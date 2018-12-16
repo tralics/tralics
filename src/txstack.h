@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txstack.h,v 2.33 2015/07/28 16:21:21 grimm Exp $
+// $Id: txstack.h,v 2.35 2015/11/18 17:58:11 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2004, 2007,2008
 
 
@@ -62,7 +62,7 @@ class Stack {
   Stack();
   Xmlp newline_xml;
 
-  void add_anchor(const string&);
+  Istring add_anchor(const string&,bool);
   void add_att_to_last(Istring,Istring,bool);
   void add_att_to_last(Istring,Istring);
   void add_att_to_last(name_positions,name_positions);
@@ -74,12 +74,13 @@ class Stack {
   void add_center_to_p();
   void add_last(Xmlp);
   void add_last_string (const Buffer& B);
-  void add_new_anchor();
-  void add_new_anchor_spec();
+  Istring add_new_anchor();
+  Istring add_new_anchor_spec();
   void add_nl();
   AttList& add_newid0(name_positions);
   void add_sp_to_p (int pid, int vid);
   void check_font();
+  void create_new_anchor(Xid, Istring, Istring);
   Xid cur_xid() { return top_stack()->get_id(); }
   void delete_table_atts();
   void dump();

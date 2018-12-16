@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE raweb SYSTEM 'raweb3.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
-<raweb language='english' creator='Tralics version 2.15.3' year='2003'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<raweb language='english' creator='Tralics version 2.15.4' year='2003'>
 <accueil isproject='true' html='exemple'>
 <theme>3a</theme>
 <projet>Miaou</projet>
@@ -404,4 +404,5 @@ Porquerolles, september.
 <bvolume>14</bvolume>
 <byear>1998</byear>
 <bpages>41-56</bpages>
-</citation></biblio></raweb>
+</citation></biblio>
+</raweb>

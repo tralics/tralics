@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.15.4, date: 2017/05/26-->
+<std>
+<p>This file is an example of <hi rend='tt'>\omitcite</hi>,
+it explains usage and some errors.
+In the case of the Raweb: there are three
+bibliography files Year, Foot, and Refer.
+The Refer file has implicitly a <hi rend='tt'>\nocite{*}</hi> .
+The Year file is automatically generated with a <hi rend='tt'>\nocite{*}</hi>.
+You can cite via <hi rend='tt'>\yearcite{foo}</hi>, <hi rend='tt'>\footcite{foo}</hi> or
+<hi rend='tt'>\refercite{foo}</hi>. This allows the same name to appear in the
+three files; for simplicity there is a unique command to omit a
+citation; it will omit it everywhere</p>
+<p>We first define a bibliography file, :</p>
+<p>We use this file as the bibliography file and import everything
+<biblio>
+<citation from='year' key='Ana' id='bid0' userid='cite:refa' type='book'>
+<bauteurs><bpers prenom='A.' nom='Aname' prenomcomplet='Afirst'/></bauteurs>
+<btitle>Atitle</btitle>
+</citation>
+<citation from='year' key='Bna' id='bid1' userid='cite:refB' type='book'>
+<bauteurs><bpers prenom='B.' nom='Bname' prenomcomplet='Bfirst'/></bauteurs>
+<btitle>Btitle</btitle>
+</citation>
+<citation from='year' key='Cna' id='bid2' userid='cite:refC' type='book'>
+<bauteurs><bpers prenom='C.' nom='Cname' prenomcomplet='Cfirst'/></bauteurs>
+<btitle>Ctitle</btitle>
+</citation>
+<citation from='year' key='Ena' id='bid5' userid='cite:refE' type='book'>
+<bauteurs><bpers prenom='E.' nom='Ename' prenomcomplet='Efirst'/></bauteurs>
+<btitle>Etitle</btitle>
+</citation></biblio>
+
+We cite the first three items
+<cit><ref target='bid0'/></cit><cit><ref target='bid1'/></cit> <cit><ref target='bid2'/></cit>
+We try: <cit><ref target='bid3'/></cit>; this fails because the case is irrelevant as long as
+the same key is used in the text file</p>
+<p>The argument of <hi rend='tt'>\omitcite</hi> must expand to a character string,
+example: 
+or   
+but not</p>
+<p>The case is important: reference refE is not ignored
+This gives a conflict <cit><ref target='bid4'/></cit>
+the reference is omitted and cannot be solved</p>
+<p>The transcript file should contain</p>
+<p noindent='true'><hi rend='tt'>\omitcite(1) = José Grimm}</hi></p>
+<p noindent='true'><hi rend='tt'>{\omitcite(2) = refD}</hi></p>
+<p noindent='true'><hi rend='tt'>{\omitcite(3) = refe}</hi></p>
+<p noindent='true'><hi rend='tt'>{\omitcite(4) = }</hi></p>
+<p noindent='true'><hi rend='tt'>{\omitcite(5) = refF}</hi></p>
+<p>There is an error with message
+unexpected element This cannot work.
+that yields an empty name.</p>
+<p>After that there is</p>
+<p noindent='true'><hi rend='tt'>Bib stats: seen 5 entries.</hi></p>
+<p noindent='true'><hi rend='tt'>bib: Omitting refD</hi></p>
+<p noindent='true'><hi rend='tt'>bib: Omitting refF</hi></p>
+<p noindent='true'>The first line says: there are 5 citations to solve. It is followed by
+the list of entries of the bibliograph to be explicitly ignored.</p>
+<p>There is also</p>
+<p noindent='true'><hi rend='tt'>Error signaled while handling entry cite:reafA</hi></p>
+<p noindent='true'><hi rend='tt'>undefined reference.</hi></p>
+<p noindent='true'><hi rend='tt'>Error signaled while handling entry cite:reff</hi></p>
+<p noindent='true'><hi rend='tt'>undefined reference.</hi></p>
+</std>

@@ -12,11 +12,10 @@
 
 #include "tralics.h"
 const char* txscan_rcsid=
-  "$Id: txscan.C,v 2.103 2015/07/31 14:24:18 grimm Exp $";
+  "$Id: txscan.C,v 2.125 2015/11/23 16:14:00 grimm Exp $";
 
 namespace{
   Buffer file_name_buffer; // a buffer for reading file names
-  Buffer buffer_for_thetoks; // a buffer for the_toks()
   Buffer scratch; // See insert_string
   TexFonts tfonts; // the font table
   TexOutStream tex_out_stream; // the output streams
@@ -26,52 +25,45 @@ namespace{
   bool scan_glue_opt = false; // true if optional glue as found
   vector<int>penalties[4];
   vector<ScaledInt> parshape_vector;
-  bool seen_eof=true; // true if every_eof has been inserted for the current file
+  bool every_eof=false; // true if every_eof can been inserted for the current file
   Buffer local_buf;  // a local buffer
+  bool require_eof = true; // eof is an outer token 
 }
-
-extern Xmlp read_xml(string);
-
-namespace translate_ns {
-  void tex_message(String s);
-}
-
-namespace scan_ns{
-  void mu_error();
-}
-
-namespace buffer_ns {
-  int current_escape_char();
-  int char_to_dig(Utf8Char c);
-};
 
 namespace io_ns {
   void set_enc_param(int enc,int pos,int v);
   int get_enc_param(int enc,int pos);
-  String dump_it(internal_type s);
 }
-
 
 extern void readline(char*buffer,int screen_size);
 extern void set_math_char(uchar c, int f,string s);
 extern string get_math_char(uchar c, int f);
+extern Xmlp read_xml(string);
 
+
+void lg_start_io (Logger& L)
+{
+  L.finish_seq();
+  *(L.fp) << "++ ";
+}
 
 
 // Section 1: output streams.
 
-// When tralics starts, everything is closed.
-// For i=16, 17 and 18, the channel is always closed.
+// max_openin=max_openout=15 is nb_input_channels -1
+// There are 3 pseudo output channels 16, 17, 18, always closed
+// and no file attached to them
+
 TexOutStream::TexOutStream()
 {
   for(int i=0;i<nb_input_channels;i++) write_file[i] = 0;
   for(int i=0;i<nb_output_channels;i++) write_open[i] = false;
 }
 
-// This closes an output channel. Assumes chan>=0, and chan<= 18
+// This closes an output channel. 
 void TexOutStream::close(int chan)
 {
-  if(chan<0 || chan>=nb_real_output_channels) return; // this cannot happen
+  if(chan<0 || chan > max_openout) return; // this cannot happen
   if(write_open[chan]) {
     fstream *F = write_file[chan];
     F->close();
@@ -81,11 +73,11 @@ void TexOutStream::close(int chan)
   }
 }
 
-// This opens an output channel. Assumes chan>=0, and chan<= 18
+// This opens an output channel. 
 // What if the file cannot be opened ?
 void TexOutStream::open(int chan, string file_name)
 {
-  if(chan<0 || chan>=nb_real_output_channels) return; // This cannot happen
+  if(chan<0 || chan> max_openout) return; // This cannot happen
   close(chan);
   String fn= tralics_ns::get_out_dir(file_name);
   fstream* fp = new fstream(fn,std::ios::out);
@@ -95,45 +87,38 @@ void TexOutStream::open(int chan, string file_name)
   write_open[chan] = true;
 }
 
+
 // This gets the object to \write in local_buf.
-// In the case of \write18, the string is printed  on the log file
-// Otherwise, a newline is added, and the caller will print the string
-// In the case of \message, we have chan=-1. No \n is added
-String Parser::tex_write(int chan)
+// A new line is added, except if chan is 18 or 19
+// Since version 2.15.4, \message print a newline
+// In the case of \write18, the string is printed on the log file
+String Parser::string_to_write(int chan)
 {
   TokenList L = scan_general_text();
-  scan_toks_edef(L);
+  read_toks_edef(L);
   Buffer& B = local_buf;
   B << bf_reset << L;
-  if(chan==write18_slot) {
-    the_log << "\\write18=" << B.convert_to_log_encoding() << "\n";
-  } else if(chan>=0)
-    B << "\n";
-  return B.convert_to_log_encoding();
-}
-
-// Implements \typeout, \wlog
-// it is \immediate\write17 in LaTeX
-// Is redefined later to take an argument
-void Parser::typeout(int c)
-{
-  if(c==0)
-    main_ns::log_and_tty << tex_write(negative_out_slot);
-  else 
-    the_log << tex_write(negative_out_slot);
+  if(chan < write18_slot) B << "\n";
+  String res = B.convert_to_log_encoding();
+  if(chan==write18_slot)
+    the_log << lg_start << "\\write18=" << res << lg_end;
+  return res;
 }
 
 
 // This implements \write, \openout, and \closeout
+// and \iow_term:x \iow_log:x of latex3
 // action is \immediate, since there is no shipout routine
-void Parser::tex_extension(int cc)
+void Parser::M_extension(int cc)
 {
   int chan = 0;
   Token T = cur_tok;
   if(cc==openout_code)
-    chan = scan_int(cur_tok,max_openout,"output channel number");
+    chan = scan_int(T,max_openout,"output channel number");
+  else if (cc == write_log_code || cc== wlog_code) chan = negative_out_slot;
+  else if (cc == write_term_code || cc==typeout_code) chan = positive_out_slot;
   else {
-    chan = scan_int(cur_tok); 
+    chan = scan_int(T); 
     if(chan<0) chan = negative_out_slot;
     else if (chan>max_openout && chan != write18_slot)
       chan = positive_out_slot;
@@ -144,17 +129,17 @@ void Parser::tex_extension(int cc)
     scan_optional_equals(); 
     string file_name = scan_file_name();
     tex_out_stream.open(chan,file_name);
-  } else if(cc==write_code) {
-    cur_tok = T;
-    String s = tex_write(chan);
-    if(chan==write18_slot) {
+  } else if (cc==closeout_code)
+    tex_out_stream.close(chan);
+  else { // write to chan
+    String s = string_to_write(chan);
+    if(chan==write18_slot)
       system(s);
-    } else if(tex_out_stream.is_open(chan)) 
+    else if(tex_out_stream.is_open(chan)) 
       tex_out_stream.write(chan,s); 
     else if (chan==negative_out_slot) the_log << s;
     else main_ns::log_and_tty << s;
-  } else // cc==close_code
-    tex_out_stream.close(chan);
+  }
 }
 
 // Section 2. input file handling
@@ -162,11 +147,18 @@ void Parser::tex_extension(int cc)
 // This closes a file opened by \openin
 void FileForInput::close()
 {
-  if(is_open) {
-    is_open = false;
+  if(is_open()) {
+    open_flag = false;
     the_lines.before_close(false);
     the_lines.clear();
   }
+}
+
+// This implements \ifeof
+bool Parser::is_input_open()
+{
+  int ch = scan_int(cur_tok,max_openin,"input channel number");
+  return !tex_input_files[ch].is_open();
 }
 
 // Open a file for \openin. if action is false, the file does not exist
@@ -174,10 +166,10 @@ void FileForInput::close()
 void FileForInput::open(string file, bool action)
 {
   if(!action) {
-    the_log <<lg_start << "++ Cannot open file " << file << " for input\n";
+    the_log << lg_start_io << "Cannot open file " << file << " for input\n";
   } else {
     tralics_ns::read_a_file(the_lines,main_ns::path_buffer.to_string(),1);
-    is_open = true;
+    open_flag = true;
     cur_line.reset();
     line_no = 0;
     the_lines.after_open();
@@ -186,16 +178,15 @@ void FileForInput::open(string file, bool action)
 
 // This puts in cur_input_stack a new slot, containing the current state
 // of affairs. It kills the input buffer and the current line.
-void Parser::push_input_stack(const string& name,bool restore_at)
+void Parser::push_input_stack(const string& name,bool restore_at, bool re)
 {
-  InputStack* W= new InputStack(name,get_cur_line(),state, cur_file_pos,seen_eof);
-  seen_eof = true; // somebody will set it to false some day
+  InputStack* W= new InputStack(name,get_cur_line(),state, cur_file_pos,
+				every_eof,require_eof);
   cur_input_stack.push_back(W); 
   int n = cur_input_stack.size();
-  if(tracing_io()) {
-    the_log << lg_start << "++ "
-	    << "Input stack ++ " << n << " " << W->get_name()<< "\n";
-  }
+  if(tracing_io())
+    the_log << lg_start_io
+	    << "Input stack ++ " << n << " " << W->get_name() << lg_end;
   W->set_line_ptr(lines);
   W->set_line_pos(input_line_pos);
   W->set_line_vector(input_line);
@@ -203,8 +194,10 @@ void Parser::push_input_stack(const string& name,bool restore_at)
   if(restore_at) {
     W->set_at_val(eqtb_int_table[uchar('@')].get_val());
     eqtb_int_table[uchar('@')].set_val(11);
-    the_log << lg_start << "++ Made @ a letter\n";
+    the_log << lg_start_io << "Made @ a letter\n";
   }
+  every_eof = false; // might be set to true
+  require_eof = re; 
   input_line.clear();
   lines.set_interactive(false);
   input_line_pos=0;
@@ -212,42 +205,39 @@ void Parser::push_input_stack(const string& name,bool restore_at)
 }
 
 // Undoes push_input_stack.
-// If vb is false, we are reading from a Token list or something like that.
+// If vb is false, we are reading from a token list or something like that.
 // Otherwise, we read from a real file, and indicate that it is closed.
 void Parser::pop_input_stack(bool vb)
 {
   int n = cur_input_stack.size();
   if(n==0) {
-    if(tracing_io()) {
-      the_log << lg_start << "++ Input stack empty \n";
-    }
+    if(tracing_io()) the_log << lg_start_io << "Input stack empty\n";
     return;
   }
   InputStack*W = cur_input_stack.back();
-  if(vb) 
-    lines.before_close(true);
+  if(vb) lines.before_close(true);
   set_cur_line(W->get_line_no());
   state = W->get_state();
   W->get_line_ptr(lines);
+  require_eof = W -> get_eof_outer();
   int at =  W->get_at_val();
   if(at>=0) {
     eqtb_int_table[uchar('@')].set_val(at);
     if(tracing_io())
-      the_log << lg_start << "++ Catcode of @ restored to " << at << "\n";
+      the_log << lg_start_io << "Catcode of @ restored to " << at << lg_end;
   }
   input_line.clear();
   input_line.insert(input_line.end(), W->get_B().begin(), W->get_B().end());
   input_line_pos = W->get_line_pos();
   back_input(W->get_TL());
   if(cur_file_pos) insert_hook(cur_file_pos);
-  cur_file_pos = W->get_file_type();
-  the_log << lg_start << "++ cur_file_pos restored to " << cur_file_pos << "\n";
+  cur_file_pos = W->get_file_pos();
+  every_eof = W->get_every_eof();
+  the_log << lg_start_io << "cur_file_pos restored to " << cur_file_pos << lg_end;
   cur_input_stack.pop_back();
-  if(tracing_io()) {
-    the_log << lg_start << "++ "
-	    << "Input stack -- " << n << " " << W->get_name() << "\n";
-  }
-  seen_eof = W->get_seen_eof();
+  if(tracing_io()) 
+    the_log << lg_start_io 
+	    << "Input stack -- " << n << " " << W->get_name() << lg_end;
   delete W;
 }
 
@@ -262,7 +252,7 @@ void InputStack::destroy()
 // This kills all pending input
 void Parser::close_all()
 {
-  if(tracing_io())  the_log << lg_start << "++ close all files\n";
+  if(tracing_io())  the_log << lg_start_io << "close all files\n";
   while (cur_input_stack.size())
     pop_input_stack(true);
   TL.clear();
@@ -294,10 +284,11 @@ string Parser::scan_file_name()
   return B.to_string();
 }
 
-// This implements  \input, \endinput, \scantokens
+// This implements \endinput, \scantokens
+// and \input \Input, \include \readxml 
 // This is called from expand. We have to print the command name in the log 
 // file. The real code of input is in T_input().
-void Parser::x_input(int q)
+void Parser::E_input(int q)
 {
   if(q==endinput_code) {
     if(tracing_commands()) the_log.dump("endinput");
@@ -313,14 +304,8 @@ void Parser::x_input(int q)
   }
   if(q==scantokens_code) {
     if(tracing_commands()) the_log.dump("scantokens");
-    static Buffer B;
     TokenList L = scan_general_text();
-    B.reset();
-    B << L;
-    push_input_stack("(scantokens)",false);
-    lines.split_string(B.c_str(),0);
-    lines.after_open();
-    seen_eof = false;
+    T_scantokens(L);
     return;
   }
   if(name_in_progress) {
@@ -333,12 +318,17 @@ void Parser::x_input(int q)
   T_input(q);
 }
 
-// This implements \ifeof
-bool Parser::is_in_open()
+void Parser::T_scantokens(TokenList &L)
 {
-  int ch = scan_int(cur_tok,15,"input channel number");
-  return !tex_input_files[ch].is_valid();
+  static Buffer B;
+  B.reset();
+  B << L;
+  push_input_stack("(scantokens)",false,true);
+  lines.split_string(B.c_str(),0);
+  lines.after_open();
+  every_eof = true;
 }
+
 
 // In TeX, you say \input foo, in latex you say \input{foo}
 // This accepts both syntaxes.
@@ -349,11 +339,11 @@ string Parser::latex_input(int q)
   if(q==include_code || cur_tok.is_OB_token()) { 
     flush_buffer(); 
     if(!cur_tok.is_OB_token()) {
-      parse_error("Missing {} for ",name_for_error,"","Missing brace");
+      parse_error(err_tok,"Missing {} for ",err_tok,"","Missing brace");
       file = ".tex";
     } else {
       InLoadHandler somthing;
-      file = sT_next_arg();
+      file = sT_arg_nopar();
     }
   } else file = scan_file_name();
   if(tracing_commands()) 
@@ -362,12 +352,13 @@ string Parser::latex_input(int q)
 }
 
 // This implements \IfFileExists, \InputIfFileExists,
-//  \input, \openin, \closein
+//  \input, \include, \openin, \closein
 void Parser::T_input(int q)
 {
   int stream = 0;
   bool seen_star = false;
   bool seen_plus = false;
+  Token T = cur_tok;
   if(q==openin_code||q==closein_code) {
     stream = scan_int(cur_tok,max_openin,"input channel number");
     tex_input_files[stream].close();
@@ -387,9 +378,9 @@ void Parser::T_input(int q)
   else { 
     flush_buffer(); 
     InLoadHandler somthing;
-    file = sT_next_arg(); 
+    file = sT_arg_nopar(); 
   }
-  if(q==scantokens_code+1) {
+  if(q==readxml_code) {
     the_xmlA = read_xml(file); return;
   }
   bool res = false;
@@ -412,18 +403,18 @@ void Parser::T_input(int q)
   }
   if(q==ifexists_code) { one_of_two(res); return; }
   if(q==inputifexists_code) {
-    TokenList A = mac_arg();
-    TokenList B = mac_arg();
+    TokenList A = read_arg();
+    TokenList B = read_arg();
     if(res) open_tex_file(seen_star);
     if(A.empty () && B.empty()) return; // optimise
     if(tracing_commands())
-      the_log << lg_start << "++ " << (res ? "iftrue" : "iffalse") << "{"
+      the_log << lg_start_io << (res ? "iftrue" : "iffalse") << "{"
 	      << A << "}{" << B << "}\n";
     one_of_two(A,B,res);
     return;
   }
   if(!res) {
-    parse_error("Cannot open input file ", file, "cannot open input");
+    parse_error(T,"Cannot open input file ", file, "cannot open input");
     return;
   }
   open_tex_file(seen_star);
@@ -434,13 +425,13 @@ void Parser::T_input(int q)
 void Parser::open_tex_file(bool seen_star)
 {
   string file = main_ns::path_buffer.to_string();
-  push_input_stack(file,seen_star);
+  push_input_stack(file,seen_star,true);
   tralics_ns::read_a_file(lines,file,2);
   lines.after_open();
-  seen_eof = false;
+  every_eof = true;
 }
 
-// Saves the current Token list, ready to read from another one.
+// Saves the current token list, ready to read from another one.
 void Parser::save_the_state(SaveState& x)
 {
   x.copy_and_reset(TL);
@@ -458,42 +449,42 @@ void Parser::restore_the_state (SaveState& x)
 
 // Converts a Hex char (lower case) to digit.
 // Returns -1 if impossible.
-int buffer_ns::char_to_dig(Utf8Char c)
+int Utf8Char::hex_val() const
 {
-  if(c.is_digit()) return c.val_as_digit();
-  else if(c.is_hex()) return c.val_as_hex();
+  if(is_digit()) return val_as_digit();
+  else if(is_hex()) return val_as_hex();
   else return -1; 
 }
 
+// We have seen a character c at category code 7, for instance ^
+// It could be ^^Z ^^ab ^^^^abce or ^^^^^abcde
+// If this is the case, a new character is constructed and replaces the last
+// character read (i.e., will be returned by read_next_char) 
 
-// Handles the case of ^^^^abcd. One char has been read.
-// Returns true in case of success. 
-// Puts the character read at location of d
-// Works with 2, 4 and 5 hats; note that ^^Z is ok.
-bool Parser::four_hats(Utf8Char cc)
+bool Parser::scan_double_hat(Utf8Char c)
 {
   int sz = input_line.size();
   int p = input_line_pos;
-  int w = sz-p +1; // 3,4,8, 10 are OK
+  int w = sz-p +1; // number of unread chars aon the line
   if(w<3) return false; 
-  if(input_line[p] != cc) return false;
-  if(w>=10 && input_line[p+1]==cc && input_line[p+2]==cc &&input_line[p+3]==cc) {
-    int hc0 = buffer_ns::char_to_dig(input_line[p+4]);
-    int hc1 = buffer_ns::char_to_dig(input_line[p+5]);
-    int hc2 = buffer_ns::char_to_dig(input_line[p+6]);
-    int hc3 = buffer_ns::char_to_dig(input_line[p+7]);
-    int hc4 = buffer_ns::char_to_dig(input_line[p+8]);
+  if(input_line[p] != c) return false;
+  if(w>=10 && input_line[p+1]==c && input_line[p+2]==c &&input_line[p+3]==c) {
+    int hc0 = input_line[p+4].hex_val();
+    int hc1 = input_line[p+5].hex_val();
+    int hc2 = input_line[p+6].hex_val();
+    int hc3 = input_line[p+7].hex_val();
+    int hc4 = input_line[p+8].hex_val();
     if(hc0 >=0 && hc1>=0 && hc2>=0 && hc3>=0 &&hc4>=0) {
       input_line_pos = p+8;
       input_line[p+8] = Utf8Char((hc0<<16)+(hc1<<12) +(hc2<<8) +(hc3<<4) + hc4);
       return true;
     }
   }
-  if(w>=8 && input_line[p+1]==cc && input_line[p+2]==cc) {
-    int hc1 = buffer_ns::char_to_dig(input_line[p+3]);
-    int hc2 = buffer_ns::char_to_dig(input_line[p+4]);
-    int hc3 = buffer_ns::char_to_dig(input_line[p+5]);
-    int hc4 = buffer_ns::char_to_dig(input_line[p+6]);
+  if(w>=8 && input_line[p+1]==c && input_line[p+2]==c) {
+    int hc1 = input_line[p+3].hex_val();
+    int hc2 = input_line[p+4].hex_val();
+    int hc3 = input_line[p+5].hex_val();
+    int hc4 = input_line[p+6].hex_val();
     if(hc1>=0 && hc2>=0 && hc3>=0 &&hc4>=0) {
       input_line_pos = p+6;
       input_line[p+6] = Utf8Char((hc1<<12) +(hc2<<8) +(hc3<<4) + hc4);
@@ -501,8 +492,8 @@ bool Parser::four_hats(Utf8Char cc)
     }
   }
   if(w>=4) {
-    int hc1 = buffer_ns::char_to_dig(input_line[p+1]);
-    int hc2 = buffer_ns::char_to_dig(input_line[p+2]);
+    int hc1 = input_line[p+1].hex_val();
+    int hc2 = input_line[p+2].hex_val();
     if(hc1>=0 && hc2>=0) {
       input_line_pos = p+2;
       input_line[input_line_pos] = Utf8Char(16*hc1+hc2);
@@ -517,34 +508,31 @@ bool Parser::four_hats(Utf8Char cc)
   return true;
 }
 
-// This constructs a command name. Returns the hashtab location of the command
-// Reading is done from the input buffer.
-// If it is empty, then the null_cs is returned.
-Token Parser::get_macro ()
+// This constructs a command name from the current line
+Token Parser::cs_from_input ()
 {
-  if(at_eol()) return Token(null_cs+cs_token_flag);
-  Utf8Char c = input_line[input_line_pos++];
-  if (c.is_big()) { // abort and return null_cs
-    state = state_M; // is this needed ? 
-    -- input_line_pos;
-    return Token(null_cs+cs_token_flag);
-  } 
+  if(at_eol()) return Token(null_tok_val);
+  Utf8Char c = get_next_char();
   state = state_S;
-  int C = fast_catcode(c.get_value());
+  if (c.is_big()) { // abort and return null_cs
+    -- input_line_pos;
+    return Token(null_tok_val);
+  } 
+  int C = get_catcode(c.get_value());
   if(C==letter_catcode) {
     mac_buffer.reset();
     mac_buffer.push_back(c);
     for(;;) {
       if(at_eol()) break;
-      c = input_line[input_line_pos ++];
+      c = get_next_char();
       if(c.is_big()) { --input_line_pos; break; } // abort
-      C = fast_catcode(c.get_value());
+      C = get_catcode(c.get_value());
       if(C==letter_catcode) {
 	mac_buffer.push_back(c);
 	continue;
       }
       if(C==hat_catcode) {
-	if(four_hats(c)) continue;
+	if(scan_double_hat(c)) continue;
       }
       --input_line_pos;
       break;
@@ -553,7 +541,7 @@ Token Parser::get_macro ()
   }
   else if(C==space_catcode) return Token(c);
   else if(C==hat_catcode) {
-    if(four_hats(c)) return get_macro();
+    if(scan_double_hat(c)) return cs_from_input();
     state = state_M;
     return Token(c); 
   }
@@ -563,16 +551,16 @@ Token Parser::get_macro ()
 // This constructs a new token by reading characters from the buffer.
 // Returns true in case of problem. Either because we are at EOL
 // or because a line ended (% or \n), or because a character was ignored
-// (space or invalid chars).
+// (space or invalid chars), or because of ^^ 
 bool Parser::next_from_line0 ()
 {
   if(at_eol()) return true;
-  Utf8Char c = input_line[input_line_pos++];
+  Utf8Char c = get_next_char();
   if(c.is_big()) { // convert to \char"ABCD
     Buffer & B = local_buf;
     B.reset();
     B.push_back('"');
-    B.push_back16(c.get_value());
+    B.push_back16(c.get_value(), false);
     int k = B.size();
     back_input(hash_table.space_token);
     while (k >0) { 
@@ -580,22 +568,18 @@ bool Parser::next_from_line0 ()
       k --; 
     }
     state = state_M;
-    cur_tok = hash_table.char_token;
-    look_at_mac();
+    see_cs_token(hash_table.char_token);
     return false;
   }
-  cur_cmd_chr = CmdChr(fast_catcode(c.get_value()), subtypes(c.get_value()));
+  cur_cmd_chr = CmdChr(get_catcode(c.get_value()), subtypes(c.get_value()));
   switch(cur_cmd_chr.get_cmd()) {
-  case escape_catcode: {
-    cur_tok = get_macro();
-    look_at_mac();
-    if(cur_cmd_chr.get_cmd()>=usero_cmd) check_outer_validity();
+  case escape_catcode:
+    cur_tok = cs_from_input();
+    see_cs_token();
     return false;
-  }
   case active_catcode:
-    cur_tok.from_cs(c.get_value()+active_base);
-    look_at_mac();
-    if(cur_cmd_chr.get_cmd()>=usero_cmd) check_outer_validity();
+    cur_tok.active_char(c.get_value());
+    see_cs_token();
     state = state_M;
     return false;
   case space_catcode: 
@@ -609,32 +593,25 @@ bool Parser::next_from_line0 ()
   case comment_catcode:
     kill_line();
     return true;
-  case eol_catcode: {
-    states s = state;
+  case eol_catcode:
     kill_line();
-    if(s==state_N) {
-      cur_tok = hash_table.par_token;
-      look_at_mac();
-      if(cur_cmd_chr.get_cmd()>=usero_cmd) check_outer_validity();
+    if(state==state_N) {
+      see_cs_token(hash_table.par_token);
       return false;
-    }
-    if(s==state_M) {
+    } else if(state==state_M) {
       // this is different from TeX
       cur_cmd_chr = CmdChr(space_catcode, subtypes('\n'));
       cur_tok = hash_table.newline_token;
       return false;
-    }
-    return true;
-  }
+    } else return true; // stateS 
   case hat_catcode:
-    if(four_hats(c)) return true;  // cur char has changed
+    if(scan_double_hat(c)) return true;  // cur char has changed
     state = state_M;
     cur_tok.from_cmd_chr(cur_cmd_chr);
     return false;
   case special_catcode: // case of ShortVerb.
     verb_saved_char = c;
-    cur_tok = hash_table.verb_token;
-    look_at_mac();
+    see_cs_token(hash_table.verb_token);
     state = state_M;
     return false;
   case ignored_catcode: return true; // ignored
@@ -646,6 +623,7 @@ bool Parser::next_from_line0 ()
   }
 }
 
+
 // This is like above, but we try again. Note that get_a_new_line
 // may fail, or fill the buffer, or put something in TL.
 bool Parser::next_from_line ()
@@ -655,65 +633,165 @@ bool Parser::next_from_line ()
     if(!res) return false;
     if(!at_eol()) continue;
     if(get_a_new_line()) // no other line available, abort
-      break;
+      return true;
     if(!TL.empty()) { 
       next_from_list(); 
       return false; 
     }
   }
-  cur_tok = invalid_token;
-  look_at_mac();
+}
+
+// Returns next token, setting cur_tok and cur_cmd_chr
+// If TL is not empty, reads from TL, otherwise from file unless restricted.
+// This should produce a valid token; returns false, in this case.
+// Otherwise, return true; set cur_tok to a null token, which might be
+// interpreted as a character of catcode 0; which is impossible.
+
+bool Parser::get_itoken ()
+{
+  if(!TL.empty()) { 
+    next_from_list(); 
+    return false; 
+  }
+  if(!restricted)
+    if(!next_from_line()) return false;
+  cur_tok.kill();
+  cur_cmd_chr.kill();
   return true; 
 }
 
-// Gets a token from the list. Returns nothing since the list is not empty.
-// Handles \noexpand\foo (this is a bit complicated)
+// Like back_input(t); read_token()
+// without outher check or noexpand 
+void Parser::examine_token (Token t)
+{
+  cur_tok = t;
+  if(t.not_a_cmd()) see_char_token(t);
+  else see_cs_token();
+}
+  
+bool Parser::get_token ()
+{
+  bool err = get_itoken(); 
+  if(!err && cur_cmd_chr.is_outer() && scanner_status != ss_normal)
+    check_outer_validity();
+  return err;
+}
+
+
+// Reads a token that can be outer for \ifx \ifdefined or \show
+// no outer check, thus no error.
+bool Parser::get_token_o()
+{
+  SaveScannerStatus tmp(ss_normal);
+  return get_itoken();
+}
+
+// This puts t in cur_tok and sets cur_cmd_chr
+void Parser::token_from_list(Token t)
+{
+  cur_tok = t;
+  if(t.not_a_cmd()) see_char_token(t);
+  else see_cs_token();
+}
+
+// Returns the next element of TL, assumed non-empty
+// executes token_from_list  with a hack explained below
 void Parser::next_from_list()
 {
   Token t = TL.front(); 
   TL.pop_front();
   cur_tok = t;
-  if(t.not_a_cmd()) see_non_mac_token(t);
+  if(t.not_a_cmd()) see_char_token(t);
   else {
-    look_at_mac();
-    if(cur_cmd_chr.get_cmd() == dont_expand_cmd) {
-      if(TL.empty()) return; // should not happen....
+    see_cs_token();
+    if(cur_cmd_chr.get_cmd() == dont_expand_cmd) { // see comment below
+      if(TL.empty()) return;
       t = TL.front(); TL.pop_front();
       cur_tok = t;
-      if(t.not_a_cmd()) return; // should not happen....
-      look_at_mac();
-      if(cur_cmd_chr.is_expandable())
+      if(t.not_a_cmd()) return;
+      see_cs_token();
+      if(cur_cmd_chr.is_expandable()) {
 	cur_cmd_chr = CmdChr(relax_cmd, subtypes(special_relax));
-    } else if(cur_cmd_chr.get_cmd()>=usero_cmd) check_outer_validity();
+      }
+    }
   }
 }
 
-// The next function reads a character, and puts it in the buffer.
-// If the in_env arg is false, stops when seeing a right brace, 
-// otherwise \end{foo}
+// Let's explain the dont_expand_cmd machinery above.
+// There is a token called \notexpanded which is not in the hash table
+// (so cannot be redefined), whose command code is dont_expand_cmd
+// so the previous test is t== hash_table.frozen_dont_expand.
+// As the token is not in the hash table next_from_line0 will never return it.
+
+// Let's consider what happens when get_token finds \noexpand. In some cases the
+// token is not interpreted (\def\foo{\noexpand}, \let\foo\noexpand, \ifx\noexpand)
+// Otherwise, the token is expanded. A token is read, say T. No error is signaled
+// if this is an outer token. Expansion is T when T is not a command (so, when it
+// is a non-active character token); otherwise expansion is \notexpanded
+// followed by T. Nothing special happens in the first case.
+
+// The next call to get_token will find a non-empty TL; the first token will be
+// \notexpanded, followed by T which is a command. So the two "return" in the
+// code above are never executed and T is put in cur_tok. If T is expandable
+// (included undefined) then cur_cmd_chr is set to relax.
+// Note that get_x_token looks at the command code, and sees a non-expandable
+// token. In the case of \xdef\foo{\noexpand\bar}, a special version of get_x_token
+// is used (\the and \protected are not expand) and cur_tok is added to the list.
+// It is generally assumed that, after get_x_token(), back_input(); get_x_token()
+// is a no-op; this is wrong in the case of \noexpand (see Tralics online doc).
+
+// The code that follows is used by \if and \ifcat. In the special case
+// where (a == relax_cmd && b ==special_relax) we know that cur_tok is as above
+// so that, if it is char_or_active, it is active.
+// Every non-char is considered to be \relax.
+
+
+void Parser::get_x_token_or_active_char (symcodes&a,subtypes&b)
+{
+  get_x_token();
+  a = cur_cmd_chr.get_cmd();
+  b = cur_cmd_chr.get_chr();
+  if(a == relax_cmd && b ==special_relax) {
+    if(cur_tok.char_or_active())
+      { a = active_catcode;  b = cur_tok.chr_val(); }
+    else b = relax_code;
+  }
+  else if(a > active_catcode) { a = relax_cmd; b =  relax_code; }
+}
+
+
+// Reads until a closing brace is found at level 0 (dismissed), or when
+// in_env is true, until \end is found a brace level zero (to be read again)
 // Return true if end condition is reached false otherwise.
+// Result is in the buffer.
+// Avoids tokenisation in order to reevaluate with other catcodes. 
+// Parsing may continue after EOF, so that we just cannot say read from TL and
+// if empty, read from file. Is this a good idea?
 
 bool Parser::scan_for_eval(Buffer&B, bool in_env)
 {
   int b = 0; // brace level
-  int elevel = 0; // 
+  int elevel = 0; // begin/end level at brace level zero when in_env true
   for(;;) {
     // First read tokens from TL
     if(!TL.empty()) {
       Token t = TL.front(); TL.pop_front();
-      if(in_env && b==0) {
-	if(t== hash_table.end_token) elevel--;
-	if(t== hash_table.begin_token) elevel++;
+      if(in_env && b==0) { // Check end in the case of env
+	if(t== hash_table.end_token) {
+	  if(elevel==0) { back_input(t); return true; }
+	  elevel--;
+	} else if(t== hash_table.begin_token) elevel++;
       }
-      if(in_env && b==0 && elevel==-1) {
-	back_input(t);
-	return true;
+      // Check brace level
+      if(t.char_or_active()) { 
+	Utf8Char c = t.char_val();
+	if(c=='{') b++;
+	else if (c=='}') {
+	  if(b==0) return !in_env; // if in_env, this is bad else OK
+	  b--;
+	}
       }
-      b += B.push_back(t,true);
-      if(!in_env &&b==-1) {
-	B.remove_last();
-	return true;
-      }
+      B.insert_token(t,true);
       continue;
     }
     if(restricted) return false;
@@ -723,7 +801,7 @@ bool Parser::scan_for_eval(Buffer&B, bool in_env)
 	return false;
       continue; // this may set TL
     }
-    Utf8Char c = input_line[input_line_pos++];
+    Utf8Char c = get_next_char();
     if(c=='\r') c = '\n';
     B.push_back(c);
     if(c=='{') b++;
@@ -737,7 +815,7 @@ bool Parser::scan_for_eval(Buffer&B, bool in_env)
     }
     if(!(c== '\\')) continue;
     if(at_eol()) continue;
-    c = input_line[input_line_pos++];
+    c = get_next_char();
     B.push_back(c);  // \{ and \} and \\ are normal chars
     if(!in_env) continue;
     if(b != 0) continue;
@@ -767,51 +845,13 @@ bool Parser::scan_for_eval(Buffer&B, bool in_env)
       }
     }
   }
-  return false;
 }
 
-
-// case of \if AB or \ifcat AB. Nasty hack with \noexpand
-void Parser::get_x_token_or_active_char()
-{
-  get_x_token();
-  if(cur_cmd_chr.is_relax())
-    if (cur_cmd_chr.get_chr()==special_relax) {
-      cur_cmd_chr = CmdChr(active_catcode, subtypes(cur_tok.eqtb_loc()));
-    }
-  if (cur_cmd_chr.get_cmd()>13 || cur_cmd_chr.get_chr()>= int(nb_characters)) 
-    cur_cmd_chr = CmdChr(relax_cmd, relax_code);
-}
-
-// Same as above, but without hacks for \noexpand
-void Parser::token_from_list(Token t)
-{
-  cur_tok = t;
-  if(t.not_a_cmd())  see_non_mac_token(t);
-  else look_at_mac();
-}
-
-// Returns next token: cur_cmd, cur_chr, cur_tok.
-// If TL is not empty, reads from TL, 
-// if restricted is true, returns an invalid token if TL is empty
-bool Parser::get_token ()
-{
-  if(!TL.empty()) { 
-    next_from_list(); 
-    return false; 
-  } 
-  if(restricted) {  
-    cur_tok = invalid_token;
-    look_at_mac();
-    return true; 
-  }
-  return next_from_line();
-}
 
 // We have to write now the function that reads a line from a file.
 // This function is used as an auxiliary.
 // Puts a line of input in the buffer; 
-// Removes spaces at end of line.
+// Ignores CR LF. Removes spaces at end of line. 
 void Buffer::insert_string(const Buffer& s)
 {
   wptr = 0;
@@ -854,9 +894,10 @@ void Parser::insert_endline_char()
 
 // Like get_a_newline below. But we never print the line in the log file.
 // Reading can be from the terminal or an external file.
-// Return value is false in case of EOF.
-// Knuth says: an empty line is appended at the end of a read_file
-// This is done if spec is true
+// Knuth says: an empty line is appended at the end of the file.
+// in the case of continuation (spec=false) this is useless.
+// Return value is true in case of problem.
+
 bool Parser::new_line_for_read(bool spec)
 {
   state = state_N;
@@ -874,15 +915,16 @@ bool Parser::new_line_for_read(bool spec)
     n = tex_input_files[cur_in_chan].get_lines().get_next(scratch);
   if(n<0) {
     tex_input_files[cur_in_chan].close();
-    if(!spec) return false;
+    if(!spec) return true;
   } else {
     store_new_line(n,false);
   }
   insert_endline_char();
-  return true;
+  return false;
 }
 
-// Read a new line from the source. If force_eof is false, a tentative
+// Read a new line from the source. Returns true in case of failure.
+// If force_eof is false, a tentative
 // is made to read from the current file. If no file is found, reading is 
 // aborted if either no_new_file is true or there is no other file.
 // If a line has been read, force_eof is set to false.
@@ -902,24 +944,31 @@ bool Parser::get_a_new_line ()
     force_eof = false;
   } else {
     n = lines.get_next(scratch);
-    if(n<0 && !seen_eof) {
-      seen_eof = true;
-      TokenList L = toks_registers[everyhbox_code].get_val();
-      if(!L.empty()) { back_input(L); return false; }
+    if(n<0 && every_eof) {
+      every_eof = false;
+      TokenList L = toks_registers[everyeof_code].get_val();
+      if(!L.empty()) {
+	if(tracing_io()) the_log << lg_start_io << "everyeof="<< L << ".\n";
+	back_input(L);
+	return false;
+      }
     }
   }
-  if(n<0) {
-    main_ns::file_ended = true;
-    // force_eof is true, or cur file ended
-    bool sz =cur_input_stack.size()==0;
-    cur_tok = hash_table.relax_token;
-    if(sz || cur_input_stack.back()->get_name() !="(reevaluate)" ) 
-      check_outer_validity0();
-    if(sz && tracing_io())
-      the_log << lg_start << "++ Input stack empty at end of file\n";
-    if(cur_in_chan==token_in_chan || sz) return true;
-    pop_input_stack(true);
-    return false;
+  if(n<0) {    // force_eof is true, or cur file ended
+    bool retval = true;
+    file_ended = true;
+    if(require_eof && (scanner_status != ss_normal)) {
+      back_input(hash_table.eof_token);
+      retval = false;
+    }
+    if(cur_input_stack.size()==0) {
+      if(tracing_io())
+	the_log << lg_start_io << "Input stack empty at end of file\n";
+      return retval;
+    } else {
+      pop_input_stack(true);
+      return false;
+    }
   }
   store_new_line(n, tracing_io());
   insert_endline_char();
@@ -935,20 +984,20 @@ TokenList Parser::read_from_file(int ch, bool rl_sw)
   string file_name = "tty";
   if(ch<0 || ch>=nb_input_channels) 
     cur_in_chan = tty_in_chan;
-  else if (!tex_input_files[ch].is_valid()) 
+  else if (!tex_input_files[ch].is_open()) 
     cur_in_chan = tty_in_chan; 
   else { 
     cur_in_chan = ch;
     file_name = tex_input_files[ch].get_lines().get_file_name();
   }
-  push_input_stack(file_name,false);
+  push_input_stack(file_name,false,true);
   TokenList L;
   new_line_for_read(true);
   int b = 0;
   if(rl_sw) { // case of readline, only one line is read
     for(;;) {
       if(at_eol()) break;
-      Utf8Char c = input_line[input_line_pos++];
+      Utf8Char c = get_next_char();
       if(c.get_value()==' ')
 	L.push_back(hash_table.space_token);
       else L.push_back(Token(other_t_offset,c));
@@ -957,8 +1006,8 @@ TokenList Parser::read_from_file(int ch, bool rl_sw)
     for(;;) {
       if(at_eol()) { // can we stop here ?
 	if(b==0) break;  // Ok, brace level is zero
-	if(!new_line_for_read(false)) { // a file cannot end here
-	  parse_error("unbalanced \\read");
+	if(new_line_for_read(false)) { // a file cannot end here
+	  parse_error(err_tok,"unbalanced \\read");
 	  while(b>0) { L.push_back(hash_table.CB_token); b--; }
 	  break; // stop because file ended
 	}
@@ -967,7 +1016,7 @@ TokenList Parser::read_from_file(int ch, bool rl_sw)
 	continue; // we might be at EOL here
       if(cur_tok.is_CB_token()) {
 	if(b==0) {
-	  parse_error("too many closing braces in \\read");
+	  parse_error(err_tok,"too many closing braces in \\read");
 	  continue;
 	}
 	else b--;
@@ -984,60 +1033,88 @@ TokenList Parser::read_from_file(int ch, bool rl_sw)
 }
 
 // Fills the token list with the content of the buffer.
-// main job is done by read_into.
-void Parser::add_buffer_to_list(Buffer& b, TokenList& X,const string& name)
+void Parser::tokenize_buffer(Buffer& b, TokenList& L,const string& name)
 {
   SaveScannerStatus tmp(ss_normal);
-  push_input_stack(name,false);
+  push_input_stack(name,false,true);
   uint n  = cur_input_stack.size();
   bool s = restricted;
   restricted = false;
   b.push_back('\n');
   lines.push_front(Clines(-1));
   lines.push_front(Clines(1,b.to_string(),true));
-  read_into(X);
+  file_ended = false;
+  for(;;) {
+    bool res = next_from_line0();
+    if(!res) { L.push_back(cur_tok); continue; }
+    if(file_ended) break;
+    if(!at_eol()) continue;
+    if(get_a_new_line()) break;
+    if(file_ended) break;
+  }
+  if(!L.empty() && L.back()==hash_table.newline_token) L.pop_back();
   restricted = s;
   if(n == cur_input_stack.size())
     pop_input_stack(false);
 }
 
-// read until EOF in the list L. Ignores the final \n.
-void Parser::read_into(TokenList& L)
-{
-  main_ns::file_ended = false;
-  for(;;) {
-    bool res = next_from_line0();
-    if(!res) { L.push_back(cur_tok); continue; }
-    if(main_ns::file_ended) break;
-    if(!at_eol()) continue;
-    if(get_a_new_line()) break;
-    if(main_ns::file_ended) break;
-  }
-  if(L.empty()) return;
-  if(L.back()==hash_table.newline_token) L.pop_back();
-}
-
+// --------------------------------------------------
 // section 3. scan_int and related functions
+// User functions take as argument a token, the caller
 
-
-// Error signaled for bad mu (there is something in local_buf)
-void scan_ns::mu_error()
+// This is the one argument scanint function. It calls two auxiliary functions
+// puts the result in cur_val, and returns it. It may log it.
+int Parser::scan_int(Token T) 
 {
-  err_ns::local_buf << bf_reset << "Incompatible glue units in " 
-		    << the_parser.get_name_for_error().tok_to_str() <<"\n" 
-		    << local_buf; 
-  err_ns::signal_error("Incompatible glue units",0);
+  Token et = err_tok;
+  err_tok = T;
+  bool negative = scan_sign();
+  int val = scan_int_internal();
+  err_tok = et;
+  if(negative)  val = -val; 
+  cur_val.set_int(val);
+  if(tracing_commands()) 
+    the_log << lg_startcond << "scanint for "<< T <<"->" << cur_val <<lg_end;
+  return val;
 }
 
-// Error signaled when a token list in seen a number expected
-void Parser::bad_number()
+void Parser::scan_dimen(bool mu,Token T)
 {
-  err_ns::local_buf <<bf_reset << "Missing number, treated as zero\n";
-  err_ns::local_buf << "found token list " << cur_tok.tok_to_str();
-  err_ns::local_buf << " while scanning " << name_for_error.tok_to_str();
-  err_ns::signal_error("Missing number",0);
-  cur_val.set_dim(0);
+  glue_spec unused;
+  Token te = err_tok;
+  err_tok = T;
+  scan_dimen(mu,false,unused,false);
+  err_tok = te;
 }
+
+void Parser::scan_glue(internal_type level,Token T)
+{
+  Token t = err_tok;
+  err_tok = T;
+  scan_glue(level);
+  err_tok = t;
+}
+
+
+// \setcounter{foo}{10} is the same as \c@foo=10\relax. 
+// This function reads a token list, puts it back in the
+// input, then calls scan_int.
+int Parser::scan_braced_int(Token T)
+{
+  TokenList L = read_arg();
+  return scan_int(L,T);
+}
+
+int Parser::scan_int(TokenList&L,Token T)
+{
+  Token marker = hash_table.relax_token;
+  back_input(marker);
+  back_input(L);
+  int n = scan_int(T);
+  read_until(marker);
+  return n;
+}
+
 
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
@@ -1046,22 +1123,35 @@ int Parser::scan_int(Token t, int n, String s)
   int N = scan_int(t);
   if(N<0 || N>n) {
     err_ns::local_buf <<bf_reset << "Bad " << s << " replaced by 0\n";
-    err_ns::local_buf << t.tok_to_str() << " wants 0<=N<=" << n 
-		      << ", with N=" <<N;
-    err_ns::signal_error("number too big",0);
+    signal_ovf(t, 0, N,n);
     cur_val.set_int_val(0); 
     return 0;
   }
   return N;
 }
 
+
+// Here we may have an optional argument; default value is d
+int Parser::scan_special_int_d(Token T, int d)
+{
+  TokenList L; read_optarg_nopar(L);
+  if(L.empty()) {
+    if(tracing_commands()) 
+      the_log << lg_startcond << "scanint for "<< T <<"->" << d <<lg_end;
+    return d;
+  }
+  back_input(hash_table.space_token);
+  back_input(L);
+  return scan_int(T);
+}
+
 // The following functions all call the previous scan_int.
-// 
-int Parser::scan_eight_bit_int  ()
+int Parser::scan_reg_num ()
 {
   return scan_int(cur_tok,nb_registers-1,"register code");
 }
 
+// Why not max Unicode 10FFFF ?
 int Parser::scan_27bit_int()
 {
   return scan_int(cur_tok,(1<<27)-1,"character code");
@@ -1077,59 +1167,7 @@ int Parser::scan_fifteen_bit_int()
   return scan_int(cur_tok,32767,"mathchar");
 }
 
-int Parser::scan_twenty_seven_bit_int()
-{
-  return scan_int(cur_tok,(1<<27)-1,"delimiter code");
-}
 
-// \setcounter{foo}{10} is the same as \c@foo=10\relax. We use a space
-// instead of relax. This function reads a token list, puts it back in the
-// input, then calls scan_int.
-// Code changed : we use the next command
-int Parser::scan_braced_int(Token T)
-{
-  TokenList L = mac_arg();
-  return scan_int(L,T);
-}
-
-int Parser::scan_int(TokenList&L,Token T)
-{
-  Token marker = hash_table.relax_token;
-  back_input(marker);
-  back_input(L);
-  int n = scan_int(T);
-  read_until(marker);
-  return n;
-}
-
-
-// Here we may have an optional argument; default value is d
-int Parser::scan_special_int_d(Token T, int d)
-{
-  TokenList L; next_optarg(L);
-  if(L.empty()) {
-    if(tracing_commands()) 
-      the_log << lg_startcond << "scanint for "<< T <<"->" << d <<lg_end;
-    return d;
-  }
-  back_input(hash_table.space_token);
-  back_input(L);
-  return scan_int(T);
-}
-
-// This is the one argument scanint function. It calls two auxiliary functions
-// puts the result in cur_val, and returns it. It may log it.
-int Parser::scan_int(Token T) 
-{
-  bool negative = scan_sign();
-  int val = scan_int_internal();
-  if(negative)  val = -val; 
-  cur_val.set_int_val(val);
-  cur_val.set_type(it_int);
-  if(tracing_commands()) 
-    the_log << lg_startcond << "scanint for "<< T <<"->" << cur_val <<lg_end;
-  return val;
-}
 
 // Scan a sign (plus, minus, spaces, etc.). After that cur_tok is the first 
 // unread token.
@@ -1151,7 +1189,7 @@ bool Parser::scan_sign()
 int Parser::scan_int_internal()
 {
   if(cur_tok.is_invalid()) {
-    parse_error("Missing number, treated as zero");
+    missing_number();
     return 0;
   }
   if(cur_tok.is_backquote())
@@ -1170,7 +1208,7 @@ int Parser::scan_alpha()
     improper_alpha();
     return 0;
   }
-  if(cur_tok.get_val() <= int(last_ok_for_char_cst)) {
+  if(cur_tok.active_or_single()) {
     int t = cur_tok.chr_val();
     read_one_space();
     return t;
@@ -1182,9 +1220,6 @@ int Parser::scan_alpha()
 
 
 // This reads the digits for scan_int, with an overflow check.
-// I do not like the setting of the global variable radix.
-// This variable is saved/restored by  get_x_token(), so a local variable
-// could be used. How
 int Parser::scan_int_digs()
 {
   int radix = 10;
@@ -1203,10 +1238,10 @@ int Parser::scan_int_digs()
     vacuous = false;
     if(val>=m &&(val>m || d>7 || radix != 10)) {
       if(!ok_so_far) {
-	parse_error("number too big");
+	parse_error(err_tok,"number too big");
       } else if(ok_so_far>1000) {
-	parse_error("number too big (infinite recursion?)");
-	get_token();
+	parse_error(err_tok,"number too big (infinite recursion?)");
+	get_token(); // this may finish infinite recursion
 	return 0;
       }
       ok_so_far++;
@@ -1215,15 +1250,14 @@ int Parser::scan_int_digs()
     get_x_token();
   }
   if(vacuous) { // cur_tok cannot be a space here
-    back_input();
-    parse_error("Missing number, treated as zero scanned by ",name_for_error,"",
-		"missing number");
+    if (cur_tok.is_valid()) back_input();
+    missing_number();
   } else back_input_unless_space();
   return val;
 }
 
 // This is the interface of the scan_something_internal routine.
-// We first call scan_something_internal(?,?), 
+// We first call scan_something_internal(cur_tok,level), 
 // then change the level, and (maybe) change the sign of the result.
 void Parser::scan_something_internal(internal_type level, bool negative)
 {
@@ -1236,21 +1270,7 @@ void Parser::scan_something_internal(internal_type level, bool negative)
 // but the quad depends on the current size. This explains some errors
 // e.g. $x\mskip 18mu y^{x\mskip18mu y}$ : different spaces
 // in plain tex, 10pt, we have 9.99976 and 8.19443
-// void io_ns::mu_error(){}
 
-
-String io_ns::dump_it(internal_type s)
-{
-  switch(s) {
-  case it_int: return "integer";
-  case it_dimen: return "dimension";
-  case it_glue: return "glue";
-  case it_mu: return "muglue";
-  case it_ident: return "font indentifier";
-  case it_tok: return "token";
-  default: return "impossible";
-  }
-}
 
 // Remember: type and level in decreasing order:
 //   it_mu, it_glue, it_dimen,it_int
@@ -1260,21 +1280,21 @@ void SthInternal::change_level(internal_type level)
   while(type>level) {
     if(type==it_glue)
       set_int_val(get_glue_width());
-    else if(type==it_mu) {
-      local_buf << bf_reset 
-		<< "in conversion from mu to " << io_ns::dump_it(level); 
-      scan_ns::mu_error();
-    }
+    else if(type==it_mu)
+      the_parser.mu_error("in conversion from mu to ", level);
     type = internal_type(type -1);
   }
 }
 
 // This is the scan_something_internal routine proper.
+// cur_tok is something like \count,  in case of \dimen0=\count0pt
+// cur_cmd_chr us set 
 // The variable level is used only in case the caller cannot change the level
 // For instance, if you say \count0 = \everypar.
 // Variables like \lastskip have no equivalent in Tralics, because the lastskip
 // may depend on the value of \spacefactor, and quantities defined only 
-// in fonts. 
+// in fonts.
+
 void Parser::scan_something_internal(internal_type level)
 {
   subtypes m = cur_cmd_chr.get_chr();
@@ -1287,7 +1307,8 @@ void Parser::scan_something_internal(internal_type level)
   case last_item_cmd:  // \lastkern etc
     switch(m) {
     case inputlineno_code: 
-      cur_val.set_int(get_cur_line()); return;
+      cur_val.set_int(get_cur_line());
+      return;
     case lastpenalty_code:
     case badness_code:
     case lastnodetype_code:
@@ -1300,20 +1321,19 @@ void Parser::scan_something_internal(internal_type level)
     case xmlBid_code:
       fetch_box_id (the_xmlB); return;
     case XMLboxid_code: {
-      int v = scan_eight_bit_int();
+      int v = scan_reg_num();
       fetch_box_id (box_table[v].get_val());
       return;
     }
     case XMLboxname_code: {
-      int v = scan_eight_bit_int();
-      xml_name(box_table[v].get_val());
+      int v = scan_reg_num();
+      xml_name(box_table[v].get_val(),level);
       return;
     }
-    case xmlAname_code: xml_name(the_xmlA); return;
-    case xmlBname_code: xml_name(the_xmlB); return;
+    case xmlAname_code: xml_name(the_xmlA,level); return;
+    case xmlBname_code: xml_name(the_xmlB,level); return;
     case xmlAsize_code:
       cur_val.set_int( the_xmlA ?  the_xmlA-> real_size() : -1); return;
-
     case xmlcurrentid_code: 
       cur_val.set_int(the_stack.cur_xid().value); return;
     case xmlcurrow_code:
@@ -1343,7 +1363,7 @@ void Parser::scan_something_internal(internal_type level)
     case parshapelength_code:
     case parshapeindent_code:
     case parshapedimen_code:
-      par_shape(m);
+      parshape_aux(m);
       return;
     case mutoglue_code:
       scan_glue(it_mu,cur_tok);
@@ -1382,7 +1402,7 @@ void Parser::scan_something_internal(internal_type level)
     }
     v = m;
     if(cur_cmd_chr.get_cmd()== toks_register_cmd) //read the 349 in `\toks349'
-      v = scan_eight_bit_int();
+      v = scan_reg_num();
     cur_val.set_toks(toks_registers[v].get_val());
     return;
   case assign_int_cmd: // \year etc
@@ -1441,7 +1461,7 @@ void Parser::scan_something_internal(internal_type level)
     }
   case set_aux_cmd:        // \spacefactor etc
     if(m==0) cur_val.set_int(0); // \spacefactor
-    if(m==1)  cur_val.set_dim(0);
+    else if(m==1)  cur_val.set_dim(0);
     else if(m==2) cur_val.set_int(lines.get_encoding()); 
     else if(m==3) cur_val.set_int(the_main->get_input_encoding()); 
     else if(m==4)  cur_val.set_int(cur_font.get_size()); 
@@ -1456,23 +1476,24 @@ void Parser::scan_something_internal(internal_type level)
     cur_val.set_int(0);
     return;
   case set_shape_cmd:      // \parshape
-    if(m != parshape_code) {
+    if(m == parshape_code)
+      cur_val.set_int(parshape_vector.size()/2);
+    else  { //interlinepenalties, etc
       int k = scan_int(cur_tok);
       if(k<0) cur_val.set_int(0);
       else if(k==0) cur_val.set_int(penalties[m-1].size());
       else if(k <= int(penalties[m-1].size()))	
 	cur_val.set_int(penalties[m-1][k-1]);
       else cur_val.set_int(penalties[m-1].back());
-    } else cur_val.set_int(parshape_vector.size()/2);
+    } 
     return;
   case set_box_dimen_cmd:  // \width, \height \depth
-    scan_eight_bit_int();
+    scan_reg_num();
     cur_val.set_dim(0);
     return;
   case def_code_cmd: // \catcode, \lccode etc
     v = scan_char_num();
-    cur_val.set_int_val (eqtb_int_table[v+m].get_val());
-    cur_val.set_type(it_int);
+    cur_val.set_int(eqtb_int_table[v+m].get_val());
     return;
   case def_family_cmd:    // \textfont
   case set_font_cmd:      // a font (like \tenrm in plain)
@@ -1489,23 +1510,23 @@ void Parser::scan_something_internal(internal_type level)
     }
     return;
   case register_cmd: // \count, \dimen, etc
-    v = scan_eight_bit_int();
+    v = scan_reg_num();
     switch(m) {
     case it_int: 
       cur_val.set_int(eqtb_int_table[v+count_reg_offset].get_val()); return;
     case it_dimen: 
-      cur_val.set_dim(eqtb_dim_table[v+dimen_reg_offset].get_val()); return;
+      cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
     case it_glue: 
       cur_val.set_glue(glue_table[v].get_val()); return;
     case it_mu: 
       cur_val.set_mu(glue_table[v+muskip_reg_offset].get_val()); 
       return;
     default:
-      parse_error("Confusion in \\register");
+      parse_error(err_tok,"Confusion in \\register");
       return;
     }
   default:
-    parse_error("You can't use `",cur_tok, "' after \\the", 
+    parse_error(err_tok,"You can't use `",cur_tok, "' after \\the", 
 		"You can't use x after...");
 
   }
@@ -1517,7 +1538,7 @@ void Parser::fetch_box_id (Xmlp x)
 }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
-void Parser::par_shape(subtypes m)
+void Parser::parshape_aux(subtypes m)
 {
   int v = scan_int(cur_tok);
   cur_val.set_dim(0);
@@ -1538,16 +1559,24 @@ void Parser::par_shape(subtypes m)
 
 
 
-
 // This implements \the. The result is a token list, of catcode 12
 // (except for space). The idea is to call scan_something_internal.
 // If this does not give a token list, we convert it to a string,
 // then use the str_toks command. 
 // Newline is converted to space. Is this a good idea? 
-TokenList Parser::the_toks ()
+
+void Parser::E_the_traced (Token T,subtypes c)
+{
+  TokenList L = E_the(c);
+  if(tracing_commands()) 
+    the_log << lg_start << T << "->" << L << "." << lg_end;
+  back_input(L);
+}
+
+// implemets \detokenize, \unexpanded or \the
+TokenList Parser::E_the (subtypes c)
 {
   static Buffer B;
-  subtypes c = cur_cmd_chr.get_chr();
   if(c==unexpanded_code) {
    TokenList L = scan_general_text();
    return L;
@@ -1555,8 +1584,8 @@ TokenList Parser::the_toks ()
   if(c==detokenize_code) {
     TokenList L = scan_general_text();
     B.reset();
-    B << L; 
-    return B.str_toks(true);
+    B << L;
+    return B.str_toks(nlt_nl); // \n gives ^^J
   }
   if(tracing_commands()) the_log.dump("the");
   get_x_token(); 
@@ -1582,35 +1611,23 @@ TokenList Parser::the_toks ()
     B.pt_to_mu();
     break;
   }
-  return B.str_toks(true);
+  return B.str_toks(nlt_space); // \n gives space 
 }
 
 // Next objective is scan_dimen. This can read a real number (in fact
 // scaled integers)
 
-// Assume that we have read x=0.142. i.e. k=3 digits  in the table.
-// This computes y=x* 2^{17}, then (y+1)/2.
-void RealNumber::convert_decimal_part(int k, int*table)
-{
-  int f = 0;
-  while(k>0) {
-    k--;
-    f = (f+ (table[k] <<17))/10;
-  }
-  fpart =  (f+1)/2;
-}
-
 // Scans something like 2.5, may skip a final space.
 // In the case of "17.2, scan_int set radix to non-ten, so that the result
 // is an integer. Same for `\A, and '177.
-void Parser::scan_double(Token T,RealNumber& res)
+void Parser::scan_double(RealNumber& res)
 {
   bool is_decimal  = true; 
-  // Case 0.5 is the same as .5, case of initial dot is trivial
+  //  0.5 is the same as .5; case of initial dot is trivial
   if(!cur_tok.is_dec_separator()) {
     get_x_token();
     if(cur_tok.is_invalid()) {
-      parse_error("Missing number, treated as zero");
+      missing_number();
       return;
     }
     int val = 0;
@@ -1627,8 +1644,8 @@ void Parser::scan_double(Token T,RealNumber& res)
       val = scan_int_digs();
     }
     if(tracing_commands()) 
-      the_log << lg_startcond << "scanint for "<< T <<"->" << val <<lg_end;
-    res.set_ipart(val); // this reads the integer part
+      the_log << lg_startcond << "scanint for "<< err_tok <<"->" << val <<lg_end;
+    res.set_ipart(val); // this sets the integer part
   }
   if(!(is_decimal && cur_tok.is_dec_separator())) return;
   get_token(); // read the . or ,
@@ -1655,7 +1672,7 @@ int Parser::read_unit()
   Utf8Char c1=0, c2=0;
   if(cur_tok.is_a_char()) {
     c1 = cur_cmd_chr.char_val().to_lower();
-    Token T = cur_tok;
+    Token save = cur_tok;
     get_x_token();
     if(cur_tok.is_a_char()) {
       c2 = cur_cmd_chr.char_val().to_lower();
@@ -1669,12 +1686,11 @@ int Parser::read_unit()
       if(c1=='c' && c2=='c') return unit_cc;
       if(c1=='s' && c2=='p') return unit_sp;
     }
-    if(!cur_tok.is_invalid()) back_input();
-    cur_tok = T;
+    if(cur_tok.is_valid()) back_input();
+    cur_tok = save;
   }
-  if(!cur_tok.is_invalid()) back_input();
-  parse_error("Missing unit (replaced by pt) ", cur_tok,"","missing unit");
-  return unit_pt;
+  if(cur_tok.is_valid()) back_input();
+  return -1;
 }
 
 // Assume that we have read the -3.5 in -3.5cm
@@ -1683,6 +1699,10 @@ void Parser::scan_unit(RealNumber R)
 {
   scan_keyword("true"); // \mag is ignored, hence no multiply....
   int k = read_unit();
+  if(k<0) {
+    parse_error(err_tok,"Missing unit (replaced by pt) ", cur_tok,"","missing unit");
+    k = unit_pt;
+  }
   if(k==unit_sp) {
     cur_val.set_int_val(R.get_ipart());
     cur_val.attach_sign(R.get_negative());
@@ -1710,7 +1730,7 @@ void Parser::scan_unit(RealNumber R)
 bool Parser::scan_dim_helper(bool mu,bool allow_int)
 {
   if(!cur_cmd_chr.is_ok_for_the()) {
-    if(!cur_tok.is_invalid()) back_input();
+    if(cur_tok.is_valid()) back_input();
     return false;
   }
   if(mu) {
@@ -1718,9 +1738,7 @@ bool Parser::scan_dim_helper(bool mu,bool allow_int)
     cur_val.glue_to_mu(); // Ignores stretch and shrink if desired
     if(cur_val.is_mu()) return true;
     if(allow_int && cur_val.is_int()) return true;
-    local_buf << bf_reset << "Converting to mu from " 
-	      << io_ns::dump_it(cur_val.get_type());
-    scan_ns::mu_error();
+    mu_error("Converting to mu from ",cur_val.get_type());
   }
   else scan_something_internal(it_dimen,false);
   return true;
@@ -1730,14 +1748,14 @@ bool Parser::scan_dim_helper(bool mu,bool allow_int)
 // and integer and calls scan_dimen for more.
 // In the case of a number like 1.5, we just call scan_double. and return false
 // Otherwise, if we see \parindent or -\parindent, we put the value in
-// cur_val, and return true. If we see \count0 (in integer), we put it in R
+// cur_val, and return true. If we see \count0 (an integer), we put it in R
 // and return false
 
-bool Parser::scan_dim2(RealNumber&R, bool mu,Token T)
+bool Parser::scan_dim2(RealNumber&R, bool mu)
 {
   R.set_negative(scan_sign());
   if(!scan_dim_helper(mu,true)) {
-    scan_double(T,R);
+    scan_double(R);
     return false;
   }
   bool res = false;
@@ -1766,11 +1784,11 @@ bool Parser::scan_dim2(RealNumber&R, bool mu,Token T)
 // Case 5: Otherwise, we need a unit, either cm, or mu or ex. 
 // Returns true if the last token read was a keyword
 
-bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut, Token T)
+bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut)
 {
   RealNumber value;
   if(!shortcut) {
-    if(scan_dim2(value,mu,T))
+    if(scan_dim2(value,mu))
       return false;
   } else 
     value.from_int(cur_val.get_int_val());
@@ -1779,7 +1797,7 @@ bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut, Token 
       co = glue_spec_fil;
       while(scan_keyword("l")) {
 	if(co==glue_spec_filll) {
-	  parse_error("Illegal unit of measure (replaced by filll)");
+	  parse_error(err_tok,"Illegal unit of measure (replaced by filll)");
 	} else co = glue_spec(co+1);
       }
       cur_val.attach_fraction(value);
@@ -1791,14 +1809,12 @@ bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut, Token 
     multiply_dim(value,cur_val.get_int_val());
     return false;
   }
-
   if(mu) {
     if(scan_keyword("mu")) {
       cur_val.attach_fraction(value);
       return true;
     }
-    local_buf <<bf_reset << "Expected mu unit, found something else";
-    scan_ns::mu_error();
+    mu_error("Expected mu unit, found something else", it_tok+1);
   }
   else {
     if(scan_keyword("em")) {
@@ -1816,20 +1832,15 @@ bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut, Token 
 
 // If scan_dimen1 return true, we have to read an optional space.
 // In any case, we print something in the log file.
-void Parser::scan_dimen(bool mu,Token T)
-{
-  glue_spec unused;
-  scan_dimen(mu,false,unused,false, T);
-}
 
-void Parser::scan_dimen(bool mu, bool inf, glue_spec&co,bool shortcut, Token T)
+void Parser::scan_dimen(bool mu, bool inf, glue_spec&co,bool shortcut)
 {
-  bool skip = scan_dimen1(mu,inf,co,shortcut,T);
+  bool skip = scan_dimen1(mu,inf,co,shortcut);
   if(skip) read_one_space();
   cur_val.set_type(it_dimen);
   if(tracing_commands()) 
     the_log << lg_start 
-	    << local_buf.trace_scan_dimen(T,cur_val.get_dim_val(),mu);
+	    << local_buf.trace_scan_dimen(err_tok,cur_val.get_dim_val(),mu);
 }
 
 // Multiplies a dimension by an integer
@@ -1842,21 +1853,13 @@ void Parser::multiply_dim(RealNumber val,int v)
   cur_val.attach_sign(val.get_negative());
 }
 
-// put x in this, but change the sign is *this<0
-void RealNumber::from_int(int x)
-{
-  if(negative) x = -x;
-  if(x>0) { ipart = x; fpart = 0; negative = false; }
-  else { ipart = -x; negative = true; fpart = 0 ; }
-}
-
 // This reads glue.
 // level is either it_glue or it_mu. The call to scan_something_internal
 // signals an error if current value is a token list, and sets the type
 // to something else.
 // In any case
  
-void Parser::scan_glue(internal_type level,Token T)
+void Parser::scan_glue(internal_type level)
 {
   bool negative = scan_sign();
   bool mu = level==it_mu;
@@ -1866,32 +1869,29 @@ void Parser::scan_glue(internal_type level,Token T)
     internal_type ct = cur_val.get_type();
     switch (ct) {
     case it_int :
-      scan_dimen(mu,false,co,true,T); // we have a multiplier 
+      scan_dimen(mu,false,co,true); // we have a multiplier 
       break;
     case it_dimen:
       if(!mu) break; 
-      local_buf << bf_reset
-		<< "in conversion from dimen to " << io_ns::dump_it(level); 
-      scan_ns::mu_error();
+      mu_error("in conversion from dimen to ",level);
       break;
     case it_glue: // we have the value
     case it_mu:
       // Note that ct<=level, different means from ct=glue to level=mu
       if(level!=ct) { // Assume level = glue, ct = mu 
-	local_buf << bf_reset << "in conversion from glue to mu";
-	scan_ns::mu_error();
+	mu_error("in conversion from glue to ",ct);
 	cur_val.set_type(level);
       }
 	return;
     default:
       // This should not happen 
-      parse_error("Unexpected error in ", name_for_error,"","bad");
+      parse_error(err_tok,"Unexpected error in ", err_tok,"","bad");
       cur_val.set_int_val(0); 
       break;
     }
   } else { 
     if(!cur_tok.is_invalid()) back_input();
-    scan_dimen(mu,false,co,false,T);
+    scan_dimen(mu,false,co,false);
     if(negative) cur_val.fast_negate();
   }
   Glue q;
@@ -1899,13 +1899,13 @@ void Parser::scan_glue(internal_type level,Token T)
   q.set_width(cur_val.get_int_val());
   if(scan_keyword("plus")) {
     co = glue_spec_pt;
-    scan_dimen(mu,true,co,false,T);
+    scan_dimen(mu,true,co,false);
     q.set_stretch(cur_val.get_int_val()); 
     q.set_stretch_order(co);
   }
   if (scan_keyword("minus")) {
     co = glue_spec_pt;
-    scan_dimen(mu,true,co,false,T);
+    scan_dimen(mu,true,co,false);
     q.set_shrink(cur_val.get_int_val()); 
     q.set_shrink_order(co);
   }
@@ -1922,21 +1922,15 @@ void Parser::scan_glue(internal_type level,Token T)
 // parens), and pushed back.
 void Parser::scan_glue(internal_type level,Token t,bool opt)
 {
-  TokenList T;
+  TokenList L;
   if(opt) {
-    next_optarg(T);
+    read_optarg_nopar(L);
     scan_glue_opt = true;
-    if(T.empty()) scan_glue_opt = false;
+    if(L.empty()) scan_glue_opt = false;
     if(!scan_glue_opt) return;
   }
-  else 
-    T = mac_arg();
-  back_input(hash_table.relax_token);
-  back_input(T);
-  scan_glue(level,t);
-  get_token();
-  if(cur_tok!=hash_table.relax_token)
-    back_input();
+  else L = read_arg();
+  list_to_glue(level, t, L);
 }
 
 // Calls scan_glue; returns 0 if no argument given.
@@ -1947,43 +1941,37 @@ Istring Parser::get_opt_dim(Token t)
   return the_main->SH.find_scaled(ScaledInt(cur_val.get_glue_width()));
 }
 
-void Parser::scan_glue(internal_type level,Token t, String B)
+void Parser::list_to_glue(internal_type level,Token t, TokenList&L)
 {
-  TokenList L = token_ns::string_to_list(B,false);
   back_input(hash_table.relax_token);
   back_input(L);
-  scan_glue(level,t);
+  if(level==it_dimen) scan_dimen(false,t);
+  else scan_glue(level,t);
   get_token();
-  if(cur_tok!=hash_table.relax_token)
-    back_input();
+  if(cur_tok!=hash_table.relax_token)  back_input();
 }
+  
 
-// Handles a command like \def, that allows \global before it.
-void Parser::prefixed_aux(bool gbl, symcodes K)
+// Handles a command like \advance\count0 by, that allows \global before it.
+// here cur_tok would be \advance
+void Parser::M_prefixed_aux(bool gbl)
 {
   int chr = cur_cmd_chr.get_chr(); 
-  Token T = cur_tok; // for debug...
-  name_for_error = T;
+  Token T = cur_tok;
   int p; 
   int q = 0;
   switch(cur_cmd_chr.get_cmd()) {
   case set_font_cmd:  
     word_define(cur_font_loc,chr,gbl);
     return;
-  case def_cmd:
-  case let_cmd:
-    define_something(chr,gbl,K);
-    return;
   case shorthand_def_cmd:
-    shorthand_define(chr,gbl);
+    M_shorthand_define(chr,gbl);
     return;
   case read_to_cs_cmd: 
     {
       int ch = scan_int(T); 
-      if(!scan_keyword("to"))
-	parse_error("Missing to inserted");
-      get_r_token();
-      Token pp = cur_tok;
+      if(!scan_keyword("to")) parse_error(T,"Missing `to' inserted");
+      Token pp = get_r_token();
       scanner_status = ss_defining;
       TokenList L = read_from_file(ch,chr==one_code);
       new_macro(L,pp,gbl);
@@ -1992,7 +1980,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
     }
   case toks_register_cmd:            // ok ???
   case assign_toks_cmd: 
-    read_a_TokenList(gbl);
+    assign_toks(T,chr,gbl);
     return;
   case assign_int_cmd: 
     p = chr; 
@@ -2009,7 +1997,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
   case assign_glue_cmd:
   case assign_mu_glue_cmd: 
     {
-      p = chr; 
+      p = chr;
       int n = cur_cmd_chr.get_cmd(); 
       scan_optional_equals();
       if (n==assign_mu_glue_cmd) scan_glue(it_mu,T); 
@@ -2046,7 +2034,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
       int v = scan_int(T,127,"mathchar");
       scan_optional_equals();
       flush_buffer();
-      string value = sT_next_arg();
+      string value = sT_arg_nopar();
       set_math_char(v,k,value);
       return;
     }
@@ -2057,7 +2045,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
     do_register_command(gbl);
     return;
   case set_box_cmd: { // \setbox0 = 
-    int i = scan_eight_bit_int();
+    int i = scan_reg_num();
     scan_optional_equals();
     scan_box(gbl? setbox_offset+i : i);
     return;
@@ -2088,7 +2076,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
     scan_int(T);
     return; // ignore value
   case set_box_dimen_cmd:
-    scan_eight_bit_int(); 
+    scan_reg_num(); 
     scan_optional_equals();
     scan_dimen(false,T);
     return; // ignore value
@@ -2114,7 +2102,7 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
    return;
   case assign_font_dimen_cmd: 
     {
-      int a= scan_int(T); 
+      int a = scan_int(T); 
       int b = scan_font_ident();
       scan_optional_equals(); 
       scan_dimen(false,T);
@@ -2157,20 +2145,67 @@ void Parser::prefixed_aux(bool gbl, symcodes K)
   }
 }
 
+
+// Case of \everypar or \toks0.
+// Location in table is subtype (for \everypar) or argument (for \toks)
+// here p is subtype of object to assign
+void Parser::assign_toks(Token T, int p, bool gbl)
+{
+  if (cur_cmd_chr.get_cmd () ==toks_register_cmd) p = scan_reg_num(); 
+  scan_optional_equals();
+  remove_initial_space_relax();
+  int c = cur_cmd_chr.get_cmd();
+  bool have_reg = true;
+  int q = cur_cmd_chr.get_chr();
+  if(c ==open_catcode) have_reg = false;
+  else if(c ==toks_register_cmd) q = scan_reg_num();
+  else if(c!=assign_toks_cmd) {
+    err_ns::local_buf << bf_reset  << "Missing { inserted for token register "
+		      << T <<"; got " << cur_tok ;
+    signal_error(T,"missing brace");
+    back_input();
+    have_reg = false;
+  }
+  if(have_reg) {
+    if(p==q) return;
+    TokenList Q = toks_registers[q].get_val();
+    token_list_define(p,Q,gbl);
+  } else {  // this is scan_toks (false,false)
+    SaveScannerStatus tmp(ss_absorbing);
+    TokenList Q;
+    skip_group0(Q);
+    token_list_define(p,Q,gbl);
+  }
+}
+
+
 // This implements \show. Puts characters in the buffer B, then prints it.
 // If what=1, this implements \meaning
 // If what=2, this implements \@onelevel@sanitize
+// If what=3, this Latex3 \cs_meaning:c
 
-void Parser::token_show(int what, Buffer& B)
+void Parser::token_show(Token T,int what, Buffer& B)
 {
-  if(get_token_o()) return;
+  if(what==3) {
+    fetch_name0();
+    tok_is_defined = hash_table.is_defined(fetch_name_res);
+    if (tok_is_defined)
+      back_input(hash_table.last_tok);
+    else {
+      B << "undefined";
+      return;
+    }
+  }
+  if(get_token_o()) {
+    return;
+  }
   bool lg = what==0;
   if(lg) {
     main_ns::log_and_tty << lg_start;
     if(!cur_tok.not_a_cmd())
       main_ns::log_and_tty << cur_tok << "=";
   }
-  token_show(lg,cur_cmd_chr,B);
+  token_for_show(lg,cur_cmd_chr,B);
   if(what==2) { // find and strip the prefix
     if(!B.find_char('>')) return;
     int k = B.get_ptr();
@@ -2182,16 +2217,16 @@ void Parser::token_show(int what, Buffer& B)
 }
 
 // This is for tracingassigns
-void Parser::token_show(const CmdChr&val)
+void Parser::token_for_show(const CmdChr&val)
 {
   static Buffer B;
   B.reset();
-  token_show(false,val,B);
+  token_for_show(false,val,B);
   the_log << B.convert_to_log_encoding();
 }
 
 // This is the common code
-void Parser::token_show(bool lg,const CmdChr&val, Buffer& B)
+void Parser::token_for_show(bool lg,const CmdChr&val, Buffer& B)
 {
   symcodes K = val.get_cmd();
   if(K==undef_cmd) B << "undefined";
@@ -2202,8 +2237,8 @@ void Parser::token_show(bool lg,const CmdChr&val, Buffer& B)
     B << "macro:" << (lg ? " " : "" ) << X;
   } else if(K==set_font_cmd) {
     B << "select font ";
-    if(val.get_chr()==0) B << "(null)";
-    tfonts.full_name(B,val.get_chr());
+    if(val.get_chr()==0) B << "nullfont";
+    else tfonts.full_name(B,val.get_chr());
   } else if(K>16) {
     String s = val.name();
     if(!s) s = "unknown.";
@@ -2212,6 +2247,7 @@ void Parser::token_show(bool lg,const CmdChr&val, Buffer& B)
     String s = val.special_name();
     if(!s) s = "[unknown command code!]";
     B << s << " " << val.char_val();
+    if(val.char_val()==0) B << "^^@"; 
   }
 }
 
@@ -2222,8 +2258,9 @@ void Parser::token_show(bool lg,const CmdChr&val, Buffer& B)
 void Parser::new_font ()
 {
   Token T = cur_tok;
-  int u = get_r_token();
-  eq_define(u,CmdChr(set_font_cmd,zero_code),false);
+  get_r_token();
+  int u = cur_tok.eqtb_loc();
+  eq_define(cur_tok.eqtb_loc(),CmdChr(set_font_cmd,zero_code),false);
   scan_optional_equals(); 
   string name = scan_file_name();
   int scaled_val =0;
@@ -2249,17 +2286,21 @@ void Parser::initialise_font()
 }
 
 // puts in cur_val the name of x
-void Parser::xml_name (Xmlp x)
+void Parser::xml_name (Xmlp x, internal_type level)
 {
   static Buffer B;
   B.reset();
   if(x) B.push_back(x->get_name ());
-  cur_val.set_toks(B.str_toks(true));
+  if(level != it_tok) {
+    bad_number1 (B);
+    return;
+  }
+  cur_val.set_toks(B.str_toks(nlt_space)); // space newline forbidden
 }
 
 
-// Convert handles \string, \number, \meaning
-void Parser::convert() 
+// Convert handles \string, \number, \meaning, etc
+void Parser::E_convert() 
 {
   int n;
   Token T = cur_tok;
@@ -2273,7 +2314,7 @@ void Parser::convert()
     B.push_back_int(n); 
     break;
   case twodigits_code:
-    { TokenList L = mac_arg(); back_input(L); } // shit
+    { TokenList L = read_arg(); back_input(L); } // shit
     n = scan_int(T); 
     if(n<10) B.push_back('0');
     B.push_back_int(n); 
@@ -2286,24 +2327,19 @@ void Parser::convert()
     n = scan_int(T);
     B.push_back_Roman(n); 
     break;
+  case l3string_code: // like \string sans escapechar
   case string_code: 
     if(get_token_o()) return; // error ?
-    if(cur_tok.not_a_cmd())
-      B.push_back(uchar(cur_cmd_chr.get_chr()));
-    else {
-      uint x = cur_tok.get_val();
-      if(x>=cs_token_flag+single_base) 
-	B.insert_escape_char_raw();
-      if(x>=cs_token_flag+bad_cs)
-	B.push_back(hash_table[cur_tok.hash_loc()]); 
-      else B.push_back(cur_tok.char_val());
-    }
+    tex_string(B,cur_tok, c==string_code);
+    break;
+  case meaning_c_code: //latex3
+    token_show(T,3,B);
     break;
   case meaning_code: 
-    token_show(1,B);
+    token_show(T,1,B);
     break;
   case sanitize_code: 
-    token_show(2,B);
+    token_show(T,2,B);
     break;
   case fontname_code:
     {
@@ -2330,15 +2366,17 @@ void Parser::convert()
     B.push_back_int(the_parser.get_ra_year());
     break;
   }
-  TokenList L = B.str_toks(true);
+  TokenList L = B.str_toks(nlt_space);  // SPACE
   if(tracing_commands())
     the_log << lg_start << T << "->" << L <<lg_end;
   if(c==sanitize_code) {
-    new_macro(L,cur_tok,false);
+    new_macro(L,cur_tok);
     return;
   }
   back_input(L);
 }
+
+// -----  scan_expr 
 
 
 // Kill everything but expr_type
@@ -2351,7 +2389,8 @@ void ScanSlot::kill()
   numerator = 0;
 } 
 
-// This implements scan_expr, as in eTeX
+// This implements \numexpr, \dimexpr, \glueexpr, \muexpr
+// Set cur_val 
 void Parser::scan_expr(subtypes m)
 {
   Token T = cur_tok;
@@ -2362,22 +2401,20 @@ void Parser::scan_expr(subtypes m)
   case muexpr_code:  it = it_mu; break;
   default: it = it_int;
   }
-  //  bool a = arith_ns::seen_error;
   bool b = scan_expr(T,it);
   if(b) {
-    parse_error("Arithmetic overflow");
+    parse_error(T,"Arithmetic overflow");
     cur_val.kill();
   }
-  //  arith_ns::seen_error = a;
   if(the_parser.tracing_commands())
     the_log <<  lg_startcond << "scan for " << T 
 	    << "= " << cur_val << lg_end;
 }
 
-// This finds the operator, or reads a termminating \relax
-// if the operator stack is not empty, and no operator is given, we expecr
+// This finds the operator, or reads a terminating \relax
+// if the operator stack is not empty, and no operator is given, we expect
 // a closing paren.
-scan_expr_t Parser::scan_expr_next(bool stack_empty)
+scan_expr_t Parser::scan_expr_next(Token T,bool stack_empty)
 {
   remove_initial_space();
   if(cur_tok.is_plus_token()) return se_add;
@@ -2389,15 +2426,15 @@ scan_expr_t Parser::scan_expr_next(bool stack_empty)
     if(!cur_cmd_chr.is_relax()) back_input();
   }
   else if(!cur_tok.is_close_paren()) {
-    parse_error("Expected + - * / or ); closing paren inserted");
+    parse_error(T,"Expected + - * / or ); closing paren inserted");
     back_input();
   }
   return se_none;
 }
 
 // This reads the next item. We have a read a token, and checked that it is
-// not an open parenthesis, so that we musg push it back.
-void Parser::scan_expr_arg(internal_type x, Token T)
+// not an open parenthesis, so that we must push it back.
+void Parser::scan_expr_arg(Token T,internal_type x)
 {
   back_input();
   if(x==it_int) scan_int(T);
@@ -2485,16 +2522,14 @@ bool Parser::scan_expr(Token T,internal_type et)
       W.expr_type = next_level;
       continue;
     }
-    scan_expr_arg(next_level,T);
+    scan_expr_arg(T,next_level);
     SthInternal f = cur_val;
     for(;;) {   // found here
-      scan_expr_t next_state = scan_expr_next(estack.empty());
-      //      arith_ns::seen_error = b;
+      scan_expr_t next_state = scan_expr_next(T,estack.empty());
       W.compute_term(next_state, f,tr_state);
       trace_scan_expr("term",W.term_so_far,tr_state,T);
       W.add_or_sub(next_state,f,tr_state);
       trace_scan_expr("expr",W.expr_so_far,tr_state,T);
-      //      b = arith_ns::seen_error;
       if(next_state != se_none) break;
       if(estack.empty()) {
 	cur_val = W.expr_so_far;
@@ -2522,8 +2557,8 @@ int Parser::scan_font_ident ()
     return eqtb_int_table[a+b].get_val();
   }
   else {
-    if(!cur_tok.is_invalid()) back_input();
-    parse_error("Missing font identifier");
+    if(cur_tok.is_valid()) back_input();
+    parse_error(err_tok,"Missing font identifier");
     return -1;
   }
 }
@@ -2531,6 +2566,7 @@ int Parser::scan_font_ident ()
 // OK for \mml@font@fraktur, or a font like that or an integer.
 int Parser::scan_mathfont_ident ()
 {
+  Token T = cur_tok;
   remove_initial_space();
   if (cur_cmd_chr.get_cmd()==mathfont_cmd) 
     return cur_cmd_chr.get_chr();
@@ -2548,27 +2584,29 @@ int Parser::scan_mathfont_ident ()
      default: break;
      }
   }
-  if(!cur_tok.is_invalid()) back_input();
-  return scan_int(cur_tok,14,"math font identifier");
+  if(cur_tok.is_valid()) back_input();
+  return scan_int(T,14,"math font identifier");
 }
 
 // This scans a hrule or a vrule.
-// Depending on the type, some fields have a default value of 4pt, or 0 pt.
-// Others are -\infty (in reality, -2^14pt)
+// May be used in \cleaders\hrule; the result is the_stack.top_stack()
+// Depending on the type, some fields have a default value of 0.4pt, or 0 pt.
+// Others are -\infty (in reality, -2^14pt = - 2^30sp)
+static const int default_rule_dimen = -1073741824;
 void TexRule::reset()
 {
-  rule_h = -1073741824;
-  rule_w = -1073741824;
-  rule_d = -1073741824;
+  rule_h = default_rule_dimen;
+  rule_w = default_rule_dimen;
+  rule_d = default_rule_dimen;
 }
 
 void TexRule::convert(AttList&res)
 {
-  if(rule_h.get_value() != -1073741824)
+  if(rule_h.get_value() != default_rule_dimen)
     res.push_back(np_height,the_main->SH.find_scaled(rule_h));
-  if(rule_d.get_value() != -1073741824)
+  if(rule_d.get_value() != default_rule_dimen)
     res.push_back(np_depth,the_main->SH.find_scaled(rule_d));
-  if(rule_w.get_value() != -1073741824)
+  if(rule_w.get_value() != default_rule_dimen)
     res.push_back(np_width,the_main->SH.find_scaled(rule_w));
 }
 
@@ -2579,9 +2617,9 @@ void Parser::scan_rule(int c)
   if(c==rule_code) {
     R.rule_d =0;
     TokenList L1;
-    bool b = next_optarg(L1);
-    TokenList L2 = mac_arg();
-    TokenList L3 = mac_arg();
+    bool b = read_optarg(L1);
+    TokenList L2 = read_arg();
+    TokenList L3 = read_arg();
     c = vrule_code;
     if(b)
       R.rule_d = dimen_from_list(T,L1);
@@ -2613,23 +2651,24 @@ void Parser::scan_rule(int c)
       break;
     }
   }
-  if(c != hrule_code && c != vrule_code) return;
   AttList& res = the_stack.add_newid0(np_rule);
   R.convert(res);
 }
 
 // This is the function associated to ' in math mode
+// x' is x^{\prime}, x'' is  x^{\prime\prime} and x'^2 is x^{\prime2}
 void Parser::scan_prime ()
 {
   TokenList L;
+  Token T = hash_table.prime_token;
   for(;;) {
-    L.push_back(hash_table.prime_token);
+    L.push_back(T);
     if(get_token()) break;
-    if(cur_cmd_chr.get_cmd()==hat_catcode) {
-      TokenList aux = mac_arg();
+    if(cur_cmd_chr.get_cmd()==hat_catcode) { // TeX wants a hat token 
+      TokenList aux = read_arg();
       L.splice(L.end(),aux);
       break;
-    } else if(cur_cmd_chr.get_cmd()==12 && cur_cmd_chr.get_chr()=='\'')
+    } else if (cur_cmd_chr.is_single_quote())
       continue;
     else { 
       back_input(); break;
@@ -2638,21 +2677,4 @@ void Parser::scan_prime ()
   brace_me(L);
   back_input(L);
   back_input(hash_table.hat_token);
-}
-
-// In order to implement \message properly, we need to know where the cursor is
-static int ttypos = 0;
-void lg_end(Logger& L)  
-{
-  ttypos = 0;
-  *(L.fp) << "\n";
-}
-
-void translate_ns::tex_message(String s)
-{
-  int k = strlen(s);
-  if(ttypos+k>77) { cout << "\n"; ttypos = 0; }
-  if(ttypos) { cout << " "; ++ttypos; }
-  cout << s;
-  ttypos +=k;
 }

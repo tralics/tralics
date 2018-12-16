@@ -11,7 +11,7 @@
 
 #include "tralics.h"
 const char* txaux_rcsid=
-  "$Id: txaux.C,v 2.32 2011/06/28 08:15:25 grimm Exp $";
+  "$Id: txaux.C,v 2.34 2015/10/28 17:38:45 grimm Exp $";
 
 
 namespace arith_ns {
@@ -33,7 +33,7 @@ void arith_ns::start_err(String s)
 // Signals the error in the buffer.
 void arith_ns::end_err()
 {
-  err_ns::signal_error("Arithmetic overflow",0);
+  the_parser.signal_error(the_parser.err_tok,"Arithmetic overflow");
 }
 
 // This makes sure that n fits on 30 bits
@@ -527,6 +527,28 @@ void Glue::kill()
   stretch_order=glue_spec_pt;
 }
 
+
+// put x in this, but change the sign is *this<0
+void RealNumber::from_int(int x)
+{
+  if(negative) x = -x;
+  if(x>0) { ipart = x; fpart = 0; negative = false; }
+  else { ipart = -x; negative = true; fpart = 0 ; }
+}
+
+
+// Assume that we have read x=0.142. i.e. k=3 digits  in the table.
+// This computes y=x* 2^{17}, then (y+1)/2.
+void RealNumber::convert_decimal_part(int k, int*table)
+{
+  int f = 0;
+  while(k>0) {
+    k--;
+    f = (f+ (table[k] <<17))/10;
+  }
+  fpart =  (f+1)/2;
+}
+
 // Return true if the string contains only integers.
 bool tralics_ns::only_digits(const string& s)
 {
@@ -568,10 +590,10 @@ int SpecialHash::find_counter()
   Buffer&B = the_parser.hash_table.my_buffer();
   B << bf_reset << "c@" << s;
   Token t = the_parser.hash_table.locate(B);
-  int cs = t.to_cs();
-  if(the_parser.hash_table.eqtb[cs-1].get_cmd() != assign_int_cmd)
+  int cs = t.eqtb_loc();
+  if(the_parser.hash_table.eqtb[cs].get_cmd() != assign_int_cmd)
     return -1;
-  return counter_val(the_parser.hash_table.eqtb[cs-1].get_chr() - count_reg_offset);
+  return counter_val(the_parser.hash_table.eqtb[cs].get_chr() - count_reg_offset);
 }
 
 

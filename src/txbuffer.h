@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txbuffer.h,v 2.74 2012/05/15 17:14:30 grimm Exp $
+// $Id: txbuffer.h,v 2.81 2015/10/16 16:51:09 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -188,15 +188,14 @@ class Buffer {
   void push_back(const Macro&);
   void push_back(const Macro&,bool);
   bool push_back(Token c);
-  int  push_back(Token c,bool);
+  void insert_token(Token c,bool);
   void push_back_alt(const AttPair&);
   void push_back_braced(string);
   void push_back_braced(String);
   void push_back_def(String,string);
   void push_back_elt(Istring,Xid,int);
   void push_back_int(int);
-  void push_back16(uint);
-  void push_back16u(uint);
+  void push_back16(uint,bool);
   void push_back16l(bool,uint);
   void push_back_ent(Utf8Char);
   void push_back_hex(uint);
@@ -256,18 +255,21 @@ class Buffer {
   void skip_letter() { while(is_letter(head())) ptr++; }
   void skip_sp_tab() { while(buf[ptr]==' ' || buf[ptr] == '\t') ptr ++; }
   void skip_sp_tab_nl() { while(is_space(buf[ptr])) ptr ++; }
-  void skip_sp_tab_comma() { while(buf[ptr]==' ' || buf[ptr] == '\t'|| buf[ptr] == ',') ptr ++; }
+  void skip_sp_tab_comma()
+  { while(buf[ptr]==' ' || buf[ptr] == '\t'|| buf[ptr] == ',') ptr ++; }
   char single_char() const;
   bool slash_separated(string&);
   String some_substring(int a, int b);
   string some_sub_string(int a, int b);
+  bool split_at_colon(string&,string&);
   String sortify(String s);
+  bool svn_id(string& name, string& date, string& version);
   bool space_or_underscore() const { return buf[ptr]=='_' || buf[ptr]==' '; }
   string special_convert(bool);
   String special_exponent() const;
   void special_purify(String s, int& pos);
   void special_title(string s);
-  TokenList str_toks(bool);
+  TokenList str_toks(nl_to_tok);
   TokenList str_toks11(bool);
   bool string_delims();
   string substring();
@@ -275,6 +277,7 @@ class Buffer {
   void to_seven_bits();
   string to_string() const ;
   string to_string(int k) const;
+  Istring convert_for_xml_err(Token t);
   bool tp_next_char(char&);
   tpa_line tp_fetch_something();
   String trace_scan_dimen(Token,ScaledInt,bool);
@@ -289,6 +292,7 @@ class Buffer {
   Xmlp xml_and_attrib(string s);
   String without_end_spaces(String T);
   bool find_char(char c);
+  void l3_fabricate_cond (const string&,const string&, subtypes);
   bool is_special_end() const
     { return buf[ptr] == '\n' || buf[ptr]=='#' || buf[ptr]=='%'; }
  private:

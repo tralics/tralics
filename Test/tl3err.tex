@@ -1,0 +1,77 @@
+\documentclass{article}
+\begin{document} 
+\tracingall
+This tests the binary code of latex3; There are lots of errors here
+\csname tralics load latex3\endcsname 
+Change catcode of underscore and colon
+\catcode 95 = 11 \catcode 58 = 11 
+
+\__chk_if_exist_cs:N  \mybar \__chk_if_exist_cs:c {mybar}
+\__chk_if_free_cs:N  \bar \__chk_if_free_cs:c {bar}
+
+\cs_new_nopar:Npn\foo{x} % define foo
+
+Check New 
+
+\cs_new_nopar:Npn\foo{x}
+\cs_new_nopar:Npx\foo{x}
+\cs_new:Npn \foo{x}
+\cs_new:Npx\foo{x}
+\cs_new_protected_nopar:Npn \foo{x}
+\cs_new_protected_nopar:Npx \foo{x}
+\cs_new_protected:Npn \foo{x}
+\cs_new_protected:Npx \foo{x}
+\cs_new_nopar:cpn {foo}{x}
+\cs_new_nopar:cpx {foo}{x}
+\cs_new:cpn {foo}{x}
+\cs_new:cpx {foo}{x}
+\cs_new_protected_nopar:cpn {foo}{x}
+\cs_new_protected_nopar:cpx {foo}{x}
+\cs_new_protected:cpn {foo}{x}
+\cs_new_protected:cpx {foo}{x}
+
+\cs_new_eq:NN\foo\xa 
+\cs_new_eq:cN{foo}\xb 
+\cs_new_eq:Nc\foo{xc}
+\cs_new_eq:cc{foo}{xd} 
+
+
+\prg_new_conditional:Nnn \foo {} {}
+\prg_new_conditional:Nnn \foo: {FT} {}
+\prg_new_protected_conditional:Nnn \foo: {p} {}
+
+\cs_set_eq:NN\foo:\cs:w \cs_set_eq:NN\foo:nnn\cs:w
+\cs_generate_variant:Nn\foo{} 
+\cs_generate_variant:Nn\foo:{}\cs_generate_variant:Nn\foo:nnn{waytoobig}
+\cs_set_eq:NN\foo:ab\cs:w\cs_generate_variant:Nn\foo:ab{n}
+\prg_new_conditional:Npnn \cs_if_eq:NN #1#2 { xx} {}
+
+\cs_set:Nn \foo:abcdefghij{}
+\cs_set:Nn \foo:abc{#1#2#3#4}
+\cs_set:Nn \foo:{#1}
+\cs_set:Nn \foo{}
+\cs_generate_from_arg_count:NNnn \foo:xx \cs_set_protected:Npn {36}{xx} 
+\cs_generate_from_arg_count:NNnn \foo:xx \cs_set_protected:Npn {-1}{xx} 
+
+\char_set_catcode:nn{-1}{10}
+\char_set_mathcode:nn{-1}{10+1} 
+\char_set_lccode:nn{-1}{120/10}
+\char_set_uccode:nn{-1}{14-1} 
+\char_set_sfcode:nn{-1}{2*7} 
+\char_set_catcode:nn{10}{-1}
+\char_set_mathcode:nn{10}{-1} 
+\char_set_lccode:nn{10}{-1}
+\char_set_uccode:nn{10}{-1} 
+\char_set_sfcode:nn{10}{-1} 
+\char_set_catcode:nn{234567}{10}
+\char_set_mathcode:nn{234567}{10+1} 
+\char_set_lccode:nn{234567}{120/10}
+\char_set_uccode:nn{234567}{1} 
+\char_set_sfcode:nn{234567}{2*7} 
+\char_set_catcode:nn{10}{234567}
+\char_set_mathcode:nn{10}{234567} 
+\char_set_lccode:nn{10}{234567}
+\char_set_uccode:nn{10}{234567} 
+\char_set_sfcode:nn{10}{234567} 
+\tl_new:N\foo \tl_const:Nx\foo{}\tl_const:Nn\foo{}
+\tl_new:c{foo} \tl_const:cx{foo}{}\tl_const:cn{foo}{}

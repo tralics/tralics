@@ -1,11 +1,11 @@
-%% -*- latex -*-
+%% -*- latex -*-  coding: utf-8
 %% This is a torture test for tralics :: math specials
 % The next line indicates that the document class to use
 % by tralics should be torture
 %\documentclass{torture1}
 %ok
 %this is a comment \def}}}
-% $Id: tormath.tex,v 1.11 2011/01/27 15:49:27 grimm Exp $
+% $Id: tormath.tex,v 1.15 2015/11/24 17:08:44 grimm Exp $
 
 % Define the class via a command
 \def\myclass{article}
@@ -14,7 +14,7 @@
 \def\entity#1{\xmllatex{\&#1;}{}}
 \def\xentity#1{\xmllatex{\&\#x#1;}{}}
 \def\strok#1{\entity{#1strok}}
-\def\Han{H‡n Th\xmllatex{&\#x1ebf;}{\'{\^e}} Th‡nh}
+\def\Han{H√†n Th\xmllatex{&\#x1ebf;}{\'{\^e}} Th√†nh}
 
 %% will be used at end of file. 
 \def\thisistheend{END OF FILE}
@@ -77,8 +77,8 @@ $\hspace{2cm} \vspace{20cm} \hskip3pt  \vskip4pt \hspace*{5pt}\vspace*{6pt}$
 $\hspace{-2pc} \vspace{-2pc} \hskip-3pt plus 1pt minus 1pt \vskip4pt plus 2pt\hspace*{-5pt}\vspace*{-6pt}$
 $abcdefghijklmnopqrstuvwxyz$
 $ABCDEFGHIJKLMNOPQRSTUVWXYZ$
-$<>,?;./:+=-_"'()ß!` '"$
-$^^^^1234a‡$
+$<>,?;./:+=-_"'()¬ß!` '"$
+$^^^^1234a√†$
 
 %% type ord
 
@@ -272,9 +272,10 @@ x & \ll & y_{1} + \cdots + y_{n} \\
   & \leq &z
 \end{eqnarray*}
 
+%% nonumber commented out
 \begin{eqnarray}
 x & = &17y \\
-y & > & a + b + c+d+e+f+g+h+i+j+ \nonumber\\
+y & > & a + b + c+d+e+f+g+h+i+j+ \\
   &   & k+l+m+n+o+p
 \end{eqnarray}
 
@@ -484,7 +485,7 @@ $$\binom{\frac{n+m}{2}} n \quad
 $\Leftrightarrow$
 
 
-1\textsuperscript{st} x\textsuperscript{iËme} y\textsubscript{some text}. 
+1\textsuperscript{st} x\textsuperscript{i√®me} y\textsubscript{some text}. 
 
 $$\genfrac{}{}{}{}12
 \genfrac[]{2pt}{2}{aaa}{bbb}
@@ -540,7 +541,7 @@ $\overline {\tt P} P$
 
 
 
-·  \char`\·  \char"E1  \'a  \a'a \xmllatex{\&\#xE1;}{}  \xmllatex{\&aacute;}{} 
+√°  \char`\√°  \char"E1  \'a  \a'a \xmllatex{\&\#xE1;}{}  \xmllatex{\&aacute;}{} 
 $\hat{a} \acute{a}  \bar{a} \dot{a} \breve{a}
 \check{a} \grave{a} \vec{a} \ddot{a} \tilde{a}
 $ 
@@ -764,7 +765,7 @@ a & = & b \\
 \mbox{by \eqref{eqn:main2}} % produces "bad hbox" in output xml
 \end{eqnarray}
 
-\[12\label{eqn:main1}34\]
+\[12\anchorlabel[5]{eqn:main1}34\]
 
 % Was bug #5 from Wagner
 

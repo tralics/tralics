@@ -13,7 +13,7 @@
 #include "tralics.h"
 #include "txmlio.h"
 const char* txmlio_rcsid=
-  "$Id: txmlio.C,v 2.9 2015/07/29 16:10:40 grimm Exp $";
+  "$Id: txmlio.C,v 2.10 2015/10/28 17:38:46 grimm Exp $";
 
 class EOD {};
 
@@ -73,7 +73,8 @@ namespace {
 Xmlp read_xml(string s)
 {
   if(!tralics_ns::find_in_path(s)) { 
-    the_parser.parse_error("Unable to read the XML input file",s,"noinput");
+    the_parser.parse_error(the_parser.err_tok,
+			   "Unable to read the XML input file",s,"noinput");
     return 0;
   }
   string file = main_ns::path_buffer.to_string();

@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txhash.h,v 2.39 2012/04/27 15:10:05 grimm Exp $
+// $Id: txhash.h,v 2.42 2015/10/29 16:38:22 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -19,7 +19,7 @@ class Hashtab {
   Token par_token,OB_token, CB_token,dollar_token;
   Token verb_token,noindent_token,small_token, textvisiblespace_token;
   Token end_token,frozen_dont_expand, relax_token,frozen_relax_token,
-    sendgroup_token,textbf_token,frozen_endcsname,begin_token;
+    sendgroup_token,textbf_token,frozen_endcsname,begin_token, eof_token;
   Token frozen_undef_token,equals_token,char_token;
   Token number_token,roman_numeral_token,Roman_numeral_token;
   Token advance_token, global_token,atalph_token,atAlph_token,fnsymbol_token;
@@ -65,6 +65,8 @@ class Hashtab {
     xkv_fams_token, xkv_na_token, xkv_rm_token, xkv_tfam_token, usevalue_token,
     xkv_header_token, xkv_tkey_token, gsavevalue_token,savevalue_token,
     empty_token,composite_token;
+  Token ExplFileName_token,ExplFileDate_token,ExplFileVersion_token,
+    ExplFileDescription_token;
   Token last_tok;
   // the big tables
   Equivalent eqtb[eqtb_size];
@@ -75,6 +77,7 @@ private:
   Buffer B; // internal buffer
   int hash_used; // all places above this one are used
   int hash_usage; // number of commands in the table
+  int hash_bad; // number of items not at hash position 
  private:
   int find_empty(String s); // find an empty slot
   int find_aux(int p,String name);
@@ -85,19 +88,20 @@ private:
   Token locate(const string& s); // used by primitive, etc
   Token locate(const Buffer&); // used by primitive, etc
   int get_hash_usage()const { return hash_usage; }
+  int get_hash_bad()const { return hash_bad; }
   int hash_find(const Buffer&b, String name);
   int hash_find();
   Token primitive (String s, symcodes c,subtypes v=zero_code);
   Token nohash_primitive(String a, CmdChr);
   void eval_let(String, String);  
+  Token eval_letv(String, String);  
   void eval_let_local(String, String);
   String operator[] (int k) const { return Text[k]; }
   void dump();
   void boot_fancyhdr();
   void boot_etex();
+  void load_latex3();
   void boot_keyval();
-  Token locate_active(Utf8Char s);
-  Token locate_mono(Utf8Char s);
   bool is_defined(const Buffer&b);
 };
 

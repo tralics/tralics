@@ -64,7 +64,7 @@ foo }bar
 
 
 
-
+\def\testeq#1#2{\ifx#1#2\else \bad\fi}
 \makeatletter
 This document contains a  number of errors.
 \For\instance\this\sentence.
@@ -94,11 +94,11 @@ x\input{F6}  incomplete \fi \or \else
 \fooA[a\Par b]{c}\fooB[a\Par b]{c}
 \fooA[a\xpar b]{c\Par d}\fooB[a\xpar b]{c\Par d}
 
-Test outer
-\iffalse \Par\fi
-\loop \iffalse x\Par\repeat
-\strip@prefix \par>
-\strip@prefix \Par>
+Test outer 
+\iffalse \Par\fi  % gives an extra \fi error
+\loop \iffalse x\Par\repeat % runaway and replaces \Par by space
+\strip@prefix \par >
+\strip@prefix \Par> % runaway but reads until >
 
 % Skip_group0  read_delimited1 
 % from read_delimited, read_until
@@ -120,7 +120,7 @@ Newcommand
 \renewcommand\foo[\z@]{}
 \renewcommand\foo[x]{}
 \def\foo#1#x{}\def\foo#x{}
-\csname foo\relax bar\endcsname
+\csname foo\relax bar\endcsname 
 \value{foo\relax bar}
 \value{foo}
 \let\c@foo\relax\value{foo}
@@ -141,7 +141,7 @@ Newcommand
 \foo\verb
 
 
-Acc\a{\par}
+Acc\a{\bar}
 \'{} \~{}\'{xy}\'{1}\'{+}\'{\par}\'{\'e}\'{^^ab}\'{0}
 \'{\^e}
 \ifnum 0 1 \bad \fi\ifnum 0 0\else\bad \fi
@@ -179,8 +179,9 @@ Arrays
 
 \def\XX{\xbox{Box}{val}}
 
-Testing Optional Argument. 
-\footcite[t\par ext]{x} is Ok
+Testing Optional Argument. These functions signal an error rather
+than cite@one which moreover complains for an extra brace.
+\footcite[t\par ext]{x} is Ok 
 \yearcite[t\par ext]{x} is Ok
 \refercite[t\par ext]{x} is Ok
 \cite[year][t\par ext]{x}
@@ -282,7 +283,7 @@ x\url{()} % strange
 \def\Gee{gee}
 \@reevaluate\fooA\fooB{gee}
 \@reevaluate\fooA\fooB\Gee
-\newenvironment{Env}{\@reevaluate*{fooA}{fooB}}{E}
+\newenvironment{Env}{\@reevaluate*{fooA}{fooB}}{\bad}
 \begin{Env}etc\end{Env}
 \AtBeginDocument
 
@@ -311,11 +312,11 @@ Check for some unimplemented commands
 \openin2=F4
 \read2to\TOTO
 \def\xTOTO{\def \foo ##1{A=##1=}\foo {x }}
-\ifx\TOTO\xTOTO\else \bad\fi
+\testeq\TOTO\xTOTO
 \closein4
 \openin2=F7
 \read2to\TOTO
-\ifx\TOTO\xTOTO\else \bad\fi
+\testeq\TOTO\xTOTO
 \count=\relax
 Here we try to converts tokens to numbers
 \muskip0=\font pt \relax
@@ -338,22 +339,22 @@ No err signaled if etc removed...!
 \xbox{foo} bar} First arg of \string\xbox is normal, scond like hbox 
 \uppercase fooo}
 %\hbox foo}
-\def\xfoo#1{#1#1##x}
+\def\xfoo#1{#1##3##x}
 \def\foo#1{#1#3#x}\def\one{1}\def\two{2}\def\exx{x}
-\ifx\foo\xfoo\else\bad\fi
-\edef\foo#1{#\one#\two#\exx}
-\ifx\foo\xfoo\else\bad\fi
+\testeq\foo\xfoo
+\edef\foo#1{#\one#\two#\exx}\def\xfoo#1{#1##2##x}
+\testeq\foo\xfoo\def\foo{#0#1#x}\def\xfoo{##0##1##x}\testeq\foo\xfoo
 \begin{motscle}uu,vu,xx}ww, {\it z}z\end{motscle}
 Next par
 
 \newcounter{Foo}  how to check overflow here ?
 \setlength{12}{12pt}
 \setlength{\skip0}{12pt} This one should be OK
-\newif\else
+\newif\else \newif\~\newif~
 \def\Foo{\iftrue Ok\fi}
 \begin{}\end{}\iftrue \unless\Foo
 \edef\Test{\expandafter\unless\Foo}\if\Test\empty\else\bad\fi
-{\catcode `\A=17} % bette keep this change local
+{\catcode `\A=17} % bettert keep this change local
 \mathcode`A=1234567
 \sfcode`A=1234567
 \lccode`A=1234567
@@ -569,7 +570,11 @@ More catcodes on Unicode chars
 \expandafter\def\csname\endcsname{Null}
 aa\^^^^^12345bb
 \expandafter\def\csname\endcsname#1{}
-aa\^^^^^12345bb
-
+aa\^^^^^12345bb 
+\def\fooA#1{fooA#1=\def\zz{zzA}}\def\fooB#1{fooB#1=\def\zz{zzB}}%
+\def\fooC{bC}\def\endfooC{eC}\def\xx{x}%
+\def\foo{\begin{Env}etc\xx w\zz{\def\xx{b}\begin{fooC}u\end{fooC}\xx w}\xx w\end{Env}}%
+\begin{Env}etc\xx w\zz{\def\xx{b}\begin{fooC}u\end{fooC}\xx w}\xx w\end{Env}
+\foo
 \end{document}
 % todo checking errors in keyval

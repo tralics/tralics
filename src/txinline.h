@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txinline.h,v 2.27 2012/05/15 17:14:30 grimm Exp $
+// $Id: txinline.h,v 2.30 2015/10/28 17:38:46 grimm Exp $
 // TRALICS, copyright (C)INRIA/apics (Jose' Grimm) 2003,2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -23,6 +23,7 @@ namespace main_ns {
   extern bool file_ended;
   extern bool no_xml_error;
   extern bool use_quotes;
+  extern bool bib_allow_break;
 }
 
 
@@ -61,7 +62,6 @@ namespace tralics_ns {
 
 namespace err_ns {
   extern Buffer local_buf;
-  void signal_error(String s,int);
   void fatal_error (String s);
 }
 

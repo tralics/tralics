@@ -35,11 +35,11 @@
 #include "txpath.h"
 
 const char* txmain_rcsid=
-  "$Id: txmain.C,v 2.182 2015/07/30 16:15:21 grimm Exp $";
+  "$Id: txmain.C,v 2.188 2015/11/10 17:32:46 grimm Exp $";
 
 inline void MainClass::set_version ()
 { 
-  version_string = "2.15.3";  // current version number
+  version_string = "2.15.4";  // current version number
 }
 
 namespace {
@@ -59,22 +59,26 @@ namespace {
   int pool_position=-1;  // Position of file in pool
   string opt_doctype="";
   bool banner_printed = false;  // hack
+  bool load_l3 = false;
+  bool multi_math_label = false;
 }
 
 namespace tpage_ns {
   void after_conf_assign(vector<string>& V);
 }
 
+using main_ns::path_buffer;
+
+
 bool nostraightquotes = false;
 bool nofloat_hack = false;
 uint leftquote_val='`';
 uint rightquote_val='\'';
-extern bool opening_main;
 bool compatibility = false;
 bool bad_minus = false;
 bool only_input_data = false; // special hack
 bool booted = false;
-using main_ns::path_buffer;
+bool seen_enddocument = false;
 
 
 namespace io_ns {
@@ -82,8 +86,7 @@ namespace io_ns {
   void show_encoding (int wc, const string& name);
 }
 namespace bib_ns {
-  extern  bool raw_bib;
-  extern bool allow_break;
+  extern bool raw_bib;
 }
 
 namespace main_ns {
@@ -396,7 +399,6 @@ void MainClass::check_for_input()
     cout << "Fatal error: Cannot open input file " << infile << "\n";
     exit(1);
   }
-  opening_main = true;
   s = path_buffer.to_string();
   path_buffer.decr_wptr();  path_buffer.decr_wptr();  path_buffer.decr_wptr();
   path_buffer.push_back("ult");
@@ -482,6 +484,7 @@ void MainClass::open_log()
   b <<" right quote is ";
   b.out_log(Utf8Char(rightquote_val), log_encoding);
   the_log << b << "\n";
+  if(trivial_math) the_log << "\\notrivialmath=" << trivial_math << "\n";
   io_ns::check_for_encoding();
   if(!default_class.empty()) 
     the_log << "Default class is " << default_class << "\n";
@@ -712,6 +715,8 @@ void MainClass::parse_option(int&p, int argc,char**argv)
   else if (strcmp(s, "te1a")==0) log_encoding = en_ascii7;
   else if (strcmp(s, "latin1")==0) input_encoding = 1;
   else if (strcmp(s, "noentnames")==0) noent_names = true; 
+  else if (strcmp(s, "nomultimathlabel")==0) multi_math_label = false; 
+  else if (strcmp(s, "multimathlabel")==0) multi_math_label = true; 
   else if (strcmp(s, "nofloathack")==0) nofloat_hack = true; 
   else if (strcmp(s, "noprimehack")==0) prime_hack = false; 
   else if (strcmp(s, "primehack")==0) prime_hack = true; 
@@ -721,11 +726,12 @@ void MainClass::parse_option(int&p, int argc,char**argv)
   else if (strcmp(s, "nozerowidthelt")==0) no_zerowidthelt = true;
   else if (strcmp(s, "shellescape")==0) shell_escape_allowed=true;
   else if (strcmp(s, "xml")==0) todo_xml = true ;
-  else if (strcmp(s, "allowbreak")==0) bib_ns::allow_break = true ;
-  else if (strcmp(s, "noallowbreak")==0) bib_ns::allow_break = false ;
+  else if (strcmp(s, "allowbreak")==0) main_ns::bib_allow_break = true ;
+  else if (strcmp(s, "noallowbreak")==0) main_ns::bib_allow_break = false ;
   else if (strcmp(s, "etex")==0) etex_enabled = true;
   else if (strcmp(s, "noetex")==0)etex_enabled = false;
   else if (strcmp(s, "noxmlerror")==0) main_ns::no_xml_error=true;
+  else if (strcmp(s, "l3")==0) load_l3=true;
   else if (strcmp(s, "xmlfo")==0)  obsolete(s);
   else if (strcmp(s, "xmlhtml")==0)  obsolete(s);
   else if (strcmp(s, "xmltex")==0)  obsolete(s);
@@ -807,7 +813,8 @@ void MainClass::usage_and_quit (int v)
   cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
   cout << "  -nomathml: this disables mathml mode\n";
   cout << "  -dualmath: gives mathML and nomathML mode\n";
-  cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi> \n";
+  cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
+  cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
   cout << "  -noundefmac: alternate XML output for undefined commands\n";
   cout << "  -noxmlerror: no XML element is generated in case of error\n";
   cout << "  -no_float_hack: Removes hacks for figures and tables\n";
@@ -1104,7 +1111,7 @@ int main_ns::extract_year(Buffer&B,Buffer&C)
 } 
 
 // Here y C are as above. We check valididy
-void main_ns::check_year(int y, Buffer&C,const string&dclass,const string&Y)
+void main_ns::check_year(int y, Buffer&C, const string&dclass, const string&Y)
 {
   if (y<2000 || y>=2100) the_main->bad_year();
   string raclass = string("ra") + C.to_string();
@@ -1145,9 +1152,12 @@ void MainClass::see_name1()
   Buffer&B = b_after;
   Buffer C;
   B << bf_reset << no_ext;
-  int y = main_ns::extract_year(B,C);
-  if(handling_ra) main_ns::check_year(y,C,dclass,year_string);
-  int k = B.last_slash();
+  int y = 0;
+  if(handling_ra) { // find and check the year from the file name
+    y = main_ns::extract_year(B,C);
+    main_ns::check_year(y,C,dclass,year_string);
+  }
+  int k = B.last_slash(); // remove the directory part
   if(k>=0) {
     string s = B.to_string(k+1);
     B << bf_reset << s;
@@ -1155,30 +1165,26 @@ void MainClass::see_name1()
   the_parser.set_projet_val(B.to_string()); // this is apics
   if(handling_ra) {
     main_ns::check_lowercase(B);
-    year_string = C.to_string();
+    year_string = C.to_string(); 
     out_name = B.to_string(); // This is apics
-  } else if(out_name.empty()) {
+    year = y;
+    the_parser.set_ra_year(y);
+    return;
+  }
+  if(out_name.empty()) { // might be given as an option
     out_name = no_ext;
-    B << bf_reset << no_ext;
+    B << bf_reset << no_ext; // remove the directory part
     int k = B.last_slash();
     if(k>=0) out_name = B.to_string(k+1); // This is apics2003
   }
-  if(C.empty() &&year_string.empty()) {
-    y = the_parser.get_ra_year();
-    C << y;
+  if(year_string.empty()) {  // might be given as an option
+    year = the_parser.get_ra_year();
+    C << year;
     year_string = C.to_string();
-    return;    
-  } 
-  year = y;
-  if(C.empty()) {
-    the_parser.set_ra_year(atoi(year_string.c_str()));
-    return;
+  } else {
+    year = atoi(year_string.c_str());
+    the_parser.set_ra_year(year);
   }
-  the_parser.set_ra_year(y);
-  if(year_string==C.to_string()) return;
-  if(!year_string.empty())
-    log_and_tty << "Option -year=" << year_string <<  " ignored\n";
-  year_string = C.to_string();
 }
 
 
@@ -1189,12 +1195,13 @@ void MainClass::trans0()
   the_log << "Starting translation\n"; 
   the_log << lg_flush;
   the_parser.init_all(dtd);
-  if(verbose) the_parser.tracing_all();
+  if(multi_math_label) the_parser.word_define(multimlabel_code,1,false);
   if(nomathml) the_parser.word_define(nomath_code,-1,false);
   if(dualmath) the_parser.word_define(nomath_code,-3,false);
-  if(trivial_math) the_log << "\\notrivialmath=" << trivial_math << "\n";
   the_parser.word_define(notrivialmath_code,trivial_math,false);
+  if(verbose) the_parser.M_tracingall();
   the_parser.load_latex();
+  if(load_l3) the_parser.L3_load(true);
   tralics_ns::Titlepage_start(verbose);
   if(only_input_data) {
     log_and_tty.finish(main_ns::nb_errs);
@@ -1286,6 +1293,7 @@ void MainClass::run(int n, char** argv)
   } catch(...) {}
   check_section_use ();
   the_parser.after_main_text();
+  if(seen_enddocument) the_parser.the_stack.add_nl();
   the_parser.final_checks();
   //    the_parser.the_stack.dump_xml_table();
   if(todo_xml) {

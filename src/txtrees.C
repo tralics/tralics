@@ -14,7 +14,7 @@
 #include "txtrees.h"
 
 const char* txtrees_rcsid =
-  "$Id: txtrees.C,v 2.21 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txtrees.C,v 2.30 2015/11/18 17:58:11 grimm Exp $";
 
 
 namespace trees_ns {
@@ -69,7 +69,7 @@ void AllIndex::new_index(const string& s, const string& title)
 // then we can say \XMLaddatt{idx}{bar}{gee}
 int Parser::get_index_value()
 {
-  string s= the_parser.sT_next_optarg();
+  string s= sT_optarg_nopar();
   int i = the_index.find_index(s);
   return the_index.get_index(i)->get_AL();
 }
@@ -127,20 +127,20 @@ int Parser::index_aux(TokenList& L, int father,int g)
   if(token_ns::split_at(escape_t, actual_t, actualb_t, L,z,false)) {
     have_key = true;
     token_ns::remove_first_last_space(z);
-    key = exp_token_list_to_string(z);
+    key = to_stringE(z);
   } 
   if(token_ns::split_at(escape_t, encap_t,encap_t, L,z,false)) {
     token_ns::remove_first_last_space(L);
-    encap = exp_token_list_to_string(L);
+    encap = to_stringE(L);
     swap(L,z);
   } 
   if(!have_key) {
     z = L;
     token_ns::remove_first_last_space(z);
-    key = exp_token_list_to_string(z);
+    key = to_stringE(z);
   }
   z = L;
-  string aux = exp_token_list_to_string(z);
+  string aux = to_stringE(z);
   // We have now: key@aux|encap
   vector<Indexer*>& IR = the_index.get_data(g);
   int level = 1;
@@ -169,21 +169,21 @@ void Parser::T_index(subtypes c)
   flush_buffer();
   if(c==index_code) remove_initial_star();
   if(c==newindex_code) {
-    string s= sT_next_arg();
-    string title= sT_next_arg();
+    string s= sT_arg_nopar();
+    string title= sT_arg_nopar();
     the_index.new_index(s,title);
     return;
   }
   int g = 0;
   if(c== printindex_code || c==index_code) {
-    string s= sT_next_optarg();
+    string s= sT_optarg_nopar();
     g=the_index.find_index(s);
   }
   if(c== printindex_code || c==printglossary_code) {
     the_index.mark_print(g);
     return;
   }
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   trees_ns::normalise_space(L);
   TokenList z1,z2;
   static const Token escape_t (other_t_offset, '"');
@@ -209,8 +209,8 @@ void Parser::T_index(subtypes c)
   int nid = the_index.next_index();;
   local_buf << bf_reset << "lid" << nid;
   string W = local_buf.to_string();
-  the_stack.add_anchor(W);
-  add_id(W);
+  Istring id = the_stack.add_anchor(W,false);
+  create_label(W,id);
   tralics_ns::add_ref(iid,W,true);
 }
 
@@ -284,12 +284,12 @@ void Parser::T_trees(int c)
 // and nodemargin=2pt for nodepoint below
 void Parser::T_node()
 {
-  Istring A = nT_next_arg();
+  Istring A = nT_arg_nopar();
   leave_v_mode();
   the_stack.push1(np_node);
   AttList& cur = last_att_list();
   cur.push_back(np_name,A);
-  T_next_arg();
+  T_arg();
   the_stack.pop(np_node);
 }
 
@@ -298,9 +298,9 @@ void Parser::T_node()
 
 void Parser::T_nodepoint()
 {
-  Istring A = nT_next_arg();
-  Istring B = nT_next_optarg();
-  Istring C = nT_next_optarg();
+  Istring A = nT_arg_nopar();
+  Istring B = nT_optarg_nopar();
+  Istring C = nT_optarg_nopar();
   the_stack.push1(np_node);
   AttList& cur = last_att_list();
   cur.push_back(np_name,A);
@@ -314,10 +314,10 @@ void Parser::T_nodeconnect(name_positions W)
 {
   name_positions  A = get_trees_opt();
   if(A==cst_invalid) A =  np_letter_b;
-  Istring B = nT_next_arg();
+  Istring B = nT_arg_nopar();
   name_positions C = get_trees_opt();
   if(C==cst_invalid) C =  np_letter_t;
-  Istring D = nT_next_arg();
+  Istring D = nT_arg_nopar();
   the_stack.push1(W);
   AttList& cur = last_att_list();
   cur.push_back(np_posB,C);
@@ -332,9 +332,9 @@ void Parser::T_nodeconnect(name_positions W)
 // \barnodeconnect[depth]{fromnode}{tonode}
 void Parser::T_barnodeconnect(name_positions W)
 {
-  Istring A = nT_next_optarg();
-  Istring B = nT_next_arg();
-  Istring C = nT_next_arg();
+  Istring A = nT_optarg_nopar();
+  Istring B = nT_arg_nopar();
+  Istring C = nT_arg_nopar();
   the_stack.push1(W);
   AttList& cur = last_att_list();
   cur.push_back(np_depth,A);
@@ -350,12 +350,12 @@ void Parser::T_nodecurve(name_positions W)
 {
   name_positions A = get_trees_opt();
   if(A==cst_invalid) A =  np_letter_b;
-  Istring B = nT_next_arg();
+  Istring B = nT_arg_nopar();
   name_positions C = get_trees_opt();
   if(C==cst_invalid) C =  np_letter_t;
-  Istring D = nT_next_arg();
-  Istring E = nT_next_arg();
-  Istring F = nT_next_optarg();
+  Istring D = nT_arg_nopar();
+  Istring E = nT_arg_nopar();
+  Istring F = nT_optarg_nopar();
   if(F.null() || F.empty()) F = E;
   the_stack.push1(W);
   AttList& cur = last_att_list();
@@ -372,7 +372,7 @@ void Parser::T_nodecurve(name_positions W)
 
 void Parser::T_nodebox(name_positions W)
 {
-  Istring A = nT_next_arg();
+  Istring A = nT_arg_nopar();
   the_stack.push1(W);
   AttList& cur = last_att_list();
   cur.push_back(np_nameA,A);
@@ -381,8 +381,8 @@ void Parser::T_nodebox(name_positions W)
 
 void Parser::T_nodetriangle(name_positions W)
 {
-  Istring A = nT_next_arg();
-  Istring B = nT_next_arg();
+  Istring A = nT_arg_nopar();
+  Istring B = nT_arg_nopar();
   the_stack.push1(W);
   AttList& cur = last_att_list();
   cur.push_back(np_nameA,A);
@@ -393,8 +393,8 @@ void Parser::T_nodetriangle(name_positions W)
 // \nodecircle[depth]{nodename}
 void Parser::T_nodecircle(name_positions W)
 {
-  Istring B = nT_next_optarg();
-  Istring A = nT_next_arg();
+  Istring B = nT_optarg_nopar();
+  Istring A = nT_arg_nopar();
   the_stack.push1(W);
   AttList& cur = last_att_list();
   cur.push_back(np_depth,B);
@@ -448,7 +448,7 @@ void Parser::T_gloss(bool c)
 
 void Parser::T_etex(subtypes c)
 {
-  parse_error("Unimplemented e-TeX extension ",cur_tok,"","unimp");
+  parse_error(cur_tok,"Unimplemented e-TeX extension ",cur_tok,"","unimp");
 }
 
 // --------------------------------------------------------------------
@@ -495,8 +495,7 @@ void Parser::date_commands(int c)
 // Stores the value c in the counter T if possible
 void Parser::set_counter(Token T, int c)
 {
-  cur_tok = T;
-  look_at_mac();
+  see_cs_token(T);
   if(cur_cmd_chr.get_cmd() != assign_int_cmd) return;
   word_define(cur_cmd_chr.get_chr(),c,false);
 }
@@ -504,9 +503,8 @@ void Parser::set_counter(Token T, int c)
 // Stores the value c in the counter T if possible
 void Parser::get_counter(Token T, int& c)
 {
-  c= 0;
-  cur_tok = T;
-  look_at_mac();
+  c = 0;
+  see_cs_token(T);
   if(cur_cmd_chr.get_cmd() != assign_int_cmd) return;
   c = eqtb_int_table[cur_cmd_chr.get_chr()].get_val();
 }
@@ -517,19 +515,19 @@ bool Parser::scan_date_ctrs()
   year_ctr = hash_table.relax_token;
   month_ctr = hash_table.relax_token;
   day_ctr = hash_table.relax_token;
-  bool ok = counter(false);
+  bool bad = M_counter(false);
   bool res = true;
-  if(ok) {
+  if(!bad) {
     get_token();
     year_ctr = cur_tok;
   } else res = false;
-  ok = counter(false);
-  if(ok) {
+  bad = M_counter(false);
+  if(!bad) {
     get_token();
     month_ctr = cur_tok;
   } else res = false;
-  ok = counter(false);
-  if(ok) {
+  bad = M_counter(false);
+  if(!bad) {
     get_token();
     day_ctr = cur_tok;
   } else res = false;
@@ -598,7 +596,7 @@ bool date_ns::check_date(int y,int m, int d)
   if(Bad[0]=='.') local_buf << "day>" << ml;
   else local_buf << Bad;
   local_buf << " " << y << '/' << m << '/' << d;
-  the_parser.parse_error(local_buf.to_string());
+  the_parser.parse_error(the_parser.err_tok,local_buf.to_string());
   return false;
 }
 
@@ -606,14 +604,14 @@ bool date_ns::check_date(int y,int m, int d)
 void Parser::count_days()
 {
   Token T =cur_tok;
-  bool ok = counter(false);
-  if(ok) get_token();
+  bool bad = M_counter(false);
+  if(!bad) get_token();
   Token ctr = cur_tok;
   int start = scan_braced_int(T);
   int cur = scan_braced_int(T);
   int month = scan_braced_int(T);
   int day = scan_braced_int(T);
-  if(!ok) return;
+  if(bad) return;
   int c = 0;
   static int month_table[13]={0,0,31,59,90,120,151,181,212,243,273,304,334};
   for(int y=start;y<cur;y++) c += date_ns::year_length(y);
@@ -747,7 +745,7 @@ void Parser::month_day(subtypes c)
   default: break;
   }
   TokenList L;
-  add_buffer_to_list(local_buf,L,"month and day");
+  tokenize_buffer(local_buf,L,"(month and day)");
   if(tracing_macros()) the_log << T << "<-" << L << lg_end;
   back_input(L);
 }

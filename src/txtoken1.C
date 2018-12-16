@@ -11,7 +11,7 @@
 
 #include "tralics.h"
 const char* txtoken1_rcsid=
-  "$Id: txtoken1.C,v 2.77 2015/08/03 16:12:51 grimm Exp $";
+  "$Id: txtoken1.C,v 2.99 2017/05/29 06:22:57 grimm Exp $";
 
 // We define functions that return the name of a token;
 
@@ -19,7 +19,9 @@ static Buffer make_name_buffer; // used for token names
 
 namespace tralics_ns {
   String make_name(String x, int y);
+  String make_name16(String x, int y);
   String strip_end(String s);
+  String math_env_name(subtypes c);
 }
 
 using tralics_ns::make_name;
@@ -43,10 +45,17 @@ String tralics_ns::make_name(String x, int y)
   return make_name_buffer.c_str();
 }
 
+String tralics_ns::make_name16(String x, int y)
+{
+  make_name_buffer << bf_reset << x << '"';
+  make_name_buffer.push_back16(y,false);
+  return make_name_buffer.c_str();
+}
+
 String CmdChr::specchar_cmd_name() const
 {
   make_name_buffer << bf_reset << "Character ";
-  make_name_buffer.push_back16u(chr);
+  make_name_buffer.push_back16(chr,true);
   return make_name_buffer.c_str();
   
 }
@@ -182,6 +191,7 @@ String CmdChr::token_specialmath_name() const
   case root_code: return  "@root";
   case mathbox_code: return  "mathbox";
   case genfrac_code: return  "genfrac";
+  case mathlabel_code: return "anchorlabel";
   case mathmi_code: return "mathmi";
   case mathmo_code: return "mathmo";
   case mathmn_code: return "mathmn";
@@ -711,7 +721,27 @@ String CmdChr::token_math_name() const
   }
 }
 
-
+String CmdChr::tipa_name() const
+{
+  switch(chr) {
+  case 0: return "tipa@star";
+  case 1: return "tipa@semi";
+  case 2: return "tipa@colon";
+  case 3: return "tipa@exclam";
+  case 4: return "tipa@normal";
+  case 5: return "tipa@syllabic";
+  case 6: return "tipa@subumlaut";
+  case 7: return "tipa@subtilde";
+  case 8: return "tipa@subring";
+  case 9: return "tipa@dotacute";
+  case 10: return "tipa@gravedot";
+  case 11: return "tipa@acutemacron";
+  case 12: return "tipa@circumdot";
+  case 13: return "tipa@tildedot";
+  case 14: return "tipa@brevemacro";
+  default: return 0;
+  }
+}
 
 // Aux functions for CmdChr::name() const
 String CmdChr::token_fancy_name() const
@@ -869,6 +899,7 @@ String CmdChr::token_convert_name() const
   case Romannumeral_code: return "Romannumeral";
   case string_code: return  "string";
   case meaning_code: return  "meaning";
+  case meaning_c_code: return  "cs_meaning:c";
   case fontname_code: return  "fontname";
   case jobname_code: return  "jobname";
   case attributeval_code: return  "XMLgetatt";
@@ -896,7 +927,7 @@ String CmdChr::token_for_name() const
   case iforloop_code : return "@iforloop";
   case tforloop_code : return "@tforloop";
   case breaktfor_code: return "@break@tfor";
-  case xkv_breaktfor_code: return "tralics@fro@break";
+  case xkv_breaktfor_code: return "tralics@for@break";
   default: return 0;
   }
 }
@@ -1024,26 +1055,6 @@ String CmdChr::token_mathcomp_name() const
   }
 }
 
-String CmdChr::token_emath_name() const
-{
-  switch(chr) {
-  case eqnarray_code: return  "endeqnarray";
-  case Beqnarray_code: return  "Bendeqnarray";
-  case multline_code: return  "endmultline";
-  case eqnarray_star_code: return  "endeqnarray*";
-  case Beqnarray_star_code: return  "Bendeqnarray*";
-  case multline_star_code: return  "endmultline*";
-  case align_code: return  "end@align";
-  case align_star_code: return  "endalign*";
-  case split_code: return  "endsplit";
-  case aligned_code: return  "endaligned";
-  case equation_code: return  "endequation";
-  case equation_star_code: return  "endequation*";
-  case math_code: return  "endmath";
-  case displaymath_code: return  "enddisplaymath";
-  default: return 0;
-  }
-}
 
 String CmdChr::token_eignorec_name() const
 {
@@ -1063,7 +1074,6 @@ String CmdChr::token_eignore_name() const
   case abstract_code: return  "endabstract";
   case latexonly_code: return  "endlatexonly";
   case xmlonly_code: return  "endxmlonly";
-  case subequations_code: return  "endsubequations";
   default: return 0;
   }
 }
@@ -1106,6 +1116,7 @@ String CmdChr::token_file_name() const
   case closein_code: return "closein";
   case include_code: return  "include";
   case scantokens_code: return "scantokens";
+  case readxml_code: return "readxml";
   default: return 0;
   }
 }
@@ -1144,6 +1155,8 @@ String CmdChr::token_caseshift_name() const
   case 3: return  "MakeUppercase";
   case 4: return  "MakeTextLowercase";
   case 5: return  "MakeTextUppercase";
+  case 6: return "tl_to_lowercase";
+  case 7: return "tl_to_uppercase";
   default: return 0;
   }
 }
@@ -1282,6 +1295,52 @@ String CmdChr::token_def_name() const
   case def_code: return  "def"; 
   case gdef_code: return  "gdef"; 
   case edef_code: return  "edef"; 
+  case lgdef_code: return  "cs_gset:Npn"; // next 12 latex3
+  case lxdef_code: return  "cs_gset:Npx"; 
+  case ldef_code: return  "cs_set:Npn"; 
+  case ledef_code: return  "cs_set:Npx";
+  case pdef_code: return  "cs_set_protected_nopar:Npn"; 
+  case pedef_code: return  "cs_set_protected_nopar:Npx";
+  case pldef_code: return  "cs_set_protected:Npn";
+  case pledef_code: return  "cs_set_protected:Npx";
+  case pgdef_code: return  "cs_gset_protected_nopar:Npn";
+  case pxdef_code: return  "cs_gset_protected_nopar:Npx"; 
+  case plgdef_code: return  "cs_gset_protected:Npn"; 
+  case plxdef_code: return  "cs_gset_protected:Npx";
+
+  case gdefn_code: return "cs_new_nopar:Npn";
+  case xdefn_code: return "cs_new_nopar:Npx";
+  case lgdefn_code: return "cs_new:Npn";
+  case lxdefn_code: return "cs_new:Npx";
+  case pgdefn_code: return "cs_new_protected_nopar:Npn";
+  case pxdefn_code: return "cs_new_protected_nopar:Npx";
+  case plgdefn_code: return "cs_new_protected:Npn";
+  case plxdefn_code: return "cs_new_protected:Npx";
+  case cdef_code: return "cs_set_nopar:cpn";
+  case cedef_code: return "cs_set_nopar:cpx";
+  case cgdef_code: return "cs_gset_nopar:cpn";
+  case cxdef_code: return "cs_gset_nopar:cpx";
+  case cgdefn_code: return "cs_new_nopar:cpn";
+  case cxdefn_code: return "cs_new_nopar:cpx";
+  case cldef_code: return "cs_set:cpn";
+  case cledef_code: return "cs_set:cpx";
+  case clgdef_code: return "cs_gset:cpn";
+  case clxdef_code: return "cs_gset:cpx";
+  case clgdefn_code: return "cs_new:cpn";
+  case clxdefn_code: return "cs_new:cpx";
+  case cpdef_code: return "cs_set_protected_nopar:cpn";
+  case cpedef_code: return "cs_set_protected_nopar:cpx";
+  case cpgdef_code: return "cs_gset_protected_nopar:cpn";
+  case cpxdef_code: return "cs_gset_protected_nopar:cpx";
+  case cpgdefn_code: return "cs_new_protected_nopar:cpn";
+  case cpxdefn_code: return "cs_new_protected_nopar:cpx";
+  case cpldef_code: return "cs_set_protected:cpn";
+  case cpledef_code: return "cs_set_protected:cpx";
+  case cplgdef_code: return "cs_gset_protected:cpn";
+  case cplxdef_code: return "cs_gset_protected:cpx";
+  case cplgdefn_code: return "cs_new_protected:cpn";
+  case cplxdefn_code: return "cs_new_protected:cpx";
+
   case newcommand_code: return  "newcommand"; 
   case newthm_code: return  "newtheorem"; 
   case newenv_code: return  "newenvironment"; 
@@ -1479,6 +1538,7 @@ String CmdChr::token_assignint_name() const
   case year_code: return  "year";
   case showboxbreadth_code: return  "showboxbreadth";
   case nomath_code: return  "@nomathml";
+  case multimlabel_code: return  "multi@math@label";
   case notrivialmath_code: return  "notrivialmath";
   case showboxdepth_code: return  "showboxdepth";
   case hbadness_code: return  "hbadness";
@@ -1530,7 +1590,7 @@ String CmdChr::token_assignint_name() const
   default: 
     if(chr<math_code_offset) return make_name("catcode",chr);
     if(chr<lc_code_offset) return make_name("mathcode",chr-math_code_offset);
-    if(chr<uc_code_offset) return make_name("uccode",chr-lc_code_offset);
+    if(chr<uc_code_offset) return make_name("lccode",chr-lc_code_offset);
     if(chr<sf_code_offset) return make_name("uccode",chr-uc_code_offset);
     if(chr<del_code_offset) return make_name("sfcode",chr-sf_code_offset);
     if(chr<count_reg_offset) return make_name("delcode",chr-del_code_offset);
@@ -1555,6 +1615,9 @@ String CmdChr::token_assigntoks_name() const
   case everycr_code: return  "everycr";
   case everyeof_code: return  "everyeof";
   case errhelp_code: return  "errhelp";
+  case theorem_style_code: return "theorem style";
+  case theorem_bodyfont_code: return "theorem bodyfont";
+  case theorem_headerfont_code: return "theorem headerfont";
   default:
     return make_name("toks",chr);
   }
@@ -1656,6 +1719,8 @@ String CmdChr::token_xray_name() const
   case showgroups_code: return "showgroups";
   case showifs_code: return "showifs";
   case showtokens_code: return "showtokens";
+  case register_show_code: return "__kernel_register_show:N";
+  case registerc_show_code: return "__kernel_register_show:c";
   default: return 0;
   }
 }
@@ -1667,6 +1732,10 @@ String CmdChr::token_extension_name() const
   case openout_code: return "openout";
   case write_code: return "write";
   case closeout_code: return "closeout";
+  case write_log_code: return "iow_log:x";
+  case write_term_code: return "iow_term:x";
+  case typeout_code: return "typeout";
+  case wlog_code: return "wlog";
   default: return 0;
   }
 }
@@ -2008,6 +2077,492 @@ String CmdChr::token_cst_name() const
   }
 }
 
+String CmdChr::l3_ifx_name() const
+{
+  switch(chr) {
+  case l3_p_NN_code: return "cs_if_eq_p:NN";
+  case l3_TF_NN_code: return "cs_if_eq:NNTF";
+  case l3_T_NN_code: return "cs_if_eq:NNT";
+  case l3_F_NN_code: return "cs_if_eq:NNF";
+  case l3_p_Nc_code: return "cs_if_eq_p:Nc";
+  case l3_TF_Nc_code: return "cs_if_eq:NcTF";
+  case l3_T_Nc_code: return "cs_if_eq:NcT";
+  case l3_F_Nc_code: return "cs_if_eq:NcF";
+  case l3_p_cN_code: return "cs_if_eq_p:cN";
+  case l3_TF_cN_code: return "cs_if_eq:cNTF";
+  case l3_T_cN_code: return "cs_if_eq:cNT";
+  case l3_F_cN_code: return "cs_if_eq:cNF";
+  case l3_p_cc_code: return "cs_if_eq_p:cc";
+  case l3_TF_cc_code: return "cs_if_eq:ccTF";
+  case l3_T_cc_code: return "cs_if_eq:ccT";
+  case l3_F_cc_code: return "cs_if_eq:ccF";
+  default: return 0;
+  }
+}
+
+String CmdChr::l3_expand_aux_name() const
+{
+  switch(chr) {
+  case l3expn_code: return "::n";
+  case l3expN_code: return "::N";
+  case l3expp_code: return "::p";
+  case l3expc_code: return "::c";
+  case l3expo_code: return "::o";
+  case l3expf_code: return "::f";
+  case l3expx_code: return "::x";
+  case l3expV_code: return "::V";
+  case l3expv_code: return "::v";
+  case l3expfu_code: return "::f_unbraced";
+  case l3expou_code: return "::o_unbraced";
+  case l3expvu_code: return "::v_unbraced";
+  case l3expVu_code: return "::V_unbraced";
+  case l3expxu_code: return "::x_unbraced";
+  default: return 0;
+  }
+}
+
+String CmdChr::l3_expand_base_name() const
+{
+  switch(chr) {
+  case l3exp_No_code: return "exp_args:No";
+  case l3exp_NNo_code: return "exp_args:NNo";
+  case l3exp_NNNo_code: return "exp_args:NNNo";
+  case l3exp_NNc_code: return "exp_args:NNc";
+  case l3exp_Ncc_code: return "exp_args:Ncc";
+  case l3exp_Nccc_code: return "exp_args:Nccc";
+  case l3exp_Nf_code: return "exp_args:Nf";
+  case l3exp_NNf_code: return "exp_args:NNf";
+  case l3exp_Nv_code: return "exp_args:Nv";
+  case l3exp_NNv_code: return "exp_args:NNv";
+  case l3exp_NV_code: return "exp_args:NV";
+  case l3exp_NNV_code: return "exp_args:NNV";
+  case l3exp_NNNV_code: return "exp_args:NNNV";
+  case l3exp_Nco_code: return "exp_args:Nco";
+  case l3exp_Ncf_code:  return "exp_args:Ncf";
+  case l3exp_NVV_code: return "exp_args:NVV";
+  case l3exp_NcNc_code: return "exp_args:NcNc";
+  case l3exp_Ncco_code: return "exp_args:Ncco";
+  case l3exp_Nx_code: return "exp_args:Nx";
+  case l3exp_Nnc_code: return "exp_args:Nnc";
+  case l3exp_Nfo_code: return "exp_args:Nfo";
+  case l3exp_Nff_code: return "exp_args:Nff";
+  case l3exp_Nnf_code: return "exp_args:Nnf";
+  case l3exp_Nno_code: return "exp_args:Nno";
+  case l3exp_NnV_code: return "exp_args:NnV";
+  case l3exp_Noo_code: return "exp_args:Noo";
+  case l3exp_Nof_code: return "exp_args:Nof";
+  case l3exp_Noc_code: return "exp_args:Noc";
+  case l3exp_NNx_code: return "exp_args:NNx";
+  case l3exp_Ncx_code: return "exp_args:Ncx";
+  case l3exp_Nnx_code: return "exp_args:Nnx";
+  case l3exp_Nox_code: return "exp_args:Nox";
+  case l3exp_Nxo_code: return "exp_args:Nxo";
+  case l3exp_Nxx_code: return "exp_args:Nxx";
+  case l3exp_NNno_code: return "exp_args:NNno";
+  case l3exp_NNoo_code: return "exp_args:NNoo";
+  case l3exp_Nnnc_code: return "exp_args:Nnnc";
+  case l3exp_Nnno_code: return "exp_args:Nnno";
+  case l3exp_Nooo_code: return "exp_args:Nooo";
+  case l3exp_NNnx_code: return "exp_args:NNnx";
+  case l3exp_NNox_code: return "exp_args:NNox";
+  case l3exp_Nnnx_code: return "exp_args:Nnnx";
+  case l3exp_Nnox_code: return "exp_args:Nnox";
+  case l3exp_Nccx_code: return "exp_args:Nccx";
+  case l3exp_Ncnx_code: return "exp_args:Ncnx";
+  case l3exp_Noox_code: return "exp_args:Noox";
+  case l3exp_NVu_code:  return "exp_last_unbraced:NV";
+  case l3exp_Nvu_code: return "exp_last_unbraced:Nv";
+  case l3exp_Nou_code: return "exp_last_unbraced:No";
+  case l3exp_Nfu_code: return "exp_last_unbraced:Nf";
+  case l3exp_Ncou_code:  return "exp_last_unbraced:Nco";
+  case l3exp_NcVu_code: return "exp_last_unbraced:NcV";
+  case l3exp_NNVu_code:  return "exp_last_unbraced:NNV";
+  case l3exp_NNou_code:  return "exp_last_unbraced:NNo";
+  case l3exp_NNNVu_code:  return "exp_last_unbraced:NNNV";
+  case l3exp_NNNou_code:  return "exp_last_unbraced:NNNo";
+  case l3exp_Nnou_code:  return "exp_last_unbraced:Nno";
+  case l3exp_Noou_code:  return "exp_last_unbraced:Noo";
+  case l3exp_Nfou_code:  return "exp_last_unbraced:Nfo";
+  case l3exp_NnNou_code:  return "exp_last_unbraced:NnNo";
+  case l3exp_Nxu_code:  return "exp_last_unbraced:Nx";
+  case l3exp_Nouou_code:  return "exp_last_two_unbraced:Noo";
+  default: return 0;
+  }
+}
+
+
+String CmdChr::l3str_ifeq_name() const
+{
+  switch(chr) {
+  case l3_p_code: return "str_if_eq_p:nn";
+  case l3_TF_code: return "str_if_eq:nnTF";
+  case l3_T_code: return "str_if_eq:nnT";
+  case l3_F_code: return "str_if_eq:nnF";
+  case l3_p_code+4: return "str_if_eq_x_p:nn";
+  case l3_TF_code+4: return "str_if_eq_x:nnTF";
+  case l3_T_code+4: return "str_if_eq_x:nnT";
+  case l3_F_code+4: return "str_if_eq_x:nnF";
+  case l3_p_code+8: return "str_if_eq_p:Vn";
+  case l3_TF_code+8: return "str_if_eq:VnTF";
+  case l3_T_code+8: return "str_if_eq:VnT";
+  case l3_F_code+8: return "str_if_eq:VnF";
+  case l3_p_code+12: return "str_if_eq_p:on";
+  case l3_TF_code+12: return "str_if_eq:onTF";
+  case l3_T_code+12: return "str_if_eq:onT";
+  case l3_F_code+12: return "str_if_eq:onF";
+  case l3_p_code+16: return "str_if_eq_p:no";
+  case l3_TF_code+16: return "str_if_eq:noTF";
+  case l3_T_code+16: return "str_if_eq:noT";
+  case l3_F_code+16: return "str_if_eq:noF";
+  case l3_p_code+20: return "str_if_eq_p:nV";
+  case l3_TF_code+20: return "str_if_eq:nVTF";
+  case l3_T_code+20: return "str_if_eq:nVT";
+  case l3_F_code+20: return "str_if_eq:nVF";
+  case l3_p_code+24: return "str_if_eq_p:VV";
+  case l3_TF_code+24: return "str_if_eq:VVTF";
+  case l3_T_code+24: return "str_if_eq:VVT";
+  case l3_F_code+24: return "str_if_eq:VVF";
+  default: return 0;
+  }
+}
+
+String CmdChr::l3_set_cat_name() const
+{
+  switch(chr) {
+  case escape_catcode: return"char_set_catcode_escape:n";
+  case open_catcode:return "char_set_catcode_group_begin:n";
+  case close_catcode: return "char_set_catcode_group_end:n";
+  case dollar_catcode: return "char_set_catcode_math_toggle:n";
+  case alignment_catcode: return "char_set_catcode_alignment:n";
+  case eol_catcode: return "char_set_catcode_end_line:n";
+  case parameter_catcode: return "char_set_catcode_parameter:n";
+  case hat_catcode: return "char_set_catcode_math_superscript:n";
+  case underscore_catcode: return "char_set_catcode_math_subscript:n";
+  case ignored_catcode: return "char_set_catcode_ignore:n";
+  case space_catcode: return "char_set_catcode_space:n";
+  case letter_catcode: return "char_set_catcode_letter:n";
+  case other_catcode: return "char_set_catcode_other:n";
+  case active_catcode: return "char_set_catcode_active:n";
+  case invalid_catcode: return "char_set_catcode_invalid:n";
+  case comment_catcode: return "char_set_catcode_comment:n";
+  case escape_catcode+16: return"char_set_catcode_escape:N";
+  case open_catcode+16:return "char_set_catcode_group_begin:N";
+  case close_catcode+16: return "char_set_catcode_group_end:N";
+  case dollar_catcode+16: return "char_set_catcode_math_toggle:N";
+  case alignment_catcode+16: return "char_set_catcode_alignment:N";
+  case eol_catcode+16: return "char_set_catcode_end_line:N";
+  case parameter_catcode+16: return "char_set_catcode_parameter:N";
+  case hat_catcode+16: return "char_set_catcode_math_superscript:N";
+  case underscore_catcode+16: return "char_set_catcode_math_subscript:N";
+  case ignored_catcode+16: return "char_set_catcode_ignore:N";
+  case space_catcode+16: return "char_set_catcode_space:N";
+  case letter_catcode+16: return "char_set_catcode_letter:N";
+  case other_catcode+16: return "char_set_catcode_other:N";
+  case active_catcode+16: return "char_set_catcode_active:N";
+  case invalid_catcode+16: return "char_set_catcode_invalid:N";
+  case comment_catcode+16: return "char_set_catcode_comment:N";
+  default: return 0;
+  }
+}
+
+String CmdChr::cat_ifeq_name() const
+{
+  switch(chr) {
+  case open_catcode*4+l3_p_code: return "token_if_group_begin_p:N";
+  case open_catcode*4+l3_TF_code: return "token_if_group_begin:NTF";
+  case open_catcode*4+l3_T_code: return "token_if_group_begin:NT";
+  case open_catcode*4+l3_F_code: return "token_if_group_begin:NF";
+  case close_catcode*4+l3_p_code: return "token_if_group_end_p:N";
+  case close_catcode*4+l3_TF_code: return "token_if_group_end:NTF";
+  case close_catcode*4+l3_T_code: return "token_if_group_end:NT";
+  case close_catcode*4+l3_F_code: return "token_if_group_end:NF";
+  case dollar_catcode*4+l3_p_code: return "token_if_math_toggle_p:N";
+  case dollar_catcode*4+l3_TF_code: return "token_if_math_toggle:NTF";
+  case dollar_catcode*4+l3_T_code: return "token_if_math_toggle:NT";
+  case dollar_catcode*4+l3_F_code: return "token_if_math_toggle:NF";
+  case alignment_catcode*4+l3_p_code: return "token_if_alignment_p:N";
+  case alignment_catcode*4+l3_TF_code: return "token_if_alignment:NTF";
+  case alignment_catcode*4+l3_T_code: return "token_if_alignment:NT";
+  case alignment_catcode*4+l3_F_code: return "token_if_alignment:NF";
+  case parameter_catcode*4+l3_p_code: return "token_if_parameter_p:N";
+  case parameter_catcode*4+l3_TF_code: return "token_if_parameter:NTF";
+  case parameter_catcode*4+l3_T_code: return "token_if_parameter:NT";
+  case parameter_catcode*4+l3_F_code: return "token_if_parameter:NF";
+  case hat_catcode*4+l3_p_code: return "token_if_math_superscript_p:N";
+  case hat_catcode*4+l3_TF_code: return "token_if_math_superscript:NTF";
+  case hat_catcode*4+l3_T_code: return "token_if_math_superscript:NT";
+  case hat_catcode*4+l3_F_code: return "token_if_math_superscript:NF";
+  case underscore_catcode*4+l3_p_code: return "token_if_math_subscript_p:N";
+  case underscore_catcode*4+l3_TF_code: return "token_if_math_subscript:NTF";
+  case underscore_catcode*4+l3_T_code: return "token_if_math_subscript:NT";
+  case underscore_catcode*4+l3_F_code: return "token_if_math_subscript:NF";
+  case space_catcode*4+l3_p_code: return "token_if_space_p:N";
+  case space_catcode*4+l3_TF_code: return "token_if_space:NTF";
+  case space_catcode*4+l3_T_code: return "token_if_space:NT";
+  case space_catcode*4+l3_F_code: return "token_if_space:NF";
+  case other_catcode*4+l3_p_code: return "token_if_other_p:N";
+  case other_catcode*4+l3_TF_code: return "token_if_other:NTF";
+  case other_catcode*4+l3_T_code: return "token_if_other:NT";
+  case other_catcode*4+l3_F_code: return "token_if_other:NF";
+  case letter_catcode*4+l3_p_code: return "token_if_letter_p:N";
+  case letter_catcode*4+l3_TF_code: return "token_if_letter:NTF";
+  case letter_catcode*4+l3_T_code: return "token_if_letter:NT";
+  case letter_catcode*4+l3_F_code: return "token_if_letter:NF";
+  case active_catcode*4+l3_p_code: return "token_if_active_p:N";
+  case active_catcode*4+l3_TF_code: return "token_if_active:NTF";
+  case active_catcode*4+l3_T_code: return "token_if_active:NT";
+  case active_catcode*4+l3_F_code: return "token_active:NF";
+  default:
+    return 0;
+  }
+}
+
+
+String CmdChr::token_if_name() const
+{
+  switch(chr) {
+  case tok_eq_cat_code*4+l3_p_code:  return "token_if_eq_catcode_p:NN";
+  case tok_eq_char_code*4+l3_p_code: return "token_if_eq_charcode_p:NN";
+  case tok_eq_meaning_code*4+l3_p_code: return "token_if_eq_meaning_p:NN";
+  case tok_if_macro_code*4+l3_p_code: return "token_if_macro_p:N";
+  case tok_if_cs_code*4+l3_p_code: return "token_if_cs_p:N";
+  case tok_if_expandable_code*4+l3_p_code:  return "token_if_expandable_p:N";
+  case tok_if_long_code*4+l3_p_code: return "token_if_long_macro_p:N";
+  case tok_if_prot_code*4+l3_p_code: return "token_if_protected_macro_p:N";
+  case tok_if_longprot_code*4+l3_p_code:
+    return "token_if_protected_long_macro_p:N";
+  case tok_if_chardef_code*4+l3_p_code:  return "token_if_chardef_p:N";
+  case tok_if_mathchardef_code*4+l3_p_code: return "token_if_mathchardef_p:N";
+  case tok_if_dim_code*4+l3_p_code: return "token_if_dim_register_p:N";
+  case tok_if_int_code*4+l3_p_code: return "token_if_int_register_p:N";
+  case tok_if_muskip_code*4+l3_p_code: return "token_if_muskip_register_p:N";
+  case tok_if_skip_code*4+l3_p_code:  return "token_if_skip_register_p:N";
+  case tok_if_toks_code*4+l3_p_code:  return "token_if_toks_register_p:N";
+  case tok_if_primitive_code*4+l3_p_code: return "token_if_primitive_p:N";
+  case tok_eq_cat_code*4+l3_TF_code: return "token_if_eq_catcode:NNTF";
+  case tok_eq_char_code*4+l3_TF_code: return "token_if_eq_charcode:NNTF";
+  case tok_eq_meaning_code*4+l3_TF_code: return "token_if_eq_meaning:NNTF";
+  case tok_if_macro_code*4+l3_TF_code: return "token_if_macro:NTF";
+  case tok_if_cs_code*4+l3_TF_code: return "token_if_cs:NTF";
+  case tok_if_expandable_code*4+l3_TF_code: return "token_if_expandable:NTF";
+  case tok_if_long_code*4+l3_TF_code: return "token_if_long_macro:NTF";
+  case tok_if_prot_code*4+l3_TF_code: return "token_if_protected_macro:NTF";
+  case tok_if_longprot_code*4+l3_TF_code: return "token_if_protected_long_macro:NTF";
+  case tok_if_chardef_code*4+l3_TF_code:return "token_if_chardef:NTF";
+  case tok_if_mathchardef_code*4+l3_TF_code: return "token_if_mathchardef:NTF";
+  case tok_if_dim_code*4+l3_TF_code: return "token_if_dim_register:NTF";
+  case tok_if_int_code*4+l3_TF_code: return "token_if_int_register:NTF";
+  case tok_if_muskip_code*4+l3_TF_code:return "token_if_muskip_register:NTF";
+  case tok_if_skip_code*4+l3_TF_code: return "token_if_skip_register:NTF";
+  case tok_if_toks_code*4+l3_TF_code: return "token_if_toks_register:NTF";
+  case tok_if_primitive_code*4+l3_TF_code: return "token_if_primitive:NTF";
+  case tok_eq_cat_code*4+l3_T_code: return "token_if_eq_catcode:NNT";
+  case tok_eq_char_code*4+l3_T_code: return "token_if_eq_charcode:NNT";
+  case tok_eq_meaning_code*4+l3_T_code: return "token_if_eq_meaning:NNT";
+  case tok_if_macro_code*4+l3_T_code:  return "token_if_macro:NT";
+  case tok_if_cs_code*4+l3_T_code:return "token_if_cs:NT";
+  case tok_if_expandable_code*4+l3_T_code: return "token_if_expandable:NT";
+  case tok_if_long_code*4+l3_T_code:  return "token_if_long_macro:NT";
+  case tok_if_prot_code*4+l3_T_code: return "token_if_protected_macro:NT";
+  case tok_if_longprot_code*4+l3_T_code:
+    return "token_if_protected_long_macro:NT";
+  case tok_if_chardef_code*4+l3_T_code:return "token_if_chardef:NT";
+  case tok_if_mathchardef_code*4+l3_T_code: return "token_if_mathchardef:NT";
+  case tok_if_dim_code*4+l3_T_code: return "token_if_dim_register:NT";
+  case tok_if_int_code*4+l3_T_code: return "token_if_int_register:NT";
+  case tok_if_muskip_code*4+l3_T_code: return "token_if_muskip_register:NT";
+  case tok_if_skip_code*4+l3_T_code:  return "token_if_skip_register:NT";
+  case tok_if_toks_code*4+l3_T_code: return "token_if_toks_register:NT";
+  case tok_if_primitive_code*4+l3_T_code: return "token_if_primitive:NT";
+  case tok_eq_cat_code*4+l3_F_code: return "token_if_eq_catcode:NNF";
+  case tok_eq_char_code*4+l3_F_code: return "token_if_eq_charcode:NNF";
+  case tok_eq_meaning_code*4+l3_F_code: return "token_if_eq_meaning:NNF";
+  case tok_if_macro_code*4+l3_F_code: return "token_if_macro:NF";
+  case tok_if_cs_code*4+l3_F_code: return "token_if_cs:NF";
+  case tok_if_expandable_code*4+l3_F_code: return "token_if_expandable:NF";
+  case tok_if_long_code*4+l3_F_code: return "token_if_long_macro:NF";
+  case tok_if_prot_code*4+l3_F_code: return "token_if_protected_macro:NF";
+  case tok_if_longprot_code*4+l3_F_code:return "token_if_protected_long_macro:NF";
+  case tok_if_chardef_code*4+l3_F_code: return "token_if_chardef:NF";
+  case tok_if_mathchardef_code*4+l3_F_code: return "token_if_mathchardef:NF";
+  case tok_if_dim_code*4+l3_F_code: return "token_if_dim_register:NF";	    
+  case tok_if_int_code*4+l3_F_code:  return "token_if_int_register:NF";
+  case tok_if_muskip_code*4+l3_F_code: return "token_if_muskip_register:NF";
+  case tok_if_skip_code*4+l3_F_code: return "token_if_skip_register:NF";
+  case tok_if_toks_code*4+l3_F_code: return "token_if_toks_register:NF";
+  case tok_if_primitive_code*4+l3_F_code: return "token_if_primitive:NF";
+	    
+ default:
+    return 0;
+  }
+}
+
+
+String CmdChr::l3_set_num_name() const
+{
+  switch(chr) {
+  case setcat_code: return "char_set_catcode:nn";
+  case thecat_code: return "char_value_catcode:n";
+  case showcat_code: return "char_show_value_catcode:n";
+  case setmath_code: return "char_set_mathcode:nn";
+  case themath_code: return "char_value_mathcode:n";
+  case showmath_code: return "char_show_value_mathcode:n";
+  case setlc_code: return "char_set_lccode:nn";
+  case thelc_code: return "char_value_lccode:n";
+  case showlc_code: return "char_show_value_lccode:n";
+  case setuc_code: return "char_set_uccode:nn";
+  case theuc_code: return "char_value_uccode:n";
+  case showuc_code: return "char_show_value_uccode:n";
+  case setsf_code: return "char_set_sfcode:nn";
+  case thesf_code: return "char_value_sfcode:n";
+  case showsf_code: return "char_show_value_sfcode:n";
+  default:
+    return 0;
+  }
+}
+    
+String CmdChr::l3str_case_name() const
+{
+  switch(chr) {
+  case l3_p_code: return "str_case_p:nn";
+  case l3_TF_code: return "str_case:nnTF";
+  case l3_T_code: return "str_case:nnT";
+  case l3_F_code: return "str_case:nnF";
+  case l3_p_code+4: return "str_case_x_p:nn";
+  case l3_TF_code+4: return "str_case_x:nnTF";
+  case l3_T_code+4: return "str_case_x:nnT";
+  case l3_F_code+4: return "str_case_x:nnF";
+  case l3_p_code+8: return "str_case_p:on";
+  case l3_TF_code+8: return "str_case:onTF";
+  case l3_T_code+8: return "str_case:onT";
+  case l3_F_code+8: return "str_case:onF";
+  default: return 0;
+  }
+}
+
+String CmdChr::l3_tl_basic_name() const
+{
+  switch (chr) {
+  case l3_tl_new_code: return "tl_new:N";
+  case l3_tl_clear_code: return "tl_clear:N";
+  case l3_tl_gclear_code: return "tl_gclear:N";
+  case l3_tl_const_code: return "tl_const:Nn";
+  case l3_tl_xconst_code: return "tl_const:Nx";
+  case l3_tl_clearnew_code: return "tl_clear_new:N";
+  case l3_tl_gclearnew_code: return "tl_gclear_new:N";
+  case l3_tlx_new_code: return "tl_new:c";
+  case l3_tlx_clear_code: return "tl_clear:c";
+  case l3_tlx_gclear_code: return "tl_gclear:c";
+  case l3_tlx_const_code: return "tl_const:cn";
+  case l3_tlx_xconst_code: return "tl_const:cx";
+  case l3_tlx_clearnew_code: return "tl_clear_new:c";
+  case l3_tlx_gclearnew_code:  return "tl_gclear_new:c";
+  default: return 0;
+  }
+}
+
+String CmdChr::tl_concat_name() const
+{
+  switch(chr) { 
+  case 0: return "tl_concat:NNN";
+  case 1: return "tl_concat:ccc";
+  case 2: return "tl_gconcat:NNN";
+  case 3: return "tl_gconcat:ccc";
+  default: return 0;
+  }
+}
+
+String CmdChr::tl_set_name() const
+{
+  switch(chr) {
+  case l3expn_code: return "tl_set:Nn";
+  case l3expo_code: return "tl_set:No";
+  case l3expf_code: return "tl_set:Nf";
+  case l3expx_code: return "tl_set:Nx";
+  case l3expV_code: return "tl_set:NV";
+  case l3expv_code: return "tl_set:Nv";
+  case l3expn_code+9: return "tl_set:cn";
+  case l3expo_code+9: return "tl_set:co";
+  case l3expf_code+9: return "tl_set:cf";
+  case l3expx_code+9: return "tl_set:cx";
+  case l3expV_code+9: return "tl_set:cV";
+  case l3expv_code+9: return "tl_set:cv";
+  case l3expn_code+18: return "tl_gset:Nn";
+  case l3expo_code+18: return "tl_gset:No";
+  case l3expf_code+18: return "tl_gset:Nf";
+  case l3expx_code+18: return "tl_gset:Nx";
+  case l3expV_code+18: return "tl_gset:NV";
+  case l3expv_code+18: return "tl_gset:Nv";
+  case l3expn_code+9+18: return "tl_gset:cn";
+  case l3expo_code+9+18: return "tl_gset:co";
+  case l3expf_code+9+18: return "tl_gset:cf";
+  case l3expx_code+9+18: return "tl_gset:cx";
+  case l3expV_code+9+18: return "tl_gset:cV";
+  case l3expv_code+9+18: return "tl_gset:cv";
+  default: return 0;
+  }
+}
+
+String CmdChr::tl_put_left_name() const
+{
+  switch(chr) {
+  case l3expn_code: return "tl_put_left:Nn";
+  case l3expo_code: return "tl_put_left:No";
+  case l3expx_code: return "tl_put_left:Nx";
+  case l3expV_code: return "tl_put_left:NV";
+  case l3expn_code+9: return "tl_put_left:cn";
+  case l3expo_code+9: return "tl_put_left:co";
+  case l3expx_code+9: return "tl_put_left:cx";
+  case l3expV_code+9: return "tl_put_left:cV";
+  case l3expn_code+18: return "tl_gput_left:Nn";
+  case l3expo_code+18: return "tl_gput_left:No";
+  case l3expx_code+18: return "tl_gput_left:Nx";
+  case l3expV_code+18: return "tl_gput_left:NV";
+  case l3expn_code+9+18: return "tl_gput_left:cn";
+  case l3expo_code+9+18: return "tl_gput_left:co";
+  case l3expx_code+9+18: return "tl_gput_left:cx";
+  case l3expV_code+9+18: return "tl_gput_left:cV";
+  case l3expn_code+36: return "tl_put_right:Nn";
+  case l3expo_code+36: return "tl_put_right:No";
+  case l3expx_code+36: return "tl_put_right:Nx";
+  case l3expV_code+36: return "tl_put_right:NV";
+  case l3expn_code+9+36: return "tl_put_right:cn";
+  case l3expo_code+9+36: return "tl_put_right:co";
+  case l3expx_code+9+36: return "tl_put_right:cx";
+  case l3expV_code+9+36: return "tl_put_right:cV";
+  case l3expn_code+18+36: return "tl_gput_right:Nn";
+  case l3expo_code+18+36: return "tl_gput_right:No";
+  case l3expx_code+18+36: return "tl_gput_right:Nx";
+  case l3expV_code+18+36: return "tl_gput_right:NV";
+  case l3expn_code+9+18+36: return "tl_gput_right:cn";
+  case l3expo_code+9+18+36: return "tl_gput_right:co";
+  case l3expx_code+9+18+36: return "tl_gput_right:cx";
+  case l3expV_code+9+18+36: return "tl_gput_right:cV";
+  default: return 0;
+  }
+}
+
+String CmdChr::l3_rescan_name() const
+{
+  switch(chr) {
+  case 0: return "tl_set_rescan:Nnn";
+  case 1: return "tl_set_rescan:Nno";
+  case 2: return "tl_set_rescan:Nnx";
+  case 3: return "tl_set_rescan:cnn";
+  case 4: return "tl_set_rescan:cno";
+  case 5: return "tl_set_rescan:cnx";
+  case 6: return "tl_gset_rescan:Nnn";
+  case 7: return "tl_gset_rescan:Nno";
+  case 8: return "tl_gset_rescan:Nnx";
+  case 9: return "tl_gset_rescan:cnn";
+  case 10: return "tl_gset_rescan:cno";
+  case 11: return "tl_gset_rescan:cnx";
+  case 12: return "tl_gset_rescan:nn";
+  default: return 0;
+  }
+}
+    
+
 String CmdChr::special_name() const
 {
   switch(cmd) {
@@ -2023,7 +2578,7 @@ String CmdChr::special_name() const
   case 10: return "blank space";
   case 11: return "the letter";
   case 12: return "the character";
-  case 13: return "active character";
+  case 13: return "impossible (active character)";
   case 14: return "impossible (comment)";
   case 15: return "impossible (ignored)";
   default: return 0;
@@ -2049,7 +2604,8 @@ String CmdChr::name() const
   case mathopn_cmd:
     return token_math_name();
   case section_cmd: return token_section_name();
-  case label_cmd: return  chr==0 ?"label" : "anchor";
+  case label_cmd:
+    return  chr==0 ?"label" :(chr== 1 ?  "anchor" : "anchorlabel");
   case ref_cmd: return chr==0 ? "ref" : "pageref";
   case eqref_cmd: return  "XMLref";
   case par_cmd: return "par";
@@ -2074,6 +2630,7 @@ String CmdChr::name() const
   case solvecite_cmd: return "XMLsolvecite";
   case bib_cmd: return chr==0 ? "bauthors" : "beditors";
   case backslash_cmd: return chr==0 ? "\\" : "newline";
+  case omitcite_cmd : return "omitcite";
   case hline_cmd:
     if(chr==one_code) return "cline";
     if(chr==two_code) return "hlinee";
@@ -2180,6 +2737,8 @@ String CmdChr::name() const
   case tag_cmd: switch(chr) {
     case 1: return "@xtag";
     case 2: return "@ytag";
+    case 3: return "notag";
+    case 4: return "nonumber";
     default: return "tag";
     }
   case line_cmd: return token_line_name();
@@ -2205,7 +2764,7 @@ String CmdChr::name() const
   case begingroup_cmd: 
     return chr==0 ? "begingroup" : 
     chr==1 ? "endgroup" : 
-    "endgroup (for env)";
+    "endenv";
   case startprojet_cmd: return  "RAstartprojet";
   case ra_startdoc_cmd: return  "rawebstartdocument";
   case declaretopics_cmd: return  "declaretopic";
@@ -2245,6 +2804,7 @@ String CmdChr::name() const
     return "tableofcontents";
   }
   case random_cmd: return "tralics@random";
+  case pdfstrcmp_cmd: return "pdfstrcmp";
   case ot2enc_cmd: {
     if (chr==1) return "OT2-encoding";
     if (chr==2) return "OT1-encoding";
@@ -2316,18 +2876,20 @@ String CmdChr::name() const
   case ignore_env_cmd: return strip_end(token_eignore_name());
   case ignore_content_cmd: return strip_end(token_eignorec_name());
   case raw_env_cmd: return  "rawxml";
-  case math_env_cmd: return  strip_end(token_emath_name());
+  case math_env_cmd: return  strip_end(tralics_ns::math_env_name(chr));
   case RAsection_env_cmd: return  "RAsection";
   case tabular_env_cmd: return  chr==0 ? "tabular":  "tabular*";
   case verbatim_env_cmd: 
      return chr==0 ? "verbatim" : chr==1 ? "Verbatim" : "@verbatim";
   case minipage_cmd: return  "minipage";
+  case subequations_cmd: return  "subequations";
   case picture_env_cmd: return  "picture";
   case xmlelement_env_cmd: return chr==0 ? "xmlelement" : "xmlelement*";
   case filecontents_env_cmd: 
     return chr==0 ? "filecontents" : chr==1 ?"filecontents*" :
       chr==2 ? "filecontents+" : "filecontents";
-  case end_document_cmd: return "enddocument";
+  case end_document_cmd:
+    return chr== 0 ? "enddocument" : "real-enddocument";
   case end_keywords_cmd: return  "endmotscle";
   case end_center_cmd: return token_ecenter_name();
   case end_figure_cmd: return token_efigure_name();
@@ -2340,12 +2902,13 @@ String CmdChr::name() const
   case end_ignore_env_cmd: return token_eignore_name();
   case end_ignore_content_cmd: return token_eignorec_name();
   case end_raw_env_cmd: return  "endrawxml";
-  case end_math_env_cmd: return  token_emath_name();
+  case end_math_env_cmd: return  tralics_ns::math_env_name(chr);
   case end_RAsection_env_cmd: return  "endRAsection";
   case end_tabular_env_cmd: return chr==0 ? "endtabular": "endtabular*";
   case end_verbatim_env_cmd:
       return chr==0 ? "endverbatim" : chr==1 ? "endVerbatim" : "end@verbatim";
   case end_minipage_cmd: return  "endminipage"; 
+  case end_subequations_cmd: return  "endsubequations"; 
   case end_picture_env_cmd: return  "endpicture"; 
   case end_xmlelement_env_cmd:
     return chr==0 ? "endxmlelement" : "endxmlelement*";
@@ -2409,7 +2972,6 @@ String CmdChr::name() const
   case ifstar_cmd: return  "@ifstar";
   case ifnextchar_cmd: return  chr==0 ? "@ifnextchar" : "@ifnextcharacter";
   case ifempty_cmd: return  chr==0 ?   "@iftempty" : "@ifbempty";
-  case typeout_cmd: return  chr==0 ? "typeout" : "wlog";
   case for_cmd: return token_for_name();
   case fp_cmd: return token_fp_names();
   case fpif_cmd: return token_fp_names();
@@ -2460,7 +3022,26 @@ String CmdChr::name() const
   case multiply_cmd: return  "multiply";
   case divide_cmd: return  "divide";
   case prefix_cmd: return token_prefix_name();
-  case let_cmd: return chr==let_code?  "let" : "futurelet";
+  case let_cmd:
+    switch (chr) {
+    case let_code: return "let";
+    case futurelet_code: return "futurelet";
+    case letNN_code: return "cs_set_eq:NN";
+    case letcN_code: return "cs_set_eq:cN";
+    case letNc_code: return "cs_set_eq:Nc";
+    case letcc_code: return "cs_set_eq:cc";
+    case gletNN_code: return "cs_gset_eq:NN";
+    case gletcN_code: return "cs_gset_eq:cN";
+    case gletNc_code: return "cs_gset_eq:Nc";
+    case gletcc_code: return "cs_gset_eq:cc";
+    case nletNN_code: return "cs_new_eq:NN";
+    case nletcN_code: return "cs_new_eq:cN";
+    case nletNc_code: return "cs_new_eq:Nc";
+    case nletcc_code: return "cs_new_eq:cc";
+    case undef_code: return "cs_undefine:N"; 
+    case undefc_code: return "cs_undefine:c"; 
+    default: return 0;
+    }
   case shorthand_def_cmd: return token_shorthand_name();
   case read_to_cs_cmd: return chr== 0 ? "read" : "readline";
   case def_cmd: return token_def_name();
@@ -2476,9 +3057,35 @@ String CmdChr::name() const
   case obracket_cmd: return  chr==0 ? "["  : "]";
   case oparen_cmd: return chr==0 ? "(" : ")";
   case csname_cmd: return  "csname"; 
+  case usename_cmd:
+    return chr==0 ? "use:c" : (chr==1 ? "exp_args:Nc" : "exp_args:cc");
+  case l3expand_aux_cmd: return l3_expand_aux_name();
+  case l3expand_base_cmd: return l3_expand_base_name();
+  case l3_ifx_cmd: return l3_ifx_name();
+  case tl_basic_cmd: return l3_tl_basic_name();
+  case tl_concat_cmd: return tl_concat_name();
+  case tl_set_cmd: return tl_set_name();
+  case l3_rescan_cmd: return l3_rescan_name();
+  case tl_put_left_cmd: return tl_put_left_name();
+  case l3str_ifeq_cmd: return l3str_ifeq_name();
+  case l3str_case_cmd: return l3str_case_name();
+  case l3_set_cat_cmd: return l3_set_cat_name();
+  case cat_ifeq_cmd: return cat_ifeq_name();
+  case token_if_cmd: return token_if_name();
+  case l3_set_num_cmd:
+  case l3E_set_num_cmd: //these two are shared
+    return l3_set_num_name();
+  case l3noexpand_cmd:
+    if(chr==l3expc_code) return "exp_not:c";
+    if(chr==l3expo_code) return "exp_not:o";
+    if(chr==l3expf_code) return "exp_not:f";
+    if(chr==l3expv_code) return "exp_not:v";
+    if(chr==l3expV_code) return "exp_not:V";
+    return 0;
   case expandafter_cmd: return chr==0? "expandafter" : "unless"; 
+  case titlepage_cmd: return  "titlepage";
   case noexpand_cmd: return  "noexpand";
-  case scanupdown_cmd: return "@scanupdown";
+  case scan_up_down_cmd: return "@scanupdown";
   case sideset_cmd: return "sideset";
   case split_cmd: return "tralics@split";
   case a_cmd: return  "a";
@@ -2487,15 +3094,80 @@ String CmdChr::name() const
   case counter_cmd: return token_counter_name();
   case setlength_cmd: return chr==0 ?  "setlength" :  "addtolength";
   case useverb_cmd: return  "UseVerb";
-  case first_of_one_cmd: return  "@firstofone";
+  case all_of_one_cmd: 
+    switch (chr) {
+    case 0: return "@firstofone";
+    case 1: return "use:n";
+    case 2: return "use:nn";
+    case 3: return "use:nnn";
+    case 4: return "use:nnnn";
+    default: return "use_i_ii:nnn";
+    }
+  case ignore_n_args_cmd: 
+    switch (chr) {
+    case 1: return "use_none:n";
+    case 2: return "use_none:nn";
+    case 3: return "use_none:nnn";
+    case 4: return "use_none:nnnn";
+    case 5: return "use_none:nnnnn";
+    case 6: return "use_none:nnnnnn";
+    case 7: return "use_none:nnnnnnn";
+    case 8: return "use_none:nnnnnnnn";
+    default: return "use_none:nnnnnnnnn";
+    }
+  case l3_gen_cond_Npnn_cmd:
+    switch(chr) {
+    case L3_set_code: return "prg_set_conditional:Npnn";
+    case L3_new_code: return "prg_new_conditional:Npnn";
+    case L3_setp_code: return "prg_set_protected_conditional:Npnn";
+    default: return "prg_new_protected_conditional:Npnn";
+    }
+  case l3_gen_cond_Nnn_cmd:
+    switch(chr) {
+    case L3_set_code: return "prg_set_conditional:Nnn";
+    case L3_new_code: return "prg_new_conditional:Nnn";
+    case L3_setp_code: return "prg_set_protected_conditional:Nnn";
+    default: return "prg_new_protected_conditional:Nnn";
+    }
+  case l3_gen_eq_cond_cmd:
+    return (chr==L3_set_code ? "prg_set_eq_conditional:NNn" :
+	    "prg_new_eq_conditional:NNn");
+  case l3_check_cmd:
+     switch(chr) {
+     case 0: return "__chk_if_free_cs:N";
+     case 1: return "__chk_if_free_cs:c";
+     case 2: return "__chk_if_exist_cs:N";
+     case 3: return "__chk_if_exist_cs:c";
+     default: return 0;
+     }
+  case l3_gen_from_ac_cmd:
+    return (chr==0) ? "cs_generate_from_arg_count:NNnn" :
+      (chr==1 ? "cs_generate_from_arg_count:cNnn":
+       "cs_generate_from_arg_count:Ncnn");
+  case l3_generate_variant_cmd: return "cs_generate_variant:Nn";
+  case l3_gen_from_sig_cmd: return "__cs_generate_from_signature:NNn";
+  case GetIdInfo_cmd: return "GetIdInfo_cmd";
+  case splitfun_cmd:
+    return chr==0 ? "__cs_get_function_name:N" :
+      "__cs_get_function_signature:N";
   case first_of_two_cmd: return  chr==1 ? "@firstoftwo" : "@secondoftwo";
+  case prg_return_cmd: return  chr==0 ? "prg_return_true:" : "prg_return_false:";
+  case first_of_three_cmd:
+    return  chr==1 ? "use_i:nnn" : chr == 2 ? "use_ii:nnn" : "use_iii:nnn";
+  case first_of_four_cmd:
+    switch (chr) {
+    case 1: return "use_i:nnnn";
+    case 2: return "use_ii:nnnn";
+    case 3: return "use_iii:nnnn";
+    default: return "use_iv:nnnn";
+    }
   case if_test_cmd: return token_iftest_name();
   case fi_or_else_cmd: return token_fiorelse_name();
   case top_bot_mark_cmd: return  token_mark_name();
   case char_given_cmd:
-    return make_name("char",chr);
+    return tralics_ns::make_name16("char",chr);
   case math_given_cmd:
-    return make_name("mathchar",chr);
+    return tralics_ns::make_name16("mathchar",chr);
   case undef_cmd: return "undefined";
   case endv_cmd: return "endtemplate";
   case ding_cmd: return "ding";
@@ -2516,6 +3188,7 @@ String CmdChr::name() const
   case car_cmd: return chr==0 ? "@car" : "@cdr";
   case latex_error_cmd: return token_error_name();
   case xkeyval_cmd: return token_xkeyval_name();
+  case ipa_cmd: return tipa_name();
   case curves_cmd:
     switch(chr) {
     case arc_code: return "arc";

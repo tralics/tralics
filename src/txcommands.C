@@ -1,5 +1,5 @@
 // Tralics, a LaTeX to XML translator.
-// Copyright INRIA/apics/marelle (Jose' Grimm) 2002-2011
+// Copyright INRIA/apics/marelle (Jose' Grimm) 2002-2015
 
 // This software is governed by the CeCILL license under French law and
 // abiding by the rules of distribution of free software.  You can  use, 
@@ -12,15 +12,16 @@
 
 #include "tralics.h"
 const char* txcommands_rcsid =
-  "$Id: txcommands.C,v 2.140 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txcommands.C,v 2.164 2017/05/29 06:22:57 grimm Exp $";
 
 // This file contains the big switch that interprets (most) commands
 
 extern bool nostraightquotes;
+extern bool seen_enddocument;
 extern bool xkv_patch;
 
-extern  uint leftquote_val;
-extern  uint rightquote_val;
+extern uint leftquote_val;
+extern uint rightquote_val;
 extern bool nofloat_hack;
 
 namespace {
@@ -61,16 +62,23 @@ void Parser::init_all(string doc_elt)
 
 
 // This assumes that the string is plain ASCII, no special XML characters
+// Note: never use process_char('&'), 
 inline void Parser::process_string (String s)
 {
   unprocessed_xml.push_back(s);
 }
 
-// This assumes that the string is plain ASCII, no special XML characters
+
 inline void Parser::process_char (int s)
 {
-  process_char(uint(s));
+  process_char(Utf8Char(uint(s)));
 }
+
+inline void Parser::process_char (uint c)
+{
+  process_char(Utf8Char(c));
+}
+
 
 
 // This is useful for German unlaut. It translates two normal characters.
@@ -90,16 +98,16 @@ void Parser::umlaut()
     if(cur_cmd_chr.is_letter()) quote_started = true;
     else if (quote_started) quote_started = false;
     else { umlaut_bad(); return; }
-    if(!cur_tok.is_invalid()) back_input();
+    if(cur_tok.is_valid()) back_input();
     Token T = Token(other_t_offset,quote_started ? '`' : '\'');
-    if(cur_lang_fr())T = Token(other_t_offset,quote_started ? '<' : '>');
+    if(cur_lang_fr()) T = Token(other_t_offset,quote_started ? '<' : '>');
     back_input(T);
     back_input(T);
     return;
   }
   if((!cur_cmd_chr.is_letter() && !cur_cmd_chr.is_other())
      || cur_tok.char_val().get_value() >int(nb_characters)) { //
-    if(cur_tok.to_cs() == '~'+1) { // "~ -> dash , strange
+    if(cur_tok.eqtb_loc() == '~') { // "~ -> dash , strange
       translate_char(CmdChr(uchar('-'))); 
       return;
     }
@@ -144,8 +152,8 @@ void Parser::umlaut()
   case '=': return;
   case '`': LC(); process_string("&#x0201E;"); return;
   case '\'': LC(); process_string("&#x0201D;"); return;
-  case '<' : translate_char(CmdChr(uchar(0253))); return;
-  case '>' : translate_char(CmdChr(uchar(0273))); return;
+  case '<' : translate_char(CmdChr(uchar(0xAB))); return;
+  case '>' : translate_char(CmdChr(uchar(0xBB))); return;
   default:
     umlaut_bad();
   }
@@ -155,7 +163,7 @@ void Parser::umlaut()
 // a double quote
 void Parser::umlaut_bad()
 {
-  if(!cur_tok.is_invalid()) back_input();
+  if(cur_tok.is_valid()) back_input();
   translate_char(CmdChr(letter_catcode,subtypes(uchar('"'))));
 }
 
@@ -164,7 +172,7 @@ void Parser::umlaut_bad()
 void Parser::extended_chars(unsigned int c)
 {
   LC();
-  if(c<1<<16)
+  if(c < 1<<16)
     process_char(c);
   else
     unprocessed_xml.process_big_char(c);
@@ -192,7 +200,7 @@ void Parser::translate_char (CmdChr X)
     english_quotes(X);
     return;
   case '"' :
-    if(X.is_letter() || InUrlHandler::global_in_url|| 
+    if(X.is_letter() || InUrlHandler::global_in_url || 
        InLoadHandler::global_in_load)
       process_char(c);
     else umlaut();
@@ -201,8 +209,8 @@ void Parser::translate_char (CmdChr X)
   case ':' : 
   case '!' : 
   case '?':
-  case 0273:
-  case 0253:
+  case 0xBB:  // <<
+  case 0xAB:  // >>
     french_punctuation(X);
     return;
   default :
@@ -212,7 +220,7 @@ void Parser::translate_char (CmdChr X)
 
 
 // This translates `'<>
-// In some case ``, '', << and >> are translated as \253 and \273
+// In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X)
 {
   uchar c = X.char_val().get_value(); // Should be a small int
@@ -227,11 +235,11 @@ void Parser::english_quotes(CmdChr X)
       if(cur_cmd_chr.is_other() && cur_cmd_chr.char_val() == uint(c)) {
 	if(c=='\'') process_char(0x201d); 
 	else if(c=='`') process_char(0x201c);
-	else if(c=='<') french_punctuation(CmdChr(uchar('\253')));
-	else  french_punctuation(CmdChr(uchar('\273')));
+	else if(c=='<') french_punctuation(CmdChr(uchar(0xAB)));
+	else  french_punctuation(CmdChr(uchar(0xBB)));
 	return;
       }
-      if(!cur_tok.is_invalid())  back_input();
+      if(cur_tok.is_valid())  back_input();
     }
     if(c=='<') process_string("&lt;"); 
     else if(c=='>') process_string("&gt;"); 
@@ -261,17 +269,17 @@ void Parser::minus_sign(CmdChr X)
       if(cur_cmd_chr.is_minus_sign()) {
 	process_char(0x2014);
       } else {
-	if(!cur_tok.is_invalid()) back_input();
+	if(cur_tok.is_valid()) back_input();
 	process_char(0x2013);
       }
     } else {
-      if(!cur_tok.is_invalid()) back_input();
+      if(cur_tok.is_valid()) back_input();
       process_char('-');
     }
   }
 }
 
-// This handles :;!?\253 \273. Especially in French.
+// This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X)
 {
   uchar c = X.char_val().get_value();
@@ -288,7 +296,7 @@ void Parser::french_punctuation(CmdChr X)
 	 cur_cmd_chr.get_chr()==nobreakspace_code) break;
       if(cur_cmd_chr.get_cmd()==cst1_cmd &&
 	 cur_cmd_chr.get_chr()==comma_code) break;
-      if(!cur_tok.is_invalid()) back_input();
+      if(cur_tok.is_valid()) back_input();
       break;
     }
     extended_chars(c);
@@ -318,7 +326,7 @@ void Parser::T_cst2(int c)
     res ->push_back(new Xml(Istring(s)));
     the_stack.add_last(res);
   }
-  T_xspace();
+  E_xspace();
 }
 
 
@@ -383,7 +391,7 @@ void Parser::T_cst1(int c)
     unprocessed_xml.remove_last_space();
     process_char(0xA0);
     process_char(0xBB); 
-    T_xspace();
+    E_xspace();
     return;
     //  case emdash_code : process_char(0x2014); return;
     // case endash_code : process_char(0x2013); return;
@@ -396,8 +404,7 @@ void Parser::T_cst1(int c)
 // In latex, this calls \char. Here we call scan_braced_int
 void Parser::T_ding()
 {
-  Token T = cur_tok;
-  int c = scan_braced_int(T);
+  int c = scan_braced_int(cur_tok);
   int r =0;
   switch(c) {
   case 33:  r =0x2701; break;
@@ -598,12 +605,12 @@ void Parser::T_ding()
 void Parser::T_minipage()
 {
   Token T = cur_tok;
-  Istring pos = the_names[get_ctb_opt(false)];
-  ignore_next_optarg();
-  Istring ipos = the_names[get_ctb_opt(true)];
-  ignore_next_optarg(); // really needed ?
-  scan_glue(it_glue,T,false);
-  Istring w =  the_main->SH.find_scaled( ScaledInt(cur_val.get_glue_width()));
+  Istring pos = the_names[get_ctb_opt()];
+  ignore_optarg();
+  Istring ipos = the_names[get_ctb_opt()];
+  ignore_optarg(); // really needed ?
+  scan_glue(it_dimen,T,false);
+  Istring w =  the_main->SH.find_scaled(cur_val.get_dim_val());
   if(the_stack.in_v_mode()) leave_v_mode();
   the_stack.push1(np_minipage);
   the_stack.set_v_mode();
@@ -618,7 +625,7 @@ void Parser::T_minipage()
 void Parser::T_xmlenv(subtypes c) 
 { 
   flush_buffer();
-  string a = sT_next_arg();
+  string a = sT_arg_nopar();
   if(c==0 && the_stack.in_v_mode()) {
     leave_v_mode();
   } else if(c==1) leave_h_mode();
@@ -652,7 +659,7 @@ void Parser::T_listenv_end(symcodes x)
 
 void Parser::T_atdocument(subtypes c)
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   if(c==0) document_hook.splice(document_hook.end(),L);
   else end_document_hook.splice(end_document_hook.end(),L);
 }
@@ -680,12 +687,12 @@ void Parser::T_glossaire_end()
 // c=2 is wrapfigure
 void Parser::T_figure_table(symcodes x, subtypes c)
 {
-  Istring opt = nT_next_optarg();
+  Istring opt = nT_optarg_nopar();
   Istring place, overhang,width;
   if(c==2) {
-    place = nT_next_arg();
-    overhang = nT_next_optarg();
-    width = nT_next_arg();
+    place = nT_arg_nopar();
+    overhang = nT_optarg_nopar();
+    width = nT_arg_nopar();
   }
   word_define(incentering_code,1,false);
   leave_h_mode();
@@ -723,13 +730,16 @@ void Parser::T_figure_table_end(bool is_fig)
 void Parser::T_enddocument(subtypes c)
 {
   if(c==0) {
-    x_input(end_all_input_code);
+    E_input(end_all_input_code);
+    kill_line();
     hash_table.eval_let("AtEndDocument","@firstofone");
     back_input(hash_table.real_end_token);
     back_input(end_document_hook);
+    if(tracing_commands()) the_log << "atenddocumenthook: " << TL << "\n";
   } else {
     flush_buffer();
     the_stack.end_module();
+    seen_enddocument = true;
   }
 }
 
@@ -744,9 +754,9 @@ void Parser::T_begindocument()
     parse_error("\\begin{document} not at level 0");
   seen_document = true;
   if(!tralics_ns::titlepage_is_valid()) add_language_att();
-  pop_level(true,bt_env);
+  cur_tok.kill();pop_level(bt_env);
   cur_level = level_one; // this is the outer level...
-  if(the_main->d_verbose()) tracing_all();
+  if(the_main->d_verbose()) M_tracingall();
   if(tracing_commands()) 
     the_log << lg_startstack << "level set to 1" << lg_end;
   tralics_ns::bibtex_bootagain();
@@ -756,7 +766,7 @@ void Parser::T_begindocument()
     TokenList L;
     b.reset();
     b.push_back("\\let\\do\\noexpand\\ignorespaces\n");
-    add_buffer_to_list(b,L,"(AtBeginDocument hook)");
+    tokenize_buffer(b,L,"(AtBeginDocument hook)");
     back_input(L);
   } 
   back_input(onlypreamble);
@@ -770,7 +780,7 @@ void Parser::T_beginend(symcodes x)
 {
   flush_buffer();
   bool begin = x==begin_cmd;
-  string S = get_env();
+  string S = fetch_name0();
   if(tracing_commands())
     the_log << lg_startbracebs  << (begin ? "begin " : "end ") << S 
 	    << lg_endbrace;
@@ -798,14 +808,15 @@ void Parser::T_aftergroup()
 // Translates \hskip1em, \vskip1em or \mskip3mu
 void Parser::T_scan_glue(subtypes c)
 {
+  Token T = cur_tok;
   if(c==mskip_code) {
-    scan_glue(it_mu,cur_tok); 
+    scan_glue(it_mu,T); 
     // ignore value...
     return;
   } else {
-    scan_glue(it_glue,cur_tok);
+    scan_glue(it_glue,T);
     // not perfect...
-    append_glue(ScaledInt(cur_val.get_glue_width()),c==vskip_code);
+    append_glue(T,ScaledInt(cur_val.get_glue_width()),c==vskip_code);
   }
 }
 
@@ -820,25 +831,11 @@ void Parser::T_bauteursediteurs(subtypes c)
   the_stack.add_nl();
 }
 
-void Parser::T_anchor() 
-{
-  static int anchor_id = 0;
-  anchor_id++;
-  string s = sT_next_optarg();
-  if(s.empty()) {
-    mac_buffer << bf_reset << anchor_id;
-    s = mac_buffer.to_string();
-  }
-  the_stack.add_anchor(s);  
-  mac_buffer << bf_reset << "aid" << anchor_id;
-  add_id(mac_buffer.to_string());
-}
-
 
 // Translates \unhbox, \unhcopy \unvbox \unvcopy
 void Parser::T_un_box(subtypes c)
 {
-  int i = scan_eight_bit_int();
+  int i = scan_reg_num();
   if(c==unhbox_code) leave_v_mode();
   Xmlp cur_box = box_table[i].get_val();
   the_stack.unbox(cur_box);
@@ -865,13 +862,6 @@ name_positions tcommands::vfill_to_np (subtypes c)
 
 
 // Translates a command.
-void Parser::translate01()
-{
-  Token T=name_for_error;
-  name_for_error = cur_tok;
-  translate03();
-  name_for_error = T;
-}
 
 void Parser::translate03()
 {
@@ -920,6 +910,7 @@ void Parser::translate03()
   case biblio_cmd:
     T_biblio();
     return;
+  case omitcite_cmd : T_omitcite (); return ;
   case bibliographystyle_cmd:
     T_bibliostyle();
     return;
@@ -935,11 +926,9 @@ void Parser::translate03()
     return;
   case xmllatex_cmd:
     LC();
-    unprocessed_xml << xmllatex();
+    unprocessed_xml << T_xmllatex();
     return;
-  case scan_glue_cmd: 
-    T_scan_glue(c);
-    return;
+  case scan_glue_cmd: T_scan_glue(c); return;
   case kern_cmd:
     scan_dimen(c==1,cur_tok);
     // so what ? we could append hspace or vspace here.
@@ -948,7 +937,6 @@ void Parser::translate03()
     LC();
     // FIXME this is latex not xml
     if(eqtb_int_table[language_code].get_val() ==1) {
-      unprocessed_xml.process_big_char(c);
       process_char(Utf8Char(0xE0));
       process_string(" para");
       process_char(Utf8Char(0xEE));
@@ -958,30 +946,25 @@ void Parser::translate03()
   case calc_cmd:
     exec_calc();
     return;
-  case 3: 
-    flush_buffer(); 
-    T_math(-1);
-    return;
-  case 4:
-    T_ampersand();
-    return;
+  case dollar_catcode: flush_buffer();  T_math(nomathenv_code);return;
+  case alignment_catcode: T_ampersand(); return;
   case open_catcode:
     push_level(bt_brace);
     return;
   case close_catcode:
-    pop_level(false,bt_brace);
+    pop_level(bt_brace);
     return;
   case begingroup_cmd:
     flush_buffer();
     if(c==0) push_level(bt_semisimple);
-    else if(c==1) pop_level(false,bt_semisimple);
-    else pop_level(true,bt_env);
+    else if(c==1) pop_level(bt_semisimple);
+    else { get_token(); pop_level(bt_env); }
     return;
   case hat_catcode: 
   case underscore_catcode: 
     if(InLoadHandler::global_in_load||is_pos_par(nomath_code))
       translate_char(CmdChr(letter_catcode,c));
-    else parse_error("Missing dollar not inserted, token ignored: ",
+    else parse_error(cur_tok,"Missing dollar not inserted, token ignored: ",
 		     cur_tok.tok_to_str(),"Missing dollar");
     return;
   case backslash_cmd: 
@@ -995,7 +978,7 @@ void Parser::translate03()
     return;
   case skip_cmd: {
     int w =  c==smallskip_code ? 3 : c == medskip_code ? 6 : 12;
-    append_glue(w<<16, true);
+    append_glue(cur_tok,w<<16, true);
     return;
   }
   case hfill_cmd:
@@ -1046,7 +1029,7 @@ void Parser::translate03()
     return;
   case ltfont_cmd:
     flush_buffer();
-    cur_font.ltfont(sT_next_arg(),c);
+    cur_font.ltfont(sT_arg_nopar(),c);
     return;
   case usefont_cmd:
     T_usefont();
@@ -1089,25 +1072,24 @@ void Parser::translate03()
     }
     return;
   case relax_cmd:
+  case eof_marker_cmd:
     return;
   case nolinebreak_cmd:
-    ignore_next_optarg();
+    ignore_optarg();
     return;
   case ignore_one_argument_cmd:
     if(c==patterns_code || c==hyphenation_code || c==special_code) 
-      scan_left_brace_and_bi();
-    ignore_next_arg();
+      scan_left_brace_and_back_input();
+    ignore_arg();
     return;
   case ignore_two_argument_cmd:
-    ignore_next_arg();
-    ignore_next_arg();
+    ignore_arg();
+    ignore_arg();
     return;
   case defineverbatimenv_cmd:
     T_define_verbatim_env();
     return;
-  case saveverb_cmd:
-    T_save_use_verb(true);
-    return;
+  case saveverb_cmd: T_saveverb(); return;
   case xkeyval_cmd: T_xkeyval(c); return;
   case add_to_macro_cmd:
     T_addtomacro(c==1);
@@ -1132,7 +1114,7 @@ void Parser::translate03()
 	      << lg_endbrace;
     return;
   case last_item_cmd: 
-    parse_error("Read only variable ", cur_tok, "","readonly");
+    parse_error(cur_tok,"Read only variable ", cur_tok, "","readonly");
     return;
   case XML_swap_cmd: user_XML_swap(c); return;
   case XML_fetch_cmd: user_XML_fetch(); return;
@@ -1140,15 +1122,11 @@ void Parser::translate03()
   case un_box_cmd: 
     T_un_box(c);
     return;
-  case extension_cmd: // 
-    tex_extension(c);
-    return;
+  case extension_cmd: M_extension(c); return;
   case setlanguage_cmd: //  strange...
     scan_int(cur_tok);
     return;
-  case xray_cmd: 
-    xray(c);
-    return;
+  case xray_cmd: M_xray(c); return;
   case move_cmd:
     scan_dimen(false,cur_tok); // ignore dimension
     scan_box(move_location); // read a box and insert the value
@@ -1163,41 +1141,24 @@ void Parser::translate03()
     scan_box(c==shipout_code ? shipout_location: c==leaders_code ? leaders_location:
 	     c== cleaders_code ? cleaders_location: xleaders_location);
     return;
-  case tracingall_cmd:
-    tracing_all();
-    return;
-  case ifstar_cmd:
-    if_star();
-    return;
+  case tracingall_cmd: M_tracingall(); return;
+  case ifstar_cmd: T_ifstar(); return;
   case vglue_cmd:
     if(c==0) T_par1(); else leave_v_mode();
     T_scan_glue(c==0? vskip_code : hskip_code);
     return;
-  case for_cmd: xkv_for(c); return;
-  case ifnextchar_cmd:
-    if_nextchar(c==0);
-    return;
-  case typeout_cmd:
-    typeout(c);
-    return;
-  case newif_cmd:
-    newif();
-    return;
+  case for_cmd: T_xkv_for(c); return;
+  case ifnextchar_cmd: T_ifnextchar(c==0); return;
+  case newif_cmd: M_newif(); return;
   case newcount_cmd:
-    define_new_something(c);
+    new_constant(c);
     return;
-  case newboolean_cmd:
-    new_boolean(c);
-    return;
+  case newboolean_cmd: M_newboolean(c); return;
   case setboolean_cmd:
     set_boolean();
     return;
-  case ifthenelse_cmd:
-    ifthenelse();
-    return;
-  case whiledo_cmd:
-    while_do();
-    return;
+  case ifthenelse_cmd: T_ifthenelse(); return;
+  case whiledo_cmd: T_whiledo(); return;
   case setmode_cmd: 
     T_setmode();
     return;
@@ -1233,26 +1194,11 @@ void Parser::translate03()
   case def_cmd:
   case set_box_cmd:
   case set_interaction_cmd:
-    prefixed_command();
+    M_prefixed();
     return;
-  case shortverb_cmd: 
-    short_verb(c);
-    return;
-  case usecounter_cmd: { 
-    Token T = cur_tok;
-    Buffer b;
-    TokenList L0 = mac_arg();
-    if(!csname_aux("c@","",L0,false,b)) {
-      bad_counter0();
-      return;
-    }
-    if(!counter_check(b,false,T)) return;
-    T_use_counter(b.to_string(2));
-    return;
-  }
-  case newcounter_cmd: 
-    counter(true);
-    return;
+  case shortverb_cmd: M_shortverb(c); return;
+  case usecounter_cmd: T_use_counter(); return;
+  case newcounter_cmd: M_counter(true); return;
   case fp_cmd:
   case fpif_cmd:
     exec_fp_cmd(c);
@@ -1334,8 +1280,8 @@ void Parser::translate03()
     T_execute_options();
     return;
   case needs_format_cmd:
-    ignore_next_arg();
-    ignore_next_optarg();
+    ignore_arg();
+    ignore_optarg();
     return;
   case subfigure_cmd: 
     T_subfigure();
@@ -1346,11 +1292,7 @@ void Parser::translate03()
   case section_cmd:
     T_paras(c);
     return;
-  case label_cmd: 
-    flush_buffer();
-    if(c==1) T_anchor();
-    else T_label();
-    return;
+  case label_cmd: flush_buffer(); T_label(c); return;
   case ref_cmd: 
     leave_v_mode();
     T_ref(c==0);
@@ -1361,13 +1303,11 @@ void Parser::translate03()
   case eqref_cmd: // Case \XMLref
     {
       int n = read_elt_id(cur_tok);
-      string a = sT_next_arg();
+      string a = sT_arg_nopar();
       Xid(n).add_ref(a);
     }
     return;
-  case box_cmd:
-    T_mbox(c); 
-    return;
+  case box_cmd: T_mbox(c); return;
   case centering_cmd:
     word_define(incentering_code,c,false);
     if(c) the_stack.add_center_to_p();
@@ -1380,21 +1320,17 @@ void Parser::translate03()
   case includegraphics_cmd:
     includegraphics(c);
     return;
-  case fancy_cmd:
-    T_fancy();
-    return;
-  case xfancy_cmd:
-    T_xfancy();
-    return;
+  case fancy_cmd: T_fancy(); return;
+  case xfancy_cmd: T_xfancy(); return;
   case xthepage_cmd:
     flush_buffer();
     the_stack.add_last(the_page_xml);
     return;
   case case_shift_cmd:
-    change_case(c);
+    T_case_shift(c);
     return;
   case linebreak_cmd:
-    ignore_next_optarg();
+    ignore_optarg();
     return;
   case url_cmd: 
     T_url(c);
@@ -1411,9 +1347,7 @@ void Parser::translate03()
   case reevaluate_cmd: 
     T_reevaluate();
     return;
-  case xmlelt_cmd:
-    T_xmlelt(c);
-    return;
+  case xmlelt_cmd: T_xmlelt(c); return;
   case newcolumntype_cmd:
     T_newcolumn_type();
     return;
@@ -1433,9 +1367,7 @@ void Parser::translate03()
     T_bezier(c);
     return;
   case grabenv_cmd: T_grabenv(); return;
-  case verb_cmd:
-    expand_verb0(c? verb_saved_char : 0);
-    return;
+  case verb_cmd: T_verb(c? verb_saved_char : 0); return;
   case gloss_cmd:
     T_gloss(c==0);
     return;
@@ -1445,6 +1377,23 @@ void Parser::translate03()
     onlypreamble.push_back(cur_tok);
     onlypreamble.push_back(hash_table.notprerr_token);
     return;
+  case l3_gen_from_sig_cmd: generate_from_sig(); return;
+  case l3_gen_from_ac_cmd: Tl3_gen_from_ac(c); return;
+  case loadlatex3_cmd: L3_load (false); return;
+  case GetIdInfo_cmd: L3_getid (); return;
+  case GetIdInfoLog_cmd: L3_logid (); return;
+  case l3_gen_cond_Npnn_cmd: L3_new_conditional_parm(c); return;
+  case l3_gen_cond_Nnn_cmd: L3_new_conditional(c); return;
+  case l3_gen_eq_cond_cmd: L3_eq_conditional(c); return;
+  case l3_check_cmd: L3_check_cmd(c); return;
+  case l3_generate_variant_cmd: l3_generate_variant(); return;
+  case l3_set_cat_cmd: L3_set_cat_code(c); return;
+  case l3_set_num_cmd: L3_set_num_code(c); return;
+  case tl_basic_cmd: l3_new_token_list(c); return;
+  case tl_concat_cmd: l3_tl_concat (c); return;
+  case tl_put_left_cmd: l3_tl_put_left (c); return;
+  case tl_set_cmd: l3_tl_set (c); return;
+  case l3_rescan_cmd: tl_set_rescan (c); return;
   case toc_cmd: { // insert <tableofcontents/>
     name_positions np = np_toc;
     if(c==1) np = np_toc1;
@@ -1536,7 +1485,10 @@ void Parser::translate03()
     T_linethickness(c);
     return;
   case thm_aux_cmd:
-    T_thm_aux(c);
+    {
+      TokenList L = read_arg();
+      token_list_define(c,L,false);
+    }
     return;
   case start_thm_cmd:
     if(c==2) T_end_theorem();
@@ -1577,14 +1529,12 @@ void Parser::translate03()
     return;
   case ignore_env_cmd: 
     return;
-  case ignore_content_cmd:
-    ignore_env(false);
-    return;
+  case ignore_content_cmd: T_raw_env(false); return;
   case raw_env_cmd:
-    the_stack.add_last(new Xml(Istring(ignore_env(true))));
+    the_stack.add_last(new Xml(Istring(T_raw_env(true))));
     return;
   case math_env_cmd:
-    pop_level(true,bt_env);
+    cur_tok.kill(); pop_level(bt_env);  // IS THIS OK ?
     T_math(c);
     return;
   case RAsection_env_cmd:  
@@ -1603,9 +1553,7 @@ void Parser::translate03()
   case end_tabular_env_cmd:
     T_end_tabular(c);
     return;
-  case verbatim_env_cmd:
-    special_verbatim();
-    return;
+  case verbatim_env_cmd: T_verbatim(); return;
   case picture_env_cmd:
     T_picture();
     return;
@@ -1614,6 +1562,8 @@ void Parser::translate03()
     return;
   case end_ignore_env_cmd: 
     return;
+  case subequations_cmd: T_subequations(true); return;
+  case end_subequations_cmd: T_subequations(false); return;
   case minipage_cmd: 
     T_minipage();
     return;
@@ -1626,7 +1576,7 @@ void Parser::translate03()
   case end_ignore_content_cmd:
   case end_raw_env_cmd:
   case end_math_env_cmd:
-    parse_error("missing \\begin environment ",
+    parse_error(cur_tok,"missing \\begin environment ",
 		cur_tok.tok_to_str(), "missing begin");
     return;
   case eqno_cmd:
@@ -1647,6 +1597,7 @@ void Parser::translate03()
   case math_xml_cmd: 
   case left_cmd:
   case right_cmd:
+  case tag_cmd:
     math_only();
     return;
   case mathinner_cmd:
@@ -1661,10 +1612,8 @@ void Parser::translate03()
   case endv_cmd:
     T_endv();
     return;
-  case cr_cmd:
-    T_cr();
-    return;
-  case cons_cmd: T_cons(); return;
+  case cr_cmd: T_cr(); return;
+  case cons_cmd: M_cons(); return;
   case self_insert_cmd:
     LC();
     unprocessed_xml.push_back(cur_tok);
@@ -1678,11 +1627,11 @@ void Parser::translate03()
   case formatdate_cmd : formatdate(); return;
   case numberwithin_cmd : numberwithin(); return;
   case dblarg_cmd : dbl_arg(); return;
-  case ifdefinable_cmd : ifdefinable(); return;
-  case makelabel_cmd : makelabel(); return;
+  case ifdefinable_cmd : T_ifdefinable(); return;
   case color_cmd: T_color(c); return;
   case kvo_family_cmd: kvo_family(c); return;
   default: 
     undefined_mac();
   }
 }
+

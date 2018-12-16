@@ -1,0 +1,985 @@
+\documentclass{article}
+\begin{document} 
+%\tracingall
+This tests the binary code of latex3; works only with option -l3
+
+\catcode 95 = 11 
+\catcode 58 = 11 
+
+%\GetIdInfo_Id: tormath.tex,v 1.11 2011/01/27 15:49:27 grimm Exp _ { OK }
+\GetIdInfo$Id: tl3.tex,v 1.16 2015/11/09 10:02:24 grimm Exp $  {L3 test}
+
+
+{\makeatletter \global\let\MMM\@MM \global\let\count_z=\interfootnotelinepenalty
+\global\let\skip_z \skip@\global\let\toks_z \toks@ \newmuskip\muskip_z
+}
+
+
+% testing \def and variants
+\def\x{x}\def\y{x}\def\z{z}
+\cs_set:Npn \foo{0100\x}\cs_meaning:N\foo 
+\cs_set_nopar:Npn \foo{0000\x}\cs_meaning:N\foo
+\cs_set_protected:Npn \foo{0110\x}\cs_meaning:N\foo
+\cs_set_protected_nopar:Npx \foo{0010\x}\cs_meaning:N\foo
+\cs_set:Npx \foo{0101\x}\cs_meaning:N\foo
+\cs_set_nopar:Npx \foo{0001\x}\cs_meaning:N\foo
+\cs_set_protected:Npx \foo{0111\x}\cs_meaning:N\foo
+\cs_set_protected_nopar:Npx \foo{0011\x}\cs_meaning:N\foo
+{\cs_gset:Npn \foo{1100\x}}\cs_meaning:N\foo 
+{\cs_gset_nopar:Npn \foo{1000\x}}\cs_meaning:N\foo 
+{\cs_gset_protected:Npn \foo{1110\x}}\cs_meaning:N\foo 
+{\cs_gset_protected_nopar:Npx \foo{1010\x}}\cs_meaning:N\foo  
+{\cs_gset:Npx \foo{1101\x}}\cs_meaning:N\foo 
+{\cs_gset_nopar:Npx \foo{1001\x}}\cs_meaning:N\foo 
+{\cs_gset_protected:Npx \foo{1111\x}}\cs_meaning:N\foo 
+{\cs_gset_protected_nopar:Npx \foo{1011\x}}\cs_meaning:N\foo 
+\cs_set:Npn \xfoo{0100\x}
+\if_cs_exist:w foo\cs_end:\else: \bad\fi:
+{\cs_undefine:N\foo}\if_cs_exist:w foo\cs_end: \bad\fi:
+\if_cs_exist:w xfoo\cs_end:\else: \bad\fi: 
+{\cs_undefine:N\xfoo}\if_cs_exist:w xfoo\cs_end: \bad\fi: 
+\cs_set_eq:NN \foo\bar {\cs_undefine:c{foo}}\if_cs_exist:w foo\cs_end: \bad\fi: 
+
+\use:c {\use_i:nn{relax}\par}% tests \par 
+\if:w\use:c {\use_i:nn{pa}\par r}\par\else: \bad\fi: 
+\exp_after:wN\if_meaning:w\use:c {\use_i:nn{pa}\par r}\par\else: \bad\fi: 
+\exp_after:wN\if_meaning:w\use:c {\use_i:nn{pa}\par r}\relax \bad\fi: 
+\cs_set:Npn \compare#1{\if_meaning:w#1\xbox\else: \bad\fi:}
+\exp_args:Nc \compare{\use_i:nn{xbo}\par x}
+\exp_args:cc {com\empty pare}{\use_i:nn{xbo}\par x}
+
+% \testsame \foo\bar errs if macros not the same
+%  \testeq \foo{abc}  compares with abc
+% \xtesteq \foo{abc} fully expands abc
+% \ztesteq \foo{abc}  detokenize abc
+
+\cs_set:Npn \testsame#1#2{%
+  \if_meaning:w #1#2\else: \show#1\show#2\uerror\fi:}
+\cs_set:Npn \testeq#1#2{%
+  \cs_set_nopar:Npn\tmp{#2}%
+  \if_meaning:w #1\tmp\else: \toks0={#1wantd: ->#2.}
+  \iow_term:x{\the\toks0}\show #1\uerror\fi:}
+
+\cs_set_nopar:Npn\xtesteq#1#2{\cs_set_nopar:Npx\tmp{#2}%
+  \if_meaning:w #1\tmp\else: \toks0={#1wantd: ->}
+  \iow_term:x{\the\toks0 #2.}\show #1\uerror\fi:}
+
+\cs_set_nopar:Npn\ztesteq_aux#1#2{%
+  \if_meaning:w #1#2\else: \toks0={#1wantd: ->}
+  \iow_term:x{\the\toks0 #2.}\show #1\uerror\fi:}
+
+\cs_set_nopar:Npn\ztesteq#1#2{\cs_set_nopar:Npx\tmp{\etex_detokenize:D{#2}}%
+ \ztesteq_aux#1\tmp}
+
+
+
+% we always define the function \foo
+\cs_set:Npn \newfoo {\cs_set_nopar:Npx \foo}
+
+\newfoo{\cs_meaning:N\tenrm}
+\ztesteq\foo{select font cmr10 at 10.0pt}
+\cs_set_nopar:Npx \yoo{\detokenize{select font cmr10 at 10.0pt}}
+\xtesteq\foo\yoo 
+\newfoo{\cs_meaning:c{tenrm}}
+\xtesteq\foo\yoo 
+\newfoo{\cs_meaning:c{elevenrm}}
+\ztesteq\foo{undefined}
+
+\newfoo{\the\c_sixteen\the\c_zero\the\c_six\the\c_seven\the\c_twelve} 
+\testeq\foo{1606712}
+\newfoo{\use:n{{1}}234\use:nn{{1}}{{2}}34\use:nnn{{1}}{{2}}{{3}}4\use:nnnn123{4}5}
+\testeq\foo{{1}234{1}{2}34{1}{2}{3}412345}
+\newfoo{\use:n{{1}x}234\use:nn{{1}x}{{2}}34\use:nnn{{1}x}{{2}}{{3}}4%
+  \use_i_ii:nnn{{1}}{{2}}\par{4}5}
+\testeq\foo{{1}x234{1}x{2}34{1}x{2}{3}4{1}{2}{4}5}
+\cs_set:Npn \List{0123456789 }
+\newfoo{\exp_after:wN\use_none:n\List \exp_after:wN\use_none:nn\List
+  \exp_after:wN\use_none:nnn\List \exp_after:wN\use_none:nnnn\List
+  \exp_after:wN\use_none:nnnnn\List \exp_after:wN\use_none:nnnnnn\List
+  \exp_after:wN\use_none:nnnnnnn\List \exp_after:wN\use_none:nnnnnnnn\List
+  \exp_after:wN\use_none:nnnnnnnnn\List }
+\testeq\foo{123456789 23456789 3456789 456789 56789 6789 789 89 9 }
+\cs_set:Npn \List{{{1}x}{{2}y}{{3}z}{{4}u}5}
+\newfoo{\exp_after:wN\use_i:nn\List \exp_after:wN\use_ii:nn\List
+  \exp_after:wN\use_i:nnn\List \exp_after:wN\use_ii:nnn\List
+  \exp_after:wN\use_iii:nnn\List \exp_after:wN\use_i:nnnn\List
+  \exp_after:wN\use_ii:nnnn\List \exp_after:wN\use_iii:nnnn\List
+  \exp_after:wN\use_iv:nnnn\List }
+\testeq\foo{{1}x{{3}z}{{4}u}5{2}y{{3}z}{{4}u}5{1}x{{4}u}5{2}y{{4}u}5%
+  {3}z{{4}u}5{1}x5{2}y5{3}z5{4}u5}
+
+%% code ca en dur
+% from the doc
+\def\mytest#1#2#3{\if_meaning:w #1#2%
+    \prg_return_true:  \else: \if_meaning:w #1#3\prg_return_true:
+    \else:    \prg_return_false:    \fi:  \fi:} 
+\mytest\relax\scan_stop:\cs:w\c_zero  {}{\uerror}
+\mytest\relax \cs:w\scan_stop:\c_zero  {}{\uerror}
+\mytest\foo\cs:w\scan_stop:\c_zero  {\uerror}{}
+
+\prg_new_conditional:Nnn \foo:N {p,T,F,TF}
+  {\if_meaning:w \xbox #1\prg_return_true: \else:  \prg_return_false: \fi:  }
+\prg_new_conditional:Npnn \foop:N #1{p}
+  {\if_meaning:w \xbox #1\prg_return_true: \else:  \prg_return_false: \fi:  }
+\if_meaning:w \foop_p:N \foo_p:N \else: \bad\fi:
+\if_meaning:w \foop_p:N \foo_p:N \else: \bad\fi:
+\prg_new_eq_conditional:NNn \vfoo:N \foo:N { TF , T , F , p }
+\if_meaning:w \foo_p:N \vfoo_p:N \else: \bad\fi:
+\if_meaning:w \foo:NT \vfoo:NT \else: \bad\fi:
+\if_meaning:w \foo:NF \vfoo:NF \else: \bad\fi:
+\if_meaning:w \foo:NTF \vfoo:NTF \else: \bad\fi:
+\if_meaning:w \foo:NFT \vfoo:NTF \bad\fi:
+
+\foo:NTF \xbox{}{\bad}\foo:NTF \hbox{\bad}{}\foo:NT \hbox{\bad}\foo:NF\xbox{\bad}
+\newfoo{\foo_p:N\xbox \foo_p:N\hbox} 
+\testeq\foo{\c_true_bool\c_false_bool} 
+
+\newfoo{\cs_to_str:N \truc!\exp_after:wN \cs_to_str:N \cs:w\space truc \cs_end:!
+\cs_to_str:N \x \cs_to_str:N \1}
+\ztesteq\foo{truc! truc ! x1} 
+\__chk_if_free_cs:N  \mybar \__chk_if_free_cs:c {mybar}
+\__chk_if_exist_cs:N  \bar \__chk_if_exist_cs:c {bar}
+
+\cs_set:Npn\testFY{\testsame\foo\yoo}
+
+\cs_set_nopar:cpn {foo}#1{#1\x1} \cs_set_nopar:Npn\yoo #1{#1\x1} \testFY
+\cs_set_nopar:cpx  {foo}#1{#1\x2} \cs_set_nopar:Npx\yoo #1{#1\y2} \testFY
+\cs_gset_nopar:cpn {foo}#1{#1\x3} \cs_gset_nopar:Npn\yoo#1{#1\x3}\testFY
+\cs_gset_nopar:cpx {foo}#1{#1\x4}  \cs_gset_nopar:Npx \yoo#1{#1\y4} \testFY
+\cs_set:cpn {foo}#1{#1\x5}   \cs_set:Npn\yoo#1{#1\x5} \testFY
+\cs_set:cpx {foo}#1{#1\x6}  \cs_set:Npx\yoo#1{#1\y6} \testFY
+{\cs_gset:cpn {foo}#1{#1\x7}} \cs_set:Npn\yoo#1{#1\x7} \testFY
+{\cs_gset:cpx {foo}#1{#1\x8}}  \cs_set:Npx\yoo#1{#1\y8} \testFY
+\cs_set_protected_nopar:cpn {foo}#1{#1\x9}  
+  \cs_set_protected_nopar:Npn\yoo #1{#1\x9} \testFY
+\cs_set_protected_nopar:cpx {foo}#1{#1\x10}   
+  \cs_set_protected_nopar:Npx \yoo#1{#1\y10} \testFY
+{\cs_gset_protected_nopar:cpn {foo}#1{#1\x11}}
+  \cs_set_protected_nopar:Npn\yoo #1{#1\x11}\testFY
+{\cs_gset_protected_nopar:cpx  {foo}#1{#1\x12}}
+   \cs_set_protected_nopar:Npx \yoo#1{#1\y12} \testFY
+\cs_set_protected:cpn {foo}#1{#1\x13}\cs_set_protected:Npn \yoo#1{#1\x13} 
+  \testFY
+\cs_set_protected:cpx  {foo}#1{#1\x14}  \cs_set_protected:Npx \yoo#1{#1\y14} 
+  \testFY
+{\cs_gset_protected:cpn {foo}#1{#1\x15}} \cs_gset_protected:Npn \yoo#1{#1\x15} 
+  \testFY
+{\cs_gset_protected:cpx {foo}#1{#1\x16}} \cs_set_protected:Npx \yoo#1{#1\y16} 
+  \testFY
+
+\cs_undefine:N \xfoo \newfoo{}
+{\cs_new_nopar:Npn \xfoo{1x\bar}}\newfoo{\foo\meaning\xfoo}
+\cs_undefine:N \xfoo 
+{\cs_new_nopar:Npx \xfoo{2\number 0 }}\newfoo{\foo\meaning\xfoo}
+\cs_undefine:N \xfoo 
+{\cs_new:Npn \xfoo#1{3x\bar}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new:Npx \xfoo{4\number 0 }}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected_nopar:Npn \xfoo{5}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected_nopar:Npx \xfoo{6\number 0 }}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected:Npn \xfoo{7}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected:Npx \xfoo#1{#18\number 0 }}\newfoo{\foo\meaning\xfoo} 
+
+\group_begin: 
+\tex_lccode:D  `\A = `\\ \tex_lccode:D  `\S = `\# % make \ and # a letter
+\tex_lowercase:D {
+    \group_end:
+\cs_set_nopar:Npx\w{\etex_detokenize:D{%
+  macro:->1xAbar macro:->20Along macro:S1->3xAbar Along macro:->40%
+  Aprotected macro:->5Aprotected macro:->60AprotectedAlong macro:->7%
+  AprotectedAlong macro:S1->S180}}} 
+\ztesteq_aux\foo\w
+
+
+\cs_undefine:N \xfoo \newfoo{}
+{\cs_new_nopar:cpn {xfoo}{1x\bar}}\newfoo{\foo\meaning\xfoo}
+\cs_undefine:N \xfoo 
+{\cs_new_nopar:cpx {xfoo}{2\number 0 }}\newfoo{\foo\meaning\xfoo}
+\cs_undefine:N \xfoo 
+{\cs_new:cpn {xfoo}#1{3x\bar}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new:cpx {xfoo}{4\number 0 }}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected_nopar:cpn {xfoo}{5}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected_nopar:cpx {xfoo}{6\number 0 }}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected:cpn {xfoo}{7}}\newfoo{\foo\meaning\xfoo} 
+\cs_undefine:N \xfoo 
+{\cs_new_protected:cpx {xfoo}#1{#18\number 0 }}\newfoo{\foo\meaning\xfoo} 
+\ztesteq_aux\foo\w
+\cs_set_eq:NN\foo\x\ztesteq_aux\foo\x 
+\cs_set_eq:cN{foo}\z\ztesteq_aux\foo\z 
+\cs_set_eq:Nc\foo{x}\ztesteq_aux\foo\x 
+\cs_set_eq:cc{foo}{z}\ztesteq_aux\foo\z 
+{\cs_gset_eq:NN\foo\x}\ztesteq_aux\foo\x 
+{\cs_gset_eq:cN{foo}\z}\ztesteq_aux\foo\z 
+{\cs_gset_eq:Nc\foo{x}}\ztesteq_aux\foo\x 
+{\cs_gset_eq:cc{foo}{z}}\ztesteq_aux\foo\z
+\cs_undefine:N \foo {\cs_new_eq:NN\foo\x}\ztesteq_aux\foo\x 
+\cs_undefine:N \foo {\cs_new_eq:cN{foo}\z}\ztesteq_aux\foo\z 
+\cs_undefine:N \foo {\cs_new_eq:Nc\foo{x}}\ztesteq_aux\foo\x 
+\cs_undefine:N \foo {\cs_new_eq:cc{foo}{z}}\ztesteq_aux\foo\z 
+
+% for the tests below
+\chardef\cc_one1 \chardef\cc_three3 \def\cc_xii{12} % should do better
+\cs_set:Npn\xx{\x}\cs_set:Npn\xxx{\x\x}\cs_set:Npn\xxxx#1{\x{#1}\x}
+
+\count0=17 
+
+% check that x gives a protected when needed
+\cs_set_eq:NN \foo:nnnn\empty\cs_set_eq:NN \foo:xnnn\empty
+\cs_set_eq:NN \foo:pnnn\empty \cs_set_eq:NN \foo:Nnnn\empty
+\cs_generate_variant:Nn \foo:nnnn {cxn}
+\cs_set_protected_nopar:Npn\yoo{\exp_args:Ncx\foo:nnnn}\testsame\foo:cxnn\yoo
+\cs_set:Nn \foo:nnnnnnnnn{\cs_set:Npn\foo{#1#2#3#4#5#6#7#8#9}}
+\cs_generate_variant:Nn \foo:nnnnnnnnn {NnpcofxVv}
+\cs_set_protected_nopar:Npn\yoo{\exp_args:NNnpcofxVv\foo:nnnnnnnnn}
+\testsame\foo:NnpcofxVv\yoo
+\cs_set_protected_nopar:Npn \yoo{\::N\::n\::p\::c\::o\::f\::x\::V\::v \:::}
+\testsame\exp_args:NNnpcofxVv\yoo
+%% p step is strange; no braces inserted so a single char is needed here 
+\foo:NnpcofxVv {\argN}{argn}P{cs}{\xxx O}{\xxx F}{\xxx  C}{\active}{cc_one}
+\cs_set:Npn\yoo{\argN argnP\cs \x\x Ox\x FxxC131}
+\testsame\foo\yoo 
+
+\cs_generate_variant:Nn \foo:nnnn {cyn}
+\cs_set_nopar:Npn\yoo{\exp_args:Ncy\foo:nnnn}\testsame\foo:cynn\yoo
+\cs_set_nopar:Npn \yoo{\::c \::y \:::}\testsame\exp_args:Ncy\yoo
+\cs_generate_variant:Nn \foo:xnnn {xyn}
+\cs_set_nopar:Npn\yoo{\exp_args:Nny\foo:xnnn}\testsame\foo:xynn\yoo
+\cs_set_nopar:Npn \yoo{\::n \::y \:::}\testsame\exp_args:Nny\yoo
+\cs_generate_variant:Nn \foo:pnnn {pyn}
+\cs_set_nopar:Npn\yoo{\exp_args:Npy\foo:pnnn}\testsame\foo:pynn\yoo 
+\cs_set_nopar:Npn \yoo{\::p \::y \:::}\testsame\exp_args:Npy\yoo 
+\cs_generate_variant:Nn \foo:Nnnn {Nyn}
+\cs_set_nopar:Npn\yoo{\exp_args:NNy\foo:Nnnn}\testsame\foo:Nynn\yoo 
+\cs_set_nopar:Npn \yoo{\::N \::y \:::}\testsame\exp_args:NNy\yoo 
+\cs_set_protected:Npn \foo:Nnnn{} 
+\cs_generate_variant:Nn \foo:Nnnn {Nyn} % noop
+\cs_set_nopar:Npn\yoo{\exp_args:NNy\foo:Nnnn}\testsame\foo:Nynn\yoo 
+\cs_undefine:N\foo:Nynn \cs_generate_variant:Nn \foo:Nnnn {Nyn}
+\cs_set_protected_nopar:Npn\yoo{\exp_args:NNy\foo:Nnnn}\testsame\foo:Nynn\yoo 
+\cs_set_eq:NN \foo:nxnnn\let 
+\cs_generate_variant:Nn \foo:nxnnn {axb, axn, axbn} 
+  \cs_set_protected_nopar:Npn\yoo{\exp_args:Nanb\foo:nxnnn}
+   \testsame\foo:axbnn\yoo 
+ \cs_set_protected_nopar:Npn\yoo{\exp_args:Na\foo:nxnnn}
+   \testsame\foo:axnnn\yoo 
+\cs_undefine:N\foo:axnnn\cs_undefine:N\foo:axbnn
+\cs_generate_variant:Nn  \foo:nxnnn {axnnn, axb} 
+  \cs_set_protected_nopar:Npn\yoo{\exp_args:Nanb\foo:nxnnn}
+   \testsame\foo:axbnn\yoo 
+ \cs_set_protected_nopar:Npn\yoo{\exp_args:Na\foo:nxnnn}
+   \testsame\foo:axnnn\yoo 
+\cs_generate_from_arg_count:NNnn \foo:xx \cs_set_protected:Npn {2}{xx}
+\cs_set_protected:Npn\yoo#1#2{xx} \testsame\foo:xx\yoo 
+\cs_generate_from_arg_count:cNnn {foo:xz} \cs_set_nopar:Npn {2}{xx}
+\cs_set_nopar:Npn\yoo#1#2{xx} \testsame\foo:xz\yoo 
+\cs_generate_from_arg_count:Ncnn \foo:xx {cs_set:Npn} {2}{yy}
+\cs_set:Npn\yoo#1#2{yy} \testsame\foo:xx\yoo 
+%\def \exp_args:NNc #1#2#3{\exp_after:wN #1\exp_after:wN #2\cs:w #3\cs_end: }
+\def\xxa{\exp_args:Nc\cs_generate_from_arg_count:NNnn }
+\xxa{foo:xz} \cs_set_nopar:Npn {2}{xx}
+\cs_set_nopar:Npn\yoo#1#2{xx} \testsame\foo:xz\yoo 
+
+\cs_set:Nn\foo:nn{}\cs_set:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set:Nx\foo:nn{\x}\cs_set:Npn\yoo#1#2{x}\testsame\foo:nn\yoo 
+\cs_set_nopar:Nn\foo:nn{}\cs_set_nopar:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_nopar:Nx\foo:nnn{\x#3}\cs_set_nopar:Npn\yoo#1#2#3{x#3}
+     \testsame\foo:nnn\yoo 
+\cs_set_protected:Nn\foo:nn{}\cs_set_protected:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_protected:Nx\foo:nnn{\x#3}\cs_set_protected:Npn\yoo#1#2#3{x#3}
+     \testsame\foo:nnn\yoo 
+\cs_set_protected_nopar:Nn\foo:nn{}
+   \cs_set_protected_nopar:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_protected_nopar:Nx\foo:nnn{\x#3}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{x#3}   \testsame\foo:nnn\yoo 
+{\cs_gset:Nn\foo:nn{a}}\cs_set:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset:Nx\foo:nn{a\x}}\cs_set:Npn\yoo#1#2{ax}\testsame\foo:nn\yoo 
+{\cs_gset_nopar:Nn\foo:nn{a}}\cs_set_nopar:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_nopar:Nx\foo:nnn{a\x#3}}\cs_set_nopar:Npn\yoo#1#2#3{ax#3}
+     \testsame\foo:nnn\yoo 
+{\cs_gset_protected:Nn\foo:nn{a}}\cs_set_protected:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_protected:Nx\foo:nnn{a\x#3}}\cs_set_protected:Npn\yoo#1#2#3{ax#3}
+     \testsame\foo:nnn\yoo 
+{\cs_gset_protected_nopar:Nn\foo:nn{a}}
+   \cs_set_protected_nopar:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_protected_nopar:Nx\foo:nnn{a\x#3}}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{ax#3}   \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new:Nn\foo:nn{c}
+   \cs_set:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new:Nx\foo:nn{c\x}
+   \cs_set:Npn\yoo#1#2{cx}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_nopar:Nn\foo:nn{c}
+  \cs_set_nopar:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nnn}\cs_new_nopar:Nx\foo:nnn{c\x#3}
+  \cs_set_nopar:Npn\yoo#1#2#3{cx#3}  \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_protected:Nn\foo:nn{c}
+  \cs_set_protected:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nnn}\cs_new_protected:Nx\foo:nnn{c\x#3}
+  \cs_set_protected:Npn\yoo#1#2#3{cx#3} \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_protected_nopar:Nn\foo:nn{c}
+   \cs_set_protected_nopar:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N\foo:nnn\cs_new_protected_nopar:Nx\foo:nnn{c\x#3}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{cx#3}   \testsame\foo:nnn\yoo 
+
+\cs_set:cn{foo:nn}{}\cs_set:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set:cx{foo:nn}{\x}\cs_set:Npn\yoo#1#2{x}\testsame\foo:nn\yoo 
+\cs_set_nopar:cn{foo:nn}{}\cs_set_nopar:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_nopar:cx{foo:nnn}{\x#3}\cs_set_nopar:Npn\yoo#1#2#3{x#3}
+     \testsame\foo:nnn\yoo 
+\cs_set_protected:cn{foo:nn}{}\cs_set_protected:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_protected:cx{foo:nnn}{\x#3}\cs_set_protected:Npn\yoo#1#2#3{x#3}
+     \testsame\foo:nnn\yoo 
+\cs_set_protected_nopar:cn{foo:nn}{}
+   \cs_set_protected_nopar:Npn\yoo#1#2{}\testsame\foo:nn\yoo 
+\cs_set_protected_nopar:cx{foo:nnn}{\x#3}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{x#3}   \testsame\foo:nnn\yoo 
+{\cs_gset:cn{foo:nn}{a}}\cs_set:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset:cx{foo:nn}{a\x}}\cs_set:Npn\yoo#1#2{ax}\testsame\foo:nn\yoo 
+{\cs_gset_nopar:cn{foo:nn}{a}}\cs_set_nopar:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_nopar:cx{foo:nnn}{a\x#3}}\cs_set_nopar:Npn\yoo#1#2#3{ax#3}
+     \testsame\foo:nnn\yoo 
+{\cs_gset_protected:cn{foo:nn}{a}}\cs_set_protected:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_protected:cx{foo:nnn}{a\x#3}}\cs_set_protected:Npn\yoo#1#2#3{ax#3}
+     \testsame\foo:nnn\yoo 
+{\cs_gset_protected_nopar:cn{foo:nn}{a}}
+   \cs_set_protected_nopar:Npn\yoo#1#2{a}\testsame\foo:nn\yoo 
+{\cs_gset_protected_nopar:cx{foo:nnn}{a\x#3}}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{ax#3}   \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new:cn{foo:nn}{c}
+   \cs_set:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new:cx{foo:nn}{c\x}
+   \cs_set:Npn\yoo#1#2{cx}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_nopar:cn{foo:nn}{c}
+  \cs_set_nopar:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nnn}\cs_new_nopar:cx{foo:nnn}{c\x#3}
+  \cs_set_nopar:Npn\yoo#1#2#3{cx#3}  \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_protected:cn{foo:nn}{c}
+  \cs_set_protected:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N{\foo:nnn}\cs_new_protected:cx{foo:nnn}{c\x#3}
+  \cs_set_protected:Npn\yoo#1#2#3{cx#3} \testsame\foo:nnn\yoo 
+\cs_undefine:N{\foo:nn}\cs_new_protected_nopar:cn{foo:nn}{c}
+   \cs_set_protected_nopar:Npn\yoo#1#2{c}\testsame\foo:nn\yoo 
+\cs_undefine:N\foo:nnn\cs_new_protected_nopar:cx{foo:nnn}{c\x#3}
+  \cs_set_protected_nopar:Npn\yoo#1#2#3{cx#3}   \testsame\foo:nnn\yoo 
+
+\cs_new:Npn\aaa#1{\exp_after:wN\cs_set_nopar:Npn\exp_after:wN\foo\exp_after:wN{#1}}
+\aaa{\::n \bar \::: \xfoo {12}{13}} \testeq\foo{\bar \::: {\xfoo {12}}{13}}
+\aaa{\::n \bar \::: \xfoo 12}\testeq\foo{\bar \::: {\xfoo {1}}2}
+\aaa{\::n  \::: \xfoo {12}}\testeq\foo{\xfoo {12}}
+\aaa{\::N \bar \::: \xfoo {12}{13}}\testeq\foo{\bar \::: {\xfoo 12}{13}}
+\aaa{\::N \bar \::: \xfoo 12}\testeq\foo{\bar \::: {\xfoo 1}2}
+\aaa{\::N  \::: \xfoo {12}}\testeq\foo{\xfoo 12}
+\aaa{\::p \bar \::: \xfoo args{12}}\testeq\foo{\bar \::: {\xfoo args}{12}}
+\aaa{\::p  \::: \xfoo {12}}\testeq\foo{\xfoo{12}}
+\aaa{\::c \bar \::: \xfoo {uv}{13}}\testeq\foo{\bar \::: {\xfoo \uv}{13}}
+\aaa{\::c \bar \::: \xfoo uv}\testeq\foo{\bar \::: {\xfoo \u}v}
+\aaa{\::c  \::: \xfoo {uv}}\testeq\foo{\xfoo\uv}
+\aaa{\::o \bar \::: \xfoo \xx{13}}\testeq\foo{\bar \::: {\xfoo {\x}}{13}}
+\aaa{\::o \bar \::: \xfoo \xx2}\testeq\foo{\bar \::: {\xfoo {\x}}2}
+\aaa{\::o  \::: \xfoo \xx}\testeq\foo{\xfoo{\x}}
+\aaa{\::o \bar \::: \xfoo \xxx{13}}\testeq\foo{\bar \::: {\xfoo {\x\x}}{13}}
+\aaa{\::o \bar \::: \xfoo \xxx2}\testeq\foo{\bar \::: {\xfoo {\x\x}}2}
+\aaa{\::o  \::: \xfoo \xxx}\testeq\foo{\xfoo{\x\x}}
+\aaa{\::f \bar \::: \xfoo \xx{13}}\testeq\foo{\bar \::: {\xfoo {x}}{13}}
+\aaa{\::f \bar \::: \xfoo \xx2}\testeq\foo{\bar \::: {\xfoo {x}}2}
+\aaa{\::f  \::: \xfoo \xx}\testeq\foo{\xfoo{x}}
+\aaa{\::f \bar \::: \xfoo \xxx{13}}\testeq\foo{\bar \::: {\xfoo {x\x}}{13}}
+\aaa{\::f \bar \::: \xfoo \xxx2}\testeq\foo{\bar \::: {\xfoo {x\x}}2}
+\aaa{\::f  \::: \xfoo \xxx}\testeq\foo{\xfoo{x\x}}
+\aaa{\::x \bar \::: \xfoo \xxx{13}}\testeq\foo{\bar \::: {\xfoo {xx}}{13}}
+\aaa{\::x \bar \::: \xfoo \xxx2}\testeq\foo{\bar \::: {\xfoo {xx}}2}
+\aaa{\::x  \::: \xfoo \xxx}\testeq\foo{\xfoo{xx}} 
+\aaa{\::v  \::: \xfoo {cc_one} \xxx }\testeq\foo{\xfoo{1} \xxx}
+\aaa{\::V  \::: \xfoo \active \xxx}\testeq\foo{\xfoo{13}\xxx}
+\aaa{\::v  \::: \xfoo {cc_xii} \xxx }\testeq\foo{\xfoo{12} \xxx}
+\aaa{\::V  \::: \xfoo \active \xxx}\testeq\foo{\xfoo{13}\xxx}
+\aaa{\::V  \::: \xfoo {\count0}\xxx}\testeq\foo{\xfoo{17}\xxx}
+\aaa{\use:c {foo}{ba}}\testeq\foo{\foo{ba}}
+\aaa{\use:c {foo}{ba}}\testeq\foo{\foo{ba}}
+%\aaa{\exp_args:Nc{\xxfoo} {foo}{ba}}\testeq\foo{\xfoo\foo{ba}} % fails
+\aaa{\exp_args:Nc\xfoo{foo}{ba}}\testeq\foo{\xfoo\foo{ba}}
+\aaa{\exp_args:cc{xfoo}{yfoo}{ba}}\testeq\foo{\xfoo\yfoo{ba}}
+%% other test. Note, in \exp_args:spec the last spec is never N,n,p
+\aaa{\exp_args:No \xfoo\xx2}\testeq\foo{\xfoo{\x}2}
+\aaa{\exp_args:NNo \xfoo{ab}\xx2}\testeq\foo{\xfoo ab{\x}2}
+\aaa{\exp_args:NNNo \xfoo\xfoo\xfoo\xx2}\testeq\foo{\xfoo\xfoo\xfoo{\x}2}
+\aaa{\exp_args:Nf \xfoo\xxx2}\testeq\foo{\xfoo{x\x}2}
+{ \cs_set:Npn \xxxx#1{ \x{#1}\x}  % test space in f key
+  \aaa{\exp_args:Nf \xfoo { x}2}\testeq\foo{\xfoo{x}2}
+  \aaa{\exp_args:Nf \xfoo { \xxx}2}\testeq\foo{\xfoo{\xxx}2}
+  \aaa{\exp_args:Nf \xfoo {\xxxx4}2}\testeq\foo{\xfoo{\x{4}\x}2}
+  \aaa{\exp_args:No\xfoo {\xxxx4}2}\testeq\foo{\xfoo{ \x{4}\x}2}
+}
+\aaa{\exp_args:NNf \xfoo\xxx\xxx2}\testeq\foo{\xfoo\xxx{x\x}2}
+\aaa{\exp_args:Nx \xfoo\xxx2}\testeq\foo{\xfoo{xx}2}
+\aaa{\exp_args:NNx \xfoo\xxx\xxx2}\testeq\foo{\xfoo\xxx{xx}2}
+\aaa{\exp_args:Nv \xfoo{cc_one}2}\testeq\foo{\xfoo{1}2}
+\aaa{\exp_args:Nv \xfoo{cc_xii}2}\testeq\foo{\xfoo{12}2}
+\aaa{\exp_args:NNv \xfoo\foo{cc_xii}2}\testeq\foo{\xfoo\foo{12}2}
+\aaa{\exp_args:NV \xfoo\cc_one2}\testeq\foo{\xfoo{1}2}
+\aaa{\exp_args:NV \xfoo\cc_xii2}\testeq\foo{\xfoo{12}2}
+\aaa{\exp_args:NnV \xfoo{yoo}\cc_xii2}\testeq\foo{\xfoo{yoo}{12}2}
+\aaa{\exp_args:NVV\xfoo\cc_xii\cc_one2}\testeq\foo{\xfoo{12}{1}2}
+\aaa{\exp_args:NNV \xfoo\xx\cc_xii2}\testeq\foo{\xfoo\xx{12}2}
+\aaa{\exp_args:NNNV \xfoo\xx\xx\cc_xii2}\testeq\foo{\xfoo\xx\xx{12}2}
+\aaa{\exp_args:Nc\xfoo{foo}{ba}}\testeq\foo{\xfoo\foo{ba}}
+\aaa{\exp_args:NNc\xfoo\xfoo{foo}{ba}}\testeq\foo{\xfoo\xfoo\foo{ba}}
+\aaa{\exp_args:Nnnc\xfoo ab{foo}{ba}}\testeq\foo{\xfoo{a}{b}\foo{ba}}
+\aaa{\exp_args:NcNc\xfoo{foo}\xfoo{foo}{ba}}\testeq\foo{\xfoo\foo\xfoo\foo{ba}}
+\aaa{\exp_args:Ncc\xfoo{yfoo}{foo}{ba}}\testeq\foo{\xfoo\yfoo\foo{ba}}
+\aaa{\exp_args:Nccc\xfoo{xf}{oo}{foo}{ba}}\testeq\foo{\xfoo\xf\oo\foo{ba}}
+\aaa{\exp_args:Nco \xfoo{xx}\xx2}\testeq\foo{\xfoo\xx{\x}2}
+\aaa{\exp_args:Ncco \xfoo{xx}{yy}\xx2}\testeq\foo{\xfoo\xx\yy{\x}2}
+\aaa{\exp_args:Nfo \xfoo\xxx\xx2}\testeq\foo{\xfoo {x\x}{\x}2}
+\aaa{\exp_args:Nfo \xfoo{\xxx}\xx2}\testeq\foo{\xfoo {x\x}{\x}2}
+\aaa{\exp_args:Noo \xfoo{\xxx}{\xxx}2}\testeq\foo{\xfoo {\x\x}{\x\x}2}
+\aaa{\exp_args:NNoo \xfoo{\xxx}{\xxx}{\xxx}2}\testeq\foo{\xfoo \xxx{\x\x}{\x\x}2}
+\aaa{\exp_args:Nxo \xfoo{\xxx}{\xxx}2}\testeq\foo{\xfoo {xx}{\x\x}2}
+\aaa{\exp_args:Nnno \xfoo{\yy}{\xxx}{\xxx}2}\testeq\foo{\xfoo{\yy}{\xxx}{\x\x}2}
+\aaa{\exp_args:Nooo \xfoo\xxx{\xxx}{\xxx}2}\testeq\foo{\xfoo{\x\x}{\x\x}{\x\x}2}
+\aaa{\exp_args:Ncf \xfoo{xxx}\xxx2}\testeq\foo{\xfoo\xxx{x\x}2}
+\aaa{\exp_args:Nnf \xfoo{xxx}\xxx2}\testeq\foo{\xfoo{xxx}{x\x}2}
+\aaa{\exp_args:Nff \xfoo{\xxx}\xxx2}\testeq\foo{\xfoo{x\x}{x\x}2}
+\aaa{\exp_args:Nof \xfoo{\xxx}\xxx2}\testeq\foo{\xfoo{\x\x}{x\x}2}
+\aaa{\exp_args:Nnc\xfoo{foo}{foo}{ba}}\testeq\foo{\xfoo{foo}\foo{ba}}
+\aaa{\exp_args:Noc\xfoo\xxx{foo}{ba}}\testeq\foo{\xfoo{\x\x}\foo{ba}}
+\aaa{\exp_args:Ncx\xfoo{foo}\xxx{ba}}\testeq\foo{\xfoo\foo{xx}{ba}}
+\aaa{\exp_args:Nccx\xfoo{foo}{yoo}\xxx{ba}}\testeq\foo{\xfoo\foo\yoo{xx}{ba}}
+\aaa{\exp_args:Nnx\xfoo{foo}\xxx{ba}}\testeq\foo{\xfoo{foo}{xx}{ba}}
+\aaa{\exp_args:Ncnx\xfoo{foo}{foo}\xxx{ba}}\testeq\foo{\xfoo\foo{foo}{xx}{ba}}
+\aaa{\exp_args:NNnx\xfoo\xfoo{foo}\xxx{ba}}\testeq\foo{\xfoo\xfoo{foo}{xx}{ba}}
+\aaa{\exp_args:Nnnx\xfoo\xfoo{foo}\xxx{ba}}\testeq\foo{\xfoo{\xfoo}{foo}{xx}{ba}}
+\aaa{\exp_args:Nox\xfoo\xx\xxx2}\testeq\foo{\xfoo{\x}{xx}2}
+\aaa{\exp_args:Noox\xfoo\xx\xx\xxx2}\testeq\foo{\xfoo{\x}{\x}{xx}2}
+\aaa{\exp_args:Nnox\xfoo\xx\xx\xxx2}\testeq\foo{\xfoo{\xx}{\x}{xx}2}
+\aaa{\exp_args:NNox\xfoo\xfoo\xx\xxx2}\testeq\foo{\xfoo\xfoo{\x}{xx}2}
+\aaa{\exp_args:Nxx\xfoo\xxx\xxx2}\testeq\foo{\xfoo{xx}{xx}2}
+\aaa{\::o \bar \::: \xfoo {\xxxx3}{13}}\testeq\foo{\bar \::: {\xfoo {\x{3}\x}}{13}}
+\aaa{\::f \bar \::: \xfoo {\xxxx3}{13}}\testeq\foo{\bar \::: {\xfoo {x{3}\x}}{13}}
+\aaa{\::x \bar \::: \xfoo {\xxxx3}{13}}\testeq\foo{\bar \::: {\xfoo {x{3}x}}{13}}
+\aaa{\exp_args:Nf \xfoo{\xxxx3}2}\testeq\foo{\xfoo{x{3}\x}2}
+\aaa{\exp_args:NNf \xfoo\xxx{\xxxx3}2}\testeq\foo{\xfoo\xxx{x{3}\x}2}
+\aaa{\exp_args:Nx \xfoo{\xxxx2}2}\testeq\foo{\xfoo{x{2}x}2}
+\aaa{\exp_args:NNx \xfoo\xxx{\xxxx2}2}\testeq\foo{\xfoo\xxx{x{2}x}2}
+\aaa{\exp_args:NNoo \xfoo{\xxx}{\xxxx2}{\xxx}2}\testeq\foo{\xfoo \xxx{\x{2}\x}{\x\x}2}
+\aaa{\exp_args:Nff \xfoo{\xxxx2}\xxx2}\testeq\foo{\xfoo{x{2}\x}{x\x}2}
+\aaa{\exp_args:Nnox\xfoo\xx{\xxxx2}\xxx2}\testeq\foo{\xfoo{\xx}{\x{2}\x}{xx}2}
+\aaa{\exp_not:N\xxx2}\testeq\foo{\xxx2}    % not a good test
+\aaa{\exp_not:n{\xxx\xxx}2}\testeq\foo{\xxx\xxx2} % not better
+\aaa{\exp_not:c\xxx2}\testeq\foo{\exp_not:N\xx2}
+\aaa{\exp_not:V\cc_one2}\testeq\foo{\exp_not:n{1}2}
+\aaa{\exp_not:v{cc_one}2}\testeq\foo{\exp_not:n{1}2}
+\aaa{\exp_not:f{\xxxx3}2}\testeq\foo{\exp_not:n{x{3}\x}2}
+\aaa{\exp_not:o{\xxxx3}2}\testeq\foo{\exp_not:n{\x{3}\x}2}
+\aaa{\::f_unbraced\:::\xfoo{\xxxx3}2}\testeq\foo{\xfoo x{3}\x2}
+\aaa{\::o_unbraced\:::\xfoo{\xxxx3}2}\testeq\foo{\xfoo\x{3}\x2}
+\aaa{\::x_unbraced\:::\xfoo{\xxxx3}2}\testeq\foo{\xfoo x{3}x2}
+\aaa{\::v_unbraced\:::\xfoo{cc_xii}2}\testeq\foo{\xfoo122}
+\aaa{\::V_unbraced\:::\xfoo{\cc_xii}3}\testeq\foo{\xfoo123}
+
+\aaa{\exp_last_unbraced:Nv\xfoo{cc_xii}2}\testeq\foo{\xfoo122}
+\aaa{\exp_last_unbraced:NV\xfoo{\cc_xii}3}\testeq\foo{\xfoo123}
+\aaa{\exp_last_unbraced:NcV\xfoo{xx}{\cc_xii}3}\testeq\foo{\xfoo\xx123}
+\aaa{\exp_last_unbraced:NNV\xfoo\xx{\cc_xii}3}\testeq\foo{\xfoo\xx123}
+\aaa{\exp_last_unbraced:NNNV\xfoo\xx\y{\cc_xii}3}\testeq\foo{\xfoo\xx\y123}
+\aaa{\exp_last_unbraced:No\xfoo{\xxxx3}3}\testeq\foo{\xfoo\x{3}\x3}
+\aaa{\exp_last_unbraced:Nco\xfoo{xx}{\xxxx3}3}\testeq\foo{\xfoo\xx\x{3}\x3}
+\aaa{\exp_last_unbraced:NNo\xfoo\xx{\xxxx3}3}\testeq\foo{\xfoo\xx\x{3}\x3}
+\aaa{\exp_last_unbraced:Nno\xfoo\xx{\xxxx3}3}\testeq\foo{\xfoo{\xx}\x{3}\x3}
+\aaa{\exp_last_unbraced:Noo\xfoo\xxx{\xxxx3}3}\testeq\foo{\xfoo{\x\x}\x{3}\x3}
+\aaa{\exp_last_unbraced:NNNo\xfoo\xx\y{\xxxx3}3}\testeq\foo{\xfoo\xx\y\x{3}\x3}
+\aaa{\exp_last_unbraced:NnNo\xfoo\xx\y{\xxxx3}3}\testeq\foo{\xfoo{\xx}\y\x{3}\x3}
+\aaa{\exp_last_unbraced:Nf\xfoo{\xxxx3}3}\testeq\foo{\xfoo x{3}\x3}
+\aaa{\exp_last_unbraced:Nx\xfoo{\xxxx3}3}\testeq\foo{\xfoo x{3}x3}
+\aaa{\exp_last_unbraced:Nfo\xfoo{\xxxx4}{\xxxx3}3}\testeq\foo{\xfoo{x{4}\x}\x{3}\x3}
+\aaa{\exp_last_two_unbraced:Noo\xfoo{\xxxx4}{\xxxx3}3}
+  \testeq\foo{\xfoo\x{4}\x\x{3}\x3}
+
+\newfoo{\cs_if_eq_p:NN\x\xx \cs_if_eq_p:NN\x\y 
+ \cs_if_eq:NNTF\x\xx bg\cs_if_eq:NNTF\x\y GB%
+ \cs_if_eq:NNT\x\xx b\cs_if_eq:NNT\x\y g% 
+ \cs_if_eq:NNF\x\xx g\cs_if_eq:NNF\x\y bOK%
+ \cs_if_eq_p:cN{y}\xx \cs_if_eq_p:cN{y}\y 
+ \cs_if_eq:cNTF\xx\xx bg\cs_if_eq:cNTF\xx\y GB%
+ \cs_if_eq:cNT{y}\xx b\cs_if_eq:cNT{y}\y g% 
+ \cs_if_eq:cNF{y}\xx g\cs_if_eq:cNF{y}\y bOK%
+ \cs_if_eq_p:Nc\x{xx}\cs_if_eq_p:Nc\x{y}% 
+ \cs_if_eq:NcTF\x{xx} bg\cs_if_eq:NcTF\x{y}GB%
+ \cs_if_eq:NcT\x{xx} b\cs_if_eq:NcT\x{y} g% 
+ \cs_if_eq:NcF\x{xx} g\cs_if_eq:NcF\x{y} bOK%
+ \cs_if_eq_p:cc{y}{xx}\cs_if_eq_p:cc{y}{y}% 
+ \cs_if_eq:ccTF\xx{xx} bg\cs_if_eq:ccTF\xx{y} GB%
+ \cs_if_eq:ccT{y}{xx} b\cs_if_eq:ccT{y}{y} g% 
+ \cs_if_eq:ccF{y}{xx} g\cs_if_eq:ccF{y}{y} bOK%
+ \cs_if_eq:ccF{undef 1}{undef 2}{bad}%
+ \cs_if_eq:ccF{par}{endgraf}{bad}\cs_if_eq:ccT{def}{gdef}{bad}} 
+\testeq\foo{\c_false_bool \c_true_bool gGggOK% 
+   \c_false_bool \c_true_bool gGggOK%
+   \c_false_bool \c_true_bool gGggOK\c_false_bool \c_true_bool gGggOK}
+
+{\escapechar=-1 %% allows merge
+  \newfoo{\str_if_eq_p:nn {\foo}{\foo}\str_if_eq:nnTF {\foo}{\foo}{a}\bad
+  \str_if_eq:nnT {\foo}{\foo}{a}\str_if_eq:nnF {\foo}{\foo}\bad
+  \str_if_eq_p:nn {\foo}{\string\fcoo}\str_if_eq:nnTF {\foo}{fo o}\bad{a}%
+  \str_if_eq:nnT {\foo}{\xfoo}{bad}\str_if_eq:nnF {\foo}{xfoo}{a}%
+  \str_if_eq_p:nn {\foo}{foo}\str_if_eq:nnF {\foo}{foo }x%
+  \str_if_eq_x_p:nn {xx}{\xxx}\str_if_eq_x:nnTF {x\xx}{\xx x}{b}\bad 
+  \str_if_eq_x:nnT {\x\x}{xx}{b}\str_if_eq_x:nnF {xx}{\x\x}\bad 
+  \str_if_eq_x_p:nn {xx\x}{\xxx}\str_if_eq_x:nnTF {xx\x}{\xx x}\bad{b}%
+  \str_if_eq_x:nnT {\x \x}{x x}\bad\str_if_eq_x:nnF {x x}{\x \x}{b}}
+  \testeq\foo{\c_true_bool aa\c_false_bool aa\c_false_bool
+  \c_true_bool bb\c_false_bool bb}} % close group
+\count0=1
+\newfoo{\str_if_eq_p:Vn\cc_one1\str_if_eq_p:Vn\cc_three1\str_if_eq_p:on\xx\x
+  \str_if_eq_p:on\xx x\str_if_eq_p:nV3\cc_three \str_if_eq_p:nV3\cc_one
+  \str_if_eq_p:no x\x \str_if_eq_p:no x\xx\str_if_eq_p:VV\cc_one{\count0 }%
+  \str_if_eq_p:VV\cc_one\cc_three %
+  \str_if_eq:VnT\cc_one1{a}\str_if_eq:VnT\cc_one2{b}% 
+  \str_if_eq:onT\x xa\str_if_eq:onT\xx x\bad\str_if_eq:nVT x\x{a}\str_if_eq:nVT x\xx{b}%
+  \str_if_eq:noT x\x a\str_if_eq:noT x\xx\bad\str_if_eq:VVT\cc_one{\count0}a%
+  \str_if_eq:VVT\cc_one\cc_three\bad X
+  \str_if_eq:VnF\cc_one1{b}\str_if_eq:VnF\cc_one2{a}% 
+  \str_if_eq:onF\x xb\str_if_eq:onF\xx x a\str_if_eq:nVF x\x{b}\str_if_eq:nVF x\xx{a}%
+  \str_if_eq:noF x\x b\str_if_eq:noF x\xx a\str_if_eq:VVF\cc_one{\count0}b%
+  \str_if_eq:VVF\cc_one\cc_three aX
+  \str_if_eq:VnTF\cc_one1a{b}\str_if_eq:VnTF\cc_one2b{a}% 
+  \str_if_eq:onTF\x xab\str_if_eq:onTF\xx x ba\str_if_eq:nVTF x\x a{b}%
+  \str_if_eq:nVTF x\xx b{a}\str_if_eq:noTF x\x ab\str_if_eq:noTF x\xx
+  ba\str_if_eq:VVTF\cc_one{\count0}ab\str_if_eq:VVTF\cc_one\cc_three ba%
+}
+\testeq\foo{\c_true_bool \c_false_bool \c_true_bool \c_false_bool
+  \c_true_bool \c_false_bool \c_true_bool \c_false_bool \c_true_bool \c_false_bool
+  aaaaaX aaaaaX aaaaaaaaaa}
+
+\newfoo{%
+\str_case:nn{}{}\str_case:nnT{}{}{b}\str_case:nnF{}{}{a}\str_case:nnTF{}{}bax%
+\str_case:nn{}{{}{a}}\str_case:nnT{}{{}{a}}{b}\str_case:nnF{}{{}{a}}{c}\str_case:nnTF{}{{}{a}}bcx%
+\str_case:nn{x}{{}{a}}\str_case:nnT{x}{{}{a}}{b}\str_case:nnF{x}{{}{a}}{c}\str_case:nnTF{x}{{}{a}}bcx%
+\str_case:nn{x}{{}{c}{x}a}\str_case:nnT{x}{{}{c}{x}a}{b}\str_case:nnF{x}{{}{c}{x}a}{c}\str_case:nnTF{x}{{}{c}{x}a}bcx% 
+\str_case:nn{x}{{}{c}xa}\str_case:nnT{x}{{}{c}xa}{b}\str_case:nnF{x}{{}{c}xa}{c}\str_case:nnTF{x}{{}{c}xa}bcy% 
+\str_case:nn{x}{{}{c}{xx}{d}{x}a}\str_case:nnT{x}{{}{c}{xx}{d}{x}a}{b}\str_case:nnF{x}{{}{c}{xx}{d}{x}a}{c}\str_case:nnTF{x}{{}{c}{xx}{d}{x}a}bc\str_case:nnn{x}{{}{c}{xx}{d}{x}a}{c}x% 
+}
+\testeq\foo{aaxaabaabxccxaabaabxaabaabyaabaabax}
+\newfoo{%
+\str_case_x:nn{}{}\str_case_x:nnT{}{}{b}\str_case_x:nnF{}{}{a}\str_case_x:nnTF{}{}bax%
+\str_case_x:nn{}{{}{a}}\str_case_x:nnT{}{{}{a}}{b}\str_case_x:nnF{}{{}{a}}{c}\str_case_x:nnTF{}{{}{a}}bcx%
+\str_case_x:nn{\xx}{{}{a}}\str_case_x:nnT{\xx}{{}{a}}{b}\str_case_x:nnF{\xx}{{}{a}}{c}\str_case_x:nnTF{\xx}{{}{a}}bcx%
+\str_case_x:nn{\xx}{{}{c}{x}a}\str_case_x:nnT{\xx}{{}{c}{x}a}{b}\str_case_x:nnF{\xx}{{}{c}{x}a}{c}\str_case_x:nnTF{\xx}{{}{c}{x}a}bcx% 
+\str_case_x:nn{\xx}{{}{c}xa}\str_case_x:nnT{\xx}{{}{c}xa}{b}\str_case_x:nnF{\xx}{{}{c}xa}{c}\str_case_x:nnTF{\xx}{{}{c}xa}bcy% 
+\str_case_x:nn{\xx}{{}{c}{xx}{d}{\xx}a}\str_case_x:nnT{\xx}{{}{c}{xx}{d}{\xx}a}{b}\str_case_x:nnF{\xx}{{}{c}{xx}{d}{\xx}a}{c}\str_case_x:nnTF{\xx}{{}{c}{xx}{d}{\xx}a}bc\str_case_x:nnn{x}{{}{c}{xx}{d}{\xx}a}{c}x% 
+}
+\testeq\foo{aaxaabaabxccxaabaabxaabaabyaabaabax}
+\newfoo{%
+\str_case:on{}{}\str_case:onT{}{}{b}\str_case:onF{}{}{a}\str_case:onTF{}{}bax%
+\str_case:on{}{{}{a}}\str_case:onT{}{{}{a}}{b}\str_case:onF{}{{}{a}}{c}\str_case:onTF{}{{}{a}}bcx%
+\str_case:on{\x}{{}{a}}\str_case:onT{\x}{{}{a}}{b}\str_case:onF{\x}{{}{a}}{c}\str_case:onTF{\x}{{}{a}}bcx%
+\str_case:on{\x}{{}{c}{x}a}\str_case:onT{\x}{{}{c}{x}a}{b}\str_case:onF{\x}{{}{c}{x}a}{c}\str_case:onTF{\x}{{}{c}{x}a}bcx% 
+\str_case:on{\x}{{}{c}xa}\str_case:onT{\x}{{}{c}xa}{b}\str_case:onF{\x}{{}{c}xa}{c}\str_case:onTF{\x}{{}{c}xa}bcy% 
+\str_case:on{\x}{{}{c}{xx}{d}{x}a}\str_case:onT{\x}{{}{c}{xx}{d}{x}a}{b}\str_case:onF{\x}{{}{c}{xx}{d}{x}a}{c}\str_case:onTF{\x}{{}{c}{xx}{d}{x}a}bc\str_case:onn{x}{{}{c}{xx}{d}{x}a}{c}x% 
+}
+\testeq\foo{aaxaabaabxccxaabaabxaabaabyaabaabax}
+\newfoo{%
+  \str_case:on{\xx}{{}{c}{x}{w}{\x}{a}}%
+  \str_case:onT{\xx}{{}{c}{x}{w}{\x}{a}}{b}%
+  \str_case:onF{\xx}{{}{c}{x}{w}{\x}{a}}{c}%
+  \str_case:onTF{\xx}{{}{c}{x}{w}{\x}{a}}bcx}% 
+\testeq\foo{aabaabx}
+{ \char_set_catcode:nn{10}{10}
+  \char_set_mathcode:nn{10}{10+1} 
+  \char_set_lccode:nn{10}{120/10}
+  \char_set_uccode:nn{10}{14-1} 
+  \char_set_sfcode:nn{10}{2*7} 
+  % \char_show_value_lccode:n{10} VERBOSE
+   \edef\foo{\char_value_catcode:n{5+5}\char_value_mathcode:n{10}%
+   \char_value_lccode:n{2*5}\char_value_uccode:n{10}\char_value_sfcode:n{10}}
+ \testeq\foo{1011121314}}
+{
+\char_set_catcode_escape:n 3 \char_set_catcode_group_begin:n 4
+ \char_set_catcode_group_end:n 5 \char_set_catcode_math_toggle:n 6
+ \char_set_catcode_alignment:n 7  \char_set_catcode_end_line:n 8
+ \char_set_catcode_parameter:n 9  \char_set_catcode_math_superscript:n {10}
+ \char_set_catcode_math_subscript:n {11} \char_set_catcode_ignore:n {12}
+ \char_set_catcode_space:n{13}  \char_set_catcode_letter:n{14}
+ \char_set_catcode_other:n{15}  \char_set_catcode_active:n{16}
+ \char_set_catcode_comment:n{17}  \char_set_catcode_invalid:n{18}
+
+ \char_set_catcode_escape:N W \char_set_catcode_group_begin:N B
+ \char_set_catcode_group_end:N C  \char_set_catcode_math_toggle:N D
+ \char_set_catcode_alignment:N E  \char_set_catcode_end_line:N F
+ \char_set_catcode_parameter:N G  \char_set_catcode_math_superscript:N H
+ \char_set_catcode_math_subscript:N I  \char_set_catcode_ignore:N J
+ \char_set_catcode_space:N K \char_set_catcode_letter:N L
+ \char_set_catcode_other:N M  \char_set_catcode_active:N O
+ \char_set_catcode_comment:N P  \char_set_catcode_invalid:N Q
+ \char_set_uccode:nn{`a}{`\B}\char_set_uccode:nn{`A}{`A-32}%
+ \char_set_uccode:nn{60}{50}
+ \edef\foo{\the\catcode 3 \the\catcode 4 \the\catcode 5 \the\catcode 6
+  \the\catcode 7 \the\catcode 8 \the\catcode 9 \the\catcode 10
+  \the\catcode 11 \the\catcode 12 \the\catcode 13 \the\catcode 14
+  \the\catcode 15 \the\catcode 16 \the\catcode 17 \the\catcode 18
+  \the\catcode `\W \the\catcode `B \the\catcode `C \the\catcode `D
+  \the\catcode `E \the\catcode `\F \the\catcode `\G \the\catcode `H
+  \the\catcode `\I \the\catcode `\J \the\catcode `\K \the\catcode `L
+  \the\catcode `M \the\catcode `\O \the\catcode `\P \the\catcode `\Q
+ \char_value_uccode:n{`a}\char_value_uccode:n{`A}\char_value_uccode:n{60}}
+ \testeq\foo{01234567891011121314150123456789101112131415663350}
+}
+{\catcode `V=\catcode`\$ \catcode`W=8
+\newfoo{\token_to_meaning:N \relax\space \token_to_meaning:c{chapter}
+  \token_to_str:N \foo\space \token_to_str:c{foo} }
+\ztesteq\foo{\relax\chapter\foo\foo}
+\if_catcode:w {\c_group_begin_token \else\bad\fi
+\if_catcode:w \c_group_end_token } \else\bad\fi
+\if_catcode:w V\c_math_toggle_token \else \bad\fi
+\if_catcode:w &\c_alignment_token\else\bad\fi
+\if_catcode:w #\c_parameter_token\else\bad\fi
+\if_catcode:w  ^\c_math_superscript_token\else\bad\fi
+\if_catcode:w  W\c_math_subscript_token\else\bad\fi
+\if_catcode:w  \space \c_space_token \else\bad\fi
+\if_catcode:w  w\c_catcode_letter_token\else\bad\fi
+\if_catcode:w  0\c_catcode_other_token\else\bad\fi
+
+\newfoo{\token_if_group_begin_p:N\bgroup \token_if_group_begin_p:N\egroup
+\token_if_group_begin:NTF\bgroup ab\token_if_group_begin:NTF\egroup ba%
+\token_if_group_begin:NT\bgroup a\token_if_group_begin:NT\egroup \bad 
+\token_if_group_begin:NF\c_group_begin_token\b\token_if_group_begin:NF\egroup a%
+\token_if_group_end_p:N\egroup \token_if_group_end_p:N\bgroup
+\token_if_group_end:NTF\egroup ab\token_if_group_end:NTF\bgroup ba%
+\token_if_group_end:NT\egroup a\token_if_group_end:NT\bgroup \bad 
+\token_if_group_end:NF\c_group_end_token \bad\token_if_group_end:NF\bgroup a%
+\token_if_group_end:NT ab\token_if_group_end:NT1b\token_if_group_end:NT \foo b%
+\token_if_group_end:NT \relax b\token_if_group_end:NT~b\token_if_group_end:NT ^b
+\token_if_group_end:NT Vb\token_if_group_end:NTWb%
+\token_if_math_toggle_p:NV\token_if_math_toggle_p:NW%
+\token_if_math_toggle:NTFV ab\token_if_math_toggle:NTF\bgroup ba%
+\token_if_math_toggle:NTV a\token_if_math_toggle:NT~\bad 
+\token_if_math_toggle:NF\c_math_toggle_token \bad\token_if_math_toggle:NF^ a%
+\token_if_alignment_p:N&\token_if_alignment_p:NW%
+\token_if_alignment:NTF& ab\token_if_alignment:NTF\bgroup ba%
+\token_if_alignment:NT& a\token_if_alignment:NT~\bad 
+\token_if_alignment:NF\c_alignment_token \bad\token_if_alignment:NF^ a
+\token_if_parameter_p:N#\token_if_parameter_p:NW%
+\token_if_parameter:NTF# ab\token_if_parameter:NTF\bgroup ba%
+\token_if_parameter:NT# a\token_if_parameter:NT~\bad 
+\token_if_parameter:NF\c_parameter_token \bad\token_if_parameter:NF^ a%
+\token_if_math_superscript_p:N^\token_if_math_superscript_p:NW%
+\token_if_math_superscript:NTF^ ab\token_if_math_superscript:NTF\bgroup ba%
+\token_if_math_superscript:NT\sp a\token_if_math_superscript:NT~\bad 
+\token_if_math_superscript:NF\c_math_superscript_token \bad\token_if_math_superscript:NF# a%
+\token_if_math_subscript_p:NW\token_if_math_subscript_p:NV%
+\token_if_math_subscript:NTFW ab\token_if_math_subscript:NTF\bgroup ba%
+\token_if_math_subscript:NT\sb a\token_if_math_subscript:NT~\bad 
+\token_if_math_subscript:NF\c_math_subscript_token \bad\token_if_math_subscript:NF# a%
+\token_if_space_p:N\c_space_token\token_if_space_p:N~%
+\token_if_space:NTF\c_space_token ab\token_if_space:NTF\bgroup ba%
+\token_if_space:NT\c_space_token a\token_if_space:NT~\bad 
+\token_if_space:NF\c_space_token \bad\token_if_space:NF# a%
+\token_if_other_p:N=\token_if_other_p:N~%
+\token_if_other:NTF= ab\token_if_other:NTF\bgroup ba%
+\token_if_other:NT0 a\token_if_other:NT~\bad 
+\token_if_other:NF\c_catcode_other_token \bad\token_if_other:NF# a%
+\token_if_letter_p:N w\token_if_letter_p:N~%
+\token_if_letter:NTF _ ab\token_if_letter:NTF\bgroup ba%
+\token_if_letter:NT x a\token_if_letter:NT~\bad 
+\token_if_letter:NF\c_catcode_letter_token \bad\token_if_letter:NF# a%
+\token_if_active_p:N~\token_if_active_p:N\c_space_token%
+\token_if_active:NTF~ ab\token_if_active:NTF\bgroup ba%
+\token_if_active:NT~ a\token_if_active:NTW\bad 
+\token_if_active:NT\c_catcode_active_tl A\ifcat\c_catcode_active_tl\noexpand~\else 0\fi
+\token_if_active:NF~\bad\token_if_active:NF# a}
+\testeq\foo{\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool  aaaa
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool  aaaa 
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool  aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool  aaaa%
+\c_true_bool\c_false_bool  aaaa\c_true_bool\c_false_bool  aaaa\c_true_bool\c_false_bool  aaaa}
+} % end catcode change VW
+{\catcode `\A=2 \global\let\foox A \catcode `\A=3 \global\let\fooz A 
+ \catcode `\B=3 \global\let\fooy B} \long\def\foou{123}\long\def\foov{123}
+\protected\def\foop{}\long\protected\def\foolp{}
+\newfoo {\token_if_eq_catcode_p:NN ab\token_if_eq_catcode_p:NN a0%
+\token_if_eq_catcode:NNT aba\token_if_eq_catcode:NNT a0\bad 
+\token_if_eq_catcode:NNF ab\bad \token_if_eq_catcode:NNF a0a%
+\token_if_eq_catcode:NNTF aba\bad \token_if_eq_catcode:NNTF a0\bad a% 
+\token_if_eq_catcode:NNF\c_group_begin_token\bgroup\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_group_end_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_math_toggle_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_alignment_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_parameter_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_space_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token~\bad 
+\token_if_eq_catcode:NNT\c_group_begin_token\relax\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\bgroup\bad 
+\token_if_eq_catcode:NNF\c_group_end_token\egroup\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_math_toggle_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_alignment_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_parameter_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_space_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_group_end_token~\bad 
+\token_if_eq_catcode:NNT\c_group_end_token\relax\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\bgroup\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\egroup\bad 
+\token_if_eq_catcode:NNF\c_math_toggle_token$\bad %$
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_alignment_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_parameter_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_space_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token~\bad 
+\token_if_eq_catcode:NNT\c_math_toggle_token\relax\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\bgroup\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\egroup\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_math_toggle_token\bad
+\token_if_eq_catcode:NNF\c_alignment_token&\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_parameter_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_space_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_alignment_token~\bad 
+\token_if_eq_catcode:NNT\c_alignment_token\relax\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\bgroup\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\egroup\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_math_toggle_token\bad
+\token_if_eq_catcode:NNT\c_parameter_token&\bad 
+\token_if_eq_catcode:NNF\c_parameter_token#\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_space_token\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_parameter_token~\bad 
+\token_if_eq_catcode:NNT\c_parameter_token\relax\bad 
+\token_if_eq_catcode:NNT\c_space_token\bgroup\bad 
+\token_if_eq_catcode:NNT\c_space_token\egroup\bad 
+\token_if_eq_catcode:NNT\c_space_token\c_math_toggle_token\bad
+\token_if_eq_catcode:NNT\c_space_token&\bad 
+\token_if_eq_catcode:NNT\c_space_token#\bad 
+\token_if_eq_catcode:NNT\c_space_token\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\c_space_token\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNF\c_space_token{ }\bad 
+\token_if_eq_catcode:NNT\c_space_token\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\c_space_token\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\c_space_token~\bad 
+\token_if_eq_catcode:NNT\c_space_token\relax\bad 
+\token_if_eq_catcode:NNT\noindent\bgroup\bad 
+\token_if_eq_catcode:NNT\noindent\c_group_end_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_math_toggle_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_alignment_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_parameter_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_math_superscript_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_math_subscript_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_space_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_catcode_letter_token\bad 
+\token_if_eq_catcode:NNT\noindent\c_catcode_other_token\bad 
+\token_if_eq_catcode:NNT\noindent~\bad 
+\token_if_eq_catcode:NNF\noindent\relax\bad 
+\token_if_eq_charcode_p:NN aa\token_if_eq_charcode_p:NN a0%
+\token_if_eq_charcode:NNT aaa\token_if_eq_charcode:NNT a0\bad 
+\token_if_eq_charcode:NNF \foox\fooz\bad \token_if_eq_charcode:NNF\foox\fooy a%
+\token_if_eq_charcode:NNF A\foox\bad \token_if_eq_charcode:NNF A\fooy a%
+\token_if_eq_charcode:NNTF \noindent\relax a\bad \token_if_eq_charcode:NNTF a\relax\bad a
+\token_if_eq_meaning_p:NN aa\token_if_eq_meaning_p:NN a0%
+\token_if_eq_meaning:NNT \csname\cs:w a\token_if_eq_meaning:NNT \if\fi\bad 
+\token_if_eq_meaning:NNF\foou\foov\bad\token_if_eq_meaning:NNF\foo\foou a%
+\token_if_eq_meaning:NNTF \par\endgraf a\bad\token_if_eq_meaning:NNTF12 \bad a% 
+\token_if_macro_p:N \foo\token_if_macro_p:N \endgraf
+\token_if_macro:NT  \testeq a\token_if_macro:NT \bad\bad 
+\token_if_macro:NF\foou\bad\token_if_macro:NF\foox a%
+\token_if_macro:NTF\foo a\bad\token_if_macro:NTF0\bad a% 
+\token_if_cs_p:N \foo\token_if_cs_p:N 0%
+\token_if_cs:NT  \testeq a\token_if_cs:NT #\bad 
+\token_if_cs:NF\foou\bad\token_if_cs:NF aa%
+\token_if_cs:NTF\bad a\bad\token_if_cs:NTF0\bad a% 
+\token_if_expandable_p:N \foo\token_if_expandable_p:N \relax
+\token_if_expandable:NT \noexpand a\token_if_expandable:NT #\bad 
+\token_if_expandable:NF\foou\bad\token_if_expandable:NF \toks a%
+\token_if_expandable:NTF\the a\bad\token_if_expandable:NTF\chapter\bad a% 
+\token_if_long_macro_p:N \foou\token_if_long_macro_p:N \relax
+\token_if_long_macro:NT \foov a\token_if_long_macro:NT #\bad 
+\token_if_long_macro:NF\foou\bad\token_if_long_macro:NF \foop a%
+\token_if_long_macro:NTF\foou a\bad\token_if_long_macro:NTF\foolp\bad a%
+\token_if_protected_macro_p:N \foop\token_if_protected_macro_p:N \relax
+\token_if_protected_macro:NT \foop a\token_if_protected_macro:NT #\bad 
+\token_if_protected_macro:NF\foop\bad\token_if_protected_macro:NF \foou a%
+\token_if_protected_macro:NTF\foop a\bad\token_if_protected_macro:NTF\foolp\bad a%
+\token_if_protected_long_macro_p:N \foolp\token_if_protected_long_macro_p:N \relax
+\token_if_protected_long_macro:NT \foolp a\token_if_protected_long_macro:NT #\bad 
+\token_if_protected_long_macro:NF\foolp\bad%
+    \token_if_protected_long_macro:NF \foop a%
+\token_if_protected_long_macro:NTF\foolp a\bad%
+    \token_if_protected_long_macro:NTF\fool\bad a%
+\exp_after:wN\token_if_chardef_p:N \cs:w voidb@x\cs_end:\token_if_chardef_p:N \relax
+\token_if_chardef:NT \c_zero a\token_if_chardef:NT 0\bad 
+\token_if_chardef:NF\cc_one\bad\token_if_chardef:NF \foop a%
+\token_if_chardef:NTF\active a\bad\token_if_chardef:NTF\fool\bad a%
+\token_if_mathchardef_p:N \MMM\token_if_mathchardef_p:N \relax
+\token_if_mathchardef:NT \MMM a\token_if_mathchardef:NT 0\bad 
+\token_if_mathchardef:NF\MMM\bad\token_if_mathchardef:NF \foop a%
+\token_if_mathchardef:NTF\MMM a\bad\token_if_mathchardef:NTF\active\bad a%
+\token_if_dim_register_p:N \jot\token_if_dim_register_p:N \relax
+\token_if_dim_register:NT \jot a\token_if_dim_register:NT \MMM\bad 
+\token_if_dim_register:NF\jot\bad\token_if_dim_register:NF \foop a%
+\token_if_dim_register:NTF\jot a\bad\token_if_dim_register:NTF\active\bad a%
+\token_if_int_register_p:N \count_z\token_if_int_register_p:N \relax
+\token_if_int_register:NT \count_z a\token_if_int_register:NT \MMM\bad 
+\token_if_int_register:NF\count_z\bad\token_if_int_register:NF \foop a%
+\token_if_int_register:NTF\count_z a\bad\token_if_int_register:NTF\active\bad a%
+\token_if_muskip_register_p:N \muskip_z\token_if_muskip_register_p:N \relax
+\token_if_muskip_register:NT \muskip_z a\token_if_muskip_register:NT \MMM\bad 
+\token_if_muskip_register:NF\muskip_z\bad\token_if_muskip_register:NF \foop a%
+\token_if_muskip_register:NTF\muskip_z a\bad\token_if_muskip_register:NTF\active\bad a%
+\token_if_toks_register_p:N \toks_z\token_if_toks_register_p:N \relax
+\token_if_toks_register:NT \toks_z a\token_if_toks_register:NT \MMM\bad 
+\token_if_toks_register:NF\toks_z\bad\token_if_toks_register:NF \foop a%
+\token_if_toks_register:NTF\toks_z a\bad\token_if_toks_register:NTF\active\bad a%
+\token_if_skip_register_p:N \skip_z\token_if_skip_register_p:N \relax
+\token_if_skip_register:NT \skip_z a\token_if_skip_register:NT \MMM\bad 
+\token_if_skip_register:NF\skip_z\bad\token_if_skip_register:NF \foop a%
+\token_if_skip_register:NTF\skip_z a\bad\token_if_skip_register:NTF\active\bad a%% %
+% %
+}
+\testeq\foo{\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool  aaaaa
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+\c_true_bool\c_false_bool aaaa\c_true_bool\c_false_bool aaaa%
+}
+\muskip_z=3 mu \relax 
+\edef\foo{\meaning\muskip_z\the\muskip 11}%\show\foo
+
+\cs_undefine:N\foo \tl_new:N \foo\xtesteq\foo\empty 
+\cs_undefine:N\foo \tl_new:c {foo}\xtesteq\foo\empty 
+\cs_set_eq:NN\foo\relax {\tl_clear:N \foo \xtesteq\foo\empty} \testsame\foo\relax
+\cs_set_eq:NN\foo\relax {\tl_gclear:N \foo}\xtesteq\foo\empty 
+\cs_set_eq:NN\foo\relax {\tl_clear:c {foo} \xtesteq\foo\empty} \testsame\foo\relax
+\cs_set_eq:NN\foo\relax {\tl_gclear:c {foo}}\xtesteq\foo\empty 
+\cs_undefine:N\foo{\tl_clear_new:N \foo}\xtesteq\foo\empty 
+\cs_undefine:N\foo{\tl_clear_new:c {foo}}\xtesteq\foo\empty 
+\cs_undefine:N\foo{\tl_gclear_new:N \foo}\xtesteq\foo\empty 
+\cs_undefine:N\foo{\tl_gclear_new:c {foo}}\xtesteq\foo\empty 
+\cs_set_eq:NN\foo\math\tl_clear_new:N \foo \xtesteq\foo\empty 
+\cs_set_eq:NN\foo\math\tl_clear_new:c {foo} \xtesteq\foo\empty 
+\cs_set_eq:NN\foo\math{\tl_clear_new:N \foo \xtesteq\foo\empty}  \testsame\foo\math 
+\cs_set_eq:NN\foo\math{\tl_clear_new:c{foo}\xtesteq\foo\empty}  \testsame\foo\math 
+\cs_set_eq:NN\foo\math{\tl_gclear_new:N \foo} \xtesteq\foo\empty 
+\cs_set_eq:NN\foo\math{\tl_gclear_new:c {foo}} \xtesteq\foo\empty 
+\cs_undefine:N\foo{\tl_const:Nn \foo{123}} \testeq\foo{123}
+\cs_undefine:N\foo{\tl_const:Nn \foo{1#2\x3}} \testeq\foo{1##2\x3}
+\cs_undefine:N\foo{\tl_const:Nx \foo{12\xx3}} \testeq\foo{12x3}
+\cs_undefine:N\foo{\tl_const:cn {foo}{123}} \testeq\foo{123}
+\cs_undefine:N\foo{\tl_const:cn {foo}{1#2\x3}} \testeq\foo{1##2\x3}
+\cs_undefine:N\foo{\tl_const:cx {foo}{12\xx3}} \testeq\foo{12x3}
+\tl_concat:NNN\foo {ab}{cd} \testeq\foo{abcd}
+{ \def\a{\b\c}\let\cd\relax
+  \tl_concat:ccc{foo} {a}{cd} \testeq\foo{\b\c\cd}
+  \tl_concat:NNN{\foo} {\cd}{\a} \testeq\foo{\cd\b\c}
+  \tl_gconcat:ccc{fooa} {a}{cd} \tl_gconcat:NNN{\foob} {\cd}{\a} 
+} \testeq\fooa{\b\c\cd}\testeq\foob{\cd\b\c}
+\tl_set:Nn\foo{123} \testeq\foo{123}
+\tl_set:No\foo{\xx} \testeq\foo{\x}
+\tl_set:Nx\foo{12\xx} \testeq\foo{12x}
+\tl_set:Nv\foo{cc_three} \testeq\foo{3}
+\tl_set:NV\foo{\cc_three} \testeq\foo{3}
+\tl_set:Nf\foo{\xxxx4} \testeq\foo{x{4}\x}
+\tl_set:cn{foo}{123} \testeq\foo{123}
+\tl_set:co{foo}{\xx} \testeq\foo{\x}
+\tl_set:cx{foo}{12\xx} \testeq\foo{12x}
+\tl_set:cv{foo}{cc_three} \testeq\foo{3}
+\tl_set:cV{foo}{\cc_three} \testeq\foo{3}
+\tl_set:cf{foo}{\xxxx4} \testeq\foo{x{4}\x}
+{\tl_gset:Nn\foo{123}} \testeq\foo{123}
+{\tl_gset:No\foo{\xx}} \testeq\foo{\x}
+{\tl_gset:Nx\foo{12\xx}} \testeq\foo{12x}
+{\tl_gset:Nv\foo{cc_three}} \testeq\foo{3}
+{\tl_gset:NV\foo{\cc_three}} \testeq\foo{3}
+{\tl_gset:Nf\foo{\xxxx4}} \testeq\foo{x{4}\x}
+{\tl_gset:cn{foo}{123}} \testeq\foo{123}
+{\tl_gset:co{foo}{\xx}} \testeq\foo{\x}
+{\tl_gset:cx{foo}{12\xx}} \testeq\foo{12x}
+{\tl_gset:cv{foo}{cc_three}} \testeq\foo{3}
+{\tl_gset:cV{foo}{\cc_three}} \testeq\foo{3}
+{\tl_gset:cf{foo}{\xxxx4}} \testeq\foo{x{4}\x}
+
+\cs_set:Npn\foo{0}
+\tl_put_left:Nn\foo{1} \tl_put_left:No\foo{\xx}
+\tl_put_left:Nx\foo{\xx} \tl_put_left:NV\foo{\cc_xii}
+\tl_put_right:Nn\foo{4} \tl_put_right:No\foo{\xx}
+\tl_put_right:Nx\foo{\xxxx4} \tl_put_right:NV\foo{\cc_three}
+\testeq\foo{12x\x 104\x x{4}x3}
+{\tl_gput_left:Nn\foo{1} \tl_gput_left:No\foo{\xx}
+\tl_gput_left:Nx\foo{\xx} \tl_gput_left:NV\foo{\cc_xii}
+\tl_gput_right:Nn\foo{4} \tl_gput_right:No\foo{\xx}
+\tl_gput_right:Nx\foo{\xxxx4} \tl_gput_right:NV\foo{\cc_three}}
+\testeq\foo{12x\x 112x\x 104\x x{4}x34\x x{4}x3}
+\cs_set:Npn\foo{0}
+\tl_put_left:cn{foo}{1} \tl_put_left:co{foo}{\xx}
+\tl_put_left:cx{foo}{\xx} \tl_put_left:cV{foo}{\cc_xii}
+\tl_put_right:cn{foo}{4} \tl_put_right:co{foo}{\xx}
+\tl_put_right:cx{foo}{\xxxx4} \tl_put_right:cV{foo}{\cc_three}
+\testeq\foo{12x\x 104\x x{4}x3}
+{\tl_gput_left:cn{foo}{1} \tl_gput_left:co{foo}{\xx}
+\tl_gput_left:cx{foo}{\xx} \tl_gput_left:cV{foo}{\cc_xii}
+\tl_gput_right:cn{foo}{4} \tl_gput_right:co{foo}{\xx}
+\tl_gput_right:cx{foo}{\xxxx4} \tl_gput_right:cV{foo}{\cc_three}}
+\testeq\foo{12x\x 112x\x 104\x x{4}x34\x x{4}x3}
+
+\cs_set:Npn\sideeffects {\char_set_catcode_escape:N A\char_set_catcode_letter:n {`\$}}
+\cs_set:Npn\xfoo #1#2\relax{\def\foo{#2}} 
+\cs_set:Npn\Av{A}
+\tl_set_rescan:Nnn \foo {\sideeffects} {Ax$y$ t}
+\expandafter\xfoo\foo\relax\testeq\foo{t}
+\tl_set_rescan:Nnx \foo {\sideeffects} {A\x$y$ \x}
+\expandafter\xfoo\foo\relax\testeq\foo{x} 
+\tl_set_rescan:Nno \foo {\sideeffects} {\Av x$y$ \x}
+\expandafter\xfoo\foo\relax\testeq\foo{\x}
+\tl_set_rescan:cnn {foo} {\sideeffects} {Ax$y$ t}
+\expandafter\xfoo\foo\relax\testeq\foo{t}
+\tl_set_rescan:cnx {foo} {\sideeffects} {A\x$y$ \x}
+\expandafter\xfoo\foo\relax\testeq\foo{x} 
+\tl_set_rescan:cno {foo} {\sideeffects} {\Av x$y$ \x}
+\expandafter\xfoo\foo\relax\testeq\foo{\x}
+{\tl_gset_rescan:Nnn \foo {\sideeffects} {Ax$y$ t}}
+\expandafter\xfoo\foo\relax\testeq\foo{t}
+{\tl_gset_rescan:Nnx \foo {\sideeffects} {A\x$y$ \x}}
+\expandafter\xfoo\foo\relax\testeq\foo{x} 
+{\tl_gset_rescan:Nno \foo {\sideeffects} {\Av x$y$ \x}}
+\expandafter\xfoo\foo\relax\testeq\foo{\x}
+{\tl_gset_rescan:cnn {foo} {\sideeffects} {Ax$y$ t}}
+\expandafter\xfoo\foo\relax\testeq\foo{t}
+{\tl_gset_rescan:cnx {foo} {\sideeffects} {A\x$y$ \x}}
+\expandafter\xfoo\foo\relax\testeq\foo{x} 
+{\tl_gset_rescan:cno {foo} {\sideeffects} {\Av x$y$ \x}}
+\expandafter\xfoo\foo\relax\testeq\foo{\x}
+\tl_rescan:nn{\catcode `A=3\relax}{xAfA}y%
+
+%-------------
+
+\show\::: 
+\show\prg_do_nothing:
+\show\exp_stop_f:
+
+
+
+\end{document}
+

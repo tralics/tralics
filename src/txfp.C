@@ -11,7 +11,7 @@
 
 #include "tralics.h"
 const char* txfp_rcsif =
-  "$Id: txfp.C,v 2.28 2012/05/15 17:14:30 grimm Exp $";
+  "$Id: txfp.C,v 2.35 2015/10/28 17:38:46 grimm Exp $";
 
 typedef unsigned int Digit;
 
@@ -1150,7 +1150,8 @@ bool FpNum::arcsincos_loop()
     if(data[2] || data[3]) ovf=true;
   }
   if(ovf) {
-    the_parser.parse_error("Number greater than one for ",fp_name, "","OVF");
+    the_parser.parse_error(the_parser.err_tok,
+			   "Number greater than one for ",fp_name, "","OVF");
     return false;
   }
   if(data[1]==1 && data[2]==0 && data[3]==0) {
@@ -1521,7 +1522,7 @@ void fp::x_solve(FpNum& r1, FpNum& r2, FpNum&r3, FpNum&r4,
 // If A is 1.23, we will get 1.23..\relax
 void Parser::fp_send_one_arg (TokenList& res)
 {
-  scan_toks_edef(res);
+  read_toks_edef(res);
   res.push_back(hash_table.dot_token);
   res.push_back(hash_table.dot_token);
   res.push_back(hash_table.relax_token);
@@ -1534,12 +1535,12 @@ void Parser::fp_send_one_arg (TokenList& res)
 FpNum Parser::fp_read_value()
 {
   Token name = fp_name;
-  name_for_error = name;
-  TokenList A = read_until_long(hash_table.dot_token);
-  TokenList B = read_until_long(hash_table.dot_token);
-  read_until_long(hash_table.relax_token);
+  err_tok = name; // is this OK ?
+  TokenList A = read_until_nopar(hash_table.dot_token);
+  TokenList B = read_until_nopar(hash_table.dot_token);
+  read_until_nopar(hash_table.relax_token);
   fp_in_buf.reset();
-  scan_toks_edef(A);
+  read_toks_edef(A);
   bool negative = false;
   for(;;) {
     if(A.empty()) break;
@@ -1561,7 +1562,7 @@ FpNum Parser::fp_read_value()
     else fp_parse_error(x,name);
   }
   fp_in_buf.push_back('.');
-  scan_toks_edef(B);
+  read_toks_edef(B);
   for(;;) {
     if(B.empty()) break;
     Token x = B.front();
@@ -1869,8 +1870,7 @@ void FpGenList::fp_check_paren()
 // and puts it in fp_res
 void Parser::fp_prepare()
 {
-  get_r_token();
-  fp_res = cur_tok;
+  fp_res = get_r_token();
 }
 
 // This puts X, converted in a token list, into fp_res.
@@ -1892,7 +1892,7 @@ void Parser::fp_special_expand(TokenList& B)
     return;
   }
   if(B1.not_a_cmd())
-    my_csname("","",B,"FPprint", false); 
+    my_csname("","",B,"FPprint"); 
   else 
     back_input(B);  
   expand_when_ok(false);
@@ -1900,7 +1900,7 @@ void Parser::fp_special_expand(TokenList& B)
 
 void Parser::fp_print()
 {
-  TokenList A = mac_arg(); 
+  TokenList A = read_arg(); 
   fp_special_expand(A);
 }
 
@@ -1908,8 +1908,8 @@ void Parser::fp_print()
 // error recovery is low.
 void Parser::fp_set()
 {
-  TokenList A = mac_arg();
-  TokenList B = mac_arg();
+  TokenList A = read_arg();
+  TokenList B = read_arg();
   back_input(hash_table.CB_token);
   fp_special_expand(B);
   back_input(hash_table.OB_token);
@@ -1917,20 +1917,19 @@ void Parser::fp_set()
     Token A1 = A.front();
     token_from_list(A1);
     if(A1.not_a_cmd()) {
-      my_csname("","",A,"FPset", false);
+      my_csname("","",A,"FPset");
       A.clear(); // needed ?
     }
   }
   back_input(A);
-  see_new_def(false,false,user_cmd);
+  M_def(false,false,user_cmd,rd_always);
 }
 
 void Parser::fp_e_arcsin(subtypes i)
 {
   fp_prepare();
   if(i==fp_arcsincos_code ||i==fp_arctancot_code) {
-    get_r_token();
-    fp_res2 = cur_tok;
+    fp_res2 = get_r_token();
   }
   FpNum X = fp_read_value();
   FpNum a,b;
@@ -1946,9 +1945,7 @@ void Parser::fp_e_arcsin(subtypes i)
 // \let\foo\iftroo\foo, where \foo is fp_test_token.
 void Parser::fp_boolean(bool res)
 {
-  back_input(res ? hash_table.iftrue_token : hash_table.iffalse_token);
-  back_input(fp_test_token);
-  see_let(false);
+  M_let_fast(fp_test_token, res ? hash_table.iftrue_token : hash_table.iffalse_token,false);
   back_input(fp_test_token);
 }
 
@@ -1980,7 +1977,7 @@ void Parser::fp_eval_unarytest(subtypes w)
 // This reads the seed of the random number generator
 void Parser::fp_setseed()
 {
-  TokenList res = mac_arg();
+  TokenList res = read_arg();
   fp_send_one_arg(res);
   back_input(res);
   fp_name = fps[fp_seed_code];
@@ -2006,8 +2003,8 @@ void FpNum::random()
 // Code of \FPeval.
 void Parser::fp_e_eval()
 {
-  TokenList A = mac_arg();
-  TokenList B = mac_arg();
+  TokenList A = read_arg();
+  TokenList B = read_arg();
   FpGenList evaluator(B);
   evaluator.to_postfix();
   if(tracing_commands())  the_log << lg_startbrace << "FPpostfix "
@@ -2022,8 +2019,7 @@ void Parser::fp_e_eval()
 // Fpsolve: linear equations.
 void Parser::fp_e_lsolve()
 {
-  get_r_token();
-  fp_res = cur_tok;
+  fp_res = get_r_token();
   FpNum X = fp_read_value();
   FpNum Y = fp_read_value();
   FpNum Z;
@@ -2034,10 +2030,8 @@ void Parser::fp_e_lsolve()
 // Fpsolve: quadratic equations.
 void Parser::fp_e_qsolve()
 {
-  get_r_token();
-  fp_res = cur_tok;
-  get_r_token();
-  fp_res2 = cur_tok;
+  fp_res = get_r_token();
+  fp_res2 = get_r_token();
   FpNum X = fp_read_value();
   FpNum Y = fp_read_value();
   FpNum Z = fp_read_value();
@@ -2051,12 +2045,9 @@ void Parser::fp_e_qsolve()
 // Fpsolve: cubic equations.
 void Parser::fp_e_csolve()
 {
-  get_r_token();
-  fp_res = cur_tok;
-  get_r_token();
-  fp_res2 = cur_tok;
-  get_r_token();
-  fp_res3 = cur_tok;
+  fp_res = get_r_token();
+  fp_res2 = get_r_token();
+  fp_res3 = get_r_token();
   FpNum X = fp_read_value();
   FpNum Y = fp_read_value();
   FpNum Z = fp_read_value();
@@ -2073,14 +2064,10 @@ void Parser::fp_e_csolve()
 // Fpsolve: degree 4 equations.
 void Parser::fp_e_qqsolve()
 {
-  get_r_token();
-  fp_res = cur_tok;
-  get_r_token();
-  fp_res2 = cur_tok;
-  get_r_token();
-  fp_res3 = cur_tok;
-  get_r_token();
-  fp_res4 = cur_tok;
+  fp_res = get_r_token();
+  fp_res2 = get_r_token();
+  fp_res3 = get_r_token();
+  fp_res4 = get_r_token();
   FpNum X = fp_read_value();
   FpNum Y = fp_read_value();
   FpNum Z = fp_read_value();
@@ -2471,7 +2458,7 @@ void Parser::upn_eval(TokenList& l)
   back_input(hash_table.CB_token);
   fp_special_expand(L.value);
   back_input(hash_table.OB_token);
-  TokenList w = mac_arg();
+  TokenList w = read_arg();
   S.push_upn(w);
 }
 
@@ -2480,7 +2467,7 @@ void Parser::fp_e_upn()
 {
   fp_prepare();
   upn_stack.clear();
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   if(L.empty()) L.push_back(hash_table.zero_token);
   upn_eval(L);  
   if(upn_stack.empty()) {
@@ -2848,9 +2835,9 @@ void Parser::exec_fp_cmd(subtypes i)
   case fp_pow_code:
   case fp_root_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       fp_send_one_arg(L2);
@@ -2877,8 +2864,8 @@ void Parser::exec_fp_cmd(subtypes i)
   case fp_arctan_code:
   case fp_arccot_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       fp_send_one_arg(L2);
@@ -2892,8 +2879,8 @@ void Parser::exec_fp_cmd(subtypes i)
   case fp_ifgt_code:
   case fp_ifeq_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
       res.push_back(aux);
       fp_send_one_arg(L1);
       res.splice(res.end(),L1);
@@ -2906,7 +2893,7 @@ void Parser::exec_fp_cmd(subtypes i)
   case fp_ifzero_code:
   case fp_ifint_code:
     {
-      TokenList L1 = mac_arg();
+      TokenList L1 = read_arg();
       res.push_back(aux);
       fp_send_one_arg(L1);
       res.splice(res.end(),L1);
@@ -2917,9 +2904,9 @@ void Parser::exec_fp_cmd(subtypes i)
   case fp_arcsincos_code:
   case fp_arctancot_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       res.splice(res.end(),L2);
@@ -2946,9 +2933,9 @@ void Parser::exec_fp_cmd(subtypes i)
     return;
   case fp_lsolve_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       fp_send_one_arg(L2);
@@ -2959,11 +2946,11 @@ void Parser::exec_fp_cmd(subtypes i)
     }
   case fp_qsolve_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
-      TokenList L4 = mac_arg();
-      TokenList L5 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
+      TokenList L4 = read_arg();
+      TokenList L5 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       res.splice(res.end(),L2);
@@ -2977,13 +2964,13 @@ void Parser::exec_fp_cmd(subtypes i)
     }
   case fp_csolve_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
-      TokenList L4 = mac_arg();
-      TokenList L5 = mac_arg();
-      TokenList L6 = mac_arg();
-      TokenList L7 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
+      TokenList L4 = read_arg();
+      TokenList L5 = read_arg();
+      TokenList L6 = read_arg();
+      TokenList L7 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       res.splice(res.end(),L2);
@@ -3000,15 +2987,15 @@ void Parser::exec_fp_cmd(subtypes i)
     }
   case fp_qqsolve_code:
     {
-      TokenList L1 = mac_arg();
-      TokenList L2 = mac_arg();
-      TokenList L3 = mac_arg();
-      TokenList L4 = mac_arg();
-      TokenList L5 = mac_arg();
-      TokenList L6 = mac_arg();
-      TokenList L7 = mac_arg();
-      TokenList L8 = mac_arg();
-      TokenList L9 = mac_arg();
+      TokenList L1 = read_arg();
+      TokenList L2 = read_arg();
+      TokenList L3 = read_arg();
+      TokenList L4 = read_arg();
+      TokenList L5 = read_arg();
+      TokenList L6 = read_arg();
+      TokenList L7 = read_arg();
+      TokenList L8 = read_arg();
+      TokenList L9 = read_arg();
       res.push_back(aux);
       res.splice(res.end(),L1);
       res.splice(res.end(),L2);
@@ -3148,10 +3135,9 @@ void Parser::exec_fpi_cmd(subtypes i)
   case fp_tancot_code:
     {
       fp_prepare();
-      if(i==fp_sincos_code ||i==fp_tancot_code) {
-	get_r_token();
-	fp_res2 = cur_tok;
-      }
+      if(i==fp_sincos_code ||i==fp_tancot_code)
+	fp_res2 = get_r_token();
+      
       FpNum X = fp_read_value();
       FpNum a,b;
       fp::sincos(a,b,X,i);

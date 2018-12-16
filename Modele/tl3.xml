@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/11/07-->
+<std>
+<p>This tests the binary code of latex3; works only with option -l3</p>
+<p>\long macro:-&gt;0100\x macro:-&gt;0000\x \protected\long macro:-&gt;0110\x \protected macro:-&gt;0010x\long macro:-&gt;0101xmacro:-&gt;0001x\protected\long macro:-&gt;0111x\protected macro:-&gt;0011x\long macro:-&gt;1100\x macro:-&gt;1000\x \protected\long macro:-&gt;1110\x \protected macro:-&gt;1010x\long macro:-&gt;1101xmacro:-&gt;1001x\protected\long macro:-&gt;1111x\protected macro:-&gt;1011x</p>
+<p>x<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math></formula>y</p>
+</std>

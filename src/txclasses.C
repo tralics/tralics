@@ -14,7 +14,7 @@
 #include "txclasses.h"
 
 const char* txclasses_rcsid =
-  "$Id: txclasses.C,v 2.37 2012/05/15 17:14:30 grimm Exp $";
+  "$Id: txclasses.C,v 2.44 2015/10/28 17:38:45 grimm Exp $";
 
 namespace {
   Buffer local_buf;
@@ -43,11 +43,6 @@ namespace classes_ns {
   void add_sharp(TokenList& L);
 }
 
-
-namespace xkv_ns {
-  string to_string(TokenList& s,String msg);
-}
-
 using namespace classes_ns;
 using namespace token_ns;
 
@@ -65,7 +60,7 @@ KeyAndVal classes_ns::make_keyval(TokenList &key_val)
   remove_first_last_space(key);
   if(have_equals) 
     key_val.push_front(equals);
-  string key_name = xkv_ns::to_string(key,"Invalid option");
+  string key_name = the_parser.list_to_string_c(key,"Invalid option");
   string key_full=key_name;
   if(have_equals) {
     Buffer&B = local_buf;
@@ -181,7 +176,7 @@ int ClassesData::find_package(const string & name, bool type,bool creat)
 // True if the date field is set (missing date in a package gives 0000/00/00)
 void Parser::T_if_package_loaded(bool type) // true for class
 {
-  string name = rT_next_arg();
+  string name = sE_arg_nopar();
   int i = the_class_data.find_package(name,type,false);
   bool res = false;
   if(i && !the_class_data.packages[i]->date.empty())
@@ -193,8 +188,8 @@ void Parser::T_if_package_loaded(bool type) // true for class
 // \@ifpackagelater{name}{YYYY/MM/DD}
 void Parser::T_if_package_later(bool c) // true for class
 {
-  string name = rT_next_arg();
-  string date = rT_next_arg();
+  string name = sE_arg_nopar();
+  string date = sE_arg_nopar();
   int idate = parse_version(date);
   int pdate = 0;
   int i = the_class_data.find_package(name,c,false);
@@ -206,8 +201,8 @@ void Parser::T_if_package_later(bool c) // true for class
 // \@ifpackagewith{name}{option-list}
 void Parser::T_if_package_with(bool c) // true for class
 {
-  string name = rT_next_arg();
-  TokenList options = mac_arg();
+  string name = sE_arg_nopar();
+  TokenList options = read_arg();
   OptionList A;
   OptionList B = make_options(options);
   int p = the_class_data.find_package(name,c,false);
@@ -304,12 +299,12 @@ void classes_ns::add_to_filelist(const string& s,const string& date)
 // Also \ProvidesFile
 void Parser::T_provides_package(bool c) // True for a file
 {
-  string name = rT_next_arg();
-  string date = rT_next_optarg();
+  string name = sE_arg_nopar();
+  string date = sE_optarg_nopar();
   add_to_filelist(get_cur_filename(),date);
   the_log << lg_start;
   if(c) {
-    the_log << "File :"  << name << " " <<  date << "\n"; 
+    the_log << "File: "  << name << " " <<  date << "\n"; 
     return;
   }
   LatexPackage* cur = the_class_data.cur_pack();
@@ -344,8 +339,8 @@ void classes_ns::dump_file_list()
 
 void Parser::T_pass_options(bool c) // true if a class
 {
-  TokenList Lopt= mac_arg();
-  string name = rT_next_arg(); 
+  TokenList Lopt= read_arg();
+  string name = sE_arg_nopar(); 
   OptionList L = make_options(Lopt);
   int p = the_class_data.find_package(name,c,true);
   the_class_data.packages[p]->add_options(L);
@@ -358,8 +353,8 @@ void Parser::T_declare_options()
   if(star) 
     T_declare_option_star();
   else {
-    string name = rT_next_arg();
-    TokenList L = mac_arg();
+    string name = sE_arg_nopar();
+    TokenList L = read_arg();
     LatexPackage* C = the_class_data.cur_pack();
     C->Poptions.push_back(KeyAndVal(name,L,name));
   }
@@ -378,7 +373,7 @@ void classes_ns::register_key(const string&Key)
 // Same code for xkeyval and kvoption packages
 void Parser::T_declare_option_star()
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   LatexPackage* C = the_class_data.cur_pack();
   C->has_a_default = true;
   C->default_handler = L;
@@ -395,7 +390,7 @@ void Parser::T_option_not_used()
   if(!the_class_data.cur_pack()->is_class()) return;
   OptionList& GO = the_class_data.global_options;
   expand_no_arg("CurrentOption");
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   KeyAndVal s = make_keyval(L);
   int j = is_in_vector(GO,s.get_full_name(),true);
   if(j>=0) GO[j].mark_un_used();
@@ -569,7 +564,7 @@ void Parser::T_process_options()
 
 void Parser::T_execute_options()
 {
-  TokenList opt = mac_arg(); 
+  TokenList opt = read_arg(); 
   LatexPackage*C = the_class_data.cur_pack();
   OptionList&pack = C->Poptions;
   TokenList action;
@@ -622,10 +617,10 @@ TokenList classes_ns::cur_options(bool star,TokenList&spec,bool normal)
 
 void Parser::T_inputclass()
 {
-  string name = rT_next_arg();
+  string name = sE_arg_nopar();
   bool res =tralics_ns::find_in_confdir(name +  ".clt", true);
   if(!res) {
-    parse_error("Cannot input " +  name +  ".clt" ,"");
+    parse_error(err_tok,"Cannot input " +  name +  ".clt" ,"");
   } else {
     int k = cur_file_pos;
     open_tex_file(true);
@@ -638,9 +633,9 @@ void Parser::T_inputclass()
 // Implements \LoadClassWithOptions and \RequirePackageWithOptions
 void Parser::T_load_with_options(bool c) // c is true for a class
 {
-  string name = rT_next_arg(); 
+  string name = sE_arg_nopar(); 
   the_class_data.cur_pack()->seen_process = true; // someone else processes
-  string date = rT_next_optarg();
+  string date = sE_optarg_nopar();
   cur_opt_list = the_class_data.cur_pack()->Uoptions;
   bool b = check_builtin_pack(name);
   use_a_package(name, c, date,b);  
@@ -653,9 +648,9 @@ void Parser::T_documentclass(bool bad)
   int c = cur_cmd_chr.get_chr();
   Token T = cur_tok;
   TokenList Loptions;
-  next_optarg(Loptions);
-  string name = rT_next_arg();
-  string date = rT_next_optarg();
+  read_optarg_nopar(Loptions);
+  string name = sE_arg_nopar();
+  string date = sE_optarg_nopar();
   cur_opt_list = make_options(Loptions);
   if(c==0) { // else is LoadClass
     cur_tok = T;
@@ -672,9 +667,9 @@ void Parser::T_documentclass(bool bad)
 void Parser::T_usepackage() 
 {
   TokenList Loptions;
-  next_optarg(Loptions);
-  string name = rT_next_arg(); // can be a list of names
-  string date = rT_next_optarg();
+  read_optarg_nopar(Loptions);
+  string name = sE_arg_nopar(); // can be a list of names
+  string date = sE_optarg_nopar();
   cur_opt_list = make_options(Loptions);
   Splitter S(name);
   for(;;) {
@@ -860,7 +855,7 @@ void ClassesData::show_unused()
 // Implements \AtEndOfPackage \AtEndOfClass
 void Parser::T_at_end_of_class()
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   the_class_data.cur_pack()->add_to_hook(L);
 }
 
@@ -927,7 +922,7 @@ void Parser::T_class_error(subtypes c)
     break;
   default:;
   }
-  if(!simple) prefix = tex_write(-1);
+  if(!simple) prefix = string_to_write(write18_slot+1);
   Buffer& B = local_buf;
   B.reset();
   if(std) {
@@ -945,7 +940,7 @@ void Parser::T_class_error(subtypes c)
   }
   TokenList L = scan_general_text();
   L.push_back(hash_table.relax_token);
-  scan_toks_edef(L);
+  read_toks_edef(L);
   if(!L.empty()) {
     if(L.back()==hash_table.relax_token) 
       L.pop_back();
@@ -955,7 +950,7 @@ void Parser::T_class_error(subtypes c)
   const_token_iterator E = L.end();
   while(C != E) {
     if(*C==message_break_token) B << "\n"<<prefix;
-    else B.push_back(*C,false); 
+    else B.insert_token(*C,false); 
     ++C;
   }
   if(on_line&&what!=mt_error) {
@@ -965,8 +960,8 @@ void Parser::T_class_error(subtypes c)
   }
   if(what!=mt_error) B << ".\n";
   if(std&&what==mt_error)  skip=1;
-  if(skip) ignore_next_arg();
-  if(skip==2) ignore_next_arg();
+  if(skip) ignore_arg();
+  if(skip==2) ignore_arg();
   out_warning(B,what);
 }
 
@@ -984,7 +979,7 @@ void Parser::out_warning(Buffer&B, msg_type what)
   }
   if(what==mt_none) return;
   String res = B.convert_to_log_encoding();
-  if(what==mt_error) parse_error(res,"uerror");
+  if(what==mt_error) parse_error(err_tok,res,"uerror");
   else if(what==mt_warning) main_ns::log_and_tty << lg_start << res;
   else the_log << res;
 }
@@ -994,7 +989,7 @@ void Parser::T_change_element_name()
   flush_buffer();
   bool star = remove_initial_star();
   string name = special_next_arg();
-  string value = rT_next_arg();
+  string value = sE_arg_nopar();
   bool res;
   if(star) {
     res = config_ns::assign_att(name.c_str(),value.c_str());
@@ -1079,14 +1074,14 @@ void Parser::finish_kvo_bool(Token T,const string&fam,const string&arg)
 // checks that val is true/false and calls \fam@argval
 void Parser::kvo_bool_key()
 {
-  string A = rT_next_arg(); // package
-  string C = rT_next_arg(); // prefix
-  string D = rT_next_arg(); // key
-  string d = rT_next_arg(); // val
+  string A = sE_arg_nopar(); // package
+  string C = sE_arg_nopar(); // prefix
+  string D = sE_arg_nopar(); // key
+  string d = sE_arg_nopar(); // val
   if(!(d=="true" || d=="false")) {
     Buffer& B= local_buf;
     B << bf_reset << "Illegal boolean value " << d << " ignored";
-    parse_error(B.c_str(),"bad bool");
+    parse_error(err_tok,B.c_str(),"bad bool");
     main_ns::log_and_tty << "Value  should be true or false in " 
 			 <<(A[0]=='P' ? "package " : "class " ) 
 			 << (A.c_str()+1) << ".\n";
@@ -1104,16 +1099,16 @@ void Parser::kvo_string_opt()
 {
   Token cmd = cur_tok;
   TokenList init,defval;
-  next_optarg(init);
-  string arg = rT_next_arg();
-  bool has_default = next_optarg(defval);
+  read_optarg(init);
+  string arg = sE_arg_nopar();
+  bool has_default = read_optarg(defval);
   classes_ns::register_key(arg);
   string fam= kvo_getfam();
   Buffer& B = local_buf;
   B << bf_reset << fam << "@" << arg;
   Token T = hash_table.locate(B);
   if(!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T,"", "bad redef");
     return;
   }
   new_macro(init,T);
@@ -1135,17 +1130,17 @@ void Parser::kvo_string_opt()
 // Signals an error if the option is not @VOID@
 void Parser::kvo_void_key()
 {
-  mac_arg(); // package (should appear in the error message)
-  string C=rT_next_arg(); // current option
-  string d= rT_next_arg(); // option value
+  read_arg(); // package (should appear in the error message)
+  string C=sE_arg_nopar(); // current option
+  string d= sE_arg_nopar(); // option value
   if(d=="@VOID@") return;
-  parse_error("Option "+ C+" takes no argument", "bad opt");
+  parse_error(err_tok,"Option "+ C +" takes no argument", "bad opt");
 }
 
 void Parser::kvo_process()
 {
   bool ok = remove_initial_star();
-  string fam= ok ?  kvo_getfam() : rT_next_arg();
+  string fam= ok ?  kvo_getfam() : sE_arg_nopar();
   TokenList spec;
   TokenList L = classes_ns::cur_options(true,spec,true);
   brace_me(L);
@@ -1159,18 +1154,18 @@ void Parser::kvo_process()
 void Parser::kvo_void_opt()
 {
   Token cmd = cur_tok;
-  string arg = rT_next_arg();
+  string arg = sE_arg_nopar();
   string fam = kvo_getfam();
   Buffer& B = local_buf;
   classes_ns::register_key(arg);
   B << bf_reset << fam << "@" << arg;
-  Token T = hash_table.locate(B);
+  Token T = hash_table.locate(B); 
   if(!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T,"", "bad redef");
     return;
   }
   back_input(T);
-  see_new_def(false,false,user_cmd);
+  M_def(false,false,user_cmd, rd_always);
   TokenList L,aux;
   add_sharp(L);
   L.push_back(T);
@@ -1191,8 +1186,8 @@ void Parser::kvo_void_opt()
 void Parser::kvo_bool_opt()
 {
   Token T = cur_tok;
-  string df= rT_next_optarg();
-  string arg = rT_next_arg();
+  string df= sE_optarg_nopar();
+  string arg = sE_arg_nopar();
   // Optional argument must be true or false
   if(!(df.empty() || df=="false" || df=="true")) {
     main_ns::log_and_tty << "Bad option " << df << " of " <<
@@ -1205,8 +1200,8 @@ void Parser::kvo_bool_opt()
   // This is \newif
   Token W = cur_tok;
   eq_define(W.eqtb_loc(),CmdChr(if_test_cmd,v),false);
-  newif_aux(W,s,true);
-  newif_aux(W,s,false);
+  M_newif_aux(W,s,true);
+  M_newif_aux(W,s,false);
   finish_kvo_bool(T,fam,arg);
 }
 
@@ -1214,8 +1209,8 @@ void Parser::kvo_bool_opt()
 void Parser::kvo_comp_opt()
 {
   Token cmd = cur_tok;
-  string arg = rT_next_arg();
-  string comp= rT_next_arg();
+  string arg = sE_arg_nopar();
+  string comp= sE_arg_nopar();
   string fam=  kvo_getfam();
   Buffer&B=local_buf;
   B << bf_reset << "if" << fam << '@' << comp;
@@ -1223,7 +1218,7 @@ void Parser::kvo_comp_opt()
   if (hash_table.eqtb[T.eqtb_loc()].is_undefined()) {
     B << bf_reset << "Cannot generate code for `" << arg  << 
       "', no parent " << comp; 
-    parse_error(B.c_str(),"bad redef");
+    parse_error(err_tok,B.c_str(),"bad redef");
     return;
   }
   // make boolean old inverse of foo
@@ -1236,13 +1231,13 @@ void Parser::kvo_comp_opt()
   B <<  bf_reset<< fam << '@' << arg << "true";
   Token T4 =  hash_table.locate(B);
   if(!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T2,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T2,"", "bad redef");
   } 
   if(!hash_table.eqtb[T4.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T4,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T4,"", "bad redef");
   }
-  eval_let(T2,T1,true);
-  eval_let(T4,T3,true);
+  M_let_fast(T2,T1,true);
+  M_let_fast(T4,T3,true);
   finish_kvo_bool(cmd,fam,arg);
 }
 
@@ -1258,7 +1253,7 @@ void Parser::kvo_family_etc(subtypes k)
   B << s;
   Token T= hash_table.locate(B);
   if(k== kvo_fam_set_code || k== kvo_pre_set_code) {
-    TokenList L= mac_arg();
+    TokenList L= read_arg();
     new_macro(L,T);
   } else if(hash_table.eqtb[T.eqtb_loc()].is_undefined()) {
     B << bf_reset<< s.c_str()+1;
@@ -1277,7 +1272,7 @@ string Parser::kvo_getfam()
   back_input(hash_table.CB_token);
   kvo_family_etc(kvo_fam_get_code);
   back_input(hash_table.OB_token);
-  return rT_next_arg();
+  return sE_arg_nopar();
 }
 
 
@@ -1289,19 +1284,19 @@ bool Parser::check_if_redef(const string& s)
   B << bf_reset << s << "true";
   Token T2=hash_table.locate(B);
   if(!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T2,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T2,"", "bad redef");
     return false;
   }
   B <<bf_reset << s << "false";
   Token T3=hash_table.locate(B);
   if(!hash_table.eqtb[T3.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T3,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T3,"", "bad redef");
     return false;
   }
   B <<bf_reset << "if" << s;
   Token T1=hash_table.locate(B);
   if(!hash_table.eqtb[T1.eqtb_loc()].is_undef_or_relax()) {
-    parse_error("Cannot redefine ",T1,"", "bad redef");
+    parse_error(err_tok,"Cannot redefine ",T1,"", "bad redef");
     return false;
   }
   cur_tok = T1;
@@ -1319,7 +1314,7 @@ TokenList Parser::XKV_parse_filename()
   if(cur_tok.is_valid()) back_input();
   if(cur_tok==Token(other_t_offset,'<')) {
     get_token();
-    return read_until_long(Token(other_t_offset,'>'));
+    return read_until_nopar(Token(other_t_offset,'>'));
   } else {
     LatexPackage*C = the_class_data.cur_pack();
     local_buf << bf_reset << C->real_name();

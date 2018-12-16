@@ -1,5 +1,5 @@
 // -*- C++ -*-
-//$Id: txvars.h,v 2.137 2015/07/28 16:21:21 grimm Exp $
+//$Id: txvars.h,v 2.141 2015/10/16 16:51:09 grimm Exp $
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
 
 // This software is governed by the CeCILL license under French law and
@@ -65,12 +65,11 @@ enum {
 // Tex channels
 enum {
   nb_input_channels = 16, // number of input channels
-  nb_real_output_channels = 16, // number of output channels
   tty_in_chan = 16, 
   main_in_chan = 17, 
   token_in_chan=18,
-  max_openout = nb_real_output_channels-1,
-  max_openin = max_openout,
+  max_openin = nb_input_channels-1,
+  max_openout = max_openin,
   positive_out_slot = 16, // means log and tty
   negative_out_slot = 17, // means log
   write18_slot = 18,      // means shell
@@ -96,14 +95,16 @@ enum { unit_pt, unit_in, unit_pc, unit_cm, unit_mm,unit_bp, unit_dd,
 // a definition like \def\foo{...} is dt_normal in the case the argument list
 // is empty, #1, #1#2, #1#2#3, etc; it is dt_brace if there is # before
 // the opening brace, like \def\foo#1#{...}, it is dt_delim otherwise
+// dt_empty holds for \def\foo{}; dt_spec_opt says opt arg is [\@dblarg]
 enum def_type {
   dt_normal, dt_optional, dt_delim, dt_brace, dt_empty,dt_spec_opt,
-  dt_long=8, dt_outer=16,
 };
 
 enum tpa_line {
   tl_normal,tl_end,tl_empty
 };
+
+enum nl_to_tok { nlt_space, nlt_cr, nlt_nl };
 
 
 // Character type for the bibtex parser
@@ -183,7 +184,8 @@ enum l_state {
 };
 
 enum scan_stat{
-  ss_normal, ss_skipping, ss_defining,ss_matching,ss_aligning,ss_absorbing,
+  ss_normal, ss_skipping, ss_defining, ss_matching, ss_aligning, ss_absorbing,
+  ss_macro
 };
 
 // the state says how to interpret white space.

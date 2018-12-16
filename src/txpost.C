@@ -15,7 +15,7 @@
 
 
 const char* txpost_rcsid= 
-	    "$Id: txpost.C,v 2.76 2015/08/06 09:28:44 grimm Exp $";
+	    "$Id: txpost.C,v 2.80 2015/11/18 17:58:11 grimm Exp $";
 
 namespace {
   Buffer scbuf; // scratch buffer for printing XML, and other things
@@ -218,19 +218,18 @@ LabelInfo* StrHash::lab_val_check(Istring k)
   return Labinfo[K]; 
 }
 
-// This implements \label{foo}. We enter foo in the hashtab, and look at the
-// LabelInfo value. If the label is undefined, we define it, and take
-// the UID from the stack.
+// This implements \label{foo}; second argument is the anchor id
+// We enter foo in the hashtab, and look at the LabelInfo value.
+// If the label is undefined, we define it, 
 
-void Parser::add_id(const string& X)
+void Parser::create_label(const string& X, Istring S)
 {
   Istring m = Istring(X);
   LabelInfo* V = the_main->SH.lab_val_check(m);
-  if(V->set_defined())
+  if(V->set_defined()) {
     multiple_label(m.c_str(), V->get_lineno(),V->get_filename());
-  else {
+  } else {
     my_stats.one_more_label();
-    Istring S =the_stack.get_cur_id();
     V->set_id(S);
     V->set_lineno(get_cur_line());
     V->set_filename(get_cur_filename());
@@ -681,14 +680,6 @@ void Xml::subst_env0(Istring match, Xmlp vl)
   recurse(X);
 }
 
-// True if there is a son named match.
-bool Xml::contains_env(Istring match)
-{
-  XmlAction X(match,rc_contains);
-  recurse0(X);
-  return X.is_ok();
-}
-
 
 // Returns number of sons named <match>.
 int Xml::how_many_env(Istring match)
@@ -922,7 +913,6 @@ void post_ns::postprocess_figure(Xmlp to,Xmlp from)
     X = from->get_first_env(np_figure);
     if(X) { // copy all atributes of X but rend in this
       to->get_id().add_attribute_but_rend(X->get_id());
-      cout << "table " << to  << "\n";
     }
     return;
   case 1: // a table in the figure, move all tables
@@ -975,7 +965,6 @@ void post_ns::postprocess_table(Xmlp to, Xmlp from)
     to->get_id().add_attribute(np_rend,np_array);
     return;
   }
-  cout << "Postprocess table '" << from << "\n";
   // Normal case
   from->remove_empty_par();
   from->remove_par_bal_if_ok();
@@ -1153,12 +1142,12 @@ void Xml::convert_to_string(Buffer& buf)
     if(!w.null()) {
       err_ns::local_buf <<  "unexpected font change " << w;
       the_parser.unexpected_font(); 
-      err_ns::signal_error("",1);
+      the_parser.signal_error();
       return;
     }
   }
   err_ns::local_buf << "unexpected element " << name;
-  err_ns::signal_error("",1);
+  the_parser.signal_error();
 }
 
 // Puts *this in the buffer B. Uses Internal Encoding

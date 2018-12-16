@@ -14,7 +14,7 @@
 #include "txmath.h"
 
 const char* txmath_rcsid = 
-  "$Id: txmath.C,v 2.141 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txmath.C,v 2.159 2015/11/24 17:08:44 grimm Exp $";
 
 namespace {
   Buffer math_buffer;
@@ -47,17 +47,24 @@ namespace math_ns {
 			       int style,int open, int close);
 };
 
+
+namespace tralics_ns {
+  String math_env_name(subtypes c);
+  int math_env_props(subtypes c);
+}
+
+using tralics_ns::math_env_props;
+
 // This duplicates the formula.
 // It removes tokens preceeded by the special marker. 
 
 subtypes Math::duplicate (bool nomath) const
 {
-  subtypes k = math_data.find_math_location(type);
+  subtypes k = math_data.find_math_location(type,sname);
   Math& cp =  math_data.get_list(k);
   int sp = 0, sm = 0;
   bool skipping = false;
   bool skip_next= false;
-  cp.name = name;
   const_math_iterator C = value.begin();
   const_math_iterator E = value.end();
   while(C != E) {
@@ -120,8 +127,9 @@ void math_ns::add_to_trace(Token T)
   else
     Trace.push_back(T);
   trace_needs_space= false;
-  if(x>=cs_token_flag) trace_needs_space=true;
+  if(x>=single_offset) trace_needs_space=true;
 }
+
 void math_ns::add_to_trace(const string& x)
 {
   Trace.push_back_braced(x); trace_needs_space= false;
@@ -132,14 +140,123 @@ void math_ns::add_to_trace(char x)
   Trace.push_back(x); trace_needs_space= false;
 }
 
-
-
 Xmlp math_ns::get_builtin(int p) 
 { 
   return math_data.get_builtin(p); 
 }
 
 // -----------------------------------------------------------------------
+// Math environments. The following are recognised.
+
+String tralics_ns::math_env_name(subtypes chr)
+{
+  switch(chr) {
+  case eqnarray_code: return  "endeqnarray";
+  case eqnarray_star_code: return  "endeqnarray*";
+  case Beqnarray_code: return  "endBeqnarray";
+  case Beqnarray_star_code: return  "endBeqnarray*";
+  case multline_code: return  "endmultline";
+  case multline_star_code: return  "endmultline*";
+  case gather_code: return  "endgather";
+  case gather_star_code: return  "endgather*";
+  case equation_code: return  "endequation";
+  case equation_star_code: return  "endequation*";
+  case align_code: return "endalign";
+  case align_star_code: return "endalign*"; 
+  case flalign_code: return "endflalign"; 
+  case flalign_star_code: return "endflalign*"; 
+  case alignat_code:  return "endalignat"; 
+  case alignat_star_code:  return "endalignat*"; 
+  case xalignat_code:  return "endxalignat"; 
+  case xalignat_star_code:  return "endxalignat*"; 
+  case xxalignat_code:  return "endxxalignat"; 
+  case xxalignat_star_code:  return "endxxalignat*";
+    // special math
+  case math_code: return  "endmath";
+  case displaymath_code: return  "enddisplaymath";
+    // inner math
+  case array_code: return "endarray"; 
+  case split_code: return  "endsplit";
+  case aligned_code: return  "endaligned";
+  case gathered_code: return  "endgathered";
+  case matrix_code: return "endmatrix";
+  case bordermatrix_code: return "endbordermatrix "; // space ?
+  case matrixb_code: return "endbmatrix";
+  case matrixB_code: return "endBmatrix";
+  case matrixp_code: return "endpmatrix";
+  case matrixV_code: return "endVmatrix";
+  case matrixv_code: return "endvmatrix";
+    // special
+  case mbox_S_code: return "endmbox";
+  case text_S_code: return "endtext";
+  case fbox_S_code: return "endfbox";
+  case hbox_S_code: return "endhbox";
+  default: return 0;
+  }
+}
+
+// symbolic properties
+// 1 means: external (otherwise internal)
+// 2 means: one equation number (implies 1)
+// 4 means: one equation number per row (implies 1)
+// 8 means: array
+// 16 has an optional ignored arg
+// 32 has an required ignored
+
+int tralics_ns::math_env_props(subtypes chr)
+{
+  switch(chr) {
+  case eqnarray_code: return 1+4+8;
+  case eqnarray_star_code: return 1+8;
+  case Beqnarray_code: return 1+4+8;
+  case Beqnarray_star_code: return 1+8;
+  case multline_code: return 1+2+8;
+  case multline_star_code: return 1+8;
+  case gather_code: return 1+4+8;
+  case gather_star_code: return 1+8;
+  case equation_code: return 1+2;
+  case equation_star_code: return 1;
+  case align_code: return 1+4+8;
+  case align_star_code: return 1+8; 
+  case flalign_code: return 1+4+8; 
+  case flalign_star_code: return 1+8; 
+  case alignat_code:  return 1+4+8+32; 
+  case alignat_star_code:  return 1+8+32; 
+  case xalignat_code:  return 1+4+8+32; 
+  case xalignat_star_code:  return 1+8+32; 
+  case xxalignat_code:  return 1+4+8+32; 
+  case xxalignat_star_code:  return 1+8+32;
+  case math_code: return 1;
+  case displaymath_code: return 1;
+  case array_code: return 8; 
+  case split_code: return  8;
+  case aligned_code: return 8+16;
+  case gathered_code: return 8+16;
+  case matrix_code: return 8;
+  case bordermatrix_code: return 8;
+  case matrixb_code: return 8;
+  case matrixB_code: return 8;
+  case matrixp_code: return 8;
+  case matrixV_code: return 8;
+  case matrixv_code: return 8;
+  default: return 0;
+  }
+}
+
+
+
+// Name of a math object. In a previous version, the name was a character string.
+// Now it is a subtype. The name has the form "endmath" and we remove the prefix
+String Math::get_name () const
+{
+  subtypes w = get_sname();
+  if(w==nomathenv_code) return "";
+  String S = tralics_ns::math_env_name(w);
+  if(S) return S +3;
+  return "bad";
+}
+
+// --------------------------------------------------
 
 // Interprets the meta data of the list
 ostream& operator <<(ostream& X,  math_list_type y)
@@ -194,7 +311,9 @@ Buffer& operator <<(Buffer& X,  math_list_type y)
 void Math::print() const
 {
   Trace << "{" << type;
-  if(name.empty()) Trace << "\n"; else Trace << " name= " << name << "\n";
+  if(sname == nomathenv_code)
+    Trace << "\n";
+  else Trace << " name= " << get_name() << "\n";
   if(empty()) Trace << "empty";
   else {
     int k=0;
@@ -222,6 +341,8 @@ void MathElt::print() const
   Trace << "ME " << cmd << " - "  ;
   if(32<chr && chr < 128) Trace << "char " <<  uchar(chr) ;
   else Trace << chr ;
+  // is this secure ???
+  //  if(cmd>16) Trace << " - " <<  Token(get_font());
   if(cmd==mathfont_cmd || is_m_font (symcodes(cmd)))
     Trace << " - " <<  Token(get_font()) << "\n";
   else Trace << " - " << int(get_font()) << "\n";
@@ -285,20 +406,20 @@ void math_ns::add_attribute_spec(Istring a, Istring b)
 // Adds a label to the formula X
 void Parser::add_math_label (Xmlp res)
 {
+  if(cmi.get_eqnum_status()==1) {
+    cmi.ml_last_pass(tracing_math());
+    if(the_tag.empty()) return;
+  }
   Istring my_id = the_main->SH.next_label_id();
-  Istring T = the_stack.get_cur_id();
-  the_stack.set_cur_id(my_id);
-  res->get_id().get_att().push_back(np_id,my_id);
   if(the_tag.empty()) {
     static int mid =0;
     mid++;
     math_buffer << bf_reset << "mid" << mid;
     the_tag = math_buffer.to_string(); 
   }
-  res->get_id().get_att().push_back(np_idtext,Istring(the_tag));
+  the_stack.create_new_anchor(res->get_id(), my_id, Istring(the_tag));
   const string& label = cmi.get_label_val();
-  if(!label.empty()) add_id(label);
-  the_stack.set_cur_id(T);
+  if(!label.empty()) create_label(label,my_id);
 }
 
 
@@ -378,7 +499,6 @@ void Math::push_front(Math& X)
 
 void Math::destroy()
 {
-  name = "";
   value.clear();
 }
 
@@ -456,17 +576,7 @@ void Math::push_back_small(Xmlp A)
   push_back(MathElt(pos,mt_flag_small));
 }
 
-// Return true if this is an environment that produces an array.
-bool Math::is_array_env() const
-{
-  if(is_array_ext()) return true;
-  if(is_split_ext()) return true;
-  if(is_aligned_ext()) return true;
-  if(is_matrix_ext()) return true; 
-  if(is_matrix()) return true;
-  if(is_bordermatrix()) return true;
-  return false;
-}
+
 
 // Returns the next style in the list D,T, S, SS.
 // D and T give S, S gives SS, and SS gives SS.
@@ -538,6 +648,9 @@ void MathHelper::reset(bool dual)
   cur_formula_id = the_main->the_stack->next_xid(0);
   if(dual) cur_texmath_id = the_main->the_stack->next_xid(0);
   else cur_texmath_id = cur_math_id;
+  multi_labels.clear();
+  multi_labels_type.clear();
+  last_ml_pos = 0;
 }
 
 // Sets the type (display or not), and prepares the pos attribute.
@@ -549,12 +662,13 @@ void MathHelper::set_type(bool b)
 
 // This finds a free position in the table of math lists.
 // Note: the return value is never zero.
-subtypes MathDataP::find_math_location(math_list_type c)
+subtypes MathDataP::find_math_location(math_list_type c, subtypes n)
 {
   lmath_pos++;
   int res = lmath_pos;
   if(res>=lmath_size) realloc_list();
   math_table[res].set_type(c);
+  math_table[res].set_name(n);
   return subtypes(res);
 }
 
@@ -609,12 +723,11 @@ bool MathElt::is_digit() const
 // we open a group, create a new mathlist res, add it to cur_math.
 // Note that the type c appears both as type of res, and a field of cur_math
 
-subtypes Parser::new_math_list(int cur_math, math_list_type c, string s)
+subtypes Parser::new_math_list(int cur_math, math_list_type c, subtypes s)
 {
-  subtypes k = math_data.find_math_location(c);
+  subtypes k = math_data.find_math_location(c,s);
   math_data.get_list(cur_math).push_back_list(k,c);
-  math_data.get_list(k).set_name(s);
-  scan_math3(k,c,true);
+  scan_math3(k,c,1);
   return k;
 }
 
@@ -625,23 +738,25 @@ del_pos Parser::math_lr_value()
   add_to_trace(cur_tok);
   del_pos k = get_delimiter(cur_cmd_chr);
   if(k != del_invalid) return k;
-  parse_error("Invalid character in \\left or \\right\n",
+  parse_error(err_tok,"Invalid character in \\left or \\right\n",
 	      cur_tok,"","bad left/right");
   return del_dot;
 }
 
 
 // This is done to the main math list U when we start reading a formula.
-// Second argument is -1 if a dollar has been read, 
+
+// Second argument is nomathenv_code if a dollar has been read, 
 // the subtype of the token otherwise;
 // Note: \( and \[ expand to $$, in all other cases we have an environment
 // for instance \begin{math} or \begin{equation}. We compute and insert
 // the name of the environment. 
 // Sets and returns the inline/non-inline flag
 
-bool Parser::start_scan_math(Math&u, int type)
+bool Parser::start_scan_math(Math&u, subtypes type)
 {
-  if(type==-1) { // case of $...
+  u.set_name(type);
+  if(type== nomathenv_code) { // case of $...
     add_to_trace(cur_tok);
     get_token();// no expansion
     if(cur_cmd_chr.get_cmd()==3) {
@@ -656,33 +771,26 @@ bool Parser::start_scan_math(Math&u, int type)
     }
   } else { // case of \begin{...}
     u.set_type(math_env_cd);
-    u.set_env_name(type);
-    //  if(type==align_code) back_input(hash_table.at_align_token);
+    if((math_env_props(type) &1)==0) {
+      math_buffer << bf_reset ;
+      math_buffer << "Environment " << u.get_name()
+		  << " should only be used in math mode"; 
+      parse_error(math_buffer.c_str());
+    }
+    if(math_env_props(type) &16) ignore_optarg();
+    if(math_env_props(type) &32) read_arg();
     return type==math_code;
   }
 }
 
-// This function returns true if an equation number is required
-void MathHelper::check_for_eqnum(int type)
+// Defines how many equation numbers are to be created
+// If multi is true, more than one is allowed
+void MathHelper::check_for_eqnum(subtypes type, bool multi)
 {
-  need_tag = type==align_code ||  type==multline_code ||
-    type==gather_code ||
-    type == eqnarray_code ||type == Beqnarray_code || type == equation_code;
-}
-
-// This is called after parsing is complete. The argument is the
-// same as above. We change the type, so that has_type(math_env_cd) returns 
-// true only if the argument is in the list shown here, i.e.,
-// if the math formula is a table.
-void Math::hack_type(int type)
-{
-  if(type==align_code || type==align_star_code ||
-       type==multline_code ||type==multline_star_code || 
-       type==gather_code ||type==gather_star_code || 
-       type == eqnarray_code || type==eqnarray_star_code ||
-       type == Beqnarray_code || type==Beqnarray_star_code)
-    return;
-   set_type(math_open_cd);
+  int fl = math_env_props(type);
+  if(fl&2) eqnum_status = 1;
+  else if (fl&4) eqnum_status = multi ? 2: 3;
+  else eqnum_status = 0;
 }
 
 // This piece of code is executed when the math formula has been read
@@ -699,7 +807,7 @@ void Parser::after_math (bool is_inline)
   else { 
     bool w = the_stack.in_h_mode() || the_stack.in_v_mode();
     leave_h_mode();
-    if (the_main->is_interactive_math()) return; 
+    if (the_main->is_interactive_math()) return; // no need to be subtle
     remove_initial_space_and_back_input();
     if(w&&cur_cmd_chr.get_cmd() != par_cmd)
       back_input(hash_table.noindent_token);
@@ -711,9 +819,8 @@ void Parser::finish_no_mathml(bool is_inline, int vp)
 {
   Math& u = math_data.get_list(vp);
   Xid id = cmi.get_mid();
-  string S = u.get_real_name();
+  string S = u.get_name();
   Istring s = Istring(S);
-  if( S != u.get_name()) u.pop3();
   if(S.empty()) s = Istring(is_inline ? np_inline : np_display);
   id.add_attribute(np_type,cmi.get_pos_att());
   id.add_attribute(np_textype, s);
@@ -748,9 +855,9 @@ bool Parser::is_inner_math()
   return cmi.is_inline();
 }
 
-// Toplevel function. Reads and translates a formula. Argument as in
-// start_scan_math
-void Parser::T_math (int type)
+// Toplevel function. Reads and translates a formula.
+// Argument as in start_scan_math
+void Parser::T_math (subtypes type)
 {
   int nm = eqtb_int_table[nomath_code].get_val();
   cmi.reset(nm == -3);
@@ -759,25 +866,22 @@ void Parser::T_math (int type)
   Math&u1= math_data.get_list(0);
   bool is_inline = start_scan_math(u1,type);
   cmi.set_type(is_inline);
-  cmi.check_for_eqnum(type);
-  if(cmi.need_eqnum()) 
-    back_input(hash_table.increqnum_token);
-  // Insert the everymath token list
-  int position = is_inline ? everymath_code : everydisplay_code;
-  TokenList everymath = toks_registers[position].get_val();
-  if(!everymath.empty()) {
-    if(tracing_commands()) 
-      the_log << lg_startbrace 
-	      << (is_inline ? "<everymath> " : "<everydisplay> ")
-	      << everymath << lg_endbrace;
-    back_input(everymath);
+  cmi.check_for_eqnum(type,eqtb_int_table[multimlabel_code].get_val());
+  if(type== nomathenv_code || type==math_code || type == displaymath_code) {
+    int position = is_inline ? everymath_code : everydisplay_code;
+    TokenList everymath = toks_registers[position].get_val();
+    if(!everymath.empty()) {
+      if(tracing_commands()) 
+	the_log << lg_startbrace 
+		<< (is_inline ? "<everymath> " : "<everydisplay> ")
+		<< everymath << lg_endbrace;
+      back_input(everymath);
+    }
   }
   select_math_font();
-  scan_math3(0,math_data.get_list(0).get_type(),true);
-  if(tracing_math())
-    the_log << lg_start  << "Math: " << Trace << lg_end << lg_flush;
-  //  if(cmi.need_eqnum()) u.remove_initial_group();
+  scan_math3(0,math_data.get_list(0).get_type(),0);
   if(tracing_math()) {
+    the_log << lg_start  << "Math: " << Trace << lg_end << lg_flush;
     Trace.reset();
     math_data.get_list(0).print();
     the_log << lg_start  << Trace << lg_flush;
@@ -793,10 +897,9 @@ void Parser::T_math (int type)
      }
   }
   Xmlp alter = 0;
-  string textype =   math_data.get_list(0).get_real_name();
+  string textype = math_data.get_list(0).get_name();
   if(nm == -3) {
     Math& w = math_data.get_list(loc_of_cp);
-  if(textype != w.get_name()) w.pop3();
     alter = w.convert_math_noML(cmi.get_pos_att(), false);
     alter->change_id(cmi.get_tid());
   }
@@ -804,14 +907,13 @@ void Parser::T_math (int type)
   Math& u = math_data.get_list(loc_of_cp);
   // Translate the formula into res
   Xmlp res=0;
-  u.hack_type(type);
+  if(!(math_env_props(type) & 8))  u.set_type(math_open_cd);
   if(u.has_type(math_env_cd)) { 
-    res = u.M_array(is_inline? ms_T: ms_D);
+    res = u.M_array(cmi.get_eqnum_status()==2, is_inline? ms_T: ms_D);
   } else {
     u.remove_spaces();
     if(is_inline) {
       int k = eqtb_int_table[notrivialmath_code].get_val();
-      k = k%8;
       res = u.trivial_math(k);
       if(res) { 
 	finish_trivial_math(res);
@@ -828,7 +930,7 @@ void Parser::T_math (int type)
   x->add_tmp(res);
   if(!is_inline) x->add_att(cst_mode,cst_display);
   Xmlp res1 = new Xml(np_formula,x);
-     if (alter) res1-> push_back(alter);
+  if (alter) res1-> push_back(alter);
 
   res1->change_id(cmi.get_fid());
   res1->add_att(np_type,cmi.get_pos_att());
@@ -848,44 +950,47 @@ void Parser::T_math (int type)
 // --------------------------------------------------
 // Scanning math
 
-// x is index of result, t is type of math list, m is false in \hbox
-void Parser::scan_math3(int x, math_list_type t, bool m)
+// x is index of result, t is type of math list,
+// m is 0 for outer math, 1 normally, 2 in \hbox
+void Parser::scan_math3(int x, math_list_type t, int m)
 {
   Token xfct_caller = fct_caller;
   fct_caller = hash_table.relax_token;
   mode om = the_stack.get_mode();
   if(t==math_open_cd) {} // do not change the mode
-  else if(m)
-    the_stack.set_m_mode();
-  else
-    the_stack.set_h_mode();
-  scan_math2(x,t);
+  else if(m==2) the_stack.set_h_mode();
+  else the_stack.set_m_mode();
+  boundary_type aux = bt_math;
+  {
+    Math& u = math_data.get_list(x);
+    if(math_env_props(u.get_sname())& 8)  aux = bt_cell;
+    else if(t==math_open_cd) aux = bt_brace;
+  }
+  push_level(aux);
+  if(m==0 && cmi.get_eqnum_status() ==3)
+    refstepcounter("equation", false);
+  scan_math(x,t);
+  if(m==0 && (cmi.get_eqnum_status()==2 || cmi.get_eqnum_status()==1)) {
+    if (!cmi.end_of_row()) {
+      refstepcounter("equation",false);
+      cmi.insert_special_tag(the_parser.eqtb_string_table[0].get_val());
+    }
+    if(tracing_math()) cmi.dump_labels();
+    cmi.ml_check_labels();
+  }
+  pop_level(aux);
   the_stack.set_mode(om);
   fct_caller = xfct_caller;
 }
-// Like scan_math, but push and pop a level. When we read an array,
-// we pop&push whenever a cell boundary is seen; in this case the push here
-// will have type bt_cell, instead of type bt_math. 
-void Parser::scan_math2(int U, math_list_type t)
-{
-  boundary_type aux = bt_math;
-  Math u = math_data.get_list(U);
-  if(u.is_array_ext() || u.is_split_ext() || u.is_matrix_ext()
-     || u.is_matrix() || u.is_bordermatrix()
-     || u.is_aligned_ext() || u.is_external_array())
-    aux = bt_cell;
-  push_level(aux);
-  scan_math(U,t);
-  pop_level(true,aux); // beurks
-}
 
+// nnewt item in the list of tags
 void MathHelper::add_tag (TokenList&L)
 {
   if(!tag_list.empty()) tag_list.push_back(the_parser.hash_table.comma_token);
   tag_list.splice(tag_list.end(),L); 
 }
 
-
+// passes the list of tag as argument to \x@tag or \y@tag
 void MathHelper::handle_tags()
 {
   TokenList L = tag_list;
@@ -928,15 +1033,15 @@ int Parser::scan_math1(int res)
     }
   }
   if(T==11 || T==12 || T==char_given_cmd) {
+    // FIXME what is the purpose of this math mode test
     if(the_stack.get_mode() == mode_math) {
       int c = cur_cmd_chr.get_chr();
       if(c>0 && c<int(nb_characters)) {
 	int u = eqtb_int_table[c+math_code_offset].get_val();
 	if(u==32768) {
-	  cur_tok.from_cs(c+active_base);
-	  look_at_mac();
+	  cur_tok.active_char(c);
 	  back_input();
-	return 1;
+	  return 1;
 	}
       }
     }
@@ -959,7 +1064,6 @@ int Parser::scan_math1(int res)
 // of the current group is seen. Fills the list number res, of type type
 void Parser::scan_math(int res, math_list_type type)
 {
-  string s="";
   for(;;) {
     int w = scan_math1(res);
     if(w==0) return;
@@ -969,7 +1073,7 @@ void Parser::scan_math(int res, math_list_type type)
     Token t = cur_tok;
     switch(T) {
     case 1: // open brace, read a group
-      new_math_list(res,math_open_cd,"");
+      new_math_list(res,math_open_cd,nomathenv_code);
       continue;
     case 2: // close brace, end group
       if(type==math_open_cd || type==math_argument_cd || type==math_hbox_cd) 
@@ -984,7 +1088,7 @@ void Parser::scan_math(int res, math_list_type type)
       if(type==math_argument_cd) 
 	err_ns::local_buf << " while scanning argument of "
 			  << fct_caller.tok_to_str();
-      err_ns::signal_error("Unexpected par",0);
+      signal_error(err_tok,"Unexpected par");
       return;
     case eqno_cmd:
       scan_eqno(type);
@@ -993,15 +1097,49 @@ void Parser::scan_math(int res, math_list_type type)
       scan_math_tag(c);
       continue;
     case label_cmd:
-      s = special_next_arg();
-      cmi.new_label(s);
+      if(c==1) { // anchor
+	remove_initial_star();
+	sT_optarg_nopar();
+	parse_error("Illegal anchor in math mode");
+	continue;
+      } else if(c==2) { // anchorlabel
+	bool h;
+	string s = scan_anchor(h);
+	string a = special_next_arg();
+	if(h) {
+	  c = mathlabel_code;
+	  TokenList L = token_ns::string_to_list(a,true);
+	  //brace_me(L);
+	  back_input (L);
+	  TokenList L1 = token_ns::string_to_list(s,true);
+	  //brace_me(L1);
+	  back_input (L1);
+	  math_list_type cc = sub_to_math(c);
+	  Token ct = cur_tok;
+	  subtypes k = math_data.find_math_location(cc,nomathenv_code);
+	  CmdChr W = CmdChr(special_math_cmd,k);
+	  math_data.set_type(k,cc);
+	  subtypes r1 = math_argument(0,ct); // should be s
+	  subtypes r2 = math_argument(0,ct); // should be a
+	  Math& u = math_data.get_list(k);
+	  u.push_back_list(r1,math_argument_cd);
+	  u.push_back_list(r2,math_argument_cd);
+	  math_data.push_back(res, W, subtypes(u.get_type()));
+	}
+	else { the_tag = s ; cmi.new_label(a, true); }
+	continue;  // case anchorlabel ??
+      }
+      {
+	string s = special_next_arg();
+	cmi.new_label(s, false);
+      }
       continue;
     case ensuremath_cmd: 
-      first_of_one(t);
+      E_all_of_one(t,zero_code);
       continue;
     case begingroup_cmd:
       if(c==0) push_level(bt_semisimple);
-      else pop_level(false,bt_semisimple);
+      else pop_level(bt_semisimple);
       continue;
     case begin_cmd:
     case end_cmd:
@@ -1010,7 +1148,7 @@ void Parser::scan_math(int res, math_list_type type)
     case left_cmd:
       {
 	del_pos k = math_lr_value();
-	int tmp = new_math_list(res,math_LR_cd,"");
+	int tmp = new_math_list(res,math_LR_cd,nomathenv_code);
 	Math& w = math_data.get_list(tmp);
 	w.push_front(CmdChr(T,subtypes(k)),zero_code);
 	if(w.back().get_cmd() != right_cmd) {
@@ -1040,23 +1178,26 @@ void Parser::scan_math(int res, math_list_type type)
       interpret_math_cmd(res,c);
       continue;
     case make_box_cmd:
-      if(c==hbox_code) scan_math_hbox(res);
+      if(c==hbox_code) scan_math_hbox(res,hbox_S_code);
       else 
 	math_data.push_back(res,cur_cmd_chr,subtypes(cur_tok.get_val()));
       continue;
     case fbox_cmd:
-      if(c==fbox_code) scan_math_hbox(res);
+      if(c==fbox_code) scan_math_hbox(res,fbox_S_code);
       else 
 	math_data.push_back(res,cur_cmd_chr,subtypes(cur_tok.get_val()));
       continue;
     case box_cmd:
-      scan_hbox(res);
+      if(c==text_code) scan_hbox(res,text_S_code);
+      else scan_hbox(res,mbox_S_code); // what if it is makebox ? [FIXME]
       continue;
-    case 4:    // case & and \\ in a table 
+    case alignment_catcode:    // case & and \\ in a table 
     case backslash_cmd:
-      math_data.push_back(res,cur_cmd_chr,subtypes(t.get_val())); // ok ??
-      pop_level(false,bt_cell); // start-end a group for the next cell
-      push_level(bt_cell);
+      if (stack_math_in_cell ()) {
+	if(scan_math_endcell(t)) return;
+	else continue;
+      }
+      scan_math_endcell_ok(res);
       continue;
     case mathfont_cmd:
       math_data.push_back(res,cur_cmd_chr,subtypes(cur_tok.get_val()));
@@ -1127,7 +1268,7 @@ void Parser::scan_math(int res, math_list_type type)
 	cur_cmd_chr = CmdChr(T,c);
       }
       if(T<16) { // Case of a character
-	subtypes font = subtypes(the_parser.eqtb_int_table[math_font_pos].get_val());
+	subtypes font = subtypes(eqtb_int_table[math_font_pos].get_val());
 	math_data.push_back(res,cur_cmd_chr,font);
       }
       else
@@ -1136,6 +1277,182 @@ void Parser::scan_math(int res, math_list_type type)
   }
 }
 
+// We have seen & or \\. Possibly inserts v-part
+bool Parser::scan_math_endcell(Token t)
+{
+  if(the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
+    TokenList L = the_stack.get_u_or_v(false);
+    if(!L.empty()) {
+      if(tracing_commands())
+	the_log << lg_startbrace << "template v-part " << L << lg_endbrace;
+      back_input(t);
+      back_input(L);
+      the_stack.mark_omit_cell();
+      return false;
+    }
+  }
+  parse_error (err_tok,"unexpected command ", t,
+	       "; math mode aborted", "bad math");
+  back_input(t);
+  return true; // bad
+}
+
+// debug
+void MathHelper::dump_labels()
+{
+  int n = multi_labels.size();
+  for(int i= 0; i<n; i++) {
+    int v = multi_labels_type[i];
+    if(v==0) the_log <<"\n";
+    else if(v==4) the_log << "notag,";
+    else if(v==1) the_log << "label " <<  multi_labels [i] << ",";
+    else if(v==-1) the_log << "bad label " <<  multi_labels [i] << ",";
+    else if(v==2) the_log << "tag " <<  multi_labels [i] << ",";
+    else if(v==3) the_log << "tag* " <<  multi_labels [i] << ",";
+    else if(v==-2) the_log << "bad tag " <<  multi_labels [i] << ",";
+    else if(v==-3) the_log << "bad tag* " <<  multi_labels [i] << ",";
+    else if(v==5) the_log << "eqno " <<  multi_labels [i] << ",";
+  }
+}
+
+// 
+void MathHelper::ml_check_labels()
+{
+  int n = multi_labels.size();
+  int l = 1;
+  Buffer&B = math_buffer;
+  static bool warned = false;
+  for(int i= 0; i<n; i++) {
+    int v = multi_labels_type[i];
+    if(v==0) l++;
+    else if(v==-1) {
+      B << bf_reset << "Multiple \\label " << multi_labels [i];
+      if(eqnum_status ==1)
+	B << " for the current the formula";
+      else {
+	B << " on row " << l << " of the formula";
+	if(!warned)
+	  B << "\n(at most one \\label and at most one \\tag allowed per row)";
+	warned = true;
+      }
+      the_parser.parse_error(the_parser.err_tok, B.c_str(), "duplicate label" );
+    }
+    if(v==-2 || v == -3) {
+      B << bf_reset << "Multiple \\tag " << multi_labels [i];
+      if(eqnum_status == 1)
+	B << " for the current formula";
+      else {
+	B << " on row " << l << " of formula";
+	if(!warned)
+	  B << "\n(at most one \\label and at most one \\tag allowed per row)";
+	warned = true;
+      }
+      the_parser.parse_error(the_parser.err_tok, B.c_str(), "duplicate tag" );
+    }
+  }
+}
+
+  
+// true if no equation number has to be produced
+// leaves a hole for the label
+bool MathHelper::end_of_row()
+{
+  int k = last_ml_pos;
+  int n =  multi_labels.size();
+  bool seen_label = false;
+  bool seen_notag = false;
+  bool seen_tag = false;
+  for(int i=k; i<n; i++) {
+    int v = multi_labels_type[i];
+    if(v==0) continue; // boundary
+    if(v==1) { // a label 
+      if(seen_label) {  multi_labels_type[i] = - v; } 
+      seen_label = true;
+    }
+    else if(v==2 || v ==3) { // a tag
+      if(seen_tag) {  multi_labels_type[i] = - v; } 
+      seen_tag = true;
+    }
+    else if(v==4) seen_notag = true;
+  }
+  bool ok = seen_tag || seen_notag;
+  if(seen_notag && seen_label && !seen_tag) ok = false; // ??
+  if(!ok) new_multi_label("",5);
+  new_multi_label("",0); // add a new boundary
+  last_ml_pos = multi_labels.size();
+  return ok;
+}
+
+void MathHelper::ml_second_pass(Xmlp row,bool vb)
+{
+  bool slabel= false, stag = false;
+  string label="";
+  string tag = "";
+  int n = multi_labels.size();
+  int i;
+  static int N = 0;
+  if(last_ml_pos==0) N = 0; N++;
+  for(;;) {
+    if(last_ml_pos >= n) break;
+    i = last_ml_pos;
+    last_ml_pos ++;
+    int j = (multi_labels_type[i]);
+    if(j== 0) break;
+    if(j== 1) { slabel = true; label =  multi_labels[i]; }
+    else if(j==2 || j== 3 || j==5)
+      { stag = true; tag =  multi_labels[i]; } 
+  }
+  if(vb) {
+    if(slabel) the_log << "label on row " << N << " "<< label << ".\n";
+    if(stag) the_log << "tag on row " << N << " "<< tag << ".\n";
+  }
+  if(stag) {
+    Istring id = the_main->SH.next_label_id();
+    the_parser.the_stack.create_new_anchor(row->get_id(),id, Istring(tag));
+    if(slabel) the_parser.create_label(label, id);
+    }
+  else if(slabel) the_parser.parse_error("Internal error");
+}
+
+void MathHelper::ml_last_pass(bool vb)
+{
+  bool slabel= false, stag = false;
+  string label="";
+  string tag = "";
+  int n = multi_labels.size();
+  for(int i = 0; i <n; i++) {
+    int j = (multi_labels_type[i]);
+    if(j== 0) continue;
+    if(j== 1) { slabel = true; label =  multi_labels[i]; }
+    else if(j==2 || j== 3 || j==5)
+      { stag = true; tag =  multi_labels[i]; } 
+  }
+  if(slabel) label_val = label;
+  the_tag = tag;
+  if(vb) {
+    the_log << "Check labels \n";
+    dump_labels(); 
+    if(slabel) the_log << "label for formula " << label << ".\n";
+    if(stag) the_log << "tag for formula "<< tag << ".\n";
+  }
+}
+
+// We have seen & or \\. Must interpret it
+void Parser::scan_math_endcell_ok(int res)
+{
+  math_data.push_back(res,cur_cmd_chr,subtypes(cur_tok.get_val())); 
+  if(cur_cmd_chr.get_cmd() == backslash_cmd &&
+     res==0 &&
+     cmi.get_eqnum_status()==2) {
+    bool w = cmi.end_of_row();
+    if (!w) {
+      refstepcounter("equation",false);
+      cmi.insert_special_tag(the_parser.eqtb_string_table[0].get_val());
+    }
+  }
+  pop_level(bt_cell); // start-end a group for the next cell
+  push_level(bt_cell);
+}
 
 // We have seen \begin or \end
 // return false if parsing continues, true otherwise (case of \end)
@@ -1143,35 +1460,59 @@ bool Parser::scan_math_env(int res, math_list_type type)
 {
   symcodes T = cur_cmd_chr.get_cmd();
   bool at_start = T==begin_cmd;
+  // Check if v-part of template has to be inserted here
+  if(!at_start && stack_math_in_cell ()) {
+    if(the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
+      TokenList L = the_stack.get_u_or_v(false);
+      if(!L.empty()) {
+	if(tracing_commands())
+	  the_log << lg_startbrace << "template v-part " << L << lg_endbrace;
+	back_input(cur_tok);
+	back_input(L);
+	the_stack.mark_omit_cell();
+	return false;
+      }
+    }
+  }
   cmi.update_all_env_ctr(at_start);
-  string s = get_env(); // name of the env
+  string s = fetch_name0();
   add_to_trace(s);
-  if(is_not_a_math_env(s.c_str())) { // Check if \endfoo defined
+  Token eenv = find_env_token(s,false); // \endfoo
+  CmdChr end_val = cur_cmd_chr; // value of \endfoo
+  Token benv = find_env_token(s,true); // \foo
+  if(end_val.is_user()) { // user defined env, expand
     if(at_start) {
-      find_env_token(s.c_str(),true);
-      back_input();
+      back_input(benv);
       back_input(hash_table.OB_token); // Insert OB
       cmi.update_math_env_ctr(true);
     } else { // end something
       if(cmi.get_math_env_ctr()>0) {
 	back_input(hash_table.CB_token); // matches the OB above
 	cmi.update_math_env_ctr(false);
+	back_input(eenv);
       } else {
-	T_end(s); return false;
+	// FIXME
+	T_end(s);
+	return false;
       }
-      find_env_token(s.c_str(),false);
-      back_input();
-      if(cmi.get_math_env_ctr() ==0 && s=="align") ;
     }
     return false;
   }
+  // non-user env
+  subtypes et = nomathenv_code;
+  if(cur_cmd_chr.get_cmd() == math_env_cmd) et = cur_cmd_chr.get_chr() ;
   if(at_start) {
-    new_math_list(res,math_env_cd,s);
+    if(et == nomathenv_code || (math_env_props(et) &1)) {
+      Buffer&B = math_buffer;
+      B << bf_reset << "Illegal \\begin{" << s << "} found in math mode";
+      parse_error(err_tok,B.c_str(), "bad env"); 
+    }
+    if(math_env_props(et) &16) ignore_optarg();
+    new_math_list(res,math_env_cd,et);
     return false;
   }
-  bool  at_level_zero =
-      (s== "@align" ? cmi.get_all_env_ctr()==-2 : cmi.get_all_env_ctr()==-1);
-  //  bool  at_level_zero = cmi.get_all_env_ctr()==-1; old code
+  // Case \end{foo}
+  bool at_level_zero = cmi.get_all_env_ctr()==-1;
   if(at_level_zero && cmi.has_tag()) {
     TokenList L = token_ns::string_to_list(s,true);
     back_input(L);
@@ -1179,13 +1520,24 @@ bool Parser::scan_math_env(int res, math_list_type type)
     cmi.handle_tags();
     return false;
   }
-  if(type == math_env_cd &&  s==math_data.get_list(res).get_name()) {
-    if(res==0) {
-      the_tag = the_parser.eqtb_string_table[0].get_val();
+  if(type == math_env_cd &&  et==math_data.get_list(res).get_sname()) {
+    if(res==0) {// end of main formula
+      if(cmi.get_eqnum_status()>1) 
+	the_tag = the_parser.eqtb_string_table[0].get_val();
     }
     return true;
   }
-  parse_error("Bad \\end{" + s + "}");
+  {
+    Buffer& B = math_buffer;
+    B << bf_reset << "Bad \\end{" << s << "}; expected ";
+    if(type== math_env_cd)
+      B << "\\end{" <<math_data.get_list(res).get_name() << "}";
+    else if(type == math_dollar_cd) B << "$";
+    else if(type == math_ddollar_cd) B << "$$";
+    else if(type == math_LR_cd) B << "\\right";
+    else B << "}";
+    parse_error(err_tok, B.to_string(), "bad end");
+  }
   return true;
 }
 
@@ -1204,7 +1556,8 @@ bool Parser::scan_math_dollar(int res,math_list_type type)
     return true;
   case math_open_cd:
     if(!the_stack.in_h_mode()) {
-      parse_error("Out of scope $ ignored, maybe a } is missing here","extra $");
+      parse_error(err_tok,"Out of scope $ ignored, maybe a } is missing here",
+		  "extra $");
       return false;  
     }
     // fall through
@@ -1213,21 +1566,21 @@ bool Parser::scan_math_dollar(int res,math_list_type type)
     TokenList everymath = toks_registers[everymath_code].get_val();
     if(!everymath.empty()) {
       if(tracing_commands()) 
-	the_log << lg_startbrace  << "<every...> " 
+	the_log << lg_startbrace  << "<everymath> " 
 		<< everymath << lg_endbrace;
       back_input(everymath);
     }
     select_math_font();
-    new_math_list(res,math_dollar_cd,"");
+    new_math_list(res,math_dollar_cd,nomathenv_code);
     return false;
   } 
   case math_LR_cd:
     back_input(); 
-    parse_error("Missing \\right. inserted","missing \\right");
+    parse_error(err_tok,"Missing \\right. inserted","missing \\right");
     math_data.get_list(res).push_back(CmdChr(right_cmd,subtypes(del_dot)));
     return true;
   case math_argument_cd:
-    parse_error("Extra $ ignored while scanning argument of ",
+    parse_error(err_tok,"Extra $ ignored while scanning argument of ",
 			   fct_caller,"","extra $");
     return false;
   default:
@@ -1236,12 +1589,39 @@ bool Parser::scan_math_dollar(int res,math_list_type type)
   } 
 }
 
-// We have seen \tag, \@xtag or \@ytag
+// We have seen \tag, \@xtag o<r \@ytag
+// 0: \tag, 1=\@xtag 2=\@ytag 3=\notag 4=\nonumber
+
 void Parser::scan_math_tag(subtypes c)
 {
+  if(c==3 || c== 4) {
+    if(cmi.get_eqnum_status()==2 || cmi.get_eqnum_status()==1) {
+      cmi.new_multi_label("",4);
+    } else if (cmi.get_eqnum_status()==0) {
+      parse_error("Illegal \\notag");
+    } else { // decrement equation number
+      int v = eqtb_int_table[equation_ctr_pos].get_val();
+      word_define(equation_ctr_pos, v-1, true);
+    }
+    return;
+  }
   bool is_star = false; 
   if(c==0) is_star = remove_initial_star();
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
+  if(c==0 && (cmi.get_eqnum_status()==2 || cmi.get_eqnum_status()==1)) {
+    L.remove_if(MathIsDollar());
+    L.push_front(hash_table.relax_token);
+    L.push_front(hash_table.ref_token);
+    L.push_front(hash_table.let_token);
+    brace_me(L);
+    string val = sT_translate(L);
+    cmi.new_multi_label(val, (is_star? 3:2));
+    return;
+  }
+  if(c==0 && (cmi.get_eqnum_status()==0)) {
+    parse_error("Illegal \\tag");
+    return;
+  }
   if(c==0) {
     brace_me(L);
     L.remove_if(MathIsDollar());
@@ -1257,7 +1637,7 @@ void Parser::scan_math_tag(subtypes c)
 void Parser::scan_eqno(math_list_type type)
 {
   if(type != math_ddollar_cd) {
-    parse_error("Command \\eqno allowed only in display math","bad \\eqno");
+    parse_error(err_tok,"Command \\eqno allowed only in display math","bad \\eqno");
     return;
   }
   name_positions w = cur_cmd_chr.get_chr()==leqno_code? np_left : np_right;
@@ -1342,31 +1722,27 @@ void Parser::scan_math_rel(subtypes c, int res)
 }
 
 // Case of a \hbox; like \mbox, but inserts \everyhbox tokens
-void Parser::scan_math_hbox(int res)
+void Parser::scan_math_hbox(int res, subtypes c)
 {
   TokenList L = toks_registers[everyhbox_code].get_val();
   if(!L.empty()) {
-    if(before_mac_arg(cur_tok)) back_input(hash_table.CB_token);; 
+    if(before_mac_arg()) back_input(hash_table.CB_token);; 
     if(tracing_commands()) 
-      the_log << lg_startbrace  << "<every...> " << L << lg_endbrace;
+      the_log << lg_startbrace  << "<everyhbox> " << L << lg_endbrace;
     back_input(L);
     back_input(hash_table.OB_token);
   }
-  scan_hbox(res);
+  scan_hbox(res,c);
 }
 
 // Scans a mbox or a hbox
-void Parser::scan_hbox(int ptr) 
+void Parser::scan_hbox(int ptr,subtypes c) 
 {
-  Buffer&B=math_buffer;
-  B.reset(); B << cur_tok;
-  if(B[0]!='\\') { B.reset(); B<< "\\hbox"; } 
-  string s = B.c_str(1);
-  if(before_mac_arg(cur_tok)) back_input(hash_table.CB_token);
+  if(before_mac_arg()) back_input(hash_table.CB_token);
   add_to_trace('{');
-  subtypes k = math_data.find_math_location(math_hbox_cd);
-  math_data.get_list(k).set_name(s);
-  scan_math3(k,math_hbox_cd,false);
+  subtypes k = math_data.find_math_location(math_hbox_cd,nomathenv_code);
+  math_data.get_list(k).set_name(c);
+  scan_math3(k,math_hbox_cd,2);
   math_data.push_back(ptr,CmdChr(math_list_cmd,k),subtypes(math_hbox_cd));
 }
 
@@ -1383,13 +1759,13 @@ subtypes Parser::math_argument(int w,Token t)
     remove_initial_space_relax();
     if(!cur_tok.is_invalid()) back_input();
   }
-  if(before_mac_arg(t))  back_input(hash_table.CB_token);
+  if(before_mac_arg())  back_input(hash_table.CB_token);
   add_to_trace('{');
-  subtypes k = math_data.find_math_location(math_argument_cd);
-  boundary_type aux = bt_math;
+  subtypes k = math_data.find_math_location(math_argument_cd,nomathenv_code);
+  boundary_type aux = bt_brace; 
   push_level(aux);
   scan_math(k,math_argument_cd);
-  pop_level(true,aux);
+  pop_level(aux);
   fct_caller = xfct_caller;
   return k;
 }
@@ -1399,7 +1775,7 @@ subtypes Parser::math_argument(int w,Token t)
 // It returns \relax otherwise. Should we call scanint ?
 Token Parser::scan_style()
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   Token t = token_ns::get_unique(L);
   int p = 4;
   if(t.cmd_val()==other_catcode) {
@@ -1416,15 +1792,15 @@ void Parser::interpret_genfrac_cmd(int res,subtypes k,CmdChr W)
 {
   Token ct = cur_tok;
   del_pos k1,k2;
-  TokenList L1 = mac_arg();
+  TokenList L1 = read_arg();
   if(L1.empty())
     k1 = del_dot;
   else { back_input (L1); k1 = math_lr_value(); }
-  TokenList L2 = mac_arg();
+  TokenList L2 = read_arg();
   if(L2.empty())
     k2 = del_dot;
   else { back_input (L2); k2 = math_lr_value(); }
-  TokenList L3 = mac_arg();
+  TokenList L3 = read_arg();
   int dmres = 0;
   if(!L3.empty()) {
     back_input (L3);
@@ -1440,7 +1816,6 @@ void Parser::interpret_genfrac_cmd(int res,subtypes k,CmdChr W)
   add_to_trace(m);
   subtypes r1 = math_argument(0,ct);
   subtypes r2 = math_argument(0,ct);
-  //  subtypes k = math_data.find_math_location(sub_to_math(genfrac_code));
   Math& u = math_data.get_list(k);
   u.push_back(CmdChr(left_cmd,subtypes(k1)),zero_code);
   u.push_back(CmdChr(right_cmd,subtypes(k2)),zero_code);
@@ -1467,7 +1842,7 @@ void Parser::scan_math_mi(int res,subtypes c,subtypes k,CmdChr W)
   for(;;) {
     remove_initial_space_and_back_input(); 
     if(!cur_tok.is_open_bracket()) break; 
-    TokenList L; next_optarg(L);
+    TokenList L; read_optarg_nopar(L);
     brace_me(L);
     back_input(L); 
     subtypes r1 = math_argument(0,ct); 
@@ -1477,7 +1852,10 @@ void Parser::scan_math_mi(int res,subtypes c,subtypes k,CmdChr W)
   n = n/2; n = n+n; // Ignore last if odd
   subtypes r1 = math_argument(0,ct); 
   Math& u = math_data.get_list(k);
-  if(c==mathbox_code)  u.set_name(s);
+  if(c==mathbox_code) {
+    Istring ss = Istring(s);
+    u.set_name(subtypes(ss.get_value()));
+  }
   u.push_back_list(r1,math_argument_cd); 
   for(int i=0;i<n;i++) u.push_back(T[i]);
   math_data.push_back(res, W, subtypes(u.get_type()));
@@ -1503,7 +1881,7 @@ void Parser::interpret_mathchoice_cmd(int res,subtypes k,CmdChr W)
 void Parser::opt_to_mandatory()
 {
   TokenList L;
-  next_optarg(L);
+  read_optarg(L);
   brace_me(L);
   back_input(L);
 }
@@ -1512,7 +1890,7 @@ void Parser::opt_to_mandatory()
 void Parser::interpret_math_cmd(int res,subtypes c) 
 {
   Token ct = cur_tok;
-  subtypes k = math_data.find_math_location(sub_to_math(c));
+  subtypes k = math_data.find_math_location(sub_to_math(c),nomathenv_code);
   CmdChr W = CmdChr(special_math_cmd,k);
   switch(c) {
   case genfrac_code:
@@ -1599,35 +1977,7 @@ void StrHash::rlc_to_string(String s,vector<AttList>&res)
   }
 }
 
-// Tries to find the name of an environment; especially in the case of @align.
-string Math::get_real_name() const
-{
-  string u = get_name ();
-  if(!has_type(math_env_cd)) return u;
-  bool st = true;
-  if(is_align_ext()) st = false;
-  else if(is_align_ext_star()) st = true;
-  else  return u;
-  string a = remove_req_arg_noerr();
-  if(a=="1") u  = "align";
-  if(a=="2") u  = "flalign";
-  if(a=="3") u  = "alignat";
-  if(a=="4") u  = "xalignat";
-  if(a=="5") u  = "xxalignat";
-  if(st) u  = u + "*";
-  return u;
-}
 
-// This pops two elements, since the optional star in now in the type
-void Math::pop3()
-{
-  while(!empty() && front().is_space()) pop_front();
-  if(!empty()) pop_front(); // the type
-  // while(!empty() && front().is_space()) pop_front();
-  //  if(!empty()) pop_front(); // optional star
-  while(!empty() && front().is_space()) pop_front();
-  if(!empty()) pop_front(); // number of arguments
-}
 
 // Constructs the attributes list for a table.
 // eqnarray is RCL, align is RL, and matrix is C*.
@@ -1636,21 +1986,34 @@ void Math::pop3()
 void Math::fetch_rlc(vector<AttList>&table)
 {
   string rlc = "rcl";
-  if(is_aligned_ext()) {
+  switch(sname) {
+  case gather_code:
+  case gather_star_code:
+  case gathered_code:
+  case multline_code:
+  case multline_star_code:
+    rlc = "c"; break;
+  case bordermatrix_code:
+    rlc = ""; break;
+  case split_code:
+    rlc = "rl"; break;
+  case aligned_code:
+  case align_code: case align_star_code:
+  case flalign_code: case flalign_star_code:
+  case  alignat_code: case alignat_star_code:
+  case xalignat_code: case xalignat_star_code:
+  case xxalignat_code: case xxalignat_star_code:
+    rlc = "rlrlrlrlrl"; break;
+  case matrix_code:
+  case matrixb_code: case matrixB_code: case matrixp_code:
+  case matrixV_code: case matrixv_code:
+    rlc = ""; break;
+  case array_code:
     remove_opt_arg(false);
-    rlc = "rlrlrlrlrl"; // C if more then 10 cols
-  } else if(is_align_ext()  || is_align_ext_star()) {
-    pop3();
-    rlc = "rlrlrlrlrl";
-  }
-  else if(is_multline_ext()) rlc = "c";
-  else if(is_gather_ext()) rlc = "c";
-  else if(is_split_ext()) rlc = "rl";
-  else if(is_matrix()) rlc = "";
-  else if(is_bordermatrix()) rlc = "";
-  else if(is_matrix_ext()) rlc = ""; // pmatrix, etc
-  else if(is_array_ext())
     rlc = remove_req_arg();
+    break;
+  default: ;
+  }
   the_main->SH.rlc_to_string(rlc.c_str(),table);
 }
 
@@ -1676,7 +2039,8 @@ Xmlp Math::convert_cell(int& n, vector<AttList>& table,math_style W)
     pop_front();
     skip_initial_space();
     if(!empty()) 
-      the_parser.parse_error("Cell contains garbage after \\multicolumn",
+      the_parser.parse_error(the_parser.err_tok,
+			     "Cell contains garbage after \\multicolumn",
 			     "multicol garbage"); 
     L.get_arg1().convert_this_to_string(math_buffer); // get the span
     int k = atoi(math_buffer.c_str());
@@ -1702,9 +2066,13 @@ Xmlp Math::convert_cell(int& n, vector<AttList>& table,math_style W)
 }
 
 // Converts an array.
-Xmlp Math::split_as_array(vector<AttList>& table,bool is_multline,bool needs_dp,math_style W)
+Xmlp Math::split_as_array(vector<AttList>& table, math_style W, bool numbered)
 {
   Math cell;
+  bool is_multline = sname == multline_code || sname == multline_star_code;
+  bool needs_dp = math_env_props(sname) &1;
+  if(sname==aligned_code) needs_dp = true; // OK FIXME
+  if(sname==split_code) needs_dp = true; // OK FIXME
   int n =0; // index of cell in row.
   Xmlp res = new Xml(cst_mtable,0);
   Xmlp row = new Xml(cst_mtr,0);
@@ -1715,7 +2083,8 @@ Xmlp Math::split_as_array(vector<AttList>& table,bool is_multline,bool needs_dp,
   cmi.set_rid(row->get_id());
   if (needs_dp) W = ms_D;
   res->push_back(row);
-  bool first_cell = is_multline; 
+  bool first_cell = is_multline;
+  if(numbered) cmi.reset_last_ml_pos();
   while (!empty()) {
     symcodes cmd = front().get_cmd();
     if(cmd==alignment_catcode) { // finish cell
@@ -1726,12 +2095,14 @@ Xmlp Math::split_as_array(vector<AttList>& table,bool is_multline,bool needs_dp,
       first_cell = false;
     } else if(cmd == backslash_cmd) { // finish row and cell
       pop_front();
-      remove_opt_arg(true);
+      remove_opt_arg(true); // optional argument ignored.
       row->push_back(cell.convert_cell(n,table,W));
       if(first_cell) cmi.get_cid().add_attribute(np_columnalign,np_left);
       cmi.set_cid(cid);
       cell.clear();
       first_cell = false;
+      if(numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
+
       n = 0;
       row = new Xml(cst_mtr,0);
       cmi.set_rid(row->get_id());
@@ -1746,6 +2117,10 @@ Xmlp Math::split_as_array(vector<AttList>& table,bool is_multline,bool needs_dp,
   }
   if(row->size()==0)  // kill the last empty row
     res->pop_back();
+  else {
+    if (numbered) cmi.ml_second_pass(row,the_parser.tracing_math());
+  }
+      
   Xid w = the_main->the_stack->next_xid(res);
   w.add_attribute(cmi.get_taid()); // move the attributes
   cmi.set_rid(rid);
@@ -1757,19 +2132,18 @@ Xmlp Math::split_as_array(vector<AttList>& table,bool is_multline,bool needs_dp,
 
 
 // Converts an object that holds an array or something.
-// eqnarray and align are outer objects, hence the finish_math.
-Xmlp Math::M_array (math_style cms)
+Xmlp Math::M_array (bool numbered, math_style cms)
 {
-  if(is_array_ext())
-    remove_opt_arg(false);
   vector<AttList> table;
   fetch_rlc(table);
-  bool special = is_split_ext()||is_aligned_ext()|| is_external_array();
-  Xmlp res = split_as_array(table,is_multline_ext(), special,cms);
-  if(is_bordermatrix()) res -> bordermatrix();
-  if(is_matrix_ext()) {
-    int open,close;
-    special_fence(name[0],open,close);
+  Xmlp res = split_as_array(table, cms,numbered);
+  if(sname == bordermatrix_code) {
+    res -> bordermatrix();
+    return res;
+  }
+  int open,close;
+  bool nf = special_fence(sname,open,close);
+  if(nf) {
     res = new Xml(the_names[cst_mfenced], res);
     res->add_att(np_close,math_data.get_fence(close));
     res->add_att(np_open,math_data.get_fence(open));
@@ -1948,17 +2322,26 @@ bool Parser::is_not_a_math_env(String s)
 }
 
 
-
-// This is done when we see a label in a math formula. 
+// This is done when we see a label in a math formula.
+// If anchor is true, we are in the case of \anchorlabel.
 // Only one label is allowed.
-void MathHelper::new_label(string s)
+void MathHelper::new_label(string s, bool anchor)
 {
-  if(warned_label) return;
-  if(seen_label || current_mode) {
-    warned_label = true;
-    the_parser.parse_error("Label will be lost: ",s,"label-lost");
-  } else 
-    set_label(s);
+  if(eqnum_status ==2 || eqnum_status == 1) {
+    if(anchor) the_parser.parse_error("Illegal \\anchorlabel");
+    cmi.new_multi_label(s,1);
+    return;
+  }
+  bool ok = true;
+  if(anchor)  ok = (eqnum_status == 0);
+  else  {
+     if (eqnum_status == 0) ok = false; // TEMP
+  }
+  if(seen_label) ok = false;
+  if(ok)  set_label(s);
+  else
+    the_parser.parse_error(the_parser.err_tok,"Label will be lost: ",s,
+			   "label-lost");
 }
 
 // This removes the spaces.
@@ -2042,14 +2425,8 @@ MathElt MathElt::cv_list(math_style cms,bool ph)
     Xmlp res2 = math_data.make_mfenced(a,b,res.get_value());
     return MathElt(res2,mt_flag_big);
   }
-  if(get_lcmd()==math_env_cd) { // case \begin{array}...
-    if(X.is_array_env())
-      return MathElt(X.M_array(cms),mt_flag_big);
-    if(X.is_align_ext() || X.is_align_ext_star())
-      return MathElt(X.M_array(cms),mt_flag_big);
-    the_parser.parse_error("bad math env ", X.get_name(),"bad math env");
-    return MathElt(CmdChr(error_cmd,zero_code),zero_code);
-  }
+  if(get_lcmd()==math_env_cd)  // case \begin{array}...
+    return MathElt(X.M_array(false,cms),mt_flag_big);
   cv1_err();
   return MathElt(CmdChr(error_cmd,zero_code),zero_code);
 }
@@ -2095,7 +2472,7 @@ int Math::check_align()
 }
 
 
-// Create <mi>...</mi> and friends
+// Create <mi>...</mi> and friends 
 MathElt MathElt::cv_mi(math_style cms)
 {
   Math& L = get_list();
@@ -2104,8 +2481,8 @@ MathElt MathElt::cv_mi(math_style cms)
   const_math_iterator Y = L.end();
   Xmlp res = 0;
   if(c== mathbox_code) {
-    Xmlp xs = X->get_list().M_cv(cms,0).get_value();
-    res = new Xml(Istring(L.get_name()),xs);
+    Xmlp xs = X->get_list().M_cv(cms,0).get_value(); //OK
+    res = new Xml(Istring(L.get_sname()),xs); // OK
   } else if (c== multiscripts_code) {
     Xmlp xs = X->get_list().M_cv(cms,0).get_value();  
     name_positions w = name_positions(c-mathmi_code +  cst_mi);
@@ -2189,6 +2566,16 @@ MathElt MathElt::cv_special(math_style cms)
       the_main->the_stack->add_att_to_last(A,B,true);
     else cmi.add_attribute(A,B,c);
     return MathElt(CmdChr(error_cmd,zero_code),zero_code);
+  }
+  case mathlabel_code: {
+    string s1 = L.get_arg1().convert_this_to_string(math_buffer);
+    string s2 = L.get_arg2().convert_this_to_string(math_buffer);
+    Xmlp x = new Xml(cst_mrow,0);
+    Istring id = the_main->SH.next_label_id();
+    Xid xid = x -> get_id();
+    the_parser.the_stack.create_new_anchor(xid,id,  Istring(s1));
+    the_parser.create_label(s2,id);
+    return MathElt(x,mt_flag_small);
   }
   case boxed_code: {
     Xmlp x = L.get_arg1().M_cv(cms,0).get_value();
@@ -2466,23 +2853,23 @@ XmlAndType Math::M_cv0(math_style cms)
     else {
       open = get_delimiter(front().get_cmd_chr());
       if(open==del_invalid)
-	the_parser.parse_error("Invalid character in open","bad delims");
+	the_parser.parse_error(the_parser.err_tok,"Invalid character in open","bad delims");
       pop_front();
     }
     while(!empty())
       { if(front().get_cmd()==relax_cmd) pop_front(); else break; }
     if(empty())
-      the_parser.parse_error("Problem finding closing delim");
+      the_parser.parse_error(the_parser.err_tok,"Problem finding closing delim");
     else {
       close = get_delimiter(front().get_cmd_chr());
       if(close==del_invalid)
-	the_parser.parse_error("Invalid character in close","bad delims");
+	the_parser.parse_error(the_parser.err_tok,"Invalid character in close","bad delims");
       pop_front();
     }
   }
   Istring sz;
   if(c==above_code ||c==abovewithdelims_code) {
-    if(empty()) the_parser.parse_error("Invalid width","bad delims");
+    if(empty()) the_parser.parse_error(the_parser.err_tok,"Invalid width","bad delims");
     sz = chars_to_mb3();
   }
   if(c==atop_code ||c==atopwithdelims_code) sz = the_names[np_zerodim];
@@ -2589,7 +2976,7 @@ XmlAndType Math::M_cv (math_style cms, int need_row)
       t = chr/4; //  empty, L, R, et M.
       next_action = 2;
     } else
-      if( cmd==ensuremath_cmd || cmd==nonumber_cmd || cmd==nolinebreak_cmd||
+      if( cmd==ensuremath_cmd || cmd==nolinebreak_cmd||
 	 cmd==mathfont_cmd)
       continue;
     bool next_is_hat = false;

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
 <std>
 <div0 id-text='1' id='cid1'><head>A</head>
 <p>Testing the float package</p>
@@ -30,4 +30,5 @@
 <bpages>435–465</bpages>
 </citation></biblio><p><cit><ref target='bid0'/></cit></p>
 <p>This is the end of the document</p>
-</div3></div0></std>
+</div3></div0>
+</std>

@@ -12,7 +12,7 @@
 #include "tralics.h"
 
 const char* txbuffer_rcsid =
-  "$Id: txbuffer.C,v 2.92 2011/06/28 08:15:25 grimm Exp $";
+  "$Id: txbuffer.C,v 2.100 2015/10/16 16:51:09 grimm Exp $";
 
 namespace {
   Buffer thebuffer; // a scratch buffer
@@ -641,8 +641,9 @@ int buffer_ns::current_escape_char()
 void Buffer::insert_escape_char()
 {
   int c = buffer_ns::current_escape_char();
-  if(c>0 && c<int(nb_characters))
+  if(c>=0 && c<int(nb_characters))
     out_log(Utf8Char(c),the_main->get_log_encoding());
+  else if(c==0) push_back("^^@");
 }
 
 /// This one is for \meaning
@@ -651,7 +652,9 @@ void Buffer::insert_escape_char_raw()
   int c = buffer_ns::current_escape_char();
   if(c>0 && c<int(nb_characters))
     push_back(Utf8Char(c));
+  else if(c==0) push_back("^^@");
 }
+
 
 // Returns a temporary string, corresponding to the command with
 // an empty name, without initial escape char.
@@ -659,56 +662,61 @@ String buffer_ns::null_cs_name()
 {
   int c = buffer_ns::current_escape_char();
   if(c=='\\') return "csname\\endcsname";
-  if(c>0 && c< int(nb_characters)) {
+  else if(c>0 && c< int(nb_characters)) {
     Buffer&B = null_cs_buffer;
     B << bf_reset << "csname";
     B.out_log(Utf8Char(c),the_main->get_log_encoding());
     B << "endcsname";
     return B.c_str();
-  } else  return "\\csname\\endcsname"; // strange otherwise
+  } else if(c==0)
+    return "csname^^@endcsname";
+  else return "csnameendcsname"; 
+}
+
+
+// This is the TeX command \string ; if esc is false, no escape char is inserted
+void Parser::tex_string(Buffer&B,Token T, bool esc)
+{
+  if(T.not_a_cmd())
+    B.push_back(T.char_val());
+  else {
+    uint x = T.get_val();
+    if(esc && x>=single_offset) 
+      B.insert_escape_char_raw();
+    if(x>=hash_offset)
+      B.push_back(hash_table[T.hash_loc()]);
+    else if(x< first_multitok_val) 
+      B.push_back(T.char_val());
+    else B.push_back(buffer_ns::null_cs_name());
+  }
 }
 
 // Returns a temporary string: the name of the token
+// This is used for printing errors in the transcript file
+// Uses the function below, except for characters
 String Token::tok_to_str() const
 {
-  local_buf.insert_token0(*this);
-  return local_buf.c_str();
-}
-
-// Returns a temporary string: the name of the token
-String Token::tok_to_str1() const
-{
-  local_buf.push_back(*this);
-  return local_buf.c_str();
-}
-
-// This puts the name of the token in the buffer.
-// This is used when printing the token 
-void Buffer::insert_token0 (Token T)
-{
-  reset();
-  if(T.get_val()<eqtb_offset) {
-    int cat = T.cmd_val(); 
-    if(cat==eol_catcode) { // not real chars
-      push_back(T);
-      return;
-    }
-    subtypes c = T.chr_val();
-    bool good_cat = false;
-    if(c>128 && cat==12) good_cat= true;
-    if(c<128 && cat==11 && is_letter(c)) good_cat = true;
-    if(good_cat) 
-      out_log(Utf8Char(c),the_main->get_log_encoding());
-    else {
-      push_back("{Character ");
-      out_log(Utf8Char(c),the_main->get_log_encoding());
-      push_back(" of catcode ");
-      push_back_int(cat);
-      push_back("}");
-      return;      
-    }
+  Buffer&B = local_buf;
+  B.reset();
+  if(!is_a_char() || cmd_val() == eol_catcode) {
+    B.push_back(*this);
+    return B.c_str();
   }
-  else push_back(T);
+  int cat = cmd_val();
+  Utf8Char c = char_val();
+  bool good_cat = false;
+  if(!c.is_ascii () && cat==12) good_cat = true;
+  if(c.is_letter() && cat==11) good_cat = true;
+  if(good_cat) 
+    B.out_log(c,the_main->get_log_encoding());
+  else {
+    B.push_back("{Character ");
+    B.out_log(c,the_main->get_log_encoding());
+    B.push_back(" of catcode ");
+    B.push_back_int(cat);
+    B.push_back("}");
+  }
+  return B.c_str();
 }
 
 // This puts the name of the token in the buffer.
@@ -719,12 +727,8 @@ bool Buffer::push_back(Token T)
 {
   static Buffer Tmp;
   output_encoding_type enc = the_main->get_log_encoding();
-  uint x = T.get_val();
-  if(x==0 ) {
-    T = invalid_token;
-    x = T.get_val();
-  }
-  if(x<eqtb_offset) {
+  if(T.is_null()) { push_back("\\invalid."); return false; }
+  if(T.is_a_char()) {
     int cmd = T.cmd_val();
     Utf8Char c = T.char_val();
     if(cmd==eol_catcode) { 
@@ -734,71 +738,95 @@ bool Buffer::push_back(Token T)
     else if(cmd==parameter_catcode) { out_log(c,enc); out_log(c,enc); }
     else out_log(c,enc);
     return false;
+  }
+  if(!T.char_or_active()) 
+    insert_escape_char();
+  if(T.active_or_single()) {
+    out_log(T.char_val(),enc);
+    return the_parser.has_letter_catcode(T.char_val().get_value());
+  } else if(T.is_in_hash()) {
+    Tmp.reset();
+    Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
+    push_back(Tmp.convert_to_log_encoding());
+    return true;
   } else {
-    if(x>=cs_token_flag+single_base) 
-      insert_escape_char();
-    if(x<cs_token_flag+bad_cs) {
-      out_log(T.char_val(),enc);
-      return
-	the_parser.has_letter_catcode(T.char_val().get_value());
-    } else if(x==cs_token_flag+null_cs) {
-      push_back(buffer_ns::null_cs_name()); 
-      return true;
-    } else {
-      Tmp.reset();
-      Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
-      push_back(Tmp.convert_to_log_encoding());
-      return true;
-    }
+    push_back(buffer_ns::null_cs_name());
+    return true;
   }
 }
 
-// Note: if sw, a space is added after a command, assuming standard catcode
-// otherwise we check catcodes; if sw, insert backslash else escape char
-// Return + if opening brace, -1 if closing brace, 0 otherwise
-int Buffer::push_back(Token T,bool sw)
+// if sw is true, we assume that the list will be re-evaluated in a standard env
+// otherwise use current escape char and catcodes.
+void Buffer::insert_token(Token T,bool sw)
 {
-  uint x = T.get_val();
-  if(x==0 ) {
-    T = invalid_token;
-    x = T.get_val();
-  }
-  if(x<cs_token_flag+single_base 
-     && x != cs_token_flag+null_cs) {
+  if(T.is_null()) { push_back("\\invalid."); return; }
+  if(T.char_or_active()) { 
     Utf8Char c = T.char_val();
-    if(x<cs_token_flag+active_base) {
+    if(T.is_a_char()) {
       int cmd = T.cmd_val();
       if(cmd==eol_catcode) { 
 	push_back('#'); 
 	push_back(uchar(c.get_value() +'0'));  // parameter
       }
-      else if (T.is_space_token()) push_back(' ');
-      else if(cmd==parameter_catcode) { push_back(c); push_back(c); }
-      else if(c.is_null()) push_back("^^@");
+      else if (T.is_space_token()) push_back(' ');  // space or newline
+      else if (c.is_null()) push_back("^^@"); // if cmd==parameter_catcode ??
+      else if (cmd==parameter_catcode) { push_back(c); push_back(c); }
       else push_back(c);
     } else {
       if(c.is_null()) push_back("^^@");
       else push_back(c); // active character 
     }
-    if(c=='{') return 1;
-    if(c=='}') return -1;
+    return ;
+  }
+  if(sw) push_back('\\'); else insert_escape_char_raw();
+  if(T.active_or_single()) { 
+    Utf8Char c = T.char_val();
+    if(c.is_null()) push_back("^^@");
+    else push_back (c);
+    bool need_space = sw ? c.is_letter() : 
+      the_parser.has_letter_catcode(c.get_value());
+    if(need_space) push_back(' ');
+  } else if(T.is_in_hash()) { // multichar
+    push_back(the_parser.hash_table[T.hash_loc()]); 
+    push_back(' ');
+  } else { // empty or bad
+    if(sw)
+      push_back("csname\\endcsname");
+    else push_back(buffer_ns::null_cs_name());
+    push_back(' ');
+  }
+}
+
+// In case of error, this puts a token in the XML tree
+Istring Buffer::convert_for_xml_err(Token T)
+{
+  reset();
+  if(T.is_null()) push_back("\\invalid."); 
+  else if(T.char_or_active()) { 
+    // We simplify the algorithm by printing the character as is
+    Utf8Char c = T.char_val();
+    if(c.is_null()) push_back("^^@");
+    else push_back_real_utf8(c);
   } else {
-    if(sw) push_back('\\'); else insert_escape_char_raw();
-    if(x==cs_token_flag+null_cs)
-      push_back("csname\\endcsname ");  // FIXME. Can this be read again?
-    else if(x<cs_token_flag+bad_cs) {
+    push_back('\\');
+    if(T.active_or_single()) {
       Utf8Char c = T.char_val();
       if(c.is_null()) push_back("^^@");
-      else push_back (c);
-      bool need_space = sw ? c.is_letter() : 
-	the_parser.has_letter_catcode(c.get_value());
-      if(need_space) push_back(' ');
-    } else {
-      push_back(the_parser.hash_table[x-cs_offset]); 
-      push_back(' ');
+      else push_back_real_utf8(c);
+    } else if (T.is_in_hash()) {
+      String s =  the_parser.hash_table[T.hash_loc()];
+      int n = strlen(s);
+      bool ok = true;
+      for(int i = 0; i<n;i++) {
+	uchar c = s[i];
+	if(c=='<' || c=='>' || c=='&' || c<32) { ok = false; break; }
+      }
+      if(ok) push_back(s);
+      else for(int i = 0; i<n;i++) push_back_xml_char(uchar(s[i]));
     }
+    else push_back("csname\\endcsname"); 
   }
-  return 0;
+  return Istring(*this);
 }
 
 // Print the scaled int V as a floating point in the buffer.
@@ -1145,6 +1173,21 @@ bool Buffer::find_char(char c)
   return head() == c;
 }
 
+// splits foo:bar into foo and bar
+bool Buffer::split_at_colon(string& before,string& after)
+{
+  if(find_char(':')) {
+    kill_at(ptr);
+    after = to_string(ptr+1);
+    before = to_string ();
+    return true;
+  } else {
+    before = to_string (); after = ""; return false;
+  }
+}
+
+
+
 // Sets ptr1 to the first non-space
 // sets ptr to the next equals sign. Returns false if no such sign exists
 bool Buffer::find_equals()
@@ -1293,7 +1336,7 @@ bool Buffer::contains_braced(String s)
   return true;
 }
 
-// Returns true if the buffer contains only \end{env}
+// Returns true if the buffer contains \end{env} with spaces.
 // (used for detecting the end of a verbatim environment).
 bool Buffer::contains_env(String env) 
 {
@@ -1304,7 +1347,6 @@ bool Buffer::contains_env(String env)
   skip_sp_tab_nl();
   if(!(contains_braced(env))) return false;
   skip_sp_tab_nl();
-  if(head()=='\r') ptr++;
   return true;
 }
 

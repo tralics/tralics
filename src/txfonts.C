@@ -12,7 +12,7 @@
 
 #include "tralics.h"
 const char* txfonts_rcsid=
-  "$Id: txfonts.C,v 2.27 2011/06/28 08:15:25 grimm Exp $";
+  "$Id: txfonts.C,v 2.28 2015/10/22 16:23:50 grimm Exp $";
 // Font info stuff.
 
 // This returns the position of the name of a font attribute
@@ -325,6 +325,8 @@ string TexFonts::name(int k)
   if(!is_valid(k)) return "";
   return data[k]->name;
 }
+
+
 // Returns name of font
 void TexFonts::full_name(Buffer& B,int k)
 {

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
-<ramain creator='Tralics version 2.14.5'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<ramain creator='Tralics version 2.15.4'>
 <biblio>
 <citation from='year' key='A+' id='bid35' userid='cite:tor41' type='misc'>
 <bauteurs><bpers prenom='' nom='Alpha'/><etal/>
@@ -851,4 +851,5 @@
 <citation from='year' key='XYZb' id='bid98' userid='cite:strange2' type='article'>
 <bauteurs><bpers prenom='J.-C.' nom='XX' prenomcomplet='Jean-Claude'/><bpers prenom='J.-C.' nom='YY' prenomcomplet='J.-Ch.'/><bpers prenom='J.-Ch.' nom='ZZ' prenomcomplet='J.-Ch.'/></bauteurs>
 <btitle>X</btitle>
-</citation></biblio></ramain>
+</citation></biblio>
+</ramain>

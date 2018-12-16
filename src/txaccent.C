@@ -14,7 +14,7 @@
 
 #include "tralics.h"
 const char* txaccent_rcsid =
-  "$Id: txaccent.C,v 2.16 2011/06/28 08:15:25 grimm Exp $";
+  "$Id: txaccent.C,v 2.21 2015/10/29 16:38:22 grimm Exp $";
 
 
 namespace accent_ns {
@@ -289,24 +289,24 @@ Token accent_ns::fetch_double_accent(int a, int acc3)
 
 // This implements \a', or \a{'}, expansion is \', empty in case of an error
 // cur_tok is \a, in case of error
-void Parser::accent_a ()
+void Parser::E_accent_a ()
 {
   if(tracing_macros()) the_log << lg_startbrace << cur_tok << lg_endbrace;
-  TokenList y = mac_arg();
+  TokenList y = read_arg();
   if(!token_ns::has_a_single_token(y)) {
     parse_error("wanted a single token as argument to \\a");
     return;
   }
   Token t = token_ns::get_unique(y);
   if(!t.is_a_char()) {  // latex says \csname\string #1 \endcsname
-    parse_error("Bad syntax of \\a, argument not a character ", t,"",
+    parse_error(err_tok,"Bad syntax of \\a, argument not a character ", t,"",
 		"bad accent");
     return;
   }
-  Token Y = Token(t.chr_val() + single_base + cs_token_flag);
+  Token Y = Token(t.chr_val() + single_offset);
   token_from_list(Y);
   if(cur_cmd_chr.get_cmd() !=accent_cmd) { 
-    parse_error("Bad syntax of \\a, argument is ", t,"","bad accent");
+    parse_error(err_tok,"Bad syntax of \\a, argument is ", t,"","bad accent");
     return;
   }
   back_input();
@@ -364,28 +364,29 @@ Token accent_ns::special_double_acc(int chr,int acc)
 // This implements \'e, or \'{a} or \a{'}{e}, \href{\~grimm}
 // or \'{\= u}, a double accent
 // cur_tok, cur_cmd_chr explain what to do.
-void Parser::accent ()
+void Parser::E_accent ()
 {
   if(tracing_macros()) 
     the_log << lg_startbrace << "accent " << cur_tok << lg_endbrace;
   int acc_code = cur_cmd_chr.get_chr();
   if(InUrlHandler::global_in_url && acc_code=='~') {
     if(tracing_macros()) {
-       the_log << lg_startbrace << "\\~ gives ~ " << lg_endbrace;
+      the_log << lg_startbrace << "\\~ gives ~ " << lg_endbrace;
     }
     back_input(Token(other_t_offset,'~'));
     return;
   }
-  static String msg1= "Error in accent, command = " ;
-  static String msg2= "bad accent";
+  String msg1= "Error in accent, command = " ;
+  String msg2= "bad accent";
   Token tfe= cur_tok;
   // Fetch the accent
-  TokenList y = mac_arg();
+  TokenList y = read_arg();
   if(y.empty()) {
-    String msg3 = acc_code=='~' ?
-      "\n\\~{} is the wrong way to put a tilde in an URL" :
-      "\nThings like {\\'{}} are a bit strange";
-    parse_error(msg1,tfe,msg3,msg2);
+    err_ns::local_buf << bf_reset << msg1 << tfe.tok_to_str();
+    err_ns::local_buf << (acc_code=='~' ?
+		       "\n\\~{} is the wrong way to put a tilde in an URL" :
+		       "\nThings like {\\'{}} are a bit strange");
+    signal_error(err_tok,msg2);
     return;
   }
   int acc_code2 = 0; // will be set in the double acc case.
@@ -402,27 +403,28 @@ void Parser::accent ()
       }
       Token t = y.front(); // get the '
       if(!t.is_a_char()) {
-	parse_error("Bad syntax of \\a, argument not a character ", t,"", msg2);
+	parse_error(err_tok,"Bad syntax of \\a, argument not a character ",
+		    t,"", msg2);
 	return;
       }
       y.pop_front(); // discard the accent
-      tfe2 = Token(t.chr_val() + single_base + cs_token_flag);
+      tfe2 = Token(t.chr_val() + single_offset);
       token_from_list(tfe2);
       if(cur_cmd_chr.get_cmd() !=accent_cmd) { 
-	parse_error("Bad syntax of \\a,  argument is ", t,"",msg2);
+	parse_error(err_tok,"Bad syntax of \\a,  argument is ", t,"",msg2);
 	return;
       }
     } else if(cur_cmd_chr.get_cmd() ==accent_cmd) {
       tfe2 = cur_tok;
       y.pop_front();
     } else {
-      parse_error(msg1,tfe,"\nWanted a single token",msg2);
+      parse_error(err_tok,msg1,tfe,"\nWanted a single token",msg2);
       return;
     }
     acc_code2 = cur_cmd_chr.get_chr();
     accent_ns::special_acc_hack(y);
     if(y.size() != 1) { 
-      parse_error(msg1,tfe,"\nWanted a single token",msg2); 
+      parse_error(err_tok,msg1,tfe,"\nWanted a single token",msg2); 
       return; 
     }
   }
@@ -449,7 +451,7 @@ void Parser::accent ()
       err_ns::local_buf << "\nLetter needed instead of " << cur_tok.tok_to_str();
     else 
       err_ns::local_buf << "\nLetter needed"; 
-    err_ns::signal_error(msg2,0);
+    signal_error(err_tok,msg2);
     return;
   }
   Token res;
@@ -478,7 +480,7 @@ void Parser::accent ()
     if(acc_code2) err_ns::local_buf << tfe2.tok_to_str();
     err_ns::local_buf <<  "\nCannot put accent on " << s;
     if(achar<128) err_ns::local_buf << " " << char(achar);
-    err_ns::signal_error(msg2,0);
+    signal_error(err_tok,msg2);
     return;
   }
   TokenList expansion;
@@ -591,10 +593,6 @@ void accent_ns::boot_accents ()
   accent_acute[uchar('y') ] = mk_acc(uchar('\375'));
   // 376 =\th
   accent_trema[uchar('y') ] = mk_acc(uchar('\377'));
-
-
-
-
 
   accent_macron[uchar('A') ] = mk_acc(0x100);
   accent_macron[uchar('a') ] = mk_acc(0x101);

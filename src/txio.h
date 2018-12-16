@@ -1,6 +1,6 @@
 // -*- C++ -*-
-// $Id: txio.h,v 2.24 2013/07/22 09:28:21 grimm Exp $
-// TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006
+// $Id: txio.h,v 2.28 2015/10/29 16:38:22 grimm Exp $
+// TRALICS, copyright (C) INRIA/apics/marelle (Jose' Grimm) 2006 2015
 
 // This software is governed by the CeCILL license under French law and
 // abiding by the rules of distribution of free software.  You can  use, 
@@ -21,14 +21,13 @@ public:
   bool global_error; // Is this line OK?
   bool local_error; // is this char OK ?
   bool line_is_ascii; // is this line ascii 7bit 
-  int lines_converted; 
-  int bad_lines;
-  int bad_chars;
+  int lines_converted; // number of lines converted
+  int bad_lines; // number of lines with errors
+  int bad_chars;  // number of errors
 public:
   Converter();
   bool new_error();
   void start_convert(int);
-  void stats();
 };
 
 // Whenever Tralics reads a file, it puts the result in a structure like this
@@ -70,6 +69,7 @@ public:
   void clear() { value.clear(); }
   void clear_and_copy(LinePtr& X) ;
   void change_encoding(int k);
+  String dump_name () const;
   void find_tex_encoding();
   bool find_aliases (const vector<string>&, string&res);
   void find_all_types (vector<string>&);
@@ -104,7 +104,7 @@ public:
   void print1(fstream*);
   void push_front(Clines x) { value.push_front(x); }
   void push_back(Clines x) { value.push_back(x); }
-  void reset(string x){cur_line=0; cur_encoding=1; interactive=false;clear(); file_name = x;}
+  void reset(string x);
   int read_from_tty(Buffer& b);
   void set_cur_line(int x) { cur_line = x; }
   void set_encoding(int k)  { cur_encoding=k; }
@@ -127,11 +127,11 @@ class InputStack {
   int line_no; // the current line number
   TokenList TL; // saved token list
   string name; // name of the current file
-  // int level; unused 
   int restore_at; // catcode of @ to restore
-  int file_type; // file type to restore
+  int file_pos; // file position to restore
   int Bpos; // position in B
-  bool seen_eof; // True if every_eof_token already included
+  bool every_eof; // True if every_eof_token can be inserted
+  bool eof_outer; // True if eof is outer
  public:
   const string& get_name() const { return name; }
   int get_line_no()const { return line_no; }
@@ -144,9 +144,9 @@ class InputStack {
   void set_line_vector(const vector<Utf8Char>& x) { B = x; }
   int get_at_val() const { return restore_at; }
   void set_at_val(int x) { restore_at = x; }
-  int get_file_type() const { return file_type; }
-  void set_file_type(int x) { file_type = x; }
-  bool get_seen_eof() const { return seen_eof; }
+  int get_file_pos() const { return file_pos; }
+  bool get_every_eof() const { return every_eof; }
+  bool get_eof_outer() const { return eof_outer; }
   void destroy();
   void set_line_ptr(LinePtr& X) { 
     L.clear_and_copy(X); 
@@ -157,9 +157,9 @@ class InputStack {
     X.clear_and_copy(L);
     X.set_interactive(L.get_interactive());
   }
-  InputStack(string N,int l, states S,int cfp,bool eof): 
+  InputStack(string N,int l, states S,int cfp,bool eof, bool eof_o): 
     s(S), line_no(l), 
-    name(N),restore_at(-1),file_type(cfp),seen_eof(eof)
+    name(N),restore_at(-1),file_pos(cfp),every_eof(eof), eof_outer(eof_o)
   {}
 };
 
@@ -167,15 +167,15 @@ class InputStack {
 
 // data structure associated to \input3=some_file. 
 class FileForInput {
-  bool is_open; // is this file active ?
+  bool open_flag; // is this file active ?
   LinePtr the_lines; // the lines that not yet read by TeX
   Buffer cur_line; // this holds the current line
   int line_no;  // this holds the current line number
  public:
   void open(string,bool);
   void close();
-  FileForInput() : is_open(false) {};
-  bool is_valid() { return is_open; }
+  FileForInput() : open_flag(false) {};
+  bool is_open() { return open_flag; }
   LinePtr& get_lines() { return the_lines; }
   void set_lines(LinePtr X) { the_lines=X; }
   Buffer& get_buffer() { return cur_line; }

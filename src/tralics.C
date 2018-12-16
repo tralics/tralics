@@ -19,7 +19,7 @@
 #include "tralics.h"
 #include <time.h>
 const char* tralics_rcsid=
-  "$Id: tralics.C,v 2.201 2015/07/27 16:15:40 grimm Exp $";
+  "$Id: tralics.C,v 2.212 2015/11/18 17:58:11 grimm Exp $";
 
 static Buffer auxb; // chars to be added to the input file
 
@@ -28,16 +28,15 @@ namespace main_ns {
   FullLogger log_and_tty;        // the logger
   HalfLogger log_or_tty;         // the logger
   int nb_errs = 0; // number of errors seen so far
-  bool file_ended = false;   // Used for checking EOF in verbatim env
-  Buffer path_buffer; // Result of search°in_path is here
+  Buffer path_buffer; // Result of search_in_path is here
   bool no_xml_error=false;  // should an error produce an XML element ?
   bool use_quotes = false; // How to translate quotes
+  bool bib_allow_break = true; // <allowbreak> in bibliography
 }
 
 Logger& the_log= main_ns::log_and_tty.L; // the log file part of the logger.
 MainClass* the_main;           // the main class data structure
 Parser the_parser;  // the big object
-
 Istring the_names[np_last];
 
 // variables declared static in some files.
@@ -53,9 +52,6 @@ namespace {
 namespace accent_ns {
   void boot_accents();
 }
-namespace config_ns {
-}
-
 
 namespace tralics_ns {
   String twodig (int n);
@@ -153,7 +149,7 @@ void Parser::boot_time()
   string short_date = b.to_string();
   b << bf_reset << short_date << ' '
     << twodig(hour) << hour << ':' << twodig(min)  << min<< ':' << twodig(sec) << sec;
-  TokenList today_tokens = b.str_toks(false);
+  TokenList today_tokens = b.str_toks(nlt_space);
   new_prim("today",today_tokens);
   b << bf_reset << "Start compilation: " << short_date << ' '
     << twodig(hour) << hour << ':' << twodig(min)  << min
@@ -270,15 +266,14 @@ void Parser::load_latex()
   TokenList body;
   new_prim("@empty",body);
   hash_table.empty_token = hash_table.locate("@empty");
-  invalid_token = hash_table.nohash_primitive("invalid.",CmdChr(invalid_cmd,zero_code));
-  runawayed_token =  hash_table.nohash_primitive("relax",CmdChr(relax_cmd,relax_code));
   // Special raweb compatibility hacks 
   if(the_main->in_ra()) ra_ok = false;
   // this is like \let\bgroup={, etc
   hash_table.primitive("bgroup",open_catcode,subtypes('{'));
   hash_table.primitive("egroup",close_catcode,subtypes('}'));
   hash_table.primitive("sp",hat_catcode,subtypes('^'));
-  hash_table.primitive("sb",underscore_catcode,subtypes('_')); 
+  hash_table.primitive("sb",underscore_catcode,subtypes('_'));
+  hash_table.primitive("@sptoken", space_catcode, subtypes(' '));
   eqtb_int_table[escapechar_code].set_val('\\');
   eqtb_dim_table[unitlength_code].set_val(ScaledInt(1<<16));
   eqtb_dim_table[textwidth_code].set_val(ScaledInt(427<<16));
@@ -347,8 +342,6 @@ void Parser::load_latex()
   shorthand_gdefine(dimen_def_code,"dimen@",0);
   shorthand_gdefine(dimen_def_code,"dimen@i",1);
   shorthand_gdefine(dimen_def_code,"dimen@ii",2);
-  shorthand_gdefine(dimen_def_code,"epsfxsize",11);
-  shorthand_gdefine(dimen_def_code,"epsfysize",12);
   shorthand_gdefine(char_def_code,"@ne",1);
   shorthand_gdefine(char_def_code,"tw@",2);
   shorthand_gdefine(char_def_code,"thr@@",3);
@@ -366,67 +359,69 @@ void Parser::load_latex()
   shorthand_gdefine(toks_def_code,"toks@",0);
   shorthand_gdefine(skip_def_code,"skip@",0);
   // commands like \newdimen\foo
-  make_token("z@"); define_new_dimen();
-  make_token("p@"); define_new_dimen();
-  make_token("oddsidemargin"); define_new_dimen();
-  make_token("evensidemargin"); define_new_dimen();
-  make_token("leftmargin"); define_new_dimen();
-  make_token("rightmargin"); define_new_dimen();
-  make_token("leftmargini"); define_new_dimen();
-  make_token("leftmarginii"); define_new_dimen();
-  make_token("leftmarginiii"); define_new_dimen();
-  make_token("leftmarginiv"); define_new_dimen();
-  make_token("leftmarginv"); define_new_dimen();
-  make_token("leftmarginvi"); define_new_dimen();
-  make_token("itemindent"); define_new_dimen();
-  make_token("labelwidth"); define_new_dimen();
-  make_token("fboxsep"); define_new_dimen();
-  make_token("fboxrule"); define_new_dimen();
-  make_token("arraycolsep"); define_new_dimen();
-  make_token("tabcolsep"); define_new_dimen();
-  make_token("arrayrulewidth"); define_new_dimen();
-  make_token("doublerulesep"); define_new_dimen();
-  make_token("@tempdima"); define_new_dimen();
-  make_token("@tempdimb"); define_new_dimen();
-  make_token("@tempdimc"); define_new_dimen();
-  make_token("footnotesep"); define_new_dimen();
-  make_token("topmargin"); define_new_dimen();
-  make_token("headheight"); define_new_dimen();
-  make_token("headsep"); define_new_dimen();
-  make_token("footskip"); define_new_dimen();
-  make_token("columnsep"); define_new_dimen();
-  make_token("columnseprule"); define_new_dimen();
-  make_token("marginparwidth"); define_new_dimen();
-  make_token("marginparsep"); define_new_dimen();
-  make_token("marginparpush"); define_new_dimen();
-  make_token("maxdimen"); define_new_dimen();
-  make_token("normallineskiplimit"); define_new_dimen();
-  make_token("jot"); define_new_dimen();
-  make_token("paperheight"); define_new_dimen();
-  make_token("paperwidth"); define_new_dimen();
+  make_token("epsfxsize");new_constant(newdimen_code);
+  make_token("epsfysize");new_constant(newdimen_code);
+  make_token("z@"); new_constant(newdimen_code);
+  make_token("p@"); new_constant(newdimen_code);
+  make_token("oddsidemargin"); new_constant(newdimen_code);
+  make_token("evensidemargin"); new_constant(newdimen_code);
+  make_token("leftmargin"); new_constant(newdimen_code);
+  make_token("rightmargin"); new_constant(newdimen_code);
+  make_token("leftmargini"); new_constant(newdimen_code);
+  make_token("leftmarginii"); new_constant(newdimen_code);
+  make_token("leftmarginiii"); new_constant(newdimen_code);
+  make_token("leftmarginiv"); new_constant(newdimen_code);
+  make_token("leftmarginv"); new_constant(newdimen_code);
+  make_token("leftmarginvi"); new_constant(newdimen_code);
+  make_token("itemindent"); new_constant(newdimen_code);
+  make_token("labelwidth"); new_constant(newdimen_code);
+  make_token("fboxsep"); new_constant(newdimen_code);
+  make_token("fboxrule"); new_constant(newdimen_code);
+  make_token("arraycolsep"); new_constant(newdimen_code);
+  make_token("tabcolsep"); new_constant(newdimen_code);
+  make_token("arrayrulewidth"); new_constant(newdimen_code);
+  make_token("doublerulesep"); new_constant(newdimen_code);
+  make_token("@tempdima"); new_constant(newdimen_code);
+  make_token("@tempdimb"); new_constant(newdimen_code);
+  make_token("@tempdimc"); new_constant(newdimen_code);
+  make_token("footnotesep"); new_constant(newdimen_code);
+  make_token("topmargin"); new_constant(newdimen_code);
+  make_token("headheight"); new_constant(newdimen_code);
+  make_token("headsep"); new_constant(newdimen_code);
+  make_token("footskip"); new_constant(newdimen_code);
+  make_token("columnsep"); new_constant(newdimen_code);
+  make_token("columnseprule"); new_constant(newdimen_code);
+  make_token("marginparwidth"); new_constant(newdimen_code);
+  make_token("marginparsep"); new_constant(newdimen_code);
+  make_token("marginparpush"); new_constant(newdimen_code);
+  make_token("maxdimen"); new_constant(newdimen_code);
+  make_token("normallineskiplimit"); new_constant(newdimen_code);
+  make_token("jot"); new_constant(newdimen_code);
+  make_token("paperheight"); new_constant(newdimen_code);
+  make_token("paperwidth"); new_constant(newdimen_code);
   // commands like \newskip\foo
-  make_token("topsep"); define_new_length();
-  make_token("partopsep"); define_new_length();
-  make_token("itemsep"); define_new_length();
-  make_token("labelsep"); define_new_length();
-  make_token("parsep"); define_new_length();
-  make_token("fill"); define_new_length();
-  make_token("@tempskipa"); define_new_length();
-  make_token("@tempskipb"); define_new_length();
-  make_token("@flushglue"); define_new_length();
-  make_token("listparindent"); define_new_length();
-  make_token("hideskip"); define_new_length();
-  make_token("z@skip"); define_new_length();
-  make_token("normalbaselineskip"); define_new_length();
-  make_token("normallineskip"); define_new_length();
-  make_token("smallskipamount"); define_new_length();
-  make_token("medskipamount"); define_new_length();
-  make_token("bigskipamount"); define_new_length();
-  make_token("floatsep"); define_new_length();
-  make_token("textfloatsep"); define_new_length();
-  make_token("intextsep"); define_new_length();
-  make_token("dblfloatsep"); define_new_length();
-  make_token("dbltextfloatsep"); define_new_length();
+  make_token("topsep"); new_constant(newlength_code);
+  make_token("partopsep"); new_constant(newlength_code);
+  make_token("itemsep"); new_constant(newlength_code);
+  make_token("labelsep"); new_constant(newlength_code);
+  make_token("parsep"); new_constant(newlength_code);
+  make_token("fill"); new_constant(newlength_code);
+  make_token("@tempskipa"); new_constant(newlength_code);
+  make_token("@tempskipb"); new_constant(newlength_code);
+  make_token("@flushglue"); new_constant(newlength_code);
+  make_token("listparindent"); new_constant(newlength_code);
+  make_token("hideskip"); new_constant(newlength_code);
+  make_token("z@skip"); new_constant(newlength_code);
+  make_token("normalbaselineskip"); new_constant(newlength_code);
+  make_token("normallineskip"); new_constant(newlength_code);
+  make_token("smallskipamount"); new_constant(newlength_code);
+  make_token("medskipamount"); new_constant(newlength_code);
+  make_token("bigskipamount"); new_constant(newlength_code);
+  make_token("floatsep"); new_constant(newlength_code);
+  make_token("textfloatsep"); new_constant(newlength_code);
+  make_token("intextsep"); new_constant(newlength_code);
+  make_token("dblfloatsep"); new_constant(newlength_code);
+  make_token("dbltextfloatsep"); new_constant(newlength_code);
   // commands like \newcounter\foo
   shorthand_gdefine(count_def_code,"m@ne",20);
   counter_boot("FancyVerbLine","");  // hard-coded 21 
@@ -463,25 +458,27 @@ void Parser::load_latex()
   counter_boot("table",""); 
   counter_boot("figure",""); 
   counter_boot("subfigure","figure"); 
-  counter_boot("equation",""); 
+  counter_boot("equation","");
+  equation_ctr_pos = allocation_table[newcount_code] + count_reg_offset;
+  counter_boot("parentequation",""); 
 
   // \newcount
-  make_token("c@bottomnumber"); define_new_counter();
-  make_token("c@topnumber"); define_new_counter();
-  make_token("@tempcnta"); define_new_counter();
-  make_token("@tempcntb"); define_new_counter();
-  make_token("c@totalnumber"); define_new_counter();
-  make_token("c@dbltopnumber"); define_new_counter();
-  make_token("interfootnotelinepenalty"); define_new_counter();
-  make_token("interdisplaylinepenalty"); define_new_counter();
+  make_token("c@bottomnumber"); new_constant(newcount_code);
+  make_token("c@topnumber"); new_constant(newcount_code);
+  make_token("@tempcnta"); new_constant(newcount_code);
+  make_token("@tempcntb"); new_constant(newcount_code);
+  make_token("c@totalnumber"); new_constant(newcount_code);
+  make_token("c@dbltopnumber"); new_constant(newcount_code);
+  make_token("interfootnotelinepenalty"); new_constant(newcount_code);
+  make_token("interdisplaylinepenalty"); new_constant(newcount_code);
   // \newtoks
-  make_token("@temptokena"); define_new_toks();
+  make_token("@temptokena"); new_constant(newtoks_code);
   // \newbox
-  make_token("@tempboxa"); define_new_box();
-  make_token("voidb@x"); define_new_box();
+  make_token("@tempboxa"); new_constant(newbox_code);
+  make_token("voidb@x"); new_constant(newbox_code);
   // \newif
-  make_token("ifin@"); newif();
-  make_token("if@tempswa"); newif();
+  make_token("ifin@"); M_newif();
+  make_token("if@tempswa"); M_newif();
 
   // Define now some other macros
   new_prim("lq","`");
@@ -557,7 +554,6 @@ void Parser::load_latex()
   L.insert("\\def\\symbol#1{\\char #1\\relax}");
   L.insert("{\\catcode`\\&=13\\global\\def&{\\char38 }}%");
   L.insert("\\catcode`\\^^L=13 \\outer\\def^^L{\\par}");
-  L.insert("\\def~{\\let\\@sptoken= }~ %"); 
   L.insert("\\def~{\\nobreakspace}\\def^^a0{\\nobreakspace}");
   L.insert("\\newenvironment{cases}{\\left\\{\\begin{array}{ll}}{\\end{array}\\right.}%");
   L.insert("\\def\\markboth#1#2{\\gdef\\@themark{{#1}}\\mark{{#1}{#2}}}");
@@ -594,8 +590,6 @@ void Parser::load_latex()
   L.insert("\\def\\pagenumbering#1{\\xmlelt{pagestyle}{\\XMLaddatt{numbering}{#1}}}");
   L.insert("\\def\\pagestyle#1{\\xmlelt{pagestyle}{\\XMLaddatt{style}{#1}}}");
   L.insert("\\def\\thispagestyle#1{\\xmlelt{pagestyle}{\\XMLaddatt{this-style}{#1}}}");
-  L.insert("\\def\\notag{\\addtocounter{equation}{-1}}");
-  L.insert("\\def\\incr@eqnum{\\refstepcounter{equation}}");
   L.insert("\\def\\thesubfigure{\\thefigure.\\@arabic\\c@subfigure}");
   L.insert("\\def\\@filedoterr#1{\\error{Wrong dots in graphic file #1}}"); 
   L.insert("\\def\\theEnumi{\\arabic{Enumi}}");
@@ -615,6 +609,8 @@ void Parser::load_latex()
   L.insert("\\def\\labelenumx{(\\theenumx)}");
   L.insert("\\def\\bordermatrix#1{{\\let\\cr\\\\");
   L.insert("\\begin{bordermatrix }#1\\end{bordermatrix }}}");
+  L.insert("\\def\\incr@eqnum{\\refstepcounter{equation}}");
+  L.insert("\\def\\@@theequation{\\theparentequation\\alph{equation}}");
 
   if(!everyjob_string.empty())
     L.insert(everyjob_string.c_str(),true); // is this converted ?

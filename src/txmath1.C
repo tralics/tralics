@@ -15,7 +15,7 @@
 #include "txmath1.h"
 
 const char* txmath1_rcsid = 
-  "$Id: txmath1.C,v 2.54 2015/08/05 17:05:50 grimm Exp $";
+  "$Id: txmath1.C,v 2.59 2015/11/24 17:08:44 grimm Exp $";
 
 enum {pbm_empty,pbm_start,pbm_end,pbm_att,pbm_att_empty};
 static Buffer mathml_buffer;
@@ -777,6 +777,7 @@ int math_ns::nb_args_for_cmd(int c)
   case math_attribute_code: return 2;
   case thismath_attribute_code: return 2;
   case formula_attribute_code: return 2;
+  case mathlabel_code: return 2;
   case dfrac_code: return 2;
   case tfrac_code: return 2;
   case cfrac_code: return 2;
@@ -799,7 +800,7 @@ int math_ns::nb_args_for_cmd(int c)
   }
 }
 
-// Not inline because of a bug of the Mac Compilet gcc4.2.1
+// Not inline because of a bug of the Mac Compiler gcc4.2.1
 
 subtypes MathElt::get_fml_subtype() const
  { return math_to_sub(get_lcmd()); }
@@ -824,10 +825,9 @@ void MathElt::cv_noML_special()
   if(n==-1) mathml_buffer.push_back("unknown");
   if(c==mathbox_code) {
     mathml_buffer.push_back("{");
-    mathml_buffer.push_back(L.get_name());
+    mathml_buffer.push_back(Istring(L.get_sname()));
     mathml_buffer.push_back("}");
   } 
-
   if(c==mathmi_code || c==mathmo_code ||c==mathmn_code ||c==mathnothing_code ||
      c==mathci_code || c==mathcn_code ||c==mathcsymbol_code ||
      c ==multiscripts_code || c ==mathbox_code) {
@@ -925,7 +925,7 @@ void MathElt::cv_noMLt_special0()
   if(n==-1) mathml_buffer.push_back("unknown");
   if(c==mathbox_code) {
     mathml_buffer.push_back("<name>");
-    mathml_buffer.push_back(L.get_name());
+    mathml_buffer.push_back(Istring(L.get_sname()));
     mathml_buffer.push_back("</name>");
   } 
   if(c==mathmi_code || c==mathmo_code ||c==mathmn_code ||c==mathnothing_code ||
@@ -1207,7 +1207,6 @@ void Math::handle_mbox_not()
  case math_comp_cmd:	 \
  case math_font_cmd:	 \
  case multicolumn_cmd:	 \
- case nonumber_cmd:	 \
  case limits_cmd:	 \
  case over_cmd:		 \
  case ref_cmd
@@ -1520,7 +1519,7 @@ Istring Math::chars_to_mb3()
     Buffer tmp;
     tmp.reset();
     tmp << "Error scanning width, so far got '" << B.to_string() << "'";
-    the_parser.parse_error (tmp.c_str(), "bad dimension");
+    the_parser.parse_error (the_parser.err_tok,tmp.c_str(), "bad dimension");
     B.reset(); B.push_back("0pt");
   }
   return Istring(the_main->SH.hash_find());
@@ -1814,7 +1813,7 @@ void Parser::TM_fonts()
     }
     return;
   }
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   int c = eqtb_int_table[math_font_pos].get_val();
   back_input(table[c]); back_input(hash_table.nomathsw0_token);
   L.push_back(hash_table.nomathsw1_token);

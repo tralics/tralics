@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
 <std>
 <p>OK
 ok
@@ -20,4 +20,5 @@ Reference to second subfigure: <ref target='uid3'/></p>
 <div0 id-text='2' id='cid3'><head>foo2</head><alt_head>chapter two</alt_head>
 </div0>
 <div0 rend='nonumber'><head>sec2</head>
-</div0></std>
+</div0>
+</std>

@@ -1,5 +1,5 @@
 // Tralics, a LaTeX to XML translator.
-// Copyright INRIA/apics/marelle (Jose' Grimm) 2006-2011
+// Copyright INRIA/apics/marelle (Jose' Grimm) 2006-2015
 
 // This software is governed by the CeCILL license under French law and
 // abiding by the rules of distribution of free software.  You can  use, 
@@ -14,7 +14,7 @@
 #include "tralics.h"
 #include <sstream>
 const char* txio_rcsid =
-  "$Id: txio.C,v 2.42 2012/05/15 17:14:30 grimm Exp $";
+  "$Id: txio.C,v 2.49 2015/11/09 10:02:24 grimm Exp $";
 
 extern void readline(char*buffer,int screen_size);
 
@@ -24,15 +24,12 @@ static const int max_encoding =34;
 
 namespace {
   Buffer thebuffer;
-  bool log_is_open = false;
+  bool log_is_open = false; // says if stranscript file is open for I/O tracing
   Buffer utf8_out; // Holds utf8 outbuffer
   Buffer utf8_in; // Holds utf8 inbuffer
   Converter the_converter;
-  int custom_table[max_encoding-2][lmaxchar];
+  Utf8Char custom_table[max_encoding-2][lmaxchar];
 }
-
-
-bool opening_main = false;
 
 namespace main_ns {
   void register_file(LinePtr*);
@@ -109,8 +106,6 @@ FullLogger& operator<<(FullLogger& fp, Token t)
   return fp << t.tok_to_str();
 }
 
-
-
 HalfLogger& operator <<(HalfLogger& X, String s) 
 {
   if(X.verbose) cout << s; X.L << s; return X;
@@ -129,7 +124,6 @@ HalfLogger& operator <<(HalfLogger& X, const string& s)
 {
   if(X.verbose) cout << s; X.L << s; return X;
 }
-
 
 // Prints an att list on a buffer, then a stream.
 void AttList::print(ostream& fp)
@@ -150,12 +144,12 @@ ostream& operator<<(ostream&fp, Xid X)
 // ---------------------------------------------------------
 // Output methods for characters
 
-// This prints a character in the form \230 it not ascii
+// This prints a character in the form \230 if not ascii
 // Can be used in case where encoding is strange
 
 void io_ns::print_ascii(ostream& fp, uchar c)
 {
-  if(c<127) fp << c;
+  if(32 <=c && c<127) fp << c;
   else {
     uint z = c&7;
     uint y = (c>>3) &7;
@@ -164,7 +158,7 @@ void io_ns::print_ascii(ostream& fp, uchar c)
   }
 }
 
-// returns true if only asci 7 bits in the buffer
+// returns true if only ascii 7 bits in the buffer
 bool Buffer::is_all_ascii() const
 {
   for(int i=0;i<wptr; i++) {
@@ -175,8 +169,8 @@ bool Buffer::is_all_ascii() const
   return true;
 }
 
-// returns false if some unpritable characters appear
-// Non ascii chars are printable
+// returns false if some unprintable characters appear
+// Non-ascii chars are printable (assumes buffer is valid UTF8). 
 bool Buffer::is_good_ascii() const
 {
   for(int i=0;i<wptr; i++) {
@@ -201,23 +195,19 @@ String io_ns::plural(int n)
   if(n>1) return "s"; else return "";
 }
 
-void Converter::stats()
+void Stats::io_convert_stats()
 {
-  if(bad_lines) {
+  int bl = the_converter.bad_lines;
+  int bc = the_converter.bad_chars;
+  int lc = the_converter.lines_converted;
+  if(bl) {
     main_ns::log_or_tty << "Input conversion errors: " 
-			<< bad_lines << " line" << io_ns::plural(bad_lines)
-			<< ", " 
-			<< bad_chars << " char" << io_ns::plural(bad_chars)
-			<< ".\n";
+			<< bl << " line" << io_ns::plural(bl) << ", " 
+			<< bc << " char" << io_ns::plural(bc) << ".\n";
   }
-  if(lines_converted)
-    main_ns::log_or_tty << "Input conversion: " << lines_converted << 
-      " line" << io_ns::plural(lines_converted) << " converted.\n";
-}
-
-void print_cv_stats()
-{
-  the_converter.stats();
+  if(lc)
+    main_ns::log_or_tty << "Input conversion: " << lc << 
+      " line" << io_ns::plural(lc) << " converted.\n";
 }
 
 
@@ -253,19 +243,17 @@ void Buffer::utf8_error(bool first)
 		       << ", file " << T.cur_file_name 
 		       << (first ? ", first byte" : ", continuation byte") 
 		       << ")\n";
-  main_ns::log_and_tty.L << "Position in line is " << ptr << "\n";
+  main_ns::log_and_tty.L << "Position in line is " << ptr << lg_end;
   if(T.new_error()) return; // signal only one error per line
   for(int i=0;i<wptr;i++) io_ns::print_ascii( *(the_log.fp), buf[i]);
-  the_log << "\n";
+  the_log << lg_end;
 }
-
-
 
 void Buffer::utf8_ovf(int n)
 {
   Converter &T = the_converter;
   thebuffer.reset(); 
-  thebuffer.push_back16u (n);
+  thebuffer.push_back16(n,true);
   main_ns::log_and_tty << "UTF-8 parsing overflow (char " << thebuffer
 		       << ", line " << T.cur_file_line 
 		       << ", file " << T.cur_file_name << ")\n";
@@ -274,7 +262,7 @@ void Buffer::utf8_ovf(int n)
 }
 
 // This reads the next byte. 
-// We assume buf[wptr]=0. We leave ptr unchanged in case it is >=ptr
+// We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
 // As a consequence, buf[ptr] is valid after the call
 uchar Buffer::next_utf8_byte ()
 {
@@ -287,6 +275,8 @@ uchar Buffer::next_utf8_byte ()
 
 // This returns the number of bytes in a UTF8 character
 // given the first byte. Returns 0 in case of error
+// Note: max Unicode value is 10FFFF. this is represented by F48FBFBF
+// if the first 3 bits are set, y is 0, 1, 2 3 or 4 plus 16. 
 int io_ns::how_many_bytes(uchar C)
 {
   if(C<128) return 1; // ascii
@@ -294,7 +284,7 @@ int io_ns::how_many_bytes(uchar C)
   if((C>>5) != 7) return 0;  // cannot start with 10
   uint y = C & 31;
   if((y&16)==0) return 3;
-  if(y==16 || y==17 || y==18 || y==19) return 4;
+  if(y==16 || y==17 || y==18 || y==19 || y == 20) return 4;
   return 0; // overflow
 }
 
@@ -306,20 +296,20 @@ Utf8Char io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D)
   if(n==0) return 0;
   else if(n==1) return A;
   else if(n==2) return ((A&31) <<6) + (B&63);
-  else if(n==3) return (C&63) +((B&63) <<6) + ((A&31)<<12); 
-  else return (D&63) + ((C&63)<<6) + ((B&63)<<12) + ((A&3)<<18);
+  else if(n==3) return (C&63) +((B&63) <<6) + ((A&15)<<12); 
+  else return (D&63) + ((C&63)<<6) + ((B&63)<<12) + ((A&7)<<18);
 }
 
 // Returns 0 at end of line or error
 // may set local_error
 Utf8Char Buffer::next_utf8_char_aux()
 {
-  unsigned char c = next_char();
+  uchar c = next_char();
   if(c==0) return 0; 
   int n = io_ns::how_many_bytes(c);
-  
   if(n==0) {
     utf8_error(true);
+    the_converter.line_is_ascii = false;
     return 0;
   }
   if(n==1) return c;
@@ -330,16 +320,17 @@ Utf8Char Buffer::next_utf8_char_aux()
   } else if(n==3) {
     uint z = next_utf8_byte(); 
     uint x = next_utf8_byte();
-    return x +(z <<6) + ((c&31)<<12); 
+    return x +(z <<6) + ((c&15)<<12); 
   } else { 
     uint z = next_utf8_byte(); 
     uint y = next_utf8_byte(); 
     uint x = next_utf8_byte(); 
-    return (x) + (y<<6) + (z<<12) + ((c&3)<<18);
+    return (x) + (y<<6) + (z<<12) + ((c&7)<<18);
   }
 }
 
 // Returns 0 at end of line or error
+// This complains if the character is greater than 1FFFF 
 Utf8Char Buffer::next_utf8_char()
 {
   the_converter.local_error = false;
@@ -382,7 +373,7 @@ bool Buffer::convert_line0 (int wc)
       if(wc==1) 
 	c = C;
       else
-	c = custom_table[wc-2][C]; // Tbl[wc-2][C]
+	c = custom_table[wc-2][C]; 
       if(!(c.is_ascii() && c==C)) the_converter.line_is_ascii = false;
     }
     if(c.non_null()) res.push_back(c); 
@@ -399,7 +390,7 @@ void Buffer::convert_line (int l, int wc)
   the_converter.start_convert(l);
   if(convert_line0(wc)) return;
   the_converter.lines_converted++;
-  reset();
+  reset(); 
   push_back(utf8_out.c_str());  
 }
 
@@ -415,7 +406,7 @@ void Clines::convert_line(int wc)
   set_chars(utf8_out.c_str());
 }
 
-
+// Initialises encoding tables
 void io_ns::check_for_encoding()
 {
   for(int i=0; i<max_encoding-2; i++)
@@ -423,6 +414,7 @@ void io_ns::check_for_encoding()
       custom_table[i][j] = j;
 }
 
+// Why is v limited to 16bit chars?
 void io_ns::set_enc_param(int enc,int pos, int v)
 {
   if(!(enc>=2 && enc< max_encoding) ) {
@@ -436,7 +428,7 @@ void io_ns::set_enc_param(int enc,int pos, int v)
     the_parser.parse_error(thebuffer.c_str());
     return;
   }
-  if(0<v && v< int(nb_characters)) custom_table[enc][pos] = v;
+  if(0<v && v< int(nb_characters)) custom_table[enc][pos] = Utf8Char(v);
   else custom_table[enc][pos] = pos;
 }
 
@@ -445,14 +437,14 @@ int io_ns::get_enc_param(int enc,int pos)
   if(!(enc>=2 && enc< max_encoding) ) return pos;
   enc -= 2;
   if(!(pos>=0 && pos<lmaxchar)) return pos;
-  return custom_table[enc][pos];
+  return custom_table[enc][pos].get_value();
 }
 
 void MainClass::set_input_encoding(int wc) 
 { 
   if(wc>=0 && wc< max_encoding) {
     input_encoding = wc;
-    the_log << "++ Default input encoding changed to " << wc << "\n";
+    the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
   }
 }
 
@@ -460,7 +452,8 @@ void LinePtr::change_encoding(int wc)
 {
   if(wc>=0 && wc< max_encoding) {
     cur_encoding = wc;
-    the_log << "++ Input encoding changed to " << wc << " for " << file_name << "\n";
+    the_log << lg_start_io
+	    << "Input encoding changed to " << wc << " for " << file_name << lg_end;
   }
 }
 
@@ -566,7 +559,8 @@ void tralics_ns::read_a_file (LinePtr& L,string x, int spec)
     } else
       B.push_back(c);
     if (emit) {
-      if(spec==0) emit = B.push_back_newline_spec();
+      if(spec==0) // special case of config file
+	emit = B.push_back_newline_spec();
       else B.push_back_newline();
       if(co_try) {
 	co_try --;
@@ -575,9 +569,9 @@ void tralics_ns::read_a_file (LinePtr& L,string x, int spec)
 	  wc = k;
           L.set_encoding (k);
 	  co_try = 0; 
-	  the_log  << "++ Input encoding number "<< k << 
+	  the_log  << lg_start_io << "Input encoding number "<< k << 
 	    " detected  at line " << L.get_cur_line()+1 << 
-	    " of file " << x <<  "\n";
+	    " of file " << x << lg_end;
         }
       }
       if(converted) B.convert_line(L.get_cur_line() +1,wc);
@@ -594,7 +588,8 @@ void io_ns::show_encoding (int wc, const string& name)
 {
   const string& wa =
     (wc== 0?  " (UTF8)" : (wc == 1 ?  " (iso-8859-1)" : " (custom)"));
-  the_log << "++ Input encoding is " << wc << wa <<" for " << name << "\n";
+  the_log << lg_start_io <<
+    "Input encoding is " << wc << wa <<" for " << name << lg_end;
 }
 
 // If a line ends with \, we take the next line, and append it to this one
@@ -666,12 +661,8 @@ inline void Buffer::push_back_Hex (uint c)
   if(c<10) push_back(c+'0'); else push_back(c+'A'-10);
 }
 
-void Buffer::push_back16u(uint n)
-{
-  push_back("U+"); push_back16(n);
-}
-
-void Buffer::push_back16(uint n)
+// Converts in uppercase hex. If uni is ptrue, produces U+00AB
+void Buffer::push_back16(uint n, bool uni)
 { 
   static uint dig[9]; 
   int k = 0;
@@ -681,13 +672,20 @@ void Buffer::push_back16(uint n)
     k++;
     if(n==0) break;
   }
+  if(uni) {
+    push_back("U+"); 
+    if(k<4) push_back('0'); // print at least 4 digit
+    if(k<3) push_back('0');
+    if(k<2) push_back('0');
+    if(k<1) push_back('0');
+  }
   while(k>0) { // print the list
     k--;
     push_back_Hex(dig[k]);
   }
 }
 
-// Converts number in lower hex form
+// Converts number in lower hex form (assumes n>=16, so k>=2)
 // if hat is true, inserts hats before
 void Buffer::push_back16l(bool hat,uint n)
 { 
@@ -736,7 +734,7 @@ void Buffer::push_back_ent(Utf8Char ch)
   push_back('&');
   push_back('#');
   push_back('x');
-  push_back16(c);
+  push_back16(c,false);
   push_back(';');
 }
 
@@ -747,11 +745,11 @@ void Buffer::process_big_char(uint n)
   push_back('&');
   push_back('#');
   push_back('x');
-  push_back16(n); 
+  push_back16(n,false); 
   push_back(';');
 }
 
-// This is the function that puts a character into the buffer to be as XML
+// This is the function that puts a character into the buffer  as XML
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
@@ -788,13 +786,6 @@ void Parser::process_char (uchar c)
   else
     process_char(Utf8Char(c));
 }
-
-
-void Parser::process_char (uint c)
-{
-  process_char(Utf8Char(c));
-}
-
 
 // This dumps a single character using log method
 void Buffer::out_log (Utf8Char ch,output_encoding_type T)
@@ -984,7 +975,7 @@ bool tralics_ns::file_exists(String name)
 {
   FILE* f = fopen(name,"r");
   if (log_is_open)
-    the_log << lg_start << "++ file " << name 
+    the_log << lg_start_io << "file " << name 
 	    << (f? " exists" : " does not exist") << lg_endsentence;
   if(f) { fclose(f); return true; }
   return false;
@@ -1025,6 +1016,16 @@ void tralics_ns::close_file(fstream* fp)
   fp->close();
   delete fp;
 }
+
+void LinePtr::reset(string x)
+{
+  cur_line = 0;
+  cur_encoding = 0;
+  interactive = false;
+  clear();
+  file_name = x;
+}
+
 
 // Insert a line at the end of the file
 void LinePtr::insert (int n, string c,bool cv) 
@@ -1084,28 +1085,37 @@ void LinePtr::clear_and_copy(LinePtr& X)
   set_file_name(X.get_file_name());
 }
 
+String LinePtr::dump_name () const
+{
+  if (file_name.empty ()) return "virtual file";
+  thebuffer.reset ();
+  thebuffer << "file " << file_name;
+  return thebuffer.c_str();
+}
+
+
 // Whenever a TeX file is opened for reading, we print this in the log
 void LinePtr::after_open()
 {
-  the_log << lg_start << "++ Opened file " << file_name << "; it has " 
-	  << (value.empty() ? 0 : get_last_line_no()) <<" lines\n";
+  the_log << lg_start_io << "Opened " <<  dump_name ();
+  if (value.empty()) the_log << "; it is empty\n";
+  else {
+    int n = value.front().get_number();
+    int m = value.back().get_number();
+    if(n==1) {
+      if (m==1) the_log  << "; it has 1 line\n";
+      else the_log  << "; it has " << m << " lines\n";
+    } else the_log << "; line range is " << n << "-" << m << "\n";
+  }
 }
 
 // Whenever a TeX file is closed, we call this. If sigforce is true
 // we say if this was closed by a \endinput command.
 void LinePtr::before_close(bool sigforce)
 {
-  the_log << lg_start << "++ ";
-  if(file_name.empty()) {
-    the_log << "End of virtual file";
-    if(sigforce && !value.empty()) the_log << " (forced by \\endinput)";
-    the_log << ".\n";
-  }
-  else {
-    the_log << "End of file ";
-    if(sigforce && !value.empty()) the_log << "(forced by \\endinput) ";
-    the_log << file_name <<"\n";
-  }
+  the_log << lg_start_io << "End of " << dump_name();
+  if(sigforce && !value.empty()) the_log << " (forced by \\endinput)";
+  the_log << lg_end;
 }
 
 // Puts in b the next line of input. 
@@ -1190,10 +1200,10 @@ void LinePtr::add_buffer(LinePtr& B, line_iterator C)
 }
 
 
-// This inserts B into *this, after N lines.
-// If N is invalid, B is inserted at the start.
+// This inserts B into *this, before C
+// If C is the end pointer, B is inserted at the start.
 // The idea is to insert text from the config file to the main file
-// It is assume that the inserted line is already converted.
+// It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(Buffer& B, line_iterator C)
 {
   line_iterator E = value.end();
@@ -1266,21 +1276,6 @@ void LinePtr::split_string (String x, int l)
   splice_first(L);
 }
 
-// Prints in Latin1 format
-void LinePtr::print1(fstream* outfile)
-{
-  Buffer temp;
-  line_iterator_const C = value.begin();
-  line_iterator_const E = value.end();
-  while(C != E) {
-    const string& s = C->get_chars();
-    temp.reset();
-    temp.push_back(s);
-    if(temp.is_all_ascii()) *outfile  << s;
-    else *outfile  << temp.convert_to_latin1(true);
-    ++C;
-  }
-}
 
 void LinePtr::print(fstream* outfile)
 {
@@ -1312,7 +1307,7 @@ void Parser::T_filecontents(int spec)
   {
     flush_buffer(); 
     InLoadHandler somthing;
-    filename = sT_next_arg(); 
+    filename = sT_arg_nopar(); 
   }
   int action= 0;
   fstream* outfile=0;
@@ -1359,5 +1354,5 @@ void Parser::T_filecontents(int spec)
   }  
   kill_line(); // who knows
   if(action==1) tralics_ns::close_file(outfile);
-  pop_level(true,bt_env);
+  cur_tok.kill();pop_level(bt_env);
 } 

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/11/20-->
 <std equation-number='left'>
 <frontmatter><maketitle><title>User's Guide for the <EM r='pkg'>amsmath</EM> Package (Version 2.0)</title><author>American Mathematical Society</author><date>1999-12-13 (revised 2002-02-25)</date></maketitle><p><pagestyle style='headings'/></p>
 <tableofcontents depth='1'/><cleardoublepage/></frontmatter>
@@ -204,7 +204,7 @@ a&amp; =b+c-d\\
 <p noindent='true'><hi rend='tt'>+i+j+k+l+m+n</hi></p>
 <p noindent='true'><hi rend='tt'>\end{multline}</hi></p>
 </minipage><minipage width='213.5pt'><rule width='0.2pt'/>
-<formula id-text='1' id='uid37' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi></mrow></mtd></mtr></mtable></math><texmath>
+<formula id-text='3' id='uid37' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi></mrow></mtd></mtr></mtable></math><texmath>
 a+b+c+d+e+f\\
 +i+j+k+l+m+n
 </texmath></formula>
@@ -384,8 +384,7 @@ cannot readily add parentheses around the entire structure. But variants
 total width is the actual width of the contents; thus they can be used
 as a component in a containing expression. E.g.,</p>
 <formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='' close='&rbrace;'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mi>B</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mo>-</mo><mi>&part;</mi><mo>&times;</mo><mi>E</mi><mo>,</mo></mrow></mtd></mtr><mtr><mtd columnalign='right'><msup><mi>E</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&part;</mi><mo>&times;</mo><mi>B</mi><mo>-</mo><mn>4</mn><mi>&pi;</mi><mi>j</mi><mo>,</mo></mrow></mtd></mtr></mtable></mfenced><mspace width='2.em'/><mtext>Maxwell's</mtext><mspace width='4.pt'/><mtext>equations</mtext></mrow></math><texmath>
-\left.\begin{aligned}
-B^{\prime }&amp;=-\partial \times E,\\
+\left.\begin{aligned}B^{\prime }&amp;=-\partial \times E,\\
 E^{\prime }&amp;=\partial \times B - 4\pi j,
 \end{aligned}
 \right\rbrace 
@@ -2354,4 +2353,5 @@ placement, 2</p>
 <index target='uid48 uid88' level='1'>text fragments inside math</index>
 <index target='uid83 uid84' level='1'>this-is-wrong</index>
 <index target='uid109' level='1'><hi rend='it'>TUGboat</hi></index>
-</theindex></std>
+</theindex>
+</std>

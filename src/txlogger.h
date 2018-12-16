@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txlogger.h,v 2.20 2012/05/15 17:14:30 grimm Exp $
+// $Id: txlogger.h,v 2.22 2015/10/09 17:05:53 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003,  2007, 2008
 
 // This software is governed by the CeCILL license under French law and
@@ -88,7 +88,7 @@ class HalfLogger
 // if Y is of type FullLogger, Y<< lg_start; is the same as
 // lg_start(Y.L), hence Y.L.finish_seq();
 
-
+extern void lg_start_io (Logger& L);
 inline void lg_flush(Logger& L) { (*(L.fp)).flush(); }
 inline void lg_start(Logger& L) { L.finish_seq(); }
 inline void lg_startstack(Logger& L) { L.finish_seq(); *(L.fp) << "+stack: "; }
@@ -97,7 +97,7 @@ inline void lg_startcond(Logger& L) { L.finish_seq(); *(L.fp) << "+"; }
 inline void lg_startif(Logger& L) { L.finish_seq(); *(L.fp) << "{ifthenelse "; }
 inline void lg_startcalc(Logger& L) { L.finish_seq(); *(L.fp) << "{calc "; }
 inline void lg_startbracebs(Logger& L) { L.finish_seq(); *(L.fp) << "{\\"; }
-void lg_end(Logger& L);
+inline void lg_end(Logger& L)  { *(L.fp) << "\n"; }
 inline void lg_endsentence(Logger& L) { *(L.fp) << ".\n"; }
 inline void lg_endbrace(Logger& L) { *(L.fp) << "}\n"; }
 inline void lg_arrow(Logger&L) { *(L.fp) << "->"; }

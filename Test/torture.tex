@@ -5,7 +5,7 @@
 %\documentclass{torture1}
 %ok
 %this is a comment \def}}}
-% $Id: torture.tex,v 1.167 2015/07/31 14:24:18 grimm Exp $
+% $Id: torture.tex,v 1.181 2017/05/29 06:22:57 grimm Exp $
 
 % Define the class via a command
 \def\myclass{article}
@@ -154,6 +154,7 @@ The file should finish with a \endinput, but not on the last line.
 
 \let\ifempty\@iftempty\let\yifempty\@yifempty\let\bifempty\@ifbempty 
 \let\zifempty\@zifempty
+\let\Scanupdown\@scanupdown
 \makeatother
 
 \newcounter{nc} \setcounter{nc}{3} \ifnum\value{nc}=3 \else \bad\fi
@@ -245,6 +246,32 @@ aaaa~bbbb\verb+aaaa bbbb+ $a~b$
 \ifx\foo\@vobeyspaces\else \bad \fi
 \makeatother
 
+%% test that newline is the same as space
+\def\fooa #1 #2{\def\foob{#1 #2}}\fooa 12 3\testeq\foob{12 3}\fooa 12 
+4\testeq\foob{12 4}\fooa 12 {3 }\testeq\foob{12 3 }\fooa 12 {3
+}\testeq\foob{12 3 }
+\let\foob \fooa\def\fooa #1
+#2{\def\foob{#1
+#2}}\ifx\fooa\foob \else\bad\fi
+\fooa 12 3\testeq\foob{12 3}\fooa 12 
+4\testeq\foob{12 4}\fooa 12 {3 }\testeq\foob{12 3 }
+\def\foo #1fooa{\def\foob{#1}}
+\foo fooa\testeq\foob{}
+\foo 1fooa\testeq\foob{1}
+\foo {2 2}fooa\testeq\foob{2 2}
+\foo {fooa}fooa\testeq\foob{fooa}
+\foo {fooa} fooa\testeq\foob{{fooa} }
+\foo {2 2}foofooa\testeq\foob{{2 2}foo}
+{\def~x y#1{\def\foob{#1}}~x
+y 0\testeq\foob{0}~x y1\testeq\foob{1}\let\fooc~
+\def~ y#1{\def\foob{#1}}~
+y 0\testeq\foob{0}~ y1\testeq\foob{1}
+\def~x
+ y#1{\def\foob{#1}}\ifx\fooc~\else\show\fooc\show~\bad\fi~x
+y 0\testeq\foob{0}~x y1\testeq\foob{1}
+\def~ 
+y#1{\def\foob{#1}}~
+y 0\testeq\foob{0}~ y1\testeq\foob{1}}
 
 %This is a test. An \unknown command. A math formula $a^$.
 %\def\test#1#2?{#1,#2.}\test ok?\typeout{A message}
@@ -261,7 +288,7 @@ $1^è=^^$ %% hat hat control-A
 }\def\msg{a message.^^J}
 
 \def\foo#1#2#3{#1=#2=#3=}
-\foo^^^^0153^^^^0152^^^^0178
+^^5c^^66o^^6f^^^^0153^^^^0152^^^^0178
  ^^^^017b^^8?
 Compare:\oe\OE\"Y\.Z
 
@@ -375,7 +402,7 @@ x      &=0.01& 0.001&=X
 \shoveleft{\sin}\\
 1+2
 \end{multline}
-% The \endgroup shgould be here, but we want a \par token after
+% The \endgroup should be here, but we want a \par token after
 % the equation
 
 
@@ -532,7 +559,7 @@ x & \ll & y_{1} + \cdots + y_{n} \\
 
 \begin{eqnarray}
 x & = &17y \\
-y & > & a + b + c+d+e+f+g+h+i+j+ \nonumber\\
+y & > & a + b + c+d+e+f+g+h+i+j+ \\ % \nonumber semantic changed
   &   & k+l+m+n+o+p
 \end{eqnarray}
 
@@ -1029,6 +1056,12 @@ D'accord \QU{FRE}{oui} ou pas \QU{FRE}{non}.
 \bad
 }
 
+
+{\def\mytypeout#1{ok\ignorespaces}
+\def\IIFE#1{\InputIfFileExists{#1}{a}{b}}
+\IIFE{taux2}\IIFE{nohope}\IIFE{taux2}
+}
+
 {\small\it\toks4={}\dimen0=1sp \count0=0
 \setbox13=\xbox{foo}{\large x}a
 \box13 \let\foo\relax\let\bar\relax\let\gee\relax}
@@ -1075,7 +1108,7 @@ Test{\count0=1000\countdef\spacefactor0\relax \skip0="DD DDPLUS2,5 \spacefactor\
 test hbox A\hbox{a\par b}B.
 {\tracingall \parbox[foo][bar][gee]{2cmPlus3mm}{some \it box content}.}
 
-UPPER\uppercase \relax\space \bgroup }\lowercase \relax\space \bgroup }CASE
+UPPER\uppercase \noexpand\testeq\relax\space \bgroup }\lowercase \relax\space \bgroup }CASE
 
 {\makeatletter
 \begingroup
@@ -1129,8 +1162,27 @@ UPPER\uppercase \relax\space \bgroup }\lowercase \relax\space \bgroup }CASE
 \def\optionalequals{ \space=}
 {\catcode`A\optionalequals2 A% } the A closes the brace
 {\escapechar=-1 \edef\foo{\string\=}\testeq\foo{=}}
+{\escapechar=-1 \edef\foo{\expandafter\string\csname\endcsname}
+\edef\yoo{\detokenize{csnameendcsname}}\xtesteq\foo\yoo}
+{\escapechar=0 \edef\foo{\string\=}\edef\yoo{\string^\string^@=}
+\xtesteq\foo\yoo}
+\xdef\foo{\string^^^^1234}\testeq\foo{^^^^1234}
 {\escapechar=-1 \xdef\foo{\string\}}}
 {\escapechar=`\+ \edef\foo{\string\=}\testeq\foo{+=}}
+{\catcode0=12 \edef\foo{\meaning^^00} \tracingall
+  \edef\yoo{\detokenize{the character }\string ^\string^\string@}\xtesteq\foo\yoo 
+  \catcode0=11 \edef\foo{\meaning ^^00} 
+  %% Note: \meaning^^00}  is interpreted as \meaning} which is wrong
+  \edef\yoo{\detokenize{the letter }\string ^\string^\string@}\xtesteq\foo\yoo 
+  \edef\foo{\meaning^\meaning_\meaning$%$
+  \meaning&\meaning#\meaning\sptoken}
+  \edef\yoo{\detokenize{superscript character }\string   ^\detokenize{subscript character %
+     _math shift character $%$
+    alignment tab character  &macro parameter character }\string#%
+  \detokenize{blank space  } }\xtesteq\foo\yoo
+  \edef\foo{\meaning\egroup\meaning\bgroup} 
+ \edef\yoo{\detokenize{end-group character }\string}\detokenize{begin-group character }\string{}\xtesteq\foo\yoo 
+}
 {\catcode`\A=12 \catcode`\B=12\catcode`\R=12\gdef\fooval{ABAR}}
 {\escapechar=`\A \edef\foo{\string\BAR}\ifx\foo\fooval\else \uerror\fi}
 \string{\string}
@@ -1305,7 +1357,7 @@ $x\Box$
 
 
 \[\left|
-\begin{array}{lcr}
+\begin{array}[ignored]{lcr}
 AAAAAAA&BBBBBCC&CCCCCCC\\
 A&B&C\\
 \multicolumn{1}{c}{A}&\multicolumn{1}{c}{B}&\multicolumn{1}{c}{C}\\
@@ -1771,7 +1823,7 @@ $\wp$
 \edef\test{\Thefoo\Foo}
 \let\AAA\relax
 
-{\makeatletter%\tracingall
+{\makeatletter %\tracingall
 \newcounter{foo}
 \def\OO{oo}
 \setcounter{f\OO}{17}
@@ -1783,6 +1835,8 @@ $\wp$
 }
 
 \makeatletter
+\@ifundefined{par}{\bad}{}\@ifundefined{mypar}{}{\bad}
+\tralics@ifundefined{par}{\xbad}{}\tralics@ifundefined{myspar}{}{\bad}
 \newif\ifok
 \def\test{\@ifstar\oktrue\okfalse}
 \test*\ifok\else\typeout{bug in ifstar1}\error\fi
@@ -2936,7 +2990,7 @@ text\\
 \if\foo\par \BUG\fi 
 \if\noexpand\foo\par \else\BUG\fi 
 \if\par\noexpand\foo \else\BUG\fi 
-\if0\noexpand\foo \BUG\fi 
+\if0\noexpand\foo \BUG\fi \if\par\else \BUG\fi \if\else \BUG\fi \if\fi
 }
 \begingroup
 \catcode `^^^^0123=13 \def^^^^0123{$} % $ emacs
@@ -2970,6 +3024,11 @@ text\\
  \if\a\par\bad\fi
  \if\par\let\else\bad\fi
  \if\noexpand\cpar\let\else\bad\fi
+\def\foo{W}\let\xfoo=W\catcode`W=12 \def\yfoo{W}%
+\catcode`W=13 \if\noexpandW\foo\else \xbad\fi 
+\if\noexpandW\xfoo\else \xbad\fi  
+\if\foo\xfoo\else \xbad\fi  \ifcat\foo\xfoo\else \xbad\fi   
+\if\yfoo\xfoo\else \xbad\fi  \ifcat\yfoo\xfoo \xbad\fi  \ifcat\yfoo=\else \xbad\fi   
 x
 
 \endgroup
@@ -3488,6 +3547,7 @@ soul:\caps{ABC}\hl{x\ul{y}\textit{z\st{w}}}\ul{etc}
 \let\Xbreak\tralics@for@break
 \edef\foo{\zap@space 1 2 345 \@empty 6 7\strip@prefix 1134>89}
 \testeq\foo{123456 789}
+{\def\@empty{t}\edef\foo{\zap@space0 \@empty}\xtesteq\foo{0}} 
 \count0=11 
 \edef\foo{\hexnumber@1 \hexnumber@3 \hexnumber@ 10 \hexnumber@{\count0}\hexnumber@15 }
 \testeq\foo{13ABF}
@@ -3685,7 +3745,20 @@ Reference to second subfigure: \ref{fig:fig1b}
 \edef\foo{\ifnum0=7\expandafter\fi\expandafter*\expandafter\iftrue\expandafter\@gobble\fi\relax}
 \testeq\foo{*\relax}
 \edef\foo{\ifnum0=0\expandafter\fi\expandafter*\expandafter\iftrue\fi}
-\xtesteq\foo{\srelax*\srelax}
+\xtesteq\foo{\srelax*\srelax}\marks0{OK}
+\edef\foo#1{#\iftrue12\fi #\iffalse12\fi1}\def\yoo#1{#12#1}\ytesteq\foo\yoo
+
+\def\xfoo#1#2{\def\foo{{#2}{#1}}}%% note the order
+\Scanupdown\xfoo{a}{b}{etc}\testeq\foo{{a}{b}}
+\Scanupdown\xfoo{a}{b}{^{uv}}\testeq\foo{{uv}{b}}
+\Scanupdown\xfoo{a}{b}{_{uv}}\testeq\foo{{a}{uv}}
+\Scanupdown\xfoo{a}{b}{^{x}_{uv}}\testeq\foo{{x}{uv}}
+\Scanupdown\xfoo{a}{b}{'^{x}_{uv}}\testeq\foo{{\prime x}{uv}}
+\Scanupdown\xfoo{a}{b}{_{uv}'^{x}}\testeq\foo{{\prime x}{uv}}
+
+
+%%%%%%%% x-------------------x
+
 
 \begin{table}\centering
 $\text{a\quad b\qquad c\!d\,e\;f\:g h~i}
@@ -3724,7 +3797,7 @@ a\quad b\qquad c\!d\,e\;f\:g h~i$
 
 
 
-$A\xi\bxi_1 B\uxi_1$
+$\noexpand\undefinded A\xi\bxi_1 B\uxi_1$
 \boldmath
 $A\xi\bxi_1 B\uxi_1$
 \unboldmath
@@ -3738,7 +3811,7 @@ $\hbox{{\ensuremath\alpha}}$
 
 \centerline{A\it B}\leftline{C\it D}\rightline{E\it F}\rlap{G\it H}\llap{I\it J}
 \marginpar{a\bf B}c\samepage
-\rule{2pt}{3pt}
+\noexpand\bad\rule{2pt}{3pt}
 \rule[1pt]{3pt+5pt}{17PT}
 \vglue 1pt plus 2pt  minus 3pt
 \vglue 1pt plus 2pt  minus 3pt
@@ -3793,12 +3866,21 @@ I&b&&-b&0\cr
 C&a'&1-a\cr}
 $
 
-
+\begin{subequations}
+\begin{equation} A\end{equation}
+\begin{equation} B \end{equation}
+\end{subequations}
+where
+\begin{subequations}
+\begin{equation} C \end{equation}
+\begin{equation} D \end{equation}
+\end{subequations}
 
 \edef\foo{\multispan3x}\testeq\foo{\omit\span\omit\span\omit x}
 \def\SBU{Upper }
 \def\SBL{Lower }
 \def\SBM{Mixed }\ref{Cd1}\ref{Cd2}
+\omitcite{not-a-citation}\omitcite{tor1}\omitcite{tor1}%
 a: \MakeTextUppercase{\SBU \NoCaseChange{MiXeD} \NoCaseChange{\SBM} \SBU }\\
 b: \MakeTextUppercase{\SBU $\rm Bar \SBM$  \(Yy\), \ensuremath{Zz} \SBU}\\
 c: \MakeTextUppercase{Text \cite{mathml2} and \cite[Page 12]{mathml2} \SBU}

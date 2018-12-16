@@ -1,5 +1,5 @@
 // -*- C++ -*-
-//$Id: txcmd.h,v 2.39 2015/07/29 16:10:40 grimm Exp $
+//$Id: txcmd.h,v 2.62 2017/05/29 06:22:57 grimm Exp $
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2008
 
 // This software is governed by the CeCILL license under French law and
@@ -21,7 +21,9 @@
 enum symcodes
 {
   // Lets start with the catcodes
-  escape_catcode= 0, open_catcode, close_catcode, dollar_catcode, alignment_catcode,
+  invalid_cmd =0,
+  escape_catcode= 0, open_catcode, close_catcode, dollar_catcode,
+  alignment_catcode,
   eol_catcode, parameter_catcode,
   hat_catcode, underscore_catcode, ignored_catcode,
   space_catcode, letter_catcode, other_catcode, active_catcode,
@@ -41,7 +43,7 @@ enum symcodes
   biblio_cmd,
   aparaitre_cmd,
   citation_cmd,end_citation_cmd,bpers_cmd,cititem_cmd,bibitem_cmd,cite_cmd,
-  cite_type_cmd, 
+  omitcite_cmd,
   bib_cmd, self_insert_cmd,thebibliography_cmd,end_thebibliography_cmd,
   footcitepre_cmd, cite_one_cmd,solvecite_cmd,vglue_cmd,xgetfontsize_cmd,
   numberwithin_cmd,ifdefinable_cmd,dblarg_cmd,
@@ -86,8 +88,8 @@ enum symcodes
   ignore_env_cmd, ignore_content_cmd,raw_env_cmd,
   math_env_cmd,RAsection_env_cmd,
   tabular_env_cmd,verbatim_env_cmd,
-  minipage_cmd,
-  picture_env_cmd,
+  minipage_cmd, subequations_cmd,
+  picture_env_cmd, 
   xmlelement_env_cmd,  filecontents_env_cmd,
   last_env_cmd,
   end_document_cmd,end_keywords_cmd,end_center_cmd,end_figure_cmd,end_table_cmd,
@@ -96,10 +98,10 @@ enum symcodes
   end_ignore_env_cmd, end_ignore_content_cmd,end_raw_env_cmd,
   end_math_env_cmd,end_RAsection_env_cmd,
   end_tabular_env_cmd,end_verbatim_env_cmd,
-  end_minipage_cmd, end_picture_env_cmd,end_xmlelement_env_cmd,
+  end_minipage_cmd, end_subequations_cmd, end_picture_env_cmd,
+  end_xmlelement_env_cmd,
   end_filecontents_env_cmd,
   // end ENV
-  invalid_cmd,
   begin_cmd, end_cmd, // is this OK ?????
   mathordb_cmd, // bold math ord
   mathord_cmd,mathbin_cmd,mathrel_cmd,mathinner_cmd,mathbetween_cmd,
@@ -125,14 +127,17 @@ enum symcodes
   newcount_cmd,newboolean_cmd,
   setboolean_cmd,for_cmd,kvo_family_cmd,
   ifthenelse_cmd, whiledo_cmd,shortverb_cmd,  newcounter_cmd,aftergroup_cmd,
-  ifstar_cmd,ifnextchar_cmd,typeout_cmd,  calc_cmd, 
+  ifstar_cmd,ifnextchar_cmd,  calc_cmd, 
   fp_cmd, fpif_cmd, fpi_cmd, // commands from the fp package,
   verb_cmd,thm_aux_cmd,start_thm_cmd,
   setmode_cmd,testopt_cmd,
   sp_deflist_cmd, selective_sanitize_cmd, latex_error_cmd,
   change_element_name_cmd,check_date_cmd,formatdate_cmd, XML_swap_cmd,
   XML_fetch_cmd, XML_modify_cmd,
-  
+  GetIdInfo_cmd, GetIdInfoLog_cmd, loadlatex3_cmd, l3_gen_cond_Npnn_cmd,
+  l3_gen_cond_Nnn_cmd,l3_gen_eq_cond_cmd, l3_check_cmd, l3_generate_variant_cmd,
+  l3_gen_from_sig_cmd, l3_gen_from_ac_cmd, l3_set_cat_cmd, l3_set_num_cmd,
+  tl_basic_cmd, tl_concat_cmd, tl_set_cmd, tl_put_left_cmd, l3_rescan_cmd,
   // From now on these are ok for \the
   min_internal,   
   char_given_cmd,math_given_cmd,last_item_cmd,
@@ -164,27 +169,34 @@ enum symcodes
   max_internal,
   advance_cmd, multiply_cmd, divide_cmd, prefix_cmd, let_cmd,
   shorthand_def_cmd,read_to_cs_cmd,def_cmd,set_box_cmd,
-  set_interaction_cmd,
+  set_interaction_cmd, 
+
   max_command, // After this, command is expanded
-  undef_cmd, // not a valid cmd
+  undef_cmd, 
+  expandafter_cmd,noexpand_cmd, input_cmd, if_test_cmd,fi_or_else_cmd,
+  csname_cmd, convert_cmd, the_cmd, top_bot_mark_cmd,
+  // latex ommands
   xspace_cmd,ensuremath_cmd,multispan_cmd, zapspace_cmd,stripprefix_cmd,
   latex_ctr_cmd, hexnumber_cmd,
-  first_of_one_cmd,
-  first_of_two_cmd,afterfi_cmd,afterelsefi_cmd,
-  ifempty_cmd, ifundefined_cmd,get_config_cmd,
-  the_cmd,strippt_cmd,convert_cmd,
-  obracket_cmd,oparen_cmd,csname_cmd,
-  expandafter_cmd,noexpand_cmd,
-  scanupdown_cmd,sideset_cmd,
+  all_of_one_cmd,first_of_two_cmd, first_of_three_cmd, first_of_four_cmd,
+  ignore_n_args_cmd, prg_return_cmd,
+  afterfi_cmd,afterelsefi_cmd,
+  ifempty_cmd, ifundefined_cmd,get_config_cmd,  strippt_cmd,
+  obracket_cmd,oparen_cmd,
+  scan_up_down_cmd,sideset_cmd,
   specchar_cmd, car_cmd,
   split_cmd,gobble_cmd,refstepcounter_cmd,
   month_day_cmd,mathversion_cmd,
   a_cmd,accent_cmd, while_cmd, iwhile_cmd,loop_cmd,
   counter_cmd,setlength_cmd,useverb_cmd,random_cmd,
-  input_cmd,if_test_cmd,fi_or_else_cmd,top_bot_mark_cmd, ot2enc_cmd,
+  ot2enc_cmd,
+  pdfstrcmp_cmd, splitfun_cmd, usename_cmd, l3expand_aux_cmd,
+  l3expand_base_cmd,l3noexpand_cmd, l3_ifx_cmd,l3str_ifeq_cmd, l3str_case_cmd,
+  l3E_set_num_cmd, cat_ifeq_cmd, token_if_cmd,
   // keep these 8 in order at the end
-  user_cmd,userl_cmd,usero_cmd,userlo_cmd,
-  userp_cmd,userlp_cmd,userop_cmd,userlop_cmd,
+  user_cmd,userl_cmd,userp_cmd,userlp_cmd,
+  usero_cmd,userlo_cmd,userpo_cmd,userlpo_cmd,
+  eof_marker_cmd // invalid command code
 };
 
 // Subtypes associated to a type. A given integer has more than one meaning.
@@ -219,7 +231,7 @@ enum subtypes {
   newlinechar_code, language_code, lefthyphenmin_code, righthyphenmin_code,
   holdinginserts_code, errorcontextlines_code,incentering_code,fpseed_code,
   list_depth_code, list_ctr_code,
-  nomath_code, notrivialmath_code, cur_font_loc,
+  nomath_code, notrivialmath_code, multimlabel_code, cur_font_loc,
   predisplaydirection_code, lastlinefit_code,savingdiscards_code,
   savinghyphcodes_code,
   atmathversion_code,mathprop_ctr_code,use_subfigure_code,
@@ -228,8 +240,7 @@ enum subtypes {
   math_font_pos=scriptscriptfont_code+16,
   integer_table_size,
   // some dimen parameters 
-  dimen_reg_offset=0, 
-  parindent_code=dimen_reg_offset+nb_registers,mathsurround_code,
+  parindent_code=nb_registers,mathsurround_code,
   lineskiplimit_code,
   hsize_code,vsize_code,maxdepth_code,splitmaxdepth_code,boxmaxdepth_code,
   hfuzz_code,vfuzz_code,delimitershortfall_code,nulldelimiterspace_code,
@@ -256,7 +267,7 @@ enum subtypes {
   tabskip_code,spaceskip_code,xspaceskip_code,parfillskip_code,
   calcAskip_code, calcBskip_code, 
   thinmuskip_code,medmuskip_code,thickmuskip_code,muskip_reg_offset,
-  glue_table_size=thickmuskip_code+nb_registers,
+  glue_table_size=muskip_reg_offset+nb_registers,
 
   noexpand_code=0,
   chartoobig,
@@ -310,6 +321,15 @@ enum subtypes {
   // for eqno
   eqno_code =0 ,leqno_code,
   hrule_code=0,  vrule_code, rule_code,
+  // for \char_set_mathcode:nn and variants
+  setcat_code=0, thecat_code, showcat_code, setmath_code, themath_code,
+  showmath_code, setlc_code, thelc_code, showlc_code,  setuc_code, theuc_code,
+  showuc_code,  setsf_code, thesf_code, showsf_code, 
+  tok_eq_cat_code =0, tok_eq_char_code, tok_eq_meaning_code, tok_if_macro_code,
+  tok_if_cs_code, tok_if_expandable_code,  tok_if_long_code, tok_if_prot_code,
+  tok_if_longprot_code,  tok_if_chardef_code, tok_if_mathchardef_code,
+  tok_if_dim_code,  tok_if_skip_code,tok_if_muskip_code, tok_if_toks_code,
+  tok_if_int_code, tok_if_primitive_code,
   // for unimp
   accent_code =0,delimiter_code,halign_code,
   ignorespaces_code,insert_code,mark_code,marks_code,mathaccent_code,
@@ -330,6 +350,33 @@ enum subtypes {
   textleaf_code, textdied_code,textdivorced_code,textborn_code, 
   textmarried_code, textblank_code, allowbreak_code,
   abort_code,sleep_code, prompt_code,
+  l3_p_code=0,l3_TF_code,l3_T_code,l3_F_code, l3_bad_code,
+  l3_p_NN_code=0,l3_TF_NN_code,l3_T_NN_code,l3_F_NN_code, // 4 times 4 in order
+  l3_p_Nc_code,l3_TF_Nc_code,l3_T_Nc_code,l3_F_Nc_code, 
+  l3_p_cN_code,l3_TF_cN_code,l3_T_cN_code,l3_F_cN_code, 
+  l3_p_cc_code,l3_TF_cc_code,l3_T_cc_code,l3_F_cc_code, 
+  l3expN_code=0, l3expn_code,l3expp_code,l3expc_code, l3expo_code,l3expf_code,
+  l3expx_code,l3expV_code, l3expv_code,
+  l3expfu_code,l3expou_code,l3expvu_code,l3expVu_code,l3expxu_code,
+  // composition of the previous code
+  l3exp_No_code=0, l3exp_NNo_code,l3exp_NNNo_code,l3exp_NNc_code, l3exp_Ncc_code,
+  l3exp_Nccc_code, l3exp_Nf_code,l3exp_NNf_code,  l3exp_Nv_code, l3exp_NNv_code,
+  l3exp_NV_code,l3exp_NNV_code,l3exp_NNNV_code,l3exp_Nco_code, l3exp_Ncf_code,
+  l3exp_NVV_code,l3exp_NcNc_code,l3exp_Ncco_code, l3exp_Nx_code,l3exp_Nnc_code,
+  l3exp_Nfo_code, l3exp_Nff_code, l3exp_Nnf_code, l3exp_Nno_code,
+  l3exp_NnV_code, l3exp_Noo_code, l3exp_Nof_code, l3exp_Noc_code, l3exp_NNx_code,
+  l3exp_Ncx_code, l3exp_Nnx_code, l3exp_Nox_code, l3exp_Nxo_code, l3exp_Nxx_code,
+  l3exp_NNno_code, l3exp_NNoo_code, l3exp_Nnnc_code, l3exp_Nnno_code,
+  l3exp_Nooo_code,l3exp_NNnx_code, l3exp_NNox_code, l3exp_Nnnx_code,
+  l3exp_Nnox_code, l3exp_Nccx_code, l3exp_Ncnx_code, l3exp_Noox_code,
+  l3exp_NVu_code,l3exp_Nvu_code,l3exp_Nou_code,l3exp_Nfu_code,
+  l3exp_Ncou_code,l3exp_NcVu_code,l3exp_NNVu_code,l3exp_NNou_code,
+  l3exp_NNNVu_code, l3exp_NNNou_code,l3exp_Nnou_code, l3exp_Noou_code,
+  l3exp_Nfou_code, l3exp_NnNou_code, l3exp_Nxu_code, l3exp_Nouou_code,
+  l3_tl_new_code=0, l3_tl_clear_code, l3_tl_gclear_code,l3_tl_const_code,
+  l3_tl_xconst_code,l3_tl_clearnew_code,l3_tl_gclearnew_code,
+  l3_tlx_new_code, l3_tlx_clear_code, l3_tlx_gclear_code,l3_tlx_const_code,
+  l3_tlx_xconst_code,l3_tlx_clearnew_code,l3_tlx_gclearnew_code,
   // for unimp_font
   DeclareTextCommandDefault_code=0,ProvideTextCommand_code,
   ProvideTextCommandDefault_code, TextSymbolUnavailable_code,
@@ -357,7 +404,7 @@ enum subtypes {
   useboxA_code, useboxB_code, 
   //  for color
   definecolor_code=0, color_code, normalcolor_code,pagecolor_code,
-  colorbox_code, fcolorbox_code,
+  colorbox_code, fcolorbox_code, color_offset,
   // for loops 
   xkv_for_n_code=0,xkv_for_en_code, for_code,tfor_code,forloop_code,
   iforloop_code,tforloop_code, breaktfor_code,xkv_breaktfor_code, 
@@ -416,10 +463,11 @@ enum subtypes {
   // for file_cmd
   input_code=0,endinput_code,inputifexists_code,ifexists_code,openin_code,
   closein_code, include_code,end_all_input_code,Input_code,scantokens_code,
+  readxml_code,
   // for participant
   participant_code =0, participante_code, participantes_code,participants_code,
   // ignore_env
-  body_code=0, abstract_code,latexonly_code,xmlonly_code,subequations_code,
+  body_code=0, abstract_code,latexonly_code,xmlonly_code,
   // ignore_content
   htmlonly_code=0,rawhtml_code,LaTeXonly_code,comment_code,
   // parshape and others
@@ -432,11 +480,17 @@ enum subtypes {
   dashline_code=0,drawline_code,dottedline_code,circle_code,
   // math_env
   eqnarray_code=0, eqnarray_star_code, 
-  align_code, align_star_code, 
   equation_code,equation_star_code,
   multline_code,  multline_star_code, gather_code,  gather_star_code,
-  aligned_code, split_code,math_code,displaymath_code,Beqnarray_code, 
-  Beqnarray_star_code,
+  aligned_code, gathered_code, split_code,math_code,displaymath_code,Beqnarray_code, 
+  Beqnarray_star_code, align_code, align_star_code,
+  flalign_code, flalign_star_code, 
+  alignat_code, alignat_star_code, 
+  xalignat_code, xalignat_star_code, 
+  xxalignat_code, xxalignat_star_code, array_code,
+  matrix_code, bordermatrix_code,
+  matrixb_code,  matrixB_code,matrixp_code, matrixV_code, matrixv_code,
+  nomathenv_code, mbox_S_code, text_S_code,  hbox_S_code,  fbox_S_code,
   // xml_modify
   xml_get_code = 0, xml_set_code, xml_del_code, xml_ins_code,
   xml_parent_code,xml_setA_code,xml_setB_code,
@@ -469,11 +523,30 @@ enum subtypes {
   // for newcount_cmd
   newtoks_code=0,newcount_code,newbox_code,newdimen_code,newlength_code, 
   newmuskip_code, newread_code,newwrite_code,newlanguage_code,
-  // for def_cmd
-  xdef_code=0,def_code,gdef_code,edef_code,let_code,
+  // for def_cmd ; no modification before let_code
+  def_code = 0, gdef_code, edef_code, xdef_code,
+  ldef_code, lgdef_code, ledef_code, lxdef_code,
+  pdef_code, pgdef_code, pedef_code, pxdef_code,
+  pldef_code, plgdef_code, pledef_code, plxdef_code,
+  defn_code, gdefn_code, edefn_code, xdefn_code,
+  ldefn_code, lgdefn_code, ledefn_code, lxdefn_code,
+  pdefn_code, pgdefn_code, pedefn_code, pxdefn_code,
+  pldefn_code, plgdefn_code,  pledefn_code, plxdefn_code,
+  cdef_code, cgdef_code, cedef_code, cxdef_code,
+  cldef_code, clgdef_code, cledef_code, clxdef_code,
+  cpdef_code, cpgdef_code, cpedef_code, cpxdef_code,
+  cpldef_code, cplgdef_code,  cpledef_code, cplxdef_code,
+  cdefn_code, cgdefn_code, cedefn_code, cxdefn_code,
+  cldefn_code, clgdefn_code, cledefn_code, clxdefn_code,
+  cpdefn_code, cpgdefn_code, cpedefn_code, cpxdefn_code,
+  cpldefn_code, cplgdefn_code, cpledefn_code, cplxdefn_code,
   newcommand_code,newthm_code,newenv_code,renewenv_code,renew_code, 
   provide_code,declare_math_operator_code,checkcommand_code,
-  futurelet_code,
+  letNN_code = 0, letcN_code,letNc_code, letcc_code, 
+  gletNN_code, gletcN_code,gletNc_code, gletcc_code, 
+  nletNN_code, nletcN_code,nletNc_code, nletcc_code, 
+  let_code, futurelet_code, undef_code, undefc_code,  
+
   // add_att 
   addatt_to_cur_code=0, addatt_to_last_code, addatt_to_doc_code,addatt_to_code,
   addatt_to_index_code,
@@ -506,10 +579,13 @@ enum subtypes {
   fancy_lfoot_code, fancy_cfoot_code,fancy_rfoot_code,
   fancy_head_code, fancy_foot_code,fancy_hf_code,
   // extension_cmd
-  openout_code=1,write_code,closeout_code,
+  openout_code=1,write_code,closeout_code, write_log_code, write_term_code,
+  typeout_code,wlog_code,
   // xray_cmd
+
   show_code=0,showbox_code,showthe_code,showlists_code, showgroups_code,
   show_xmlA_code, show_xmlB_code,showtokens_code, showifs_code,
+  register_show_code,registerc_show_code,
   unexpanded_code,detokenize_code,// awful hack, because  \showthe calls \the
   // shorthand_def_cmd
   char_def_code=0,  math_char_def_code, count_def_code,
@@ -526,7 +602,7 @@ enum subtypes {
   number_code=1,romannumeral_code,string_code,meaning_code,fontname_code,
   jobname_code,tralicsversion_code,etexrevision_code,rayear_code,
   Romannumeral_code,at_arabic_code,sanitize_code,twodigits_code,
-  ra_jobname_code,attributeval_code,
+  ra_jobname_code,attributeval_code, meaning_c_code, l3string_code,
   // the
   the_code = 0,  
   // latex_ctr_cmd
@@ -550,7 +626,7 @@ enum subtypes {
   stepcounter_code=0,addtocounter_code,setcounter_code,value_code,
   killcounter_code,addtoreset_code,
   // prefix_cmd
-  global_code=8,long_code=1,outer_code=2, protected_code=4,
+  global_code=8,long_code=1,outer_code=4, protected_code=2,
   // set_page_dimen_cmd
   pagegoal_code=0,pagetotal_code,pagestretch_code,
   pagefilstretch_code, pagefillstretch_code, pagefilllstretch_code,
@@ -565,7 +641,7 @@ enum subtypes {
   mathchoice_code=0,stackrel_code,underset_code,
   overset_code,frac_code,dfrac_code,tfrac_code,cfrac_code,genfrac_code,
   binom_code,tbinom_code,dbinom_code,
-  root_code,mathbox_code,cell_attribute_code,row_attribute_code,
+  root_code,mathlabel_code,mathbox_code,cell_attribute_code,row_attribute_code,
   formula_attribute_code,thismath_attribute_code, table_attribute_code,
   math_attribute_code,   accentset_code, underaccent_code,
   multicolumn_code,last_marg_code = multicolumn_code, // following take 1 arg
@@ -597,8 +673,10 @@ enum subtypes {
   // month day names
   md_frenchm_code=0,  md_frenchd_code,  md_englishm_code,  md_englishd_code,
   md_germanm_code,  md_germand_code,  md_spanishm_code,  md_spanishd_code,
+  // decide whether to use \cs_set:Npn etc
+  L3_set_code =0, L3_new_code, L3_setp_code, L3_newp_code,
   // hacks
-  zero_code = 0,one_code, two_code,three_code,
+  zero_code = 0,one_code, two_code,three_code, four_code,
   fp_ident_code =0, fp_print_code, fp_set_code, fp_add_code, fp_sub_code, 
   fp_div_code, fp_mul_code, fp_abs_code, fp_neg_code, fp_iflt_code, 
   fp_ifeq_code,  fp_ifgt_code, fp_ifneg_code, fp_ifpos_code, fp_ifzero_code, 

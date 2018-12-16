@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/07/15-->
-<ramain creator='Tralics version 2.15.3'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/11/20-->
+<ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>6</mn></mrow></math></formula>
 <div0 id-text='1' id='cid1'><head>simple math</head>
@@ -61,7 +61,7 @@ and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mro
 </div0>
 <div0 id-text='5' id='cid5'><head>Other</head>
 <formula id-text='1' id='uid1' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>1</mn></mrow></mtd><mtd columnalign='right'><mn>1</mn></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>X</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>Y</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>0</mn><mo>.</mo><mn>01</mn></mrow></mtd><mtd columnalign='right'><mrow><mn>0</mn><mo>.</mo><mn>001</mn></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>X</mi></mrow></mtd></mtr></mtable></math></formula>
-<formula id-text='5' id='uid2' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mo form='prefix'>sin</mo><mo>=</mo><mo form='prefix'>cos</mo></mrow></mtd></mtr><mtr><mtd><mi>c</mi></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mo form='prefix'>cos</mo></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mo form='prefix'>sin</mo></mtd></mtr><mtr><mtd columnalign='right'><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></mtd></mtr></mtable></math></formula>
+<formula id-text='2' id='uid2' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mo form='prefix'>sin</mo><mo>=</mo><mo form='prefix'>cos</mo></mrow></mtd></mtr><mtr><mtd><mi>c</mi></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mo form='prefix'>cos</mo></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mo form='prefix'>sin</mo></mtd></mtr><mtr><mtd columnalign='right'><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></mtd></mtr></mtable></math></formula>
 <foo>ccaaAbbBaa</foo><formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&beta;</mi><mi>A</mi><mtext>aaB</mtext><mspace width='4.pt'/><mrow><mi>&alpha;</mi><mi>C</mi></mrow><mi>D</mi></mrow></math></formula>
 <p noindent='true'><foo>AB</foo></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mtext>B</mtext><mspace width='4.pt'/><mi>C</mi><mi>D</mi></mrow></math></formula>
@@ -112,8 +112,8 @@ c)</p>
 <p noindent='true' spacebefore='8.53581pt'>text C</p>
 <p rend='center'>line one</p>
 <p rend='center'>this is the second line</p>
-<p>1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
-<p>1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.
 <font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
 <formula id-text='10' id='uid10' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mover accent='true'><mi>x</mi> <mo>&dot;</mo></mover></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>A</mi><mi>x</mi><mo>+</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>u</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>y</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>C</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='3'><mrow><mi>x</mi><mo>&Element;</mo><msup><mi>R</mi> <mi>n</mi> </msup></mrow></mtd></mtr></mtable></math></formula>
 <table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
@@ -279,7 +279,6 @@ Testing references <ref target='uid14'/> <ref target='uid1'/>
 <formula textype='xalignat*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mn>23</mn></mtd><mtd columnalign='left'><mn>34</mn></mtd></mtr><mtr><mtd columnalign='right'><mn>56</mn></mtd><mtd columnalign='left'><mn>78</mn></mtd></mtr></mtable></math></formula>
 <formula id-text='5' id='uid19' textype='xxalignat' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mn>23</mn></mtd><mtd columnalign='left'><mn>34</mn></mtd></mtr><mtr><mtd columnalign='right'><mn>56</mn></mtd><mtd columnalign='left'><mn>78</mn></mtd></mtr></mtable></math></formula>
 <formula textype='xxalignat*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mn>23</mn></mtd><mtd columnalign='left'><mn>34</mn></mtd></mtr><mtr><mtd columnalign='right'><mn>56</mn></mtd><mtd columnalign='left'><mn>78</mn></mtd></mtr></mtable></math></formula>
-<p noindent='true'>
-ok</p>
+<p noindent='true'>ok</p>
 <p noindent='true'>AT_DOC_END</p></div0>
 </ramain>

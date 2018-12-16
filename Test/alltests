@@ -75,12 +75,12 @@ run_tralics hello
 run_tralics hello1
 run_tralics hello2.tex -config=hello.tcf -oe8
 run_tralics hello3
-run_tralics testb
+run_tralics testb -shell-escape
 run_tralics_with_err txtc "There was one error." -nozerowidthelt
 run_tralics txtd
 run_tralics torture -oe1 -oldphi
 run_tralics tormath
-run_tralics tormath1
+run_tralics tormath1 -notrivial_math
 run_tralics tormath2 -oe1
 run_tralics tormath3 -oe1 -oldphi
 run_tralics amsldoc
@@ -96,11 +96,11 @@ run_tralics testpack
 run_tralics testpackii  -param bibtex_fields -year  -param bibtex_extensions -phdthesis
 run_tralics bo
 run_tralics testhtml
-run_tralics testclass  -defaultclass=article 
+run_tralics testclass  -defaultclass=article
 run_tralics_with_err testkeyval "There were 32 errors." 
 run_tralics xii
 run_tralics_with_param comp_pi 100
-run_tralics_with_err teststr "There were 10 errors." 
+run_tralics_with_err teststr "There were 64 errors." 
 run_tralics_with_err testerr "Following images not defined: gee." "-year=2008"
 run_tralics beauvilams2
 run_tralics testbe
@@ -129,14 +129,20 @@ run_tralics exemple2011
 mv exemple.xml exemple2011.xml
 run_tralics exemple2013
 mv exemple.xml exemple2013.xml
+run_tralics exemple2015
+mv exemple.xml exemple2015.xml 
 run_tralics testm1 -oe8
 mv testm1.xml testm1a.xml
 run_tralics testm1 -nomathml -oe8
 mv testm1.xml testm1b.xml
 run_tralics testm1 -dualmath -oe8
 mv testm1.xml testm1c.xml
+run_tralics xtp
 run_tralics_with_err booktabs "There were 71 errors." 
 run_tralics manip
+run_tralics tl3 -l3
+run_tralics_with_err tl3err "There were 63 errors." 
+run_tralics_with_err omitcite "There were 3 errors." 
 
 echo 
 echo Comparing results with models
@@ -191,6 +197,10 @@ compare_file testot2.xml
 compare_file testmathfont.xml 
 compare_file booktabs.xml 
 compare_file manip.xml 
+compare_file xtp.xml 
+compare_file tl3.xml 
+compare_file tl3err.xml 
+compare_file omitcite.xml 
 
 echo done
 

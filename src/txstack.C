@@ -13,7 +13,7 @@
 #include <string.h>
 #include "tralics.h"
 const char* txstack_rcsid=
-  "$Id: txstack.C,v 2.55 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txstack.C,v 2.60 2015/11/18 17:58:11 grimm Exp $";
 
 namespace stack_ns {
   String mode_to_string(mode x);
@@ -85,6 +85,12 @@ Xmlp Stack::find_parent (Xmlp x)
     if(enames[i]-> is_child (x)) return enames[i];
   }
   return 0;
+}
+
+
+AttList& Parser::last_att_list()
+{
+  return the_stack.get_top_id().get_att();
 }
 
 // Add A=B as attribute list to last_xid.
@@ -257,14 +263,10 @@ void Stack::add_nl()
 // This adds a NL to the end of the element
 void Xml::add_nl()
 {
-  if(last_is_string()) {
-    Buffer& aux = the_main->SH.shbuf(); // write directly in the buffer.
-    last_to_SH();
-    int k = aux.length();
-    if(k>0 &&aux[k-1]=='\n') 
-      return;
-  }
+  if(tree.size()>0 && tree.back() == the_main->the_stack->newline_xml)
+    return;
   tree.push_back(the_main->the_stack->newline_xml);
+
 }
 
 // Returns the slot of the first non-empty frame
@@ -393,13 +395,13 @@ Xmlp Stack::temporary()
 
 // We assume that document is numbered 1. This simplifies  the mechanism
 // for adding attributes to the document.
-// Called after all math elements arte created
+// Called after all math elements are created
 void Stack::init_all(string a)
 {
   cur_mode = mode_v;
   cur_lid = Istring("uid1");
   Xmlp V = new Xml(Istring(a),0);
-  V->push_back(0); // Make a hole for the coloe pool
+  V->push_back(0); // Make a hole for the color pool
   V->change_id(1);
   ipush(the_names[cst_document], V);
   newline_xml = new Xml(Istring("\n"));
@@ -480,7 +482,7 @@ void Stack::pop(Istring a)
     err_ns::local_buf << bf_reset
 		      <<  "Error in pop; stack holds " << Table.back().frame
 		      << "; trying to pop " << a;
-    err_ns::signal_error("",1);
+    the_parser.signal_error();
     return;
   }
   cur_mode = Table.back().md;
@@ -489,7 +491,7 @@ void Stack::pop(Istring a)
   if(Table.empty()) { 
     err_ns::local_buf << bf_reset
 		      <<  "Error in pop; stack empty; trying to pop " << a;
-    err_ns::signal_error("",1);
+    the_parser.signal_error();
     Istring S = the_names[cst_document];
     ipush(S, new Xml(S,0)); // stack should never be empty
   }
@@ -801,19 +803,29 @@ inline Istring get_cur_label()
   return Istring(the_parser.eqtb_string_table[0].get_val());
 }
 
+void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext)
+{
+  AttList& AL = get_att_list(xid.value);
+  AL.push_back(the_names[np_id], id);
+  AL.push_back(the_names[np_idtext], idtext);
+}
+
 
 // mark current element as target for a label.
-void Stack::add_new_anchor()
+Istring Stack::add_new_anchor()
 {
-  set_cur_id(the_main->SH.next_label_id());
-  add_att_to_last(the_names[np_id], get_cur_id());
-  add_att_to_last(the_names[np_idtext], get_cur_label());
+  Istring id = the_main->SH.next_label_id();
+  set_cur_id(id);
+  create_new_anchor(last_xid,id, get_cur_label());
+  return id;
 }
-void Stack::add_new_anchor_spec()
+
+Istring Stack::add_new_anchor_spec()
 {
-  set_cur_id(the_main->SH.next_top_label_id());
-  add_att_to_last(the_names[np_id], get_cur_id());
-  add_att_to_last(the_names[np_idtext], get_cur_label());
+  Istring id = the_main->SH.next_top_label_id();
+  set_cur_id(id);
+  create_new_anchor(last_xid,id, get_cur_label());
+  return id;
 }
 
 bool Xml::tail_is_anchor() const
@@ -822,12 +834,17 @@ bool Xml::tail_is_anchor() const
 }
 
 // Add an anchor if needed.
-void Stack::add_anchor(const string& s)
+Istring Stack::add_anchor(const string& s, bool spec)
 {
-  Xmlp X = top_stack();
-  if(X->tail_is_anchor()) return;
-  add_newid0(np_anchor);
-  set_cur_id(the_main->SH.next_label_id());
-  add_att_to_last(the_names[np_id], get_cur_id());
-  add_att_to_last(the_names[np_idtext], Istring(s));
+  if(!spec && (top_stack()->tail_is_anchor()))
+    return get_cur_id();
+  Istring id = the_main->SH.next_label_id();
+  set_cur_id(id);
+  if(!spec) { 
+    add_newid0(np_anchor);
+    create_new_anchor(last_xid,id, Istring(s));
+  } else {
+    create_new_anchor(cur_xid(),id, Istring(s));
+  }
+  return id;
 }

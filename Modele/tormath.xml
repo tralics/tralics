@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/07/15-->
-<ramain creator='Tralics version 2.15.3'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/11/20-->
+<ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <texmath textype='display' type='display'>x6</texmath>
 <div0 id-text='1' id='cid1'><head>simple math</head>
@@ -75,12 +75,11 @@ and <texmath textype='inline' type='inline'>0\ne \infty </texmath></p>
 </div0>
 <div0 id-text='5' id='cid5'><head>Other</head>
 <texmath id-text='1' id='uid1' textype='equation' type='display'>
-\begin{aligned}
-x^2+y^2&amp;=1 &amp; 1 &amp;=X^2+Y^2\\
+\begin{aligned}x^2+y^2&amp;=1 &amp; 1 &amp;=X^2+Y^2\\
 x &amp;=0.01&amp; 0.001&amp;=X
 \end{aligned} 
 </texmath>
-<texmath id-text='5' id='uid2' textype='multline' type='display'>
+<texmath id-text='2' id='uid2' textype='multline' type='display'>
 \sin =\cos \\
 \multicolumn{a}{b}{c}\\
 \multicolumn{1}{r}{\cos }\\
@@ -104,8 +103,7 @@ x &amp;=0.01&amp; 0.001&amp;=X
 \end{split}
 </texmath>
 <texmath id-text='5' id='uid5' textype='equation' type='display'>
-\begin{aligned}
-(a+b)^4 &amp;= (a+b)^ 2 (a+b)^2 \\
+\begin{aligned}(a+b)^4 &amp;= (a+b)^ 2 (a+b)^2 \\
 &amp;= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
 &amp;= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
 \end{aligned}
@@ -119,7 +117,7 @@ x &amp; \ll &amp; y_{1} + \cdots + y_{n} \\
 </texmath>
 <texmath id-text='5' id='uid7' textype='eqnarray' type='display'>
 x &amp; = &amp;17y \\
-y &amp; &gt; &amp; a + b + c+d+e+f+g+h+i+j+ \nonumber \\
+y &amp; &gt; &amp; a + b + c+d+e+f+g+h+i+j+ \\
 &amp; &amp; k+l+m+n+o+p
 </texmath>
 <texmath textype='display' type='display'>EQ1</texmath>
@@ -448,7 +446,7 @@ x^{y^z} = {x^y}^z
 
 <texmath textype='inline' type='inline'>a\text{b=1} c</texmath></p>
 <p>oooooooooooooo
-<texmath textype='inline' type='inline'>a\myhbox{b=1} c</texmath>
+<texmath textype='inline' type='inline'>a\hbox{b=1} c</texmath>
 <texmath textype='inline' type='inline'>a\text{b=1} c</texmath>
 <texmath textype='inline' type='inline'>a\mbox{b=1} c</texmath>
 <texmath textype='inline' type='inline'>a\hbox{b=1} c</texmath></p>
@@ -509,7 +507,6 @@ Testing references <ref target='uid14'/> <ref target='uid1'/>
 <texmath textype='xalignat*' type='display'>23&amp;34\\56&amp;78</texmath>
 <texmath id-text='5' id='uid19' textype='xxalignat' type='display'>23&amp;34\\56&amp;78</texmath>
 <texmath textype='xxalignat*' type='display'>23&amp;34\\56&amp;78</texmath>
-<p noindent='true'>
-ok</p>
+<p noindent='true'>ok</p>
 <p noindent='true'>AT_DOC_END</p></div0>
 </ramain>

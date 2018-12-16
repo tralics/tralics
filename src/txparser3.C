@@ -13,11 +13,12 @@
 
 #include "tralics.h"
 const char* txparser3_rcsid=
-  "$Id: txparser3.C,v 2.15 2015/07/27 16:15:40 grimm Exp $";
+  "$Id: txparser3.C,v 2.25 2015/11/10 17:32:46 grimm Exp $";
 
 
 namespace parser_ns {
   String to_string(boundary_type v);
+  String save_string_name(int);
 }
 
 namespace {
@@ -48,6 +49,22 @@ String to_string (save_type v)
   }
 }
 
+
+String gbl_or_assign (bool gbl, bool re)
+{
+  if(gbl) return "globally changing ";
+  if(re) return  "reassigning ";
+  else return "changing ";
+}
+
+String parser_ns::save_string_name (int n)
+{
+  if(n==0) return "current label";
+  if(n==1) return "current counter";
+  return "unknown";
+}
+			
+
 SaveScannerStatus::SaveScannerStatus(scan_stat c) 
 {
   code = the_parser.get_scanner_status();
@@ -72,15 +89,23 @@ SaveLongState::~SaveLongState()
 }
 
 
+SaveErrTok::~SaveErrTok()
+{ 
+  the_parser.err_tok = val;
+}
+
+SaveErrTok::SaveErrTok(Token t) 
+{
+  val = the_parser.err_tok;
+  the_parser.err_tok = t;
+}
+
 Parser::Parser() :
   unexpected_seen_hi(false),  force_eof(false), 
   no_new_file(false), chapter_has_star(false),
   begin_env_line(0), 
-  ra_year(1789), after_assignment_token(0), 
+  ra_year(1789), 
   default_language_num(0), cur_file_pos(0), cur_env_name("document"),
-  //  input_buffer("main input buffer"),
-  //  mac_buffer("mac buffer"),
-  //  group_buffer("group_buffer"), unprocessed_xml("unprocessed xml"),
   verb_saved_char(0),input_line_pos(0), the_xmlA(0), the_xmlB(0)
 {
   sectionning_offset=section_code;
@@ -88,19 +113,18 @@ Parser::Parser() :
   cur_level = level_one;
   calc_loaded = false;
   cur_in_chan = main_in_chan;
-  long_state = ls_bad;
+  long_state = ls_long;
   scanner_status = ss_normal;
   list_files_p = false;
-  eqtb_int_table[count_reg_offset+10].set_val(20); // counter
-  eqtb_int_table[count_reg_offset+11].set_val(12); // dimen
-  eqtb_int_table[count_reg_offset+12].set_val(10); 
-  eqtb_int_table[count_reg_offset+13].set_val(10); 
-  eqtb_int_table[count_reg_offset+14].set_val(10); 
-  eqtb_int_table[count_reg_offset+15].set_val(10); 
-  eqtb_int_table[count_reg_offset+16].set_val(0); // newread 
-  eqtb_int_table[count_reg_offset+17].set_val(0); // newwrite 
-  eqtb_int_table[count_reg_offset+18].set_val(10); 
-  eqtb_int_table[count_reg_offset+19].set_val(10); 
+  allocation_table[newcount_code] = 20;
+  allocation_table[newdimen_code] = 10;
+  allocation_table[newlength_code] = 10;
+  allocation_table[newmuskip_code] = 10;
+  allocation_table[newbox_code] = 10;
+  allocation_table[newtoks_code] = 10;
+  allocation_table[newread_code] = 0;
+  allocation_table[newwrite_code] = 0;
+  allocation_table[newlanguage_code] = 10;
   cur_font.pack();
   cur_font.set_old_from_packed();
 }
@@ -139,19 +163,21 @@ String parser_ns::to_string(boundary_type v)
   }
 }
 
+// Implements \currentgrouptype.
+// (see online doc for the meaning of the numbers).
 int Parser::cur_group_type()
 {
   boundary_type V = first_boundary();
   switch(V) {
+  case bt_impossible: return 0;
   case bt_brace: return 1;
-  case bt_cell: return 19;
-  case bt_local: return 20;
+  case bt_math: return 9;
   case bt_semisimple: return 14;
   case bt_esemisimple: return 17;
   case bt_env: return 18;
+  case bt_cell: return 19;
+  case bt_local: return 20;
   case bt_tpa: return 21;
-  case bt_math: return 9;
-  case bt_impossible: return 0;
   default: return 17;
   }
 }
@@ -211,18 +237,15 @@ void Parser::eq_define (int a, CmdChr bc, bool gbl)
 void Parser::mac_define(Token a, Macro* b, bool gbl,rd_flag redef,symcodes what)
 {
   if(ok_to_define(a,redef)) {
-    subtypes B = mac_table.new_macro(b);
+    CmdChr nv = CmdChr(what,mac_table.new_macro(b));
     if(tracing_assigns()) {
-      String action = gbl ? "globally " :  "";
-      the_log << lg_startbrace << action << "changing " <<  a <<"=" ;
-      token_show(hash_table.eqtb[a.eqtb_loc()].get_cmdchr());
-    }
-    eq_define(a.eqtb_loc(),CmdChr(what,B),gbl);
-    if(tracing_assigns()) {
+      the_log << lg_startbrace << gbl_or_assign(gbl, false) <<  a << "=" ;
+      token_for_show(hash_table.eqtb[a.eqtb_loc()].get_cmdchr());
       the_log << "}\n{into " << a << "=";
-      token_show(hash_table.eqtb[a.eqtb_loc()].get_cmdchr());
+      token_for_show(nv);
       the_log << lg_endbrace; 
     }
+    eq_define(a.eqtb_loc(),nv,gbl);
   } else delete b;     
 }
 
@@ -250,6 +273,8 @@ bool Parser::ok_to_define(Token a, rd_flag redef)
   return true;
 }
 
+
+
 // Define for an integer quantity. Like eq_define without reference counts.
 void Parser::word_define (int a, int c, bool gbl)
 {
@@ -257,10 +282,8 @@ void Parser::word_define (int a, int c, bool gbl)
   bool reassign = !gbl && W.get_val()==c;
   if(tracing_assigns()) {
     CmdChr tmp(assign_int_cmd, subtypes(a));
-    String action = gbl ? "globally changing" : 
-      reassign ? "reassigning" : "changing";
-    the_log << lg_startbrace << action << " \\" <<  tmp.name() <<"=" << 
-      W.get_val();
+    the_log << lg_startbrace << gbl_or_assign(gbl,reassign) << "\\"
+	    <<  tmp.name() << "=" << W.get_val();
     if(!reassign) the_log << " into \\" << tmp.name() << "=" << c;
     the_log << lg_endbrace; 
   }
@@ -279,10 +302,10 @@ void Parser::string_define (int a, const string& c, bool gbl)
   EqtbString& W = eqtb_string_table[a];
   bool reassign = !gbl && W.get_val()==c;
   if(tracing_assigns()) {
-    String action = gbl ? "globally changing" : 
-      reassign ? "reassigning" : "changing";
-    the_log << lg_startbrace << action << " string" <<  a <<"='" << W.get_val() << "'";
-    if(!reassign) the_log << " into '"  << c << "'";
+    the_log << lg_startbrace << gbl_or_assign(gbl,reassign) <<  parser_ns::save_string_name(a)
+	    << "=" << W.get_val();
+    if(!reassign) the_log << " into " <<  parser_ns::save_string_name(a)
+	    << "="  << c;
     the_log << lg_endbrace; 
   }
   if(gbl)
@@ -302,10 +325,8 @@ void Parser::dim_define (int a, ScaledInt c, bool gbl)
   bool reassign = !gbl && W.get_val()==c;
   if(tracing_assigns()) {
     CmdChr tmp(assign_dimen_cmd, subtypes(a));
-    String action = gbl ? "globally changing" : 
-      reassign ? "reassigning" : "changing";
-    the_log << lg_startbrace << action << " \\" <<  tmp.name() <<"=" << 
-      W.get_val();
+    the_log << lg_startbrace <<  gbl_or_assign(gbl,reassign)
+	    << "\\" <<  tmp.name() << "=" << W.get_val();
     if(!reassign) the_log << " into \\" << tmp.name() << "=" << c;
     the_log << lg_endbrace; 
   }
@@ -336,11 +357,15 @@ void Parser::glue_define (int a, Glue c, bool gbl)
   bool reassign = !gbl && W.get_val()==c;
   if(tracing_assigns()) {
     CmdChr tmp(assign_glue_cmd, subtypes(a));
-    String action = gbl ? "globally changing" : 
-      reassign ? "reassigning" : "changing";
-    the_log << lg_startbrace << action << " \\" <<  tmp.name() <<"=" << 
-      W.get_val();
-    if(!reassign) the_log << " into \\" << tmp.name() << "=" << c;
+    Thbuf1 << bf_reset << W.get_val();
+    if(a>=thinmuskip_code) Thbuf1.pt_to_mu();
+    the_log << lg_startbrace <<  gbl_or_assign(gbl,reassign) << "\\" <<
+      tmp.name() << "=" << Thbuf1;
+    if(!reassign) {
+      Thbuf1 << bf_reset << c;
+      if(a>=thinmuskip_code) Thbuf1.pt_to_mu();
+      the_log << " into \\" << tmp.name() << "=" << Thbuf1;
+    }
     the_log << lg_endbrace; 
   }
   if(gbl)
@@ -358,11 +383,9 @@ void Parser::box_define (int a, Xmlp c, bool gbl)
 {
   EqtbBox& W = box_table[a];
   if(tracing_assigns()) {
-    String action = gbl ? "globally changing" :  "changing";
-    the_log << lg_startbrace << action << " \\box" <<  a <<"=" << 
+    the_log << lg_startbrace << gbl_or_assign(gbl,false) << "\\box" <<  a << "=" << 
       W.get_val();
-    the_log << " into \\box" << a << "=" << c;
-    the_log << lg_endbrace; 
+    the_log << " into \\box" << a << "=" << c << lg_endbrace; 
   }
   if(gbl)
     W.val_and_level(c, level_one);
@@ -380,16 +403,15 @@ void Parser::token_list_define(int p, TokenList& c, bool gbl)
   bool reassign = !gbl && W.get_val()==c;
   if(tracing_assigns()) {
     CmdChr tmp(assign_toks_cmd, subtypes(p));
-    String action = gbl ? "globally changing" : 
-      reassign ? "reassigning" : "changing";
-    the_log << lg_startbrace << action << " \\" <<  tmp.name() <<"=" << 
-      W.get_val();
+    the_log << lg_startbrace <<  gbl_or_assign(gbl,reassign) <<
+      "\\" <<  tmp.name() << "=" <<  W.get_val();
     if(!reassign) the_log << " into \\" << tmp.name() << "=" << c;
     the_log << lg_endbrace; 
   }
-  if(gbl) {
+  if(gbl)
     W.val_and_level(c,level_one);
-  } else {
+  else if(reassign) return;
+  else {
     if(W.must_push(cur_level))
       push_save_stack(new SaveAuxToken(W.get_level(), p, W.get_val()));
     W.val_and_level(c,cur_level);
@@ -418,7 +440,7 @@ void SaveAuxFont::unsave(bool trace, Parser& P)
   P.cur_font.set_color(color);
   P.cur_font.unpack();
   if(trace)
-    the_log <<lg_startbrace << "font restore " << P.cur_font << lg_endbrace;
+    the_log <<lg_startstack << "restoring current font " << P.cur_font << lg_endsentence;
   P.font_has_changed1();
   P.cur_font.update_old();
 }
@@ -427,16 +449,9 @@ void SaveAuxFont::unsave(bool trace, Parser& P)
 // If you say: \let\foo=1 \global\let\foo=2
 // the first \let saves the old value on the stack. The \global makes this
 // irrelevant.
-void SaveAux::restore_or_retain(bool rt) const
+void SaveAux::restore_or_retain(bool rt, String s) const
 {
-  the_log << lg_startstack << (rt? "restoring " : "retaining ");
-}
-
-// Utility function for unsave_trace.
-void SaveAux::unsave_trace_aux(String s, int pos, bool rt)
-{
-  restore_or_retain(rt);
-  the_log <<  s << " value at position "  << pos << lg_end;
+  the_log << lg_startstack << (rt? "restoring " : "retaining ") << s;
 }
 
 // This done when we restore an integer value 
@@ -444,24 +459,21 @@ void SaveAuxInt::unsave(bool trace, Parser& P)
 {
   bool rt = P.eqtb_int_table[pos].get_level()!= level_one;
   if(trace) {
-    restore_or_retain(rt);
+    restore_or_retain(rt,"\\");
     CmdChr tmp(assign_int_cmd, subtypes(pos));
-    the_log <<  "integer value";
-    if(rt) the_log << " " << val ;
-    the_log << " for \\" << tmp.name() << lg_end;
+    the_log << tmp.name() << "=" << val << lg_endsentence;
   }
   if(rt) P.eqtb_int_table[pos].val_and_level(val,level);
 }
 
-// This done when we restore an integer value 
+// This done when we restore a string value
+// 
 void SaveAuxString::unsave(bool trace, Parser& P)
 {
   bool rt = P.eqtb_string_table[pos].get_level()!= level_one;
   if(trace) {
-    restore_or_retain(rt);
-    the_log <<  "string value";
-    if(rt) the_log << " " << val ;
-    the_log << " " << pos << lg_end;
+    the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos)
+	    << "=" <<  val << lg_endsentence;
   }
   if(rt) P.eqtb_string_table[pos].val_and_level(val,level);
 }
@@ -472,14 +484,28 @@ void SaveAuxDim::unsave(bool trace, Parser& P)
 {
   bool rt = P.eqtb_dim_table[pos].get_level()!= level_one;
   if(trace) {
-    restore_or_retain(rt);
+    restore_or_retain(rt,"\\");
     CmdChr tmp(assign_dimen_cmd, subtypes(pos));
-    the_log << "dimension value";
-    if(rt) the_log << " " << val ;
-    the_log << " for \\" << tmp.name() << lg_end;
+    the_log << tmp.name() << "=" << val << lg_endsentence;
   }
   if(rt) P.eqtb_dim_table[pos].val_and_level(val,level);
 }
+
+
+// Restore glue
+void SaveAuxGlue::unsave(bool trace, Parser& P)
+{
+  bool rt = P.glue_table[pos].get_level() != level_one;
+  if(trace) {
+    Thbuf1 << bf_reset << val;
+    if(pos>=thinmuskip_code) Thbuf1.pt_to_mu();
+    restore_or_retain(rt,"\\");
+    CmdChr tmp(assign_glue_cmd, subtypes(pos));
+    the_log << tmp.name() << "=" << Thbuf1 << lg_endsentence;
+  }
+  if(rt) P.glue_table[pos].val_and_level(val,level);
+}
+
 
 // Restore command. We have to take care to free memory for user commands.
 void SaveAuxCmd::unsave(bool trace, Parser& P)
@@ -488,37 +514,21 @@ void SaveAuxCmd::unsave(bool trace, Parser& P)
   if(trace) {
     String S = lvl== level_one ? "retaining " 
       : (val.is_undef() ? "killing " : "restoring ");
-    the_log << lg_startstack << S << Token(cs+1+cs_token_flag);
-    if(lvl>level_one && val.is_user())
-      the_log << P.mac_table.get_macro(val.get_chr());
-    else if(val.is_undef()) {}
-    else if(lvl>level_one) {
+    the_log << lg_startstack << S << Token(cs+eqtb_offset);
+    if(lvl>level_one && !val.is_undef()) {
       the_log << "=";
-      P.print_cmd_chr(val);
+      if(val.is_user())  P.token_for_show(val);
+      else P.print_cmd_chr(val);
     }
-    the_log << lg_end;
+    the_log << lg_endsentence;
   }
-  if(lvl==level_one) {
+  if(lvl==level_one) { // retain old value, so kill val
     if(val.is_user()) P.mac_table.delete_macro_ref(val.get_chr());
   } else {
-    if(P.hash_table.eqtb[cs].is_user()) 
+    if(P.hash_table.eqtb[cs].is_user()) // kill cur and change
       P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].get_chr());
     P.hash_table.eqtb[cs].set(val,level);
   }
-}
-
-// Restore glue
-void SaveAuxGlue::unsave(bool trace, Parser& P)
-{
-  bool rt = P.glue_table[pos].get_level() != level_one;
-  if(trace) {
-    restore_or_retain(rt);
-    CmdChr tmp(assign_glue_cmd, subtypes(pos));
-    if(pos>=thinmuskip_code) the_log <<"mu";
-    the_log <<  "glue value for \\" << tmp.name() << lg_end;
-  }
-  if(rt) 
-    P.glue_table[pos].val_and_level(val,level);
 }
 
 // Restore token list. 
@@ -526,12 +536,11 @@ void SaveAuxToken::unsave(bool trace, Parser& P)
 {
   bool rt = P.toks_registers[pos].get_level() != level_one;
   if(trace) {
-    restore_or_retain(rt); 
+    restore_or_retain(rt,"\\"); 
     CmdChr tmp(assign_toks_cmd, subtypes(pos));
-    the_log << "token value for \\" << tmp.name() << lg_end;
+    the_log << tmp.name() << "=" << val << lg_endsentence;
   }
-  if(rt)
-    P.toks_registers[pos].val_and_level(val,level);
+  if(rt)P.toks_registers[pos].val_and_level(val,level);
 }
 
 // Restore box. Called in the case {\setbox0=\hbox{...}} 
@@ -539,10 +548,11 @@ void SaveAuxToken::unsave(bool trace, Parser& P)
 void SaveAuxBox::unsave(bool trace, Parser& P)
 {
   bool rt = P.box_table[pos].get_level() != level_one;
-  if(trace)
-    unsave_trace_aux("box", pos,rt);
-  if(rt)
-    P.box_table[pos].val_and_level(val,level);
+  if(trace) {
+    restore_or_retain(rt,"\\box");
+    the_log  << pos << lg_endsentence;
+  }
+  if(rt) P.box_table[pos].val_and_level(val,level);
 }
 
 // Restore box. Called in the case {\setbox0=\hbox{...}} 
@@ -584,16 +594,44 @@ void SaveAuxBoundary::unsave(bool trace, Parser& P)
   }
 }
 
+// returns the type of the first boundary
+// sets first_boundary_loc if a boundary has been seen.
+
+static int first_boundary_loc = 0;
 boundary_type Parser::first_boundary()
 {
   int n = the_save_stack.size();
   for(int i=n-1;i>=0;i--) {
     SaveAux*p = the_save_stack[i];    
     if(p->type!=st_boundary) continue;
+    first_boundary_loc = p-> get_line();
     return  static_cast<SaveAuxBoundary*>(p)->get_val();
   }
   return bt_impossible;
 }
+
+// case where a table preamble says  >{}c<{xx$yy} and we see &
+// here xy can be } or \endgroup
+bool Parser::stack_math_in_cell()
+{
+  int n = the_save_stack.size();
+  bool first = true;
+  for(int i=n-1;i>=0;i--) {
+    SaveAux*p = the_save_stack[i];    
+    if(p->type!=st_boundary) continue;
+    boundary_type cur =  static_cast<SaveAuxBoundary*>(p)->get_val();
+    if(cur == bt_brace || cur ==bt_semisimple) continue;
+    if(first) {
+      if(cur != bt_math) return false;
+      first = false;
+      continue;
+    }
+    if(cur==bt_cell) return true;
+    return false;
+  }
+  return false;
+}
+
 
 void Parser::dump_save_stack()
 {
@@ -610,44 +648,64 @@ void Parser::dump_save_stack()
 void SaveAuxBoundary::dump(int n)
 {
   String s= val== bt_semisimple ? "semi simple" : parser_ns::to_string(val);
-  the_log << "### "<< s << " group (level " << n << ") entered at line "<< line_no << "\n";
+  the_log << "### "<< s << " group (level " << n << ") entered at line "
+	  << line_no << "\n";
 }
 
 // The function called when we see a closing brace or \endgroup.
-void Parser::pop_level(bool allow_env, boundary_type v)
+// \end{foo} expands to \endfoo\endenv\endfoo, the last \endfoo is in cur_tok 
+// there should be an \endfoo token in cur_tok
+void Parser::pop_level(boundary_type v)
 {
   bool trace = tracing_stack();
   bool must_throw = false;
   boundary_type w = first_boundary();
+  if(w==bt_impossible) {
+    if(v== bt_brace) parse_error(err_tok,"Extra }");
+    else if(v== bt_semisimple) parse_error(err_tok,"Extra \\endgroup");
+    else parse_error(err_tok,"Empty save stack");
+    return;
+  }
+  if(v !=w) {
+    if(v==bt_brace && w ==bt_tpa)
+      must_throw = true;
+    else if(w==bt_env) {
+      if(v==bt_semisimple) v = bt_esemisimple;
+      err_ns::local_buf << bf_reset << "Extra "	<<  parser_ns::to_string(v)
+			<< " found in unclosed environment " << cur_env_name ;
+      signal_error(err_tok,"extra brace");
+      return;
+    } else {
+      if(w==bt_semisimple) w = bt_esemisimple;
+      if(v==bt_semisimple) v = bt_esemisimple;
+      wrong_pop(err_tok,parser_ns::to_string(v),parser_ns::to_string(w));
+    }
+  }
+  if(v==bt_env && cur_tok.is_valid()){
+    string foo = cur_tok.tok_to_str();
+    if(foo != "\\end" + cur_env_name) {
+      err_ns::local_buf  << bf_reset << "Environment '" << cur_env_name <<
+	"' started at line " << first_boundary_loc << " ended by " << cur_tok ; 
+      signal_error(err_tok,"bad end env");
+    }
+    // this is the wrong env, we nevertheless pop
+  }
   for(;;) {
     if(the_save_stack.empty()) {
-      parse_error("Extra }");
+      parse_error(err_tok,"Internal error: empty save stack");
       return;
     }
     SaveAux* tmp = the_save_stack.back();
-    if(!allow_env &&tmp->type==st_env) {
-      if(v==bt_semisimple) v = bt_esemisimple;
-      Thbuf1 << bf_reset << "Extra " <<  parser_ns::to_string(v) <<
-	" found in unclosed env";
-      parse_error(Thbuf1.c_str(),"extra brace");
-      return;
-    }
-    the_save_stack.pop_back();
     bool ok = tmp->type==st_boundary;
-    if(ok) {
-      if(v==bt_brace && w ==bt_tpa)
-	must_throw = true;
-      else if(v != w)
-	wrong_pop(parser_ns::to_string(v),parser_ns::to_string(w));
-    }
-    if(ok && must_throw) cur_level++; 
+    the_save_stack.pop_back();
     tmp->unsave(trace,*this);
     my_stats.one_more_down();
     delete tmp;
     if(ok) {
-      if(must_throw) {
+      if(must_throw) { 
+	cur_level++; 
 	throw EndOfData(); 
-      } else  return;
+      } else return;
     }
   }
 }
@@ -655,7 +713,7 @@ void Parser::pop_level(bool allow_env, boundary_type v)
 // Signals error for unclosed environments and braces
 void Parser::pop_all_levels()
 {
-  pop_level(true,bt_env); // pop the end document
+  cur_tok.kill();pop_level(bt_env); // pop the end document
   bool started = false;
   string ename = "";
   Buffer& B = err_ns::local_buf; B.reset();
@@ -685,7 +743,7 @@ void Parser::pop_all_levels()
     delete tmp;
   }
   if(started) {
-    err_ns::signal_error("",1);
+    signal_error(Token(),"");
     B<< ".\n";
     out_warning(B, mt_none); // insert a warning in the XML if desired
   }
@@ -740,20 +798,7 @@ SaveAuxEnv* Parser::is_env_on_stack(const string& s)
   }
   return 0;
 }
-// Returns the number of env named S
-int Parser::nb_env_on_stack(const string& s)
-{
-  int n = the_save_stack.size();
-  int k = 0;
-  for(int i=n-1;i>=0;i--) {
-    SaveAux*p = the_save_stack[i];    
-    if(p->type!=st_env) continue;
-    SaveAuxEnv* q = static_cast<SaveAuxEnv*>(p);
-    if(q->get_name()==s) 
-      ++k;
-  }
-  return k;
-}
+
 
 // Returns the number of environments
 int Parser::nb_env_on_stack()
@@ -916,7 +961,7 @@ void Parser::tipa_normal()
   back_input(cur_tok);
 }
 
-
+// Unicode characters not in the tables above.
 // 25a 25d 25e 
 // 262 267 269 26b 
 // 270 276 277 27a 27c 27f

@@ -1,0 +1,77 @@
+%% -*- coding: utf-8    -*- 
+
+\documentclass{minimal}
+\begin{document}
+
+This file is an example of \verb=\omitcite=, 
+it explains usage and some errors. 
+In the case of the Raweb: there are three 
+bibliography files Year, Foot, and Refer.  
+The Refer file has implicitly a \verb=\nocite{*}= .
+The Year file is automatically generated with a \verb=\nocite{*}=.
+You can cite via \verb=\yearcite{foo}=, \verb=\footcite{foo}= or 
+\verb=\refercite{foo}=. This allows the same name to appear in the
+three files; for simplicity there is a unique command to omit a
+citation; it will omit it everywhere
+
+We first define a bibliography file,  :
+
+\begin{filecontents+}{om.bib}
+ @book {refA , author = "Aname,  Afirst",  title="Atitle"}
+ @book {refB , author = "Bname,  Bfirst",	title="Btitle"}
+ @book {refc , author = "Cname, Cfirst",	title="Ctitle"}
+ @book {refD , author = "Dname, Dfirst", title="Dtitle"}
+ @book {refE , author = "Ename, Efirst", title="Etitle"}
+ @book {refF , author = "Fname, Ffirst", title="Ftitle"}
+\end{filecontents+}
+
+We use this file as the bibliography file and import everything
+\bibliography{om}
+\nocite{*}
+We cite the first three items
+\cite{refa}\cite{refB} \cite{refC}
+We try: \cite{reafA}; this fails because the case is irrelevant as long as
+the same key is used in the text file
+
+The argument of \verb=\omitcite=  must expand to a character string, 
+example: \omitcite{José Grimm}
+or \def\prefix#1{ref#1}  \omitcite{\prefix D} \omitcite{\prefix e}
+but not \omitcite{\xmlelt{This cannot work}{val}}
+
+The case is important:  reference refE is not ignored
+This gives a conflict  \cite{reff}\omitcite{refF}
+the reference is omitted and cannot be solved
+
+The transcript file should contain
+\begin{verbatim}
+\omitcite(1) = José Grimm}
+{\omitcite(2) = refD}
+{\omitcite(3) = refe}
+{\omitcite(4) = }
+{\omitcite(5) = refF}
+\end{verbatim}
+
+There is an error with message
+  unexpected element This cannot work.
+that yields an empty name.
+
+After that there is 
+\begin{verbatim}
+Bib stats: seen 5 entries.
+bib: Omitting refD
+bib: Omitting refF
+\end{verbatim}
+The first line says: there are 5 citations to solve. It is followed by 
+the list of entries of the bibliograph to be explicitly ignored.
+
+
+There is also
+\begin{verbatim}
+Error signaled while handling entry cite:reafA
+undefined reference.
+Error signaled while handling entry cite:reff
+undefined reference.
+\end{verbatim}
+
+\end{document}
+

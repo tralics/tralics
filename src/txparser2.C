@@ -16,9 +16,9 @@
 #include "txparser2.h"
 
 const char* txparser2_rcsid=
-  "$Id: txparser2.C,v 2.38 2013/07/22 09:28:21 grimm Exp $";
+  "$Id: txparser2.C,v 2.53 2015/11/18 17:58:11 grimm Exp $";
 
-bool xkv_patch = false;
+bool xkv_patch = false; // for pass_option_to class; where is this set ????
 
 namespace {
   Buffer local_buf,  mac_buf, buf_for_del;
@@ -30,13 +30,8 @@ namespace {
   TokenList xkv_action;
 }
 
-extern int is_in_skipped;
-
 namespace xkv_ns {
   void find_aux(int c);
-  void to_string(TokenList& s, String s1,String s2,String msg,Buffer&B);
-  Token to_string(TokenList& s, String s1,String s2,String msg);
-  string to_string(TokenList& s,String msg);
   string find_key_of(const TokenList&L,int type);
   void merge(TokenList&W, TokenList& L, int type);
   void remove(TokenList&W, TokenList& L, int type);
@@ -46,7 +41,7 @@ namespace xkv_ns {
 
 namespace token_ns {
   void lower_case(TokenList& L);
-  bool find_in(TokenList&A, TokenList&B, Token C, bool);
+  bool find_in(TokenList&A, TokenList&B, Token C, bool, int&);
   void int_to_roman(Buffer&b, int n);
 }
 
@@ -56,39 +51,31 @@ namespace classes_ns {
   void unknown_optionX(TokenList&cur_keyval, TokenList&action);
 }
 
-void Parser::new_macro(TokenList& L,Token name, bool gbl)
-{
-  Macro* X = new Macro(L);
-  mac_define(name,X, gbl,rd_always,user_cmd);
-}
-void Parser::new_macro(TokenList& L,Token name)
-{
-  Macro* X = new Macro(L);
-  mac_define(name,X, false,rd_always,user_cmd);
-}
-
-void Parser::new_macro(const string& s,Token name)
-{
-  mac_buf << bf_reset << s;
-  TokenList L = mac_buf.str_toks11(false);
-  Macro* X = new Macro(L);
-  mac_define(name,X, false,rd_always,user_cmd);
-}
-
-
 // Optimised version, because \zap@space 12 3 {44} 5 6\@empty
 // is wrong after all
-void Parser::zapspace()
+void Parser::E_zapspace()
 {
   TokenList result;
-  Token t2 = hash_table.empty_token;
   for(;;) {
-    TokenList L = read_until_long(hash_table.space_token);
+    TokenList L = read_until_nopar(hash_table.space_token);
     result.splice(result.end(),L);
-    if(get_token()) break; else back_input(); // error ?
-    if(cur_tok==t2) break;
+    if(get_token()) break;
+    if(cur_tok==hash_table.empty_token) break;
+    back_input();
   }
   back_input(result);
+}
+
+// \fancyinternal
+void Parser::T_xfancy()
+{
+  Istring s = nT_arg_nopar();
+  the_stack.push1(np_header);
+  the_stack.add_att_to_last(the_names[np_type],s);
+  the_stack.set_arg_mode();
+  T_arg();
+  flush_buffer();
+  the_stack.pop(np_header);
 }
 
 // Stuff for fancyheadings
@@ -106,16 +93,6 @@ void Parser::T_fancy(String s, TokenList& L)
   back_input(hash_table.locate("fancyinternal"));
 }
 
-void Parser::T_xfancy()
-{
-  Istring s = nT_next_arg();
-  the_stack.push1(np_header);
-  the_stack.add_att_to_last(the_names[np_type],s);
-  the_stack.set_arg_mode();
-  T_next_arg();
-  flush_buffer();
-  the_stack.pop(np_header);
-}
 
 void Parser::T_fancy()
 {
@@ -126,8 +103,8 @@ void Parser::T_fancy()
   else if(c==fancy_hf_code) hf=3;
   if(hf==0) {
     TokenList L1;
-    bool o = next_optarg_long(L1);
-    TokenList L2 = mac_arg();
+    bool o = read_optarg_nopar(L1);
+    TokenList L2 = read_arg();
     if(!o) L1 = L2;
     if(c==fancy_lhead_code) {
       T_fancy("elh",L1); T_fancy("olh",L2); return;
@@ -144,8 +121,8 @@ void Parser::T_fancy()
     }
   }
   TokenList L1; 
-  next_optarg_long(L1);
-  TokenList L = mac_arg();
+  read_optarg_nopar(L1);
+  TokenList L = read_arg();
   for(;;) {
     bool use_e = false, use_o = false;
     bool use_h = false, use_f = false;
@@ -209,7 +186,8 @@ bool CmdChr::is_ok_for_xspace() const
   return false;
 }
 
-void Parser::T_xspace()
+// expansion of \xspace
+void Parser::E_xspace()
 {
   if(get_token()) return;
   back_input();
@@ -222,35 +200,34 @@ void Parser::T_xspace()
 }
 
 // arg2 ignored, in arg1 \ is special
-string Parser::xmllatex()
+string Parser::T_xmllatex()
 {
-  TokenList L = mac_arg();
-  ignore_next_arg();
+  TokenList L = read_arg();
+  ignore_arg();
   mac_buffer.reset();
   while(!L.empty()) {
     Token x = L.front();
     L.pop_front();
-    if(x.get_val()<cs_token_flag+bad_cs) mac_buffer.push_back(x.char_val());
-    else if(x.get_val()>=cs_offset) { 
-      int xx = x.hash_loc();
-      mac_buffer.push_back(hash_table[xx]);
-    }
+    if(x.active_or_single()) mac_buffer.push_back(x.char_val());
+    else if(x.is_in_hash())
+      mac_buffer.push_back(hash_table[x.hash_loc()]);
+    // else token is bad or null
   }
   if(tracing_commands()) 
     the_log << lg_startbrace  << "Rawxml: " << mac_buffer << lg_endbrace;
   return mac_buffer.to_string();
 }
 
-void Parser::find_in_config(int c)
+void Parser::E_get_config(int c)
 {
   Token T = cur_tok;
-  TokenList L1 = mac_arg();
-  string resource = xkv_ns::to_string(L1,"Problem scanning resource name");
+  TokenList L1 = read_arg();
+  string resource = list_to_string_c(L1,"Problem scanning resource name");
   string key;
   string res;
   if(c) {
-    TokenList L2 = mac_arg();
-    key = xkv_ns::to_string(L2,"Problem scanning key");
+    TokenList L2 = read_arg();
+    key = list_to_string_c(L2,"Problem scanning key");
     res =config_ns::find_one_key(resource,key);
   } else res = config_ns::find_keys(resource);
   mac_buf << bf_reset << res;
@@ -267,10 +244,10 @@ void Parser::find_in_config(int c)
 void Parser::T_usefont()
 {
   flush_buffer();
-  cur_font.ltfont(sT_next_arg(),fontencoding_code);
-  cur_font.ltfont(sT_next_arg(),fontfamily_code);
-  cur_font.ltfont(sT_next_arg(),fontseries_code);
-  cur_font.ltfont(sT_next_arg(),fontshape_code);
+  cur_font.ltfont(sT_arg_nopar(),fontencoding_code);
+  cur_font.ltfont(sT_arg_nopar(),fontfamily_code);
+  cur_font.ltfont(sT_arg_nopar(),fontseries_code);
+  cur_font.ltfont(sT_arg_nopar(),fontshape_code);
   font_has_changed();    // \selectfont
   remove_initial_space_and_back_input(); // \ignorespaces
 }
@@ -279,13 +256,14 @@ void Parser::T_unimplemented_font(subtypes c)
 {
   Token T = cur_tok;
   if(c==DeclareMathSizes_code) remove_initial_star();
+  int n = 0;
   switch(c) {
-  case TextSymbolUnavailable_code://1 arg
+  case TextSymbolUnavailable_code:
   case DeclareMathVersion_code:
   case DeclareMathDelimiter_code:
-    ignore_next_arg();
+    n = 1;
     break;
-  case ProvideTextCommand_code: //2 args
+  case ProvideTextCommand_code:
   case DeclareTextCommand_code:
   case DeclareTextCommandDefault_code: 
   case ProvideTextCommandDefault_code:
@@ -296,58 +274,44 @@ void Parser::T_unimplemented_font(subtypes c)
   case DeclareSizeFunction_code:
   case DeclareSymbolFontAlphabet_code:
   case DeclareTextFontCommand_code:
-    ignore_next_arg();
-    ignore_next_arg();
+    n = 2;
     break;
-  case DeclareTextAccent_code : //3 args
+  case DeclareTextAccent_code:
   case UseTextAccent_code:
   case DeclareTextSymbol_code:
   case DeclareFontFamily_code:
   case DeclareFontEncoding_code:
   case DeclareOldFontCommand_code:
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
+    n = 3;
     break;
-  case DeclareTextCompositeCommand_code : //4 args
+  case DeclareTextCompositeCommand_code: 
   case DeclareTextComposite_code:
   case DeclareFontSubstitution_code:
   case DeclareMathAccent_code:
   case DeclareMathSymbol_code:
   case DeclareMathSizes_code:
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
+    n = 4;
     break;
-  case DeclarePreloadSizes_code : //5 args
+  case DeclarePreloadSizes_code:
   case DeclareErrorFont_code:
   case DeclareSymbolFont_code:
   case DeclareMathAlphabet_code:
   case DeclareMathRadical_code:
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
+    n = 5;
     break;
-  case DeclareFontShape_code: //6 args
+  case DeclareFontShape_code:
   case DeclareFixedFont_code:
   case SetSymbolFont_code:
   case SetMathAlphabet_code:
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
-    ignore_next_arg();
+    n = 6;
     break;
   default: break;
-  }  
-  parse_error("Unimplemented NFSS command ",T,"","unimplemented");
+  }
+  while (n>0) { ignore_arg(); n--; }
+  parse_error(T,"Unimplemented NFSS command ",T,"","unimplemented");
   if(c==ProvideTextCommand_code || c==DeclareTextCommand_code) {
     back_input(hash_table.frozen_protection);
-    get_new_command(rd_always,false);
+    M_newcommand(rd_always);
   }
 }
 
@@ -356,32 +320,35 @@ void Parser::T_unimplemented_font(subtypes c)
 
 void Parser::T_raisebox()
 {
-  Istring A = nT_next_arg();
-  Istring B = nT_next_optarg();
-  Istring C = nT_next_optarg();
+  Istring A = nT_arg_nopar();
+  Istring B = nT_optarg_nopar();
+  Istring C = nT_optarg_nopar();
   leave_v_mode();
   the_stack.push1(np_raisebox);
   AttList& cur = last_att_list();
   cur.push_back(np_val,A);
   cur.push_back(np_height,B);
   cur.push_back(np_depth,C);
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(np_raisebox);
 }
 
+// Implements \in@ , evaluates \in@false or \in@true
 void Parser::T_isin()
 {
-  TokenList A = mac_arg();
-  TokenList B = mac_arg();
-  bool found = token_ns::is_in(A,B,false);
+  TokenList A = read_arg();
+  TokenList B = read_arg();
+  int n; // unused
+  bool found = token_ns::is_in(A,B,false,n);
   back_input(found ? hash_table.intrue_token :hash_table.infalse_token);
 }
 
-void Parser::expand_car(bool first)
+// \@car \@cdr
+void Parser::E_car(bool first)
 {
   Token T = cur_tok;
-  TokenList L = mac_arg();
-  TokenList M =  read_until_long(hash_table.nil_token);
+  TokenList L = read_arg();
+  TokenList M =  read_until_nopar(hash_table.nil_token);
   if(tracing_macros()) {
     the_log << lg_start << T << "#1#2\\@nil ->#" << (first ? "1" : "2")<<lg_end;
     the_log << "#1 <-" << L << lg_end;
@@ -422,7 +389,7 @@ void Parser::T_line(subtypes c)
   the_stack.push1(np_lineC);
   AttList& cur = last_att_list();
   cur.push_back(np_rend,k);
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(np_lineC);
 }
 
@@ -433,14 +400,13 @@ void Parser::T_typein()
   Token cmd = hash_table.relax_token;
   TokenList res;
   bool has_opt = false;
-  if(next_optarg_long(res)) { // 
+  if(read_optarg_nopar(res)) {
     Token Q = token_ns::get_unique(res);
     back_input(Q);
-    get_r_token(false);
-    cmd = cur_tok;
+    cmd = get_r_token();
     has_opt = true;
   }
-  main_ns::log_and_tty << tex_write(negative_out_slot); // \typeout next arg
+  main_ns::log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
   int cc = eqtb_int_table[endlinechar_code].get_val();
   eqtb_int_table[endlinechar_code].set_val(-1);
   TokenList L = read_from_file(0,false);
@@ -456,13 +422,12 @@ Token Parser::read_for_variable()
   TokenList W; 
   W.push_back(Token(other_t_offset,':'));
   W.push_back(hash_table.equals_token);
-  get_r_token();
-  Token cmd =  cur_tok;
+  Token cmd = get_r_token();
   read_delimited(W); // this should read an empty list
   return cmd;
 }
 
-// expand the first element of L, line in \expandafter{\foo...}
+// expand the first element of L, like in \expandafter{\foo...}
 // the result is pushed back in L 
 void Parser::expand_first(TokenList& L)
 {
@@ -470,13 +435,14 @@ void Parser::expand_first(TokenList& L)
   back_input(L);
   expand_when_ok(true);
   back_input(hash_table.OB_token);
-  TokenList res = mac_arg(); 
+  TokenList res = read_arg(); 
   L.swap(res);
 }
 
 
 // Implementation of some loops
-void Parser::xkv_for(subtypes c)
+// should be expand rather than translate
+void Parser::T_xkv_for(subtypes c)
 {
   Token comma = hash_table.comma_token;
   Token nil = hash_table.nil_token;
@@ -487,7 +453,7 @@ void Parser::xkv_for(subtypes c)
   case for_code: { // case \@for \A:= list \do code
     Token cmd =read_for_variable();
     TokenList L = read_until(hash_table.do_token);
-    TokenList function = mac_arg();
+    TokenList function = read_arg();
     expand_first(L);
     if(L.empty()) break;
     brace_me(function);
@@ -500,13 +466,12 @@ void Parser::xkv_for(subtypes c)
     res.splice(res.end(),function);
     break;
   }
-  case forloop_code: {
+  case forloop_code: { // \@forloop
     TokenList entry=read_until(comma);
     TokenList next_entry = read_until(comma);
     TokenList remainder = read_until(doubleat);
-    get_r_token();
-    Token cmd = cur_tok;
-    TokenList function = mac_arg();
+    Token cmd = get_r_token();
+    TokenList function = read_arg();
     if(token_ns::has_a_single_token(entry,nil)) break;
     new_macro(entry,cmd);
     TokenList aux = function;
@@ -526,11 +491,11 @@ void Parser::xkv_for(subtypes c)
     res.splice(res.end(),function);
     break;
   }
-  case tfor_code: {
+  case tfor_code: { // \@tfor
     Token cmd = read_for_variable();
     back_input(hash_table.space_token);
     TokenList L = read_until(hash_table.do_token);
-    TokenList function = mac_arg();
+    TokenList function = read_arg();
     if(token_ns::has_a_single_token(L,hash_table.space_token)) break;
     brace_me(function);
     res.push_back(hash_table.tforloop_token);
@@ -542,7 +507,7 @@ void Parser::xkv_for(subtypes c)
     res.splice(res.end(),function);
     break;
   }
-  case xkv_breaktfor_code: {
+  case xkv_breaktfor_code: { // \tralics@for@break
     // should we insert \fi here
     TokenList W;
     W.push_back(nil);W.push_back(comma);
@@ -550,19 +515,18 @@ void Parser::xkv_for(subtypes c)
     res.push_back(hash_table.fi_token);
     break;
   }
-  case breaktfor_code:
+  case breaktfor_code: // \@break@tfor
     read_until(hash_table.doubleat_token);
-    ignore_next_arg(); 
-    ignore_next_arg();
+    ignore_arg();  // should this be long ?
+    ignore_arg();
     res.push_back(hash_table.fi_token);
     break;
-  case iforloop_code:
+  case iforloop_code: // \@iforloop  \@tforloop
   case tforloop_code:  {
-    TokenList entry=c==iforloop_code ? read_until(comma) : mac_arg();; 
+    TokenList entry=c==iforloop_code ? read_until(comma) : read_arg();
     TokenList remainder = read_until(doubleat);
-    get_r_token();
-    Token cmd = cur_tok;
-    TokenList function = mac_arg();
+    Token cmd = get_r_token();
+    TokenList function = read_arg();
     if(token_ns::has_a_single_token(entry,nil)) break;
     new_macro(entry,cmd);
     TokenList aux = function;
@@ -577,14 +541,14 @@ void Parser::xkv_for(subtypes c)
     res.splice(res.end(),function);
     break;
   }
-  case xkv_for_n_code: 
+  case xkv_for_n_code: // \tralics@for@n and variants
   case xkv_for_o_code: 
   case xkv_for_en_code: 
   case xkv_for_eo_code: {
-    TokenList L=mac_arg();  // the list to operate on
+    TokenList L=read_arg();  // the list to operate on
     if(c==xkv_for_o_code || c==xkv_for_eo_code) expand_first(L);
-    TokenList cmd =mac_arg(); 
-    TokenList function= mac_arg();
+    TokenList cmd =read_arg(); 
+    TokenList function= read_arg();
     if(L.empty() && (c==xkv_for_n_code || c==xkv_for_o_code)) break;
     brace_me(function);
     res.push_front(hash_table.xkv_for_i_token);
@@ -596,10 +560,9 @@ void Parser::xkv_for(subtypes c)
     res.push_back(comma);
     break;
   } 
-  case xkv_for_i_code: {
-    get_r_token(false); // the command
-    Token cmd=cur_tok;
-    TokenList function=mac_arg(); // the code
+  case xkv_for_i_code: {  // \tralics@for@i
+    Token cmd = get_r_token(); // the command
+    TokenList function=read_arg(); // the code
     TokenList entry=read_until(comma);
     if(token_ns::has_a_single_token(entry,nil)) break;
     new_macro(entry,cmd);
@@ -622,38 +585,35 @@ void Parser::xkv_for(subtypes c)
 
 // Implementation of \@cons
 // Read a token T and a list L, calls the function below
-void Parser::T_cons()
+void Parser::M_cons()
 {
-  get_r_token();
-  Token cmd = cur_tok;
-  TokenList L= mac_arg();
+  Token cmd = get_r_token();
+  TokenList L= read_arg();
   if(tracing_commands()) 
     the_log << lg_startbrace << "\\@cons " << cmd << " + " << L << lg_endbrace;
-  T_cons(cmd,L);
+  M_cons(cmd,L);
 }
 
 // \@cons\T{L} is \edef\T{\T\@elt L}, with \let\@elt\relax in a group
 // Question: latex has \xdef, is a \edef useful ? 
-void Parser::T_cons(Token cmd, TokenList& L)
+void Parser::M_cons(Token cmd, TokenList& L)
 {
   Token E = hash_table.elt_token;
   L.push_front(E);
   L.push_front(cmd);
   push_level(bt_brace);
-  eval_let(E,hash_table.relax_token,false);
-  Token nfe = name_for_error;
-  name_for_error = cmd;
-  scan_toks_edef(L);
-  pop_level(false,bt_brace);
+  M_let_fast(E,hash_table.relax_token,false);
+  SaveErrTok sv (cmd);
+  read_toks_edef(L);
+  pop_level(bt_brace);
   new_macro(L,cmd,true);
-  name_for_error = nfe;
 }
 
 // Implements \@testopt \A B as: if bracket, then \A, else \A[{B}]
 void Parser::T_testopt()
 {
-  TokenList L= mac_arg();
-  TokenList R = mac_arg();
+  TokenList L= read_arg();
+  TokenList R = read_arg();
   skip_initial_space();
   if(cur_tok.is_valid()) back_input();
   if(!cur_tok.is_open_bracket()) {
@@ -668,14 +628,13 @@ void Parser::T_testopt()
 
 // Implements \tralics@addtolist@n{sep}{\cmd}{val}
 // and \tralics@addtolist@o{sep}{\cmd}{val}
-// In the second case, the first tken in val is expanded; 
+// In the second case, the first token in val is expanded; 
 // This puts val to the end of \cmd, with sep unless \cmd is empty
 void Parser::T_addtomacro(bool exp)
 {
-  TokenList D = mac_arg(); // The separator 
-  get_r_token(true);
-  Token T = cur_tok;  // the macro to define
-  TokenList L = mac_arg(); // 
+  TokenList D = read_arg(); // The separator 
+  Token T = get_r_token(true);   // the macro to define
+  TokenList L = read_arg(); // 
   back_input(hash_table.CB_token);
   back_input(L);
   if(exp) expand_when_ok(true);
@@ -692,16 +651,15 @@ void Parser::T_addtomacro(bool exp)
 // result is \foo{barval}{geeval}
 void Parser::expand_twoargs()
 {
-  TokenList L = mac_arg();
-  TokenList M = mac_arg();
-  TokenList N = mac_arg();
+  TokenList L = read_arg();
+  TokenList M = read_arg();
+  TokenList N = read_arg();
   brace_me(M);
   brace_me(N);
   M.splice(M.end(),N);
-  scan_toks_edef(M);
+  read_toks_edef(M);
   back_input(M);
   back_input(L);
-  
 }
 
 
@@ -731,7 +689,7 @@ void Parser::T_xkeyval(subtypes c)
   case gsave_keys_code: 
     {
       xkv_save_keys_aux(false,0);
-      TokenList A = mac_arg();
+      TokenList A = read_arg();
       xkv_merge(c==gsave_keys_code,0,A,true);
       return;
     }
@@ -739,21 +697,21 @@ void Parser::T_xkeyval(subtypes c)
   case gdelsave_keys_code: 
     {
       bool bad = xkv_save_keys_aux(false,0);
-      TokenList A = mac_arg();
+      TokenList A = read_arg();
       if(!bad) xkv_merge(c==gdelsave_keys_code,0,A,false);
       return;
     }
   case unsave_keys_code: 
   case gunsave_keys_code: 
     if(xkv_save_keys_aux(true,0)) return;
-    eval_let(cur_tok,hash_table.frozen_undef_token,c==gunsave_keys_code);
+    M_let_fast(cur_tok,hash_table.frozen_undef_token,c==gunsave_keys_code);
     return;
   case preset_keys_code: 
   case gpreset_keys_code: 
     {
       xkv_save_keys_aux(false,1);
-      TokenList A = mac_arg();
-      TokenList B = mac_arg();
+      TokenList A = read_arg();
+      TokenList B = read_arg();
       xkv_merge(c==gpreset_keys_code,1,A,true);
       xkv_merge(c==gpreset_keys_code,2,B,true);
       return;
@@ -762,8 +720,8 @@ void Parser::T_xkeyval(subtypes c)
   case gdelpreset_keys_code: 
     {
       bool bad = xkv_save_keys_aux(true,1);
-      TokenList A = mac_arg();
-      TokenList B = mac_arg();
+      TokenList A = read_arg();
+      TokenList B = read_arg();
       if(bad) return;
       xkv_merge(c==gdelpreset_keys_code,1,A,false);
       xkv_merge(c==gdelpreset_keys_code,2,B,false);
@@ -773,10 +731,10 @@ void Parser::T_xkeyval(subtypes c)
   case gunpreset_keys_code: 
     {
       if(xkv_save_keys_aux(true,1)) return;
-      eval_let(cur_tok,hash_table.frozen_undef_token,c==gunpreset_keys_code);
+      M_let_fast(cur_tok,hash_table.frozen_undef_token,c==gunpreset_keys_code);
       xkv_ns::find_aux(2);
       cur_tok = hash_table.locate(local_buf);
-      eval_let(cur_tok,hash_table.frozen_undef_token,c==gunpreset_keys_code);
+      M_let_fast(cur_tok,hash_table.frozen_undef_token,c==gunpreset_keys_code);
       return;
     }
   case setrmkeys_code: setkeys(false); return;
@@ -788,35 +746,6 @@ void Parser::T_xkeyval(subtypes c)
   } 
 }
 
-// Converts the token list X into a string, adding s1 and s2
-// May signal an error, used bad instead 
-void xkv_ns::to_string(TokenList& x, String s1,String s2,String msg,Buffer&B)
-{
-  B << bf_reset << s1;
-  if(!the_parser.csname_aux(x,false,B)) {
-    the_parser.parse_error(msg,x);
-    B << bf_reset << s1 << "bad";
-  }
-  B << s2;
-}
-
-string xkv_ns::to_string(TokenList& x,String msg)
-{
-  Buffer&B = local_buf;
-  B.reset();
-  if(!the_parser.csname_aux(x,false,B)) {
-    the_parser.parse_error(msg,x);
-    B << bf_reset << "bad";
-  }
-  return B.to_string();
-}
-
-// Same as above, converts the string into a token 
-Token xkv_ns::to_string(TokenList& x, String s1,String s2,String msg)
-{
-  to_string(x,s1,s2,msg,local_buf);
-  return the_parser.hash_table.locate(local_buf);
-}
 
 // Case \define@key{foo}{bar}{ETC}
 // or   \define@key{foo}{bar}[gee]{ETC}
@@ -829,15 +758,16 @@ void Parser::T_define_key(bool xkv)
   Buffer& B = local_buf;
   if(xkv) xkv_fetch_prefix_family();
   else {
-    TokenList fam = mac_arg();
-    xkv_ns::to_string(fam, "KV@","","Problem in define@key",B);
+    TokenList fam = read_arg();
+    list_to_string_c(fam, "KV@","","Problem in define@key",B);
     B <<'@';
     xkv_header= B.to_string();
   } 
-  TokenList key = mac_arg();
-  Token T = xkv_ns::to_string(key, xkv_header.c_str(),"","bad key name");
+  TokenList key = read_arg();
+  list_to_string_c(key, xkv_header.c_str(),"","bad key name",B);
+  Token T = hash_table.locate(B);
   TokenList opt;
-  if(next_optarg(opt)) internal_define_key_default(T,opt);
+  if(read_optarg(opt)) internal_define_key_default(T,opt);
   internal_define_key(T);
 }
 
@@ -848,15 +778,15 @@ void Parser::define_cmd_key(subtypes c)
   Buffer&B = local_buf;
   xkv_fetch_prefix_family(); // read prefix and family
   TokenList L;
-  if(next_optarg_long(L)) {
-    xkv_ns::to_string(L,"","","Problem scanning macro prefix",B);
+  if(read_optarg_nopar(L)) {
+    list_to_string_c(L,"","","Problem scanning macro prefix",B);
   } else B << bf_reset << "cmd" << xkv_header;
   string mp = B.to_string();
-  TokenList keytoks = mac_arg();
+  TokenList keytoks = read_arg();
   TokenList dft;
-  bool has_dft = next_optarg(dft); // \par ok here
+  bool has_dft = read_optarg(dft); // \par ok here
   // construct the key or key list
-  string Keys = xkv_ns::to_string(keytoks,"problem scanning key");
+  string Keys = list_to_string_c(keytoks,"problem scanning key");
   Splitter S(Keys);
   for(;;) {
     if(S.at_end()) return;
@@ -872,7 +802,7 @@ void Parser::define_cmd_key(subtypes c)
     }
     TokenList L;
     if(c==define_cmdkey_code)  {// case of cmdkey
-      TokenList u = mac_arg();
+      TokenList u = read_arg();
       L.splice(L.end(),u);
     }
     L.push_front(hash_table.CB_token);
@@ -898,22 +828,23 @@ void Parser::define_choice_key()
   bool if_star = remove_initial_plus(false);
   bool if_plus = remove_initial_plus(true);
   xkv_fetch_prefix_family(); 
-  TokenList keytoks = mac_arg();
-  Token T = xkv_ns::to_string(keytoks, xkv_header.c_str(),"","bad key name");
+  TokenList keytoks = read_arg();
+  list_to_string_c(keytoks, xkv_header.c_str(),"","bad key name", local_buf);
+  Token T = hash_table.locate(local_buf);
   TokenList storage_bin;
-  next_optarg_long(storage_bin); 
-  TokenList allowed = mac_arg();
+  read_optarg_nopar(storage_bin); 
+  TokenList allowed = read_arg();
   TokenList opt;
-  if(next_optarg(opt)) internal_define_key_default(T,opt);
+  if(read_optarg(opt)) internal_define_key_default(T,opt);
   TokenList F;
   if(if_plus) {
-    TokenList x = mac_arg();
-    TokenList y = mac_arg();
+    TokenList x = read_arg();
+    TokenList y = read_arg();
     brace_me(x);
     brace_me(y);
     F.splice(F.end(),x); F.splice(F.end(),y);
   } else {
-    F = mac_arg();
+    F = read_arg();
     brace_me(F);
   }
   TokenList body;
@@ -942,12 +873,12 @@ void Parser::internal_choice_key()
   bool if_star = remove_initial_plus(false);
   bool if_plus = remove_initial_plus(true);
   TokenList bin;
-  next_optarg_long(bin);
-  TokenList input = mac_arg();
-  TokenList allowed = mac_arg();
-  TokenList ok_code = mac_arg();
+  read_optarg_nopar(bin);
+  TokenList input = read_arg();
+  TokenList allowed = read_arg();
+  TokenList ok_code = read_arg();
   TokenList bad_code;
-  if(if_plus) bad_code= mac_arg();
+  if(if_plus) bad_code= read_arg();
   if(if_star) {
     token_ns::lower_case(input);
     token_ns::lower_case(allowed);
@@ -963,10 +894,11 @@ void Parser::internal_choice_key()
     new_macro(u,B1);
   } 
   TokenList xinput=input;
-  bool found = token_ns::find_in(xinput,allowed,hash_table.comma_token,false);
+  int k;
+  bool found = token_ns::find_in(xinput,allowed,hash_table.comma_token,false,k);
   if(B2!=relax) {
-    local_buf << bf_reset << is_in_skipped;
-    TokenList u = local_buf.str_toks(false);
+    local_buf << bf_reset << k;
+    TokenList u = local_buf.str_toks(nlt_cr);  // Should be irrelevant ?
     new_macro(u,B2);
   }
   if(found)
@@ -974,7 +906,7 @@ void Parser::internal_choice_key()
   else if(if_plus) // invalid, but catched
     back_input(bad_code);
   else {
-    parse_error("XKV: value is not allowed");
+    parse_error(err_tok,"XKV: value is not allowed");
     main_ns::log_and_tty << " " << input << lg_end;
   }
 }
@@ -988,15 +920,15 @@ void Parser::define_bool_key(subtypes c)
   if(c!=define_boolkey_code) if_plus = false;
   xkv_fetch_prefix_family(); // read prefix and family
   TokenList L;
-  if(next_optarg_long(L)) {
-    xkv_ns::to_string(L,"","","Problem scanning macro prefix",B);
+  if(read_optarg_nopar(L)) {
+    list_to_string_c(L,"","","Problem scanning macro prefix",B);
   } else B << bf_reset  << xkv_header;
   string mp = B.to_string();
-  TokenList keytoks = mac_arg();
+  TokenList keytoks = read_arg();
   TokenList dft;
-  bool has_dft = next_optarg_long(dft);
+  bool has_dft = read_optarg_nopar(dft);
   // construct the key or key list
-  string Keys = xkv_ns::to_string(keytoks,"Problem scanning key");
+  string Keys = list_to_string_c(keytoks,"Problem scanning key");
   Splitter S(Keys);
   for(;;) {
     if(S.at_end()) break;
@@ -1006,7 +938,7 @@ void Parser::define_bool_key(subtypes c)
     TokenList u = B.str_toks11(false);
     B << bf_reset << "if" << mp << Key;
     back_input(hash_table.locate(B));
-    newif();
+    M_newif();
     B << bf_reset << "true,false";
     TokenList v = B.str_toks11(false);
     B << bf_reset <<xkv_header << Key;
@@ -1019,14 +951,14 @@ void Parser::define_bool_key(subtypes c)
     u.push_back(hash_table.xkv_resa_token);
     u.push_back(hash_table.endcsname_token);
     if(c==define_boolkey_code) {
-      TokenList add1 = mac_arg();
+      TokenList add1 = read_arg();
       u.splice(u.end(),add1);
     }
     brace_me(u);
     TokenList L;
     L.splice(L.end(),u);
     if(if_plus) {
-      TokenList add2 = mac_arg();
+      TokenList add2 = read_arg();
       brace_me(add2);
       L.splice(L.end(),add2);
     }
@@ -1058,11 +990,11 @@ void Parser::key_ifundefined()
 {
   Buffer& B = local_buf;
   xkv_fetch_prefix();
-  TokenList fams = mac_arg();
+  TokenList fams = read_arg();
   bool undefined = true;
-  TokenList key = mac_arg();
-  string Key = xkv_ns::to_string(key,"problem scanning key");
-  string Fams = xkv_ns::to_string(fams,"Problem with the families");
+  TokenList key = read_arg();
+  string Key = list_to_string_c(key,"problem scanning key");
+  string Fams = list_to_string_c(fams,"Problem with the families");
   string fam="";
   Splitter S (Fams);
   for(;;) {
@@ -1084,8 +1016,8 @@ void Parser::disable_keys()
 {
   Buffer&B = local_buf;
   xkv_fetch_prefix_family(); // read prefix and family
-  TokenList keys = mac_arg();
-  string Keys = xkv_ns::to_string(keys,"problem scanning keys");
+  TokenList keys = read_arg();
+  string Keys = list_to_string_c(keys,"problem scanning keys");
   Splitter S (Keys);
   for(;;) {
     if(S.at_end()) break;
@@ -1101,14 +1033,14 @@ void Parser::disable_keys()
 	new_macro(L,hash_table.last_tok);
       }
       B << bf_reset << "Key `" << Key << "' has been disabled";
-      TokenList L = B.str_toks(false);
+      TokenList L = B.str_toks(nlt_space); // should be irrelevant
       brace_me(L);
       L.push_front(hash_table.xkv_warn_token);
       Macro* X = new Macro(L);
       X->set_nbargs(1);
       X->set_type(dt_normal);
       mac_define(T,X,false,rd_always,user_cmd);
-    } else parse_error("Undefined key cannot be disabled: ", Key,"");
+    } else parse_error(err_tok,"Undefined key cannot be disabled: ", Key,"");
   }
 }
 
@@ -1126,7 +1058,7 @@ bool Parser::xkv_save_keys_aux(bool c, int c2)
   if(c && ret) {
     B << bf_reset << "No " << (c2 ? "presets" : " save keys") 
       << " defined for `" << xkv_header << "'";
-    parse_error(B.to_string());
+    parse_error(err_tok,B.to_string());
     return true;
   }
   cur_tok = hash_table.last_tok;
@@ -1170,7 +1102,7 @@ string xkv_ns::find_key_of(const TokenList&L,int type)
     }
   }
   token_ns::remove_ext_braces(x);
-  return xkv_ns::to_string(x,"Invalid key name");
+  return the_parser.list_to_string_c(x,"Invalid key name");
 }
 
 
@@ -1227,7 +1159,7 @@ void xkv_ns::remove(TokenList&W, TokenList& L, int type)
 {
   Buffer&B = buf_for_del;
   Buffer&aux = local_buf;
-  to_string(L,",",",","Invalid key name list",B);
+  the_parser.list_to_string_c(L,",",",","Invalid key name list",B);
   Token comma = the_parser.hash_table.comma_token;
   TokenList tmp;
   TokenList key;
@@ -1312,23 +1244,25 @@ bool Parser::remove_initial_plus (bool plus)
 void Parser::xkv_fetch_prefix()
 {
   TokenList L;
-  if(!next_optarg(L)) {
+  if(!read_optarg(L)) {
     xkv_prefix = "KV@";
     return;
   }
   Buffer&B = local_buf;
   B.reset();
   token_ns::remove_first_last_space(L);
-  bool t = csname_aux(L,false,B);
-  if(!t) {
-    parse_error("Bad command ",cur_tok," in XKV prefix (more errors may follow)","bad kv prefix");
+  bool t = list_to_string(L,B);
+  if(t) {
+    parse_error(err_tok,"Bad command ",cur_tok," in XKV prefix (more errors may follow)",
+		"bad kv prefix");
     B.reset();
   }
   if(B.is_equal("XKV")) {
-    parse_error("xkeyval: `XKV' prefix is not allowed");
+    parse_error(err_tok,"xkeyval: `XKV' prefix is not allowed");
     B.reset();
   }
-  if(!B.empty()) B.push_back('@');
+  if(!B.empty())
+    B.push_back('@');
   xkv_prefix = B.to_string();
 }
 
@@ -1341,8 +1275,9 @@ void Parser::xkv_makehd(TokenList& L)
   B.reset();
   B << xkv_prefix;
   int k = B.size();
-  if(!csname_aux(L,false,B)) {
-    parse_error("Bad command ",cur_tok," in XKV family (more errors may follow)","bad kv family");
+  if(list_to_string(L,B)) {
+    parse_error(err_tok,"Bad command ",cur_tok," in XKV family (more errors may follow)",
+		"bad kv family");
    B.set_last(k);
   }
   if(B.size() != k) B.push_back('@');
@@ -1360,7 +1295,7 @@ void xkv_ns::makehd(const string& fam)
 void Parser::xkv_fetch_prefix_family()
 {
   xkv_fetch_prefix();
-  TokenList M = mac_arg();
+  TokenList M = read_arg();
   xkv_makehd(M);
 }
 
@@ -1371,7 +1306,7 @@ void token_ns::lower_case(TokenList& L)
   int offset = lc_code_offset;
   while (P != E) {
     Token a = *P;
-    if(a.get_val()<cs_token_flag+single_base) {
+    if(a.get_val() < single_offset) {
       int b = a.chr_val();
       int cx = the_parser.eqtb_int_table[b+offset].get_val();
       if(cx)
@@ -1392,13 +1327,14 @@ void Parser::xkv_declare_option()
   xkv_fetch_prefix();
   TokenList FL = XKV_parse_filename();
   xkv_makehd(FL);
-  TokenList key = mac_arg();
+  TokenList key = read_arg();
   TokenList xkey = key;
-  string Key = xkv_ns::to_string(xkey,"Invalid option");
+  string Key = list_to_string_c(xkey,"Invalid option");
   classes_ns::register_key(Key);
-  Token T = xkv_ns::to_string(key, xkv_header.c_str(),"","bad option name");
+  list_to_string_c(key, xkv_header.c_str(),"","bad option name",local_buf);
+  Token T= hash_table.locate(local_buf);
   TokenList opt;
-  next_optarg(opt);
+  read_optarg(opt);
   internal_define_key_default(T,opt);
   internal_define_key(T);
 }
@@ -1445,26 +1381,27 @@ void Parser::xkv_process_options()
 // Removes A from B, result will be in C
 void Parser::T_remove_element()
 {
-  TokenList A = mac_arg();
-  TokenList B = mac_arg();
+  TokenList A = read_arg();
+  TokenList B = read_arg();
   get_r_token(true);
   remove_element(A,B,cur_tok);
 }
 
-bool token_ns::find_in(TokenList&A, TokenList&B, Token t, bool sw)
+bool token_ns::find_in(TokenList&A, TokenList&B, Token t, bool sw,int&n)
 {
   A.push_back(t);
   B.push_back(t);
   A.push_front(t);
   B.push_front(t);
-  return token_ns::is_in(A,B,sw);
+  return token_ns::is_in(A,B,sw,n);
 }
 
 // We add commas around A and B, and must remove them later
 void Parser::remove_element(TokenList& A, TokenList& B, Token C)
 {
   Token t = hash_table.comma_token;
-  token_ns::find_in(A,B,t,true);
+  int n;
+  token_ns::find_in(A,B,t,true,n);
   B.pop_front();
   if(!B.empty()) B.pop_back();
   new_macro(B,C);
@@ -1476,8 +1413,8 @@ void Parser::remove_element(TokenList& A, TokenList& B, Token C)
 // Pushes tokens into \opt@foo.cls
 void Parser::xkv_pass_options(bool c) // true if a class
 {
-  TokenList opt = mac_arg();
-  string name = rT_next_arg(); 
+  TokenList opt = read_arg();
+  string name = sE_arg_nopar(); 
   name = "opt@" + name;
   name +=  (c ? ".cls" : ".sty");
   Token t = hash_table.CurrentOption_token;
@@ -1495,9 +1432,8 @@ void Parser::xkv_pass_options(bool c) // true if a class
 // Currently unused
 void Parser::xkv_checksanitize(bool c)
 {
-  TokenList B = mac_arg();
-  get_r_token(true);
-  Token A = cur_tok;
+  TokenList B = read_arg();
+  Token A = get_r_token(true);
   xkv_checksanitize(A,B,c);
 }
 
@@ -1513,13 +1449,12 @@ void Parser::selective_sanitize()
   Token T = cur_tok;
   int n = 10000;
   TokenList nb;
-  next_optarg_long(nb);
+  read_optarg_nopar(nb);
   if(!nb.empty())
     n = scan_int(nb,T);
-  TokenList chars = mac_arg();
+  TokenList chars = read_arg();
   token_ns::sanitize_one(chars);
-  get_r_token(true);
-  Token res = cur_tok;
+  Token res = get_r_token(true);
   if(chars.empty())  return;
   TokenList L = get_mac_value(res);
   token_ns::sanitize_one(L,chars,n);
@@ -1550,7 +1485,7 @@ XkvSetkeys::XkvSetkeys(Parser*P) : P(P)
 // This reads and manages the list of families
 void XkvSetkeys::fetch_fams()
 {
-  fams = P->mac_arg();
+  fams = P->read_arg();
   extract_keys(fams,Fams);
 }
 
@@ -1564,14 +1499,14 @@ void XkvSetkeys::special_fams()
 // Reads the optional list of keys that should not be set
 void XkvSetkeys::fetch_na()
 {
-  P->next_optarg_long(na); 
+  P->read_optarg_nopar(na); 
   extract_keys(na,Na);
 }
 
 void XkvSetkeys::fetch_keys(bool c)
 {
   if(!c) keyvals = P->get_mac_value(rm_token); // case of \setrmkeys
-  else keyvals = P->mac_arg();  
+  else keyvals = P->read_arg();  
   if(the_parser.tracing_commands())
     the_log << lg_start << "setkeys -> "  << keyvals << lg_end;
   extract_keys(keyvals,Keys);
@@ -1650,9 +1585,9 @@ void XkvSetkeys::run(bool c)
   no_err = P->remove_initial_plus(false);
   set_all = P->remove_initial_plus(true);
   P->xkv_fetch_prefix();
-  fams = P->mac_arg();
+  fams = P->read_arg();
   if(xkv_ns::is_Gin(fams)) {
-    TokenList L = the_parser.mac_arg();
+    TokenList L = the_parser.read_arg();
     L.push_back(comma_token);
     the_parser.new_macro(L,the_parser.hash_table.locate("Gin@keys"));
     return;
@@ -1696,7 +1631,7 @@ void XkvSetkeys::set_aux(TokenList& W,int idx)
     cur.set_initial(val);
     cur.extract();
     if(cur.key_empty()) {
-      if(!cur.val_empty()) P->parse_error("No key for a value");
+      if(!cur.val_empty()) P->parse_error(P->err_tok,"No key for a value");
       continue;
     }
     if(cur.ignore_this(Na)) continue; 
@@ -1836,25 +1771,25 @@ void XkvSetkeys::replace_pointers(TokenList& L)
     }
     if(!L.empty()) t = L.front();
     if(!t.is_a_left_brace()) {
-      P->parse_error("Invalid \\usevalue token","invalid usevalue");
+      P->parse_error(P->err_tok,"Invalid \\usevalue token","invalid usevalue");
       continue;
     }
     --n;
     if(n<0) {
-      P->parse_error("Replace pointer aborted, (infinite loop?)","key loop");
+      P->parse_error(P->err_tok,"Replace pointer aborted, (infinite loop?)","key loop");
       res.clear();
       break;
     }
     TokenList key = token_ns::fast_get_block(L);
     token_ns::remove_ext_braces(key);
-    string Key = xkv_ns::to_string(key, "Argument of \\savevalue");
+    string Key = P->list_to_string_c(key, "Argument of \\savevalue");
     find_pointer(Key);
     if(P->hash_table.is_defined(B)) {
       TokenList w = P->get_mac_value(P->hash_table.last_tok);
       L.splice(L.begin(),w);
     } else {
       B << bf_reset << "No value recorded for key `" << Key << "'; ignored";
-      P->parse_error(B.c_str(),"no val recorded");
+      P->parse_error(P->err_tok,B.c_str(),"no val recorded");
     }
   }
   L.swap(res);
@@ -1867,7 +1802,7 @@ void XkvSetkeys::run_default(const string &Key,Token mac,bool s)
   B << bf_reset << xkv_header << Key << "@default";
   if(!P->hash_table.is_defined(B)) {
     B << bf_reset << "No value specified for key `" << Key << "'";
-    P->parse_error(B.c_str());
+    P->parse_error(P->err_tok,B.c_str());
     return;
   }
   Token T = P->hash_table.locate(B);
@@ -1918,14 +1853,16 @@ void XkvSetkeys::check_action(XkvToken& cur)
   // This is the normal case
   if(no_err) new_unknown(cur_opt);
   else
-    P->parse_error("Undefined key: ",cur.get_name(),"undefined key");
+    P->parse_error(P->err_tok,"Undefined key: ",cur.get_name(),"undefined key");
 }
 void Parser::formatdate()
 {
   flush_buffer();
-  string s = sT_next_arg();
+  string s = sT_arg_nopar();
   FormatDate FP;
-  FP.interpret(s);
+  if (!FP.interpret(s,err_tok)) {
+    the_log << "Date to scan was " << s << "\n";
+  }
   Xmlp X= new Xml(Istring("date"), 0);
   the_stack.add_last(X);
   AttList&AL = X->get_id().get_att();
@@ -1950,11 +1887,11 @@ bool FormatDate::sort()
     if(field1>field2) swap(field1,field2);
   }
   if(field2>31) {
-    the_parser.parse_error("Date has two fields with value>31");
+    the_parser.parse_error(err_tok,"Date has two fields with value>31");
     return false;
   }
   if(field2<0) {
-      the_parser.parse_error("Date has two month fields");
+    the_parser.parse_error(err_tok,"Date has two month fields");
     return false;
   }
   return true;
@@ -1972,7 +1909,7 @@ bool FormatDate::scan_a_field(Buffer&B,int& res)
     B.advance();
     res = 10*res + (c-'0');
     if(res>9999) {
-      the_parser.parse_error("Too many digits in date field");
+      the_parser.parse_error(err_tok,"Too many digits in date field");
       return false;
     }
   }
@@ -2044,7 +1981,7 @@ bool FormatDate::scan_next(Buffer&B,int& res)
 {
   B.skip_sp_tab_nl();
   if(B.at_eol()) {
-    the_parser.parse_error("Missing fields in date");
+    the_parser.parse_error(err_tok,"Missing fields in date");
     return false;
   }
   uchar c = B.head();
@@ -2052,14 +1989,14 @@ bool FormatDate::scan_next(Buffer&B,int& res)
     B.advance();
     B.skip_sp_tab_nl();
     if(B.at_eol()) {
-      the_parser.parse_error("Missing fields in date");
+      the_parser.parse_error(err_tok,"Missing fields in date");
       return false;
     }
     c = B.head();
   } 
   if(is_digit(c)) return scan_a_field(B,res);
   if(!scan_a_month(B,res)) {
-    the_parser.parse_error("Expected digits or a month in letters");
+    the_parser.parse_error(err_tok,"Expected digits or a month in letters");
     return false;
   }
   return true;
@@ -2089,7 +2026,7 @@ bool FormatDate::parse_format(Buffer&B)
   }
   if(c1==c2 || c1==c3 || c2==c3)  ok = false;
   if(!ok) {
-    the_parser.parse_error("Illegal date format");
+    the_parser.parse_error(err_tok,"Illegal date format");
     return false;
   }
   if(c1>c2) {swap (c1,c2); swap(field1,field2); }
@@ -2101,13 +2038,13 @@ bool FormatDate::parse_format(Buffer&B)
   // now c1=m c2=d c3=y
   // hence field1=month, field2 = day field3 =year
   if(field1>12) {
-    the_parser.parse_error("Bad month field"); return false;
+    the_parser.parse_error(err_tok,"Bad month field"); return false;
   }
   if(field2>31 || field2<0) {
-    the_parser.parse_error("Bad day field"); return false;
+    the_parser.parse_error(err_tok,"Bad day field"); return false;
   }
   if(field3<0) {
-    the_parser.parse_error("Bad year field"); return false;
+    the_parser.parse_error(err_tok,"Bad year field"); return false;
   }
   return true;
 }
@@ -2125,26 +2062,29 @@ bool FormatDate::parse(Buffer&B)
     if(field1==field2) return true;
     if(field2>12) return true;
   }
-  the_parser.parse_error("Unable to distinguish between year day and month");
+  the_parser.parse_error(err_tok,"Unable to distinguish between year day and month");
   return false;
 }
 
 // fills year month day
-void FormatDate::interpret(const string& s)
+bool FormatDate::interpret(const string& s, Token T)
 {
+  err_tok = T;
   Buffer&B= local_buf;
   B.reset(); B.reset_ptr(); B<< s;
-  if(!parse(B)) { field1=1;  field2=1; field3=2008; }
+  bool res = parse(B);
+  if(!res) { field1=1;  field2=1; field3=2008; }
+  return res;
 }
 
 // \@dblarg\foo provides as optional argument of \foo the required one
 void Parser::dbl_arg()
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   skip_initial_space();
   if(cur_tok.is_valid()) back_input();
   if(!cur_tok.is_open_bracket()) {
-    TokenList A = mac_arg();
+    TokenList A = read_arg();
     brace_me(A);
     TokenList B = A;
     B.push_front(Token(other_t_offset,'['));
@@ -2156,35 +2096,31 @@ void Parser::dbl_arg()
 }
 
 // \numberwithin[\c]{foo}{bar}
-// evaluate: \@cons\cl@bar{{foo}}; i.e. T_cons(\cl@bar, {foo}).
+// evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
 // and \def\thefoo{\thebar.\c{foo}}
 void Parser::numberwithin()
 {
-  Token T = cur_tok;
   TokenList L;
-  next_optarg(L);
+  read_optarg(L);
   if(L.empty()) L.push_back(hash_table.arabic_token);
-  cur_tok = T;
-  TokenList foo_list = mac_arg();
+  TokenList foo_list = read_arg();
   TokenList A = foo_list;
-  TokenList bar_list = mac_arg();
+  TokenList bar_list = read_arg();
   Buffer&b = local_buf;
-  b.reset();
-  if(!csname_aux("c@","",foo_list,false,b)) {  bad_counter0(); return; }
-  if(!counter_check(b,false,T)) return;
+  if(csname_ctr(foo_list,b)) {  bad_counter0(); return; }
+  if(counter_check(b,false)) return;
   string fooname = b.c_str(2);
-  b.reset();
-  if(!csname_aux("c@","",bar_list,false,b)) { bad_counter0(); return; }
-  if(!counter_check(b,false,T)) return;
+  if(csname_ctr(bar_list,b)) { bad_counter0(); return; }
+  if(counter_check(b,false)) return;
   string barname = b.c_str(2);
-  b << bf_reset << "cl@" << barname;  // B is now thefoo
+  b << bf_reset << "cl@" << barname;
   Token clbar_token = hash_table.locate(b);
   brace_me(A);
   TokenList B = A;
-  T_cons(clbar_token,B);
-  b << bf_reset << "the" << barname;  // B is now thefoo
+  M_cons(clbar_token,B);
+  b << bf_reset << "the" << barname;
   Token thebar = hash_table.locate(b);
-  b << bf_reset << "the" << fooname;  // B is now thebar
+  b << bf_reset << "the" << fooname;
   Token thefoo = hash_table.locate(b);
   L.splice(L.end(),A);
   L.push_front(Token(other_t_offset,'.'));
@@ -2192,87 +2128,116 @@ void Parser::numberwithin()
   new_macro(L,thefoo,true);
 }
 
-void Parser::refstepcounter(const string&s,bool star )
+string Parser::make_label_inner(string name)
 {
-  Buffer&b = local_buf;
-  b.reset();
-  b.push_back(s);
-  TokenList L = b.str_toks11(true);
-  refstepcounter(L,star);
-  T_translate(L);
-}
-
-void Parser::refstepcounter()
-{
-  bool star = remove_initial_star();  
-  TokenList L = mac_arg();
-  refstepcounter(L,star);
-  back_input(L);
-}
-
-void Parser::refstepcounter(TokenList&L,bool star)
-{
-  brace_me(L);
-  TokenList L1 = L;
-  L.push_front(hash_table.stepcounter_token);
-  if(star) L1.push_front(Token(other_t_offset,'*'));
-  L1.push_front(hash_table.makelabel_token);
-  L.splice(L.end(),L1);
-  if(tracing_macros()) 
-    the_log << lg_start <<"\\refstepcounter-> " << L << lg_end;
-}
-
-// \edef\@currentlabel{\csname\p@#1\endcsname\csnane the#1\endcsname}
-void Parser::makelabel()
-{
-  Buffer&b = local_buf;
-  b.reset();
-  bool star = remove_initial_star();
-  TokenList L = mac_arg();
-  if(!csname_aux("","",L,false,b)) { bad_counter0(); return; }
-  string s =b.to_string();
   TokenList res;
-  b << bf_reset << "the" << s; 
+  Buffer& b = local_buf;
+  b << bf_reset << "the" << name; 
   res.push_back(hash_table.locate(b));
-  b << bf_reset << "p@" << s; 
-  if(hash_table.is_defined(b))
+  b << bf_reset << "p@" << name; 
+  if(hash_table.is_defined(b)) // ignore \p@foo if undefined
     res.push_front(hash_table.last_tok);
   b.reset();
-  if(!csname_aux("","",res,false,b)) { 
-    parse_error("Illegal tokens in \\makelabel");
-    return; 
+  if(list_to_string(res,b)) { // evaluate the label
+    parse_error(err_tok,"Illegal tokens in \\makelabel");
+    return ""; 
   }
-  if(tracing_commands()) 
-    the_log << lg_start <<"\\@currlabel<- " << b << lg_end;
-  string_define(0,b.to_string(),false);
+  return b.to_string();
+}
+
+// executes \stepcounter{foo}\makelabel*{foo}
+// the name of the counter is in local_buf abd L
+void Parser::refstepcounter_inner(TokenList&L,bool star)
+{
+  string name = local_buf.to_string();
+  brace_me(L);
+  L.push_front(hash_table.stepcounter_token);
+  T_translate(L);
+  string v = make_label_inner(name);
+  string_define(0,v,false);
   if(star) the_stack.add_new_anchor();
 }
 
-void Parser::ifdefinable() 
+// takes a string as argument and translates the thing
+void Parser::refstepcounter(String S, bool star)
 {
-  bool is_ok = true;
-  TokenList A = mac_arg();
-  TokenList B = mac_arg();
-  Token C = token_ns::get_unique(A);
-  if(C.is_null()) { parse_error("Wrong syntax in \\@ifdefinable"); return; }
-  if(C.not_a_cmd()) is_ok = false;
-  else if(C==hash_table.relax_token) is_ok =false;
-  else if(!hash_table.eqtb[C.eqtb_loc()].is_undef_or_relax()) is_ok = false;
-  else {
-     uint x = C.get_val();
-     if(x>cs_token_flag+null_cs) {
-       string s = hash_table[C.hash_loc()];
-       if(s[0]=='e' && s[1]=='n' && s[2]=='d') is_ok=false;
-     }
-  }
-  if(is_ok) back_input(B);
-  else parse_error("Undefinable command ",C,"","bad");
+  Buffer&b = local_buf;
+  b.reset();
+  b.push_back(S);
+  TokenList L = b.str_toks11(true);
+  refstepcounter(L,star);
+
 }
 
-// Interpret the optional argument of \enumerate. If it is
-// [(i)], then executes \def\@itemlabel{(\theenumiv)}
-// where \theenumiv is the last argument. 
-// redefines \def\theenumiv{\arabic{enumiv}}
+// user function: read an argument and back_input
+void Parser::refstepcounter()
+{
+  bool star = remove_initial_star();  
+  TokenList L = read_arg();
+  flush_buffer();
+  refstepcounter(L,star);
+}
+
+// Case where the nale of the label is in L
+void Parser::refstepcounter(TokenList&L,bool star)
+{
+  Buffer&b = local_buf;
+  b.reset();
+  TokenList L1 = L;
+  if(list_to_string(L1,b)) { bad_counter0(); return; }
+  refstepcounter_inner(L,star);
+}
+
+
+
+// If the argument is foo, executes \global\c@foo=0 with a test
+// remembers locally the name.
+void Parser::T_use_counter(const string& s)
+{
+  string_define(1,s,false);
+  Buffer&b = local_buf;
+  b << bf_reset << "c@" << s;
+  Token T  = hash_table.locate(b);
+  Equivalent& E = hash_table.eqtb[T.eqtb_loc()];
+  if(E.get_cmd() != assign_int_cmd) return;
+  word_define(E.get_chr(),0,true);
+}
+
+// \usecounter{foo}. Signals an error if foo is not a counter
+void Parser::T_use_counter ()
+{
+  TokenList L = read_arg();
+  Buffer b; // will contain c@foo
+  if(csname_ctr(L,b)) { bad_counter0(); return; }
+  if(counter_check(b,false)) return;
+  T_use_counter(b.to_string(2));
+}
+
+
+// \@ifdefinable\foo{\bar} errs if not definable, executes \vbar otherwise.
+void Parser::T_ifdefinable() 
+{
+  bool bad = read_token_arg(cur_tok);
+  Token C = cur_tok;
+  TokenList B = read_arg();
+  if(bad) return;
+  if(C.not_a_cmd()) bad = true;
+  else if(C==hash_table.relax_token) bad=true;
+  else if(!hash_table.eqtb[C.eqtb_loc()].is_undef_or_relax()) bad=true;
+  else {
+     if(C.is_in_hash()) {
+       string s = hash_table[C.hash_loc()];
+       if(s[0]=='e' && s[1]=='n' && s[2]=='d') bad=true;
+     }
+  }
+  if(!bad) back_input(B);
+  else parse_error(err_tok,"Undefinable command ",C,"","bad");
+}
+
+// Here L is the optional argument of the enumerate env, for instance [(i)]
+// and ctr the counter, for instance enumiv
+// executes \def\@itemlabel{(\theenumiv)}
+// redefines \def\theenumiv{\roman{enumiv}}
 bool Parser::optional_enumerate(TokenList& L,String ctr)
 {
   Hashtab& H= hash_table;
@@ -2312,20 +2277,6 @@ bool Parser::optional_enumerate(TokenList& L,String ctr)
   return true;
 }
 
-// This is \usecounter{foo} 
-// remembers locally the name,  changes globally the counter to 0
-// Caller checks that this is a counter
-void Parser::T_use_counter(const string& s)
-{
-  string_define(1,s,false);
-  Buffer&b = local_buf;
-  b << bf_reset << "c@" << s;
-  Token T  = hash_table.locate(b);
-  Equivalent& E = hash_table.eqtb[T.eqtb_loc()];
-  if(E.get_cmd() != assign_int_cmd) return;
-  word_define(E.get_chr(),0,true);
-}
-
 void token_ns::int_to_roman(Buffer&b, int n)
 {
   switch(n) {
@@ -2362,25 +2313,24 @@ void Parser::T_listenv(symcodes x)
     x==itemize_cmd ?np_simple:
     x==enumerate_cmd ? np_ordered : np_description;
   Token t = hash_table.itemlabel_token;
-  eval_let(t, hash_table.relax_token,false);
+  M_let_fast(t, hash_table.relax_token,false);
   T_use_counter(list_ctr);
   TokenList L;
   if(x==enumerate_cmd) {
-    next_optarg_long(L);
+    read_optarg_nopar(L);
     // Token cmd = hash_table.relax_token;  unused (why ?)
     if(!optional_enumerate(L,list_ctr.c_str())){
       b << bf_reset << "labelenum";
       token_ns::int_to_roman(b,n);
-      Token T = hash_table.locate(b); 
-      eval_let(t, T,false);
+      M_let_fast(t, hash_table.locate(b),false);
     }
   }
   if(x==list_cmd) {
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     Macro* X= new Macro(L);
     mac_define(t,X,false,rd_always,user_cmd);
-    TokenList L2 = mac_arg();
-    back_input(L2);
+    TokenList L2 = read_arg();
+    back_input(L2); // remove a pair of braces here
   } 
   if(x==enumerate_cmd) {
     b << bf_reset << "enum";
@@ -2392,9 +2342,265 @@ void Parser::T_listenv(symcodes x)
   }
   Xmlp res = new Xml(np_list,0);
   the_stack.push(the_names[np_list],res);
-
   res->get_id().add_attribute(np_type,np);
 }
 
+
+
+// converts T1/ OT2 into a Unicode character (expandable command)
+// what=1 is OT2, everything else is T1
+void Parser::E_parse_encoding(bool vb, subtypes what)
+{
+  Token T = cur_tok;
+  int c = scan_braced_int(T);
+  int r = 0;
+  if(what == 1) {
+    switch(c) {
+    case 0: r = 0x40A; break; // 0-15
+    case 1: r = 0x409; break;
+    case 2: r = 0x40F; break;
+    case 3: r = 0x42D; break;
+    case 4: r = 0x406; break;
+    case 5: r = 0x404; break;
+    case 6: r = 0x402; break;
+    case 7: r = 0x40B; break;
+    case 8: r = 0x45A; break;
+    case 9: r = 0x459; break;
+    case 10: r = 0x45F; break;
+    case 11: r = 0x44D; break;
+    case 12: r = 0x456; break;
+    case 13: r = 0x454; break;
+    case 14: r = 0x452; break;
+    case 15: r = 0x45B; break;
+    case 16: r = 0x42E; break; // 16-31
+    case 17: r = 0x416; break;
+    case 18: r = 0x419; break;
+    case 19: r = 0x401; break;
+    case 20: r = 0x474; break;
+    case 21: r = 0x472; break;
+    case 22: r = 0x405; break;
+    case 23: r = 0x42F; break;
+    case 24: r = 0x44E; break;
+    case 25: r = 0x436; break;
+    case 26: r = 0x439; break;
+    case 27: r = 0x451; break;
+    case 28: r = 0x475; break;
+    case 29: r = 0x473; break;
+    case 30: r = 0x455; break;
+    case 31: r = 0x44F; break;
+    case 32: r = 0x308; break; // 32 - 47
+    case 33: r = '!'; break;
+    case 34: r = 0x201D; break; // right double quotation mark
+    case 35: r = 0x462; break;
+    case 36: r = 0x306; break;
+    case 37: r = '%'; break;
+    case 38: r = 0x301; break;
+    case 39: r = 0x2019; break;  // right single quotation mark
+    case 40: r = '('; break;
+    case 41: r = ')'; break;
+    case 42: r =  '*'; break;
+    case 43: r = 0x463; break;
+    case 44: r = ','; break;
+    case 45: r = '-'; break;
+    case 46: r = '.'; break;
+    case 47: r =  '/';break;
+    case 48: r = '0'; break; // 48 - 63
+    case 49: r = '1'; break;
+    case 50: r = '2'; break;
+    case 51: r = '3'; break;
+    case 52: r = '4'; break;
+    case 53: r = '5'; break;
+    case 54: r = '6'; break;
+    case 55: r = '7'; break;
+    case 56: r = '8'; break;
+    case 57: r = '9'; break;
+    case 58: r = ':'; break;
+    case 59: r = ';'; break;
+    case 60: r = 0xAB; break;
+    case 61: r = 0xB9; break;
+    case 62: r = 0xBB; break;
+    case 63: r = '?';break;
+    case 64: r = 0x306; break; // 64 -79
+    case 65: r = 0x410; break;
+    case 66: r = 0x411; break;
+    case 67: r = 0x426; break;
+    case 68: r = 0x414; break;
+    case 69: r = 0x415; break;
+    case 70: r = 0x424; break;
+    case 71: r = 0x413; break;
+    case 72: r = 0x425; break;
+    case 73: r = 0x418; break;
+    case 74: r = 0x408; break;
+    case 75: r = 0x41A; break;
+    case 76: r = 0x41B; break;
+    case 77: r = 0x41C; break;
+    case 78: r = 0x41D; break;
+    case 79: r = 0x41E; break;
+    case 80: r = 0x41F; break; // 80 - 95
+    case 81: r = 0x427; break;
+    case 82: r = 0x420; break;
+    case 83: r = 0x421; break;
+    case 84: r = 0x422; break;
+    case 85: r = 0x423; break;
+    case 86: r = 0x412; break;
+    case 87: r = 0x429; break;
+    case 88: r = 0x428; break;
+    case 89: r = 0x42B; break;
+    case 90: r = 0x417; break;
+    case 91: r = '['; break;
+    case 92: r = 0x201C; break; //  left double quotation mark
+    case 93: r = ']'; break;
+    case 94: r = 0x42C; break;
+    case 95: r = 0x42A; break;
+    case 96: r = 0x2018; break; // 96 - 111 left single quotation mark
+    case 97: r = 0x430; break;
+    case 98: r = 0x431; break;
+    case 99: r = 0x446; break;
+    case 100: r = 0x434; break;
+    case 101: r = 0x435; break;
+    case 102: r = 0x444; break;
+    case 103: r = 0x433; break;
+    case 104: r = 0x445; break;
+    case 105: r = 0x438;break;
+    case 106: r = 0x458;break;
+    case 107: r = 0x43A; break;
+    case 108: r = 0x43B; break;
+    case 109: r = 0x43C; break;
+    case 110: r = 0x43D; break;
+    case 111: r = 0x43E; break;
+    case 112: r = 0x43F; break; //112 - 127
+    case 113: r = 0x447; break;
+    case 114: r = 0x440; break;
+    case 115: r = 0x441; break;
+    case 116: r = 0x442; break;
+    case 117: r = 0x443; break;
+    case 118: r = 0x432; break;
+    case 119: r = 0x449; break;
+    case 120: r = 0x448; break;
+    case 121: r = 0x44B; break;
+    case 122: r = 0x437; break;
+    case 123: r = '-'; break;
+    case 124: r = 0x2014; break; // em dash
+    case 125: r = 0x2116; break; // numero sign
+    case 126: r = 0x44C; break;
+    case 127: r = 0x44A; break;
+    }
+  } else if(what == 2) { // OT1 128 bits, parttly implemented
+    if(33 <=c && c <= 123)  r = c ;
+    switch(c) {
+    case 0: r = 0x393; break; // Gamma
+    case 1: r = 0x394; break; // Delta
+    case 2: r = 0x398; break; // Theta
+    case 3: r = 0x39B; break; // Lamnda
+    case 4: r = 0x39E; break; // Xi
+    case 5: r = 0x3A0; break; // Pi 
+    case 6: r = 0x3A3; break; // Sigma
+    case 7: r = 0x3A5; break; // Upsilon
+    case 8: r = 0x3A6; break; // Phi
+    case 9: r = 0x3A8; break; // Psi
+    case 10: r = 0x3A9; break; // Omega
+    case 25: r = 0xDF; break; // ss
+    case 26: r = 0xE6; break; // ae
+    case 27: r = 0x153; break; // oe
+    case 28: r = 0xF8; break; // \o
+    case 29: r = 0xC6; break; // AE
+    case 30: r = 0x152; break; // OE
+    case 31: r = 0xD8; break; // \O
+    case 60: r = 0xA1; break; // exclam
+    case 62: r = 0xBF; break; // question
+    case 92: case 94: case 95: r = 0; break;
+    }
+  } else { // T1
+    if(c==0xFF) r = 0xDF; // \ss
+    else if(c==0xDF) r = 0x0; // SS is not a char in Unicode
+    else if(c==0xD7) r = 0x152; // \OE
+    else if(c==0xF7) r = 0x153; //\oe
+    else if(0xC0 <=c && c <= 255)  r = c ;
+    else if(33 <=c && c <= 126)  r = c ;
+    else if(c==32) r = 0x2423; // visible space
+    else if(c==127) r = '-'; // is this ok ?
+    // if c<32 we reject
+    else switch(c) {
+      case 128: r = 0x102; break; // A breve
+      case 129: r = 0x104; break; // A ogonek
+      case 130: r = 0x106; break; // C acute
+      case 131: r = 0x10C; break; // C caron
+      case 132: r = 0x10E; break; // D caron
+      case 133: r = 0x11A; break; // E caron
+      case 134: r = 0x118; break; // E ogonek
+      case 135: r = 0x11E; break; // G breve
+      case 136: r = 0x139; break; // L acute
+      case 137: r = 0x13D; break; // L caron
+      case 138: r = 0x141; break; // L stroke
+      case 139: r = 0x147; break; // N acute
+      case 140: r = 0x143; break; // N caron
+      case 141: r = 0x14A; break; // Eng
+      case 142: r = 0x150; break; // O double acute
+      case 143: r = 0x154; break; // R acute
+      case 144: r = 0x158; break; // R caron
+      case 145: r = 0x15A; break; // S acute
+      case 146: r = 0x160; break; // S caron
+      case 147: r = 0x15E; break; // S cedilla
+      case 148: r = 0x164; break; // T caron
+      case 149: r = 0x162; break; // T cedilla
+      case 150: r = 0x170; break; // U double acute
+      case 151: r = 0x16E; break; // U ring
+      case 152: r = 0x178; break; // Y diaeresis
+      case 153: r = 0x179; break; // Z acute
+      case 154: r = 0x17D; break; // Z caron
+      case 155: r = 0x17B; break; // Z dot
+      case 156: r = 0x132; break; // IJ 
+      case 157: r = 0x130; break; // I dot
+      case 158: r = 0x111; break; // d stroke
+      case 159: r = 0xA7; break; // section
+      case 160: r = 0x103; break; // a breve
+      case 161: r = 0x105; break; // a ogonek
+      case 162: r = 0x107; break; // c acute
+      case 163: r = 0x10D; break; // c caron
+      case 164: r = 0x10F; break; // d caron
+      case 165: r = 0x11B; break; // e caron
+      case 166: r = 0x119; break; // e ogonek
+      case 167: r = 0x11F; break; // g breve
+      case 168: r = 0x13A; break; // l acute
+      case 169: r = 0x13E; break; // l caron
+      case 170: r = 0x142; break; // l stroke
+      case 171: r = 0x144; break; // n acure
+      case 172: r = 0x148; break; // n caron
+      case 173: r = 0x14B; break; // eng
+      case 174: r = 0x151; break; // o double acute
+      case 175: r = 0x155; break; // r acute
+      case 176: r = 0x159; break; // r caron
+      case 177: r = 0x15B; break; // s acute
+      case 178: r = 0x161; break; // s caron
+      case 179: r = 0x15F; break; // s cedilla
+      case 180: r = 0x165; break; // t caron
+      case 181: r = 0x163; break; // t cedilla
+      case 182: r = 0x171; break; // u double acute
+      case 183: r = 0x16F; break; // u ring
+      case 184: r = 0xFF; break; // y diaeresis
+      case 185: r = 0x17A; break; // z acute
+      case 186: r = 0x17E; break; // z caron
+      case 187: r = 0x17C; break; // z dot
+      case 188: r = 0x133; break; // ij
+      case 189: r = 0xA1; break; // inverted exclam
+      case 190: r = 0xBF; break; // inverted question
+      case 191: r = 0xA3; break; // pound
+    }
+  }
+  if(vb) {
+    Buffer& B = mac_buffer;
+    B.reset(); B.push_back("-> \\char\""); B.push_back16(r,false);
+    the_log << lg_start<< T << c << B << "." << lg_end;
+  }
+  if(!r) {
+    Buffer& B = err_ns::local_buf;
+    B << bf_reset << "Invalid chararacter specification ";
+    B.push_back(T); B.push_back("{");B.push_back_int(c); B.push_back("}");
+    signal_error(T,"bad char spec");
+    return;
+  }
+  Token t = Token(other_t_offset, Utf8Char(r));
+  back_input(t);
+}
 
 

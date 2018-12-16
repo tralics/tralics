@@ -12,7 +12,7 @@
 
 #include "tralics.h"
 const char* txarray_rcsid =
-  "$Id: txarray.C,v 2.49 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txarray.C,v 2.59 2015/11/10 17:32:46 grimm Exp $";
 
 static NewArray new_array_object; 
 static char char_for_error ='c';
@@ -61,14 +61,12 @@ void NewArray::remove_a_type(uchar c)
 // Here \cmd is some internal name, stored in nct_tok[C]
 void Parser::T_newcolumn_type()
 {
-  TokenList L = mac_arg();
   uint c = 0; 
-  if(L.empty()) parse_error("Empty argument to \\newcolumntype");
-  else if(L.size() != 1)
-    parse_error("More than one token in argument to \\newcolumntype");
-  else {
-    if(L.front().is_a_char())
-      c = L.front().char_val().get_value();
+  bool bad = read_token_arg(cur_tok);
+  if(!bad) {
+    Token T = cur_tok;
+    if(T.is_a_char())
+      c = T.char_val().get_value();
     if(!(c>0 && c<nb_newcolumn)) {
       parse_error("Argument to \\newcolumntype is not a 7bit character");
       c= 0;
@@ -81,21 +79,21 @@ void Parser::T_newcolumn_type()
   cur_tok = hash_table.locate(B);
   new_array_object.add_a_type(c,cur_tok);
   back_input();
-  get_new_command(rd_always,false); // definition is local
+  M_newcommand(rd_always); // definition is local
 }
 
 // Assume that T is the token defined and stored by the procedures above
 // This returns -1 in case something strange happened (like redefinition)
 // returns the number of arguments of the function otherwise.
-int Parser::nct_aux(Token T)
+int Parser::nct_aux(Token T, TokenList& body)
 {
-  cur_tok = T;
-  look_at_mac();
+  see_cs_token(T);
   if(!cur_cmd_chr.is_user()) 
     return -1; // bad
   Macro& X = mac_table.get_macro(cur_cmd_chr.get_chr());
   if(!(X.get_type() == dt_empty || X.get_type()==dt_normal))
     return -1;
+  body = X.get_body();
   return X.get_nbargs();
 }
 
@@ -104,10 +102,10 @@ int Parser::nct_aux(Token T)
 // defined, and nothing has to be done. Otherwise, we loop over all
 // characters. If there is one substitution, we try again.
 // If for some reason, the character is invalid, we remove it from the table.
-void token_ns::expand_nct(TokenList&L)
+void Parser::expand_nct(TokenList&L)
 {
   bool action = true;
-  if(the_parser.tracing_commands())
+  if(tracing_commands())
     the_log << lg_start << "array preamble at start: " << L << "\n";
   if(!new_array_object.has_a_nct()) return;
   int max_iter = max_newcolumn_loops;
@@ -115,21 +113,22 @@ void token_ns::expand_nct(TokenList&L)
     action = false;
     max_iter--;
     if(max_iter<=0) {
-      the_parser.parse_error("array preamble expansion: Infinite loop?");
+      parse_error("array preamble expansion: Infinite loop?");
       return;
     }
     for(int i=1;i<int(nb_newcolumn);i++) {
       uchar c = i;
       if(!new_array_object.nct_exists(c)) continue;
       Token T = new_array_object.nct_token(c);
-      int n = the_parser.nct_aux(T);
+      TokenList body;
+      int n = nct_aux(T,body);
       if(n==-1) {
 	new_array_object.remove_a_type(c);
 	continue;
       }
-      if(expand_nct(L,T,n,c,max_iter)) {
+      if(token_ns::expand_nct(L,T,n,c,max_iter,body)) {
 	action = true;
-	if(the_parser.tracing_commands())
+	if(tracing_commands())
 	  the_log << "array preamble after " << c << ": " << L << "\n";
       }
     }
@@ -139,7 +138,7 @@ void token_ns::expand_nct(TokenList&L)
 // Here we have to find the character c, and expand the token T.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-bool token_ns::expand_nct(TokenList&L,Token T, int n, uchar c, int& MX)
+bool token_ns::expand_nct(TokenList&L,Token T, int n, uchar c, int& MX,TokenList&body)
 { 
   TokenList res;
   bool result = false;
@@ -163,7 +162,7 @@ bool token_ns::expand_nct(TokenList&L,Token T, int n, uchar c, int& MX)
     if(MX<0) return true;
     for(int k=0;k<n;k++) 
       Table[k+1] = get_a_param(L,false);
-    TokenList W = the_parser.special_expand(Table);
+    TokenList W = the_parser.expand_mac_inner(body,Table);
     L.splice(L.begin(),W);
   }
   L.splice(L.end(),res);
@@ -243,7 +242,8 @@ void NewArray::test_pach()
   if(c=='p') { ch_num = chn_p; return; }
   if(c=='b') { ch_num = chn_b; return; }
   ch_class = chc_cell;
-  the_parser.parse_error("Wrong character in array preamble ",
+  the_parser.parse_error(the_parser.err_tok,
+			 "Wrong character in array preamble ",
 			 current_token, "", "Wrong char");
 }
 
@@ -257,13 +257,14 @@ void NewArray::test_pach()
 void NewArray::run(Xid ID, bool main_fct)
 {
   id = ID;
-  if(!main_fct) {
-    Istring x = P->nT_next_arg();
-    id.add_attribute(the_names[np_cols], x);
+  if(!main_fct) { // read and set the column span
+    Istring x = P->nT_arg_nopar();
+    const string& s = the_main->SH[x.get_value()];
+    if(s != "1") id.add_attribute(the_names[np_cols], x);
   }
-  preamble = P->mac_arg();
+  preamble = P->read_arg(); // read the preamble
   token_ns::expand_star(preamble);
-  token_ns::expand_nct(preamble);
+  P->expand_nct(preamble);
   if(main_fct) AI = &P->the_stack.new_array_info(id);
   u_list.clear();
   v_list.clear();
@@ -358,7 +359,7 @@ void NewArray::run(Xid ID, bool main_fct)
   // Case of \multicolumn, 
   id.add_attribute(attribs,true);
   attribs.reset();
-  TokenList cell = P->mac_arg();
+  TokenList cell = P->read_arg();
   cell.splice(cell.begin(),u_list);
   cell.splice(cell.end(),v_list);
   u_list.clear();
@@ -415,6 +416,7 @@ bool NewArray::ac_next()
     preamble.pop_front();
     return true;
   }
+  // strange 
   if(current_token==the_parser.hash_table.verb_token) {
     preamble.pop_front();
     return true;
@@ -474,12 +476,11 @@ void Parser::start_a_row(int a)
     symcodes S = cur_cmd_chr.get_cmd();
     if(S ==ifnextchar_cmd) {
       get_token();
-      if_nextchar(true);
+      T_ifnextchar(true);
       continue;
     }
     if(S==hline_cmd) {
-      Token T = cur_tok;
-      name_for_error = T;
+      SaveErrTok sv (cur_tok);
       subtypes c = cur_cmd_chr.get_chr();
       get_token(); 
       int w = T_hline_parse(c);
@@ -523,6 +524,8 @@ void Parser::start_a_cell(bool started)
     new_array_object.run(cid,false);
   } else {
     TokenList L= the_stack.get_u_or_v(true);
+    if(tracing_commands() &&!L.empty())
+      the_log << lg_startbrace << "template u-part " << L << lg_endbrace;
     back_input(L); 
   }
 }
@@ -533,7 +536,7 @@ void Parser::finish_a_cell(Token T, Istring a)
   the_stack.remove_last_space();
   if(!a.null()) {
     back_input(hash_table.space_token);
-    TokenList L = token_ns::string_to_list(a);
+    TokenList L = token_ns::string_to_list(a); 
     back_input(L);
     T = hash_table.crwithargs_token;
   }
@@ -541,6 +544,8 @@ void Parser::finish_a_cell(Token T, Istring a)
   if(the_stack.is_omit_cell())
     return;
   TokenList L = the_stack.get_u_or_v(false);
+  if(tracing_commands() && !L.empty())
+    the_log << lg_startbrace << "template v-part " << L << lg_endbrace;
   back_input(L);
 }
 
@@ -553,13 +558,13 @@ void Parser::T_start_tabular (subtypes c)
   else if(the_stack.is_frame(np_fbox)) {}
   else
     leave_h_mode();
-  hash_table.eval_let_local("par","@empty");
+  M_let_fast(hash_table.par_token,hash_table.empty_token,false);
   the_stack.push1(x,np_table);
   the_stack.add_att_to_last(np_rend,np_inline);
   Xid id = the_stack.get_xid();
   if(c!=0) { // case of tabular*
     Token T = cur_tok;
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     ScaledInt tab_width = dimen_from_list(T,L);
     if(!tab_width.null())
       id.add_attribute(the_names[np_tab_width],
@@ -568,7 +573,7 @@ void Parser::T_start_tabular (subtypes c)
     if(!cur_cmd_chr.is_relax()) back_input();
   }
   {
-    int pos = get_ctb_opt(false); // Lamport does not mention c, who cares
+    int pos = get_ctb_opt(); // Lamport does not mention c, who cares
     if(pos) id.add_attribute(the_names[np_vpos], the_names[pos]);
   }
   new_array_object.run(id,true);
@@ -612,7 +617,7 @@ int Parser::T_hline_parse(subtypes c)
   in_hlinee = false;
   Token T = cur_tok;
   if(c== one_code) { // cline
-    TokenList arg = mac_arg(); 
+    TokenList arg = read_arg(); 
     if(scan_pair_ints(T,arg)) {
       parse_error(errbuf.c_str());
       return 0;
@@ -620,19 +625,19 @@ int Parser::T_hline_parse(subtypes c)
     return 2;
   }
   if (c !=two_code) return 1;
-  TokenList cols = mac_arg();
+  TokenList cols = read_arg();
   int rt = 1;
   if(!cols.empty()) {
     rt = 2; 
     if(scan_pair_ints(T,cols)) {
       parse_error(errbuf.c_str());
-      ignore_next_arg(); ignore_next_arg(); ignore_next_arg();
+      ignore_arg(); ignore_arg(); ignore_arg();
       return 0; // read the mandatory arguments before returning
     }
   }
   have_above = false;
   have_below = false;
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   if(!L.empty ()) {
     ScaledInt tab_width = dimen_from_list(T,L);
     if(!tab_width.null()) {
@@ -640,7 +645,7 @@ int Parser::T_hline_parse(subtypes c)
       hlinee_above  = the_main->SH.find_scaled (tab_width);
     }
   }
-  L = mac_arg();
+  L = read_arg();
   if(!L.empty ()) {
     ScaledInt tab_width = dimen_from_list(T,L);
     if(!tab_width.null()) {
@@ -648,7 +653,7 @@ int Parser::T_hline_parse(subtypes c)
       hlinee_below  = the_main->SH.find_scaled (tab_width);
     }
   }
-  L = mac_arg();
+  L = read_arg();
   ScaledInt tab_width = dimen_from_list(T,L);
   in_hlinee = true;
   hlinee_width  = the_main->SH.find_scaled (tab_width);
@@ -818,13 +823,13 @@ void Parser::T_hline(subtypes c)
     else if(res==2) T_cline ();
   }
   else
-    parse_error("misplaced ", T, " should occur in tables only",
+    parse_error(err_tok,"misplaced ", T, " should occur in tables only",
 		"Current command should occur in tables only");
 }
 
 // This is executed when we see \end{tabular}
 // If true, the \end{tabular} is not executed.
-// and we have to push back the `end{tabular}' tokens
+// and we have to push back the `\end{tabular}' tokens
 bool Parser::false_end_tabular(const string& s)
 {
   if(the_stack.is_frame(np_cell)) {
@@ -854,7 +859,7 @@ void Parser::T_endv()
     flush_buffer();
     the_stack.finish_cell(-1);
     the_stack.push_pop_cell(pop_only);
-    pop_level(false,bt_cell);
+    pop_level(bt_cell);
     start_a_cell(false);
   }
   else parse_error("Bad endv token");
@@ -873,13 +878,13 @@ void Parser::T_cr()
   }
   the_stack.finish_cell(0);
   the_stack.push_pop_cell(pop_only);
-  pop_level(false,bt_cell);
+  pop_level(bt_cell);
   the_stack.pop(np_row);
   start_a_row(a);
 }
 
 // Case of \multispan; fully expandable
-void Parser::multispan()
+void Parser::E_multispan()
 {
   Token omit = hash_table.locate("omit");
   Token span = hash_table.locate("span");

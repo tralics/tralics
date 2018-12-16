@@ -10,7 +10,7 @@
 
 
 const char* txtitlepage_rcsid =
-  "$Id: txtitlepage.C,v 2.37 2011/06/28 08:15:25 grimm Exp $";
+  "$Id: txtitlepage.C,v 2.41 2015/10/28 17:38:46 grimm Exp $";
 
 
 #include "tralics.h"
@@ -390,10 +390,10 @@ void TitlePageAux::exec_post()
   if(type != tpi_rt_normal)
     return;
   if(get_flags2() == tp_C_flag) 
-    the_parser.evaluate_now(T4.c_str(),T1);
+    the_parser.titlepage_evaluate(T4.c_str(),T1);
   if(!has_plus_flags()) return;
   if(has_u_flags()) return;
-  the_parser.parse_error("No value given for command \\", T1, "");
+  the_parser.parse_error(the_parser.err_tok,"No value given for command \\", T1, "");
 }
 
 // This is executed when the user asks for a titlepage command.
@@ -475,7 +475,7 @@ void Parser::T_titlepage_finish (int v)
     res->add_last_nl(Titlepage[k]);
   the_stack.pop_if_frame(the_names[cst_p]);
   the_stack.add_nl();
-  the_stack.add_last(res);
+  the_stack.add_last(res); 
   the_stack.add_nl();
   ileave_v_mode();
   Titlepage.make_invalid();
@@ -491,7 +491,7 @@ void Parser::T_titlepage_finish (int v)
   }
   if(finished) {
     main_ns::log_and_tty << "Translation terminated after title page\n";
-    x_input(end_all_input_code);
+    E_input(end_all_input_code);
   }
 }
 

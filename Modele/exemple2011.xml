@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE raweb SYSTEM 'raweb7.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
-<raweb language='english' creator='Tralics version 2.15.3' year='2011'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<raweb language='english' creator='Tralics version 2.15.4' year='2011'>
 <accueil isproject='true' html='exemple'>
 <theme>Dummy</theme>
 <projet>ExemplE</projet>
@@ -510,4 +510,5 @@ formal proof or formal methods.</abstract>
 <bpages>159-163</bpages>
 <bmonth>September</bmonth>
 <byear>2007</byear>
-</citation></biblio></raweb>
+</citation></biblio>
+</raweb>

@@ -1,6 +1,6 @@
 
 // -*- C++ -*-
-// $Id: txtokenlist.h,v 2.13 2008/02/21 17:46:00 grimm Exp $
+// $Id: txtokenlist.h,v 2.15 2015/10/28 17:38:46 grimm Exp $
 // Copyright INRIA/apics (Jose' Grimm)  2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -24,7 +24,7 @@ namespace token_ns {
   void add_verbatim_number(TokenList&,const Hashtab&, int);
   int block_size(const TokenList&);
   void expand_nct(TokenList&);
-  bool expand_nct(TokenList&L,Token T,int n, uchar c,int&);
+  bool expand_nct(TokenList&L,Token T,int n, uchar c,int&, TokenList&);
   void expand_star(TokenList&);
   TokenList fast_get_block(TokenList&);
   void fast_get_block(TokenList&,TokenList&w);
@@ -50,7 +50,7 @@ namespace token_ns {
   void double_hack(TokenList& key);
   bool split_at(Token m,TokenList&L, TokenList& z);
   bool is_sublist(token_iterator A, token_iterator B, int);
-  bool is_in(TokenList& A, TokenList&B, bool remove);
+  bool is_in(TokenList& A, TokenList&B, bool remove,int&);
   void normalise_list(char c, TokenList &L);
   void sanitize_one(TokenList &L, uchar c);
   void sanitize_one(TokenList &L, TokenList& s, int n);

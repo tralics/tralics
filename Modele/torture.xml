@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='iso-8859-1'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
-<ramain creator='Tralics version 2.15.3'>
-<p>The time is 09h 55min, 6th August 2015.</p>
+<!-- Translated from latex by tralics 2.15.4, date: 2016/01/04-->
+<ramain creator='Tralics version 2.15.4'>
+<p>The time is 14h 19min, 4th January 2016.</p>
 <p>DOCSTART</p>
 <div0 id-text='1' id='cid1'><head>First</head>
 <p>31.5pt0.0pt0.0mu1717.0pt17.0pt plus 1.0pt minus 2.0pt17.0mu plus 1.0mu minus 2.0mu3.0mu plus 4.0fil minus 17.0mu0.0mu119811711.0pt
@@ -10,7 +10,7 @@
 25cmr10 
 foo= foo</p>
 <div3 id-text='0.0.0.1' id='uid1'><head>Macroexpansion</head>
-<p>Version2.15.3.
+<p>Version2.15.4.
 foo=foo.
 foo=foo.
 <font-bold-series>foo=bold-foo</font-bold-series> non-bold foo.
@@ -99,7 +99,7 @@ a body</p>
 </moreinfo>
 <p>ok</p>
 <preview><formula id-text='1' id='uid10' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>1</mn></mrow></mtd><mtd columnalign='right'><mn>1</mn></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>X</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>Y</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>0</mn><mo>.</mo><mn>01</mn></mrow></mtd><mtd columnalign='right'><mrow><mn>0</mn><mo>.</mo><mn>001</mn></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>X</mi></mrow></mtd></mtr></mtable></math></formula>
-</preview><formula id-text='0.0.0.4' id='uid11' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mo form='prefix'>sin</mo><mo>=</mo><mo form='prefix'>cos</mo></mrow></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mo form='prefix'>cos</mo></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mo form='prefix'>sin</mo></mtd></mtr><mtr><mtd columnalign='right'><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></mtd></mtr></mtable></math></formula>
+</preview><formula id-text='2' id='uid11' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mo form='prefix'>sin</mo><mo>=</mo><mo form='prefix'>cos</mo></mrow></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mo form='prefix'>cos</mo></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mo form='prefix'>sin</mo></mtd></mtr><mtr><mtd columnalign='right'><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></mtd></mtr></mtable></math></formula>
 <p>ABCABCABC</p>
 <p>XX</p>
 <foo>ccaaAbbBaa</foo><formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&beta;</mi><mi>A</mi><mtext>aaB</mtext><mspace width='4.pt'/><mrow><mi>&alpha;</mi><mi>C</mi></mrow><mi>D</mi></mrow></math></formula>
@@ -296,6 +296,7 @@ D'accord &#x201C;OK&#x201D; ou pas &#x201C;not OK&#x201D;.</p>
 <p>6
 10.0pt=10pt
  321=321</p>
+<p>aokbaok</p>
 <p><font-small1><font-italic-shape>a
 <foo><font-large1><font-italic-shape>x</font-italic-shape></font-large1></foo></font-italic-shape></font-small1></p>
 <p>2</p>
@@ -705,15 +706,15 @@ expanded 132 times.</p>
 <p noindent='true'><font-large3>&#x2117;&#x211E;&#x2120;&#x212E;&#x2022;&#x203D;</font-large3></p>
 <p>&#x2122;</p>
 <p>IEME 1<font-super>er</font-super> 1<font-super>re</font-super> 1<font-super>ers</font-super> 1<font-super>res</font-super> 2<font-super>e</font-super> 2<font-super>es</font-super> n<font-super>o</font-super> N<font-super>o</font-super></p>
-<table rend='inline'><row top-border='true'><cell right-border='true' halign='left' left-border='true' cols='1'/>
+<table rend='inline'><row top-border='true'><cell right-border='true' halign='left' left-border='true'/>
 <cell bottom-border='true' halign='center' cols='3'>          Propositional linear
 logic</cell>
 <cell right-border='true' halign='center'/>
-</row><row><cell right-border='true' halign='left' left-border='true' cols='1'/>
+</row><row><cell right-border='true' halign='left' left-border='true'/>
 <cell bottom-border='true' right-border='true' halign='center' cols='3'>Rudimentary linear
 logic</cell>
 <cell bottom-border='true' right-border='true' halign='center'/>
-</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true' cols='1'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'/>
 <cell right-border='true' halign='center'>Negation</cell>
 <cell right-border='true' halign='center'>Multiplicatives</cell>
 <cell right-border='true' halign='center'>Additives</cell>
@@ -992,7 +993,7 @@ FooBar</p>
 <table vpos='b' width='120.0pt' rend='inline'><row spaceafter='2.0pt' top-border='true'><cell halign='left'>a</cell>
 <cell halign='right'>b</cell>
 <cell halign='center'>c</cell>
-</row><row bottom-border='true'><cell halign='left' cols='1'>A</cell>
+</row><row bottom-border='true'><cell halign='left'>A</cell>
 <cell halign='right'>B</cell>
 <cell halign='center'>C</cell>
 </row></table>
@@ -1456,7 +1457,12 @@ This is a sentence typeset</font-slanted-shape></p>
 <cell halign='center'><figure rend='inline' width='113.81102pt' file='x'/></cell>
 </row></table>
 <p>border matrix <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd/><mtd/><mtd><mi>C</mi></mtd><mtd><mi>I</mi></mtd><mtd><msup><mi>C</mi> <mo>&apos;</mo> </msup></mtd></mtr><mtr><mtd><mi>C</mi></mtd><mtd rowspan='3'><mo>(</mo></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd rowspan='3'><mo>)</mo></mtd></mtr><mtr><mtd><mi>I</mi></mtd><mtd><mi>b</mi></mtd><mtd/><mtd><mrow><mo>-</mo><mi>b</mi></mrow></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mi>C</mi></mtd><mtd><msup><mi>a</mi> <mo>&apos;</mo> </msup></mtd><mtd><mrow><mn>1</mn><mo>-</mo><mi>a</mi></mrow></mtd></mtr></mtable></math></formula></p>
-<p><ref target='uid60'/><ref target='uid60'/>
+<anchor id-text='15' id='uid110'/><formula id-text='15a' id='uid111' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula>
+<formula id-text='15b' id='uid112' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>B</mi></math></formula>
+<p noindent='true'>where</p>
+<anchor id-text='16' id='uid113'/><formula id-text='16a' id='uid114' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula>
+<formula id-text='16b' id='uid115' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>D</mi></math></formula>
+<p noindent='true'><ref target='uid113'/><ref target='uid113'/>
 a: UPPER MiXeD Mixed  UPPER</p>
 <p noindent='true'>b: UPPER <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> BarMixed </mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Z</mi><mi>z</mi></mrow></math></formula> UPPER</p>
 <p noindent='true'>c: TEXT <cit><ref target='bid4'/></cit> AND <cit><ref target='bid4'/></cit> UPPER 

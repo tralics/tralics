@@ -1,5 +1,5 @@
 // Tralics, a LaTeX to XML translator.
-// Copyright INRIA/apics/marelle (Jose' Grimm) 2002, 2004, 2007-2011
+// Copyright INRIA/apics/marelle (Jose' Grimm) 2002, 2004, 2007-2015
 
 // This software is governed by the CeCILL license under French law and
 // abiding by the rules of distribution of free software.  You can  use, 
@@ -12,7 +12,7 @@
 // This file contains a big part of the Tralics translator
 #include "tralics.h"
 const char* txtranslate_rcsid =
-  "$Id: txtranslate.C,v 2.138 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txtranslate.C,v 2.161 2017/05/29 06:22:58 grimm Exp $";
 
 
 extern void readline_newprompt(string s);
@@ -24,23 +24,30 @@ namespace {
   Buffer Abuf;
   Buffer tpa_buffer;
   Xmlp unfinished_par=0;
-
-}
-
-namespace xkv_ns {
-  string to_string(TokenList& s,String msg);
+  Token T_theequation, T_theparentequation,  T_at_theparentequation;
 }
 
 namespace translate_ns {
-  void seen_pack(string,int);
-  void tex_message(String s);
   Istring find_color(const string& a, const string& b);
 }
-using namespace translate_ns;
 
-namespace bib_ns {
-  extern bool allow_break;
-}
+class ColSpec {
+  string name;
+  string model;
+  string value;
+  Istring id;
+  Xmlp xval;
+  bool used;
+public:
+  ColSpec(string a, string b,string c);
+  bool compare(string a, string b) { return model==a && value==b; } 
+  Istring get_id() { used = true; return id; }
+  bool is_used() const { return used; }
+  Xmlp get_val() const { return xval; }
+};
+vector<ColSpec*>all_colors;
+
+
 
 // This code translates everything, until end of file.
 void Parser::translate_all()
@@ -75,6 +82,12 @@ void Parser::T_translate(TokenList& X)
   if(!unprocessed_xml.empty()) missing_flush();
   translate_all();
   restore_the_state(s);
+}
+
+void Parser::translate01()
+{
+  SaveErrTok sv (cur_tok);
+  translate03();
 }
 
 // This prints the command to translate. The case of a space is special
@@ -145,18 +158,11 @@ void Parser::leave_h_mode()
     flush_buffer0();
     the_stack.pop(cst_p);
     Xmlp p =the_stack.top_stack()->back();
-    if(p) {
-      if (p->is_empty_p()) { the_stack.top_stack()->pop_back(); p = 0; }
-    }
+    if(p && p->is_empty_p())  the_stack.top_stack()->pop_back();
     the_stack.add_nl();
   }
 }
 
-
-AttList& Parser::last_att_list()
-{
-  return the_stack.get_top_id().get_att();
-}
 
 inline string xml_to_string (Xmlp X)
 {
@@ -165,26 +171,26 @@ inline string xml_to_string (Xmlp X)
 }
 
 // translates {foo}
-void Parser::T_next_arg()
+void Parser::T_arg()
 {
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   T_translate(L);
 }
 
 // translates {foo} in a group
-void Parser::T_next_arg_local()
+void Parser::T_arg_local()
 {
   push_level(bt_local);
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   T_translate(L);
-  pop_level(false,bt_local);
+  pop_level(bt_local);
 }
 
 // translates [foo]
-void Parser::T_next_optarg()
+void Parser::T_optarg()
 {
   TokenList L;
-  next_optarg(L);
+  read_optarg(L);
   T_translate(L);
 }
 
@@ -198,86 +204,79 @@ Xmlp Parser::translate_list(TokenList& L)
 }
 
 // Same, but reads the list of tokens.
-Xmlp Parser::xT_next_arg()
+Xmlp Parser::xT_arg_nopar()
 {
-  TokenList L = mac_arg_long();
+  TokenList L = read_arg_nopar();
   return translate_list(L);
 }
 
 // Same, but returns a string
-string Parser::sT_next_arg()
+string Parser::sT_arg_nopar()
 {
-  return xT_next_arg() -> convert_to_string();
+  return xT_arg_nopar() -> convert_to_string();
 }
 
-// Return an Id location for the next argument
-Istring Parser::nT_next_arg()
+
+// translates a token list, result is a string
+string Parser::sT_translate(TokenList& L)
 {
-  string s = sT_next_arg();
+  return translate_list(L) ->convert_to_string();
+}
+// Return an Id location for the next argument
+Istring Parser::nT_arg_nopar()
+{
+  string s = sT_arg_nopar();
   return Istring(s);
 }
 
 // Return 0 if the argument is empty or does not exist.
-Xmlp Parser::xT_next_optarg()
+Xmlp Parser::xT_optarg_nopar()
 {
   TokenList L;
-  next_optarg(L);
+  read_optarg(L);
   if(L.empty()) return 0;
   return translate_list(L);
 }
 
-// Hacked version of sT_next_arg.
+// Hacked version of sT_arg_nopar.
 string Parser::special_next_arg()
 {
   InUrlHandler something;
   InLoadHandler something_else;
-  SaveCatcode unused2('~',12);
-  SaveCatcode unused3('#',13);
-  return sT_next_arg();
+  SaveCatcode unused2('~',other_catcode);
+  SaveCatcode unused3('#',active_catcode);
+  return sT_arg_nopar();
 }
 
 // Returns next optional argument as a string
-string Parser::sT_next_optarg()
+string Parser::sT_optarg_nopar()
 {
-  Xmlp res = xT_next_optarg();
+  Xmlp res = xT_optarg_nopar();
   if(!res) return "";
   return res -> convert_to_string();
 }
 
 // Returns next optional argument as an attribute value.
 // return 0 if the argument is empty or does not exist.
-Istring Parser::nT_next_optarg()
+Istring Parser::nT_optarg_nopar()
 {
   TokenList L;
-  next_optarg_long(L);
+  read_optarg_nopar(L);
   if(L.empty()) return Istring();
   Xmlp x = translate_list(L);
   string y = x ->convert_to_string();
   return Istring(y);
 }
 
-// Returns next arg as a string (not translated)
-string Parser::rT_next_optarg()
-{
-  TokenList L;
-  next_optarg_long(L);
-  return exp_token_list_to_string(L);
-}
-
-string Parser::rT_next_arg()
-{
-  TokenList L = mac_arg_long();
-  return exp_token_list_to_string(L);
-}
-
 // First argument of minipage should be [c] [t] or [b]
 // Third arg allows [s]
+// Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
 // returns cst_invalid in case of failure, a position otherwise
-// Fixme : should be outer, requires caller's name.
-name_positions Parser::get_ctb_opt(bool all)
+
+name_positions Parser::get_ctb_opt()
 {
   TokenList L; 
-  next_optarg_long(L);
+  read_optarg_nopar(L);
   if(L.empty()) return cst_invalid;
   Token t = token_ns::get_unique(L);
   if(t.is_null()) return cst_invalid;
@@ -287,6 +286,8 @@ name_positions Parser::get_ctb_opt(bool all)
   if(c=='s') return np_letter_s;
   if(c=='t') return np_letter_t;
   if(c=='b') return np_letter_b;
+  if(c=='l') return np_letter_l;
+  if(c=='r') return np_letter_r;
   else return cst_invalid;
 }
 
@@ -294,7 +295,7 @@ name_positions Parser::get_ctb_opt(bool all)
 name_positions Parser::get_trees_opt()
 {
   TokenList L; 
-  next_optarg_long(L);
+  read_optarg_nopar(L);
   if(L.empty()) return cst_invalid;
   Token t1,t2;
   token_ns::get_unique(L,t1,t2);
@@ -314,30 +315,6 @@ name_positions Parser::get_trees_opt()
   if(c2!='l' && c2 != 'r') return cst_invalid;
   if(c=='t') return c2=='l' ?  np_letters_tl : np_letters_tr; 
   else return c2=='l' ?  np_letters_bl : np_letters_br; 
-}
-
-// Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
-// returns cst_invalid in case of failure, a position otherwise
-name_positions Parser::get_lrcs_opt(bool all)
-{
-  TokenList L; 
-  next_optarg_long(L);
-  if(L.empty()) return cst_invalid;
-  Token t = token_ns::get_unique(L);
-  if(t.is_null()) return cst_invalid;
-  if(t.cmd_val()!=letter_catcode) return cst_invalid;
-  uint c = t.val_as_letter();
-  if(c=='c') return np_letter_c;
-  if(c=='l') return np_letter_l;
-  if(c=='r') return np_letter_r;
-  if(c=='s') return np_letter_s;
-  else return cst_invalid;
-}
-
-// translates a token list, result is a string
-string Parser::sT_translate(TokenList& L)
-{
-  return translate_list(L) ->convert_to_string();
 }
 
 // In the case where the font has changed and we are in text mode, we call 
@@ -384,7 +361,7 @@ void Parser::old_font()
 void Parser::arg_font(subtypes c)
 {
   flush_buffer();
-  before_mac_arg(name_for_error);
+  before_mac_arg();
   push_level(bt_brace);
   see_font_change(c);
 }
@@ -395,7 +372,7 @@ void Parser::T_fonts(name_positions x)
   leave_v_mode();
   Xmlp res = the_stack.fonts1(x);
   the_stack.push(the_names[cst_fonts],res);
-  T_next_arg();
+  T_arg();
   the_stack.pop(cst_fonts);
 }
 
@@ -445,8 +422,10 @@ void Parser::T_par1()
       parse_error("Invalid \\par command: paragraph not started");
     } else if(cp->par_is_empty()) {
       unfinished_par = cp;
-      cp->change_name(Istring());
       the_stack.pop(cst_p);
+      Xmlp tp = the_stack.top_stack();
+      if(tp -> back() == cp) tp ->pop_back();
+      else cp->change_name(Istring());
       return;
     }
   }
@@ -461,14 +440,14 @@ void Parser::T_par1(Istring u)
 }
 
 // User function that adds some element. Is leave_v_mode necessary ?
-// if w generates <foo/> otherwise <foo></foo>
+// if w generates <foo/> otherwise <foo>...</foo>
 void Parser::T_xmlelt(subtypes w)
 {
   flush_buffer();
-  string s = sT_next_arg();
+  string s = sT_arg_nopar();
   Xmlp res = new Xml(Istring(s),0);
   if(w) {
-    if(w==two_code) res -> set_id(-1);
+    if(w==two_code) res -> set_id(-1);  // XML comment
     flush_buffer();
     the_stack.add_last(res);
     return;
@@ -476,7 +455,7 @@ void Parser::T_xmlelt(subtypes w)
   leave_v_mode();
   Istring name  = Istring("xmlelt");
   the_stack.push(name,res);
-  T_next_arg();
+  T_arg();
   the_stack.pop(name);
 }
 
@@ -485,7 +464,7 @@ void Parser::T_xmlelt(subtypes w)
 void Parser::T_arg1(name_positions y)
 {
   the_stack.push1(y);
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   brace_me(L);
   T_translate(L);
   the_stack.pop(y);
@@ -514,10 +493,10 @@ Istring Parser::T_item_label(int c)
 {
   TokenList L;
   bool opt = cur_tok.is_open_bracket();
-  if(opt) next_optarg_long(L); 
+  if(opt) read_optarg_nopar(L); 
   string list_ctr = the_parser.eqtb_string_table[1].get_val();
   if(!list_ctr.empty())
-    refstepcounter(list_ctr,false);
+    refstepcounter(list_ctr.c_str(),false);
   if(!opt) {
     Token t = hash_table.itemlabel_token;
     token_from_list(t);
@@ -547,7 +526,7 @@ void Parser::T_glo ()
   T_arg1(np_label_glo);
   the_stack.push1(np_item);
   the_stack.set_v_mode();
-  T_next_arg();
+  T_arg();
   leave_h_mode();
   the_stack.pop(np_item);
   the_stack.set_mode(w);
@@ -560,22 +539,22 @@ void Parser::T_glo ()
 // we have to allow for a label and read the title.
 void Parser::start_paras(int y, string Y,bool star)
 {
-  if(!star) {
+  bool module =y==7 || y == 8;
+  if(!star || module) {
     if(y==0)
       the_stack.add_new_anchor_spec();
     else
       the_stack.add_new_anchor();
   }
-  bool module =y==7 ||  y == 8;
   Xmlp opt = 0;
   if(module)
-    add_id("mod:" +Y);
+    create_label("mod:" +Y,the_stack.get_cur_id()); // should be the id above
   else
-    opt = xT_next_optarg();
+    opt = xT_optarg_nopar();
   the_stack.set_arg_mode();
   the_stack.push1(np_head);
   Xmlp title = the_stack.top_stack();
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   if(module) check_module_title(L);
   brace_me(L);
   T_translate(L);
@@ -602,10 +581,9 @@ void Parser::check_module_title(TokenList&L)
   static int ctr =0;
   ++ctr;
   token_ns::remove_initial_spaces(L);
-  if(ctr==1) return; // ok for the first module
   if(!L.empty()) return;
   signal_error("Empty module name replaced!");
-  L = token_ns::string_to_list(ctr==2 ? "Overall Objectives" :
+  L = token_ns::string_to_list(ctr==1 ? "Overall Objectives" :
 			       "Introduction",false);
 }
 
@@ -631,7 +609,7 @@ void Parser::T_paras(subtypes x)
   int y = x-sectionning_offset;
   if(x==toplevel_sec_code) {
     y = 0;
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     if(!L.empty()) {
       token_from_list(L.front());
       sectionning_offset = section_code;
@@ -646,7 +624,7 @@ void Parser::T_paras(subtypes x)
   }
   if(x==endsec_code) {
     y = 0;
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     if(!L.empty()) {
       token_from_list(L.front());
       if (cur_cmd_chr.get_cmd()==section_cmd)
@@ -678,13 +656,7 @@ void Parser::T_paras(subtypes x)
   start_paras(y,Y.c_str(),star);
 }
 
-// Translates \label or \ref. This is mode independent (ok ?)
-void Parser::T_label()
-{
-  string a = special_next_arg();
-  add_id(a);
-}
-
+// Translates \ref or \pageref
 void Parser::T_ref(bool is_ref)
 {
   string a = special_next_arg();
@@ -694,6 +666,77 @@ void Parser::T_ref(bool is_ref)
   if(!is_ref) X.add_attribute(np_rend,np_page);
 }
 
+// \begin or \end of subequations
+void Parser::T_subequations(bool start)
+{
+  static bool in_subequations = false;
+  if(!start) { // easy part: \global\c@equation=\c@parentequation
+    if(!in_subequations) {
+      parse_error("Illegal \\endsubequations");
+      return;
+    }
+    in_subequations = false;
+    int v = eqtb_int_table[equation_ctr_pos+1].get_val();
+    word_define(equation_ctr_pos, v, true);
+    state = state_S;
+    return;
+  }
+  if(in_subequations) {
+    parse_error("Illegal nesting of subequations environment");
+    return;
+  }
+  in_subequations = true;
+  leave_h_mode();
+  static bool tokscreated = false;
+  if(!tokscreated) {
+    tokscreated = true;
+    T_theequation = hash_table.locate("theequation");
+    T_theparentequation = hash_table.locate("theparentequation");
+    T_at_theparentequation = hash_table.locate("@@theequation");
+  }
+  the_stack.add_newid0(np_anchor);
+  refstepcounter("equation", true);
+  back_input(hash_table.CB_token);
+  back_input(T_theequation);
+  back_input(hash_table.OB_token);
+  TokenList theparent;
+  read_mac_body(theparent,true,0);
+  new_macro(theparent,T_theparentequation);
+  int v = eqtb_int_table[equation_ctr_pos].get_val();
+  word_define(equation_ctr_pos+1, v, true);  // par = cur
+  word_define(equation_ctr_pos, 0, true);  // cur = 0
+  M_let_fast(T_theequation,T_at_theparentequation,false);
+}
+
+string Parser::scan_anchor(bool& h)
+{
+  static int anchor_id = 0;
+  anchor_id++;
+  h = remove_initial_star();
+  string s = sT_optarg_nopar();
+  if(!s.empty()) return s;
+  mac_buffer << bf_reset << anchor_id;
+  return mac_buffer.to_string();
+}
+
+// \label \anchor or \anchorlabel
+void Parser::T_label(int c)
+{
+  if(c==0) { // case of label
+    string a = special_next_arg();
+    create_label(a,the_stack.get_cur_id());
+    return;
+  }
+  bool h;
+  string s = scan_anchor(h);
+  Istring id = the_stack.add_anchor(s,h);
+  if(c==2) {
+    string a = special_next_arg();
+    create_label(a,id);
+  }
+}
+
+
 // Commands for the float package
 void Parser::T_float(subtypes c)
 {
@@ -702,13 +745,13 @@ void Parser::T_float(subtypes c)
   case 1:// @dblfloat
     {
       Buffer& B=Tbuf;
-      string sarg = sT_next_arg();
+      string sarg = sT_arg_nopar();
       Istring arg = Istring(sarg);
-      Istring opt = nT_next_optarg();
+      Istring opt = nT_optarg_nopar();
       if(opt.null()) {
 	B <<bf_reset << "fps@" << sarg;
 	expand_no_arg(B.to_string());
-	opt = nT_next_arg();
+	opt = nT_arg_nopar();
       }
       word_define(incentering_code,1,false);
       leave_h_mode();
@@ -718,9 +761,9 @@ void Parser::T_float(subtypes c)
       the_stack.add_att_to_last(np_type,arg);
       B <<bf_reset << "fname@" << sarg;
       expand_no_arg(B.to_string());
-      opt = nT_next_arg();
+      opt = nT_arg_nopar();
       the_stack.add_att_to_last(np_name,opt);
-      refstepcounter(sarg,true);
+      refstepcounter(sarg.c_str(),true);
       B <<bf_reset << "@float@every@" << sarg;
       back_input(hash_table.locate(B));
       back_input(hash_table.locate("the"));
@@ -751,7 +794,7 @@ void Parser::T_subfigure ()
   refstepcounter("subfigure",true);
   the_stack.set_arg_mode();
   the_stack.push1(np_leg);
-  T_next_optarg ();
+  T_optarg ();
   the_stack.pop(np_leg);
   {
     SaveCatcode tmp('_',13); // allow underscore in the file name (needed ?)
@@ -770,7 +813,7 @@ void Parser::T_ampersand()
     unprocessed_xml << "&amp;";  // hack...
     return;
   } else
-    parse_error("Unexpected &","Unexpected ampersand");
+    parse_error(err_tok,"Unexpected &","Unexpected ampersand");
 }
 
 // This interprets \newline.
@@ -806,8 +849,7 @@ void Parser::T_backslash()
 
 void Parser::T_grabenv ()
 {
-  get_r_token();
-  Token cmd = cur_tok;
+  Token cmd = get_r_token();
   TokenList value;
   skip_initial_space_and_back_input();
   if(!nb_env_on_stack()) {
@@ -827,7 +869,7 @@ void Parser::T_keywords ()
   bool seen_end = false;
   for(;;) {
     TokenList v;
-    grab_env(v,true,seen_end);
+    seen_end = grab_env_comma(v);
     token_ns::remove_first_last_space(v);
     if(!v.empty() && v.back().is_dot())
       v.pop_back();
@@ -905,13 +947,13 @@ void Parser::includegraphics(subtypes C)
   {
     InLoadHandler something;
     if(ic) {
-      next_optarg(W);
+      read_optarg(W);
       flush_buffer();
-      file_name = sT_next_arg(); 
-    } else W = mac_arg();
+      file_name = sT_arg_nopar(); 
+    } else W = read_arg();
   }
   expand_no_arg("Gin@keys");
-  { TokenList K = mac_arg(); W.splice(W.begin(),K); }
+  { TokenList K = read_arg(); W.splice(W.begin(),K); }
   leave_v_mode();
   AttList& AL = the_stack.add_newid0(np_figure);
   if(ic) no_extension(AL,file_name);
@@ -924,21 +966,21 @@ void Parser::includegraphics(subtypes C)
     token_ns::remove_first_last_space(key);
     if(key.empty()) continue;
     token_ns::remove_first_last_space(val);
-    string skey = xkv_ns::to_string(key,bkey);
+    string skey = list_to_string_c(key,bkey);
     B.reset();
     if(!ic && (skey == "file" || skey == "figure")) { 
-      string sval = xkv_ns::to_string(val,bval);
+      string sval = list_to_string_c(val,bval);
       no_extension(AL,sval); 
       ic = true;
     } else if(skey == "keepaspectratio" || skey=="clip" || skey=="draft" || skey =="hiresbb") {
       name_positions V = np_true;
-      string sval = xkv_ns::to_string(val,bval);
+      string sval = list_to_string_c(val,bval);
       if(sval=="false") V = np_false;
       if(skey == "clip") AL.push_back(np_clip, V,true);
       else AL.push_back(Istring(skey), V,true);
     } else if(skey == "type" || skey=="ext" ||skey=="read" ||skey=="command"
 	      ||skey=="origin" || skey=="scale" || skey=="angle") {
-      string sval = xkv_ns::to_string(val,bval);
+      string sval = list_to_string_c(val,bval);
       if(skey=="angle" && sval=="0") continue;
       Istring p = skey=="scale" ? the_names[np_scale] :
 	skey=="angle" ? the_names[np_angle] : Istring(skey);
@@ -964,22 +1006,22 @@ void Parser::includegraphics(subtypes C)
 	if(i<3) B.push_back(' ');
       }
       AL.push_back(Istring(skey), Istring(B),true);	    
-    } else invalid_key(skey,val);
+    } else invalid_key(T,skey,val);
   }
   AL.push_back(np_rend,np_inline);
 }
 
 void Parser::T_epsfbox()
 {
-  int xdim_pos = dimen_reg_offset+11;
-  int ydim_pos = dimen_reg_offset+12;
+  int xdim_pos = 11;  //  \epsfxsize hard-coded
+  int ydim_pos = 12;  // \epsfysize hard-coded
   ScaledInt xdim = eqtb_dim_table[xdim_pos].get_val();
   ScaledInt ydim = eqtb_dim_table[ydim_pos].get_val();
   flush_buffer();
   string y;
   {
     InLoadHandler something;
-    y = sT_next_arg();
+    y = sT_arg_nopar();
   }
   AttList& res = the_stack.add_newid0(np_figure);
   no_extension(res,y);
@@ -998,11 +1040,11 @@ void Parser::T_hspace(subtypes c)
   Token t = cur_tok;
   remove_initial_star();
   scan_glue(it_glue,t,false);
-  append_glue(ScaledInt(cur_val.get_glue_width()),c==1);
+  append_glue(t,ScaledInt(cur_val.get_glue_width()),c==1);
 }
 
 // Code of \vspace, or \vskip, after we have fetched the dimension.
-void Parser::append_glue(ScaledInt dimen, bool vert)
+void Parser::append_glue(Token T,ScaledInt dimen, bool vert)
 {
   if(!vert) {
     int dim = dimen.get_value();
@@ -1023,33 +1065,19 @@ void Parser::append_glue(ScaledInt dimen, bool vert)
       return;
     }
     if(cp->par_is_empty()) {
-      add_vspace(dimen,cp->get_id());
+      add_vspace(T,dimen,cp->get_id());
       return;
     }
   }
   leave_h_mode(); // start a new par if needed.
   if(!the_stack.in_v_mode()) return;
   Xid cp = ileave_v_mode();
-  add_vspace(dimen,cp);
+  add_vspace(T,dimen,cp);
 }
 
-class ColSpec {
-  string name;
-  string model;
-  string value;
-  Istring id;
-  Xmlp xval;
-  bool used;
-public:
-  ColSpec(string a, string b,string c);
-  bool compare(string a, string b) { return model==a && value==b; } 
-  Istring get_id() { used = true; return id; }
-  bool is_used() const { return used; }
-  Xmlp get_val() const { return xval; }
-};
-vector<ColSpec*>all_colors;
-
-
+//  Colors.
+// This creates a new color item, to be pushed on the color stack
+// Note that used is false, set to true by get_id.
 ColSpec::ColSpec(string a, string b,string c) :
   name(a), model(b), value(c), used(false)
 {
@@ -1063,7 +1091,7 @@ ColSpec::ColSpec(string a, string b,string c) :
   static int n = 0;
   ++n;
   B << "colid" << n;
-  id = Istring(B);
+  id = Istring(B); // This is a unique id
   xval->get_id().add_attribute(np_id, id);
 }
 
@@ -1094,7 +1122,8 @@ Istring translate_ns::find_color(const string& model, const string& value)
 }
 
 // case of \color{red} or \color[rgb]{1,0,0}
-// Marks the color as used
+// In the first case, we look at \color@red if this is a command
+// with code color_md, subtype N, its color N-offset in the table.
 Istring Parser::scan_color(const string& opt,const string& name)
 {
   if(opt.empty() || opt=="named") { // case \color{red} or \color[named]{Red}
@@ -1103,17 +1132,17 @@ Istring Parser::scan_color(const string& opt,const string& name)
     token_from_list(hash_table.locate(B));
     if(cur_cmd_chr.get_cmd()==color_cmd) {
       int n = all_colors.size();
-      int k = cur_cmd_chr.get_chr()-10;
+      int k = cur_cmd_chr.get_chr() - color_offset;
       if(k>=0 && k<n) 
 	return all_colors[k]->get_id();
     } 
-    parse_error("Undefined color ", name, "undefined color");
+    parse_error(err_tok,"Undefined color ", name, "undefined color");
     return Istring();
-  } else return find_color(opt,name);
+  } else return translate_ns::find_color(opt,name);
 }
 
 
-// All commands that deal with colors
+// Implements color and variants (code = color_cmd)
 void Parser::T_color(subtypes c)
 {
   Buffer&B =tpa_buffer;
@@ -1124,32 +1153,32 @@ void Parser::T_color(subtypes c)
     return;
   }
   if(c==color_code) {
-    string opt = sT_next_optarg();
-    string name = sT_next_arg();
+    string opt = sT_optarg_nopar();
+    string name = sT_arg_nopar();
     Istring C = scan_color(opt,name);
     cur_font.set_color(C);
     font_has_changed();
     return;
   }
   if(c==pagecolor_code) {
-    string opt = sT_next_optarg();
-    string name = sT_next_arg();
+    string opt = sT_optarg_nopar();
+    string name = sT_arg_nopar();
     Istring C = scan_color(opt,name);
     AttList& res = the_stack.add_newid0(np_pagecolor);
     res.push_back(np_color,C);
   }
   if(c==colorbox_code) {
-    string opt = sT_next_optarg();
-    string name = sT_next_arg();
+    string opt = sT_optarg_nopar();
+    string name = sT_arg_nopar();
     Istring C = scan_color(opt,name);
     Xmlp mbox = internal_makebox();
     mbox->get_id().add_attribute(np_color,C);
     return;
   }
   if(c==fcolorbox_code) {
-    string opt = sT_next_optarg();
-    string name1 = sT_next_arg();
-    string name2 = sT_next_arg();
+    string opt = sT_optarg_nopar();
+    string name1 = sT_arg_nopar();
+    string name2 = sT_arg_nopar();
     Istring C1 = scan_color(opt,name1);
     Istring C2 = scan_color(opt,name2);
     Xmlp mbox = internal_makebox();
@@ -1157,29 +1186,37 @@ void Parser::T_color(subtypes c)
     mbox->get_id().add_attribute(np_color2,C2);
     return;
   }
-  if(c==definecolor_code) { 
-    string name = sT_next_arg();
-    string model = sT_next_arg();
-    string value = sT_next_arg();
-    B<< bf_reset <<  "\\color@" << name;
-    cur_tok = hash_table.locate(B);
-    if(!hash_table.eqtb[cur_tok.eqtb_loc()].is_undefined()) 
+  if(c==definecolor_code) {
+    string name = sT_arg_nopar();
+    string model = sT_arg_nopar();
+    string value = sT_arg_nopar();
+    B << bf_reset <<  "\\color@" << name;
+    Token C = hash_table.locate(B);
+    if(!hash_table.eqtb[C.eqtb_loc()].is_undefined()) 
       main_ns::log_and_tty << "Redefining color " << name << "\n";
     if(model=="named") {
+      // case \definecolor{myred}{named}{red}
+      // is \global\let\color@myred = \color@red
       Buffer&B = tpa_buffer;
       B<< bf_reset <<  "\\color@" << value;
       Token T = hash_table.locate(B);
-      eval_let(cur_tok,T,true);
+      M_let_fast(C,T,true);
       return;
     }
+    // case \definecolor{myred}{rgb}{1,2,3}
+    // is \global\let \color@myred \colorN
     int n = all_colors.size();
     all_colors.push_back(new ColSpec(name,model,value));
-    CmdChr v(color_cmd,subtypes(n+10));
-    eq_define(cur_tok.eqtb_loc(),v,true);
+    CmdChr v(color_cmd,subtypes(n+color_offset));
+    eq_define(C.eqtb_loc(),v,true);
+    if(tracing_assigns()) 
+      the_log << lg_startbrace << "Globally changing " << C
+	      << " into color number " << n << lg_endbrace;
     return;
   }
+  // Now c >= color_offset
   int n = all_colors.size();
-  int k = c-10;
+  int k = c-color_offset;
   if(k>=0 && k<n) {
     Istring C = all_colors[k]->get_id();
     cur_font.set_color(C);
@@ -1187,33 +1224,35 @@ void Parser::T_color(subtypes c)
   }
 }
 
-Xmlp Parser::internal_makebox()
-{
-  leave_v_mode();
-  the_stack.push1(np_mbox);
-  Xmlp mbox = the_stack.top_stack();
-  TokenList d=mac_arg();
-  brace_me(d);
-  T_translate(d);
-  the_stack.pop(np_mbox);
-  return mbox;
-}
-
 // Add the given dimension as spacebefore value to the paragraph x.
-void Parser::add_vspace(ScaledInt dimen, Xid x)
+void Parser::add_vspace(Token T,ScaledInt dimen, Xid x)
 {
   AttList&L = x.get_att();
   int K = L.has_value(the_names[np_spacebefore]);
   if(K>=0) {
     Istring k = L.get_val(K);
-    scan_glue(it_glue,the_parser.hash_table.relax_token,k.c_str());
+    TokenList La = token_ns::string_to_list(k.c_str(),false);
+    list_to_glue(it_glue,T,La);
     dimen += ScaledInt(cur_val.get_glue_width());
   }
   Istring k = the_main->SH.find_scaled(dimen);
   x.add_attribute(the_names[np_spacebefore],k,true);
 }
 
-// Translates \makebox and \mbox
+
+Xmlp Parser::internal_makebox()
+{
+  leave_v_mode();
+  the_stack.push1(np_mbox);
+  Xmlp mbox = the_stack.top_stack();
+  TokenList d=read_arg();
+  brace_me(d);
+  T_translate(d);
+  the_stack.pop(np_mbox);
+  return mbox;
+}
+
+// Translates \makebox and \mbox, \text
 void Parser::T_mbox(subtypes c)
 {
   Token T= cur_tok;
@@ -1227,7 +1266,7 @@ void Parser::T_mbox(subtypes c)
       return;
     }
     iwidth = get_opt_dim(T);
-    ipos = the_names[get_lrcs_opt(true)];
+    ipos = the_names[get_ctb_opt()];
   }
   Xmlp mbox = internal_makebox();
   if(!ipos.null() || !iwidth.null()) {
@@ -1235,7 +1274,7 @@ void Parser::T_mbox(subtypes c)
     mbox->get_id().add_attribute(np_box_width,iwidth);
     return;
   }
-
+  // Hack the box
   Xmlp u = mbox->single_non_empty();
   if(u && u->has_name(the_names[np_figure])) mbox->kill_name();
   if(mbox->only_text()) mbox->kill_name();
@@ -1254,13 +1293,13 @@ void Parser::T_cap_or_note(bool cap)
   the_stack.push1(name);
   Xmlp opt=0, note = 0;
   if(cap) {  // case of Caption
-    opt = xT_next_optarg();
+    opt = xT_optarg_nopar();
     note = the_stack.top_stack();
     the_stack.set_v_mode();
-    T_next_arg();
+    T_arg();
     leave_h_mode();
   } else { // case of footnote, locally redefines fonts
-    ignore_next_optarg(); // is this OK ?
+    ignore_optarg(); // is this OK ?
     the_stack.add_att_to_last(the_names[np_place],the_names[np_foot]);
     my_stats.one_more_footnote();
     refstepcounter("footnote",true);
@@ -1270,14 +1309,14 @@ void Parser::T_cap_or_note(bool cap)
     cur_font.change_size(6);
     font_has_changed();
     the_stack.set_v_mode();
-    T_next_arg();
+    T_arg();
     leave_h_mode();
     cur_font = sv; 
     font_has_changed();
   }
   the_stack.pop(name);
   if(opt) the_stack.add_last(new Xml(np_alt_caption,opt));
-  pop_level(false,bt_local);
+  pop_level(bt_local);
   if(the_main->get_footnote_hack())
     note->remove_par_bal_if_ok(); 
 }
@@ -1286,7 +1325,7 @@ void Parser::T_makebox(bool framed, Token C)
 {
   Istring A,B;
   T_twodims(A,B,C);
-  string oarg = sT_next_optarg();
+  string oarg = sT_optarg_nopar();
   leave_v_mode();
   the_stack.push1(np_box);
   AttList& cur = last_att_list();
@@ -1296,7 +1335,7 @@ void Parser::T_makebox(bool framed, Token C)
     cur.push_back(np_box_pos,Istring(oarg));
   cur.push_back(np_height,B);
   cur.push_back(np_width,A);
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(np_box);
 }
 
@@ -1304,10 +1343,10 @@ void Parser::T_makebox(bool framed, Token C)
 void Parser::T_save_box(bool simple)
 {
   Token T = cur_tok;
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   back_input(hash_table.equals_token);
   back_input(L);
-  int i = scan_eight_bit_int();
+  int i = scan_reg_num();
   scan_optional_equals();
   skip_initial_space_and_back_input();
   //  leave_v_mode();
@@ -1319,12 +1358,12 @@ void Parser::T_save_box(bool simple)
     Istring iwidth;
     if(!simple) {
       iwidth = get_opt_dim(T);
-      ipos = the_names[get_lrcs_opt(true)];
+      ipos = the_names[get_ctb_opt()];
     }
     the_stack.push1(np_mbox);
     the_stack.set_arg_mode();
     Xmlp mbox = the_stack.top_stack();
-    TokenList d=mac_arg();
+    TokenList d=read_arg();
     brace_me(d);
     T_translate(d);
     the_stack.pop(np_mbox);
@@ -1358,11 +1397,11 @@ void Parser::T_fbox_dash_box()
 {
   Token T = cur_tok;
   flush_buffer();
-  TokenList a = mac_arg();
+  TokenList a = read_arg();
   Istring A = token_list_to_att(a,T,false);
   Istring B,C;
   T_twodims(B,C,T);
-  string oarg = sT_next_optarg();
+  string oarg = sT_optarg_nopar();
   the_stack.push1(np_dashbox);
   Xid cur_id = the_stack.get_top_id();
   if(!oarg.empty())
@@ -1370,18 +1409,18 @@ void Parser::T_fbox_dash_box()
   cur_id.add_attribute(np_height,C);
   cur_id.add_attribute(np_width,B);
   cur_id.add_attribute(np_dashdim,A);
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(np_dashbox);
 }
 
 void Parser::T_fbox_rotate_box ()
 {
   flush_buffer();
-  Istring val = nT_next_arg(); 
+  Istring val = nT_arg_nopar(); 
   leave_v_mode();
   the_stack.push1(np_rotatebox);
   the_stack.get_top_id().add_attribute(np_r_angle,val);
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(np_rotatebox);
 }
 
@@ -1403,17 +1442,17 @@ void Parser::T_fbox (subtypes cc)
       return;
     }
     iwidth = get_opt_dim(T);
-    ipos = Istring(get_lrcs_opt(true));
+    ipos = Istring(get_ctb_opt());
   }
   if(cc==scalebox_code) {
     flush_buffer();
-    iscale =  nT_next_arg();
-    iwidth =  nT_next_optarg();
+    iscale =  nT_arg_nopar();
+    iwidth =  nT_optarg_nopar();
   }
   leave_v_mode();
   the_stack.push1(cc==scalebox_code? np_sbox:np_fbox);
   Xmlp cur = the_stack.top_stack(); // will contain the argument.
-  T_next_arg_local();
+  T_arg_local();
   the_stack.pop(cc==scalebox_code? np_sbox:np_fbox);
   Xmlp aux = cur->single_non_empty();
   AttList& AL = cur->get_id().get_att();
@@ -1461,7 +1500,7 @@ void Parser::url_hack(TokenList& L)
     if(T.is_slash_token() && L.front().is_slash_token())
       continue; //no break at the start of http://
     if((T.is_slash_token() || T.get_val() == other_t_offset+'.')
-       &&bib_ns::allow_break)
+       && main_ns::bib_allow_break)
       R.push_back(hash_table.allowbreak_token);
   }
 }
@@ -1477,10 +1516,10 @@ void Parser::T_url(subtypes c)
   leave_v_mode();
   InUrlHandler something;
   InLoadHandler something_else;
-  SaveCatcode unused2('~',12);
-  SaveCatcode unused3('&',13);
-  SaveCatcode unused4('#',13);
-  TokenList X = mac_arg();
+  SaveCatcode unused2('~',other_catcode);
+  SaveCatcode unused3('&',active_catcode);
+  SaveCatcode unused4('#',active_catcode);
+  TokenList X = read_arg();
   if(!X.empty()) {
     Token T = X.front();
     token_from_list(T);
@@ -1491,10 +1530,10 @@ void Parser::T_url(subtypes c)
   }
   if(is_rrrt) {
     Tbuf << bf_reset << "http://www.inria.fr/rrrt/";
-    TokenList tmp = Tbuf.str_toks(false); // what about new line here ?
+    TokenList tmp = Tbuf.str_toks(nlt_space); // what about new line here ?
     X.splice(X.begin(),tmp);
     Tbuf << bf_reset << ".html";
-    tmp = Tbuf.str_toks(false);
+    tmp = Tbuf.str_toks(nlt_space);
     X.splice(X.end(),tmp);
   }
   TokenList Y;
@@ -1523,8 +1562,8 @@ void Parser::T_url(subtypes c)
 Xmlp Parser::T_hanl_text()
 { 
   push_level(bt_local);
-  Xmlp val = xT_next_arg();
-  pop_level(false,bt_local);
+  Xmlp val = xT_arg_nopar();
+  pop_level(bt_local);
   return val;
 }
 
@@ -1533,7 +1572,7 @@ Xmlp Parser::T_hanl_url()
 {
   InUrlHandler something;
   InLoadHandler something_else;
-  Xmlp B = xT_next_arg();
+  Xmlp B = xT_arg_nopar();
   return B;
 }
 
@@ -1549,7 +1588,7 @@ void Parser::T_hanl(subtypes c)
     B = T_hanl_url();
     val = T_hanl_text();
   } else {
-    ignore_next_optarg();
+    ignore_optarg();
     val = T_hanl_text();
     B = T_hanl_url();
   }
@@ -1570,7 +1609,7 @@ void Parser::T_hanl(subtypes c)
 Xmlp Parser::special_tpa_arg(String name,String y, bool par,bool env,bool has_q)
 {
   if(!y ||y[0]==0) {
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     back_input(hash_table.par_token);
     back_input(L);
     return 0;
@@ -1580,7 +1619,7 @@ Xmlp Parser::special_tpa_arg(String name,String y, bool par,bool env,bool has_q)
   bool has_atts = tpa_buffer.look_at_space(y);
   Istring Y ;
   if(!has_atts)
-    Y = Istring(y); // shit...
+    Y = Istring(y);
   else Y = Istring(tpa_buffer.c_str());
   if(par)
     the_stack.set_v_mode();
@@ -1596,7 +1635,7 @@ Xmlp Parser::special_tpa_arg(String name,String y, bool par,bool env,bool has_q)
     cur_tok = hash_table.locate(B);
     if(!hash_table.eqtb[cur_tok.eqtb_loc()].is_undefined()) {
       Token T = cur_tok;
-      TokenList L = mac_arg();
+      TokenList L = read_arg();
       brace_me(L);
       L.push_front(T);
       brace_me(L);
@@ -1653,12 +1692,13 @@ Xmlp Parser::tpa_exec(String cmd)
 
 // \@reevaluate\foo\bar\gee is \foo\gee\bar\gee
 // \@reevaluate\foo\bar{gee} is \foo{gee}\bar{gee}
-// 
+// \begin{X}\@reevaluate*{foo}{bar} etc \end{X}
+//  is \begin{foo} etc \end{foo}\begin{bar} etc \end{bar}
 void Parser::T_reevaluate()
 {
   bool in_env = remove_initial_star();
-  TokenList L1 = mac_arg();
-  TokenList L2 = mac_arg();
+  TokenList L1 = read_arg();
+  TokenList L2 = read_arg();
   skip_initial_space();
   // check the easy case
   if(!in_env && !cur_cmd_chr.is_open_brace()) {
@@ -1678,17 +1718,17 @@ void Parser::T_reevaluate()
     get_token(); // the \end token  
     string s = group_to_string(); 
     if(!is_env_on_stack(s)) {
-      parse_error("cannot close environment ",s,"bad \\end");
+      parse_error(err_tok,"cannot close environment ",s,"bad \\end");
       return;
     }
-    pop_level(true,bt_env);
+    cur_tok.kill(); pop_level(bt_env); // closes current env
   }
   Tbuf.reset();
   T_reevaluate0(L1,in_env);
   T_reevaluate0(L2,in_env);
   if(tracing_commands())
     the_log << lg_startbrace << "Reeval: " << Tbuf << lg_endbrace;
-  push_input_stack("(reevaluate)",false);
+  push_input_stack("(reevaluate)",false,false);
   lines.push_front(Clines(-1));
   lines.split_string(Tbuf.c_str(),0);
 }
@@ -1707,33 +1747,34 @@ void Parser::T_reevaluate0(TokenList& L1, bool in_env)
 
 
 // Translates \uppercase, \MakeUpperCase, etc
-void Parser::change_case(int c)
+void Parser::T_case_shift(int c)
 {
   Token T = cur_tok;
-  bool to_upper = (c==1 || c==3 || c==5);
+  bool to_upper = (c==1 || c==3 || c==5 || c== 7);
   int offset = to_upper ? uc_code_offset : lc_code_offset;
   int k = to_upper ? +1 : -1;
   Token* table = to_upper ? uclc_list : uclc_list+1;
   bool ltx = (c>=2);
-  bool extended = c>=4;
-  TokenList L = ltx ? mac_arg() : scan_general_text();
-  if(ltx) {
+  bool extended = (c==4 || c== 5);
+  bool latex3 = (c>=6);
+  TokenList L = ltx ? read_arg() : scan_general_text();
+  if(ltx && !latex3) {
     push_level(bt_brace);
     //    if(to_upper) {} // definir \i et \j
     if(extended) {
-      eval_let(hash_table.nocase_e_token,  hash_table.nocase_i_token,false);
-      eval_let(hash_table.cite_e_token,  hash_table.cite_i_token,false);
-      eval_let(hash_table.ref_token,  hash_table.ref_i_token,false);
-      eval_let(hash_table.label_token,  hash_table.label_i_token,false);
-      eval_let(hash_table.ensuremath_token,  hash_table.ensuremath_i_token,false);
+      M_let_fast(hash_table.nocase_e_token,  hash_table.nocase_i_token,false);
+      M_let_fast(hash_table.cite_e_token,  hash_table.cite_i_token,false);
+      M_let_fast(hash_table.ref_token,  hash_table.ref_i_token,false);
+      M_let_fast(hash_table.label_token,  hash_table.label_i_token,false);
+      M_let_fast(hash_table.ensuremath_token, hash_table.ensuremath_i_token,false);
     }
     for(int i=0; i< 11;i++) {
       TokenList L;
       L.push_back(table[2*i+k]);
       new_macro(L,table[2*i]);
     }
-    scan_toks_edef(L);
-    pop_level(false,bt_brace);
+    read_toks_edef(L);
+    pop_level(bt_brace);
   }
   if(tracing_commands()) 
     the_log << lg_startbrace << T << "(a)->" << L << lg_endbrace;
@@ -1767,11 +1808,11 @@ void Parser::change_case(int c)
 	a = *P;
 	++P;
 	res.push_back(a);
-	if(a.is_math_shift()) break;
+	if(a.is_math_shift()) break; // not very robust
       }
       continue;
     } 
-    if(a.get_val()<cs_token_flag+single_base) {
+    if(a.char_or_active()) { 
       int b = a.chr_val();
       int cx = eqtb_int_table[b+offset].get_val();
       if(cx) {
@@ -1793,8 +1834,8 @@ void Parser::T_twoints(TokenList&A, TokenList&B)
   get_token();
   if(cur_tok != match )
     bad_macro_prefix(cur_tok,match);
-  A = read_until_long(hash_table.comma_token);
-  B = read_until_long(Token(other_t_offset,')'));
+  A = read_until_nopar(hash_table.comma_token);
+  B = read_until_nopar(Token(other_t_offset,')'));
 }
 
 // Reads the tokens, converts them to dimension.
@@ -1858,7 +1899,7 @@ Istring Parser::get_c_val(Token x)
   back_input(hash_table.CB_token);
   back_input (x);
   back_input(hash_table.OB_token);
-  return nT_next_arg();
+  return nT_arg_nopar();
 }
 
 void Parser::T_bezier(int c)
@@ -1869,8 +1910,8 @@ void Parser::T_bezier(int c)
   Istring w;
   {
     TokenList L;
-    if(c) next_optarg(L);
-    else L = mac_arg();
+    if(c) read_optarg(L);
+    else L = read_arg();
     if(!L.empty()) 
       w = token_list_to_att(L,C,true); // integer....
   }
@@ -1909,7 +1950,7 @@ void Parser::T_put(subtypes c)
   if(c==frame_code) {
     the_stack.push1(x0); 
     the_stack.set_arg_mode();
-    T_next_arg();
+    T_arg();
     the_stack.pop(x0);  
     return;
   }
@@ -1923,7 +1964,7 @@ void Parser::T_put(subtypes c)
   else
     T_twoints(A,B,C);
   if(c==oval_code) {
-    Istring specs = nT_next_optarg();    
+    Istring specs = nT_optarg_nopar();    
     AttList& val = the_stack.add_newid0(x0);
     val.push_back(np_specs,specs);
     val.push_back(np_ypos,B);
@@ -1931,7 +1972,7 @@ void Parser::T_put(subtypes c)
     return;
   }
   if(c != put_code && c != multiput_code && c!=scaleput_code) { // line vector
-    TokenList L = mac_arg(); 
+    TokenList L = read_arg(); 
     D = token_list_to_att(L,C,false);
     AttList& AL= the_stack.add_newid0(x0);
     AL.push_back(np_width,D);
@@ -1955,13 +1996,13 @@ void Parser::T_put(subtypes c)
     T_twodims(aa,bb,C);
     cur_id.add_attribute(np_dy,bb);
     cur_id.add_attribute(np_dx,aa);
-    TokenList L = mac_arg(); 
+    TokenList L = read_arg(); 
     D = token_list_to_att(L,C,true); // integer....
     cur_id.add_attribute(np_repeat,D); 
   }
   cur_id.add_attribute(np_ypos,B);
   cur_id.add_attribute(np_xpos,A);
-  T_next_arg();
+  T_arg();
   the_stack.pop(x0);  
   if(c==put_code|| c==multiput_code) remove_initial_space_and_back_input();
 }
@@ -1974,7 +2015,7 @@ void Parser::T_linethickness(int c)
   if(c==thinlines_code) C = np_thin_lines;
   AttList& res = the_stack.add_newid0(C);
   if(c==linethickness_code)
-    res.push_back(np_size,nT_next_arg());
+    res.push_back(np_size,nT_arg_nopar());
 }
 
 void Parser::T_curves(int c)
@@ -1992,7 +2033,7 @@ void Parser::T_curves(int c)
   the_stack.push1(x0); 
   the_stack.set_arg_mode();
   Xid cur_id = the_stack.get_top_id();
-  Istring specs = nT_next_optarg();
+  Istring specs = nT_optarg_nopar();
   if(!specs.null()) cur_id.add_attribute(np_curve_nbpts,specs);
   TokenList emptyl;
   cur_id.add_attribute(np_unit_length,token_list_to_att(emptyl,C,false));
@@ -2001,16 +2042,16 @@ void Parser::T_curves(int c)
     T_twodims(aa,bb,C);
     cur_id.add_attribute(np_ypos,bb);
     cur_id.add_attribute(np_xpos,aa);
-    specs = nT_next_arg();
+    specs = nT_arg_nopar();
     cur_id.add_attribute(np_angle,specs);
   } else if(c==bigcircle_code) {
-    cur_id.add_attribute(np_size,nT_next_arg());
+    cur_id.add_attribute(np_size,nT_arg_nopar());
   } else {
     Token match (other_t_offset,'(');
     skip_initial_space();
     if(cur_tok != match )
       bad_macro_prefix(cur_tok,match);
-    TokenList L = read_until_long(Token(other_t_offset,')'));
+    TokenList L = read_until_nopar(Token(other_t_offset,')'));
     T_translate(L);
   }
   the_stack.pop(x0);  
@@ -2029,10 +2070,10 @@ void Parser::T_multiput()
   T_twoints(dx,dy);
   Dx = token_list_to_dim(dx,C,false);
   Dy = token_list_to_dim(dy,C,false);
-  TokenList w = mac_arg();
+  TokenList w = read_arg();
   back_input(w);
   int r = scan_int(C);
-  TokenList L = mac_arg();
+  TokenList L = read_arg();
   brace_me(L);
   while(r>0) {
     TokenList Lc = L;
@@ -2042,7 +2083,7 @@ void Parser::T_multiput()
     AttList& AL = last_att_list();
     AL.push_back(np_ypos,dimen_attrib(Y));
     AL.push_back(np_xpos,dimen_attrib(X));
-    T_next_arg();
+    T_arg();
     the_stack.pop(np_put);  
     the_stack.add_nl();
     r--;
@@ -2062,17 +2103,17 @@ void Parser::T_dashline(subtypes c)
   if(c==circle_code) x0 = np_circle;
   if(c==circle_code) { // circle
     bool has_star = remove_initial_star();
-    TokenList L = mac_arg();
+    TokenList L = read_arg();
     Istring aa = token_list_to_att(L,T,false);
     AttList &AL = the_stack.add_newid0(x0);
     AL.push_back(np_size,aa);
     if(has_star) AL.push_back(np_full,np_true);
     return;
   }
-  Istring A = nT_next_optarg();
+  Istring A = nT_optarg_nopar();
   Istring B;
-  if(c==dashline_code || c==dottedline_code) B = nT_next_arg();
-  Istring C = nT_next_optarg();
+  if(c==dashline_code || c==dottedline_code) B = nT_arg_nopar();
+  Istring C = nT_optarg_nopar();
   the_stack.push1(x0); 
   the_stack.set_arg_mode();
   AttList& AL = last_att_list();
@@ -2115,13 +2156,13 @@ void Parser::LC()
 void Parser::T_error()
 {
   if(cur_cmd_chr.get_chr()==1) {
-    parse_error("Can be used only in preamble: ",cur_tok,"","noprerr");
+    parse_error(cur_tok,"Can be used only in preamble: ",cur_tok,"","noprerr");
     return;
   }
   flush_buffer();
-  string b = sT_next_arg(); // msg
+  string b = sT_arg_nopar(); // msg
   err_ns::local_buf << bf_reset << "Error: " << b;
-  err_ns::signal_error(b.c_str(),0);
+  signal_error(err_tok,b.c_str());
 }
 
 // scans an element id, in brackets, default is cur_id
@@ -2132,7 +2173,7 @@ int Parser::read_elt_id(Token T)
   int n = scan_special_int_d(T,cur);
   if(n>0 && n<=upper) return n;
   err_ns::local_buf << bf_reset << "Bad xml id replaced by 0: " << n;
-  err_ns::signal_error("number too big",0);
+  signal_error(err_tok,"number too big");
   return 0;
 }
 
@@ -2151,9 +2192,9 @@ void Parser::T_xmladdatt(subtypes c)
   else if(c==addatt_to_index_code) n= get_index_value();
   else n = read_elt_id(T);
   cur_tok = T;
-  Istring key = nT_next_arg();
+  Istring key = nT_arg_nopar();
   cur_tok = T;
-  Istring val = nT_next_arg();
+  Istring val = nT_arg_nopar();
   if(key.empty()) {
     if(!force) return;
     Xml* e = the_stack.elt_from_id(n);
@@ -2170,7 +2211,7 @@ string Parser::get_attval()
   Token T = cur_tok;
   flush_buffer();
   int n = read_elt_id(T);
-  Istring key = nT_next_arg();
+  Istring key = nT_arg_nopar();
   if(key.empty()) {
     Xml* e = the_stack.elt_from_id(n);
     if(!e) return ""; 
@@ -2187,15 +2228,14 @@ void Parser::T_define_verbatim_env()
   string b = group_to_string();
   Token t1 = find_env_token(a,true);
   Token t2 = find_env_token(b,true);
-  eval_let(t1,t2,true); // global assignments OK ?
+  M_let_fast(t1,t2,true); // global assignments OK ?
   Token xt1 = find_env_token(a,false);
   Token xt2 = find_env_token(b,false);
-  eval_let(xt1,xt2,true);
-  TokenList L = mac_arg();
-  string t3 = a+"@hook";
-  make_token(t3.c_str());
-  TL.pop_front();
-  new_macro(L,cur_tok);
+  M_let_fast(xt1,xt2,true);
+  TokenList L = read_arg();
+  Buffer&B = Tbuf;
+  B << bf_reset << a << "@hook"; 
+  new_macro(L,hash_table.locate(b));
 }
 
 // Implements some commands (\ignorespaces, \mark, \penalty, \@@end,
@@ -2207,11 +2247,8 @@ void Parser::T_specimp(int c)
     remove_initial_space_and_back_input();
     return;
   case mark_code:
-    expand_mark(subtypes(c));
-    return;
   case marks_code:
-    scan_int(cur_tok);
-    expand_mark(subtypes(c));
+    T_mark(subtypes(c));
     return;
   case penalty_code:
     scan_int(cur_tok);
@@ -2223,7 +2260,7 @@ void Parser::T_specimp(int c)
     txsleep(scan_int(cur_tok));
     return; 
   case prompt_code: {
-    string S =tex_write(-1);
+    string S = string_to_write(write18_slot+1);
     readline_newprompt(S);
     return;
   }
@@ -2233,18 +2270,18 @@ void Parser::T_specimp(int c)
     close_all();
     return;
   case message_code:
-    tex_message(tex_write(-1));
+    cout << string_to_write(0);
     return;
   case errmessage_code:
-    err_ns::local_buf << bf_reset << tex_write(-1);;
-    err_ns::signal_error("",1);
+    err_ns::local_buf << bf_reset << string_to_write(write18_slot+1);
+    signal_error();
     return;
   case discretionary_code: 
-    scan_left_brace_and_bi();
-    ignore_next_arg();
-    scan_left_brace_and_bi();
-    ignore_next_arg();
-    scan_left_brace_and_bi();
+    scan_left_brace_and_back_input();
+    ignore_arg();
+    scan_left_brace_and_back_input();
+    ignore_arg();
+    scan_left_brace_and_back_input();
   return;
   case allowbreak_code:
     flush_buffer();
@@ -2256,21 +2293,21 @@ void Parser::T_specimp(int c)
 // Commands that do nothing, just print a message.
 void Parser::T_unimp(subtypes c)
 {
-  parse_error("Unimplemented command ",cur_tok,"","unimplemented");
+  parse_error(cur_tok,"Unimplemented command ",cur_tok,"","unimplemented");
 
   switch(c) {
   case accent_code:
     extended_chars(scan_27bit_int());
     return;
   case delimiter_code:
-    scan_twenty_seven_bit_int();
+    scan_int (cur_tok); // no overflow check
     return;
   case insert_code:
-    scan_eight_bit_int();
-    scan_left_brace_and_bi();
+    scan_reg_num();
+    scan_left_brace_and_back_input();
     return;
   case vadjust_code:
-    scan_left_brace_and_bi();
+    scan_left_brace_and_back_input();
     return;
   case mathaccent_code:
   case mathchar_code:
@@ -2289,11 +2326,10 @@ void Parser::T_unimp(subtypes c)
 
 void Parser::need_bib_mode()
 {
-  if(the_stack.in_bib_mode())
-    return;
-  Tbuf << bf_reset << "Command " << name_for_error 
+  if(the_stack.in_bib_mode()) return;
+  Tbuf << bf_reset << "Command " << err_tok
        << " should occur in bibliographic mode only";
-  parse_error(Tbuf.to_string());
+  parse_error(err_tok,Tbuf.to_string());
 }
 void Parser::need_array_mode()
 {
@@ -2302,18 +2338,4 @@ void Parser::need_array_mode()
   parse_error("Current command should occur in tables only");
 }
 
-// \mathversion{bold} is the same as \@mathversion1\relax
-// \mathversion{otherwise} is the same as \@mathversion0\relax
-void Parser::mathversion()
-{
-  TokenList arg = mac_arg();
-  Buffer&B = Tbuf;
-  Tbuf.reset();
-  if(!csname_aux(arg,false,B)) return;
-  TokenList L;
-  Token T = Token(other_t_offset,B.to_string()=="bold" ? '1' : '0');
-  L.push_back(hash_table.mathversion_token);
-  L.push_back(T);
-  L.push_back(hash_table.relax_token);
-  back_input(L);
-}
+

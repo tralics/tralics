@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txclasses.h,v 2.10 2009/01/05 10:35:32 grimm Exp $
+// $Id: txclasses.h,v 2.11 2015/10/28 17:38:45 grimm Exp $
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008
 
 
@@ -96,6 +96,7 @@ public:
 class FormatDate
 {
   int field1, field2, field3;
+  Token err_tok;
   bool scan_a_field(Buffer&,int&);
   bool scan_a_month(Buffer&,int&);
   bool scan_next(Buffer&,int&);
@@ -104,7 +105,7 @@ class FormatDate
   bool parse_format(Buffer&);
   bool parse(Buffer&);
 public:
-  void interpret(const string&);
+  bool interpret(const string&, Token T);
   int get_year() const { return field3; }
   int get_month() const { return field1; }
   int get_day() const { return field2; }

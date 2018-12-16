@@ -12,7 +12,7 @@
 
 #include "tralics.h"
 const char* txtoken2_rcsid=
-  "$Id: txtoken2.C,v 2.19 2015/07/29 16:10:40 grimm Exp $";
+  "$Id: txtoken2.C,v 2.29 2017/05/29 06:22:57 grimm Exp $";
 
 
 void Hashtab::boot_etex()
@@ -148,6 +148,7 @@ Hashtab::Hashtab()
 
   iterate_token =  nohash_primitive("iterate",CmdChr(undef_cmd,zero_code));
   frozen_relax_token = nohash_primitive("relax",CmdChr(relax_cmd,relax_code));
+  eof_token = nohash_primitive("eof",CmdChr(eof_marker_cmd,zero_code));
   Token* T = my_mathfont_table;
   T[0] = primitive("mml@font@normal",mathfont_cmd,math_f_normal); 
   T[1] = primitive("mml@font@upright",mathfont_cmd,math_f_upright); 
@@ -178,6 +179,7 @@ Hashtab::Hashtab()
   primitive("toplevelsection",section_cmd,toplevel_sec_code);
   label_token = primitive("label",label_cmd);
   primitive("anchor",label_cmd,one_code);
+  primitive("anchorlabel",label_cmd,two_code);
   ref_token = primitive("ref",ref_cmd);
   primitive("pageref",ref_cmd, one_code);
   primitive("XMLref",eqref_cmd);
@@ -213,6 +215,7 @@ Hashtab::Hashtab()
   citeone_token = primitive("cite@one", cite_one_cmd);
   citesimple_token = primitive("cite@simple", cite_one_cmd,one_code);
   end_natcite_token = nohash_primitive("endnatcite", CmdChr(cite_cmd,natcite_e_code));
+  primitive ("omitcite", omitcite_cmd);
   primitive("bauthors",bib_cmd,zero_code);
   primitive("beditors",bib_cmd,one_code);
   backslash_token=  primitive("\\", backslash_cmd);
@@ -355,7 +358,6 @@ Hashtab::Hashtab()
   limits_token = primitive("limits",limits_cmd,two_code);
   primitive("nolimits",limits_cmd,one_code);
   ensuremath_token = primitive("ensuremath",ensuremath_cmd);
-  primitive("nonumber",nonumber_cmd);
   primitive("linebreak",linebreak_cmd,linebreak_code);
   primitive("nolinebreak",linebreak_cmd,nolinebreak_code);
   primitive("pagebreak",linebreak_cmd,pagebreak_code);
@@ -384,7 +386,7 @@ Hashtab::Hashtab()
     primitive("begingroup",begingroup_cmd,zero_code);
   endgroup_token =
     primitive("endgroup",begingroup_cmd,one_code);
-  sendgroup_token =  primitive("end group",begingroup_cmd,subtypes(2));
+  sendgroup_token = nohash_primitive("endenv",CmdChr(begingroup_cmd,subtypes(2)));
   footnote_token =primitive("footnote",footnote_cmd);
   primitive("tralics@fnhack",fnhack_cmd);
   primitive("tralics@pop@module",popmodule_cmd);
@@ -443,6 +445,8 @@ Hashtab::Hashtab()
   primitive("tag",tag_cmd);
   xtag_token = primitive("@xtag",tag_cmd,one_code);
   ytag_token = primitive("@ytag",tag_cmd,two_code);
+  primitive("nonumber", tag_cmd, subtypes(4));
+  primitive("notag", tag_cmd, subtypes(3));
   xtag1_token = locate("x@tag");
   ytag1_token = locate("y@tag");
   primitive("omit",unimp_cmd,omit_code);
@@ -461,11 +465,13 @@ Hashtab::Hashtab()
   primitive("tralics@sleep",specimp_cmd,sleep_code);
   primitive("tralics@prompt",specimp_cmd,prompt_code);
   primitive("tralics@random",random_cmd, one_code);
+  primitive("pdfstrcmp",pdfstrcmp_cmd);
   primitive("OT2-encoding",ot2enc_cmd,one_code);
   primitive("OT1-encoding",ot2enc_cmd,two_code);
   primitive("wncyr-encoding",ot2enc_cmd,one_code); // same as above
   primitive("T1-encoding",ot2enc_cmd);
   primitive("stop",specimp_cmd,atatend_code);
+  primitive("tralics load latex3",loadlatex3_cmd);
   primitive("eqno",eqno_cmd,eqno_code);
   primitive("leqno",eqno_cmd,leqno_code);
   primitive("message",specimp_cmd,message_code);
@@ -777,7 +783,7 @@ Hashtab::Hashtab()
   primitive("input",input_cmd,input_code);
   primitive("Input",input_cmd,Input_code);
   primitive("include",input_cmd,include_code);
-  primitive("readxml",input_cmd,subtypes(scantokens_code+1));
+  primitive("readxml",input_cmd,readxml_code);
   primitive("endinput",input_cmd,endinput_code);
   primitive("openin",file_cmd,openin_code);
   primitive("closein",file_cmd,closein_code);
@@ -833,10 +839,7 @@ Hashtab::Hashtab()
   primitive("description",description_cmd);
   primitive("latexonly",ignore_env_cmd,latexonly_code);
   primitive("xmlonly",ignore_env_cmd,xmlonly_code);
-  primitive("subequations",ignore_env_cmd,subequations_code); // is this OK ??
-  //  primitive("htmlonly",ignore_content_cmd,htmlonly_code);
   primitive("comment",ignore_content_cmd,comment_code);
-  // primitive("rawhtml",ignore_content_cmd,rawhtml_code);
   primitive("LaTeXonly",ignore_content_cmd,LaTeXonly_code);
   primitive("rawxml",raw_env_cmd);
   primitive("eqnarray",math_env_cmd,eqnarray_code);
@@ -847,14 +850,32 @@ Hashtab::Hashtab()
   primitive("multline*",math_env_cmd,multline_star_code);
   primitive("gather",math_env_cmd,gather_code);
   primitive("gather*",math_env_cmd,gather_star_code);
-  at_align_token=primitive("@align",math_env_cmd,align_code);
-  primitive("@align*",math_env_cmd,align_star_code);
-  primitive("split",math_env_cmd,split_code);
   primitive("aligned",math_env_cmd,aligned_code);
+  primitive("gathered",math_env_cmd,gathered_code);
+  primitive("split",math_env_cmd,split_code);
   primitive("equation",math_env_cmd,equation_code);
   primitive("equation*",math_env_cmd,equation_star_code);
   primitive("math",math_env_cmd,math_code);
   primitive("displaymath",math_env_cmd,displaymath_code);
+  primitive("align", math_env_cmd, align_code);
+  primitive("align*", math_env_cmd, align_star_code);
+  primitive("flalign", math_env_cmd, flalign_code);
+  primitive("flalign*", math_env_cmd, flalign_star_code);
+  primitive("alignat", math_env_cmd, alignat_code);
+  primitive("alignat*", math_env_cmd, alignat_star_code);
+  primitive("xalignat", math_env_cmd, xalignat_code);
+  primitive("xalignat*", math_env_cmd, xalignat_star_code);
+  primitive("xxalignat", math_env_cmd, xxalignat_code);
+  primitive("xxalignat*", math_env_cmd, xxalignat_star_code);
+  primitive("array",math_env_cmd, array_code);
+  primitive("matrix",math_env_cmd, matrix_code);
+  primitive("bordermatrix ",math_env_cmd, bordermatrix_code); // space!
+  primitive("bmatrix",math_env_cmd, matrixb_code);
+  primitive("Bmatrix",math_env_cmd, matrixB_code);
+  primitive("pmatrix",math_env_cmd, matrixp_code);
+  primitive("vmatrix",math_env_cmd, matrixv_code);
+  primitive("Vmatrix",math_env_cmd, matrixV_code);
+  
   primitive("tralics@push@section",RAsection_env_cmd);
   primitive("tabular",tabular_env_cmd,zero_code);
   primitive("tabular*",tabular_env_cmd,one_code);
@@ -862,6 +883,7 @@ Hashtab::Hashtab()
   primitive("Verbatim",verbatim_env_cmd,one_code);
   primitive("lst@verbatim",verbatim_env_cmd,two_code);
   primitive("minipage",minipage_cmd);
+  primitive("subequations",subequations_cmd);
   primitive("picture",picture_env_cmd);
   primitive("xmlelement",xmlelement_env_cmd);
   primitive("xmlelement*",xmlelement_env_cmd,one_code);
@@ -872,7 +894,7 @@ Hashtab::Hashtab()
   primitive("filecontents-",filecontents_env_cmd,three_code);
   primitive("enddocument",end_document_cmd);
   real_end_token = 
-    primitive("real end of document",end_document_cmd, one_code);
+    nohash_primitive("real-enddocument",CmdChr(end_document_cmd, one_code));
   primitive("endmotscle",end_keywords_cmd);
   primitive("endcenter",end_center_cmd, center_code);
   primitive("endverse",end_center_cmd, verse_code);
@@ -893,27 +915,25 @@ Hashtab::Hashtab()
   primitive("enddescription",end_description_cmd);
   primitive("endlatexonly",end_ignore_env_cmd,latexonly_code);
   primitive("endxmlonly",end_ignore_env_cmd,xmlonly_code);
-  primitive("endsubequations",end_ignore_env_cmd,subequations_code); // is this OK ??
-  //  primitive("endhtmlonly",end_ignore_content_cmd,htmlonly_code);
   //  primitive("endcomment",end_ignore_content_cmd,comment_code);
-  //  primitive("endrawhtml",end_ignore_content_cmd,rawhtml_code);
   primitive("endLaTeXonly",end_ignore_content_cmd,LaTeXonly_code);
   primitive("endrawxml",end_raw_env_cmd);
-  primitive("endeqnarray",end_math_env_cmd,eqnarray_code);
-  primitive("endeqnarray*",end_math_env_cmd,eqnarray_star_code);
-  primitive("endBeqnarray",end_math_env_cmd,Beqnarray_code);
-  primitive("endBeqnarray*",end_math_env_cmd,Beqnarray_star_code);
-  primitive("endmultline",end_math_env_cmd,multline_code);
-  primitive("endmultline*",end_math_env_cmd,multline_star_code);
-  primitive("endgather",end_math_env_cmd,gather_code);
-  primitive("endgather*",end_math_env_cmd, gather_star_code);
-  primitive("end@align",end_math_env_cmd,align_code);
-  primitive("endsplit",end_math_env_cmd,split_code);
-  primitive("endaligned",end_math_env_cmd,aligned_code);
-  primitive("endequation",end_math_env_cmd,equation_code);
-  primitive("endequation*",end_math_env_cmd,equation_star_code);
-  primitive("endmath",end_math_env_cmd,math_code);
-  primitive("enddisplaymath",end_math_env_cmd,displaymath_code);
+  // primitive("endeqnarray",end_math_env_cmd,eqnarray_code);
+  // primitive("endeqnarray*",end_math_env_cmd,eqnarray_star_code);
+  // primitive("endBeqnarray",end_math_env_cmd,Beqnarray_code);
+  // primitive("endBeqnarray*",end_math_env_cmd,Beqnarray_star_code);
+  // primitive("endmultline",end_math_env_cmd,multline_code);
+  // primitive("endmultline*",end_math_env_cmd,multline_star_code);
+  // primitive("endgather",end_math_env_cmd,gather_code);
+  // primitive("endgather*",end_math_env_cmd, gather_star_code);
+  // primitive("endalign",end_math_env_cmd,align_code);
+  // primitive("endsplit",end_math_env_cmd,split_code);
+  // primitive("endaligned",end_math_env_cmd,aligned_code);
+  // primitive("endgathered",end_math_env_cmd,gathered_code);
+  // primitive("endequation",end_math_env_cmd,equation_code);
+  // primitive("endequation*",end_math_env_cmd,equation_star_code);
+  // primitive("endmath",end_math_env_cmd,math_code);
+  // primitive("enddisplaymath",end_math_env_cmd,displaymath_code);
   primitive("tralics@pop@section",end_RAsection_env_cmd);
   primitive("endtabular",end_tabular_env_cmd,zero_code);
   primitive("endtabular*",end_tabular_env_cmd,one_code);
@@ -921,6 +941,7 @@ Hashtab::Hashtab()
   primitive("endVerbatim",end_verbatim_env_cmd,one_code);
   primitive("endlst@verbatim",end_verbatim_env_cmd,two_code);
   primitive("endminipage",end_minipage_cmd);
+  primitive("endsubequations",end_subequations_cmd);
   primitive("endpicture",end_picture_env_cmd);
   primitive("endfilecontents",end_filecontents_env_cmd);
   primitive("endfilecontents*",end_filecontents_env_cmd,one_code);
@@ -1070,7 +1091,8 @@ Hashtab::Hashtab()
   primitive("unhcopy",un_box_cmd,unhcopy_code);
   primitive("unvbox",un_box_cmd,unvbox_code);
   primitive("unvcopy",un_box_cmd,unvcopy_code);
-
+  primitive("typeout", extension_cmd,typeout_code);
+  primitive("wlog", extension_cmd,wlog_code);
   primitive("openout",extension_cmd,openout_code);
   primitive("write",extension_cmd,write_code); 
   primitive("closeout",extension_cmd,closeout_code);
@@ -1128,8 +1150,6 @@ Hashtab::Hashtab()
   primitive("@ifnextcharacter", ifnextchar_cmd,one_code);
   primitive("@iftempty", ifempty_cmd,zero_code);
   primitive("@ifbempty", ifempty_cmd,one_code);
-  primitive("typeout", typeout_cmd,zero_code);
-  primitive("wlog", typeout_cmd,one_code);
   // min_internal here...
   primitive("lastpenalty",last_item_cmd,lastpenalty_code);
   primitive("lastkern",last_item_cmd,lastkern_code);
@@ -1203,6 +1223,7 @@ Hashtab::Hashtab()
   primitive("month",assign_int_cmd,month_code);
   primitive("year",assign_int_cmd,year_code);
   primitive("@nomathml",assign_int_cmd,nomath_code);
+  primitive("multi@math@label",assign_int_cmd,multimlabel_code);
   primitive("@curmathfont",assign_int_cmd,math_font_pos);
   primitive("notrivialmath",assign_int_cmd,notrivialmath_code);
   primitive("showboxbreadth",assign_int_cmd,showboxbreadth_code);
@@ -1398,7 +1419,7 @@ Hashtab::Hashtab()
   csname_token = primitive("csname",csname_cmd);
   expandafter_token=  primitive("expandafter",expandafter_cmd);
   primitive("noexpand", noexpand_cmd); 
-  primitive("@scanupdown", scanupdown_cmd);
+  primitive("@scanupdown", scan_up_down_cmd);
   primitive("sideset", sideset_cmd);
   primitive("tralics@split", split_cmd);
   primitive("a",a_cmd);
@@ -1443,10 +1464,10 @@ Hashtab::Hashtab()
   primitive("setlength",setlength_cmd,zero_code);
   primitive("addtolength",setlength_cmd,one_code);
   primitive("UseVerb",useverb_cmd);
-  primitive("@firstofone",first_of_one_cmd);
+  primitive("@firstofone",all_of_one_cmd,zero_code);
   primitive("@firstoftwo",first_of_two_cmd,one_code);
   primitive("@secondoftwo",first_of_two_cmd,two_code);
-  composite_token = primitive("@unicode@composite",first_of_one_cmd);
+  composite_token = primitive("@unicode@composite",all_of_one_cmd);
   primitive("tipa@star",ipa_cmd,subtypes(0));
   primitive("tipa@semi",ipa_cmd,subtypes(1));
   primitive("tipa@colon",ipa_cmd,subtypes(2));

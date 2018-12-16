@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txstats.h,v 2.5 2008/02/21 17:45:59 grimm Exp $
+// $Id: txstats.h,v 2.6 2015/09/23 16:54:30 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -68,6 +68,7 @@ class Stats {
 	   m_trivial(0), m_spec_box(0),
 	   m_allocated (0), m_destroyed (0),m_merge(0),footnotes(0) {};
   void token_stats();
+  void io_convert_stats();
   void print_module_stats();
 };
 

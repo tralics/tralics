@@ -14,7 +14,7 @@
 #include "txmath.h"
 
 const char* txmathboot_rcsid=
-  "$Id: txmathboot.C,v 2.87 2012/07/06 10:21:07 grimm Exp $";
+  "$Id: txmathboot.C,v 2.90 2015/11/18 17:58:11 grimm Exp $";
 
 extern MathDataP math_data;
 using namespace math_ns;
@@ -1052,43 +1052,82 @@ Xmlp MathDataP::mk_mo(String a)
 
 // Case of math env. Converts an integer into a string,
 // that is put in the name field.
-void Math::set_env_name(int xtype)
-{
-  String env;
-  switch(xtype) {
-  case eqnarray_code : env = "eqnarray"; break;
-  case Beqnarray_code : env = "Beqnarray"; break;
-  case multline_code : env = "multline"; break;
-  case gather_code : env = "gather"; break;
-  case align_code: env = "@align"; break;
-  case align_star_code: env = "@align*"; break;
-  case split_code: env = "split"; break;
-  case aligned_code: env = "aligned"; break;
-  case eqnarray_star_code: env = "eqnarray*"; break;
-  case Beqnarray_star_code: env = "Beqnarray*"; break;
-  case multline_star_code: env = "multline*"; break;
-  case gather_star_code: env = "gather*"; break;
-  case math_code: env = "math"; break;
-  case equation_code: env = "equation"; break;
-  case equation_star_code: env = "equation*"; break;
-  case displaymath_code: env = "displaymath"; break;
-  default: env = "strange";
-  }
-  name = env;
-}
+// void Math::set_env_name(int xtype)
+// {
+//   String env;
+//   switch(xtype) {
+//   case eqnarray_code : env = "eqnarray"; break;
+//   case Beqnarray_code : env = "Beqnarray"; break;
+//   case multline_code : env = "multline"; break;
+//   case gather_code : env = "gather"; break;
+//   case align_code: env = "align"; break;
+//   case align_star_code: env = "align*"; break;
+//   case split_code: env = "split"; break;
+//   case aligned_code: env = "aligned"; break;
+//   case gathered_code: env = "gathered"; break;
+//   case eqnarray_star_code: env = "eqnarray*"; break;
+//   case Beqnarray_star_code: env = "Beqnarray*"; break;
+//   case multline_star_code: env = "multline*"; break;
+//   case gather_star_code: env = "gather*"; break;
+//   case math_code: env = "math"; break;
+//   case equation_code: env = "equation"; break;
+//   case equation_star_code: env = "equation*"; break;
+//   case displaymath_code: env = "displaymath"; break;
+//   default: env = "strange";
+//   }
+//   name = env;
+// }
 
+
+// void Math::set_env_name(int xtype)
+// {
+//   String env;
+//   switch(xtype) {
+//   case eqnarray_code: env =  "eqnarray";break;
+//   case Beqnarray_code: env =  "Beqnarray";break;
+//   case multline_code: env =  "multline";break;
+//   case eqnarray_star_code: env =  "eqnarray*";break;
+//   case Beqnarray_star_code: env =  "Beqnarray*";break;
+//   case multline_star_code: env =  "multline*";break;
+//   case gather_code: env =  "gather";break;
+//   case gather_star_code: env =  "gather*";break;
+//   case split_code: env =  "split";break;
+//   case aligned_code: env =  "aligned";break;
+//   case gathered_code: env =  "gathered";break;
+//   case equation_code: env =  "equation";break;
+//   case equation_star_code: env =  "equation*";break;
+//   case math_code: env =  "math";break;
+//   case displaymath_code: env =  "displaymath";break;
+//   case align_code: env = "align";break;
+//   case align_star_code: env = "align*"; break;
+//   case flalign_code: env = "flalign"; break;
+//   case flalign_star_code: env = "flalign*"; break;
+//   case alignat_code:  env = "alignat"; break;
+//   case alignat_star_code:  env = "alignat*"; break;
+//   case xalignat_code:  env = "xalignat"; break;
+//   case xalignat_star_code:  env = "xalignat*"; break;
+//   case xxalignat_code:  env = "xxalignat"; break;
+//   case xxalignat_star_code:  env = "xxalignat*"; break;
+//   default: env = "strange";
+//   }
+//   name = env;
+// }
+    
 // Ams environments pmatrix, bmatrix, Bmatrix etc.
-// Adds the fence adapted to the first character of the env.
-// static function
-void math_ns::special_fence(char s, int& open, int&close)
+// returns the fence  values
+bool math_ns::special_fence(subtypes s, int& open, int&close)
 {
   switch(s) {
-  case 'B' : open=del_open_brace; close=del_close_brace; break;
-  case 'b' : open=del_open_bra; close=del_close_bra; break;
-  case 'v' : open=del_bar; close=del_bar; break;
-  case 'V' : open=del_Vert; close=del_Vert; break;
-  default : open=del_open_par; close=del_close_par; break;
+  case matrixB_code : open=del_open_brace; close=del_close_brace; break;
+  case matrixb_code : open=del_open_bra; close=del_close_bra; break;
+  case matrixv_code : open=del_bar; close=del_bar; break;
+  case matrixV_code : open=del_Vert; close=del_Vert; break;
+  case matrixp_code : open=del_open_par; close=del_close_par; break;
+  default:
+    return false; // no fence
   }
+  return true;
+  
 }
 
 // returns a delimiter position in the table

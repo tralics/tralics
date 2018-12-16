@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txeqtb.h,v 2.12 2013/07/22 09:28:21 grimm Exp $
+// $Id: txeqtb.h,v 2.15 2015/11/09 10:02:24 grimm Exp $
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -47,7 +47,7 @@ class Equivalent {
   }
   bool is_undefined() const { return value.is_undef();}
   bool is_user() const { return value.is_user(); }
-  bool is_undef_or_relax() const { return is_undefined() || value.is_relax();}
+  bool is_undef_or_relax() const { return value.is_undef_or_relax(); }
 };
 
 class RestoreVbSpace {
@@ -85,6 +85,13 @@ class SaveLongState {
   ~SaveLongState();
 };
 
+class SaveErrTok {
+ private:
+  Token val;
+ public:
+  SaveErrTok(Token c);
+  ~SaveErrTok();
+};
 
 class InLoadHandler {
   bool in_load; // a boolean value to restore
@@ -126,7 +133,7 @@ class SaveAux {
   void set_line(int l) { line_no = l; }
   int get_line() const { return line_no; }
   void unsave_trace_aux(String s, int pos, bool rt);
-  void restore_or_retain(bool) const;
+  void restore_or_retain(bool,String) const;
 };
 
 // A boundary object is created when we see an open brace, or something

@@ -4,11 +4,11 @@
 \usepackage{coollist}
 \usepackage{csquotes}
 \usepackage[french,german,spanish,english]{datenumber}
-\usepackage{decimal}
+\usepackage{decimal,textcase}
 \usepackage[catperso,participant,moduleref]{ra}
 
 \begin{document}
-
+This tests also a certain number of errors
 
 \ifstrleneq{abc}{3}{OK}{\bad}
 \ifstrleneq{abc}{4}{\bad}{OK}
@@ -218,7 +218,7 @@ Today is  \datedayname\space \datedate.
 $\left(  1.25 >0\.\right. \hbox{text\.s.}$
 
 
-\makeatletter
+
 \edef\foo{\tralics@find@config{foo}}
 \def\xfoo{A1=B1,C1=C1,X1=x1,Other=Other}
 \ifx\xfoo\foo \else \bad \show\foo\fi
@@ -295,10 +295,236 @@ $\left(  1.25 >0\.\right. \hbox{text\.s.}$
 \moduleref{}{}{telecom}
 \moduleref{}{}{logi1}
 \moduleref{}{}{logi2}
+\def\tfoo a{}\tfoo} \edef\xx{\tfoo} a OK 
+\catcode `>=2 >
+\catcode `>=11 \def\foo>={}\foo>1
+
+{\makeatletter
+\edef\mo{\detokenize{count254}}
+\edef\mp{\detokenize{count256}}
+\def\next{\let\c@xx\relax\newcounter{xx}\edef\u{\meaning\c@xx}}
+\escapechar-1  
+\loop \next \ifx\u\mo \else \repeat
+\next\ifx\u\mp\else \bad\fi}
+
+\edef\foo{\expandafter\noexpand\csname foo\endcsname0}\meaning\foo 
+\edef\foo{a\expandafter\noexpand\csname foo\relax0}\meaning\foo 
+\def\testeq#1#2{\ifx#1#2\else \bad\fi}
+
+x\pdfstrcmp{ab}{abc}\pdfstrcmp{ax}{abc}\pdfstrcmp{ab}{ax}\pdfstrcmp{ax}{ax}y
+\edef\foo{\pdfstrcmp{ab}{abc}}\def\yoo{-1}\testeq\foo\yoo
+\edef\foo{\pdfstrcmp{abc}{ab}}\def\yoo{1}\testeq\foo\yoo
+\edef\foo{\pdfstrcmp{ab}{ab}}\def\yoo{0}\testeq\foo\yoo 
+{\escapechar-1 \ifnum\pdfstrcmp{\noexpand\par }{par }=0 \else bad\fi }
+{\escapechar-1 \ifnum\pdfstrcmp{\noexpand\par \relax}{par relax }=0 \else bad\fi }
+
+\def\foo#1{x}\foo\par y 
+\def\wfoo#1#2{\def\xfoo{#1,#2}\show\xfoo}\wfoo{\par y %}
+\outer\def\Par{}\let\Qar\Par\wfoo \Qar \wfoo {\Par %}
+\wfoo\bad\par
+
+\def\foo{\begin{it}} \def\endfoo{\end{it}}
+\begin{foo}x\end{foo}
+\def\endfoo{}
+\begin{foo}x\end{foo}\end{it}y 
+\begin{foo}x\end{foo}\end{it}y 
+\begin{foo}x\end{foo}\end{foo}y 
+\def\foo{}\def\endfoo#1{\bad}%
+\begin{foo}x\end{foo}%
+\def\endfoo{}\begin{foo}\def\endfoo{\bad}\end{foo}%
+\begin{it}\def\endit{\bad}x\end{it}
+\unless x\unless\ifcase 1 0\else2\fi
+\end{foo}\end{foo}
+%
+\edef \jn {\noexpand \jobname=\jobname} 
+\ifcat\noexpand~\jn\bad\fi 
+
+{\let\foo=W \catcode`W=13
+  \ifcat\noexpandW\noexpand~\else \bad \fi 
+  \if\noexpandW\foo\else \bad \fi 
+  \if\noexpandW\noexpand\foo\else \bad \fi 
+  \if\noexpand XX\else \bad \fi 
+  \if\noexpand \par\par\else \bad \fi 
+} 
+
+\let\foo\undefined
+\csname\noexpand\foo\endcsname
+\hbox to 2cm \noexpand\foo {\noexpand\foo \uppercase\noexpand\foo{}}
+\def\foo{0}\count0=1\noexpand\foo \the\count0
+\def\foo{ }\count0=2\noexpand\foo \the\count0
+\def\foo{\bgroup}\hbox\noexpand\foo x\egroup  
+\hbox\noexpand\noexpand\foo y\egroup
+\hbox\noexpand\noexpand\noexpand\foo{z} 
+\def\foo{pt}\dimen0=2\noexpand\foo  
+\def\foo{pt}\dimen0=2\noexpand\noexpand\foo  
+\def\foo{pt}\dimen0=2\noexpand\noexpand\noexpand\foo  
+\def\foo{pt}\dimen0=2\noexpand\noexpand\noexpand\noexpand\foo  
+\def\foo{pt}\dimen0=2\noexpand\noexpand\noexpand\noexpand\noexpand\foo  
+\def\foo{.5pt}\dimen0=2\noexpand\foo  
+\edef\foo{\ifcat=\jn\else \bad\fi} 
+
+
+\long\def\safescantokens#1#2{%
+  \begingroup
+    \everyeof{\noexpand}%
+    \endlinechar=-1
+    \xdef#1{\scantokens{#2}}%
+  \endgroup
+}
+\safescantokens\demo{foo} \def\yoo{foo}\testeq\demo\yoo
+\begin{filecontents+}{F4}
+A
+B
+\end{filecontents+}
+
+
+\openin2=F4
+\ifeof2 \bad\fi \read2 to \toto \def\totoa{A }\testeq\toto\totoa
+\ifeof2 \bad\fi  \read2 to \toto \def\totoa{B }\testeq\toto\totoa
+\ifeof2 \bad\fi \read2 to \toto  \def\totoa{\par}\testeq\toto\totoa
+\ifeof2 \else \bad\fi 
+{\endlinechar -1
+\openin2=F4 %
+\ifeof2 \bad\fi \read2 to \toto \def\totoa{A}\testeq\toto\totoa
+\ifeof2 \bad\fi  \read2 to \toto \def\totoa{B}\testeq\toto\totoa
+\ifeof2 \bad\fi \read2 to \toto  \def\totoa{}\testeq\toto\totoa
+\ifeof2 \else \bad\fi} 
+\def\foo{0\foo} \count0=1\foo % 
+\setbox2=\xbox{BN}{bar}\edef\fooa{\detokenize{BN}}
+\count0= \XMLbox@name 2
+\edef\foo{\the\XMLbox@name2} \testeq\foo\fooa
+\toks0=\expandafter{\foo}\edef\foob{\the\toks0}\testeq\foo\foob
+\cleaders \vrule \cleaders \hrule 
+A\the\currentgrouptype{B\the\currentgrouptype\begingroup C%
+\the\currentgrouptype\begin{it}\global\count0=\the\currentgrouptype\end{it}%
+D\the\count0E$\the\currentgrouptype$\endgroup} %
+\let \ALn\tralics@addtolist@n \let \ALo\tralics@addtolist@o
+\def\res{}\ALn{x}\res{12}\ALn{x}\res{34}\ALo{x}\res{56}%
+\def\x{x}\ALo{x}\res{\x\x}\def\foo{12x34x56xx\x}\testeq\res\foo
+\def\xx{y}\def\foo{\def\xx{x}\xx}\makebox\foo\xx
+\begin{minipage}[t]{2pt plus 2 fill}abc\end{minipage}
+\begin{minipage}[t]{2pt plus}abc\end{minipage}
+\edef\xfoo{\detokenize{^^J}} 
+\def\aaa#1#2{\def\C{#2}}
+\expandafter\aaa\xfoo a\relax \def\foo{^^J}\ifx\foo\xfoo\else \bad\fi
+\def\foo{a}\ifx\foo\C\else \bad\fi
+\edef\foo{\meaning\sixt@@n\meaning\@cclv\meaning\count@\meaning\@M}
+\edef\yoo{\string\char"10\string\char"\string F\string
+  F\string\count255\string\mathchar"2710}
+\testeq\foo\yoo
+\begin{tabular}{c} x$&y \\ z\end{tabular} %$
+\newenvironment{tab}{Table \begin{tabular}{>{\before} c<{\after}c}}{\end{tabular}}
+\def\before{Before}\def\after{After}
+\begin{tab}x\end{tab}
+\def\before{$} \def\after{$}
+\begin{tabular}{ll} 
+a&b\\ \multicolumn{1}{>{\before} c<{\after}}{c}&d
+\end{tabular}
+\begin{tab}a&math before amp \end{tab}
+\begin{tab}b \\ \multicolumn{1}{c}{math before backslah}\end{tab}%
+\def\before{$\bgroup} \def\after{\egroup$}%
+\begin{tab}c&math before amp brace \end{tab}%
+\def\before{\begingroup$\bgroup} \def\after{\egroup$\endgroup}%
+\begin{tab}d&math before amp group\end{tab}
+\def\before{$u} \def\after{v$}
+\begin{tab}x&ATEND\\A \end{tab}
+\begin{tabular}{>{$}c<{$}}x \end{tabular}
+\newenvironment{xtab}{\begin{tabular}{>{\before} cc}}{\after\end{tabular}}
+\begin{xtab}ww\end{xtab}
+xx \anchorlabel{a2} yy \anchorlabel*[bar]{b2}\ref{a2}\ref{b2}
+$1 \anchor*[t] 2  \anchor[t] 3 \anchor* 4  \anchor 5$
+
+
+$A\end{split} $$B\end{split}  \the\catcode`$ ok
+$C \left (\end{math}$
+$D \frac {\end{math}  w $ 
+\begin{math} E \end{displaymath} 
+
+
+\makeatletter \multi@math@label=1\makeatother
+\setcounter{section}{3}
+\setcounter{equation}{5}
+\def\theequation{\thesection.\arabic{equation}}
+
+\begin{equation} x\label{e1} \end{equation} 
+\begin{align}
+\label{e2} a&b\\
+c&d \label{e3}
+\end{align}
+\begin{align}
+\tag{u1} a&b\\
+\tag*{u2}c&d
+\end{align}
+\begin{align}
+\notag a&b\\
+\notag c&d
+\end{align} 
+\begin{equation} x\label{e4}\label{e5} \tag{uu}\tag{vv}\end{equation} 
+\ref{e1}\ref{e2}\ref{e3}
+
+
+\begin{align}
+a&b \notag\tag{foo}\label{aa3} \\
+c&d \label{bb3}  \\
+e\label{au}\tag{av}&f \label{au2}\tag*{av2}
+\end{align}
+
+
+\begin{eqnarray} x \\ y \end{eqnarray}
+\begin{eqnarray*} x \\ y \end{eqnarray*}
+\begin{Beqnarray} x \\ y \end{Beqnarray}
+\begin{Beqnarray*} x \\ y \end{Beqnarray*}
+\begin{multline} x \\ y \end{multline} 
+\begin{multline} \tag{foo} x \\ y \end{multline}
+\begin{multline*} x \\ y \end{multline*}
+\begin{gather} x \\ y \end{gather}
+\begin{gather*} x \\ y \end{gather*}
+\begin{align} x \\ y \end{align}
+\begin{align*} x \\ y \end{align*}
+
+\begin{align}
+  x^2+y^2 &= z^2 \label{eq:A1}            \\
+  x^3+y^3 &= z^3 \notag                  \\
+  x^4+y^4 &= r^4 \tag{$*$}           \\
+  x^5+y^5 &= r^5 \tag*{$*$}            \\
+  x^6+y^6 &= r^6 \tag{\ref{eq:A1}$'$}   \\
+      A_1 &= N_0 (\lambda ; \Omega')
+             - \phi ( \lambda ; \Omega') \\
+      A_2 &= \phi (\lambda ; \Omega')
+             \, \phi (\lambda ; \Omega)
+             \tag*{ALSO (\theequation)}  \\
+      A_3 &= \mathcal{N} (\lambda ; \omega)
+\end{align} 
+
+\begin{multline} \tag{a}\tag{b} 1\\ b \tag{c}\label{aa}\label{bb}\end{multline}
+\begin{multline} a\\ b \tag{foo}\end{multline}
+\begin{multline*} 3\\ b\end{multline*}
+
+\begin{eqnarray}
+x & = &17y \\
+y & > & a + b + c+d+e+f+g+h+i+j+ \nonumber \\
+  &   & k+l+m+n+o+p
+\end{eqnarray}\tracingall
+
+$x\notag$ $$x\notag$$ \[\notag\] \begin{eqnarray*} x\notag \end{eqnarray*}
+$x\tag{a}$ $$x\tag{b}$$ \[\tag{c}\] \begin{eqnarray*} x\tag{d} \end{eqnarray*}
+\begin{align*}\notag \end{align*}\begin{align*}\tag{e} \end{align*}
+
+{\everymath{A}\everydisplay{B} \(x\) \[y\] \begin{math} u  \end{math}
+  \begin{displaymath} u  \end{displaymath}
+\begin{equation} x \end{equation}\begin{align*} x \end{align*}
+}
+%
+\let\foo#\def\A\foo1\foo2{\foo1} \def\B#1#2{#1}\testeq\A\B
+\def\A{\foo#} \def\B{##}\testeq\A\B 
+\def\A{#\foo} \let\foo\relax\def\B{\foo}\testeq\A\B 
 
 \end{document}
+
+
+
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: t
-
 %%% End: 

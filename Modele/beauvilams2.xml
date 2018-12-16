@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
 <std equation-number='left'>
 <Metadata>
 <shortitle>Ams-art example</shortitle>
@@ -502,4 +502,5 @@ and rendering of subfigures in the next figure.</p>
 <bvolume>311</bvolume>
 <byear>1990</byear>
 <bpages>547–552</bpages>
-</citation></biblio></div1></div0></std>
+</citation></biblio></div1></div0>
+</std>

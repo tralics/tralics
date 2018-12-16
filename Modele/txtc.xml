@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/24-->
 <std filename='txtc'>
 <title>A sample file for Tralics</title><author>José Grimm</author><abstract><p>This document shows some commands of <hi rend='it'>Tralics</hi>.
 We use it also to show that characters are converted into the right encoding
 in a lot of situations, including commands, titles, indices etc.
 The <hi rend='it'>XML</hi> result is translated via <hi rend='slanted'>XSLT</hi> into <hi rend='bold'>HTML</hi>
 and available on the web
-<xref url='http://www-sop.inria.fr/apics/tralics/txtc.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>tralics/<allowbreak/>txtc.<allowbreak/>html</xref>.
+<xref url='http://www-sop.inria.fr/marelle/tralics/txtc.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>marelle/<allowbreak/>tralics/<allowbreak/>txtc.<allowbreak/>html</xref>.
 Source document can be found at
-<xref url='http://www-sop.inria.fr/apics/tralics/doc-step.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>tralics/<allowbreak/>doc-step.<allowbreak/>html</xref>.</p>
+<xref url='http://www-sop.inria.fr/marelle/tralics/doc-step.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>marelle/<allowbreak/>tralics/<allowbreak/>doc-step.<allowbreak/>html</xref>.</p>
 </abstract><keyword>Latex, XML, HTML, UTF8, Hàn</keyword><tableofcontents depth='2'/>
 <div0 id-text='1' id='cid1'><head>Who is Hàn</head>
 <p>If you call tralics with options -te1a ou -te8a, the terminal should show
@@ -63,7 +63,7 @@ ill-formed XML.<anchor id-text='lid5' id='uid6'/></p>
 Hàn Th&#x1ebf; Thành<note id-text='2' id='uid7' place='foot'>Hàn is the author of
 pdftex</note>. The second argument is meant to be translated by <LaTeX/>, it is
 ignored by Tralics. Instead of <hi rend='tt'>\xmllatex{foo}{bar}</hi>, define a command,
-use it in the text, and overwrite it in a ult file (user configuratin file).<anchor id-text='lid6' id='uid8'/></p>
+use it in the text, and overwrite it in a ult file (user configuration file).<anchor id-text='lid6' id='uid8'/></p>
 <p>In the current version, you can say ế because the double-accent
 mechanism is implemented, or ế, this is a character, as valid as the
 other ones. This is possible and dangerous too <TeX/>.<anchor id-text='lid7' id='uid9'/></p>
@@ -206,4 +206,5 @@ bad accent ̀ on x bad accent ̆ on z</p>
 <index target='uid25' level='2'>I3</index>
 </theindex><theglossary title='A glossary'><index target='uid18 uid20' level='1'>G1</index>
 <index target='uid19 uid21' level='1'>G2</index>
-</theglossary></std>
+</theglossary>
+</std>

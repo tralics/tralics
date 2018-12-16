@@ -1,5 +1,5 @@
 %%  -*- latex -*-
-\ProvidesPackage{ra}[2013/07/22 v1.9 Utilities for INRIA's activity report]
+\ProvidesPackage{ra}[2013/07/22 v1.10 Utilities for INRIA's activity report]
 \RequirePackage{xkeyval}
 % This file is part of Tralics
 
@@ -7,7 +7,7 @@
 %% abiding by the rules of distribution of free software.  You can  use, 
 %% modify and/ or redistribute the software under the terms of the CeCILL
 %% license as circulated by CEA, CNRS and INRIA at the following URL
-%% "http:%%www.cecill.info". 
+%% "http://www.cecill.info". 
 %% (See the file COPYING in the main directory for details)
 % copyright (C) INRIA/apics/marelle (Jose' Grimm) 2008-2013
 
@@ -222,16 +222,21 @@
 
 \newenvironment{module}{\@start@module}{\tralics@pop@module}
 
+\newcommand\ra@change@section[1]{%
+    \unless \ifra@firstsection \tralics@pop@section\fi 
+    \global\ra@firstsectionfalse 
+    \tralics@push@section{#1}%
+}
+
+
 % first optional argument #1=topic ignored; #2=section, #3=aux, #4=title
 \newcommand\@start@module[4][]{%
   \ifra@inmodule\PackageError{Raweb}{Nested modules are illegal}{}\fi
   \ra@inmoduletrue
   \edef\@tmp{\tralics@get@config{fullsection}{#2}}%
-  \ifx\@tmp\empty\else
-    \ifra@firstsection\else \tralics@pop@section\fi
-     \global\ra@firstsectionfalse
+  \unless\ifx\@tmp\empty % new section
+     \ra@change@section{#2}%
      \typeout{Translating section #2}%
-     \tralics@push@section{#2}
      \ifnum\ra@year>2006 \XMLaddatt{titre}{\@tmp}\fi
   \fi
   \refstepcounter{modules}%
@@ -322,16 +327,13 @@
 {\let\pers\persB
   \ifra@inmodule\PackageError{Raweb}{Composition forbidden in Module}{}\fi
   \unless\ifra@firstsection
-    \PackageError{Raweb}{Composition must be before first module}{}
-    \tralics@pop@section
+     \PackageError{Raweb}{Composition must be before first module}{}
   \fi
   \edef\@tmp{\tralics@get@config{fullsection}{composition}}%
-  \ifx\@tmp\empty\else
-  \ifra@firstsection\else \tralics@pop@section\fi
-  \global\ra@firstsectionfalse
-  \typeout{Translating composition}%
-  \tralics@push@section{composition}%
-  \XMLaddatt{titre}{\@tmp}\@addnl%
+  \unless\ifx\@tmp\empty % new section
+    \ra@change@section{composition}
+    \typeout{Translating composition}%
+    \XMLaddatt{titre}{\@tmp}\@addnl%
   \fi
 }{}
 
@@ -339,11 +341,13 @@
 \fi
 %% --------------------------------------------------
 
-\def\declaretopic#1#2{%
+\ifra@topic
+% redef only if topics are used
+\def\declaretopic#1#2{% 
 \xbox{topic}{\XMLaddatt{num}{#1}\xbox{t\_titre}{#2}}\@addnl
 }
 
-\ifra@topic
+
 \newcounter{topics}
 \def\ra@topicval@default{1}
 \let\ra@declaretopic\declaretopic

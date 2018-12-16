@@ -14,7 +14,7 @@
 #include "tralics.h"
 
 const char* txconfig_rcsid=
-  "$Id: txconfig.C,v 2.17 2013/08/01 06:30:30 grimm Exp $";
+  "$Id: txconfig.C,v 2.20 2015/10/28 17:38:45 grimm Exp $";
 
 namespace config_ns {
   Buffer sec_buffer;
@@ -86,7 +86,7 @@ void MainClass::finish_init()
 {
   if(in_ra()) {
     if(year<=2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
-    if(all_themes.empty()) bad_conf("theme_vals");
+    if(year<=2014 && all_themes.empty()) bad_conf("theme_vals");
     if(config_data.data[0]->empty()) bad_conf("ur_vals");
     if(year>=2007) {
       if(config_data.data[2]->empty()) bad_conf("profession_vals");
@@ -96,14 +96,7 @@ void MainClass::finish_init()
     }
     int n = config_data.data[1]->size();
     if(n==0) bad_conf("sections_vals");
-    if(n<2) { // this is bad
-      config_data.data[1]->push_back(ParamDataSlot("dummy1", "dummy1"));
-      config_data.data[1]->push_back(ParamDataSlot("dummy2", "dummy2"));
-      main_ns::log_and_tty << "Config file did not provide sections\n"
-       << lg_fatal;
-      exit(1);
-    }
-    if(composition_section == n) composition_section = -1;
+    if(n<2) bad_conf("Config file did not provide sections");
   }
   int n = config_data.data.size();
   for(int i=2;i<n;i++) config_data.data[i]->check_other();
@@ -145,7 +138,7 @@ string MainClass::check_theme(const string& s)
       err_ns::local_buf << "Configuration file defines nothing";
     else
       err_ns::local_buf << "Valid themes are" << all_themes;  
-    err_ns::signal_error("Bad theme",0);
+    the_parser.signal_error(the_parser.err_tok,"Bad theme");
   }
   return res;
 }
@@ -193,7 +186,7 @@ void MainClass::check_section_use()
     int n = X.size(); // number of sections
     for (int i =0; i <n; i++)
       if(X[i].no_topic()) 
-	the_parser.parse_error("No module in section ",
+	the_parser.parse_error(Token(),"No module in section ",
 			       X[i]. key ,"no module");
   }
 }
@@ -249,7 +242,7 @@ string config_ns::find_one_key(const string& name,const string&key)
   if(name=="section") return check_spec_section(key);
   ParamDataList* X = config_data.find_list(name,false);
   if(!X) {
-    the_parser.parse_error("Configuration file does not define ",
+    the_parser.parse_error(the_parser.err_tok,"Configuration file does not define ",
 				   name,"no list");
     return "";
   }
@@ -259,7 +252,7 @@ string config_ns::find_one_key(const string& name,const string&key)
 		    << "Illegal value '" << key << "' for " << name << "\n"
 		    << "Use one of:";
   X->keys_to_buffer(err_ns::local_buf);
-  err_ns::signal_error("illegal data",0);
+  the_parser.signal_error(the_parser.err_tok,"illegal data");
   return "";
 }
 
@@ -279,7 +272,7 @@ string config_ns::check_section(const string&s)
     err_ns::local_buf << "Bad section " << s << " after " 
 		      << X[cur_section-1].key << "\n"
 		      << "Order of sections is" << sec_buffer;  
-    err_ns::signal_error("",1);
+    the_parser.signal_error();
   } else if(k==-1) {
     if(n==0) {
       the_parser.parse_error("Illegal access to fullsection list.");
@@ -288,7 +281,7 @@ string config_ns::check_section(const string&s)
     if(!s.empty()) {
       err_ns::local_buf <<"Invalid section " << s << "\n"
 			<< "Valid sections are" << sec_buffer;  
-      err_ns::signal_error("",1);
+      the_parser.signal_error();
       if(cur_section<0)  cur_section = 1;
     }
   } else cur_section = k;
@@ -438,7 +431,7 @@ void config_ns::check_RC(Buffer& B,Xml*res)
     err_ns::local_buf << "Illegal localisation value: " << B.c_str() << "\n";
   err_ns::local_buf << "Use one or more of:";
   config_data.data[0]->keys_to_buffer(err_ns::local_buf);
-  err_ns::signal_error("",1);
+  the_parser.signal_error();
 }
 
 // Interprets the RC argument of a pers command
@@ -467,7 +460,7 @@ string config_ns::pers_rc(const string& rc)
       vector <ParamDataSlot> & V = config_data.data[0]->data;
       int n = V.size();
       for(int i=0; i<n;i++) if(V[i].is_used) V[i].key_to_buffer(err_ns::local_buf);
-      err_ns::signal_error("illegal data",0);
+      the_parser.signal_error(the_parser.err_tok,"illegal data");
     }
     if (spec) {
       the_default_rc = RC;
@@ -526,7 +519,13 @@ void Buffer::interpret_aux(vector <Istring>& bib, vector <Istring>& bib2)
     skip_sp_tab();
     if(!head()) break;
     int a = ptr;
-    if (head()=='-') { keep = false; if(!head()) break; a++; the_log << "--"; }
+    if (head()=='-') {
+      keep = false;
+      advance();
+      if(!head()) break; // final dash ignored
+      a++;
+      the_log << "--";
+    }
     while(head() && !is_space(head())) 
       advance(); 
     ptr1 = a;

@@ -870,11 +870,11 @@ case of the last expression scripts are in script style (small size) and we
 have a \elt{munderover} element for the sum (it is an operator with limits in
 display style) and a \elt{msubsup} element for the Z (that is not an operator).
 $$ {1\over 2}\qquad {\rm and}\qquad {n+1 \over 3} \qquad {\rm and}\qquad {n+1
-  \choose 3}\qquad {\rm and}\qquad \sum_{n=1}^3Z_n^2. \label{eq17.1}
+  \choose 3}\qquad {\rm and}\qquad \sum_{n=1}^3Z_n^2. \anchorlabel{eq17.1}
 $$
 The same, using \LaTeX\ syntax
 \[ \frac{1}{2}\qquad \text{and}\qquad \frac{n+1}{3} \qquad \text{and}\qquad 
-\binom{n+1}{3}\qquad \text{and}\qquad \sum_{n=1}^3Z_n^2.\label{eq17.2}\]
+\binom{n+1}{3}\qquad \text{and}\qquad \sum_{n=1}^3Z_n^2.\anchorlabel{eq17.2}\]
 
 \begin{verbatim}[numbers=left,firstnumber=last]
 \[{x+y^2\over k+1},\qquad {x+y^2\over k}+1,\qquad
@@ -886,12 +886,12 @@ Single over. The only difference in these expressions is the placement of the
 braces.
 \[{x+y^2\over k+1},\qquad {x+y^2\over k}+1,\qquad
 x+{y^2\over k}+1,\qquad x+{y^2\over k+1},\qquad x+y^{2\over k+1}.
-\label{eq17.3}\]
+\anchorlabel{eq17.3}\]
 \LaTeX\ style: this uses a command with two arguments, that behaves without
 surprise. 
 \[\frac{x+y^2}{k+1},\qquad \frac{x+y^2}{k}+1,\qquad
 x+\frac{y^2}{k}+1,\qquad x+\frac{y^2}{k+1},\qquad x+y^{\frac{2}{k+1}}.
-\label{eq17.4}\]
+\anchorlabel{eq17.4}\]
 
 \begin{verbatim}[numbers=left,firstnumber=last]
 \[{ {a \over b}\over 2} \qquad \text{and}\qquad { a\over {b\over 2}} 
@@ -905,11 +905,11 @@ braces. As you can see, if a fraction is in text style, its numerator and
 denominator are in script style, so that it is sometimes better to use a slash. 
 \[{ {a \over b}\over 2} \qquad \text{and}\qquad { a\over {b\over 2}} 
 \qquad \text{and}\qquad { a/ b\over 2} \qquad \text{and}\qquad { a\over b/2}. 
-\label{eq17.5} \]
+\anchorlabel{eq17.5} \]
 \LaTeX\ style (nothing special here).
 \[ \frac{\frac{a}{b}}{2} \qquad \text{and}\qquad \frac{a}{\frac{b}{2}} 
 \qquad \text{and}\qquad \frac{a/b}{2} \qquad \text{and}\qquad \frac{a}{b/2}.
-\label{eq17.6}  \]
+\anchorlabel{eq17.6}  \]
 
 
 
@@ -2195,9 +2195,9 @@ $$x^2-y^2=(x+y)(x-y).\leqno(15L)$$
 
 Equation number of \eqref{xxleft} is on the left, of \eqref{xxright} on the
 right, and \eqref{xxdefault} depends on the class option.
-$$x^2-y^2=(x+y)(x-y).\label{xxleft}\formulaattribute{eqnpos}{left}$$
-$$x^2-y^2=(x+y)(x-y).\label{xxright}\formulaattribute{eqnpos}{right}$$
-$$x^2-y^2=(x+y)(x-y).\label{xxdefault}$$
+$$x^2-y^2=(x+y)(x-y).\anchorlabel{xxleft}\formulaattribute{eqnpos}{left}$$
+$$x^2-y^2=(x+y)(x-y).\anchorlabel{xxright}\formulaattribute{eqnpos}{right}$$
+$$x^2-y^2=(x+y)(x-y).\anchorlabel{xxdefault}$$
 
 
 \ex{19.5} 
@@ -2304,16 +2304,16 @@ The best we can do is using phantoms:
 \end{verbatim}
 \def\xcenter#1#2#3{\phantom{#3}{#1#2#3}\phantom{#1}}
 \[\xcenter{(x+y)(x-y)}{=}{x^2-xy+yx-y^2} \]
-\[\xcenter{{}}{=}{x^2-y^2;}\label{192-0}\]
-\[\xcenter{{(x+y)^2}}{=}{x^2+2xy+y^2 .}\label{192-5}\]
+\[\xcenter{{}}{=}{x^2-y^2;}\anchorlabel{192-0}\]
+\[\xcenter{{(x+y)^2}}{=}{x^2+2xy+y^2 .}\anchorlabel{192-5}\]
 
 \ex{19.12} First two equations use \cmd{leqno},
 Equations \eqref{e19.12.a} and \eqref{e19.12.b} have a label.
 \[\xcenter{\gcd(u,v)}{=}{\gcd(v,u);}\leqno(9) \]
 \[\xcenter{\gcd(u,v)}{=}{\gcd(-u,v).}\leqno(10) \]
-\[\xcenter{\gcd(u,v)}{=}{\gcd(v,u);}\label{e19.12.a}
+\[\xcenter{\gcd(u,v)}{=}{\gcd(v,u);}\anchorlabel{e19.12.a}
 \formulaattribute{eqleft}{true} \]
-\[\xcenter{\gcd(u,v)}{=}{\gcd(-u,v).}\label{e19.12.b} \formulaattribute{eqleft}{true}\]
+\[\xcenter{\gcd(u,v)}{=}{\gcd(-u,v).}\anchorlabel{e19.12.b} \formulaattribute{eqleft}{true}\]
 
 \ex{19.13} Note: Knuth has a small space before the first \LTC{dx}, this seems
 unnecessary. Some operators are big by default in MathML, so that no \cmd{big}
@@ -2337,7 +2337,7 @@ $(\smash{x^2+y^2})$. In the pdf version, the vertical bar is too small.
 \[\xcenter{}{=}{\int_0^{2\pi}\int_0^\infty e^{-r^2}r\,dr\,d\theta}\]
 \[\xcenter{}{=}{\int_0^{2\pi}{\left(-\frac{e^{-r^2}}{2}|_{r=0}^{r=\infty}
 \right)}\,d\theta}\]
-\[\xcenter{}{=}{\pi.}\label{e19.13}\]
+\[\xcenter{}{=}{\pi.}\anchorlabel{e19.13}\]
 
 \ex{19.14} Knuth explains that \LTC{eqalign} and \LTC{eqalignno} environments
 are based on \cmd{halign}, so that \cmd{noalign} can be used. In environments
@@ -2625,7 +2625,7 @@ Example 8-2-4.  We modified the examples by adding a label; you can see that
 this produces an equation number for  \LTC{equation*}, \eqref{8-2-4-a}
 as well as \LTC{equation}, \eqref{8-2-4-b}. 
 \begin{equation*}
-  n^2 + m^2 = k^2\label{8-2-4-a}
+  n^2 + m^2 = k^2\anchorlabel{8-2-4-a}
 \end{equation*}
 \begin{equation}
   n^p +m^p \neq k^p  \qquad p > 2\label{8-2-4-b}
@@ -2671,7 +2671,7 @@ Same formulas, with \cmd{multlinegap} set to zero. This has no effect in
 From now on, we redefine the \cmd{tag} command via \cmd{tagasattribute}; 
 the second equation with a tag gives:
 \tagasattribute
-\[  \sin^2\eta+\cos^2\eta = 1  \tag{3}\]
+\begin{equation} \sin^2\eta+\cos^2\eta = 1  \tag{3}\end{equation}
 
 The magic is that this uses \cmd{formulaattribute}, a command added in
 \Tralics\ 2.9.5 that adds an attribute pair to the formula; our style sheet
@@ -2702,6 +2702,7 @@ Translation (bold attribute ignored in the Pdf version):
 \cellattribute{columnalign}{left}  x^3 + y^3+1 &<  z^3
 \end{align}
 
+\addtocounter{equation}{+2}  % compatibility
 \begin{verbatim}[numbers=left,firstnumber=last]
 \begin{equation} \begin{split} % 8-2-7
  (a + b)^4
@@ -3257,7 +3258,7 @@ Example 8-2-29: the amsmath package provides a \LTC{subequations} environment
 to support ``equation subnumbering'' with tags of the form (2a), (2b), (2c),
 and so on. All the tagged equations within it use this sub-numbering scheme
 based on two normal \LaTeX\ counters \LTC{parentequation} and \LTC{equation}.
-First group, with only labels \LTC{eq:1} and \LTC{eq1:C}
+First group, with only labels \LTC{eq:1} and \LTC{eq1:C} \let\subequations\relax\let\endsubequations\relax
 \begin{subequations}  \label{eq:1}
 \begin{align}  f  &= g \\
                f' &= g'\\
@@ -3268,9 +3269,9 @@ The \Tralics\ implementation is trivial: the environment does nothing.
 Thus, the \cmd{label} command in the \LTC{subequations} corresponds to the
 current section. Second group, with only labels \LTC{eq:2} and \LTC{eq2:C}.
 \def\theparentequation{}
-\begin{subequations} \label{eq:2}
+\begin{subequations} \label{eq:2} \tracingall
 \renewcommand\theequation{\theparentequation\roman{equation}}
-\begin{align}  f  &= g  \\
+\begin{align}  f  &= g  \\ 
                f' &= g'  \\
     \mathcal{L}f  &= \mathcal{L}g + K  \label{eq:2C}
 \end{align}
@@ -4756,14 +4757,14 @@ input lines.
 %
 Initial code
 \[{\uplus a}, {\uplus _ab}, {\mathop \uplus_ab}, {\mathop \uplus\limits_ab}
-\label{uplus1} \]
-\[{x\uplus a}, {x\uplus _ab}, {x\mathop \uplus_ab}, {x\mathop \uplus\limits_ab}\label{uplus2}  \]
+\anchorlabel{uplus1} \]
+\[{x\uplus a}, {x\uplus _ab}, {x\mathop \uplus_ab}, {x\mathop \uplus\limits_ab}\anchorlabel{uplus2}  \]
 %
 Unicode character U+2A04 used instead of \cmd{uplus}.
 {
 \def\uplus{\mathmo{^^^^2a04}}
-\[{\uplus a}, {\uplus _ab}, {\mathop \uplus_ab}, {\mathop \uplus\limits_ab} \label{uplus3} \]
-\[{x\uplus a}, {x\uplus _ab}, {x\mathop \uplus_ab}, {x\mathop \uplus\limits_ab} \label{uplus4} \]
+\[{\uplus a}, {\uplus _ab}, {\mathop \uplus_ab}, {\mathop \uplus\limits_ab} \anchorlabel{uplus3} \] 
+\[{x\uplus a}, {x\uplus _ab}, {x\mathop \uplus_ab}, {x\mathop \uplus\limits_ab} \anchorlabel{uplus4} \]
 }
 
 In \Tralics\ 2.9.4,
@@ -4784,12 +4785,12 @@ Thus, translation of \cmd{biguplus} seems to be wrong. Thus, we changed it:
 in \Tralics\ 2.9.5, \cmd{biguplus} is the same character as \cmd{uplus}.
 Same formulas as above, with
 command \cmd{biguplus} used instead of \cmd{uplus}
-\[{\biguplus a}, {\biguplus _ab}, {\mathop \biguplus_ab}, {\mathop \biguplus\limits_ab} \label{uplus5} \]
-\[{x\biguplus a}, {x\biguplus _ab}, {x\mathop \biguplus_ab}, {x\mathop \biguplus\limits_ab} \label{uplus6} \]
+\[{\biguplus a}, {\biguplus _ab}, {\mathop \biguplus_ab}, {\mathop \biguplus\limits_ab} \anchorlabel{uplus5} \]
+\[{x\biguplus a}, {x\biguplus _ab}, {x\mathop \biguplus_ab}, {x\mathop \biguplus\limits_ab} \anchorlabel{uplus6} \]
 Same, with \cmd{textstyle}
-\[{\textstyle \biguplus a}, {\textstyle\biguplus _ab}, {\textstyle\mathop \biguplus_ab}, {\textstyle\mathop \biguplus\limits_ab} \label{uplus7} \]
+\[{\textstyle \biguplus a}, {\textstyle\biguplus _ab}, {\textstyle\mathop \biguplus_ab}, {\textstyle\mathop \biguplus\limits_ab} \anchorlabel{uplus7} \]
 \[{\textstyle x\biguplus a}, {\textstyle x\biguplus _ab}, {\textstyle x\mathop
-  \biguplus_ab}, {\textstyle x\mathop \biguplus\limits_ab} \label{uplus8} \]
+  \biguplus_ab}, {\textstyle x\mathop \biguplus\limits_ab} \anchorlabel{uplus8} \]
 
 
 \begin{verbatim}[numbers=left,firstnumber=last]

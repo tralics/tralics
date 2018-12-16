@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txmath.h,v 2.69 2011/08/05 14:08:18 grimm Exp $
+// $Id: txmath.h,v 2.76 2015/11/24 17:08:44 grimm Exp $
 // TRALICS, copyright (C) 2003-2004 2006, 2007 INRIA, Jos\'e Grimm
 
 // This software is governed by the CeCILL license under French law and
@@ -147,9 +147,9 @@ class Math {
   friend class MathElt;
   MathList value;
   math_list_type type;
-  string name;
+  subtypes sname;
  public:
-  Math() : type(invalid_cd),name("") {}
+  Math() : type(invalid_cd),sname(nomathenv_code) {}
  public:
 
   subtypes duplicate (bool) const;
@@ -176,34 +176,19 @@ class Math {
   Math get_arg2 () { return second_element().get_list(); }
   Math get_arg3 () { return third_element().get_list(); }
   math_list_type get_type() const { return type; }
-  string get_name() const { return name; }
+  subtypes get_sname() const { return sname; }
+  String get_name() const;
   Math& get_list(int) const;
-  string get_real_name() const;
   void hack_type(int);
   bool has_type(int x) const { return type==x;}
   bool has_one_element() const;
   bool has_two_elements() const;
-  bool is_align_ext() const { return name == "@align"; }
-  bool is_align_ext_star() const { return name == "@align*"; }
-  bool is_aligned_ext() const { return name == "aligned"; }
-  bool is_array_env() const;
-  bool is_array_ext() const { return name == "array" || name == "array*"; }
-  bool is_external_array() const;
   void is_font_cmd1_list(const_math_iterator&B,const_math_iterator&E);
-  bool is_bordermatrix () const {return name == "bordermatrix "; }
-  bool is_matrix_ext() const { return strncmp(name.c_str()+1,"matrix",6)==0; }
-  bool is_matrix() const { return name == "matrix"; }
-  bool is_multline_ext() const 
-  { return name == "multline" || name == "multline*"; }
-  bool is_gather_ext() const 
-  { return name == "gather" || name == "gather*"; }
-  bool is_split_ext() const { return name == "split"; }
   bool length_one() const { return value.size() ==1; }
-  Xmlp M_array (math_style);
+  Xmlp M_array (bool,math_style);
   XmlAndType M_cv (math_style,int need_row);
   void pop_back() { value.pop_back(); }
   void pop_front() { value.pop_front(); }
-  void pop3 ();
   void print() const;
   void push_back(CmdChr,subtypes);
   void push_back_list(subtypes X,math_list_type c);
@@ -218,7 +203,7 @@ class Math {
   const MathElt& second_element() const;
   void set_display_type() { type = math_ddollar_cd;  } 
   void set_env_name(int);
-  void set_name(string X) { name = X;}
+  void set_name(subtypes X) { sname = X;}
   void set_nondisplay_type() { type = math_dollar_cd;  } 
   void set_type(math_list_type c) { type = c; }
   const MathElt& third_element() const;
@@ -260,7 +245,7 @@ class Math {
   void skip_initial_space();
   Xmlp special1() const;
   void special2(bool&,Xmlp&) const;
-  Xmlp split_as_array(vector<AttList>& table,bool,bool,math_style);
+  Xmlp split_as_array(vector<AttList>& table,math_style,bool);
   void remove_opt_arg (bool star);
   string remove_req_arg ();
   string remove_req_arg_noerr () const;
@@ -274,10 +259,11 @@ class MathHelper {
   MathElt* free_list;  // free list
   bool current_mode; // display or not, needed for \label
   name_positions pos_att; // position attribute, inline or display
-  bool need_tag; // has this equation a number
   bool seen_label; // do we see already have a label
-  bool warned_label; // was the used waerned for labels on this formula ?
+  bool warned_label; // was the used warned for labels on this formula ?
   string label_val; // name of the label
+  vector<string> multi_labels;
+  vector<int> multi_labels_type;
   TokenList tag_list; // value of \tag{foo}, if given 
   bool is_tag_starred; // \tag or \tag* ?
   Xid cur_cell_id; // Id of current cell
@@ -288,13 +274,27 @@ class MathHelper {
   Xid cur_texmath_id; // Id of current texmath
   int math_env_ctr; // two counters for environments
   int all_env_ctr;
+  int last_ml_pos; 
+  int eqnum_status; // how many numbers for this equation?
  public:
   MathHelper() {math_env_ctr = 0; all_env_ctr =0; }
-  void new_label(string s);
+  void reset_last_ml_pos () { last_ml_pos = 0; }
+  bool end_of_row();
+  void dump_labels();
+  void ml_check_labels();
+  void new_label(string s, bool a);
+  void ml_second_pass(Xmlp row,bool);
+  void ml_last_pass(bool);
+  void insert_special_tag(string s) {
+    multi_labels [last_ml_pos-2] = s;
+  }
+  void new_multi_label(string s, int t) {
+    multi_labels.push_back(s); multi_labels_type.push_back(t);  }
+  vector <string>& get_multi_labels() { return multi_labels; }
   void finish_math_mem();
   void set_type(bool);
-  bool has_label() const { return seen_label || need_tag; }
-  bool need_eqnum() const { return need_tag; }
+  int get_eqnum_status () const { return eqnum_status; }
+  bool has_label() const { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
   string get_label_val() const { return label_val; }
   void stats();
   name_positions get_pos_att() const { return pos_att; }
@@ -323,10 +323,9 @@ class MathHelper {
   void set_rid(Xid i) { cur_row_id = i; }
   void set_taid(Xid i) { cur_table_id = i; }
   void starred_tag() { is_tag_starred = true; }
-  void check_for_eqnum(int type);
+  void check_for_eqnum(subtypes, bool);
  private:
   void set_label(string s) { label_val = s; seen_label = true; }
-  void initialise();
 };
 
 // This is a global object for math handling
@@ -376,7 +375,7 @@ public:
   void realloc_list0();
   void realloc_list();
   void realloc_xml();
-  subtypes find_math_location(math_list_type k);
+  subtypes find_math_location(math_list_type k, subtypes s);
   subtypes find_xml_location();
   subtypes find_xml_location(Xmlp);
   Xmlp make_mfenced(int open, int close, Xmlp val);
@@ -453,7 +452,7 @@ namespace math_ns {
   math_style next_math_style(math_style x);
   math_style next_frac_style(math_style x);
   Xmlp special_exponent(const_math_iterator L,const_math_iterator E);
-  void special_fence(char s, int& open, int&close);  
+  bool special_fence(subtypes s, int& open, int&close);  
   math_style style_level(subtypes tt); 
   Xmlp make_math_char(uchar,int);
   Xmlp xml2sons(Istring elt, Xmlp first_arg, Xmlp second_arg);
@@ -496,12 +495,3 @@ inline const MathElt& Math::third_element() const
   return *X; 
 }
 
-
-inline bool Math::is_external_array() const 
-{
-  return name == "eqnarray" || name == "eqnarray*" ||
-    name == "Beqnarray" || name == "Beqnarray*" ||
-    name == "multline" || name == "multline*" ||
-    name == "gather" || name == "gather*" || 
-    name == "@align" || name == "@align*" ;
-}

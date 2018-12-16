@@ -10,7 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 const char* txbib_rcsid =
-  "$Id: txbib.C,v 2.84 2015/08/06 09:28:44 grimm Exp $";
+  "$Id: txbib.C,v 2.91 2017/05/29 06:22:57 grimm Exp $";
 
 #include "tralics.h"
 #include "txbib.h"
@@ -29,7 +29,8 @@ namespace {
   bool distinguish_refer = false;
   string cur_entry_name;  // name of entry under construction.
   int cur_entry_line; // position of entry in source file
-
+  vector <string> omitcite_list;
+  
   BblAndTty BAT;
   Bibliography the_bibliography;
   int similar_entries;
@@ -48,7 +49,6 @@ namespace bib_ns {
   name_positions type_to_string(entry_type x);
   bool is_noopsort(const string& s, int i);
   bool raw_bib = false;
-  bool allow_break = true;
 }
 using namespace bib_ns;
 
@@ -134,29 +134,42 @@ Istring bib_ns::normalise_for_bib(Istring w)
 // Case of \natcite[otherargs][see][p25]{Knuth}
 // Translates as <cit type='otherargs'>see <ref target='xx'/> p25</cit>
 
+// case of \omitcite{foo}. reads an argument, puts it in the omit mist
+// and logs it
+void Parser:: T_omitcite ()
+{
+  flush_buffer();
+  string s = sT_arg_nopar();
+  omitcite_list.push_back (s);
+  the_log << lg_startbrace << "\\omitcite(" << int(omitcite_list.size ());
+  the_log << ") = "  << s << lg_endbrace; 
+}
+
+
+
 // We start with a function that fetches optional arguments
 // In prenote we put `p. 25' or nothing, in type one of year, foot, refer, bar
 // as an istring, it will be normalised later.
 void Parser::T_cite(subtypes sw, TokenList& prenote, Istring& type)
 {
   if(sw==footcite_code) {
-    next_optarg(prenote);
+    read_optarg_nopar(prenote);
     type = the_names[cst_foot];
   } else if(sw==yearcite_code) {
-    next_optarg(prenote);
+    read_optarg_nopar(prenote);
     type = the_names[cst_empty]; // should be year here
   } else if(sw==refercite_code) {
-    next_optarg(prenote);
+    read_optarg_nopar(prenote);
     type = the_names[cst_refer];
   } else if(sw==nocite_code) {
     type = Istring(fetch_name_opt());
   } else if(sw==natcite_code) {
-    next_optarg(prenote); // is really the post note
+    read_optarg_nopar(prenote); // is really the post note
   } else {
     // we can have two optional arguments, prenote is last
     TokenList L1;
-    if(next_optarg(L1)) {
-      if(next_optarg(prenote))
+    if(read_optarg_nopar(L1)) {
+      if(read_optarg_nopar(prenote))
 	type = Istring(fetch_name1(L1));
       else prenote = L1;
     }
@@ -191,9 +204,9 @@ void Parser::T_cite(subtypes sw)
   TokenList prenote;
   Istring type = Istring("");
   if(is_natbib) {
-    Istring x  = nT_next_optarg();
+    Istring x  = nT_optarg_nopar();
     if(!x.empty()) the_stack.add_att_to_last(the_names[np_cite_type],x);
-    next_optarg(res);
+    read_optarg(res);
     if(!res.empty()) res.push_back(hash_table.space_token);
     res.push_front(hash_table.locate("NAT@open"));
   }
@@ -206,7 +219,7 @@ void Parser::T_cite(subtypes sw)
     sw==natcite_code  ? hash_table.locate("NAT@sep") :
     hash_table.cite_punct_token; 
   cur_tok = T;
-  String List = fetch_name0();
+  String List = fetch_name0_nopar();
   Splitter S(List);
   int n = 0;
   Token my_cmd = is_natbib ? hash_table.citesimple_token : 
@@ -255,11 +268,11 @@ void Parser::T_cite_one()
   bool is_simple = cur_cmd_chr.get_chr() != 0;
   Token T = cur_tok;
   flush_buffer();
-  Istring type = is_simple ? Istring("") : Istring(fetch_name0());
+  Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
   cur_tok = T;
-  Istring ref = Istring(fetch_name0());
-  Xmlp arg= is_simple ? 0 :  xT_next_arg();
-  // signal error after argumenty parsing
+  Istring ref = Istring(fetch_name0_nopar());
+  Xmlp arg= is_simple ? 0 :  xT_arg_nopar();
+  // signal error after argument parsing
   if(bbl.is_too_late()) { 
     parse_error("Citation after loading biblio?"); 
     return;
@@ -300,7 +313,7 @@ void Parser::add_bib_marker (bool force)
 // or program:something
 void Parser::T_bibliostyle()
 {
-  String Val = fetch_name0();
+  String Val = fetch_name0_nopar();
   Bibliography&T = the_bibliography;
   if(strncmp(Val,"bibtex:",7)==0) {
     if(Val[7]) T.set_style(string(Val+7));
@@ -316,7 +329,7 @@ void Parser::T_bibliostyle()
 void Parser::T_biblio()
 {
   flush_buffer();
-  String list = fetch_name0();
+  String list = fetch_name0_nopar();
   add_bib_marker(false);
   Splitter S(list); 
   while(!S.at_end()) {
@@ -381,7 +394,7 @@ void CitationItem::dump_bibtex()
   if(X) {
     err_ns::local_buf << bf_reset << "Conflicts with tralics bib"<<
       ref.get_name();
-    err_ns::signal_error("bib",0);
+    the_parser.signal_error(the_parser.err_tok,"bib");
     return;
   }
   the_bibtex->make_entry(ref,get_bid());
@@ -520,6 +533,10 @@ void Bibliography::dump_data(Buffer& b)
 // This creates the bbl file by running an external program.
 void Parser::create_aux_file_and_run_pgm()
 {
+  if(!the_main->is_shell_escape_allowed()) {
+    log_and_tty << "Cannot call external program unless using option -shell-escape\n";
+    return;
+  }
   Buffer&B = biblio_buf4;
   B.reset();
   bbl.reset_lines();
@@ -537,9 +554,11 @@ void Parser::create_aux_file_and_run_pgm()
   *fp << B.c_str();
   fp->close();
   delete fp;
+  the_log << "++ executing " << T.get_cmd().c_str() << ".\n";
   system(T.get_cmd().c_str());
   B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
   // NOTE: can we use on-the-fly encoding ? 
+  the_log << "++ reading " << B.c_str() << ".\n";
   tralics_ns::read_a_file(bbl.get_lines(),B.c_str(), 1);
 }
 
@@ -581,9 +600,9 @@ void Parser::T_end_the_biblio()
 // before and after the mandatory one.
 void Parser::T_start_the_biblio()
 {
-  ignore_next_optarg();
-  ignore_next_arg(); // longest label, ignored
-  ignore_next_optarg();
+  ignore_optarg();
+  ignore_arg(); // longest label, ignored
+  ignore_optarg();
   TokenList L1;
   L1.push_back(hash_table.refname_token);
   String a = fetch_name1(L1);
@@ -645,11 +664,11 @@ int Bibliography::find_citation_star(Istring from, Istring key)
 // Command has to be in Bib mode, argument translated in Arg mode.
 void Parser::T_cititem()
 {
-  String a = fetch_name0();
+  String a = fetch_name0_nopar();
   Buffer&B = biblio_buf4;
   B << bf_reset << "cititem-" << a;
   finish_csname(B);
-  look_at_mac();
+  see_cs_token();
   if(cur_cmd_chr.get_cmd() != relax_cmd){
     back_input();
     return;
@@ -659,7 +678,7 @@ void Parser::T_cititem()
   the_stack.set_arg_mode();
   Istring name  = Istring(a);
   the_stack.push(name,new Xml(name,0));
-  T_next_arg();
+  T_arg();
   the_stack.pop(name);
   the_stack.set_mode(m);
   the_stack.add_nl();
@@ -720,11 +739,12 @@ field_pos Bibtex::find_field_pos(String s) const
 {  
   if(!s) return fp_unknown;
   Istring S = Istring(s);
+  // Check is this has to be ignored
   vector <Istring>& Bib_s = the_main->get_bibtex_fields_s();
   int additional_s = Bib_s.size();
   for(int i=0;i<additional_s;i++) if(Bib_s[i] == S) return fp_unknown;
 
-
+  // Check is this is standard
   if(S==cstb_address) return fp_address;
   if(S==cstb_author) return fp_author;
   if(S==cstb_booktitle) return fp_booktitle;
@@ -755,6 +775,7 @@ field_pos Bibtex::find_field_pos(String s) const
   if(S==cstb_volume) return fp_volume;
   if(S==cstb_year) return fp_year;
   if(S==cstb_crossref) return fp_crossref;
+  // Check is this is additional
   vector <Istring>& Bib = the_main->get_bibtex_fields();
   int additional = Bib.size();
   for(int i=0;i<additional;i++) 
@@ -871,7 +892,7 @@ String BibEntry::ra_prefix() const
   }
 }
 
-// This finds a citation that matches exaclty S
+// This finds a citation that matches exactly S
 BibEntry* Bibtex::find_entry(const CitationKey& s)
 {
   int len = all_entries.size();
@@ -969,11 +990,11 @@ void Parser::T_bpers()
 {
   int e = main_ns::nb_errs;
   unexpected_seen_hi = false; 
-  Istring A = nT_next_optarg();
-  Istring a = nT_next_arg();
-  Istring b = nT_next_arg();
-  Istring c = nT_next_arg();
-  Istring d = nT_next_arg();
+  Istring A = nT_optarg_nopar();
+  Istring a = nT_arg_nopar();
+  Istring b = nT_arg_nopar();
+  Istring c = nT_arg_nopar();
+  Istring d = nT_arg_nopar();
   if(unexpected_seen_hi&&e!=main_ns::nb_errs)
     log_and_tty << "maybe you confused Publisher with Editor\n";
   need_bib_mode();
@@ -1017,7 +1038,7 @@ void Parser::solve_cite(bool user)
   if(user) { 
     implicit_par(zero_code);
     the_stack.add_last(new Xml(np_bibitem,0));
-    Istring ukey = nT_next_optarg();
+    Istring ukey = nT_optarg_nopar();
     the_stack.get_xid().get_att().push_back(np_bibkey,ukey);
     n = the_stack.get_xid().value;
   } else {
@@ -1027,7 +1048,7 @@ void Parser::solve_cite(bool user)
   }
   from = normalise_for_bib(from);
   cur_tok = T;
-  Istring key= Istring(fetch_name0());
+  Istring key= Istring(fetch_name0_nopar());
   if (user) insert_every_bib();
   if(n==0) return;
   Xid N = Xid(n);
@@ -1038,7 +1059,7 @@ void Parser::solve_cite(bool user)
   if(CI.is_solved()) {
     err_ns::local_buf << bf_reset << "Bibliography entry already defined "<<
 	key.c_str();
-    err_ns::signal_error("bad solve",0);
+    the_parser.signal_error(the_parser.err_tok,"bad solve");
     return;
   }
   AttList& AL= N.get_att();
@@ -1049,7 +1070,7 @@ void Parser::solve_cite(bool user)
     else { 
       err_ns::local_buf << bf_reset << "Cannot solve (element has an Id) "<<
 	key.c_str();
-      err_ns::signal_error("bad solve",0);
+      the_parser.signal_error(the_parser.err_tok,"bad solve");
       return;
     }
   } else AL.push_back(the_names[np_id], CI.get_bid());
@@ -1062,7 +1083,7 @@ void Parser::T_empty_bibitem()
   flush_buffer();
   string w = "";
   string a = "";
-  string b = sT_next_arg();
+  string b = sT_arg_nopar();
   Istring id = the_bibtex->exec_bibitem(w,b);
   if(id.empty()) return;
   leave_v_mode();
@@ -1088,17 +1109,17 @@ Istring Bibtex::exec_bibitem(const string& w, string b)
 void Parser::T_citation ()
 {
   flush_buffer();
-  string a = sT_next_arg();
+  string a = sT_arg_nopar();
   string b1 = special_next_arg();
-  string b2 = sT_next_arg();
-  string c = sT_next_arg();
-  Istring d = nT_next_arg();
+  string b2 = sT_arg_nopar();
+  string c = sT_arg_nopar();
+  Istring d = nT_arg_nopar();
   the_stack.add_nl();
   the_stack.push1(np_citation);
   the_stack.add_att_to_last(np_type,d);
   the_stack.implement_cit(b1,Istring(b2),a,c);
   the_stack.set_bib_mode();
-  ignore_next_optarg(); 
+  ignore_optarg(); 
   insert_every_bib();
 }
 
@@ -1484,11 +1505,17 @@ BibEntry* Bibtex::find_entry(String s,bool create, bib_creator bc)
 
 // This command is called when we have see @foo{bar,... on line lineno
 // The type of FOO is in cn, the value BAR in cur_entry_name.
+// the entry is ignored if teh name is in the omit list (with the same case)
 // This does not create a new entry, complains if the entry exists
 // and is not empty. If OK, we start to fill the entry.
 
 BibEntry* Bibtex::see_new_entry(entry_type cn, int lineno)
 {
+  for(int i= 0; i< int(omitcite_list.size ()); i++)
+    if (omitcite_list [i] == cur_entry_name) {
+      the_log << lg_start << "bib: Omitting " << cur_entry_name << lg_end;
+      return 0;
+    }
   BibEntry* X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
   if(!X) return X;
   if(X->type_int != type_unknown) {
@@ -2058,7 +2085,7 @@ string Buffer::insert_break(const string& x)
   reset();
   push_back("{\\url{");
   for(int i=0;i<n;i++) {
-    if(x[i] == ' ' && bib_ns::allow_break) push_back("\\allowbreak");
+    if(x[i] == ' ' && main_ns::bib_allow_break) push_back("\\allowbreak");
     push_back(x[i]);
   }
   push_back("}}");
@@ -2902,18 +2929,6 @@ void Bibtex::read(String src, bib_from ct)
 
 
 /// -------------------------   a virer
-
-
-void Buffer::chars_to_buffer(Buffer& X)
-{
-  X.reset();
-  for(;;) {
-    char c = head();
-    if(!is_letter(c))  break;
-    X.push_back(c);
-    advance();
-  }
-}
 
 
 void bib_ns::handle_special_string(string s, Buffer&A, Buffer&B)

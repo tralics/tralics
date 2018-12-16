@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE document SYSTEM 'devnul.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<!-- Translated from latex by tralics 2.15.4, date: 2015/11/05-->
 <document Language='English' part='true'>
 <Frontmatter>
 <Xdiv1 Rend='NoNumber'><Head>Chapter one</Head>
@@ -173,7 +173,7 @@ tata
 <p Rend='FlushRight'>E</p>
 <Table Rend='inline'><Row Spaceafter='2.0pt' Topborder='true'><Cell Rightborder='true' Halign='Right' Leftborder='true'>a</Cell>
 <Cell Rightborder='true' Halign='Left'>b</Cell>
-<Cell Rightborder='true' Halign='Center' Cols='1'>x</Cell>
+<Cell Rightborder='true' Halign='Center'>x</Cell>
 </Row></Table><p>
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd><mtd columnspan='1'><mi>x</mi></mtd></mtr></mtable></math></formula></p>
 <p><minipage InnerPos='s' Pos='t' marginpar='85.35826pt'><p>ok
@@ -331,4 +331,5 @@ a :c
 </Xdiv3></Xdiv2></Backmatter><TheIndex title='Index'><Index target='uid30 uid32' Level='1'>foo</Index>
 <Index target='uid31' Level='2' Encap='gee'>barb</Index>
 <Index target='uid32' Level='2'>bara</Index>
-</TheIndex></document>
+</TheIndex>
+</document>

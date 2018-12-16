@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+\usepackage{zwgetfdate}
+\usepackage{amsmath,array,ziffer,12many}
+
+\begin{document}
+\def\foo{} 
+\long\def\fooL{}
+\protected\def\fooP{} \ifx\foo\fooP \bad\fi
+\protected\long\def\fooLP{}
+
+
+
+\iffalse feature currently removed
+\protected\long\outer\def\fooLOP{} % Cannot have outer macro in conditional
+{\newcommand\FooL{} \ifx\FooL\fooL\else \bad\fi \ifx\FooL\foo \bad\fi}
+{\newcommand*\Foo{} \ifx\Foo\foo\else \bad\fi \ifx\Foo\fooL \bad\fi}
+{\newcommand[\long]\FooLL{} 
+  \ifx\FooLL\fooL\else \bad\fi \ifx\FooLL\foo \bad\fi}
+{\newcommand[]\Foon{} 
+  \ifx\FooN\Foo\else \bad\fi \ifx\FooN\foo \bad\fi}
+{\newcommand[\protected]\FooP{} 
+  \ifx\FooP\fooP\else \bad\fi \ifx\FooP\fooL \bad\fi}
+{\newcommand[\protected\long\outer]\FooLOP{} 
+    \ifx\FooLOP\fooLOP\else \bad\fi \ifx\FooLOP\fooL \bad\fi}
+{\newcommand[\global]\FooN{}} 
+\ifx\FooN\foo\else \bad\fi \ifx\FooN\fooL \bad\fi
+\fi
+
+amsmath date =\DateOfPackage{amsmath}
+12many date \DateOfPackage{12many}
+
+$1.000,-- / 2,33$
+\ZifferStrichAn 
+$1.000,-- / 2,33$
+$a-b$ $a--b$ \\
+
+\ZifferStrichAus 
+$1.000,-- / 2,33$
+$a-b$ $a--b$
+
+$a,0,1,n$
+
+\ZifferAus 
+Nomal: $1.000,-- / 2,33$
+
+
+\setOTMstyle{dots}
+dot: \nto2{233} \nto ab  \ito{233} \ito b \oto{233} \oto b \\
+dot; $\nto2{233}; \nto ab  \ito{233} \ito b \oto{233} \oto b$ 
+
+\setOTMstyle[dots=;\ldotp\ldotp]{dots}
+dot: $\nto2{233}; \nto ab  \ito{233} \ito b \oto{233} \oto b$ 
+
+\setOTMstyle{nude}
+nude: $\nto2{233}; \nto ab  \ito{233} \ito b \oto{233} \oto b$ 
+
+\setOTMstyle{laue}
+laue: $\nto{12}{233};   \ito{233} \ito b \oto{233} \oto b$ 
+
+\setOTMstyle{set}
+set: $\nto{12}{233};  \nto ab \ito{233} \ito b \oto{233} \oto b$ 
+
+\setOTMstyle[var=\iota, naturals=\mathbb{N},where=:] {set}
+set: $\nto{12}{233};  \nto ab \ito{233} \ito b \oto{233} \oto b$ 
+
+ $\nto{12}{233} $
+
+\end{document}
+
+% aa \vcenter{123}\setbox0\lastbox \showbox513 \showbox0

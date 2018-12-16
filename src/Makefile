@@ -3,7 +3,7 @@ OBJECTS=  txtoken1.o txtoken2.o tralics.o txparser.o  txparser2.o txparser3.o\
   txstack.o txtranslate.o  txmain.o txfp.o txfonts.o txscan.o txio.o\
   txtrees.o  txtitlepage.o txcommands.o txarray.o  txatt.o txaccent.o\
   txpost.o txerr.o txaux.o txbib.o readline.o txclasses.o\
-  txra.o txconfig.o
+  txra.o txconfig.o txl3.o
 
 INCLUDES=tralics.h txinline.h  txparser.h  txvars.h txstring.h \
    txstack.h txfonts.h  txlogger.h  txtoken.h  txbuffer.h txparam.h \
@@ -63,9 +63,9 @@ txtoken1.o : txtoken1.C $(INCLUDES)
 txtoken2.o : txtoken2.C $(INCLUDES)
 txconfig.o : txconfig.C $(INCLUDES)
 txra.o : txra.C $(INCLUDES)
+txl3.o : txl3.C $(INCLUDES)
 txtranslate.o: txtranslate.C $(INCLUDES)
 txtrees.o: txtrees.C $(INCLUDES) txtrees.h
 txclasses.o: txclasses.C $(INCLUDES) txclasses.h
 txmlio.o: txmlio.C $(INCLUDES) txmlio.h
 txmain.o: txmain.C $(INCLUDES)  txpath.h
-	 $(CC) $(CPPFLAGS) -c $*.C $(RAOPT)

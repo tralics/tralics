@@ -1,6 +1,6 @@
 % -*- latex -*-
-% $Id: amsmath.plt,v 2.33 2015/08/04 15:54:02 grimm Exp $
-\ProvidesPackage{amsmath}[2017/08/04 v1.6 AMS math features for Tralics]
+% $Id: amsmath.plt,v 2.38 2015/11/23 16:14:00 grimm Exp $
+\ProvidesPackage{amsmath}[2015/11/13 v1.7 AMS math features for Tralics]
 
 
 \DeclareOption{leqno}{\XMLaddatt[1]{equation-number}{left}}
@@ -28,7 +28,6 @@
 \def\brace{\atopwithdelims\{\}}
 \def\shoveleft{\multicolumn{1}{l}}
 \def\shoveright{\multicolumn{1}{r}}
-\def\intertext#1{\multicolumn{2}{l}{\mbox{#1}}\\}
 \def\mathpalette#1#2{\mathchoice {#1\displaystyle {#2}}%
 {#1\textstyle {#2}}{#1\scriptstyle{#2}}{#1\scriptscriptstyle{#2}}}
 
@@ -58,7 +57,6 @@
 
 \newlength\mathindent
 \newskip\multlinegap
-\ifx\c@equation\undefined \newcounter{equation}\fi
 
 \newcount\c@MaxMatrixCols \c@MaxMatrixCols=10  % 
 
@@ -71,24 +69,13 @@
   \or\dots&\dots&\dots\or\dots&\dots&\dots&\dots
   \or\dots&\dots&\dots&\dots&\dots\or\dots&\dots&\dots&\dots&\dots&\dots
   \or\dots&\dots&\dots&\dots&\dots\or\dots&\dots&\dots&\dots&\dots&\dots
-  \or\dots&\dots&\dots&\dots&\dots&\dots&\dots\or\dots&\dots&\dots&\dots&\dots&\dots&\dots&\dots\fi
+  \or\dots&\dots&\dots&\dots&\dots&\dots&\dots
+  \or\dots&\dots&\dots&\dots&\dots&\dots&\dots&\dots\fi
 }
 
 
 %% Objects that are not yet defined but described in the Book
 
-
-% Verbatim copy of the AMS math code.
-% \numberwithin{equation}{section} is the same as
-%    \@addtoreset{equation}{section} 
-%    \def\theequation{\thesection.\arabic{equation}}
-\providecommand{\numberwithin}[3][\arabic]{%
-  \@ifundefined{c@#2}{\@nocounterr{#2}}{%
-    \@ifundefined{c@#3}{\@nocnterr{#3}}{%
-      \@addtoreset{#2}{#3}%
-      \@xp\xdef\csname the#2\endcsname{%
-        \@xp\@nx\csname the#3\endcsname .\@nx#1{#2}}}}%
-}
 
 % Command used by T. Bouche
 % \equalenv{foo}{bar} is \let\foo\bar\let\endfoo\endbar
@@ -101,30 +88,19 @@
 \newenvironment{subarray}[1]
 {\bgroup\scriptstyle\begin{matrix}} {\end{matrix}\egroup}
 \newenvironment{smallmatrix}{\begin{matrix}}{\end{matrix}}
-\def\intertext#1{\text{\let\vspace\@gobble#1}\\}
+%\def\intertext#1{\text{\let\vspace\@gobble#1}\\}
 \def\intertext#1{\multicolumn{2}{l}{\text{\let\vspace\@gobble#1}}\\}
 \def\displaybreak{}
 
 \def\qed{\ensuremath{\Box}}
 
 
-%% Align envs 
-\newenvironment{align}{\begin{@align}{1}{-1}}{\end{@align}}
-\newenvironment{align*}{\begin{@align*}{1}{-1}}{\end{@align*}}
-\newenvironment{flalign}{\begin{@align}{2}{-1}}{\end{@align}}
-\newenvironment{flalign*}{\begin{@align*}{2}{-1}}{\end{@align*}}
-\newenvironment{alignat}{\begin{@align}{3}}{\end{@align}}
-\newenvironment{alignat*}{\begin{@align*}{3}}{\end{@align*}}
-\newenvironment{xalignat}{\begin{@align}{4}}{\end{@align}}
-\newenvironment{xalignat*}{\begin{@align*}{4}}{\end{@align*}}
-\newenvironment{xxalignat}{\begin{@align}{5}}{\end{@align}}
-\newenvironment{xxalignat*}{\begin{@align*}{5}}{\end{@align*}}
-
-
-
 \def\minalignsep{0pt}
 
-\newenvironment{gathered}[1][c]{\begin{array}{c}}{\end{array}}
+\DeclareRobustCommand{\tmspace}[3]{%
+  \ifmmode\mskip#1#2\else\kern#1#3\fi\relax}
+\newcommand{\negmedspace}{\tmspace-\medmuskip{.2222em}}
+\newcommand{\negthickspace}{\tmspace-\thickmuskip{.2222em}}
 
 
 %% Tags
@@ -151,6 +127,7 @@
 }
 \tagatendofformula
 
+% other commands
 
 
 \def\sqrtsign{\sqrt}
@@ -262,35 +239,9 @@
 \let\ngeqslant\ngeq
 \let\nleqslant\nleq
 
-\DeclareRobustCommand{\tmspace}[3]{%
-  \ifmmode\mskip#1#2\else\kern#1#3\fi\relax}
-\newcommand{\negmedspace}{\tmspace-\medmuskip{.2222em}}
-\newcommand{\negthickspace}{\tmspace-\thickmuskip{.2222em}}
-
-%\def\bordermatrix#1{{%
-%\let\cr\\\begin{pmatrix}\tableattribute{bordermatrix}{true}#1\end{pmatrix}}}
 
 
 \endinput
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\def\sideset#1#2#3{\mathop\def\@tempa{#3}%
-  \@ifbempty{#1}{\@xsideset{#2}}
-      {\@ifbempty{#2}{\@ysideset{#1}}{\@zsideset{#1}{#2}}}\limits}
-
-\def\@xsideset#1{\@scanupdown\@xxsideset\mmlnone\mmlnone{#1}}
-\def\@xxsideset#1#2{{\mathbox{mmultiscripts}{\@tempa{#1}{#2}}}}
-
-
-\def\@ysideset#1{\@scanupdown\@yysideset\mmlnone\mmlnone{#1}}
-\def\@yysideset#1#2{{\mathbox{mmultiscripts}{\@tempa\mmlprescripts{#1}{#2}}}}
-
-\def\@zsideset#1#2{\@scanupdown\@zzsideset\mmlnone\mmlnone{#1}{#2}}
-\def\@zzsideset#1#2#3{\@scanupdown\@wsideset\mmlnone\mmlnone{#3}{#1}{#2}}
-\def\@wsideset#1#2#3#4{{\mathbox{mmultiscripts}
-   {\@tempa{#1}{#2}\mmlprescripts{#3}{#4}}}}
 
 
 

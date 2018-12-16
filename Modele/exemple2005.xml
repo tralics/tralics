@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE raweb SYSTEM 'raweb3.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
-<raweb language='english' creator='Tralics version 2.15.3' year='2005'>
+<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<raweb language='english' creator='Tralics version 2.15.4' year='2005'>
 <accueil isproject='true' html='exemple'>
 <theme>num</theme>
 <projet>Apics</projet>
@@ -493,4 +493,5 @@ Des refercite <cit><ref target='bid5'/></cit>, <cit><ref target='bid6'/></cit></
 <bvolume>327</bvolume>
 <bpublisher>Springer Verlag</bpublisher>
 <byear>2006</byear>
-</citation></biblio></raweb>
+</citation></biblio>
+</raweb>

@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txchars.h,v 2.8 2012/04/27 15:10:05 grimm Exp $
+// $Id: txchars.h,v 2.10 2015/10/07 16:56:23 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002,2004,2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -17,6 +17,7 @@ private :
   unsigned int value;
 public :
   Utf8Char(unsigned int x) : value(x) {}
+  Utf8Char() : value(0) {}
 public:
   void make_invalid() { value = 0xFFFF; } // Not a Unicode char
   bool is_invalid()const { return value == 0xFFFF; } 
@@ -36,7 +37,8 @@ public:
   bool is_hex() const { return 'a'<= value && value <= 'f'; }
   int  val_as_hex() const { return value -'a' +10; } 
   bool is_Hex() const { return 'A'<= value && value <= 'F'; }
-  int  val_as_Hex() const { return value -'A' +10; } 
+  int  val_as_Hex() const { return value -'A' +10; }
+  int  hex_val () const;
   bool is_letter() const { return is_ascii() && ::is_letter(value); }
   bool is_upper_case() const {  return  'A' <= value && value <= 'Z';}
   bool is_lower_case() const {  return  'a' <= value && value <= 'z';}

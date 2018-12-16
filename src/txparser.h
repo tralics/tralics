@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: txparser.h,v 2.145 2015/07/29 16:10:40 grimm Exp $
+// $Id: txparser.h,v 2.177 2017/05/29 06:22:57 grimm Exp $
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2003-2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
@@ -29,12 +29,14 @@ class Parser
   EqtbGlue glue_table[glue_table_size]; // EQTB, glue
   Token verbatim_chars[nb_characters]; // value of a character in verbatim mode
   int old_catcode[nb_shortverb_values]; // catcodes for undefineshortverb
+  int allocation_table[9]; // values for \newcount etc
   bool ok_for_xspace[nb_xspace_values]; // status of char w.r.t. \xspace
   Token uclc_list[22]; // upper, lowert case equivalent of \ij etc
   FontInfo cur_font;  // info for the current font
   vector<Image> the_images; // file data for images
   vector<Xmlp> all_heads;
   Stats my_stats;    // for the statistics
+  Token err_tok;       // in case of error   
 private:
   bool unexpected_seen_hi;  // check for wrongly placed font changes
   bool calc_loaded;    // did we see \usepackage{calc} ?
@@ -42,22 +44,23 @@ private:
   bool restricted;     // are we in restricted mode ?
   bool force_eof;      // did we see \endinput ?
   bool no_new_file;    // can we pop the input stack ?
+  bool file_ended;     // 
   bool chapter_has_star; // true in frontmatter, backmatter
   bool use_quotes;
   bool list_files_p;   // Should we list the files at the end ?
+  bool tok_is_defined; // use by \ifcsname
   int old_nberrs;      // previous number of errors
   int cur_line;        // current input line number
   int begin_env_line;  // input line number of 
   int ra_year;    // default year if none given as argument
-  Token after_assignment_token; // token for \after assignment
   int default_language_num; // default language
   int cur_level;       // current level on the execution stack
+  int equation_ctr_pos; // position in the table of the counter equation
   states state;        // current state of the scanner
   Token cur_tok;       // current token
-  unsigned int cur_cs; // control-sequence value of current token
+  Token after_assignment_token; // token for \afterassignment
   CmdChr cur_cmd_chr;   // current command code and modifier
   int sectionning_offset; // what is the main section, part, chapter ?
-  Token name_for_error;  // used in somne error messages
   l_state long_state;  // Error recovery handling (\long)
   scan_stat scanner_status; // Error recovery handling (\outer)
   int cur_in_chan;     // if get_token call get_a_new_line
@@ -73,7 +76,7 @@ private:
   Buffer mac_buffer;   // buffer the current macro
   Buffer group_buffer; // buffer for arg of \begin{...} \end(...)
   Buffer unprocessed_xml; // chars to be converted into an XML element
-
+  Buffer fetch_name_res; // used by fetch_name
   LinePtr lines;      // the lines to  be read
   TokenList TL;       // list of tokens to be read again
   Condition conditions;// condition stack for current \if
@@ -87,23 +90,28 @@ private:
   // private inline functions
  private: 
   bool at_eol () { return input_line_pos>=input_line.size(); }
-  symcodes fast_catcode(int x) const {
+  Utf8Char get_next_char() { return input_line[input_line_pos++]; }
+  symcodes get_catcode(int x) const {
     return symcodes(eqtb_int_table[x].get_val()); }
+  void set_catcode(int x,int v) { // untraced version of catcode modification
+     eqtb_int_table[x].set_val(v); }
   Token get_after_ass_tok() { 
     Token x = after_assignment_token;
     after_assignment_token.kill(); 
     return x; 
   }
-  string& get_cur_env_name() { return cur_env_name; }
   int get_def_language_num()const { return default_language_num; }
   string get_projet_val() const { return the_projetval; }
   string get_ur_val() { return the_url_val; }
   bool is_pos_par(int k) const { return eqtb_int_table[k].get_val()>0; }
   void kill_line() { input_line.clear(); }
-  void look_at_mac() { 
+  void see_cs_token() { 
     cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr();
   }
-  void see_non_mac_token(Token t)  {
+  void see_cs_token(Token T) { 
+    cur_tok = T; see_cs_token ();
+  }
+  void see_char_token(Token t)  {
     cur_cmd_chr.set_cmd(t.cmd_val());
     cur_cmd_chr.set_chr(t.chr_val());
   }
@@ -114,6 +122,8 @@ private:
   bool tracing_macros() const { return is_pos_par(tracingmacros_code); }
   // public inline functions
  public:
+  string& get_cur_env_name() { return cur_env_name; }
+
   void back_input() { TL.push_front(cur_tok); }
   void back_input(Token t) { TL.push_front(t); }
   void back_input(TokenList& L) { TL.splice(TL.begin(),L); }
@@ -156,7 +166,7 @@ private:
   bool tracing_math() const { return is_pos_par(tracingmath_code); }
   bool tracing_stack() const { return is_pos_par(tracingrestores_code); }
   void unexpected_font() { unexpected_seen_hi = true; }
-
+  void L3_load (bool);
   // public functions
  public:  
   Parser();
@@ -167,11 +177,17 @@ private:
   void boot();
   void boot_special_names();
   void box_end(Xmlp,int);
+  bool list_to_string0(Buffer& b);
+  bool list_to_string(TokenList& L,Buffer& b);
+  bool list_to_string_cv(TokenList& L,Buffer& b);
+  void list_to_string_c(TokenList& x, String s1,String s2,String msg,Buffer&B);
+  Token list_to_string_c(TokenList& x, String s1,String s2,String msg);
+  string list_to_string_c(TokenList& x,String msg);
   bool csname_aux(String s1, String s2, TokenList& L, bool cs,Buffer&b);
   bool csname_aux(TokenList& L, bool cs,Buffer&b);
+  bool csname_ctr(TokenList& L, Buffer&b);
   void eq_define (int a, CmdChr, bool gbl);
-  void evaluate_now(String s,const string&);
-  void evaluate_now(Buffer& s,const string&);
+  void titlepage_evaluate(String s,const string&);
   void final_checks();
   void finish_images();
   void flush_buffer();
@@ -180,75 +196,92 @@ private:
   void fp_send_one_arg (TokenList& res);
   scan_stat get_scanner_status() const { return scanner_status; }
   l_state get_long_state() const { return long_state; }
-  bool has_letter_catcode(int x)const { return fast_catcode(x)==letter_catcode;}
+  bool has_letter_catcode(int x)const { return get_catcode(x)==letter_catcode;}
   void init_all(string);
   void load_latex();
-  TokenList mac_arg ();
-  TokenList mac_arg_long();
-  int nct_aux(Token);
-  Istring nT_next_arg();
-  void parse_error(const string&,TokenList&);
-  void parse_error(const string&);
+  TokenList read_arg ();
+  TokenList read_arg_nopar();
+  int nct_aux(Token, TokenList&);
+  Istring nE_arg_nopar();
+  Istring nT_arg_nopar();
+  Istring nT_optarg_nopar();
+  void parse_error(Token,const string&,TokenList&);
+  void parse_error(Token,const string&);
+  void parse_error(Token,String);
   void parse_error(String);
-  void parse_error(const string&,const string&);
-  void parse_error(const string&,Token,const string&,const string&);
-  void parse_error(const string&,const string&,const string&);
+  void parse_error(Token,const string&,const string&);
+  void parse_error(Token, const string&,Token,const string&,const string&);
+  void parse_error(Token,const string&,const string&,const string&);
   void print_cmd_chr(CmdChr);
   void remove_junk();
   void scan_eqno(math_list_type);
+  void scan_glue(internal_type level);
   void scan_glue(internal_type level,Token T);
   void scan_glue(internal_type level,Token T,bool);
-  void scan_glue(internal_type level,Token T,String);
+  void list_to_glue(internal_type level,Token t, TokenList&L);
   void set_default_language(int);
   void set_scanner_status(scan_stat c) { scanner_status=c; }
   void set_long_state(l_state c) { long_state=c; }
   void signal_error(String);
+  void signal_error();
+  void signal_error(Token,String);
+  void signal_ovf(Token,String,int,int);
   TokenList special_expand(TokenList* args);
   Xmlp special_tpa_arg(String n,String y, bool par,bool env,bool qf);
   void T_titlepage_finish (int v);
   Xmlp tpa_exec(String);
-  void tracing_all();
+  void M_tracingall();
   void translate0();
   void translate_all();
   void word_define (int a, int c, bool gbl);
   bool find_a_save_key(const string& mykey);
-  Token get_name_for_error() { return name_for_error; }
+  TokenList expand_mac_inner (const TokenList& X,TokenList*);
+  void mu_error(String,int);
+  void expand_nct(TokenList&L);
+  void token_for_show(const CmdChr&);
+  void create_label(const string&, Istring value);
 
   // private functions, alphabetic order
  private:
-  void accent_a ();
-  void accent ();
+  bool stack_math_in_cell();
+  void E_accent_a ();
+  void E_accent ();
+  void E_user(bool,subtypes,symcodes);
+  void E_first_of_two(bool,subtypes);
+  void E_first_of_three(bool,subtypes);
+  void E_first_of_four(bool,subtypes);
+  void E_ignore_n_args (bool,subtypes);
   void accent_err1();
   void accent_err2(Token Y);
   void accent_err3();
   void accent_err4();
   void add_bib_marker(bool);
   void add_math_label(Xmlp);
-  void add_buffer_to_list(Buffer& b,TokenList&X,const string&);
-  void add_id(const string&);
-  void add_vspace(ScaledInt,Xid);
+  void tokenize_buffer(Buffer& b,TokenList&X,const string&);
+  void add_vspace(Token T,ScaledInt,Xid);
   void after_parameter(bool exp,int);
   void after_math(bool);
-  void append_glue(ScaledInt,bool);
+  void append_glue(Token,ScaledInt,bool);
   void arg_font(subtypes);
   void assign_def_something(bool gbl);
+  void assign_toks(Token T,int, bool gbl);
   void back_input_braced(TokenList&);
   void back_input_pt(bool);
   void back_input_unless_space();
   void bad_counter0();
   void bad_counter1(const Buffer&,Equivalent&);
-  void bad_csname();
-  void bad_csname(String);
-  void bad_definition(int nb, Token name);
+  void bad_csname(bool);
+  void bad_definition(Token, int);
   void bad_delimited(int,Token name);
   void bad_end_env(int);
-  void bad_end_env(String s,bool);
-  void bad_group_char (bool test);
+  void bad_group_char ();
   void bad_macro_prefix(Token,Token);
   void bad_nbargs(int k);
+  void missing_number();
   void bad_number();
+  void bad_number1(Buffer&);
   void bad_redefinition(int,Token);
-  bool before_mac_arg (Token);
+  bool before_mac_arg ();
   void begin_box(int,subtypes);
   void boot_NAO();
   void boot_fp();
@@ -264,7 +297,7 @@ private:
   void calc_ratio_eval(int num, int den,SthInternal& res);
   void calc_spec_mul(RealNumber,SthInternal& res);
   void call_define_key(TokenList&L,Token cmd,const string&arg,const string&fam);
-  void change_case(int);
+  void T_case_shift(int);
   void check_all_ids();
   bool check_brace(int&);
   bool check_builtin_pack(const string&);
@@ -273,44 +306,33 @@ private:
   void check_language();
   void check_module_title(TokenList&L);
   void check_outer_validity();
-  void check_outer_validity0();
-  void conditional(subtypes,bool);
-  void convert();
+  void E_if_test(subtypes,bool);
+  void E_convert();
   void count_days();
-  bool counter(bool def);
-  void counter_commands(int);
+  bool M_counter(bool def);
+  void E_counter(int);
   bool counter_aux(string,String,Token T);
   void counter_boot(String,String);
-  bool counter_check(Buffer&,bool,Token);
+  bool counter_check(Buffer&,bool);
   int  counter_read_opt(String);
-  void counter_overflow(int,int);
+  void counter_overflow(Token,int,int);
   void close_all();
   void create_aux_file_and_run_pgm();
-  void csname();
+  void E_csname();
+  void csname_arg();
   int cur_group_type();
   void date_commands(int);
   void datebynumber();
   void dbl_arg();
-  void declare_math_operator();
+  void M_declare_math_operator();
   void declaretopics();
   void default_bp(Buffer& B,Token T,TokenList&val);
   void define_bool_key(subtypes);
   void define_choice_key();
   void define_cmd_key(subtypes);
-  void define_new_box();
-  void define_new_counter();
-  void define_new_dimen();
-  void define_new_language();
-  void define_new_length();
-  void define_new_muskip();
-  void define_new_read();
-  void define_new_something(subtypes);
-  void define_new_something(String ,int, int ,symcodes c);
-  void define_new_toks();
-  void define_new_write();
-  void define_something(int,bool,symcodes);
-  Utf8Char delimiter_for_verb(bool&,bool&);
-  Utf8Char delimiter_for_saveverb(bool&);
+  void define_something (int chr, bool gbl,symcodes w);
+  Utf8Char delimiter_for_verb(bool&);
+  Utf8Char delimiter_for_saveverb();
   Istring dimen_attrib(ScaledInt);
   ScaledInt dimen_from_list(Token, TokenList&);
   void dimen_from_list0(Token, TokenList&);
@@ -323,47 +345,51 @@ private:
   void english_quotes(CmdChr);
   void enter_file_in_table(const string&, bool);
   SaveAuxEnv* env_helper (const string& s);
+  void examine_token (Token);
   void exec_calc();
   void exec_fp_cmd(subtypes);
   void exec_fpi_cmd(subtypes);
   void expand();
-  void expand_car(bool);
+  void E_car(bool);
   void expand_first(TokenList& L);
-  bool expand_ifthenelse(Token);
-  bool expand_ifx ();
+  bool T_ifthenelse_inner(Token);
+  void T_ifthenelse ();
+  bool T_ifthenelse (TokenList&);
+  bool E_ifx ();
   void expand_mac (Macro& X);
-  void expand_mark(subtypes);
-  TokenList expand_mac_inner (Macro& X,TokenList*);
+  void T_mark(subtypes);
   void expand_no_arg0 (Token);
   void expand_no_arg (const string&);
   void expand_spaces ();
   void expand_twoargs ();
-  void expand_verbatim (int,Token,Token,Token);
+  void T_verbatim (int,Token,Token,Token);
   void expand_verb (unsigned char t);
-  void expand_verb0(Utf8Char);
+  void T_verb(Utf8Char);
   void expand_verb1(TokenList&);
   void expand_when_ok(bool);
-  string exp_token_list_to_string(TokenList& L);
+  string to_stringE(TokenList& L);
   void extended_chars(unsigned int);
   void extra_close_brace(int cl);
   void extra_fi_or_else();
   void extract_keys(TokenList,vector<string>&);
   bool eval_condition(subtypes);
-  void eval_let(Token,Token,bool);
+
   bool false_end_tabular(const string&);
   void fast_new_macro(TokenList& L,Token name);
   void fetch_box_id(Xmlp);
+  Token fetch_csname(bool);
   String fetch_name0();
+  String fetch_name0_nopar();
   String fetch_name1(TokenList& L);
   void fetch_name2();
   String fetch_name_opt();
   Token find_env_token(const string& s, bool beg);
-  void find_in_config(int c);
+  void E_get_config(int c);
   void finish_a_cell(Token T, Istring a);
   void finish_counter_cmd(Token, TokenList& L);
   void finish_csname(const Buffer&,String);
   void finish_csname(const Buffer&);
-  void finish_fi(); 
+  void E_fi_or_else(); 
   void finish_index(); 
   void finish_color(); 
   void finish_pers(); 
@@ -373,13 +399,13 @@ private:
   void finish_trivial_math(Xmlp);
   void finish_no_mathml(bool,int); 
   boundary_type first_boundary();
-  void first_of_one(Token);
+  void E_all_of_one(Token,int);
   void flush_buffer0();
   void flush_buffer1();
   void fnhack();
   void font_has_changed();
   void formatdate();
-  bool four_hats(Utf8Char cc);
+  bool scan_double_hat(Utf8Char cc);
   void fp_boolean(bool);
   void fp_calla(Token);
   void fp_callb(Token);
@@ -407,53 +433,51 @@ private:
   void french_punctuation(CmdChr);
   bool get_a_new_line();
   string get_attval();
-  name_positions get_ctb_opt(bool);
+  name_positions get_ctb_opt();
   name_positions get_trees_opt();
   Istring get_c_val(Token);
   void get_counter(Token, int&);
   int get_index_value();
   void get_date_ctrs(int&,int&,int&);
   void get_def_nbargs (Macro* X,Token t);
-  string get_env();
-  name_positions get_lrcs_opt(bool);
-  Token get_macro();
+  name_positions get_lrcs_opt();
+  Token cs_from_input();
   TokenList get_mac_value(Token);
   TokenList get_mac_value(const string&);
-  int get_nbargs ();
-  void get_new_command (rd_flag redef,bool gbl);
+  int read_mac_nbargs ();
+  void M_newcommand (rd_flag redef);
   void get_new_command_aux(const TokenList&);
-  void get_new_env (rd_flag redef,bool gbl);
-  Macro* get_new_mac();
+  void M_new_env (rd_flag redef);
+  Macro* read_latex_macro();
   Istring get_opt_dim(Token);
   bool get_token();
+  bool get_itoken();
   bool get_token_o();
-  int get_r_token(bool br=false);
+  Token get_r_token(bool br=false);
   bool get_x_token();
-  void get_x_token_or_active_char();
+  void get_x_token_or_active_char(symcodes&a,subtypes&b);
   void glue_define (int a, Glue c, bool gbl);
-  void grab_env(TokenList&,bool,bool&);
+  bool grab_env_comma(TokenList&);
   void grab_env(TokenList&);
   string group_to_string ();
   string group_to_string_spec (bool);
   void iexpand();
-  void ifdefinable();
-  void if_empty();
-  void if_nextchar(bool);
-  void if_star();
-  void if_undefined();
-  void ifthenelse ();
-  bool ifthenelse (TokenList&);
-  string ignore_env(bool);
-  void ignore_group0 ();
-  void ignore_next_arg ();
-  void ignore_next_optarg();
+  void T_ifdefinable();
+  void E_ifempty();
+  void T_ifnextchar(bool);
+  void T_ifstar();
+  void E_ifundefined(bool);
+  void ignore_arg ();
+  string T_raw_env(bool);
+  void ignore_optarg();
   Xid  ileave_v_mode();
   void implicit_par(subtypes);
   void improper_alpha();
   void includegraphics(subtypes);
   int  index_aux(TokenList& L,int father,int);
   void initialise_font();
-  void ins_the_toks();
+  void E_the_traced(Token T,subtypes);
+  TokenList E_the(subtypes);
   void insert_endline_char();
   void insert_every_bib();
   void insert_relax ();
@@ -466,15 +490,15 @@ private:
   void interpret_mathchoice_cmd(int res,subtypes,CmdChr);
   void interpret_math_cmd(int res,subtypes);
   void interpret_rc();
-  void invalid_key(string,const TokenList&);
+  void invalid_key(Token T,string,const TokenList&);
   bool is_delimiter(const TokenList& L);
   void is_date_valid();
   SaveAuxEnv* is_env_on_stack(const string& s);
-  bool is_in_open();
+  bool is_input_open();
   bool is_inner_math();
   bool is_not_a_math_env(String s); 
   bool is_verbatim_end ();
-  void iwhile_num(subtypes);
+  void E_iwhile(subtypes);
   void key_ifundefined();
   void kvo_bool_key();
   void kvo_bool_opt();
@@ -487,12 +511,13 @@ private:
   void kvo_void_opt();
   void kvo_void_key();
   AttList& last_att_list();
-  void latex_ctr();
+  void E_latex_ctr();
+  void E_latex_ctr_fnsymbol(int, TokenList&);
   string latex_input(int);
   void LC();
   void leave_h_mode();
   void leave_v_mode();
-  void lost_if(int);
+  void lost_if(Token T,int);
   void mac_define(Token a, Macro* b,bool gbl,rd_flag redef,symcodes);
   void make_catcodes();
   Xmlp make_cit_ref(Istring,Istring);
@@ -504,11 +529,11 @@ private:
   int math_dimen_attrib(Token C, String s); 
   del_pos math_lr_value();
   void math_only();
-  void mathversion();
+  void E_mathversion();
   void minus_sign(CmdChr);
   void missing_argument();
   void missing_close_brace(int);
-  void missing_equals();
+  void missing_equals(Token);
   void missing_flush();
   void missing_open_brace();
   void mklcuc(int c, int lc, int uc);
@@ -518,8 +543,8 @@ private:
   void more_bootstrap();
   void multiple_label(String, int,string);
   void multiply_dim(RealNumber val,int v);
-  void multispan();
-  bool my_csname(String s1, String s2, TokenList& L, String s,bool cs);
+  void E_multispan();
+  bool my_csname(String s1, String s2, TokenList& L, String s);
   int nb_env_on_stack(const string& s);
   int nb_env_on_stack();
   void need_array_mode();
@@ -530,17 +555,17 @@ private:
   void next_from_list();
   bool next_from_line();
   bool next_from_line0();
-  bool next_optarg(TokenList&);
-  bool next_optarg_long(TokenList&);
-  void new_boolean(subtypes);
-  void newif();
-  void newif_aux(Token T, string s, bool b);
+  void M_newboolean(subtypes);
+  void new_constant(subtypes);
+  void new_constant(String name,int max_val, subtypes alloc_pos,symcodes c);
+  void M_newif();
+  void M_newif_aux(Token T, string s, bool b);
   void new_font ();
   bool new_line_for_read(bool);
   void new_macro(const string& L,Token name);
   void new_macro(TokenList& L,Token name,bool gbl);
   void new_macro(TokenList& L,Token name);
-  subtypes new_math_list(int,math_list_type,string s);
+  subtypes new_math_list(int,math_list_type,subtypes s);
   void new_prim(String, TokenList&);
   void new_prim(String, String);
   void new_prim(Token, Token);
@@ -549,7 +574,7 @@ private:
   void new_xref(Xmlp val, string v, bool err);
   void no_arg_font();
   void no_extension(AttList&, const string&);
-  Istring nT_next_optarg();
+  Istring T_optarg_nopar();
   void numberwithin();
   bool ok_to_define(Token a, rd_flag redef);
   void old_font();
@@ -559,13 +584,13 @@ private:
   void opt_to_mandatory();
   bool optional_enumerate(TokenList& L,String);
   void out_warning(Buffer&B, msg_type);
-  void par_shape(subtypes m);
-  void pass_text(); 
-  void prefixed_aux(bool,symcodes);
-  void prefixed_command();
+  void parshape_aux(subtypes m);
+  void pass_text(Token); 
+  void M_prefixed_aux(bool);
+  void M_prefixed();
   void prefix_error(bool b_global, symcodes K);
   void pop_input_stack(bool);
-  void pop_level(bool,boundary_type);
+  void pop_level(boundary_type);
   void pop_all_levels();
   void prev_date();
   void print_token(ostream& fp,Token x);
@@ -574,7 +599,7 @@ private:
   void process_char(Utf8Char c);
   void process_char(uint c);
   void process_char(int c);
-  void push_input_stack(const string&,bool);
+  void push_input_stack(const string&,bool, bool);
   void push_level(boundary_type);
   void push_module();
   void push_module(const string&aux);
@@ -582,7 +607,6 @@ private:
   void push_save_stack(SaveAux *v);
   void push_tpa();
   void ratio_evaluate(TokenList& A, TokenList& B,SthInternal&res);
-  void read_a_TokenList(bool gbl);
   TokenList read_delimited (const TokenList& L);
   int read_elt_id(Token T);
   Token read_for_variable();
@@ -590,14 +614,17 @@ private:
   TokenList read_mac_body (bool exp);
   void read_mac_body (TokenList&,bool,int);
   void read_one_space();
-  void read_until(TokenList&,Token x);
+  bool read_optarg(TokenList&);
+  bool read_optarg_nopar(TokenList&);
   TokenList read_until(Token x);
-  TokenList read_until_long(Token x);
+  TokenList read_until_nopar(Token x);
   void read_into(TokenList&X);
   int read_unit();
+  string make_label_inner(string name);
   void refstepcounter();
-  void refstepcounter(const string&,bool);
+  void refstepcounter(String,bool);
   void refstepcounter(TokenList&,bool);
+  void refstepcounter_inner(TokenList&,bool);
   void remove_element(TokenList& A, TokenList& B, Token C);
   bool remove_initial_plus (bool);
   void remove_initial_space();
@@ -605,9 +632,11 @@ private:
   void remove_initial_space_relax();
   bool remove_initial_star ();
   void restore_the_state (SaveState& x);
-  string rT_next_arg();
-  string rT_next_optarg();
+  string rT_arg_nopar();
+  string sE_arg();
+  string sE_optarg_nopar();
   void runaway(int);
+  void err_one_arg(const TokenList&);
   void save_font();
   void save_the_state(SaveState& x);
   int scan_27bit_int();
@@ -618,29 +647,30 @@ private:
   Istring scan_color(const string& opt,const string& name);  
   bool scan_date_ctrs();
   bool scan_dim_helper(bool mu,bool ai);
-  bool scan_dim2(RealNumber&,bool,Token T);
+  bool scan_dim2(RealNumber&,bool);
   void scan_dimen(bool,Token T);
-  void scan_dimen(bool mu, bool inf, glue_spec&,bool shortcut,Token T);
-  bool scan_dimen1(bool mu, bool inf, glue_spec&,bool shortcut,Token T);
-  void scan_double(Token T,RealNumber&res);
-  int scan_eight_bit_int();
+  void scan_dimen(bool mu, bool inf, glue_spec&,bool shortcut);
+  bool scan_dimen1(bool mu, bool inf, glue_spec&,bool shortcut);
+  void scan_double(RealNumber&res);
   void scan_expr(subtypes);
   bool scan_expr(Token,internal_type);
-  void scan_expr_arg(internal_type, Token T);
-  scan_expr_t scan_expr_next(bool);
+  void scan_expr_arg(Token T,internal_type);
+  scan_expr_t scan_expr_next(Token,bool);
   int scan_fifteen_bit_int();
   string scan_file_name();
-  int  scan_font_ident ();
+  int  scan_font_ident();
   bool scan_for_eval(Buffer&B, bool sw);
   TokenList scan_general_text();
   bool scan_group0 (TokenList&,int);
   bool scan_group1(TokenList&L, int&b,int cl);
-  void scan_group2(TokenList&);
+  bool scan_group2(TokenList&);
   void scan_group3 (TokenList&,int,bool,int);
   void scan_group4 (TokenList&,int);
-  bool scan_group_opt(TokenList&L);
-  void scan_group_del(TokenList&L,const TokenList&);
-  void scan_hbox(int);
+  bool scan_group_opt(TokenList&L,bool&);
+  bool scan_group_del(TokenList&L,const TokenList&);
+  bool scan_group_del1(TokenList&,Token x);
+  void scan_hbox(int,subtypes c);
+  void scan_ignore_group ();
   int  scan_int(TokenList&, Token);
   int  scan_int(Token);
   int  scan_int(Token,int, String);
@@ -648,85 +678,92 @@ private:
   int  scan_int_internal();
   bool scan_keyword(String s);
   void scan_left_brace();
-  void scan_left_brace_and_bi();
+  void scan_left_brace_and_back_input();
   void scan_math(int,math_list_type);
   int  scan_math1(int);
-  void scan_math2(int, math_list_type);
-  void scan_math3(int, math_list_type, bool);
+  void scan_math2(int, math_list_type, boundary_type);
+  void scan_math3(int, math_list_type, int);
   bool scan_math_dollar(int,math_list_type);
+  bool scan_math_endcell(Token t);
+  void scan_math_endcell_ok(int);
   bool scan_math_env(int,math_list_type);
   int  scan_mathfont_ident ();
   ScaledInt scan_math_kern(symcodes,subtypes&);
-  void scan_math_hbox(int);
+  void scan_math_hbox(int, subtypes c);
   void scan_math_mi(int, subtypes,subtypes,CmdChr);
   void scan_math_rel(subtypes,int);
   void scan_math_tag(subtypes);
   void scan_optional_equals();
   bool scan_pair_ints (Token T, TokenList&L);
   void scan_prime();
+  int scan_reg_num();
   void scan_rule(int);
-  void scan_sideset();
-  void scan_split();
+  void E_sideset();
+  void E_split();
   bool scan_sign();
   void scan_something_internal(internal_type,bool);
   void scan_something_internal(internal_type);
   int  scan_special_int_d(Token T, int d);
   Token scan_style();
-  void scan_toks_def();
-  void scan_toks_edef(TokenList&);
+  void read_toks_edef(TokenList&);
   void scan_toks_absorb();
   void scan_toks_absorb_expand();
   int  scan_twenty_seven_bit_int();
-  void scan_updown(TokenList&,TokenList&,TokenList&,TokenList&);
-  void scan_updown();
+  void E_scan_up_down(TokenList&,TokenList&,TokenList&,TokenList&);
+  void E_scan_up_down();
   void scan_unit(RealNumber f);
   void see_font_change(subtypes);
-  void see_future_let(bool);
-  void see_let(bool);
-  void see_new_thm ();
-  void see_new_def(bool edef,bool gbl,symcodes);
+  void M_future_let(bool);
+  void M_let(bool);
+  void M_let(Token A, bool gbl, bool redef);
+  void M_let(Token,Token,bool,bool);
+  void M_let_fast(Token,Token,bool);
+  void M_let(int,bool);
+
+  void M_new_thm ();
+  void M_def(bool edef,bool gbl,symcodes, rd_flag);
   void see_new_id_spec(bool);
   void selective_sanitize();
   void select_math_font();
-  void setlength_command(int c);
+  void E_setlength(int c);
   void set_boolean();
   void set_counter(Token, int);
   void set_date_ctrs(int,int,int);
   void setkeys(bool);
-  void shorthand_define(int cmd,bool gbl);
-  void shorthand_gdefine(int cmd, String,int);
-  void short_verb(int x);
-  void short_verb_error(Token t, int x);
+  void M_shorthand_define(int cmd,bool gbl);
+  Token shorthand_gdefine(int cmd, String,int);
+  void M_shortverb(int x);
+  void short_verb_error(Token T,Token t, int x);
   void show_box(Xmlp);
   void skip_group (TokenList&);
   void skip_group0 (TokenList&);
   void skip_initial_space();
   void skip_initial_space_and_back_input();
   void skip_over_parens();
-  void skip_prefix (const TokenList& L);
+  bool skip_prefix (const TokenList& L);
   void solve_cite(bool);
   void special_fvset();
   string special_next_arg();
-  void special_read_mac_body(TokenList& L);
-  void special_verbatim();
+  void T_verbatim();
+  void T_subequations (bool);
   void start_a_cell(bool);
   void start_a_row(int);
-  bool start_scan_math(Math&,int);
+  bool start_scan_math(Math&,subtypes);
   void start_paras(int,string,bool);
   void store_new_line(int, bool);
   void string_define (int a, const string& c, bool gbl);
   void strip_pt();
-  string sT_next_arg();
-  string sT_next_optarg();
+  string sE_arg_nopar();
+  string sT_arg_nopar();
+  string sT_optarg_nopar();
   string sT_translate(TokenList& L);
 
   void T_addtomacro(bool);
-  void T_add_to_reset();
+  void E_addtoreset();
   void T_aftergroup();
-  void T_afterfi();
-  void T_afterelsefi();
+  void E_afterfi();
+  void E_afterelsefi();
   void T_ampersand();
-  void T_anchor();
   void T_arg1(name_positions);
   void T_atdocument(subtypes);
   void T_at_end_of_class();
@@ -751,8 +788,8 @@ private:
   void T_cititem();
   void T_class_error(subtypes);
   void T_cline();
-  void T_cons();
-  void T_cons(Token, TokenList&);
+  void M_cons();
+  void M_cons(Token, TokenList&);
   void T_cr();
   void T_cst1(int);
   void T_cst2(int);
@@ -771,12 +808,12 @@ private:
   void T_endv();
   void T_end_the_biblio();
   void T_end_theorem();
-  void T_ensuremath();
+  void E_ensuremath();
   void T_epsfbox();
   void T_error();
   void T_etex(subtypes);
   void T_execute_options();
-  void T_expandafter();
+  void E_expandafter();
   void T_figure_table(symcodes,subtypes);
   void T_color(subtypes);
   void T_figure_table_end(bool);
@@ -811,24 +848,25 @@ private:
   void T_item (int);
   Istring T_item_label(int);
   void T_keywords();
-  void T_label();
+  void T_label(int);
   void T_line(subtypes);
+  string scan_anchor(bool& h);
   void T_listenv(symcodes);
   void T_listenv_end(symcodes);
   void T_linethickness(int);
-  void T_loop();
+  void E_loop();
   void T_load_with_options(bool);
   void T_makebox(bool,Token);
-  void T_math (int);
+  void T_math (subtypes);
   void T_matter (subtypes);
   void T_mbox(subtypes);
   void T_minipage();
   void T_moreinfo_end();
   void T_multicolumn ();
   void T_multiput();
-  void T_next_arg_local();
-  void T_next_arg();
-  void T_next_optarg();
+  void T_arg_local();
+  void T_arg();
+  void T_optarg();
   void T_newline();
   void T_newcolumn_type();
   void T_newthheorem();
@@ -840,11 +878,12 @@ private:
   void T_nodetriangle(name_positions);
   void T_nodecircle(name_positions);
   void T_barnodeconnect(name_positions);
+  void T_omitcite ();
   void T_option_not_used();
   void T_par1(Istring);
   void T_par1();
   void T_paras(subtypes x);
-  void T_parse_encoding(bool, subtypes);
+  void E_parse_encoding(bool, subtypes);
   void T_participants(subtypes x);
   void T_participants_end();
   void T_pass_options(bool c);
@@ -856,7 +895,7 @@ private:
   void T_provides_package(bool c);
   void T_put(subtypes);
   void T_raisebox();
-  void T_random();
+  void E_random();
   void T_rasection();
   void T_ra_startdoc();
   void T_rasection_end();
@@ -865,7 +904,8 @@ private:
   void T_reevaluate0(TokenList&, bool);
   void T_remove_element();
   void T_save_box(bool);
-  void T_save_use_verb(bool save);
+  void T_saveverb();
+  void E_useverb();
   void T_scan_glue(subtypes c);
   void T_setmode();
   void T_specimp(int);
@@ -875,7 +915,6 @@ private:
   void T_start_the_biblio();
   void T_start_theorem(int);
   void T_testopt();
-  void T_thm_aux(int);
   void T_titlepage (int v);
   void T_trees(int);
   void T_translate(TokenList&);
@@ -886,18 +925,19 @@ private:
   void T_un_box(subtypes c); 
   void T_unimp(subtypes c);
   void T_unimplemented_font(subtypes c);
-  void T_unless();
+  void E_unless();
   void T_url(subtypes);
   void T_usefont();
   void T_usepackage();
   void T_use_counter(const string&);
+  void T_use_counter();
   void T_xmlelt(subtypes);
   void T_xmlenv(subtypes);
   void T_xmlenv_end(subtypes);
   void T_xmladdatt(subtypes c);
   void T_xfancy();
   void T_xkeyval(subtypes);
-  void T_xspace();
+  void E_xspace();
   void TM_fonts();
   void TM_math_fonts(Math& x);
   void TM_tabular_arg (Xid id);
@@ -905,9 +945,9 @@ private:
   void Tat_pers ();
   void Tat_pers_ra ();
   void testoptd(string s);
-  void tex_extension (int);
-  String tex_write(int);
-  TokenList the_toks();
+  void M_extension (int);
+  String string_to_write(int);
+  TokenList E_toks(subtypes);
   void tipa_acutemacron();
   void tipa_brevemacro();
   void tipa_circumdot();
@@ -927,9 +967,8 @@ private:
   void token_list_define(int p, TokenList& c, bool gbl);
   ScaledInt token_list_to_dim(TokenList& a,Token C,bool);
   Istring token_list_to_att(TokenList& a,Token C,bool);
-  void token_show(int, Buffer&B);
-  void token_show(bool lg, const CmdChr&,Buffer&B);
-  void token_show(const CmdChr&);
+  void token_show(Token T,int, Buffer&B);
+  void token_for_show(bool lg, const CmdChr&,Buffer&B);
   void trace_count_def(String,CmdChr);
   void trace_if(int);
   void trace_if(String,int,String);
@@ -953,21 +992,22 @@ private:
   void upn_eval(TokenList&);
   void url_hack(TokenList&);
   void use_a_package(const string&,bool,const string&,bool);
+  void E_usename(int,bool);
   void user_XML_swap (subtypes c);
   void user_XML_modify (subtypes c);
   void user_XML_fetch ();
-  void vb_tokens(bool& ok, Utf8Char test,TokenList&L,bool);
-  void verb_error(bool,int);
-  void while_do();  
-  void while_num(subtypes);  
+  bool vb_tokens(Utf8Char test,TokenList&L,bool);
+  void verb_error(Token,int);
+  void T_whiledo();  
+  void E_while(subtypes);  
   void wrong_mode(String);
-  void wrong_pop(String, String);
-  void x_input(int);
+  void wrong_pop(Token,String, String);
+  void E_input(int);
   void xgetfontsize();
   void xkv_checksanitize(Token A, TokenList&B,bool c);
   void xkv_checksanitize(bool c);
   void xkv_fetch_prefix_family();
-  void xkv_for(subtypes c);
+  void T_xkv_for(subtypes c);
   void xkv_makehd(TokenList& L);
   void xkv_makehd(); 
   void xkv_merge(bool gbl, int,TokenList& L,bool);
@@ -983,12 +1023,64 @@ private:
   void xkv_process_options();
   void xkv_execute_options();
   void xkv_pass_options(bool c);
-  void xml_name (Xmlp x);
-  string xmllatex();
+  void xml_name (Xmlp x,internal_type);
+  string T_xmllatex();
   void xsetfontsize();
-  Xmlp xT_next_arg();
-  Xmlp xT_next_optarg();
-  void xray(subtypes);
-  void zapspace();
+  Xmlp xT_arg_nopar();
+  Xmlp xT_optarg_nopar();
+  void M_xray(subtypes);
+  void E_zapspace();
+  bool read_token_arg (Token t);
+  bool read_token_arg(int);
+  // For latex3
+  void E_pdfstrcmp ();
+  void define_definer(String,String,String);
+  void define_definer(String);
+  void l3_after_cond(Token T, bool test, subtypes c);
+  void L3_check_cmd(int c);
+  bool l3_compare_str (bool);
+  void L3_eq_conditional (subtypes s);
+  void E_l3expand_aux(subtypes c);
+  void E_l3noexpand(subtypes c);
+  void E_l3expand_base(subtypes c);
+  void l3_expand_N(TokenList& L);
+  void l3_expand_o(TokenList& L);
+  void l3_reexpand_o(TokenList& L);
+  void l3_expand_f(TokenList& L);
+  void l3_expand_x(TokenList& L);
+  void l3_expand_Vv(TokenList& L, bool spec);
+  void L3_generate_form(subtypes c, TokenList parms, TokenList body,subtypes);
+  void generate_from_sig ();
+  void Tl3_gen_from_ac(int);
+  void l3_generate_variant ();
+  void l3_generate_variant(String orig, String var);
+  void l3_generate_variant (const string& var, bool prot, Token orig);
+  void L3_getid ();
+  bool l3_get_name(Token T);
+  void E_cat_ifeq(subtypes c);
+  void E_l3_ifx (subtypes);
+  void E_l3str_ifeq (subtypes);
+  void E_l3str_case (subtypes);
+  void L3_logid ();
+  void L3_new_conditional (subtypes);
+  void L3_new_conditional_aux (TokenList&,subtypes);
+  void L3_new_conditional_parm(subtypes);
+  TokenList l3_parms_from_ac(int, Token T,bool s);
+  void E_prg_return (int);
+  bool L3_split_next_name();
+  string l3_to_string(subtypes, TokenList&);
+  void L3_user_split_next_name(bool base);
+  void tex_string(Buffer&,Token, bool);
+  int l3_read_int (Token T);
+  void L3_set_cat_code(int c);
+  void L3_set_num_code(int c);
+  bool l3_get_cat(symcodes&a,subtypes&b, Token);
+  void l3_token_check (subtypes c);
+  void l3_new_token_list(int c);
+  void l3_tl_concat (int c);
+  void l3_tl_set (int c);
+  void l3_tl_put_left (int c);
+  void tl_set_rescan (int c);
+  void T_scantokens(TokenList &);
 };
 

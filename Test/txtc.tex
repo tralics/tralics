@@ -1,4 +1,4 @@
-\documentclass{article}  % iso-8859-1
+\documentclass{article}  % -*- coding: iso-8859-1 -*-
 \usepackage{fancyvrb}
 \usepackage{natbib}
 \usepackage{RR}
@@ -19,9 +19,9 @@ We use it also to show that characters are converted into the right encoding
 in a lot of situations, including commands, titles, indices etc.
 The \textit{XML} result is translated via \textsl{XSLT} into \textbf{HTML} 
 and available  on the web
-\url{http://www-sop.inria.fr/apics/tralics/txtc.html}.
+\url{http://www-sop.inria.fr/marelle/tralics/txtc.html}.
 Source document can be found at
-\url{http://www-sop.inria.fr/apics/tralics/doc-step.html}.} 
+\url{http://www-sop.inria.fr/marelle/tralics/doc-step.html}.} 
 
 \keyword{Latex, XML, HTML, UTF8, Hàn}
 \begin{document}
@@ -93,13 +93,13 @@ depends on the output encoding), three ampersand characters, a less than sign,
 a greater than sign. The second line is a valid XML comment, the third line is
 well-formed XML (it contains three entities, so that the XML is valid only if
 the DTD defines these entities); it is very easy to produce invalid and
-ill-formed XML.\index{vérb@vérb}% this one alreedy seen
+ill-formed XML.\index{vérb@vérb}% this one already seen
 
 The xmllatex command is to be used with care. It can produce
 \xmllatex{Hàn Th&\#x1ebf; Thành}{unused}\footnote{Hàn is the author of
 pdftex}. The second argument is meant to be translated by \LaTeX, it is
 ignored by Tralics. Instead of \verb=\xmllatex{foo}{bar}=, define a command,
-use it in the text, and overwrite it in a ult file (user configuratin file).%
+use it in the text, and overwrite it in a ult file (user configuration file).%
 \index{vérb@vérb|bf}% Note that encap is ignored
 
 In the current version, you can say \'{\^e} because the double-accent 
