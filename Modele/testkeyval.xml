@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<std>
+<p>2008/02/15 Package for testing keyval</p>
+<error n='\Error' l='99' c='Undefined command'/><p>epW=5.opE.CuCvLaD=Lb.Lcxyz</p>
+<p>I will first check your input, please wait.</p>
+<p noindent='true'>The input true was correct, we proceed.</p>
+<p noindent='true'>I finished the input check.
+
+I will first check your input, please wait.</p>
+<p noindent='true'>The input nottrue was incorrect and was ignored.</p>
+<p noindent='true'>I finished the input check.</p>
+<p>auaxvbu3v
+auaxvbu3v
+auaxvbu43v</p>
+<Warning l='339' c='Warning'>Package xkeyval Warning: Key `keya' has been disabled at line 339 of file testkeyval.tex.
+</Warning><p>XXA<error n='\setkeys' l='348' c='undefined key'/>aAabBb
+aAa
+<error n='\setkeys' l='350' c='No value specified for key `keyb&apos;'/>cCVc
+XXBcaa and bacb and cb
+cCVc cCVc
+XXCc1ec2f
+cCVc cCVc
+XXCc1ec2f
+XXDaAaEaAabAa</p>
+<error n='\setkeys' l='467' c='invalid usevalue'/><error n='\setkeys' l='468' c='no val recorded'/><error n='\setkeys' l='474' c='key loop'/><error n='\setkeys' l='478' c='key loop'/><p><figure rend='inline' width='20.0pt' file='G'/></p>
+<p><cit><ref target='bid0'/></cit></p>
+<div0 id-text='1' id='cid1'><head>Testing errors and the like</head>
+<p>This is a test
+<Warning l='578' c='Error'>Package mypack Error: error line1
+(mypack)              line2</Warning><error n='\PackageError' l='578' c='uerror'/>
+<Warning l='579' c='Warning'>Package mypack Warning: warning line1
+(mypack)                line2 at line 579 of file testkeyval.tex.
+</Warning>
+<Warning l='580' c='Warning'>Package mypack Warning: warning nl line1
+(mypack)                line2.
+</Warning>
+<Warning l='581' c='Info'>Package mypack Info: info line1
+(mypack)             line2 at line 581 of file testkeyval.tex.
+</Warning>
+<Warning l='582' c='Error'>Class myclass Error: error line1
+(myclass)            line2</Warning><error n='\ClassError' l='582' c='uerror'/>
+<Warning l='583' c='Warning'>Class myclass Warning: warning line1
+(myclass)              line2 at line 583 of file testkeyval.tex.
+</Warning>
+<Warning l='584' c='Warning'>Class myclass Warning: warning nl line1
+(myclass)              line2.
+</Warning>
+<Warning l='585' c='Info'>Class myclass Info: info line1
+(myclass)           line2 at line 585 of file testkeyval.tex.
+</Warning></p>
+<Warning l='587' c='Info'>info bar at line 587 of file testkeyval.tex.
+</Warning><Warning l='588' c='Warning'>warning bar
+PREFIXsecond line at line 588 of file testkeyval.tex.
+</Warning><Warning l='589' c='Error'>error bar
+PREFIXsecond line</Warning><error n='\GenericError' l='589' c='uerror'/></div0>
+<div0 id-text='2' id='cid2'><head>Elements</head>
+<Keywords>
+<Term>latex</Term>
+<Term>xml</Term>
+<Term>translator</Term>
+</Keywords></div0>
+<div0 id-text='3' id='cid3'><head>Trees</head>
+<p>We test also trees</p>
+<p><Node Name='a'>Value of node A</Node></p>
+<Node Name='b'/><p>.
+<Node Xpos='3pt' Name='c'/>.
+<Node Ypos='5pt' Xpos='4pt' Name='d'/>.
+<NodeConnect NameA='a' NameB='b' PosA='b' PosB='t'/>
+<NodeConnect NameA='a' NameB='c' PosA='tl' PosB='r'/>
+<ANodeConnect NameA='a' NameB='b' PosA='b' PosB='t'/>
+<ANodeConnect NameA='a' NameB='c' PosA='tl' PosB='r'/>
+<BarNodeConnect NameA='a' NameB='d' Depth='3pt'/>
+<BarNodeConnect NameA='a' NameB='d'/>
+<ABarNodeConnect NameA='a' NameB='d' Depth='3pt'/>
+<ABarNodeConnect NameA='a' NameB='d'/>
+<NodeCurve NameA='a' NameB='b' PosA='b' PosB='t' DepthB='2pt' DepthA='2pt'/>.
+<NodeCurve NameA='a' NameB='b' PosA='l' PosB='r' DepthB='3pt' DepthA='2pt'/>
+<ANodeCurve NameA='a' NameB='b' PosA='b' PosB='t' DepthB='2pt' DepthA='2pt'/>.
+<ANodeCurve NameA='a' NameB='b' PosA='l' PosB='r' DepthB='3pt' DepthA='2pt'/>
+<NodeTriangle NameB='b' NameA='a'/>
+<NodeBox NameA='a'/>
+<NodeOval NameA='a'/>
+<NodeCircle NameA='a' Depth='3pt'/>
+<NodeCircle NameA='a'/></p>
+<p><Ref target='cid2' rend='Page'/>
+
+
+<NewRef target='cid2' rend='NewPage'/></p>
+<p>Now checking runaway
+<error n='\nohope' l='664' c='Runaway argument'/>Second test
+<error n='\@car' l='668' c='Runaway argument'/>tLine of text.</p>
+<Warning l='674' c='Warning'>Tralics Warning: Command \par has changed
+</Warning><Warning l='677' c='Warning'>Tralics Warning: Command \foo has changed
+</Warning><Warning l='678' c='Warning'>Tralics Warning: Command \foo has changed
+</Warning><Warning l='680' c='Warning'>Tralics Warning: Command \foo has changed
+</Warning><error n='\@addtoreset' l='686' c='Runaway argument'/><p><hi b='a' a='b' id='bid5' rend='it'>x
+<error n='\newcounter' l='687' c='Runaway argument'/>x
+<error n='\nocite' l='688' c='Runaway argument'/>x
+<error n='\XMLsolvecite' l='689' c='Runaway argument'/>x
+<error n='\cite' l='690' c='Runaway argument'/><cit><NewRef target='bid2'/></cit>x
+<error n='\cite@one' l='691' c='Runaway argument'/><cit rend='a '><NewRef target='bid3'>b</NewRef></cit>x
+<error n='\cite@one' l='692' c='Runaway argument'/><cit rend='year'><NewRef target='bid4'>b</NewRef></cit>x
+<error n='\bibliographystyle' l='693' c='Runaway argument'/>x
+<error n='\bibliography' l='694' c='Runaway argument'/><biblio>
+<citation from='year' key='Lou88' id='bid0' userid='cite:louarn88' type='article'>
+<bauteurs><bpers prenom='P.' nom='Louarn' prenomcomplet='Philippe'/></bauteurs>
+<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'act ivité de l'INRIA</btitle>
+<bjournal>Cahiers Gutenberg</bjournal>
+<bnumber>0</bnumber>
+<bmonth>apr</bmonth>
+<byear>1988</byear>
+<bpages>17-24</bpages>
+</citation></biblio>x
+<error n='\cititem' l='695' c='Runaway argument'/><error n='\cititem' l='695' c='Command \cititem should occur in bibliographic mode only'/><aa>val</aa>
+x<error n='\XMLsolvecite' l='696' c='Runaway argument'/>x
+<error n='\XMLaddatt' l='697' c='Runaway argument'/>x
+<error n='\XMLaddatt' l='698' c='Runaway argument'/> x
+<error n='\newtheorem' l='699' c='Runaway argument'/> x
+<error n='\newtheorem' l='700' c='Runaway argument'/>x</hi></p>
+<p noindent='true'><hi rend='it'><bibitem id='bid6'/>X</hi></p>
+<p noindent='true'><hi rend='it'><bibitem id='bid2'/>X</hi></p>
+<p noindent='true'><hi rend='it'><bibitem id='bid3'/>X</hi></p>
+<p noindent='true'><hi rend='it'><bibitem id='bid7'/>X</hi><Warning l='703' c='Info'>Non-closed \begingroup started at line 683.
+Non-closed brace started at line 683.
+Non-closed environment `it' started at line 683.
+</Warning></p></div0>
+</std>

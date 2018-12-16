@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<std filename='txtc'>
+<title>A sample file for Tralics</title><author>José Grimm</author><abstract><p>This document shows some commands of <hi rend='it'>Tralics</hi>.
+We use it also to show that characters are converted into the right encoding
+in a lot of situations, including commands, titles, indices etc.
+The <hi rend='it'>XML</hi> result is translated via <hi rend='slanted'>XSLT</hi> into <hi rend='bold'>HTML</hi>
+and available on the web
+<xref url='http://www-sop.inria.fr/apics/tralics/txtc.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>tralics/<allowbreak/>txtc.<allowbreak/>html</xref>.
+Source document can be found at
+<xref url='http://www-sop.inria.fr/apics/tralics/doc-step.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>tralics/<allowbreak/>doc-step.<allowbreak/>html</xref>.</p>
+</abstract><keyword>Latex, XML, HTML, UTF8, Hàn</keyword><tableofcontents depth='2'/>
+<div0 id-text='1' id='cid1'><head>Who is Hàn</head>
+<p>If you call tralics with options -te1a ou -te8a, the terminal should show
+<hi rend='tt'>^^e0</hi><anchor id-text='lid1' id='uid1'/><note id-text='1' id='uid2' place='foot'>Index here</note> for the section title;
+if you say -te1, there is a single byte, if you say
+-te8, there are two bytes. If you say -e1a or -e8a, the XML file should
+contain <hi rend='tt'>&amp;#E0;</hi>, in the case -oe1 ou -oe8, the XML file contains the
+characters shown on the terminal.</p>
+<p>The following lines try to demonstrate that Tralics handles 16bit characters.
+An error will be signaled because the argument is out of range; but the
+character with hex value 312 should be valid; the command defined here
+by csname has two characters in its name, it must be followed by an
+exclamation point (a space is allowed between the command and the exclamation
+point).
+
+
+<error n='\catcode' l='52' c='number too big'/>
+123! 123! 312!</p>
+<p>This is standard verbatim: <hi rend='tt'>a _bç</hi>, <hi rend='tt'>a␣_bç</hi>, <hi rend='tt'>a _bç</hi>,
+<hi rend='tt'>\verb+ { } $$</hi>, <hi rend='tt'>+x+</hi>. Think about this last example.
+We index here a word<anchor id-text='lid2' id='uid3'/>. Location is just before period.
+This is a verbatim environment</p>
+<p noindent='true'><hi rend='tt'>{\let\rm\bf \bf totoé}</hi></p>
+<p noindent='true'><hi rend='tt'>&lt;&#x200B;!-&#x200B;-&#x200B;this is a comment -&#x200B;-&#x200B;&gt;&#x200B;</hi></p>
+<p noindent='true'><hi rend='tt'>&amp;Dollar; not &amp;Equals; &amp;Euro;</hi></p>
+<p noindent='true'>{\let\rm\bf \bf totoé}
+<!--this is a comment -->
+&Dollar; not &Equals; &Euro;</p>
+<p>Note. A verbatim environment neutralises meaning of some commands.
+The last line of the verbatim environment should start with an ampersand
+character; since this is a special character in XML, it is represented as
+<hi rend='tt'>&amp;amp;</hi> or <hi rend='tt'>&amp;#x26;</hi>. Lines can be numbered; spaces can be replaced
+by non-breaking ones; lines can use special fonts; paragraphs can be
+no-indented, etc.<anchor id-text='lid3' id='uid4'/></p>
+<p>On the other hand, a rawxml environment is left unchanged. Remember however
+that end-of-line characters and spaces are removed from the end of the line; a
+new line character is added at the end of the line. If you remove the comment
+between the two environments, replacing it by an empty line, then the second
+environment will be in vertical mode. Otherwise, the end of the verbatim
+environment inserts a <hi rend='tt'>\noindent</hi>, and the environment that follows is in
+horizontal mode. As a consequence, there will be a P element on the first
+line of the raw xml; moreover, since the final space in a paragraph is
+removed, you will find the end-P element at the end of the line.<anchor id-text='lid4' id='uid5'/></p>
+<p>The translation of the environment contains e-acute (its representation
+depends on the output encoding), three ampersand characters, a less than sign,
+a greater than sign. The second line is a valid XML comment, the third line is
+well-formed XML (it contains three entities, so that the XML is valid only if
+the DTD defines these entities); it is very easy to produce invalid and
+ill-formed XML.<anchor id-text='lid5' id='uid6'/></p>
+<p>The xmllatex command is to be used with care. It can produce
+Hàn Th&#x1ebf; Thành<note id-text='2' id='uid7' place='foot'>Hàn is the author of
+pdftex</note>. The second argument is meant to be translated by <LaTeX/>, it is
+ignored by Tralics. Instead of <hi rend='tt'>\xmllatex{foo}{bar}</hi>, define a command,
+use it in the text, and overwrite it in a ult file (user configuratin file).<anchor id-text='lid6' id='uid8'/></p>
+<p>In the current version, you can say ế because the double-accent
+mechanism is implemented, or ế, this is a character, as valid as the
+other ones. This is possible and dangerous too <TeX/>.<anchor id-text='lid7' id='uid9'/></p>
+</div0>
+<div0 id-text='2' id='cid2'><head>Index</head>
+<p>This demonstrates how accents work in the index
+<anchor id-text='lid8' id='uid10'/>a
+<anchor id-text='lid9' id='uid11'/>b
+<anchor id-text='lid10' id='uid12'/>c
+<anchor id-text='lid11' id='uid13'/>d
+<anchor id-text='lid12' id='uid14'/>e
+<anchor id-text='lid13' id='uid15'/>f
+<anchor id-text='lid14' id='uid16'/>g
+<anchor id-text='lid15' id='uid17'/>h
+OK</p>
+<p>These words are in the glossary
+<anchor id-text='lid16' id='uid18'/>1<anchor id-text='lid17' id='uid19'/>2
+<anchor id-text='lid18' id='uid20'/>3<anchor id-text='lid19' id='uid21'/>4
+These are in the second index
+<anchor id-text='lid20' id='uid22'/>1<anchor id-text='lid21' id='uid23'/>2
+<anchor id-text='lid22' id='uid24'/>3<anchor id-text='lid23' id='uid25'/>4</p>
+<p>A verbatim test. We put some stuff in English and French before, in order
+to show how it is translated differently. The end of the environment can
+contain spaces (see example above), but nothing else.
+test ligatures: &lt;&lt;&gt;&gt;“”– et — !
+test ligatures : «  »“”– et — !</p>
+<p noindent='true'><hi rend='small'>1</hi> <hi rend='tt'>test : !@#$%^&amp;*()_$</hi></p>
+<p noindent='true'><hi rend='small'>2</hi> <hi rend='tt'>test : {\foo\} et zxcvbnm,./</hi></p>
+<p noindent='true'><hi rend='small'>3</hi> <hi rend='tt'>test ZXVBNM&lt;&#x200B;&gt;&#x200B;? ~</hi></p>
+<p noindent='true'><hi rend='small'>4</hi> <hi rend='tt'>test \verb+\verb-&#x200B;xx-&#x200B;+</hi></p>
+<p noindent='true'><hi rend='small'>5</hi> <hi rend='tt'>test ligatures: &lt;&#x200B;&lt;&#x200B;&gt;&#x200B;&gt;&#x200B;`&#x200B;`&#x200B;'&#x200B;'&#x200B;-&#x200B;-&#x200B; et -&#x200B;-&#x200B;-&#x200B; !</hi></p>
+<p noindent='true'><hi rend='small'>6</hi> <hi rend='tt'> \end+{verbatim} Not this one %% + added in version 2.11</hi></p>
+<p noindent='true'><hi rend='small'>7</hi> <hi rend='tt'>\end{notverbatim}</hi></p>
+<p>Verbatim without line numbers.</p>
+<p noindent='true'><hi rend='tt'>test : !@#$%^&amp;*()_$</hi></p>
+<p noindent='true'><hi rend='tt'>test : {\foo\} et zxcvbnm,./</hi></p>
+<p noindent='true'><hi rend='tt'>test ZXVBNM&lt;&#x200B;&gt;&#x200B;? ~</hi></p>
+<p noindent='true'><hi rend='tt'>test \verb+\verb-&#x200B;xx-&#x200B;+</hi></p>
+<p noindent='true'><hi rend='tt'>test ligatures: &lt;&#x200B;&lt;&#x200B;&gt;&#x200B;&gt;&#x200B;`&#x200B;`&#x200B;'&#x200B;'&#x200B;-&#x200B;-&#x200B; et -&#x200B;-&#x200B;-&#x200B; !</hi></p>
+<p noindent='true'><hi rend='tt'>test BL : \\738! et \\838!.</hi></p>
+<p noindent='true'>The BL test is funny ; why should it fail ? a long long time ago, before
+it was called Tralics, our translator was written in Perl, and such a line
+was illegal ; the math was converted by Omega, see <cit><ref target='bid0'/></cit>. We cite also
+<Cit type='year'>(<ref target='bid1'/>)</Cit>, and <Cit type='fullauthor'>(<ref target='bid2'/>)</Cit>.</p>
+<p>We now test the verbatim extensions. We start with Verbatim
+and demonstrate the counting possibilities</p>
+<p noindent='true'><hi rend='small'>1</hi> <hi rend='tt'>test line 1a</hi></p>
+<p noindent='true'><hi rend='small'>2</hi> <hi rend='tt'>test line 1b</hi></p>
+<p noindent='true'>and without numbers</p>
+<p noindent='true'><hi rend='tt'>[numbers=true]test line 2a</hi></p>
+<p noindent='true'><hi rend='tt'>[numbers=true]test line 2b</hi></p>
+<p noindent='true'><hi rend='small'>1</hi> <hi rend='tt'>The environment has an optional argument; spaces but no newlines are allowed</hi></p>
+<p noindent='true'><hi rend='small'>2</hi> <hi rend='tt'>between brace and bracket; what follows the argument on the line is ignored</hi></p>
+<p>We put here the first character of the line in italics</p>
+<p noindent='true'><hi rend='large'>5</hi> <hi rend='it'>5</hi> we use here counter number 3</p>
+<p noindent='true'><hi rend='large'>6</hi> <hi rend='it'>6</hi> for counting lines</p>
+<p noindent='true'>Define our Verbatim hook now.</p>
+<pre class='latex-code'><p noindent='true'><hi rend='large'>7</hi> <hi rend='it'>7</hi> we use here counter number 03 (the same)</p>
+<p noindent='true'><hi rend='large'>8</hi> <hi rend='it'>8</hi> but the HTML output differs a lot.</p>
+</pre>
+<pre class='latex-code'><p noindent='true'><hi rend='large'>9</hi> <hi rend='it'>9</hi> we use here counter named vbcounter</p>
+<p noindent='true'><hi rend='large'>10</hi> <hi rend='it'>1</hi>0 initialised to the value of the previous counter</p>
+</pre>
+<pre class='latex-code'><p noindent='true'><hi rend='large'>11</hi> <hi rend='it'>1</hi>1 yet another verbatim line (ok with é^^e9?)</p>
+</pre><pre class='latex-code'><p noindent='true'><vbnumber>1</vbnumber> <hi rend='tt'>note that, if no counter is specified, it is FancyVerbLine</hi></p>
+</pre>
+<pre class='log-code'><p noindent='true'><vbnumber>2</vbnumber> <hi rend='tt'>and that the first line is numbered one by default.</hi></p>
+<p noindent='true'><vbnumber>3</vbnumber> <hi rend='tt'>Of course, options given on the line have precedence over options</hi></p>
+<p noindent='true'><vbnumber>4</vbnumber> <hi rend='tt'>inherited from the definition.</hi></p>
+</pre><p rend='center'>In French, centré means centered.</p>
+</div0>
+<div0 id-text='3' id='cid3'><head>Short Verb, as in <hi rend='tt'>$_</hi></head>
+<p>Test of <hi rend='sansserif'>\DefineShortVerb</hi> and <hi rend='sansserif'>\UndefineShortVerb</hi>. Normally
+the bar is used, but 16bit characters are possible. Example, with itrema :
+
+<hi rend='sansserif'>toto</hi> <hi rend='sansserif'>x</hi> <hi rend='sansserif'>+x-&#x200B;</hi> <hi rend='sansserif'>|t|</hi>,
+
+and without :
+<hi rend='sansserif'>toto</hi> ïxï <hi rend='sansserif'>+x-&#x200B;</hi> ï<hi rend='sansserif'>t</hi>ï
+Spaces : like this <hi rend='sansserif'>+ +</hi> or that <hi rend='sansserif'>+␣+</hi>
+Verbatimfoo : <hi rend='sansserif'>+␣foo␣+*foo*foo*</hi>.</p>
+<p>Test of useverb A}A, A}A,A|A, A$_A.</p>
+<p noindent='true'>BWe␣have␣changed␣the␣font,␣and␣added␣a␣prefixB</p>
+<p noindent='true'>BSpaces␣are␣specialB</p>
+<p>Testing accents</p>
+<p>À È Ì Ò Ù Ǹ Ẁ Ỳ à è ì ò ù ǹ ẁ ỳ x̀</p>
+<p>Á É Í Ó Ú Ý Ć Ĺ Ń Ŕ Ś Ź Ǵ Ḱ Ḿ Ṕ Ẃ Ǽ Ǻ Ǿ ǽ ǻ ǿ á é í ó ú ý ć ĺ ń ŕ ś ź ǵ ḱ ḿ ṕ ẃ v́</p>
+<p>Â Ê Î Ô Û Ĉ Ĝ Ĥ Ĵ Ŝ Ŵ Ŷ Ẑ â ê î ô û ĉ ĝ ĥ ĵ ŝ ŵ ŷ ẑ</p>
+<p>Ã Ñ Õ Ũ Ĩ Ṽ Ẽ Ỹ ĩ õ ã ñ õ ĩ õ ṽ ẽ ỹ w̃</p>
+<p>Ä Ë Ï Ö Ü Ÿ Ḧ Ẅ Ẍ ä ë ï ö ü ÿ ḧ ẅ ẍ ẗ z̎</p>
+<p>Ő Ű ő ű e̋</p>
+<p>Å Ů å ů ẘ ẙ e̊</p>
+<p>Č Ď Ě Ľ Ň Ř Š Ť Ž Ǎ Ǐ Ǔ Ǧ Ǩ Ȟ č ď ě ľ ň ř š ť ž ǎ ǐ ǔ ǧ ǩ ȟ ǰ x̌</p>
+<p>Ă Ĕ Ğ Ĭ Ŏ Ŭ ă ĕ ğ ĭ ŏ ŭ x̆</p>
+<p>Ā Ē Ħ Ī Ō Ŧ Ū Ȳ Ḡ Ǣ ǣ ā ē ħ ī ō ŧ ū ȳ ḡ</p>
+<p>Ȧ Ḃ Ċ Ḋ Ė Ḟ Ġ Ḣ İ Ŀ Ṁ Ṅ Ȯ Ṗ Ṙ Ṡ Ṫ Ẇ Ẋ Ẏ Ż ȧ ḃ ċ ḋ ė ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ u̇ v̇ ẇ ż ẏ ż q̇</p>
+<p>Ç Ģ Ķ Ļ Ņ Ŗ Ş Ţ Ȩ Ḑ Ḩ ç ģ ķ ļ ņ ŗ ş ţ ȩ ḑ ḩ b̧</p>
+<p>Ą Ę Į Ǫ Ų ą ę į ǫ ų b̨</p>
+<p>Ḁ E̥ I̥ O̥ U̥ R̥ ḁ e̥ i̥ o̥ u̥ r̥ y̥</p>
+<p>Ḇ Ḏ Ḵ Ḻ Ṉ Ṟ Ṯ Ẕ ḇ ḏ ḵ ḻ ṉ ṟ ṯ ẕ ẖ e̠</p>
+<p>Ḅ Ḍ Ḥ Ḳ Ḷ Ṃ Ṇ Ṛ Ṣ Ṭ Ṿ Ẉ Ẓ Ạ Ẹ Ị Ọ Ụ Ỵ ḅ ḍ ḥ ḳ ḷ ṃ ṇ ṛ ṣ ṭ ṿ ẉ ẓ ạ ẹ ị ọ ụ ỵ c̣</p>
+<p>Ȃ Ȇ Ȋ Ȏ Ȗ Ȓ ȃ ȇ ȋ ȏ ȗ ȓ x̑</p>
+<p>Ḛ Ḭ Ṵ ḛ ḭ ṵ o̰</p>
+<p>Ḓ Ḙ Ḽ Ṋ Ṱ Ṷ ḓ ḙ ḽ ṋ ṱ ṷ a̭</p>
+<p>Ḁ ḁ e̥</p>
+<p>Ả Ẻ Ỉ Ỏ Ủ Ỷ ả ẻ ỉ ỏ ủ ỷ x̉</p>
+<p>Some people dont like special characters
+
+
+bad accent ̀ on x bad accent ̆ on z</p>
+<p>Changing font size
+<hi rend='large'>x</hi><hi rend='large'>x</hi>
+<hi rend='large'>x</hi>y<hi rend='small'>z</hi><hi rend='large'>xy</hi>z</p>
+<p>Switch to English, for colons in URLs</p>
+<biblio natpos='a' natcmt=', ' natyrsep=',' nataysep=',' natsep=';' natclose=')' natopen='('>
+<citation from='year' key='CIMP01' id='bid2' userid='cite:mathml2' type='misc'>
+<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='P.' nom='Ion' prenomcomplet='Patrick'/><bpers prenom='R.' nom='Miner' prenomcomplet='Robert'/><bpers prenom='N.' nom='Poppelier (editors)' prenomcomplet='Nico'/></bauteurs>
+<btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
+<byear>2001</byear>
+<xref url='http://www.w3.org/TR/MathML2/'>http://<allowbreak/>www.<allowbreak/>w3.<allowbreak/>org/<allowbreak/>TR/<allowbreak/>MathML2/</xref></citation>
+<citation from='year' key='HP99' id='bid0' userid='cite:place99' type='inproceedings'>
+<bauteurs><bpers prenom='Y.' nom='Haralambous' prenomcomplet='Yannis'/><bpers prenom='J.' nom='Place' prenomcomplet='John'/></bauteurs>
+<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<bbooktitle>Cahiers Gutenberg</bbooktitle>
+<bnumber>33-34</bnumber>
+<bpages>173-182</bpages>
+<byear>1999</byear>
+</citation>
+<citation from='year' key='Kay01' id='bid1' userid='cite:mKay' type='book'>
+<bauteurs><bpers prenom='M.' nom='Kay' prenomcomplet='Michael'/></bauteurs>
+<btitle>XSLT, Programmer's Reference</btitle>
+<bedition>2nd</bedition>
+<bpublisher>Wrox Press Ltd</bpublisher>
+<byear>2001</byear>
+</citation></biblio></div0><theindex title='First Index'><index target='uid1 uid4 uid5 uid10 uid12 uid13' level='1'>verb</index>
+<index target='uid3 uid6 uid8 uid11 uid14 uid15' level='1'>vérb</index>
+<index target='uid9 uid16 uid17' level='2'>vèrb</index>
+</theindex><theindex head='Second Index' title='Second Index'><index target='uid22 uid24' level='1'>I1</index>
+<index target='uid23' level='1'>I2</index>
+<index target='uid25' level='2'>I3</index>
+</theindex><theglossary title='A glossary'><index target='uid18 uid20' level='1'>G1</index>
+<index target='uid19 uid21' level='1'>G2</index>
+</theglossary></std>

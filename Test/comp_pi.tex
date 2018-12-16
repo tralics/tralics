@@ -1,0 +1,335 @@
+% Compute Pi in TeX!
+% D. Roegel (roegel@loria.fr), 21 July 1996
+%
+% This programs uses the formula by John Machin:
+%
+%  Pi=16*arctan(1/5)-4*arctan(1/239)
+%
+% The implementation of arrays uses a trick shown by Tom Rokicki
+% in his game of life program (life.tex).
+%
+% Warning: this program has limits, and I invite you to find them...
+%
+% Bugs: I believe there is one, since when you ask for 100 digits,
+%       you get only 97 ...
+%
+%
+
+
+%% These lines no more needed [JG]
+%\ifx\begin\undef\else
+%\def\message#1{\edef\foo{{#1}}\expandafter\typeout\foo}
+%\fi
+
+\newlinechar=`\^^J
+\message{^^J***** Computation of Pi with John Machin's formula *****}
+\message{^^J** i.e.: pi=16*arctan(1/5)-4*arctan(1/239)}
+\message{^^JHow many digits of pi do you want ? }
+
+\read16to\nbdigits
+\wlog{We want \nbdigits digits}
+\newcount\n
+\n\nbdigits
+\newcount\index
+\index\n
+\advance\index7
+\divide\index4
+
+\newcount\lastplusone
+\lastplusone\index
+\advance\lastplusone1
+
+% \index is now the index for the last slot in the arrays
+
+% slot 1 -> integer digits
+% slot 2 -> digits 1 to 4
+% slot 3 -> digits 5 to 8
+% ...
+% slot \index -> digits (\index-2) * 4 +1 to (\index-1) * 4 
+%
+
+\font\xa=cmr10 at 11truept % array for current values of (1/5)^{2n+1}
+                           %                  and (1/239)^{2n+1}
+\fontdimen\lastplusone\xa=0pt % this creates room
+\font\xb=cmr10 at 13truept % array for current values of (1/5)^{2n+1}/(2n+1)
+                           %                  and (1/239)^{2n+1}/(2n+1)
+\fontdimen\lastplusone\xb=0pt % this creates room
+\font\xc=cmr10 at 15truept % array for current sums of arctan(1/5)
+                           %                    and arctan(1/239)
+\fontdimen\lastplusone\xc=0pt % this creates room
+\font\xr=cmr10 at 17truept % array for the result
+\fontdimen\lastplusone\xr=0pt % this creates room
+
+
+% \xa, \xb, \xc and \xr are now equal to 0
+
+% Some variables:
+
+\newcount\dv       % will hold dividers
+\newcount\firstpos % first non empty slot
+\newcount\I        % scratch register for loops
+\newdimen\carry    % for carry (in additions) and borrows (in subtractions)
+\newdimen\x        % a scratch variable
+\newcount\N        % counts the terms
+\newif\ifcont      % flag used to find when an operation on bignums is not done
+
+% Initialization of working arrays
+
+\def\InitializeArrays{
+  {
+  \I=1
+  \loop
+    \fontdimen\I\xa=0sp
+    \fontdimen\I\xb=0sp
+    \fontdimen\I\xc=0sp
+    \advance\I1
+    \ifnum\I<\lastplusone
+  \repeat
+  }
+  }
+
+% Initialization of the result
+
+\newcount\I
+\I=1
+\loop
+  \fontdimen\I\xr=0sp
+  \advance\I1
+  \ifnum\I<\lastplusone
+\repeat
+
+\InitializeArrays
+
+% divide #1 by #2 beginning at slot \firstpos and up to \index;
+% result is in #3
+
+\def\Divide#1#2into#3{%
+  \carry0sp
+  \I\firstpos
+  {
+  \loop
+     \x=\fontdimen\I#1
+     \multiply\carry10000
+     \advance\x\carry
+     \carry\x
+     \divide\x#2
+     \fontdimen\I#3=\x
+     \multiply\x#2
+     \advance\carry-\x
+     \advance\I1
+     \ifnum\I<\lastplusone
+  \repeat
+  }
+  }
+
+
+
+% Addition:
+
+\def\Add#1to#2{%
+  \carry0sp
+  \I\index
+  {
+  \loop
+    \x=\fontdimen\I#2
+    \advance\x by \fontdimen\I#1
+    \advance\x by \carry
+    \fontdimen\I#2=\x
+    \carry\x
+    \divide\carry10000
+    \multiply\carry10000
+    \x=\fontdimen\I#2
+    \advance\x-\carry
+    \fontdimen\I#2=\x
+    \divide\carry10000
+    \advance\I-1
+    {
+    \ifnum\I<\firstpos \ifnum\carry=0 \global\contfalse
+                       \else \global\conttrue \fi
+    \else \global\conttrue
+    \fi
+    }
+    \ifcont
+  \repeat
+  }
+  }
+
+
+% Subtraction:
+
+\def\Sub#1from#2{%
+  \carry0sp
+  \I\index
+  {
+  \loop
+    \x=\fontdimen\I#2
+    \advance\x by -\fontdimen\I#1
+    \advance\x by -\carry
+    \fontdimen\I#2=\x
+    \carry\x
+    \divide\carry10000
+    \multiply\carry10000
+    \advance\x-\carry
+    \fontdimen\I#2=\x
+    \divide\carry10000
+    {\ifdim\fontdimen\I#2<0sp
+      \advance\x10000sp
+      \fontdimen\I#2=\x
+      \global\advance\carry1sp
+    \fi}
+    \advance\I-1
+    {
+    \ifnum\I<\firstpos \ifnum\carry=0 \global\contfalse 
+                       \else \global\conttrue \fi
+    \else \global\conttrue
+    \fi
+    }
+    \ifcont
+  \repeat
+  }
+  }
+
+% Multiplication:
+
+\def\Multiply#1#2{%
+  \carry0sp
+  \I\index
+  \loop
+    \x=\fontdimen\I#1
+    \multiply\x by #2
+    \advance\x by \carry
+    \fontdimen\I#1=\x
+    \carry\x
+    \divide\carry10000
+    \multiply\carry10000
+    \x=\fontdimen\I#1
+    \advance\x-\carry
+    \fontdimen\I#1=\x
+    \divide\carry10000
+    \advance\I-1
+    {
+    \ifnum\I<\firstpos \ifnum\carry=0 \global\contfalse 
+                       \else \global\conttrue \fi
+    \else \global\conttrue
+    \fi
+    }
+    \ifcont
+  \repeat
+  }
+
+\def\updatefirstpos{
+  \ifdim\fontdimen\firstpos\xa=0pt 
+              \ifnum\firstpos<\lastplusone
+                 \global\advance\firstpos1 
+              \fi
+           \fi
+  }
+
+\def\UpdateFirstPos{\updatefirstpos\updatefirstpos}
+
+
+\def\ComputeArcTan#1{%
+  \firstpos=2
+  \dv=#1
+  \multiply\dv\dv
+  \N1
+  \message{^^JI am now computing the following sum: arctan(1/#1)=1/#1}
+  \Add\xb to\xc % first term
+  \loop
+     %---------------------------------------------------------
+     % negative terms:
+     \Divide\xa\dv into\xa
+     \UpdateFirstPos
+     \advance\N2
+     \Divide\xa\N into\xb
+     \message{-1/\the\N*1/#1^\the\N}
+     \Sub\xb from\xc
+     \fontdimen\firstpos\xb=0pt
+     %---------------------------------------------------------
+     % positive terms:
+     \Divide\xa\dv into\xa
+     \UpdateFirstPos
+     \advance\N2
+     \Divide\xa\N into\xb
+     \message{+1/\the\N*1/#1^\the\N}
+     \Add\xb to\xc
+     \fontdimen\firstpos\xb=0pt
+    \ifnum\firstpos<\lastplusone
+  \repeat
+  }
+
+
+\def\ShowResult#1#2{{
+  \count0=2
+  \def\res{}
+  \loop
+    \count1=\fontdimen\count0#2
+    % we add `0' in front, in order to have always 4 digits
+    \ifnum\count1<10
+      \edef\res{\res000\number\count1 }
+    \else
+      \ifnum\count1<100
+        \edef\res{\res00\number\count1 }
+      \else
+        \ifnum\count1<1000
+          \edef\res{\res0\number\count1 }
+        \else
+          \edef\res{\res\number\count1 }
+        \fi
+      \fi
+    \fi
+    \advance\count0by 1
+    \ifnum\count0 <\lastplusone
+  \repeat
+  \message{^^J#1\res}
+%% added JG for Tralics
+\xbox{pi}{#1\res}
+  }
+}
+
+
+
+% initialize \xa with 1/5:
+\fontdimen2\xa 2000sp  % 1/5=0.2000 ...
+% initialize \xb with 1/5:
+\fontdimen2\xb 2000sp  
+
+\ComputeArcTan{5}
+
+\message{^^JNow, I multiply it by 16...}
+\firstpos1
+\Multiply\xc{16}
+\message{done}
+
+\firstpos1
+\Add\xc to\xr
+
+\InitializeArrays
+% initialize \xa with 1:
+\fontdimen2\xa =10000sp  
+\dv239
+\Divide\xa\dv into\xa
+\Add\xa to\xb
+
+\ComputeArcTan{239}
+
+\message{^^JNow, I multiply it by 4...}
+\firstpos1
+\Multiply\xc{4}
+\message{done}
+
+\message{^^JAnd finally, I subtract 4*arctan(1/239) to 16*arctan(1/5)}
+\message{which results in :}
+
+%\tracingall
+\firstpos1
+\Sub\xc from\xr
+\ShowResult{pi=3.}\xr
+
+
+
+\bye
+
+
+
+

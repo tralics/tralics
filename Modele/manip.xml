@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE unknown SYSTEM 'unknown.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/07/30-->
+<unknown>
+<p>before
+<foo myatt='myval'> b <bar>s </bar> c </foo>
+after
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&alpha;</mi><mo>=</mo><msup><mi>&alpha;</mi> <mn>2</mn> </msup></mrow></math></formula>
+
+<mi att-name='att-val0'>E1E2E3</mi></p>
+<p>Hello, world!
+</p><p><mi att-name='att-val1'/></p></unknown>

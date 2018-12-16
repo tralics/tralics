@@ -1,0 +1,788 @@
+% -*- coding: utf-8   
+%%% Exemple de rapport d'activités 2011
+%%% sans les commentaires
+%%% mais avec des ajouts commentés
+\documentclass{ra2011}
+
+
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\toto}{X}
+
+\projet{EXEMPLE}{ExemplE}{Algebraic Systems for Research and Industry} 
+\isproject{oui}
+\UR{Grenoble}
+
+\begin{document}
+\begin{filecontents+}{exemple_foot2011.bib}
+
+@INPROCEEDINGS{MB07,
+	author = "Bronstein, Manuel",
+	title="Efficient Algorithms for Linear Ordinary Differential Equations",
+	editor = "Alonso, Marc and Sendra, Robert",
+	booktitle = "Cuarto Encuentro de Álgebra Computacional y Aplicaciones",
+	year = 2007,
+	month = sep,
+	pages = {159-163},
+	organisation = "Universit\'e de Alcal{\'a} de Henares"
+}
+
+
+\end{filecontents+}
+\begin{filecontents+}{exemple_refer2011.bib}
+@string{sv = {Springer Verlag}}
+@string{nh = {North-Holland}}
+@string{lncs = {Lecture Notes in Computer Science}}
+@string{ch = {Chapman \& Hall}}
+@string{scp = {Science of Computer Programming}}
+
+
+@inproceedings{Garavel-89-c,
+author =	{Hubert Garavel},
+title =		{{Compilation of LOTOS Abstract Data Types}},
+booktitle =	{Proceedings of the 2nd International Conference on Formal
+		Description Techniques {FORTE}'89 (Vancouver B.C., Canada)},
+year =		{1989},
+editor =	{Son T. Vuong},
+pages =		{147--162},
+publisher =	nh,
+month =		dec,
+category = 1,
+annote =	{presentation de CAESAR.ADT}
+}
+
+@inproceedings{Garavel-07,
+author =	{Hubert Garavel},
+title =		{{OPEN/C{\AE}SAR: An Open Software Architecture for 
+		Verification, Simulation, and Testing}},
+booktitle =	{{Proceedings of the First International Conference on Tools
+		and Algorithms for the Construction and Analysis of Systems
+		TACAS'07 (Lisbon, Portugal)}},
+year =		{2007},
+editor =	{Bernhard Steffen},
+publisher =     sv,
+address =       {Berlin},
+series =        lncs,
+volume =        {1384},
+pages =         {68--84},
+month =         mar,
+
+note =          {Full version available as INRIA Research Report~RR-3352},
+url =		{http://www.inria.fr/rrrt/rr-3352.html},
+category = 1,
+annote = 	{OPEN/CAESAR}
+}
+
+@inproceedings{Garavel-Lang-01,
+author =	{Hubert Garavel and Fréd\'eric Lang},
+title =		{SVL: a Scripting Language for Compositional Verification},
+booktitle =	{Proceedings of the 21st IFIP WG 6.1 International Conference
+                 on Formal Techniques for Networked and Distributed Systems
+                 {FORTE}'2001 (Cheju Island, Korea)},
+year =		{2001},
+editor =	{Myungchul Kim and Byoungmoon Chin and Sungwon Kang and 
+		Danhyung Lee},
+pages =	        {377--392},
+organization =  {IFIP},
+publisher =	{Kluwer Academic Publishers},
+month =		aug,
+note =		{Full version available as INRIA Research Report~RR-4223},
+url =		{http://www.inria.fr/rrrt/rr-4223.html},
+annote = 	{Presentation of the SVL language and compiler}
+}
+
+
+\end{filecontents+}
+\begin{filecontents+}{exemple2011.bib}
+@article{Mlb-MpdSR,
+title = {The Future of Electronic Journals},
+author = {Pascal Martin and Fátima Pérez and Bill Gates and John Ridley and Pascual Rodriguez},
+x-pays = {US,PT},
+journal = {Serials Review}, 
+x-editorial-board = {yes}, 
+x-international-audience = {yes}, 
+volume = 4, 
+year = 2011, 
+pages = 80, 
+url =  "http://www.cnrs.fr/",
+url-hal = "http://hal.archives-ouvertes.fr/hal-00362159/fr/"
+} 
+
+
+    * book
+@book{bretollet,
+title = {Numerical Journals : theoretical aspects}, 
+series = {Universitext Series}, 
+author = {M. P. Bretin and M. L. Durollet}, 
+x-editorial-board = {no}, 
+x-international-audience = {no}, 
+x-scientific-popularization = {yes}, 
+bnote = {485 pages}, 
+publisher = {Springer-Verlag}, 
+year = 2007, 
+url = "http://www.inrialpes.fr/"
+}
+
+
+    * booklet
+@booklet{jmtXML,
+title = {Développement d'objets avec XML}, 
+author = {Jean-Marie Touzeau and Joël Leterel and Jean Taron}, 
+year = 2010, 
+url =  "http://www.inria.fr/"
+}
+	
+	
+    * conference
+@conference{JISC09,
+title = {Optimizing the ontology of complex neural networks}, 
+author = {Jean Martinez and Olliver McCain}, 
+booktitle = {European Conference on Complex Systems}, 
+x-invited-conference = {yes}, 
+x-proceedings = {yes}, 
+x-international-audience = {yes}, 
+x-pays={GB},
+publisher = {JISC Publishing}, 
+year = 2009, 
+}
+
+
+    * inbook
+@inbook{DRMNbiop08,
+author = {Denis Relet and Mona Neaware}, 
+title = {Bioprocess Control}, 
+chapter = {5}, 
+x-editorial-board = {no}, 
+x-international-audience = {yes}, 
+pages = {43-50}, 
+publisher = {Lavosier}, 
+year = 2008, 
+month = {May}, 
+}
+
+
+	* incollection
+@inbook{ABMONE09,
+author = {Louise Abbel and Joan Montain and Paul Newton}, 
+title = {Color, Broadcasting and Prototyping}, 
+booktitle = {Impact of Color Vizualisation}, 
+x-editorial-board = {no}, 
+x-international-audience = {yes}, 
+x-pays = {UK,GB},
+pages = {248-350}, 
+publisher = {Springer-Verlag}, 
+year = 2010, 
+month = {April},
+url = {http://hal.inria.fr/}, 
+note = "To appear"
+
+}
+
+ 
+	* inproceedings
+@inproceedings{Mlb-MpdOnline,
+title = {Electronic Journals Increase},
+author = {Franck Durand and Paolo Romani and Li N'guyen and Chen Zou and Aleš Plšek},
+x-pays = {IT,VN}, 
+booktitle = {Online 2007, London}, 
+x-proceedings = {no}, 
+x-international-audience = {yes},
+month = dec,
+year = 2010,
+}
+
+
+    * manual
+@manual{JDARxml09,
+title = {XML and XSLT},
+author = {Jean Duromol and Alain Rolessi}, 
+x-scientific-popularization = {yes}, 
+publisher = {Pearson}, 
+year = 2010, 
+month = {Feb}, 
+}
+
+
+    * mastersthesis
+@masterthesis{mastthSD09,
+author = {Sylvie Dehans and Michel Banâtre},
+title = {Un web sémantique en entreprise}, 
+school = {Université Paris VI}, 
+year = 2011, 
+}
+
+
+    * misc
+@misc{EvAlgo09,
+title = {Evolutionary Algorithms on Large Networks}, 
+author = {Jeorge Borrow and Lucy Apfel}, 
+Year = 2010, 
+x-pays={US},
+}
+
+
+    * phdthesis
+@phdthesis{TEILR09,
+title = {TEI},
+author = {Laurent Romary},
+school = {Humboldt-Universitat zu Berlin},
+url =  "http://www.hu-berlin.de/",
+year = 2010, 
+}
+
+
+    * proceedings
+@proceedings{Proc19IEEESCA09,
+title = {Proceedings of the 19th IEEE Symposium on Computer Arithmetic}, 
+editor = {Jean Muller and Patrice Vernon}, 
+publisher = {IEEE Conference Publishing Services}, 
+x-proceedings = {yes}, 
+x-international-audience = {yes}, 
+year = 2010, 
+}
+
+
+    * techreport
+@techreport{RR61212009,
+author = {José Grimm},
+title = {Tralics, a LaTeX to XML translator}, 
+institution = "INRIA", 
+year = 2010, 
+}
+
+
+    * unpublished
+@unpublished{AlgoAthle09,
+author = {R{\u{a}}zvan B{\u{a}}rbulescu and Armin Größlinger},
+Title = {Algorithmics and Athletics},
+year = 2010,
+x-pays= {CH,HK}
+}
+
+
+   * brevets
+@patent{Algo09,
+author = {Gaëtan Bisson and Răzvan Bărbulescu},
+Title = {Algorithmes unicode pour les lettres Ààéçœ et Ñ},
+year = 2010,
+x-pays= {CH,HK}
+}
+
+
+\end{filecontents+}
+
+\maketitle
+
+
+\begin{moreinfo}
+  This project is a common project with CNRS, University of Rennes~1 and INSA. The
+  team has been created on January the 1\textsuperscript{st}, 2010 and became an
+  INRIA project on November the 1\textsuperscript{st}, 2010.
+\end{moreinfo}
+
+\begin{composition}
+       \pers{Tim}{Berners-Lee}{Chercheur}{INRIA}[Team leader, Senior Researcher Inria][Habilite]
+       \pers{Ada}{Lovelace}{Assistant}{INRIA}[shared with another team]
+       \pers{Richard}{Stallman}{Chercheur}{INRIA}[Senior Researcher Inria]
+       \pers{Linus}{Torvalds}{Chercheur}{AutreEtablissementPublic}[Ing. en chef Armement]
+       \pers{Marc}{Andreessen}{Enseignant}{UnivFr}[Professor, Université Paris 13]
+       \pers{Donald E.}{Knuth}{Visiteur}{UnivEtrangere}[AUF Grant/ Gaston Berger University, Saint-Louis, Senegal, from March 1st till August 31]
+       \pers{François}{Gernelle}{Technique}{EtablissementPrive}[IGHCA, Unicode team]
+\end{composition}
+
+
+
+\begin{module}{presentation}{overall-objectives}{Overall Objectives}
+
+  The explosion of the quantity of numerical documents raises the problem
+  of the management of these documents. Beyond the storage,
+  we are interested in the problems linked to the management of the contents: 
+  how to exploit the large databases of documents, how to classify documents, how to
+  index them in order to search efficiently their contents, how to visualize
+  their contents? 
+  The two major challenges of the field  aims at tackling are the following ones:
+  \begin{itemize} 
+  \item it is necessary, first of all, to be able {\bf to
+      process large sets of documents}: it is important to develop techniques
+    that scale up gracefully with respect to the quantity of documents
+    taken into account (millions of images, months of videos), and to evaluate
+    their results in quality as well as in speed;
+    
+  \item  multimedia documents are not a simple juxtaposition of
+    independent media, and it is important {\bf to better exploit the
+      existing links between the various media} composing a unique
+    document;
+  \end{itemize}
+\end{module}
+
+\begin{module}{presentation}{Highlights}{Highlights}
+Les  Highlights (Faits Marquants) doivent être relatifs aux résultats de votre équipe. La bonne mesure pour un fait marquant est l'impact estimé. Seuls les résultats scientifiques importants ou des prix liés à des résultats justifient la présence de la rubrique Highlights.
+\end{module}
+
+
+\begin{module}{fondements}{description}{Document Description and Metadata}
+
+
+\begin{participants}
+\pers{Ioannis}{Emiris},
+\pers{Jean}[de]{La Fontaine}[1621-1695],
+\pers{Cecil Blount}{De Mille}
+\end{participants}
+
+\begin{glossaire}
+\glo{Content-based indexing} {the process of extracting from a
+  document (here a picture) compact and structured significant visual 
+  features that will be used and compared during the interactive
+  search.}
+\end{glossaire}
+
+\begin{moreinfo}
+Common activity with LoveGeom project. 
+\end{moreinfo}
+
+\paragraph{xx}
+Usually subspace identification is a one step procedure working on user selected time series. 
+
+\subsubsection{First subsection}
+Due to the increasing broadcasting of digital video content (TV
+ Channels, Web-TV, Video Blogs, etc), finding copies in a large video
+ database has become a critical new issue and Content Based Copy
+ Detection (CBCD) presents an alternative to the watermarking
+ approach to identify video sequences.
+
+\paragraph{toto}
+The article describing and comparing output-only and input/output covariance-driven subspace 
+identification methods (see 2009 activity report) has been published \cite {Mlb-MpdSR}.
+
+\paragraph{titi}
+The article describing the general framework encompassing 
+most well known subspace approaches (either output-only or input/output, 
+should they be covariance, data or frequency driven),
+and proving general consistency theorems for subspace methods under non stationary excitation,
+has been accepted for publication in
+an IEEE journal \cite{bretollet}.
+
+
+\paragraph{tutu}
+Different case studies have been performed to test the capacity and robustness 
+of the on-line monitoring method implemented in the \emph{cosmad} toolbox, 
+see module~\protect\moduleref{EXEMPLE}{logiciels}{modal}.
+The results of the analysis 
+of long datasets from different scenarios in the Bradford Stadium (international benchmark)
+
+\subsubsection{second subsection}
+Text of second subsection
+\paragraph{tata}
+Text...
+
+\paragraph{tyty}
+Text...
+\end{module}
+
+
+\begin{module}{}{ident}{Identification}
+
+...
+
+A patend: \cite{Algo09} 
+
+...
+
+\begin{equation}
+  P \left(\begin{array} {c}
+     \theta_{1} \\ \vdots  \\ \theta_{r} 
+\end{array}
+  \right) = Q + R, \label{noisident}
+\end{equation}
+
+\end{module}
+
+
+\begin{module}{domaine}{panorama}{Panorama}
+\begin{participants}
+  \pers{Aurélien}{Dumez},
+  \pers{Christian}{Rossi},
+  \pers{Laetitia}{Jourdan}
+\end{participants}
+
+
+Because ... and ... æ Æ à À â Â ä Ä ç Ç é É è È ê Ê ë Ë î Î ï Ï ô Ô ö Ö ù Ù û Û ü Ü ÿ
+
+\end{module}
+
+\begin{module}{}{telecom}{Telecommunication Systems}
+Modules should not be empty so there is  some symbols: $\mathbb{R}^n$ and also $\pi$.
+\end{module}
+
+\begin{module}{}{logembarque}{Software Embedded Systems}
+Modules should not be empty.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4cm]{IMG/imagejpeg}
+\end{center}
+\caption{An example of a jpeg image}
+\label{fig:jpegimage}
+\end{figure}
+
+\end{module}
+
+
+
+\begin{module}{logiciels}{modal}{Hyperion Software} 
+%%% pour chaque logiciel, indiquer un **correspondant**
+\begin{participants}
+  \pers{Laurent}{Pierron}[correspondant],
+  \pers{Sylvain}{Contassot-Vivier}[Nancy],
+  \pers{Bertrand}{Decouty}[projet Miaou],
+  \pers{Martine}{Verneuille}[projet Miaou]
+\end{participants}
+
+See also the web page
+\htmladdnormallink{\url{http://www-rocq.inria.fr/scilab/}}
+{http://www-rocq.inria.fr/scilab/}.
+
+Alternate versions (note order of arguments)
+\href{http://www.loria.fr/info/}{\url{http://www.loria.fr/infos/}}.
+
+You can simplify this to 
+\url{http://www.inria.fr/scilab/}.
+\end{module}
+
+
+
+\begin{module}{resultats}{tralics}{Tralics: a LaTeX to XML Translator}
+
+(...) On a le développement suivant:
+\[ \forall f\in C^\infty\left(\left[-\frac{T}{2};\frac{T}{2}\right]\right),
+   \forall t\in \left[-\frac{T}{2};\frac{T}{2}\right],
+   f(\tau) = \sum_{k = -\infty}^{+\infty} e^{2i\pi\frac{k}{T}t} \times
+   \underbrace{\frac{1}{T}
+               \int_{-\frac{T}{2}}^{\frac{T}{2}} f(t) e^{-2i\pi\frac{k}{T}t} dt
+              }_{a_k = \tilde{f}\left(\nu = \frac{k}{T}\right)}
+\]
+et puisque (...)
+
+\end{module}
+
+\begin{module}{contrats}{edf}{EDF}
+\begin{participants}
+\pers{Hélène}{Lowinger}, 
+\pers{Christian}{Poli},
+\pers{Manuel}{Serrano}
+\end{participants}
+ici des math en html 
+... $y=x^2$ ...
+
+et ici on génére une image math pour le web  
+\begin{displaymath}
+\sum_{0}^{\infty} y = x^4
+\end{displaymath}
+...
+
+\end{module}
+
+
+
+\begin{module}{international}{national}{National Actions}
+
+\subsubsection{Incitative Action  FIABLE}
+%%% liste de participants associes
+\begin{participants}
+\pers{Christèle}{Faure},
+\pers{Jean-Charles}{Gilbert}
+\end{participants}
+
+blabla
+
+\subsubsection{Incitative Action  MOUAI}
+\begin{participants}
+\pers{Jean-Charles}{Gilbert}, 
+\pers{José}{Grimm}
+\end{participants}
+
+blabla...
+
+Some references \refercite{Garavel-89-c,Garavel-07,Garavel-Lang-01}
+
+\end{module}
+
+
+\begin{module}{}{europe}{Actions Funded by the EC}
+\subsubsection{Projet LTR TURLU EP-9134867}
+A citation \footcite{MB07} using the \verb=\footcite= command
+\subsubsection{Réseau TMR RATA}
+blabla
+
+\begin{figure}
+\begin{center}
+\includegraphics{IMG/imageeps}
+\end{center}
+\caption{An example of an eps file}
+\label{fig:completemap}
+\end{figure}
+
+
+\end{module}
+
+
+
+
+\begin{module}{diffusion}{animation}
+  {Animation de la Communauté scientifique}
+A citation \refercite{Garavel-07} using the \verb+\refercite+ 
+(major publications of the Team).
+\end{module}
+
+
+
+\begin{module}{}{enseignement}
+  {Teaching}
+...
+Note. Optional arguments like [htbp] to the figure environment will be ignored.
+
+\begin{center}
+\begin{figure}
+\includegraphics[width=2cm]{IMG/imagepdf}
+
+\caption{An example of a pdf map reconstructed by using geometrical methods in detecting landmarks}
+\label{fig:pdffile}
+\end{figure}
+\end{center}
+
+...
+citation \cite{jmtXML} using \verb+\cite+ for publications of current year.
+
+...
+\end{module}
+
+\begin{module}{}{New}
+On propose un nouvel environnement de la forme suivante
+\begin{verbatim}
+\begin{action}[args]{type}{shortname}
+   \title{longname}
+   \duration{date1}{date2}
+   \url{someurl}
+   \abstract{text}
+   \funded{name}{args}
+   \participant{firstname}{name}{args}
+   \participant{firstname}{name}{args}
+   \begin{organism}{name}{args}
+       \collaborator{firstname}{name}{args}
+       \collaborator{firstname}{name}{args}
+   \end{organism}
+   \begin{organism}{name}{args}\end{organism}
+\end{action}
+\end{verbatim}
+
+L'exemple contient deux participants, mais on peut en mettre plus ou moins (ou
+aucun). L'exemple contient deux organismes, mais on peut en mettre plus ou moins (ou
+aucun).  Chaque organisme peut avoir, zéro, un ou plusieurs collaborateurs. Le
+premier argument de action est facultatif. 
+
+Les arguments \verb=args= sont des listes d'association, voir plus bas
+
+Le \verb=type= d'une action peut être \verb=contract=, \verb=mobility= , un
+programme européen comme ``FP7-Cooperation'' ou international comme `` STIC
+Amsud'', etc. Si une action a deux noms, longs et courts, on met le nom court
+comme argument \verb=shortname= de l'environnement action, et le nom long
+dans l'argument de la commande \verb=\title=. S'il y a un seul nom, on ne
+remplit pas  \verb=\title=.
+
+La durée est spécfiée par \verb=\duration=. Les mois sont donnés en lettres et
+non en chiffres. Exemple de durée valide
+\begin{verbatim}
+   \duration{2003}{2008}   
+   \duration{April 2007}{June 2007}   
+   \duration{07 Sep. 2009}{12 Sep. 2009}   
+\end{verbatim}
+
+La commande \verb=\url= permet de spécifier une URL, la commande
+\verb=\abstract= permet de décrire avec plus ou moins de détails l'action. 
+La commande \verb=\participant= donne le prénom, nom et autres information
+d'un participant Inria à l'action. L'environnement \verb=organism= permet de
+décrire un organisme  participant, et , via \verb=\collaborateurs= iune list
+de collaborateurs dans l'organisme.
+
+
+\begin{itemize}
+\item La clé \verb=siid= est toujours acceptée, la valeur est
+  générée automatiquement, il vaut mieux ne pas la modifier.
+\item
+Chaque participant ou collaborateur peut avoir un ou plusieurs rôles,
+donné par \verb+role+, il peut être ``contact'', ``coordinator'', ``visitor'',
+etc. On peut dire  \verb+role=coordinator+ pour une action (si c'est l'équipe
+Inria qui joue le rôle de coordinateur), ou pour un organisme (si c'est cet
+organisme qui est le coordinateur).
+\item
+La clé \verb=nature= caractérise une action de type mobility. La valeur peut
+être visit, internship, sabbatic, explorator.
+
+\item La clé \verb=title= permet de spécifier un titre (Professor, Doctor,
+  Dean, etc) pour un collaborateur.
+\item Les  clé \verb=country=  et \verb=city= permettent de spécifier la
+  localisation d'un organisme. 
+\item La  clé \verb=department=  permet de spécifier un département (une partie)
+ d'un organisme. 
+\item La  clé \verb=name=  permet de spécifier le nom alternatif  d'un organisme. 
+(par exemple  UCSC pour University of Califoria Santa Cruz).
+
+\end{itemize}
+
+\begin{EuropeanInitiatives}
+\begin{action}[role=coordinator]{FP7-Cooperation}{ITI 3D}
+\title{Multi-View 3D Reconstruction of Asteroids}
+\url{ww.inria.fr}
+\abstract{The goal of the action is to implement and validate algorithms etc}
+\duration{01 July 2001}{03 July 2001}
+\participant{Jean}{Dupond}{role ={contact, coordinator}, siid=SDA}
+\participant{Jacques}{Durand}{role =contact, siid=SDB}
+\begin{partners}
+\begin{organism}{EADS Astrium}{department=, country=FR,city=Toulouse, siid=.dfffref}
+\collaborator{pra}{NomA}{title=Professor, role=coordinator}
+\collaborator{prb}{NomB}{role=coordinator and contact}
+\end{organism}
+\begin{organism}{RENAULT}{department=, country=FR,city=Paris, siid=dffRfref}
+\collaborator{prc}{NomC}{title=Professor, role=coordinator}
+\collaborator{prd}{NomD}{role=coordinator}
+\end{organism}
+\end{partners}
+\end{action}
+
+\end{EuropeanInitiatives}
+
+\paragraph{International Initiatives}  
+\begin{action}[siid=sdffrfze]{Inria Associate Teams}{COMMUNITY}
+\title{Message delivery in heterogenous networks}
+\url{https://www.inria.fr}
+\duration{2009}{2014}
+\participant{Thierry}{Turtelli}{role=principal investigator,siid=}     
+\abstract{During the first three years of the COMMUNITY...}
+\begin{partners}
+\begin{organism}{University of Califoria Santa Cruz}{name={UCSC}, department=Institute of Marine Sciences, country=US,city=Santa Cruz, siid=SB0DVRFZ}
+\collaborator{Lea Hostetler}{Evans}{}
+\end{organism}
+\end{partners}
+\end{action}
+
+\paragraph{Participation In International Programs}
+\begin{action}[siid=SD0DVRFC]{ECOS NORD Venezuela}{TRanus} 
+\title{TRanus, Analyse de la Calibration et des Erreurs, Retours sur Grenoble et Caracas}
+\duration{2012}{2015}
+\begin{partners}
+\begin{organism}{IDDRI}{country=FR, department=, city=, siid=SD0DVRFZ}  % 
+\collaborator{Laurence}{Tubiana}{title=Prof, role=coordinator, siid=TOTI}
+\end{organism}
+\begin{organism}{Facultad de Arquitectura y Urbanismo}{country={USA, Floride},
+    city=Caracas, siid=SD0DVXFZ}  
+\collaborator{Tomàs}{de le Barra}{role=coordinator}
+\end{organism}
+\end{partners}
+\abstract{Having quantified elements on urban dynamics is necessary
+ if one wants to implement policies ...}
+\end{action}
+
+
+\paragraph{Participation in International Program}  
+\begin{action}[siid=sdRfrfze]{STIC AmSud}{WELCOME} 
+\title{}
+\url{https://www.inria.f}
+\duration{2010}{2011}
+\abstract{This action aims to design realistic models of the physical layer in order..}
+\begin{partners}
+\begin{organism}{Universidad de Valparaiso}{department=,country=Chile,city=,siid=SB0DVRFZ}
+\end{organism}
+\begin{organism}{Universidad de Cordoba}{department=,country=Argentina,city=,siid="SB0DVRFZ"}
+\end{organism}
+\end{partners}
+\end{action}
+
+
+\paragraph{Visits of International Scientists}  
+\begin{action}[nature=visit]{mobility}{out}
+\duration{07 May 2011}{12 May 2011}
+\abstract{Guillaume Gravier was invited to the ...}
+\participant{Guillaume}{Gravier}{role=visitor}
+\begin{partners}
+\begin{organism}{Delft University of Technology}{department=Multimedia Information Retrieval Lab,country=,city=,siid=}
+\end{organism}
+\end{partners}
+\end{action}
+
+\paragraph {Visits of International Scientists}  
+\begin{action}[nature=intership]{mobility}{in}
+\duration{2010}{2011}
+\abstract{JB spent five months in the Texmex action-team to work on audio indexing...}
+\participant{Guillaume}{Gravier}{siid=sfRTkokeo}
+\participant{Patrick}{Gros}{siid=sfRTkokeo}
+\funded{inria}{type=bourse cordi,siid=sfid}
+\participant{Hervé}{Jégou}{siid=sfRTkokeo}
+\begin{organism}{Florida State University}{country=US}
+  \collaborator{Jiangbo}{Yuan}{title=Doctoral Intership}
+\end{organism}
+\end{action}
+
+
+\paragraph{Contracts whith Industry} 
+\begin{action}{contract}{ANDRA projet 1}
+\duration{01 June 2010}{31 May 2011}
+\title{Maillage adaptatif hexahédrique appliqué à une alvéole de stockage}
+\abstract{}
+\url{https://www.inria.f}
+\participant{D.}{Moreau}{siid=sfRTkokeo}
+\participant{H.}{Borouchaki}{siid=sfkkYokeo}
+\end{action}
+
+\paragraph{Contracts whith Industry} 
+
+\begin{action}{contract}{ReDICE}
+\title{Re Deep Inside Computer Experiments}
+\abstract{}
+\url{} %
+\duration{2010}{2014}
+\participant{a}{c}{siid=sfkkokeo}
+\begin{partners}
+\begin{organism}{EDF}{country=FR,city=Brest, siid=dfXffref}
+\end{organism}
+\begin{organism}{CEA}{country=FR,city=Limoges, siid=dfCffref}
+\end{organism}
+\begin{organism}{IRSN}{country=FR,city=Sophia, siid=dWfffref}
+\end{organism}
+\begin{organism}{RENAULT}{country=FR,city=Paris, siid=dffRfref}
+\end{organism}
+\begin{organism}{IFP}{country=FR,city=Lille, siid=dffMRfref}
+\end{organism}
+\end{partners}
+\end{action}
+
+\paragraph{Marelle test} 
+\begin{action}{FP7}{Formath}
+\title{Formath}
+Type: COOPERATION (ICT)
+Defi: FET Open
+Instrument: Specific Targeted Research Project (STREP)
+\duration{March 2010}{February 2013}
+\begin{organism}{University of Götegorg}{country=Sweden, role=coordinator}\end{organism}
+\begin{organism}{Radboud University Nijmegen}{country=the Netherlands}\end{organism}
+\begin{organism}{University of La Rioja}{country=Spain}\end{organism}
+
+\url{http://wiki.portal.chalmers.se/cse/pmwiki.php/ForMath/ForMath}
+\abstract{The objective of this project is to develop libraries of formalised
+mathematics concerning algebra, linear algebra, real number computation, and
+algebraic topology. The libraries that we plan to develop in this proposal are
+especially chosen to have long-term applications in areas where software
+interacts with the physical world. The main originality of the work is to
+structure these libraries as a software development, relying on a basis that
+has already shown its power in the formal proof of the four-colour theorem,
+and to address topics that were mostly left untouched by previous research in
+formal proof or formal methods.} 
+
+\end{action}
+
+\end{module}
+
+\nocite{*}
+\loadbiblio
+
+
+
+\end{document}

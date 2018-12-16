@@ -1,0 +1,17 @@
+\documentclass{article}
+\begin{document}
+\AtEndDocument{\bibitem{unused}Hey}
+\bibliography{torture}
+\bibliographystyle{bibtex:}
+\cite{poussin,cruz,many,strange,unused}
+
+a: \natcite[empty][prenote][postnote]{poussin,cruz,many,strange,unused}
+b: \natcite[empty][][]{poussin,cruz,many,strange,unused}
+d: \natcite[][][post]{poussin,cruz,many,strange,unused}
+e: \natcite[][pre][]{poussin,cruz,many,strange,unused}
+f: \natcite[][pre][]{poussin}
+
+\end{document}
+
+% Running this file calls bibtex, using plain as style
+% Citation unused is not solved by bibtex

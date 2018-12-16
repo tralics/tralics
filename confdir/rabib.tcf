@@ -1,0 +1,24 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: rabib.tcf,v 2.2 2006/10/03 16:25:20 grimm Exp $
+## tralics ident rc=rabib.tcf $Revision: 2.2 $
+
+KBeginType rabib     % Case RA
+  DocType = raweb raweb3.dtd
+  DocAttrib = year \specialyear
+  DocAttrib = creator \tralics
+
+
+DocAttrib = variable "va'&quot;lue"
+DocAttrib =Foo \World
+DocAttrib =A \specialyear
+DocAttrib =B  \tralics
+DocAttrib =C  \today
+
+BeginCommands
+  % These commands are inserted verbatim in the file
+  \newcommand\usebib[2]{\bibliography{#1#2,#1_foot#2+foot,#1_refer#2+refer}}
+EndCommands
+
+
+

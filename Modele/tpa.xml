@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE tpa SYSTEM 'tpa.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<tpa from_type='OK' from-tpa='ok'>
+<error n='\InsertTitlepage' l='35' c=''/>
+<titlepage a2='b2' a1='b1' att2='foo2' att1='foo'><title-element tea='tea-val'>Titlepage customisation in Tralics</title-element>
+<utitle-element tea='utea-val'>No title</utitle-element>
+<autL bl='blval' al='alval'><aut auta='autaval'>José Grimm</aut>
+<aut auta='autaval'>Knuth</aut>
+<aut auta='autaval'>JG</aut>
+<aut auta='autaval'>DEK</aut>
+</autL>
+<uautL bl='blval' al='alval'><aut auta='autaval'>No authors</aut></uautL>
+<abstract ab='AB1'><p>
+This is an abstract with</p>
+<p>some paragraphs in it</p>
+<p>ok ?
+</p></abstract>
+<abstract ab='AB2'>
+This is an abstract without paragraphs in it
+</abstract>
+<abstract ab='AB3'><p>Another abstract</p>
+<p>with</p>
+<p>in it</p></abstract>
+<abstract ab='AB4'>Another abstract without par</abstract>
+<uabstract ab='AB5'>no abstract1</uabstract>
+<uabstract ab='AB6'>no abstract2</uabstract>
+<uabstract ab='AB7'>no abstract3</uabstract>
+<uabstract ab='AB8'>no abstract4</uabstract>
+<UR>
+<Rocq/>
+<URsop/>
+</UR>
+<sUR en='research unit' fr='unit&#xe9; de recherche'>
+<Rocq en='nearparis'/>
+<sURsop fr='dans le sud'/>
+<sURlor fr=' dans l&apos;est'/>
+</sUR>
+<Address>somewhere</Address>
+<cmdp>nodefault</cmdp>
+<cmdA>CMDA</cmdA>
+<cmdB>CMDB</cmdB>
+<cmdC>CMDC</cmdC>
+</titlepage>
+</tpa>

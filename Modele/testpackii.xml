@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<std>
+<div0 id-text='1' id='cid1'><head>A</head>
+<p>Testing the float package</p>
+</div0>
+<div0 id-text='2' id='cid2'><head>B</head>
+<float style='ruled' id-text='2.1' id='uid1' name='Table' type='Table' place='tbp'><p rend='center'>foo <hi rend='it'>xx</hi>Hey<caption>foo</caption></p>
+</float>
+<float style='ruled' id-text='1' id='uid2' name='tablex' type='Tablex' place='tbp'><p rend='center'>Hey<caption>foo</caption><alt_head>bar</alt_head></p>
+</float>
+<float style='ruled' id-text='2.2' id='uid3' name='Table' type='Table' starred='true' place='hh'><p rend='center'>foo <hi rend='it'>xx</hi>Hey</p>
+</float>
+<float style='plain' id-text='1' id='uid4' name='figure' type='figure' place='tbp'><p rend='center'><figure rend='inline' file='foo'/></p>
+</float>
+<float style='plain' id-text='1' id='uid5' name='table' type='table' place='tbp'><p rend='center'><figure rend='inline' file='foo'/></p>
+</float>
+<listof type='figure'>List of figures</listof><listof type='Program'>List of Programs</listof>
+<div3 id-text='2.0.0.1' id='uid6'><head>forloop</head>
+<p>+1+3+5+7+9
+=2=5=8=11=14=17
+=2=5=8=11=14=17</p>
+<biblio>
+<citation from='year' key='BPY' id='bid0' userid='cite:OK' type='article'>
+<bauteurs><bpers prenom='P.' nom='Biane' prenomcomplet='P.'/><bpers prenom='J.' nom='Pitman' prenomcomplet='J.'/><bpers prenom='M.' nom='Yor' prenomcomplet='M.'/></bauteurs>
+<btitle>Probability laws related to the Jacobi <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&theta;</mi></math></formula> and Riemann <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&zeta;</mi></math></formula> functions, and Brownian excursions</btitle>
+<bjournal>Bull. Amer. Math. Soc.</bjournal>
+<bvolume>38</bvolume>
+<bpages>435–465</bpages>
+</citation></biblio><p><cit><ref target='bid0'/></cit></p>
+<p>This is the end of the document</p>
+</div3></div0></std>

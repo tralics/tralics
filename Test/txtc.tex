@@ -1,0 +1,338 @@
+\documentclass{article}  % iso-8859-1
+\usepackage{fancyvrb}
+\usepackage{natbib}
+\usepackage{RR}
+\usepackage{index}
+\newindex{A}{}{}{Second Index}
+\newindex{B}{}{}{Third index}
+\makeatletter
+\newcommand{\smaller}[1][1]{\larger[-#1]}
+\newcommand{\larger}[1][1]{%
+  \count@\@xfontsize \advance\count@#1\relax
+  \@xfontsize \count@}
+\makeatother
+
+\RRetitle{A sample file for Tralics}
+\RRauthor{José Grimm}
+\RRabstract{This document shows some commands of \textit{Tralics}.
+We use it also to show that characters are converted into the right encoding
+in a lot of situations, including commands, titles, indices etc.
+The \textit{XML} result is translated via \textsl{XSLT} into \textbf{HTML} 
+and available  on the web
+\url{http://www-sop.inria.fr/apics/tralics/txtc.html}.
+Source document can be found at
+\url{http://www-sop.inria.fr/apics/tralics/doc-step.html}.} 
+
+\keyword{Latex, XML, HTML, UTF8, Hàn}
+\begin{document}
+
+% compile with option -nozerowidthelt for comparison  with model
+% This is à còmment
+
+\tableofcontents
+\section{Who is Hàn}
+If you call tralics with options -te1a ou -te8a, the terminal should show 
+\verb=^^e0=\index{verb}\footnote{Index here} for the section title; 
+if you say -te1, there is a single byte, if you say
+-te8, there are two bytes. If you say -e1a or -e8a, the XML file should
+contain \verb=&#E0;=, in the case -oe1 ou -oe8, the XML file contains the
+characters shown on the terminal.
+
+\def\gobble#1{} %% Used later
+
+
+The following lines try to demonstrate that Tralics handles 16bit characters.
+An error will be signaled because the argument is out of range; but the
+character with hex value 312 should be valid; the command defined here
+by csname has two characters in its name, it must be followed by an
+exclamation point (a space is allowed between the command and the exclamation
+point).
+\expandafter\def\csname féé\endcsname!{123}
+\expandafter\def\csname f^^^^0123\endcsname!{312}
+\catcode`\é 11 \catcode"123=11 \catcode65536=11
+\typeout{If an error concerning bad char code is signaled above, then it's OK }
+\féé !! \f^^e9^^^^00e9 !! \f^^^^0123 !!
+
+
+This is standard verbatim: \verb+a _bç+, \verb*=a _bç=, \verbèa _bçè,
+\verb-\verb+ { } $$-, \verb +x+ . Think about this last example.
+We index here a word\index{vérb}. Location is just before period.
+This is a verbatim environment
+\begin{verbatim}
+{\let\rm\bf \bf totoé}
+<!--this is a comment -->
+&Dollar; not &Equals; &Euro;
+  \end{verbatim}
+% See comment below
+\begin{rawxml}
+{\let\rm\bf \bf totoé}
+<!--this is a comment -->
+&Dollar; not &Equals; &Euro;
+\end{rawxml}
+
+Note. A verbatim environment neutralises meaning of some commands.
+The last line of the verbatim environment should start with an ampersand 
+character; since this is a special character in XML, it is represented as
+\verb=&amp;= or \verb=&#x26;=. Lines can be numbered; spaces can be replaced
+by non-breaking ones; lines can use special fonts; paragraphs can be
+no-indented, etc.\index{verb@verb}% same as \index{verb}
+
+On the other hand, a rawxml environment is left unchanged. Remember however
+that end-of-line characters and spaces are removed from the end of the line; a
+new line character is added at the end of the line. If you remove the comment
+between the two environments, replacing it by an empty line, then the second 
+environment will be in vertical mode. Otherwise, the end of the verbatim
+environment inserts a \verb=\noindent=, and the environment that follows is in
+horizontal mode. As a consequence, there will be a P element on the first
+line of the raw xml; moreover, since the final space in a paragraph is
+removed, you will find the end-P element at the end of the line.%
+\index{vérb@verb}% this a new index entry
+
+The translation of the environment contains e-acute (its representation
+depends on the output encoding), three ampersand characters, a less than sign,
+a greater than sign. The second line is a valid XML comment, the third line is
+well-formed XML (it contains three entities, so that the XML is valid only if
+the DTD defines these entities); it is very easy to produce invalid and
+ill-formed XML.\index{vérb@vérb}% this one alreedy seen
+
+The xmllatex command is to be used with care. It can produce
+\xmllatex{Hàn Th&\#x1ebf; Thành}{unused}\footnote{Hàn is the author of
+pdftex}. The second argument is meant to be translated by \LaTeX, it is
+ignored by Tralics. Instead of \verb=\xmllatex{foo}{bar}=, define a command,
+use it in the text, and overwrite it in a ult file (user configuratin file).%
+\index{vérb@vérb|bf}% Note that encap is ignored
+
+In the current version, you can say \'{\^e} because the double-accent 
+mechanism is implemented, or ^^^^1ebf, this is a character, as valid as the
+other ones. This is possible and dangerous too \xmllatex{<TeX/>}{tex}.%
+\index{vérb!vèrb} %subitem in index
+
+
+\section{Index}
+This demonstrates how accents work in the index
+\index{verb}a
+\index{vérb}b
+\index{verb@verb}c
+\index{vérb@verb}d
+\index{vérb@vérb}e
+\index{vérb@vérb|bf}f
+\index{vérb!vèrb}g
+\index[default]{vérb!vèrb}h
+OK
+
+These words are in the glossary
+\glossary{G1}1\glossary{G2}2
+\glossary{G1}3\index[glossary]{G2}4
+These are in the second index
+\index[A]{I1}1\index[A]{I2}2
+\index[A]{I1}3\index[A]{I2!I3}4
+\AddAttToIndex{title}{First Index}
+\AddAttToIndex[A]{head}{Second Index}
+\AddAttToIndex[glossary]{title}{A glossary}
+\AddAttToDocument{filename}{txtc}
+
+
+A verbatim test. We put some stuff in English and French before, in order
+to show how it is translated differently. The end of the environment can
+contain spaces (see example above), but nothing else.
+\language=0
+test ligatures: <<>>``''-- et --- !
+\language=1
+test ligatures: <<>>``''-- et --- !
+\numberedverbatim
+\begin{verbatim}
+test : !@#$%^&*()_$
+test : {\foo\} et zxcvbnm,./
+\end{verbatim}
+\begin{verbatim}
+test ZXVBNM<>? ~
+test \verb+\verb-xx-+
+test ligatures: <<>>``''-- et --- !
+ \end+{verbatim} Not this one %% + added in version 2.11
+\end{notverbatim}
+\end{verbatim}
+
+\gobble{
+\end{verbatim}
+}
+\gobble{
+\begin{verbatim}
+}
+
+
+\unnumberedverbatim
+Verbatim without line numbers. 
+\begin{verbatim}
+test : !@#$%^&*()_$
+test : {\foo\} et zxcvbnm,./
+test ZXVBNM<>? ~
+test \verb+\verb-xx-+
+test ligatures: <<>>``''-- et --- !
+test BL : \\738! et \\838!.
+\end{verbatim}
+The BL test is funny; why should it fail? a long long time ago, before
+it was called Tralics, our translator was written in Perl, and such a line 
+was illegal; the math was converted by Omega, see \cite{place99}. We cite also
+\citeyear{mKay}, and \citefullauthor{mathml2}.
+
+We now test the verbatim extensions. We start with Verbatim
+and demonstrate the counting possibilities
+\begin{Verbatim}                   [numbers=true]
+test line 1a
+test line 1b
+\end{Verbatim}
+and without numbers
+\begin{Verbatim}
+[numbers=true]test line 2a
+[numbers=true]test line 2b
+\end{Verbatim}
+\begin{Verbatim} %
+[numbers=true] this text is ignored
+The environment has an optional argument; spaces but no newlines are allowed
+between brace and bracket; what follows the argument on the line is ignored
+\end{Verbatim}
+
+We put here the first character of the line in italics
+\def\verbatimfont#1{{\it #1}}
+\def\verbatimnumberfont{\large}
+\count3=4
+\begin{Verbatim}[counter=3]
+5 we use here counter number 3
+6 for counting lines
+\end{Verbatim}
+Define our Verbatim hook now.
+\expandafter\def\csname Verbatim@hook\endcsname{pre=pre,style=latex}
+\begin{Verbatim}[counter=03]
+7 we use here counter number 03 (the same)
+8 but the HTML output differs a lot.
+\end{Verbatim}
+\newcounter{vbcounter}
+\setcounter{vbcounter}{\count3}
+\begin{Verbatim}[counter=vbcounter]
+9 we use here counter named vbcounter
+10 initialised to the value of the previous counter
+\end{Verbatim}
+\begin{Verbatim}[counter=vbcounter]
+11 yet another verbatim line (ok with é^^e9?)
+\end{Verbatim}
+
+\let\verbatimfont\tt
+\def\verbatimnumberfont#1{\xbox{vbnumber}{#1}}
+
+\DefineVerbatimEnvironment{xverbatim}{Verbatim}{pre=pre,style=latex}
+\begin{xverbatim}[numbers=left]
+note that, if no counter is specified, it is FancyVerbLine
+\end{xverbatim}
+\begin{xverbatim}[numbers=left,firstnumber=last,style=log]
+and that the first line is numbered one by default.
+Of course, options given on the line have precedence over options
+inherited from the definition.
+\end{xverbatim}
+
+\newenvironment{centré}{\centering}{}
+\begin{centré}
+In French, centré means centered.
+\end{centré}
+
+\DefineShortVerb{\|}
+\SaveVerb{DU}|$_|\def\DU{\UseVerb{DU}} %$
+\section{Short  Verb, as in \DU}
+\let\verbatimfont\sffamily
+Test of |\DefineShortVerb| and |\UndefineShortVerb|. Normally
+the bar is used, but 16bit characters are possible. Example, with itrema:
+\DefineShortVerb{\ï}
+|toto| ïxï |+x-| ï|t|ï,
+\UndefineShortVerb{\ï}
+and without:
+|toto| ïxï |+x-| ï|t|ï
+Spaces: like this |+ +| or that \fvset{showspaces=true}|+ +|
+Verbatimfoo: \verb|+ foo +*foo*foo*|.
+
+\def\verbatimfont#1{{#1}}
+\def\verbprefix#1{A#1A}
+\def\verbatimprefix#1{B#1B}
+
+\SaveVerb{Ç}|}|\def\FE{\UseVerb{Ç}}
+\DefineShortVerb{\+}
+\SaveVerb{VE}+|+\def\VE{\UseVerb{VE}}
+\UndefineShortVerb{\+}
+\UndefineShortVerb{\|}
+
+Test of useverb \UseVerb{Ç}, \FE,\VE, \DU.
+\begin{verbatim}
+We have changed the font, and added a prefix
+Spaces are special
+\end{verbatim}
+
+Testing accents 
+
+
+\def\acclist#1#2{\def\theacc{#1}\let\next\oneacc\next#2\relax}
+\def\Relax{\relax}
+\def\oneacc#1{%
+\ifx#1\relax\let\next\relax\else\theacc#1 \fi
+\next}
+
+\acclist\`{AEIOUNWYaeiounwyx}
+
+\acclist\'{AEIOUYCLNRSZGKMPW\AE\AA\O\ae\aa\o aeiouyclnrszgkmpwv}
+
+\acclist\^{AEIOUCGHJSWYZaeioucghjswyz}
+
+\acclist\~{ANOUIVEYioanoioveyw}
+
+\acclist\"{AEIOUYHWXaeiouyhwxtz}
+
+\acclist\H{OUoue}
+
+\acclist\r{AUauwye}
+
+\acclist\v{CDELNRSTZAIUGKHcdelnrstzaiugkhjx}
+
+\acclist\u{AEGIOUaegioux}
+
+\acclist\={AEHIOTUYG\AE\ae aehiotuyg}
+
+\acclist\.{ABCDEFGHILMNOPRSTWXYZabcdeghlmnoprstuvwzyzq}
+
+\acclist\c{CGKLNRSTEDHcgklnrstedhb}
+
+\acclist\k{AEIOUaeioub}
+
+\acclist\D{AEIOURaeioury}
+
+\acclist\b{BDKLNRTZbdklnrtzhe}
+
+\acclist\d{BDHKLMNRSTVWZAEIOUYbdhklmnrstvwzaeiouyc}
+
+\acclist\f{AEIOURaeiourx}
+
+\acclist\T{EIUeiuo}
+
+\acclist\V{DELNTUdelntua}
+
+\acclist\D{Aae}
+
+\acclist\h{AEIOUYaeiouyx}
+
+Some people dont like  special characters 
+\makeatletter \def\@unicode@composite#1{\badchar#1}
+\def\badchar#1#2{bad accent #2 on #1}
+\`x  \u z
+
+Changing font size
+{\large x}{\Large x}
+{\large x\smaller y\smaller z}{\Large x\smaller y\smaller z}
+
+
+Switch to English, for colons in URLs \language=0
+
+
+
+
+
+\bibliography{tralics}
+
+
+
+\end{document}

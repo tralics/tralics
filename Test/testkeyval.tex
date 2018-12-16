@@ -1,0 +1,703 @@
+\documentclass[Cu,Cv,Cw,foo=E,opF={\foobar,gee},unused,Unused=U]{article}
+\usepackage{checkend}
+\ChangeElementName{warning}{Warning}
+
+%%% This tests the special filecontents environment
+\begin{filecontents+}{testkeyval.plt}
+\ProvidesPackage{testkeyval}{2008/02/15 Package for testing keyval}
+
+\DeclareOptionX{landscape}{\landscapefalse}
+
+\DeclareOptionX{keya}{%
+\edef\vara{prefix=\XKV@prefix, fams=\XKV@fams, this fam=\XKV@tfam, 
+header=\XKV@header,this key=\XKV@tkey, na=\XKV@na,val=#1}}
+\DeclareOptionX{keyb}{%
+\edef\varb{prefix=\XKV@prefix, fams=\XKV@fams, this fam=\XKV@tfam, 
+header=\XKV@header,this key=\XKV@tkey, na=\XKV@na,val=#1}}
+
+\DeclareOptionX{opA}{\def\opA{#1}}
+\DeclareOptionX{opB}{\def\opB{#1}}
+\DeclareOptionX{opC}{\def\opC{#1}}
+\DeclareOptionX{opD}{\def\opD{#1}}
+\DeclareOptionX{opF}{\def\opF{#1}}
+\DeclareOptionX{Cw}{}
+\let\opA\relax 
+\let\opB\relax 
+\let\opC\relax 
+\let\opD\relax 
+\let\opF\relax 
+
+\def\unknownoptions{}
+
+\ExecuteOptionsX{keya,keyb=1}
+
+\DeclareOptionX*{%
+  \typeout{xkeyval: Unknown option `\CurrentOption'}%
+  \edef\unknownoptions{\unknownoptions\CurrentOption.}
+}
+
+\ProcessOptionsX \relax
+\end{filecontents+}
+
+\begin{filecontents+}{options.plt}
+\ProvidesPackage{options}[2008/02/29 Package for testing package]
+\newcounter{xyz}
+\DeclareOption{foo=A}{\addtocounter{xyz}{1}}
+\DeclareOption{foo=B}{\addtocounter{xyz}{10}}
+\DeclareOption{foo=C}{\addtocounter{xyz}{100}}
+\DeclareOption{foo=D}{\addtocounter{xyz}{1000}}
+\DeclareOption{foo=E}{\addtocounter{xyz}{10000}}
+\ExecuteOptions{foo=A,foo=D}
+\ProcessOptions \relax
+\end{filecontents+}
+
+
+%% See comment below about encoding
+\csname input@encoding\endcsname=1
+\begin{filecontents+}{testclass.plt}
+% This file is a model
+\ProvidesPackage{testclass}[2008/02/19 Package for testing package]
+
+%We assume \unknownoptions set by another package
+\def\addfoo#1{\edef\unknownoptions{\unknownoptions#1}}
+
+\AtEndOfPackage{\addfoo{x}}
+\AtEndOfPackage{\addfoo{y}}
+
+\@ifclassloaded{article}{}{\addfoo{badclass.}}
+\@ifpackageloaded{testkeyval}{}{\addfoo{badpack.}}
+\@ifpackageloaded{article}{\addfoo{badclass2.}}{}
+\@ifclassloaded{testkeyval}{\addfoo{badpack2.}}{}
+
+\@ifclasslater{article}{2000/00/00}{}{\addfoo{badclass3.}}
+\@ifclasslater{article}{2020/00/00}{\addfoo{badclass4.}}{}
+\@ifpackagelater{testclass}{2008/00/00}{}{\addfoo{badclass5.}}
+\@ifpackagelater{xkeyval}{2020/00/00}{\addfoo{badpack3.}}{}
+\@ifpackagelater{xkeyval}{2008/00/00}{}{\addfoo{badpack4.}}
+\@ifpackagelater{testclass}{\the\numexpr\the\year+10\relax/00/00}{\addfoo{badpack6a.}}{}
+\@ifpackagelater{testclass}{\the\numexpr\the\year-10\relax/00/00}{}{\addfoo{badpack5a.}}
+\@ifpackagewith{testclass}{La,Lb,Lc}{}{\addfoo{badpack5.}}
+\@ifpackagewith{testclass}{Lc,Lb,La}{}{\addfoo{badpack6.}}
+\@ifpackagewith{testclass}{Ld}{\addfoo{badpack7.}}{}
+%%\@ifpackagewith{testkeyval}{opW=5}{}{\addfoo{badpack9.}}
+\@ifpackagewith{testkeyval}{opW=6}{\addfoo{badpack10.}}{}
+\@ifclasswith{article}{Cuu}{\addfoo{badclass8.}}{}
+\@ifclasswith{article}{Cu}{}{\addfoo{badclass7.}}
+
+%% Note about encodings: this file is read in latin2
+%% is saved as UTF8, so the stream coontains JosÃ©. 
+
+\def\NameA{José}% 
+\input@encoding=1
+\def\NameB{José}% 
+\def\xNameA{Jos^^e9}% 
+\def\xNameB{Jos^^c3^^a9}% 
+\ifx\NameA\xNameA\else \bad \fi
+\ifx\NameB\xNameB\else \bad \fi
+% Next line should produce an error. the line number should be
+% that of the real tex file, not the virtual testclass.plt
+\ifx\NameA\NameB\else\Error \fi
+
+\DeclareOption{Lc}{\addfoo{Lc}}
+\DeclareOption{La}{\addfoo{La}}
+\DeclareOption{Cv}{\addfoo{Cv}}
+\DeclareOption{Cu}{\addfoo{Cu}}
+
+\DeclareOption*{% 
+ \addfoo{D=\CurrentOption.}
+}
+
+\DeclareOption
+\ExecuteOptions{keya,keyb=1}
+
+\ProcessOptions* \relax
+\AtEndOfPackage{\addfoo{z}}
+\end{filecontents+}
+
+\begin{filecontents+}{testkv.bib}
+@Article{louarn88,
+  author =       {Philippe Louarn},
+  title =        {Une exp\'erience d'utilisation de {LaTeX} : le {R}apport d'act
+ivit\'e de {l'INRIA}},
+  journal =      {Cahiers Gutenberg},
+  year =         {1988},
+  number =       {0},
+  pages =        {17-24},
+  month =        {apr},
+  OPTnote =      {},
+  annote =       {http://www.gutenberg.eu.org/publications/cahiers/25-cahiers0.h
+tml}
+}
+\end{filecontents+}
+
+%% Is the usepackage working ?
+\usepackage{xkeyval}
+\usepackage[opA,opB=C,epW=5,opC=\foo,opE]{testkeyval}
+\usepackage[La,Lb,Lc]{testclass}
+\usepackage[foo=A,foo=C]{options}
+\begin{document}
+
+
+\def\fooA{a
+b}
+\def\fooB{a b}
+\ifx\fooA\fooB\else\bad\fi
+
+\makeatletter
+\newif\ifOK
+\def\cp@store#1#2#3#4\@nnil{\def#1{#3}\def#2{#4}}
+\def\cp@split#1#2{\expandafter\cp@store\expandafter#1\expandafter#2#2\@nnil}
+\def\cp@compare#1#2{\cp@split\fooA#1\cp@split\fooB#2\ifx\fooA\fooB\OKtrue\else\OKfalse\fi
+\ifx#1#2\typeout{SAME}\show#1 \OKfalse\fi
+}
+
+
+
+
+
+
+\newcommand{\makeCommandwithOption}[1]
+{
+\define@choicekey+[Prefix]{#1}{CommandStyle}%
+[\expandafter\csname Prefix@#1@CommandStyle\endcsname]
+ {none, bold, italic, roman}
+ {
+   % CommandStyle: ##1, \csname Prefix@#1@CommandStyle\endcsname. \\
+  }{
+    \PackageError{Prefix@#1@CommandStyle}{Invalid CommandStyle Option}
+%
+    {*CommandStyle can only be `none', `bold', `italic',`roman'}%
+  }
+}
+\makeCommandwithOption{myCommand}
+
+% The tester function
+\def\isfoo#1{\ifx\foo#1\else\show#1\show\foo\bad\fi}
+\def\ISfoo#1{\def\tmp{#1}\ifx\foo\tmp\else\show\tmp\show\foo\bad\fi}
+\makeatletter
+
+%% Command set by the package
+\unknownoptions
+
+
+\define@key{fam}{keyA}{}\ifcsname KV@fam@keyA\endcsname\else \bad\fi
+\define@key[]{xx}{keyA}{}\ifcsname xx@keyA\endcsname\else \bad\fi
+\define@key{}{keyA}{}\ifcsname KV@keyA\endcsname\else \bad\fi
+\define@key[]{}{keyA}{}\ifcsname keyA\endcsname\else \bad\fi
+\define@key[my]{fam}{keyA}[]{}\ifcsname my@fam@keyA\endcsname\else \bad\fi
+\ifcsname my@fam@keyA@default\endcsname\else \bad\fi
+\define@key[my]{}{keyA}{}\ifcsname my@keyA\endcsname\else \bad\fi
+\ifcsname my@keyA@default\endcsname\bad\fi
+
+\define@key{family}{keyA}{The input is #1}
+\define@key{family}{keyB}[none]{The input is #1}
+\def\foo#1{The input is #1} \isfoo\KV@family@keyA
+\def\foo{\KV@family@keyB{none}} \isfoo\KV@family@keyB@default
+\define@key{family}{keyB}[none]{\edef\bar{#1}}
+\KV@family@keyB{toto}
+\def\foo{toto}\isfoo\bar
+\define@key{family}{keyB}[none]{\edef\bar{#1}}
+\KV@family@keyB@default
+\def\foo{none}\isfoo\bar
+
+
+
+\define@cmdkey[xKV]{fam}{keyA}[x]{code #1}
+\def\foo{\xKV@fam@keyA {x}}\isfoo\xKV@fam@keyA@default
+\def\foo#1{\def \cmdxKV@fam@keyA {#1}code #1}\isfoo\xKV@fam@keyA
+\define@cmdkey[xKV]{fam}{keyA}[y]{\edef\bar{x#1}}
+\xKV@fam@keyA{toto}
+\def\foo{toto}\isfoo\cmdxKV@fam@keyA
+\def\foo{xtoto}\isfoo\bar
+\xKV@fam@keyA@default
+\def\foo{y}\isfoo\cmdxKV@fam@keyA
+\def\foo{xy}\isfoo\bar
+
+
+\define@cmdkey[xKV]{fam}[MP@]{keyB}[y]{code #1}
+\def\foo#1{\def \MP@keyB {#1}code #1}\isfoo\xKV@fam@keyB
+\def\foo{\xKV@fam@keyB {y}}\isfoo\xKV@fam@keyB@default
+\define@cmdkey[xKV]{fam}[MP@]{keyC}{code #1}
+\def\foo#1{\def \MP@keyC {#1}code #1}\isfoo\xKV@fam@keyC
+
+\define@cmdkeys[xKV]{fam}[MP@]{keyD,keyE}[z]
+\def\foo#1{\def \MP@keyD {#1}}\isfoo\xKV@fam@keyD
+\def\foo#1{\def \MP@keyE {#1}}\isfoo\xKV@fam@keyE
+\def\foo{\xKV@fam@keyE {z}}\isfoo\xKV@fam@keyE@default
+
+\define@cmdkeys[xKV]{fam}[MP@]{keyF,keyG}
+\def\foo#1{\def \MP@keyF {#1}}\isfoo\xKV@fam@keyF
+\def\foo#1{\def \MP@keyG {#1}}\isfoo\xKV@fam@keyG
+\let\foo\undefined\isfoo\xKV@fam@keyF@default
+
+\define@choicekey*[KV]{fam}{keyC}[\val\nr]{left,center,right}[w]
+{\ifcase\nr\relax\raggegright\or\centering\or\raggedleft\fi}
+\def\foo{\KV@fam@keyC {w}}\isfoo\KV@fam@keyC@default
+
+\define@choicekey*[KV]{fam}{keyC}[\val\nr]{a,b}{#1}
+\def\foo#1{\XKV@cc*[\val \nr ]{#1}{a,b}{#1}}
+\isfoo\KV@fam@keyC
+\define@choicekey*[KV]{fam}{keyC}[\val\nr]{a,b}{\edef\bar{w#1}}
+\KV@fam@keyC{A} 
+\def\foo{a}\isfoo\val
+\def\foo{0}\isfoo\nr
+\def\foo{wA}\isfoo\bar
+\KV@fam@keyC{B} 
+\def\foo{b}\isfoo\val
+\def\foo{1}\isfoo\nr
+\def\foo{wB}\isfoo\bar
+
+\define@choicekey+[KV]{fam}{keyC}[\val\nr]{a,b}{\edef\bar{w#1}}{\edef\bar{W#1}}
+\KV@fam@keyC{A} 
+\def\foo{A}\isfoo\val
+\def\foo{-1}\isfoo\nr
+\def\foo{WA}\isfoo\bar
+\KV@fam@keyC{B} 
+\def\foo{B}\isfoo\val
+\def\foo{-1}\isfoo\nr
+\def\foo{WB}\isfoo\bar
+
+\define@choicekey[KV]{fam}{keyC}[\val\nr]{a,b}{#1}
+\def\foo#1{\XKV@cc[\val \nr ]{#1}{a,b}{#1}}
+\isfoo\KV@fam@keyC
+
+\define@choicekey[KV]{fam}{keyC}{a,b}{#1}
+\def\foo#1{\XKV@cc[]{#1}{a,b}{#1}}
+\isfoo\KV@fam@keyC
+
+\define@choicekey*+[KV]{fam}{keyC}[\val\nr]{a,b}{#1}{=#1}
+\def\foo#1{\XKV@cc*+[\val \nr ]{#1}{a,b}{#1}{=#1}}
+\isfoo\KV@fam@keyC
+
+\define@boolkeys{fam}[my@]{frameA,frameB}
+\define@boolkey{fam}[my@]{frame}{A#1}
+\define@boolkey+{fam}{shadow}{B#1}{C#1}
+\def\foo#1{\XKV@cc*[\XKV@resa ]{#1}{true,false}{\csname
+    my@frame\XKV@resa \endcsname A#1}}
+\isfoo\KV@fam@frame
+\def\foo#1{\XKV@cc*[\XKV@resa ]{#1}{true,false}{\csname
+    my@frameA\XKV@resa \endcsname}}
+\isfoo\KV@fam@frameA
+
+\def\foo#1{\XKV@cc*+[\XKV@resa ]{#1}{true,false}{\csname KV@fam@shadow\XKV@resa \endcsname B#1}{C#1}}
+\isfoo\KV@fam@shadow           
+
+
+\define@key{fam}{key}{%
+I will first check your input, please wait.\\
+\XKV@cc*+[\val]{#1}{true,false}{%
+   The input \val\ was correct, we proceed.\\
+}{%
+   The input \val\ was incorrect and was ignored.\\
+}%
+  I finished the input check.
+}
+
+
+\KV@fam@key{True}
+\KV@fam@key{NotTrue}
+
+
+\define@boolkey{fam}{A}{\xdef\foo{\ifKV@fam@A Atrue\else Afalse\fi}}
+\define@boolkeys{fam}{B,C}
+
+\setkeys{fam}{A=true,B=false,C=True}
+\def\Test{Atrue}
+{
+\ifx\foo\Test \ifKV@fam@B\else \ifKV@fam@C \let\bad\relax\fi\fi\fi
+\bad}
+
+\define@key{Fam}{keya}[ax]{au#1v}
+\define@key{Fam}{keyb}[bx]{bu#1v}
+
+
+
+\setkeys{Fam}{keya,keyb=3}
+\setkeys{Fam}{\savevalue{keya},\gsavevalue{keyb}=3}
+\setkeys{Fam}{ keya , keyb   = 43 , ,}
+
+%% ----------------------------------------------------------------------
+\define@key[my]{familya}{keya}{\def\foo{fam=A,key=A,value=#1}}
+\define@key[my]{familya}{keyb}{\def\foo{fam=A,key=B,value=#1}}
+\define@key[my]{familyb}{keyb}{\def\foo{fam=B,key=B,value=#1}}
+\define@key[my]{familya}{keyc}{\def\foo{fam=A,key=C,value=#1}}
+
+\define@boolkey{fam}{frame}
+
+\define@key[my]{dfamilya}{keya}{fam=A,key=A,value=#1}
+\define@key[my]{dfamilya}{keyb}{fam=A,key=A,value=#1}
+\disable@keys[my]{dfamilya}{keya,keyb}
+
+\key@ifundefined[my]{familya,familyb}{keya}{\bad}{}
+\key@ifundefined[my]{xx,yy,familya,familyb}{keya}{\bad}{}
+\def\expt{familya}\ifx\XKV@tfam\expt\else\bad\fi
+\key@ifundefined[my]{xx,yy}{keya}{}{\bad}
+\def\expt{yy}\ifx\XKV@tfam\expt\else\bad\fi
+\key@ifundefined[my]{}{keya}{}{\bad}
+\def\expt{}\ifx\XKV@tfam\expt\else\bad\fi
+
+\setkeys[my]{dfamilya,dfamilyb}{keya=xxxxxxxxxxxxxx}
+
+\define@key[X]{familya}{keya}{a#1a}
+\define@key[X]{familyb}{keya}{b#1a}
+\define@key[X]{familyb}{keyb}{b#1b}
+\define@key[X]{familyc}{keye}{c#1e}
+\define@key[X]{familyc}{keyf}{c#1f}
+\define@key[X]{familyb}{keyc}[CV]{c#1c}
+
+XXA\setkeys[X]{familya,familyb}{keya=A,keyb=B,keyd=D}
+\setkeys[X]{familya}{keya=A}
+\setkeys[X]{familyb}{keyb,keyc}
+XXB\setkeys[X]{familyb}{keyc=a\setkeys[X]{familya}{keya=~and b},keyb=~and c}
+\setkeys*[X]{familyb}{keyc,keyd,keye} \def\foo{keyd,keye}\isfoo\XKV@rm
+\setkeys*[X]{familya,familyb}[keya,keyd]{keyc,keyd,keye=1, keyf= 2, keyg=3}
+\def\foo{keye=1,keyf= 2,keyg=3}\isfoo\XKV@rm
+XX\setrmkeys*[X]{familyd}C\setrmkeys[X]{familyc}[keyg]
+\setkeys*+[X]{familyb}{keyc,keyd,keye} \def\foo{keyd,keye}\isfoo\XKV@rm
+\setkeys*+[X]{familya,familyb}[keya,keyd]{keyc,keyd,keye=1, keyf= 2, keyg=3}
+\def\foo{keye=1,keyf= 2,keyg=3}\isfoo\XKV@rm
+XX\setrmkeys*+[X]{familyd}C\setrmkeys[X]{familyc}[keyg]
+XXD\setkeys[X]{familya,familyb}{keya=A}E\setkeys+[X]{familya,familyb}{keya=A}
+
+\setkeys[my]{familya,familyb}{keya=test}\ISfoo{fam=A,key=A,value=test}
+\setkeys[my]{familya,familyb}{keyb=test}\ISfoo{fam=A,key=B,value=test}
+\setkeys[my]{familyb,familya}{keyb=test}\ISfoo{fam=B,key=B,value=test}
+\setkeys[my]{familyc,familya}{keyb=test}\ISfoo{fam=A,key=B,value=test}
+\setkeys[my]{familya,familyb}{keya = test}\ISfoo{fam=A,key=A,value=test}
+\setkeys[my]{familya,familyb}{keya = {{{test=x}}}}\ISfoo{fam=A,key=A,value={test=x}}
+
+\define@key[X]{familya}{keyc}{%
+\edef\var{prefix=\XKV@prefix, fams=\XKV@fams, this fam=\XKV@tfam, 
+header=\XKV@header,this key=\XKV@tkey, na=\XKV@na}}
+\setkeys*[X]{familya,familyb}[keya,keyd]{keyc=x,keyd,keye=1, keyf= 2, keyg=3}
+
+\def\foo{prefix=X@, fams=familya,familyb, %
+this fam=familya, header=X@familya@,this key=keyc, na=keya,keyd}
+\isfoo\var
+
+{
+\setkeys[my]{familya}{\savevalue{keya}=test1}\ISfoo{fam=A,key=A,value=test1}
+\def\foo{test1}\isfoo\XKV@my@familya@keya@value
+\setkeys[my]{familya}{\gsavevalue{keya}=test2}\ISfoo{fam=A,key=A,value=test2}
+\def\foo{test2}\isfoo\XKV@my@familya@keya@value
+\isfoo\XKV@my@familya@keya@value
+\setkeys[my]{familya}{\savevalue{keya}=test3}\ISfoo{fam=A,key=A,value=test3}
+\def\foo{test3}\isfoo\XKV@my@familya@keya@value
+}
+\def\foo{test2}\isfoo\XKV@my@familya@keya@value
+\define@key{familya}{keya}{\def\foo{fam=A,key=A,value=#1}}
+\setkeys{familya}{\savevalue{keya}=test4}
+\def\foo{test4}\isfoo\XKV@KV@familya@keya@value
+
+{
+\savekeys[my]{familya}{keya , keyc}
+\def\foo{keya,keyc}\isfoo\XKV@my@familya@save
+\gsavekeys[my]{familya}{keyb,keyc}
+\def\foo{keya,keyc,keyb}\isfoo\XKV@my@familya@save
+\savekeys[my]{familya}{keyd}
+\def\foo{keya,keyc,keyb,keyd}\isfoo\XKV@my@familya@save
+}
+\def\foo{keya,keyc,keyb}\isfoo\XKV@my@familya@save
+{
+  \unsavekeys[my]{familya}
+  \let\foo\undefined\isfoo\XKV@my@familya@save
+}
+\def\foo{keya,keyc,keyb}\isfoo\XKV@my@familya@save
+{
+  \gunsavekeys[my]{familya}
+  \let\foo\undefined\isfoo\XKV@my@familya@save
+}
+\let\foo\undefined\isfoo\XKV@my@familya@save
+
+
+
+\savekeys[my]{familya}{keya,keyc,keybb,keyd}
+{
+  \gdelsavekeys[my]{familya}{keyc,keye}
+  \def\foo{keya,keybb,keyd}\isfoo\XKV@my@familya@save
+  \gdelsavekeys[my]{familya}{keyb}
+  \def\foo{keya,keybb,keyd}\isfoo\XKV@my@familya@save
+  \gdelsavekeys[my]{familya}{keybbb}
+  \def\foo{keya,keybb,keyd}\isfoo\XKV@my@familya@save
+  \delsavekeys[my]{familya}{keybb,keye}
+  \def\foo{keya,keyd}\isfoo\XKV@my@familya@save
+  \delsavekeys[my]{familya}{keya,keye}
+  \def\foo{keyd}\isfoo\XKV@my@familya@save
+  \delsavekeys[my]{familya}{keyd,keye}
+  \def\foo{}\isfoo\XKV@my@familya@save
+}
+\def\foo{keya,keybb,keyd}\isfoo\XKV@my@familya@save
+
+\unsavekeys[my]{familya}
+\savekeys[my]{familya}{keya,\global{keyc}}
+\setkeys[my]{familya}{keyc=test5}
+{
+ \def\foo{keya,\global{keyc}}\isfoo\XKV@my@familya@save
+ \savekeys[my]{familya}{\global{keya},keyc,keyd,\global{keye}}
+ \def\foo{\global{keya},keyc,keyd,\global{keye}}\isfoo\XKV@my@familya@save
+ \setkeys[my]{familya}{keya=test6}
+ \setkeys[my]{familya}{keyc=test7}
+ \def\foo{test7}\isfoo\XKV@my@familya@keyc@value
+ \def\foo{test6}\isfoo\XKV@my@familya@keya@value
+ \delsavekeys[my]{familya}{keyd,keye} 
+ \def\foo{\global{keya},keyc}\isfoo\XKV@my@familya@save
+}
+\def\foo{test5}\isfoo\XKV@my@familya@keyc@value
+\def\foo{test6}\isfoo\XKV@my@familya@keya@value
+\def\foo{keya,\global{keyc}}\isfoo\XKV@my@familya@save
+
+\define@key{familye}{keya}{}
+\define@key{familye}{keyb}{}
+\define@key{familye}{keyc}{}
+\savekeys{familye}{keya,keyc}
+{
+\setkeys{familye}{keya=test4}
+\def\foo{test4}\isfoo\XKV@KV@familye@keya@value
+\setkeys{familye}{\savevalue{keya}=test5}
+\def\foo{test5}\isfoo\XKV@KV@familye@keya@value
+\setkeys{familye}{\gsavevalue{keyc}=test6}
+\setkeys{familye}{keyc=test7}
+\def\foo{test7}\isfoo\XKV@KV@familye@keyc@value
+}
+\def\foo{test6}\isfoo\XKV@KV@familye@keyc@value
+
+%% pointers
+\unsavekeys[my]{familya}
+\setkeys[my]{familya,familyb}{keya=test}\ISfoo{fam=A,key=A,value=test}
+\setkeys[my]{familya}{keya=\usevalue test1} % error
+\setkeys[my]{familya}{keya=\usevalue{unknown}} % error
+\setkeys[my]{familya}{\savevalue{keya}=test1}\ISfoo{fam=A,key=A,value=test1}
+\setkeys[my]{familya}{keyb=x\usevalue{keya}y}\ISfoo{fam=A,key=B,value=xtest1y}
+\setkeys[my]{familya}{\savevalue{keya}=test2}\ISfoo{fam=A,key=A,value=test2}
+\setkeys[my]{familya}{\savevalue{keyb}=x\usevalue{keya}y}\ISfoo{fam=A,key=B,value=xtest2y}
+\setkeys[my]{familya}{keyc=X\usevalue{keyb}Y}\ISfoo{fam=A,key=C,value=Xxtest2yY}
+\setkeys[my]{familya}{\savevalue{keya}=\usevalue{keya}} % loop
+
+\setkeys[my]{familya}{\savevalue{keya}=test3}\ISfoo{fam=A,key=A,value=test3}
+\setkeys[my]{familya}{\savevalue{keyb}=\usevalue{keya}}\ISfoo{fam=A,key=B,value=test3}
+\setkeys[my]{familya}{\savevalue{keya}=x\usevalue{keyb}y} % loop
+\ISfoo{fam=A,key=A,value=}
+
+\define@key{fam}{keya}{\def\foo{keya: #1}}
+\define@key{fam}{keyb}[\usevalue{keya}Q]{\def\foo{keyb: #1}}
+\define@key{fam}{keyc}[\usevalue{keyb}R]{\def\foo{keyc: #1}}
+\setkeys{fam}{\savevalue{keya}=test}\ISfoo{keya: test}
+\setkeys{fam}{\savevalue{keyb}}\ISfoo{keyb: testQ}
+\setkeys{fam}{keyc}\ISfoo{keyc: testQR}
+
+% preset
+\presetkeys[pre]{fama}{keya, keyb=c, \savevalue{keyc}}{Keya, Keyb=c, \savevalue{Keyc}}
+\def\foo{keya,keyb=c,\savevalue{keyc}}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keya,Keyb=c,\savevalue{Keyc}}\isfoo\XKV@pre@fama@presett
+{
+  \gpresetkeys[pre]{fama}{keya=1,keyd}{Keya=2,Keyd}
+\def\foo{keya=1,keyb=c,\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keya=2,Keyb=c,\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+  \presetkeys[pre]{fama}{keyc}{Keyc}
+\def\foo{keya=1,keyb=c,keyc,keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keya=2,Keyb=c,Keyc,Keyd}\isfoo\XKV@pre@fama@presett
+}
+\def\foo{keya=1,keyb=c,\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keya=2,Keyb=c,\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+{
+  \gdelpresetkeys[pre]{fama}{keya}{Keya}
+\def\foo{keyb=c,\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keyb=c,\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+  \delpresetkeys[pre]{fama}{keyb,keyw}{Keyb,Keyw}
+\def\foo{\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+}
+\def\foo{keyb=c,\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keyb=c,\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+{
+\unpresetkeys[pre]{fama}
+\let\foo\undefined\isfoo\XKV@pre@fama@preseth
+\let\foo\undefined\isfoo\XKV@pre@fama@presett
+}
+\def\foo{keyb=c,\savevalue{keyc},keyd}\isfoo\XKV@pre@fama@preseth
+\def\foo{Keyb=c,\savevalue{Keyc},Keyd}\isfoo\XKV@pre@fama@presett
+{
+\gunpresetkeys[pre]{fama}
+}
+\let\foo\undefined\isfoo\XKV@pre@fama@preseth
+\let\foo\undefined\isfoo\XKV@pre@fama@presett
+
+\savekeys[my]{familya}{keya}
+\presetkeys[my]{familya}{keya=blue}{keyb=\usevalue{keya}}
+\setkeys[my]{familya}{keya=red}
+
+
+
+\define@key[my2]{familya}{keya}{\edef\foo{\foo keya: #1}}
+\define@key[my2]{familya}{keyb}{\edef\foo{\foo keyb: #1}}
+\define@key[my2]{familya}{keyc}{\edef\foo{\foo keyc: #1}}
+\savekeys[my2]{familya}{keya}
+\presetkeys[my2]{familya}{keya=blue}{keyb=\usevalue{keya}}
+\def\foo{}
+\setkeys[my2]{familya}{keya=red}\ISfoo{keya: redkeyb: red}
+\def\foo{}
+\setkeys[my2]{familya}{keyc=green}\ISfoo{keya: bluekeyc: greenkeyb: blue}
+\def\foo{}
+\setkeys[my2]{familya}{keyb=green}\ISfoo{keya: bluekeyb: green}
+\def\foo{}
+\setkeys[my2]{familya}{keya=green}\ISfoo{keya: greenkeyb: green}
+
+%% options
+\DeclareOptionX[my]<foobar>{landscape}{\landscapetrue}
+\def\foo#1{\landscapetrue}\isfoo\my@foobar@landscape
+\def\foo{\my@foobar@landscape{}}\isfoo\my@foobar@landscape@default
+\DeclareOptionX[my]<foobar>{portrait}[false]{pt=#1}
+\def\foo#1{pt=#1}\isfoo\my@foobar@portrait
+\def\foo{\my@foobar@portrait{false}}\isfoo\my@foobar@portrait@default
+
+%% options from 
+\def\foo#1{\landscapefalse}\expandafter\isfoo\csname KV@testkeyval.sty@landscape\endcsname
+
+\def\foo{prefix=KV@, fams=testkeyval.sty, this fam=testkeyval.sty, header=KV@testkeyval.sty@,this key=keya, na=,val=}
+\isfoo\vara
+\def\foo{prefix=KV@, fams=testkeyval.sty, this fam=testkeyval.sty, header=KV@testkeyval.sty@,this key=keyb, na=,val=1}
+\isfoo\varb
+
+\def\foo{}\isfoo\opA
+\def\foo{C}\isfoo\opB
+\def\foo{\foo}\isfoo\opC
+\def\foo{\foobar,gee}\isfoo\opF
+\let\foo\relax\isfoo\opD {\setkeys[xxx]{yyy}{}\setkeys{Gin}{width=20pt}\includegraphics{G}}
+
+\def\xNameA{José}% 
+\def\xNameB{JosÃ©}% 
+\ifx\NameA\xNameA\else \bad \fi
+\ifx\NameB\xNameB\else \bad \fi
+
+
+\bibliography{testkv+year}
+\cite{louarn88}
+
+\section{Testing errors and the like}
+This is a test
+\PackageError{mypack}{error line1\MessageBreak line2}{unused}
+\PackageWarning{mypack}{warning line1\MessageBreak line2}
+\PackageWarningNoLine{mypack}{warning nl line1\MessageBreak line2}
+\PackageInfo{mypack}{info line1\MessageBreak line2}
+\ClassError{myclass}{error line1\MessageBreak line2}{unused}
+\ClassWarning{myclass}{warning line1\MessageBreak line2}
+\ClassWarningNoLine{myclass}{warning nl line1\MessageBreak line2}
+\ClassInfo{myclass}{info line1\MessageBreak line2}
+
+\GenericInfo{info}{info bar}
+\GenericWarning{PREFIX}{warning bar\MessageBreak second line}
+\GenericError{PREFIX}{error bar\MessageBreak  second line}{FOO}{BAR}
+
+\section{Elements}\label{here}
+\ChangeElementName{node}{Node}
+\ChangeElementName{nodeconnect}{NodeConnect}
+\ChangeElementName{anodeconnect}{ANodeConnect}
+\ChangeElementName{barnodeconnect}{BarNodeConnect}
+\ChangeElementName{abarnodeconnect}{ABarNodeConnect}
+\ChangeElementName{nodecurve}{NodeCurve}
+\ChangeElementName{anodecurve}{ANodeCurve}
+\ChangeElementName{nodecircle}{NodeCircle}
+\ChangeElementName{nodetriangle}{NodeTriangle}
+\ChangeElementName{nodeoval}{NodeOval}
+\ChangeElementName{nodebox}{NodeBox}
+
+\ChangeElementName*{nameA}{NameA}
+\ChangeElementName*{nameB}{NameB}
+\ChangeElementName*{posA}{PosA}
+\ChangeElementName*{posB}{PosB}
+\ChangeElementName*{depth}{Depth}
+\ChangeElementName*{depthA}{DepthA}
+\ChangeElementName*{depthB}{DepthB}
+\ChangeElementName*{name}{Name}
+\ChangeElementName*{pos}{Pos}
+\ChangeElementName*{xpos}{Xpos}
+\ChangeElementName*{ypos}{Ypos}
+
+\ChangeElementName{keywords}{Keywords}
+\ChangeElementName{term}{Term}
+\ChangeElementName*{page}{Page}
+\ChangeElementName{ref}{Ref}
+
+\begin{motscle}
+latex, xml, translator.
+\end{motscle}
+
+\section{Trees}
+We test also trees\par % Check that a new paragraph is created
+\node{a}{Value of node A}
+\par % Should a paragraph start here ?
+\nodepoint{b}. 
+\nodepoint{c}[3pt].
+\nodepoint{d}[4pt][5pt].
+\nodeconnect{a}{b}
+\nodeconnect[tl]{a}[r]{c}
+\anodeconnect{a}{b}
+\anodeconnect[tl]{a}[r]{c}
+\barnodeconnect[3pt]{a}{d}
+\barnodeconnect{a}{d}
+\abarnodeconnect[3pt]{a}{d}
+\abarnodeconnect{a}{d}
+\nodecurve{a}{b}{2pt}.
+\nodecurve[l]{a}[r]{b}{2pt}[3pt]
+\anodecurve{a}{b}{2pt}.
+\anodecurve[l]{a}[r]{b}{2pt}[3pt]
+\nodetriangle{a}{b}
+\nodebox{a}
+\nodeoval{a}
+\nodecircle[3pt]{a}
+\nodecircle{a}
+
+\pageref{here}
+\ChangeElementName*{page}{NewPage}
+\ChangeElementName{ref}{NewRef}
+\pageref{here}
+
+\show\unknownoptions
+
+\expandafter\showthe\csname c@xyz\endcsname
+\ifnum\value{xyz}=11102\else \bad\fi
+
+Now checking runaway
+\def\nohope#1\bad{}\nohope
+This line is ignored
+\def\@car{} this is ignored too
+
+Second test
+\@car there is a missing%\@nil
+so that this line is ignored
+
+Line of text.
+
+\providecommand\ABC{x} \long\def\foo{x} \ifx\foo\ABC\else\bad\fi
+\providecommand\ABC{xy} \long\def\foo{x} \ifx\foo\ABC\else\bad\fi
+\providecommand*\ABc{x} \def\foo{x} \ifx\foo\ABc\else\bad\fi
+\CheckCommand\par{} % this fails
+\def\foo{}\CheckCommand*\foo{} % this OK
+\long\def\foo{}\CheckCommand\foo{} % this OK
+\def\foo{}\CheckCommand\foo{} % this fails
+\def\foo{}\CheckCommand\foo{} % this fails
+\renewcommand\foo[2][x]{#1#2}\CheckCommand\foo[2][x]{#1#2} % OK
+\renewcommand\foo[2][xx]{#1#2}\CheckCommand\foo[2][x]{#1#2} % fails
+
+
+\begin{it}{ \begingroup
+
+%outer check for some commands, tokens after \par are not read
+\@addtoreset{ab}{c\par x
+\newcounter{foo}[a\par x
+\nocite[a\par {a1}x
+\XMLsolvecite[10][a \par yx
+\cite{a2\par x
+\cite@one{a \par {a3}{b}x
+\cite@one{year}{a4 \par {b}x
+\bibliographystyle{aa\par x
+\bibliography{\par x
+\cititem{aa\par {val}x%  this makes two errors
+\XMLsolvecite{a \par x
+\XMLaddatt{a}{b\par x
+\XMLaddatt{b\par {a} x
+\newtheorem{tha}[page\par {c} x
+\newtheorem{thb}{b}[page\par x
+
+\par \bibitem{a1}X\bibitem{a2}X\bibitem{a3}X\bibitem{a4}X%
+\end{document}

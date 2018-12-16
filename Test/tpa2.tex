@@ -1,0 +1,379 @@
+% tralics configuration file 'test'
+% This file tests that a lot of XML element and attribute names
+% can be changed
+
+\documentclass{book}
+\usepackage{curves,ra,soul}
+\begin{document}
+
+\notrivialmath=7
+
+\newcounter{bib}
+\everybibitem{\stepcounter{bib}%
+\edef\foo{%
+bk=\XMLgetatt[\the\XMLlastid]{bib-key},%
+BK=\XMLgetatt[\the\XMLlastid]{Bibkey},%
+N=\XMLgetatt[\the\XMLlastid]{},%
+S=\XMLgetatt{}.
+}
+\xbox{bib}{\thebib\XMLaddatt*{}{BiB}}\xbox{}{\foo}}
+
+%%% test divisions
+\frontmatter
+\chapter{Chapter one}  OK
+\mainmatter
+\part{First Part of document}
+Some text here
+\part{Second Part}
+\chapter{Chapter two}
+\section{Section one}
+\subsection{Subsection one}
+\subsubsection{Subsubsection one}
+\paragraph{First paragraph}
+\subparagraph{First sub paragraph}
+Normal text\label{a}
+\backmatter
+We are now in the backmatter.\ref{a}\pageref{a}
+
+%%% test tables 
+\newcolumntype{+} {>{B}l <{D}|}
+
+\begin{tabular*}{3cm}[t]{|ll|rr|cc|}
+\hline a&b&c&d&e&f\\
+A&\multicolumn{3}{+}{C}&E&F\\
+\multicolumn{2}{|l}{ab}&c&d&e&f\\[1cm]
+\cline{1-3}\cline{6-6}\\\hline
+\end{tabular*}
+
+%%% Test Graphics
+\def\IC#1{\includegraphics[width=#1cm]{Logo-INRIA-couleur}}
+\IC{1}
+\fbox{\includegraphics[clip=, angle=90, scale=3, %
+       width=10cm, height=3mm]{A}}
+
+%%% Test Float
+
+\begin{figure}
+\subfigure[~one]{\IC{2}} \subfigure{\IC{3}} \par
+\subfigure[~two]{\IC{4}} \subfigure{\IC{1.3}} 
+\caption{Caption of the figure}
+\end{figure}
+\begin{table}[b]
+\begin{tabular}[t]{cc}
+a&b
+\end{tabular}
+\caption{ok}
+\end{table}
+
+a\footnote{B}\footnote{C\par D}
+\caption{a caption}
+\subfigure[~one]{\IC{2}} 
+\noindent \mbox{\xbox{a}{b}} \rotatebox{30}{x}
+\subfigure[a]{b}
+
+\begin{tabular}{c}a\end{tabular}
+\caption{A}
+\begin{table}[htbp]
+\begin{tabular}{c}a\end{tabular}
+\caption{B}
+\end{table}
+\begin{table}[htbp]
+\includegraphics{a}
+\caption{C}
+\end{table}
+\begin{figure}[htbp]
+\includegraphics{a}
+\caption[ok]{D}
+\end{figure}
+\caption{a}\caption[b]{c}
+
+%% Boxes
+\mbox{fo\xbox{a}{b}}
+\scalebox{0.3}{foo}
+\raisebox{0.3}{foo}
+\framebox{foo}
+\framebox[2cm]{foo}
+\makebox(1,2)[bl]{foo\xbox{a}{b}}
+\rotatebox{45}{\it x}
+\fbox{foo}\scalebox{0.3}{foo}\framebox(10,10){foo}\framebox[10pt][11]{foo}
+
+
+%%% Picture
+\begin{picture}(100,100)
+\qbezier(0,0)(10,30)(50,30)
+\put(15,20){\circle{6}}
+\put(15,20){\circle*{6}}
+ \scaleput(10,10){\arc(5,0){121}}
+  \multiput(20,5)(-20,12){2} {\line(5,3){20}}
+\put(10,32){\vector(-2,1){10}}
+\put(15,20){\oval(30,10)}
+\dashline{3}[0.7](0,18)(63,18)
+\drawline some text here% well
+\dottedline{2}(0,10)(70,10)
+\put(30,20){\circle{6}}
+\put(15,20){\bigcircle{2}}
+\closecurve(150,0, 190,100, 230,0)
+\curve[17](300,0, 340,100, 380,0)
+\tagcurve(80,0, 0,0, 40,100, 80,0, 0,0)
+\thicklines
+\thinlines
+\linethickness{.5pt}
+\end{picture}
+
+%%% Lists 
+\begin{itemize}
+\makeatletter
+\@item [A]b
+\@@item [A]b
+\end{itemize}
+
+\begin{list}{}{}
+\item[item label] item value
+\begin{description}
+\item[first item] okok
+\item[second item]
+\begin{itemize}
+\item First
+\item Second
+\begin{enumerate}
+\item some item
+\item another one
+\end{enumerate}
+\end{itemize}
+\end{description}
+\end{list}
+
+%%% Theorems
+\newtheorem{xCor}{Corollary}
+\begin{xCor}[Important] this is easy \end{xCor}
+
+%%% Fonts
+\ul{a}\caps{b}\hl{c}\so{d}\st{e}
+\textsuperscript{f}\textsubscript{g}
+\oldstylenums{h}\overline{i}\underline{j}
+
+{\Huge a}{\huge b}{\LARGE c}{\Large d}{\large e}{\normalsize f}{\small
+  g}{\footnotesize h}{\scriptsize i}{\tiny j}
+
+\textbf{a}\textsf{b}\texttt{c}\textsc{d}\textsl{e}\textit{f}
+\textup{x}\textmd{x}\textrm{x} %% currently these do not work
+{\upshape a}{\itshape b}{\slshape c}{\scshape d}
+{\mdseries e}{\bfseries f}{\ttfamily h}{\sffamily h}{\rmfamily i}
+Normal text
+
+%%% Bibliography
+\makeatletter {
+\leavevmode\@setmode 4
+\citation{A}{cite:B}{bid2}{D}{E}
+\bauthors{\bpers {a}{}{c}{d}}
+\beditors{\bpers[AA] {a}{b}{c}{d}}
+\endcitation
+\@setmode 1}\par
+
+\def\cite@prenote{cf}
+\def\cite@@type{fx}
+\cite[p 30]{toto}
+
+\xbox{Bibitem}{\XMLsolvecite{toto}{key1}}
+OKOK \bibitem [toto] {titi}{tata}
+\ChangeElementName{bibitem}{Bibitem}
+\ChangeElementName{natcite}{NatCite}
+\ChangeElementName*{bibkey}{Bibkey}
+\tracingall
+\bibitem [toto] {titi2}{tata}
+\natcite{titi2}
+
+%%% Raweb specific stuff 
+No everything tested here
+\def\X{\pers{a}{b}} \def\Y{\pers{c}{d}}
+\begin{participant} \X\Y \end{participant}
+
+\begin{xmlelement*}{catperso}\xbox{head}{xx}
+\pers {jean}{dupond}{PHD}{Cnrs}[Ok][not yet]
+\end{xmlelement*}
+
+\begin{glossaire}
+\glo{aa}{bb}
+\glo{cc}{dd}
+\end{glossaire}
+
+%%% Other 
+Text
+\setbox0\xbox{foo}{bar}%
+\leaders\copy0\hfil\cleaders\copy0\hfil\xleaders\copy0\hfil
+\noindent Word\index{foo}
+\index{foo!a@barb|gee}
+\index{foo!b@bara}%
+\index{foo}
+\begin{motscle} first, second,  {(max,+)}\end{motscle}
+\url{foo}
+\tableofcontents
+\makeindex
+{\@nomathml=-1 $xy$
+\def\[{$$\formulaattribute{textype}{Bdisplay}}  \[ x \] 
+\def\({$\formulaattribute{textype}{Binline}}  \( x \) }
+\def\unused{$$ and $} % Emacs
+
+
+
+a\\[2pt]b
+\begin{center}A\end{center}
+\begin{quote}B\end{quote}
+\begin{quotation}C\end{quotation}
+\begin{flushleft}D\end{flushleft}
+\begin{flushright}E\end{flushright}
+
+\begin{tabular}{|r|l|c}
+\hline a&b&\multicolumn{1}{c|}{x}\\[2pt]
+\end{tabular}
+$\begin{array}{|r|l|}
+a&b&\multicolumn{1}{c|}{x}\\[2pt]
+\end{array}$
+
+\begin{minipage}[t][2cm][s]{3cm}
+ok
+\end{minipage}
+
+\theorembodyfont{\sl}
+\theoremstyle{break}
+\newtheorem{Cor}{Corollary}
+\theoremstyle{plain}
+%\newcounter{section}
+\setcounter{section}{17}
+\newtheorem{Exa}{Example}[section]
+{\theorembodyfont{\rmfamily}\newtheorem{Rem}{Remark}}
+\theoremstyle{marginbreak}
+\newtheorem{Lem}[Cor]{lemma}
+\theoremstyle{change}
+\theorembodyfont{\small\itshape} \newtheorem{Def}[Cor]{Definition}
+\theoremheaderfont{\scshape}
+\def\Lenv#1{\texttt{#1}}
+\begin{Cor}
+ This is a sentence typeset in the theorem environment \Lenv{Cor}.
+\end{Cor}
+\ref{exA}\ref{exB}
+\begin{Exa}
+\label{exA}
+ This is a sentence typeset \par \label{exB}in the theorem environment \Lenv{Exa}.
+\end{Exa}
+\begin{Rem}
+ This is a sentence typeset in the theorem environment \Lenv{Rem}.
+\end{Rem}
+\begin{Lem}[Ben User]
+ This is a sentence typeset in the theorem environment \Lenv{Lem}.
+\end{Lem}
+\begin{Def}[Very Impressive definition]
+ This is a sentence typeset in the theorem environment \Lenv{Def}.
+\end{Def}
+
+\setlength{\unitlength}{1.8mm}
+\begin{picture}(40,30)
+  \thicklines
+  \multiput(20,5)(20,12){2} {\line(0,-1){2}\line(-5,3){20}}
+  \multiput(20,5)(-20,12){2} {\line(5,3){20}}
+  \put(20,3){\line(5,3){20}}
+  \put(20,3){\line(-5,3){20}}
+  \put(0,15){\line(0,1){2}}
+  \linethickness{1pt}
+  \put(20,5) {
+   \renewcommand{\xscale}{1}%
+   \renewcommand{\xscaley}{-1}%
+   \renewcommand{\yscale}{0.6}%
+   \renewcommand{\yscalex}{0.6}%
+   \scaleput(10,10){\bigcircle{10}}
+   \put(0,-2){%
+      \scaleput(10,10){\arc(5,0){121}}
+      \scaleput(10,10){\arc(5,0){-31}}}}
+\end{picture}\hspace{1.5cm}
+\setlength{\unitlength}{1mm}
+\newcounter{cms}
+\begin{picture}(50,39)
+\put(0,7){\makebox(0,0)[bl]{cm}}
+\multiput*(10,7)(10,0){5}{\addtocounter{cms}{1}\makebox(0,0)[b]{\arabic{cms}}}
+\put(15,20){\circle{6}}
+\put(30,20){\circle{6}}
+\put(15,20){\circle*{2}}
+\put(30,20){\circle*{2}}
+\put(10,24){\framebox(25,8){car}}
+\put(10,32){\vector(-2,1){10}}
+\multiput(1,0)(1,0){49}{\line(0,1){2.5}}
+\multiput(5,0)(10,0){5}{\line(0,1){3.5}}
+\thicklines
+\put(0,0){\line(1,0){50}}
+\multiput(0,0)(10,0){6}{\line(0,1){5}}
+\end{picture}
+
+On the fly changes are possible, for instance
+a\allowbreak b
+\ChangeElementName{allowbreak}{AllowBreak}
+a\allowbreak b
+
+You can change attributes also
+\begin{quote}B\end{quote}
+\ChangeElementName*{rend}{rendering}
+\ChangeElementName*{quote}{quotation}
+\begin{quote}B\end{quote}
+
+\section[Section 1]{Section two}
+\subsection[Subsetion 2]{Subsection two}
+
+% Wagner test
+A \begin{table} $x$ \end{table}
+B \begin{table} \begin{tabular}{c} x \end{tabular} \end{table}
+C \begin{tabular}{c} x \end{tabular} 
+A \begin{table}[ht] $x$ \end{table}
+B \begin{table*} \begin{tabular}{c} x \end{tabular} \end{table*}
+C \begin{tabular}{c} x \end{tabular} 
+\begin{figure} text \end{figure}
+\begin{figure}[!h] \includegraphics{x.ps} \end{figure}
+\begin{figure}[!h] \includegraphics{x.ps}\hspace{2cm}\includegraphics{x.ps} \end{figure}
+\begin{figure}[!h] \includegraphics{x.ps} text\includegraphics{x.ps} \end{figure}
+
+
+Same test as in torture file
+\let\IC=\includegraphics
+\def\FILE{Logo-INRIA-couleur}
+\IC[angle=0,width=3cm,clip=]{\FILE}
+\IC[angle=20,width=.5\textwidth,height=.3\textheight]{\FILE.ducon}
+\IC[angle=0,width=\columnwidth,height=\textheight]{\FILE.foo_bar}
+{\language=1 a:c
+\IC[angle=0, =foo,,width=3cm,scale=1,scale=2,clip]{../../a_b:c}
+}
+
+
+%% More table tests
+
+\begin{tabular*}{3cm}[t]{|ll|rr|cc|}
+\hlinee{}{}{}{3pt} line1&b&c&d&e&f\\ 
+\hlinee{}{}{}{6pt} \hlinee{}{}{}{7pt} line2&b&c&d&e&f\\ % 7wins
+A&\multicolumn{3}{+}{C}&E&F\\ \hlinee{}{}{}{4pt} 
+\multicolumn{2}{|l}{line4}&c&d&e&f\\[1cm]
+\cline{1-3}\cline{6-6}\\\hlinee{}{}{}{6pt}%
+\end{tabular*}
+
+
+\begin{tabular*}{3cm}[t]{|ll|rr|cc|}
+\hlinee{}{}{}{3pt} line1&b&c&d&e&f\\ 
+\hlinee{}{}{}{6pt} \hlinee{}{}{}{7pt} line2&b&c&d&e&f\\ % 7wins
+A&\multicolumn{3}{+}{C}&E&F\\ \hlinee{}{}{}{4pt} 
+\multicolumn{2}{|l}{line4}&c&d&e&f\\[1cm]
+\hlinee{1-3}{}{}{13pt}\hlinee{6-6}{}{}{66pt}\\\hlinee{}{}{}{6pt}%
+\end{tabular*}
+
+
+\begin{tabular*}{3cm}[t]{|ll|rr|cc|}
+\hlinee{}{1.1pt}{1.2pt}{3pt} line1&b&c&d&e&f\\ 
+\hlinee{}{1.5pt}{}{6pt} \hlinee{}{}{1.6pt}{7pt} line2&b&c&d&e&f\\ % 7wins on line1
+A&\multicolumn{3}{+}{C}&E&F\\ \hlinee{}{}{}{4pt} 
+\multicolumn{2}{|l}{line4}&c&d&e&f\\[1cm]
+\hlinee{1-3}{1.8pt}{}{13pt}\hlinee{6-6}{}{1.9pt}{66pt}\\\hlinee{}{}{}{6pt}%
+\end{tabular*}
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
+

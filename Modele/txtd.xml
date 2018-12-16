@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet href="monstyle" type="text/css"?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/06/20-->
+<std>
+<p>OK
+<anchor id-text='lid1' id='uid1'/>a
+<anchor id-text='lid2' id='uid2'/>b
+<anchor id-text='lid3' id='uid3'/>c
+<anchor id-text='lid4' id='uid4'/>d
+<anchor id-text='lid5' id='uid5'/>e
+<anchor id-text='lid6' id='uid6'/>f
+<anchor id-text='lid7' id='uid7'/>g
+<anchor id-text='lid8' id='uid8'/>h
+OK</p>
+<theindex title='Index'><index target='uid1 uid3 uid4' level='1'>verb</index>
+<index target='uid2 uid5 uid6' level='1'>vérb</index>
+<index target='uid7 uid8' level='2'>vèrb</index>
+</theindex></std>

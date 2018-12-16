@@ -1,0 +1,2357 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<std equation-number='left'>
+<frontmatter><maketitle><title>User's Guide for the <EM r='pkg'>amsmath</EM> Package (Version 2.0)</title><author>American Mathematical Society</author><date>1999-12-13 (revised 2002-02-25)</date></maketitle><p><pagestyle style='headings'/></p>
+<tableofcontents depth='1'/><cleardoublepage/></frontmatter>
+<mainmatter>
+<div0 id-text='1' id='cid1'><head>Introduction</head>
+<p>The <EM r='pkg'>amsmath</EM> package is a <LaTeX/> package that provides
+miscellaneous enhancements for improving the information structure and
+printed output of documents that contain mathematical formulas. Readers
+unfamiliar with <LaTeX/> should refer to <cit><ref target='bid0'/></cit>. If you have an
+up-to-date version of <LaTeX/>, the <EM r='pkg'>amsmath</EM> package is normally
+provided along with it. Upgrading when a newer version of the
+<EM r='pkg'>amsmath</EM> package is released can be done via
+<xref url='http://www.ams.org/tex/amsmath.html'>http://<allowbreak/>www.<allowbreak/>ams.<allowbreak/>org/<allowbreak/>tex/<allowbreak/>amsmath.<allowbreak/>html</xref> or
+<xref url='ftp://ftp.ams.org/pub/tex/'>ftp://<allowbreak/>ftp.<allowbreak/>ams.<allowbreak/>org/<allowbreak/>pub/<allowbreak/>tex/</xref>.</p>
+<p>This documentation describes the features of the <EM r='pkg'>amsmath</EM> package
+and discusses how they are intended to be used. It also covers some
+ancillary packages:</p>
+<table rend='inline'><row><cell halign='left'><EM r='pkg'>amsbsy</EM></cell>
+<cell halign='left'><EM r='pkg'>amstext</EM></cell>
+</row><row><cell halign='left'><EM r='pkg'>amscd</EM></cell>
+<cell halign='left'><EM r='pkg'>amsxtra</EM></cell>
+</row><row><cell halign='left'><EM r='pkg'>amsopn</EM></cell>
+</row></table><p>
+These all have something to do with the contents of math formulas. For
+information on extra math symbols and math fonts, see <cit><ref target='bid1'/></cit>
+and <xref url='http://www.ams.org/tex/amsfonts.html'>http://<allowbreak/>www.<allowbreak/>ams.<allowbreak/>org/<allowbreak/>tex/<allowbreak/>amsfonts.<allowbreak/>html</xref>. For documentation of the
+<EM r='pkg'>amsthm</EM> package or AMS document classes (<EM r='cls'>amsart</EM>,
+<EM r='cls'>amsbook</EM>, etc.) see <cit><ref target='bid2'/></cit> or <cit><ref target='bid3'/></cit> and
+<xref url='http://www.ams.org/tex/author-info.html'>http://<allowbreak/>www.<allowbreak/>ams.<allowbreak/>org/<allowbreak/>tex/<allowbreak/>author-info.<allowbreak/>html</xref>.</p>
+<p>If you are a long-time <LaTeX/> user and have lots of mathematics in what
+you write, then you may recognize solutions for some familiar problems
+in this list of <EM r='pkg'>amsmath</EM> features:</p>
+<list type='simple'>
+<item id-text='1' id='uid1'><p noindent='true'>A convenient way to define new `operator name' commands analogous
+to <EM r='cn'>sin</EM> and <EM r='cn'>lim</EM>, including proper side spacing and automatic
+selection of the correct font style and size (even when used in
+sub- or superscripts).</p>
+</item>
+<item id-text='2' id='uid2'><p noindent='true'>Multiple substitutes for the <EM r='cls'>eqnarray</EM> environment to make
+various kinds of equation arrangements easier to write.</p>
+</item>
+<item id-text='3' id='uid3'><p noindent='true'>Equation numbers automatically adjust up or down to avoid
+overprinting on the equation contents (unlike <EM r='cls'>eqnarray</EM>).</p>
+</item>
+<item id-text='4' id='uid4'><p noindent='true'>Spacing around equals signs matches the normal spacing in the
+<EM r='cls'>equation</EM> environment (unlike <EM r='cls'>eqnarray</EM>).</p>
+</item>
+<item id-text='5' id='uid5'><p noindent='true'>A way to produce multiline subscripts as are often used with
+summation or product symbols.</p>
+</item>
+<item id-text='6' id='uid6'><p noindent='true'>An easy way to substitute a variant equation number for a given
+equation instead of the automatically supplied number.</p>
+</item>
+<item id-text='7' id='uid7'><p noindent='true'>An easy way to produce subordinate equation numbers of the form
+(1.3a) (1.3b) (1.3c) for selected groups of equations.</p>
+</item></list>
+<p>The <EM r='pkg'>amsmath</EM> package is distributed together with some small
+auxiliary packages:</p>
+<list type='description'><label><EM r='pkg'>amsmath</EM></label>
+<item id-text='1' id='uid8'><p noindent='true'>Primary package, provides various features for
+displayed equations and other mathematical constructs.</p>
+</item><label><EM r='pkg'>amstext</EM></label>
+<item id-text='2' id='uid9'><p noindent='true'>Provides a <EM r='cn'>text</EM> command for
+typesetting a fragment of text inside a display.</p>
+</item><label><EM r='pkg'>amsopn</EM></label>
+<item id-text='3' id='uid10'><p noindent='true'>Provides <EM r='cn'>DeclareMathOperator</EM> for defining new
+`operator names' like <EM r='cn'>sin</EM> and <EM r='cn'>lim</EM>.</p>
+</item><label><EM r='pkg'>amsbsy</EM></label>
+<item id-text='4' id='uid11'><p noindent='true'>For backward compatibility this package continues
+to exist but use of the newer <EM r='pkg'>bm</EM> package that comes with <LaTeX/>
+is recommended instead.</p>
+</item><label><EM r='pkg'>amscd</EM></label>
+<item id-text='5' id='uid12'><p noindent='true'>Provides a <EM r='cls'>CD</EM> environment for simple
+commutative diagrams (no support for diagonal arrows).</p>
+</item><label><EM r='pkg'>amsxtra</EM></label>
+<item id-text='6' id='uid13'><p noindent='true'>Provides certain odds and ends such as
+<EM r='cn'>fracwithdelims</EM> and <EM r='cn'>accentedsymbol</EM>, for compatibility with
+documents created using version 1.1.</p>
+</item></list>
+<p>The <EM r='pkg'>amsmath</EM> package incorporates <EM r='pkg'>amstext</EM>, <EM r='pkg'>amsopn</EM>, and
+<EM r='pkg'>amsbsy</EM>. The features of <EM r='pkg'>amscd</EM> and <EM r='pkg'>amsxtra</EM>, however,
+are available only by invoking those packages separately.</p>
+</div0>
+<div0 id-text='2' id='cid2'><head>Options for the <EM r='pkg'>amsmath</EM> package</head>
+<p>The <EM r='pkg'>amsmath</EM> package has the following options:</p>
+<list type='description'><label><EM r='opt'>centertags</EM></label>
+<item id-text='1' id='uid14'><p noindent='true'>(default) For a split equation, place equation
+numbers<anchor id-text='lid1' id='uid15'/> vertically centered
+on the total height of the equation.</p>
+</item><label><EM r='opt'>tbtags</EM></label>
+<item id-text='2' id='uid16'><p noindent='true'>`Top-or-bottom tags': For a split equation, place
+equation numbers<anchor id-text='lid2' id='uid17'/> level with
+the last (resp. first) line, if numbers are on the right (resp.
+left).</p>
+</item><label><EM r='opt'>sumlimits</EM></label>
+<item id-text='3' id='uid18'><p noindent='true'>(default) Place the subscripts and
+superscripts<anchor id-text='lid3' id='uid19'/> of summation symbols
+above and below, in displayed equations. This option also affects other
+symbols of the same type—<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&prod;</mo></math><texmath>\prod </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&coprod;</mo></math><texmath>\coprod </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&bigotimes;</mo></math><texmath>\bigotimes </texmath></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&bigoplus;</mo></math><texmath>\bigoplus </texmath></formula>, and so forth—but excluding integrals (see below).</p>
+</item><label><EM r='opt'>nosumlimits</EM></label>
+<item id-text='4' id='uid20'><p noindent='true'>Always place the subscripts and superscripts of
+summation-type symbols to the side, even in displayed equations.</p>
+</item><label><EM r='opt'>intlimits</EM></label>
+<item id-text='5' id='uid21'><p noindent='true'>Like <EM r='opt'>sumlimits</EM>, but for
+integral<anchor id-text='lid5' id='uid22'/> symbols.</p>
+</item><label><EM r='opt'>nointlimits</EM></label>
+<item id-text='6' id='uid23'><p noindent='true'>(default) Opposite of <EM r='opt'>intlimits</EM>.</p>
+</item><label><EM r='opt'>namelimits</EM></label>
+<item id-text='7' id='uid24'><p noindent='true'>(default) Like <EM r='opt'>sumlimits</EM>, but for certain
+`operator names' such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>det</mo></math><texmath>\det </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>inf</mo></math><texmath>\inf </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>max</mo></math><texmath>\max </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>min</mo></math><texmath>\min </texmath></formula>, that
+traditionally have subscripts <anchor id-text='lid6' id='uid25'/> placed underneath when they occur in a displayed
+equation.</p>
+</item><label><EM r='opt'>nonamelimits</EM></label>
+<item id-text='8' id='uid26'><p noindent='true'>Opposite of <EM r='opt'>namelimits</EM>.</p>
+</item></list>
+<p>To use one of these package options, put the option name in the optional
+argument of the <EM r='cn'>usepackage</EM> command—e.g.,
+<hi rend='tt'>\usepackage[intlimits]{amsmath}</hi>.</p>
+<p>The <EM r='pkg'>amsmath</EM> package also recognizes the following options which
+are normally selected (implicitly or explicitly) through the
+<EM r='cn'>documentclass</EM> command, and thus need not be repeated in the option
+list of the <EM r='cn'>usepackage</EM><hi rend='tt'>{amsmath}</hi> statement.</p>
+<list type='description'><label><EM r='opt'>leqno</EM></label>
+<item id-text='1' id='uid27'><p noindent='true'>Place equation numbers on the left.<anchor id-text='lid7' id='uid28'/></p>
+</item><label><EM r='opt'>reqno</EM></label>
+<item id-text='2' id='uid29'><p noindent='true'>Place equation numbers on the right.</p>
+</item><label><EM r='opt'>fleqn</EM></label>
+<item id-text='3' id='uid30'><p noindent='true'>Position equations at a fixed indent from the left
+margin rather than centered in the text column.<anchor id-text='lid8' id='uid31'/></p>
+</item></list>
+</div0>
+<div0 id-text='3' id='cid3'><head>Displayed equations</head>
+</div0>
+<div0 id-text='1' id='cid4'><head>Introduction</head>
+<p>The <EM r='pkg'>amsmath</EM> package provides a number of additional displayed
+equation structures<anchor id-text='lid9' id='uid32'/> beyond the ones
+provided in basic <LaTeX/>. The augmented set includes:</p>
+<p noindent='true'><hi rend='tt'>  equation     equation*     align       align*</hi></p>
+<p noindent='true'><hi rend='tt'>  gather       gather*       flalign     flalign*</hi></p>
+<p noindent='true'><hi rend='tt'>  multline     multline*     alignat     alignat*</hi></p>
+<p noindent='true'><hi rend='tt'>  split</hi></p>
+<p noindent='true'>(Although the standard <EM r='cls'>eqnarray</EM> environment remains available,
+it is better to use <EM r='cls'>align</EM> or <EM r='cls'>equation</EM>+<EM r='cls'>split</EM> instead.)</p>
+<p>Except for <EM r='cls'>split</EM>, each environment has both starred and unstarred
+forms, where the unstarred forms have automatic numbering using
+<LaTeX/>'s <EM r='cls'>equation</EM> counter. You can suppress the number on any
+particular line by putting <EM r='cn'>notag</EM> before the <EM r='cn'>\\</EM>; you can also
+override<anchor id-text='lid11' id='uid33'/> it with a tag of your own
+using <EM r='cn'>tag</EM><hi rend='tt'>{</hi><hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>label<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi><hi rend='tt'>}</hi>, where <hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>label<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi> means arbitrary text such
+as <hi rend='tt'>$*$</hi> or <hi rend='tt'>ii</hi> used to “number” the equation. There is also a
+<EM r='cn'>tag*</EM> command that causes the text you supply to be typeset
+literally, without adding parentheses around it. <EM r='cn'>tag</EM> and <EM r='cn'>tag*</EM>
+can also be used within the unnumbered versions of all the <EM r='pkg'>amsmath</EM>
+alignment structures. Some examples of the use of <EM r='cn'>tag</EM> may be found
+in the sample files <EM r='fn'>testmath.tex</EM> and <EM r='fn'>subeqn.tex</EM> provided with
+the <EM r='pkg'>amsmath</EM> package.</p>
+<p>The <EM r='cls'>split</EM> environment is a special subordinate form that is used
+only <hi rend='it'>inside</hi> one of the others. It cannot be used inside
+<EM r='cls'>multline</EM>, however.</p>
+<p>In the structures that do alignment (<EM r='cls'>split</EM>, <EM r='cls'>align</EM> and
+variants), relation symbols have an <hi rend='tt'>&amp;</hi> before them but not
+after—unlike <EM r='cls'>eqnarray</EM>. Putting the <hi rend='tt'>&amp;</hi> after the
+relation symbol will interfere with the normal spacing; it has to go
+before.</p>
+<table id-text='1' id='uid34' place='p' rend='display'><head>Comparison of displayed equation environments (vertical lines
+indicating nominal margins)</head>
+<unexpected><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{equation*}</hi></p>
+<p noindent='true'><hi rend='tt'>a=b</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation*}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>=</mo><mi>b</mi></mrow></math><texmath>
+a=b
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{equation}</hi></p>
+<p noindent='true'><hi rend='tt'>a=b</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='1' id='uid35' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>=</mo><mi>b</mi></mrow></math><texmath>
+a=b
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{equation}\label{xx}</hi></p>
+<p noindent='true'><hi rend='tt'>\begin{split}</hi></p>
+<p noindent='true'><hi rend='tt'>a&amp; =b+c-<zws/>d\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; \quad +e-<zws/>f\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; =g+h\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; =i</hi></p>
+<p noindent='true'><hi rend='tt'>\end{split}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='2' id='uid36' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>-</mo><mi>d</mi></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mspace width='1.em'/><mo>+</mo><mi>e</mi><mo>-</mo><mi>f</mi></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mi>g</mi><mo>+</mo><mi>h</mi></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mi>i</mi></mrow></mtd></mtr></mtable></math><texmath>
+\begin{split}
+a&amp; =b+c-d\\
+&amp; \quad +e-f\\
+&amp; =g+h\\
+&amp; =i
+\end{split}
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{multline}</hi></p>
+<p noindent='true'><hi rend='tt'>a+b+c+d+e+f\\</hi></p>
+<p noindent='true'><hi rend='tt'>+i+j+k+l+m+n</hi></p>
+<p noindent='true'><hi rend='tt'>\end{multline}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='1' id='uid37' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi></mrow></mtd></mtr></mtable></math><texmath>
+a+b+c+d+e+f\\
++i+j+k+l+m+n
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{gather}</hi></p>
+<p noindent='true'><hi rend='tt'>a_1=b_1+c_1\\</hi></p>
+<p noindent='true'><hi rend='tt'>a_2=b_2+c_2-<zws/>d_2+e_2</hi></p>
+<p noindent='true'><hi rend='tt'>\end{gather}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='1' id='uid38' textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd><mrow><msub><mi>a</mi> <mn>1</mn> </msub><mo>=</mo><msub><mi>b</mi> <mn>1</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>1</mn> </msub></mrow></mtd></mtr><mtr><mtd><mrow><msub><mi>a</mi> <mn>2</mn> </msub><mo>=</mo><msub><mi>b</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>2</mn> </msub><mo>-</mo><msub><mi>d</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>e</mi> <mn>2</mn> </msub></mrow></mtd></mtr></mtable></math><texmath>
+a_1=b_1+c_1\\
+a_2=b_2+c_2-d_2+e_2
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{align}</hi></p>
+<p noindent='true'><hi rend='tt'>a_1&amp; =b_1+c_1\\</hi></p>
+<p noindent='true'><hi rend='tt'>a_2&amp; =b_2+c_2-<zws/>d_2+e_2</hi></p>
+<p noindent='true'><hi rend='tt'>\end{align}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='1' id='uid39' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>1</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>1</mn> </msub></mrow></mtd></mtr><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>2</mn> </msub><mo>-</mo><msub><mi>d</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>e</mi> <mn>2</mn> </msub></mrow></mtd></mtr></mtable></math><texmath>
+a_1&amp; =b_1+c_1\\
+a_2&amp; =b_2+c_2-d_2+e_2
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{align}</hi></p>
+<p noindent='true'><hi rend='tt'>a_{11}&amp; =b_{11}&amp;</hi></p>
+<p noindent='true'><hi rend='tt'>  a_{12}&amp; =b_{12}\\</hi></p>
+<p noindent='true'><hi rend='tt'>a_{21}&amp; =b_{21}&amp;</hi></p>
+<p noindent='true'><hi rend='tt'>  a_{22}&amp; =b_{22}+c_{22}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{align}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula id-text='1' id='uid40' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>11</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>11</mn> </msub></mrow></mtd><mtd columnalign='right'><msub><mi>a</mi> <mn>12</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>12</mn> </msub></mrow></mtd></mtr><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>21</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>21</mn> </msub></mrow></mtd><mtd columnalign='right'><msub><mi>a</mi> <mn>22</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>22</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>22</mn> </msub></mrow></mtd></mtr></mtable></math><texmath>
+a_{11}&amp; =b_{11}&amp;
+a_{12}&amp; =b_{12}\\
+a_{21}&amp; =b_{21}&amp;
+a_{22}&amp; =b_{22}+c_{22}
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p><p rend='center'><minipage width='213.5pt'><p noindent='true'><hi rend='tt'>\begin{flalign*}</hi></p>
+<p noindent='true'><hi rend='tt'>a_{11}&amp; =b_{11}&amp;</hi></p>
+<p noindent='true'><hi rend='tt'>  a_{12}&amp; =b_{12}\\</hi></p>
+<p noindent='true'><hi rend='tt'>a_{21}&amp; =b_{21}&amp;</hi></p>
+<p noindent='true'><hi rend='tt'>  a_{22}&amp; =b_{22}+c_{22}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{flalign*}</hi></p>
+</minipage><minipage width='213.5pt'><rule width='0.2pt'/>
+<formula textype='flalign*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>11</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>11</mn> </msub></mrow></mtd><mtd columnalign='right'><msub><mi>a</mi> <mn>12</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>12</mn> </msub></mrow></mtd></mtr><mtr><mtd columnalign='right'><msub><mi>a</mi> <mn>21</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>21</mn> </msub></mrow></mtd><mtd columnalign='right'><msub><mi>a</mi> <mn>22</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>b</mi> <mn>22</mn> </msub><mo>+</mo><msub><mi>c</mi> <mn>22</mn> </msub></mrow></mtd></mtr></mtable></math><texmath>
+a_{11}&amp; =b_{11}&amp;
+a_{12}&amp; =b_{12}\\
+a_{21}&amp; =b_{21}&amp;
+a_{22}&amp; =b_{22}+c_{22}
+</texmath></formula>
+<rule width='0.0pt' depth='0.0pt' height='0.0pt'/><rule width='0.2pt'/></minipage></p></unexpected></table>
+</div0>
+<div0 id-text='2' id='cid5'><head>Single equations</head>
+<p>The <EM r='cls'>equation</EM> environment is for a single equation with an
+automatically generated number. The <EM r='cls'>equation*</EM> environment is the
+same except for omitting the number.<note id-text='1' id='uid41' place='foot'>Basic <LaTeX/> doesn't provide an <EM r='cls'>equation*</EM> environment,
+but rather a functionally equivalent environment named
+<EM r='cls'>displaymath</EM>.</note></p>
+</div0>
+<div0 id-text='3' id='cid6'><head>Split equations without alignment</head>
+<p>The <EM r='cls'>multline</EM> environment is a variation of the <EM r='cls'>equation</EM>
+environment used for equations that don't fit on a single line. The
+first line of a <EM r='cls'>multline</EM> will be at the left margin and the last
+line at the right margin, except for an indention on both sides in the
+amount of <EM r='cn'>multlinegap</EM>. Any additional lines in between will be
+centered independently within the display width (unless the <EM r='opt'>fleqn</EM>
+option is in effect).</p>
+<p>Like <EM r='cls'>equation</EM>, <EM r='cls'>multline</EM> has only a single equation number
+(thus, none of the individual lines should be marked with <EM r='cn'>notag</EM>).
+The equation number is placed on the last line (<EM r='opt'>reqno</EM> option) or
+first line (<EM r='opt'>leqno</EM> option); vertical centering as for <EM r='cls'>split</EM>
+is not supported by <EM r='cls'>multline</EM>.</p>
+<p>It's possible to force one of the middle lines to the left or right with
+commands <EM r='cn'>shoveleft</EM>, <EM r='cn'>shoveright</EM>. These commands take the entire
+line as an argument, up to but not including the final <EM r='cn'>\\</EM>; for
+example</p>
+<p>MISSING</p>
+<p noindent='true'><hi rend='tt'>\begin{multline}</hi></p>
+<p noindent='true'><hi rend='tt'>\framebox[.65\columnwidth]{A}\\</hi></p>
+<p noindent='true'><hi rend='tt'>\framebox[.5\columnwidth]{B}\\</hi></p>
+<p noindent='true'><hi rend='tt'>\shoveright{\framebox[.55\columnwidth]{C}}\\</hi></p>
+<p noindent='true'><hi rend='tt'>\framebox[.65\columnwidth]{D}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{multline}</hi></p>
+<p>The value of <EM r='cn'>multlinegap</EM> can be changed with the usual <LaTeX/>
+commands <EM r='cn'>setlength</EM> or <EM r='cn'>addtolength</EM>.</p>
+</div0>
+<div0 id-text='4' id='cid7'><head>Split equations with alignment</head>
+<p>Like <EM r='cls'>multline</EM>, the <EM r='cls'>split</EM> environment is for <hi rend='it'>single</hi>
+equations that are too long to fit on one line and hence must be split
+into multiple lines. Unlike <EM r='cls'>multline</EM>, however, the <EM r='cls'>split</EM>
+environment provides for alignment among the split lines, using <hi rend='tt'>&amp;</hi> to
+mark alignment points. Unlike the other <EM r='pkg'>amsmath</EM> equation
+structures, the <EM r='cls'>split</EM> environment provides no numbering, because
+it is intended to be used <hi rend='it'>only inside some other displayed
+equation structure</hi>, usually an <EM r='cls'>equation</EM>, <EM r='cls'>align</EM>, or
+<EM r='cls'>gather</EM> environment, which provides the numbering. For example:</p>
+<formula id-text='7' id='uid42' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msub><mi>H</mi> <mi>c</mi> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mfrac><mn>1</mn> <mrow><mn>2</mn><mi>n</mi></mrow></mfrac><munderover><mo>&sum;</mo> <mrow><mi>l</mi><mo>=</mo><mn>0</mn></mrow> <mi>n</mi> </munderover><msup><mrow><mo>(</mo><mo>-</mo><mn>1</mn><mo>)</mo></mrow> <mi>l</mi> </msup><msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mi>l</mi><mo>)</mo></mrow> <mrow><mi>p</mi><mo>-</mo><mn>2</mn></mrow> </msup><munder><mo>&sum;</mo> <mrow><msub><mi>l</mi> <mn>1</mn> </msub><mo>+</mo><mo>&ctdot;</mo><mo>+</mo><msub><mi>l</mi> <mi>p</mi> </msub><mo>=</mo><mi>l</mi></mrow> </munder><munderover><mo>&prod;</mo> <mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow> <mi>p</mi> </munderover><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><msub><mi>n</mi> <mi>i</mi> </msub> <msub><mi>l</mi> <mi>i</mi> </msub></mfrac></mfenced></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mspace width='1.em'/><mo>&middot;</mo><msup><mrow><mo>[</mo><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mi>l</mi><mo>)</mo></mrow><mo>-</mo><mrow><mo>(</mo><msub><mi>n</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>l</mi> <mi>i</mi> </msub><mo>)</mo></mrow><mo>]</mo></mrow> <mrow><msub><mi>n</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>l</mi> <mi>i</mi> </msub></mrow> </msup><mo>&middot;</mo><mfenced separators='' open='[' close=']'><msup><mrow><mo>(</mo><mi>n</mi><mo>-</mo><mi>l</mi><mo>)</mo></mrow> <mn>2</mn> </msup> <mo>-</mo> <munderover><mo>&sum;</mo> <mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow> <mi>p</mi> </munderover> <msup><mrow><mo>(</mo><msub><mi>n</mi> <mi>i</mi> </msub><mo>-</mo><msub><mi>l</mi> <mi>i</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup></mfenced><mo>.</mo><mspace width='-20.0pt'/></mrow></mtd></mtr></mtable></math><texmath>\begin{split}
+H_c&amp;=\frac{1}{2n} \sum ^n_{l=0}(-1)^{l}(n-{l})^{p-2}
+\sum _{l _1+\dots + l _p=l}\prod ^p_{i=1} \binom{n_i}{l _i}\\
+&amp;\quad \cdot [(n-l )-(n_i-l _i)]^{n_i-l _i}\cdot \Bigl [(n-l )^2-\sum ^p_{j=1}(n_i-l _i)^2\Bigr ].
+\hspace{-20.0pt}\end{split}</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{equation}\label{e:barwq}\begin{split}</hi></p>
+<p noindent='true'><hi rend='tt'>H_c&amp;=\frac{1}{2n} \sum^n_{l=0}(-<zws/>1)^{l}(n-<zws/>{l})^{p-<zws/>2}</hi></p>
+<p noindent='true'><hi rend='tt'>\sum_{l _1+\dots+ l _p=l}\prod^p_{i=1} \binom{n_i}{l _i}\\</hi></p>
+<p noindent='true'><hi rend='tt'>&amp;\quad\cdot[(n-<zws/>l )-<zws/>(n_i-<zws/>l _i)]^{n_i-<zws/>l _i}\cdot</hi></p>
+<p noindent='true'><hi rend='tt'>\Bigl[(n-<zws/>l )^2-<zws/>\sum^p_{j=1}(n_i-<zws/>l _i)^2\Bigr].</hi></p>
+<p noindent='true'><hi rend='tt'>\end{split}\end{equation}</hi></p>
+<p>The <EM r='cls'>split</EM> structure should constitute the entire body of the
+enclosing structure, apart from commands like <EM r='cn'>label</EM> that produce no
+visible material.</p>
+</div0>
+<div0 id-text='5' id='cid8'><head>Equation groups without alignment</head>
+<p>The <EM r='cls'>gather</EM> environment is used for a group of consecutive
+equations when there is no alignment desired among them; each one is
+centered separately within the text width (see Table <ref target='uid34'/>).
+Equations inside <EM r='cls'>gather</EM> are separated by a <hi rend='tt'>\\</hi> command.
+Any equation in a <EM r='cls'>gather</EM> may consist of a <hi rend='tt'>\begin{split}</hi>
+... <hi rend='tt'>\end{split}</hi> structure—for example:</p>
+<p noindent='true'><hi rend='tt'>\begin{gather}</hi></p>
+<p noindent='true'><hi rend='tt'>  first equation\\</hi></p>
+<p noindent='true'><hi rend='tt'>  \begin{split}</hi></p>
+<p noindent='true'><hi rend='tt'>    second &amp; equation\\</hi></p>
+<p noindent='true'><hi rend='tt'>           &amp; on two lines</hi></p>
+<p noindent='true'><hi rend='tt'>  \end{split}</hi></p>
+<p noindent='true'><hi rend='tt'>  \\</hi></p>
+<p noindent='true'><hi rend='tt'>  third equation</hi></p>
+<p noindent='true'><hi rend='tt'>\end{gather}</hi></p>
+</div0>
+<div0 id-text='6' id='cid9'><head>Equation groups with mutual alignment</head>
+<p>The <EM r='cls'>align</EM> environment is used for two or more equations when
+vertical alignment is desired; usually binary relations such as equal
+signs are aligned (see Table <ref target='uid34'/>).</p>
+<p>To have several equation columns side-by-side, use extra ampersands
+to separate the columns:</p>
+<formula id-text='6' id='uid43' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>y</mi></mrow></mtd><mtd columnalign='right'><mi>X</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>Y</mi></mrow></mtd><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>b</mi><mo>+</mo><mi>c</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><msup><mi>x</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='right'><msup><mi>X</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>Y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='right'><msup><mi>a</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>b</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>x</mi><mo>+</mo><msup><mi>x</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>y</mi><mo>+</mo><msup><mi>y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='right'><mrow><mi>X</mi><mo>+</mo><msup><mi>X</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>Y</mi><mo>+</mo><msup><mi>Y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd columnalign='right'><mrow><msup><mi>a</mi> <mo>&apos;</mo> </msup><mi>b</mi></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>c</mi> <mo>&apos;</mo> </msup><mi>b</mi></mrow></mtd></mtr></mtable></math><texmath>
+x&amp;=y &amp; X&amp;=Y &amp; a&amp;=b+c\\
+x^{\prime }&amp;=y^{\prime } &amp; X^{\prime }&amp;=Y^{\prime } &amp; a^{\prime }&amp;=b\\
+x+x^{\prime }&amp;=y+y^{\prime } &amp; X+X^{\prime }&amp;=Y+Y^{\prime } &amp; a^{\prime }b&amp;=c^{\prime }b
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{align}</hi></p>
+<p noindent='true'><hi rend='tt'>x&amp;=y       &amp; X&amp;=Y       &amp; a&amp;=b+c\\</hi></p>
+<p noindent='true'><hi rend='tt'>x'<zws/>&amp;=y'<zws/>     &amp; X'<zws/>&amp;=Y'<zws/>     &amp; a'<zws/>&amp;=b\\</hi></p>
+<p noindent='true'><hi rend='tt'>x+x'<zws/>&amp;=y+y'<zws/> &amp; X+X'<zws/>&amp;=Y+Y'<zws/> &amp; a'<zws/>b&amp;=c'<zws/>b</hi></p>
+<p noindent='true'><hi rend='tt'>\end{align}</hi></p>
+<p noindent='true'>Line-by-line annotations on an equation can be done by judicious
+application of <EM r='cn'>text</EM> inside an <EM r='cls'>align</EM> environment:</p>
+<formula id-text='6' id='uid44' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>y</mi> <mn>1</mn> </msub><mo>-</mo><msub><mi>y</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>y</mi> <mn>3</mn> </msub><mo>-</mo><msub><mi>y</mi> <mn>5</mn> </msub><mo>+</mo><msub><mi>y</mi> <mn>8</mn> </msub><mo>-</mo><mo>&ctdot;</mo></mrow></mtd><mtd/><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>(</mtext><mref target='uid46'/><mtext>)</mtext></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>y</mi> <mo>&apos;</mo> </msup><mo>&SmallCircle;</mo><msup><mi>y</mi> <mo>*</mo> </msup></mrow></mtd><mtd/><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>(</mtext><mref target='uid59'/><mtext>)</mtext></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mi>y</mi><mrow><mo>(</mo><mn>0</mn><mo>)</mo></mrow><msup><mi>y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd/><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>Axiom</mtext><mspace width='4.pt'/><mtext>1.</mtext></mrow></mtd></mtr></mtable></math><texmath>
+x&amp; = y_1-y_2+y_3-y_5+y_8-\dots &amp;&amp; \text{by (\ref {eq:C})}\\
+&amp; = y^{\prime }\circ y^* &amp;&amp; \text{by (\ref {eq:D})}\\
+&amp; = y(0) y^{\prime } &amp;&amp; \text{by Axiom 1.}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{align}</hi></p>
+<p noindent='true'><hi rend='tt'>x&amp; = y_1-<zws/>y_2+y_3-<zws/>y_5+y_8-<zws/>\dots</hi></p>
+<p noindent='true'><hi rend='tt'>                    &amp;&amp; \text{by \eqref{eq:C}}\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; = y'<zws/>\circ y^*    &amp;&amp; \text{by \eqref{eq:D}}\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; = y(0) y'<zws/>        &amp;&amp; \text {by Axiom 1.}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{align}</hi></p>
+<p noindent='true'>A variant environment <EM r='cls'>alignat</EM> allows the horizontal space between
+equations to be explicitly specified. This environment takes one argument,
+the number of “equation columns”: count the maximum number of <hi rend='tt'>&amp;</hi>s
+in any row, add 1 and divide by 2.</p>
+<formula id-text='6' id='uid45' textype='alignat' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>y</mi> <mn>1</mn> </msub><mo>-</mo><msub><mi>y</mi> <mn>2</mn> </msub><mo>+</mo><msub><mi>y</mi> <mn>3</mn> </msub><mo>-</mo><msub><mi>y</mi> <mn>5</mn> </msub><mo>+</mo><msub><mi>y</mi> <mn>8</mn> </msub><mo>-</mo><mo>&ctdot;</mo></mrow></mtd><mtd columnalign='right'><mspace width='1.em'/></mtd><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>(</mtext><mref target='uid46'/><mtext>)</mtext></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>y</mi> <mo>&apos;</mo> </msup><mo>&SmallCircle;</mo><msup><mi>y</mi> <mo>*</mo> </msup></mrow></mtd><mtd/><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>(</mtext><mref target='uid59'/><mtext>)</mtext></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mi>y</mi><mrow><mo>(</mo><mn>0</mn><mo>)</mo></mrow><msup><mi>y</mi> <mo>&apos;</mo> </msup></mrow></mtd><mtd/><mtd columnalign='left'><mrow><mtext>by</mtext><mspace width='4.pt'/><mtext>Axiom</mtext><mspace width='4.pt'/><mtext>1.</mtext></mrow></mtd></mtr></mtable></math><texmath>
+x&amp; = y_1-y_2+y_3-y_5+y_8-\dots &amp;\quad &amp; \text{by (\ref {eq:C})}\\
+&amp; = y^{\prime }\circ y^* &amp;&amp; \text{by (\ref {eq:D})}\\
+&amp; = y(0) y^{\prime } &amp;&amp; \text{by Axiom 1.}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{alignat}{2}</hi></p>
+<p noindent='true'><hi rend='tt'>x&amp; = y_1-<zws/>y_2+y_3-<zws/>y_5+y_8-<zws/>\dots</hi></p>
+<p noindent='true'><hi rend='tt'>                  &amp;\quad&amp; \text{by \eqref{eq:C}}\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; = y'<zws/>\circ y^*  &amp;&amp; \text{by \eqref{eq:D}}\\</hi></p>
+<p noindent='true'><hi rend='tt'> &amp; = y(0) y'<zws/>      &amp;&amp; \text {by Axiom 1.}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{alignat}</hi></p>
+</div0>
+<div0 id-text='7' id='cid10'><head>Alignment building blocks</head>
+<p>Like <EM r='cls'>equation</EM>, the multi-equation environments <EM r='cls'>gather</EM>,
+<EM r='cls'>align</EM>, and <EM r='cls'>alignat</EM> are designed to produce a structure
+whose width is the full line width. This means, for example, that one
+cannot readily add parentheses around the entire structure. But variants
+<EM r='cls'>gathered</EM>, <EM r='cls'>aligned</EM>, and <EM r='cls'>alignedat</EM> are provided whose
+total width is the actual width of the contents; thus they can be used
+as a component in a containing expression. E.g.,</p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='' close='&rbrace;'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mi>B</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mo>-</mo><mi>&part;</mi><mo>&times;</mo><mi>E</mi><mo>,</mo></mrow></mtd></mtr><mtr><mtd columnalign='right'><msup><mi>E</mi> <mo>&apos;</mo> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&part;</mi><mo>&times;</mo><mi>B</mi><mo>-</mo><mn>4</mn><mi>&pi;</mi><mi>j</mi><mo>,</mo></mrow></mtd></mtr></mtable></mfenced><mspace width='2.em'/><mtext>Maxwell's</mtext><mspace width='4.pt'/><mtext>equations</mtext></mrow></math><texmath>
+\left.\begin{aligned}
+B^{\prime }&amp;=-\partial \times E,\\
+E^{\prime }&amp;=\partial \times B - 4\pi j,
+\end{aligned}
+\right\rbrace 
+\qquad \text{Maxwell's equations}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{equation*}</hi></p>
+<p noindent='true'><hi rend='tt'>\left.\begin{aligned}</hi></p>
+<p noindent='true'><hi rend='tt'>  B'<zws/>&amp;=-<zws/>\partial\times E,\\</hi></p>
+<p noindent='true'><hi rend='tt'>  E'<zws/>&amp;=\partial\times B -<zws/> 4\pi j,</hi></p>
+<p noindent='true'><hi rend='tt'>\end{aligned}</hi></p>
+<p noindent='true'><hi rend='tt'>\right\}</hi></p>
+<p noindent='true'><hi rend='tt'>\qquad \text{Maxwell'<zws/>s equations}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation*}</hi></p>
+<p noindent='true'>Like the <EM r='cls'>array</EM> environment, these <hi rend='tt'>-ed</hi> variants also take
+an optional <hi rend='tt'>[t]</hi> or <hi rend='tt'>[b]</hi> argument to specify vertical
+positioning.</p>
+<p>“Cases” constructions like the following are common in
+mathematics:</p>
+<formula id-text='11' id='uid46' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>P</mi> <mrow><mi>r</mi><mo>-</mo><mi>j</mi></mrow> </msub><mo>=</mo><mfenced separators='' open='&lbrace;' close=''><mtable><mtr><mtd columnalign='left'><mn>0</mn></mtd><mtd columnalign='left'><mrow><mtext>if</mtext><mspace width='4.pt'/><mrow><mi>r</mi><mo>-</mo><mi>j</mi></mrow><mspace width='4.pt'/><mtext>is</mtext><mspace width='4.pt'/><mtext>odd</mtext><mo>,</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mrow><mi>r</mi><mo>!</mo><mspace width='0.166667em'/><msup><mrow><mo>(</mo><mo>-</mo><mn>1</mn><mo>)</mo></mrow> <mrow><mo>(</mo><mi>r</mi><mo>-</mo><mi>j</mi><mo>)</mo><mo>/</mo><mn>2</mn></mrow> </msup></mrow></mtd><mtd columnalign='left'><mrow><mtext>if</mtext><mspace width='4.pt'/><mrow><mi>r</mi><mo>-</mo><mi>j</mi></mrow><mspace width='4.pt'/><mtext>is</mtext><mspace width='4.pt'/><mtext>even</mtext><mo>.</mo></mrow></mtd></mtr></mtable></mfenced></mrow></math><texmath>
+P_{r-j}=
+{\left\lbrace \begin{array}{ll}
+0&amp; \text{if $r-j$ is odd},\\
+r!\,(-1)^{(r-j)/2}&amp; \text{if $r-j$ is even}.
+\end{array}\right.}
+</texmath></formula>
+<p noindent='true'>and in the <EM r='pkg'>amsmath</EM> package there is a <EM r='cls'>cases</EM> environment to
+make them easy to write:</p>
+<p noindent='true'><hi rend='tt'>P_{r-<zws/>j}=\begin{cases}</hi></p>
+<p noindent='true'><hi rend='tt'>    0&amp;  \text{if $r-<zws/>j$ is odd},\\</hi></p>
+<p noindent='true'><hi rend='tt'>    r!\,(-<zws/>1)^{(r-<zws/>j)/2}&amp;  \text{if $r-<zws/>j$ is even}.</hi></p>
+<p noindent='true'><hi rend='tt'>  \end{cases}</hi></p>
+<p noindent='true'>Notice the use of <EM r='cn'>text</EM> (cf. §<ref target='cid33'/>) and the nested
+math formulas.</p>
+</div0>
+<div0 id-text='8' id='cid11'><head>Adjusting tag placement</head>
+<p>Placing equation numbers can be a rather complex problem in multiline
+displays. The environments of the <EM r='pkg'>amsmath</EM> package try hard to
+avoid overprinting an equation number on the equation contents, if
+necessary moving the number down or up to a separate line. Difficulties
+in accurately calculating the profile of an equation can occasionally
+result in number movement that doesn't look right. There is a
+<EM r='cn'>raisetag</EM> command provided to adjust the vertical position of the
+current equation number, if it has been shifted away from its normal
+position. To move a particular number up by six points, write
+<hi rend='tt'>\raisetag{6pt}</hi>. This kind of adjustment is fine tuning like line
+breaks and page breaks, and should therefore be left undone until your
+document is nearly finalized, or you may end up redoing the fine tuning
+several times to keep up with changing document contents.</p>
+</div0>
+<div0 id-text='9' id='cid12'><head>Vertical spacing and page breaks in multiline displays</head>
+<p>You can use the <hi rend='tt'>\\[</hi><hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>dimension<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi><hi rend='tt'>]</hi> command to get extra vertical
+space between lines in all the <EM r='pkg'>amsmath</EM> displayed equation
+environments, as is usual in <LaTeX/>. When the <EM r='pkg'>amsmath</EM> package is
+in use page breaks<anchor id-text='lid12' id='uid47'/> between equation lines are normally disallowed;
+the philosophy is that page breaks in such material should receive
+individual attention from the author. To get an individual page break
+inside a particular displayed equation, a <EM r='cn'>displaybreak</EM> command is
+provided. <EM r='cn'>displaybreak</EM> is best placed immediately before the
+<hi rend='tt'>\\</hi> where it is to take effect. Like <LaTeX/>'s <EM r='cn'>pagebreak</EM>,
+<EM r='cn'>displaybreak</EM> takes an optional argument between 0 and 4 denoting
+the desirability of the pagebreak. <hi rend='tt'>\displaybreak[0]</hi> means “it is
+permissible to break here” without encouraging a break;
+<EM r='cn'>displaybreak</EM> with no optional argument is the same as
+<hi rend='tt'>\displaybreak[4]</hi> and forces a break.</p>
+<p>If you prefer a strategy of letting page breaks fall where they may,
+even in the middle of a multi-line equation, then you might put
+<EM r='cn'>allowdisplaybreaks</EM><hi rend='tt'>[1]</hi> in the preamble of your document. An
+optional argument 1–4 can be used for finer control: <hi rend='tt'>[1]</hi> means
+allow page breaks, but avoid them as much as possible; values of 2,3,4
+mean increasing permissiveness. When display breaks are enabled with
+<EM r='cn'>allowdisplaybreaks</EM>, the <hi rend='tt'>\\*</hi> command can be used to prohibit a
+pagebreak after a given line, as usual.</p>
+<p><hi rend='bold'>Note: Certain equation environments wrap their contents in an
+unbreakable box, with the consequence that neither <EM r='cn'>displaybreak</EM> nor
+<EM r='cn'>allowdisplaybreaks</EM> will have any effect on them. These include
+<EM r='cls'>split</EM>, <EM r='cls'>aligned</EM>, <EM r='cls'>gathered</EM>, and <EM r='cls'>alignedat</EM>.
+</hi></p>
+</div0>
+<div0 id-text='10' id='cid13'><head>Interrupting a display</head>
+<p>The command <EM r='cn'>intertext</EM> is used for a short interjection of one or
+two lines of text<anchor id-text='lid13' id='uid48'/> in the middle of a
+multiple-line display structure (see also the <EM r='cn'>text</EM> command in
+§<ref target='cid33'/>). Its salient feature is preservation of the alignment,
+which would not happen if you simply ended the display and then started
+it up again afterwards. <EM r='cn'>intertext</EM> may only appear right after a
+<hi rend='tt'>\\</hi> or <hi rend='tt'>\\*</hi> command. Notice the position of the word “and” in
+this example.</p>
+<formula id-text='10' id='uid49' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msub><mi>A</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>N</mi> <mn>0</mn> </msub><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>,</mo></mrow></mtd></mtr><mtr><mtd columnalign='right'><msub><mi>A</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&Omega;</mi><mo>)</mo></mrow><mo>,</mo></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='2'><mtext>and</mtext></mtd></mtr><mtr><mtd columnalign='right'><msub><mi>A</mi> <mn>3</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&Nscr;</mi><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&omega;</mi><mo>)</mo><mo>.</mo></mrow></mtd></mtr></mtable></math><texmath>
+A_1&amp;=N_0(\lambda ;\Omega ^{\prime })-\phi (\lambda ;\Omega ^{\prime }),\\
+A_2&amp;=\phi (\lambda ;\Omega ^{\prime })-\phi (\lambda ;\Omega ),\\
+\multicolumn{2}{l}{\text{and}}\\
+A_3&amp;=\mathcal {N}(\lambda ;\omega ).
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{align}</hi></p>
+<p noindent='true'><hi rend='tt'>A_1&amp;=N_0(\lambda;\Omega'<zws/>)-<zws/>\phi(\lambda;\Omega'<zws/>),\\</hi></p>
+<p noindent='true'><hi rend='tt'>A_2&amp;=\phi(\lambda;\Omega'<zws/>)-<zws/>\phi(\lambda;\Omega),\\</hi></p>
+<p noindent='true'><hi rend='tt'>\intertext{and}</hi></p>
+<p noindent='true'><hi rend='tt'>A_3&amp;=\mathcal{N}(\lambda;\omega).</hi></p>
+<p noindent='true'><hi rend='tt'>\end{align}</hi></p>
+</div0>
+<div0 id-text='11' id='cid14'><head>Equation numbering</head>
+<div1 id-text='1' id='uid50'><head>Numbering hierarchy</head>
+<p>In <LaTeX/> if you wanted to have equations numbered within
+sections—that is, have
+equation numbers (1.1), (1.2), ..., (2.1), (2.2),
+..., in sections 1, 2, and so forth—you could redefine
+<EM r='cn'>theequation</EM> as suggested in the <LaTeX/> manual <cit><ref target='bid0'>§6.3, §C.8.4</ref></cit>:</p>
+<p noindent='true'><hi rend='tt'>\renewcommand{\theequation}{\thesection.\arabic{equation}}</hi></p>
+<p>This works pretty well, except that the equation counter won't be reset
+to zero at the beginning of a new section or chapter, unless you do it
+yourself using <EM r='cn'>setcounter</EM>. To make this a little more convenient,
+the <EM r='pkg'>amsmath</EM> package provides a command<anchor id-text='lid14' id='uid51'/> <EM r='cn'>numberwithin</EM>. To have equation numbering tied to
+section numbering, with automatic reset of the equation counter, write</p>
+<p noindent='true'><hi rend='tt'>\numberwithin{equation}{section}</hi></p>
+<p noindent='true'>As its name implies, the <EM r='cn'>numberwithin</EM> command can be applied to
+any counter, not just the <hi rend='tt'>equation</hi> counter.</p>
+</div1>
+<div1 id-text='2' id='uid52'><head>Cross references to equation numbers</head>
+<p>To make cross-references to equations easier, an <EM r='cn'>eqref</EM>
+command<anchor id-text='lid15' id='uid53'/> is provided. This
+automatically supplies the parentheses around the equation number. I.e.,
+if <hi rend='tt'>\ref{abc}</hi> produces 3.2 then <hi rend='tt'>\eqref{abc}</hi> produces
+(3.2).</p>
+</div1>
+<div1 id-text='3' id='uid54'><head>Subordinate numbering sequences</head>
+<p>The <EM r='pkg'>amsmath</EM> package provides also a <EM r='cls'>subequations</EM>
+environment<anchor id-text='lid16' id='uid55'/> to make it
+easy to number equations in a particular group with a subordinate
+numbering scheme. For example</p>
+<p noindent='true'><hi rend='tt'>\begin{subequations}</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+<p noindent='true'><hi rend='tt'>\end{subequations}</hi></p>
+<p noindent='true'>causes all numbered equations within that part of the document to be
+numbered (4.9a) (4.9b) (4.9c) ..., if the preceding numbered
+equation was (4.8). A <EM r='cn'>label</EM> command immediately after
+<hi rend='tt'>\begin{subequations}</hi> will produce a <EM r='cn'>ref</EM> of the parent
+number 4.9, not 4.9a. The counters used by the subequations
+environment are <hi rend='tt'>parentequation</hi> and <hi rend='tt'>equation</hi> and
+<EM r='cn'>addtocounter</EM>, <EM r='cn'>setcounter</EM>, <EM r='cn'>value</EM>, etc., can be applied
+as usual to those counter names. To get anything other than lowercase
+letters for the subordinate numbers, use standard <LaTeX/> methods for
+changing numbering style <cit><ref target='bid0'>§6.3, §C.8.4</ref></cit>. For example,
+redefining <EM r='cn'>theequation</EM> as follows will produce roman numerals.</p>
+<p noindent='true'><hi rend='tt'>\begin{subequations}</hi></p>
+<p noindent='true'><hi rend='tt'>\renewcommand{\theequation}{\theparentequation \roman{equation}}</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+</div1></div0>
+<div0 id-text='4' id='cid15'><head>Miscellaneous mathematical features</head>
+</div0>
+<div0 id-text='1' id='cid16'><head>Matrices</head>
+<p>The <EM r='pkg'>amsmath</EM> package provides some environments for
+matrices<anchor id-text='lid17' id='uid56'/> beyond the basic <EM r='cls'>array</EM> environment of
+<LaTeX/>. The <EM r='cls'>pmatrix</EM>, <EM r='cls'>bmatrix</EM>, <EM r='cls'>Bmatrix</EM>, <EM r='cls'>vmatrix</EM>
+and <EM r='cls'>Vmatrix</EM> have (respectively) <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mspace width='0.166667em'/><mo>)</mo></mrow></math><texmath>(\,)</texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>[</mo><mspace width='0.166667em'/><mo>]</mo></mrow></math><texmath>[\,]</texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&lbrace;</mo><mspace width='0.166667em'/><mo>&rbrace;</mo></mrow></math><texmath>\lbrace \,\rbrace </texmath></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&vert;</mo><mspace width='0.166667em'/><mo>&vert;</mo></mrow></math><texmath>\vert \,\vert </texmath></formula>, and
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&parallel;</mo><mspace width='0.166667em'/><mo>&parallel;</mo></mrow></math><texmath>\Vert \,\Vert </texmath></formula> delimiters built in. For naming consistency there is a
+<EM r='cls'>matrix</EM> environment sans delimiters. This is not entirely redundant
+with the <EM r='cls'>array</EM> environment; the matrix environments all use more
+economical horizontal spacing than the rather prodigal spacing of the
+<EM r='cls'>array</EM> environment. Also, unlike the <EM r='cls'>array</EM> environment, you
+don't have to give column specifications for any of the matrix
+environments; by default you can have up to 10 centered columns.<note id-text='2' id='uid57' place='foot'>More precisely: The maximum number of columns in a matrix is determined
+by the counter <EM r='cn'>MaxMatrixCols</EM> (normal value = 10), which you can change
+if necessary using <LaTeX/>'s <EM r='cn'>setcounter</EM> or <EM r='cn'>addtocounter</EM>
+commands.</note> (If you need left or right alignment in a column or other special
+formats you must resort to <EM r='cls'>array</EM>.)</p>
+<p>To produce a small matrix suitable for use in text, there is a
+<EM r='cls'>smallmatrix</EM> environment (e.g.,
+<formula textype='math' type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=')'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd></mtr><mtr><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr></mtable></mfenced></math><texmath>
+\bigl ( {\begin{matrix}
+a&amp;b\\ c&amp;d
+\end{matrix}} \bigr )
+</texmath></formula>)
+that comes closer to fitting within a single text line than a normal
+matrix. Delimiters must be provided; there are no <hi rend='tt'>p</hi>,<hi rend='tt'>b</hi>,<hi rend='tt'>B</hi>,<hi rend='tt'>v</hi>,<hi rend='tt'>V</hi>
+versions of <EM r='cls'>smallmatrix</EM>. The above example was produced by</p>
+<p noindent='true'><hi rend='tt'>\bigl( \begin{smallmatrix}</hi></p>
+<p noindent='true'><hi rend='tt'>  a&amp;b\\ c&amp;d</hi></p>
+<p noindent='true'><hi rend='tt'>\end{smallmatrix} \bigr)</hi></p>
+<EM r='cn'>hdotsfor</EM><p><hi rend='tt'>{</hi><hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>number<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi><hi rend='tt'>}</hi> produces a row of dots in a
+matrix<anchor id-text='lid18' id='uid58'/> spanning the given number of
+columns. For example,</p>
+<p rend='center'><minipage width='128.1013pt'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd></mtr><mtr><mtd><mi>e</mi></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mo>&ctdot;</mo></mtd></mtr></mtable></math><texmath>\begin{matrix} a&amp;b&amp;c&amp;d\\
+e&amp;\dots &amp;\dots &amp;\dots  \end{matrix}</texmath></formula>
+</p></minipage>      <minipage width='192.1487pt'><p noindent='true'><hi rend='tt'>\begin{matrix} a&amp;b&amp;c&amp;d\\</hi></p>
+<p noindent='true'><hi rend='tt'>e&amp;\hdotsfor{3} \end{matrix}</hi></p>
+<p noindent='true'/></minipage></p>
+<p>The spacing of the dots can be varied through use of a square-bracket
+option, for example, <hi rend='tt'>\hdotsfor[1.5]{3}</hi>. The number in square brackets
+will be used as a multiplier (i.e., the normal value is 1.0).</p>
+<formula id-text='13' id='uid59' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced open='(' close=')'><mtable><mtr><mtd><mrow><msub><mi>D</mi> <mn>1</mn> </msub><mi>t</mi></mrow></mtd><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mn>12</mn> </msub><msub><mi>t</mi> <mn>2</mn> </msub></mrow></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mrow><mn>1</mn><mi>n</mi></mrow> </msub><msub><mi>t</mi> <mi>n</mi> </msub></mrow></mtd></mtr><mtr><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mn>21</mn> </msub><msub><mi>t</mi> <mn>1</mn> </msub></mrow></mtd><mtd><mrow><msub><mi>D</mi> <mn>2</mn> </msub><mi>t</mi></mrow></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mrow><mn>2</mn><mi>n</mi></mrow> </msub><msub><mi>t</mi> <mi>n</mi> </msub></mrow></mtd></mtr><mtr><mtd><mo>&ctdot;</mo></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mo>&ctdot;</mo></mtd></mtr><mtr><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mrow><mi>n</mi><mn>1</mn></mrow> </msub><msub><mi>t</mi> <mn>1</mn> </msub></mrow></mtd><mtd><mrow><mo>-</mo><msub><mi>a</mi> <mrow><mi>n</mi><mn>2</mn></mrow> </msub><msub><mi>t</mi> <mn>2</mn> </msub></mrow></mtd><mtd><mo>&ctdot;</mo></mtd><mtd><mrow><msub><mi>D</mi> <mi>n</mi> </msub><mi>t</mi></mrow></mtd></mtr></mtable></mfenced><mo>,</mo></mrow></math><texmath>
+\begin{pmatrix} D_1t&amp;-a_{12}t_2&amp;\dots &amp;-a_{1n}t_n\\
+-a_{21}t_1&amp;D_2t&amp;\dots &amp;-a_{2n}t_n\\
+\dots &amp;\dots &amp;\dots &amp;\dots \\
+-a_{n1}t_1&amp;-a_{n2}t_2&amp;\dots &amp;D_nt\end{pmatrix},
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{pmatrix} D_1t&amp;-<zws/>a_{12}t_2&amp;\dots&amp;-<zws/>a_{1n}t_n\\</hi></p>
+<p noindent='true'><hi rend='tt'>-<zws/>a_{21}t_1&amp;D_2t&amp;\dots&amp;-<zws/>a_{2n}t_n\\</hi></p>
+<p noindent='true'><hi rend='tt'>\hdotsfor[2]{4}\\</hi></p>
+<p noindent='true'><hi rend='tt'>-<zws/>a_{n1}t_1&amp;-<zws/>a_{n2}t_2&amp;\dots&amp;D_nt\end{pmatrix}</hi></p>
+</div0>
+<div0 id-text='2' id='cid17'><head>Math spacing commands</head>
+<p>The <EM r='pkg'>amsmath</EM> package slightly extends the set of math
+spacing<anchor id-text='lid21' id='uid60'/> commands, as shown below.
+Both the spelled-out and abbreviated forms of these commands are robust,
+and they can also be used outside of math.</p>
+<table rend='inline'><row bottom-border='true'><cell halign='left'>Abbrev.</cell>
+<cell halign='left'>Spelled out</cell>
+<cell right-border='true' halign='left'>Example</cell>
+<cell halign='left'>Abbrev.</cell>
+<cell halign='left'>Spelled out</cell>
+<cell>Example</cell>
+</row><row><cell halign='left'><rule width='0.0pt' height='10.625pt'/></cell>
+<cell halign='left'>no space</cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+<cell halign='left'/>
+<cell halign='left'>no space</cell>
+<cell><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row><row><cell halign='left'><EM r='cn'> </EM></cell>
+<cell halign='left'><EM r='cn'>thinspace</EM></cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='0.166667em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\,\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+<cell halign='left'><EM r='cn'>!</EM></cell>
+<cell halign='left'><EM r='cn'>negthinspace</EM></cell>
+<cell><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='-0.166667em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\!\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row><row><cell halign='left'><EM r='cn'>:</EM></cell>
+<cell halign='left'><EM r='cn'>medspace</EM></cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='0.222222em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\:\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+<cell halign='left'/>
+<cell halign='left'><EM r='cn'>negmedspace</EM></cell>
+<cell><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='0.0pt'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\hspace{0.0pt}\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row><row><cell halign='left'><EM r='cn'>;</EM></cell>
+<cell halign='left'><EM r='cn'>thickspace</EM></cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='0.277778em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\;\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+<cell halign='left'/>
+<cell halign='left'><EM r='cn'>negthickspace</EM></cell>
+<cell><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='0.0pt'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\hspace{0.0pt}\mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row><row><cell halign='left'/>
+<cell halign='left'><EM r='cn'>quad</EM></cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='1.em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\quad \mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row><row><cell halign='left'/>
+<cell halign='left'><EM r='cn'>qquad</EM></cell>
+<cell right-border='true' halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='2.em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\qquad \mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
+</row></table><p>
+For the greatest possible control over math spacing, use <EM r='cn'>mspace</EM>
+and `math units'. One math unit, or <hi rend='tt'>mu</hi>, is equal to 1/18 em. Thus to
+get a negative <EM r='cn'>quad</EM> you could write <hi rend='tt'>\mspace{-<zws/>18.0mu}</hi>.</p>
+</div0>
+<div0 id-text='3' id='cid18'><head>Dots</head>
+<p>For preferred placement of ellipsis dots (raised or on-line) in various
+contexts there is no general consensus. It may therefore be considered a
+matter of taste. By using the semantically oriented commands</p>
+<list type='simple'>
+<item id-text='1' id='uid61'><p noindent='true'><EM r='cn'>dotsc</EM> for “dots with commas”</p>
+</item>
+<item id-text='2' id='uid62'><p noindent='true'><EM r='cn'>dotsb</EM> for “dots with binary operators/relations”</p>
+</item>
+<item id-text='3' id='uid63'><p noindent='true'><EM r='cn'>dotsm</EM> for “multiplication dots”</p>
+</item>
+<item id-text='4' id='uid64'><p noindent='true'><EM r='cn'>dotsi</EM> for “dots with integrals”</p>
+</item>
+<item id-text='5' id='uid65'><p noindent='true'><EM r='cn'>dotso</EM> for “other dots” (none of the above)</p>
+</item></list>
+<p>instead of <EM r='cn'>ldots</EM> and <EM r='cn'>cdots</EM>, you make it possible for your
+document to be adapted to different conventions on the fly, in case (for
+example) you have to submit it to a publisher who insists on following
+house tradition in this respect. The default treatment for the various
+kinds follows American Mathematical Society conventions:</p>
+<table rend='inline'><row><cell><minipage pos='t' width='230.57713pt'><p noindent='true'><hi rend='tt'>Then we have the series $A_1, A_2,</hi></p>
+<p noindent='true'><hi rend='tt'>\dotsc$, the regional sum $A_1</hi></p>
+<p noindent='true'><hi rend='tt'>+A_2 +\dotsb $, the orthogonal</hi></p>
+<p noindent='true'><hi rend='tt'>product $A_1 A_2 \dotsm $, and</hi></p>
+<p noindent='true'><hi rend='tt'>the infinite integral</hi></p>
+<p noindent='true'><hi rend='tt'>\[\int_{A_1}\int_{A_2}\dotsi\].</hi></p>
+<p noindent='true'/></minipage></cell>
+<cell><minipage pos='t' width='192.1487pt'><p noindent='true'>Then we have the series <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>A</mi> <mn>1</mn> </msub><mo>,</mo><msub><mi>A</mi> <mn>2</mn> </msub><mo>,</mo><mo>&ctdot;</mo></mrow></math><texmath>A_1,A_2,\cdots </texmath></formula>,
+the regional sum <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>A</mi> <mn>1</mn> </msub><mo>+</mo><msub><mi>A</mi> <mn>2</mn> </msub><mo>+</mo><mo>&ctdot;</mo></mrow></math><texmath>A_1+A_2+\cdots </texmath></formula>,
+the orthogonal product <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>A</mi> <mn>1</mn> </msub><msub><mi>A</mi> <mn>2</mn> </msub><mo>&ctdot;</mo></mrow></math><texmath>A_1A_2\cdots </texmath></formula>,
+and the infinite integral</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mo>&int;</mo> <msub><mi>A</mi> <mn>1</mn> </msub> </msub><msub><mo>&int;</mo> <msub><mi>A</mi> <mn>2</mn> </msub> </msub><mo>&ctdot;</mo><mo>.</mo></mrow></math><texmath>\int _{A_1}\int _{A_2}\cdots .</texmath></formula>
+<p noindent='true'/></minipage></cell>
+</row></table><p rend='center'/>
+</div0>
+<div0 id-text='4' id='cid19'><head>Nonbreaking dashes</head>
+<p>A command <EM r='cn'>nobreakdash</EM> is provided to suppress the possibility
+of a linebreak after the following hyphen or dash. For example, if you
+write `pages 1–9' as <hi rend='tt'>pages 1\nobreakdash-<zws/>-<zws/>9</hi> then a linebreak will
+never occur between the dash and the 9. You can also use
+<EM r='cn'>nobreakdash</EM> to prevent undesirable hyphenations in combinations
+like <hi rend='tt'>$p$-<zws/>adic</hi>. For frequent use, it's advisable to make abbreviations,
+e.g.,</p>
+<p noindent='true'><hi rend='tt'>\newcommand{\p}{$p$\nobreakdash}% for "\p-<zws/>adic"</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\Ndash}{\nobreakdash-<zws/>-<zws/>}% for "pages 1\Ndash 9"</hi></p>
+<p noindent='true'><hi rend='tt'>%    For "\n dimensional" ("n-<zws/>dimensional"):</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\n}[1]{$n$\nobreakdash-<zws/>\hspace{0pt}}</hi></p>
+<p noindent='true'>The last example shows how to prohibit a linebreak after the hyphen but
+allow normal hyphenation in the following word. (It suffices to add a
+zero-width space after the hyphen.)</p>
+</div0>
+<div0 id-text='5' id='cid20'><head>Accents in math</head>
+<p>In ordinary <LaTeX/> the placement of the second accent in doubled math
+accents is often poor. With the <EM r='pkg'>amsmath</EM> package you
+will get improved placement of the second accent:
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mover accent='true'><mover accent='true'><mi>A</mi> <mo>&Hat;</mo></mover> <mo>&Hat;</mo></mover></math><texmath>\hat{\hat{A}}</texmath></formula> (<EM r='cn'>hat</EM><hi rend='tt'>{\hat{A}}</hi>).</p>
+<p>The commands <EM r='cn'>dddot</EM> and <EM r='cn'>ddddot</EM> are available to produce triple
+and quadruple dot accents in addition to the <EM r='cn'>dot</EM> and <EM r='cn'>ddot</EM>
+accents already available in <LaTeX/>.</p>
+<p>To get a superscripted hat or tilde character, load the <EM r='pkg'>amsxtra</EM>
+package and use <EM r='cn'>sphat</EM> or <EM r='cn'>sptilde</EM>. Usage is <hi rend='tt'>A\sphat</hi>
+(note the absence of the <hi rend='tt'>^</hi> character).</p>
+<p>To place an arbitrary symbol in math accent position, or to get under
+accents, see the <EM r='pkg'>accents</EM> package by Javier Bezos.</p>
+</div0>
+<div0 id-text='6' id='cid21'><head>Roots</head>
+<p>In ordinary <LaTeX/> the placement of root indices is sometimes not so
+good: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mi>k</mi> <mi>&beta;</mi></mroot></math><texmath>\@root \beta  \of {k}</texmath></formula> (<hi rend='tt'>\sqrt</hi><hi rend='tt'>[\beta]{k}</hi>). In the
+<EM r='pkg'>amsmath</EM> package <EM r='cn'>leftroot</EM> and <EM r='cn'>uproot</EM> allow you to adjust
+the position of the root:</p>
+<p noindent='true'><hi rend='tt'>  \sqrt[\leftroot{-<zws/>2}\uproot{2}\beta]{k}</hi></p>
+<p noindent='true'>will move the beta up and to the right:
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mi>k</mi> <mi>&beta;</mi></mroot></math><texmath>\@root \beta  \of {k}</texmath></formula>. The negative argument used
+with <EM r='cn'>leftroot</EM> moves the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&beta;</mi></math><texmath>\beta </texmath></formula> to the right. The units are a small
+amount that is a useful size for such adjustments.</p>
+</div0>
+<div0 id-text='7' id='cid22'><head>Boxed formulas</head>
+<p>The command <EM r='cn'>boxed</EM> puts a box around its
+argument, like <EM r='cn'>fbox</EM> except that the contents are in math mode:</p>
+<formula id-text='14' id='uid66' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable frame='solid'><mtr><mtd><mi>&eta;</mi><mo>&le;</mo><mi>C</mi><mo>(</mo><mi>&delta;</mi><mrow><mo>(</mo><mi>&eta;</mi><mo>)</mo></mrow><mo>+</mo><msub><mi>&Lambda;</mi> <mi>M</mi> </msub><mrow><mo>(</mo><mn>0</mn><mo>,</mo><mi>&delta;</mi><mo>)</mo></mrow><mo>)</mo></mtd></mtr></mtable></math><texmath>
+\boxed{\eta \le C(\delta (\eta ) +\Lambda _M(0,\delta ))}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>  \boxed{\eta \leq C(\delta(\eta) +\Lambda_M(0,\delta))}</hi></p>
+</div0>
+<div0 id-text='8' id='cid23'><head>Over and under arrows</head>
+<p>Basic <LaTeX/> provides <EM r='cn'>overrightarrow</EM> and <EM r='cn'>overleftarrow</EM>
+commands. Some additional over and under arrow commands are provided
+by the <EM r='pkg'>amsmath</EM> package to extend the set:</p>
+<table rend='inline'><row><cell halign='left'><EM r='cn'>overleftarrow</EM></cell>
+<cell halign='center'><EM r='cn'>underleftarrow</EM></cell>
+</row><row><cell halign='left'><EM r='cn'>overrightarrow</EM></cell>
+<cell halign='center'><EM r='cn'>underrightarrow</EM></cell>
+</row><row><cell halign='left'><EM r='cn'>overleftrightarrow</EM></cell>
+<cell halign='center'><EM r='cn'>underleftrightarrow</EM></cell>
+</row></table>
+</div0>
+<div0 id-text='9' id='cid24'><head>Extensible arrows</head>
+<EM r='cn'>xleftarrow</EM><p>and <EM r='cn'>xrightarrow</EM> produce
+arrows<anchor id-text='lid22' id='uid67'/> that extend automatically to accommodate
+unusually wide subscripts or superscripts. These commands take one
+optional argument (the subscript) and one mandatory argument (the
+superscript, possibly empty):</p>
+<formula id-text='15' id='uid68' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mover><mo>&leftarrow;</mo> <mrow><mi>n</mi><mo>+</mo><mi>&mu;</mi><mo>-</mo><mn>1</mn></mrow></mover><mi>B</mi><munderover><mo>&rightarrow;</mo> <mi>T</mi> <mrow><mi>n</mi><mo>&pm;</mo><mi>i</mi><mo>-</mo><mn>1</mn></mrow></munderover><mi>C</mi></mrow></math><texmath>
+A\xleftarrow{}B \xrightarrow[T]{n\pm i-1}C
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>  \xleftarrow{n+\mu-<zws/>1}\quad \xrightarrow[T]{n\pm i-<zws/>1}</hi></p>
+</div0>
+<div0 id-text='10' id='cid25'><head>Affixing symbols to other symbols</head>
+<p><LaTeX/> provides <EM r='cn'>stackrel</EM> for placing a
+superscript<anchor id-text='lid23' id='uid69'/> above a binary relation.
+In the <EM r='pkg'>amsmath</EM> package there are somewhat more general commands,
+<EM r='cn'>overset</EM> and <EM r='cn'>underset</EM>, that can be used to place one symbol
+above or below another symbol, whether it's a relation or something
+else. The input <hi rend='tt'>\overset{*}{X}</hi> will place a superscript-size <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>*</mo></math><texmath>*</texmath></formula> above
+the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>X</mi></math><texmath>X</texmath></formula>: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mover><mi>X</mi> <mo>*</mo></mover></math><texmath>\overset{*}{X}</texmath></formula>; <EM r='cn'>underset</EM> is the analog for adding a
+symbol underneath.</p>
+<p>See also the description of <EM r='cn'>sideset</EM> in §<ref target='cid36'/>.</p>
+</div0>
+<div0 id-text='11' id='cid26'><head>Fractions and related constructions</head>
+<div1 id-text='1' id='uid70'><head>The <EM r='cn'>frac</EM>, <EM r='cn'>dfrac</EM>, and <EM r='cn'>tfrac</EM> commands</head>
+<p>The <EM r='cn'>frac</EM> command, which is in the basic command set of
+<LaTeX/>,<anchor id-text='lid24' id='uid71'/> takes two arguments—numerator and
+denominator—and typesets them in normal fraction form. The
+<EM r='pkg'>amsmath</EM> package provides also <EM r='cn'>dfrac</EM> and <EM r='cn'>tfrac</EM> as
+convenient abbreviations for <hi rend='tt'>{\displaystyle\frac</hi> <hi rend='tt'>...</hi> <hi rend='tt'>}</hi>
+and<EM r='indexcs'>textstyle</EM><EM r='indexcs'>displaystyle</EM> <hi rend='tt'>{\textstyle\frac</hi> <hi rend='tt'>...</hi> <hi rend='tt'>}</hi>.</p>
+<formula id-text='16' id='uid72' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mn>1</mn> <mi>k</mi></mfrac><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mspace width='1.em'/><mstyle scriptlevel='0' displaystyle='false'><mfrac><mn>1</mn> <mi>k</mi></mfrac></mstyle><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mspace width='1.em'/><msqrt><mrow><mfrac><mn>1</mn> <mi>k</mi></mfrac><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mrow></msqrt><mspace width='1.em'/><msqrt><mrow><mstyle scriptlevel='0' displaystyle='true'><mfrac><mn>1</mn> <mi>k</mi></mfrac></mstyle><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mrow></msqrt></mrow></math><texmath>
+\frac{1}{k}\log _2 c(f)\quad \tfrac{1}{k}\log _2 c(f)\quad \sqrt{\frac{1}{k}\log _2 c(f)}\quad \sqrt{\dfrac{1}{k}\log _2 c(f)}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{equation}</hi></p>
+<p noindent='true'><hi rend='tt'>\frac{1}{k}\log_2 c(f)\;\tfrac{1}{k}\log_2 c(f)\;</hi></p>
+<p noindent='true'><hi rend='tt'>\sqrt{\frac{1}{k}\log_2 c(f)}\;\sqrt{\dfrac{1}{k}\log_2 c(f)}</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation}</hi></p>
+</div1>
+<div1 id-text='2' id='uid73'><head>The <EM r='cn'>binom</EM>, <EM r='cn'>dbinom</EM>, and <EM r='cn'>tbinom</EM> commands</head>
+<p>For binomial expressions<anchor id-text='lid25' id='uid74'/> such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mi>n</mi> <mi>k</mi></mfrac></mfenced></math><texmath>\binom{n}{k}</texmath></formula>
+<EM r='pkg'>amsmath</EM> has <EM r='cn'>binom</EM>, <EM r='cn'>dbinom</EM> and <EM r='cn'>tbinom</EM>:</p>
+<formula id-text='17' id='uid75' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mn>2</mn> <mi>k</mi> </msup><mo>-</mo><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mi>k</mi> <mn>1</mn></mfrac></mfenced><msup><mn>2</mn> <mrow><mi>k</mi><mo>-</mo><mn>1</mn></mrow> </msup><mo>+</mo><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mi>k</mi> <mn>2</mn></mfrac></mfenced><msup><mn>2</mn> <mrow><mi>k</mi><mo>-</mo><mn>2</mn></mrow> </msup></mrow></math><texmath>
+2^k-\binom{k}{1}2^{k-1}+\binom{k}{2}2^{k-2}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>2^k-<zws/>\binom{k}{1}2^{k-<zws/>1}+\binom{k}{2}2^{k-<zws/>2}</hi></p>
+</div1>
+<div1 id-text='3' id='uid76'><head>The <EM r='cn'>genfrac</EM> command</head>
+<p>The capabilities of <EM r='cn'>frac</EM>, <EM r='cn'>binom</EM>, and their variants are
+subsumed by a generalized fraction command <EM r='cn'>genfrac</EM> with six
+arguments. The last two correspond to <EM r='cn'>frac</EM>'s numerator and
+denominator; the first two are optional delimiters (as seen in
+<EM r='cn'>binom</EM>); the third is a line thickness override (<EM r='cn'>binom</EM> uses
+this to set the fraction line thickness to 0—i.e., invisible); and
+the fourth argument is a mathstyle override: integer values 0–3 select
+respectively <EM r='cn'>displaystyle</EM>, <EM r='cn'>textstyle</EM>, <EM r='cn'>scriptstyle</EM>, and
+<EM r='cn'>scriptscriptstyle</EM>. If the third argument is left empty, the line
+thickness defaults to `normal'.</p>
+<p rend='center'><minipage width='362.9526pt'><p rend='flushed-left'><hi rend='tt'>\genfrac{</hi><hi rend='it'>left-delim</hi><hi rend='tt'>}{</hi><hi rend='it'>right-delim</hi><hi rend='tt'>}{</hi><hi rend='it'>thickness</hi><hi rend='tt'>}{</hi><hi rend='it'>mathstyle</hi><hi rend='tt'>}{</hi><hi rend='it'>numerator</hi><hi rend='tt'>}{</hi><hi rend='it'>denominator</hi><hi rend='tt'>}</hi></p></minipage></p>
+<p>To illustrate, here is how <EM r='cn'>frac</EM>, <EM r='cn'>tfrac</EM>, and
+<EM r='cn'>binom</EM> might be defined.</p>
+<p noindent='true'><hi rend='tt'>\newcommand{\frac}[2]{\genfrac{}{}{}{}{#1}{#2}}</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\tfrac}[2]{\genfrac{}{}{}{1}{#1}{#2}}</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\binom}[2]{\genfrac{(}{)}{0pt}{}{#1}{#2}}</hi></p>
+<p noindent='true'>If you find yourself repeatedly using <EM r='cn'>genfrac</EM> throughout a document
+for a particular notation, you will do yourself a favor (and your
+publisher) if you define a meaningfully-named abbreviation for that
+notation, along the lines of <EM r='cn'>frac</EM> and <EM r='cn'>binom</EM>.</p>
+<p>The primitive generalized fraction commands <EM r='cs'>over</EM>, <EM r='cs'>overwithdelims</EM>,
+<EM r='cs'>atop</EM>, <EM r='cs'>atopwithdelims</EM>, <EM r='cs'>above</EM>, <EM r='cs'>abovewithdelims</EM> produce
+warning messages if used with the <EM r='pkg'>amsmath</EM> package, for reasons
+discussed in <EM r='fn'>technote.tex</EM>.</p>
+</div1></div0>
+<div0 id-text='12' id='cid27'><head>Continued fractions</head>
+<p>The continued fraction<anchor id-text='lid26' id='uid77'/></p>
+<formula id-text='18' id='uid78' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn>1</mn> <mrow><msqrt><mn>2</mn></msqrt><mo>+</mo><mfrac><mn>1</mn> <mrow><msqrt><mn>2</mn></msqrt><mo>+</mo><mfrac><mn>1</mn> <mrow><msqrt><mn>2</mn></msqrt><mo>+</mo><mo>&ctdot;</mo></mrow></mfrac></mrow></mfrac></mrow></mfrac></math><texmath>
+\cfrac{1}{\sqrt{2}+
+\cfrac{1}{\sqrt{2}+
+\cfrac{1}{\sqrt{2}+\cdots }}}
+</texmath></formula>
+<p noindent='true'>can be obtained by typing
+<samepage/></p>
+<p noindent='true'><hi rend='tt'>\cfrac{1}{\sqrt{2}+</hi></p>
+<p noindent='true'><hi rend='tt'> \cfrac{1}{\sqrt{2}+</hi></p>
+<p noindent='true'><hi rend='tt'>  \cfrac{1}{\sqrt{2}+\dotsb</hi></p>
+<p noindent='true'><hi rend='tt'>}}}</hi></p>
+<p noindent='true'>This produces better-looking results than straightforward use of
+<EM r='cn'>frac</EM>. Left or right placement of any of the numerators is
+accomplished by using <EM r='cn'>cfrac</EM><hi rend='tt'>[l]</hi> or <EM r='cn'>cfrac</EM><hi rend='tt'>[r]</hi> instead of
+<EM r='cn'>cfrac</EM>.</p>
+</div0>
+<div0 id-text='13' id='cid28'><head>Smash options</head>
+<p>The command <EM r='cn'>smash</EM> is used to typeset a subformula with an effective height and depth of zero, which is sometimes
+useful in adjusting the subformula's position with respect to adjacent
+symbols. With the <EM r='pkg'>amsmath</EM> package <EM r='cn'>smash</EM> has optional
+arguments <hi rend='tt'>t</hi> and <hi rend='tt'>b</hi>, because occasionally it is advantageous to be
+able to “smash” only the top or only the bottom of something while
+retaining the natural depth or height. For example, when adjacent
+radical symbols are unevenly sized or positioned because of differences
+in the height and depth of their contents, <EM r='cn'>smash</EM> can be employed to
+make them more consistent. Compare
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msqrt><mi>x</mi></msqrt><mo>+</mo><msqrt><mi>y</mi></msqrt><mo>+</mo><msqrt><mi>z</mi></msqrt></mrow></math><texmath>\sqrt{x}+\sqrt{y}+\sqrt{z}</texmath></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msqrt><mi>x</mi></msqrt><mo>+</mo><msqrt><mpadded depth='0pt'><mi>y</mi></mpadded></msqrt><mo>+</mo><msqrt><mi>z</mi></msqrt></mrow></math><texmath>\sqrt{x}+\sqrt{\smash[b]{y}}+\sqrt{z}</texmath></formula>,
+where the latter was produced by
+<hi rend='tt'>$\sqrt{x}</hi> <hi rend='tt'>+</hi>
+<hi rend='tt'>\sqrt{</hi>+<hi rend='tt'>\smash[b]{y}}</hi> <hi rend='tt'>+</hi> <hi rend='tt'>\sqrt{z}$</hi>.</p>
+</div0>
+<div0 id-text='14' id='cid29'><head>Delimiters</head>
+<div1 id-text='1' id='uid79'><head>Delimiter sizes</head>
+<p>The automatic delimiter sizing done by <EM r='cn'>left</EM> and <EM r='cn'>right</EM> has two
+limitations: First, it is applied mechanically to produce delimiters
+large enough to encompass the largest contained item, and second, the
+range of sizes is not even approximately continuous but has fairly large
+quantum jumps. This means that a math fragment that is infinitesimally
+too large for a given delimiter size will get the next larger size, a
+jump of 3pt or so in normal-sized text. There are two or three
+situations where the delimiter size is commonly adjusted, using a set of
+commands that have `big' in their names.</p>
+<table rend='inline'><row><cell right-border='true' halign='left'>Delimiter</cell>
+<cell halign='left'>text</cell>
+<cell halign='left'><EM r='ncn'>left</EM></cell>
+<cell halign='left'><EM r='ncn'>bigl</EM></cell>
+<cell halign='left'><EM r='ncn'>Bigl</EM></cell>
+<cell halign='left'><EM r='ncn'>biggl</EM></cell>
+<cell><EM r='ncn'>Biggl</EM></cell>
+</row><row bottom-border='true'><cell right-border='true' halign='left'>size</cell>
+<cell halign='left'>size</cell>
+<cell halign='left'><EM r='ncn'>right</EM></cell>
+<cell halign='left'><EM r='ncn'>bigr</EM></cell>
+<cell halign='left'><EM r='ncn'>Bigr</EM></cell>
+<cell halign='left'><EM r='ncn'>biggr</EM></cell>
+<cell><EM r='ncn'>Biggr</EM></cell>
+</row><row><cell right-border='true' halign='left'><rule width='0.0pt' height='21.25pt'/>Result</cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mrow><mo>(</mo><mi>b</mi><mo>)</mo></mrow><mrow><mo>(</mo><mfrac><mi>c</mi> <mi>d</mi></mfrac><mo>)</mo></mrow></mrow></mstyle></math><texmath>\displaystyle (b)(\frac{c}{d})</texmath></formula></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mfenced open='(' close=')'><mi>b</mi></mfenced><mfenced separators='' open='(' close=')'><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></mrow></mstyle></math><texmath>\displaystyle \left(b\right)\left(\frac{c}{d}\right)</texmath></formula></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mfenced open='(' close=')'><mi>b</mi></mfenced><mfenced open='(' close=')'><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></mrow></mstyle></math><texmath>\displaystyle \bigl (b\bigr )\bigl (\frac{c}{d}\bigr )</texmath></formula></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mfenced open='(' close=')'><mi>b</mi></mfenced><mfenced open='(' close=')'><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></mrow></mstyle></math><texmath>\displaystyle \Bigl (b\Bigr )\Bigl (\frac{c}{d}\Bigr )</texmath></formula></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mfenced open='(' close=')'><mi>b</mi></mfenced><mfenced open='(' close=')'><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></mrow></mstyle></math><texmath>\displaystyle \biggl (b\biggr )\biggl (\frac{c}{d}\biggr )</texmath></formula></cell>
+<cell><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><mfenced open='(' close=')'><mi>b</mi></mfenced><mfenced open='(' close=')'><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></mrow></mstyle></math><texmath>\displaystyle \Biggl (b\Biggr )\Biggl (\frac{c}{d}\Biggr )</texmath></formula></cell>
+</row></table><p>
+The first kind of situation is a cumulative operator with limits above
+and below. With <EM r='cn'>left</EM> and <EM r='cn'>right</EM> the delimiters usually turn out
+larger than necessary, and using the <hi rend='tt'>Big</hi> or <hi rend='tt'>bigg</hi>
+sizes<anchor id-text='lid27' id='uid80'/>
+instead gives better results:</p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mfenced separators='' open='[' close=']'><munder><mo>&sum;</mo> <mi>i</mi> </munder><msub><mi>a</mi> <mi>i</mi> </msub><msup><mfenced separators='' open='&vert;' close='&vert;'><munder><mo>&sum;</mo> <mi>j</mi> </munder><msub><mi>x</mi> <mrow><mi>i</mi><mi>j</mi></mrow> </msub></mfenced> <mi>p</mi> </msup></mfenced> <mrow><mn>1</mn><mo>/</mo><mi>p</mi></mrow> </msup><mspace width='1.em'/><mtext>versus</mtext><mspace width='1.em'/><msup><mfenced separators='' open='[' close=']'><munder><mo>&sum;</mo> <mi>i</mi> </munder> <msub><mi>a</mi> <mi>i</mi> </msub> <msup><mfenced separators='' open='&vert;' close='&vert;'><munder><mo>&sum;</mo> <mi>j</mi> </munder> <msub><mi>x</mi> <mrow><mi>i</mi><mi>j</mi></mrow> </msub></mfenced> <mi>p</mi> </msup></mfenced> <mrow><mn>1</mn><mo>/</mo><mi>p</mi></mrow> </msup></mrow></math><texmath>
+\left[\sum _i a_i\left|\sum _j x_{ij}\right|^p\right]^{1/p}
+\quad \text{versus}\quad \biggl [\sum _i a_i\Bigl \vert \sum _j x_{ij}\Bigr \vert ^p\biggr ]^{1/p}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\biggl[\sum_i a_i\Bigl\lvert\sum_j x_{ij}\Bigr\rvert^p\biggr]^{1/p}</hi></p>
+<p noindent='true'>The second kind of situation is clustered pairs of delimiters where
+<EM r='cn'>left</EM> and <EM r='cn'>right</EM> make them all the same size (because that is
+adequate to cover the encompassed material) but what you really want
+is to make some of the delimiters slightly larger to make the nesting
+easier to see.</p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=')'><mrow><mo>(</mo><msub><mi>a</mi> <mn>1</mn> </msub><msub><mi>b</mi> <mn>1</mn> </msub><mo>)</mo></mrow><mo>-</mo><mrow><mo>(</mo><msub><mi>a</mi> <mn>2</mn> </msub><msub><mi>b</mi> <mn>2</mn> </msub><mo>)</mo></mrow></mfenced><mfenced separators='' open='(' close=')'><mrow><mo>(</mo><msub><mi>a</mi> <mn>2</mn> </msub><msub><mi>b</mi> <mn>1</mn> </msub><mo>)</mo></mrow><mo>+</mo><mrow><mo>(</mo><msub><mi>a</mi> <mn>1</mn> </msub><msub><mi>b</mi> <mn>2</mn> </msub><mo>)</mo></mrow></mfenced><mspace width='1.em'/><mtext>versus</mtext><mspace width='1.em'/><mfenced separators='' open='(' close=')'><mrow><mo>(</mo><msub><mi>a</mi> <mn>1</mn> </msub><msub><mi>b</mi> <mn>1</mn> </msub><mo>)</mo></mrow> <mo>-</mo> <mrow><mo>(</mo><msub><mi>a</mi> <mn>2</mn> </msub><msub><mi>b</mi> <mn>2</mn> </msub><mo>)</mo></mrow></mfenced><mfenced separators='' open='(' close=')'><mrow><mo>(</mo><msub><mi>a</mi> <mn>2</mn> </msub><msub><mi>b</mi> <mn>1</mn> </msub><mo>)</mo></mrow> <mo>+</mo> <mrow><mo>(</mo><msub><mi>a</mi> <mn>1</mn> </msub><msub><mi>b</mi> <mn>2</mn> </msub><mo>)</mo></mrow></mfenced></mrow></math><texmath>
+\left((a_1 b_1) - (a_2 b_2)\right)
+\left((a_2 b_1) + (a_1 b_2)\right)
+\quad \text{versus}\quad \bigl ((a_1 b_1) - (a_2 b_2)\bigr )
+\bigl ((a_2 b_1) + (a_1 b_2)\bigr )
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\left((a_1 b_1) -<zws/> (a_2 b_2)\right)</hi></p>
+<p noindent='true'><hi rend='tt'>\left((a_2 b_1) + (a_1 b_2)\right)</hi></p>
+<p noindent='true'><hi rend='tt'>\quad\text{versus}\quad</hi></p>
+<p noindent='true'><hi rend='tt'>\bigl((a_1 b_1) -<zws/> (a_2 b_2)\bigr)</hi></p>
+<p noindent='true'><hi rend='tt'>\bigl((a_2 b_1) + (a_1 b_2)\bigr)</hi></p>
+<p noindent='true'>The third kind of situation is a slightly oversize object in running
+text, such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='&vert;' close='&vert;'><mfrac><msup><mi>b</mi> <mo>&apos;</mo> </msup> <msup><mi>d</mi> <mo>&apos;</mo> </msup></mfrac></mfenced></math><texmath>\left|\frac{b^{\prime }}{d^{\prime }}\right|</texmath></formula> where the
+delimiters produced by <EM r='cn'>left</EM> and <EM r='cn'>right</EM> cause too much line
+spreading. In that case <EM r='ncn'>bigl</EM> and <EM r='ncn'>bigr</EM><anchor id-text='lid28' id='uid81'/> can be used to produce
+delimiters that are slightly larger than the base size but still able to
+fit within the normal line spacing:
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='&vert;' close='&vert;'><mfrac><msup><mi>b</mi> <mo>&apos;</mo> </msup> <msup><mi>d</mi> <mo>&apos;</mo> </msup></mfrac></mfenced></math><texmath>\bigl \vert \frac{b^{\prime }}{d^{\prime }}\bigr \vert </texmath></formula>.</p>
+<p>In ordinary <LaTeX/> <EM r='ncn'>big</EM>, <EM r='ncn'>bigg</EM>, <EM r='ncn'>Big</EM>, and <EM r='ncn'>Bigg</EM>
+delimiters aren't scaled properly over the full range of <LaTeX/> font
+sizes. With the <EM r='pkg'>amsmath</EM> package they are.</p>
+</div1>
+<div1 id-text='2' id='uid82'><head>Vertical bar notations</head>
+<p>The <EM r='pkg'>amsmath</EM> package provides commands <EM r='cn'>lvert</EM>, <EM r='cn'>rvert</EM>,
+<EM r='cn'>lVert</EM>, <EM r='cn'>rVert</EM> (compare <EM r='cn'>langle</EM>, <EM r='cn'>rangle</EM>) to address the
+problem of overloading for the vert bar character <EM r='cn'>|</EM>. This
+character is currently used in <LaTeX/> documents to represent a wide
+variety of mathematical objects: the `divides' relation in a
+number-theory expression like <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&vert;</mo><mi>q</mi></mrow></math><texmath>p\vert q</texmath></formula>, or the absolute-value
+operation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&vert;</mo><mi>z</mi><mo>&vert;</mo></mrow></math><texmath>\vert z\vert </texmath></formula>, or the `such that' condition in set
+notation, or the `evaluated at' notation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>f</mi> <mi>&zeta;</mi> </msub><mrow><mo>(</mo><mi>t</mi><mo>)</mo></mrow><msub><mo>&vert;</mo> <mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow> </msub></mrow></math><texmath>f_\zeta (t)\bigr \vert _{t=0}</texmath></formula>.
+The multiplicity of uses in itself is not so bad; what is bad, however,
+is that fact that not all of the uses take the same typographical
+treatment, and that the complex discriminatory powers of a knowledgeable
+reader cannot be replicated in computer processing of mathematical
+documents. It is recommended therefore that there should be a one-to-one
+correspondence in any given document between the vert bar character
+<EM r='cn'>|</EM> and a selected mathematical notation, and similarly for the
+double-bar command <EM r='ncn'>|</EM><anchor id-text='lid29' id='uid83'/>. This immediately
+rules out the use of <EM r='cn'>|</EM>
+and <EM r='ncn'>|</EM><anchor id-text='lid30' id='uid84'/> for delimiters, because left and right
+delimiters are distinct usages that do not relate in the same way to
+adjacent symbols; recommended practice is therefore to define suitable
+commands in the document preamble for any paired-delimiter use of vert
+bar symbols:</p>
+<p noindent='true'><hi rend='tt'>\providecommand{\abs}[1]{\lvert#1\rvert}</hi></p>
+<p noindent='true'><hi rend='tt'>\providecommand{\norm}[1]{\lVert#1\rVert}</hi></p>
+<p noindent='true'>whereupon the document would contain <hi rend='tt'>\abs{z}</hi> to produce <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&vert;</mo><mi>z</mi><mo>&vert;</mo></mrow></math><texmath>\vert z\vert </texmath></formula> and <hi rend='tt'>\norm{v}</hi> to produce <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&parallel;</mo><mi>v</mi><mo>&parallel;</mo></mrow></math><texmath>\Vert v\Vert </texmath></formula>.</p>
+</div1></div0>
+<div0 id-text='5' id='cid30'><head>Operator names</head>
+</div0>
+<div0 id-text='1' id='cid31'><head>Defining new operator names</head>
+<p>Math functions<anchor id-text='lid31' id='uid85'/> such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>log</mo></math><texmath>\log </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sin</mo></math><texmath>\sin </texmath></formula>, and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim</mo></math><texmath>\lim </texmath></formula> are
+traditionally typeset in roman type to make them visually more distinct
+from one-letter math variables, which are set in math italic. The more
+common ones have predefined names, <EM r='cn'>log</EM>, <EM r='cn'>sin</EM>, <EM r='cn'>lim</EM>, and so
+forth, but new ones come up all the time in mathematical papers, so the
+<EM r='pkg'>amsmath</EM> package provides a general mechanism for defining new
+`operator names'. To define a math function <EM r='ncn'>xxx</EM> to work like
+<EM r='cn'>sin</EM>, you write</p>
+<p noindent='true'><hi rend='tt'>\DeclareMathOperator{\xxx}{xxx}</hi></p>
+<p noindent='true'>whereupon ensuing uses of <EM r='ncn'>xxx</EM> will produce xxx in the
+proper font and automatically add proper spacing<anchor id-text='lid33' id='uid86'/> on either side when necessary, so that you
+get <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo form='prefix'>xxx</mo><mi>B</mi></mrow></math><texmath>A\operatorname{xxx}B</texmath></formula> instead of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mi> xxx </mi><mi>B</mi></mrow></math><texmath>A\mathrm {xxx}B</texmath></formula>. In the second argument of
+<EM r='cn'>DeclareMathOperator</EM> (the name text), a pseudo-text mode prevails:
+the hyphen character <EM r='cn'>-</EM> will print as a text hyphen rather than a
+minus sign and an asterisk <EM r='cn'>*</EM> will print as a raised text asterisk
+instead of a centered math star. (Compare
+<hi rend='it'>a</hi>-<hi rend='it'>b</hi>*<hi rend='it'>c</hi> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>-</mo><mi>b</mi><mo>*</mo><mi>c</mi></mrow></math><texmath>a-b*c</texmath></formula>.) But otherwise the name
+text is printed in math mode, so that you can use, e.g., subscripts and
+superscripts there.</p>
+<p>If the new operator should have subscripts and superscripts placed in
+`limits' position above and below as with <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>sup</mo></math><texmath>\sup </texmath></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>max</mo></math><texmath>\max </texmath></formula>, use
+the <EM r='cn'>*</EM> form of the <EM r='cn'>DeclareMathOperator</EM> command:</p>
+<p noindent='true'><hi rend='tt'>\DeclareMathOperator*{\Lim}{Lim}</hi></p>
+<p noindent='true'>See also the discussion of subscript placement in
+Section <ref target='cid37'/>.</p>
+<p>The following operator names are predefined:</p>
+<table rend='inline'><row><cell halign='right'><EM r='cn'>arccos</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>arccos</mo></math><texmath>\arccos </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>deg</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>deg</mo></math><texmath>\deg </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>lg</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>lg</mo></math><texmath>\lg </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>projlim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>proj lim</mo></math><texmath>\projlim </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>arcsin</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>arcsin</mo></math><texmath>\arcsin </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>det</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>det</mo></math><texmath>\det </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>lim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim</mo></math><texmath>\lim </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>sec</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sec</mo></math><texmath>\sec </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>arctan</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>arctan</mo></math><texmath>\arctan </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>dim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>dim</mo></math><texmath>\dim </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>liminf</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim inf</mo></math><texmath>\liminf </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>sin</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sin</mo></math><texmath>\sin </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>arg</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>arg</mo></math><texmath>\arg </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>exp</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>exp</mo></math><texmath>\exp </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>limsup</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim sup</mo></math><texmath>\limsup </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>sinh</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sinh</mo></math><texmath>\sinh </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>cos</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>cos</mo></math><texmath>\cos </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>gcd</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>gcd</mo></math><texmath>\gcd </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>ln</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>ln</mo></math><texmath>\ln </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>sup</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>sup</mo></math><texmath>\sup </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>cosh</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>cosh</mo></math><texmath>\cosh </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>hom</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>hom</mo></math><texmath>\hom </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>log</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>log</mo></math><texmath>\log </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>tan</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>tan</mo></math><texmath>\tan </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>cot</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>cot</mo></math><texmath>\cot </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>inf</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>inf</mo></math><texmath>\inf </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>max</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>max</mo></math><texmath>\max </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>tanh</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>tanh</mo></math><texmath>\tanh </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>coth</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>coth</mo></math><texmath>\coth </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>injlim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>inj lim</mo></math><texmath>\injlim </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>min</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>min</mo></math><texmath>\min </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>csc</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>csc</mo></math><texmath>\csc </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>ker</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>ker</mo></math><texmath>\ker </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>Pr</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>Pr</mo></math><texmath>\Pr </texmath></formula></cell>
+</row></table>
+<table rend='inline'><row><cell halign='right'><EM r='cn'>varlimsup</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mover><mo movablelimits='false'>lim</mo> <mo>&OverBar;</mo></mover></mstyle></math><texmath>\displaystyle \varlimsup </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varinjlim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><munder accentunder='true'><mo movablelimits='false'>lim</mo> <mo>&rightarrow;</mo></munder></mstyle></math><texmath>\displaystyle \varinjlim </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varliminf</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><munder><mo movablelimits='false'>lim</mo> <mo>&UnderBar;</mo></munder></mstyle></math><texmath>\displaystyle \varliminf </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varprojlim</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><munder accentunder='true'><mo movablelimits='false'>lim</mo> <mo>&leftarrow;</mo></munder></mstyle></math><texmath>\displaystyle \varprojlim </texmath></formula></cell>
+</row></table>
+<p>There is also a command <EM r='cn'>operatorname</EM> such that using</p>
+<p noindent='true'><hi rend='tt'>\operatorname{abc}</hi></p>
+<p noindent='true'>in a math formula is equivalent to a use of <EM r='ncn'>abc</EM> defined by
+<EM r='cn'>DeclareMathOperator</EM>. This may be occasionally useful for
+constructing more complex notation or other purposes. (Use the variant
+<EM r='cn'>operatorname*</EM> to get limits.)</p>
+</div0>
+<div0 id-text='2' id='cid32'><head><EM r='cn'>mod</EM> and its relatives</head>
+<p>Commands <EM r='cn'>mod</EM>, <EM r='cn'>bmod</EM>, <EM r='cn'>pmod</EM>, <EM r='cn'>pod</EM> are provided to deal
+with the special spacing conventions of “mod” notation. <EM r='cn'>bmod</EM> and
+<EM r='cn'>pmod</EM> are available in <LaTeX/>, but with the <EM r='pkg'>amsmath</EM> package
+the spacing of <EM r='cn'>pmod</EM> will adjust to a smaller value if it's used in
+a non-display-mode formula. <EM r='cn'>mod</EM> and <EM r='cn'>pod</EM> are variants of
+<EM r='cn'>pmod</EM> preferred by some authors; <EM r='cn'>mod</EM> omits the parentheses,
+whereas <EM r='cn'>pod</EM> omits the “mod” and retains the parentheses.</p>
+<formula id-text='19' id='uid87' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo movablelimits='true' form='prefix'>gcd</mo><mo>(</mo><mi>n</mi><mo>,</mo><mi>m</mi><mspace width='0.277778em'/><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mi>n</mi><mo>)</mo><mo>;</mo><mspace width='1.em'/><mi>x</mi><mo>&equiv;</mo><mi>y</mi><mspace width='10.0pt'/><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mi>b</mi><mo>)</mo><mo>;</mo><mspace width='1.em'/><mi>x</mi><mo>&equiv;</mo><mi>y</mi><mspace width='3.33333pt'/><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mi>c</mi><mo>;</mo><mspace width='1.em'/><mi>x</mi><mo>&equiv;</mo><mi>y</mi><mspace width='10.0pt'/><mo>(</mo><mi>d</mi><mo>)</mo></mrow></math><texmath>
+\gcd (n,m\bmod n);\quad x\equiv y\pmod {b};
+\quad x\equiv y\mod {c};\quad x\equiv y\hspace{10.0pt}(d)
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\gcd(n,m\bmod n);\quad x\equiv y\pmod b;</hi></p>
+<p noindent='true'><hi rend='tt'>\quad x\equiv y\mod c;\quad x\equiv y\pod d</hi></p>
+</div0>
+<div0 id-text='6' id='cid33'><head>The <EM r='cn'>text</EM> command</head>
+<p>The main use of the command <EM r='cn'>text</EM> is for words or
+phrases<anchor id-text='lid34' id='uid88'/> in a display. It is very
+similar to the <LaTeX/> command <EM r='cn'>mbox</EM> in its effects, but has a
+couple of advantages. If you want a word or phrase of text in a
+subscript, you can type <hi rend='tt'>..._{\text{word or phrase}}</hi>, which is slightly
+easier than the <EM r='cn'>mbox</EM> equivalent: <hi rend='tt'>..._{\mbox{\scriptsize</hi> <hi rend='tt'>word</hi>
+<hi rend='tt'>or</hi> <hi rend='tt'>phrase}}</hi>. The other advantage is the more descriptive name.</p>
+<formula id-text='20' id='uid89' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>f</mi> <mrow><mo>[</mo><msub><mi>x</mi> <mrow><mi>i</mi><mo>-</mo><mn>1</mn></mrow> </msub><mo>,</mo><msub><mi>x</mi> <mi>i</mi> </msub><mo>]</mo></mrow> </msub><mspace width='4.pt'/><mtext>is</mtext><mspace width='4.pt'/><mtext>monotonic,</mtext><mspace width='1.em'/><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mo>&ctdot;</mo><mo>,</mo><mi>c</mi><mo>+</mo><mn>1</mn></mrow></math><texmath>
+f_{[x_{i-1},x_i]} \text{ is monotonic,}
+\quad i = 1,\dots ,c+1
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>f_{[x_{i-<zws/>1},x_i]} \text{ is monotonic,}</hi></p>
+<p noindent='true'><hi rend='tt'>\quad i = 1,\dots,c+1</hi></p>
+</div0>
+<div0 id-text='7' id='cid34'><head>Integrals and sums</head>
+</div0>
+<div0 id-text='1' id='cid35'><head>Multiline subscripts and superscripts</head>
+<p>The <EM r='cn'>substack</EM> command can be used to produce a multiline subscript
+or superscript:<anchor id-text='lid35' id='uid90'/> for example</p>
+<table rend='inline'><row><cell halign='left'><minipage pos='t' width='256.2026pt'><p noindent='true'><hi rend='tt'>\sum_{\substack{</hi></p>
+<p noindent='true'><hi rend='tt'>         0\le i\le m\\</hi></p>
+<p noindent='true'><hi rend='tt'>         0&lt;<zws/>j&lt;<zws/>n}}</hi></p>
+<p noindent='true'><hi rend='tt'>  P(i,j)</hi></p>
+<p noindent='true'/></minipage></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><munder><mo>&sum;</mo> <mtable><mtr><mtd><mrow><mn>0</mn><mo>&le;</mo><mi>i</mi><mo>&le;</mo><mi>m</mi></mrow></mtd></mtr><mtr><mtd><mrow><mn>0</mn><mo>&lt;</mo><mi>j</mi><mo>&lt;</mo><mi>n</mi></mrow></mtd></mtr></mtable> </munder><mi>P</mi><mrow><mo>(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>)</mo></mrow></mrow></mstyle></math><texmath>\displaystyle \sum _{\begin{array}{c}0\le i\le m\\ 0&lt;j&lt;n\end{array}} P(i,j)</texmath></formula></cell>
+</row></table><p>
+A slightly more generalized form is the <EM r='cls'>subarray</EM> environment which
+allows you to specify that each line should be left-aligned instead of
+centered, as here:</p>
+<table rend='inline'><row><cell halign='left'><minipage pos='t' width='256.2026pt'><p noindent='true'><hi rend='tt'>\sum_{\begin{subarray}{l}</hi></p>
+<p noindent='true'><hi rend='tt'>        i\in\Lambda\\ 0&lt;<zws/>j&lt;<zws/>n</hi></p>
+<p noindent='true'><hi rend='tt'>      \end{subarray}}</hi></p>
+<p noindent='true'><hi rend='tt'> P(i,j)</hi></p>
+<p noindent='true'/></minipage></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><munder><mo>&sum;</mo> <mstyle scriptlevel='1' displaystyle='false'><mtable><mtr><mtd><mrow><mi>i</mi><mo>&Element;</mo><mi>&Lambda;</mi></mrow></mtd></mtr><mtr><mtd><mrow><mn>0</mn><mo>&lt;</mo><mi>j</mi><mo>&lt;</mo><mi>n</mi></mrow></mtd></mtr></mtable></mstyle> </munder><mi>P</mi><mrow><mo>(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>)</mo></mrow></mrow></mstyle></math><texmath>\displaystyle \sum _{{{\scriptstyle \begin{matrix}
+i\in \Lambda \\ 0&lt;j&lt;n
+\end{matrix}}}}
+P(i,j)</texmath></formula></cell>
+</row></table>
+</div0>
+<div0 id-text='2' id='cid36'><head>The <EM r='cn'>sideset</EM> command</head>
+<p>There's also a command called <EM r='cn'>sideset</EM>, for a rather special
+purpose: putting symbols at the subscript and
+superscript<anchor id-text='lid37' id='uid91'/> corners of a
+large operator symbol such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&sum;</mo></math><texmath>\sum </texmath></formula> or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&prod;</mo></math><texmath>\prod </texmath></formula>. <hi rend='it'>Note: this
+command is not designed to be applied to anything other than sum-class symbols.</hi> The prime
+example is the case when you want to put a prime on a sum symbol. If
+there are no limits above or below the sum, you could just use
+<EM r='cn'>nolimits</EM>: here's
+<hi rend='tt'>\sum\nolimits'<zws/> E_n</hi> in display mode:</p>
+<formula id-text='21' id='uid92' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo>&sum;</mo> <mo>&apos;</mo> </msup><msub><mi>E</mi> <mi>n</mi> </msub></mrow></math><texmath>
+\sum \nolimits ^{\prime } E_n
+</texmath></formula>
+<p noindent='true'>If, however, you want not only the prime but also something below or
+above the sum symbol, it's not so easy—indeed, without
+<EM r='cn'>sideset</EM>, it would be downright difficult. With <EM r='cn'>sideset</EM>, you
+can write</p>
+<table rend='inline'><row><cell halign='left'><minipage pos='t' width='256.2026pt'><p noindent='true'><hi rend='tt'>\sideset{}{'<zws/>}</hi></p>
+<p noindent='true'><hi rend='tt'>  \sum_{n&lt;<zws/>k,\;\text{$n$ odd}} nE_n</hi></p>
+<p noindent='true'/></minipage></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mrow><munder><mmultiscripts><mo>&sum;</mo><none/><mo>&apos;</mo></mmultiscripts> <mrow><mi>n</mi><mo>&lt;</mo><mi>k</mi><mo>,</mo><mspace width='0.277778em'/><mi>n</mi><mspace width='4.pt'/><mtext>odd</mtext></mrow> </munder><mi>n</mi><msub><mi>E</mi> <mi>n</mi> </msub></mrow></mstyle></math><texmath>\displaystyle \mathop {\mmlmultiscripts{\sum {\mmlnone }{\prime }}}\limits _{n&lt;k,\;\text{$n$ odd}} nE_n
+</texmath></formula></cell>
+</row></table><p>
+The extra pair of empty braces is explained by the fact that
+<EM r='cn'>sideset</EM> has the capability of putting an extra symbol or symbols at
+each corner of a large operator; to put an asterisk at each corner of a
+product symbol, you would type</p>
+<table rend='inline'><row><cell halign='left'><minipage pos='t' width='256.2026pt'><p noindent='true'><hi rend='tt'>\sideset{_*^*}{_*^*}\prod</hi></p>
+<p noindent='true'/></minipage></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mmultiscripts><mo>&prod;</mo><mo>*</mo><mo>*</mo><mprescripts/><mo>*</mo><mo>*</mo></mmultiscripts></mstyle></math><texmath>\displaystyle \mathop {\mmlmultiscripts{\prod {*}{*}\mmlprescripts {*}{*}}}\limits </texmath></formula></cell>
+</row></table>
+</div0>
+<div0 id-text='3' id='cid37'><head>Placement of subscripts and limits</head>
+<p>The default positioning for subscripts depends on the
+base symbol involved. The default for sum-class symbols is
+`displaylimits' positioning: When a sum-class symbol appears
+in a displayed formula, subscript and superscript are placed in `limits'
+position above and below, but in an inline formula, they are placed to
+the side, to avoid unsightly and wasteful spreading of the
+surrounding text lines.
+The default for integral-class symbols is to have sub- and
+superscripts always to the side, even in displayed formulas.
+(See the discussion of the <EM r='opt'>intlimits</EM> and related options in
+Section <ref target='cid2'/>.)</p>
+<p>Operator names such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sin</mo></math><texmath>\sin </texmath></formula> or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo movablelimits='true' form='prefix'>lim</mo></math><texmath>\lim </texmath></formula> may have either `displaylimits'
+or `limits' positioning depending on how they were defined. The standard
+operator names are defined according to normal mathematical usage.</p>
+<p>The commands <EM r='cn'>limits</EM> and <EM r='cn'>nolimits</EM> can be used to override the
+normal behavior of a base symbol:</p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mo>&sum;</mo> <mi>X</mi> </msub><mo>,</mo><mspace width='2.em'/><munder><mrow><mspace width='0.277778em'/><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mspace width='0.277778em'/></mrow> <mi>A</mi> </munder><mo>,</mo><mspace width='2.em'/><msub><munder><mo movablelimits='false'>lim</mo> <mo>&UnderBar;</mo></munder> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </msub></mrow></math><texmath>
+\sum \nolimits _X,\qquad \iint \limits _{A},
+\qquad \varliminf \nolimits _{n\rightarrow \infty }
+</texmath></formula>
+<p noindent='true'>To define a command whose subscripts follow the
+same `displaylimits' behavior as <EM r='cn'>sum</EM>, put
+<EM r='cn'>displaylimits</EM> at the tail end of the definition. When multiple
+instances of <EM r='cn'>limits</EM>, <EM r='cn'>nolimits</EM>, or <EM r='cn'>displaylimits</EM> occur
+consecutively, the last one takes precedence.</p>
+</div0>
+<div0 id-text='4' id='cid38'><head>Multiple integral signs</head>
+<EM r='cn'>iint</EM><p>, <EM r='cn'>iiint</EM>, and <EM r='cn'>iiiint</EM> give multiple integral
+signs<anchor id-text='lid38' id='uid93'/> with the spacing between them nicely
+adjusted, in both text and display style. <EM r='cn'>idotsint</EM> is an extension
+of the same idea that gives two integral signs with dots between them.</p>
+<formula id-text='4' id='uid94' textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd><mrow><munder><mrow><mspace width='0.277778em'/><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mspace width='0.277778em'/></mrow> <mi>A</mi> </munder><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>x</mi><mspace width='0.166667em'/><mi>d</mi><mi>y</mi><mspace width='2.em'/><munder><mrow><mspace width='0.277778em'/><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mspace width='0.277778em'/></mrow> <mi>A</mi> </munder><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>x</mi><mspace width='0.166667em'/><mi>d</mi><mi>y</mi><mspace width='0.166667em'/><mi>d</mi><mi>z</mi></mrow></mtd></mtr><mtr><mtd><mrow><munder><mrow><mspace width='0.277778em'/><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mpadded width='-3pt'><mo>&int;</mo></mpadded><mspace width='0.277778em'/></mrow> <mi>A</mi> </munder><mi>f</mi><mrow><mo>(</mo><mi>w</mi><mo>,</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>w</mi><mspace width='0.166667em'/><mi>d</mi><mi>x</mi><mspace width='0.166667em'/><mi>d</mi><mi>y</mi><mspace width='0.166667em'/><mi>d</mi><mi>z</mi><mspace width='2.em'/><munder><mrow><mo>&int;</mo><mo>...</mo><mo>&int;</mo></mrow> <mi>A</mi> </munder><mi>f</mi><mrow><mo>(</mo><msub><mi>x</mi> <mn>1</mn> </msub><mo>,</mo><mo>&ctdot;</mo><mo>,</mo><msub><mi>x</mi> <mi>k</mi> </msub><mo>)</mo></mrow></mrow></mtd></mtr></mtable></math><texmath>
+\iint \limits _A f(x,y)\,dx\,dy\qquad \iiint \limits _A
+f(x,y,z)\,dx\,dy\,dz\\
+\iiiint \limits _A
+f(w,x,y,z)\,dw\,dx\,dy\,dz\qquad \idotsint \limits _A f(x_1,\dots ,x_k)
+</texmath></formula>
+</div0>
+<div0 id-text='8' id='cid39'><head>Commutative diagrams</head>
+<p>Some commutative diagram commands like the ones in <amstex/> are
+available as a separate package, <EM r='pkg'>amscd</EM>. For complex commutative
+diagrams authors will need to turn to more comprehensive packages like
+<EM r='pkg'>kuvio</EM> or <xypic/>, but for simple diagrams without diagonal
+arrows<anchor id-text='lid39' id='uid95'/> the <EM r='pkg'>amscd</EM> commands
+may be more convenient. Here is one example.</p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mrow><msup><mi>S</mi> <msub><mi>&Wscr;</mi> <mi>&Lambda;</mi> </msub> </msup><mo>&otimes;</mo><mi>T</mi></mrow></mtd><mtd><mover><mo>&rightarrow;</mo> <mi>j</mi></mover></mtd><mtd><mi>T</mi></mtd></mtr><mtr><mtd><mo>&downarrow;</mo></mtd><mtd/><mtd><mrow><mphantom><mstyle scriptlevel='1' displaystyle='false'><mo form='prefix'>End</mo><mi>P</mi></mstyle></mphantom><mo>&downarrow;</mo><mstyle scriptlevel='1' displaystyle='false'><mrow><mo form='prefix'>End</mo><mi>P</mi></mrow></mstyle></mrow></mtd><mtd/><mtd/></mtr><mtr><mtd><mrow><mo>(</mo><mi>S</mi><mo>&otimes;</mo><mi>T</mi><mo>)</mo><mo>/</mo><mi>I</mi></mrow></mtd><mtd><mo>=</mo></mtd><mtd><mrow><mo>(</mo><mi>Z</mi><mo>&otimes;</mo><mi>T</mi><mo>)</mo><mo>/</mo><mi>J</mi></mrow></mtd></mtr></mtable></math><texmath>
+{\begin{matrix}
+S^{{\mathcal {W}}_\Lambda }\otimes T &amp;\xrightarrow{}&amp; T\\
+
+\downarrow 
+&amp;&amp; 
+\mathbox{mphantom}{\scriptstyle \operatorname{End}P}\downarrow {\scriptstyle \operatorname{End}P}
+&amp;&amp;\\
+(S\otimes T)/I &amp;=&amp; (Z\otimes T)/J
+\end{matrix}}
+</texmath></formula>
+<p noindent='true'><hi rend='tt'>\begin{CD}</hi></p>
+<p noindent='true'><hi rend='tt'>S^{{\mathcal{W}}_\Lambda}\otimes T   @&gt;<zws/>j&gt;<zws/>&gt;<zws/>   T\\</hi></p>
+<p noindent='true'><hi rend='tt'>@VVV                                    @VV{\End P}V\\</hi></p>
+<p noindent='true'><hi rend='tt'>(S\otimes T)/I                  @=      (Z\otimes T)/J</hi></p>
+<p noindent='true'><hi rend='tt'>\end{CD}</hi></p>
+<p noindent='true'>In the <EM r='cls'>CD</EM> environment the commands <hi rend='tt'>@&gt;<zws/>&gt;<zws/>&gt;<zws/></hi>,
+<hi rend='tt'>@&lt;<zws/>&lt;<zws/>&lt;<zws/></hi>, <hi rend='tt'>@VVV</hi>, and <hi rend='tt'>@AAA</hi> give respectively right, left, down, and up
+arrows. For the horizontal arrows, material between the first and second
+<hi rend='tt'>&gt;<zws/></hi> or <hi rend='tt'>&lt;<zws/></hi> symbols will be typeset as a superscript, and material
+between the second and third will be typeset as a subscript. Similarly,
+material between the first and second or second and third <hi rend='tt'>A</hi>s or <hi rend='tt'>V</hi>s
+of vertical arrows will be typeset as left or right “sidescripts”.
+The commands <hi rend='tt'>@=</hi> and <hi rend='tt'>@|</hi> give horizontal and vertical double lines.
+A “null arrow” command <hi rend='tt'>@.</hi> can be used instead of a visible arrow
+to fill out an array where needed.</p>
+</div0>
+<div0 id-text='9' id='cid40'><head>Using math fonts</head>
+</div0>
+<div0 id-text='1' id='cid41'><head>Introduction</head>
+<p>For more comprehensive information on font use in <LaTeX/>, see the
+<LaTeX/> font guide (<EM r='fn'>fntguide.tex</EM>) or <hi rend='it'>The <LaTeX/>
+Companion</hi> <cit><ref target='bid4'/></cit>. The basic set of math font commands<anchor id-text='lid40' id='uid96'/> in <LaTeX/> includes
+<EM r='cn'>mathbf</EM>, <EM r='cn'>mathrm</EM>, <EM r='cn'>mathcal</EM>, <EM r='cn'>mathsf</EM>, <EM r='cn'>mathtt</EM>,
+<EM r='cn'>mathit</EM>. Additional math alphabet commands such as
+<EM r='cn'>mathbb</EM> for blackboard bold, <EM r='cn'>mathfrak</EM> for Fraktur, and
+<EM r='cn'>mathscr</EM> for Euler script are available through the packages
+<EM r='pkg'>amsfonts</EM> and <EM r='pkg'>euscript</EM> (distributed separately).</p>
+</div0>
+<div0 id-text='2' id='cid42'><head>Recommended use of math font commands</head>
+<p>If you find yourself employing math font commands frequently in your
+document, you might wish that they had shorter names, such as <EM r='ncn'>mb</EM>
+instead of <EM r='cn'>mathbf</EM>. Of course, there is nothing to keep you from
+providing such abbreviations for yourself by suitable <EM r='cn'>newcommand</EM>
+statements. But for <LaTeX/> to provide shorter names would actually be a
+disservice to authors, as that would obscure a much better alternative:
+defining custom command names derived from the names of the underlying
+mathematical objects, rather than from the names of the fonts used to
+distinguish the objects. For example, if you are using bold to indicate
+vectors, then you will be better served in the long run if you define a
+`vector' command instead of a `math-bold' command:</p>
+<p noindent='true'><hi rend='tt'>  \newcommand{\vect}[1]{\mathbf{#1}}</hi></p>
+<p noindent='true'>you can write <hi rend='tt'>\vect{a} + \vect{b}</hi> to produce <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D41A;</mi><mo>+</mo><mi>&#x1D41B;</mi></mrow></math><texmath>\mathbf {a} +
+\mathbf {b}</texmath></formula>.
+If you decide several months down the road that you want to use the bold
+font for some other purpose, and mark vectors by a small over-arrow
+instead, then you can put the change into effect merely by changing the
+definition of <EM r='ncn'>vect</EM>; otherwise you would have to replace all
+occurrences of <EM r='cn'>mathbf</EM> throughout your document, perhaps even
+needing to inspect each one to see whether it is indeed
+an instance of a vector.</p>
+<p>It can also be useful to assign distinct
+command names for different letters of a particular font:</p>
+<p noindent='true'><hi rend='tt'>\DeclareSymbolFont{AMSb}{U}{msb}{m}{n}% or use amsfonts package</hi></p>
+<p noindent='true'><hi rend='tt'>\DeclareMathSymbol{\C}{\mathalpha}{AMSb}{"43}</hi></p>
+<p noindent='true'><hi rend='tt'>\DeclareMathSymbol{\R}{\mathalpha}{AMSb}{"52}</hi></p>
+<p noindent='true'>These statements would define the commands <EM r='cn'>C</EM> and <EM r='cn'>R</EM> to produce
+blackboard-bold letters from the `AMSb' math symbols font. If you refer
+often to thecomplex numbers or real numbers in your document, you
+might find this method more convenient than (let's say) defining a
+<EM r='ncn'>field</EM> command and writing<hi rend='tt'>\field{C}</hi>, <hi rend='tt'>\field{R}</hi>. But for
+maximum flexibility and control, define such a <EM r='ncn'>field</EM> command and
+then define <EM r='ncn'>C</EM> and <EM r='ncn'>R</EM> in terms of that
+command:<EM r='indexcs'>mathbb</EM></p>
+<p noindent='true'><hi rend='tt'>\usepackage{amsfonts}% to get the \mathbb alphabet</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\field}[1]{\mathbb{#1}}</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\C}{\field{C}}</hi></p>
+<p noindent='true'><hi rend='tt'>\newcommand{\R}{\field{R}}</hi></p>
+</div0>
+<div0 id-text='3' id='cid43'><head>Bold math symbols</head>
+<p>The <EM r='cn'>mathbf</EM> command is commonly used to obtain bold Latin letters in
+math, but for most other kinds of math symbols it has no effect, or its
+effects depend unreliably on the set of math fonts that are in use. For
+example, writing</p>
+<p noindent='true'><hi rend='tt'>\Delta \mathbf{\Delta}\mathbf{+}\delta \mathbf{\delta}</hi></p>
+<p noindent='true'>produces <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&Delta;</mi><mi>&Delta;</mi><mo>+</mo><mi>&delta;</mi><mi>&delta;</mi></mrow></math><texmath>\Delta \mathbf {\Delta }\mathbf {+}\delta \mathbf {\delta }</texmath></formula>; the <EM r='cn'>mathbf</EM> has no effect on the plus
+sign or the small delta.</p>
+<p>The <EM r='pkg'>amsmath</EM> package therefore provides two additional commands,
+<EM r='cn'>boldsymbol</EM> and <EM r='cn'>pmb</EM>, that can be applied to other kinds of math
+symbols. <EM r='cn'>boldsymbol</EM> can be used for a math symbol that remains
+unaffected by <EM r='cn'>mathbf</EM> if (and only if) your current math font set
+includes a bold version of that symbol. <EM r='cn'>pmb</EM> can be used as a last
+resort for any math symbols that do not have a true bold version
+provided by your set of math fonts; “pmb” stands for “poor man's
+bold” and the command works by typesetting multiple copies of the symbol
+with slight offsets. The quality of the output is inferior, especially
+for symbols that contain any hairline strokes. When the standard default set of
+<LaTeX/> math fonts are in use (Computer Modern), the only symbols that
+are likely to require <EM r='cn'>pmb</EM> are large operator symbols like <EM r='cn'>sum</EM>,
+extended delimiter symbols, or the extra math symbols provided by
+the <EM r='pkg'>amssymb</EM> package <cit><ref target='bid1'/></cit>.</p>
+<p>The following formula shows some of the results that are possible:</p>
+<p noindent='true'><hi rend='tt'>A_\infty + \pi A_0</hi></p>
+<p noindent='true'><hi rend='tt'>\sim \mathbf{A}_{\boldsymbol{\infty}} \boldsymbol{+}</hi></p>
+<p noindent='true'><hi rend='tt'>  \boldsymbol{\pi} \mathbf{A}_{\boldsymbol{0}}</hi></p>
+<p noindent='true'><hi rend='tt'>\sim\pmb{A}_{\pmb{\infty}} \pmb{+}\pmb{\pi} \pmb{A}_{\pmb{0}}</hi></p>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>A</mi> <mi>&infin;</mi> </msub><mo>+</mo><mi>&pi;</mi><msub><mi>A</mi> <mn>0</mn> </msub><mo>&sim;</mo><msub><mi>&#x1D400;</mi> <mi>&infin;</mi> </msub><mo>+</mo><mi>&pi;</mi><msub><mi>&#x1D400;</mi> <mn>0</mn> </msub><mo>&sim;</mo><msub><mi>A</mi> <mi>&infin;</mi> </msub><mo>+</mo><mi>&pi;</mi><msub><mi>A</mi> <mn>0</mn> </msub></mrow></math><texmath>
+A_\infty + \pi A_0
+\sim \mathbf {A}_{\infty } +
+\pi  \mathbf {A}_{0}
+\sim A_{\infty } +\pi  A_{0}
+</texmath></formula>
+<p noindent='true'>If you want to use only the <EM r='cn'>boldsymbol</EM> command without loading the
+whole <EM r='pkg'>amsmath</EM> package, the <EM r='pkg'>bm</EM> package is recommended (this
+is a standard <LaTeX/> package, not an AMS package; you probably have it
+already if you have a 1997 or newer version of <LaTeX/>).</p>
+</div0>
+<div0 id-text='4' id='cid44'><head>Italic Greek letters</head>
+<p>For italic versions of the capital Greek letters, the following commands
+are provided:</p>
+<table rend='inline'><row><cell halign='right'><EM r='cn'>varGamma</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Gamma;</mi></math><texmath>\Gamma </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varSigma</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Sigma;</mi></math><texmath>\Sigma </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varDelta</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Delta;</mi></math><texmath>\Delta </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varUpsilon</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Upsi;</mi></math><texmath>\Upsilon </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varTheta</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Theta;</mi></math><texmath>\Theta </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varPhi</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Phi;</mi></math><texmath>\Phi </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varLambda</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Lambda;</mi></math><texmath>\Lambda </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varPsi</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Psi;</mi></math><texmath>\Psi </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varXi</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Xi;</mi></math><texmath>\Xi </texmath></formula></cell>
+<cell halign='right'><EM r='cn'>varOmega</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math><texmath>\Omega </texmath></formula></cell>
+</row><row><cell halign='right'><EM r='cn'>varPi</EM></cell>
+<cell halign='left'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Pi;</mi></math><texmath>\Pi </texmath></formula></cell>
+</row></table>
+</div0>
+<div0 id-text='10' id='cid45'><head>Error messages and output problems</head>
+</div0>
+<div0 id-text='1' id='cid46'><head>General remarks</head>
+<p>This is a supplement to Chapter 8 of the <LaTeX/> manual <cit><ref target='bid0'/></cit> (first
+edition: Chapter 6). For the reader's convenience, the set of error
+messages discussed here overlaps somewhat with the set in that chapter,
+but please be aware that we don't provide exhaustive coverage here.
+The error messages are arranged in alphabetical order, disregarding
+unimportant text such as <hi rend='tt'>! LaTeX Error:</hi> at the beginning, and
+nonalphabetical characters such as <hi rend='tt'>\\</hi>. Where examples are given, we
+show also the help messages that appear on screen when you respond to an
+error message prompt by entering <hi rend='tt'>h</hi>.</p>
+<p>There is also a section discussing some output errors, i.e., instances
+where the printed document has something wrong but there was no <LaTeX/>
+error during typesetting.</p>
+</div0>
+<div0 id-text='2' id='cid47'><head>Error messages</head>
+<error><msg>\beginsplit won't work here.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Package amsmath Error: \begin{split} won'<zws/>t work here.</hi></p>
+<p noindent='true'><hi rend='tt'> ...</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>l.8 \begin{split}</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>\Did you forget a preceding \begin{equation}?</hi></p>
+<p noindent='true'><hi rend='tt'>If not, perhaps the `<zws/>aligned'<zws/> environment is what you want.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: The <EM r='cls'>split</EM> environment does not construct a stand-alone displayed
+equation; it needs to be used within some other environment such as
+<EM r='cls'>equation</EM> or <EM r='cls'>gather</EM>.</p>
+</error><error><msg>Extra &amp; on this line</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Package amsmath Error: Extra &amp; on this line.</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>See the amsmath package documentation for explanation.</hi></p>
+<p noindent='true'><hi rend='tt'>Type  H &lt;<zws/>return&gt;<zws/>  for immediate help.</hi></p>
+<p noindent='true'><hi rend='tt'> ...</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>l.9 \end{alignat}</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>\An extra &amp; here is so disastrous that you should probably exit</hi></p>
+<p noindent='true'><hi rend='tt'> and fix things up.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: In an <EM r='cls'>alignat</EM> structure the number of alignment points per line
+is dictated by the numeric argument given after <hi rend='tt'>\begin{alignat}</hi>.
+If you use more alignment points in a line it is assumed that you
+accidentally left out a newline command <hi rend='tt'>\\</hi> and the above error is
+issued.</p>
+</error><error><msg>Improper argument for math accent</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Package amsmath Error: Improper argument for math accent:</hi></p>
+<p noindent='true'><hi rend='tt'>(amsmath)                Extra braces must be added to</hi></p>
+<p noindent='true'><hi rend='tt'>(amsmath)                prevent wrong output.</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>See the amsmath package documentation for explanation.</hi></p>
+<p noindent='true'><hi rend='tt'>Type  H &lt;<zws/>return&gt;<zws/>  for immediate help.</hi></p>
+<p noindent='true'><hi rend='tt'> ...</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>l.415 \tilde k_{\lambda_j} = P_{\tilde \mathcal</hi></p>
+<p noindent='true'><hi rend='tt'>                                               {M}}</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: Non-simple arguments for any <LaTeX/> command should be enclosed in
+braces. In this example extra braces are needed as follows:</p>
+<p noindent='true'><hi rend='tt'>... P_{\tilde{\mathcal{M}}}</hi></p>
+</error><error><msg>Font OMX/cmex/m/n/7=cmex7 not loadable ...</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Font OMX/cmex/m/n/7=cmex7 not loadable: Metric (TFM) file not found.</hi></p>
+<p noindent='true'><hi rend='tt'>&lt;<zws/>to be read again&gt;<zws/></hi></p>
+<p noindent='true'><hi rend='tt'>                   relax</hi></p>
+<p noindent='true'><hi rend='tt'>l.8 $a</hi></p>
+<p noindent='true'><hi rend='tt'>      b+b^2$</hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>I wasn'<zws/>t able to read the size data for this font,</hi></p>
+<p noindent='true'><hi rend='tt'>so I will ignore the font specification.</hi></p>
+<p noindent='true'><hi rend='tt'>[Wizards can fix TFM files using TFtoPL/PLtoTF.]</hi></p>
+<p noindent='true'><hi rend='tt'>You might try inserting a different font spec;</hi></p>
+<p noindent='true'><hi rend='tt'>e.g., type `<zws/>I\font&lt;<zws/>same font id&gt;<zws/>=&lt;<zws/>substitute font name&gt;<zws/>'<zws/>.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: Certain extra sizes of some Computer Modern fonts that were formerly
+available mainly through the AMSFonts<anchor id-text='lid42' id='uid97'/>
+distribution are considered part of standard <LaTeX/> (as of June 1994):
+<EM r='fn'>cmex7</EM>–<hi rend='tt'>9</hi>, <EM r='fn'>cmmib5</EM>–<hi rend='tt'>9</hi>, and
+<EM r='fn'>cmbsy5</EM>–<hi rend='tt'>9</hi>. If these extra sizes are missing on your
+system, you should try first to get them from the source where you
+obtained <LaTeX/>. If that fails, you could try getting the fonts from
+CTAN (e.g., in the form of Metafont<anchor id-text='lid43' id='uid98'/> source
+files, directory <hi rend='tt'>/tex-archive/fonts/latex/mf</hi>, or in PostScript
+Type 1 format, directory
+<hi rend='tt'>/tex-archive/fonts/cm/ps-type1/bakoma</hi><anchor id-text='lid44' id='uid99'/>).</p>
+<p>If the font name begins with <EM r='fn'>cmex</EM>, there is a special option
+<EM r='fn'>cmex10</EM> for the <EM r='pkg'>amsmath</EM> package that provides a temporary
+workaround. I.e., change the <EM r='cn'>usepackage</EM> to</p>
+<p noindent='true'><hi rend='tt'>\usepackage[cmex10]{amsmath}</hi></p>
+<p noindent='true'>This will force the use of the 10-point size of the <EM r='fn'>cmex</EM> font in
+all cases. Depending on the contents of your document this may be
+adequate.</p>
+</error><error><msg>Math formula deleted: Insufficient extension fonts</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Math formula deleted: Insufficient extension fonts.</hi></p>
+<p noindent='true'><hi rend='tt'>l.8 $ab+b^2$</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: This usually follows a previous error <hi rend='tt'>Font ... not loadable</hi>; see the
+discussion of that error (above) for solutions.</p>
+</error><error><msg>Missing number, treated as zero</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Missing number, treated as zero.</hi></p>
+<p noindent='true'><hi rend='tt'>&lt;<zws/>to be read again&gt;<zws/></hi></p>
+<p noindent='true'><hi rend='tt'>                   a</hi></p>
+<p noindent='true'><hi rend='tt'>l.100 \end{alignat}</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>A number should have been here; I inserted `<zws/>0'<zws/>.</hi></p>
+<p noindent='true'><hi rend='tt'>(If you can'<zws/>t figure out why I needed to see a number,</hi></p>
+<p noindent='true'><hi rend='tt'>look up `<zws/>weird error'<zws/> in the index to The TeXbook.)</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: There are many possibilities that can lead to this error. However, one
+possibility that is relevant for the <EM r='pkg'>amsmath</EM> package is that you
+forgot to give the number argument of an <EM r='cls'>alignat</EM> environment, as
+in:</p>
+<p noindent='true'><hi rend='tt'>\begin{alignat}</hi></p>
+<p noindent='true'><hi rend='tt'> a&amp;  =b&amp;    c&amp; =d\\</hi></p>
+<p noindent='true'><hi rend='tt'>a'<zws/>&amp; =b'<zws/>&amp;   c'<zws/>&amp; =d'<zws/></hi></p>
+<p noindent='true'><hi rend='tt'>\end{alignat}</hi></p>
+<p noindent='true'>where the first line should read instead</p>
+<p noindent='true'><hi rend='tt'>\begin{alignat}{2}</hi></p>
+<p>Another possibility is that you have a left bracket character <hi rend='tt'>[</hi>
+following a linebreak command <hi rend='tt'>\\</hi> in a multiline construction such
+as <EM r='cls'>array</EM>, <EM r='cls'>tabular</EM>, or <EM r='cls'>eqnarray</EM>. This will be
+interpreted by <LaTeX/> as the beginning of an `additional vertical
+space' request <cit><ref target='bid0'>§C.1.6</ref></cit>, even if it occurs on the following
+line and is intended to be part of the contents. For example</p>
+<p noindent='true'><hi rend='tt'>\begin{array}</hi></p>
+<p noindent='true'><hi rend='tt'>a+b\\</hi></p>
+<p noindent='true'><hi rend='tt'>[f,g]\\</hi></p>
+<p noindent='true'><hi rend='tt'>m+n</hi></p>
+<p noindent='true'><hi rend='tt'>\end{array}</hi></p>
+<p noindent='true'>To prevent the error message in such a case, you can
+add braces as discussed in the <LaTeX/> manual <cit><ref target='bid0'>§C.1.1</ref></cit>:</p>
+<p noindent='true'><hi rend='tt'>\begin{array}</hi></p>
+<p noindent='true'><hi rend='tt'>a+b\\</hi></p>
+<p noindent='true'><hi rend='tt'>{[f,g]}\\</hi></p>
+<p noindent='true'><hi rend='tt'>m+n</hi></p>
+<p noindent='true'><hi rend='tt'>\end{array}</hi></p>
+</error><error><msg>Missing \right. inserted</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Missing \right. inserted.</hi></p>
+<p noindent='true'><hi rend='tt'>&lt;<zws/>inserted text&gt;<zws/></hi></p>
+<p noindent='true'><hi rend='tt'>                \right .</hi></p>
+<p noindent='true'><hi rend='tt'>l.10 \end{multline}</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>I'<zws/>ve inserted something that you may have forgotten.</hi></p>
+<p noindent='true'><hi rend='tt'>(See the &lt;<zws/>inserted text&gt;<zws/> above.)</hi></p>
+<p noindent='true'><hi rend='tt'>With luck, this will get me unwedged. But if you</hi></p>
+<p noindent='true'><hi rend='tt'>really didn'<zws/>t forget anything, try typing `<zws/>2'<zws/> now; then</hi></p>
+<p noindent='true'><hi rend='tt'>my insertion and my current dilemma will both disappear.</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: This error typically arises when you try to insert a linebreak inside a
+<EM r='cn'>left</EM>-<EM r='cn'>right</EM> pair of delimiters in a <EM r='cls'>multline</EM> or
+<EM r='cls'>split</EM> environment:</p>
+<p noindent='true'><hi rend='tt'>\begin{multline}</hi></p>
+<p noindent='true'><hi rend='tt'>AAA\left(BBB\\</hi></p>
+<p noindent='true'><hi rend='tt'>  CCC\right)</hi></p>
+<p noindent='true'><hi rend='tt'>\end{multline}</hi></p>
+<p noindent='true'>There are two possible solutions: (1) instead of using <EM r='cn'>left</EM> and
+<EM r='cn'>right</EM>, use `big' delimiters of fixed size (<EM r='cn'>bigl</EM> <EM r='cn'>bigr</EM>
+<EM r='cn'>biggl</EM> <EM r='cn'>biggr</EM> ...; see §<ref target='uid79'/>); or (2) use null
+delimiters to break up the <EM r='cn'>left</EM>-<EM r='cn'>right</EM> pair into parts for each
+line:</p>
+<p noindent='true'><hi rend='tt'>AAA\left(BBB\right.\\</hi></p>
+<p noindent='true'><hi rend='tt'>  \left.CCC\right)</hi></p>
+<p noindent='true'>The latter solution may result in mismatched delimiter sizes;
+ensuring that they match requires using <EM r='cn'>vphantom</EM> in the line
+that has the smaller delimiter (or possibly <EM r='cn'>smash</EM> in the line that
+has the larger delimiter). In the argument of <EM r='cn'>vphantom</EM> put a copy
+of the tallest element that occurs in the other line, e.g.,</p>
+<p noindent='true'><hi rend='tt'>xxx \left(\int_t yyy\right.\\</hi></p>
+<p noindent='true'><hi rend='tt'>  \left.\vphantom{\int_t} zzz ... \right)</hi></p>
+</error><error><msg>Paragraph ended before \xxx was complete</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>Runaway argument?</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>! Paragraph ended before \multline was complete.</hi></p>
+<p noindent='true'><hi rend='tt'>&lt;<zws/>to be read again&gt;<zws/></hi></p>
+<p noindent='true'><hi rend='tt'>                   \par</hi></p>
+<p noindent='true'><hi rend='tt'>l.100</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>I suspect you'<zws/>ve forgotten a `<zws/>}'<zws/>, causing me to apply this</hi></p>
+<p noindent='true'><hi rend='tt'>control sequence to too much text. How can we recover?</hi></p>
+<p noindent='true'><hi rend='tt'>My plan is to forget the whole thing and hope for the best.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: This might be produced by a misspelling in the <hi rend='tt'>\end{multline}</hi> command,
+e.g.,</p>
+<p noindent='true'><hi rend='tt'>\begin{multline}</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+<p noindent='true'><hi rend='tt'>\end{multiline}</hi></p>
+<p noindent='true'>or by using abbreviations for certain environments, such as <hi rend='tt'>\bal</hi> and
+<hi rend='tt'>\eal</hi> for <hi rend='tt'>\begin{align}</hi> and <hi rend='tt'>\end{align}</hi>:</p>
+<p noindent='true'><hi rend='tt'>\bal</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+<p noindent='true'><hi rend='tt'>\eal</hi></p>
+<p noindent='true'>For technical reasons that kind of abbreviation does not work with
+the more complex displayed equation environments of the <EM r='pkg'>amsmath</EM> package
+(<EM r='cls'>gather</EM>, <EM r='cls'>align</EM>, <EM r='cls'>split</EM>, etc.; cf. <EM r='fn'>technote.tex</EM>).</p>
+</error><error><msg>Runaway argument?</msg><p>See the discussion for the error message
+<hi rend='tt'>Paragraph ended before <EM r='ncn'>xxx</EM> was complete</hi>.</p>
+</error><error><msg>Unknown option `xxx' for package `yyy'</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! LaTeX Error: Unknown option `<zws/>intlim'<zws/> for package `<zws/>amsmath'<zws/>.</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>The option `<zws/>intlim'<zws/> was not declared in package `<zws/>amsmath'<zws/>, perhaps you</hi></p>
+<p noindent='true'><hi rend='tt'>misspelled its name. Try typing  &lt;<zws/>return&gt;<zws/>  to proceed.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: This means that you misspelled the option name, or the package simply
+does not have an option that you expected it to have. Consult the
+documentation for the given package.</p>
+</error><error><msg>Old form `\pmatrix' should be \beginpmatrix.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Package amsmath Error: Old form `<zws/>\pmatrix'<zws/> should be</hi></p>
+<p noindent='true'><hi rend='tt'>                         \begin{pmatrix}.</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>See the amsmath package documentation for explanation.</hi></p>
+<p noindent='true'><hi rend='tt'>Type  H &lt;<zws/>return&gt;<zws/>  for immediate help.</hi></p>
+<p noindent='true'><hi rend='tt'> ...</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>\pmatrix -<zws/>&gt;<zws/>\left (\matrix@check \pmatrix</hi></p>
+<p noindent='true'><hi rend='tt'>                                         \env@matrix</hi></p>
+<p noindent='true'><hi rend='tt'>l.16 \pmatrix</hi></p>
+<p noindent='true'><hi rend='tt'>             {a&amp;b\cr c&amp;d\cr}</hi></p>
+<p noindent='true'><hi rend='tt'>? h</hi></p>
+<p noindent='true'><hi rend='tt'>`<zws/>\pmatrix{...}'<zws/> is old Plain-<zws/>TeX syntax whose use is</hi></p>
+<p noindent='true'><hi rend='tt'>ill-<zws/>advised in LaTeX.</hi></p>
+<p noindent='true'><hi rend='tt'>?</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: When the <EM r='pkg'>amsmath</EM> package is used, the old forms of <EM r='cn'>pmatrix</EM>,
+<EM r='cn'>matrix</EM>, and <EM r='cn'>cases</EM> cannot be used any longer because of naming
+conflicts. Their syntax did not conform with standard <LaTeX/> syntax
+in any case.</p>
+</error><error><msg>Erroneous nesting of equation structures</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>! Package amsmath Error: Erroneous nesting of equation structures;</hi></p>
+<p noindent='true'><hi rend='tt'>(amsmath)                trying to recover with `<zws/>aligned'<zws/>.</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>See the amsmath package documentation for explanation.</hi></p>
+<p noindent='true'><hi rend='tt'>Type  H &lt;<zws/>return&gt;<zws/>  for immediate help.</hi></p>
+<p noindent='true'><hi rend='tt'> ...</hi></p>
+<p noindent='true'><hi rend='tt'> </hi></p>
+<p noindent='true'><hi rend='tt'>l.260 \end{alignat*}</hi></p>
+<p noindent='true'><hi rend='tt'>                    \end{equation*}</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: The structures <EM r='cls'>align</EM>, <EM r='cls'>alignat</EM>, etc., are designed
+for top-level use and for the most part cannot be nested inside some
+other displayed equation structure. The chief exception is that
+<EM r='cls'>align</EM> and most of its variants can be used inside the
+<EM r='cls'>gather</EM> environment.</p>
+</error></div0>
+<div0 id-text='3' id='cid48'><head>Warning messages</head>
+<error><msg>Foreign command \over [or \atop or \above]</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>Package amsmath Warning: Foreign command \over; \frac or \genfrac</hi></p>
+<p noindent='true'><hi rend='tt'>(amsmath)                should be used instead.</hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: The primitive generalized fraction commands of <TeX/>—<EM r='cs'>over</EM>, <EM r='cs'>atop</EM>, <EM r='cs'>above</EM>—are deprecated when the
+<EM r='pkg'>amsmath</EM> package is used because their syntax is foreign to <LaTeX/>
+and <EM r='pkg'>amsmath</EM> provides native <LaTeX/> equivalents. See
+<EM r='fn'>technote.tex</EM> for further information.</p>
+</error><error><msg>Cannot use `split' here</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<p noindent='true'><hi rend='tt'>Package amsmath Warning: Cannot use `<zws/>split'<zws/> here;</hi></p>
+<p noindent='true'><hi rend='tt'>(amsmath)                trying to recover with `<zws/>aligned'<zws/></hi></p>
+<p noindent='true'><hi rend='it'>Explanation</hi>: The <EM r='cls'>split</EM> environment is designed to serve as the entire
+body of an equation, or an entire line of an <EM r='cls'>align</EM> or <EM r='cls'>gather</EM>
+environment. There cannot be any printed material before or
+after it within the same enclosing structure:</p>
+<p noindent='true'><hi rend='tt'>\begin{equation}</hi></p>
+<p noindent='true'><hi rend='tt'>\left\{ % &lt;<zws/>-<zws/>-<zws/> Not allowed</hi></p>
+<p noindent='true'><hi rend='tt'>\begin{split}</hi></p>
+<p noindent='true'><hi rend='tt'>...</hi></p>
+<p noindent='true'><hi rend='tt'>\end{split}</hi></p>
+<p noindent='true'><hi rend='tt'>\right. % &lt;<zws/>-<zws/>-<zws/> Not allowed</hi></p>
+<p noindent='true'><hi rend='tt'>\end{equation}</hi></p>
+</error></div0>
+<div0 id-text='4' id='cid49'><head>Wrong output</head>
+<div1 id-text='1' id='uid100'><head>Section numbers 0.1, 5.1, 8.1 instead of 1, 2, 3</head>
+<p>This most likely means that you have the arguments for <EM r='cn'>numberwithin</EM>
+in reverse order:</p>
+<p noindent='true'><hi rend='tt'>\numberwithin{section}{equation}</hi></p>
+<p noindent='true'>That means `print the section number as <hi rend='it'>equation
+number</hi>.<hi rend='it'>section number</hi> and reset to 1 every time an equation
+occurs' when what you probably wanted was the inverse</p>
+<p noindent='true'><hi rend='tt'>\numberwithin{equation}{section}</hi></p>
+</div1>
+<div1 id-text='2' id='uid101'><head>The <EM r='cn'>numberwithin</EM> command had no effect on equation
+numbers</head>
+<p>Are you looking at the first section in your document? Check the section
+numbers elsewhere to see if the problem is the one described in
+§<ref target='uid100'/>.</p>
+</div1></div0>
+<div0 id-text='11' id='cid50'><head>Additional information</head>
+</div0>
+<div0 id-text='1' id='cid51'><head>Converting existing documents</head>
+<div1 id-text='1' id='uid102'><head>Converting from plain <LaTeX/></head>
+<p>A <LaTeX/> document will typically continue to work the same in most
+respects if <hi rend='tt'>\usepackage{amsmath}</hi> is added in the document
+preamble. By default, however, the <EM r='pkg'>amsmath</EM> package suppresses page
+breaks inside multiple-line displayed equation structures such as
+<EM r='cls'>eqnarray</EM>, <EM r='cls'>align</EM>, and <EM r='cls'>gather</EM>. To continue allowing page
+breaks inside <EM r='cls'>eqnarray</EM> after switching to <EM r='pkg'>amsmath</EM>, you will
+need to add the following line in your document preamble:</p>
+<p noindent='true'><hi rend='tt'>\allowdisplaybreaks[1]</hi></p>
+<p noindent='true'>To ensure normal spacing around relation symbols, you might also want to
+change <EM r='cls'>eqnarray</EM> to <EM r='cls'>align</EM>, <EM r='cls'>multline</EM>, or
+<EM r='cls'>equation</EM>/<EM r='cls'>split</EM> as appropriate.</p>
+<p>Most of the other differences in <EM r='pkg'>amsmath</EM> usage can be considered
+optional refinements, e.g., using</p>
+<p noindent='true'><hi rend='tt'>\DeclareMathOperator{\Hom}{Hom}</hi></p>
+<p noindent='true'>instead of <hi rend='tt'>\newcommand{\Hom}{\mbox{Hom}}</hi>.</p>
+</div1>
+<div1 id-text='2' id='uid103'><head>Converting from <amslatex/> 1.1</head>
+<p>See <EM r='fn'>diffs-m.txt</EM>.</p>
+</div1></div0>
+<div0 id-text='2' id='cid52'><head>Technical notes</head>
+<p>The file <EM r='fn'>technote.tex</EM> contains some remarks on miscellaneous
+technical questions that are less likely to be of general interest.</p>
+</div0>
+<div0 id-text='3' id='cid53'><head>Getting help</head>
+<p>Questions or comments regarding <EM r='pkg'>amsmath</EM> and related packages
+should be sent to:</p>
+<label/>
+<item id-text='3' id='uid104'><p rend='center'><minipage width='298.8987pt'><p rend='flushed-left'>American Mathematical Society</p>
+<p noindent='true' rend='flushed-left'>Technical Support</p>
+<p noindent='true' rend='flushed-left'>Electronic Products and Services</p>
+<p noindent='true' rend='flushed-left'>P. O. Box 6248</p>
+<p noindent='true' rend='flushed-left'>Providence, RI 02940</p>
+<p noindent='true' spacebefore='3.0pt' rend='flushed-left'>Phone: 800-321-4AMS (321-4267)    or    401-455-4080</p>
+<p noindent='true' rend='flushed-left'>Internet: <hi rend='tt'>tech-support@ams.org</hi>
+</p></minipage>
+If you are reporting a problem you should include
+the following information to make proper investigation possible:</p>
+<list type='ordered'>
+<item id-text='1' id='uid105' label='(1)'><p noindent='true'>The source file where the problem occurred, preferably reduced
+to minimum size by removing any material that can be removed without
+affecting the observed problem.</p>
+</item>
+<item id-text='2' id='uid106' label='(2)'><p noindent='true'>A <LaTeX/> log file showing the error message (if applicable) and
+the version numbers of the document class and option files being used.</p>
+</item></list>
+<div0 id-text='4' id='cid54'><head>Of possible interest</head>
+<p>Information about obtaining AMSFonts or other <TeX/>-related
+software from the AMS Internet archive <EM r='fn'>e-math.ams.org</EM>
+can be obtained by sending a request through electronic mail to:
+<hi rend='tt'>webmaster@ams.org</hi>.</p>
+<p>Information about obtaining the <EM r='pkg'>amsmath</EM> distribution on diskette
+from the AMS is available from:</p>
+<label/>
+<item id-text='4' id='uid107'><p rend='center'><minipage width='298.8987pt'><p rend='flushed-left'>American Mathematical Society</p>
+<p noindent='true' rend='flushed-left'>Customer Services</p>
+<p noindent='true' rend='flushed-left'>P. O. Box 6248</p>
+<p noindent='true' rend='flushed-left'>Providence, RI 02940</p>
+<p noindent='true' spacebefore='3.0pt' rend='flushed-left'>Phone: 800-321-4AMS (321-4267)    or    401-455-4000</p>
+<p noindent='true' rend='flushed-left'>Internet: <hi rend='tt'>cust-serv@ams.org</hi>
+</p></minipage></p>
+<p>The <TeX/> Users Group<anchor id-text='lid46' id='uid108'/> is a nonprofit
+organization that publishes a journal
+(<hi rend='it'>TUGboat</hi><anchor id-text='lid47' id='uid109'/>), holds
+meetings, and serves as a clearing-house of general information about
+<TeX/> and <TeX/>-related software.</p>
+</item><label/>
+<item id-text='4' id='uid110'><p rend='center'><minipage width='298.8987pt'><p rend='flushed-left'><TeX/> Users Group</p>
+<p noindent='true' rend='flushed-left'>PO Box 2311</p>
+<p noindent='true' rend='flushed-left'>Portland, OR 97208-2311</p>
+<p noindent='true' rend='flushed-left'>USA</p>
+<p noindent='true' spacebefore='3.0pt' rend='flushed-left'>Phone: +1-503-223-9994</p>
+<p noindent='true' rend='flushed-left'>Email: <hi rend='tt'>office@tug.org</hi>
+</p></minipage>
+Membership in the <TeX/> Users Group is a good way to support continued
+development of free <TeX/>-related software. There are also many local
+<TeX/> user groups in other countries; information about contacting a
+local user group can be gotten from the <TeX/> Users Group.</p>
+<p>There is a Usenet newsgroup called <EM r='fn'>comp.text.tex</EM> that is a fairly
+good source of information about <LaTeX/> and <TeX/> in general. If you
+don't know about reading newsgroups, check with your local system
+administrator to see if newsgroup service is available at your site.</p>
+<Bibliography><p>tocchapterBibliography</p>
+<p noindent='true'><bibitem id='bid1'/><hi rend='it'>AMSFonts version </hi>2.2<hi rend='it'>—user's guide</hi>,
+Amer. Math. Soc., Providence, RI, 1994; distributed
+with the AMSFonts package.</p>
+<p noindent='true'><bibitem id='bid3'/><hi rend='it'>Instructions for preparation of
+papers and monographs—<amslatex/></hi>,
+Amer. Math. Soc., Providence, RI, 1996, 1999.</p>
+<p noindent='true'><bibitem id='bid2'/><hi rend='it'>Using the <EM r='pkg'>amsthm</EM> Package</hi>,
+Amer. Math. Soc., Providence, RI, 1999.</p>
+<p noindent='true'><bibitem id='bid4'/>Michel Goossens, Frank Mittelbach, and Alexander Samarin,
+<hi rend='it'>The <LaTeX/> companion</hi>, Addison-Wesley, Reading, MA, 1994.
+[<hi rend='it'>Note: The 1994 edition is not a reliable guide for the
+<EM r='pkg'>amsmath</EM> package unless you refer to the errata for Chapter
+8—file <EM r='fn'>compan.err</EM>, distributed with <LaTeX/>.</hi>]</p>
+<p noindent='true' rend='flushed-left'><bibitem id='bid5'/>G. Grätzer,
+<hi rend='it'>Math into <LaTeX/>: An Introduction to <LaTeX/> and AMS-<LaTeX/></hi>
+<xref url='http://www.ams.org/cgi-bin/bookstore/bookpromo?fn=91&amp;arg1=bookvideo&amp;itmc=MLTEX'>http://<allowbreak/>www.<allowbreak/>ams.<allowbreak/>org/<allowbreak/>cgi-bin/<allowbreak/>bookstore/<allowbreak/>bookpromo?fn=91&amp;arg1=bookvideo&amp;itmc=MLTEX</xref>,
+Birkhäuser, Boston, 1995.</p>
+<p noindent='true'><bibitem id='bid6'/>Donald E. Knuth, <hi rend='it'>The <TeX/>book</hi>,
+Addison-Wesley, Reading, MA, 1984.</p>
+<p noindent='true'><bibitem id='bid0'/>Leslie Lamport, <hi rend='it'><LaTeX/>: A document preparation
+system</hi>, 2nd revised ed., Addison-Wesley, Reading, MA, 1994.</p>
+<p noindent='true'><bibitem id='bid7'/>Frank Mittelbach and Rainer Schöpf,
+<hi rend='it'>The new font family selection—user
+interface to standard <LaTeX/></hi>, <hi rend='it'>TUGboat</hi> <hi rend='bold'>11</hi>,
+no. 2 (June 1990), pp. 297–305.</p>
+<p noindent='true'><bibitem id='bid8'/>Michael Spivak, <hi rend='it'>The joy of <TeX/></hi>, 2nd revised ed.,
+Amer. Math. Soc., Providence, RI, 1990.</p>
+</Bibliography><list type='simple'>
+<item id-text='1' id='uid111'><p noindent='true'><hi rend='tt'>\! </hi>, 11</p>
+</item>
+<item id-text='2' id='uid112'><p noindent='true'><hi rend='tt'>\,</hi>, 11</p>
+</item>
+<item id-text='3' id='uid113'><p noindent='true'><hi rend='tt'>\:</hi>, 11</p>
+</item>
+<item id-text='4' id='uid114'><p noindent='true'><hi rend='tt'>\;</hi>, 11</p>
+</item>
+<item id-text='5' id='uid115'><p noindent='true'><hi rend='tt'>\\</hi>, 3, 5, 6, 8, 9, 24, 26</p>
+</item>
+<item id-text='6' id='uid116'><p noindent='true'><hi rend='tt'>\\*</hi>, 9</p>
+</item>
+<item id-text='7' id='uid117'><p noindent='true'><hi rend='tt'>\|</hi>, 16</p>
+</item>
+<item id-text='8' id='uid118'><p noindent='true'><hi rend='tt'>\above</hi>, 14, 29</p>
+</item>
+<item id-text='9' id='uid119'><p noindent='true'><hi rend='tt'>\abovewithdelims</hi>, 14</p>
+</item>
+<item id-text='10' id='uid120'><p noindent='true'><hi rend='tt'>\accentedsymbol</hi>, 2</p>
+</item>
+<item id-text='11' id='uid121'><p noindent='true'><hi rend='tt'>accents</hi> package, 12</p>
+</item>
+<item id-text='12' id='uid122'><p noindent='true'><hi rend='tt'>\addtocounter</hi>, 10</p>
+</item>
+<item id-text='13' id='uid123'><p noindent='true'><hi rend='tt'>\addtolength</hi>, 5</p>
+</item>
+<item id-text='14' id='uid124'><p noindent='true'><hi rend='tt'>align</hi> environment, 3, 5–7, 28–30</p>
+</item>
+<item id-text='15' id='uid125'><p noindent='true'><hi rend='tt'>alignat</hi> environment, 7, 24, 26, 29</p>
+</item>
+<item id-text='16' id='uid126'><p noindent='true'><hi rend='tt'>aligned</hi> environment, 7, 9</p>
+</item>
+<item id-text='17' id='uid127'><p noindent='true'><hi rend='tt'>alignedat</hi> environment, 7, 9</p>
+</item>
+<item id-text='18' id='uid128'><p noindent='true'><hi rend='tt'>\allowdisplaybreaks</hi>, 8, 9</p>
+</item>
+<item id-text='19' id='uid129'><p noindent='true'><hi rend='tt'>amsart</hi> class, 1</p>
+</item>
+<item id-text='20' id='uid130'><p noindent='true'><hi rend='tt'>amsbook</hi> class, 1</p>
+</item>
+<item id-text='21' id='uid131'><p noindent='true'><hi rend='tt'>amsbsy</hi> package, 1, 2</p>
+</item>
+<item id-text='22' id='uid132'><p noindent='true'><hi rend='tt'>amscd</hi> package, 1, 2, 20</p>
+</item>
+<item id-text='23' id='uid133'><p noindent='true'><hi rend='tt'>amsfonts</hi> package, 21</p>
+</item>
+<item id-text='24' id='uid134'><p noindent='true'>AMSFonts collection, 25</p>
+</item>
+<item id-text='25' id='uid135'><p noindent='true'><hi rend='tt'>amsmath</hi> package, i, 1–3, 5, 8–18, 22, 23, 25, 26,
+28–32</p>
+</item>
+<item id-text='26' id='uid136'><p noindent='true'><hi rend='tt'>amsopn</hi> package, 1, 2</p>
+</item>
+<item id-text='27' id='uid137'><p noindent='true'><hi rend='tt'>amssymb</hi> package, 22</p>
+</item>
+<item id-text='28' id='uid138'><p noindent='true'><hi rend='tt'>amstext</hi> package, 1, 2</p>
+</item>
+<item id-text='29' id='uid139'><p noindent='true'><hi rend='tt'>amsthm</hi> package, 1, 32</p>
+</item>
+<item id-text='30' id='uid140'><p noindent='true'><hi rend='tt'>amsxtra</hi> package, 1, 2, 12</p>
+</item>
+<item id-text='31' id='uid141'><p noindent='true'><hi rend='tt'>\arccos</hi>, 18</p>
+</item>
+<item id-text='32' id='uid142'><p noindent='true'><hi rend='tt'>\arcsin</hi>, 18</p>
+</item>
+<item id-text='33' id='uid143'><p noindent='true'><hi rend='tt'>\arctan</hi>, 18</p>
+</item>
+<item id-text='34' id='uid144'><p noindent='true'><hi rend='tt'>\arg</hi>, 18</p>
+</item>
+<item id-text='35' id='uid145'><p noindent='true'><hi rend='tt'>array</hi> environment, 8, 10, 26</p>
+</item>
+<item id-text='36' id='uid146'><p noindent='true'>arrows
+extensible, 13
+in commutative diagrams, 20</p>
+</item>
+<item id-text='37' id='uid147'><p noindent='true'><hi rend='tt'>\atop</hi>, 14, 29</p>
+</item>
+<item id-text='38' id='uid148'><p noindent='true'><hi rend='tt'>\atopwithdelims</hi>, 14</p>
+</item>
+<item id-text='39' id='uid149'><p noindent='true'>BaKoMa fonts, 25</p>
+</item>
+<item id-text='40' id='uid150'><p noindent='true'><EM r='cn'>big</EM>, <EM r='cn'>Big</EM>, <EM r='cn'>bigg</EM>, ... delimiters, 16</p>
+</item>
+<item id-text='41' id='uid151'><p noindent='true'><hi rend='tt'>\biggl</hi>, 27</p>
+</item>
+<item id-text='42' id='uid152'><p noindent='true'><hi rend='tt'>\biggr</hi>, 27</p>
+</item>
+<item id-text='43' id='uid153'><p noindent='true'><hi rend='tt'>\bigl</hi>, 27</p>
+</item>
+<item id-text='44' id='uid154'><p noindent='true'><hi rend='tt'>\bigr</hi>, 27</p>
+</item>
+<item id-text='45' id='uid155'><p noindent='true'><hi rend='tt'>\binom</hi>, 14</p>
+</item>
+<item id-text='46' id='uid156'><p noindent='true'>binomials, 14</p>
+</item>
+<item id-text='47' id='uid157'><p noindent='true'><hi rend='tt'>bm</hi> package, 2, 23</p>
+</item>
+<item id-text='48' id='uid158'><p noindent='true'><hi rend='tt'>Bmatrix</hi> environment, 10</p>
+</item>
+<item id-text='49' id='uid159'><p noindent='true'><hi rend='tt'>bmatrix</hi> environment, 10</p>
+</item>
+<item id-text='50' id='uid160'><p noindent='true'><hi rend='tt'>\bmod</hi>, 18</p>
+</item>
+<item id-text='51' id='uid161'><p noindent='true'><hi rend='tt'>\boldsymbol</hi>, 22, 23</p>
+</item>
+<item id-text='52' id='uid162'><p noindent='true'><hi rend='tt'>\boxed</hi>, 13</p>
+</item>
+<item id-text='53' id='uid163'><p noindent='true'><hi rend='tt'>\C</hi>, 22</p>
+</item>
+<item id-text='54' id='uid164'><p noindent='true'><hi rend='tt'>cases</hi> environment, 8</p>
+</item>
+<item id-text='55' id='uid165'><p noindent='true'><hi rend='tt'>\cases</hi>, 28</p>
+</item>
+<item id-text='56' id='uid166'><p noindent='true'><hi rend='tt'>CD</hi> environment, 2, 21</p>
+</item>
+<item id-text='57' id='uid167'><p noindent='true'><hi rend='tt'>\cdots</hi>, 12</p>
+</item>
+<item id-text='58' id='uid168'><p noindent='true'><hi rend='tt'>centertags</hi> option, 2</p>
+</item>
+<item id-text='59' id='uid169'><p noindent='true'><hi rend='tt'>\cfrac</hi>, 15</p>
+</item>
+<item id-text='60' id='uid170'><p noindent='true'><hi rend='tt'>cmbsy5</hi>, 25</p>
+</item>
+<item id-text='61' id='uid171'><p noindent='true'><hi rend='tt'>cmex</hi>, 25</p>
+</item>
+<item id-text='62' id='uid172'><p noindent='true'><hi rend='tt'>cmex10</hi>, 25</p>
+</item>
+<item id-text='63' id='uid173'><p noindent='true'><hi rend='tt'>cmex7</hi>, 25</p>
+</item>
+<item id-text='64' id='uid174'><p noindent='true'><hi rend='tt'>cmmib5</hi>, 25</p>
+</item>
+<item id-text='65' id='uid175'><p noindent='true'><hi rend='tt'>comp.text.tex</hi>, 31</p>
+</item>
+<item id-text='66' id='uid176'><p noindent='true'><hi rend='tt'>compan.err</hi>, 32</p>
+</item>
+<item id-text='67' id='uid177'><p noindent='true'>continued fractions, 15</p>
+</item>
+<item id-text='68' id='uid178'><p noindent='true'><hi rend='tt'>\cos</hi>, 18</p>
+</item>
+<item id-text='69' id='uid179'><p noindent='true'><hi rend='tt'>\cosh</hi>, 18</p>
+</item>
+<item id-text='70' id='uid180'><p noindent='true'><hi rend='tt'>\cot</hi>, 18</p>
+</item>
+<item id-text='71' id='uid181'><p noindent='true'><hi rend='tt'>\coth</hi>, 18</p>
+</item>
+<item id-text='72' id='uid182'><p noindent='true'><hi rend='tt'>\csc</hi>, 18</p>
+</item>
+<item id-text='73' id='uid183'><p noindent='true'><hi rend='tt'>\dbinom</hi>, 14</p>
+</item>
+<item id-text='74' id='uid184'><p noindent='true'><hi rend='tt'>\ddddot</hi>, 12</p>
+</item>
+<item id-text='75' id='uid185'><p noindent='true'><hi rend='tt'>\dddot</hi>, 12</p>
+</item>
+<item id-text='76' id='uid186'><p noindent='true'><hi rend='tt'>\ddot</hi>, 12</p>
+</item>
+<item id-text='77' id='uid187'><p noindent='true'><hi rend='tt'>\DeclareMathOperator</hi>, 2, 17, 18</p>
+</item>
+<item id-text='78' id='uid188'><p noindent='true'><hi rend='tt'>\deg</hi>, 18</p>
+</item>
+<item id-text='79' id='uid189'><p noindent='true'><hi rend='tt'>\det</hi>, 18</p>
+</item>
+<item id-text='80' id='uid190'><p noindent='true'><hi rend='tt'>\dfrac</hi>, 14</p>
+</item>
+<item id-text='81' id='uid191'><p noindent='true'><hi rend='tt'>diffs-m.txt</hi>, 30</p>
+</item>
+<item id-text='82' id='uid192'><p noindent='true'><hi rend='tt'>\dim</hi>, 18</p>
+</item>
+<item id-text='83' id='uid193'><p noindent='true'><hi rend='tt'>\displaybreak</hi>, 8, 9</p>
+</item>
+<item id-text='84' id='uid194'><p noindent='true'>displayed equations, 3</p>
+</item>
+<item id-text='85' id='uid195'><p noindent='true'>displayed equations
+centering, 3</p>
+</item>
+<item id-text='86' id='uid196'><p noindent='true'><hi rend='tt'>\displaylimits</hi>, 20</p>
+</item>
+<item id-text='87' id='uid197'><p noindent='true'><hi rend='tt'>displaymath</hi> environment, 3</p>
+</item>
+<item id-text='88' id='uid198'><p noindent='true'><hi rend='tt'>\displaystyle</hi>, 14</p>
+</item>
+<item id-text='89' id='uid199'><p noindent='true'><hi rend='tt'>\documentclass</hi>, 2</p>
+</item>
+<item id-text='90' id='uid200'><p noindent='true'><hi rend='tt'>\dot</hi>, 12</p>
+</item>
+<item id-text='91' id='uid201'><p noindent='true'>dots, <hi rend='it'>see</hi> ellipsis dots</p>
+</item>
+<item id-text='92' id='uid202'><p noindent='true'><hi rend='tt'>\dotsb</hi>, 12</p>
+</item>
+<item id-text='93' id='uid203'><p noindent='true'><hi rend='tt'>\dotsc</hi>, 12</p>
+</item>
+<item id-text='94' id='uid204'><p noindent='true'><hi rend='tt'>\dotsi</hi>, 12</p>
+</item>
+<item id-text='95' id='uid205'><p noindent='true'><hi rend='tt'>\dotsm</hi>, 12</p>
+</item>
+<item id-text='96' id='uid206'><p noindent='true'><hi rend='tt'>\dotso</hi>, 12</p>
+</item>
+<item id-text='97' id='uid207'><p noindent='true'><hi rend='tt'>e-math.ams.org</hi>, 31</p>
+</item>
+<item id-text='98' id='uid208'><p noindent='true'>ellipsis dots
+in matrices, 11</p>
+</item>
+<item id-text='99' id='uid209'><p noindent='true'><hi rend='tt'>eqnarray</hi> environment, 1, 3, 26, 30</p>
+</item>
+<item id-text='100' id='uid210'><p noindent='true'><hi rend='tt'>\eqref</hi>, 10</p>
+</item>
+<item id-text='101' id='uid211'><p noindent='true'><hi rend='tt'>equation</hi> environment, 1, 3, 5, 7, 24, 30</p>
+</item>
+<item id-text='102' id='uid212'><p noindent='true'>equation numbers
+cross-references, 10
+hierarchy, 9
+left or right placement, 3
+overriding, 3
+subordinate numbering, 10
+vertical placement, 2</p>
+</item>
+<item id-text='103' id='uid213'><p noindent='true'><hi rend='tt'>equation*</hi> environment, 3</p>
+</item>
+<item id-text='104' id='uid214'><p noindent='true'>equations, <hi rend='it'>see</hi> displayed equations</p>
+</item>
+<item id-text='105' id='uid215'><p noindent='true'><hi rend='tt'>euscript</hi> package, 21</p>
+</item>
+<item id-text='106' id='uid216'><p noindent='true'><hi rend='tt'>\exp</hi>, 18</p>
+</item>
+<item id-text='107' id='uid217'><p noindent='true'><hi rend='tt'>\fbox</hi>, 13</p>
+</item>
+<item id-text='108' id='uid218'><p noindent='true'><hi rend='tt'>fleqn</hi> option, 3, 5</p>
+</item>
+<item id-text='109' id='uid219'><p noindent='true'><hi rend='tt'>fntguide.tex</hi>, 21</p>
+</item>
+<item id-text='110' id='uid220'><p noindent='true'><hi rend='tt'>\frac</hi>, 14, 15</p>
+</item>
+<item id-text='111' id='uid221'><p noindent='true'>fractions, 14</p>
+</item>
+<item id-text='112' id='uid222'><p noindent='true'><hi rend='tt'>\fracwithdelims</hi>, 2</p>
+</item>
+<item id-text='113' id='uid223'><p noindent='true'>function names, <hi rend='it'>see</hi> operator names</p>
+</item>
+<item id-text='114' id='uid224'><p noindent='true'><hi rend='tt'>gather</hi> environment, 5–7, 24, 28–30</p>
+</item>
+<item id-text='115' id='uid225'><p noindent='true'><hi rend='tt'>gathered</hi> environment, 7, 9</p>
+</item>
+<item id-text='116' id='uid226'><p noindent='true'><hi rend='tt'>\gcd</hi>, 18</p>
+</item>
+<item id-text='117' id='uid227'><p noindent='true'><hi rend='tt'>\genfrac</hi>, 14</p>
+</item>
+<item id-text='118' id='uid228'><p noindent='true'><hi rend='tt'>\hat</hi>, 12</p>
+</item>
+<item id-text='119' id='uid229'><p noindent='true'><hi rend='tt'>\hdotsfor</hi>, 11</p>
+</item>
+<item id-text='120' id='uid230'><p noindent='true'><hi rend='tt'>\hom</hi>, 18</p>
+</item>
+<item id-text='121' id='uid231'><p noindent='true'>horizontal space
+around operator names, 17
+in math mode, 11</p>
+</item>
+<item id-text='122' id='uid232'><p noindent='true'><hi rend='tt'>\idotsint</hi>, 20</p>
+</item>
+<item id-text='123' id='uid233'><p noindent='true'><hi rend='tt'>\iiiint</hi>, 20</p>
+</item>
+<item id-text='124' id='uid234'><p noindent='true'><hi rend='tt'>\iiint</hi>, 20</p>
+</item>
+<item id-text='125' id='uid235'><p noindent='true'><hi rend='tt'>\iint</hi>, 20</p>
+</item>
+<item id-text='126' id='uid236'><p noindent='true'><hi rend='tt'>\inf</hi>, 18</p>
+</item>
+<item id-text='127' id='uid237'><p noindent='true'><hi rend='tt'>\injlim</hi>, 18</p>
+</item>
+<item id-text='128' id='uid238'><p noindent='true'>integrals
+multiple, 20
+placement of limits, 2</p>
+</item>
+<item id-text='129' id='uid239'><p noindent='true'><hi rend='tt'>\intertext</hi>, 9</p>
+</item>
+<item id-text='130' id='uid240'><p noindent='true'><hi rend='tt'>intlimits</hi> option, 2, 20</p>
+</item>
+<item id-text='131' id='uid241'><p noindent='true'><hi rend='tt'>\ker</hi>, 18</p>
+</item>
+<item id-text='132' id='uid242'><p noindent='true'><hi rend='tt'>kuvio</hi> package, 20</p>
+</item>
+<item id-text='133' id='uid243'><p noindent='true'><hi rend='tt'>\label</hi>, 6, 10</p>
+</item>
+<item id-text='134' id='uid244'><p noindent='true'><hi rend='tt'>\langle</hi>, 16</p>
+</item>
+<item id-text='135' id='uid245'><p noindent='true'><hi rend='tt'>\ldots</hi>, 12</p>
+</item>
+<item id-text='136' id='uid246'><p noindent='true'><hi rend='tt'>\left</hi>, 15, 16, 27</p>
+</item>
+<item id-text='137' id='uid247'><p noindent='true'><hi rend='tt'>\leftroot</hi>, 13</p>
+</item>
+<item id-text='138' id='uid248'><p noindent='true'><hi rend='tt'>leqno</hi> option, 3, 5</p>
+</item>
+<item id-text='139' id='uid249'><p noindent='true'><hi rend='tt'>\lg</hi>, 18</p>
+</item>
+<item id-text='140' id='uid250'><p noindent='true'><hi rend='tt'>\lim</hi>, 1, 2, 17, 18</p>
+</item>
+<item id-text='141' id='uid251'><p noindent='true'><hi rend='tt'>\liminf</hi>, 18</p>
+</item>
+<item id-text='142' id='uid252'><p noindent='true'>limits, <hi rend='it'>see</hi> subscripts and superscripts</p>
+</item>
+<item id-text='143' id='uid253'><p noindent='true'><hi rend='tt'>\limits</hi>, 20</p>
+</item>
+<item id-text='144' id='uid254'><p noindent='true'><hi rend='tt'>\limsup</hi>, 18</p>
+</item>
+<item id-text='145' id='uid255'><p noindent='true'><hi rend='tt'>\ln</hi>, 18</p>
+</item>
+<item id-text='146' id='uid256'><p noindent='true'><hi rend='tt'>\log</hi>, 17, 18</p>
+</item>
+<item id-text='147' id='uid257'><p noindent='true'><hi rend='tt'>\lVert</hi>, 16</p>
+</item>
+<item id-text='148' id='uid258'><p noindent='true'><hi rend='tt'>\lvert</hi>, 16</p>
+</item>
+<item id-text='149' id='uid259'><p noindent='true'>math fonts, 21</p>
+</item>
+<item id-text='150' id='uid260'><p noindent='true'>math symbols, <hi rend='it'>see</hi> math fonts</p>
+</item>
+<item id-text='151' id='uid261'><p noindent='true'><hi rend='tt'>\mathbb</hi>, 21, 22</p>
+</item>
+<item id-text='152' id='uid262'><p noindent='true'><hi rend='tt'>\mathbf</hi>, 21, 22</p>
+</item>
+<item id-text='153' id='uid263'><p noindent='true'><hi rend='tt'>\mathcal</hi>, 21</p>
+</item>
+<item id-text='154' id='uid264'><p noindent='true'><hi rend='tt'>\mathfrak</hi>, 21</p>
+</item>
+<item id-text='155' id='uid265'><p noindent='true'><hi rend='tt'>\mathit</hi>, 21</p>
+</item>
+<item id-text='156' id='uid266'><p noindent='true'><hi rend='tt'>\mathrm</hi>, 21</p>
+</item>
+<item id-text='157' id='uid267'><p noindent='true'><hi rend='tt'>\mathscr</hi>, 21</p>
+</item>
+<item id-text='158' id='uid268'><p noindent='true'><hi rend='tt'>\mathsf</hi>, 21</p>
+</item>
+<item id-text='159' id='uid269'><p noindent='true'><hi rend='tt'>\mathtt</hi>, 21</p>
+</item>
+<item id-text='160' id='uid270'><p noindent='true'>matrices, 10
+ellipsis dots, 11</p>
+</item>
+<item id-text='161' id='uid271'><p noindent='true'><hi rend='tt'>matrix</hi> environment, 10</p>
+</item>
+<item id-text='162' id='uid272'><p noindent='true'><hi rend='tt'>\matrix</hi>, 28</p>
+</item>
+<item id-text='163' id='uid273'><p noindent='true'><hi rend='tt'>\max</hi>, 18</p>
+</item>
+<item id-text='164' id='uid274'><p noindent='true'><hi rend='tt'>\mbox</hi>, 18</p>
+</item>
+<item id-text='165' id='uid275'><p noindent='true'><hi rend='tt'>\medspace</hi>, 11</p>
+</item>
+<item id-text='166' id='uid276'><p noindent='true'>Metafont source files, 25</p>
+</item>
+<item id-text='167' id='uid277'><p noindent='true'><hi rend='tt'>\min</hi>, 18</p>
+</item>
+<item id-text='168' id='uid278'><p noindent='true'><hi rend='tt'>\mod</hi>, 18</p>
+</item>
+<item id-text='169' id='uid279'><p noindent='true'><hi rend='tt'>\mspace</hi>, 11</p>
+</item>
+<item id-text='170' id='uid280'><p noindent='true'><hi rend='tt'>multline</hi> environment, 3, 5, 27, 30</p>
+</item>
+<item id-text='171' id='uid281'><p noindent='true'><hi rend='tt'>\multlinegap</hi>, 5</p>
+</item>
+<item id-text='172' id='uid282'><p noindent='true'><hi rend='tt'>namelimits</hi> option, 2</p>
+</item>
+<item id-text='173' id='uid283'><p noindent='true'><hi rend='tt'>\negmedspace</hi>, 11</p>
+</item>
+<item id-text='174' id='uid284'><p noindent='true'><hi rend='tt'>\negthickspace</hi>, 11</p>
+</item>
+<item id-text='175' id='uid285'><p noindent='true'><hi rend='tt'>\negthinspace</hi>, 11</p>
+</item>
+<item id-text='176' id='uid286'><p noindent='true'><hi rend='tt'>\newcommand</hi>, 21</p>
+</item>
+<item id-text='177' id='uid287'><p noindent='true'><hi rend='tt'>\nobreakdash</hi>, 12</p>
+</item>
+<item id-text='178' id='uid288'><p noindent='true'><hi rend='tt'>nointlimits</hi> option, 2</p>
+</item>
+<item id-text='179' id='uid289'><p noindent='true'><hi rend='tt'>\nolimits</hi>, 19, 20</p>
+</item>
+<item id-text='180' id='uid290'><p noindent='true'><hi rend='tt'>nonamelimits</hi> option, 2</p>
+</item>
+<item id-text='181' id='uid291'><p noindent='true'><hi rend='tt'>nosumlimits</hi> option, 2</p>
+</item>
+<item id-text='182' id='uid292'><p noindent='true'><hi rend='tt'>\notag</hi>, 3, 5</p>
+</item>
+<item id-text='183' id='uid293'><p noindent='true'><hi rend='tt'>\numberwithin</hi>, 9, 29, 30</p>
+</item>
+<item id-text='184' id='uid294'><p noindent='true'>operator names, 17</p>
+</item>
+<item id-text='185' id='uid295'><p noindent='true'><hi rend='tt'>\operatorname</hi>, 18</p>
+</item>
+<item id-text='186' id='uid296'><p noindent='true'><hi rend='tt'>\operatorname*</hi>, 18</p>
+</item>
+<item id-text='187' id='uid297'><p noindent='true'><hi rend='tt'>\over</hi>, 14, 29</p>
+</item>
+<item id-text='188' id='uid298'><p noindent='true'><hi rend='tt'>\overleftarrow</hi>, 13</p>
+</item>
+<item id-text='189' id='uid299'><p noindent='true'><hi rend='tt'>\overleftrightarrow</hi>, 13</p>
+</item>
+<item id-text='190' id='uid300'><p noindent='true'><hi rend='tt'>\overrightarrow</hi>, 13</p>
+</item>
+<item id-text='191' id='uid301'><p noindent='true'><hi rend='tt'>\overset</hi>, 13</p>
+</item>
+<item id-text='192' id='uid302'><p noindent='true'><hi rend='tt'>\overwithdelims</hi>, 14</p>
+</item>
+<item id-text='193' id='uid303'><p noindent='true'>page breaks, 8</p>
+</item>
+<item id-text='194' id='uid304'><p noindent='true'><hi rend='tt'>\pagebreak</hi>, 8</p>
+</item>
+<item id-text='195' id='uid305'><p noindent='true'><hi rend='tt'>pmatrix</hi> environment, 10</p>
+</item>
+<item id-text='196' id='uid306'><p noindent='true'><hi rend='tt'>\pmatrix</hi>, 28</p>
+</item>
+<item id-text='197' id='uid307'><p noindent='true'><hi rend='tt'>\pmb</hi>, 22</p>
+</item>
+<item id-text='198' id='uid308'><p noindent='true'><hi rend='tt'>\pmod</hi>, 18</p>
+</item>
+<item id-text='199' id='uid309'><p noindent='true'><hi rend='tt'>\pod</hi>, 18</p>
+</item>
+<item id-text='200' id='uid310'><p noindent='true'>PostScript fonts, 25</p>
+</item>
+<item id-text='201' id='uid311'><p noindent='true'><hi rend='tt'>\Pr</hi>, 18</p>
+</item>
+<item id-text='202' id='uid312'><p noindent='true'><hi rend='tt'>\projlim</hi>, 18</p>
+</item>
+<item id-text='203' id='uid313'><p noindent='true'><hi rend='tt'>\qquad</hi>, 11</p>
+</item>
+<item id-text='204' id='uid314'><p noindent='true'><hi rend='tt'>\quad</hi>, 11</p>
+</item>
+<item id-text='205' id='uid315'><p noindent='true'><hi rend='tt'>\R</hi>, 22</p>
+</item>
+<item id-text='206' id='uid316'><p noindent='true'><hi rend='tt'>\raisetag</hi>, 8</p>
+</item>
+<item id-text='207' id='uid317'><p noindent='true'><hi rend='tt'>\rangle</hi>, 16</p>
+</item>
+<item id-text='208' id='uid318'><p noindent='true'><hi rend='tt'>\ref</hi>, 10</p>
+</item>
+<item id-text='209' id='uid319'><p noindent='true'><hi rend='tt'>reqno</hi> option, 3, 5</p>
+</item>
+<item id-text='210' id='uid320'><p noindent='true'><hi rend='tt'>\right</hi>, 15, 16, 27</p>
+</item>
+<item id-text='211' id='uid321'><p noindent='true'><hi rend='tt'>\rVert</hi>, 16</p>
+</item>
+<item id-text='212' id='uid322'><p noindent='true'><hi rend='tt'>\rvert</hi>, 16</p>
+</item>
+<item id-text='213' id='uid323'><p noindent='true'><hi rend='tt'>\scriptscriptstyle</hi>, 14</p>
+</item>
+<item id-text='214' id='uid324'><p noindent='true'><hi rend='tt'>\scriptstyle</hi>, 14</p>
+</item>
+<item id-text='215' id='uid325'><p noindent='true'><hi rend='tt'>\sec</hi>, 18</p>
+</item>
+<item id-text='216' id='uid326'><p noindent='true'><hi rend='tt'>\setcounter</hi>, 9, 10</p>
+</item>
+<item id-text='217' id='uid327'><p noindent='true'><hi rend='tt'>\setlength</hi>, 5</p>
+</item>
+<item id-text='218' id='uid328'><p noindent='true'><hi rend='tt'>\shoveleft</hi>, 5</p>
+</item>
+<item id-text='219' id='uid329'><p noindent='true'><hi rend='tt'>\shoveright</hi>, 5</p>
+</item>
+<item id-text='220' id='uid330'><p noindent='true'><hi rend='tt'>\sideset</hi>, 13, 19</p>
+</item>
+<item id-text='221' id='uid331'><p noindent='true'><hi rend='tt'>\sin</hi>, 1, 2, 17, 18</p>
+</item>
+<item id-text='222' id='uid332'><p noindent='true'><hi rend='tt'>\sinh</hi>, 18</p>
+</item>
+<item id-text='223' id='uid333'><p noindent='true'><hi rend='tt'>smallmatrix</hi> environment, 11</p>
+</item>
+<item id-text='224' id='uid334'><p noindent='true'><hi rend='tt'>\smash</hi>, 15, 27</p>
+</item>
+<item id-text='225' id='uid335'><p noindent='true'><hi rend='tt'>\sphat</hi>, 12</p>
+</item>
+<item id-text='226' id='uid336'><p noindent='true'><hi rend='tt'>split</hi> environment, 3, 5, 6, 9, 24, 27–30</p>
+</item>
+<item id-text='227' id='uid337'><p noindent='true'><hi rend='tt'>\sptilde</hi>, 12</p>
+</item>
+<item id-text='228' id='uid338'><p noindent='true'><hi rend='tt'>\stackrel</hi>, 13</p>
+</item>
+<item id-text='229' id='uid339'><p noindent='true'><hi rend='tt'>subarray</hi> environment, 19</p>
+</item>
+<item id-text='230' id='uid340'><p noindent='true'><hi rend='tt'>subeqn.tex</hi>, 3</p>
+</item>
+<item id-text='231' id='uid341'><p noindent='true'><hi rend='tt'>subequations</hi> environment, 10</p>
+</item>
+<item id-text='232' id='uid342'><p noindent='true'>subscripts and superscripts, 13
+multi-line, 19
+on sums, 19
+placement, 2</p>
+</item>
+<item id-text='233' id='uid343'><p noindent='true'><hi rend='tt'>\substack</hi>, 19</p>
+</item>
+<item id-text='234' id='uid344'><p noindent='true'><hi rend='tt'>\sum</hi>, 20, 22</p>
+</item>
+<item id-text='235' id='uid345'><p noindent='true'><hi rend='tt'>sumlimits</hi> option, 2</p>
+</item>
+<item id-text='236' id='uid346'><p noindent='true'><hi rend='tt'>\sup</hi>, 18</p>
+</item>
+<item id-text='237' id='uid347'><p noindent='true'>superscripts, <hi rend='it'>see</hi> subscripts and superscripts</p>
+</item>
+<item id-text='238' id='uid348'><p noindent='true'><hi rend='tt'>tabular</hi> environment, 26</p>
+</item>
+<item id-text='239' id='uid349'><p noindent='true'><hi rend='tt'>\tag</hi>, 3</p>
+</item>
+<item id-text='240' id='uid350'><p noindent='true'><hi rend='tt'>\tag*</hi>, 3</p>
+</item>
+<item id-text='241' id='uid351'><p noindent='true'><hi rend='tt'>\tan</hi>, 18</p>
+</item>
+<item id-text='242' id='uid352'><p noindent='true'><hi rend='tt'>\tanh</hi>, 18</p>
+</item>
+<item id-text='243' id='uid353'><p noindent='true'><hi rend='tt'>\tbinom</hi>, 14</p>
+</item>
+<item id-text='244' id='uid354'><p noindent='true'><hi rend='tt'>tbtags</hi> option, 2</p>
+</item>
+<item id-text='245' id='uid355'><p noindent='true'><hi rend='tt'>technote.tex</hi>, 14, 28–30</p>
+</item>
+<item id-text='246' id='uid356'><p noindent='true'><hi rend='tt'>testmath.tex</hi>, 3</p>
+</item>
+<item id-text='247' id='uid357'><p noindent='true'><TeX/> Users Group, 31</p>
+</item>
+<item id-text='248' id='uid358'><p noindent='true'><hi rend='tt'>\text</hi>, 2, 7–9, 18</p>
+</item>
+<item id-text='249' id='uid359'><p noindent='true'>text fragments inside math, 9, 18</p>
+</item>
+<item id-text='250' id='uid360'><p noindent='true'><hi rend='tt'>\textstyle</hi>, 14</p>
+</item>
+<item id-text='251' id='uid361'><p noindent='true'><hi rend='tt'>\tfrac</hi>, 14</p>
+</item>
+<item id-text='252' id='uid362'><p noindent='true'><hi rend='tt'>\theequation</hi>, 9, 10</p>
+</item>
+<item id-text='253' id='uid363'><p noindent='true'><hi rend='tt'>\thickspace</hi>, 11</p>
+</item>
+<item id-text='254' id='uid364'><p noindent='true'><hi rend='tt'>\thinspace</hi>, 11</p>
+</item>
+<item id-text='255' id='uid365'><p noindent='true'><hi rend='it'>TUGboat</hi>, 31</p>
+</item>
+<item id-text='256' id='uid366'><p noindent='true'><hi rend='tt'>\underleftarrow</hi>, 13</p>
+</item>
+<item id-text='257' id='uid367'><p noindent='true'><hi rend='tt'>\underleftrightarrow</hi>, 13</p>
+</item>
+<item id-text='258' id='uid368'><p noindent='true'><hi rend='tt'>\underrightarrow</hi>, 13</p>
+</item>
+<item id-text='259' id='uid369'><p noindent='true'><hi rend='tt'>\underset</hi>, 13</p>
+</item>
+<item id-text='260' id='uid370'><p noindent='true'><hi rend='tt'>\uproot</hi>, 13</p>
+</item>
+<item id-text='261' id='uid371'><p noindent='true'><hi rend='tt'>\usepackage</hi>, 2, 25</p>
+</item>
+<item id-text='262' id='uid372'><p noindent='true'><hi rend='tt'>\value</hi>, 10</p>
+</item>
+<item id-text='263' id='uid373'><p noindent='true'><hi rend='tt'>\varDelta</hi>, 23</p>
+</item>
+<item id-text='264' id='uid374'><p noindent='true'><hi rend='tt'>\varGamma</hi>, 23</p>
+</item>
+<item id-text='265' id='uid375'><p noindent='true'><hi rend='tt'>\varinjlim</hi>, 18</p>
+</item>
+<item id-text='266' id='uid376'><p noindent='true'><hi rend='tt'>\varLambda</hi>, 23</p>
+</item>
+<item id-text='267' id='uid377'><p noindent='true'><hi rend='tt'>\varliminf</hi>, 18</p>
+</item>
+<item id-text='268' id='uid378'><p noindent='true'><hi rend='tt'>\varlimsup</hi>, 18</p>
+</item>
+<item id-text='269' id='uid379'><p noindent='true'><hi rend='tt'>\varOmega</hi>, 23</p>
+</item>
+<item id-text='270' id='uid380'><p noindent='true'><hi rend='tt'>\varPhi</hi>, 23</p>
+</item>
+<item id-text='271' id='uid381'><p noindent='true'><hi rend='tt'>\varPi</hi>, 23</p>
+</item>
+<item id-text='272' id='uid382'><p noindent='true'><hi rend='tt'>\varprojlim</hi>, 18</p>
+</item>
+<item id-text='273' id='uid383'><p noindent='true'><hi rend='tt'>\varPsi</hi>, 23</p>
+</item>
+<item id-text='274' id='uid384'><p noindent='true'><hi rend='tt'>\varSigma</hi>, 23</p>
+</item>
+<item id-text='275' id='uid385'><p noindent='true'><hi rend='tt'>\varTheta</hi>, 23</p>
+</item>
+<item id-text='276' id='uid386'><p noindent='true'><hi rend='tt'>\varUpsilon</hi>, 23</p>
+</item>
+<item id-text='277' id='uid387'><p noindent='true'><hi rend='tt'>\varXi</hi>, 23</p>
+</item>
+<item id-text='278' id='uid388'><p noindent='true'><hi rend='tt'>Vmatrix</hi> environment, 10</p>
+</item>
+<item id-text='279' id='uid389'><p noindent='true'><hi rend='tt'>vmatrix</hi> environment, 10</p>
+</item>
+<item id-text='280' id='uid390'><p noindent='true'><hi rend='tt'>\vphantom</hi>, 27</p>
+</item>
+<item id-text='281' id='uid391'><p noindent='true'><hi rend='tt'>\xleftarrow</hi>, 13</p>
+</item>
+<item id-text='282' id='uid392'><p noindent='true'><hi rend='tt'>\xrightarrow</hi>, 13</p>
+</item></list>
+</item></div0></item></div0></mainmatter><theindex title='Index'><index target='uid97' level='1'>AMSFonts collection</index>
+<index target='' level='1'>arrows</index>
+<index target='uid67' level='2'>extensible</index>
+<index target='uid95' level='2'>in commutative diagrams</index>
+<index target='uid99' level='1'>BaKoMa fonts</index>
+<index target='uid80 uid81' level='1'><EM r='cn'>big</EM>, <EM r='cn'>Big</EM>, <EM r='cn'>bigg</EM>, ... delimiters</index>
+<index target='uid74' level='1'>binomials</index>
+<index target='uid77' level='1'>continued fractions</index>
+<index target='uid32' level='1'>displayed equations</index>
+<index target='uid31' level='2'>centering</index>
+<index target='uid58' level='1' encap='see{ellipsis dots}'>dots</index>
+<index target='' level='1'>ellipsis dots</index>
+<index target='uid58' level='2'>in matrices</index>
+<index target='' level='1'>equation numbers</index>
+<index target='uid53' level='2'>cross-references</index>
+<index target='uid51' level='2'>hierarchy</index>
+<index target='uid28' level='2'>left or right placement</index>
+<index target='uid33' level='2'>overriding</index>
+<index target='uid55' level='2'>subordinate numbering</index>
+<index target='uid15 uid17' level='2'>vertical placement</index>
+<index target='uid32' level='1' encap='see{displayed equations}'>equations</index>
+<index target='uid71' level='1'>fractions</index>
+<index target='uid85' level='1' encap='see{operator names}'>function names</index>
+<index target='' level='1'>horizontal space</index>
+<index target='uid86' level='2'>around operator names</index>
+<index target='uid60' level='2'>in math mode</index>
+<index target='' level='1'>integrals</index>
+<index target='uid93' level='2'>multiple</index>
+<index target='uid22' level='2'>placement of limits</index>
+<index target='uid19' level='1' encap='see{subscripts and superscripts}'>limits</index>
+<index target='uid96' level='1'>math fonts</index>
+<index target='uid96' level='1' encap='see{math fonts}'>math symbols</index>
+<index target='uid56' level='1'>matrices</index>
+<index target='uid58' level='2'>ellipsis dots</index>
+<index target='uid98' level='1'>Metafont source files</index>
+<index target='uid85' level='1'>operator names</index>
+<index target='uid47' level='1'>page breaks</index>
+<index target='uid99' level='1'>PostScript fonts</index>
+<index target='uid69' level='1'>subscripts and superscripts</index>
+<index target='uid90' level='2'>multi-line</index>
+<index target='uid91' level='2'>on sums</index>
+<index target='uid19 uid25' level='2'>placement</index>
+<index target='uid90' level='1' encap='see{subscripts and superscripts}'>superscripts</index>
+<index target='uid108' level='1'><TeX/> Users Group</index>
+<index target='uid48 uid88' level='1'>text fragments inside math</index>
+<index target='uid83 uid84' level='1'>this-is-wrong</index>
+<index target='uid109' level='1'><hi rend='it'>TUGboat</hi></index>
+</theindex></std>

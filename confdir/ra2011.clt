@@ -1,0 +1,29 @@
+%%  -*- latex -*-
+\ProvidesClass{ra2011}[2008/07/16 v1.1 Activity Report, Inria 2008]
+% This file is part of Tralics
+% copyright (C) INRIA/apics (Jose' Grimm) 2008
+
+%% This software is governed by the CeCILL license under French law and
+%% abiding by the rules of distribution of free software.  You can  use, 
+%% modify and/ or redistribute the software under the terms of the CeCILL
+%% license as circulated by CEA, CNRS and INRIA at the following URL
+%% "http:%%www.cecill.info". 
+%% (See the file COPYING in the main directory for details)
+% copyright (C) INRIA/apics (Jose' Grimm) 2008
+
+%% $Id: ra2011.clt,v 2.1 2012/05/15 13:12:50 grimm Exp $
+
+\ProcessOptions\relax
+
+\usepackage[composition]{ra} 
+
+
+% Define some aliases
+\let\ResearchCenterList\UR
+\let\ResearchCentreList\UR
+
+% You should use the HTML package instead of this
+\let\htmladdnormallinkfoot\@@href@foot
+\let\htmladdnormallink\@@href
+
+\endinput

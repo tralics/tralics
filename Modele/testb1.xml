@@ -1,0 +1,854 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE ramain SYSTEM 'raweb.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<ramain creator='Tralics version 2.14.5'>
+<biblio>
+<citation from='year' key='A+' id='bid35' userid='cite:tor41' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><etal/>
+</bauteurs>
+</citation>
+<citation from='year' key='a1a' id='bid0' userid='cite:tor1' type='article'>
+<bauteurs><bpers prenom='' nom='a1'/></bauteurs>
+<btitle>b-title</btitle>
+<bjournal>c-journal</bjournal>
+<bnumber>d-number</bnumber>
+<bvolume>e-volume</bvolume>
+<bpages>h-pages</bpages>
+<bmonth>f-month</bmonth>
+<byear>g-year</byear>
+<xref url='some-url'><font-large1>some-url</font-large1></xref><bnote>i-note</bnote>
+</citation>
+<citation from='year' key='a1b' id='bid1' userid='cite:torc' type='article'>
+<bauteurs><bpers prenom='' nom='a1'/></bauteurs>
+<btitle>b-title</btitle>
+<bjournal>c-journal</bjournal>
+<bnumber>d-number</bnumber>
+<bvolume>e-volume</bvolume>
+<bpages>h-pages</bpages>
+<bmonth>f-month</bmonth>
+<byear>g-year</byear>
+<xref url='some-url'><font-large1>some-url</font-large1></xref><bnote>i-note</bnote>
+</citation>
+<citation from='year' key='a13' id='bid13' userid='cite:tor13' type='book'>
+<bauteurs><bpers prenom='' nom='a13'/></bauteurs>
+<btitle>c-title</btitle>
+<bediteur><bpers prenom='F.' nom='Editor' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/><bpers prenom='T.' nom='Editor' prenomcomplet='Third'/></bediteur>
+<bedition>d-edition</bedition>
+<bseries>e-series</bseries>
+<bnumber>f-number</bnumber>
+<bvolume>g-volume</bvolume>
+<bpublisher>h-publisher</bpublisher>
+<baddress>i-address</baddress>
+<bmonth>j-month</bmonth>
+<byear>k-year</byear>
+<bnote>l-note</bnote>
+</citation>
+<citation from='year' key='a15' id='bid15' userid='cite:tor15' type='booklet'>
+<bauteurs><bpers prenom='' nom='a15'/></bauteurs>
+<btitle>b-title</btitle>
+<baddress>d-address</baddress>
+<bhowpublished>c-howpublished</bhowpublished>
+<bmonth>e-month</bmonth>
+<byear>f-year</byear>
+<bnote>g-note</bnote>
+</citation>
+<citation from='year' key='a16' id='bid16' userid='cite:tor16' type='phdthesis'>
+<bauteurs><bpers prenom='' nom='a16'/></bauteurs>
+<btitle>b-title</btitle>
+<bediteur><bpers prenom='' nom='myself'/></bediteur>
+<btype>Ph. D. Thesis</btype>
+<bschool>c-school</bschool>
+<byear>d-year</byear>
+</citation>
+<citation from='year' key='a17' id='bid17' userid='cite:tor17' type='phdthesis'>
+<bauteurs><bpers prenom='' nom='a17'/></bauteurs>
+<btitle>b-title</btitle>
+<baddress>e-address</baddress>
+<btype>c-type</btype>
+<bschool>d-school</bschool>
+<bmonth>f-month</bmonth>
+<byear>g-year</byear>
+<bnote>h-note</bnote>
+</citation>
+<citation from='year' key='a18' id='bid18' userid='cite:tor18' type='mastersthesis'>
+<bauteurs><bpers prenom='' nom='a18'/></bauteurs>
+<btitle>b-title</btitle>
+<btype>Masters thesis</btype>
+<bschool>c-school</bschool>
+<byear>d-year</byear>
+</citation>
+<citation from='year' key='a19' id='bid19' userid='cite:tor19' type='mastersthesis'>
+<bauteurs><bpers prenom='' nom='a19'/></bauteurs>
+<btitle>b-title</btitle>
+<baddress>e-address</baddress>
+<btype>c-type</btype>
+<bschool>d-school</bschool>
+<bmonth>g-month</bmonth>
+<byear>h-year</byear>
+<bnote>i-note</bnote>
+</citation>
+<citation from='year' key='a20' id='bid20' userid='cite:tor20' type='techreport'>
+<bauteurs><bpers prenom='' nom='a20'/></bauteurs>
+<btitle>b-title</btitle>
+<btype>Technical report</btype>
+<binstitution>c-institution</binstitution>
+<byear>d-year</byear>
+</citation>
+<citation from='year' key='a203' id='bid2' userid='cite:tor2' type='article'>
+<bauteurs><bpers prenom='' nom='a2'/></bauteurs>
+<btitle>Title, Majuscule, Majuscule, Majuscule</btitle>
+<bjournal>journal</bjournal>
+<byear>2003</byear>
+</citation>
+<citation from='year' key='a21' id='bid21' userid='cite:tor21' type='techreport'>
+<bauteurs><bpers prenom='' nom='a21'/></bauteurs>
+<btitle>b-title</btitle>
+<bnumber>d-number</bnumber>
+<baddress>f-addres</baddress>
+<btype>c-type</btype>
+<binstitution>e-institution</binstitution>
+<bmonth>g-month</bmonth>
+<byear>h-year</byear>
+<bnote>i-note</bnote>
+</citation>
+<citation from='year' key='a23' id='bid23' userid='cite:tor23' type='manual'>
+<bauteurs><bpers prenom='' nom='a23'/></bauteurs>
+<btitle>b</btitle>
+<bedition>d-edition</bedition>
+<baddress>e-address</baddress>
+<borganization>c-organization</borganization>
+<bmonth>f-month</bmonth>
+<byear>g-year</byear>
+<bnote>h-note</bnote>
+</citation>
+<citation from='year' key='a24' id='bid24' userid='cite:tor24' type='unpublished'>
+<bauteurs><bpers prenom='' nom='a24'/></bauteurs>
+<btitle>b-title</btitle>
+<bnote>c-note</bnote>
+</citation>
+<citation from='year' key='a25' id='bid25' userid='cite:tor25' type='unpublished'>
+<bauteurs><bpers prenom='' nom='a25'/></bauteurs>
+<btitle>b-title</btitle>
+<bmonth>c-month</bmonth>
+<byear>d-year</byear>
+<bnote>e-note</bnote>
+</citation>
+<citation from='year' key='a27' id='bid27' userid='cite:tor27' type='misc'>
+<bauteurs><bpers prenom='' nom='a27'/></bauteurs>
+<btitle>b-title</btitle>
+<bhowpublished>c-howpublished</bhowpublished>
+<bmonth>d-month</bmonth>
+<byear>e-year</byear>
+<bnote>f-note</bnote>
+</citation>
+<citation from='year' key='a4' id='bid4' userid='cite:tor4' type='inproceedings'>
+<bauteurs><bpers prenom='' nom='a4'/></bauteurs>
+<btitle>b-title, ACCENTáéíóúý, ÁÉÍÓÚÝ àèìòù, ÀÈÌÒÙ, âêîôû, ÂÊÎÔÛ äëïöüÿ, ÄËÏÖÜ ñ Ñ</btitle>
+<bbooktitle>c-booktitle</bbooktitle>
+</citation>
+<citation from='year' key='a5' id='bid5' userid='cite:tor5' type='inproceedings'>
+<bauteurs><bpers prenom='' nom='a5'/></bauteurs>
+<btitle>b-title</btitle>
+<bediteur><bpers prenom='O.' nom='Editor' prenomcomplet='One'/><bpers prenom='T.' nom='Editor' prenomcomplet='Two'/></bediteur>
+<bseries>d-series</bseries>
+<bnumber>e-number</bnumber>
+<bvolume>f-volume</bvolume>
+<bpublisher>h-publisher</bpublisher>
+<baddress>k-address</baddress>
+<bbooktitle>c-booktitle</bbooktitle>
+<borganization>g-organization</borganization>
+<bpages>j-pages</bpages>
+<bmonth>l-month</bmonth>
+<byear>m-year</byear>
+<bnote>n-note</bnote>
+</citation>
+<citation from='year' key='a6' id='bid6' userid='cite:tor6' type='incollection'>
+<bauteurs><bpers prenom='' nom='a6'/></bauteurs>
+<btitle>b-title : et du texte</btitle>
+<bbooktitle>c-booktitle</bbooktitle>
+<xref url='http://www.inria.fr/~grimm'><font-large1>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>~grimm</font-large1></xref></citation>
+<citation from='year' key='a7' id='bid7' userid='cite:tor7' type='incollection'>
+<bauteurs><bpers prenom='' nom='a7'/></bauteurs>
+<btitle>b-title</btitle>
+<bediteur><bpers prenom='F. N.' nom='Editor' prenomcomplet='First Name'/><bpers prenom='A. O.' nom='Editor' prenomcomplet='Another One'/></bediteur>
+<bedition>xo-edition</bedition>
+<bseries>e-series</bseries>
+<bnumber>f-number</bnumber>
+<bvolume>g-volume</bvolume>
+<bpublisher>h-publisher</bpublisher>
+<baddress>i-address</baddress>
+<bbooktitle>d-booktitle</bbooktitle>
+<bpages>m-pages</bpages>
+<bchapter>l-chapter</bchapter>
+<btype>xl-type</btype>
+<bmonth>j-month</bmonth>
+<byear>k-year</byear>
+<bnote>n-note</bnote>
+</citation>
+<citation from='year' key='a9' id='bid9' userid='cite:tor9' type='inbook'>
+<bauteurs><bpers prenom='' nom='a9'/></bauteurs>
+<btitle>c-title</btitle>
+<bediteur><bpers prenom='' nom='EditorA'/><bpers prenom='' nom='EditorB'/><bpers prenom='' nom='EditorC'/></bediteur>
+<bedition>d-edition</bedition>
+<bseries>e-series</bseries>
+<bnumber>f-number</bnumber>
+<bvolume>g-volume</bvolume>
+<bpublisher>h-publisher</bpublisher>
+<baddress>i-address</baddress>
+<bpages>m-pages</bpages>
+<bchapter>l-chapter</bchapter>
+<btype>xk</btype>
+<bmonth>j-month</bmonth>
+<byear>k-year</byear>
+<bnote>n-note</bnote>
+</citation>
+<citation from='year' key='AA00a' id='bid103' userid='cite:sample-article' type='article'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00b' id='bid104' userid='cite:sample-book' type='book'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00c' id='bid105' userid='cite:sample-booklet' type='booklet'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00d' id='bid106' userid='cite:sample-inbook' type='inbook'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00e' id='bid107' userid='cite:sample-incollection' type='incollection'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00f' id='bid108' userid='cite:sample-inproceedings' type='inproceedings'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00g' id='bid109' userid='cite:sample-manual' type='manual'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00h' id='bid110' userid='cite:sample-masterthesis' type='mastersthesis'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00i' id='bid111' userid='cite:sample-misc' type='misc'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00j' id='bid112' userid='cite:sample-phdthesis' type='phdthesis'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00k' id='bid114' userid='cite:sample-techreport' type='techreport'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AA00l' id='bid115' userid='cite:sample-unpublished' type='unpublished'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='AAJA+' id='bid95' userid='cite:many' type='article'>
+<bauteurs><bpers prenom='J.' nom='And' prenomcomplet='Joe'/><bpers prenom='J.' nom='And' prenomcomplet='Joe'/><bpers prenom='' nom='Joe-And'/><etal/>
+</bauteurs>
+<btitle>X</btitle>
+</citation>
+<citation from='year' key='AB' id='bid29' userid='cite:tor32' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/></bauteurs>
+<bediteur><bpers prenom='A.' nom='van B' prenomcomplet='A'/><bpers prenom='' nom='and'/><bpers prenom='' nom='And'/><bpers prenom='' nom=''/><bpers prenom='a.' nom='b c' prenomcomplet='a'/></bediteur>
+</citation>
+<citation from='year' key='AB+' id='bid36' userid='cite:tor42' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><etal/>
+</bauteurs>
+</citation>
+<citation from='year' key='ABG' id='bid31' userid='cite:tor33' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><bpers prenom='' nom='Gamma'/></bauteurs>
+<bediteur><bpers prenom='A.' nom='van B' prenomcomplet='A'/><bpers prenom='y.' nom='x' prenomcomplet='y'/><bpers prenom='c. d.' nom='a b' prenomcomplet='c d'/></bediteur>
+</citation>
+<citation from='year' key='ABG+a' id='bid38' userid='cite:tor44' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><bpers prenom='' nom='Gamma'/><bpers prenom='' nom='Delta'/><etal/>
+</bauteurs>
+</citation>
+<citation from='year' key='ABG+b' id='bid37' userid='cite:tor43' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><bpers prenom='' nom='Gamma'/><etal/>
+</bauteurs>
+</citation>
+<citation from='year' key='ABGD' id='bid33' userid='cite:tor34' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><bpers prenom='' nom='Gamma'/><bpers prenom='' nom='Delta'/></bauteurs>
+</citation>
+<citation from='year' key='Alp' id='bid28' userid='cite:tor31' type='misc'>
+<bauteurs><bpers prenom='' nom='Alpha'/></bauteurs>
+<bediteur><bpers prenom='J.' nom='Grimm' prenomcomplet='J'/><bpers prenom='J.G.' nom='Grimm' prenomcomplet='J.G'/><bpers prenom='J. G.' nom='Grimm' prenomcomplet='J. G'/><bpers prenom='J.-G.' nom='Grimm' prenomcomplet='J.-G'/></bediteur>
+</citation>
+<citation from='year' key='bC' id='bid97' userid='cite:strange' type='article'>
+<bauteurs><bpers prenom='A.' nom='b Cde' prenomcomplet='A'/></bauteurs>
+<btitle>X</btitle>
+</citation>
+<citation from='year' key='BJMTa' id='bid87' userid='cite:titi' type='article'>
+<bauteurs><bpers prenom='F.' nom='Besson' prenomcomplet='F.'/><bpers prenom='T.' nom='Jensen' prenomcomplet='T.'/><bpers prenom='D. L.' nom='Métayer' prenomcomplet='D. Le'/><bpers prenom='T.' nom='Thorn' prenomcomplet='T.'/></bauteurs>
+<btitle>BRACETEST1 leave  leave a leave <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>H</mi></math></formula></btitle>
+</citation>
+<citation from='year' key='BJMTb' id='bid86' userid='cite:toto' type='book'>
+<bauteurs><bpers prenom='F.' nom='Besson' prenomcomplet='F.'/><bpers prenom='T.' nom='Jensen' prenomcomplet='T.'/><bpers prenom='D. L.' nom='Métayer' prenomcomplet='D. Le'/><bpers prenom='T.' nom='Thorn' prenomcomplet='T.'/></bauteurs>
+<btitle>Some title</btitle>
+<xref url='http://www.inria.fr/rrrt/rt-0265.html'><font-large1>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rt-0265.<allowbreak/>html</font-large1></xref><first-page>50</first-page>
+<lastpage>70</lastpage>
+<allpages>21</allpages>
+<bnote>some note</bnote>
+</citation>
+<citation from='year' key='CGR00' id='bid78' userid='cite:CGR2000' type='inproceedings'>
+<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='M.' nom='Goossens' prenomcomplet='Michel'/><bpers prenom='S.' nom='Rahtz' prenomcomplet='Sebastian'/></bauteurs>
+<btitle>De XML à PDF avec <font-typewriter-family>xmltex</font-typewriter-family> et Passive<TeX/></btitle>
+<bnumber>35-36</bnumber>
+<bbooktitle>Cahiers Gutenberg</bbooktitle>
+<bpages>79-114</bpages>
+<byear>2000</byear>
+</citation>
+<citation from='year' key='CIMP01' id='bid80' userid='cite:mathml2' type='misc'>
+<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='P.' nom='Ion' prenomcomplet='Patrick'/><bpers prenom='R.' nom='Miner' prenomcomplet='Robert'/><bpers prenom='N.' nom='Poppelier' prenomcomplet='Nico'/></bauteurs>
+<btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
+<bhowpublished>http://www.w3.org/TR/MathML2/</bhowpublished>
+<byear>2001</byear>
+</citation>
+<citation from='year' key='Cru' id='bid94' userid='cite:cruz' type='article'>
+<bauteurs><bpers prenom='M. De La.' nom='Cruz' prenomcomplet='Maria De La'/></bauteurs>
+<btitle>X</btitle>
+</citation>
+<citation from='year' key='dlVPa' id='bid93' userid='cite:xpoussin' type='article'>
+<bauteurs><bpers prenom='C. L. X. J.' nom='de la Vallée Poussin' prenomcomplet='Charles Louis Xavier Joseph'/></bauteurs>
+<btitle>BRACETEST6 leave<font-italic-shape>ABC</font-italic-shape>x del delIetc</btitle>
+</citation>
+<citation from='year' key='dlVPb' id='bid92' userid='cite:poussin' type='article'>
+<bauteurs><bpers prenom='C. L. X. J.' nom='de la Vallée Poussin' prenomcomplet='Charles Louis Xavier Joseph'/></bauteurs>
+<btitle>X</btitle>
+</citation>
+<citation from='year' key='EE+' id='bid11' userid='cite:tor11' type='proceedings'>
+<btitle>a11</btitle>
+<bediteur><bpers prenom='S.' nom='Edidor' prenomcomplet='Some'/><bpers prenom='A.' nom='Editor' prenomcomplet='Another'/><etal/>
+</bediteur>
+<bseries>d</bseries>
+<bnumber>e-number</bnumber>
+<bvolume>f-volume</bvolume>
+<bpublisher>g</bpublisher>
+<baddress>h</baddress>
+<borganization>c</borganization>
+<bmonth>i</bmonth>
+<byear>j-year</byear>
+<bnote>k</bnote>
+</citation>
+<citation from='year' key='EE00' id='bid113' userid='cite:sample-proceedings' type='proceedings'>
+<bauteurs><bpers prenom='F.' nom='Author' prenomcomplet='First'/><bpers prenom='S.' nom='Author' prenomcomplet='Second'/></bauteurs>
+<btitle>A beautiful title</btitle>
+<bediteur><bpers prenom='F.' nom='Ediror' prenomcomplet='First'/><bpers prenom='S.' nom='Editor' prenomcomplet='Second'/></bediteur>
+<bjournal>A journal</bjournal>
+<bedition>Second</bedition>
+<bseries>15</bseries>
+<bnumber>16</bnumber>
+<bvolume>17</bvolume>
+<bpublisher>Publishing&amp;Co, Inc.</bpublisher>
+<baddress>Paris, New Yorkm, Amsterdam</baddress>
+<bhowpublished>Available by anonymous ftp</bhowpublished>
+<bbooktitle>Title of the book</bbooktitle>
+<borganization>Unknown Organisation</borganization>
+<bpages>12-13</bpages>
+<bchapter>First and second</bchapter>
+<btype>Some type</btype>
+<bschool>The best school in the word</bschool>
+<binstitution>Some well-known institution</binstitution>
+<bmonth>January</bmonth>
+<byear>2000</byear>
+<bdoi>A DOI</bdoi>
+<xref url='http://www.mysite.mycountry/mypage'><font-large1>http://<allowbreak/>www.<allowbreak/>mysite.<allowbreak/>mycountry/<allowbreak/>mypage</font-large1></xref></citation>
+<citation from='year' key='Ga' id='bid90' userid='cite:GoC' type='article'>
+<bauteurs><bpers prenom='C.' nom='Gödel' prenomcomplet='C.'/></bauteurs>
+<btitle>BRACETEST4 leave<font-italic-shape>ABC</font-italic-shape>x deltc leaveIetc</btitle>
+</citation>
+<citation from='year' key='Gb' id='bid91' userid='cite:GoD' type='article'>
+<bauteurs><bpers prenom='D.' nom='Gödel' prenomcomplet='D.'/></bauteurs>
+<btitle>BRACETEST5 leave<font-italic-shape>ABC</font-italic-shape>x deltc leaveIetc</btitle>
+</citation>
+<citation from='year' key='GMS93' id='bid84' userid='cite:companion' type='book'>
+<bauteurs><bpers prenom='M.' nom='Goossens' prenomcomplet='Michel'/><bpers prenom='F.' nom='Mittelbach' prenomcomplet='Frank'/><bpers prenom='A.' nom='Samarin' prenomcomplet='Alexander'/></bauteurs>
+<btitle>The <LaTeX/> companion</btitle>
+<bpublisher>Addison Wesley</bpublisher>
+<byear>1993</byear>
+</citation>
+<citation from='year' key='GR99' id='bid99' userid='cite:example' type='article'>
+<bauteurs><bpers prenom='J.' nom='Garrigue' prenomcomplet='Joseph'/><bpers prenom='D.' nom='Rémy' prenomcomplet='Didier'/></bauteurs>
+<btitle>Extending ML with semi-explicit higher-order polymorphism</btitle>
+<bjournal>Journal of Functional Programming</bjournal>
+<bnumber>1/2</bnumber>
+<bvolume>155</bvolume>
+<bpages>134-169</bpages>
+<byear>1999</byear>
+<xref url='ftp://ftp.inria.fr/INRIA/Projects/Cristal/iandc.ps.gz'><font-large1>ftp://<allowbreak/>ftp.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>INRIA/<allowbreak/>Projects/<allowbreak/>Cristal/<allowbreak/>iandc.<allowbreak/>ps.<allowbreak/>gz</font-large1></xref></citation>
+<citation from='year' key='Gri02' id='bid85' userid='cite:RT-ra2002' type='techreport'>
+<bauteurs><bpers prenom='J.' nom='Grimm' prenomcomplet='José'/></bauteurs>
+<btitle>Outils pour la manipulation du rapport d'activité</btitle>
+<bnumber>RT-0265</bnumber>
+<btype>Technical report</btype>
+<binstitution>Inria</binstitution>
+<byear>2002</byear>
+<xref url='http://www.inria.fr/rrrt/rt-0265.html'><font-large1>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rt-0265.<allowbreak/>html</font-large1></xref></citation>
+<citation from='year' key='gri10' id='bid101' userid='cite:amovie' type='movie'>
+<bauteurs><bpers prenom='' nom='grimm'/></bauteurs>
+<btitle>A title</btitle>
+<baddress>somewhere</baddress>
+<bhowpublished>http://www.inria.fr</bhowpublished>
+<borganization>The Big Organizer</borganization>
+<byear>2010</byear>
+</citation>
+<citation from='year' key='Göd' id='bid88' userid='cite:GoA' type='article'>
+<bauteurs><bpers prenom='A.' nom='Gödel' prenomcomplet='A.'/></bauteurs>
+<btitle>BRACETEST2 delABCx del<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>H</mi></math></formula>h</btitle>
+</citation>
+<citation from='year' key='Göd' id='bid89' userid='cite:GoB' type='article'>
+<bauteurs><bpers prenom='B.' nom='Gödel' prenomcomplet='B.'/></bauteurs>
+<btitle>BRACETEST3 leaveABCx leave<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>H</mi></math></formula> delAb</btitle>
+</citation>
+<citation from='year' key='HP99' id='bid77' userid='cite:place99' type='inproceedings'>
+<bauteurs><bpers prenom='Y.' nom='Haralambous' prenomcomplet='Yannis'/><bpers prenom='J.' nom='Place' prenomcomplet='John'/></bauteurs>
+<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<bnumber>33-34</bnumber>
+<bbooktitle>Cahiers Gutenberg</bbooktitle>
+<bpages>173-182</bpages>
+<byear>1999</byear>
+</citation>
+<citation from='year' key='keya' id='bid26' userid='cite:tor26' type='misc'>
+</citation>
+<citation from='year' key='keyb' id='bid14' userid='cite:tor14' type='booklet'>
+<btitle>a14</btitle>
+</citation>
+<citation from='year' key='keyc' id='bid22' userid='cite:tor22' type='manual'>
+<btitle>a22</btitle>
+</citation>
+<citation from='year' key='keyd' id='bid10' userid='cite:tor10' type='proceedings'>
+<btitle>a10</btitle>
+<byear>b-year</byear>
+</citation>
+<citation from='year' key='keye' id='bid12' userid='cite:tor12' type='book'>
+<btitle>c, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mfenced separators='' open='&lbrace;' close='&rbrace;'><msup><mi>L</mi> <mn>2</mn> </msup></mfenced> <mi>&infin;</mi> </msub></math></formula></btitle>
+<bpublisher>d–e—f</bpublisher>
+<byear>e-year</byear>
+</citation>
+<citation from='year' key='Knu84' id='bid82' userid='cite:texbook' type='book'>
+<bauteurs><bpers prenom='D. E.' nom='Knuth' prenomcomplet='Donald E.'/></bauteurs>
+<btitle>The <TeX/>book</btitle>
+<bpublisher>Addison Wesley</bpublisher>
+<byear>1984</byear>
+</citation>
+<citation from='year' key='Lou88' id='bid76' userid='cite:louarn88' type='article'>
+<bauteurs><bpers prenom='P.' nom='Louarn' prenomcomplet='Philippe'/></bauteurs>
+<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'activité de l'INRIA</btitle>
+<bjournal>Cahiers Gutenberg</bjournal>
+<bnumber>0</bnumber>
+<bpages>17-24</bpages>
+<bmonth>apr</bmonth>
+<byear>1988</byear>
+</citation>
+<citation from='year' key='oth' id='bid34' userid='cite:tor40' type='misc'>
+<bauteurs><bpers prenom='' nom='others'/></bauteurs>
+</citation>
+<citation from='year' key='Rah03' id='bid81' userid='cite:Passive-tex' type='misc'>
+<bauteurs><bpers prenom='S.' nom='Rahtz' prenomcomplet='Sebastian'/></bauteurs>
+<btitle>Passive <TeX/></btitle>
+<bhowpublished>http://www.tei-c.org.uk/Software/passivetex/</bhowpublished>
+<byear>2003</byear>
+</citation>
+<citation from='year' key='Sey98a' id='bid100' userid='cite:thesefabien' type='phdthesis'>
+<bauteurs><bpers prenom='F.' nom='Seyfert' prenomcomplet='Fabien'/></bauteurs>
+<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l'identification de filtres hyperfréquences à cavités couplées</btitle>
+<btype>Ph. D. Thesis</btype>
+<bschool>Ecole de Mines de Paris</bschool>
+<byear>1998</byear>
+</citation>
+<citation from='year' key='Sey98b' id='bid102' userid='cite:aphd' type='hdr'>
+<bauteurs><bpers prenom='F.' nom='Seyfert' prenomcomplet='Fabien'/></bauteurs>
+<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l'identification de filtres hyperfréquences à cavités couplées</btitle>
+<bediteur><bpers prenom='' nom='Myself'/></bediteur>
+<btype>Thèse de doctorat</btype>
+<bschool>Ecole de Mines de Paris</bschool>
+<byear>1998</byear>
+<bdoi>foo</bdoi>
+</citation>
+<citation from='year' key='ske' id='bid8' userid='cite:tor8' type='inbook'>
+<btitle>c-title</btitle>
+<bpublisher>e-publisher</bpublisher>
+<bchapter>d-chapter</bchapter>
+<byear>f-year</byear>
+</citation>
+<citation from='year' key='T00' id='bid83' userid='cite:unicode' type='book'>
+<bauteurs><bpers prenom='' nom='The Unicode Consortium'/></bauteurs>
+<btitle>The Unicode Standard, version 3.0</btitle>
+<bpublisher>Addison Wesley</bpublisher>
+<byear>2000</byear>
+</citation>
+<citation from='year' key='thi03' id='bid3' userid='cite:tor3' type='article'>
+<bjournal>journal</bjournal>
+<byear>2003</byear>
+</citation>
+<citation from='year' key='vBaA+' id='bid30' userid='cite:tor52' type='misc'>
+<bauteurs><bpers prenom='A.' nom='van B' prenomcomplet='A'/><bpers prenom='' nom='and'/><bpers prenom='' nom='And'/><bpers prenom='' nom=''/><bpers prenom='a.' nom='b c' prenomcomplet='a'/></bauteurs>
+<bediteur><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/></bediteur>
+</citation>
+<citation from='year' key='vBxab' id='bid32' userid='cite:tor53' type='misc'>
+<bauteurs><bpers prenom='A.' nom='van B' prenomcomplet='A'/><bpers prenom='y.' nom='x' prenomcomplet='y'/><bpers prenom='c. d.' nom='a b' prenomcomplet='c d'/></bauteurs>
+<bediteur><bpers prenom='' nom='Alpha'/><bpers prenom='' nom='Beta'/><bpers prenom='' nom='Gamma'/></bediteur>
+</citation>
+<citation from='year' key='WM99' id='bid79' userid='cite:docbook' type='book'>
+<bauteurs><bpers prenom='N.' nom='Walsh' prenomcomplet='Norman'/><bpers prenom='L.' nom='Muelner' prenomcomplet='Leonard'/></bauteurs>
+<btitle>Docbook. The Definite Guide</btitle>
+<bpublisher>O'Reilly &amp; Associates, Inc</bpublisher>
+<byear>1999</byear>
+</citation>
+<citation from='year' key='X10a' id='bid39' userid='cite:tor100' type='misc'>
+<bauteurs><bpers prenom='' nom='X100'/></bauteurs>
+</citation>
+<citation from='year' key='X10b' id='bid40' userid='cite:tor101' type='misc'>
+<bauteurs><bpers prenom='' nom='X101'/></bauteurs>
+</citation>
+<citation from='year' key='X10c' id='bid41' userid='cite:tor102' type='misc'>
+<bauteurs><bpers prenom='' nom='X102'/></bauteurs>
+</citation>
+<citation from='year' key='X10d' id='bid42' userid='cite:tor103' type='misc'>
+<bauteurs><bpers prenom='' nom='X103'/></bauteurs>
+</citation>
+<citation from='year' key='X10e' id='bid43' userid='cite:tor104' type='misc'>
+<bauteurs><bpers prenom='' nom='X104'/></bauteurs>
+</citation>
+<citation from='year' key='X10f' id='bid44' userid='cite:tor105' type='misc'>
+<bauteurs><bpers prenom='' nom='X105'/></bauteurs>
+</citation>
+<citation from='year' key='X10g' id='bid45' userid='cite:tor106' type='misc'>
+<bauteurs><bpers prenom='' nom='X106'/></bauteurs>
+</citation>
+<citation from='year' key='X10h' id='bid46' userid='cite:tor107' type='misc'>
+<bauteurs><bpers prenom='' nom='X107'/></bauteurs>
+</citation>
+<citation from='year' key='X10i' id='bid47' userid='cite:tor108' type='misc'>
+<bauteurs><bpers prenom='' nom='X108'/></bauteurs>
+</citation>
+<citation from='year' key='X10j' id='bid48' userid='cite:tor109' type='misc'>
+<bauteurs><bpers prenom='' nom='X109'/></bauteurs>
+</citation>
+<citation from='year' key='X11a' id='bid49' userid='cite:tor110' type='misc'>
+<bauteurs><bpers prenom='' nom='X110'/></bauteurs>
+</citation>
+<citation from='year' key='X11b' id='bid50' userid='cite:tor111' type='misc'>
+<bauteurs><bpers prenom='' nom='X111'/></bauteurs>
+</citation>
+<citation from='year' key='X11c' id='bid51' userid='cite:tor112' type='misc'>
+<bauteurs><bpers prenom='' nom='X112'/></bauteurs>
+</citation>
+<citation from='year' key='X11d' id='bid52' userid='cite:tor113' type='misc'>
+<bauteurs><bpers prenom='' nom='X113'/></bauteurs>
+</citation>
+<citation from='year' key='X11e' id='bid53' userid='cite:tor114' type='misc'>
+<bauteurs><bpers prenom='' nom='X114'/></bauteurs>
+</citation>
+<citation from='year' key='X11f' id='bid54' userid='cite:tor115' type='misc'>
+<bauteurs><bpers prenom='' nom='X115'/></bauteurs>
+</citation>
+<citation from='year' key='X11g' id='bid55' userid='cite:tor116' type='misc'>
+<bauteurs><bpers prenom='' nom='X116'/></bauteurs>
+</citation>
+<citation from='year' key='X11h' id='bid56' userid='cite:tor117' type='misc'>
+<bauteurs><bpers prenom='' nom='X117'/></bauteurs>
+</citation>
+<citation from='year' key='X11i' id='bid57' userid='cite:tor118' type='misc'>
+<bauteurs><bpers prenom='' nom='X118'/></bauteurs>
+</citation>
+<citation from='year' key='X11j' id='bid58' userid='cite:tor119' type='misc'>
+<bauteurs><bpers prenom='' nom='X119'/></bauteurs>
+</citation>
+<citation from='year' key='X12a' id='bid59' userid='cite:tor120' type='misc'>
+<bauteurs><bpers prenom='' nom='X120'/></bauteurs>
+</citation>
+<citation from='year' key='X12b' id='bid60' userid='cite:tor121' type='misc'>
+<bauteurs><bpers prenom='' nom='X121'/></bauteurs>
+</citation>
+<citation from='year' key='X12c' id='bid61' userid='cite:tor122' type='misc'>
+<bauteurs><bpers prenom='' nom='X122'/></bauteurs>
+</citation>
+<citation from='year' key='X12d' id='bid62' userid='cite:tor123' type='misc'>
+<bauteurs><bpers prenom='' nom='X123'/></bauteurs>
+</citation>
+<citation from='year' key='X12e' id='bid63' userid='cite:tor124' type='misc'>
+<bauteurs><bpers prenom='' nom='X124'/></bauteurs>
+</citation>
+<citation from='year' key='X12f' id='bid64' userid='cite:tor125' type='misc'>
+<bauteurs><bpers prenom='' nom='X125'/></bauteurs>
+</citation>
+<citation from='year' key='X12g' id='bid67' userid='cite:tor128' type='misc'>
+<bauteurs><bpers prenom='' nom='X128'/></bauteurs>
+</citation>
+<citation from='year' key='X12h' id='bid68' userid='cite:tor129' type='misc'>
+<bauteurs><bpers prenom='' nom='X129'/></bauteurs>
+</citation>
+<citation from='year' key='X1203' id='bid65' userid='cite:tor126' type='misc'>
+<bauteurs><bpers prenom='' nom='X126'/></bauteurs>
+<byear>2003</byear>
+</citation>
+<citation from='year' key='X1289' id='bid66' userid='cite:tor127' type='misc'>
+<bauteurs><bpers prenom='' nom='X127'/></bauteurs>
+<byear>1789</byear>
+</citation>
+<citation from='year' key='X13a' id='bid69' userid='cite:tor130' type='misc'>
+<bauteurs><bpers prenom='' nom='X130'/></bauteurs>
+</citation>
+<citation from='year' key='X13b' id='bid70' userid='cite:tor131' type='misc'>
+<bauteurs><bpers prenom='' nom='X131'/></bauteurs>
+</citation>
+<citation from='year' key='X13c' id='bid71' userid='cite:tor132' type='misc'>
+<bauteurs><bpers prenom='' nom='X132'/></bauteurs>
+</citation>
+<citation from='year' key='X13d' id='bid72' userid='cite:tor133' type='misc'>
+<bauteurs><bpers prenom='' nom='X133'/></bauteurs>
+</citation>
+<citation from='year' key='X13e' id='bid73' userid='cite:tor134' type='misc'>
+<bauteurs><bpers prenom='' nom='X134'/></bauteurs>
+</citation>
+<citation from='year' key='X13f' id='bid74' userid='cite:tor135' type='misc'>
+<bauteurs><bpers prenom='' nom='X135'/></bauteurs>
+</citation>
+<citation from='year' key='X13g' id='bid75' userid='cite:tor136' type='misc'>
+<bauteurs><bpers prenom='' nom='X136'/></bauteurs>
+</citation>
+<citation from='year' key='XYZa' id='bid96' userid='cite:strange3' type='article'>
+<bauteurs><bpers prenom='J.-C.' nom='XX' prenomcomplet='Jean-Claude'/><bpers prenom='J.-C.' nom='YY' prenomcomplet='J.-Ch.'/><bpers prenom='J.-Ch.' nom='ZZ' prenomcomplet='J.-Ch.'/></bauteurs>
+<btitle>X</btitle>
+</citation>
+<citation from='year' key='XYZb' id='bid98' userid='cite:strange2' type='article'>
+<bauteurs><bpers prenom='J.-C.' nom='XX' prenomcomplet='Jean-Claude'/><bpers prenom='J.-C.' nom='YY' prenomcomplet='J.-Ch.'/><bpers prenom='J.-Ch.' nom='ZZ' prenomcomplet='J.-Ch.'/></bauteurs>
+<btitle>X</btitle>
+</citation></biblio></ramain>

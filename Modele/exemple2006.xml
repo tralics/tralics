@@ -1,0 +1,481 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE raweb SYSTEM 'raweb3.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<raweb language='english' creator='Tralics version 2.15.3' year='2006'>
+<accueil isproject='true' html='exemple'>
+<theme>num</theme>
+<projet>Apics</projet>
+<projetdeveloppe>Analysis and Problems of Inverse type in Control and Signal processing</projetdeveloppe>
+<UR><URSophia/></UR>
+<topic num='1'><t_titre>Topic one</t_titre></topic>
+<topic num='2'><t_titre>Topic two</t_titre></topic>
+<topic num='3'><t_titre>Topic three</t_titre></topic>
+</accueil>
+<composition id-text='composition' id='uid1'>
+
+<catperso><head>Team Leader</head>
+<pers prenom='Laurent' nom='Baratchart' affiliation='Inria' profession='Scientist'>DR Inria</pers>
+</catperso>
+<catperso><head>Deputy Team Leader</head>
+<pers prenom='Jean-Baptiste' nom='Pomet' affiliation='Inria' profession='Scientist'>CR Inria</pers>
+</catperso>
+<catperso><head>Administrative Assistant</head>
+<pers prenom='France' nom='Limouzis' affiliation='Inria' profession='Assistant'>AI Inria, partial time in the team</pers>
+</catperso>
+<catperso><head>Staff Member</head>
+<pers prenom='José' nom='Grimm' affiliation='Inria' profession='Scientist'>CR Inria</pers>
+<pers prenom='Juliette' nom='Leblond' affiliation='Inria' profession='Scientist'>DR Inria (since September, CR INRIA b
+efore)</pers>
+<pers prenom='Martine' nom='Olivi' affiliation='Inria' profession='Scientist'>CR Inria</pers>
+<pers prenom='Fabien' nom='Seyfert' affiliation='Inria' profession='Scientist'>CR Inria</pers>
+</catperso>
+</composition>
+<presentation id-text='presentation' id='uid3'>
+<module html='module2' id-text='2' id='uid4'><head>(Sans Titre)</head>
+<moreinfo><p>The Apics Team is a Project Team since January 2005.</p>
+</moreinfo>
+<p>The Team develops constructive methods for modeling, identification and
+control of dynamical systems.</p>
+<div2 rend='nonumber'><head>Research Themes</head>
+<list type='simple'>
+<item id-text='1' id='uid5'><p noindent='true'>Meromorphic approximation in the complex domain.</p>
+</item>
+<item id-text='2' id='uid6'><p noindent='true'>Inverse potential problems in 3-D and analysis of harmonic fields.</p>
+</item>
+<item id-text='3' id='uid7'><p noindent='true'>Control and structure analysis of non-linear systems.</p>
+</item></list>
+</div2>
+<div2 rend='nonumber'><head>International and industrial partners</head>
+<list type='simple'>
+<item id-text='1' id='uid8'><p noindent='true'>Industrial collaborations with Alcatel-Alenia-Space.</p>
+</item>
+<item id-text='2' id='uid9'><p noindent='true'>Exchanges with UST (Villeneuve d'Asq).</p>
+</item>
+<item id-text='3' id='uid10'><p noindent='true'>The project is involved in a NATO Collaborative Linkage Grant (with.</p>
+</item></list>
+</div2></module></presentation>
+<fondements id-text='fondements' id='uid11'>
+<module topic='1' html='module3' id-text='3' id='uid12'><head>Identification and deconvolution</head>
+<p>Let us first introduce the subject of Identification in some generality.
+Let us turn to work of the Apics Team<note id-text='1' id='uid13' place='foot'>and of the former
+MIAOU-project</note> can be partly recast from the data.</p>
+<p>We shall explain in more detail the above steps in the sub-paragraphs
+to come.</p>
+<div2 id-text='1' id='uid14'><head>Analytic approximation of incomplete boundary data</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+<pers prenom='José' nom='Grimm'/>
+<pers prenom='Juliette' nom='Leblond'/>
+<pers prenom='Jean-Paul' nom='Marmorat'>CMA, École des Mines</pers>
+<pers prenom='Jonathan' nom='Partington'/>
+<pers prenom='Fabien' nom='Seyfert'/>
+</participants>
+<keywords>
+<term>meromorphic approximation</term>
+<term>frequency-domain identification</term>
+<term>extremal problems</term>
+<term>algèbre élémentaire <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mo movablelimits='true' form='prefix'>max</mo><mo>,</mo><mo>+</mo><mo>)</mo></mrow></math></formula></term>
+</keywords><p>A prototypical Problem is:</p>
+<p><hi rend='slanted'>(<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>P</mi></math></formula>)  Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>&ge;</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> be an arc of the unit circle <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>M</mi><mo>&gt;</mo><mn>0</mn></mrow></math></formula>;
+find a function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>&Element;</mo><msup><mi>H</mi> <mi>p</mi> </msup><mo>+</mo><msub><mi>R</mi> <mi>N</mi> </msub></mrow></math></formula> such that
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow><mo>&parallel;</mo><mi>g</mi><mo>-</mo><mi>&psi;</mi><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow> </msub><mo>&le;</mo><mi>M</mi></mrow></math></formula> and such that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>-</mo><mi>f</mi></mrow></math></formula>
+is of minimal norm in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> under this constraint.</hi></p>
+<p>In order to impose pointwise constraints in the frequency domain
+one may wish to express
+the gauge constraint on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>T</mi><mo>&setminus;</mo><mi>K</mi></mrow></math></formula> in a more subtle manner, depending on
+the frequency:</p>
+<p><hi rend='slanted'>(<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>P</mi> <mo>&apos;</mo> </msup></math></formula>)  Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>&ge;</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> be an arc of the unit circle
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> and
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>M</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>;
+find a function
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>&Element;</mo><msup><mi>H</mi> <mi>p</mi> </msup><mo>+</mo><msub><mi>R</mi> <mi>N</mi> </msub></mrow></math></formula> such that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>|</mo><mi>g</mi><mo>-</mo><mi>&psi;</mi><mo>|</mo><mo>&le;</mo><mi>M</mi></mrow></math></formula> a.e. on
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>T</mi><mo>&setminus;</mo><mi>K</mi></mrow></math></formula> and such that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>-</mo><mi>f</mi></mrow></math></formula> is of minimal norm in
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> under this constraint.</hi></p>
+<p>Deeply linked with Problem <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>P</mi><mo>)</mo></mrow></math></formula>, is the following completion Problem:</p>
+<p><hi rend='slanted'>(<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>P</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup></math></formula>)  Let
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>&ge;</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> an arc of the unit circle <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> and
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>M</mi><mo>&gt;</mo><mn>0</mn></mrow></math></formula>; find a function
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>h</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> such that
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow><mo>&parallel;</mo><mi>h</mi><mo>-</mo><mi>&psi;</mi><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow> </msub><mo>&le;</mo><mi>M</mi></mrow></math></formula>, and such that the distance to
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>H</mi> <mi>p</mi> </msup><mo>+</mo><msub><mi>R</mi> <mi>N</mi> </msub></mrow></math></formula> of the concatenated function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&vee;</mo><mi>h</mi></mrow></math></formula>
+is minimal in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>)</mo></mrow></mrow></math></formula> under this constraint.</hi></p>
+<p>A version of this problem where the constraint depends on the frequency is:</p>
+<p><hi rend='slanted'>(<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>P</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup></math></formula>)  Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>&ge;</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> an arc the unit circle <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> and
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>M</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>; find a function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>h</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> such that
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>|</mo><mi>h</mi><mo>-</mo><mi>&psi;</mi><mo>|</mo><mo>&le;</mo><mi>M</mi></mrow></math></formula> a.e. on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>T</mi><mo>&setminus;</mo><mi>K</mi></mrow></math></formula>, and such that the distance to
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>H</mi> <mi>p</mi> </msup><mo>+</mo><msub><mi>R</mi> <mi>N</mi> </msub></mrow></math></formula> of the concatenated function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&vee;</mo><mi>h</mi></mrow></math></formula>
+is minimal in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>)</mo></mrow></mrow></math></formula> under this constraint.</hi></p>
+<p>Let us mention that Problem <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><msup><mi>P</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><mo>)</mo></mrow></math></formula> reduces to Problem
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>P</mi><mo>)</mo></mrow></math></formula> that in turn reduces, although implicitly,
+to an extremal Problem without
+constraint, (i.e., a Problem of type <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>P</mi><mo>)</mo></mrow></math></formula> where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>K</mi><mo>=</mo><mi>T</mi></mrow></math></formula>) that is
+denoted conventionally by <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><msub><mi>P</mi> <mn>0</mn> </msub><mo>)</mo></mrow></math></formula>. In the case where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>=</mo><mi>&infin;</mi></mrow></math></formula>,
+Problems <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><msup><mi>P</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><msup><mi>P</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><mo>)</mo></mrow></math></formula> can viewed as special cases of
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>P</mi><mo>)</mo></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><msup><mi>P</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><mo>)</mo></mrow></math></formula> respectively, but if <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&lt;</mo><mi>&infin;</mi></mrow></math></formula> the situation
+is different.</p>
+<p>where the constraint on the approximant is expressed in terms of
+its real and imaginary parts while the criterion takes only its real part
+into account:</p>
+<p><hi rend='slanted'>Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> be an arc of the unit circle <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&alpha;</mi><mo>,</mo><mi>&beta;</mi><mo>,</mo><mi>M</mi><mo>&gt;</mo><mn>0</mn></mrow></math></formula>;
+find a function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>&Element;</mo><msup><mi>H</mi> <mi>p</mi> </msup></mrow></math></formula> such that
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow><mi>&alpha;</mi><mspace width='0.166667em'/><mo>&parallel;</mo><mtext>Re</mtext><mrow><mo>(</mo><mrow><mi>g</mi><mo>-</mo><mi>&psi;</mi></mrow><mo>)</mo></mrow><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow> </msub><mo>+</mo><mi>&beta;</mi><mspace width='0.166667em'/><msub><mrow><mo>&parallel;</mo><mtext>Im</mtext><mrow><mo>(</mo><mrow><mi>g</mi><mo>-</mo><mi>&psi;</mi></mrow><mo>)</mo></mrow><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow> </msub><mo>&le;</mo><mi>M</mi></mrow></math></formula> and
+such that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mtext>Re</mtext><mo>(</mo><mi>g</mi><mo>-</mo><mi>f</mi><mo>)</mo></mrow></math></formula> is of minimal norm in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>
+under this constraint.</hi></p>
+<p>see sections <ref target='uid29'/> and
+<ref target='uid45'/>, where data and physical prior
+information concern real (or imaginary) parts of analytic functions.</p>
+<p>This allows one to</p>
+<list type='ordered'>
+<item id-text='1' id='uid15' label='(1)'><p noindent='true'>extend the index theorem to the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>2</mn><mo>&le;</mo><mi>p</mi><mo>&le;</mo><mi>&infin;</mi></mrow></math></formula></p>
+</item>
+<item id-text='2' id='uid16' label='(2)'><p noindent='true'>study asymptotic errors with</p>
+</item>
+<item id-text='3' id='uid17' label='(3)'><p noindent='true'>characterize the asymptotic (cf. section <ref target='uid38'/>).</p>
+</item></list>
+<p>In connection with the second and third items above,see section <ref target='uid46'/>.</p>
+</div2>
+<div2 id-text='2' id='uid18'><head>Scalar rational approximation</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+<pers prenom='Martine' nom='Olivi'/>
+<pers prenom='Edward' nom='Saff'/>
+<pers prenom='Herbert' nom='Stahl'>TFH Berlin</pers>
+<pers prenom='Maxim' nom='Yattselev'/>
+</participants>
+<keywords>
+<term>rational approximation</term>
+<term>critical point</term>
+<term>orthogonal polynomials</term>
+</keywords><p>Rational approximation is the second step mentioned
+in section <ref target='uid12'/>.
+The Problem can be stated as:</p>
+<p><hi rend='slanted'>Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>&le;</mo><mi>p</mi><mo>&le;</mo><mi>&infin;</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>H</mi> <mi>p</mi> </msup></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>n</mi></math></formula> an integer;
+find a rational function without poles in the unit disk, and of
+degree at most <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>n</mi></math></formula> that is nearest possible to <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>f</mi></math></formula> in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>H</mi> <mi>p</mi> </msup></math></formula>.</hi>
+In this way we are led to consider
+minimizing a criterion of the form:</p>
+<formula id-text='1' id='uid19' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><msub><mfenced separators='' open='&parallel;' close='&parallel;'><mi>f</mi><mo>-</mo><mfrac><msub><mi>p</mi> <mi>m</mi> </msub> <msub><mi>q</mi> <mi>n</mi> </msub></mfrac></mfenced> <mrow><msup><mi>L</mi> <mn>2</mn> </msup><mrow><mo>(</mo><mi>d</mi><mi>&mu;</mi><mo>)</mo></mrow></mrow> </msub></math></formula>
+<p noindent='true'>where, by definition,</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mrow><mo>&parallel;</mo><mi>g</mi><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mn>2</mn> </msup><mrow><mo>(</mo><mi>d</mi><mi>&mu;</mi><mo>)</mo></mrow></mrow> <mn>2</mn> </msubsup><mo>=</mo><mfrac><mn>1</mn> <mrow><mn>2</mn><mi>&pi;</mi></mrow></mfrac><msubsup><mo>&int;</mo> <mrow><mo>-</mo><mi>&pi;</mi></mrow> <mi>&pi;</mi> </msubsup><msup><mrow><mo>|</mo><mi>g</mi><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow><mo>|</mo></mrow> <mn>2</mn> </msup><mi>d</mi><mi>&mu;</mi><mrow><mo>(</mo><mi>&theta;</mi><mo>)</mo></mrow><mo>,</mo></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo movablelimits='true' form='prefix'>min</mo><msub><mfenced separators='' open='&parallel;' close='&parallel;'><mrow><mo>|</mo><mi>f</mi><mo>|</mo></mrow><mo>-</mo><mfenced separators='' open='&vert;' close='&vert;'><mfrac><msub><mi>p</mi> <mi>n</mi> </msub> <msub><mi>q</mi> <mi>n</mi> </msub></mfrac></mfenced></mfenced> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>)</mo></mrow></mrow> </msub><mo>.</mo></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mfenced separators='' open='&parallel;' close='&parallel;'><msup><mrow><mo>|</mo><mi>f</mi><mo>|</mo></mrow> <mn>2</mn> </msup><mo>-</mo><msup><mfenced separators='' open='&vert;' close='&vert;'><mfrac><msub><mi>p</mi> <mi>n</mi> </msub> <msub><mi>q</mi> <mi>n</mi> </msub></mfrac></mfenced> <mn>2</mn> </msup></mfenced> <mrow><msup><mi>L</mi> <mi>&infin;</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>)</mo></mrow></mrow> </msub><mo>&lt;</mo><mi>&varepsilon;</mi><mo>,</mo></mrow></math></formula>
+<div3 id-text='1' id='uid20'><head>OK</head>
+<p>If one introduces now as a new variable the rational matrix <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>R</mi></math></formula> defined by</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>R</mi><mo>=</mo><msup><mfenced separators='' open='(' close=')'><mtable><mtr><mtd><mi>L</mi></mtd><mtd><mi>H</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>I</mi> <mi>m</mi> </msub></mtd></mtr></mtable></mfenced> <mrow><mo>-</mo><mn>1</mn></mrow> </msup></mrow></math></formula>
+<p noindent='true'>and if <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula> stands for the first block-row,</p>
+<formula id-text='2' id='uid21' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mrow><mo>&parallel;</mo><mi>T</mi><mo>&parallel;</mo></mrow> <mrow><mi>&Lambda;</mi></mrow> <mn>2</mn> </msubsup><mo>=</mo><mi>&#x1D413;&#x1D42B;</mi><mfenced separators='' open='&lbrace;' close='&rbrace;'><mfrac><mn>1</mn> <mrow><mn>2</mn><mi>&pi;</mi></mrow></mfrac><msubsup><mo>&int;</mo> <mrow><mn>0</mn></mrow> <mrow><mn>2</mn><mi>&pi;</mi></mrow> </msubsup><mi>T</mi><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>&Lambda;</mi><mrow><mo>(</mo><mi>&theta;</mi><mo>)</mo></mrow><mspace width='0.166667em'/><msup><mi>T</mi> <mo>*</mo> </msup><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow></mfenced><mo>,</mo></mrow></math></formula>
+<p noindent='true'/></div3></div2></module>
+<module topic='1' html='module4' id-text='4' id='uid22'><head>Structure and control of non-linear systems</head>
+<p>In order to control a system, one generally relies on a model.</p>
+<div2 id-text='3' id='uid23'><head>Feedback control and optimal control</head>
+<p>Stabilization by continuous state feedback—or output feedback, that is,</p>
+</div2>
+<div2 id-text='4' id='uid24'><head>Transformations and equivalences of non-linear systems and models</head>
+<div3 id-text='1' id='uid25'><head>Dynamic linearization.</head>
+<p>The problem of dynamic linearization,.</p>
+</div3>
+<div3 id-text='2' id='uid26'><head>Topological Equivalence</head>
+<p>In what precedes, we have not taken into account the degree of
+<hi rend='it'>smoothness</hi> of the transformations under consideration.</p></div3></div2></module></fondements>
+<domaine id-text='domaine' id='uid27'>
+<module topic='1' html='module5' id-text='5' id='uid28'><head>Introduction</head>
+<p>The botton line of the team's activity is twofold,
+</p></module>
+<module topic='1' html='module6' id-text='6' id='uid29'><head>Geometric inverse problems
+for the Laplacian</head>
+<p>Localizing cracks, pointwise sources or occlusions in a two-dimensional.</p>
+</module>
+<module topic='1' html='module7' id-text='7' id='uid30'><head>Identification and design of resonant systems</head>
+<p>One of the best training ground for the research of the team in function
+theory is the identification and design of physical systems.</p>
+<figure file='miaou_transf' id-text='1' id='uid31' rend='figure'><head>Transducer model.</head>
+</figure>
+<figure file='miaou_coup' id-text='2' id='uid32' rend='figure'><head>Configuration of the filter</head>
+</figure>
+</module>
+<module topic='1' html='module8' id-text='8' id='uid33'><head>Spatial mechanics</head>
+<p>The use of satellites in telecommunication networks motivates.
+</p></module>
+<module topic='1' html='module9' id-text='9' id='uid34'><head>Non-linear optics</head>
+<p>The increased capacity of numerical channels in information
+technology is a major
+industrial challenge.
+</p></module>
+<module topic='1' html='module10' id-text='10' id='uid35'><head>Transformations and equivalence of non-linear systems</head>
+<p>The works presented in module <ref target='uid24'/> lie upstream.
+</p></module></domaine>
+<logiciels id-text='logiciels' id='uid36'>
+<module topic='1' html='module11' id-text='11' id='uid37'><head>The Tralics software</head>
+<participant><pers prenom='José' nom='Grimm'>manager</pers>
+</participant>
+<p>The development of a <LaTeX/> to XML translator, named Tralics was continued.
+</p></module>
+<module topic='1' html='module12' id-text='12' id='uid38'><head>The RARL2 software</head>
+<participants><pers prenom='Jean-Paul' nom='Marmorat'/>
+<pers prenom='Martine' nom='Olivi'>manager</pers>
+</participants>
+<p>RARL2 (Réalisation interne et Approximation Rationnelle L2) is a software for
+rational approximation (see module <ref target='uid20'/>). Its web
+page is
+<xref url='http://www-sop.inria.fr/miaou/RARL2/rarl2.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>RARL2/<allowbreak/>rarl2.<allowbreak/>html</xref>.
+It is germane to the arl2 function of hyperion
+</p></module>
+<module topic='1' html='module13' id-text='13' id='uid39'><head>The RGC software</head>
+<p>The identification of filters modeled
+see section <ref target='uid59'/>.
+</p></module>
+<module topic='1' html='module14' id-text='14' id='uid40'><head>PRESTO-HF</head>
+<participant><pers prenom='Fabien' nom='Seyfert'/>
+</participant>
+<p>PRESTO-HF: a toolbox dedicated to lowpass parameter identification for
+hyperfrequency filters
+<xref url='http://www-sop.inria.fr/miaou/Fabien.Seyfert/Presto_web_page/presto_pres.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>Fabien.<allowbreak/>Seyfert/<allowbreak/>Presto_web_page/<allowbreak/>presto_pres.<allowbreak/>html</xref>
+The `miaou' should be replaced by `apics' here.
+</p></module>
+<module topic='1' html='module15' id-text='15' id='uid41'><head>The Endymion software</head>
+<participant><pers prenom='José' nom='Grimm'>manager</pers>
+</participant>
+<p>We have started the development of Endymion, a software licensed
+under the CeCILL license version two, see
+<xref url='http://www.cecill.info/'>http://www.cecill.info</xref>.
+</p></module></logiciels>
+<resultats id-text='resultats' id='uid42'>
+<module topic='1' html='module16' id-text='16' id='uid43'><head>Tools for producing the Activity Report
+(this document)</head>
+<p>The great novelty in the RAWEB2002 (Scientific Annex to the Annual Activity
+Report of Inria), was the use of XML as intermediate language, and the
+possibility of bypassing <LaTeX/>. for the example we get
+<hi rend='tt'>${\#119987 _y=lim_{x\#8594 0}sin^2{(x)}}$</hi>.</p>
+</module>
+<module topic='1' html='module17' id-text='17' id='uid44'><head>Tralics: a Latex to XML Translator</head>
+<p>The <hi rend='it'>Tralics</hi> software is a C++ written <LaTeX/> to XML translator</p>
+</module>
+<module topic='2' html='module18' id-text='18' id='uid45'><head>Inverse Problems for 2D and 3D
+elliptic operators</head>
+<div2 id-text='5' id='uid46'><head>Sources recovery in 2D and 3D</head>
+<p>The fact that 2D harmonic functions are real parts is also considered.</p>
+</div2>
+<div2 id-text='6' id='uid47'><head>Application to EEG inverse problems</head>
+<p>In 3D, epileptic regions in the cortex are often
+linked to a number of important related issues.</p>
+</div2>
+<div2 id-text='7' id='uid48'><head>Cauchy problems in 2D and 3D</head>
+<p>Solving Cauchy problems on an annulus can be extended.</p>
+</div2>
+<div2 id-text='8' id='uid49'><head>More general geometries</head>
+<p>We also started to be developed.</p>
+</div2>
+<div2 id-text='9' id='uid50'><head>Others elliptic operators</head>
+<p>Within the post-doctoral stay of E. Sincich, we began
+the University of Nice.</p>
+</div2>
+<div2 id-text='10' id='uid51'><head>Application to magnetic dipoles recovery</head>
+<p>The magnetic field produced by a magnetic dipole <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mover accent='true'><mi>m</mi> <mo>&rightarrow;</mo></mover></math></formula>
+located at a point <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup></math></formula> is</p>
+<formula id-text='3' id='uid52' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>B</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>)</mo></mrow><mo>=</mo><mfrac><msub><mi>&mu;</mi> <mn>0</mn> </msub> <mrow><mn>4</mn><mi>&pi;</mi></mrow></mfrac><mfenced separators='' open='&lbrace;' close='&rbrace;'><mfrac><mrow><mn>3</mn><mover accent='true'><mi>m</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>&middot;</mo><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow> <mrow><mrow><mo>|</mo></mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><msup><mrow><mo>|</mo></mrow> <mn>5</mn> </msup></mrow></mfrac><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mfrac><mrow><mover accent='true'><mi>m</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow> <mrow><mrow><mo>|</mo></mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><msup><mrow><mo>|</mo></mrow> <mn>3</mn> </msup></mrow></mfrac></mfenced><mo>.</mo></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>B</mi> <mi>z</mi> </msub><mrow><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>)</mo></mrow><mo>=</mo><mfrac><msub><mi>&mu;</mi> <mn>0</mn> </msub> <mrow><mn>4</mn><mi>&pi;</mi></mrow></mfrac><msub><mi>&lambda;</mi> <mi>k</mi> </msub><mfrac><mrow><mn>2</mn><msup><mi>z</mi> <mn>2</mn> </msup><mo>-</mo><msup><mrow><mo>(</mo><mi>x</mi><mo>-</mo><msub><mi>x</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>-</mo><msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><msub><mi>y</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup></mrow> <msup><mrow><mo>[</mo><msup><mrow><mo>(</mo><mi>x</mi><mo>-</mo><msub><mi>x</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>+</mo><msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><msub><mi>y</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>+</mo><msup><mi>z</mi> <mn>2</mn> </msup><mo>]</mo></mrow> <mrow><mn>5</mn><mo>/</mo><mn>2</mn></mrow> </msup></mfrac></mrow></math></formula>
+<formula id-text='4' id='uid53' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>C</mi> <mi>z</mi> </msub><mrow><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>z</mi><mo>)</mo></mrow><mo>=</mo><mfrac><msub><mi>&mu;</mi> <mn>0</mn> </msub> <mrow><mn>4</mn><msup><mi>&pi;</mi> <mn>2</mn> </msup><msup><mi>a</mi> <mn>2</mn> </msup></mrow></mfrac><munder><mo>&sum;</mo> <mi>k</mi> </munder><msub><mi>&lambda;</mi> <mi>k</mi> </msub><msub><mo>&int;</mo> <mrow><mi>D</mi><mo>(</mo><mn>0</mn><mo>,</mo><mi>a</mi><mo>)</mo></mrow> </msub><mfrac><mrow><mn>2</mn><msup><mi>z</mi> <mn>2</mn> </msup><mo>-</mo><msup><mrow><mo>(</mo><mi>x</mi><mo>-</mo><mi>&alpha;</mi><mo>-</mo><msub><mi>x</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>-</mo><msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><mi>&beta;</mi><mo>-</mo><msub><mi>y</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup></mrow> <msup><mfenced separators='' open='[' close=']'><msup><mrow><mo>(</mo><mi>x</mi><mo>-</mo><mi>&alpha;</mi><mo>-</mo><msub><mi>x</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>+</mo><msup><mrow><mo>(</mo><mi>y</mi><mo>-</mo><mi>&beta;</mi><mo>-</mo><msub><mi>y</mi> <mi>k</mi> </msub><mo>)</mo></mrow> <mn>2</mn> </msup><mo>+</mo><msup><mi>z</mi> <mn>2</mn> </msup></mfenced> <mrow><mn>5</mn><mo>/</mo><mn>2</mn></mrow> </msup></mfrac><mi>d</mi><mi>&alpha;</mi><mi>d</mi><mi>&beta;</mi><mo>.</mo></mrow></math></formula>
+<p noindent='true'/></div2></module>
+<module topic='3' html='module19' id-text='19' id='uid54'><head>Parametrizations of matrix-valued
+lossless functions</head>
+<p>The possibility to fertilize the pure algebraic LMI approach
+with the rich and vast topic of Schur analysis has been pointed out and
+deserve to be further investigated.
+</p></module>
+<module topic='3' html='module20' id-text='20' id='uid55'><head>The mathematics of Surface Acoustic Wave
+filters</head>
+</module>
+<module topic='2' html='module21' id-text='21' id='uid56'><head>Rational and Meromorphic Approximation</head>
+<p>The results have been exploited .
+</p></module>
+<module topic='2' html='module22' id-text='22' id='uid57'><head>Behavior of poles</head>
+<p>This rather unexpected algorithm is currently being explored in
+details by E. Mina.
+</p></module>
+<module topic='3' html='module23' id-text='23' id='uid58'><head>Analytic extension under pointwise constraints</head>
+<p>Such regularity condition should greatly impinge on the
+numerical practice of the problem.
+</p></module>
+<module topic='2' html='module24' id-text='24' id='uid59'><head>Exhaustive determination
+of constrained realizations corresponding to a transfer function</head>
+<formula id-text='24' id='uid60' textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><mi>p</mi><mo>&Element;</mo><msup><mrow><mi>&Copf;</mi></mrow> <msub><mi>r</mi> <mn>1</mn> </msub> </msup><mo>,</mo><mspace width='0.166667em'/><mspace width='0.166667em'/><msub><mi>E</mi> <msub><mi>&sigma;</mi> <mn>1</mn> </msub> </msub><mrow><mo>(</mo><mi>p</mi><mo>)</mo></mrow></mrow></mtd><mtd><mrow><mo>=</mo><mo>&lbrace;</mo><mi>q</mi><mo>&Element;</mo><msup><mrow><mi>&Copf;</mi></mrow> <msub><mi>r</mi> <mn>1</mn> </msub> </msup><mo>,</mo><msub><mi>&pi;</mi> <msub><mi>&sigma;</mi> <mn>1</mn> </msub> </msub><mrow><mo>(</mo><mi>q</mi><mo>)</mo></mrow><mo>=</mo><msub><mi>&pi;</mi> <msub><mi>&sigma;</mi> <mn>1</mn> </msub> </msub><mrow><mo>(</mo><mi>p</mi><mo>)</mo></mrow><mo>&rbrace;</mo></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>p</mi><mo>&Element;</mo><msup><mrow><mi>&Copf;</mi></mrow> <msub><mi>r</mi> <mn>2</mn> </msub> </msup><mo>,</mo><mspace width='0.166667em'/><mspace width='0.166667em'/><msub><mi>E</mi> <mrow><msub><mi>&sigma;</mi> <mn>1</mn> </msub><mo>,</mo><msub><mi>&sigma;</mi> <mn>2</mn> </msub></mrow> </msub><mrow><mo>(</mo><mi>p</mi><mo>)</mo></mrow></mrow></mtd><mtd><mrow><mo>=</mo><mo>&lbrace;</mo><mi>q</mi><mo>&Element;</mo><msup><mrow><mi>&Copf;</mi></mrow> <msub><mi>r</mi> <mn>1</mn> </msub> </msup><mo>,</mo><msub><mi>&pi;</mi> <msub><mi>&sigma;</mi> <mn>1</mn> </msub> </msub><mrow><mo>(</mo><mi>q</mi><mo>)</mo></mrow><mo>=</mo><msub><mi>&pi;</mi> <msub><mi>&sigma;</mi> <mn>2</mn> </msub> </msub><mrow><mo>(</mo><mi>p</mi><mo>)</mo></mrow><mo>&rbrace;</mo></mrow></mtd></mtr></mtable></math></formula>
+<p noindent='true'/></module>
+<module topic='1' html='module25' id-text='25' id='uid61'><head>Zolotarev problem and multi-band filter design</head>
+<p>T</p>
+</module>
+<module topic='2' html='module26' id-text='26' id='uid62'><head>Frequency Approximation and OMUX design</head>
+<p>This is one reason for analysing the optimization problem further.
+</p></module>
+<module topic='1' html='module27' id-text='27' id='uid63'><head>On the structure of optimal trajectories</head>
+<p>The results on the local regularity of trajectories in optimal control
+obtained previously have been published.
+</p></module>
+<module topic='1' html='module28' id-text='28' id='uid64'><head>Feedback for low thrust orbital transfer</head>
+<p>The study concerns the control of a satellite.
+</p></module>
+<module topic='1' html='module29' id-text='29' id='uid65'><head>Local linearization (or flatness) of control systems</head>
+<p>a workable formulation of the question is now available.
+</p></module>
+<module topic='1' html='module30' id-text='30' id='uid66'><head>Controllability for a general Dubins
+problem</head>
+<p>Controllability results for systems with drift are usually obtained.</p>
+<p spacebefore='3.0pt'>The main object of our research is given by Dubins-like systems
+In <cit rend='foot'><ref target='bid0'/></cit> we proved that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>&ne;</mo><mn>1</mn></mrow></math></formula>. This has been presented in
+<cit><ref target='bid1'/></cit> and <cit rend='refer'><ref target='bid2'/></cit>.
+</p></module></resultats>
+<contrats id-text='contrats' id='uid67'>
+<module html='module31' id-text='31' id='uid68'><head>Contracts CNES-IRCOM-INRIA</head>
+<p>Contracts n<hi rend='sup'>o</hi> 04/CNES/1728/00-DCT094
+see module <ref target='uid32'/>,
+</p></module>
+<module html='module32' id-text='32' id='uid69'><head>Contract Alcatel Space (Cannes)</head>
+<p>Contract n<hi rend='sup'>o</hi> 1 01 E 0726.
+</p></module></contrats>
+<international id-text='international' id='uid70'>
+<module html='module33' id-text='33' id='uid71'><head>Scientific Committees</head>
+<p>L. Baratchart is a member of the editorial board
+</p></module>
+<module html='module34' id-text='34' id='uid72'><head>National Actions</head>
+<p>Together with project-teams Caiman and Odyssée
+</p></module>
+<module html='module35' id-text='35' id='uid73'><head>Actions Funded by the EC</head>
+<p>The team is the recipient see
+<xref url='http://www.ladseb.pd.cnr.it/control/ercim/control.html'>http://<allowbreak/>www.<allowbreak/>ladseb.<allowbreak/>pd.<allowbreak/>cnr.<allowbreak/>it/<allowbreak/>control/<allowbreak/>ercim/<allowbreak/>control.<allowbreak/>html</xref>.
+</p></module>
+<module html='module36' id-text='36' id='uid74'><head>Extra-european International Actions</head>
+<p><hi rend='bold'>NATO CLG</hi> (Collaborative Linkage Grant), PST.CLG.979703,
+“Constructive approximation and inverse diffusion problems”, with
+Vanderbilt Univ. (Nashville, USA) and LAMSIN-ENIT (Tunis, Tu.), 2003-2005.</p>
+<p><hi rend='bold'>EPSRC</hi> grant (EP/C004418) “Constrained approximation in
+function spaces, with applications”, with Leeds Univ. (UK) and
+Univ. Lyon I, 2005-2006.</p>
+<p><hi rend='bold'>STIC-INRIA</hi> and <hi rend='bold'>AireDéveloppement</hi> grants with
+LAMSIN-ENIT (Tunis, Tu.), “Problèmes
+inverses du Laplacien et approximation constructive des fonctions”,</p>
+<p><hi rend='bold'>NSF EMS21</hi> RTG students exchange program (with
+Vanderbilt University).
+</p></module>
+<module html='module37' id-text='37' id='uid75'><head>The Apics Seminar</head>
+<p>The following scientists gave a talk at the seminar:</p>
+</module></international>
+<diffusion id-text='diffusion' id='uid76'>
+<module html='module38' id-text='38' id='uid77'><head>Teaching</head>
+<list type='description'><label>Courses</label>
+<item id-text='1' id='uid78'>
+<list type='simple'>
+<item id-text='1.1' id='uid79'><p noindent='true'>L. Baratchart, DEA Géométrie et Analyse, LATP-CMI, Univ. de Provence</p>
+</item>
+<item id-text='1.2' id='uid80'><p noindent='true'>M. Olivi, Mathématiques pour l'ingénieur</p>
+</item></list>
+</item><label>Trainees</label>
+<item id-text='2' id='uid81'>
+<list type='simple'>
+<item id-text='2.1' id='uid82'><p noindent='true'>Jonathan Chetboun (ENPC)</p>
+</item>
+<item id-text='2.2' id='uid83'><p noindent='true'>Cristina Paduret
+<hi rend='it'>Résolution de problèmes inverses</hi></p>
+</item></list>
+</item><label>Ph.D. Students</label>
+<item id-text='3' id='uid84'>
+<list type='simple'>
+<item id-text='3.1' id='uid85'><p noindent='true'>Alex Bombrun, « Commande optimale de satellites » (optimal etc)</p>
+</item>
+<item id-text='3.2' id='uid86'><p noindent='true'>Imen Fellah, “Data completion in inverse problems”, co-tutelle.</p>
+</item>
+<item id-text='3.3' id='uid87'><p noindent='true'>Vincent Lunot, « Problèmes à  la synthèse d'OMUX »,</p>
+</item>
+<item id-text='3.4' id='uid88'><p noindent='true'>Moncef Mahjoub, “Complétion de données géométriques.” co-tutelle.</p>
+</item>
+<item id-text='3.5' id='uid89'><p noindent='true'>Erwin Mina Diaz, “Asymptotic properties of urves.”</p>
+</item>
+<item id-text='3.6' id='uid90'><p noindent='true'>Maxim Yattselev, “Meromorphic orthogonality.”</p>
+</item></list>
+</item><label>defended Ph.D. thesis</label>
+<item id-text='4' id='uid91'>
+<list type='simple'>
+<item id-text='4.1' id='uid92'><p noindent='true'>David Avanessoff, « Linéarisation dynamique des solutions » (dynamic
+trajectories). June 8, 2005.<cit><ref target='bid3'/></cit></p>
+</item></list>
+</item><label>Jurys</label>
+<item id-text='5' id='uid93'>
+</item>
+<item id-text='6' id='uid94'><p noindent='true'>L. Baratchart sat on</p>
+</item>
+<item id-text='7' id='uid95'><p noindent='true'>J. Leblond has been sitting</p>
+</item>
+<item id-text='8' id='uid96'><p noindent='true'>F. Seyfert has been sitting</p>
+</item>
+<item id-text='9' id='uid97'><p noindent='true'>J.-B. Pomet has been sitting</p>
+</item></list>
+</module>
+<module html='module39' id-text='39' id='uid98'><head>Community service</head>
+<p>L. Baratchart was a member of the “bureau” of the CP
+(Comité des Projets) of INRIA-Sophia Antipolis untill July.
+He is a member of the “commission de spécialistes” (section 25) of the
+Université de Provence.</p>
+<p>J. Leblond and J. Grimm are co-editors of the
+proceedings (to appear in 2006) of the
+CNRS-INRIA summer school “Harmonic analysis and rational approximation: their
+rôles in signals, control and dynamical systems theory”
+(Porquerolles, 2003)
+<xref url='http://www-sop.inria.fr/apics/anap03/index.en.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>anap03/<allowbreak/>index.<allowbreak/>en.<allowbreak/>html</xref> <cit rend='foot'><ref target='bid4'/></cit>.
+</p></module>
+<module html='module40' id-text='40' id='uid99'><head>Conferences and workshops</head>
+<p>A. Bombrun, B. Atfeh and L. Baratchart have presented a communication at
+CMFT2005 (Computational Methods and Function
+Theory), Joensuu, Finland (June).
+<cit rend='refer'><ref target='bid5'/></cit>
+</p></module></diffusion><biblio>
+<citation from='refer' key='1' id='bid5' userid='refercite:th-david' type='phdthesis'>
+<bauteurs><bpers prenom='D.' nom='Avanessoff' prenomcomplet='David'/></bauteurs>
+<btitle>Linéarisation dynamique des systèmes non linéaires et paramétrage de l'ensemble des solutions</btitle>
+<btype>Ph. D. Thesis</btype>
+<bschool>Univ. de Nice - Sophia Antipolis</bschool>
+<bmonth>June</bmonth>
+<byear>2006</byear>
+</citation>
+<citation from='refer' key='2' id='bid2' userid='refercite:ref3' type='inproceedings'>
+<bauteurs><bpers prenom='M.' nom='Sigalotti' prenomcomplet='Mario'/></bauteurs>
+<btitle>Stability of Nonlinear switched systems in the plane</btitle>
+<bbooktitle>44th IEEE Conf.</bbooktitle>
+<bpages>3285–3290</bpages>
+<baddress>Seville, Spain</baddress>
+<bmonth>December</bmonth>
+<byear>2005</byear>
+</citation>
+<citation from='year' key='3' id='bid3' userid='cite:th-david' type='phdthesis'>
+<bauteurs><bpers prenom='D.' nom='Avanessoff' prenomcomplet='David'/></bauteurs>
+<btitle>Linéarisation dynamique des systèmes non linéaires et paramétrage de l'ensemble des solutions</btitle>
+<btype>Ph. D. Thesis</btype>
+<bschool>Univ. de Nice - Sophia Antipolis</bschool>
+<bmonth>June</bmonth>
+<byear>2006</byear>
+</citation>
+<citation from='year' key='4' id='bid1' userid='cite:ref2' type='inproceedings'>
+<bauteurs><bpers prenom='U.' nom='Boscain' prenomcomplet='Ugo'/></bauteurs>
+<btitle>Stability of Non</btitle>
+<bpages>3285–3290</bpages>
+<baddress>Seville, Spain</baddress>
+<bmonth>December</bmonth>
+<byear>2006</byear>
+</citation>
+<citation from='foot' key='5' id='bid0' userid='footcite:ref1' type='inproceedings'>
+<bauteurs><bpers prenom='G.' nom='Charlot' prenomcomplet='Grégoire'/></bauteurs>
+<btitle>Stability of Nonlinear switched systems in the plane</btitle>
+<bbooktitle>44th IEEE Conf.</bbooktitle>
+<bpages>3285–3290</bpages>
+<baddress>Seville, Spain</baddress>
+<bmonth>December</bmonth>
+<byear>2005</byear>
+</citation>
+<citation from='foot' key='6' id='bid4' userid='footcite:anap' type='book'>
+<bediteur><bpers prenom='J.-D.' nom='Fournier' prenomcomplet='J.-D.'/><bpers prenom='J.' nom='Grimm' prenomcomplet='J.'/><bpers prenom='J.' nom='Leblond' prenomcomplet='J.'/><bpers prenom='J. R.' nom='Partington' prenomcomplet='J. R.'/></bediteur>
+<btitle>Harmonic Analysis and Rational Approximation; Their Rôles in Signals, Control and Dynamical Systems</btitle>
+<bseries>Lecture Notes in Control and Information Sciences</bseries>
+<bvolume>327</bvolume>
+<bpublisher>Springer Verlag</bpublisher>
+<byear>2006</byear>
+</citation></biblio></raweb>

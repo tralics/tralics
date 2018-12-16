@@ -1,0 +1,50 @@
+# This is a configuration file for tralics, for the Raweb
+# $Id: ra2009.tcf,v 1.1 2009/10/15 08:44:23 grimm Exp $
+## tralics ident rc=standard-ra $Revision: 1.1 $
+
+# This file is part of Tralics.
+# Copyright Inria. Jos\'e Grimm. Apics. 2004/2005, 2006, 2007
+# (See the file COPYING in the Tralics main directory)
+# If you modify this file, by changing the semantics of the RA,
+# please remove the `standard-ra' on the `tralics ident' line above, 
+# or replace it by `non-standard'.
+
+# Note that this file contains no command block: 
+# the tex code must be in ra2008.clt
+
+  DocType = raweb raweb7.dtd
+  DocAttrib = year \specialyear
+  DocAttrib = creator \tralics
+
+  theme_vals = "do not use"
+
+  fullsection_vals = "/composition/Team/presentation/Overall Objectives/\
+     fondements/Scientific Foundations/domaine/Application Domains/\
+     logiciels/Software/resultats/New Results/\
+     contrats/Contracts and Grants with Industry/\
+     international/Other Grants and Activities/diffusion/Dissemination"
+
+  ur_vals = "Rocquencourt//Sophia//Rennes//Nancy//Lorraine//\
+             Bordeaux//Lille//Saclay//Grenoble//RhoneAlpes//Liama"
+  affiliation_vals ="INRIA//CNRS//LIAMA//AutreEtablissementPublic//"
+  affiliation_vals ="+UnivFr//UnivEtrangere//EtablissementPrive//AutreAffiliation//"
+  profession_vals = "Visiteur//Chercheur//Enseignant//Technique//"
+  profession_vals = "+Assistant//PhD//PostDoc//AutreCategorie//CollaborateurExterieur"
+
+bibtex_extensions = ""
+  bibtex_fields = "x-editorial-board" #booleen (yes or no) Required pour les @articles 
+              # articles avec ou sans comite de lecture
+  bibtex_fields = "+x-international-audience"  #booleen (yes or no) Required pour les @articles et les  les @inproceedings
+  bibtex_fields = "+x-proceedings" #booleen (yes or no) Required pour les @inproceedings
+              # conf avec ou sans actes
+  bibtex_fields = "+x-invited-conference" #booleen (yes or no) optionnel
+              # conferences invitees
+  bibtex_fields = "+x-scientific-popularization" #booleen (yes or no) optionnel
+              # publi de vulgarisation scientifique
+  bibtex_fields = "+x-pays" #list (liste des pays des co-auteurs, 2lettres)	
+bibtex_extensions = "patent standard"
+
+xml_rasection = "section"
+
+
+

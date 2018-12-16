@@ -1,0 +1,709 @@
+\documentclass{article}
+\usepackage{mml}
+% $Id: mathmlc.tex,v 1.1 2008/02/05 14:25:26 grimm Exp $
+%% TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007
+%% Licensed under thde CeCILL free software  license 
+%% (See the file COPYING in the main directory for details)
+\begin{document}
+
+This document produces a list of all examples of the MathML documentation
+Chapter 4 
+
+\newcommand\www{http://www.example.com}
+\newcommand\openmath{http://www.openmath.org/cd}
+
+\newcommand\Power[2]{\mmlapply{\mmlPower#1#2}}
+\newcommand\Sum[2]{\mmlapply{\mmlPlus#1#2}}
+\newcommand\Product[2]{\mmlapply{\mmlTimes#1#2}}
+\newcommand\Lt[2]{\mmlapply{\mmlLt#1#2}}
+\newcommand\Fn[1]{\mmlfn{\mathci{#1}}}
+\newcommand\Set[1]{\mathci\mmlAtype{set}{#1}}
+\newcommand\List[1]{\mathci\mmlAtype{list}{#1}}
+\newcommand\Vector[1]{\mathci\mmlAtype{vector}{#1}}
+
+\newcommand\exprA{\Sum{\mathci{F}}{\mathci{G}}}
+\newcommand\Condition[1]{\mmlcondition{\mmlapply{#1}}}
+
+
+\newcommand\cix{\mathci{x}}
+\newcommand\ciy{\mathci{y}}
+\newcommand\ciz{\mathci{z}}
+\newcommand\cit{\mathci{t}}
+\newcommand\ciu{\mathci{u}}
+
+\newcommand\cia{\mathci{a}}
+\newcommand\cib{\mathci{b}}
+\newcommand\ciA{\mathci{A}}
+\newcommand\ciB{\mathci{B}}
+\newcommand\cic{\mathci{c}}
+\newcommand\cif{\mathci{f}}
+\newcommand\cin{\mathci{n}}
+\newcommand\ciff{\mathci\mmlAtype{function}{f}} % f as function
+\newcommand\bvar[1]{\mmlbvar{\mathci{#1}}}
+\newcommand\czero{\mathcn{0}}
+\newcommand\cone{\mathcn{1}}
+\newcommand\ctwo{\mathcn{2}}
+\newcommand\cthree{\mathcn{3}}
+\newcommand\cfour{\mathcn{4}}
+
+
+
+$\mathcn{12345}$
+$\mathcn\mmlAbase{8}{12345}$
+$\mathbox{cn}\mmlAtype{complex-cartesian}
+  {\mathcnothing{3}\mathbox{sep}{}\mathcnothing{4}}$
+% marche pas
+
+%$\mathcn[type][complex-cartesian]{3\sep4}$
+$\mathci{v}$
+$\Vector{v}$
+
+
+% 4.2.1.3
+$\Sum\cix\ciy$
+$\mmlapply{\mmlPlus\cix\ciy\ciz}$
+$\mmlapply{\mmlPlus\Product{\cia}{\cix}\cib}$
+$\mmlapply{\mmlTimes\exprA\cix}$
+
+
+$\exprA$
+$\mmlapply{\exprA\cix}$
+$\mathbox{reln}{\mmlLt\cix\ciy}$
+$\Lt{\cix}{\ciy}$
+
+% 4.2.1.4
+$\mathcsymbol\mmlAdefinitionURL{\www/VectorCalculus.htm}
+ \mmlAencoding{text}{Christoffel}$
+$\mmlfn{\exprA}$
+$\mmlsemantics\mmlAdefinitionURL{\www/vectorfuncs/plus.htm}
+   \mmlAencoding{Mathematica}{\exprA}$
+$\mmlapply{
+\mathcsymbol\mmlAdefinitionURL{http://www.example.org/function\_spaces.html\#my\_def}\mmlAencoding{text}{BigK}\cix\ciy}$
+
+% 4.2.1.5
+$\mmlapply{\mmlapply{\mmlInverse\mmlSin}\cix}$
+
+% 4.2.1.6
+$\Vector{A}$
+$\mmldeclare{\ciA\mmlvector{\cia\cib\cic}}$
+$\mmlapply{\mmlEq\mathci{V} \Sum{\ciA}{\ciB}}$
+$\mmldeclare\mmlAtype{vector}{\ciA}$
+
+% 4.2.1.7
+$\mmllambda{bvarcix \mmlapply{\mmlSin\Sum\cix\cone}}$
+
+$\mmldeclare\mmlAtype{function}{\cif
+  \mmllambda{\bvar{x}
+      \mmlapply{\mmlPlus\Power{\cix}{\ctwo}\cix\cthree}}}$
+
+$\mmldeclare{\mathci{J}\mmllambda{\bvar{x}\bvar{y}\mmlapply{\mmlInt
+\bvar{t}\mmllowlimit{\cix}\mmluplimit{\ciy}
+\Power{\cit}{\cfour}}}}$
+
+
+% 4.2.1.8
+$\mmlset{\bvar{x}\mmlcondition{\Lt{\cix}{\cone}}\cix}$
+
+$\mmlapply{\mmlUnion\bvar{S}
+  \Condition{\mmlIn\mathci{S}\mathci{F}}
+  \mmlapply{\mmlSetdiff\mathci{U}\mathci{S}}}$
+
+$\mmlapply{\mmlPlus
+ \mmldomainofapplication{\mmlNaturalnumbers}
+ \mmllambda{\bvar{x}\mmlapply{\mmlQuotient\cone\cix}}}$
+
+% 4.2.2.1.
+$\mmlci{\cic_\mathmn{1}}$
+$\mmlcsymbol\mmlAdefinitionURL{\www/ContDiffFuncs.html}
+{\mathci{C}^\mathmn{2}}$
+
+% 4.2.2.2
+$\mmlinterval\mmlAclosure{open-closed}{\cia\cib}$
+$\mmllist{\cia\cib\cic}$
+$\mmlmatrix{\mmlmatrixrow{\cone\ctwo}
+ \mmlmatrixrow{\cthree\cfour}}$
+$\mmlvector{\Sum\cix\ciy \cthree\mathcn{7}}$
+$\Sum\cia\cib$
+$\mmlapply{\mmlSin\cia}$
+$\mathbox{reln}{\mmlEq\cia\cib}$
+$\mmllambda{\bvar{x}\mmlapply{\mmlSin\cix}}$
+$\mmllambda{\bvar{x}\cthree}$
+$\mmlpiecewise{\mmlpiece{\czero\Lt{\cix}{\czero}}\mmlotherwise{\cix}}$
+
+% 4.2.2.3
+$\mmldeclare\mmlAtype{vector}{\mathci{V}}$
+$\mmldeclare{\mathci{F}\mmllambda{
+\bvar{U}\mmlapply{\mmlInt\bvar{x}\mmllowlimit{\czero}
+\mmluplimit{\cia}\mathci{U}}}}$
+$\mmlapply{\mathci{F}\mathci{U}}$
+$\mmldeclare\mmlAdefinitionURL{http://.../MathML:noncommutplus}
+\mmlAencoding{Maple}{\mmlPlus}$
+
+% 4.2.3.1.
+$\mmlapply{\mmlSin\mathcn{5}}$
+$\mmlapply{\mmlPlus\mmlSin\mmlCos}$
+
+% 4.2.3.2.
+$\mmlapply{\mmlInt\bvar{x}\mmllowlimit{\czero}\mmluplimit{\cone}
+  \Power{\cix}{\ctwo}}$
+$\mmlapply{\mmlInt\mmlinterval{\czero\cone}\mmlSin}$
+$\mmlapply{\mmlInt\bvar{x}
+  \Condition{\mmlIn\cix\Set{C}}  \mmlapply{\mmlSin\cix}}$
+$\mmlapply{\mmlInt\mmldomainofapplication{\Set{C}}\ciff}$
+
+
+\def\tmp{\mmlapply{\mmlAnd
+                   \mmlapply{\mmlLeq\czero\cit}%
+                   \mmlapply{\mmlLeq\cit\cone}}}
+
+$\mmlapply{\mmlInt \bvar{x}
+ \mmldomainofapplication{\mmlset{\bvar{t}\mmlcondition{\tmp}\cit}}
+ \Power{\cix}{\ctwo}}$
+
+\def\tmp{\mmlapply{\mmlAnd
+                   \mmlapply{\mmlLeq\czero\cit}%
+                   \mmlapply{\mmlLeq\cit\cone}
+                   \mmlapply{\mmlLeq\czero\ciu}%
+                   \mmlapply{\mmlLeq\ciu\cone}}}
+\def\tmpA{\Product{\Power{\cix}{ctwo}}{\Power{ciy}{\cthree}}}
+$\mmlapply{\mmlInt \bvar{x}\bvar{y}
+ \mmldomainofapplication{\mmlset{\bvar{t}\bvar{u}\mmlcondition{\tmp}
+    \mmllist{\cit\ciu}}}\tmpA}$
+
+\def\tmp{\mmlapply{\mmlInt\mmlinterval{\czero\cone}}}
+  
+$\mmlfn{\tmp}$
+$\mmllambda{\bvar{f} \tmp}$
+
+% second derivative
+\def\tmpA{\mmlbvar{\cix\mmldegree{\ctwo}}}
+\def\tmpB{\mmlbvar{\mmldegree{\ctwo}\cix}}
+$\mmlapply{\mmlDiff\tmpA \mmlapply{\Fn{f} \cix}}$
+$\mmlapply{\mmlPartialdiff\tmpB\bvar{y}\bvar{x}\mmldegree{\cfour}\ciff}$
+$\mmlapply{\mmlSum\bvar{i}\mmllowlimit{\czero}\mmluplimit{\mathcn{100}}
+  \Power{\cix}{\mathci{i}}}$
+
+\def\tmp{\mmlapply{\mmlLt\cix\mathcn{9}}}
+\def\tmpA{\mmlapply{\mmlLt\cix\mathcn{10}}}
+$\mmlapply{\mmlExists\bvar{x}\tmp}$
+$\mmlapply{\mmlForall\bvar{x}\mmlcondition{\tmp}\tmpA}$
+
+
+% 4.2.4
+$\Lt\cia\cib$
+
+% 4.2.5.1
+\def\tmp#1{\mathcsymbol\mmlAencoding{OpenMath}
+\mmlAdefinitionURL{\openmath/setname1\##1}{#1}}
+
+$\mmlapply{\mmlExists \bvar{x}
+  \mmlapply{\mmlLt\mmlapply{\Power{\cix}{\mathcn{5}}}\cthree}}$
+$\mmlapply{
+  \mmlForall
+  \bvar{x} 
+  \Condition{\mmlIn\cix\tmp{N}}
+  \mmlapply{
+    \mmlExists
+    \bvar{p}\bvar{q}
+    \Condition{
+        \mmlAnd 
+        \mmlapply{\mmlIn\mathci{p}\tmp{P}}
+        \mmlapply{\mmlIn\mathci{q}\tmp{P}}}
+    \mmlapply{\mmlEq\Sum{\mathci{p}}{\mathci{q}} \Product{\ctwo}{\cix}}}}  $
+
+
+$\mmlapply{\mmlExists\bvar{x}
+  \Condition{\Lt\cix\cthree}
+  \mmlapply{\mmlEq\Power{\cix}{\ctwo} \cfour}}$
+
+% 4.2.6
+$
+\mmlsemantics{
+  \mmlapply{\mmlDivide \mathcn{123}\mathcn{456}}
+  \mmlannotation\mmlAencoding{Mathematica}{
+    \mathcnothing{N[123/456,\space 39]}}
+  \mmlannotation\mmlAencoding{TeX}{
+    \mathcnothing{\char`\$0.269736842105263157894736842105263157894\char`\\
+      ldots\char`\$}}
+  \mmlannotation\mmlAencoding{Maple}{\mathcnothing{evalf(123/456,\space39);}}
+  \mmlannotationxml\mmlAencoding{MathML-Presentation}{
+    0.269736842105263157894\overline{736842105263157894}}
+  \mmlannotationxml\mmlAencoding{MathML-OpenMath}{
+    \mathbox{OMA}[xmlns][http://www.openmath.org/OpenMath]{
+      \mathbox{OMS}[cd][arith1][name][divide] {
+        \mathbox{OMI}{\mathcnothing{123}}\mathbox{OMI}{\mathcnothing{123}}
+ }}}}$
+
+$\mathcn\mmlAtype{constant}{\mmlCpi}$
+
+% 4.3.3.1.
+$\Vector{V}$
+
+% 4.3.3.1.
+$\mmlapply\mmlAother{display="scriptstyle"}{\mmlDivide\cone\cix}$
+
+% 4.4.1.1.
+$\mathcn\mmlAtype{real}{12345.7}$
+$\mathcn\mmlAtype{integer}{12345}$
+$\mathcn\mmlAtype{integer}\mmlAbase{16}{AB3}$
+$\mmlcn\mmlAtype{rational}{\mmlXsep{12342}{2342342}}$
+$\mmlcn\mmlAtype{complex-cartesian}{\mmlXsep{12.3}{5}}$
+$\mmlcn\mmlAtype{complex-polar}{\mmlXsep{2}{3.1514}}$
+$\mmlcn\mmlAtype{constant}{\tau}$
+
+% 4.4.1.2.
+$\cix$
+$\Vector{V}$
+$\mmlci{x-i}$
+
+% 4.4.1.3.
+$\mmlapply{\mmlcsymbol\mmlAencoding{OpenMath}
+  \mmlAdefinitionURL{\openmath/hypergeo2\#BesselJ}
+  {J_0}\ciy}$
+$\mmlapply{\mathcsymbol\mmlAencoding{text}
+  \mmlAdefinitionURL{\www/universalconstants/Boltmann.htm}{k}}$
+
+% 4.4.2.1
+$\mmlapply{\mmlFactorial\cthree}$
+$\mmlapply{\mmlPlus\cthree\cfour}$
+$\mmlapply{\mmlSin\cix}$
+
+% 4.4.2.2
+$\mathbox{reln}{\mmlEq\cia\cib}$
+$\mathbox{reln}{\mmlLt\cia\cib}$
+
+% 4.4.2.3
+$\Fn{L}$
+$\mmlapply{\mmlfn{\mmlapply{\mmlPlus\mathci{g}}\ciz}}$
+
+% 4.4.2.4
+$\mmlinterval{\cia\cib}$
+$\mmlinterval\mmlAclosure{open-closed}{\cia\cib}$
+
+% 4.4.2.5
+$\mmlapply{\mmlInverse\cif}$
+$\mmlapply{\mmlinverse{../MyDefinition.htm}{text}\cif}$
+$\mmlapply{\mmlapply{\mmlInverse\mathci\mmlAtype{matrix}{a}}\ciA}$
+
+% 4.4.2.6
+$\mmlcn\mmlAtype{complex-cartesian}{\mmlXsep{3}{4}}$
+
+% 4.4.2.7
+$\Condition{\mmlIn\cix\Set{A}}$
+\def\tmp{\mmlapply{\mmlAnd
+    \mmlapply{\mmlGt\cix\czero}\mmlapply{\mmlLt\cix\cone}}}
+$\mmlcondition{\tmp}$
+$\mmlapply{\mmlMax\bvar{x} \mmlcondition{\tmp}
+\mmlapply{\mmlMinus\cix\mmlapply{\mmlSin\cix}}}$
+
+% 4.4.2.8
+$\mmldeclare\mmlAtype{vector}{\mathci{V}}$
+$\mmldeclare\mmlAtype{vector}{\mathci{V} \mmlvector{\cone\ctwo\cthree}}$
+$\mmldeclare{\mathci[id][var-A]{A} \mmlvector{\cia\cib\cic}}$
+$\mmlapply{\mmlEq\mathci{V}\mmlapply
+  {\mmlPlus\mathci\mmlAdefinitionURL{\#var-A}{A}\ciB}}$
+$\mmldeclare\mmlAtype{function}\mmlAnargs{2}{\cif\exprA}$
+$\mmldeclare\mmlAtype{function}{\mathci{J}
+  \mmllambda{\bvar{x} \mmlapply{\mmlLn \mathci{x}}}}$
+$\mmldeclare\mmlAtype{vector}{\mathci{v} \mmlvector{\cone\ctwo\cthree}}$
+
+% 4.4.2.9
+$\mmllambda{\bvar{x}\mmlapply{\mmlSin\Sum\cix\cone}}$
+$\mmllambda{\bvar{b}\mmlapply{
+    \mmlInt\bvar{x}\mmllowlimit{cia}\mmluplimit{\cib}
+    \mmlapply{\Fn{f}\cix} }}$
+$\mmllambda{\bvar{x}\mmldomainofapplication{\mmlIntegers}
+  \mmlapply{\mmlSin\cix}}$
+$\mmllambda{\mmldomainofapplication{\mmlIntegers}\mmlSin}$
+
+% 4.4.2.10
+$\mmlapply{\mmlCompose\Fn{f}\Fn{g}}$
+$\mmlapply{\mmlCompose\Fn{f}\Fn{g}\Fn{h}}$
+$\mmlapply{\mmlapply{\mmlCompose\Fn{f}\Fn{g}}cix}$
+$\mmlapply{\Fn{f}\mmlapply{\Fn{g}\cix}}$
+
+% 4.4.2.11
+$\mmlapply{\mmlEq\mmlapply{\mmlCompose\Fn{f}\mmlapply{\mmlInverse\Fn{f}}}
+\mmlIdent}$
+
+% 4.4.2.12
+$\mmlapply{\mmlEq\mmlapply{\mmlDomain\Fn{f}}\mmlReals}$
+% 4.4.2.13
+$\mmlapply{\mmlEq\mmlapply{\mmlCodomain\Fn{f}}\mmlRationals}$
+% 4.4.2.14
+$\mmlapply{\mmlEq\mmlapply{\mmlImage\mmlSin}\mmlinterval{\mathcn{-1}\cone}}$
+% 4.4.2.15
+$\mmlapply{\mmlInt\mmldomainofapplication{\mathci{C}}\mathci{f}}$
+
+% 4.4.2.16
+$\mmlpiecewise{\mmlpiece{\czero\Lt{\cix}{\czero}}\mmlotherwise{\cix}}$
+
+$\mmlapply {\mmlEq\mmlapply{\mmlAbs\cix}
+  \mmlpiecewise{
+    \mmlpiece{\mmlapply{\mmlMinus\cix}\mmlapply{\mmlLt\cix\czero}}
+    \mmlpiece{\czero\mmlapply{\mmlEq\cix\czero}}
+    \mmlpiece{\cix\mmlapply{\mmlGt\cix\czero}}}}$
+
+% 4.4.3.1
+$\mmlapply{\mmlQuotient\cia\cib}$
+% 4.4.3.2
+$\mmlapply{\mmlFactorial\cin}$
+% 4.4.3.3
+$\mmlapply{\mmlDivide\cia\cib}$
+% 4.4.3.4
+
+$\mmlapply{\mmlMax \cia\cib}$
+$\mmlapply{\mmlMin\bvar{x}
+  \Condition{\mmlNotin\cix\Set{B}}
+  \mmlapply{\mmlPower\cix\ctwo}}$
+$\mmlapply{\mmlMax\bvar{x}
+  \Condition{
+\mmlAnd\mmlapply{\mmlIn\cix\Set{B}}\mmlapply{\mmlNotin\cix\Set{C}}}
+\cix}$
+
+% 4.4.3.5
+$\mmlapply{\mmlMinus\cix\ciy}$
+% 4.4.3.6
+$\mmlapply{\mmlPlus\cix\ciy\ciz}$
+% 4.4.3.7
+$\Power{\cix}{\cthree}$
+% 4.4.3.8
+$\mmlapply{\mmlRem\cia\cib}$
+% 4.4.3.9
+$\mmlapply{\mmlTimes\cia\cib}$
+
+% 4.4.3.10
+$\mmlapply{\mmlRoot\mmldegree{\mathci\mmlAtype{integer}{n}}\cia}$
+% 4.4.3.11
+$\mmlapply{\mmlGcd\cia\cib\cic}$
+% 4.4.3.12
+$\mmlapply{\mmlAnd\cia\cib}$
+% 4.4.3.13
+$\mmlapply{\mmlOr\cia\cib}$
+% 4.4.3.14
+$\mmlapply{\mmlXor\cia\cib}$
+% 4.4.3.15
+$\mmlapply{\mmlNot\cia}$
+% 4.4.3.16
+$\mmlapply{\mmlImplies\ciA\ciB}$
+% 4.4.3.17
+$\mmlapply{\mmlForall\bvar{x}
+  \mmlapply{\mmlEq\mmlapply{\mmlMinus\cix\cix}\czero}}$
+$\mmlapply{\mmlForall\bvar{p}\bvar{q}
+  \Condition{\mmlAnd
+      \mmlapply{\mmlIn\mathci{p}\mmlRationals}
+      \mmlapply{\mmlIn\mathci{q}\mmlRationals}
+      \mmlapply{\mmlLt\mathci{p}\mathci{q}}}
+  \mmlapply{\mmlLt\mathci{p}\Power{\mathci{q}}\ctwo}}$
+$\mmlapply{\mmlForall\bvar{n}
+  \Condition{\mmlAnd\mmlapply{\mmlGt\cin\czero}
+    \mmlapply{\mmlIn\cin\mmlIntegers}}
+  \mmlapply{\mmlExists\bvar{x}\bvar{y}\bvar{z}
+    \Condition{\mmlAnd\mmlapply{\mmlIn\cix\mmlIntegers}
+        \mmlapply{\mmlIn\ciy\mmlIntegers}
+        \mmlapply{\mmlIn\ciz\mmlIntegers}}
+    \mmlapply{\mmlEq\mmlapply{\mmlPlus\Power{\cix}{\cin}\Power{\cix}{\cin}}
+      \Power{\ciz}{\cin}}}}$
+
+% 4.4.3.18
+$\mmlapply{\mmlExists\bvar{x}\mmlapply{\Fn{f}\cix}\czero}$
+
+% 4.4.3.19
+$\mmlapply{\mmlAbs\cix}$
+
+% 4.4.3.20
+$\mmlapply{\mmlConjugate
+  \mmlapply{\Sum{\cix}{\mathcn{\mmlentity{ImaginaryI}}\ciy}}}$
+
+% 4.4.3.21
+\def\temp{\Sum{\cix}{\Product{\mathcn{\mmlentity{ImaginaryI}}}{\ciy}}}
+$\mmlapply{\mmlArg\tmp}$
+% 4.4.3.22
+$\mmlapply{\mmlReal\tmp}$
+% 4.4.3.23
+$\mmlapply{\mmlImaginary\tmp}$
+% 4.4.3.24
+$\mmlapply{\mmlLcm\cia\cib\cic}$
+% 4.4.3.25
+\def\tmp{\mmlapply{\mmlFloor\cia}}
+$\tmp$
+$\mmlapply{\mmlForall\bvar{a}\mmlapply{\mmlAnd
+    \mmlapply{\mmlLeq\tmp\cia}
+    \mmlapply{\mmlLt\cia\Sum{\tmp}{\cone}}}}$
+% 4.4.3.25
+\def\tmp{\mmlapply{\mmlCeiling\cia}}
+$\tmp$
+$\mmlapply{\mmlForall\bvar{a}\mmlapply{\mmlAnd
+    \mmlapply{\mmlLt\mmlapply{\mmlMinus\tmp\cone}\cia}
+    \mmlapply{\mmlLeq\cia\tmp}}}$
+
+% 4.4.4.1
+$\mmlapply{\mmlEq\cia\cib}$
+% 4.4.4.2
+$\mmlapply{\mmlNeq\cia\cib}$
+% 4.4.4.3
+$\mmlapply{\mmlGt\cia\cib}$
+% 4.4.4.4
+$\mmlapply{\mmlLt\cia\cib}$
+% 4.4.4.5
+$\mmlapply{\mmlGeq\cia\cib}$
+% 4.4.4.6
+$\mmlapply{\mmlLeq\cia\cib}$
+% 4.4.4.7
+$\mmlapply{\mmlEquivalent\cia\mmlapply{\mmlNot\mmlapply{\mmlNot\cia}}}$
+% 4.4.4.8
+$\mmlapply{\mmlApprox\mmlcn\mmlAtype{rational}{\mmlXsep{22}{7}}\mmlPi}$
+% 4.4.4.9
+$\mmlapply{\mmlFactorof\cia\cib}$
+
+% 4.4.5.1
+$\mmlapply{\mmlEq\mmlapply{\mmlInt\mmlSin}\mmlCos}$
+$\mmlapply{\mmlInt\bvar{x} \mmllowlimit{czero}\mmluplimit{\cia}
+  \mmlapply{\cif\cix}}$
+$\mmlapply{\mmlInt\mmlinterval{\cia\cib}\mmlCos}$
+$\mmlapply{\mmlInt\bvar{x} \mmlcondition{\mmlapply{\mmlIn\cix\Set{D}}}
+  \mmlapply{\ciff\cix}}$
+
+% 4.4.5.2
+$\mmlapply{\mmlDiff\cif}$
+$\mmlapply{\mmlDiff\bvar{x}\mmlapply{\ciff\cix}}$
+
+% 4.4.5.3
+\def\tmp#1#2{\mmlbvar{\mathci{#1}\mmldegree{\mathci{#2}}}}
+$\mmlapply{\mmlPartialdiff\tmp{x}{m}\tmp{y}{n}
+  \mmldegree{\mathci{k}}\mmlapply{\ciff\cix\ciy}}$
+$\mmlapply{\mmlPartialdiff\bvar{x}\bvar{y}\mmlapply{\ciff\cix\ciy}}$
+$\mmlapply{\mmlPartialdiff\mmllist{\cone\cone\cthree}\Fn{f}}$
+
+% 4.4.5.4
+\def\tmpA{\mmlapply{\mmlInt\bvar{x} \mmllowlimit{czero}\mmluplimit{\cia}
+  \mmlapply{\cif\cix}}}
+$\tmpA$
+% 4.4.5.5
+$\tmpA$
+
+
+% 4.4.5.6
+$\mmlset{\mmlbvar{\mathci\mmlAid{var-x}{x}}
+  \mmlcondition{\mmlapply{\mmlLt\mathci\mmlAdefinitionURL{\#var-x}{x}\cone}}}$
+$\mmlapply{\mmlDiff\mmlbvar{\cix\mmldegree{\ctwo}} \Power{\cix}{\cfour}}$
+$\mmlapply{\mmlInt\bvar{x}\mmlcondition{\mmlIn\cix\mathci{D}}\mmlapply{\cif\cix}}$
+
+% 4.4.5.7
+$\mmlapply{\mmlPartialdiff\tmp{x}{n}\tmp{y}{m}
+  \mmlapply{\mmlSin\Product\cix\ciy}}$
+
+
+% 4.4.5.8
+$\mmlapply{\mmlDivergence\cia}$
+% 4.4.5.9
+$\mmlapply{\mmlGrad\cif}$
+% 4.4.5.10
+$\mmlapply{\mmlCurl\cia}$
+
+% 4.4.5.11
+$\mmlapply{\mmlEq\mmlapply{\mmlLaplacian\cif} \mmlapply{\mmlDivergence
+    \mmlapply{\mmlGrad\cif}}}$
+
+% 4.4.6.1
+$\mmlset{\cib\cia\cic}$
+$\mmlset{\bvar{x}\Condition{\mmlAnd\mmlapply{\mmlLt\cix\mathcn{5}}
+    \mmlapply{\mmlIn\cix\mmlNaturalnumbers}} \cix}$
+
+% 4.4.6.2
+$\mmllist{\cia\cib\cic}$
+$\mmllist\mmlAorder{numeric}{\bvar{x}\Condition{\mmlLt\cix\mathcn{5}}\cix}$
+
+% 4.4.6.3
+$\mmlapply{\mmlUnion\ciA\ciB}$
+$\mmlapply{\mmlUnion\mmlbvar{\Set{S}}\mmldomainofapplication{\List{L}}\Set{S}}$
+
+% 4.4.6.4
+$\mmlapply{\mmlIntersect\ciA\ciB}$
+$\mmlapply{\mmlIntersect\mmlbvar{\Set{S}} 
+  \mmldomainofapplication{\List{L}}\Set{S}}$
+
+% 4.4.6.5
+$\mmlapply{\mmlIn\cia\Set{A}}$
+
+% 4.4.6.6
+$\mmlapply{\mmlNotin\cia\mathmi{A}}$
+
+% 4.4.6.7
+$\mmlapply{\mmlSubset\mathmi{A}\mathmi{B}}$
+$\mmlapply{\mmlSubset\mmlbvar{\Set{S}} \Condition{\mmlIn\mathci{S}
+      \List{T}} \mathci{S}}$
+
+% 4.4.6.8
+$\mmlapply{\mmlPrsubset\ciA\ciB}$
+$\mmlapply{\mmlPrsubset\mmlbvar{\mathci\mmlAtype{integer}{i}}
+  \mmllowlimit{\czero}\mmluplimit{\mathcn{10}}
+  \mmlapply{\mmlSelector\mathci\mmlAtype{vector\_of\_sets}{S}\mathci{i}}}$
+
+% 4.4.6.9
+$\mmlapply{\mmlNotsubset\mathmi{A}\mathmi{B}}$
+% 4.4.6.10
+$\mmlapply{\mmlNotprsubset\mathmi{A}\mathmi{B}}$
+% 4.4.6.11
+$\mmlapply{\mmlSetdiff\mathmi{A}\mathmi{B}}$
+% 4.4.6.12
+$\mmlapply{\mmlEq\mmlapply{\mmlCard\ciA}\mathcn{5}}$
+% 4.4.6.13
+$\mmlapply{\mmlCartesianproduct\ciA\ciB}$
+$\mmlapply{\mmlCartesianproduct\mmlReals\mmlReals\mmlReals}$
+
+% 4.4.7.1
+$\mmlapply{\mmlSum\bvar{x} \mmllowlimit{\cia}\mmluplimit{\cib}
+  \mmlapply{\ciff\cix}}$
+$\mmlapply{\mmlSum\bvar{x} \Condition{\mmlIn\cix\Set{B}} \mmlapply{\ciff\cix}}$
+$\mmlapply{\mmlSum\mmldomainofapplication{\Set{B}}\ciff}$
+
+% 4.4.7.2
+$\mmlapply{\mmlProduct\bvar{x} \mmllowlimit{\cia}\mmluplimit{\cib}
+  \mmlapply{\ciff\cix}}$
+$\mmlapply{\mmlProduct\bvar{x} \Condition{\mmlIn\cix\Set{B}}
+  \mmlapply{\ciff\cix}}$
+
+% 4.4.7.3
+$\mmlapply{\mmlLimit\bvar{x} \mmllowlimit{\czero}\mmlapply{\mmlSin\cix}}$
+$\mmlapply{\mmlLimit\bvar{x} 
+  \Condition{\mmltendsto{above} \cix\cia}\mmlapply{\mmlSin\cix}}$
+
+% 4.4.7.4
+$\mmlapply{\mmltendsto{above} \Power{\cix}{\ctwo}  \Power{\cia}{\ctwo}}$
+$\mmlapply{\mmlTendsto \mmlvector{\cix\ciy} \mmlvector{\mmlapply{\ciff\cix\ciy}
+    \mmlapply{\mathci\mmlAtype{function}{g}\cix\ciy}}}$
+
+% 4.4.8.1
+$\mmlapply{\mmlSin\cix}$
+$\mmlapply{\mmlSin\Sum{\mmlapply{\mmlCos\cix}}{\Power{\cix}{\cthree}}}$
+$\mmllist{\mmlSin\mmlSec\mmlSinh\mmlSech\mmlArcsin\mmlArccosh\mmlArccsc
+  \mmlArcsech\mmlCos\mmlCsc\mmlCosh\mmlCsch\mmlArccos\mmlArccot\mmlArccsch
+  \mmlArcsinh\mmlTan\mmlCot\mmlTanh\mmlCoth\mmlArctan\mmlArccoth
+  \mmlArcsec\mmlArctanh}$
+
+% 4.4.8.2
+$\mmlapply{\mmlExp\cix}$
+% 4.4.8.3
+$\mmlapply{\mmlLn\cia}$
+% 4.4.8.4
+$\mmlapply{\mmlLog\mmllogbase{\cthree}\cix}$
+
+% 4.4.9.1
+$\mmlapply{\mmlMean\mathci{X}}$
+% 4.4.9.2
+$\mmlapply{\mmlSdev\mathci{X}}$
+% 4.4.9.3
+$\mmlapply{\mmlVariance\mathci{X}}$
+% 4.4.9.4
+$\mmlapply{\mmlMedian\mathci{X}}$
+% 4.4.9.5
+$\mmlapply{\mmlMode\mathci{X}}$
+% 4.4.9.6
+\def\tmp{\mmlapply{\mmlMoment\mmldegree{\cthree}
+    \mmlmomentabout{\mathci{p}}\mathci{X}}}
+$\tmp$
+% 4.4.9.7
+$\tmp$
+
+% 4.4.10.1
+$\mmlvector{\cone\ctwo\cthree}$
+% 4.4.10.2
+$\mmlmatrix{\mmlmatrixrow{\czero\cone\czero}
+\mmlmatrixrow{\czero\czero\cone}
+\mmlmatrixrow{\cone\czero\czero}}$
+% 4.4.10.3
+$\mmlmatrixrow{\cone\ctwo}$
+$\mmlmatrixrow{\cthree\cix}$
+% 4.4.10.4
+$\mmlapply{\mmlDeterminant\mathci\mmlAtype{matrix}{A}}$
+% 4.4.10.5
+$\mmlapply{\mmlTranspose\mathci\mmlAtype{matrix}{A}}$
+
+% 4.4.10.6
+\def\tmp{\mmlmatrixrow{\cone\ctwo}}
+$\mmlapply{\mmlSelector\mmlmatrix{\tmp\mmlmatrixrow{\cthree\cfour}}\cone}$
+$\mmlapply{\mmlSelector\mathci\mmlAtype{matrix}{A}\cthree\ctwo}$
+$\mmlapply{\mmlSelector\Vector{V}\cone}$
+
+% 4.4.10.7
+$\mmlapply{\mmlEq\mmlapply{\mmlVectorproduct\Vector{A}\Vector{B}}
+  \mmlapply{\mmlTimes\cia\cib
+    \mmlapply{\mmlSin\mmlci{\mmlentity{theta}}}
+    \Vector{V}}}$
+% 4.4.10.8
+$\mmlapply{\mmlEq\mmlapply{\mmlScalarproduct\Vector{A}\Vector{B}}
+  \mmlapply{\mmlTimes\cia\cib
+    \mmlapply{\mmlCos\mmlci{\mmlentity{theta}}}}}$
+
+% 4.4.10.9
+$\mmlapply{\mmlOuterproduct\Vector{A}\Vector{B}}$
+
+% 4.4.11.1
+\def\tmp{\Sum{\mmlapply{\mmlSin\cix}}{\mathcn{5}}}
+\def\tmpA{\mmlannotation\mmlAencoding{TeX}{
+    \mathcnothing{\char`\\sin\space x\space +\space 5}}}
+$\mmlsemantics{\tmp\tmpA}$
+  
+
+% 4.4.11.2
+$\mmlsemantics{\tmp
+  \mmlannotation\mmlAencoding{Maple}{\mathcnothing{sin(x)\space+\space5}}
+  \mmlannotationxml\mmlAencoding{MathML-Presentation}{
+    \mathcnothing{...\space...}}
+  \mmlannotation\mmlAencoding{Mathematica}{\mathcnothing{sin[x]\space+\space5}}
+  \tmpA
+  \mmlannotationxml\mmlAencoding{OpenMath}{
+    \mathbox{OMA}[xmlns][http://www.openmath.org/OpenMath]{
+      \mathbox{OMS}[cd][transc1][name][sin]{}
+      \mathbox{OMI}{\mathcnothing{5}}}}}$
+
+% 4.4.11.3
+$\mmlsemantics{\tmp
+  \mmlannotationxml\mmlAencoding{OpenMath}{
+    \mathbox{OMA}[xmlns][http://www.openmath.org/OpenMath]{
+      \mathbox{OMS}[name][plus]{}[cd][arith1]{}
+      \mathbox{OMA}{
+        \mathbox{OMS}[cd][transc1][name][sin]{}
+        \mathbox{OMV}[name][x]{}}
+      \mathbox{OMI}{\mathcnothing{5}}}}}$
+
+% 4.4.12.1
+$\mmlapply{\mmlIn\mathcn\mmlAtype{integer}{12}\mmlIntegers}$
+% 4.4.12.2
+$\mmlapply{\mmlIn\mathcn\mmlAtype{real}{44.997}\mmlReals}$
+% 4.4.12.3
+$\mmlapply{\mmlIn\mmlcn\mmlAtype{rational}{\mmlXsep{22}{7}}\mmlRationals}$
+% 4.4.12.4
+$\mmlapply{\mmlIn\mathcn\mmlAtype{integer}{1729}\mmlNaturalnumbers}$
+% 4.4.12.5
+$\mmlapply{\mmlIn\mmlcn\mmlAtype{complex-cartesian}{\mmlXsep{17}{29}}\mmlComplexes}$
+% 4.4.12.6
+$\mmlapply{\mmlIn\mathcn\mmlAtype{integer}{17}\mmlPrimes}$
+% 4.4.12.7
+$\mmlapply{\mmlEq\mmlapply{\mmlLn\mmlExponentiale}\cone}$
+% 4.4.12.8
+$\mmlapply{\mmlEq\mmlapply{\mmlPower\mmlImaginaryi\ctwo}\mathcn{-1}}$
+% 4.4.12.9
+$\mmlapply{\mmlEq\mmlapply{\mmlDivide\czero\czero}\mmlNotanumber}$
+% 4.4.12.10
+$\mmlapply{\mmlEq\mmlapply{\mmlOr\mmlTrue\mathci\mmlAtype{logical}{P}}
+  \mmlTrue}$
+% 4.4.12.11
+$\mmlapply{\mmlEq\mmlapply{\mmlAnd\mmlFalse\mathci\mmlAtype{logical}{P}}
+  \mmlFalse}$
+% 4.4.12.12
+$\mmlapply{\mmlNeq\mmlIntegers\mmlEmptyset}$
+% 4.4.12.13
+$\mmlapply{\mmlApprox\mmlPi\mmlcn\mmlAtype{rational}{\mmlXsep{22}{7}}}$
+% 4.4.12.14
+$\mmlEulergamma$
+% 4.4.12.15
+$\mmlInfinity$
+
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
+

@@ -1,0 +1,1252 @@
+
+%% NOTE: this does not describe the latest version of tralics.
+\documentclass[11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{amssymb,amsmath}
+%\usepackage[frenchb]{babel}
+\usepackage{verbatim}
+\let\thebar|
+\DefineShortVerb{\|}
+%\usepackage{a4}
+%\usepackage{descaux}
+\usepackage{RR}
+
+\def\tralics{\textsc{tralics}}
+
+\DefineVerbatimEnvironment{verbatim}{Verbatim}
+{fontsize=\small,listparameters={\topsep0pt }}
+
+\textwidth16cm
+\textheight22cm
+\evensidemargin0cm
+\oddsidemargin0cm
+\parskip 2pt plus 2pt
+
+\SaveVerb{BA}|\|\def\BA{\UseVerb{BA}}
+\SaveVerb{OV}|{|\def\OV{\UseVerb{OV}}
+\SaveVerb{FE}|}|\def\FE{\UseVerb{FE}}
+\SaveVerb{rend}|rend|
+\SaveVerb{bhi}|<hi>|
+\SaveVerb{yesstar}|star='yes'|
+\SaveVerb{verb}|\verb|
+\DefineShortVerb{\+}
+\SaveVerb{VE}+|+\def\VE{\UseVerb{VE}}
+\SaveVerb{DU}|$_|\def\DU{\UseVerb{DU}} %$
+\UndefineShortVerb{\+}
+
+\providecommand\xmllatex[1]{}
+
+\def\Han{Hàn Th\xmllatex{&\#x1ebf;}{\'{\^e}} Thành}
+
+\def\mybox#1{\par\medskip\noindent\fbox{\large \texttt {<#1>}}}
+
+
+\RRtitle{Tralics : un traducteur \LaTeX\ vers XML}
+\RRetitle{Tralics: a \LaTeX\ to XML translator}
+\RRprojet{MIAOU}
+\RRtheme{4}
+\RRauthor{Jos\'e Grimm}
+\URSophia
+
+\bibliographystyle{plain}
+
+
+\begin{document}
+
+\RRresume{En l'an 2001, il a été décidé que le format pivot du rapport
+  d'activité serait XML, c'est pour cela qu'on a écrit un traducteur de
+  \LaTeX\ vers XML, en Perl, puis en C++.
+
+  On décrit dans ce document comment utiliser le traducteur.}
+
+\RRabstract{In 2001, it was decided that the scientific part of Inria's annual
+  report uses XML as intermediate language. We have hence written a \LaTeX\ to
+  XML translator, first in Perl, then in C++.
+  We explain here how to use this software}
+
+
+\motcle{Latex, XML, HTML, MathML,PostScript, Pdf, syntaxe, sémantique}
+\keyword{Latex, XML, HTML, MathML, PostScript, Pdf, syntax, semantics}
+\makeRT
+%\makeRT
+
+\chapter{Introduction}
+This document describes yet another \TeX-to-something translator; in this
+first chapter we give some motivations, and in the next ones, we explain the
+software. Since 1982, when Knuth released \TeX, the situation has evolved a
+lot: processors became faster, memory cheaper, new languages like Pdf have
+been invented, the Web plays a great role in information exchange, etc.  On
+the other hand, \TeX\ still uses the technology of the seventies, and their
+paradigms. For instance, the only way to introduce color in a dvi document is
+via |\special|s, so that, on one hand, the document becomes device dependent
+(when dvi stands for device independent), and on the other hand, special
+precautions are required in the source document if order for the colors to
+stack properly. It is difficult to put dvi documents on the Web, because they
+are not standalone (on the other side of web, there must be a, at least
+partial, \TeX\ distribution), and appear as raw data (a dvi file cannot be
+indexed like an HTML page or a Pdf document, because there are no key words in
+it).
+
+% \def\pluriel#1#2{#1s #2s}\def\singulier#1#2{#1 #2}
+% \def\sp{\iftrue\expandafter\pluriel\else\expandafter\singulier\fi}
+% TESTSP\sp{toto}{titi}
+
+There have been some tentatives to extend \TeX, some of them available only
+in commercial softwares, others (like $\epsilon$-\TeX\ or Ml\TeX) are part of
+the standard distributions, but nobody makes use of them. There are two major
+softwares, pdf\TeX\ and $\Omega$ that have enough features to make them
+attractive (see also \cite{Hagen2001}, which deals mainly with NTS). For
+instance, $\Omega$ removes some internal limits (number of registers, etc.),
+allows full Unicode input, bi-directional typesetting, etc. As a result, dvi
+files, TFM files, etc., are incompatible, and you need to upgrade all the
+tools (xdvi, dvips, dvidvi, etc). On the other hand, pdf\TeX\ uses standard
+\TeX\ input and produces Pdf files, which have become a de facto standard on
+the Web. However, there are some informations in a Pdf file that do not exist
+in a dvi file: the paper size, title, author, subject, keywords, etc. A
+special syntax is required for them (on the other hand, hyperlinks, bookmarks,
+etc., are often obtained by automatically redefining some \LaTeX\ commands).
+
+There is no equivalent for producing HTML; perhaps because \TeX\ The
+Program is too difficult to modify, but mostly because \TeX\ is designed to
+produce (directly or not) black and white pixels on a sheet of paper (or a
+screen), and not structured documents. There are a lot of translators from
+\LaTeX\ to HTML, some of them use \TeX\ behind the scene, others are written
+in C (very efficient), or Perl (easy to customize), etc. All these translators
+use the structuring mechanisms of \LaTeX.
+
+
+  A software like |latex2html| has nearly one hundred different options
+(some of them are not described in the on-line help), and can generate
+code for some different versions of HTML: currently 2.0, 3.0, 3.2, and 4.0.
+In general, people want to split the document into several HTML pages (but
+should we split on |\sections|, |\subsections|, or elsewhere?), and link these
+pages (should navigation buttons be on top of the page, or also on the
+bottom, should the ``next'' button be an image with an arrow, or some
+text, in English, or in the local language ?), putting a table of contents
+somewhere (on the main page only?, at the top or bottom of other pages?).
+
+This document describes \tralics, a \LaTeX\ to XML translator. The main
+assumption we make is that the XML document produced by \tralics\ will, sooner
+or later, be transformed into something readable by a human being
+(dvi, Pdf, HTML, etc), under a form not specified a priori. For instance, we
+may assume that the document will be converted to both HTML and Pdf, and we
+may have to answer a lot of questions like:  what is the paper size for the
+Pdf case? at which level to split the HTML? should we put the table of
+contents at the beginning or the end the Pdf document? what about the HTML
+case?, etc. 
+
+Notice that the real difference between HTML and Pdf is not the way data are
+organized in the file, it is how they can be exploited by a human being: 
+in the case of a PostScript document, printed on some sheets of paper, what we
+expect from an index and a table of contents is a page number (in some cases,
+line numbers can be useful too), and this of course implies that the pages
+have numbers; in the case of an HTML document, that is generally read on a
+screen, we expect the document to react positively in case the size of the
+window changes (thus, there is no a priori formatting of the text), and the
+table of contents (the index, etc.) should contain active links. Since Pdf can
+be read in both ways, we need both: like PostScript, typesetting is done once
+and for all, pages are numbered, and the table of contents contains page
+numbers; like HTML the table of contents contains active links. 
+
+Being able to produce a document that can be converted to both HTML and Pdf is
+not a problem for \tralics: in fact, no typesetting is done, no table of
+contents nor index is generated, but there is enough information in the XML
+file for an XML processor to do so. Thus, when \tralics\ sees |\chapter|, it
+has to output |<chapter>| instead of expanding the command and executing more
+basic actions (that could be: finish the current page, flush all floating
+material still in memory, switch to an odd page, change locally the page
+style, reset a lot of counters, add some white space at the begin of the page,
+typeset ``Chapter two'' and the name of the chapter in a huge bold font, add a
+new entry to the table of contents, etc). 
+
+
+\section{The name of the game}
+We shall assume that the reader is familiar with HTML and Pdf (if he is not,
+he will not understand some arguments presented in this introduction), and
+with XML (The Extensible Markup Language (XML) is the universal format for
+structured documents and data on the Web, see |http://www.w3.org/XML/|). In
+fact, XML is a markup language, in which you can say: |<chapter>| starts here
+and ends there, but no significance is given to the word ``chapter'', it could
+have been |<chapitre>|, |<Kapitel>| (or the same in Japanese). There are
+nevertheless some keywords: for instance |<fo:block>| is a reserved word in
+the FO (formatting objects) namespace, which plays the same role as boxes in
+\TeX\ (\tralics\ will never generate such objects), |<xsl:when>| is a reserved
+word in the XSLT namespace (XSLT is a natural way to convert an XML object to
+another one, \tralics\ will never generate such objects), and |<m:msubsup>| is
+a reserved word in the MathML namespace (it defines constructs  like
+$x_2^3$); note that \tralics\ \emph{will} generate such keywords.
+
+We assume also that the user is familiar with \TeX-the-program and
+\TeX-the-language (if no confusion can arise, we just say \TeX) and the
+extensions $\Omega$, pdf\TeX, and \LaTeX. Note that  $\Omega$ and pdf\TeX\ are
+two programs, that are based on the same sources as \TeX, that can process a
+\TeX\ document and produce a dvi file, although pdf\TeX\ is mainly used to
+generate Pdf files, and $\Omega$ can be used to generate right-to-left text 
+inside left-to-right text (thus you can insert some arabic text into some
+english text). In \tralics, we have implemented only basic \TeX, no
+extensions, except this one: you can say |\char N|, and |\chardef\x N| where N
+is a 16bit integer (instead of a 8bit integer). This is to allow the use of
+any Unicode character in the output: a character like é can be represented 
+in the output as |é| (iso-8859-1 encoding), or |&#233;| (Unicode numeric
+value), or |&eacute;| (Unicode name); on the other hand, the |\oe| ligature
+can be given only as |&oelig;| or |&#339;|. You can say |\char339| instead of
+|\oe| in your input (this is very useful in case the input is encoded in
+UTF-8, see later for details).
+
+
+Just as pdf\TeX\ is an extension of \TeX-the-program, \LaTeX\ is an extension
+of \TeX-the-language, that defines a great many number of commands, most of
+them being explained in the documentation. In the next paragraph, we shall
+discuss the |\textit| command: this command is defined as: call the font
+changing command |\itshape| on the argument (this implies handling italic
+correction, and there is somewhere a comparison of the first parameter of the
+current font against zero). On the other hand, |\chapter| is just a small \TeX\
+command (it's only 20 tokens long, but calls commands like |\@chapter| which
+are much longer); it's not even defined in the \LaTeX\ kernel, but the
+semantics is clear. Note that |\chapter| calls |\newpage|, which starts a new
+page, essentially by executing |\penalty-10000| after a |\par\vfil|.
+
+\tralics, our \LaTeX\ to XML translator, is able to expand every \TeX\ macro,
+but knows about \LaTeX\ semantics, thus stops expansion before its comes to a
+dead-end (the first parameter of a font is the slant, so that |\textit| will
+check whether the old and new font or both slanted or both unslanted;
+inserting a |\penalty| of value $-10000$ causes \TeX\ to break a line or a
+page there. Any other penalty is only a hint, thus completely ignored by
+\tralics.
+
+
+\section{The philosophy of the translation}
+Let's assume that we have to translate |\textit{foo}|. What \TeX\ does is to
+introduce a font switch command in the dvi file. If the current font scheme
+is: T1 encoding, computer modern type face, eleven point size, and if |\texit|
+means: switch to italics, normal weight, normal family, then the font name
+might be |ecti1095|. In order to process this file, an external process
+(xdvi, dvips, etc) must know, hence read, at least the font metrics (possibly
+other files, like metafont sources, or bitmap files). On the other hand, a Pdf
+file contains everything that is needed to process the file. This limits the
+possibilities of representation of the font: either something understood by
+Adobe Acrobat or bitmaps. Using bitmaps is not a good idea, because it fixes
+the resolution (and Adobe Acrobat is still unable to render then properly on a
+screen). Since the |ecti1095| does not exist in Type 1 format, some people use
+|cmti10| instead (it's a similar font, at ten point, but it can be
+rescaled). There are two problems for the non-english speaking people: since
+this is a 7bit font, words like « caractère accentué » do not consist only of
+letters. One consequence is that it forbids hyphenation, another one is that
+the word cannot be found using the search facility of Acrobat (there is also
+the problem that the characters `«' and `»', french opening and closing quotes,
+do not exist in this font). One important point is that our translator
+translates the argument of the font command, in a way independent of the font
+(it may depend on some global settings, for instance).
+
+The HTML solution is a first step in the good direction: first a standard way
+of encoding character is used (namely iso-10646, which is the same as
+Unicode), and for many characters, the Unicode name can be used (for instance 
+|&gamma;| for the Greek letter $\gamma$). In XML, any Unicode character can be
+used, by its number or its name. The translation of the example would be
+|<i>foo</i>|. However, the translation of |{\bf a \textit{b} c}|,
+cannot be |<b>a<i>b</i>c</b>|, because this gives a bold italic b. Thus, a
+correct translation of |\textit| is not trivial. In \tralics, we could decide
+a priori that |<b>| is bold, |<i>| is italic, etc., independently of the
+context. But then, we need a name for bold-italic, so that using the \TeX\
+name |ecti1095| is a solution not worse than other. However, a better scheme
+would be to generate something like
+\begin{verbatim}
+<font family='fam-x' series='series-y' shape='shape-z' size='size-t'>...</font>
+\end{verbatim}
+which maps \LaTeX\ font scheme (the font encoding is not given here, it is
+the same for the whole document). The expression above is just a name, like 
+|ecti1095|, but we could decide that |<font shape='it'>| is a shorthand for
+a |<font>| element where all the missing attributes are inherited,
+and  |<font shape='it' defaut='yes'>| is the same where all missing fields
+have the default value.
+ 
+\section{Parameterisation and DTD}
+The DTD (Document Type Definition) is the specification of the syntax of the
+result of the translation. Consider an example where the DTD sayus that the
+toplevel element can contain |<div0>|, that can contain |<div1>| that can
+contain |<div2>|, etc.  If the document to convert is a book, then |\part|
+matches |<div0>|, |\chapter| matches |<div1>| and |\subsection| matches
+|<div3>|. On the other hand, an article has no chapter, nor part, so that
+|\subsection| matches |<div1>|. Assume that the DTD allows a |<p>| in a |<b>|
+in a |<p>| and a |<i>| in a |<b>|. How is \tralics\ assumed to translate
+|{\bf a \textit{b} c}|?  If the current element is |<b>|, it may output a |<i>|
+element, but DTD does not say if this gives normal italic or bold italic.
+In fact, the DTD does not say that its gives italic at all.
+
+In some cases, the translator cannot emit a |<i>| element (perhaps because we
+are in a |<p>|, and |<i>| can be used only in a |<b>| inside a |<p>|), or
+cannot emit a |<i>| with the given argument (for instance, the argument is a
+character string, and |<i>| needs a |<j>|). For all these reasons, translation
+is independent of the DTD, and an error might be signalled later (by
+xmllint, for instance). Remember: translation should respect the
+\emph{semantics}, while the DTD offers only syntax.
+
+
+
+This does not mean that the translator produces syntactically correct
+documents. In some cases, the  document has constraints that
+cannot be given in the DTD, for instance: the document must contain A, B, C
+and D, in this order, but one of them is optional. There are some constaints
+that can be expressed in SGML but not in XML (for instance, you want to allow
+a footnote in a paragraph, a paragraph in a footnote, so that this could give
+a P in a F in a P: ok, a F in a P in a F: refused). What we propose is a
+translator that is independent of the DTD. You can, if you want, call
+automatically xmllint (or any other XML checker) from \tralics. 
+
+Hence, there is a way to tell \tralics\ to produce special effects. The easy
+case is to make |\foo{bar}| translate into |<foo>bar</foo>|.
+It is also possible to ask for |\font{A}{B}| to be translated into 
+|<font name='A'>B</font>|.  Then you can say |\def\textit{\font{it}}|,
+and you have a working definition for |\textit|.
+
+
+It is possible to parameterise \tralics\ in order to get one or the other
+behavior, but the situation is much different for |\itshape|. In fact, a
+command such as |\itshape| says: from now on, the current font should use
+an italic shape. Thus \TeX\ and pdf\TeX\ will generate, wherever needed,
+a reference to the desired font (for instance, the dvi might contain something
+like: this page is in italics). It is possible to put 
+|{\itshape| in the middle of a paragraph and |}| in the middle of the next
+one, and this gives two paragraphs with a font change in it, so that the XML
+we generate will be of the form |<p>a<it>b></it></p>| followed by
+|<p><it>c></it>d</p>|. 
+
+\chapter{All commands}
+\def\showcmd#1{\fbox{{\large\tt\textbackslash #1}}}
+\def\showenv#1#2{\fbox{{\large\tt\textbackslash begin\{#1\}#2...\textbackslash end\{#1\}}}}
+\section{Accents}
+\showcmd{a} In \LaTeX, the |\a| command is a special hack, in that it 
+allows to construct an accent
+that is otherwise disabled by some environments like |\tabbing|. As long 
+as you do not try to play
+with macro-expansion, you should see no difference with \tralics. 
+
+\showcmd{accent}
+In \TeX, you can say |\accent XAY|, where X is character code, A a list of 
+assignments, Y a character. The result 
+is to put character at position X in the current font onto character Y (of the current font, but A can 
+contain a font change). This mechanism is not available in tralics: the translator will generate a reference to
+some Unicode character. In tralics, |\accent| will signal an error, and ignore the arguments.
+
+The following accents are recognised by tralics. The characters generated are defined in iso-latin1 and iso-latin2.
+\begin{itemize}
+\item circonflex accent. Available on a, e, i, o, u, c, g, h, j, s, w, y, upper or lower.
+\item acute accent. Available on a, e, i, o, u, y, c, l, n, r, s, z (upper and lower) and g lower.
+\item grave accent. Available on a, e, i, o, u (upper and lower).
+\item accent trema. Available on a, e, i, o, u (upper and lower).
+\item macron accent. Available on a, e, i, o, u (upper and lower).
+\item dot accent. Available on  c, e, g, z (upper and lower).
+\item cedilla accent. Available on c, k, l, n, r, s, t (upper and lower) and g  (upper).
+\item breve accent. Available on g, a, u (upper and lower).
+\item check accent. Available on c, d, e, l, n, r, s, t, z (upper and lower).
+\item tilde accent. Available on a, o, i, u, n (upper, lower)
+\item umlaut accent. Available on o (lower).
+\item ogoneck accent. Available on a, e, i, u, upper and lower.
+\item b t r accents. Not available.
+\end{itemize}
+Example
+\begin{verbatim}
+ \^a \'a \`a \"a \=a \.e \c c \u a \v c \~ a \H o \k a  \b t \d t \r t 
+\end{verbatim}
+ \^a \'a \`a \"a \=a \.e \c c \u a \v c \~ a \H o \k a  \b t \d t \r t 
+
+\showcmd{AA} \showcmd{aa}. These are defined as \verb|\r A| and |\r a|
+in \LaTeX, but as a character reference in tralics.
+
+\showcmd{l} This generates the l-stroke character.
+
+\showcmd{\$} this command generates a dollar sign.
+
+\showcmd{,} This command generates a space, in fact |&nbsp;|.
+
+\showcmd{\_} This command generates an underscore character.
+
+\showcmd{\&} This command generates an ampersand character.
+
+\showcmd{\#} This command generates a sharp sign character.
+
+\showcmd{\%} This command generates a percent sign character.
+
+\showcmd{S} This command generates a section sign characer.
+This is the same as |§|.
+
+\showcmd{ } The backslash-space and backslash-newline command both generate
+a space character.
+
+\showcmd{o} \showcmd{O} These command generate a slashed o. This is
+exactly the same as  |ø| or |Ø|.
+
+\showcmd{-} This command produces nothing (in \LaTeX, |\-| generates a discretionary hyphen).
+
+\showcmd{@} This command produces nothing. In \LaTeX, it generates sometimes
+a weird error (if the |\catcode| of the at-sign is wrong, and you say something
+like |\@foo|) about an invalid |\spacefactor|. See the description of  
+the |\spacefactor| command, in order to see why assigning this variable to
+1000 would not change the XML output in a significant way.
+
+
+\showcmd{space} This is a command whose expansion is a space character.
+OK ???
+
+\showcmd{lq} This is the same as a left quote (a command whose expansion
+is a left quote).
+
+\showcmd{rq} This is the same as a right quote  (a command whose expansion is a right quote).
+
+\showcmd{lbrack} This is the same as a left bracket  (a command whose expansion is a left bracket).
+
+\showcmd{rbrack} This is the same as a right bracket  (a command whose expansion is a right bracket).
+
+\showcmd{endgraf} This is the same as |\par| (a command that has the same meaning as the |\par| primitive).
+
+\showcmd{bgroup} This is the same as an open brace (a command that has the same meaning as an open brace)
+
+\showcmd{egroup} This is the same as close brace (a command that has the same meaning as an close brace)
+
+\showcmd{empty} This is a user defined command whose body is empty.
+
+\showcmd{null} The result of this command is an empty hbox. Tralics constructs
+an XML element whose printed value is void. 
+
+\showcmd{active} This is number 13. Technically, it is |\chardef|, but who cares. This is in general only used in cases like |\catcode 10=\active|.
+
+\showcmd{inputlineno} Returns the current input line number.
+
+\showcmd{wlog} Undefined. a definir. The argument is printed in the log file.
+
+Difference between \underline{punderline underbar} and \underbar{punderline underbar}.
+
+newbox a definir...
+
+\showcmd{xmllatex}
+This command could be defined as 
+\begin{verbatim}
+  \newcommand\xmllatex[2]{#2}
+\end{verbatim}
+However, \tralics\ ignores the second argument and converts the first in a special 
+verbatim mode: each token is printed in the result as follows: if the token is a
+command, its name is printed (without the initial backaslash), otherwise it is 
+a character that is  pinted as is. This may generate invalid XML.
+Example:
+\begin{verbatim}
+\def\entity#1{\xmllatex{\&#1;}{}}
+\def\strok#1{\entity{#1strok}}
+\def\Han{Hàn Th\xmllatex{&\#x1ebf;}{\'{\^e}} Thành}
+\end{verbatim}
+\def\entity#1{\xmllatex{\&#1;}{}}
+\def\strok#1{\entity{#1strok}}
+\def\Han{Hàn Th\xmllatex{&\#x1ebf;}{\'{\^e}} Thành}
+The expansion of |\Han| is \Han. This is the only way provided in \tralics\ for double
+accents. The result of |\strok{l}| is empty in \LaTeX\, the XML quantity |&lstrok;| 
+otherwise. By the way, this is the same as |\l|.
+
+
+This is not yet implemented...
+\begin{verbatim}
+\def\null{\hbox{}} % hacker
+\end{verbatim}
+
+\showenv{xmlelement}{\{name\}} This allows you to construct a named xml element
+
+\showcmd{AddAttToLast} \showcmd{AddAttToCurrent} These two commands take
+two arguments, say A and B, and add an attribute-value pair to the
+last or current XML element. No check is made on the syntax of the attribute name. No check is made on the existence of an attribute of the same name.
+Example
+\begin{verbatim}
+\begin{xmlelement}{foo}
+\begin{xmlelement}{subelt}
+text
+\end{xmlelement}
+\AddAttToLast{sub-att}{att-val}
+\AddAttToCurrent{foo-att}{att'value}
+\end{xmlelement}
+\end{verbatim}
+should produce something like
+\begin{verbatim}
+<foo foo-att='att&apos;value'>
+<subelt sub-att='att-val'>
+text
+</subelt></foo>
+\end{verbatim}
+
+backash
+\section{Conditionals}
+There are different tests in \TeX. For instance
+\begin{verbatim}
+\ifnum\count0=0 A\else B\fi
+\end{verbatim}
+compares the value of the count register number zero to the integer zero; if true
+that A is evaluated, otherwise B is evaluated. More precisely, \TeX\ remembers that 
+it is in an |\if| construct. If the test is true, expansion and evaluation proceeds
+as usually, until an |\else| or a |\fi| is seen. In the first case, all tokens between
+the |\else| and the |\fi| are read at high speed. If the test is false, \TeX\ reads 
+all tokens at high speed until finding a |\fi| or an |\else|. In the second case,
+evaluation proceeds normally. Reading tokens at high speed means that any token whose
+meaning is |\fi| finishes a conditional, any token whose meaning is |\if|, |\ifnum|, 
+etc., open a new test. Said otherwise, if |\A|, |\B| and |\C| are some user defined 
+commands that do not use conditional commands, then the following
+\begin{verbatim}
+\let\IFNUM\ifnum\let\FI\fi\let\ELSE\else
+\ifnum\count0=0 \A \else \ifnum\count0=1 \B \else \C \fi\fi
+\IFNUM\count0=0 \A \ELSE \IFNUM\count0=1 \B \ELSE \C \FI\FI
+\end{verbatim}
+produce the same code. 
+
+You can say something like
+\begin{verbatim}
+\def\Atrue{\let\ifA\iftrue}\def\Afalse{\let\ifA\ifalse}
+\ifnum\coun0=0 \Atrue \else \Afalse\fi
+\end{verbatim}
+but not
+\begin{verbatim}
+\ifnum\coun0=0 \let\ifA\iftrue \else \let\ifA\iffalse\fi
+\end{verbatim}
+The reason is the following: if the test is true, what we get after the |\else|
+is |\let|, |\ifA| (whose meaning is |\iftrue|) then |\iffalse| and |\fi|. Two more
+|\fi|s are needed. In the case where the test is false, the situation is different.
+In the case where |\ifA| is undefined, we have one missing |\fi|, if |\ifA| 
+is |\iftrue|, |\iffalse| or something like that, there are 3 missing |\if|s, and 
+if |\ifA| is |\fi| it will terminate the |\ifnum| conditional. After that, 
+the |\iftrue| is evaluated and |\ifA| will terminate it, and then the |\iffalse| 
+is evaluated, and all three conditional are balanced.
+
+The following code is wrong
+\begin{verbatim}
+\def\FI{\fi}
+\ifnum\count0=0 A\else B\FI
+\end{verbatim}
+This is because the |\FI| is a |\fi| in case the test if false, but not if the
+test is true. On the other hand, this code
+\begin{verbatim}
+\def\A#1\fi{okok #1\fi}
+\ifnum\count0=0 \A something \else B\fi
+\end{verbatim}
+is perfectly valid code: if the test is false, the |\fi| finishes the 
+conditional, otherwise, it is read by |\A|, and |\A| produces its own |\fi| to 
+terminate the conditional. 
+
+
+Consider the following example
+\begin{verbatim}
+\count0=0
+\ifnum\count0=0 A\else B\fi
+\ifnum\count0=0 A\fi
+\count0=1
+\ifnum\count0=0 A\else B\fi
+\ifnum\count0=0 A\fi
+\end{verbatim}
+
+This is what \TeX\ puts in the log file, when |\tracingall| has been evaluated.
+\begin{verbatim}
+{\count}
+{\ifnum}
+{true}
+{the letter A}
+{\else}
+{\ifnum}
+{true}
+{\fi}
+{\count}
+{\ifnum}
+{false}
+{the letter B}
+{\fi}
+{\ifnum}
+{false}
+\end{verbatim}
+For the first test, you see the |\else|, for the second test you see the |\fi|.
+For the third test, you see the |\fi|, and for the last, you see nothing
+
+The log file of \tralics\ is a bit different. It will contains the following:
+\begin{verbatim}
+[466] \count0=0
+{\count}
++scanint for \count->0
++scanint for \count->0
+\end{verbatim}
+Here, you see that \tralics\ has seen the |\count| command, and that this command has
+read an integer, namely zero, then a second integer (it's also zero).
+\begin{verbatim}
+[467] \ifnum\count0=0 A\else B\fi
++\ifnum
++scanint for \count->0
++scanint for \ifnum->0
++scanint for \ifnum->0
++iftest true
++\else
++\fi
+\end{verbatim}
+Here, you can see that \tralics\ has seen a |\ifnum| which read two integers. The
+first integer is the value of |\count0|, this means that |\count| must fetch
+its argument first. In the example, all three numbers are zero, the test is true.
+We do not show the trace for the other cases, just notice that the trace contains
+always a |+\fi|, and a |+\else| if the input contains a |\else| token.
+
+\showcmd{newcount} \showcmd{newdimen} \showcmd{newlength}
+Each of these commands takes an argument and defines it globally as a 
+new counter, dimenion or length. More precisely, |\newcounter\foo| is like
+|\countdef\foo N|, where N is the current allocation number for counters; it
+is incremented at each call. All allocation numbers start at 10.
+
+\showcmd{newcounter} This command takes as argument a character string,
+and defines a \LaTeX\ counter. For instance, |\newcounter{foo}| defines
+the counter |\c@foo|. Moreover |\thefoo| is globally defined to be 
+|number\c@foo|. The command takes a final optional argument. If it is for 
+instance |[bar]|, then |bar| must be a counter, and incrementing |bar| via
+|\stepcounter| will reset |foo| to zero.
+
+ET OPT ARG? FAIRE QUELQUE CHOSE.
+
+\showcmd{value} This command takes a counter name as argument, and returns
+the value of the counter. More precisely, |\value{foo}| is the same as
+|\c@foo|.
+
+\showcmd{setcounter}, \showcmd{addtocounter}, \showcmd{stepcounter}.
+These commands take a counter as argument, say |foo|, and modify globally
+the counter. The first two commands take a number T as second argument, and 
+set the value of the counter to T, or increments it by T. On the other hand,
+|\stepcounter| increments the value by 1, and may reset some other counters.
+Morew precvisely
+\begin{verbatim}
+  \setcounter{foo}{T}
+  \addtocounter{foo}{T}
+  \stepcounter{foo}
+\end{verbatim}
+is the same as
+\begin{verbatim}
+  \global\advancc@ T\relax
+  \global\c@foo T\relax
+  \global\advance\c@foo 1\relax
+\end{verbatim}
+abd if the calc package is loaded, this is changed to
+\begin{verbatim}
+  \@calc{\global\advancc@}{T}
+  \@calc{\global\c@foo}{T}
+\end{verbatim}
+
+
+
+\section{Expandable Commands}
+
+\showcmd{[}, \showcmd{]} Both these commands expand to |$$|. In \LaTeX, 
+the closing bracket inserts a |\ignorespaces| command, but in \tralics, 
+displaymath is always outside a paragraph. The opening bracket inserts 
+|\nointerlineskip\makebox[.6\linewidth]|, that is ignored by tralics.
+
+
+\showcmd{(}, \showcmd{)}. Both these command expand to just a single
+dollar.
+    
+\showcmd{csname} This command reads all tokens, up to |\endcsname|,
+and constructs the control sequence whose name is formed by the tokens
+just read. If this produces an undefined command, the command will be (locally)
+defined as |\relax|. For instance, |\csname foo\endcsname| is the same as
+|\foo| (but does nothing is |\foo| is undefined).
+
+This allows to construct control sequences that are empty or
+contain funny characters; for instance |\csname$ \endcsname| %$
+constructs the control sequence whose name is a dollar sign followed
+by a space. 
+
+Commands are fully expanded, but non-expandable commands are forbidden. Example
+\begin{verbatim}
+\def\fooaux{bar}\def\foo{\fooaux}\let\gee\endcsname
+\csname\foo\gee
+\csname x\par\endcsname
+\end{verbatim}
+Here, the first |\csname| generates the |\bar| token, the second |\cname|
+complains that |\par| is forbidden (the expansion is empty, and an extra 
+|\endcsname| error will be signalled). In the following example, we construct 
+a command whose name ends with a backslash. This is achieved by calling |\string|
+on |\\|, this gives a double backslash;  the first backslash is removed by calling 
+|\gobble| on this result, using |\expandafter| to alter evaluation order.
+\begin{verbatim}
+\def\gobble#1{}
+\csname foo\expandafter\gobble\string\\\endcsname
+\end{verbatim}
+Note that the command constructed by |\csname| is never undefined
+
+
+\chapter{The configuration file}
+After all arguments are read, tralics constructs the |Tdir| variable: this is
+the place where some file can be found. This variable is obtaine
+\begin{itemize}
+\item as the value of the |-dir| argument of the command,
+\item as the value of the envirnonment variable |TRALICSDIR|,
+\item as the value of the environment variable |RAWEBDIR|,
+\item or as some default value (which could be related to the author's
+home dir). 
+\end{itemize}
+
+It is possible to parameterise \tralics\ via a configuration file.
+The file is searched first
+in the current working directory, then in the subdirectory `src' 
+of the |Tdir| variable, finally in the home directory of the user, or in a 
+subdirectory `src' of it. In case where the environment variable |HOME|
+is set, it is assumed to be the home directory. Otherwise, if the variable
+|USERNAME| is set and \tralics\ is compiled on windows, it is assumed that
+the home directory is |//d/username|. The name of the configuration file
+is |.tralics_rc| (without the initial dot on windows).
+
+
+
+
+The same configuration file can be used for more than one document type. Thus
+the configuration file contains two kinds of information: what is the document
+type? what should be done for a this document type?
+
+The syntax of the configuration file is the following: 
+\begin{itemize}
+\item There are lines that define a keyword. The keyword is the first element
+  on the line, it is followed by an equals sign and a value (spaces are
+  allowed before and after the equals sign). 
+\item There are lines that define a block. A block starts with something like
+|BeginBlock|, and ends with |EndBlock|. In fact, the end of a block is defined
+by a line that starts with the three letters ``End''. 
+\item All other non trivial lines must start with white space (a space
+  character or tabulation).
+\item Empty lines and lines starting with a comment may appear everywhere
+\item A comment is introduced by a |%| or a |#| sign. In some cases, it is
+possible to put a comment at the end of a line. This will be explained later.
+\end{itemize}
+
+Let's start with a simple example.
+\begin{Verbatim}
+Type=\documentclass
+BeginType article
+DocType= article article.dtd
+End
+
+BeginType book
+DocType= book article.dtd
+BeginMacros
+  \def\foo{\bar}
+EndMacros
+End
+\end{Verbatim}
+On the first line, we have a keyword, named |Type| with value |\documentclass|.
+Then we have two blocks, named |Type|, these blocks have a value, |article|
+and |book|. In each block is a keyword, |DocType|, and the value is character
+string formed by two words. In the second block, there is a subblock |Macros|,
+that contains some text (here a macro definition). 
+
+Note that you can put a comment (or anything else) after the keyword that
+follows |BeginType|. This keyword should contain only letters. In the same
+fashion, you can put a comment after the keyword that follows |Type=|.
+Comments are allowed after the second keyword following |DocType|. You can put
+a |%| on the line that contains |\def\foo|, but this is not a comment:
+it will be considered by the translator as a comment.
+
+
+
+\paragraph{The document type}
+Finding the type of a document requires three actions. First, we compute the
+potential type. This is the value of the |-type| argument of the translator if
+given, the value of the |Type| keyword otherwise, and if this |Type| is not
+given, or is |\documentclass|, it will be the argument of the |\documentclass|
+declaration of the main document. After that, the list of all defined types is
+computed. In the example given above, there are two types: 
+|article| and |book|).
+
+If the potential type is a known type, it becomes the real type. Otherwise,
+we look at aliases. These are defined like this :
+\begin{Verbatim}
+BeginAlias
+  article report 
+  slides inriaslides foiltex
+End
+\end{Verbatim}
+The idea is: if the first type on the line is defined, and the potential
+type is one of the other terms, then the first term will become the real type.
+Thus |report| will be the same as |article|, while |inriaslides| and |foiltex|
+will remain potential types (since |slides| is undefined).
+Note: a type contains only letters, while an alias may contain also digits.
+
+In case of failure, another check is made, by removing final letter from
+the potential type. Otherwise, the first type that is defined is chosen.
+
+Consider the following exemple: the document class holds is |ra2001|,
+there are two defined types, |RR| and |RA|, the aliases are those indicated
+aboved, plus these:
+\begin{Verbatim}
+BeginAlias
+  RR toto# ra2001
+  RA ra toto ra2001%etc
+        
+End
+\end{Verbatim}
+
+The translator might print something like this:
+\begin{Verbatim}
+Read configuration file src/.tralics_rc
+Seen \documentclass ra2001
+Config type \documentclass
+Potential type is ra2001
+Defined type: RA
+Defined type: RR
+Alias article undefined
+Alias slides undefined
+Alias RR does not match ra2001
+Alias RA does not match ra2001
+Trying type ra
+Alias article undefined
+Alias slides undefined
+Alias RR does not match ra
+Potential type ra aliased to RA
+\end{Verbatim}
+This means that the document type is |RA|.
+
+After this operation is done, every line of the configuration file
+that are is not in the current |Type| block is discarded (Noting is done here
+if there is no |Type| block, hence no type).
+
+\paragraph{Main document configuration}
+From now on, we assume that we have found a document type, and that is ts
+|article|. This means that the configuration file contains something like:
+\begin{Verbatim}
+BeginType article
+DocType= article article.dtd
+DocAttrib = year \specialyear
+DocAttrib = test "foo"
+morestuff...
+End
+\end{Verbatim}
+The |DocType| keyword explains the doctype to use. In fact, the translator
+is now ready to generate the following XML code:
+
+\begin{Verbatim}
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE article SYSTEM 'article.dtd'>
+<!-- translated from latex by tralics 0.0-->
+<article ???>
+\end{Verbatim}
+
+We have put some question marks in |<article ???>|. This means that
+the |<article>| element has some attributes, that can be set anywhere in
+the \LaTeX\ document. But you can say |DocAttrib = x y| in the configuration
+file. This will add |x='y'| to the attributes of the document.
+If the string |y| is encloded in double quotes, the value is used unchanged.
+Otherwise, it starts with a backslash. It this case, it is a \LaTeX\ command
+that will be evaluated later. The effect is the same as saying
+\begin{Verbatim}
+  \AtBeginDocument{\addattributestodocument{x}{\y}}
+\end{Verbatim}
+Exception: if |y| is |\specialyear|, the value is either the value of the
+paramter |-year|, or, in the case of the RA, the year extracted from the
+|\documentclass|. With the |DocAttrib|s given above, the next line of the
+resulting document might be :
+
+\begin{Verbatim}
+<article year=2001 test="foo">
+\end{Verbatim}
+
+\subsection{A non trivial example}
+Let's consider the following non trivial example. It computes the 30 first
+prime numbers. Knuth pretends
+that the trial division was executed 132 times. We modified the code so that 
+it computes and show this number.
+\paragraph{loops}
+
+\begin{verbatim}
+\countdef\td 4 \td=0
+\newif\ifprime \newif\ifunknown
+\newcount\n \newcount\p \newcount\d \newcount\a
+\def\primes#1{2,~3% assume that #1 is at least 3
+  \n=#1 \advance\n by-2 % n more to go
+  \p=5 % odd primes starting with p
+  \loop\ifnum\n>0 \printifprime\advance\p by2 \repeat}
+\def\printp{, % we will invoke \printp if p is prime
+  \ifnum\n=1 and~\fi % this precedes the last value
+  \number\p \advance\n by -1 }
+\def\printifprime{\testprimality \ifprime\printp\fi}
+\def\testprimality{{\d=3 \global\primetrue
+  \loop\trialdivision \ifunknown\advance\d by2 \repeat}}
+\def\trialdivision{\a=\p \global\advance\td by 1\divide\a by\d
+  \ifnum\a>\d \unknowntrue\else\unknownfalse\fi
+  \multiply\a by\d
+  \ifnum\a=\p \global\primefalse\unknownfalse\fi}
+
+The first thirty prime numbers are \primes{30}. trial division macro was
+expanded \the\td\ times
+\end{verbatim}
+
+If you say |\tracingall|, you will see in the log file the whole job done by
+\tralics. For instance, associated to |\countdef\td 4 \td=0|, you will see:
+\begin{verbatim}
+{\countdef}
++scanint for \countdef->4
+{\td}
++scanint for \td->0
+\end{verbatim}
+The rules for scanning an integer in \TeX\ may be hard to undersand. Thus,
+whenever \tralics\ has scanned an integer it shows in the log file the value,
+and the destination (here |\countdef| and |\td|). We use use |\td| as a
+counter to count the number of calls to |\trialdivision|. If you allocate a
+counter via |\newcount| its value is zero. Here we must zero it by hand.
+
+This is the log for the expression |\newcount\n|.
+\begin{verbatim}
+{\countdef \n=1548}
+\end{verbatim}
+Note that, in \LaTeX, you would see something like |\n=\count28|. Here the
+value 1548 is an index in the |eqtb| table (this is irrelevant).
+
+When the first prime number has been computed, (namely 5), the macro |\printp|
+is called. Here is the log of it:
+\begin{verbatim}
+\printp->, \ifnum \n =1 and~\fi \number \p \advance \n by -1 
++\ifnum
++scanint for \ifnum->28
++scanint for \ifnum->1
++iftest false
++\fi
++scanint for \number->5
+{\advance}
++scanint for \advance->-1
+\end{verbatim}
+The effect of this procedure is first to add a comma and a space to the
+current XML tree (these two characters are in a temporary buffer). Then comes
+a test. The macro |\ifnum| looks for an expression like $A<B$, $A>B$ or
+$A=B$. It needs two numbers; as you can see, these numbers are 28 and 1, and
+the test is false. It adds nothing to the current XML tree. After that
+|\number| evaluates |\n|, and adds its value to the current tree (in the
+temporary buffer). This buffer is flushed by any command that might non-text
+to the current tree, here |\advance| (this is due to the fact that |\advance|
+is a member of the family of commands that can be preceeded by |\global|).
+The net effect of |\printp| is hence to add comma, space, et 5 to the XML tree,
+decrement the counter |\n|.
+
+In the case where the whole code is in a group, the old value of |\n| is saved
+on the save stack (but only the first time). Then, at the end of the group,
+you can see something like:
+\begin{verbatim}
++stack: restoring integer value 1548 0
+\end{verbatim}
+Note that the definition of |\n| is global (as well as |\a|, so that you lose
+the construct |\a'e|).
+
+
+In plain \TeX, we have the following definition:
+\begin{verbatim}
+\def\loop#1\repeat{\def\body{#1}\iterate}
+\def\iterate{\body \let\next\iterate \else\let\next\relax\fi \next}
+\let\repeat=\fi % this makes \loop...\if...\repeat skippable
+\end{verbatim}
+
+This is changed, in \LaTeX\ to
+\begin{verbatim}
+\def\loop#1\repeat{\def\iterate{#1\relax\expandafter\iterate\fi}%
+  \iterate \let\iterate\relax}
+\let\repeat\fi
+\end{verbatim}
+
+In \tralics, we use a variant of the \LaTeX\ code, where |\iterate| is a
+private macro. Note that, if you define a loop inside a loop, the inner
+|\iterate| will kill the outer |\iterate|. For this reason, the inner loop
+must be in a group, and some variables must be changed globally (|\printrue|
+et |\td|). The following is printed in the log file when the closing brace is
+seen in |\testprimality|. 
+\begin{verbatim}
+{end group character}
++stack: level - 5
++stack: restoring \ifunknown
++stack: restoring integer value 1551 0
++stack: restoring \iterate
++stack: restoring integer value 1550 0
++stack: level boundary
+\end{verbatim}
+The first line is printed by the translator: it sees a command that asks for
+popping the stack. It then decrements the current level (which is 5), then unwinds
+the stack. As you can see, two integer values were modified in the group, namely
+ |\a| and |\d|, and a command |\ifunknown|. The process of unwinding the stack stops
+when a level boundary has been seen.
+In the case where $n=9$, which is not a
+prime number, the value of |\ifprime| is changed to false by the line 
+|\ifnum\a=\p \global\primefalse|. The trace for these lines is 
+\begin{verbatim}
++scanint for \ifnum->9
++scanint for \ifnum->9
++iftest true
+\primefalse->\let \ifprime \iffalse 
+{\global\let}
+{\let \ifprime \iffalse}
+\end{verbatim}
+
+The \LaTeX\ trace for |\global\primefalse| is the following:
+\begin{verbatim}
+{\global}
+\primefalse ->\let \ifprime \iffalse 
+\end{verbatim}
+As you can see, when \TeX\ sees |\global\let|, it prints only the |\global|
+into the log file, while \tralics\ prints more. In some cases, the trace of
+\TeX\ is hard to understand. Consider for instance :
+\begin{verbatim}
+|\def\a{\b}\expandafter\let\a\c|
+\end{verbatim}
+You get:
+\begin{verbatim}
+{\expandafter}
+\a ->\b 
+{\let}
+\end{verbatim}
+You have no idea here of what is expanded after what, and what is defined. In
+\tralics, you will see:
+\begin{verbatim}
+{\expandafter \let \a}
+\a->\b 
+{\let}
+{\let \b \c}
+\end{verbatim}
+This shows that |\let| is expanded after |\a|, and that |\let| defines |\b| to
+|\c|.
+
+\paragraph{ifthenelse}
+The constructions of the |ifthen| package are implemented, but differently
+from the current \LaTeX\ version. The main algorithm is the following :
+If you say |\ifthenelse{test}{A}{B}|, then one of |A| or |B| is executed, this
+depends on the value of |test|, which is analysed in the following way. Let T
+be the first token of |test| that is neither a space, nor |\relax|. If this is
+a normal token, the |\ifnum| is executed (more precisely, two numbers and an
+operator are
+read, and compared), this gives a result, true or false, and can leave some
+tokens in the main token list, see later. If |T| is |\isodd|, then  |\ifodd|
+is executed on the argument (i.e., an argument is read, pushed back on the main
+list with a |\relax| as separator, a number is read, and checked for parity).
+There are little chances that |\ifodd{\pageref{someref}}| gives a result.
+If |T| is |\lengthtest|, then |\ifdim| is called on the argument (i.e., an
+argument is read, pushed backed on the main list with |\relax| as terminator,
+two dimensions and an operator are read, and the dimensions are compared).
+If |T| is |\boolean|, and argument is read. It is an error if the expansion
+contains non-characters. Assume that the result is `foo'. The test is true if
+the token |\iffoo| is equivalent to |\iftrue|, false otherwise. Finally, if
+|T| is |\equal|, two arguments are read, fully expanded, and compared for
+equality. In any case, after we have found the value of the test there can
+remain some unread tokens on the main list.
+
+In the case where the first token |T| is |\(|, the procedure is called
+recursively, all remaining tokens are read, until finding a closing |\)|.
+In case where the first token is |T|, the result is negated. 
+
+In the case where the first unread token, that is neither space nor relax
+is |\or| or |\and|, the following is done : In the case |\or|, and the
+condition is true, nothing happens, otherwise, the remaining is evaluated for
+truth value. In the case |\and|, if the
+condition is false, nothing happens, otherwise, the remaining is evaluated for
+truth value. Otherwise, remaining tokens are ignored. In the following
+example, each line should expand into |ok|. 
+
+\begin{verbatim}
+\ifthenelse{\not\boolean{true}\and\boolean{true}}{bug}{ok}
+\ifthenelse{\not\boolean{true}\and\boolean{false}}{bug}{ok}
+\ifthenelse{\not\boolean{false}\and\boolean{true}}{ok}{bug}
+\ifthenelse{\not\boolean{false}\and\boolean{false}}{bug}{ok}
+
+\ifthenelse{\not\(\boolean{true}\and\boolean{true}\)}{bug}{ok}
+\ifthenelse{\not\(\boolean{true}\and\boolean{false}\)}{ok}{bug}
+\ifthenelse{\not\(\boolean{false}\and\boolean{true}\)}{ok}{bug}
+\ifthenelse{\not\(\boolean{false}\and\boolean{false} good ?\)}{ok}{bug}
+
+\ifthenelse{\boolean{false} \or \boolean{false} or \boolean{true}}{ok}{bug}
+\end{verbatim}
+
+
+If |\tracingcommands| is positive, you can see how the machanism works.
+The following is taken from the LaTeX companion.
+\begin{verbatim}
+\newcommand{\QU}[2]{%
+\ifthenelse {
+  \(\equal{#1}{ENG} \and \equal{#2}{yes} \)
+     \or
+  \(\equal{#1}{FRE} \and \equal{#2}{oui} \)
+}{``OK''}{``not OK''}}
+You agree \QU{ENG}{yes} or don't \QU{ENG}{no}. 
+D'accord \QU{FRE}{oui} ou pas \QU{FRE}{non}. 
+\end{verbatim}
+
+The trace for the first |\QU| is:
+\begin{verbatim}
+{ifthenelse \(}
+{ifthenelse \equal}
+{ifthenelse equal true}
+{ifthenelse \and continuing}
+{ifthenelse \equal}
+{ifthenelse equal true}
+{ifthenelse-> true}
+{ifthenelse \or skipping}
+{ifthenelse-> true}
+\end{verbatim}
+In this case, we have first a |\(|, followed by an |\equal|. We print the
+value of the |\equal|, since |\equal| forces macro-expansion, so that, if
+|tracingmacros| is true, there may be a lot of lines between these two lines.
+After that comes and |\and|, and we continue (because the value was true).
+Then, we see an |\equal|, and return true. This is the truth value of the 
+subexpression |\(...\)|. It is followed by an |\or| that does nothing.
+
+This is the trace of the second |\ifthenelse|. It is of the form (true and
+false) or (false and something).
+\begin{verbatim}
+{ifthenelse \(}
+{ifthenelse \equal}
+{ifthenelse equal true}
+{ifthenelse \and continuing}
+{ifthenelse \equal}
+{ifthenelse equal false}
+{ifthenelse-> false}
+{ifthenelse \or continuing}
+{ifthenelse \(}
+{ifthenelse \equal}
+{ifthenelse equal false}
+{ifthenelse \and skipping}
+{ifthenelse-> false}
+\end{verbatim}
+
+\subsubsection{The calc package}
+It's of course available only if you load the package. In this case,
+|\setcounter|, |\addtocounter|, |\setlength| and |\addtolength| are redefined
+so that you use infix arithmethics. Example:
+\begin{verbatim}
+\newcounter{Ac}
+\setcounter{Ac}{(1+2)*(3+4)-20}\theAc=1
+\addtocounter{Ac}{(1*2)+(3*-4)+(34/7)}\theAc=-9
+\end{verbatim}
+In the example above, all computations were done using integer values.
+
+Evaluation is from left to right, unless you use parentheses. Example.
+\begin{verbatim}
+\newcounter{hours}\newcounter{minutes}
+\newcommand{\printtime}{%
+   \setcounter{hours}{\time/60}%
+   \setcounter{minutes}{\time-(\value{hours}*60)}
+   \thehours h \theminutes min}The time is \printtime.
+\setcounter{hours}{3* \real{1.6} *\real{1.7}}
+\end{verbatim}
+Here 3 times is 4.8, rounded to 4, and 4 times 1.7 is 6.8, rounded to 6,
+and the result is 6. On the other hand, multiplying 1.6 by 1.7 gives 2.72,
+after multiplication by 3, this gives 8.16, rounded to 8. There is no way to
+achieve the multiplication in this order, using the |calc| package.
+On the other hand, if you says |A+B*C|, the calc package may evaluate the
+multiplication first. This is not explained in the documentation, neither in
+the \LaTeX\ companion, which gives the example above (without the
+parentheses). In our implementation, the parentheses are required in this
+example. 
+
+In the case of dimensions, you have to take some care.
+\begin{verbatim}
+\newlength{\Bc}
+\setlength{\Bc}{(1cm+2cm)*(3+4)-200mm} \the\Bc=28.4526pt
+\setlength\Bc{\the\Bc*\ratio{25.4pt}{722.7pt}} \the\Bc=0.99985pt
+\Bc=1in \setlength\Bc{\the\Bc * 100 / 7227} \the\Bc=0.99998pt
+\Bc=1in \setlength\Bc{\the\Bc * \real{ 0.001383700013837}} \the\Bc=1.00018pt
+\Bc=1cm \setlength\Bc{\the\Bc / \real{28.452755}} \the\Bc=0.99985pt
+\Bc=1cm \setlength\Bc{\the\Bc * \ratio{254pt}{7227pt}} \the\Bc=0.99985pt
+\Bc=1in \setlength\Bc{\the\Bc / \ratio{7227pt}{100pt}} \the\Bc=1.00018pt
+\end{verbatim}
+The last two expressions give some arithmetic error, and a completely wrong
+result in \LaTeX. In \tralics, we solved the problem, by dividing numerator
+and denominator by an adequate power of two. In any case, if the denominator 
+is greater than $2^{31}/10 sp$, or 3276pt, there can be an overflow in LaTeX. 
+(the denominator is $B$ if you multiply by $A/B$, and $A$ if you divide).
+
+\subsection{titlepage}
+The title page is customised by saying something like this
+\begin{Verbatim}
+BeginTitlePage
+  \makeRR <RRstart> "" " type = 'RR'"
+  alias \makeRT "123" " type = 'RT'"
+
+  <UR> -
+  \URSophia ?+<UR>
+  \URRocquencourt ?+<UR>
+  alias \URRocq
+  \Paris ?<UR> <Rocquencourt>
+  \URRhoneAlpes ?+<UR>
+  \URRennes ?+<UR>
+  \URLorraine ?+<UR>
+  \URFuturs ?+<UR>
+
+  \RRtitle <title> "pas de titre"
+  \RRetitle <etitle>  "no title"
+  \RRprojet <projet> "pas de projet"
+  \RRtheme <theme>  "pas de theme"
+  \motcle <motcle> "pas de motcle"
+  \keyword <keyword>  "no keywords"
+  \RRresume p<resume> "pas de resume"
+  \RRabstract p<abstract> "no abstract"
+  \RRauthor + <author> <auth> "Pas d'auteurs"
+  \RRdate <date> A"\monthyearvalfr"
+  \RRNo <numero> "????"
+
+End
+\end{Verbatim}
+
+Here every line follows a pattern
+\begin{Verbatim}[numbers=left]
+mac elt str str
+alias mac str str
+mac elt str
+mac +elt elt str
+elt -
+mac ?+elt
+mac ?elt elt
+mac mac str
+mac elt mac
+alias mac
+\end{Verbatim}
+
+If you say |\makeRR <RRstart> "" " type = 'RR'"|, this will define 
+a command |\makeRR| that takes no argument, and constructs the titlepage.
+If you say |alias \makeRT "123" " type = 'RT'"|, then |\makeRT| is an
+alternate way to create this title page.
+
+
+If |tracing_io| is true, then every source line is printed in
+the log file. It is preceeded by the line number in square brackets.
+
+\section{etc}
+optional star ignored in |\newcommand|.
+
+\paragraph{Trace}
+There is an integer variable |\tracingrestores| that controls
+
+When \tralics\ sees a closing brace, and tracing-restores is true, it
+prints in the log file the status of the variables to be restored.
+For some reasons, 
+\begin{verbatim}
+{\let\foo\relax\tracingall\let\bar\relax}
+\end{verbatim}
+
+
+\section{empy}
+
+There is a questin about whether or not the argument of |\begin|
+or |\end| should be expanded. Condider the following code.
+\begin{verbatim}
+\newenvironment{Foo}{startfoo}{endfoo}
+\def\endBar{endbar}
+\def\foo{Foo}
+\begin{\foo}\def\foo{Bar}
+\end{\foo}
+\def\Bar{Foo}
+\begin{\foo}
+\end{\Bar}
+\end{verbatim}
+
+
+
+For efficiency reasons, when \tralics\ reads a dimension, and a unit, if the
+first token is a character then a second token is read. Said otherwise,
+after |\def\foo\foo| and |\dimen0=1w\foo\relax|, \tralics\ expands |\foo| and
+signals an error about the syntax of |\foo|, followed by a missing unit error,
+while \TeX signals errors in the other order. 
+
+
+
+
+
+\bibliography{lx}
+
+
+
+\end{document}

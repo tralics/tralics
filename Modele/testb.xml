@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<std>
+<biblio>
+<Bibliography><p noindent='true'><bibitem id='bid2'/>Joe And, Joe And, Joe-And, et al.
+X.</p>
+<p noindent='true'><bibitem id='bid3'/>A b Cde.
+X.</p>
+<p noindent='true'><bibitem id='bid0'/>Charles Louis Xavier Joseph de la Vallée Poussin.
+X.</p>
+<p noindent='true'><bibitem id='bid1'/>Maria De La Cruz.
+X.</p>
+</Bibliography></biblio><p><cit><ref target='bid0'/></cit>, <cit><ref target='bid1'/></cit>, <cit><ref target='bid2'/></cit>, <cit><ref target='bid3'/></cit>, <cit><ref target='bid4'/></cit></p>
+<p>a: <Cit type='empty'>(prenote <ref target='bid0'/>;<ref target='bid1'/>;<ref target='bid2'/>;<ref target='bid3'/>;<ref target='bid4'/>, postnote)</Cit>
+b: <Cit type='empty'>(<ref target='bid0'/>;<ref target='bid1'/>;<ref target='bid2'/>;<ref target='bid3'/>;<ref target='bid4'/>)</Cit>
+d: <Cit>(<ref target='bid0'/>;<ref target='bid1'/>;<ref target='bid2'/>;<ref target='bid3'/>;<ref target='bid4'/>, post)</Cit>
+e: <Cit>(pre <ref target='bid0'/>;<ref target='bid1'/>;<ref target='bid2'/>;<ref target='bid3'/>;<ref target='bid4'/>)</Cit>
+f: <Cit>(pre <ref target='bid0'/>)</Cit></p>
+<p noindent='true'><bibitem id='bid4'/>Hey</p>
+</std>

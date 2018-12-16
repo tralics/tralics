@@ -1,0 +1,14 @@
+% tralics.sty file (C) INRIA 2004
+% This file is part of Tralics. Copyright Inria/ Jose Grimm/ Apics. 2004
+% You can use this file in order to conditionnally compile
+% a latex file with and without tralics
+
+% This is how you can check that tralics is loaded
+\ifx\tralicsversion\undefined\else\endinput\fi
+
+% here we are outside tralics
+
+\newcommand\xmllatex[2]{#2}
+
+
+\endinput

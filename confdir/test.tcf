@@ -1,0 +1,316 @@
+## This file contains iso-8859-1 characters
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/Apics, Jos\'e Grimm
+## $Id: test.tcf,v 1.12 2015/07/09 16:04:52 grimm Exp $
+## tralics ident rc=test.tcf $Revision: 1.12 $
+
+## In this file we give a definition for everything that can be defined
+## There are three types of variable. Attributes names are of the form att_foo
+## element names are of the form xml_foo_name. These affect how the XML tree
+## is printed. Other variables may change how the tree is constructed.
+
+
+DocType = document devnul.dtd
+
+distinguish_refer_in_ra_bib = "true"    # overrides command line arg
+entity_names = "false"     # overrides command line arg
+lang_en = "English"
+lang_fr = "French"
+alternate_item = "true"  # redefines \item to \@item or \@@item 
+url_font = "\large ι"  # redefines \urlfont
+no_footnote_hack="true"   # ihnibits fotnote hacking
+use_font_elt = "true" # <large> instead of <hi rend='large'>
+use_all_sizes = "true" # by default, we have only 3 sizes, normal large small
+bibtex_fields = "firstpage lastpage "
+bibtex_fields = "+allpages"
+  everyjob="\AtBeginDocument {ιθ}"
+  everyjob="\typeout{Hello Word!}"
+
+## Raweb only 
+  theme_vals = "com cog num sym bio"
+  section_vals = "composition*/presentation*/fondements/domaine/logiciels/"
+  section_vals = "+resultats/contrats*/international*/diffusion*/"
+  ur_vals = "Rocquencourt//Sophia/Sophia Antipolis/Rennes//Lorraine//";
+  ur_vals = "+RhoneAlpes/Rh\^one-Alpes/Futurs//"
+  affiliation_vals ="Inria//Cnrs//University//ForeignUniversity//"
+  affiliation_vals ="+Public//Other//"
+  profession_vals = "Scientist//Assistant//Technical//PHD//"
+  profession_vals = "+PostDoc//StudentIntern//Other//"
+
+
+# Divisions
+xml_div0_name = "Xdiv0"
+xml_div1_name = "Xdiv1"
+xml_div2_name = "Xdiv2"
+xml_div3_name = "Xdiv3"
+xml_div4_name = "Xdiv4"
+xml_div5_name = "Xdiv5"
+xml_div6_name = "Xdiv6"
+xml_frontmatter_name = "Frontmatter"
+xml_backmatter_name = "Backmatter"
+xml_mainmatter_name = "Mainmatter"
+att_nonumber = "NoNumber"
+
+# Tables
+xml_row_name = "Row"
+xml_cell_name = "Cell"
+xml_Table_name = "XTable"
+xml_table_name = "Table" 
+att_halign = "Halign"
+att_cell_left =  "Left"
+att_cell_right =  "Right"
+att_cell_center =  "Center"
+att_cell_leftborder = "Leftborder"
+att_cell_rightborder = "Rightborder"
+att_cell_topborder = "Topborder"
+att_cell_bottomborder = "Bottomborder"
+att_border_bottom_width = "BottomBorderWidth"
+att_border_top_width = "TopBorderWidth"
+att_border_left_width = "LeftBorderWidth"
+att_border_right_width = "RightBorderWidth"
+att_cols = "Cols"
+att_row_spaceafter = "Spaceafter"
+att_vpos = "Vpos"
+att_table_width = "TWidth"
+
+# Graphics
+xml_graphics_name = "Xgraphics"
+xml_figure_name = "Figure"
+att_file = "File"
+att_file_extension = "Extension"
+att_scale = "Scale"
+att_clip = "Clip"
+
+att_height = "Height"
+att_width = "Width"
+# Floats
+xml_subfigure_name = "Xsubfigure"
+xml_caption_name = "Caption"
+xml_scaption_name = "SCaption"
+xml_footnote_name = "Note"
+xml_figure_env_name = "FloatFigure"
+xml_table_env_name = "FloatTable"
+att_place = "Place"
+att_foot_position = "Inline"
+
+
+# Boxes
+xml_box_name = "Xbox"
+xml_mbox_name = "Xmbox"
+xml_fbox_name = "Framebox"
+xml_scalebox_name= "Scalebox";
+xml_raisebox_name= "Raisebox";
+xml_rotatebox_name = "Rotatebox"
+att_rotate_angle = "Rangle"
+att_angle = "Angle"
+att_box_scale = "BoxScale"
+att_minipage_width= "MinipageWidth"
+att_pos = "Pos"
+att_posA = "PosA"
+att_posB = "PosB"
+att_inner_pos = "InnerPos"
+att_box_pos = "BPos"
+att_framed = "Framed"
+att_boxed = "Boxed"
+att_fbox_rend = "Rendering"
+att_box_width= "BoxWidth"
+
+# Picture
+xml_picture_name = "Xpicture"
+xml_bezier_name = "Xbezier"
+xml_put_name = "Xput"
+xml_scaleput_name = "Scaleput"
+xml_arc_name = "Arc"
+xml_multiput_name = "Multiput"
+xml_line_name = "Xline"
+xml_lineC_name = "XlineC"
+xml_vector_name = "Xvector"
+xml_oval_name = "Xoval"
+xml_dashline_name = "Xdashline"
+xml_drawline_name = "Xdrawline"
+xml_dottedline_name = "Xdottedline"
+xml_circle_name = "Xcircle"
+xml_bigcircle_name = "Bigcircle"
+xml_closecurve_name = "CloseCurve"
+xml_curve_name = "Curve"
+xml_tagcurve_name = "TagCurve"
+xml_thicklines_name = "Thicklines"
+xml_thinlines_name = "Thinlines"
+xml_linethickness_name = "Linethickness"
+
+att_unit_length = "Unitlength"
+att_xscale = "Xscale"
+att_yscale = "Yscale"
+att_xscaley = "XscaleY"
+att_yscalex = "YscaleX"
+att_xpos = "Xpos"
+att_ypos = "Ypos"
+att_xdir = "XDir"
+att_ydir = "YDir"
+att_repeat = "Repeat"
+att_dx = "Dx"
+att_dy = "Dy"
+att_full= "Full"
+att_size= "Size"
+att_curve_nbpts = "Nbsymb"
+
+# Paragraphs
+att_quote = "Quote"
+att_quotation = "Quotation"
+att_centering = "Center"
+att_flush_left = "FlushLeft"
+att_flush_right = "FlushRight"
+att_noindent = "Noindent"
+att_rend = "Rend"
+att_space_before = "Spacebefore"
+
+# Lists
+xml_list_name = "List"
+xml_catperso_name = "Catperso"
+xml_head_name = "Head"
+xml_labelitem_name = "Label"
+xml_item_name = "Item"
+xml_glo_name = "The famous glossary"
+xml_glossary_name = "Glossary"
+att_user_list = "MyList"
+
+# Theorems
+xml_theorem_name = "ATheorem"
+xml_xtheorem_name = "BTheorem"
+xml_theorem_head = "ThHead"
+
+# Fonts
+#xml_pack_font_att = "true"
+xml_caps_name = "font-caps"
+xml_ul_name = "font-ul"
+xml_hl_name = "font-hl"
+xml_so_name = "font-so"
+xml_st_name = "font-st"
+xml_sup_name = "font-super"
+xml_sub_name = "font-sub"
+xml_oldstyle_name = "font-oldstyle"
+xml_overline_name = "font-overline"
+xml_underline_name = "font-underline"
+xml_font_small = "font-small"
+xml_font_small1 = "font-small1"
+xml_font_small2 = "font-small2"
+xml_font_small3 = "font-small3"
+xml_font_small4 = "font-small4"
+xml_font_small5 = "font-small5"
+xml_font_small6 = "font-small6"
+xml_font_large = "font-large"
+xml_font_large1 = "font-large1"
+xml_font_large2 = "font-large2"
+xml_font_large3 = "font-large3"
+xml_font_large4 = "font-large4"
+xml_font_large5 = "font-large5"
+xml_font_large6 = "font-large6"
+xml_font_normalsize = "font-normalsize"
+xml_font_upright = "font-upright-shape"
+xml_font_medium = "font-medium-series"
+xml_font_roman = "font-roman-family"
+xml_font_it = "font-italic-shape"
+xml_font_slanted = "font-slanted-shape"
+xml_font_sc = "font-small-caps-shape"
+xml_font_tt = "font-typewriter-family"
+xml_font_sansserif = "font-sansserif-family"
+xml_font_bold = "font-bold-series"
+xml_font_boldextended = "font-boldextended-series"
+xml_font_semibold = "font-semibold-series"
+xml_font_condensed = "font-condensed-series"
+
+# Bibliography
+xml_biblio = "Xbiblio"
+xml_bpers_name = "Bpers"
+xml_cit_name = "Cit"
+xml_citation_name = "Citation"
+xml_ref_name = "Ref"
+xml_prenote_name = "Prenote"
+xml_citetype_name = "Citetype"
+att_page="Page"
+
+# Raweb specific stuff
+xml_topic_name = "Topic"
+xml_topic_title = "Title"
+xml_project_name = "Project"
+xml_accueil_name = "Accueil"
+xml_composition_ra_name = "Composition"
+xml_keywords_name = "Keywords"
+xml_term_name = "Term"
+xml_pers_name = "Pers"
+xml_gloitem_name = "Glolabel"
+att_gloss_type = "Gloss"  
+att_topic_num = "Num"
+
+# These are for pers and bpers
+att_full_first="FullFirst"
+att_prenom="Firstname"
+att_nom="Lastname"
+att_particule="Particle"
+att_junior="Junior"
+att_affiliation="Affiliation"
+att_profession="Profession"
+att_hdr="Xhdr"
+
+# Other
+xml_leaders_name = "Leaders"
+xml_cleaders_name = "Cleaders"
+xml_xleaders_name = "Xleaders"
+xml_anchor_name = "Anchor"
+xml_texmath_name = "Texmath"
+xml_xref_name = "Xref"
+xml_texte_name = "Texte"
+xml_leg_name = "Leg"
+xml_tableofcontents_name = "TableOfContents"
+xml_theindex_name = "TheIndex"
+xml_theglossary_name = "TheGlossary"
+
+xml_index_name = "Index"
+att_level = "Level"
+att_encap = "Encap"
+
+
+att_language="Language"
+att_pre="Pre"   # for verbatim
+
+## math fonts
+mml_font_normal = "Nr"
+mml_font_upright = "Up"
+mml_font_bold = "Bo"
+mml_font_italic = "It"
+mml_font_bold_italic = "Bi"
+mml_font_script = "Sc"
+mml_font_bold_script = "Bs" 
+mml_font_fraktur = "Fr"
+mml_font_doublestruck = "Ds"
+mml_font_bold_fraktur  = "Bf"
+mml_font_sansserif = "Ss"
+mml_font_bold_sansserif = "Bs"
+mml_font_sansserif_italic = "Si"
+mml_font_sansserif_bold_italic = "Sbi" 
+mml_font_monospace = "Mn"
+
+xml_node_name = "node"
+xml_nodeconnect_name = "nodeC"
+xml_nodecurve_name = "nodec"
+xml_nodetriangle_name = "nodet"
+xml_nodecircle_name = "nodecr"
+xml_nodebox_name = "nodeb"
+xml_nodeoval_name = "nodeo"
+xml_anodeconnect_name = "AnodeC"
+xml_abarnodeconnect_name = "ABnodeC"
+xml_anodecurve_name = "Anodec"
+xml_barnodeconnect_name = "BnodeC"
+
+
+xml_allowbreak_name = "allowbreak"
+xml_eqnpos_name = "eqnpos"
+xml_llap_name = "llap"
+xml_rlap_name = "rlap"
+att_minipage_width="marginpar"
+att_name="Name"
+att_nameA="Name"
+att_nameB="Name"
+xml_alt_section_name ="Atitle"
+xml_alt_caption_name ="Acaption"
+

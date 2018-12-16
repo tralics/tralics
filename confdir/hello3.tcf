@@ -1,0 +1,31 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: hello3.tcf,v 2.4 2012/06/20 17:15:57 grimm Exp $
+## tralics ident rc=helloconf3!
+
+
+
+BeginCommands
+  \def\World{world}
+End
+
+BeginTitlePage
+ \maketitle <Title> "" ""
+End
+
+DocType = Article classes.dtd
+att_language = "language"
+xml_stylesheet = "my_stylesheet.css"
+xml_stylesheettype = "text/xsl"
+
+BeginCommands
+\newcommand\hello{\uppercase {h}ello}
+End
+
+BeginTitlePage
+ \abstract <abstract> "No abstract given"
+ \author <author> "No author given"
+End
+
+
+

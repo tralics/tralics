@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE raweb SYSTEM 'raweb7.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<raweb language='english' creator='Tralics version 2.15.3' year='2011'>
+<accueil isproject='true' html='exempleb'>
+<theme>Dummy</theme>
+<error n='\PackageError' l='14' c='uerror'/><projet>ExemplE</projet>
+<projetdeveloppe>Algebraic Systems for Research and Industry</projetdeveloppe>
+<UR><URGrenoble/></UR>
+</accueil>
+<moreinfo><p>This project is a common project with CNRS, University of Rennes 1 and INSA. The
+team has been created on January the 1<hi rend='sup'>st</hi>, 2010 and became an
+INRIA project on November the 1<hi rend='sup'>st</hi>, 2010.</p>
+</moreinfo>
+<section titre='Team' id-text='composition' id='uid1' name='composition'>
+<pers prenom='Tim' nom='Berners-Lee' affiliation='INRIA' profession='Chercheur' hdr='Habilite' research-centre='Grenoble'>Team leader, Senior Researcher Inria</pers>
+<pers prenom='Ada' nom='Lovelace' affiliation='INRIA' profession='Assistant' research-centre='Grenoble'>shared with another team</pers>
+<error n='\tralics@get@config' l='285' c='illegal data'/><error n='\tralics@get@config' l='285' c='illegal data'/><pers prenom='Richard' nom='Stallman' affiliation='' profession='' research-centre='Grenoble'>Senior Researcher Inria</pers>
+<pers prenom='Linus' nom='Torvalds' affiliation='AutreEtablissementPublic' profession='Chercheur' research-centre='Grenoble'>Ing. en chef Armement</pers>
+<pers prenom='Marc' nom='Andreessen' affiliation='UnivFr' profession='Enseignant' research-centre='Grenoble'>Professor, Université Paris 13</pers>
+<pers prenom='Donald E.' nom='Knuth' affiliation='UnivEtrangere' profession='Visiteur' research-centre='Grenoble'>AUF Grant/ Gaston Berger University, Saint-Louis, Senegal, from March 1st till August 31</pers>
+<pers prenom='François' nom='Gernelle' affiliation='EtablissementPrive' profession='Technique' research-centre='Grenoble'>IGHCA, Unicode team</pers>
+<error n='\tralics@get@config' l='291' c='Only one module accepted in composition'/>
+
+<p>ok
+</p></section>
+<section titre='Overall Objectives' id-text='presentation' id='uid3' name='presentation'>
+<module id-text='2' id='uid4'><head>Overall Objectives</head>
+<p>The explosion of the quantity of numerical documents raises the problem
+of the management of these documents. Beyond the storage,
+we are interested in the problems linked to the management of the contents:
+how to exploit the large databases of documents, how to classify documents, how to
+index them in order to search efficiently their contents, how to visualize
+their contents?
+The two major challenges of the field aims at tackling are the following ones:</p>
+<list type='simple'>
+<item id-text='1' id='uid5'><p noindent='true'>it is necessary, first of all, to be able <hi rend='bold'>to
+process large sets of documents</hi>: it is important to develop techniques
+that scale up gracefully with respect to the quantity of documents
+taken into account (millions of images, months of videos), and to evaluate
+their results in quality as well as in speed;</p>
+</item>
+<item id-text='2' id='uid6'><p noindent='true'>multimedia documents are not a simple juxtaposition of
+independent media, and it is important <hi rend='bold'>to better exploit the
+existing links between the various media</hi> composing a unique
+document;</p>
+</item></list>
+</module>
+<module id-text='3' id='uid7'><head>Highlights</head>
+<p>Les Highlights (Faits Marquants) doivent être relatifs aux résultats de votre équipe. La bonne mesure pour un fait marquant est l'impact estimé. Seuls les résultats scientifiques importants ou des prix liés à des résultats justifient la présence de la rubrique Highlights.
+</p></module></section>
+<section titre='Scientific Foundations' id-text='fondements' id='uid8' name='fondements'>
+<module id-text='4' id='uid9'><head>Document Description and Metadata</head>
+<participants><pers prenom='Ioannis' nom='Emiris'/>
+<pers prenom='Jean' nom='de La Fontaine'>1621-1695</pers>
+<pers prenom='Cecil Blount' nom='De Mille'/>
+</participants>
+<list type='gloss'><head>Glossary</head><label>Content-based indexing</label><item><p>the process of extracting from a
+document (here a picture) compact and structured significant visual
+features that will be used and compared during the interactive
+search.</p>
+</item></list><moreinfo><p>Common activity with LoveGeom project.</p>
+</moreinfo>
+<div3 id-text='1' id='uid10'><head>xx</head>
+<p>Usually subspace identification is a one step procedure working on user selected time series.</p>
+</div3>
+<div2 id-text='1' id='uid11'><head>First subsection</head>
+<p>Due to the increasing broadcasting of digital video content (TV
+Channels, Web-TV, Video Blogs, etc), finding copies in a large video
+database has become a critical new issue and Content Based Copy
+Detection (CBCD) presents an alternative to the watermarking
+approach to identify video sequences.</p>
+<div3 id-text='1' id='uid12'><head>toto</head>
+<p>The article describing and comparing output-only and input/output covariance-driven subspace
+identification methods (see 2009 activity report) has been published <cit><ref target='bid0'/></cit>.</p>
+</div3>
+<div3 id-text='2' id='uid13'><head>titi</head>
+<p>The article describing the general framework encompassing
+most well known subspace approaches (either output-only or input/output,
+should they be covariance, data or frequency driven),
+and proving general consistency theorems for subspace methods under non stationary excitation,
+has been accepted for publication in
+an IEEE journal <cit><ref target='bid1'/></cit>.</p>
+</div3>
+<div3 id-text='3' id='uid14'><head>tutu</head>
+<p>Different case studies have been performed to test the capacity and robustness
+of the on-line monitoring method implemented in the <hi rend='it'>cosmad</hi> toolbox,
+see module <ref target='uid25'/>.
+The results of the analysis
+of long datasets from different scenarios in the Bradford Stadium (international benchmark)</p>
+</div3></div2>
+<div2 id-text='2' id='uid15'><head>second subsection</head>
+<p>Text of second subsection</p>
+<div3 id-text='1' id='uid16'><head>tata</head>
+<p>Text...</p>
+</div3>
+<div3 id-text='2' id='uid17'><head>tyty</head>
+<p>Text...
+</p></div3></div2></module><p>Threre should be no text between modules. This line provokes an error.
+<error n='\tralics@push@module' l='385' c='Invalid \begin{module} in a paragraph'/></p>
+<module id-text='5' id='uid18'><head>Identification</head>
+<p>...</p>
+<p>A patend: <cit><ref target='bid2'/></cit></p>
+<p>...</p>
+<formula id-text='1' id='uid19' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>P</mi><mfenced separators='' open='(' close=')'><mtable><mtr><mtd><msub><mi>&theta;</mi> <mn>1</mn> </msub></mtd></mtr><mtr><mtd><mo>&vellip;</mo></mtd></mtr><mtr><mtd><msub><mi>&theta;</mi> <mi>r</mi> </msub></mtd></mtr></mtable></mfenced><mo>=</mo><mi>Q</mi><mo>+</mo><mi>R</mi><mo>,</mo></mrow></math></formula>
+</module></section>
+<section titre='Application Domains' id-text='domaine' id='uid20' name='domaine'>
+<module id-text='6' id='uid21'><head>Panorama</head>
+<participants><pers prenom='Aurélien' nom='Dumez'/>
+<pers prenom='Christian' nom='Rossi'/>
+<pers prenom='Laetitia' nom='Jourdan'/>
+</participants>
+<p>Because ... and ... æ Æ à À â Â ä Ä ç Ç é É è È ê Ê ë Ë î Î ï Ï ô Ô ö Ö ù Ù û Û ü Ü ÿ</p>
+</module>
+<module id-text='7' id='uid22'><head>Telecommunication Systems</head>
+<p>Modules should not be empty so there is some symbols: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>&Ropf;</mi> <mi>n</mi> </msup></math></formula> and also <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&pi;</mi></math></formula>.
+</p></module>
+<module id-text='8' id='uid23'><head>Software Embedded Systems</head>
+<p>Modules should not be empty.</p>
+<figure width='113.81102pt' file='IMG/imagejpeg' id-text='1' id='uid24' rend='figure'><head>An example of a jpeg image</head>
+</figure>
+</module>
+<module id-text='9' id='uid25'><head>Hyperion Software</head>
+<participants><pers prenom='Laurent' nom='Pierron'>correspondant</pers>
+<pers prenom='Sylvain' nom='Contassot-Vivier'>Nancy</pers>
+<pers prenom='Bertrand' nom='Decouty'>projet Miaou</pers>
+<pers prenom='Martine' nom='Verneuille'>projet Miaou</pers>
+</participants>
+<p>See also the web page
+<xref url='http://www-rocq.inria.fr/scilab/'>http://<allowbreak/>www-rocq.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>scilab/</xref>.</p>
+<p>Alternate versions (note order of arguments)
+<xref url='http://www.loria.fr/info/'>http://<allowbreak/>www.<allowbreak/>loria.<allowbreak/>fr/<allowbreak/>infos/</xref>.</p>
+<p>You can simplify this to
+<xref url='http://www.inria.fr/scilab/'>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>scilab/</xref>.
+</p></module></section>
+<section titre='New Results' id-text='resultats' id='uid26' name='resultats'>
+<module id-text='10' id='uid27'><head>Tralics: a LaTeX to XML Translator</head>
+<p>(...) On a le développement suivant:</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&forall;</mo><mi>f</mi><mo>&Element;</mo><msup><mi>C</mi> <mi>&infin;</mi> </msup><mfenced separators='' open='(' close=')'><mfenced separators='' open='[' close=']'><mo>-</mo><mfrac><mi>T</mi> <mn>2</mn></mfrac><mo>;</mo><mfrac><mi>T</mi> <mn>2</mn></mfrac></mfenced></mfenced><mo>,</mo><mo>&forall;</mo><mi>t</mi><mo>&Element;</mo><mfenced separators='' open='[' close=']'><mo>-</mo><mfrac><mi>T</mi> <mn>2</mn></mfrac><mo>;</mo><mfrac><mi>T</mi> <mn>2</mn></mfrac></mfenced><mo>,</mo><mi>f</mi><mrow><mo>(</mo><mi>&tau;</mi><mo>)</mo></mrow><mo>=</mo><munderover><mo>&sum;</mo> <mrow><mi>k</mi><mo>=</mo><mo>-</mo><mi>&infin;</mi></mrow> <mrow><mo>+</mo><mi>&infin;</mi></mrow> </munderover><msup><mi>e</mi> <mrow><mn>2</mn><mi>i</mi><mi>&pi;</mi><mfrac><mi>k</mi> <mi>T</mi></mfrac><mi>t</mi></mrow> </msup><mo>&times;</mo><munder><munder accentunder='true'><mrow><mfrac><mn>1</mn> <mi>T</mi></mfrac><msubsup><mo>&int;</mo> <mrow><mo>-</mo><mfrac><mi>T</mi> <mn>2</mn></mfrac></mrow> <mfrac><mi>T</mi> <mn>2</mn></mfrac> </msubsup><mi>f</mi><mrow><mo>(</mo><mi>t</mi><mo>)</mo></mrow><msup><mi>e</mi> <mrow><mo>-</mo><mn>2</mn><mi>i</mi><mi>&pi;</mi><mfrac><mi>k</mi> <mi>T</mi></mfrac><mi>t</mi></mrow> </msup><mi>d</mi><mi>t</mi></mrow> <mo>&UnderBrace;</mo></munder> <mrow><msub><mi>a</mi> <mi>k</mi> </msub><mo>=</mo><mover accent='true'><mi>f</mi> <mo>&tilde;</mo></mover><mfenced separators='' open='(' close=')'><mi>&nu;</mi><mo>=</mo><mfrac><mi>k</mi> <mi>T</mi></mfrac></mfenced></mrow> </munder></mrow></math></formula>
+<p noindent='true'>et puisque (...)</p>
+</module></section>
+<section titre='Contracts and Grants with Industry' id-text='contrats' id='uid28' name='contrats'>
+<module id-text='11' id='uid29'><head>EDF</head>
+<participants><pers prenom='Hélène' nom='Lowinger'/>
+<pers prenom='Christian' nom='Poli'/>
+<pers prenom='Manuel' nom='Serrano'/>
+</participants>
+<p>ici des math en html
+... <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>y</mi><mo>=</mo><msup><mi>x</mi> <mn>2</mn> </msup></mrow></math></formula> ...</p>
+<p>et ici on génére une image math pour le web</p>
+<formula textype='displaymath' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munderover><mo>&sum;</mo> <mrow><mn>0</mn></mrow> <mi>&infin;</mi> </munderover><mi>y</mi><mo>=</mo><msup><mi>x</mi> <mn>4</mn> </msup></mrow></math></formula>
+<p noindent='true'>...</p>
+</module>
+<module id-text='12' id='uid30'><head>Document Description and Metadata</head>
+<p>ok
+</p></module></section>
+<section titre='Partnerships and Cooperations' id-text='international' id='uid31' name='international'>
+<module id-text='13' id='uid32'><head>National Actions</head>
+<div2 id-text='3' id='uid33'><head>Incitative Action FIABLE</head>
+<participants><pers prenom='Christèle' nom='Faure'/>
+<pers prenom='Jean-Charles' nom='Gilbert'/>
+</participants>
+<p>blabla</p>
+</div2>
+<div2 id-text='4' id='uid34'><head>Incitative Action MOUAI</head>
+<participants><pers prenom='Jean-Charles' nom='Gilbert'/>
+<pers prenom='José' nom='Grimm'/>
+</participants>
+<p>blabla...</p>
+<p>Some references <cit rend='refer'><ref target='bid3'/></cit>, <cit rend='refer'><ref target='bid4'/></cit>, <cit rend='refer'><ref target='bid5'/></cit></p>
+</div2></module>
+<module id-text='14' id='uid35'><head>Actions Funded by the EC</head>
+<div2 id-text='5' id='uid36'><head>Projet LTR TURLU EP-9134867</head>
+<p>A citation <cit rend='foot'><ref target='bid6'/></cit> using the <hi rend='tt'>\footcite</hi> command</p>
+</div2>
+<div2 id-text='6' id='uid37'><head>Réseau TMR RATA</head>
+<p>blabla</p>
+<figure file='IMG/imageeps' id-text='2' id='uid38' rend='figure'><head>An example of an eps file</head>
+</figure>
+</div2></module></section>
+<section titre='Dissemination' id-text='diffusion' id='uid39' name='diffusion'>
+<module id-text='15' id='uid40'><head>Animation de la Communauté scientifique</head>
+<p>A citation <cit rend='refer'><ref target='bid4'/></cit> using the <hi rend='tt'>\refercite</hi>
+(major publications of the Team).
+</p></module>
+<module id-text='16' id='uid41'><head>Teaching</head>
+<p>...
+Note. Optional arguments like [htbp] to the figure environment will be ignored.</p>
+<figure width='56.9055pt' file='IMG/imagepdf' id-text='3' id='uid42' rend='figure'><head>An example of a pdf map reconstructed by using geometrical methods in detecting landmarks</head>
+</figure>
+<p>...
+citation <cit><ref target='bid7'/></cit> using <hi rend='tt'>\cite</hi> for publications of current year.</p>
+<p>...
+</p></module></section><error n='\invalid.' l='570' c='no module'/><biblio>
+<citation from='refer' key='1' id='bid4' userid='refercite:Garavel-07' type='inproceedings'>
+<bauteurs><bpers prenom='H.' nom='Garavel' prenomcomplet='Hubert'/></bauteurs>
+<btitle>OPEN/CÆSAR: An Open Software Architecture for Verification, Simulation, and Testing</btitle>
+<bbooktitle>Proceedings of the First International Conference on Tools and Algorithms for the Construction and Analysis of Systems TACAS'07 (Lisbon, Portugal)</bbooktitle>
+<bseries>Lecture Notes in Computer Science</bseries>
+<bvolume>1384</bvolume>
+<bpublisher>Springer Verlag</bpublisher>
+<bediteur><bpers prenom='B.' nom='Steffen' prenomcomplet='Bernhard'/></bediteur>
+<bpages>68–84</bpages>
+<baddress>Berlin</baddress>
+<bmonth>March</bmonth>
+<byear>2007</byear>
+<xref url='http://www.inria.fr/rrrt/rr-3352.html'>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rr-3352.<allowbreak/>html</xref><bnote>Full version available as INRIA Research Report RR-3352</bnote>
+</citation>
+<citation from='refer' key='2' id='bid3' userid='refercite:Garavel-89-c' type='inproceedings'>
+<bauteurs><bpers prenom='H.' nom='Garavel' prenomcomplet='Hubert'/></bauteurs>
+<btitle>Compilation of LOTOS Abstract Data Types</btitle>
+<bbooktitle>Proceedings of the 2nd International Conference on Formal Description Techniques FORTE'89 (Vancouver B.C., Canada)</bbooktitle>
+<bpublisher>North-Holland</bpublisher>
+<bediteur><bpers prenom='S. T.' nom='Vuong' prenomcomplet='Son T.'/></bediteur>
+<bpages>147–162</bpages>
+<bmonth>December</bmonth>
+<byear>1989</byear>
+</citation>
+<citation from='refer' key='3' id='bid5' userid='refercite:Garavel-Lang-01' type='inproceedings'>
+<bauteurs><bpers prenom='H.' nom='Garavel' prenomcomplet='Hubert'/><bpers prenom='F.' nom='Lang' prenomcomplet='Frédéric'/></bauteurs>
+<btitle>SVL: a Scripting Language for Compositional Verification</btitle>
+<bbooktitle>Proceedings of the 21st IFIP WG 6.1 International Conference on Formal Techniques for Networked and Distributed Systems FORTE'2001 (Cheju Island, Korea)</bbooktitle>
+<borganization>IFIP</borganization>
+<bpublisher>Kluwer Academic Publishers</bpublisher>
+<bediteur><bpers prenom='M.' nom='Kim' prenomcomplet='Myungchul'/><bpers prenom='B.' nom='Chin' prenomcomplet='Byoungmoon'/><bpers prenom='S.' nom='Kang' prenomcomplet='Sungwon'/><bpers prenom='D.' nom='Lee' prenomcomplet='Danhyung'/></bediteur>
+<bpages>377–392</bpages>
+<bmonth>August</bmonth>
+<byear>2001</byear>
+<xref url='http://www.inria.fr/rrrt/rr-4223.html'>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rr-4223.<allowbreak/>html</xref><bnote>Full version available as INRIA Research Report RR-4223</bnote>
+</citation>
+<citation from='year' key='4' id='bid1' userid='cite:bretollet' type='book'>
+<bauteurs><bpers prenom='M. P.' nom='Bretin' prenomcomplet='M. P.'/><bpers prenom='M. L.' nom='Durollet' prenomcomplet='M. L.'/></bauteurs>
+<btitle>Numerical Journals : theoretical aspects</btitle>
+<bseries>Universitext Series</bseries>
+<bpublisher>Springer-Verlag</bpublisher>
+<byear>2007</byear>
+<xref url='http://www.inrialpes.fr/'>http://<allowbreak/>www.<allowbreak/>inrialpes.<allowbreak/>fr/</xref><x-editorial-board>no</x-editorial-board>
+<x-international-audience>no</x-international-audience>
+<x-scientific-popularization>yes</x-scientific-popularization>
+</citation>
+<citation from='year' key='5' id='bid16' userid='cite:Proc19IEEESCA09' type='proceedings'>
+<btitle>Proceedings of the 19th IEEE Symposium on Computer Arithmetic</btitle>
+<bediteur><bpers prenom='J.' nom='Muller' prenomcomplet='Jean'/><bpers prenom='P.' nom='Vernon' prenomcomplet='Patrice'/></bediteur>
+<bpublisher>IEEE Conference Publishing Services</bpublisher>
+<byear>2010</byear>
+<x-international-audience>yes</x-international-audience>
+<x-proceedings>yes</x-proceedings>
+</citation>
+<citation from='year' key='6' id='bid7' userid='cite:jmtXML' type='booklet'>
+<bauteurs><bpers prenom='J.-M.' nom='Touzeau' prenomcomplet='Jean-Marie'/><bpers prenom='J.' nom='Leterel' prenomcomplet='Joël'/><bpers prenom='J.' nom='Taron' prenomcomplet='Jean'/></bauteurs>
+<btitle>Développement d'objets avec XML</btitle>
+<byear>2010</byear>
+<xref url='http://www.inria.fr/'>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/</xref></citation>
+<citation from='year' key='7' id='bid15' userid='cite:TEILR09' type='phdthesis'>
+<bauteurs><bpers prenom='L.' nom='Romary' prenomcomplet='Laurent'/></bauteurs>
+<btitle>TEI</btitle>
+<btype>Ph. D. Thesis</btype>
+<bschool>Humboldt-Universitat zu Berlin</bschool>
+<byear>2010</byear>
+<xref url='http://www.hu-berlin.de/'>http://<allowbreak/>www.<allowbreak/>hu-berlin.<allowbreak/>de/</xref></citation>
+<citation from='year' key='8' id='bid10' userid='cite:ABMONE09' type='inbook'>
+<bauteurs><bpers prenom='L.' nom='Abbel' prenomcomplet='Louise'/><bpers prenom='J.' nom='Montain' prenomcomplet='Joan'/><bpers prenom='P.' nom='Newton' prenomcomplet='Paul'/></bauteurs>
+<btitle>Color, Broadcasting and Prototyping</btitle>
+<bpublisher>Springer-Verlag</bpublisher>
+<bmonth>April</bmonth>
+<byear>2010</byear>
+<bpages>248-350</bpages>
+<xref url='http://hal.inria.fr/'>http://<allowbreak/>hal.<allowbreak/>inria.<allowbreak/>fr/</xref><x-editorial-board>no</x-editorial-board>
+<x-international-audience>yes</x-international-audience>
+<x-pays>UK,GB</x-pays>
+<bnote>To appear</bnote>
+</citation>
+<citation from='year' key='9' id='bid0' userid='cite:Mlb-MpdSR' type='article'>
+<bauteurs><bpers prenom='P.' nom='Martin' prenomcomplet='Pascal'/><bpers prenom='F.' nom='Pérez' prenomcomplet='Fátima'/><bpers prenom='B.' nom='Gates' prenomcomplet='Bill'/><bpers prenom='J.' nom='Ridley' prenomcomplet='John'/><bpers prenom='P.' nom='Rodriguez' prenomcomplet='Pascual'/></bauteurs>
+<btitle>The Future of Electronic Journals</btitle>
+<bjournal>Serials Review</bjournal>
+<bvolume>4</bvolume>
+<byear>2011</byear>
+<bpages>80</bpages>
+<xref url='http://www.cnrs.fr/'>http://<allowbreak/>www.<allowbreak/>cnrs.<allowbreak/>fr/</xref><x-editorial-board>yes</x-editorial-board>
+<x-international-audience>yes</x-international-audience>
+<x-pays>US,PT</x-pays>
+<url-hal>http://hal.archives-ouvertes.fr/hal-00362159/fr/</url-hal>
+</citation>
+<citation from='year' key='10' id='bid9' userid='cite:DRMNbiop08' type='inbook'>
+<bauteurs><bpers prenom='D.' nom='Relet' prenomcomplet='Denis'/><bpers prenom='M.' nom='Neaware' prenomcomplet='Mona'/></bauteurs>
+<btitle>Bioprocess Control</btitle>
+<bpublisher>Lavosier</bpublisher>
+<bmonth>May</bmonth>
+<byear>2008</byear>
+<bchapter>5</bchapter>
+<bpages>43-50</bpages>
+<x-editorial-board>no</x-editorial-board>
+<x-international-audience>yes</x-international-audience>
+</citation>
+<citation from='year' key='11' id='bid11' userid='cite:Mlb-MpdOnline' type='inproceedings'>
+<bauteurs><bpers prenom='F.' nom='Durand' prenomcomplet='Franck'/><bpers prenom='P.' nom='Romani' prenomcomplet='Paolo'/><bpers prenom='L.' nom='N&apos;guyen' prenomcomplet='Li'/><bpers prenom='C.' nom='Zou' prenomcomplet='Chen'/><bpers prenom='A.' nom='Plšek' prenomcomplet='Aleš'/></bauteurs>
+<btitle>Electronic Journals Increase</btitle>
+<bbooktitle>Online 2007, London</bbooktitle>
+<bmonth>December</bmonth>
+<byear>2010</byear>
+<x-international-audience>yes</x-international-audience>
+<x-proceedings>no</x-proceedings>
+<x-pays>IT,VN</x-pays>
+</citation>
+<citation from='year' key='12' id='bid8' userid='cite:JISC09' type='conference'>
+<bauteurs><bpers prenom='J.' nom='Martinez' prenomcomplet='Jean'/><bpers prenom='O.' nom='McCain' prenomcomplet='Olliver'/></bauteurs>
+<btitle>Optimizing the ontology of complex neural networks</btitle>
+<bbooktitle>European Conference on Complex Systems</bbooktitle>
+<bpublisher>JISC Publishing</bpublisher>
+<byear>2009</byear>
+<x-international-audience>yes</x-international-audience>
+<x-proceedings>yes</x-proceedings>
+<x-invited-conference>yes</x-invited-conference>
+<x-pays>GB</x-pays>
+</citation>
+<citation from='year' key='13' id='bid12' userid='cite:JDARxml09' type='manual'>
+<bauteurs><bpers prenom='J.' nom='Duromol' prenomcomplet='Jean'/><bpers prenom='A.' nom='Rolessi' prenomcomplet='Alain'/></bauteurs>
+<btitle>XML and XSLT</btitle>
+<bmonth>Feb</bmonth>
+<byear>2010</byear>
+<x-scientific-popularization>yes</x-scientific-popularization>
+</citation>
+<citation from='year' key='14' id='bid17' userid='cite:RR61212009' type='techreport'>
+<bauteurs><bpers prenom='J.' nom='Grimm' prenomcomplet='José'/></bauteurs>
+<btitle>Tralics, a LaTeX to XML translator</btitle>
+<btype>Technical report</btype>
+<binstitution>INRIA</binstitution>
+<byear>2010</byear>
+</citation>
+<citation from='year' key='15' id='bid2' userid='cite:Algo09' type='patent'>
+<bauteurs><bpers prenom='G.' nom='Bisson' prenomcomplet='Gaëtan'/><bpers prenom='R.' nom='Bărbulescu' prenomcomplet='Răzvan'/></bauteurs>
+<btitle>Algorithmes unicode pour les lettres Ààéçœ et Ñ</btitle>
+<byear>2010</byear>
+<x-pays>CH,HK</x-pays>
+</citation>
+<citation from='year' key='16' id='bid14' userid='cite:EvAlgo09' type='misc'>
+<bauteurs><bpers prenom='J.' nom='Borrow' prenomcomplet='Jeorge'/><bpers prenom='L.' nom='Apfel' prenomcomplet='Lucy'/></bauteurs>
+<btitle>Evolutionary Algorithms on Large Networks</btitle>
+<byear>2010</byear>
+<x-pays>US</x-pays>
+</citation>
+<citation from='year' key='17' id='bid18' userid='cite:AlgoAthle09' type='unpublished'>
+<bauteurs><bpers prenom='R.' nom='Bărbulescu' prenomcomplet='Răzvan'/><bpers prenom='A.' nom='Größlinger' prenomcomplet='Armin'/></bauteurs>
+<btitle>Algorithmics and Athletics</btitle>
+<byear>2010</byear>
+<x-pays>CH,HK</x-pays>
+</citation>
+<citation from='year' key='18' id='bid13' userid='cite:mastthSD09' type='mastersthesis'>
+<bauteurs><bpers prenom='S.' nom='Dehans' prenomcomplet='Sylvie'/><bpers prenom='M.' nom='Banâtre' prenomcomplet='Michel'/></bauteurs>
+<btitle>Un web sémantique en entreprise</btitle>
+<btype>Masters thesis</btype>
+<bschool>Université Paris VI</bschool>
+<byear>2011</byear>
+</citation>
+<citation from='foot' key='19' id='bid6' userid='footcite:MB07' type='inproceedings'>
+<bauteurs><bpers prenom='M.' nom='Bronstein' prenomcomplet='Manuel'/></bauteurs>
+<btitle>Efficient Algorithms for Linear Ordinary Differential Equations</btitle>
+<bbooktitle>Cuarto Encuentro de Álgebra Computacional y Aplicaciones</bbooktitle>
+<bediteur><bpers prenom='M.' nom='Alonso' prenomcomplet='Marc'/><bpers prenom='R.' nom='Sendra' prenomcomplet='Robert'/></bediteur>
+<bpages>159-163</bpages>
+<bmonth>September</bmonth>
+<byear>2007</byear>
+</citation></biblio></raweb>

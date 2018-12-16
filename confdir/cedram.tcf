@@ -1,0 +1,78 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: cedram.tcf,v 1.2 2006/08/01 16:10:44 grimm Exp $
+## tralics ident rc=cedram.tcf $Revision: 1.2 $
+
+  DocType = cedram cedram.dtd #
+BeginTitlePage 
+  \maketitle <article> "" "'only title page' 'translate also bibliography'"
+   action \getproduction
+  action \getid 
+  \daterecieved <date_reception> "Pas de date"
+  \dateaccepted <date_acceptation> "Pas de date"
+  "<auteur>"
+#  <nomcomplet> "NC"
+   \firstname <prenom> "FN"  
+   \middlename <middlename> "MN"  
+   \lastname <nom> "LN"  
+
+  \address q<adresse> "no ad"
+  \email <mel> "no mail"
+  "</auteur>"
+# <nombre_auteurs>
+# <nombre_contributeurs>
+  \Ctitle <titre xml:lang='fr'> "TF"
+  \Dtitle <TeXtitre xml:lang='fr'> "TF"
+  \Atitle <titre xml:lang='en'> "TE"
+  \Btitle <TeXtitre xml:lang='en'> "TE"
+  \currentlanguage <langue> "en"
+  \Aabstract e<resume xml:lang='en' > "no abstract"
+  \Babstract e<TEXresume xml:lang='en' > "no abstract"
+  \Cabstract e<resume xml:lang='fr' > "no abstract"
+  \Dabstract e<TEXresume xml:lang='fr' > "no abstract"
+  \altkeywords <motcle xml:lang='fr'> "pas de resume"
+  \keywords <motcle xml:lang='en' > "no abstract"
+  \subjclass <msc> "MSC"
+End
+
+BeginCommands
+  \let\author\relax
+  \def\getproduction{\xbox{production}{
+   \xbox{fichier\_tex}{\jobname}
+   \xbox{fichier\_bib}{\jobname}
+   \xbox{date\_prod}{\the\year-\the\month-\the\day}}}
+  \makeatletter 
+  \def\title{\@reevaluate\Atitle\Btitle}
+  \def\abstract{\@reevaluate*{Aabstract}{Babstract}}
+  \def\altabstract{\@reevaluate*{Cabstract}{Dabstract}}
+  \def\Btitle@helper{\@nomathml=-1 }
+  \def\Dtitle@helper{\@nomathml=-1 }
+  \def\Babstract@helper{\@nomathml=-1 }
+  \def\Dabstract@helper{\@nomathml=-1 }
+  \def\alttitle{\@reevaluate\Ctitle\Dtitle}
+   % for the biblio
+   \renewcommand\bpers[5][\undefined]{%
+   \xbox{nom}{#4}%
+ \ifx#1\undefined\xbox{prenom}{#2}\else\xbox{prenom}{#1}\xbox{initiale}{#2}\fi
+ \xbox{particule}{#3}%
+ \def\tmp{#1\undefined}\ifx\tmp\undefined\else
+ \xbox{junior}{#5}\fi}
+  \def\lastname@hook#1{\textit{#1}}
+  \expandafter\def\csname cititem-btitle\endcsname{%
+    \bgroup\catcode `\$=12 \@nomathml=1 \citembtitle}
+     \def\citembtitle#1{\xbox{title}{#1}\egroup\@addnl}
+# Following commands used by T.B.
+  \let\nfrac\dfrac
+  \let\pfrac\dfrac
+  \newtheorem{theorem}{Theorem}
+  \newtheorem{proof}{Proof}
+  \newtheorem{lemma}{Lemma}
+  \newtheorem{rema*}{Remark}
+  \newtheorem{remas*}{Remarks}
+  \newtheorem{defi}{Definition}
+  \let \tn\text
+  \let\appendix\relax
+  \let\notag\relax
+  \def\sideset#1#2{}
+  \makeatother 
+EndCommands

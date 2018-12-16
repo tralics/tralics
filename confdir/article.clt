@@ -1,0 +1,34 @@
+%%  -*- latex -*-
+
+% This file is part of Tralics
+%% copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007, 2008
+
+% It may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%    http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX 
+% version 2003/12/01 or later.
+%% $Id: article.clt,v 2.8 2011/05/10 07:21:34 grimm Exp $
+\ProvidesClass{article}[2011/05/09 v1.2  Article document class for Tralics]
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+
+\InputClass{std}
+\@titlepagefalse
+\ExecuteOptions{letterpaper,10pt,oneside,onecolumn,final}
+
+\ProcessOptions
+
+\newcommand\appendix{\par
+  \setcounter{section}{0}%
+  \setcounter{subsection}{0}%
+  \gdef\thesection{\@Alph\c@section}}
+
+
+\renewcommand \thepart {\@Roman\c@part}
+\renewcommand \thesection {\@arabic\c@section}
+\renewcommand\thesubsection   {\thesection.\@arabic\c@subsection}
+\renewcommand\thesubsubsection{\thesubsection .\@arabic\c@subsubsection}
+\renewcommand\theparagraph    {\thesubsubsection.\@arabic\c@paragraph}
+\renewcommand\thesubparagraph {\theparagraph.\@arabic\c@subparagraph}

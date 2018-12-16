@@ -1,0 +1,142 @@
+// Ce logiciel est régi par la licence CeCILL soumise au droit français et
+// respectant les principes de diffusion des logiciels libres. Vous pouvez
+// utiliser, modifier et/ou redistribuer ce programme sous les conditions
+// de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+// sur le site "http://www.cecill.info".
+// (voir fichier Licence_CeCILL_V2-fr.txt)
+// Pour plus de détails : voir la fin du fichier.
+
+L'archive contient six répertoires et quelques fichiers.
+Les répertoires sont xml, Test, confdir, icons et src.
+Pour avoir un exécutable, aller dans le répertoire src, et taper make.
+(ce qui suit est une copie du fichier README en anglais)
+
+The src directory contains the following files
+  Copyright: copy of the copyriht notice
+  README: explains how to create the Tralics binary
+  Makefile  : this is the Makefile
+  *.C *.h : the sources.
+
+
+The confdir directory contains the following files
+   test.tcd cedram.tcf eurotex.tcf unused.tcf testa.tcf tpa.tcf hello.tcf
+   torture.tcf hello1.tcf hello3.tcf gescap.tcf tp.tcfRR.tcd rabib.tcf
+      -> example of tcf files
+   config_empty tralics_rc .tralics_rc
+      -> configuration files
+  ra.tcf : tcf file for the raweb
+  mpd.tex mpmath.tex : some tex files
+
+
+The xml directory contains the following files and directories
+  mathml2 (directory)
+    -> the mathml2 DTD, version 1.12, date 2003/11/04, downloaded 2004/09/15
+     (see the copyright notice in each of these files)
+
+  fotex.sty-patched, fotex-add.sty
+    a patched version of fotex.sty (by Sebastian Rahtz)
+    (see copyright notice in the file)
+    (see also README file in the xml directory)
+
+  raweb3-makecolspec.xsl raweb3-param.xsl raweb3-table.xsl
+   Three auxiliary style sheets, from the TEI by Sebastian Rahtz
+   adapted to tralics (see the copyright notice in each of these files)
+
+  preview.xsl
+   Style sheet for producing small images.
+
+  raweb3fo.xsl rrfo3.xsl
+   Two style sheets, used at Inria, given as example.
+   Inspired by from the TEI by Sebastian Rahtz.
+   (see the copyright notice in each of these files)
+
+  raweb3.dtd
+    The Raweb DTD (for year 2003).
+
+  raweb-cfg.sty
+    re-implementation of the MathML to dvi converter
+    (distributed under the LaTeX Project Public License )
+
+  tralics-iso.sty
+    a TeX file that defines lots of mathematical symbols
+
+The icons directory contains some icons to be used for the raweb
+
+The raweb directory contains
+  raweb.cls ra2006.cls  
+      : the classes for the raweb
+  rawebnum.bst  rawebalpha.bst rawebxml.bst raweb.bst 
+      : bst files
+  Logo-INRIA-couleur.ps  Logo-INRIA-couleur.pdf LogoRA2006.pdf LogoRA2006.eps
+      : Logos
+
+The main directory contains 
+   ChangeLog : a file that describes what has changed
+  README    : this file
+  LISEZMOI  : French version of this file
+  Copyright : French/English copyright notice for Tralics
+  COPYING   : Copyright notice for the whole package
+  Licence_CeCILL_V2-en.txt  Licence_CeCILL_V2-fr.txt
+    English and french version of the CeCILL License, text version
+  rahandler.pl  
+     Perl script called by tralics in case action is required
+
+
+The Test directory contains
+
+   torture.tex, tormath.tex fptest.tex : the 3 main testfiles
+   torture.bib: a bibtex associated to it
+   tortureaux.tex taux1.tex taux2.tex: 
+      test file (fort testing \openin)
+   tpa.tex:  a file for testing the titlepage stuff
+   lxdoc.tex  : 
+      the source of the documentation (now obsolete)
+   tralics-euro2003.ps : 
+      preliminary version of the paper eurotex 20023
+
+You can compile tralics issuing the make command.
+A C++ compiler (like gcc version 3 or 4 is required)
+
+You can test the software: go into the Test directory,
+run tralics on the files torture, fptest, tormath, tormath1
+The result should be: No error found.
+
+
+In case of problem contact : Jose.Grimm@sophia.inria.fr
+or consult the Web page: http://www.inria.fr/apics/tralics
+
+August 2006.
+
+
+-------------------
+
+Ce logiciel est un programme informatique servant à traduire
+des documents du format LaTeX vers le langage XML.
+
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
+

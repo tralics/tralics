@@ -1,0 +1,515 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE ramain SYSTEM 'raweb.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/07/15-->
+<ramain creator='Tralics version 2.15.3'>
+<p>DOCSTART</p>
+<texmath textype='display' type='display'>x6</texmath>
+<div0 id-text='1' id='cid1'><head>simple math</head>
+<p><texmath textype='inline' type='inline'><sharp/></texmath> &#x266F;</p>
+<p><texmath textype='inline' type='inline'>
+<i/><j/><elt name='$'/> ~<elt name=','/> <elt name='_'/> <elt name='&amp;'/> <lbrace/> <rbrace/> <elt name='%'/> <elt name=' '/><elt name='!'/> <quad/><qquad/><dots/><ldots/><elt name='#'/> <sharp/><natural/><flat/></texmath>
+=
+<texmath textype='inline' type='inline'><hspace>56.9055pt</hspace> <vspace>569.05511pt</vspace> <hspace>3.0pt</hspace><vspace>4.0pt</vspace><hspace star='true'>5.0pt</hspace><vspace star='true'>6.0pt</vspace></texmath>
+<texmath textype='inline' type='inline'><hspace>-24.0pt</hspace> <vspace>-24.0pt</vspace> <hspace>-3.0pt</hspace><vspace>4.0pt</vspace><hspace star='true'>-5.0pt</hspace><vspace star='true'>-6.0pt</vspace></texmath>
+<texmath textype='inline' type='inline'>abcdefghijklmnopqrstuvwxyz</texmath>
+<texmath textype='inline' type='inline'>ABCDEFGHIJKLMNOPQRSTUVWXYZ</texmath>
+<texmath textype='inline' type='inline'>&lt;&gt;,?;./:+=-<subscript>"</subscript><superscript><arg><prime/></arg></superscript>()§!` <superscript><arg><prime/></arg></superscript>"</texmath>
+<texmath textype='inline' type='inline'>&#x1234;aà</texmath></p>
+<p><texmath textype='inline' type='inline'><alpha/><beta/><gamma/><delta/><epsilon/><varepsilon/><zeta/><eta/><theta/><iota/><kappa/><lambda/><mu/><nu/><xi/><pi/><rho/><sigma/><tau/><upsilon/><phi/><chi/><psi/><omega/><varpi/><varrho/><varsigma/><varphi/><varkappa/><vartheta/></texmath>
+<texmath textype='inline' type='inline'><Gamma/><Delta/><Theta/><Lambda/><Xi/><Sigma/><Upsilon/><Phi/><Pi/><Psi/><Omega/></texmath></p>
+<p><texmath textype='inline' type='inline'><hbar/><ell/><wp/><Re/><Im/><partial/><infty/><emptyset/><nabla/><surd/><top/><bottom/><bot/><angle/><triangle/></texmath></p>
+<p><texmath textype='inline' type='inline'> <arccos/><arcsin/><arctan/><arg/><cos/><cosh/><cot/><coth/><csc/><deg/><dim/></texmath>
+<texmath textype='inline' type='inline'> <exp/><hom/><ker/><lg/><ln/><log/><Pr/><sec/><sin/><sinh/><tan/><tanh/><det/><gcd/></texmath>
+<texmath textype='inline' type='inline'><inf/><injlim/><lim/><liminf/><limsup/><max/><min/><projlim/><sup/></texmath></p>
+<p><texmath textype='inline' type='inline'><forall/><exists/></texmath></p>
+<p><texmath textype='inline' type='inline'><coprod/><bigvee/><bigwedge/><biguplus/><bigcap/><bigcup/><int/><sum/><prod/><bigotimes/><bigoplus/><bigodot/><oint/><bigsqcup/><smallint/></texmath></p>
+<p><texmath textype='inline' type='inline'><triangleleft/><triangleright/><bigtriangleup/><bigtriangledown/><wedge/><wedge/><vee/><vee/><cap/><cup/><multimap/><dagger/><ddagger/><sqcap/><sqcup/><amalg/><diamond/><Diamond/><bullet/><wr/><div/><odot/><oslash/><otimes/><ominus/><oplus/><uplus/><mp/><pm/><circ/><bigcirc/><setminus/><cdot/><ast/><times/><star/></texmath></p>
+<p><texmath textype='inline' type='inline'><propto/><sqsubseteq/><sqsupseteq/><subseteq/><sqsubset/><parallel/><mid/><dashv/><vdash/><Vdash/><models/><nearrow/><searrow/><swarrow/><nwarrow/><Leftrightarrow/><Leftarrow/><Rightarrow/><ne/><ne/><le/><le/><ge/><ge/><succ/><approx/><succeq/><preceq/><prec/><doteq/><subset/><supset/><supseteq/><subseteq/><bindnasrepma/><ni/><ni/><gg/><ll/><gtrless/><geqslant/><leqslant/><lnot/><notin/><leftrightarrow/><leftarrow/><leftarrow/><rightarrow/><rightarrow/><mapsto/><sim/><simeq/><perp/><equiv/><asymp/><smile/><frown/><leftharpoonup/><leftharpoondown/><rightharpoonup/><rightharpoondown/><hookrightarrow/><hookleftarrow/><bowtie/><bowtie/><Longrightarrow/><longrightarrow/><longleftarrow/><Longleftarrow/><longmapsto/><longleftrightarrow/><Longleftrightarrow/><iff/></texmath></p>
+<p><texmath textype='inline' type='inline'> <cdots/><hdots/><vdots/><ddots/><imath/><jmath/><Vert/><Vert/> <vert/><uparrow/><downarrow/><Uparrow/><Downarrow/><Updownarrow/><updownarrow/><mho/><clubsuit/><diamondsuit/><heartsuit/><spadesuit/><aleph/><backslash/><Box/><langle/><rangle/><rmoustache/><lmoustache/><rgroup/><lgroup/><rbrace/><lbrace/><rceil/><lceil/><rfloor/><lfloor/><square/><cong/><lnot/><lnot/><in/><prime/></texmath></p>
+<p><texmath textype='inline' type='inline'> &lt;&gt;,.:;*?!()[]|+-/=</texmath></p>
+<p><texmath textype='inline' type='inline'> <hspace>5.0pt</hspace><elt name=':'/> <elt name=';'/> <elt name=':'/> <elt name='!'/> <quad/><qquad/>~</texmath></p>
+<p><texmath textype='inline' type='inline'><smallint/><int/><vee/><ni/><ldots/><top/><bot/><nabla/><flat/><Re/><infty/><surd/><natural/><Im/><hbar/><ell/><sharp/><angle/><emptyset/><triangle/><lnot/><wp/><partial/></texmath></p>
+<p><texmath textype='math' type='inline'><alpha/>=<beta/></texmath> and
+<texmath textype='inline' type='inline'><gamma/>=<delta/></texmath> and <texmath textype='inline' type='inline'><phi/>=<psi/></texmath>;
+and <texmath textype='inline' type='inline'>0<ne/><infty/></texmath></p>
+</div0>
+<div0 id-text='2' id='cid2'><head>Mathaccents</head>
+<p><texmath textype='inline' type='inline'>HAT: <hat>a</hat> <acute>b</acute> <bar>c</bar> <dot>d</dot> <breve>e</breve> <check>f</check> <grave>g</grave> <vec>h</vec>
+<ddot>k</ddot> <tilde>l</tilde>a<rightarrow/>b<longrightarrow/>c</texmath></p>
+<p><texmath textype='inline' type='inline'>ACUTE: <acute>x</acute> <bar>x</bar> <breve>x</breve> <check>x</check>
+<ddddot>x</ddddot> <dddot>x</dddot> <ddot>x</ddot> <dot>x</dot>
+<grave>x</grave> <hat>x</hat> <mathring>x</mathring> <tilde>x</tilde>
+<vec>x</vec> <widehat>xyz</widehat> <widetilde>xyz</widetilde></texmath></p>
+<p><texmath textype='inline' type='inline'>WIDETILDE: <widetilde>abc</widetilde> <widehat>abc</widehat> <overleftarrow>abc</overleftarrow> <overrightarrow>abc</overrightarrow>
+<overline>abc</overline> <underline>abc</underline> <overbrace>abc</overbrace> <underbrace>abc</underbrace>
+<underleftarrow>abc</underleftarrow> <underrightarrow>abc</underrightarrow>
+</texmath></p>
+</div0>
+<div0 id-text='3' id='cid3'><head>Commands</head>
+<p><texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<operatorname>dmin</operatorname><subscript>x</subscript>f(x)</texmath>.
+
+<texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<operatornamewithlimits>dmin</operatornamewithlimits><subscript>x</subscript>f(x)</texmath>.</p>
+<p><texmath textype='inline' type='inline'><overline>foo</overline><underline>bar</underline></texmath>
+<texmath textype='inline' type='inline'><stackrel><arg>j</arg><arg><longrightarrow/></arg></stackrel> </texmath>
+<texmath textype='inline' type='inline'><overset><arg>*</arg><arg>X</arg></overset> <underset><arg>*</arg><arg>X</arg></underset></texmath>
+<texmath textype='inline' type='inline'><overbrace>xyz</overbrace> </texmath>
+<texmath textype='inline' type='inline'><underbrace>xyz</underbrace></texmath>
+<texmath textype='inline' type='inline'><frac><arg>abc</arg><arg>xyz</arg></frac> <dfrac><arg>abc</arg><arg>xyz</arg></dfrac> <tfrac><arg>abc</arg><arg>xyz</arg></tfrac></texmath>
+<texmath textype='inline' type='inline'><sqrt>abc</sqrt> <root><oarg>n</oarg>abc</root> <root><oarg>n </oarg>abc</root></texmath></p>
+<p><texmath textype='inline' type='inline'><bigl/>[<frac><arg>1</arg><arg>a<superscript>2</superscript></arg></frac><bigr/>[</texmath>
+<texmath textype='inline' type='inline'><left del='['/><frac><arg>1</arg><arg>b<superscript>2</superscript></arg></frac><right del='['/></texmath>
+<texmath textype='inline' type='inline'>[<frac><arg>1</arg><arg>x<superscript>2</superscript></arg></frac>[</texmath></p>
+<texmath textype='display' type='display'><genfrac><arg>1</arg><arg>2</arg></genfrac>
+<genfrac left='[' right=']' size='2.0pt' style='2'><arg>aaa</arg><arg>bbb</arg></genfrac>
+<genfrac left='(' right=')' size='0.0pt' style='0'><arg>n</arg><arg>m</arg></genfrac>
+</texmath>
+<p><texmath textype='inline' type='inline'>a<nonscript/><elt name=','/>b<subscript><arg>c<nonscript/><elt name=','/>d</arg></subscript> a<nonscript/><elt name=','/>b<subscript><arg><textstyle/>c<nonscript/><elt name=','/>d</arg></subscript> </texmath></p>
+<texmath textype='display' type='display'><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>= <frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac> =
+1<subscript><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac></arg></subscript> = 2<superscript> </superscript><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac></arg></texmath>
+<p rend='center'><texmath textype='inline' type='inline'><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>= <frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac> =
+1<subscript><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac></arg></subscript> = 2<superscript> </superscript><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac></arg></texmath></p>
+<p><texmath textype='inline' type='inline'><arg><frac><arg>1</arg><arg>2</arg></frac></arg><arg>x<displaystyle/><frac><arg>1</arg><arg>2</arg></frac></arg>
+<arg>x<textstyle/><frac><arg>1</arg><arg>2</arg></frac></arg><arg>x<scriptstyle/><frac><arg>1</arg><arg>2</arg></frac></arg><arg>x<scriptscriptstyle/><frac><arg>1</arg><arg>2</arg></frac></arg> <qquad/><arg>x<displaystyle/>a</arg>+<arg>x<textstyle/>a</arg>+<arg>x<scriptstyle/>a</arg>+<arg>x<scriptscriptstyle/>a</arg><qquad/><frac><arg>x<displaystyle/>a</arg><arg>x<textstyle/>b</arg></frac>+<frac><arg>x<scriptstyle/>a</arg><arg>x<scriptscriptstyle/>b</arg></frac></texmath></p>
+</div0>
+<div0 id-text='4' id='cid4'><head>Environments</head>
+</div0>
+<div0 id-text='5' id='cid5'><head>Other</head>
+<texmath id-text='1' id='uid1' textype='equation' type='display'>
+<env name='aligned'>
+x<superscript>2</superscript>+y<superscript>2</superscript>&amp;=1 &amp; 1 &amp;=X<superscript>2</superscript>+Y<superscript>2</superscript><elt name='\'/>
+x &amp;=0.01&amp; 0.001&amp;=X
+</env> 
+</texmath>
+<texmath id-text='5' id='uid2' textype='multline' type='display'>
+<sin/>=<cos/><elt name='\'/>
+<multicolumn><arg>a</arg><arg>b</arg><arg>c</arg></multicolumn><elt name='\'/>
+<multicolumn><arg>1</arg><arg>r</arg><arg><cos/></arg></multicolumn><elt name='\'/>
+<multicolumn><arg>1</arg><arg>l</arg><arg><sin/></arg></multicolumn><elt name='\'/>
+1+2
+</texmath>
+<foo>ccaaAbbBaa</foo><texmath textype='display' type='display'><beta/> A<hbox>aaB <math><alpha/>C</math></hbox> D</texmath>
+<p noindent='true'><foo>AB</foo></p>
+<texmath textype='display' type='display'> A<hbox>B <math>C</math></hbox> D</texmath>
+<p><texmath textype='inline' type='inline'>a+b</texmath> <texmath textype='inline' type='inline'>a<mathbin/>+b</texmath></p>
+<texmath id-text='3' id='uid3' textype='equation' type='display'> 0=1 </texmath>
+<texmath textype='equation*' type='display'> 0=2 </texmath>
+<texmath textype='displaymath' type='display'> 0=3 </texmath>
+<texmath textype='display' type='display'> 0=4 </texmath>
+<texmath textype='display' type='display'> 0 = 5 </texmath>
+<texmath id-text='4' id='uid4' textype='equation' type='display'>
+<env name='split'>
+(a+b)<superscript>4</superscript> &amp;= (a+b)<superscript> </superscript>2 (a+b)<superscript>2</superscript> <elt name='\'/>
+&amp;= (a<superscript>2</superscript>+2ab+b<superscript>2</superscript>)(a<superscript>2</superscript>+2ab+b<superscript>2</superscript>) <elt name='\'/>
+&amp;= a<superscript>4</superscript>+4a<superscript>3</superscript>b+6a<superscript>2</superscript>b<superscript>2</superscript>+4ab<superscript>3</superscript>+b<superscript>4</superscript> <elt name='\'/>
+</env>
+</texmath>
+<texmath id-text='5' id='uid5' textype='equation' type='display'>
+<env name='aligned'>
+(a+b)<superscript>4</superscript> &amp;= (a+b)<superscript> </superscript>2 (a+b)<superscript>2</superscript> <elt name='\'/>
+&amp;= (a<superscript>2</superscript>+2ab+b<superscript>2</superscript>)(a<superscript>2</superscript>+2ab+b<superscript>2</superscript>) <elt name='\'/>
+&amp;= a<superscript>4</superscript>+4a<superscript>3</superscript>b+6a<superscript>2</superscript>b<superscript>2</superscript>+4ab<superscript>3</superscript>+b<superscript>4</superscript> <elt name='\'/>
+</env>
+</texmath>
+<texmath id-text='5' id='uid6' textype='align' type='display'>
+x<superscript>2</superscript>+y<superscript>2</superscript>&amp;=1<elt name='\'/> x&amp;=<sqrt>1-y<superscript>2</superscript></sqrt>
+</texmath>
+<texmath textype='eqnarray*' type='display'>
+x &amp; <ll/>&amp; y<subscript><arg>1</arg></subscript> + <cdots/>+ y<subscript><arg>n</arg></subscript> <elt name='\'/>
+&amp; <le/>&amp;z
+</texmath>
+<texmath id-text='5' id='uid7' textype='eqnarray' type='display'>
+x &amp; = &amp;17y <elt name='\'/>
+y &amp; &gt; &amp; a + b + c+d+e+f+g+h+i+j+ <nonumber/><elt name='\'/>
+&amp; &amp; k+l+m+n+o+p
+</texmath>
+<texmath textype='display' type='display'>EQ1</texmath>
+<p noindent='true'>etc</p>
+<texmath textype='display' type='display'>EQ2</texmath>
+<p>etc</p>
+<texmath textype='display' type='display'>EQ3</texmath>
+<texmath textype='align*' type='display'>
+u&amp; <equiv/>v+1 <mod/><arg>n<superscript>2</superscript></arg> <elt name='\'/>
+u&amp; <equiv/>v+1 <bmod/><arg>n<superscript>2</superscript></arg> <elt name='\'/>
+u&amp; = v+1 <pmod/><arg>n<superscript>2</superscript></arg> <elt name='\'/>
+u&amp; = v+1 <hspace>10.0pt</hspace>(n<superscript>2</superscript>) <elt name='\'/>
+</texmath>
+<texmath textype='display' type='display'><frac><arg>1</arg><arg>2</arg></frac> <dfrac><arg>1</arg><arg>2</arg></dfrac> <tfrac><arg>1</arg><arg>2</arg></tfrac> <qquad/><arg></arg><superscript><arg><frac><arg>1</arg><arg>2</arg></frac> <dfrac><arg>1</arg><arg>2</arg></dfrac> <tfrac><arg>1</arg><arg>2</arg></tfrac></arg></superscript></texmath>
+<texmath textype='display' type='display'><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac><quad/><tfrac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tfrac><quad/><dfrac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dfrac></texmath>
+<p><texmath textype='inline' type='inline'><bar><dot><rm/>o</dot></bar></texmath>
+a - b &#x2013; c &#x2014; d</p>
+<texmath textype='display' type='display'><binom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></binom><quad/><tbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tbinom><quad/><dbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dbinom><qquad/><arg></arg><superscript><arg><binom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></binom><quad/><tbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tbinom><quad/><dbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dbinom></arg></superscript></texmath>
+<texmath textype='display' type='display'>a<over/><arg>b<over/>c</arg>
+</texmath>
+<p>y´<texmath textype='inline' type='inline'>x<superscript><arg><prime/></arg></superscript> x<superscript><arg><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/><prime/></arg></superscript> u<subscript>2</subscript><superscript><arg><prime/></arg></superscript> v<superscript><arg><prime/>3</arg></superscript><subscript>4</subscript></texmath></p>
+<p><texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<operatorname>dmin</operatorname><subscript>x</subscript>f(x)</texmath>.</p>
+<p><texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<mathmo>dmin</mathmo><mathattribute><arg>form</arg><arg>prefix</arg></mathattribute><mathattribute><arg>movablelimits</arg><arg>true</arg></mathattribute><subscript>x</subscript>f(x)</texmath>.</p>
+<texmath id-text='8' id='uid8' textype='equation' type='display'><env name='split'>
+<mathtt/><arg>Aa</arg><mathcal/><arg>A</arg><mathbf/><arg>Aa</arg><mathrm/><arg>Aa</arg>
+<mathit/><arg>Aa</arg><mathbb/><arg>A</arg><mathsf/><arg>Aa</arg><mathnormal/><arg>Aa</arg> &amp;<mathtt/><arg>Bb</arg><mathcal/><arg>B</arg><mathbf/><arg>Bb</arg><mathrm/><arg>Bb</arg>
+<mathit/><arg>Bb</arg><mathbb/><arg>B</arg><mathsf/><arg>Bb</arg><mathnormal/><arg>Bb</arg><elt name='\'/>
+<mathtt/><arg>Cc</arg><mathcal/><arg>C</arg><mathbf/><arg>Cc</arg><mathrm/><arg>Cc</arg>
+<mathit/><arg>Cc</arg><mathbb/><arg>C</arg><mathsf/><arg>Cc</arg><mathnormal/><arg>Cc</arg> &amp;<mathtt/><arg>Dd</arg><mathcal/><arg>D</arg><mathbf/><arg>Dd</arg><mathrm/><arg>Dd</arg>
+<mathit/><arg>Dd</arg><mathbb/><arg>D</arg><mathsf/><arg>Dd</arg><mathnormal/><arg>Dd</arg><elt name='\'/>
+<mathtt/><arg>Ee</arg><mathcal/><arg>E</arg><mathbf/><arg>Ee</arg><mathrm/><arg>Ee</arg>
+<mathit/><arg>Ee</arg><mathbb/><arg>E</arg><mathsf/><arg>Ee</arg><mathnormal/><arg>Ee</arg> &amp;<mathtt/><arg>Ff</arg><mathcal/><arg>F</arg><mathbf/><arg>Ff</arg><mathrm/><arg>Ff</arg>
+<mathit/><arg>Ff</arg><mathbb/><arg>F</arg><mathsf/><arg>Ff</arg><mathnormal/><arg>Ff</arg><elt name='\'/>
+<mathtt/><arg>Gg</arg><mathcal/><arg>G</arg><mathbf/><arg>Gg</arg><mathrm/><arg>Gg</arg>
+<mathit/><arg>Gg</arg><mathbb/><arg>G</arg><mathsf/><arg>Gg</arg><mathnormal/><arg>Gg</arg> &amp;<mathtt/><arg>Hh</arg><mathcal/><arg>H</arg><mathbf/><arg>Hh</arg><mathrm/><arg>Hh</arg>
+<mathit/><arg>Hh</arg><mathbb/><arg>H</arg><mathsf/><arg>Hh</arg><mathnormal/><arg>Hh</arg><elt name='\'/>
+<mathtt/><arg>Ii</arg><mathcal/><arg>I</arg><mathbf/><arg>Ii</arg><mathrm/><arg>Ii</arg>
+<mathit/><arg>Ii</arg><mathbb/><arg>I</arg><mathsf/><arg>Ii</arg><mathnormal/><arg>Ii</arg> &amp;<mathtt/><arg>Jj</arg><mathcal/><arg>J</arg><mathbf/><arg>Jj</arg><mathrm/><arg>Jj</arg>
+<mathit/><arg>Jj</arg><mathbb/><arg>J</arg><mathsf/><arg>Jj</arg><mathnormal/><arg>Jj</arg><elt name='\'/>
+<mathtt/><arg>Kk</arg><mathcal/><arg>K</arg><mathbf/><arg>Kk</arg><mathrm/><arg>Kk</arg>
+<mathit/><arg>Kk</arg><mathbb/><arg>K</arg><mathsf/><arg>Kk</arg><mathnormal/><arg>Kk</arg> &amp;<mathtt/><arg>Ll</arg><mathcal/><arg>L</arg><mathbf/><arg>Ll</arg><mathrm/><arg>Ll</arg>
+<mathit/><arg>Ll</arg><mathbb/><arg>L</arg><mathsf/><arg>Ll</arg><mathnormal/><arg>Ll</arg><elt name='\'/>
+<mathtt/><arg>Mm</arg><mathcal/><arg>M</arg><mathbf/><arg>Mm</arg><mathrm/><arg>Mm</arg>
+<mathit/><arg>Mm</arg><mathbb/><arg>M</arg><mathsf/><arg>Mm</arg><mathnormal/><arg>Mm</arg> &amp;<mathtt/><arg>Nn</arg><mathcal/><arg>N</arg><mathbf/><arg>Nn</arg><mathrm/><arg>Nn</arg>
+<mathit/><arg>Nn</arg><mathbb/><arg>N</arg><mathsf/><arg>Nn</arg><mathnormal/><arg>Nn</arg><elt name='\'/>
+<mathtt/><arg>Oo</arg><mathcal/><arg>O</arg><mathbf/><arg>Oo</arg><mathrm/><arg>Oo</arg>
+<mathit/><arg>Oo</arg><mathbb/><arg>O</arg><mathsf/><arg>Oo</arg><mathnormal/><arg>Oo</arg> &amp;<mathtt/><arg>Pp</arg><mathcal/><arg>P</arg><mathbf/><arg>Pp</arg><mathrm/><arg>Pp</arg>
+<mathit/><arg>Pp</arg><mathbb/><arg>P</arg><mathsf/><arg>Pp</arg><mathnormal/><arg>Pp</arg><elt name='\'/>
+<mathtt/><arg>Qq</arg><mathcal/><arg>Q</arg><mathbf/><arg>Qq</arg><mathrm/><arg>Qq</arg>
+<mathit/><arg>Qq</arg><mathbb/><arg>Q</arg><mathsf/><arg>Qq</arg><mathnormal/><arg>Qq</arg> &amp;<mathtt/><arg>Rr</arg><mathcal/><arg>R</arg><mathbf/><arg>Rr</arg><mathrm/><arg>Rr</arg>
+<mathit/><arg>Rr</arg><mathbb/><arg>R</arg><mathsf/><arg>Rr</arg><mathnormal/><arg>Rr</arg><elt name='\'/>
+<mathtt/><arg>Ss</arg><mathcal/><arg>S</arg><mathbf/><arg>Ss</arg><mathrm/><arg>Ss</arg>
+<mathit/><arg>Ss</arg><mathbb/><arg>S</arg><mathsf/><arg>Ss</arg><mathnormal/><arg>Ss</arg> &amp;<mathtt/><arg>Tt</arg><mathcal/><arg>T</arg><mathbf/><arg>Tt</arg><mathrm/><arg>Tt</arg>
+<mathit/><arg>Tt</arg><mathbb/><arg>T</arg><mathsf/><arg>Tt</arg><mathnormal/><arg>Tt</arg><elt name='\'/>
+<mathtt/><arg>Uu</arg><mathcal/><arg>U</arg><mathbf/><arg>Uu</arg><mathrm/><arg>Uu</arg>
+<mathit/><arg>Uu</arg><mathbb/><arg>U</arg><mathsf/><arg>Uu</arg><mathnormal/><arg>Uu</arg> &amp;<mathtt/><arg>Vv</arg><mathcal/><arg>V</arg><mathbf/><arg>Vv</arg><mathrm/><arg>Vv</arg>
+<mathit/><arg>Vv</arg><mathbb/><arg>V</arg><mathsf/><arg>Vv</arg><mathnormal/><arg>Vv</arg><elt name='\'/>
+<mathtt/><arg>Ww</arg><mathcal/><arg>W</arg><mathbf/><arg>Ww</arg><mathrm/><arg>Ww</arg>
+<mathit/><arg>Ww</arg><mathbb/><arg>W</arg><mathsf/><arg>Ww</arg><mathnormal/><arg>Ww</arg> &amp;<mathtt/><arg>Xx</arg><mathcal/><arg>X</arg><mathbf/><arg>Xx</arg><mathrm/><arg>Xx</arg>
+<mathit/><arg>Xx</arg><mathbb/><arg>X</arg><mathsf/><arg>Xx</arg><mathnormal/><arg>Xx</arg><elt name='\'/>
+<mathtt/><arg>Yy</arg><mathcal/><arg>Y</arg><mathbf/><arg>Yy</arg><mathrm/><arg>Yy</arg>
+<mathit/><arg>Yy</arg><mathbb/><arg>Y</arg><mathsf/><arg>Yy</arg><mathnormal/><arg>Yy</arg> &amp;<mathtt/><arg>Zz</arg><mathcal/><arg>Z</arg><mathbf/><arg>Zz</arg><mathrm/><arg>Zz</arg>
+<mathit/><arg>Zz</arg><mathbb/><arg>Z</arg><mathsf/><arg>Zz</arg><mathnormal/><arg>Zz</arg><elt name='\'/>
+</env>
+</texmath>
+<p><texmath textype='inline' type='inline'><arg><cal/>ABCDEFGHIJKLMNOPQRSTUVWXYZ</arg></texmath></p>
+<p><texmath textype='inline' type='inline'> <bf/>a <mathrm/><arg>a <mathcal/><arg>c</arg> d</arg></texmath></p>
+<p><texmath textype='inline' type='inline'>a<superscript>c</superscript><subscript>b</subscript></texmath>
+<texmath textype='inline' type='inline'>a<subscript>b</subscript><superscript>c</superscript></texmath></p>
+<p><texmath textype='inline' type='inline'>x<Box/></texmath></p>
+<texmath textype='display' type='display'><left del='|'/>
+<env name='array'><arg>lcr</arg>
+AAAAAAA&amp;BBBBBCC&amp;CCCCCCC<elt name='\'/>
+A&amp;B&amp;C<elt name='\'/>
+<multicolumn><arg>1</arg><arg>c</arg><arg>A</arg></multicolumn>&amp;<multicolumn><arg>1</arg><arg>c</arg><arg>B</arg></multicolumn>&amp;<multicolumn><arg>1</arg><arg>c</arg><arg>C</arg></multicolumn><elt name='\'/>
+<multicolumn><arg>1</arg><arg>r</arg><arg>A</arg></multicolumn>&amp;<multicolumn><arg>1</arg><arg>r</arg><arg>B</arg></multicolumn>&amp;<multicolumn><arg>r</arg><arg>c</arg><arg>C</arg></multicolumn><elt name='\'/>
+<multicolumn><arg>1</arg><arg>l</arg><arg>A</arg></multicolumn>&amp;<multicolumn><arg>1</arg><arg>l</arg><arg>B</arg></multicolumn>&amp;<multicolumn><arg>l</arg><arg>c</arg><arg>C</arg></multicolumn><elt name='\'/>
+<env name='array'><arg>cl</arg>1&amp;22<elt name='\'/>3&amp;4</env>&amp;<env name='array'><arg>cc</arg>1&amp;22<elt name='\'/>3&amp;4</env>&amp;<env name='array'><arg>cr</arg>1&amp;22<elt name='\'/>3&amp;4</env><elt name='\'/>
+<multicolumn><arg>2</arg><arg>c</arg><arg>0123456789abcdef</arg></multicolumn>&amp;C<elt name='\'/>
+A&amp;<multicolumn><arg>2</arg><arg>c</arg><arg>0123456789abcdef</arg></multicolumn><elt name='\'/>
+<multicolumn><arg>2</arg><arg>r</arg><arg>0123456789abcdef</arg></multicolumn>&amp;C<elt name='\'/>
+A&amp;<multicolumn><arg>2</arg><arg>l</arg><arg>0123456789abcdef</arg></multicolumn><elt name='\'/>
+A&amp;B&amp;C<elt name='\'/>
+</env>
+<right del='|'/></texmath>
+<texmath textype='eqnarray*' type='display'>
+<left del='lbrace'/><env name='array'><arg>lcl</arg>
+<dot>x</dot> &amp; = &amp; Ax+g(x,u)<elt name='\'/>
+y &amp; = &amp; Cx <elt name='\'/>
+<multicolumn><arg>3</arg><arg>l</arg><arg>x<in/><mathbf/><arg>R</arg><superscript>n</superscript></arg></multicolumn>
+</env>
+<right del='.'/>
+</texmath>
+<p>a) <texmath textype='math' type='inline'> x1 </texmath>
+b) <texmath textype='inline' type='inline'> x2 </texmath>
+c)</p>
+<texmath textype='displaymath' type='display'> x3 </texmath>
+<p noindent='true'>d)</p>
+<texmath textype='display' type='display'> x4 </texmath>
+<p noindent='true'>e)</p>
+<texmath id-text='9' id='uid9' textype='equation' type='display'> x5 </texmath>
+<p>text A</p>
+<p noindent='true'>text B</p>
+<p noindent='true' spacebefore='8.53581pt'>text C</p>
+<p rend='center'>line one</p>
+<p rend='center'>this is the second line</p>
+<p><texmath textype='inline' type='inline'>1<superscript>e</superscript></texmath><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
+<p><texmath textype='inline' type='inline'>1<superscript>e</superscript></texmath><font-overline>foo</font-overline><font-underline>bar</font-underline>.
+<font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
+<texmath id-text='10' id='uid10' textype='equation' type='display'>
+<env name='array'><arg>lcl</arg>
+<dot>x</dot> &amp; = &amp; Ax+g(x,u)<elt name='\'/>[2mm]
+y &amp; = &amp; Cx <elt name='\'/>
+<multicolumn><arg>3</arg><arg>l</arg><arg>x<in/>R<superscript>n</superscript></arg></multicolumn>
+</env>
+</texmath>
+<table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+<cell halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true' spaceafter='8.53581pt'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row><row><cell halign='left' left-border='true'>A</cell>
+<cell halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' cols='3'/>
+<cell cols='2'/><cell bottom-border='true'/></row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row></table>
+<texmath textype='display' type='display'> <arccos/><superscript>2</superscript> (x),<elt name=','/> <arcsin/><superscript>2</superscript>(x) ,<elt name=','/> <arctan/><superscript>2</superscript>(x) ,<elt name=','/> <arg/><superscript>2</superscript>(x),<elt name=','/>
+<cos/><superscript>2</superscript>(x) ,<elt name=','/> <cosh/><superscript>2</superscript>(x) ,<elt name=','/> <cot/><superscript>2</superscript>(x)</texmath>
+<texmath textype='display' type='display'> <coth/><superscript>2</superscript>(x) ,<elt name=','/> <csc/><superscript>2</superscript>(x),<elt name=','/> <deg/><superscript>2</superscript>(x),<elt name=','/> <dim/><superscript>2</superscript>(x),<elt name=','/> <exp/><superscript>2</superscript>(x),<elt name=','/>
+<hom/><superscript>2</superscript>(x),<elt name=','/> <ker/><superscript>2</superscript>(x) ,<elt name=','/> <lg/><superscript>2</superscript>(x)</texmath>
+<texmath textype='display' type='display'> <ln/><superscript>2</superscript>(x),<elt name=','/> <log/><superscript>2</superscript>(x),<elt name=','/> <Pr/><superscript>2</superscript>(x),<elt name=','/> <sec/><superscript>2</superscript>(x),<elt name=','/> <sin/><superscript>2</superscript>(x) ,<elt name=','/>
+<sinh/><superscript>2</superscript>(x),<elt name=','/> <tan/><superscript>2</superscript>(x),<elt name=','/> <tanh/><superscript>2</superscript>(x)</texmath>
+<texmath textype='display' type='display'> <det/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <gcd/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <inf/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <injlim/><subscript><arg>x=1</arg></subscript>,<elt name=','/>
+<lim/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <liminf/><subscript><arg>x=1</arg></subscript>,<elt name=','/><limsup/><subscript><arg>x=1</arg></subscript>,<elt name=','/>
+<max/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <min/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <projlim/><subscript><arg>x=1</arg></subscript>,<elt name=','/> <sup/><subscript><arg>x=1</arg></subscript>
+</texmath>
+<p><texmath textype='inline' type='inline'><stackrel><arg>j</arg><arg><longrightarrow/></arg></stackrel> <overset><arg>*</arg><arg>X</arg></overset> <underset><arg>*</arg><arg>X</arg></underset>
+<sqrt>abc</sqrt> <root><oarg>n</oarg>abc</root> <root><oarg>n </oarg>abc</root>
+<frac><arg>abc</arg><arg>xyz</arg></frac> <dfrac><arg>abc</arg><arg>xyz</arg></dfrac>
+</texmath></p>
+<texmath textype='display' type='display'><binom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></binom> <quad/><tbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></tbinom> <quad/><dbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></dbinom><qquad/><arg></arg><superscript><arg><binom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></binom> <quad/><tbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></tbinom> <quad/><dbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></dbinom></arg></superscript></texmath>
+<p><texmath textype='inline' type='inline'><Leftrightarrow/></texmath></p>
+<p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>.</p>
+<texmath textype='display' type='display'><genfrac><arg>1</arg><arg>2</arg></genfrac>
+<genfrac left='[' right=']' size='2.0pt' style='2'><arg>aaa</arg><arg>bbb</arg></genfrac>
+<genfrac left='(' right=')' size='0.0pt' style='0'><arg>n</arg><arg>m</arg></genfrac>
+</texmath>
+<p><texmath textype='inline' type='inline'><genfrac style='0'><arg>a</arg><arg>b</arg></genfrac>
+<genfrac style='1'><arg>a</arg><arg>b</arg></genfrac>
+<genfrac style='2'><arg>a</arg><arg>b</arg></genfrac>
+<genfrac style='3'><arg>a</arg><arg>b</arg></genfrac> </texmath></p>
+<p><texmath textype='inline' type='inline'><arg>a<over/>b</arg><quad/><arg>a<above/>1pt b</arg><quad/><arg>a<atop/>b</arg></texmath>
+<texmath textype='inline' type='inline'><arg>a<overwithdelims/>() b</arg><quad/><arg>a<abovewithdelims/>()1pt b</arg><quad/><arg>a<atopwithdelims/>() b</arg></texmath>
+<texmath textype='inline' type='inline'><genfrac left='(' right=')' size='2.0pt'><arg>foo</arg><arg>bar</arg></genfrac></texmath></p>
+<texmath textype='display' type='display'><frac><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></frac> <quad/><tfrac><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></tfrac> <quad/><dfrac><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></dfrac></texmath>
+<texmath textype='display' type='display'>
+<sup/><subscript><arg>x=2</arg></subscript>y~
+<frac><arg>1</arg><arg>k</arg></frac><log/><subscript>2</subscript> c(f)<elt name=';'/>
+<tfrac><arg>1</arg><arg>k</arg></tfrac><log/><subscript>2</subscript> c(f)<elt name=';'/>
+<sqrt><frac><arg>1</arg><arg>k</arg></frac><log/><subscript>2</subscript> c(f)</sqrt><elt name=';'/>
+<sqrt><dfrac><arg>1</arg><arg>k</arg></dfrac><log/><subscript>2</subscript> c(f)</sqrt>
+</texmath>
+<p><texmath textype='inline' type='inline'><genfrac left='(' right=')' size='2.84526pt' style='3'><arg>aaaaaaaaaaaaaaaaaa</arg><arg>111111111</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><genfrac left='(' right=')' size='0.0pt' style='3'><arg>aaaaaaaaaaaaaaaaaa</arg><arg>111111111</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><genfrac style='0'><arg>abc</arg><arg>def</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><genfrac style='1'><arg>abc</arg><arg>def</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><genfrac style='2'><arg>abc</arg><arg>def</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><genfrac style='3'><arg>abc</arg><arg>def</arg></genfrac></texmath></p>
+<p><texmath textype='inline' type='inline'><tilde>a</tilde>,<tilde>z</tilde>, <tilde>a+b</tilde></texmath></p>
+<p><texmath textype='inline' type='inline'><overline><tt/>P</overline> P</texmath></p>
+<p>á ááá á &#xE1; &aacute;
+<texmath textype='inline' type='inline'><hat>a</hat> <acute>a</acute> <bar>a</bar> <dot>a</dot> <breve>a</breve>
+<check>a</check> <grave>a</grave> <vec>a</vec> <ddot>a</ddot> <tilde>a</tilde>
+</texmath></p>
+<texmath textype='display' type='display'>d=z<superscript>2</superscript>=( I<subscript>t</subscript> + <nabla/>I<vec>vvvv</vec> +I div(<vec>vvvvv</vec>) )<superscript>2</superscript>,</texmath>
+<p><texmath textype='inline' type='inline'>a<hbox>b=1</hbox> c</texmath>
+<texmath textype='inline' type='inline'>a<hbox>b~1</hbox>~c</texmath></p>
+<p><texmath textype='inline' type='inline'>x<superscript><arg>y<superscript><epsilon/></superscript><subscript><varepsilon/></subscript></arg></superscript></texmath></p>
+<texmath id-text='11' id='uid11' textype='equation' type='display'>
+<vec>B</vec>(<vec>r</vec>) = <frac><arg><mu/><subscript>0</subscript></arg><arg>4<pi/></arg></frac><left del='lbrace'/>
+<frac><arg>3<vec>m</vec>(<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>)<cdot/>(<vec>r</vec>-<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>)</arg><arg>|<vec>r</vec>-<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>|<superscript>5</superscript></arg></frac>
+(<vec>r</vec>-<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>) - <frac><arg><vec>m</vec>(<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>)</arg><arg>|<vec>r</vec>-<arg><vec>r</vec></arg><superscript><arg><prime/></arg></superscript>|<superscript>3</superscript></arg></frac>
+<right del='rbrace'/>. 
+</texmath>
+<p><texmath textype='inline' type='inline'>
+
+<left del='Vert'/><left del='|'/><left del='['/><left del='('/><left del='lbrace'/> <frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac><right del='rbrace'/><right del=')'/><right del=']'/><right del='|'/><right del='Vert'/><left del='|'/><left del='|'/><left del='&lt;'/><left del='langle'/><frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac><right del='rangle'/><right del='&gt;'/><right del='|'/><right del='|'/><left del='lbrace'/><left del='lceil'/><left del='lfloor'/><frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac><right del='rfloor'/><right del='rceil'/><right del='rbrace'/>[]a<hspace>0.55542pt</hspace>b<hspace>1.111pt</hspace>c <hspace>2.22214pt</hspace>d <hspace>4.44443pt</hspace>e <hspace>8.88885pt</hspace>f
+</texmath></p>
+<p><texmath textype='inline' type='inline'>
+<left del='moustache'/><left del='uparrow'/><left del='Uparrow'/><left del='updownarrow'/><left del='lgroup'/><frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac><right del='rgroup'/><right del='Updownarrow'/><right del='Downarrow'/><right del='downarrow'/><right del='moustache'/></texmath>
+<texmath textype='inline' type='inline'>
+<left/><lmoustache/><left/><uparrow/><left/><Uparrow/><left/><updownarrow/><left/><lgroup/><frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac><right/><rgroup/><right/><Updownarrow/><right/><Downarrow/><right/><downarrow/><right/><rmoustache/></texmath>
+<texmath textype='inline' type='inline'> 
+<left del='moustache'/><left del='uparrow'/><left del='Uparrow'/><left del='updownarrow'/><left del='lgroup'/><int/><subscript>0</subscript><superscript><arg><frac><arg>x<superscript>1</superscript><subscript>2</subscript></arg><arg>y<superscript>3</superscript><subscript>4</subscript></arg></frac></arg></superscript><right del='rgroup'/><right del='Updownarrow'/><right del='Downarrow'/><right del='downarrow'/><right del='moustache'/></texmath></p>
+<p><texmath textype='inline' type='inline'><Longrightarrow/></texmath>
+
+<texmath textype='inline' type='inline'><cal/>X<subscript>y</subscript></texmath>and <texmath textype='inline' type='inline'><cal/>X<subscript>y</subscript>Z</texmath>
+<texmath textype='inline' type='inline'><sin/>(x) + <cos/><superscript>2</superscript>(x) </texmath> and <texmath textype='inline' type='inline'><overbrace>xyz</overbrace> <superscript>t</superscript> </texmath></p>
+<p><texmath textype='inline' type='inline'><bigl/>[<frac><arg>1</arg><arg>a<superscript>2</superscript></arg></frac><bigr/>[</texmath>
+<texmath textype='inline' type='inline'><left del='['/><frac><arg>1</arg><arg>b<superscript>2</superscript></arg></frac><right del='['/></texmath>
+<texmath textype='inline' type='inline'>[<frac><arg>1</arg><arg>x<superscript>2</superscript></arg></frac>[</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'><int/>f<mathopen/>)a+b<mathclose/>(=c+d</texmath>
+<texmath textype='inline' type='inline'><int/>f(a+b)=c+d</texmath></p>
+<p><texmath textype='inline' type='inline'>a<limits/><displaylimits/><nolimits/>b</texmath></p>
+<p>wwwwwwwwwwwwa...b...c   d      e f$g%h&amp;ij k{l}m&#x131;n&#x266F;o&#x266E;p&#x266D;q_</p>
+<p noindent='true'><texmath textype='inline' type='inline'>a<dots/>b<ldots/>c<quad/>d<qquad/>e f<elt name='$'/>g<elt name='%'/>h<elt name='&amp;'/>i<elt name='!'/>j<elt name=','/>k<lbrace/>l<rbrace/>m<i/>n<sharp/>o<natural/>p<flat/>q<elt name='_'/></texmath></p>
+<p>Math spacing</p>
+<p noindent='true'><texmath textype='inline' type='inline'>xxxxx</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'>x<elt name=','/>x<elt name=':'/>x<elt name=';'/>x<elt name='!'/>x</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'>a<elt name=','/><elt name=','/><elt name=','/><elt name=','/><elt name=','/>a<elt name=':'/><elt name=':'/><elt name=':'/><elt name=':'/><elt name=':'/>a</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'>a<elt name=';'/><elt name=';'/><elt name=';'/>a<elt name=';'/><elt name=';'/><elt name=';'/><elt name=';'/>a</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'>!?<elt name='#'/><elt name='_'/>.@<elt name='%'/><Vert/>/|</texmath></p>
+<texmath textype='display' type='display'>
+<mathop/><arg><mathop/><arg>arg<elt name=','/>min</arg><nolimits/><subscript><Psi/></subscript></arg><limits/><subscript><arg><theta/><in/><Theta/></arg></subscript>
+<Delta/><left del='('/> <arg><mathop/><Phi/><nolimits/><subscript><theta/></subscript><left del='('/> <arg><Omega/><subscript>s</subscript> </arg>
+<right del=')'/>-<Omega/><subscript>t</subscript> </arg> <right del=')'/>
+<qquad/>x<subscript><arg>y<subscript>z</subscript></arg></subscript> = <arg>x<subscript>y</subscript></arg><subscript>z</subscript>=
+x<superscript><arg>y<subscript>z</subscript></arg></superscript> = <arg>x<superscript>y</superscript></arg><subscript>z</subscript>=
+x<subscript><arg>y<superscript>z</superscript></arg></subscript> = <arg>x<subscript>y</subscript></arg><superscript>z</superscript>=
+x<superscript><arg>y<superscript>z</superscript></arg></superscript> = <arg>x<superscript>y</superscript></arg><superscript>z</superscript>
+<left del='lbrace'/><lbrace/><frac><arg>2</arg><arg>3</arg></frac><rbrace/><right del='rbrace'/>
+</texmath>
+<p><texmath textype='inline' type='inline'>x=0123456789</texmath>
+<texmath textype='inline' type='inline'><root><oarg>3 </oarg>4</root></texmath> <texmath textype='inline' type='inline'><root><oarg>3</oarg>4</root></texmath></p>
+<texmath id-text='12' id='uid12' textype='equation' type='display'>
+0=<hspace>11.38092pt</hspace>1
+</texmath>
+<p><texmath textype='inline' type='inline'> Â â &#x1EA4; &#x1EA5; &#x1EA6; &#x1EA7; &#x1EA8; &#x1EA9; &#x1EAA; &#x1EAB;
+&#x1EAC; &#x1EAD; &#x108; &#x109;</texmath>
+<texmath textype='inline' type='inline'> Ê ê &#x1EBE; &#x1EBF; &#x1EC0; &#x1EC1; &#x1EC2;
+&#x1EC3; &#x1EC4; &#x1EC5; &#x1EC6; &#x1EC7; &#x11C; &#x11D; &#x124; &#x125; Î î &#x134; &#x135; </texmath>
+<texmath textype='inline' type='inline'>
+Ô ô &#x1ED0; &#x1ED1; &#x1ED2; &#x1ED3; &#x1ED4; &#x1ED5; &#x1ED6; &#x1ED7;
+&#x1ED8; &#x1ED9; &#x15C; &#x15D; Û û &#x174; &#x175; &#x176; &#x177; &#x1E90; &#x1E91;
+Á á &#x1FA; &#x1FB; &#x1FC; &#x1FD; &#x1EA4; &#x1EA5; &#x1EAE; &#x1EAF;
+&#x106; &#x107; &#x1E08; &#x1E09; É é &#x1E16;
+&#x1E17; &#x1EBE; &#x1EBF; &#x1F4; &#x1F5; Í í </texmath>
+<texmath textype='inline' type='inline'>&#x1E2E; &#x1E2F; &#x1E30; &#x1E31; &#x139; &#x13A; &#x1E3E;
+&#x1E3F; &#x143; &#x144; Ó ó &#x1FE; &#x1FF; &#x1E4C; &#x1E4D; &#x1E52; &#x1E53; &#x1ED0;
+&#x1ED1; &#x1EDA; &#x1EDB;</texmath>
+<texmath textype='inline' type='inline'> &#x1E54; &#x1E55; &#x154; &#x155; &#x15A; &#x15B;
+&#x1E64; &#x1E65; Ú ú &#x1D7; &#x1D8; &#x1E78; &#x1E79; &#x1EE8; &#x1EE9;
+&#x1E82; &#x1E83; Ý ý &#x179; &#x17A;
+À à &#x1EA6; &#x1EA7; &#x1EB0; &#x1EB1; È è &#x1E14; &#x1E15; &#x1EC0;
+&#x1EC1; Ì ì &#x1F8; &#x1F9; </texmath>
+<texmath textype='inline' type='inline'>Ò ò &#x1E50; &#x1E51; &#x1ED2; &#x1ED3;
+&#x1EDC; &#x1EDD; Ù ù &#x1DB; &#x1DC; &#x1EEA; &#x1EEB; &#x1E80; &#x1E81; &#x1EF2;&#x1EF3;
+Ä ä &#x1DE; &#x1DF; Ë ë &#x1E26; &#x1E27; Ï ï &#x1E2E; &#x1E2F; Ö ö
+&#x22A; &#x22B; &#x1E4E; &#x1E4F; &#x1E97;</texmath>
+<texmath textype='inline' type='inline'> Ü ü &#x1E7A; &#x1E7B; &#x1DB; &#x1DC;
+&#x1D7; &#x1D8; &#x1D9; &#x1DA; &#x1E84; &#x1E85; &#x1E8C; &#x1E8D; &#x178; ÿ
+Ç ç &#x1E08; &#x1E09; &#x1E10; &#x1E11; &#x228; &#x229; &#x1E1C; &#x1E1D; </texmath>
+<texmath textype='inline' type='inline'>
+&#x1E28; &#x1E29; &#x122; &#x123; &#x136; &#x137; &#x13B; &#x13C; &#x145; &#x146; &#x156; &#x157; &#x15E; &#x15F; &#x162; &#x163;
+&#x200; &#x201; &#x204; &#x205; &#x208; &#x209; &#x20C; &#x20D; &#x210; &#x211; &#x214; &#x215;
+&#x102; &#x103; &#x1EB0; &#x1EB1; &#x1EAE; &#x1EAF; &#x1EB2; &#x1EB3; &#x1EB4; &#x1EB5;
+&#x1EB6; &#x1EB7;</texmath>
+<texmath textype='inline' type='inline'> &#x114; &#x115; &#x1E1C; &#x1E1D; &#x11E; &#x11F; &#x12C; &#x12D;
+&#x14E; &#x14F; &#x16C; &#x16D;
+&#x1CD; &#x1CE; &#x10C; &#x10D; &#x10E; &#x10F; &#x11A; &#x11B; &#x1E6; &#x1E7; &#x21E; &#x21F; &#x1E8; &#x1E9;
+&#x1CF; &#x1D0; &#x1F0; &#x13D; &#x13E; &#x147; &#x148; </texmath>
+<texmath textype='inline' type='inline'> &#x1D1;
+&#x1D2; &#x158; &#x159; &#x160; &#x161; &#x164; &#x165; &#x1D3; &#x1D4; &#x1D9; &#x1DA; &#x1E66;
+&#x1E67; &#x17D; &#x17E;
+&#x150; &#x151; &#x170; &#x171;</texmath>
+<texmath textype='inline' type='inline'>
+&#x1EDA; &#x1EDB; &#x1EDC; &#x1EDD; &#x1EDE; &#x1EDF; &#x1EE0; &#x1EE1;
+&#x1EE2; &#x1EE3;</texmath>
+<texmath textype='inline' type='inline'> &#x1EE8; &#x1EE9; &#x1EEA; &#x1EEB; &#x1EEC; &#x1EED; &#x1EEE;
+&#x1EEF; &#x1EF0; &#x1EF1;
+&#x1EA2; &#x1EA3; &#x1EA8; &#x1EA9; &#x1EB2; &#x1EB3; &#x1EBA; &#x1EBB; &#x1EC2; &#x1EC3; &#x1EC8;
+&#x1EC9;</texmath>
+<texmath textype='inline' type='inline'> &#x1ECE; &#x1ECF; &#x1ED4; &#x1ED5; &#x1EDE; &#x1EDF; &#x1EE6; &#x1EE7;
+&#x1EEC; &#x1EED; &#x1EF6; &#x1EF7;
+&#x104; &#x105; &#x118; &#x119; &#x12E; &#x12F; &#x1EA; &#x1EB; &#x1EC; &#x1ED; &#x172; &#x173;
+Å å &#x16E; &#x16F; &#x1E98; &#x1E99;
+&#x1EA0; &#x1EA1; &#x1EAC; &#x1EAD; &#x1EB6; &#x1EB7; &#x1E04; &#x1E05; &#x1E0C; &#x1E0D; &#x1EB8; &#x1EB9;
+&#x1EC6; &#x1EC7; &#x1E24; &#x1E25; &#x1ECA; &#x1ECB; &#x1E32; &#x1E33; &#x1E36; &#x1E37; &#x1E38; &#x1E39;</texmath>
+<texmath textype='inline' type='inline'>
+&#x1E42; &#x1E43; &#x1E46; &#x1E47; &#x1ECC; &#x1ECD; &#x1ED8; &#x1ED9; &#x1EE2; &#x1EE3;
+&#x1E5A; &#x1E5B; &#x1E5C; &#x1E5D; &#x1E62; &#x1E63; &#x1E68; &#x1E69; &#x1E6C;</texmath>
+<texmath textype='inline' type='inline'>
+&#x1E6D; &#x1EE4; &#x1EE5; &#x1EF0; &#x1EF1; &#x1E7E;
+&#x1E7F; &#x1E88; &#x1E89; &#x1EF4; &#x1EF5; &#x1E92; &#x1E93;
+&#x1E00; &#x1E01;
+&#x1E06; &#x1E07; &#x1E0E; &#x1E0F; &#x1E96; &#x1E34; &#x1E35; &#x1E3A; &#x1E3B;
+&#x1E48; &#x1E49; &#x1E5E; &#x1E5F; &#x1E6E; &#x1E6F; &#x1E94; &#x1E95;
+&#x202; &#x203; &#x206; &#x207; &#x20A; &#x20B; &#x20E; &#x20F; &#x212; &#x213; &#x216; &#x217;
+&#x1E1A; &#x1E1B; &#x1E2C; &#x1E2D; &#x1E74; &#x1E75;
+&#x1E12; &#x1E13; &#x1E18; &#x1E19; &#x1E3C; &#x1E3D; &#x1E4A; &#x1E4B; &#x1E70; &#x1E71; &#x1E76; &#x1E77;
+&#x100; &#x101; &#x1DE; &#x1DF; &#x1E0; &#x1E1; &#x1E2;&#x1E3;&#x112; &#x113; &#x1E16; &#x1E17;
+&#x1E14; &#x1E15; &#x1E20; &#x1E21; &#x126; &#x127;</texmath>
+<texmath textype='inline' type='inline'>
+&#x12A; &#x12B; &#x1E38; &#x1E39; &#x14C; &#x14D; &#x1EC; &#x1ED; &#x22A; &#x22B; &#x22C;
+&#x22D; &#x230; &#x231; &#x1E50; &#x1E51; &#x1E52; &#x1E53;</texmath>
+<texmath textype='inline' type='inline'> &#x1E5C; &#x1E5D;
+&#x166; &#x167; &#x16A; &#x16B; &#x1E7A; &#x1E7B; &#x232; &#x233;
+&#x226; &#x227; &#x1E0; &#x1E1; &#x1E02; &#x1E03; &#x10A; &#x10B; &#x1E0A; &#x1E0B; &#x116; &#x117; &#x1E1E; &#x1E1F; &#x120; &#x121; &#x1E22;
+&#x1E23; &#x130; </texmath>
+<texmath textype='inline' type='inline'>&#x13F; &#x140; &#x1E40; &#x1E41; &#x1E44; &#x1E45; &#x22E; &#x22F; &#x230; &#x231; &#x1E56; &#x1E57; &#x1E58; &#x1E59; </texmath>
+<texmath textype='inline' type='inline'>
+&#x1E60;
+&#x1E61; &#x1E68; &#x1E69; &#x1E66; &#x1E67; &#x1E64; &#x1E65; &#x1E6A; &#x1E6B; &#x1E86; &#x1E87; &#x1E8A;
+&#x1E8B; &#x1E8E; &#x1E8F; &#x17B; &#x17C;
+</texmath></p>
+<p><texmath textype='inline' type='inline'>B</texmath></p>
+<p><texmath textype='inline' type='inline'> <font name='mml@font@normal'/> ab+2c=DE<font name='mml@font@upright'/> ab+2c=DE<font name='mml@font@bold'/> ab+2c=DE<font name='mml@font@italic'/> ab+2c=DE<font name='mml@font@bolditalic'/> ab+2c=DE<font name='mml@font@script'/> ab+2c=DE<font name='mml@font@boldscript'/> ab+2c=DE<font name='mml@font@fraktur'/> ab+2c=DE<font name='mml@font@doublestruck'/> ab+2c=DE<font name='mml@font@boldfraktur'/> ab+2c=DE<font name='mml@font@sansserif'/> ab+2c=DE<font name='mml@font@boldsansserif'/> ab+2c=DE<font name='mml@font@sansserifitalic'/> ab+2c=DE<font name='mml@font@sansserifbolditalic'/> ab+2c=DE<font name='mml@font@monospace'/> ab+2c=DE</texmath></p>
+<p><texmath textype='inline' type='inline'>Xx<mathcal/><arg>Cal</arg><mathrm/><arg>Rm</arg><mathbf/><arg>Bf</arg><mathsf/><arg>Sf</arg><mathtt/><arg>Tt</arg><mathtt/><arg>x</arg><mathtt/><arg>y+1</arg><mathnormal/><arg>No</arg> <mathit/><arg>It</arg><mathfrak/><arg>Fr</arg></texmath>
+<texmath textype='inline' type='inline'>Xx<mathcal/><arg>Cal</arg><mathrm/><arg>Rm</arg><mathbf/><arg>Bf</arg><mathsf/><arg>Sf</arg><mathtt/><arg>Tt</arg><mathtt/><arg>x</arg><mathtt/><arg>y+1</arg><mathnormal/><arg>No</arg> <mathit/><arg>It</arg><mathfrak/><arg>Fr</arg></texmath>
+
+<texmath textype='inline' type='inline'><frac><arg><mathit/><arg><mathbf/><arg>foo</arg></arg></arg><arg><mathrm/><arg>bar</arg>+1</arg></frac>=3</texmath>
+
+<texmath textype='inline' type='inline'>a<text>b=1</text> c</texmath></p>
+<p>oooooooooooooo
+<texmath textype='inline' type='inline'>a<myhbox>b=1</myhbox> c</texmath>
+<texmath textype='inline' type='inline'>a<text>b=1</text> c</texmath>
+<texmath textype='inline' type='inline'>a<mbox>b=1</mbox> c</texmath>
+<texmath textype='inline' type='inline'>a<hbox>b=1</hbox> c</texmath></p>
+<p><texmath textype='inline' type='inline'>a<mbox>b=1</mbox> c<formulaattribute><arg>tag</arg><arg>8-2-3</arg></formulaattribute></texmath></p>
+<p><texmath textype='inline' type='inline'><env name='pmatrix'>
+<binom><arg>1</arg><arg>2</arg></binom>&amp;<int/><subscript>0</subscript><superscript><infty/></superscript>f(x)dx<elt name='\'/>[2cm]
+<mathfrak/><arg>W</arg><subscript>2</subscript>&amp;<text>xyz</text>=<sqrt>xxyyzz</sqrt>
+</env></texmath></p>
+<p>signal <texmath textype='inline' type='inline'><bar>x </bar><in/><mathcal/><arg>F</arg> (y )</texmath> with smallest support.</p>
+<p><texmath textype='inline' type='inline'><mbox>(<ref/><arg>W102</arg>)</mbox>=(<ref/><arg>W102</arg>)=<mbox>(<ref/><arg>W102</arg>)</mbox></texmath></p>
+<texmath id-text='5' id='uid13' textype='eqnarray' type='display'>
+a &amp; = &amp; b <elt name='\'/>
+&amp; = &amp; c
+<mbox>by (<ref/><arg>eqn:main2</arg>)</mbox> </texmath>
+<texmath id-text='5' id='uid14' textype='display' type='display'>1234</texmath>
+<p>Non math version
+Is upper case : BAR</p>
+<p noindent='true'>Is lower case : bar</p>
+<p noindent='true'>Is upper case : FOO</p>
+<p noindent='true'>Is lower case : foo</p>
+<p noindent='true'>Is upper case : BAR</p>
+<p noindent='true'>Is upper case : BAR</p>
+<p noindent='true'>Is lower case : bar</p>
+<p noindent='true'>Is lower case : bar</p>
+<p noindent='true'>Is upper case : <texmath textype='inline' type='inline'>BAR</texmath></p>
+<p noindent='true'>Is lower case : <texmath textype='inline' type='inline'>bar</texmath></p>
+<p noindent='true'>Is upper case : <texmath textype='inline' type='inline'>FOO</texmath></p>
+<p noindent='true'>Is lower case : <texmath textype='inline' type='inline'>foo</texmath></p>
+<p noindent='true'>Is upper case : <texmath textype='inline' type='inline'>BAR</texmath></p>
+<p noindent='true'>Is upper case : <texmath textype='inline' type='inline'>BAR</texmath></p>
+<p noindent='true'>Is lower case : <texmath textype='inline' type='inline'>bar</texmath></p>
+<p noindent='true'>Is lower case : <texmath textype='inline' type='inline'>bar</texmath></p>
+<p noindent='true'><texmath textype='inline' type='inline'><arg></arg><left del='lbrace'/><env name='array'><arg>ll</arg> 2 h(n) &amp;<text> for <math>0 <le/>n <le/>N/2-1</math> </text><elt name='\'/>0 &amp;<text> otherwise </text><elt name='\'/></env><right del='.'/> </texmath></p>
+<texmath textype='display' type='display'>x<formulaattribute><arg>label</arg><arg>1</arg></formulaattribute></texmath>
+<texmath textype='display' type='display'><rm/><binom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></binom> <quad/><tbinom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></tbinom> <quad/><dbinom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></dbinom><qquad/><arg></arg><superscript><arg><binom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></binom> <quad/><tbinom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></tbinom> <quad/><dbinom><arg><frac><arg><mathchoice><arg>\displaystyle+</arg><arg>\textstyle+</arg><arg>\scriptstyle+</arg><arg>\scriptscriptstyle+</arg></mathchoice>m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>\displaystyle0</arg><arg>\textstyle0</arg><arg>\scriptstyle0</arg><arg>\scriptscriptstyle0</arg></mathchoice></arg></dbinom></arg></superscript></texmath>
+<p>Additional tests
+<texmath textype='inline' type='inline'><hspace>20.0pt</hspace>, <hspace star='true'>56.9055pt</hspace> 12&gt;10<elt name=','/><elt name='$'/></texmath>
+<texmath textype='inline' type='inline'><left del='['/><mathit/>x<superscript>1</superscript><subscript>2</subscript> y<superscript><arg>22</arg></superscript><subscript><arg>33</arg></subscript><right del='lbrace'/></texmath>
+<texmath textype='inline' type='inline'><overline>x</overline><frac><arg>1</arg><arg>2</arg></frac> <mathmi A='B'>c</mathmi></texmath>
+<texmath textype='inline' type='inline'><genfrac size='2.0pt' style='3'><arg>u</arg><arg>v</arg></genfrac> <genfrac left='[' right=']'><arg>u</arg><arg>v</arg></genfrac></texmath>
+<texmath textype='inline' type='inline'><sqrt>10</sqrt> <root><oarg>3 </oarg>4</root> <root><oarg>6</oarg>7</root></texmath>
+If <texmath textype='inline' type='inline'>x<in/><emptyset/></texmath> then <texmath textype='inline' type='inline'><forall/>n&gt;0, <dfrac><arg>1</arg><arg>n<superscript>2</superscript></arg></dfrac>&lt;0</texmath></p>
+<p>Kumar test
+<texmath textype='inline' type='inline'>x<subscript><arg><mbox><arg><scriptsize/><arg>H<elt name=','/><arg><sc/>i</arg></arg></arg></mbox></arg></subscript></texmath>
+<texmath textype='inline' type='inline'>x<subscript><arg><mbox><arg><scriptsize/><arg>H<elt name=','/><quad/><qquad/><elt name='!'/><elt name=','/><elt name=':'/><elt name=';'/><arg><sc/>i</arg></arg></arg></mbox></arg></subscript></texmath>
+Testing references <ref target='uid14'/> <ref target='uid1'/>
+<texmath textype='inline' type='inline'>a<mbox>b=1</mbox> c<formulaattribute><arg>tag</arg><arg>8-2-3</arg></formulaattribute><thismathattribute><arg>xx</arg><arg>yy</arg></thismathattribute></texmath>
+
+
+<texmath textype='inline' type='inline'><varPi/>=<varPsi/></texmath></p>
+<texmath id-text='5' id='uid15' textype='align' type='display'> 123&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath textype='align*' type='display'> 123&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath id-text='5' id='uid16' textype='flalign' type='display'> 123&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath textype='flalign*' type='display'> 123&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath id-text='5' id='uid17' textype='alignat' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath textype='alignat*' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath id-text='5' id='uid18' textype='xalignat' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath textype='xalignat*' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath id-text='5' id='uid19' textype='xxalignat' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<texmath textype='xxalignat*' type='display'>23&amp;34<elt name='\'/>56&amp;78</texmath>
+<p noindent='true'>
+ok</p>
+<p noindent='true'>AT_DOC_END</p></div0>
+</ramain>

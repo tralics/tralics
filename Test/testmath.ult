@@ -1,0 +1,27 @@
+%% -*- latex -*-
+%$Id: testmath.ult,v 1.1 2008/02/05 14:25:26 grimm Exp $
+%% This is the ult file for tesrtmath.tex 
+
+\let\item\@item
+\def\clearpage{\xbox{clearpage}{}}
+
+\notrivialmath=0
+\mathfontproperty0=1
+\mathfontproperty1=1
+\mathfontproperty2=1
+\mathfontproperty3=1
+\mathfontproperty4=1
+\mathfontproperty5=1
+\mathfontproperty6=1
+\mathfontproperty7=1
+\mathfontproperty8=1
+\mathfontproperty9=1
+\mathfontproperty10=1
+\mathfontproperty11=1
+\mathfontproperty12=1
+\mathfontproperty13=1
+\mathfontproperty14=1
+
+
+
+\endinput

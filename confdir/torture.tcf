@@ -1,0 +1,69 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: torture.tcf,v 1.9 2008/06/24 12:03:28 grimm Exp $
+## tralics ident rc=torture.tcf $Revision: 1.9 $
+
+
+
+  DocAttrib = creator \tralics
+  DocType  = ramain raweb.dtd
+  on package loaded calc CALC = "true"
+  on package loaded foo/bar FOO1 = "true"
+  on package loaded *foo/bar FOO2 = "true"
+  on package loaded foo/*bar FOO3 = "true"
+  on package loaded *foo/*bar FOO4 = "true"
+  url_font = "\large "
+  no_footnote_hack = "false"
+  on class loaded calc CALC="true"
+
+  use_font_elt = "true"
+  use_all_sizes = "true"
+xml_caps_name = "font-caps"
+xml_ul_name = "font-ul"
+xml_hl_name = "font-hl"
+xml_so_name = "font-so"
+xml_st_name = "font-st"
+xml_sup_name = "font-super"
+xml_sub_name = "font-sub"
+xml_oldstyle_name = "font-oldstyle"
+xml_overline_name = "font-overline"
+xml_underline_name = "font-underline"
+xml_font_small = "font-small"
+xml_font_small1 = "font-small1"
+xml_font_small2 = "font-small2"
+xml_font_small3 = "font-small3"
+xml_font_small4 = "font-small4"
+xml_font_large = "font-large"
+xml_font_large1 = "font-large1"
+xml_font_large2 = "font-large2"
+xml_font_large3 = "font-large3"
+xml_font_large4 = "font-large4"
+xml_font_large5 = "font-large5"
+xml_font_normalsize = "font-normalsize"
+xml_font_upright = "font-upright-shape"
+xml_font_medium = "font-medium-series"
+xml_font_roman = "font-roman-family"
+xml_font_it = "font-italic-shape"
+xml_font_slanted = "font-slanted-shape"
+xml_font_sc = "font-small-caps-shape"
+xml_font_tt = "font-typewriter-family"
+xml_font_sansserif = "font-sansserif-family"
+xml_font_bold = "font-bold-series"
+
+bibtex_extensions = "hdr movie"
+
+  bibtex_fields = "foo bar gee"
+  bibtex_fields = "first-page lastpage "
+  bibtex_fields = "+allpages"
+
+  distinguish_refer_in_rabib= "false"
+
+  # xml_theorem_name = "theorem"
+
+BeginCommands
+  % These commands are inserted verbatim in the file
+  \def\recurse{\recurse\recurse}
+
+EndCommands
+
+

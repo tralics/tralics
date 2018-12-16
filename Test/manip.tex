@@ -1,0 +1,71 @@
+
+
+before
+\xbox{foo} {  b \xbox{bar}{s \global\count0=\XMLlastid} c }
+after
+$x= \alpha^2$
+\count1=\XMLcurrentid
+\showthe\count0 \showthe\count1
+%
+\makeatletter
+\XML@fetch\count1
+%\show@xmlA 
+\showthe\XML@A@size
+\XML@fetch\count0 \ifnum 0<\XML@A@id\else \oupps\fi
+\show@xmlA
+\XML@parent
+\show@xmlB 
+\XML@swapAB \count2=\XML@A@id 
+\XMLaddatt[\count2]{myatt}{myval}
+\show@xmlA 
+%
+\XML@parent \XML@moveBA \XML@get3  \XML@swapAB \XML@get0
+\XML@swapAB \XML@get0 \count4=\XML@B@id 
+\XML@swapAB \XML@get2 \XML@swapAB \XML@get0 
+\show@xmlB \setbox0=\XML@copyB \showbox0 \copy0
+\XML@fetch\count1\showthe\XML@A@size
+%
+\readxml{hello.xml}\showthe\XML@A@size\showthe\XML@A@name
+\XML@get0 \showthe\XML@B@id 
+\XML@get1 \showthe\XML@B@id 
+\XML@get2 \showthe\XML@B@id 
+\XML@get4 \showthe\XML@B@id 
+\XML@get7 \showthe\XML@B@id 
+\XML@get6 \showthe\XML@B@name
+\edef\pfoo{\detokenize{unknown}}
+\edef\foo{\the\XML@B@name}\ifx\foo\pfoo\else \ooups\fi 
+\XML@swapAB \XML@get1 \show@xmlB \par\XML@copyB
+%
+\XML@fetch\XMLbox@id0 \show@xmlA 
+\XMLaddatt[\XMLbox@id0]{att-name}{att-val0}
+\setbox1=\XML@copyA \leavevmode\copy1
+\XMLaddatt*[\XMLbox@id1]{att-name}{att-val1}%
+\XML@setB\hbox{E1}\XML@insert0
+\XML@setB\hbox{E3}\XML@insert2
+\XML@setB\hbox{E2}\XML@set1 
+\show@xmlA 
+%
+\XML@setA\box1 \show@xmlA \showbox1
+\XML@get0 \setbox0=\XML@copyB \XML@delete0
+\XML@fetch\count4 \XML@get0 \XML@swapAB
+\XML@setB\copy0 \XML@set0
+% here A is <mi> B is alpha
+%
+\XML@swapAB \ifnum-2=\XML@A@size\else\bad\fi \count3=\XML@B@id
+\setbox8\XML@copyA\XML@swapAB %
+\XML@moveAB \XML@setA\hbox{}\XML@swapAB
+\edef\pfoo{\detokenize{mi}}%
+\edef\foo{\the\XML@A@name}\ifx\foo\pfoo\else \ooups\fi 
+\edef\foo{\the\XML@B@name}\ifx\foo\empty\else \ooups\fi 
+\XML@fetch 20000 \edef\foo{\the\XML@A@name}\ifx\foo\empty\else \ooups\fi
+\ifnum-1=\XML@A@size\else\bad\fi 
+\ifnum 0<\XML@A@id \bad\fi \ifnum 0<\XML@B@id\else \bad\fi
+\XML@fetch\count4 \ifnum \XML@A@id=\count4 \else \bad\fi
+\XML@setA\hbox{25}\ifnum1=\XML@A@size\else\bad\fi
+\XML@setB\copy0 \ifnum \XML@B@id=-4 \bad\fi 
+\XML@setA\box0 \XML@parent \ifnum \XML@B@id=-4 \else\bad\fi 
+\XML@fetch\count3 \XML@parent \ifnum 0<\XML@B@id \else\bad\fi 
+\XML@fetch\count3 \XML@get0 \XML@swapAB
+\XML@parent \ifnum \XML@B@id=-4 \else \bad\fi % 
+%
+\endinput

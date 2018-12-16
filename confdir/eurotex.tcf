@@ -1,0 +1,20 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: eurotex.tcf,v 2.1 2006/07/17 09:57:55 grimm Exp $
+## tralics ident rc=eurotex.tcf $Revision: 2.1 $
+
+# This one was used for the eurotex paper
+  DocType = eurotex tugboat.dtd
+BeginTitlePage
+  \maketitle <titlepage> "" ""
+  \title <ti> "No title"
+  \netaddress <NetA>  "No address"
+  \personalURL <U> "No url given"
+  \resume E<resume> "Pas de r\'esum\'e"
+  \abstract E<abstract> "no abstract"
+  \author + <author> <auth> "No authors"
+  \address p<address>  "no address"
+End
+BeginCommands
+  \def\recurse{\recurse\recurse}
+EndCommands

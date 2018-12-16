@@ -1,0 +1,859 @@
+%% -*- latex -*-
+%% This is a torture test for tralics :: math specials
+% The next line indicates that the document class to use
+% by tralics should be torture
+%\documentclass{torture1}
+%ok
+%this is a comment \def}}}
+% $Id: tormath.tex,v 1.11 2011/01/27 15:49:27 grimm Exp $
+
+% Define the class via a command
+\def\myclass{article}
+
+% Define some macros. 
+\def\entity#1{\xmllatex{\&#1;}{}}
+\def\xentity#1{\xmllatex{\&\#x#1;}{}}
+\def\strok#1{\entity{#1strok}}
+\def\Han{Hàn Th\xmllatex{&\#x1ebf;}{\'{\^e}} Thành}
+
+%% will be used at end of file. 
+\def\thisistheend{END OF FILE}
+\def\discardcounter#1{\expandafter\let\csname c@#1\endcsname \relax}
+
+\def\xshow#1{} % Could be \show
+\def\gobble#1{} % Then we might say: \let\show\gobble.
+
+\AtBeginDocument{DOC}\AtBeginDocument{S\AtBeginDocument{TART}}
+\AtEndDocument{\AtEndDocument{AT\_}}
+\AtEndDocument{DOC}\AtEndDocument{\_END}
+
+
+% This is the real document class
+\documentclass[useallsizes]{\myclass}
+\usepackage{calc}
+\usepackage{fp}
+\usepackage{ifthen}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb,english]{babel}
+\usepackage{tralics}
+%\input{../xml/tralics.sty}
+%% Tralics knows these commands
+\providecommand\IJ{IJ}
+\providecommand\ij{ij}
+\providecommand\xmlelement{}
+\providecommand\AddAttToLast{}
+\providecommand\AddAttToCurrent{}
+\providecommand\xbox[1]{\hbox}
+\providecommand\numberedverbatim{}
+\providecommand\unnumberedverbatim{}
+
+
+\begin{document}
+
+%
+\def\xx#1{\xmllatex{\&\#x#1;}{}}
+\makeatletter
+\ifx\NMLval\undefined \@nomathml= -1\else \@nomathml= \NMLval \fi
+\makeatother
+
+%%% We start with simple math expressions. 
+\newcounter{nc} \setcounter{nc}{3} \ifnum\value{nc}=3 \else \bad\fi
+\addtocounter{nc}{1} \ifnum\value{nc}=4 \else \bad\fi
+$$x\addtocounter{nc}{1}\ifnum\value{nc}=5 6\else \bad\fi$$
+
+
+
+\chapter{simple math}
+$\sharp$ \sharp
+
+$
+\i \j \$ ~\, \_ \& \{ \} \% \ \! \quad \qquad \dots \ldots
+\# \sharp \natural \flat  $
+=
+$\hspace{2cm} \vspace{20cm} \hskip3pt  \vskip4pt \hspace*{5pt}\vspace*{6pt}$
+$\hspace{-2pc} \vspace{-2pc} \hskip-3pt plus 1pt minus 1pt \vskip4pt plus 2pt\hspace*{-5pt}\vspace*{-6pt}$
+$abcdefghijklmnopqrstuvwxyz$
+$ABCDEFGHIJKLMNOPQRSTUVWXYZ$
+$<>,?;./:+=-_"'()§!` '"$
+$^^^^1234aà$
+
+%% type ord
+
+$\alpha \beta \gamma \delta \epsilon \varepsilon \zeta \eta
+\theta \iota \kappa \lambda \mu \nu \xi \pi \rho \sigma \tau
+\upsilon \phi \chi \psi \omega \varpi \varrho \varsigma \varphi
+\varkappa \vartheta$
+$\Gamma \Delta \Theta \Lambda \Xi \Sigma \Upsilon \Phi \Pi \Psi \Omega$
+
+$\hbar \ell \wp \Re \Im \partial \infty \emptyset \nabla
+\surd \top \bottom \bot \angle \triangle$
+
+
+%%% Les mathop nus
+$ \arccos \arcsin \arctan \arg \cos  \cosh \cot \coth \csc  \deg \dim$
+$ \exp \hom \ker \lg \ln \log \Pr \sec \sin \sinh \tan \tanh \det \gcd$
+$\inf \injlim \lim \liminf \limsup \max \min \projlim \sup$
+
+$\forall  \exists $
+
+%% large
+$\coprod \bigvee \bigwedge \biguplus \bigcap \bigcup \int \sum 
+ \prod \bigotimes \bigoplus \bigodot \oint \bigsqcup  \smallint$
+
+%% bin
+$\triangleleft \triangleright  \bigtriangleup \bigtriangledown \wedge
+ \land  \vee \lor \cap \cup  \multimap \dagger \ddagger \sqcap \sqcup 
+\amalg \diamond \Diamond \bullet \wr  \div \odot \oslash \otimes \ominus 
+\oplus \uplus  \mp  \pm  \circ \bigcirc  \setminus \cdot \ast  \times \star 
+$
+
+%% rel
+$\propto \sqsubseteq  \sqsupseteq  \subseteq \sqsubset \parallel \mid 
+ \dashv \vdash \Vdash \models \nearrow \searrow \swarrow \nwarrow
+ \Leftrightarrow \Leftarrow \Rightarrow \ne \neq \le \leq 
+ \ge \geq \succ \approx \succeq \preceq \prec \doteq \subset 
+ \supset  \supseteq \subseteq \bindnasrepma \ni \owns \gg \ll 
+ \gtrless \geqslant \leqslant \not \notin \leftrightarrow \leftarrow \gets 
+ \rightarrow \to \mapsto \sim \simeq \perp \equiv \asymp \smile 
+ \frown \leftharpoonup \leftharpoondown \rightharpoonup \rightharpoondown 
+ \hookrightarrow \hookleftarrow \bowtie \Join \Longrightarrow
+ \longrightarrow \longleftarrow  \Longleftarrow \longmapsto 
+ \longleftrightarrow \Longleftrightarrow \iff $
+
+$ \cdots \hdots \vdots \ddots \imath \jmath \Vert \| \vert \uparrow 
+\downarrow \Uparrow  \Downarrow  \Updownarrow \updownarrow \mho \clubsuit
+\diamondsuit \heartsuit \spadesuit \aleph \backslash \Box \langle \rangle
+\rmoustache  \lmoustache \rgroup \lgroup \rbrace \lbrace \rceil \lceil 
+\rfloor \lfloor \square \cong  \lnot \neg \in \prime  
+$
+
+$ <>,.:;*?!()[]|+-/=$
+
+$ \enspace \> \; \: \! \quad \qquad ~$
+
+ 
+$\smallint \int  \lor \owns 
+\ldots \top \bot  \nabla  \flat  \Re \infty \surd  \natural \Im
+\hbar \ell \sharp  \angle \emptyset \triangle \neg \wp  \partial
+$
+
+
+
+\begin{math}\alpha=\beta\end{math} and
+\(\gamma=\delta\) and $\phi=\psi$;
+and \ensuremath{0\neq\infty}
+
+\chapter{Mathaccents}
+
+$HAT: \hat{a} \acute{b} \bar{c} \dot{d} \breve{e} \check{f} \grave{g} \vec{h}
+\ddot{k} \tilde{l}a\rightarrow b\longrightarrow c$
+
+$ACUTE: \acute{x} \bar{x} \breve{x} \check{x} 
+\ddddot{x} \dddot{x} \ddot{x} \dot{x} 
+\grave{x} \hat{x} \mathring{x} \tilde{x}
+\vec{x} \widehat{xyz} \widetilde{xyz}$
+
+$WIDETILDE: %
+\widetilde{abc} \widehat{abc} \overleftarrow{abc} \overrightarrow{abc}
+\overline{abc} \underline{abc} \overbrace{abc} \underbrace{abc}
+\underleftarrow{abc} \underrightarrow{abc}
+$ 
+
+\chapter{Commands}
+
+\def\Dmin{\operatorname{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+\def\Dmin{\operatorname*{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+
+$\overline{foo}\underline{bar}$
+$\stackrel{j}{\longrightarrow} $
+$\overset{*}{X} \underset{*}{X}$
+$\overbrace{xyz} $
+$\underbrace{xyz}$
+$\frac{abc}{xyz} \dfrac{abc}{xyz} \tfrac{abc}{xyz}$
+$\sqrt{abc} \sqrt[n]{abc} \root n \of{abc}$
+
+
+
+
+$\bigl[\frac{1}{a^2}\bigr[$
+$\left[\frac{1}{b^2}\right[$ 
+$[\frac{1}{x^2}[$
+
+
+
+$$\genfrac{}{}{}{}12
+\genfrac[]{2pt}{2}{aaa}{bbb} 
+\genfrac(){0cm}{0}nm
+$$
+
+\def\XX{\nonscript\,}
+$a\XX b_{c\XX d} a\XX b_{\textstyle c\XX d} $
+
+\def\mychoice{\mathchoice{a}{b}{c}{d}}
+$$\mychoice = \frac{\mychoice}{\mychoice} = 
+ 1_{\mychoice\frac{\mychoice}{\mychoice}} = 2^ {\mychoice\frac{\mychoice}{\mychoice}}$$
+\begin{center}
+$\mychoice = \frac{\mychoice}{\mychoice} = 
+ 1_{\mychoice\frac{\mychoice}{\mychoice}} = 2^ {\mychoice\frac{\mychoice}{\mychoice}}$
+\end{center}
+
+
+
+${\frac12}{x\displaystyle\frac 12} 
+{x\textstyle\frac 12}{x\scriptstyle\frac 12}{x\scriptscriptstyle\frac 12} \qquad
+{x\displaystyle a}+{x\textstyle a}+{x\scriptstyle a}+{x\scriptscriptstyle a}\qquad
+\frac{x\displaystyle a}{x\textstyle b}+\frac{x\scriptstyle a}{x\scriptscriptstyle b}$
+
+\chapter{Environments}
+
+\chapter{Other}
+
+
+\begin{equation}
+\begin{aligned}
+x^2+y^2&=1   & 1    &=X^2+Y^2\\
+x      &=0.01& 0.001&=X
+\end{aligned}   \label{eqn:main2}
+\end{equation}
+
+\begin{multline}
+\sin=\cos\\
+\multicolumn{a}{b}{c}\\
+\shoveright{\cos}\\
+\shoveleft{\sin}\\
+1+2
+\end{multline}
+
+
+{\everyhbox={aa}\everyvbox={bb}\everyxbox={cc} \everymath{\alpha}
+ \everydisplay{\beta}
+\xbox{foo}{\hbox{A\vbox{B}}\hbox{}}
+$$ A\hbox{B $C$} D$$
+}\xbox{foo}{\hbox{A\vbox{B}}\hbox{}}
+$$ A\hbox{B $C$} D$$
+
+$a+b$ $a\mathbin+b$
+
+\begin{equation} 0=1 \end{equation}
+\begin{equation*} 0=2 \end{equation*}
+\begin{displaymath} 0=3 \end{displaymath}
+\[ 0=4 \]
+$$ 0 = 5 $$
+
+\begin{equation}
+\begin{split}
+(a+b)^4 &= (a+b)^ 2 (a+b)^2           \\
+        &= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
+        &= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{aligned}
+(a+b)^4 &= (a+b)^ 2 (a+b)^2           \\
+        &= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
+        &= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
+\end{aligned}
+\end{equation}
+
+
+\begin{align}
+x^2+y^2&=1\\ x&=\sqrt{1-y^2}
+\end{align}
+
+\begin{eqnarray*}
+x & \ll & y_{1} + \cdots + y_{n} \\
+  & \leq &z
+\end{eqnarray*}
+
+\begin{eqnarray}
+x & = &17y \\
+y & > & a + b + c+d+e+f+g+h+i+j+ \nonumber\\
+  &   & k+l+m+n+o+p
+\end{eqnarray}
+
+$$EQ1$$ etc
+$$EQ2$$ \par etc
+$$EQ3$$ 
+
+
+
+\begin{align*}
+u& \equiv v+1 \mod{n^2} \\
+u& \equiv v+1 \bmod{n^2} \\
+u&   =    v+1 \pmod{n^2} \\
+u&   =    v+1 \pod{n^2} \\
+\end{align*}
+
+
+$$\frac12 \dfrac 12 \tfrac12 \qquad
+{}^{\frac12 \dfrac 12 \tfrac12}$$
+\def\N{\mathchoice{a}{b}{c}{d}}
+$$\frac{\N\frac{\N+m}{2}} \N \quad
+\tfrac{\N\frac{\N+m}{2}} \N \quad
+\dfrac{\N\frac{\N+m}{2}} \N
+%\quad \genfrac {}{}{}0{\N\frac{\N+m}{2}} \N
+$$
+
+$\bar{\dot {\rm o}}$
+a - b -- c --- d
+
+\def\thiswillfail{
+$\radical -1 x
+\radical 134217727 w
+\radical 100 y$
+\vadjust\relax\space {c}
+\vadjust\relax\space ?
+\vcenter to 5pt {toto}
+XXXXX\vcenter to 5pt {\bf toto}x!
+\insert 2000 !
+}
+
+
+{\def\n{\mathchoice{a}{b}{c}{d}}
+$$\binom{\frac{\n+m}{2}} \n \quad
+\tbinom{\frac{\n+m}{2}} \n \quad
+\dbinom{\frac{\n+m}{2}} \n\qquad
+{}^{\binom{\frac{\n+m}{2}} \n \quad
+\tbinom{\frac{\n+m}{2}} \n \quad
+\dbinom{\frac{\n+m}{2}} \n}$$
+}
+
+
+
+ $$a\over{b\over c}
+$$
+
+y\textasciiacute$x' x'' x''' x'''' u_2' v'^3_4$
+
+\def\Dmin{\operatorname{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+
+\renewcommand\operatorname[1]{%
+  \mathmo{#1}%
+  \mathattribute{form}{prefix}%
+  \mathattribute{movablelimits}{true}%
+}
+\def\Dmin{\operatorname{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+
+
+\def\test#1#2{\mathtt{#1#2}\mathcal{#1}\mathbf{#1#2}\mathrm{#1#2}
+\mathit{#1#2}\mathbb{#1}\mathsf{#1#2}\mathnormal{#1#2}}
+\begin{equation}\begin{split}
+\test Aa &\test Bb\\
+\test Cc &\test Dd\\
+\test Ee &\test Ff\\
+\test Gg &\test Hh\\
+\test Ii &\test Jj\\
+\test Kk &\test Ll\\
+\test Mm &\test Nn\\
+\test Oo &\test Pp\\
+\test Qq &\test Rr\\
+\test Ss &\test Tt\\
+\test Uu &\test Vv\\
+\test Ww &\test Xx\\
+\test Yy &\test Zz\\
+\end{split}
+\end{equation}
+
+${\cal ABCDEFGHIJKLMNOPQRSTUVWXYZ}$
+
+$ \bf a \mathrm{a \mathcal{c} d}$
+
+$a^c_b$
+$a\sb b\sp c$
+
+
+
+\wd0=3cm %\showthe\wd0
+\spacefactor-12345
+%\showthe\spacefactor
+$x\Box$
+\def\R{\mathbf{R}}
+
+\def\MAT#1{\begin{array}{c#1}1&22\\3&4\end{array}}
+
+
+\[\left|
+\begin{array}{lcr}
+AAAAAAA&BBBBBCC&CCCCCCC\\
+A&B&C\\
+\multicolumn{1}{c}{A}&\multicolumn{1}{c}{B}&\multicolumn{1}{c}{C}\\
+\multicolumn{1}{r}{A}&\multicolumn{1}{r}{B}&\multicolumn{r}{c}{C}\\
+\multicolumn{1}{l}{A}&\multicolumn{1}{l}{B}&\multicolumn{l}{c}{C}\\
+\MAT l&\MAT c&\MAT r\\
+\multicolumn{2}{c}{0123456789abcdef}&C\\
+A&\multicolumn{2}{c}{0123456789abcdef}\\
+\multicolumn{2}{r}{0123456789abcdef}&C\\
+A&\multicolumn{2}{l}{0123456789abcdef}\\
+A&B&C\\
+\end{array}
+\right|\]
+
+
+
+\begin{eqnarray*}
+\left\{\begin{array}{lcl}
+\dot{x} & = & Ax+g(x,u)\\
+ y & = & Cx \\
+ \multicolumn{3}{l}{x\in \R^n} 
+\end{array}
+    \right.
+\end{eqnarray*}
+
+
+
+a) \begin{math} x1 \end{math}
+b) \( x2 \)
+c) \begin{displaymath} x3 \end{displaymath}
+d) \[ x4 \]
+e) \begin{equation} x5 \end{equation}
+
+text A \\* text B \\[3mm] text C
+\begin{center}
+line one\\
+this is the second line
+\end{center}
+
+
+$1^e$\overline{foo}\underline{bar}.
+
+
+
+$1^e$\overline{foo}\underline{bar}.
+\lsc{Foo}\fsc{Bar}
+
+
+
+\begin{equation}
+\begin{array}{lcl}
+\dot{x} & = & Ax+g(x,u)\\[2mm]
+ y & = & Cx \\
+ \multicolumn{3}{l}{x\in R^n} 
+\end{array}
+\end{equation}
+
+\begin{tabular}{|ll|rr|cc|}
+\hline a&b&c&d&e&f\\
+aaa&bbb&ccc&ddd&eee&fff\\[3mm]
+\hline
+A&\multicolumn{3}{l}{BCD}&E&F\\
+\cline{1-3}\cline{6-6}
+aaa&bbb&ccc&ddd&eee&fff\\\hline
+\end{tabular}
+ 
+
+$$ \arccos^2 (x),\,  \arcsin^2(x) ,\,  \arctan^2(x) ,\,  \arg^2(x),\,
+   \cos^2(x) ,\,   \cosh^2(x)  ,\, \cot^2(x)$$
+
+$$ \coth^2(x) ,\,  \csc^2(x),\,   \deg^2(x),\,   \dim^2(x),\, \exp^2(x),\,
+   \hom^2(x),\,   \ker^2(x) ,\,   \lg^2(x)$$
+
+$$  \ln^2(x),\, \log^2(x),\,  \Pr^2(x),\, \sec^2(x),\, \sin^2(x) ,\,
+ \sinh^2(x),\,  \tan^2(x),\, \tanh^2(x)$$
+
+$$ \det_{x=1},\, \gcd_{x=1},\, \inf_{x=1},\, \injlim_{x=1},\,
+ \lim_{x=1},\, \liminf_{x=1},\,\limsup_{x=1},\,
+ \max_{x=1},\, \min_{x=1},\, \projlim_{x=1},\, \sup_{x=1}
+$$
+
+$%
+\stackrel{j}{\longrightarrow} \overset{*}{X} \underset{*}{X}
+\sqrt{abc} \sqrt[n]{abc} \root n \of{abc}
+\frac{abc}{xyz} \dfrac{abc}{xyz}
+$
+
+
+
+$$\binom{\frac{n+m}{2}} n \quad
+\tbinom{\frac{n+m}{2}} n \quad
+\dbinom{\frac{n+m}{2}} n\qquad
+{}^{\binom{\frac{n+m}{2}} n \quad
+\tbinom{\frac{n+m}{2}} n \quad
+\dbinom{\frac{n+m}{2}} n}$$
+
+
+
+$\Leftrightarrow$
+
+
+1\textsuperscript{st} x\textsuperscript{ième} y\textsubscript{some text}. 
+
+$$\genfrac{}{}{}{}12
+\genfrac[]{2pt}{2}{aaa}{bbb}
+\genfrac(){0cm}{0}nm
+$$
+
+
+
+$\genfrac{}{}{}0ab 
+\genfrac{}{}{}1ab 
+\genfrac{}{}{}2ab 
+\genfrac{}{}{}3ab $
+
+${a\over b}\quad {a\above1pt b}\quad {a\atop b}$
+${a\overwithdelims() b}\quad {a\abovewithdelims()1pt b}\quad
+{a\atopwithdelims() b}$
+$\dimen0=2pt\genfrac(){\dimen0 }{}{foo}{bar}$
+
+
+$$\frac{\frac{n+m}{2}} n \quad
+\tfrac{\frac{n+m}{2}} n \quad
+\dfrac{\frac{n+m}{2}} n$$
+
+
+
+$$
+\sup_{x=2}y~
+\frac{1}{k}\log_2 c(f)\;
+\tfrac{1}{k}\log_2 c(f)\;
+\sqrt{\frac{1}{k}\log_2 c(f)}\;
+\sqrt{\dfrac{1}{k}\log_2 c(f)}
+$$
+
+
+
+
+
+$\genfrac(){1mm}{3}{aaaaaaaaaaaaaaaaaa}{111111111}$
+$\genfrac(){0pt}{3}{aaaaaaaaaaaaaaaaaa}{111111111}$
+$\genfrac{}{}{}{0}{abc}{def}$
+$\genfrac{}{}{}{1}{abc}{def}$
+$\genfrac{}{}{}{2}{abc}{def}$
+$\genfrac{}{}{}{3}{abc}{def}$
+%$a\atop b$  $c\over d$
+
+
+
+$\tilde a,\tilde z, \tilde{a+b}$
+
+
+
+$\overline {\tt P} P$
+
+
+
+á  \char`\á  \char"E1  \'a  \a'a \xmllatex{\&\#xE1;}{}  \xmllatex{\&aacute;}{} 
+$\hat{a} \acute{a}  \bar{a} \dot{a} \breve{a}
+\check{a} \grave{a} \vec{a} \ddot{a} \tilde{a}
+$ 
+$$d=z^2=( I_t + \nabla I\vec{vvvv} +I div(\vec{vvvvv}) )^2,$$
+
+$a\hbox{b=1} c$
+$a\hbox{b~1}~c$ % both ~ do not give the same space. bad
+
+
+$x^{y^\epsilon_\varepsilon}$
+\begin{equation}
+\vec B(\vec r) = \frac{\mu_0}{4\pi}\left\{
+\frac{3\vec m({\vec r}')\cdot(\vec r-{\vec r}')}{|\vec r-{\vec r}'|^5}
+(\vec r-{\vec r}') - \frac{\vec m({\vec r}')}{|\vec r-{\vec r}'|^3}
+\right\}. \label{W102}
+\end{equation}
+
+$
+\def\kernel{\frac{x^1_2}{y^3_4}}
+\left\Vert\left|\left[\left(\left\{ \kernel \right\}\right)\right]\right|\right\Vert
+\left\vert\left|\left<\left\langle \kernel \right\rangle\right>\right|\right\vert
+\left\lbrace\left\lceil\left\lfloor \kernel \right\rfloor\right\rceil\right\rbrace
+\lbrack\rbrack
+a\mskip1mu b\mskip2mu c \mskip4mu d \mskip8mu e \mskip16mu f
+$
+
+\def\kernel{\frac{x^1_2}{y^3_4}}
+\def\test{
+\left\lmoustache\left\uparrow\left\Uparrow\left\updownarrow\left\lgroup
+\kernel
+\right\rgroup\right\Updownarrow\right\Downarrow\right\downarrow\right\rmoustache}
+$\test$
+$\let\left\relax\let\right\relax \test$
+$\def\kernel{\int_0^{\frac{x^1_2}{y^3_4}}} \test$
+
+
+
+$\Longrightarrow$
+\def\test{\ensuremath{\cal X_y}}
+\test and $\test Z$
+$\sin(x) + \cos^2(x) $ and $\overbrace{xyz} ^t $
+
+
+$\bigl[\frac{1}{a^2}\bigr[$
+$\left[\frac{1}{b^2}\right[$ 
+$[\frac{1}{x^2}[$\\
+
+$\int f\mathopen)a+b\mathclose(=c+d$
+$\int f(a+b)=c+d$
+
+$a\limits \displaylimits \nolimits b$
+
+
+\def\cmd{a\dots b\ldots c\quad d\qquad e\space f\$g\%h\&i\!j\,k\{% 
+l\}m\i n\sharp o\natural p\flat q\_}
+wwwwwwwwwwww\cmd\\ $\cmd$
+
+
+Math spacing\\
+$xxxxx$\\
+$x\,x\>x\;x\!x$\\
+$a\,\,\,\,\,a\>\>\>\>\>a$\\
+$a\;\;\;a\;\;\;\;a$\\
+$!?\#\_.@\%\|/|$
+
+
+
+\[
+\mathop {\mathop {arg\,min}\nolimits_\Psi }\limits_{\theta \in \Theta } 
+\Delta \left( {\mathop \Phi \nolimits_\theta \left( {\Omega _s } 
+\right)-\Omega _t } \right)
+\qquad
+x_{y_z} = {x_y}_z= 
+x^{y_z} = {x^y}_z= 
+x_{y^z} = {x_y}^z= 
+x^{y^z} = {x^y}^z
+%
+\left\{\{\frac{2}{3}\}\right\}
+\]
+
+$x=0123456789$
+$\root 3 \of 4$ $\sqrt[3]{4}$
+
+
+\begin{equation}
+0=\hspace{0.4
+cm}1
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$ \^A \^a \^{\'A} \^{\'a} \^{\`A} \^{\`a} \^{\h A} \^{\h a} \^{\~A} \^{\~a}
+  \^{\d A} \^{\d a} \^C \^c$
+$ \^E \^e \^{\'E} \^{\'e} \^{\`E} \^{\`e} \^{\h E}
+  \^{\h e} \^{\~E} \^{\~e} \^{\d E} \^{\d e} \^G \^g \^H \^h \^I \^i \^J \^j $
+$
+ \^O \^o \^{\'O} \^{\'o}  \^{\`O} \^{\`o}  \^{\h O} \^{\h o}  \^{\~O} \^{\~o}
+ \^{\d O} \^{\d o}  \^S \^ s \^U \^u \^W \^w \^Y \^y \^Z \^z
+ \'A \'a \'{\AA} \'{\aa} \'{\AE} \'{\ae} \'{\^A} \'{\^a} \'{\u A} \'{\u a} 
+ \'C \'c \'{\c C} \'{\c c} \'E \'e  \'{\=E}
+ \'{\=e} \'{\^E} \'{\^e} \'G \'g \'I \'i $
+$\'{\"I} \'{\"i} \'K \'k \'L \'l \'M 
+ \'m \'N \'n \'O \'o \'{\O} \'{\o} \'{\~O} \'{\~o} \'{\=O} \'{\=o} \'{\^O} 
+ \'{\^o} \'{\H O} \'{\H o}$
+$ \'P \'p \'R \'r \' S \'s
+ \'{\.S} \'{\.s} \'U \'u \'{\"U} \'{\"u} \'{\~U} \'{\~u} \'{\H U} \'{\H u} 
+ \'W \'w \'Y \'y \'Z \'z 
+ \`A \`a \`{\^A} \`{\^a} \`{\u A} \`{\u a} \`E \`e \`{\=E} \`{\=e} \`{\^E}
+ \`{\^e}  \`I \`i \`N \`n $
+$\`O \`o \`{\=O} \`{\=o} \`{\^O} \`{\^o} 
+ \`{\H O} \`{\H o} \`U \`u \`{\"U} \`{\"u} \`{\H U} \`{\H u} \`W \`w \`Y\`y 
+ \"A \"a \"{\=A} \"{\=a} \"E \"e \"H \"h \"I \"i \"{\'I} \"{\'i} \"O \"o
+ \"{\=O} \"{\=o} \"{\~O} \"{\~o} \"t$
+$ \"U \"u \"{\=U} \"{\=u} \"{\`U} \"{\`u}
+ \"{\'U} \"{\'u} \"{\v U} \"{\v u} \"W \"w \"X \"x \"Y \"y
+ \c C \c c \c{\'C} \c{\'c} \c D \c d \c E \c e \c{\u E} \c{\u e} $
+$
+ \c H \c h \c G \c g \c K \c k \c L \c l \c N \c n \c R \c r \c S \c s \c T \c t
+ \C A \C a \C E \C e \C I \C i \C O \C o \C R \C r \C U \C u
+ \u A \u a \u{\`A} \u{\`a} \u{\'A} \u{\'a} \u{\h A} \u{\h a} \u{\~A} \u{\~a}
+ \u{\d A} \u{\d a}$
+$ \u E \u e \u{\c E} \u{\c e} \u G \u g \u I \u i
+ \u O \u o \u U \u u
+ \v A \v a \v C \v c \v D \v d \v E \v e \v G \v g \v H \v h \v K \v k 
+ \v I \v i \v j \v L \v l \v N \v n $
+$ \v O 
+ \v o \v R \v r \v S \v s \v T \v t \v U \v u  \v{\"U} \v{\"u} \v{\.S}
+ \v{\.s} \v Z \v z
+ \H O \H o \H U \H u$
+$
+ \H{\'O} \H{\'o}  \H{\`O} \H{\`o}  \H{\h O} \H{\h o}  \H{\~O} \H{\~o}
+ \H{\d O} \H{\d o}$
+$ \H{\'U} \H{\'u} \H{\`U} \H{\`u} \H{\h U} \H{\h u} \H{\~U}
+ \H{\~u} \H{\d U} \H{\d u}  
+ \h A \h a \h{\^A} \h{\^a} \h{\u A} \h{\u a} \h E \h e  \h{\^E} \h{\^e}  \h I
+ \h i$
+$ \h O \h o  \h{\^O} \h{\^o}  \h{\H O} \h{\H o}  \h U \h u 
+ \h{\H U} \h{\H u} \h Y \h y
+ \k A \k a \k E \k e \k I \k i \k O \k o \k{\=O} \k{\=o}  \k U \k u 
+ \r A \r a \r U \r u \r w \r y
+ \d A \d a \d{\^A} \d{\^a} \d{\u A} \d{\u a} \d B \d b \d D \d d \d E \d e
+ \d{\^E} \d{\^e} \d H \d h \d I \d i \d K \d k \d L \d l \d{\=L} \d{\=l}$
+$
+ \d M \d m \d N \d n \d O \d o  \d{\^O} \d{\^o}  \d{\H O} \d{\H o}  
+ \d R \d r \d{\=R} \d{\=r} \d S \d s \d{\.S} \d{\.s} \d T$
+$
+ \d t \d U \d u \d {\H U} \d{\H u}  \d V
+ \d v \d W \d w \d Y \d y \d Z \d z
+ \D A \D a
+ \b B \b b \b D \b d \b h \b K \b k \b L \b l
+ \b N \b n \b R \b r \b T \b t \b Z \b z
+ \f A \f a \f E \f e \f I \f i \f O \f o \f R \f r \f U \f u
+ \T E \T e \T I \T i \T U \T u
+ \V D \V d \V E \V e \V L \V l \V N \V n \V T \V t \V U \V u
+ \=A \=a \={\"A} \={\"a} \={\.A} \={\.a} \=\AE \=\ae \=E \= e \={\'E} \={\'e}
+ \={\`E} \={\`e} \=G \=g \=H \=h$
+$
+ \=I \=i \={\d L} \={\d l} \= O \=o \={\k O} \={\k o} \={\"O} \={\"o} \={\~O}
+ \={\~o} \={\.O} \={\.o} \={\`O} \={\`o} \={\'O} \={\'o}$ 
+$ \={\d R} \={\d r}
+ \=T \=t \=U \=u \={\"U} \={\"u} \=Y \=y
+ \.A \.a \.{\=A} \.{\=a} \.B \.b \.C \.c \.D \.d \.E \.e \.F \.f \.G \.g \.H
+ \.h \.I $
+$\.L \.l \.M \.m \.N \.n \.O \.o \.{\=O} \.{\=o} \.P \.p \.R \.r $
+$
+ \.S
+ \.s \.{\d S} \.{\d s} \.{\v S} \.{\v s} \.{\'S} \.{\'s} \.T \.t \.W \.w \.X
+ \.x \.Y \.y \.Z \.z
+$
+
+{\let\A B $\A$}
+
+\def\F#1{\csname mml@font@#1\endcsname}
+\def\A{ab+2c=DE}
+%\def\A{A}
+$  \F{normal} \A  \F{upright} \A  \F{bold} \A    \F{italic} \A
+   \F{bolditalic} \A  \F{script} \A \F{boldscript} \A \F{fraktur} \A
+   \F{doublestruck} \A \F{boldfraktur} \A \F{sansserif} \A \F{boldsansserif} \A
+   \F{sansserifitalic} \A \F{sansserifbolditalic} \A \F{monospace} \A $
+
+\def\A{Xx\mathcal{Cal}\mathrm{Rm}\mathbf{Bf}\mathsf{Sf}%
+  \mathtt{Tt}\mathtt{x}\mathtt{y+1}%
+\mathnormal{No} \mathit{It}\mathfrak{Fr}}
+\mathversion{normal}$\A$
+% \mathversion{bold}\mathnormal gives bold in next version
+\mathversion{bold}$\A$
+{
+$\frac{\mathit{\mathbf{foo}}}{\mathrm{bar}+1}=3$
+}
+$a\text{b=1} c$ % the text is in bold!
+
+\mathversion{normal}
+oooooooooooooo
+\let\myhbox=\hbox
+$a\myhbox{b=1} c$
+$a\text{b=1} c$
+$a\mbox{b=1} c$
+$a\hbox{b=1} c$
+
+$a\mbox{b=1} c\formulaattribute{tag}{8-2-3}$
+
+
+$\begin{pmatrix}
+\binom 12&\int_0^\infty f(x)dx\\[2cm]
+\mathfrak{W}_2&\text{xyz}=\sqrt{xxyyzz}
+\end{pmatrix}$
+
+% Was bug #2 from Wagner
+\newcommand{\xmath}[1]{\ensuremath{#1}\xspace}
+\newcommand{\is}{\xmath{x}\xspace}
+\newcommand{\os}{\xmath{y}\xspace}
+\newcommand{\fs}{\xmath{\mathcal{F}}}
+signal $\bar\is \in \fs(\os)$ with smallest support.
+
+% Was bug #4 from Wagner
+$\mbox{(\ref{W102})}=\eqref{W102}=\mbox{\eqref{W102}}$
+
+\begin{eqnarray}
+a & = & b \\
+& = & c
+\mbox{by \eqref{eqn:main2}} % produces "bad hbox" in output xml
+\end{eqnarray}
+
+\[12\label{eqn:main1}34\]
+
+% Was bug #5 from Wagner
+
+\newcommand{\Foo}{Bar}
+\newcommand{\Ufoo}{\MakeUppercase{\Foo}}
+\newcommand{\Lfoo}{\MakeLowercase{\Foo}}
+
+Non math version 
+Is upper case : \MakeUppercase{\Foo}\\
+Is lower case : \MakeLowercase{\Foo}\\
+Is upper case : \MakeUppercase{Foo}\\
+Is lower case : \MakeLowercase{Foo}\\
+Is upper case : \MakeUppercase{\Ufoo}\\
+Is upper case : \MakeLowercase{\Ufoo}\\
+Is lower case : \MakeUppercase{\Lfoo}\\
+Is lower case : \MakeLowercase{\Lfoo}\\
+
+% does not work
+Is upper case : $\MakeUppercase{\Foo}$\\
+Is lower case : $\MakeLowercase{\Foo}$\\
+Is upper case : $\MakeUppercase{Foo}$\\
+Is lower case : $\MakeLowercase{Foo}$\\
+Is upper case : $\MakeUppercase{\Ufoo}$\\
+Is upper case : $\MakeLowercase{\Ufoo}$\\
+Is lower case : $\MakeUppercase{\Lfoo}$\\
+Is lower case : $\MakeLowercase{\Lfoo}$\\
+
+% Testing mathpalette
+\def\yshow#1#2{\string #1#2}
+\def\n{\mathpalette\yshow}
+
+{
+\let\ampersand&
+\catcode`&=13\def&#1\cr{\ampersand \text{#1}\\}
+\def\cases{\bgroup\catcode`&=13 \casesaux}
+\def\casesaux#1{\egroup\left\{\begin{array}{ll}#1\end{array}\right.} 
+$\cases{ 2 h(n) & for $0 \leq n \leq N/2-1$ \cr  0 & otherwise \cr} $
+}
+
+{
+\newcounter{ffoo} 
+\def\FOO{\addtocounter{ffoo}{1}\Label{\theffoo}}
+
+%\let\Label\relax 
+\def\Label#1{\formulaattribute{label}{#1}}
+$$x\FOO$$ 
+}
+
+$$\rm \binom{\frac{\n+m}{2}} {\n0} \quad
+\tbinom{\frac{\n+m}{2}} {\n0} \quad
+\dbinom{\frac{\n+m}{2}} {\n0}\qquad
+{}^{\binom{\frac{\n+m}{2}} {\n0} \quad
+\tbinom{\frac{\n+m}{2}} {\n0} \quad
+\dbinom{\frac{\n+m}{2}} {\n0}}$$
+
+Additional tests
+$\hspace{2em}, \hspace*{2cm} 12>10\,\$$
+$\left[\mathit x^1_2 y^{22}_{33}\right\lbrace$
+$\overline{x}\frac12 \mathmi[A][B]{c}$
+$\genfrac{}{}{2pt}{3}uv \genfrac[]{}{}uv$
+$\sqrt {10} \root 3 \of 4 \sqrt[6]{7}$
+If $x\in\emptyset$ then $\forall n>0, \dfrac{1}{n^2}<0$
+
+Kumar test
+$x_{\mbox{{\scriptsize{H\,{\sc i}}}}}$
+$x_{\mbox{{\scriptsize{H\,\quad\qquad\!\,\:\;{\sc i}}}}}$
+Testing references \ref{eqn:main1} \ref{eqn:main2}
+$a\mbox{b=1} c\formulaattribute{tag}{8-2-3}\thismathattribute{xx}{yy}$
+{\makeatletter\gdef\varPi{\@nomathswi\Pi \@nomathswii\noexpand\varPi}
+\gdef\varPsi{\@nomathswi\Psi \@nomathswii\noexpand\varPsi}}
+$\varPi=\varPsi$
+\begin{align} 123&34\\56&78\end{align}
+\begin{align*} 123&34\\56&78\end{align*}
+\begin{flalign} 123&34\\56&78\end{flalign}
+\begin{flalign*} 123&34\\56&78\end{flalign*}
+\begin{alignat} 123&34\\56&78\end{alignat}
+\begin{alignat*} 123&34\\56&78\end{alignat*}
+\begin{xalignat} 123&34\\56&78\end{xalignat}
+\begin{xalignat*} 123&34\\56&78\end{xalignat*}
+\begin{xxalignat} 123&34\\56&78\end{xxalignat}
+\begin{xxalignat*} 123&34\\56&78\end{xxalignat*}
+ok\\
+
+\typeout{\thisistheend} 
+\end{document}
+
+fin du document
+
+
+
+
+

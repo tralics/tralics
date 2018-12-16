@@ -1,0 +1,42 @@
+\documentclass{Xarticle}
+% The purpose of this file is to check  the following invocation
+% tralics testclass -defaultclass=article
+% Tralics DOCTYPE = std classes.dtd
+\usepackage{subfigure}
+
+\begin{document}
+
+\makeatletter
+\@ifclassloaded{Xarticle}{OK}{BAD}
+\@ifclassloaded{article}{bad}{ok}
+\ifx\appendix\relax bad \else ok\fi  % changed 9 may 2011
+
+Reference to figure: \ref{fig:fig1}
+Reference to first subfigure: \ref{fig:fig1a}
+Reference to second subfigure: \ref{fig:fig1b}
+
+\begin{figure}[htbp]
+  \XMLaddatt{FOO}{BAR}
+    \centering
+    \subfigure[first subfigure caption]{
+           \includegraphics{figure1a.eps}
+       \label{fig:fig1a}
+    }
+    \hspace{2cm}
+    \subfigure[second subfigure caption]{
+           \includegraphics[width=3cm]{figure1b.eps}
+       \label{fig:fig1b}
+    }
+\par
+    \subfigure{\includegraphics{figure1c}}
+    \caption{main figure caption}
+    \label{fig:fig1}
+\end{figure}
+
+\chapter{foo}
+\section[Sec]{sec$1$}
+\chapter[chapter two]{foo$2$}
+\section*{sec$2$}
+
+
+\end{document}

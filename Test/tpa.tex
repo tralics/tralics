@@ -1,0 +1,38 @@
+\def\cmdAval{CMDA}
+\def\cmdBval{\invalid}
+\def\cmdCval{\invalid}
+\documentclass{tpa}
+\def\cmdAval{\invalid}
+\def\Title{Titlepage customisation in Tralics}
+
+
+\title{\Title}
+\author{José Grimm}
+\author{Knuth}
+\myself
+\autk
+
+\Paris \URsop
+\waddress
+
+\sParis \sURsop \sURlor
+
+\begin{Eabstract}
+This is an abstract with \par some paragraphs in it\par ok ?
+\end{Eabstract}
+
+\begin{eabstract}
+This is an abstract without paragraphs in it
+\end{eabstract}
+\pabstract{Another abstract \par with \par in it}
+\abstractalias{Another abstract without par}
+
+\def\cmdBval{CMDB}
+\begin{document}
+\def\cmdBval{\invalidagain}
+
+\def\cmdCval{CMDC}
+\InsertTitlepage
+
+\end{document}
+

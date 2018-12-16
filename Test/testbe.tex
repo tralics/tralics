@@ -1,0 +1,189 @@
+\documentclass {article}
+\usepackage{amsmath,listings,color,fancyhdr}
+\begin{filecontents+}{lst-test.C}
+This is a test file for the listings package
+
+// In a case like \def\bar#1foo#2{...}, this returns the value of #1
+// given the token list foo as argument. 
+TokenList Parser::read_delimited (const TokenList& L)
+{
+  TokenList res;
+  scanner_status = ss_matching;
+  scan_group_del(res,L);
+  scanner_status = ss_normal;
+  return res;
+}
+
+\end{filecontents+}
+
+
+\def\hhline#1{}
+\newcommand{\requirements}[2]{{
+    \noindent%
+    \begin{tabular}{||p{2.3cm}||p{12.7cm}||}
+      \hhline{|t:=:t:=:t|}
+      Requirements\vfill & \parbox{12cm}{
+        {#1}
+      } \\
+      \hhline{|:=::=:|}
+      Results\vfill      & \parbox{12cm}{
+        {#2}
+      } \\
+      \hhline{|b:=:b:=:b|}
+    \end{tabular}
+  }}
+
+
+\begin{document}
+
+Test of bordermatrix
+
+$\bordermatrix{
+a&b&c&d&e\cr
+f&g&h&i&j\cr
+k&l&m&n&o\cr
+p&q&r&s&t\cr}
+$
+
+no row$\bordermatrix{}$
+one row $\bordermatrix{1&2&3}$
+first row empty  $\bordermatrix{\cr 1&2&3}$
+first row small  $\bordermatrix{1\cr 1&2&3}$
+second row empty $\bordermatrix{1&2\cr \cr 1 & 2}$
+second row small $\bordermatrix{1&2\cr 3\cr}$
+first row OK  $\bordermatrix{1&2\cr 3&4<}$
+
+
+Testing spaces in math
+\skip0=3mm\relax\the\skip0 
+\skip0=25pt\relax\the\skip0 
+\skip0= 3PC\relax\the\skip0
+$x^2 \hbox{\kern 3mm +\hspace{25pt} +\hskip 3PC =0} y^2$
+$x^2 \hbox{\kern 3mm+\hspace{25pt}+\hskip 3PC=0} y^2$
+$x^2 \hbox{aa\,\;\! $bb\,\;\! cc$dd} y^2$
+$x^2 \hbox{aa\,\;\! $b\kern 3mm b\,\;\! cc$dd} y^2$
+
+xx$\mbox{\hspace {2mm}}$yy
+
+Test of spaces between \verb+\begin{description}+ and \verb+\item+
+
+
+\requirements{
+  \begin{description}
+  \item[$\bullet$] the input distribution : {\itshape inputDistribution}
+  \item[type] : Distribution
+  \end{description}
+}
+{
+  \begin{description}
+  \item[$\bullet$] the random input vector : {\itshape inputRandomVector}
+  \item[type] : RandomVector which implementation is a UsualRandomVector
+  \end{description}
+}
+
+\lstset{language=C++, basicstyle=\normalsize}
+\begin{lstlisting}[frame=TBRL]
+class Exception {
+public :
+        Exception ( const char *description, const char * comment = 0 ) ;
+        virtual ~Exception( ) throw();
+        /* ... */
+        friend ostream & operator<< (ostream &, const Exception & e ) ;
+} ;
+\end{lstlisting}
+
+\lstset{language=C++, basicstyle=\color{red}}
+\lstinputlisting{lst-test.C}
+
+\includegraphics{nosuchfile} 
+
+\section {one}
+Footnotes and fonts\footnote{normal\it italic} after note.
+
+Hey {\bf Footnotes and fonts\footnote{normal\it italic} after} note.
+
+\ChangeElementName{use_font_elt}{true}
+{\large  This is large {\color{red} This is red 
+{\it This is italics\footnote{NormalNote \tiny small note \let\bar\par
+      \color{blue}  blue note} after the note} after italic}\par after red} 
+after large\ifx\bar\par \error{Non-local definition in footnote} \fi
+
+\newcounter{Rulecounter}
+%\setcounter{Rulecounter}{1} <- le laisser à 0
+
+\newcommand{\Rule}[2]{
+\begin{description} \refstepcounter*{Rulecounter}\label{rule:#1}
+\item[{\color{blue} R\arabic{Rulecounter}}] #2
+\end{description}
+} 
+
+\section{Two} Some text. \label{secl1}
+
+\appendix
+
+Texte1. \Rule{A} {Rule A}  texte fin1.
+
+Texte2.  \Rule{B} {Rule B}  texte fin2.
+
+Texte3 \Rule{C}{Rule C} texte fin3.
+
+Liens \ref{rule:A} et \ref{rule:B} et \ref{rule:C}. Lien
+\pageref{rule:C}
+
+\arabic{Rulecounter} \label{xx1} ok'3
+\refstepcounter{Rulecounter}  {\it \arabic{Rulecounter}}\label{xx2} ok4
+% this puts an anchor on the previous \it
+\refstepcounter* {Rulecounter} {\it \arabic{Rulecounter}} \label{xx3} ok5
+\refstepcounter{Rulecounter} {\it \arabic{Rulecounter}} \label{xx4} OK6
+
+\ref{xx1}\ref{xx2}\ref{xx3}\ref{xx4}
+
+%% fancyheadings
+\fancypagestyle{plain}
+\nouppercase{{foo \bf bar}}
+\headrule \footrule \fancypagestyle{myps}
+
+% 
+We are in H-mode here
+\setcounter{tocdepth}{5}
+\ChangeElementName{listoftables}{ListOfTables}
+\ChangeElementName{listoffigures}{ListOfFigures}
+\XMLaddatt[4]{mode}{all}
+\listoftables \XMLaddatt[\XMLlastid]{value}{lot}
+\listoffigures \XMLaddatt[\XMLlastid]{value}{lof}
+\tableofcontents
+\setcounter{tocdepth}{4}
+\tableofcontents
+\XMLaddatt[4]{mode2}{all2}
+
+\section{One in appendix} Some text. \label{secl2}
+\section{Two in appendix} Some text. 
+References \ref{secl1}, \ref{secl2}
+
+\makeatletter
+\define@key{lst}{caption} {\XMLaddatt{caption}{#1}}
+\define@key{lst}{escapeinside}{\XMLaddatt{escapeinside}{#1}}
+\define@key{lst}{label}{\XMLaddatt{label}{#1}}
+\makeatother
+
+\begin{lstlisting}[caption={EBNF definition of a configuration},
+   escapeinside=YY,label={lst: config ebnf}]
+this is the verbatim stuff
+\end{lstlisting}
+
+
+\newenvironment {simple}{A}{B} 
+\newenvironment {grab}{C}{D\grabbed} 
+
+Test grabenv
+\begin{grab}x\grabenv\grabbed \begin{simple}yz\end{simple}t\end{grab}
+\grabbed=%\grabenv.OK.
+
+\url{http://www.inria.fr}
+\url*{http://www.inria.fr}
+\href{http://www.inria.fr}{http://www.inria.fr}
+
+\href{a~b\~n_d}{\url{a~b\~n_d}}
+\url{a~b\~n_d}
+
+\end{document}

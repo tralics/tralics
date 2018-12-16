@@ -1,0 +1,46 @@
+# This is a configuration file for tralics, for the Raweb
+# $Id: ra.tcf,v 2.4 2008/07/15 14:55:18 grimm Exp $
+## tralics ident rc=standard-ra $Revision: 2.4 $
+
+# This file is part of Tralics.
+# Copyright Inria. Jos\'e Grimm. Apics. 2004/2005, 2006
+# (See the file COPYING in the Tralics main directory)
+# If you modify this file, by changing the semantics of the RA,
+# please remove the `standard-ra' on the `tralics ident' line above, 
+# or replace it by `non-standard'.
+
+  DocType = raweb raweb3.dtd
+  DocAttrib = year \specialyear
+  DocAttrib = creator \tralics
+
+  makefo="xsltproc --catalogs -o %A.fo %B %C";
+  makehtml = "xsltproc --catalogs  %B %C";
+  call_lint = "xmllint --catalogs --valid  --noout %C"
+  makepdf = "pdflatex -interaction=nonstopmode %w"
+  generatedvi = "latex -interaction=nonstopmode %t"
+  generateps = "dvips %t.dvi -o %t.ps"
+  theme_vals = "com cog num sym bio"
+  section_vals = "composition*/presentation*/fondements/domaine/logiciels/"
+  section_vals = "+resultats/contrats*/international*/diffusion*/"
+  ur_vals = "Rocquencourt//Sophia/Sophia Antipolis/Rennes//Lorraine//";
+  ur_vals = "+RhoneAlpes/Rh\^one-Alpes/Futurs//"
+  affiliation_vals ="Inria//Cnrs//University//ForeignUniversity//"
+  affiliation_vals ="+Public//Other//"
+  profession_vals = "Scientist//Assistant//Technical//PHD//"
+  profession_vals = "+PostDoc//StudentIntern//Other//"
+
+BeginCommands
+ \let\keywords\motscle
+ \newenvironment{body}{\obsoleteEnvBody The body environment is obsolete since 2003}
+   {End of obsolete environment body}
+ \newenvironment{abstract}{\obsoleteEnvAbstract The abstract environment is obsolete since 2003}
+  {End of obsolete environment abstract}
+  \makeatletter
+  \let\htmladdnormallinkfoot\@@href@foot
+  \let\htmladdnormallink\@@href
+  \makeatother
+EndCommands
+
+
+
+

@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE raweb SYSTEM 'raweb3.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<raweb language='english' creator='Tralics version 2.15.3' year='2003'>
+<accueil isproject='true' html='exemple'>
+<theme>3a</theme>
+<projet>Miaou</projet>
+<projetdeveloppe>Mathématiques et Informatique de l'Automatique et de l'Optimisation pour l'Utilisateur</projetdeveloppe>
+<UR><URSophia/><URFuturs/></UR>
+<topic num='1'><t_titre>Topic abc</t_titre></topic>
+<topic num='2'><t_titre>Topic def</t_titre></topic>
+</accueil>
+<composition id-text='composition' id='uid1'>
+
+<catperso><head>Head of project team</head>
+<pers prenom='Laurent' nom='Baratchart'>DR INRIA</pers>
+</catperso>
+<catperso><head>Vice-head of project team</head>
+<pers prenom='Juliette' nom='Leblond'>CR INRIA</pers>
+</catperso>
+<catperso><head>Administrative assistant</head>
+<pers prenom='France' nom='Limouzis'>AI INRIA, partial time in the project</pers>
+</catperso>
+<catperso><head>Staff member</head>
+<pers prenom='José' nom='Grimm'>CR INRIA</pers>
+</catperso>
+<catperso><head>Ph. D. Students</head>
+<pers prenom='David' nom='Avanessoff'>Fellow, INRIA</pers>
+<pers prenom='Alex' nom='Bombrun'>Since November, 1st</pers>
+<pers prenom='Moncef' nom='Mahjoub'>Co-advised, ENIT Tunis (in France in February, March, October, November)</pers>
+</catperso>
+</composition>
+<presentation id-text='presentation' id='uid3'>
+<module html='module2' id-text='2' id='uid4'><head>(Sans Titre)</head>
+<moreinfo><p>The project was terminated June the 30th, 2003.
+A proposal for a new project named APICS has been submitted to the steering
+comittee of Inria Sophia Antipolis.</p>
+</moreinfo>
+<p>The Team develops effective methods for modelling, identification and control
+of dynamical systems.</p>
+<div2 rend='nonumber'><head>Research Themes</head>
+<list type='simple'>
+<item id-text='1' id='uid5'><p noindent='true'>Meromorphic and rational approximation in the complex domain,
+application to identification of transfer functions and matrices as well as
+singularity detection for 2-D Laplace operators. Development of
+software for frequency domain identification and synthesis of transfer
+matrices.</p>
+</item>
+<item id-text='2' id='uid6'><p noindent='true'>Control and structure of non-linear systems: continuous stabilization,
+non-linear transformations (linearization, classification).</p>
+</item></list>
+</div2>
+<div2 rend='nonumber'><head>International and industrial partners</head>
+<list type='simple'>
+<item id-text='1' id='uid7'><p noindent='true'>Industrial collaborations with Alcatel-Space, etc</p>
+</item>
+<item id-text='2' id='uid8'><p noindent='true'>Exchanges with CWI CNR (Italy), etc</p>
+</item>
+<item id-text='3' id='uid9'><p noindent='true'>The project is involved in a NATO Collaborative Linkage Grant etc</p>
+</item></list>
+</div2></module></presentation>
+<fondements id-text='fondements' id='uid10'>
+<module topic='2' html='module3' id-text='3' id='uid11'><head>Identification and deconvolution</head>
+<p>Let us first introduce the subject of Identification in some generality.</p>
+<p>Abstracting in the form
+of mathematical equations the behavior of a phenomenon is
+a step called <hi rend='it'>modeling</hi>. It typically serves two purposes: the first
+is to describe the phenomenon with minimal complexity for some specific
+purpose,
+the second is to <hi rend='it'>predict</hi> its outcome. etc</p>
+<div2 id-text='1' id='uid12'><head>Analytic approximation of incomplete boundary data</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+<pers prenom='José' nom='Grimm'/>
+<pers prenom='Birgit' nom='Jacob'>University of Leeds (GB)</pers>
+<pers prenom='Juliette' nom='Leblond'/>
+<pers prenom='Jean-Paul' nom='Marmorat'>CMA, École des Mines</pers>
+<pers prenom='Jonathan' nom='Partington'/>
+<pers prenom='Fabien' nom='Seyfert'/>
+</participants>
+<keywords>
+<term>meromorphic approximation</term>
+<term>frequency-domain identification</term>
+<term>extremal problems</term>
+</keywords><p>etc, so that a prototypical Problem is:</p>
+<p><hi rend='slanted'>(<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>P</mi></math></formula>)  Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&ge;</mo><mn>1</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>&ge;</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>K</mi></math></formula> be an arc of the unit circle <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula>,
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&psi;</mi><mo>&Element;</mo><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>M</mi><mo>&gt;</mo><mn>0</mn></mrow></math></formula>;
+find a function <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>&Element;</mo><msup><mi>H</mi> <mi>p</mi> </msup><mo>+</mo><msub><mi>R</mi> <mi>N</mi> </msub></mrow></math></formula> such that
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow><mo>&parallel;</mo><mi>g</mi><mo>-</mo><mi>&psi;</mi><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>T</mi><mo>&setminus;</mo><mi>K</mi><mo>)</mo></mrow></mrow> </msub><mo>&le;</mo><mi>M</mi></mrow></math></formula> and such that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>-</mo><mi>f</mi></mrow></math></formula>
+is of minimal norm in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>L</mi> <mi>p</mi> </msup><mrow><mo>(</mo><mi>K</mi><mo>)</mo></mrow></mrow></math></formula> under this constraint.</hi></p>
+<p>Problem (<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>P</mi></math></formula>) is an extension to the meromorphic case, and to incomplete data,
+of classical analytic extremal problems (obtained
+by setting <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>K</mi><mo>=</mo><mi>T</mi></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>N</mi><mo>=</mo><mn>0</mn></mrow></math></formula>), that generically go under the name
+<hi rend='it'>bounded extremal problems</hi>.
+These have been introduced and intensively studied by the Team,
+<cit><ref target='bid0'/></cit> and   <cit rend='foot'><ref target='bid1'/></cit>.</p>
+</div2>
+<div2 id-text='2' id='uid13'><head>Scalar rational approximation</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+<pers prenom='Reinhold' nom='Küstner'/>
+<pers prenom='Juliette' nom='Leblond'/>
+<pers prenom='Martine' nom='Olivi'/>
+<pers prenom='Edward' nom='Saff'/>
+<pers prenom='Herbert' nom='Stahl'/>
+<pers prenom='Franck' nom='Wielonsky'/>
+</participants>
+<keywords>
+<term>rational approximation</term>
+<term>critical point</term>
+<term>orthogonal polynomials</term>
+</keywords><p>etc.</p>
+<formula id-text='1' id='uid14' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><msub><mfenced separators='' open='&parallel;' close='&parallel;'><mi>f</mi><mo>-</mo><mfrac><msub><mi>p</mi> <mi>m</mi> </msub> <msub><mi>q</mi> <mi>n</mi> </msub></mfrac></mfenced> <mrow><msup><mi>L</mi> <mn>2</mn> </msup><mrow><mo>(</mo><mi>d</mi><mi>&mu;</mi><mo>)</mo></mrow></mrow> </msub></math></formula>
+<p noindent='true'>where, by definition,</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mrow><mo>&parallel;</mo><mi>g</mi><mo>&parallel;</mo></mrow> <mrow><msup><mi>L</mi> <mn>2</mn> </msup><mrow><mo>(</mo><mi>d</mi><mi>&mu;</mi><mo>)</mo></mrow></mrow> <mn>2</mn> </msubsup><mo>=</mo><mfrac><mn>1</mn> <mrow><mn>2</mn><mi>&pi;</mi></mrow></mfrac><msubsup><mo>&int;</mo> <mrow><mo>-</mo><mi>&pi;</mi></mrow> <mi>&pi;</mi> </msubsup><msup><mrow><mo>|</mo><mi>g</mi><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow><mo>|</mo></mrow> <mn>2</mn> </msup><mi>d</mi><mi>&mu;</mi><mrow><mo>(</mo><mi>&theta;</mi><mo>)</mo></mrow><mo>,</mo></mrow></math></formula>
+<p>etc</p>
+<p>If one introduces now as a new variable the rational matrix <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>R</mi></math></formula> defined by</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>R</mi><mo>=</mo><msup><mfenced separators='' open='(' close=')'><mtable><mtr><mtd><mi>L</mi></mtd><mtd><mi>H</mi></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><msub><mi>I</mi> <mi>m</mi> </msub></mtd></mtr></mtable></mfenced> <mrow><mo>-</mo><mn>1</mn></mrow> </msup></mrow></math></formula>
+<p noindent='true'>and if <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula> stands for the first block-row,
+normalizing the variance of the noise to be identity, the maximum likelihood
+estimator is asymptotically equivalent, when the sample size increases,
+to the minimization of</p>
+<formula id-text='2' id='uid15' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mrow><mo>&parallel;</mo><mi>T</mi><mo>&parallel;</mo></mrow> <mrow><mi>&Lambda;</mi></mrow> <mn>2</mn> </msubsup><mo>=</mo><mi>&#x1D413;&#x1D42B;</mi><mfenced separators='' open='&lbrace;' close='&rbrace;'><mfrac><mn>1</mn> <mrow><mn>2</mn><mi>&pi;</mi></mrow></mfrac><msubsup><mo>&int;</mo> <mrow><mn>0</mn></mrow> <mrow><mn>2</mn><mi>&pi;</mi></mrow> </msubsup><mi>T</mi><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>&Lambda;</mi><mrow><mo>(</mo><mi>&theta;</mi><mo>)</mo></mrow><mspace width='0.166667em'/><msup><mi>T</mi> <mo>*</mo> </msup><mrow><mo>(</mo><msup><mi>e</mi> <mrow><mi>i</mi><mi>&theta;</mi></mrow> </msup><mo>)</mo></mrow></mfenced><mo>,</mo></mrow></math></formula>
+<p noindent='true'>where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Lambda;</mi></math></formula> is the spectral measure of the process <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow><mo>(</mo><mi>y</mi><mspace width='3.33333pt'/><mi>u</mi><mo>)</mo></mrow> <mi>t</mi> </msup></math></formula>
+(which positive and matrix-valued)
+and where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&#x1D413;&#x1D42B;</mi></math></formula> indicates the trace.</p>
+</div2>
+<div2 id-text='3' id='uid16'><head>Continuous stabilization</head>
+<p>Stabilization by continuous state feedback etc</p>
+<div3 id-text='1' id='uid17'><head>Periodic stabilisation of non-linear systems.</head>
+<p>It is known that etc</p>
+</div3>
+<div3 id-text='2' id='uid18'><head>Control Lyapunov functions.</head>
+<p>Lyapunov functions are etc</p></div3></div2></module></fondements>
+<domaine id-text='domaine' id='uid19'>
+<module topic='1' html='module4' id-text='4' id='uid20'><head>(Sans Titre)</head>
+<p>The activity of the team focuses on two bottom lines, namely etc</p></module>
+<module topic='1' html='module5' id-text='5' id='uid21'><head>Geometric inverse problems
+for the Laplacian</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+</participants>
+<keywords>
+<term>inverse problem</term>
+<term>Laplace equation</term>
+<term>non destructive control</term>
+<term>tomography</term>
+</keywords><p>Localizing cracks, etc</p></module>
+<module topic='1' html='module6' id-text='6' id='uid22'><head>Identification and design of resonant systems</head>
+<keywords>
+<term>telecommunications</term>
+<term>multiplexing</term>
+<term>filtering device</term>
+<term>hyperfrequency</term>
+<term>surface waves</term>
+</keywords><p>Some text.
+</p></module>
+<module topic='1' html='module7' id-text='7' id='uid23'><head>mechanics</head>
+<p>etc</p></module>
+<module topic='2' html='module8' id-text='8' id='uid24'><head>Non-linear Optics</head>
+<p>etc</p></module>
+<module topic='1' html='module9' id-text='9' id='uid25'><head>Transformations and equivalence of non-linear systems</head>
+<participants><pers prenom='Laurent' nom='Baratchart'/>
+<pers prenom='Jean-Baptiste' nom='Pomet'/>
+<pers prenom='David' nom='Avanessoff'/>
+</participants>
+<keywords>
+<term>path planning</term>
+<term>mobile cybernetics</term>
+<term>identification</term>
+<term>(max,plus) algebra</term>
+</keywords><p>etc</p></module></domaine>
+<logiciels id-text='logiciels' id='uid26'>
+<module topic='1' html='module10' id-text='10' id='uid27'><head>The hyperion software</head>
+<participants><pers prenom='José' nom='Grimm'>manager</pers>
+<pers prenom='Fabien' nom='Seyfert'/>
+<pers prenom='Franck' nom='Wielonsky'/>
+</participants>
+<p>etc</p></module>
+<module topic='1' html='module11' id-text='11' id='uid28'><head>The Tralics software</head>
+<participant><pers prenom='José' nom='Grimm'>manager</pers>
+</participant>
+<p>etc. 
+</p></module>
+<module topic='1' html='module12' id-text='12' id='uid29'><head>The RARL2 software</head>
+<participant><pers prenom='Jean-Paul' nom='Marmorat'/>
+<pers prenom='Martine' nom='Olivi'>manager</pers>
+</participant>
+<p>RARL2 (Réalisation interne et Approximation Rationnelle L2) is a software for
+rational approximation (see module <ref target='uid12'/>). Its web
+page is
+<xref url='http://www-sop.inria.fr/miaou/RARL2/rarl2.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>RARL2/<allowbreak/>rarl2.<allowbreak/>html</xref>.
+</p></module>
+<module topic='1' html='module13' id-text='13' id='uid30'><head>The RGC software</head>
+<participants><pers prenom='Fabien' nom='Seyfert'/>
+<pers prenom='Jean-Paul' nom='Marmorat'/>
+</participants>
+<p>The RGC software etc</p></module>
+<module topic='1' html='module14' id-text='14' id='uid31'><head>PRESTO-HF</head>
+<participant><pers prenom='Fabien' nom='Seyfert'/>
+</participant>
+<p>PRESTO-HF: a toolbox dedicated to lowpass parameter identification for
+hyperfrequency filters
+<xref url='http://www-sop.inria.fr/miaou/Fabien.Seyfert/Presto_web_page/presto_pres.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>Fabien.<allowbreak/>Seyfert/<allowbreak/>Presto_web_page/<allowbreak/>presto_pres.<allowbreak/>html</xref>
+etc</p>
+</module></logiciels>
+<resultats id-text='resultats' id='uid32'>
+<module topic='1' html='module15' id-text='15' id='uid33'><head>Tralics: a Latex to XML Translator</head>
+<p>The main philosophy of Tralics is to have the same parser as <TeX/>, but the
+same semantics as <LaTeX/>. This means that commands like <hi rend='tt'>\chardef</hi>,
+<hi rend='tt'>\catcode</hi>, <hi rend='tt'>\ifx</hi>, <hi rend='tt'>\expandafter</hi>, <hi rend='tt'>\csname</hi>, etc.,
+that are not described in the <LaTeX/> book and not implemented in translators
+like latex2html, tth, hévéa, etc., are recognised by Tralics. This year we
+added constructions like <hi rend='tt'>\endlinechar</hi>, <hi rend='tt'>\read</hi>,
+<hi rend='tt'>\uppercase</hi>, <hi rend='tt'>\endinput</hi>, which are less used, and a bit tricky.
+Note that a construction like <hi rend='tt'>\ifdim\wd0&gt;<zws/>0pt\fi</hi> is recognised by the
+parser, but there is no way to change the size of the box number zero, so that
+the test is always false.</p>
+<p>For more information, see the
+<xref url='http://www-sop.inria.fr/miaou/tralics/'>Tralics web page</xref>.</p>
+<figure width='426.79134pt' file='xml-route' id-text='1' id='uid34' rend='figure'><head>A slide that explains how the raweb operates. Rectangular boxes contain
+tools, diamond-shape boxes are style sheets, and ellipses contain language
+names; the name XML is in a double ellipse, it is the central object. The
+Perl script that handles the math formulas is not shown here; it uses tools
+borrowed from latex2html.</head>
+</figure>
+</module>
+<module topic='1' html='module16' id-text='16' id='uid35'><head>Parametrizations of matrix-valued lossless functions</head>
+<p>etc</p></module>
+<module topic='1' html='module17' id-text='17' id='uid36'><head>The mathematics of Surface Acoustic Wave filters</head>
+<p>etc</p></module>
+<module topic='1' html='module18' id-text='18' id='uid37'><head>Scientific Committees</head>
+<p>L. Baratchart is member of the editorial board of <hi rend='it'>Computational
+Methods in Function Theory</hi>.</p>
+</module></resultats>
+<contrats id-text='contrats' id='uid38'>
+<module html='module19' id-text='19' id='uid39'><head>Contract ABCD-EFGH-INRIA</head>
+<p>Contract n<hi rend='sup'>o</hi> 1 03 E 2145</p>
+<p>In the framework of a contract that links ABCD, EFGH and Inria,
+whose objective is etcthe work of Inria has been</p>
+<list type='simple'>
+<item id-text='1' id='uid40'><p noindent='true'>etcsee module <ref target='uid12'/>,</p>
+</item>
+<item id-text='2' id='uid41'><p noindent='true'>etc(see module <ref target='uid35'/>),</p>
+</item>
+<item id-text='3' id='uid42'><p noindent='true'>modeling and etc, see module <ref target='uid12'/>.</p>
+</item></list>
+<p>In this contract, we promised version 1 of our software to both partners.
+This contract has been renewed in 2003.
+</p></module>
+<module html='module20' id-text='20' id='uid43'><head>Contract Company Somename (Cannes)</head>
+<p>Contract n<hi rend='sup'>o</hi> 1 01 E 0736.</p>
+<p>This contract started in 2001, for three years.
+The objective is etc</p></module>
+<module html='module21' id-text='21' id='uid44'><head>Contract OtherName</head>
+<p>Contract n<hi rend='sup'>o</hi> 1 02 E 0327.
+This was a one year contract, that ended formally in February, 2003.</p>
+<list type='description'><label>Subject.</label>
+<item id-text='1' id='uid45'><p noindent='true'>Objective was etc</p>
+</item><label>Outcome.</label>
+<item id-text='2' id='uid46'><p noindent='true'>We have contributed to etc</p>
+</item></list>
+</module></contrats>
+<international id-text='international' id='uid47'>
+<module html='module22' id-text='22' id='uid48'><head>National Actions</head>
+<p>Together with project-teams Caiman and Odyssée
+(INRIA-Sophia Antipolis, ENPC), the University of Nice (J.A. Dieudonné lab.),
+CEA, CNRS-LENA (Paris), and a few French hospitals, we are part of the
+national action <hi rend='bold'>ACI Masse de données « OBS-CERV »</hi>, 2003-2006 (inverse
+problems, EEG).</p>
+<p>The <hi rend='bold'>region PACA</hi> (Provence Alpes Côte d'Azur) is partially supporting
+the post-doctaral stay of Per Enquist until May, 2004. We also obtained a (modest) grant from
+the region for exchanges with SISSA Trieste (Italy), 2003-2004.</p>
+</module>
+<module html='module23' id-text='23' id='uid49'><head>Actions Funded by the EC</head>
+<p>The Team etcThe Team is member of the <hi rend='bold'>TMR network</hi>
+<hi rend='it'>European Research Network on System Identification</hi> (ERNSI), see
+<xref url='http://www.cwi.nl/~schuppen/ernsi/ernsihp.html'>http://<allowbreak/>www.<allowbreak/>cwi.<allowbreak/>nl/<allowbreak/>~schuppen/<allowbreak/>ernsi/<allowbreak/>ernsihp.<allowbreak/>html</xref>.
+This formally ended in February. A new proposal of a Research Training Network
+(RTN) has been submitted to the EC.
+<note id-text='1' id='uid50' place='foot'>URL: <xref url='http://graal.ens-lyon.fr/~desprez/OURAGAN/'>http://<allowbreak/>graal.<allowbreak/>ens-lyon.<allowbreak/>fr/<allowbreak/>~desprez/<allowbreak/>OURAGAN/</xref>.</note>.
+The team obtained a <hi rend='bold'>Marie Curie EIF</hi> (Intra European Fellowship)
+FP6-2002-Mobility-5-502062, for 24 months (2003-2005). This finances Mario
+Sigalotti's post-doc.</p>
+<p>The Team is a member of the <hi rend='bold'>Marie Curie multi-partner training site</hi>
+<hi rend='it'>Control Training Site</hi>, number HPMT-CT-2001-00278, 2001-2005. See
+<xref url='http://www.supelec.fr/lss/CTS/'>http://<allowbreak/>www.<allowbreak/>supelec.<allowbreak/>fr/<allowbreak/>lss/<allowbreak/>CTS/</xref>.</p>
+<p>The project is member of Working Group Control and System Theory
+of the <hi rend='bold'>ERCIM</hi> consortium, see
+<xref url='http://www.ladseb.pd.cnr.it/control/ercim/control.html'>http://<allowbreak/>www.<allowbreak/>ladseb.<allowbreak/>pd.<allowbreak/>cnr.<allowbreak/>it/<allowbreak/>control/<allowbreak/>ercim/<allowbreak/>control.<allowbreak/>html</xref>.
+</p></module>
+<module html='module24' id-text='24' id='uid51'><head>Extra-european International Actions</head>
+<p><hi rend='bold'>NATO CLG</hi> (Collaborative Linkage Grant), PST.CLG.979703,
+« Constructive approximation and inverse diffusion problems », with
+Vanderbilt Univ. (Nashville, USA) et le LAMSIN-ENIT (Tunis, Tu.), 2003-2005.
+</p></module>
+<module html='module25' id-text='25' id='uid52'><head>Exterior research visitors</head>
+<p>1=<ref target='uid14'/>, 2=<ref target='uid34'/>, 3=<ref target='uid10'/> 4=<ref target='uid11'/> 5=<ref target='uid12'/></p>
+<p>In addition to the “Scientific advisors” and to the “Visiting scientists”
+listed in section <ref target='uid1'/>,
+the following scientists visited us in 2003.</p>
+<list type='simple'>
+<item id-text='1' id='uid53'><p noindent='true'>Mohamed Jaoua (Lamsin-ENIT, Tunis).</p>
+</item>
+<item id-text='2' id='uid54'><p noindent='true'>Herbert Stahl (TU Berlin).</p>
+</item>
+<item id-text='3' id='uid55'><p noindent='true'>etc</p>
+</item></list>
+</module></international>
+<diffusion id-text='diffusion' id='uid56'>
+<module html='module26' id-text='26' id='uid57'><head>Teaching</head>
+<list type='description'><label>Courses</label>
+<item id-text='1' id='uid58'>
+<list type='simple'>
+<item id-text='1.1' id='uid59'><p noindent='true'>D. Avanessoff etc</p>
+</item>
+<item id-text='1.2' id='uid60'><p noindent='true'>L. Baratchart, etc</p>
+</item>
+<item id-text='1.3' id='uid61'><p noindent='true'>J. Leblond etc</p>
+</item></list>
+</item><label>Trainees</label>
+<item id-text='2' id='uid62'>
+<list type='simple'>
+<item id-text='2.1' id='uid63'><p noindent='true'>Antoine Chaillet, etc</p>
+</item></list>
+</item><label>Ph.D. Students</label>
+<item id-text='3' id='uid64'>
+<list type='simple'>
+<item id-text='3.1' id='uid65'><p noindent='true'>David Avanessoff, « Linéarisation etc »
+(dynamic linearization etc)</p>
+</item>
+<item id-text='3.2' id='uid66'><p noindent='true'>Fehmi Ben Hassen, &lt;&lt; Localisation etc &gt;&gt;,</p>
+</item>
+<item id-text='3.3' id='uid67'><p noindent='true'>Alex Bombrun, etc</p>
+</item></list>
+</item><label>Ph.D. thesis defended</label>
+<item id-text='4' id='uid68'>
+<list type='simple'>
+<item id-text='4.1' id='uid69'><p noindent='true'>Reinhold Küstner, etc</p>
+</item></list>
+</item></list>
+<p>L. Baratchart was (president|rapporteur|examinateur)<note id-text='2' id='uid70' place='foot'>Rayer les
+mentions inutiles</note>
+of the Thesis of X and Y
+and Z<note id-text='3' id='uid71' place='foot'>Remplacer les lettres par des noms</note>.</p>
+</module>
+<module html='module27' id-text='27' id='uid72'><head>Community service</head>
+<p>L. Baratchart is a member of the “bureau” of the CP
+(Comité des Projets) of INRIA-Sophia Antipolis.
+</p></module>
+<module html='module28' id-text='28' id='uid73'><head>Conferences and workshops</head>
+<list type='gloss'><head>Glossary</head><label>A</label><item><p>B</p>
+<p>C</p>
+</item><label>A1</label><item><p>B1</p>
+<p>C1</p>
+</item></list><p>Talks, courses, sessions, software demonstrations at the
+CNRS-INRIA summer school “Harmonic analysis and rational approximation: their
+rôles in signals, control and dynamical systems theory”,
+Porquerolles, september.
+<xref url='http://www-sop.inria.fr/miaou/Jose&amp;Grimm'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>anap03/<allowbreak/>index.<allowbreak/>en.<allowbreak/>html</xref></p>
+<p>J. Grimm gave a talk about Tralics at Eurotex 2003 (Brest)</p>
+<p>This is a refercite <cit><ref target='bid2'/></cit></p>
+<p>Math
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&alpha;</mi><mi>&beta;</mi><mi>&gamma;</mi><mi>&delta;</mi></mrow></math></formula></p>
+</module></diffusion><biblio>
+<citation from='refer' key='1' id='bid5' userid='cite:BO1' type='article'>
+<bauteurs><bpers prenom='L.' nom='Baratchart' prenomcomplet='L.'/><bpers prenom='M.' nom='Olivi' prenomcomplet='M.'/></bauteurs>
+<btitle>Critical points and error rank in best <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>H</mi> <mn>2</mn> </msup></math></formula> matrix rational approximation of fixed McMillan degree</btitle>
+<bjournal>Constructive Approximation</bjournal>
+<bvolume>14</bvolume>
+<byear>1998</byear>
+<bpages>273-300</bpages>
+</citation>
+<citation from='refer' key='2' id='bid2' userid='cite:lo' type='article'>
+<bauteurs><bpers prenom='J.' nom='Leblond' prenomcomplet='J.'/><bpers prenom='M.' nom='Olivi' prenomcomplet='M.'/></bauteurs>
+<btitle>Weighted <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>H</mi> <mn>2</mn> </msup></math></formula> approximation of transfer functions</btitle>
+<bjournal>Math. of Control, Signals &amp; Systems (MCSS)</bjournal>
+<bvolume>11</bvolume>
+<byear>1998</byear>
+<bpages>28-39</bpages>
+</citation>
+<citation from='year' key='3' id='bid0' userid='cite:blpprep' type='article'>
+<bauteurs><bpers prenom='L.' nom='Baratchart' prenomcomplet='L.'/><bpers prenom='J.' nom='Grimm' prenomcomplet='J.'/><bpers prenom='J.' nom='Leblond' prenomcomplet='J.'/><bpers prenom='J. R.' nom='Partington' prenomcomplet='J. R.'/></bauteurs>
+<btitle>Approximation and interpolation in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>H</mi> <mn>2</mn> </msup></math></formula>: Toeplitz operators, recovery problems and error bounds</btitle>
+<bjournal>Integral Equations and Operator Theory</bjournal>
+<bvolume>45</bvolume>
+<byear>2003</byear>
+<bpages>269–299</bpages>
+</citation>
+<citation from='year' key='4' id='bid3' userid='cite:tralics-eurotex' type='inproceedings'>
+<bauteurs><bpers prenom='J.' nom='Grimm' prenomcomplet='José'/></bauteurs>
+<btitle>Tralics, a <LaTeX/> to XML Translator</btitle>
+<bbooktitle>Proceedings of Eurotex</bbooktitle>
+<byear>2003</byear>
+</citation>
+<citation from='year' key='5' id='bid4' userid='cite:brevet' type='misc'>
+<bauteurs><bpers prenom='' nom='European patent No. 03292257.7-'/></bauteurs>
+<bhowpublished>European patent office</bhowpublished>
+<bmonth>September</bmonth>
+<byear>2003</byear>
+<bnote>Title: “wavelength converter”. Applicant/proprietor: Alcatel. Inventors: B. Lavigne, O. Leclerc, J.-P. Moncelet, A. Bombrun, F. Seyfert, J.-B. Pomet</bnote>
+</citation>
+<citation from='foot' key='6' id='bid1' userid='footcite:partII' type='article'>
+<bauteurs><bpers prenom='L.' nom='Baratchart' prenomcomplet='L.'/><bpers prenom='J.' nom='Leblond' prenomcomplet='J.'/></bauteurs>
+<btitle>Hardy approximation to <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>L</mi> <mi>p</mi> </msup></math></formula> functions on subsets of the circle with <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>&le;</mo><mi>p</mi><mo>&lt;</mo><mi>&infin;</mi></mrow></math></formula></btitle>
+<bjournal>Constructive Approximation</bjournal>
+<bvolume>14</bvolume>
+<byear>1998</byear>
+<bpages>41-56</bpages>
+</citation></biblio></raweb>

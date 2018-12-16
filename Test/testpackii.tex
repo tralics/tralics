@@ -1,0 +1,80 @@
+\documentclass{article}
+
+\long\def\testeq#1#2{\def\tmp{#2}\ifx#1\tmp\else \toks0={#1wantd: ->#2.}
+\typeout{\the\toks0}\show #1\uerror\fi}
+
+
+\usepackage{float,forloop}
+\begin{document}
+\section {A}
+Testing the float package
+
+\section {B}
+
+\makeatletter
+
+\floatstyle{ruled}
+\restylefloat{Figure}
+\expandafter\let\expandafter\endFigurE\csname endFigure*\endcsname
+\expandafter\let\expandafter\FigurE\csname Figure*\endcsname
+
+\testeq\fst@Figure{\fs@ruled} 
+\testeq\Figure{\@float{Figure}}
+\testeq\FigurE{\@dblfloat{Figure}}
+\ifx\endFigure\float@end\else\bad\fi
+\ifx\endFigurE\float@dblend\else\bad\fi
+\ifx\@float@c@Figure\float@caption\else\bad\fi
+\edef\foo{x\the\@float@every@Figure}\testeq\foo{x}
+\restylefloat*{Figure}
+\ifx\@float@c@Figure\@caption\else\bad\fi
+\floatname{Figure}{xfigure}\testeq\fname@Figure{xfigure}
+\floatplacement{Figure}{xyz}\testeq\fps@Figure{xyz}
+
+\newfloat{Table}{tbp}{lop}[section]
+\testeq\ext@Table{lop}
+\let\float@do=\relax
+\xdef\foo{\the\float@exts}\testeq\foo{\float@do{lop}}
+\floatname{Tablex}{tablex}
+\newfloat{Tablex}{tbp}{lop2}
+
+\xdef\foo{\the\float@exts}\testeq\foo{\float@do{lop}\float@do{lop2}}
+\floatevery{Table}{foo {\it xx}}
+\xdef\foo{\the\@float@every@Table}\testeq\foo{foo {\it xx}}
+\testeq\fps@Table{tbp}
+\testeq\fname@Table{Table}
+\testeq\fname@Tablex{tablex}
+\testeq\fnum@Table{\fname@Table{} \theTable}
+
+\testeq\Table{\@float{Table}}
+\ifx\endTable\float@end\else\bad\fi
+\testeq\ftype@Table{3}
+\testeq\ftype@Tablex{4}
+\testeq\ftype@Table{3}
+\testeq\ftype@Tablex{4}
+\testeq\theTablex{\arabic{Tablex}}
+\testeq\theTable{\thesection.\arabic{Table}}
+
+
+\begin{Table}Hey\caption{foo}\end{Table}
+\begin{Tablex}Hey\caption[bar]{foo}\end{Tablex}
+\begin{Table*}[hh]Hey\end{Table*}
+\begin{figure}\includegraphics{foo}\end{figure} 
+\begin{table}\includegraphics{foo}\end{table} 
+
+\listof{figure}{List of figures}
+\listof{Program}{List of Programs}
+
+
+\paragraph{forloop}
+\newcounter{foo}
+\forloop[2]{foo}{1}{\value{foo}<10} {+\thefoo}
+\forLoop[3]{2}{17}{foo}{=\thefoo}
+\forLoop[3]{2}{18}{foo}{=\thefoo}
+
+\bibliography{bo,bo,bi}
+\cite{OK}
+
+
+This is the end of the document
+
+\end{document}

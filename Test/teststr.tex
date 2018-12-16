@@ -1,0 +1,304 @@
+\documentclass{article}
+% Tralics configuration file 'test0.tcf'
+\usepackage{coolstr}
+\usepackage{coollist}
+\usepackage{csquotes}
+\usepackage[french,german,spanish,english]{datenumber}
+\usepackage{decimal}
+\usepackage[catperso,participant,moduleref]{ra}
+
+\begin{document}
+
+
+\ifstrleneq{abc}{3}{OK}{\bad}
+\ifstrleneq{abc}{4}{\bad}{OK}
+
+\newcounter{xx}
+\def\Strlen#1{\setcounter{xx}{-1}\strlenstore{#1}{xx}-\roman{xx}}
+\strlen{}\strlen{a}\strlen{ab}\strlen{abc}
+\Strlen{}\Strlen{a}\Strlen{ab}\Strlen{abc}
+\ifstrchareq{abc}{3}{c}{OK}{\bad}
+\ifstrchareq{abc}{3}{d}{\bad}{OK}
+\ifstrchareq{abc}{13}{d}{\bad}{OK}
+
+\strchar{ab}{3};\strchar{abc}{3};\strchar{abcd}{3}.
+
+\def\Substr#1#2#3{Substr, #1,#2, #3, \strlen{#1}: \substr{#1}{#2}{#3}}
+\Substr{12345}{1}{2}                  
+\Substr{12345}{3}{5}                  
+\Substr{12345}{3}{end}                        
+\Substr{12345}{3}{beg}                        
+\Substr{12345}{-2}{1}  
+\Substr{12345}{-1}{1}  
+\Substr{12345}{3}{-2} 
+\Substr{12345}{-2}{-2}       
+\Substr{12345}{0}{5}  (the null string) 
+\Substr{12345}{2}{0}  (the null string)
+\Substr{abcdefgh}{2}{3} 
+
+\newboolean{t}
+\def\Isdecimal#1#2{%
+Quantity #1 \isdecimal{#1}{#2}\ifthenelse{\boolean{#2}}{is}{is not} decimal\par}
+
+\Isdecimal{2.345}{t} 
+\Isdecimal{2.4.5}{t} 
+\Isdecimal{+-2.45}{t}
+\Isdecimal{+2.345}{t}
+\Isdecimal{-2.345}{t}
+\Isdecimal{2.345-}{t}
+\Isdecimal{2.4+4.5}{t}
+\Isdecimal{+4.}{t} 
+\Isdecimal{4.}{t} 
+\Isdecimal{+.7}{t}
+\Isdecimal{.3}{t} 
+\Isdecimal{4}{t} 
+\Isdecimal{123456}{t} 
+\Isdecimal{-12345}{t} 
+\Isdecimal{+12345}{t} 
+
+\def\Isnumeric#1#2{%
+Quantity #1 \isnumeric{#1}{#2}\ifthenelse{\boolean{#2}}{is}{is not} numeric\par}
+
+\Isnumeric{2.345}{t} 
+\Isnumeric{2.4.5}{t} 
+\Isnumeric{+-2.45}{t}
+\Isnumeric{+2.345}{t}
+\Isnumeric{-2.345}{t}
+\Isnumeric{2.345-}{t}
+\Isnumeric{2.4+4.5}{t}
+\Isnumeric{+4.}{t} 
+\Isnumeric{4.}{t} 
+\Isnumeric{+.7}{t}
+\Isnumeric{.3}{t} 
+\Isnumeric{4}{t} 
+\Isnumeric{123456}{t} 
+\Isnumeric{-12345}{t} 
+\Isnumeric{+12345}{t} 
+\Isnumeric{4.5}{t} 
+\Isnumeric{4.5e5}{t}
+\Isnumeric{+4.5e5}{t}
+\Isnumeric{4.5e+5}{t} 
+\Isnumeric{+4.5e+5}{t}
+\Isnumeric{4.5E5}{t} 
+\Isnumeric{-4.5E5}{t}
+\Isnumeric{4.5E-5}{t}
+\Isnumeric{-4.5E-5}{t}
+\Isnumeric{-4.5E-5.}{t}
+\Isnumeric{4.5.E-5}{t}
+\Isnumeric{abcdefg}{t}
+\Isnumeric{abcE-5}{t} 
+
+
+\def\Isint#1#2{%
+Quantity #1 \isint{#1}{#2}\ifthenelse{\boolean{#2}}{is}{is not} int\par}
+
+\Isint{2.345}{t} 
+\Isint{2.4.5}{t} 
+\Isint{+-2.45}{t}
+\Isint{+2.345}{t}
+\Isint{-2.345}{t}
+\Isint{2.345-}{t}
+\Isint{2.4+4.5}{t}
+\Isint{+4.}{t} 
+\Isint{4.}{t} 
+\Isint{+.7}{t}
+\Isint{.3}{t} 
+\Isint{4}{t} 
+\Isint{123456}{t} 
+\Isint{-12345}{t} 
+\Isint{+12345}{t} 
+\Isint{4.5}{t} 
+\Isint{4.5e5}{t}
+\Isint{+4.5e5}{t}
+\Isint{4.5e+5}{t} 
+\Isint{+4.5e+5}{t}
+\Isint{4.5E5}{t} 
+\Isint{-4.5E5}{t}
+\Isint{4.5E-5}{t}
+\Isint{-4.5E-5}{t}
+\Isint{4.5.E-5}{t}
+\Isint{abcdefg}{t}
+\Isint{abcE-5}{t} 
+
+\liststore{1,2,3,4}{temp}\tempi;\tempii;\tempiii;\tempiv.
+\liststore{1,23,,4}{temp}\tempi;\tempii;\tempiii;\tempiv.
+\listlenstore{xx}{1,2,3,4}Strlen \arabic{xx} should be 4
+\listlen{1,2,3,4,5,6}=6
+\listlen{11,,22,,3,4}=6
+\listval{1,,2,,3,4}{3}=2
+\listval{11,22,33,44}{3}=33
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\typeout{dates}
+
+\newcounter{dateone}\newcounter{datetwo}
+
+\def\daydifftoday#1#2#3{%
+  \setmydatenumber{dateone}{\the\year}{\the\month}{\the\day}%
+  \setmydatenumber{datetwo}{#1}{#2}{#3}%
+  \addtocounter{datetwo}{-\thedateone}%
+  \thedatetwo
+}
+
+
+\def\pnext{%
+\thedateyear/%
+\ifnum\value{datemonth}<10 0\fi
+\thedatemonth/%
+\ifnum\value{dateday}<10 0\fi
+\thedateday%
+\nextdate
+}
+\def\sd{%
+\ifcase\thedatedayname \or
+    Mon\or Tue\or Wed\or Thu\or
+    Fri\or Sat\or Sun\fi
+}%
+
+\def\cmdA{%
+\setdate{2001}{9}{29}
+\begin{tabular}{lll}
+\sd & \pnext & Abc\\
+\sd & \pnext & Def\\
+\sd & \pnext & Ghi\\
+\sd & \pnext & Jkl\\
+\end{tabular}}
+
+
+%Tests all months 
+
+\def\Line{\T{0}.\T{1} \T{2} \T{3} \T{4} \T{5} \T{6} \T{7}.\T{8}}
+
+\makeatletter
+\let\T\@daynamefrench\Line,
+\edef\tline{\Line}%
+\let\T\@daynamegerman\Line,
+\let\T\@daynameenglish\Line,
+\let\T\@daynamespanish\Line.
+\def\foo{.Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche.}
+\ifx\foo\tline\else\bad\fi
+
+\def\Line{\T{0}.\T{1} \T{2} \T{3} \T{4} \T{5} \T{6} \T{7} \T{8} %
+\T{9} \T{10} \T{11} \T{12}.\T{13}}
+\let\T\@monthnamefrench\Line,
+%\edef\tline{\Line}%
+\let\T\@monthnamegerman\Line,
+\let\T\@monthnameenglish\Line,
+\let\T\@monthnamespanish\Line.
+
+\day=25 \year=2008 \month=3
+\setdatetoday
+\addtocounter{datenumber}{5}
+\setdatebynumber{\thedatenumber}
+\nextdate\nextdate\nextdate\nextdate\nextdate
+In 10 days is  \datedate
+\prevdate\prevdate\prevdate\prevdate\prevdate
+\addtocounter{datenumber}{-5}
+\setdatebynumber{\thedatenumber}
+Today is \datedate.
+
+\setdatenumber{2008}{3}{25}.%
+\dateselectlanguage{french}%
+Today is  \datedayname\space \datedate.
+\dateselectlanguage{german}%
+Today is  \datedayname\space \datedate.
+\dateselectlanguage{spanish}%
+Today is  \datedayname\space \datedate.
+\dateselectlanguage{USenglish}%
+Today is  \datedayname\space \datedate.
+\dateselectlanguage{english}%
+Today is  \datedayname\space \datedate.
+
+
+
+\setdatetoday
+\datedayname
+
+$\left(  1.25 >0\.\right. \hbox{text\.s.}$
+
+
+\makeatletter
+\edef\foo{\tralics@find@config{foo}}
+\def\xfoo{A1=B1,C1=C1,X1=x1,Other=Other}
+\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@find@config{Bar}}
+\def\xfoo{1=2,u=v,3= 3 /4 ,4=5,x=x}
+\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@find@config{Gee++}}\ifx\foo\empty \else \bad\fi
+\edef\foo{\tralics@find@config{Gee}}
+\def\xfoo{+x=y}\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@find@config{catperso}}
+\def\xfoo{AA=BB,CC=CC,XX=xx,Other=Other}
+\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@get@config{foo}{A1}}
+\def\xfoo{B1}\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@get@config{foo}{C1}}
+\def\xfoo{C1}\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@get@config{catperso}{CC}}
+\def\xfoo{CC}\ifx\xfoo\foo \else \bad \show\foo\fi
+\edef\foo{\tralics@get@config{ceatperso}{DD}}
+\edef\foo{\tralics@get@config{catperso}{DD}}
+
+
+\begin{catperso}{AA}\end{catperso}
+\begin{catperso}{CC}\end{catperso}
+\begin{catperso}{XX}\end{catperso}
+\begin{catperso}{TT}\end{catperso}
+
+\def\X{\pers{a}{b}} \def\Y{\pers{c}{d}}
+\begin{participant} \X\Y \end{participant}
+\begin{participante} \X\Y \end{participante}
+\begin{participants} \X\Y \end{participants}
+\begin{participantes} \X\Y \end{participantes}
+
+\let\pers\persB 
+\pers {Jean B}{Dupond}[Lyon]{these}{Dec}[Ok][not yet]
+\pers {Jean A}{Dupond}[Sophia]{Chercheur}{CNRS}[Ok][not yet]
+\pers {Jean B}{Dupond}[+Lyon]{Ingenieur}{INRIA}[Ok][not yet]
+\pers {Jean C}{Dupond}[=Paris]{Other}{IBM}[Ok]
+\pers {Jean D}{Dupond}{Enseignant}{Other}[Ok][not yet]
+
+\tralics@get@config{ur}{Paris}
+\edef\foo{\tralics@get@config{ur}{Sophia}}
+\def\xfoo{Sophia}\ifx\foo\xfoo\else \error\fi
+\tralics@get@config{ur}{rennes}
+
+\setbox0=\hbox{\tralics@interpret@rc{\URParis\URSophia}}\box0
+\setbox0=\hbox{\tralics@interpret@rc{Paris Sophia}}\box0
+\setbox0=\hbox{\tralics@interpret@rc{Lille}}\box0
+
+\ChangeElementName{rclist}{RC}
+\ChangeElementName{rcval}{+RC}
+\setbox0=\hbox{\tralics@interpret@rc{Paris Sophia}}\box0
+\ChangeElementName{rcval}{rc}
+\setbox0=\hbox{\tralics@interpret@rc{Paris Sophia}}\box0
+\begin{module}{domaine}{panorama}{Panorama 2} Module1\end{module}
+\begin{module}{}{telecom}{Panorama 2} Module2\end{module}
+\ChangeElementName{rasection}{Section}
+\begin{module}{logiciels}{logi1}{Titre 3} Module3\end{module}
+\begin{module}{}{logi2}{Titre 4}\label{section:foo} Module4\end{module}
+
+\moduleref{a}{b}{panorama}
+\moduleref{}{}{telecom}
+\moduleref{}{}{logi1}
+\moduleref{}{}{logi2}
+\moduleref{a}{foo}{}
+\moduleref[]{a}{foo}{}
+\moduleref[2008]{a}{foo}{}
+\moduleref[2005]{a}{foo}{}
+
+% This is new moduleref
+
+\def\moduleref#1#2#3{\ref{mod:#3}}
+\moduleref{}{}{panorama}
+\moduleref{}{}{telecom}
+\moduleref{}{}{logi1}
+\moduleref{}{}{logi2}
+
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+
+%%% End: 

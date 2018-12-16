@@ -1,0 +1,156 @@
+## Configuration for the RR (Research Report of Inria) for Tralics
+## Copyright Inria/apics 2004,2006
+## This file is part of Tralics.
+## tralics ident rc=tralics RR gescap $Revision: 2.2 $
+#$Id: gescap.tcf,v 2.2 2006/10/09 16:15:58 grimm Exp $
+
+##Type = "RR"    # use the type defined in this file.
+
+##BeginType RR
+# This will gererate: <!DOCTYPE ficheRR SYSTEM 'ficherr.dtd'>
+
+  DocType = ficheRR ficherr.dtd
+
+# Instead of defining a lot of commands, we just input two files
+BeginCommands
+  \let\RRstyisuseful\relax  % black magic
+  \makeatletter
+  \@nomathml=-1 % more magic
+\catcode`\,13 
+\def\actcomma{ / }
+\def\authcomma{ ; }
+\def,{{\char`\,}}
+
+% Un hook pour pour \motcle{x,y} donne X/Y
+% Idem pour \RRmotcle \RRkeyword \keyword
+\def\motcle@hook{\bgroup\let,\actcomma\motclehook}
+\def\motclehook#1{\uppercase{#1}\egroup}
+\let\RRmotcle@hook\motcle@hook
+\let\RRkeyword@hook\motcle@hook
+\let\keyword@hook\motcle@hook
+
+% Un hook pour que \RRauthor{x,y} donne x;y
+\def\RRauthor@hook{\bgroup\let,\authcomma\xauthor@hook}
+\def\xauthor@hook#1{#1\egroup}
+
+%% Commandes definies par le style RR
+\renewcommand\thanks[2][!]{}
+\newcommand\thanksref[1]{}% \define{foo} definit \foo comme foo.
+\def\define#1{\expandafter\def\csname#1\endcsname{#1}}
+
+% \define{foo} definit \foo comme \foo.
+\def\mdefine#1{\expandafter\def\csname#1\endcsname{\char`\\#1 }}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcounter{secnumdepth}
+\newcounter{tocdepth}
+\newlength\topmargin
+\newlength\oddsidemargin
+\newlength\evensidemargin
+\newlength\headheight
+\newlength\headrulewidth
+\newlength\footrulewidth
+
+\newskip\footskip
+\def\DeclareGraphicsRule#1#2#3#4{}
+\newcommand\footnotetext[2][x]{}
+\def\footnotemark[#1]{}
+\def\titlehead#1{}
+\def\authorhead#1{}
+
+\def\and{ \xmlelt{and}{}  }
+\def\RRnote#1{}
+
+\def\graphicspath#1{}
+\def\arraystretch{1}
+
+\let\onehalfspacing\relax
+\def\labelitemi{}
+\def\geometry#1{}
+\def\leftmark{}
+\def\rightmark{}
+\makeatother
+EndCommands
+
+# The purpose of the file is to produce <fiche> element
+# from \makeRR or \makeRT
+BeginTitlePage
+  \makeRR <fiche> "" "type = 'RR' special='only title page'"
+  alias \makeRT "" "type = 'RT' special='only title page' "
+
+# There are 6 commands \UR?? that can be used
+# the result if put in the <UR> element
+  <UR> -
+  \URSophia ?+<UR>
+  \URRocquencourt ?+<UR>
+  alias \URRocq  # \URRocq is an alias for \URRocquencourt
+  \URRhoneAlpes ?+<UR>
+  \URRennes ?+<UR>
+  \URLorraine ?+<UR>
+  \URFuturs ?+<UR>
+
+# There are 5 commands \TH?? that can be used 
+# the result is put in the <Theme> element
+  <Theme> -
+  \THNum ?+<Theme>
+  \THCog ?+<Theme>
+  \THCom ?+<Theme>
+  \THBio ?+<Theme>
+  \THSym ?+<Theme>
+
+# This line is special: you should say \RRTheme{???}
+# where ??? is replaced by one of the \TH?? commands
+  \RRtheme <>  +"pas de theme"
+
+# French and english title. The q means: \\ is equivalent to space
+  \RRtitle q<title> "pas de titre"
+  \RRetitle q<etitle>  "no title"
+
+# French and Englishk keywords, with an alternate name
+  \motcle <motcle> "pas de motcle"
+  alias \RRmotcle
+  \keyword <keyword>  "no keywords"
+  alias \RRkeyword
+
+# French and English abstracts.  Paragraphs are allowed.
+  \RRresume p<resume> "pas de resume"
+  \RRabstract p<abstract> "no abstract"
+
+# Autor and date
+  \RRauthor  q<author>  "Pas d'auteurs"
+  \RRdate <date> "pas de date"
+# The team
+  \RRprojet <projet> "pas de projet"
+  alias \RRprojets
+
+# Is this useful ? No number should be given at this stage
+  \RRNo <RRnumber> "????"
+
+# This could be useful: name of guy to contact in case of trouble.
+#  \RRcontact <Contact> "personne"
+End
+
+  use_font_elt = "true"
+  xml_font_small = ""
+  xml_font_small1 = ""
+  xml_font_small2 = ""
+  xml_font_small3 = ""
+  xml_font_small4 = ""
+  xml_font_large = ""
+  xml_font_large1 = ""
+  xml_font_large2 = ""
+  xml_font_large3 = ""
+  xml_font_large4 = ""
+  xml_font_large5 = ""
+  xml_font_normalsize = ""
+  xml_font_upright = ""
+  xml_font_medium = ""
+  xml_font_roman = ""
+  xml_font_it = ""
+  xml_font_slanted = ""
+  xml_font_sc = ""
+  xml_font_tt = ""
+  xml_font_sansserif = ""
+  xml_font_bold = ""
+
+##EndType

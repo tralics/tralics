@@ -1,0 +1,279 @@
+%%  -*- latex -*-
+
+% This file is part of Tralics
+%% copyright (C) INRIA/apics (Jose' Grimm) 2008
+
+\ProvidesClass{amsart}[2008/09/17 v1.1 Ams article class for tralics] 
+
+\DeclareOption{a4paper}{}
+\DeclareOption{letterpaper}{}
+\DeclareOption{landscape}{}
+\DeclareOption{portrait}{}
+\DeclareOption{oneside}{}
+\DeclareOption{twoside}{}
+\DeclareOption{draft}{}
+\DeclareOption{final}{}
+\DeclareOption{e-only}{}
+\DeclareOption{titlepage}{}
+\DeclareOption{notitlepage}{}
+\DeclareOption{onecolumn}{}
+\DeclareOption{twocolumn}{}
+\DeclareOption{nomath}{}
+\DeclareOption{noamsfonts}{}
+\DeclareOption{psamsfonts}{}
+\DeclareOption{leqno}{\PassOptionsToPackage{leqno}{amsmath}}
+\DeclareOption{reqno}{\PassOptionsToPackage{reqno}{amsmath}}
+\DeclareOption{centertags}{}
+\DeclareOption{tbtags}{}
+\DeclareOption{fleqn}{}
+\DeclareOption{10pt}{}
+\DeclareOption{11pt}{}
+\DeclareOption{12pt}{}
+\DeclareOption{8pt}{}
+\DeclareOption{9pt}{}
+\DeclareOption{makeidx}{}
+
+\ExecuteOptions{leqno,centertags,letterpaper,portrait,%
+  10pt,twoside,onecolumn,final}
+\ProcessOptions\relax
+
+\renewcommand\thepart          {\arabic{part}}
+\renewcommand\thesection       {\arabic{section}}
+\renewcommand\thesubsection    {\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection {\thesubsection .\arabic{subsubsection}}
+\renewcommand\theparagraph     {\thesubsubsection.\arabic{paragraph}}
+\renewcommand\thesubparagraph  {\theparagraph.\arabic{subparagraph}}
+
+
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+
+\def\nopunct{\spacefactor 1007 }
+\def\frenchspacing{}
+
+%%% Special ams switches 
+\def\@True{00}
+\def\@False{01}
+\newcommand\newswitch[2][False]{%
+  \expandafter\@ifdefinable\csname ?@#2\endcsname{%
+    \global\expandafter\let\csname ?@#2\expandafter\endcsname
+      \csname @#1\endcsname
+  }%
+}
+\newcommand{\setFalse}[1]{%
+  \expandafter\let\csname ?@#1\endcsname\@False}
+\newcommand{\setTrue}[1]{%
+  \expandafter\let\csname ?@#1\endcsname\@True}
+
+%% You can say \except{toc}{\linebreak} or \for{5ed}{\linebreak}
+\DeclareRobustCommand{\except}[1]{%
+  \if\csname ?@#1\endcsname \expandafter\@gobble
+  \else \expandafter\@firstofone
+  \fi}
+
+\DeclareRobustCommand{\for}[1]{%
+  \if\csname ?@#1\endcsname \expandafter\@firstofone
+  \else \expandafter\@gobble
+  \fi
+}
+%% The empty switch is by default false;
+\newswitch{}
+
+%    The \cn{forany} command needs to run through a comma-separated list
+%    of switch names and print its second argument if any of the
+%    switches are true.
+\DeclareRobustCommand{\forany}[1]{%
+  \csname for@any@01\endcsname#1,?,\@nil
+}
+\@namedef{for@any@\@False}#1,{%
+  \csname for@any@%
+    \csname ?@\zap@space#1 \@empty\endcsname
+  \endcsname
+}
+\@namedef{for@any@\@True}#1\@nil#2{#2}% found true, evaluate what follows \@nil
+\@namedef{?@?}{x}
+%% note that \@car \A\B\@nil\D expands to \A\D, 
+\def\for@any@x{\@car\@gobble} 
+
+\newswitch{runhead}
+\newswitch{toc}
+\newswitch{lof}
+\newswitch{lot}
+
+
+\newcommand{\smaller}[1][1]{\larger[-#1]}
+\newcommand{\larger}[1][1]{%
+  \count@\@xfontsize \advance\count@#1\relax
+  \@xfontsize \count@}
+
+\let\@xp=\expandafter
+\let\@nx=\noexpand
+\newtoks\@emptytoks
+\providecommand{\Mc}{Mc}
+
+
+\renewcommand{\today}{%
+  \relax\ifcase\month\or
+  January\or February\or March\or April\or May\or June\or
+  July\or August\or September\or October\or November\or December\fi
+  \space\number\day, \number\year}
+
+
+\let\@dateposted\@empty
+\let\shortauthors\@empty   
+\let\authors\@empty
+\let\contribs\@empty  
+\let\xcontribs\@empty  
+\let\@translators\@empty
+\let\addresses\@empty
+\let\thankses\@empty
+\let\@commby\@empty
+\let\@keywords=\@empty
+\let\@subjclass=\@empty
+\let\@dedicatory=\@empty
+\let\@date\@empty
+
+
+\def\dateposted#1{\def\@dateposted{\xbox{dateposted}{#1}}}
+\def\commby#1{\def\@commby{\xbox{communicated-by}{#1}\@addnl}}
+\def\translator#1{\g@addto@macro\@translators{\xbox{translator}{#1}}}
+\newcommand*{\title}[2][\@dblarg]{\gdef\shorttitle{#1}\gdef\@title{#2}}
+\newcommand{\address}[2][]{\g@addto@macro\addresses{\address{#1}{#2}}}
+\newcommand{\curraddr}[2][]{\g@addto@macro\addresses{\curraddr{#1}{#2}}}
+\newcommand{\email}[2][]{\g@addto@macro\addresses{\email{#1}{#2}}}
+\newcommand{\urladdr}[2][]{\g@addto@macro\addresses{\urladdr{#1}{#2}}}
+\renewcommand{\thanks}[1]{\g@addto@macro\thankses{\xbox{thanks}{#1}}}
+\def\keywords#1{\def\@keywords{\xbox{keywords}{#1}\@addnl}}
+\def\dedicatory#1{\def\@dedicatory{\xbox{dedicatory}{#1}\@addnl}}
+\def\date#1{\def\@date{\xbox{date}{#1}\@addnl}}
+
+\newcommand{\author}[2][\@dblarg]{%
+  \unless\ifx\@empty\authors % After the first author
+     \g@addto@macro\addresses{\@addnl\xbox{Next}{}}
+  \fi
+  \g@addto@macro\authors{\xbox{author}{#2}\@addnl}%
+  \@ifnotempty{#1}{\g@addto@macro\shortauthors{\xbox{shortauthor}{#1}}}}
+
+%% optional arg introduces a new contribution group 
+\newcommand\contrib[2][]{%
+  \def\@tempa{#1}%
+  \unless\ifx\@empty\@tempa
+    \unless\ifx\@empty\contribs\@xcontribs\fi
+    \gdef\@contribhead{#1}
+  \fi
+  \g@addto@macro\contribs{\xbox{contrib}{#2}}%
+}
+
+\def\@contribhead{}
+
+\def\@xcontribs{%
+  \xdef\xcontribs{\xcontribs \xbox{contribs}{\xbox{head}{\@contribhead}\contribs}\@addnl}%
+  \let\contribs\@empty
+}
+
+
+\def\@set@address#1#2{%
+  \xbox{address}{\@ifnotempty{#1}{\XMLaddatt{name}{#1}}#2}}%
+\def\@set@curaddr#1#2{%
+  \xbox{curaddr}{\@ifnotempty{#1}{\XMLaddatt{name}{#1}}#2}}%
+\def\@set@email#1#2{%
+  \xbox{email}{\@ifnotempty{#1}{\XMLaddatt{name}{#1}}#2}}%
+\def\@set@url#1#2{%
+  \xbox{url}{\@ifnotempty{#1}{\XMLaddatt{name}{#1}}\def~{\char`\~}#2}}%
+
+\@namedef{subjclassname@2000}{2000}
+\@namedef{subjclassname@1991}{1991}
+\newcommand*\subjclass[2][1991]{%
+  \@ifundefined{subjclassname@#1}
+  {\def\@subjclass{\xbox{subjclass}{\XMLaddatt{class}{1991}#2}\@addnl}}
+  {\def\@subjclass{\xbox{subjclass}{\XMLaddatt{class}{#1}#2}\@addnl}}}
+
+
+
+
+\def\maketitle{
+  \xbox{Metadata}{\@addnl
+    \def\\{ \ignorespaces}%
+    \xbox{shortitle}{\shorttitle}\@addnl
+    \xbox{shortauthors}{\shortauthors}\@addnl
+    \xbox{title}{\@title}\@addnl
+    \xbox{authors}{\let\thanks\@gobble \authors}%
+    \unless\ifx\contribs\@empty\@xcontribs\fi
+    \xcontribs
+    \@commby
+    \ifx\@empty\@translators \else\xbox{translators}{\@translators}\@addnl\fi
+    \xbox{addresses}{%
+      \def\\{\unskip, \ignorespaces}%
+      \let\address\@set@address
+      \let\curraddr\@set@curaddr
+      \let\email\@set@email
+      \let\urladdr\@set@url
+      \addresses
+    }
+    \@dedicatory
+    \thankses
+    \@date
+    \@subjclass
+    \@keywords}
+    \box\abstractbox}
+
+
+
+\def\issueinfo#1#2#3#4{}
+\newcommand{\copyrightinfo}[2]{}
+\newcommand{\revertcopyright}{}
+
+
+\newbox\abstractbox
+\newenvironment{abstract}%
+{\begin{xmlelement*}{abstract}\leavevmode\XMLaddatt{class}{start-abstract}%
+}
+{\end{xmlelement*}\global\setbox\abstractbox=\lastbox}
+
+
+\renewenvironment{verse}{%
+  \list{}{\XMLaddatt*{type}{verse}}\item[]}{\endlist}
+
+
+
+
+\let\upn=\textup
+\let\specialsection\section  % OK ?
+\def\appendix{\chapter{appendix}}
+
+\newcommand\MR[1]{MR~#1}
+\let\URL\url
+
+%% not good
+\DeclareRobustCommand\textprime{'}
+
+
+\def\textsquare{\ensuremath{\Box}}
+\newcommand{\openbox}{\textsquare}
+\providecommand{\qedsymbol}{\textsquare}
+
+\newenvironment{proof}[1][\proofname]%
+{\begin{xmlelement*}{proof}}{\end{xmlelement*}}
+
+\def\labelenumi{(\theenumi)}
+\def\labelenumii{(\theenumii)}
+\def\labelenumiii{(\theenumiii)}
+\def\labelenumiv{(\theenumiv)}
+\def\labelenumv{(\theenumv)}
+\def\labelenumvi{(\theenumvi)}
+\def\labelenumvii{(\theenumvii)}
+\def\labelenumviii{(\theenumviii)}
+\def\labelenumix{(\theenumix)}
+\def\labelenumx{(\theenumx)}
+\def\theenumi{\@arabic\c@enumi}
+\def\theenumii{\@alph\c@enumii}
+\def\theenumiii{\@roman\c@enumiii}
+\def\p@enumii{\theenumi}
+\def\p@enumiii{\theenumi(\theenumii)}
+\def\p@enumiv{\p@enumiii\theenumiii}
+
+\let\cdotp \cdot
+
+\endinput
+%%
+%% End of file `amsart.cls'.

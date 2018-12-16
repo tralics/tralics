@@ -1,0 +1,18 @@
+xml_pack_font_att = "true"
+
+catperso_vals="AA/BB/CC//XX/xx"
+Bar_vals="d1d/d2d/d3/3/4/5"
+Bar_vals="/1/2/ u / v /3/ \ 3 \/4\  /4/5"
+Bar_vals="+/x"
+Gee_vals="++x/y"
+foo_vals="A1/B1/C1/ /X1/x1"
+
+affiliation_vals ="INRIA/inria/CNRS/cnrs/IBM/ibm"
+profession_vals = "Ingenieur/Engineer/Chercheur/Research/Enseignant/Teaching/"
+ur_vals = "Paris//Sophia/Sophia Antipolis/Rennes//";	
+ur_vals = "+/Sop/Sophia Antipolis/";	
+  fullsection_vals = "/composition/Team/presentation/Overall Objectives/\
+     fondements/Scientific Foundations/domaine/Application Domains/\
+     logiciels/Software/resultats/New Results/\
+     contrats/Contracts and Grants with Industry/\
+     international/Other Grants and Activities/diffusion/Dissemination"

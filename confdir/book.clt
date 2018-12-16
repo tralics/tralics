@@ -1,0 +1,46 @@
+%%  -*- latex -*- 
+
+% This file is part of Tralics
+% copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007, 2008
+
+% It may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%    http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX 
+% version 2003/12/01 or later.
+%% $Id: book.clt,v 2.5 2011/05/10 07:21:34 grimm Exp $
+
+%% This file contains little code, but explains all the commands 
+%% defined in book.cls (and article.cls, or report.cls, if pertinent) 
+
+
+\ProvidesClass{book}[2011/05/09 v1.2 book document class for Tralics]
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+
+\InputClass{std}
+\newif\if@mainmatter \@mainmattertrue
+
+\@openrighttrue
+\@titlepagefalse
+
+\ExecuteOptions{letterpaper,10pt,twoside,onecolumn,final,openright}
+\ProcessOptions
+
+\toplevelsection{\part}
+\newcommand\appendix{\par
+  \setcounter{chapter}{0}%
+  \setcounter{section}{0}%
+  \gdef\@chapapp{\appendixname}%
+  \gdef\thechapter{\@Alph\c@chapter}}
+
+%\let\appendix\relax
+
+\renewcommand \thepart {\@Roman\c@part}
+\renewcommand \thechapter {\@arabic\c@chapter}
+\renewcommand \thesection {\thechapter.\@arabic\c@section}
+\renewcommand\thesubsection   {\thesection.\@arabic\c@subsection}
+\renewcommand\thesubsubsection{\thesubsection .\@arabic\c@subsubsection}
+\renewcommand\theparagraph    {\thesubsubsection.\@arabic\c@paragraph}
+\renewcommand\thesubparagraph {\theparagraph.\@arabic\c@subparagraph}

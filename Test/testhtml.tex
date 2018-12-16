@@ -1,0 +1,530 @@
+\documentclass{article}
+% Tralics configuration file 'test0.tcf'
+\usepackage{html,keyval,abstract,bbding,checkend,comma,remreset}
+\usepackage{nopageno}
+\usepackage{tipx}
+
+\listfiles
+\begin{document}
+
+\ifx\tralicsversion\undefined
+\excludecomment{rawxml}
+\excludecomment{xmlonly}
+\excludecomment{LaTeXonly}
+\fi
+
+\begin{abstract}
+This file tests  the html package.
+
+It also tests abstract and keyval
+\end{abstract}
+\anchor\label{foo}
+
+Some font tests
+
+{\usefont{T1}{phv}{bx}{it} B
+ \fontseries{sb} C \selectfont D 
+ \fontshape{sc}\selectfont E 
+ \fontfamily{cmtt}\fontencoding{OT1}\selectfont E }
+
+\makeatletter
+xx\fontsize\@xpt\@xiipt xx
+\makeatother
+\input{dummy.txt}
+
+%Check \in@
+\makeatletter 
+\def\Tin#1#2#3#4{\in@{#1}{#2}\ifin@#3\else #4\fi}
+\makeatother
+\Tin4{12345}{}{\bad}
+\Tin6{12345}{\bad}{}
+\Tin{12}{1x2x3x4x5x12}{}{\bad}
+\Tin{123}{1x121221\bad2121121212121212x4x1235x\bad12}{}{\bad}
+\Tin{123}{1x1212212121121212121212x4x125x12}{\bad}{}
+\Tin{1B3}{1x1B1BB1B1B11B1B1B1B1B1Bx4x1B3{}5x1B}{}{\bad}
+\Tin{1B 3}{1x1B 1B B 1B 1B 11B 1B 1B 1B 1B 1B x4x1B 35x1B}{}{\bad}
+
+
+This is piece of code that comes from torture
+\def\ok{4} \leavevmode
+\begin{rawxml}
+&#x31;
+\end{rawxml}
+\begin{latexonly}\def\ok{2}\ok\end{latexonly}
+\begin{htmlonly}
+\def\ok{ ?
+\end{htmlonly}
+\begin{comment}
+\def\ok{ ?
+\end{comment}
+\begin{rawhtml}
+<p>\def\ok{ ?</p>
+\end{rawhtml}
+\begin{LaTeXonly}
+\def\ok{ ?
+\end{LaTeXonly}
+\begin{xmlonly}\def\ok{3}\ok\end{xmlonly}
+\ok
+
+
+
+\htmladdnormallink{foo}{url/bar_x}
+\htmladdnormallinkfoot{foo}{url/bar_x}
+\href{url/bar_x}{foo}
+
+\htmlrule \htmlrule* \htmlrule[\bad] \htmlrule*[\bad]
+\bodytext{\bad}\htmlbody
+\htmlbody[\bad] 
+
+\hyperref{\bad}{A}{B}{foo}
+\hyperref[ref]{\bad}{A}{B}{foo}
+\hyperref[pageref]{\bad}{A}{B}{foo}
+\hyperref[page]{\bad}{A}{B}{foo}
+\hyperref[noref]{\bad}{A}{B}
+\hyperref[no]{\bad}{A}{B}
+\hyperref[hyper]{\bad}{A}{B}{foo}
+\hyperref[html]{\bad}{A}{B}{foo}
+
+\hypercite{\bad}{B}{}{texbook}
+\hypercite{\bad}{B}{p 100}{texbook}
+\hypercite[int]{\bad}{B}{p101}{texbook}
+\hypercite[cite]{\bad}{B}{p102}{texbook}
+\hypercite[ext]{\bad}{B}{place99}
+\hypercite[nocite]{\bad}{B}[]{CGR2000}
+\hypercite[no]{\bad}{B}[C]{louarn88}
+
+\begin{tex2html_deferred}
+\begin{makeimage}
+\htmlref{a}{\bad}
+\htmlref[b]{a}{\bad}
+\htmlref[b]{a}[\bad]{\bad}
+\htmlcite{a}{texbook}
+\htmlcite[b]{a}{\bad}
+\htmlcite[b]{a}[\bad]{\bad}
+\htmlimage{\bad}\htmlimage[\bad]{\bad}
+\htmlborder{\bad}\htmlborder[\bad]{\bad}
+\html{\bad}
+\end{makeimage}
+\end{tex2html_deferred}
+
+\htmladdtonavigation{\bad}
+\latex{yeah}\latexhtml{ok}{\bad}
+\htmltracing\bad\htmltracenv\bad\strikeout\bad
+\htmlurl{Some url}
+\HTMLcode{\bad}\HTMLcode[\bad]{\bad}
+\HTML{\bad}\HTML[\bad]{\bad}
+\HTMLset{\bad}{\bad}\HTMLset[\bad]{\bad}{\bad}
+\htmlhead{\bad}{\bad}\htmlhead[\bad]{\bad}{\bad}
+\HTMLsetenv{\bad}{\bad}\HTMLsetenv[\bad]{\bad}{\bad}
+\internal{\bad}\internal[\bad]{\bad}
+\htmlnohead
+\htmlbase{\bad}
+\htmlsetstyle{\bad}{\bad}\htmlsetstyle[\bad]{\bad}{\bad}
+\htmladdtostyle{\bad}{\bad}\htmladdtostyle[\bad]{\bad}{\bad}
+\htmllanguagestyle{\bad}\htmllanguagestyle[\bad]{\bad}
+\startdocument
+\tableofchildlinks \tableofchildlinks*\tableofchildlinks[x]
+\tableofchildlinks*[x] 
+\htmlinfo\htmlinfo* \htmlinfo[x] \htmlinfo*[x]
+
+\setcounter{part}{0}
+\setcounter{chapter}{0}
+\setcounter{lpart}{0}
+\setcounter{lchapter}{0}
+\setcounter{lsection}{0}
+\setcounter{lsubsection}{0}
+\setcounter{lsubsubsection}{0}
+\setcounter{lparagraph}{0}
+\setcounter{lsubparagraph}{0}
+\setcounter{lsubsubparagraph}{0}
+
+
+\begin{comment}
+   ^=$ ... $ _ 
+\end{comment}
+
+\begin{rawhtml}
+   ^=$ ... $ _ 
+\end{rawhtml}
+
+\begin{htmlonly}
+   ^=$ ... $ _ 
+\end{htmlonly}
+
+\excludecomment{foo}
+
+\begin{foo}
+   ^=$ ... $ _ 
+\end{foo}
+
+\includecomment{foo}
+
+
+\begin{foo}
+   $ a_2^3 $  
+\end{foo}
+\tracingall
+
+\makeatletter
+\define@key{kv}{foo}{\Foo{#1}}
+\define@key{kv}{bar}[dbar]{\Bar{#1}}
+\makeatother
+
+\def\Foo#1{seen #1 in Foo}
+\def\Bar#1{seen #1 in Bar}
+\setkeys{kv}{foo = 1, bar = 2, bar}
+
+\bibliography{tralics}
+
+THE FUNNY TEST
+ 
+\def\ok{4} \leavevmode
+\begin{rawxml}
+&#x31;
+\end{rawxml}
+\begin{latexonly}\def\ok{2}\ok\end{latexonly}
+\begin{htmlonly}
+\def\ok{ ?
+\end{htmlonly}
+\begin{comment}
+\def\ok{ ?
+\end{comment}
+\begin{rawhtml}
+<p>\def\ok{ ?</p>
+\end{rawhtml}
+\begin{LaTeXonly}
+\def\ok{ ?
+\end{LaTeXonly}
+\begin{xmlonly}\def\ok{3}\ok\end{xmlonly}
+\ok
+
+
+
+\ScissorRightBrokenBottom
+\ScissorRight
+\ScissorRightBrokenTop
+%\ScissorLeftBrokenBottom
+%\ScissorLeft
+%\ScissorLeftBrokenTop
+\ScissorHollowRight
+%\ScissorHollowLeft
+\Phone
+\PhoneHandset
+\Tape
+\Plane
+\Envelope
+\HandCuffRight
+\HandCuffLeft
+%\HandCuffRightUp
+%\HandCuffLeftUp
+\HandRight
+\HandLeft
+%\HandRightUp
+%\HandLeftUp
+\Peace
+\HandPencilLeft
+\PencilRight
+%\PencilLeft
+\PencilRightUp
+%\PencilLeftUp
+\PencilRightDown
+%\PencilLeftDown
+\NibRight
+%\NibLeft
+\NibSolidRight
+%\NibSolidLeft
+\Checkmark
+\CheckmarkBold
+\XSolid
+\XSolidBold
+\XSolidBrush
+\PlusOutline
+\Plus
+\PlusCenterOpen
+\PlusThinCenterOpen
+\Cross
+\CrossOpenShadow
+\CrossOutline
+%\CrossBoldOutline
+\CrossMaltese
+%\DavidStarSolid
+\DavidStar
+\FourAsterisk
+\JackStar
+\JackStarBold
+\CrossClowerTips
+\FourStar
+\FourStarOpen
+\FiveStarLines
+\FiveStar
+\FiveStarOpen
+\FiveStarOpenCircled
+\FiveStarCenterOpen
+\FiveStarOpenDotted
+\FiveStarOutline
+\FiveStarOutlineHeavy
+\FiveStarConvex
+\FiveStarShadow
+\AsteriskBold
+\AsteriskCenterOpen
+\AsteriskThin
+%\AsteriskThinCenterOpen
+\EightStarTaper
+\EightStarConvex
+\SixStar
+\EightStar
+\EightStarBold
+\TwelweStar
+\SixteenStarLight
+\SixFlowerPetalRemoved
+\SixFlowerOpenCenter
+\Asterisk
+\SixFlowerAlternate
+\FiveFlowerPetal
+%\SixFlowerPetalDotted
+\FiveFlowerOpen
+\EightFlowerPetal
+\SunshineOpenCircled
+\SixFlowerAltPetal
+%\FourClowerOpen
+%\FourClowerSolid
+\AsteriskRoundedEnds
+\EightFlowerPetalRemoved
+\EightAsterisk
+%\SixFlowerRemovedOpenPetal
+\SparkleBold
+\Sparkle
+\SnowflakeChevron
+\SnowflakeChevronBold
+\Snowflake
+\CircleSolid
+%\Ellipse
+%\EllipseSolid
+\CircleShadow
+%\EllipseShadow
+%\Square
+%\SquareSolid
+\SquareShadowBottomRight
+\SquareShadowTopRight
+%\SquareShadowTopLeft
+\SquareCastShadowBottomRight
+\SquareCastShadowTopRight
+%\SquareCastShadowTopLeft
+\TriangleUp
+\TriangleDown
+\DiamondSolid
+\OrnamentDiamondSolid
+\HalfCircleRight
+\HalfCircleLeft
+\RectangleThin
+\Rectangle
+\RectangleBold
+\ArrowBoldRightStrobe
+\ArrowBoldUpRight
+\ArrowBoldDownRight
+\ArrowBoldRightShort
+\ArrowBoldRightCircled
+
+\makeatletter\let\Commaform\@commaform\makeatother
+\countdef\CT0
+
+\setcounter{page}{12345}\commaform{page}
+\setcounter{page}{123456}\commaform{page}
+\setcounter{page}{1234567}\commaform{page}
+\CT=12345678 \Commaform\CT
+\def\commaformtoken{ }
+\Commaform{1234567890123456789012345678901234567890}
+
+\newcounter{A}
+\newcounter{B}
+\newcounter{C}[A]
+\makeatletter
+\setcounter{A}{10}
+\setcounter{B}{11}
+\setcounter{C}{12}
+\stepcounter{A}
+\ifnum\value{B}=11\else\bad\fi\ifnum\value{C}=0\else\bad\fi
+\show\cl@A
+
+\@addtoreset{B}{A}
+\show\cl@A
+\setcounter{C}{12}
+\stepcounter{A}
+\ifnum\value{B}=0\else\bad\fi\ifnum\value{C}=0\else\bad\fi
+\@removefromreset{C}{A}
+\setcounter{B}{11}
+\setcounter{C}{12}
+\stepcounter{A}
+\ifnum\value{C}=12\else\bad\fi\ifnum\value{B}=0\else\bad\fi
+
+
+%%% ACCENTS
+
+\`*a \`.a \textgravedot{a} \ \textgravemacron{a} \`a
+\'*e \'=e \textacutemacron{e} \'e
+\^*o \^.o \textcircumdot{o} \^o 
+\~*u \~.u \texttildedot{u} \~u 
+\"*a \"a 
+\H*e \H e 
+\r*o \r=o \textringmacron{o} \r o 
+\v*u \v'u \textacutewedge{a} \v u 
+\u*a \u=a \textbrevemacron{a} \u a 
+\=*e \=e
+\.*o \.'o \textdotacute{o} \textdotbreve{a} \.u \t*au \t ae
+
+\def\acclist#1#2{\def\theacc{#1}\let\next\oneacc\next#2\relax}
+\def\Relax{\relax}
+\def\oneacc#1{%
+\ifx#1\relax\let\next\relax\else\theacc#1 \fi
+\next}
+
+\acclist\`{AEIOUNWYaeiounwyx}\par
+\acclist\'{AEIOUYCLNRSZGKMPW\AE\AA\O\ae\aa\o aeiouyclnrszgkmpwv}\par
+\acclist\^{AEIOUCGHJSWYZaeioucghjswyz}\par
+\acclist\~{ANOUIVEYioanoioveyw}\par
+\acclist\"{AEIOUYHWXaeiouyhwxtz}\par
+\acclist\H{OUoue}\par
+\acclist\r{AUauwye}\par
+\acclist\v{CDELNRSTZAIUGKHcdelnrstzaiugkhjx}\par
+\acclist\u{AEGIOUaegioux}\par
+\acclist\={AEHIOTUYG\AE\ae aehiotuyg}\par
+\acclist\.{ABCDEFGHILMNOPRSTWXYZabcdeghlmnoprstuvwzyzq}\par
+\acclist\c{CGKLNRSTEDHcgklnrstedhb}\par
+\acclist\k{AEIOUaeioub}\par
+\acclist\D{AEIOURaeioury}\par
+\acclist\b{BDKLNRTZbdklnrtzhe}\par
+\acclist\d{BDHKLMNRSTVWZAEIOUYbdhklmnrstvwzaeiouyc}\par
+\acclist\f{AEIOURaeiourx}\par
+\acclist\T{EIUeiuo}\par
+\acclist\V{DELNTUdelntua}
+\acclist\D{Aae}
+\acclist\h{AEIOUYaeiouyx}
+
+
+{\makeatletter \global\let\|\@omniaccent}
+\textsubbridge{t} \|[t      \textinvsubbridge{d} \|]d
+\textsubrhalfring{o} \|)o   \textsublhalfring{o} \|(o
+\textroundcap{g} \|c{g}     \textsubplus{\textopeno} \|+o
+\textlowering{e} \|`e       \textraising{\textepsilon} \|'e  
+\textadvancing{u} \|<u      \textretracting{\textschwa} \|>e
+\textovercross{e} \|x{e}    \textsubw{k} \|w{k}
+\textseagull{t} \|m{t}
+
+\`*a \textsubgrave{a} \`.a \textgravedot{a} \textgravemacron{a} \`a
+\'*e \textsubacute{e} \'=e \textacutemacron{e} \'e
+\^*o \textsubcircum{o} \^.o \textcircumdot{o} \^o 
+\~*u \textsubtilde{u} \~.u \texttildedot{u} \~u 
+\"*a \textsubumlaut{a} \"a 
+\H*e \textdoublegrave{e} \H e 
+\r*o \textsubring{u} \r=o \textringmacron{o} \r o 
+\v*u \textsubwedge{u} \v'u \textacutewedge{a} \v u 
+\u*a \textsubarch{a}  \u=a \textbrevemacron{a} \u a 
+\=*e \textsubbar{e} \=e
+\.*o \textsubdot{e} \.'o \textdotacute{o} \textdotbreve{a} \.u 
+\t*au \t ae\texttoptiebar gb
+
+\makeatletter
+\def\textipa#1{{\let\*=\tipa@star\let\;=\tipa@semi\let\:=\tipa@colon
+\let\!=\tipa@exclam#1}}
+\makeatother
+
+TEST1 \textipa{\*f \*k \*r \*t \*w}
+\textipa{\*j \*n \*h \*l \*z}
+\textipa{\*A dOg, \*B k\ae{}t ma\super{\*{214}}}
+\par Test2 \textipa{\;E \;J \;A \;H \;L \;U \;B \;G \;R}
+\par Test3 \textipa{\:d \:l \:n \:r \:R \:s \:t \:z}
+\par Test4 \textipa{\!G \!b \!d \!g \!j \!o}
+
+
+a, \textrhooka, \textturna, \textscripta, \textturnscripta,
+\textinvscripta, \ae, \textaolig, \textsca, \textlhookfour, 
+\textinvsca, \textscaolig, 
+\textturnv, \textscdelta
+
+b, \textcrb, \textbarb, \textsoftsign, \texthardsign,\texthtb, \textscb, \textbeta
+
+c, \textbarc, \v{c}, \c{c}, \texthtc, \textctc, \textstretchc,
+\textstretchcvar, \textctstretchc, \textctstretchcvar 
+
+d, \textcrd, \textbard, \textfrhookd, \textfrhookdvar, \texthtd,\textrtaild,
+\texthtrtaild, \textctd, \textdblig, \textdzlig,  \textdctzlig, 
+\textdyoghlig, \textctdctzlig, \dh
+
+e, \textrhooke, \textschwa, \textrhookschwa, \textreve, \textsce,
+\textepsilon, \textrhookepsilon, \textcloseepsilon, \textrevepsilon,
+\textrhookrevepsilon, \textcloserevepsilon
+
+f, \textscf
+
+\textscriptg,  \textbarg,  \textcrg, \texthtg, g, \textscg, \texthtscg,
+\textgamma, \textgrgamma, \textfrtailgamma, \textbktailgamma,
+\textbabygamma, \textramshorns
+
+h, \texthvlig, \textcrh , \texthth, \textrtailhth, \textheng, \texththeng,
+\textturnh, \textsch
+
+i, \i, \textbari, \textsci, \textiota, \textlhti, \textlhtlongi,
+\textvibyi, \textraisevibyi
+
+j, \j, \textctj,  \textctjvar, 
+\textbardotlessj, \textObardotlessj,
+\texthtbardotlessj, \texthtbardotlessjvar, \textscj
+
+k, \texthtk, \textturnk, \textsck, \textturnsck 
+
+l, \textltilde, \textbarl, \textbeltl, \textrtaill, \textlyoghlig,
+\textOlyoghlig, \textlfishhookrlig, \textscl, 
+\textrevscl, \textlambda, \textcrlambda,
+
+m, \textltailm, \texthmlig, \textturnm, \textturnmrleg, \textscm
+
+n, \textfrbarn, \textnrleg, \~n, \textltailn, \ng, \textrtailn, \textctn,
+\textscn
+
+o, \textfemale, \textuncrfemale, \textbullseye, \textObullseye, \textbaro,
+\o, \oe, \textscoelig, \textopeno, \textrhookopeno, \textturncelig,
+\textomega, \textinvomega, \textcloseomega, \textscomega
+
+p, \texthtp, \textlhookp, \textscp, \textwynn, 
+\textthorn, \textthornvari, \textthornvarii, \textthornvariii,
+\textthornvariv, \textphi,
+
+q, \texthtq, \textqplig, \textscq
+
+r, \textfishhookr, \textlonglegr, \textrtailr, \textturnr, \textturnrrtail,
+\textturnlonglegr, \textscr, \textrevscr, \textinvscr, 
+
+s, \v{s}, \textrtails, \textesh, \textdoublebaresh, \textlooptoprevesh,
+\textctesh
+
+t, \textfrhookt, \textlhookt, \textrtailt, \texthtt, \textturnt,
+\textctturnt, \textctt, \texttctclig, \textcttctclig, \texttslig,
+\textteshlig, \texttheta
+
+u,  \textbaru, \textupsilon, \textscu, \textturnscu,
+
+v, \textscriptv, 
+
+w, \textturnw
+
+x, \textchi
+
+y, \textturny, \textscy, \textlhtlongy, \textvibyy
+
+z, \textcommatailz, \v{z}, \textctz, \textrtailz, \textcrtwo, \textturntwo,
+\textyogh, \textbenttailyogh, \textctyogh, \textrevyogh, \textturnthree
+
+{\let \unimplemented U
+\textretractingvar \textrevapostrophe \texthooktop\textrthook\textrthooklong
+\textpalhook\textpalhooklong\textpalhookvar\dottedtilde{a}
+\partvoiceless{n} \inipartvoiceless{n} \finpartvoiceless{n} 
+\textoverw{g} \partvoice{s} \inipartvoice{s} \finpartvoice{s} 
+}
+
+
+p\super h = p^^^^02b0
+k\super w=k^^^^02b7 t\super j=t^^^^02b2  d\super\textgamma=d^^^^02e0
+d\super{\textrevglotstop}=d^^^^02c1
+d\super n d\super l=d^^^^02e1
+
+\end{document}

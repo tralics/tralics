@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/04/27-->
+<std>
+<p>simple math test
+<texmath textype='inline' type='inline'>x = y ^2 Ω∑∆∏</texmath></p>
+<texmath id-text='1' id='uid1' textype='equation' type='display'>
+\int _0 ^\infty f(x)\, dx
+</texmath>
+<p><texmath textype='inline' type='inline'>&#x1D400;&#x1D7FF;</texmath>
+<texmath textype='inline' type='inline'>&#x1D400;;&#x1D7FF;; &#x1D49F;</texmath></p>
+</std>

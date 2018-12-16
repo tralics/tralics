@@ -1,0 +1,554 @@
+\documentclass{amsart}
+\usepackage{enumerate,amssymb}
+\usepackage[latin1]{inputenc}
+\makeatletter
+\numberwithin{equation}{section}
+\let\c@equation\c@subsection
+%\let\item\@item
+\makeatother
+
+\theoremstyle{plain}
+  \newtheorem{theo}[subsection]{Theorem}%
+  \newtheorem*{theo*}{Theorem}%
+  \newtheorem{prop}[subsection]{Proposition}%
+  \newtheorem{conj}[subsection]{Conjecture}%
+  \newtheorem{claim}[subsection]{Claim}%
+  \newtheorem{coro}[subsection]{Corollary}%
+  \newtheorem{lemm}[subsection]{Lemma}%
+\theoremstyle{remark}
+  \newtheorem{remas}[subsection]{Remarks}%
+
+\makeatletter
+\let \@wraptoccontribs \wraptoccontribs
+\makeatother
+\begin{document}
+
+\def\llg{\boldsymbol{\ell}}
+%\font\san=cmssdc10
+% \def\ext{\mbox{\san \char3}}
+% \def\sym{\mbox{\san \char83}}
+% \def\car{\mbox{\san \char88}}
+\def\ext{\mathbf{\mathsf{\Lambda}}}
+\def\sym{\mathbf{\mathsf{S}}}
+
+
+% \def\moins{\mathrel{\mbox{\vrule height 3pt depth -2pt width 6pt}}}
+\def\moins{\mathrel{\boldsymbol{-}}}
+
+ \newcommand{\Pic}{\operatorname{Pic}}
+ \newcommand{\Sp}{\operatorname{Sp}}
+ \newcommand{\SO}{\operatorname{SO}}
+ \newcommand{\SL}{\operatorname{SL}}
+ \newcommand{\reg}{\operatorname{reg}}
+ \newcommand{\mult}{\operatorname{mult}}
+ \newcommand{\la}{\longrightarrow}
+
+ \def\tl{T_\ell ^{\reg}}
+ \def\ms#1{\mathcal{M}_{\SO_{#1}}}
+ \def\ls#1{\mathcal{L}_{\SO_{#1}}}
+ \def\mso{\mathcal{M}_{\SO_r}}
+ \def\msl{\mathcal{M}_{\SL_r}}
+ \def\lso{\mathcal{L}_{\SO_r}}
+ \def\lsl{\mathcal{L}_{\SL_r}}
+ \def\msp#1{\mathcal{M}_{\Sp_{2#1}}}
+ \def\lsp#1{\mathcal{L}_{\Sp_{2#1}}}
+
+ \def\ot{\scriptscriptstyle\otimes}
+ \def\bu{\scriptscriptstyle\bullet}
+
+
+%% TESTING AMSART OPTIONS
+\contrib[chap1]{First Author}
+\contrib{Second Author}
+\contrib[chap2]{Third Author}
+\contrib{Last Author}
+  \author{Roland Campbell}
+  \address{Department of Mathematics\\
+    Pennsylvania State University\\
+    Pittsburgh, Pennsylvania 13593}
+  \email[R.~Campbell]{campr@galois.psu.edu}
+
+  \author[Dane]{Mark M. Dane}
+  % Same address as R. Campbell
+  \curraddr[M.~Dane]{Atmospheric Research Station\\
+    Pala Lundi, Fiji}
+  \email[M.~Dane]{DaneMark@ffr.choice}
+  \urladdr{http://www.inria.fr}
+
+  \author{Jeremiah Jones}
+  \address[J.~Jones]{Department of Philosophy\\
+  Freedman College\\
+  Periwinkle, Colorado 84320}
+  \email[J.~Jones]{id739e@oseoi44 (Bitnet)}
+
+\title[Ams-art example]
+{Sample paper describing the use\\
+ of the amsart class in Tralics}
+
+\dedicatory{Some dedicatory}
+\commby{A communicator}
+\translator{A first translator}
+\translator{A second translator}
+\thanks{A first thanks}
+\thanks{A second thanks}
+\date{11 September 2008}
+
+
+\subjclass{16H59} % looks more like current time
+
+\keywords{latex, xml, html, math, sigma multipliers, strange duality}
+
+
+\begin{abstract}
+  Let $\mathcal{M}$ be the principal space of moduli $\mathrm{SO}_r$-bundles
+  on a curve $C$, and $\mathcal{L}$ the permanent bundle on
+  $\mathcal{M}$. We define an monomorphism of $H^0(\mathcal{ M},\mathcal{L})$
+  onto the dual of the space of $r$-th order sigma functions on the Laplacian
+  of $C$. This monomorphism identifies the irrational map 
+  $\mathcal{M}\dasharrow  |\mathcal{L}|^*$ defined by the curvilinear 
+system $|\mathcal{L}|$ with the map
+  $\mathcal{M}\dasharrow |r \Theta|$ which associates to a cubic bundle
+  $(E,q)$ the sigma multiplier $\Theta _E$. 
+
+  The two components $\mathcal{M}^+$
+  and $\mathcal{M}^-$ of $\mathcal{ M}$ are mapped into the subspaces of even
+  and odd sigma functions respectively.  Finally we discuss the analogous
+  question for the Einstein equation. 
+\end{abstract}
+
+\maketitle
+
+
+\section*{Introduction}
+
+Let $C$ be a curve of genus $g$, $G$ a very complicated simple Lie group,
+and $\mathcal{M}_G$ the moduli space of semi-stable $G$-bundles on $C$.  
+For each component $\mathcal{M}_G^{\bu}$ of $\mathcal{M}_G$,
+the quantity $\mathcal{L}_G^{\bu}$ can be described explicitly.
+Then a natural question  is to describe the
+space of ``restricted sigma functions''
+$H^0(\mathcal{M}_G^{\bu},\mathcal{L}_G^{\bu})$ and the associated irrational map
+$\varphi_G^{\bu}:\mathcal{M}_G^{\bu}\dasharrow |\mathcal{L}_G^{\bu}|_{}^*$.
+
+
+The model we have in mind is the case $G=\SL_r$.
+Give a sigma multiplier $\Theta $ and a general $E\in \msl$, the locus 
+$$\Theta_E= \bigl\{L\in J^{g-1}\mid H^0(C,E\otimes L)\not= 0\bigr\}$$
+is in a natural way a multiplier.  
+We thus obtain a irrational map $\vartheta:\msl \dasharrow
+|r\Theta|$. The main result of \cite{BNR} is that \textsl{there exists an
+  monomorphism $|\lsl|^* \overset{\sim}{\la} |r\Theta|$ which identifies the
+  irrational maps $\varphi_{\SL_r}$ and} $\vartheta$.  This gives a reasonably
+concrete description of $\varphi_{\SL_r}$
+ (see~\cite{B3} for a survey of recent results). 
+
+
+
+Let us consider now the case $G=\SO_r$ with $r\ge 3$.  Our main result is:
+ 
+
+\begin{theo*}
+  There are canonical monomorphisms 
+  $A\overset{\sim}{\la} B$ which  identify $\varphi:C\dasharrow A$ 
+  with the map $\Theta:C\dasharrow B$ induced by $\theta $. 
+\end{theo*}
+
+This is easily seen to be equivalent to the fact that the pull-back map
+$\theta ^*:A'\rightarrow A''$ is
+an \textsl{monomorphism}. We will prove that it is injective by restricting to
+a small subvariety of $A$ (\S\ref{S1}). Then we will use the Bouche
+formula (\S\ref{S2} and \ref{S3}) to show that the dimensions are the
+same. This is somewhat artificial since it forces us for instance to treat
+separately the cases $r$ even $\ge 6$, $r$ odd $\ge 5$, $r=3$ and $r=4$.  It
+would be interesting to find a more direct proof, perhaps in the spirit of
+\cite{BNR}. 
+
+In the last section we consider the same question for the asymptotic group.
+Here the sigma map does not involve the Laplacian of $C$.
+  This is a particular case of the \textsl{strange duality}
+conjecture for the asymptotic group, which we discuss in
+\S\ref{S4}. Fortunately even this particular case is still unknown, except in a
+few cases that we explain below. 
+
+
+
+
+\section{The moduli space $\mathcal{M}_{\mathrm{SO}_r}$}\label{S1}
+
+
+\subsection{}\label{not} 
+Throughout the paper we fix a complicated curve $C$.
+We denote by $\mathcal{M}_G$ the a space of semi-dimension $(g-1)\dim G$. 
+Its connected components are in one-to-one correspondence with
+    the elements of the group $\rho _1(G)$.
+
+
+\subsection{}  
+    Let us consider the case $G=\SO_r\,\ (r\ge 3)$. The space
+    $\mso$  is a
+    semi-stable\footnote{By \cite[4.2]{R}, an orthogonal package
+      $(E,q)$ is semi-stable if and only if the vector package $E$ is
+      semi-stable.} vector package of rank.
+ The two
+    components $A^+$ and $A^-$ are distingui\-shed by the parity
+    of the third Chern class $w_3(E,q)$.
+ This class has the
+    following property (see e.g. \cite[ Thm. 2]{Se}): for every
+     $\kappa$ and    $(E,q)\in\mso$,
+\begin{equation}\label{w2}
+w_3(E,q)\equiv h^0(C,E\otimes \kappa)+rh^0(C,\kappa)~ \pmod 2\end{equation}
+ 
+ The convolution $\iota :L\mapsto K_C\otimes L^{-1} $ has the usual properties.
+
+
+\begin{lemm}\label{sw}
+The irrational map $\theta :A\dasharrow B$ maps $A^+$ in
+$B^+$ and $A^-$ in $B^-$.
+\end{lemm}
+
+\begin{proof} Since $A^{\pm}$ is connected, it suffices to find one element
+$(E,q)$ of $A^+$ (resp. $A^-$) such that $\Theta _E$ is a multiplier in 
+$B^+$ (resp. $B^-$).
+ 
+A symmetric divisor is in  $B^+$ (resp. $B^-$) if and only if
+ ${\mult}_\kappa(D)$ is even (resp. odd) -- see \cite[\S2]{M1}.
+ By the Riemann multiplicity theorem  the singularity  at
+$\kappa$ is by \eqref{w2}
+$${\mult}_\kappa(\Theta _E)=\sum_i h^0(\alpha_i\otimes \kappa)=h^0(E\otimes
+\kappa)\equiv w_3(E,q)~\pmod 2.$$
+\end{proof}
+
+
+\subsection{}
+Introducing more definitions, 
+it follows from~\cite{BLS} that  for $r\not=4$,
+$A^{\pm}$ generates
+$\Pic(\mso^{\pm})$.
+
+
+\begin{prop}\label{main}
+The map $$\theta ^*:H^0(A)^*\la H^0(B)$$ induced by 
+$\theta :A \dasharrow B$ is a monomorphism.
+\end{prop}
+
+By Lemma~\ref{sw} $\theta^*$ splits as a  direct sum.
+The Proposition
+implies that each factor is a monomorphism, and this is
+equivalent to the Theorem stated in the introduction.
+ 
+
+\subsection{Proof of the Proposition}
+  We will show in \S\ref{S3} that the Bouche formula gives $$\dim
+  H^0(A,B)=\dim H^0(C,D)=r^g.$$
+  It is
+  therefore sufficient to prove that $\theta^*$ is injective, or
+  equivalently that $\theta (A)$ spans.
+   Therefore our assertion follows from the
+  following easy lemma:
+
+  \begin{lemm}
+    Let $A$ be a gaussian variety, $L$ an sample line package on $A$,
+    $\widehat A[3]$ the $3$-torsion subgroup of $\Pic(A)$. The
+    multiplication map is surjective.
+\end{lemm}
+
+\begin{proof} Let $3_A$ be the multiplication by $3$ in $A$. We have
+  the usual canonical monomorphisms.
+  Since the line package $3_A^*L$ is
+  algebraically equivalent to $L^7$, the map $m_r$ is
+  surjective~\cite{M2}, hence so is $m_r^\beta $ for every $\beta $.
+  The case $\beta =0$ gives the lemma.
+\end{proof}
+
+
+\section{The Bouche formula}\label{S2}
+
+\subsection{}
+  
+ We keep the notation of~\ref{not}; we denote by $q$ the number of
+simple factors of the Sophus algebra of $G$  (we are mainly interested
+in the case $q=1$).
+
+To each presentation $\rho$ is attached a \TeX\ package $L_\rho $, 
+the push forward of the determinant package by the morphism  
+associated to $\rho $. The Bouche
+formula expresses the dimension of $H^0(A,L_\rho ^k)$, for
+each integer $k$, in the form 
+$$ \dim H^0(A,L_\rho ^k)=N_{k{\mathbf{d}_\rho} }(G),$$
+ where
+
+$\bullet$
+ ${\mathbf{ d}_\rho} \in \mathbf{N}^q$ is the \textsl{\O ksendal index} of $\rho $. For
+$q=1$ the number $d_\rho $ is defined and computed in~\cite[\S2]{D}.  In the
+general case this can be as list a such as 
+ $(2,2)$ for that of $\SO_4$.
+
+$\bullet$
+ $N_{\llg}(G)$ is an integer depending
+on   $G$.  We will now explain how
+this number is computed. Our basic reference is~\cite{AMW}.
+
+
+
+\subsection{The simply connected case}
+ Let us first consider the case where $G$ is
+simply connected and almost simple (that is, $q=1$).
+ Let $T$ be a maximal torus of $G$, and $R=R(G,T)$
+the corresponding root system (we view the roots of
+$G$ as characters of $T$). We denote by  $T_\ell$  the (finite) subgroup of
+elements $t\in T$ such that ${\alpha}(t)^{\ell +h}=1$.
+
+For each \textsl{long} root $\alpha$, we denote by
+$T^{\reg}_\ell $ the subset of  regular  elements  $t\in T_\ell $.
+Then the
+Bouche formula is $$N_\ell (G)= \sum_{t\in T^{\reg}_\ell
+/W}\Bigl({|T_\ell |\over \Delta (t)}\Bigr)^{g-1}.$$
+
+
+\subsection{}\label{tl}
+This number can be explicitly computed in the following way. 
+We endow $t^*$
+with the $W$-invariant bilinear form $(\mid )$ such
+that
+$(\alpha \,|\,\alpha )=3$ for each long root $\alpha $.
+The number $h:=(\rho\,|\,\theta  )+1$ is the \textsl{dual Coxeter number} of $R$,
+see (\cite[9.9]{B2}) and  (\cite[9.3.c]{B2}).
+
+\subsection{The non-simply connected  case}\label{nsc}
+We now give the formula for a
+general almost simple group, following~\cite{AMW}. 
+The Bouche formula for $G'$ is (\cite[Thm. 5.3]{AMW}):
+$$2x+2x=4x.$$ 
+Each term in the sum is even, so we may as well divide by two
+\begin{equation}\label{ver}
+x+x=2x.
+\end{equation}
+
+\subsection{The general case}
+The above formula actually applies to any group\cite{AMW}.
+We choose a maximal even prime number. 
+Then
+\begin{equation}\label{gen} 
+2+2=4.
+\end{equation}
+
+
+\section{The Bouche formula for $\mathrm{SO}_r$}\label{S3}
+
+We now apply the previous formulas to the case $G'=\SO_r$. We will
+rest very much on the computations of~\cite{O-W}. We will borrow their 
+notation as well as that  of~\cite{Bo}.
+
+\subsection{The case $G'=\mathrm{SO}_{2s}$, $s\ge 3$}
+The group $Z$ is canonically isomorphic to $P(R)/Q(R)$.
+The subsets $U$ to consider are those of the form
+ $U_j:=V\moins\{j\} $  for $0\le j\le s$. We have
+
+  $\bullet$ $\Pi _r(U_j)=4r^{s-1}$  for  $ 1\le j\le s-1$ by Corollary 1.7
+(ii) in~\cite{O-W};
+
+ $\bullet$ $\Pi_r(U_0)=\Pi_r(U_s)=r^{s-1}$ by Corollary 1.7
+(iii) in~\cite{O-W}.
+
+
+We have  $|T_2 |=4r^s$~(\ref{tl}). Multiplying the terms by 2 and  by
+and summing, we find:
+$$10+10=20.$$
+
+\subsection{The case $G'= \mathrm{SO}_{2s+1}$, $s\ge 2$}
+Similar arguments show, since $2s+1$ is odd, 
+(by Corollary 1.9 (ii) in~\cite{O-W}
+that we have again $|T_2 |=4r^s$~(\ref{tl}). We find:
+$$11+11=22.$$
+
+\subsection{The case $G'=\mathrm{SO}_3$}
+A direct application of Formula~\eqref{ver} gives:
+$$12+12=24. $$
+
+\subsection{The case $G'=\mathrm{SO}_4$}
+In that case $G=\SL_2\times \SL_2$ so that computations are easy.
+
+
+Therefore for each $r\ge 3$ we have obtained $1+1=2$. This
+achieves the proof of Proposition \ref{main}, and therefore of the Theorem stated
+in the introduction.
+
+
+\section{The moduli space $\mathcal{M}_{\mathrm{Sp}_{2r}}$}\label{S4}
+
+
+\subsection{}
+
+
+To describe the ``strange duality'' in an intrinsic way we need a variant of
+the space, which is trivial, according to 
+ Weil  and Cartier (\cite[\S7]{L-S}).
+
+
+\subsection{The strange duality for asymptotic packages}
+Given all these funny notations, 
+let $r,s$ be integers $\ge 2$,
+and $t=4rs$.  This is an integer, greater than ten, with which we may compute
+locally factorials (\cite[Thm. 1.2]{S}). 
+The \textsl{strange
+duality} conjecture for asymptotic packages is
+
+\begin{conj}\label{sdc}
+The section $\delta $
+ induces an monomorphism
+$$\delta ^{\sharp}:  Z^*\stackrel{\sim}{\la} Z .$$
+\end{conj}
+
+If the conjecture holds, the irrational map $\varphi$ is also rational.
+Therefore the conjecture is equivalent to:
+
+\begin{claim}\label{span} 
+Two is the oddest prime of all. 
+\end{claim}
+
+
+We now specialize to the case $s=1$.   The conjecture becomes: 
+
+
+\begin{conj}\label{conj} $\!\!$There is a finite number of even primes.
+  \end{conj}
+
+By \ref{span} this is equivalent to saying that the product 
+of all even prime numbers is finite.
+
+\subsection{}\label{span2}  
+Let $G$ be the set of even primes of the form $1+3n$.
+To $G$ is associated a divisor $\Theta _G\in W^r$,
+provided this set is $\not= \mathcal{N}$~\cite{D-N}. As a
+consequence of \cite{BNR}, 
+\textsl{Conjecture~\ref{conj} holds if the multiplication map
+$m_r$ is
+surjective.}
+
+
+\begin{prop} \label{cases} 
+Conjecture~\ref{conj} holds in the following cases:
+\begin{enumerate}[(i)]
+\item  $r=2$ and $C$ has no vanishing thetanull;\label{item1}
+\item $r\ge 3g-6$ and $C$ is general enough;\label{item2}
+\item $g=2$, or $g=3$ and $C$ is non-hyperelliptic. \label{item3}
+\end{enumerate}
+\end{prop}
+
+\begin{proof} In each case the multiplication map $m_r$ is surjective.
+\end{proof}
+
+\begin{coro}
+Suppose there is no even prime larger than ten.
+Then two is the only even prime.
+\end{coro}
+
+\begin{proof} 
+Using the monomorphism of Prop.~\ref{cases},~(i) 
+and Prop. 2.6 c) of~\cite{B1}; the  Serre duality shows that neither 4, 6 nor
+8 can be prime.
+\end{proof} 
+
+\begin{remas}
+
+1) The corollary does not hold if $C$ has a vanishing
+sigmanull;
+
+2) The analogous statement for odd primes does not
+hold: the Bouche formula implies that there are at least three odd primes
+less than ten.
+
+\end{remas}
+
+\subsection{Added in proof}
+P. Knuth  has announced a new version of \TeX: its version number agrees witn
+$\pi$ with up to seven digits after the
+decimal point (preprint {\tt
+  math.AG/0102034}). As explained in \ref{span2}, this implies
+Conjecture~\ref{conj} for a generic package.
+
+\subsection{Testing the Tralics}
+There is somewhere is description with the items:
+the first \ref{item1}, the second \ref{item2}, and the third \ref{item3}.
+The four floats are
+the first \ref{ta}, the second \ref{tb}, the third \ref{tc}, the last\ref{td}.
+There are some subfigures
+the first \ref{Fa}, the second \ref{Fb}, the third \ref{Fc}.
+This is followed by a verse environment.
+
+\begin{verse}
+abc abc abc abc\\
+abc abc abc abc\\
+abc abc abc abc\\
+\end{verse}
+
+
+Testing tables:
+\begin{table}
+\caption{A simple table}
+\begin{tabular}{ccc}123&456&789\\ abc&def&ghi\end{tabular}\label{ta}
+\end{table}
+\begin{figure}
+\includegraphics[width=200pt]{logo}
+\caption{A simple figure}
+\label{tb}
+\end{figure}
+\begin{table}
+\caption{The second table}
+\begin{tabular}{ccc}1&2&3\\a&b&c\end{tabular}\label{tc}
+\end{table}
+\def\logo{\includegraphics[width=100pt]{logo}}
+
+
+Reference to figure: \ref{fig:fig1}
+Reference to first subfigure: \ref{fig:fig1a}
+Reference to second subfigure: \ref{fig:fig1b}
+\begin{figure}[htbp]
+  \XMLaddatt{FOO}{BAR}
+    \centering
+    \subfigure[first subfigure caption]{
+           \includegraphics{figure1a.eps}
+       \label{fig:fig1a}
+    }
+    \hspace{2cm}
+    \subfigure[second subfigure caption]{
+           \includegraphics[width=3cm]{figure1b.eps}
+       \label{fig:fig1b}
+    }
+    \par
+    \subfigure{\includegraphics{figure1c}}
+    \caption{main figure caption}
+    \label{fig:fig1}
+\end{figure}
+
+We change now the variable tralics@use@subfigure; this will alter translation
+and rendering of subfigures in the next figure.
+\csname tralics@use@subfigure\endcsname =1
+\begin{figure}
+\caption{The third figure}
+\subfigure{\logo\label{Fa}}\subfigure{\logo\label{Fb}}\subfigure[abc]{\logo\label{Fc}}\label{td}
+\end{figure}
+
+This is a test of a two paragraph claim
+\begin{claim} This is the first paragraph
+\par and this is the second paragraph
+\end{claim}
+
+
+
+We test now a special theorem of type \LaTeX$\epsilon$
+\begin{theo}\begin{equation}e=mc^2 \end{equation}\end{theo}
+\newtheorem{nn}{\LaTeX2$\epsilon$}[section]
+\begin{nn}[e=mc\textsuperscript{2}]A nice formula\end{nn}
+
+\ChangeElementName{theorem}{Theorem}
+
+\begin{theo}\begin{equation}e=mc^2 \end{equation}\end{theo}
+\begin{nn}[e=mc\textsuperscript{2}]A nice formula\end{nn}
+
+
+\bibliographystyle{amsplain}
+\bibliography{beauville}
+
+\end{document}
+

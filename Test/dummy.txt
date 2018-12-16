@@ -1,0 +1,3 @@
+\ProvidesFile{Dummy text file}[2007/12/23 v1.0  Dummy file for Tralics]
+Some dummy tex file
+\endinput

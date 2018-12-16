@@ -1,0 +1,304 @@
+% -*- latex -*-
+%% TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007
+%% Licensed under the CeCILL free software license 
+%% (See the file COPYING in the main directory for details)
+%% $Id: mml.sty,v 2.8 2007/05/22 09:46:32 grimm Exp $
+
+\ProvidesPackage{mml}[2007/02/14 v1.0 MathML: Standard Tralics]
+
+\def\mmlxentity#1{\amp\#x#1;}
+\def\mmlentity#1{\amp#1;}
+
+
+% These are listed in section 4.2.3
+% Unary arithmetic functions
+\newcommand\mmlFactorial{\mathbox{factorial}{}}
+\newcommand\mmlMinus{\mathbox{minus}{}}
+\newcommand\mmlAbs{\mathbox{abs}{}}
+\newcommand\mmlConjugate{\mathbox{conjugate}{}}
+\newcommand\mmlArg{\mathbox{arg}{}}
+\newcommand\mmlReal{\mathbox{real}{}}
+\newcommand\mmlImaginary{\mathbox{imaginary}{}}
+\newcommand\mmlFloor{\mathbox{floor}{}}
+\newcommand\mmlCeiling{\mathbox{ceiling}{}}
+% Unary logical
+\newcommand\mmlNot{\mathbox{not}{}}
+% Unary functional
+\newcommand\mmlInverse{\mathbox{inverse}{}}
+\newcommand\mmlinverse[2]{\mathbox{inverse}[definitionURL][#1][encoding][#2]{}} % in the case attributes needed
+\newcommand\mmlIdent{\mathbox{ident}{}}
+\newcommand\mmlDomain{\mathbox{domain}{}}
+\newcommand\mmlCodomain{\mathbox{codomain}{}}
+\newcommand\mmlImage{\mathbox{image}{}}
+% Unary elementary classical functions
+\newcommand\mmlSin{\mathbox{sin}{}}
+\newcommand\mmlCos{\mathbox{cos}{}}
+\newcommand\mmlTan{\mathbox{tan}{}}
+\newcommand\mmlSec{\mathbox{sec}{}}
+\newcommand\mmlCsc{\mathbox{csc}{}}
+\newcommand\mmlCot{\mathbox{cot}{}}
+\newcommand\mmlSinh{\mathbox{sinh}{}}
+\newcommand\mmlCosh{\mathbox{cosh}{}}
+\newcommand\mmlTanh{\mathbox{tanh}{}}
+\newcommand\mmlSech{\mathbox{sech}{}}
+\newcommand\mmlCsch{\mathbox{csch}{}}
+\newcommand\mmlCoth{\mathbox{coth}{}}
+\newcommand\mmlArcsin{\mathbox{arcsin}{}}
+\newcommand\mmlArccos{\mathbox{arccos}{}}
+\newcommand\mmlArctan{\mathbox{arctan}{}}
+\newcommand\mmlArcsinh{\mathbox{arcsinh}{}}
+\newcommand\mmlArccosh{\mathbox{arccosh}{}}
+\newcommand\mmlArctanh{\mathbox{arctanh}{}}
+\newcommand\mmlArccot{\mathbox{arccot}{}}
+\newcommand\mmlArccoth{\mathbox{arccoth}{}}
+\newcommand\mmlArccsc{\mathbox{arccsc}{}}
+\newcommand\mmlArccsch{\mathbox{arccsch}{}}
+\newcommand\mmlArcsec{\mathbox{arcsec}{}}
+\newcommand\mmlArcsech{\mathbox{arcsech}{}}
+\newcommand\mmlExp{\mathbox{exp}{}}
+\newcommand\mmlLn{\mathbox{ln}{}}
+\newcommand\mmlLog{\mathbox{log}{}}
+%Unary linear algebra
+\newcommand\mmlDeterminant{\mathbox{determinant}{}}
+\newcommand\mmlTranspose{\mathbox{transpose}{}}
+% Unary calculus and vector calculus
+\newcommand\mmlDivergence{\mathbox{}{}}
+\newcommand\mmlGrad{\mathbox{grad}{}}
+\newcommand\mmlCurl{\mathbox{curl}{}}
+\newcommand\mmlLaplacian{\mathbox{laplacian}{}}
+% Unary set-theoric
+\newcommand\mmlCard{\mathbox{card}{}}
+% Binary arithmetic
+\newcommand\mmlQuotient{\mathbox{quotient}{}}
+\newcommand\mmlDivide{\mathbox{divide}{}}
+%\newcommand\mmlMinus{\mathbox{minus}{}}   % s also unary
+\newcommand\mmlPower{\mathbox{power}{}}
+\newcommand\mmlRem{\mathbox{rem}{}}
+% Binary logical
+\newcommand\mmlImplies{\mathbox{implies}{}}
+\newcommand\mmlEquivalent{\mathbox{equivalent}{}}
+\newcommand\mmlApprox{\mathbox{approx}{}}
+% Binary set operator
+\newcommand\mmlSetdiff{\mathbox{setdiff}{}}
+% Binary linear algebra
+\newcommand\mmlVectorproduct{\mathbox{vectorproduct}{}}
+\newcommand\mmlScalarproduct{\mathbox{scalarproduct}{}}
+\newcommand\mmlOuterproduct{\mathbox{outerproduct}{}}
+% N-ary arithmetic
+\newcommand\mmlPlus{\mathbox{plus}{}}
+\newcommand\mmlTimes{\mathbox{times}{}}
+\newcommand\mmlMax{\mathbox{max}{}}
+\newcommand\mmlMin{\mathbox{min}{}}
+\newcommand\mmlGcd{\mathbox{gcd}{}}
+\newcommand\mmlLcm{\mathbox{lcm}{}}
+% N-ary statistical
+\newcommand\mmlMean{\mathbox{mean}{}}
+\newcommand\mmlSdev{\mathbox{sdev}{}}
+\newcommand\mmlVariance{\mathbox{variance}{}}
+\newcommand\mmlMedian{\mathbox{median}{}}
+\newcommand\mmlMode{\mathbox{mode}{}}
+% N-ary logical
+\newcommand\mmlAnd{\mathbox{and}{}}
+\newcommand\mmlOr{\mathbox{or}{}}
+\newcommand\mmlXor{\mathbox{xor}{}}
+% N-ary linear algebra
+\newcommand\mmlSelector{\mathbox{selector}{}}
+% N-ary set operator
+\newcommand\mmlUnion{\mathbox{union}{}}
+\newcommand\mmlIntersect{\mathbox{intersect}{}}
+\newcommand\mmlCartesianproduct{\mathbox{cartesianproduct}{}}
+% N-ary functional
+\newcommand\mmlCompose{\mathbox{compose}{}}
+% Integral sum product operators
+\newcommand\mmlInt{\mathbox{int}{}}
+\newcommand\mmlSum{\mathbox{sum}{}}
+\newcommand\mmlProduct{\mathbox{product}{}}
+% Differential operator
+\newcommand\mmlDiff{\mathbox{diff}{}}
+\newcommand\mmlPartialdiff{\mathbox{partialdiff}{}}
+% Quantifier
+\newcommand\mmlForall{\mathbox{forall}{}}
+\newcommand\mmlExists{\mathbox{exists}{}}
+
+% These are listed in section 4.2.4
+% Binary relation
+\newcommand\mmlNeq{\mathbox{neq}{}}
+% \newcommand\mmlEquivalent{\mathbox{equivalent}{}} defined above
+% \newcommand\mmlApprox{\mathbox{approx}{}} % defined above
+\newcommand\mmlFactorof{\mathbox{factorof}{}}
+% binary logical relation
+% \newcommand\mmlImplies{\mathbox{implies}{}}  % defined above
+% Binary set relation
+\newcommand\mmlIn{\mathbox{in}{}}
+\newcommand\mmlNotin{\mathbox{notin}{}}
+\newcommand\mmlNotsubset{\mathbox{notsubset}{}}
+\newcommand\mmlNotprsubset{\mathbox{notprsubset}{}}
+% binary series relation
+\newcommand\mmlTendsto{\mathbox{tendsto}{}}
+\newcommand\mmltendsto[1]{\mathbox{tendsto}[type][#1]{}}
+% N-ary relation
+\newcommand\mmlEq{\mathbox{eq}{}}
+\newcommand\mmlLeq{\mathbox{leq}{}}
+\newcommand\mmlLt{\mathbox{lt}{}}
+\newcommand\mmlGt{\mathbox{gt}{}}
+\newcommand\mmlGeq{\mathbox{geq}{}}
+% N-ary set relation
+\newcommand\mmlSubset{\mathbox{subset}{}}
+\newcommand\mmlPrsubset{\mathbox{prsubset}{}}
+
+% <sep/> separator in a number
+\newcommand\mmlSep{\mathbox{sep}{}}
+
+
+% <apply> takes N arguments
+\newcommand\mmlapply{\mathbox{apply}}
+% <semantics> one child
+\newcommand\mmlsemantics{\mathbox{semantics}}
+% <declare> one child
+\newcommand\mmldeclare{\mathbox{declare}}  %
+% <lambda> N <bvar> children, optional <domainofapplication>, expression
+\newcommand\mmllambda{\mathbox{lambda}}  %
+
+% <cn> : content is PCDATA plus <sep/>
+% 
+\newcommand\mmlcn{\mathbox{cn}}
+
+% <ci> 
+% \mathci gives PCDATA as content, \mmlci gives a general construct
+%% Attributes: base, type
+\newcommand\mmlci{\mathbox{ci}}  %
+
+% <csymbol> 
+% \mathcsymbol gives PCDATA as content, \mmlcsymbol for general construct
+% attributes  definitionURL
+\newcommand\mmlcsymbol{\mathbox{csymbol}}  %
+
+
+% <interval> can have a closure attribute
+\newcommand\mmlinterval{\mathbox{interval}}
+
+% <list> can have a closure attribute
+\newcommand\mmllist{\mathbox{list}}
+
+% <matrix> contains only <matrixrow> as children
+\newcommand\mmlmatrix{\mathbox{matrix}}
+
+% <matrixrow> a row in a matrix
+\newcommand\mmlmatrixrow{\mathbox{matrixrow}}
+
+% <vector> a row in a matrix
+\newcommand\mmlvector{\mathbox{vector}}
+
+% <condition> has a single child
+\newcommand\mmlcondition{\mathbox{condition}}
+\newcommand\mmlfn{\mathbox{fn}}
+
+
+% <annotation>
+\newcommand\mmlannotation{\mathbox{annotation}}
+\newcommand\mmlannotationxml{\mathbox{annotation-xml}}
+
+
+\newcommand\mmldomainofapplication{\mathbox{domainofapplication}}
+
+
+
+\newcommand\mmlpiece{\mathbox{piece}}
+\newcommand\mmlpiecewise{\mathbox{piecewise}}
+\newcommand\mmlotherwise{\mathbox{otherwise}}
+\newcommand\mmllowlimit{\mathbox{lowlimit}}
+\newcommand\mmluplimit{\mathbox{uplimit}}
+\newcommand\mmlbvar{\mathbox{bvar}}
+\newcommand\mmldegree{\mathbox{degree}}
+\newcommand\mmlmomentabout{\mathbox{momentabout}}
+\newcommand\mmlMoment{\mathbox{moment}{}}
+\newcommand\mmllogbase{\mathbox{logbase}}
+\newcommand\mmlset{\mathbox{set}}
+
+%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\mmlRoot{\mathbox{root}{}} 
+\newcommand\mmlLimit{\mathbox{limit}{}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% constants
+\newcommand\mmlIntegers{\mathbox{integers}{}}
+\newcommand\mmlReals{\mathbox{reals}{}}
+\newcommand\mmlRationals{\mathbox{rationals}{}}
+\newcommand\mmlComplexes{\mathbox{complexes}{}}
+\newcommand\mmlPrimes{\mathbox{primes}{}}
+\newcommand\mmlExponentiale{\mathbox{exponentiale}{}}
+\newcommand\mmlImaginaryi{\mathbox{imaginaryi}{}}
+\newcommand\mmlNotanumber{\mathbox{notanumber}{}}
+\newcommand\mmlTrue{\mathbox{true}{}}
+\newcommand\mmlFalse{\mathbox{false}{}}
+\newcommand\mmlEmptyset{\mathbox{emptyset}{}}
+\newcommand\mmlPi{\mathbox{pi}{}}
+\newcommand\mmlEulergamma{\mathbox{eulergamma}{}}
+\newcommand\mmlInfinity{\mathbox{infinity}{}}
+\newcommand\mmlNaturalnumbers{\mathbox{naturalnumbers}{}}
+
+
+
+
+% Attribute type. In the case of <cn> can be: real integer rational 
+% complex-cartesian and complex-polar
+% Other types e-notation, constant, function complex normal multiset
+% above below two-sided
+\newcommand\mmlAtype[1]{[type][#1]}
+
+% Attribute base: for <cn> defaults to 10
+\newcommand\mmlAbase[1]{[base][#1]}
+
+% closure of an interval
+\newcommand\mmlAclosure[1]{[closure][#1]}
+
+% encoding of  annotation etc
+\newcommand\mmlAencoding[1]{[encoding][#1]}
+%\def\mmlencodingP{\mmlAencoding{MathML-Presentation}}
+%\def\mmlencodingC{\mmlAencoding{MathML-Content}}
+%\def\mmlencodingT{\mmlAencoding{TeX}}
+%\def\mmlencodingO{\mmlAencoding{OpenMath}}
+
+% external definition of the semantics of teh symbol or construct being 
+% declared
+\newcommand\mmlAdefinitionURL[1]{[definitionURL][#1]}
+
+%% Number of arguments for <declare>. Can be nary
+\newcommand\mmlAnargs[1]{[nargs][#1]}
+
+%% Occurence for operator declaration. Can be prefix, infix, function-model
+\newcommand\mmlAoccurrence[1]{[occurrence][#1]}
+
+%% Ordering of a list. Can be lexicographic or numeric
+\newcommand\mmlAorder[1]{[order][#1]}
+
+% General attributes
+\newcommand\mmlAclass[1]{[class][#1]}
+\newcommand\mmlAstyle[1]{[style][#1]}
+\newcommand\mmlAid[1]{[id][#1]}
+\newcommand\mmlAother[1]{[other][#1]}
+
+
+%% Scope of applicability of a declaration. Can be local, global
+% deprecated
+%\newcommand\mmlAscope[1]{[scope][#1]}
+
+\newcommand\mmlXsep[2]{\mathcnothing{#1}\mathbox{sep}{}\mathcnothing{#2}}
+
+
+
+% Common constants, to be code
+\newcommand\mmlCpi{\mmlentity{pi}}
+\newcommand\mmlCee{\mmlentity{ee}}
+\newcommand\mmlCii{\mmlentity{ii}}
+\newcommand\mmlCgamma{\mmlentity{gamma}}
+\newcommand\mmlCinfty{\mmlentity{infty}}
+\newcommand\mmlCtrue{\mmlentity{true}}
+\newcommand\mmlCfalse{\mmlentity{false}}
+\newcommand\mmlCNaN{\mmlentity{NaN}}
+
+

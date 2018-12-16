@@ -1,0 +1,6 @@
+# This is an example of a configuration file for tralics.
+# This file is part of Tralics. Copyright Inria/ Jose Grimm/ Apics. 2004
+# $Id: config_empty,v 1.1 2006/07/17 09:09:06 grimm Exp $
+BeginType default
+  DocType = document devnul.dtd
+End

@@ -1,0 +1,31 @@
+Copyright notice.
+
+   This software is governed by the CeCILL license under French law and
+   abiding by the rules of distribution of free software.  You can  use, 
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info". 
+   (See the file COPYING in the main directory for details)
+
+Compiling instructions.
+
+Only standard C++ libraries are required. Just say make,
+this will provide a tralics binary.
+You can uncomment the line 'CPPFLAGS=-g -Wall' in case of trouble.
+This Software was compiled on Windows (cygwin gcc 3.4.4)
+on linux/fedora (gcc 3.4.4), on MacOS 10.4 (gcc 4.0.0)
+
+The binary contains the default location of the tralics configuration files.
+You can modify this in the following way:
+a) uncomment the line RAOPT=somevalue
+  and set the variable TRALICSDIR (it can be an argument of make)
+b) edit the file txpath.h and define TRALICSDIR there.
+You can do the same for confdir
+
+In case of problem contact: tralics@sophia.inria.fr
+or consult the Web page: http://www.inria.fr//tralics
+Report all bugs at the address mentioned above.
+
+
+
+

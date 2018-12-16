@@ -1,0 +1,1469 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE ramain SYSTEM 'raweb.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<ramain creator='Tralics version 2.15.3'>
+<p>The time is 09h 55min, 6th August 2015.</p>
+<p>DOCSTART</p>
+<div0 id-text='1' id='cid1'><head>First</head>
+<p>31.5pt0.0pt0.0mu1717.0pt17.0pt plus 1.0pt minus 2.0pt17.0mu plus 1.0mu minus 2.0mu3.0mu plus 4.0fil minus 17.0mu0.0mu119811711.0pt
+45
+25cmr10 
+foo= foo</p>
+<div3 id-text='0.0.0.1' id='uid1'><head>Macroexpansion</head>
+<p>Version2.15.3.
+foo=foo.
+foo=foo.
+<font-bold-series>foo=bold-foo</font-bold-series> non-bold foo.
+bold-<font-bold-series>foo</font-bold-series>=nonbold-foo
+barbar=barbar
+bold-<font-bold-series>barbar=bold-barbar</font-bold-series>
+bold-<font-bold-series>bar</font-bold-series><font-bold-series>bar</font-bold-series>=nonbold-barbar
+babar=babar
+barbar=barbar</p>
+<p>firstofone 
+
+Testing addtohook.</p>
+<p>__12345__12345__12345__12345abc
+emptyempty
+
+
+
+abc=abc
++a++b++c+</p>
+<p>=Textetexte=</p>
+<p>aaaa bbbb<font-typewriter-family>aaaa bbbb</font-typewriter-family> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='3.33333pt'/><mi>b</mi></mrow></math></formula></p>
+<p>=_#&amp;<xref url='a~&amp;#&amp; _'><font-large1>a~&amp;#&amp; _</font-large1></xref>=</p>
+<p>27<font-super>e</font-super>
+27<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow/> <mrow><mi>j</mi><mi>i</mi><mover accent='true'><mi>e</mi> <mo>&grave;</mo></mover><mi>m</mi><mi>e</mi></mrow> </msup></math></formula></p>
+</div3>
+<div3 id-text='0.0.0.2' id='uid2'><head>hathat</head>
+<p>1;«2«3«4okOK
+« <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>x</mi> <mn>2</mn> </msup></math></formula> M<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mn>1</mn> <mi>è</mi> </msup><mo>=</mo><mi>A</mi></mrow></math></formula></p>
+<p>&#x153;=&#x152;=&#x178;=
+&#x17B;x?
+Compare:&#x153;&#x152;&#x178;&#x17B;</p>
+<p>Test for German thing
+OK: äöüëïÄÖÜÏËßßSSSZckCKffFFllLLmmMMnnNNppPPrrRRttTT
+Ok: --=&#x0201E;&#x0201D;«»</p>
+</div3>
+<div3 id-text='0.0.0.3' id='uid3'><head>accents</head>
+</div3>
+<div3 id-text='0.0.0.4' id='uid4'><head>latin extended-A</head>
+<p>ligne 010x: &#x100;&#x101;&#x102;&#x103;&#x104;&#x105; &#x106;&#x107;&#x108;î &#x10A;&#x10B;&#x10C;&#x10D;&#x10E;&#x10F;</p>
+<p noindent='true'>ligne 011x: ??&#x112;&#x113;&#x114;&#x115;&#x116;&#x117;&#x118;&#x119;&#x11A;&#x11B;&#x11C;&#x11D;&#x11E;&#x11F;</p>
+<p noindent='true'>ligne 013x: &#x130;&#x131;&#x132;&#x133;&#x134;&#x135;&#x136;&#x137;?&#x139;&#x13A;&#x13B;&#x13C;&#x13D;&#x13E;?</p>
+<p noindent='true'>ligne 014x: ?&#x141;&#x142;&#x143;&#x144;&#x145;&#x146;&#x147;&#x148;?&#x14A;&#x14B;&#x14C;&#x14D;&#x14E;&#x14F;</p>
+<p noindent='true'>ligne 015x: &#x150;&#x151;&#x152;&#x153;&#x154;&#x155;&#x156;&#x157;&#x158;&#x159;&#x15A;&#x15B;&#x15C;&#x15D;&#x15E;&#x15F;</p>
+<p noindent='true'>ligne 016x: &#x160;&#x161;&#x162;&#x163;&#x164;&#x165;??&#x168;&#x169;&#x16A;&#x16B;&#x16C;&#x16D;&#x16E;&#x16F;</p>
+<p noindent='true'>ligne 017x: &#x170;&#x171;&#x172;&#x173;&#x174;&#x175;&#x176;&#x177;&#x178;&#x179;&#x17A;&#x17B;&#x17C;&#x17D;&#x17E;?</p>
+<p>testpar</p>
+<p noindent='true' spacebefore='6.0pt'>a paragraph</p>
+<figure file='x' id-text='1' id='uid5' rend='figure'/>
+<figure file='y' extension='ps' id-text='2' id='uid6' rend='figure'><head><p>A</p>
+<p>B</p>
+</head>
+</figure>
+<figure file='x' id-text='3' id='uid7' rend='figure'><head>Caption of the figure</head>
+</figure>
+<figure id-text='4' id='uid8' starred='true' rend='array'><p><table rend='inline'><row><cell halign='center'><figure rend='inline' width='1.0pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='2.0pt' file='x'/></cell>
+</row><row><cell halign='center'><figure rend='inline' width='3.0pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='4.0pt' file='x'/></cell>
+</row></table></p></figure>
+<table id-text='1' id='uid9' starred='true' rend='display'><head>a table with a caption</head>
+<row><cell halign='center'><figure rend='inline' width='1.0pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='2.0pt' file='x'/></cell>
+</row><row><cell halign='center'><figure rend='inline' width='3.0pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='4.0pt' file='x'/></cell>
+</row></table>
+<list type='gloss'><head>Glossary</head><label>x1</label><item><p>y1</p>
+</item><label>x2</label><item><p>y2</p>
+</item></list><participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<participants><pers prenom='1' nom='2'>3</pers>
+<pers prenom='1' nom='2'/>
+</participants>
+<p>abstract
+a body</p>
+<moreinfo><p>additional information</p>
+</moreinfo>
+<p>ok</p>
+<preview><formula id-text='1' id='uid10' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>1</mn></mrow></mtd><mtd columnalign='right'><mn>1</mn></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>X</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>Y</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>0</mn><mo>.</mo><mn>01</mn></mrow></mtd><mtd columnalign='right'><mrow><mn>0</mn><mo>.</mo><mn>001</mn></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>X</mi></mrow></mtd></mtr></mtable></math></formula>
+</preview><formula id-text='0.0.0.4' id='uid11' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mrow><mo form='prefix'>sin</mo><mo>=</mo><mo form='prefix'>cos</mo></mrow></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mo form='prefix'>cos</mo></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mo form='prefix'>sin</mo></mtd></mtr><mtr><mtd columnalign='right'><mrow><mn>1</mn><mo>+</mo><mn>2</mn></mrow></mtd></mtr></mtable></math></formula>
+<p>ABCABCABC</p>
+<p>XX</p>
+<foo>ccaaAbbBaa</foo><formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&beta;</mi><mi>A</mi><mtext>aaB</mtext><mspace width='4.pt'/><mrow><mi>&alpha;</mi><mi>C</mi></mrow><mi>D</mi></mrow></math></formula>
+<p noindent='true'><foo>AB</foo></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mtext>B</mtext><mspace width='4.pt'/><mi>C</mi><mi>D</mi></mrow></math></formula>
+<p>023400</p>
+<p>ASSTEST
+
+.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></math></formula></p>
+<p noindent='true'><font-typewriter-family>{\let\rm\bf \bf toto}</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>&lt;<zws/>!-<zws/>-<zws/>this is a comment -<zws/>-<zws/>&gt;<zws/></font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>&amp;dollar; not &amp;equals; EURO &amp;excl;</font-typewriter-family></p>
+<p noindent='true'>{\let\rm\bf \bf toto}
+<!--this is a comment -->
+&dollar; not &equals; EURO &excl;</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>a</mi> <mo>&Hat;</mo></mover><mover accent='true'><mi>b</mi> <mo>&acute;</mo></mover><mover accent='true'><mi>c</mi> <mo>&OverBar;</mo></mover><mover accent='true'><mi>d</mi> <mo>&dot;</mo></mover><mover accent='true'><mi>e</mi> <mo>&breve;</mo></mover><mover accent='true'><mi>f</mi> <mo>&Hacek;</mo></mover><mover accent='true'><mi>g</mi> <mo>&grave;</mo></mover><mover accent='true'><mi>h</mi> <mo>&rightarrow;</mo></mover><mover accent='true'><mi>k</mi> <mo>&die;</mo></mover><mover accent='true'><mi>l</mi> <mo>&tilde;</mo></mover><mi>a</mi><mo>&rightarrow;</mo><mi>b</mi><mo>&longrightarrow;</mo><mi>c</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>x</mi> <mo>&acute;</mo></mover><mover accent='true'><mi>x</mi> <mo>&OverBar;</mo></mover><mover accent='true'><mi>x</mi> <mo>&breve;</mo></mover><mover accent='true'><mi>x</mi> <mo>&Hacek;</mo></mover><mover accent='true'><mi>x</mi> <mo>&#x20DC;</mo></mover><mover accent='true'><mi>x</mi> <mo>&#x20DB;</mo></mover><mover accent='true'><mi>x</mi> <mo>&die;</mo></mover><mover accent='true'><mi>x</mi> <mo>&dot;</mo></mover><mover accent='true'><mi>x</mi> <mo>&grave;</mo></mover><mover accent='true'><mi>x</mi> <mo>&Hat;</mo></mover><mover accent='true'><mi>x</mi> <mo>&#x2DA;</mo></mover><mover accent='true'><mi>x</mi> <mo>&tilde;</mo></mover><mover accent='true'><mi>x</mi> <mo>&rightarrow;</mo></mover><mover accent='true'><mrow><mi>x</mi><mi>y</mi><mi>z</mi></mrow> <mo>&Hat;</mo></mover><mover accent='true'><mrow><mi>x</mi><mi>y</mi><mi>z</mi></mrow> <mo>&tilde;</mo></mover></mrow></math></formula></p>
+<p><formula textype='math' type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&alpha;</mi><mo>=</mo><mi>&beta;</mi></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&gamma;</mi><mo>=</mo><mi>&delta;</mi></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&phiv;</mi><mo>=</mo><mi>&psi;</mi></mrow></math></formula>;
+and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>&ne;</mo><mi>&infin;</mi></mrow></math></formula></p>
+<formula id-text='3' id='uid12' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mn>0</mn></mrow></math></formula>
+<formula textype='equation*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mn>0</mn></mrow></math></formula>
+<formula textype='displaymath' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mn>0</mn></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mn>0</mn></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mn>0</mn></mrow></math></formula>
+<formula id-text='4' id='uid13' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>4</mn> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>a</mi> <mn>4</mn> </msup><mo>+</mo><mn>4</mn><msup><mi>a</mi> <mn>3</mn> </msup><mi>b</mi><mo>+</mo><mn>6</mn><msup><mi>a</mi> <mn>2</mn> </msup><msup><mi>b</mi> <mn>2</mn> </msup><mo>+</mo><mn>4</mn><mi>a</mi><msup><mi>b</mi> <mn>3</mn> </msup><mo>+</mo><msup><mi>b</mi> <mn>4</mn> </msup></mrow></mtd></mtr></mtable></math></formula>
+<formula id-text='5' id='uid14' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>4</mn> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>a</mi> <mn>4</mn> </msup><mo>+</mo><mn>4</mn><msup><mi>a</mi> <mn>3</mn> </msup><mi>b</mi><mo>+</mo><mn>6</mn><msup><mi>a</mi> <mn>2</mn> </msup><msup><mi>b</mi> <mn>2</mn> </msup><mo>+</mo><mn>4</mn><mi>a</mi><msup><mi>b</mi> <mn>3</mn> </msup><mo>+</mo><msup><mi>b</mi> <mn>4</mn> </msup></mrow></mtd></mtr></mtable></math></formula>
+<formula id-text='0.0.0.4' id='uid15' textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><mn>1</mn></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><msqrt><mrow><mn>1</mn><mo>-</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></msqrt></mrow></mtd></mtr></mtable></math></formula>
+<formula textype='eqnarray*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>&ll;</mo></mtd><mtd columnalign='left'><mrow><msub><mi>y</mi> <mn>1</mn> </msub><mo>+</mo><mo>&ctdot;</mo><mo>+</mo><msub><mi>y</mi> <mi>n</mi> </msub></mrow></mtd></mtr><mtr><mtd/><mtd><mo>&le;</mo></mtd><mtd columnalign='left'><mi>z</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='0.0.0.4' id='uid16' textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mn>17</mn><mi>y</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi><mo>+</mo><mi>g</mi><mo>+</mo><mi>h</mi><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo></mrow></mtd></mtr><mtr><mtd/><mtd/><mtd columnalign='left'><mrow><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>+</mo><mi>o</mi><mo>+</mo><mi>p</mi></mrow></mtd></mtr></mtable></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>E</mi><mi>Q</mi><mn>1</mn></mrow></math></formula>
+<p noindent='true'>etc</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>E</mi><mi>Q</mi><mn>2</mn></mrow></math></formula>
+<p>etc</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>E</mi><mi>Q</mi><mn>3</mn></mrow></math></formula>
+<p>etc</p>
+<p>&#x31;
+2
+3
+4</p>
+<p>&#x1e08; &#x1e09; &#x1e16; &#x1e17; &#x1e2e; &#x1e2f;
+ok</p>
+<p><font-large1>Xº</font-large1></p>
+<formula textype='align*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>u</mi></mtd><mtd columnalign='left'><mrow><mo>&equiv;</mo><mi>v</mi><mo>+</mo><mn>1</mn><mspace width='3.33333pt'/><mo form='prefix'>mod</mo><mspace width='0.277778em'/><msup><mi>n</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>u</mi></mtd><mtd columnalign='left'><mrow><mo>&equiv;</mo><mi>v</mi><mo>+</mo><mn>1</mn><mspace width='0.277778em'/><mo form='prefix'>mod</mo><mspace width='0.277778em'/><msup><mi>n</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>u</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>v</mi><mo>+</mo><mn>1</mn><mspace width='10.0pt'/><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><msup><mi>n</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>u</mi></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>v</mi><mo>+</mo><mn>1</mn><mspace width='10.0pt'/><mo>(</mo><msup><mi>n</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mtd></mtr></mtable></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mstyle scriptlevel='0' displaystyle='true'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle><mstyle scriptlevel='0' displaystyle='false'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle><mspace width='2.em'/><msup><mrow/> <mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mstyle scriptlevel='0' displaystyle='true'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle><mstyle scriptlevel='0' displaystyle='false'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle></mrow> </msup></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mrow><mi>b</mi><mfrac><mrow><mi>c</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac></mrow> <mi>b</mi></mfrac><mspace width='1.em'/><mstyle scriptlevel='0' displaystyle='false'><mfrac><mrow><mi>c</mi><mfrac><mrow><mi>d</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac></mrow> <mi>c</mi></mfrac></mstyle><mspace width='1.em'/><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><mi>b</mi><mfrac><mrow><mi>c</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac></mrow> <mi>b</mi></mfrac></mstyle></mrow></math></formula>
+<pers prenom='1' nom='2'/>
+<p>3
+<pers prenom='Rose' nom='Dieng-Kuntz' affiliation='Inria' profession='Scientist' hdr='yes'>1956-2008, Research Director</pers>
+
+<pers prenom='Rose' nom='Dieng-Kuntz' affiliation='Inria' profession='Scientist' research-centre='Sophia'>1956-2008, Research Director</pers>
+.</p>
+<p><font-large5>1&#x1F4;&#x1F5;
+&#x1CD;&#x1CE;</font-large5>
+&#x1F5;&#x1F4;</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mover accent='true'><mover accent='true'><mi mathvariant='normal'>o</mi> <mo>&dot;</mo></mover> <mo>&OverBar;</mo></mover></math></formula>
+a - b &#x2013; c &#x2014; d</p>
+<p>ABCABC&#x152;&#x152;ØØÆÆÐÐ&#x110;&#x110;&#x141;&#x141;&#x14A;&#x14A;SSSSÞÞ</p>
+<p noindent='true'>abcabc&#x153;&#x153;øøææðð&#x111;&#x111;&#x142;&#x142;&#x14B;&#x14B;ßßþþ</p>
+<p noindent='true'>Check:fooøø=fooøø
+Check:FOOØØ=FOOØØ</p>
+<p>13</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mfrac><mrow><mi>c</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>b</mi></mfrac></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='false'><mfrac linethickness='0pt'><mfrac><mrow><mi>d</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>c</mi></mfrac></mstyle></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0pt'><mfrac><mrow><mi>c</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>b</mi></mfrac></mstyle></mfenced><mspace width='2.em'/><msup><mrow/> <mrow><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mfrac><mrow><mi>d</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>d</mi></mfrac></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='false'><mfrac linethickness='0pt'><mfrac><mrow><mi>d</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>c</mi></mfrac></mstyle></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0pt'><mfrac><mrow><mi>c</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>b</mi></mfrac></mstyle></mfenced></mrow> </msup></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='0.166667em'/><msub><mi>b</mi> <mrow><mi>c</mi><mi>d</mi></mrow> </msub><mi>a</mi><mspace width='0.166667em'/><msub><mi>b</mi> <mstyle scriptlevel='0' displaystyle='false'><mrow><mi>c</mi><mspace width='0.166667em'/><mi>d</mi></mrow></mstyle> </msub></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mfenced open='[' close=']'><mstyle scriptlevel='1' displaystyle='false'><mfrac linethickness='2.0pt'><mrow><mi>a</mi><mi>a</mi><mi>a</mi></mrow> <mrow><mi>b</mi><mi>b</mi><mi>b</mi></mrow></mfrac></mstyle></mfenced><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0.0pt'><mi>n</mi> <mi>m</mi></mfrac></mstyle></mfenced></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>=</mo><mfrac><mi>b</mi> <mi>b</mi></mfrac><mo>=</mo><msub><mn>1</mn> <mrow><mi>c</mi><mfrac><mi>d</mi> <mi>d</mi></mfrac></mrow> </msub><mo>=</mo><msup><mn>2</mn> <mrow><mi>c</mi><mfrac><mi>d</mi> <mi>d</mi></mfrac></mrow> </msup></mrow></math></formula>
+<p rend='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>b</mi><mo>=</mo><mfrac><mi>c</mi> <mi>c</mi></mfrac><mo>=</mo><msub><mn>1</mn> <mrow><mi>c</mi><mfrac><mi>d</mi> <mi>d</mi></mfrac></mrow> </msub><mo>=</mo><msup><mn>2</mn> <mrow><mi>c</mi><mfrac><mi>d</mi> <mi>d</mi></mfrac></mrow> </msup></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mstyle scriptlevel='0' displaystyle='true'><mrow><mi>x</mi><mfrac><mn>1</mn> <mn>2</mn></mfrac></mrow></mstyle><mstyle scriptlevel='0' displaystyle='false'><mrow><mi>x</mi><mfrac><mn>1</mn> <mn>2</mn></mfrac></mrow></mstyle><mstyle scriptlevel='1' displaystyle='false'><mrow><mi>x</mi><mfrac><mn>1</mn> <mn>2</mn></mfrac></mrow></mstyle><mstyle scriptlevel='2' displaystyle='false'><mrow><mi>x</mi><mfrac><mn>1</mn> <mn>2</mn></mfrac></mrow></mstyle><mspace width='2.em'/><mstyle scriptlevel='0' displaystyle='true'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle><mo>+</mo><mstyle scriptlevel='0' displaystyle='false'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle><mo>+</mo><mstyle scriptlevel='1' displaystyle='false'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle><mo>+</mo><mstyle scriptlevel='2' displaystyle='false'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle><mspace width='2.em'/><mfrac><mstyle scriptlevel='0' displaystyle='true'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle> <mstyle scriptlevel='0' displaystyle='false'><mrow><mi>x</mi><mi>b</mi></mrow></mstyle></mfrac><mo>+</mo><mfrac><mstyle scriptlevel='1' displaystyle='false'><mrow><mi>x</mi><mi>a</mi></mrow></mstyle> <mstyle scriptlevel='2' displaystyle='false'><mrow><mi>x</mi><mi>b</mi></mrow></mstyle></mfrac></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mi>a</mi> <mfrac><mi>b</mi> <mi>c</mi></mfrac></mfrac></math></formula>
+<p>y´<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>x</mi> <mo>&apos;</mo> </msup><msup><mi>x</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><msup><mi>x</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><msup><mi>x</mi> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msup><msubsup><mi>u</mi> <mn>2</mn> <mo>&apos;</mo> </msubsup><msubsup><mi>v</mi> <mn>4</mn> <mrow><mo>&apos;</mo><mn>3</mn></mrow> </msubsup></mrow></math></formula></p>
+<div4 id-text='0.0.0.4.1' id='uid17'><head>t</head>
+<p><ref target='uid3'/><ref target='uid4'/><ref target='uid17'/>c
+<bar target='uid4'/>
+<foo target='uid3'/>
+Testing raw XML.
+<foo foo-att='att-value&apos;&apos;'><subelt1>texte1
+</subelt1>
+<subelt2 sb3-att='' sb2-att='value1'>texte2
+</subelt2>
+</foo></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mo movablelimits='true' form='prefix'>min</mo> <mi>x</mi> </msub><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>&gt;</mo><msub><mo form='prefix'>dmin</mo> <mi>x</mi> </msub><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mo movablelimits='true' form='prefix'>min</mo> <mi>x</mi> </msub><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>&gt;</mo><msub><mo movablelimits='true' form='prefix'>dmin</mo> <mi>x</mi> </msub><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>.</p>
+<p><foo y='2' x='3'>    </foo></p>
+<bar y='2' x='1'/><p>code starts here</p>
+<p>ok</p>
+<bar x='1'><p x='2'>ok</p>
+</bar><p>ok
+<bar x='1'>
+ok 
+</bar></p>
+<p>é=é è=è</p>
+<foo>A<bar>By</bar> Cx</foo><mybox>box contains foo</mybox><p>Optional argument trick.
+
+no-opt and opt-bar-arg[optional]</p>
+<p>ncaand ncband nccarg1arg2 and
+ncdarg1arg2 and ncdxarg2</p>
+<p>Another idea (heiko)
+  no-opt and opt-bar-arg[optional]</p>
+<p><font-large1>x</font-large1><font-large2>x</font-large2>
+<font-large1>x</font-large1>y<font-small1>z</font-small1><font-large2>x</font-large2><font-large1>y</font-large1>z</p>
+<p>31=31,
+0=0 
+11101=11101</p>
+</div4></div3>
+<div3 id-text='0.0.0.5' id='uid18'><head>Test verbatim</head>
+<p>Essai de verbatim 1) <font-typewriter-family>&#x2423;x&#x2423;y</font-typewriter-family> 2) <font-typewriter-family>&#x2423;x&#x2423;y</font-typewriter-family></p>
+<p noindent='true'><font-small1>5</font-small1> <font-typewriter-family>test : !@#$%^&amp;*()_$</font-typewriter-family></p>
+<p noindent='true'><font-small1>6</font-small1> <font-typewriter-family>test : {\foo\} et zxcvbnm,./</font-typewriter-family></p>
+<p noindent='true'><font-small1>7</font-small1> <font-typewriter-family>test ZXVBNM&lt;<zws/>&gt;<zws/>? ~</font-typewriter-family></p>
+<p noindent='true'><font-small1>8</font-small1> <font-typewriter-family>test \verb+\verb-<zws/>xx-<zws/>+</font-typewriter-family></p>
+<p noindent='true'><font-small1>9</font-small1> <font-typewriter-family>test ligatures: &lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>`<zws/>`<zws/>'<zws/>'<zws/>-<zws/>-<zws/> et -<zws/>-<zws/>-<zws/> !</font-typewriter-family></p>
+<p noindent='true'><font-small1>10</font-small1> <font-typewriter-family>! \end{verbatim} Not this one</font-typewriter-family></p>
+<p noindent='true'><font-small1>11</font-small1> <font-typewriter-family>\end{notverbatim}</font-typewriter-family></p>
+<p>Fin du verbatim. <font-typewriter-family>\toto</font-typewriter-family> et <font-typewriter-family>\verb+ { } $$</font-typewriter-family>.
+<font-typewriter-family>\begin{verbatim}</font-typewriter-family> doit passer Autre verbatim (sans numéro)</p>
+<p noindent='true'><font-typewriter-family>test : !@#$%^&amp;*()_$</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>test : {\foo\} et zxcvbnm,./</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>test ZXVBNM&lt;<zws/>&gt;<zws/>? ~</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>test \verb+\verb-<zws/>xx-<zws/>+</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>test ligatures: &lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>`<zws/>`<zws/>'<zws/>'<zws/>-<zws/>-<zws/> et -<zws/>-<zws/>-<zws/> !</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>test BL : \\738! et \\838!.</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>Verbatim_line</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>Verbatim_line</font-typewriter-family></p>
+<p>Verbatim env with line numbers</p>
+<p noindent='true'><font-small1>1</font-small1> <font-typewriter-family>TEST</font-typewriter-family></p>
+<p noindent='true'>and without</p>
+<p noindent='true'><font-typewriter-family>[ok]TEST</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>TEST</font-typewriter-family></p>
+<p noindent='true'><font-large1>5</font-large1> <font-italic-shape>5</font-italic-shape>,one line</p>
+<p noindent='true'><font-large1>6</font-large1> <font-italic-shape>6</font-italic-shape>,one line</p>
+<p noindent='true'><font-large1>9</font-large1> <font-italic-shape>9</font-italic-shape>,one line</p>
+<p noindent='true'><font-large1>10</font-large1> <font-italic-shape>1</font-italic-shape>0,one line</p>
+<p noindent='true'>Test of <font-typewriter-family>\DefineShortVerb</font-typewriter-family> and <font-typewriter-family>\UndefineShortVerb</font-typewriter-family>.
+
+test 1 <font-typewriter-family>toto</font-typewriter-family> <font-typewriter-family>x</font-typewriter-family> <font-typewriter-family>+x-<zws/></font-typewriter-family> <font-typewriter-family>|t|</font-typewriter-family>
+
+test 2 <font-typewriter-family>toto</font-typewriter-family> +x+ <font-typewriter-family>+x-<zws/></font-typewriter-family> +<font-typewriter-family>t</font-typewriter-family>+
+espace: <font-typewriter-family>+ +</font-typewriter-family>
+
+Verbatimfoo: <font-typewriter-family>+ foo +</font-typewriter-family><font-typewriter-family>*foo*</font-typewriter-family><font-typewriter-family>foo*</font-typewriter-family>
+Verbatimfoo: <font-typewriter-family>+ foo +*foo*foo*</font-typewriter-family>.</p>
+<p><font-typewriter-family>}</font-typewriter-family>
+Test <font-typewriter-family>}</font-typewriter-family>,<font-typewriter-family>|</font-typewriter-family>, <font-typewriter-family>$_</font-typewriter-family>.</p>
+<p><font-typewriter-family>+&#x2423;+</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>Some&#x2423;Verbatim&#x2423;text.</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>+ +</font-typewriter-family>, <font-typewriter-family> </font-typewriter-family>, <font-typewriter-family>&#x2423;</font-typewriter-family>.</p>
+<p noindent='true'><font-typewriter-family>More Verbatim text.</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family>Some Verbatim text.</font-typewriter-family></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mtext>The</mtext><mspace width='4.pt'/><mtext>sign</mtext><mspace width='4.pt'/><mtext>function:</mtext><mspace width='4.pt'/><mspace width='4.pt'/><mi>&Sscr;</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>=</mo><mfenced separators='' open='&lbrace;' close=''><mtable><mtr><mtd columnalign='left'><mrow><mo>-</mo><mn>1</mn></mrow></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>&lt;</mo><mn>0</mn></mrow></mtd></mtr><mtr><mtd columnalign='left'><mn>0</mn></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow></mtd></mtr><mtr><mtd columnalign='left'><mn>1</mn></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>&gt;</mo><mn>0</mn></mrow></mtd></mtr></mtable></mfenced></mrow></math></formula>
+<p>Verbatim test</p>
+<p><font-typewriter-family>\verb+ { } $$</font-typewriter-family>.
+<font-typewriter-family>\verb+&#x2423;{&#x2423;}&#x2423;$$</font-typewriter-family>.
+<font-italic-shape>+x+</font-italic-shape>!</p>
+</div3>
+<div3 id-text='0.0.0.6' id='uid19'><head>ifthenelse</head>
+<p>ok1
+ok2
+ok3
+ok4
+ok5
+ok6
+ok7
+ok8
+
+
+ok9
+ok10
+ok11
+ok12
+ok13
+ok14
+ok15
+ok16
+ok17
+ok18
+ok19
+ok20
+ok21</p>
+<p>dd et rr.</p>
+<p>You agree &#x201C;OK&#x201D; or don't &#x201C;not OK&#x201D;.
+D'accord &#x201C;OK&#x201D; ou pas &#x201C;not OK&#x201D;.</p>
+</div3>
+<div3 id-text='0.0.0.7' id='uid20'><head>CALC</head>
+<p>1=1
+-5=-5</p>
+<p>28.4526pt=28.4526pt
+ 0.99985pt=0.99985pt
+ 0.99998pt=0.99998pt
+ 1.00018pt=1.00018pt
+ 0.99985pt=0.99985pt
+ 0.99985pt=0.99985pt
+ 1.00018pt=1.00018pt
+ 1.00018pt=1.00018pt</p>
+<p>6
+10.0pt=10pt
+ 321=321</p>
+<p><font-small1><font-italic-shape>a
+<foo><font-large1><font-italic-shape>x</font-italic-shape></font-large1></foo></font-italic-shape></font-small1></p>
+<p>2</p>
+<foo>ok</foo><p>, and <foo>ok</foo>, and <foo>ok</foo>, and !
+<foo>ok</foo><foo>ok</foo>3</p>
+<foo>ok</foo><p>and ; <bar>ok</bar><bar>ok</bar>.
+XY.
+XxY.
+XxY.
+XxY.
+XxY.
+XxY.
+XxY.</p>
+<p>Test.236.47191pt plus 0.03815pt=236.47191pt plus 0.03815pt.</p>
+x<p><font-large1>a<font-small1>x</font-small1>b</font-large1>
+<font-large1>axb</font-large1></p>
+<p>test hbox AabB.
+some <font-italic-shape>box content</font-italic-shape>.</p>
+<p>UPPERCASE</p>
+<p>33.4</p>
+<p><figure rend='inline' clip='true' width='85.35826pt' file='Logo-INRIA-couleur' extension='ducon'/>
+<figure rend='inline' height='171.00174pt' width='213.5pt' file='Logo-INRIA-couleur' extension='ducon'/>
+<figure rend='inline' height='570.0pt' width='427.0pt' file='Logo-INRIA-couleur' extension='ducon'/>
+<figure rend='inline' clip='true' width='85.35826pt' file='Logo-INRIA-couleur' extension='ducon'/></p>
+<p>{}
+{}
+YX</p>
+<p>0¶¶¶¶</p>
+</div3>
+<div3 id-text='0.0.0.8' id='uid21'><head>Biblio</head>
+<p>This is some text
+<cit rend='foot'><ref target='bid0'/></cit>, <cit rend='foot'><ref target='bid1'/></cit> <cit><ref target='bid2'>text</ref></cit>, <cit><ref target='bid3'/></cit> <cit><ref target='bid4'/></cit>
+<cit><ref target='bid4'>foo</ref></cit>
+<cit rend='foot'><ref target='bid0'>p32</ref></cit>, <cit rend='foot'><ref target='bid1'/></cit><cit rend='foot'><ref target='bid0'>p32</ref></cit><cit><ref target='bid4'/></cit>, <cit><ref target='bid4'/></cit>
+<cit><ref target='bid2'>text</ref></cit>, <cit><ref target='bid3'/></cit><cit><ref target='bid2'/></cit>, <cit><ref target='bid3'/></cit>
+<cit rend='foot'><ref target='bid0'/></cit>, <cit rend='foot'><ref target='bid1'/></cit> <cit rend='foot'><ref target='bid0'>p3</ref></cit>, <cit rend='foot'><ref target='bid1'/></cit></p>
+<bibitem id='bid0'>key1</bibitem><bibitem id='bid1'>key2</bibitem><p>MINIPAGE
+Hàn Th&#x1ebf; Thành designed pdf<TeX/>. &#x142; and &lstrok;.</p>
+<p noindent='true'>In Tralics version 2, you can say Th&#x1EBF;</p>
+<formula id-text='8' id='uid22' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><mi>&#x1D670;&#x1D68A;</mi><mi>&Ascr;</mi><mi>&#x1D400;&#x1D41A;</mi><mi> Aa </mi><mi>&#x1D434;&#x1D44E;</mi><mi>&Aopf;</mi><mi>&#x1D5A0;&#x1D5BA;</mi><mi>A</mi><mi>a</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D671;&#x1D68B;</mi><mi>&Bscr;</mi><mi>&#x1D401;&#x1D41B;</mi><mi> Bb </mi><mi>&#x1D435;&#x1D44F;</mi><mi>&Bopf;</mi><mi>&#x1D5A1;&#x1D5BB;</mi><mi>B</mi><mi>b</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D672;&#x1D68C;</mi><mi>&Cscr;</mi><mi>&#x1D402;&#x1D41C;</mi><mi> Cc </mi><mi>&#x1D436;&#x1D450;</mi><mi>&Copf;</mi><mi>&#x1D5A2;&#x1D5BC;</mi><mi>C</mi><mi>c</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D673;&#x1D68D;</mi><mi>&Dscr;</mi><mi>&#x1D403;&#x1D41D;</mi><mi> Dd </mi><mi>&#x1D437;&#x1D451;</mi><mi>&Dopf;</mi><mi>&#x1D5A3;&#x1D5BD;</mi><mi>D</mi><mi>d</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D674;&#x1D68E;</mi><mi>&Escr;</mi><mi>&#x1D404;&#x1D41E;</mi><mi> Ee </mi><mi>&#x1D438;&#x1D452;</mi><mi>&Eopf;</mi><mi>&#x1D5A4;&#x1D5BE;</mi><mi>E</mi><mi>e</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D675;&#x1D68F;</mi><mi>&Fscr;</mi><mi>&#x1D405;&#x1D41F;</mi><mi> Ff </mi><mi>&#x1D439;&#x1D453;</mi><mi>&Fopf;</mi><mi>&#x1D5A5;&#x1D5BF;</mi><mi>F</mi><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D676;&#x1D690;</mi><mi>&Gscr;</mi><mi>&#x1D406;&#x1D420;</mi><mi> Gg </mi><mi>&#x1D43A;&#x1D454;</mi><mi>&Gopf;</mi><mi>&#x1D5A6;&#x1D5C0;</mi><mi>G</mi><mi>g</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D677;&#x1D691;</mi><mi>&Hscr;</mi><mi>&#x1D407;&#x1D421;</mi><mi> Hh </mi><mi>&#x1D43B;&#x210E;</mi><mi>&Hopf;</mi><mi>&#x1D5A7;&#x1D5C1;</mi><mi>H</mi><mi>h</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D678;&#x1D692;</mi><mi>&Iscr;</mi><mi>&#x1D408;&#x1D422;</mi><mi> Ii </mi><mi>&#x1D43C;&#x1D456;</mi><mi>&Iopf;</mi><mi>&#x1D5A8;&#x1D5C2;</mi><mi>I</mi><mi>i</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D679;&#x1D693;</mi><mi>&Jscr;</mi><mi>&#x1D409;&#x1D423;</mi><mi> Jj </mi><mi>&#x1D43D;&#x1D457;</mi><mi>&Jopf;</mi><mi>&#x1D5A9;&#x1D5C3;</mi><mi>J</mi><mi>j</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67A;&#x1D694;</mi><mi>&Kscr;</mi><mi>&#x1D40A;&#x1D424;</mi><mi> Kk </mi><mi>&#x1D43E;&#x1D458;</mi><mi>&Kopf;</mi><mi>&#x1D5AA;&#x1D5C4;</mi><mi>K</mi><mi>k</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67B;&#x1D695;</mi><mi>&Lscr;</mi><mi>&#x1D40B;&#x1D425;</mi><mi> Ll </mi><mi>&#x1D43F;&#x1D459;</mi><mi>&Lopf;</mi><mi>&#x1D5AB;&#x1D5C5;</mi><mi>L</mi><mi>l</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67C;&#x1D696;</mi><mi>&Mscr;</mi><mi>&#x1D40C;&#x1D426;</mi><mi> Mm </mi><mi>&#x1D440;&#x1D45A;</mi><mi>&Mopf;</mi><mi>&#x1D5AC;&#x1D5C6;</mi><mi>M</mi><mi>m</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67D;&#x1D697;</mi><mi>&Nscr;</mi><mi>&#x1D40D;&#x1D427;</mi><mi> Nn </mi><mi>&#x1D441;&#x1D45B;</mi><mi>&Nopf;</mi><mi>&#x1D5AD;&#x1D5C7;</mi><mi>N</mi><mi>n</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67E;&#x1D698;</mi><mi>&Oscr;</mi><mi>&#x1D40E;&#x1D428;</mi><mi> Oo </mi><mi>&#x1D442;&#x1D45C;</mi><mi>&Oopf;</mi><mi>&#x1D5AE;&#x1D5C8;</mi><mi>O</mi><mi>o</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67F;&#x1D699;</mi><mi>&Pscr;</mi><mi>&#x1D40F;&#x1D429;</mi><mi> Pp </mi><mi>&#x1D443;&#x1D45D;</mi><mi>&Popf;</mi><mi>&#x1D5AF;&#x1D5C9;</mi><mi>P</mi><mi>p</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D680;&#x1D69A;</mi><mi>&Qscr;</mi><mi>&#x1D410;&#x1D42A;</mi><mi> Qq </mi><mi>&#x1D444;&#x1D45E;</mi><mi>&Qopf;</mi><mi>&#x1D5B0;&#x1D5CA;</mi><mi>Q</mi><mi>q</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D681;&#x1D69B;</mi><mi>&Rscr;</mi><mi>&#x1D411;&#x1D42B;</mi><mi> Rr </mi><mi>&#x1D445;&#x1D45F;</mi><mi>&Ropf;</mi><mi>&#x1D5B1;&#x1D5CB;</mi><mi>R</mi><mi>r</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D682;&#x1D69C;</mi><mi>&Sscr;</mi><mi>&#x1D412;&#x1D42C;</mi><mi> Ss </mi><mi>&#x1D446;&#x1D460;</mi><mi>&Sopf;</mi><mi>&#x1D5B2;&#x1D5CC;</mi><mi>S</mi><mi>s</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D683;&#x1D69D;</mi><mi>&Tscr;</mi><mi>&#x1D413;&#x1D42D;</mi><mi> Tt </mi><mi>&#x1D447;&#x1D461;</mi><mi>&Topf;</mi><mi>&#x1D5B3;&#x1D5CD;</mi><mi>T</mi><mi>t</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D684;&#x1D69E;</mi><mi>&Uscr;</mi><mi>&#x1D414;&#x1D42E;</mi><mi> Uu </mi><mi>&#x1D448;&#x1D462;</mi><mi>&Uopf;</mi><mi>&#x1D5B4;&#x1D5CE;</mi><mi>U</mi><mi>u</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D685;&#x1D69F;</mi><mi>&Vscr;</mi><mi>&#x1D415;&#x1D42F;</mi><mi> Vv </mi><mi>&#x1D449;&#x1D463;</mi><mi>&Vopf;</mi><mi>&#x1D5B5;&#x1D5CF;</mi><mi>V</mi><mi>v</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D686;&#x1D6A0;</mi><mi>&Wscr;</mi><mi>&#x1D416;&#x1D430;</mi><mi> Ww </mi><mi>&#x1D44A;&#x1D464;</mi><mi>&Wopf;</mi><mi>&#x1D5B6;&#x1D5D0;</mi><mi>W</mi><mi>w</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D687;&#x1D6A1;</mi><mi>&Xscr;</mi><mi>&#x1D417;&#x1D431;</mi><mi> Xx </mi><mi>&#x1D44B;&#x1D465;</mi><mi>&Xopf;</mi><mi>&#x1D5B7;&#x1D5D1;</mi><mi>X</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D688;&#x1D6A2;</mi><mi>&Yscr;</mi><mi>&#x1D418;&#x1D432;</mi><mi> Yy </mi><mi>&#x1D44C;&#x1D466;</mi><mi>&Yopf;</mi><mi>&#x1D5B8;&#x1D5D2;</mi><mi>Y</mi><mi>y</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D689;&#x1D6A3;</mi><mi>&Zscr;</mi><mi>&#x1D419;&#x1D433;</mi><mi> Zz </mi><mi>&#x1D44D;&#x1D467;</mi><mi>&Zopf;</mi><mi>&#x1D5B9;&#x1D5D3;</mi><mi>Z</mi><mi>z</mi></mrow></mtd></mtr></mtable></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Ascr;&Bscr;&Cscr;&Dscr;&Escr;&Fscr;&Gscr;&Hscr;&Iscr;&Jscr;&Kscr;&Lscr;&Mscr;&Nscr;&Oscr;&Pscr;&Qscr;&Rscr;&Sscr;&Tscr;&Uscr;&Vscr;&Wscr;&Xscr;&Yscr;&Zscr;</mi></math></formula></p>
+<p rend='center'>xx</p>
+<p rend='center'><minipage width='56.9055pt'><p>abc</p></minipage></p>
+<p rend='center'>xx</p>
+<p><minipage pos='t' width='56.9055pt'><p>abc</p></minipage>
+<minipage pos='b' width='56.9055pt'><p>abc</p></minipage>
+<minipage pos='c' width='56.9055pt'><p>abc</p></minipage>
+<minipage inner-pos='s' pos='c' width='56.9055pt'><p>abc</p></minipage></p>
+<p><mbox width='28.45274pt' position='r'>some text</mbox>
+<fbox width='28.45274pt' position='r' rend='boxed'>some text</fbox></p>
+<p>With opt AABBWithout opt CC
+
+
+<cit><ref target='bid4'/></cit>Without opt BBWithout opt CC</p>
+<p>xfoo</p>
+</div3>
+<div3 id-text='0.0.0.9' id='uid23'><head>Letter c</head>
+<p>testchar&lt;  
+ é &#x12C; ~ -- '' `` &lt;&lt; &gt;&gt;
+;:!?«»&amp;<font-italic-shape>~-<zws/>-<zws/>`<zws/>`<zws/>xx'<zws/>'<zws/>&lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>;:!?«»&amp;</font-italic-shape>
+ &#x2013;&#x201C;«  » ; : ! ?«  »&#x201D;&amp;
+
+&lt;  
+ é &#x12C; ~ -- '' `` &lt;&lt; &gt;&gt;
+;:!?«»&amp;<font-italic-shape>~-<zws/>-<zws/>`<zws/>`<zws/>&lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>;:!?«»&amp;'<zws/>'<zws/></font-italic-shape>
+ &#x2013;&#x201C;&lt;&lt;&gt;&gt;;:!?«»&#x201D;&amp;
+
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D41A;</mi><mi mathvariant='normal'>a</mi><mi>&cscr;</mi><mi mathvariant='normal'>d</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>a</mi> <mi>b</mi> <mi>c</mi> </msubsup></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>a</mi> <mi>b</mi> <mi>c</mi> </msubsup></math></formula></p>
+<p>the letter  the letter %the character =</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&tilde;</mo></mover><mover accent='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&Hat;</mo></mover><mover accent='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&leftarrow;</mo></mover><mover accent='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&rightarrow;</mo></mover><mover><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&OverBar;</mo></mover><munder><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&UnderBar;</mo></munder><mover accent='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&OverBrace;</mo></mover><munder accentunder='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&UnderBrace;</mo></munder><munder accentunder='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&leftarrow;</mo></munder><munder accentunder='true'><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mo>&rightarrow;</mo></munder></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>&#x25A1;</mo></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='&vert;' close='&vert;'><mtable><mtr><mtd columnalign='left'><mrow><mi>A</mi><mi>A</mi><mi>A</mi><mi>A</mi><mi>A</mi><mi>A</mi><mi>A</mi></mrow></mtd><mtd><mrow><mi>B</mi><mi>B</mi><mi>B</mi><mi>B</mi><mi>B</mi><mi>C</mi><mi>C</mi></mrow></mtd><mtd columnalign='right'><mrow><mi>C</mi><mi>C</mi><mi>C</mi><mi>C</mi><mi>C</mi><mi>C</mi><mi>C</mi></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>A</mi></mtd><mtd><mi>B</mi></mtd><mtd columnalign='right'><mi>C</mi></mtd></mtr><mtr><mtd columnspan='1'><mi>A</mi></mtd><mtd columnspan='1'><mi>B</mi></mtd><mtd columnspan='1'><mi>C</mi></mtd></mtr><mtr><mtd columnalign='right' columnspan='1'><mi>A</mi></mtd><mtd columnalign='right' columnspan='1'><mi>B</mi></mtd><mtd><mi>C</mi></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mi>A</mi></mtd><mtd columnalign='left' columnspan='1'><mi>B</mi></mtd><mtd><mi>C</mi></mtd></mtr><mtr><mtd columnalign='left'><mtable><mtr><mtd><mn>1</mn></mtd><mtd columnalign='left'><mn>22</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd columnalign='left'><mn>4</mn></mtd></mtr></mtable></mtd><mtd><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>22</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable></mtd><mtd columnalign='right'><mtable><mtr><mtd><mn>1</mn></mtd><mtd columnalign='right'><mn>22</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd columnalign='right'><mn>4</mn></mtd></mtr></mtable></mtd></mtr><mtr><mtd columnspan='2'><mrow><mn>0123456789</mn><mi>a</mi><mi>b</mi><mi>c</mi><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mtd><mtd columnalign='right'><mi>C</mi></mtd></mtr><mtr><mtd columnalign='left'><mi>A</mi></mtd><mtd columnspan='2'><mrow><mn>0123456789</mn><mi>a</mi><mi>b</mi><mi>c</mi><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right' columnspan='2'><mrow><mn>0123456789</mn><mi>a</mi><mi>b</mi><mi>c</mi><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mtd><mtd columnalign='right'><mi>C</mi></mtd></mtr><mtr><mtd columnalign='left'><mi>A</mi></mtd><mtd columnalign='left' columnspan='2'><mrow><mn>0123456789</mn><mi>a</mi><mi>b</mi><mi>c</mi><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>A</mi></mtd><mtd><mi>B</mi></mtd><mtd columnalign='right'><mi>C</mi></mtd></mtr></mtable></mfenced></math></formula>
+<formula textype='eqnarray*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mfenced separators='' open='&lbrace;' close=''><mtable><mtr><mtd columnalign='left'><mover accent='true'><mi>x</mi> <mo>&dot;</mo></mover></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>A</mi><mi>x</mi><mo>+</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>u</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>y</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>C</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='3'><mrow><mi>x</mi><mo>&Element;</mo><msup><mi>&#x1D411;</mi> <mi>n</mi> </msup></mrow></mtd></mtr></mtable></mfenced></mtd></mtr></mtable></math></formula>
+<p>1.123<foo>456</foo><foo>789<bar>abc</bar></foo>123<foo>456</foo><foo>789<bar>abc</bar></foo></p>
+<p>2.123<foo>456</foo><foo>789<bar>abc</bar></foo></p>
+<p>3.123456789<bar>abc</bar>123456789<bar>abc</bar></p>
+<p>4.123456789<bar>abc</bar></p>
+<p>5.123456789<bar>abc</bar>123456789<bar>abc</bar></p>
+<p>6.123456789<bar>abc</bar></p>
+<p>FILL <hfil/><hfill/><hfilneg/><hss/></p>
+<vfil/><vfill/><vfilneg/><vss/><p>ABCparshape</p>
+<p>11 
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>a</mi> <mrow><mo>&apos;</mo><mn>2</mn></mrow> </msup></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>a</mi> <mrow><mo>&apos;</mo><mn>2</mn></mrow> </msup></math></formula></p>
+<p>2</p>
+<p>a) <formula textype='math' type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>1</mn></mrow></math></formula>
+b) <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>2</mn></mrow></math></formula>
+c)</p>
+<formula textype='displaymath' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>3</mn></mrow></math></formula>
+<p noindent='true'>d)</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>4</mn></mrow></math></formula>
+<p noindent='true'>e)</p>
+<formula id-text='9' id='uid24' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>5</mn></mrow></math></formula>
+<p>text A</p>
+<p noindent='true'>text B</p>
+<p noindent='true' spacebefore='8.53581pt'>text C</p>
+<p rend='center'>line one</p>
+<p rend='center'>this is the second line</p>
+<p>text A</p>
+<p spacebefore='12.0pt'>text B</p>
+<p spacebefore='3.0pt'>text C</p>
+<p spacebefore='6.0pt'>text D</p>
+<p rend='center'>short line</p>
+<p spacebefore='12.0pt' rend='center'>a longer line</p>
+<p spacebefore='3.0pt' rend='center'>a still longer line</p>
+<p spacebefore='6.0pt' rend='center'>a very long line of text</p>
+<p>Some text <font-sansserif-family>Some text</font-sansserif-family> <font-typewriter-family>Some text</font-typewriter-family>
+<font-bold-series>Some text</font-bold-series> <font-italic-shape>Some text</font-italic-shape> <font-small-caps-shape>Some text</font-small-caps-shape> <font-slanted-shape>Some text</font-slanted-shape></p>
+<p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>
+1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&notin;</mo></math></formula></p>
+<p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>
+1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.
+<font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
+<p>rmmdup 
+Textrm <font-sansserif-family>Textsf</font-sansserif-family> <font-typewriter-family>Texttt</font-typewriter-family>
+<font-bold-series>Testbf</font-bold-series> <font-italic-shape>Textit</font-italic-shape> <font-small-caps-shape>Textsc</font-small-caps-shape> <font-slanted-shape>Textsl</font-slanted-shape>
+Textnormal Textmd <font-italic-shape>Emph</font-italic-shape> Textup</p>
+<p noindent='true'>
+<font-sansserif-family>sfmdup 
+</font-sansserif-family>Textrm<font-sansserif-family> Textsf </font-sansserif-family><font-typewriter-family>Texttt</font-typewriter-family><font-sansserif-family>
+</font-sansserif-family><font-sansserif-family><font-bold-series>Testbf</font-bold-series></font-sansserif-family><font-sansserif-family> </font-sansserif-family><font-italic-shape><font-sansserif-family>Textit</font-sansserif-family></font-italic-shape><font-sansserif-family> </font-sansserif-family><font-small-caps-shape><font-sansserif-family>Textsc</font-sansserif-family></font-small-caps-shape><font-sansserif-family> </font-sansserif-family><font-slanted-shape><font-sansserif-family>Textsl</font-sansserif-family></font-slanted-shape><font-sansserif-family>
+</font-sansserif-family>Textnormal<font-sansserif-family> Textmd </font-sansserif-family><font-italic-shape><font-sansserif-family>Emph</font-sansserif-family></font-italic-shape><font-sansserif-family> Textup</font-sansserif-family></p>
+<p noindent='true'><font-sansserif-family/>
+<font-typewriter-family>ttmdup 
+</font-typewriter-family>Textrm<font-typewriter-family> </font-typewriter-family><font-sansserif-family>Textsf</font-sansserif-family><font-typewriter-family> Texttt
+</font-typewriter-family><font-typewriter-family><font-bold-series>Testbf</font-bold-series></font-typewriter-family><font-typewriter-family> </font-typewriter-family><font-italic-shape><font-typewriter-family>Textit</font-typewriter-family></font-italic-shape><font-typewriter-family> </font-typewriter-family><font-small-caps-shape><font-typewriter-family>Textsc</font-typewriter-family></font-small-caps-shape><font-typewriter-family> </font-typewriter-family><font-slanted-shape><font-typewriter-family>Textsl</font-typewriter-family></font-slanted-shape><font-typewriter-family>
+</font-typewriter-family>Textnormal<font-typewriter-family> Textmd </font-typewriter-family><font-italic-shape><font-typewriter-family>Emph</font-typewriter-family></font-italic-shape><font-typewriter-family> Textup</font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family/>
+<font-bold-series>rmbfup 
+Textrm </font-bold-series><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family><font-bold-series> </font-bold-series><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family><font-bold-series>
+Testbf </font-bold-series><font-italic-shape><font-bold-series>Textit</font-bold-series></font-italic-shape><font-bold-series> </font-bold-series><font-small-caps-shape><font-bold-series>Textsc</font-bold-series></font-small-caps-shape><font-bold-series> </font-bold-series><font-slanted-shape><font-bold-series>Textsl</font-bold-series></font-slanted-shape><font-bold-series>
+</font-bold-series>Textnormal<font-bold-series> </font-bold-series>Textmd<font-bold-series> </font-bold-series><font-italic-shape><font-bold-series>Emph</font-bold-series></font-italic-shape><font-bold-series> Textup</font-bold-series></p>
+<p noindent='true'><font-bold-series/>
+<font-sansserif-family/><font-sansserif-family><font-bold-series>sfbfup 
+</font-bold-series></font-sansserif-family><font-bold-series>Textrm</font-bold-series><font-sansserif-family><font-bold-series> Textsf </font-bold-series></font-sansserif-family><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family><font-sansserif-family><font-bold-series>
+Testbf </font-bold-series></font-sansserif-family><font-italic-shape><font-sansserif-family><font-bold-series>Textit</font-bold-series></font-sansserif-family></font-italic-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family><font-small-caps-shape><font-sansserif-family><font-bold-series>Textsc</font-bold-series></font-sansserif-family></font-small-caps-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family><font-slanted-shape><font-sansserif-family><font-bold-series>Textsl</font-bold-series></font-sansserif-family></font-slanted-shape><font-sansserif-family><font-bold-series>
+</font-bold-series></font-sansserif-family>Textnormal<font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family><font-sansserif-family>Textmd</font-sansserif-family><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family><font-italic-shape><font-sansserif-family><font-bold-series>Emph</font-bold-series></font-sansserif-family></font-italic-shape><font-sansserif-family><font-bold-series> Textup</font-bold-series></font-sansserif-family></p>
+<p noindent='true'><font-sansserif-family><font-bold-series/></font-sansserif-family>
+<font-typewriter-family/><font-typewriter-family><font-bold-series>ttbfup 
+</font-bold-series></font-typewriter-family><font-bold-series>Textrm</font-bold-series><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family><font-typewriter-family><font-bold-series> Texttt
+Testbf </font-bold-series></font-typewriter-family><font-italic-shape><font-typewriter-family><font-bold-series>Textit</font-bold-series></font-typewriter-family></font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family><font-small-caps-shape><font-typewriter-family><font-bold-series>Textsc</font-bold-series></font-typewriter-family></font-small-caps-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family><font-slanted-shape><font-typewriter-family><font-bold-series>Textsl</font-bold-series></font-typewriter-family></font-slanted-shape><font-typewriter-family><font-bold-series>
+</font-bold-series></font-typewriter-family>Textnormal<font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family><font-typewriter-family>Textmd</font-typewriter-family><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family><font-italic-shape><font-typewriter-family><font-bold-series>Emph</font-bold-series></font-typewriter-family></font-italic-shape><font-typewriter-family><font-bold-series> Textup</font-bold-series></font-typewriter-family></p>
+<p noindent='true'><font-typewriter-family><font-bold-series/></font-typewriter-family>
+<font-italic-shape>rmmdit 
+Textrm </font-italic-shape><font-italic-shape><font-sansserif-family>Textsf</font-sansserif-family></font-italic-shape><font-italic-shape> </font-italic-shape><font-italic-shape><font-typewriter-family>Texttt</font-typewriter-family></font-italic-shape><font-italic-shape>
+</font-italic-shape><font-italic-shape><font-bold-series>Testbf</font-bold-series></font-italic-shape><font-italic-shape> Textit </font-italic-shape><font-small-caps-shape>Textsc</font-small-caps-shape><font-italic-shape> </font-italic-shape><font-slanted-shape>Textsl</font-slanted-shape><font-italic-shape>
+</font-italic-shape>Textnormal<font-italic-shape> Textmd </font-italic-shape>Emph<font-italic-shape> </font-italic-shape>Textup<font-italic-shape/></p>
+<p noindent='true'><font-italic-shape/>
+<font-sansserif-family/><font-italic-shape><font-sansserif-family>sfmdit 
+</font-sansserif-family></font-italic-shape><font-italic-shape>Textrm</font-italic-shape><font-italic-shape><font-sansserif-family> Textsf </font-sansserif-family></font-italic-shape><font-italic-shape><font-typewriter-family>Texttt</font-typewriter-family></font-italic-shape><font-italic-shape><font-sansserif-family>
+</font-sansserif-family></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series>Testbf</font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-sansserif-family> Textit </font-sansserif-family></font-italic-shape><font-small-caps-shape><font-sansserif-family>Textsc</font-sansserif-family></font-small-caps-shape><font-italic-shape><font-sansserif-family> </font-sansserif-family></font-italic-shape><font-slanted-shape><font-sansserif-family>Textsl</font-sansserif-family></font-slanted-shape><font-italic-shape><font-sansserif-family>
+</font-sansserif-family></font-italic-shape>Textnormal<font-italic-shape><font-sansserif-family> Textmd </font-sansserif-family></font-italic-shape><font-sansserif-family>Emph</font-sansserif-family><font-italic-shape><font-sansserif-family> </font-sansserif-family></font-italic-shape><font-sansserif-family>Textup</font-sansserif-family><font-italic-shape><font-sansserif-family/></font-italic-shape></p>
+<p noindent='true'><font-italic-shape><font-sansserif-family/></font-italic-shape>
+<font-typewriter-family/><font-italic-shape><font-typewriter-family>ttmdit 
+</font-typewriter-family></font-italic-shape><font-italic-shape>Textrm</font-italic-shape><font-italic-shape><font-typewriter-family> </font-typewriter-family></font-italic-shape><font-italic-shape><font-sansserif-family>Textsf</font-sansserif-family></font-italic-shape><font-italic-shape><font-typewriter-family> Texttt
+</font-typewriter-family></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series>Testbf</font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-typewriter-family> Textit </font-typewriter-family></font-italic-shape><font-small-caps-shape><font-typewriter-family>Textsc</font-typewriter-family></font-small-caps-shape><font-italic-shape><font-typewriter-family> </font-typewriter-family></font-italic-shape><font-slanted-shape><font-typewriter-family>Textsl</font-typewriter-family></font-slanted-shape><font-italic-shape><font-typewriter-family>
+</font-typewriter-family></font-italic-shape>Textnormal<font-italic-shape><font-typewriter-family> Textmd </font-typewriter-family></font-italic-shape><font-typewriter-family>Emph</font-typewriter-family><font-italic-shape><font-typewriter-family> </font-typewriter-family></font-italic-shape><font-typewriter-family>Textup</font-typewriter-family><font-italic-shape><font-typewriter-family/></font-italic-shape></p>
+<p noindent='true'><font-italic-shape><font-typewriter-family/></font-italic-shape>
+<font-bold-series/><font-italic-shape><font-bold-series>rmbfit 
+Textrm </font-bold-series></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-bold-series> </font-bold-series></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-bold-series>
+Testbf Textit </font-bold-series></font-italic-shape><font-small-caps-shape><font-bold-series>Textsc</font-bold-series></font-small-caps-shape><font-italic-shape><font-bold-series> </font-bold-series></font-italic-shape><font-slanted-shape><font-bold-series>Textsl</font-bold-series></font-slanted-shape><font-italic-shape><font-bold-series>
+</font-bold-series></font-italic-shape>Textnormal<font-italic-shape><font-bold-series> </font-bold-series></font-italic-shape><font-italic-shape>Textmd</font-italic-shape><font-italic-shape><font-bold-series> </font-bold-series></font-italic-shape><font-bold-series>Emph</font-bold-series><font-italic-shape><font-bold-series> </font-bold-series></font-italic-shape><font-bold-series>Textup</font-bold-series><font-italic-shape><font-bold-series/></font-italic-shape></p>
+<p noindent='true'><font-italic-shape><font-bold-series/></font-italic-shape>
+<font-sansserif-family/><font-sansserif-family><font-bold-series/></font-sansserif-family><font-italic-shape><font-sansserif-family><font-bold-series>sfbfit 
+</font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-bold-series>Textrm</font-bold-series></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series> Textsf </font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series>
+Testbf Textit </font-bold-series></font-sansserif-family></font-italic-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>Textsc</font-bold-series></font-sansserif-family></font-small-caps-shape><font-italic-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-italic-shape><font-slanted-shape><font-sansserif-family><font-bold-series>Textsl</font-bold-series></font-sansserif-family></font-slanted-shape><font-italic-shape><font-sansserif-family><font-bold-series>
+</font-bold-series></font-sansserif-family></font-italic-shape>Textnormal<font-italic-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-sansserif-family>Textmd</font-sansserif-family></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-italic-shape><font-sansserif-family><font-bold-series>Emph</font-bold-series></font-sansserif-family><font-italic-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-italic-shape><font-sansserif-family><font-bold-series>Textup</font-bold-series></font-sansserif-family><font-italic-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-italic-shape></p>
+<p noindent='true'><font-italic-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-italic-shape>
+<font-typewriter-family/><font-typewriter-family><font-bold-series/></font-typewriter-family><font-italic-shape><font-typewriter-family><font-bold-series>ttbfit 
+</font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-bold-series>Textrm</font-bold-series></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series> Texttt
+Testbf Textit </font-bold-series></font-typewriter-family></font-italic-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>Textsc</font-bold-series></font-typewriter-family></font-small-caps-shape><font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-italic-shape><font-slanted-shape><font-typewriter-family><font-bold-series>Textsl</font-bold-series></font-typewriter-family></font-slanted-shape><font-italic-shape><font-typewriter-family><font-bold-series>
+</font-bold-series></font-typewriter-family></font-italic-shape>Textnormal<font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-italic-shape><font-italic-shape><font-typewriter-family>Textmd</font-typewriter-family></font-italic-shape><font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-italic-shape><font-typewriter-family><font-bold-series>Emph</font-bold-series></font-typewriter-family><font-italic-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-italic-shape><font-typewriter-family><font-bold-series>Textup</font-bold-series></font-typewriter-family><font-italic-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-italic-shape></p>
+<p noindent='true'><font-italic-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-italic-shape>
+<font-small-caps-shape>rmmdsc 
+Textrm </font-small-caps-shape><font-small-caps-shape><font-sansserif-family>Textsf</font-sansserif-family></font-small-caps-shape><font-small-caps-shape> </font-small-caps-shape><font-small-caps-shape><font-typewriter-family>Texttt</font-typewriter-family></font-small-caps-shape><font-small-caps-shape>
+</font-small-caps-shape><font-small-caps-shape><font-bold-series>Testbf</font-bold-series></font-small-caps-shape><font-small-caps-shape> </font-small-caps-shape><font-italic-shape>Textit</font-italic-shape><font-small-caps-shape> Textsc </font-small-caps-shape><font-slanted-shape>Textsl</font-slanted-shape><font-small-caps-shape>
+</font-small-caps-shape>Textnormal<font-small-caps-shape> Textmd </font-small-caps-shape>Emph<font-small-caps-shape> </font-small-caps-shape>Textup<font-small-caps-shape/></p>
+<p noindent='true'><font-small-caps-shape/>
+<font-sansserif-family/><font-small-caps-shape><font-sansserif-family>sfmdsc 
+</font-sansserif-family></font-small-caps-shape><font-small-caps-shape>Textrm</font-small-caps-shape><font-small-caps-shape><font-sansserif-family> Textsf </font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family>Texttt</font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family>
+</font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>Testbf</font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family> </font-sansserif-family></font-small-caps-shape><font-italic-shape><font-sansserif-family>Textit</font-sansserif-family></font-italic-shape><font-small-caps-shape><font-sansserif-family> Textsc </font-sansserif-family></font-small-caps-shape><font-slanted-shape><font-sansserif-family>Textsl</font-sansserif-family></font-slanted-shape><font-small-caps-shape><font-sansserif-family>
+</font-sansserif-family></font-small-caps-shape>Textnormal<font-small-caps-shape><font-sansserif-family> Textmd </font-sansserif-family></font-small-caps-shape><font-sansserif-family>Emph</font-sansserif-family><font-small-caps-shape><font-sansserif-family> </font-sansserif-family></font-small-caps-shape><font-sansserif-family>Textup</font-sansserif-family><font-small-caps-shape><font-sansserif-family/></font-small-caps-shape></p>
+<p noindent='true'><font-small-caps-shape><font-sansserif-family/></font-small-caps-shape>
+<font-typewriter-family/><font-small-caps-shape><font-typewriter-family>ttmdsc 
+</font-typewriter-family></font-small-caps-shape><font-small-caps-shape>Textrm</font-small-caps-shape><font-small-caps-shape><font-typewriter-family> </font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family>Textsf</font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family> Texttt
+</font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>Testbf</font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family> </font-typewriter-family></font-small-caps-shape><font-italic-shape><font-typewriter-family>Textit</font-typewriter-family></font-italic-shape><font-small-caps-shape><font-typewriter-family> Textsc </font-typewriter-family></font-small-caps-shape><font-slanted-shape><font-typewriter-family>Textsl</font-typewriter-family></font-slanted-shape><font-small-caps-shape><font-typewriter-family>
+</font-typewriter-family></font-small-caps-shape>Textnormal<font-small-caps-shape><font-typewriter-family> Textmd </font-typewriter-family></font-small-caps-shape><font-typewriter-family>Emph</font-typewriter-family><font-small-caps-shape><font-typewriter-family> </font-typewriter-family></font-small-caps-shape><font-typewriter-family>Textup</font-typewriter-family><font-small-caps-shape><font-typewriter-family/></font-small-caps-shape></p>
+<p noindent='true'><font-small-caps-shape><font-typewriter-family/></font-small-caps-shape>
+<font-bold-series/><font-small-caps-shape><font-bold-series>rmbfsc 
+Textrm </font-bold-series></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-bold-series> </font-bold-series></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-bold-series>
+Testbf </font-bold-series></font-small-caps-shape><font-italic-shape><font-bold-series>Textit</font-bold-series></font-italic-shape><font-small-caps-shape><font-bold-series> Textsc </font-bold-series></font-small-caps-shape><font-slanted-shape><font-bold-series>Textsl</font-bold-series></font-slanted-shape><font-small-caps-shape><font-bold-series>
+</font-bold-series></font-small-caps-shape>Textnormal<font-small-caps-shape><font-bold-series> </font-bold-series></font-small-caps-shape><font-small-caps-shape>Textmd</font-small-caps-shape><font-small-caps-shape><font-bold-series> </font-bold-series></font-small-caps-shape><font-bold-series>Emph</font-bold-series><font-small-caps-shape><font-bold-series> </font-bold-series></font-small-caps-shape><font-bold-series>Textup</font-bold-series><font-small-caps-shape><font-bold-series/></font-small-caps-shape></p>
+<p noindent='true'><font-small-caps-shape><font-bold-series/></font-small-caps-shape>
+<font-sansserif-family/><font-sansserif-family><font-bold-series/></font-sansserif-family><font-small-caps-shape><font-sansserif-family><font-bold-series>sfbfsc 
+</font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-bold-series>Textrm</font-bold-series></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series> Textsf </font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>
+Testbf </font-bold-series></font-sansserif-family></font-small-caps-shape><font-italic-shape><font-sansserif-family><font-bold-series>Textit</font-bold-series></font-sansserif-family></font-italic-shape><font-small-caps-shape><font-sansserif-family><font-bold-series> Textsc </font-bold-series></font-sansserif-family></font-small-caps-shape><font-slanted-shape><font-sansserif-family><font-bold-series>Textsl</font-bold-series></font-sansserif-family></font-slanted-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>
+</font-bold-series></font-sansserif-family></font-small-caps-shape>Textnormal<font-small-caps-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family>Textmd</font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-small-caps-shape><font-sansserif-family><font-bold-series>Emph</font-bold-series></font-sansserif-family><font-small-caps-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-small-caps-shape><font-sansserif-family><font-bold-series>Textup</font-bold-series></font-sansserif-family><font-small-caps-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-small-caps-shape></p>
+<p noindent='true'><font-small-caps-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-small-caps-shape>
+<font-typewriter-family/><font-typewriter-family><font-bold-series/></font-typewriter-family><font-small-caps-shape><font-typewriter-family><font-bold-series>ttbfsc 
+</font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-bold-series>Textrm</font-bold-series></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series> Texttt
+Testbf </font-bold-series></font-typewriter-family></font-small-caps-shape><font-italic-shape><font-typewriter-family><font-bold-series>Textit</font-bold-series></font-typewriter-family></font-italic-shape><font-small-caps-shape><font-typewriter-family><font-bold-series> Textsc </font-bold-series></font-typewriter-family></font-small-caps-shape><font-slanted-shape><font-typewriter-family><font-bold-series>Textsl</font-bold-series></font-typewriter-family></font-slanted-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>
+</font-bold-series></font-typewriter-family></font-small-caps-shape>Textnormal<font-small-caps-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family>Textmd</font-typewriter-family></font-small-caps-shape><font-small-caps-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-small-caps-shape><font-typewriter-family><font-bold-series>Emph</font-bold-series></font-typewriter-family><font-small-caps-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-small-caps-shape><font-typewriter-family><font-bold-series>Textup</font-bold-series></font-typewriter-family><font-small-caps-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-small-caps-shape></p>
+<p noindent='true'><font-small-caps-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-small-caps-shape>
+<font-slanted-shape>rmmdsl 
+Textrm </font-slanted-shape><font-slanted-shape><font-sansserif-family>Textsf</font-sansserif-family></font-slanted-shape><font-slanted-shape> </font-slanted-shape><font-slanted-shape><font-typewriter-family>Texttt</font-typewriter-family></font-slanted-shape><font-slanted-shape>
+</font-slanted-shape><font-slanted-shape><font-bold-series>Testbf</font-bold-series></font-slanted-shape><font-slanted-shape> </font-slanted-shape><font-italic-shape>Textit</font-italic-shape><font-slanted-shape> </font-slanted-shape><font-small-caps-shape>Textsc</font-small-caps-shape><font-slanted-shape> Textsl
+</font-slanted-shape>Textnormal<font-slanted-shape> Textmd </font-slanted-shape>Emph<font-slanted-shape> </font-slanted-shape>Textup<font-slanted-shape/></p>
+<p noindent='true'><font-slanted-shape/>
+<font-sansserif-family/><font-slanted-shape><font-sansserif-family>sfmdsl 
+</font-sansserif-family></font-slanted-shape><font-slanted-shape>Textrm</font-slanted-shape><font-slanted-shape><font-sansserif-family> Textsf </font-sansserif-family></font-slanted-shape><font-slanted-shape><font-typewriter-family>Texttt</font-typewriter-family></font-slanted-shape><font-slanted-shape><font-sansserif-family>
+</font-sansserif-family></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series>Testbf</font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-sansserif-family> </font-sansserif-family></font-slanted-shape><font-italic-shape><font-sansserif-family>Textit</font-sansserif-family></font-italic-shape><font-slanted-shape><font-sansserif-family> </font-sansserif-family></font-slanted-shape><font-small-caps-shape><font-sansserif-family>Textsc</font-sansserif-family></font-small-caps-shape><font-slanted-shape><font-sansserif-family> Textsl
+</font-sansserif-family></font-slanted-shape>Textnormal<font-slanted-shape><font-sansserif-family> Textmd </font-sansserif-family></font-slanted-shape><font-sansserif-family>Emph</font-sansserif-family><font-slanted-shape><font-sansserif-family> </font-sansserif-family></font-slanted-shape><font-sansserif-family>Textup</font-sansserif-family><font-slanted-shape><font-sansserif-family/></font-slanted-shape></p>
+<p noindent='true'><font-slanted-shape><font-sansserif-family/></font-slanted-shape>
+<font-typewriter-family/><font-slanted-shape><font-typewriter-family>ttmdsl 
+</font-typewriter-family></font-slanted-shape><font-slanted-shape>Textrm</font-slanted-shape><font-slanted-shape><font-typewriter-family> </font-typewriter-family></font-slanted-shape><font-slanted-shape><font-sansserif-family>Textsf</font-sansserif-family></font-slanted-shape><font-slanted-shape><font-typewriter-family> Texttt
+</font-typewriter-family></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series>Testbf</font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-typewriter-family> </font-typewriter-family></font-slanted-shape><font-italic-shape><font-typewriter-family>Textit</font-typewriter-family></font-italic-shape><font-slanted-shape><font-typewriter-family> </font-typewriter-family></font-slanted-shape><font-small-caps-shape><font-typewriter-family>Textsc</font-typewriter-family></font-small-caps-shape><font-slanted-shape><font-typewriter-family> Textsl
+</font-typewriter-family></font-slanted-shape>Textnormal<font-slanted-shape><font-typewriter-family> Textmd </font-typewriter-family></font-slanted-shape><font-typewriter-family>Emph</font-typewriter-family><font-slanted-shape><font-typewriter-family> </font-typewriter-family></font-slanted-shape><font-typewriter-family>Textup</font-typewriter-family><font-slanted-shape><font-typewriter-family/></font-slanted-shape></p>
+<p noindent='true'><font-slanted-shape><font-typewriter-family/></font-slanted-shape>
+<font-bold-series/><font-slanted-shape><font-bold-series>rmbfsl 
+Textrm </font-bold-series></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-bold-series> </font-bold-series></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-bold-series>
+Testbf </font-bold-series></font-slanted-shape><font-italic-shape><font-bold-series>Textit</font-bold-series></font-italic-shape><font-slanted-shape><font-bold-series> </font-bold-series></font-slanted-shape><font-small-caps-shape><font-bold-series>Textsc</font-bold-series></font-small-caps-shape><font-slanted-shape><font-bold-series> Textsl
+</font-bold-series></font-slanted-shape>Textnormal<font-slanted-shape><font-bold-series> </font-bold-series></font-slanted-shape><font-slanted-shape>Textmd</font-slanted-shape><font-slanted-shape><font-bold-series> </font-bold-series></font-slanted-shape><font-bold-series>Emph</font-bold-series><font-slanted-shape><font-bold-series> </font-bold-series></font-slanted-shape><font-bold-series>Textup</font-bold-series><font-slanted-shape><font-bold-series/></font-slanted-shape></p>
+<p noindent='true'><font-slanted-shape><font-bold-series/></font-slanted-shape>
+<font-sansserif-family/><font-sansserif-family><font-bold-series/></font-sansserif-family><font-slanted-shape><font-sansserif-family><font-bold-series>sfbfsl 
+</font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-bold-series>Textrm</font-bold-series></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series> Textsf </font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series>Texttt</font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series>
+Testbf </font-bold-series></font-sansserif-family></font-slanted-shape><font-italic-shape><font-sansserif-family><font-bold-series>Textit</font-bold-series></font-sansserif-family></font-italic-shape><font-slanted-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-slanted-shape><font-small-caps-shape><font-sansserif-family><font-bold-series>Textsc</font-bold-series></font-sansserif-family></font-small-caps-shape><font-slanted-shape><font-sansserif-family><font-bold-series> Textsl
+</font-bold-series></font-sansserif-family></font-slanted-shape>Textnormal<font-slanted-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-sansserif-family>Textmd</font-sansserif-family></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-slanted-shape><font-sansserif-family><font-bold-series>Emph</font-bold-series></font-sansserif-family><font-slanted-shape><font-sansserif-family><font-bold-series> </font-bold-series></font-sansserif-family></font-slanted-shape><font-sansserif-family><font-bold-series>Textup</font-bold-series></font-sansserif-family><font-slanted-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-slanted-shape></p>
+<p noindent='true'><font-slanted-shape><font-sansserif-family><font-bold-series/></font-sansserif-family></font-slanted-shape>
+<font-typewriter-family/><font-typewriter-family><font-bold-series/></font-typewriter-family><font-slanted-shape><font-typewriter-family><font-bold-series>ttbfsl 
+</font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-bold-series>Textrm</font-bold-series></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-sansserif-family><font-bold-series>Textsf</font-bold-series></font-sansserif-family></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series> Texttt
+Testbf </font-bold-series></font-typewriter-family></font-slanted-shape><font-italic-shape><font-typewriter-family><font-bold-series>Textit</font-bold-series></font-typewriter-family></font-italic-shape><font-slanted-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-slanted-shape><font-small-caps-shape><font-typewriter-family><font-bold-series>Textsc</font-bold-series></font-typewriter-family></font-small-caps-shape><font-slanted-shape><font-typewriter-family><font-bold-series> Textsl
+</font-bold-series></font-typewriter-family></font-slanted-shape>Textnormal<font-slanted-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-slanted-shape><font-slanted-shape><font-typewriter-family>Textmd</font-typewriter-family></font-slanted-shape><font-slanted-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-slanted-shape><font-typewriter-family><font-bold-series>Emph</font-bold-series></font-typewriter-family><font-slanted-shape><font-typewriter-family><font-bold-series> </font-bold-series></font-typewriter-family></font-slanted-shape><font-typewriter-family><font-bold-series>Textup</font-bold-series></font-typewriter-family><font-slanted-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-slanted-shape></p>
+<p noindent='true'><font-slanted-shape><font-typewriter-family><font-bold-series/></font-typewriter-family></font-slanted-shape></p>
+<p rend='center'>1234567890</p>
+<p rend='center'><font-oldstyle>1234567890</font-oldstyle></p>
+<p>Aa<font-small4>Bb </font-small4><font-small3>Cc </font-small3><font-small2>Dd </font-small2><font-small1>Ee </font-small1>Ff
+<font-large1>Gg </font-large1><font-large2>Hh </font-large2><font-large3>Ii </font-large3><font-large4>Jj </font-large4><font-large5>Kk</font-large5></p>
+<vfil/><vfill/><p><hfil/><hfill/></p>
+<formula id-text='10' id='uid25' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mover accent='true'><mi>x</mi> <mo>&dot;</mo></mover></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>A</mi><mi>x</mi><mo>+</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>u</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>y</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>C</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='3'><mrow><mi>x</mi><mo>&Element;</mo><msup><mi>R</mi> <mi>n</mi> </msup></mrow></mtd></mtr></mtable></math></formula>
+<table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+<cell halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true' spaceafter='8.53581pt'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row><row><cell halign='left' left-border='true'>A</cell>
+<cell halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' cols='3'/>
+<cell cols='2'/><cell bottom-border='true'/></row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row></table>
+</div3></div0>
+<div0 id-text='I' id='cid2'><head>A</head>
+</div0>
+<div0 id-text='2' id='cid3'><head>B</head>
+</div0>
+<div0 id-text='1' id='cid4'><head>C c</head>
+<div1 id-text='1.1' id='uid26'><head>Ddd</head>
+<div2 id-text='1.1.1' id='uid27'><head>E</head>
+<div3 id-text='1.1.1.1' id='uid28'><head>F</head>
+<div4 id-text='1.1.1.1.1' id='uid29'><head>G</head>
+<p>Text</p>
+<p>more text
+<ref target='cid2'/> <ref target='cid3'/> <ref target='cid4'/>
+<ref target='uid26'/> <ref target='uid27'/> <ref target='uid28'/> <ref target='uid29'/></p>
+</div4></div3>
+<div3 id-text='1.1.1.2' id='uid30'><head>A</head>
+<p><ref target='uid30'/> <ref target='uid31'/> <ref target='uid32'/> <ref target='uid33'/> <ref target='uid34'/> <ref target='uid35'/>
+<ref target='uid30'/> <ref target='uid31'/> <ref target='uid32'/> <ref target='uid33'/> <ref target='uid34'/> <ref target='uid35'/></p>
+</div3>
+<div3 id-text='1.1.1.3' id='uid31'><head>B</head>
+<formula id-text='11' id='uid32' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
+<figure file='x' id-text='5' id='uid33' rend='figure'/>
+<list type='simple'>
+<item id-text='1' id='uid34'><p noindent='true'>a</p>
+</item><label>B</label>
+<item id-text='2' id='uid35'><p noindent='true'>b</p>
+</item></list>
+</div3>
+<div3 id-text='1.1.1.4' id='uid36'><head>xxxxx</head>
+<p>123</p>
+</div3></div2>
+<div2 id-text='1.1.2' id='uid37'><head>xxxxx</head>
+<p>456</p>
+</div2>
+<p>ENDOFSUBSECTION</p>
+</div1></div0>
+<appendix/><p>Test tilde: <font-italic-shape>~</font-italic-shape><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='3.33333pt'/><mi>b</mi></mrow></math></formula>.
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>
+<xref url='url&amp;-~'>text a</xref>
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>
+<note id-text='1' id='uid38' place='foot'>URL in footnote....
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>
+<xref url='url&amp;-~'>text a</xref>
+<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref></note></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo form='prefix'>arccos</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>arcsin</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>arctan</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>arg</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>cos</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>cosh</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>cot</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo form='prefix'>coth</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>csc</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>deg</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>dim</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>exp</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>hom</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>ker</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>lg</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover><mo>&longrightarrow;</mo> <mi>j</mi></mover><mover><mi>X</mi> <mo>*</mo></mover><munder><mi>X</mi> <mo>*</mo></munder><msqrt><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow></msqrt><mroot><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mi>n</mi></mroot><mroot><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mi>n</mi></mroot><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>x</mi><mi>y</mi><mi>z</mi></mrow></mfrac><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>x</mi><mi>y</mi><mi>z</mi></mrow></mfrac></mstyle></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='false'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle></mfenced><mspace width='2.em'/><msup><mrow/> <mrow><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='false'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle></mfenced><mspace width='1.em'/><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0pt'><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle></mfenced></mrow> </msup></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&Leftrightarrow;</mo></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&sharp;</mo></math></formula> &#x266F;</p>
+<p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>.</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mfenced open='[' close=']'><mstyle scriptlevel='1' displaystyle='false'><mfrac linethickness='2.0pt'><mrow><mi>a</mi><mi>a</mi><mi>a</mi></mrow> <mrow><mi>b</mi><mi>b</mi><mi>b</mi></mrow></mfrac></mstyle></mfenced><mfenced open='(' close=')'><mstyle scriptlevel='0' displaystyle='true'><mfrac linethickness='0.0pt'><mi>n</mi> <mi>m</mi></mfrac></mstyle></mfenced></mrow></math></formula>
+<dean><first-name>Ingo</first-name><last-name>Zschoch</last-name></dean><date type='defense'>01-01-2004</date><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mstyle scriptlevel='0' displaystyle='true'><mfrac><mi>a</mi> <mi>b</mi></mfrac></mstyle><mstyle scriptlevel='0' displaystyle='false'><mfrac><mi>a</mi> <mi>b</mi></mfrac></mstyle><mstyle scriptlevel='1' displaystyle='false'><mfrac><mi>a</mi> <mi>b</mi></mfrac></mstyle><mstyle scriptlevel='2' displaystyle='false'><mfrac><mi>a</mi> <mi>b</mi></mfrac></mstyle></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mi>a</mi> <mi>b</mi></mfrac><mspace width='1.em'/><mfrac linethickness='1pt'><mi>a</mi> <mi>b</mi></mfrac><mspace width='1.em'/><mfrac linethickness='0pt'><mi>a</mi> <mi>b</mi></mfrac></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=')'><mfrac><mi>a</mi> <mi>b</mi></mfrac></mfenced><mspace width='1.em'/><mfenced separators='' open='(' close=')'><mfrac linethickness='1pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced><mspace width='1.em'/><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=')'><mfrac linethickness='2.0pt'><mrow><mi>f</mi><mi>o</mi><mi>o</mi></mrow> <mrow><mi>b</mi><mi>a</mi><mi>r</mi></mrow></mfrac></mfenced></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac><mspace width='1.em'/><mstyle scriptlevel='0' displaystyle='false'><mfrac><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle><mspace width='1.em'/><mstyle scriptlevel='0' displaystyle='true'><mfrac><mfrac><mrow><mi>n</mi><mo>+</mo><mi>m</mi></mrow> <mn>2</mn></mfrac> <mi>n</mi></mfrac></mstyle></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo form='prefix'>ln</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>log</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>Pr</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>sec</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>sin</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>sinh</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>tan</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>,</mo><mspace width='0.166667em'/><msup><mo form='prefix'>tanh</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mo movablelimits='true' form='prefix'>det</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>gcd</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>inf</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>inj lim</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>lim</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>lim inf</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>lim sup</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>max</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>min</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>proj lim</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder><mo>,</mo><mspace width='0.166667em'/><munder><mo movablelimits='true' form='prefix'>sup</mo> <mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow> </munder></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mo movablelimits='true' form='prefix'>sup</mo> <mrow><mi>x</mi><mo>=</mo><mn>2</mn></mrow> </munder><mi>y</mi><mspace width='3.33333pt'/><mfrac><mn>1</mn> <mi>k</mi></mfrac><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mspace width='0.277778em'/><mstyle scriptlevel='0' displaystyle='false'><mfrac><mn>1</mn> <mi>k</mi></mfrac></mstyle><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow><mspace width='0.277778em'/><msqrt><mrow><mfrac><mn>1</mn> <mi>k</mi></mfrac><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mrow></msqrt><mspace width='0.277778em'/><msqrt><mrow><mstyle scriptlevel='0' displaystyle='true'><mfrac><mn>1</mn> <mi>k</mi></mfrac></mstyle><msub><mo form='prefix'>log</mo> <mn>2</mn> </msub><mi>c</mi><mrow><mo>(</mo><mi>f</mi><mo>)</mo></mrow></mrow></msqrt></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=')'><mstyle scriptlevel='2' displaystyle='false'><mfrac linethickness='2.84526pt'><mrow><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi></mrow> <mn>111111111</mn></mfrac></mstyle></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=')'><mstyle scriptlevel='2' displaystyle='false'><mfrac linethickness='0.0pt'><mrow><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi><mi>a</mi></mrow> <mn>111111111</mn></mfrac></mstyle></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mfrac></mstyle></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='false'><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mfrac></mstyle></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='1' displaystyle='false'><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mfrac></mstyle></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='2' displaystyle='false'><mfrac><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow> <mrow><mi>d</mi><mi>e</mi><mi>f</mi></mrow></mfrac></mstyle></math></formula></p>
+<p>1<xref url='b'>a</xref>, 2<xref url='b'>añ</xref>, 3<xref url='a~n'>b</xref>,
+4<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>,
+5<xref url='a~b~n_d'><font-large1>a~b~n_d</font-large1></xref>,</p>
+<p noindent='true'>1<xref url='b'>a</xref>, 2<xref url='b'>añ</xref>, 3<xref url='a~n'>b</xref>,
+4<xref url='a~b~n_d'><font-typewriter-family>a~b~n_d</font-typewriter-family></xref>,
+5<xref url='a~b~n_d'><font-typewriter-family>a~b~n_d</font-typewriter-family></xref>.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>a</mi> <mo>&tilde;</mo></mover><mo>,</mo><mover accent='true'><mi>z</mi> <mo>&tilde;</mo></mover><mo>,</mo><mover accent='true'><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow> <mo>&tilde;</mo></mover></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&alpha;</mi><mi>&beta;</mi><mi>&gamma;</mi><mi>&delta;</mi><mi>&straightepsilon;</mi><mi>&varepsilon;</mi><mi>&zeta;</mi><mi>&eta;</mi><mi>&theta;</mi><mi>&iota;</mi><mi>&kappa;</mi><mi>&lambda;</mi><mi>&mu;</mi><mi>&nu;</mi><mi>&xi;</mi><mi>&pi;</mi><mi>&rho;</mi><mi>&sigma;</mi><mi>&tau;</mi><mi>&upsi;</mi><mi>&phiv;</mi><mi>&chi;</mi><mi>&psi;</mi><mi>&omega;</mi><mi>&piv;</mi><mi>&rhov;</mi><mi>&sigmav;</mi><mi>&phi;</mi><mi>&kappav;</mi><mi>&thetav;</mi></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&Gamma;</mi><mi>&Delta;</mi><mi>&Theta;</mi><mi>&Lambda;</mi><mi>&Xi;</mi><mi>&Sigma;</mi><mi>&Upsi;</mi><mi>&Phi;</mi><mi>&Pi;</mi><mi>&Psi;</mi><mi>&Omega;</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&coprod;</mo><mo>&bigvee;</mo><mo>&bigwedge;</mo><mo>&uplus;</mo><mo>&bigcap;</mo><mo>&bigcup;</mo><mo>&int;</mo><mo>&sum;</mo><mo>&prod;</mo><mo>&bigotimes;</mo><mo>&bigoplus;</mo><mo>&oint;</mo><mo>&bigsqcup;</mo><mo>&bigodot;</mo></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&pm;</mo><mo>&mp;</mo><mo>&times;</mo><mo>&div;</mo><mo>&ast;</mo><mo>&star;</mo><mo>&SmallCircle;</mo><mo>&bullet;</mo><mo>&middot;</mo><mo>&cap;</mo><mo>&cup;</mo><mo>&uplus;</mo><mo>&sqcap;</mo><mo>&sqcup;</mo><mo>&vee;</mo><mo>&wedge;</mo><mo>&setminus;</mo><mo>&wr;</mo><mo>&diamond;</mo><mo>&bigtriangleup;</mo><mo>&bigtriangledown;</mo><mo>&triangleleft;</mo><mo>&triangleright;</mo><mo>&oplus;</mo><mo>&ominus;</mo><mo>&otimes;</mo><mo>&osol;</mo><mo>&odot;</mo><mo>&bigcirc;</mo><mo>&dagger;</mo><mo>&ddagger;</mo><mo>&amalg;</mo></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&le;</mo><mo>&le;</mo><mo>&succ;</mo><mo>&simeq;</mo><mo>&parallel;</mo><mo>&subseteq;</mo><mo>&sqsubset;</mo><mo>&doteq;</mo><mo>&ge;</mo><mo>&ge;</mo><mo>&sim;</mo><mo>&mid;</mo><mo>&subset;</mo><mo>&subseteq;</mo><mo>&ne;</mo><mo>&ne;</mo><mo>&frown;</mo><mo>&vdash;</mo><mo>&equiv;</mo><mo>&perp;</mo><mo>&ll;</mo><mo>&supset;</mo><mo>&cong;</mo><mo>&smile;</mo><mo>&Element;</mo><mo>&dashv;</mo><mo>&models;</mo><mo>&preceq;</mo><mo>&gg;</mo><mo>&approx;</mo><mo>&bowtie;</mo><mo>&sqsubseteq;</mo><mo>&ni;</mo><mo>&prec;</mo><mo>&succeq;</mo><mo>&asympeq;</mo><mo>&bowtie;</mo><mo>&sqsupseteq;</mo><mo>&propto;</mo></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&wp;</mi></math></formula>
+
+
+<picture xpos='-28.4526' ypos='28.4526' width='142.26303' height='-85.35782'>
+<pic-bezier a1='0' a2='0' b1='28.4526' b2='85.35782' c1='142.26303' c2='85.35782'/>
+<pic-line xdir='0' ydir='13' width='71.13152'/>
+</picture></p>
+<p>ok</p>
+<p>oka
+okb</p>
+<p>okb</p>
+<p>0 0 0 0 0 1 1 1 0 1 1 1 0 1 1 1</p>
+<p>ok</p>
+<p>ok
+ok
+ok
+ok
+ok</p>
+<p>*****</p>
+<p><font-typewriter-family>y </font-typewriter-family></p>
+<p>0.0pt00.0pt</p>
+<p>=1=2===3=4</p>
+<p>=1=2==25=3=4</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover><mi>&#x1D67F;</mi> <mo>&OverBar;</mo></mover><mi>P</mi></mrow></math></formula></p>
+<p>The first thirty prime numbers are 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, and 113. trial division macro was
+expanded 132 times.</p>
+<table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+<cell halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row><row><cell halign='left' left-border='true'>A</cell>
+<cell right-border='true' halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' halign='left' left-border='true' cols='2'>ab</cell>
+<cell bottom-border='true' halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell bottom-border='true' right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row></table>
+<p>á ááá á &#xE1; &aacute;
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>a</mi> <mo>&Hat;</mo></mover><mover accent='true'><mi>a</mi> <mo>&acute;</mo></mover><mover accent='true'><mi>a</mi> <mo>&OverBar;</mo></mover><mover accent='true'><mi>a</mi> <mo>&dot;</mo></mover><mover accent='true'><mi>a</mi> <mo>&breve;</mo></mover><mover accent='true'><mi>a</mi> <mo>&Hacek;</mo></mover><mover accent='true'><mi>a</mi> <mo>&grave;</mo></mover><mover accent='true'><mi>a</mi> <mo>&rightarrow;</mo></mover><mover accent='true'><mi>a</mi> <mo>&die;</mo></mover><mover accent='true'><mi>a</mi> <mo>&tilde;</mo></mover></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>d</mi><mo>=</mo><msup><mi>z</mi> <mn>2</mn> </msup><mo>=</mo><msup><mrow><mo>(</mo><msub><mi>I</mi> <mi>t</mi> </msub><mo>+</mo><mi>&nabla;</mi><mi>I</mi><mover accent='true'><mrow><mi>v</mi><mi>v</mi><mi>v</mi><mi>v</mi></mrow> <mo>&rightarrow;</mo></mover><mo>+</mo><mi>I</mi><mi>d</mi><mi>i</mi><mi>v</mi><mrow><mo>(</mo><mover accent='true'><mrow><mi>v</mi><mi>v</mi><mi>v</mi><mi>v</mi><mi>v</mi></mrow> <mo>&rightarrow;</mo></mover><mo>)</mo></mrow><mo>)</mo></mrow> <mn>2</mn> </msup><mo>,</mo></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mtext>b=1</mtext><mi>c</mi></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mtext>b</mtext><mspace width='4.pt'/><mtext>1</mtext><mspace width='3.33333pt'/><mi>c</mi></mrow></math></formula></p>
+<p><font-large3>&#x2103;&#x20A9;&#x20A6;&#x20A4;&#x192;&#x20AB;&#x2030;&#x2031;&#x203B;&#x2020;</font-large3></p>
+<p noindent='true'><font-large3>&#x2021;&#x2036;&#x2033;&#x2035;&#x2032;&#x2045;&#x2046;&#x2126;&#x2127;&#x2116;</font-large3></p>
+<p noindent='true'><font-large3>&#x2117;&#x211E;&#x2120;&#x212E;&#x2022;&#x203D;</font-large3></p>
+<p>&#x2122;</p>
+<p>IEME 1<font-super>er</font-super> 1<font-super>re</font-super> 1<font-super>ers</font-super> 1<font-super>res</font-super> 2<font-super>e</font-super> 2<font-super>es</font-super> n<font-super>o</font-super> N<font-super>o</font-super></p>
+<table rend='inline'><row top-border='true'><cell right-border='true' halign='left' left-border='true' cols='1'/>
+<cell bottom-border='true' halign='center' cols='3'>          Propositional linear
+logic</cell>
+<cell right-border='true' halign='center'/>
+</row><row><cell right-border='true' halign='left' left-border='true' cols='1'/>
+<cell bottom-border='true' right-border='true' halign='center' cols='3'>Rudimentary linear
+logic</cell>
+<cell bottom-border='true' right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true' cols='1'/>
+<cell right-border='true' halign='center'>Negation</cell>
+<cell right-border='true' halign='center'>Multiplicatives</cell>
+<cell right-border='true' halign='center'>Additives</cell>
+<cell right-border='true' halign='center'>Exponentials</cell>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Negation</cell>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>A</mi> <mo>&perp;</mo> </msup></math></formula></cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Conjunction</cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo>&otimes;</mo><mi>B</mi></mrow></math></formula></cell>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo>&amp;</mo><mi>B</mi></mrow></math></formula></cell>
+<cell right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Disjunction</cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo>&#x214B;</mo><mi>B</mi></mrow></math></formula></cell>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo>&oplus;</mo><mi>B</mi></mrow></math></formula></cell>
+<cell right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Implication</cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mo>&multimap;</mo><mi>B</mi></mrow></math></formula></cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Constants</cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn mathvariant='bold'>1</mn><mo>,</mo><mo>&perp;</mo></mrow></math></formula></cell>
+<cell right-border='true' halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&top;</mi><mo>,</mo><mn mathvariant='bold'>0</mn></mrow></math></formula></cell>
+<cell right-border='true' halign='center'/>
+</row><row bottom-border='true'><cell right-border='true' halign='left' left-border='true'>Modalities</cell>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'/>
+<cell right-border='true' halign='center'>!A, ?A</cell>
+</row></table>
+<picture width='142.26303' height='110.96516'><pic-put xpos='0' ypos='19.91682'><pic-framebox width='0' height='0' position='bl'>cm</pic-framebox></pic-put><pic-put xpos='28.4526' ypos='19.91682'><pic-framebox width='0' height='0' position='b'>1</pic-framebox></pic-put>
+<pic-put xpos='56.90521' ypos='19.91682'><pic-framebox width='0' height='0' position='b'>2</pic-framebox></pic-put>
+<pic-put xpos='85.35782' ypos='19.91682'><pic-framebox width='0' height='0' position='b'>3</pic-framebox></pic-put>
+<pic-put xpos='113.81042' ypos='19.91682'><pic-framebox width='0' height='0' position='b'>4</pic-framebox></pic-put>
+<pic-put xpos='142.26303' ypos='19.91682'><pic-framebox width='0' height='0' position='b'>5</pic-framebox></pic-put>
+<pic-put xpos='42.67891' ypos='56.90521'><pic-circle size='17.07156'/></pic-put><pic-put xpos='85.35782' ypos='56.90521'><pic-circle size='17.07156'/></pic-put><pic-put xpos='42.67891' ypos='56.90521'><pic-circle full='true' size='5.69052'/></pic-put><pic-put xpos='85.35782' ypos='56.90521'><pic-circle full='true' size='5.69052'/></pic-put><pic-put xpos='28.4526' ypos='68.28625'><pic-framebox width='71.13152' height='22.76208' framed='true'>car</pic-framebox></pic-put><pic-put xpos='28.4526' ypos='91.04834'><pic-vector xdir='-2' ydir='1' width='28.4526'/></pic-put><pic-multiput xpos='2.84526' ypos='0' repeat='49' dx='2.84526' dy='0'><pic-line xdir='0' ydir='1' width='7.11314'/></pic-multiput><pic-multiput xpos='14.2263' ypos='0' repeat='5' dx='28.4526' dy='0'><pic-line xdir='0' ydir='1' width='9.9584'/></pic-multiput><pic-thicklines/><pic-put xpos='0' ypos='0'><pic-line xdir='1' ydir='0' width='142.26303'/></pic-put><pic-multiput xpos='0' ypos='0' repeat='6' dx='28.4526' dy='0'><pic-line xdir='0' ydir='1' width='14.2263'/></pic-multiput></picture><p><xref url='http://www-sop.inria.fr/miaou/Jose&amp;Grimm'><font-large1>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>miaou/<allowbreak/>Jose&amp;Grimm</font-large1></xref>
+
+<picture xpos='-5' ypos='0' width='120' height='100'>
+<pic-bezier a1='0' a2='0' b1='0' b2='100' c1='100' c2='0' repeat='50'/>
+<pic-bezier a1='0' a2='0' b1='30' b2='80' c1='100' c2='0'/>
+<pic-bezier a1='0' a2='0' b1='60' b2='60' c1='100' c2='0' repeat='150'/>
+<pic-bezier a1='0' a2='0' b1='90' b2='40' c1='100' c2='0' repeat='200'/>
+<pic-bezier a1='0' a2='0' b1='120' b2='20' c1='100' c2='0'/>
+<pic-put xpos='0' ypos='0'><pic-circle full='true' size='3'/></pic-put><pic-put xpos='100' ypos='0'><pic-circle full='true' size='3'/></pic-put><pic-multiput xpos='0' ypos='100' repeat='5' dx='30' dy='-20'><pic-circle size='2'/></pic-multiput></picture></p>
+<p>
+
+
+
+
+<mbox>1A<font-bold-series>b</font-bold-series></mbox><mbox>2A<font-bold-series>b</font-bold-series></mbox><pic-framebox width='3' height='4'>3A<font-bold-series>b</font-bold-series></pic-framebox><pic-framebox width='3' height='4' position='c'>4A<font-bold-series>b</font-bold-series></pic-framebox><mbox width='40.0pt'>5A<font-bold-series>b</font-bold-series></mbox><mbox width='40.0pt' position='c'>6A<font-bold-series>b</font-bold-series></mbox><mbox width='40.0pt' position='c'>7A<font-bold-series>b</font-bold-series></mbox></p>
+<picture xpos='-20' ypos='0' width='120' height='100'>
+<pic-bezier a1='20' a2='60' b1='70' b2='60' c1='90' c2='30'/>
+<pic-bezier a1='20' a2='0' b1='70' b2='0' c1='90' c2='30'/>
+<pic-bezier a1='20' a2='60' b1='40' b2='30' c1='20' c2='0'/>
+<pic-bezier a1='10' a2='60' b1='30' b2='30' c1='10' c2='0'/>
+<pic-put xpos='97.5' ypos='30'><pic-circle size='15'/></pic-put><pic-put xpos='105' ypos='30'><pic-line xdir='1' ydir='0' width='15'/></pic-put><pic-put xpos='0' ypos='50'><pic-line xdir='1' ydir='0' width='15'/></pic-put><pic-put xpos='0' ypos='10'><pic-line xdir='1' ydir='0' width='15'/></pic-put></picture><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>x</mi> <msubsup><mi>y</mi> <mi>&varepsilon;</mi> <mi>&straightepsilon;</mi> </msubsup> </msup></math></formula></p>
+<formula id-text='12' id='uid39' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>B</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>)</mo></mrow><mo>=</mo><mfrac><msub><mi>&mu;</mi> <mn>0</mn> </msub> <mrow><mn>4</mn><mi>&pi;</mi></mrow></mfrac><mfenced separators='' open='&lbrace;' close='&rbrace;'><mfrac><mrow><mn>3</mn><mover accent='true'><mi>m</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>&middot;</mo><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow> <mrow><mrow><mo>|</mo></mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><msup><mrow><mo>|</mo></mrow> <mn>5</mn> </msup></mrow></mfrac><mrow><mo>(</mo><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mfrac><mrow><mover accent='true'><mi>m</mi> <mo>&rightarrow;</mo></mover><mrow><mo>(</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow> <mrow><mrow><mo>|</mo></mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover><mo>-</mo><msup><mrow><mover accent='true'><mi>r</mi> <mo>&rightarrow;</mo></mover></mrow> <mo>&apos;</mo> </msup><msup><mrow><mo>|</mo></mrow> <mn>3</mn> </msup></mrow></mfrac></mfenced><mo>.</mo></mrow></math></formula>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&leftarrow;</mo><mo>&longleftarrow;</mo><mo>&Leftarrow;</mo><mo>&Longleftarrow;</mo><mo>&rightarrow;</mo><mo>&longrightarrow;</mo><mo>&Rightarrow;</mo><mo>&Longrightarrow;</mo><mo>&leftrightarrow;</mo><mo>&Leftrightarrow;</mo><mo>&longleftrightarrow;</mo><mo>&Longleftrightarrow;</mo><mo>&mapsto;</mo><mo>&longmapsto;</mo><mo>&hookleftarrow;</mo><mo>&hookrightarrow;</mo><mo>&leftharpoondown;</mo><mo>&leftharpoonup;</mo><mo>&rightharpoondown;</mo><mo>&rightharpoonup;</mo><mo>&uparrow;</mo><mo>&Uparrow;</mo><mo>&updownarrow;</mo><mo>&Updownarrow;</mo><mo>&downarrow;</mo><mo>&Downarrow;</mo><mo>&nearrow;</mo><mo>&searrow;</mo><mo>&swarrow;</mo><mo>&nwarrow;</mo></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&supseteq;</mo></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>...</mo><mo>&apos;</mo><mo>&exist;</mo><mo>&diamond;</mo><mi>&top;</mi><mi>&bottom;</mi><mo>&mho;</mo><mo>&ctdot;</mo><mo>&forall;</mo><mi>&nabla;</mi><mo>&imath;</mo><mo>&flat;</mo><mo>&clubsuit;</mo><mi>&Re;</mi><mo>&vellip;</mo><mi>&infin;</mi><mi>&radic;</mi><mo>&jmath;</mo><mo>&natur;</mo><mo>&diamondsuit;</mo><mi>&Im;</mi><mo>&dtdot;</mo><mi>&hbar;</mi><mo>&square;</mo><mi>&ell;</mi><mo>&sharp;</mo><mo>&heartsuit;</mo><mi>&ang;</mi><mi>&aleph;</mi><mi>&emptyset;</mi><mi>&triangle;</mi><mo>&not;</mo><mi>&wp;</mi><mo>&spadesuit;</mo><mi>&part;</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&hbar;</mi><mi>&ell;</mi><mi>&wp;</mi><mi>&Re;</mi><mi>&Im;</mi><mi>&part;</mi><mi>&infin;</mi><mi>&emptyset;</mi><mi>&nabla;</mi><mi>&radic;</mi><mi>&top;</mi><mi>&bottom;</mi><mi>&bottom;</mi><mi>&ang;</mi><mi>&triangle;</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&int;</mo><mo>&int;</mo><mo>&wedge;</mo><mo>&wedge;</mo><mo>&vee;</mo><mo>&ni;</mo><mo>&ni;</mo><mo>&notin;</mo><mo>&not;</mo><mo>&not;</mo><mo>&leftarrow;</mo><mo>&leftarrow;</mo><mo>&rightarrow;</mo><mo>&rightarrow;</mo><mo>&gl;</mo><mo>&geqslant;</mo><mo>&leqslant;</mo><mo>&Leftrightarrow;</mo><mo>&Backslash;</mo></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced open='&parallel;' close='&parallel;'><mfenced open='&vert;' close='&vert;'><mfenced open='[' close=']'><mfenced open='(' close=')'><mfenced separators='' open='&lbrace;' close='&rbrace;'><mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac></mfenced></mfenced></mfenced></mfenced></mfenced><mfenced open='&vert;' close='&vert;'><mfenced open='&vert;' close='&vert;'><mfenced open='&langle;' close='&rangle;'><mfenced separators='' open='&langle;' close='&rangle;'><mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac></mfenced></mfenced></mfenced></mfenced><mfenced open='&lbrace;' close='&rbrace;'><mfenced open='&lceil;' close='&rceil;'><mfenced separators='' open='&lfloor;' close='&rfloor;'><mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac></mfenced></mfenced></mfenced><mrow><mo>[</mo><mo>]</mo></mrow><mi>a</mi><mspace width='0.55542pt'/><mi>b</mi><mspace width='1.111pt'/><mi>c</mi><mspace width='2.22214pt'/><mi>d</mi><mspace width='4.44443pt'/><mi>e</mi><mspace width='8.88885pt'/><mi>f</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mspace width='10.0pt'/><mi>b</mi><mspace width='10.0pt'/><mi>c</mi><mspace width='20.0pt'/><mi>d</mi><mspace width='20.0pt'/></mrow></math></formula></p>
+<p>123</p>
+<picture xpos='0' ypos='0' width='330' height='45'>
+<pic-put xpos='0' ypos='0'><pic-framebox width='45' height='15'>aaa</pic-framebox></pic-put><pic-put xpos='60' ypos='0'><pic-framebox width='45' height='15' position='lb' framed='true'>bbb</pic-framebox></pic-put><pic-put xpos='120' ypos='0'><pic-dashbox dashdim='1.5' width='45' height='15' position='bl'>ccc</pic-dashbox></pic-put><pic-put xpos='180' ypos='0'><pic-dashbox dashdim='3' width='45' height='15' position='rt'>ddd</pic-dashbox></pic-put><pic-put xpos='240' ypos='0'><pic-dashbox dashdim='7.5' width='45' height='15' position='b'>eee</pic-dashbox></pic-put><pic-put xpos='288' ypos='1.5'><pic-frame>W</pic-frame></pic-put><pic-put xpos='22.5' ypos='30'><pic-oval xpos='45' ypos='15'/></pic-put><pic-put xpos='82.5' ypos='30'><pic-oval xpos='45' ypos='15' specs='t'/></pic-put><pic-put xpos='142.5' ypos='30'><pic-oval xpos='45' ypos='15'/></pic-put><pic-put xpos='202.5' ypos='30'><pic-oval xpos='45' ypos='15' specs='bl'/></pic-put><pic-put xpos='262.5' ypos='30'><pic-oval xpos='45' ypos='15' specs='r'/></pic-put></picture><p>1 i I a A * <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>*</mo></math></formula></p>
+<p noindent='true'>2 ii II b B <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&dagger;</mo></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&dagger;</mo></math></formula></p>
+<p noindent='true'>3 iii III c C <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&ddagger;</mo></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&ddagger;</mo></math></formula></p>
+<p noindent='true'>4 iv IV d D § <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>§</mi></math></formula></p>
+<p noindent='true'>5 v V e E ¶ <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>¶</mi></math></formula></p>
+<p noindent='true'>6 vi VI f F <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&parallel;</mo></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&parallel;</mo></math></formula></p>
+<p noindent='true'>7 vii VII g G ** <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>*</mo><mo>*</mo></mrow></math></formula></p>
+<p noindent='true'>8 viii VIII h H <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&dagger;</mo><mo>&dagger;</mo></mrow></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&dagger;</mo><mo>&dagger;</mo></mrow></math></formula></p>
+<p noindent='true'>9 ix IX i I <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ddagger;</mo><mo>&ddagger;</mo></mrow></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ddagger;</mo><mo>&ddagger;</mo></mrow></math></formula></p>
+<p noindent='true'>10</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='&lmoustache;' close='&rmoustache;'><mfenced open='&uparrow;' close='&downarrow;'><mfenced open='&Uparrow;' close='&Downarrow;'><mfenced open='&updownarrow;' close='&Updownarrow;'><mfenced separators='' open='&#x3014;' close='&#x3015;'><mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac></mfenced></mfenced></mfenced></mfenced></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&lmoustache;</mo><mo>&uparrow;</mo><mo>&Uparrow;</mo><mo>&updownarrow;</mo><mrow><mo>&#x3014;</mo><mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac><mo>&#x3015;</mo></mrow><mo>&Updownarrow;</mo><mo>&Downarrow;</mo><mo>&downarrow;</mo><mo>&rmoustache;</mo></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='&lmoustache;' close='&rmoustache;'><mfenced open='&uparrow;' close='&downarrow;'><mfenced open='&Uparrow;' close='&Downarrow;'><mfenced open='&updownarrow;' close='&Updownarrow;'><mfenced separators='' open='&#x3014;' close='&#x3015;'><msubsup><mo>&int;</mo> <mn>0</mn> <mfrac><msubsup><mi>x</mi> <mn>2</mn> <mn>1</mn> </msubsup> <msubsup><mi>y</mi> <mn>4</mn> <mn>3</mn> </msubsup></mfrac> </msubsup></mfenced></mfenced></mfenced></mfenced></mfenced></math></formula></p>
+<p><ref target='uid1'/></p>
+<p>Redefining par
+!</p>
+<p>!</p>
+<p>Redefining par</p>
+<p>3</p>
+<list type='simple'><label>first item</label>
+<item id-text='1' id='uid40'><p noindent='true'>This is the first item</p>
+</item><label><font-italic-shape>second item</font-italic-shape></label>
+<item id-text='2' id='uid41'><p noindent='true'>This is the second item</p>
+</item><label>third</label>
+<item id-text='3' id='uid42'><p noindent='true'>This is the last item</p>
+<list type='description'><label>a</label>
+<item id-text='3.1' id='uid43'><p noindent='true'>description of a.</p>
+</item><label>b</label>
+<item id-text='3.2' id='uid44'><p noindent='true'>description of b.</p>
+</item><label>cde</label>
+<item id-text='3.3' id='uid45'><p noindent='true'>description of cde.</p>
+</item><label>defgh etc</label>
+<item id-text='3.4' id='uid46'><p noindent='true'>description of other letters</p>
+<list type='ordered'>
+<item id-text='1' id='uid47' label='(1)'><p noindent='true'>One</p>
+</item>
+<item id-text='2' id='uid48' label='(2)'><p noindent='true'>Two</p>
+</item>
+<item id-text='3' id='uid49' label='(3)'><p noindent='true'>Threee</p>
+</item></list>
+</item></list>
+</item></list>
+<p>A:aa, B:<font-italic-shape>bb</font-italic-shape>, C:<figure rend='inline' file='Logo-INRIA-couleur'/>
+D:<mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>=</mo><mi>y</mi></mrow></math></formula></mbox>, E: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>=</mo><mi>b</mi><mtext>by</mtext><mspace width='4.pt'/><mtext>definition</mtext></mrow></math></formula>.</p>
+<p>A:aa B:<mbox width='28.45274pt'>bb</mbox> C:<mbox width='28.45274pt'>cc</mbox> C:<mbox width='28.45274pt' position='s'>cc</mbox>
+D<pic-framebox width='1.79999' height='6.75' position='5'>text</pic-framebox>
+E<pic-framebox width='1.79999' height='6' position='5'>text</pic-framebox>
+F<pic-framebox width='1.79999' height='6' position='5'>text</pic-framebox></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&Longrightarrow;</mo></math></formula>
+
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Xscr;</mi> <mi>&yscr;</mi> </msub></math></formula>and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&Xscr;</mi> <mi>&yscr;</mi> </msub><mi>&Zscr;</mi></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>sin</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>+</mo><msup><mo form='prefix'>cos</mo> <mn>2</mn> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mover accent='true'><mrow><mi>x</mi><mi>y</mi><mi>z</mi></mrow> <mo>&OverBrace;</mo></mover> <mi>t</mi> </msup></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='[' close='['><mfrac><mn>1</mn> <msup><mi>a</mi> <mn>2</mn> </msup></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='[' close='['><mfrac><mn>1</mn> <msup><mi>b</mi> <mn>2</mn> </msup></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>[</mo></mrow><mfrac><mn>1</mn> <msup><mi>x</mi> <mn>2</mn> </msup></mfrac><mrow><mo>[</mo></mrow></mrow></math></formula></p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&int;</mo><mi>f</mi><mo>)</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>(</mo><mo>=</mo><mi>c</mi><mo>+</mo><mi>d</mi></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&int;</mo><mi>f</mi><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>=</mo><mi>c</mi><mo>+</mo><mi>d</mi></mrow></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mi>b</mi></mrow></math></formula></p>
+<p>wwwwwwwwwwwwa...b...c   d      e f$g%h&amp;ij k{l}m&#x131;n&#x266F;o&#x266E;p&#x266D;q_</p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mo>&ctdot;</mo><mi>b</mi><mo>...</mo><mi>c</mi><mspace width='1.em'/><mi>d</mi><mspace width='2.em'/><mi>e</mi><mi>f</mi><mi>$</mi><mi>g</mi><mo>%</mo><mi>h</mi><mo>&amp;</mo><mi>i</mi><mspace width='-0.166667em'/><mi>j</mi><mspace width='0.166667em'/><mi>k</mi><mo>&lbrace;</mo><mi>l</mi><mo>&rbrace;</mo><mi>m</mi><mo>&inodot;</mo><mi>n</mi><mo>&sharp;</mo><mi>o</mi><mo>&natur;</mo><mi>p</mi><mo>&flat;</mo><mi>q</mi><mo>_</mo></mrow></math></formula></p>
+<p>Math spacing</p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mi>x</mi><mi>x</mi><mi>x</mi><mi>x</mi></mrow></math></formula></p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mspace width='0.166667em'/><mi>x</mi><mspace width='0.222222em'/><mi>x</mi><mspace width='0.277778em'/><mi>x</mi><mspace width='-0.166667em'/><mi>x</mi></mrow></math></formula></p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='0.166667em'/><mspace width='0.166667em'/><mspace width='0.166667em'/><mspace width='0.166667em'/><mspace width='0.166667em'/><mi>a</mi><mspace width='0.222222em'/><mspace width='0.222222em'/><mspace width='0.222222em'/><mspace width='0.222222em'/><mspace width='0.222222em'/><mi>a</mi></mrow></math></formula></p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='0.277778em'/><mspace width='0.277778em'/><mspace width='0.277778em'/><mi>a</mi><mspace width='0.277778em'/><mspace width='0.277778em'/><mspace width='0.277778em'/><mspace width='0.277778em'/><mi>a</mi></mrow></math></formula></p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>!</mo><mo>?</mo><mo>#</mo><mo>_</mo><mo>.</mo><mo>@</mo><mo>%</mo><mo>&parallel;</mo><mo>/</mo><mo>|</mo></mrow></math></formula></p>
+<catperso><head>List of Very Important Persons 1</head>
+<pers prenom='Jean' nom='de la Fontaine'/>
+<pers prenom='Donald' nom='Knuth'>author of <TeX/></pers>
+<pers prenom='Leslie' nom='Lamport'/>
+<pers prenom='Jose' nom='Grimm'>No footnote here</pers>
+</catperso>
+<catperso><head>List of Very Important Persons 2</head>
+<pers><firstname>Jean</firstname><lastname>de la Fontaine</lastname><localisation/><main-interest>Tales</main-interest><nationality>French</nationality><info/><hdr>phd</hdr></pers>
+<pers><firstname>Donald</firstname><lastname>Knuth</lastname><localisation/><main-interest>Math</main-interest><nationality>American</nationality><info>author of <TeX/></info><hdr/></pers>
+<pers><firstname>Leslie</firstname><lastname>Lamport</lastname><localisation/><main-interest>Computer Science</main-interest><nationality>American</nationality><info/><hdr/></pers>
+<pers><firstname>Jose</firstname><lastname>Grimm</lastname><localisation>Sophia</localisation><main-interest>Inria</main-interest><nationality>French</nationality><info>No footnote here, funny text</info><hdr/></pers>
+</catperso>
+<catperso><head>List of Very Important Persons 3</head>
+<pers prenom='Jean' nom='de la Fontaine' affiliation='Other' profession='Other' hdr='phd'/>
+<pers prenom='Donald' nom='Knuth' affiliation='Other' profession='Other'>author of <TeX/></pers>
+<pers prenom='Leslie' nom='Lamport' affiliation='Other' profession='Other'/>
+</catperso>
+<catperso><head>List of Very Important Persons 4</head>
+<pers><firstname>Jean</firstname><lastname>de la Fontaine</lastname><info/></pers><pers><firstname>Donald</firstname><lastname>Knuth</lastname><info>author of <TeX/></info></pers><pers><firstname>Leslie</firstname><lastname>Lamport</lastname><info/></pers></catperso>
+<pers prenom='Jean B' nom='Dupond' affiliation='Dec' profession='these' hdr='not yet' research-centre='Lyon'>Ok</pers>
+<pers prenom='Jean A' nom='Dupond' affiliation='CNRS' profession='Chercheur' hdr='not yet' research-centre='Sophia'>Ok</pers>
+<pers prenom='Jean B' nom='Dupond' affiliation='INRIA' profession='Ingenieur' hdr='not yet' research-centre='+Lyon'>Ok</pers>
+<pers prenom='Jean C' nom='Dupond' affiliation='IBM' profession='Other' research-centre='=Paris'>Ok</pers>
+<pers prenom='Jean D' nom='Dupond' affiliation='Other' profession='Enseignant' hdr='not yet'>Ok</pers>
+<list type='simple'><label>A</label>
+<item id-text='1' id='uid50'><p noindent='true'>B</p>
+</item></list>
+<list type='gloss'><head>Glossary</head><label>x</label><item><p>y</p>
+</item></list>
+<div0 id-text='II' id='cid5'><head>A</head>
+</div0>
+<div0 id-text='3' id='cid6'><head>B</head>
+</div0>
+<div0 id-text='1' id='cid7'><head>C</head>
+<div1 id-text='1.1' id='uid51'><head>D</head>
+<div2 id-text='1.1.1' id='uid52'><head>E</head>
+<div3 id-text='1.1.1.1' id='uid53'><head>F</head>
+<div4 id-text='1.1.1.1.1' id='uid54'><head>G</head>
+<keywords>
+<term>first</term>
+<term>second</term>
+</keywords><p><mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math></formula></mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>c</mi></math></formula> 0 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+<topic num='10'><t_titre>foo</t_titre></topic>
+<caption>ok</caption><alt_head>opt</alt_head>
+<note id-text='2' id='uid55' place='foot'>anote</note>
+<note id-text='3' id='uid56' place='foot'><p>par1</p>
+<p>pr2</p>
+</note>
+<note id-text='4' id='uid57' place='foot'>last<ref target='uid55'/></note>
+<figure rend='inline' file='x' extension='ps'/></p>
+<figure file='y' extension='ps' id-text='6' id='uid58' rend='figure'><head><p>A</p>
+<p>B</p>
+</head>
+</figure>
+<p><figure framed='true' rend='inline' file='../../tralics/Test/a_b' extension='eps'/>
+<figure rend='inline' scale='0.3' file='x' extension='ps'/>
+<figure rend='inline' scale='0.3' file='x' extension='ps'/>
+<figure scale='0.3' rend='inline' file='x' extension='ps'/>
+<figure vscale='0.4' scale='0.3' rend='inline' file='x' extension='ps'/></p>
+<p>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is normal</p>
+<p noindent='true'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is normal</p>
+<p noindent='false'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is normal</p>
+<p rend='center'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is center</p>
+<p rend='center'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is center</p>
+<p rend='center'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is center</p>
+<p rend='flushed-left'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is left</p>
+<p noindent='true' rend='flushed-left'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is left</p>
+<p noindent='false' rend='flushed-left'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is left</p>
+<p rend='flushed-right'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is right</p>
+<p noindent='true' rend='flushed-right'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is right</p>
+<p noindent='false' rend='flushed-right'>This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. Mode is right</p>
+<table rend='inline'><row><cell halign='center'>a</cell>
+<cell halign='center'>b</cell>
+<cell>c</cell>
+</row><row><cell halign='left' cols='14'>s</cell>
+<cell>e</cell>
+</row></table>
+<p>XX</p>
+<p>0,</p>
+<p>2294XX</p>
+<p>2298XX</p>
+<p>XX</p>
+<p>X</p>
+<p>2340XX<foo/><foo>bar</foo></p>
+<p><foo>barX</foo></p>
+<foo>barY</foo><p>2340<font-small-caps-shape>Abc</font-small-caps-shape><font-small-caps-shape>Abc</font-small-caps-shape><font-small-caps-shape>Abc</font-small-caps-shape></p>
+<rule depth='0.0pt' height='0.4pt'/><rule width='0.4pt'/><rule width='1.0pt' depth='2.0pt' height='3.0pt'/><rule width='1.0pt' depth='2.0pt' height='3.0pt'/><keywords>
+<term>latex</term>
+<term>xml</term>
+<term>translator</term>
+</keywords><p>ligne2060</p>
+<table width='427.0pt' rend='inline'><row><cell halign='center'>a</cell>
+<cell halign='center'>b</cell>
+<cell>c</cell>
+</row><row><cell halign='left' cols='14'>s</cell>
+<cell>e</cell>
+</row></table>
+<p>Gcd(144,272) =
+gcd(144,128) = gcd(16,128) = gcd(16,112) = gcd(16,96) = gcd(16,80) = gcd(16,64) = gcd(16,48) = gcd(16,32) = gcd(16,16) = 16.</p>
+<p>gcd(144,272) = gcd(144,128) = gcd(16,128) = gcd(16,112) = gcd(16,96) = gcd(16,80) = gcd(16,64) = gcd(16,48) = gcd(16,32) = gcd(16,16) = 16.</p>
+<p>Gcd(144,272) =  Gcd(128,144) =  Gcd(16,128) =  Gcd(16,112) =  Gcd(16,96) =  Gcd(16,80) =  Gcd(16,64) =  Gcd(16,48) =  Gcd(16,32) = 16.</p>
+<p>Xgcd(144,272) = Xgcd(144,128) = Xgcd(128,16) = Xgcd(16,112) = Xgcd(16,96) = Xgcd(16,80) = Xgcd(16,64) = Xgcd(16,48) = Xgcd(16,32) = 16.</p>
+<p>*
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&dagger;</mo></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&ddagger;</mo></math></formula>
+§
+¶
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&parallel;</mo></math></formula>
+**
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&dagger;</mo><mo>&dagger;</mo></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ddagger;</mo><mo>&ddagger;</mo></mrow></math></formula></p>
+<p>EOLy</p>
+<p>FooBar
+FooBar</p>
+<p>3 23</p>
+<p>123456789abc 123456789abc
+7686 7686
+7686 7686
+7e8e 7e8e</p>
+</div4></div3>
+<div3 id-text='1.1.1.2' id='uid59'><head>a</head>
+<p>aa</p>
+</div3>
+<div3 id-text='1.1.1.3' id='uid60'><head>b</head>
+<p>bb</p>
+<headings type='orf'/><headings type='ocf'/><headings type='olf'/><headings type='erf'/><headings type='ecf'/><headings type='elf'/><headings type='orh'/><headings type='och'/><headings type='olh'/><headings type='erh'/><headings type='ech'/><headings type='elh'/><headings type='ORH'>righmark</headings><headings type='ELH'>righmark</headings><headings type='OLH'>leftmark</headings><headings type='ERH'>leftmark</headings><headings type='OLH'/><headings style='arabic' type='ELH'><thepage/></headings><headings style='arabic' type='ORH'><thepage/></headings><headings type='ERH'><font-italic-shape>OK</font-italic-shape></headings><headings style='roman' type='OLF'><thepage/></headings><headings style='roman' type='ELF'><thepage/></headings><headings style='roman' type='ORF'><thepage/></headings><headings type='ERF'><font-italic-shape>OK</font-italic-shape></headings><p>ok</p>
+<table vpos='b' width='120.0pt' rend='inline'><row spaceafter='2.0pt' top-border='true'><cell halign='left'>a</cell>
+<cell halign='right'>b</cell>
+<cell halign='center'>c</cell>
+</row><row bottom-border='true'><cell halign='left' cols='1'>A</cell>
+<cell halign='right'>B</cell>
+<cell halign='center'>C</cell>
+</row></table>
+<table vpos='b' width='142.26378pt' rend='inline'><row><cell halign='right'>a1</cell>
+<cell halign='left'>a2</cell>
+<cell halign='center'>a3x</cell>
+<cell right-border='true' halign='center'>a4</cell>
+<cell halign='left'>b1</cell>
+<cell halign='center'>b2x</cell>
+<cell right-border='true' halign='center'>b3</cell>
+<cell halign='right'>b4</cell>
+<cell halign='left'>c1</cell>
+<cell halign='center'>c2x</cell>
+<cell right-border='true' halign='center'>c3</cell>
+<cell halign='right'>c4</cell>
+<cell halign='left'>d1</cell>
+<cell halign='center'>d2x</cell>
+<cell right-border='true' halign='center'>d3</cell>
+<cell>d4</cell>
+</row><row><cell halign='right'>Wa1</cell>
+<cell halign='left'>Wa2</cell>
+<cell halign='center'>Wa3x</cell>
+<cell right-border='true' halign='center'>Wa4</cell>
+<cell halign='left'>Wb1</cell>
+<cell halign='center'>Wb2x</cell>
+<cell right-border='true' halign='center'>Wb3</cell>
+<cell halign='right'>Wb4</cell>
+<cell halign='left'>Wc1</cell>
+<cell halign='center'>Wc2x</cell>
+<cell right-border='true' halign='center'>Wc3</cell>
+<cell halign='right'>Wc4</cell>
+<cell halign='left'>Wd1</cell>
+<cell halign='center'>Wd2x</cell>
+<cell right-border='true' halign='center'>Wd3</cell>
+<cell>Wd4</cell>
+</row></table><p>
+<topic num='A'><t_titre>B</t_titre></topic></p>
+<p>okok</p>
+<p><figure rend='inline' angle='90' file='x'/>
+<pic-rotatebox angle='30'><figure rend='inline' file='x'/></pic-rotatebox>
+<pic-rotatebox angle='45'><font-italic-shape>x</font-italic-shape></pic-rotatebox>
+<pic-rotatebox angle='-10'><p>xx</p>
+<p>yy</p></pic-rotatebox>
+<figure framed='true' rend='inline' file='x'/>
+<fbox rend='boxed'><font-typewriter-family>abc</font-typewriter-family></fbox>
+<fbox rend='boxed'><p>abc</p>
+<p>def</p></fbox>
+<fbox rend='boxed'>ab</fbox>
+<figure framed='true' rend='inline' file='x'/>
+<fbox rend='boxed'><font-typewriter-family>abc</font-typewriter-family></fbox>
+<fbox rend='boxed'><p>abc</p>
+<p>def</p></fbox>
+<figure framed='true' rend='inline' file='x'/>
+<fbox width='60.0pt' rend='boxed'><font-typewriter-family>abc</font-typewriter-family></fbox>
+<fbox width='80.0pt' rend='boxed'><p>abc</p>
+<p>def</p></fbox>
+<figure framed='true' rend='inline' file='x'/>
+<fbox width='120.0pt' position='r' rend='boxed'><font-typewriter-family>abc</font-typewriter-family></fbox>
+<fbox width='140.0pt' position='s' rend='boxed'><p>abc</p>
+<p>def</p></fbox>
+<figure scale='xx' rend='inline' file='x'/>
+<scalebox scale='yy'><font-typewriter-family>abc</font-typewriter-family></scalebox>
+<scalebox vscale='zz' scale='yy'><font-typewriter-family>abc</font-typewriter-family></scalebox>
+<scalebox scale='zz'><p>abc</p>
+<p>def</p></scalebox></p>
+<p><figure rend='inline' angle='90' file='x'/>
+<pic-rotatebox angle='30'><figure rend='inline' file='x'/></pic-rotatebox>
+<pic-rotatebox angle='40'>x</pic-rotatebox></p>
+<p rend='center'>a</p>
+<p rend='center'>a1</p>
+<p rend='center'>a2</p>
+<p rend='center'>a3</p>
+<p rend='center'>a4</p>
+<p rend='flushed-right'>b</p>
+<p noindent='false' rend='flushed-right'>b1</p>
+<p noindent='true' rend='flushed-right'>b2</p>
+<p noindent='true' rend='flushed-right'>b3</p>
+<p rend='flushed-right'>b4</p>
+<p rend='flushed-left'>c</p>
+<p noindent='false' rend='flushed-left'>c1</p>
+<p noindent='true' rend='flushed-left'>c2</p>
+<p noindent='true' rend='flushed-left'>c3</p>
+<p rend='flushed-left'>c4</p>
+<p rend='flushed-left'>d</p>
+<p noindent='false' rend='flushed-left'>d1</p>
+<p noindent='true' rend='flushed-left'>d2</p>
+<p noindent='true' rend='flushed-left'>d3</p>
+<p rend='flushed-left'>d4</p>
+<p rend='center'>fe</p>
+<p noindent='false' rend='flushed-left'>e1</p>
+<p noindent='true' rend='flushed-left'>e2</p>
+<p noindent='true' rend='flushed-left'>e3</p>
+<p rend='flushed-left'>e4</p>
+<p rend='center'>A</p>
+<p rend='center'>A1</p>
+<p rend='center'>A2</p>
+<p rend='center'>A3</p>
+<p rend='center'>A4</p>
+<p rend='flushed-right'>B</p>
+<p noindent='false' rend='flushed-right'>B1</p>
+<p noindent='true' rend='flushed-right'>B2</p>
+<p noindent='true' rend='flushed-right'>B3</p>
+<p rend='flushed-right'>B4</p>
+<p rend='flushed-left'>C</p>
+<p noindent='false' rend='flushed-left'>C1</p>
+<p noindent='true' rend='flushed-left'>C2</p>
+<p noindent='true' rend='flushed-left'>C3</p>
+<p rend='flushed-left'>C4</p>
+<p rend='flushed-left'>D</p>
+<p noindent='false' rend='flushed-left'>D1</p>
+<p noindent='true' rend='flushed-left'>D2</p>
+<p noindent='true' rend='flushed-left'>D3</p>
+<p rend='flushed-left'>D4</p>
+<p>F</p>
+<p rend='flushed-left'>E</p>
+<p noindent='false' rend='flushed-left'>E1</p>
+<p noindent='true' rend='flushed-left'>E2</p>
+<p noindent='true' rend='flushed-left'>E3</p>
+<p rend='flushed-left'>E4</p>
+<p rend='quoted'>I</p>
+<p noindent='false' rend='quoted'>I1</p>
+<p noindent='true' rend='quoted'>I2</p>
+<p noindent='true' rend='quoted'>I3</p>
+<p rend='quoted'>I4</p>
+<p rend='quoted'>J</p>
+<p noindent='false' rend='quoted'>J1</p>
+<p noindent='true' rend='quoted'>J2</p>
+<p noindent='true' rend='quoted'>J3</p>
+<p rend='quoted'>J4</p>
+<table width='142.26378pt' rend='inline'><row><cell halign='center'><font-bold-series>aaaaa</font-bold-series>aaac</cell>
+<cell halign='center'>b</cell>
+</row><row><cell halign='center'><font-bold-series>c</font-bold-series></cell>
+<cell halign='center'>d</cell>
+</row></table>
+<table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+<cell halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row><row><cell halign='left' left-border='true'>A</cell>
+<cell right-border='true' halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' halign='left' left-border='true' cols='2'>ab</cell>
+<cell bottom-border='true' halign='right'>c</cell>
+<cell right-border='true' halign='right'>d</cell>
+<cell halign='center'>e</cell>
+<cell bottom-border='true' right-border='true' halign='center'>f</cell>
+</row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
+<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='right'>ccc</cell>
+<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='center'>eee</cell>
+<cell right-border='true' halign='center'>fff</cell>
+</row></table>
+<table rend='inline'><row><cell>a</cell>
+<cell bottom-border='true'/></row></table>
+<table rend='inline'><row><cell>b</cell>
+<cell cols='2'/><cell bottom-border='true' cols='4'/></row></table>
+<table rend='inline'><row><cell>c</cell>
+</row><row><cell bottom-border='true' cols='7'/>
+</row></table>
+<table rend='inline'><row><cell cols='4'>d</cell>
+</row><row><cell bottom-border='true'/>
+</row></table>
+<table rend='inline'><row><cell cols='4'>e</cell>
+</row><row><cell bottom-border='true'/>
+<cell cols='2'/><cell bottom-border='true'/></row></table>
+<table rend='inline'><row><cell bottom-border='true'/>
+<cell cols='2'/><cell bottom-border='true'/></row><row><cell>f</cell>
+</row></table>
+<table rend='inline'><row><cell cols='3'/>
+<cell bottom-border='true'/>
+</row><row><cell>g</cell>
+</row></table>
+<table rend='inline'><row><cell halign='left' left-border='true'>A</cell>
+<cell halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' cols='3'/>
+<cell cols='2'/><cell bottom-border='true'/></row><row><cell halign='left' left-border='true'>A</cell>
+<cell halign='left' cols='3'>BCD</cell>
+<cell halign='center'>E</cell>
+<cell right-border='true' halign='center'>F</cell>
+</row><row><cell bottom-border='true' cols='3'/>
+</row><row><cell halign='left' left-border='true'/>
+<cell cols='4'/><cell bottom-border='true'/></row><row><cell halign='left' left-border='true'>z</cell>
+<cell right-border='true' halign='left'>t</cell>
+<cell bottom-border='true'/></row></table>
+<table rend='inline'><row bottom-border='true' top-border='true'><cell right-border='true' halign='center' left-border='true'><font-large1>1Ax</font-large1></cell>
+<cell right-border='true' halign='left'><font-large1/><font-large1><font-bold-series>2By</font-bold-series></font-large1></cell>
+<cell right-border='true' halign='center'>b<font-large1/><font-large1><font-italic-shape>3Cza</font-italic-shape></font-large1></cell>
+</row><row><cell right-border='true' halign='center' left-border='true'><font-large1>1100x</font-large1></cell>
+<cell right-border='true' halign='left'><font-large1/><font-large1><font-bold-series>210y</font-bold-series></font-large1></cell>
+<cell right-border='true' halign='center'>b<font-large1/><font-large1><font-italic-shape>31za</font-italic-shape></font-large1></cell>
+</row></table>
+<p>test de table</p>
+<table rend='inline'/>
+<p><figure rend='inline' clip='true' width='85.35826pt' file='Logo-INRIA-couleur'/>
+<figure rend='inline' height='171.00174pt' width='213.5pt' angle='20' file='Logo-INRIA-couleur' extension='ducon'/>
+<figure rend='inline' height='570.0pt' width='427.0pt' file='Logo-INRIA-couleur' extension='foo_bar'/>
+a :c
+<figure rend='inline' clip='true' scale='2' width='85.35826pt' file='../../a_b:c'/>
+
+<figure framed='true' rend='inline' file='x_' extension='ps'/></p>
+<figure height='60.0pt' width='50.0pt' rend='inline' file='x' extension='ps'/><figure height='70.0pt' rend='inline' file='x' extension='eps'/><figure rend='inline' file='x' extension='epsf'/><p><figure framed='true' rend='inline' file='x' extension='ps'/>
+<figure rend='inline' scale='0.3' file='x' extension='ps'/>
+<figure rend='inline' scale='0.3' file='x' extension='ps'/>
+<figure scale='0.3' rend='inline' file='x' extension='ps'/>
+<figure rend='inline' angle='90' file='x' extension='ps'/>
+<pic-rotatebox angle='30'><figure rend='inline' file='x' extension='ps'/></pic-rotatebox></p>
+<p id-text='1' id='uid61'><font-small-caps-shape>Corollary 1</font-small-caps-shape> <font-slanted-shape>This is a sentence typeset in the theorem environment </font-slanted-shape><font-slanted-shape><font-typewriter-family>Cor</font-typewriter-family></font-slanted-shape><font-slanted-shape>.</font-slanted-shape></p>
+
+<p id-text='17.1' id='uid62'><font-small-caps-shape>Example 17.1</font-small-caps-shape> <font-slanted-shape>This is a sentence typeset in the theorem environment </font-slanted-shape><font-slanted-shape><font-typewriter-family>Exa</font-typewriter-family></font-slanted-shape><font-slanted-shape>.</font-slanted-shape></p>
+
+<p id-text='1' id='uid63'><font-small-caps-shape>Remark 1</font-small-caps-shape> This is a sentence typeset in the theorem environment <font-typewriter-family>Rem</font-typewriter-family>.</p>
+
+<p id-text='2' id='uid64'><font-small-caps-shape>lemma 2 (Ben User)</font-small-caps-shape> <font-slanted-shape>
+This is a sentence typeset in the theorem environment </font-slanted-shape><font-slanted-shape><font-typewriter-family>Lem</font-typewriter-family></font-slanted-shape><font-slanted-shape>.</font-slanted-shape></p>
+
+<p id-text='3' id='uid65'><font-small-caps-shape>Definition 3 (Very Impressive definition)</font-small-caps-shape> <font-small1/><font-small1><font-italic-shape>
+This is a sentence typeset in the theorem environment </font-italic-shape></font-small1><font-small1><font-italic-shape><font-typewriter-family>Def</font-typewriter-family></font-italic-shape></font-small1><font-small1><font-italic-shape>.</font-italic-shape></font-small1></p>
+
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mrow><msub><mrow><mi>a</mi><mi>r</mi><mi>g</mi><mspace width='0.166667em'/><mi>m</mi><mi>i</mi><mi>n</mi></mrow> <mi>&Psi;</mi> </msub></mrow> <mrow><mi>&theta;</mi><mo>&Element;</mo><mi>&Theta;</mi></mrow> </munder><mi>&Delta;</mi><mfenced separators='' open='(' close=')'><mrow><msub><mi>&Phi;</mi> <mi>&theta;</mi> </msub><mfenced separators='' open='(' close=')'><msub><mi>&Omega;</mi> <mi>s</mi> </msub></mfenced><mo>-</mo><msub><mi>&Omega;</mi> <mi>t</mi> </msub></mrow></mfenced><mspace width='2.em'/><msub><mi>x</mi> <msub><mi>y</mi> <mi>z</mi> </msub> </msub><mo>=</mo><msub><mrow><msub><mi>x</mi> <mi>y</mi> </msub></mrow> <mi>z</mi> </msub><mo>=</mo><msup><mi>x</mi> <msub><mi>y</mi> <mi>z</mi> </msub> </msup><mo>=</mo><msub><mrow><msup><mi>x</mi> <mi>y</mi> </msup></mrow> <mi>z</mi> </msub><mo>=</mo><msub><mi>x</mi> <msup><mi>y</mi> <mi>z</mi> </msup> </msub><mo>=</mo><msup><mrow><msub><mi>x</mi> <mi>y</mi> </msub></mrow> <mi>z</mi> </msup><mo>=</mo><msup><mi>x</mi> <msup><mi>y</mi> <mi>z</mi> </msup> </msup><mo>=</mo><msup><mrow><msup><mi>x</mi> <mi>y</mi> </msup></mrow> <mi>z</mi> </msup><mfenced separators='' open='&lbrace;' close='&rbrace;'><mo>&lbrace;</mo><mfrac><mn>2</mn> <mn>3</mn></mfrac><mo>&rbrace;</mo></mfenced></mrow></math></formula>
+<pic-linethickness size='0.7mm'/>
+<p rend='center'>text</p>
+<p rend='center'><picture width='142.26227' height='28.45245'>
+<pic-scaleput xpos='1.77827' ypos='1.77827' xscale='1.0' yscale='1.0' xscaley='0.0' yscalex='0.0'><pic-arc angle='-135' xpos='0' ypos='-1.77827' unit-length='1.42262'/></pic-scaleput>
+<pic-scaleput xpos='0' ypos='0' xscale='1.0' yscale='1.0' xscaley='0.0' yscalex='0.0'><pic-curve unit-length='1.42262'>0.366,2.133, 1.25,3.19, 2.5,4.42,
+5.0,6.10, 7.5,7.24, 10,8.09, 15,9.28, 20,9.90, 30,10.3,
+40,10.22, 50,9.80, 60,8.98, 70,7.70, 80,5.91, 90,3.79,
+95,2.58, 99.24,1.52</pic-curve></pic-scaleput>
+<pic-scaleput xpos='141.18108' ypos='1.08118' xscale='1.0' yscale='1.0' xscaley='0.0' yscalex='0.0'><pic-arc angle='180' xpos='0' ypos='-1.08118' unit-length='1.42262'/></pic-scaleput>
+<pic-scaleput xpos='0' ypos='0' xscale='1.0' yscale='1.0' xscaley='0.0' yscalex='0.0'><pic-curve unit-length='1.42262'>1.25,0, 99.24,0</pic-curve></pic-scaleput>
+</picture></p>
+<p rend='center'>The RAF 6E has a flat undersurface.</p>
+<p rend='center'><picture xpos='-28.45245' ypos='0' width='170.71472' height='42.67868'>
+
+
+
+
+<pic-put xpos='0' ypos='28.45245'>
+<pic-scaleput xpos='1.77827' ypos='1.77827' xscale='0.9781' yscale='0.9781' xscaley='0.2079' yscalex='-0.2079'><pic-arc angle='-135' xpos='0' ypos='-1.77827' unit-length='1.42262'/></pic-scaleput>
+<pic-scaleput xpos='0' ypos='0' xscale='0.9781' yscale='0.9781' xscaley='0.2079' yscalex='-0.2079'><pic-curve unit-length='1.42262'>0.366,2.133, 1.25,3.19, 2.5,4.42,
+5.0,6.10, 7.5,7.24, 10,8.09, 15,9.28, 20,9.90, 30,10.3,
+40,10.22, 50,9.80, 60,8.98, 70,7.70, 80,5.91, 90,3.79,
+95,2.58, 99.24,1.52</pic-curve></pic-scaleput>
+<pic-scaleput xpos='141.18108' ypos='1.08118' xscale='0.9781' yscale='0.9781' xscaley='0.2079' yscalex='-0.2079'><pic-arc angle='180' xpos='0' ypos='-1.08118' unit-length='1.42262'/></pic-scaleput>
+<pic-scaleput xpos='0' ypos='0' xscale='0.9781' yscale='0.9781' xscaley='0.2079' yscalex='-0.2079'><pic-curve unit-length='1.42262'>1.25,0, 99.24,0</pic-curve></pic-scaleput>
+</pic-put><pic-thicklines/><pic-put xpos='-28.45245' ypos='7.11311'><pic-vector xdir='1' ydir='0' width='28.45245'/></pic-put></picture></p>
+<p rend='center'>The RAF 6E has maximum lift at angles of attack over 12<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow/> <mo>&SmallCircle;</mo> </msup></math></formula>.</p>
+<pic-linethickness size='0.7mm'/><picture xpos='-3.99994' ypos='0' width='159.99756' height='43.99933'>
+<pic-tagcurve unit-length='0.4'>80,0, 0,0, 40,100, 80,0, 0,0</pic-tagcurve>
+<pic-closecurve unit-length='0.4'>150,0, 190,100, 230,0</pic-closecurve>
+<pic-curve unit-length='0.4'>300,0, 340,100, 380,0</pic-curve>
+</picture><picture width='204.85962' height='153.64471'><pic-thicklines/><pic-multiput xpos='102.42981' ypos='25.60745' repeat='2' dx='102.42981' dy='61.45789'><pic-line xdir='0' ydir='-1' width='10.24298'/><pic-line xdir='-5' ydir='3' width='102.42981'/></pic-multiput><pic-multiput xpos='102.42981' ypos='25.60745' repeat='2' dx='-102.42981' dy='61.45789'><pic-line xdir='5' ydir='3' width='102.42981'/></pic-multiput><pic-put xpos='102.42981' ypos='15.36447'><pic-line xdir='5' ydir='3' width='102.42981'/></pic-put><pic-put xpos='102.42981' ypos='15.36447'><pic-line xdir='-5' ydir='3' width='102.42981'/></pic-put><pic-put xpos='0' ypos='76.82236'><pic-line xdir='0' ydir='1' width='10.24298'/></pic-put><pic-linethickness size='1pt'/>
+<pic-put xpos='102.42981' ypos='25.60745'>
+
+
+
+
+<pic-scaleput xpos='51.2149' ypos='51.2149' xscale='1' yscale='0.6' xscaley='-1' yscalex='0.6'><pic-bigcircle size='10' unit-length='5.12149'/></pic-scaleput>
+<pic-put xpos='0' ypos='-10.24298'><pic-scaleput xpos='51.2149' ypos='51.2149' xscale='1' yscale='0.6' xscaley='-1' yscalex='0.6'><pic-arc angle='121' xpos='25.60745' ypos='0' unit-length='5.12149'/></pic-scaleput>
+<pic-scaleput xpos='51.2149' ypos='51.2149' xscale='1' yscale='0.6' xscaley='-1' yscalex='0.6'><pic-arc angle='-31' xpos='25.60745' ypos='0' unit-length='5.12149'/></pic-scaleput></pic-put></pic-put></picture><table rend='inline'><row bottom-border='true' top-border='true'><cell right-border='true' halign='left' left-border='true'>Protocol</cell>
+<cell right-border='true' halign='center'>Proof</cell>
+<cell right-border='true' halign='center'><table rend='inline'><row><cell halign='center'>max # of</cell>
+</row><row><cell halign='center'>&#x201C;back&#x201D; steps</cell>
+</row></table></cell>
+<cell right-border='true' halign='center'><table rend='inline'><row><cell halign='center'>Time</cell>
+</row><row><cell halign='center'>ms.</cell>
+</row></table></cell>
+</row><row><cell right-border='true' halign='left' left-border='true'>Otway-Rees</cell>
+<cell right-border='true' halign='center'>Yes</cell>
+<cell right-border='true' halign='center'>0</cell>
+<cell right-border='true' halign='center'>0.35</cell>
+</row></table>
+<p>112233</p>
+<p>=torture</p>
+<p>4</p>
+<p>00</p>
+<p>Bx</p>
+<p>m</p>
+<p>1 2 
+1 2 
+2 1</p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mn>1</mn></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mn>0123456789</mn></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>4</mn> <mn>3</mn></mroot></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mroot><mn>4</mn> <mn>3</mn></mroot><mi>&#x321;</mi><mi>&#x4321;</mi><mi>&#x54321;</mi><mi>&#x654321;</mi><mi>&#x7654321;</mi></mrow></math></formula>
+XYZ</p>
+<biblio>
+<citation from='year' key='BJMTa' id='bid3' userid='cite:titi' type='article'>
+<bauteurs><bpers prenom='F.' nom='Besson' prenomcomplet='F.'/><bpers prenom='T.' nom='Jensen' prenomcomplet='T.'/><bpers prenom='D. L.' nom='Métayer' prenomcomplet='D. Le'/><bpers prenom='T.' nom='Thorn' prenomcomplet='T.'/></bauteurs>
+<btitle>BRACETEST1 leave  leave a leave <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>H</mi></math></formula></btitle>
+</citation>
+<citation from='year' key='BJMTb' id='bid2' userid='cite:toto' type='book'>
+<bauteurs><bpers prenom='F.' nom='Besson' prenomcomplet='F.'/><bpers prenom='T.' nom='Jensen' prenomcomplet='T.'/><bpers prenom='D. L.' nom='Métayer' prenomcomplet='D. Le'/><bpers prenom='T.' nom='Thorn' prenomcomplet='T.'/></bauteurs>
+<btitle>Some title</btitle>
+<xref url='http://www.inria.fr/rrrt/rt-0265.html'><font-large1>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rt-0265.<allowbreak/>html</font-large1></xref><first-page>50</first-page>
+<lastpage>70</lastpage>
+<allpages>21</allpages>
+<bnote>some note</bnote>
+</citation>
+<citation from='year' key='CIMP01' id='bid4' userid='cite:mathml2' type='misc'>
+<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='P.' nom='Ion' prenomcomplet='Patrick'/><bpers prenom='R.' nom='Miner' prenomcomplet='Robert'/><bpers prenom='N.' nom='Poppelier' prenomcomplet='Nico'/></bauteurs>
+<btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
+<bhowpublished>http://www.w3.org/TR/MathML2/</bhowpublished>
+<byear>2001</byear>
+</citation></biblio><p>markXY
+XYZ    T</p>
+<p>&#x2030;&#x2031;&#x2032;&#x2033;</p>
+<p noindent='true'>&#x2034;&#x2035;&#x2036;&#x2037;</p>
+<p noindent='true'>&#x2113;</p>
+<p>OK</p>
+<exercice><p>Blabla</p>
+<p>Blabla</p>
+</exercice><p>Test: AfooA and AbarA</p>
+<p noindent='true'>Bline1B</p>
+<p noindent='true'>Bline2B</p>
+<p>123</p>
+<formula id-text='13' id='uid66' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>=</mo><mspace width='11.38092pt'/><mn>1</mn></mrow></math></formula>
+<p>Unskip:a bcde</p>
+<p>DMO<font-italic-shape>bar</font-italic-shape>OK*<font-italic-shape>bar</font-italic-shape>ok</p>
+<p>ok
+Ifempty 122112112122122112112122 222.
+Ifempty 122112112122122112112122 222.</p>
+<p><date>This is a date</date>
+<xref url='b'>a</xref> <xref url='b'>añ</xref> <xref url='a~n'>b</xref>
+<note id-text='5' id='uid67' place='foot'><xref url='toto~titi'>a b</xref></note></p>
+<p>A</p>
+<formula id-text='14' id='uid68' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>B</mi><mtable><mtr><mtd><mi>x</mi></mtd></mtr><mtr><mtd><mi>y</mi></mtd></mtr></mtable><mi>A</mi></mrow></math></formula>
+<p noindent='true'>D</p>
+<p>Gobble:xxx</p>
+<p>soul:<font-caps>ABC</font-caps><font-hl>x<font-ul>y</font-ul><font-italic-shape>z<font-st>w</font-st></font-italic-shape></font-hl><font-ul>etc</font-ul></p>
+<list type='description'><p>HEY!</p>
+<label>a</label>
+<item id-text='1' id='uid69'><p noindent='true'>bla bla</p>
+</item><label>(2)</label>
+<item id-text='2' id='uid70'><p noindent='true'>ble ble</p>
+</item><label>(3)</label>
+<item id-text='3' id='uid71'><p noindent='true'>blu blu</p>
+<list type='ordered'>
+<item id-text='1' id='uid72' label='(1)'><p noindent='true'>e1</p>
+</item>
+<item id-text='2' id='uid73' label='(2)'><p noindent='true'>e1</p>
+</item>
+<item id-text='3' id='uid74' label='[3]'><p noindent='true'>e3</p>
+</item>
+<item id-text='4' id='uid75' label='[4]'>
+<list type='ordered'>
+<item id-text='4a' id='uid76' label='[4,a]'><p noindent='true'>i1</p>
+</item>
+<item id-text='4b' id='uid77' label='[4,b]'><p noindent='true'>i2</p>
+</item>
+<item id-text='4c' id='uid78' label='foo'><p noindent='true'>i3</p>
+</item>
+<item id-text='4d' id='uid79' label='foo'><p noindent='true'>i5</p>
+</item></list>
+</item>
+<item id-text='5' id='uid80' label='[5]'><p noindent='true'>e5</p>
+</item></list>
+</item><label>(4)</label>
+<item id-text='4' id='uid81'><p noindent='true'>bli bli</p>
+</item></list>
+<p><a>-</a><a>&#x2013;</a><a>'</a><a>`</a><a>&lt;</a><a>&gt;</a><a>&#x2013;</a><a>&#x2014;</a><a>&#x201D;</a><a>&#x201C;</a><a>&lt;&lt;</a><a>&gt;&gt;</a>
+
+<a>-</a><a>&#x2013;</a><a>'</a><a>`</a><a>&lt;</a><a>&gt;</a><a>&#x2013;</a><a>&#x2014;</a><a>&#x201D;</a><a>&#x201C;</a><a>« </a><a> »</a></p>
+<p>00</p>
+<foo y='2'>Vest1<bar x='1'>Vest2</bar> 3</foo><foo y='4'>West1<bar x='1'>West2</bar> 3</foo><p>A</p>
+<clearpage/><p>B</p>
+<cleardoublepage/><p>C</p>
+<newpage/><p>D <hrulefill/>E <dotfill/>F
+<samepage/>G
+<pagestyle numbering='arabic'/> <pagestyle style='mypagestyle'/><pagestyle this-style='plain'/></p>
+<p>Reference to figure: <ref target='uid85'/>
+Reference to first subfigure: <ref target='uid86'/>
+Reference to second subfigure: <ref target='uid87'/></p>
+<figure id-text='7' id='uid82' place='htbp' rend='array'><head>main figure caption</head>
+<p><table rend='inline'><row><cell id-text='7.1' id='uid83'>
+<figure rend='inline' file='figure1a' extension='eps'/>
+
+</cell><cell id-text='7.2' id='uid84'>
+<figure rend='inline' width='85.35826pt' file='figure1b' extension='eps'/>
+
+</cell></row><row><cell>(a) first subfigure caption</cell><cell>(b) second subfigure caption</cell></row></table></p></figure>
+<figure FOO='BAR' id-text='8' id='uid85' place='htbp' rend='subfigure'><head>main figure caption</head>
+<subfigure file='figure1a' extension='eps' parid='0' id-text='8.1' id='uid86'><head>first subfigure caption</head></subfigure>
+<subfigure width='85.35826pt' file='figure1b' extension='eps' parid='0' id-text='8.2' id='uid87'><head>second subfigure caption</head></subfigure>
+<subfigure file='figure1c' parid='1' id-text='8.3' id='uid88'><head/></subfigure>
+</figure>
+<table id-text='2' id='uid89' rend='display'><head>Infinite and finite discrete time signal processing.</head>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mtext>a</mtext><mspace width='1.em'/><mtext>b</mtext><mspace width='2.em'/><mtext>c</mtext><mspace width='-0.166667em'/><mtext>d</mtext><mspace width='0.166667em'/><mtext>e</mtext><mspace width='0.277778em'/><mtext>f</mtext><mspace width='0.222222em'/><mtext>g</mtext><mspace width='4.pt'/><mtext>h</mtext><mspace width='4.pt'/><mtext>i</mtext><mi>a</mi><mspace width='1.em'/><mi>b</mi><mspace width='2.em'/><mi>c</mi><mspace width='-0.166667em'/><mi>d</mi><mspace width='0.166667em'/><mi>e</mi><mspace width='0.277778em'/><mi>f</mi><mspace width='0.222222em'/><mi>g</mi><mi>h</mi><mspace width='3.33333pt'/><mi>i</mi></mrow></math></formula></table>
+<table id-text='3' id='uid90' rend='display'><unexpected><foo>bar</foo></unexpected></table>
+<p><ref target='uid91'/><ref target='uid91'/><ref target='uid92'/><ref target='uid92'/></p>
+<p id-text='17.2' id='uid91'><font-small-caps-shape>Example 17.2</font-small-caps-shape> <font-slanted-shape>
+This is a sentence typeset</font-slanted-shape></p>
+<p><font-slanted-shape>in the theorem environment </font-slanted-shape><font-slanted-shape><font-typewriter-family>Exa</font-typewriter-family></font-slanted-shape><font-slanted-shape>.</font-slanted-shape></p>
+
+<theorem id-text='17.3' id='uid92'><p><font-small-caps-shape>Example 17.3</font-small-caps-shape> <font-slanted-shape>
+This is a sentence typeset</font-slanted-shape></p>
+<p><font-slanted-shape>in the theorem environment </font-slanted-shape><font-slanted-shape><font-typewriter-family>Exa</font-typewriter-family></font-slanted-shape><font-slanted-shape>.</font-slanted-shape></p>
+</theorem>
+<theorem style='plain' type='Exa' id-text='17.4' id='uid93'>
+<head>Example</head>
+<p>x</p>
+</theorem>
+<p id-text='17.5' id='uid94'><font-small-caps-shape>Example 17.5</font-small-caps-shape> <font-slanted-shape>x</font-slanted-shape></p>
+
+<theorem style='plain' type='Exa' id-text='17.6' id='uid95'>
+<head>Example</head>
+<p>x</p>
+</theorem>
+<p id-text='17.7' id='uid96'><font-small-caps-shape>Example 17.7</font-small-caps-shape> <font-slanted-shape>x</font-slanted-shape></p>
+
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mi>&xi;</mi><msub><mi mathvariant='bold'>&xi;</mi> <mn>1</mn> </msub><mi>B</mi><msub><mi>&xi;</mi> <mn>1</mn> </msub></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D400;</mi><mi mathvariant='bold'>&xi;</mi><msub><mi mathvariant='bold'>&xi;</mi> <mn mathvariant='bold'>1</mn> </msub><mi>&#x1D401;</mi><msub><mi>&xi;</mi> <mn mathvariant='bold'>1</mn> </msub></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&alpha;</mi></math></formula></p>
+<p><line rend='center'>A<font-italic-shape>B</font-italic-shape></line><line rend='left'>C<font-italic-shape>D</font-italic-shape></line><line rend='right'>E<font-italic-shape>F</font-italic-shape></line><line rend='rlap'>G<font-italic-shape>H</font-italic-shape></line><line rend='llap'>I<font-italic-shape>J</font-italic-shape></line>
+<marginpar>a<font-bold-series>B</font-bold-series></marginpar>c<samepage/><rule width='2.0pt' depth='0.0pt' height='3.0pt'/>
+<rule width='8.0pt' depth='-1.0pt' height='18.0pt'/></p>
+<p spacebefore='3.0pt'>   </p>
+<list list-counter='Roman' type='ordered'>
+<item id-text='1' id='uid97' label='I.'><p noindent='true'>one</p>
+</item>
+<item id-text='2' id='uid98' label='II.'><p noindent='true'>two</p>
+</item>
+<item id-text='3' id='uid99' label='III.'><p noindent='true'>three</p>
+<list list-counter='Alph' type='ordered'>
+<item id-text='3a' id='uid100' label='A)'><p noindent='true'>three.one</p>
+</item>
+<item id-text='3b' id='uid101' label='B)'><p noindent='true'>three.two</p>
+</item>
+<item id-text='3c' id='uid102' label='C)'><p noindent='true'>three.three</p>
+<list list-counter='alph' type='ordered'>
+<item id-text='3(c)a' id='uid103' label='(a)'><p noindent='true'>three.three.one</p>
+</item>
+<item id-text='3(c)a' id='uid104' label='(b)'><p noindent='true'>three.three.two</p>
+</item>
+<item id-text='3(c)a' id='uid105' label='(c)'><p noindent='true'>three.three.three</p>
+<list list-counter='roman' type='ordered'>
+<item id-text='3(c)aA' id='uid106' label='i.'><p noindent='true'>three.three.three.one</p>
+</item>
+<item id-text='3(c)bB' id='uid107' label='ii.'><p noindent='true'>three.three.three.two</p>
+</item>
+<item id-text='3(c)cC' id='uid108' label='iii.'><p noindent='true'>three.three.three.three <ref target='uid108'/></p>
+</item></list>
+</item></list>
+</item></list>
+</item></list>
+<table id-text='4' id='uid109' rend='display'><head>a table with a caption</head>
+<alt_head>opt arg for caption</alt_head>
+<row><cell halign='center'><figure rend='inline' width='28.45274pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='56.9055pt' file='x'/></cell>
+</row><row><cell halign='center'><figure rend='inline' width='85.35826pt' file='x'/></cell>
+<cell halign='center'><figure rend='inline' width='113.81102pt' file='x'/></cell>
+</row></table>
+<p>border matrix <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd/><mtd/><mtd><mi>C</mi></mtd><mtd><mi>I</mi></mtd><mtd><msup><mi>C</mi> <mo>&apos;</mo> </msup></mtd></mtr><mtr><mtd><mi>C</mi></mtd><mtd rowspan='3'><mo>(</mo></mtd><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd><mtd><mn>0</mn></mtd><mtd rowspan='3'><mo>)</mo></mtd></mtr><mtr><mtd><mi>I</mi></mtd><mtd><mi>b</mi></mtd><mtd/><mtd><mrow><mo>-</mo><mi>b</mi></mrow></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mi>C</mi></mtd><mtd><msup><mi>a</mi> <mo>&apos;</mo> </msup></mtd><mtd><mrow><mn>1</mn><mo>-</mo><mi>a</mi></mrow></mtd></mtr></mtable></math></formula></p>
+<p><ref target='uid60'/><ref target='uid60'/>
+a: UPPER MiXeD Mixed  UPPER</p>
+<p noindent='true'>b: UPPER <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> BarMixed </mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Z</mi><mi>z</mi></mrow></math></formula> UPPER</p>
+<p noindent='true'>c: TEXT <cit><ref target='bid4'/></cit> AND <cit><ref target='bid4'/></cit> UPPER 
+d: <ref target='cid2'/>  UPPER</p>
+<p noindent='true'>a: lower MiXeD Mixed  lower</p>
+<p noindent='true'>b: lower <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> BarMixed </mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Z</mi><mi>z</mi></mrow></math></formula> lower</p>
+<p noindent='true'>c: TEXT <cit><ref target='bid4'/></cit> AND <cit><ref target='bid4'/></cit> LOWER 
+d: <ref target='cid2'/>  lower</p>
+<p noindent='true'>AT_DOC_END</p></div3></div2></div1></div0>
+</ramain>

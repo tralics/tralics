@@ -1,0 +1,3818 @@
+%% -*- latex  encoding: iso-8859-1 -*-
+%% This is a torture test for tralics 
+% The next line indicates that the document class to use
+% by tralics should be torture
+%\documentclass{torture1}
+%ok
+%this is a comment \def}}}
+% $Id: torture.tex,v 1.167 2015/07/31 14:24:18 grimm Exp $
+
+% Define the class via a command
+\def\myclass{article}
+% Define some macros. 
+\def\entity#1{\xmllatex{\&#1;}{}}
+\def\xentity#1{\xmllatex{\&\#x#1;}{}}
+\def\strok#1{\entity{#1strok}}
+\def\Han{Hàn Th\xmllatex{&\#x1ebf;}{\'{\^e}} Thành}
+
+%% will be used at end of file. 
+\def\thisistheend{END OF FILE}
+\def\discardcounter#1{\expandafter\let\csname c@#1\endcsname \relax}
+
+\def\xshow#1{} % Could be \show
+
+\AtBeginDocument{\myprintdate}
+\AtBeginDocument{DOC}\AtBeginDocument{S\AtBeginDocument{TART}}
+\AtEndDocument{\AtEndDocument{AT\_}}
+\AtEndDocument{DOC}\AtEndDocument{\_END}
+
+
+
+% This is the real document class
+\documentclass[useallsizes]{\myclass}
+\usepackage{calc,fp,ifthen,fancyvrb}
+\usepackage{fancyhdr,curves}
+\usepackage[catperso]{ra} 
+\usepackage[T1]{fontenc}
+\usepackage[frenchb,english]{babel}
+\usepackage{tralics,fink}
+\usepackage{textcase}\usepackage{soul}\usepackage{amsmath}
+\input{tralics.sty}
+%% Tralics knows these commands
+\providecommand\IJ{IJ}
+\providecommand\ij{ij}
+\providecommand\xmlelement{}
+\providecommand\AddAttToLast{}
+\providecommand\AddAttToCurrent{}
+\providecommand\xbox[1]{\hbox}
+\providecommand\numberedverbatim{}
+\providecommand\unnumberedverbatim{}
+
+
+\begin{filecontents}{taux2.tex}
+% aux file  for testing tralics
+% this file contains nothing useful
+\mytypeout{in file taux2.tex}
+\endinput
+The file should finish with a \endinput, but not on the last line. 
+\end{filecontents}
+
+\newcounter{hours}\newcounter{minutes}
+\expandafter\let\expandafter\Twodigits\csname two@digits\endcsname
+
+% Important note: this command prints the date and time of the current run
+% when testing tralics, the result and evrything before it ignored; so this
+% must be at the very start of the XML file. 
+% In particular, in order to check the begin document hook, it is the start of
+% the hook.
+\newcommand{\printtime}{%
+   \setcounter{hours}{\time/60}%
+   \setcounter{minutes}{\time-(\value{hours}*60)}%
+   \Twodigits\thehours h \Twodigits\theminutes min}
+ \def\today{\ifcase\day\or
+      1st\or 2nd\or 3rd\or 4th\or 5th\or
+      6th\or 7th\or 8th\or 9th\or 10th\or
+      11th\or 12th\or 13th\or 14th\or 15th\or
+      16th\or 17th\or 18th\or 19th\or 20th\or
+      21st\or 22nd\or 23rd\or 24th\or 25th\or
+      26th\or 27th\or 28th\or 29th\or 30th\or
+      31st\fi~\ifcase\month\or
+      January\or February\or March\or April\or May\or June\or
+      July\or August\or September\or October\or November\or
+      December\fi\space \number\year}
+\def\myprintdate{The time is \printtime, \today.\par}
+
+
+
+\begin{document}
+
+%% must reset
+\setcounter{hours}{0}\setcounter{minutes}{0}
+
+
+\chapter{First}
+
+%
+%
+\iftrue %%%%%%%%%%%%%%%%%  \showthe \the
+         %%%%%%%% replace \iffalse by \iftrue, will print a lot of things
+%\def\Show#1{\the#1\showthe#1}
+\def\Show#1{\the#1}
+%\the parameter
+\widowpenalty=3 \Show\widowpenalty
+\parindent1.5pt \Show\parindent
+\leftskip = 1pt plus 2fil minus 4fill \Show\leftskip
+\thinmuskip = 3mu plus -2fil minus 4fill \Show\thinmuskip
+% \the register
+\count0=17 \Show{\count0}
+\dimen0=17pt \Show{\dimen0}
+\skip0=17pt plus 1 pt minus 2pt \Show{\skip0}
+\muskip0=17mu plus 1 mu minus 2mu \Show{\muskip0}
+\muskip3=3mu plus 4 fil minus \muskip0 \Show{\muskip3}
+\setbox0=\hbox{$\global\muskip0=\lastskip $}\Show{\muskip0}
+%\the codename 8bit-number
+\Show{\catcode`\A}
+\Show{\lccode`\B}
+%\the special register
+\Show\inputlineno
+%\the  with fonts
+\font\xa=cmr10 at 11truept
+\fontdimen6\xa = 11pt \hyphenchar\xa=`\-
+\Show{\fontdimen6\xa}
+\Show{\hyphenchar\xa}
+% \the\lastpenalty...
+% \the\ defined character
+\chardef\foo25 
+\Show\foo
+\Show\xa
+\toks0={\foo = \foo} \def\foo{foo}
+\Show{\toks0}
+\fi %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%\recurse\def\recurse{\newcounter{toto}\recurse\recurse}\recurse
+%
+\makeatletter
+\let\gobble\@gobble % Then we might say: \let\show\gobble.
+\toksdef\toks@=0 \let\thezero\z@
+\long\def\addto@hook#1#2{#1\expandafter{\the#1#2}}
+\def\addtohookz#1{\addto@hook\toks@{#1}}
+\def\copytomac#1{\xdef#1{\the\toks@}\toks@{}}
+\def\execlist#1#2{\def\do##1{#1}\expandafter\exec#2\do\done}
+\def\exec#1#2\done{\ifx\do#1\else\do#1\exec#2\do\done\fi}
+\def\ifbracket{\@ifnextchar[}
+\let\FirstOfOne\@firstofone
+\let\kFirstOfTwo\@firstoftwo
+\let\kSecondOfTwo\@secondoftwo 
+%% These two are defined in the kernel
+%\def\@firstoftwo#1#2{#1}%\def\@secondoftwo#1#2{#2}
+\let\@xp=\expandafter
+\long\def\@zifempty#1{\ifx @#1@\@xp\@firstoftwo\else\@xp\@secondoftwo\fi}
+\long\def\@yifempty#1{\@xifempty#1@@..\@nil}
+\long\def\@xifempty#1#2@#3#4#5\@nil{%
+  \ifx#3#4\@xp\@firstoftwo\else\@xp\@secondoftwo\fi}
+
+\let\ifempty\@iftempty\let\yifempty\@yifempty\let\bifempty\@ifbempty 
+\let\zifempty\@zifempty
+\makeatother
+
+\newcounter{nc} \setcounter{nc}{3} \ifnum\value{nc}=3 \else \bad\fi
+\addtocounter{nc}{1} \ifnum\value{nc}=4 \else \bad\fi
+
+
+\long\def\testeq#1#2{\def\tmp{#2}\ifx#1\tmp\else \toks0={#1wantd: ->#2.}
+\typeout{\the\toks0}\show #1\uerror\fi}
+\def\ytesteq#1#2{\def\tmp{#2}\ifx#1#2\else 
+\typeout{Wanted}\show #2\show #1\uerror\fi}
+\def\xtesteq#1#2{\xdef\tmp{#2}\ifx#1\tmp\else \toks0={#1wantd: ->}
+\typeout{\the\toks0 #2.}\show #1\uerror\fi}
+
+%\chapter{W}
+\paragraph{Macroexpansion}
+Version\tralicsversion.
+\def\foo{foo}\foo=foo.
+\def\foo{{foo}}\foo=foo.
+\def\foo{\bf foo}{\foo=bold-foo} non-bold foo.
+\def\foo{{\bf foo}}{bold-\foo=nonbold-foo}
+\def\foo#1{#1#1}\foo{bar}=barbar
+\def\foo#1{#1#1}{bold-\foo{\bf bar}=bold-barbar}
+\def\foo#1{#1#1}{bold-\foo{{\bf bar}}=nonbold-barbar}
+\def\foo#1#2{#1#2#1#2}\foo bar=babar
+\def\foo#1#2{#1#2#1#2}\foo {ba}r=barbar
+
+{\tracingall
+firstofone \def\ABC#1{#1}
+\ABC{\let\xfoo\foo}\ifx\xfoo\foo\else\uerror\fi
+\FirstOfOne{\let\xfoo\foo}\ifx\xfoo\foo\else\uerror\fi
+\relax{\let\xfoo\relax}\ifx\xfoo\relax\uerror\fi
+}
+Testing \symbol{`a}\symbol{`\d}dtohook.\newfont{\unusedfont}{somefontspecs}
+
+\_\_\toks17{}\toks17{12345}\the\toks17
+\_\_\toks1{}\toks1{12345}\the\toks1
+{\_\_\makeatletter\global\toks@{}\toks@{12345}\the\toks@
+\_\_\toks@\expandafter{\the\toks@ abc}\the\toks@}
+empty{\makeatletter\the\toks@{}}empty
+\addtohookz{a}
+\addtohookz{b}
+\addtohookz{c}
+\copytomac\foo\foo=abc
+\execlist\relax\foo % This does nothing
+\execlist{+#1+}\foo % This generates +a++b++c+
+
+=\hbox{Texte\par texte}=
+
+aaaa~bbbb\verb+aaaa bbbb+ $a~b$
+\def\myempty{}\ifx\myempty\empty\relax\else\uerror\fi
+
+% This gives only cmr10
+\edef\foo{\the\font\the\tenrm}
+{\lccode`+=`c \lccode`-=`m \lccode`/=`r\lowercase{\def\test{+-/10+-/10}}
+\ifx\foo\test\else\bad\fi}
+\edef\foo{\meaning\tenrm}
+\edef\yoo{\detokenize{select font cmr10 at 10.0pt}}
+\xtesteq\foo\yoo
+
+\makeatletter
+\newcommand{\smaller}[1][1]{\larger[-#1]}
+\newcommand{\larger}[1][1]{%
+  \count@\@xfontsize \advance\count@#1\relax
+  \@xfontsize \count@}
+\testeq\sloppypar{\par\sloppy}
+\testeq\endsloppypar{\par}
+\testeq\null{\hbox{}}
+\testeq\hb@xt@{\hbox to}
+\testeq\thepage{\@arabic\c@page}
+\testeq\labelitemi{\textbullet}
+\testeq\labelitemii{\textendash}
+\testeq\labelitemiii{\textasteriskcentered}
+\testeq\labelitemiv{\textperiodcentered}
+\testeq\endguillemets{\guillemotright}
+\testeq\guillemets{\guillemotleft}
+\testeq\@nnil{\@nil}
+\testeq\@sanitize{\@makeother\ \@makeother\\\@makeother\$\@makeother\&%
+   \@makeother\#\@makeother\^\@makeother\_\@makeother\%\@makeother\~}
+\testeq\dospecials{\do\ \do\\\do\$\do\&%
+   \do\#\do\^\do\_\do\%\do\~\do\{\do\}}
+\testeq\obeyspaces{\@makeactive\ }
+{\xdef\fooA{    }\obeyspaces\xdef\fooB{    }
+\expandafter\gdef\expandafter\fooC\expandafter{ }}
+\edef\foob{\space\space\space\space}\def\fooc{ }
+\ifx\fooA\foob\bada\fi\ifx\fooB\foob \else \badb\fi\ifx\fooC\fooc \else \badc\fi
+{\catcode`\_=13 \catcode`\#=13 \catcode`\&=13 \xdef\foo{_#&}}
+=\foo\url{a~&#& _}=
+{\@makeactive\ \gdef\foo{\@makeactive\ \let \nobreakspace}}
+\ifx\foo\@vobeyspaces\else \bad \fi
+\makeatother
+
+
+%This is a test. An \unknown command. A math formula $a^$.
+%\def\test#1#2?{#1,#2.}\test ok?\typeout{A message}
+
+27$^{i\grave {e}me}$
+27$^{ji\grave {e}me}$
+
+\paragraph{hathat}
+{1^^{^^ab2^^5e^ab3^^5e^5e^ab4\def\Abc{ok}\def\bAc{OK}\^^41bc\b^^41c}
+{\catcode `\é=7 ééab $xé2$ %next line should produce M
+éé
+%$1^è=^^ééT$ %% hat hat control-A 
+$1^è=^^$ %% hat hat control-A 
+}\def\msg{a message.^^J}
+
+\def\foo#1#2#3{#1=#2=#3=}
+\foo^^^^0153^^^^0152^^^^0178
+ ^^^^017b^^8?
+Compare:\oe\OE\"Y\.Z
+
+\def\foo{^^é}\def\Bar#1#2#3{\def\gee{#3}}
+\expandafter\Bar\foo\testeq\gee{é}
+{\catcode`\A=9 \def\foo{BAC}\testeq\foo{BC}}
+{\catcode`^^ab=7 \let\xy^^ab«!b\foo \ifx\xyab\foo\else\bad\fi} % » 
+
+{ %% ## in a group
+\def\Ma#1{\def\Mb ##1{\xdef\xbar{#1##1}}}\Ma a\Mb b
+\testeq\xbar{ab}
+\catcode`A6 \def\fooA1A2{\xdef\xbar{A2A1}}\foo23
+\testeq\xbar{32}
+}
+
+
+{\language=2 
+Test for German thing
+ OK: "a"o"u"e"i"A"O"U"I"E"s"z"S"Z"c"C"f"F"l"L"m"M"n"N"p"P"r"R"t"T
+ Ok: "-"~"|""""="`"'"<">
+}
+
+{% Check that csname is locally relax 
+\csname somecommand\endcsname
+\csname par\endcsname
+\ifx\somecommand\relax\else\bad\fi\ifx\par\relax\bad\fi
+}\ifx\somecommand\relax\bad\fi
+
+\paragraph{accents}
+\label{1x}
+\paragraph{latin extended-A}
+\label{1y}
+ligne 010x: \=A\=a\u A\u a\k A\k a \'C\'c\^C\^i \.C\.c\v C\v c\v D\v d
+\noindent ligne 011x: ??\=E\=e\u E\u e\.E\.e\k E\k e\v E\v e\^G\^g\u G\u g
+\noindent ligne 013x: \.I\i\IJ\ij\^J\^j\c K\c k?\'L\'l\c L\c l\v L\v l?
+\noindent ligne 014x: ?\L\l\'N\'n\c N\c n\v N\v n?\NG\ng\=O\=o\u O\u o
+\noindent ligne 015x: \H O\H o\OE\oe\'R\'r\c R\c r\v R\v r\'S\'s\^S\^s\c S\c s
+\noindent ligne 016x: \v S\v s\c T\c t\v T\v t??\~U\~u\=U\=u\u U\u u\r U\r u
+\noindent ligne 017x: \H U\H u\k U\k u\^W\^w\^Y\^y\"Y\'Z\'z\.Z\.z\v Z\v z?
+
+testpar
+
+
+\medskip
+
+\noindent a paragraph
+
+
+\begin{figure} \includegraphics{x} \end{figure}
+
+\begin{figure}\includegraphics{y.ps}\label{xpd} \caption{A\par B}\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics{x}}
+
+\caption{Caption of the figure}
+\end{figure}
+
+\begin{figure*}
+\def\IC#1{\includegraphics[width=#1pt]{x}}
+\begin{tabular}{cc}
+\IC{1}&\IC{2}\\
+\IC{3}&\IC{4}\\
+\end{tabular}
+\end{figure*}
+
+\begin{table*}
+\def\IC#1{\includegraphics[width=#1pt]{x}}
+\begin{tabular}{cc}
+\IC{1}&\IC{2}\\
+\IC{3}&\IC{4}\\
+\end{tabular}
+\caption{a table with a caption}
+\end{table*}
+
+\begin{glossaire} \glo{x1}{y1}\glo{x2}{y2}\end{glossaire}
+\def\X{\pers{a}{b}} \def\Y{\pers{c}{d}}
+\begin{participant} \X\Y \end{participant}
+\begin{participante} \X\Y \end{participante}
+\begin{participants} \X\Y \end{participants}
+\begin{participantes} \X\Y \end{participantes}
+
+\begin{participant} \pers{1}{2}[3], \pers{1}{2}, \end{participant}
+
+\newenvironment{abstract}{}{}
+\newenvironment{body}{}{}
+\begin{abstract}abstract\end{abstract}
+\begin{body}a body \end{body}
+\begin{moreinfo}additional information\end{moreinfo}
+
+% Accents
+\def\xx#1{\xmllatex{\&\#x#1;}{}}
+%\Large
+ok
+
+\begin{xmlelement*}{preview}
+\begin{equation}
+\begin{aligned}
+x^2+y^2&=1   & 1    &=X^2+Y^2\\
+x      &=0.01& 0.001&=X
+\end{aligned}
+\end{equation}
+\end{xmlelement*}
+
+\begingroup
+\def\shoveleft{\multicolumn{1}{l}}
+\def\shoveright{\multicolumn{1}{r}}
+\begin{multline}
+\sin=\cos\\
+\shoveright{\cos}\\
+\shoveleft{\sin}\\
+1+2
+\end{multline}
+% The \endgroup shgould be here, but we want a \par token after
+% the equation
+
+
+
+
+ABCABCABC
+
+\endgroup
+\def\foo{X}
+\output={\foo}\the\output\the\output
+
+{\everyhbox= \csname non-existent\endcsname {aa}%
+ \everyvbox={bb}\everyxbox={cc} \everymath{\alpha}
+ \everydisplay{\beta} \tracingall
+\xbox{foo}{\hbox{A\vbox{B}}\hbox{}}
+$$ A\hbox{B $C$} D$$
+}\xbox{foo}{\hbox{A\vbox{B}}\hbox{}}
+$$ A\hbox{B $C$} D$$
+
+{\def\:{\global\let\sptoken= } \:  % this makes \sptoken a space token
+\gdef\space{ }
+}
+
+\count0=0 \count1=0 \count100=0 \count11=0 \count120=0  \count121=0 
+{
+  \count0=1 \global\count1=2
+  \globaldefs=1
+  \count100=3 \global\count11=4
+  \globaldefs=-1
+  \count120=5 \global\count121=6
+}
+\the\count0 \the\count1 \the\count100 \the\count11 \the\count120 \the\count121 
+%\showthe\globaldefs
+\globaldefs=0
+
+{ASSTEST
+\everymath \space \space \sptoken= \relax \space\relax\sptoken{foo} 
+\everydisplay\relax\sptoken\everymath
+ \pretolerance=1 \tolerance=2  \hbadness=3 \vbadness = 4
+ \linepenalty =5 \hyphenpenalty=6  \exhyphenpenalty=7
+ \binoppenalty=8 \relpenalty=9 \clubpenalty=10 \widowpenalty=11
+ \displaywidowpenalty=12  \brokenpenalty=13 \predisplaypenalty=14
+ \postdisplaypenalty=15 \interlinepenalty=16 \floatingpenalty=17
+ \outputpenalty=18 \doublehyphendemerits=19 \finalhyphendemerits=20
+ \adjdemerits = 21 \looseness =22 \pausing=23 \holdinginserts=24
+ \tracingonline=25 \tracingmacros=26 \tracingstats=27 \tracingparagraphs=28
+ \tracingpages=29 \tracingoutput=30 \tracinglostchars=31
+ \tracingcommands=32 \tracingrestores=33 \language=34 \uchyph=35
+ \lefthyphenmin=36 \righthyphenmin=37
+ \globaldefs=-38 \defaulthyphenchar =39 \defaultskewchar=40
+ \escapechar41 \endlinechar`A \newlinechar43 \maxdeadcycles44 %
+ \hangafter 45 \fam46 \mag47 \delimiterfactor48 \time49 %
+ \day50 \month51 \year52 \showboxbreadth53 \showboxdepth54 \errorcontextlines55.}%
+{ \hfuzz5pt \vfuzz5pt \overfullrule=5pt \emergencystretch5pt
+ \hsize10cm \vsize10cm \maxdepth3mm \splitmaxdepth=4mm \boxmaxdepth=5mm
+ \delimitershortfall =5pt  \lineskiplimit-3mm \delimitershortfall=1mm
+ \nulldelimiterspace=11mm \scriptspace=1cm \mathsurround=2mm
+ \predisplaysize=1.2pt \displaywidth12cm \displayindent3pc
+ \parindent3mm \hangindent2mm \hoffset1in \voffset1in
+
+
+ \baselineskip =1pt plus 2pt minus 1cm
+ \lineskip =2pt plus 2pt minus 1cm
+ \parskip =3pt plus 2pt minus 1cm
+ \abovedisplayskip =4pt plus 2pt minus 1cm
+ \abovedisplayshortskip =5pt plus 2pt minus 1cm
+ \belowdisplayskip =6pt plus 2pt minus 1cm
+ \belowdisplayshortskip =7pt plus 2pt minus 1cm
+ \leftskip =8pt plus 2pt minus 1cm
+ \rightskip =9pt plus 2pt minus 1cm
+ \topskip =10pt plus 2pt minus 1cm
+ \splittopskip =11pt plus 2pt minus 1cm
+ \tabskip =12pt plus 2pt minus 1cm
+ \spaceskip =13pt plus 2pt minus 1cm
+ \xspaceskip =14pt plus 2pt minus 1cm
+ \parfillskip =15pt plus 2pt minus 1cm
+}
+
+$a+b$ $a\mathbin+b$
+
+
+\begin{verbatim}
+{\let\rm\bf \bf toto}
+<!--this is a comment -->
+&dollar; not &equals; EURO &excl;
+  \end{verbatim}
+%
+\begin{rawxml}
+{\let\rm\bf \bf toto}
+<!--this is a comment -->
+&dollar; not &equals; EURO &excl;
+\end{rawxml}
+
+
+$\hat{a} \acute{b} \bar{c} \dot{d} \breve{e} \check{f} \grave{g} \vec{h}
+\ddot{k} \tilde{l}a\rightarrow b\longrightarrow c$
+
+
+
+
+
+%\xmtext{nrarrc           "&#x02933;&#x00338}
+%\xmtext{nrarrw           "&#x0219D;&#x00338}   
+
+
+
+
+$\acute{x} \bar{x} \breve{x} \check{x} 
+\ddddot{x} \dddot{x} \ddot{x} \dot{x} 
+\grave{x} \hat{x} \mathring{x} \tilde{x}
+\vec{x} \widehat{xyz} \widetilde{xyz}$
+
+
+
+
+
+
+
+\begin{math}\alpha=\beta\end{math} and  \(\gamma=\delta\) and $\phi=\psi$;
+and \ensuremath{0\neq\infty}
+
+\begin{equation} 0=0 \end{equation}
+\begin{equation*} 0=0 \end{equation*}
+\begin{displaymath} 0=0 \end{displaymath}
+\[ 0=0 \]
+$$ 0 = 0 $$
+
+\begin{equation}
+\begin{split}
+(a+b)^4 &= (a+b)^ 2 (a+b)^2           \\
+        &= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
+        &= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{aligned}
+(a+b)^4 &= (a+b)^ 2 (a+b)^2           \\
+        &= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
+        &= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
+\end{aligned}
+\end{equation}
+
+
+\begin{align}
+x^2+y^2&=1\\ x&=\sqrt{1-y^2}
+\end{align}
+
+\begin{eqnarray*}
+x & \ll & y_{1} + \cdots + y_{n} \\
+  & \leq &z
+\end{eqnarray*}
+
+\begin{eqnarray}
+x & = &17y \\
+y & > & a + b + c+d+e+f+g+h+i+j+ \nonumber\\
+  &   & k+l+m+n+o+p
+\end{eqnarray}
+
+$$EQ1$$ etc
+$$EQ2$$ \par etc
+$$EQ3$$ 
+
+etc
+
+
+
+
+\def\ok{4} \leavevmode
+\begin{rawxml}
+&#x31;
+\end{rawxml}
+\begin{latexonly}\def\ok{2}\ok\end{latexonly}
+%\begin{htmlonly}
+%\def\ok{ ?
+%\end{htmlonly}
+\begin{comment}
+\def\ok{ ?
+\end{comment}
+%\begin{rawhtml}
+%<p>\def\ok{ ?</p>
+%\end{rawhtml}
+\begin{LaTeXonly}
+\def\ok{ ?
+\end{LaTeXonly}
+\begin{xmlonly}\def\ok{3}\ok\end{xmlonly}
+\ok
+
+
+
+%\Large
+\xx{1e08} \xx{1e09} \xx{1e16} \xx{1e17} \xx{1e2e} \xx{1e2f}
+ok
+
+
+{\large X\textordmasculine}
+\begin{align*}
+u& \equiv v+1 \mod{n^2} \\
+u& \equiv v+1 \bmod{n^2} \\
+u&   =    v+1 \pmod{n^2} \\
+u&   =    v+1 \pod{n^2} \\
+\end{align*}
+
+
+$$\frac12 \dfrac 12 \tfrac12 \qquad
+{}^{\frac12 \dfrac 12 \tfrac12}$$
+\def\N{\mathchoice{a}{b}{c}{d}}
+$$\frac{\N\frac{\N+m}{2}} \N \quad
+\tfrac{\N\frac{\N+m}{2}} \N \quad
+\dfrac{\N\frac{\N+m}{2}} \N
+%\quad \genfrac {}{}{}0{\N\frac{\N+m}{2}} \N
+$$
+
+
+\persA 1 2 3 
+\pers {Rose} {Dieng-Kuntz} {Scientist} {Inria} [1956-2008, Research Director] [yes],
+\pers {Rose} {Dieng-Kuntz} [Sophia]{Scientist} {Inria} [1956-2008, Research Director]. 
+
+
+
+{\Huge 1\xx{1F4}\xx{1F5}
+\xx{1CD}\xx{1CE}}
+%\end{xmlelement*}
+\'g\'G
+
+$\bar{\dot {\rm o}}$
+a - b -- c --- d
+
+\def\List{{abcABC\oe\OE\o\O\ae\AE\dh\DH\dj\DJ\l\L\ng\NG\ss\SS\th\TH}}
+%% There was a \expandafter here, not needed any more
+\MakeUppercase\List\\
+\MakeLowercase\List\\
+Check:\MakeUppercase{\MakeLowercase{Foo\o\O}}=foo\o\o{}
+Check:\MakeLowercase{\MakeUppercase{Foo\o\O}}=FOO\O\O{}
+
+
+%\halign{#\global\let\xxx\cr\relax\cr\xxx}
+%\show\xxx
+
+\ignorespaces
+1\penalty2 3
+
+\def\thiswillfail{
+$\radical -1 x
+\radical 134217727 w
+\radical 100 y$
+\vadjust\relax\space {c}
+\vadjust\relax\space ?
+\vcenter to 5pt {toto}
+XXXXX\vcenter to 5pt {\bf toto}x!
+\insert 2000 !
+}
+
+
+
+{\def\n{\mathchoice{a}{b}{c}{d}}
+$$\binom{\frac{\n+m}{2}} \n \quad
+\tbinom{\frac{\n+m}{2}} \n \quad
+\dbinom{\frac{\n+m}{2}} \n\qquad
+{}^{\binom{\frac{\n+m}{2}} \n \quad
+\tbinom{\frac{\n+m}{2}} \n \quad
+\dbinom{\frac{\n+m}{2}} \n}$$
+}
+
+
+
+\def\XX{\nonscript\,}
+$a\XX b_{c\XX d} a\XX b_{\textstyle c\XX d} $
+
+$$\genfrac{}{}{}{}12
+\genfrac[]{2pt}{2}{aaa}{bbb} 
+\genfrac(){0cm}{0}nm
+$$
+
+
+\def\mychoice{\mathchoice{a}{b}{c}{d}}
+$$\mychoice = \frac{\mychoice}{\mychoice} = 
+ 1_{\mychoice\frac{\mychoice}{\mychoice}} = 2^ {\mychoice\frac{\mychoice}{\mychoice}}$$
+\begin{center}
+$\mychoice = \frac{\mychoice}{\mychoice} = 
+ 1_{\mychoice\frac{\mychoice}{\mychoice}} = 2^ {\mychoice\frac{\mychoice}{\mychoice}}$
+\end{center}
+
+
+
+${\frac12}{x\displaystyle\frac 12} 
+{x\textstyle\frac 12}{x\scriptstyle\frac 12}{x\scriptscriptstyle\frac 12} \qquad
+{x\displaystyle a}+{x\textstyle a}+{x\scriptstyle a}+{x\scriptscriptstyle a}\qquad
+\frac{x\displaystyle a}{x\textstyle b}+\frac{x\scriptstyle a}{x\scriptscriptstyle b}$
+
+
+
+ $$a\over{b\over c}
+$$
+
+y\textasciiacute$x' x'' x''' x'''' u_2' v'^3_4$
+ 
+\subparagraph{t}
+\label{1z} \ref{1x}\ref{1y}\ref{1z}c
+\xbox{bar}{\xdef\nbar{\the\XMLcurrentid}}
+\xbox{foo}{\XMLref{1x}\XMLref[\nbar]{1y}}
+Testing raw XML.
+\begin{xmlelement}{foo}
+\begin{xmlelement}{subelt1}
+texte1
+\end{xmlelement}
+\begin{xmlelement}{subelt2}
+texte2
+\end{xmlelement}
+\AddAttToLast{sb2-att}{value1}%
+\AddAttToLast{sb3-att}{}%
+\AddAttToCurrent{foo-att}{att-value'{}'}% in 2.13, this gives &#x201D; without braces
+\end{xmlelement}
+
+
+\def\Dmin{\operatorname{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+
+\newcommand\Operatorname[1]{%
+  \mathmo{#1}%
+  \mathattribute{form}{prefix}%
+  \mathattribute{movablelimits}{true}%
+}
+\def\Dmin{\Operatorname{dmin}}
+$\min _xf(x) >\Dmin _xf(x)$.
+
+
+\begin{xmlelement}{foo}
+\AddAttToCurrent{x}{1} % ignored
+\AddAttToCurrent{y}{2} % ok
+\AddAttToCurrent*{x}{3} % ok
+\AddAttToCurrent{y}{4} % ignored
+\end{xmlelement}
+
+\begin{xmlelement*}{bar}
+\AddAttToCurrent{x}{1}
+\AddAttToCurrent{y}{2}
+\end{xmlelement*}
+code starts here\par
+
+ok
+\begin{xmlelement*}{bar}
+\AddAttToCurrent{x}{1}
+ok %
+\AddAttToCurrent{x}{2}
+\end{xmlelement*}
+
+
+ok
+\begin{xmlelement}{bar}
+\AddAttToCurrent{x}{1}
+ok %
+\AddAttToCurrent{x}{2}
+\end{xmlelement}
+
+\expandafter\a\rq{e}=\'e %this tests \rq and expandafter
+\expandafter\a\lq{e}=\`e %this tests \rq and expandafter
+
+% ca chie
+%\xbox{foo}{\let\FOO=xA\xbox{bar\let\FOO=y\foo}{B} C\foo}
+\xbox{foo}{\let\FOO=xA\xbox{bar}{\let\FOO=yB\FOO} C\FOO}
+
+\def\foo{}
+\xbox{mybox\foo}{box contains foo}
+\par
+
+Optional argument trick.
+\let\foo\undef
+\newcommand\foo[2][\fi\if]{#2\iffalse#1\else[#1]\fi}
+\foo{no-opt} and \foo[optional]{opt-bar-arg}
+
+\newcommand\NCA{nca}
+\newcommand{\NCB}[0]{ncb}
+\newcommand{\NCC}[2]{ncc#1#2}
+\newcommand{\NCD}[2][x]{ncd#1#2}
+\NCA and \NCB and \NCC{arg1}{arg2} and 
+\NCD[arg1]{arg2} and \NCD{arg2}
+
+
+Another idea (heiko)
+\let\foo\undef   %
+\newcommand{\foo}{}%
+\def\foo#1#{\Xexch{#1}} %
+\newcommand{\Xexch}[2]{#2#1}  %
+\foo{no-opt} and \foo[optional]{opt-bar-arg}
+
+\countdef\foo 0 \xshow\foo
+
+
+{\large x}{\Large x}
+{\large x\smaller y\smaller z}{\Large x\smaller y\smaller z}
+
+{ \let\show\gobble  \let\showthe\gobble
+\makeatletter
+\tracingall
+  \newcounter{toto}
+  \newcounter{titi}[toto]
+  \newcounter{tata}[titi]
+  \newcounter{tutu}[toto]
+\show\cl@toto
+\setcounter{toto}{10}
+\setcounter{titi}{20}
+\setcounter{tata}{30}
+\setcounter{tutu}{40}
+\expandafter\show\value{toto}\expandafter\showthe\value{toto}
+\expandafter\show\value{titi}\expandafter\showthe\value{titi}
+\expandafter\show\value{tata}\expandafter\showthe\value{tata}
+\expandafter\show\value{tutu}\expandafter\showthe\value{tutu}
+\stepcounter{toto} %  kills titi, tutu
+\stepcounter{tata}\thetata=31, 
+\stepcounter{titi}\thetata=0 % titi=1
+\stepcounter{tutu} 
+\thetoto\thetiti\thetata\thetutu=11101
+
+\show\cl@toto
+\show\cl@titi
+\show\cl@tata
+\show\cl@tutu
+}%
+\paragraph{Test verbatim}\setcounter{FancyVerbLine}{4}
+
+Essai de verbatim 1) \verb*+ x y+ 2) \verb*! x y!
+\numberedverbatim
+\begin{verbatim}
+test : !@#$%^&*()_$
+test : {\foo\} et zxcvbnm,./
+test ZXVBNM<>? ~
+test \verb+\verb-xx-+
+test ligatures: <<>>``''-- et --- !
+! \end{verbatim} Not this one
+\end{notverbatim}
+\end {verbatim}
+
+\gobble{
+\end{verbatim}
+}
+\gobble{
+\end{verbatim} %% make emacs happy
+}
+
+Fin du verbatim. \verb+\toto+ et \verb-\verb+ { } $$-.
+\verb+\begin{verbatim}+ doit passer % avec ca \end{verbatim}
+\unnumberedverbatim
+Autre verbatim (sans numéro)
+\begin{verbatim}
+test : !@#$%^&*()_$
+test : {\foo\} et zxcvbnm,./
+test ZXVBNM<>? ~
+test \verb+\verb-xx-+
+test ligatures: <<>>``''-- et --- !
+test BL : \\738! et \\838!.
+\end{verbatim}
+
+ \begin {Verbatim}
+Verbatim_line 
+ \end {Verbatim}
+ \begin {Verbatim}
+Verbatim_line 
+ \end {Verbatim} % this is a comment
+
+
+Verbatim env with line numbers
+\begin{Verbatim}                   [numbers=true]
+TEST
+\end{Verbatim}
+and without
+\begin{Verbatim}
+[ok]TEST
+\end{Verbatim}
+\begin{Verbatim} %
+[ok] ceci est en commentaire
+TEST
+\end{Verbatim}
+
+\iffalse % emacs hack
+\end{Verbatim}
+\fi
+
+\def\verbatimfont#1{{\it #1}}
+\def\verbatimnumberfont{\large}
+%\tracingall
+\count3=4
+\begin{Verbatim}[counter=3]
+5,one line
+\end{Verbatim}
+\begin{Verbatim}[counter=03]
+6,one line
+\end{Verbatim}
+\newcounter{vbcounter}
+\setcounter{vbcounter}8
+\begin{Verbatim}[counter=vbcounter]
+9,one line
+\end{Verbatim}
+\begin{Verbatim}[counter=vbcounter]
+10,one line
+\end{Verbatim}
+\let\verbatimfont\tt
+
+
+\DefineShortVerb{\|}
+Test of |\DefineShortVerb| and |\UndefineShortVerb|.
+\DefineShortVerb{\+}
+test 1 |toto| +x+ |+x-| +|t|+
+\UndefineShortVerb{\+}
+test 2 |toto| +x+ |+x-| +|t|+
+espace: |+ +|
+\DefineShortVerb{\*}
+Verbatimfoo: *+ foo +*\verb+*foo*+\verb*+foo*+
+Verbatimfoo: \verb|+ foo +*foo*foo*|.
+
+\SaveVerb{FE}|}|\def\FE{\UseVerb{FE}}
+\DefineShortVerb{\+}
+\SaveVerb{VE}+|+\def\VE{\UseVerb{VE}}
+\SaveVerb{DU}|$_|\def\DU{\UseVerb{DU}} %$
+\UndefineShortVerb{\+}
+\UndefineShortVerb{\|}
+\UndefineShortVerb{\*}
+
+\UseVerb{FE}
+Test \FE,\VE, \DU.
+
+\DefineShortVerb{\|}
+\fvset{showspaces=true}|+ +|
+\begin{verbatim}
+Some Verbatim text.
+\end{verbatim}
+\fvset{showspaces=false}|+ +|, \verb+ +, \verb*+ +.
+\begin{verbatim}
+More Verbatim text.
+\end{verbatim}
+\UndefineShortVerb{\|}
+
+\DefineVerbatimEnvironment{verbatîm}{Verbatim}{}
+\begin{verbatîm}
+Some Verbatim text.
+\end{verbatîm}
+
+
+\[\text{The sign function: \ } 
+\mathcal{S}(x) = \begin{cases}
+-1&x<0 \\
+0&x=0 \\
+1&x>0
+\end{cases}
+\]
+
+
+%\tracingall
+Verbatim test
+
+\verb-\verb+ { } $$-.
+\verb*-\verb+ { } $$-.
+\let\verbatimfont\it
+\verb +x+ !
+
+
+
+
+\paragraph{ifthenelse}
+{
+\def\truefals {tru}
+\newboolean{foo}
+\def\Foo{fo}
+\iffoo Bug1 \fi
+\setboolean{\Foo o}{\truefals e}
+\iffoo\else Bug2\fi
+
+\ifthenelse{2=3}{bug}{ok1}
+\ifthenelse{\isodd{2}}{bug2}{ok2}
+\ifthenelse{\isodd{3}}{ok3}{bug3}
+\ifthenelse{\boolean{foo}}{ok4}{bug54}
+\setboolean{foo}{False}\ifthenelse{\boolean{foo}}{bug5}{ok5}
+\ifthenelse{\lengthtest{1cm<1mm}}{bug6}{ok6}
+\dimen0=1cm \dimen1=0.01pt \dimen2=1.01pt \dimen3=9876.54321533pt 
+\ifthenelse{\lengthtest{\dimen0>\dimen1}}{ok7}{bug7}
+\ifthenelse{2>1}{ok8}{bug8}
+\newcommand{\BB}{\CC}\newcommand{\CC}{\DD}
+\newcommand{\DD}{AA}\newcommand{\EE}{EE}
+\ifthenelse{\equal{\BB}{\EE}}{bug9}{ok9}
+\ifthenelse{\equal{\BB}{\CC}}{ok10}{bug10}
+\ifthenelse{\equal{\DD}{\BB}}{ok11}{bug11}
+\ifthenelse{\not\boolean{true}}{bug12}{ok12}
+\ifthenelse{\not\not\boolean{true}}{ok13}{bug13}
+\ifthenelse{\not\boolean{true}\and\boolean{true}}{bug}{ok14}
+\ifthenelse{\not\boolean{true}\and\boolean{false}}{bug}{ok15}
+\ifthenelse{\not\boolean{false}\and\boolean{true}}{ok16}{bug16}
+\ifthenelse{\not\boolean{false}\and\boolean{false}}{bug}{ok17}
+\ifthenelse{\not\(\boolean{true}\and\boolean{true}\)}{bug}{ok18}
+\ifthenelse{\not\(\boolean{true}\and\boolean{false}\)}{ok19}{bug}
+\ifthenelse{\not\(\boolean{false}\and\boolean{true}\)}{ok20}{bug}
+\ifthenelse{\not\(\boolean{false}\and\boolean{false} good ?\)}{ok21}{bug}
+
+\newcommand{\IX}[2][R]{\ifthenelse{\equal{#1}{D}}{d}{r}#2}
+\IX[D]{d} et \IX{r}.
+
+\newcommand{\QU}[2]{%
+\ifthenelse {
+  \(\equal{#1}{ENG} \and \equal{#2}{yes} \)
+     \or
+  \(\equal{#1}{FRE} \and \equal{#2}{oui} \)
+}{``OK''}{``not OK''}}
+You agree \QU{ENG}{yes} or don't \QU{ENG}{no}. 
+D'accord \QU{FRE}{oui} ou pas \QU{FRE}{non}. 
+
+
+\paragraph{CALC}
+
+\newcounter{Ac}
+\setcounter{Ac}{(1+2)*(3+4)-20}\theAc=1
+\addtocounter{Ac}{(1*2)+(3*-4)+(34/7)}\theAc=-5
+
+\newlength{\Bc}
+\setlength{\Bc}{(1cm+2cm)*(3+4)-200mm} \the\Bc=28.4526pt
+\setlength\Bc{\the\Bc*\ratio{25.4pt}{722.7pt}} \the\Bc=0.99985pt
+\Bc=1in \setlength\Bc{\the\Bc * 100 / 7227} \the\Bc=0.99998pt
+\Bc=1in \setlength\Bc{\the\Bc * \real{ 0.01383700013837}} \the\Bc=1.00018pt
+\Bc=1cm \setlength\Bc{\the\Bc / \real{28.452755}} \the\Bc=0.99985pt
+\Bc=1cm \setlength\Bc{\the\Bc * \ratio{254pt}{7227pt}} \the\Bc=0.99985pt
+\Bc=1in \setlength\Bc{\the\Bc / \ratio{7227pt}{100pt}} \the\Bc=1.00018pt
+\Bc=1IN \setlength\Bc{\the\Bc / \ratio{7227PT}{100pT}} \the\Bc=1.00018pt
+
+{\catcode `\p=12\catcode`\t=12\gdef\ZPT{0.0pt}}
+\Bc=1in \setlength\Bc{\the\Bc-72.26999pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1pc \setlength\Bc{\the\Bc-12pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1cm \setlength\Bc{\the\Bc-28.45274pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1mm \setlength\Bc{\the\Bc-2.84526pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1bp \setlength\Bc{\the\Bc-1.00374pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1dd \setlength\Bc{\the\Bc-1.07pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1cc \setlength\Bc{\the\Bc-12.8401pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+\Bc=1sp \setlength\Bc{\the\Bc-0.00002pt}\edef\foo{\the\Bc}\xtesteq\foo\ZPT
+
+
+\def\a{\b}\expandafter\let\a\c
+
+\setcounter{hours}{3* \real{1.6} *\real{1.7}} \thehours
+}
+\count0 =2  \dimen0=3pt \dimen1=5pt
+\dimen0 = \count0 \dimen1 \the\dimen0=10pt
+\count0=123 \def\toto#1#2#3{#3#2#1} \expandafter\toto\the\count0=321
+
+{
+\IfFileExists{nohope}{\errmessage{bad1}}{}
+\IfFileExists{\jobname}{}{\errmessage{bad2}}
+\IfFileExists{X.tex}{\errmessage{bad3}}{}
+\def\bad{\errmessage{BAD}}\let\ybad\bad
+\def\mytypeout#1{\def\bad{\xbad}}
+\def\foo{\ifx\bad\ybad\else\let\xbad\relax\fi\let\bad\ybad}
+\def\IIFE#1{\InputIfFileExists{#1}{}{}}
+\IIFE{taux2}\IIFE{nohope}\foo\IIFE{taux2}
+\bad
+}
+
+{\small\it\toks4={}\dimen0=1sp \count0=0
+\setbox13=\xbox{foo}{\large x}a
+\box13 \let\foo\relax\let\bar\relax\let\gee\relax}
+
+\def\Test-#174{#1}
+\count3=-27
+\expandafter\Test\number\count3 4
+\def\catletter#1{\catcode`#1=12 }
+\def\somecats{\catletter\m\catletter\c\catletter\x\catletter\i
+  \catletter\v\catletter\l}
+{\somecats \gdef\Testmcmlxxxiv{}}
+\expandafter\Test\romannumeral 1984
+\def\catletter#1{\catcode`#1=12 }
+\def\somecats{\catletter\M\catletter\C\catletter\X\catletter\I
+  \catletter\V\catletter\L}
+{\somecats \gdef\TestMCMLXXXIV{}}
+\expandafter\Test\Romannumeral 1984
+
+
+
+\setbox12=\xbox{foo}{ok}\setbox14=\xbox{foo}{ok}
+\count3=12
+\copy12 , and \copy 12 , and \box \count3 , and \box 12!
+\usebox{14}\usebox{14}3
+
+\def\dupbox{\setbox0=\lastbox \copy0 \box0 }
+\xbox{foo}{ok} and \dupbox; \xbox{bar}{ok}\dupbox.
+X\setbox0=\vsplit 25 to 4cm \box0Y.
+X\setbox0=\vtop to 2cm{x}\box0Y.
+X\setbox0=\vtop spread 2cm{x}\box0Y.
+X\setbox0=\vbox to 2cm{x}\box0Y.
+X\setbox0=\vbox spread 2cm{x}\box0Y.
+X\setbox0=\hbox to 2cm{x}\box0Y.
+X\setbox0=\hbox spread 2cm{x}\box0Y.
+
+
+% Keep the dot. Otherwise, \the is expanded, 
+Test{\count0=1000\countdef\spacefactor0\relax \skip0="DD DDPLUS2,5 \spacefactor\space.\the\skip0=236.47191pt plus 0.03815pt.}
+
+{\large{\hbox{\normalsize x}}}
+{\large a\hbox{\small x}b}
+{\large a\hbox{\normalsize x}b}
+
+test hbox A\hbox{a\par b}B.
+{\tracingall \parbox[foo][bar][gee]{2cmPlus3mm}{some \it box content}.}
+
+UPPER\uppercase \relax\space \bgroup }\lowercase \relax\space \bgroup }CASE
+
+{\makeatletter
+\begingroup
+  \catcode`P=12
+  \catcode`T=12
+  \lowercase{
+    \def\x{\def\rem@pt##1.##2PT{##1\ifnum##2>\z@.##2\fi}}}
+  \expandafter\endgroup\x
+\def\strip@pt{\expandafter\rem@pt\the}
+\dimen0=3pt
+\dimen1=3.4pt
+\strip@pt\dimen0
+\strip@pt\dimen1
+
+\def\do@noligs#1{%
+  \catcode`#1\active
+  \begingroup
+     \lccode`\~`#1\relax
+     \lowercase{\endgroup\def~{\leavevmode\kern\z@\char`#1}}}
+\do@noligs A
+}
+
+{\makeatletter
+\endlinechar-1
+\count@0
+\catcode0=13
+\gdef\XML@tempa{
+ \begingroup
+   \uccode0\count@
+  \uppercase{\endgroup
+    \edef^^@{
+      \ifnum\catcode\count@=11 %
+        \noexpand\utfeightay\else\noexpand\utfeightax\fi
+      \noexpand^^@}
+    \expandafter\edef\csname 8:\string^^@\endcsname{\string^^@}}
+ \ifnum\count@<127\advance\count@1 \expandafter\XML@tempa\fi}
+\XML@tempa
+}
+
+\outer\def\ofoo{}\edef\foo{\noexpand\ofoo}
+
+\includegraphics[angle=0,width=3cm,clip=]{Logo-INRIA-couleur.ducon}
+\includegraphics[angle=0,width  =   %
+                .5\textwidth,height=.3\textheight]{Logo-INRIA-couleur.ducon}
+\includegraphics[angle=0,width=\textwidth,height=\textheight]{Logo-INRIA-couleur.ducon}
+\includegraphics[angle=0, =foo,,width=3cm,clip]{Logo-INRIA-couleur.ducon}
+
+{ \let\show\gobble \let\showthe\gobble
+\def\test{\a\-\b}
+  \show\test\showthe\escapechar\escapechar-1\showthe\escapechar\show\test}
+\def\optionalequals{ \space=}
+{\catcode`A\optionalequals2 A% } the A closes the brace
+{\escapechar=-1 \edef\foo{\string\=}\testeq\foo{=}}
+{\escapechar=-1 \xdef\foo{\string\}}}
+{\escapechar=`\+ \edef\foo{\string\=}\testeq\foo{+=}}
+{\catcode`\A=12 \catcode`\B=12\catcode`\R=12\gdef\fooval{ABAR}}
+{\escapechar=`\A \edef\foo{\string\BAR}\ifx\foo\fooval\else \uerror\fi}
+\string{\string}
+\char`{\char`}
+\expandafter\def\csname\string{\string}\endcsname#1#2{#2#1}
+\expandafter\csname\string{\string}\endcsname XY
+
+\def\recur#1{\csname rn#1\recur}
+\def\rn#1{}
+\def\rnm#1{\endcsname{#1}#1}
+\def\replicate#1{\csname rn\expandafter\recur 
+  \romannumeral\number\number#1 000\endcsname\endcsname}
+0{\tracingall
+\dimen0=4sp
+\replicate{\dimen0}{{{{\P}}}}
+}
+
+  \def\factorial#1{%
+    \ifnum\numexpr#1>1
+      \number \numexpr#1*\factorial{(#1-1)}\expandafter\relax
+    \else
+      \expandafter1\fi}
+\edef\foo{\factorial{0}\factorial{0} \factorial{0}4}\testeq\foo{11 14}
+\edef\foo{\factorial{1}4}\testeq\foo{14}
+\edef\foo{\factorial{2}4}\testeq\foo{24}
+\edef\foo{\factorial{3}4}\testeq\foo{64}
+\edef\foo{\factorial{5}\factorial{5} \factorial{5}4}\testeq\foo{120120 1204}
+\edef\foo{\factorial{6}4}\testeq\foo{7204}
+
+%\newcommand{\ba}{OK}
+%\newcommand\bab{OK}
+%\newcommand{\ba\bb}{OK}
+%\newcommand{1}{OK}
+%\newcommand{\Athapascan0}{ok}
+
+% testing optional chars via \ifbracket
+\def\wopt{\ifbracket\xwopt\ywopt}
+{\def\ywopt#1#2{}\let\xwopt\bad \wopt 12}
+{\def\xwopt[#1]{}\let\ywopt\bad \wopt [12]}
+{\let\=\wopt\def\ywopt#1#2{}\let\xwopt\bad \= 12}
+{\let\=\wopt\def\ywopt#1#2{}\let\xwopt\bad \=12}
+{\let\=\wopt\def\xwopt[#1]{}\let\ywopt\bad \=[12]}
+{\let\=\wopt\def\xwopt[#1]{}\let\ywopt\bad \= [12]}
+{\let\=\wopt\def\xwopt[#1]{}\let\ywopt\bad \= 
+[12]}
+{
+\def\; {}\futurelet\SPtokena\; % comment required
+\def\;#1{}\futurelet\SPtokenb\; 
+0\xshow\SPtokena\xshow\SPtokenb
+% This fails in the current version.
+%\ifx\SPtokena\SPtokenb \else \bad\fi
+}
+\expandafter\ifx\csname @sptoken\endcsname\sptoken \else \oops\fi 
+\expandafter\ifx\csname @@sptoken\endcsname\sptoken \oopps\fi 
+
+\paragraph{Biblio}
+\def\wopt{\ifbracket\xwopt\ywopt}
+\def\xwopt[#1]#2{With opt #1#2}
+\def\ywopt#1{Without opt #1}
+This is some text
+\footcite{toto,titi} \cite[text]{toto,titi} \cite{mathml2}
+\cite[foo]{mathml2}
+% Check all possibilities
+\cite[foot][p32]{toto,titi}\cite[foot][p32]{toto}\cite{mathml2,mathml2}
+\cite[text]{toto,titi}\cite[refer][]{toto,titi}
+\footcite{toto,titi}\footcite[p3]{toto,titi}
+\nocite[foot]{toto,titi}\nocite{mathml2}
+%\bibliographystyle{Plain}
+%\bibliographystyle{program:cat}
+%\bibliographystyle{bibtex:plain}
+
+\xbox{bibitem}{\XMLsolvecite[][foot]{toto}{key1}}
+\xbox{bibitem}{\XMLsolvecite[][foot]{titi}{key2}}
+
+MINIPAGE
+\Han\ designed \xmllatex{\pdf\<TeX/\>}{}. \l\ and \strok{l}.\\
+In Tralics version 2, you can say Th{\'{\^e}}
+
+\def\test#1#2{\mathtt{#1#2}\mathcal{#1}\mathbf{#1#2}\mathrm{#1#2}
+\mathit{#1#2}\mathbb{#1}\mathsf{#1#2}\mathnormal{#1#2}}
+\begin{equation}\begin{split}
+\test Aa &\test Bb\\
+\test Cc &\test Dd\\
+\test Ee &\test Ff\\
+\test Gg &\test Hh\\
+\test Ii &\test Jj\\
+\test Kk &\test Ll\\
+\test Mm &\test Nn\\
+\test Oo &\test Pp\\
+\test Qq &\test Rr\\
+\test Ss &\test Tt\\
+\test Uu &\test Vv\\
+\test Ww &\test Xx\\
+\test Yy &\test Zz\\
+\end{split}
+\end{equation}
+
+${\cal ABCDEFGHIJKLMNOPQRSTUVWXYZ}$
+\begin{center} xx
+
+{ \begin{minipage}{2cm}abc\end{minipage} \par xx}
+\end{center}
+\begin{minipage}[t]{2cm}abc\end{minipage}
+\begin{minipage}[b]{2cm}abc\end{minipage}
+\begin{minipage}[c]{2cm}abc\end{minipage}
+\begin{minipage}[c][xxx][s]{2cm}abc\end{minipage}
+
+
+\makebox[1cm][r]{some text}
+\framebox[1cm][r]{some text}
+
+
+
+\wopt[AA]{BB}\wopt{CC}
+\def\citenotext{\let\originalcite\cite \def\cite ##1##{\originalcite}}
+\let\originalwopt\wopt \def\wopt #1#{\originalwopt}
+\citenotext
+\cite[foo]{mathml2}\wopt[AA]{BB}\wopt{CC}
+
+
+{%\tracingall
+   {\def\foo{\gdef\xbar{OK}}\catcode`x=0 xfoo}
+   \testeq\xbar{OK}
+   {\def\foo{\gdef\xbar{notOK}}\catcode`x=0xfoo}
+   \testeq\xbar{OK}
+}
+
+{\catcode`A1\catcode`B2 
+\def\fooA2B\testeq\fooA2B
+\def\xbarA\bgroup\def\fooA3B\egroupB\xbar\testeq\foo{2}}
+
+{\catcode`A6 \def\fooA1A2{\def\xbar{A2A1}}\foo23\testeq\xbar{32}}
+
+\paragraph{Letter c}
+testchar{\language=1
+\char60\ \char0\ \char 10\ \char233\ \char 300\
+\char126\ \char45- \char39' \char96` \char60< \char62>
+\char59\char58\char33\char63\char171\char 187\char38
+\verb@~--``xx''<<>>;:!?«»&@
+~--``<<>>;:!?«»''\&
+}
+{\language=0
+\char60\ \char0\ \char 10\ \char233\ \char 300\
+\char126\ \char45- \char39' \char96` \char60< \char62>
+\char59\char58\char33\char63\char171\char 187\char38
+\verb@~--``<<>>;:!?«»&''@
+~--``<<>>;:!?«»''\&
+}
+$ \bf a \mathrm{a \mathcal{c} d}$
+
+$a^c_b$
+$a\sb b\sp c$
+
+%ERROR{\catcode`x7 \catcode`y=8 a^b_c xy\sp\sb}
+{\def\xbar#1{\egroup\edef\FV{\meaning#1}\xshow\FV\FV}
+\def\foo{\bgroup\catcode32=11\catcode`\%=11 \xbar}\foo \foo%\foo=}
+
+
+$%
+\widetilde{abc} \widehat{abc} \overleftarrow{abc} \overrightarrow{abc}
+\overline{abc} \underline{abc} \overbrace{abc} \underbrace{abc}
+\underleftarrow{abc} \underrightarrow{abc}
+$ 
+
+\wd0=3cm %\showthe\wd0
+\spacefactor-12345
+%\showthe\spacefactor
+$x\Box$
+\def\R{\mathbf{R}}
+
+\def\MAT#1{\begin{array}{c#1}1&22\\3&4\end{array}}
+
+
+\[\left|
+\begin{array}{lcr}
+AAAAAAA&BBBBBCC&CCCCCCC\\
+A&B&C\\
+\multicolumn{1}{c}{A}&\multicolumn{1}{c}{B}&\multicolumn{1}{c}{C}\\
+\multicolumn{1}{r}{A}&\multicolumn{1}{r}{B}&\multicolumn{r}{c}{C}\\
+\multicolumn{1}{l}{A}&\multicolumn{1}{l}{B}&\multicolumn{l}{c}{C}\\
+\MAT l&\MAT c&\MAT r\\
+\multicolumn{2}{c}{0123456789abcdef}&C\\
+A&\multicolumn{2}{c}{0123456789abcdef}\\
+\multicolumn{2}{r}{0123456789abcdef}&C\\
+A&\multicolumn{2}{l}{0123456789abcdef}\\
+A&B&C\\
+\end{array}
+\right|\]
+
+
+
+\begin{eqnarray*}
+\left\{\begin{array}{lcl}
+\dot{x} & = & Ax+g(x,u)\\
+ y & = & Cx \\
+ \multicolumn{3}{l}{x\in \R^n} 
+\end{array}
+    \right.
+\end{eqnarray*}
+
+
+\def\makeboxes{%
+\setbox0=\hbox{123}%
+\setbox1=\xbox{foo}{456}%
+\setbox2=\xbox{foo}{789\xbox{bar}{abc}}}
+1.\makeboxes \copy0 \copy1 \copy2 \copy0 \copy1 \copy2\par
+2.\makeboxes \box0 \box1 \box2 \box0 \box1 \box2\par
+3.\makeboxes \unhcopy0 \unhcopy1 \unhcopy2 \unhcopy0 \unhcopy1 \unhcopy2\par
+4.\makeboxes \unhbox0 \unhbox1 \unhbox2 \unhbox0 \unhbox1 \unhbox2\par
+5.\makeboxes \unvcopy0 \unvcopy1 \unvcopy2 \unvcopy0 \unvcopy1 \unvcopy2\par
+6.\makeboxes \unvbox0 \unvbox1 \unvbox2 \unvbox0 \unvbox1 \unvbox2\par
+
+
+FILL \hfil \hfill \hfilneg \hss \vfil  \vfill \vfilneg \vss
+
+\def\foo{123}\afterassignment\foo\setbox0=\hbox{4}
+\makeatletter
+\def\openup{\afterassignment\@penup\dimen@=}
+\def\@penup{\advance\lineskip\dimen@
+  \advance\baselineskip\dimen@
+  \advance\lineskiplimit\dimen@}
+\makeatother
+\openup1234pt
+%\showthe \lineskip\showthe\baselineskip \showthe \lineskiplimit
+\prevdepth=12345pt
+\pagestretch=1pt
+\pagefilstretch=1pt
+\pagefillstretch=1pt
+\pagefilllstretch=1pt
+\pageshrink=1pt
+\pagetotal=1pt
+\pagegoal=1pt
+\deadcycles-25
+\insertpenalties=13
+
+ABC\parshape3 1pt 102pt  3pt 104pt 5pt 106pt parshape
+\count`\^^M=\catcode'53 \ifnum\count13=12 \else \bad\fi
+\parindent=3pt
+\bgroup %% keep this local since \z@ might be \count13
+\dimen`\^^M=4\parindent \ifdim\dimen13=12pt \else \bad\fi
+\egroup
+
+{\let\show\xshow
+{\def\B#1{a} \let \A\B \show\A}
+{\catcode `A=13 \def A{b} \let\A A \show\A}
+{\catcode `A=13 \def\B#1{c} \let A\B \showA}
+{\catcode `A=13  \let A~ \showA}
+{\catcode `A=13 \letA=1 \showA}
+{\let\sp=^ \show\sp}
+{\let\egroup=} \show\egroup}
+}
+
+{\let \show\gobble
+\catcode `A=13 \letA=1 \showA \count0=0A1 \showthe\count0}
+$a'^2$ $a'\sp2$
+
+{\chardef\foo124 \count\foo13 }
+\let\foo W
+{\futurelet\bar\relax\relax \global\futurelet\foo\relax2}
+\xshow\foo \xshow\bar
+
+a) \begin{math} x1 \end{math}
+b) \( x2 \)
+c) \begin{displaymath} x3 \end{displaymath}
+d) \[ x4 \]
+e) \begin{equation} x5 \end{equation}
+
+text A \\* text B \\[3mm] text C
+\begin{center}
+line one\\
+this is the second line
+\end{center}
+
+
+text A \bigskip text B \smallskip text C \medskip text D
+\begin{center}
+short line \bigskip a longer line \smallskip a still longer line \medskip 
+a very long line of text
+\end{center}
+
+{\rm Some text} {\sf Some text} {\tt Some text}
+{\bf Some text} {\it Some text} {\sc Some text} {\sl Some text}
+
+1\textsuperscript{st} x\textsuperscript{ième} y\textsubscript{some text}
+$1^e$\overline{foo}\underline{bar}.
+
+\setcounter{enumi}{\value{enumii}}
+\renewcommand\theenumiii{\alph{enumiv}}\stepcounter{enumiv}
+
+$\notin$
+
+1\textsuperscript{st} x\textsuperscript{ième} y\textsubscript{some text}
+$1^e$\overline{foo}\underline{bar}.
+\lsc{Foo}\fsc{Bar}
+
+
+\def\Test{
+\textrm{Textrm} \textsf{Textsf} \texttt{Texttt}
+\textbf{Testbf} \textit{Textit} \textsc{Textsc} \textsl{Textsl}
+\textnormal{Textnormal} \textmd{Textmd} \emph{Emph} \textup{Textup}
+\par\noindent}
+
+{\rmfamily \mdseries \upshape rmmdup \Test}
+{\sffamily \mdseries \upshape sfmdup \Test}
+{\ttfamily \mdseries \upshape ttmdup \Test}
+{\rmfamily \bfseries \upshape rmbfup \Test}
+{\sffamily \bfseries \upshape sfbfup \Test}
+{\ttfamily \bfseries \upshape ttbfup \Test}
+%
+{\rmfamily \mdseries \itshape rmmdit \Test}
+{\sffamily \mdseries \itshape sfmdit \Test}
+{\ttfamily \mdseries \itshape ttmdit \Test}
+{\rmfamily \bfseries \itshape rmbfit \Test}
+{\sffamily \bfseries \itshape sfbfit \Test}
+{\ttfamily \bfseries \itshape ttbfit \Test}
+%
+{\rmfamily \mdseries \scshape rmmdsc \Test}
+{\sffamily \mdseries \scshape sfmdsc \Test}
+{\ttfamily \mdseries \scshape ttmdsc \Test}
+{\rmfamily \bfseries \scshape rmbfsc \Test}
+{\sffamily \bfseries \scshape sfbfsc \Test}
+{\ttfamily \bfseries \scshape ttbfsc \Test}
+%
+{\rmfamily \mdseries \slshape rmmdsl \Test}
+{\sffamily \mdseries \slshape sfmdsl \Test}
+{\ttfamily \mdseries \slshape ttmdsl \Test}
+{\rmfamily \bfseries \slshape rmbfsl \Test}
+{\sffamily \bfseries \slshape sfbfsl \Test}
+{\ttfamily \bfseries \slshape ttbfsl \Test}
+
+
+
+\begin{center}
+1234567890 \\
+\oldstylenums{1234567890}
+\end{center}
+
+
+{Aa\tiny Bb  \scriptsize Cc \footnotesize Dd \small Ee \normalsize Ff 
+\large Gg \Large Hh \LARGE Ii  \huge Jj  \Huge Kk}
+
+\vfil \vfill \hfil \hfill
+
+\begin{equation}
+\begin{array}{lcl}
+\dot{x} & = & Ax+g(x,u)\\[2mm]
+ y & = & Cx \\
+ \multicolumn{3}{l}{x\in R^n} 
+\end{array}
+\end{equation}
+
+\begin{tabular}{|ll|rr|cc|}
+\hline a&b&c&d&e&f\\
+aaa&bbb&ccc&ddd&eee&fff\\[3mm]
+\hline
+A&\multicolumn{3}{l}{BCD}&E&F\\
+\cline{1-3}\cline{6-6}
+aaa&bbb&ccc&ddd&eee&fff\\\hline
+\end{tabular}
+ 
+\part{A} \label{label-A}
+\chapter{B} \label{label-b}
+\makeatletter 
+\section{C\\c} \label{label-c}
+\let\@headercr d
+\subsection{D\\[2mm]d} \label{label-d}
+\subsubsection{E} \label{label-e}
+\makeatother
+\paragraph{F} \label{label-f}
+\subparagraph{G} \label{label-g}
+Text \par more text
+\ref{label-A} \ref{label-b} \ref{label-c}
+\ref{label-d} \ref{label-e} \ref{label-f} \ref{label-g}
+
+\paragraph{A}
+\label{pa}
+\ref{pa} \ref{pb} \ref{pc} \ref{pd} \ref{pe} \ref{pf}
+\ref{pa} \ref{pb} \ref{pc} \ref{pd} \ref{pe} \ref{pf}
+\paragraph{B}
+\label{pb}
+\begin{equation}x \label{pc} \end{equation}
+\begin{figure} \includegraphics{x}\label{pd} \end{figure}
+\begin{itemize} \item a \label{pe}\item[B] b \label{pf} \end{itemize}
+
+\paragraph{xxxxx}123\subsubsection{xxxxx}456
+\endsec{\subsubsection} ENDOFSUBSECTION
+\endsec{}\xmlemptyelt{appendix}
+
+Test tilde:~\verb=~=$a~b$.
+\Href{\url{a~b\~n_d}}{a~b\~n_d}
+\href{a~b\~n_d}{\url{a~b\~n_d}}
+\href{url&-~}{text~a}
+\url{a~b\~n_d}
+\footnote{URL in footnote....
+\Href{\url{a~b\~n_d}}{a~b\~n_d}
+\href{a~b\~n_d}{\url{a~b\~n_d}}
+\href{url&-~}{text~a}
+\url{a~b\~n_d}}
+
+
+$$ \arccos^2 (x),\,  \arcsin^2(x) ,\,  \arctan^2(x) ,\,  \arg^2(x),\,
+   \cos^2(x) ,\,   \cosh^2(x)  ,\, \cot^2(x)$$
+
+$$ \coth^2(x) ,\,  \csc^2(x),\,   \deg^2(x),\,   \dim^2(x),\, \exp^2(x),\,
+   \hom^2(x),\,   \ker^2(x) ,\,   \lg^2(x)$$
+
+
+
+$%
+\stackrel{j}{\longrightarrow} \overset{*}{X} \underset{*}{X}
+\sqrt{abc} \sqrt[n]{abc} \root n \of{abc}
+\frac{abc}{xyz} \dfrac{abc}{xyz}
+$
+
+
+
+$$\binom{\frac{n+m}{2}} n \quad
+\tbinom{\frac{n+m}{2}} n \quad
+\dbinom{\frac{n+m}{2}} n\qquad
+{}^{\binom{\frac{n+m}{2}} n \quad
+\tbinom{\frac{n+m}{2}} n \quad
+\dbinom{\frac{n+m}{2}} n}$$
+
+
+
+$\Leftrightarrow$
+$\sharp$ \sharp
+
+1\textsuperscript{st} x\textsuperscript{ième} y\textsubscript{some text}. 
+
+$$\genfrac{}{}{}{}12
+\genfrac[]{2pt}{2}{aaa}{bbb}
+\genfrac(){0cm}{0}nm
+$$
+
+
+
+\newcommand\dean[2]{%
+  \xbox{dean}{\xbox{first-name}{#1}\xbox{last-name}{#2}}}
+\dean{Ingo}{Zschoch}
+
+\newcommand\Date[2]{%
+  \xbox{date}{\AddAttToCurrent{type}{#2}#1}}
+\Date{01-01-2004}{defense}
+
+
+
+$\genfrac{}{}{}0ab 
+\genfrac{}{}{}1ab 
+\genfrac{}{}{}2ab 
+\genfrac{}{}{}3ab $
+
+${a\over b}\quad {a\above1pt b}\quad {a\atop b}$
+${a\overwithdelims() b}\quad {a\abovewithdelims()1pt b}\quad
+{a\atopwithdelims() b}$
+$\dimen0=2pt\genfrac(){\dimen0 }{}{foo}{bar}$
+
+
+$$\frac{\frac{n+m}{2}} n \quad
+\tfrac{\frac{n+m}{2}} n \quad
+\dfrac{\frac{n+m}{2}} n$$
+
+
+$$  \ln^2(x),\, \log^2(x),\,  \Pr^2(x),\, \sec^2(x),\, \sin^2(x) ,\,
+ \sinh^2(x),\,  \tan^2(x),\, \tanh^2(x)$$
+
+$$ \det_{x=1},\, \gcd_{x=1},\, \inf_{x=1},\, \injlim_{x=1},\,
+ \lim_{x=1},\, \liminf_{x=1},\,\limsup_{x=1},\,
+ \max_{x=1},\, \min_{x=1},\, \projlim_{x=1},\, \sup_{x=1}
+$$
+
+
+
+$$
+\sup_{x=2}y~
+\frac{1}{k}\log_2 c(f)\;
+\tfrac{1}{k}\log_2 c(f)\;
+\sqrt{\frac{1}{k}\log_2 c(f)}\;
+\sqrt{\dfrac{1}{k}\log_2 c(f)}
+$$
+
+
+
+
+
+$\genfrac(){1mm}{3}{aaaaaaaaaaaaaaaaaa}{111111111}$
+$\genfrac(){0pt}{3}{aaaaaaaaaaaaaaaaaa}{111111111}$
+$\genfrac{}{}{}{0}{abc}{def}$
+$\genfrac{}{}{}{1}{abc}{def}$
+$\genfrac{}{}{}{2}{abc}{def}$
+$\genfrac{}{}{}{3}{abc}{def}$
+%$a\atop b$  $c\over d$
+
+
+{
+1\Href{a}{b}, 2\Href{a\~n}{b}, 3\Href{b}{a\~n},
+4\Href{\url{a~b\~n_d}}{a~b\~n_d},
+5\url{a~b\~n_d},\\
+\let\urlfont\tt
+1\Href{a}{b}, 2\Href{a\~n}{b}, 3\Href{b}{a\~n},
+4\Href{\url{a~b\~n_d}}{a~b\~n_d},
+5\url{a~b\~n_d}.
+}
+
+
+
+$\tilde a,\tilde z, \tilde{a+b}$
+
+$\alpha \beta \gamma \delta \epsilon \varepsilon \zeta \eta
+\theta \iota \kappa \lambda \mu \nu \xi \pi \rho \sigma \tau
+\upsilon \phi \chi \psi \omega \varpi \varrho \varsigma \varphi
+\varkappa \vartheta$
+$\Gamma \Delta \Theta \Lambda \Xi \Sigma \Upsilon \Phi \Pi \Psi \Omega$
+
+
+
+
+
+$\coprod \bigvee \bigwedge \biguplus \bigcap \bigcup \int \sum 
+ \prod \bigotimes \bigoplus \oint \bigsqcup  \bigodot$
+
+
+$ \pm \mp \times \div \ast \star \circ \bullet \cdot 
+\cap \cup \uplus \sqcap \sqcup \vee \wedge \setminus \wr
+\diamond \bigtriangleup \bigtriangledown \triangleleft \triangleright
+\oplus \ominus \otimes \oslash \odot \bigcirc \dagger \ddagger \amalg
+$
+
+
+$\le \leq \succ \simeq \parallel \subseteq \sqsubset \doteq
+\ge \geq \sim \mid \subset \subseteq \ne \neq \frown \vdash
+\equiv \perp \ll \supset \cong \smile \in \dashv 
+\models \preceq \gg \approx \Join \sqsubseteq \ni
+\prec \succeq \asymp \bowtie \sqsupseteq \propto$
+
+
+$\wp$
+{
+\setlength\unitlength{1mm}
+\begin{picture}(50,-30)(-10,10)
+%\linethickness{1pt}
+\qbezier(0,0)(10,30)(50,30)\tracingall
+\setlength\parindent{13sp}
+\line(0,\parindent){25}
+\end{picture}
+}
+
+\def\test#1{\csname f#1#1\endcsname}
+\def\foo{bar}
+\def\foobar{\def\result{ok}}
+\csname foo\test o\endcsname
+\testeq\result{ok}
+
+{
+\def\double#1{#1#1}
+\let\startmacro\csname
+\let\endmacro\endcsname
+\def\foo{bar}
+\def\foobar{ok}
+\startmacro foo\startmacro f\double o\endmacro\endmacro
+}
+
+{
+\def\double#1{#1#1}
+\newboolean{g\double o}
+\def\swap{\setboolean{g\double o}{\ifgoo fals \else TRU\fi e}}
+\ifthenelse{\boolean{goo}}{\bad}{oka}
+\swap 
+\ifthenelse{\boolean{goo}}{okb}{\bad}
+
+\ifthenelse{\boolean{goo} \bof !!}{okb}{\bad}
+}
+
+{
+\newboolean{cA}\newboolean{cB}\newboolean{cC}\newboolean{cD}
+\def\Test{ %
+\ifthenelse{\( \boolean{cA} \and \boolean{cB} \) \or \( \boolean{cC} \and 
+\boolean{cD} \)}{0}{1}}
+\def\testa{\setboolean{cA}{true}\Test \setboolean{cA}{false}\Test}
+\def\testb{\setboolean{cB}{true}\testa \setboolean{cB}{false}\testa}
+\def\testc{\setboolean{cC}{true}\testb \setboolean{cC}{false}\testb}
+\def\testd{\setboolean{cD}{true}\testc \setboolean{cD}{false}\testc}
+\testd
+
+\ifthenelse{\not 1<2 \or \NOT 3<4}{\bad}{ok}
+
+\ifthenelse{\not 1<2 \or \NOT 3<4}{\bad}{ok}
+\ifthenelse{\isundefined{\or}}{\bad}{ok}
+\ifthenelse{\isundefined{\xor}}{ok}{\bad}
+\ifthenelse{\isundefined{}}{\bad}{ok}
+\ifthenelse{\isundefined{\relax \and \undef}}{\bad}{ok}
+}
+
+\countdef\n 3
+\n=5
+\begingroup\aftergroup\edef\aftergroup\asts\aftergroup{
+\loop\ifnum\n>0 \aftergroup*\advance\n-1 \repeat
+\aftergroup}\endgroup
+\asts
+
+
+{\makeatletter\catcode`\^^M=\active % these lines must end with %
+  \ifx^^M\par\else\bad\fi
+  \def\foo{\@makeactive\^^M\let^^M\par}% 
+%\meaning\foo\meaning\obeylines % 
+  \ifx\foo\obeylines\else\bad\fi % 
+  \gdef\obeylines{\catcode`\^^M\active \let^^M\par}%
+  \global\let^^M\par} % this is in case ^^M appears in a \write
+\begingroup
+  \obeylines%
+  \gdef\VEE{\obeylines%
+    \def^^M{\verbegroup \verberrorA}}%
+\endgroup
+\let\VBG\empty
+\def\verbegroup{\global\let\VBG\empty\egroup}
+
+\def\sverb{ \bgroup \VEE \tt \ssverb}
+\def\ssverb#1{%
+  \catcode`#1\active
+  \lccode`\~`#1%
+  \gdef\VBG{\verbegroup\verberrorB}
+  \aftergroup\VBG
+  \lowercase{\let~\verbegroup}}%
+
+{\tracingall \sverb x y x 
+%\def\test#1{{#1}}\test{\sverb x y x}
+}
+
+\the\lastskip\the\lastpenalty\the\lastkern
+
+\toksdef\foo 11
+\newtoks\Bar
+\foo={123 456} \the\Bar
+
+\toksdef\foo 11 \def\Thefoo{\the\foo}
+\def\AAA{A}
+\foo={\AAA} \def\Foo{\AAA}
+\edef\test{\Thefoo\Foo}
+\let\AAA\relax
+
+{\makeatletter%\tracingall
+\newcounter{foo}
+\def\OO{oo}
+\setcounter{f\OO}{17}
+\def\setcounter#1#2{%
+  \@ifundefined{c@#1}%
+    {\@nocounterr{#1}}%
+    {\global\csname c@#1\endcsname#2\relax}}
+\setcounter{f\OO}{18}
+}
+
+\makeatletter
+\newif\ifok
+\def\test{\@ifstar\oktrue\okfalse}
+\test*\ifok\else\typeout{bug in ifstar1}\error\fi
+\test\ifok\typeout{bug in ifstar2}\error\fi
+\expandafter\test\space*\ifok\else\typeout{bug in ifstar3}\error\fi
+\expandafter\test\space\ifok\typeout{bug in ifstar4}\error\fi
+
+%\tracingall
+\def\normal#1#2{=#1=#2=}
+\def\withbrackets[#1]#2{\normal{#1}{#2}}
+\def\withoutbrackets#1{\normal{}{#1}}
+\def\foo{\@ifnextchar[\withbrackets\withoutbrackets}
+\def\xfoo{\@testopt\withbrackets{25}}
+\foo[1]{2}\foo34 \par
+\xfoo[1]{2}\xfoo34
+
+{
+\def\@ifstar#1{\@ifnextcharacter*{\@firstoftwo{#1}}}
+\def\@ifplus#1{\@ifnextcharacter+{\@firstoftwo{#1}}}
+\newif\ifseenplus\newif\ifseenstar
+\def\testa#1{\@ifstar{\seenstartrue\testb{#1}}{\seenstarfalse\testb{#1}}}
+\def\testb#1{\@ifplus{\seenplustrue#1}{\seenplusfalse#1}}
+\def\test{\testa{\testaux}}
+\def\testaux#1{\edef\foo{\ifseenstar*\fi\ifseenplus+\fi#1}}
+\def\resA{12}
+\def\resB{*+12}
+\test{12}  \ifx\foo\resA\else \bad\fi
+\test*+{12} \ifx\foo\resB\else \bad\fi
+\catcode`*=3 \catcode`+=3
+\test *+{12} \ifx\foo\resB\else \bad\fi
+\catcode`*=13 \catcode`+=13
+\test *+{12} \ifx\foo\resB\else \bad\fi
+}
+
+$\overline {\tt P} P$
+
+\def\looptest#1#2#3{\count0=#1\relax \loop #2\advance\count0by-1
+  \ifnum\count0>0 #3\repeat}
+\def\res{}
+\looptest5{\edef\res{\the\count0 a\res}}{\edef\res{b\res}}
+\testeq\res{1ab2ab3ab4ab5a}
+
+%\tracingall
+\let\olda\a %% \newcount defines \a globally...
+\countdef\td 4 \td=0
+\newif\ifprime \newif\ifunknown
+\newcount\n \newcount\p \newcount\d \newcount\a
+\def\primes#1{2,~3% assume that #1 is at least 3
+  \n=#1 \advance\n by-2 % n more to go 
+  \p=5 % odd primes starting with p
+  \loop\ifnum\n>0 \printifprime\advance\p by2 \repeat}
+\def\printp{, % we will invoke \printp if p is prime
+  \ifnum\n=1 and~\fi % this precedes the last value
+  \number\p \advance\n by -1 }
+\def\printifprime{\testprimality \ifprime\printp\fi}
+\def\testprimality{{\d=3 \global\primetrue
+  \loop\trialdivision \ifunknown\advance\d by2 \repeat}}
+\def\trialdivision{\a=\p \divide\a by\d
+  \global\advance\td by 1 % okok
+  \ifnum\a>\d \unknowntrue\else\unknownfalse\fi
+  \multiply\a by\d
+  \ifnum\a=\p \global\primefalse\unknownfalse\fi}
+
+
+The first thirty prime numbers are \primes{30}. trial division macro was
+expanded \the\td\ times. % Knuth says cpu time=4 sec, I see 0.02
+\let\a\olda
+
+
+
+
+\begin{tabular}{|ll|rr|cc|}
+\hline a&b&c&d&e&f\\
+aaa&bbb&ccc&ddd&eee&fff\\
+\hline
+A&\multicolumn{3}{l|}{BCD}&E&F\\
+\multicolumn{2}{|l}{ab}&c&d&e&f\\
+\cline{1-3}\cline{6-6}
+aaa&bbb&ccc&ddd&eee&fff\\\hline
+\end{tabular}
+
+
+
+
+á  \char`\á  \char"E1  \'a  \a'a \xmllatex{\&\#xE1;}{}  \xmllatex{\&aacute;}{} 
+$\hat{a} \acute{a}  \bar{a} \dot{a} \breve{a}
+\check{a} \grave{a} \vec{a} \ddot{a} \tilde{a}
+$ 
+$$d=z^2=( I_t + \nabla I\vec{vvvv} +I div(\vec{vvvvv}) )^2,$$
+
+$a\hbox{b=1} c$
+$a\hbox{b~1}~c$ % both ~ do not give the same space. bad
+
+
+
+{\LARGE
+\textcelsius \textwon  \textnaira \textlira \textflorin
+ \textdong \textperthousand   \textpertenthousand \textreferencemark
+ \textdagger \\
+\textdaggerdbl  \textgravedbl \textacutedbl \textasciigrave \textasciiacutex
+\textlquill \textrquill \textohm \textmho \textnumero\\
+ \textcircledP \textrecipe
+  \textservicemark \textestimated \textbullet \textinterrobang
+}
+
+
+
+
+\texttrademark
+
+IEME 1\ier 1\iere 1\iers 1\ieres 2\ieme 2\iemes \numero \Numero
+
+
+      \begin{tabular}{|l|c|c|c|c|}
+        \hline
+        \multicolumn{1}{|l|}{} & \multicolumn{3}{c}{~~~~~~~~~~Propositional linear
+          logic}& \\ \cline{2-4}
+        \multicolumn{1}{|l|}{} & \multicolumn{3}{c|}{Rudimentary linear
+          logic} &  \\ \cline{2-5}
+        \multicolumn{1}{|l|}{} & Negation & Multiplicatives &
+        Additives & Exponentials \\ \hline
+        Negation & $A^\perp$ & & & \\ \hline
+        Conjunction & & $A\otimes B$ & $A \& B$ & \\ \hline
+        Disjunction & & $A\bindnasrepma B$ & $A \oplus B$ & \\ \hline
+        Implication & & $A\multimap B$ &  & \\ \hline
+        Constants & & $\mathbf{1}, \perp$ & $\top, \mathbf{0}$ & \\ \hline
+        Modalities & & & & !A, ?A \\ \hline
+      \end{tabular}
+
+
+
+\newcounter{cms}
+\setlength{\unitlength}{1mm}
+\begin{picture}(50,39)
+\put(0,7){\makebox(0,0)[bl]{cm}}
+\multiput*(10,7)(10,0){5}{\addtocounter{cms}{1}\makebox(0,0)[b]{\arabic{cms}}}
+\put(15,20){\circle{6}}
+\put(30,20){\circle{6}}
+\put(15,20){\circle*{2}}
+\put(30,20){\circle*{2}}
+\put(10,24){\framebox(25,8){car}}
+\put(10,32){\vector(-2,1){10}}
+\multiput(1,0)(1,0){49}{\line(0,1){2.5}}
+\multiput(5,0)(10,0){5}{\line(0,1){3.5}}
+\thicklines
+\put(0,0){\line(1,0){50}}
+\multiput(0,0)(10,0){6}{\line(0,1){5}}
+\end{picture}
+\url{http://www-sop.inria.fr/miaou/Jose&Grimm}
+\setlength\unitlength{1pt}
+\begin{picture}(120,100)(-5,0)
+%\linethickness{.5pt}
+ \qbezier [50](0,0)(0,100)(100,0)
+ \qbezier     (0,0)(30,80)(100,0)
+ \qbezier[150](0,0)(60,60)(100,0)
+ \qbezier[200](0,0)(90,40)(100,0)
+ \qbezier     (0,0)(120,20)(100,0)
+% mark the end points
+ \put(0,0){\circle*{3}}
+ \put(100,0){\circle*{3}}
+% mark the control points
+ \multiput(0,100)(30,-20){5}{\circle{2}}
+\end{picture}
+
+
+
+\setlength{\unitlength}{1pt}
+\sbox0{1A\bf b}
+\savebox1{2A\bf b}
+\savebox2(3,4){3A\bf b}
+\savebox3(3,4)[c]{4A\bf b}
+\savebox4[40pt]{5A\bf b}
+\savebox{5}[40pt][c]{6A\bf b}
+\newsavebox\Nsbox
+\savebox\Nsbox[40pt][c]{7A\bf b}
+\box0\box1\box2\box3\box4\box5\usebox\Nsbox
+
+
+{\setlength\unitlength{10pt}
+\begin{picture}(12,10)(-2,0)
+%\linethickness{0.4pt}
+\qbezier(2,6)(7,6)(9,3)
+\qbezier(2,0)(7,0)(9,3)
+\qbezier(2,6)(4,3)(2,0)
+\qbezier(1,6)(3,3)(1,0)
+\put(9.75,3.00){\circle{1.50}}
+\put(10.5,3.00){\line(1,0){1.50}}
+\put(0,5){\line(1,0){1.5}}
+\put(0,1){\line(1,0){1.50}}
+\end{picture}}
+$x^{y^\epsilon_\varepsilon}$
+\begin{equation}
+\vec B(\vec r) = \frac{\mu_0}{4\pi}\left\{
+\frac{3\vec m({\vec r}')\cdot(\vec r-{\vec r}')}{|\vec r-{\vec r}'|^5}
+(\vec r-{\vec r}') - \frac{\vec m({\vec r}')}{|\vec r-{\vec r}'|^3}
+\right\}. \label{W102}
+\end{equation}
+$\leftarrow\longleftarrow  \Leftarrow \Longleftarrow 
+\rightarrow \longrightarrow \Rightarrow \Longrightarrow
+\leftrightarrow \Leftrightarrow \longleftrightarrow\Longleftrightarrow
+\mapsto \longmapsto \hookleftarrow \hookrightarrow
+\leftharpoondown \leftharpoonup \rightharpoondown \rightharpoonup
+\uparrow \Uparrow  \updownarrow \Updownarrow 
+\downarrow \Downarrow \nearrow \searrow \swarrow \nwarrow
+$
+
+$\supseteq$
+
+$\ldots \prime \exists \Diamond \top \bot \mho 
+\cdots \forall \nabla \imath \flat \clubsuit \Re
+\vdots \infty \surd \jmath \natural \diamondsuit \Im
+\ddots \hbar \square \ell \sharp \heartsuit \angle
+\aleph \emptyset \triangle \neg \wp \spadesuit \partial
+$
+
+
+$\hbar \ell \wp \Re \Im \partial \infty \emptyset \nabla
+\surd \top \bottom \bot \angle \triangle$
+%%  AFAIRE  smallint \land \lor  \Diamond
+
+
+$\smallint \int \land \wedge \lor \owns \ni \notin
+\neg \lnot \gets \leftarrow \to \rightarrow
+\gtrless \geqslant \leqslant \iff \backslash$
+
+
+$
+\def\kernel{\frac{x^1_2}{y^3_4}}
+\left\Vert\left|\left[\left(\left\{ \kernel \right\}\right)\right]\right|\right\Vert
+\left\vert\left|\left<\left\langle \kernel \right\rangle\right>\right|\right\vert
+\left\lbrace\left\lceil\left\lfloor \kernel \right\rfloor\right\rceil\right\rbrace
+\lbrack\rbrack
+a\mskip1mu b\mskip2mu c \mskip4mu d \mskip8mu e \mskip16mu f
+$
+
+$ 1\kern10pt b\mkern 18mu c \hspace{20pt} d\mskip36mu$
+
+
+123
+\begin{comment}
+\begin{picture}(150,15)(0,0)
+\thicklines
+\dottedline{2}(0,10)(70,10)
+\dottedline[$\bullet$]{3}(0,5)(70,5)
+\dottedline[$\diamond$]{4}(0,0)(70,0)
+\end{picture}
+\begin{picture}(70,22)(0,-2)
+\dashline{3}[0.7](0,18)(63,18)
+\thicklines
+\dashline{3}(0,13)(63,13)
+\dashline[-30]{3}(0,8)(63,8)
+\dashline[+15]{3}(0,4)(63,4)
+\dashline[+30]{3}(0,0)(63,0)
+\end{picture}
+\end{comment}
+
+\setlength\unitlength{1.5pt}
+\begin{picture}(220,30)(0,0)
+\put(0,0){\makebox(30,10){aaa}}
+\put(40,0){\framebox(30,10)[lb]{bbb}}
+\put(80,0){\dashbox{1}(30,10)[bl]{ccc}}
+\put(120,0){\dashbox{2}(30,10)[rt]{ddd}}
+\put(160,0){\dashbox{5}(30,10)[b]{eee}}
+\put(192,1){\frame{W}}
+\put(15,20){\oval(30,10)}
+\put(55,20){\oval(30,10)[t]}
+\put(95,20){\oval(30,10)}
+\put(135,20){\oval(30,10)[bl]}
+\put(175,20){\oval(30,10)[r]}
+\end{picture}
+
+\def\showcounter#1{%
+\arabic{#1} \roman{#1} \Roman{#1} \alph{#1} \Alph{#1} \fnsymbol{#1}  $\fnsymbol{#1}$\\}
+\newcounter{ctr}%\tracingall
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+\stepcounter{ctr}\showcounter{ctr}
+
+
+
+\def\letterF{f}\def\letterO{o}
+\def\double#1{#1#1}
+\discardcounter{foo}
+\newcounter{foo}\setcounter{foo}{10}
+\the\value{\letterF\double\letterO}
+
+
+
+\def\kernel{\frac{x^1_2}{y^3_4}}
+\def\test{
+\left\lmoustache\left\uparrow\left\Uparrow\left\updownarrow\left\lgroup
+\kernel
+\right\rgroup\right\Updownarrow\right\Downarrow\right\downarrow\right\rmoustache}
+$\test$
+$\let\left\relax\let\right\relax \test$
+$\def\kernel{\int_0^{\frac{x^1_2}{y^3_4}}} \test$
+
+
+
+{\tracingall \count206=3{
+\catcode199=2
+\mathcode 200=3
+\lccode 201=4
+\uccode 202=5
+\sfcode 203=6
+\delcode 204=7
+\count 205=8
+\global\count 206=9 \count 206=12
+\muskip 207=10mu
+\countdef\Xa=1 \Xa=2
+\chardef \Xb=2
+\mathchardef\Xc=3
+\countdef\Xd=4 \Xd=5
+\dimendef\Xe=5 \Xe=6pt \voffset=4pt
+\skipdef\Xf=6 \Xf=7pt plus 8pt minus 9pt \lineskip=12pt \relax
+\muskipdef\Xg=7 \Xg=10mu \relax \medmuskip=1mu 
+\toksdef\Xh=8 \Xh={\relax} \output={ok}
+}}
+
+
+{\def\AAA{AAA}\ref{\char65 \AAA}\label{AAAA}}
+
+{\def\par{!\endgraf}
+Redefining par
+
+
+}
+
+\count0=0
+{\def\par{\global\advance\count0by 1\endgraf}
+Redefining par
+
+
+
+\the\count0}
+
+
+\begin{itemize}
+\item[first item] This is the first item
+\item[\it second item] This is the second item
+\item[third] This is the last item
+\begin{description}
+\item[a] description of a.
+\item[b] description of b.
+\item[cde] description of cde.
+\item[defgh etc] description of other letters
+\begin{enumerate}
+\item One
+\item Two
+\item Threee
+\end{enumerate}
+\end{description}
+\end{itemize}
+
+A:\mbox{aa}, B:\mbox{\it bb}, C:\mbox{\includegraphics{Logo-INRIA-couleur}}
+D:\mbox{$a=y$}, E: $a=b\mbox{by definition}$. 
+
+A:\makebox{aa} B:\makebox[1cm]{bb} C:\makebox[1cm][y]{cc}  C:\makebox[1cm][s]{cc}
+D\makebox (1.2,4,5)[5]{text}
+E\count3=4 \makebox ({1,2},\count3)[5]{text}
+F\def\FF{1,2}\makebox(\FF,\count3)[5]{text}
+
+\newcommand\Oarg[2][3]{\def\foo{#1=#2}}
+\Oarg[5]{4}\testeq\foo{5=4}
+\Oarg{4}\testeq\foo{3=4}
+\renewcommand\Oarg[2][\@dblarg]{\def\foo{#1=#2}}
+\Oarg[5]{4}\testeq\foo{5=4}
+\Oarg{4}\testeq\foo{4=4}
+\def\afoo#1[#2]#3{\def\foo{#1=#2=#3}}
+\def\bfoo#1{\@dblarg{\afoo{#1}}}
+\bfoo12 \testeq\foo{1=2=2}
+\bfoo{12}{13} \testeq\foo{12=13=13}
+\bfoo{12}[14]{13} \testeq\foo{12=14=13}
+
+$\Longrightarrow$
+\def\test{\ensuremath{\cal X_y}}
+\test and $\test Z$
+$\sin(x) + \cos^2(x) $ and $\overbrace{xyz} ^t $
+
+
+$\bigl[\frac{1}{a^2}\bigr[$
+$\left[\frac{1}{b^2}\right[$ 
+$[\frac{1}{x^2}[$\\
+
+$\int f\mathopen)a+b\mathclose(=c+d$
+$\int f(a+b)=c+d$
+
+$a\limits \displaylimits \nolimits b$
+
+
+\def\cmd{a\dots b\ldots c\quad d\qquad e\space f\$g\%h\&i\!j\,k\{% 
+l\}m\i n\sharp o\natural p\flat q\_}
+wwwwwwwwwwww\cmd\\ $\cmd$
+
+
+Math spacing\\
+$xxxxx$\\
+$x\,x\>x\;x\!x$\\
+$a\,\,\,\,\,a\>\>\>\>\>a$\\
+$a\;\;\;a\;\;\;\;a$\\
+$!?\#\_.@\%\|/|$
+
+% Testing footnote hack in \pers
+\def\macA{some text}\def\macB{other text}
+\tralics@fnhack\macA\macB
+\testeq\macA{some text}\testeq\macB{other text}
+\def\macA{some{\footnote{x}} text}
+\tralics@fnhack\macA\macB
+\testeq\macA{some{\footnote{x}} text}\testeq\macB{other text}
+\def\macA{some\footnote{x} text}
+\tralics@fnhack\macA\macB
+\testeq\macA{some}\testeq\macB{{x} text, other text}
+\def\macA{some\footnote{x} text}\def\macB{}
+\tralics@fnhack\macA\macB
+\testeq\macA{some}\testeq\macB{{x} text}
+
+
+
+% This not test the new version
+\begin{catperso}{List of Very Important Persons 1}
+\let\pers\persA
+\pers{Jean}[de la]{Fontaine},
+\pers{Donald}{Knuth}[ author of \TeX]
+\pers{Leslie}{Lamport } ,
+\pers{Jose}{Grimm \footnote{No footnote here}}
+\end{catperso}
+
+\begin{catperso}{List of Very Important Persons 2}
+\makeatletter
+\renewcommand\@persB[7][]{\xbox{pers}{\xbox{firstname}{#2}\xbox{lastname}{#3}%
+\xbox{localisation}{#1}\xbox{main-interest}{#4}\xbox{nationality}{#5}%
+\xbox{info}{#6}\xbox{hdr}{#7}}\@addnl}
+\pers{Jean}[de la]{Fontaine}{Tales}{French}[][phd]
+\pers{Donald}{Knuth}{Math}{American}[ author of \TeX]\par
+\pers{Leslie}{Lamport }{Computer Science}{American} 
+\pers{Jose}{Grimm \footnote{No footnote here}}[Sophia]{Inria}{French}[funny text]
+\end{catperso}
+
+
+\begin{catperso}{List of Very Important Persons 3}
+\pers{Jean}[de la]{Fontaine}{Other}{Other}[][phd],
+\pers{Donald}{Knuth}{Other}{Other}[ author of \TeX]
+\pers{Leslie}{Lamport }{Other}{Other}
+\end{catperso}
+
+\begin{catperso}{List of Very Important Persons 4}
+\makeatletter
+\def\@persA#1#2#3{\xbox{pers}{\xbox{firstname}{#1}\xbox{lastname}{#2}\xbox{info}{#3}}}
+\let\pers\persA
+\pers{Jean}[de la]{Fontaine}
+\pers{Donald}{Knuth}[author  of \TeX]
+\pers{   Leslie   }{Lamport}
+\end{catperso}
+
+
+\pers {Jean B}{Dupond}[Lyon]{these}{Dec}[Ok][not yet]
+\pers {Jean A}{Dupond}[Sophia]{Chercheur}{CNRS}[Ok][not yet]
+\pers {Jean B}{Dupond}[+Lyon]{Ingenieur}{INRIA}[Ok][not yet]
+\pers {Jean C}{Dupond}[=Paris]{Other}{IBM}[Ok]
+\pers {Jean D}{Dupond}{Enseignant}{Other}[Ok][not yet]
+
+\def\declaretopic#1#2{\xbox{topic}{\XMLaddatt{num}{#1}\xbox{t\_titre}{#2}}\@addnl}
+
+%% test de parametrisation
+\begin{itemize} \item [A] B \end{itemize}
+\begin{glossaire} \glo{x}{y}\end{glossaire}
+\part{A}\chapter{B}\section{C} \subsection{D}
+\subsubsection{E}\paragraph{F} \subparagraph{G}
+\begin{motscle}first,second \end{motscle}
+\mbox{$a$}$b$ ${c}$ $0$ xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\declaretopic{10}{foo}\caption[opt]{ok}
+\footnote{anote\label{from-one}} 
+\footnote{par1\par pr2}
+\footnote[ign]{last\ref{from-one}}
+\includegraphics{x.ps}
+\begin{figure}\includegraphics{y.ps} \caption{A\par B}\end{figure}
+\fbox{\includegraphics{../../tralics/Test/a_b.eps}}
+\includegraphics[scale=0.3]{x.ps}
+\scalebox{0.3}{\includegraphics[scale=0.6]{x.ps}}
+\scalebox{0.3}{\includegraphics{x.ps}}
+\scalebox{0.3}[0.4]{\includegraphics{x.ps}}
+
+
+
+\def\sample{This is some text explaining and showing how text is centered,
+flushed left or flushed right or indented or not indented. \Env}
+\def\Line{\sample\noindent\sample\indent\sample}
+\def\Env{Mode is normal}\Line
+\begin{center}\def\Env{Mode is center}\Line\end{center}
+\begin{flushleft}\def\Env{Mode is left}\Line\end{flushleft}
+\begin{flushright}\def\Env{Mode is right}\Line\end{flushright}
+
+
+
+{
+\openin 5=tortureaux
+\endlinechar=-1
+\ifeof5 \badifeofatentry\fi
+\read 5 to \foo\testeq\foo{abc}
+\read 5 to \foo\testeq\foo{}
+\read 5 to \foo\testeq\foo{\a\b{\c{} \d} \e}
+\global\read 5 to \foo
+\closein5\relax
+\ifeof5\else\badifeofatexit\fi
+}\testeq\foo{123}
+\ifeof3\else \badifeofnonexists\fi
+\begin{tabular}{cc}
+a&b&c\\
+\multicolumn{14}{l}{s}&e
+\end{tabular}
+
+{\makeatletter
+X\count@=2 \count@=+2 \count@= + + 2 \count@ = + + + 2
+\count@=-2 \count@=+-2 \count@= -+ + 2 \count@ = + - + + 2 \count@=---2 X
+
+\dimen0=.25pt \count@=-\dimen0
+\skip0=-.125pt plus 4fill \count@=+-+\skip0
+\count@=-\count@
+\count@=-\count255
+\count@=\catcode`\A
+\count@=\inputlineno
+\count@=\escapechar
+\count@=\year0, \count@\the\year0
+
+2294X\count@=1000 \count@='1750 \count@="3E8
+\count@=`A \count@=`\A \count@ =`\~ X
+
+\count@=3 \count@=222\ifodd\count@ 1 \else 2\fi
+
+}
+{\makeatletter% \tracingall
+2298X\dimen@=2pt \dimen@=+2pt \dimen@= + + 2pt \dimen@ = + + + 2pt
+\dimen@=-2pt \dimen@=+-2 Pt \dimen@= -+ + 2pT \dimen@ = + - + + 2PT \dimen@=---2 pt X
+\skip0=2ptplus2fill \parskip=2pt minus 3pt
+\dimen@=\skip0
+\dimen@=\parskip
+
+\dimen@=-\dimen@ 
+\dimen@=-\dimen0
+\dimen@=\hsize
+\dimen@=\fontdimen0 \font
+
+\dimen@=.10pt \dimen@=10.pt \dimen@=1.2pt \dimen@=.pt
+\dimen@=,10pt \dimen@=10,pt \dimen@=1,2pt \dimen@=,pt
+
+\dimen@=2pt \count@=5 \dimen@=\count@ pt \dimen@=\year pt 
+\dimen@=\the\year,\the\month pt
+
+\dimen@=2pt \count@=196608 \skip0=4pt plus 3fill
+\dimen@=2 \dimen@ \dimen@=2 \count@ \dimen@=2 \skip0
+\dimen@=.2 \dimen@ \dimen@=.2 \count@ \dimen@= .2 \skip0
+
+X\dimen@=2truept \dimen@=2 TRUE PT \dimen@=2.0 True PtX
+
+\dimen@=2ex \dimen@=4em
+\ifdim \ifnum0=1 \count0 pt\else \skip 0\fi >1cm \errmessage{bad}\fi
+\skip0 =1\skip0
+\dimen@ = 12c\ifdim \the\ifnum0=1 \count0 pt\else \skip 0\fi <1cmm\else c\fi
+\dimen@="Ccc \dimen@=-,sp
+ X
+
+\skip0=2pt
+\skip0=-\skip0
+\skip0=\parskip
+
+2340X\skip0 = 1pt plus 2 pt minus 3pt 
+\skip0 = 1pt PLUS -2 pt MINUS -3pt 
+\skip0 = 1pt
+\skip0=.33\skip0 plus \count0fill minus \parskip
+\skip0 = 1pt minus 2pt
+\skip0 = 1ptplus 3Filll minus 4fil X\xmlemptyelt{foo}\xmlelt{foo}{bar}
+}
+
+{\makeatletter \@namedef{1.0pt}{2}
+\dimen0=1pt 
+\ifnum123=1\csname\the\dimen0\endcsname3\relax \else\errmessage{bad}\fi
+}
+\par\xmlelt{foo}{barX}
+\par\xbox{foo}{barY}
+2340\lsc{Abc}\fsc{Abc}{\sc Abc}
+
+{
+\hrule \vrule
+\hrule width 1pt depth 2pt height  3pt
+\vrule width 1pt depth 2pt height  3pt
+}
+
+\begin{motscle}
+latex, xml, translator
+\end{motscle}
+
+
+ligne2060
+\begin{tabular*}{\textwidth}[i]{cc}
+a&b&c\\
+\multicolumn{14}{l}{s}&e
+\end{tabular*}
+
+\newcounter{ca}\newcounter{cb}
+\newcommand{\printgcd}[2]{%
+  \setcounter{ca}{#1}\setcounter{cb}{#2}%
+  Gcd(#1,#2) = 
+  \whiledo{\not\(\value{ca}=\value{cb}\)}%
+    {\ifthenelse{\value{ca}>\value{cb}}%
+      {\addtocounter{ca}{-\value{cb}}}%
+      {\addtocounter{cb}{-\value{ca}}}%
+    gcd(\arabic{ca},\arabic{cb}) = }%
+  \arabic{ca}.}
+
+\makeatletter
+\newif\if@whiledo
+\long\def\whiledo#1#2{%
+  \ifthenelse{#1}%
+    {\@whiledotrue
+     \@whilesw\if@whiledo\fi
+       {#2%
+        \ifthenelse{#1}\@whiledotrue\@whiledofalse}}%
+    {}%
+  }
+\printgcd{144}{272}
+\let\printgcd\relax
+
+\newif\iftest
+\newcommand{\printgcd}[2]{%
+  \setcounter{ca}{#1}\setcounter{cb}{#2}%
+  \testtrue
+  \@whilesw\iftest gcd(\arabic{ca},\arabic{cb}) = \fi{%
+   \ifnum\value{ca}=\value{cb}\testfalse\else
+    \ifnum\value{ca}>\value{cb}%
+      \addtocounter{ca}{-\value{cb}}\else
+      \addtocounter{cb}{-\value{ca}}\fi
+\fi}%
+  \arabic{ca}.}
+\printgcd{144}{272}
+\newcounter{cc}\newcounter{cd}
+\def\assigncounter{%
+ \ifnum\value{ca}<\value{cb}%
+  \setcounter{cc}{\value{ca}}%
+  \setcounter{cd}{\value{cb}}%
+ \else 
+  \setcounter{cc}{\value{cb}}%
+  \setcounter{cd}{\value{ca}}%
+  \fi}
+
+\def\subtractcounter{%
+ \setcounter{cb}{\value{cd}}%
+ \setcounter{ca}{\value{cc}}%
+ \addtocounter{cb}{-\value{cc}}}%
+\let\printgcd\relax
+\newcommand{\printgcd}[2]{%
+  \setcounter{ca}{#1}\setcounter{cb}{#2}%
+  \assigncounter
+  \@whilenum \value{cc}<\value{cd} Gcd(\arabic{cc},\arabic{cd}) = \do{%
+     \subtractcounter\assigncounter}%
+  \arabic{ca}.}
+\printgcd{144}{272}
+
+
+\newlength\cC\newlength\cD
+\def\assignlength{%
+ \ifnum\value{ca}<\value{cb}%
+  \setlength\cC{\value{ca}sp}%
+  \setlength\cD{\value{cb}sp}%
+ \else 
+  \setlength\cC{\value{cb}sp}%
+  \setlength\cD{\value{ca}sp}%
+  \fi}
+
+\def\subtractlength{%
+ \setcounter{cb}{\cD}%
+ \setcounter{ca}{\cC}%
+ \addtocounter{cb}{-\cC}}%
+\let\printgcd\relax
+\newcommand{\printgcd}[2]{%
+  \setcounter{ca}{#1}\setcounter{cb}{#2}%
+  \assignlength
+  \@whiledim \cC<\cD Xgcd(\arabic{ca},\arabic{cb}) = \do{%
+     \subtractlength\assignlength}%
+  \arabic{ca}.}
+\printgcd{144}{272}
+
+\makeatletter 
+\ifnum\z@>0 \bad{positive zero}\fi
+\ifdim\z@<0pt \bad{positive dim zero}\fi
+\ifnum\z@<0 \bad{negative zero}\fi
+\ifdim\z@<0pt \bad{negative dim zero}\fi
+\makeatother
+
+\setcounter{cb}{3}
+\setcounter{ca}{4}
+\edef\foo{\the\value{cb}}\testeq\foo{3}
+\edef\foo{\the\value{ca}}\testeq\foo{4}
+\numberwithin{cb}{ca}
+\edef\foo{\the\value{cb}+\thecb}\testeq\foo{3+4.3}\tracingall
+\stepcounter{ca}
+\edef\foo{\the\value{cb}+\thecb}\testeq\foo{0+5.0}
+\setcounter{cb}{4}
+\edef\foo{\the\value{cb}+\thecb}\testeq\foo{4+5.4}
+\numberwithin[\alph]{cb}{ca}
+\edef\foo{\the\value{cb}+\thecb}\testeq\foo{4+5.d}
+
+\newcounter{AA}
+\setcounter{AA}{0}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+\stepcounter{AA}\fnsymbol{AA}
+
+
+{EOL\endlinechar=`\A \relax% 
+\def\foo{a
+b}\testeq\foo{aAb}%
+\def\foo{\foo
+b}\testeq\foo{\fooA b}%
+\def\foo{a
+b}\testeq\foo{aAb}%
+\endlinechar=`\% %
+\def\foo{a
+b}\testeq\foo{ab}
+\endlinechar=-1 %
+\def\foo{a
+b}\testeq\foo{ab}
+y}
+
+
+\def\empty{}
+\def\lengthof#1{\def\lengthres{0}\ifx#1\empty\else\count0=1 \lengthaux #1\relax\edef\lengthres{\the\count0 }\fi}
+\def\lengthaux#1#2\relax{\ifx#2\empty\else\advance\count0 by1 \lengthaux #2\relax\fi}
+
+Foo\linebreak\linebreak[2]\nolinebreak\nolinebreak[2]Bar
+Foo\pagebreak\pagebreak[2]\nopagebreak\nopagebreak[2]Bar
+
+
+\let\foo\par
+\renewcommand*\foo[2][toto]{#1#2}
+\xdef\Bar{{\meaning\foo}}
+\expandafter\lengthof\Bar\testeq\lengthres{21}
+
+%macro:(latex mac with optional argument toto)#2->#1#2
+\lengthof{abc}\testeq\lengthres 3
+\lengthof{}\testeq\lengthres 0
+
+\makeatletter
+\def\strip@prefix#1>{}
+\def\foo#1#2{OK OK}
+\edef\Bar{\expandafter\strip@prefix\meaning\foo}
+{\catcode `\O=12 \catcode `\K=12 \testeq\Bar{OK OK}
+}
+\count0=3
+\skip1=10pt
+\def\foo{\count} \def\xbar{\skip} \def\zero{0}\def\one{1}
+\parindent=\foo\zero\xbar\one
+%\showthe\parindent
+
+\edef\toto{x\empty\empty\empty y}\testeq\toto{xy}
+\def\zfoo#1\bar#2#{\def\X{{#1}{#2}}}
+\zfoo 1\bar2{3} \xshow\X 
+\zfoo1\bar {2}{3}\xshow\X
+\let\foo#\def\A\foo1\foo2{\foo1} \let\foo\relax
+
+%debug \AtBeginDocument{}
+
+%\nocite{tor1,tor2,tor3,tor4,tor5,tor6,tor7,tor8,tor9,tor10,tor11}
+%\nocite{tor12,tor13,tor14,tor15,tor16,tor17,tor18,tor19,tor20,tor21}
+%\nocite{tor22,tor23,tor24,tor25,tor26,tor27}
+%\nocite{tor31,tor32,tor33,tor34,tor53,tor52}
+%\nocite{tor40,tor41,tor42,tor43,tor44,toto,titi}
+\nocite{toto,titi}
+
+
+\begingroup %\tracingall
+\newenvironment{AAA}{1\begin{BBB}5}{8\end{BBB}c}
+\newenvironment{BBB}{2\begin{CCC}4}{9\end{CCC}b}
+\newenvironment{CCC}{3}{a}
+\newenvironment{DDD}[2]{#2#1\def\foo{#1}}{\foo}
+\newenvironment{EEE}[2][e]{#2#1\def\foo{#1}}{\foo}
+\begin{AAA}67\end{AAA} 123456789abc
+\begin{DDD}678\end{DDD} 7686
+\begin{EEE}[6]78\end{EEE} 7686
+\begin{EEE}78\end{EEE} 7e8e
+\renewenvironment{EEE}[2][e]{#1#2\def\foo{#1}}{\foo}
+\endgroup
+
+\iffalse test de \renew... qui fait des erreurs
+\renewenvironment{xxx}{before}{after}
+\let\xx\renewenvironment
+\xx{xxx}{before}{after}
+\newenvironment{xxx}{before}{after}
+\newenvironment{xxx}{before}{after}
+\xx{xxx}{before}{after}
+\fi
+
+{\def\foo{} \providecommand\foo[2]{#1#2} \xshow\foo\foo}
+
+
+\bibliography{torture,bo,bo}
+\def\foo#1#{#1} \xshow\foo
+\renewcommand\foo[2][toto]{#1#2} \xshow\foo
+\let\foo\par \xshow\foo
+\let\foo=1 \xshow\foo
+\let\foo=\undef \xshow\foo
+\count0=0
+\loop \csname command number \the\count0\endcsname
+  \advance\count0 by 1 
+\iffalse\repeat
+
+
+\let\mytypeout\typeout
+\ifnum \tracingcommands=0 \def\mytypeout{\write -1 }\fi\tracingall
+\input taux1.tex\input taux2.tex
+\input{taux1.tex}\input{taux2.tex}
+\def\foo{\input taux1 \input taux2 }
+\foo
+
+\paragraph{a} aa\label{pax}
+\paragraph{b} bb\label{pbx}
+
+\makeatletter
+\fancyhf{} % clear all
+\let\XF\fancyinternal
+\def\fancyinternal#1#2{\XF{\uppercase{#1}}{#2}}
+
+\let\IP\inert@thepage
+\def\inert@thepage{\IP\AddAttToLast{style}{arabic}}
+
+\fancyhead[el,or]{righmark}
+\fancyhead[er,ol]{leftmark}
+\lhead[\thepage]{} 
+\rhead[\emph{OK}]{\thepage}
+
+\def\inert@thepage{\IP\AddAttToLast{style}{roman}}
+\lfoot{\thepage}
+\rfoot[\emph{OK}]{\thepage}
+ok
+
+\makeatother
+\newcolumntype{L} {>{\large\bfseries 2}l <{y}|}
+\newcolumntype{+} {>{B}l <{D}|}
+\newcolumntype{_}{rlc<{x}}
+\newcolumntype{x}{>{b}c<{a}}
+\begin{tabular*}{10pc}[b]{lrc}
+\hline
+a&b&c\\[2pt]
+\multicolumn{1}{l}{A}&B&C\\\hline
+\end{tabular*}
+
+
+
+\begin{tabular*}{5cm}[b]{*{4}{_c|}}
+a1&a2&a3&a4  & b1&b2&b3&b4 & c1&c2&c3&c4& d1&d2&d3&d4\\
+Wa1&Wa2&Wa3&Wa4  & Wb1&Wb2&Wb3&Wb4 & Wc1&Wc2&Wc3&Wc4& Wd1&Wd2&Wd3&Wd4\\
+\end{tabular*}
+\declaretopic{A}{B}
+
+okok\par
+
+%\end{xmlelement*}
+
+
+
+\def\pararg#1#2{\begin{xmlelement+}{}#1\par #2\end{xmlelement+}}
+\includegraphics[angle=90]{x}
+\rotatebox{30}{\includegraphics{x}}
+\rotatebox{45}{\it x}
+\rotatebox{-10}{\pararg{xx}{yy}}
+\fbox{\includegraphics{x}}
+\fbox{\tt abc}
+\fbox{\pararg{abc}{def}}
+\fbox{ab}
+\framebox{\includegraphics{x}}
+\framebox{\tt abc}
+\framebox{\pararg{abc}{def}}
+\dimen0=20pt
+\framebox[2\dimen0]{\includegraphics{x}}
+\framebox[3\dimen0]{\tt abc}
+\framebox[4\dimen0]{\pararg{abc}{def}}
+\framebox[5\dimen0][l]{\includegraphics{x}}
+\framebox[6\dimen0][r]{\tt abc}
+\framebox[7\dimen0][s]{\pararg{abc}{def}}
+\scalebox{xx}{\includegraphics{x}}
+\scalebox{yy}{\tt abc}
+\scalebox{yy}[zz]{\tt abc}
+\scalebox{zz}{\pararg{abc}{def}}
+
+
+\includegraphics[angle=90]{x}
+\rotatebox{30}{\includegraphics{x}}
+\rotatebox{40}{x}
+
+
+{\centering a \indent a1 \noindent a2 \\ a3\par a4} \par
+{\raggedleft b \indent b1 \noindent b2 \\ b3\par b4} \par
+{\raggedright c \indent c1 \noindent c2 \\ c3\par c4} \par
+{\centering\raggedright d \indent d1 \noindent d2 \\ d3\par d4} \par
+{f\centering\raggedright e \indent e1 \noindent e2 \\ e3\par e4} \par
+\begin{center}A \indent A1 \noindent A2 \\ A3 \par A4\end{center}
+\begin{flushright}B \indent B1 \noindent B2 \\ B3 \par B4\end{flushright}
+\begin{flushleft}C \indent C1 \noindent C2 \\ C3\par C4\end{flushleft}
+\begin{center}\begin{flushleft}D \indent D1 \noindent D2 \\ D3\par D4\end{flushleft}\end{center}
+F\begin{center}\begin{flushleft} E \indent E1 \noindent E2 \\ E3 \par E4\end{flushleft}\end{center}
+\begin{quote}I \indent I1 \noindent I2 \\ I3 \par I4\end{quote}
+\begin{quotation}J \indent J1 \noindent J2 \\ J3 \par J4\end{quotation}
+
+\begin{tabular*}{5cm}{>{\bgroup\bf}c<{\egroup}c}
+aaaaa}aaa{c&b\\c&d
+\end{tabular*}
+
+\begin{tabular}{|ll|rr|cc|}
+\hline a&b&c&d&e&f\\
+aaa&bbb&ccc&ddd&eee&fff\\
+\hline
+A&\multicolumn{3}{+}{C}&E&F\\
+\multicolumn{2}{|l}{ab}&c&d&e&f\\
+\cline{1-3}\cline{6-6}
+aaa&bbb&ccc&ddd  &eee&fff\\\hline
+\end{tabular}
+%cline tests
+\begin{tabular}{}a \\ \cline{2-2} \end{tabular}
+\begin{tabular}{}b \\ \cline{4-7} \end{tabular}
+\begin{tabular}{}c \\ \cline{1-7} \end{tabular}
+\begin{tabular}{}\multicolumn{4}{}{d} \\ \cline{1-1} \end{tabular}
+\begin{tabular}{}\multicolumn{4}{}{e} \\ \cline{1-1} \cline{4-4} \end{tabular}
+\begin{tabular}{} \cline{1-1} \cline{4-4} f\end{tabular}
+\begin{tabular}{} \cline{4-4} g\end{tabular}
+
+
+\begin{tabular}{|ll|rr|cc|}
+A&\multicolumn{3}{l}{BCD}&E&F\\\cline{1-3}\cline{6-6} 
+A&\multicolumn{3}{l}{BCD}&E&F\\\cline{1-3}\\ \cline{6-6}  
+z&t\\ \cline{3-3}
+\end{tabular}
+
+ 
+\begin{tabular} {| >{\large 1}c <{x}| L > {\large\itshape 3}x <{z}|}
+\hline A&B&C\\\hline 100&10 &1
+\end{tabular}
+
+test de table
+\newcolumntype{C}{>{$}c<{$}}
+\newcolumntype{L}{>{$}l<{$}}
+\newcolumntype{R}{>{$}r<{$}}
+\newcolumntype{d}[1]{>{\rightdots{#1}}r<{\endrightdots}}
+\newcolumntype{X}{CLR}
+\begin{tabular}{*{3}{|c|}d{23}X}
+\end{tabular}
+
+
+
+
+\let\IC=\includegraphics
+\def\FILE{Logo-INRIA-couleur}
+\IC[angle=0,width=3cm,clip=]{\FILE}
+\IC[angle=20,width=.5\textwidth,height=.3\textheight]{\FILE.ducon}
+\IC[angle=0,width=\columnwidth,height=\textheight]{\FILE.foo_bar}
+{\language=1 a:c
+\IC[angle=0, =foo,,width=3cm,scale=1,scale=2,clip]{../../a_b:c}
+}
+\framebox{\includegraphics{x_.ps}}
+
+{
+  \setlength\epsfxsize{50pt}
+  \setlength\epsfysize{60pt}
+  \epsfbox{x.ps}
+  \setlength\epsfysize{70pt}
+  \epsfbox{x.eps}
+  \epsfbox{x.epsf}
+}
+
+
+\fbox{\includegraphics{x.ps}}
+\includegraphics[scale=0.3]{x.ps}
+\scalebox{0.3}{\includegraphics[scale=0.6]{x.ps}}
+\scalebox{0.3}{\includegraphics{x.ps}}
+\includegraphics[angle=90]{x.ps}
+\rotatebox{30}{\includegraphics{x.ps}}
+
+\theorembodyfont{\sl}
+\theoremstyle{break}
+\newtheorem{Cor}{Corollary}
+\theoremstyle{plain}
+%\newcounter{section}
+\setcounter{section}{17}
+\newtheorem{Exa}{Example}[section]
+{\theorembodyfont{\rmfamily}\newtheorem{Rem}{Remark}}
+\theoremstyle{marginbreak}
+\newtheorem{Lem}[Cor]{lemma}
+\theoremstyle{change}
+\theorembodyfont{\small\itshape} \newtheorem{Def}[Cor]{Definition}
+\theoremheaderfont{\scshape}
+\def\Lenv#1{\texttt{#1}}
+
+\begin{Cor}
+ This is a sentence typeset in the theorem environment \Lenv{Cor}.
+\end{Cor}
+\begin{Exa}
+ This is a sentence typeset in the theorem environment \Lenv{Exa}.
+\end{Exa}
+\begin{Rem}
+ This is a sentence typeset in the theorem environment \Lenv{Rem}.
+\end{Rem}
+\begin{Lem}[Ben User]
+ This is a sentence typeset in the theorem environment \Lenv{Lem}.
+\end{Lem}
+\begin{Def}[Very Impressive definition]
+ This is a sentence typeset in the theorem environment \Lenv{Def}.
+\end{Def}
+
+
+
+\[
+\mathop {\mathop {arg\,min}\nolimits_\Psi }\limits_{\theta \in \Theta } 
+\Delta \left( {\mathop \Phi \nolimits_\theta \left( {\Omega _s } 
+\right)-\Omega _t } \right)
+\qquad
+x_{y_z} = {x_y}_z= 
+x^{y_z} = {x^y}_z= 
+x_{y^z} = {x_y}^z= 
+x^{y^z} = {x^y}^z
+%
+\left\{\{\frac{2}{3}\}\right\}
+\]
+
+
+
+\newcommand{\RAFsixE}{
+  \scaleput(1.25,1.25){\arc(0,-1.25){-135}}
+  \scaleput(0,0){\curve(0.366,2.133, 1.25,3.19, 2.5,4.42,
+    5.0,6.10, 7.5,7.24, 10,8.09, 15,9.28, 20,9.90, 30,10.3,
+    40,10.22, 50,9.80, 60,8.98, 70,7.70, 80,5.91, 90,3.79,
+    95,2.58, 99.24,1.52)}
+  \scaleput(99.24,0.76){\arc(0,-0.76){180}}
+  \scaleput(0,0){\curve(1.25,0, 99.24,0)}
+  }
+\setlength{\unitlength}{.5mm}
+\linethickness{0.7mm}
+\begin{center}
+text\\
+  \begin{picture}(100,20)
+    \RAFsixE
+  \end{picture}
+  \\The RAF 6E has a flat undersurface.
+\\
+  \begin{picture}(120,30)(-20,0)
+  \renewcommand{\xscale}{0.9781}
+  \renewcommand{\xscaley}{0.2079}
+  \renewcommand{\yscale}{0.9781}
+  \renewcommand{\yscalex}{-0.2079}
+  \put(0,20){\RAFsixE}
+  \thicklines
+  \put(-20,5){\vector(1,0){20}}
+  \end{picture}
+\\
+  The RAF 6E has maximum lift at angles of attack over 12$^\circ$.
+  \end{center}
+
+
+\setlength{\unitlength}{0.4pt}
+\linethickness{0.7mm}
+\begin{picture}(400,110)(-10,0)
+  \tagcurve(80,0, 0,0, 40,100, 80,0, 0,0)
+  \closecurve(150,0, 190,100, 230,0)
+  \curve(300,0, 340,100, 380,0)
+\end{picture}
+
+
+
+\setlength{\unitlength}{1.8mm}
+\begin{picture}(40,30)
+  \thicklines
+  \multiput(20,5)(20,12){2} {\line(0,-1){2}\line(-5,3){20}}
+  \multiput(20,5)(-20,12){2} {\line(5,3){20}}
+  \put(20,3){\line(5,3){20}}
+  \put(20,3){\line(-5,3){20}}
+  \put(0,15){\line(0,1){2}}
+  \linethickness{1pt}
+  \put(20,5) {
+   \renewcommand{\xscale}{1}
+   \renewcommand{\xscaley}{-1}
+   \renewcommand{\yscale}{0.6}
+   \renewcommand{\yscalex}{0.6}
+   \scaleput(10,10){\bigcircle{10}}
+   \put(0,-2){%
+      \scaleput(10,10){\arc(5,0){121}}
+      \scaleput(10,10){\arc(5,0){-31}}}}
+\end{picture}
+
+
+  \begin{tabular}{|l||c|c|c|}
+    \hline
+    Protocol & Proof & 
+    \begin{tabular}{c}max \# of \\ ``back'' steps \end{tabular} 
+   & \begin{tabular}{c}Time \\ ms.\end{tabular} \\
+    \hline 
+    Otway-Rees             & Yes & 0 & 0.35\\
+  \end{tabular}
+
+% this should yield \relax
+\expandafter\let\expandafter\relax\ifnum0=0\fi
+\edef\foo{\jobname} \xshow\foo
+\edef\foo{\noexpand\jobname=\jobname} \xshow\foo
+112233\noexpand\par\noexpand\jobname=\jobname
+
+{\tracingall
+\count0=7 
+\count1=7
+\count0=2\ifnum\count0=\count1 3\fi4
+}
+{\tracingall
+\count0=7 
+\count13=0
+\count0=2\ifnum\count0=\count13\fi4
+}
+{\tracingall
+\def\relax{25}
+\count0=7 
+\count13=7
+\count0=2\ifnum\count0=\count13\fi4
+}
+
+{\def\relax{0}\edef\foo{\ifnum0=0\fi}}
+
+%%%%%%%%% TESTS
+{
+\if00 \else \BUG\fi
+\if01 \BUG\fi
+\if\par\relax \else \BUG\fi
+\if0\par \BUG\fi
+\count0=1000
+\if\romannumeral\count0m \else \BUG\fi 
+\if\romannumeral\count0n \BUG\fi
+\if\number\count0  \BUG\fi
+\count0=1100
+\if\number\count0 \else \BUG\fi
+\catcode `[=13 \catcode`]=13 \def[{*}
+\if\noexpand[\noexpand] \BUG \fi
+\if[* \else \BUG \fi
+\if\noexpand[* \BUG\fi
+\def\foo{01}\def\xfoo{00}
+\if\xfoo \else\BUG\fi
+\if\foo\par \BUG\fi 
+\if\noexpand\foo\par \else\BUG\fi 
+\if\par\noexpand\foo \else\BUG\fi 
+\if0\noexpand\foo \BUG\fi 
+}
+\begingroup
+\catcode `^^^^0123=13 \def^^^^0123{$} % $ emacs
+\def\foo{\uccode`\~=`A\uppercase{~}}
+\def\xfoo{\uccode`\~=`A\uppercase{\gdef\xxfoo{~}}}
+
+{\catcode`A 13\gdef A{B}}
+
+\foo % typesets B
+\xfoo% defines\xxfoo
+\if\xxfoo B\else\bad\fi
+\ifcat\noexpand~1\bad\fi
+\ifcat^^^^0123$\else\bad\fi
+\ifcat^^^^012344\bad\fi
+\ifcat^^^^01234a\bad\fi
+\ifcat\noexpand^^^^0123$\bad\fi % $ emacs
+\ifcat\noexpand^^^^01234\bad\fi
+\catcode`[=13 \catcode`]=13 \def[{*}%
+ \ifcat\noexpand[\noexpand]\else\bad\fi
+ \ifcat[*\else\bad\fi
+ \ifcat\noexpand[*\bad\fi
+ \def\test{%
+   \ifcat\noexpand[\noexpand]\else\bad\fi
+   \ifcat[*\else\bad\fi
+   \ifcat\noexpand[*\bad\fi}%
+ \test
+ \let\b*\def\a{*}\def\c{/}%
+ \if*\a\else\bad\fi
+ \if\a\b\else\bad\fi
+ \if\a\c\bad\fi
+ \if\a\par\bad\fi
+ \if\par\let\else\bad\fi
+ \if\noexpand\cpar\let\else\bad\fi
+x
+
+\endgroup
+
+
+
+{
+\ifcat a0 \BUG\fi
+\ifcat $^ \BUG\fi %$
+\ifcat 01 \else \BUG\fi
+\ifcat AB \else \BUG\fi
+\count0=1000
+\ifcat\romannumeral\count0m \BUG\fi 
+\count0=1100
+\ifcat\romannumeral\count0m \else \BUG\fi 
+\count0=1
+\ifcat\number\count0 3\else \BUG\fi
+\ifcat\par\relax \else \BUG\fi
+\ifcat0\par \BUG\fi
+\catcode `[=13 \catcode`]=13 \def[{*}
+\ifcat\noexpand[\noexpand] \else \BUG \fi
+\ifcat[* \else \BUG \fi
+\ifcat\noexpand[* \BUG\fi
+}
+{ \tracingall
+\ifnum 0<1 \else\BUG\fi
+\ifnum 0=1 \BUG\fi
+\ifnum 0>1 \BUG\fi
+\ifnum -3<-2 \else \BUG\fi
+\ifnum -3=-2 \BUG\fi
+\ifnum -3>-2  \BUG\fi
+\def\equalsign{=}
+\ifnum 1\ifnum2<3 4\else6\fi\equalsign 14 \else \BUG \fi
+\ifnum 1\ifnum2>3 4\else6 \fi\equalsign 14 \BUG \fi
+\ifnum 1\ifnum2>3 4\else6\fi\equalsign 14 \BUG \fi
+}
+{ \tracingall
+\ifdim 0pt<1pt \else\BUG\fi
+\ifdim 0pt=1pt \BUG\fi
+\ifdim 0pt>1pt \BUG\fi
+\ifdim -3pt<-2pt \else \BUG\fi
+\ifdim -3pt=-2pt \BUG\fi
+\ifdim -3pt>-2pt  \BUG\fi
+\def\equalsign{=}
+\ifdim 1\ifnum2<3 4\else6\fi pt\equalsign 14pt \else \BUG \fi
+\ifdim 1\ifnum2>3 4\else6\fi pt\equalsign 14pt \BUG \fi
+
+\ifodd 1 \else \BUG\fi
+\ifodd -1 \else \BUG\fi
+\ifodd 0 \BUG\fi
+\ifodd 2 \BUG\fi
+\ifodd -2 \BUG\fi
+\ifodd 1\ifnum2<3 5 \else6 \fi \else \BUG \fi
+\ifodd 1\ifnum2>3 5 \else6 \fi \BUG\fi
+\ifnum4\ifodd1 2 \else 3\fi=42\else \BUG\fi
+}
+
+{
+\ifvmode 1 \else 2 \fi \ifinner 3\fi
+\vbox{\ifvmode 1 \else 2 \fi \ifinner 3\fi}
+\ifhmode 1 \else 2 \fi \ifinner 3\fi
+\hbox{\ifhmode 1 \else 2 \fi \ifinner 3\fi}
+\ifmmode 1 \else 2 \fi $\ifmmode \ifinner 1 \fi \else 2 \fi$
+$$\ifmmode 1 \else 2 \fi\ifinner 3\fi$$
+
+{\makeatletter \ifvoid\voidb@x \else \bad \fi}
+\ifvoid0 \else \bad \fi
+\setbox0=\hbox{x} 
+\ifvoid0 \bad \fi
+\setbox0=\xbox{foo}{bar} 
+\ifvoid0 \bad \fi
+\setbox0=\hbox{} 
+\ifvoid0 \else \bad \fi
+\setbox0=\xbox{}{} 
+\ifvoid0 \else \bad \fi
+\setbox0=\xbox{foo}{} 
+\ifvoid0 \bad \fi \setbox1\box0
+\ifvoid0 \else \bad \fi
+}
+{
+\chardef\xx=48 \chardef\yy=`0
+\ifx 01 \BUG \fi
+\ifx aa \else \BUG \fi
+\ifx {} \BUG \fi
+\ifx\xx\yy \else \BUG \fi
+\countdef\xx17 \countdef\yy 17
+\ifx\xx\yy \else \BUG \fi
+\ifx\par\relax \BUG\fi \if\par\relax \else \BUG\fi
+\let\endgraf\par 
+\ifx\endgraf\relax \BUG\fi
+\ifx\endgraf\par \else \BUG\fi
+
+\def\Xa{\Xc}\def\Xb{\Xd} \def\Xc{\Xe}\def\Xd{\Xe}
+\def\Xe{a}
+\ifx\Xa\Xb \BUG \fi \ifx\Xb\Xa \BUG \fi
+\ifx\Xa\Xc \BUG \fi \ifx\Xc\Xa \BUG \fi
+\ifx\Xa\Xd \BUG \fi \ifx\Xd\Xa \BUG \fi
+\ifx\Xa\Xe \BUG \fi \ifx\Xe\Xa \BUG \fi
+\ifx\Xb\Xc \BUG \fi \ifx\Xc\Xb \BUG \fi
+\ifx\Xb\Xd \BUG \fi \ifx\Xd\Xb \BUG \fi
+\ifx\Xb\Xe \BUG \fi \ifx\Xe\Xb \BUG \fi
+\ifx\Xc\Xd \else\BUG \fi \ifx\Xd\Xc \else \BUG \fi
+\ifx\Xc\Xe \BUG \fi \ifx\Xe\Xc \BUG \fi
+\ifx\Xd\Xe \BUG \fi \ifx\Xe\Xd \BUG \fi
+\ifx\Xa\Xa \else \BUG \fi
+\ifx\Xb\Xb \else \BUG \fi
+\ifx\Xc\Xc \else \BUG \fi
+\ifx\Xd\Xd \else \BUG \fi
+\ifx\Xe\Xe \else \BUG \fi
+\expandafter\ifx\csname undefined \endcsname\relax \else \BUG \fi
+\ifx \undeffined\Undefined \else \BUG \fi
+}
+
+$x=0123456789$
+$\root 3 \of 4$ $\sqrt[3]{4} \char"321 \char"4321 \char"54321 \char"654321 \char"7654321$
+XYZ 
+
+\bibliography{torture+foot}
+
+markX\mark{a}\topmark\mark{b}\botmark\mark{c}\firstmark
+\mark{d}\splitfirstmark\mark{e}\splitbotmark Y
+XYZ\space{ } \space T
+
+{\makeatletter
+\outer\def\newif#1{\count@\escapechar \escapechar\m@ne
+  \expandafter\expandafter\expandafter
+   \def\@if#1{true}{\let#1=\iftrue}%
+  \expandafter\expandafter\expandafter
+   \def\@if#1{false}{\let#1=\iffalse}%
+  \@if#1{false}\escapechar\count@} % the condition starts out false
+\def\@if#1#2{\csname\expandafter\if@\string#1#2\endcsname}
+{\uccode`1=`i \uccode`2=`f \uppercase{\gdef\if@12{}}} % `if' is required
+\tracingall
+\newif \ifBAR
+}
+
+
+\xentity{2030}\xentity{2031}\xentity{2032}\xentity{2033}\\
+\xentity{2034}\xentity{2035}\xentity{2036}\xentity{2037}\\
+\xentity{2113}
+
+
+\newenvironment{exercice}{\begin{xmlelement*}{exercice}}{\end{xmlelement*}}
+OK
+\begin{exercice}
+Blabla
+
+Blabla
+\end{exercice}
+
+\def\tla#1{#1}
+\long\def\tlb#1{#1}
+\outer\def\tlc#1{#1}
+\long\outer\def\tld#1{#1}
+\newcommand\tle[1]{#1}
+\newcommand*\tlf[1]{#1}
+\tla{}\tlb{}\tlc{}\tld{}\tle{}\tlf{}
+%\show\tla \show\tlb \show\tlc \show\tld \show\tle \show\tlf
+%\tle\par \tlf0\par
+
+{
+\DefineShortVerb{\|}
+\def\verbatimfont#1{{#1}}
+\def\verbprefix#1{A#1A}
+\def\verbatimprefix#1{B#1B}
+Test: \verb+foo+ and |bar|
+\UndefineShortVerb{\|}
+\begin{verbatim}
+line1
+line2
+\end{verbatim}
+}
+
+
+
+
+
+\long\def\FirstOfTwo#1#2{#1}
+\long\def\SecondOfTwo#1#2{#2}
+
+\def\IfRange#1#2{%
+  \ifcase0\ifnum\expandafter`\CurrentToken<`#1 1\fi
+          \ifnum\expandafter`\CurrentToken>`#2 1\fi
+         \relax
+% * TeX reads the number that starts with "0" and expands
+%   macros until it finds a token that is not expandable and
+%   is not a digit, \relax in this case.
+% * The backtick generates the "character number" of the
+%   follwoing token.
+% * Instead of the use of \CurrentToken you can use another
+%   parameter, then the \expandafter before `\CurrentToken
+%   is not necessary, too.
+    \expandafter\FirstOfTwo
+  \else
+    \expandafter\SecondOfTwo
+  \fi
+}
+\def\IfEqual#1{%
+  \expandafter\ifx\CurrentToken#1%
+    \expandafter\FirstOfTwo
+  \else
+    \expandafter\SecondOfTwo
+  \fi
+}
+
+\def\YourTestMacro#1{%
+  \def\CurrentToken{#1}%
+  \IfRange{A}{M}{%
+    \TestOutput{A-M}%
+  }{%
+    \IfEqual{N}{%
+      \TestOutput{N}%
+    }{%
+      \IfEqual{O}{%
+        \TestOutput{O}%
+      }{%
+        \IfRange{P}{Q}{%
+          \TestOutput{P-Q}%
+        }{%
+          \TestOutput{UNKNOWN}%
+        }%
+      }%
+    }%
+  }%
+}
+
+\def\TestOutput#1{%
+  \immediate\write-1{* \CurrentToken\space is in range #1}%
+}
+
+\immediate\openout 6=tout.tex
+\immediate\write6{\def\noexpand\foo{\noexpand\endinput}}
+\immediate\write6{\noexpand\foo^^J\noexpand\bar}
+\immediate \closeout6 \relax
+\input{tout}
+123
+
+\YourTestMacro{C}
+\YourTestMacro{N}
+\YourTestMacro{X}
+
+\begin{equation}
+0=\hspace{0.4
+cm}1
+\end{equation}
+
+
+
+
+Unskip:a \space\unskip b \unskip c\space \unskip d\space\space \unskip\unskip e
+
+\let\operatorname\relax
+\DeclareMathOperator{\Xfoo}{\it bar}\DeclareMathOperator*{\Yfoo}{\it bar}
+DMO\Xfoo OK\Yfoo ok
+
+\tracingall
+\def\First#1#2{#1}
+\def\Second#1#2{#2}
+\def\w\ww{}
+ok
+Ifempty \ifempty{}{1}{2}\ifempty{ }{1}{2}\ifempty{\w}{1}{2}%
+\yifempty{}{1}{2}\yifempty{ }{1}{2}\yifempty{\w}{1}{2}%
+\bifempty{}{1}{2}\bifempty{ }{1}{2}\bifempty{\w}{1}{2}%
+\zifempty{}{1}{2}\zifempty{ }{1}{2}\zifempty{\w}{1}{2}%
+\ifempty{}{\First}{\Second}{1}{2}%
+\ifempty{ }{\First}{\Second}{1}{2}%
+\ifempty{\w}{\First}{\Second}{1}{2}%
+\yifempty{}{\First}{\Second}{1}{2}%
+\yifempty{ }{\First}{\Second}{1}{2}%
+\yifempty{\w}{\First}{\Second}{1}{2}%
+\bifempty{}{\First}{\Second}{1}{2}%
+\bifempty{ }{\First}{\Second}{1}{2}%
+\bifempty{\w}{\First}{\Second}{1}{2}%
+\zifempty{}{\First}{\Second}{1}{2}%
+\zifempty{ }{\First}{\Second}{1}{2}%
+\zifempty{\w}{\First}{\Second}{1}{2} %
+\yifempty{x@22}{4}{2}%
+\yifempty{xy@22}{4}{2}%
+\yifempty{xy@22@33}{4}{2}%
+.
+\if\ifempty{}{1}{2}1\else\uerror\fi
+\if\ifempty{\w}{1}{2}2\else\uerror\fi
+\if\yifempty{}{1}{2}1\else\uerror\fi
+\if\yifempty{\w}{1}{2}2\else\uerror\fi
+\if\bifempty{}{1}{2}1\else\uerror\fi
+\if\bifempty{\w}{1}{2}2\else\uerror\fi
+\if\bifempty{ }{1}{2}1\else\uerror\fi
+\if\yifempty{ }{1}{2}1\else\uerror\fi
+\count\bifempty{\w}{1}{2}=1
+\count\ifempty{\w}{1}{2}=1
+\count\yifempty{\w}{1}{2}=1
+\count\zifempty{\w}{1}{2}=1
+Ifempty 122112112122122112112122 222.
+
+%% funny tests by David Kastrup.
+\iffalse\iftrue\fi \uerror\fi
+\iftrue\iffalse\fi \else \uerror\fi
+\expandafter\iffalse\iftrue\fi \else \uerror\fi
+\expandafter\iftrue\iffalse\fi \else \uerror\fi
+
+
+\leavevmode\xbox{date}{This is a date}
+\Href{a}{b} \Href{a\~n}{b} \Href{b}{a\~n}
+\footnote{\href{toto~titi}{a~b}}
+
+\newenvironment{xgather} 
+    {A\begin{equation}B\begin{array}{c}} 
+    {\end{array}A\end{equation}D}
+\begin{xgather} x\\y \end{xgather}
+
+
+\long\def\foo#1{#1}
+Gobble:x\foo{\gobble\par}\FirstOfOne{\gobble\par}x%
+\kFirstOfTwo{\gobble\par}{\uerror}\kSecondOfTwo{\uerror}{\gobble\par}x
+
+soul:\caps{ABC}\hl{x\ul{y}\textit{z\st{w}}}\ul{etc}
+
+\newcounter{Ctr}
+\begin{list}{(\theCtr)}{HEY!\usecounter{Ctr}}
+\makeatletter
+\item[a] bla bla
+\item ble ble 
+\item blu blu
+\begin{enumerate}
+\item e1
+\item e1
+\def\@itemlabel{[\theenumi]}
+\item e3
+\item
+\begin{enumerate}\def\@itemlabel{[\theenumi,\theenumii]}
+\item i1 
+\item i2 
+\item[foo] i3 
+\item[foo] i5
+\end{enumerate}
+\item e5
+\end{enumerate}
+\item bli bli
+\end{list}
+
+{\language=0
+\xmlelt{a}{-}\xmlelt{a}{--}\xmlelt{a}{'}\xmlelt{a}{`}\xmlelt{a}{<}%
+\xmlelt{a}{>}%
+\xmlelt{a}{--}\xmlelt{a}{---}\xmlelt{a}{''}\xmlelt{a}{``}\xmlelt{a}{<<}%
+\xmlelt{a}{>>}
+}
+{\language=1
+\xmlelt{a}{-}\xmlelt{a}{--}\xmlelt{a}{'}\xmlelt{a}{`}\xmlelt{a}{<}%
+\xmlelt{a}{>}%
+\xmlelt{a}{--}\xmlelt{a}{---}\xmlelt{a}{''}\xmlelt{a}{``}\xmlelt{a}{<<}%
+\xmlelt{a}{>>}
+}
+
+
+\muskip0 = 18mu plus 36mu minus 1 fill
+\skip0 = 10pt plus 20pt minus 1 fil
+\edef\foo{%
+\the\muskip0,%
+\the\mutoglue\muskip0,%
+\the\skip0,%
+\the\gluetomu\skip0,%
+\the\mutoglue\gluetomu\skip0,%
+\the\glueshrink\skip0,%
+\the\gluestretch\skip0,%
+\the\glueshrinkorder\skip0,%
+\the\gluestretchorder\skip0}
+
+{\let\GDEF\gdef\let\XDEF\xdef\def\S{ }
+ \catcode`m=12 \catcode`u=12 \catcode`p=12 \catcode`f=12  
+ \catcode`i=12  \catcode`l=12 \catcode`n=12 \catcode`i=12 \catcode`s=12 
+ \catcode`t=12 
+ \GDEF\MU{mu}\GDEF\PT{pt}\GDEF\FIL{fil}\GDEF\FILL{fill}%
+ \GDEF\PLUS{plus}\GDEF\MINUS{minus}
+\XDEF\xoo{18.0\MU\S \PLUS\S 36.0\MU\S \MINUS\S 1.0\FILL,%
+18.0\PT\S \PLUS\S 36.0\PT\S \MINUS\S 1.0\FILL,%
+10.0\PT\S \PLUS\S 20.0\PT\S \MINUS\S 1.0\FIL,% 
+10.0\MU\S \PLUS\S 20.0\MU\S \MINUS\S 1.0\FIL,%
+10.0\PT\S \PLUS\S 20.0\PT\S \MINUS\S 1.0\FIL,%
+1.0\PT,20.0\PT,1,0}}
+
+\edef\yoo{\detokenize{18.0mu plus 36.0mu minus 1.0fill,%
+18.0pt plus 36.0pt minus 1.0fill,%
+10.0pt plus 20.0pt minus 1.0fil,% 
+10.0mu plus 20.0mu minus 1.0fil,%
+10.0pt plus 20.0pt minus 1.0fil,%
+1.0pt,20.0pt,1,0}}
+
+\xtesteq\foo\xoo
+\xtesteq\yoo\xoo
+
+\parshape 3 1pt 2pt 3pt 4pt 5pt 6pt
+\ifnum\parshape=3 \else\bad\fi
+\ifdim\parshapelength 1 = 2.0pt\else\bad\fi
+\ifdim\parshapeindent 2 = 3.0pt\else\bad\fi
+\ifdim\parshapedimen 4  = 4.0pt\else\bad\fi
+\ifdim\parshapedimen 5  = 5.0pt\else\bad\fi
+\ifdim\parshapedimen 6  = 6.0pt\else\bad\fi
+\ifdim\parshapedimen 7  = 5.0pt\else\bad\fi
+\ifdim\parshapedimen 0  = 0.0pt\else\bad\fi
+\parshape 0
+\ifdim\parshapedimen 1  = 0.0pt\else\bad\fi
+
+\ifdim \dimexpr(2pt-5pt) *\numexpr 3-3*13/5\relax + 34pt/2=32pt
+\else\bad\fi
+
+\def\foo#1#2{\number#1
+  \ifnum#1<#2, %
+  \expandafter\foo
+  \expandafter{\number\numexpr#1+1\expandafter}%
+  \expandafter{\number#2\expandafter}%
+  \fi}
+
+\edef\Bar{\foo{7}{13}}
+\def\xBar{7, 8, 9, 10, 11, 12, 13}
+\ifx\Bar\xBar\else \bad\fi
+
+
+\ifnum \numexpr \dimexpr 10sp=10\else \bad\fi
+\skip0=\glueexpr 3pt plus \dimexpr2pt+3pt\relax minus \numexpr3fill \relax
+%\showthe\skip0
+\edef\foo{\the\skip0}
+\edef\xfoo{\detokenize{3.0pt plus 5.0pt minus 3.0fill}}
+\xtesteq\foo\xfoo
+\muskip0=\muexpr 6mu plus 4mu minus 6 fill/2 
+\edef\foo{\the\muskip0}
+\edef\xfoo{\detokenize{3.0mu plus 2.0mu minus 3.0fill}}
+\xtesteq\foo\xfoo
+
+\ifdefined x \else \bad\fi
+\ifdefined \undefined \bad\fi
+\ifdefined \par\else\bad \fi
+\ifcsname foo bar\endcsname\bad\fi
+\ifcsname bar\endcsname\else\bad\fi
+\csname foo bar\endcsname\ifcsname foo bar\endcsname\else\bad\fi
+\unless\iffontchar\font 32 \bad\fi
+\iffontchar\nullfont 32 \bad\fi
+
+\def\foo{A}
+\edef\FooA{\foo\unexpanded\relax{\foo\foo}\relax{\foo\foo}}
+\testeq\FooA{A\foo\foo\relax{AA}}
+
+{
+{\catcode`~12\xdef\B{~}}
+\def\A{a}
+\def~{a}
+\if\noexpand~\A \bad\fi
+\if\noexpand~\B \else \bad\fi
+\if~\A \else\bad\fi
+}
+
+
+
+% test \@car\@cdr
+\makeatletter
+\newcommand\tfoo[1][x]{\def\foo{#1}}
+\tfoo \testeq\foo{x}
+\tfoo[3] \testeq\foo{3}
+\@testopt\tfoo{44} \testeq\foo{44} 
+\@testopt\tfoo{{44}} \testeq\foo{{44}} 
+\@testopt\tfoo{44}[55] \testeq\foo{55} 
+\@testopt\tfoo{44}[{55}] \testeq\foo{55} 
+\@testopt\tfoo{44}[{{55}}] \testeq\foo{{55}} 
+\@testopt{\def\bar{3}\tfoo}{44}[55] \testeq\foo{55} \testeq\bar{3} 
+\@testopt{\def\bar{4}\tfoo}{44} \testeq\foo{44} \testeq\bar{4} 
+
+\edef\foo{\@car123\@nil}\testeq\foo{1}
+\edef\foo{\@car {1}23\@nil}\testeq\foo{1}
+\edef\foo{\@car {134}23\@nil}\testeq\foo{134}
+\edef\foo{\@cdr123\@nil}\testeq\foo{23}
+\edef\foo{\@cdr {1}23\@nil}\testeq\foo{23}
+\edef\foo{\@cdr {134} 23\@nil}\testeq\foo{ 23}
+\edef\foo{\@cdr {134}\@nil}\testeq\foo{}
+\edef\foo{\@cdr {134}{x}\@nil}\testeq\foo{x}
+\edef\foo{\@cdr {134}{{x}}\@nil}\testeq\foo{{x}}
+\edef\foo{\@cdr {134}{{x}} \@nil}\testeq\foo{{{x}} }
+\def\@elt{12}\@cons\foo{\@car123\@nil}\@cons\foo{4}\testeq\@elt{12}
+\testeq\foo{{{x}} \@elt1\@elt4}
+0\@gobble1\@gobbletwo12\@gobblefour1234%
+\@gobble\par\@gobbletwo\par\par\@gobblefour\par\par\par\par0
+\def\ABC[#1]#2{\def\fooi{#1#2}}\def\foo{\@testopt\ABC{x}}\foo[2]{3}%
+\testeq\fooi{23}\foo{3}\testeq\fooi{x3}
+
+{\def\foo{A}\@cons\foo{\@car123\@nil}\@cons\foo{4}} % cons in a group
+\testeq\foo{A\@elt1\@elt4}
+
+\makeatother
+
+{
+\makeatletter
+\long\def\test#1{\def\res{#1}\ifx\foo\res\else \ERROR\fi}
+\edef\foo{\@car 123\@nil} \test{1}
+\edef\foo{\@car {1}23\@nil} \test{1}
+\edef\foo{\@car {123}{456}{7}\@nil}\test{123}
+\edef\foo{\@cdr 123\@nil} \test{23}
+\edef\foo{\@cdr {134}{x}\@nil}\test{x}
+\edef\foo{\@cdr {134}{{x}}\@nil}\test{{x}}
+\def\foo{\@nil} \ifx\foo\@nnil\else \ERROR\fi
+\let\foo\@nnil \test{\@nil}
+\toks@={abc\foo}\addto@hook\toks@{x\bar}
+\expandafter\def\expandafter\foo\expandafter{\the\toks@} \test{abc\foo x\bar}
+\g@addto@macro\foo{y\gee} \test{abc\foo x\bar y\gee}
+\def\xx{456}
+\def\foo{123}\@cons\foo{\xx78}\test{123\@elt45678}
+\toks@={abc\foo}\addto@hook\toks@{x\par}
+\expandafter\def\expandafter\foo\expandafter{\the\toks@} \test{abc\foo x\par}
+}
+
+\makeatletter 
+\def\Tin#1#2#3#4{\in@{#1}{#2}\ifin@#3\else #4\fi}
+\def\RM#1#2{\@expandtwoargs\@removeelement{#1}{#2}#2}
+\let\Tfor\@tfor\let\BreakTfor\@break@tfor\let\Lfor\@for
+\let\Xforn\tralics@for@n
+\let\Xforo\tralics@for@o
+\let\Xforeo\tralics@for@eo
+\let\Xforen\tralics@for@en
+\let\Xbreak\tralics@for@break
+\edef\foo{\zap@space 1 2 345 \@empty 6 7\strip@prefix 1134>89}
+\testeq\foo{123456 789}
+\count0=11 
+\edef\foo{\hexnumber@1 \hexnumber@3 \hexnumber@ 10 \hexnumber@{\count0}\hexnumber@15 }
+\testeq\foo{13ABF}
+
+\def\remove@fl@space#1#2{%
+\expandafter\def\expandafter #1\expandafter {\zap@fl@space{#2}}}
+\remove@fl@space\foo{ \empty\space Hello  World }
+\testeq\foo{\empty\space Hello  World}
+\makeatother
+{\everyxbox{Vest}
+\setbox0=\xbox{foo}{1\xbox{bar}{2} %
+   \XMLaddatt[\XMLlastid]{x}{1}\XMLaddatt[\XMLcurrentid]{y}{2}\XMLaddatt{y}{22}3}
+\box0
+}
+{\everyxbox{West}
+\setbox0=\xbox{foo}{1\xbox{bar}{2} %
+   \XMLaddatt*[\XMLlastid]{x}{1}\XMLaddatt*[\XMLcurrentid]{y}{2}\XMLaddatt*{y}{4}3}
+\box0
+}
+
+
+
+A\clearpage B\cleardoublepage C\newpage D \hrulefill E \dotfill F
+\samepage G
+\pagenumbering{arabic} \pagestyle{mypagestyle}\thispagestyle{plain}
+
+\Tin4{12345}{}{\bad}
+\Tin6{12345}{\bad}{}
+\Tin{12}{1x2x3x4x5x12}{}{\bad}
+\Tin{123}{1x121221\bad2121121212121212x4x1235x\bad12}{}{\bad}
+\Tin{123}{1x1212212121121212121212x4x125x12}{\bad}{}
+\Tin{1B3}{1x1B1BB1B1B11B1B1B1B1B1Bx4x1B3{}5x1B}{}{\bad}
+\Tin{1B 3}{1x1B 1B B 1B 1B 11B 1B 1B 1B 1B 1B x4x1B 35x1B}{}{\bad}
+
+\def\foo{A,B
+C,D,E F}\RM{D}\foo\testeq\foo{A,B C,E F}\RM{D}\foo\testeq\foo{A,B C,E F}
+\RM{B}\foo\testeq\foo{A,B C,E F}
+\RM{B C}\foo\testeq\foo{A,E F}
+\RM{A}\foo\testeq\foo{E F}
+\RM{E F}\foo\testeq\foo{}
+
+\def\List{}%% list not expanded here
+\Tfor\foo:=12345\do{\edef\List{\List\foo}\if\foo4\BreakTfor\fi}
+\Tfor\foo:=12 345\do{\edef\List{\List\foo}}
+\Tfor\foo:=6\do{\edef\List{\List\foo}}
+\Tfor\foo:=78\do{\edef\List{\List\foo}}
+\Tfor\foo:=\do{\edef\List{\List\foo}}
+\testeq\List{123412345678}
+
+\def\List{}\def\thelist{12,3,4,5,6} % list is expanded here
+\Lfor\foo:=\thelist\do{\edef\List{\List\foo}\if\foo4\BreakTfor\fi}
+\Lfor\foo:=1,23,45\do{\edef\List{\List\foo}}
+\Lfor\foo:=6\do{\edef\List{\List\foo}}
+\Lfor\foo:=7,8\do{\edef\List{\List\foo}}
+\Lfor\foo:=\do{\edef\List{\List\foo}}
+\testeq\List{123412345678}
+
+\def\List{}\def\thelist{12,13,14,15,16} 
+\Xforn{1,2,3,4}\foo{\if4\foo\Xbreak\else\edef\List{\List+\foo}\fi}
+\Xforn{1,2,3,4}\foo{\if1\foo\Xbreak\else\edef\List{\List+\foo}\fi}
+\Xforn{}\foo{\edef\List{\List?\foo}}
+\Xforen{}\foo{\edef\List{\List-\foo}}
+\Xforo\thelist\foo{\edef\List{\List+\foo}}
+\Xforo\empty\foo{\edef\List{\List?\foo}}
+\Xforeo\empty\foo{\edef\List{\List=\foo}}
+\Xforeo\empty\foo{\edef\List{\List=\foo}}
+\testeq\List{+1+2+3-+12+13+14+15+16==}
+
+
+\def\expandA{\expandB}
+\protected\def\expandB{\expandC}
+\def\expandC{\count0=0}
+\count0=17
+\edef\foo{\expandA\expandB\expandC}
+\def\xfoo{\expandB\expandB\count0=0}
+%\show\foo\show\xfoo
+\ifx\foo\xfoo\else \bad\fi
+
+\expandA \makeatletter
+\def\xfoo#1#2{\def\testa{x#1#2}}
+\def\yfoo#1#2{\def\testb{y#1#2}}
+\def\testA{xua}\def\testB{yvb}
+\def\test#1{\ifnum\count0=#1 \@afterelsefi\xfoo u \else\@afterfi\yfoo v\fi} 
+\test0a \test1b 
+\ifx\testa\testA\else\bad\fi
+\ifx\testb\testB\else\bad\fi
+\def\testc#1{%
+   \ifnum\count0=#1 %
+   \@afterelsefi \fct u 
+   \else\@afterfi\fct v\fi} 
+\def\fct#1#2{}\edef\foo{\testc023}\testeq\foo{3}
+\makeatother
+
+
+Reference to figure: \ref{fig:fig1}
+Reference to first subfigure: \ref{fig:fig1a}
+Reference to second subfigure: \ref{fig:fig1b}
+
+\csname tralics@use@subfigure\endcsname=0
+\begin{figure}[htbp]
+    \centering
+    \subfigure[first subfigure caption]{
+           \includegraphics{figure1a.eps}
+       \label{fig:fig1au}
+    }
+    \subfigure[second subfigure caption]{
+           \includegraphics[width=3cm]{figure1b.eps}
+       \label{fig:fig1bu}
+    }
+    \caption{main figure caption}
+    \label{fig:fig1u}
+\end{figure}
+
+
+\csname tralics@use@subfigure\endcsname=1
+\begin{figure}[htbp]
+  \XMLaddatt{FOO}{BAR}
+    \centering
+    \subfigure[first subfigure caption]{
+           \includegraphics{figure1a.eps}
+       \label{fig:fig1a}
+    }
+    \hspace{2cm}
+    \subfigure[second subfigure caption]{
+           \includegraphics[width=3cm]{figure1b.eps}
+       \label{fig:fig1b}
+    }
+\par
+    \subfigure{\includegraphics{figure1c}}
+    \caption{main figure caption}
+    \label{fig:fig1}
+\end{figure}
+
+{\makeatletter
+\edef\xoo{\the\bigskipamount,\the\medskipamount,\the\smallskipamount,\the\hideskip}
+\edef\yoo{\detokenize{12.0pt plus 4.0pt minus 4.0pt,%
+6.0pt plus 2.0pt minus 2.0pt,%
+3.0pt plus 1.0pt minus 1.0pt,%
+-1000.0pt plus 1.0fill}}
+\xtesteq\yoo\xoo
+\topsep=1ptminus2pt \partopsep=1ptminus2pt \@tempskipa=1ptminus2pt \@tempskipb=1ptminus2pt \@flushglue=1ptminus2pt \listparindent=1ptminus2pt
+\hideskip=1ptminus2pt \z@skip=1ptminus2pt \skip@=1ptminus2pt \normalbaselineskip=1ptminus2pt \normallineskip=1ptminus2pt \smallskipamount=1ptminus2pt
+\medskipamount=1ptminus2pt \bigskipamount=1ptminus2pt \floatsep=1ptminus2pt \textfloatsep=1ptminus2pt \intextsep=1ptminus2pt
+\dblfloatsep=1ptminus2pt \dbltextfloatsep=1ptminus2pt
+
+}
+
+%% Testing that these are dimensions
+{\makeatletter
+\advance\maxdimen by-"3FFFFFFFsp \ifdim\maxdimen=0pt\else\bad\fi
+\textwidth=3cm\linewidth=3cm\columnwidth=3cm
+\paperheight=3cm \paperwidth=3cm \headheight=3cm \headsep=3cm
+\footskip=3cm\jot=3cm\marginparwidth=3cm \marginparsep=3cm \marginparpush=3cm
+\tabcolsep=3cm\arraycolsep=3cm\footnotesep=3cm\doublerulesep=3cm
+\arrayrulewidth=3cm\@tempdima=3cm\@tempdimb=3cm \@tempdimc=3cm\topmargin=3cm
+\dimen@=4pt\ifdim\dimen@=\dimen0 \else\bad\fi
+\dimen@i=5pt\ifdim\dimen@i=\dimen1 \else\bad\fi
+\dimen@ii=6pt\ifdim\dimen@ii=\dimen4 \else\bad\fi
+}
+
+{\makeatletter
+\setcounter{bottomnumber}{3}\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}\setcounter{totalnumber}{3}
+\setcounter{footnote}{17}\setcounter{mpfootnote}{17}
+\@tempcnta=3 \@tempcntb=4 
+\interfootnotelinepenalty=5 \interdisplaylinepenalty=6
+\setbox\@tempboxa\xbox{foo}{bar}\setbox\voidb@x\xbox{foo}{bar}
+\@temptokena=\relax{foo\bar}\@spaces
+\expandafter\def\expandafter\foo\expandafter{\@spaces}
+\testeq\foo{\space\space\space\space}
+\testeq\fmtname{Tralics}
+\testeq\encodingdefault{T1}
+\testeq\familydefault{cmr}
+\testeq\seriesdefault{m}
+\testeq\shapedefault{n}
+\def\test{\bgroup \@sanitize\ifnum\catcode`\$=12 \else\bad\fi
+  \def\do##1{\catcode`##1=3\relax}\dospecials \ifnum\catcode`\}=3\else\bad\fi
+  \egroup}\test
+\newread\NRA\newwrite\NRB\newmuskip\NRC\newlanguage\NRD
+\NRC=3mu plus 4mu
+\count\NRA=0 \count\NRB=0 \count\NRD=0
+\testeq\baselinestretch{1}
+\testeq\arraystretch{1}
+}
+
+\offinterlineskip \nointerlineskip \frenchspacing \nonfrenchspacing
+\showoverfull \loggingoutput \showoutput \nofiles \sloppy \fussy
+\onecolumn \twocolumn \flushbottom \raggedbottom \normalmarginpar 
+\reversemarginpar \normalbaselines \removelastskip 
+\edef\srelax{\ifnum0=0\fi}
+\edef\foo{\ifnum0=7\expandafter\fi\expandafter*\expandafter\iftrue\fi}
+\xtesteq\foo{*\srelax}
+\makeatletter
+
+\edef\foo{\ifnum0=7\expandafter\fi\expandafter*\expandafter\iftrue\expandafter\@gobble\fi\relax}
+\testeq\foo{*\relax}
+\edef\foo{\ifnum0=0\expandafter\fi\expandafter*\expandafter\iftrue\fi}
+\xtesteq\foo{\srelax*\srelax}
+
+\begin{table}\centering
+$\text{a\quad b\qquad c\!d\,e\;f\:g h~i}
+a\quad b\qquad c\!d\,e\;f\:g h~i$
+\caption{Infinite and finite discrete time signal processing.
+\label{m:inffin}}
+\end{table}
+\begin{table}\centering \xbox{foo}{bar} \end{table}
+
+\def\boldmath{\mathversion{bold}}
+\def\unboldmath{\mathversion{normal}}
+\newcommand{\bxi}{{\mbox{\boldmath{$\xi$}}}}
+\newcommand{\uxi}{\mbox{\unboldmath$\xi$}}
+
+
+\ref{exA}\ref{exB}\ref{exA2}\ref{exB2}
+\begin{Exa}
+\label{exA}
+ This is a sentence typeset \par \label{exB}in the theorem environment \Lenv{Exa}.
+\end{Exa}
+
+\ChangeElementName{theorem}{ theorem}
+\begin{Exa}
+\label{exA2}
+ This is a sentence typeset \par \label{exB2}in the theorem environment \Lenv{Exa}.
+\end{Exa}
+
+\ChangeElementName{theorem}{theorem}
+\begin{Exa}x \end{Exa}
+\ChangeElementName{theorem}{}
+\begin{Exa}x \end{Exa}
+\ChangeElementName{theorem}{theorem}
+\begin{Exa}x \end{Exa}
+\ChangeElementName{theorem}{}
+\begin{Exa}x \end{Exa}
+
+
+
+$A\xi\bxi_1 B\uxi_1$
+\boldmath
+$A\xi\bxi_1 B\uxi_1$
+\unboldmath
+$\hbox{{\ensuremath\alpha}}$
+
+\makeatletter
+\def\Edef#1{\expandafter\def\expandafter#1\expandafter}
+\Edef\fooa{\tralics@split{L@}\A\B{u=v,w,, U = V}}
+\def\foob{\A {L@u}{v}\B {L@w}\A {L@U}{V}}
+\ytesteq\fooa\foob
+
+\centerline{A\it B}\leftline{C\it D}\rightline{E\it F}\rlap{G\it H}\llap{I\it J}
+\marginpar{a\bf B}c\samepage
+\rule{2pt}{3pt}
+\rule[1pt]{3pt+5pt}{17PT}
+\vglue 1pt plus 2pt  minus 3pt
+\vglue 1pt plus 2pt  minus 3pt
+\vglue 1pt plus 2pt  minus 3pt
+\hglue 10pt plus 2pt  minus 3pt
+
+\renewcommand{\labelenumi}{\Roman{enumi}.}
+\renewcommand{\labelenumii}{\Alph{enumii})}
+\renewcommand{\labelenumiii}{(\alph{enumiii})}
+\renewcommand{\labelenumiv}{\roman{enumiv}.}
+\makeatletter
+\def\enumi@hook{
+\AddAttToCurrent{list-counter}{Roman}}
+\def\enumii@hook{\AddAttToCurrent{list-counter}{Alph}}
+\def\enumiii@hook{\AddAttToCurrent{list-counter}{alph}}
+\def\enumiv@hook{\AddAttToCurrent{list-counter}{roman}}
+%\section{crazy nested Enumerated List}
+\begin{enumerate}
+\item one
+\item two
+\item three
+    \begin{enumerate}
+    \item three.one
+    \item three.two
+    \item three.three
+        \begin{enumerate}
+        \item three.three.one
+        \item three.three.two
+        \item three.three.three
+            \begin{enumerate}
+            \item three.three.three.one
+            \item three.three.three.two
+            \item three.three.three.three \ref{xx} \label{xx}
+            \end{enumerate}
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+
+\begin{table}
+\def\IC#1{\includegraphics[width=#1cm]{x}}
+\begin{tabular}{cc}
+\IC{1}&\IC{2}\\
+\IC{3}&\IC{4}\\
+\end{tabular}
+\caption[opt arg for caption]{a table with a caption}
+\end{table}
+
+border matrix $\bordermatrix{
+   &C&I&C'\cr
+ C&1&0&0\cr
+I&b&&-b&0\cr
+C&a'&1-a\cr}
+$
+
+
+
+\edef\foo{\multispan3x}\testeq\foo{\omit\span\omit\span\omit x}
+\def\SBU{Upper }
+\def\SBL{Lower }
+\def\SBM{Mixed }\ref{Cd1}\ref{Cd2}
+a: \MakeTextUppercase{\SBU \NoCaseChange{MiXeD} \NoCaseChange{\SBM} \SBU }\\
+b: \MakeTextUppercase{\SBU $\rm Bar \SBM$  \(Yy\), \ensuremath{Zz} \SBU}\\
+c: \MakeTextUppercase{Text \cite{mathml2} and \cite[Page 12]{mathml2} \SBU}
+d: \MakeTextUppercase{\ref{label-A} \label{Cd1}  \SBU}\\
+
+a: \MakeTextLowercase{\SBL \NoCaseChange{MiXeD} \NoCaseChange{\SBM} \SBL }\\
+b: \MakeTextLowercase{\SBL $\rm Bar \SBM$  \(Yy\), \ensuremath{Zz} \SBL}\\
+c: \MakeTextUppercase{Text \cite{mathml2} and \cite[Page 12]{mathml2} \SBL}
+d: \MakeTextLowercase{\ref{label-A} \label{Cd2}  \SBL}\\
+%
+%
+ 
+\typeout{\thisistheend} 
+\end{document}
+
+fin du document
+

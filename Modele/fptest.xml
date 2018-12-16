@@ -1,0 +1,958 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE ramain SYSTEM 'raweb.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<ramain creator='Tralics version 2.14.5'>
+<p>DOCSTART</p>
+<div0 id-text='I' id='cid1'><head>testing fp</head>
+<div3 id-text='0.0.0.1' id='uid1'><head>Testing fp</head>
+<p>-8.9=-8.9</p>
+</div3></div0>
+<div0 id-text='1' id='cid2'><head>Characters</head>
+<table rend='inline'><row><cell halign='center'>&#x400;</cell>
+<cell halign='center'>&#x401;</cell>
+<cell halign='center'>&#x402;</cell>
+<cell halign='center'>&#x403;</cell>
+<cell halign='center'>&#x404;</cell>
+<cell halign='center'>&#x405;</cell>
+<cell halign='center'>&#x406;</cell>
+<cell halign='center'>&#x407;</cell>
+<cell halign='center'>&#x408;</cell>
+<cell halign='center'>&#x409;</cell>
+<cell halign='center'>&#x40a;</cell>
+<cell halign='center'>&#x40b;</cell>
+<cell halign='center'>&#x40c;</cell>
+<cell halign='center'>&#x40d;</cell>
+<cell halign='center'>&#x40e;</cell>
+<cell halign='center'>&#x40f;</cell>
+</row><row><cell halign='center'>&#x410;</cell>
+<cell halign='center'>&#x411;</cell>
+<cell halign='center'>&#x412;</cell>
+<cell halign='center'>&#x413;</cell>
+<cell halign='center'>&#x414;</cell>
+<cell halign='center'>&#x415;</cell>
+<cell halign='center'>&#x416;</cell>
+<cell halign='center'>&#x417;</cell>
+<cell halign='center'>&#x418;</cell>
+<cell halign='center'>&#x419;</cell>
+<cell halign='center'>&#x41a;</cell>
+<cell halign='center'>&#x41b;</cell>
+<cell halign='center'>&#x41c;</cell>
+<cell halign='center'>&#x41d;</cell>
+<cell halign='center'>&#x41e;</cell>
+<cell halign='center'>&#x41f;</cell>
+</row><row><cell halign='center'>&#x420;</cell>
+<cell halign='center'>&#x421;</cell>
+<cell halign='center'>&#x422;</cell>
+<cell halign='center'>&#x423;</cell>
+<cell halign='center'>&#x424;</cell>
+<cell halign='center'>&#x425;</cell>
+<cell halign='center'>&#x426;</cell>
+<cell halign='center'>&#x427;</cell>
+<cell halign='center'>&#x428;</cell>
+<cell halign='center'>&#x429;</cell>
+<cell halign='center'>&#x42a;</cell>
+<cell halign='center'>&#x42b;</cell>
+<cell halign='center'>&#x42c;</cell>
+<cell halign='center'>&#x42d;</cell>
+<cell halign='center'>&#x42e;</cell>
+<cell halign='center'>&#x42f;</cell>
+</row><row><cell halign='center'>&#x430;</cell>
+<cell halign='center'>&#x431;</cell>
+<cell halign='center'>&#x432;</cell>
+<cell halign='center'>&#x433;</cell>
+<cell halign='center'>&#x434;</cell>
+<cell halign='center'>&#x435;</cell>
+<cell halign='center'>&#x436;</cell>
+<cell halign='center'>&#x437;</cell>
+<cell halign='center'>&#x438;</cell>
+<cell halign='center'>&#x439;</cell>
+<cell halign='center'>&#x43a;</cell>
+<cell halign='center'>&#x43b;</cell>
+<cell halign='center'>&#x43c;</cell>
+<cell halign='center'>&#x43d;</cell>
+<cell halign='center'>&#x43e;</cell>
+<cell halign='center'>&#x43f;</cell>
+</row><row><cell halign='center'>&#x440;</cell>
+<cell halign='center'>&#x441;</cell>
+<cell halign='center'>&#x442;</cell>
+<cell halign='center'>&#x443;</cell>
+<cell halign='center'>&#x444;</cell>
+<cell halign='center'>&#x445;</cell>
+<cell halign='center'>&#x446;</cell>
+<cell halign='center'>&#x447;</cell>
+<cell halign='center'>&#x448;</cell>
+<cell halign='center'>&#x449;</cell>
+<cell halign='center'>&#x44a;</cell>
+<cell halign='center'>&#x44b;</cell>
+<cell halign='center'>&#x44c;</cell>
+<cell halign='center'>&#x44d;</cell>
+<cell halign='center'>&#x44e;</cell>
+<cell halign='center'>&#x44f;</cell>
+</row><row><cell halign='center'>&#x450;</cell>
+<cell halign='center'>&#x451;</cell>
+<cell halign='center'>&#x452;</cell>
+<cell halign='center'>&#x453;</cell>
+<cell halign='center'>&#x454;</cell>
+<cell halign='center'>&#x455;</cell>
+<cell halign='center'>&#x456;</cell>
+<cell halign='center'>&#x457;</cell>
+<cell halign='center'>&#x458;</cell>
+<cell halign='center'>&#x459;</cell>
+<cell halign='center'>&#x45a;</cell>
+<cell halign='center'>&#x45b;</cell>
+<cell halign='center'>&#x45c;</cell>
+<cell halign='center'>&#x45d;</cell>
+<cell halign='center'>&#x45e;</cell>
+<cell halign='center'>&#x45f;</cell>
+</row><row><cell halign='center'>&#x490;</cell>
+<cell halign='center'>&#x491;</cell>
+<cell halign='center'>&#x492;</cell>
+<cell halign='center'>&#x493;</cell>
+<cell halign='center'>94</cell>
+<cell halign='center'>95</cell>
+<cell halign='center'>&#x496;</cell>
+<cell halign='center'>&#x497;</cell>
+<cell halign='center'>&#x498;</cell>
+<cell halign='center'>&#x499;</cell>
+<cell halign='center'>&#x49a;</cell>
+<cell halign='center'>&#x49b;</cell>
+<cell halign='center'>&#x49c;</cell>
+<cell halign='center'>&#x49d;</cell>
+<cell halign='center'>9e</cell>
+<cell halign='center'>9f</cell>
+</row><row><cell halign='center'>&#x4a0;</cell>
+<cell halign='center'>&#x4a1;</cell>
+<cell halign='center'>&#x4a2;</cell>
+<cell halign='center'>&#x4a3;</cell>
+<cell halign='center'>&#x4a4;</cell>
+<cell halign='center'>&#x4a5;</cell>
+<cell halign='center'>a6</cell>
+<cell halign='center'>a7</cell>
+<cell halign='center'>a8</cell>
+<cell halign='center'>a9</cell>
+<cell halign='center'>&#x4aa;</cell>
+<cell halign='center'>&#x4ab;</cell>
+<cell halign='center'>ac</cell>
+<cell halign='center'>ad</cell>
+<cell halign='center'>&#x4ae;</cell>
+<cell halign='center'>&#x4af;</cell>
+</row><row><cell halign='center'>&#x4b0;</cell>
+<cell halign='center'>&#x4b1;</cell>
+<cell halign='center'>&#x4b2;</cell>
+<cell halign='center'>&#x4b3;</cell>
+<cell halign='center'>b4</cell>
+<cell halign='center'>b5</cell>
+<cell halign='center'>&#x4b6;</cell>
+<cell halign='center'>&#x4b7;</cell>
+<cell halign='center'>&#x4b8;</cell>
+<cell halign='center'>&#x4b9;</cell>
+<cell halign='center'>&#x4ba;</cell>
+<cell halign='center'>&#x4bb;</cell>
+<cell halign='center'>bc</cell>
+<cell halign='center'>bd</cell>
+<cell halign='center'>be</cell>
+<cell halign='center'>bf</cell>
+</row><row><cell halign='center'>&#x4c0;</cell>
+<cell halign='center'>&#x4c1;</cell>
+<cell halign='center'>&#x4c2;</cell>
+<cell halign='center'>c3</cell>
+<cell halign='center'>c4</cell>
+<cell halign='center'>&#x4c5;</cell>
+<cell halign='center'>&#x4c6;</cell>
+<cell halign='center'>c7</cell>
+<cell halign='center'>c8</cell>
+<cell halign='center'>&#x4c9;</cell>
+<cell halign='center'>&#x4ca;</cell>
+<cell halign='center'>cb</cell>
+<cell halign='center'>cc</cell>
+<cell halign='center'>&#x4cd;</cell>
+<cell halign='center'>&#x4ce;</cell>
+<cell halign='center'>&#x4cf;</cell>
+</row><row><cell halign='center'>&#x4d0;</cell>
+<cell halign='center'>&#x4d1;</cell>
+<cell halign='center'>&#x4d2;</cell>
+<cell halign='center'>&#x4d3;</cell>
+<cell halign='center'>&#x4d4;</cell>
+<cell halign='center'>&#x4d5;</cell>
+<cell halign='center'>&#x4d6;</cell>
+<cell halign='center'>&#x4d7;</cell>
+<cell halign='center'>&#x4d8;</cell>
+<cell halign='center'>&#x4d9;</cell>
+<cell halign='center'>&#x4da;</cell>
+<cell halign='center'>&#x4db;</cell>
+<cell halign='center'>&#x4dc;</cell>
+<cell halign='center'>&#x4dd;</cell>
+<cell halign='center'>&#x4de;</cell>
+<cell halign='center'>&#x4df;</cell>
+</row><row><cell halign='center'>e0</cell>
+<cell halign='center'>e1</cell>
+<cell halign='center'>&#x4e2;</cell>
+<cell halign='center'>&#x4e3;</cell>
+<cell halign='center'>&#x4e4;</cell>
+<cell halign='center'>&#x4e5;</cell>
+<cell halign='center'>&#x4e6;</cell>
+<cell halign='center'>&#x4e7;</cell>
+<cell halign='center'>&#x4e8;</cell>
+<cell halign='center'>&#x4e9;</cell>
+<cell halign='center'>&#x4ea;</cell>
+<cell halign='center'>&#x4eb;</cell>
+<cell halign='center'>&#x4ec;</cell>
+<cell halign='center'>&#x4ed;</cell>
+<cell halign='center'>&#x4ee;</cell>
+<cell halign='center'>&#x4ef;</cell>
+</row><row><cell halign='center'>&#x4f0;</cell>
+<cell halign='center'>&#x4f1;</cell>
+<cell halign='center'>&#x4f2;</cell>
+<cell halign='center'>&#x4f3;</cell>
+<cell halign='center'>&#x4f4;</cell>
+<cell halign='center'>&#x4f5;</cell>
+<cell halign='center'>-</cell>
+<cell halign='center'>-</cell>
+<cell halign='center'>&#x4f8;</cell>
+<cell halign='center'>&#x4f9;</cell>
+<cell halign='center'>&#x4fa;</cell>
+<cell halign='center'>&#x4fb;</cell>
+<cell halign='center'>&#x4fc;</cell>
+<cell halign='center'>&#x4fd;</cell>
+<cell halign='center'>&#x4fe;</cell>
+<cell halign='center'>&#x4ff;</cell>
+</row></table>
+<table rend='inline'><row><cell halign='center'>Ẁ</cell>
+<cell halign='center'>ẁ</cell>
+<cell halign='center'>Ẃ</cell>
+<cell halign='center'>ẃ</cell>
+<cell halign='center'>Ẅ</cell>
+<cell halign='center'>ẅ</cell>
+<cell halign='center'>Ẇ</cell>
+<cell halign='center'>ẇ</cell>
+<cell halign='center'>Ẉ</cell>
+<cell halign='center'>ẉ</cell>
+<cell halign='center'>Ẋ</cell>
+<cell halign='center'>ẋ</cell>
+<cell halign='center'>Ẍ</cell>
+<cell halign='center'>ẍ</cell>
+<cell halign='center'>Ẏ</cell>
+<cell halign='center'>ẏ</cell>
+</row><row><cell halign='center'>Ẑ</cell>
+<cell halign='center'>ẑ</cell>
+<cell halign='center'>Ẓ</cell>
+<cell halign='center'>ẓ</cell>
+<cell halign='center'>Ẕ</cell>
+<cell halign='center'>ẕ</cell>
+<cell halign='center'>ẖ</cell>
+<cell halign='center'>ẗ</cell>
+<cell halign='center'>ẘ</cell>
+<cell halign='center'>ẙ</cell>
+<cell halign='center'>?</cell>
+<cell halign='center'>&#x1e9b;</cell>
+</row><row><cell halign='center'>Ạ</cell>
+<cell halign='center'>ạ</cell>
+<cell halign='center'>Ả</cell>
+<cell halign='center'>ả</cell>
+<cell halign='center'>Ấ</cell>
+<cell halign='center'>ấ</cell>
+<cell halign='center'>Ầ</cell>
+<cell halign='center'>ầ</cell>
+<cell halign='center'>Ẩ</cell>
+<cell halign='center'>ẩ</cell>
+<cell halign='center'>Ẫ</cell>
+<cell halign='center'>ẫ</cell>
+<cell halign='center'>Ậ</cell>
+<cell halign='center'>ậ</cell>
+<cell halign='center'>Ắ</cell>
+<cell halign='center'>ắ</cell>
+</row><row><cell halign='center'>Ằ</cell>
+<cell halign='center'>ằ</cell>
+<cell halign='center'>Ẳ</cell>
+<cell halign='center'>ẳ</cell>
+<cell halign='center'>Ẵ</cell>
+<cell halign='center'>ẵ</cell>
+<cell halign='center'>Ặ</cell>
+<cell halign='center'>ặ</cell>
+<cell halign='center'>Ẹ</cell>
+<cell halign='center'>ẹ</cell>
+<cell halign='center'>Ẻ</cell>
+<cell halign='center'>ẻ</cell>
+<cell halign='center'>Ẽ</cell>
+<cell halign='center'>ẽ</cell>
+<cell halign='center'>Ế</cell>
+<cell halign='center'>ế</cell>
+</row><row><cell halign='center'>Ề</cell>
+<cell halign='center'>ề</cell>
+<cell halign='center'>Ể</cell>
+<cell halign='center'>ể</cell>
+<cell halign='center'>Ễ</cell>
+<cell halign='center'>ễ</cell>
+<cell halign='center'>Ệ</cell>
+<cell halign='center'>ệ</cell>
+<cell halign='center'>Ỉ</cell>
+<cell halign='center'>ỉ</cell>
+<cell halign='center'>Ị</cell>
+<cell halign='center'>ị</cell>
+<cell halign='center'>Ọ</cell>
+<cell halign='center'>ọ</cell>
+<cell halign='center'>Ỏ</cell>
+<cell halign='center'>ỏ</cell>
+</row><row><cell halign='center'>Ố</cell>
+<cell halign='center'>ố</cell>
+<cell halign='center'>Ồ</cell>
+<cell halign='center'>ồ</cell>
+<cell halign='center'>Ổ</cell>
+<cell halign='center'>ổ</cell>
+<cell halign='center'>Ỗ</cell>
+<cell halign='center'>ỗ</cell>
+<cell halign='center'>Ộ</cell>
+<cell halign='center'>ộ</cell>
+<cell halign='center'>Ớ</cell>
+<cell halign='center'>ớ</cell>
+<cell halign='center'>Ờ</cell>
+<cell halign='center'>ờ</cell>
+<cell halign='center'>Ở</cell>
+<cell halign='center'>ở</cell>
+</row><row><cell halign='center'>Ỡ</cell>
+<cell halign='center'>ỡ</cell>
+<cell halign='center'>Ợ</cell>
+<cell halign='center'>ợ</cell>
+<cell halign='center'>Ụ</cell>
+<cell halign='center'>ụ</cell>
+<cell halign='center'>Ủ</cell>
+<cell halign='center'>ủ</cell>
+<cell halign='center'>Ứ</cell>
+<cell halign='center'>ứ</cell>
+<cell halign='center'>Ừ</cell>
+<cell halign='center'>ừ</cell>
+<cell halign='center'>Ử</cell>
+<cell halign='center'>ử</cell>
+<cell halign='center'>Ữ</cell>
+<cell halign='center'>ữ</cell>
+</row><row><cell halign='center'>Ự</cell>
+<cell halign='center'>ự</cell>
+<cell halign='center'>Ỳ</cell>
+<cell halign='center'>ỳ</cell>
+<cell halign='center'>Ỵ</cell>
+<cell halign='center'>ỵ</cell>
+<cell halign='center'>Ỷ</cell>
+<cell halign='center'>ỷ</cell>
+<cell halign='center'>Ỹ</cell>
+<cell halign='center'>ỹ</cell>
+</row></table><p>
+ç, ő, ȍ, ö, ą, ḇ, ạ, ă, ȃ, ǎ, ḛ, å, ḁ,
+ả, ḙ.
+è é ê ë ã ė ē
+ǣǽǻǿíǡ ǟ ǘ ǜ ǚ ḉ ḝ
+ṩ ế</p>
+<p>Ṻ Ǟ Ȫ Ǘ Ḯ Ǜ Ǡ Ȱ
+Ȭ Ǭ Ṹ Ǿ Ṓ Ḗ Ṥ Ḉ
+Ấ Ố</p>
+<p noindent='true'>Ế Ṑ Ḕ Ḹ Ṝ
+Ầ Ề Ứ Ớ Ừ Ờ Ử Ở
+Ữ Ỡ Ự Ợ Ậ</p>
+<p noindent='true'>Ộ Ệ Ẫ
+Ỗ Ễ Ẩ Ổ Ể Ắ Ằ Ẳ
+Ẵ Ặ Ṏ Ố Ồ Ḝ Ṧ Ṩ</p>
+<p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>1d400</mtext></mtd><mtd><mo>&#x1d400;</mo></mtd><mtd><mo>&#x1d401;</mo></mtd><mtd><mo>&#x1d402;</mo></mtd><mtd><mo>&#x1d403;</mo></mtd><mtd><mo>&#x1d404;</mo></mtd><mtd><mo>&#x1d405;</mo></mtd><mtd><mo>&#x1d406;</mo></mtd><mtd><mo>&#x1d407;</mo></mtd><mtd><mo>&#x1d408;</mo></mtd><mtd><mo>&#x1d409;</mo></mtd><mtd><mo>&#x1d40a;</mo></mtd><mtd><mo>&#x1d40b;</mo></mtd><mtd><mo>&#x1d40c;</mo></mtd><mtd><mo>&#x1d40d;</mo></mtd><mtd><mo>&#x1d40e;</mo></mtd><mtd><mo>&#x1d40f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d410</mtext></mtd><mtd><mo>&#x1d410;</mo></mtd><mtd><mo>&#x1d411;</mo></mtd><mtd><mo>&#x1d412;</mo></mtd><mtd><mo>&#x1d413;</mo></mtd><mtd><mo>&#x1d414;</mo></mtd><mtd><mo>&#x1d415;</mo></mtd><mtd><mo>&#x1d416;</mo></mtd><mtd><mo>&#x1d417;</mo></mtd><mtd><mo>&#x1d418;</mo></mtd><mtd><mo>&#x1d419;</mo></mtd><mtd><mo>&#x1d41a;</mo></mtd><mtd><mo>&#x1d41b;</mo></mtd><mtd><mo>&#x1d41c;</mo></mtd><mtd><mo>&#x1d41d;</mo></mtd><mtd><mo>&#x1d41e;</mo></mtd><mtd><mo>&#x1d41f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d420</mtext></mtd><mtd><mo>&#x1d420;</mo></mtd><mtd><mo>&#x1d421;</mo></mtd><mtd><mo>&#x1d422;</mo></mtd><mtd><mo>&#x1d423;</mo></mtd><mtd><mo>&#x1d424;</mo></mtd><mtd><mo>&#x1d425;</mo></mtd><mtd><mo>&#x1d426;</mo></mtd><mtd><mo>&#x1d427;</mo></mtd><mtd><mo>&#x1d428;</mo></mtd><mtd><mo>&#x1d429;</mo></mtd><mtd><mo>&#x1d42a;</mo></mtd><mtd><mo>&#x1d42b;</mo></mtd><mtd><mo>&#x1d42c;</mo></mtd><mtd><mo>&#x1d42d;</mo></mtd><mtd><mo>&#x1d42e;</mo></mtd><mtd><mo>&#x1d42f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d430</mtext></mtd><mtd><mo>&#x1d430;</mo></mtd><mtd><mo>&#x1d431;</mo></mtd><mtd><mo>&#x1d432;</mo></mtd><mtd><mo>&#x1d433;</mo></mtd><mtd><mo>&#x1d434;</mo></mtd><mtd><mo>&#x1d435;</mo></mtd><mtd><mo>&#x1d436;</mo></mtd><mtd><mo>&#x1d437;</mo></mtd><mtd><mo>&#x1d438;</mo></mtd><mtd><mo>&#x1d439;</mo></mtd><mtd><mo>&#x1d43a;</mo></mtd><mtd><mo>&#x1d43b;</mo></mtd><mtd><mo>&#x1d43c;</mo></mtd><mtd><mo>&#x1d43d;</mo></mtd><mtd><mo>&#x1d43e;</mo></mtd><mtd><mo>&#x1d43f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d440</mtext></mtd><mtd><mo>&#x1d440;</mo></mtd><mtd><mo>&#x1d441;</mo></mtd><mtd><mo>&#x1d442;</mo></mtd><mtd><mo>&#x1d443;</mo></mtd><mtd><mo>&#x1d444;</mo></mtd><mtd><mo>&#x1d445;</mo></mtd><mtd><mo>&#x1d446;</mo></mtd><mtd><mo>&#x1d447;</mo></mtd><mtd><mo>&#x1d448;</mo></mtd><mtd><mo>&#x1d449;</mo></mtd><mtd><mo>&#x1d44a;</mo></mtd><mtd><mo>&#x1d44b;</mo></mtd><mtd><mo>&#x1d44c;</mo></mtd><mtd><mo>&#x1d44d;</mo></mtd><mtd><mo>&#x1d44e;</mo></mtd><mtd><mo>&#x1d44f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d450</mtext></mtd><mtd><mo>&#x1d450;</mo></mtd><mtd><mo>&#x1d451;</mo></mtd><mtd><mo>&#x1d452;</mo></mtd><mtd><mo>&#x1d453;</mo></mtd><mtd><mo>&#x1d454;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x210e;</mo></mrow></mtd><mtd><mo>&#x1d456;</mo></mtd><mtd><mo>&#x1d457;</mo></mtd><mtd><mo>&#x1d458;</mo></mtd><mtd><mo>&#x1d459;</mo></mtd><mtd><mo>&#x1d45a;</mo></mtd><mtd><mo>&#x1d45b;</mo></mtd><mtd><mo>&#x1d45c;</mo></mtd><mtd><mo>&#x1d45d;</mo></mtd><mtd><mo>&#x1d45e;</mo></mtd><mtd><mo>&#x1d45f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d460</mtext></mtd><mtd><mo>&#x1d460;</mo></mtd><mtd><mo>&#x1d461;</mo></mtd><mtd><mo>&#x1d462;</mo></mtd><mtd><mo>&#x1d463;</mo></mtd><mtd><mo>&#x1d464;</mo></mtd><mtd><mo>&#x1d465;</mo></mtd><mtd><mo>&#x1d466;</mo></mtd><mtd><mo>&#x1d467;</mo></mtd><mtd><mo>&#x1d468;</mo></mtd><mtd><mo>&#x1d469;</mo></mtd><mtd><mo>&#x1d46a;</mo></mtd><mtd><mo>&#x1d46b;</mo></mtd><mtd><mo>&#x1d46c;</mo></mtd><mtd><mo>&#x1d46d;</mo></mtd><mtd><mo>&#x1d46e;</mo></mtd><mtd><mo>&#x1d46f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d470</mtext></mtd><mtd><mo>&#x1d470;</mo></mtd><mtd><mo>&#x1d471;</mo></mtd><mtd><mo>&#x1d472;</mo></mtd><mtd><mo>&#x1d473;</mo></mtd><mtd><mo>&#x1d474;</mo></mtd><mtd><mo>&#x1d475;</mo></mtd><mtd><mo>&#x1d476;</mo></mtd><mtd><mo>&#x1d477;</mo></mtd><mtd><mo>&#x1d478;</mo></mtd><mtd><mo>&#x1d479;</mo></mtd><mtd><mo>&#x1d47a;</mo></mtd><mtd><mo>&#x1d47b;</mo></mtd><mtd><mo>&#x1d47c;</mo></mtd><mtd><mo>&#x1d47d;</mo></mtd><mtd><mo>&#x1d47e;</mo></mtd><mtd><mo>&#x1d47f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d480</mtext></mtd><mtd><mo>&#x1d480;</mo></mtd><mtd><mo>&#x1d481;</mo></mtd><mtd><mo>&#x1d482;</mo></mtd><mtd><mo>&#x1d483;</mo></mtd><mtd><mo>&#x1d484;</mo></mtd><mtd><mo>&#x1d485;</mo></mtd><mtd><mo>&#x1d486;</mo></mtd><mtd><mo>&#x1d487;</mo></mtd><mtd><mo>&#x1d488;</mo></mtd><mtd><mo>&#x1d489;</mo></mtd><mtd><mo>&#x1d48a;</mo></mtd><mtd><mo>&#x1d48b;</mo></mtd><mtd><mo>&#x1d48c;</mo></mtd><mtd><mo>&#x1d48d;</mo></mtd><mtd><mo>&#x1d48e;</mo></mtd><mtd><mo>&#x1d48f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d490</mtext></mtd><mtd><mo>&#x1d490;</mo></mtd><mtd><mo>&#x1d491;</mo></mtd><mtd><mo>&#x1d492;</mo></mtd><mtd><mo>&#x1d493;</mo></mtd><mtd><mo>&#x1d494;</mo></mtd><mtd><mo>&#x1d495;</mo></mtd><mtd><mo>&#x1d496;</mo></mtd><mtd><mo>&#x1d497;</mo></mtd><mtd><mo>&#x1d498;</mo></mtd><mtd><mo>&#x1d499;</mo></mtd><mtd><mo>&#x1d49a;</mo></mtd><mtd><mo>&#x1d49b;</mo></mtd><mtd><mo>&#x1D49C;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0212C;</mo></mrow></mtd><mtd><mo>&#x1D49E;</mo></mtd><mtd><mo>&#x1D49F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4a0</mtext></mtd><mtd><mrow><mo>+</mo><mo>&#x02130;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x02131;</mo></mrow></mtd><mtd><mo>&#x1D4A2;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0210B;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x02110;</mo></mrow></mtd><mtd><mo>&#x1D4A5;</mo></mtd><mtd><mo>&#x1D4A6;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02112;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x02133;</mo></mrow></mtd><mtd><mo>&#x1D4A9;</mo></mtd><mtd><mo>&#x1D4AA;</mo></mtd><mtd><mo>&#x1D4AB;</mo></mtd><mtd><mo>&#x1D4AC;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0211B;</mo></mrow></mtd><mtd><mo>&#x1D4AE;</mo></mtd><mtd><mo>&#x1D4AF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4b0</mtext></mtd><mtd><mo>&#x1D4B0;</mo></mtd><mtd><mo>&#x1D4B1;</mo></mtd><mtd><mo>&#x1D4B2;</mo></mtd><mtd><mo>&#x1D4B3;</mo></mtd><mtd><mo>&#x1D4B4;</mo></mtd><mtd><mo>&#x1D4B5;</mo></mtd><mtd><mo>&#x1D4B6;</mo></mtd><mtd><mo>&#x1D4B7;</mo></mtd><mtd><mo>&#x1D4B8;</mo></mtd><mtd><mo>&#x1D4B9;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0212F;</mo></mrow></mtd><mtd><mo>&#x1D4BB;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0210A;</mo></mrow></mtd><mtd><mo>&#x1D4BD;</mo></mtd><mtd><mo>&#x1D4BE;</mo></mtd><mtd><mo>&#x1D4BF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4c0</mtext></mtd><mtd><mo>&#x1D4C0;</mo></mtd><mtd><mo>&#x1D4C1;</mo></mtd><mtd><mo>&#x1D4C2;</mo></mtd><mtd><mo>&#x1D4C3;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02134;</mo></mrow></mtd><mtd><mo>&#x1D4C5;</mo></mtd><mtd><mo>&#x1D4C6;</mo></mtd><mtd><mo>&#x1D4C7;</mo></mtd><mtd><mo>&#x1D4C8;</mo></mtd><mtd><mo>&#x1D4C9;</mo></mtd><mtd><mo>&#x1D4CA;</mo></mtd><mtd><mo>&#x1D4CB;</mo></mtd><mtd><mo>&#x1D4CC;</mo></mtd><mtd><mo>&#x1D4CD;</mo></mtd><mtd><mo>&#x1D4CE;</mo></mtd><mtd><mo>&#x1D4CF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4d0</mtext></mtd><mtd><mo>&#x1d4d0;</mo></mtd><mtd><mo>&#x1d4d1;</mo></mtd><mtd><mo>&#x1d4d2;</mo></mtd><mtd><mo>&#x1d4d3;</mo></mtd><mtd><mo>&#x1d4d4;</mo></mtd><mtd><mo>&#x1d4d5;</mo></mtd><mtd><mo>&#x1d4d6;</mo></mtd><mtd><mo>&#x1d4d7;</mo></mtd><mtd><mo>&#x1d4d8;</mo></mtd><mtd><mo>&#x1d4d9;</mo></mtd><mtd><mo>&#x1d4da;</mo></mtd><mtd><mo>&#x1d4db;</mo></mtd><mtd><mo>&#x1d4dc;</mo></mtd><mtd><mo>&#x1d4dd;</mo></mtd><mtd><mo>&#x1d4de;</mo></mtd><mtd><mo>&#x1d4df;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4e0</mtext></mtd><mtd><mo>&#x1d4e0;</mo></mtd><mtd><mo>&#x1d4e1;</mo></mtd><mtd><mo>&#x1d4e2;</mo></mtd><mtd><mo>&#x1d4e3;</mo></mtd><mtd><mo>&#x1d4e4;</mo></mtd><mtd><mo>&#x1d4e5;</mo></mtd><mtd><mo>&#x1d4e6;</mo></mtd><mtd><mo>&#x1d4e7;</mo></mtd><mtd><mo>&#x1d4e8;</mo></mtd><mtd><mo>&#x1d4e9;</mo></mtd><mtd><mo>&#x1d4ea;</mo></mtd><mtd><mo>&#x1d4eb;</mo></mtd><mtd><mo>&#x1d4ec;</mo></mtd><mtd><mo>&#x1d4ed;</mo></mtd><mtd><mo>&#x1d4ee;</mo></mtd><mtd><mo>&#x1d4ef;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d4f0</mtext></mtd><mtd><mo>&#x1d4f0;</mo></mtd><mtd><mo>&#x1d4f1;</mo></mtd><mtd><mo>&#x1d4f2;</mo></mtd><mtd><mo>&#x1d4f3;</mo></mtd><mtd><mo>&#x1d4f4;</mo></mtd><mtd><mo>&#x1d4f5;</mo></mtd><mtd><mo>&#x1d4f6;</mo></mtd><mtd><mo>&#x1d4f7;</mo></mtd><mtd><mo>&#x1d4f8;</mo></mtd><mtd><mo>&#x1d4f9;</mo></mtd><mtd><mo>&#x1d4fa;</mo></mtd><mtd><mo>&#x1d4fb;</mo></mtd><mtd><mo>&#x1d4fc;</mo></mtd><mtd><mo>&#x1d4fd;</mo></mtd><mtd><mo>&#x1d4fe;</mo></mtd><mtd><mo>&#x1d4ff;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>1d500</mtext></mtd><mtd><mo>&#x1d500;</mo></mtd><mtd><mo>&#x1d501;</mo></mtd><mtd><mo>&#x1d502;</mo></mtd><mtd><mo>&#x1d503;</mo></mtd><mtd><mo>&#x1D504;</mo></mtd><mtd><mo>&#x1D505;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0212D;</mo></mrow></mtd><mtd><mo>&#x1D507;</mo></mtd><mtd><mo>&#x1D508;</mo></mtd><mtd><mo>&#x1D509;</mo></mtd><mtd><mo>&#x1D50A;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0210C;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x02111;</mo></mrow></mtd><mtd><mo>&#x1D50D;</mo></mtd><mtd><mo>&#x1D50E;</mo></mtd><mtd><mo>&#x1D50F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d510</mtext></mtd><mtd><mo>&#x1D510;</mo></mtd><mtd><mo>&#x1D511;</mo></mtd><mtd><mo>&#x1D512;</mo></mtd><mtd><mo>&#x1D513;</mo></mtd><mtd><mo>&#x1D514;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0211C;</mo></mrow></mtd><mtd><mo>&#x1D516;</mo></mtd><mtd><mo>&#x1D517;</mo></mtd><mtd><mo>&#x1D518;</mo></mtd><mtd><mo>&#x1D519;</mo></mtd><mtd><mo>&#x1D51A;</mo></mtd><mtd><mo>&#x1D51B;</mo></mtd><mtd><mo>&#x1D51C;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02128;</mo></mrow></mtd><mtd><mo>&#x1D51E;</mo></mtd><mtd><mo>&#x1D51F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d520</mtext></mtd><mtd><mo>&#x1D520;</mo></mtd><mtd><mo>&#x1D521;</mo></mtd><mtd><mo>&#x1D522;</mo></mtd><mtd><mo>&#x1D523;</mo></mtd><mtd><mo>&#x1D524;</mo></mtd><mtd><mo>&#x1D525;</mo></mtd><mtd><mo>&#x1D526;</mo></mtd><mtd><mo>&#x1D527;</mo></mtd><mtd><mo>&#x1D528;</mo></mtd><mtd><mo>&#x1D529;</mo></mtd><mtd><mo>&#x1D52A;</mo></mtd><mtd><mo>&#x1D52B;</mo></mtd><mtd><mo>&#x1D52C;</mo></mtd><mtd><mo>&#x1D52D;</mo></mtd><mtd><mo>&#x1D52E;</mo></mtd><mtd><mo>&#x1D52F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d530</mtext></mtd><mtd><mo>&#x1D530;</mo></mtd><mtd><mo>&#x1D531;</mo></mtd><mtd><mo>&#x1D532;</mo></mtd><mtd><mo>&#x1D533;</mo></mtd><mtd><mo>&#x1D534;</mo></mtd><mtd><mo>&#x1D535;</mo></mtd><mtd><mo>&#x1D536;</mo></mtd><mtd><mo>&#x1D537;</mo></mtd><mtd><mo>&#x1D538;</mo></mtd><mtd><mo>&#x1D539;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02102;</mo></mrow></mtd><mtd><mo>&#x1D53B;</mo></mtd><mtd><mo>&#x1D53C;</mo></mtd><mtd><mo>&#x1D53D;</mo></mtd><mtd><mo>&#x1D53E;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x0210D;</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d540</mtext></mtd><mtd><mo>&#x1D540;</mo></mtd><mtd><mo>&#x1D541;</mo></mtd><mtd><mo>&#x1D542;</mo></mtd><mtd><mo>&#x1D543;</mo></mtd><mtd><mo>&#x1D544;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02115;</mo></mrow></mtd><mtd><mo>&#x1D546;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02119;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x0211A;</mo></mrow></mtd><mtd><mrow><mo>+</mo><mo>&#x0211D;</mo></mrow></mtd><mtd><mo>&#x1D54A;</mo></mtd><mtd><mo>&#x1D54B;</mo></mtd><mtd><mo>&#x1D54C;</mo></mtd><mtd><mo>&#x1D54D;</mo></mtd><mtd><mo>&#x1D54E;</mo></mtd><mtd><mo>&#x1D54F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d550</mtext></mtd><mtd><mo>&#x1D550;</mo></mtd><mtd><mrow><mo>+</mo><mo>&#x02124;</mo></mrow></mtd><mtd><mo>&#x1D552;</mo></mtd><mtd><mo>&#x1D553;</mo></mtd><mtd><mo>&#x1D554;</mo></mtd><mtd><mo>&#x1D555;</mo></mtd><mtd><mo>&#x1D556;</mo></mtd><mtd><mo>&#x1D557;</mo></mtd><mtd><mo>&#x1D558;</mo></mtd><mtd><mo>&#x1D559;</mo></mtd><mtd><mo>&#x1D55A;</mo></mtd><mtd><mo>&#x1D55B;</mo></mtd><mtd><mo>&#x1D55C;</mo></mtd><mtd><mo>&#x1D55D;</mo></mtd><mtd><mo>&#x1D55E;</mo></mtd><mtd><mo>&#x1D55F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d560</mtext></mtd><mtd><mo>&#x1D560;</mo></mtd><mtd><mo>&#x1D561;</mo></mtd><mtd><mo>&#x1D562;</mo></mtd><mtd><mo>&#x1D563;</mo></mtd><mtd><mo>&#x1D564;</mo></mtd><mtd><mo>&#x1D565;</mo></mtd><mtd><mo>&#x1D566;</mo></mtd><mtd><mo>&#x1D567;</mo></mtd><mtd><mo>&#x1D568;</mo></mtd><mtd><mo>&#x1D569;</mo></mtd><mtd><mo>&#x1D56A;</mo></mtd><mtd><mo>&#x1D56B;</mo></mtd><mtd><mo>&#x1d56c;</mo></mtd><mtd><mo>&#x1d56d;</mo></mtd><mtd><mo>&#x1d56e;</mo></mtd><mtd><mo>&#x1d56f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d570</mtext></mtd><mtd><mo>&#x1d570;</mo></mtd><mtd><mo>&#x1d571;</mo></mtd><mtd><mo>&#x1d572;</mo></mtd><mtd><mo>&#x1d573;</mo></mtd><mtd><mo>&#x1d574;</mo></mtd><mtd><mo>&#x1d575;</mo></mtd><mtd><mo>&#x1d576;</mo></mtd><mtd><mo>&#x1d577;</mo></mtd><mtd><mo>&#x1d578;</mo></mtd><mtd><mo>&#x1d579;</mo></mtd><mtd><mo>&#x1d57a;</mo></mtd><mtd><mo>&#x1d57b;</mo></mtd><mtd><mo>&#x1d57c;</mo></mtd><mtd><mo>&#x1d57d;</mo></mtd><mtd><mo>&#x1d57e;</mo></mtd><mtd><mo>&#x1d57f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d580</mtext></mtd><mtd><mo>&#x1d580;</mo></mtd><mtd><mo>&#x1d581;</mo></mtd><mtd><mo>&#x1d582;</mo></mtd><mtd><mo>&#x1d583;</mo></mtd><mtd><mo>&#x1d584;</mo></mtd><mtd><mo>&#x1d585;</mo></mtd><mtd><mo>&#x1d586;</mo></mtd><mtd><mo>&#x1d587;</mo></mtd><mtd><mo>&#x1d588;</mo></mtd><mtd><mo>&#x1d589;</mo></mtd><mtd><mo>&#x1d58a;</mo></mtd><mtd><mo>&#x1d58b;</mo></mtd><mtd><mo>&#x1d58c;</mo></mtd><mtd><mo>&#x1d58d;</mo></mtd><mtd><mo>&#x1d58e;</mo></mtd><mtd><mo>&#x1d58f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d590</mtext></mtd><mtd><mo>&#x1d590;</mo></mtd><mtd><mo>&#x1d591;</mo></mtd><mtd><mo>&#x1d592;</mo></mtd><mtd><mo>&#x1d593;</mo></mtd><mtd><mo>&#x1d594;</mo></mtd><mtd><mo>&#x1d595;</mo></mtd><mtd><mo>&#x1d596;</mo></mtd><mtd><mo>&#x1d597;</mo></mtd><mtd><mo>&#x1d598;</mo></mtd><mtd><mo>&#x1d599;</mo></mtd><mtd><mo>&#x1d59a;</mo></mtd><mtd><mo>&#x1d59b;</mo></mtd><mtd><mo>&#x1d59c;</mo></mtd><mtd><mo>&#x1d59d;</mo></mtd><mtd><mo>&#x1d59e;</mo></mtd><mtd><mo>&#x1d59f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5a0</mtext></mtd><mtd><mo>&#x1d5a0;</mo></mtd><mtd><mo>&#x1d5a1;</mo></mtd><mtd><mo>&#x1d5a2;</mo></mtd><mtd><mo>&#x1d5a3;</mo></mtd><mtd><mo>&#x1d5a4;</mo></mtd><mtd><mo>&#x1d5a5;</mo></mtd><mtd><mo>&#x1d5a6;</mo></mtd><mtd><mo>&#x1d5a7;</mo></mtd><mtd><mo>&#x1d5a8;</mo></mtd><mtd><mo>&#x1d5a9;</mo></mtd><mtd><mo>&#x1d5aa;</mo></mtd><mtd><mo>&#x1d5ab;</mo></mtd><mtd><mo>&#x1d5ac;</mo></mtd><mtd><mo>&#x1d5ad;</mo></mtd><mtd><mo>&#x1d5ae;</mo></mtd><mtd><mo>&#x1d5af;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5b0</mtext></mtd><mtd><mo>&#x1d5b0;</mo></mtd><mtd><mo>&#x1d5b1;</mo></mtd><mtd><mo>&#x1d5b2;</mo></mtd><mtd><mo>&#x1d5b3;</mo></mtd><mtd><mo>&#x1d5b4;</mo></mtd><mtd><mo>&#x1d5b5;</mo></mtd><mtd><mo>&#x1d5b6;</mo></mtd><mtd><mo>&#x1d5b7;</mo></mtd><mtd><mo>&#x1d5b8;</mo></mtd><mtd><mo>&#x1d5b9;</mo></mtd><mtd><mo>&#x1d5ba;</mo></mtd><mtd><mo>&#x1d5bb;</mo></mtd><mtd><mo>&#x1d5bc;</mo></mtd><mtd><mo>&#x1d5bd;</mo></mtd><mtd><mo>&#x1d5be;</mo></mtd><mtd><mo>&#x1d5af;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5c0</mtext></mtd><mtd><mo>&#x1d5c0;</mo></mtd><mtd><mo>&#x1d5c1;</mo></mtd><mtd><mo>&#x1d5c2;</mo></mtd><mtd><mo>&#x1d5c3;</mo></mtd><mtd><mo>&#x1d5c4;</mo></mtd><mtd><mo>&#x1d5c5;</mo></mtd><mtd><mo>&#x1d5c6;</mo></mtd><mtd><mo>&#x1d5c7;</mo></mtd><mtd><mo>&#x1d5c8;</mo></mtd><mtd><mo>&#x1d5c9;</mo></mtd><mtd><mo>&#x1d5ca;</mo></mtd><mtd><mo>&#x1d5cb;</mo></mtd><mtd><mo>&#x1d5cc;</mo></mtd><mtd><mo>&#x1d5cd;</mo></mtd><mtd><mo>&#x1d5ce;</mo></mtd><mtd><mo>&#x1d5cf;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5d0</mtext></mtd><mtd><mo>&#x1d5d0;</mo></mtd><mtd><mo>&#x1d5d1;</mo></mtd><mtd><mo>&#x1d5d2;</mo></mtd><mtd><mo>&#x1d5d3;</mo></mtd><mtd><mo>&#x1d5d4;</mo></mtd><mtd><mo>&#x1d5d5;</mo></mtd><mtd><mo>&#x1d5d6;</mo></mtd><mtd><mo>&#x1d5d7;</mo></mtd><mtd><mo>&#x1d5d8;</mo></mtd><mtd><mo>&#x1d5d9;</mo></mtd><mtd><mo>&#x1d5da;</mo></mtd><mtd><mo>&#x1d5db;</mo></mtd><mtd><mo>&#x1d5dc;</mo></mtd><mtd><mo>&#x1d5dd;</mo></mtd><mtd><mo>&#x1d5de;</mo></mtd><mtd><mo>&#x1d5df;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5e0</mtext></mtd><mtd><mo>&#x1d5e0;</mo></mtd><mtd><mo>&#x1d5e1;</mo></mtd><mtd><mo>&#x1d5e2;</mo></mtd><mtd><mo>&#x1d5e3;</mo></mtd><mtd><mo>&#x1d5e4;</mo></mtd><mtd><mo>&#x1d5e5;</mo></mtd><mtd><mo>&#x1d5e6;</mo></mtd><mtd><mo>&#x1d5e7;</mo></mtd><mtd><mo>&#x1d5e8;</mo></mtd><mtd><mo>&#x1d5e9;</mo></mtd><mtd><mo>&#x1d5ea;</mo></mtd><mtd><mo>&#x1d5eb;</mo></mtd><mtd><mo>&#x1d5ec;</mo></mtd><mtd><mo>&#x1d5ed;</mo></mtd><mtd><mo>&#x1d5ee;</mo></mtd><mtd><mo>&#x1d5ef;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d5f0</mtext></mtd><mtd><mo>&#x1d5f0;</mo></mtd><mtd><mo>&#x1d5f1;</mo></mtd><mtd><mo>&#x1d5f2;</mo></mtd><mtd><mo>&#x1d5f3;</mo></mtd><mtd><mo>&#x1d5f4;</mo></mtd><mtd><mo>&#x1d5f5;</mo></mtd><mtd><mo>&#x1d5f6;</mo></mtd><mtd><mo>&#x1d5f7;</mo></mtd><mtd><mo>&#x1d5f8;</mo></mtd><mtd><mo>&#x1d5f9;</mo></mtd><mtd><mo>&#x1d5fa;</mo></mtd><mtd><mo>&#x1d5fb;</mo></mtd><mtd><mo>&#x1d5fc;</mo></mtd><mtd><mo>&#x1d5fd;</mo></mtd><mtd><mo>&#x1d5fe;</mo></mtd><mtd><mo>&#x1d5ff;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>1d600</mtext></mtd><mtd><mo>&#x1d600;</mo></mtd><mtd><mo>&#x1d601;</mo></mtd><mtd><mo>&#x1d602;</mo></mtd><mtd><mo>&#x1d603;</mo></mtd><mtd><mo>&#x1d604;</mo></mtd><mtd><mo>&#x1d605;</mo></mtd><mtd><mo>&#x1d606;</mo></mtd><mtd><mo>&#x1d607;</mo></mtd><mtd><mo>&#x1d608;</mo></mtd><mtd><mo>&#x1d609;</mo></mtd><mtd><mo>&#x1d60a;</mo></mtd><mtd><mo>&#x1d60b;</mo></mtd><mtd><mo>&#x1d60c;</mo></mtd><mtd><mo>&#x1d60d;</mo></mtd><mtd><mo>&#x1d60e;</mo></mtd><mtd><mo>&#x1d60f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d610</mtext></mtd><mtd><mo>&#x1d610;</mo></mtd><mtd><mo>&#x1d611;</mo></mtd><mtd><mo>&#x1d612;</mo></mtd><mtd><mo>&#x1d613;</mo></mtd><mtd><mo>&#x1d614;</mo></mtd><mtd><mo>&#x1d615;</mo></mtd><mtd><mo>&#x1d616;</mo></mtd><mtd><mo>&#x1d617;</mo></mtd><mtd><mo>&#x1d618;</mo></mtd><mtd><mo>&#x1d619;</mo></mtd><mtd><mo>&#x1d61a;</mo></mtd><mtd><mo>&#x1d61b;</mo></mtd><mtd><mo>&#x1d61c;</mo></mtd><mtd><mo>&#x1d61d;</mo></mtd><mtd><mo>&#x1d61e;</mo></mtd><mtd><mo>&#x1d61f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d620</mtext></mtd><mtd><mo>&#x1d620;</mo></mtd><mtd><mo>&#x1d621;</mo></mtd><mtd><mo>&#x1d622;</mo></mtd><mtd><mo>&#x1d623;</mo></mtd><mtd><mo>&#x1d624;</mo></mtd><mtd><mo>&#x1d625;</mo></mtd><mtd><mo>&#x1d626;</mo></mtd><mtd><mo>&#x1d627;</mo></mtd><mtd><mo>&#x1d628;</mo></mtd><mtd><mo>&#x1d629;</mo></mtd><mtd><mo>&#x1d62a;</mo></mtd><mtd><mo>&#x1d62b;</mo></mtd><mtd><mo>&#x1d62c;</mo></mtd><mtd><mo>&#x1d62d;</mo></mtd><mtd><mo>&#x1d62e;</mo></mtd><mtd><mo>&#x1d62f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d630</mtext></mtd><mtd><mo>&#x1d630;</mo></mtd><mtd><mo>&#x1d631;</mo></mtd><mtd><mo>&#x1d632;</mo></mtd><mtd><mo>&#x1d633;</mo></mtd><mtd><mo>&#x1d634;</mo></mtd><mtd><mo>&#x1d635;</mo></mtd><mtd><mo>&#x1d636;</mo></mtd><mtd><mo>&#x1d637;</mo></mtd><mtd><mo>&#x1d638;</mo></mtd><mtd><mo>&#x1d639;</mo></mtd><mtd><mo>&#x1d63a;</mo></mtd><mtd><mo>&#x1d63b;</mo></mtd><mtd><mo>&#x1d63c;</mo></mtd><mtd><mo>&#x1d63d;</mo></mtd><mtd><mo>&#x1d63e;</mo></mtd><mtd><mo>&#x1d63f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d640</mtext></mtd><mtd><mo>&#x1d640;</mo></mtd><mtd><mo>&#x1d641;</mo></mtd><mtd><mo>&#x1d642;</mo></mtd><mtd><mo>&#x1d643;</mo></mtd><mtd><mo>&#x1d644;</mo></mtd><mtd><mo>&#x1d645;</mo></mtd><mtd><mo>&#x1d646;</mo></mtd><mtd><mo>&#x1d647;</mo></mtd><mtd><mo>&#x1d648;</mo></mtd><mtd><mo>&#x1d649;</mo></mtd><mtd><mo>&#x1d64a;</mo></mtd><mtd><mo>&#x1d64b;</mo></mtd><mtd><mo>&#x1d64c;</mo></mtd><mtd><mo>&#x1d64d;</mo></mtd><mtd><mo>&#x1d64e;</mo></mtd><mtd><mo>&#x1d64f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d650</mtext></mtd><mtd><mo>&#x1d650;</mo></mtd><mtd><mo>&#x1d651;</mo></mtd><mtd><mo>&#x1d652;</mo></mtd><mtd><mo>&#x1d653;</mo></mtd><mtd><mo>&#x1d654;</mo></mtd><mtd><mo>&#x1d655;</mo></mtd><mtd><mo>&#x1d656;</mo></mtd><mtd><mo>&#x1d657;</mo></mtd><mtd><mo>&#x1d658;</mo></mtd><mtd><mo>&#x1d659;</mo></mtd><mtd><mo>&#x1d65a;</mo></mtd><mtd><mo>&#x1d65b;</mo></mtd><mtd><mo>&#x1d65c;</mo></mtd><mtd><mo>&#x1d65d;</mo></mtd><mtd><mo>&#x1d65e;</mo></mtd><mtd><mo>&#x1d65f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d660</mtext></mtd><mtd><mo>&#x1d660;</mo></mtd><mtd><mo>&#x1d661;</mo></mtd><mtd><mo>&#x1d662;</mo></mtd><mtd><mo>&#x1d663;</mo></mtd><mtd><mo>&#x1d664;</mo></mtd><mtd><mo>&#x1d665;</mo></mtd><mtd><mo>&#x1d666;</mo></mtd><mtd><mo>&#x1d667;</mo></mtd><mtd><mo>&#x1d668;</mo></mtd><mtd><mo>&#x1d669;</mo></mtd><mtd><mo>&#x1d66a;</mo></mtd><mtd><mo>&#x1d66b;</mo></mtd><mtd><mo>&#x1d66c;</mo></mtd><mtd><mo>&#x1d66d;</mo></mtd><mtd><mo>&#x1d66e;</mo></mtd><mtd><mo>&#x1d66f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d670</mtext></mtd><mtd><mo>&#x1d670;</mo></mtd><mtd><mo>&#x1d671;</mo></mtd><mtd><mo>&#x1d672;</mo></mtd><mtd><mo>&#x1d673;</mo></mtd><mtd><mo>&#x1d674;</mo></mtd><mtd><mo>&#x1d675;</mo></mtd><mtd><mo>&#x1d676;</mo></mtd><mtd><mo>&#x1d677;</mo></mtd><mtd><mo>&#x1d678;</mo></mtd><mtd><mo>&#x1d679;</mo></mtd><mtd><mo>&#x1d67a;</mo></mtd><mtd><mo>&#x1d67b;</mo></mtd><mtd><mo>&#x1d67c;</mo></mtd><mtd><mo>&#x1d67d;</mo></mtd><mtd><mo>&#x1d67e;</mo></mtd><mtd><mo>&#x1d67f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d670</mtext></mtd><mtd><mo>&#x1d670;</mo></mtd><mtd><mo>&#x1d671;</mo></mtd><mtd><mo>&#x1d672;</mo></mtd><mtd><mo>&#x1d673;</mo></mtd><mtd><mo>&#x1d674;</mo></mtd><mtd><mo>&#x1d675;</mo></mtd><mtd><mo>&#x1d676;</mo></mtd><mtd><mo>&#x1d677;</mo></mtd><mtd><mo>&#x1d678;</mo></mtd><mtd><mo>&#x1d679;</mo></mtd><mtd><mo>&#x1d67a;</mo></mtd><mtd><mo>&#x1d67b;</mo></mtd><mtd><mo>&#x1d67c;</mo></mtd><mtd><mo>&#x1d67d;</mo></mtd><mtd><mo>&#x1d67e;</mo></mtd><mtd><mo>&#x1d67f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d680</mtext></mtd><mtd><mo>&#x1d680;</mo></mtd><mtd><mo>&#x1d681;</mo></mtd><mtd><mo>&#x1d682;</mo></mtd><mtd><mo>&#x1d683;</mo></mtd><mtd><mo>&#x1d684;</mo></mtd><mtd><mo>&#x1d685;</mo></mtd><mtd><mo>&#x1d686;</mo></mtd><mtd><mo>&#x1d687;</mo></mtd><mtd><mo>&#x1d688;</mo></mtd><mtd><mo>&#x1d689;</mo></mtd><mtd><mo>&#x1d68a;</mo></mtd><mtd><mo>&#x1d68b;</mo></mtd><mtd><mo>&#x1d68c;</mo></mtd><mtd><mo>&#x1d68d;</mo></mtd><mtd><mo>&#x1d68e;</mo></mtd><mtd><mo>&#x1d68f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d690</mtext></mtd><mtd><mo>&#x1d690;</mo></mtd><mtd><mo>&#x1d691;</mo></mtd><mtd><mo>&#x1d692;</mo></mtd><mtd><mo>&#x1d693;</mo></mtd><mtd><mo>&#x1d694;</mo></mtd><mtd><mo>&#x1d695;</mo></mtd><mtd><mo>&#x1d696;</mo></mtd><mtd><mo>&#x1d697;</mo></mtd><mtd><mo>&#x1d698;</mo></mtd><mtd><mo>&#x1d699;</mo></mtd><mtd><mo>&#x1d69a;</mo></mtd><mtd><mo>&#x1d69b;</mo></mtd><mtd><mo>&#x1d69c;</mo></mtd><mtd><mo>&#x1d69d;</mo></mtd><mtd><mo>&#x1d69e;</mo></mtd><mtd><mo>&#x1d69f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6a0</mtext></mtd><mtd><mo>&#x1d6a0;</mo></mtd><mtd><mo>&#x1d6a1;</mo></mtd><mtd><mo>&#x1d6a2;</mo></mtd><mtd><mo>&#x1d6a3;</mo></mtd><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x1d6a8;</mo></mtd><mtd><mo>&#x1d6a9;</mo></mtd><mtd><mo>&#x1d6aa;</mo></mtd><mtd><mo>&#x1d6ab;</mo></mtd><mtd><mo>&#x1d6ac;</mo></mtd><mtd><mo>&#x1d6ad;</mo></mtd><mtd><mo>&#x1d6ae;</mo></mtd><mtd><mo>&#x1d6af;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6b0</mtext></mtd><mtd><mo>&#x1d6b0;</mo></mtd><mtd><mo>&#x1d6b1;</mo></mtd><mtd><mo>&#x1d6b2;</mo></mtd><mtd><mo>&#x1d6b3;</mo></mtd><mtd><mo>&#x1d6b4;</mo></mtd><mtd><mo>&#x1d6b5;</mo></mtd><mtd><mo>&#x1d6b6;</mo></mtd><mtd><mo>&#x1d6b7;</mo></mtd><mtd><mo>&#x1d6b8;</mo></mtd><mtd><mo>&#x1d6b9;</mo></mtd><mtd><mo>&#x1d6ba;</mo></mtd><mtd><mo>&#x1d6bb;</mo></mtd><mtd><mo>&#x1d6bc;</mo></mtd><mtd><mo>&#x1d6bd;</mo></mtd><mtd><mo>&#x1d6be;</mo></mtd><mtd><mo>&#x1d6bf;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6c0</mtext></mtd><mtd><mo>&#x1d6c0;</mo></mtd><mtd><mo>&#x1d6c1;</mo></mtd><mtd><mo>&#x1d6c2;</mo></mtd><mtd><mo>&#x1d6c3;</mo></mtd><mtd><mo>&#x1d6c4;</mo></mtd><mtd><mo>&#x1d6c5;</mo></mtd><mtd><mo>&#x1d6c6;</mo></mtd><mtd><mo>&#x1d6c7;</mo></mtd><mtd><mo>&#x1d6c8;</mo></mtd><mtd><mo>&#x1d6c9;</mo></mtd><mtd><mo>&#x1d6ca;</mo></mtd><mtd><mo>&#x1d6cb;</mo></mtd><mtd><mo>&#x1d6cc;</mo></mtd><mtd><mo>&#x1d6cd;</mo></mtd><mtd><mo>&#x1d6ce;</mo></mtd><mtd><mo>&#x1d6cf;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6d0</mtext></mtd><mtd><mo>&#x1d6d0;</mo></mtd><mtd><mo>&#x1d6d1;</mo></mtd><mtd><mo>&#x1d6d2;</mo></mtd><mtd><mo>&#x1d6d3;</mo></mtd><mtd><mo>&#x1d6d4;</mo></mtd><mtd><mo>&#x1d6d5;</mo></mtd><mtd><mo>&#x1d6d6;</mo></mtd><mtd><mo>&#x1d6d7;</mo></mtd><mtd><mo>&#x1d6d8;</mo></mtd><mtd><mo>&#x1d6d9;</mo></mtd><mtd><mo>&#x1d6da;</mo></mtd><mtd><mo>&#x1d6db;</mo></mtd><mtd><mo>&#x1d6dc;</mo></mtd><mtd><mo>&#x1d6dd;</mo></mtd><mtd><mo>&#x1d6de;</mo></mtd><mtd><mo>&#x1d6df;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6e0</mtext></mtd><mtd><mo>&#x1d6e0;</mo></mtd><mtd><mo>&#x1d6e1;</mo></mtd><mtd><mo>&#x1d6e2;</mo></mtd><mtd><mo>&#x1d6e3;</mo></mtd><mtd><mo>&#x1d6e4;</mo></mtd><mtd><mo>&#x1d6e5;</mo></mtd><mtd><mo>&#x1d6e6;</mo></mtd><mtd><mo>&#x1d6e7;</mo></mtd><mtd><mo>&#x1d6e8;</mo></mtd><mtd><mo>&#x1d6e9;</mo></mtd><mtd><mo>&#x1d6ea;</mo></mtd><mtd><mo>&#x1d6eb;</mo></mtd><mtd><mo>&#x1d6ec;</mo></mtd><mtd><mo>&#x1d6ed;</mo></mtd><mtd><mo>&#x1d6ee;</mo></mtd><mtd><mo>&#x1d6ef;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d6f0</mtext></mtd><mtd><mo>&#x1d6f0;</mo></mtd><mtd><mo>&#x1d6f1;</mo></mtd><mtd><mo>&#x1d6f2;</mo></mtd><mtd><mo>&#x1d6f3;</mo></mtd><mtd><mo>&#x1d6f4;</mo></mtd><mtd><mo>&#x1d6f5;</mo></mtd><mtd><mo>&#x1d6f6;</mo></mtd><mtd><mo>&#x1d6f7;</mo></mtd><mtd><mo>&#x1d6f8;</mo></mtd><mtd><mo>&#x1d6f9;</mo></mtd><mtd><mo>&#x1d6fa;</mo></mtd><mtd><mo>&#x1d6fb;</mo></mtd><mtd><mo>&#x1d6fc;</mo></mtd><mtd><mo>&#x1d6fd;</mo></mtd><mtd><mo>&#x1d6fe;</mo></mtd><mtd><mo>&#x1d6ff;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>1d700</mtext></mtd><mtd><mo>&#x1d700;</mo></mtd><mtd><mo>&#x1d701;</mo></mtd><mtd><mo>&#x1d702;</mo></mtd><mtd><mo>&#x1d703;</mo></mtd><mtd><mo>&#x1d704;</mo></mtd><mtd><mo>&#x1d705;</mo></mtd><mtd><mo>&#x1d706;</mo></mtd><mtd><mo>&#x1d707;</mo></mtd><mtd><mo>&#x1d708;</mo></mtd><mtd><mo>&#x1d709;</mo></mtd><mtd><mo>&#x1d70a;</mo></mtd><mtd><mo>&#x1d70b;</mo></mtd><mtd><mo>&#x1d70c;</mo></mtd><mtd><mo>&#x1d70d;</mo></mtd><mtd><mo>&#x1d70e;</mo></mtd><mtd><mo>&#x1d70f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d710</mtext></mtd><mtd><mo>&#x1d710;</mo></mtd><mtd><mo>&#x1d711;</mo></mtd><mtd><mo>&#x1d712;</mo></mtd><mtd><mo>&#x1d713;</mo></mtd><mtd><mo>&#x1d714;</mo></mtd><mtd><mo>&#x1d715;</mo></mtd><mtd><mo>&#x1d716;</mo></mtd><mtd><mo>&#x1d717;</mo></mtd><mtd><mo>&#x1d718;</mo></mtd><mtd><mo>&#x1d719;</mo></mtd><mtd><mo>&#x1d71a;</mo></mtd><mtd><mo>&#x1d71b;</mo></mtd><mtd><mo>&#x1d71c;</mo></mtd><mtd><mo>&#x1d71d;</mo></mtd><mtd><mo>&#x1d71e;</mo></mtd><mtd><mo>&#x1d71f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d720</mtext></mtd><mtd><mo>&#x1d720;</mo></mtd><mtd><mo>&#x1d721;</mo></mtd><mtd><mo>&#x1d722;</mo></mtd><mtd><mo>&#x1d723;</mo></mtd><mtd><mo>&#x1d724;</mo></mtd><mtd><mo>&#x1d725;</mo></mtd><mtd><mo>&#x1d726;</mo></mtd><mtd><mo>&#x1d727;</mo></mtd><mtd><mo>&#x1d728;</mo></mtd><mtd><mo>&#x1d729;</mo></mtd><mtd><mo>&#x1d72a;</mo></mtd><mtd><mo>&#x1d72b;</mo></mtd><mtd><mo>&#x1d72c;</mo></mtd><mtd><mo>&#x1d72d;</mo></mtd><mtd><mo>&#x1d72e;</mo></mtd><mtd><mo>&#x1d72f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d730</mtext></mtd><mtd><mo>&#x1d730;</mo></mtd><mtd><mo>&#x1d731;</mo></mtd><mtd><mo>&#x1d732;</mo></mtd><mtd><mo>&#x1d733;</mo></mtd><mtd><mo>&#x1d734;</mo></mtd><mtd><mo>&#x1d735;</mo></mtd><mtd><mo>&#x1d736;</mo></mtd><mtd><mo>&#x1d737;</mo></mtd><mtd><mo>&#x1d738;</mo></mtd><mtd><mo>&#x1d739;</mo></mtd><mtd><mo>&#x1d73a;</mo></mtd><mtd><mo>&#x1d73b;</mo></mtd><mtd><mo>&#x1d73c;</mo></mtd><mtd><mo>&#x1d73d;</mo></mtd><mtd><mo>&#x1d73e;</mo></mtd><mtd><mo>&#x1d73f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d740</mtext></mtd><mtd><mo>&#x1d740;</mo></mtd><mtd><mo>&#x1d741;</mo></mtd><mtd><mo>&#x1d742;</mo></mtd><mtd><mo>&#x1d743;</mo></mtd><mtd><mo>&#x1d744;</mo></mtd><mtd><mo>&#x1d745;</mo></mtd><mtd><mo>&#x1d746;</mo></mtd><mtd><mo>&#x1d747;</mo></mtd><mtd><mo>&#x1d748;</mo></mtd><mtd><mo>&#x1d749;</mo></mtd><mtd><mo>&#x1d74a;</mo></mtd><mtd><mo>&#x1d74b;</mo></mtd><mtd><mo>&#x1d74c;</mo></mtd><mtd><mo>&#x1d74d;</mo></mtd><mtd><mo>&#x1d74e;</mo></mtd><mtd><mo>&#x1d74f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d750</mtext></mtd><mtd><mo>&#x1d750;</mo></mtd><mtd><mo>&#x1d751;</mo></mtd><mtd><mo>&#x1d752;</mo></mtd><mtd><mo>&#x1d753;</mo></mtd><mtd><mo>&#x1d754;</mo></mtd><mtd><mo>&#x1d755;</mo></mtd><mtd><mo>&#x1d756;</mo></mtd><mtd><mo>&#x1d757;</mo></mtd><mtd><mo>&#x1d758;</mo></mtd><mtd><mo>&#x1d759;</mo></mtd><mtd><mo>&#x1d75a;</mo></mtd><mtd><mo>&#x1d75b;</mo></mtd><mtd><mo>&#x1d75c;</mo></mtd><mtd><mo>&#x1d75d;</mo></mtd><mtd><mo>&#x1d75e;</mo></mtd><mtd><mo>&#x1d75f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d760</mtext></mtd><mtd><mo>&#x1d760;</mo></mtd><mtd><mo>&#x1d761;</mo></mtd><mtd><mo>&#x1d762;</mo></mtd><mtd><mo>&#x1d763;</mo></mtd><mtd><mo>&#x1d764;</mo></mtd><mtd><mo>&#x1d765;</mo></mtd><mtd><mo>&#x1d766;</mo></mtd><mtd><mo>&#x1d767;</mo></mtd><mtd><mo>&#x1d768;</mo></mtd><mtd><mo>&#x1d769;</mo></mtd><mtd><mo>&#x1d76a;</mo></mtd><mtd><mo>&#x1d76b;</mo></mtd><mtd><mo>&#x1d76c;</mo></mtd><mtd><mo>&#x1d76d;</mo></mtd><mtd><mo>&#x1d76e;</mo></mtd><mtd><mo>&#x1d76f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d7c0</mtext></mtd><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x1d7ce;</mo></mtd><mtd><mo>&#x1d7cf;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d7d0</mtext></mtd><mtd><mo>&#x1d7d0;</mo></mtd><mtd><mo>&#x1d7d1;</mo></mtd><mtd><mo>&#x1d7d2;</mo></mtd><mtd><mo>&#x1d7d3;</mo></mtd><mtd><mo>&#x1d7d4;</mo></mtd><mtd><mo>&#x1d7d5;</mo></mtd><mtd><mo>&#x1d7d6;</mo></mtd><mtd><mo>&#x1d7d7;</mo></mtd><mtd><mo>&#x1d7d8;</mo></mtd><mtd><mo>&#x1d7d9;</mo></mtd><mtd><mo>&#x1d7da;</mo></mtd><mtd><mo>&#x1d7db;</mo></mtd><mtd><mo>&#x1d7dc;</mo></mtd><mtd><mo>&#x1d7dd;</mo></mtd><mtd><mo>&#x1d7de;</mo></mtd><mtd><mo>&#x1d7df;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d7e0</mtext></mtd><mtd><mo>&#x1d7e0;</mo></mtd><mtd><mo>&#x1d7e1;</mo></mtd><mtd><mo>&#x1d7e2;</mo></mtd><mtd><mo>&#x1d7e3;</mo></mtd><mtd><mo>&#x1d7e4;</mo></mtd><mtd><mo>&#x1d7e5;</mo></mtd><mtd><mo>&#x1d7e6;</mo></mtd><mtd><mo>&#x1d7e7;</mo></mtd><mtd><mo>&#x1d7e8;</mo></mtd><mtd><mo>&#x1d7e9;</mo></mtd><mtd><mo>&#x1d7ea;</mo></mtd><mtd><mo>&#x1d7eb;</mo></mtd><mtd><mo>&#x1d7ec;</mo></mtd><mtd><mo>&#x1d7ed;</mo></mtd><mtd><mo>&#x1d7ee;</mo></mtd><mtd><mo>&#x1d7ef;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>1d7f0</mtext></mtd><mtd><mo>&#x1d7f0;</mo></mtd><mtd><mo>&#x1d7f1;</mo></mtd><mtd><mo>&#x1d7f2;</mo></mtd><mtd><mo>&#x1d7f3;</mo></mtd><mtd><mo>&#x1d7f4;</mo></mtd><mtd><mo>&#x1d7f5;</mo></mtd><mtd><mo>&#x1d7f6;</mo></mtd><mtd><mo>&#x1d7f7;</mo></mtd><mtd><mo>&#x1d7f8;</mo></mtd><mtd><mo>&#x1d7f9;</mo></mtd><mtd><mo>&#x1d7fa;</mo></mtd><mtd><mo>&#x1d7fb;</mo></mtd><mtd><mo>&#x1d7fc;</mo></mtd><mtd><mo>&#x1d7fd;</mo></mtd><mtd><mo>&#x1d7fe;</mo></mtd><mtd><mo>&#x1d7ff;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>2300</mtext></mtd><mtd><mo>&#x2300;</mo></mtd><mtd><mo>&#x2301;</mo></mtd><mtd><mo>&#x2302;</mo></mtd><mtd><mo>&#x2303;</mo></mtd><mtd><mo>&#x2304;</mo></mtd><mtd><mo>&#x02305;</mo></mtd><mtd><mo>&#x02306;</mo></mtd><mtd><mo>&#x2307;</mo></mtd><mtd><mo>&#x02308;</mo></mtd><mtd><mo>&#x02309;</mo></mtd><mtd><mo>&#x0230A;</mo></mtd><mtd><mo>&#x0230B;</mo></mtd><mtd><mo>&#x0230C;</mo></mtd><mtd><mo>&#x0230D;</mo></mtd><mtd><mo>&#x0230E;</mo></mtd><mtd><mo>&#x0230F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2310</mtext></mtd><mtd><mo>&#x02310;</mo></mtd><mtd><mo>&#x2311;</mo></mtd><mtd><mo>&#x02312;</mo></mtd><mtd><mo>&#x02313;</mo></mtd><mtd><mo>&#x2314;</mo></mtd><mtd><mo>&#x02315;</mo></mtd><mtd><mo>&#x02316;</mo></mtd><mtd><mo>&#x2317;</mo></mtd><mtd><mo>&#x2318;</mo></mtd><mtd><mo>&#x2319;</mo></mtd><mtd><mo>&#x231a;</mo></mtd><mtd><mo>&#x231b;</mo></mtd><mtd><mo>&#x0231C;</mo></mtd><mtd><mo>&#x0231D;</mo></mtd><mtd><mo>&#x0231E;</mo></mtd><mtd><mo>&#x0231F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2320</mtext></mtd><mtd><mo>&#x2320;</mo></mtd><mtd><mo>&#x2321;</mo></mtd><mtd><mo>&#x02322;</mo></mtd><mtd><mo>&#x02323;</mo></mtd><mtd><mo>&#x2324;</mo></mtd><mtd><mo>&#x2325;</mo></mtd><mtd><mo>&#x2326;</mo></mtd><mtd><mo>&#x2327;</mo></mtd><mtd><mo>&#x2328;</mo></mtd><mtd><mo>&#x02329;</mo></mtd><mtd><mo>&#x0232A;</mo></mtd><mtd><mo>&#x232b;</mo></mtd><mtd><mo>&#x232c;</mo></mtd><mtd><mo>&#x0232D;</mo></mtd><mtd><mo>&#x0232E;</mo></mtd><mtd><mo>&#x232f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2330</mtext></mtd><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x02336;</mo></mtd><mtd/><mtd/><mtd><mo>&#x2339;</mo></mtd><mtd/><mtd/><mtd/><mtd><mo>&#x0233D;</mo></mtd><mtd/><mtd><mo>&#x0233F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2340</mtext></mtd><mtd><mo>&#x2340;</mo></mtd><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x2347;</mo></mtd><mtd><mo>&#x2348;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2350</mtext></mtd><mtd><mo>&#x2350;</mo></mtd><mtd/><mtd/><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x2357;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2600</mtext></mtd><mtd/><mtd><mo>&#x2601;</mo></mtd><mtd/><mtd/><mtd/><mtd><mo>&#x02605;</mo></mtd><mtd><mo>&#x02606;</mo></mtd><mtd/><mtd/><mtd/><mtd/><mtd/><mtd><mo>&#x260C;</mo></mtd><mtd><mrow><mo>&#x260d;</mo><mo>&#x263d;</mo></mrow></mtd><mtd><mo>&#x263e;</mo></mtd><mtd><mo>&#x263f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2640</mtext></mtd><mtd><mo>&#x02640;</mo></mtd><mtd><mo>&#x2641;</mo></mtd><mtd><mo>&#x02642;</mo></mtd><mtd><mo>&#x2643;</mo></mtd><mtd><mo>&#x2644;</mo></mtd><mtd><mo>&#x2645;</mo></mtd><mtd><mo>&#x2646;</mo></mtd><mtd><mo>&#x2647;</mo></mtd><mtd><mo>&#x2648;</mo></mtd><mtd><mo>&#x2649;</mo></mtd><mtd><mo>&#x264A;</mo></mtd><mtd><mo>&#x264b;</mo></mtd><mtd><mo>&#x264c;</mo></mtd><mtd><mo>&#x264d;</mo></mtd><mtd><mo>&#x264e;</mo></mtd><mtd><mo>&#x264f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2650</mtext></mtd><mtd><mo>&#x2650;</mo></mtd><mtd><mo>&#x2651;</mo></mtd><mtd><mo>&#x2652;</mo></mtd><mtd><mo>&#x2653;</mo></mtd><mtd><mo>&#x2654;</mo></mtd><mtd><mo>&#x2655;</mo></mtd><mtd><mo>&#x2656;</mo></mtd><mtd><mo>&#x2657;</mo></mtd><mtd><mo>&#x2658;</mo></mtd><mtd><mo>&#x2659;</mo></mtd><mtd><mo>&#x265A;</mo></mtd><mtd><mo>&#x265b;</mo></mtd><mtd><mo>&#x265c;</mo></mtd><mtd><mo>&#x265d;</mo></mtd><mtd><mo>&#x265e;</mo></mtd><mtd><mo>&#x265f;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2660</mtext></mtd><mtd><mo>&#x02660;</mo></mtd><mtd><mo>&#x2661;</mo></mtd><mtd><mo>&#x2662;</mo></mtd><mtd><mo>&#x02663;</mo></mtd><mtd><mo>&#x2664;</mo></mtd><mtd><mo>&#x02665;</mo></mtd><mtd><mo>&#x02666;</mo></mtd><mtd><mo>&#x2667;</mo></mtd><mtd/><mtd><mo>&#x2669;</mo></mtd><mtd><mo>&#x0266A;</mo></mtd><mtd/><mtd/><mtd><mo>&#x0266D;</mo></mtd><mtd><mo>&#x0266E;</mo></mtd><mtd><mo>&#x0266F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2680</mtext></mtd><mtd><mo>&#x2680;</mo></mtd><mtd><mo>&#x2681;</mo></mtd><mtd><mo>&#x2682;</mo></mtd><mtd><mo>&#x2683;</mo></mtd><mtd><mo>&#x2684;</mo></mtd><mtd><mo>&#x2685;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>2200</mtext></mtd><mtd><mo>&#x02200;</mo></mtd><mtd><mo>&#x02201;</mo></mtd><mtd><mo>&#x02202;</mo></mtd><mtd><mo>&#x02203;</mo></mtd><mtd><mo>&#x02204;</mo></mtd><mtd><mo>&#x02205;</mo></mtd><mtd><mo>&#x2206;</mo></mtd><mtd><mo>&#x02207;</mo></mtd><mtd><mo>&#x02208;</mo></mtd><mtd><mo>&#x02209;</mo></mtd><mtd><mo>&#x220a;</mo></mtd><mtd><mo>&#x0220B;</mo></mtd><mtd><mo>&#x0220C;</mo></mtd><mtd><mo>&#x220d;</mo></mtd><mtd><mo>&#x220e;</mo></mtd><mtd><mo>&#x0220F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2210</mtext></mtd><mtd><mo>&#x02210;</mo></mtd><mtd><mo>&#x02211;</mo></mtd><mtd><mo>&#x02212;</mo></mtd><mtd><mo>&#x02213;</mo></mtd><mtd><mo>&#x02214;</mo></mtd><mtd><mo>&#x2215;</mo></mtd><mtd><mo>&#x02216;</mo></mtd><mtd><mo>&#x02217;</mo></mtd><mtd><mo>&#x02218;</mo></mtd><mtd><mo>&#x2219;</mo></mtd><mtd><mo>&#x0221A;</mo></mtd><mtd><mo>&#x221B;</mo></mtd><mtd><mo>&#x221c;</mo></mtd><mtd><mo>&#x0221D;</mo></mtd><mtd><mo>&#x0221E;</mo></mtd><mtd><mo>&#x0221F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2220</mtext></mtd><mtd><mo>&#x02220;</mo></mtd><mtd><mo>&#x02221;</mo></mtd><mtd><mo>&#x2222;</mo></mtd><mtd><mo>&#x02223;</mo></mtd><mtd><mo>&#x02224;</mo></mtd><mtd><mo>&#x02225;</mo></mtd><mtd><mo>&#x02226;</mo></mtd><mtd><mo>&#x02227;</mo></mtd><mtd><mo>&#x02228;</mo></mtd><mtd><mo>&#x02229;</mo></mtd><mtd><mo>&#x0222A;</mo></mtd><mtd><mo>&#x0222B;</mo></mtd><mtd><mo>&#x0222C;</mo></mtd><mtd><mo>&#x0222D;</mo></mtd><mtd><mo>&#x0222E;</mo></mtd><mtd><mo>&#x0222F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2230</mtext></mtd><mtd><mo>&#x02230;</mo></mtd><mtd><mo>&#x02231;</mo></mtd><mtd><mo>&#x02232;</mo></mtd><mtd><mo>&#x02233;</mo></mtd><mtd><mo>&#x02234;</mo></mtd><mtd><mo>&#x02235;</mo></mtd><mtd><mo>&#x02236;</mo></mtd><mtd><mo>&#x02237;</mo></mtd><mtd><mo>&#x02238;</mo></mtd><mtd><mo>&#x2239;</mo></mtd><mtd><mo>&#x0223A;</mo></mtd><mtd><mo>&#x0223B;</mo></mtd><mtd><mo>&#x0223C;</mo></mtd><mtd><mo>&#x0223D;</mo></mtd><mtd><mo>&#x0223E;</mo></mtd><mtd><mo>&#x0223E;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2240</mtext></mtd><mtd><mo>&#x02240;</mo></mtd><mtd><mo>&#x02241;</mo></mtd><mtd><mo>&#x02242;</mo></mtd><mtd><mo>&#x02243;</mo></mtd><mtd><mo>&#x02244;</mo></mtd><mtd><mo>&#x02245;</mo></mtd><mtd><mo>&#x02246;</mo></mtd><mtd><mo>&#x02247;</mo></mtd><mtd><mo>&#x02248;</mo></mtd><mtd><mo>&#x02249;</mo></mtd><mtd><mo>&#x0224A;</mo></mtd><mtd><mo>&#x0224B;</mo></mtd><mtd><mo>&#x0224C;</mo></mtd><mtd><mo>&#x0224D;</mo></mtd><mtd><mo>&#x0224E;</mo></mtd><mtd><mo>&#x0224F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2250</mtext></mtd><mtd><mo>&#x02250;</mo></mtd><mtd><mo>&#x02251;</mo></mtd><mtd><mo>&#x02252;</mo></mtd><mtd><mo>&#x02253;</mo></mtd><mtd><mo>&#x02254;</mo></mtd><mtd><mo>&#x02255;</mo></mtd><mtd><mo>&#x02256;</mo></mtd><mtd><mo>&#x02257;</mo></mtd><mtd><mo>&#x2258;</mo></mtd><mtd><mo>&#x2259;</mo></mtd><mtd><mo>&#x225a;</mo></mtd><mtd><mo>&#x225b;</mo></mtd><mtd><mo>&#x0225C;</mo></mtd><mtd><mo>&#x225d;</mo></mtd><mtd><mo>&#x225e;</mo></mtd><mtd><mo>&#x0225F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2260</mtext></mtd><mtd><mo>&#x02260;</mo></mtd><mtd><mo>&#x02261;</mo></mtd><mtd><mo>&#x02262;</mo></mtd><mtd><mo>&#x2263;</mo></mtd><mtd><mo>&#x02264;</mo></mtd><mtd><mo>&#x02265;</mo></mtd><mtd><mo>&#x02266;</mo></mtd><mtd><mo>&#x02267;</mo></mtd><mtd><mo>&#x02268;</mo></mtd><mtd><mo>&#x02269;</mo></mtd><mtd><mo>&#x0226A;</mo></mtd><mtd><mo>&#x0226B;</mo></mtd><mtd><mo>&#x0226C;</mo></mtd><mtd><mo>&#x0226D;</mo></mtd><mtd><mo>&#x0226E;</mo></mtd><mtd><mo>&#x0226F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2270</mtext></mtd><mtd><mo>&#x02270;</mo></mtd><mtd><mo>&#x02271;</mo></mtd><mtd><mo>&#x02272;</mo></mtd><mtd><mo>&#x02273;</mo></mtd><mtd><mo>&#x02274;</mo></mtd><mtd><mo>&#x02275;</mo></mtd><mtd><mo>&#x02276;</mo></mtd><mtd><mo>&#x02277;</mo></mtd><mtd><mo>&#x02278;</mo></mtd><mtd><mo>&#x02279;</mo></mtd><mtd><mo>&#x0227A;</mo></mtd><mtd><mo>&#x0227B;</mo></mtd><mtd><mo>&#x0227C;</mo></mtd><mtd><mo>&#x0227D;</mo></mtd><mtd><mo>&#x0227E;</mo></mtd><mtd><mo>&#x0227F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2280</mtext></mtd><mtd><mo>&#x02280;</mo></mtd><mtd><mo>&#x02281;</mo></mtd><mtd><mo>&#x02282;</mo></mtd><mtd><mo>&#x02283;</mo></mtd><mtd><mo>&#x02284;</mo></mtd><mtd><mo>&#x02285;</mo></mtd><mtd><mo>&#x02286;</mo></mtd><mtd><mo>&#x02287;</mo></mtd><mtd><mo>&#x02288;</mo></mtd><mtd><mo>&#x02289;</mo></mtd><mtd><mo>&#x0228A;</mo></mtd><mtd><mo>&#x0228B;</mo></mtd><mtd><mo>&#x228c;</mo></mtd><mtd><mo>&#x0228D;</mo></mtd><mtd><mo>&#x0228E;</mo></mtd><mtd><mo>&#x0228F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>2290</mtext></mtd><mtd><mo>&#x02290;</mo></mtd><mtd><mo>&#x02291;</mo></mtd><mtd><mo>&#x02292;</mo></mtd><mtd><mo>&#x02293;</mo></mtd><mtd><mo>&#x02294;</mo></mtd><mtd><mo>&#x02295;</mo></mtd><mtd><mo>&#x02296;</mo></mtd><mtd><mo>&#x02297;</mo></mtd><mtd><mo>&#x02298;</mo></mtd><mtd><mo>&#x02299;</mo></mtd><mtd><mo>&#x0229A;</mo></mtd><mtd><mo>&#x0229B;</mo></mtd><mtd><mo>&#x229c;</mo></mtd><mtd><mo>&#x0229D;</mo></mtd><mtd><mo>&#x0229E;</mo></mtd><mtd><mo>&#x0229F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22a0</mtext></mtd><mtd><mo>&#x022A0;</mo></mtd><mtd><mo>&#x022A1;</mo></mtd><mtd><mo>&#x022A2;</mo></mtd><mtd><mo>&#x022A3;</mo></mtd><mtd><mo>&#x022A4;</mo></mtd><mtd><mo>&#x022A5;</mo></mtd><mtd><mo>&#x22a6;</mo></mtd><mtd><mo>&#x022A7;</mo></mtd><mtd><mo>&#x022A8;</mo></mtd><mtd><mo>&#x022A9;</mo></mtd><mtd><mo>&#x022AA;</mo></mtd><mtd><mo>&#x022AB;</mo></mtd><mtd><mo>&#x022AC;</mo></mtd><mtd><mo>&#x022AD;</mo></mtd><mtd><mo>&#x022AE;</mo></mtd><mtd><mo>&#x022AF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22b0</mtext></mtd><mtd><mo>&#x022B0;</mo></mtd><mtd><mo>&#x22b1;</mo></mtd><mtd><mo>&#x022B2;</mo></mtd><mtd><mo>&#x022B3;</mo></mtd><mtd><mo>&#x022B4;</mo></mtd><mtd><mo>&#x022B5;</mo></mtd><mtd><mo>&#x022B6;</mo></mtd><mtd><mo>&#x022B7;</mo></mtd><mtd><mo>&#x022B8;</mo></mtd><mtd><mo>&#x022B9;</mo></mtd><mtd><mo>&#x022BA;</mo></mtd><mtd><mo>&#x022BB;</mo></mtd><mtd><mo>&#x22bc;</mo></mtd><mtd><mo>&#x022BD;</mo></mtd><mtd><mo>&#x022BE;</mo></mtd><mtd><mo>&#x022BF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22c0</mtext></mtd><mtd><mo>&#x022C0;</mo></mtd><mtd><mo>&#x022C1;</mo></mtd><mtd><mo>&#x022C2;</mo></mtd><mtd><mo>&#x022C3;</mo></mtd><mtd><mo>&#x022C4;</mo></mtd><mtd><mo>&#x022C5;</mo></mtd><mtd><mo>&#x022C6;</mo></mtd><mtd><mo>&#x022C7;</mo></mtd><mtd><mo>&#x022C8;</mo></mtd><mtd><mo>&#x022C9;</mo></mtd><mtd><mo>&#x022CA;</mo></mtd><mtd><mo>&#x022CB;</mo></mtd><mtd><mo>&#x022CC;</mo></mtd><mtd><mo>&#x022CD;</mo></mtd><mtd><mo>&#x022CE;</mo></mtd><mtd><mo>&#x022CF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22d0</mtext></mtd><mtd><mo>&#x022D0;</mo></mtd><mtd><mo>&#x022D1;</mo></mtd><mtd><mo>&#x022D2;</mo></mtd><mtd><mo>&#x022D3;</mo></mtd><mtd><mo>&#x022D4;</mo></mtd><mtd><mo>&#x022D5;</mo></mtd><mtd><mo>&#x022D6;</mo></mtd><mtd><mo>&#x022D7;</mo></mtd><mtd><mo>&#x022D8;</mo></mtd><mtd><mo>&#x022D9;</mo></mtd><mtd><mo>&#x022DA;</mo></mtd><mtd><mo>&#x022DB;</mo></mtd><mtd><mo>&#x22dc;</mo></mtd><mtd><mo>&#x22dd;</mo></mtd><mtd><mo>&#x022DE;</mo></mtd><mtd><mo>&#x022DF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22e0</mtext></mtd><mtd><mo>&#x022E0;</mo></mtd><mtd><mo>&#x022E1;</mo></mtd><mtd><mo>&#x022E2;</mo></mtd><mtd><mo>&#x022E3;</mo></mtd><mtd><mo>&#x22e4;</mo></mtd><mtd><mo>&#x22e5;</mo></mtd><mtd><mo>&#x022E6;</mo></mtd><mtd><mo>&#x022E7;</mo></mtd><mtd><mo>&#x022E8;</mo></mtd><mtd><mo>&#x022E9;</mo></mtd><mtd><mo>&#x022EA;</mo></mtd><mtd><mo>&#x022EB;</mo></mtd><mtd><mo>&#x022EC;</mo></mtd><mtd><mo>&#x022ED;</mo></mtd><mtd><mo>&#x022EE;</mo></mtd><mtd><mo>&#x022EF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>22f0</mtext></mtd><mtd><mo>&#x022F0;</mo></mtd><mtd><mo>&#x022F1;</mo></mtd><mtd><mo>&#x022F2;</mo></mtd><mtd><mo>&#x022F3;</mo></mtd><mtd><mo>&#x022F4;</mo></mtd><mtd><mo>&#x022F5;</mo></mtd><mtd><mo>&#x022F6;</mo></mtd><mtd><mo>&#x022F7;</mo></mtd><mtd><mo>&#x22f8;</mo></mtd><mtd><mo>&#x022F9;</mo></mtd><mtd><mo>&#x022FA;</mo></mtd><mtd><mo>&#x022FB;</mo></mtd><mtd><mo>&#x022FC;</mo></mtd><mtd><mo>&#x022FD;</mo></mtd><mtd><mo>&#x022FE;</mo></mtd><mtd><mo>&#x22ff;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mo>&amp;#x2100;</mo></mtd><mtd><mo>&amp;#x2101;</mo></mtd><mtd><mi>&Copf;</mi></mtd><mtd><mo>&amp;#x2103;</mo></mtd><mtd><mo>&amp;#x2104;</mo></mtd><mtd><mo>&amp;#x2105;</mo></mtd><mtd><mo>&amp;#x2106;</mo></mtd><mtd><mo>&amp;#x2107;</mo></mtd><mtd><mo>&amp;#x2108;</mo></mtd><mtd><mo>&amp;#x2109;</mo></mtd><mtd><mo>&amp;#x210A;</mo></mtd><mtd><mo>&amp;#x210B;</mo></mtd><mtd><mo>&amp;#x210C;</mo></mtd><mtd><mo>&amp;#x210D;</mo></mtd><mtd><mo>&amp;#x210E;</mo></mtd><mtd><mo>&amp;#x210F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mo>&amp;#x2110;</mo></mtd><mtd><mo>&amp;#x2111;</mo></mtd><mtd><mo>&amp;#x2112;</mo></mtd><mtd><mo>&amp;#x2113;</mo></mtd><mtd><mo>&amp;#x2114;</mo></mtd><mtd><mo>&amp;#x2115;</mo></mtd><mtd><mo>&amp;#x2116;</mo></mtd><mtd><mo>&amp;#x2117;</mo></mtd><mtd><mo>&amp;#x2118;</mo></mtd><mtd><mo>&amp;#x2119;</mo></mtd><mtd><mo>&amp;#x211A;</mo></mtd><mtd><mo>&amp;#x211B;</mo></mtd><mtd><mo>&amp;#x211C;</mo></mtd><mtd><mo>&amp;#x211D;</mo></mtd><mtd><mo>&amp;#x211E;</mo></mtd><mtd><mo>&amp;#x211F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mo>&amp;#x2120;</mo></mtd><mtd><mo>&amp;#x2121;</mo></mtd><mtd><mo>&amp;#x2122;</mo></mtd><mtd><mo>&amp;#x2123;</mo></mtd><mtd><mo>&amp;#x2124;</mo></mtd><mtd><mo>&amp;#x2125;</mo></mtd><mtd><mo>&amp;#x2126;</mo></mtd><mtd><mo>&amp;#x2127;</mo></mtd><mtd><mo>&amp;#x2128;</mo></mtd><mtd><mo>&amp;#x2129;</mo></mtd><mtd><mo>&amp;#x212A;</mo></mtd><mtd><mo>&amp;#x212B;</mo></mtd><mtd><mo>&amp;#x212C;</mo></mtd><mtd><mo>&amp;#x212D;</mo></mtd><mtd><mo>&amp;#x212E;</mo></mtd><mtd><mo>&amp;#x212F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mo>&amp;#x2130;</mo></mtd><mtd><mo>&amp;#x2131;</mo></mtd><mtd><mo>&amp;#x2132;</mo></mtd><mtd><mo>&amp;#x2133;</mo></mtd><mtd><mo>&amp;#x2134;</mo></mtd><mtd><mo>&amp;#x2135;</mo></mtd><mtd><mo>&amp;#x2136;</mo></mtd><mtd><mo>&amp;#x2137;</mo></mtd><mtd><mo>&amp;#x2138;</mo></mtd><mtd><mo>&amp;#x2139;</mo></mtd><mtd><mo>&amp;#x213A;</mo></mtd><mtd><mo>&amp;#x213B;</mo></mtd><mtd/><mtd><mo>&amp;#x213D;</mo></mtd><mtd><mo>&amp;#x213E;</mo></mtd><mtd><mo>&amp;#x213F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mo>&amp;#x2140;</mo></mtd><mtd><mo>&amp;#x2141;</mo></mtd><mtd><mo>&amp;#x2142;</mo></mtd><mtd><mo>&amp;#x2143;</mo></mtd><mtd><mo>&amp;#x2144;</mo></mtd><mtd><mo>&amp;#x2145;</mo></mtd><mtd><mo>&amp;#x2146;</mo></mtd><mtd><mo>&amp;#x2147;</mo></mtd><mtd><mo>&amp;#x2148;</mo></mtd><mtd><mo>&amp;#x2149;</mo></mtd><mtd><mo>&amp;#x214A;</mo></mtd><mtd><mo>&amp;#x214B;</mo></mtd></mtr></mtable></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mtext>2190</mtext></mtd><mtd><mo>&#x02190;</mo></mtd><mtd><mo>&#x02191;</mo></mtd><mtd><mo>&#x02192;</mo></mtd><mtd><mo>&#x02193;</mo></mtd><mtd><mo>&#x02194;</mo></mtd><mtd><mo>&#x02195;</mo></mtd><mtd><mo>&#x02196;</mo></mtd><mtd><mo>&#x02197;</mo></mtd><mtd><mo>&#x02198;</mo></mtd><mtd><mo>&#x02199;</mo></mtd><mtd><mo>&#x0219A;</mo></mtd><mtd><mo>&#x0219B;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x0219D;</mo></mtd><mtd><mo>&#x0219E;</mo></mtd><mtd><mo>&#x0219F;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21A0</mtext></mtd><mtd><mo>&#x021A0;</mo></mtd><mtd><mo>&#x021A1;</mo></mtd><mtd><mo>&#x021A2;</mo></mtd><mtd><mo>&#x021A3;</mo></mtd><mtd><mo>&#x021A4;</mo></mtd><mtd><mo>&#x021A5;</mo></mtd><mtd><mo>&#x021A6;</mo></mtd><mtd><mo>&#x021A7;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021A9;</mo></mtd><mtd><mo>&#x021AA;</mo></mtd><mtd><mo>&#x021AB;</mo></mtd><mtd><mo>&#x021AC;</mo></mtd><mtd><mo>&#x021AD;</mo></mtd><mtd><mo>&#x021AE;</mo></mtd><mtd><mo>&amp;#x21af;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21B0</mtext></mtd><mtd><mo>&#x021B0;</mo></mtd><mtd><mo>&#x021B1;</mo></mtd><mtd><mo>&#x021B2;</mo></mtd><mtd><mo>&#x021B3;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021B6;</mo></mtd><mtd><mo>&#x021B7;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021BA;</mo></mtd><mtd><mo>&#x021BB;</mo></mtd><mtd><mo>&#x021BC;</mo></mtd><mtd><mo>&#x021BD;</mo></mtd><mtd><mo>&#x021BE;</mo></mtd><mtd><mo>&#x021BF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21C0</mtext></mtd><mtd><mo>&#x021C0;</mo></mtd><mtd><mo>&#x021C1;</mo></mtd><mtd><mo>&#x021C2;</mo></mtd><mtd><mo>&#x021C3;</mo></mtd><mtd><mo>&#x021C4;</mo></mtd><mtd><mo>&#x021C5;</mo></mtd><mtd><mo>&#x021C6;</mo></mtd><mtd><mo>&#x021C7;</mo></mtd><mtd><mo>&#x021C8;</mo></mtd><mtd><mo>&#x021C9;</mo></mtd><mtd><mo>&#x021CA;</mo></mtd><mtd><mo>&#x021CB;</mo></mtd><mtd><mo>&#x021CC;</mo></mtd><mtd><mo>&#x021CD;</mo></mtd><mtd><mo>&#x021CE;</mo></mtd><mtd><mo>&#x021CF;</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21D0</mtext></mtd><mtd><mo>&#x021D0;</mo></mtd><mtd><mo>&#x021D1;</mo></mtd><mtd><mo>&#x021D2;</mo></mtd><mtd><mo>&#x021D3;</mo></mtd><mtd><mo>&#x021D4;</mo></mtd><mtd><mo>&#x021D5;</mo></mtd><mtd><mo>&#x021D6;</mo></mtd><mtd><mo>&#x021D7;</mo></mtd><mtd><mo>&#x021D8;</mo></mtd><mtd><mo>&#x021D9;</mo></mtd><mtd><mo>&#x021DA;</mo></mtd><mtd><mo>&#x021DB;</mo></mtd><mtd><mo>&#x21dc;</mo></mtd><mtd><mo>&#x021DD;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21E0</mtext></mtd><mtd><mo>&#x21e0;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x21e2;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021E4;</mo></mtd><mtd><mo>&#x021E5;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd></mtr><mtr><mtd columnalign='left'><mtext>21F0</mtext></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021F5;</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>.</mo></mtd><mtd><mo>&#x021FD;</mo></mtd><mtd><mo>&#x021FE;</mo></mtd><mtd><mo>&#x021FF;</mo></mtd></mtr></mtable></math></formula></p>
+<table rend='inline'><row><cell halign='center'>Ḁ</cell>
+<cell halign='center'>ḁ</cell>
+<cell halign='center'>Ḃ</cell>
+<cell halign='center'>ḃ</cell>
+<cell halign='center'>Ḅ</cell>
+<cell halign='center'>ḅ</cell>
+<cell halign='center'>Ḇ</cell>
+<cell halign='center'>ḇ</cell>
+<cell halign='center'>Ḉ</cell>
+<cell halign='center'>ḉ</cell>
+<cell halign='center'>Ḋ</cell>
+<cell halign='center'>ḋ</cell>
+<cell halign='center'>Ḍ</cell>
+<cell halign='center'>ḍ</cell>
+<cell halign='center'>Ḏ</cell>
+<cell halign='center'>ḏ</cell>
+</row><row><cell halign='center'>Ḑ</cell>
+<cell halign='center'>ḑ</cell>
+<cell halign='center'>Ḓ</cell>
+<cell halign='center'>ḓ</cell>
+<cell halign='center'>Ḕ</cell>
+<cell halign='center'>ḕ</cell>
+<cell halign='center'>Ḗ</cell>
+<cell halign='center'>ḗ</cell>
+<cell halign='center'>Ḙ</cell>
+<cell halign='center'>ḙ</cell>
+<cell halign='center'>Ḛ</cell>
+<cell halign='center'>ḛ</cell>
+<cell halign='center'>Ḝ</cell>
+<cell halign='center'>ḝ</cell>
+<cell halign='center'>Ḟ</cell>
+<cell halign='center'>ḟ</cell>
+</row><row><cell halign='center'>Ḡ</cell>
+<cell halign='center'>ḡ</cell>
+<cell halign='center'>Ḣ</cell>
+<cell halign='center'>ḣ</cell>
+<cell halign='center'>Ḥ</cell>
+<cell halign='center'>ḥ</cell>
+<cell halign='center'>Ḧ</cell>
+<cell halign='center'>ḧ</cell>
+<cell halign='center'>Ḩ</cell>
+<cell halign='center'>ḩ</cell>
+<cell halign='center'>&#x1e2a;</cell>
+<cell halign='center'>&#x1e2b;</cell>
+<cell halign='center'>Ḭ</cell>
+<cell halign='center'>ḭ</cell>
+<cell halign='center'>Ḯ</cell>
+<cell halign='center'>ḯ</cell>
+</row><row><cell halign='center'>Ḱ</cell>
+<cell halign='center'>ḱ</cell>
+<cell halign='center'>Ḳ</cell>
+<cell halign='center'>ḳ</cell>
+<cell halign='center'>Ḵ</cell>
+<cell halign='center'>ḵ</cell>
+<cell halign='center'>Ḷ</cell>
+<cell halign='center'>ḷ</cell>
+<cell halign='center'>Ḹ</cell>
+<cell halign='center'>ḹ</cell>
+<cell halign='center'>Ḻ</cell>
+<cell halign='center'>ḻ</cell>
+<cell halign='center'>Ḽ</cell>
+<cell halign='center'>ḽ</cell>
+<cell halign='center'>Ḿ</cell>
+<cell halign='center'>ḿ</cell>
+</row><row><cell halign='center'>Ṁ</cell>
+<cell halign='center'>ṁ</cell>
+<cell halign='center'>Ṃ</cell>
+<cell halign='center'>ṃ</cell>
+<cell halign='center'>Ṅ</cell>
+<cell halign='center'>ṅ</cell>
+<cell halign='center'>Ṇ</cell>
+<cell halign='center'>ṇ</cell>
+<cell halign='center'>Ṉ</cell>
+<cell halign='center'>ṉ</cell>
+<cell halign='center'>Ṋ</cell>
+<cell halign='center'>ṋ</cell>
+<cell halign='center'>Ṍ</cell>
+<cell halign='center'>ṍ</cell>
+<cell halign='center'>Ṏ</cell>
+<cell halign='center'>ṏ</cell>
+</row><row><cell halign='center'>Ṑ</cell>
+<cell halign='center'>ṑ</cell>
+<cell halign='center'>Ṓ</cell>
+<cell halign='center'>ṓ</cell>
+<cell halign='center'>Ṕ</cell>
+<cell halign='center'>ṕ</cell>
+<cell halign='center'>Ṗ</cell>
+<cell halign='center'>ṗ</cell>
+<cell halign='center'>Ṙ</cell>
+<cell halign='center'>ṙ</cell>
+<cell halign='center'>Ṛ</cell>
+<cell halign='center'>ṛ</cell>
+<cell halign='center'>Ṝ</cell>
+<cell halign='center'>ṝ</cell>
+<cell halign='center'>Ṟ</cell>
+<cell halign='center'>ṟ</cell>
+</row><row><cell halign='center'>Ṡ</cell>
+<cell halign='center'>ṡ</cell>
+<cell halign='center'>Ṣ</cell>
+<cell halign='center'>ṣ</cell>
+<cell halign='center'>Ṥ</cell>
+<cell halign='center'>ṥ</cell>
+<cell halign='center'>Ṧ</cell>
+<cell halign='center'>ṧ</cell>
+<cell halign='center'>Ṩ</cell>
+<cell halign='center'>ṩ</cell>
+<cell halign='center'>Ṫ</cell>
+<cell halign='center'>ṫ</cell>
+<cell halign='center'>Ṭ</cell>
+<cell halign='center'>ṭ</cell>
+<cell halign='center'>Ṯ</cell>
+<cell halign='center'>ṯ</cell>
+</row><row><cell halign='center'>Ṱ</cell>
+<cell halign='center'>ṱ</cell>
+<cell halign='center'>&#x1e72;</cell>
+<cell halign='center'>&#x1e73;</cell>
+<cell halign='center'>Ṵ</cell>
+<cell halign='center'>ṵ</cell>
+<cell halign='center'>Ṷ</cell>
+<cell halign='center'>ṷ</cell>
+<cell halign='center'>Ṹ</cell>
+<cell halign='center'>ṹ</cell>
+<cell halign='center'>Ṻ</cell>
+<cell halign='center'>ṻ</cell>
+<cell halign='center'>Ṽ</cell>
+<cell halign='center'>ṽ</cell>
+<cell halign='center'>Ṿ</cell>
+<cell halign='center'>ṿ</cell>
+</row></table>
+<p>Â â Ấ ấ Ầ ầ Ẩ ẩ Ẫ ẫ
+Ậ ậ Ĉ ĉ</p>
+<p noindent='true'>Ê ê Ế ế Ề ề Ể
+ể Ễ ễ Ệ ệ Ĝ ĝ Ĥ ĥ Î î Ĵ ĵ</p>
+<p noindent='true'>Ô ô Ố ố Ồ ồ Ổ ổ Ỗ ỗ
+Ộ ộ Ŝ ŝ Û û Ŵ ŵ Ŷ ŷ Ẑ ẑ
+Á á Ǻ ǻ Ǽ ǽ Ấ ấ Ắ ắ
+Ć ć Ḉ ḉ É é Ḗ
+ḗ Ế ế Ǵ ǵ Í í</p>
+<p noindent='true'>Ḯ ḯ Ḱ ḱ Ĺ ĺ Ḿ
+ḿ Ń ń Ó ó Ǿ ǿ Ṍ ṍ Ṓ ṓ Ố
+ố Ớ ớ</p>
+<p noindent='true'>Ṕ ṕ Ŕ ŕ Ś ś
+Ṥ ṥ Ú ú Ǘ ǘ Ṹ ṹ Ứ ứ
+Ẃ ẃ Ý ý Ź ź
+À à Ầ ầ Ằ ằ È è Ḕ ḕ Ề
+ề Ì ì Ǹ ǹ</p>
+<p noindent='true'>Ò ò Ṑ ṑ Ồ ồ
+Ờ ờ Ù ù Ǜ ǜ Ừ ừ Ẁ ẁ Ỳỳ
+Ä ä Ǟ ǟ Ë ë Ḧ ḧ Ï ï Ḯ ḯ Ö ö
+Ȫ ȫ Ṏ ṏ ẗ</p>
+<p noindent='true'>Ü ü Ṻ ṻ Ǜ ǜ
+Ǘ ǘ Ǚ ǚ Ẅ ẅ Ẍ ẍ Ÿ ÿ
+Ç ç Ḉ ḉ Ḑ ḑ Ȩ ȩ Ḝ ḝ</p>
+<p noindent='true'>Ḩ ḩ Ģ ģ Ķ ķ Ļ ļ Ņ ņ Ŗ ŗ Ş ş Ţ ţ
+Ȁ ȁ Ȅ ȅ Ȉ ȉ Ȍ ȍ Ȑ ȑ Ȕ ȕ
+Ă ă Ằ ằ Ắ ắ Ẳ ẳ Ẵ ẵ
+Ặ ặ</p>
+<p noindent='true'>Ĕ ĕ Ḝ ḝ Ğ ğ Ĭ ĭ
+Ŏ ŏ Ŭ ŭ
+Ǎ ǎ Č č Ď ď Ě ě Ǧ ǧ Ȟ ȟ Ǩ ǩ
+Ǐ ǐ ǰ Ľ ľ Ň ň</p>
+<p noindent='true'>Ǒ
+ǒ Ř ř Š š Ť ť Ǔ ǔ Ǚ ǚ Ṧ
+ṧ Ž ž
+Ő ő Ű ű</p>
+<p noindent='true'>Ớ ớ Ờ ờ Ở ở Ỡ ỡ
+Ợ ợ</p>
+<p noindent='true'>Ứ ứ Ừ ừ Ử ử Ữ
+ữ Ự ự
+Ả ả Ẩ ẩ Ẳ ẳ Ẻ ẻ Ể ể Ỉ
+ỉ</p>
+<p noindent='true'>Ỏ ỏ Ổ ổ Ở ở Ủ ủ
+Ử ử Ỷ ỷ
+Ą ą Ę ę Į į Ǫ ǫ Ǭ ǭ Ų ų
+Å å Ů ů ẘ ẙ
+Ạ ạ Ậ ậ Ặ ặ Ḅ ḅ Ḍ ḍ Ẹ ẹ
+Ệ ệ Ḥ ḥ Ị ị Ḳ ḳ Ḷ ḷ Ḹ ḹ</p>
+<p noindent='true'>Ṃ ṃ Ṇ ṇ Ọ ọ Ộ ộ Ợ ợ
+Ṛ ṛ Ṝ ṝ Ṣ ṣ Ṩ ṩ Ṭ</p>
+<p noindent='true'>ṭ Ụ ụ Ự ự Ṿ
+ṿ Ẉ ẉ Ỵ ỵ Ẓ ẓ
+Ḁ ḁ
+Ḇ ḇ Ḏ ḏ ẖ Ḵ ḵ Ḻ ḻ
+Ṉ ṉ Ṟ ṟ Ṯ ṯ Ẕ ẕ
+Ȃ ȃ Ȇ ȇ Ȋ ȋ Ȏ ȏ Ȓ ȓ Ȗ ȗ
+Ḛ ḛ Ḭ ḭ Ṵ ṵ
+Ḓ ḓ Ḙ ḙ Ḽ ḽ Ṋ ṋ Ṱ ṱ Ṷ ṷ
+Ā ā Ǟ ǟ Ǡ ǡ ǢǣĒ ē Ḗ ḗ
+Ḕ ḕ Ḡ ḡ Ħ ħ</p>
+<p noindent='true'>Ī ī Ḹ ḹ Ō ō Ǭ ǭ Ȫ ȫ Ȭ
+ȭ Ȱ ȱ Ṑ ṑ Ṓ ṓ</p>
+<p noindent='true'>Ṝ ṝ
+Ŧ ŧ Ū ū Ṻ ṻ Ȳ ȳ
+Ȧ ȧ Ǡ ǡ Ḃ ḃ Ċ ċ Ḋ ḋ Ė ė Ḟ ḟ Ġ ġ Ḣ
+ḣ İ</p>
+<p noindent='true'>Ŀ ŀ Ṁ ṁ Ṅ ṅ Ȯ ȯ Ȱ ȱ Ṗ ṗ Ṙ ṙ</p>
+<p noindent='true'>Ṡ
+ṡ Ṩ ṩ Ṧ ṧ Ṥ ṥ Ṫ ṫ Ẇ ẇ Ẋ
+ẋ Ẏ ẏ Ż ż</p>
+<p>✁ ✂ ✃ ✄ ☎ ✆ ✇ 
+✈ ✉ ☛ ☞ ✌ ✍ ✎ ✏</p>
+<p noindent='true'>✐ ✑ ✒ ✓ ✔ ✕ ✖ ✗ 
+✘ ✙ ✚ ✛ ✜ ✝ ✞ ✟</p>
+<p noindent='true'>✠ ✡ ✢ ✣ ✤ ✥ ✦ ✧ 
+★ ✩ ✪ ✫ ✬ ✭ ✮ ✯</p>
+<p noindent='true'>✰ ✱ ✲ ✳ ✴ ✵ ✶ ✷ 
+✸ ✹ ✺ ✻ ✼ ✽ ✾ ✿</p>
+<p noindent='true'>❀ ❁ ❂ ❃ ❄ ❅ ❆ ❇ 
+❈ ❉ ❊ ❋ ● ❍ ■ ❏</p>
+<p noindent='true'>❐ ❑ ❒ ▲ ▼ ◆ ❖ ◗ 
+❘ ❙ ❚ ❛ ❜ ❝ ❞</p>
+<p noindent='true'>❡ ❢ ❣ ❤ ❥ ❦ ❧ 
+♣ ♦ ♥ ♠ ① ② ③ ④</p>
+<p noindent='true'>⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ❶ ❷ 
+❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿</p>
+<p noindent='true'>➀ ➁ ➂ ➃ ➄ ➅ ➆ ➇ 
+➈ ➉ ➊ ➋ ➌ ➍ ➎ ➏</p>
+<p noindent='true'>➐ ➑ ➒ ➓ ➔ → ↔ ↕ 
+➘ ➙ ➚ ➛ ➜ ➝ ➞ ➟</p>
+<p noindent='true'>➠ ➡ ➢ ➣ ➤ ➥ ➦ ➧ 
+➨ ➩ ➪ ➫ ➬ ➭ ➮ ➯</p>
+<p noindent='true'>➱ ➲ ➳ ➴ ➵ ➶ ➷ 
+➸ ➹ ➺ ➻ ➼ ➽ ➾</p>
+<p><font-large1>฿₩₦₤₫€ƒ‰‱※†‡‶a″a‵a′℃⁅⁆Ω℧℞℗№℠&#x192;f&#x2120;&#x212E;&#x2022; &#x203D;
+</font-large1></p>
+<p>TABLE
+
+  ¡ ¢ £ ¤ ¥ 
+¦ § ¨ © 
+ª « ¬ ­ 
+® ¯</p>
+<p noindent='true'>° ± ² ³ ´ 
+µ ¶ · ¸ 
+¹ º »  ¼ 
+½ ¾ ¿</p>
+<p noindent='true'>À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï</p>
+<p noindent='true'>Ð Ñ Ò Ó Ô Õ Ö × Ø Ù Ú Û Ü Ý Þ ß</p>
+<p noindent='true'>à á â ã ä å æ ç è é ê ë ì í î ï</p>
+<p noindent='true'>ð ñ ò ó ô õ ö ÷ ø ù ú û ü ý þ ÿ</p>
+<p>LATIN1</p>
+<table rend='inline'><row><cell halign='center'> </cell>
+<cell halign='center'>¡</cell>
+<cell halign='center'>¢</cell>
+<cell halign='center'>£</cell>
+<cell halign='center'>¤</cell>
+<cell halign='center'>¥</cell>
+<cell halign='center'>¦</cell>
+<cell halign='center'>§</cell>
+<cell halign='center'>¨</cell>
+<cell halign='center'>©</cell>
+<cell halign='center'>ª</cell>
+<cell halign='center'>«</cell>
+<cell halign='center'>¬</cell>
+<cell halign='center'>-</cell>
+<cell halign='center'>®</cell>
+<cell halign='center'>¯</cell>
+</row><row><cell halign='center'>°</cell>
+<cell halign='center'>±</cell>
+<cell halign='center'>²</cell>
+<cell halign='center'>³</cell>
+<cell halign='center'>´</cell>
+<cell halign='center'>µ</cell>
+<cell halign='center'>¶</cell>
+<cell halign='center'>·</cell>
+<cell halign='center'>¸</cell>
+<cell halign='center'>¹</cell>
+<cell halign='center'>º</cell>
+<cell halign='center'>»</cell>
+<cell halign='center'>¼</cell>
+<cell halign='center'>½</cell>
+<cell halign='center'>¾</cell>
+<cell halign='center'>¿</cell>
+</row><row><cell halign='center'>À</cell>
+<cell halign='center'>Á</cell>
+<cell halign='center'>Â</cell>
+<cell halign='center'>Ã</cell>
+<cell halign='center'>Ä</cell>
+<cell halign='center'>Å</cell>
+<cell halign='center'>Æ</cell>
+<cell halign='center'>Ç</cell>
+<cell halign='center'>È</cell>
+<cell halign='center'>É</cell>
+<cell halign='center'>Ê</cell>
+<cell halign='center'>Ë</cell>
+<cell halign='center'>Ì</cell>
+<cell halign='center'>Í</cell>
+<cell halign='center'>Î</cell>
+<cell halign='center'>Ï</cell>
+</row><row><cell halign='center'>Ð</cell>
+<cell halign='center'>Ñ</cell>
+<cell halign='center'>Ò</cell>
+<cell halign='center'>Ó</cell>
+<cell halign='center'>Ô</cell>
+<cell halign='center'>Õ</cell>
+<cell halign='center'>Ö</cell>
+<cell halign='center'>×</cell>
+<cell halign='center'>Ø</cell>
+<cell halign='center'>Ù</cell>
+<cell halign='center'>Ú</cell>
+<cell halign='center'>Û</cell>
+<cell halign='center'>Ü</cell>
+<cell halign='center'>Ý</cell>
+<cell halign='center'>Þ</cell>
+<cell halign='center'>ß</cell>
+</row><row><cell halign='center'>à</cell>
+<cell halign='center'>á</cell>
+<cell halign='center'>â</cell>
+<cell halign='center'>ã</cell>
+<cell halign='center'>ä</cell>
+<cell halign='center'>å</cell>
+<cell halign='center'>æ</cell>
+<cell halign='center'>ç</cell>
+<cell halign='center'>è</cell>
+<cell halign='center'>é</cell>
+<cell halign='center'>ê</cell>
+<cell halign='center'>ë</cell>
+<cell halign='center'>ì</cell>
+<cell halign='center'>í</cell>
+<cell halign='center'>î</cell>
+<cell halign='center'>ï</cell>
+</row><row><cell halign='center'>ð</cell>
+<cell halign='center'>ñ</cell>
+<cell halign='center'>ò</cell>
+<cell halign='center'>ó</cell>
+<cell halign='center'>ô</cell>
+<cell halign='center'>õ</cell>
+<cell halign='center'>ö</cell>
+<cell halign='center'>÷</cell>
+<cell halign='center'>ø</cell>
+<cell halign='center'>ù</cell>
+<cell halign='center'>ú</cell>
+<cell halign='center'>û</cell>
+<cell halign='center'>ü</cell>
+<cell halign='center'>ý</cell>
+<cell halign='center'>þ</cell>
+<cell halign='center'>ÿ</cell>
+</row></table><p><font-large3>
+</font-large3></p>
+<table rend='inline'><row><cell halign='center'/>
+<cell halign='center'>!</cell>
+<cell halign='center'>"</cell>
+<cell halign='center'>#</cell>
+<cell halign='center'>$</cell>
+<cell halign='center'>%</cell>
+<cell halign='center'>&amp;</cell>
+<cell halign='center'>'</cell>
+<cell halign='center'>(</cell>
+<cell halign='center'>)</cell>
+<cell halign='center'>*</cell>
+<cell halign='center'>+</cell>
+<cell halign='center'>,</cell>
+<cell halign='center'>-</cell>
+<cell halign='center'>.</cell>
+<cell halign='center'>/</cell>
+</row><row><cell halign='center'>0</cell>
+<cell halign='center'>1</cell>
+<cell halign='center'>2</cell>
+<cell halign='center'>3</cell>
+<cell halign='center'>4</cell>
+<cell halign='center'>5</cell>
+<cell halign='center'>6</cell>
+<cell halign='center'>7</cell>
+<cell halign='center'>8</cell>
+<cell halign='center'>9</cell>
+<cell halign='center'>:</cell>
+<cell halign='center'>;</cell>
+<cell halign='center'>&lt;</cell>
+<cell halign='center'>=</cell>
+<cell halign='center'>&gt;</cell>
+<cell halign='center'>?</cell>
+</row><row><cell halign='center'>@</cell>
+<cell halign='center'>A</cell>
+<cell halign='center'>B</cell>
+<cell halign='center'>C</cell>
+<cell halign='center'>D</cell>
+<cell halign='center'>E</cell>
+<cell halign='center'>F</cell>
+<cell halign='center'>G</cell>
+<cell halign='center'>H</cell>
+<cell halign='center'>I</cell>
+<cell halign='center'>J</cell>
+<cell halign='center'>K</cell>
+<cell halign='center'>L</cell>
+<cell halign='center'>M</cell>
+<cell halign='center'>N</cell>
+<cell halign='center'>O</cell>
+</row><row><cell halign='center'>P</cell>
+<cell halign='center'>Q</cell>
+<cell halign='center'>R</cell>
+<cell halign='center'>S</cell>
+<cell halign='center'>T</cell>
+<cell halign='center'>U</cell>
+<cell halign='center'>V</cell>
+<cell halign='center'>W</cell>
+<cell halign='center'>X</cell>
+<cell halign='center'>Y</cell>
+<cell halign='center'>Z</cell>
+<cell halign='center'>[</cell>
+<cell halign='center'>\</cell>
+<cell halign='center'>]</cell>
+<cell halign='center'>^</cell>
+<cell halign='center'>_</cell>
+</row><row><cell halign='center'>`</cell>
+<cell halign='center'>a</cell>
+<cell halign='center'>b</cell>
+<cell halign='center'>c</cell>
+<cell halign='center'>d</cell>
+<cell halign='center'>e</cell>
+<cell halign='center'>f</cell>
+<cell halign='center'>g</cell>
+<cell halign='center'>h</cell>
+<cell halign='center'>i</cell>
+<cell halign='center'>j</cell>
+<cell halign='center'>k</cell>
+<cell halign='center'>l</cell>
+<cell halign='center'>m</cell>
+<cell halign='center'>n</cell>
+<cell halign='center'>o</cell>
+</row><row><cell halign='center'>p</cell>
+<cell halign='center'>q</cell>
+<cell halign='center'>r</cell>
+<cell halign='center'>s</cell>
+<cell halign='center'>t</cell>
+<cell halign='center'>u</cell>
+<cell halign='center'>v</cell>
+<cell halign='center'>w</cell>
+<cell halign='center'>x</cell>
+<cell halign='center'>y</cell>
+<cell halign='center'>z</cell>
+<cell halign='center'>{</cell>
+<cell halign='center'>|</cell>
+<cell halign='center'>}</cell>
+<cell halign='center'>~</cell>
+<cell halign='center'/>
+</row></table><p><font-large3>
+</font-large3></p>
+<table rend='inline'><row><cell halign='center'>Ā</cell>
+<cell halign='center'>ā</cell>
+<cell halign='center'>Ă</cell>
+<cell halign='center'>ă</cell>
+<cell halign='center'>Ą</cell>
+<cell halign='center'>ą</cell>
+<cell halign='center'>Ć</cell>
+<cell halign='center'>ć</cell>
+<cell halign='center'>Ĉ</cell>
+<cell halign='center'>ĉ</cell>
+<cell halign='center'>Ċ</cell>
+<cell halign='center'>ċ</cell>
+<cell halign='center'>Č</cell>
+<cell halign='center'>č</cell>
+<cell halign='center'>Ď</cell>
+<cell halign='center'>ď</cell>
+</row><row><cell halign='center'>Đ</cell>
+<cell halign='center'>đ</cell>
+<cell halign='center'>Ē</cell>
+<cell halign='center'>ē</cell>
+<cell halign='center'>Ĕ</cell>
+<cell halign='center'>ĕ</cell>
+<cell halign='center'>Ė</cell>
+<cell halign='center'>ė</cell>
+<cell halign='center'>Ę</cell>
+<cell halign='center'>ę</cell>
+<cell halign='center'>Ě</cell>
+<cell halign='center'>ě</cell>
+<cell halign='center'>Ĝ</cell>
+<cell halign='center'>ĝ</cell>
+<cell halign='center'>Ğ</cell>
+<cell halign='center'>ğ</cell>
+</row><row><cell halign='center'>Ġ</cell>
+<cell halign='center'>ġ</cell>
+<cell halign='center'>Ģ</cell>
+<cell halign='center'>ģ</cell>
+<cell halign='center'>Ĥ</cell>
+<cell halign='center'>ĥ</cell>
+<cell halign='center'>Ħ</cell>
+<cell halign='center'>ħ</cell>
+<cell halign='center'>Ĩ</cell>
+<cell halign='center'>ĩ</cell>
+<cell halign='center'>Ī</cell>
+<cell halign='center'>ī</cell>
+<cell halign='center'>Ĭ</cell>
+<cell halign='center'>ĭ</cell>
+<cell halign='center'>Į</cell>
+<cell halign='center'>į</cell>
+</row><row><cell halign='center'>İ</cell>
+<cell halign='center'>ı</cell>
+<cell halign='center'>Ĳ</cell>
+<cell halign='center'>ĳ</cell>
+<cell halign='center'>Ĵ</cell>
+<cell halign='center'>ĵ</cell>
+<cell halign='center'>Ķ</cell>
+<cell halign='center'>ķ</cell>
+<cell halign='center'>&#x138;</cell>
+<cell halign='center'>Ĺ</cell>
+<cell halign='center'>ĺ</cell>
+<cell halign='center'>Ļ</cell>
+<cell halign='center'>ļ</cell>
+<cell halign='center'>Ľ</cell>
+<cell halign='center'>ľ</cell>
+<cell halign='center'>Ŀ</cell>
+</row><row><cell halign='center'>ŀ</cell>
+<cell halign='center'>Ł</cell>
+<cell halign='center'>ł</cell>
+<cell halign='center'>Ń</cell>
+<cell halign='center'>ń</cell>
+<cell halign='center'>Ņ</cell>
+<cell halign='center'>ņ</cell>
+<cell halign='center'>Ň</cell>
+<cell halign='center'>ň</cell>
+<cell halign='center'>&#x149;</cell>
+<cell halign='center'>Ŋ</cell>
+<cell halign='center'>ŋ</cell>
+<cell halign='center'>Ō</cell>
+<cell halign='center'>ō</cell>
+<cell halign='center'>Ŏ</cell>
+<cell halign='center'>ŏ</cell>
+</row><row><cell halign='center'>Ő</cell>
+<cell halign='center'>ő</cell>
+<cell halign='center'>Œ</cell>
+<cell halign='center'>œ</cell>
+<cell halign='center'>Ŕ</cell>
+<cell halign='center'>ŕ</cell>
+<cell halign='center'>Ŗ</cell>
+<cell halign='center'>ŗ</cell>
+<cell halign='center'>Ř</cell>
+<cell halign='center'>ř</cell>
+<cell halign='center'>Ś</cell>
+<cell halign='center'>ś</cell>
+<cell halign='center'>Ŝ</cell>
+<cell halign='center'>ŝ</cell>
+<cell halign='center'>Ş</cell>
+<cell halign='center'>ş</cell>
+<cell halign='center'/>
+</row><row><cell halign='center'>Š</cell>
+<cell halign='center'>š</cell>
+<cell halign='center'>Ţ</cell>
+<cell halign='center'>ţ</cell>
+<cell halign='center'>Ť</cell>
+<cell halign='center'>ť</cell>
+<cell halign='center'>Ŧ</cell>
+<cell halign='center'>ŧ</cell>
+<cell halign='center'>Ũ</cell>
+<cell halign='center'>ũ</cell>
+<cell halign='center'>Ū</cell>
+<cell halign='center'>ū</cell>
+<cell halign='center'>Ŭ</cell>
+<cell halign='center'>ŭ</cell>
+<cell halign='center'>Ů</cell>
+<cell halign='center'>ů</cell>
+</row><row><cell halign='center'>Ű</cell>
+<cell halign='center'>ű</cell>
+<cell halign='center'>Ų</cell>
+<cell halign='center'>ų</cell>
+<cell halign='center'>Ŵ</cell>
+<cell halign='center'>ŵ</cell>
+<cell halign='center'>Ŷ</cell>
+<cell halign='center'>ŷ</cell>
+<cell halign='center'>Ÿ</cell>
+<cell halign='center'>Ź</cell>
+<cell halign='center'>ź</cell>
+<cell halign='center'>Ż</cell>
+<cell halign='center'>ż</cell>
+<cell halign='center'>Ž</cell>
+<cell halign='center'>ž</cell>
+<cell halign='center'>&#x17F;</cell>
+</row></table><p><font-large3>
+</font-large3></p>
+<p>$%&amp; {}_#
+j™</p>
+<p noindent='true'>​␣\<TeX/><LaTeX/>SS</p>
+<p noindent='true'>/.</p>
+<p noindent='true'>1F: ǵ
+A:  ¡§© »</p>
+<p noindent='true'>B: ¶« ¿</p>
+<p noindent='true'>C:ÅÆ</p>
+<p noindent='true'>D: ØÐÞß</p>
+<p noindent='true'>E: åæ</p>
+<p noindent='true'>F:øðýþ</p>
+<p><font-large1>é è é ê ë ã ė ē</font-large1>
+<font-large1>ç, ĕ, ě, ő, ę, ů</font-large1></p>
+<p><font-large2>Ç ç Ḉ ḉ Ḑ ḑ Ȩ ȩ Ḝ ḝ</font-large2></p>
+<p noindent='true'><font-large2>Ḩ ḩ Ģ ģ Ķ ķ Ļ ļ Ņ ņ Ŗ ŗ Ş ş Ţ ţ
+</font-large2></p>
+<p>Ả ả Ẩ ẩ Ẳ ẳ Ẻ ẻ Ể ể Ỉ
+ỉ</p>
+<p noindent='true'>Ỏ ỏ Ổ ổ Ở ở Ủ ủ
+Ử ử Ỷ ỷ</p>
+<p>pounds££</p>
+<p>a » b« c« d »e
+a » b« c«d»e
+a« b« c«  d« e  »f  »g »h »i
+a&lt;&lt;b&lt;&lt; c&lt;&lt; d&lt;&lt; e &gt;&gt;f &gt;&gt;g &gt;&gt;h&gt;&gt;i
+a« b« c«  d« e  »f  »g »h »i
+a«b« c« d« e »f »g »h»i</p>
+<p>a refaire
+the love that men to hym <font-bold-series/><font-italic-shape><font-bold-series>owen</font-bold-series></font-italic-shape><font-bold-series/>.</p>
+<p>AT_DOC_END</p></div0>
+</ramain>

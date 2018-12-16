@@ -1,0 +1,26 @@
+# This is a configuration file for tralics.
+# $Id: tralics_rc,v 2.24 2006/07/24 08:23:17 grimm Exp $
+## tralics ident rc=standard $Revision: 2.24 $
+
+# Copyright Inria. Jos\'e Grimm. Apics. 2004/2005 2006
+# This file is part of Tralics.
+
+% Some comments: comments start with % or #
+
+% this means: take the documentclass value as type name
+Type = \documentclass
+
+## First type defined is the default. Since version 2.8,  there is only
+## one type.
+
+BeginType std#      standard latex classes
+  DocType = std classes.dtd 
+End
+
+BeginAlias
+  torture torture1 torture2 
+  std report book article minimal
+End
+
+
+

@@ -1,0 +1,332 @@
+%%% Exemple de rapport d'activités 2007
+%%% This was exemple2007.tex, comments removed
+
+\documentclass{ra2008}
+\newcommand{\calX}{\mathcal{X}}
+\newcommand{\toto}{X}
+
+
+\project{EXEMPLE}{ExemplE}{Algebraic Systems for Research and Industry} 
+\theme{com}
+\isproject{oui}
+\UR{RhoneAlpes}
+ 
+
+\begin{document}
+\begin{filecontents+}{exemple_all2008.bib}
+
+@inproceedings{refer1,
+author =	{First Author},
+title =		{Compilation of LOTOS Abstract Data Types},
+booktitle =	{Proceedings of foo},
+year =		{1989},
+editor =	{Son T. Vuong},
+pages =		{147--162},
+publisher =	"nh",
+month =		dec,
+}
+
+@inproceedings{refer2,
+author =	{Second Author},
+title =		{Some title},
+booktitle =	{Proceedings of the First International Conference},
+year =		{1998},
+editor =	{Bernhard Steffen},
+publisher =     "sv",
+address =       {Berlin},
+series =        "lncs",
+volume =        {1384},
+pages =         {68--84},
+month =         mar,
+note =          {Full version available as INRIA Research Report~RR-3352},
+url =		{http://www.inria.fr/rrrt/rr-3352.html},
+}
+
+@inproceedings{refer3,
+
+author =	{Third Author},
+title =		{SVL: a Scripting Language for Compositional Verification},
+booktitle =	{Proceedings of the 21st IFIP},
+year =		{2001},
+editor =	{Myungchul Kim and Danhyung Lee},
+pages =	        {377--392},
+organization =  {IFIP},
+publisher =	{Kluwer Academic Publishers},
+month =		aug,
+}
+
+@INPROCEEDINGS{MB04,
+        author = "Bronstein, Manuel",
+        title="Efficient Algorithms for Linear Ordinary Differential Equations",
+        editor = "Alonso, Marc and Sendra, Robert",
+        booktitle = "Cuarto Encuentro de Algebra Computacional y Aplicaciones",
+        year = 2004,
+        month = sep,
+        pages = {159-163},
+        organisation = "Universit\'e de Alcala de Henares"
+}
+
+@InCollection{cite1,
+  author =       "Arsac, Olivier and Dalmas, St\'ephane and Ga{\"e}tano, Marc",
+  booktitle =    "Computer-Human Interaction in Symbolic Computation",
+  series = "Texts and Monographs in Symbolic Computation", 
+  title =        "Algorithm Animation with {AGAT}",
+  chapter = "8",
+  pages =   "163-177",
+  publisher = "Springer-Verlag",
+  year =      "2008"
+}
+@Misc{cite2,
+  title = {Mathematical Markup Language {(MathML)} 1.0 Specification},
+  url = {http://www.w3.org/TR/REC-MathML/},
+  month =     apr,
+  year =   2008,
+  key = {mathml},
+  note =      {{W3C} Recommendation}
+}
+
+
+
+
+
+
+\end{filecontents+}
+
+\nocite{cite1}
+
+\begin{moreinfo}
+  Texmex is a common project with CNRS, University of Rennes~1 and INSA. The
+  team has been created on January the 1\textsuperscript{st}, 2002 and became an
+  INRIA project on November the 1\textsuperscript{st}, 2002.
+\end{moreinfo}
+
+\begin{composition}
+  \pers{Christine}{Eisenbeis}{Chercheur}{INRIA}[Research Associate (CR) Inria][Habilite]
+  \pers{Nathalie}{Gaudechoux}{Assistant}{INRIA}[Secretary (SAR) Inria]
+  \pers{François}{Thomasset}{Chercheur}{INRIA}[Research Director (DR) Inria]
+  \pers{Jean}{Louchet}{Chercheur}{AutreEtablissementPublic}[Ing. en chef Armement (CR)]
+  \pers{Jean-Marie}{Rocchisani}{Chercheur}{UnivFr}[Université Paris XIII]
+  \pers{Moussa}{Lo}{Visiteur}{UnivEtrangere}[AUF Grant/ Gaston Berger University, Saint-Louis, Senegal, from March 1st till August 31]
+\end{composition}
+
+\begin{module}{presentation}{overall-objectives}{Overall Objectives}
+
+  The explosion of the quantity of numerical documents raises a problem.
+  \begin{itemize} 
+  \item Firt item
+  \item Second item
+  \end{itemize}
+\end{module}
+
+\begin{module}{}{Highlights}{Highlights}
+This year, a new module appears.....
+\end{module}
+
+
+
+\begin{module}{fondements}{description}{Document Description and Metadata}
+  \begin{motscle}
+    Low-level Descriptor, Metadata
+  \end{motscle}
+
+\begin{participants}
+\pers{Ioannis}{Emiris},
+\pers{Jean}[de]{La Fontaine}[1621-1695],
+\pers{Cecil Blount}{De Mille}
+\end{participants}
+
+\begin{glossaire}
+\glo{Content-based indexing} {the process of extracting from a
+  document (here a picture) compact and structured significant visual 
+  features that will be used and compared during the interactive
+  search.}
+\end{glossaire}
+
+\begin{moreinfo}
+Common activity with LoveGeom project. 
+\end{moreinfo}
+
+\paragraph{xx}
+Usually subspace identification is a one step procedure.
+
+\subsubsection{First subsection}
+Due to the increasing broadcasting of digital video content
+finding copies in a large video  database has become a critical new issue.
+
+\paragraph{toto}
+The article describing and comparing output-only and input/output covariance-driven subspace 
+identification methods (see 2005 activity report) has been published \cite
+{cite2}.
+
+\paragraph{titi}
+The article describing the general framework.
+an IEEE journal \cite{cite2}.
+
+\paragraph{tutu}
+The \emph{cosmad} toolbox, 
+see module~\protect\moduleref{EXEMPLE}{logiciels}{modal}.
+
+\subsubsection{second subsection}
+Text of second subsection
+\paragraph{tata}
+Text...
+\end{module}
+
+\begin{module}{}{ident}{Identification}
+...
+\end{module}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Modules dans la section domaines d'applications
+
+
+\begin{module}{domaine}{panorama}{Panorama}
+
+\begin{motscle}
+telecommunications,
+multimedia,
+biology,
+health,
+process engineering,
+transportation systems,
+environment
+\end{motscle}
+\end{module}
+
+\begin{module}{}{telecom}{Telecommunication Systems}
+Modules should not be empty.
+\end{module}
+
+\begin{module}{}{logembarque}{Software Embedded Systems}
+Modules should not be empty.
+\end{module}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Section logiciels.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{module}{logiciels}{modal}{Hyperion Software} 
+\begin{participants}
+  \pers{José}{Grimm}[correspondant],
+  \pers{Laurent}{Baratchart}[projet Miaou],
+  \pers{Fabien}{Seyfert} [projet Miaou]
+\end{participants}
+\begin{motscle}
+Conformance Testing,
+TGV,
+Lotos
+\end{motscle}
+
+See also the web page
+\htmladdnormallink{\url{http://www-rocq.inria.fr/scilab/}}
+{http://www-rocq.inria.fr/scilab/}.
+
+Alternate versions (note order of arguments)
+\href{http://www-rocq.inria.fr/scilab/}{\url{http://www-rocq.inria.fr/scilab/}}.
+
+You can simplify this to 
+\url{http://www-rocq.inria.fr/scilab/}.
+\end{module}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{module}{resultats}{tralics}{Tralics: a LaTeX to XML Translator}
+
+(...) On a le développement suivant:
+\[ \forall f\in C^\infty\left(\left[-\frac{T}{2};\frac{T}{2}\right]\right),
+   \forall t\in \left[-\frac{T}{2};\frac{T}{2}\right],
+   f(\tau) = \sum_{k = -\infty}^{+\infty} e^{2i\pi\frac{k}{T}t} \times
+   \underbrace{\frac{1}{T}
+               \int_{-\frac{T}{2}}^{\frac{T}{2}} f(t) e^{-2i\pi\frac{k}{T}t} dt
+              }_{a_k = \tilde{f}\left(\nu = \frac{k}{T}\right)}
+\]
+et puisque (...)
+
+\end{module}
+
+%%%%%%%%%%%%%%%%
+%%% Section contrats 
+
+\begin{module}{contrats}{edf}{EDF}
+\begin{participants}
+\pers{Christèle}{Faure},
+\pers{Jean-Charles}{Gilbert}, 
+\pers{José}{Grimm}
+\end{participants}
+ici des math en html 
+... $y=x^2$ ...
+
+et ici on génére une image pour le web  
+\begin{displaymath}
+\sum_{0}^{\infty} y = x^4
+\end{displaymath}
+...
+
+\end{module}
+
+
+
+
+
+\begin{module}{international}{national}{National Actions}
+
+\subsubsection{Incitative Action  FIABLE}
+%%% liste de participants associee
+\begin{participants}
+\pers{Christèle}{Faure},
+\pers{Jean-Charles}{Gilbert}
+\end{participants}
+blabla
+
+\subsubsection{Incitative Action  MOUAI}
+\begin{participants}
+\pers{Jean-Charles}{Gilbert}, 
+\pers{José}{Grimm}
+\end{participants}
+blabla<w references  \refercite{refer1,refer2,refer3}
+\end{module}
+
+
+\begin{module}{}{europe}{Actions Funded by the EC}
+\subsubsection{Projet LTR TURLU EP-9134867}
+A citation \footcite{MB04} using the \verb=\footcite= command
+\subsubsection{Réseau TMR RATA}
+blabla
+\end{module}
+
+\begin{module}{diffusion}{animation}
+  {Animation de la Communauté scientifique}
+A citation \refercite{refer1} using the \verb+\refercite+ 
+(major publications of the Team).
+\end{module}
+
+
+
+\begin{module}{}{enseignement}{Teaching}
+...
+Note. Optional arguments like [htbp] to the figure environment will be ignored.
+
+\begin{figure}
+\begin{center}
+\includegraphics{IMG/uneimage}
+\end{center}
+\caption{An example of a map reconstructed by using geometrical methods in detecting landmarks}
+\label{fig:completemap}
+\end{figure}
+...
+citation \cite{cite2} using \verb+\cite+ for publications of current year.
+
+...
+\end{module}
+\begin{module}{}{second Highlights}{} % sans titre
+This year, a new module appears.....
+\end{module}
+
+
+%%%%% fin du document
+\end{document}

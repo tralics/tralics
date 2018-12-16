@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE unknown SYSTEM 'unknown.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<unknown>
+<p>OK
+OK</p>
+<p>0123
+--i-ii-iii
+
+OK
+
+OK
+
+OK</p>
+<p>;c;c.</p>
+<p>Substr, 12345,1, 2, 5: 12
+Substr, 12345,3, 5, 5: 345
+Substr, 12345,3, end, 5: 345
+Substr, 12345,3, beg, 5: 123
+Substr, 12345,-2, 1, 5: 4
+Substr, 12345,-1, 1, 5: 5
+Substr, 12345,3, -2, 5: 23
+Substr, 12345,-2, -2, 5: 34
+Substr, 12345,0, 5, 5:  (the null string)
+Substr, 12345,2, 0, 5:  (the null string)
+Substr, abcdefgh,2, 3, 8: bcd</p>
+<p>Quantity 2.345 is decimal</p>
+<p>Quantity 2.4.5 is not decimal</p>
+<p>Quantity +-2.45 is not decimal</p>
+<p>Quantity +2.345 is decimal</p>
+<p>Quantity -2.345 is decimal</p>
+<p>Quantity 2.345- is not decimal</p>
+<p>Quantity 2.4+4.5 is not decimal</p>
+<p>Quantity +4. is decimal</p>
+<p>Quantity 4. is decimal</p>
+<p>Quantity +.7 is decimal</p>
+<p>Quantity .3 is decimal</p>
+<p>Quantity 4 is decimal</p>
+<p>Quantity 123456 is decimal</p>
+<p>Quantity -12345 is decimal</p>
+<p>Quantity +12345 is decimal</p>
+<p>Quantity 2.345 is numeric</p>
+<p>Quantity 2.4.5 is not numeric</p>
+<p>Quantity +-2.45 is not numeric</p>
+<p>Quantity +2.345 is numeric</p>
+<p>Quantity -2.345 is numeric</p>
+<p>Quantity 2.345- is not numeric</p>
+<p>Quantity 2.4+4.5 is not numeric</p>
+<p>Quantity +4. is numeric</p>
+<p>Quantity 4. is numeric</p>
+<p>Quantity +.7 is numeric</p>
+<p>Quantity .3 is numeric</p>
+<p>Quantity 4 is numeric</p>
+<p>Quantity 123456 is numeric</p>
+<p>Quantity -12345 is numeric</p>
+<p>Quantity +12345 is numeric</p>
+<p>Quantity 4.5 is numeric</p>
+<p>Quantity 4.5e5 is numeric</p>
+<p>Quantity +4.5e5 is numeric</p>
+<p>Quantity 4.5e+5 is numeric</p>
+<p>Quantity +4.5e+5 is numeric</p>
+<p>Quantity 4.5E5 is numeric</p>
+<p>Quantity -4.5E5 is numeric</p>
+<p>Quantity 4.5E-5 is numeric</p>
+<p>Quantity -4.5E-5 is numeric</p>
+<p>Quantity -4.5E-5. is not numeric</p>
+<p>Quantity 4.5.E-5 is not numeric</p>
+<p>Quantity abcdefg is not numeric</p>
+<p>Quantity abcE-5 is not numeric</p>
+<p>Quantity 2.345 is not int</p>
+<p>Quantity 2.4.5 is not int</p>
+<p>Quantity +-2.45 is not int</p>
+<p>Quantity +2.345 is not int</p>
+<p>Quantity -2.345 is not int</p>
+<p>Quantity 2.345- is not int</p>
+<p>Quantity 2.4+4.5 is not int</p>
+<p>Quantity +4. is not int</p>
+<p>Quantity 4. is not int</p>
+<p>Quantity +.7 is not int</p>
+<p>Quantity .3 is not int</p>
+<p>Quantity 4 is int</p>
+<p>Quantity 123456 is int</p>
+<p>Quantity -12345 is int</p>
+<p>Quantity +12345 is int</p>
+<p>Quantity 4.5 is not int</p>
+<p>Quantity 4.5e5 is not int</p>
+<p>Quantity +4.5e5 is not int</p>
+<p>Quantity 4.5e+5 is not int</p>
+<p>Quantity +4.5e+5 is not int</p>
+<p>Quantity 4.5E5 is not int</p>
+<p>Quantity -4.5E5 is not int</p>
+<p>Quantity 4.5E-5 is not int</p>
+<p>Quantity -4.5E-5 is not int</p>
+<p>Quantity 4.5.E-5 is not int</p>
+<p>Quantity abcdefg is not int</p>
+<p>Quantity abcE-5 is not int</p>
+<p>1;2;3;4.
+1;23;;4.
+Strlen 4 should be 4
+6=6
+6=6
+2=2
+33=33</p>
+<p>.Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche.,
+.Montag Dienstag Mittwoch Donnerstag Freitag Samstag Sonntag.,
+.Monday Tuesday Wednesday Thursday Friday Saturday Sunday.,
+.Lunes Martes Miércoles Jueves Viernes Sábado Domingo..</p>
+<p>.janvier février mars avril mai juin juillet août septembre octobre novembre décembre.,
+.Januar Februar März April Mai Juni Juli August September Oktober November Dezember.,
+.January February March April May June July August September October November December.,
+.enero febrero marzo abril mayo junio julio agosto septiembre octubre noviembre diciembre..</p>
+<p>In 10 days is 4th April 2008
+
+Today is 25th March 2008.</p>
+<p>.Today is Mardi 25 mars 2008.
+Today is Dienstag 25. März 2008.
+Today is Martes 25 de marzo de 2008.
+Today is Tuesday March 25, 2008.
+Today is Tuesday 25th March 2008.</p>
+<p>Tuesday</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=''><mn>1</mn><mo>&middot;</mo><mn>25</mn><mo>&gt;</mo><mn>0</mn><mo>.</mo></mfenced><mtext>textṡ.</mtext></mrow></math></formula></p>
+<error n='\tralics@get@config' l='240' c='no list'/><error n='\tralics@get@config' l='241' c='illegal data'/><catperso><head>BB</head>
+</catperso>
+<catperso><head>CC</head>
+</catperso>
+<catperso><head>xx</head>
+</catperso>
+<catperso><head><error n='\tralics@get@config' l='247' c='illegal data'/></head>
+</catperso>
+<participant><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participant>
+<participante><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participante>
+<participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<participantes><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participantes>
+<error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='' profession='' hdr='not yet' research-centre='Lyon'>Ok</pers>
+<pers prenom='Jean A' nom='Dupond' affiliation='cnrs' profession='Research' hdr='not yet' research-centre='Sophia'>Ok</pers>
+<pers prenom='Jean B' nom='Dupond' affiliation='inria' profession='Engineer' hdr='not yet' research-centre='Lyon'>Ok</pers>
+<pers prenom='Jean C' nom='Dupond' affiliation='ibm' profession='Other' research-centre='Paris'>Ok</pers>
+<pers prenom='Jean D' nom='Dupond' affiliation='Other' profession='Teaching' hdr='not yet' research-centre='Paris'>Ok</pers>
+<p>Paris
+
+<error n='\tralics@get@config' l='265' c='illegal data'/>rennes</p>
+<UR><URParis/><URSophia/></UR><UR><URParis/><URSophia/></UR><UR/><RC><RCParis/><RCSophia/></RC><RC><rc name='Paris'/><rc name='Sophia'/></RC>
+<domaine titre='Application Domains' id-text='domaine' id='uid1'>
+<module id-text='1' id='uid2'><head>Panorama 2</head>
+<p>Module1</p></module>
+<module id-text='2' id='uid3'><head>Panorama 2</head>
+<p>Module2</p></module></domaine>
+<Section titre='Software' id-text='logiciels' id='uid4' name='logiciels'>
+<module id-text='3' id='uid5'><head>Titre 3</head>
+<p>Module3</p></module>
+<module id-text='4' id='uid6'><head>Titre 4</head>
+<p>Module4</p></module><p><ref target='uid2'/>
+<ref target='uid3'/>
+<ref target='uid5'/>
+<ref target='uid6'/>
+<ref target='uid6'/>
+<ref target='uid6'/>
+<error n='\PackageError' l='288' c='uerror'/>
+<error n='\PackageError' l='289' c='uerror'/></p>
+<p><ref target='uid2'/>
+<ref target='uid3'/>
+<ref target='uid5'/>
+<ref target='uid6'/></p>
+</Section></unknown>

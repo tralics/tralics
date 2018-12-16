@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.15.2, date: 2015/06/24-->
+<std>
+<formula id-text='1' id='uid1' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mi> lim </mi> <mrow><mi>v</mi><mo>&rightarrow;</mo><mo>+</mo><mi>&infin;</mi></mrow></munder><mi>&Theta;</mi><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><mfrac><mn>1</mn> <mrow><mn>4</mn><mi>a</mi><mi>b</mi></mrow></mfrac></mstyle><mspace width='1.em'/><mi> and </mi><mspace width='1.em'/><munder><mi> lim </mi> <mrow><mi>v</mi><mo>&rightarrow;</mo><mn>0</mn><mo>+</mo></mrow></munder><mi>&Theta;</mi><mo>=</mo><msup><mi>Ш</mi> <mn>2</mn> </msup><mo>.</mo></mrow></math></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Ш</mi><mi>Ш</mi><mi>Ш</mi><mi>A</mi><mo>)</mo></mrow></math></formula></p>
+</std>

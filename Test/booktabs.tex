@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage {booktabs}
+\begin{document}
+
+%% This tests booktabs and extensions of hline cline
+
+\def\fooA{fooA}\def\fooB{FooB}\def\fooC{fooC}\def\fooD{fooD}
+\def\checknext{\ifx\tmp\fooA A\else\ifx\tmp\fooB B\else X\fi\fi}
+
+\def\TA{TA:\futurelet\tmp\checknext}
+\def\TB#1{TB#1:\futurelet\tmp\checknext}
+\def\TC#1{TC#1:\futurenonspacelet\tmp\checknext}
+
+Testing futurenonspacelet\\
+\TA\fooA\TA\fooB\TA\fooC\\ 
+\TB{1}\fooA\TB{1}\fooB\TB{1}\fooC \\
+\TB{1} \fooA\TB{1} \fooB\TB{1} \fooC \\
+\TC{1}\fooA\TC{1}\fooB\TC{1}\fooC \\ 
+\TC{1} \fooA\TC{1} \fooB\TC{1} \fooC\TC{1} {} \fooA. 
+\edef\truc{\noexpand\TC{1}\space \space\space\space \noexpand\fooA}\truc.
+
+\bigskip
+\begin{tabular}{@{}llr@{}} \toprule
+\multicolumn{2}{c}{Item}\\ \cmidrule(r){1-2}
+Animal& Description & Price (\$) \\ \midrule
+Gnat & per gram & 13.63 \\
+        & each & 0.01\\
+Gnu  & stuffed& 92.50 \\
+Emu & stuffed & 33.33\\
+Armadillo& frozen &8.99 \\ \bottomrule
+\end{tabular}
+
+Example 5-68 of the companion\\
+\begin{tabular}{@{}llr@{}}
+\toprule
+  \multicolumn{2}{c}{Item} &\multicolumn{1}{c}{Price/lb} \\
+\cmidrule(r){1-2}\cmidrule(l){3-3}
+  a & b & c \\
+\cmidrule(l{2pt}r{2pt}){1-2}\cmidrule(l{2pt}r{2pt}){3-3}
+\morecmidrules
+\cmidrule(l{2pt}r{2pt}){2-3}
+\addlinespace[5pt]
+  Food& Category & \multicolumn{1}{c}{\$}\\
+\midrule
+  Apples & Fruit  & 1.50 \\
+  Oranges & Fruit & 2.00 \\
+\addlinespace
+  Beef & Meat     & 4.50 \\
+\specialrule{.5pt}{3pt}{3pt}
+  x & y & z \\
+\bottomrule
+\end{tabular}
+
+
+
+\begin{tabular}{llll}
+\hlinee{}{}{}{5pt} a&b&c&d\\\hlinee{}{}{}{6pt} \hlinee{3-4}{}{}{7pt}
+\end{tabular}
+
+\begin{tabular}{llll}
+\hlinee{}{1pt}{2pt}{5pt} a&b&c&d\\\hlinee{}{3pt}{4pt}{6pt} \hlinee{3-4}{-1pt}{-2pt}{7pt}
+\end{tabular}
+
+
+\begin{tabular}{llll}
+a&b&c&d\\ \cmidrule[3pt](){1-3}\cmidrule[2pt](){3-4}
+A&B&C&D\\ \cmidrule[3pt](){1-3}\morecmidrules\cmidrule[2pt](){3-4}
+\end{tabular}
+
+\setlength\aboverulesep{6pt}
+\setlength\belowrulesep{4pt}
+\setlength\cmidrulewidth{5pt}
+\begin{tabular}{llll}
+a&b&c&d\\ \cmidrule[3pt](rl){1-3}\cmidrule[2pt](lr){3-4}
+A&B&C&D\\ \cmidrule[3pt](){1-3}\morecmidrules\cmidrule[2pt](){3-4}
+\end{tabular}
+
+
+x\addlinespace\addlinespace[17pt]x
+
+
+\begin{tabular}{|r|l|c} % this is completely wrong
+\hline a&b&\multicolumn{1}{c|}{x}\hline\\[2pt]
+a&b\hline\\ \cline{bad}\cline{4-bad}\cline{-2-3}\cline{2--3}
+a&b\cline{1-2}\hlinee{}{}{}{0pt}\hlinee{}{}{}{bad}\hlinee{}{}{}{2bad}\\
+\cmidrule[2un](){3-4} \cmidrule[2un](){3--4} a&b\\\hline
+\end{tabular}
+\hline \cline{1-2}\omit  \multicolumn{}{}{}
+
+Testing error for T1 ot1/enc 
+\expandafter\def\expandafter\foo\expandafter{\csname T1-encoding\endcsname}
+\expandafter\def\expandafter\foO\expandafter{\csname OT2-encoding\endcsname}
+\expandafter\def\expandafter\foP\expandafter{\csname OT1-encoding\endcsname}
+
+\count0=66
+\foo{65}\foo{'101}\foo{"41}\foo{`A}\foo{\count0}\foo{ 65}\foo{ 66 67}\foo{'274}
+\foO{65}\foO{'101}\foO{"41}\foO{`A}\foO{\count0}\foO{"DF}
+\foo{256}\foo{-1}\foo{count}\foo{\count}\foo0\foo{"DF}
+\foO{128}\foO{-1}\foO{count}\foO{\count}\foO0
+
+\fooP{11}\fooP{12}\fooP{13}\fooP{14}\fooP{15}\fooP{16}\fooP{17}\fooP{18}
+\fooP{19}\fooP{20}\fooP{21}\fooP{22}\fooP{23}\fooP{24}\fooP{32}\fooP{92}
+\fooP{94}\fooP{95}\fooP{123}\fooP{124}\fooP{125}\fooP{126}\fooP{127}\fooP{128}
+
+^^^^^3d7e0 \def\f^^^^^3d7e0{aa} \catcode`^^^^^1d7e0=11
+^^^^^1d7e0 \def\f^^^^^1d7e0{xx}\f\char "1D7E00
+{\def\^^^^^1d7e0{xx} \^^^^^1d7e0 \^^^^^1d7e1}
+^^^^d7e0 \def\f^^^^d7e0{yy}\f^^^^d7e0\def\^^^^d7e0{abc}\^^^^d7e0
+\catcode`^^^^d7e0=11 \def\f^^^^d7e0{tt}\f^^^^d7e0
+\char100\char1000\char100000 
+
+Weird math
+\(\)\)\( 
+$a\]b$ $a\[b$ \]x\[ $$y\(\)
+$a\atopwithdelims$
+$a\atopwithdelims (x$
+$a\atopwithdelims x(x$
+$a\above x$
+$a \above 3..pt b$
+$a \above -pt b$ $a \above 3-pt b$ $a \above 3p\alpha b$
+
+
+\end{document}

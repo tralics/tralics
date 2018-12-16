@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/05-->
+<std>
+<p>Testing futurenonspacelet</p>
+<p noindent='true'>TA:AfooATA:BFooBTA:XfooC</p>
+<p noindent='true'>TB1:AfooATB1:BFooBTB1:XfooC</p>
+<p noindent='true'>TB1:X fooATB1:X FooBTB1:X fooC</p>
+<p noindent='true'>TC1:AfooATC1:BFooBTC1:XfooC</p>
+<p noindent='true'>TC1:AfooATC1:BFooBTC1:XfooCTC1:X fooA.
+TC1:AfooA.</p>
+<p spacebefore='12.0pt'/>
+<table rend='inline'><row top_rule_space_below='2.76247pt' border-top-width='0.80002pt' top-border='true'><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' halign='right' cols='2'>Item</cell>
+</row><row bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.50003pt' bottom-border='true'><cell halign='left'>Animal</cell>
+<cell halign='left'>Description</cell>
+<cell>Price ($)</cell>
+</row><row><cell halign='left'>Gnat</cell>
+<cell halign='left'>per gram</cell>
+<cell>13.63</cell>
+</row><row><cell halign='left'/>
+<cell halign='left'>each</cell>
+<cell>0.01</cell>
+</row><row><cell halign='left'>Gnu</cell>
+<cell halign='left'>stuffed</cell>
+<cell>92.50</cell>
+</row><row><cell halign='left'>Emu</cell>
+<cell halign='left'>stuffed</cell>
+<cell>33.33</cell>
+</row><row bottom_rule_space_above='1.69997pt' border-bottom-width='0.80002pt' bottom-border='true'><cell halign='left'>Armadillo</cell>
+<cell halign='left'>frozen</cell>
+<cell>8.99</cell>
+</row></table>
+<p>Example 5-68 of the companion</p>
+<table rend='inline'><row top_rule_space_below='2.76247pt' border-top-width='0.80002pt' top-border='true'><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' halign='right' cols='2'>Item</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' halign='center' cols='1'>Price/lb</cell>
+</row><row><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' halign='left'>a</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' halign='left'>b</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true'>c</cell>
+</row><row><cell halign='left'/>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.29999pt' bottom-border='true' cols='2'/></row><row bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='0.50003pt' bottom-border='true'><cell halign='left'>Food</cell>
+<cell halign='left'>Category</cell>
+<cell halign='center' cols='1'>$</cell>
+</row><row><cell halign='left'>Apples</cell>
+<cell halign='left'>Fruit</cell>
+<cell>1.50</cell>
+</row><row><cell halign='left'>Oranges</cell>
+<cell halign='left'>Fruit</cell>
+<cell>2.00</cell>
+</row><row bottom_rule_space_below='3.0pt' bottom_rule_space_above='3.0pt' border-bottom-width='0.5pt' bottom-border='true'><cell halign='left'>Beef</cell>
+<cell halign='left'>Meat</cell>
+<cell>4.50</cell>
+</row><row bottom_rule_space_above='1.69997pt' border-bottom-width='0.80002pt' bottom-border='true'><cell halign='left'>x</cell>
+<cell halign='left'>y</cell>
+<cell>z</cell>
+</row></table>
+<table rend='inline'><row border-bottom-width='6.0pt' bottom-border='true' border-top-width='5.0pt' top-border='true'><cell halign='left'>a</cell>
+<cell halign='left'>b</cell>
+<cell border-bottom-width='7.0pt' bottom-border='true' halign='left'>c</cell>
+<cell border-bottom-width='7.0pt' bottom-border='true' halign='left'>d</cell>
+</row></table>
+<table rend='inline'><row bottom_rule_space_below='4.0pt' bottom_rule_space_above='3.0pt' border-bottom-width='6.0pt' bottom-border='true' top_rule_space_below='2.0pt' top_rule_space_above='1.0pt' border-top-width='5.0pt' top-border='true'><cell halign='left'>a</cell>
+<cell halign='left'>b</cell>
+<cell bottom_rule_space_below='-2.0pt' bottom_rule_space_above='-1.0pt' border-bottom-width='7.0pt' bottom-border='true' halign='left'>c</cell>
+<cell bottom_rule_space_below='-2.0pt' bottom_rule_space_above='-1.0pt' border-bottom-width='7.0pt' bottom-border='true' halign='left'>d</cell>
+</row></table>
+<table rend='inline'><row><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>a</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>b</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='2.0pt' bottom-border='true' halign='left'>c</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='2.0pt' bottom-border='true' halign='left'>d</cell>
+</row><row><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>A</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>B</cell>
+<cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>C</cell>
+<cell halign='left'>D</cell>
+</row><row><cell halign='left'/>
+<cell/><cell bottom_rule_space_below='2.76247pt' bottom_rule_space_above='1.69997pt' border-bottom-width='2.0pt' bottom-border='true' cols='2'/></row></table>
+<table rend='inline'><row><cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>a</cell>
+<cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>b</cell>
+<cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='2.0pt' bottom-border='true' halign='left'>c</cell>
+<cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='2.0pt' bottom-border='true' halign='left'>d</cell>
+</row><row><cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>A</cell>
+<cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>B</cell>
+<cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='3.0pt' bottom-border='true' halign='left'>C</cell>
+<cell halign='left'>D</cell>
+</row><row><cell halign='left'/>
+<cell/><cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='2.0pt' bottom-border='true' cols='2'/></row></table>
+<p>xx</p>
+<table rend='inline'><row spaceafter='2.0pt' top-border='true'><cell right-border='true' halign='right' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+<cell right-border='true' halign='center' cols='1'>x<error n='\hline' l='83' c='Current command should occur in tables only'/></cell>
+</row><row><cell right-border='true' halign='right' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b<error n='\hline' l='84' c='Current command should occur in tables only'/></cell>
+</row><error n='\cline' l='84' c='missing number'/><error n='\cline' l='84' c='missing number'/><error n='\cline' l='84' c='Bad range in \cline: 0-0'/><error n='\cline' l='84' c='missing number'/><error n='\cline' l='84' c='Bad range in \cline: 4-0'/><error n='\cline' l='84' c='Bad range in \cline: -2-3'/><error n='\cline' l='84' c='Bad range in \cline: 2--3'/><row><cell right-border='true' halign='right' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b<error n='\cline' l='85' c='Current command should occur in tables only'/><error n='\hlinee' l='85' c='Current command should occur in tables only'/><error n='\hlinee' l='85' c='missing number'/><error n='\hlinee' l='85' c='missing unit'/><error n='\hlinee' l='85' c='Current command should occur in tables only'/><error n='\hlinee' l='85' c='missing unit'/><error n='\hlinee' l='85' c='Current command should occur in tables only'/></cell>
+</row><error n='\hlinee' l='86' c='missing unit'><cell cols='2'/><cell bottom_rule_space_below='4.0pt' bottom_rule_space_above='6.0pt' border-bottom-width='2.0pt' bottom-border='true' cols='2'/></error><error n='\hlinee' l='86' c='Bad range in \hlinee: 3--4'/><row bottom-border='true'><cell right-border='true' halign='right' left-border='true'>a</cell>
+<cell right-border='true' halign='left'>b</cell>
+</row></table><p>
+<error n='\hline' l='88' c='Current command should occur in tables only'/><error n='\cline' l='88' c='Current command should occur in tables only'/><error n='\omit' l='88' c='unimplemented'/><error n='\multicolumn' l='88' c='Undefined command'/></p>
+<p>Testing error for T1 ot1/enc</p>
+<p>AAAABABĳ
+ААААБ<error n='\OT2-encoding' l='97' c='Invalid chararacter specification \OT2-encoding{223}'/>
+<error n='\T1-encoding' l='98' c='Invalid chararacter specification \T1-encoding{256}'/><error n='\T1-encoding' l='98' c='Invalid chararacter specification \T1-encoding{-1}'/><error n='\T1-encoding' l='98' c='missing number'/><error n='\T1-encoding' l='98' c='Invalid chararacter specification \T1-encoding{0}'/><error n='\T1-encoding' l='98' c='missing number'/>B<error n='\T1-encoding' l='98' c='Invalid chararacter specification \T1-encoding{0}'/><error n='\T1-encoding' l='98' c='Invalid chararacter specification \T1-encoding{223}'/>
+<error n='\OT2-encoding' l='99' c='Invalid chararacter specification \OT2-encoding{128}'/><error n='\OT2-encoding' l='99' c='Invalid chararacter specification \OT2-encoding{-1}'/><error n='\OT2-encoding' l='99' c='missing number'/>Њ<error n='\OT2-encoding' l='99' c='missing number'/>БЊ</p>
+<error n='\fooP' l='101' c='Undefined command'/><p>11<error n='\fooP' l='101' c='Undefined command'/>12<error n='\fooP' l='101' c='Undefined command'/>13<error n='\fooP' l='101' c='Undefined command'/>14<error n='\fooP' l='101' c='Undefined command'/>15<error n='\fooP' l='101' c='Undefined command'/>16<error n='\fooP' l='101' c='Undefined command'/>17<error n='\fooP' l='101' c='Undefined command'/>18
+<error n='\fooP' l='102' c='Undefined command'/>19<error n='\fooP' l='102' c='Undefined command'/>20<error n='\fooP' l='102' c='Undefined command'/>21<error n='\fooP' l='102' c='Undefined command'/>22<error n='\fooP' l='102' c='Undefined command'/>23<error n='\fooP' l='102' c='Undefined command'/>24<error n='\fooP' l='102' c='Undefined command'/>32<error n='\fooP' l='102' c='Undefined command'/>92
+<error n='\fooP' l='103' c='Undefined command'/>94<error n='\fooP' l='103' c='Undefined command'/>95<error n='\fooP' l='103' c='Undefined command'/>123<error n='\fooP' l='103' c='Undefined command'/>124<error n='\fooP' l='103' c='Undefined command'/>125<error n='\fooP' l='103' c='Undefined command'/>126<error n='\fooP' l='103' c='Undefined command'/>127<error n='\fooP' l='103' c='Undefined command'/>128</p>
+<p>&#x3D7E0;  <error n='\catcode' l='105' c='bad alph'/><error n='\catcode' l='105' c='number too big'/>=11
+&#x1D7E0; <error n='\f' l='106' c='bad prefix'/>xx7E00
+ xx <error n='\\csname\endcsname' l='107' c='bad prefix'/>xx 
+ퟠ yyabc
+ttdϨ&#x186A0;</p>
+<p>Weird math
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow/></math></formula><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow/></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math></formula><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math></formula><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>y</mi></math></formula>
+<p noindent='true'><error n='$' l='115' c='Problem finding opening delim'/><error n='$' l='115' c='Problem finding closing delim'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mrow/></mfrac></math></formula>
+<error n='$' l='116' c='bad delims'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='('><mfrac linethickness='0pt'><mi>a</mi> <mrow/></mfrac></mfenced></math></formula>
+<error n='$' l='117' c='bad delims'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' close='('><mfrac linethickness='0pt'><mi>a</mi> <mi>x</mi></mfrac></mfenced></math></formula>
+<error n='$' l='118' c='bad dimension'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mrow/></mfrac></math></formula>
+<error n='$' l='119' c='bad dimension'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mrow><mi>p</mi><mi>t</mi><mi>b</mi></mrow></mfrac></math></formula>
+<error n='$' l='120' c='bad dimension'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula> <error n='$' l='120' c='bad dimension'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mrow><mi>p</mi><mi>t</mi><mi>b</mi></mrow></mfrac></math></formula> <error n='$' l='120' c='bad dimension'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0pt'><mi>a</mi> <mrow><mi>&alpha;</mi><mi>b</mi></mrow></mfrac></math></formula></p>
+</std>

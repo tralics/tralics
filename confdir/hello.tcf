@@ -1,0 +1,17 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: hello.tcf,v 1.1 2006/07/17 09:09:06 grimm Exp $
+## tralics ident rc=hello.tcf $Revision: 1.1 $
+
+
+DocType = Article classes.dtd
+DocAttrib =Foo \World
+DocAttrib =A \specialyear
+DocAttrib =B  \tralics
+DocAttrib =C  \today
+BeginCommands
+  \def\World{world}
+  \def\today{\the\year/\the\month/\the\day}
+End
+
+

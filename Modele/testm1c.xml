@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/04/27-->
+<std>
+<p>simple math test
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><msup><mi>y</mi> <mn>2</mn> </msup><mi>Ω</mi><mi>∑</mi><mi>∆</mi><mi>∏</mi></mrow></math><texmath>x = y ^2 Ω∑∆∏</texmath></formula></p>
+<formula id-text='1' id='uid1' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mo>&int;</mo> <mn>0</mn> <mi>&infin;</mi> </msubsup><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mspace width='0.166667em'/><mi>d</mi><mi>x</mi></mrow></math><texmath>
+\int _0 ^\infty f(x)\, dx
+</texmath></formula>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D400;</mi><mi>&#x1D7FF;</mi></mrow></math><texmath>&#x1D400;&#x1D7FF;</texmath></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D400;</mi><mo>;</mo><mi>&#x1D7FF;</mi><mo>;</mo><mi>&#x1D49F;</mi></mrow></math><texmath>&#x1D400;;&#x1D7FF;; &#x1D49F;</texmath></formula></p>
+</std>

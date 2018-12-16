@@ -1,0 +1,52 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: tpa.tcf,v 1.3 2006/07/21 08:47:03 grimm Exp $
+## tralics ident rc=tpa.tcf $Revision: 1.3 $
+
+
+  DocType = tpa tpa.dtd
+
+
+BeginTitlePage
+  \InsertTitlepage <titlepage att1='foo' att2='foo2'> "a1='b1' a2='b2'" "from-tpa='ok' from_type='OK'"
+  alias \AInsertTitlepage  "" ""
+  \title <title-element tea='tea-val'> "No title"
+  \utitle <utitle-element tea='utea-val'> "No title"
+  \author + <autL al = 'alval' bl = 'blval'> <aut auta='autaval'> "No authors"
+  \uauthor + <uautL al='alval' bl='blval'> <aut auta='autaval'> "No authors"
+  \Eabstract E<abstract ab='AB1'> "no abstract1"
+  \eabstract e<abstract ab='AB2'> "no abstract2"
+  \pabstract p<abstract ab='AB3'> "no abstract3"
+  \abstract <abstract ab='AB4'> "no abstract4"
+  alias \abstractalias
+  \uEabstract E<uabstract ab='AB5' > "no abstract1"
+  \ueabstract e<uabstract ab='AB6'> "no abstract2"
+  \upabstract p<uabstract ab='AB7'> "no abstract3"
+  \uabstract <uabstract ab='AB8'> "no abstract4"
+  alias \uabstractalias
+  <UR> -
+  \URsop ?+ <UR>
+  \URlor ?+ <UR>
+  \Paris ?<UR> <Rocq>
+  <sUR fr='unit&#xe9; de recherche' en='research unit'> -
+  \sURsop ?+ <sUR fr='dans le sud'>
+  \sURlor ?+ <sUR fr=" dans l'est">
+  \sParis ?<sUR> <Rocq en='nearparis'>
+  \myself \author "JG"
+  \himself \author "DEK"  # this is a list def
+  alias \autk
+  \address  <Address>  "no adress"
+  \waddress \address "somewhere" # this is a normal def
+
+  \cmdp <cmdp> +"nodefault" 
+  \cmda <cmdA> A"\cmdAval" 
+  \cmdb <cmdB> B"\cmdBval" 
+  \cmdc <cmdC> C"\cmdCval" 
+
+End
+
+
+BeginCommands
+  \def\recurse{\recurse\recurse}
+EndCommands
+

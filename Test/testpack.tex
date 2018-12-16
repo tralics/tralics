@@ -1,0 +1,408 @@
+\documentclass{article}
+
+\long\def\testeq#1#2{\def\tmp{#2}\ifx#1\tmp\else \toks0={#1wantd: ->#2.}
+\typeout{\the\toks0}\show #1\uerror\fi}
+
+\begin{filecontents+}{kvp.plt}
+\RequirePackage{xkeyval}
+\newif\iflandscape
+\DeclareOptionX{landscape}{\landscapetrue}
+\def\upo{}
+\DeclareOptionX*{\xdef\upo{\upo,\CurrentOption}}
+
+\ProcessOptionsX \relax
+\end{filecontents+}
+
+\begin{filecontents+}{kvo.plt}
+  \ProvidesPackage{kvo}[2007/10/18 kvoptions test]
+  \RequirePackage{ifpdf} \RequirePackage{kvoptions}
+  \SetupKeyvalOptions{ family=MCS, prefix=MCS@ }
+  \DeclareBoolOption[true]{BA} \DeclareBoolOption[false]{BB}
+  \DeclareBoolOption[true]{BC} \DeclareBoolOption{BD}
+  \DeclareBoolOption[true]{BE} \DeclareBoolOption[true]{BF}
+  \DeclareBoolOption[true]{BG} \DeclareBoolOption[true]{BH}
+  \DeclareComplementaryOption{BNH}{BH} \DeclareBoolOption[true]{BI}
+  \DeclareComplementaryOption{BNI}{BI}
+  \DeclareVoidOption{VA}{\let\foo\relax} \DeclareVoidOption{VB}{}
+  \DeclareStringOption{SA} \DeclareStringOption[foo]{SB}
+  \DeclareStringOption[foo]{SC}[bar]
+  \DeclareStringOption[foo]{SD}[bar] \let\foo\undefined
+  \def\@@relax{\relax} \def\theopts{} \DeclareDefaultOption{%
+    \edef\theopts{\theopts,\CurrentOptionKey+%
+      \ifx\CurrentOptionValue\@@relax
+      RELAX\else\CurrentOptionValue\fi+\CurrentOption}}
+  \ProcessKeyvalOptions* \edef\xxa{\CurrentOption}
+  \edef\xxb{\CurrentOptionKey} \edef\xxc{\CurrentOptionValue}
+\end{filecontents+}
+
+\usepackage{epigraph,esdiff,calc}
+\usepackage{xkeyval,textcomp}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{color}
+\usepackage{fancybox}
+\usepackage{fixme}
+\usepackage{fink}
+\usepackage{fixfoot}
+\usepackage[landscape,unknownA,unknownB=c]{kvp}
+\usepackage[BE =false,BC=false,BF=true,BG=false,BNH=true,BNI=false,VA,VB,
+   SC=yfoo,SD,ua,ub=c]{kvo}
+\foo
+\DeclareFixedFootnote{\blah}{blah \didi blah}
+\DeclareFixedFootnote*{\blih}{blih da blih}
+\begin{document}
+
+\unless\iflandscape\bad\fi
+\edef\xfoo{\detokenize{,unknownA,unknownB=c}}
+\edef\yfoo{\detokenize\expandafter{\upo}}
+\ifx\yfoo\xfoo\else\bad\fi
+% BA is true BB false BC false BD false
+\makeatletter
+%%%\testerUnknownOptions dans xkeyval
+\edef\xfoo{\detokenize{,ua+RELAX+ua,ub+c+ub=c}}
+\edef\yfoo{\detokenize\expandafter{\theopts}}
+\ifx\yfoo\xfoo\else\bad\fi
+
+\let\res\bad
+\ifMCS@BA \unless\ifMCS@BB \unless\ifMCS@BC \unless\ifMCS@BD
+\unless\ifMCS@BE  \ifMCS@BF\unless\ifMCS@BG
+\let\res\relax \fi\fi\fi\fi\fi\fi\fi \res
+\let\res\bad
+\unless\ifMCS@BH\ifMCS@BI\let\res\relax \fi\fi\res
+\def\xfoo{}\ifx\MCS@SA\xfoo\else\bad\show\MSC@SA\fi
+\def\xfoo{foo}\ifx\MCS@SB\xfoo\else\bad\fi
+\def\xfoo{bar}\ifx\MCS@SD\xfoo\else\bad\fi
+\def\xfoo{yfoo}\ifx\MCS@SC\xfoo\else\bad\fi
+
+\let\xfoo\KV@MCS@SC\let\yfoo\KV@MCS@SC@default
+{
+\DisableKeyvalOption[local]{MCS}{SC}
+\ifx\KV@MCS@SC\relax\else\bad\fi
+\ifx\KV@MCS@SC@default\relax\else\bad\fi
+}
+\ifx\KV@MCS@SC\xfoo\else\bad\fi
+\ifx\KV@MCS@SC@default\yfoo\else\bad\fi
+{\DisableKeyvalOption[global]{MCS}{SC}}
+\ifx\KV@MCS@SC\relax\else\bad\fi
+\ifx\KV@MCS@SC@default\relax\else\bad\fi
+\let\KV@MCS@SC\xfoo\let\KV@MCS@SC@default\yfoo
+{\DisableKeyvalOption{MCS}{SC}}
+\ifx\KV@MCS@SC\relax\else\bad\fi
+\ifx\KV@MCS@SC@default\relax\else\bad\fi
+\let\KV@MCS@SC\xfoo\let\KV@MCS@SC@default\yfoo
+% Testing ignore
+{
+\DisableKeyvalOption[local,action=ignore]{MCS}{SC}
+\ifx\KV@MCS@SC\@gobble\else\bad\fi
+\ifx\KV@MCS@SC@default\@empty\else\bad\fi
+}
+\ifx\KV@MCS@SC\xfoo\else\bad\fi
+\ifx\KV@MCS@SC@default\yfoo\else\bad\fi
+{\DisableKeyvalOption[action=ignore]{MCS}{SC}}
+\ifx\KV@MCS@SC\@gobble\else\bad\fi
+\ifx\KV@MCS@SC@default\@empty\else\bad\fi
+{
+  \DisableKeyvalOption[class=foo,global=false,action=error]{MCS}{SC}
+  \def\xfoo#1{\KVO@disable@error{foo}\KVOdyn@ext {SC}}
+  \def\yfoo{\KV@MCS@SC{}}
+  \ifx\xfoo\KV@MCS@SC\else \bad\fi
+  \ifx\yfoo\KV@MCS@SC@default\else \bad\fi
+  \DisableKeyvalOption[package=bar,local,action=warning]{MCS}{SC}
+  \def\xfoo#1{\KVO@disable@warning{bar}\KVOdyn@ext {SC}}
+  \ifx\xfoo\KV@MCS@SC\else \bad\fi
+  \ifx\yfoo\KV@MCS@SC@default\else \bad\fi
+}
+\def\yfoo{\KV@MCS@SC{}}
+\def\xfoo#1{\KVO@disable@warning{bar}\KVOdyn@ext {SC}}
+\ifx\xfoo\KV@MCS@SC \bad\fi
+\ifx\yfoo\KV@MCS@SC@default\bad\fi
+\DisableKeyvalOption[package=bar,local,action=warning]{MCS}{SC}
+\KV@MCS@SC{foo}
+\makeatother
+
+\epigraphhead[70]{\epigraph{Star crossed lovers.}{\textit{The Bard}}}
+\epigraph{Example is the school of mankind, and they will learn at no other}
+{\textit{Letters on a Regicide Peace}\\ \textsc{Edmond Burke}}
+\begin{epigraphs}
+\qitem{A text}{An author}
+\qitem{A second text}{An author}
+\end{epigraphs}
+
+\newenvironment{Foo}{\begin{xmlelement}{Foo}A}{B\end{xmlelement}}
+\newenvironment{Foo+ Bar_}{\begin{xmlelement}{special}A}{B\end{xmlelement}}
+\newenvironment{*$é$}{\begin{xmlelement}{VerySpecial}A}{B\end{xmlelement}}
+\def\foo{Foo}\begin{\foo}X\end{\foo}
+\def\foo{Foo+ Bar_}\begin{\foo}X\end{\foo}
+\def\foo{*$é$}\begin{\foo}X\end{\foo}
+
+
+\def\T{\diff{f}{x}}$\T_{\T^\T}$
+\def\T{\diff[2]{f}{x}}$\T_{\T^\T}$
+\def\T{\diff*{f}{x}{x_0}}$\T_{\T^\T}$
+\def\T{\diff*[2]{g}{y}{0}}$\T_{\T^\T}$
+
+$\diffp{f}{x}=\diffp[2]{f}{x}= \diffp*{p}{V}{T}= \diffp{f}{{x}{y^2}}=
+\diffp{f}{{x^2}}=\diffp*{f}{{x^2}{y^3}}{z}$ 
+
+\[\diffp{f}{x} =\diffp[2]{f}{x}=\diffp*{p}{V}{T}=\diffp{f}{{x}{y^2}}=
+\diffp{f}{{x^2}}=\diffp*{f}{{x^2}{y^3}}{z}\]
+
+
+
+\def\myscale{.3}
+\includegraphics[height=15cm,width=\columnwidth]{A}
+\includegraphics[height=15cm,totalheight=\columnwidth]{A}
+\includegraphics[height=20cm,width=\textheight]{AA}
+\includegraphics[height=18cm,width=\textheight-2cm]{AA}
+\includegraphics[height=1.5cm,width=.1\linewidth]{B}
+\includegraphics[height=7.5cm,width=.5\textwidth]{C}
+\includegraphics[height=7.5cm,width=.5\textwidth]{C}
+\includegraphics[bb=10 20 30  40,clip=true,keepaspectratio=true,draft=true,hiresbb=true,origin=c]{D}
+\includegraphics[bb=10pt 20pt 30pt  40pt,clip=true,keepaspectratio=true,draft=true]{D}
+\includegraphics[bbllx= 9.9626,bblly= 20pt,bburx= 30,bbury=40,clip=false,keepaspectratio=false,draft=false,type=aa,ext=bb,read=cc,command=dd,hiresbb=false]{E}
+\includegraphics[natwidth= 3,natheight=40,clip=,hiresbb,keepaspectratio=,scale=\myscale,draft=]{F}
+
+{\setkeys{Gin}{width=20pt}\includegraphics{G}}
+\graphicspath{foo/bar}
+\DeclareGraphicsExtensions{ext1,ext2,ext3}
+\DeclareGraphicsRule{ext}{type}{read-file}{command}
+
+\makeatletter
+\fontdimen1\font=.33pt
+\dimen@=10pt
+$\kern\strip@pt\fontdimen1\font\dimen@$
+\edef\foo{\strip@pt\dimen@}
+\def\xfoo{10}\ifx\foo\xfoo\else\show\foo\bad\fi
+\edef\foo{\strip@pt\fontdimen1\font}
+\def\xfoo{0.33}\ifx\foo\xfoo\else\show\foo\bad\fi
+\rotatebox{30}{Text}
+\rotatebox[x=1pt,y=2pt,origin=c]{30}{Text}
+\rotatebox{30}{\includegraphics{x}}
+\rotatebox[x=1pt,y=2pt,origin=c,units= -360]{30}{\includegraphics{x}}
+\reflectbox{foo}
+\resizebox{1in}{2in}{Some text}
+\resizebox{1in}{!}{Some text}
+\resizebox{1in}{\height}{Some text}
+
+%% Testing colors
+{\color{red} textA \par textB {\it testC} textD}out
+{\color{Red} textD \color {Blue} textE \color[rgb]{.1,.2,.3} textF}out
+{\color[named]{Yellow} textG {\normalcolor this} and that}
+\pagecolor{green}\pagecolor[rgb]{0,1,0}
+\definecolor{myred}{named}{WildStrawberry}
+\definecolor{mygreen}{rgb}{.1,.2,.3}
+\colorbox{red}{textH etc\textcolor{myred}{redtext}etc\textcolor{mygreen}{greentext}}
+\colorbox[cmyk]{0,1,1,1}{textI}
+\fcolorbox{red}{green}{textJ}
+\fcolorbox[cmyk]{0,1,1,1}{.1,.2,.3,.4}{textK}
+
+$x\thinspace y\,z$\thinspace a\,b
+
+%% textcomp
+\leavevmode \textcompwordmark\textcopyleft \par
+
+
+\makeatletter
+\gdef \newlabel#1#2{\newlabelxx{#1}#2}
+\gdef \newlabelxx#1#2#3#4#5#6{\@namedef{label@value@#1}{#2}\@namedef{label@title@#1}{#4}}
+\def\myref#1{\xbox{ref}{\XMLref{#1}\@nameuse{label@title@#1}%
+\XMLaddatt{value}{\@nameuse{label@value@#1}}}}
+
+\newlabel{labA}{{1_1}{1}{Introduction\relax }{subsection.1.1}{}}
+\newlabel{labB}{{1.2}{1}{Continuation\relax }{subsection.1.2}{}}
+
+Text. \anchor\label{labA}
+\myref{labA}\myref{labB}
+\anchor\label{labB}
+
+\def\foo{\@reevaluate\ca\cb}
+\def\ca#1{A#1}\def\cb#1#2{B#1C#2=}
+\foo 123
+\foo {1}23\foo {12}23
+
+
+\expandafter\def\expandafter\getuserid \detokenize{cite}:#1\\{#1}
+
+\def\expanduserid#1{\expandafter\getuserid \detokenize{#1}\\}
+\renewenvironment{citation}[1]
+{\begin{xmlelement}{bib\textunderscore entry}#1\NCcitation}
+{\end{xmlelement}}
+\def\NCcitation#1#2#3#4{%
+\XMLaddatt{doctype}{#4}%
+\XMLaddatt{id}{#2}%
+\XMLaddatt{user-id}{\expanduserid{#1}}%
+\@nameuse{bibref#1}}
+
+\@namedef{bibrefcite:ab}{FOO}
+\begin{citation}{text}{cite:foo^bar}{A2}{A3}{A4}ETC\end{citation}
+\begin{citation}{text}{cite:ab}{A2}{A3}{A4}ETC\end{citation}
+    
+XYX \^M(\^^M(
+            blabla.\
+            (taratata)
+           blabla.\
+            (taratata)
+$\overline{\bmod}$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Testing fancybox
+
+\shadowbox{\Large\bf New Glarus Birdwatch}
+\doublebox{\Large\bf New Glarus Birdwatch}
+\ovalbox{\Large\bf New Glarus Birdwatch}
+\Ovalbox{\Large\bf New Glarus Birdwatch}
+x\cornersize{.7}\cornersize*{17cm}x
+\begin{Sbox}\begin{minipage}{200Pt}blah\end{minipage}\end{Sbox}
+\fbox{\TheSbox}
+\newenvironment{fminipage}{\begin{Sbox}\begin{minipage}}
+{\end{minipage}\end{Sbox}\fbox{\TheSbox}}
+\begin{fminipage}{150pt} Since the former doesn't use braces to delimit
+the context of the box, $\ldots$
+\end{fminipage}
+
+\newlength\mylength
+\begin{equation}\fbox{$\displaystyle \int $}\end{equation}
+
+\newenvironment{FramedEqn}
+ {\setlength{\fboxsep}{15pt}
+   \setlength{\mylength}{\linewidth}
+   \addtolength{\mylength}{-2\fboxsep}
+   \addtolength{\mylength}{-2\fboxrule}
+   \Sbox
+   \minipage{\mylength}
+      \setlength{\abovedisplayskip}{0pt}
+      \setlength{\belowdisplayskip}{0pt}
+      \equation}%
+    {\endequation\endminipage\endSbox
+      \[\fbox{\TheSbox}\]}
+
+
+\newenvironment{FramedTable}
+{\begin{table}[h]
+    \begin{Sbox}
+      \setlength{\mylength}{\textwidth}
+      \addtolength{\mylength}{-2\fboxsep}
+      \addtolength{\mylength}{-2\fboxrule}
+      \begin{minipage}{\mylength}}
+      {\end{minipage}\end{Sbox}\fbox{\TheSbox}\end{table}}
+x\fbox{$y$}z
+
+\fbox{\[ x\]}
+
+
+\fbox{%
+  \begin{Beqnarray*}
+    x &=&y\\
+    y& >& x\\
+    \int_4^5 f(x)dx &=&\sum_{i\in F} x_i
+  \end{Beqnarray*}
+}
+\fbox{%
+  \begin{Beqnarray}
+    x &=&y\\
+    y& >& x\\
+    \int_4^5 f(x)dx &=&\sum_{i\in F} x_i
+  \end{Beqnarray}
+}
+\begin{verse} etc \end{verse}
+
+\begin{table}[h]
+  \begin{center}
+    \fbox{%
+      \begin{minipage}{.8\textwidth}
+        \begin{center}
+          \begin{tabular}{rl}
+            foo & bar
+          \end{tabular}
+        \end{center}
+        \caption{A table of foo and bar}
+      \end{minipage}}
+  \end{center}
+\end{table}
+
+
+\begin{FramedTable}
+  \begin{center}
+    \begin{tabular}{rl}
+      foo & bar
+    \end{tabular}
+  \end{center}
+  \caption{A table of foo and bar}
+\end{FramedTable}
+
+
+\fbox{\begin{tabular}{c} x & y  \end{tabular}}
+
+\setlength{\fboxsep}{10pt}
+\fbox{
+\begin{Bcenter}
+Love of life\\
+and other short stories\\[2pt]
+by Policarpa Salabarrieta 
+\end{Bcenter}}
+
+My list: \fbox{
+\begin{Bflushleft}[b]
+Galanga root\\ Coconot\\Tempeh
+\end{Bflushleft}}
+
+\begin{landfloat}{table}{\rotateleft}
+Hello, world
+\end{landfloat}
+
+\fixme{A}\fxnote{B}\fxwarning{C}\fxerror{D}
+\begin{anfxnote}[A]aa\end{anfxnote}
+\begin{anfxwarning}[B]bb\end{anfxwarning}
+\begin{anfxerror}[C]cc\end{anfxerror}
+\begin{afixme}[D]dd\end{afixme}
+
+\def\didi{di }
+    \noindent       here we are again\blah
+\par\noindent       happy as can be\blah
+\clearpage\noindent all good friends\blah OK
+\par\noindent       and jolly good company\blah\blih OK
+\footnote{xyz}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{landfloat}{table}{\rotateleft}
+\begin{equation}
+  x+y=z
+\end{equation}
+\end{landfloat}
+
+
+
+
+This does not yet work
+You cannot put display math in a hbox
+
+
+\[
+  \setlength{\fboxsep}{15pt}
+  \setlength{\mylength}{\linewidth}
+  \addtolength{\mylength}{-2\fboxsep}
+  \addtolength{\mylength}{-2\fboxrule}
+  \fbox{\parbox{\mylength}{
+      \setlength{\abovedisplayskip}{0pt}
+      \setlength{\belowdisplayskip}{0pt}
+      \begin{equation} x + y = z \end{equation}}}\]
+
+
+
+\begin{FramedEqn}
+  \Rightarrow P\sim\xi(P_\gamma)-\frac{1}{3}
+\end{FramedEqn}
+\fi
+
+
+  
+\iffalse
+
+\fi
+
+
+
+\end{document}
+
+

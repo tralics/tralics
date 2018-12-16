@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Article SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.9, date: 2006/09/21-->
+<Article C='2006/9/21' Foo='world' B='Tralics version 2.9' A='2006'>
+<p>Hello, world!
+</p>
+</Article>

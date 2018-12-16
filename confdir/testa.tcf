@@ -1,0 +1,14 @@
+## This is an example of a configuration file for tralics
+## Copyright 2006 Inria/apics, Jose' Grimm
+## $Id: testa.tcf,v 1.1 2006/07/17 09:09:06 grimm Exp $
+## tralics ident rc=testa.tcf $Revision: 1.1 $
+
+
+  DocType = document devnul.dtd
+  DocAttrib = x \foo
+  DocAttrib = y \specialyear
+  DocAttrib = z \the\day\space \the\month\space \the\year 
+BeginCommands
+  \def\ABC{\recurse\recurse}
+  \def\DEF{\recurse\recurse}
+End

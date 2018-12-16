@@ -1,0 +1,9 @@
+%%  -*- latex -*-
+
+% This file is part of Tralics
+%% copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007
+%% $Id: minimal.clt,v 1.1 2011/04/11 14:59:15 grimm Exp $
+
+\ProvidesClass{minimal}[2007/12/29 v1.0  minimal document class for Tralics]
+\endinput
+

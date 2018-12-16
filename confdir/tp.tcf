@@ -1,0 +1,51 @@
+## test file for the titlepage
+## tralics ident rc=Test $Revision: 2.3 $
+## TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007
+## Licensed under the CeCILL free software license 
+## (See the file COPYING in the main directory for details)
+
+  DocType = rr raweb.dtd
+BeginTitlePage
+  \makeRR <RRstart> "" "type = 'RR'"  % CESS
+  alias \makeRT "" "type = 'RT'"      % ACSS
+  <UR> -                      % E
+  \URSophia ?+<UR>            % CE
+  \URRocquencourt ?+<UR>      % CE
+  alias \URRocq               % AC
+  \Paris ?<UR> <Rocquencourt> % CEE 
+  \URRhoneAlpes ?+<UR>        % CE
+  \URRennes ?+<UR>            % CE
+  \URLorraine ?+<UR>          % CE
+  \URFuturs ?+<UR d='true'>           % CE
+  \RRtitle q<title> "pas de titre"    % CES
+  \RRetitle q<etitle>  "no title"     % CES
+  \RRprojet <projet> "pas de projet"  % CES
+  \motcle <motcle> "pas de motcle"    % CES
+  \keyword <keyword>  "no keywords"   % CES
+  \RRresume p<resume> "pas de resume" % CES
+  \RRabstract p<abstract> "no abstract"  % CES
+  \RRauthor + <author> <auth> "Pas d'auteurs"  % CEES
+  \RRdate <date> "\monthyearvalfr"    % CES
+  \RRNo <RRnumber> "????"             % CES
+
+  \RRtheme <>  +"pas de theme" % CES
+  <Theme> -                    % E
+  \THNum ?+<Theme>             % CE
+  \THCog ?+<Theme>             % CE
+  \THCom ?+<Theme>             % CE
+  \THBio ?+<Theme>             % CE
+  \THSym ?+<Theme>             % CE
+
+
+  \myself \RRauthor "grimm"  %CCS
+  \cmdp <cmdp> +"nodefault"  % CES
+  \cmda <cmdA> A"\cmdAval"   % CES
+  \cmdb <cmdB> B"\cmdBval"   % CES
+  \cmdc <cmdC> C"\cmdCval"   % CES
+
+End
+BeginCommands
+  \let\thanks\footnote
+End
+
+

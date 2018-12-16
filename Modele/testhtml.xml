@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE unknown SYSTEM 'unknown.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<unknown page-numbering='false'>
+<abstract pos='center'>
+<p><hi rend='small'>This file tests the html package.</hi></p>
+<p><hi rend='small'>It also tests abstract and keyval</hi></p>
+</abstract>
+<anchor id-text='1' id='uid1'/><p>Some font tests</p>
+<p><hi rend='it,sansserif,boldextended'>B
+ C </hi><hi rend='it,sansserif,semibold'>D
+</hi><hi rend='sc,sansserif,semibold'>E
+</hi><hi rend='sc,tt,semibold'>E </hi></p>
+<p>xxxx
+
+Some dummy tex file</p>
+<p>This is piece of code that comes from torture
+ &#x31;
+2
+3
+4</p>
+<p><xref url='url/bar_x'>foo</xref>
+<xref url='url/bar_x'>foo</xref>
+<xref url='url/bar_x'>foo</xref></p>
+<p>A<ref target='uid1'/>B
+A<ref target='uid1'/>B
+A<ref target='uid1' rend='page'/>B
+A<ref target='uid1' rend='page'/>B
+A
+A
+foo
+foo</p>
+<p>B<cit><ref target='bid0'/></cit>
+B<cit><ref target='bid0'>p 100</ref></cit>
+B<cit><ref target='bid0'>p101</ref></cit>
+B<cit><ref target='bid0'>p102</ref></cit>
+B
+B
+B</p>
+<p>a
+a
+a
+a 
+a
+a</p>
+<p>yeahok
+<xref url='Some url'>Some url</xref></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>a</mi> <mn>2</mn> <mn>3</mn> </msubsup></math></formula></p>
+<p>seen 1 in Fooseen 2 in Barseen dbar in Bar</p>
+<biblio>
+<citation from='year' key='CGR00' id='bid2' userid='cite:CGR2000' type='inproceedings'>
+<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='M.' nom='Goossens' prenomcomplet='Michel'/><bpers prenom='S.' nom='Rahtz' prenomcomplet='Sebastian'/></bauteurs>
+<btitle>De XML à PDF avec <hi rend='tt'>xmltex</hi> et Passive<TeX/></btitle>
+<bbooktitle>Cahiers Gutenberg</bbooktitle>
+<bnumber>35-36</bnumber>
+<bpages>79-114</bpages>
+<byear>2000</byear>
+</citation>
+<citation from='year' key='HP99' id='bid1' userid='cite:place99' type='inproceedings'>
+<bauteurs><bpers prenom='Y.' nom='Haralambous' prenomcomplet='Yannis'/><bpers prenom='J.' nom='Place' prenomcomplet='John'/></bauteurs>
+<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<bbooktitle>Cahiers Gutenberg</bbooktitle>
+<bnumber>33-34</bnumber>
+<bpages>173-182</bpages>
+<byear>1999</byear>
+</citation>
+<citation from='year' key='Knu84' id='bid0' userid='cite:texbook' type='book'>
+<bauteurs><bpers prenom='D. E.' nom='Knuth' prenomcomplet='Donald E.'/></bauteurs>
+<btitle>The <TeX/>book</btitle>
+<bpublisher>Addison Wesley</bpublisher>
+<byear>1984</byear>
+</citation>
+<citation from='year' key='Lou88' id='bid3' userid='cite:louarn88' type='article'>
+<bauteurs><bpers prenom='P.' nom='Louarn' prenomcomplet='Philippe'/></bauteurs>
+<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'activité de l'INRIA</btitle>
+<bjournal>Cahiers Gutenberg</bjournal>
+<bnumber>0</bnumber>
+<bmonth>apr</bmonth>
+<byear>1988</byear>
+<bpages>17-24</bpages>
+</citation></biblio><p>THE FUNNY TEST</p>
+<p>&#x31;
+2
+3
+4</p>
+<p>✁✂✃✄☎✆✇✈✉☛☚☞☜✌✍✏✐✎✑✒✓✔✕✖✗✙✚✜✛✝✞✟✠✡✢✣✤✥✦✨✩★✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❉❊❋❈❇❄❆❅●❍❏❐❑❒▲▼◆❖◗◖❘❙❚➟➦➥➧➲</p>
+<p>12,345
+123,456
+1,234,567
+12,345,678
+1 234 567 890 123 456 789 012 345 678 901 234 567 890</p>
+<p>a̖ ạ̀ ạ̀  à̱ à
+e̗ é̱ é̱ é
+o̭ ộ ộ ô
+ṵ ụ͂ ụ͂ ũ
+a̤ ä
+ę e̋
+o̥ o̱̊ o̱̊ o̊
+u̬ ú̬ á̬ ǔ
+a̯ ă̠ ă̠ ă
+e̱ ē
+ọ ọ́ ọ́ a̐ u̇ ‿au a͡e</p>
+<p>À È Ì Ò Ù Ǹ Ẁ Ỳ à è ì ò ù ǹ ẁ ỳ x̀</p>
+<p>Á É Í Ó Ú Ý Ć Ĺ Ń Ŕ Ś Ź Ǵ Ḱ Ḿ Ṕ Ẃ Ǽ Ǻ Ǿ ǽ ǻ ǿ á é í ó ú ý ć ĺ ń ŕ ś ź ǵ ḱ ḿ ṕ ẃ v́</p>
+<p>Â Ê Î Ô Û Ĉ Ĝ Ĥ Ĵ Ŝ Ŵ Ŷ Ẑ â ê î ô û ĉ ĝ ĥ ĵ ŝ ŵ ŷ ẑ</p>
+<p>Ã Ñ Õ Ũ Ĩ Ṽ Ẽ Ỹ ĩ õ ã ñ õ ĩ õ ṽ ẽ ỹ w̃</p>
+<p>Ä Ë Ï Ö Ü Ÿ Ḧ Ẅ Ẍ ä ë ï ö ü ÿ ḧ ẅ ẍ ẗ z̎</p>
+<p>Ő Ű ő ű e̋</p>
+<p>Å Ů å ů ẘ ẙ e̊</p>
+<p>Č Ď Ě Ľ Ň Ř Š Ť Ž Ǎ Ǐ Ǔ Ǧ Ǩ Ȟ č ď ě ľ ň ř š ť ž ǎ ǐ ǔ ǧ ǩ ȟ ǰ x̌</p>
+<p>Ă Ĕ Ğ Ĭ Ŏ Ŭ ă ĕ ğ ĭ ŏ ŭ x̆</p>
+<p>Ā Ē Ħ Ī Ō Ŧ Ū Ȳ Ḡ Ǣ ǣ ā ē ħ ī ō ŧ ū ȳ ḡ</p>
+<p>Ȧ Ḃ Ċ Ḋ Ė Ḟ Ġ Ḣ İ Ŀ Ṁ Ṅ Ȯ Ṗ Ṙ Ṡ Ṫ Ẇ Ẋ Ẏ Ż ȧ ḃ ċ ḋ ė ġ ḣ ŀ ṁ ṅ ȯ ṗ ṙ ṡ ṫ u̇ v̇ ẇ ż ẏ ż q̇</p>
+<p>Ç Ģ Ķ Ļ Ņ Ŗ Ş Ţ Ȩ Ḑ Ḩ ç ģ ķ ļ ņ ŗ ş ţ ȩ ḑ ḩ b̧</p>
+<p>Ą Ę Į Ǫ Ų ą ę į ǫ ų b̨</p>
+<p>Ḁ E̥ I̥ O̥ U̥ R̥ ḁ e̥ i̥ o̥ u̥ r̥ y̥</p>
+<p>Ḇ Ḏ Ḵ Ḻ Ṉ Ṟ Ṯ Ẕ ḇ ḏ ḵ ḻ ṉ ṟ ṯ ẕ ẖ e̠</p>
+<p>Ḅ Ḍ Ḥ Ḳ Ḷ Ṃ Ṇ Ṛ Ṣ Ṭ Ṿ Ẉ Ẓ Ạ Ẹ Ị Ọ Ụ Ỵ ḅ ḍ ḥ ḳ ḷ ṃ ṇ ṛ ṣ ṭ ṿ ẉ ẓ ạ ẹ ị ọ ụ ỵ c̣</p>
+<p>Ȃ Ȇ Ȋ Ȏ Ȗ Ȓ ȃ ȇ ȋ ȏ ȗ ȓ x̑</p>
+<p>Ḛ Ḭ Ṵ ḛ ḭ ṵ o̰</p>
+<p>Ḓ Ḙ Ḽ Ṋ Ṱ Ṷ ḓ ḙ ḽ ṋ ṱ ṷ a̭ 
+Ḁ ḁ e̥ 
+Ả Ẻ Ỉ Ỏ Ủ Ỷ ả ẻ ỉ ỏ ủ ỷ x̉</p>
+<p>t̪ t̪ d̺ d̺
+o̹ o̹ o̜ o̜
+g̑ g̑ ɔ̟ o̟
+e̞ e̞ ɛ̝ e̝
+u̘ u̘ ə̙ e̙
+e̽ e̽ k̫ k̫
+t̼ t̼</p>
+<p>a̖ a̖ ạ̀ ạ̀ à̱ à
+e̗ e̗ é̱ é̱ é
+o̭ o̭ ộ ộ ô
+ṵ ṵ ụ͂ ụ͂ ũ
+a̤ a̤ ä
+ę ę e̋
+o̥ u̥ o̱̊ o̱̊ o̊
+u̬ u̬ ú̬ á̬ ǔ
+a̯ a̯ ă̠ ă̠ ă
+e̱ e̱ ē
+ọ ẹ ọ́ ọ́ a̐ u̇
+‿au a͡eg͡b</p>
+<p>TEST1 <hi rend='turned'>f</hi> ʞ ɹ ʇ ʍ
+ɟ ɲ ħ ɬ ɮ
+A dOg, B kæt ma<hi rend='sup'>214</hi></p>
+<p>Test2 <hi rend='sc'>E</hi> <hi rend='sc'>J</hi> <hi rend='sc'>A</hi> ʜ ʟ <hi rend='sc'>U</hi> ʙ ɢ ʀ</p>
+<p>Test3 ɖ ɭ ɳ ɽ ɻ ʂ ʈ ʐ</p>
+<p>Test4 ʛ ɓ ɗ ɠ ʄ ʘ</p>
+<p>a, <hi rend='rhook'>a</hi>, ɐ, ɑ, ɒ,
+<hi rend='inv-script'>a</hi>, æ, <hi rend='lig'>ao</hi>, ᴀ, <hi rend='lhook'>4</hi>,
+<hi rend='inv-sc'>a</hi>, <hi rend='sc-lig'>ao</hi>,
+ʌ, <hi rend='s'>Δ</hi></p>
+<p>b, ƀ, b̶, ь, ъ,ɓ, ʙ, β</p>
+<p>c, c̶, č, ç, ƈ, ɕ, ʗ,
+<hi rend='var'>ʗ</hi>, <hi rend='var'>ʗ</hi>, <hi rend='var'>ʗ</hi></p>
+<p>d, đ, d̶, <hi rend='frhook'>d</hi>, <hi rend='frhook-var'>d</hi>, ɗ,ɖ,
+<hi rend='ht-rtail'>d</hi>, ȡ, <hi rend='lig'>db</hi>, ʣ, ʥ,
+ʤ, <hi rend='lig'>ȡʑ</hi>, ð</p>
+<p>e, e̢, ə, ɚ, ɘ, ᴇ,
+ɛ, ɛ̢, ʚ, ɜ,
+ɝ, ɞ</p>
+<p>f, <hi rend='sc'>F</hi></p>
+<p>ɡ, ɡ̶, ɡ̰, ɡ, g, ɢ, ʛ,
+ɣ, γ, <hi rend='frtail'>γ</hi>, <hi rend='bktail'>γ</hi>,
+<hi rend='var'>ɤ</hi>, ɤ</p>
+<p>h, ƕ, ħ, ɦ, <hi rend='rtailht'>h</hi>, <hi rend='heng'>h</hi>, ɧ,
+ɥ, ʜ</p>
+<p>i, ı, ɨ, ɪ, ɩ, ɿ, <hi rend='long'>ɿ</hi>,
+ʅ, <hi rend='raise'>ʅ</hi></p>
+<p>j, j, ʝ, <hi rend='ct-var'>j</hi>,
+ɟ, ɟ,
+<hi rend='var'>ʄ</hi>, ʄ, ᴊ</p>
+<p>k, ƙ, ʞ, <hi rend='sc'>K</hi>, <hi rend='sc'>ʞ</hi></p>
+<p>l, ɫ, ƚ, ɬ, ɭ, ɮ,
+<hi rend='var'>ɮ</hi>, <hi rend='lig'>lɾ</hi>, ʟ,
+<hi rend='rev'>L</hi>, λ, ƛ,</p>
+<p>m, ɱ, <hi rend='lig'>hm</hi>, ɯ, ɰ, ᴍ</p>
+<p>n, <hi rend='frbar'>n</hi>, ƞ, ñ, ɲ, ŋ, ɳ, ȵ,
+ɴ</p>
+<p>o, ♀, <hi rend='uncr'>♀</hi>, ʘ, <hi rend='var'>ʘ</hi>, ɵ,
+ø, œ, ɶ, ɔ, ɔ̢, <hi rend='lig'>ɔe</hi>,
+ω, <hi rend='inv'>ω</hi>, ɷ, <hi rend='sc'>Ω</hi></p>
+<p>p, ƥ, <hi rend='lhook'>p</hi>, ᴘ, ƿ,
+þ, <hi rend='var1'>þ</hi>, <hi rend='var2'>þ</hi>, <hi rend='var3'>þ</hi>,
+<hi rend='var4'>þ</hi>, ɸ,</p>
+<p>q, ʠ, <hi rend='lig'>qp</hi>, <hi rend='sc'>Q</hi></p>
+<p>r, ɾ, ɼ, ɽ, ɹ, ɻ,
+ɺ, ʀ, я, ʁ,</p>
+<p>s, š, ʂ, ʃ, <hi rend='doublebar'>ʃ</hi>, ƪ,
+ʆ</p>
+<p>t, <hi rend='frhook'>t</hi>, <hi rend='lhook'>t</hi>, ʈ, ƭ, ʇ,
+<hi rend='ct-turn'>t</hi>, ȶ, ʨ, <hi rend='lig'>tc</hi>, ʦ,
+ʧ, θ</p>
+<p>u, ʉ, ʊ, ᴜ, <hi rend='turn-sc'>u</hi>,</p>
+<p>v, ʋ,</p>
+<p>w, ʍ</p>
+<p>x, χ</p>
+<p>y, ʎ, ʏ, ʮ, ʯ</p>
+<p>z, ȥ, ž, ʑ, ʐ, ƻ, <hi rend='turn'>2</hi>,
+ʒ, ƺ, ʓ, ƹ, <hi rend='turn'>3</hi></p>
+<p>UUUUUUUUaU
+nU nU nU
+gU sU sU sU</p>
+<p>p<hi rend='sup'>h</hi> = pʰ
+k<hi rend='sup'>w</hi>=kʷ t<hi rend='sup'>j</hi>=tʲ d<hi rend='sup'>ɣ</hi>=dˠ
+d<hi rend='sup'>ʕ</hi>=dˁ
+d<hi rend='sup'>n</hi> d<hi rend='sup'>l</hi>=dˡ</p>
+</unknown>

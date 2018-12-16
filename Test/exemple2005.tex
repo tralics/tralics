@@ -1,0 +1,727 @@
+% Example of an activity report, much simplified
+
+\documentclass{ra2005}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{subfigure}
+\usepackage{array}
+\let\href\htmladdnormallink
+\theme{Num}
+\isproject{Yes}
+\projet{exemple}{Apics}{Analyse et Problèmes etc}
+\UR{\URSophia}
+
+\def\reachable{controllable} % ok ?
+\def\corresp{manager}
+\def\CC{{\mathbb C}}
+
+\declaretopic{A}{Topic one}
+\declaretopic{B}{Topic two}
+\declaretopic{C}{Topic three}
+
+\begin{document}
+
+\begin{filecontents+}{exemple_foot2005.bib}
+@Book{anap,
+  editor =       {Fournier, J.-D. and Grimm, J. and Leblond, J. and
+ Partington, J. R.},
+  title =        {Harmonic Analysis and Rational Approximation;
+Their Rôles in Signals, Control and Dynamical Systems},
+  publisher =    {Springer Verlag},
+  year =         {2006},
+  volume =       {327},
+  series =       {Lecture Notes in Control and Information Sciences},
+  isbn =         {3-540-30922-5}
+}
+@InProceedings{ref1,
+  author =       { Charlot, Grégoire},
+  title =        {Stability of Nonlinear switched systems in the plane},
+  booktitle =    {44th IEEE Conf. },
+  year =         2005,
+  pages={3285--3290},
+  address =      {Seville, Spain},
+  month =        dec
+}
+\end{filecontents+}
+
+\begin{filecontents+}{exemple2005.bib}
+@PhdThesis{th-david,
+  author =       {Avanessoff, David},
+  title =        {Linéarisation dynamique des systèmes non linéaires et
+                  paramétrage de l'ensemble des solutions},
+  school =       {Univ. de Nice - Sophia Antipolis},
+  year =         2005,
+  month =        jun,
+ }
+
+@InProceedings{ref2,
+  author =       {Boscain, Ugo},
+  title =        {Stability of Non},
+  year =         2005,
+  pages={3285--3290},
+  address =      {Seville, Spain},
+  month =        dec
+}
+@InProceedings{ref3,
+  author =       {Sigalotti, Mario},
+  title =        {Stability of Nonlinear switched systems in the plane},
+  booktitle =    {44th IEEE Conf. },
+  year =         2005,
+  pages={3285--3290},
+  address =      {Seville, Spain},
+  month =        dec
+}
+\end{filecontents+}
+
+\begin{filecontents+}{exemple_refer2005.bib}
+@PhdThesis{refer1,
+  author =       {Avanessoff, David},
+  title =        {Linéarisation dynamique des systèmes non linéaires et
+                  paramétrage de l'ensemble des solutions},
+  school =       {Univ. de Nice - Sophia Antipolis},
+  year =         2000,
+  month =        jun,
+ }
+
+@InProceedings{refer2,
+  author =       {Boscain, Ugo},
+  title =        {Stability of Non},
+  year =         2000,
+  pages={3285--3290},
+  address =      {Seville, Spain},
+  month =        dec
+}
+@InProceedings{refer3,
+  author =       {Sigalotti, Mario},
+  title =        {Stability of Nonlinear switched systems in the plane},
+  booktitle =    {44th IEEE Conf. },
+  year =         2000,
+  pages={3285--3290},
+  address =      {Seville, Spain},
+  month =        dec
+}
+
+
+\end{filecontents+}
+
+
+\maketitle
+\nocite{*}
+
+\begin{module}{composition}{en-tete}{}
+
+\begin{catperso}{Team Leader}
+\pers{Laurent}{Baratchart}[DR Inria]
+\end{catperso}
+
+% 
+\begin{catperso}{Deputy Team Leader}
+\pers{Jean-Baptiste}{Pomet}[CR Inria]
+\end{catperso}
+
+\begin{catperso}{Administrative Assistant}
+\pers{France}{Limouzis}[AI Inria, partial time in the team]
+\end{catperso}
+
+\begin{catperso}{Staff Member}
+\pers{José}{Grimm}[CR Inria]
+\pers{Juliette}{Leblond}[DR Inria (since September, CR INRIA before)]
+\pers{Martine}{Olivi}[CR Inria]
+\pers{Fabien}{Seyfert}[CR Inria]
+\end{catperso}
+
+\end{module}
+
+
+\begin{module}{presentation}{presentation}{}
+\begin{moreinfo}
+The Apics Team is a Project Team since January 2005. 
+\end{moreinfo}
+
+
+The Team develops constructive methods for modeling, identification and 
+control of dynamical systems.
+
+\subsubsection*{Research Themes}
+\begin{itemize}
+\item Meromorphic approximation in the complex domain.
+\item Inverse potential problems in 3-D and analysis of harmonic fields.
+\item Control and structure analysis of non-linear systems.
+ \end{itemize}
+
+\subsubsection*{International and industrial partners}
+
+\begin{itemize}
+\item Industrial collaborations with Alcatel-Alenia-Space.
+\item Exchanges with UST (Villeneuve d'Asq).
+\item The project is involved in a NATO Collaborative Linkage Grant (with.
+\end{itemize}
+\end{module}
+
+
+\begin{module}{fondements}{identif}{Identification and déconvolution}
+Let us first introduce the subject of Identification in some generality.
+Let us turn to work of the Apics Team\footnote{and of the former
+  MIAOU-project}  can be partly recast from the data.
+
+We shall explain in more detail the above steps in the sub-paragraphs
+to come. 
+
+\subsubsection{Analytic approximation of incomplete boundary data}
+\label{dida-mero}
+\begin{participants}
+\pers{Laurent}{Baratchart},
+\pers{José}{Grimm},
+\pers{Juliette}{Leblond},
+\pers{Jean-Paul}{Marmorat}[CMA, École des Mines],
+\pers{Jonathan}{Partington},
+\pers{Fabien}{Seyfert}
+\end{participants}
+
+\begin{motscle}
+meromorphic approximation, frequency-domain identification,
+extremal problems
+\end{motscle}
+
+A prototypical Problem is:
+
+{\sl ($P$)~~Let $p \geq 1$, $N \geq 0$, $K$ be an arc of the unit circle $T$, 
+  $f \in L^p(K)$, $\psi \in L^p(T \setminus K)$ and $M>0$;
+  find a function  $g \in H^p + R_N$ such that 
+  $\|g - \psi\|_{L^p(T \setminus K)} \leq M$ and such that $g - f$ 
+  is of minimal norm in  $L^p(K)$ under this constraint.}
+
+In order to impose pointwise constraints in the frequency domain
+ one may wish to express
+the gauge constraint on $T\setminus K$ in a more subtle manner, depending on
+the frequency:
+
+{\sl ($P'$)~~Let $p \geq 1$, $N \geq 0$, $K$ be an arc of the unit circle
+$T$, $f \in L^p (K)$, $\psi \in L^p(T \setminus K)$ and
+$M \in L^p(T \setminus K)$;
+find a function 
+$g \in H^p + R_N$ such that $|g - \psi|\leq M$ a.e.\ on 
+$T \setminus K$ and such that  $g - f$ is of minimal norm in
+$L^p(K)$ under this constraint.}
+
+Deeply linked with Problem $(P)$,  is the following completion Problem:
+
+
+{\sl ($P''$)~~Let
+$p \geq 1$, $N \geq 0$, $K$ an arc of the unit circle $T$, 
+$f \in L^p(K)$,  $\psi \in L^p(T \setminus K)$ and
+$M >0$; find a function  
+$h \in L^p(T \setminus K)$ such that 
+$\|h - \psi\|_{L^p(T\setminus K)} \leq M$, and such that the distance to 
+$H^p + R_N$ of the concatenated function $f\vee h$
+is minimal in $L^p(T)$ under this constraint.}
+
+A version of this problem where the constraint depends on the frequency is:
+
+{\sl ($P'''$)~~Let $p \geq 1$,
+$N \geq 0$, $K$ an arc the unit circle $T$, $f \in L^p(K)$,  
+$\psi \in L^p(T \setminus K)$ and
+$M \in L^p(T \setminus K)$; find a function  $h \in L^p(T
+\setminus K)$ such that 
+$|h - \psi|\leq M$ a.e.\ on $T \setminus K$, and such that the distance to
+$H^p + R_N$ of the concatenated function $f\vee h$
+is minimal in $L^p(T)$ under this constraint.}
+
+Let us mention that Problem $(P'')$ reduces to Problem 
+$(P)$ that in turn reduces, although implicitly, 
+to an extremal Problem without
+constraint, (i.e., a Problem of type  $(P)$ where $K=T$) that is
+denoted conventionally by  $(P_0)$. In the case where $p=\infty$, 
+Problems  $(P')$ and $(P''')$ can viewed as special cases of 
+$(P)$ and $(P'')$ respectively, but if  $p<\infty$ the situation
+is different.
+
+where the constraint on the approximant is expressed in terms of
+its real and imaginary parts while the criterion takes only its real part 
+into account:
+
+{\sl Let $p \geq 1$, $K$ be an arc of the unit circle $T$, 
+  $f \in L^p(K)$, $\psi \in L^p(T \setminus K)$, and $\alpha, \beta, M>0$;
+  find a function  $g \in H^p$ such that 
+  $\alpha \, \|\mbox{\rm Re} ({g - \psi})\|_{L^p(T \setminus K)} + \beta
+\, \|\mbox{\rm Im} ({g - \psi})\|_{L^p(T \setminus K)} \leq M$ and
+such that $\mbox{\rm Re} (g - f)$    is of minimal norm in  $L^p(K)$
+under this constraint.} 
+
+see sections \moduleref{APICS}{domaine}{dom-fissures} and
+\moduleref{APICS}{resultats}{fissures}, where data and physical prior
+information concern  real (or imaginary)  parts of analytic functions.
+
+This allows one to 
+\begin{enumerate}
+\item extend  the index theorem to the case $2\leq p\leq\infty$
+\item study asymptotic errors with
+\item characterize the asymptotic (cf. section \ref{didactique-poles}). 
+\end{enumerate}
+In connection with the second and third items above,see section \ref{AHH}.
+
+\subsubsection{Scalar rational approximation}
+\label{didactique-approx-rat-scal}
+\begin{participants}
+\pers{Laurent}{Baratchart},
+\pers{Martine}{Olivi},
+\pers{Edward}{Saff},
+\pers{Herbert}{Stahl}[TFH Berlin],
+\pers{Maxim}{Yattselev}
+\end{participants}
+
+\begin{motscle}
+rational approximation, critical point, orthogonal polynomials
+\end{motscle}
+Rational approximation is the second step mentioned
+in section~\moduleref{APICS}{fondements}{identif}. 
+The Problem can be stated as:
+
+{\sl Let $1\leq p\leq\infty$, $f\in H^p$ and $n$ an integer; 
+find a rational function without poles in the unit disk, and of
+degree at most $n$ that is nearest possible to $f$ in  $H^p$.}
+In this way we are led to consider
+minimizing a criterion of the form:
+\begin{equation}
+\label{crit}
+\left\|f - \frac{p_m}{q_n} \right\|_{L^2(d \mu)} 
+\end{equation}
+where, by definition, 
+\[
+\|g\|_{L^2(d \mu)}^2=\frac{1}{2\pi} \int_{-\pi}^{\pi}|g(e^{i\theta})|^2
+d\mu(\theta),
+\]
+
+
+\[
+\min \left\||f| - \left|\frac{p_n}{q_n}\right| \right\|_{L^p(T)}.
+\]
+
+\[
+\left\||f|^2 - \left|\frac{p_n}{q_n}\right|^2 \right\|_{L^\infty(T)}
+<\varepsilon,
+\]
+
+\paragraph{OK}
+\label{didactique-approx-rat-mat}
+If one introduces now as a new variable the rational matrix $R$ defined by
+\[
+R=\left(\begin{array}{cc}
+L            &  H \\
+0            &   I_m
+\end{array} \right)^{-1}
+\]
+and if $T$ stands for the first block-row, 
+
+\begin{equation}
+\label{defLL}
+\|T\|_{\Lambda}^2={\bf Tr}\left\{\frac{1}{2\pi}
+\int_{0}^{2\pi}T(e^{i\theta})\,
+d\Lambda(\theta)\,T^*(e^{i\theta})\right\},
+\end{equation}
+\end{module}
+
+\begin{module}{fondements}{nl}{Structure and control of non-linear systems}
+
+In order to control a system, one generally relies on a model.
+
+\subsubsection{Feedback control and optimal control}
+\label{nl-stab}
+
+Stabilization by continuous state feedback---or output feedback, that is,
+
+
+\subsubsection{Transformations and equivalences of non-linear systems and models} 
+\label{nl-trans}
+
+
+\paragraph{Dynamic linearization.}
+The problem of dynamic linearization,.
+
+\paragraph{Topological Equivalence}
+
+In what precedes, we have not taken into account the degree of
+\emph{smoothness} of the transformations under consideration.\end{module}
+
+\begin{module}{domaine}{chapeau}{Introduction}
+The botton line of the team's activity is twofold,
+\end{module}
+
+\begin{module}{domaine}{dom-fissures}{Geometric inverse problems 
+for the Laplacian}
+
+Localizing cracks, pointwise sources or occlusions in a two-dimensional.
+
+
+
+\end{module}
+
+
+\begin{module}{domaine}{resonn}{Identification and design of resonant systems}
+
+One of the best training ground for the research of the team in function
+theory is the identification and design of physical systems. 
+
+\begin{figure}
+\begin{center}
+\includegraphics{miaou_transf}
+\end{center}
+\caption{Transducer model.}
+\label{trans}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics{miaou_coup}
+\end{center}
+\caption{Configuration of the filter}
+\label{filtrescnes}
+\end{figure}\end{module}
+
+\begin{module}{domaine}{spatial}{Spatial mechanics}
+The use of satellites in telecommunication networks motivates.
+\end{module}
+
+
+\begin{module}{domaine}{optique}{Non-linear optics}
+The increased capacity of numerical channels in information
+technology is a major
+industrial challenge.
+\end{module}
+
+
+\begin{module}{domaine}{plat}{Transformations and equivalence of non-linear systems}
+
+
+The works presented in module~\ref{nl-trans} lie upstream.
+\end{module}
+
+
+\begin{module}{logiciels}{logi-tralics}{The Tralics software}
+\label{RARL2}
+\begin{participant}
+\pers{José}{Grimm}[\corresp]
+\end{participant}
+The development of a \LaTeX\ to XML translator, named Tralics was continued.
+\end{module}
+
+\begin{module}{logiciels}{RARL2}{The RARL2 software}
+\begin{participants}
+\pers{Jean-Paul}{Marmorat},
+\pers{Martine}{Olivi}[\corresp]
+\end{participants}
+ \label{didactique-poles}
+
+RARL2 (Réalisation interne et Approximation Rationnelle L2) is a software for
+rational approximation (see module \ref{didactique-approx-rat-mat}). Its web
+page is
+\htmladdnormallink{\url{http://www-sop.inria.fr/miaou/RARL2/rarl2.html}}
+{http://www-sop.inria.fr/miaou/RARL2/rarl2.html}.
+It is germane to the arl2 function of hyperion
+\end{module}
+
+\begin{module}{logiciels}{RGC}{The RGC software}
+The identification of  filters modeled 
+see section~\moduleref{APICS}{resultats}{Couplages-Algebrique}.
+\end{module}
+
+\begin{module}{logiciels}{PRESTO-HF}{PRESTO-HF}
+\begin{participant}
+\pers{Fabien}{Seyfert}
+\end{participant}
+
+PRESTO-HF: a toolbox dedicated to lowpass parameter identification for
+hyperfrequency filters
+\htmladdnormallink{\url{http://www-sop.inria.fr/miaou/Fabien.Seyfert/Presto_web_page/presto_pres.html}}
+{http://www-sop.inria.fr/miaou/Fabien.Seyfert/Presto_web_page/presto_pres.html}
+The `miaou' should be replaced by `apics' here.
+\end{module}
+
+
+\begin{module}{logiciels}{logi-endymion}{The Endymion software}
+\label{endymion}
+\begin{participant}
+\pers{José}{Grimm}[\corresp]
+\end{participant}
+We have started the development of Endymion, a software licensed
+under the CeCILL license version two, see
+\href{http://www.cecill.info}{http://www.cecill.info/}.
+\end{module}
+
+\begin{module}[A]{resultats}{RAjose}{Tools for producing the Activity Report
+    (this document)}
+
+The great novelty in the RAWEB2002 (Scientific Annex to the Annual Activity
+Report of Inria), was the use of XML as intermediate language, and the
+possibility of bypassing \LaTeX.  for the example we get
+\verb+${\#119987 _y=lim_{x\#8594 0}sin^2{(x)}}$+.
+
+\end{module}
+
+\begin{module}[A]{resultats}{tralics}{Tralics: a Latex to XML Translator}
+The \textit{Tralics} software is a C++ written \LaTeX\ to XML translator
+
+\end{module}
+
+\begin{module}[B]{resultats}{fissures}{Inverse Problems for 2D and 3D
+  elliptic operators}
+
+\subsubsection{Sources recovery in 2D and 3D}
+\label{AHH}
+The fact that 2D harmonic functions are real parts is also considered.
+
+\subsubsection{Application to EEG inverse problems}
+
+In 3D, epileptic regions in the cortex are often 
+linked  to a number of important related issues.
+
+
+\subsubsection{Cauchy problems in 2D and 3D}
+
+Solving Cauchy problems on an annulus can be extended.
+
+\subsubsection{More general geometries}
+
+We also started  to be developed.
+
+\subsubsection{Others elliptic operators}
+Within the post-doctoral stay of E. Sincich, we began
+the University of Nice.
+
+\subsubsection{Application to  magnetic dipoles recovery}
+
+The magnetic field produced by a magnetic dipole $\vec {m}$
+located at a point ${\vec r}'$ is
+\begin{equation}
+\vec B(\vec r) = \frac{\mu_0}{4\pi}\left\{
+\frac{3\vec m({\vec r}')\cdot(\vec r-{\vec r}')}{|\vec r-{\vec r}'|^5}
+(\vec r-{\vec r}') - \frac{\vec m({\vec r}')}{|\vec r-{\vec r}'|^3}
+\right\}. \label{W102}
+\end{equation}
+
+\[ 
+B_z(x,y,z) = \frac{\mu_0}{4\pi}\lambda_k
+\frac{2z^2-(x-x_k)^2-(y-y_k)^2}{[(x-x_k)^2+(y-y_k)^2+z^2]^{5/2}}
+\]
+
+\begin{equation}
+C_z(x,y,z) = \frac{\mu_0}{4\pi^2a^2}\sum_k\lambda_k
+\int_{D(0,a)}
+\frac{2z^2-(x-\alpha-x_k)^2-(y-\beta-y_k)^2}
+{\left[(x-\alpha-x_k)^2+(y-\beta-y_k)^2+z^2\right]^{5/2}} d\alpha d\beta.
+\label{equa3}
+\end{equation}
+\end{module}
+
+
+\begin{module}[C]{resultats}{martine1}{Parametrizations  of matrix-valued
+    lossless functions} 
+\label{Schur-realisations}
+ The possibility to fertilize the pure algebraic LMI approach
+with the rich and vast topic of Schur analysis has been pointed out and
+deserve to be further investigated. 
+\end{module}
+
+\begin{module}[C]{resultats}{martine2}{The mathematics of Surface Acoustic Wave
+    filters} 
+\end{module}
+
+
+\begin{module}[B]{resultats}{jul2}{Rational and Meromorphic Approximation}
+The results  have been exploited .
+\end{module}
+
+
+\begin{module}[B]{resultats}{poles}{Behavior of poles}
+\label{Rpoles}
+
+This rather unexpected algorithm is currently being explored in 
+details by E. Mina.
+\end{module}
+
+
+\begin{module}[C]{resultats}{ExtFab}{Analytic extension under pointwise constraints}
+Such regularity condition should greatly impinge on the
+numerical practice of the problem.
+\end{module}
+
+\begin{module}[B]{resultats}{Couplages-Algebrique}{Exhaustive determination
+of constrained realizations corresponding to a transfer function}
+
+\begin{eqnarray}
+\label{ep}
+p \in \CC^{r_1},\,\, E_{\sigma_1}(p)&=\{q \in \CC^{r_1},
+\pi_{\sigma_1}(q)=\pi_{\sigma_1}(p)\} \\
+p \in \CC^{r_2},\,\, E_{\sigma_1,\sigma_2}(p)&=\{q \in \CC^{r_1},
+\pi_{\sigma_1}(q)=\pi_{\sigma_2}(p)\}
+\end{eqnarray}
+\end{module}
+
+\begin{module}[A]{resultats}{synthese}{Zolotarev problem and multi-band filter design}
+
+\label{zolo}
+T
+
+\end{module}
+
+
+\begin{module}[B]{resultats}{omux}{Frequency Approximation and OMUX design}
+\label{secOMUXc}
+This is one reason for analysing the optimization problem further.
+\end{module}
+
+
+
+\begin{module}[A]{resultats}{mario-optim}{On the structure of optimal trajectories}
+
+The results on the local regularity of trajectories in optimal control
+obtained previously have been published.
+\end{module}
+
+\begin{module}[A]{resultats}{alex1}{Feedback for low thrust orbital transfer}
+\label{secorbitet}
+   The study concerns the control of a satellite.
+\end{module}
+
+
+\begin{module}{resultats}{flat}{Local linearization (or flatness) of control systems}
+
+ a workable formulation of the question is now available.
+\end{module}
+
+\begin{module}{resultats}{dubbins}{Controllability for a general Dubins 
+problem}
+Controllability results for systems with drift are usually obtained.
+
+\smallskip
+
+The main object of our research  is given by Dubins-like systems 
+In \footcite{ref1} we proved that $0\ne1$. This has been presented in 
+\cite{ref2}  and \refercite{ref3}.
+\end{module}
+
+
+
+\begin{module}{contrats}{cnes}{Contracts CNES-IRCOM-INRIA}
+Contracts \no 04/CNES/1728/00-DCT094
+ see module \ref{filtrescnes},
+\end{module}
+
+
+
+\begin{module}{contrats}{aspi-c}{Contract Alcatel Space (Cannes)}
+Contract \no 1 01 E 0726.
+\end{module}
+
+\begin{module}{international}{nat}{Scientific Committees}
+L. Baratchart is a member of the editorial board
+\end{module}
+
+\begin{module}{international}{nationale}{National Actions}
+Together with project-teams Caiman and Odyssée
+\end{module}
+
+\begin{module}{international}{cee}{Actions  Funded by the EC}
+The team is the recipient see
+\htmladdnormallink{\url{http://www.ladseb.pd.cnr.it/control/ercim/control.html}}{http://www.ladseb.pd.cnr.it/control/ercim/control.html}.
+\end{module}
+
+\begin{module}{international}{monde}{Extra-european International Actions}
+\textbf{NATO CLG} (Collaborative Linkage Grant), PST.CLG.979703, 
+``Constructive approximation and inverse diffusion problems'', with
+Vanderbilt Univ. (Nashville, USA) and LAMSIN-ENIT (Tunis, Tu.), 2003-2005.
+
+\textbf{EPSRC}  grant (EP/C004418) ``Constrained approximation in
+function spaces, with applications'', with Leeds Univ. (UK) and
+Univ. Lyon I, 2005-2006.
+
+\textbf{STIC-INRIA} and \textbf{AireDéveloppement} grants with
+LAMSIN-ENIT (Tunis, Tu.), ``Problèmes 
+inverses du Laplacien et approximation constructive des fonctions'',
+
+\textbf{NSF EMS21} RTG students exchange program (with
+Vanderbilt University).
+\end{module}
+
+
+
+\begin{module}{international}{accueilx}{The Apics Seminar}
+
+The following scientists gave a talk at the seminar:
+
+\end{module}
+
+
+
+
+
+\begin{module}{diffusion}{dif-ens}{Teaching}
+
+\begin{description}
+\item [Courses] \ 
+  \begin{itemize}
+  \item L. Baratchart, DEA Géométrie et Analyse, LATP-CMI, Univ. de Provence
+  \item M. Olivi, Mathématiques pour l'ingénieur 
+  \end{itemize}
+  
+\item [Trainees] \ 
+  \begin{itemize}
+  \item  Jonathan Chetboun (ENPC)
+  \item Cristina Paduret
+    \textit{Résolution de problèmes inverses}
+  \end{itemize}
+
+\item[Ph.D. Students] \ 
+  \begin{itemize}
+  \item Alex Bombrun, «~Commande optimale de satellites~» (optimal etc)
+  \item Imen Fellah, ``Data completion in inverse problems'',  co-tutelle.
+\item Vincent Lunot,  «~Problèmes  à  la synthèse d'OMUX », 
+\item Moncef Mahjoub,    ``Complétion de données géométriques.'' co-tutelle.
+\item  Erwin Mina Diaz, ``Asymptotic properties of urves.''
+\item  Maxim Yattselev, ``Meromorphic orthogonality.''
+
+\end{itemize}
+\item[defended Ph.D. thesis] \ 
+ \begin{itemize}
+  \item David Avanessoff, «~Linéarisation dynamique des solutions~» (dynamic
+ trajectories). June 8, 2005.\cite{th-david}
+\end{itemize}
+\item[Jurys] \ 
+%
+\item L.~Baratchart sat on 
+\item J.~Leblond has been sitting
+\item F.~Seyfert has been sitting 
+\item J.-B. Pomet has been sitting 
+\end{description}
+
+
+\end{module}
+
+\begin{module}{diffusion}{dif-anim}{Community service}
+
+L. Baratchart was a member of the  ``bureau'' of the CP
+(Comité des Projets) of INRIA-Sophia Antipolis untill July.
+He is a member of the ``commission de spécialistes'' (section 25) of the
+Université de Provence.
+
+J.~Leblond and J. Grimm are co-editors of  the
+proceedings (to appear in 2006) of the 
+CNRS-INRIA summer school ``Harmonic analysis and rational approximation: their
+r\^oles in signals, control and dynamical systems theory''
+(Porquerolles, 2003)
+\htmladdnormallink{\url{http://www-sop.inria.fr/apics/anap03/index.en.html}}
+{http://www-sop.inria.fr/apics/anap03/index.en.html} \footcite{anap}. 
+\end{module}
+
+\begin{module}{diffusion}{dif-conf}{Conferences and workshops}
+
+A. Bombrun, B. Atfeh and L. Baratchart have presented a communication at 
+CMFT2005 (Computational Methods and Function
+Theory), Joensuu, Finland (June).
+Des refercite \cite{refer1,refer2} 
+
+\end{module}
+
+\loadbiblio
+\end{document}
+

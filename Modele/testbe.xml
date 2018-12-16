@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE std SYSTEM 'classes.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<std><colorpool><color id='colid3' value='1,0,0' model='rgb' name='red'/>
+<color id='colid5' value='0,0,1' model='rgb' name='blue'/>
+</colorpool><p>Test of bordermatrix</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mi>a</mi></mtd><mtd/><mtd><mi>b</mi></mtd><mtd><mi>c</mi></mtd><mtd><mi>d</mi></mtd><mtd><mi>e</mi></mtd></mtr><mtr><mtd><mi>f</mi></mtd><mtd rowspan='3'><mo>(</mo></mtd><mtd><mi>g</mi></mtd><mtd><mi>h</mi></mtd><mtd><mi>i</mi></mtd><mtd><mi>j</mi></mtd><mtd rowspan='3'><mo>)</mo></mtd></mtr><mtr><mtd><mi>k</mi></mtd><mtd><mi>l</mi></mtd><mtd><mi>m</mi></mtd><mtd><mi>n</mi></mtd><mtd><mi>o</mi></mtd></mtr><mtr><mtd><mi>p</mi></mtd><mtd><mi>q</mi></mtd><mtd><mi>r</mi></mtd><mtd><mi>s</mi></mtd><mtd><mi>t</mi></mtd></mtr></mtable></math></formula></p>
+<p>no row<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable/></math></formula>
+one row <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd></mtr></mtable></math></formula>
+first row empty <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd/></mtr><mtr><mtd><mn>1</mn></mtd><mtd rowspan='1'><mo>(</mo></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd><mtd rowspan='1'><mo>)</mo></mtd></mtr></mtable></math></formula>
+first row small <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd><mtd rowspan='1'><mo>(</mo></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd><mtd rowspan='1'><mo>)</mo></mtd></mtr></mtable></math></formula>
+second row empty <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mn>1</mn></mtd><mtd/><mtd><mn>2</mn></mtd></mtr><mtr><mtd/></mtr><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr></mtable></math></formula>
+second row small <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mn>1</mn></mtd><mtd/><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable></math></formula>
+first row OK <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd><mn>1</mn></mtd><mtd/><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd rowspan='1'><mo>(</mo></mtd><mtd><mrow><mn>4</mn><mo>&lt;</mo></mrow></mtd><mtd rowspan='1'><mo>)</mo></mtd></mtr></mtable></math></formula></p>
+<p>Testing spaces in math
+8.53581pt25.0pt36.0pt<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mspace width='8.53581pt'/><mtext>+</mtext><mspace width='25.0pt'/><mspace width='4.pt'/><mtext>+</mtext><mspace width='36.0pt'/><mtext>=0</mtext><msup><mi>y</mi> <mn>2</mn> </msup></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mspace width='8.53581pt'/><mtext>+</mtext><mspace width='25.0pt'/><mtext>+</mtext><mspace width='36.0pt'/><mtext>=0</mtext><msup><mi>y</mi> <mn>2</mn> </msup></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mtext>aa</mtext><mspace width='0.166667em'/><mspace width='0.277778em'/><mspace width='-0.166667em'/><mspace width='4.pt'/><mrow><mi>b</mi><mi>b</mi><mspace width='0.166667em'/><mspace width='0.277778em'/><mspace width='-0.166667em'/><mi>c</mi><mi>c</mi></mrow><mtext>dd</mtext><msup><mi>y</mi> <mn>2</mn> </msup></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mtext>aa</mtext><mspace width='0.166667em'/><mspace width='0.277778em'/><mspace width='-0.166667em'/><mspace width='4.pt'/><mrow><mi>b</mi><mspace width='8.53581pt'/><mi>b</mi><mspace width='0.166667em'/><mspace width='0.277778em'/><mspace width='-0.166667em'/><mi>c</mi><mi>c</mi></mrow><mtext>dd</mtext><msup><mi>y</mi> <mn>2</mn> </msup></mrow></math></formula></p>
+<p>xx<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mspace width='5.69054pt'/></math></formula>yy</p>
+<p>Test of spaces between <hi rend='tt'>\begin{description}</hi> and <hi rend='tt'>\item</hi></p>
+<table rend='inline'><row><cell right-border='true' halign='center' left-border='true'><vfill/>Requirements</cell>
+<cell right-border='true' halign='center'>
+
+<list type='description'><label><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&bullet;</mo></math></formula></label>
+<item id-text='1' id='uid1'><p noindent='true'>the input distribution : <hi rend='it'>inputDistribution</hi></p>
+</item><label>type</label>
+<item id-text='2' id='uid2'><p noindent='true'>: Distribution</p>
+</item></list>
+
+
+</cell>
+</row><row><cell right-border='true' halign='center' left-border='true'><vfill/>Results</cell>
+<cell right-border='true' halign='center'>
+
+<list type='description'><label><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&bullet;</mo></math></formula></label>
+<item id-text='1' id='uid3'><p noindent='true'>the random input vector : <hi rend='it'>inputRandomVector</hi></p>
+</item><label>type</label>
+<item id-text='2' id='uid4'><p noindent='true'>: RandomVector which implementation is a UsualRandomVector</p>
+</item></list>
+
+
+</cell>
+</row></table>
+<listing frame='TBRL' basicstyle='normalsize' language='C++'><p noindent='true'><hi rend='tt'>class Exception {</hi></p>
+<p noindent='true'><hi rend='tt'>public :</hi></p>
+<p noindent='true'><hi rend='tt'>        Exception ( const char *description, const char * comment = 0 ) ;</hi></p>
+<p noindent='true'><hi rend='tt'>        virtual ~Exception( ) throw();</hi></p>
+<p noindent='true'><hi rend='tt'>        /* ... */</hi></p>
+<p noindent='true'><hi rend='tt'>        friend ostream &amp; operator&lt;<zws/>&lt;<zws/> (ostream &amp;, const Exception &amp; e ) ;</hi></p>
+<p noindent='true'><hi rend='tt'>} ;</hi></p>
+</listing><listing basicstyle='red' language='C++'><p>This is a test file for the listings package
+
+// In a case like \def\bar#1foo#2{...}, this returns the value of #1
+// given the token list foo as argument.
+TokenList Parser::read_delimited (const TokenList&amp; L)
+{
+  TokenList res;
+  scanner_status = ss_matching;
+  scan_group_del(res,L);
+  scanner_status = ss_normal;
+  return res;
+}</p>
+</listing><p><figure rend='inline' file='nosuchfile'/></p>
+<div0 id-text='1' id='cid1'><head>one</head>
+<p>Footnotes and fonts<note id-text='1' id='uid5' place='foot'>normal<hi rend='it'>italic</hi></note> after note.</p>
+<p>Hey <hi rend='bold'>Footnotes and fonts<note id-text='2' id='uid6' place='foot'>normal<hi rend='it'>italic</hi></note> after</hi> note.</p>
+<p><large>This is large </large><large><hi color='colid3'> This is red
+</hi></large><large><it><hi color='colid3'>This is italics<note id-text='3' id='uid7' place='foot'>NormalNote <small>small note </small><small><hi color='colid5'> blue note</hi></small></note> after the note</hi></it></large><large><hi color='colid3'> after italic</hi></large><large/></p>
+<p><large>after red</large>
+after large</p>
+</div0>
+<div0 id-text='2' id='cid2'><head>Two</head>
+<p>Some text.</p>
+<p>Texte1.</p>
+<list id-text='1' id='uid8' type='description'><label><hi color='colid5'> R1</hi></label>
+<item id-text='1' id='uid9'><p noindent='true'>Rule A</p>
+</item></list>
+<p>texte fin1.</p>
+<p>Texte2.</p>
+<list id-text='2' id='uid10' type='description'><label><hi color='colid5'> R2</hi></label>
+<item id-text='1' id='uid11'><p noindent='true'>Rule B</p>
+</item></list>
+<p>texte fin2.</p>
+<p>Texte3</p>
+<list id-text='3' id='uid12' type='description'><label><hi color='colid5'> R3</hi></label>
+<item id-text='1' id='uid13'><p noindent='true'>Rule C</p>
+</item></list>
+<p>texte fin3.</p>
+<p>Liens <ref target='uid8'/> et <ref target='uid10'/> et <ref target='uid12'/>. Lien
+<ref target='uid12' rend='page'/></p>
+<p>3  ok'3
+ <it id-text='5' id='uid14'>4</it> ok4
+ <it>5</it>  ok5
+ <it>6</it>  OK6</p>
+<p><ref target='cid2'/><ref target='cid2'/><ref target='uid14'/><ref target='uid14'/></p>
+<fancypagestyle value='plain'/><p>foo <bold>bar</bold>
+<headrule/><footrule/><fancypagestyle value='myps'/></p>
+<p>We are in H-mode here</p>
+<ListOfTables value='lot'/><ListOfFigures value='lof'/><tableofcontents mode2='all2' depth='5' mode='all'/><tableofcontents depth='4'/></div0>
+<div0 id-text='A' id='cid3'><head>One in appendix</head>
+<p>Some text.</p>
+</div0>
+<div0 id-text='B' id='cid4'><head>Two in appendix</head>
+<p>Some text.
+References <ref target='cid2'/>, <ref target='cid3'/></p>
+<listing label='lst: config ebnf' escapeinside='YY' caption='EBNF definition of a configuration' basicstyle='red' language='C++'><p noindent='true'><tt>this is the verbatim stuff</tt></p>
+</listing><p>Test grabenv
+CxDAyzBt
+AyzBt=</p>
+<p><xref url='http://www.inria.fr'>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr</xref>
+<xref url='http://www.inria.fr'>http://www.inria.fr</xref>
+<xref url='http://www.inria.fr'>http://www.inria.fr</xref></p>
+<p><xref url='a~b~n_d'>a~b~n_d</xref>
+<xref url='a~b~n_d'>a~b~n_d</xref></p>
+</div0></std>

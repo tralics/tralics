@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document SYSTEM 'devnul.dtd'>
+<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
+<document Language='English' part='true'>
+<Frontmatter>
+<Xdiv1 Rend='NoNumber'><Head>Chapter one</Head>
+<p>OK</p>
+</Xdiv1></Frontmatter>
+<Mainmatter>
+<Xdiv0 id-text='I' id='cid1'><Head>First Part of document</Head>
+<p>Some text here</p>
+</Xdiv0>
+<Xdiv0 id-text='II' id='cid2'><Head>Second Part</Head>
+<Xdiv1 id-text='1' id='uid1'><Head>Chapter two</Head>
+<Xdiv2 id-text='1.1' id='uid2'><Head>Section one</Head>
+<Xdiv3 id-text='1.1.1' id='uid3'><Head>Subsection one</Head>
+<Xdiv4 id-text='1.1.1.1' id='uid4'><Head>Subsubsection one</Head>
+<Xdiv5 id-text='1.1.1.1.1' id='uid5'><Head>First paragraph</Head>
+<Xdiv6 id-text='1.1.1.1.1.1' id='uid6'><Head>First sub paragraph</Head>
+<p>Normal text</p>
+</Xdiv6></Xdiv5></Xdiv4></Xdiv3></Xdiv2></Xdiv1></Xdiv0></Mainmatter>
+<Backmatter><p>We are now in the backmatter.<Ref target='uid6'/><Ref target='uid6' Rend='Page'/></p>
+<Table Vpos='t' TWidth='85.35826pt' Rend='inline'><Row Topborder='true'><Cell Halign='Left' Leftborder='true'>a</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row><Cell Halign='Left' Leftborder='true'>A</Cell>
+<Cell Rightborder='true' Halign='Left' Cols='3'>BCD</Cell>
+<Cell Halign='Center'>E</Cell>
+<Cell Rightborder='true' Halign='Center'>F</Cell>
+</Row><Row Spaceafter='28.45274pt'><Cell Bottomborder='true' Halign='Left' Leftborder='true' Cols='2'>ab</Cell>
+<Cell Bottomborder='true' Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Bottomborder='true' Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row Bottomborder='true'><Cell Halign='Left' Leftborder='true'/>
+</Row></Table>
+<p><Figure Rend='inline' Width='28.45274pt' File='Logo-INRIA-couleur'/>
+<Figure Framed='true' Rend='inline' Height='8.53581pt' Width='284.52756pt' Scale='3' Angle='90' Clip='true' File='A'/></p>
+<FloatFigure id-text='1' id='uid7' Rend='Figure'><p Rend='Center'><Xsubfigure id-text='1.1' id='uid8'><Leg> one</Leg><Texte><Figure Rend='inline' Width='56.9055pt' File='Logo-INRIA-couleur'/></Texte></Xsubfigure> <Xsubfigure id-text='1.2' id='uid9'><Leg/><Texte><Figure Rend='inline' Width='85.35826pt' File='Logo-INRIA-couleur'/></Texte></Xsubfigure></p>
+<p Rend='Center'><Xsubfigure id-text='1.3' id='uid10'><Leg> two</Leg><Texte><Figure Rend='inline' Width='113.81102pt' File='Logo-INRIA-couleur'/></Texte></Xsubfigure> <Xsubfigure id-text='1.4' id='uid11'><Leg/><Texte><Figure Rend='inline' Width='36.98866pt' File='Logo-INRIA-couleur'/></Texte></Xsubfigure>
+<SCaption><p>Caption of the figure</p>
+</SCaption></p>
+</FloatFigure>
+<FloatTable id-text='1' id='uid12' Place='b' Rend='Table'><p Rend='Center'><Table Vpos='t' Rend='inline'><Row><Cell Halign='Center'>a</Cell>
+<Cell Halign='Center'>b</Cell>
+</Row></Table>
+<SCaption><p>ok</p>
+</SCaption></p>
+</FloatTable>
+<p>a<Note id-text='1' id='uid13' Place='Inline'><p>B</p>
+</Note><Note id-text='2' id='uid14' Place='Inline'><p>C</p>
+<p>D</p>
+</Note>
+<SCaption><p>a caption</p>
+</SCaption>
+<Xsubfigure id-text='1.5' id='uid15'><Leg> one</Leg><Texte><Figure Rend='inline' Width='56.9055pt' File='Logo-INRIA-couleur'/></Texte></Xsubfigure></p>
+<p Noindent='true'><Xmbox><a>b</a></Xmbox> <Rotatebox Rangle='30'>x</Rotatebox>
+<Xsubfigure id-text='1.6' id='uid16'><Leg>a</Leg><Texte>b</Texte></Xsubfigure></p>
+<Table Rend='inline'><Row><Cell Halign='Center'>a</Cell>
+</Row></Table><p>
+<SCaption><p>A</p>
+</SCaption></p>
+<FloatTable id-text='2' id='uid17' Place='htbp' Rend='Table'><p Rend='Center'><Table Rend='inline'><Row><Cell Halign='Center'>a</Cell>
+</Row></Table>
+<SCaption><p>B</p>
+</SCaption></p>
+</FloatTable>
+<FloatTable id-text='3' id='uid18' Place='htbp' Rend='Table'><p Rend='Center'><Figure Rend='inline' File='a'/>
+<SCaption><p>C</p>
+</SCaption></p>
+</FloatTable>
+<FloatFigure id-text='2' id='uid19' Place='htbp' Rend='Figure'><p Rend='Center'><Figure Rend='inline' File='a'/>
+<SCaption><p>D</p>
+</SCaption><Acaption>ok</Acaption></p>
+</FloatFigure>
+<p><SCaption><p>a</p>
+</SCaption><SCaption><p>c</p>
+</SCaption><Acaption>b</Acaption></p>
+<p><Xmbox>fo<a>b</a></Xmbox>
+<Scalebox BoxScale='0.3'>foo</Scalebox>
+<Raisebox val='0.3'>foo</Raisebox>
+<Framebox Rendering='Boxed'>foo</Framebox>
+<Framebox BoxWidth='56.9055pt' Rendering='Boxed'>foo</Framebox>
+<Xbox Width='1' Height='2' BPos='bl'>foo<a>b</a></Xbox>
+<Rotatebox Rangle='45'><font-italic-shape>x</font-italic-shape></Rotatebox>
+<Framebox Rendering='Boxed'>foo</Framebox><Scalebox BoxScale='0.3'>foo</Scalebox><Xbox Width='10' Height='10' Framed='true'>foo</Xbox><Framebox BoxWidth='10.0pt' Rendering='Boxed'>foo</Framebox></p>
+<Xpicture Width='100' Height='100'><Xbezier a1='0' a2='0' b1='10' b2='30' c1='50' c2='30'/>
+<Xput Xpos='15' Ypos='20'><Xcircle Size='6'/></Xput><Xput Xpos='15' Ypos='20'><Xcircle Full='true' Size='6'/></Xput><Scaleput Xpos='10' Ypos='10' Xscale='1.0' Yscale='1.0' XscaleY='0.0' YscaleX='0.0'><Arc Angle='121' Xpos='5' Ypos='0' Unitlength='1'/></Scaleput>
+<Multiput Xpos='20' Ypos='5' Repeat='2' Dx='-20' Dy='12'><Xline XDir='5' YDir='3' Width='20'/></Multiput><Xput Xpos='10' Ypos='32'><Xvector XDir='-2' YDir='1' Width='10'/></Xput><Xput Xpos='15' Ypos='20'><Xoval Xpos='30' Ypos='10'/></Xput><Xdashline arg3='0.7' arg2='3'><point Xpos='0' Ypos='18'/><point Xpos='63' Ypos='18'/></Xdashline><Xdrawline/>some text here<Xdottedline arg2='2'><point Xpos='0' Ypos='10'/><point Xpos='70' Ypos='10'/></Xdottedline><Xput Xpos='30' Ypos='20'><Xcircle Size='6'/></Xput><Xput Xpos='15' Ypos='20'><Bigcircle Size='2' Unitlength='1'/></Xput><CloseCurve Unitlength='1'>150,0, 190,100, 230,0</CloseCurve>
+<Curve Unitlength='1' Nbsymb='17'>300,0, 340,100, 380,0</Curve>
+<TagCurve Unitlength='1'>80,0, 0,0, 40,100, 80,0, 0,0</TagCurve>
+<Thicklines/><Thinlines/><Linethickness Size='.5pt'/>
+</Xpicture><List type='simple'>
+<Item id-text='1' id='uid20' Label='A'><p Noindent='true'>b</p>
+</Item><Label>A</Label>
+<Item id-text='2' id='uid21'><p Noindent='true'>b</p>
+</Item></List>
+<List type='MyList'>
+<Item id-text='1' id='uid22' Label='item label'><p Noindent='true'>item value</p>
+<List type='description'>
+<Item id-text='1.1' id='uid23' Label='first item'><p Noindent='true'>okok</p>
+</Item>
+<Item id-text='1.2' id='uid24' Label='second item'>
+<List type='simple'>
+<Item id-text='1.2.1' id='uid25'><p Noindent='true'>First</p>
+</Item>
+<Item id-text='1.2.2' id='uid26'><p Noindent='true'>Second</p>
+<List type='ordered'>
+<Item id-text='1' id='uid27' Label='(1)'><p Noindent='true'>some item</p>
+</Item>
+<Item id-text='2' id='uid28' Label='(2)'><p Noindent='true'>another one</p>
+</Item></List>
+</Item></List>
+</Item></List>
+</Item></List>
+<BTheorem style='plain' type='xCor' id-text='1' id='uid29'>
+<Head>Corollary</Head>
+<ThHead>Important</ThHead>
+<p>this is easy</p>
+</BTheorem>
+<p><font-ul>a</font-ul><font-caps>b</font-caps><font-hl>c</font-hl><font-so>d</font-so><font-st>e</font-st>
+<font-super>f</font-super><font-sub>g</font-sub>
+<font-oldstyle>h</font-oldstyle><font-overline>i</font-overline><font-underline>j</font-underline></p>
+<p><font-large5>a</font-large5><font-large4>b</font-large4><font-large3>c</font-large3><font-large2>d</font-large2><font-large1>e</font-large1>f<font-small1>g</font-small1><font-small2>h</font-small2><font-small3>i</font-small3><font-small4>j</font-small4></p>
+<p><font-bold-series>a</font-bold-series><font-sansserif-family>b</font-sansserif-family><font-typewriter-family>c</font-typewriter-family><font-small-caps-shape>d</font-small-caps-shape><font-slanted-shape>e</font-slanted-shape><font-italic-shape>f</font-italic-shape>
+xxx a<font-italic-shape>b</font-italic-shape><font-slanted-shape>c</font-slanted-shape><font-small-caps-shape>d</font-small-caps-shape>
+e<font-bold-series>f</font-bold-series><font-typewriter-family>h</font-typewriter-family><font-sansserif-family>h</font-sansserif-family>i
+Normal text</p>
+<p>
+<Citation from='D' key='A' id='bid2' userid='cite:B' type='E'>
+<BiB>1</BiB>bk=,BK=,N=Citation,S=Citation.
+<bauteurs><Bpers Firstname='a' Lastname='c' Junior='d'/></bauteurs>
+<bediteur><Bpers Firstname='a' Particle='b' Lastname='c' Junior='d' FullFirst='AA'/></bediteur>
+</Citation></p>
+<p><Cit Prenote='cf' Citetype='fx'><Ref target='bid0'>p 30</Ref></Cit></p>
+<Bibitem id='bid0'>key1</Bibitem><p>OKOK</p>
+<p Noindent='true'><bibitem id='bid1' bib-key='toto'/>
+<BiB>2</BiB>bk=toto,BK=,N=bibitem,S=p.
+tata</p>
+<p Noindent='true'><Bibitem id='bid2' Bibkey='toto'/>
+<BiB>3</BiB>bk=,BK=toto,N=Bibitem,S=p.
+tata
+<Cit>(<Ref target='bid2'/>)</Cit></p>
+<p>No everything tested here</p>
+<participants><pers prenom='a' nom='b'/>
+<pers prenom='c' nom='d'/>
+</participants>
+<catperso><head>xx</head><pers prenom='jean' nom='dupond' affiliation='Cnrs' profession='PHD' hdr='not yet'>Ok</pers>
+</catperso><List type='Gloss'><Head>The famous glossary</Head><Glolabel>aa</Glolabel><Item><p>bb</p>
+</Item><Glolabel>cc</Glolabel><Item><p>dd</p>
+</Item></List><p>Text
+<Leaders><foo>bar</foo></Leaders><hfil/><Cleaders><foo>bar</foo></Cleaders><hfil/><Xleaders><foo>bar</foo></Xleaders><hfil/></p>
+<p Noindent='true'>Word<Anchor id-text='lid1' id='uid30'/>
+<Anchor id-text='lid2' id='uid31'/>
+<Anchor id-text='lid3' id='uid32'/></p>
+<Keywords>
+<Term>first</Term>
+<Term>second</Term>
+<Term>(max,+)</Term>
+</Keywords><p><Xref url='foo'><font-large1>éfoo</font-large1></Xref></p>
+<TableOfContents depth='2'/><p><Texmath textype='inline' type='inline'>xy</Texmath></p>
+<Texmath textype='Bdisplay' type='display'> x </Texmath>
+<p Noindent='true'> <Texmath textype='Binline' type='inline'> x </Texmath></p>
+<p>a</p>
+<p Noindent='true' Spacebefore='2.0pt'>b</p>
+<p Rend='Center'>A</p>
+<p Rend='Quote'>B</p>
+<p Rend='Quotation'>C</p>
+<p Rend='FlushLeft'>D</p>
+<p Rend='FlushRight'>E</p>
+<Table Rend='inline'><Row Spaceafter='2.0pt' Topborder='true'><Cell Rightborder='true' Halign='Right' Leftborder='true'>a</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Rightborder='true' Halign='Center' Cols='1'>x</Cell>
+</Row></Table><p>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd><mtd columnspan='1'><mi>x</mi></mtd></mtr></mtable></math></formula></p>
+<p><minipage InnerPos='s' Pos='t' marginpar='85.35826pt'><p>ok
+</p></minipage></p>
+<BTheorem style='break' type='Cor' id-text='1' id='uid33'>
+<Head>Corollary</Head>
+<p>This is a sentence typeset in the theorem environment <font-typewriter-family>Cor</font-typewriter-family>.</p>
+</BTheorem>
+<p><Ref target='uid34'/><Ref target='uid34'/></p>
+<BTheorem style='plain' type='Exa' id-text='1.17.1' id='uid34'>
+<Head>Example</Head>
+<p>
+This is a sentence typeset</p>
+<p>in the theorem environment <font-typewriter-family>Exa</font-typewriter-family>.</p>
+</BTheorem>
+<BTheorem style='plain' type='Rem' id-text='1' id='uid35'>
+<Head>Remark</Head>
+<p>This is a sentence typeset in the theorem environment <font-typewriter-family>Rem</font-typewriter-family>.</p>
+</BTheorem>
+<BTheorem style='marginbreak' type='Lem' id-text='2' id='uid36'>
+<Head>lemma</Head>
+<ThHead>Ben User</ThHead>
+<p>This is a sentence typeset in the theorem environment <font-typewriter-family>Lem</font-typewriter-family>.</p>
+</BTheorem>
+<BTheorem style='change' type='Def' id-text='3' id='uid37'>
+<Head>Definition</Head>
+<ThHead>Very Impressive definition</ThHead>
+<p>This is a sentence typeset in the theorem environment <font-typewriter-family>Def</font-typewriter-family>.</p>
+</BTheorem>
+<Xpicture Width='204.85962' Height='153.64471'><Thicklines/><Multiput Xpos='102.42981' Ypos='25.60745' Repeat='2' Dx='102.42981' Dy='61.45789'><Xline XDir='0' YDir='-1' Width='10.24298'/><Xline XDir='-5' YDir='3' Width='102.42981'/></Multiput><Multiput Xpos='102.42981' Ypos='25.60745' Repeat='2' Dx='-102.42981' Dy='61.45789'><Xline XDir='5' YDir='3' Width='102.42981'/></Multiput><Xput Xpos='102.42981' Ypos='15.36447'><Xline XDir='5' YDir='3' Width='102.42981'/></Xput><Xput Xpos='102.42981' Ypos='15.36447'><Xline XDir='-5' YDir='3' Width='102.42981'/></Xput><Xput Xpos='0' Ypos='76.82236'><Xline XDir='0' YDir='1' Width='10.24298'/></Xput><Linethickness Size='1pt'/>
+<Xput Xpos='102.42981' Ypos='25.60745'>
+<Scaleput Xpos='51.2149' Ypos='51.2149' Xscale='1' Yscale='0.6' XscaleY='-1' YscaleX='0.6'><Bigcircle Size='10' Unitlength='5.12149'/></Scaleput>
+<Xput Xpos='0' Ypos='-10.24298'><Scaleput Xpos='51.2149' Ypos='51.2149' Xscale='1' Yscale='0.6' XscaleY='-1' YscaleX='0.6'><Arc Angle='121' Xpos='25.60745' Ypos='0' Unitlength='5.12149'/></Scaleput>
+<Scaleput Xpos='51.2149' Ypos='51.2149' Xscale='1' Yscale='0.6' XscaleY='-1' YscaleX='0.6'><Arc Angle='-31' Xpos='25.60745' Ypos='0' Unitlength='5.12149'/></Scaleput></Xput></Xput></Xpicture><p>           
+
+<Xpicture Width='142.26303' Height='110.96516'><Xput Xpos='0' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='bl'>cm</Xbox></Xput><Xput Xpos='28.4526' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='b'>1</Xbox></Xput>
+<Xput Xpos='56.90521' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='b'>2</Xbox></Xput>
+<Xput Xpos='85.35782' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='b'>3</Xbox></Xput>
+<Xput Xpos='113.81042' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='b'>4</Xbox></Xput>
+<Xput Xpos='142.26303' Ypos='19.91682'><Xbox Width='0' Height='0' BPos='b'>5</Xbox></Xput>
+<Xput Xpos='42.67891' Ypos='56.90521'><Xcircle Size='17.07156'/></Xput><Xput Xpos='85.35782' Ypos='56.90521'><Xcircle Size='17.07156'/></Xput><Xput Xpos='42.67891' Ypos='56.90521'><Xcircle Full='true' Size='5.69052'/></Xput><Xput Xpos='85.35782' Ypos='56.90521'><Xcircle Full='true' Size='5.69052'/></Xput><Xput Xpos='28.4526' Ypos='68.28625'><Xbox Width='71.13152' Height='22.76208' Framed='true'>car</Xbox></Xput><Xput Xpos='28.4526' Ypos='91.04834'><Xvector XDir='-2' YDir='1' Width='28.4526'/></Xput><Multiput Xpos='2.84526' Ypos='0' Repeat='49' Dx='2.84526' Dy='0'><Xline XDir='0' YDir='1' Width='7.11314'/></Multiput><Multiput Xpos='14.2263' Ypos='0' Repeat='5' Dx='28.4526' Dy='0'><Xline XDir='0' YDir='1' Width='9.9584'/></Multiput><Thicklines/><Xput Xpos='0' Ypos='0'><Xline XDir='1' YDir='0' Width='142.26303'/></Xput><Multiput Xpos='0' Ypos='0' Repeat='6' Dx='28.4526' Dy='0'><Xline XDir='0' YDir='1' Width='14.2263'/></Multiput></Xpicture></p>
+<p>On the fly changes are possible, for instance
+a<allowbreak/>b
+
+a<AllowBreak/>b</p>
+<p>You can change attributes also</p>
+<p Rend='Quote'>B</p>
+<p rendering='quotation'>B</p>
+<Xdiv2 id-text='1.18' id='uid38'><Head>Section two</Head><Atitle>Section 1</Atitle>
+<Xdiv3 id-text='1.18.1' id='uid39'><Head>Subsection two</Head><Atitle>Subsetion 2</Atitle>
+<p>A</p>
+<FloatTable id-text='4' id='uid40' rendering='Table'><p rendering='Center'><formula type='inline'><simplemath>x</simplemath></formula></p>
+</FloatTable>
+<p>B</p>
+<FloatTable id-text='5' id='uid41' rendering='Table'><p rendering='Center'><Table rendering='inline'><Row><Cell Halign='Center'>x</Cell>
+</Row></Table></p>
+</FloatTable>
+<p>C</p>
+<Table rendering='inline'><Row><Cell Halign='Center'>x</Cell>
+</Row></Table><p>
+A</p>
+<FloatTable id-text='6' id='uid42' Place='ht' rendering='Table'><p rendering='Center'><formula type='inline'><simplemath>x</simplemath></formula></p>
+</FloatTable>
+<p>B</p>
+<FloatTable id-text='7' id='uid43' starred='true' rendering='Table'><p rendering='Center'><Table rendering='inline'><Row><Cell Halign='Center'>x</Cell>
+</Row></Table></p>
+</FloatTable>
+<p>C</p>
+<Table rendering='inline'><Row><Cell Halign='Center'>x</Cell>
+</Row></Table>
+<FloatFigure id-text='3' id='uid44' rendering='Figure'><p rendering='Center'>text</p>
+</FloatFigure>
+<FloatFigure id-text='4' id='uid45' Place='!h' rendering='Figure'><p rendering='Center'><Figure rendering='inline' File='x' Extension='ps'/></p>
+</FloatFigure>
+<FloatFigure id-text='5' id='uid46' Place='!h' rendering='Figure'><p rendering='Center'><Figure rendering='inline' File='x' Extension='ps'/>              <Figure rendering='inline' File='x' Extension='ps'/></p>
+</FloatFigure>
+<FloatFigure id-text='6' id='uid47' Place='!h' rendering='Figure'><p rendering='Center'><Figure rendering='inline' File='x' Extension='ps'/> text<Figure rendering='inline' File='x' Extension='ps'/></p>
+</FloatFigure>
+<p>Same test as in torture file
+
+<Figure rendering='inline' Clip='true' Width='85.35826pt' File='Logo-INRIA-couleur'/>
+<Figure rendering='inline' Height='171.00174pt' Width='213.5pt' Angle='20' File='Logo-INRIA-couleur' Extension='ducon'/>
+<Figure rendering='inline' Height='570.0pt' Width='427.0pt' File='Logo-INRIA-couleur' Extension='foo_bar'/>
+a :c
+<Figure rendering='inline' Clip='true' Scale='2' Width='85.35826pt' File='../../a_b:c'/></p>
+<Table Vpos='t' TWidth='85.35826pt' rendering='inline'><Row BottomBorderWidth='7.0pt' Bottomborder='true' TopBorderWidth='3.0pt' Topborder='true'><Cell Halign='Left' Leftborder='true'>line1</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row><Cell Halign='Left' Leftborder='true'>line2</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='4.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'>A</Cell>
+<Cell Rightborder='true' Halign='Left' Cols='3'>BCD</Cell>
+<Cell Halign='Center'>E</Cell>
+<Cell Rightborder='true' Halign='Center'>F</Cell>
+</Row><Row Spaceafter='28.45274pt'><Cell Bottomborder='true' Halign='Left' Leftborder='true' Cols='2'>line4</Cell>
+<Cell Bottomborder='true' Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Bottomborder='true' Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='6.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'/>
+</Row></Table>
+<Table Vpos='t' TWidth='85.35826pt' rendering='inline'><Row BottomBorderWidth='7.0pt' Bottomborder='true' TopBorderWidth='3.0pt' Topborder='true'><Cell Halign='Left' Leftborder='true'>line1</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row><Cell Halign='Left' Leftborder='true'>line2</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='4.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'>A</Cell>
+<Cell Rightborder='true' Halign='Left' Cols='3'>BCD</Cell>
+<Cell Halign='Center'>E</Cell>
+<Cell Rightborder='true' Halign='Center'>F</Cell>
+</Row><Row Spaceafter='28.45274pt'><Cell BottomBorderWidth='13.0pt' Bottomborder='true' Halign='Left' Leftborder='true' Cols='2'>line4</Cell>
+<Cell BottomBorderWidth='13.0pt' Bottomborder='true' Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell BottomBorderWidth='66.0pt' Bottomborder='true' Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='6.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'/>
+</Row></Table>
+<Table Vpos='t' TWidth='85.35826pt' rendering='inline'><Row bottom_rule_space_below='1.6pt' bottom_rule_space_above='1.5pt' BottomBorderWidth='7.0pt' Bottomborder='true' top_rule_space_below='1.2pt' top_rule_space_above='1.1pt' TopBorderWidth='3.0pt' Topborder='true'><Cell Halign='Left' Leftborder='true'>line1</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row><Cell Halign='Left' Leftborder='true'>line2</Cell>
+<Cell Rightborder='true' Halign='Left'>b</Cell>
+<Cell Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='4.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'>A</Cell>
+<Cell Rightborder='true' Halign='Left' Cols='3'>BCD</Cell>
+<Cell Halign='Center'>E</Cell>
+<Cell Rightborder='true' Halign='Center'>F</Cell>
+</Row><Row Spaceafter='28.45274pt'><Cell bottom_rule_space_above='1.8pt' BottomBorderWidth='13.0pt' Bottomborder='true' Halign='Left' Leftborder='true' Cols='2'>line4</Cell>
+<Cell bottom_rule_space_above='1.8pt' BottomBorderWidth='13.0pt' Bottomborder='true' Halign='Right'>c</Cell>
+<Cell Rightborder='true' Halign='Right'>d</Cell>
+<Cell Halign='Center'>e</Cell>
+<Cell bottom_rule_space_below='1.9pt' BottomBorderWidth='66.0pt' Bottomborder='true' Rightborder='true' Halign='Center'>f</Cell>
+</Row><Row BottomBorderWidth='6.0pt' Bottomborder='true'><Cell Halign='Left' Leftborder='true'/>
+</Row></Table>
+</Xdiv3></Xdiv2></Backmatter><TheIndex title='Index'><Index target='uid30 uid32' Level='1'>foo</Index>
+<Index target='uid31' Level='2' Encap='gee'>barb</Index>
+<Index target='uid32' Level='2'>bara</Index>
+</TheIndex></document>

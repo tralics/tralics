@@ -1,0 +1,24 @@
+\documentclass {article}
+% a small document that tests the \index command
+\makeindex
+\begin{document}
+\ChangeElementName{stylesheet}{monstyle}
+
+
+OK
+\index{verb}a
+\index{vérb}b
+\index{verb@verb}c
+\index{vérb@verb}d
+\index{vérb@vérb}e
+\index{vérb@vérb|bf}f
+\index{vérb!vèrb}g
+\index{vérb!vèrb}h
+OK
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

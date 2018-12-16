@@ -1,0 +1,56 @@
+This is the README file for Tralics
+
+This software is governed by the CeCILL license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+   http://www.cecill.info
+See the files COPYING and Copyright for additional details.
+Plain text version of the license are in the files
+  Licence_CeCILL_V2-en.txt  Licence_CeCILL_V2-fr.txt
+
+
+The archive contains four directories and some files.
+
+
+The src directory contains the following files
+  Copyright: copy of the copyright notice
+  README: explains how to create the Tralics binary
+  Makefile  : this is the Makefile
+  *.C *.h : the sources.
+You get a binary version of Tralics by saying `make' in this directory.
+
+The confdir directory contains the following files
+   config_empty tralics_rc .tralics_rc
+      -> configuration files
+   - files of the form foo.tcf,  these are Tralics configuration files
+   - files of the form foo.clt,  these are Tralics version of class files
+   - files of the form foo.plt,  these are Tralics version of packages
+These files are used by Tralics; when you install a new version, you should
+copy them in the appropriate place.
+
+
+The Test directory contains some test files
+The Modele directory contains translation of the test files.
+The Test directory contains `alltests',
+  this is a shell script that compiles the test files and compares
+  them against models.
+
+Since July 2008, directories raweb, xml, styles, icons are distributed
+in an alternate file, named tralics-extra-2.12.7.tar.gz 
+(the version number may vary). 
+
+
+
+In case of problem contact : tralics@sophia.inria.fr
+or consult the Web page: http://www.inria.fr/apics/tralics
+
+
+The remaining of the archive is formed of miscellaneous files, that can be 
+used to convert the XML produced by Tralics into HTML, Pdf, or whatever.
+
+
+
+July 2008.
+
+

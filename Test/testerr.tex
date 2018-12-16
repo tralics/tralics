@@ -1,0 +1,575 @@
+% Tralics configuration file 'test0.tcf' 
+% Tralics DOCTYPE = book classes.dtd -*- encoding: utf-8
+\documentclass{article}
+\begin{filecontents+}{kvo.plt}
+\ProvidesPackage{kvo}[2007/10/18 kvoptions test]
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=MCS,prefix=MCS@}
+\DeclareVoidOption{VA}{\let\seeva\relax}
+\DeclareVoidOption{VB}{}
+\DeclareBoolOption[true]{BH}
+\DeclareStringOption[foo]{SB}
+\def\MCS@SA{}\DeclareStringOption{SA}
+\def\MCS@SB{}\DeclareVoidOption{SB}
+\def\MCS@SCtrue{}\DeclareBoolOption{SC}
+\def\MCS@SDfalse{}\DeclareBoolOption{SD}
+\def\ifMCS@SE{}\DeclareBoolOption{SE}
+\def\MCS@SFtrue{}\DeclareComplementaryOption{SF}{BH}
+\def\MCS@SGtrue{}\DeclareComplementaryOption{SG}{BH}
+\DeclareComplementaryOption{SH}{Sh}
+\ProcessKeyvalOptions*
+\end{filecontents+}
+
+\usepackage{xkeyval,fancyhdr,fp,fixfoot}
+\usepackage[moduleref]{ra}
+\usepackage[BH=TRUE,VA=0]{kvo}
+\DisableKeyvalOption[action=foo]{MCS}{VB}
+\DisableKeyvalOption[action=error]{MCS}{VB}
+\DisableKeyvalOption[package =foo,action=error]{MCS}{VB}
+\makeatletter\KV@MCS@VB{}\makeatother
+\seeva
+\begin{document}
+\begin{filecontents+}{F0}
+is a normal
+\end{filecontents+}
+
+\begin{filecontents+}{F1}
+\begin{Verbatim}
+Line1
+Line2
+\end{filecontents+}
+\begin{filecontents+}{F2}
+\begin{rawxml}
+<hi rend='tt'>Line3 
+Line4</hi>
+\end{filecontents+}
+\begin{filecontents+}{F3}
+\begin{comment}
+Line5
+Line6
+\end{filecontents+}
+\begin{filecontents+}{F4}
+\def\foo#1{A=#1=}\foo{x
+\end{filecontents+}
+\begin{filecontents+}{F5}
+\long\def\lfoo#1{B=#1=}\lfoo{x
+\end{filecontents+}
+\begin{filecontents+}{F6}
+\iftrue \else missing fi
+\end{filecontents+}
+\begin{filecontents+}{F7}
+foo }bar
+\end{filecontents+}
+
+
+
+
+
+\makeatletter
+This document contains a  number of errors.
+\For\instance\this\sentence.
+This \input{F0} line
+\outer\def\Par{} % very bad token
+
+
+% bad_end_env: EOF in verbatim env 
+F1\input{F1}after F1
+F2\input{F2}after F2
+F3\input{F3}after F3
+Line after input should be OK
+
+% Missing_close_brace : This is hard to test
+x\input{F4}y}
+x\input{F5}y}
+% 
+
+x\input{F6}  incomplete \fi \or \else 
+% Must test a lot of other runaway cases
+% runaway: case of unexpected \par in 
+\newcommand\fooA[2][]{A=#1=#2}
+\newcommand*\fooB[2][]{A=#1=#2}
+\def\xpar{xpar}
+\fooA[a\par b]{c}\fooB[a\par b]{c}
+\fooA[a\xpar b]{c\par d}\fooB[a\xpar b]{c\par d}
+\fooA[a\Par b]{c}\fooB[a\Par b]{c}
+\fooA[a\xpar b]{c\Par d}\fooB[a\xpar b]{c\Par d}
+
+Test outer
+\iffalse \Par\fi
+\loop \iffalse x\Par\repeat
+\strip@prefix \par>
+\strip@prefix \Par>
+
+% Skip_group0  read_delimited1 
+% from read_delimited, read_until
+% next_optarg 
+% while_num afterfi afterelsefi
+%% --------------------------------------------------
+Some math only commands \dot x \tilde y \undertilde
+\eqno \mathstrut \alpha \uparrow \colon \strut \land \mid \Vert
+\lVert \rVert \> \mml@font@normal \mathit \left \right \ddots
+
+
+Counter overflow
+\@alph0 \@alph1 \@alph26 \@alph27
+\@Alph0 \@Alph1 \@Alph26 \@Alph27
+\@fnsymbol0 \@fnsymbol1 \@fnsymbol9 \@fnsymbol10
+Newcommand
+\def\foo{}
+\renewcommand\foo[12]{}
+\renewcommand\foo[\z@]{}
+\renewcommand\foo[x]{}
+\def\foo#1#x{}\def\foo#x{}
+\csname foo\relax bar\endcsname
+\value{foo\relax bar}
+\value{foo}
+\let\c@foo\relax\value{foo}
+\begin{undefined_env} \end{undefined+env}
+\UndefinedCommand
+\global\par WW\global X \outer\par WW\outer X 
+\global\count0=13 \outer\dimen0=2pt 
+\ifnum\count0=13 \else \bad\fi
+\ifdim\dimen0=2pt \else \bad\fi
+\count0=`\foo\count0=`\f
+{\endgroup \begingroup}
+}\endgroup
+\def\foo\bar{} \foo\Bar
+\def\foo\bar\gee{} \foo\Bar \foo\bar\Gee 
+\includegraphics[foo=bar]{gee}
+\verb=foo
+\def\foo{\verb=x=}
+\foo\verb
+
+
+Acc\a{\par}
+\'{} \~{}\'{xy}\'{1}\'{+}\'{\par}\'{\'e}\'{^^ab}\'{0}
+\'{\^e}
+\ifnum 0 1 \bad \fi\ifnum 0 0\else\bad \fi
+\ifdim 0pt 0pt \fi
+\DefineShortVerb{\foo\bar}
+\UndefineShortVerb{\+}
+\DefineShortVerb{\foo}\DefineShortVerb{1}
+\DefineShortVerb{\+}
+\DefineShortVerb{\+}
+\UndefineShortVerb{\+}
+\a{\x\x} \a{}\a{\x}\a{x}
+
+Arrays
+\newcolumntype{}{}
+\newcolumntype{\foo\bar}{}
+\newcolumntype{\foo}{}
+\newcolumntype{^^ab}{}
+\begin{array}{w}\end{array} % strange err
+\begin{table}
+\begin{tabular}{wc}\end{tabular}
+\begin{tabular}{}\end{tabular}
+\begin{tabular}{@}\end{tabular}
+\begin{tabular}{<}\end{tabular}
+\begin{tabular}{>}\end{tabular}
+\begin{tabular}{p}\end{tabular}
+\begin{tabular}{m}\end{tabular}
+\begin{tabular}{b}\end{tabular}
+\begin{tabular}{@{}|@{}!!<{}}\end{tabular}
+\begin{tabular}{c@{3pt}!!p{2cm}}
+\multicolumn{}{}{}\\
+\multicolumn{2}{cc}{xx}\\
+\multicolumn{cc}{2}{xx}\\
+\end{tabular}
+\end{table}
+
+\def\XX{\xbox{Box}{val}}
+
+Testing Optional Argument. 
+\footcite[t\par ext]{x} is Ok
+\yearcite[t\par ext]{x} is Ok
+\refercite[t\par ext]{x} is Ok
+\cite[year][t\par ext]{x}
+\cite[y\par ear][text]{x}
+
+\begin{thebibliography}[a\par {}[] \XX\end{thebibliography}
+\begin{thebibliography}[a]{}[\par \XX
+
+\citation KUIFT
+\bpers{x}{y}{z}{t}
+\bpers[x\par y]{x}{y}{z}{t}% ok since \par ignored
+\endcitation
+\end{thebibliography}
+ok\par
+ok
+\ProvidesPackage{fo\par[bar\par  % Two errors
+\begin{minipage}[c][ignore\par [c][ign\par
+2 runaway errors signaled above, and a missing unit here
+\end{minipage}
+xxx
+\begin{minipage}[x\par [ign] [y\par [ign] {3pt}\end{minipage}
+
+Is current mode ok here
+%
+\begin{figure}[x\par etc \end{figure}
+\begin{wrapfigure}[x\par {y\par {z\par 3 errors \end{wrapfigure}
+
+This is new par
+\nolinebreak[a\par \linebreak[a\par
+\NeedsTeXFormat{aa\par [a\par
+\fancyhead[a\par  {a \par b}
+\lhead[[a\par  {a \par b}
+\raisebox{1cm\par[2cm\par [3cm\par {a box}
+
+
+Testing  get\_r\_token 
+%\typein[B]{Say something} 
+\@onlypreamble{A} 
+\@tfor C:=0\do{} \@cons D{} \tralics@addtolist@n {}E{}
+\@removeelement {}{}F\@selective@sanitize[]{}G
+\DeclareMathOperator H{etc}\newcommand I{} \newcount J \newif K
+\let LB \futurelet Mmm \chardef  N10 
+Cannot define \def a{}\newcommand b{}\setlength c{10}\edef e{}
+Bad redefinition \renewcommand\notdefined{}\newcommand\a{}
+\newcounter{page}
+Multiple labels \label{A}\label{B}\label{A}\label{B}
+% --------------------------------------------------
+\@nomathml=-1
+
+
+Checking some math errors
+$\right.x}=1
+\begingroup$x\endgroup=2\par 
+$\frac3{4\par 5}
+$\left x=\right y$ 
+$\left ($ 
+$}
+$\end{y} \alpha we are out of math
+\[ \label{M1}\label{M2}x = $. out of math % \]
+$a{b$c}\frac{x}{y$z}\eqno(17)$ 
+
+{\@nomathml=0
+$\begin{array}{c}\multicolumn{2}{c}{x}y \\z
+\end{array}$
+$a\over b\over c$
+$a\begin{equation}\end{equation}$
+$x_ $ $x__y$ $x^ $ $x^ ^y$ $x_y_z^u^v$
+}
+This is out of math mode
+\showthe\@nomathml
+
+More tests 
+\middle % no yet implemented
+\@persA{first}{Pers1}{option} Ok outside RA
+RC is  tested outside RA
+\@persB[Paris]{first}{pers2}{Chercheur}{IBM}{d}{hdr}
+\persB{a}[de]{Pers3}[Paris]{Ingenieur}{INRIA}[d][hdr]
+Error here
+\@persB[Marseille]{first}{pers2}{Assistant}{DEC}{d}{hdr}
+\persB{a}[de]{Pers3}[Lyon]{Professeur}{CNR}[d][hdr]
+
+X&\hbox{\\ and \newline}
+\includegraphics{a.b.c}
+\moduleref{p}{s}{a}
+\moduleref[foo]{p}{s}{a}
+
+%Start a paragraph
+%\RAstartprojet{ThemeA}{Oui}{ProjetA}{ProjetB}{Unusedloc}{Short desc}
+\isproject{yes}
+\def\ra@theme{Com}
+\def\ra@proj@a{ProjA}
+\def\ra@proj@b{ProjB}
+\def\ra@proj@c{ProjC}
+\def\ra@UR{Sophia}
+\rawebstartdocument
+x\url{()} % strange
+\def\fooA#1{fooA#1}\def\fooB#1{fooB#1}
+\def\endfooA{A.}\def\endfooB{B.}
+\def\Gee{gee}
+\@reevaluate\fooA\fooB{gee}
+\@reevaluate\fooA\fooB\Gee
+\newenvironment{Env}{\@reevaluate*{fooA}{fooB}}{E}
+\begin{Env}etc\end{Env}
+\AtBeginDocument
+
+
+
+Check for some unimplemented commands
+\accent 48,\accent-1,\accent134217727,\accent134217728, 
+\delimiter 48,\delimiter-1,\delimiter134217727,\delimiter134217728, 
+\insert4{ok}\insert123456{ok}
+\mathaccent 48\mathaccent "7FFF\mathaccent "8000
+\mathchar 48\mathchar "7FFF\mathchar "8000
+\vadjust{ok}
+\radical134217728 \vcenter{vcentered text}.
+\halign{}\noalign\noboundary\omit \valign{text}
+\span\dump\widthof{} \heightof{}\depthof{}
+\textquotestraightbase \textquotestraightdblbase
+\textlbrackdbl\textrbrackdbl\textcompwordmark
+\texttildelow\textcentoldstyle\textdollaroldstyle\textcopyleft
+\textzerooldstyle\textoneoldstyle\texttwooldstyle\textthreeoldstyle
+\textfouroldstyle\textfiveoldstyle\textsixoldstyle\textsevenoldstyle
+\texteightoldstyle\textnineoldstyle\textcapitalcompwordmark
+\textguarani\textleaf\textdied\textdivorced\textblank
+\textborn\textmarried\textdblhyphen\textascendercompwordmark
+\textinterrobangdown\textdiscount \par X
+\include foo \input{/dev/mem}
+\openin2=F4
+\read2to\TOTO
+\def\xTOTO{\def \foo ##1{A=##1=}\foo {x }}
+\ifx\TOTO\xTOTO\else \bad\fi
+\closein4
+\openin2=F7
+\read2to\TOTO
+\ifx\TOTO\xTOTO\else \bad\fi
+\count=\relax
+Here we try to converts tokens to numbers
+\muskip0=\font pt \relax
+\skip0=\everycr\relax 
+\count0=\setmathchar\textbf`A\relax
+Testing incompatible mu, first from mu to something else
+\skip0=\muskip0 \parindent=\muskip0 \linepenalty=\muskip0
+now scanning mu
+\muskip0=\parindent 
+\muskip0=\skip0 
+\muskip0=1pt plus 2pt minus 3bad mu
+\skip0=1pt plus 2mu Missing unit
+\muskip0=1mu plus \count0\dimen0
+\muskip0=1mu plus \count0\skip0
+\muskip0=1mu plus \count0\count1
+X\def\fooC#1X#2{=#1=#2=}
+\fooA}\textit}{\everyhbox{foo} $\hbox} 4\mbox}\frac}12$}
+No err signaled if etc removed...!
+\def\foo{\begin{comment}etc} \foo hey
+\xbox{foo} bar} First arg of \string\xbox is normal, scond like hbox 
+\uppercase fooo}
+%\hbox foo}
+\def\xfoo#1{#1#1##x}
+\def\foo#1{#1#3#x}\def\one{1}\def\two{2}\def\exx{x}
+\ifx\foo\xfoo\else\bad\fi
+\edef\foo#1{#\one#\two#\exx}
+\ifx\foo\xfoo\else\bad\fi
+\begin{motscle}uu,vu,xx}ww, {\it z}z\end{motscle}
+Next par
+
+\newcounter{Foo}  how to check overflow here ?
+\setlength{12}{12pt}
+\setlength{\skip0}{12pt} This one should be OK
+\newif\else
+\def\Foo{\iftrue Ok\fi}
+\begin{}\end{}\iftrue \unless\Foo
+\edef\Test{\expandafter\unless\Foo}\if\Test\empty\else\bad\fi
+{\catcode `\A=17} % bette keep this change local
+\mathcode`A=1234567
+\sfcode`A=1234567
+\lccode`A=1234567
+\uccode`A=1234567
+\newcommand{}{body}
+\newcommand{xy}{body}
+\advance x by 1
+\count0=123456
+\multiply \count0 by \count0
+\toks0=\toks1  ok and \toks0=toks1} bad
+\newboolean{foo}\newboolean{foo}
+\setboolean{foo}{bar}
+\setboolean{foo2}{true}
+\setbox0x
+\shipout\box14
+
+An example of all the font commands
+\TextSymbolUnavailable\texteuro
+\DeclareMathVersion{normal}
+\DeclareMathDelimiter{\bracevert}
+\DeclareTextCommandDefault{\textasciitilde}{\~{}}
+\ProvideTextCommandDefault{\textflorin}{\textit{f}}
+\DeclareTextSymbolDefault{\textmu}{TS1}
+\UseTextSymbol{TS1}{\tc@fake@euro}
+\UndeclareTextCommand{\textsterling}{OT1}
+\DeclareFontEncodingDefaults{\relax}{\def\accentclass@{7}}
+\DeclareSizeFunction{sgenb}{\genb@sfcnt\@font@info}
+\DeclareSymbolFontAlphabet{\mathrm}{operators}
+\DeclareTextFontCommand{\textrm}{\rmfamily}
+\DeclareTextAccent{\capitalcircumflex}{TS1}{2}
+\DeclareTextSymbol{\textflorin}{TS1}{140}
+\DeclareFontFamily{T1}{lcmtt}{\hyphenchar\font\m@ne}
+\DeclareFontEncoding{U}{}{\noaccents@}
+\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}
+\DeclareTextCompositeCommand{\^}{OT1}{i}{\^\i}
+\DeclareTextComposite{\^}{T1}{i}{238}
+\DeclareFontSubstitution{OML}{cmm}{m}{it}
+\DeclareMathAccent{\breve}{\mathalpha}{operators}{"15}
+\DeclareMathSymbol\Join    {\mathrel}{lasy}{"31}
+\DeclarePreloadSizes{OT1}{cmr}{m}{n}{5,7,10}
+\DeclareMathSizes{34.4}{34.4}{28.66}{23.89}
+\DeclareErrorFont{OT1}{cmr}{m}{n}{10} 
+\DeclareSymbolFont{lasy}{U}{lasy}{m}{n}
+\DeclareMathAlphabet{\mathbf}{OT1}{cmr}{bx}{n}
+\DeclareMathRadical{\sqrtsign}{symbols}{"70}{largesymbols}{"70}
+\DeclareFontShape{OT1}{cmr}{bx}{n}{etc}{}
+\DeclareFixedFont{\svtnsy}{OMS}{cmsy}{m}{n}{\@xviipt}
+\SetSymbolFont{lasy}{bold}{U}{lasy}{b}{n}
+\SetMathAlphabet\mathsf{bold}{OT1}{cmss}{bx}{n}
+\UseTextAccent{OT1}{\"}{i}
+\ProvideTextCommand{\Dbar}{T1}{\DJ}
+\DeclareTextCommand{\"}{LY}[1]{\UseTextAccent{OT1}{\"}{#1}}
+
+
+OK\define@key[a]{fa\relax mily}{keyA}{}
+OK\define@key[a]{family}{keyA}{}
+OK\define@key[a\relax]{family}{keyA}{}
+OK\define@key[XKV]{family}{keyA}{}
+
+Errors from FO
+\FPadd\foo{999999999999999999}{.5} ok
+\FPmul\fooe\foo{1.0000001} overflow
+\FPadd\fooe\foo{.5} bad
+\FPdiv\fooe\foo{0.99} 
+\FPpascal\foo{200}
+\FPtrunc\foo{1234}{-3}
+\FPround\foo{1234}{-4}
+\FPdiv\foo{3}{0}
+\FPln\foo{-3.4}\FPln\foo{0}
+\FPexp\foo{41} \FPexp\foo{42}
+\FPpow\foo{-1}{2}\FPpow\foo{0}{-2}
+\FParccos\foo{1}
+\FParccos\foo{1.2}
+\FParcsin\foo{1.2}
+\FPround\foo{12345678901234567890}{4}
+\parindent=2cm
+ok% \count0=0
+\fontdimen123456\tenrm=3pt
+\fontdimen-1\tenrm=3pt
+\tracingall
+\hyphenchar\relax=1
+\lastkern\numexpr\XMLlastid
+
+\count1='1000 
+\count0='1000
+\multiply\count0 by \count1 % 2^18
+\multiply\count0 by \count1 % 2^27
+{\multiply\count0 by 8 
+\multiply\count0 by 2}
+{\multiply\count0by 15} This is OK
+{\multiply\count0by 17} fail
+\dimen0=4096pt
+\multiply \dimen0 by 2 OK
+{\multiply \dimen0 by 2 bad}
+\showthe \dimen0
+\dimen0=8192pt
+\dimen0=16383pt
+\divide\count0 by 0 \divide\dimen0 by 0
+\count0=21474836 \multiply \count0 by 100
+\count0=2147483643
+{\advance\count0 by 4} good
+{\advance\count0 by 6} bad
+
+\count10=1
+\count8=2
+\count16=3
+\count0="\the\count10A\the\count"10 A\the\count'10A
+\ifnum \count0=1718826 \else\bad\fi
+\dimen1=2pt
+\dimen0=1.5\dimen1 \ifdim\dimen0=3pt\else \bad\fi
+Lines that follow give missing unit but \string\bad is not called
+\dimen0='10.  \ifdim\dimen0=8pt\else \bad\fi Missing unit here
+\dimen0='\the\count10 1. \ifdim\dimen0=9pt\else \bad\fi 
+\dimen0='\the\count10 18 \ifdim\dimen0=9pt\else \bad\fi 
+\dimen0="\the\count10 1. \ifdim\dimen0=17pt\else \bad\fi
+\dimen0="\the\count10 A. \ifdim\dimen0=26pt\else \bad\fi 
+\dimen0=\the\count"A .5\dimen1 \ifdim\dimen0=3pt\else \bad\fi
+
+This is a good accent \'{\u A} and \a{'}{\a{u}A}  \a{'}{\a{u}=}
+%2^31-1 pas bon ?  
+\divide\skip0 by 0
+\skip0=\glueexpr \skip0 / 0\relax
+\dimen0=7sp \divide\dimen0by3 \ifdim\dimen0=2sp\else \bad\fi
+\dimen0=8sp \divide\dimen0by3 \ifdim\dimen0=2sp\else \bad\fi
+\dimen0=7sp \dimen0\dimexpr\dimen0/3 \relax \ifdim\dimen0=2sp\else \bad\fi
+\dimen0=8sp \dimen0\dimexpr\dimen0/3 \relax \ifdim\dimen0=3sp\else \bad\fi
+\dimen0=\numexpr 2*3/6pt\relax \dimen0=\numexpr 6*3/6pt\relax
+\dimen0=\numexpr 7*3/6pt\relax\ifdim\dimen0=4pt \else\bad\fi
+\dimen0=\dimexpr 1pt*8*3/6\relax\ifdim\dimen0=4pt \else\bad\fi
+\dimen0=\dimexpr 1pt*12*3/6\relax\ifdim\dimen0=6pt \else\bad\fi
+\dimen0=\dimexpr 1pt*6/3\relax\ifdim\dimen0=2pt \else\bad\fi
+\dimen0=\glueexpr 1pt*6/0\relax
+\dimen0=\glueexpr (1pt plus 2pt)/0\relax
+
+\formatdate{2-2-2008}
+\formatdate{3/3/2008}
+\formatdate{13/3/2008}
+\formatdate{3/13/2008}
+\formatdate{mar/13/2008}
+\formatdate{1 mar 2008}
+\formatdate{4 July 2008}
+\formatdate{1 2 3 YMD}\formatdate{1 2 3 MYD}\formatdate{1 2 3 MDY}
+\formatdate{1 2 3 AJM}\formatdate{1 2 3 JAM}\formatdate{1 2 3 JMA}
+Now errors
+\formatdate{2-2-2AAM}\formatdate{2-2-13AJM}
+\formatdate{2-32-1AJM}\formatdate{2-32-1AJMX}\formatdate{2-32-1 X}
+\formatdate{2-2008-2008}\formatdate{2 mar apr}
+\formatdate{2;3;4}\formatdate{2;3;4000}\formatdate{2;3;40000}
+\formatdate{;;3;4000}\formatdate{;septembree;3;4000}
+\formatdate{2-fevrier-2008}
+\formatdate{2-f\'evrier-2008}\formatdate{2-ao\^ut-2008}
+
+\tralics@fnhack 12 What is the result here ?
+\def\macA{foo bar}\def\mac1{foo gee}
+\tralics@fnhack\macA\macB\show\macA
+\def\macA#1{foo #1bar}\def\macB#1{foo #1gee}
+\tralics@fnhack\macA\macB\show\macA
+
+\@ifdefinable{\yfoo}{ok1}
+\let\yfoo\relax\@ifdefinable{\yfoo}{ok2}
+\let\yfoo\formatdate\@ifdefinable{\yfoo}{bad3}
+\@ifdefinable{\endyfoo}{bad4}
+\@ifdefinable{\relax}{bad5}
+\@ifdefinable{15}{bad6}
+\@ifdefinable{~}{bad7}
+\@ifdefinable{}{bad8}
+\@ifdefinable{123}{bad9}
+
+
+Lets try some files foo ok bar bad
+\includegraphics{foo}
+\includegraphics{./../foo}
+\includegraphics{.././foo}
+\includegraphics{../foo}
+\includegraphics{./foo}
+\includegraphics{./../foo.ps}
+\includegraphics{.././foo.ps}
+\includegraphics{../foo.ps}
+\includegraphics{./foo.ps}
+\includegraphics{foo.ps}
+\includegraphics{bar.gee}
+\includegraphics{./../bar.gee}
+\includegraphics{.././bar.gee}
+\includegraphics{../bar.gee}
+\includegraphics{./bar.gee}
+\includegraphics{./../bar.gee.ps}
+\includegraphics{.././bar.gee.ps}
+\includegraphics{../bar.gee.ps}
+\includegraphics{./bar.gee.ps}
+\includegraphics{bar.gee.ps}
+\includegraphics{.bar}
+\includegraphics{bar.}
+
+\DeclareFixedFootnote\foo{} 
+
+
+Case of special chars in commande names {\catcode`\^^^^1234=11  
+\catcode`\&=11 \catcode`\'=11  \catcode`\<=11 \catcode`\>=11 \foo&x^^^^1234<'>!
+\catcode`\'=13  \catcode`\<=13 \catcode`\>=13 \foo&x^^^^1234<'>!}
+
+More catcodes on Unicode chars
+\def\€{foo}gives \€bar OK
+\catcode`€=11
+\def\my€{ok}gives\my€ bar OK \my€bar bad \my €bar bad
+\my^^^^20ac ok \my^^^^20acbad  \my^^^^^020ac ok \my^^^^^020acbad  
+\lccode `€=13 ok
+\catcode`€=13
+\def\my€{ok}gives\my€ bar OK \my €bar good
+\lccode `€=13 OK
+\def\foo^^^^abcd{ok} \foo^^^^abcd OK \foo ^^^^abcd OK
+\def\foo^^^^^12345{ok} \foo \char"12345 OOk
+\def\foo^^^^^1234e{ok}  {\uccode `5=`E\uppercase {\foo \char"12345 }OOk}
+\expandafter\def\csname\endcsname{Null}
+aa\^^^^^12345bb
+\expandafter\def\csname\endcsname#1{}
+aa\^^^^^12345bb
+
+\end{document}
+% todo checking errors in keyval

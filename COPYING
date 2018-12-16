@@ -1,0 +1,57 @@
+Tralics is a software that comes with 1) the sources files, 
+2) some test files, 3) some utilitary files, 4) the documentation.
+
+The distribution includes 1, 2 and 3. Some utilitary files are
+copies, or modifications of files found on the WEB, with their own
+copyright notice (see the README file for the list of these files).
+
+The source files are Copyright by Inria, see notice below.
+
+The test files are some TeX files that can be translated by tralics.
+You can use or modify them as you wish. 
+If you distribute a modified version of Tralics, make sure that
+the script alltests runs.
+
+
+If you modify the raweb configuration file, confdir/ra.tcf,
+or a file of the form ra2007.tcf, 
+you should modify or remove the line containing `tralics ident',
+as explained in the file.
+
+In case of problem contact : tralics@sophia.inria.fr
+or consult the Web page: http://www.inria.fr/apics/tralics
+
+-------------------------------------------------------------------
+Copyright notice for Tralics:
+
+This software is a computer program whose purpose is to 
+translate LaTeX documents into XML format.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+
+
+

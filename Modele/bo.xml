@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE cedram SYSTEM 'cedram.dtd'>
+<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<cedram>
+<article><production>
+<fichier_tex>bo</fichier_tex>
+<fichier_bib>bo</fichier_bib>
+<date_prod>2012-5-14</date_prod></production>
+
+<date_reception>2004-06-14</date_reception>
+<date_acceptation>2004-12-09</date_acceptation>
+<auteur>
+<prenom>Donald</prenom>
+<middlename>E.</middlename>
+<nom><hi rend='it'>Knuth</hi></nom>
+<adresse><TeX/> Users Group  P.O. Box 869 Santa Barbara, CA 93102-0869 USA</adresse>
+<mel>d.e.knuth@somewhere.on.the.net</mel>
+</auteur>
+<titre xml:lang='fr'>Coefficients Fourier pour fonctions <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>L</mi> <mi>&infin;</mi> </msup></math></formula> simples</titre>
+<TeXtitre xml:lang='fr'>Coefficients Fourier pour fonctions <texmath textype='inline' type='inline'>L^\infty </texmath> simples</TeXtitre>
+<titre xml:lang='en'>Fourier coefficients for simple <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>L</mi> <mi>&infin;</mi> </msup></math></formula> functions</titre>
+<TeXtitre xml:lang='en'>Fourier coefficients for simple <texmath textype='inline' type='inline'>L^\infty </texmath> functions</TeXtitre>
+<langue>en</langue>
+<resume xml:lang='en'>This is an abstract with a beautiful inline formula <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&lambda;</mi> <mi>n</mi> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow><mo>=</mo><mfrac><mi>N</mi> <mn>2</mn></mfrac><mi>n</mi><mo form='prefix'>log</mo><mi>n</mi><mo>+</mo><msub><mi>C</mi> <mn>1</mn> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow><mi>n</mi><mo>+</mo><mi>O</mi><mrow><mo>(</mo><msqrt><mi>n</mi></msqrt><mo form='prefix'>log</mo><mi>n</mi><mo>)</mo></mrow></mrow></math></formula>, where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>C</mi> <mn>1</mn> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow></mrow></math></formula> is a real-valued constant.
+</resume>
+<TEXresume xml:lang='en'>This is an abstract with a beautiful inline formula <texmath textype='inline' type='inline'>\lambda _n(\pi ) = \frac{N}{2} n \log n + C_1(\pi ) n +
+O(\sqrt{n}\log {n})</texmath>, where <texmath textype='inline' type='inline'>C_1(\pi )</texmath> is a real-valued constant.
+</TEXresume>
+<resume xml:lang='fr'>Mon résumé avec ma formule
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&lambda;</mi> <mi>n</mi> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow><mo>=</mo><mfrac><mi>N</mi> <mn>2</mn></mfrac><mi>n</mi><mo form='prefix'>log</mo><mi>n</mi><mo>+</mo><msub><mi>C</mi> <mn>1</mn> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow><mi>n</mi><mo>+</mo><mi>O</mi><mrow><mo>(</mo><msqrt><mi>n</mi></msqrt><mo form='prefix'>log</mo><mi>n</mi><mo>)</mo></mrow></mrow></math></formula>, où <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>C</mi> <mn>1</mn> </msub><mrow><mo>(</mo><mi>&pi;</mi><mo>)</mo></mrow></mrow></math></formula> est une constante réelle.
+</resume>
+<TEXresume xml:lang='fr'>Mon résumé avec ma formule
+<texmath textype='inline' type='inline'>\lambda _n(\pi ) = \frac{N}{2} n \log n + C_1(\pi ) n +
+O(\sqrt{n}\log {n})</texmath>, où <texmath textype='inline' type='inline'>C_1(\pi )</texmath> est une constante réelle.
+</TEXresume>
+<motcle xml:lang='fr'>fonctions <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>L</mi> <mi>&infin;</mi> </msup></math></formula> simples, fonction lambda</motcle>
+<motcle xml:lang='en'>simple <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>L</mi> <mi>&infin;</mi> </msup></math></formula> functions, lambda function</motcle>
+<msc>11M26, 11M36, 11S40</msc>
+</article>
+<p/><biblio>
+<citation from='year' key='Bar03' id='bid0' userid='cite:Ba03' type='article'>
+<bauteurs><nom>Barnes</nom><prenom>E. W.</prenom><initiale>E. W.</initiale><particule/><junior/></bauteurs>
+<title>On the éxpression of Euler's constant as a definite integral</title>
+<bjournal>Messenger of Math.</bjournal>
+<bvolume>33</bvolume>
+<byear>1903</byear>
+<bpages>59–61</bpages>
+</citation>
+<citation from='year' key='Bom00' id='bid2' userid='cite:Bo99' type='article'>
+<bauteurs><nom>Bombieri</nom><prenom>E.</prenom><initiale>E.</initiale><particule/><junior/></bauteurs>
+<title>Remarks on Weil's quadratic functional in the theory of prime numbers I</title>
+<bjournal>Rend. Mat. Acc. Lincei, Ser. IX</bjournal>
+<bvolume>11</bvolume>
+<byear>2000</byear>
+<bpages>183–233</bpages>
+</citation>
+<citation from='year' key='BPY01' id='bid1' userid='cite:BPY01' type='article'>
+<bauteurs><nom>Biane</nom><prenom>P.</prenom><initiale>P.</initiale><particule/><junior/><nom>Pitman</nom><prenom>J.</prenom><initiale>J.</initiale><particule/><junior/><nom>Yor</nom><prenom>M.</prenom><initiale>M.</initiale><particule/><junior/></bauteurs>
+<title>Probability laws related to the Jacobi $\theta$ and Riemann $\zeta$ functions, and Brownian excursions</title>
+<bjournal>Bull. Amer. Math. Soc.</bjournal>
+<bvolume>38</bvolume>
+<byear>2001</byear>
+<bpages>435–465</bpages>
+</citation></biblio></cedram>
