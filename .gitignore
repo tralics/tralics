@@ -1,0 +1,17 @@
+compile_commands.json
+warnings.log
+build/.ninja_deps
+build/.ninja_log
+build/build.ninja
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/rules.ninja
+build/tralics
+build/CMakeFiles/cmake.check_cache
+build/CMakeFiles/CMakeOutput.log
+build/CMakeFiles/TargetDirectories.txt
+build/CMakeFiles/3.16.3/CMakeCXXCompiler.cmake
+build/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_CXX.bin
+build/CMakeFiles/3.16.3/CMakeSystem.cmake
+build/CMakeFiles/3.16.3/CompilerIdCXX/a.out
+build/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.cpp
