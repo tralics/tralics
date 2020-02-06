@@ -12,14 +12,21 @@
 // for the fp package. this implements fixed point arithmetic
 class FpNum {
  public:
-  bool sign; // sign of the number
-  unsigned int data[4]; // the digits
+   bool sign{true};      // sign of the number
+   unsigned int data[4]; // the digits
 
-  FpNum(Digit a, Digit b, Digit c, Digit d)
-    { data[0]=a; data[1]=b; data[2] = c; data[3] =d; sign=true; } 
-  FpNum(): sign(true) {data[0]=data[1]=data[2]=data[3]=0;}
-  void init(Digit a, Digit b, Digit c, Digit d)
-    { data[0]=a; data[1]=b; data[2] = c; data[3] =d;}
+   FpNum(Digit a, Digit b, Digit c, Digit d) {
+     data[0] = a;
+     data[1] = b;
+     data[2] = c;
+     data[3] = d;
+     sign = true; }
+   FpNum() { data[0] = data[1] = data[2] = data[3] = 0; }
+   void init(Digit a, Digit b, Digit c, Digit d) {
+     data[0] = a;
+     data[1] = b;
+     data[2] = c;
+     data[3] = d;}
   auto is_zero() const -> bool;
   void reset() { data[0] = data[1] = data[2] = data[3] = 0; }
   void correct_sign();

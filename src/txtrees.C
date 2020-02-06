@@ -40,8 +40,7 @@ namespace {
 
 
 // By default, this is a glossary and a main index
-AllIndex::AllIndex() : last_index(0),last_iid(0)
-{
+AllIndex::AllIndex() {
   value.push_back(new OneIndex("glossary","Glossary",6));
   value.push_back(new OneIndex("default","Index",5));
 }

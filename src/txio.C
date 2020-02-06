@@ -193,12 +193,7 @@ auto Buffer::is_good_ascii() const -> bool {
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers
 
-Converter::Converter() : cur_file_line(0), global_error(false),
-			 local_error(false), line_is_ascii(false),
-			 lines_converted(0),bad_lines(0),bad_chars(0)
-{
-  cur_file_name = "tty";
-}
+Converter::Converter() { cur_file_name = "tty"; }
 
 auto io_ns::plural(int n) -> String {
   if(n>1) return "s"; else return "";

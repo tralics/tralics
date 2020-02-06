@@ -23,45 +23,45 @@ class TitlePageFullLine;
 // data for a titlepage item
 class TitlePageAux {
   string T1,T2,T3,T4; // the four strings
-  int idx;    // index into titlepage::Data
-  int xflags;  // flags associated to the object
-  tpi_vals type; // type of object
+  int idx{0};         // index into titlepage::Data
+  int xflags{0};      // flags associated to the object
+  tpi_vals type{tpi_zero}; // type of object
 
- public:
-   auto classify(tpi_vals, int &) -> bool;
-   auto convert(int) -> Xmlp;
-   auto convert(int, Xmlp) -> Xmlp;
-   auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
-   void dump(int);
-   void exec_start(int);
-   void exec_post();
-   void exec(int, bool);
-   void set_T1(string x) { T1 = x; }
-   void set_T2(string x) { T2 = x; }
-   void set_T3(string x) { T3 = x; }
-   void set_T4(string x) { T4 = x; }
-   void set_flags(int f) { xflags = f; }
+public:
+  auto classify(tpi_vals, int &) -> bool;
+  auto convert(int) -> Xmlp;
+  auto convert(int, Xmlp) -> Xmlp;
+  auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
+  void dump(int);
+  void exec_start(int);
+  void exec_post();
+  void exec(int, bool);
+  void set_T1(string x) { T1 = x; }
+  void set_T2(string x) { T2 = x; }
+  void set_T3(string x) { T3 = x; }
+  void set_T4(string x) { T4 = x; }
+  void set_flags(int f) { xflags = f; }
 
-   auto get_type() -> tpi_vals { return type; }
-   auto get_typeref() -> tpi_vals & { return type; }
-   auto get_idx() -> int { return idx; }
-   auto get_flags2() const -> int { return 32 * (xflags / 32); }
-   auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
-   auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
-   auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
-   auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
-   auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
-   TitlePageAux() : idx(0), xflags(0), type(tpi_zero) {}
-   TitlePageAux(TitlePageFullLine &X);
-   auto find_UR(String s, int n) const -> int;
-   auto get_T1() -> string { return T1; }
-   auto get_T2() -> string { return T2; }
-   auto get_T3() -> string { return T3; }
-   auto get_T4() -> string { return T4; }
-   auto find_cmd(const string &s) const -> bool;
-   void move_T1T2(string x) {
-     T1 = T2;
-     T2 = x;}
+  auto get_type() -> tpi_vals { return type; }
+  auto get_typeref() -> tpi_vals & { return type; }
+  auto get_idx() -> int { return idx; }
+  auto get_flags2() const -> int { return 32 * (xflags / 32); }
+  auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
+  auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
+  auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
+  auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
+  auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
+  TitlePageAux() {}
+  TitlePageAux(TitlePageFullLine &X);
+  auto find_UR(String s, int n) const -> int;
+  auto get_T1() -> string { return T1; }
+  auto get_T2() -> string { return T2; }
+  auto get_T3() -> string { return T3; }
+  auto get_T4() -> string { return T4; }
+  auto find_cmd(const string &s) const -> bool;
+  void move_T1T2(string x) {
+    T1 = T2;
+    T2 = x;}
    auto increment_flag() -> bool;
    void decode_flags();
 };
@@ -111,14 +111,14 @@ class TitlePageFullLine {
 };
 
 class TitlePage {
-  int len2; // size of bigtable and Data
-  bool valid; // is this initialised and not killed ?
-  int size;   // allocated size of bigtable
-  Xmlp* Data;  // the array of xml data
- public:
+  int len2{1};       // size of bigtable and Data
+  bool valid{false}; // is this initialised and not killed ?
+  int size{0};       // allocated size of bigtable
+  Xmlp *Data{0};     // the array of xml data
+public:
   vector<TitlePageAux> bigtable; // the table
   int state;  // current state of the parser
-  TitlePage() : len2(1),valid(false),size(0),Data(0) {}
+  TitlePage() {}
   auto operator[](int k) -> Xmlp & { return Data[k]; }
   auto get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
   auto get_len2() const -> int { return len2; }

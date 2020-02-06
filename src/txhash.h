@@ -129,22 +129,24 @@ class SpecialHash
 // Data structure for label and references.
 class LabelInfo
 {
-  bool used;    // is this ID used ?
-  bool defined; // is this ID defined ?
+  bool used{false};    // is this ID used ?
+  bool defined{false}; // is this ID defined ?
   Istring id;       // value of the ID
   Istring name;     // name of the ID (pointer into SH)
-  int lineno;   // line of definition
+  int lineno{0};    // line of definition
   string file_name; // file of definition
  public:
-  LabelInfo() : used(false), defined(false), id(Istring()), name(Istring()), lineno(0), file_name("") {}
-  LabelInfo(Istring k) : used(false), defined(false), id(Istring()), name(k), lineno(0),file_name("") {}
-  auto is_used() const -> bool { return used; }
-  auto is_defined() const -> bool { return defined; }
-  auto set_used() -> bool {
-    if (used)
-      return true;
-    used = true;
-    return false;
+   LabelInfo() : id(Istring()), name(Istring()), file_name("") {}
+   LabelInfo(Istring k)
+       : used(false), defined(false), id(Istring()), name(k), lineno(0),
+         file_name("") {}
+   auto is_used() const -> bool { return used; }
+   auto is_defined() const -> bool { return defined; }
+   auto set_used() -> bool {
+     if (used)
+       return true;
+     used = true;
+     return false;
   }
   auto set_defined() -> bool {
     if (defined)
@@ -186,15 +188,13 @@ class PackMatcher {
   string value;  // value of attribute
   string package;  // package name
   string options;  // option
-  bool wild_pack;  // wild card in package
-  bool att_star;    // one star in attribute
+  bool wild_pack{false}; // wild card in package
+  bool att_star{false};  // one star in attribute
   bool match_document; // usepackage? or \documentclass ?
-  bool att_plus; // 
-  bool used; // did we use this rule ?
- public:
-  PackMatcher(bool c=false):
-    wild_pack(false), att_star(false), match_document(c), att_plus(false),
-    used(false) {}
+  bool att_plus{false}; //
+  bool used{false};     // did we use this rule ?
+public:
+  PackMatcher(bool c = false) : match_document(c) {}
   auto ok_for_match(bool c) -> bool { return c == match_document && !used; }
   void set_match_doc(bool X) { match_document = X; }
   auto set_wild_pack(bool X) -> int {

@@ -145,71 +145,73 @@ class Math {
   friend class MathDataP;
   friend class MathElt;
   MathList value;
-  math_list_type type;
-  subtypes sname;
- public:
-  Math() : type(invalid_cd),sname(nomathenv_code) {}
- public:
-   auto duplicate(bool) const -> subtypes;
-   auto back() -> MathElt & { return value.back(); }
-   auto begin() const -> const_math_iterator { return value.begin(); }
-   auto chars_to_mb(Buffer &, bool) const -> bool;
-   auto chars_to_mb1(Buffer &) const -> bool;
-   auto chars_to_mb2(Buffer &) const -> bool;
-   auto chars_to_mb3() -> Istring;
-   void clear() { value.clear(); }
-   auto convert_math(math_style) -> Xmlp;
-   auto convert_math_noML(name_positions, bool) -> Xmlp;
-   void convert_math_noML0();
-   void convert_math_noMLt0();
-   auto convert_opname() -> string;
-   auto convert_this_to_string(Buffer &) -> string;
-   void destroy();
-   auto empty() const -> bool { return value.empty(); }
-   auto end() const -> const_math_iterator { return value.end(); }
-   auto find_parens(MathQList &, bool) const -> bool;
-   auto front() -> MathElt & { return value.front(); }
-   auto front() const -> const MathElt & { return value.front(); }
-   auto get_arg1() -> Math { return front().get_list(); }
-   auto get_arg2() -> Math { return second_element().get_list(); }
-   auto get_arg3() -> Math { return third_element().get_list(); }
-   auto get_type() const -> math_list_type { return type; }
-   auto get_sname() const -> subtypes { return sname; }
-   auto get_name() const -> String;
-   auto get_list(int) const -> Math &;
-   void hack_type(int);
-   auto has_type(int x) const -> bool { return type == x; }
-   auto has_one_element() const -> bool;
-   auto has_two_elements() const -> bool;
-   void is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
-   auto length_one() const -> bool { return value.size() == 1; }
-   auto M_array(bool, math_style) -> Xmlp;
-   auto M_cv(math_style, int need_row) -> XmlAndType;
-   void pop_back() { value.pop_back(); }
-   void pop_front() { value.pop_front(); }
-   void print() const;
-   void push_back(CmdChr, subtypes);
-   void push_back_list(subtypes X, math_list_type c);
-   void push_back_font(subtypes X, subtypes c);
-   void push_back(CmdChr);
-   void push_back(MathElt x) { value.push_back(x); }
-   void push_back(Xmlp, int, math_types);
-   void push_front(CmdChr, subtypes);
-   void remove_initial_group();
-   void remove_last();
-   void remove_spaces();
-   auto second_element() const -> const MathElt &;
-   void set_display_type() { type = math_ddollar_cd; }
-   void set_env_name(int);
-   void set_name(subtypes X) { sname = X; }
-   void set_nondisplay_type() { type = math_dollar_cd; }
-   void set_type(math_list_type c) { type = c; }
-   auto third_element() const -> const MathElt &;
-   auto trivial_math(int) -> Xmlp;
-   auto trivial_math_index(symcodes) -> Xmlp;
-   auto check_align() -> int;
+  math_list_type type{invalid_cd};
+  subtypes sname{nomathenv_code};
 
- private:
+public:
+  Math() {}
+
+public:
+  auto duplicate(bool) const -> subtypes;
+  auto back() -> MathElt & { return value.back(); }
+  auto begin() const -> const_math_iterator { return value.begin(); }
+  auto chars_to_mb(Buffer &, bool) const -> bool;
+  auto chars_to_mb1(Buffer &) const -> bool;
+  auto chars_to_mb2(Buffer &) const -> bool;
+  auto chars_to_mb3() -> Istring;
+  void clear() { value.clear(); }
+  auto convert_math(math_style) -> Xmlp;
+  auto convert_math_noML(name_positions, bool) -> Xmlp;
+  void convert_math_noML0();
+  void convert_math_noMLt0();
+  auto convert_opname() -> string;
+  auto convert_this_to_string(Buffer &) -> string;
+  void destroy();
+  auto empty() const -> bool { return value.empty(); }
+  auto end() const -> const_math_iterator { return value.end(); }
+  auto find_parens(MathQList &, bool) const -> bool;
+  auto front() -> MathElt & { return value.front(); }
+  auto front() const -> const MathElt & { return value.front(); }
+  auto get_arg1() -> Math { return front().get_list(); }
+  auto get_arg2() -> Math { return second_element().get_list(); }
+  auto get_arg3() -> Math { return third_element().get_list(); }
+  auto get_type() const -> math_list_type { return type; }
+  auto get_sname() const -> subtypes { return sname; }
+  auto get_name() const -> String;
+  auto get_list(int) const -> Math &;
+  void hack_type(int);
+  auto has_type(int x) const -> bool { return type == x; }
+  auto has_one_element() const -> bool;
+  auto has_two_elements() const -> bool;
+  void is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
+  auto length_one() const -> bool { return value.size() == 1; }
+  auto M_array(bool, math_style) -> Xmlp;
+  auto M_cv(math_style, int need_row) -> XmlAndType;
+  void pop_back() { value.pop_back(); }
+  void pop_front() { value.pop_front(); }
+  void print() const;
+  void push_back(CmdChr, subtypes);
+  void push_back_list(subtypes X, math_list_type c);
+  void push_back_font(subtypes X, subtypes c);
+  void push_back(CmdChr);
+  void push_back(MathElt x) { value.push_back(x); }
+  void push_back(Xmlp, int, math_types);
+  void push_front(CmdChr, subtypes);
+  void remove_initial_group();
+  void remove_last();
+  void remove_spaces();
+  auto second_element() const -> const MathElt &;
+  void set_display_type() { type = math_ddollar_cd; }
+  void set_env_name(int);
+  void set_name(subtypes X) { sname = X; }
+  void set_nondisplay_type() { type = math_dollar_cd; }
+  void set_type(math_list_type c) { type = c; }
+  auto third_element() const -> const MathElt &;
+  auto trivial_math(int) -> Xmlp;
+  auto trivial_math_index(symcodes) -> Xmlp;
+  auto check_align() -> int;
+
+private:
   
   void add_cur_cont();
   void add_cur_font();

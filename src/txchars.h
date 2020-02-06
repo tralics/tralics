@@ -14,10 +14,12 @@
 
 class Utf8Char {
 private :
-  unsigned int value;
+  unsigned int value{0};
+
 public :
   Utf8Char(unsigned int x) : value(x) {}
-  Utf8Char() : value(0) {}
+  Utf8Char() {}
+
 public:
   void make_invalid() { value = 0xFFFF; } // Not a Unicode char
   auto is_invalid() const -> bool { return value == 0xFFFF; }

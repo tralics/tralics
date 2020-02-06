@@ -66,11 +66,7 @@ String bib_xml_name[] = {
 };
 
 // Ctor of the bibliography stuff.
-Bibliography::Bibliography() : 
-  bib_style("plain"),   bib_cmd (""),   biblio_loc(0), nocite(false),
-  biblio_loc_force (false), last_bid(-1)
-{
-}
+Bibliography::Bibliography() : bib_style("plain"), bib_cmd("") {}
 
 // Main idea. The TeX file has commands like \cite , \nocite, which produce
 // a CitationItem (new or old). There are stored in citation_table. They have
@@ -1780,12 +1776,9 @@ void BibEntry::numeric_label(int i)
   B << bf_reset << i;
   label = B.to_string();
 }
-  
-BibEntry::BibEntry() :  crossref(0),crossref_from(0),type_int(type_unknown), 
-    label(""), sort_label(""), extra_num(0),cur_year(0),
-    lab1(""),lab2(""),lab3("") , id(0), unique_id(""), 
-    explicit_cit(false), first_line(-1)
-{
+
+BibEntry::BibEntry()
+    : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), unique_id("") {
   for(int i=0;i<fp_unknown;i++) 
     all_fields[i]="";
   vector <Istring>& Bib = the_main->get_bibtex_fields();

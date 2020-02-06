@@ -79,12 +79,13 @@ static const uint newline_token_val = space_t_offset + '\n';
 
 // cmd, chr pair; The subtype can have 16bits
 class CmdChr {
-  symcodes cmd;
-  subtypes chr;
-  public:
+  symcodes cmd{invalid_cmd};
+  subtypes chr{zero_code};
+
+public:
   CmdChr(symcodes a, subtypes b) : cmd(a), chr(b) {}
   explicit CmdChr(uchar b) : cmd(other_catcode), chr(subtypes(b)) {}
-  CmdChr() :cmd (invalid_cmd), chr(zero_code) {}
+  CmdChr() {}
   void reset() { cmd = undef_cmd; chr = zero_code; }
   void kill() { cmd = invalid_cmd; chr = zero_code; }
   auto get_cmd() const -> symcodes { return cmd; }
@@ -238,13 +239,14 @@ class CmdChr {
 
 
 class Token {
-  uint val;
- public:
+  uint val{0};
+
+public:
   explicit Token(uint x) : val(x) {}
   Token(spec_offsets a, Utf8Char b) : val(a+b.get_value()) {}
   Token(spec_offsets a, uchar b) : val(a+b) {}
   explicit Token(Utf8Char c) : val( c.get_value() +single_offset) {}
-  Token() : val(0) {}
+  Token() {}
 
   auto get_val() const -> uint { return val; }
 

@@ -82,8 +82,8 @@ public:
   OptionList unused_options; // is \@unusedoptionlist in latex
   OptionList global_options; // is \@classoptionslist is latex
   TokenList documentclass_hook; // single hook for all classes
-  bool seen_document_class; // have we seen a \documentclass command
-  bool using_default_class; // inhibits warning
+  bool seen_document_class{false}; // have we seen a \documentclass command
+  bool using_default_class{false}; // inhibits warning
 public:
   ClassesData();
   auto cur_pack() -> LatexPackage *;

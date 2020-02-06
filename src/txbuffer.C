@@ -36,8 +36,7 @@ Buffer::~Buffer()
   delete [] buf;
 }
 
-Buffer::Buffer() :  wptr(0), asize(128), ptr(0), ptr1(0) 
-{ 
+Buffer::Buffer() {
   buf = new char [128];
   buf[0]=0;
 }

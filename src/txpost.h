@@ -13,10 +13,10 @@
 // for modules
 class ModChecker {
   Istring id;    // the id of the module or section
-  bool is_mod;   // is this a module?
-  bool has_info; // does this have some infos ?
- public:
-  ModChecker() : id(0), is_mod(false), has_info(false) {}
+  bool is_mod{false};   // is this a module?
+  bool has_info{false}; // does this have some infos ?
+public:
+  ModChecker() : id(0) {}
   ModChecker(Istring I, bool mod) : id (I), is_mod(mod), has_info(false) {}
   void set(Istring I) { if(id==I) has_info = true; }
   void check(int*T) const {

@@ -95,14 +95,7 @@ SaveErrTok::SaveErrTok(Token t)
   the_parser.err_tok = t;
 }
 
-Parser::Parser() :
-  unexpected_seen_hi(false),  force_eof(false), 
-  no_new_file(false), chapter_has_star(false),
-  begin_env_line(0), 
-  ra_year(1789), 
-  default_language_num(0), cur_file_pos(0), cur_env_name("document"),
-  verb_saved_char(0),input_line_pos(0), the_xmlA(0), the_xmlB(0)
-{
+Parser::Parser() : cur_env_name("document"), verb_saved_char(0) {
   sectionning_offset=section_code;
   restricted = false;
   cur_level = level_one;
@@ -123,7 +116,6 @@ Parser::Parser() :
   cur_font.pack();
   cur_font.set_old_from_packed();
 }
-
 
 // Saves in *this the catcode at position c, modifies it to be nc
 SaveCatcode::SaveCatcode(int c, int nc) : character(c)

@@ -67,12 +67,12 @@ public:
 class Bibliography {
 private:
   string bib_style;  // The bibliography style
-  string bib_cmd;    // The bibliography command 
-  Xmlp biblio_loc;   // location of biblio in the XML tree
+  string bib_cmd;    // The bibliography command
+  Xmlp biblio_loc{0};         // location of biblio in the XML tree
   vector <string> biblio_src; // database file names
-  bool nocite;       // have  we seen \nocite* ?
-  bool biblio_loc_force; // force location  
-  int last_bid;      // current number for unique_bid
+  bool nocite{false};         // have  we seen \nocite* ?
+  bool biblio_loc_force{false}; // force location
+  int last_bid{-1};             // current number for unique_bid
 public:
   vector <CitationItem>  citation_table;
   Bibliography();
@@ -191,9 +191,9 @@ class NameSplitter {
 class BibEntry {
   friend class Bibtex;
 
-  BibEntry* crossref;      // In case of a crossref
-  BibEntry* crossref_from; // reverse crossref
-  entry_type type_int;     // the type of the entry
+  BibEntry *crossref{0};             // In case of a crossref
+  BibEntry *crossref_from{0};        // reverse crossref
+  entry_type type_int{type_unknown}; // the type of the entry
   CitationKey cite_key;     // the cite_key structure
   bib_creator why_me;      // reason why this entry is considered
   string all_fields [fp_unknown]; // all the fields
@@ -201,15 +201,15 @@ class BibEntry {
   BibtexName editor_data; // already processed editor data
 
   string label, sort_label,aux_label;// cite label and sort label
-  int extra_num;           // extra char added to the label
-  int cur_year; // current year, if year field can be parsed
+  int extra_num{0};                  // extra char added to the label
+  int cur_year{0};              // current year, if year field can be parsed
   string lab1,lab2,lab3;        // two temporaries.
-  int id;
+  int id{0};
   Istring unique_id;
-  bool explicit_cit;
+  bool explicit_cit{false};
   c_primaire main_c_type;
   c_secondaire second_c_type;
-  int first_line;
+  int first_line{-1};
   string* user_fields;
   int is_extension;
  public:

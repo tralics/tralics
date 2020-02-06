@@ -17,13 +17,13 @@
 class Converter {
 public:
   string cur_file_name; // file name to be converted
-  int cur_file_line; // current line number
-  bool global_error; // Is this line OK?
-  bool local_error; // is this char OK ?
-  bool line_is_ascii; // is this line ascii 7bit 
-  int lines_converted; // number of lines converted
-  int bad_lines; // number of lines with errors
-  int bad_chars;  // number of errors
+  int cur_file_line{0}; // current line number
+  bool global_error{false};  // Is this line OK?
+  bool local_error{false};   // is this char OK ?
+  bool line_is_ascii{false}; // is this line ascii 7bit
+  int lines_converted{0};    // number of lines converted
+  int bad_lines{0};          // number of lines with errors
+  int bad_chars{0};          // number of errors
 public:
   Converter();
   auto new_error() -> bool;
@@ -64,10 +64,10 @@ typedef std::list<Clines>::iterator line_iterator;
 class LinePtr {
 private:
   std::list<Clines> value;
-  int cur_line;   // current line number
-  bool interactive; // is this file or a tty ?
+  int cur_line{0};         // current line number
+  bool interactive{false}; // is this file or a tty ?
   string file_name; // file name associated to the lines
-  int cur_encoding; // current file encoding
+  int cur_encoding{1}; // current file encoding
 public:
   void add(int n, Buffer& b,bool);
   void add_buffer(Buffer&,line_iterator);
@@ -122,7 +122,7 @@ public:
   void splice_end(LinePtr & X);
   void splice_first(LinePtr & X);
   void split_string (String x, int l);
-  LinePtr() :  cur_line(0), interactive(false), file_name(""),cur_encoding(1) {}
+  LinePtr() : file_name("") {}
   void normalise_final_cr ();
 };
 
@@ -175,14 +175,14 @@ class InputStack {
 
 // data structure associated to \input3=some_file. 
 class FileForInput {
-  bool open_flag; // is this file active ?
+  bool open_flag{false}; // is this file active ?
   LinePtr the_lines; // the lines that not yet read by TeX
   Buffer cur_line; // this holds the current line
   int line_no;  // this holds the current line number
  public:
   void open(string,bool);
   void close();
-  FileForInput() : open_flag(false) {};
+  FileForInput(){};
   auto is_open() -> bool { return open_flag; }
   auto get_lines() -> LinePtr & { return the_lines; }
   void set_lines(LinePtr X) { the_lines=X; }

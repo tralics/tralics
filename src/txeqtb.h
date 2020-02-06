@@ -287,10 +287,10 @@ class SaveAuxAftergroup : public SaveAux {
 // the current level is different fron the old one, and is greater than one.
 // These objects are defined at level_one
 class EqtbInt {
-  int val; // value of the object
-  int level; // level at which this is defined
- public:
-  EqtbInt() :val(0), level(level_one) {}
+  int val{0};           // value of the object
+  int level{level_one}; // level at which this is defined
+public:
+  EqtbInt() {}
   auto get_val() const -> int { return val; }
   void set_val(int x) { val = x; }
   void set_level(int x) { level = x; }
@@ -301,9 +301,9 @@ class EqtbInt {
 
 class EqtbString {
   string val; // value of the object
-  int level; // level at which this is defined
- public:
-  EqtbString() :val(""), level(level_one) {}
+  int level{level_one}; // level at which this is defined
+public:
+  EqtbString() : val("") {}
   auto get_val() const -> string { return val; }
   void set_val(string x) { val = x; }
   void set_level(int x) { level = x; }
@@ -317,9 +317,9 @@ class EqtbString {
 // EQBT entry for a dimension.
 class EqtbDim {
   ScaledInt val; // value of the object
-  int level; // level at which this is defined
- public:
-  EqtbDim() :val(0), level(level_one) {}
+  int level{level_one}; // level at which this is defined
+public:
+  EqtbDim() : val(0) {}
   auto get_val() const -> ScaledInt { return val; }
   void set_val(ScaledInt x) { val = x; }
   void set_level(int x) { level = x; }
@@ -331,9 +331,9 @@ class EqtbDim {
 // EQTB entry for a glue
 class EqtbGlue {
   Glue val;  // value of the object
-  int level; // level at which this is defined
- public:
-  EqtbGlue() : level(level_one) {}
+  int level{level_one}; // level at which this is defined
+public:
+  EqtbGlue() {}
   auto get_level() const -> int { return level; }
   auto get_val() const -> Glue { return val; }
   void val_and_level(Glue a, int b) { val = a; level = b; }
@@ -343,9 +343,9 @@ class EqtbGlue {
 // EQTB entry for a token list
 class EqtbToken {
   TokenList val;  // value of the object
-  int level; // level at which this is defined
- public:
-  EqtbToken(): level(level_one) {}
+  int level{level_one}; // level at which this is defined
+public:
+  EqtbToken() {}
   auto get_val() const -> TokenList { return val; }
   auto get_level() const -> int { return level; }
   void val_and_level(TokenList a, int b) { val = a; level = b; }
@@ -354,13 +354,13 @@ class EqtbToken {
 
 // EQTB entry for a box
 class EqtbBox {
-  int level;  // level at which this is defined
+  int level{level_one}; // level at which this is defined
   Xmlp val; // value of the object
  public:
   void set_val(Xmlp X) { val = X; }
   auto get_val() const -> Xmlp { return val; }
   auto get_level() const -> int { return level; }
-  EqtbBox() : level(level_one) {}
+  EqtbBox() {}
   void val_and_level(Xmlp a, int b) { val = a; level = b; }
   auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };

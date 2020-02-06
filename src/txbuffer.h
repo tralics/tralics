@@ -18,11 +18,11 @@ typedef void buffer_fn(Buffer&);
 class Buffer {
  private:
   char* buf; // the characters
-  int wptr;  // the write pointer
-  int asize;  // allocated size
-  int ptr;   // the read pointer
-  int ptr1;  // a seconnd read pointer
- public:
+  int wptr{0};    // the write pointer
+  int asize{128}; // allocated size
+  int ptr{0};     // the read pointer
+  int ptr1{0};    // a seconnd read pointer
+public:
  
   Buffer ();
   ~Buffer();

@@ -175,27 +175,7 @@ auto MainClass::print_os() const -> String {
 }
 
 // Ctor of the main class
-MainClass::MainClass() : 
-  infile(""), raweb_dir(TRALICSDIR),
-  year(9876), env_number(0), current_line(0),
-  bibtex_size(0),bibtex_extension_size(0),tpa_mode(3), dft(3),
-  //  line_buffer("line buffer"),  b_after("b_after"), b_current("b_current"),
-  external_prog("rahandler.pl"), 
-  input_encoding(1), // latin1
-  output_encoding(en_boot), // hack bootstrap
-  log_encoding(en_boot), // hack bootstrap
-  no_zerowidthspace(false), no_zerowidthelt(false), 
-  footnote_hack(true), prime_hack(false), 
-  use_all_sizes_sw(false),
-  noent_names(false), interactive_math(false),
-  shell_escape_allowed(false), find_words(false), 
-  handling_ra(true),no_undef_mac(false),
-  use_font_elt_sw(false),  pack_font_elt_sw(false),
-  distinguish_refer(true),  noconfig(false), 
-  nomathml(false), dualmath(false), old_phi (false), verbose(false),
-  dverbose(false),silent(false),double_quote_att(false),use_tcf(false),
-  etex_enabled(true), use_math_variant(false), simplified_ra(false),todo_xml(true)
-{
+MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) {
   conf_path.push_back(CONFDIR);
 }
 

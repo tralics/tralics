@@ -38,22 +38,22 @@ class Parser
   Stats my_stats;    // for the statistics
   Token err_tok;       // in case of error   
 private:
-  bool unexpected_seen_hi;  // check for wrongly placed font changes
+  bool unexpected_seen_hi{false}; // check for wrongly placed font changes
   bool calc_loaded;    // did we see \usepackage{calc} ?
   bool numbered_verbatim; // has this verbatim line numbers ?
   bool restricted;     // are we in restricted mode ?
-  bool force_eof;      // did we see \endinput ?
-  bool no_new_file;    // can we pop the input stack ?
-  bool file_ended;     // 
-  bool chapter_has_star; // true in frontmatter, backmatter
+  bool force_eof{false};   // did we see \endinput ?
+  bool no_new_file{false}; // can we pop the input stack ?
+  bool file_ended;     //
+  bool chapter_has_star{false}; // true in frontmatter, backmatter
   bool use_quotes;
   bool list_files_p;   // Should we list the files at the end ?
   bool tok_is_defined; // use by \ifcsname
   int old_nberrs;      // previous number of errors
   int cur_line;        // current input line number
-  int begin_env_line;  // input line number of 
-  int ra_year;    // default year if none given as argument
-  int default_language_num; // default language
+  int begin_env_line{0};       // input line number of
+  int ra_year{1789};           // default year if none given as argument
+  int default_language_num{0}; // default language
   int cur_level;       // current level on the execution stack
   int equation_ctr_pos; // position in the table of the counter equation
   states state;        // current state of the scanner
@@ -64,8 +64,8 @@ private:
   l_state long_state;  // Error recovery handling (\long)
   scan_stat scanner_status; // Error recovery handling (\outer)
   int cur_in_chan;     // if get_token call get_a_new_line
-  int cur_file_pos;    // pos of file in the package list (0= none)
-  
+  int cur_file_pos{0}; // pos of file in the package list (0= none)
+
   string cur_env_name; // name of current environment
   string the_url_val;  // this may be <URSophia>, raweb only
   string the_projetval;// this could be miaou
@@ -85,14 +85,14 @@ private:
   TokenList end_document_hook; // the end-document-hook
   Utf8Char verb_saved_char;  // Char to use for verb by ShortVewrb
   vector<Utf8Char> input_line; // input line converted to chars
-  uint input_line_pos;  // position in input_line
-  Xmlp the_xmlA, the_xmlB; // for XML tree manipulations
-  // private inline functions
- private:
-   auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
-   auto get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
-   auto get_catcode(int x) const -> symcodes {
-     return symcodes(eqtb_int_table[x].get_val());
+  uint input_line_pos{0};      // position in input_line
+  Xmlp the_xmlA{0}, the_xmlB{0}; // for XML tree manipulations
+                                 // private inline functions
+private:
+  auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
+  auto get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
+  auto get_catcode(int x) const -> symcodes {
+    return symcodes(eqtb_int_table[x].get_val());
    }
   void set_catcode(int x,int v) { // untraced version of catcode modification
      eqtb_int_table[x].set_val(v); }

@@ -111,24 +111,24 @@ public:
 // This represents the value of a user-defined command
 class Macro 
 {
-  int nbargs; // number of arguments
-  def_type type; // type of macro
+  int nbargs{0};            // number of arguments
+  def_type type{dt_normal}; // type of macro
   TokenList delimiters[10]; // deleimiters bewtween arguments
   TokenList body; // the body
  public:
-  Macro() : nbargs(0), type(dt_normal) {}
-  Macro(TokenList L) : nbargs(0), type(dt_normal), body(L) {correct_type();}
-  // other methods
-  auto get_type() const -> def_type { return type; }
-  auto get_nbargs() const -> int { return nbargs; }
-  auto get_body() -> TokenList & { return body; }
-  auto get_body() const -> const TokenList & { return body; }
-  void set_nbargs(int n) { nbargs = n; }
-  void set_type(def_type n) { type = n; }
-  auto is_same(const Macro &) const -> bool;
-  auto operator[](int n) const -> const TokenList & { return delimiters[n]; }
-  void set_delimiters(int k, TokenList L) { delimiters[k] = L; }
-  void correct_type();
+   Macro() {}
+   Macro(TokenList L) : nbargs(0), type(dt_normal), body(L) { correct_type(); }
+   // other methods
+   auto get_type() const -> def_type { return type; }
+   auto get_nbargs() const -> int { return nbargs; }
+   auto get_body() -> TokenList & { return body; }
+   auto get_body() const -> const TokenList & { return body; }
+   void set_nbargs(int n) { nbargs = n; }
+   void set_type(def_type n) { type = n; }
+   auto is_same(const Macro &) const -> bool;
+   auto operator[](int n) const -> const TokenList & { return delimiters[n]; }
+   void set_delimiters(int k, TokenList L) { delimiters[k] = L; }
+   void correct_type();
 };
 
 // The table of macros. it contains the reference counts
@@ -137,16 +137,16 @@ class Macro
 // points to it, i.e. if the reference count is zero)
 class Mactab{
  private:
-  Macro** table;   // this contains the table
-  int* rc_table;  // this contains the reference counts
-  int cur_rc_mac_len;   // size of the table.
-  int ptr;              // pointer to the first free position
+   Macro **table{0};      // this contains the table
+   int *rc_table{0};      // this contains the reference counts
+   int cur_rc_mac_len{0}; // size of the table.
+   int ptr{-1};           // pointer to the first free position
  private:  
   void rc_mac_realloc();
  public:
-  Mactab(): table(0), rc_table(0), cur_rc_mac_len(0), ptr(-1){};
-  void incr_macro_ref(int c) { rc_table[c]++; }
-  void delete_macro_ref(int i);
-  auto get_macro(int k) -> Macro & { return *table[k]; }
-  auto new_macro(Macro *s) -> subtypes;
+   Mactab(){};
+   void incr_macro_ref(int c) { rc_table[c]++; }
+   void delete_macro_ref(int i);
+   auto get_macro(int k) -> Macro & { return *table[k]; }
+   auto new_macro(Macro *s) -> subtypes;
 };

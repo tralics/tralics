@@ -32,13 +32,13 @@ class MainClass
   string out_name; // Name of output file
   string in_dir; // Input directory
   string default_class; //
-  int year;        // current year
-  int env_number;     // number of environments seen
-  int current_line;      // current line number
-  int bibtex_size;
-  int bibtex_extension_size;
-  int tpa_mode;
-  int dft; // default dtd for standard classes
+  int year{9876};       // current year
+  int env_number{0};    // number of environments seen
+  int current_line{0};  // current line number
+  int bibtex_size{0};
+  int bibtex_extension_size{0};
+  int tpa_mode{3};
+  int dft{3};     // default dtd for standard classes
   int cur_fp_len; // number of bytes sent to XML file
   LinePtr input_content;// content of the tex source
   LinePtr tex_source;   // the data to be translated
@@ -55,39 +55,40 @@ class MainClass
   Buffer line_buffer; // buffer for current line
 
   Buffer b_after, b_current; // aux buffers.
-  String external_prog;
+  String external_prog{"rahandler.pl"};
   String version_string;
-  int input_encoding;
-  output_encoding_type output_encoding;
-  output_encoding_type log_encoding;
+  int input_encoding{1};
+  output_encoding_type output_encoding{en_boot};
+  output_encoding_type log_encoding{en_boot};
 
-  bool no_zerowidthspace;
-  bool no_zerowidthelt;
-  bool footnote_hack;
-  bool prime_hack;
-  bool use_all_sizes_sw;
-  bool noent_names;
-  bool interactive_math;
-  bool shell_escape_allowed;
-  bool find_words;
-  bool handling_ra;
-  bool no_undef_mac;
-  bool use_font_elt_sw;
-  bool pack_font_elt_sw;
-  bool distinguish_refer;
-  bool noconfig;
-  bool nomathml;
-  bool dualmath;
-  bool old_phi;
-  bool verbose;    // are we verbose ?
-  bool dverbose;    // are we verbose at begin document ?
-  bool silent;    // are we silent ?
-  bool double_quote_att; // double quote as attribute value delimitor
-  bool use_tcf;
-  bool etex_enabled;
-  bool use_math_variant;
-  bool simplified_ra;
-  bool todo_xml;
+  bool no_zerowidthspace{false};
+  bool no_zerowidthelt{false};
+  bool footnote_hack{true};
+  bool prime_hack{false};
+  bool use_all_sizes_sw{false};
+  bool noent_names{false};
+  bool interactive_math{false};
+  bool shell_escape_allowed{false};
+  bool find_words{false};
+  bool handling_ra{true};
+  bool no_undef_mac{false};
+  bool use_font_elt_sw{false};
+  bool pack_font_elt_sw{false};
+  bool distinguish_refer{true};
+  bool noconfig{false};
+  bool nomathml{false};
+  bool dualmath{false};
+  bool old_phi{false};
+  bool verbose{false};          // are we verbose ?
+  bool dverbose{false};         // are we verbose at begin document ?
+  bool silent{false};           // are we silent ?
+  bool double_quote_att{false}; // double quote as attribute value delimitor
+  bool use_tcf{false};
+  bool etex_enabled{true};
+  bool use_math_variant{false};
+  bool simplified_ra{false};
+  bool todo_xml{true};
+
 public:
   Stack* the_stack;   // pointer to the stack 
   StrHash SH;        // the XML hash table

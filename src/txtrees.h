@@ -69,8 +69,8 @@ public :
 };
 
 class AllIndex {
-  int last_index;
-  int last_iid;
+  int last_index{0};
+  int last_iid{0};
   vector<OneIndex*> value;
 public:
   auto get_index(int j) -> OneIndex * { return value[j]; }

@@ -209,9 +209,7 @@ void Parser::T_if_package_with(bool c) // true for class
 
 
 // Class data ctor
-ClassesData::ClassesData() : 
-  seen_document_class(false), using_default_class(false)
-{
+ClassesData::ClassesData() {
   packages.push_back(new LatexPackage("Fdummy file"));
 }
 

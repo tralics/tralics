@@ -11,26 +11,27 @@
 
 
 class Stats {
-  int st_short; // number of times the free token_list was shortened
-  int st_inc;   // number of times it was increased
-  int st_alloc; // total number of totals in a list
-  int stb_alloc; // number of buffer realloc
-  int st_nb_string; // number of strings created
+  int st_short{0};     // number of times the free token_list was shortened
+  int st_inc{0};       // number of times it was increased
+  int st_alloc{0};     // total number of totals in a list
+  int stb_alloc{0};    // number of buffer realloc
+  int st_nb_string{0}; // number of strings created
   int str_length; // total size of string created
-  int nb_macros, nb_macros_del; // number of macross added end deleted
-  int level_up, level_down; // number of push and pop nest.
-  int sh_boot, sh_find,sh_used;
-  int nb_xboot; // number of elements created at boot tme.
-  int nb_ref, nb_used_ref,nb_label_defined;
-  int nb_href;
-  int nb_hdr;
-  int m_cv, m_k, m_large, m_small;
-  int m_special;
-  int m_trivial;
-  int m_spec_box;
-  int m_allocated,m_destroyed,m_merge;
-  int footnotes;
-  public:
+  int nb_macros{0}, nb_macros_del{0}; // number of macross added end deleted
+  int level_up{0}, level_down{0};     // number of push and pop nest.
+  int sh_boot{0}, sh_find{0}, sh_used{0};
+  int nb_xboot{0}; // number of elements created at boot tme.
+  int nb_ref{0}, nb_used_ref{0}, nb_label_defined{0};
+  int nb_href{0};
+  int nb_hdr{0};
+  int m_cv{0}, m_k{0}, m_large{0}, m_small{0};
+  int m_special{0};
+  int m_trivial{0};
+  int m_spec_box{0};
+  int m_allocated{0}, m_destroyed{0}, m_merge{0};
+  int footnotes{0};
+
+public:
   void one_more_mbox() { m_spec_box++; }
   void one_more_shorten_list() { st_short++; }
   void one_more_increase_list() { st_inc++; }
@@ -60,13 +61,7 @@ class Stats {
   void one_more_allocated() { m_allocated ++; }
   void more_math_destroy(int k) { m_destroyed+= k; }
   void one_more_merge () { m_merge++; }
-  Stats(): st_short(0),st_inc(0), st_alloc(0),stb_alloc(0), st_nb_string(0),
-	   nb_macros(0),nb_macros_del(0), level_up(0), level_down(0),
-	   sh_boot(0), sh_find(0),sh_used(0),nb_xboot(0), nb_ref(0), 
-	   nb_used_ref(0), nb_label_defined(0),nb_href(0),nb_hdr(0),
-	   m_cv(0), m_k(0), m_large(0), m_small(0), m_special(0),
-	   m_trivial(0), m_spec_box(0),
-	   m_allocated (0), m_destroyed (0),m_merge(0),footnotes(0) {};
+  Stats(){};
   void token_stats();
   void io_convert_stats();
   void print_module_stats();

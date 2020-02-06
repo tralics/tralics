@@ -41,12 +41,12 @@ public:
 
 // This is a table of AttList. We should use a vector instead
 class AttListTable {
-  AttList * table; // the table
+  AttList *table{0}; // the table
   Xml*  xtable;
-  int len; // the length of the table
-  int size; // the size of the table
- public:
-  AttListTable(): table(0), len(0), size (0) {}
+  int len{0};  // the length of the table
+  int size{0}; // the size of the table
+public:
+  AttListTable() {}
   void destroy();
   void resize();
   void init();

@@ -14,9 +14,9 @@
 
 // this is a wrapper around an int
 class ScaledInt {
-  int value; // the integer, considered as a scaled number
- public:
-  ScaledInt() : value(0) {}
+  int value{0}; // the integer, considered as a scaled number
+public:
+  ScaledInt() {}
   void set_value(int i) { value = i; }
   ScaledInt (int v): value (v) {}
   auto get_value() const -> int { return value; }
@@ -47,10 +47,10 @@ class Glue {
   ScaledInt width; // natural width (2.3)
   ScaledInt shrink; // shrink (6.7)
   ScaledInt stretch; // stretch (4.5)
-  glue_spec shrink_order; // fill, symbolically
-  glue_spec stretch_order; // pt, symbolically
- public:
-  Glue(): shrink_order(glue_spec_pt), stretch_order(glue_spec_pt) {}
+  glue_spec shrink_order{glue_spec_pt};  // fill, symbolically
+  glue_spec stretch_order{glue_spec_pt}; // pt, symbolically
+public:
+  Glue() {}
   auto get_width() const -> ScaledInt { return width; }
   auto get_shrink() const -> ScaledInt { return shrink; }
   auto get_stretch() const -> ScaledInt { return stretch; }
@@ -79,10 +79,10 @@ class Glue {
 
 // The value of the number is sign*(i+f/2^16);
 class RealNumber {
-  bool negative; // true if negative
-  int ipart;     // fractional part
-  int fpart;     // integer part, is <2^16
- public:
+  bool negative{false}; // true if negative
+  int ipart{0};         // fractional part
+  int fpart{0};         // integer part, is <2^16
+public:
   void convert_decimal_part(int k, int*table);
   void set_ipart(int x) { ipart = x; }
   void set_fpart(int x) { fpart = x; }
@@ -90,7 +90,7 @@ class RealNumber {
   auto get_fpart() const -> int { return fpart; }
   void change_sign() { negative = !negative; }
   void set_negative(bool x) { negative = x; }
-  RealNumber() : negative(false), ipart(0), fpart(0) {}
+  RealNumber() {}
   void set_neg() { negative = true ; }
   void change_sign_i() { ipart = -ipart; }
   auto get_negative() -> bool { return negative; };
@@ -103,9 +103,9 @@ class SthInternal {
   Glue glue_val;  // value if it is a glue
   ScaledInt int_val;    // value if it is a dimension or an integer
   TokenList token_val; // value if it is a token list
-  internal_type type; // this says what the object is.
- public:
-  SthInternal(): int_val(0), type(it_int) {}
+  internal_type type{it_int}; // this says what the object is.
+public:
+  SthInternal() : int_val(0) {}
   auto is_int() const -> bool { return type == it_int; }
   auto is_mu() const -> bool { return type == it_mu; }
   auto is_glue() const -> bool { return type == it_glue; }
@@ -162,19 +162,19 @@ class SthInternal {
 class ScanSlot
 {
 public:
-  internal_type expr_type;
+  internal_type expr_type{it_int};
   SthInternal expr_so_far;
-  SthInternal term_so_far;  
-  scan_expr_t expr_state;
-  scan_expr_t term_state;
-  int numerator;
+  SthInternal term_so_far;
+  scan_expr_t expr_state{se_none};
+  scan_expr_t term_state{se_none};
+  int numerator{0};
+
 public:
   ScanSlot(internal_type L, SthInternal E,SthInternal T, 
 	    scan_expr_t R,scan_expr_t S, int N): 
     expr_type(L), expr_so_far(E),term_so_far(T),expr_state(R), term_state(S),
     numerator(N) {}
-  ScanSlot(): expr_type(it_int), expr_state(se_none), term_state(se_none),
-    numerator(0){}
+  ScanSlot() {}
   auto get_next_type() const -> internal_type {
     return term_state == se_none ? expr_type : it_int;
   }

@@ -12,19 +12,18 @@
 // This is how Tralics interprets a font
 class FontInfo {
   int size;  // size, between 1 and 11 times 2048
-  int tsize; // is fi_normal_size, etc 
-  int shape; // it, sl, sc, or normal
-  int family;// tt, sf, or normal
-  int series;// bf or normal
-  int packed;// packed value of the font
-  int level; // the level, as for any EQTB object
+  int tsize{0};          // is fi_normal_size, etc
+  int shape{0};          // it, sl, sc, or normal
+  int family{0};         // tt, sf, or normal
+  int series{0};         // bf or normal
+  int packed{0};         // packed value of the font
+  int level{level_zero}; // the level, as for any EQTB object
   int old;   // previous value
   Istring color; // current color
   Istring old_color; // previous color
-  bool stackval; // is the value on the stack ok ?
- public:
-  FontInfo() : size(6*2048), tsize(0), shape(0), family(0), series(0), 
-	       packed(0), level(level_zero), color(Istring()), stackval(true) {}
+  bool stackval{true}; // is the value on the stack ok ?
+public:
+  FontInfo() : size(6 * 2048), color(Istring()) {}
   auto shape_change() const -> name_positions;
   auto shape_name() const -> String;
   auto size_change() const -> name_positions;

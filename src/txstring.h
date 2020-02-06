@@ -59,9 +59,10 @@ class StrHash {
 
 
 class Istring {
-  int value;
+  int value{0};
+
 public:
-  Istring() : value(0) {};
+  Istring(){};
   Istring(name_positions N) : value(the_names[N].value) {}
   Istring(const Buffer& X);
   explicit Istring(int N) : value(N) {}
