@@ -20,54 +20,49 @@ public :
   Utf8Char() : value(0) {}
 public:
   void make_invalid() { value = 0xFFFF; } // Not a Unicode char
-  bool is_invalid()const { return value == 0xFFFF; } 
-  uint get_value() const { return value; }
-  uchar ascii_value() const { return uchar(value); }
-  bool is_ascii() const { return value<128; }
-  bool is_delete() const { return value==127; }
-  bool is_control() const { return value<32; }
-  bool is_null() const { return value == 0; }
-  bool is_small() const { return value < 256; }
-  bool is_big() const { return value > 65535; }
-  bool is_verybig() const { return value > 0x1FFFF; }
-  bool non_null() const { return value != 0; }
-  uchar char_val() const { return uchar(value); }
-  bool is_digit() const { return '0'<= value && value <= '9'; }
-  int  val_as_digit() const { return value -'0'; } 
-  bool is_hex() const { return 'a'<= value && value <= 'f'; }
-  int  val_as_hex() const { return value -'a' +10; } 
-  bool is_Hex() const { return 'A'<= value && value <= 'F'; }
-  int  val_as_Hex() const { return value -'A' +10; }
-  int  hex_val () const;
-  bool is_letter() const { return is_ascii() && ::is_letter(value); }
-  bool is_upper_case() const {  return  'A' <= value && value <= 'Z';}
-  bool is_lower_case() const {  return  'a' <= value && value <= 'z';}
-  bool is_space() const { return value==' ' || value =='\t' || value =='\n'; }
-  Utf8Char to_lower() const {  
+  auto is_invalid() const -> bool { return value == 0xFFFF; }
+  auto get_value() const -> uint { return value; }
+  auto ascii_value() const -> uchar { return uchar(value); }
+  auto is_ascii() const -> bool { return value < 128; }
+  auto is_delete() const -> bool { return value == 127; }
+  auto is_control() const -> bool { return value < 32; }
+  auto is_null() const -> bool { return value == 0; }
+  auto is_small() const -> bool { return value < 256; }
+  auto is_big() const -> bool { return value > 65535; }
+  auto is_verybig() const -> bool { return value > 0x1FFFF; }
+  auto non_null() const -> bool { return value != 0; }
+  auto char_val() const -> uchar { return uchar(value); }
+  auto is_digit() const -> bool { return '0' <= value && value <= '9'; }
+  auto val_as_digit() const -> int { return value - '0'; }
+  auto is_hex() const -> bool { return 'a' <= value && value <= 'f'; }
+  auto val_as_hex() const -> int { return value - 'a' + 10; }
+  auto is_Hex() const -> bool { return 'A' <= value && value <= 'F'; }
+  auto val_as_Hex() const -> int { return value - 'A' + 10; }
+  auto hex_val() const -> int;
+  auto is_letter() const -> bool { return is_ascii() && ::is_letter(value); }
+  auto is_upper_case() const -> bool { return 'A' <= value && value <= 'Z'; }
+  auto is_lower_case() const -> bool { return 'a' <= value && value <= 'z'; }
+  auto is_space() const -> bool {
+    return value == ' ' || value == '\t' || value == '\n';
+  }
+  auto to_lower() const -> Utf8Char {
     if('A' <= value && value <= 'Z') return Utf8Char(value + ('a'-'A')); 
     else return *this;
   }
 };
 
-
-inline bool operator ==(const Utf8Char& a, const Utf8Char& b) 
-{ 
-  return a.get_value() == b.get_value(); 
+inline auto operator==(const Utf8Char &a, const Utf8Char &b) -> bool {
+  return a.get_value() == b.get_value();
 }
 
-inline bool operator !=(const Utf8Char& a, const Utf8Char& b) 
-{ 
-  return a.get_value() != b.get_value(); 
+inline auto operator!=(const Utf8Char &a, const Utf8Char &b) -> bool {
+  return a.get_value() != b.get_value();
 }
 
-
-inline bool operator ==(const Utf8Char& a, const unsigned char& b) 
-{ 
-  return a.get_value() == uint(b); 
+inline auto operator==(const Utf8Char &a, const unsigned char &b) -> bool {
+  return a.get_value() == uint(b);
 }
 
-inline bool operator !=(const Utf8Char& a, const unsigned char& b) 
-{ 
-  return a.get_value() != uint(b); 
+inline auto operator!=(const Utf8Char &a, const unsigned char &b) -> bool {
+  return a.get_value() != uint(b);
 }
-

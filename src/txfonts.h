@@ -25,35 +25,37 @@ class FontInfo {
  public:
   FontInfo() : size(6*2048), tsize(0), shape(0), family(0), series(0), 
 	       packed(0), level(level_zero), color(Istring()), stackval(true) {}
-  name_positions shape_change() const;
-  String shape_name() const;
-  name_positions size_change() const;
-  String size_name() const;
-  name_positions family_change() const;
-  String family_name() const;
-  name_positions series_change() const;
-  String series_name() const ;
+  auto shape_change() const -> name_positions;
+  auto shape_name() const -> String;
+  auto size_change() const -> name_positions;
+  auto size_name() const -> String;
+  auto family_change() const -> name_positions;
+  auto family_name() const -> String;
+  auto series_change() const -> name_positions;
+  auto series_name() const -> String;
   void not_on_stack() { stackval = false; }
   void is_on_stack() { stackval = true; }
   void update_old() { old = packed; old_color = color;}
-  bool is_ok () { return  (old&fi_data_mask) == (packed&fi_data_mask) 
-      && stackval &&color==old_color;}
+  auto is_ok() -> bool {
+    return (old & fi_data_mask) == (packed & fi_data_mask) && stackval &&
+           color == old_color;
+  }
   void pack() { packed = tsize+shape+family+series+size;}
   void unpack();
   void change_size(int);
   void kill() { shape =0; family = 0; series = 0;}
   void see_font_change(subtypes);
-  String show_font();
-  int get_level() { return level; }
-  int get_size() { return size>>11; }
+  auto show_font() -> String;
+  auto get_level() -> int { return level; }
+  auto get_size() -> int { return size >> 11; }
   void set_level(int k) { level = k;}
   void set_packed(int k) { packed = k;}
-  int get_old() { return old; }
-  Istring get_old_color() { return old_color; }
-  int get_packed() { return packed; }
+  auto get_old() -> int { return old; }
+  auto get_old_color() -> Istring { return old_color; }
+  auto get_packed() -> int { return packed; }
   void set_old_from_packed() { old = packed;}
   void set_color(Istring c) { color = c; }
-  Istring get_color() const  { return color; }
+  auto get_color() const -> Istring { return color; }
   void ltfont(string s, subtypes c);
 };
 
@@ -97,7 +99,7 @@ class TexFont {
   TexFont(string, int,int); 
 
   void realloc_param(int);
-  bool its_me(string, int,int) const;
+  auto its_me(string, int, int) const -> bool;
   void make_null();
   void load();
 };
@@ -107,13 +109,13 @@ class TexFonts {
  public:
   TexFonts() { data[0] = new TexFont("",0,0); last_idx = 0;}
   TexFont* data[nb_tex_fonts];
-  bool is_valid(int);
-  string name(int);
+  auto is_valid(int) -> bool;
+  auto name(int) -> string;
   void full_name(Buffer &,int k);
-  int get_int_param(int k, int m);
-  ScaledInt get_dimen_param(int k, int m);
+  auto get_int_param(int k, int m) -> int;
+  auto get_dimen_param(int k, int m) -> ScaledInt;
   void set_int_param(int,int,int);
   void set_dimen_param(int,int,ScaledInt);
-  int find_font(string,int,int);
-  int define_a_new_font(string n, int a, int s);
+  auto find_font(string, int, int) -> int;
+  auto define_a_new_font(string n, int a, int s) -> int;
 };

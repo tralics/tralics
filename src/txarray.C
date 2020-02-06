@@ -85,8 +85,7 @@ void Parser::T_newcolumn_type()
 // Assume that T is the token defined and stored by the procedures above
 // This returns -1 in case something strange happened (like redefinition)
 // returns the number of arguments of the function otherwise.
-int Parser::nct_aux(Token T, TokenList& body)
-{
+auto Parser::nct_aux(Token T, TokenList &body) -> int {
   see_cs_token(T);
   if(!cur_cmd_chr.is_user()) 
     return -1; // bad
@@ -138,8 +137,8 @@ void Parser::expand_nct(TokenList&L)
 // Here we have to find the character c, and expand the token T.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-bool token_ns::expand_nct(TokenList&L,Token T, int n, uchar c, int& MX,TokenList&body)
-{ 
+auto token_ns::expand_nct(TokenList &L, Token T, int n, uchar c, int &MX,
+                          TokenList &body) -> bool {
   TokenList res;
   bool result = false;
   TokenList Table[10]; // arguments of the commands 
@@ -170,8 +169,7 @@ bool token_ns::expand_nct(TokenList&L,Token T, int n, uchar c, int& MX,TokenList
 }
 
 // Prints a (ch_class, ch_num) pair for debug.
-String NewArray::dump_slot()
-{
+auto NewArray::dump_slot() -> String {
   switch(ch_class) {
   case chc_cell: 
     switch(ch_num) {
@@ -409,8 +407,7 @@ void NewArray::ac_maybe_finish_multi(bool& seen)
 // Return true if this is a space.
 // otherwise get the next token in current_token
 // if it is a brace, get the list in current_list
-bool NewArray::ac_next()
-{
+auto NewArray::ac_next() -> bool {
   current_token = preamble.front();
   if(current_token.cmd_val()==10) {
     preamble.pop_front();
@@ -431,7 +428,6 @@ bool NewArray::ac_next()
   }
   return false;
 }
-
 
 // This starts or ends a cell, or does both
 void Stack::push_pop_cell(int dir)
@@ -587,8 +583,7 @@ void Parser::T_start_tabular (subtypes c)
 // sets cline_first and cline_last;
 // fills errbuf and returns a code in case of error
 
-bool Parser::scan_pair_ints (Token T, TokenList&L)
-{
+auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
   back_input(hash_table.relax_token);
   back_input(L); 
   cline_first = scan_int(T);
@@ -612,8 +607,7 @@ bool Parser::scan_pair_ints (Token T, TokenList&L)
 // 0:none, 1: hline, 2: cline, 
 // may set in_hlinee and hlinee_width
 
-int Parser::T_hline_parse(subtypes c)
-{
+auto Parser::T_hline_parse(subtypes c) -> int {
   in_hlinee = false;
   Token T = cur_tok;
   if(c== one_code) { // cline
@@ -660,12 +654,10 @@ int Parser::T_hline_parse(subtypes c)
   return rt;
 }
 
-
 // Case of cline, placed after a row. If action is false, we check whether the
 // row, including the spans of the cells, is adapted to the pattern.
 // If action is true, we do something
-bool Xml::try_cline(bool action)
-{
+auto Xml::try_cline(bool action) -> bool {
   int a = cline_first-1;
   bool a_ok = false; // true after skip
   int len = size();
@@ -693,8 +685,7 @@ bool Xml::try_cline(bool action)
 }
 
 // Puts the total span in res, return false in case of trouble
-bool Xml::total_span(int& res) const
-{
+auto Xml::total_span(int &res) const -> bool {
   int r = 0;
   int len = size();
   for(int k=0;k<len;k++){
@@ -715,8 +706,7 @@ bool Xml::total_span(int& res) const
 // Special case when \\ started a row; we may have an empty cell followed by
 // newline. Returns false if the cell is non-empty, has a span or a top border
 // If action is true, we kill the cell/newline
-bool Xml::try_cline_again (bool action)
-{
+auto Xml::try_cline_again(bool action) -> bool {
   bool seen_cell = false;
   int len = size();
   for(int k=0;k<len;k++){
@@ -830,8 +820,7 @@ void Parser::T_hline(subtypes c)
 // This is executed when we see \end{tabular}
 // If true, the \end{tabular} is not executed.
 // and we have to push back the `\end{tabular}' tokens
-bool Parser::false_end_tabular(const string& s)
-{
+auto Parser::false_end_tabular(const string &s) -> bool {
   if(the_stack.is_frame(np_cell)) {
     TokenList L = token_ns::string_to_list(s,true);
     back_input(L);
@@ -841,7 +830,6 @@ bool Parser::false_end_tabular(const string& s)
   }
   return false;
 }
-
 
 // This is the code of \end{tabular}
 void Parser::T_end_tabular(subtypes c) 

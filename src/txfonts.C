@@ -18,8 +18,7 @@ const char* txfonts_rcsid=
 // This returns the position of the name of a font attribute
 // for use as an XML attribute. 
 // This function deals with the size.
-name_positions FontInfo::size_change() const
-{
+auto FontInfo::size_change() const -> name_positions {
   if(tsize == fi_small_size) return np_font_small;
   else if(tsize == fi_big_size) return np_font_large;
   else if(tsize==0) return cst_empty;
@@ -40,8 +39,7 @@ name_positions FontInfo::size_change() const
 }
 
 // Idem. This function deals with the shape.
-name_positions FontInfo::shape_change() const
-{
+auto FontInfo::shape_change() const -> name_positions {
   if(shape == fi_it_shape) return np_font_it;
   else if(shape == fi_sl_shape) return np_font_slanted; 
   else if(shape == fi_sc_shape) return np_font_sc;
@@ -50,8 +48,7 @@ name_positions FontInfo::shape_change() const
 }
 
 // Idem. This function deals with the family.
-name_positions FontInfo::family_change() const
-{
+auto FontInfo::family_change() const -> name_positions {
   if(family == fi_sf_family) return np_font_sansserif;
   else if(family == fi_tt_family) return np_font_tt;
   else return cst_empty;
@@ -59,8 +56,7 @@ name_positions FontInfo::family_change() const
 }
 
 // Idem. This function deals with the series.
-name_positions FontInfo::series_change() const
-{ 
+auto FontInfo::series_change() const -> name_positions {
   if(series == fi_bf_series) return np_font_bold;
   else if(series == fi_bx_series) return np_font_boldextended;
   else if(series == fi_sb_series) return np_font_semibold;
@@ -70,8 +66,7 @@ name_positions FontInfo::series_change() const
 
 // This function returns a font attribute, as a LaTeX command.
 
-String FontInfo::size_name() const
-{
+auto FontInfo::size_name() const -> String {
   if(tsize == fi_small_size) return "\\small";
   else if(tsize == fi_small_size1) return "\\small";
   else if(tsize == fi_big_size) return "\\large";
@@ -90,8 +85,7 @@ String FontInfo::size_name() const
 }
 
 // Idem. This function deals with the shape.
-String FontInfo::shape_name() const
-{
+auto FontInfo::shape_name() const -> String {
   if(shape == fi_it_shape) return "\\itshape";
   else if(shape == fi_sl_shape) return "\\slshape";
   else if(shape == fi_sc_shape) return "\\scshape";
@@ -99,16 +93,14 @@ String FontInfo::shape_name() const
 }
 
 // Idem. This function deals with the family.
-String FontInfo::family_name() const
-{
+auto FontInfo::family_name() const -> String {
   if(family == fi_sf_family) return "\\sffamily";
   else if(family == fi_tt_family) return "\\ttfamily";
   else return 0;
 }
 
 // Idem. This function deals with the series. (the function is inline).
-String FontInfo::series_name() const 
-{ 
+auto FontInfo::series_name() const -> String {
   if(series==fi_bf_series) return "\\bfseries";
   else if(series==fi_bx_series) return "\\boldextendedseries";
   else if(series==fi_sb_series) return "\\semiboldseries";
@@ -117,8 +109,7 @@ String FontInfo::series_name() const
 }
 
 // This prints everything.
-ostream& operator<<(ostream&fp, const FontInfo& L)
-{
+auto operator<<(ostream &fp, const FontInfo &L) -> ostream & {
   String s;
   s = L.size_name();
   if(s) fp << s;
@@ -131,12 +122,10 @@ ostream& operator<<(ostream&fp, const FontInfo& L)
   return fp;
 }
 
-Logger& operator <<(Logger& X,  const FontInfo&x)
-{
+auto operator<<(Logger &X, const FontInfo &x) -> Logger & {
   *(X.fp) << x;
   return X;
 }
-
 
 // This unpacks the font. 
 void FontInfo::unpack()
@@ -238,8 +227,7 @@ void FontInfo::ltfont(string s,subtypes c)
 // tex fonts
 
 // Finds a font given by name and size, or creates one if needed
-int TexFonts::find_font(string n, int a, int s) 
-{
+auto TexFonts::find_font(string n, int a, int s) -> int {
   for(uint i=0;i<nb_tex_fonts;i++)
     if(data[i] && data[i]->its_me(n,a,s)) return i;
   return define_a_new_font(n,a,s);
@@ -258,8 +246,7 @@ TexFont::TexFont(string n, int a, int s)
 }
 
 // This allocates a new slot in the font list.
-int TexFonts::define_a_new_font(string n, int a, int s) 
-{
+auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
   if(last_idx+1>=nb_tex_fonts) {
     the_parser.parse_error("fatal: font table overflow");
     return 0;
@@ -276,8 +263,7 @@ void TexFont::load()
 }
 
 // This compares two fonts
-bool TexFont::its_me(string n, int a, int s) const
-{
+auto TexFont::its_me(string n, int a, int s) const -> bool {
   return name==n && at_val == a && scaled_val ==s;
 }
 
@@ -311,21 +297,18 @@ void TexFont::make_null()
 }
 
 // True if k is a valid font ID
-bool TexFonts::is_valid(int k)
-{
+auto TexFonts::is_valid(int k) -> bool {
   if(k<0 || k>= int(nb_tex_fonts)) return false;
   if(!data[k]) return false;
   return true;
 }
 
 // Returns name of font
-string TexFonts::name(int k)
-{
+auto TexFonts::name(int k) -> string {
   if(k==0) return "nullfont";
   if(!is_valid(k)) return "";
   return data[k]->name;
 }
-
 
 // Returns name of font
 void TexFonts::full_name(Buffer& B,int k)
@@ -343,16 +326,14 @@ void TexFonts::full_name(Buffer& B,int k)
 }
 
 // Returns an integer parameter for a font
-int TexFonts::get_int_param(int ft, int pos)
-{
+auto TexFonts::get_int_param(int ft, int pos) -> int {
   if(!is_valid(ft)) return -1;
   if(pos==0) return data[ft]->hyphen_char;
   else return data[ft]->skew_char;
 }
 
 // Returns a dimension parameter for a font
-ScaledInt TexFonts::get_dimen_param(int ft, int pos)
-{
+auto TexFonts::get_dimen_param(int ft, int pos) -> ScaledInt {
   if(!is_valid(ft)) return 0;
   if(pos<0 || pos>= data[ft]->param_len) return 0;
   return data[ft]->param_table[pos];

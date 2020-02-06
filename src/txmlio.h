@@ -18,8 +18,8 @@ class EntityDef{
   string value;
 public:
   EntityDef(string a, string b) : name(a), value(b) {}
-  bool has_name(const string& x) const { return x== name; }
-  string get_val() { return value; }
+  auto has_name(const string &x) const -> bool { return x == name; }
+  auto get_val() -> string { return value; }
 };
 
 class XmlIO {
@@ -44,12 +44,12 @@ class XmlIO {
   int nb_cond;
   bool eof_ok;
 private:
-  Utf8Char peek_char();
+  auto peek_char() -> Utf8Char;
   void skip_char();
-  Utf8Char next_char();
+  auto next_char() -> Utf8Char;
   void skip_space();
   void next_line();
-   bool at_eol() { return input_line_pos>= cur_line_len; }
+  auto at_eol() -> bool { return input_line_pos >= cur_line_len; }
   void scan_name();
   void scan_name(uchar);
   void scan_name(uchar,uchar);
@@ -64,7 +64,7 @@ private:
   void parse_dec_cdata();
   void parse_dec_conditional();
   void parse_dec_notation();
-  bool parse_sys_pub();
+  auto parse_sys_pub() -> bool;
   void expect (String);
   void parse_pi();
   void parse_tag();
@@ -73,10 +73,10 @@ private:
   void parse_quoted();
   void pop_this();
   void flush_buffer();
-  bool expand_PEReference();
+  auto expand_PEReference() -> bool;
   void run();
 public:
   XmlIO(Parser*P) : cur_char(' ') {}
-  bool init(const string&);
-  Xmlp prun();
+  auto init(const string &) -> bool;
+  auto prun() -> Xmlp;
 };

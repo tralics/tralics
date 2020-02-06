@@ -18,18 +18,18 @@ const char* txaccent_rcsid =
 
 
 namespace accent_ns {
-  Token fetch_accent(int chr, int accent_code);
-  Token fetch_double_accent(int chr, int);
-  int combine_accents(int,int);
-  int double_a_accent(int acc3);
-  int double_e_accent(int acc3);
-  int double_o_accent(int acc3);
-  int double_u_accent(int acc3);
-  int double_other_accent(int,int acc3);
-  void boot_accents ();
-  Token mk_acc(uint s) ;
-  void special_acc_hack(TokenList&y);
-  Token special_double_acc(int chr,int acc);
+auto fetch_accent(int chr, int accent_code) -> Token;
+auto fetch_double_accent(int chr, int) -> Token;
+auto combine_accents(int, int) -> int;
+auto double_a_accent(int acc3) -> int;
+auto double_e_accent(int acc3) -> int;
+auto double_o_accent(int acc3) -> int;
+auto double_u_accent(int acc3) -> int;
+auto double_other_accent(int, int acc3) -> int;
+void boot_accents();
+auto mk_acc(uint s) -> Token;
+void special_acc_hack(TokenList &y);
+auto special_double_acc(int chr, int acc) -> Token;
 
 // Accent tables. Holds the result of the expansion
   Token accent_cir [nb_accents]; // \^
@@ -60,8 +60,7 @@ namespace accent_ns {
 
 // Returns the token associated to acc for character chr.
 // Return zero-token in case of failure
-Token accent_ns::fetch_accent(int chr, int acc)
-{
+auto accent_ns::fetch_accent(int chr, int acc) -> Token {
   switch(acc) {
   case '\'': return accent_acute[chr]; 
   case '`': return accent_grave[chr]; 
@@ -92,8 +91,7 @@ Token accent_ns::fetch_accent(int chr, int acc)
 // For the case of \'\^e, construct an accent code.
 // It is assumed that the order is irrelevant.
 
-int accent_ns::combine_accents(int acc1, int acc2)
-{
+auto accent_ns::combine_accents(int acc1, int acc2) -> int {
   // start with acute and something
   if(acc1=='\'' && acc2 =='~') return 9;
   else if(acc2=='\'' && acc1 =='~') return 9;
@@ -170,8 +168,7 @@ int accent_ns::combine_accents(int acc1, int acc2)
 }
 
 // Fetches the position of a double accent on capital O
-int accent_ns::double_o_accent(int acc3)
-{
+auto accent_ns::double_o_accent(int acc3) -> int {
   switch(acc3) {
   case 1: return Odiamacro_cc;
   case 5: return Odotmacro_cc;
@@ -194,11 +191,10 @@ int accent_ns::double_o_accent(int acc3)
   case 30: return  Odotyy_cc;
   default: return unused_accent_even_cc;
   }
-} 
+}
 
 // Fetches the position of a double accent on capital E
-int accent_ns::double_e_accent(int acc3)
-{
+auto accent_ns::double_e_accent(int acc3) -> int {
   if(acc3==10) return  Ebaracute_cc;
   if(acc3==12) return  Eciracute_cc;
   if(acc3==13) return  Ebargrave_cc;
@@ -210,10 +206,8 @@ int accent_ns::double_e_accent(int acc3)
   return unused_accent_even_cc;
 }
 
-
 // Fetches the position of a double accent on capital A
-int accent_ns::double_a_accent(int acc3)
-{
+auto accent_ns::double_a_accent(int acc3) -> int {
   if(acc3==1) return Adiamacro_cc;
   if(acc3==5) return Adotmacro_cc;
   if(acc3==12) return Aciracute_cc;
@@ -230,8 +224,7 @@ int accent_ns::double_a_accent(int acc3)
 }
 
 // Fetches the position of a double accent on capital U
-int accent_ns::double_u_accent(int acc3)
-{
+auto accent_ns::double_u_accent(int acc3) -> int {
   if(acc3==1) return Udiamacro_cc;
   if(acc3==2) return Udiaacute_cc;
   if(acc3==3) return Udiacaron_cc;
@@ -246,8 +239,7 @@ int accent_ns::double_u_accent(int acc3)
 }
 
 // Fetches the position of a double accent on a, not in the list above
-int accent_ns::double_other_accent(int a, int acc3)
-{
+auto accent_ns::double_other_accent(int a, int acc3) -> int {
   if(a=='I') {
     if(acc3==2) return  Itremaacute_cc;
   }
@@ -274,8 +266,7 @@ int accent_ns::double_other_accent(int a, int acc3)
 // The result is a token (character or command) from
 // the other_accent table defined above; or empty token in case of failure.
 // Assumes that lower case letters follow upper case ones.
-Token accent_ns::fetch_double_accent(int a, int acc3)
-{
+auto accent_ns::fetch_double_accent(int a, int acc3) -> Token {
   if(a=='U') return other_accent[double_u_accent(acc3)];
   if(a=='u') return other_accent[double_u_accent(acc3)+1];
   if(a=='A') return other_accent[double_a_accent(acc3)];
@@ -334,8 +325,7 @@ void accent_ns::special_acc_hack(TokenList&y)
   }
 }
 
-Token accent_ns::special_double_acc(int chr,int acc)
-{
+auto accent_ns::special_double_acc(int chr, int acc) -> Token {
   if(acc=='`' && chr=='*') return special_double[0];
   if(acc=='`' && chr=='.') return special_double[1];
   if(acc=='\'' && chr=='*') return special_double[2];
@@ -358,8 +348,6 @@ Token accent_ns::special_double_acc(int chr,int acc)
   if(acc=='t' && chr=='*') return special_double[19];
   return Token();
 }
-
-
 
 // This implements \'e, or \'{a} or \a{'}{e}, \href{\~grimm}
 // or \'{\= u}, a double accent
@@ -499,12 +487,10 @@ void Parser::E_accent ()
 }
 
 
-// Simple case of \^a that gives \342. 
-inline Token accent_ns::mk_acc(uint s) 
-{
+// Simple case of \^a that gives \342.
+inline auto accent_ns::mk_acc(uint s) -> Token {
   return Token(other_t_offset, Utf8Char(s));
 }
-
 
 // Creates the table for accents.
 void accent_ns::boot_accents ()

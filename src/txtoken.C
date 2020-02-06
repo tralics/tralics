@@ -26,7 +26,7 @@ namespace classes_ns {
 }
 
 namespace token_ns {
-  int length_normalise(TokenList&);
+auto length_normalise(TokenList &) -> int;
 }
 
 
@@ -65,8 +65,7 @@ void Stats::token_stats ()
 
 // Converts an integer into a token list, catcode 12
 // Assumes n>0, otherwise result is empty.
-TokenList token_ns::posint_to_list(int n)
-{
+auto token_ns::posint_to_list(int n) -> TokenList {
   TokenList L;
   if(n<=0) return L;
   while(n != 0) {
@@ -90,8 +89,8 @@ void token_ns::push_back_i (TokenList& L,int n)
 // Finds the first M, not escaped by E in the list L.
 // If so, puts the prefix in z, removes it from L
 // A pair EX is replaced by X in Z if S is false
-bool token_ns::split_at(Token e, Token m, Token m1, TokenList&L, TokenList& z,bool s)
-{
+auto token_ns::split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z,
+                        bool s) -> bool {
   z.clear();
   while(!L.empty()) {
     Token x = L.front();
@@ -112,8 +111,7 @@ bool token_ns::split_at(Token e, Token m, Token m1, TokenList&L, TokenList& z,bo
 
 // Checks that x is a brace, increases or decreases brace level
 // returns true if this is the toplevel closing brace
-bool token_ns::check_brace(Token x, int& bl)
-{
+auto token_ns::check_brace(Token x, int &bl) -> bool {
   if(x.is_a_brace()) {
     if(x.is_a_left_brace()) {
       bl++;
@@ -141,9 +139,8 @@ void token_ns::replace(TokenList& A, Token x1, Token x2)
 
 // Replace space by x2,x3  at brace-level zero.
 // Two consecutive space tokens are replaced by
-// a single occurence. 
-int token_ns::replace_space(TokenList& A, Token x2, Token x3)
-{
+// a single occurence.
+auto token_ns::replace_space(TokenList &A, Token x2, Token x3) -> int {
   remove_first_last_space(A);
   token_iterator C = A.begin();
   token_iterator E = A.end();
@@ -167,8 +164,7 @@ int token_ns::replace_space(TokenList& A, Token x2, Token x3)
 }
 
 // True if the Token is upper case or lower case x
-bool Token::no_case_letter(char x) const
-{
+auto Token::no_case_letter(char x) const -> bool {
   if(cmd_val()!=letter_catcode) return false;
   int c = val_as_letter();
   if(c==x) return true;
@@ -190,8 +186,7 @@ bool Token::no_case_letter(char x) const
 // Finds an empty slot in the hash table; fills it with name s.
 // Return value is hash_used
 // The string s must be a permanent string
-int Hashtab::find_empty(String s)
-{
+auto Hashtab::find_empty(String s) -> int {
   for(;;) {
     hash_used--;
     if(hash_used<=0) {
@@ -218,8 +213,7 @@ int Hashtab::find_empty(String s)
 // Returns the hash location of the name in the buffer. 
 // If a new slot has to be created, uses the string name, if not empty.
 // The string name must be a permanent string
-int Hashtab::hash_find(const Buffer&b, String name)
-{
+auto Hashtab::hash_find(const Buffer &b, String name) -> int {
   int p = b.hashcode(hash_prime);
   for(;;) {
     if(Text[p] && b == Text[p]) return p;
@@ -230,10 +224,8 @@ int Hashtab::hash_find(const Buffer&b, String name)
   return find_aux(p,name);
 }
 
-
 // Finds the object in the buffer B.
-int Hashtab::hash_find()
-{
+auto Hashtab::hash_find() -> int {
   int p = B.hashcode(hash_prime);
   for(;;) {
     if(Text[p] && B == Text[p]) return p;
@@ -247,8 +239,7 @@ int Hashtab::hash_find()
 // If Text[p] is empty, then p is not Next[q] so p is the hash code of s
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
-int Hashtab::find_aux(int p, String name)
-{
+auto Hashtab::find_aux(int p, String name) -> int {
   if(Text[p]) {
     int q = find_empty(name);
     Next[p] = q;
@@ -262,9 +253,8 @@ int Hashtab::find_aux(int p, String name)
 
 // Defines the command named a, but hash_find will not find it.
 // The string a must be a permanent string
-// This must be used at bootstrap code. 
-Token Hashtab::nohash_primitive(String a, CmdChr b)
-{
+// This must be used at bootstrap code.
+auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
   hash_used --;
   int p = hash_used;
   if(Text[p]  || p < hash_prime) {
@@ -282,8 +272,7 @@ Token Hashtab::nohash_primitive(String a, CmdChr b)
 }
 
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
-int Buffer::hashcode(int prime) const
-{
+auto Buffer::hashcode(int prime) const -> int {
   int j = 1;
   unsigned int h = (unsigned char) (buf[0]);
   if(h==0) return 0;
@@ -297,23 +286,20 @@ int Buffer::hashcode(int prime) const
 
 // Returns the hash table location of the string s.
 // The string must be a non-empty permanent string
-Token Hashtab::locate(String s)
-{
+auto Hashtab::locate(String s) -> Token {
   if(!s[1]) return Token(uchar(s[0]) + single_offset);
   B << bf_reset << s; 
   return Token(hash_find(B,s) + hash_offset);
 }
 
-Token Hashtab::locate(const string& s)
-{
+auto Hashtab::locate(const string &s) -> Token {
   if(s.size()==1) return Token(uchar(s[0]) + single_offset);
   B << bf_reset << s; 
   return locate(B);
 }
 
 // This returns the token associated to the string in the buffer.
-Token Hashtab::locate(const Buffer&b)
-{
+auto Hashtab::locate(const Buffer &b) -> Token {
   if(b.size()==0) return Token(null_tok_val);
   Utf8Char c = b.unique_character();
   if(c.non_null()) return Token(c.get_value() + single_offset);
@@ -323,8 +309,7 @@ Token Hashtab::locate(const Buffer&b)
 // This returns true if the token associated to the string in the buffer
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
-bool Hashtab::is_defined(const Buffer&b)
-{
+auto Hashtab::is_defined(const Buffer &b) -> bool {
   int T=0;
   if(b.size()==0) T = null_tok_val;
   else {
@@ -346,8 +331,7 @@ bool Hashtab::is_defined(const Buffer&b)
 
 // Creates a primitive.
 // The string s must be a permanent string
-Token Hashtab::primitive (String s, symcodes c, subtypes v)
-{
+auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
   Token res = locate(s);
   int w = res.eqtb_loc();
   eqtb[w].primitive(CmdChr(c,v));
@@ -363,15 +347,13 @@ void Hashtab::eval_let(String a, String b)
   the_parser.eq_define(A,eqtb[Bval].get_cmdchr(),true);
 }
 
-Token Hashtab::eval_letv(String a, String b)
-{
+auto Hashtab::eval_letv(String a, String b) -> Token {
   Token Av = locate(a);
   int A = Av.eqtb_loc();
   int Bval = locate(b).eqtb_loc();
   the_parser.eq_define(A,eqtb[Bval].get_cmdchr(),true);
   return Av;
 }
-
 
 // \let\firststring = \secondstring 
 // Both strings must be permanent strings
@@ -382,9 +364,7 @@ void Hashtab::eval_let_local(String a, String b)
   the_parser.eq_define(A,eqtb[Bval].get_cmdchr(),false);
 }
 
-
-bool token_ns::compare(const TokenList& A, const TokenList&B)
-{
+auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
   const_token_iterator C1 = A.begin();
   const_token_iterator E1 = A.end();
   const_token_iterator C2 = B.begin();
@@ -395,13 +375,11 @@ bool token_ns::compare(const TokenList& A, const TokenList&B)
     if( ! (*C1).is_same_token (*C2)) return false;
     ++C1;
     ++C2;
-  } 
+  }
 }
 
-
 // compares two macros
-bool Macro::is_same(const Macro& aux) const
-{
+auto Macro::is_same(const Macro &aux) const -> bool {
   if(nbargs != aux.nbargs) return false;
   if(type != aux.type) return false;
   if(!token_ns::compare(body,aux.body)) return false;
@@ -441,8 +419,7 @@ void token_ns::remove_initial_spaces(TokenList&L)
 
 // If the token list is `{foo}bar{gee}'
 // returns foo, leaves `bar{gee}' in the list
-TokenList token_ns::get_block(TokenList&L)
-{
+auto token_ns::get_block(TokenList &L) -> TokenList {
   int bl = 0;
   TokenList res;
   remove_initial_spaces(L);
@@ -463,8 +440,7 @@ TokenList token_ns::get_block(TokenList&L)
 // Returns the number of tokens in sublist with its braces.
 // If the sublist is everything, returns -1.
 // in case of problem, returns -2.
-int token_ns::block_size(const TokenList&L)
-{
+auto token_ns::block_size(const TokenList &L) -> int {
   int res = 0;
   int bl = 0;
   const_token_iterator C = L.begin();
@@ -483,8 +459,7 @@ int token_ns::block_size(const TokenList&L)
 
 // Assumes that the list starts with a brace. 
 // Returns the sublist with its braces.
-TokenList token_ns::fast_get_block(TokenList&L)
-{
+auto token_ns::fast_get_block(TokenList &L) -> TokenList {
   int len = block_size(L);
   TokenList res;
   if(len==-2) {
@@ -521,8 +496,7 @@ void token_ns::fast_get_block(TokenList&L,TokenList&res)
 
 // Returns the first token, or the first token-list
 // There are braces around the thing if br is true
-TokenList token_ns::get_a_param(TokenList&L, bool br)
-{
+auto token_ns::get_a_param(TokenList &L, bool br) -> TokenList {
   TokenList res;
   while(!L.empty()) {
     Token t = L.front();
@@ -592,9 +566,7 @@ void token_ns::expand_star(TokenList&L)
 // Everything is of \catcode 12, except space.
 // If the switch is true, \n is converted to space, otherwise newline
 
-
-TokenList Buffer::str_toks (nl_to_tok nl)
-{
+auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
   TokenList L;
   Token SP = Token(space_token_val);
   Token CR = Token (space_t_offset + '\n'); // behaves as space
@@ -611,8 +583,7 @@ TokenList Buffer::str_toks (nl_to_tok nl)
 }
 
 // Use character code 11 whenever possible
-TokenList Buffer::str_toks11 (bool nl)
-{
+auto Buffer::str_toks11(bool nl) -> TokenList {
   Token SP = Token(space_token_val);
   Token NL = the_parser.hash_table.newline_token;
   TokenList L;
@@ -630,8 +601,7 @@ TokenList Buffer::str_toks11 (bool nl)
 
 // Converts a string to a token list. If b is true, we add braces.
 // NOTE:  in every case converts newline to space
-TokenList token_ns::string_to_list (String s, bool b)
-{
+auto token_ns::string_to_list(String s, bool b) -> TokenList {
   Buffer& B = buffer_for_log;
   B << bf_reset << s; 
   TokenList L = B.str_toks(nlt_space);
@@ -639,8 +609,7 @@ TokenList token_ns::string_to_list (String s, bool b)
   return L;
 }
 
-TokenList token_ns::string_to_list (const string& s, bool b)
-{
+auto token_ns::string_to_list(const string &s, bool b) -> TokenList {
   Buffer& B = buffer_for_log;
   B << bf_reset << s; 
   TokenList L = B.str_toks(nlt_space);
@@ -650,16 +619,14 @@ TokenList token_ns::string_to_list (const string& s, bool b)
 
 // Converts a istring to a token list. 
 // Special hack, because we insert the number, not the value
-TokenList token_ns::string_to_list (Istring s)
-{
+auto token_ns::string_to_list(Istring s) -> TokenList {
   Buffer& B = buffer_for_log;
   B << bf_reset << s.get_value(); 
   return B.str_toks(nlt_space);
 }
 
-// Converts a Token list into a String. 
-Buffer& Buffer::operator<<(const TokenList& L)
-{ 
+// Converts a Token list into a String.
+auto Buffer::operator<<(const TokenList &L) -> Buffer & {
   const_token_iterator C = L.begin();
   const_token_iterator E = L.end();
   while(C != E) {
@@ -671,8 +638,7 @@ Buffer& Buffer::operator<<(const TokenList& L)
 
 // Prints a token list.
 // Note: conversion to log_encoding
-ostream& operator<<(ostream&fp, const TokenList& L)
-{
+auto operator<<(ostream &fp, const TokenList &L) -> ostream & {
   const_token_iterator C = L.begin();
   const_token_iterator E = L.end();
   while(C != E) {
@@ -686,8 +652,7 @@ ostream& operator<<(ostream&fp, const TokenList& L)
 }
 
 // Prints a token list.
-ostream& operator<<(ostream&fp, const Istring& L)
-{
+auto operator<<(ostream &fp, const Istring &L) -> ostream & {
   return fp << L.c_str();
 }
 
@@ -726,31 +691,25 @@ void Buffer::push_back(const Macro& x, bool sw)
   }    
 }
 
-Buffer& Buffer::operator<<(const Macro& x)
-{
+auto Buffer::operator<<(const Macro &x) -> Buffer & {
   push_back(x,false); 
-  return *this; 
+  return *this;
 }
-
 
 // Puts a macro definition in a file.
-ostream& operator<<(ostream&fp, const Macro&x)
-{
+auto operator<<(ostream &fp, const Macro &x) -> ostream & {
   Buffer&B = buffer_for_log;
   B << bf_reset;
   B.push_back(x,true);
   return fp << B.c_str();
 }
 
-FullLogger& operator<<(FullLogger&fp, const Macro&x)
-{
+auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
   Buffer&B = buffer_for_log;
   B << bf_reset;
   B.push_back(x,true);
   return fp << B.c_str();
 }
-
-
 
 // This is the Ctor of strhash.
 StrHash::StrHash()
@@ -804,8 +763,7 @@ void StrHash::re_alloc()
 
 // Find something in the StrHash table. The buffer mybuf holds the string 
 // to search. result is never zero
-int StrHash::hash_find()
-{
+auto StrHash::hash_find() -> int {
   the_parser.my_stats.one_more_sh_find();
   if(!mybuf[0]) return 1;
   int p = mybuf.hashcode(hash_prime) + 3;
@@ -833,29 +791,25 @@ int StrHash::hash_find()
 }
 
 // The string can be a temporary
-int StrHash::find(String s) 
-{
+auto StrHash::find(String s) -> int {
   mybuf << bf_reset << s;
   return hash_find();
 }
 
 // The string can be a temporary
-int StrHash::find(const string& s) 
-{
+auto StrHash::find(const string &s) -> int {
   mybuf << bf_reset << s;
   return hash_find();
 }
 
 // Converts s into a string and returns its hash table location.
-int StrHash::find(int s) 
-{
+auto StrHash::find(int s) -> int {
   mybuf << bf_reset << s;
   return hash_find();
 }
 
 // if s is the integer associated to 15pt, returns its hash location.
-Istring StrHash::find_scaled(ScaledInt s)
-{
+auto StrHash::find_scaled(ScaledInt s) -> Istring {
   mybuf.reset();
   mybuf.push_back(s, glue_spec_pt);
   return Istring(hash_find());
@@ -882,9 +836,8 @@ void Buffer::push_back(const Istring& X)
 //   }
 // }
 
-// True if L has a single token 
-bool token_ns::has_a_single_token(const TokenList& L)
-{
+// True if L has a single token
+auto token_ns::has_a_single_token(const TokenList &L) -> bool {
   const_token_iterator C = L.begin();
   const_token_iterator E = L.end();
   if(C==E) return false;
@@ -894,8 +847,7 @@ bool token_ns::has_a_single_token(const TokenList& L)
 }
 
 // True if L has a single token that is T
-bool token_ns::has_a_single_token(const TokenList& L, Token t)
-{
+auto token_ns::has_a_single_token(const TokenList &L, Token t) -> bool {
   const_token_iterator C = L.begin();
   const_token_iterator E = L.end();
   if(C==E) return false;
@@ -934,8 +886,7 @@ void Logger::out_single_char(Utf8Char c)
   buffer_for_log2 << c;
 }
 
-Logger& operator<<(Logger&X, const Macro&x)
-{
+auto operator<<(Logger &X, const Macro &x) -> Logger & {
   *(X.fp) << x;
   return X;
 }
@@ -980,8 +931,7 @@ void Parser::print_cmd_chr(CmdChr X)
 // ------------------------ token lists ----------------------------
 
 // kill L. If it has 1 element, returns it, otherwise 0.
-Token token_ns::get_unique(TokenList& L)
-{
+auto token_ns::get_unique(TokenList &L) -> Token {
   if(L.empty()) return Token(0);
   Token x = L.front();
   L.pop_front();
@@ -1047,8 +997,7 @@ void Buffer::dump_prefix(bool err, bool gbl,symcodes K)
 
 // --------------------------------------------------
 // Finds the first m at brace level 0; before in Z, after in L
-bool token_ns::split_at(Token m,TokenList&L, TokenList& z)
-{
+auto token_ns::split_at(Token m, TokenList &L, TokenList &z) -> bool {
   z.clear();
   int bl = 0;
   while(!L.empty()) {
@@ -1157,8 +1106,7 @@ void Parser::E_split()
    back_input(R);
 }
 
-int token_ns::length_normalise(TokenList& L)
-{
+auto token_ns::length_normalise(TokenList &L) -> int {
   Token u =Token(space_t_offset+'\n');
   Token v =Token(space_t_offset+' ');
   token_iterator A = L.begin();
@@ -1172,8 +1120,7 @@ int token_ns::length_normalise(TokenList& L)
   return n;
 }
 
-bool token_ns::is_sublist(token_iterator A, token_iterator B, int n)
-{
+auto token_ns::is_sublist(token_iterator A, token_iterator B, int n) -> bool {
   while(n>0) {
     if(*A != *B) return false;
     ++A; ++B; --n;
@@ -1181,12 +1128,11 @@ bool token_ns::is_sublist(token_iterator A, token_iterator B, int n)
   return true;
 }
 
-
 // Returns true if A is in B. If the switch is true, the value is removed
 // but the last token of B is not
 // Counts the number of skipped commas.
-bool token_ns::is_in(TokenList& A, TokenList&B, bool remove,int&is_in_skipped)
-{
+auto token_ns::is_in(TokenList &A, TokenList &B, bool remove,
+                     int &is_in_skipped) -> bool {
   int n= length_normalise(A);
   int m= length_normalise(B);
   int k= m-n;
@@ -1214,4 +1160,3 @@ bool token_ns::is_in(TokenList& A, TokenList&B, bool remove,int&is_in_skipped)
   is_in_skipped = found ? skipped : -1;
   return found;
 }
-

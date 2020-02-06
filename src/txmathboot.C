@@ -34,18 +34,14 @@ Xmlp single_chars[128];
 //#define LANGLE "&#x27E8;"
 //#define RANGLE "&#x27E9;"
 
-string get_math_char(uchar c, int f)
-{
-  return math_chars[c][f];
-}
+auto get_math_char(uchar c, int f) -> string { return math_chars[c][f]; }
 
 void set_math_char(uchar c, int f,string s)
 {
   math_chars[c][f] = s;
 }
 
-Xmlp math_ns::get_builtin_alt(int p)
-{
+auto math_ns::get_builtin_alt(int p) -> Xmlp {
   return math_data.get_builtin_alt(p);
 }
 
@@ -1037,15 +1033,13 @@ void math_ns::fill_math_char_slots()
 }
 
 // Converts foo into <mspace width='foo'/>
-Xmlp math_ns::mk_space(String a)
-{
+auto math_ns::mk_space(String a) -> Xmlp {
   Xmlp b = new Xml(cst_mspace,0);
   b->add_att(np_cst_width, Istring(a));
   return b;
 }
 
-Xmlp MathDataP::mk_mo(String a)
-{
+auto MathDataP::mk_mo(String a) -> Xmlp {
   Xmlp x = new Xml(Istring(a));
   return new Xml(cst_mo, x);
 }
@@ -1115,8 +1109,7 @@ Xmlp MathDataP::mk_mo(String a)
     
 // Ams environments pmatrix, bmatrix, Bmatrix etc.
 // returns the fence  values
-bool math_ns::special_fence(subtypes s, int& open, int&close)
-{
+auto math_ns::special_fence(subtypes s, int &open, int &close) -> bool {
   switch(s) {
   case matrixB_code : open=del_open_brace; close=del_close_brace; break;
   case matrixb_code : open=del_open_bra; close=del_close_bra; break;
@@ -1127,13 +1120,11 @@ bool math_ns::special_fence(subtypes s, int& open, int&close)
     return false; // no fence
   }
   return true;
-  
 }
 
 // returns a delimiter position in the table
 // static
-del_pos math_ns::get_delimiter(CmdChr X)
-{
+auto math_ns::get_delimiter(CmdChr X) -> del_pos {
   if(X.is_other()) {
     if(!X.char_val().is_ascii()) return del_invalid;
     switch(X.char_val().ascii_value()) {
@@ -1183,8 +1174,7 @@ del_pos math_ns::get_delimiter(CmdChr X)
   return del_invalid;
 }
 
-del_pos math_ns::get_delimiter(int k)
-{
+auto math_ns::get_delimiter(int k) -> del_pos {
   switch(k) {
   case rangle_code:  return del_rangle;
   case langle_code:  return del_langle;
@@ -1232,8 +1222,7 @@ del_pos math_ns::get_delimiter(int k)
 
 // This is a static function
 // true if the constant is a space.
-bool math_ns::math_space_code(int c)
-{
+auto math_ns::math_space_code(int c) -> bool {
   switch(c) {
   case quad_code: return true;
   case qquad_code: return true;
@@ -1245,8 +1234,7 @@ bool math_ns::math_space_code(int c)
 }
 
 // Returns the value of a constant,
-Xmlp math_ns::math_constants(int c)
-{
+auto math_ns::math_constants(int c) -> Xmlp {
   switch(c) {
   case dots_code: return math_data.get_mc_table(5);
   case ldots_code: return math_data.get_mc_table(6);
@@ -1273,8 +1261,8 @@ Xmlp math_ns::math_constants(int c)
   return math_data.get_mc_table(0);
 }
 
-Token MathDataP::init_builtin(String name,math_loc pos, Xmlp x, symcodes t)
-{
+auto MathDataP::init_builtin(String name, math_loc pos, Xmlp x, symcodes t)
+    -> Token {
   init_builtin(pos,x);
   return the_parser.hash_table.primitive(name,t,subtypes(pos));
 }
@@ -1285,11 +1273,9 @@ Token MathDataP::init_builtin(String name,math_loc pos, Xmlp x, symcodes t)
 // $\alpha$ translates to &alpha;) If no entity names are desired
 // then ent2 is used instead of ent, so that \alpha gives &#x3B1;
 
-Token MathDataP::mk_gen(String name, String ent, String ent2, 
-			  math_loc pos,
-			  name_positions bl, symcodes t, bool hack)
-{
-  
+auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos,
+                       name_positions bl, symcodes t, bool hack) -> Token {
+
   Xmlp x = new Xml(Istring(no_ent_names ? ent2 : ent));
   if(hack) built_in_table_alt[pos] = x;
   x = new Xml(bl,x);
@@ -1297,11 +1283,10 @@ Token MathDataP::mk_gen(String name, String ent, String ent2,
 }
 
 // Special case where a bold variant exists
-Token MathDataP::mk_gen(String name, String ent, String ent2, 
-			math_loc pos, math_loc pos2,
-			name_positions bl, symcodes t, bool hack)
-{
-  
+auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos,
+                       math_loc pos2, name_positions bl, symcodes t, bool hack)
+    -> Token {
+
   Xmlp x = new Xml(Istring(no_ent_names ? ent2 : ent));
   if(hack) built_in_table_alt[pos] = x;
   Xmlp bold = new Xml(bl,x);
@@ -1400,9 +1385,8 @@ void MathDataP::TM_mk(String a, String b, math_types c)
   math_char_type[A] = c;
 }
 
-// For a command like \frac. 
-Token mk_cmd(String name, subtypes pos)
-{
+// For a command like \frac.
+auto mk_cmd(String name, subtypes pos) -> Token {
   return the_parser.hash_table.primitive(name,special_math_cmd,pos);
 }
 
@@ -1506,10 +1490,7 @@ void MathDataP::boot_xml_lr_tables()
   mc_table[26] = mk_mo(no_ent_names ? "&#x2DC;" : "&tilde;");
 }
 
-
-
-Xmlp math_ns::make_math_char(uchar c, int n)
-{
+auto math_ns::make_math_char(uchar c, int n) -> Xmlp {
   Buffer& B = the_main->SH.shbuf();
   B.reset();
   if(n<=1) B.push_back(c);

@@ -33,10 +33,10 @@ namespace post_ns {
   void remove_label(String s, Istring n);
   void remove_me_from_heads(Xmlp X);
   void print_no_title(int i, String s);
-  int is_entity(String s);
+  auto is_entity(String s) -> int;
   void raw_subfigure(Xmlp from,Xmlp to,Xmlp junk);
   void table_subfigure(Xmlp from,Xmlp to,Xmlp junk);
-  Xmlp figline(Xmlp from,int&ctr, Xmlp junk);
+  auto figline(Xmlp from, int &ctr, Xmlp junk) -> Xmlp;
   void postprocess_table(Xmlp to,Xmlp from);
   void postprocess_figure(Xmlp to,Xmlp from);
 }
@@ -50,24 +50,22 @@ namespace all_words_ns {
   void add_a_word(String s, int h);
   void dump_and_list(WordList*,int i);
   void dump_words(string name);
-  int is_entity(String s);
+  auto is_entity(String s) -> int;
 }
 
 //  --- Manipulating the XML tree
 
 // return the true size, excluding null elements
-int Xml::real_size() const
-{
+auto Xml::real_size() const -> int {
   if(is_xmlc()) return -2;
   int n = 0;
   int k = tree.size();
   for (int i=0; i < k; i++) if(tree[i]) n ++;
-  return n;  
+  return n;
 }
 
 // returns the value at n, excluding null elements
-Xmlp Xml::value_at(int n)
-{
+auto Xml::value_at(int n) -> Xmlp {
   if(is_xmlc() || n < 0) return 0;
   int k = tree.size();
   for (int i=0; i < k; i++) {
@@ -76,11 +74,10 @@ Xmlp Xml::value_at(int n)
       n --;
     }
   }
-  return 0;  
+  return 0;
 }
 
-bool Xml::put_at(int n, Xmlp x)
-{
+auto Xml::put_at(int n, Xmlp x) -> bool {
   if(is_xmlc()) return false;
   int k = tree.size();
   for (int i=0; i < k; i++) {
@@ -89,12 +86,11 @@ bool Xml::put_at(int n, Xmlp x)
       n --;
     }
   }
-  return false;  
+  return false;
 }
 
 // returns the value at n, excluding null elements, returns true if OK
-bool Xml::remove_at(int n)
-{
+auto Xml::remove_at(int n) -> bool {
   if(is_xmlc()) return false;
   int k = tree.size();
   for (int i=0; i < k; i++) {
@@ -103,13 +99,12 @@ bool Xml::remove_at(int n)
       n --;
     }
   }
-  return false;  
+  return false;
 }
 
 // inserts a position n, excluding spaces
 // returns true if OK
-bool Xml::insert_at_ck(int n, Xmlp v)
-{
+auto Xml::insert_at_ck(int n, Xmlp v) -> bool {
   if(is_xmlc()) return false;
   int k = tree.size();
   for (int i=0; i < k; i++) { 
@@ -117,16 +112,15 @@ bool Xml::insert_at_ck(int n, Xmlp v)
     if(tree[i]) n --;
     }
   if(n==1) { tree.push_back(v); return true; }
-  return false;  
+  return false;
 }
 
-bool Xml::is_child(Xmlp x) const 
-{
+auto Xml::is_child(Xmlp x) const -> bool {
   if(is_xmlc()) return false;
   int k = tree.size();
   for (int i=0; i < k; i++) 
     if(tree[i] ==x) return true;
-  return false;  
+  return false;
 }
 
 void Parser::user_XML_swap (subtypes c)
@@ -140,9 +134,7 @@ void Parser::user_XML_swap (subtypes c)
   }
 }
 
-
-Xmlp Xml::deep_copy ()
-{
+auto Xml::deep_copy() -> Xmlp {
   if(is_xmlc()) return this;
   Xmlp res = new Xml (name,0);
   res-> id.add_attribute(id);
@@ -195,8 +187,7 @@ void Parser::user_XML_modify(subtypes c)
 
 // Implementation of \label, \ref
 // This is assumed to create a unique ID.
-Istring StrHash::next_label_id()
-{
+auto StrHash::next_label_id() -> Istring {
   last_label_id++;
   mybuf << bf_reset << "uid" << last_label_id;
   return Istring(hash_find());
@@ -204,18 +195,16 @@ Istring StrHash::next_label_id()
 
 // Implementation of \label, \ref
 // This is assumed to create a unique ID.
-Istring StrHash::next_top_label_id()
-{
+auto StrHash::next_top_label_id() -> Istring {
   last_top_label_id++;
   mybuf << bf_reset << "cid" << last_top_label_id;
   return Istring(hash_find());
 }
 
-LabelInfo* StrHash::lab_val_check(Istring k)
-{ 
+auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
   int K = k.get_value();
   if(!Labinfo[K]) Labinfo[K] = new LabelInfo(k);
-  return Labinfo[K]; 
+  return Labinfo[K];
 }
 
 // This implements \label{foo}; second argument is the anchor id
@@ -341,8 +330,7 @@ void post_ns::remove_me_from_heads(Xmlp X)
 
 
 // True if the string holds only white space
-bool Istring::only_space() const
-{
+auto Istring::only_space() const -> bool {
   const string& s = the_main->SH[value];
   int i = 0;
   int l = s.length();
@@ -355,8 +343,7 @@ bool Istring::only_space() const
 }
 
 // True if the string holds only white space or &nbsp;
-bool Istring::only_space_spec() const
-{
+auto Istring::only_space_spec() const -> bool {
   int i = 0;
   String s = c_str();
   while(s[i]) {
@@ -368,7 +355,6 @@ bool Istring::only_space_spec() const
   }
   return true;
 }
-
 
 // This finds a sub element named match, and does some action X
 // Recursion stops when found.
@@ -482,16 +468,14 @@ void Xml::make_hole(int pos)
 }
 
 // Returns a pointer to the last son.
-Xmlp Xml::last_addr() const
-{
+auto Xml::last_addr() const -> Xmlp {
   int len = size();
   return len>0 ? tree[len-1] : 0;
 }
 
 // Returns a pointer to the last element 
 // and removes it if it is a Box
-Xmlp Xml::last_box()
-{
+auto Xml::last_box() -> Xmlp {
   int len = size();
   if(len==0) return 0;
   Xmlp res = tree[len-1];
@@ -514,8 +498,7 @@ void Xml::remove_last_empty_hi()
 }
 
 // Return true if this is an empty <hi> (recursion allowed)
-bool Xml::only_recur_hi() const
-{
+auto Xml::only_recur_hi() const -> bool {
   if(!id.is_font_change()) return false;
   if(size()==0) return true;
   Xmlp x = single_son();
@@ -526,8 +509,7 @@ bool Xml::only_recur_hi() const
 
 // Return true if this contains only <hi>
 // Exemple \mbox{\tt x} gives {\tt x}
-bool Xml::only_hi() const
-{
+auto Xml::only_hi() const -> bool {
   Xmlp x = single_non_empty();
   if(!x) return false;
   if(x->is_xmlc()) return false;
@@ -571,8 +553,7 @@ void Xml::add_first(Xmlp x)
 }
 
 // This find an element with a single son, the son should be res.
-bool Xml::find_on_tree(Xmlp check, Xmlp*res) const
-{
+auto Xml::find_on_tree(Xmlp check, Xmlp *res) const -> bool {
   int n = size();
   for(int i=0; i<n;i++) {
     Xmlp T = tree[i];
@@ -650,8 +631,7 @@ void Xml::to_buffer (Buffer&b) const
 }
 
 // This prints T on the file fp, using scbuf.
-ostream& operator<<(ostream&fp, const Xml* T)
-{
+auto operator<<(ostream &fp, const Xml *T) -> ostream & {
   scbuf.reset();
   cur_fp = &fp;
   if(T)  T->to_buffer(scbuf); else scbuf << "</>";
@@ -682,24 +662,21 @@ void Xml::subst_env0(Istring match, Xmlp vl)
 
 
 // Returns number of sons named <match>.
-int Xml::how_many_env(Istring match)
-{
+auto Xml::how_many_env(Istring match) -> int {
   XmlAction X(match,rc_how_many);
   recurse(X);
   return X.get_int_val();
 }
 
 // Removes and returns first element named N.
-Xmlp Xml::get_first_env(name_positions N)
-{
+auto Xml::get_first_env(name_positions N) -> Xmlp {
   XmlAction X(the_names[N],rc_return_first_and_kill);
   recurse0(X);
   return X.get_xml_val();
 }
 
 // Returns the element that is just before x.
-Xmlp Xml::prev_sibling(Xmlp x)
-{
+auto Xml::prev_sibling(Xmlp x) -> Xmlp {
   int len = size();
   for(int i=1;i<len;i++)
     if(tree[i]==x) return tree[i-1];
@@ -707,8 +684,7 @@ Xmlp Xml::prev_sibling(Xmlp x)
 }
 
 // This returns true if it is possible to remove the p
-bool Xml::is_empty_p () const
-{
+auto Xml::is_empty_p() const -> bool {
   if(!has_name(cst_p)) return false;
   int len = size();
   for(int k=0;k<len;k++) {
@@ -724,8 +700,7 @@ bool Xml::is_empty_p () const
 }
 
 // Returns true if empty
-bool Xml::empty () const
-{
+auto Xml::empty() const -> bool {
   if(!name.empty()) return false;
   int len = size();
   for(int k=0;k<len;k++) {
@@ -735,8 +710,7 @@ bool Xml::empty () const
 }
 
 // Returns true if empty (white space only)
-bool Xml::is_empty () const
-{
+auto Xml::is_empty() const -> bool {
   int len = size();
   for(int k=0;k<len;k++) {
     Xmlp T = tree[k];
@@ -748,8 +722,7 @@ bool Xml::is_empty () const
 }
 
 // Returns true if empty (white space or &nbsp; only)
-bool Xml::is_empty_spec () const
-{
+auto Xml::is_empty_spec() const -> bool {
   int len = size();
   for(int k=0;k<len;k++) {
     Xmlp T = tree[k];
@@ -761,8 +734,7 @@ bool Xml::is_empty_spec () const
 }
 
 // If there is one non-empty son returns it.
-Xmlp Xml::single_non_empty () const
-{
+auto Xml::single_non_empty() const -> Xmlp {
   int len = size();
   Xmlp res = 0;
   for(int k=0;k<len;k++) {
@@ -776,8 +748,7 @@ Xmlp Xml::single_non_empty () const
 }
 
 // Returns true if text only.
-bool Xml::only_text () const
-{
+auto Xml::only_text() const -> bool {
   int len = size();
   for(int k=0;k<len;k++) {
     Xmlp y = tree[k];
@@ -788,8 +759,7 @@ bool Xml::only_text () const
 }
 
 // Returns the only son, or 0 if more than one sons.
-Xmlp Xml::single_son() const
-{
+auto Xml::single_son() const -> Xmlp {
   int len = size();
   Xmlp res = 0;
   for(int k=0;k<len;k++) {
@@ -1005,8 +975,7 @@ void post_ns::table_subfigure(Xmlp from,Xmlp to,Xmlp junk)
 
 // Figure with subfigure. We construct a table with two rows
 // for a par. ctr holds the value of the counter for the caption.
-Xmlp post_ns::figline(Xmlp from, int&ctr, Xmlp junk)
-{
+auto post_ns::figline(Xmlp from, int &ctr, Xmlp junk) -> Xmlp {
   Xmlp row1 = new Xml(np_row,0);
   Xmlp row2 = new Xml(np_row,0);
   int nrows = 0;
@@ -1115,8 +1084,7 @@ void Xml::compo_special()
 
 // This is used by sT_translate. It converts an XML element
 // to a string, using scbuf as temporary. clears the object
-string Xml::convert_to_string ()
-{
+auto Xml::convert_to_string() -> string {
   scbuf.reset();
   convert_to_string(scbuf);
   tree.clear();
@@ -1166,8 +1134,7 @@ void Xml::put_in_buffer(Buffer& b)
 }
 
 // Removes and returns the last element
-Xmlp Xml::remove_last()
-{
+auto Xml::remove_last() -> Xmlp {
   int len = size();
   if(len==0) return 0;
   Xmlp res = tree.back();
@@ -1176,8 +1143,7 @@ Xmlp Xml::remove_last()
 }
 
 // True if this is empty, or contains only a <hi> element which is empty
-bool Xml::par_is_empty()
-{
+auto Xml::par_is_empty() -> bool {
   int len = size();
   if(len>1) return false;
   if(len==0) return true;
@@ -1256,7 +1222,7 @@ void all_words_ns::dump_words(string name)
   fp->close();
 }
 
-inline bool dig_char(char c) { return c=='-' || is_digit(c); }
+inline auto dig_char(char c) -> bool { return c == '-' || is_digit(c); }
 
 void Buffer::new_word()
 {
@@ -1284,8 +1250,7 @@ const String entities[] = {"&nbsp;","&ndash;","&mdash;","&ieme;",
 
 // This is static. If s is &foo;bar, returns the length
 // of the &foo; part. Rturns 0 if this is not an entity.
-int post_ns::is_entity(String s)
-{
+auto post_ns::is_entity(String s) -> int {
   for(int k=0;;k++) {
     String w = entities[k];
     if(!w) return 0;

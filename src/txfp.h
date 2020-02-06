@@ -19,12 +19,12 @@ class FpNum {
     { data[0]=a; data[1]=b; data[2] = c; data[3] =d; sign=true; } 
   FpNum(): sign(true) {data[0]=data[1]=data[2]=data[3]=0;}
   void init(Digit a, Digit b, Digit c, Digit d)
-    { data[0]=a; data[1]=b; data[2] = c; data[3] =d;} 
-  bool is_zero() const ;
+    { data[0]=a; data[1]=b; data[2] = c; data[3] =d;}
+  auto is_zero() const -> bool;
   void reset() { data[0] = data[1] = data[2] = data[3] = 0; }
   void correct_sign();
-  bool create(Buffer&);
-  TokenList to_list() const;
+  auto create(Buffer &) -> bool;
+  auto to_list() const -> TokenList;
   void add(FpNum);
   void set_xmax(Digit* x, int & xmin, int&xmax);
   void prop_carry(Digit* z);
@@ -39,8 +39,8 @@ class FpNum {
   void sub_abs(FpNum);
   void neg_sub_abs(FpNum);
   void mod2pi();
-  int count_times(FpNum);
-  String to_string() const;
+  auto count_times(FpNum) -> int;
+  auto to_string() const -> String;
   void neg();
   void mul_split(unsigned int*) const;
   void mul_by_10();
@@ -56,18 +56,18 @@ class FpNum {
   void exec_ln();
   void exec_ln_a();
   void exec_exp();
-  bool large_exp();
+  auto large_exp() -> bool;
   void mul(FpNum,FpNum);
   void mul(FpNum,int);
   void div(FpNum,FpNum);
   void pow(FpNum,FpNum,subtypes);
   void divide2();
-  int octand();
+  auto octand() -> int;
   void sin1(int);
   void cos1(int);
   void mean(FpNum a, FpNum b);
-  bool sincos_transform();
-  bool arcsincos_loop();
+  auto sincos_transform() -> bool;
+  auto arcsincos_loop() -> bool;
   void trigo_xy(int);
   void trigo_inv();
   void trigo_sqrt();

@@ -26,12 +26,14 @@ class Equivalent {
   int level;      // level at which this is defined
   CmdChr value; // the modifier
  public:
-  int get_level() const { return level; }
-  CmdChr get_cmdchr() const { return value; }
-  symcodes get_cmd() const { return value.get_cmd(); }
-  subtypes get_chr() const { return value.get_chr(); }
-  bool must_push(int l) const { return level !=l && l> level_one;}
-  void reset() { level = level_zero; value.reset(); }
+   auto get_level() const -> int { return level; }
+   auto get_cmdchr() const -> CmdChr { return value; }
+   auto get_cmd() const -> symcodes { return value.get_cmd(); }
+   auto get_chr() const -> subtypes { return value.get_chr(); }
+   auto must_push(int l) const -> bool { return level != l && l > level_one; }
+   void reset() {
+     level = level_zero;
+     value.reset(); }
   void special_prim(CmdChr b) {
     value = b;
     if(!b.is_undef()) level = level_one;
@@ -45,9 +47,9 @@ class Equivalent {
   void setnl (CmdChr c) {
     value = c;
   }
-  bool is_undefined() const { return value.is_undef();}
-  bool is_user() const { return value.is_user(); }
-  bool is_undef_or_relax() const { return value.is_undef_or_relax(); }
+  auto is_undefined() const -> bool { return value.is_undef(); }
+  auto is_user() const -> bool { return value.is_user(); }
+  auto is_undef_or_relax() const -> bool { return value.is_undef_or_relax(); }
 };
 
 class RestoreVbSpace {
@@ -117,7 +119,7 @@ class SaveState {
   void copy_and_reset(TokenList&X) { L.clear(); L.splice(L.begin(), X); }
   void restore(TokenList&X) { X.clear(); X.splice(X.begin(), L); }
   void set_restricted(bool b) { restricted = b;}
-  bool get_restricted() const { return restricted; }
+  auto get_restricted() const -> bool { return restricted; }
 };
 
 // This is a virtual class for saving an object that is in an EQTB table
@@ -131,7 +133,7 @@ class SaveAux {
   virtual ~SaveAux() {}
   SaveAux(save_type t) : type(t), line_no(0) {}
   void set_line(int l) { line_no = l; }
-  int get_line() const { return line_no; }
+  auto get_line() const -> int { return line_no; }
   void unsave_trace_aux(String s, int pos, bool rt);
   void restore_or_retain(bool,String) const;
 };
@@ -141,11 +143,11 @@ class SaveAux {
 class SaveAuxBoundary : public SaveAux {
   boundary_type val; // explains why we opened a new group
  public:
-  boundary_type get_val() const { return val; }
-  void unsave(bool,Parser&);
-  SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
-  ~SaveAuxBoundary() {}
-  void dump(int);
+   auto get_val() const -> boundary_type { return val; }
+   void unsave(bool, Parser &);
+   SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
+   ~SaveAuxBoundary() {}
+   void dump(int);
 };
 
 // This restores an integer value.
@@ -248,9 +250,9 @@ class SaveAuxEnv : public SaveAux {
   CmdChr cc;
  public:
   void set_line(int x) { line = x; }
-  CmdChr get_val() const { return cc; }
-  Token get_token() const { return T; }
-  string get_name() { return newname; }
+  auto get_val() const -> CmdChr { return cc; }
+  auto get_token() const -> Token { return T; }
+  auto get_name() -> string { return newname; }
   void unsave(bool,Parser&);
   SaveAuxEnv(string a, string aa, int ll, Token b, CmdChr c) :
     SaveAux(st_env),oldname(a),newname(aa),line(ll), T(b), cc(c) {}
@@ -289,12 +291,12 @@ class EqtbInt {
   int level; // level at which this is defined
  public:
   EqtbInt() :val(0), level(level_one) {}
-  int get_val() const { return val; }
+  auto get_val() const -> int { return val; }
   void set_val(int x) { val = x; }
   void set_level(int x) { level = x; }
-  int get_level()const { return level; }
+  auto get_level() const -> int { return level; }
   void val_and_level(int a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 
 class EqtbString {
@@ -302,12 +304,12 @@ class EqtbString {
   int level; // level at which this is defined
  public:
   EqtbString() :val(""), level(level_one) {}
-  string get_val() const { return val; }
+  auto get_val() const -> string { return val; }
   void set_val(string x) { val = x; }
   void set_level(int x) { level = x; }
-  int get_level()const { return level; }
+  auto get_level() const -> int { return level; }
   void val_and_level(string a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 
 
@@ -318,12 +320,12 @@ class EqtbDim {
   int level; // level at which this is defined
  public:
   EqtbDim() :val(0), level(level_one) {}
-  ScaledInt get_val() const { return val; }
+  auto get_val() const -> ScaledInt { return val; }
   void set_val(ScaledInt x) { val = x; }
   void set_level(int x) { level = x; }
-  int get_level() const { return level; }
+  auto get_level() const -> int { return level; }
   void val_and_level(ScaledInt a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 
 // EQTB entry for a glue
@@ -332,10 +334,10 @@ class EqtbGlue {
   int level; // level at which this is defined
  public:
   EqtbGlue() : level(level_one) {}
-  int get_level() const { return level; }
-  Glue get_val() const { return val; }
+  auto get_level() const -> int { return level; }
+  auto get_val() const -> Glue { return val; }
   void val_and_level(Glue a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 
 // EQTB entry for a token list
@@ -344,10 +346,10 @@ class EqtbToken {
   int level; // level at which this is defined
  public:
   EqtbToken(): level(level_one) {}
-  TokenList get_val()const { return val; }
-  int get_level() const { return level; }
+  auto get_val() const -> TokenList { return val; }
+  auto get_level() const -> int { return level; }
   void val_and_level(TokenList a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 
 // EQTB entry for a box
@@ -356,10 +358,10 @@ class EqtbBox {
   Xmlp val; // value of the object
  public:
   void set_val(Xmlp X) { val = X; }
-  Xmlp get_val() const { return val; }
-  int get_level() const { return level; }
+  auto get_val() const -> Xmlp { return val; }
+  auto get_level() const -> int { return level; }
   EqtbBox() : level(level_one) {}
   void val_and_level(Xmlp a, int b) { val = a; level = b; }
-  bool must_push(int l) const { return level != l&& l>level_one;}
+  auto must_push(int l) const -> bool { return level != l && l > level_one; }
 };
 

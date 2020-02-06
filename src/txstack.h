@@ -23,13 +23,13 @@ class ArrayInfo
   int size,repeat_count, first_repeat; // for repeated patterns
  public:
   ArrayInfo(Xid a1) : id(a1), cell_no(0), size(0), repeat_count(0), first_repeat(0) {}
-  bool its_me(Xid a) { return id==a; }
-  int get_cell_no() const { return cell_no; }
+  auto its_me(Xid a) -> bool { return id == a; }
+  auto get_cell_no() const -> int { return cell_no; }
   void set_cell_no(int k) { cell_no = k; }
-  AttList get_cell_atts(int k);
-  TokenList get_u_or_v(bool,int);
+  auto get_cell_atts(int k) -> AttList;
+  auto get_u_or_v(bool, int) -> TokenList;
   void add_uv(TokenList& u, TokenList& v,AttList);
-  int get_size() { return size; }
+  auto get_size() -> int { return size; }
   void del_array_info();
 };
 
@@ -62,7 +62,7 @@ class Stack {
   Stack();
   Xmlp newline_xml;
 
-  Istring add_anchor(const string&,bool);
+  auto add_anchor(const string &, bool) -> Istring;
   void add_att_to_last(Istring,Istring,bool);
   void add_att_to_last(Istring,Istring);
   void add_att_to_last(name_positions,name_positions);
@@ -74,56 +74,56 @@ class Stack {
   void add_center_to_p();
   void add_last(Xmlp);
   void add_last_string (const Buffer& B);
-  Istring add_new_anchor();
-  Istring add_new_anchor_spec();
+  auto add_new_anchor() -> Istring;
+  auto add_new_anchor_spec() -> Istring;
   void add_nl();
-  AttList& add_newid0(name_positions);
+  auto add_newid0(name_positions) -> AttList &;
   void add_sp_to_p (int pid, int vid);
   void check_font();
   void create_new_anchor(Xid, Istring, Istring);
-  Xid cur_xid() { return top_stack()->get_id(); }
+  auto cur_xid() -> Xid { return top_stack()->get_id(); }
   void delete_table_atts();
   void dump();
   void dump_xml_table();
-  Xmlp document_element() { return Table[0].obj; }
-  Xmlp elt_from_id(int n) { return enames[n]; }
+  auto document_element() -> Xmlp { return Table[0].obj; }
+  auto elt_from_id(int n) -> Xmlp { return enames[n]; }
   void end_module ();
-  Xmlp fetch_by_id (int n);
-  ArrayInfo* find_cell_props(Xid id);
+  auto fetch_by_id(int n) -> Xmlp;
+  auto find_cell_props(Xid id) -> ArrayInfo *;
   void find_cid_rid_tid(Xid&cid,Xid&rid,Xid&tid);
-  int find_ctrid(subtypes);
-  Xmlp find_parent (Xmlp);
+  auto find_ctrid(subtypes) -> int;
+  auto find_parent(Xmlp) -> Xmlp;
   void finish_cell(int w);
-  Istring first_frame() const;
-  const StackSlot& first_non_empty() const;
+  auto first_frame() const -> Istring;
+  auto first_non_empty() const -> const StackSlot &;
   void fonts0 (name_positions x);
-  Xmlp fonts1 (name_positions x);
-  AttList& get_att_list(int k) { return attributes[k]; }
-  Istring get_cur_id() const  { return cur_lid; } 
-  Xmlp get_cur_par();
-  Xmlp get_father();
-  mode get_mode() const { return cur_mode; }
-  ArrayInfo* get_my_table(Xid&);
-  Xid get_top_id() { return top_stack()->get_id(); }
-  TokenList get_u_or_v(bool u_or_v);
-  Xid get_xid() { return last_xid; } 
+  auto fonts1(name_positions x) -> Xmlp;
+  auto get_att_list(int k) -> AttList & { return attributes[k]; }
+  auto get_cur_id() const -> Istring { return cur_lid; }
+  auto get_cur_par() -> Xmlp;
+  auto get_father() -> Xmlp;
+  auto get_mode() const -> mode { return cur_mode; }
+  auto get_my_table(Xid &) -> ArrayInfo *;
+  auto get_top_id() -> Xid { return top_stack()->get_id(); }
+  auto get_u_or_v(bool u_or_v) -> TokenList;
+  auto get_xid() -> Xid { return last_xid; }
   void hack_for_hanl();
   void implement_cit(string b1, Istring b2, string a, string c);
-  bool in_v_mode() const { return get_mode() == mode_v; }
-  bool in_h_mode() const { return get_mode() == mode_h; }
-  bool in_no_mode() const { return get_mode() == mode_none; }
-  bool in_bib_mode() const { return get_mode() == mode_bib; }
-  bool in_array_mode() const { return get_mode() == mode_array; }
+  auto in_v_mode() const -> bool { return get_mode() == mode_v; }
+  auto in_h_mode() const -> bool { return get_mode() == mode_h; }
+  auto in_no_mode() const -> bool { return get_mode() == mode_none; }
+  auto in_bib_mode() const -> bool { return get_mode() == mode_bib; }
+  auto in_array_mode() const -> bool { return get_mode() == mode_array; }
   void init_all(string a);
   void ipush(Istring, Xmlp);
-  bool is_float();
-  bool is_frame(name_positions) const;
-  bool is_frame2(name_positions) const;
-  bool is_omit_cell() { return Table.back().omit_cell; }
-  AttList& last_att_list() { return get_xid().get_att(); }
+  auto is_float() -> bool;
+  auto is_frame(name_positions) const -> bool;
+  auto is_frame2(name_positions) const -> bool;
+  auto is_omit_cell() -> bool { return Table.back().omit_cell; }
+  auto last_att_list() -> AttList & { return get_xid().get_att(); }
   void mark_omit_cell();
-  ArrayInfo& new_array_info(Xid i);
-  Xid next_xid(Xml*);
+  auto new_array_info(Xid i) -> ArrayInfo &;
+  auto next_xid(Xml *) -> Xid;
   void para_aux(int x);
   void pop (Istring a);
   void pop (name_positions a);
@@ -131,11 +131,11 @@ class Stack {
   void push(Istring a, Xmlp b);
   void push1(Istring name,name_positions x);
   void push1(name_positions x);
-  Xmlp push_hbox(Istring);
+  auto push_hbox(Istring) -> Xmlp;
   void push_pop_cell(int);
   void push_trace();
-  Xid push_par(int);
-  Xmlp remove_last();
+  auto push_par(int) -> Xid;
+  auto remove_last() -> Xmlp;
   void remove_last_space();
   void set_arg_mode() { cur_mode = mode_argument; }
   void set_array_mode() { cur_mode = mode_array; }
@@ -149,14 +149,13 @@ class Stack {
   void set_xid_boot () { xid_boot = last_xid; }
   void T_ampersand();
   void T_hline ();
-  Xmlp temporary();
-  Xmlp top_stack() { return Table.back().obj; }
+  auto temporary() -> Xmlp;
+  auto top_stack() -> Xmlp { return Table.back().obj; }
   void trace_pop(bool);
   void trace_stack();
   void unbox(Xmlp);
-  Xmlp xml2_space(Istring a, Xmlp c, Xmlp d);
-  Xmlp xml2_space(Istring a, Istring, Istring, Xmlp c, Xmlp d);
-  Xmlp xml2_space(Istring a, Istring, Xmlp c, Xmlp d);
-
+  auto xml2_space(Istring a, Xmlp c, Xmlp d) -> Xmlp;
+  auto xml2_space(Istring a, Istring, Istring, Xmlp c, Xmlp d) -> Xmlp;
+  auto xml2_space(Istring a, Istring, Xmlp c, Xmlp d) -> Xmlp;
 };
 

@@ -19,7 +19,7 @@ class Image {
  public:
   Image() {}
   Image(string N, int oc_val) : name(N), occ(oc_val), flags(0) {}
-  bool file_exists(String);
+  auto file_exists(String) -> bool;
   void check_existence();
   void check();
 };

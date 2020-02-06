@@ -30,19 +30,16 @@ namespace{
 
 namespace tpage_ns {
   void init_error();
-  bool begins_with(string A, String B);
-  bool scan_item(Buffer&in,Buffer&out,char del);
-  tpi_vals next_item(Buffer&in,Buffer&out);
-  int see_an_assignment(Buffer&in, Buffer&key,Buffer& val);
-  bool see_main_a(Buffer&in, Buffer&key, Buffer&val);
+  auto begins_with(string A, String B) -> bool;
+  auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
+  auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
+  auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
+  auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
   void after_conf_assign(vector<string>& V);
 }
 
 // needed elsewhere, because we have to call add_language_add.
-bool tralics_ns::titlepage_is_valid()
-{
-  return Titlepage.is_valid();
-}
+auto tralics_ns::titlepage_is_valid() -> bool { return Titlepage.is_valid(); }
 
 // needed in txmain.
 void tralics_ns::Titlepage_start(bool verbose)
@@ -58,8 +55,7 @@ void tpage_ns::init_error()
 
 // return tl_end if seen End, tl_empty if empty (or comment), 
 // tl_normal otherwise
-tpa_line Buffer::tp_fetch_something()
-{
+auto Buffer::tp_fetch_something() -> tpa_line {
   ptr = 0;
   if(strncmp(buf,"End",3)==0) return tl_end;
   skip_sp_tab();
@@ -121,8 +117,7 @@ void tralics_ns::Titlepage_create(LinePtr& lines)
 
 
 // Gets next non space. return false if EOL
-bool Buffer::tp_next_char(char& res)
-{
+auto Buffer::tp_next_char(char &res) -> bool {
   skip_sp_tab();
   if(is_special_end()) 
     return false;
@@ -133,8 +128,7 @@ bool Buffer::tp_next_char(char& res)
 
 // Returns an item that start with del
 // result is in local_buf, return value is true if OK.
-bool tpage_ns::scan_item(Buffer&in,Buffer&out,char del)
-{
+auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
   out.reset();
   if(del=='\\') {// scan a command
     while(is_letter(in.head())) out.push_back(in.next_char());
@@ -156,8 +150,7 @@ bool tpage_ns::scan_item(Buffer&in,Buffer&out,char del)
 
 // Scans an item: prefix plus value. Result in Toi
 // returns the type of the thing to create.
-tpi_vals tpage_ns::next_item(Buffer&in,Buffer&out)
-{
+auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
   Toi.reset();
   char c;
   if(!in.tp_next_char(c)) return tpi_noval;
@@ -186,8 +179,7 @@ tpi_vals tpage_ns::next_item(Buffer&in,Buffer&out)
 
 // This reads up to four items.
 // returns a number that tells what types have been read.
-int TitlePageFullLine::read()
-{
+auto TitlePageFullLine::read() -> int {
   item1.reset();
   item2.reset();
   item3.reset();
@@ -224,8 +216,7 @@ int TitlePageFullLine::read()
 
 // First attempt at classification 
 // E=1 C=2 S=3 A=4 e=5
-tpi_vals TitlePageFullLine::classify(int w,int state)
-{
+auto TitlePageFullLine::classify(int w, int state) -> tpi_vals {
   if(w==-1) return tpi_err; // forget about this
   flags = 0;
   if(item1.has_a_char() || item4.has_a_char()) return tpi_err;
@@ -257,8 +248,7 @@ tpi_vals TitlePageFullLine::classify(int w,int state)
 }
 
 // More classification. This allocates memory, and modifies state
-bool TitlePageAux::classify(tpi_vals w,int& state)
-{
+auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
   switch(w) {
   case tpi_CESS: // \makeRR <rrstart> "ok" "ok"
     state = 1; 
@@ -430,8 +420,7 @@ void TitlePageAux::exec(int v,bool vb)
 // Finds the real flag to increment.
 // If 0, increments it and returns true, otherwise return false.
 // In the case of =tpi_rt_*_def, the flag is a pointer !
-bool TitlePageAux::increment_flag()
-{
+auto TitlePageAux::increment_flag() -> bool {
   if(type==tpi_rt_normal_def ||type==tpi_rt_list_def)
     return Titlepage.bigtable[xflags].increment_flag();
   if(!has_u_flags()) {
@@ -532,8 +521,7 @@ void TpiOneItem::reset()
 
 // For the case CEE, \Paris ?<UR flags> <Rocq>
 // s is the string without attribs, and n is the length
-int TitlePageAux::find_UR (String s, int n) const
-{
+auto TitlePageAux::find_UR(String s, int n) const -> int {
   if(type != tpi_rt_urlist) return 0;
   String w = T2.c_str();
   if(strncmp(w,s,n)==0) return idx;
@@ -542,8 +530,7 @@ int TitlePageAux::find_UR (String s, int n) const
 
 // For the case CE, \URsop ?+ <UR myflags> 
 // We put `URsop myflags' in the buffer local_buf in case of success.
-int TitlePage::find_UR (const string& s, string name) const
-{
+auto TitlePage::find_UR(const string &s, string name) const -> int {
   Buffer& B = local_buf;
   B << bf_reset << s;
   int j=0;
@@ -566,16 +553,14 @@ int TitlePage::find_UR (const string& s, string name) const
 }
 
 // true if this OK for CCS and the nams is right.
-bool TitlePageAux::find_cmd (const string& s) const
-{
+auto TitlePageAux::find_cmd(const string &s) const -> bool {
   if(type != tpi_rt_normal && type != tpi_rt_list) return false;
   if(T1 != s) return false;
   return true;
 }
 
 // Returns the index for a CCS.
-int TitlePage::find_cmd (const string& s) const
-{
+auto TitlePage::find_cmd(const string &s) const -> int {
   for(unsigned int k=0;k<bigtable.size();k++) {
     if(bigtable[k].find_cmd(s))
       return k;
@@ -594,24 +579,21 @@ TitlePageAux::TitlePageAux(TitlePageFullLine& X) : idx(0), type(tpi_zero)
 }
 
 // True if B is an initial substring of A
-bool tpage_ns::begins_with(string A, String B)
-{
+auto tpage_ns::begins_with(string A, String B) -> bool {
   unsigned int n = strlen(B);
   if(A.length()<n) return false;
   return strncmp(A.c_str(),B,n) == 0;
 }
 
 // True if current line starts with x.
-bool Clines::starts_with(String x) const
-{
+auto Clines::starts_with(String x) const -> bool {
   return tpage_ns::begins_with(get_chars(),x);
 }
 
 // This compares a Begin line with the string s.
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type
-int Buffer::is_begin_something(String s)
-{
+auto Buffer::is_begin_something(String s) -> int {
   if(strncmp("Begin",buf,5) != 0) return 0;
   if(strncmp("Type",buf+5,4)==0) {
     ptr = 9;
@@ -669,8 +651,7 @@ void LinePtr::parse_and_extract_clean(String s)
 }
 
 // Returns all line in a begin/end block named s
-LinePtr LinePtr::parse_and_extract(String s) const
-{
+auto LinePtr::parse_and_extract(String s) const -> LinePtr {
   LinePtr res;
   int b =0;
   Buffer& B = local_buf;
@@ -716,8 +697,7 @@ void LinePtr::parse_conf_toplevel() const
 }
 
 // Converts two characters into a flag.
-bool TitlePageFullLine::encode_flags(char c1, char c2)
-{
+auto TitlePageFullLine::encode_flags(char c1, char c2) -> bool {
   flags = 0;
   if(c1=='p') flags = tp_p_flag;
   else if(c1=='e')  flags = tp_e_flag;
@@ -792,15 +772,13 @@ void TitlePageAux::dump(int k)
 }
 
 // Converts one of the strings into an empty XML element
-Xmlp TitlePageAux::convert(int i)
-{
+auto TitlePageAux::convert(int i) -> Xmlp {
   string s = i==1 ? T1 : i==2 ? T2 : i== 3 ? T3:T4;
   return local_buf.xml_and_attrib(s);
 }
 
 // Converts one of the strings into a XML element containing R.
-Xmlp TitlePageAux::convert(int i, Xmlp r)
-{
+auto TitlePageAux::convert(int i, Xmlp r) -> Xmlp {
   string s = i==1 ? T1 : i==2 ? T2 : i== 3 ? T3:T4;
   Xmlp res = local_buf.xml_and_attrib(s);
   res->push_back(r);
@@ -811,8 +789,7 @@ Xmlp TitlePageAux::convert(int i, Xmlp r)
 // If c is true, stop at white space or comment.
 // Otherwise, just remove trailing space.
 
-String Buffer::see_config_kw(String s, bool c)
-{
+auto Buffer::see_config_kw(String s, bool c) -> String {
   if(!see_equals(s)) return 0;
   if(c) {
     int k = ptr;
@@ -853,8 +830,7 @@ void LinePtr::find_all_types (vector<string>& res)
 
 
 // This find a toplevel value.
-string LinePtr::find_top_val (String s,bool c)
-{
+auto LinePtr::find_top_val(String s, bool c) -> string {
   Buffer& B = local_buf;
   line_iterator_const C = value.begin();
   line_iterator_const E = value.end();
@@ -903,16 +879,15 @@ void Buffer::find_top_atts()
 }
 
 // Returns +1 if begin, -1 if end, 0 otherwise.
-int Buffer::see_config_env() const
-{
+auto Buffer::see_config_env() const -> int {
   if(strncmp(buf,"Begin",5) ==0) return 1;
   if(strncmp(buf,"End",3) ==0) return -1;
   return 0;
 }
 
 // This skips over an environment.
-line_iterator_const LinePtr::skip_env(line_iterator_const C, Buffer&B)
-{
+auto LinePtr::skip_env(line_iterator_const C, Buffer &B)
+    -> line_iterator_const {
   ++C;
   int b = B.see_config_env();
   if(b!=1)  return C;
@@ -938,8 +913,7 @@ void Buffer::find_one_type(vector<string>& S)
 
 // This is called for all lines, outside groups.
 // Either calls the_parser.shell_a.assign
-bool tpage_ns::see_main_a(Buffer&in, Buffer&key, Buffer&val)
-{
+auto tpage_ns::see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool {
   key.reset();
   val.reset();
   int k = tpage_ns::see_an_assignment(in,key,val);
@@ -973,8 +947,7 @@ void tpage_ns::after_conf_assign(vector<string>& V)
 
 // Returns 0, unless we see A="B", fills the buffers A and B.
 // return 2 if there is a space in A, 1 otherwise.
-int tpage_ns::see_an_assignment(Buffer&in, Buffer&key,Buffer& val)
-{
+auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
   if(in.tp_fetch_something() != tl_normal) return 0;
   for(;;) {
     if(in.is_special_end()) return 0;
@@ -996,10 +969,8 @@ int tpage_ns::see_an_assignment(Buffer&in, Buffer&key,Buffer& val)
   }
 }
 
-
 // Find one aliases in the config file.
-bool Buffer::find_alias(const vector<string>& SL, string&res)
-{
+auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
   ptr = 0;
   if(strncmp(buf,"End",3)==0) return false;
   skip_sp_tab();
@@ -1036,11 +1007,10 @@ bool Buffer::find_alias(const vector<string>& SL, string&res)
   }
   the_log << "Alias " << pot_res << " does not match " << res << "\n";
   return false;
-} 
+}
 
 // Find all aliases in the config file.
-bool LinePtr::find_aliases (const vector<string>& SL, string& res)
-{
+auto LinePtr::find_aliases(const vector<string> &SL, string &res) -> bool {
   Buffer& B = local_buf;
   line_iterator_const C = value.begin();
   line_iterator_const E = value.end();
@@ -1064,8 +1034,7 @@ bool LinePtr::find_aliases (const vector<string>& SL, string& res)
 }
 
 // This converts ra2003 to ra.
-string Buffer::remove_digits(string s)
-{
+auto Buffer::remove_digits(string s) -> string {
   reset();
   push_back(s);
   int k = wptr;

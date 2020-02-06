@@ -19,15 +19,15 @@ const char* txtrees_rcsid =
 
 namespace trees_ns {
   void normalise_space(TokenList&L);
-  int which_index(string);
+  auto which_index(string) -> int;
 }
 
 namespace date_ns {
-  bool check_date(int y,int m, int d);
-  int year_length(int y);
-  int month_length(int y, int m);
-  void prev_date(int&year,int&month,int&day);
-  void next_date(int&year,int&month,int&day);
+auto check_date(int y, int m, int d) -> bool;
+auto year_length(int y) -> int;
+auto month_length(int y, int m) -> int;
+void prev_date(int &year, int &month, int &day);
+void next_date(int &year, int &month, int &day);
 }
 
 
@@ -47,9 +47,8 @@ AllIndex::AllIndex() : last_index(0),last_iid(0)
 }
 
 // Returns the index location associated to the name S
-// If S is not found, the main index is used 
-int AllIndex::find_index(const string& s)
-{
+// If S is not found, the main index is used
+auto AllIndex::find_index(const string &s) -> int {
   int n = value.size();
   for(int i=0;i<n;i++)
     if(value[i]->has_name(s)) return i;
@@ -67,8 +66,7 @@ void AllIndex::new_index(const string& s, const string& title)
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
-int Parser::get_index_value()
-{
+auto Parser::get_index_value() -> int {
   string s= sT_optarg_nopar();
   int i = the_index.find_index(s);
   return the_index.get_index(i)->get_AL();
@@ -109,14 +107,9 @@ void trees_ns::normalise_space(TokenList&L)
   L.swap(res);
 }
 
+auto trees_ns::xless(Indexer *A, Indexer *B) -> bool { return A->key < B->key; }
 
-bool trees_ns::xless(Indexer*A,Indexer*B)
-{
-  return  A->key < B->key;
-}
-
-int Parser::index_aux(TokenList& L, int father,int g)
-{
+auto Parser::index_aux(TokenList &L, int father, int g) -> int {
   static const Token escape_t (other_t_offset, '"');
   static const Token actual_t (other_t_offset, '@');
   static const Token actualb_t (letter_t_offset, '@');
@@ -454,8 +447,7 @@ void Parser::T_etex(subtypes c)
 // --------------------------------------------------------------------
 // GB4e
 
-string mk_ensure(string a, string b)
-{
+auto mk_ensure(string a, string b) -> string {
   return a + "{\\ensuremath{" + b + "}}";
 }
 
@@ -510,8 +502,7 @@ void Parser::get_counter(Token T, int& c)
 }
 
 // Reads three counter names; return true if OK
-bool Parser::scan_date_ctrs()
-{
+auto Parser::scan_date_ctrs() -> bool {
   year_ctr = hash_table.relax_token;
   month_ctr = hash_table.relax_token;
   day_ctr = hash_table.relax_token;
@@ -553,8 +544,7 @@ void Parser::get_date_ctrs(int& year, int& month, int& day)
 
 // True if year Y is a leap year
 
-bool tralics_ns::is_leap_year(int y)
-{
+auto tralics_ns::is_leap_year(int y) -> bool {
   if(y%4) return false;
   if(y<=1500) return true;
   if(y%100==0) return y%400==0; 
@@ -562,24 +552,21 @@ bool tralics_ns::is_leap_year(int y)
 }
 
 // Returns number of days in the year
-int date_ns::year_length(int y)
-{
+auto date_ns::year_length(int y) -> int {
   if(y==1582) return 355;
   if(is_leap_year(y)) return 366;
   return 365;
 }
 
 // Returns number of days in the month
-int date_ns::month_length(int y, int m)
-{
+auto date_ns::month_length(int y, int m) -> int {
   if(m !=2) return month_length_table[m];
   if(is_leap_year(y)) return 29;
   else return 28;
 }
 
 // Return true if valid, signals error otherwise
-bool date_ns::check_date(int y,int m, int d)
-{
+auto date_ns::check_date(int y, int m, int d) -> bool {
   String Bad=0;
   int ml = 0;
   if(y<=0) Bad="year<1";

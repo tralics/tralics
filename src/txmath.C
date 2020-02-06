@@ -42,24 +42,23 @@ namespace math_ns {
   void add_to_trace(const string& x);
   void remove_from_trace();
   void bad_math_warn(Buffer&);
-  Xmlp finish_cv_special(bool isfrac, Istring s,int pos, Xmlp a, Xmlp b,
-				 Istring sz,int numalign, int denalign,
-			       int style,int open, int close);
+  auto finish_cv_special(bool isfrac, Istring s, int pos, Xmlp a, Xmlp b,
+                         Istring sz, int numalign, int denalign, int style,
+                         int open, int close) -> Xmlp;
 };
 
 
 namespace tralics_ns {
-  String math_env_name(subtypes c);
-  int math_env_props(subtypes c);
+auto math_env_name(subtypes c) -> String;
+auto math_env_props(subtypes c) -> int;
 }
 
 using tralics_ns::math_env_props;
 
 // This duplicates the formula.
-// It removes tokens preceeded by the special marker. 
+// It removes tokens preceeded by the special marker.
 
-subtypes Math::duplicate (bool nomath) const
-{
+auto Math::duplicate(bool nomath) const -> subtypes {
   subtypes k = math_data.find_math_location(type,sname);
   Math& cp =  math_data.get_list(k);
   int sp = 0, sm = 0;
@@ -140,16 +139,12 @@ void math_ns::add_to_trace(char x)
   Trace.push_back(x); trace_needs_space= false;
 }
 
-Xmlp math_ns::get_builtin(int p) 
-{ 
-  return math_data.get_builtin(p); 
-}
+auto math_ns::get_builtin(int p) -> Xmlp { return math_data.get_builtin(p); }
 
 // -----------------------------------------------------------------------
 // Math environments. The following are recognised.
 
-String tralics_ns::math_env_name(subtypes chr)
-{
+auto tralics_ns::math_env_name(subtypes chr) -> String {
   switch(chr) {
   case eqnarray_code: return  "endeqnarray";
   case eqnarray_star_code: return  "endeqnarray*";
@@ -203,8 +198,7 @@ String tralics_ns::math_env_name(subtypes chr)
 // 16 has an optional ignored arg
 // 32 has an required ignored
 
-int tralics_ns::math_env_props(subtypes chr)
-{
+auto tralics_ns::math_env_props(subtypes chr) -> int {
   switch(chr) {
   case eqnarray_code: return 1+4+8;
   case eqnarray_star_code: return 1+8;
@@ -243,12 +237,9 @@ int tralics_ns::math_env_props(subtypes chr)
   }
 }
 
-
-
 // Name of a math object. In a previous version, the name was a character string.
 // Now it is a subtype. The name has the form "endmath" and we remove the prefix
-String Math::get_name () const
-{
+auto Math::get_name() const -> String {
   subtypes w = get_sname();
   if(w==nomathenv_code) return "";
   String S = tralics_ns::math_env_name(w);
@@ -259,8 +250,7 @@ String Math::get_name () const
 // --------------------------------------------------
 
 // Interprets the meta data of the list
-ostream& operator <<(ostream& X,  math_list_type y)
-{
+auto operator<<(ostream &X, math_list_type y) -> ostream & {
   switch(y) {
   case invalid_cd: X << "Invalid list"; break;
   case math_open_cd: X << "simple group";  break;
@@ -280,14 +270,12 @@ ostream& operator <<(ostream& X,  math_list_type y)
   return X;
 }
 
-Logger& operator <<(Logger& X,  math_list_type y)
-{
+auto operator<<(Logger &X, math_list_type y) -> Logger & {
   *(X.fp) << y;
   return X;
 }
 
-Buffer& operator <<(Buffer& X,  math_list_type y)
-{
+auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
   switch(y) {
   case invalid_cd: X << "Invalid list"; break;
   case math_open_cd: X << "Simple group";  break;
@@ -353,8 +341,7 @@ void MathElt::print() const
 // Basic code generator
 
 // General fence around val.
-Xmlp MathDataP::make_mfenced(int open, int close, Xmlp val)
-{
+auto MathDataP::make_mfenced(int open, int close, Xmlp val) -> Xmlp {
   Xmlp res = new Xml(cst_mfenced,0);
   res->add_att(np_close,xml_lr_ptable[close]);
   res->add_att(np_open,xml_lr_ptable[open]);
@@ -366,12 +353,10 @@ Xmlp MathDataP::make_mfenced(int open, int close, Xmlp val)
   else res->add_att(cst_separators,np_separator);
   res->add_tmp(val);
   return res;
-} 
-
+}
 
 // This adds a style element above res.
-Xmlp MathDataP::add_style(int lvl, Xmlp res)
-{
+auto MathDataP::add_style(int lvl, Xmlp res) -> Xmlp {
   if(lvl<0) return res; // special case
   res = new Xml(cst_mstyle,res);
   if(lvl==0) {
@@ -424,8 +409,7 @@ void Parser::add_math_label (Xmlp res)
 
 
 // Generates <elt>first_arg second_arg</elt>
-Xmlp math_ns::xml2sons(Istring elt, Xmlp first_arg, Xmlp second_arg)
-{
+auto math_ns::xml2sons(Istring elt, Xmlp first_arg, Xmlp second_arg) -> Xmlp {
   Xmlp tmp= new Xml(elt,0);
   tmp->add_tmp(first_arg);
   tmp->push_back(xmlspace);
@@ -434,8 +418,8 @@ Xmlp math_ns::xml2sons(Istring elt, Xmlp first_arg, Xmlp second_arg)
 }
 
 // As above, but if B1 is not empty, adds b1 as attribute with value b2.
-Xmlp Stack::xml2_space(Istring elt, Istring b1, Istring b2,Xmlp f_arg, Xmlp s_arg)
-{
+auto Stack::xml2_space(Istring elt, Istring b1, Istring b2, Xmlp f_arg,
+                       Xmlp s_arg) -> Xmlp {
   Xmlp tmp = new Xml(elt,0);
   if(!b1.null()) tmp->add_att(b1,b2);
   tmp->add_tmp(f_arg);
@@ -445,8 +429,8 @@ Xmlp Stack::xml2_space(Istring elt, Istring b1, Istring b2,Xmlp f_arg, Xmlp s_ar
 }
 
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
-Xmlp Stack::xml2_space(Istring elt, Istring b1, Xmlp first_arg, Xmlp second_arg)
-{
+auto Stack::xml2_space(Istring elt, Istring b1, Xmlp first_arg, Xmlp second_arg)
+    -> Xmlp {
   Xmlp tmp = new Xml(elt,0);
   if(!b1.null()) tmp->add_att(b1,the_names[np_true]);
   tmp->add_tmp(first_arg);
@@ -509,15 +493,11 @@ void Math::push_back(Math& X)
   value.splice(value.end(), X.value);
 }
 
-Math& MathElt::get_list() const
-{
+auto MathElt::get_list() const -> Math & {
   return math_data.get_list(get_chr());
 }
 
-Math& Math::get_list(int w) const
-{
-  return math_data.get_list(w);
-}
+auto Math::get_list(int w) const -> Math & { return math_data.get_list(w); }
 
 // Adds a token to the list
 void Math::push_back(CmdChr X, subtypes c)
@@ -581,8 +561,7 @@ void Math::push_back_small(Xmlp A)
 // Returns the next style in the list D,T, S, SS.
 // D and T give S, S gives SS, and SS gives SS.
 // Knuth uses: 2*(x/4)+1+1 for sub,  2*(x/4)+1+ (x mod2) for sub
-math_style math_ns::next_math_style(math_style x)
-{
+auto math_ns::next_math_style(math_style x) -> math_style {
   switch(x) {
   case ms_T: 
   case ms_D: return ms_S;
@@ -591,8 +570,7 @@ math_style math_ns::next_math_style(math_style x)
 }
 
 // Knuth uses: x+2-2*(x/6)  for numerator x*(x/2)+1+2-2*(x/6) for denominator
-math_style math_ns::next_frac_style(math_style x)
-{
+auto math_ns::next_frac_style(math_style x) -> math_style {
   switch(x) {
   case ms_D: return ms_T;
   case ms_T:  return ms_S;
@@ -601,8 +579,7 @@ math_style math_ns::next_frac_style(math_style x)
 }
 
 // Takes the code of a command like \textstyle, returns ms_T
-math_style math_ns::style_level(subtypes tt)
-{
+auto math_ns::style_level(subtypes tt) -> math_style {
   if(tt==displaystyle_code)  return ms_D;
   else if(tt==textstyle_code) return ms_T;
   else if(tt==scriptstyle_code) return ms_S;
@@ -624,8 +601,7 @@ void MathDataP::boot_table()
   lmath_pos = 0;
 }
 
-inline Xmlp MathElt::get_xml_val() const
-{
+inline auto MathElt::get_xml_val() const -> Xmlp {
   return math_data.get_xml_val(get_chr());
 }
 
@@ -662,8 +638,7 @@ void MathHelper::set_type(bool b)
 
 // This finds a free position in the table of math lists.
 // Note: the return value is never zero.
-subtypes MathDataP::find_math_location(math_list_type c, subtypes n)
-{
+auto MathDataP::find_math_location(math_list_type c, subtypes n) -> subtypes {
   lmath_pos++;
   int res = lmath_pos;
   if(res>=lmath_size) realloc_list();
@@ -674,16 +649,14 @@ subtypes MathDataP::find_math_location(math_list_type c, subtypes n)
 
 // This finds a free position in the xml table.
 // Note that there is a free position in case of overflow (see next function)
-subtypes MathDataP::find_xml_location()
-{
+auto MathDataP::find_xml_location() -> subtypes {
   xmath_pos++;
   if(xmath_pos>=xmath_size) realloc_xml();
   return subtypes(m_offset+xmath_pos-1);
 }
 
 // This finds a free position, puts Y in it, and returns the position.
-subtypes MathDataP::find_xml_location(Xmlp y)
-{
+auto MathDataP::find_xml_location(Xmlp y) -> subtypes {
   xml_math_table[xmath_pos] = y;
   return find_xml_location();
 }
@@ -714,8 +687,7 @@ void MathDataP::finish_math_mem()
 }
 
 // True if this is a digit with category 12
-bool MathElt::is_digit() const 
-{
+auto MathElt::is_digit() const -> bool {
   return get_cmd()==12 && val.is_digit();
 }
 
@@ -723,8 +695,8 @@ bool MathElt::is_digit() const
 // we open a group, create a new mathlist res, add it to cur_math.
 // Note that the type c appears both as type of res, and a field of cur_math
 
-subtypes Parser::new_math_list(int cur_math, math_list_type c, subtypes s)
-{
+auto Parser::new_math_list(int cur_math, math_list_type c, subtypes s)
+    -> subtypes {
   subtypes k = math_data.find_math_location(c,s);
   math_data.get_list(cur_math).push_back_list(k,c);
   scan_math3(k,c,1);
@@ -732,8 +704,7 @@ subtypes Parser::new_math_list(int cur_math, math_list_type c, subtypes s)
 }
 
 // This reads a character (delimiter) after a \left or a \right.
-del_pos Parser::math_lr_value()
-{
+auto Parser::math_lr_value() -> del_pos {
   remove_initial_space_relax();
   add_to_trace(cur_tok);
   del_pos k = get_delimiter(cur_cmd_chr);
@@ -742,7 +713,6 @@ del_pos Parser::math_lr_value()
 	      cur_tok,"","bad left/right");
   return del_dot;
 }
-
 
 // This is done to the main math list U when we start reading a formula.
 
@@ -753,8 +723,7 @@ del_pos Parser::math_lr_value()
 // the name of the environment. 
 // Sets and returns the inline/non-inline flag
 
-bool Parser::start_scan_math(Math&u, subtypes type)
-{
+auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
   u.set_name(type);
   if(type== nomathenv_code) { // case of $...
     add_to_trace(cur_tok);
@@ -850,10 +819,7 @@ void Parser::finish_trivial_math(Xmlp res)
 
 
 // Needed for implementation of \ifinner
-bool Parser::is_inner_math() 
-{
-  return cmi.is_inline();
-}
+auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
@@ -1004,8 +970,7 @@ void MathHelper::handle_tags()
 
 // Reads a new token.
 // Return  0 if end-of data, 1 if token should be ignored, 2 otherwise
-int Parser::scan_math1(int res)
-{
+auto Parser::scan_math1(int res) -> int {
   get_x_token();
   if(cur_tok.is_invalid()) {
     parse_error("End of input reached");
@@ -1278,8 +1243,7 @@ void Parser::scan_math(int res, math_list_type type)
 }
 
 // We have seen & or \\. Possibly inserts v-part
-bool Parser::scan_math_endcell(Token t)
-{
+auto Parser::scan_math_endcell(Token t) -> bool {
   if(the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
     TokenList L = the_stack.get_u_or_v(false);
     if(!L.empty()) {
@@ -1355,8 +1319,7 @@ void MathHelper::ml_check_labels()
   
 // true if no equation number has to be produced
 // leaves a hole for the label
-bool MathHelper::end_of_row()
-{
+auto MathHelper::end_of_row() -> bool {
   int k = last_ml_pos;
   int n =  multi_labels.size();
   bool seen_label = false;
@@ -1456,8 +1419,7 @@ void Parser::scan_math_endcell_ok(int res)
 
 // We have seen \begin or \end
 // return false if parsing continues, true otherwise (case of \end)
-bool Parser::scan_math_env(int res, math_list_type type)
-{
+auto Parser::scan_math_env(int res, math_list_type type) -> bool {
   symcodes T = cur_cmd_chr.get_cmd();
   bool at_start = T==begin_cmd;
   // Check if v-part of template has to be inserted here
@@ -1543,8 +1505,7 @@ bool Parser::scan_math_env(int res, math_list_type type)
 
 // We have seen a dollar sign, expected closing delimiter type
 // Returns  true if Ok, false if parsing continues
-bool Parser::scan_math_dollar(int res,math_list_type type)
-{
+auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
   switch(type) {
   case math_dollar_cd:
     return true;
@@ -1586,7 +1547,7 @@ bool Parser::scan_math_dollar(int res,math_list_type type)
   default:
     parse_error("Extra $ ignored...");
     return false;
-  } 
+  }
 }
 
 // We have seen \tag, \@xtag o<r \@ytag
@@ -1670,8 +1631,7 @@ void Parser::scan_eqno(math_list_type type)
   
 // Case of a \kern, or something like that. We scan the value, convert it
 // in pt.
-ScaledInt Parser::scan_math_kern(symcodes T, subtypes& c)
-{
+auto Parser::scan_math_kern(symcodes T, subtypes &c) -> ScaledInt {
   ScaledInt value =0;
   bool is_mu = false;
   Token ct = cur_tok;
@@ -1751,8 +1711,7 @@ void Parser::scan_hbox(int ptr,subtypes c)
 // case w=1 or w = 3: scans a relax
 // Same command with relax hacking
 // Changes in 2.10.9: always create a scope
-subtypes Parser::math_argument(int w,Token t) 
-{
+auto Parser::math_argument(int w, Token t) -> subtypes {
   Token xfct_caller = fct_caller;
   fct_caller = t;
   if(w&1) {
@@ -1773,8 +1732,7 @@ subtypes Parser::math_argument(int w,Token t)
 // This reads a number and returns \displaystyle, \textstyle
 // scriptstyle \scriptscriptstyle if the result is 0 1 2 3 
 // It returns \relax otherwise. Should we call scanint ?
-Token Parser::scan_style()
-{
+auto Parser::scan_style() -> Token {
   TokenList L = read_arg();
   Token t = token_ns::get_unique(L);
   int p = 4;
@@ -2018,8 +1976,7 @@ void Math::fetch_rlc(vector<AttList>&table)
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
-Xmlp Math::convert_cell(int& n, vector<AttList>& table,math_style W)
-{
+auto Math::convert_cell(int &n, vector<AttList> &table, math_style W) -> Xmlp {
   Xmlp res = new Xml(cst_mtd,0);
   if(empty()) {
     n++; // empty cell, no atts needed.
@@ -2066,8 +2023,8 @@ Xmlp Math::convert_cell(int& n, vector<AttList>& table,math_style W)
 }
 
 // Converts an array.
-Xmlp Math::split_as_array(vector<AttList>& table, math_style W, bool numbered)
-{
+auto Math::split_as_array(vector<AttList> &table, math_style W, bool numbered)
+    -> Xmlp {
   Math cell;
   bool is_multline = sname == multline_code || sname == multline_star_code;
   bool needs_dp = math_env_props(sname) &1;
@@ -2130,10 +2087,8 @@ Xmlp Math::split_as_array(vector<AttList>& table, math_style W, bool numbered)
   return res;
 }
 
-
 // Converts an object that holds an array or something.
-Xmlp Math::M_array (bool numbered, math_style cms)
-{
+auto Math::M_array(bool numbered, math_style cms) -> Xmlp {
   vector<AttList> table;
   fetch_rlc(table);
   Xmlp res = split_as_array(table, cms,numbered);
@@ -2179,8 +2134,7 @@ void Xml::bordermatrix()
 // We assume here that the formula has two tokens. The first is underscore 
 // or caret, code in cmd. In the case of $_x$ or $_{x}$ or $^{y}$
 // return a non-mathml expression in case the argument is OK.
-Xmlp Math::trivial_math_index(symcodes cmd) 
-{
+auto Math::trivial_math_index(symcodes cmd) -> Xmlp {
   Buffer &B = math_buffer;
   B.reset();
   const_math_iterator L = value.begin();
@@ -2231,8 +2185,6 @@ Xmlp Math::trivial_math_index(symcodes cmd)
   return tmp;
 }
 
-
-
 // If this is a number, returns the number, with ok = 1;
 // if it starts with a number, followed by a hat, returns the number,
 // and reads the hat. 
@@ -2248,8 +2200,7 @@ Xmlp Math::trivial_math_index(symcodes cmd)
 // We handle also the case of $_{foo}$ that gives \textsubscript{foo}
 // provided that a special switch is true.
 
-Xmlp Math::trivial_math(int action)
-{
+auto Math::trivial_math(int action) -> Xmlp {
   action = action%8;
   if(action==0) return 0;
   const_math_iterator L = value.begin();
@@ -2314,13 +2265,11 @@ void Parser::TM_math_fonts(Math& x)
   x.push_back_font(cur_chr,zero_code);
 }
 
-bool Parser::is_not_a_math_env(String s)
-{
+auto Parser::is_not_a_math_env(String s) -> bool {
   find_env_token(s,false);
   if(cur_cmd_chr.is_user()) return true;
   return false;
 }
-
 
 // This is done when we see a label in a math formula.
 // If anchor is true, we are in the case of \anchorlabel.
@@ -2351,8 +2300,7 @@ void Math::remove_spaces()
 }
 
 // Returns true if there is an \over or something like that in the list.
-bool Math::has_over() const
-{
+auto Math::has_over() const -> bool {
   int ovr = count_if(value.begin(), value.end(), MathIsOver());
   if(ovr>1)
     the_parser.parse_error("Too many commands of type \\over");
@@ -2361,8 +2309,7 @@ bool Math::has_over() const
 
 // Case of \mathop{\rm sin}. The this in the procedure is what follows the
 // \mathop.
-Xmlp MathElt::try_math_op()
-{
+auto MathElt::try_math_op() -> Xmlp {
   if(!is_list()) return 0;
   Math& X = get_list();
   if(X.empty()) return 0;
@@ -2375,8 +2322,7 @@ Xmlp MathElt::try_math_op()
 }
 
 // This converts a character into a MathML object
-MathElt MathElt::cv_char()
-{
+auto MathElt::cv_char() -> MathElt {
   uint c = get_chr();
   int a;
   math_types mt = mt_flag_small;
@@ -2400,8 +2346,7 @@ MathElt MathElt::cv_char()
 }
 
 // This converts a constant.
-MathElt MathElt::cv_cst()
-{
+auto MathElt::cv_cst() -> MathElt {
   subtypes c = get_chr();
   Xmlp s = math_constants(c);
   math_types mt = math_space_code(c) ? mt_flag_space : mt_flag_small;
@@ -2409,8 +2354,7 @@ MathElt MathElt::cv_cst()
 }
 
 // This converts a list
-MathElt MathElt::cv_list(math_style cms,bool ph)
-{
+auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
   Math& X = get_list();
   if(get_lcmd()==math_open_cd) { // case of {x+y}
     XmlAndType res = X.M_cv(cms,ph?2:1);
@@ -2432,8 +2376,7 @@ MathElt MathElt::cv_list(math_style cms,bool ph)
 }
 
 // Return the name of the element associated to the command c.
-name_positions math_ns::cv_special_string (int c)
-{
+auto math_ns::cv_special_string(int c) -> name_positions {
   if(c>=first_maccent_code &&  c<=last_maccent_code)
     return c>=first_under_accent_code ? cst_munder : cst_mover;
   if(c==overline_code || c==overbrace_code|| c==stackrel_code ||
@@ -2451,8 +2394,7 @@ name_positions math_ns::cv_special_string (int c)
 }
 
 // Return 1 if the list is left aligned, 2 if right aligned, 0 if centered
-int Math::check_align()
-{
+auto Math::check_align() -> int {
   int a=0,b=0;
   if(!empty() &&front().get_cmd() == hfill_cmd) {
     a = front().get_chr();
@@ -2471,10 +2413,8 @@ int Math::check_align()
   return 0; // remaining cases are \hss and \hfilneg
 }
 
-
-// Create <mi>...</mi> and friends 
-MathElt MathElt::cv_mi(math_style cms)
-{
+// Create <mi>...</mi> and friends
+auto MathElt::cv_mi(math_style cms) -> MathElt {
   Math& L = get_list();
   subtypes c = get_fml_subtype();
   const_math_iterator X = L.begin();
@@ -2509,10 +2449,8 @@ MathElt MathElt::cv_mi(math_style cms)
   return MathElt(res,mt_flag_small);
 }
 
-
 //  This converts commands.
-MathElt MathElt::cv_special(math_style cms)
-{
+auto MathElt::cv_special(math_style cms) -> MathElt {
   subtypes c = get_fml_subtype();
   Math& L = get_list();
   switch(c) {
@@ -2613,9 +2551,7 @@ MathElt MathElt::cv_special(math_style cms)
   }
 }
 
-
-MathElt MathElt::cv_special1(math_style cms)
-{
+auto MathElt::cv_special1(math_style cms) -> MathElt {
   subtypes c = get_fml_subtype();
   int numalign = 0, denalign = 0;
   Math& L = get_list();
@@ -2734,10 +2670,8 @@ MathElt MathElt::cv_special1(math_style cms)
   return MathElt(res,is_mathop? mt_flag_opD: mt_flag_big);
 }
 
-
 // First pass: convert characters.
-MathElt MathElt::cv1(math_style cms,bool ph)
-{
+auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
   subtypes c = get_chr();
   switch(get_cmd()) {
   case space_catcode:
@@ -2829,8 +2763,7 @@ void MathElt::change_type(int t)
 }
 
 // We have an \over somewhere...
-XmlAndType Math::M_cv0(math_style cms)
-{
+auto Math::M_cv0(math_style cms) -> XmlAndType {
   Math A;
   subtypes c = subtypes(atopwithdelims_code+1);
   cms = next_frac_style(cms);
@@ -2882,10 +2815,9 @@ XmlAndType Math::M_cv0(math_style cms)
   return XmlAndType(res, mt_flag_big);
 }
 
-Xmlp math_ns::finish_cv_special(bool isfrac, Istring s, int pos, Xmlp a, Xmlp b,
-			       Istring sz,int numalign, int denalign,
-			       int style,int open, int close)
-{
+auto math_ns::finish_cv_special(bool isfrac, Istring s, int pos, Xmlp a, Xmlp b,
+                                Istring sz, int numalign, int denalign,
+                                int style, int open, int close) -> Xmlp {
   Istring Pos;
   if(pos) Pos = the_names[pos];
   Xmlp R = the_main->the_stack->xml2_space(s,Pos, a,b);
@@ -2902,8 +2834,7 @@ Xmlp math_ns::finish_cv_special(bool isfrac, Istring s, int pos, Xmlp a, Xmlp b,
   return R;
 }
 
-XmlAndType Math::M_cv (math_style cms, int need_row)
-{
+auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
   the_parser.my_stats.one_more_convert();
   if(has_over()) return M_cv0(cms); // there was an over somewhere
   Math res; 
@@ -3027,8 +2958,7 @@ XmlAndType Math::M_cv (math_style cms, int need_row)
 }
 
 // Translate \ref
-Xmlp Math::M_ref()
-{
+auto Math::M_ref() -> Xmlp {
   Math w = front().get_list();
   pop_front();
   string label = w.convert_opname();
@@ -3054,8 +2984,7 @@ void math_ns::bad_math_warn (Buffer& B)
     the_log << "Error occured after scanning " << B << ".\n";
 }
 
-int Math::M_mbox1 (Buffer&B, subtypes&f)
-{
+auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
   B.reset();
   while(!empty()) {
     symcodes cmd = front().get_cmd();
@@ -3125,7 +3054,6 @@ int Math::M_mbox1 (Buffer&B, subtypes&f)
   return 1;
 }
 
-
 void Math::handle_mbox(Math& res)
 {
   while(!empty()) {
@@ -3173,9 +3101,8 @@ void Math::handle_mbox(Math& res)
     }
   }
 }
- 
-Xmlp MathElt::remove_prefix() const
-{
+
+auto MathElt::remove_prefix() const -> Xmlp {
   if(get_cmd() == math_xml_cmd) return get_xml_val();
   dump_for_err();
   main_ns::log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) <<"\n";
@@ -3314,8 +3241,7 @@ void Cv3Helper::find_index(math_style cms)
 // This is a bit complicated
 // Special is A+B, A=8(limits) or 16(nolimits)
 // B=0 (not a big op), B=1 (\sum, \lim, \mathop), B=2(\int, \sin)
-name_positions Cv3Helper::find_operator(math_style cms)
-{
+auto Cv3Helper::find_operator(math_style cms) -> name_positions {
   int what =0;
   if(index) what ++;
   if(exponent) what += 2;
@@ -3378,8 +3304,7 @@ void Cv3Helper::add_kernel(math_style cms)
   res.push_back(p,-1,mt_flag_big);
 }
 
-Math Math::M_cv3(math_style cms)
-{
+auto Math::M_cv3(math_style cms) -> Math {
   Cv3Helper W(*this);
   for(;;) {
     W.reinit();
@@ -3399,8 +3324,7 @@ Math Math::M_cv3(math_style cms)
 
 // returns the element with a new id, if it's a <mo> and has a np_movablelimits
 // attributes; return null otherwise.
-Xmlp Xml::spec_copy()
-{
+auto Xml::spec_copy() -> Xmlp {
   if(name != Istring(cst_mo)) return 0;
   AttList&X = get_id().get_att();
   int i = X.has_value(the_names[np_movablelimits]);
@@ -3428,15 +3352,11 @@ void Math::concat(Xmlp res)
   }
 }
 
-del_pos MathElt::large2()
-{
-  return get_delimiter(get_chr());
-}
+auto MathElt::large2() -> del_pos { return get_delimiter(get_chr()); }
 
 // The list holds something like [a+b, et cl is ]
 // returns <mfenced open=[ close=]>a+b</mfenced>
-Xmlp Math::large1(MathElt& cl,math_style cms)
-{
+auto Math::large1(MathElt &cl, math_style cms) -> Xmlp {
   the_parser.my_stats.one_more_large();
   int close = cl.large2(); // ok ??
   int open = front().large2(); // ok ??
@@ -3467,8 +3387,7 @@ void Math::handle_cmd_Big (math_style cms)
   }
 }
 
-bool Math::handle_cmd_Big_aux (math_style cms)
-{
+auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
   MathList res;
   Math aux;
   bool state = false;
@@ -3505,10 +3424,7 @@ bool Math::handle_cmd_Big_aux (math_style cms)
   return ok && try_again;
 }
 
-Xmlp Math::convert_math(math_style k)
-{
-  return M_cv(k,1).get_value();
-}
+auto Math::convert_math(math_style k) -> Xmlp { return M_cv(k, 1).get_value(); }
 
 // Removes an an initial group that is the consequence of \refstepcounter
 void Math::remove_initial_group()

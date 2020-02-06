@@ -33,95 +33,109 @@ namespace {
 
 namespace main_ns {
   void register_file(LinePtr*);
-  bool use_pool(LinePtr&L);
+  auto use_pool(LinePtr &L) -> bool;
 }
 
 namespace io_ns {
   void print_ascii(ostream& fp, uchar c);
-  int how_many_bytes(uchar);
-  Utf8Char make_utf8char(uchar A, uchar B,uchar C,uchar D);
-  String plural(int n);
+  auto how_many_bytes(uchar) -> int;
+  auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> Utf8Char;
+  auto plural(int n) -> String;
   void check_for_encoding();
   void set_enc_param(int enc,int pos,int v);
-  int get_enc_param(int enc,int pos);
-  int find_encoding(String cl);
+  auto get_enc_param(int enc, int pos) -> int;
+  auto find_encoding(String cl) -> int;
   void show_encoding (int wc, const string& name);
 }
 
 // ---------------------------------------------------------
- 
 
-FullLogger& operator <<(FullLogger& X, String s) 
-{
-   if(X.verbose)  cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, String s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, Istring s) 
-{
-   if(X.verbose)  cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, Istring s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, int s) 
-{
-   if(X.verbose)  cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, int s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, char s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, char s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, unsigned char s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, unsigned char s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, const Buffer& s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, const string& s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, const string &s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, const TokenList& s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, const TokenList &s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator <<(FullLogger& X, const Xml* s) 
-{
-   if(X.verbose) cout << s; X.L << s; return X;
+auto operator<<(FullLogger &X, const Xml *s) -> FullLogger & {
+  if (X.verbose)
+    cout << s;
+  X.L << s;
+  return X;
 }
 
-FullLogger& operator<<(FullLogger& X,  const ScaledInt& x)
-{
-   if(X.verbose) cout << x; X.L << x;  return X;
+auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger & {
+  if (X.verbose)
+    cout << x;
+  X.L << x;
+  return X;
 }
 
-FullLogger& operator<<(FullLogger& fp, Token t)
-{
+auto operator<<(FullLogger &fp, Token t) -> FullLogger & {
   return fp << t.tok_to_str();
 }
 
-HalfLogger& operator <<(HalfLogger& X, String s) 
-{
+auto operator<<(HalfLogger &X, String s) -> HalfLogger & {
   if(X.verbose) cout << s; X.L << s; return X;
 }
 
-HalfLogger& operator <<(HalfLogger& X, Istring s) 
-{
+auto operator<<(HalfLogger &X, Istring s) -> HalfLogger & {
   if(X.verbose) cout << s; X.L << s; return X;
 }
 
-HalfLogger& operator <<(HalfLogger& X, int s) 
-{
+auto operator<<(HalfLogger &X, int s) -> HalfLogger & {
   if(X.verbose) cout << s; X.L << s; return X;
 }
-HalfLogger& operator <<(HalfLogger& X, const string& s) 
-{
+auto operator<<(HalfLogger &X, const string &s) -> HalfLogger & {
   if(X.verbose) cout << s; X.L << s; return X;
 }
 
@@ -134,12 +148,10 @@ void AttList::print(ostream& fp)
 }
 
 // Prints an att list on a stream.
-ostream& operator<<(ostream&fp, Xid X)
-{
+auto operator<<(ostream &fp, Xid X) -> ostream & {
   X.get_att().print(fp);
   return fp;
 }
-
 
 // ---------------------------------------------------------
 // Output methods for characters
@@ -159,8 +171,7 @@ void io_ns::print_ascii(ostream& fp, uchar c)
 }
 
 // returns true if only ascii 7 bits in the buffer
-bool Buffer::is_all_ascii() const
-{
+auto Buffer::is_all_ascii() const -> bool {
   for(int i=0;i<wptr; i++) {
     uchar c = buf[i];
     if(c>=128) return false;
@@ -170,9 +181,8 @@ bool Buffer::is_all_ascii() const
 }
 
 // returns false if some unprintable characters appear
-// Non-ascii chars are printable (assumes buffer is valid UTF8). 
-bool Buffer::is_good_ascii() const
-{
+// Non-ascii chars are printable (assumes buffer is valid UTF8).
+auto Buffer::is_good_ascii() const -> bool {
   for(int i=0;i<wptr; i++) {
     uchar c = buf[i];
     if(c<32 && c !='\t' && c!='\n') return false; 
@@ -190,8 +200,7 @@ Converter::Converter() : cur_file_line(0), global_error(false),
   cur_file_name = "tty";
 }
 
-String io_ns::plural(int n)
-{
+auto io_ns::plural(int n) -> String {
   if(n>1) return "s"; else return "";
 }
 
@@ -214,8 +223,7 @@ void Stats::io_convert_stats()
 
 // If an error is signaled on current line, we do not signal again
 // We mark current char as invalid
-bool Converter::new_error()
-{
+auto Converter::new_error() -> bool {
   local_error = true;
   if(global_error) return true;
   bad_lines ++;
@@ -264,8 +272,7 @@ void Buffer::utf8_ovf(int n)
 // This reads the next byte. 
 // We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
 // As a consequence, buf[ptr] is valid after the call
-uchar Buffer::next_utf8_byte ()
-{
+auto Buffer::next_utf8_byte() -> uchar {
   uchar x = buf[ptr];
   if ((x >> 6) == 2) { ++ptr; return x&63; }
   utf8_error(false);
@@ -276,9 +283,8 @@ uchar Buffer::next_utf8_byte ()
 // This returns the number of bytes in a UTF8 character
 // given the first byte. Returns 0 in case of error
 // Note: max Unicode value is 10FFFF. this is represented by F48FBFBF
-// if the first 3 bits are set, y is 0, 1, 2 3 or 4 plus 16. 
-int io_ns::how_many_bytes(uchar C)
-{
+// if the first 3 bits are set, y is 0, 1, 2 3 or 4 plus 16.
+auto io_ns::how_many_bytes(uchar C) -> int {
   if(C<128) return 1; // ascii
   if((C>>5) == 6) return 2;  // 2 bytes
   if((C>>5) != 7) return 0;  // cannot start with 10
@@ -290,8 +296,7 @@ int io_ns::how_many_bytes(uchar C)
 
 // Creates a Unicode character from the bytes A, B, C and D.
 // Return 0 if invalid. Return 0 if overflow
-Utf8Char io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D)
-{
+auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> Utf8Char {
   int n = io_ns::how_many_bytes(A);
   if(n==0) return 0;
   else if(n==1) return A;
@@ -302,8 +307,7 @@ Utf8Char io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D)
 
 // Returns 0 at end of line or error
 // may set local_error
-Utf8Char Buffer::next_utf8_char_aux()
-{
+auto Buffer::next_utf8_char_aux() -> Utf8Char {
   uchar c = next_char();
   if(c==0) return 0; 
   int n = io_ns::how_many_bytes(c);
@@ -330,9 +334,8 @@ Utf8Char Buffer::next_utf8_char_aux()
 }
 
 // Returns 0 at end of line or error
-// This complains if the character is greater than 1FFFF 
-Utf8Char Buffer::next_utf8_char()
-{
+// This complains if the character is greater than 1FFFF
+auto Buffer::next_utf8_char() -> Utf8Char {
   the_converter.local_error = false;
   Utf8Char res = next_utf8_char_aux();
   if(the_converter.local_error) return 0;
@@ -345,8 +348,7 @@ Utf8Char Buffer::next_utf8_char()
 
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
-Utf8Char Buffer::unique_character() const
-{
+auto Buffer::unique_character() const -> Utf8Char {
   uchar c= buf[0];
   int n = io_ns::how_many_bytes(c);
   if(n==0) return 0;
@@ -360,8 +362,7 @@ Utf8Char Buffer::unique_character() const
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
 // Otherwise, the result is in utf8_out.
-bool Buffer::convert_line0 (int wc)
-{
+auto Buffer::convert_line0(int wc) -> bool {
   Buffer& res = utf8_out;
   res.reset();
   reset_ptr();
@@ -381,7 +382,6 @@ bool Buffer::convert_line0 (int wc)
   }
   return the_converter.line_is_ascii;
 }
-
 
 // This converts a line in UTF8 format
 // Result of conversion is pushed back in the buffer
@@ -432,8 +432,7 @@ void io_ns::set_enc_param(int enc,int pos, int v)
   else custom_table[enc][pos] = pos;
 }
 
-int io_ns::get_enc_param(int enc,int pos)
-{
+auto io_ns::get_enc_param(int enc, int pos) -> int {
   if(!(enc>=2 && enc< max_encoding) ) return pos;
   enc -= 2;
   if(!(pos>=0 && pos<lmaxchar)) return pos;
@@ -460,8 +459,7 @@ void LinePtr::change_encoding(int wc)
 // -----------------------------------------------------------------
 // Reading characters from files
 
-int io_ns::find_encoding(String cl)
-{
+auto io_ns::find_encoding(String cl) -> int {
   if (strstr (cl, "-*-")) {
     if(strstr(cl,"coding: utf-8")) return 0;
     if(strstr(cl,"coding: utf8")) return 0;
@@ -488,8 +486,7 @@ void LinePtr::set_interactive()
 }
 
 // interface with the line editor.
-int LinePtr::read_from_tty(Buffer& B)
-{
+auto LinePtr::read_from_tty(Buffer &B) -> int {
   static bool prev_line = false; // was previous line non-blank ?
   static char m_ligne [4096];
   readline(m_ligne,78);
@@ -802,8 +799,7 @@ void Buffer::out_log (Utf8Char ch,output_encoding_type T)
 
 // Converts the buffer to the output encoding
 // If conversion is trivial, returns string a.
-String Buffer::convert_to_out_encoding(String a) const
-{
+auto Buffer::convert_to_out_encoding(String a) const -> String {
   output_encoding_type T = the_main->get_output_encoding();
   if(T==en_boot || T== en_utf8) return a;
   if(is_all_ascii()) return a;
@@ -811,8 +807,7 @@ String Buffer::convert_to_out_encoding(String a) const
 }
 
 // Convert to latin 1 or ASCII
-String Buffer::convert_to_latin1(bool nonascii) const
-{
+auto Buffer::convert_to_latin1(bool nonascii) const -> String {
   Buffer& I = utf8_in;
   Buffer& O = utf8_out;
   I.reset(); I.push_back(buf);
@@ -833,8 +828,7 @@ String Buffer::convert_to_latin1(bool nonascii) const
 
 // Returns the buffer, converted into log encoding, to be printed
 // on the transcript file.
-String Buffer::convert_to_log_encoding() const 
-{
+auto Buffer::convert_to_log_encoding() const -> String {
   output_encoding_type T = the_main->get_log_encoding();
   if(is_all_ascii() || (T==en_utf8 && is_good_ascii()))
     return c_str();
@@ -971,8 +965,7 @@ void FullLogger::init(string name,bool status)
 
 // This can be used to check if the main file exists. In this case the
 // transcript file is not yet open.
-bool tralics_ns::file_exists(String name)
-{
+auto tralics_ns::file_exists(String name) -> bool {
   FILE* f = fopen(name,"r");
   if (log_is_open)
     the_log << lg_start_io << "file " << name 
@@ -981,19 +974,16 @@ bool tralics_ns::file_exists(String name)
   return false;
 }
 
-bool tralics_ns::file_exists(string B)
-{
+auto tralics_ns::file_exists(string B) -> bool {
   return tralics_ns::file_exists(B.c_str());
 }
 
-bool tralics_ns::file_exists(Buffer&B)
-{
+auto tralics_ns::file_exists(Buffer &B) -> bool {
   return tralics_ns::file_exists(B.c_str());
 }
 
 // This exits if the file cannot be opened and argument is true
-fstream* tralics_ns::open_file(String name, bool fatal)
-{
+auto tralics_ns::open_file(String name, bool fatal) -> fstream * {
   fstream* fp = new fstream(name,std::ios::out);
   if (log_is_open && !*fp)
     the_log << "Cannot open file " << name << " for output \n"; 
@@ -1005,8 +995,7 @@ fstream* tralics_ns::open_file(String name, bool fatal)
 }
 
 // This takes a string as argument
-fstream* tralics_ns::open_file(string name, bool f)
-{
+auto tralics_ns::open_file(string name, bool f) -> fstream * {
   return tralics_ns::open_file(name.c_str(),f) ;
 }
 
@@ -1085,14 +1074,12 @@ void LinePtr::clear_and_copy(LinePtr& X)
   set_file_name(X.get_file_name());
 }
 
-String LinePtr::dump_name () const
-{
+auto LinePtr::dump_name() const -> String {
   if (file_name.empty ()) return "virtual file";
   thebuffer.reset ();
   thebuffer << "file " << file_name;
   return thebuffer.c_str();
 }
-
 
 // Whenever a TeX file is opened for reading, we print this in the log
 void LinePtr::after_open()
@@ -1120,8 +1107,7 @@ void LinePtr::before_close(bool sigforce)
 
 // Puts in b the next line of input. 
 // return -1 at EOF, the line number otherwise.
-int LinePtr::get_next (Buffer& b)
-{
+auto LinePtr::get_next(Buffer &b) -> int {
   int n = -1;
   bool converted = false;
   if(interactive) {
@@ -1137,10 +1123,9 @@ int LinePtr::get_next (Buffer& b)
     b.convert_line(n,cur_encoding);
   }
   return n;
-} 
+}
 
-int LinePtr::get_next_cv (Buffer& b,int w)
-{
+auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
   if(value.empty()) return -1;
   bool converted = false; // unused
   int n = value.front().to_buffer(b,converted);
@@ -1150,31 +1135,28 @@ int LinePtr::get_next_cv (Buffer& b,int w)
     b.convert_line(n,w);
   }
   return n;
-} 
+}
 
 // same as get_next, without conversion
-int LinePtr::get_next_raw (Buffer& b)
-{
+auto LinePtr::get_next_raw(Buffer &b) -> int {
   if(value.empty()) return -1;
   bool unused;
   int n = value.front().to_buffer(b,unused);
   value.pop_front();
   return n;
-} 
+}
 
 // Puts the line in the string, instead of the buffer.
-int LinePtr::get_next (string& b, bool&cv)
-{
+auto LinePtr::get_next(string &b, bool &cv) -> int {
   if(value.empty()) return -1;
   int n = value.front().to_string(b,cv);
   value.pop_front();
   return n;
-} 
+}
 
 /// This finds a line with documentclass in it
 // uses B and the buffer.
-string LinePtr::find_documentclass(Buffer& B) 
-{
+auto LinePtr::find_documentclass(Buffer &B) -> string {
   line_iterator C = value.begin();
   line_iterator E = value.end();
   the_main->set_doc_class_pos(E);
@@ -1214,8 +1196,7 @@ void LinePtr::add_buffer(Buffer& B, line_iterator C)
 
 // This finds a line with documentclass in it
 // uses B and the buffer.
-string LinePtr::find_configuration(Buffer& B) 
-{
+auto LinePtr::find_configuration(Buffer &B) -> string {
   int N = 0;
   line_iterator_const C = value.begin();
   line_iterator_const E = value.end();

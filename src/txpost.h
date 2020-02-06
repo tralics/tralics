@@ -37,17 +37,17 @@ class XmlAction {
   XmlAction(Istring M, recur_type w): match(M), what(w), int_val(0),xml_val(0), string_val(Istring()) {}
   XmlAction(Istring M, recur_type w, Xmlp X): match(M), what(w), int_val(0),xml_val(X), string_val(Istring()) {}
   XmlAction(Istring M, recur_type w, Istring X): match(M), what(w), int_val(0),xml_val(0), string_val(X) {}
-  recur_type get_what() const { return what; }
+  auto get_what() const -> recur_type { return what; }
   void incr_int_val() { int_val ++; }
   void mark_found() { int_val = 1; }
-  bool is_ok() { return int_val != 0; }
-  Xmlp get_xml_val() const { return xml_val; }
-  int get_int_val() const { return int_val; }
-  Istring get_string_val() const { return string_val; }
+  auto is_ok() -> bool { return int_val != 0; }
+  auto get_xml_val() const -> Xmlp { return xml_val; }
+  auto get_int_val() const -> int { return int_val; }
+  auto get_string_val() const -> Istring { return string_val; }
   void set_string_val(Istring s) { string_val = s; }
   void set_xml_val(Xmlp s) { xml_val = s; }
   void set_int_val(int s) { int_val = s; }
-  Istring get_match() const { return match; }
+  auto get_match() const -> Istring { return match; }
 };
 
 
@@ -60,17 +60,19 @@ class WordList {
   int freq;
 public:
   void set_next(WordList*n) { next = n;}
-  bool next_empty() const { return next==0; }
-  WordList(String s, int h,WordList*N) :next(N), name(s), hash(h), freq(1) {} 
-  bool is_here(String s, int h) const { return hash==h && strcmp(name,s)==0;}
+  auto next_empty() const -> bool { return next == 0; }
+  WordList(String s, int h,WordList*N) :next(N), name(s), hash(h), freq(1) {}
+  auto is_here(String s, int h) const -> bool {
+    return hash == h && strcmp(name, s) == 0;
+  }
   void incr_freq() { freq++; }
-  int get_freq() const { return freq; }
-  WordList* get_next() const { return next; }
-  bool dump(fstream*X,int i) {
+  auto get_freq() const -> int { return freq; }
+  auto get_next() const -> WordList * { return next; }
+  auto dump(fstream *X, int i) -> bool {
     if(freq==i){
       (*X) << freq << " " << name << "\n"; 
       return true;
     }
     return false;
-  } 
+  }
 };

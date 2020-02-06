@@ -22,41 +22,43 @@ namespace token_ns {
   void add_env(TokenList&L, String name);
   void add_par_noindent(TokenList&,const Hashtab&);
   void add_verbatim_number(TokenList&,const Hashtab&, int);
-  int block_size(const TokenList&);
+  auto block_size(const TokenList &) -> int;
   void expand_nct(TokenList&);
-  bool expand_nct(TokenList&L,Token T,int n, uchar c,int&, TokenList&);
+  auto expand_nct(TokenList &L, Token T, int n, uchar c, int &, TokenList &)
+      -> bool;
   void expand_star(TokenList&);
-  TokenList fast_get_block(TokenList&);
+  auto fast_get_block(TokenList &) -> TokenList;
   void fast_get_block(TokenList&,TokenList&w);
-  TokenList get_a_param(TokenList&,bool);
-  TokenList get_block(TokenList&);
-  Token get_unique(TokenList& L);
+  auto get_a_param(TokenList &, bool) -> TokenList;
+  auto get_block(TokenList &) -> TokenList;
+  auto get_unique(TokenList &L) -> Token;
   void get_unique(TokenList& L,Token&t1,Token&t2);
-  bool has_a_single_token(const TokenList&);
-  bool has_a_single_token(const TokenList&, Token);
-  TokenList posint_to_list (int n);
+  auto has_a_single_token(const TokenList &) -> bool;
+  auto has_a_single_token(const TokenList &, Token) -> bool;
+  auto posint_to_list(int n) -> TokenList;
   void push_back_i (TokenList&,int n);
   void remove_block(TokenList&);
   void remove_ext_braces(TokenList&);
   void remove_initial_spaces(TokenList&);
   void remove_first_last_space(TokenList&);
-  void replace(TokenList& A, Token x1, Token x2); 
-  int replace_space(TokenList& A, Token x2, Token x3);
+  void replace(TokenList& A, Token x1, Token x2);
+  auto replace_space(TokenList &A, Token x2, Token x3) -> int;
   void show(const TokenList&);
-  bool split_at(Token x1, Token x2, Token x3,TokenList&L, TokenList& z,bool);
-  TokenList string_to_list (Istring s);
-  TokenList string_to_list (String s,bool);
-  TokenList string_to_list (const string& s,bool);
+  auto split_at(Token x1, Token x2, Token x3, TokenList &L, TokenList &z, bool)
+      -> bool;
+  auto string_to_list(Istring s) -> TokenList;
+  auto string_to_list(String s, bool) -> TokenList;
+  auto string_to_list(const string &s, bool) -> TokenList;
   void double_hack(TokenList& key);
-  bool split_at(Token m,TokenList&L, TokenList& z);
-  bool is_sublist(token_iterator A, token_iterator B, int);
-  bool is_in(TokenList& A, TokenList&B, bool remove,int&);
+  auto split_at(Token m, TokenList &L, TokenList &z) -> bool;
+  auto is_sublist(token_iterator A, token_iterator B, int) -> bool;
+  auto is_in(TokenList &A, TokenList &B, bool remove, int &) -> bool;
   void normalise_list(char c, TokenList &L);
   void sanitize_one(TokenList &L, uchar c);
   void sanitize_one(TokenList &L, TokenList& s, int n);
   void sanitize_one(TokenList &L);
-  bool check_brace(Token,int&);
-  bool compare(const TokenList& A, const TokenList&B);
+  auto check_brace(Token, int &) -> bool;
+  auto compare(const TokenList &A, const TokenList &B) -> bool;
 }
 
 
@@ -71,7 +73,7 @@ public:
   FpGenList (TokenList A): value(A) {}
   void  add_last_space(String);
   void  add_last_space(TokenList&,String);
-  Token find_str(int&n) const;
+  auto find_str(int &n) const -> Token;
   void  fp_gen_add();
   void  fp_gen_app();
   void  fp_gen_exp();
@@ -82,9 +84,9 @@ public:
   void  remove_first_n (int n);
   void  remove_spaces();
   void  split_after(int n,TokenList& z);
-  Token split_at(Token x, Token y,TokenList& z);
+  auto split_at(Token x, Token y, TokenList &z) -> Token;
   void  split_after(token_iterator X,TokenList& z);
-  bool  split_at_p(TokenList&,TokenList& z);
+  auto split_at_p(TokenList &, TokenList &z) -> bool;
   void  to_postfix();
   void  fp_check_paren();
 };
@@ -96,7 +98,7 @@ class FpStack
   TokenList value;
 public:
   void clear() { value.clear(); }
-  bool empty() const { return value.empty(); }
+  auto empty() const -> bool { return value.empty(); }
   void pop_upn(FpNum&);
   void pop_upn(TokenList&);
   void push_front(Token L) { value.push_front(L); }
@@ -117,14 +119,14 @@ class Macro
   Macro() : nbargs(0), type(dt_normal) {}
   Macro(TokenList L) : nbargs(0), type(dt_normal), body(L) {correct_type();}
   // other methods
-  def_type get_type () const { return type; }
-  int get_nbargs() const { return nbargs; }
-  TokenList& get_body()  { return body; }
-  const TokenList& get_body() const { return body; }
+  auto get_type() const -> def_type { return type; }
+  auto get_nbargs() const -> int { return nbargs; }
+  auto get_body() -> TokenList & { return body; }
+  auto get_body() const -> const TokenList & { return body; }
   void set_nbargs(int n) { nbargs = n; }
   void set_type(def_type n) { type = n; }
-  bool is_same(const Macro&) const;
-  const TokenList& operator[](int n) const { return delimiters[n]; }
+  auto is_same(const Macro &) const -> bool;
+  auto operator[](int n) const -> const TokenList & { return delimiters[n]; }
   void set_delimiters(int k, TokenList L) { delimiters[k] = L; }
   void correct_type();
 };
@@ -145,6 +147,6 @@ class Mactab{
   Mactab(): table(0), rc_table(0), cur_rc_mac_len(0), ptr(-1){};
   void incr_macro_ref(int c) { rc_table[c]++; }
   void delete_macro_ref(int i);
-  Macro& get_macro(int k) { return *table[k]; }
-  subtypes new_macro (Macro* s);
+  auto get_macro(int k) -> Macro & { return *table[k]; }
+  auto new_macro(Macro *s) -> subtypes;
 };

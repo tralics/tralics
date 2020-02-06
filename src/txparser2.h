@@ -22,19 +22,19 @@ class XkvToken {
   bool has_val;
   TokenList action;
 public:
-  bool key_empty () const { return keyname.empty(); }
-  bool val_empty () const { return value.empty(); }
+  auto key_empty() const -> bool { return keyname.empty(); }
+  auto val_empty() const -> bool { return value.empty(); }
   void set_initial(TokenList L) { initial = L; }
-  TokenList get_all() { return initial; }
-  TokenList get_code() { return value; }
-  TokenList& get_action() { return action; }
+  auto get_all() -> TokenList { return initial; }
+  auto get_code() -> TokenList { return value; }
+  auto get_action() -> TokenList & { return action; }
   void extract();
-  bool ignore_this(vector<string>&igna);
-  string& get_name() { return keyname; }
+  auto ignore_this(vector<string> &igna) -> bool;
+  auto get_name() -> string & { return keyname; }
   void prepare(const string&fam);
-  bool is_defined (const string & fam);
-  bool get_save() { return has_save; }
-  bool check_save();
+  auto is_defined(const string &fam) -> bool;
+  auto get_save() -> bool { return has_save; }
+  auto check_save() -> bool;
 };
 
 

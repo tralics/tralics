@@ -17,7 +17,7 @@ namespace tralics_ns {
 
 class Indexer;
 namespace trees_ns {
-  bool xless(Indexer*A, Indexer*B);
+auto xless(Indexer *A, Indexer *B) -> bool;
 }
 
 // This  holds the association between the index and the main text.
@@ -38,7 +38,9 @@ public:
   Xmlp translation;
   int level;
   int iid; // index in the reference table
-  bool is_same(int l, const string& k) const { return level==l &&k==aux; }
+  auto is_same(int l, const string &k) const -> bool {
+    return level == l && k == aux;
+  }
   Indexer(string k,string a, Xmlp x, int l,int u) : 
     key(k), aux(a),translation(x), level(l),iid(u) {
   }
@@ -53,16 +55,16 @@ class OneIndex {
   int AL; // The attribute list index
   vector<Indexer*> value;
 public :
-  int size() const { return value.size(); }
-  vector<Indexer*>& get_data() { return value; }
+  auto size() const -> int { return value.size(); }
+  auto get_data() -> vector<Indexer *> & { return value; }
   void do_sort() { sort(value.begin(),value.end(),trees_ns::xless); }
-  int get_AL() const { return AL; }
-  const string& get_title() const { return title; }
-  Xmlp get_position() const { return position; }
+  auto get_AL() const -> int { return AL; }
+  auto get_title() const -> const string & { return title; }
+  auto get_position() const -> Xmlp { return position; }
   void set_position(Xmlp x)  { position = x; }
-  Xmlp get_translation(int i) const { return value[i]->translation; }
-  int get_iid(int i) const { return value[i]->iid; }
-  bool has_name(const string&s) const { return name==s; }
+  auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
+  auto get_iid(int i) const -> int { return value[i]->iid; }
+  auto has_name(const string &s) const -> bool { return name == s; }
   OneIndex(string a, string b, int c): name(a), title(b),position(0),AL(c) {}
 };
 
@@ -71,14 +73,21 @@ class AllIndex {
   int last_iid;
   vector<OneIndex*> value;
 public:
-  OneIndex* get_index(int j) { return value[j]; }
-  int find_index(const string&);
-  int size() const { return value.size(); }
-  vector<Indexer*>& get_data(int i) { return value[i]->get_data(); }  
+  auto get_index(int j) -> OneIndex * { return value[j]; }
+  auto find_index(const string &) -> int;
+  auto size() const -> int { return value.size(); }
+  auto get_data(int i) -> vector<Indexer *> & { return value[i]->get_data(); }
   AllIndex();
   void mark_print(int g);
-  int next_iid() { int i = last_iid; ++last_iid; return i; }
-  int next_index() { ++last_index; return last_index; }
-  int get_last_iid() const { return last_iid; }
+  auto next_iid() -> int {
+    int i = last_iid;
+    ++last_iid;
+    return i;
+  }
+  auto next_index() -> int {
+    ++last_index;
+    return last_index;
+  }
+  auto get_last_iid() const -> int { return last_iid; }
   void new_index(const string&, const string&);
 };

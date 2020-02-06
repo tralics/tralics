@@ -32,23 +32,23 @@ namespace {
 
 namespace xkv_ns {
   void find_aux(int c);
-  string find_key_of(const TokenList&L,int type);
+  auto find_key_of(const TokenList &L, int type) -> string;
   void merge(TokenList&W, TokenList& L, int type);
   void remove(TokenList&W, TokenList& L, int type);
-  void makehd(const string& L); 
-  bool is_Gin(const TokenList& x);
+  void makehd(const string& L);
+  auto is_Gin(const TokenList &x) -> bool;
 }
 
 namespace token_ns {
   void lower_case(TokenList& L);
-  bool find_in(TokenList&A, TokenList&B, Token C, bool, int&);
+  auto find_in(TokenList &A, TokenList &B, Token C, bool, int &) -> bool;
   void int_to_roman(Buffer&b, int n);
 }
 
 namespace classes_ns {
-  TokenList cur_options(bool,TokenList&,bool);
-  void register_key(const string&);
-  void unknown_optionX(TokenList&cur_keyval, TokenList&action);
+auto cur_options(bool, TokenList &, bool) -> TokenList;
+void register_key(const string &);
+void unknown_optionX(TokenList &cur_keyval, TokenList &action);
 }
 
 // Optimised version, because \zap@space 12 3 {44} 5 6\@empty
@@ -173,9 +173,7 @@ void Parser::T_fancy()
   }
 }
 
-
-bool CmdChr::is_ok_for_xspace() const 
-{
+auto CmdChr::is_ok_for_xspace() const -> bool {
   if(cmd==other_catcode) {
     if(chr< int(nb_xspace_values)) return the_parser.ok_for_xspace[chr];
     return false;
@@ -200,8 +198,7 @@ void Parser::E_xspace()
 }
 
 // arg2 ignored, in arg1 \ is special
-string Parser::T_xmllatex()
-{
+auto Parser::T_xmllatex() -> string {
   TokenList L = read_arg();
   ignore_arg();
   mac_buffer.reset();
@@ -417,8 +414,7 @@ void Parser::T_typein()
 
 // In the case of \@tfor \foo:=... reads the command name \foo 
 // and skips the :=
-Token Parser::read_for_variable()
-{
+auto Parser::read_for_variable() -> Token {
   TokenList W; 
   W.push_back(Token(other_t_offset,':'));
   W.push_back(hash_table.equals_token);
@@ -1049,8 +1045,7 @@ void Parser::disable_keys()
 // Find saved or preset keys, depending on c2. If not found:
 // signals a an error if c is true (creates otherwise), return true.
 // Creates cur_tok if needed
-bool Parser::xkv_save_keys_aux(bool c, int c2)
-{
+auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
   xkv_fetch_prefix_family();
   xkv_ns::find_aux(c2);
   Buffer& B = local_buf;
@@ -1065,13 +1060,11 @@ bool Parser::xkv_save_keys_aux(bool c, int c2)
   return ret;
 }
 
-
 // The following function takes in L one item and puts the key in x.
 // If type is 0, we are looking for \global, and there is no equals
 // Otherwise we look for \savevalue or \gsavevalue, skip equals.
 // We set some booleans
-string xkv_ns::find_key_of(const TokenList&L,int type)
-{
+auto xkv_ns::find_key_of(const TokenList &L, int type) -> string {
   Hashtab&H =the_parser.hash_table;
   Token equals = H.equals_token;
   const_token_iterator C = L.begin();
@@ -1104,7 +1097,6 @@ string xkv_ns::find_key_of(const TokenList&L,int type)
   token_ns::remove_ext_braces(x);
   return the_parser.list_to_string_c(x,"Invalid key name");
 }
-
 
 // Command savekeys and presetkeys use a common whose name is constructed
 // here 
@@ -1177,8 +1169,7 @@ void xkv_ns::remove(TokenList&W, TokenList& L, int type)
 
 
 // This finds mykey in the list whose name is in the buffer
-bool Parser::find_a_save_key(const string& mykey)
-{
+auto Parser::find_a_save_key(const string &mykey) -> bool {
   Buffer&B = local_buf; 
   TokenList W = get_mac_value(hash_table.locate(B));
   TokenList key;
@@ -1189,7 +1180,6 @@ bool Parser::find_a_save_key(const string& mykey)
   }
   return false;
 }
-
 
 // Merges or deletes depending on mg globally if gbl is true
 // the keys in L from the variable depending on type
@@ -1229,8 +1219,7 @@ void Parser::internal_define_key(Token T)
 }
 
 // Skips initial + or *, catcode irrelevant
-bool Parser::remove_initial_plus (bool plus)
-{
+auto Parser::remove_initial_plus(bool plus) -> bool {
   skip_initial_space();
   if(cur_tok.is_a_char()) {
     if(cur_tok.char_val()== (plus ? '+' : '*')) return true;
@@ -1238,7 +1227,6 @@ bool Parser::remove_initial_plus (bool plus)
   if(!cur_tok.is_invalid()) back_input();
   return false;
 }
-
 
 // Reads optional prefix, and family, and handles them
 void Parser::xkv_fetch_prefix()
@@ -1387,8 +1375,8 @@ void Parser::T_remove_element()
   remove_element(A,B,cur_tok);
 }
 
-bool token_ns::find_in(TokenList&A, TokenList&B, Token t, bool sw,int&n)
-{
+auto token_ns::find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n)
+    -> bool {
   A.push_back(t);
   B.push_back(t);
   A.push_front(t);
@@ -1563,8 +1551,7 @@ void Parser::setkeys(bool c)
   data.run(c);
 }
 
-bool xkv_ns::is_Gin(const TokenList& x)
-{
+auto xkv_ns::is_Gin(const TokenList &x) -> bool {
   const_token_iterator C = x.begin();
   const_token_iterator E = x.end();
   if(C==E) return false;
@@ -1670,8 +1657,7 @@ void XkvToken::extract()
 }
 
 // True if the key is in the ignore list
-bool XkvToken::ignore_this(vector<string>&igna)
-{
+auto XkvToken::ignore_this(vector<string> &igna) -> bool {
   int n = igna.size();
   for(int i=0;i< n; i++) if(keyname==igna[i]) return true;
   return false;
@@ -1705,22 +1691,19 @@ void XkvToken::prepare(const string& fam)
 }
 
 // Returns true if the key is defined
-bool XkvToken::is_defined(const string& fam)
-{
+auto XkvToken::is_defined(const string &fam) -> bool {
   xkv_ns::makehd(fam);
   local_buf << keyname;
   return the_parser.hash_table.is_defined(local_buf);
 }
 
 // Returns true if must be saved; may set xkv_is_global
-bool XkvToken::check_save()
-{
+auto XkvToken::check_save() -> bool {
   if(has_save) { xkv_is_global = is_global; return true; }
   xkv_ns::find_aux(0); 
   if(!the_parser.hash_table.is_defined(local_buf)) return false;
   return the_parser.find_a_save_key(keyname);
 }
-
 
 // This is called if the value must be saved
 void XkvSetkeys::save_key(const string& Key, TokenList& L)
@@ -1879,8 +1862,7 @@ void Parser::formatdate()
 
 
 // True if ok, parse_error otherwise
-bool FormatDate::sort()
-{
+auto FormatDate::sort() -> bool {
   if(field1>field2) swap(field1,field2);
   if(field2>field3) { // else ok
     swap(field3,field2);
@@ -1899,8 +1881,7 @@ bool FormatDate::sort()
 
 // True if ok, parse_error otherwise
 // assumes current character is a digit.
-bool FormatDate::scan_a_field(Buffer&B,int& res)
-{
+auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
   res = 0;
   for(;;) {
     if(B.at_eol()) return true;
@@ -1915,8 +1896,7 @@ bool FormatDate::scan_a_field(Buffer&B,int& res)
   }
 }
 
-bool Buffer::is_here_case(String s)
-{
+auto Buffer::is_here_case(String s) -> bool {
   int n = strlen(s);
   for(int i=0;i<n;i++) {
     char c = buf[ptr+i];
@@ -1926,13 +1906,11 @@ bool Buffer::is_here_case(String s)
   char c = buf[ptr+n];
   if(is_letter(c)) return false;
   ptr += n;
-  return true;  
+  return true;
 }
 
-
 // True if ok. Assume cur char is non-space
-bool FormatDate::scan_a_month(Buffer&B,int& res)
-{
+auto FormatDate::scan_a_month(Buffer &B, int &res) -> bool {
   if(B.is_here_case("janvier")) { res = -1; return true; }
   if(B.is_here_case("januar")) { res = -1; return true; }
   if(B.is_here_case("jan")) { res = -1; return true; }
@@ -1977,8 +1955,7 @@ bool FormatDate::scan_a_month(Buffer&B,int& res)
 }
 
 // true if OK.
-bool FormatDate::scan_next(Buffer&B,int& res)
-{
+auto FormatDate::scan_next(Buffer &B, int &res) -> bool {
   B.skip_sp_tab_nl();
   if(B.at_eol()) {
     the_parser.parse_error(err_tok,"Missing fields in date");
@@ -2002,8 +1979,7 @@ bool FormatDate::scan_next(Buffer&B,int& res)
   return true;
 }
 
-int FormatDate::next_format_char(Buffer&B)
-{
+auto FormatDate::next_format_char(Buffer &B) -> int {
   if(B.at_eol()) return 0;
   uchar c = B.next_char();
   if(c=='j' || c=='J' || c=='D' || c=='d') return 2;
@@ -2013,8 +1989,7 @@ int FormatDate::next_format_char(Buffer&B)
 }
 
 // this is called if a random character is after the date
-bool FormatDate::parse_format(Buffer&B)
-{
+auto FormatDate::parse_format(Buffer &B) -> bool {
   int c1=0,c2=0,c3=0;
   bool ok = false;
   c1 = next_format_char(B);
@@ -2049,8 +2024,7 @@ bool FormatDate::parse_format(Buffer&B)
   return true;
 }
 
-bool FormatDate::parse(Buffer&B)
-{
+auto FormatDate::parse(Buffer &B) -> bool {
   if(!scan_next(B,field1)) return false;
   if(!scan_next(B,field2)) return false;
   if(!scan_next(B,field3)) return false;
@@ -2067,8 +2041,7 @@ bool FormatDate::parse(Buffer&B)
 }
 
 // fills year month day
-bool FormatDate::interpret(const string& s, Token T)
-{
+auto FormatDate::interpret(const string &s, Token T) -> bool {
   err_tok = T;
   Buffer&B= local_buf;
   B.reset(); B.reset_ptr(); B<< s;
@@ -2128,8 +2101,7 @@ void Parser::numberwithin()
   new_macro(L,thefoo,true);
 }
 
-string Parser::make_label_inner(string name)
-{
+auto Parser::make_label_inner(string name) -> string {
   TokenList res;
   Buffer& b = local_buf;
   b << bf_reset << "the" << name; 
@@ -2238,8 +2210,7 @@ void Parser::T_ifdefinable()
 // and ctr the counter, for instance enumiv
 // executes \def\@itemlabel{(\theenumiv)}
 // redefines \def\theenumiv{\roman{enumiv}}
-bool Parser::optional_enumerate(TokenList& L,String ctr)
-{
+auto Parser::optional_enumerate(TokenList &L, String ctr) -> bool {
   Hashtab& H= hash_table;
   TokenList res;
   int b = 0;

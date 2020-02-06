@@ -54,15 +54,14 @@ namespace accent_ns {
 }
 
 namespace tralics_ns {
-  String twodig (int n);
+auto twodig(int n) -> String;
 }
 using namespace tralics_ns;
 
 // This is the main function. It does the following:
 // print a banner, boot the parser and the math part,
-// and execute the main prog. 
-int main (int argc, char** argv)
-{
+// and execute the main prog.
+auto main(int argc, char **argv) -> int {
   MainClass M;
   the_main = &M;
   M.the_stack = &the_parser.the_stack;
@@ -119,10 +118,7 @@ void Parser::boot_xspace()
 }
 
 // used below for printing numbersin dates  with 2 digits
-String tralics_ns::twodig (int n)
-{
-  return n<10 ? "0" : "";
-}
+auto tralics_ns::twodig(int n) -> String { return n < 10 ? "0" : ""; }
 
 // This computes the current date (first thing done after printing the banner)
 // stores the date in the table of equivalents, computes the default year 
@@ -1265,8 +1261,7 @@ void tralics_ns::make_names()
 
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised
-bool config_ns::assign(Buffer& a, Buffer& b)
-{
+auto config_ns::assign(Buffer &a, Buffer &b) -> bool {
   String A = a.c_str();
   String B = b.c_str();
   int n = a.size();
@@ -1400,8 +1395,7 @@ bool config_ns::assign(Buffer& a, Buffer& b)
 }
 
 // Handles names starting with xml_
-bool config_ns::assign_name(String A,String B)
-{
+auto config_ns::assign_name(String A, String B) -> bool {
   switch(A[0]) {
   case 'a':
     if(strcmp(A,"accueil")==0) 
@@ -1778,10 +1772,9 @@ bool config_ns::assign_name(String A,String B)
     return false;
   }
 }
- 
+
 // Handles names starting with att_
-bool config_ns::assign_att(String A, String B)
-{
+auto config_ns::assign_att(String A, String B) -> bool {
   switch(A[0]) {
   case 'a':
     if(strcmp(A,"angle")==0) 

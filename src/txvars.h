@@ -603,10 +603,12 @@ extern Parser the_parser;
 extern MainClass* the_main;
 extern Istring the_names [np_last];
 
-inline bool is_space (char c) { return c==' ' || c=='\t' || c=='\n';}
-inline bool is_lower_case(char c) { return  'a' <= c && c <= 'z';}
-inline bool is_upper_case(char c) { return  'A' <= c && c <= 'Z';}
-inline bool is_digit (char c) { return ('0'<= c && c<= '9'); } 
-inline uchar to_lower(uchar c) { 
+inline auto is_space(char c) -> bool {
+  return c == ' ' || c == '\t' || c == '\n';
+}
+inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }
+inline auto is_upper_case(char c) -> bool { return 'A' <= c && c <= 'Z'; }
+inline auto is_digit(char c) -> bool { return ('0' <= c && c <= '9'); }
+inline auto to_lower(uchar c) -> uchar {
   if('A' <= c && c <= 'Z') return c + ('a'-'A');  else return c;
 }

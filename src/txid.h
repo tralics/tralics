@@ -18,7 +18,7 @@ class Xid {
   int value; // value of the id
   Xid(int v) :  value(v) {}
   Xid() : value(0) {}
-  AttList& get_att() const;
+  auto get_att() const -> AttList &;
   void add_attribute(Istring A,Istring B);
   void add_attribute(Istring A,Istring B,bool f);
   void add_attribute(name_positions A, name_positions B);
@@ -31,8 +31,8 @@ class Xid {
   void add_span (int);
   void add_top_rule ();
   void add_bottom_rule ();
-  bool operator==(Xid X)const { return value==X.value; }
-  Istring has_attribute(Istring n);
-  bool is_font_change() const;
+  auto operator==(Xid X) const -> bool { return value == X.value; }
+  auto has_attribute(Istring n) -> Istring;
+  auto is_font_change() const -> bool;
   void add_special_att(string S);
 };

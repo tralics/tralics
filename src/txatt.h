@@ -24,16 +24,16 @@ public:
 
   vector<AttPair> val; // the value
 
-  Istring get_val(int i) { return val[i].value; }
+  auto get_val(int i) -> Istring { return val[i].value; }
   void reset() { val = vector<AttPair>(); }
-  bool empty() { return val.size()==0; }
+  auto empty() -> bool { return val.size() == 0; }
   void push_back_empty(Istring n);
   void push_back(name_positions n, Istring v);
   void push_back(name_positions n, name_positions v);
   void push_back(name_positions n, name_positions v,bool);
   void push_back(Istring n, Istring v);
   void push_back(Istring n, Istring v, bool f);
-  int has_value(Istring x) const;
+  auto has_value(Istring x) const -> int;
   void delete_att(name_positions);
   void destroy();
   void print(ostream&);
@@ -50,13 +50,14 @@ class AttListTable {
   void destroy();
   void resize();
   void init();
-  AttList& operator [](int k) { return table[k]; }
-  AttList get(int n) { 
+  auto operator[](int k) -> AttList & { return table[k]; }
+  auto get(int n) -> AttList {
     if(n<len) return table[n]; 
-    else return AttList();}
+    else return AttList();
+  }
   void push_back(AttList X);
   void push_back();
   void push_back(Istring,Istring);
   void push_back(name_positions,name_positions);
-  int get_size() const {return size; }
+  auto get_size() const -> int { return size; }
 };

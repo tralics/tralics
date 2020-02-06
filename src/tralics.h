@@ -28,7 +28,7 @@ typedef unsigned int uint;
 
 
 using namespace std;
-extern bool is_letter (char c);
+extern auto is_letter(char c) -> bool;
 class EndOfData{};
 
 

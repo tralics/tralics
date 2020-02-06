@@ -17,8 +17,8 @@ const char* txparser3_rcsid=
 
 
 namespace parser_ns {
-  String to_string(boundary_type v);
-  String save_string_name(int);
+auto to_string(boundary_type v) -> String;
+auto save_string_name(int) -> String;
 }
 
 namespace {
@@ -30,8 +30,7 @@ namespace {
 
 // --------------------------------------------------
 
-String to_string (save_type v)
-{
+auto to_string(save_type v) -> String {
   switch(v) {
   case st_boundary: return "boundary";
   case st_cmd: return "command";
@@ -49,21 +48,17 @@ String to_string (save_type v)
   }
 }
 
-
-String gbl_or_assign (bool gbl, bool re)
-{
+auto gbl_or_assign(bool gbl, bool re) -> String {
   if(gbl) return "globally changing ";
   if(re) return  "reassigning ";
   else return "changing ";
 }
 
-String parser_ns::save_string_name (int n)
-{
+auto parser_ns::save_string_name(int n) -> String {
   if(n==0) return "current label";
   if(n==1) return "current counter";
   return "unknown";
 }
-			
 
 SaveScannerStatus::SaveScannerStatus(scan_stat c) 
 {
@@ -148,8 +143,7 @@ SaveCatcode::~SaveCatcode()
 // saving and restoring things
 
 // This converts a boundary_type to a String for printing
-String parser_ns::to_string(boundary_type v)
-{
+auto parser_ns::to_string(boundary_type v) -> String {
   switch(v) {
   case bt_brace: return "brace";
   case bt_cell: return "cell";
@@ -165,8 +159,7 @@ String parser_ns::to_string(boundary_type v)
 
 // Implements \currentgrouptype.
 // (see online doc for the meaning of the numbers).
-int Parser::cur_group_type()
-{
+auto Parser::cur_group_type() -> int {
   boundary_type V = first_boundary();
   switch(V) {
   case bt_impossible: return 0;
@@ -182,8 +175,7 @@ int Parser::cur_group_type()
   }
 }
 
-ostream& operator<< (ostream&fp, const boundary_type&x)
-{
+auto operator<<(ostream &fp, const boundary_type &x) -> ostream & {
   fp << parser_ns::to_string(x);
   return fp;
 }
@@ -252,8 +244,7 @@ void Parser::mac_define(Token a, Macro* b, bool gbl,rd_flag redef,symcodes what)
 // For \newcommand, \renewcommand: we signal an error if we cannot define
 // the thing. For \providecommand: the function returns true if we have
 // to define, false otherwise.
-bool Parser::ok_to_define(Token a, rd_flag redef)
-{
+auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
   if(redef==rd_never) return false;
   if(a.not_a_cmd()) return false; // Should not happen
   if(a == hash_table.frozen_protection) return false;
@@ -272,8 +263,6 @@ bool Parser::ok_to_define(Token a, rd_flag redef)
     return false;
   return true;
 }
-
-
 
 // Define for an integer quantity. Like eq_define without reference counts.
 void Parser::word_define (int a, int c, bool gbl)
@@ -340,15 +329,13 @@ void Parser::dim_define (int a, ScaledInt c, bool gbl)
   }
 }
 
-bool operator==(const Glue& a, const Glue&b)
-{
+auto operator==(const Glue &a, const Glue &b) -> bool {
   return a.get_width() == b.get_width()  &&
     a.get_shrink() == b.get_shrink()  &&
     a.get_stretch() == b.get_stretch()  &&
     a.get_shrink_order() == b.get_shrink_order()  &&
     a.get_stretch_order() == b.get_stretch_order();
 }
-
 
 // Define for a glue quantity
 void Parser::glue_define (int a, Glue c, bool gbl)
@@ -598,8 +585,7 @@ void SaveAuxBoundary::unsave(bool trace, Parser& P)
 // sets first_boundary_loc if a boundary has been seen.
 
 static int first_boundary_loc = 0;
-boundary_type Parser::first_boundary()
-{
+auto Parser::first_boundary() -> boundary_type {
   int n = the_save_stack.size();
   for(int i=n-1;i>=0;i--) {
     SaveAux*p = the_save_stack[i];    
@@ -612,8 +598,7 @@ boundary_type Parser::first_boundary()
 
 // case where a table preamble says  >{}c<{xx$yy} and we see &
 // here xy can be } or \endgroup
-bool Parser::stack_math_in_cell()
-{
+auto Parser::stack_math_in_cell() -> bool {
   int n = the_save_stack.size();
   bool first = true;
   for(int i=n-1;i>=0;i--) {
@@ -631,7 +616,6 @@ bool Parser::stack_math_in_cell()
   }
   return false;
 }
-
 
 void Parser::dump_save_stack()
 {
@@ -786,8 +770,7 @@ void Parser::final_checks()
 
 
 // Returns the slot associated to the env S
-SaveAuxEnv* Parser::is_env_on_stack(const string& s)
-{
+auto Parser::is_env_on_stack(const string &s) -> SaveAuxEnv * {
   int n = the_save_stack.size();
   for(int i=n-1;i>=0;i--) {
     SaveAux*p = the_save_stack[i];    
@@ -799,10 +782,8 @@ SaveAuxEnv* Parser::is_env_on_stack(const string& s)
   return 0;
 }
 
-
 // Returns the number of environments
-int Parser::nb_env_on_stack()
-{
+auto Parser::nb_env_on_stack() -> int {
   int n = the_save_stack.size();
   int k = 0;
   for(int i=n-1;i>=0;i--) {

@@ -100,41 +100,47 @@ public:
   void bad_char_before_brace(int k, String s, String info);
   void bad_end_env(string,int);
   void bad_ignore_char(int k, String s);
-  bool check_for_tcf(const string&);
+  auto check_for_tcf(const string &) -> bool;
   void check_section_use();
-  string check_theme(const string&);
+  auto check_theme(const string &) -> string;
   void check_ur(const Buffer&);
-  vector <Istring>& get_bibtex_fields() { return  bibtex_fields; }
-  vector <Istring>& get_bibtex_fields_s() { return  bibtex_fields_s; }
-  vector <Istring>& get_bibtex_extensions() { return  bibtex_extensions; }
-  vector <Istring>& get_bibtex_extensions_s() { return  bibtex_extensions_s; }
-  int get_fp_len() { return cur_fp_len; }
-  bool get_footnote_hack() { return footnote_hack; }
-  bool get_no_undef_mac() { return no_undef_mac; }
-  string get_no_year() { return no_year; }
-  string get_year_string() { return year_string; }
-  int get_input_encoding() const { return input_encoding; }
-  output_encoding_type get_output_encoding() const { return output_encoding;}
-  output_encoding_type get_log_encoding() const { return log_encoding;}
-  int get_tpa_mode() const { return tpa_mode; }
-  bool get_prime_hack() const { return prime_hack; }
-  bool get_math_variant() const { return use_math_variant; }
-  bool get_zws_mode() const { return no_zerowidthspace; }
-  bool get_zws_elt() const { return no_zerowidthelt; }
-  String get_version() const { return version_string; }
+  auto get_bibtex_fields() -> vector<Istring> & { return bibtex_fields; }
+  auto get_bibtex_fields_s() -> vector<Istring> & { return bibtex_fields_s; }
+  auto get_bibtex_extensions() -> vector<Istring> & {
+    return bibtex_extensions;
+  }
+  auto get_bibtex_extensions_s() -> vector<Istring> & {
+    return bibtex_extensions_s;
+  }
+  auto get_fp_len() -> int { return cur_fp_len; }
+  auto get_footnote_hack() -> bool { return footnote_hack; }
+  auto get_no_undef_mac() -> bool { return no_undef_mac; }
+  auto get_no_year() -> string { return no_year; }
+  auto get_year_string() -> string { return year_string; }
+  auto get_input_encoding() const -> int { return input_encoding; }
+  auto get_output_encoding() const -> output_encoding_type {
+    return output_encoding;
+  }
+  auto get_log_encoding() const -> output_encoding_type { return log_encoding; }
+  auto get_tpa_mode() const -> int { return tpa_mode; }
+  auto get_prime_hack() const -> bool { return prime_hack; }
+  auto get_math_variant() const -> bool { return use_math_variant; }
+  auto get_zws_mode() const -> bool { return no_zerowidthspace; }
+  auto get_zws_elt() const -> bool { return no_zerowidthelt; }
+  auto get_version() const -> String { return version_string; }
   void handle_one_bib_file(string);
   void incr_cur_fp_len(int a) { cur_fp_len += a; }
-  bool in_ra() const {  return handling_ra;}
-  bool in_simple_ra() const {  return simplified_ra;}
+  auto in_ra() const -> bool { return handling_ra; }
+  auto in_simple_ra() const -> bool { return simplified_ra; }
   void inhibit_xml () { todo_xml = false; }
-  bool is_verbose() const { return verbose; }
-  bool is_interactive_math() const { return interactive_math; }
-  bool is_shell_escape_allowed() const { return shell_escape_allowed; }
-  bool non_interactive() const{ return !interactive_math;}
+  auto is_verbose() const -> bool { return verbose; }
+  auto is_interactive_math() const -> bool { return interactive_math; }
+  auto is_shell_escape_allowed() const -> bool { return shell_escape_allowed; }
+  auto non_interactive() const -> bool { return !interactive_math; }
   void parse_args(int argc, char** argv);
   void parse_option(int&,int,char** argv);
   void banner();
-  String print_os() const;
+  auto print_os() const -> String;
   void read_config_and_other();
   void RRbib(String);
   void run(); 
@@ -152,54 +158,54 @@ public:
   void set_start_date(string s) { start_date = s; } 
   void set_short_date(string s) { short_date = s; } 
   void set_default_class(string s) { default_class = s; }
-  string get_short_date() const { return short_date; } 
-  string get_default_class() const { return default_class; } 
+  auto get_short_date() const -> string { return short_date; }
+  auto get_default_class() const -> string { return default_class; }
   void set_tpa_status(String);
-  bool use_all_sizes() const { return use_all_sizes_sw; }
-  bool use_noent_names() const { return noent_names; }
-  bool use_font_elt() const { return use_font_elt_sw; }
-  bool use_old_phi() { return old_phi; }
-  bool use_double_quote_att () {return  double_quote_att; }
-  bool pack_font_elt() const { return pack_font_elt_sw; }
+  auto use_all_sizes() const -> bool { return use_all_sizes_sw; }
+  auto use_noent_names() const -> bool { return noent_names; }
+  auto use_font_elt() const -> bool { return use_font_elt_sw; }
+  auto use_old_phi() -> bool { return old_phi; }
+  auto use_double_quote_att() -> bool { return double_quote_att; }
+  auto pack_font_elt() const -> bool { return pack_font_elt_sw; }
   void unexpected_eof(string,int);
-  bool d_verbose() const { return dverbose; }
+  auto d_verbose() const -> bool { return dverbose; }
   void bad_year();
 private:
   void after_main_text();
-  int  append_checked_line ();
+  auto append_checked_line() -> int;
   void append_non_eof_line (String,int);
-  int  append_nonempty_line ();
+  auto append_nonempty_line() -> int;
   void bad_mod (int a, string b, Buffer& c);
   void boot_bibtex(bool);
   void call_dvips (string);
   void check_all ();
   void check_before_begin(int k);
-  bool check_for_alias_type(bool vb);
-  String check_for_arg(int&p, int argc,char**argv);
+  auto check_for_alias_type(bool vb) -> bool;
+  auto check_for_arg(int &p, int argc, char **argv) -> String;
   void check_for_input();
   void check_kw(int, Buffer&);
   void check_line(Buffer&);
-  bool check_line_aux(Buffer&);
+  auto check_line_aux(Buffer &) -> bool;
   void check_mod();
   void check_options();
   void check_presentation();
   void check_project(Buffer& a);
   void check_ra_dir();
-  int  check_section();
+  auto check_section() -> int;
   void check_year_string(int, bool);
   void dubious_command(int k, bool where);
   void end_document();
   void end_env(string);
   void end_mod();
   void end_with_help(int);
-  bool find_config_file();
-  bool find_document_type();
+  auto find_config_file() -> bool;
+  auto find_document_type() -> bool;
   void find_dtd();
   void find_field(String a);
-  bool find_opt_field(String info);
+  auto find_opt_field(String info) -> bool;
   void finish_init();
   void finish_xml();
-  bool get_a_new_line();
+  auto get_a_new_line() -> bool;
   void get_doc_type();
   void get_machine_name();
   void get_os();
@@ -211,8 +217,7 @@ private:
   void mkcfg();
   void mk_empty();
   void more_boot();
-  bool need_script() 
-  { return in_ra() && !in_simple_ra(); }
+  auto need_script() -> bool { return in_ra() && !in_simple_ra(); }
   void one_bib_file (bib_from pre, string bib);
   void open_main_file();
   void open_config_file();
@@ -239,7 +244,7 @@ private:
   void see_topic();
   void set_version();
   void show_input_size();
-  String split_one_arg(String,int&);
+  auto split_one_arg(String, int &) -> String;
   void start_document(Buffer& a);
   void start_env(string);
   void start_error();
@@ -258,8 +263,8 @@ class ParamDataSlot {
   ParamDataSlot(string a, string b) : key(a), value(b),is_used(false) {}
   ParamDataSlot(string a, string b,bool c) : key(a), value(b),is_used(c) {}
   void mark_used() { is_used = true; }
-  bool matches(const string& x) { return is_used && x==key; } 
-  bool no_topic() const { return !is_used; } 
+  auto matches(const string &x) -> bool { return is_used && x == key; }
+  auto no_topic() const -> bool { return !is_used; }
   void to_buffer(Buffer&) const;
   void key_to_buffer(Buffer&) const;
 };
@@ -271,11 +276,11 @@ public:
   vector <ParamDataSlot> data;
 public:
   void check_other();
-  bool its_me(const string& s) { return name == s; }
+  auto its_me(const string &s) -> bool { return name == s; }
   ParamDataList(string s) : name (s) {}
-  bool empty() const { return data.empty(); }
+  auto empty() const -> bool { return data.empty(); }
   void push_back(ParamDataSlot x) { data.push_back(x); }
-  int size() const { return data.size(); }
+  auto size() const -> int { return data.size(); }
   void keys_to_buffer(Buffer&) const;
   void reset() { data = vector <ParamDataSlot>(); }
 };
@@ -284,6 +289,6 @@ class ParamDataVector {
 public:
   vector<ParamDataList*> data;
   ParamDataVector();
-  ParamDataList* find_list(const string& name,bool creat);
+  auto find_list(const string &name, bool creat) -> ParamDataList *;
 };
 

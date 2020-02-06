@@ -16,13 +16,12 @@ const char* txstack_rcsid=
   "$Id: txstack.C,v 2.60 2015/11/18 17:58:11 grimm Exp $";
 
 namespace stack_ns {
-  String mode_to_string(mode x);
+auto mode_to_string(mode x) -> String;
 }
 
 extern bool booted;
 // Increases xid, makes sure that the attribute table is big enough
-Xid Stack::next_xid(Xml* elt) 
-{ 
+auto Stack::next_xid(Xml *elt) -> Xid {
   attributes.push_back(AttList());
   enames.push_back(elt);
   //  if(booted && elt) cout << "XX" << last_xid+1 << elt << "\n";
@@ -58,8 +57,7 @@ void Stack::dump_xml_table()
 
 // Returns the element in the table with id n
 // This should be at position N
-Xmlp Stack::fetch_by_id (int n)
-{
+auto Stack::fetch_by_id(int n) -> Xmlp {
   if(n<=0) return 0; // no need to look at this
   if(int(enames.size()) <= n) return 0;
   Xmlp x = enames[n];
@@ -70,8 +68,7 @@ Xmlp Stack::fetch_by_id (int n)
 }
 
 // returns a parent of x
-Xmlp Stack::find_parent (Xmlp x)
-{
+auto Stack::find_parent(Xmlp x) -> Xmlp {
   if(!x) return 0;
   int k = enames.size();
   // debug: print all parents
@@ -87,9 +84,7 @@ Xmlp Stack::find_parent (Xmlp x)
   return 0;
 }
 
-
-AttList& Parser::last_att_list()
-{
+auto Parser::last_att_list() -> AttList & {
   return the_stack.get_top_id().get_att();
 }
 
@@ -154,8 +149,7 @@ void Stack::hack_for_hanl()
 }
 
 // Returns element below topstack.
-Xml* Stack::get_father() 
-{ 
+auto Stack::get_father() -> Xml * {
   int ptr = Table.size() -1;
   if(ptr>0)
     return Table[ptr-1].obj;
@@ -164,8 +158,7 @@ Xml* Stack::get_father()
 
 // Creates an empty element named x, and adds it to the stack.
 // returns a reference to the attribute list of the object.
-AttList& Stack::add_newid0 (name_positions x)
-{
+auto Stack::add_newid0(name_positions x) -> AttList & {
   top_stack()->push_back(new Xml(x,0));
   return Xid(last_xid).get_att();
 }
@@ -189,8 +182,7 @@ void Stack::add_last_string (const Buffer& B)
 }
 
 // True if last element on the tree is a string.
-bool Xml::last_is_string () const
-{
+auto Xml::last_is_string() const -> bool {
   return tree.size()>0 && tree.back() && tree.back()->get_id().value==0;
 }
 
@@ -271,25 +263,21 @@ void Xml::add_nl()
 
 // Returns the slot of the first non-empty frame
 // It is assumed that the first frame is "document", hence never empty.
-const Stack::StackSlot& Stack::first_non_empty() const
-{
+auto Stack::first_non_empty() const -> const Stack::StackSlot & {
   int k = Table.size() -1;
   while(Table[k].frame.spec_empty()) k--;
   return Table[k];
 }
 
 // Returns the name of the first non-empty frame.
-Istring Stack::first_frame() const
-{
+auto Stack::first_frame() const -> Istring {
   const StackSlot&X= first_non_empty();
   return X.frame;
 }
 
-
 // Returns the first p on the stack.
 // Too bad that the frame AND the element have to be called p.
-Xmlp Stack::get_cur_par()
-{
+auto Stack::get_cur_par() -> Xmlp {
   const StackSlot&X= first_non_empty();
   Istring pname = the_names[cst_p];
   if(X.frame==pname && !X.obj->is_xmlc() && X.obj->has_name(pname))
@@ -308,15 +296,13 @@ void Stack::add_center_to_p ()
   x->get_id().get_att().push_back(np_rend,name_positions(np_center_etc+w),false);
 }
 
-bool Stack::is_frame(name_positions s) const
-{
+auto Stack::is_frame(name_positions s) const -> bool {
   return first_frame() == the_names[s];
 }
 
 // Returns true if frame is s, or argument, and next frame is s.
 // ignores a font change
-bool Stack::is_frame2(name_positions S) const
-{
+auto Stack::is_frame2(name_positions S) const -> bool {
   Istring s = the_names[S];
   int k = Table.size()-1;
   while(Table[k].frame.spec_empty()) k--;
@@ -334,10 +320,8 @@ bool Stack::is_frame2(name_positions S) const
   return false;
 }
 
-
 // Returns true inside a float (table or figure)
-bool Stack::is_float() 
-{
+auto Stack::is_float() -> bool {
   int k = Table.size();
   for(int i=0; i<k;i++) {
     if(Table[i].frame.spec_empty()) continue;
@@ -373,8 +357,7 @@ void Stack::push(Istring fr, Xmlp V)
 }
 
 // Pushes a new empty object, for \hbox, etc
-Xmlp Stack::push_hbox(Istring name)
-{
+auto Stack::push_hbox(Istring name) -> Xmlp {
   Xmlp code = new Xml(name,0);
   ipush(the_names[cst_hbox],code);
   push_trace();
@@ -384,13 +367,12 @@ Xmlp Stack::push_hbox(Istring name)
 // Creates a temporary, sets mode to argument mode.
 // The number of the element is 2. No other element has 2 as number
 // (see Stack::Stack).
-Xmlp Stack::temporary()
-{
+auto Stack::temporary() -> Xmlp {
   Xmlp res = new Xml(cst_temporary,Xid(2));
   ipush(the_names[cst_argument],res);
   cur_mode = mode_argument;
   push_trace();
-  return res;  
+  return res;
 }
 
 // We assume that document is numbered 1. This simplifies  the mechanism
@@ -408,8 +390,7 @@ void Stack::init_all(string a)
 }
 
 // For debug. Returns symbolic name of mode
-String stack_ns::mode_to_string(mode x)
-{
+auto stack_ns::mode_to_string(mode x) -> String {
   switch(x) {
   case mode_argument: return "_t";
   case mode_h: return "_h";
@@ -500,8 +481,7 @@ void Stack::pop(Istring a)
 // Pushes a <p>. The argument a is (an attribute value for) a vertical space 
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
-Xid Stack::push_par (int k)
-{
+auto Stack::push_par(int k) -> Xid {
   Xmlp res = new Xml(cst_p,0);
   Xid id = res->get_id();
   push(the_names[cst_p],res);
@@ -511,8 +491,7 @@ Xid Stack::push_par (int k)
   return id;
 }
 
-Xmlp Stack::fonts1 (name_positions x)
-{
+auto Stack::fonts1(name_positions x) -> Xmlp {
   bool w = the_main->use_font_elt();
   Xmlp res = new Xml (w ? x : cst_hi,0);
   AttList& W = res->get_id().get_att();
@@ -637,20 +616,17 @@ void Stack::para_aux(int x)
 }
 
 // This allocates a slot for a new table.
-ArrayInfo& Stack::new_array_info(Xid id)
-{
+auto Stack::new_array_info(Xid id) -> ArrayInfo & {
   AI.push_back(ArrayInfo(id));
   return AI.back();
 }
 
 // This finds the table info given an ID
-ArrayInfo* Stack::find_cell_props(Xid id)
-{
+auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
   if(AI.empty()) return 0;
   if(!AI.back().its_me(id)) return 0;
   return &AI.back();
 }
-
 
 // This finds the cell row and table ID currently on the  stack.
 void Stack::find_cid_rid_tid(Xid&cid, Xid&rid, Xid&tid)
@@ -666,8 +642,7 @@ void Stack::find_cid_rid_tid(Xid&cid, Xid&rid, Xid&tid)
     { tid = Table[k].obj->get_id(); k--;}
 }
 
-int Stack::find_ctrid(subtypes m)
-{
+auto Stack::find_ctrid(subtypes m) -> int {
   int k = Table.size() -1;
   while (k >= 0) {
     Istring frame = Table[k].frame;
@@ -686,11 +661,8 @@ int Stack::find_ctrid(subtypes m)
   return 0;
 }
 
-
-
 // Computes the cell-id in cid, and returns the table associated.
-ArrayInfo* Stack::get_my_table(Xid& cid)
-{
+auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
   Xid rid,tid;
   find_cid_rid_tid(cid,rid,tid);
   ArrayInfo* A = find_cell_props(tid);
@@ -727,22 +699,19 @@ void ArrayInfo::add_uv(TokenList& u, TokenList& v, AttList At)
 }
 
 // This gets u-part or v-part
-TokenList ArrayInfo::get_u_or_v(bool u_or_v, int pos)
-{
+auto ArrayInfo::get_u_or_v(bool u_or_v, int pos) -> TokenList {
   if(pos<0 || pos>=size) return TokenList();
   return u_or_v ? u_table[pos] : v_table[pos];
 }
 
-TokenList Stack::get_u_or_v(bool u_or_v)
-{
+auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
   Xid unused;
   ArrayInfo*A = get_my_table(unused);
   int cell_no = A->get_cell_no();
   return A->get_u_or_v(u_or_v,cell_no);
 }
 
-AttList ArrayInfo::get_cell_atts(int k)
-{ 
+auto ArrayInfo::get_cell_atts(int k) -> AttList {
   if(k<0 || k>=size)  return AttList();
   else return attribs[k];
 }
@@ -772,9 +741,8 @@ void Stack::finish_cell(int w)
 
 
 // This returns the span of the current cell; -1 in case of trouble
-// the default value is 1 
-int Xml::get_cell_span() const
-{
+// the default value is 1
+auto Xml::get_cell_span() const -> int {
   Buffer&B = the_main->SH.shbuf();
   if(is_xmlc()) return 0;
   if(!has_name(the_names[np_cell]))
@@ -784,8 +752,6 @@ int Xml::get_cell_span() const
   return B.get_int_val();
 }
 
-
-
 // hack...
 void Stack::mark_omit_cell()
 {
@@ -793,13 +759,9 @@ void Stack::mark_omit_cell()
 }
 
 // This removes the last element of the top-stack
-Xmlp Stack::remove_last ()
-{
-  return top_stack()->remove_last(); 
-}
+auto Stack::remove_last() -> Xmlp { return top_stack()->remove_last(); }
 
-inline Istring get_cur_label()
-{
+inline auto get_cur_label() -> Istring {
   return Istring(the_parser.eqtb_string_table[0].get_val());
 }
 
@@ -812,30 +774,26 @@ void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext)
 
 
 // mark current element as target for a label.
-Istring Stack::add_new_anchor()
-{
+auto Stack::add_new_anchor() -> Istring {
   Istring id = the_main->SH.next_label_id();
   set_cur_id(id);
   create_new_anchor(last_xid,id, get_cur_label());
   return id;
 }
 
-Istring Stack::add_new_anchor_spec()
-{
+auto Stack::add_new_anchor_spec() -> Istring {
   Istring id = the_main->SH.next_top_label_id();
   set_cur_id(id);
   create_new_anchor(last_xid,id, get_cur_label());
   return id;
 }
 
-bool Xml::tail_is_anchor() const
-{
+auto Xml::tail_is_anchor() const -> bool {
   return tree.size()>0 && tree.back() && tree.back()->is_anchor();
 }
 
 // Add an anchor if needed.
-Istring Stack::add_anchor(const string& s, bool spec)
-{
+auto Stack::add_anchor(const string &s, bool spec) -> Istring {
   if(!spec && (top_stack()->tail_is_anchor()))
     return get_cur_id();
   Istring id = the_main->SH.next_label_id();

@@ -22,7 +22,7 @@ static Buffer mathml_buffer;
 static Buffer aux_buffer;
 static Buffer att_buffer;
 extern Xmlp single_chars[128];
-extern string get_math_char(uchar c, int f);
+extern auto get_math_char(uchar c, int f) -> string;
 extern bool cmi_verbose;
 extern MathDataP math_data;
 
@@ -45,8 +45,7 @@ void MathPAux::print(ostream& fp) const
 
 // This prints the whole MathP list on the stream
 
-ostream& operator<<(ostream& fp, const MathP& X)
-{
+auto operator<<(ostream &fp, const MathP &X) -> ostream & {
   const_math_p_iterator C = X.value.begin();
   const_math_p_iterator E = X.value.end();
   while(C != E) {
@@ -58,8 +57,7 @@ ostream& operator<<(ostream& fp, const MathP& X)
 
 // This prints the whole MathQ list on the stream
 
-ostream& operator<<(ostream& fp, const MathQList& X)
-{
+auto operator<<(ostream &fp, const MathQList &X) -> ostream & {
   MathQList::const_iterator C = X.begin();
   MathQList::const_iterator E = X.end();
   while(C != E) {
@@ -72,8 +70,7 @@ ostream& operator<<(ostream& fp, const MathQList& X)
 // ------------------------------------------------------------------------
 
 // Returns true if there is a small.
-bool MathP::has_small() const
-{
+auto MathP::has_small() const -> bool {
   const_math_p_iterator B = value.begin();
   const_math_p_iterator E = value.end();
   const_math_p_iterator C = find_if(B,E,MathPAuxSmall());
@@ -144,8 +141,7 @@ void Math::find_paren0(MathP& aux) const
 
 // The next function returns true if the formula is acceptable if we split
 // at:  rel and bin if w is true, rel if w is false.
-bool MathP::analyse1(bool w) const
-{
+auto MathP::analyse1(bool w) const -> bool {
   int nb_small = 0;
   const_math_p_iterator C = value.begin();
   const_math_p_iterator E = value.end();
@@ -178,8 +174,7 @@ void MathP::remove_binrel()
 
 // The next function assumes that there is a big at the end of the list.
 // Its splits the list in two parts, putting in k the position of the big.
-MathP MathP::find_big(int& k)
-{
+auto MathP::find_big(int &k) -> MathP {
   MathP res;
   while(!value.empty()) {
     MathPAux N = value.front();
@@ -197,8 +192,7 @@ MathP MathP::find_big(int& k)
 // Returns true if formula is ... left ... right ...
 // 2 delims only, a big between them, no big ouside.
 //  assumes that there is a big at the end of the list (ignored)
-bool MathP::is_lbr(int& seen_d1,int &seen_d2) const
-{
+auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
   const_math_p_iterator B = value.begin();
   const_math_p_iterator E = value.end();
   seen_d1 = -1;
@@ -226,8 +220,7 @@ bool MathP::is_lbr(int& seen_d1,int &seen_d2) const
   return false;
 }
 
-bool MathP::is_lbr2(int& seen_d1,int &seen_d2) const
-{
+auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
   const_math_p_iterator B = value.begin();
   const_math_p_iterator E = value.end();
   seen_d1 = -1;
@@ -248,9 +241,8 @@ bool MathP::is_lbr2(int& seen_d1,int &seen_d2) const
 }
 
 // Return true if Pairing is OK.
-// Handles the case of brakets (\langle  a \mid b\rangle)  
-bool MathP::find_paren_matched1() const
-{
+// Handles the case of brakets (\langle  a \mid b\rangle)
+auto MathP::find_paren_matched1() const -> bool {
   const_math_p_iterator B = value.begin();
   const_math_p_iterator E = value.end();
   bool is_out = true;
@@ -290,8 +282,7 @@ void MathP::find_paren_matched2(MathQList& res) const
   }
 }
 
-bool MathP::find_paren_rec(MathQList&res) const
-{
+auto MathP::find_paren_rec(MathQList &res) const -> bool {
   const_math_p_iterator B = value.begin();
   const_math_p_iterator E = value.end();
   int level = 0, p =-1;
@@ -330,8 +321,7 @@ bool MathP::find_paren_rec(MathQList&res) const
 // (the start=0 means that the list starts after 0, the final 13B
 // indicates that the list ends before the 13).
 // Retval is false if rec, true otherwise
-bool Math::find_parens (MathQList& res,bool verbose) const
-{
+auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
   MathP aux;
   find_paren0(aux);
   if(aux.empty()) return true;
@@ -374,8 +364,7 @@ bool Math::find_parens (MathQList& res,bool verbose) const
 // Same algo as find_big. We assume that the list is terminated by
 // a rel. In the example above, the result will be
 //  2l 6r k=9, and  10m 12m k=13
-MathP MathP::find_relbin(int &k)
-{
+auto MathP::find_relbin(int &k) -> MathP {
   MathP res;
   while(!empty()) {
     MathPAux N = value.front();
@@ -461,8 +450,7 @@ void MathP::find_paren1(int start1, int end1, MathQList& res,bool verbose)
 // This calls find_parens, which indicates where we should add some <mrow>
 // and replaces some values. Uses a class for this
 // Returns true if the object is big, false if small.
-bool Math::finish_translate1(bool vb)
-{
+auto Math::finish_translate1(bool vb) -> bool {
   if(empty()) return false;
   MathF M(*this,vb);
   bool retval = false;
@@ -475,8 +463,7 @@ bool Math::finish_translate1(bool vb)
 }
 
 // final is true for the final pass: calls remove_prefix when pushing in
-bool Math::add_fence(bool final,MathF &M)
-{
+auto Math::add_fence(bool final, MathF &M) -> bool {
   int i = 0; // current index in the list
   M.reset();  // state is now true
   M.change_state(); 
@@ -750,8 +737,7 @@ void Buffer::push_back_math_aux(String s)
 }
 
 // Returns the number of arguments of the command.
-int math_ns::nb_args_for_cmd(int c)
-{
+auto math_ns::nb_args_for_cmd(int c) -> int {
   if(c>= first_maccent_code && c<= last_maccent_code) return  1;
   switch(c) {
   case mathchoice_code: return 4;
@@ -802,8 +788,9 @@ int math_ns::nb_args_for_cmd(int c)
 
 // Not inline because of a bug of the Mac Compiler gcc4.2.1
 
-subtypes MathElt::get_fml_subtype() const
- { return math_to_sub(get_lcmd()); }
+auto MathElt::get_fml_subtype() const -> subtypes {
+  return math_to_sub(get_lcmd());
+}
 
 // Handles the case of a command like \sqrt, \frac
 void MathElt::cv_noML_special()
@@ -1366,14 +1353,12 @@ void Math::convert_math_noMLt0()
 
 // Main function. Converts the buffer into XML, adds attributes. 
 // If spec is true, we produce <in/> otherwise \in
-Xmlp Math::convert_math_noML(name_positions P, bool spec)
-{
+auto Math::convert_math_noML(name_positions P, bool spec) -> Xmlp {
   mathml_buffer.reset();
   if(spec) convert_math_noMLt0();
   else convert_math_noML0();
   return new Xml (np_texmath, new Xml (Istring(mathml_buffer)));
 }
-
 
 // --------------------------------------------------
 // Special hacks.
@@ -1381,8 +1366,7 @@ Xmlp Math::convert_math_noML(name_positions P, bool spec)
 
 
 // True if the list contains only digits, that are put in the buffer.
-bool Math::only_digits(Buffer&B) const
-{
+auto Math::only_digits(Buffer &B) const -> bool {
   const_math_iterator L = value.begin();
   const_math_iterator E = value.end();
   if(L==E) return false;
@@ -1399,8 +1383,7 @@ bool Math::only_digits(Buffer&B) const
 // Returns true if everything was inserted.
 // If rec is true, the argument can contain groups; In the case the buffer
 // is not reset !!
-bool Math::chars_to_mb(Buffer& B, bool rec) const
-{
+auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
   if(!rec) B.reset();
   const_math_iterator L = value.begin();
   const_math_iterator E = value.end();
@@ -1436,8 +1419,7 @@ bool Math::chars_to_mb(Buffer& B, bool rec) const
 }
 
 // Slightly modified procedure.
-bool Math::chars_to_mb1(Buffer& B) const
-{
+auto Math::chars_to_mb1(Buffer &B) const -> bool {
   B.reset();
   const_math_iterator L = value.begin();
   const_math_iterator E = value.end();
@@ -1458,8 +1440,7 @@ bool Math::chars_to_mb1(Buffer& B) const
 }
 
 // Slightly modified procedure. First token is ignored
-bool Math::chars_to_mb2(Buffer& B) const
-{
+auto Math::chars_to_mb2(Buffer &B) const -> bool {
   B.reset();
   const_math_iterator L = value.begin();
   const_math_iterator E = value.end();
@@ -1476,8 +1457,7 @@ bool Math::chars_to_mb2(Buffer& B) const
 
 // Yet another procedure. Reads the dimension in a command like \above
 // Something like -1,2cm  is OK
-Istring Math::chars_to_mb3()
-{
+auto Math::chars_to_mb3() -> Istring {
   Buffer& B = the_main->SH.shbuf();
   B.reset();
   int bc = 0; // unit size
@@ -1539,8 +1519,7 @@ void Buffer::show_uncomplete(String m)
 
 // Converts a whole math list into a string. May signal an error.
 // In this case, the result is `error'.
-string Math::convert_this_to_string(Buffer&B)
-{
+auto Math::convert_this_to_string(Buffer &B) -> string {
   B.reset();
   if(!chars_to_mb(B,true)) 
     B.show_uncomplete("Bad character in conversion to string"); 
@@ -1548,14 +1527,12 @@ string Math::convert_this_to_string(Buffer&B)
 }
 
 // Use of the alternate command
-string Math::convert_opname()
-{
+auto Math::convert_opname() -> string {
   Buffer& B = aux_buffer;
   if(!chars_to_mb1(B)) 
     B.show_uncomplete("Bad character in conversion to string"); 
   return B.to_string();
 }
-
 
 // Case of \begin{foo}[bar]{gee}ETC, spaces are not yet removed
 // This removes the optional argument of a list. 
@@ -1584,8 +1561,7 @@ void Math::remove_opt_arg (bool star)
 // Case of \begin{foo}[bar]{gee}ETC, spaces are not yet removed
 // Returns the value of a required argument, as a string.
 // Here it can be "gee"; this is a sublist.
-string Math::remove_req_arg ()
-{
+auto Math::remove_req_arg() -> string {
   skip_initial_space();
   if(empty() || !front().is_list()) {
     the_parser.signal_error("missing argument"); 
@@ -1596,8 +1572,7 @@ string Math::remove_req_arg ()
   return L.convert_this_to_string(aux_buffer);
 }
 
-string Math::remove_req_arg_noerr () const
-{
+auto Math::remove_req_arg_noerr() const -> string {
   const_math_iterator C = value.begin();
   const_math_iterator E = value.end();
   while(C != E && C ->is_space())  ++C;
@@ -1615,8 +1590,7 @@ string Math::remove_req_arg_noerr () const
 // like that by 10\textsuperscript{e}. 
 
 // This realises the \textsuperscript, given the translation of the argument
-Xmlp math_ns::make_sup(Xmlp xval)
-{
+auto math_ns::make_sup(Xmlp xval) -> Xmlp {
   Xmlp tmp = the_main->the_stack->fonts1(np_s_sup);
   tmp ->push_back(xval);
   return tmp;
@@ -1654,8 +1628,7 @@ void Math::special2(bool&ok, Xmlp& res) const
 
 // This handles the exponent. The case 10^e and 10^o is handled
 // elsewhere. We consider here only 10^{something}
-Xmlp MathElt::special3() const
-{
+auto MathElt::special3() const -> Xmlp {
   if(!is_list()) return 0;
   const_math_iterator L1;
   const_math_iterator E1;
@@ -1685,8 +1658,8 @@ void Math::is_font_cmd1_list(const_math_iterator&B, const_math_iterator&E)
 
 // This handles the case of i{\`e}me. Removes initial font change,
 // looks at letters. If OK, return a valid XML exponent.
-Xmlp math_ns::special_exponent(const_math_iterator L,const_math_iterator E)
-{
+auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E)
+    -> Xmlp {
   if(L==E) return 0;
   if(L->get_cmd() == mathfont_cmd || L->get_cmd() ==fontsize_cmd) 
     ++L;
@@ -1709,8 +1682,7 @@ Xmlp math_ns::special_exponent(const_math_iterator L,const_math_iterator E)
 }
 
 // True if it is a group containing \grave{e}
-bool MathElt::is_e_grave() const
-{
+auto MathElt::is_e_grave() const -> bool {
   if(get_cmd()!=special_math_cmd && get_font() != grave_code) 
     return false;
   Math& A = get_list();
@@ -1723,8 +1695,7 @@ bool MathElt::is_e_grave() const
 }
 
 // This is the list of valid exponents and the conversions.
-String Buffer::special_exponent () const
-{
+auto Buffer::special_exponent() const -> String {
   if(strcmp(buf,"th")==0) return "th";
   else if(strcmp(buf,"st")==0) return "st";
   else if(strcmp(buf,"rd")==0) return "rd";
@@ -1740,8 +1711,7 @@ String Buffer::special_exponent () const
 }
 
 // This is the main function.
-Xmlp Math::special1() const
-{
+auto Math::special1() const -> Xmlp {
   bool ok = false;
   Xmlp U = 0;
   special2(ok, U);
@@ -1828,8 +1798,7 @@ void Parser::TM_fonts()
 
 
 // Convert the character c  into <mi>c</mi>
-Xmlp math_ns::mk_mi(Utf8Char c)
-{
+auto math_ns::mk_mi(Utf8Char c) -> Xmlp {
   aux_buffer.reset();
   aux_buffer.push_back_real_utf8(c);
   Xmlp x = new Xml(Istring(aux_buffer));
@@ -1837,9 +1806,8 @@ Xmlp math_ns::mk_mi(Utf8Char c)
 }
 
 // Converts a letter with a into into <mi mathvariant='foo'>X</mi>
-// Assumes 2<=font<=14 and 'a'<=c<='z' || 'A'<=c<='Z' 
-Xmlp math_ns::mk_mi(uchar c, int font)
-{
+// Assumes 2<=font<=14 and 'a'<=c<='z' || 'A'<=c<='Z'
+auto math_ns::mk_mi(uchar c, int font) -> Xmlp {
   Xmlp x = single_chars[c];
   Xmlp y = new Xml(cst_mi, x);
   y->add_att(cst_mathvariant,name_positions(cstf_normal+font));
@@ -1847,8 +1815,7 @@ Xmlp math_ns::mk_mi(uchar c, int font)
 }
 
 // True if this can form a sequence of characters to put in a <mi>
-bool MathElt::maybe_seq() const 
-{
+auto MathElt::maybe_seq() const -> bool {
   if(get_cmd() !=letter_catcode) return false;
   if(get_font()==0) return false; 
   uint c = get_chr();
@@ -1857,8 +1824,7 @@ bool MathElt::maybe_seq() const
 
 // True is this can form a sequence of characters to put in a <mi>
 // with the same font as F
-bool MathElt::maybe_seq(subtypes f) const 
-{
+auto MathElt::maybe_seq(subtypes f) const -> bool {
   if(get_cmd() !=letter_catcode) return false;
   if(get_font() != f) return false; 
   uint c = get_chr();
@@ -1866,8 +1832,7 @@ bool MathElt::maybe_seq(subtypes f) const
 }
 
 // True is this can form a sequence of digits to put in a <mn>
-bool MathElt::maybe_iseq() const 
-{
+auto MathElt::maybe_iseq() const -> bool {
   if(get_cmd() !=other_catcode) return false;
   uint c = get_chr();
   return  c<128 && ::is_digit(uchar(c)) ;
@@ -1875,19 +1840,16 @@ bool MathElt::maybe_iseq() const
 
 // True is this can form a sequence of characters to put in a <mn>
 // with the same font as F
-bool MathElt::maybe_iseq(subtypes f) const 
-{
+auto MathElt::maybe_iseq(subtypes f) const -> bool {
   if(get_cmd() !=other_catcode) return false;
   if(get_font() != f) return false; 
   uint c = get_chr();
   return  c<128 && ::is_digit(uchar(c)) ;
 }
 
-
 // Converts a character sequence; first char W already removed from
 // the list
-MathElt Math::convert_char_seq(MathElt W)
-{
+auto Math::convert_char_seq(MathElt W) -> MathElt {
   subtypes f = W.get_font();
   int w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
   Xmlp res;
@@ -1914,12 +1876,10 @@ MathElt Math::convert_char_seq(MathElt W)
   return MathElt(res,mt_flag_small);
 }
 
-
 // Converts a character sequence; first char W already removed from
 // the list; if bool true reads some chars, otherwise, 
 // reads only a single one.
-MathElt Math::convert_char_iseq(MathElt W, bool multiple)
-{
+auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
   subtypes f = W.get_font();
   Buffer& B = aux_buffer;
   B.reset();

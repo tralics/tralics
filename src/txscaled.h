@@ -19,16 +19,16 @@ class ScaledInt {
   ScaledInt() : value(0) {}
   void set_value(int i) { value = i; }
   ScaledInt (int v): value (v) {}
-  int get_value() const { return value; }
-  ScaledInt operator-()const { return ScaledInt(-value); }
+  auto get_value() const -> int { return value; }
+  auto operator-() const -> ScaledInt { return ScaledInt(-value); }
   void operator += (ScaledInt X) {value += X.value; }
   void add_dim(ScaledInt x);
-  bool null() const { return value == 0; }
+  auto null() const -> bool { return value == 0; }
   void neg() { value = - value; }
   void divide(int);
   void quotient(int);
   void scale(int,int,int);
-  bool scale(int,int,int,int,bool&);
+  auto scale(int, int, int, int, bool &) -> bool;
   void mult_scaled(int);
   void mult_integer(int);
   void times_10_18();
@@ -37,11 +37,9 @@ class ScaledInt {
   void ovf31();
 };
 
-inline bool operator==(const ScaledInt& a, const ScaledInt&b)
-{
+inline auto operator==(const ScaledInt &a, const ScaledInt &b) -> bool {
   return a.get_value() == b.get_value();
 }
-
 
 // a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
 // the three ints should be ScaledInt.
@@ -53,11 +51,11 @@ class Glue {
   glue_spec stretch_order; // pt, symbolically
  public:
   Glue(): shrink_order(glue_spec_pt), stretch_order(glue_spec_pt) {}
-  ScaledInt get_width()const  { return width; }
-  ScaledInt get_shrink()const { return shrink; }
-  ScaledInt get_stretch()const { return stretch; }
-  glue_spec get_shrink_order()const { return shrink_order; }
-  glue_spec get_stretch_order()const { return stretch_order; }
+  auto get_width() const -> ScaledInt { return width; }
+  auto get_shrink() const -> ScaledInt { return shrink; }
+  auto get_stretch() const -> ScaledInt { return stretch; }
+  auto get_shrink_order() const -> glue_spec { return shrink_order; }
+  auto get_stretch_order() const -> glue_spec { return stretch_order; }
   void set_width(ScaledInt x)  { width = x; }
   void set_shrink(ScaledInt x) { shrink = x; }
   void set_stretch(ScaledInt x) { stretch = x; }
@@ -88,14 +86,14 @@ class RealNumber {
   void convert_decimal_part(int k, int*table);
   void set_ipart(int x) { ipart = x; }
   void set_fpart(int x) { fpart = x; }
-  int get_ipart()const  { return ipart; }
-  int get_fpart()const  { return fpart; }
+  auto get_ipart() const -> int { return ipart; }
+  auto get_fpart() const -> int { return fpart; }
   void change_sign() { negative = !negative; }
   void set_negative(bool x) { negative = x; }
   RealNumber() : negative(false), ipart(0), fpart(0) {}
   void set_neg() { negative = true ; }
   void change_sign_i() { ipart = -ipart; }
-  bool get_negative() { return negative; };
+  auto get_negative() -> bool { return negative; };
   void from_int(int x);
 };
 
@@ -108,21 +106,23 @@ class SthInternal {
   internal_type type; // this says what the object is.
  public:
   SthInternal(): int_val(0), type(it_int) {}
-  bool is_int()const { return type == it_int; }
-  bool is_mu()const { return type == it_mu; }
-  bool is_glue()const { return type == it_glue; }
-  bool is_dimen()const { return type == it_dimen; }
-  internal_type get_type()const { return type; }
+  auto is_int() const -> bool { return type == it_int; }
+  auto is_mu() const -> bool { return type == it_mu; }
+  auto is_glue() const -> bool { return type == it_glue; }
+  auto is_dimen() const -> bool { return type == it_dimen; }
+  auto get_type() const -> internal_type { return type; }
   void kill() { int_val = 0; glue_val.kill(); type=it_int; }
   void set_type(internal_type X) { type=X; }
-  int get_int_val()const { return int_val.get_value(); } 
-  ScaledInt get_dim_val()const { return int_val; } 
-  ScaledInt& get_scaled() { return int_val; } 
-  TokenList get_token_val()const { return token_val; } 
+  auto get_int_val() const -> int { return int_val.get_value(); }
+  auto get_dim_val() const -> ScaledInt { return int_val; }
+  auto get_scaled() -> ScaledInt & { return int_val; }
+  auto get_token_val() const -> TokenList { return token_val; }
   void set_int_val(int k) { int_val = k; } 
-  void set_scaled_val(ScaledInt k) { int_val = k; } 
-  const Glue& get_glue_val()const { return glue_val; } 
-  int get_glue_width()const { return glue_val.get_width().get_value(); } 
+  void set_scaled_val(ScaledInt k) { int_val = k; }
+  auto get_glue_val() const -> const Glue & { return glue_val; }
+  auto get_glue_width() const -> int {
+    return glue_val.get_width().get_value();
+  }
   void initialise(internal_type t);
   void copy(const SthInternal& x);
   void negate(){
@@ -175,8 +175,9 @@ public:
     numerator(N) {}
   ScanSlot(): expr_type(it_int), expr_state(se_none), term_state(se_none),
     numerator(0){}
-  internal_type get_next_type() const 
-  { return term_state==se_none ? expr_type: it_int; }
+  auto get_next_type() const -> internal_type {
+    return term_state == se_none ? expr_type : it_int;
+  }
   void kill();
   void compute_term(scan_expr_t& next_state, SthInternal f,char&);
   void add_or_sub(scan_expr_t& next_state, SthInternal f,char&);
@@ -184,12 +185,12 @@ public:
 
 
 namespace arith_ns {
-  int nx_plus_y(int n, int x, int y);
-  ScaledInt n_times_x(int n, ScaledInt x);
-  void scaled_div(ScaledInt& x, int n);
-  int xn_over_d(int x, int n, int d, int& remainder);
-  int quotient(int n, int d);
-  int add_ovf(ScaledInt x, ScaledInt y);
+auto nx_plus_y(int n, int x, int y) -> int;
+auto n_times_x(int n, ScaledInt x) -> ScaledInt;
+void scaled_div(ScaledInt &x, int n);
+auto xn_over_d(int x, int n, int d, int &remainder) -> int;
+auto quotient(int n, int d) -> int;
+auto add_ovf(ScaledInt x, ScaledInt y) -> int;
 };
 
 class TexRule {

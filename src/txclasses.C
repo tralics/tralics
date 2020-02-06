@@ -25,22 +25,22 @@ namespace {
 }
 
 namespace classes_ns {
-  int parse_version(const string& s);
-  OptionList get_option_list(const string & name);
-  int is_in_vector(const OptionList& V, const string& s,bool);
-  bool is_raw_option(const OptionList& V, String s);
-  bool is_in_option(const OptionList& V, const KeyAndVal& s);
-  OptionList make_options(TokenList&L);
-  bool compare_options(const OptionList& A, const OptionList& B);
-  void dump_options(const OptionList&A, String b); 
-  void dump_file_list();
-  TokenList cur_options(bool,TokenList&,bool);
-  KeyAndVal make_keyval(TokenList &L);
-  void register_key(const string&);
-  void unknown_optionX(TokenList&action,TokenList&);
-  void unknown_option(KeyAndVal&cur_keyval, TokenList&,TokenList&,int);
-  void add_to_filelist(const string&,const string&);
-  void add_sharp(TokenList& L);
+auto parse_version(const string &s) -> int;
+auto get_option_list(const string &name) -> OptionList;
+auto is_in_vector(const OptionList &V, const string &s, bool) -> int;
+auto is_raw_option(const OptionList &V, String s) -> bool;
+auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
+auto make_options(TokenList &L) -> OptionList;
+auto compare_options(const OptionList &A, const OptionList &B) -> bool;
+void dump_options(const OptionList &A, String b);
+void dump_file_list();
+auto cur_options(bool, TokenList &, bool) -> TokenList;
+auto make_keyval(TokenList &L) -> KeyAndVal;
+void register_key(const string &);
+void unknown_optionX(TokenList &action, TokenList &);
+void unknown_option(KeyAndVal &cur_keyval, TokenList &, TokenList &, int);
+void add_to_filelist(const string &, const string &);
+void add_sharp(TokenList &L);
 }
 
 using namespace classes_ns;
@@ -51,8 +51,7 @@ using namespace token_ns;
 
 
 // Splits key=val in two parts
-KeyAndVal classes_ns::make_keyval(TokenList &key_val)
-{
+auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
   TokenList key;
   Token equals = Token(other_t_offset,'=');
   bool have_equals = split_at(equals,key_val,key);
@@ -71,8 +70,7 @@ KeyAndVal classes_ns::make_keyval(TokenList &key_val)
 }
 
 // Reverse function
-TokenList KeyAndVal::to_list() const
-{
+auto KeyAndVal::to_list() const -> TokenList {
   TokenList u = string_to_list(name, false);
   if(val.empty()) return u;
   TokenList aux = val;
@@ -81,8 +79,7 @@ TokenList KeyAndVal::to_list() const
 }
 
 // Constructs an option list from a comma separated string.
-OptionList classes_ns::make_options(TokenList& L)
-{
+auto classes_ns::make_options(TokenList &L) -> OptionList {
   OptionList res;
   TokenList key;
   Token comma = the_parser.hash_table.comma_token;
@@ -117,8 +114,7 @@ void LatexPackage::add_options(const OptionList& L)
 }
 
 // Returns true if S is in the option list (for check_builtin_class)
-bool classes_ns::is_raw_option(const OptionList& V, String s)
-{
+auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
   int n = V.size();
   for(int i=0;i<n;i++)
     if(V[i].has_name(s)) return true;
@@ -126,8 +122,8 @@ bool classes_ns::is_raw_option(const OptionList& V, String s)
 }
 
 // Returns true if slot is in the vector V with the same value
-bool classes_ns::is_in_option(const OptionList& V, const KeyAndVal& slot)
-{
+auto classes_ns::is_in_option(const OptionList &V, const KeyAndVal &slot)
+    -> bool {
   const string& s = slot.get_name();
   int n = V.size();
   for(int i=0;i<n;i++)
@@ -137,8 +133,8 @@ bool classes_ns::is_in_option(const OptionList& V, const KeyAndVal& slot)
 }
 
 // Returns true if each element of B is in A, i.e. A contains B
-bool classes_ns::compare_options(const OptionList& A, const OptionList& B)
-{
+auto classes_ns::compare_options(const OptionList &A, const OptionList &B)
+    -> bool {
   int n = B.size();
   for(int i=0;i<n;i++)
     if(!is_in_option(A,B[i])) return false;
@@ -147,8 +143,8 @@ bool classes_ns::compare_options(const OptionList& A, const OptionList& B)
 
 // Like is_in_option, but returns a position
 // If X true, checks the keyname
-int classes_ns::is_in_vector(const OptionList& V, const string& s,bool X)
-{
+auto classes_ns::is_in_vector(const OptionList &V, const string &s, bool X)
+    -> int {
   int n = V.size();
   for(int i=0;i<n;i++) {
     if(X ?  V[i].has_name(s) : V[i].has_full_name(s)) return i;
@@ -161,8 +157,8 @@ int classes_ns::is_in_vector(const OptionList& V, const string& s,bool X)
 // Find the index of a package in the list. Returns 0 in case of
 // failure (slot 0 does not hold a valid package)
 // Creates if creat is true.
-int ClassesData::find_package(const string & name, bool type,bool creat)
-{
+auto ClassesData::find_package(const string &name, bool type, bool creat)
+    -> int {
   string full_name = (type ? "C" : "P") + name;
   int n = packages.size();
   for(int i=1; i<n;i++) 
@@ -225,8 +221,7 @@ LatexPackage::LatexPackage(string A):
 
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
-LatexPackage* ClassesData::cur_pack()
-{ 
+auto ClassesData::cur_pack() -> LatexPackage * {
   int n = the_parser.get_cur_file_pos();
   if(n<0) n = -n;
   return packages[n];
@@ -234,8 +229,7 @@ LatexPackage* ClassesData::cur_pack()
 
 // Date is something like 2004/12/03 converted to 20041203
 // Hack: we read at most 8 digits, ignore everything else
-int classes_ns::parse_version(const string& s)
-{
+auto classes_ns::parse_version(const string &s) -> int {
   int n = s.size();
   int r = 0;
   int k=0;
@@ -597,8 +591,8 @@ void Parser::T_process_options_aux(TokenList& action)
 
 // This is used by \ProcessOptionsX and \ProcessKeyvalOptions
 // It gets the list of all keyval pairs.
-TokenList classes_ns::cur_options(bool star,TokenList&spec,bool normal)
-{
+auto classes_ns::cur_options(bool star, TokenList &spec, bool normal)
+    -> TokenList {
   LatexPackage*C = the_class_data.cur_pack();
   bool in_class = C->is_class();
   C->seen_process = true;
@@ -735,8 +729,7 @@ void Parser::use_a_package(const string& name, bool type, const string&date,
 }
 
 // Built-in package handler
-bool Parser::check_builtin_pack(const string& pack)
-{
+auto Parser::check_builtin_pack(const string &pack) -> bool {
   if(pack=="calc") { calc_loaded = true; return false; }
   if(pack=="fp") { boot_fp(); return true; }
   if(pack=="french" || pack== "frenchle")
@@ -810,8 +803,7 @@ void Parser::add_language_att()
 //   cout << "\n";
 // }
 
-int LatexPackage::find_option(const string & name)
-{
+auto LatexPackage::find_option(const string &name) -> int {
   int n = Poptions.size();
   for(int i=0; i<n;i++) 
     if(Poptions[i].has_name(name))
@@ -1267,19 +1259,16 @@ void Parser::kvo_family_etc(subtypes k)
 }
 
 // This gets prefix and family
-string Parser::kvo_getfam()
-{
+auto Parser::kvo_getfam() -> string {
   back_input(hash_table.CB_token);
   kvo_family_etc(kvo_fam_get_code);
   back_input(hash_table.OB_token);
   return sE_arg_nopar();
 }
 
-
 // If arg is foo checks that \iffoo \footrue \foofalse
 // are undefined . Puts \iffo in cur_tok
-bool Parser::check_if_redef(const string& s)
-{
+auto Parser::check_if_redef(const string &s) -> bool {
   Buffer&B = local_buf;
   B << bf_reset << s << "true";
   Token T2=hash_table.locate(B);
@@ -1301,15 +1290,13 @@ bool Parser::check_if_redef(const string& s)
   }
   cur_tok = T1;
   return true;
-    
 }
 
 // --------------------------------------------------
 // extensions for Xkeyval
 
-// You can use <foo.sty> as optional argument 
-TokenList Parser::XKV_parse_filename()
-{
+// You can use <foo.sty> as optional argument
+auto Parser::XKV_parse_filename() -> TokenList {
   skip_initial_space();
   if(cur_tok.is_valid()) back_input();
   if(cur_tok==Token(other_t_offset,'<')) {

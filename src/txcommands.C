@@ -35,8 +35,8 @@ namespace {
 }
 
 namespace tcommands {
-  name_positions hfill_to_np (subtypes c);
-  name_positions vfill_to_np (subtypes c);
+auto hfill_to_np(subtypes c) -> name_positions;
+auto vfill_to_np(subtypes c) -> name_positions;
 }
 
 extern void show_unused_options();
@@ -844,22 +844,19 @@ void Parser::T_un_box(subtypes c)
   return; // else does nothing
 }
 
-name_positions tcommands::hfill_to_np (subtypes c)
-{
+auto tcommands::hfill_to_np(subtypes c) -> name_positions {
   if(c==hfill_code) return np_hfill;
   if(c==hfilneg_code) return np_hfilneg;
   if(c==hss_code) return np_hss;
   return np_hfil;
 }
 
-name_positions tcommands::vfill_to_np (subtypes c)
-{
+auto tcommands::vfill_to_np(subtypes c) -> name_positions {
   if(c==vfill_code) return np_vfill;
   if(c==vfilneg_code) return np_vfilneg;
   if(c==vss_code) return np_vss;
   return np_vfil;
 }
-
 
 // Translates a command.
 

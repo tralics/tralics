@@ -31,33 +31,33 @@ extern Logger& the_log;  // not in a namespace ?
 
 
 namespace tralics_ns {
-  bool is_leap_year(int y);
-  int year_length(int y);
-  void make_names();
-  void boot_math(bool);
-  bool file_exists(String name);
-  bool find_in_confdir(const string & s, bool retry);
-  bool find_in_path(const string & s);
-  bool find_no_path(const string & s);
-  void read_a_file (LinePtr&,string x, int spec);
-  String make_string(String);
-  bool titlepage_is_valid();
-  bool file_exists(String name);
-  bool file_exists(string name);
-  bool file_exists(Buffer&);
-  void bibtex_bootagain();
-  void bibtex_boot(String b,String,string,bool,bool);
-  void Titlepage_create(LinePtr& x);
-  void Titlepage_start(bool);
-  bool exists(const vector<string>&, string);
-  void bibtex_set_nocite();
-  void bibtex_insert_jobname();
-  fstream* open_file(String name,bool);
-  fstream* open_file(string name,bool);
-  void close_file(fstream*);
-  bool only_digits(const string& s);
-  String get_out_dir(string);
-  string get_short_jobname();
+auto is_leap_year(int y) -> bool;
+auto year_length(int y) -> int;
+void make_names();
+void boot_math(bool);
+auto file_exists(String name) -> bool;
+auto find_in_confdir(const string &s, bool retry) -> bool;
+auto find_in_path(const string &s) -> bool;
+auto find_no_path(const string &s) -> bool;
+void read_a_file(LinePtr &, string x, int spec);
+auto make_string(String) -> String;
+auto titlepage_is_valid() -> bool;
+auto file_exists(String name) -> bool;
+auto file_exists(string name) -> bool;
+auto file_exists(Buffer &) -> bool;
+void bibtex_bootagain();
+void bibtex_boot(String b, String, string, bool, bool);
+void Titlepage_create(LinePtr &x);
+void Titlepage_start(bool);
+auto exists(const vector<string> &, string) -> bool;
+void bibtex_set_nocite();
+void bibtex_insert_jobname();
+auto open_file(String name, bool) -> fstream *;
+auto open_file(string name, bool) -> fstream *;
+void close_file(fstream *);
+auto only_digits(const string &s) -> bool;
+auto get_out_dir(string) -> String;
+auto get_short_jobname() -> string;
 };
 
 namespace err_ns {
@@ -66,48 +66,40 @@ namespace err_ns {
 }
 
 namespace config_ns {
-  string find_one_key(const string& name,const string&key);
-  string pers_rc(const string& rc);
-  void check_RC(Buffer& s,Xml*);
-  string find_keys(const string& name);
-  bool start_interpret(Buffer&B, String s);
-  void interpret_list(const string&, Buffer&B);
-  bool assign(Buffer& a, Buffer& b);
-  bool assign_name(String A,String B);
-  bool assign_att(String A, String B);
-
+auto find_one_key(const string &name, const string &key) -> string;
+auto pers_rc(const string &rc) -> string;
+void check_RC(Buffer &s, Xml *);
+auto find_keys(const string &name) -> string;
+auto start_interpret(Buffer &B, String s) -> bool;
+void interpret_list(const string &, Buffer &B);
+auto assign(Buffer &a, Buffer &b) -> bool;
+auto assign_name(String A, String B) -> bool;
+auto assign_att(String A, String B) -> bool;
 }
 
-inline bool operator==(const Buffer& B, String s) 
-{ 
+inline auto operator==(const Buffer &B, String s) -> bool {
   return strcmp(B.c_str(),s)== 0;
 }
 
-inline bool is_vowel(char c) 
-{
+inline auto is_vowel(char c) -> bool {
   return c=='a' || c=='e' || c=='i' || c=='o' || c=='u';
 }
 
-// True if it is an accent character, like \^. 
-inline bool is_accent_char(char c)
-{
+// True if it is an accent character, like \^.
+inline auto is_accent_char(char c) -> bool {
   return c=='\'' || c=='`' || c=='^' || c=='"' || c=='~' || c== '.' || c=='=';
 }
 
-inline bool is_tp_delim (char c)
-{
+inline auto is_tp_delim(char c) -> bool {
   return c == '<' || c == '\\' || c == '"';
 }
 
-
-inline bool operator ==(Token a, Token b) 
-{ 
-  return a.get_val() == b.get_val(); 
+inline auto operator==(Token a, Token b) -> bool {
+  return a.get_val() == b.get_val();
 }
 
-inline bool operator !=(Token a, Token b) 
-{ 
-  return a.get_val() != b.get_val(); 
+inline auto operator!=(Token a, Token b) -> bool {
+  return a.get_val() != b.get_val();
 }
 
 inline Istring::Istring(const Buffer& X) :
@@ -119,12 +111,8 @@ inline Istring::Istring(String s) :
 inline Istring::Istring(string s) :
   value(the_main->SH.find(s)) {}
 
-inline String Istring::c_str()const 
-{
-  return the_main->SH[value]; 
-}
+inline auto Istring::c_str() const -> String { return the_main->SH[value]; }
 
-inline String Istring::p_str()const 
-{
-  return the_main->SH.p_str(value); 
+inline auto Istring::p_str() const -> String {
+  return the_main->SH.p_str(value);
 }

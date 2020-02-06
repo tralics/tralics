@@ -30,8 +30,8 @@ namespace {
   //  bool check_declaration = false; should set and use this, TODO
 }
 
-namespace l3_ns { 
-  subtypes conditional_aux (const string& p);
+namespace l3_ns {
+auto conditional_aux(const string &p) -> subtypes;
 }
   
 // -----------------------------------------------------
@@ -55,8 +55,7 @@ void Parser::E_pdfstrcmp()
 
 
 // Parses svn info. returns false in case of bad syntax
-bool Buffer::svn_id(string& name, string& date, string& version)
-{
+auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
   reset_ptr();
   date = "0000/00/00";
   version = "-1" ;
@@ -85,7 +84,7 @@ bool Buffer::svn_id(string& name, string& date, string& version)
   if (buf[ptr+7] == '-') buf[ptr+7] = '/';
   if (buf[ptr+10] == ' ') buf[ptr+10] = 0; else return true;
   date = buf + ptr1;
-  return true;  
+  return true;
 }
 
 // In latex3, a space is ignored, so locally redefine the catcode
@@ -145,8 +144,7 @@ void Parser::E_prg_return (int c)
 
 // Generate #1#2#3 etc 
 // s is true when n is given by specification, false when by value
-TokenList Parser::l3_parms_from_ac (int n, Token t,bool s)
-{
+auto Parser::l3_parms_from_ac(int n, Token t, bool s) -> TokenList {
   if(n<0) {
     err_ns::local_buf << bf_reset << "Negative number of arguments " << n <<
       " for " << t;
@@ -171,8 +169,7 @@ TokenList Parser::l3_parms_from_ac (int n, Token t,bool s)
 // reads a command name, say \foo:nn, stores it in token_to_split 
 // sets tok_base = foo, tok_sig=nn
 // return true if bad
-bool Parser::L3_split_next_name()
-{
+auto Parser::L3_split_next_name() -> bool {
   if(l3_get_name(err_tok)) return true;
   Buffer& B = local_buffer;
   B.reset();
@@ -239,8 +236,7 @@ void Buffer::l3_fabricate_cond (const string&base, const string& sig,subtypes w)
   else if(w==l3_TF_code) push_back("TF");
 }
 
-subtypes l3_ns::conditional_aux (const string& p)
-{
+auto l3_ns::conditional_aux(const string &p) -> subtypes {
   if(p=="p") return l3_p_code; 
   else if(p=="TF") return l3_TF_code; 
   else if(p=="T") return l3_T_code; 
@@ -409,8 +405,7 @@ void Parser::E_l3_ifx(subtypes c)
 // There is a variant \str_if_eq_x:nn with with full expansion
 // and two variants v and o (for each argument).
 
-string Parser::l3_to_string(subtypes c, TokenList& L)
-{
+auto Parser::l3_to_string(subtypes c, TokenList &L) -> string {
   switch(c) {
   case l3expx_code : read_toks_edef(L); break;
   case l3expo_code : l3_reexpand_o(L); break;
@@ -667,8 +662,7 @@ void Parser::tl_set_rescan (int c)
 // --------------------------------------------------
 // Character codes
 
-int Parser::l3_read_int (Token T)
-{
+auto Parser::l3_read_int(Token T) -> int {
   TokenList L = read_arg();
   back_input(hash_table.relax_token);
   back_input(L);
@@ -676,7 +670,7 @@ int Parser::l3_read_int (Token T)
   scan_expr(numexpr_code);
   return cur_val.get_int_val();
 }
-  
+
 // \char_set_catcode_ignore:N T or \char_set_catcode_ignore:n `T
 void Parser::L3_set_cat_code(int c)
 {
@@ -750,15 +744,13 @@ void Parser::L3_set_num_code(int c)
 }
 
 // returns true in case of problem; otherwise L3 equivalent of \if\ifcat
-bool Parser::l3_get_cat(symcodes&a,subtypes&b,Token caller)
-{
+auto Parser::l3_get_cat(symcodes &a, subtypes &b, Token caller) -> bool {
   if(read_token_arg(caller)) return true;
   back_input(); // fake \noexpand
   if(!cur_tok.not_a_cmd()) back_input(hash_table.frozen_dont_expand);
   get_x_token_or_active_char (a,b);
   return false;
 }
-
 
 // Compares a character code
 void Parser::E_cat_ifeq(subtypes c)

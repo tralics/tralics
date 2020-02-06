@@ -18,10 +18,10 @@ const char* txtoken1_rcsid=
 static Buffer make_name_buffer; // used for token names
 
 namespace tralics_ns {
-  String make_name(String x, int y);
-  String make_name16(String x, int y);
-  String strip_end(String s);
-  String math_env_name(subtypes c);
+auto make_name(String x, int y) -> String;
+auto make_name16(String x, int y) -> String;
+auto strip_end(String s) -> String;
+auto math_env_name(subtypes c) -> String;
 }
 
 using tralics_ns::make_name;
@@ -30,38 +30,31 @@ using tralics_ns::strip_end;
 
 // This converts `endfoo' to `foo'. It does not check that the
 // string starts with `end', just that is is not zero.
-String tralics_ns::strip_end(String s)
-{
+auto tralics_ns::strip_end(String s) -> String {
   if(!s) return 0;
   return s+3;
 }
 
-
 // This returns a temporary associated to \skip24
 // (given the name skip and the integer 24)
-String tralics_ns::make_name(String x, int y)
-{
+auto tralics_ns::make_name(String x, int y) -> String {
   make_name_buffer << bf_reset << x << y;
   return make_name_buffer.c_str();
 }
 
-String tralics_ns::make_name16(String x, int y)
-{
+auto tralics_ns::make_name16(String x, int y) -> String {
   make_name_buffer << bf_reset << x << '"';
   make_name_buffer.push_back16(y,false);
   return make_name_buffer.c_str();
 }
 
-String CmdChr::specchar_cmd_name() const
-{
+auto CmdChr::specchar_cmd_name() const -> String {
   make_name_buffer << bf_reset << "Character ";
   make_name_buffer.push_back16(chr,true);
   return make_name_buffer.c_str();
-  
 }
 
-String CmdChr::token_error_name() const
-{
+auto CmdChr::token_error_name() const -> String {
   switch (chr) {
   case classerror_code: return "ClassError";
   case classwarning_code: return "ClassWarning";
@@ -84,8 +77,7 @@ String CmdChr::token_error_name() const
   }
 }
 
-String CmdChr::token_monthday_name() const
-{
+auto CmdChr::token_monthday_name() const -> String {
   switch(chr) {
   case md_frenchm_code: return "@monthnamefrench";
   case md_frenchd_code: return "@daynamefrench";
@@ -99,9 +91,7 @@ String CmdChr::token_monthday_name() const
   }
 }
 
-
-String CmdChr::token_xkeyval_name() const
-{
+auto CmdChr::token_xkeyval_name() const -> String {
   switch(chr) {
   case boot_keyval_code: return "tralics@boot@keyval";
   case definekey_code: return "define@key";
@@ -131,10 +121,7 @@ String CmdChr::token_xkeyval_name() const
   }
 }
 
-
-
-String CmdChr::token_specialmath_name() const
-{
+auto CmdChr::token_specialmath_name() const -> String {
   switch(chr) {
   case acute_code: return "acute"; 
   case grave_code: return "grave"; 
@@ -210,8 +197,7 @@ String CmdChr::token_specialmath_name() const
 }
 
 // For debug: returns the name of a command
-String CmdChr::token_math_name() const
-{
+auto CmdChr::token_math_name() const -> String {
   switch (int (chr)) {
   case xml_zero_space_loc: return "zerospace";
   case xml_thinmu_space_loc: return ",";
@@ -721,8 +707,7 @@ String CmdChr::token_math_name() const
   }
 }
 
-String CmdChr::tipa_name() const
-{
+auto CmdChr::tipa_name() const -> String {
   switch(chr) {
   case 0: return "tipa@star";
   case 1: return "tipa@semi";
@@ -744,8 +729,7 @@ String CmdChr::tipa_name() const
 }
 
 // Aux functions for CmdChr::name() const
-String CmdChr::token_fancy_name() const
-{
+auto CmdChr::token_fancy_name() const -> String {
   switch(chr) {
   case fancy_lhead_code: return "lhead";
   case fancy_chead_code: return "chead";
@@ -759,8 +743,7 @@ String CmdChr::token_fancy_name() const
   default: return 0;
   }
 }
-String CmdChr::token_color_name()const
-{
+auto CmdChr::token_color_name() const -> String {
   switch(chr) {
   case definecolor_code: return "definecolor";
   case color_code: return "color";
@@ -772,8 +755,7 @@ String CmdChr::token_color_name()const
   }
 }
 
-String CmdChr::token_fbox_name()const
-{
+auto CmdChr::token_fbox_name() const -> String {
   switch(chr) {
   case fbox_code: return "fbox";
   case framebox_code: return "framebox";
@@ -785,8 +767,7 @@ String CmdChr::token_fbox_name()const
   }
 }
 
-String CmdChr::token_linebreak_name() const
-{
+auto CmdChr::token_linebreak_name() const -> String {
   switch(chr) {
   case pagebreak_code: return "pagebreak";
   case nopagebreak_code: return "nopagebreak";
@@ -796,8 +777,7 @@ String CmdChr::token_linebreak_name() const
   }
 }
 
-String CmdChr::token_mark_name()  const
-{
+auto CmdChr::token_mark_name() const -> String {
   switch(chr) {
   case topmark_code: return  "topmark";
   case firstmark_code: return  "firstmark";
@@ -813,8 +793,7 @@ String CmdChr::token_mark_name()  const
   }
 }
 
-String CmdChr::token_fiorelse_name()  const
-{
+auto CmdChr::token_fiorelse_name() const -> String {
   switch(chr) {
   case fi_code: return "fi";
   case or_code: return "or";
@@ -823,9 +802,7 @@ String CmdChr::token_fiorelse_name()  const
   }
 }
 
-
-String CmdChr::token_iftest_name() const
-{
+auto CmdChr::token_iftest_name() const -> String {
   switch(chr) {
   case if_char_code: return  "if";
   case if_cat_code: return  "ifcat";
@@ -852,8 +829,7 @@ String CmdChr::token_iftest_name() const
   }
 }
 
-String CmdChr::token_counter_name() const
-{
+auto CmdChr::token_counter_name() const -> String {
   switch(chr) {
   case killcounter_code: return  "@stpelt";
   case stepcounter_code: return  "stepcounter";
@@ -865,8 +841,7 @@ String CmdChr::token_counter_name() const
   }
 }
 
-String CmdChr::token_accent_name() const
-{
+auto CmdChr::token_accent_name() const -> String {
   switch(chr) {
   case '\'': return  "'";
   case '`': return  "`";
@@ -890,8 +865,7 @@ String CmdChr::token_accent_name() const
   }
 }
 
-String CmdChr::token_convert_name() const
-{
+auto CmdChr::token_convert_name() const -> String {
   switch(chr) {
   case number_code: return  "number";
   case at_arabic_code: return  "@arabic";
@@ -913,8 +887,7 @@ String CmdChr::token_convert_name() const
   }
 }
 
-String CmdChr::token_for_name() const
-{
+auto CmdChr::token_for_name() const -> String {
   switch(chr) {
   case  xkv_for_n_code: return "tralics@for@n";
   case  xkv_for_en_code: return "tralics@for@en";
@@ -932,9 +905,7 @@ String CmdChr::token_for_name() const
   }
 }
 
-
-String CmdChr::token_lastitem_name() const
-{
+auto CmdChr::token_lastitem_name() const -> String {
   switch(chr) {
   case lastpenalty_code: return  "lastpenalty";
   case lastkern_code: return  "lastkern";
@@ -981,8 +952,7 @@ String CmdChr::token_lastitem_name() const
   }
 }
 
-String CmdChr::token_over_name() const
-{
+auto CmdChr::token_over_name() const -> String {
   switch(chr) {
   case above_code: return  "above";
   case over_code: return  "over";
@@ -994,9 +964,7 @@ String CmdChr::token_over_name() const
   }
 }
 
-
-String CmdChr::token_limits_name() const
-{
+auto CmdChr::token_limits_name() const -> String {
   switch(chr) {
   case 0: return  "displaylimits";
   case 2: return  "limits";
@@ -1005,8 +973,7 @@ String CmdChr::token_limits_name() const
   }
 }
 
-String CmdChr::token_style_name() const
-{
+auto CmdChr::token_style_name() const -> String {
   switch(chr) {
   case displaystyle_code: return  "displaystyle";
   case textstyle_code: return  "textstyle";
@@ -1016,8 +983,7 @@ String CmdChr::token_style_name() const
   }
 }
 
-String CmdChr::token_big_name() const
-{
+auto CmdChr::token_big_name() const -> String {
   switch(chr) {
   case big_code: return  "big"; 
   case Big_code: return  "Big"; 
@@ -1039,8 +1005,7 @@ String CmdChr::token_big_name() const
   }
 }
 
-String CmdChr::token_mathcomp_name() const
-{
+auto CmdChr::token_mathcomp_name() const -> String {
   switch(chr) {
   case ord_noad: return  "mathord";
   case op_noad: return  "mathop";
@@ -1055,9 +1020,7 @@ String CmdChr::token_mathcomp_name() const
   }
 }
 
-
-String CmdChr::token_eignorec_name() const
-{
+auto CmdChr::token_eignorec_name() const -> String {
   switch(chr) {
   case htmlonly_code: return  "endhtmlonly";
   case comment_code: return  "endcomment";
@@ -1067,8 +1030,7 @@ String CmdChr::token_eignorec_name() const
   }
 }
 
-String CmdChr::token_eignore_name() const
-{
+auto CmdChr::token_eignore_name() const -> String {
   switch(chr) {
   case body_code: return  "endbody";
   case abstract_code: return  "endabstract";
@@ -1078,9 +1040,7 @@ String CmdChr::token_eignore_name() const
   }
 }
 
-
-String CmdChr::token_efigure_name() const
-{
+auto CmdChr::token_efigure_name() const -> String {
   switch(chr) {
   case 0: return  "endfigure";
   case 1: return  "endfigure*";
@@ -1089,9 +1049,7 @@ String CmdChr::token_efigure_name() const
   }
 }
 
-
-String CmdChr::token_ecenter_name() const
-{
+auto CmdChr::token_ecenter_name() const -> String {
   switch(chr) {
   case center_code: return  "endcenter";
   case quote_code: return  "endquote";
@@ -1104,8 +1062,7 @@ String CmdChr::token_ecenter_name() const
 }
 
 // input and friends
-String CmdChr::token_file_name() const
-{
+auto CmdChr::token_file_name() const -> String {
   switch(chr) {
   case ifexists_code: return  "IfFileExists";
   case inputifexists_code: return  "InputIfFileExists";
@@ -1121,8 +1078,7 @@ String CmdChr::token_file_name() const
   }
 }
 
-String CmdChr::token_dashline_name() const
-{
+auto CmdChr::token_dashline_name() const -> String {
   switch(chr) {
   case dashline_code: return  "dashline";
   case drawline_code: return  "drawline";
@@ -1132,8 +1088,7 @@ String CmdChr::token_dashline_name() const
   }
 }
 
-String CmdChr::token_put_name() const
-{
+auto CmdChr::token_put_name() const -> String {
   switch(chr) {
   case put_code: return  "put";
   case line_code: return  "line";
@@ -1146,8 +1101,7 @@ String CmdChr::token_put_name() const
   }
 }
 
-String CmdChr::token_caseshift_name() const
-{
+auto CmdChr::token_caseshift_name() const -> String {
   switch(chr) {
   case 0: return  "lowercase";
   case 1: return  "uppercase";
@@ -1161,8 +1115,7 @@ String CmdChr::token_caseshift_name() const
   }
 }
 
-String CmdChr::token_centering_name() const
-{
+auto CmdChr::token_centering_name() const -> String {
   switch(chr) {
   case center_code: return  "centering";
   case flushright_code: return  "raggedleft";
@@ -1171,8 +1124,7 @@ String CmdChr::token_centering_name() const
   }
 }
 
-String CmdChr::token_box_name() const
-{
+auto CmdChr::token_box_name() const -> String {
   switch(chr) {
   case mbox_code: return  "mbox";
   case makebox_code: return  "makebox";
@@ -1181,8 +1133,7 @@ String CmdChr::token_box_name() const
   }
 }
 
-String CmdChr::token_section_name() const
-{
+auto CmdChr::token_section_name() const -> String {
   switch(chr) {
   case part_code: return  "part";
   case chapter_code: return  "chapter";
@@ -1197,8 +1148,7 @@ String CmdChr::token_section_name() const
   }
 }
 
-String CmdChr::token_cite_name() const
-{
+auto CmdChr::token_cite_name() const -> String {
   switch(chr) {
   case cite_code: return  "cite";
   case footcite_code: return  "footcite";
@@ -1211,8 +1161,7 @@ String CmdChr::token_cite_name() const
   }
 }
 
-String CmdChr::token_latexctr_name() const
-{
+auto CmdChr::token_latexctr_name() const -> String {
   switch(chr) {
   case arabic_code: return "arabic";
   case roman_code: return  "roman";
@@ -1227,8 +1176,7 @@ String CmdChr::token_latexctr_name() const
   }
 }
 
-String CmdChr::token_mathfont2_name() const
-{
+auto CmdChr::token_mathfont2_name() const -> String {
   switch(chr) {
   case math_f_normal: return "mml@font@normal";
   case math_f_upright: return "mml@font@upright";
@@ -1249,8 +1197,7 @@ String CmdChr::token_mathfont2_name() const
   }
 }
 
-String CmdChr::token_mathfont1_name() const
-{
+auto CmdChr::token_mathfont1_name() const -> String {
   switch(chr) {
   case cal_code: return  "cal";
   case mathtt_code: return  "mathtt";
@@ -1266,8 +1213,7 @@ String CmdChr::token_mathfont1_name() const
   }
 }
 
-String CmdChr::token_setinteraction_name() const
-{
+auto CmdChr::token_setinteraction_name() const -> String {
   switch(chr) {
   case batchmode_code: return  "batchmode";
   case nonstopmode_code: return  "nonstopmode";
@@ -1277,8 +1223,7 @@ String CmdChr::token_setinteraction_name() const
   }
 }
 
-String CmdChr::token_shape_name() const
-{
+auto CmdChr::token_shape_name() const -> String {
   switch(chr) {
   case parshape_code: return "parshape";
   case interlinepenalties_code: return "interlinepenalties";
@@ -1288,8 +1233,7 @@ String CmdChr::token_shape_name() const
   default: return 0;
   }
 }
-String CmdChr::token_def_name() const
-{
+auto CmdChr::token_def_name() const -> String {
   switch(chr) {
   case xdef_code: return  "xdef"; 
   case def_code: return  "def"; 
@@ -1353,8 +1297,7 @@ String CmdChr::token_def_name() const
   }
 }
 
-String CmdChr::token_shorthand_name() const
-{
+auto CmdChr::token_shorthand_name() const -> String {
   switch(chr) {
   case char_def_code: return  "chardef";
   case math_char_def_code: return  "mathchardef";
@@ -1367,8 +1310,7 @@ String CmdChr::token_shorthand_name() const
   }
 }
 
-String CmdChr::token_prefix_name() const
-{
+auto CmdChr::token_prefix_name() const -> String {
   switch(chr) {
   case global_code: return  "global";
   case long_code: return  "long";
@@ -1378,8 +1320,7 @@ String CmdChr::token_prefix_name() const
   }
 }
 
-String CmdChr::token_register_name() const
-{
+auto CmdChr::token_register_name() const -> String {
   switch(chr) {
   case it_int: return  "count";
   case it_dimen: return  "dimen";
@@ -1389,8 +1330,7 @@ String CmdChr::token_register_name() const
   }
 }
 
-String CmdChr::token_deffamily_name() const
-{
+auto CmdChr::token_deffamily_name() const -> String {
   switch(chr) {
   case textfont_code: return  "textfont";
   case scriptfont_code: return  "scriptfont";
@@ -1399,8 +1339,7 @@ String CmdChr::token_deffamily_name() const
   }
 }
 
-String CmdChr::token_defcode_name() const
-{
+auto CmdChr::token_defcode_name() const -> String {
   switch(chr) {
   case 0: return  "catcode"; 
   case math_code_offset: return  "mathcode"; 
@@ -1412,8 +1351,7 @@ String CmdChr::token_defcode_name() const
   }
 }
 
-String CmdChr::token_setboxdimen_name() const
-{
+auto CmdChr::token_setboxdimen_name() const -> String {
   switch(chr) {
   case wd_code: return  "wd";
   case ht_code: return  "ht";
@@ -1422,8 +1360,7 @@ String CmdChr::token_setboxdimen_name() const
   }
 }
 
-String CmdChr::token_setpagedimen_name() const
-{
+auto CmdChr::token_setpagedimen_name() const -> String {
   switch(chr) {
   case pagegoal_code: return  "pagegoal";
   case pagetotal_code: return  "pagetotal";
@@ -1437,13 +1374,11 @@ String CmdChr::token_setpagedimen_name() const
   }
 }
 
-String CmdChr::token_assignmuglue_name() const
-{
+auto CmdChr::token_assignmuglue_name() const -> String {
   return token_assignglue_name();
 }
 
-String CmdChr::token_assignglue_name() const
-{
+auto CmdChr::token_assignglue_name() const -> String {
   switch(chr) {
   case lineskip_code: return  "lineskip";
   case baselineskip_code: return  "baselineskip";
@@ -1473,9 +1408,7 @@ String CmdChr::token_assignglue_name() const
   }
 }
 
-
-String CmdChr::token_assigndimen_name() const
-{
+auto CmdChr::token_assigndimen_name() const -> String {
   switch(chr) {
   case parindent_code: return  "parindent";
   case mathsurround_code: return  "mathsurround";
@@ -1508,8 +1441,7 @@ String CmdChr::token_assigndimen_name() const
   }
 }
 
-String CmdChr::token_assignint_name() const
-{
+auto CmdChr::token_assignint_name() const -> String {
   switch(chr) {
   case pretolerance_code: return  "pretolerance";
   case tolerance_code: return  "tolerance";
@@ -1600,8 +1532,7 @@ String CmdChr::token_assignint_name() const
   }
 }
 
-String CmdChr::token_assigntoks_name() const
-{
+auto CmdChr::token_assigntoks_name() const -> String {
   switch(chr) {
   case output_code: return  "output";
   case everypar_code: return  "everypar";
@@ -1623,9 +1554,7 @@ String CmdChr::token_assigntoks_name() const
   }
 }
 
-
-String CmdChr::token_leader_name() const
-{
+auto CmdChr::token_leader_name() const -> String {
   switch(chr) {
   case shipout_code: return  "shipout";
   case leaders_code: return  "leaders";
@@ -1634,8 +1563,7 @@ String CmdChr::token_leader_name() const
   default: return 0;
   }
 }
-String CmdChr::token_index_name() const
-{
+auto CmdChr::token_index_name() const -> String {
   switch(chr) {
   case index_code: return "index";
   case glossary_code: return "glossary";
@@ -1647,8 +1575,7 @@ String CmdChr::token_index_name() const
   default: return 0;
   }
 }
-String CmdChr::token_newcount_name() const
-{
+auto CmdChr::token_newcount_name() const -> String {
   switch(chr) {
   case newcount_code: return "newcount";
   case newtoks_code: return "newtoks";
@@ -1662,9 +1589,8 @@ String CmdChr::token_newcount_name() const
   default: return 0;
   }
 }
-  
-String CmdChr::token_line_name() const
-{
+
+auto CmdChr::token_line_name() const -> String {
   switch(chr) {
   case leftline_code: return "leftline";
   case rightline_code: return  "rightline";
@@ -1675,9 +1601,7 @@ String CmdChr::token_line_name() const
   }
 }
 
-
-String CmdChr::token_makebox_name() const
-{
+auto CmdChr::token_makebox_name() const -> String {
   switch(chr) {
   case box_code: return "box";
   case copy_code: return  "copy";
@@ -1696,8 +1620,7 @@ String CmdChr::token_makebox_name() const
   }
 }
 
-String CmdChr::token_move_name() const
-{
+auto CmdChr::token_move_name() const -> String {
   switch(chr) {
   case moveleft_code: return "moveleft";
   case moveright_code: return "moveright";
@@ -1707,8 +1630,7 @@ String CmdChr::token_move_name() const
   }
 }
 
-String CmdChr::token_xray_name() const
-{
+auto CmdChr::token_xray_name() const -> String {
   switch(chr) {
   case show_code: return "show";
   case showbox_code: return "showbox";
@@ -1725,9 +1647,7 @@ String CmdChr::token_xray_name() const
   }
 }
 
-
-String CmdChr::token_extension_name() const
-{
+auto CmdChr::token_extension_name() const -> String {
   switch(chr) {
   case openout_code: return "openout";
   case write_code: return "write";
@@ -1740,8 +1660,7 @@ String CmdChr::token_extension_name() const
   }
 }
 
-String CmdChr::token_unbox_name() const
-{
+auto CmdChr::token_unbox_name() const -> String {
   switch(chr) {
   case unhbox_code: return "unhbox";
   case unhcopy_code: return "unhcopy";
@@ -1751,8 +1670,7 @@ String CmdChr::token_unbox_name() const
   }
 }
 
-String CmdChr::token_ltfont_name() const
-{
+auto CmdChr::token_ltfont_name() const -> String {
   switch(chr) {
   case fontencoding_code: return "fontencoding";
   case fontfamily_code: return "fontfamily";
@@ -1762,8 +1680,7 @@ String CmdChr::token_ltfont_name() const
   }
 }
 
-String CmdChr::token_ign2_name() const
-{
+auto CmdChr::token_ign2_name() const -> String {
   switch(chr) {
   case HTMLset_code: return "HTMLset";
   case fontsize_code: return "fontsize";
@@ -1771,8 +1688,7 @@ String CmdChr::token_ign2_name() const
   }
 }
 
-String CmdChr::token_ign1_name() const
-{
+auto CmdChr::token_ign1_name() const -> String {
   switch(chr) {
   case RAlabel_code: return "RAlabel";
   case hyphenation_code: return "hyphenation";
@@ -1785,8 +1701,7 @@ String CmdChr::token_ign1_name() const
   }
 }
 
-String CmdChr::token_ignore_name() const
-{
+auto CmdChr::token_ignore_name() const -> String {
   switch(chr) {
   case protect_code: return  "protect";
   case sloppy_code: return  "sloppy";
@@ -1838,8 +1753,7 @@ String CmdChr::token_ignore_name() const
   }
 }
 
-String CmdChr::token_fontsize_name() const
-{
+auto CmdChr::token_fontsize_name() const -> String {
   switch(chr) {
   case tiny_code: return  "tiny";
   case scriptsize_code: return  "scriptsize";
@@ -1855,8 +1769,7 @@ String CmdChr::token_fontsize_name() const
   }
 }
 
-String CmdChr::token_argfont_name() const
-{
+auto CmdChr::token_argfont_name() const -> String {
   switch(chr) {
   case rm_family_code:return  "textrm";
   case sf_family_code:return  "textsf";
@@ -1873,8 +1786,7 @@ String CmdChr::token_argfont_name() const
   }
 }
 
-String CmdChr::token_soul_name() const
-{
+auto CmdChr::token_soul_name() const -> String {
   switch(chr) {
   case soul_sup_code: return "textsuperscript";
   case soul_sub_code: return "textsubscript";
@@ -1888,8 +1800,7 @@ String CmdChr::token_soul_name() const
   }
 }
 
-String CmdChr::token_oldfont_name() const
-{
+auto CmdChr::token_oldfont_name() const -> String {
   switch(chr) {
   case rm_family_code: return "rm";
   case sf_family_code: return "sf";
@@ -1902,8 +1813,7 @@ String CmdChr::token_oldfont_name() const
   }
 }
 
-String CmdChr::token_noargfont_name() const
-{
+auto CmdChr::token_noargfont_name() const -> String {
   switch(chr) {
   case rm_family_code: return  "rmfamily";
   case sf_family_code: return  "sffamily";
@@ -1920,8 +1830,7 @@ String CmdChr::token_noargfont_name() const
   }
 }
 
-String CmdChr::token_trees_name() const
-{
+auto CmdChr::token_trees_name() const -> String {
   switch(chr) {
   case node_code: return "node";
   case nodepoint_code: return "nodepoint";
@@ -1939,8 +1848,7 @@ String CmdChr::token_trees_name() const
   }
 }
 
-String CmdChr::token_unimp_font_name() const
-{
+auto CmdChr::token_unimp_font_name() const -> String {
   switch(chr) {
   case DeclareTextCommand_code: return "DeclareTextCommand";
   case ProvideTextCommand_code: return "ProvideTextCommand";
@@ -1983,8 +1891,7 @@ String CmdChr::token_unimp_font_name() const
   }
 }
 
-String CmdChr::token_unimp_name() const
-{
+auto CmdChr::token_unimp_name() const -> String {
   switch(chr) {
   case accent_code: return "accent";
   case delimiter_code: return "delimiter";
@@ -2020,8 +1927,7 @@ String CmdChr::token_unimp_name() const
   }
 }
 
-String CmdChr::token_cst_name() const
-{
+auto CmdChr::token_cst_name() const -> String {
   switch(chr) {
   case textasciicircum_code: return "textasciicircum";
   case guillemet_og_code: return "og";
@@ -2077,8 +1983,7 @@ String CmdChr::token_cst_name() const
   }
 }
 
-String CmdChr::l3_ifx_name() const
-{
+auto CmdChr::l3_ifx_name() const -> String {
   switch(chr) {
   case l3_p_NN_code: return "cs_if_eq_p:NN";
   case l3_TF_NN_code: return "cs_if_eq:NNTF";
@@ -2100,8 +2005,7 @@ String CmdChr::l3_ifx_name() const
   }
 }
 
-String CmdChr::l3_expand_aux_name() const
-{
+auto CmdChr::l3_expand_aux_name() const -> String {
   switch(chr) {
   case l3expn_code: return "::n";
   case l3expN_code: return "::N";
@@ -2121,8 +2025,7 @@ String CmdChr::l3_expand_aux_name() const
   }
 }
 
-String CmdChr::l3_expand_base_name() const
-{
+auto CmdChr::l3_expand_base_name() const -> String {
   switch(chr) {
   case l3exp_No_code: return "exp_args:No";
   case l3exp_NNo_code: return "exp_args:NNo";
@@ -2190,9 +2093,7 @@ String CmdChr::l3_expand_base_name() const
   }
 }
 
-
-String CmdChr::l3str_ifeq_name() const
-{
+auto CmdChr::l3str_ifeq_name() const -> String {
   switch(chr) {
   case l3_p_code: return "str_if_eq_p:nn";
   case l3_TF_code: return "str_if_eq:nnTF";
@@ -2226,8 +2127,7 @@ String CmdChr::l3str_ifeq_name() const
   }
 }
 
-String CmdChr::l3_set_cat_name() const
-{
+auto CmdChr::l3_set_cat_name() const -> String {
   switch(chr) {
   case escape_catcode: return"char_set_catcode_escape:n";
   case open_catcode:return "char_set_catcode_group_begin:n";
@@ -2265,8 +2165,7 @@ String CmdChr::l3_set_cat_name() const
   }
 }
 
-String CmdChr::cat_ifeq_name() const
-{
+auto CmdChr::cat_ifeq_name() const -> String {
   switch(chr) {
   case open_catcode*4+l3_p_code: return "token_if_group_begin_p:N";
   case open_catcode*4+l3_TF_code: return "token_if_group_begin:NTF";
@@ -2317,9 +2216,7 @@ String CmdChr::cat_ifeq_name() const
   }
 }
 
-
-String CmdChr::token_if_name() const
-{
+auto CmdChr::token_if_name() const -> String {
   switch(chr) {
   case tok_eq_cat_code*4+l3_p_code:  return "token_if_eq_catcode_p:NN";
   case tok_eq_char_code*4+l3_p_code: return "token_if_eq_charcode_p:NN";
@@ -2397,9 +2294,7 @@ String CmdChr::token_if_name() const
   }
 }
 
-
-String CmdChr::l3_set_num_name() const
-{
+auto CmdChr::l3_set_num_name() const -> String {
   switch(chr) {
   case setcat_code: return "char_set_catcode:nn";
   case thecat_code: return "char_value_catcode:n";
@@ -2420,9 +2315,8 @@ String CmdChr::l3_set_num_name() const
     return 0;
   }
 }
-    
-String CmdChr::l3str_case_name() const
-{
+
+auto CmdChr::l3str_case_name() const -> String {
   switch(chr) {
   case l3_p_code: return "str_case_p:nn";
   case l3_TF_code: return "str_case:nnTF";
@@ -2440,8 +2334,7 @@ String CmdChr::l3str_case_name() const
   }
 }
 
-String CmdChr::l3_tl_basic_name() const
-{
+auto CmdChr::l3_tl_basic_name() const -> String {
   switch (chr) {
   case l3_tl_new_code: return "tl_new:N";
   case l3_tl_clear_code: return "tl_clear:N";
@@ -2461,8 +2354,7 @@ String CmdChr::l3_tl_basic_name() const
   }
 }
 
-String CmdChr::tl_concat_name() const
-{
+auto CmdChr::tl_concat_name() const -> String {
   switch(chr) { 
   case 0: return "tl_concat:NNN";
   case 1: return "tl_concat:ccc";
@@ -2472,8 +2364,7 @@ String CmdChr::tl_concat_name() const
   }
 }
 
-String CmdChr::tl_set_name() const
-{
+auto CmdChr::tl_set_name() const -> String {
   switch(chr) {
   case l3expn_code: return "tl_set:Nn";
   case l3expo_code: return "tl_set:No";
@@ -2503,8 +2394,7 @@ String CmdChr::tl_set_name() const
   }
 }
 
-String CmdChr::tl_put_left_name() const
-{
+auto CmdChr::tl_put_left_name() const -> String {
   switch(chr) {
   case l3expn_code: return "tl_put_left:Nn";
   case l3expo_code: return "tl_put_left:No";
@@ -2542,8 +2432,7 @@ String CmdChr::tl_put_left_name() const
   }
 }
 
-String CmdChr::l3_rescan_name() const
-{
+auto CmdChr::l3_rescan_name() const -> String {
   switch(chr) {
   case 0: return "tl_set_rescan:Nnn";
   case 1: return "tl_set_rescan:Nno";
@@ -2561,10 +2450,8 @@ String CmdChr::l3_rescan_name() const
   default: return 0;
   }
 }
-    
 
-String CmdChr::special_name() const
-{
+auto CmdChr::special_name() const -> String {
   switch(cmd) {
   case 1: return "begin-group character";
   case 2: return "end-group character";
@@ -2585,11 +2472,9 @@ String CmdChr::special_name() const
   }
 }
 
-
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
-String CmdChr::name() const
-{
+auto CmdChr::name() const -> String {
   switch(cmd) {
   case mathbin_cmd:
   case mathrel_cmd:

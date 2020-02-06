@@ -32,14 +32,13 @@ namespace{
 
 namespace io_ns {
   void set_enc_param(int enc,int pos,int v);
-  int get_enc_param(int enc,int pos);
+  auto get_enc_param(int enc, int pos) -> int;
 }
 
 extern void readline(char*buffer,int screen_size);
 extern void set_math_char(uchar c, int f,string s);
-extern string get_math_char(uchar c, int f);
-extern Xmlp read_xml(string);
-
+extern auto get_math_char(uchar c, int f) -> string;
+extern auto read_xml(string) -> Xmlp;
 
 void lg_start_io (Logger& L)
 {
@@ -92,8 +91,7 @@ void TexOutStream::open(int chan, string file_name)
 // A new line is added, except if chan is 18 or 19
 // Since version 2.15.4, \message print a newline
 // In the case of \write18, the string is printed on the log file
-String Parser::string_to_write(int chan)
-{
+auto Parser::string_to_write(int chan) -> String {
   TokenList L = scan_general_text();
   read_toks_edef(L);
   Buffer& B = local_buf;
@@ -104,7 +102,6 @@ String Parser::string_to_write(int chan)
     the_log << lg_start << "\\write18=" << res << lg_end;
   return res;
 }
-
 
 // This implements \write, \openout, and \closeout
 // and \iow_term:x \iow_log:x of latex3
@@ -155,8 +152,7 @@ void FileForInput::close()
 }
 
 // This implements \ifeof
-bool Parser::is_input_open()
-{
+auto Parser::is_input_open() -> bool {
   int ch = scan_int(cur_tok,max_openin,"input channel number");
   return !tex_input_files[ch].is_open();
 }
@@ -263,9 +259,8 @@ void Parser::close_all()
 }
 
 // A file name is a special thing in TeX. 
-// We read until we find a non-char, or a space. 
-string Parser::scan_file_name()
-{
+// We read until we find a non-char, or a space.
+auto Parser::scan_file_name() -> string {
   if(name_in_progress) return "sabotage!"; // recursion killer.
   name_in_progress = true;
   remove_initial_space_and_back_input();
@@ -332,8 +327,7 @@ void Parser::T_scantokens(TokenList &L)
 
 // In TeX, you say \input foo, in latex you say \input{foo}
 // This accepts both syntaxes.
-string Parser::latex_input(int q)
-{
+auto Parser::latex_input(int q) -> string {
   remove_initial_space_and_back_input();
   string file;
   if(q==include_code || cur_tok.is_OB_token()) { 
@@ -449,20 +443,18 @@ void Parser::restore_the_state (SaveState& x)
 
 // Converts a Hex char (lower case) to digit.
 // Returns -1 if impossible.
-int Utf8Char::hex_val() const
-{
+auto Utf8Char::hex_val() const -> int {
   if(is_digit()) return val_as_digit();
   else if(is_hex()) return val_as_hex();
-  else return -1; 
+  else return -1;
 }
 
 // We have seen a character c at category code 7, for instance ^
 // It could be ^^Z ^^ab ^^^^abce or ^^^^^abcde
 // If this is the case, a new character is constructed and replaces the last
-// character read (i.e., will be returned by read_next_char) 
+// character read (i.e., will be returned by read_next_char)
 
-bool Parser::scan_double_hat(Utf8Char c)
-{
+auto Parser::scan_double_hat(Utf8Char c) -> bool {
   int sz = input_line.size();
   int p = input_line_pos;
   int w = sz-p +1; // number of unread chars aon the line
@@ -509,8 +501,7 @@ bool Parser::scan_double_hat(Utf8Char c)
 }
 
 // This constructs a command name from the current line
-Token Parser::cs_from_input ()
-{
+auto Parser::cs_from_input() -> Token {
   if(at_eol()) return Token(null_tok_val);
   Utf8Char c = get_next_char();
   state = state_S;
@@ -551,9 +542,8 @@ Token Parser::cs_from_input ()
 // This constructs a new token by reading characters from the buffer.
 // Returns true in case of problem. Either because we are at EOL
 // or because a line ended (% or \n), or because a character was ignored
-// (space or invalid chars), or because of ^^ 
-bool Parser::next_from_line0 ()
-{
+// (space or invalid chars), or because of ^^
+auto Parser::next_from_line0() -> bool {
   if(at_eol()) return true;
   Utf8Char c = get_next_char();
   if(c.is_big()) { // convert to \char"ABCD
@@ -623,11 +613,9 @@ bool Parser::next_from_line0 ()
   }
 }
 
-
 // This is like above, but we try again. Note that get_a_new_line
 // may fail, or fill the buffer, or put something in TL.
-bool Parser::next_from_line ()
-{
+auto Parser::next_from_line() -> bool {
   for(;;) {
     bool res = next_from_line0();
     if(!res) return false;
@@ -647,8 +635,7 @@ bool Parser::next_from_line ()
 // Otherwise, return true; set cur_tok to a null token, which might be
 // interpreted as a character of catcode 0; which is impossible.
 
-bool Parser::get_itoken ()
-{
+auto Parser::get_itoken() -> bool {
   if(!TL.empty()) { 
     next_from_list(); 
     return false; 
@@ -657,7 +644,7 @@ bool Parser::get_itoken ()
     if(!next_from_line()) return false;
   cur_tok.kill();
   cur_cmd_chr.kill();
-  return true; 
+  return true;
 }
 
 // Like back_input(t); read_token()
@@ -668,20 +655,17 @@ void Parser::examine_token (Token t)
   if(t.not_a_cmd()) see_char_token(t);
   else see_cs_token();
 }
-  
-bool Parser::get_token ()
-{
+
+auto Parser::get_token() -> bool {
   bool err = get_itoken(); 
   if(!err && cur_cmd_chr.is_outer() && scanner_status != ss_normal)
     check_outer_validity();
   return err;
 }
 
-
 // Reads a token that can be outer for \ifx \ifdefined or \show
 // no outer check, thus no error.
-bool Parser::get_token_o()
-{
+auto Parser::get_token_o() -> bool {
   SaveScannerStatus tmp(ss_normal);
   return get_itoken();
 }
@@ -768,8 +752,7 @@ void Parser::get_x_token_or_active_char (symcodes&a,subtypes&b)
 // Parsing may continue after EOF, so that we just cannot say read from TL and
 // if empty, read from file. Is this a good idea?
 
-bool Parser::scan_for_eval(Buffer&B, bool in_env)
-{
+auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
   int b = 0; // brace level
   int elevel = 0; // begin/end level at brace level zero when in_env true
   for(;;) {
@@ -847,7 +830,6 @@ bool Parser::scan_for_eval(Buffer&B, bool in_env)
   }
 }
 
-
 // We have to write now the function that reads a line from a file.
 // This function is used as an auxiliary.
 // Puts a line of input in the buffer; 
@@ -898,8 +880,7 @@ void Parser::insert_endline_char()
 // in the case of continuation (spec=false) this is useless.
 // Return value is true in case of problem.
 
-bool Parser::new_line_for_read(bool spec)
-{
+auto Parser::new_line_for_read(bool spec) -> bool {
   state = state_N;
   static char m_ligne [4096];
   static int tty_line_no = 0;
@@ -931,8 +912,7 @@ bool Parser::new_line_for_read(bool spec)
 // In the case of \input\foo\input bar, after foo is finished, the 
 // pop_input_stack may give us a non-empty line, even a non-empty TL
 // And consider the case \def\foo{\input A\input B\relax}
-bool Parser::get_a_new_line ()
-{
+auto Parser::get_a_new_line() -> bool {
   state = state_N;
   input_line.clear();
   scratch.reset();
@@ -978,9 +958,8 @@ bool Parser::get_a_new_line ()
 // This implements \read.
 // Reads from file (or the tty if the file is closed).
 // A whole line is read. If braces are unbalanced, a second (or third...)
-// line is read. 
-TokenList Parser::read_from_file(int ch, bool rl_sw)
-{
+// line is read.
+auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
   string file_name = "tty";
   if(ch<0 || ch>=nb_input_channels) 
     cur_in_chan = tty_in_chan;
@@ -1064,8 +1043,7 @@ void Parser::tokenize_buffer(Buffer& b, TokenList& L,const string& name)
 
 // This is the one argument scanint function. It calls two auxiliary functions
 // puts the result in cur_val, and returns it. It may log it.
-int Parser::scan_int(Token T) 
-{
+auto Parser::scan_int(Token T) -> int {
   Token et = err_tok;
   err_tok = T;
   bool negative = scan_sign();
@@ -1099,14 +1077,12 @@ void Parser::scan_glue(internal_type level,Token T)
 // \setcounter{foo}{10} is the same as \c@foo=10\relax. 
 // This function reads a token list, puts it back in the
 // input, then calls scan_int.
-int Parser::scan_braced_int(Token T)
-{
+auto Parser::scan_braced_int(Token T) -> int {
   TokenList L = read_arg();
   return scan_int(L,T);
 }
 
-int Parser::scan_int(TokenList&L,Token T)
-{
+auto Parser::scan_int(TokenList &L, Token T) -> int {
   Token marker = hash_table.relax_token;
   back_input(marker);
   back_input(L);
@@ -1115,11 +1091,9 @@ int Parser::scan_int(TokenList&L,Token T)
   return n;
 }
 
-
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
-int Parser::scan_int(Token t, int n, String s)
-{
+auto Parser::scan_int(Token t, int n, String s) -> int {
   int N = scan_int(t);
   if(N<0 || N>n) {
     err_ns::local_buf <<bf_reset << "Bad " << s << " replaced by 0\n";
@@ -1130,10 +1104,8 @@ int Parser::scan_int(Token t, int n, String s)
   return N;
 }
 
-
 // Here we may have an optional argument; default value is d
-int Parser::scan_special_int_d(Token T, int d)
-{
+auto Parser::scan_special_int_d(Token T, int d) -> int {
   TokenList L; read_optarg_nopar(L);
   if(L.empty()) {
     if(tracing_commands()) 
@@ -1146,33 +1118,26 @@ int Parser::scan_special_int_d(Token T, int d)
 }
 
 // The following functions all call the previous scan_int.
-int Parser::scan_reg_num ()
-{
+auto Parser::scan_reg_num() -> int {
   return scan_int(cur_tok,nb_registers-1,"register code");
 }
 
 // Why not max Unicode 10FFFF ?
-int Parser::scan_27bit_int()
-{
+auto Parser::scan_27bit_int() -> int {
   return scan_int(cur_tok,(1<<27)-1,"character code");
 }
 
-int Parser::scan_char_num()
-{
+auto Parser::scan_char_num() -> int {
   return scan_int(cur_tok,scan_char_num_max,"character code");
 }
 
-int Parser::scan_fifteen_bit_int()
-{
+auto Parser::scan_fifteen_bit_int() -> int {
   return scan_int(cur_tok,32767,"mathchar");
 }
 
-
-
 // Scan a sign (plus, minus, spaces, etc.). After that cur_tok is the first 
 // unread token.
-bool Parser::scan_sign()
-{
+auto Parser::scan_sign() -> bool {
   bool negative = false;
   for(;;) {
     get_x_token();
@@ -1186,8 +1151,7 @@ bool Parser::scan_sign()
 
 // This is now the scan_int routine. It reads either `\A or
 // \language or '12345.
-int Parser::scan_int_internal()
-{
+auto Parser::scan_int_internal() -> int {
   if(cur_tok.is_invalid()) {
     missing_number();
     return 0;
@@ -1202,8 +1166,7 @@ int Parser::scan_int_internal()
 
 // Read an alpha token. 
 // we allow }, \} or active ~. One optional space is read.
-int Parser::scan_alpha()
-{
+auto Parser::scan_alpha() -> int {
   if(get_token()) {
     improper_alpha();
     return 0;
@@ -1218,10 +1181,8 @@ int Parser::scan_alpha()
   }
 }
 
-
 // This reads the digits for scan_int, with an overflow check.
-int Parser::scan_int_digs()
-{
+auto Parser::scan_int_digs() -> int {
   int radix = 10;
   int m = 214748364;
   int ok_so_far = 0;
@@ -1574,8 +1535,7 @@ void Parser::E_the_traced (Token T,subtypes c)
 }
 
 // implemets \detokenize, \unexpanded or \the
-TokenList Parser::E_the (subtypes c)
-{
+auto Parser::E_the(subtypes c) -> TokenList {
   static Buffer B;
   if(c==unexpanded_code) {
    TokenList L = scan_general_text();
@@ -1611,7 +1571,7 @@ TokenList Parser::E_the (subtypes c)
     B.pt_to_mu();
     break;
   }
-  return B.str_toks(nlt_space); // \n gives space 
+  return B.str_toks(nlt_space); // \n gives space
 }
 
 // Next objective is scan_dimen. This can read a real number (in fact
@@ -1665,9 +1625,8 @@ void Parser::scan_double(RealNumber& res)
 }
 
 // This is a bit more efficient then a lot of scan_keyword...
-// it reads a unit, returns 
-int Parser::read_unit()
-{
+// it reads a unit, returns
+auto Parser::read_unit() -> int {
   remove_initial_space();
   Utf8Char c1=0, c2=0;
   if(cur_tok.is_a_char()) {
@@ -1727,8 +1686,7 @@ void Parser::scan_unit(RealNumber R)
 // If mu is true we want math_units. This procedure returns false
 // in case no internal quantity is there. If there is an internal quantity
 // we accept either an integer (a potential factor) or a dimen, skip or muskip
-bool Parser::scan_dim_helper(bool mu,bool allow_int)
-{
+auto Parser::scan_dim_helper(bool mu, bool allow_int) -> bool {
   if(!cur_cmd_chr.is_ok_for_the()) {
     if(cur_tok.is_valid()) back_input();
     return false;
@@ -1751,8 +1709,7 @@ bool Parser::scan_dim_helper(bool mu,bool allow_int)
 // cur_val, and return true. If we see \count0 (an integer), we put it in R
 // and return false
 
-bool Parser::scan_dim2(RealNumber&R, bool mu)
-{
+auto Parser::scan_dim2(RealNumber &R, bool mu) -> bool {
   R.set_negative(scan_sign());
   if(!scan_dim_helper(mu,true)) {
     scan_double(R);
@@ -1784,8 +1741,8 @@ bool Parser::scan_dim2(RealNumber&R, bool mu)
 // Case 5: Otherwise, we need a unit, either cm, or mu or ex. 
 // Returns true if the last token read was a keyword
 
-bool Parser::scan_dimen1(bool mu, bool inf, glue_spec& co, bool shortcut)
-{
+auto Parser::scan_dimen1(bool mu, bool inf, glue_spec &co, bool shortcut)
+    -> bool {
   RealNumber value;
   if(!shortcut) {
     if(scan_dim2(value,mu))
@@ -1934,8 +1891,7 @@ void Parser::scan_glue(internal_type level,Token t,bool opt)
 }
 
 // Calls scan_glue; returns 0 if no argument given.
-Istring Parser::get_opt_dim(Token t)
-{
+auto Parser::get_opt_dim(Token t) -> Istring {
   scan_glue(it_glue,t,true);
   if(!scan_glue_opt) return Istring();
   return the_main->SH.find_scaled(ScaledInt(cur_val.get_glue_width()));
@@ -2414,8 +2370,7 @@ void Parser::scan_expr(subtypes m)
 // This finds the operator, or reads a terminating \relax
 // if the operator stack is not empty, and no operator is given, we expect
 // a closing paren.
-scan_expr_t Parser::scan_expr_next(Token T,bool stack_empty)
-{
+auto Parser::scan_expr_next(Token T, bool stack_empty) -> scan_expr_t {
   remove_initial_space();
   if(cur_tok.is_plus_token()) return se_add;
   else if(cur_tok.is_minus_token()) return se_sub;
@@ -2505,8 +2460,7 @@ void Parser::trace_scan_expr(String s, const SthInternal v, char t,Token T)
 	    << t << ' ' << v << lg_end;
 }
 
-bool Parser::scan_expr(Token T,internal_type et)
-{
+auto Parser::scan_expr(Token T, internal_type et) -> bool {
   vector<ScanSlot> estack;
   ScanSlot W;  
   W.expr_type = et;
@@ -2542,10 +2496,8 @@ bool Parser::scan_expr(Token T,internal_type et)
   }
 }
 
-
 // OK for \font, or \scriptfont, or \nullfont or \tenrm
-int Parser::scan_font_ident ()
-{
+auto Parser::scan_font_ident() -> int {
   remove_initial_space();
   if (cur_cmd_chr.get_cmd()==def_font_cmd) 
     return eqtb_int_table[cur_font_loc].get_val();
@@ -2564,8 +2516,7 @@ int Parser::scan_font_ident ()
 }
 
 // OK for \mml@font@fraktur, or a font like that or an integer.
-int Parser::scan_mathfont_ident ()
-{
+auto Parser::scan_mathfont_ident() -> int {
   Token T = cur_tok;
   remove_initial_space();
   if (cur_cmd_chr.get_cmd()==mathfont_cmd) 

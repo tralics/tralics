@@ -22,16 +22,11 @@ namespace ra_ns {
   void fnhack(TokenList& c,TokenList&d, TokenList&aux);
 }
 
-bool Parser::next_arg_is_project()
-{
+auto Parser::next_arg_is_project() -> bool {
   TokenList L = read_arg();
   if(L.empty()) return true;
   return L.front().is_one_token();
 }
-
-
-
-
 
 // --------------------------------------------------
 

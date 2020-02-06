@@ -79,30 +79,31 @@ private:
   int hash_usage; // number of commands in the table
   int hash_bad; // number of items not at hash position 
  private:
-  int find_empty(String s); // find an empty slot
-  int find_aux(int p,String name);
+   auto find_empty(String s) -> int; // find an empty slot
+   auto find_aux(int p, String name) -> int;
+
  public:
   Hashtab ();
-  Buffer& my_buffer() { return B; }
-  Token locate(String s); // used by primitive, etc
-  Token locate(const string& s); // used by primitive, etc
-  Token locate(const Buffer&); // used by primitive, etc
-  int get_hash_usage()const { return hash_usage; }
-  int get_hash_bad()const { return hash_bad; }
-  int hash_find(const Buffer&b, String name);
-  int hash_find();
-  Token primitive (String s, symcodes c,subtypes v=zero_code);
-  Token nohash_primitive(String a, CmdChr);
-  void eval_let(String, String);  
-  Token eval_letv(String, String);  
+  auto my_buffer() -> Buffer & { return B; }
+  auto locate(String s) -> Token;        // used by primitive, etc
+  auto locate(const string &s) -> Token; // used by primitive, etc
+  auto locate(const Buffer &) -> Token;  // used by primitive, etc
+  auto get_hash_usage() const -> int { return hash_usage; }
+  auto get_hash_bad() const -> int { return hash_bad; }
+  auto hash_find(const Buffer &b, String name) -> int;
+  auto hash_find() -> int;
+  auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
+  auto nohash_primitive(String a, CmdChr) -> Token;
+  void eval_let(String, String);
+  auto eval_letv(String, String) -> Token;
   void eval_let_local(String, String);
-  String operator[] (int k) const { return Text[k]; }
+  auto operator[](int k) const -> String { return Text[k]; }
   void dump();
   void boot_fancyhdr();
   void boot_etex();
   void load_latex3();
   void boot_keyval();
-  bool is_defined(const Buffer&b);
+  auto is_defined(const Buffer &b) -> bool;
 };
 
 // This is an association table. We could use a standard C++ class here
@@ -114,14 +115,14 @@ class SpecialHash
  public:
   SpecialHash(string s) : size(0) { create(s.c_str()); }
   void create(String s);
-  string find(String) const;
-  int get_size() const { return size;}
+  auto find(String) const -> string;
+  auto get_size() const -> int { return size; }
   void get_pair(int k, string&a, string &b) {
     if(k<size) {a = key[k];b=value[k];} else {a="";b="";}
   }
-  int find_true_false(String s);
-  static int counter_val(int);
-  int find_counter();
+  auto find_true_false(String s) -> int;
+  static auto counter_val(int) -> int;
+  auto find_counter() -> int;
 };
 
 
@@ -137,16 +138,26 @@ class LabelInfo
  public:
   LabelInfo() : used(false), defined(false), id(Istring()), name(Istring()), lineno(0), file_name("") {}
   LabelInfo(Istring k) : used(false), defined(false), id(Istring()), name(k), lineno(0),file_name("") {}
-  bool is_used() const { return used; }
-  bool is_defined() const { return defined; }
-  bool set_used() { if(used) return true; used = true; return false; }
-  bool set_defined() { if (defined) return true; defined = true; return false;}
+  auto is_used() const -> bool { return used; }
+  auto is_defined() const -> bool { return defined; }
+  auto set_used() -> bool {
+    if (used)
+      return true;
+    used = true;
+    return false;
+  }
+  auto set_defined() -> bool {
+    if (defined)
+      return true;
+    defined = true;
+    return false;
+  }
   void set_undefined() { defined = false;}
-  Istring get_id() const { return id; }
-  Istring get_name() const { return name; }
+  auto get_id() const -> Istring { return id; }
+  auto get_name() const -> Istring { return name; }
   void set_id(Istring i) {id = i; }
-  int get_lineno() const { return lineno; }
-  string get_filename() const { return file_name; }
+  auto get_lineno() const -> int { return lineno; }
+  auto get_filename() const -> string { return file_name; }
   void set_lineno(int i) { lineno = i; }
   void set_filename(string i) { file_name = i; }
 };
@@ -159,10 +170,10 @@ class Splitter {
   int size;
  public:
   Splitter(const string& w) : S(w), pos(0) { size = S.size(); }
-  bool at_end() const { return pos==size; }
-  int count() const;
-  String get_next_raw();
-  String get_next();
+  auto at_end() const -> bool { return pos == size; }
+  auto count() const -> int;
+  auto get_next_raw() -> String;
+  auto get_next() -> String;
   void extract_keyval(string&,string&);
 };
 
@@ -184,15 +195,18 @@ class PackMatcher {
   PackMatcher(bool c=false):
     wild_pack(false), att_star(false), match_document(c), att_plus(false),
     used(false) {}
-  bool ok_for_match(bool c) { return c==match_document && !used; }
+  auto ok_for_match(bool c) -> bool { return c == match_document && !used; }
   void set_match_doc(bool X) { match_document = X; }
-  int set_wild_pack(bool X) { wild_pack = X; return X ? 1 : 0; }
+  auto set_wild_pack(bool X) -> int {
+    wild_pack = X;
+    return X ? 1 : 0;
+  }
   void set_package(string X) { package = X; }
   void set_options(string X) { options = X; }
   void print();
-  string get_attrib() { return attrib; }
-  bool find_att(string cur_pack, string cur_options);
-  Istring find_att_val(string cur_pack, string cur_options);
+  auto get_attrib() -> string { return attrib; }
+  auto find_att(string cur_pack, string cur_options) -> bool;
+  auto find_att_val(string cur_pack, string cur_options) -> Istring;
   void initialise(string A, string B);
 };
 

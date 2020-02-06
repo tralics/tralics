@@ -40,46 +40,43 @@ namespace {
 
 namespace fp {
   void mul_split_aux(Digit A, Digit*T);
-  Digit unsplit_mul(const Digit* z);
-  int compare_abs(const FpNum& X, const FpNum& Y);
-  int compare(const FpNum& X, const FpNum& Y);
+  auto unsplit_mul(const Digit *z) -> Digit;
+  auto compare_abs(const FpNum &X, const FpNum &Y) -> int;
+  auto compare(const FpNum &X, const FpNum &Y) -> int;
   void create_pascal_table();
-  Digit truncate_n (Digit x, int n);
-  Digit round_n (Digit x, int n);
+  auto truncate_n(Digit x, int n) -> Digit;
+  auto round_n(Digit x, int n) -> Digit;
   void sincos(FpNum& res1,FpNum& res2, FpNum x, subtypes i);
   void arcsincos(FpNum& res1,FpNum& res2, FpNum x, subtypes i);
-  bool quad_aux(FpNum r, FpNum w, FpNum&y, FpNum&Ay);
+  auto quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool;
   void set_nb_sols(int n);
   void x_solve(FpNum& r1, FpNum A, FpNum B);
-  int qsolve(FpNum& r1, FpNum& r2, FpNum B, FpNum C);
-  int qsolve(FpNum& r1, FpNum& r2, FpNum A, FpNum B, FpNum C);
+  auto qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int;
+  auto qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int;
   void x_solve(FpNum& r1, FpNum& r2, FpNum A, FpNum B, FpNum C);
   void csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, 
 		  FpNum& p, FpNum&q, FpNum& T);
-  int x_solve(FpNum& r1, FpNum& r2, FpNum&r3,
-	      FpNum A, FpNum B, FpNum C,FpNum D);
+  auto x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C,
+               FpNum D) -> int;
   void x_solve(FpNum& r1, FpNum& r2, FpNum&r3, FpNum&r4,
 	       FpNum A, FpNum B, FpNum C,FpNum D,FpNum E);
     
 }
 
 // This prints a FpNum on a ostream
-ostream& operator<<(ostream& fp, const FpNum&X)
-{
+auto operator<<(ostream &fp, const FpNum &X) -> ostream & {
   fp << X.to_string();
   return fp;
 }
 
 // This prints a FpNum on the logger.
-Logger& operator<<(Logger& fp,const FpNum&X)
-{
+auto operator<<(Logger &fp, const FpNum &X) -> Logger & {
   fp << X.to_string();
   return fp;
 }
 
 // Returns the opposite of X
-FpNum operator-(FpNum X)
-{
+auto operator-(FpNum X) -> FpNum {
   FpNum res;
   res = X;
   res.sign = !res.sign;
@@ -88,71 +85,62 @@ FpNum operator-(FpNum X)
 }
 
 // Returns the product of X and Y
-FpNum operator*(FpNum X, FpNum Y)
-{
+auto operator*(FpNum X, FpNum Y) -> FpNum {
   FpNum res;
   res.mul(X,Y);
   return res;
 }
 
 // Returns the product of X and Y. Assumes abs(Y)<1000
-FpNum operator*(FpNum X, int Y)
-{
+auto operator*(FpNum X, int Y) -> FpNum {
   FpNum res;
   res.mul(X,Y);
   return res;
 }
 
 // Idem, in reverse order
-FpNum operator*(int Y, FpNum X)
-{
+auto operator*(int Y, FpNum X) -> FpNum {
   FpNum res;
   res.mul(X,Y);
   return res;
 }
 
 // Returns the sum of X and Y
-FpNum operator+(FpNum X, FpNum Y)
-{
+auto operator+(FpNum X, FpNum Y) -> FpNum {
   FpNum res = X;
   res.add(Y);
   return res;
 }
 
 // Returns the quotient of X and n. Assumes abs(n)<1000,  n!=0
-FpNum operator/(FpNum X, int n)
-{
+auto operator/(FpNum X, int n) -> FpNum {
   FpNum res= X;
   res.div(n);
   return res;
 }
 
 // Returns the quotient of X and Y
-FpNum operator/(FpNum X, FpNum Y)
-{
+auto operator/(FpNum X, FpNum Y) -> FpNum {
   FpNum res;
   res.div(X,Y);
   return res;
 }
 
 // Returns the difference between X and Y
-FpNum operator-(FpNum X, FpNum Y)
-{
+auto operator-(FpNum X, FpNum Y) -> FpNum {
   Y.neg();
   X.add(Y);
   return X;
 }
 
 // Increments X by Y, returns X
-FpNum& operator+=(FpNum& X, FpNum Y)
-{
+auto operator+=(FpNum &X, FpNum Y) -> FpNum & {
   X.add(Y);
   return X;
 }
 
 // divides X by Y, returns X.
-FpNum& operator/=(FpNum& X, FpNum Y)
-{
+auto operator/=(FpNum &X, FpNum Y) -> FpNum & {
   FpNum res;
   res.div(X,Y);
   X=res;
@@ -160,8 +148,7 @@ FpNum& operator/=(FpNum& X, FpNum Y)
 }
 
 // divides X by Y, returns X. Assumes abs(Y)<1000
-FpNum& operator/=(FpNum& X, int Y)
-{
+auto operator/=(FpNum &X, int Y) -> FpNum & {
   X.div(Y);
   return X;
 }
@@ -177,8 +164,7 @@ void FpNum::div(FpNum X)
 }
 
 // Returns true if zero
-bool FpNum::is_zero() const 
-{
+auto FpNum::is_zero() const -> bool {
   return data[0]==0 && data[1]==0 && data[2]==0 && data[3]==0;
 }
 
@@ -247,8 +233,7 @@ inline void fp::mul_split_aux(Digit A, Digit*T)
 }
 
 // Returns a number from three 1000-base digits
-inline Digit fp::unsplit_mul(const Digit* z)
-{
+inline auto fp::unsplit_mul(const Digit *z) -> Digit {
   return z[0]*1000000+z[1]*1000+z[2];
 }
 
@@ -291,8 +276,7 @@ void Buffer::push_back9(Digit x)
 }
 
 // Insert a number in the buffer. Returns the string value.
-String Buffer::insert_fp(const FpNum& X)
-{
+auto Buffer::insert_fp(const FpNum &X) -> String {
   reset0();
   push_back(' '); //reserve for the sign
   push_back9(X.data[0]);
@@ -386,8 +370,7 @@ void FpNum::finish_mul(bool xs, Digit*z)
 }
 
 // Returns -1, 0, 1 according to x<y x=y x>y (x=abs X, y = abs Y)
-int fp::compare_abs(const FpNum& X, const FpNum& Y)
-{
+auto fp::compare_abs(const FpNum &X, const FpNum &Y) -> int {
   if(X.data[0]<Y.data[0]) return -1;
   if(X.data[0]>Y.data[0]) return 1;
   if(X.data[1]<Y.data[1]) return -1;
@@ -400,8 +383,7 @@ int fp::compare_abs(const FpNum& X, const FpNum& Y)
 }
 
 // Returns -1, 0, 1 according to X<Y X=Y X>Y
-int fp::compare(const FpNum& X, const FpNum& Y)
-{
+auto fp::compare(const FpNum &X, const FpNum &Y) -> int {
   if(X.sign && !Y.sign) return 1;
   if(!X.sign && Y.sign) return -1;
   int res = compare_abs(X,Y);
@@ -413,8 +395,7 @@ int fp::compare(const FpNum& X, const FpNum& Y)
 // Computes \sum a_k b_k, where a_k is the next digit, b_k = 10^k
 // via Horner (k is decreasing until 0).
 // Ok for the integer part of 1234.5678
-Digit Buffer::horner(int p)
-{
+auto Buffer::horner(int p) -> Digit {
   if(p>9) p = 9;
   Digit res = 0;
   while(p>0) {
@@ -428,8 +409,7 @@ Digit Buffer::horner(int p)
 // via explicit power. k is decreasing, starts with 0. Result is 
 // multiplied by 10^9. Reading ends after 9 digits or EOL.
 // Ok for the fractional part of 1234.5678
-Digit Buffer::reverse_horner()
-{
+auto Buffer::reverse_horner() -> Digit {
   int i=8;
   Digit res =0;
   for(;;) {
@@ -442,8 +422,7 @@ Digit Buffer::reverse_horner()
 
 // Assume that the buffer holds : sign digits dot digits
 // Creates a number with it. Returns true if overflow
-bool FpNum::create(Buffer& B)
-{
+auto FpNum::create(Buffer &B) -> bool {
   B.reset_ptr();
   char c = B.next_char();
   bool retval = false;
@@ -473,16 +452,14 @@ bool FpNum::create(Buffer& B)
 
 // This puts the digits in a buffer, removes leading and trailing zeroes
 // This returns the buffer.
-String FpNum::to_string() const
-{
+auto FpNum::to_string() const -> String {
   String buf = fp_in_buf.insert_fp(*this); 
   return buf;
 }
 
 // This puts the digits in a buffer, then constructs a token list
 // Leading and trailing zeroes are removed.
-TokenList FpNum::to_list() const
-{
+auto FpNum::to_list() const -> TokenList {
   String buf = to_string();
   TokenList res;
   int i=0;
@@ -608,8 +585,7 @@ void Parser::fp_e_pascal()
 
 
 // Truncate x to n digits.
-Digit fp::truncate_n (Digit x, int n)
-{
+auto fp::truncate_n(Digit x, int n) -> Digit {
   if(n==0) return 0;
   if(n==9) return x;
   int k = power_table[9-n];
@@ -617,8 +593,7 @@ Digit fp::truncate_n (Digit x, int n)
 }
 
 // Round to n digits.
-Digit fp::round_n (Digit x, int n)
-{
+auto fp::round_n(Digit x, int n) -> Digit {
   if(n==9) return x;
   if(n==0) return 0;
   Digit k = power_table[9-n];
@@ -787,8 +762,7 @@ void FpNum::exec_ln()
 
 // Replaces *this by the exponential of its integer part.
 // Returns true if overflow
-bool FpNum::large_exp()
-{
+auto FpNum::large_exp() -> bool {
   int k = data[1];
   if(!sign && (data[0] || k>42)) {
     reset();
@@ -843,8 +817,7 @@ void FpNum::pow(FpNum X, FpNum Y, subtypes i)
 
 // Replaces *this by *this-Y, as longh as the result is positive
 // Returns  how many times this was done.
-int FpNum::count_times(FpNum Y)
-{
+auto FpNum::count_times(FpNum Y) -> int {
   int i = 0;
   for(;;) {
     if(fp::compare_abs(*this,Y)>=0) {
@@ -925,8 +898,7 @@ void FpNum::mod2pi()
 // Returns k if x is between k\pi/4 and (k+1)\pi/4
 // computes x-y or y-x, where y is an integer multiple of \pi/2
 // result is between 0 and \pi/4
-int FpNum::octand()
-{
+auto FpNum::octand() -> int {
   if(fp::compare_abs(*this, pi_table[4])>0) {
     if(fp::compare_abs(*this, pi_table[6])>0) {
       if(fp::compare_abs(*this, pi_table[7])>0) {
@@ -1098,8 +1070,7 @@ void FpNum::mean(FpNum a, FpNum b)
 // that x is known, t is desired. If x<y, this returns false. otherwise, it
 // returns true, replaces *this by y. The square root is computed
 // one bit after the other (dichotomy).
-bool FpNum::sincos_transform()
-{
+auto FpNum::sincos_transform() -> bool {
   if(data[2]<=707106781) return false;
   FpNum y;
   // put 1-x^2 in y
@@ -1141,8 +1112,7 @@ bool FpNum::sincos_transform()
 // where ak = 1/2*3/4....*(2k-1)/(2k).
 // we have f'(x)=\sum x^(2k)ak=\sum x^(2k)(2k-1)!/k!2^k = (1-x^2)^(-1/2)
 // hence f(x) = arcsin(x)
-bool FpNum::arcsincos_loop()
-{
+auto FpNum::arcsincos_loop() -> bool {
   bool ovf=false;
   if(data[0]) ovf=true;
   if(data[1]>1)  ovf=true;
@@ -1352,8 +1322,7 @@ void fp::x_solve(FpNum& r1, FpNum A, FpNum B)
 }
 
 // Solves x^2+Bx+C=0; result in r1 and r2, returns number of solutions
-int fp::qsolve(FpNum& r1, FpNum& r2, FpNum B, FpNum C)
-{
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int {
   B /= 2;
   FpNum delta = B*B - C;
   if(!delta.sign) return 0; // no solutions
@@ -1365,8 +1334,7 @@ int fp::qsolve(FpNum& r1, FpNum& r2, FpNum B, FpNum C)
 }
 
 // solves Ax^2+Bx+C=0; result in r1 and r2, returns number of solutions
-int fp::qsolve(FpNum& r1, FpNum& r2, FpNum A, FpNum B, FpNum C)
-{
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int {
   return qsolve(r1,r2,B/A,C/A);
 }
 
@@ -1394,9 +1362,8 @@ void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D,
 }
 
 // solve ax^3+bx^2+cx+d =0;
-int fp::x_solve(FpNum& r1, FpNum& r2, FpNum&r3,
-		FpNum A, FpNum B, FpNum C,FpNum D)
-{
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C,
+                 FpNum D) -> int {
   r1.reset();
   r2.reset();
   r3.reset();
@@ -1434,8 +1401,7 @@ int fp::x_solve(FpNum& r1, FpNum& r2, FpNum&r3,
   return 3;
 }
 
-bool fp::quad_aux(FpNum r, FpNum w, FpNum& y, FpNum& Ay)
-{
+auto fp::quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool {
   y = r;
   Ay = 8*y + w;
   return Ay.sign && !Ay.is_zero();
@@ -1532,8 +1498,7 @@ void Parser::fp_send_one_arg (TokenList& res)
 // we read in A the 17 or 1, in B nothing or 23, and parse until the \relax.
 // After that, we put the digits into the buffer, skipping unwanted
 // things, and read the number.
-FpNum Parser::fp_read_value()
-{
+auto Parser::fp_read_value() -> FpNum {
   Token name = fp_name;
   err_tok = name; // is this OK ?
   TokenList A = read_until_nopar(hash_table.dot_token);
@@ -1584,8 +1549,7 @@ FpNum Parser::fp_read_value()
 // If the token list contains a string of N characters, is followed by X
 // returns X and sets n to N. Return null token in case all tokens in the
 // list are characters.
-Token FpGenList::find_str(int& n) const
-{
+auto FpGenList::find_str(int &n) const -> Token {
   tkbuf.reset();
   const_token_iterator C = value.begin();
   const_token_iterator E = value.end();
@@ -1635,8 +1599,7 @@ void FpGenList::split_after(token_iterator X, TokenList& z)
 
 // Finds the first x1 or x2. Splits there. before is put in z.
 // Returns x1 or x2 (the token that is found) or 0 (if nothing is found).
-Token FpGenList::split_at(Token x1, Token x2, TokenList& z)
-{
+auto FpGenList::split_at(Token x1, Token x2, TokenList &z) -> Token {
   token_iterator X = value.begin();
   token_iterator E = value.end();
   for(;;) {
@@ -1795,8 +1758,7 @@ void FpGenList::fp_gen_komma()
 
 // In case of X(Y)Z, puts X in A, Y in B, leaves Z in *this
 // First closing parenthesis is considered. Then last opening one is taken.
-bool FpGenList::split_at_p(TokenList& A, TokenList& B)
-{
+auto FpGenList::split_at_p(TokenList &A, TokenList &B) -> bool {
   Token x1 = Token(other_t_offset, '(');
   Token x2 = Token(other_t_offset, ')');
   token_iterator X = value.begin();
@@ -2710,8 +2672,7 @@ fps[fp_sincos_code] = hash_table.primitive("FP@sincos", fpi_cmd,fp_sincos_code);
   pi_table[8].init(0,6,283185307,179586477); //  8\pi/4
 }
 
-String CmdChr::token_fp_names() const
-{
+auto CmdChr::token_fp_names() const -> String {
   switch(chr) {
   case fp_ident_code: return "FPident";
   case fp_print_code: return "FPprint";
@@ -2765,9 +2726,7 @@ String CmdChr::token_fp_names() const
   }
 }
 
-
-String CmdChr::token_fpi_names() const
-{
+auto CmdChr::token_fpi_names() const -> String {
   switch(chr) {
   case fp_upn_code: return "FP@upn";
   case fp_ident_code: return "FP@ident";
@@ -2812,7 +2771,7 @@ String CmdChr::token_fpi_names() const
   case fp_qqsolve_code: return "FP@qqsolve";
   default: return 0;
   }
-}    
+}
 
 void Parser::exec_fp_cmd(subtypes i)
 {

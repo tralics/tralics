@@ -28,7 +28,7 @@ namespace {
 }
 
 namespace translate_ns {
-  Istring find_color(const string& a, const string& b);
+auto find_color(const string &a, const string &b) -> Istring;
 }
 
 class ColSpec {
@@ -40,10 +40,13 @@ class ColSpec {
   bool used;
 public:
   ColSpec(string a, string b,string c);
-  bool compare(string a, string b) { return model==a && value==b; } 
-  Istring get_id() { used = true; return id; }
-  bool is_used() const { return used; }
-  Xmlp get_val() const { return xval; }
+  auto compare(string a, string b) -> bool { return model == a && value == b; }
+  auto get_id() -> Istring {
+    used = true;
+    return id;
+  }
+  auto is_used() const -> bool { return used; }
+  auto get_val() const -> Xmlp { return xval; }
 };
 vector<ColSpec*>all_colors;
 
@@ -139,8 +142,7 @@ void Parser::leave_v_mode()
   if(the_stack.in_v_mode()) ileave_v_mode();
 }
 
-Xid Parser::ileave_v_mode()
-{
+auto Parser::ileave_v_mode() -> Xid {
   int k = cur_centering();
   Xid res = the_stack.push_par(k);
   if(unfinished_par) {
@@ -163,9 +165,7 @@ void Parser::leave_h_mode()
   }
 }
 
-
-inline string xml_to_string (Xmlp X)
-{
+inline auto xml_to_string(Xmlp X) -> string {
   string s = X->convert_to_string();
   return s;
 }
@@ -195,8 +195,7 @@ void Parser::T_optarg()
 }
 
 // Translates a list of token in argument mode. Returns the value.
-Xmlp Parser::translate_list(TokenList& L)
-{
+auto Parser::translate_list(TokenList &L) -> Xmlp {
   Xmlp res = the_stack.temporary();
   T_translate(L);
   the_stack.pop(cst_argument);
@@ -204,34 +203,28 @@ Xmlp Parser::translate_list(TokenList& L)
 }
 
 // Same, but reads the list of tokens.
-Xmlp Parser::xT_arg_nopar()
-{
+auto Parser::xT_arg_nopar() -> Xmlp {
   TokenList L = read_arg_nopar();
   return translate_list(L);
 }
 
 // Same, but returns a string
-string Parser::sT_arg_nopar()
-{
+auto Parser::sT_arg_nopar() -> string {
   return xT_arg_nopar() -> convert_to_string();
 }
 
-
 // translates a token list, result is a string
-string Parser::sT_translate(TokenList& L)
-{
+auto Parser::sT_translate(TokenList &L) -> string {
   return translate_list(L) ->convert_to_string();
 }
 // Return an Id location for the next argument
-Istring Parser::nT_arg_nopar()
-{
+auto Parser::nT_arg_nopar() -> Istring {
   string s = sT_arg_nopar();
   return Istring(s);
 }
 
 // Return 0 if the argument is empty or does not exist.
-Xmlp Parser::xT_optarg_nopar()
-{
+auto Parser::xT_optarg_nopar() -> Xmlp {
   TokenList L;
   read_optarg(L);
   if(L.empty()) return 0;
@@ -239,8 +232,7 @@ Xmlp Parser::xT_optarg_nopar()
 }
 
 // Hacked version of sT_arg_nopar.
-string Parser::special_next_arg()
-{
+auto Parser::special_next_arg() -> string {
   InUrlHandler something;
   InLoadHandler something_else;
   SaveCatcode unused2('~',other_catcode);
@@ -249,8 +241,7 @@ string Parser::special_next_arg()
 }
 
 // Returns next optional argument as a string
-string Parser::sT_optarg_nopar()
-{
+auto Parser::sT_optarg_nopar() -> string {
   Xmlp res = xT_optarg_nopar();
   if(!res) return "";
   return res -> convert_to_string();
@@ -258,8 +249,7 @@ string Parser::sT_optarg_nopar()
 
 // Returns next optional argument as an attribute value.
 // return 0 if the argument is empty or does not exist.
-Istring Parser::nT_optarg_nopar()
-{
+auto Parser::nT_optarg_nopar() -> Istring {
   TokenList L;
   read_optarg_nopar(L);
   if(L.empty()) return Istring();
@@ -273,8 +263,7 @@ Istring Parser::nT_optarg_nopar()
 // Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
 // returns cst_invalid in case of failure, a position otherwise
 
-name_positions Parser::get_ctb_opt()
-{
+auto Parser::get_ctb_opt() -> name_positions {
   TokenList L; 
   read_optarg_nopar(L);
   if(L.empty()) return cst_invalid;
@@ -292,8 +281,7 @@ name_positions Parser::get_ctb_opt()
 }
 
 // Nodes: tblr, or 2 letters
-name_positions Parser::get_trees_opt()
-{
+auto Parser::get_trees_opt() -> name_positions {
   TokenList L; 
   read_optarg_nopar(L);
   if(L.empty()) return cst_invalid;
@@ -314,7 +302,7 @@ name_positions Parser::get_trees_opt()
   if(c!='t' && c != 'b') return cst_invalid;
   if(c2!='l' && c2 != 'r') return cst_invalid;
   if(c=='t') return c2=='l' ?  np_letters_tl : np_letters_tr; 
-  else return c2=='l' ?  np_letters_bl : np_letters_br; 
+  else return c2=='l' ?  np_letters_bl : np_letters_br;
 }
 
 // In the case where the font has changed and we are in text mode, we call 
@@ -489,8 +477,7 @@ void Parser::T_item (int c)
 }
 
 // c=1 in the case of \@item (new scheme)
-Istring Parser::T_item_label(int c)
-{
+auto Parser::T_item_label(int c) -> Istring {
   TokenList L;
   bool opt = cur_tok.is_open_bracket();
   if(opt) read_optarg_nopar(L); 
@@ -515,7 +502,6 @@ Istring Parser::T_item_label(int c)
   string w = res ->convert_to_string();
   return Istring(w);
 }
-
 
 // Case of \glo{item}{some text} inside an glossaire env.
 void Parser::T_glo ()
@@ -708,8 +694,7 @@ void Parser::T_subequations(bool start)
   M_let_fast(T_theequation,T_at_theparentequation,false);
 }
 
-string Parser::scan_anchor(bool& h)
-{
+auto Parser::scan_anchor(bool &h) -> string {
   static int anchor_id = 0;
   anchor_id++;
   h = remove_initial_star();
@@ -1112,8 +1097,8 @@ void Parser::finish_color()
 
 // Find a color in the stack, returns the id;
 // May add a new item to the stack
-Istring translate_ns::find_color(const string& model, const string& value)
-{
+auto translate_ns::find_color(const string &model, const string &value)
+    -> Istring {
   int n= all_colors.size();
   for(int i=0;i<n;i++)
     if(all_colors[i]->compare(model,value)) return all_colors[i]->get_id();
@@ -1124,8 +1109,7 @@ Istring translate_ns::find_color(const string& model, const string& value)
 // case of \color{red} or \color[rgb]{1,0,0}
 // In the first case, we look at \color@red if this is a command
 // with code color_md, subtype N, its color N-offset in the table.
-Istring Parser::scan_color(const string& opt,const string& name)
-{
+auto Parser::scan_color(const string &opt, const string &name) -> Istring {
   if(opt.empty() || opt=="named") { // case \color{red} or \color[named]{Red}
     Buffer&B = tpa_buffer;
     B<< bf_reset <<  "\\color@" << name;
@@ -1140,7 +1124,6 @@ Istring Parser::scan_color(const string& opt,const string& name)
     return Istring();
   } else return translate_ns::find_color(opt,name);
 }
-
 
 // Implements color and variants (code = color_cmd)
 void Parser::T_color(subtypes c)
@@ -1239,9 +1222,7 @@ void Parser::add_vspace(Token T,ScaledInt dimen, Xid x)
   x.add_attribute(the_names[np_spacebefore],k,true);
 }
 
-
-Xmlp Parser::internal_makebox()
-{
+auto Parser::internal_makebox() -> Xmlp {
   leave_v_mode();
   the_stack.push1(np_mbox);
   Xmlp mbox = the_stack.top_stack();
@@ -1559,8 +1540,7 @@ void Parser::T_url(subtypes c)
 
 // Grabs the text of the URL. This does nothing special with ~.
 // Argument is translated in a group.
-Xmlp Parser::T_hanl_text()
-{ 
+auto Parser::T_hanl_text() -> Xmlp {
   push_level(bt_local);
   Xmlp val = xT_arg_nopar();
   pop_level(bt_local);
@@ -1568,8 +1548,7 @@ Xmlp Parser::T_hanl_text()
 }
 
 // This fetches the URL.
-Xmlp Parser::T_hanl_url()
-{
+auto Parser::T_hanl_url() -> Xmlp {
   InUrlHandler something;
   InLoadHandler something_else;
   Xmlp B = xT_arg_nopar();
@@ -1606,8 +1585,8 @@ void Parser::T_hanl(subtypes c)
 // This should work, whatever the mode...
 // If env is true, we grab the content of the env.
 
-Xmlp Parser::special_tpa_arg(String name,String y, bool par,bool env,bool has_q)
-{
+auto Parser::special_tpa_arg(String name, String y, bool par, bool env,
+                             bool has_q) -> Xmlp {
   if(!y ||y[0]==0) {
     TokenList L = read_arg();
     back_input(hash_table.par_token);
@@ -1673,8 +1652,7 @@ Xmlp Parser::special_tpa_arg(String name,String y, bool par,bool env,bool has_q)
   return the_stack.remove_last();
 }
 
-Xmlp Parser::tpa_exec(String cmd)
-{
+auto Parser::tpa_exec(String cmd) -> Xmlp {
   mode m = the_stack.get_mode();
   the_stack.set_arg_mode(); 
   Istring Y = Istring(cmd);
@@ -1839,8 +1817,7 @@ void Parser::T_twoints(TokenList&A, TokenList&B)
 }
 
 // Reads the tokens, converts them to dimension.
-Istring Parser::dimen_attrib(ScaledInt A)
-{
+auto Parser::dimen_attrib(ScaledInt A) -> Istring {
   Buffer& B = the_main->SH.shbuf();
   B.reset();
   B.push_back(A,glue_spec_empty);
@@ -1859,17 +1836,15 @@ void Parser::back_input_pt(bool spec)
     back_input(hash_table.unitlength_token);
 }
 
-ScaledInt Parser::token_list_to_dim(TokenList& a, Token C, bool spec)
-{
+auto Parser::token_list_to_dim(TokenList &a, Token C, bool spec) -> ScaledInt {
   back_input_pt(spec);
   back_input(a);
   scan_dimen(false,C);
   return cur_val.get_dim_val();
 }
- 
+
 // Same code, but calls dimen_attrib
-Istring Parser::token_list_to_att(TokenList& a, Token C, bool spec)
-{
+auto Parser::token_list_to_att(TokenList &a, Token C, bool spec) -> Istring {
   back_input_pt(spec);
   back_input(a);
   scan_dimen(false,C);
@@ -1894,8 +1869,7 @@ void Parser::T_twodims(Istring& A, Istring& B,Token C)
   B = token_list_to_att(b,C,false);
 }
 
-Istring Parser::get_c_val(Token x)
-{
+auto Parser::get_c_val(Token x) -> Istring {
   back_input(hash_table.CB_token);
   back_input (x);
   back_input(hash_table.OB_token);
@@ -2166,8 +2140,7 @@ void Parser::T_error()
 }
 
 // scans an element id, in brackets, default is cur_id
-int Parser::read_elt_id(Token T)
-{
+auto Parser::read_elt_id(Token T) -> int {
   int cur= the_stack.cur_xid().value;
   int upper=the_stack.get_xid().value;
   int n = scan_special_int_d(T,cur);
@@ -2206,8 +2179,7 @@ void Parser::T_xmladdatt(subtypes c)
 }
 
 // Returns the value of an attribute or element
-string Parser::get_attval()
-{ 
+auto Parser::get_attval() -> string {
   Token T = cur_tok;
   flush_buffer();
   int n = read_elt_id(T);
@@ -2220,7 +2192,6 @@ string Parser::get_attval()
   Istring res = Xid(n).has_attribute(key);
   return res.c_str();
 }
-
 
 void Parser::T_define_verbatim_env()
 {

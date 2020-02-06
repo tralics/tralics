@@ -62,8 +62,7 @@ void ScaledInt::ovf31()
 // If this is a TeX token representing a valid digit in base radix, 
 // returns the value,
 // otherwise return -1.
-int Token::tex_is_digit(int radix)
-{
+auto Token::tex_is_digit(int radix) -> int {
   int w = val_as_other();
   if('0'<=w && w <= radix+'0' && w<='9') // do not use is_digit...
     return w-'0';
@@ -114,8 +113,7 @@ void ScaledInt::divide(int n)
 // computes xn/d , returns quotient and remainder
 // Assumes n>0 and d>0.  Quotient is < 2^30
 // This is used for instance when converting 38cm into 38*n/d pt
-int arith_ns::xn_over_d(int x, int n, int d, int& remainder)
-{
+auto arith_ns::xn_over_d(int x, int n, int d, int &remainder) -> int {
   const int two_fifteen = 1<<15;
   bool positive = true;
   if(x<0) { positive = false; x = -x; }
@@ -149,8 +147,8 @@ void ScaledInt::scale(int n, int d, int max_answer)
 }
 
 // Return true if overflow.
-bool ScaledInt::scale(int x, int n, int d, int max_answer,bool&negative)
-{
+auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative)
+    -> bool {
   value = 0;
   if(x==0) return false;
   if(n==0) return false;
@@ -193,7 +191,6 @@ bool ScaledInt::scale(int x, int n, int d, int max_answer,bool&negative)
   value = a+f;
   return false;
 }
-
 
 // Computes x/n, rounded
 // No overflow possible. Division by zero must be checked by caller.
@@ -263,8 +260,7 @@ void SthInternal::scale(int n, int d)
 
 // Computes nx+y. Overflow is 2^30.  
 // We assume |y|< 2^{30};  so that overflow_threshold \pm y is OK
-int arith_ns::nx_plus_y(int n, int x, int y) 
-{
+auto arith_ns::nx_plus_y(int n, int x, int y) -> int {
   if(n<0) { x = -x; n = -n; }
   if(n==0) return y;
   if(x<=(max_dimension-y)/n && -x <= (max_dimension+y)/n)
@@ -550,8 +546,7 @@ void RealNumber::convert_decimal_part(int k, int*table)
 }
 
 // Return true if the string contains only integers.
-bool tralics_ns::only_digits(const string& s)
-{
+auto tralics_ns::only_digits(const string &s) -> bool {
   String S = s.c_str();
   for(int i=0;;i++) {
     char c = S[i];
@@ -561,8 +556,7 @@ bool tralics_ns::only_digits(const string& s)
 }
 
 // Returns: 0 if false, 1 if true, 2 if empty, 3 otherwise
-int SpecialHash::find_true_false(String s)
-{
+auto SpecialHash::find_true_false(String s) -> int {
   string res = find(s);
   if(res.empty()) return 2;
   if(res=="true") return 1;
@@ -571,8 +565,7 @@ int SpecialHash::find_true_false(String s)
 }
 
 // returns true if this is a valid register index.
-int SpecialHash::counter_val(int k)
-{
+auto SpecialHash::counter_val(int k) -> int {
   if(k>=0 && uint(k)<nb_registers) return k;
   return -1;
 }
@@ -581,8 +574,7 @@ int SpecialHash::counter_val(int k)
 // counter=12345 was given, this is out_of_range,  counter=foo is given
 // but \c@foo is not a counter. 
 // Otherwise, returns the register number of the counter
-int SpecialHash::find_counter()
-{
+auto SpecialHash::find_counter() -> int {
   string s = find("counter");
   if(s.empty()) return -1;
   if(tralics_ns::only_digits(s)) 
@@ -596,13 +588,11 @@ int SpecialHash::find_counter()
   return counter_val(the_parser.hash_table.eqtb[cs].get_chr() - count_reg_offset);
 }
 
-
 // finds a slot for the macro
 // Note: the reference count is 0. This is strange: the macro has to
 // be killed or its reference count increased.
 
-subtypes Mactab::new_macro (Macro* s)
-{
+auto Mactab::new_macro(Macro *s) -> subtypes {
   the_parser.my_stats.one_more_macro();
   if(ptr<0)
     rc_mac_realloc();
@@ -612,7 +602,6 @@ subtypes Mactab::new_macro (Macro* s)
   table[w] = s;
   return subtypes(w);
 }
-
 
 // Initially cur_rc_mac_len=0, tables are empty
 // Note that the table always contains a valid pointer

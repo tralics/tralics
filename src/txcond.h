@@ -15,11 +15,11 @@ class CondAux {
   int if_line; // is the line number at which it began
   int serial; // is the serial number
 public:
-  int get_limit() const { return if_limit; }
-  int get_type() const { return cur_if; }
+  auto get_limit() const -> int { return if_limit; }
+  auto get_type() const -> int { return cur_if; }
   void set_limit(int x) { if_limit =x; }
-  int get_line() const { return if_line; }
-  int get_serial()const { return serial; }
+  auto get_line() const -> int { return if_line; }
+  auto get_serial() const -> int { return serial; }
   void dump(int) const;
   CondAux(int a,int b, int c, int d): 
     if_limit(a),cur_if(b), if_line(c),serial(d) {}
@@ -33,18 +33,20 @@ class Condition {
  public:
   Condition()  { if_serial=0; }
   void pop();
-  uint push(int);
+  auto push(int) -> uint;
   void wait_for_fi(){ D.back().set_limit(fi_code); }
   void terminate();
-  int top_serial() const { return D.empty()? -1:  D.back().get_serial(); }
-  int top_branch() const;
-  int top_type() const;
-  int top_level() const { return D.size(); };
-  int top_limit() const { return D.empty()? 0 : D.back().get_limit(); }
-  int top_line() const { return D.empty()? 0 : D.back().get_line(); }
+  auto top_serial() const -> int {
+    return D.empty() ? -1 : D.back().get_serial();
+  }
+  auto top_branch() const -> int;
+  auto top_type() const -> int;
+  auto top_level() const -> int { return D.size(); };
+  auto top_limit() const -> int { return D.empty() ? 0 : D.back().get_limit(); }
+  auto top_line() const -> int { return D.empty() ? 0 : D.back().get_line(); }
   void set_limit(int n, int l) { D[n-1].set_limit(l); }
-  bool is_this_if(uint n) const { return n==D.size(); }
-  bool empty() const { return D.empty(); }
+  auto is_this_if(uint n) const -> bool { return n == D.size(); }
+  auto empty() const -> bool { return D.empty(); }
   void dump() const;
 };
 

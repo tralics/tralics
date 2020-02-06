@@ -24,11 +24,7 @@ namespace token_ns {
   void strip_pt(TokenList& L);
 }
 
-
-inline String boolean(bool x)
-{
-  return x ? "true" : "false";
-}
+inline auto boolean(bool x) -> String { return x ? "true" : "false"; }
 
 // --------------------------------------------------
 // Reading arguments, groups, etc.
@@ -104,8 +100,7 @@ void Parser::check_outer_validity()
 
 // Adjusts the brace counter b. Returns true if it becomes 0.
 // The scanner returns only balanced lists.
-bool Parser::check_brace(int& b)
-{
+auto Parser::check_brace(int &b) -> bool {
   if(cur_tok.is_a_brace()){
     if(cur_tok.is_a_left_brace()) b++;
     else {
@@ -117,9 +112,8 @@ bool Parser::check_brace(int& b)
 }
 
 // Assumes an open brace has been read. Reads in res everything up to the 
-// matching close brace. Returns true in case of error (cl is start line). 
-bool Parser::scan_group0 (TokenList&res, int cl)
-{
+// matching close brace. Returns true in case of error (cl is start line).
+auto Parser::scan_group0(TokenList &res, int cl) -> bool {
   int b = 1; // brace counter, we start with 1
   for(;;) {
     if(get_token()) { missing_close_brace(cl); return true; }
@@ -158,8 +152,7 @@ void Parser::scan_ignore_group ()
 // In the case of \edef, all tokens are expanded, unless they come from the
 // \the or a protected command; these are appended to L by this procedure. 
 // Returns true if EOF; otherwise cur_tok holds the next token
-bool Parser::edef_aux(TokenList& L)
-{
+auto Parser::edef_aux(TokenList &L) -> bool {
   for(;;) {
     if(get_token()) return true;
     else if(!cur_cmd_chr.is_expandable()) return false;
@@ -212,8 +205,7 @@ void Parser::scan_group4 (TokenList&res, int cl)
 // Returns true in case of error.
 // Invariant b=-1 is res is empty, b=0 if it contains a single group, b>0 otherwise
 
-bool Parser::scan_group1(TokenList& res, int& b, int cl)
-{
+auto Parser::scan_group1(TokenList &res, int &b, int cl) -> bool {
   Token aux = cur_tok;
   if(aux.is_OB_token()) {
     res.push_back(cur_tok); // Insert the opening brace
@@ -244,10 +236,9 @@ bool Parser::scan_group1(TokenList& res, int& b, int cl)
 // Returns true in case of error. Is used in math mode. Normal arguments
 // are read via 
 //    if(!before_mac_arg()) skip_group0(L);
-// or optimised version: scan_group2(L) 
+// or optimised version: scan_group2(L)
 
-bool Parser::before_mac_arg()
-{
+auto Parser::before_mac_arg() -> bool {
   for(;;) {
     if(get_token()) {
       runaway(-1);
@@ -269,8 +260,7 @@ bool Parser::before_mac_arg()
 
 // Inner code of read_arg. This is the command that reads an argument;
 // note that outer braces disappear
-bool Parser::scan_group2(TokenList&L)
-{
+auto Parser::scan_group2(TokenList &L) -> bool {
   int cl = get_cur_line();
   for(;;) {
     if(get_token()) {
@@ -298,8 +288,7 @@ bool Parser::scan_group2(TokenList&L)
 // Gathers all tokens until finding x
 // A newline token is identified with a space token.
 // If this is a group (b==0), then outer braces will be removed;
-bool Parser::scan_group_del1(TokenList&res, Token x)
-{
+auto Parser::scan_group_del1(TokenList &res, Token x) -> bool {
   int cl = get_cur_line();
   int b = -1;
   for(;;) {
@@ -317,8 +306,7 @@ bool Parser::scan_group_del1(TokenList&res, Token x)
 // reads a token list R followed by L (which is discarded).
 // At every stage we check that L is present; if not so, a token or a group is read
 // outer braces are removed if possible.
-bool Parser::scan_group_del (TokenList&res, const TokenList& L)
-{
+auto Parser::scan_group_del(TokenList &res, const TokenList &L) -> bool {
   int cl = get_cur_line();
   int b = -1;
   for(;;) {
@@ -353,8 +341,7 @@ bool Parser::scan_group_del (TokenList&res, const TokenList& L)
 // Reads the tokens of the list L
 // in the case below, a closing brace is inserted so that no runaway is signaled.
 // \def\tfoo a{} \edef\xx{\tfoo}
-bool Parser::skip_prefix (const TokenList& L)
-{
+auto Parser::skip_prefix(const TokenList &L) -> bool {
   const_token_iterator C = L.begin();
   const_token_iterator E = L.end();
   while(C != E) {
@@ -369,12 +356,9 @@ bool Parser::skip_prefix (const TokenList& L)
   return false;
 }
 
-
-
 // Reads a LaTeX optional argument, enclosed in brackets
 // Initial spaces are discarded. Return false in no bracket found
-bool Parser::scan_group_opt(TokenList& L, bool& have_arg)
-{
+auto Parser::scan_group_opt(TokenList &L, bool &have_arg) -> bool {
   for(;;) {
     if(get_token()) return true;
     if(cur_tok.is_space_token()) continue;
@@ -394,16 +378,13 @@ bool Parser::scan_group_opt(TokenList& L, bool& have_arg)
 // are used by expand_mac that temporarily resets scanner_status.
 // Return value does noy say if an error occured
 
-
-bool Parser::read_optarg(TokenList& L)
-{
+auto Parser::read_optarg(TokenList &L) -> bool {
   scanner_status = ss_matching;
   bool retval= false;
   scan_group_opt(L,retval);
   scanner_status = ss_normal;
   return retval;
 }
-
 
 void Parser::ignore_optarg()
 {
@@ -414,29 +395,24 @@ void Parser::ignore_optarg()
 
 // The three next commands set locally long_state to normal
 // Reads an optional argument in L, true if found
-bool Parser::read_optarg_nopar(TokenList& L)
-{
+auto Parser::read_optarg_nopar(TokenList &L) -> bool {
   SaveLongState sth(ls_normal);
   return read_optarg(L);
 }
 
-
 // Read an argument delimited by a token
-TokenList Parser::read_until_nopar(Token x)
-{  
+auto Parser::read_until_nopar(Token x) -> TokenList {
   TokenList res;
   SaveLongState sv(ls_normal);
   scanner_status = ss_matching;
   scan_group_del1(res,x);
   scanner_status = ss_normal;
   return res;
-
 }
 
 // This reads all tokens before x. The scanner status is set to matching
 // and to normal at the end.
-TokenList Parser::read_until(Token x)
-{
+auto Parser::read_until(Token x) -> TokenList {
   TokenList res;
   SaveLongState sv(ls_long);
   scanner_status = ss_matching;
@@ -446,8 +422,7 @@ TokenList Parser::read_until(Token x)
 }
 
 // Argument of macro. A single token, or a brace delimited non-expanded list
-TokenList Parser::read_arg ()
-{
+auto Parser::read_arg() -> TokenList {
   TokenList L;
   SaveLongState sth(ls_long);
   scanner_status = ss_matching;
@@ -457,8 +432,7 @@ TokenList Parser::read_arg ()
 }
 
 // Read a normal argument
-TokenList Parser::read_arg_nopar ()
-{
+auto Parser::read_arg_nopar() -> TokenList {
   TokenList L;
   SaveLongState sth(ls_normal);
   scanner_status = ss_matching;
@@ -467,11 +441,9 @@ TokenList Parser::read_arg_nopar ()
   return L;
 }
 
-
 // Argument of macro that should be a single token
 // sets cur_tok and cmd_chr,
-bool Parser::read_token_arg (Token T)
-{
+auto Parser::read_token_arg(Token T) -> bool {
   SaveLongState sth(ls_long);
   scanner_status = ss_matching;
   SaveErrTok sv (T);
@@ -480,8 +452,7 @@ bool Parser::read_token_arg (Token T)
   return res;
 }
 
-bool Parser::read_token_arg (int cl)
-{
+auto Parser::read_token_arg(int cl) -> bool {
   TokenList L;
   for(;;) {
     if(get_token()) { runaway(-1); return true; }
@@ -502,7 +473,6 @@ bool Parser::read_token_arg (int cl)
   }
 }
 
-
 // Paragraphs are forbidden in ignored arguments
 // Use read_arg() if \par allowed
 void Parser::ignore_arg ()
@@ -519,8 +489,7 @@ void Parser::ignore_arg ()
 // In a case like \def\bar#1foo#2{...}, this returns the value of #1
 // given the token list foo as argument.
 // NOTE. used only in \for loops and result ignored.
-TokenList Parser::read_delimited (const TokenList& L)
-{
+auto Parser::read_delimited(const TokenList &L) -> TokenList {
   TokenList res;
   scanner_status = ss_matching;
   scan_group_del(res,L);
@@ -577,8 +546,7 @@ void Parser::titlepage_evaluate(String s, const string& cmd)
 
 
 // Puts in cur_tok the next non-expandable token.
-bool Parser::get_x_token()
-{
+auto Parser::get_x_token() -> bool {
   for(;;) {
     if(get_token()) return true;
     if(cur_cmd_chr.is_expandable()) expand();
@@ -588,8 +556,7 @@ bool Parser::get_x_token()
 
 // Returns true if the next line contains \end{env}
 // In this case, removes the \end{env}
-bool Parser::is_verbatim_end ()
-{
+auto Parser::is_verbatim_end() -> bool {
   file_ended = false;
   if(at_eol()) get_a_new_line();
   if(file_ended) return false;
@@ -610,8 +577,7 @@ bool Parser::is_verbatim_end ()
 // pushed at the end of L (or with prefix  \verbprefix pushed at the start of L).
 // Returns true in case of problem
 
-bool Parser::vb_tokens(Utf8Char test, TokenList& L, bool before)
-{
+auto Parser::vb_tokens(Utf8Char test, TokenList &L, bool before) -> bool {
   TokenList res;
   state = state_M;
   for(;;) {
@@ -801,8 +767,7 @@ inline void RestoreVbSpace::operator()(Token T)
 // In the case of \verb+foo+, reads and returns the + character.
 // Sets special_space to true if spaces have to be treaded specially
 // Returns null in case of error
-Utf8Char Parser::delimiter_for_verb(bool& special_space)
-{
+auto Parser::delimiter_for_verb(bool &special_space) -> Utf8Char {
   Utf8Char t = get_next_char();
   if(!(t =='*'))  return t;
   if(at_eol()) return 0;
@@ -812,8 +777,7 @@ Utf8Char Parser::delimiter_for_verb(bool& special_space)
 
 // In the case of \SaveVerb{ok}+foo+, reads and returns the + character,
 // which must have spacial_catcode. returns 0 in case of trouble
-Utf8Char Parser::delimiter_for_saveverb()
-{
+auto Parser::delimiter_for_saveverb() -> Utf8Char {
   for(;;) {
     if(at_eol()) return 0;
     Utf8Char c = get_next_char();
@@ -859,8 +823,7 @@ void Parser::T_saveverb()
 // we make sure that reading is not from a token list
 // Ignores everything, until end of environment.
 // or take it verbatim
-string Parser::T_raw_env(bool want_result)
-{
+auto Parser::T_raw_env(bool want_result) -> string {
   kill_line();
   if(!TL.empty()) { 
     parse_error(err_tok,"Verbatim-like environment in argument : ", 
@@ -986,15 +949,13 @@ void Parser::scan_left_brace_and_back_input()
 }
 
 // Reads an optional *. Returns true if we have seen one.
-bool Parser::remove_initial_star ()
-{
+auto Parser::remove_initial_star() -> bool {
   skip_initial_space();
   if(cur_tok.is_star_token())
      return true;
   if(cur_tok.is_valid()) back_input();
   return false;
 }
-
 
 // This is done if we see a # while reading the body of a command.
 // if exp is true, the token that follows the # is expanded,
@@ -1030,8 +991,7 @@ void Parser::T_mark(subtypes c)
 }
 
 // a special kind of csname, without expand. Returns a name
-string Parser::group_to_string ()
-{
+auto Parser::group_to_string() -> string {
   skip_initial_space();
   if(!cur_cmd_chr.is_open_brace()) {
     missing_open_brace(); 
@@ -1059,31 +1019,25 @@ void Parser::unskip_group(String s)
   back_input(L);
 }
 
-string Parser::sE_arg()
-{
+auto Parser::sE_arg() -> string {
   TokenList L = read_arg();
   return to_stringE(L);
 }
 
-string Parser::sE_arg_nopar()
-{
+auto Parser::sE_arg_nopar() -> string {
   TokenList L = read_arg_nopar();
   return to_stringE(L);
 }
 
-
 // Returns next arg as a string (not translated)
-string Parser::sE_optarg_nopar()
-{
+auto Parser::sE_optarg_nopar() -> string {
   TokenList L;
   read_optarg_nopar(L);
   return to_stringE(L);
 }
 
-
 // Here, we expand all tokens, and gather all non-expandable tokens
-string Parser::to_stringE(TokenList& L)
-{
+auto Parser::to_stringE(TokenList &L) -> string {
   read_toks_edef(L);
   Buffer&B = group_buffer;
   B.reset();
@@ -1091,11 +1045,9 @@ string Parser::to_stringE(TokenList& L)
   return B.to_string();
 }
 
-
 // Scan_general_text is like scan_toks(false,false).
 // It can be recursive, hence scanner_status not reset to normal
-TokenList Parser::scan_general_text()
-{
+auto Parser::scan_general_text() -> TokenList {
   TokenList L;
   scan_left_brace();
   SaveLongState sth(ls_long); // allows \par
@@ -1104,10 +1056,8 @@ TokenList Parser::scan_general_text()
   return L;
 }
 
-
 // number of arguments for \newcommand; tries to be clever.
-int Parser::read_mac_nbargs ()
-{
+auto Parser::read_mac_nbargs() -> int {
   TokenList L;
   read_optarg(L); 
   if(!L.empty() && L.front().is_plus_token()) L.pop_front();
@@ -1401,8 +1351,7 @@ void Parser::grab_env(TokenList& v)
 
 // Idem, but stops at comma at level 0, returning false
 // uses get_x_token
-bool Parser::grab_env_comma(TokenList& v)
-{
+auto Parser::grab_env_comma(TokenList &v) -> bool {
   int b = 1;
   int elevel = 0;
   for(;;) {
@@ -1475,8 +1424,8 @@ void Parser::expand_mac (Macro& X)
 // This is the code that replaces arguments by values in the body.
 // note that Tex uses a completely different method (there is a stack with
 // all arguments of all macros; here we have just one table).
-TokenList Parser::expand_mac_inner(const TokenList& W, TokenList* arguments)
-{
+auto Parser::expand_mac_inner(const TokenList &W, TokenList *arguments)
+    -> TokenList {
   const_token_iterator C = W.begin();
   const_token_iterator E = W.end();
   TokenList res;
@@ -1495,8 +1444,7 @@ TokenList Parser::expand_mac_inner(const TokenList& W, TokenList* arguments)
 // Converting a list of token into a string or a CS name
 
 // returns true if bad; fills the buffer b until finding \endcsname
-bool Parser::list_to_string0(Buffer& b)
-{
+auto Parser::list_to_string0(Buffer &b) -> bool {
   for(;;) {
     if(get_x_token()) return true; 
     if(cur_cmd_chr.get_cmd() == endcsname_cmd) return false;
@@ -1507,17 +1455,14 @@ bool Parser::list_to_string0(Buffer& b)
 }
 
 // takes the list of tokens as argument
-bool Parser::list_to_string(TokenList& L, Buffer& b)
-{
+auto Parser::list_to_string(TokenList &L, Buffer &b) -> bool {
   back_input(hash_table.frozen_endcsname);
   back_input(L);
   return list_to_string0 (b);
 }
 
-
 // as above, converts to lower case
-bool Parser::list_to_string_cv(TokenList& L, Buffer& b)
-{
+auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
   back_input(hash_table.frozen_endcsname);
   back_input(L);
   for(;;) {
@@ -1532,17 +1477,14 @@ bool Parser::list_to_string_cv(TokenList& L, Buffer& b)
   }
 }
 
-
 // Special case of a counter
-bool Parser::csname_ctr(TokenList& L, Buffer& b)
-{
+auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
   b.reset(); b.push_back("c@");
   return list_to_string(L,b);
 }
 
 // Signals an error; returns the string or bad
-string Parser::list_to_string_c(TokenList& x,String msg)
-{
+auto Parser::list_to_string_c(TokenList &x, String msg) -> string {
   Buffer&B = Thbuf1;
   B.reset();
   if(list_to_string(x,B)) {
@@ -1566,8 +1508,7 @@ void Parser::list_to_string_c(TokenList& x, String s1,String s2,String msg,Buffe
 
 // This is like \csname s1 L s2 \endcsname
 // It returns true and signals in case of error.
-bool Parser::my_csname(String s1, String s2, TokenList& L, String s)
-{
+auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
   if(tracing_commands()) the_log << lg_startbrace << s << lg_endbrace;
   Buffer b;
   b.push_back(s1);
@@ -1580,7 +1521,6 @@ bool Parser::my_csname(String s1, String s2, TokenList& L, String s)
   finish_csname(b,s);
   return false;
 }
-
 
 // Same as above; but converts the result into the string fetch_name_res
 void Parser::fetch_name2()
@@ -1662,19 +1602,16 @@ void Parser::E_usename(int c, bool vb)
 }
 
 // Converts a token list into a string, like csname_arg
-String Parser::fetch_name0()
-{
+auto Parser::fetch_name0() -> String {
   TokenList L = read_arg();
   return fetch_name1(L);
 }
-String Parser::fetch_name0_nopar()
-{
+auto Parser::fetch_name0_nopar() -> String {
   TokenList L = read_arg_nopar();
   return fetch_name1(L);
 }
 
-String Parser::fetch_name1(TokenList& L)
-{
+auto Parser::fetch_name1(TokenList &L) -> String {
   if(L.empty()) return "";
   SaveState st_state;
   save_the_state(st_state);
@@ -1688,26 +1625,21 @@ String Parser::fetch_name1(TokenList& L)
 
 // if exp is true, this is \csname ... \endcsname, otherwise get_r_token
 // Note that the token is left undefined
-Token Parser::fetch_csname(bool exp)
-{
+auto Parser::fetch_csname(bool exp) -> Token {
   if(exp) {
     fetch_name0();
     return hash_table.locate(fetch_name_res);
   } else return get_r_token(true);
 }
 
-
 // Use a non-long method
-String Parser::fetch_name_opt()
-{
+auto Parser::fetch_name_opt() -> String {
   TokenList L;
   bool res = read_optarg_nopar(L);
   if(!res || L.empty())
     return "";
   else return fetch_name1(L);
 }
-
-
 
 // Implements \@ifundefined{cmd} {A}{B}
 // token lists A and B are read by one_of_two. A command is undefined
@@ -1866,8 +1798,7 @@ void Parser::E_loop()
 // Returns true in case of error. If def is false we check 
 // that foo is a counter i.e. \c@foo is assign_int. 
 // Otherwise we define a counter
-bool Parser::M_counter(bool def)
-{
+auto Parser::M_counter(bool def) -> bool {
   Token T = cur_tok;
   Buffer b;
   TokenList L0 = read_arg();
@@ -1896,8 +1827,7 @@ void Parser::counter_boot(String s, String aux)
 // if def is false, check that \c@foo=2 is OK
 // otherwise, checks that \c@foo is undefined or relax
 // Returns true if bad
-bool Parser::counter_check(Buffer&b, bool def)
-{
+auto Parser::counter_check(Buffer &b, bool def) -> bool {
   cur_tok = hash_table.locate(b);
   Equivalent& E = hash_table.eqtb[cur_tok.eqtb_loc()];
   if(def) {
@@ -1914,13 +1844,11 @@ bool Parser::counter_check(Buffer&b, bool def)
   return false;
 }
 
-
 // Reads an optional argument bar; puts \cl@bar in cur_tok
 // Return 0 if no opt argument, 1 if error, 2 if OK
 // If s is a valid string, it contains the optional argument
 
-int Parser::counter_read_opt(String s)
-{
+auto Parser::counter_read_opt(String s) -> int {
   if(s) {
     if(s[0]==0) return 0; // s empty says no opt arg
     Buffer&b = Thbuf2;
@@ -1939,8 +1867,7 @@ int Parser::counter_read_opt(String s)
 
 // This defines a new counter, named name; second arg is for counter_read_opt
 // cur_tok (o be read again) holds the token \c@foo
-bool Parser::counter_aux(string name, String opt,Token T)
-{
+auto Parser::counter_aux(string name, String opt, Token T) -> bool {
   Buffer&b = Thbuf1;
   // We are defining a counter now
   // We construct a macro without argument that expands to \number\c@foo
@@ -1971,7 +1898,6 @@ bool Parser::counter_aux(string name, String opt,Token T)
   M_cons(cl_token,foo_list);
   return false;
 }
-
 
 // \@addtreset{foo}{bar}
 // evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
@@ -2278,8 +2204,7 @@ void Parser::M_shortverb(int x)
 }
 
 // Returns the token \foo or \endfoo.
-Token Parser::find_env_token(const string& name, bool beg)
-{
+auto Parser::find_env_token(const string &name, bool beg) -> Token {
   mac_buffer.reset();
   if(!beg) mac_buffer << "end";
   mac_buffer << name; 
@@ -2288,8 +2213,7 @@ Token Parser::find_env_token(const string& name, bool beg)
 }
 
 // Hack for \begin{foo}
-SaveAuxEnv* Parser::env_helper (const string& s)
-{
+auto Parser::env_helper(const string &s) -> SaveAuxEnv * {
   int cl = get_cur_line();
   find_env_token(s,true);
   string cur_e_name = get_cur_env_name();
@@ -2301,7 +2225,6 @@ SaveAuxEnv* Parser::env_helper (const string& s)
   if(cur_cmd_chr.is_undef()) cur_cmd_chr = CmdChr(relax_cmd,relax_code);
   return new SaveAuxEnv(cur_e_name,s,cl,t, cur_cmd_chr);
 }
-
 
 // This implements \begin{foo}
 void Parser::T_begin(const string& s)
@@ -2381,14 +2304,11 @@ void Parser::expand_when_ok(bool allow_undef)
 
 // Returns the value of the macro \foo;
 // If \foo is not a user macro without args, returns empty list
-TokenList Parser::get_mac_value(const string &s)
-{
+auto Parser::get_mac_value(const string &s) -> TokenList {
   return get_mac_value(hash_table.locate(s));
-  
 }
 
-TokenList Parser::get_mac_value(Token t)
-{
+auto Parser::get_mac_value(Token t) -> TokenList {
   TokenList res;
   if(t.not_a_cmd()) return res;  
   see_cs_token(t);
@@ -2671,8 +2591,7 @@ void Parser::E_ignore_n_args (bool vb, subtypes c)
 
 // If the tokens that follows are that of the string S (upper or lower case)
 // then they are read. Initial spaces are read. Full expansion.
-bool Parser::scan_keyword(String s)
-{
+auto Parser::scan_keyword(String s) -> bool {
   int k = 0;
   TokenList L;
   for(;;) {
@@ -2857,8 +2776,7 @@ void CondAux::dump(int i) const
 }
 
 // for \currentifbranch
-int Condition::top_branch() const
-{
+auto Condition::top_branch() const -> int {
   int k = top_limit();
   if(k==or_code || k== else_code) return 1;
   else if(k==fi_code) return -1;
@@ -2866,8 +2784,7 @@ int Condition::top_branch() const
 }
 
 // for \currentiftype
-int Condition::top_type() const
-{
+auto Condition::top_type() const -> int {
   if(D.empty()) return 0;
   int n =  D.back().get_type();
   if(n<unless_code) return n+1;
@@ -2926,8 +2843,7 @@ void Parser::pass_text(Token Tfe)
 }
 
 // Pushes a new conditional
-uint Condition::push(int chr)
-{
+auto Condition::push(int chr) -> uint {
   if_serial++;
   D.push_back(CondAux(if_code,chr,the_parser.get_cur_line(),if_serial));
   return D.size();
@@ -3037,8 +2953,7 @@ void Parser::E_if_test (subtypes test, bool negate)
 }
 
 // Returns the truth value of the next condition
-bool Parser::eval_condition(subtypes test) 
-{ 
+auto Parser::eval_condition(subtypes test) -> bool {
   switch(test) {
   case if_true_code: return true;
   case if_false_code: return false;
@@ -3114,8 +3029,7 @@ bool Parser::eval_condition(subtypes test)
 }
 
 // Returns truth value of \ifx \A\B
-bool Parser::E_ifx ()
-{
+auto Parser::E_ifx() -> bool {
   Token T = cur_tok;
   if(get_token_o()) { parse_error(T,"\\ifx at end of file"); return false; }
   CmdChr pq = cur_cmd_chr;
@@ -3166,8 +3080,7 @@ void Parser::E_afterelsefi()
 // Reads a name to define; returns eqtb loc of token
 // If br is true (default value false), reads an argument in braces;
 // initial explicit spaces are ignored
-Token Parser::get_r_token(bool br)
-{
+auto Parser::get_r_token(bool br) -> Token {
   for(;;) {
     get_token(); 
     if (!cur_tok.is_space_token())
@@ -3366,8 +3279,7 @@ void Parser::M_new_env (rd_flag redef)
 }
 
 // Common code for \newcommand and \newenv, constructs the macro
-Macro* Parser::read_latex_macro()
-{
+auto Parser::read_latex_macro() -> Macro * {
   Macro* X = new Macro;
   int n = read_mac_nbargs();
   X->set_nbargs(n);
@@ -3460,8 +3372,7 @@ void Parser::assign_def_something(bool gbl)
 
 
 // Simplified for latex3; requires a macro name. returns true if error
-bool Parser::l3_get_name(Token T)
-{
+auto Parser::l3_get_name(Token T) -> bool {
   if(get_token()) return true;
   if(cur_tok.not_a_cmd()) {
     parse_error(T,"Expecting a command name instead of ", cur_tok, "",
@@ -3470,7 +3381,6 @@ bool Parser::l3_get_name(Token T)
   }
   return false;
 }
-
 
 // This interprets \countdef, and things like that
 void Parser::M_shorthand_define(int cmd, bool gbl)
@@ -3525,8 +3435,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl)
 }
 
 // For bootstrap; always traced
-Token Parser::shorthand_gdefine(int cmd, String sh, int k)
-{
+auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
   Token T =  hash_table.locate(sh);
   int p = T.eqtb_loc(); // return value
   symcodes ncmd;
@@ -3569,15 +3478,13 @@ Token Parser::shorthand_gdefine(int cmd, String sh, int k)
   return T;
 }
 
-
 // q is register, advance, multiply, divide
 // We may have seen \count: here we read a number, the register number.
 // We may have seen \advance, and read \count. Then we read the number.
 // We may have seen \advance, then \foo, where \foo is defined by
 // \countdef, so that we can return after seeing \foo.
 // In any case, returns a position and sets p to the type.
-int Parser::do_register_arg(int q, int&p, Token& tfe)
-{
+auto Parser::do_register_arg(int q, int &p, Token &tfe) -> int {
   Token T = cur_tok;
   if(q != register_cmd) {
     get_x_token();
@@ -3793,8 +3700,7 @@ void Parser::skip_over_parens()
   }
 }
 
-inline String skip_or_continue(bool s)
-{
+inline auto skip_or_continue(bool s) -> String {
   return s ?  "skipping" : "continuing";
 }
 
@@ -3809,8 +3715,7 @@ void Parser::T_ifthenelse ()
 }
 
 // This evaluates a condition in an environment.
-bool Parser::T_ifthenelse(TokenList& A)
-{
+auto Parser::T_ifthenelse(TokenList &A) -> bool {
   Token t = cur_tok;
   SaveState st_state;
   save_the_state(st_state);
@@ -3823,8 +3728,7 @@ bool Parser::T_ifthenelse(TokenList& A)
 
 // This returns true if the ifthenelse condition should be true.
 // is recursive...
-bool Parser::T_ifthenelse_inner(Token t)
-{
+auto Parser::T_ifthenelse_inner(Token t) -> bool {
   bool res = true;
   bool must_negate = false;
   for(;;) {
@@ -4186,8 +4090,7 @@ void Parser::dimen_from_list0(Token T,TokenList& L)
   read_until(hash_table.relax_token);
 }
 
-ScaledInt Parser::dimen_from_list(Token T,TokenList& L)
-{
+auto Parser::dimen_from_list(Token T, TokenList &L) -> ScaledInt {
   if(!calc_loaded) dimen_from_list0(T,L);
   else calc_main(it_dimen,cur_val,L);
   return cur_val.get_dim_val();

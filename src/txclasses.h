@@ -26,18 +26,18 @@ private:
 public:
   KeyAndVal(){}
   KeyAndVal(string a, TokenList b,string all) :full_name(all), name(a), val(b),used(false) {}
-  const string& get_name ()const { return name; }
-  const string& get_full_name ()const { return full_name; }
-  const TokenList& get_val ()const { return val; }
-  bool has_name(const string& x) const { return name==x; }
-  bool has_full_name(const string& x) const { return full_name==x; }
-  bool has_name(String x) const { return name==x; }
+  auto get_name() const -> const string & { return name; }
+  auto get_full_name() const -> const string & { return full_name; }
+  auto get_val() const -> const TokenList & { return val; }
+  auto has_name(const string &x) const -> bool { return name == x; }
+  auto has_full_name(const string &x) const -> bool { return full_name == x; }
+  auto has_name(String x) const -> bool { return name == x; }
   void dump(Buffer&B) const { B << full_name; };
   void use(TokenList&L) const;
   void kill() { val = TokenList(); used = true;}
   void use_and_kill(TokenList& L,KeyAndVal&U,bool X);
-  TokenList to_list() const;
-  bool is_used() const { return used; }
+  auto to_list() const -> TokenList;
+  auto is_used() const -> bool { return used; }
   void mark_used() { used = true; }
   void mark_un_used() { used = false; }
 };
@@ -61,12 +61,14 @@ public:
   LatexPackage(string A); 
   void add_to_hook(TokenList&L) { hook.splice(hook.end(),L); }
   void add_options(const OptionList& L);
-  int find_option(const string& name);
-  bool is_class() const  { return name[0] == 'C'; }
-  String real_name() const { return name.c_str()+1; } 
-  string full_name() const { return name; } 
-  String pack_or_class() const { return is_class() ? "class "  : "package "; }
-  bool has_name(const string & s) const { return name==s; }
+  auto find_option(const string &name) -> int;
+  auto is_class() const -> bool { return name[0] == 'C'; }
+  auto real_name() const -> String { return name.c_str() + 1; }
+  auto full_name() const -> string { return name; }
+  auto pack_or_class() const -> String {
+    return is_class() ? "class " : "package ";
+  }
+  auto has_name(const string &s) const -> bool { return name == s; }
   void print_options();
   void check_global_options(TokenList& res, bool X);
   void check_local_options(TokenList& res, bool X);
@@ -84,8 +86,8 @@ public:
   bool using_default_class; // inhibits warning
 public:
   ClassesData();
-  LatexPackage* cur_pack();
-  int find_package(const string & name,bool,bool);
+  auto cur_pack() -> LatexPackage *;
+  auto find_package(const string &name, bool, bool) -> int;
   void new_unused_global_option(const KeyAndVal& s)
   { unused_options.push_back(s); }
   void remove_from_unused(const string& name);
@@ -97,17 +99,18 @@ class FormatDate
 {
   int field1, field2, field3;
   Token err_tok;
-  bool scan_a_field(Buffer&,int&);
-  bool scan_a_month(Buffer&,int&);
-  bool scan_next(Buffer&,int&);
-  bool sort();
-  int next_format_char(Buffer&);
-  bool parse_format(Buffer&);
-  bool parse(Buffer&);
+  auto scan_a_field(Buffer &, int &) -> bool;
+  auto scan_a_month(Buffer &, int &) -> bool;
+  auto scan_next(Buffer &, int &) -> bool;
+  auto sort() -> bool;
+  auto next_format_char(Buffer &) -> int;
+  auto parse_format(Buffer &) -> bool;
+  auto parse(Buffer &) -> bool;
+
 public:
-  bool interpret(const string&, Token T);
-  int get_year() const { return field3; }
-  int get_month() const { return field1; }
-  int get_day() const { return field2; }
+  auto interpret(const string &, Token T) -> bool;
+  auto get_year() const -> int { return field3; }
+  auto get_month() const -> int { return field1; }
+  auto get_day() const -> int { return field2; }
 };
 

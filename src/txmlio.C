@@ -20,10 +20,9 @@ class EOD {};
 string xxx;
 
 namespace {
-  inline  bool is_spacer (Utf8Char c) 
-  { 
-    return c==' ' || c=='\t' || c=='\n' || c=='\r';
-  }
+inline auto is_spacer(Utf8Char c) -> bool {
+  return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
 }
 
 // Rule 1 defines Document
@@ -70,8 +69,7 @@ namespace {
 // where foo is element, X, Z is name4 choice or seq
 
 // The external function. Needs to be completed
-Xmlp read_xml(string s)
-{
+auto read_xml(string s) -> Xmlp {
   if(!tralics_ns::find_in_path(s)) { 
     the_parser.parse_error(the_parser.err_tok,
 			   "Unable to read the XML input file",s,"noinput");
@@ -83,8 +81,7 @@ Xmlp read_xml(string s)
   return res.prun();
 }
 
-Xmlp XmlIO::prun()
-{
+auto XmlIO::prun() -> Xmlp {
   try {
     run();
   } catch (EOD cc) {};
@@ -92,8 +89,7 @@ Xmlp XmlIO::prun()
 }
 
 // This reads the XML file, without conversion
-bool XmlIO::init(const string &name)
-{
+auto XmlIO::init(const string &name) -> bool {
   for(int i=0; i<128;i++) Type[i] = xt_invalid;
   for(int i='0'; i<='9';i++) Type[i] = xt_digit;
   for(int i='a'; i<='z';i++) Type[i] = xt_letter;
@@ -152,8 +148,7 @@ void XmlIO::next_line()
 
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
-Utf8Char XmlIO::peek_char()
-{
+auto XmlIO::peek_char() -> Utf8Char {
   if(reread_list.size())
     return reread_list.back();
   if(at_eol()) next_line();
@@ -168,8 +163,7 @@ void XmlIO::skip_char()
 }
 
 // This returns the next character
-Utf8Char XmlIO::next_char()
-{
+auto XmlIO::next_char() -> Utf8Char {
   Utf8Char res = peek_char();
   skip_char();
   return res;
@@ -496,8 +490,7 @@ void XmlIO::parse_dec_conditional()
 }
 
 // Parses SYSTEM 'foo' or PUBLIC 'foo' 'bar'
-bool XmlIO::parse_sys_pub() 
-{
+auto XmlIO::parse_sys_pub() -> bool {
   if(cur_char=='P') {
     expect("PUBLIC");
     aux.push_back(" PUBLIC '");
@@ -513,7 +506,6 @@ bool XmlIO::parse_sys_pub()
     return true;
   } else return false;
 }
-
 
 // We scan one of
 // <!ENTITY foo PUBLIC 'pub-part' 'system-part'>
@@ -728,8 +720,7 @@ void XmlIO::parse_dec_notation()
 }
 
 // Replaces %foo by its value
-bool XmlIO::expand_PEReference()
-{
+auto XmlIO::expand_PEReference() -> bool {
   B.reset();
   for(;;) {
     Utf8Char c = next_char();
@@ -758,7 +749,6 @@ bool XmlIO::expand_PEReference()
   }
   return ok;
 }
-
 
 void XmlIO::error(string s)
 {

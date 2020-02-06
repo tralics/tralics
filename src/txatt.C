@@ -17,14 +17,12 @@ const char* txatt_rcsid=
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.
-AttList& Xid::get_att() const
-{
+auto Xid::get_att() const -> AttList & {
   return the_main->the_stack->get_att_list(value);
 }
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
-int AttList::has_value(Istring x) const
-{
+auto AttList::has_value(Istring x) const -> int {
   int n = val.size();
   for(int i = 0; i<n;i++)
     if(val[i].name == x) return i;
@@ -33,8 +31,7 @@ int AttList::has_value(Istring x) const
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
-Istring Xid::has_attribute(Istring n)
-{
+auto Xid::has_attribute(Istring n) -> Istring {
   AttList& X = get_att();
   int i = X.has_value(n);
   if(i>=0) return X.get_val(i);
@@ -43,8 +40,7 @@ Istring Xid::has_attribute(Istring n)
 
 // Return true if this id has special attribute pair.
 // (it is unprintable).
-bool Xid::is_font_change() const
-{
+auto Xid::is_font_change() const -> bool {
   Istring n = Istring(cst_flaghi);
   return get_att().has_value(n) != -1;
 }
@@ -157,8 +153,7 @@ void AttList::destroy()
 
 // Puts in the buffer the value of the attribute M of element idx
 // returns false if there is no such value.
-bool Buffer::install_att (Xid idx, Istring m)
-{
+auto Buffer::install_att(Xid idx, Istring m) -> bool {
   AttList&L = idx.get_att();
   int k = L.has_value(m);
   if(k==-1) return false;
@@ -230,8 +225,7 @@ void Buffer::push_back_alt(const AttPair& X)
 
 
 // Returns true if there is a space. Kills at the space. Advance
-bool Buffer::look_at_space(string s)
-{
+auto Buffer::look_at_space(string s) -> bool {
   reset();
   push_back(s);
   bool has_space = false;
@@ -254,8 +248,7 @@ bool Buffer::look_at_space(string s)
 // In the case of "foo" (no space), returns <foo>
 // In the case of space, what follows the spaces is considered as
 // attribute list.
-Xmlp Buffer::xml_and_attrib(string s)
-{
+auto Buffer::xml_and_attrib(string s) -> Xmlp {
   bool has_spaces = look_at_space(s);
   if(!has_spaces) return new Xml(Istring(s),0);
   Xmlp res = new Xml(Istring(buf),0);
@@ -281,8 +274,7 @@ void Buffer::push_back_special_att(Xid id)
 
 // Returns true if we see space, then s then space then equals then space.
 // sets ptr to the char after this space
-bool Buffer::see_equals(String s)
-{
+auto Buffer::see_equals(String s) -> bool {
   ptr = 0;
   skip_sp_tab();
   int k = strlen(s);

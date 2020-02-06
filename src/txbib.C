@@ -39,21 +39,21 @@ namespace {
 }
 
 namespace bib_ns {
-  Istring normalise_for_bib(Istring w);
-  void boot_ra_prefix(String s);
-  string first_three(const string& s);
-  string last_chars(const string& s,int k);
-  string skip_dp(const string& str);
-  void bib_explain ();
-  void handle_special_string(string s, Buffer&A, Buffer&B);
-  name_positions type_to_string(entry_type x);
-  bool is_noopsort(const string& s, int i);
-  bool raw_bib = false;
+auto normalise_for_bib(Istring w) -> Istring;
+void boot_ra_prefix(String s);
+auto first_three(const string &s) -> string;
+auto last_chars(const string &s, int k) -> string;
+auto skip_dp(const string &str) -> string;
+void bib_explain();
+void handle_special_string(string s, Buffer &A, Buffer &B);
+auto type_to_string(entry_type x) -> name_positions;
+auto is_noopsort(const string &s, int i) -> bool;
+bool raw_bib = false;
 }
 using namespace bib_ns;
 
 namespace io_ns {
-  int how_many_bytes(uchar);
+auto how_many_bytes(uchar) -> int;
 }
 
 String bib_xml_name[] = {
@@ -86,8 +86,7 @@ Bibliography::Bibliography() :
 // and the result is translated.
 
 // This creates a unique ID, named bid1, bid2, etc.
-Istring Bibliography::unique_bid()
-{
+auto Bibliography::unique_bid() -> Istring {
   last_bid++; 
   Buffer&B = biblio_buf4;
   B << bf_reset << "bid" << last_bid;
@@ -95,8 +94,7 @@ Istring Bibliography::unique_bid()
 }
 
 // This returns a bid. It may create one.
-Istring CitationItem::get_bid()
-{
+auto CitationItem::get_bid() -> Istring {
   if(bid.empty())
     bid = the_bibliography.unique_bid();
   return bid;
@@ -106,8 +104,7 @@ Istring CitationItem::get_bid()
 // to be solved later. In the case of \footcite[p.25]{Knuth}, 
 // the arguments of the function are foot and Knuth; the `p.25' will be 
 // considered elsewhere.
-Xmlp Parser::make_cit_ref(Istring type, Istring ref)
-{
+auto Parser::make_cit_ref(Istring type, Istring ref) -> Xmlp {
   int n = the_bibliography.find_citation_item(type,ref,true);
   Istring id = the_bibliography.citation_table[n].get_bid();
   Xmlp res = new Xml(np_ref,0);
@@ -117,8 +114,7 @@ Xmlp Parser::make_cit_ref(Istring type, Istring ref)
 
 // \cite[year][]{foo}is the same as \cite{foo}
 // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
-Istring bib_ns::normalise_for_bib(Istring w)
-{
+auto bib_ns::normalise_for_bib(Istring w) -> Istring {
   String S = w.c_str();
   if(strcmp(S,"year")==0) return the_names[cst_empty];
   if(!distinguish_refer)
@@ -411,8 +407,7 @@ void Bibliography::dump(Buffer& b)
 }
 
 // This reads conditionally a file. Returns true if the file exists.
-bool Bibtex::read0(Buffer&B, bib_from ct)
-{
+auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
   B.push_back(".bib");
   if(tralics_ns::find_in_path(B.c_str())) {
     read(main_ns::path_buffer.c_str(),ct);
@@ -460,8 +455,7 @@ void Bibtex::read1(const string& cur)
 
 // Handles one bib file for the raweb. Returns true if the file exists.
 // Extension can be foot, year or refer. New in Tralics 2.9.3 it can be any
-bool Bibtex::read2(bib_from pre)
-{
+auto Bibtex::read2(bib_from pre) -> bool {
   Buffer& B= biblio_buf4;
   B.reset();
   B.push_back(no_year);
@@ -614,24 +608,22 @@ void Parser::T_start_the_biblio()
 
 // Returns true if this is the same object.
 // returns false for \cite{Knuth} and \footcite{Knuth}
-bool CitationItem::match(Istring A, Istring B)
-{
+auto CitationItem::match(Istring A, Istring B) -> bool {
   return key==A && from == B;
 }
 
 // Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the
 // from field, but only if the entry is unsolved.
-bool CitationItem::match_star(Istring A)
-{
+auto CitationItem::match_star(Istring A) -> bool {
   return key==A && !is_solved();
 }
 
 // This finds a citation in the table. In the case \footcite{Kunth},
 // the first two arguments are the Istrings associated to foot and Knuth.
 // If not found, we may insert a new item (normal case), 
-// or return -1 (in case of failure) 
-int Bibliography::find_citation_item(Istring from, Istring key, bool insert)
-{
+// or return -1 (in case of failure)
+auto Bibliography::find_citation_item(Istring from, Istring key, bool insert)
+    -> int {
   int n = citation_table.size();
   for(int i=0;i<n;i++)
     if(citation_table[i].match(key,from))
@@ -645,9 +637,8 @@ int Bibliography::find_citation_item(Istring from, Istring key, bool insert)
 // the two arguments are the Istrings associated to foot and Knuth.
 // If not found, we try \cite[?]{Kunth}, using any possibility for the first 
 // argument (this matches only unsolved references). In case of failure
-// a new entry is added, of type FROM. 
-int Bibliography::find_citation_star(Istring from, Istring key)
-{
+// a new entry is added, of type FROM.
+auto Bibliography::find_citation_star(Istring from, Istring key) -> int {
   int n = find_citation_item(from,key,false);
   if(n>=0) return n;
   n = citation_table.size();
@@ -695,14 +686,12 @@ void Bbl::newline()
 }
 
 // Returns the index of the macro named name if it exists,  not_found otherwise.
-int Bibtex::look_at_macro(const Buffer& name)
-{
+auto Bibtex::look_at_macro(const Buffer &name) -> int {
   int h = name.hashcode(bib_hash_mod);
   return look_at_macro(h,name.c_str());
 }
 
-int Bibtex::look_at_macro(int h, String name)
-{
+auto Bibtex::look_at_macro(int h, String name) -> int {
   int n = all_macros.size();
   for(int i=0;i<n;i++) 
     if(all_macros[i].is_same(h,name)) return i;
@@ -714,8 +703,8 @@ int Bibtex::look_at_macro(int h, String name)
 // the macro is initialised to val. 
 // [ if xname true, we define a system macro, 
 //   otherwise we define/redefine user one]
-int Bibtex::find_a_macro(Buffer& name, bool insert, String xname, String val)
-{
+auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val)
+    -> int {
   if(xname) name << bf_reset << xname;
   int h = name.hashcode(bib_hash_mod);
   int res = look_at_macro(h,name.c_str());
@@ -735,8 +724,7 @@ void Bibtex::define_a_macro(String name, String value)
 }
 
 // Return an integer associated to a field position.
-field_pos Bibtex::find_field_pos(String s) const
-{  
+auto Bibtex::find_field_pos(String s) const -> field_pos {
   if(!s) return fp_unknown;
   Istring S = Istring(s);
   // Check is this has to be ignored
@@ -785,8 +773,7 @@ field_pos Bibtex::find_field_pos(String s) const
 }
 
 // Finds the type of an entry (or comment, string, preamble).
-entry_type Bibtex::find_type(String s)
-{
+auto Bibtex::find_type(String s) -> entry_type {
   if(s[0]==0) return type_comment;  // in case of error.
   Istring S = Istring(s);
 
@@ -821,9 +808,8 @@ entry_type Bibtex::find_type(String s)
   return type_unknown;
 }
 
-// Dual function. Returns the name of the thing. 
-name_positions bib_ns::type_to_string(entry_type x) 
-{
+// Dual function. Returns the name of the thing.
+auto bib_ns::type_to_string(entry_type x) -> name_positions {
   switch(x) {
   case type_article: return cstb_article;
   case type_book: return cstb_book;
@@ -862,8 +848,7 @@ void bib_ns::boot_ra_prefix(String s)
 }
 
 // This returns a prefix from ra_pretable, according to from and type_int.
-String BibEntry::ra_prefix() const
-{
+auto BibEntry::ra_prefix() const -> String {
   if(get_from() == from_refer) return ra_pretable[0];
   if(get_from()==from_foot) return ra_pretable[1];
   switch(type_int) {
@@ -893,8 +878,7 @@ String BibEntry::ra_prefix() const
 }
 
 // This finds a citation that matches exactly S
-BibEntry* Bibtex::find_entry(const CitationKey& s)
-{
+auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
   int len = all_entries.size();
   if(old_ra) {
     for(int i=0;i<len;i++) 
@@ -906,19 +890,16 @@ BibEntry* Bibtex::find_entry(const CitationKey& s)
   return 0;
 }
 
-bool CitationKey::is_same_lower_old(const CitationKey &w) const
-{ 
+auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
   if(!is_similar_lower(w)) return false;
   if(cite_prefix == w.cite_prefix) return true;
   if(cite_prefix == from_foot || w.cite_prefix== from_foot) return false;
   return true;
 }
 
-
 // This finds a citation whose lowercase equivalent is S.
 // Puts in N the number of citations found.
-BibEntry* Bibtex::find_lower_case(const CitationKey&s,int &n)
-{
+auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
   n = 0;
   int len = all_entries.size();
   BibEntry* res = 0;
@@ -940,8 +921,7 @@ BibEntry* Bibtex::find_lower_case(const CitationKey&s,int &n)
 // Returns -2 if we have \cite{knuth}, \footcite{knuth}
 // Returns 2  if we have \cite{KNUTH}, \footcite{knuth} or other mismatch
 // Returns 0 if nothing was found.
-BibEntry* Bibtex::find_similar(const CitationKey&s,int &n)
-{
+auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
   n = 0; 
   int len = all_entries.size();
   BibEntry* res = 0;
@@ -961,8 +941,7 @@ BibEntry* Bibtex::find_similar(const CitationKey&s,int &n)
 }
 
 // This makes a new entry.
-BibEntry* Bibtex::make_new_entry(const CitationKey& a, bib_creator b)
-{
+auto Bibtex::make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry * {
   return make_entry(a,b, the_bibliography.unique_bid());
 }
 
@@ -973,8 +952,8 @@ void Bibtex::make_entry(const CitationKey& a, Istring myid)
 }
 
 // Generic code
-BibEntry* Bibtex::make_entry(const CitationKey& a, bib_creator b, Istring myid)
-{
+auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid)
+    -> BibEntry * {
   BibEntry* X = new BibEntry;
   X->cite_key = a;
   X->why_me = b;
@@ -1092,8 +1071,7 @@ void Parser::T_empty_bibitem()
   the_stack.pop(np_citation);
 }
 
-Istring Bibtex::exec_bibitem(const string& w, string b)
-{
+auto Bibtex::exec_bibitem(const string &w, string b) -> Istring {
   BibEntry*X = find_entry(b.c_str(),w, because_all);
   if(X->type_int != type_unknown) {
     the_parser.parse_error("Duplicate bibliography entry ignored");
@@ -1103,7 +1081,6 @@ Istring Bibtex::exec_bibitem(const string& w, string b)
   X->set_explicit_cit();
   return X->get_unique_id();
 }
-
 
 // Translation of \citation{key}{userid}{id}{from}{type}[alpha-key]
 void Parser::T_citation ()
@@ -1233,9 +1210,8 @@ static const String scan_msgs[] = {
 // that should be 0, or at least 4 in absolute value
 // If the retval of scan_identifier0 is <=0, but not -4
 // Note: The error message must be output before skip_space,
-// in case we are at EOF. 
-bool Bibtex::scan_identifier(int what)
-{
+// in case we are at EOF.
+auto Bibtex::scan_identifier(int what) -> bool {
   int ret = scan_identifier0(what);
   if(ret) log_and_tty << scan_msgs[ret>0? ret : -ret];
   if(ret == 4 || ret == -4) {
@@ -1249,8 +1225,7 @@ bool Bibtex::scan_identifier(int what)
 // Scans an identifier. It will be in lower case in token_buf.
 // Scans also something after it. Invariant: at_eol() is false on entry.
 // it is also false on exit
-int Bibtex::scan_identifier0(int what)
-{
+auto Bibtex::scan_identifier0(int what) -> int {
   Buffer& B = token_buf;
   B.reset();
   Utf8Char c = cur_char();
@@ -1274,11 +1249,9 @@ int Bibtex::scan_identifier0(int what)
   return check_field_end(what);
 }
 
-
 // A bunch of functions called when we see the end of an identifier.
 // We start with a function that complains if first character is wrong.
-int Bibtex::wrong_first_char(Utf8Char c,int what)
-{
+auto Bibtex::wrong_first_char(Utf8Char c, int what) -> int {
   err_in_file(scan_msgs[what],false);
   if(c.is_digit())
     log_and_tty << "\nit cannot start with a digit";
@@ -1294,13 +1267,11 @@ int Bibtex::wrong_first_char(Utf8Char c,int what)
   return 4;
 }
 
-
 // We have seen @article, plus space, plus c. We want paren or brace.
 // Return 0 if OK, a negative value otherwise.
 // We read c; maybe additional characters in case of error
 // @comment(etc) is ignored
-int Bibtex::check_entry_end()
-{
+auto Bibtex::check_entry_end() -> int {
   if(token_buf=="comment") return 0; // don't complain
   Utf8Char c = cur_char();
   if(c=='(' || c=='{') return check_entry_end(0);
@@ -1316,8 +1287,7 @@ int Bibtex::check_entry_end()
 
 // We store in right_outer_delim the closing delimiter.
 // associated to the current char. We skip over spaces.
-int Bibtex::check_entry_end(int k)
-{
+auto Bibtex::check_entry_end(int k) -> int {
   right_outer_delim = cur_char() == '(' ? ')' : '}';
   advance();
   skip_space(); 
@@ -1326,9 +1296,8 @@ int Bibtex::check_entry_end(int k)
 
 // We have seen foo in foo=bar. We have skipped over spaces
 // Returns 0 if OK. We try to read some characters on the current line
-// in case of error 
-int Bibtex::check_field_end(int what)
-{
+// in case of error
+auto Bibtex::check_field_end(int what) -> int {
   if(cur_char()=='=') { 
     advance(); 
     skip_space(); 
@@ -1351,8 +1320,7 @@ int Bibtex::check_field_end(int what)
 // concatenated with something), a comma (there are more fields after foo)
 // or brace/paren indicating the end of the entry. Of course spaces are allowed.
 // Returns 0 ik OK, 4 otherwise.
-int Bibtex::check_val_end()
-{
+auto Bibtex::check_val_end() -> int {
   if(at_eol()) return 0;
   Utf8Char c = cur_char();
   if(c.is_space() || c=='#' || c==',' || c==right_outer_delim)
@@ -1367,8 +1335,7 @@ int Bibtex::check_val_end()
 // In any case, a tab is converted into a space, multiple space chars
 // are replaced by single ones.
 // We can safely assume that buffer is ASCII
-string Buffer::special_convert(bool init)
-{
+auto Buffer::special_convert(bool init) -> string {
   ptr = 0;
   if(init) skip_sp_tab_nl();
   biblio_buf1.reset();
@@ -1452,8 +1419,7 @@ void Bibtex::read_one_field(bool store)
 }
 
 // Returns true if because of \nocite{*}
-bool Bibtex::auto_cite()
-{
+auto Bibtex::auto_cite() -> bool {
   if(refer_biblio) return true;
   if(normal_biblio && nocitestar) return true;
   return false;
@@ -1461,8 +1427,8 @@ bool Bibtex::auto_cite()
 
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
-BibEntry* Bibtex::find_entry(String s, const string& prefix, bib_creator bc)
-{
+auto Bibtex::find_entry(String s, const string &prefix, bib_creator bc)
+    -> BibEntry * {
   CitationKey key(prefix.c_str(),s);
   BibEntry* X = find_entry(key);
   if(X) return X;
@@ -1479,10 +1445,9 @@ BibEntry* Bibtex::find_entry(String s, const string& prefix, bib_creator bc)
 // prefix can be from_year, from_refer, from_foot, from_any;
 // If create is true, it is either a crossref, or \nocite{*}+from_year
 // or from_refer, or bug; if prefix is from_any, we use from_year instead.
-// 
+//
 
-BibEntry* Bibtex::find_entry(String s,bool create, bib_creator bc)
-{
+auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
   bib_from prefix = default_prefix();
   if(create && prefix==from_any) prefix = from_year;
   CitationKey key(prefix,s);
@@ -1509,8 +1474,7 @@ BibEntry* Bibtex::find_entry(String s,bool create, bib_creator bc)
 // This does not create a new entry, complains if the entry exists
 // and is not empty. If OK, we start to fill the entry.
 
-BibEntry* Bibtex::see_new_entry(entry_type cn, int lineno)
-{
+auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
   for(int i= 0; i< int(omitcite_list.size ()); i++)
     if (omitcite_list [i] == cur_entry_name) {
       the_log << lg_start << "bib: Omitting " << cur_entry_name << lg_end;
@@ -1571,8 +1535,7 @@ void Bibtex::parse_one_field (BibEntry* X)
 
 // This is non trivial, because we have a fixed-sized array and a varying size
 // return true if the field is not already filled.
-bool BibEntry::store_field(field_pos where)
-{
+auto BibEntry::store_field(field_pos where) -> bool {
   if(int(where) < fp_unknown) {
     if(all_fields[where].empty()) {
       all_fields[where] = field_buf.special_convert(true);
@@ -1586,7 +1549,6 @@ bool BibEntry::store_field(field_pos where)
     } else return false;
   }
 }
-
 
 // This parses an @something.
 void Bibtex::parse_one_item()
@@ -1713,12 +1675,9 @@ void Bibtex::parse_a_file()
 //
 // Working with the entries
 
-
-bool xless(BibEntry*A,BibEntry*B)
-{
+auto xless(BibEntry *A, BibEntry *B) -> bool {
   return  A->Sort_label() < B->Sort_label();
 }
-
 
 // This is the main function.
 void Bibtex::work()
@@ -1889,14 +1848,11 @@ void BibEntry::format_author(bool au)
   bbl.newline();
 }
 
-
-String CitationKey::from_to_string() const
-{
+auto CitationKey::from_to_string() const -> String {
   if(cite_prefix==from_year) return "year";
   else if(cite_prefix==from_refer) return "refer";
   else return "foot";
 }
-
 
 void BibEntry::call_type()
 {
@@ -2069,8 +2025,7 @@ void BibEntry::call_type_special()
 // In the bibliobraphy \url="foo bar" 
 // gives \href{foobar}{\url{foo\allowbreak bar}}
 // We handle here the first string
-string Buffer::remove_space(const string& x)
-{
+auto Buffer::remove_space(const string &x) -> string {
   int n = x.size();
   reset();
   for(int i=0;i<n;i++)
@@ -2079,8 +2034,7 @@ string Buffer::remove_space(const string& x)
 }
 
 // We create here the second string
-string Buffer::insert_break(const string& x)
-{
+auto Buffer::insert_break(const string &x) -> string {
   int n = x.size();
   reset();
   push_back("{\\url{");
@@ -2150,8 +2104,7 @@ void Buffer::skip_over_brace()
 }
 
 // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
-string bib_ns::first_three(const string& s)
-{
+auto bib_ns::first_three(const string &s) -> string {
   Buffer& B = biblio_buf1;
   B.reset(); B.push_back(s);
   B.reset_ptr();
@@ -2168,8 +2121,7 @@ string bib_ns::first_three(const string& s)
 
 // In the case of `Lo{\"i}c', returns  `{\"i}c' for k=2.
 // In the case of `Lo\"i c', returns the whole string.
-string bib_ns::last_chars(const string& s,int k)
-{
+auto bib_ns::last_chars(const string &s, int k) -> string {
   Buffer& B = biblio_buf1;
   B.reset();
   B.push_back(s);
@@ -2183,8 +2135,7 @@ string bib_ns::last_chars(const string& s,int k)
 }
 
 // Signals an error if the year is invalid in the case of refer.
-bool Bibtex::wrong_class(int y, const string& Y,bib_from from)
-{
+auto Bibtex::wrong_class(int y, const string &Y, bib_from from) -> bool {
   if(from !=from_refer) return false;
   if(old_ra) return false;
   int ry = the_parser.get_ra_year();
@@ -2215,8 +2166,7 @@ void BibEntry::add_warning(int dy)
 
 
 // Converts cite:foo into foo, with some heuristic tests.
-string bib_ns::skip_dp(const string& str)
-{
+auto bib_ns::skip_dp(const string &str) -> string {
   String s = str.c_str();
   int i=0;
   while(s[i] && s[i] != ':') i++;
@@ -2278,8 +2228,7 @@ void BibEntry::presort(int serial)
 
 // True if \sortnoop, \SortNoop, \noopsort plus brace or space 
 // First char to test is at i+1
-bool bib_ns::is_noopsort(const string& s, int i)
-{
+auto bib_ns::is_noopsort(const string &s, int i) -> bool {
   int n = s.size();
   if(i+10>=n) return false;
   if(s[i+10] != '{' && !is_space(s[i+10])) return false;
@@ -2293,7 +2242,6 @@ bool bib_ns::is_noopsort(const string& s, int i)
     return true;
   return false;
 }
-
 
 // removes braces in the case title="study of {$H^p}, part {I}"
 // Brace followed by Uppercase or dollar
@@ -2477,8 +2425,7 @@ void NameSplitter::handle_the_names()
   }
 }
 
-bool Buffer::find_and(bchar_type* table)
-{
+auto Buffer::find_and(bchar_type *table) -> bool {
   for(;;) {
     char c = head();
     if(c==0) return true;
@@ -2488,8 +2435,7 @@ bool Buffer::find_and(bchar_type* table)
 }
 
 // True if this is an `and'
-bool Buffer::is_and(int k)
-{
+auto Buffer::is_and(int k) -> bool {
   char c = buf[k];
   if(c != 'a' && c!='A') return false;
   c = buf[k+1];
@@ -2501,15 +2447,13 @@ bool Buffer::is_and(int k)
   return true;
 }
 
-Buffer& operator << (Buffer& X, const Bchar& Y)
-{
+auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
   int i = Y.first;
   int j = Y.last;
   for(int k=i;k<j;k++)
     if(Y.table[k] != bct_bad) X.push_back(name_buffer[k]);
   return X;
 }
-
 
 // Very complicated function. Assume that the names are Alpha,
 // Bravo, Charlie, Delta, usw. The key will be
@@ -2600,16 +2544,14 @@ void Bchar::find_a_comma(int& first_c, int& second_c, int&howmany) const
     }
 }
 
-int Bchar::find_a_space() const 
-{
+auto Bchar::find_a_space() const -> int {
   for(int i=last-1; i>=first;i--)
     if(like_special_space(i)) return i;
   return last;
 }
 
-// 
-int Bchar::find_a_lower() const 
-{
+//
+auto Bchar::find_a_lower() const -> int {
   for(int i=first; i<last-1;i++) {
     if(!like_space(i)) continue;
     char c = '0';
@@ -2629,8 +2571,7 @@ void Bchar::invent_spaces()
 }
 
 // In J.G. Grimm,only the first dot matches.
-bool Buffer::insert_space_here(int k) const
-{
+auto Buffer::insert_space_here(int k) const -> bool {
   if(k<=0) return false;
   if(buf[k] != '.') return false;
   if(!is_upper_case(buf[k+1])) return false;
@@ -2639,8 +2580,7 @@ bool Buffer::insert_space_here(int k) const
 }
 
 // Returns true if character can be removed (between names)
-bool Bchar::is_junk(int i)
-{
+auto Bchar::is_junk(int i) -> bool {
   bchar_type b = table[i];
   if(b==bct_comma) {
     the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
@@ -2668,8 +2608,7 @@ void  Bchar::remove_junk()
   }
 }
 
-bool NameSplitter::want_handle_key(int s, bool last)
-{
+auto NameSplitter::want_handle_key(int s, bool last) -> bool {
   if(s<4) return true;
   if(s>4) return false;
   if(last) return true;
@@ -2677,8 +2616,7 @@ bool NameSplitter::want_handle_key(int s, bool last)
   return false;
 }
 
-bool NameSplitter::is_this_other()
-{
+auto NameSplitter::is_this_other() -> bool {
   if(!first_name.empty()) return false;
   if(!jr_name.empty()) return false;
   int a = last_name.first;
@@ -2720,8 +2658,7 @@ void Bchar::make_key_aux(bool sw, Buffer& B)
   }
 }
 
-bool Bchar::is_name_start(int i)
-{
+auto Bchar::is_name_start(int i) -> bool {
   bchar_type A = table[i-1];
   bchar_type B = table[i];
   if(A!=bct_space && A != bct_dash && A!= bct_tilde) return false;
@@ -2729,8 +2666,7 @@ bool Bchar::is_name_start(int i)
   return true;
 }
 
-int Bchar::print_for_key(Buffer& X)
-{
+auto Bchar::print_for_key(Buffer &X) -> int {
   int i = first;
   while(i<last && table[i] == bct_bad) i++;
   if(i>=last) return i;
@@ -2747,8 +2683,7 @@ int Bchar::print_for_key(Buffer& X)
   return print(X);
 }
 
-int Bchar::print(Buffer& X)
-{
+auto Bchar::print(Buffer &X) -> int {
   int i = first;
   while(i<last&&table[i] == bct_bad) i++;
   if(i>=last) return i;
@@ -2761,8 +2696,7 @@ int Bchar::print(Buffer& X)
   return i;
 }
 
-int Bchar::special_print(Buffer& X, bool sw)
-{
+auto Bchar::special_print(Buffer &X, bool sw) -> int {
   int i = print(X);
   if(sw) X.push_back('.');
   X.no_double_dot();

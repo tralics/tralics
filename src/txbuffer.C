@@ -21,13 +21,12 @@ namespace {
   const String gptable[] = { "pt", "fil", "fill", "filll","","mu"};
 }
 static Buffer local_buf; // another buffer
-extern int txgethostname(char *name, size_t len);
-
+extern auto txgethostname(char *name, size_t len) -> int;
 
 namespace buffer_ns {
-  int current_escape_char();
-  String null_cs_name();
-  void dump_identification(String);
+auto current_escape_char() -> int;
+auto null_cs_name() -> String;
+void dump_identification(String);
 };
 
 
@@ -43,19 +42,14 @@ Buffer::Buffer() :  wptr(0), asize(128), ptr(0), ptr1(0)
   buf[0]=0;
 }
 
-String Buffer::convert(int k) const 
-{ 
-  return tralics_ns::make_string(buf+k); 
+auto Buffer::convert(int k) const -> String {
+  return tralics_ns::make_string(buf+k);
 }
 
-bool is_letter (char c)
-{
-  return is_upper_case(c) || is_lower_case(c);
-}
+auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
 // This returns a copy of the string
-String tralics_ns::make_string (String a)
-{
+auto tralics_ns::make_string(String a) -> String {
   int n = strlen(a);
   the_parser.my_stats.one_more_string(n+1);
   char* res = new char[n+1];
@@ -64,21 +58,18 @@ String tralics_ns::make_string (String a)
 }
 
 // Returns of copy of the buffer as a string.
-string Buffer::to_string() const 
-{ 
+auto Buffer::to_string() const -> string {
   int n = strlen(buf);
   the_parser.my_stats.one_more_string(n+1);
-  return string(buf); 
+  return string(buf);
 }
 
 // Returns a copy, starting at k.
-string Buffer::to_string(int k) const
-{ 
+auto Buffer::to_string(int k) const -> string {
   int n = strlen(buf+k);
   the_parser.my_stats.one_more_string(n+1);
-  return string(buf+k); 
+  return string(buf+k);
 }
-
 
 // Replaces all \r by a space.
 void Buffer::no_control_M()
@@ -125,8 +116,7 @@ void Buffer::push_back_xml_char (uchar c)
 }
 
 // Converts the buffer into a string.
-String Buffer::convert_to_str() const
-{
+auto Buffer::convert_to_str() const -> String {
   the_parser.my_stats.one_more_string(wptr+1);
   char* aux = new char[wptr+1];
   strcpy(aux,buf);
@@ -222,19 +212,16 @@ void Buffer::push_back_int(int n)
 
 // In case of error, we add the current line number as attribute 
 // via this function
-Istring Parser::cur_line_to_istring()
-{
+auto Parser::cur_line_to_istring() -> Istring {
   Buffer&  B = local_buf;
   B.reset();
   B.push_back_int(get_cur_line());
   return Istring(B.c_str());
 }
 
-
 // Returns 0, 1, 2 depending on whether there is \begin or \end in the buffer
 // between ptr1 and ptr.
-int Buffer::is_begin_end() const
-{
+auto Buffer::is_begin_end() const -> int {
   if(contains_here("\\begin")) return 1;
   if(contains_here("\\end")) return 2;
   return 0;
@@ -242,8 +229,7 @@ int Buffer::is_begin_end() const
 
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
-bool Buffer::after_slash()
-{
+auto Buffer::after_slash() -> bool {
   if(head()!='\\')  return false;
   set_ptr1();
   advance();
@@ -254,8 +240,7 @@ bool Buffer::after_slash()
 }
 
 // Sets (ptr1,ptr) to the next macro. In case of failure, returns false.
-bool Buffer::next_macro()
-{
+auto Buffer::next_macro() -> bool {
   if(at_eol()) return false;
   while(head() && head() != '\\') advance();
   return after_slash();
@@ -263,8 +248,7 @@ bool Buffer::next_macro()
 
 // Sets ptr to the start of the next macro. Ignores non-letter macros
 // Handles comments and newlines. Returns false in case of failure.
-bool Buffer::next_macro_spec()
-{
+auto Buffer::next_macro_spec() -> bool {
   for(;;) {
     if(at_eol()) return false;
     if(head()=='%') {
@@ -278,8 +262,7 @@ bool Buffer::next_macro_spec()
 
 // Sets (ptr1,ptr) to the next macro, if it is \begin or \end.
 // Returns false in case of failure.
-bool Buffer::next_env_spec() 
-{
+auto Buffer::next_env_spec() -> bool {
   for(;;) {
     if(!next_macro_spec()) return false;
     set_ptr1();
@@ -292,8 +275,7 @@ bool Buffer::next_env_spec()
 // Searches for \begin{motscle} or \end{motscle}.
 // Sets ptr1 to location of \, ptr to after closing brace.
 // Returns false in case of failure.
-bool Buffer::next_kw()
-{
+auto Buffer::next_kw() -> bool {
   for(;;) {
     if(!next_env_spec()) return false;
     if(contains_braced("motscle")) return true;
@@ -302,8 +284,7 @@ bool Buffer::next_kw()
 
 // Searches for a command in the NULL terminated table.
 // returns the index if found. Sets (ptr1,ptr).
-int Buffer::see_something(const String* Table)
-{
+auto Buffer::see_something(const String *Table) -> int {
   reset_ptr();
   for(;;) {
     if(!next_macro()) return -1;
@@ -316,8 +297,7 @@ int Buffer::see_something(const String* Table)
 }
 
 // Splits at \begin or \end. The return value says if it's \begin or \end.
-int Buffer::see_begin_end(Buffer& before, Buffer& after)
-{
+auto Buffer::see_begin_end(Buffer &before, Buffer &after) -> int {
   ptr = 0;
   int res = 0;
   for(;;) {
@@ -367,8 +347,7 @@ void Buffer::no_newline ()
 // Single brace match. When we see a newline, it will later be replaced
 // by some other character. Search starts at ptr.
 // Returns 0, 1 or 2. Sets ptr to the position after the char.
-int Buffer::find_brace()
-{
+auto Buffer::find_brace() -> int {
 
   for(;;) {
     char c = head();
@@ -380,8 +359,7 @@ int Buffer::find_brace()
 }
 
 // Same for [] and {}
-int Buffer::find_bracket()
-{
+auto Buffer::find_bracket() -> int {
   for(;;) {
     char c = head();
     if(c==0 || c=='\n') return 0;
@@ -395,8 +373,7 @@ int Buffer::find_bracket()
 
 // We assume that there is an open brace at ptr.
 // Sets ptr to the matching closiung brace. Returns false in case of trouble.
-bool Buffer::full_brace_match()
-{
+auto Buffer::full_brace_match() -> bool {
   int level = 0;
   for(;;) {
     uchar c = next_char();
@@ -408,8 +385,7 @@ bool Buffer::full_brace_match()
 
 // Finds a non hidden closing bracket.
 // Assumes that braces do match. [}{] would be OK.
-bool Buffer::full_bracket_match()
-{
+auto Buffer::full_bracket_match() -> bool {
   int level = 0;
   advance();
   for(;;) {
@@ -423,8 +399,7 @@ bool Buffer::full_bracket_match()
 
 // True if letter (or digit, hyphen, but not first char).
 // Is also ok in case of underscore (Laurent Pierron)
-bool Buffer::is_letter_digit() const
-{
+auto Buffer::is_letter_digit() const -> bool {
   for(int j = 0; j<wptr; j++) {
     if(is_letter(buf[j])) continue;
     if(j==0) return false;
@@ -439,8 +414,8 @@ bool Buffer::is_letter_digit() const
 // Find a command, but in some case sets a flag if we see a dollar sign
 // Stops at a comment.  If it returns true, then we have a command
 // between ptr1 and ptr
-bool Buffer::next_macro_spec(bool incat, int& com_loc, bool& seen_dollar)
-{
+auto Buffer::next_macro_spec(bool incat, int &com_loc, bool &seen_dollar)
+    -> bool {
   com_loc = -1;
   for(;;) {
     char c = head();
@@ -453,8 +428,7 @@ bool Buffer::next_macro_spec(bool incat, int& com_loc, bool& seen_dollar)
 }
 
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
-string Buffer::substring()
-{
+auto Buffer::substring() -> string {
   char c = buf[ptr];
   buf[ptr] = 0;
   string s = c_str(ptr1);
@@ -486,8 +460,7 @@ void buffer_ns::dump_identification(String s)
   main_ns::log_or_tty << "Configuration file identification: " << s;
 }
 
-bool Buffer::push_back_newline_spec()
-{
+auto Buffer::push_back_newline_spec() -> bool {
   push_back('\n');
   if(wptr==1) return true; // keep empty lines
   if(buf[0]=='#') {
@@ -518,10 +491,8 @@ bool Buffer::push_back_newline_spec()
   return true;
 }
 
-
 // This returns the number of keywords in the list.
-int Splitter::count() const
-{
+auto Splitter::count() const -> int {
   int n = 1;
   for(int i=0;i<size;i++)
     if(S[i]==',') n++;
@@ -529,8 +500,7 @@ int Splitter::count() const
 }
 
 // This returns the next keyword
-String Splitter::get_next_raw() 
-{
+auto Splitter::get_next_raw() -> String {
   int p = pos;
   while(pos<size && S[pos] != ',') pos++;
   int n = pos - p;
@@ -544,8 +514,7 @@ String Splitter::get_next_raw()
 
 // Returns the next keyword, or empty string if there is none.
 // Uses next_for_splitter to see the start and end of the keyword
-String Splitter::get_next ()
-{
+auto Splitter::get_next() -> String {
   String T = get_next_raw();
   while(T[0] && is_space(T[0])) T++;
   if(!T[0]) return "";
@@ -554,7 +523,7 @@ String Splitter::get_next ()
   B.push_back(T);
   B.remove_space_at_end();
   return B.c_str();
-} 
+}
 // Constructs the next pair. We first call next_for_splitter,
 // Assume that this puts Key=Val in the buffer. We set key and val.
 // If no equals sign is given, the string is the key, the value is empty.
@@ -574,8 +543,7 @@ void Splitter::extract_keyval(string& key, string& val)
 }
 
 // Return the value associated to the key x, or empty string if not found.
-string SpecialHash::find(String x) const
-{
+auto SpecialHash::find(String x) const -> string {
   for(int i=0;i<size;i++)
     if(key[i] == x) return value[i];
   return "";
@@ -618,8 +586,7 @@ void Buffer::remove_space_at_end()
 }
 
 // This removes initial and final spaces. The result is a temporary.
-String Buffer::without_end_spaces(String T)
-{
+auto Buffer::without_end_spaces(String T) -> String {
   while(is_space(T[0])) T++;
   if(!T[0]) return "";
   reset();
@@ -631,8 +598,7 @@ String Buffer::without_end_spaces(String T)
 }
 
 // Returns the current escape char (used for printing)
-int buffer_ns::current_escape_char()
-{
+auto buffer_ns::current_escape_char() -> int {
   return the_parser.eqtb_int_table[escapechar_code].get_val();
 }
 
@@ -658,8 +624,7 @@ void Buffer::insert_escape_char_raw()
 
 // Returns a temporary string, corresponding to the command with
 // an empty name, without initial escape char.
-String buffer_ns::null_cs_name()
-{
+auto buffer_ns::null_cs_name() -> String {
   int c = buffer_ns::current_escape_char();
   if(c=='\\') return "csname\\endcsname";
   else if(c>0 && c< int(nb_characters)) {
@@ -670,9 +635,8 @@ String buffer_ns::null_cs_name()
     return B.c_str();
   } else if(c==0)
     return "csname^^@endcsname";
-  else return "csnameendcsname"; 
+  else return "csnameendcsname";
 }
-
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
 void Parser::tex_string(Buffer&B,Token T, bool esc)
@@ -694,8 +658,7 @@ void Parser::tex_string(Buffer&B,Token T, bool esc)
 // Returns a temporary string: the name of the token
 // This is used for printing errors in the transcript file
 // Uses the function below, except for characters
-String Token::tok_to_str() const
-{
+auto Token::tok_to_str() const -> String {
   Buffer&B = local_buf;
   B.reset();
   if(!is_a_char() || cmd_val() == eol_catcode) {
@@ -723,8 +686,7 @@ String Token::tok_to_str() const
 // This is used when printing a token list
 
 // returns true if a space could be added after the token
-bool Buffer::push_back(Token T)
-{
+auto Buffer::push_back(Token T) -> bool {
   static Buffer Tmp;
   output_encoding_type enc = the_main->get_log_encoding();
   if(T.is_null()) { push_back("\\invalid."); return false; }
@@ -798,8 +760,7 @@ void Buffer::insert_token(Token T,bool sw)
 }
 
 // In case of error, this puts a token in the XML tree
-Istring Buffer::convert_for_xml_err(Token T)
-{
+auto Buffer::convert_for_xml_err(Token T) -> Istring {
   reset();
   if(T.is_null()) push_back("\\invalid."); 
   else if(T.char_or_active()) { 
@@ -855,8 +816,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit)
 }
 
 // Useful function for scan_dimen.
-String Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu)
-{
+auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
   reset();
   push_back("+scandimen for ");
   push_back(T);
@@ -914,64 +874,53 @@ void Buffer::push_back(const SthInternal& x)
   }
 }
 
-
-Logger& operator<<(Logger& fp, Token t)
-{
+auto operator<<(Logger &fp, Token t) -> Logger & {
   return fp << t.tok_to_str();
 }
 
-
-ostream& operator<<(ostream& fp, Token x)
-{
+auto operator<<(ostream &fp, Token x) -> ostream & {
   return fp << x.tok_to_str();
 }
 
-ostream& operator<<(ostream& fp, const ScaledInt& x)
-{
+auto operator<<(ostream &fp, const ScaledInt &x) -> ostream & {
   thebuffer.reset();
   thebuffer.push_back(x,glue_spec_pt);
   return fp << thebuffer.c_str();
 }
 
-Logger& operator<<(Logger& X,  const ScaledInt& x)
-{
+auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
   *(X.fp) << x;
   return X;
 }
 
-ostream& operator<<(ostream& fp, const Glue& x)
-{
+auto operator<<(ostream &fp, const Glue &x) -> ostream & {
   thebuffer.reset();
   thebuffer.push_back(x);
   fp << thebuffer.c_str();
   return fp;
 }
 
-Logger& operator<<(Logger& X,  const Glue& x)
-{
+auto operator<<(Logger &X, const Glue &x) -> Logger & {
   *(X.fp) << x;
   return X;
 }
 
-ostream& operator<<(ostream& fp, const SthInternal& x)
-{
+auto operator<<(ostream &fp, const SthInternal &x) -> ostream & {
   thebuffer.reset();
   thebuffer.push_back(x);
   fp << thebuffer.c_str();
   return fp;
 }
 
-Logger& operator<<(Logger& X, const SthInternal& x)
-{
+auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
   thebuffer.reset();
   thebuffer.push_back(x);
   X << thebuffer.c_str();
   return X;
 }
 
-// We use internal encoding here. 
-ostream& operator<<(ostream& fp, const Utf8Char& x)
-{
+// We use internal encoding here.
+auto operator<<(ostream &fp, const Utf8Char &x) -> ostream & {
   if(x.is_ascii()) fp << x.ascii_value();
   else {
     thebuffer.reset();
@@ -981,8 +930,7 @@ ostream& operator<<(ostream& fp, const Utf8Char& x)
   return fp;
 }
 // Duplicate code...
-FullLogger& operator<<(FullLogger& fp, const Utf8Char& x)
-{
+auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger & {
   if(x.is_ascii()) fp << x.ascii_value();
   else {
     thebuffer.reset();
@@ -992,10 +940,8 @@ FullLogger& operator<<(FullLogger& fp, const Utf8Char& x)
   return fp;
 }
 
-
-// We use log encoding here. 
-Logger& operator<<(Logger& fp, const Utf8Char& x)
-{
+// We use log encoding here.
+auto operator<<(Logger &fp, const Utf8Char &x) -> Logger & {
   if(x.is_ascii()) fp << x.ascii_value();
   else {
     thebuffer.reset();
@@ -1004,7 +950,6 @@ Logger& operator<<(Logger& fp, const Utf8Char& x)
   }
   return fp;
 }
-
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
 void Buffer::push_back_roman(int n)
@@ -1035,18 +980,15 @@ void Buffer::push_back_Roman(int n)
 }
 
 // True is s is at ptr. If so, updates ptr
-bool Buffer::is_here(String s)
-{
+auto Buffer::is_here(String s) -> bool {
   int n = strlen(s);
   if(strncmp(buf+ptr,s,n) !=0) return false;
   ptr += n;
   return true;
 }
 
-
 // True if this line contains only a comment
-bool Buffer::tex_comment_line() const
-{
+auto Buffer::tex_comment_line() const -> bool {
   int j = 0;
   for(;;) {
     uchar c = buf[j];
@@ -1058,8 +1000,7 @@ bool Buffer::tex_comment_line() const
 }
 
 // returns the document class. value in aux
-bool Buffer::find_documentclass(Buffer&aux)
-{
+auto Buffer::find_documentclass(Buffer &aux) -> bool {
   String cmd = "\\documentclass";
   String s = strstr(buf,cmd);
   if(!s) return false;
@@ -1090,10 +1031,8 @@ bool Buffer::find_documentclass(Buffer&aux)
   return true;
 }
 
-
 // returns the configuration value in aux
-bool Buffer::find_configuration(Buffer&aux)
-{
+auto Buffer::find_configuration(Buffer &aux) -> bool {
   if (buf[0]!='%') return false;
   String s = strstr(buf,"ralics configuration file");
   if(!s) return false;
@@ -1116,8 +1055,7 @@ bool Buffer::find_configuration(Buffer&aux)
 }
 
 // returns the configuration value in aux
-int Buffer::find_doctype()
-{
+auto Buffer::find_doctype() -> int {
   if (buf[0]!='%') return 0;
   String S = "ralics DOCTYPE ";
   String s = strstr(buf,S);
@@ -1131,8 +1069,7 @@ int Buffer::find_doctype()
 
 // If the buffer holds a single char (plus space) returns it.
 // Note: this returns 0 in case of a non-7bit character
-char Buffer::single_char() const
-{
+auto Buffer::single_char() const -> char {
   int j = skip_space(0);
   if(buf[j]==0) return 0;
   char c = buf[j];
@@ -1144,8 +1081,7 @@ char Buffer::single_char() const
 
 // If the buffer contains a small positive number returns it.
 // Otherwise returns -1;
-int Buffer::get_int_val() const
-{
+auto Buffer::get_int_val() const -> int {
   int n = 0;
   for(int p=0;;p++) {
     char c = buf[p];
@@ -1165,8 +1101,7 @@ void Buffer::init_from_buffer(Buffer& b)
   if(!b.empty()) push_back(b.buf);
 }
 
-bool Buffer::find_char(char c)
-{
+auto Buffer::find_char(char c) -> bool {
   ptr = 0;
   while(head() && head() != c)
     advance();
@@ -1174,8 +1109,7 @@ bool Buffer::find_char(char c)
 }
 
 // splits foo:bar into foo and bar
-bool Buffer::split_at_colon(string& before,string& after)
-{
+auto Buffer::split_at_colon(string &before, string &after) -> bool {
   if(find_char(':')) {
     kill_at(ptr);
     after = to_string(ptr+1);
@@ -1186,12 +1120,9 @@ bool Buffer::split_at_colon(string& before,string& after)
   }
 }
 
-
-
 // Sets ptr1 to the first non-space
 // sets ptr to the next equals sign. Returns false if no such sign exists
-bool Buffer::find_equals()
-{
+auto Buffer::find_equals() -> bool {
   skip_sp_tab_nl();
   set_ptr1();
   while(head() && head() != '=')
@@ -1203,8 +1134,7 @@ bool Buffer::find_equals()
 // removes the spaces just before.
 // puts a null char there.
 // returns false in case of trouble (only spaces).
-bool Buffer::backup_space()
-{
+auto Buffer::backup_space() -> bool {
   int j = ptr;
   while(j>ptr1 &&is_spaceh(j-1))
     j --;
@@ -1216,8 +1146,7 @@ bool Buffer::backup_space()
 // If there is 'foobar' at ptr, then puts ptr1 to the char after 
 // the quote, replaces the second quote by a null.
 // returns false in  case of trouble.
-bool Buffer::string_delims()
-{
+auto Buffer::string_delims() -> bool {
   skip_sp_tab_nl();
   char c = head();
   if(!c) return false;
@@ -1232,8 +1161,7 @@ bool Buffer::string_delims()
 // Assumes the buffer is of the form foo/bar/etc, 
 // with a final slash; returns the next item; Retval false if no string found
 
-bool Buffer::slash_separated(string&a)
-{
+auto Buffer::slash_separated(string &a) -> bool {
   static Buffer tmp;
   tmp.reset();
   int p = 0;
@@ -1259,9 +1187,8 @@ bool Buffer::slash_separated(string&a)
   return true;
 }
 
-// Returns the substring between a and b. 
-String Buffer::some_substring(int a, int b)
-{
+// Returns the substring between a and b.
+auto Buffer::some_substring(int a, int b) -> String {
   int c = b-a;
   char* S = new char [c+1];
   for(int j=0;j<c;j++)
@@ -1272,8 +1199,7 @@ String Buffer::some_substring(int a, int b)
 
 // Returns the substring between a and b. 
 // Assume this is not substring_buf
-string Buffer::some_sub_string(int a, int b)
-{
+auto Buffer::some_sub_string(int a, int b) -> string {
   int c = b-a;
   substring_buf.reset();
   substring_buf.alloc(c+1);
@@ -1298,8 +1224,7 @@ void Buffer::push_back_unless_punct(char c)
 
 // Tries to read an argument. Sets ptr1 to after the opening brace
 // ptr to the closing brace.
-bool Buffer::fetch_spec_arg()
-{
+auto Buffer::fetch_spec_arg() -> bool {
   skip_sp_tab_nl();
   if(head() != '{') return false;
   advance();
@@ -1313,8 +1238,7 @@ bool Buffer::fetch_spec_arg()
 }
 
 // Returns true if the string S is between ptr1 and ptr.
-bool Buffer::contains_here(String s) const
-{
+auto Buffer::contains_here(String s) const -> bool {
   int k = ptr1,j=0;
   for(;;) {
     char c = s[j];
@@ -1326,8 +1250,7 @@ bool Buffer::contains_here(String s) const
 
 // Returns true if the buffer contains the string s with braces.
 // After that, ptr1 is reset, ptr set to after the closing brace.
-bool Buffer::contains_braced(String s)
-{
+auto Buffer::contains_braced(String s) -> bool {
   int k = get_ptr1();
   if(!fetch_spec_arg()) return false;
   if(!contains_here(s)) return false;
@@ -1338,8 +1261,7 @@ bool Buffer::contains_braced(String s)
 
 // Returns true if the buffer contains \end{env} with spaces.
 // (used for detecting the end of a verbatim environment).
-bool Buffer::contains_env(String env) 
-{
+auto Buffer::contains_env(String env) -> bool {
   skip_sp_tab_nl();
   ptr1 = ptr;
   ptr = ptr1+4;
@@ -1351,8 +1273,7 @@ bool Buffer::contains_env(String env)
 }
 
 // returns true if the file exists with extension s.
-bool Image::file_exists(String s)
-{
+auto Image::file_exists(String s) -> bool {
   local_buf << bf_reset << name << '.' << s;
   return tralics_ns::file_exists(local_buf.c_str());
 }
@@ -1455,8 +1376,7 @@ void Parser::finish_images()
 			<< check_image2 << ".\n";
 }
 
-string Buffer::get_machine_name()
-{
+auto Buffer::get_machine_name() -> string {
   reset();
   alloc(200);
   if(txgethostname(buf,199)!=0) push_back("unknown");
@@ -1478,16 +1398,14 @@ void Buffer::optslash()
 }
 
 // returns location of last slash in the buffer
-int Buffer::last_slash() const
-{
+auto Buffer::last_slash() const -> int {
   int k = -1;
   for(int i=0;i<wptr;i++) if (buf[i] == '/') k = i;
   return k;
 }
 
 // True if the string s is at the end of the buffer
-bool Buffer::is_at_end(String s) const
-{
+auto Buffer::is_at_end(String s) const -> bool {
   int n = strlen(s);
   return wptr>n && strcmp(buf+wptr-n,s)==0;
 }

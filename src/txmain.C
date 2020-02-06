@@ -92,18 +92,18 @@ namespace bib_ns {
 namespace main_ns {
   void perl_assign(fstream*fp, String name, string value);
   void perl_assign(fstream*fp, String name, bool value);
-  bool try_conf(const string&);
+  auto try_conf(const string &) -> bool;
   void find_conf_path();
-  param_args find_param_type(String s);
-  bool search_in_confdir(const string & s);
+  auto find_param_type(String s) -> param_args;
+  auto search_in_confdir(const string &s) -> bool;
   void new_in_dir(String);
   void check_in_dir();
-  string hack_for_input(const string& s);
-  bool search_in_pool(const string& name);
+  auto hack_for_input(const string &s) -> string;
+  auto search_in_pool(const string &name) -> bool;
   void register_file(LinePtr*);
-  bool use_pool(LinePtr&L);
-  bool param_hack(String);
-  int extract_year(Buffer&B,Buffer&C);
+  auto use_pool(LinePtr &L) -> bool;
+  auto param_hack(String) -> bool;
+  auto extract_year(Buffer &B, Buffer &C) -> int;
   void check_lowercase(Buffer&B);
   void check_year(int,Buffer&B,const string&,const string&);
 }
@@ -155,16 +155,14 @@ int tcgethostname(char *name , size_t len)
   return -1;
 }
 #else
-int txgethostname(char *name, size_t len)
-{
+auto txgethostname(char *name, size_t len) -> int {
   return gethostname(name,len);
 }
 #endif
 
 
 // Converts the symbolic OS string to a real string
-String MainClass::print_os() const 
-{
+auto MainClass::print_os() const -> String {
   switch(cur_os) {
   case st_windows: return "Windows";
   case st_decalpha: return "Dec alpha";  
@@ -175,7 +173,6 @@ String MainClass::print_os() const
   default: return "Unknown";
   }
 }
-
 
 // Ctor of the main class
 MainClass::MainClass() : 
@@ -208,8 +205,7 @@ MainClass::MainClass() :
 
 // Returns true if prefix is the path to he conf_path
 // Tries to see if book.clt is there
-bool main_ns::try_conf(const string& prefix)
-{
+auto main_ns::try_conf(const string &prefix) -> bool {
   int n = prefix.size(); 
   if(n==0) return false;
   Buffer& b = confbuf;
@@ -267,8 +263,7 @@ void main_ns::check_in_dir()
 
 // If input file has the form foo/bar, then \jobname is foo/bar
 // but in some case we prefer the short name bar
-string main_ns::hack_for_input(const string& s)
-{
+auto main_ns::hack_for_input(const string &s) -> string {
   Buffer&B = path_buffer;
   B << bf_reset << s;
   int k = B.last_slash();
@@ -302,18 +297,15 @@ void main_ns::register_file(LinePtr* x)
   file_pool.push_back(x);
 }
 
-bool main_ns::use_pool(LinePtr&L)
-{
+auto main_ns::use_pool(LinePtr &L) -> bool {
   if(pool_position == -1) return false; // should not happen
   L.insert(*file_pool[pool_position]);
   pool_position = -1;
   return true;
-  
 }
 
 // Returns true if the file is in the pool
-bool main_ns::search_in_pool(const string& name)
-{
+auto main_ns::search_in_pool(const string &name) -> bool {
   int n = file_pool.size();
   pool_position = -1;
   for(int i=0;i<n;i++) {
@@ -325,12 +317,9 @@ bool main_ns::search_in_pool(const string& name)
   return false;
 }
 
-
-
 // Try to open the file, using alternate location if desired
 // Resulting filename is in the buffer.
-bool tralics_ns::find_in_confdir(const string & s, bool retry)
-{
+auto tralics_ns::find_in_confdir(const string &s, bool retry) -> bool {
   path_buffer << bf_reset << s;
   if(main_ns::search_in_pool(s)) return true;
   if(file_exists(path_buffer)) return true;
@@ -340,8 +329,7 @@ bool tralics_ns::find_in_confdir(const string & s, bool retry)
 }
 
 // Searches only in conf_path
-bool main_ns::search_in_confdir(const string & s)
-{
+auto main_ns::search_in_confdir(const string &s) -> bool {
   int n = conf_path.size();
   for(int i=n-1; i>=0;i--) {
     path_buffer << bf_reset << conf_path[i] << bf_optslash << s;
@@ -350,16 +338,14 @@ bool main_ns::search_in_confdir(const string & s)
   return false;
 }
 
-bool tralics_ns::find_no_path(const string & s)
-{
+auto tralics_ns::find_no_path(const string &s) -> bool {
   if(s.size()==0) return false;
   path_buffer << bf_reset << s;    
   return file_exists(path_buffer);
 }
 
 // This tries opens a TeX file
-bool tralics_ns::find_in_path(const string & s)
-{
+auto tralics_ns::find_in_path(const string &s) -> bool {
   if(s.size()==0) return false;
   path_buffer << bf_reset << s;    
   if(main_ns::search_in_pool(s))
@@ -377,7 +363,6 @@ bool tralics_ns::find_in_path(const string & s)
   }
   return false;
 }
-
 
 // This reads the input file, it is in infile
 // If you say tralics foo/bar; and no input path given
@@ -500,8 +485,7 @@ void MainClass::open_log()
   }
 }
 
-bool tralics_ns::exists(const vector<string>& ST, string d)
-{
+auto tralics_ns::exists(const vector<string> &ST, string d) -> bool {
   for(unsigned int j=0;j<ST.size(); j++)
     if(ST[j]==d) return true;
   return false;
@@ -544,8 +528,7 @@ void MainClass::parse_args(int argc, char** argv)
 // All these options take an argumet; You can say
 // tralics type=foo, tralics type foo, tralics type = foo
 // These are handled the same
-param_args main_ns::find_param_type(String s)
-{
+auto main_ns::find_param_type(String s) -> param_args {
   if (strcmp(s, "entnames")==0) return pa_entnames;
   if (strcmp(s, "tpastatus")==0) return pa_tpastatus;
   if (strcmp(s, "dir")==0) return pa_dir;
@@ -576,8 +559,7 @@ param_args main_ns::find_param_type(String s)
 // This considers the case of tralics conf_dir=foo
 // puts confdir in the buffer, and returns that; sets p to the first 
 // valid char after = sign, and 0 if none
-String MainClass::split_one_arg(String a, int& p)
-{
+auto MainClass::split_one_arg(String a, int &p) -> String {
   Buffer &B=bparse;
   p = 0;
   B.reset();
@@ -605,8 +587,7 @@ String MainClass::split_one_arg(String a, int& p)
 
 // This gets foo, unless we are in the case tralics type=foo
 // Here p is the position of the argument type.
-String MainClass::check_for_arg(int&p, int argc,char**argv)
-{
+auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
   if(p>=argc-1)  {
     banner();
     cout << "Argument missing for option " << argv[p] << "\n";
@@ -764,9 +745,8 @@ void MainClass::parse_option(int&p, int argc,char**argv)
     usage_and_quit(1);
   } 
 }
-    
-bool main_ns::param_hack(String a)
-{
+
+auto main_ns::param_hack(String a) -> bool {
   Buffer&B =bparse; B.reset();B.reset_ptr();
   B.push_back(a);
   if(!B.find_equals()) return false;
@@ -855,8 +835,7 @@ void MainClass::end_with_help(int v)
   exit(v);
 }
 
-bool MainClass::check_for_tcf(const string& s)
-{
+auto MainClass::check_for_tcf(const string &s) -> bool {
   string tmp = s + ".tcf";
   if(tralics_ns::find_in_confdir(tmp,true)) {
     set_tcf_file(path_buffer.to_string());
@@ -867,8 +846,7 @@ bool MainClass::check_for_tcf(const string& s)
 
 // This puts in path_buffer the name of the config file.
 // Returns false if not found.
-bool MainClass::find_config_file()
-{
+auto MainClass::find_config_file() -> bool {
   if(noconfig) return false;
   Buffer& B = path_buffer;
   if(!user_config_file.empty()) {
@@ -965,8 +943,7 @@ void MainClass::get_doc_type()
 
 // Returns true if u is a type defined in ST, or aliased to something
 // Result in dtype.
-bool MainClass::check_for_alias_type(bool vb)
-{
+auto MainClass::check_for_alias_type(bool vb) -> bool {
   if(dtype.empty()) return false;
   if(!check_for_tcf(dtype)) { 
     if(vb) the_log << "Trying type " << dtype << "\n";
@@ -985,8 +962,7 @@ bool MainClass::check_for_alias_type(bool vb)
 
 // Puts in dtype the type to use (returns false if no type found).
 // Puts in dft a maker in case of a standard class.
-bool MainClass::find_document_type ()
-{
+auto MainClass::find_document_type() -> bool {
   get_doc_type();
   if(config_file.is_empty()) return false;
   if(dtype.empty()) return false;
@@ -1095,8 +1071,7 @@ void MainClass::see_name (String s)
 }
 
 // If B holds apics2006, puts apics in B,  2006 in C, returns 2006 as int
-int main_ns::extract_year(Buffer&B,Buffer&C)
-{
+auto main_ns::extract_year(Buffer &B, Buffer &C) -> int {
   int m = B.size();
   int n = m;
   int k = 0; 
@@ -1108,7 +1083,7 @@ int main_ns::extract_year(Buffer&B,Buffer&C)
   }
   B.set_last(n);
   return y;
-} 
+}
 
 // Here y C are as above. We check valididy
 void main_ns::check_year(int y, Buffer&C, const string&dclass, const string&Y)
@@ -1211,17 +1186,13 @@ void MainClass::trans0()
 }
 
 // returns output_dir+name
-String tralics_ns::get_out_dir(string name)
-{
+auto tralics_ns::get_out_dir(string name) -> String {
   Buffer&B= path_buffer;
   B << bf_reset << out_dir << bf_optslash << name;
   return B.c_str();
 }
 
-string tralics_ns::get_short_jobname()
-{
-  return file_name;
-}
+auto tralics_ns::get_short_jobname() -> string { return file_name; }
 
 void MainClass::boot_bibtex(bool inra)
 {

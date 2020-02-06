@@ -36,21 +36,25 @@ class StrHash {
  public:
   StrHash();
   void re_alloc();
-  int hash_find ();
-  int find (String);
-  int find (const string&);
-  int find (int);
-  String operator[](int k) const { return Text[k]; }
-  String p_str(int k) const { return Value[k]; }
-  Buffer& shbuf() { return mybuf; }
-  LabelInfo* lab_val(Istring k);
-  LabelInfo* lab_val_check(Istring k);
-  Istring next_label_id();
-  Istring next_top_label_id();
+  auto hash_find() -> int;
+  auto find(String) -> int;
+  auto find(const string &) -> int;
+  auto find(int) -> int;
+  auto operator[](int k) const -> String { return Text[k]; }
+  auto p_str(int k) const -> String { return Value[k]; }
+  auto shbuf() -> Buffer & { return mybuf; }
+  auto lab_val(Istring k) -> LabelInfo *;
+  auto lab_val_check(Istring k) -> LabelInfo *;
+  auto next_label_id() -> Istring;
+  auto next_top_label_id() -> Istring;
   void rlc_to_string(String s, vector<AttList>&);
-  name_positions st_bool(bool x) const { return x ? np_true : np_false; };
-  Istring find_scaled(ScaledInt);
-  name_positions skip_val(int k) { return k==0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
+  auto st_bool(bool x) const -> name_positions {
+    return x ? np_true : np_false;
+  };
+  auto find_scaled(ScaledInt) -> Istring;
+  auto skip_val(int k) -> name_positions {
+    return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt;
+  }
 };
 
 
@@ -64,19 +68,19 @@ public:
   explicit Istring(string s);
   explicit Istring(String s);
 
-
-  bool null() const { return value == 0; }  // null string
-  bool empty() const { return value == 1; } // ""
-  bool spec_empty() const { return value == 2; } // ""
-  bool only_space() const;
-  uchar starts_with_div() const;
-  bool only_space_spec() const;
-  bool operator==(Istring X)const { return value==X.value; }
-  bool operator!=(Istring X)const { return value!=X.value; }
-  int get_value() const { return value; }
-  String c_str()const;
-  String p_str()const;
+  auto null() const -> bool { return value == 0; }       // null string
+  auto empty() const -> bool { return value == 1; }      // ""
+  auto spec_empty() const -> bool { return value == 2; } // ""
+  auto only_space() const -> bool;
+  auto starts_with_div() const -> uchar;
+  auto only_space_spec() const -> bool;
+  auto operator==(Istring X) const -> bool { return value == X.value; }
+  auto operator!=(Istring X) const -> bool { return value != X.value; }
+  auto get_value() const -> int { return value; }
+  auto c_str() const -> String;
+  auto p_str() const -> String;
 };
 
-inline LabelInfo* StrHash::lab_val(Istring k) { return Labinfo[k.get_value()]; }
-
+inline auto StrHash::lab_val(Istring k) -> LabelInfo * {
+  return Labinfo[k.get_value()];
+}

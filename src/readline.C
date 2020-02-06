@@ -50,8 +50,7 @@ static struct termios orig_termio,rl_termio;
 inline void RESET_TERMIO()  { tcsetattr(0, TCSANOW, &orig_termio); }
 inline void SET_TERMIO()  { tcsetattr(0,TCSANOW,&rl_termio); }
 
-unsigned char check_for_control(unsigned char c) 
-{
+auto check_for_control(unsigned char c) -> unsigned char {
   if(c==orig_termio.c_cc[VERASE])
     c = 8; //^H
   else if(c==orig_termio.c_cc[VEOF])
@@ -68,8 +67,7 @@ unsigned char check_for_control(unsigned char c)
     c = 28;
   return c;
 }
-inline bool is_interrupt(char cc)
-{
+inline auto is_interrupt(char cc) -> bool {
   return cc==orig_termio.c_cc[VINTR] || cc==3 || cc==orig_termio.c_cc[VQUIT]
     || cc=='y' || cc=='Y';
 }
@@ -106,12 +104,12 @@ namespace readline_ns {
   void reset_termio();
   void my_exit();
   void tybeep();
-  int skip_over_letters(String buf, int j);
+  auto skip_over_letters(String buf, int j) -> int;
   void tycleol();
   void right_fill();
   void shift_string(char*S,int s,int p,int n);
   void rl_delete0(char*s,int pos,int size,int w);
-  int find_word_beg(char*buf,int size);
+  auto find_word_beg(char *buf, int size) -> int;
 }
 
 using namespace readline_ns;
@@ -143,43 +141,43 @@ class Slined {
   char g_buffer[buf_size];
   bool done;
  public:
-  int newpos(int x,int n);
-  Slined(int, String);
-  int copystring(String string,int s,int inpos,bool);
-  void redisplay();
-  void redisplay0();
-  void redisplay1(int x);
-  void redisplay_eol();
-  void finish_redisplay(int pleft,int pright);
-  void I_move(int pos,int x);
-  void insert_in_image(int n,char c1,char c2);
-  void delete_in_image(int w);
-  void insert(int n,char c);
-  void insert1(int n,unsigned char c);
-  void rl_move(int y,int x);
-  void rl_delete(bool sw);
-  void toggle_char();
-  void delete_string(int sw,int deb,int fn);
-  void fast_ins(int n,String s,int l);
-  void insert_substring(int n,String s,int l);
-  void Hshow();
-  bool Hfind(int n);
-  void Hfirst();
-  void Hlast();
-  void Hprevious(int n);
-  void Hnext(int n);
-  void search_string(int);
-  void forword(bool sw,int n);
-  void backword(bool sw,int n);
-  void replace_string();
-  void store_line();
-  void maybe_store_line();
-  void do_esc_command(int n);
-  void do_esc_command(int n,char c);
-  void do_n_command(int n,unsigned char c);
-  void do_command(int n,int c);
-  void initialise(char*buf,const string& prompt,int size);
-  void run();
+   auto newpos(int x, int n) -> int;
+   Slined(int, String);
+   auto copystring(String string, int s, int inpos, bool) -> int;
+   void redisplay();
+   void redisplay0();
+   void redisplay1(int x);
+   void redisplay_eol();
+   void finish_redisplay(int pleft, int pright);
+   void I_move(int pos, int x);
+   void insert_in_image(int n, char c1, char c2);
+   void delete_in_image(int w);
+   void insert(int n, char c);
+   void insert1(int n, unsigned char c);
+   void rl_move(int y, int x);
+   void rl_delete(bool sw);
+   void toggle_char();
+   void delete_string(int sw, int deb, int fn);
+   void fast_ins(int n, String s, int l);
+   void insert_substring(int n, String s, int l);
+   void Hshow();
+   auto Hfind(int n) -> bool;
+   void Hfirst();
+   void Hlast();
+   void Hprevious(int n);
+   void Hnext(int n);
+   void search_string(int);
+   void forword(bool sw, int n);
+   void backword(bool sw, int n);
+   void replace_string();
+   void store_line();
+   void maybe_store_line();
+   void do_esc_command(int n);
+   void do_esc_command(int n, char c);
+   void do_n_command(int n, unsigned char c);
+   void do_command(int n, int c);
+   void initialise(char *buf, const string &prompt, int size);
+   void run();
 };
 
 
@@ -228,15 +226,13 @@ void readline_ns::shift_string(char*S, int len, int source, int target)
 }
 
 // This assumes that characters with code >=128 are printable.
-inline bool not_printable (unsigned char c)
-{
-  return c== 127 || c<32; 
+inline auto not_printable(unsigned char c) -> bool {
+  return c== 127 || c<32;
 }
 
 // Returns the cursor position y of position x. Returns -1-y if the cursor
 // is invisible. It is assumed that position n corresponds to m_pos.
-int Slined::newpos(int x, int n)
-{
+auto Slined::newpos(int x, int n) -> int {
   int i = 0, y = 0;
   if(x>=n){ // We can hack a bit.
     i = n;
@@ -263,8 +259,7 @@ void readline_ns::tybeep ()
 // the number of chars put in the buffer. If character at position
 // inpos is copied, its location will be in m_pos.
 
-int Slined::copystring(String string, int s, int inpos, bool sw)
-{
+auto Slined::copystring(String string, int s, int inpos, bool sw) -> int {
   int j = 0;
   unsigned char cn;
   char*buf= sw ? m_buffer : g_buffer;
@@ -641,8 +636,7 @@ void Slined::search_string(int n)
 }
 
 // Find a string in the history
-bool Slined::Hfind(int n)
-{
+auto Slined::Hfind(int n) -> bool {
   String s = m_search.c_str();
   bool seen_once = false; // if seen at least once, do not kill
   int pos = m_hpos;
@@ -696,8 +690,7 @@ void Slined::Hnext(int n)
   m_hpos = n;
 }
 
-int readline_ns::skip_over_letters(String buf, int j)
-{
+auto readline_ns::skip_over_letters(String buf, int j) -> int {
   for(;;) {
     if(!is_letter(buf[j])) return j;
     j++;
@@ -705,8 +698,7 @@ int readline_ns::skip_over_letters(String buf, int j)
 }
 
 // Find word boundaries
-int readline_ns::find_word_beg(char*buf, int size)
-{
+auto readline_ns::find_word_beg(char *buf, int size) -> int {
   int i = -1;
   unsigned char c;
   int j=0;

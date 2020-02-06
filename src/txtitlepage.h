@@ -28,40 +28,42 @@ class TitlePageAux {
   tpi_vals type; // type of object
 
  public:
-  bool classify(tpi_vals,int&);
-  Xmlp convert(int);
-  Xmlp convert(int,Xmlp);
-  Xmlp convert(int i,Istring s) { return convert(i, new Xml(s)); }
-  void dump(int);
-  void exec_start(int);
-  void exec_post();
-  void exec(int,bool);
-  void set_T1(string x) { T1 = x; }
-  void set_T2(string x) { T2 = x; }
-  void set_T3(string x) { T3 = x; }
-  void set_T4(string x) { T4 = x; }
-  void set_flags(int f) { xflags = f; }
+   auto classify(tpi_vals, int &) -> bool;
+   auto convert(int) -> Xmlp;
+   auto convert(int, Xmlp) -> Xmlp;
+   auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
+   void dump(int);
+   void exec_start(int);
+   void exec_post();
+   void exec(int, bool);
+   void set_T1(string x) { T1 = x; }
+   void set_T2(string x) { T2 = x; }
+   void set_T3(string x) { T3 = x; }
+   void set_T4(string x) { T4 = x; }
+   void set_flags(int f) { xflags = f; }
 
-  tpi_vals get_type() { return type; }
-  tpi_vals& get_typeref() { return type; }
-  int get_idx() { return idx; }
-  int get_flags2() const { return 32*(xflags/32); } 
-  bool has_u_flags() const { return (xflags&1) != 0; }
-  bool has_p_flags() const { return (xflags&tp_p_flag) != 0; }
-  bool has_e_flags() const { return (xflags&tp_e_flag) != 0; }
-  bool has_q_flags() const { return (xflags&tp_q_flag) != 0; }
-  bool has_plus_flags() const { return (xflags&tp_plus_flag) != 0; }
-  TitlePageAux(): idx(0),xflags(0), type(tpi_zero) {}
-  TitlePageAux(TitlePageFullLine& X);
-  int find_UR(String s, int n) const;
-  string get_T1() { return T1; }
-  string get_T2() { return T2; }
-  string get_T3() { return T3; }
-  string get_T4() { return T4; }
-  bool find_cmd (const string& s) const;
-  void move_T1T2(string x) { T1 = T2; T2 = x;}
-  bool increment_flag();
-  void decode_flags();
+   auto get_type() -> tpi_vals { return type; }
+   auto get_typeref() -> tpi_vals & { return type; }
+   auto get_idx() -> int { return idx; }
+   auto get_flags2() const -> int { return 32 * (xflags / 32); }
+   auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
+   auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
+   auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
+   auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
+   auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
+   TitlePageAux() : idx(0), xflags(0), type(tpi_zero) {}
+   TitlePageAux(TitlePageFullLine &X);
+   auto find_UR(String s, int n) const -> int;
+   auto get_T1() -> string { return T1; }
+   auto get_T2() -> string { return T2; }
+   auto get_T3() -> string { return T3; }
+   auto get_T4() -> string { return T4; }
+   auto find_cmd(const string &s) const -> bool;
+   void move_T1T2(string x) {
+     T1 = T2;
+     T2 = x;}
+   auto increment_flag() -> bool;
+   void decode_flags();
 };
 
 // One item if a titlepage
@@ -72,20 +74,20 @@ class TpiOneItem {
   tpi_vals v; // the type (none, string, command, or XML element)
  public:
   TpiOneItem() { reset(); }
-  bool has_a_char() const { return p1 !=0 || p2 != 0; }
-  bool noval() const { return v==tpi_noval; }
-  bool is_elt() const { return v==tpi_elt; }
-  bool is_str() const { return v==tpi_str; }
-  bool is_cmd() const { return v==tpi_cmd; }
-  bool is_alias() const { return v==tpi_alias; }
-  bool only_dash() const { return p1=='-' && p2==0; }
-  bool question() const { return p1=='?' && p2==0; }
-  bool plus() const { return p1=='+' && p2==0; }
-  bool quest_plus() const { return p1=='?' && p2=='+'; }
-  bool second_char() const { return p2!=0; }
-  tpi_vals get_v() const { return v; }
-  string get_value() const { return value; }
-  char get_p1() const { return p1; }
+  auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
+  auto noval() const -> bool { return v == tpi_noval; }
+  auto is_elt() const -> bool { return v == tpi_elt; }
+  auto is_str() const -> bool { return v == tpi_str; }
+  auto is_cmd() const -> bool { return v == tpi_cmd; }
+  auto is_alias() const -> bool { return v == tpi_alias; }
+  auto only_dash() const -> bool { return p1 == '-' && p2 == 0; }
+  auto question() const -> bool { return p1 == '?' && p2 == 0; }
+  auto plus() const -> bool { return p1 == '+' && p2 == 0; }
+  auto quest_plus() const -> bool { return p1 == '?' && p2 == '+'; }
+  auto second_char() const -> bool { return p2 != 0; }
+  auto get_v() const -> tpi_vals { return v; }
+  auto get_value() const -> string { return value; }
+  auto get_p1() const -> char { return p1; }
   void set_p2(char c) { p2 = c; }
   void set_p1(char c) { p1 = c; }
   //  void bad() { v = tpi_err; }
@@ -101,11 +103,11 @@ class TitlePageFullLine {
  public:
   friend class titlepage;
   friend class TitlePageAux;
-  int read();
+  auto read() -> int;
   void kill();
-  tpi_vals classify(int,int state);
-  int get_flags()const { return flags; }
-  bool encode_flags(char, char);
+  auto classify(int, int state) -> tpi_vals;
+  auto get_flags() const -> int { return flags; }
+  auto encode_flags(char, char) -> bool;
 };
 
 class TitlePage {
@@ -117,17 +119,20 @@ class TitlePage {
   vector<TitlePageAux> bigtable; // the table
   int state;  // current state of the parser
   TitlePage() : len2(1),valid(false),size(0),Data(0) {}
-  Xmlp& operator[] (int k) { return Data[k]; }
-  TitlePageAux& get_bigtable(int k) { return bigtable[k] ;}
-  int get_len2()const { return len2;}
-  bool is_valid() { return valid; }
+  auto operator[](int k) -> Xmlp & { return Data[k]; }
+  auto get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
+  auto get_len2() const -> int { return len2; }
+  auto is_valid() -> bool { return valid; }
   void make_invalid() { valid = false; }
   void make_valid() { valid = true; }
   void start_thing(bool);
   void parse();
-  int increase_data() { len2++; return len2-1;}
+  auto increase_data() -> int {
+    len2++;
+    return len2 - 1;
+  }
   void check_size();
-  int find_UR(const string&,string) const;
-  int find_cmd(const string&) const;
+  auto find_UR(const string &, string) const -> int;
+  auto find_cmd(const string &) const -> int;
 };
 
