@@ -31,7 +31,7 @@ inline auto operator<<(ostream &fp, const Buffer &L) -> ostream & {
 }
 
 class Logger;
-typedef void logger_fn(Logger&);
+using logger_fn = void (Logger &);
 
 
 class Logger{

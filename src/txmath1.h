@@ -40,9 +40,9 @@ public:
   }
 };
 
-typedef std::list<MathPAux> MathPList;
-typedef std::list<MathPAux>::const_iterator const_math_p_iterator;
-typedef std::list<MathPAux>::iterator math_p_iterator;
+using MathPList = std::list<MathPAux>;
+using const_math_p_iterator = std::list<MathPAux>::const_iterator;
+using math_p_iterator = std::list<MathPAux>::iterator;
 
 
 class MathPAuxType: public unary_function<MathPAux,bool> {

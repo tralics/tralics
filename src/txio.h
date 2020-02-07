@@ -58,8 +58,8 @@ class Clines
    void clear_converted() { converted = false; }
 };
 
-typedef std::list<Clines>::const_iterator line_iterator_const; 
-typedef std::list<Clines>::iterator line_iterator; 
+using line_iterator_const = std::list<Clines>::const_iterator; 
+using line_iterator = std::list<Clines>::iterator; 
 
 class LinePtr {
 private:

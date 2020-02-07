@@ -40,10 +40,10 @@ class MainClass;
 
 
 // Some typedef declarations
-typedef const char*String;
-typedef Xml* Xmlp;
-typedef unsigned char uchar;
-typedef unsigned int Digit;
+using String = const char *;
+using Xmlp = Xml *;
+using uchar = unsigned char;
+using Digit = unsigned int;
 
 
 // ------------------------------------------------

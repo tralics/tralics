@@ -13,7 +13,7 @@
 const char* txfp_rcsif =
   "$Id: txfp.C,v 2.35 2015/10/28 17:38:46 grimm Exp $";
 
-typedef unsigned int Digit;
+using Digit = unsigned int;
 
 namespace {
   Token fp_tmp_token,fp_test_token;

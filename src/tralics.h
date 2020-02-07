@@ -24,7 +24,7 @@
 
 // use this for debug
 #define the_tty cout
-typedef unsigned int uint;
+using uint = unsigned int;
 
 
 using namespace std;

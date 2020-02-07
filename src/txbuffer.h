@@ -12,7 +12,7 @@
 // This is the include file for the Buffer data structure
 
 
-typedef void buffer_fn(Buffer&);
+using buffer_fn = void (Buffer &);
 
 // a big structure
 class Buffer {

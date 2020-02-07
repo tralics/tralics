@@ -14,9 +14,9 @@
 
 class Hashtab;
 
-typedef std::list<Token> TokenList;
-typedef std::list<Token>::const_iterator const_token_iterator;
-typedef std::list<Token>::iterator token_iterator;
+using TokenList = std::list<Token>;
+using const_token_iterator = std::list<Token>::const_iterator;
+using token_iterator = std::list<Token>::iterator;
 
 namespace token_ns {
   void add_env(TokenList&L, String name);

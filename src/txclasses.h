@@ -42,7 +42,7 @@ public:
   void mark_un_used() { used = false; }
 };
 
-typedef vector<KeyAndVal> OptionList;
+using OptionList = vector<KeyAndVal>;
 
 // This defines what is in a package or a class
 class LatexPackage {

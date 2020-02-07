@@ -12,7 +12,7 @@
 class MathQ;
 class MathP;
 class MathF;
-typedef std::list<MathQ> MathQList;
+using MathQList = std::list<MathQ>;
  
 // A math object is a strange thing:
 // a math_elt object has 4 fields, one is a pointer to another object.
@@ -136,9 +136,9 @@ public:
 };
 
 
-typedef std::list<MathElt> MathList;
-typedef std::list<MathElt>::const_iterator const_math_iterator;
-typedef std::list<MathElt>::iterator math_iterator;
+using MathList = std::list<MathElt>;
+using const_math_iterator = std::list<MathElt>::const_iterator;
+using math_iterator = std::list<MathElt>::iterator;
 
 class Math {
   friend class MathHelper;
