@@ -10,8 +10,8 @@
 
 // This file implements the XML stack for Tralics
 
-#include <string.h>
 #include "tralics.h"
+#include <cstring>
 const char* txstack_rcsid=
   "$Id: txstack.C,v 2.60 2015/11/18 17:58:11 grimm Exp $";
 

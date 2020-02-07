@@ -17,7 +17,7 @@
 // The file contains the main data structures, and code to fill the tables.
 
 #include "tralics.h"
-#include <time.h>
+#include <ctime>
 const char* tralics_rcsid=
   "$Id: tralics.C,v 2.212 2015/11/18 17:58:11 grimm Exp $";
 

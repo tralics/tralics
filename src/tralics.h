@@ -19,8 +19,8 @@
 #include <list>
 #include <algorithm>
 
-#include <string.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 // use this for debug
 #define the_tty cout

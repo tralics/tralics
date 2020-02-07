@@ -13,8 +13,8 @@
 #include "tralics.h"
 
 #include<cctype>
+#include<csignal>
 #include<sys/types.h>
-#include<signal.h>
 
 
 const char* read_line_rcsid =
