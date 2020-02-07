@@ -3,136 +3,136 @@
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use, 
+// abiding by the rules of distribution of free software.  You can  use,
 // modify and/ or redistribute the software under the terms of the CeCILL
 // license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info". 
+// "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
 // This file contains stuff for title-page element.
 
 class TitlePageFullLine;
-  static const int tp_p_flag=2;
-  static const int tp_e_flag=4;
-  static const int tp_q_flag=8;
-  static const int tp_plus_flag=16;
-  static const int tp_A_flag=32;
-  static const int tp_B_flag=64;
-  static const int tp_C_flag=96;
+static const int tp_p_flag    = 2;
+static const int tp_e_flag    = 4;
+static const int tp_q_flag    = 8;
+static const int tp_plus_flag = 16;
+static const int tp_A_flag    = 32;
+static const int tp_B_flag    = 64;
+static const int tp_C_flag    = 96;
 
 // data for a titlepage item
 class TitlePageAux {
-  string T1,T2,T3,T4; // the four strings
-  int idx{0};         // index into titlepage::Data
-  int xflags{0};      // flags associated to the object
-  tpi_vals type{tpi_zero}; // type of object
+    string   T1, T2, T3, T4; // the four strings
+    int      idx{0};         // index into titlepage::Data
+    int      xflags{0};      // flags associated to the object
+    tpi_vals type{tpi_zero}; // type of object
 
 public:
-  auto classify(tpi_vals, int &) -> bool;
-  auto convert(int) -> Xmlp;
-  auto convert(int, Xmlp) -> Xmlp;
-  auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
-  void dump(int);
-  void exec_start(int);
-  void exec_post();
-  void exec(int, bool);
-  void set_T1(string x) { T1 = x; }
-  void set_T2(string x) { T2 = x; }
-  void set_T3(string x) { T3 = x; }
-  void set_T4(string x) { T4 = x; }
-  void set_flags(int f) { xflags = f; }
+    auto classify(tpi_vals, int &) -> bool;
+    auto convert(int) -> Xmlp;
+    auto convert(int, Xmlp) -> Xmlp;
+    auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
+    void dump(int);
+    void exec_start(int);
+    void exec_post();
+    void exec(int, bool);
+    void set_T1(string x) { T1 = x; }
+    void set_T2(string x) { T2 = x; }
+    void set_T3(string x) { T3 = x; }
+    void set_T4(string x) { T4 = x; }
+    void set_flags(int f) { xflags = f; }
 
-  auto get_type() -> tpi_vals { return type; }
-  auto get_typeref() -> tpi_vals & { return type; }
-  auto get_idx() -> int { return idx; }
-  auto get_flags2() const -> int { return 32 * (xflags / 32); }
-  auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
-  auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
-  auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
-  auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
-  auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
-  TitlePageAux() {}
-  TitlePageAux(TitlePageFullLine &X);
-  auto find_UR(String s, int n) const -> int;
-  auto get_T1() -> string { return T1; }
-  auto get_T2() -> string { return T2; }
-  auto get_T3() -> string { return T3; }
-  auto get_T4() -> string { return T4; }
-  auto find_cmd(const string &s) const -> bool;
-  void move_T1T2(string x) {
-    T1 = T2;
-    T2 = x;}
-   auto increment_flag() -> bool;
-   void decode_flags();
+    auto get_type() -> tpi_vals { return type; }
+    auto get_typeref() -> tpi_vals & { return type; }
+    auto get_idx() -> int { return idx; }
+    auto get_flags2() const -> int { return 32 * (xflags / 32); }
+    auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
+    auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
+    auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
+    auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
+    auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
+    TitlePageAux() {}
+    TitlePageAux(TitlePageFullLine &X);
+    auto find_UR(String s, int n) const -> int;
+    auto get_T1() -> string { return T1; }
+    auto get_T2() -> string { return T2; }
+    auto get_T3() -> string { return T3; }
+    auto get_T4() -> string { return T4; }
+    auto find_cmd(const string &s) const -> bool;
+    void move_T1T2(string x) {
+        T1 = T2;
+        T2 = x;
+    }
+    auto increment_flag() -> bool;
+    void decode_flags();
 };
 
 // One item if a titlepage
 class TpiOneItem {
-  char p1;  // first character modifier
-  char p2;  // second character modifier
-  string value; // the value
-  tpi_vals v; // the type (none, string, command, or XML element)
- public:
-  TpiOneItem() { reset(); }
-  auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
-  auto noval() const -> bool { return v == tpi_noval; }
-  auto is_elt() const -> bool { return v == tpi_elt; }
-  auto is_str() const -> bool { return v == tpi_str; }
-  auto is_cmd() const -> bool { return v == tpi_cmd; }
-  auto is_alias() const -> bool { return v == tpi_alias; }
-  auto only_dash() const -> bool { return p1 == '-' && p2 == 0; }
-  auto question() const -> bool { return p1 == '?' && p2 == 0; }
-  auto plus() const -> bool { return p1 == '+' && p2 == 0; }
-  auto quest_plus() const -> bool { return p1 == '?' && p2 == '+'; }
-  auto second_char() const -> bool { return p2 != 0; }
-  auto get_v() const -> tpi_vals { return v; }
-  auto get_value() const -> string { return value; }
-  auto get_p1() const -> char { return p1; }
-  void set_p2(char c) { p2 = c; }
-  void set_p1(char c) { p1 = c; }
-  //  void bad() { v = tpi_err; }
-  void set_v(tpi_vals V) { v = V;}
-  void set_value(const Buffer& b) { value = b.to_string(); }
-  void reset();
+    char     p1;    // first character modifier
+    char     p2;    // second character modifier
+    string   value; // the value
+    tpi_vals v;     // the type (none, string, command, or XML element)
+public:
+    TpiOneItem() { reset(); }
+    auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
+    auto noval() const -> bool { return v == tpi_noval; }
+    auto is_elt() const -> bool { return v == tpi_elt; }
+    auto is_str() const -> bool { return v == tpi_str; }
+    auto is_cmd() const -> bool { return v == tpi_cmd; }
+    auto is_alias() const -> bool { return v == tpi_alias; }
+    auto only_dash() const -> bool { return p1 == '-' && p2 == 0; }
+    auto question() const -> bool { return p1 == '?' && p2 == 0; }
+    auto plus() const -> bool { return p1 == '+' && p2 == 0; }
+    auto quest_plus() const -> bool { return p1 == '?' && p2 == '+'; }
+    auto second_char() const -> bool { return p2 != 0; }
+    auto get_v() const -> tpi_vals { return v; }
+    auto get_value() const -> string { return value; }
+    auto get_p1() const -> char { return p1; }
+    void set_p2(char c) { p2 = c; }
+    void set_p1(char c) { p1 = c; }
+    //  void bad() { v = tpi_err; }
+    void set_v(tpi_vals V) { v = V; }
+    void set_value(const Buffer &b) { value = b.to_string(); }
+    void reset();
 };
 
 // temporary class, will bew copied into a TitlePageAux
 class TitlePageFullLine {
-  TpiOneItem item1, item2, item3,item4; // the four items
-  int flags; // the flags 
- public:
-  friend class titlepage;
-  friend class TitlePageAux;
-  auto read() -> int;
-  void kill();
-  auto classify(int, int state) -> tpi_vals;
-  auto get_flags() const -> int { return flags; }
-  auto encode_flags(char, char) -> bool;
+    TpiOneItem item1, item2, item3, item4; // the four items
+    int        flags;                      // the flags
+public:
+    friend class titlepage;
+    friend class TitlePageAux;
+    auto read() -> int;
+    void kill();
+    auto classify(int, int state) -> tpi_vals;
+    auto get_flags() const -> int { return flags; }
+    auto encode_flags(char, char) -> bool;
 };
 
 class TitlePage {
-  int len2{1};       // size of bigtable and Data
-  bool valid{false}; // is this initialised and not killed ?
-  int size{0};       // allocated size of bigtable
-  Xmlp *Data{0};     // the array of xml data
+    int   len2{1};      // size of bigtable and Data
+    bool  valid{false}; // is this initialised and not killed ?
+    int   size{0};      // allocated size of bigtable
+    Xmlp *Data{0};      // the array of xml data
 public:
-  vector<TitlePageAux> bigtable; // the table
-  int state;  // current state of the parser
-  TitlePage() {}
-  auto operator[](int k) -> Xmlp & { return Data[k]; }
-  auto get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
-  auto get_len2() const -> int { return len2; }
-  auto is_valid() -> bool { return valid; }
-  void make_invalid() { valid = false; }
-  void make_valid() { valid = true; }
-  void start_thing(bool);
-  void parse();
-  auto increase_data() -> int {
-    len2++;
-    return len2 - 1;
-  }
-  void check_size();
-  auto find_UR(const string &, string) const -> int;
-  auto find_cmd(const string &) const -> int;
+    vector<TitlePageAux> bigtable; // the table
+    int                  state;    // current state of the parser
+    TitlePage() {}
+    auto operator[](int k) -> Xmlp & { return Data[k]; }
+    auto get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
+    auto get_len2() const -> int { return len2; }
+    auto is_valid() -> bool { return valid; }
+    void make_invalid() { valid = false; }
+    void make_valid() { valid = true; }
+    void start_thing(bool);
+    void parse();
+    auto increase_data() -> int {
+        len2++;
+        return len2 - 1;
+    }
+    void check_size();
+    auto find_UR(const string &, string) const -> int;
+    auto find_cmd(const string &) const -> int;
 };
-

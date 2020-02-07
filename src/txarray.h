@@ -1,3 +1,4 @@
+#pragma once
 // -*- C++ -*-
 // $Id: txarray.h,v 2.4 2008/02/21 17:45:58 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
@@ -20,6 +21,11 @@
 // !-arg 1   1           p    10 4
 // <-arg 2   -           b    10 5
 // >-arg 3   -
+
+#include "txarray.h"
+#include "txatt.h"
+#include "txstack.h"
+#include "txtokenlist.h"
 
 // Class used to implement array.sty
 class NewArray {
