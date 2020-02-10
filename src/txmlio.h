@@ -22,7 +22,6 @@ public:
 };
 
 class XmlIO {
-    Parser *         P;
     Buffer           B; // holds current element
     Buffer           aux;
     Buffer           line_buffer; // holds current line
@@ -77,7 +76,7 @@ private:
     void run();
 
 public:
-    XmlIO(Parser *P) : cur_char(' ') {}
+    XmlIO() : cur_char(' ') {}
     auto init(const string &) -> bool;
     auto prun() -> Xmlp;
 };

@@ -71,7 +71,7 @@ auto read_xml(string s) -> Xmlp {
         return 0;
     }
     string file = main_ns::path_buffer.to_string();
-    XmlIO  res(&the_parser);
+    XmlIO  res;
     if (res.init(file)) return 0;
     return res.prun();
 }

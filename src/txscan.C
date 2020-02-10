@@ -2046,7 +2046,7 @@ void Parser::assign_toks(Token T, int p, bool gbl) {
 // If what=2, this implements \@onelevel@sanitize
 // If what=3, this Latex3 \cs_meaning:c
 
-void Parser::token_show(Token T, int what, Buffer &B) {
+void Parser::token_show(int what, Buffer &B) {
     if (what == 3) {
         fetch_name0();
         tok_is_defined = hash_table.is_defined(fetch_name_res);
@@ -2189,10 +2189,10 @@ void Parser::E_convert() {
         tex_string(B, cur_tok, c == string_code);
         break;
     case meaning_c_code: // latex3
-        token_show(T, 3, B);
+        token_show(3, B);
         break;
-    case meaning_code: token_show(T, 1, B); break;
-    case sanitize_code: token_show(T, 2, B); break;
+    case meaning_code: token_show(1, B); break;
+    case sanitize_code: token_show(2, B); break;
     case fontname_code: {
         int k = scan_font_ident();
         tfonts.full_name(B, k);
@@ -2314,7 +2314,7 @@ void ScanSlot::compute_term(scan_expr_t &next_state, SthInternal f, char &C) {
 }
 
 // This performs addition or subtraction, or finishes term evaluation
-void ScanSlot::add_or_sub(scan_expr_t &next_state, SthInternal f, char &C) {
+void ScanSlot::add_or_sub(scan_expr_t &next_state, char &C) {
     C = ' ';
     if (next_state > se_sub) {
         term_state = next_state;
@@ -2361,7 +2361,7 @@ auto Parser::scan_expr(Token T, internal_type et) -> bool {
             scan_expr_t next_state = scan_expr_next(T, estack.empty());
             W.compute_term(next_state, f, tr_state);
             trace_scan_expr("term", W.term_so_far, tr_state, T);
-            W.add_or_sub(next_state, f, tr_state);
+            W.add_or_sub(next_state, tr_state);
             trace_scan_expr("expr", W.expr_so_far, tr_state, T);
             if (next_state != se_none) break;
             if (estack.empty()) {

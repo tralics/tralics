@@ -199,7 +199,7 @@ public:
     auto get_next_type() const -> internal_type { return term_state == se_none ? expr_type : it_int; }
     void kill();
     void compute_term(scan_expr_t &next_state, SthInternal f, char &);
-    void add_or_sub(scan_expr_t &next_state, SthInternal f, char &);
+    void add_or_sub(scan_expr_t &next_state, char &);
 };
 
 namespace arith_ns {

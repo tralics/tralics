@@ -806,7 +806,7 @@ private:
     void E_ensuremath();
     void T_epsfbox();
     void T_error();
-    void T_etex(subtypes);
+    void T_etex();
     void T_execute_options();
     void E_expandafter();
     void T_figure_table(symcodes, subtypes);
@@ -962,7 +962,7 @@ private:
     void token_list_define(int p, TokenList &c, bool gbl);
     auto token_list_to_dim(TokenList &a, Token C, bool) -> ScaledInt;
     auto token_list_to_att(TokenList &a, Token C, bool) -> Istring;
-    void token_show(Token T, int, Buffer &B);
+    void token_show(int, Buffer &B);
     void token_for_show(bool lg, const CmdChr &, Buffer &B);
     void trace_count_def(String, CmdChr);
     void trace_if(int);

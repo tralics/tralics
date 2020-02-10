@@ -428,7 +428,7 @@ void Parser::T_gloss(bool c) {
 
 //      eTEX ----------------------------------------------------------
 
-void Parser::T_etex(subtypes c) { parse_error(cur_tok, "Unimplemented e-TeX extension ", cur_tok, "", "unimp"); }
+void Parser::T_etex() { parse_error(cur_tok, "Unimplemented e-TeX extension ", cur_tok, "", "unimp"); }
 
 // --------------------------------------------------------------------
 // GB4e

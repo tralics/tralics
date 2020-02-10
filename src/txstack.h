@@ -22,9 +22,10 @@ class ArrayInfo {
     int               cell_no; // current cell number, first on row is zero
     vector<AttList>   attribs; // positions attributes for each row
     vector<TokenList> u_table, v_table;
-    int               size, repeat_count, first_repeat; // for repeated patterns
+    int               size;
+
 public:
-    ArrayInfo(Xid a1) : id(a1), cell_no(0), size(0), repeat_count(0), first_repeat(0) {}
+    ArrayInfo(Xid a1) : id(a1), cell_no(0), size(0) {}
     auto its_me(Xid a) -> bool { return id == a; }
     auto get_cell_no() const -> int { return cell_no; }
     void set_cell_no(int k) { cell_no = k; }

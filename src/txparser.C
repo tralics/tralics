@@ -4249,7 +4249,7 @@ void Parser::M_xray(subtypes c) {
     switch (c) {
     case show_code:
         trace_buffer.reset();
-        token_show(cur_tok, 0, trace_buffer);
+        token_show(0, trace_buffer);
         return;
     case showbox_code: {
         int k = scan_reg_num();

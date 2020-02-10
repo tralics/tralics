@@ -1269,7 +1269,7 @@ void Parser::translate03() {
     case ipa_cmd: T_ipa(c); return;
     case footcitepre_cmd: unprocessed_xml.push_back_unless_punct(' '); return;
     case ding_cmd: T_ding(); return;
-    case etex_cmd: T_etex(c); return;
+    case etex_cmd: T_etex(); return;
     case rule_cmd: scan_rule(c); return;
     case file_cmd: T_input(c); return;
     case unimp_font_cmd: T_unimplemented_font(c); return;
