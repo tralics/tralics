@@ -149,7 +149,7 @@ public:
     auto chars_to_mb3() -> Istring;
     void clear() { value.clear(); }
     auto convert_math(math_style) -> Xmlp;
-    auto convert_math_noML(name_positions, bool) -> Xmlp;
+    auto convert_math_noML(bool) -> Xmlp;
     void convert_math_noML0();
     void convert_math_noMLt0();
     auto convert_opname() -> string;

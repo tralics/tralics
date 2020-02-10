@@ -461,7 +461,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
 // Returns true if the object is big, false if small.
 auto Math::finish_translate1(bool vb) -> bool {
     if (empty()) return false;
-    MathF M(*this, vb);
+    MathF M;
     bool  retval = false;
     for (;;) {
         M.reset();
@@ -566,7 +566,7 @@ void MathF::finish(MathList &value) {
     value.swap(res);
 }
 
-MathF::MathF(const Math &L, bool vb) : state(true), next_change(-1), next_finish(-1) {}
+MathF::MathF() : state(true), next_change(-1), next_finish(-1) {}
 
 // debug
 void MathF::dump_aux() {
@@ -1343,7 +1343,7 @@ void Math::convert_math_noMLt0() {
 
 // Main function. Converts the buffer into XML, adds attributes.
 // If spec is true, we produce <in/> otherwise \in
-auto Math::convert_math_noML(name_positions P, bool spec) -> Xmlp {
+auto Math::convert_math_noML(bool spec) -> Xmlp {
     mathml_buffer.reset();
     if (spec)
         convert_math_noMLt0();

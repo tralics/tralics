@@ -93,7 +93,7 @@ class MathF {
     Xmlp      t;
 
 public:
-    MathF(const Math &, bool);
+    MathF();
     auto in_mrow() const -> bool { return state; }
     auto is_next_change(int i) const -> bool { return i == next_change; }
     auto get_aux() -> MathQList & { return aux; }

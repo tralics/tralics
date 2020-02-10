@@ -649,7 +649,7 @@ void Parser::T_xmlenv_end(subtypes c) {
 }
 
 // \end{itemize},  \end{description}, \end{enumerate},
-void Parser::T_listenv_end(symcodes x) {
+void Parser::T_listenv_end() {
     leave_h_mode();
     the_stack.pop_if_frame(the_names[np_item]);
     the_stack.pop(np_list);
@@ -1297,7 +1297,7 @@ void Parser::translate03() {
     case end_list_cmd:
     case end_itemize_cmd:
     case end_enumerate_cmd:
-    case end_description_cmd: T_listenv_end(x); return;
+    case end_description_cmd: T_listenv_end(); return;
     case xmlelement_env_cmd: T_xmlenv(c); return;
     case end_xmlelement_env_cmd: T_xmlenv_end(c); return;
     case filecontents_env_cmd: T_filecontents(c); return;

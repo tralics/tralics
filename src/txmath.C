@@ -759,7 +759,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     if (S.empty()) s = Istring(is_inline ? np_inline : np_display);
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
-    Xmlp res = u.convert_math_noML(cmi.get_pos_att(), eqtb_int_table[nomath_code].get_val() == -2);
+    Xmlp res = u.convert_math_noML(eqtb_int_table[nomath_code].get_val() == -2);
     res->change_id(id);
     if (the_main->is_interactive_math()) cout << res << "\n";
     after_math(is_inline);
@@ -824,7 +824,7 @@ void Parser::T_math(subtypes type) {
     string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
         Math &w = math_data.get_list(loc_of_cp);
-        alter   = w.convert_math_noML(cmi.get_pos_att(), false);
+        alter   = w.convert_math_noML(false);
         alter->change_id(cmi.get_tid());
     }
     loc_of_cp = math_data.get_list(0).duplicate(false);

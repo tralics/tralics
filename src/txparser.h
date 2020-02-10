@@ -847,7 +847,7 @@ private:
     void T_line(subtypes);
     auto scan_anchor(bool &h) -> string;
     void T_listenv(symcodes);
-    void T_listenv_end(symcodes);
+    void T_listenv_end();
     void T_linethickness(int);
     void E_loop();
     void T_load_with_options(bool);
