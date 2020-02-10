@@ -2775,7 +2775,7 @@ auto Condition::top_branch() const -> int {
 // for \currentiftype
 auto Condition::top_type() const -> int {
     if (D.empty()) return 0;
-    int n = D.back().get_type();
+    int n = D.back().cur_if;
     if (n < unless_code)
         return n + 1;
     else
@@ -2829,7 +2829,7 @@ void Parser::pass_text(Token Tfe) {
 // Pushes a new conditional
 auto Condition::push(int chr) -> uint {
     if_serial++;
-    D.push_back(CondAux(if_code, chr, the_parser.get_cur_line(), if_serial));
+    D.push_back({if_code, chr, the_parser.get_cur_line(), if_serial});
     return D.size();
 }
 
