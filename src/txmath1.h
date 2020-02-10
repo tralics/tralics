@@ -30,14 +30,14 @@ class MathPAux {
 public:
     // no default Ctor, but two specialised ones
     MathPAux(int i, math_types t) : pos(i), type(t) {}
-    auto get_pos() const -> int { return pos; }
-    auto get_type() const -> math_types { return type; }
-    void get_both(int &i, math_types &t) const {
+    [[nodiscard]] auto get_pos() const -> int { return pos; }
+    [[nodiscard]] auto get_type() const -> math_types { return type; }
+    void               get_both(int &i, math_types &t) const {
         i = pos;
         t = type;
     }
-    void print(ostream &) const;
-    auto is_small() const -> bool { return type == mt_flag_small_l || type == mt_flag_small_r || type == mt_flag_small_m; }
+    void               print(ostream &) const;
+    [[nodiscard]] auto is_small() const -> bool { return type == mt_flag_small_l || type == mt_flag_small_r || type == mt_flag_small_m; }
 };
 
 using MathPList             = std::list<MathPAux>;
@@ -62,24 +62,24 @@ class MathP {
     MathPList value;
 
 public:
-    friend auto operator<<(ostream &fp, const MathP &X) -> ostream &;
-    void        clear() { value.clear(); }
-    auto        empty() const -> bool { return value.empty(); }
-    auto        find_big(int &) -> MathP;
-    auto        is_lbr(int &, int &) const -> bool;
-    auto        is_lbr2(int &, int &) const -> bool;
-    auto        find_paren_rec(MathQList &res) const -> bool;
-    void        find_paren2(int start, MathQList &res, bool);
-    void        push_back(MathPAux N) { value.push_back(N); }
-    void        remove_binrel();
-    auto        has_small() const -> bool;
-    auto        find_paren_matched1() const -> bool;
-    void        find_paren_matched2(MathQList &res) const;
+    friend auto        operator<<(ostream &fp, const MathP &X) -> ostream &;
+    void               clear() { value.clear(); }
+    [[nodiscard]] auto empty() const -> bool { return value.empty(); }
+    auto               find_big(int &) -> MathP;
+    auto               is_lbr(int &, int &) const -> bool;
+    auto               is_lbr2(int &, int &) const -> bool;
+    auto               find_paren_rec(MathQList &res) const -> bool;
+    void               find_paren2(int start, MathQList &res, bool);
+    void               push_back(MathPAux N) { value.push_back(N); }
+    void               remove_binrel();
+    [[nodiscard]] auto has_small() const -> bool;
+    [[nodiscard]] auto find_paren_matched1() const -> bool;
+    void               find_paren_matched2(MathQList &res) const;
 
 private:
-    auto analyse1(bool) const -> bool;
-    auto find_relbin(int &) -> MathP;
-    void find_paren1(int start1, int end1, MathQList &res, bool);
+    [[nodiscard]] auto analyse1(bool) const -> bool;
+    auto               find_relbin(int &) -> MathP;
+    void               find_paren1(int start1, int end1, MathQList &res, bool);
 };
 
 // Helper for finding start and end of <mrow>
@@ -94,16 +94,16 @@ class MathF {
 
 public:
     MathF();
-    auto in_mrow() const -> bool { return state; }
-    auto is_next_change(int i) const -> bool { return i == next_change; }
-    auto get_aux() -> MathQList & { return aux; }
-    void change_state();
-    void make_t_big() { t_big = true; }
-    void handle_t();
-    void push_in_t(Xmlp x);
-    void push_in_res(MathElt x) { res.push_back(x); }
-    void push_in_res(Xmlp x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
-    void reset() {
+    [[nodiscard]] auto in_mrow() const -> bool { return state; }
+    [[nodiscard]] auto is_next_change(int i) const -> bool { return i == next_change; }
+    auto               get_aux() -> MathQList & { return aux; }
+    void               change_state();
+    void               make_t_big() { t_big = true; }
+    void               handle_t();
+    void               push_in_t(Xmlp x);
+    void               push_in_res(MathElt x) { res.push_back(x); }
+    void               push_in_res(Xmlp x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
+    void               reset() {
         t     = nullptr;
         state = true;
         t_big = false;

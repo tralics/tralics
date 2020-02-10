@@ -24,23 +24,23 @@ private:
 public:
     KeyAndVal() {}
     KeyAndVal(string a, TokenList b, string all) : full_name(all), name(a), val(b), used(false) {}
-    auto get_name() const -> const string & { return name; }
-    auto get_full_name() const -> const string & { return full_name; }
-    auto get_val() const -> const TokenList & { return val; }
-    auto has_name(const string &x) const -> bool { return name == x; }
-    auto has_full_name(const string &x) const -> bool { return full_name == x; }
-    auto has_name(String x) const -> bool { return name == x; }
-    void dump(Buffer &B) const { B << full_name; };
-    void use(TokenList &L) const;
-    void kill() {
+    [[nodiscard]] auto get_name() const -> const string & { return name; }
+    [[nodiscard]] auto get_full_name() const -> const string & { return full_name; }
+    [[nodiscard]] auto get_val() const -> const TokenList & { return val; }
+    [[nodiscard]] auto has_name(const string &x) const -> bool { return name == x; }
+    [[nodiscard]] auto has_full_name(const string &x) const -> bool { return full_name == x; }
+    auto               has_name(String x) const -> bool { return name == x; }
+    void               dump(Buffer &B) const { B << full_name; };
+    void               use(TokenList &L) const;
+    void               kill() {
         val  = TokenList();
         used = true;
     }
-    void use_and_kill(TokenList &L, KeyAndVal &U, bool X);
-    auto to_list() const -> TokenList;
-    auto is_used() const -> bool { return used; }
-    void mark_used() { used = true; }
-    void mark_un_used() { used = false; }
+    void               use_and_kill(TokenList &L, KeyAndVal &U, bool X);
+    [[nodiscard]] auto to_list() const -> TokenList;
+    [[nodiscard]] auto is_used() const -> bool { return used; }
+    void               mark_used() { used = true; }
+    void               mark_un_used() { used = false; }
 };
 
 using OptionList = vector<KeyAndVal>;
@@ -60,19 +60,19 @@ public:
     bool       checked;         // set by \usepakage (for re-use)
 public:
     LatexPackage(string A);
-    void add_to_hook(TokenList &L) { hook.splice(hook.end(), L); }
-    void add_options(const OptionList &L);
-    auto find_option(const string &name) -> int;
-    auto is_class() const -> bool { return name[0] == 'C'; }
-    auto real_name() const -> String { return name.c_str() + 1; }
-    auto full_name() const -> string { return name; }
-    auto pack_or_class() const -> String { return is_class() ? "class " : "package "; }
-    auto has_name(const string &s) const -> bool { return name == s; }
-    void print_options();
-    void check_global_options(TokenList &res, bool X);
-    void check_local_options(TokenList &res, bool X);
-    void check_all_options(TokenList &res, TokenList &, int X);
-    void reload();
+    void               add_to_hook(TokenList &L) { hook.splice(hook.end(), L); }
+    void               add_options(const OptionList &L);
+    auto               find_option(const string &name) -> int;
+    [[nodiscard]] auto is_class() const -> bool { return name[0] == 'C'; }
+    [[nodiscard]] auto real_name() const -> String { return name.c_str() + 1; }
+    [[nodiscard]] auto full_name() const -> string { return name; }
+    [[nodiscard]] auto pack_or_class() const -> String { return is_class() ? "class " : "package "; }
+    [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
+    void               print_options();
+    void               check_global_options(TokenList &res, bool X);
+    void               check_local_options(TokenList &res, bool X);
+    void               check_all_options(TokenList &res, TokenList &, int X);
+    void               reload();
 };
 
 class ClassesData {
@@ -105,8 +105,8 @@ class FormatDate {
     auto  parse(Buffer &) -> bool;
 
 public:
-    auto interpret(const string &, Token T) -> bool;
-    auto get_year() const -> int { return field3; }
-    auto get_month() const -> int { return field1; }
-    auto get_day() const -> int { return field2; }
+    auto               interpret(const string &, Token T) -> bool;
+    [[nodiscard]] auto get_year() const -> int { return field3; }
+    [[nodiscard]] auto get_month() const -> int { return field1; }
+    [[nodiscard]] auto get_day() const -> int { return field2; }
 };

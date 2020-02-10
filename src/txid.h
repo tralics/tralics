@@ -16,21 +16,21 @@ public:
     int value{0}; // value of the id
     Xid(int v) : value(v) {}
     Xid() {}
-    auto get_att() const -> AttList &;
-    void add_attribute(Istring A, Istring B);
-    void add_attribute(Istring A, Istring B, bool f);
-    void add_attribute(name_positions A, name_positions B);
-    void add_attribute(name_positions n, name_positions v, bool);
-    void add_attribute(name_positions n, Istring v);
-    void add_attribute(const AttList &L, bool f);
-    void add_attribute_but_rend(Xid b);
-    void add_attribute(Xid b);
-    void add_ref(string);
-    void add_span(int);
-    void add_top_rule();
-    void add_bottom_rule();
-    auto operator==(Xid X) const -> bool { return value == X.value; }
-    auto has_attribute(Istring n) -> Istring;
-    auto is_font_change() const -> bool;
-    void add_special_att(string S);
+    [[nodiscard]] auto get_att() const -> AttList &;
+    void               add_attribute(Istring A, Istring B);
+    void               add_attribute(Istring A, Istring B, bool f);
+    void               add_attribute(name_positions A, name_positions B);
+    void               add_attribute(name_positions n, name_positions v, bool);
+    void               add_attribute(name_positions n, Istring v);
+    void               add_attribute(const AttList &L, bool f);
+    void               add_attribute_but_rend(Xid b);
+    void               add_attribute(Xid b);
+    void               add_ref(string);
+    void               add_span(int);
+    void               add_top_rule();
+    void               add_bottom_rule();
+    auto               operator==(Xid X) const -> bool { return value == X.value; }
+    auto               has_attribute(Istring n) -> Istring;
+    [[nodiscard]] auto is_font_change() const -> bool;
+    void               add_special_att(string S);
 };

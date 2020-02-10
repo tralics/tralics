@@ -46,17 +46,17 @@ public:
     XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(Istring()) {}
     XmlAction(Istring M, recur_type w, Xmlp X) : match(M), what(w), int_val(0), xml_val(X), string_val(Istring()) {}
     XmlAction(Istring M, recur_type w, Istring X) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(X) {}
-    auto get_what() const -> recur_type { return what; }
-    void incr_int_val() { int_val++; }
-    void mark_found() { int_val = 1; }
-    auto is_ok() -> bool { return int_val != 0; }
-    auto get_xml_val() const -> Xmlp { return xml_val; }
-    auto get_int_val() const -> int { return int_val; }
-    auto get_string_val() const -> Istring { return string_val; }
-    void set_string_val(Istring s) { string_val = s; }
-    void set_xml_val(Xmlp s) { xml_val = s; }
-    void set_int_val(int s) { int_val = s; }
-    auto get_match() const -> Istring { return match; }
+    [[nodiscard]] auto get_what() const -> recur_type { return what; }
+    void               incr_int_val() { int_val++; }
+    void               mark_found() { int_val = 1; }
+    auto               is_ok() -> bool { return int_val != 0; }
+    [[nodiscard]] auto get_xml_val() const -> Xmlp { return xml_val; }
+    [[nodiscard]] auto get_int_val() const -> int { return int_val; }
+    [[nodiscard]] auto get_string_val() const -> Istring { return string_val; }
+    void               set_string_val(Istring s) { string_val = s; }
+    void               set_xml_val(Xmlp s) { xml_val = s; }
+    void               set_int_val(int s) { int_val = s; }
+    [[nodiscard]] auto get_match() const -> Istring { return match; }
 };
 
 // A class to count words...
@@ -67,14 +67,14 @@ class WordList {
     int       freq;
 
 public:
-    void set_next(WordList *n) { next = n; }
-    auto next_empty() const -> bool { return next == nullptr; }
+    void               set_next(WordList *n) { next = n; }
+    [[nodiscard]] auto next_empty() const -> bool { return next == nullptr; }
     WordList(String s, int h, WordList *N) : next(N), name(s), hash(h), freq(1) {}
-    auto is_here(String s, int h) const -> bool { return hash == h && strcmp(name, s) == 0; }
-    void incr_freq() { freq++; }
-    auto get_freq() const -> int { return freq; }
-    auto get_next() const -> WordList * { return next; }
-    auto dump(fstream *X, int i) -> bool {
+    auto               is_here(String s, int h) const -> bool { return hash == h && strcmp(name, s) == 0; }
+    void               incr_freq() { freq++; }
+    [[nodiscard]] auto get_freq() const -> int { return freq; }
+    [[nodiscard]] auto get_next() const -> WordList * { return next; }
+    auto               dump(fstream *X, int i) -> bool {
         if (freq == i) {
             (*X) << freq << " " << name << "\n";
             return true;

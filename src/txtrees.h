@@ -33,12 +33,12 @@ public:
 //
 class Indexer {
 public:
-    string key; // sort key
-    string aux;
-    Xmlp   translation;
-    int    level;
-    int    iid; // index in the reference table
-    auto   is_same(int l, const string &k) const -> bool { return level == l && k == aux; }
+    string             key; // sort key
+    string             aux;
+    Xmlp               translation;
+    int                level;
+    int                iid; // index in the reference table
+    [[nodiscard]] auto is_same(int l, const string &k) const -> bool { return level == l && k == aux; }
     Indexer(string k, string a, Xmlp x, int l, int u) : key(k), aux(a), translation(x), level(l), iid(u) {}
 };
 
@@ -50,16 +50,16 @@ class OneIndex {
     vector<Indexer *> value;
 
 public:
-    auto size() const -> int { return value.size(); }
-    auto get_data() -> vector<Indexer *> & { return value; }
-    void do_sort() { sort(value.begin(), value.end(), trees_ns::xless); }
-    auto get_AL() const -> int { return AL; }
-    auto get_title() const -> const string & { return title; }
-    auto get_position() const -> Xmlp { return position; }
-    void set_position(Xmlp x) { position = x; }
-    auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
-    auto get_iid(int i) const -> int { return value[i]->iid; }
-    auto has_name(const string &s) const -> bool { return name == s; }
+    [[nodiscard]] auto size() const -> int { return value.size(); }
+    auto               get_data() -> vector<Indexer *> & { return value; }
+    void               do_sort() { sort(value.begin(), value.end(), trees_ns::xless); }
+    [[nodiscard]] auto get_AL() const -> int { return AL; }
+    [[nodiscard]] auto get_title() const -> const string & { return title; }
+    [[nodiscard]] auto get_position() const -> Xmlp { return position; }
+    void               set_position(Xmlp x) { position = x; }
+    [[nodiscard]] auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
+    [[nodiscard]] auto get_iid(int i) const -> int { return value[i]->iid; }
+    [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
     OneIndex(string a, string b, int c) : name(a), title(b), position(nullptr), AL(c) {}
 };
 
@@ -69,10 +69,10 @@ class AllIndex {
     vector<OneIndex *> value;
 
 public:
-    auto get_index(int j) -> OneIndex * { return value[j]; }
-    auto find_index(const string &) -> int;
-    auto size() const -> int { return value.size(); }
-    auto get_data(int i) -> vector<Indexer *> & { return value[i]->get_data(); }
+    auto               get_index(int j) -> OneIndex * { return value[j]; }
+    auto               find_index(const string &) -> int;
+    [[nodiscard]] auto size() const -> int { return value.size(); }
+    auto               get_data(int i) -> vector<Indexer *> & { return value[i]->get_data(); }
     AllIndex();
     void mark_print(int g);
     auto next_iid() -> int {
@@ -84,6 +84,6 @@ public:
         ++last_index;
         return last_index;
     }
-    auto get_last_iid() const -> int { return last_iid; }
-    void new_index(const string &, const string &);
+    [[nodiscard]] auto get_last_iid() const -> int { return last_iid; }
+    void               new_index(const string &, const string &);
 };

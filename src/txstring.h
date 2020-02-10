@@ -35,22 +35,22 @@ class StrHash {
     Buffer      mybuf;     // local buffer
 public:
     StrHash();
-    void re_alloc();
-    auto hash_find() -> int;
-    auto find(String) -> int;
-    auto find(const string &) -> int;
-    auto find(int) -> int;
-    auto operator[](int k) const -> String { return Text[k]; }
-    auto p_str(int k) const -> String { return Value[k]; }
-    auto shbuf() -> Buffer & { return mybuf; }
-    auto lab_val(Istring k) -> LabelInfo *;
-    auto lab_val_check(Istring k) -> LabelInfo *;
-    auto next_label_id() -> Istring;
-    auto next_top_label_id() -> Istring;
-    void rlc_to_string(String s, vector<AttList> &);
-    auto st_bool(bool x) const -> name_positions { return x ? np_true : np_false; };
-    auto find_scaled(ScaledInt) -> Istring;
-    auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
+    void               re_alloc();
+    auto               hash_find() -> int;
+    auto               find(String) -> int;
+    auto               find(const string &) -> int;
+    auto               find(int) -> int;
+    auto               operator[](int k) const -> String { return Text[k]; }
+    [[nodiscard]] auto p_str(int k) const -> String { return Value[k]; }
+    auto               shbuf() -> Buffer & { return mybuf; }
+    auto               lab_val(Istring k) -> LabelInfo *;
+    auto               lab_val_check(Istring k) -> LabelInfo *;
+    auto               next_label_id() -> Istring;
+    auto               next_top_label_id() -> Istring;
+    void               rlc_to_string(String s, vector<AttList> &);
+    [[nodiscard]] auto st_bool(bool x) const -> name_positions { return x ? np_true : np_false; };
+    auto               find_scaled(ScaledInt) -> Istring;
+    auto               skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
 };
 
 class Istring {
@@ -64,17 +64,17 @@ public:
     explicit Istring(string s);
     explicit Istring(String s);
 
-    auto null() const -> bool { return value == 0; }       // null string
-    auto empty() const -> bool { return value == 1; }      // ""
-    auto spec_empty() const -> bool { return value == 2; } // ""
-    auto only_space() const -> bool;
-    auto starts_with_div() const -> uchar;
-    auto only_space_spec() const -> bool;
-    auto operator==(Istring X) const -> bool { return value == X.value; }
-    auto operator!=(Istring X) const -> bool { return value != X.value; }
-    auto get_value() const -> int { return value; }
-    auto c_str() const -> String;
-    auto p_str() const -> String;
+    [[nodiscard]] auto null() const -> bool { return value == 0; }       // null string
+    [[nodiscard]] auto empty() const -> bool { return value == 1; }      // ""
+    [[nodiscard]] auto spec_empty() const -> bool { return value == 2; } // ""
+    [[nodiscard]] auto only_space() const -> bool;
+    [[nodiscard]] auto starts_with_div() const -> uchar;
+    [[nodiscard]] auto only_space_spec() const -> bool;
+    auto               operator==(Istring X) const -> bool { return value == X.value; }
+    auto               operator!=(Istring X) const -> bool { return value != X.value; }
+    [[nodiscard]] auto get_value() const -> int { return value; }
+    [[nodiscard]] auto c_str() const -> String;
+    [[nodiscard]] auto p_str() const -> String;
 };
 
 inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.get_value()]; }

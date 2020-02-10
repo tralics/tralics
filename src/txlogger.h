@@ -37,16 +37,16 @@ class Logger {
                      // a newline is required
     string filename; // the name of the log file
 public:
-    fstream *fp; // the stream to which we print
-    void     finish_seq();
-    void     out_single_char(Utf8Char c);
-    void     dump(String s);
-    void     dump0(String s);
-    void     set_finished() { finished = true; }
-    void     set_file_name(string x) { filename = x; }
-    void     abort();
-    auto     get_filename() const -> string { return filename; }
-    auto     operator<<(logger_fn f) -> Logger & {
+    fstream *          fp; // the stream to which we print
+    void               finish_seq();
+    void               out_single_char(Utf8Char c);
+    void               dump(String s);
+    void               dump0(String s);
+    void               set_finished() { finished = true; }
+    void               set_file_name(string x) { filename = x; }
+    void               abort();
+    [[nodiscard]] auto get_filename() const -> string { return filename; }
+    auto               operator<<(logger_fn f) -> Logger & {
         f(*this);
         return *this;
     }

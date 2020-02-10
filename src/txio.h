@@ -50,12 +50,12 @@ public:
         C = converted;
         return number;
     }
-    auto get_number() const -> int { return number; }
-    auto get_chars() const -> const string & { return chars; }
-    void set_chars(string x) { chars = x; }
-    auto starts_with(String) const -> bool;
-    void convert_line(int);
-    void clear_converted() { converted = false; }
+    [[nodiscard]] auto get_number() const -> int { return number; }
+    [[nodiscard]] auto get_chars() const -> const string & { return chars; }
+    void               set_chars(string x) { chars = x; }
+    auto               starts_with(String) const -> bool;
+    void               convert_line(int);
+    void               clear_converted() { converted = false; }
 };
 
 using line_iterator_const = std::list<Clines>::const_iterator;
@@ -69,59 +69,59 @@ private:
     string            file_name;          // file name associated to the lines
     int               cur_encoding{1};    // current file encoding
 public:
-    void add(int n, Buffer &b, bool);
-    void add_buffer(Buffer &, line_iterator);
-    void add_buffer(LinePtr &, line_iterator);
-    void after_open();
-    void before_close(bool);
-    void clear() { value.clear(); }
-    void clear_and_copy(LinePtr &X);
-    void change_encoding(int k);
-    auto dump_name() const -> String;
-    void find_tex_encoding();
-    auto find_aliases(const vector<string> &, string &res) -> bool;
-    void find_all_types(vector<string> &);
-    auto find_configuration(Buffer &) -> string;
-    void find_doctype(Buffer &, string &);
-    auto find_documentclass(Buffer &) -> string;
-    void find_top_atts(Buffer &B);
-    auto find_top_val(String s, bool c) -> string;
-    auto get_cur_line() const -> int { return cur_line; }
-    auto get_encoding() const -> int { return cur_encoding; }
-    auto get_file_name() const -> string { return file_name; }
-    auto get_interactive() const -> bool { return interactive; }
-    void set_interactive(bool sw) { interactive = sw; }
-    auto get_last_line_no() -> int { return value.back().get_number(); }
-    auto get_next_raw(Buffer &b) -> int;
-    auto get_next_cv(Buffer &b, int) -> int;
-    auto get_next(Buffer &b) -> int;
-    auto get_next(string &b, bool &cv) -> int;
-    auto get_value() -> std::list<Clines> & { return value; }
-    void incr_cur_line() { cur_line++; }
-    void insert(int n, string c, bool);
-    void insert(string c, bool);
-    void insert(String c);
-    void insert_spec(int n, string c);
-    void insert(const LinePtr &);
-    auto is_empty() const -> bool { return value.empty(); }
-    void parse_and_extract_clean(String s);
-    void parse_conf_toplevel() const;
-    auto parse_and_extract(String s) const -> LinePtr;
-    void print();
-    void print(fstream *);
-    void print1(fstream *);
-    void push_front(Clines x) { value.push_front(x); }
-    void push_back(Clines x) { value.push_back(x); }
-    void reset(string x);
-    auto read_from_tty(Buffer &b) -> int;
-    void set_cur_line(int x) { cur_line = x; }
-    void set_encoding(int k) { cur_encoding = k; }
-    void set_file_name(string s) { file_name = s; }
-    void set_interactive();
-    auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
-    void splice_end(LinePtr &X);
-    void splice_first(LinePtr &X);
-    void split_string(String x, int l);
+    void               add(int n, Buffer &b, bool);
+    void               add_buffer(Buffer &, line_iterator);
+    void               add_buffer(LinePtr &, line_iterator);
+    void               after_open();
+    void               before_close(bool);
+    void               clear() { value.clear(); }
+    void               clear_and_copy(LinePtr &X);
+    void               change_encoding(int k);
+    [[nodiscard]] auto dump_name() const -> String;
+    void               find_tex_encoding();
+    auto               find_aliases(const vector<string> &, string &res) -> bool;
+    void               find_all_types(vector<string> &);
+    auto               find_configuration(Buffer &) -> string;
+    void               find_doctype(Buffer &, string &);
+    auto               find_documentclass(Buffer &) -> string;
+    void               find_top_atts(Buffer &B);
+    auto               find_top_val(String s, bool c) -> string;
+    [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
+    [[nodiscard]] auto get_encoding() const -> int { return cur_encoding; }
+    [[nodiscard]] auto get_file_name() const -> string { return file_name; }
+    [[nodiscard]] auto get_interactive() const -> bool { return interactive; }
+    void               set_interactive(bool sw) { interactive = sw; }
+    auto               get_last_line_no() -> int { return value.back().get_number(); }
+    auto               get_next_raw(Buffer &b) -> int;
+    auto               get_next_cv(Buffer &b, int) -> int;
+    auto               get_next(Buffer &b) -> int;
+    auto               get_next(string &b, bool &cv) -> int;
+    auto               get_value() -> std::list<Clines> & { return value; }
+    void               incr_cur_line() { cur_line++; }
+    void               insert(int n, string c, bool);
+    void               insert(string c, bool);
+    void               insert(String c);
+    void               insert_spec(int n, string c);
+    void               insert(const LinePtr &);
+    [[nodiscard]] auto is_empty() const -> bool { return value.empty(); }
+    void               parse_and_extract_clean(String s);
+    void               parse_conf_toplevel() const;
+    auto               parse_and_extract(String s) const -> LinePtr;
+    void               print();
+    void               print(fstream *);
+    void               print1(fstream *);
+    void               push_front(Clines x) { value.push_front(x); }
+    void               push_back(Clines x) { value.push_back(x); }
+    void               reset(string x);
+    auto               read_from_tty(Buffer &b) -> int;
+    void               set_cur_line(int x) { cur_line = x; }
+    void               set_encoding(int k) { cur_encoding = k; }
+    void               set_file_name(string s) { file_name = s; }
+    void               set_interactive();
+    auto               skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
+    void               splice_end(LinePtr &X);
+    void               splice_first(LinePtr &X);
+    void               split_string(String x, int l);
     LinePtr() : file_name("") {}
     void normalise_final_cr();
 };
@@ -140,22 +140,22 @@ class InputStack {
     bool             every_eof;  // True if every_eof_token can be inserted
     bool             eof_outer;  // True if eof is outer
 public:
-    auto get_name() const -> const string & { return name; }
-    auto get_line_no() const -> int { return line_no; }
-    void set_state(states X) { s = X; }
-    auto get_TL() -> TokenList & { return TL; }
-    auto get_B() -> vector<Utf8Char> & { return B; }
-    auto get_state() const -> states { return s; }
-    auto get_line_pos() const -> int { return Bpos; }
-    void set_line_pos(int x) { Bpos = x; }
-    void set_line_vector(const vector<Utf8Char> &x) { B = x; }
-    auto get_at_val() const -> int { return restore_at; }
-    void set_at_val(int x) { restore_at = x; }
-    auto get_file_pos() const -> int { return file_pos; }
-    auto get_every_eof() const -> bool { return every_eof; }
-    auto get_eof_outer() const -> bool { return eof_outer; }
-    void destroy();
-    void set_line_ptr(LinePtr &X) {
+    [[nodiscard]] auto get_name() const -> const string & { return name; }
+    [[nodiscard]] auto get_line_no() const -> int { return line_no; }
+    void               set_state(states X) { s = X; }
+    auto               get_TL() -> TokenList & { return TL; }
+    auto               get_B() -> vector<Utf8Char> & { return B; }
+    [[nodiscard]] auto get_state() const -> states { return s; }
+    [[nodiscard]] auto get_line_pos() const -> int { return Bpos; }
+    void               set_line_pos(int x) { Bpos = x; }
+    void               set_line_vector(const vector<Utf8Char> &x) { B = x; }
+    [[nodiscard]] auto get_at_val() const -> int { return restore_at; }
+    void               set_at_val(int x) { restore_at = x; }
+    [[nodiscard]] auto get_file_pos() const -> int { return file_pos; }
+    [[nodiscard]] auto get_every_eof() const -> bool { return every_eof; }
+    [[nodiscard]] auto get_eof_outer() const -> bool { return eof_outer; }
+    void               destroy();
+    void               set_line_ptr(LinePtr &X) {
         L.clear_and_copy(X);
         X.set_file_name("");
         L.set_interactive(X.get_interactive());
@@ -198,8 +198,8 @@ class TexOutStream {
 
 public:
     TexOutStream();
-    void close(int);
-    void open(int, string);
-    auto is_open(int i) const -> bool { return write_open[i]; }
-    void write(int chan, string s) { *(write_file[chan]) << s; }
+    void               close(int);
+    void               open(int, string);
+    [[nodiscard]] auto is_open(int i) const -> bool { return write_open[i]; }
+    void               write(int chan, string s) { *(write_file[chan]) << s; }
 };

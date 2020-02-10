@@ -89,14 +89,14 @@ class FpStack {
     TokenList value;
 
 public:
-    void clear() { value.clear(); }
-    auto empty() const -> bool { return value.empty(); }
-    void pop_upn(FpNum &);
-    void pop_upn(TokenList &);
-    void push_front(Token L) { value.push_front(L); }
-    void push_front(TokenList &L) { value.splice(value.begin(), L); }
-    void push_upn(TokenList &);
-    void push_upn(FpNum);
+    void               clear() { value.clear(); }
+    [[nodiscard]] auto empty() const -> bool { return value.empty(); }
+    void               pop_upn(FpNum &);
+    void               pop_upn(TokenList &);
+    void               push_front(Token L) { value.push_front(L); }
+    void               push_front(TokenList &L) { value.splice(value.begin(), L); }
+    void               push_upn(TokenList &);
+    void               push_upn(FpNum);
 };
 
 // This represents the value of a user-defined command
@@ -109,16 +109,16 @@ public:
     Macro() {}
     Macro(TokenList L) : nbargs(0), type(dt_normal), body(L) { correct_type(); }
     // other methods
-    auto get_type() const -> def_type { return type; }
-    auto get_nbargs() const -> int { return nbargs; }
-    auto get_body() -> TokenList & { return body; }
-    auto get_body() const -> const TokenList & { return body; }
-    void set_nbargs(int n) { nbargs = n; }
-    void set_type(def_type n) { type = n; }
-    auto is_same(const Macro &) const -> bool;
-    auto operator[](int n) const -> const TokenList & { return delimiters[n]; }
-    void set_delimiters(int k, TokenList L) { delimiters[k] = L; }
-    void correct_type();
+    [[nodiscard]] auto get_type() const -> def_type { return type; }
+    [[nodiscard]] auto get_nbargs() const -> int { return nbargs; }
+    auto               get_body() -> TokenList & { return body; }
+    [[nodiscard]] auto get_body() const -> const TokenList & { return body; }
+    void               set_nbargs(int n) { nbargs = n; }
+    void               set_type(def_type n) { type = n; }
+    [[nodiscard]] auto is_same(const Macro &) const -> bool;
+    auto               operator[](int n) const -> const TokenList & { return delimiters[n]; }
+    void               set_delimiters(int k, TokenList L) { delimiters[k] = L; }
+    void               correct_type();
 };
 
 // The table of macros. it contains the reference counts

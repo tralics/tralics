@@ -43,8 +43,8 @@ public:
         used = true;
         return id;
     }
-    auto is_used() const -> bool { return used; }
-    auto get_val() const -> Xmlp { return xval; }
+    [[nodiscard]] auto is_used() const -> bool { return used; }
+    [[nodiscard]] auto get_val() const -> Xmlp { return xval; }
 };
 vector<ColSpec *> all_colors;
 

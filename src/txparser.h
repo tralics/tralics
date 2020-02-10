@@ -88,10 +88,10 @@ private:
     Xmlp             the_xmlA{nullptr}, the_xmlB{nullptr}; // for XML tree manipulations
                                                            // private inline functions
 private:
-    auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
-    auto get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
-    auto get_catcode(int x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
-    void set_catcode(int x, int v) { // untraced version of catcode modification
+    auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
+    auto               get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
+    [[nodiscard]] auto get_catcode(int x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
+    void               set_catcode(int x, int v) { // untraced version of catcode modification
         eqtb_int_table[x].set_val(v);
     }
     auto get_after_ass_tok() -> Token {
@@ -99,13 +99,13 @@ private:
         after_assignment_token.kill();
         return x;
     }
-    auto get_def_language_num() const -> int { return default_language_num; }
-    auto get_projet_val() const -> string { return the_projetval; }
-    auto get_ur_val() -> string { return the_url_val; }
-    auto is_pos_par(int k) const -> bool { return eqtb_int_table[k].get_val() > 0; }
-    void kill_line() { input_line.clear(); }
-    void see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr(); }
-    void see_cs_token(Token T) {
+    [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
+    [[nodiscard]] auto get_projet_val() const -> string { return the_projetval; }
+    auto               get_ur_val() -> string { return the_url_val; }
+    [[nodiscard]] auto is_pos_par(int k) const -> bool { return eqtb_int_table[k].get_val() > 0; }
+    void               kill_line() { input_line.clear(); }
+    void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr(); }
+    void               see_cs_token(Token T) {
         cur_tok = T;
         see_cs_token();
     }
@@ -113,38 +113,38 @@ private:
         cur_cmd_chr.set_cmd(t.cmd_val());
         cur_cmd_chr.set_chr(t.chr_val());
     }
-    void set_after_ass_tok(Token x) { after_assignment_token = x; }
-    void set_cat(int c, int v) { eqtb_int_table[c].set_val(v); }
-    void set_def_language_num(int x) { default_language_num = x; }
-    auto tracing_io() const -> bool { return is_pos_par(tracingoutput_code); }
-    auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }
+    void               set_after_ass_tok(Token x) { after_assignment_token = x; }
+    void               set_cat(int c, int v) { eqtb_int_table[c].set_val(v); }
+    void               set_def_language_num(int x) { default_language_num = x; }
+    [[nodiscard]] auto tracing_io() const -> bool { return is_pos_par(tracingoutput_code); }
+    [[nodiscard]] auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }
     // public inline functions
 public:
     auto get_cur_env_name() -> string & { return cur_env_name; }
 
-    void back_input() { TL.push_front(cur_tok); }
-    void back_input(Token t) { TL.push_front(t); }
-    void back_input(TokenList &L) { TL.splice(TL.begin(), L); }
-    void brace_me(TokenList &L);
-    auto cur_centering() const -> int { return eqtb_int_table[incentering_code].get_val(); }
-    auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].get_val() == 1; }
-    auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].get_val() == 2; }
-    auto cur_line_to_istring() -> Istring;
-    void decr_cur_level() { cur_level--; }
-    auto get_cur_filename() -> string { return lines.get_file_name(); }
-    auto get_cur_file_pos() const -> int { return cur_file_pos; }
-    auto get_cur_level() -> int { return cur_level; }
-    auto get_cur_line() const -> int { return cur_line; }
-    auto get_cur_val() -> SthInternal & { return cur_val; }
-    auto get_job_name() const -> string { return job_name; }
-    auto get_list_files() const -> bool { return list_files_p; }
-    auto get_ra_year() const -> int { return ra_year; }
-    auto get_year_string() const -> string { return year_string; }
-    void init(LinePtr x) { lines = x; }
-    void remember_ur(string s) { the_url_val = s; }
-    void set_cur_line(int x) { cur_line = x; }
-    void set_cur_file_pos(int k) { cur_file_pos = k; }
-    void set_cur_env_name(string s) {
+    void               back_input() { TL.push_front(cur_tok); }
+    void               back_input(Token t) { TL.push_front(t); }
+    void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
+    void               brace_me(TokenList &L);
+    [[nodiscard]] auto cur_centering() const -> int { return eqtb_int_table[incentering_code].get_val(); }
+    [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].get_val() == 1; }
+    [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].get_val() == 2; }
+    auto               cur_line_to_istring() -> Istring;
+    void               decr_cur_level() { cur_level--; }
+    auto               get_cur_filename() -> string { return lines.get_file_name(); }
+    [[nodiscard]] auto get_cur_file_pos() const -> int { return cur_file_pos; }
+    auto               get_cur_level() -> int { return cur_level; }
+    [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
+    auto               get_cur_val() -> SthInternal & { return cur_val; }
+    [[nodiscard]] auto get_job_name() const -> string { return job_name; }
+    [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
+    [[nodiscard]] auto get_ra_year() const -> int { return ra_year; }
+    [[nodiscard]] auto get_year_string() const -> string { return year_string; }
+    void               init(LinePtr x) { lines = x; }
+    void               remember_ur(string s) { the_url_val = s; }
+    void               set_cur_line(int x) { cur_line = x; }
+    void               set_cur_file_pos(int k) { cur_file_pos = k; }
+    void               set_cur_env_name(string s) {
         cur_env_name   = s;
         begin_env_line = cur_line;
     }
@@ -152,89 +152,89 @@ public:
         cur_env_name   = s;
         begin_env_line = x;
     }
-    void set_ra_year(int x) { ra_year = x; }
-    void set_job_name(string s) { job_name = s; }
-    void set_projet_val(string s) { the_projetval = s; }
-    void set_year_string(string s) { year_string = s; }
-    auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
-    auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
-    auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
-    auto tracing_stack() const -> bool { return is_pos_par(tracingrestores_code); }
-    void unexpected_font() { unexpected_seen_hi = true; }
-    void L3_load(bool);
+    void               set_ra_year(int x) { ra_year = x; }
+    void               set_job_name(string s) { job_name = s; }
+    void               set_projet_val(string s) { the_projetval = s; }
+    void               set_year_string(string s) { year_string = s; }
+    [[nodiscard]] auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
+    [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
+    [[nodiscard]] auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
+    [[nodiscard]] auto tracing_stack() const -> bool { return is_pos_par(tracingrestores_code); }
+    void               unexpected_font() { unexpected_seen_hi = true; }
+    void               L3_load(bool);
     // public functions
 public:
     Parser();
 
-    void add_buffer_to_document_hook(Buffer &b, const string &);
-    void add_language_att();
-    void after_main_text();
-    void boot();
-    void boot_special_names();
-    void box_end(Xmlp, int);
-    auto list_to_string0(Buffer &b) -> bool;
-    auto list_to_string(TokenList &L, Buffer &b) -> bool;
-    auto list_to_string_cv(TokenList &L, Buffer &b) -> bool;
-    void list_to_string_c(TokenList &x, String s1, String s2, String msg, Buffer &B);
-    auto list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
-    auto list_to_string_c(TokenList &x, String msg) -> string;
-    auto csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
-    auto csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
-    auto csname_ctr(TokenList &L, Buffer &b) -> bool;
-    void eq_define(int a, CmdChr, bool gbl);
-    void titlepage_evaluate(String s, const string &);
-    void final_checks();
-    void finish_images();
-    void flush_buffer();
-    void font_has_changed1();
-    auto fp_read_value() -> FpNum;
-    void fp_send_one_arg(TokenList &res);
-    auto get_scanner_status() const -> scan_stat { return scanner_status; }
-    auto get_long_state() const -> l_state { return long_state; }
-    auto has_letter_catcode(int x) const -> bool { return get_catcode(x) == letter_catcode; }
-    void init_all(string);
-    void load_latex();
-    auto read_arg() -> TokenList;
-    auto read_arg_nopar() -> TokenList;
-    auto nct_aux(Token, TokenList &) -> int;
-    auto nE_arg_nopar() -> Istring;
-    auto nT_arg_nopar() -> Istring;
-    auto nT_optarg_nopar() -> Istring;
-    void parse_error(Token, const string &, TokenList &);
-    void parse_error(Token, const string &);
-    void parse_error(Token, String);
-    void parse_error(String);
-    void parse_error(Token, const string &, const string &);
-    void parse_error(Token, const string &, Token, const string &, const string &);
-    void parse_error(Token, const string &, const string &, const string &);
-    void print_cmd_chr(CmdChr);
-    void remove_junk();
-    void scan_eqno(math_list_type);
-    void scan_glue(internal_type level);
-    void scan_glue(internal_type level, Token T);
-    void scan_glue(internal_type level, Token T, bool);
-    void list_to_glue(internal_type level, Token t, TokenList &L);
-    void set_default_language(int);
-    void set_scanner_status(scan_stat c) { scanner_status = c; }
-    void set_long_state(l_state c) { long_state = c; }
-    void signal_error(String);
-    void signal_error();
-    void signal_error(Token, String);
-    void signal_ovf(Token, String, int, int);
-    auto special_expand(TokenList *args) -> TokenList;
-    auto special_tpa_arg(String n, String y, bool par, bool env, bool qf) -> Xmlp;
-    void T_titlepage_finish(int v);
-    auto tpa_exec(String) -> Xmlp;
-    void M_tracingall();
-    void translate0();
-    void translate_all();
-    void word_define(int a, int c, bool gbl);
-    auto find_a_save_key(const string &mykey) -> bool;
-    auto expand_mac_inner(const TokenList &X, TokenList *) -> TokenList;
-    void mu_error(String, int);
-    void expand_nct(TokenList &L);
-    void token_for_show(const CmdChr &);
-    void create_label(const string &, Istring value);
+    void               add_buffer_to_document_hook(Buffer &b, const string &);
+    void               add_language_att();
+    void               after_main_text();
+    void               boot();
+    void               boot_special_names();
+    void               box_end(Xmlp, int);
+    auto               list_to_string0(Buffer &b) -> bool;
+    auto               list_to_string(TokenList &L, Buffer &b) -> bool;
+    auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
+    void               list_to_string_c(TokenList &x, String s1, String s2, String msg, Buffer &B);
+    auto               list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
+    auto               list_to_string_c(TokenList &x, String msg) -> string;
+    auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
+    auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
+    auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
+    void               eq_define(int a, CmdChr, bool gbl);
+    void               titlepage_evaluate(String s, const string &);
+    void               final_checks();
+    void               finish_images();
+    void               flush_buffer();
+    void               font_has_changed1();
+    auto               fp_read_value() -> FpNum;
+    void               fp_send_one_arg(TokenList &res);
+    [[nodiscard]] auto get_scanner_status() const -> scan_stat { return scanner_status; }
+    [[nodiscard]] auto get_long_state() const -> l_state { return long_state; }
+    [[nodiscard]] auto has_letter_catcode(int x) const -> bool { return get_catcode(x) == letter_catcode; }
+    void               init_all(string);
+    void               load_latex();
+    auto               read_arg() -> TokenList;
+    auto               read_arg_nopar() -> TokenList;
+    auto               nct_aux(Token, TokenList &) -> int;
+    auto               nE_arg_nopar() -> Istring;
+    auto               nT_arg_nopar() -> Istring;
+    auto               nT_optarg_nopar() -> Istring;
+    void               parse_error(Token, const string &, TokenList &);
+    void               parse_error(Token, const string &);
+    void               parse_error(Token, String);
+    void               parse_error(String);
+    void               parse_error(Token, const string &, const string &);
+    void               parse_error(Token, const string &, Token, const string &, const string &);
+    void               parse_error(Token, const string &, const string &, const string &);
+    void               print_cmd_chr(CmdChr);
+    void               remove_junk();
+    void               scan_eqno(math_list_type);
+    void               scan_glue(internal_type level);
+    void               scan_glue(internal_type level, Token T);
+    void               scan_glue(internal_type level, Token T, bool);
+    void               list_to_glue(internal_type level, Token t, TokenList &L);
+    void               set_default_language(int);
+    void               set_scanner_status(scan_stat c) { scanner_status = c; }
+    void               set_long_state(l_state c) { long_state = c; }
+    void               signal_error(String);
+    void               signal_error();
+    void               signal_error(Token, String);
+    void               signal_ovf(Token, String, int, int);
+    auto               special_expand(TokenList *args) -> TokenList;
+    auto               special_tpa_arg(String n, String y, bool par, bool env, bool qf) -> Xmlp;
+    void               T_titlepage_finish(int v);
+    auto               tpa_exec(String) -> Xmlp;
+    void               M_tracingall();
+    void               translate0();
+    void               translate_all();
+    void               word_define(int a, int c, bool gbl);
+    auto               find_a_save_key(const string &mykey) -> bool;
+    auto               expand_mac_inner(const TokenList &X, TokenList *) -> TokenList;
+    void               mu_error(String, int);
+    void               expand_nct(TokenList &L);
+    void               token_for_show(const CmdChr &);
+    void               create_label(const string &, Istring value);
 
     // private functions, alphabetic order
 private:

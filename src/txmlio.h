@@ -17,8 +17,8 @@ class EntityDef {
 
 public:
     EntityDef(string a, string b) : name(a), value(b) {}
-    auto has_name(const string &x) const -> bool { return x == name; }
-    auto get_val() -> string { return value; }
+    [[nodiscard]] auto has_name(const string &x) const -> bool { return x == name; }
+    auto               get_val() -> string { return value; }
 };
 
 class XmlIO {

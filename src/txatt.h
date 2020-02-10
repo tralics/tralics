@@ -26,19 +26,19 @@ class AttList {
 public:
     vector<AttPair> val; // the value
 
-    auto get_val(int i) -> Istring { return val[i].value; }
-    void reset() { val = vector<AttPair>(); }
-    auto empty() -> bool { return val.size() == 0; }
-    void push_back_empty(Istring n);
-    void push_back(name_positions n, Istring v);
-    void push_back(name_positions n, name_positions v);
-    void push_back(name_positions n, name_positions v, bool);
-    void push_back(Istring n, Istring v);
-    void push_back(Istring n, Istring v, bool f);
-    auto has_value(Istring x) const -> int;
-    void delete_att(name_positions);
-    void destroy();
-    void print(ostream &);
+    auto               get_val(int i) -> Istring { return val[i].value; }
+    void               reset() { val = vector<AttPair>(); }
+    auto               empty() -> bool { return val.size() == 0; }
+    void               push_back_empty(Istring n);
+    void               push_back(name_positions n, Istring v);
+    void               push_back(name_positions n, name_positions v);
+    void               push_back(name_positions n, name_positions v, bool);
+    void               push_back(Istring n, Istring v);
+    void               push_back(Istring n, Istring v, bool f);
+    [[nodiscard]] auto has_value(Istring x) const -> int;
+    void               delete_att(name_positions);
+    void               destroy();
+    void               print(ostream &);
 };
 
 // This is a table of AttList. We should use a vector instead
@@ -59,9 +59,9 @@ public:
         else
             return AttList();
     }
-    void push_back(AttList X);
-    void push_back();
-    void push_back(Istring, Istring);
-    void push_back(name_positions, name_positions);
-    auto get_size() const -> int { return size; }
+    void               push_back(AttList X);
+    void               push_back();
+    void               push_back(Istring, Istring);
+    void               push_back(name_positions, name_positions);
+    [[nodiscard]] auto get_size() const -> int { return size; }
 };

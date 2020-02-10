@@ -75,26 +75,26 @@ private:
 
 public:
     Hashtab();
-    auto my_buffer() -> Buffer & { return B; }
-    auto locate(String s) -> Token;        // used by primitive, etc
-    auto locate(const string &s) -> Token; // used by primitive, etc
-    auto locate(const Buffer &) -> Token;  // used by primitive, etc
-    auto get_hash_usage() const -> int { return hash_usage; }
-    auto get_hash_bad() const -> int { return hash_bad; }
-    auto hash_find(const Buffer &b, String name) -> int;
-    auto hash_find() -> int;
-    auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
-    auto nohash_primitive(String a, CmdChr) -> Token;
-    void eval_let(String, String);
-    auto eval_letv(String, String) -> Token;
-    void eval_let_local(String, String);
-    auto operator[](int k) const -> String { return Text[k]; }
-    void dump();
-    void boot_fancyhdr();
-    void boot_etex();
-    void load_latex3();
-    void boot_keyval();
-    auto is_defined(const Buffer &b) -> bool;
+    auto               my_buffer() -> Buffer & { return B; }
+    auto               locate(String s) -> Token;        // used by primitive, etc
+    auto               locate(const string &s) -> Token; // used by primitive, etc
+    auto               locate(const Buffer &) -> Token;  // used by primitive, etc
+    [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
+    [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
+    auto               hash_find(const Buffer &b, String name) -> int;
+    auto               hash_find() -> int;
+    auto               primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
+    auto               nohash_primitive(String a, CmdChr) -> Token;
+    void               eval_let(String, String);
+    auto               eval_letv(String, String) -> Token;
+    void               eval_let_local(String, String);
+    auto               operator[](int k) const -> String { return Text[k]; }
+    void               dump();
+    void               boot_fancyhdr();
+    void               boot_etex();
+    void               load_latex3();
+    void               boot_keyval();
+    auto               is_defined(const Buffer &b) -> bool;
 };
 
 // This is an association table. We could use a standard C++ class here
@@ -104,10 +104,10 @@ class SpecialHash {
     vector<string> value; // the values
 public:
     SpecialHash(string s) : size(0) { create(s.c_str()); }
-    void create(String s);
-    auto find(String) const -> string;
-    auto get_size() const -> int { return size; }
-    void get_pair(int k, string &a, string &b) {
+    void               create(String s);
+    auto               find(String) const -> string;
+    [[nodiscard]] auto get_size() const -> int { return size; }
+    void               get_pair(int k, string &a, string &b) {
         if (k < size) {
             a = key[k];
             b = value[k];
@@ -132,9 +132,9 @@ class LabelInfo {
 public:
     LabelInfo() : id(Istring()), name(Istring()), file_name("") {}
     LabelInfo(Istring k) : used(false), defined(false), id(Istring()), name(k), lineno(0), file_name("") {}
-    auto is_used() const -> bool { return used; }
-    auto is_defined() const -> bool { return defined; }
-    auto set_used() -> bool {
+    [[nodiscard]] auto is_used() const -> bool { return used; }
+    [[nodiscard]] auto is_defined() const -> bool { return defined; }
+    auto               set_used() -> bool {
         if (used) return true;
         used = true;
         return false;
@@ -144,14 +144,14 @@ public:
         defined = true;
         return false;
     }
-    void set_undefined() { defined = false; }
-    auto get_id() const -> Istring { return id; }
-    auto get_name() const -> Istring { return name; }
-    void set_id(Istring i) { id = i; }
-    auto get_lineno() const -> int { return lineno; }
-    auto get_filename() const -> string { return file_name; }
-    void set_lineno(int i) { lineno = i; }
-    void set_filename(string i) { file_name = i; }
+    void               set_undefined() { defined = false; }
+    [[nodiscard]] auto get_id() const -> Istring { return id; }
+    [[nodiscard]] auto get_name() const -> Istring { return name; }
+    void               set_id(Istring i) { id = i; }
+    [[nodiscard]] auto get_lineno() const -> int { return lineno; }
+    [[nodiscard]] auto get_filename() const -> string { return file_name; }
+    void               set_lineno(int i) { lineno = i; }
+    void               set_filename(string i) { file_name = i; }
 };
 
 // This class returns foo then bar then gee from `foo,bar,gee'
@@ -162,11 +162,11 @@ class Splitter {
 
 public:
     Splitter(const string &w) : S(w), pos(0) { size = S.size(); }
-    auto at_end() const -> bool { return pos == size; }
-    auto count() const -> int;
-    auto get_next_raw() -> String;
-    auto get_next() -> String;
-    void extract_keyval(string &, string &);
+    [[nodiscard]] auto at_end() const -> bool { return pos == size; }
+    [[nodiscard]] auto count() const -> int;
+    auto               get_next_raw() -> String;
+    auto               get_next() -> String;
+    void               extract_keyval(string &, string &);
 };
 
 // This is used in order to extract things from \documentclass[]{}

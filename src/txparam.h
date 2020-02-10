@@ -97,79 +97,79 @@ public:
 
 public:
     MainClass();
-    void add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
-    void bad(string, string);
-    void bad1(string, string);
-    void bad_char_before_brace(int k, String s, String info);
-    void bad_end_env(string, int);
-    void bad_ignore_char(int k, String s);
-    auto check_for_tcf(const string &) -> bool;
-    void check_section_use();
-    auto check_theme(const string &) -> string;
-    void check_ur(const Buffer &);
-    auto get_bibtex_fields() -> vector<Istring> & { return bibtex_fields; }
-    auto get_bibtex_fields_s() -> vector<Istring> & { return bibtex_fields_s; }
-    auto get_bibtex_extensions() -> vector<Istring> & { return bibtex_extensions; }
-    auto get_bibtex_extensions_s() -> vector<Istring> & { return bibtex_extensions_s; }
-    auto get_fp_len() -> int { return cur_fp_len; }
-    auto get_footnote_hack() -> bool { return footnote_hack; }
-    auto get_no_undef_mac() -> bool { return no_undef_mac; }
-    auto get_no_year() -> string { return no_year; }
-    auto get_year_string() -> string { return year_string; }
-    auto get_input_encoding() const -> int { return input_encoding; }
-    auto get_output_encoding() const -> output_encoding_type { return output_encoding; }
-    auto get_log_encoding() const -> output_encoding_type { return log_encoding; }
-    auto get_tpa_mode() const -> int { return tpa_mode; }
-    auto get_prime_hack() const -> bool { return prime_hack; }
-    auto get_math_variant() const -> bool { return use_math_variant; }
-    auto get_zws_mode() const -> bool { return no_zerowidthspace; }
-    auto get_zws_elt() const -> bool { return no_zerowidthelt; }
-    auto get_version() const -> String { return version_string; }
-    void handle_one_bib_file(string);
-    void incr_cur_fp_len(int a) { cur_fp_len += a; }
-    auto in_ra() const -> bool { return handling_ra; }
-    auto in_simple_ra() const -> bool { return simplified_ra; }
-    void inhibit_xml() { todo_xml = false; }
-    auto is_verbose() const -> bool { return verbose; }
-    auto is_interactive_math() const -> bool { return interactive_math; }
-    auto is_shell_escape_allowed() const -> bool { return shell_escape_allowed; }
-    auto non_interactive() const -> bool { return !interactive_math; }
-    void parse_args(int argc, char **argv);
-    void parse_option(int &, int, char **argv);
-    void banner();
-    auto print_os() const -> String;
-    void read_config_and_other();
-    void RRbib(String);
-    void run();
-    void run(int n, char **argv);
-    void set_distinguish(bool b) { distinguish_refer = b; }
-    void set_doc_class_pos(line_iterator x) { doc_class_pos = x; }
-    void set_ent_names(String);
-    void set_foot_hack(bool b) { footnote_hack = b; }
-    void set_fp_len(int a) { cur_fp_len = a; }
-    void set_input_encoding(int a);
-    void set_tcf_file(string s) {
+    void               add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
+    void               bad(string, string);
+    void               bad1(string, string);
+    void               bad_char_before_brace(int k, String s, String info);
+    void               bad_end_env(string, int);
+    void               bad_ignore_char(int k, String s);
+    auto               check_for_tcf(const string &) -> bool;
+    void               check_section_use();
+    auto               check_theme(const string &) -> string;
+    void               check_ur(const Buffer &);
+    auto               get_bibtex_fields() -> vector<Istring> & { return bibtex_fields; }
+    auto               get_bibtex_fields_s() -> vector<Istring> & { return bibtex_fields_s; }
+    auto               get_bibtex_extensions() -> vector<Istring> & { return bibtex_extensions; }
+    auto               get_bibtex_extensions_s() -> vector<Istring> & { return bibtex_extensions_s; }
+    auto               get_fp_len() -> int { return cur_fp_len; }
+    auto               get_footnote_hack() -> bool { return footnote_hack; }
+    auto               get_no_undef_mac() -> bool { return no_undef_mac; }
+    auto               get_no_year() -> string { return no_year; }
+    auto               get_year_string() -> string { return year_string; }
+    [[nodiscard]] auto get_input_encoding() const -> int { return input_encoding; }
+    [[nodiscard]] auto get_output_encoding() const -> output_encoding_type { return output_encoding; }
+    [[nodiscard]] auto get_log_encoding() const -> output_encoding_type { return log_encoding; }
+    [[nodiscard]] auto get_tpa_mode() const -> int { return tpa_mode; }
+    [[nodiscard]] auto get_prime_hack() const -> bool { return prime_hack; }
+    [[nodiscard]] auto get_math_variant() const -> bool { return use_math_variant; }
+    [[nodiscard]] auto get_zws_mode() const -> bool { return no_zerowidthspace; }
+    [[nodiscard]] auto get_zws_elt() const -> bool { return no_zerowidthelt; }
+    [[nodiscard]] auto get_version() const -> String { return version_string; }
+    void               handle_one_bib_file(string);
+    void               incr_cur_fp_len(int a) { cur_fp_len += a; }
+    [[nodiscard]] auto in_ra() const -> bool { return handling_ra; }
+    [[nodiscard]] auto in_simple_ra() const -> bool { return simplified_ra; }
+    void               inhibit_xml() { todo_xml = false; }
+    [[nodiscard]] auto is_verbose() const -> bool { return verbose; }
+    [[nodiscard]] auto is_interactive_math() const -> bool { return interactive_math; }
+    [[nodiscard]] auto is_shell_escape_allowed() const -> bool { return shell_escape_allowed; }
+    [[nodiscard]] auto non_interactive() const -> bool { return !interactive_math; }
+    void               parse_args(int argc, char **argv);
+    void               parse_option(int &, int, char **argv);
+    void               banner();
+    [[nodiscard]] auto print_os() const -> String;
+    void               read_config_and_other();
+    void               RRbib(String);
+    void               run();
+    void               run(int n, char **argv);
+    void               set_distinguish(bool b) { distinguish_refer = b; }
+    void               set_doc_class_pos(line_iterator x) { doc_class_pos = x; }
+    void               set_ent_names(String);
+    void               set_foot_hack(bool b) { footnote_hack = b; }
+    void               set_fp_len(int a) { cur_fp_len = a; }
+    void               set_input_encoding(int a);
+    void               set_tcf_file(string s) {
         tcf_file = s;
         use_tcf  = true;
     }
-    void set_use_font(bool b) { use_font_elt_sw = b; }
-    void set_pack_font(bool b) { pack_font_elt_sw = b; }
-    void set_use_sizes(bool b) { use_all_sizes_sw = b; }
-    void set_start_date(string s) { start_date = s; }
-    void set_short_date(string s) { short_date = s; }
-    void set_default_class(string s) { default_class = s; }
-    auto get_short_date() const -> string { return short_date; }
-    auto get_default_class() const -> string { return default_class; }
-    void set_tpa_status(String);
-    auto use_all_sizes() const -> bool { return use_all_sizes_sw; }
-    auto use_noent_names() const -> bool { return noent_names; }
-    auto use_font_elt() const -> bool { return use_font_elt_sw; }
-    auto use_old_phi() -> bool { return old_phi; }
-    auto use_double_quote_att() -> bool { return double_quote_att; }
-    auto pack_font_elt() const -> bool { return pack_font_elt_sw; }
-    void unexpected_eof(string, int);
-    auto d_verbose() const -> bool { return dverbose; }
-    void bad_year();
+    void               set_use_font(bool b) { use_font_elt_sw = b; }
+    void               set_pack_font(bool b) { pack_font_elt_sw = b; }
+    void               set_use_sizes(bool b) { use_all_sizes_sw = b; }
+    void               set_start_date(string s) { start_date = s; }
+    void               set_short_date(string s) { short_date = s; }
+    void               set_default_class(string s) { default_class = s; }
+    [[nodiscard]] auto get_short_date() const -> string { return short_date; }
+    [[nodiscard]] auto get_default_class() const -> string { return default_class; }
+    void               set_tpa_status(String);
+    [[nodiscard]] auto use_all_sizes() const -> bool { return use_all_sizes_sw; }
+    [[nodiscard]] auto use_noent_names() const -> bool { return noent_names; }
+    [[nodiscard]] auto use_font_elt() const -> bool { return use_font_elt_sw; }
+    auto               use_old_phi() -> bool { return old_phi; }
+    auto               use_double_quote_att() -> bool { return double_quote_att; }
+    [[nodiscard]] auto pack_font_elt() const -> bool { return pack_font_elt_sw; }
+    void               unexpected_eof(string, int);
+    [[nodiscard]] auto d_verbose() const -> bool { return dverbose; }
+    void               bad_year();
 
 private:
     void after_main_text();
@@ -262,11 +262,11 @@ public:
     bool   is_used;
     ParamDataSlot(string a, string b) : key(a), value(b), is_used(false) {}
     ParamDataSlot(string a, string b, bool c) : key(a), value(b), is_used(c) {}
-    void mark_used() { is_used = true; }
-    auto matches(const string &x) -> bool { return is_used && x == key; }
-    auto no_topic() const -> bool { return !is_used; }
-    void to_buffer(Buffer &) const;
-    void key_to_buffer(Buffer &) const;
+    void               mark_used() { is_used = true; }
+    auto               matches(const string &x) -> bool { return is_used && x == key; }
+    [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
+    void               to_buffer(Buffer &) const;
+    void               key_to_buffer(Buffer &) const;
 };
 
 // We maintain a list of ParamDataSlot.
@@ -279,11 +279,11 @@ public:
     void check_other();
     auto its_me(const string &s) -> bool { return name == s; }
     ParamDataList(string s) : name(s) {}
-    auto empty() const -> bool { return data.empty(); }
-    void push_back(ParamDataSlot x) { data.push_back(x); }
-    auto size() const -> int { return data.size(); }
-    void keys_to_buffer(Buffer &) const;
-    void reset() { data = vector<ParamDataSlot>(); }
+    [[nodiscard]] auto empty() const -> bool { return data.empty(); }
+    void               push_back(ParamDataSlot x) { data.push_back(x); }
+    [[nodiscard]] auto size() const -> int { return data.size(); }
+    void               keys_to_buffer(Buffer &) const;
+    void               reset() { data = vector<ParamDataSlot>(); }
 };
 
 class ParamDataVector {

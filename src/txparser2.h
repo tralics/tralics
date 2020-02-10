@@ -21,19 +21,19 @@ class XkvToken {
     TokenList action;
 
 public:
-    auto key_empty() const -> bool { return keyname.empty(); }
-    auto val_empty() const -> bool { return value.empty(); }
-    void set_initial(TokenList L) { initial = L; }
-    auto get_all() -> TokenList { return initial; }
-    auto get_code() -> TokenList { return value; }
-    auto get_action() -> TokenList & { return action; }
-    void extract();
-    auto ignore_this(vector<string> &igna) -> bool;
-    auto get_name() -> string & { return keyname; }
-    void prepare(const string &fam);
-    auto is_defined(const string &fam) -> bool;
-    auto get_save() -> bool { return has_save; }
-    auto check_save() -> bool;
+    [[nodiscard]] auto key_empty() const -> bool { return keyname.empty(); }
+    [[nodiscard]] auto val_empty() const -> bool { return value.empty(); }
+    void               set_initial(TokenList L) { initial = L; }
+    auto               get_all() -> TokenList { return initial; }
+    auto               get_code() -> TokenList { return value; }
+    auto               get_action() -> TokenList & { return action; }
+    void               extract();
+    auto               ignore_this(vector<string> &igna) -> bool;
+    auto               get_name() -> string & { return keyname; }
+    void               prepare(const string &fam);
+    auto               is_defined(const string &fam) -> bool;
+    auto               get_save() -> bool { return has_save; }
+    auto               check_save() -> bool;
 };
 
 // Used by \setkeys in xkv

@@ -19,20 +19,20 @@ class CitationKey {
     string   full_key;         // something like footcite:Foo
     void     make_key(String); // creates the key.
 public:
-    auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
-    auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
-    auto is_same(const CitationKey &w) const -> bool { return is_similar(w) && cite_prefix == w.cite_prefix; }
-    auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
-    auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
-    auto is_same_lower_old(const CitationKey &w) const -> bool;
+    [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
+    [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
+    [[nodiscard]] auto is_same(const CitationKey &w) const -> bool { return is_similar(w) && cite_prefix == w.cite_prefix; }
+    [[nodiscard]] auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
+    [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
+    [[nodiscard]] auto is_same_lower_old(const CitationKey &w) const -> bool;
     CitationKey() {}
     CitationKey(String, String);
     CitationKey(bib_from, String);
-    auto get_name() const -> string { return full_key; }
-    auto get_from() const -> bib_from { return cite_prefix; }
-    auto from_to_string() const -> String;
-    void move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
-    void move_to_refer() { cite_prefix = from_refer; }
+    [[nodiscard]] auto get_name() const -> string { return full_key; }
+    [[nodiscard]] auto get_from() const -> bib_from { return cite_prefix; }
+    [[nodiscard]] auto from_to_string() const -> String;
+    void               move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
+    void               move_to_refer() { cite_prefix = from_refer; }
 };
 
 class CitationItem {
@@ -42,15 +42,15 @@ class CitationItem {
     Xid     solved;
 
 public:
-    auto get_bid() -> Istring;
-    void set_id(Istring x) { bid = x; }
-    auto has_empty_id() -> bool { return bid.empty(); }
-    void set_solved(Xid N) { solved = N; }
-    void dump(Buffer &);
-    void dump_bibtex();
-    auto match(Istring, Istring) -> bool;
-    auto match_star(Istring) -> bool;
-    auto is_solved() const -> bool { return solved.value != 0; }
+    auto               get_bid() -> Istring;
+    void               set_id(Istring x) { bid = x; }
+    auto               has_empty_id() -> bool { return bid.empty(); }
+    void               set_solved(Xid N) { solved = N; }
+    void               dump(Buffer &);
+    void               dump_bibtex();
+    auto               match(Istring, Istring) -> bool;
+    auto               match_star(Istring) -> bool;
+    [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
     CitationItem(Istring A, Istring B) : key(A), from(B), bid(""), solved(Xid()) {}
 };
 
@@ -68,21 +68,21 @@ public:
     Bibliography();
 
 public:
-    void dump(Buffer &);
-    void dump_bibtex();
-    void dump_data(Buffer &);
-    auto get_bid(int n) -> Istring { return citation_table[n].get_bid(); }
-    auto find_citation_item(Istring, Istring, bool) -> int;
-    auto find_citation_star(Istring, Istring) -> int;
-    auto get_cmd() const -> string { return bib_cmd; }
-    auto get_location() const -> Xmlp { return biblio_loc; }
-    auto has_cmd() const -> bool { return !bib_cmd.empty(); }
-    auto location_exists() const -> bool { return biblio_loc_force; }
-    auto number_of_data_bases() -> int { return biblio_src.size(); }
-    void push_back_src(String x) { biblio_src.push_back(string(x)); }
-    auto seen_nocite() const -> bool { return nocite; }
-    void set_cmd(string x) { bib_cmd = x; }
-    void set_location(Xmlp X, bool f) {
+    void               dump(Buffer &);
+    void               dump_bibtex();
+    void               dump_data(Buffer &);
+    auto               get_bid(int n) -> Istring { return citation_table[n].get_bid(); }
+    auto               find_citation_item(Istring, Istring, bool) -> int;
+    auto               find_citation_star(Istring, Istring) -> int;
+    [[nodiscard]] auto get_cmd() const -> string { return bib_cmd; }
+    [[nodiscard]] auto get_location() const -> Xmlp { return biblio_loc; }
+    [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
+    [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
+    auto               number_of_data_bases() -> int { return biblio_src.size(); }
+    void               push_back_src(String x) { biblio_src.push_back(string(x)); }
+    [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
+    void               set_cmd(string x) { bib_cmd = x; }
+    void               set_location(Xmlp X, bool f) {
         biblio_loc       = X;
         biblio_loc_force = f;
     }
@@ -139,27 +139,27 @@ public:
         last  = 0;
         table = T;
     }
-    auto empty() const -> bool { return first >= last; }
-    void print_first_name(Buffer &, Buffer &, Buffer &);
-    void make_key(bool, Buffer &);
-    void remove_junk();
-    auto find_a_lower() const -> int;
-    auto find_a_space() const -> int;
-    void invent_spaces();
-    void find_a_comma(int &, int &, int &) const;
+    [[nodiscard]] auto empty() const -> bool { return first >= last; }
+    void               print_first_name(Buffer &, Buffer &, Buffer &);
+    void               make_key(bool, Buffer &);
+    void               remove_junk();
+    [[nodiscard]] auto find_a_lower() const -> int;
+    [[nodiscard]] auto find_a_space() const -> int;
+    void               invent_spaces();
+    void               find_a_comma(int &, int &, int &) const;
 
 private:
-    void make_key_aux(bool, Buffer &);
-    auto is_junk(int i) -> bool;
-    auto like_space(int i) const -> bool {
+    void               make_key_aux(bool, Buffer &);
+    auto               is_junk(int i) -> bool;
+    [[nodiscard]] auto like_space(int i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dash;
     }
-    auto like_special_space(int i) const -> bool {
+    [[nodiscard]] auto like_special_space(int i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dot;
     }
-    auto is_printable() const -> bool {
+    [[nodiscard]] auto is_printable() const -> bool {
         bchar_type b = table[first];
         return b == bct_normal || b == bct_cmd || b == bct_brace || b == bct_extended;
     }
@@ -215,51 +215,51 @@ class BibEntry {
 
 public:
     BibEntry();
-    auto get_unique_id() const -> Istring { return unique_id; }
-    auto Sort_label() const -> const string & { return sort_label; }
+    [[nodiscard]] auto get_unique_id() const -> Istring { return unique_id; }
+    [[nodiscard]] auto Sort_label() const -> const string & { return sort_label; }
 
 private:
-    void find_cnrs_type(Buffer &);
-    auto from_to_string() const -> String { return cite_key.from_to_string(); };
-    void output_bibitem();
-    void out_something(field_pos p);
-    void out_something(field_pos p, string w);
-    void out_something(field_pos p, int w);
-    void set_explicit_cit() { explicit_cit = true; }
-    auto get_from() const -> bib_from { return cite_key.get_from(); }
-    auto get_name() const -> string { return cite_key.get_name(); }
-    auto is_empty(String s) -> bool;
-    void move_to_year() { cite_key.move_to_year(); }
-    void use_extra_num();
-    void numeric_label(int);
-    void call_type();
-    void call_type_all();
-    void call_type_special();
-    void format_series_etc(bool);
-    void sort_author(bool);
-    void sort_editor();
-    void sort_organization();
-    void sort_check(String);
-    void presort(int);
-    void sort_key();
-    void format_author(bool);
-    void forward_pass(string &previous_label, int &last_num);
-    void reverse_pass(int &extra_num);
-    auto find_all_names(String) -> BibtexName *;
-    auto format_lab_names(String s) -> String;
-    auto sort_format_names(String s) -> String;
-    void normalise();
-    auto ra_prefix() const -> String;
-    void handle_one_namelist(string &s, BibtexName &X);
-    void un_crossref();
-    void copy_from(BibEntry *);
-    void copy_from(BibEntry *, int);
-    void normalise_statut(Buffer &);
-    void one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
-    void add_warning(int);
-    auto store_field(field_pos) -> bool;
-    void parse_crossref();
-    void work(int);
+    void               find_cnrs_type(Buffer &);
+    [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
+    void               output_bibitem();
+    void               out_something(field_pos p);
+    void               out_something(field_pos p, string w);
+    void               out_something(field_pos p, int w);
+    void               set_explicit_cit() { explicit_cit = true; }
+    [[nodiscard]] auto get_from() const -> bib_from { return cite_key.get_from(); }
+    [[nodiscard]] auto get_name() const -> string { return cite_key.get_name(); }
+    auto               is_empty(String s) -> bool;
+    void               move_to_year() { cite_key.move_to_year(); }
+    void               use_extra_num();
+    void               numeric_label(int);
+    void               call_type();
+    void               call_type_all();
+    void               call_type_special();
+    void               format_series_etc(bool);
+    void               sort_author(bool);
+    void               sort_editor();
+    void               sort_organization();
+    void               sort_check(String);
+    void               presort(int);
+    void               sort_key();
+    void               format_author(bool);
+    void               forward_pass(string &previous_label, int &last_num);
+    void               reverse_pass(int &extra_num);
+    auto               find_all_names(String) -> BibtexName *;
+    auto               format_lab_names(String s) -> String;
+    auto               sort_format_names(String s) -> String;
+    void               normalise();
+    [[nodiscard]] auto ra_prefix() const -> String;
+    void               handle_one_namelist(string &s, BibtexName &X);
+    void               un_crossref();
+    void               copy_from(BibEntry *);
+    void               copy_from(BibEntry *, int);
+    void               normalise_statut(Buffer &);
+    void               one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
+    void               add_warning(int);
+    auto               store_field(field_pos) -> bool;
+    void               parse_crossref();
+    void               work(int);
 };
 
 class Berror {};
@@ -294,75 +294,75 @@ private:
 
 public:
     Bibtex(String dy) : input_line_pos(0), nocitestar(false), normal_biblio(true), default_year(dy), interactive(false) {}
-    auto find_entry(const CitationKey &s) -> BibEntry *;
-    auto find_entry(String, const string &, bib_creator) -> BibEntry *;
-    auto find_entry(String, bool, bib_creator) -> BibEntry *;
-    auto make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
-    void make_entry(const CitationKey &, Istring);
-    auto auto_cite() -> bool;
-    auto default_prefix() const -> bib_from { return entry_prefix; }
+    auto               find_entry(const CitationKey &s) -> BibEntry *;
+    auto               find_entry(String, const string &, bib_creator) -> BibEntry *;
+    auto               find_entry(String, bool, bib_creator) -> BibEntry *;
+    auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
+    void               make_entry(const CitationKey &, Istring);
+    auto               auto_cite() -> bool;
+    [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
 
 private:
-    auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
-    void advance() { input_line_pos++; }
-    auto check_val_end() -> int;
-    auto check_entry_end() -> int;
-    auto check_entry_end(int) -> int;
-    auto check_field_end(int) -> int;
-    auto cur_char() -> Utf8Char { return input_line[input_line_pos]; }
-    void define_a_macro(String a, String b);
-    auto find_a_macro(Buffer &B, bool insert, String, String) -> int;
-    auto find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
-    auto find_similar(const CitationKey &s, int &n) -> BibEntry *;
-    void forward_pass();
-    auto get_class(Utf8Char c) -> id_type { return id_class[c.get_value()]; }
-    void handle_multiple_entries(BibEntry *);
-    void kill_the_lists();
-    auto look_at_macro(const Buffer &) -> int;
-    auto look_at_macro(int h, String name) -> int;
-    void mac_def_val(int X) { all_macros[X].set_default_value(); }
-    void mac_set_val(int X, string s) { all_macros[X].set_value(s); }
-    auto make_entry(const CitationKey &a, bib_creator, Istring) -> BibEntry *;
-    auto next_char() -> Utf8Char { return input_line[input_line_pos++]; }
-    void next_line(bool);
-    auto not_start_or_end(int what, char c, bool s) -> bool;
-    void parse_a_file();
-    void parse_one_item();
-    void parse_one_field(BibEntry *X);
-    void read_one_field(bool);
-    void read_field(bool);
-    auto read2(bib_from pre) -> bool;
-    void reset_input() { input_line.clear(); }
-    void reverse_pass();
-    void scan_for_at();
-    auto scan_identifier(int) -> bool;
-    auto scan_identifier0(int) -> int;
-    auto see_new_entry(entry_type, int) -> BibEntry *;
-    void skip_space();
-    auto wrong_first_char(Utf8Char, int) -> int;
+    [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
+    void               advance() { input_line_pos++; }
+    auto               check_val_end() -> int;
+    auto               check_entry_end() -> int;
+    auto               check_entry_end(int) -> int;
+    auto               check_field_end(int) -> int;
+    auto               cur_char() -> Utf8Char { return input_line[input_line_pos]; }
+    void               define_a_macro(String a, String b);
+    auto               find_a_macro(Buffer &B, bool insert, String, String) -> int;
+    auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
+    auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
+    void               forward_pass();
+    auto               get_class(Utf8Char c) -> id_type { return id_class[c.get_value()]; }
+    void               handle_multiple_entries(BibEntry *);
+    void               kill_the_lists();
+    auto               look_at_macro(const Buffer &) -> int;
+    auto               look_at_macro(int h, String name) -> int;
+    void               mac_def_val(int X) { all_macros[X].set_default_value(); }
+    void               mac_set_val(int X, string s) { all_macros[X].set_value(s); }
+    auto               make_entry(const CitationKey &a, bib_creator, Istring) -> BibEntry *;
+    auto               next_char() -> Utf8Char { return input_line[input_line_pos++]; }
+    void               next_line(bool);
+    auto               not_start_or_end(int what, char c, bool s) -> bool;
+    void               parse_a_file();
+    void               parse_one_item();
+    void               parse_one_field(BibEntry *X);
+    void               read_one_field(bool);
+    void               read_field(bool);
+    auto               read2(bib_from pre) -> bool;
+    void               reset_input() { input_line.clear(); }
+    void               reverse_pass();
+    void               scan_for_at();
+    auto               scan_identifier(int) -> bool;
+    auto               scan_identifier0(int) -> int;
+    auto               see_new_entry(entry_type, int) -> BibEntry *;
+    void               skip_space();
+    auto               wrong_first_char(Utf8Char, int) -> int;
 
 public:
-    auto get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
-    auto find_field_pos(String s) const -> field_pos;
-    auto find_type(String s) -> entry_type;
-    auto exec_bibitem(const string &, string) -> Istring;
-    void nocitestar_true() { nocitestar = true; }
-    auto implement_cit(String x, string w) -> int;
-    auto is_year_string(const string &y, bib_from from) -> String;
-    auto wrong_class(int, const string &y, bib_from from) -> bool;
-    void work();
-    void read(String src, bib_from);
-    auto read0(Buffer &src, bib_from) -> bool;
-    void read1(const string &src);
-    void read_ra();
-    void err_in_file(String s, bool last);
-    void err_in_entry(String s);
-    void err_in_name(String s, int i);
-    void bad_year(const string &given, String wanted);
-    void boot(string, bool);
-    void bootagain();
-    auto is_in_ra() const -> bool { return in_ra; }
-    void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
+    auto               get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
+    auto               find_field_pos(String s) const -> field_pos;
+    auto               find_type(String s) -> entry_type;
+    auto               exec_bibitem(const string &, string) -> Istring;
+    void               nocitestar_true() { nocitestar = true; }
+    auto               implement_cit(String x, string w) -> int;
+    auto               is_year_string(const string &y, bib_from from) -> String;
+    auto               wrong_class(int, const string &y, bib_from from) -> bool;
+    void               work();
+    void               read(String src, bib_from);
+    auto               read0(Buffer &src, bib_from) -> bool;
+    void               read1(const string &src);
+    void               read_ra();
+    void               err_in_file(String s, bool last);
+    void               err_in_entry(String s);
+    void               err_in_name(String s, int i);
+    void               bad_year(const string &given, String wanted);
+    void               boot(string, bool);
+    void               bootagain();
+    [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
+    void               enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
 };
 
 class Bbl {

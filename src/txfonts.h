@@ -24,17 +24,17 @@ class FontInfo {
     bool    stackval{true};    // is the value on the stack ok ?
 public:
     FontInfo() : size(6 * 2048), color(Istring()) {}
-    auto shape_change() const -> name_positions;
-    auto shape_name() const -> String;
-    auto size_change() const -> name_positions;
-    auto size_name() const -> String;
-    auto family_change() const -> name_positions;
-    auto family_name() const -> String;
-    auto series_change() const -> name_positions;
-    auto series_name() const -> String;
-    void not_on_stack() { stackval = false; }
-    void is_on_stack() { stackval = true; }
-    void update_old() {
+    [[nodiscard]] auto shape_change() const -> name_positions;
+    [[nodiscard]] auto shape_name() const -> String;
+    [[nodiscard]] auto size_change() const -> name_positions;
+    [[nodiscard]] auto size_name() const -> String;
+    [[nodiscard]] auto family_change() const -> name_positions;
+    [[nodiscard]] auto family_name() const -> String;
+    [[nodiscard]] auto series_change() const -> name_positions;
+    [[nodiscard]] auto series_name() const -> String;
+    void               not_on_stack() { stackval = false; }
+    void               is_on_stack() { stackval = true; }
+    void               update_old() {
         old       = packed;
         old_color = color;
     }
@@ -47,19 +47,19 @@ public:
         family = 0;
         series = 0;
     }
-    void see_font_change(subtypes);
-    auto show_font() -> String;
-    auto get_level() -> int { return level; }
-    auto get_size() -> int { return size >> 11; }
-    void set_level(int k) { level = k; }
-    void set_packed(int k) { packed = k; }
-    auto get_old() -> int { return old; }
-    auto get_old_color() -> Istring { return old_color; }
-    auto get_packed() -> int { return packed; }
-    void set_old_from_packed() { old = packed; }
-    void set_color(Istring c) { color = c; }
-    auto get_color() const -> Istring { return color; }
-    void ltfont(string s, subtypes c);
+    void               see_font_change(subtypes);
+    auto               show_font() -> String;
+    auto               get_level() -> int { return level; }
+    auto               get_size() -> int { return size >> 11; }
+    void               set_level(int k) { level = k; }
+    void               set_packed(int k) { packed = k; }
+    auto               get_old() -> int { return old; }
+    auto               get_old_color() -> Istring { return old_color; }
+    auto               get_packed() -> int { return packed; }
+    void               set_old_from_packed() { old = packed; }
+    void               set_color(Istring c) { color = c; }
+    [[nodiscard]] auto get_color() const -> Istring { return color; }
+    void               ltfont(string s, subtypes c);
 };
 
 class TeXChar {
@@ -101,10 +101,10 @@ public:
 
     TexFont(string, int, int);
 
-    void realloc_param(int);
-    auto its_me(string, int, int) const -> bool;
-    void make_null();
-    void load();
+    void               realloc_param(int);
+    [[nodiscard]] auto its_me(string, int, int) const -> bool;
+    void               make_null();
+    void               load();
 };
 
 class TexFonts {

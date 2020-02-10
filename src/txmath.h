@@ -43,67 +43,67 @@ public:
     MathElt(Xmlp, math_types);
     MathElt(Xmlp A, int b, math_types c);
     // access to elements
-    auto get_xmltype() const -> math_types { return math_types(Font); }
-    void set_xmltype(math_types x) { Font = subtypes(x); }
-    auto get_font() const -> subtypes { return Font; }
-    auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
-    auto get_fml_subtype() const -> subtypes;
-    auto get_cmd_chr() const -> const CmdChr & { return val; }
-    auto get_char() const -> Utf8Char { return val.char_val(); }
-    auto get_chr() const -> subtypes { return val.get_chr(); }
-    void set_chr(subtypes c) { val.set_chr(c); }
-    auto get_cmd() const -> symcodes { return val.get_cmd(); }
-    void set_cmd(symcodes c) { val.set_cmd(c); }
-    auto get_list() const -> Math &;
-    auto get_xml_val() const -> Xmlp;
+    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
+    void               set_xmltype(math_types x) { Font = subtypes(x); }
+    [[nodiscard]] auto get_font() const -> subtypes { return Font; }
+    [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
+    [[nodiscard]] auto get_fml_subtype() const -> subtypes;
+    [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
+    [[nodiscard]] auto get_char() const -> Utf8Char { return val.char_val(); }
+    [[nodiscard]] auto get_chr() const -> subtypes { return val.get_chr(); }
+    void               set_chr(subtypes c) { val.set_chr(c); }
+    [[nodiscard]] auto get_cmd() const -> symcodes { return val.get_cmd(); }
+    void               set_cmd(symcodes c) { val.set_cmd(c); }
+    [[nodiscard]] auto get_list() const -> Math &;
+    [[nodiscard]] auto get_xml_val() const -> Xmlp;
 
     // some tests on the elements
-    auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }
-    auto is_hbox() const -> bool { return val.is_math_list() && Font == subtypes(math_hbox_cd); }
-    auto is_space() const -> bool { return val.is_space(); }
-    auto is_digit() const -> bool;
-    auto is_char() const -> bool { return is_space() || is_letter_token() || is_other_token(); }
-    auto is_letter_token() const -> bool { return val.is_letter(); }
-    auto is_other_token() const -> bool { return val.is_other(); }
-    auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }
-    auto is_bracket() const -> bool { return is_other_token() && get_char() == '['; }
-    auto maybe_seq() const -> bool;
-    auto maybe_seq(subtypes) const -> bool;
-    auto maybe_iseq(subtypes) const -> bool;
-    auto maybe_iseq() const -> bool;
+    [[nodiscard]] auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }
+    [[nodiscard]] auto is_hbox() const -> bool { return val.is_math_list() && Font == subtypes(math_hbox_cd); }
+    [[nodiscard]] auto is_space() const -> bool { return val.is_space(); }
+    [[nodiscard]] auto is_digit() const -> bool;
+    [[nodiscard]] auto is_char() const -> bool { return is_space() || is_letter_token() || is_other_token(); }
+    [[nodiscard]] auto is_letter_token() const -> bool { return val.is_letter(); }
+    [[nodiscard]] auto is_other_token() const -> bool { return val.is_other(); }
+    [[nodiscard]] auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }
+    [[nodiscard]] auto is_bracket() const -> bool { return is_other_token() && get_char() == '['; }
+    [[nodiscard]] auto maybe_seq() const -> bool;
+    [[nodiscard]] auto maybe_seq(subtypes) const -> bool;
+    [[nodiscard]] auto maybe_iseq(subtypes) const -> bool;
+    [[nodiscard]] auto maybe_iseq() const -> bool;
     // other functions
-    auto large2() -> del_pos;
-    auto remove_prefix() const -> Xmlp;
-    void cv_noMLt();
-    void cv_noML();
-    void cv_noMLt_special();
-    void cv_noMLt_special0();
-    void cv_noMLt_list();
-    void cv_noML_special();
-    void cv_noML_list();
-    auto cv1(math_style, bool) -> MathElt;
-    void change_type(int t);
-    auto try_math_op() -> Xmlp;
-    auto is_e_grave() const -> bool;
-    auto special3() const -> Xmlp;
-    void print() const;
-    auto val_as_digit() const -> int { return val.val_as_digit(); }
+    auto               large2() -> del_pos;
+    [[nodiscard]] auto remove_prefix() const -> Xmlp;
+    void               cv_noMLt();
+    void               cv_noML();
+    void               cv_noMLt_special();
+    void               cv_noMLt_special0();
+    void               cv_noMLt_list();
+    void               cv_noML_special();
+    void               cv_noML_list();
+    auto               cv1(math_style, bool) -> MathElt;
+    void               change_type(int t);
+    auto               try_math_op() -> Xmlp;
+    [[nodiscard]] auto is_e_grave() const -> bool;
+    [[nodiscard]] auto special3() const -> Xmlp;
+    void               print() const;
+    [[nodiscard]] auto val_as_digit() const -> int { return val.val_as_digit(); }
 
 private:
     void set_xml_subtype(math_types x) {
         set_xmltype(x);
         val.set_mathml();
     }
-    auto cv_char() -> MathElt;
-    auto cv_cst() -> MathElt;
-    auto cv_special(math_style) -> MathElt;
-    auto cv_special1(math_style) -> MathElt;
-    auto cv_list(math_style, bool) -> MathElt;
-    auto cv_list_no() -> MathElt;
-    auto cv_mi(math_style) -> MathElt;
-    void cv1_err();
-    void dump_for_err() const;
-    auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
+    auto               cv_char() -> MathElt;
+    auto               cv_cst() -> MathElt;
+    auto               cv_special(math_style) -> MathElt;
+    auto               cv_special1(math_style) -> MathElt;
+    auto               cv_list(math_style, bool) -> MathElt;
+    auto               cv_list_no() -> MathElt;
+    auto               cv_mi(math_style) -> MathElt;
+    void               cv1_err();
+    void               dump_for_err() const;
+    [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
 };
 
 class MathIsSpace : public unary_function<MathElt, bool> {
@@ -140,103 +140,103 @@ public:
     Math() {}
 
 public:
-    auto duplicate(bool) const -> subtypes;
-    auto back() -> MathElt & { return value.back(); }
-    auto begin() const -> const_math_iterator { return value.begin(); }
-    auto chars_to_mb(Buffer &, bool) const -> bool;
-    auto chars_to_mb1(Buffer &) const -> bool;
-    auto chars_to_mb2(Buffer &) const -> bool;
-    auto chars_to_mb3() -> Istring;
-    void clear() { value.clear(); }
-    auto convert_math(math_style) -> Xmlp;
-    auto convert_math_noML(bool) -> Xmlp;
-    void convert_math_noML0();
-    void convert_math_noMLt0();
-    auto convert_opname() -> string;
-    auto convert_this_to_string(Buffer &) -> string;
-    void destroy();
-    auto empty() const -> bool { return value.empty(); }
-    auto end() const -> const_math_iterator { return value.end(); }
-    auto find_parens(MathQList &, bool) const -> bool;
-    auto front() -> MathElt & { return value.front(); }
-    auto front() const -> const MathElt & { return value.front(); }
-    auto get_arg1() -> Math { return front().get_list(); }
-    auto get_arg2() -> Math { return second_element().get_list(); }
-    auto get_arg3() -> Math { return third_element().get_list(); }
-    auto get_type() const -> math_list_type { return type; }
-    auto get_sname() const -> subtypes { return sname; }
-    auto get_name() const -> String;
-    auto get_list(int) const -> Math &;
-    void hack_type(int);
-    auto has_type(int x) const -> bool { return type == x; }
-    auto has_one_element() const -> bool;
-    auto has_two_elements() const -> bool;
-    void is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
-    auto length_one() const -> bool { return value.size() == 1; }
-    auto M_array(bool, math_style) -> Xmlp;
-    auto M_cv(math_style, int need_row) -> XmlAndType;
-    void pop_back() { value.pop_back(); }
-    void pop_front() { value.pop_front(); }
-    void print() const;
-    void push_back(CmdChr, subtypes);
-    void push_back_list(subtypes X, math_list_type c);
-    void push_back_font(subtypes X, subtypes c);
-    void push_back(CmdChr);
-    void push_back(MathElt x) { value.push_back(x); }
-    void push_back(Xmlp, int, math_types);
-    void push_front(CmdChr, subtypes);
-    void remove_initial_group();
-    void remove_last();
-    void remove_spaces();
-    auto second_element() const -> const MathElt &;
-    void set_display_type() { type = math_ddollar_cd; }
-    void set_env_name(int);
-    void set_name(subtypes X) { sname = X; }
-    void set_nondisplay_type() { type = math_dollar_cd; }
-    void set_type(math_list_type c) { type = c; }
-    auto third_element() const -> const MathElt &;
-    auto trivial_math(int) -> Xmlp;
-    auto trivial_math_index(symcodes) -> Xmlp;
-    auto check_align() -> int;
+    [[nodiscard]] auto duplicate(bool) const -> subtypes;
+    auto               back() -> MathElt & { return value.back(); }
+    [[nodiscard]] auto begin() const -> const_math_iterator { return value.begin(); }
+    auto               chars_to_mb(Buffer &, bool) const -> bool;
+    auto               chars_to_mb1(Buffer &) const -> bool;
+    auto               chars_to_mb2(Buffer &) const -> bool;
+    auto               chars_to_mb3() -> Istring;
+    void               clear() { value.clear(); }
+    auto               convert_math(math_style) -> Xmlp;
+    auto               convert_math_noML(bool) -> Xmlp;
+    void               convert_math_noML0();
+    void               convert_math_noMLt0();
+    auto               convert_opname() -> string;
+    auto               convert_this_to_string(Buffer &) -> string;
+    void               destroy();
+    [[nodiscard]] auto empty() const -> bool { return value.empty(); }
+    [[nodiscard]] auto end() const -> const_math_iterator { return value.end(); }
+    auto               find_parens(MathQList &, bool) const -> bool;
+    auto               front() -> MathElt & { return value.front(); }
+    [[nodiscard]] auto front() const -> const MathElt & { return value.front(); }
+    auto               get_arg1() -> Math { return front().get_list(); }
+    auto               get_arg2() -> Math { return second_element().get_list(); }
+    auto               get_arg3() -> Math { return third_element().get_list(); }
+    [[nodiscard]] auto get_type() const -> math_list_type { return type; }
+    [[nodiscard]] auto get_sname() const -> subtypes { return sname; }
+    [[nodiscard]] auto get_name() const -> String;
+    [[nodiscard]] auto get_list(int) const -> Math &;
+    void               hack_type(int);
+    [[nodiscard]] auto has_type(int x) const -> bool { return type == x; }
+    [[nodiscard]] auto has_one_element() const -> bool;
+    [[nodiscard]] auto has_two_elements() const -> bool;
+    void               is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
+    [[nodiscard]] auto length_one() const -> bool { return value.size() == 1; }
+    auto               M_array(bool, math_style) -> Xmlp;
+    auto               M_cv(math_style, int need_row) -> XmlAndType;
+    void               pop_back() { value.pop_back(); }
+    void               pop_front() { value.pop_front(); }
+    void               print() const;
+    void               push_back(CmdChr, subtypes);
+    void               push_back_list(subtypes X, math_list_type c);
+    void               push_back_font(subtypes X, subtypes c);
+    void               push_back(CmdChr);
+    void               push_back(MathElt x) { value.push_back(x); }
+    void               push_back(Xmlp, int, math_types);
+    void               push_front(CmdChr, subtypes);
+    void               remove_initial_group();
+    void               remove_last();
+    void               remove_spaces();
+    [[nodiscard]] auto second_element() const -> const MathElt &;
+    void               set_display_type() { type = math_ddollar_cd; }
+    void               set_env_name(int);
+    void               set_name(subtypes X) { sname = X; }
+    void               set_nondisplay_type() { type = math_dollar_cd; }
+    void               set_type(math_list_type c) { type = c; }
+    [[nodiscard]] auto third_element() const -> const MathElt &;
+    auto               trivial_math(int) -> Xmlp;
+    auto               trivial_math_index(symcodes) -> Xmlp;
+    auto               check_align() -> int;
 
 private:
-    void add_cur_cont();
-    void add_cur_font();
-    auto add_fence(bool, MathF &) -> bool;
-    void concat(Xmlp);
-    void concat_space(Xmlp);
-    auto convert_cell(int &n, vector<AttList> &table, math_style) -> Xmlp;
-    auto convert_char_seq(MathElt W) -> MathElt;
-    auto convert_char_iseq(MathElt W, bool) -> MathElt;
-    void fetch_rlc(vector<AttList> &);
-    void find_paren0(MathP &) const;
-    auto finish_translate1(bool) -> bool;
-    auto finish_translate2() -> bool;
-    void handle_mbox(Math &);
-    void handle_mbox_no();
-    void handle_mbox_not();
-    auto has_over() const -> bool;
-    auto is_font_cmd1() -> bool;
-    auto large1(MathElt &, math_style) -> Xmlp;
-    auto M_cv0(math_style) -> XmlAndType;
-    auto M_cv3(math_style) -> Math;
-    void handle_cmd_Big(math_style);
-    auto handle_cmd_Big_aux(math_style) -> bool;
-    void cv_hspace_t(MathElt &cur);
-    auto M_cvaux() -> Math;
-    auto M_ref() -> Xmlp;
-    auto M_mbox1(Buffer &, subtypes &) -> int;
-    auto only_digits(Buffer &) const -> bool;
-    void push_back(Math &);
-    void push_back_small(Xmlp a);
-    void push_front(Math &);
-    void skip_initial_space();
-    auto special1() const -> Xmlp;
-    void special2(bool &, Xmlp &) const;
-    auto split_as_array(vector<AttList> &table, math_style, bool) -> Xmlp;
-    void remove_opt_arg(bool star);
-    auto remove_req_arg() -> string;
-    auto remove_req_arg_noerr() const -> string;
+    void               add_cur_cont();
+    void               add_cur_font();
+    auto               add_fence(bool, MathF &) -> bool;
+    void               concat(Xmlp);
+    void               concat_space(Xmlp);
+    auto               convert_cell(int &n, vector<AttList> &table, math_style) -> Xmlp;
+    auto               convert_char_seq(MathElt W) -> MathElt;
+    auto               convert_char_iseq(MathElt W, bool) -> MathElt;
+    void               fetch_rlc(vector<AttList> &);
+    void               find_paren0(MathP &) const;
+    auto               finish_translate1(bool) -> bool;
+    auto               finish_translate2() -> bool;
+    void               handle_mbox(Math &);
+    void               handle_mbox_no();
+    void               handle_mbox_not();
+    [[nodiscard]] auto has_over() const -> bool;
+    auto               is_font_cmd1() -> bool;
+    auto               large1(MathElt &, math_style) -> Xmlp;
+    auto               M_cv0(math_style) -> XmlAndType;
+    auto               M_cv3(math_style) -> Math;
+    void               handle_cmd_Big(math_style);
+    auto               handle_cmd_Big_aux(math_style) -> bool;
+    void               cv_hspace_t(MathElt &cur);
+    auto               M_cvaux() -> Math;
+    auto               M_ref() -> Xmlp;
+    auto               M_mbox1(Buffer &, subtypes &) -> int;
+    auto               only_digits(Buffer &) const -> bool;
+    void               push_back(Math &);
+    void               push_back_small(Xmlp a);
+    void               push_front(Math &);
+    void               skip_initial_space();
+    [[nodiscard]] auto special1() const -> Xmlp;
+    void               special2(bool &, Xmlp &) const;
+    auto               split_as_array(vector<AttList> &table, math_style, bool) -> Xmlp;
+    void               remove_opt_arg(bool star);
+    auto               remove_req_arg() -> string;
+    [[nodiscard]] auto remove_req_arg_noerr() const -> string;
 };
 
 // This is a global object for math handling
@@ -279,23 +279,23 @@ public:
         multi_labels.push_back(s);
         multi_labels_type.push_back(t);
     }
-    auto get_multi_labels() -> vector<string> & { return multi_labels; }
-    void finish_math_mem();
-    void set_type(bool);
-    auto get_eqnum_status() const -> int { return eqnum_status; }
-    auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
-    auto get_label_val() const -> string { return label_val; }
-    void stats();
-    auto get_pos_att() const -> name_positions { return pos_att; }
-    void reset(bool);
-    auto get_free_list() const -> MathElt * { return free_list; }
-    void set_free_list(MathElt *x) { free_list = x; }
-    auto is_inline() const -> bool { return current_mode; }
-    auto has_tag() const -> bool { return !tag_list.empty(); }
-    void reset_tags() { tag_list = TokenList(); }
-    void handle_tags();
-    void add_tag(TokenList &L);
-    void update_all_env_ctr(bool open) {
+    auto               get_multi_labels() -> vector<string> & { return multi_labels; }
+    void               finish_math_mem();
+    void               set_type(bool);
+    [[nodiscard]] auto get_eqnum_status() const -> int { return eqnum_status; }
+    [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
+    [[nodiscard]] auto get_label_val() const -> string { return label_val; }
+    void               stats();
+    [[nodiscard]] auto get_pos_att() const -> name_positions { return pos_att; }
+    void               reset(bool);
+    [[nodiscard]] auto get_free_list() const -> MathElt * { return free_list; }
+    void               set_free_list(MathElt *x) { free_list = x; }
+    [[nodiscard]] auto is_inline() const -> bool { return current_mode; }
+    [[nodiscard]] auto has_tag() const -> bool { return !tag_list.empty(); }
+    void               reset_tags() { tag_list = TokenList(); }
+    void               handle_tags();
+    void               add_tag(TokenList &L);
+    void               update_all_env_ctr(bool open) {
         if (open)
             all_env_ctr++;
         else
@@ -307,20 +307,20 @@ public:
         else
             math_env_ctr--;
     }
-    auto get_math_env_ctr() const -> int { return math_env_ctr; }
-    auto get_all_env_ctr() const -> int { return all_env_ctr; }
-    void add_attribute(Istring, Istring, subtypes);
-    auto get_cid() const -> Xid { return cur_cell_id; }
-    auto get_rid() const -> Xid { return cur_row_id; }
-    auto get_mid() const -> Xid { return cur_math_id; }
-    auto get_fid() const -> Xid { return cur_formula_id; }
-    auto get_tid() const -> Xid { return cur_texmath_id; }
-    auto get_taid() const -> Xid { return cur_table_id; }
-    void set_cid(Xid i) { cur_cell_id = i; }
-    void set_rid(Xid i) { cur_row_id = i; }
-    void set_taid(Xid i) { cur_table_id = i; }
-    void starred_tag() { is_tag_starred = true; }
-    void check_for_eqnum(subtypes, bool);
+    [[nodiscard]] auto get_math_env_ctr() const -> int { return math_env_ctr; }
+    [[nodiscard]] auto get_all_env_ctr() const -> int { return all_env_ctr; }
+    void               add_attribute(Istring, Istring, subtypes);
+    [[nodiscard]] auto get_cid() const -> Xid { return cur_cell_id; }
+    [[nodiscard]] auto get_rid() const -> Xid { return cur_row_id; }
+    [[nodiscard]] auto get_mid() const -> Xid { return cur_math_id; }
+    [[nodiscard]] auto get_fid() const -> Xid { return cur_formula_id; }
+    [[nodiscard]] auto get_tid() const -> Xid { return cur_texmath_id; }
+    [[nodiscard]] auto get_taid() const -> Xid { return cur_table_id; }
+    void               set_cid(Xid i) { cur_cell_id = i; }
+    void               set_rid(Xid i) { cur_row_id = i; }
+    void               set_taid(Xid i) { cur_table_id = i; }
+    void               starred_tag() { is_tag_starred = true; }
+    void               check_for_eqnum(subtypes, bool);
 
 private:
     void set_label(string s) {
@@ -404,19 +404,19 @@ public:
 };
 
 class Cv3Helper {
-    Math       res;
-    Xmlp       p;
-    int        ploc;
-    math_types ptype;
-    math_types prefix_type;
-    Xmlp       index, exponent;
-    Math       object;
-    int        special; // Sum or product
-    void       pop_front() { object.pop_front(); }
-    auto       get_cmd() const -> symcodes { return object.front().get_cmd(); }
-    auto       get_chr() const -> subtypes { return object.front().get_chr(); }
-    auto       get_xmltype() -> math_types { return object.front().get_xmltype(); }
-    auto       empty() -> bool { return object.empty(); }
+    Math               res;
+    Xmlp               p;
+    int                ploc;
+    math_types         ptype;
+    math_types         prefix_type;
+    Xmlp               index, exponent;
+    Math               object;
+    int                special; // Sum or product
+    void               pop_front() { object.pop_front(); }
+    [[nodiscard]] auto get_cmd() const -> symcodes { return object.front().get_cmd(); }
+    [[nodiscard]] auto get_chr() const -> subtypes { return object.front().get_chr(); }
+    auto               get_xmltype() -> math_types { return object.front().get_xmltype(); }
+    auto               empty() -> bool { return object.empty(); }
 
 public:
     int state;

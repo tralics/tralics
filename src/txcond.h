@@ -25,18 +25,18 @@ class Condition {
 
 public:
     Condition() { if_serial = 0; }
-    void pop();
-    auto push(int) -> uint;
-    void wait_for_fi() { D.back().if_limit = fi_code; }
-    void terminate();
-    auto top_serial() const -> int { return D.empty() ? -1 : D.back().serial; }
-    auto top_branch() const -> int;
-    auto top_type() const -> int;
-    auto top_level() const -> int { return D.size(); };
-    auto top_limit() const -> int { return D.empty() ? 0 : D.back().if_limit; }
-    auto top_line() const -> int { return D.empty() ? 0 : D.back().if_line; }
-    void set_limit(int n, int l) { D[n - 1].if_limit = l; }
-    auto is_this_if(uint n) const -> bool { return n == D.size(); }
-    auto empty() const -> bool { return D.empty(); }
-    void dump() const;
+    void               pop();
+    auto               push(int) -> uint;
+    void               wait_for_fi() { D.back().if_limit = fi_code; }
+    void               terminate();
+    [[nodiscard]] auto top_serial() const -> int { return D.empty() ? -1 : D.back().serial; }
+    [[nodiscard]] auto top_branch() const -> int;
+    [[nodiscard]] auto top_type() const -> int;
+    [[nodiscard]] auto top_level() const -> int { return D.size(); };
+    [[nodiscard]] auto top_limit() const -> int { return D.empty() ? 0 : D.back().if_limit; }
+    [[nodiscard]] auto top_line() const -> int { return D.empty() ? 0 : D.back().if_line; }
+    void               set_limit(int n, int l) { D[n - 1].if_limit = l; }
+    [[nodiscard]] auto is_this_if(uint n) const -> bool { return n == D.size(); }
+    [[nodiscard]] auto empty() const -> bool { return D.empty(); }
+    void               dump() const;
 };
