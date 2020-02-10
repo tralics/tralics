@@ -110,7 +110,7 @@ void Parser::expand_nct(TokenList &L) {
                 new_array_object.remove_a_type(c);
                 continue;
             }
-            if (token_ns::expand_nct(L, T, n, c, max_iter, body)) {
+            if (token_ns::expand_nct(L, n, c, max_iter, body)) {
                 action = true;
                 if (tracing_commands()) the_log << "array preamble after " << c << ": " << L << "\n";
             }
@@ -118,10 +118,10 @@ void Parser::expand_nct(TokenList &L) {
     }
 }
 
-// Here we have to find the character c, and expand the token T.
+// Here we have to find the character c.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-auto token_ns::expand_nct(TokenList &L, Token T, int n, uchar c, int &MX, TokenList &body) -> bool {
+auto token_ns::expand_nct(TokenList &L, int n, uchar c, int &MX, TokenList &body) -> bool {
     TokenList res;
     bool      result = false;
     TokenList Table[10]; // arguments of the commands
