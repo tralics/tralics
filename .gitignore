@@ -5,6 +5,8 @@
 /Test/*.aux
 /Test/*.bbl
 /Test/*.blg
+/Test/*.fdb_latexmk
+/Test/*.fls
 /Test/*.log
 /Test/*.xml
 /Test/*.img
