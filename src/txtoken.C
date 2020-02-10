@@ -290,7 +290,7 @@ auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.size() == 0) return Token(null_tok_val);
     Utf8Char c = b.unique_character();
     if (c.non_null()) return Token(c.get_value() + single_offset);
-    return Token(hash_find(b, 0) + hash_offset);
+    return Token(hash_find(b, nullptr) + hash_offset);
 }
 
 // This returns true if the token associated to the string in the buffer
@@ -710,9 +710,9 @@ StrHash::StrHash() {
     Next     = new int[hash_len];
     Labinfo  = new LabelInfo *[hash_len];
     for (int i = 0; i < hash_len; i++) {
-        Text[i]    = 0;
+        Text[i]    = nullptr;
         Next[i]    = 0;
-        Labinfo[i] = 0;
+        Labinfo[i] = nullptr;
     }
     hash_last = hash_prime + 1;
     Text[0]   = ""; // make sure these are allocated.
@@ -745,10 +745,10 @@ void StrHash::re_alloc() {
     delete[] Value;
     Value = T4;
     for (int i = hash_len; i < k; i++) {
-        Text[i]    = 0;
+        Text[i]    = nullptr;
         Next[i]    = 0;
-        Labinfo[i] = 0;
-        Value[i]   = 0;
+        Labinfo[i] = nullptr;
+        Value[i]   = nullptr;
     }
     hash_len = k;
     the_log << "Realloc str hash to " << k << "\n";

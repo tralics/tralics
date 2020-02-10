@@ -71,22 +71,22 @@ private:
     string year_string;   // the year (effective number)
     string job_name;      // the name, without extensions
 
-    Buffer           input_buffer;             // input buffer
-    Buffer           mac_buffer;               // buffer the current macro
-    Buffer           group_buffer;             // buffer for arg of \begin{...} \end(...)
-    Buffer           unprocessed_xml;          // chars to be converted into an XML element
-    Buffer           fetch_name_res;           // used by fetch_name
-    LinePtr          lines;                    // the lines to  be read
-    TokenList        TL;                       // list of tokens to be read again
-    Condition        conditions;               // condition stack for current \if
-    SthInternal      cur_val;                  // result of scan_something internal
-    TokenList        document_hook;            // the document-hook
-    TokenList        end_document_hook;        // the end-document-hook
-    Utf8Char         verb_saved_char;          // Char to use for verb by ShortVewrb
-    vector<Utf8Char> input_line;               // input line converted to chars
-    uint             input_line_pos{0};        // position in input_line
-    Xmlp             the_xmlA{0}, the_xmlB{0}; // for XML tree manipulations
-                                               // private inline functions
+    Buffer           input_buffer;                         // input buffer
+    Buffer           mac_buffer;                           // buffer the current macro
+    Buffer           group_buffer;                         // buffer for arg of \begin{...} \end(...)
+    Buffer           unprocessed_xml;                      // chars to be converted into an XML element
+    Buffer           fetch_name_res;                       // used by fetch_name
+    LinePtr          lines;                                // the lines to  be read
+    TokenList        TL;                                   // list of tokens to be read again
+    Condition        conditions;                           // condition stack for current \if
+    SthInternal      cur_val;                              // result of scan_something internal
+    TokenList        document_hook;                        // the document-hook
+    TokenList        end_document_hook;                    // the end-document-hook
+    Utf8Char         verb_saved_char;                      // Char to use for verb by ShortVewrb
+    vector<Utf8Char> input_line;                           // input line converted to chars
+    uint             input_line_pos{0};                    // position in input_line
+    Xmlp             the_xmlA{nullptr}, the_xmlB{nullptr}; // for XML tree manipulations
+                                                           // private inline functions
 private:
     auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }

@@ -190,7 +190,7 @@ auto ParamDataVector::find_list(const string &name, bool creat) -> ParamDataList
     int n = data.size();
     for (int i = 0; i < n; i++)
         if (data[i]->its_me(name)) return data[i];
-    if (!creat) return 0;
+    if (!creat) return nullptr;
     ParamDataList *res = new ParamDataList(name);
     data.push_back(res);
     return res;
@@ -374,7 +374,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, string &sname, string &lname) -> in
 void config_ns::check_RC(Buffer &B, Xml *res) {
     string tmp      = the_names[np_rcval].c_str();
     bool   need_elt = tmp[0] == '+'; // Hack
-    String S        = 0;
+    String S        = nullptr;
     if (need_elt) S = tmp.c_str() + 1;
     Buffer temp2;
     string sname, lname;
@@ -391,9 +391,9 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             break;
         }
         if (need_elt)
-            new_elt = new Xml(Istring(string(S + sname)), 0);
+            new_elt = new Xml(Istring(string(S + sname)), nullptr);
         else {
-            new_elt = new Xml(np_rcval, 0);
+            new_elt = new Xml(np_rcval, nullptr);
             new_elt->get_id().add_attribute(Istring("name"), Istring(sname));
         }
         res->push_back(new_elt);

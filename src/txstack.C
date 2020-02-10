@@ -33,13 +33,13 @@ Stack::Stack() {
     enames.reserve(2048);
     last_xid = -1;
     xid_boot = 0;
-    next_xid(0); // 0
-    next_xid(0); // 1 <document>
-    next_xid(0); // 2 dummy, see Stack::temporary
-    next_xid(0); // 3 is for the biblio, see after_main_text
-    next_xid(0); // 4 is <tableofcontents/>
-    next_xid(0); // 5 is for theindex (see txtrees)
-    next_xid(0); // 6 is for the glossary (see txtrees)
+    next_xid(nullptr); // 0
+    next_xid(nullptr); // 1 <document>
+    next_xid(nullptr); // 2 dummy, see Stack::temporary
+    next_xid(nullptr); // 3 is for the biblio, see after_main_text
+    next_xid(nullptr); // 4 is <tableofcontents/>
+    next_xid(nullptr); // 5 is for theindex (see txtrees)
+    next_xid(nullptr); // 6 is for the glossary (see txtrees)
 }
 
 // Debug: this prints all elements, except those allocated at boot
@@ -55,18 +55,18 @@ void Stack::dump_xml_table() {
 // Returns the element in the table with id n
 // This should be at position N
 auto Stack::fetch_by_id(int n) -> Xmlp {
-    if (n <= 0) return 0; // no need to look at this
-    if (int(enames.size()) <= n) return 0;
+    if (n <= 0) return nullptr; // no need to look at this
+    if (int(enames.size()) <= n) return nullptr;
     Xmlp x = enames[n];
-    if (!x) return 0;
+    if (!x) return nullptr;
     if (x->get_id().value == n) return x;
     cout << "This cannot happen: bug in table at position " << n << "\n";
-    return 0;
+    return nullptr;
 }
 
 // returns a parent of x
 auto Stack::find_parent(Xmlp x) -> Xmlp {
-    if (!x) return 0;
+    if (!x) return nullptr;
     int k = enames.size();
     // debug: print all parents
     // cout << "Search parent of " << x << "\n";
@@ -78,7 +78,7 @@ auto Stack::find_parent(Xmlp x) -> Xmlp {
         if (!enames[i]) continue;
         if (enames[i]->is_child(x)) return enames[i];
     }
-    return 0;
+    return nullptr;
 }
 
 auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
@@ -126,13 +126,13 @@ auto Stack::get_father() -> Xml * {
     if (ptr > 0)
         return Table[ptr - 1].obj;
     else
-        return 0;
+        return nullptr;
 }
 
 // Creates an empty element named x, and adds it to the stack.
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(name_positions x) -> AttList & {
-    top_stack()->push_back(new Xml(x, 0));
+    top_stack()->push_back(new Xml(x, nullptr));
     return Xid(last_xid).get_att();
 }
 
@@ -230,7 +230,7 @@ auto Stack::get_cur_par() -> Xmlp {
     if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname))
         return X.obj;
     else
-        return 0;
+        return nullptr;
 }
 
 // In case the current element happens to be a P,
@@ -297,7 +297,7 @@ void Stack::push(Istring fr, Xmlp V) {
 
 // Pushes a new empty object, for \hbox, etc
 auto Stack::push_hbox(Istring name) -> Xmlp {
-    Xmlp code = new Xml(name, 0);
+    Xmlp code = new Xml(name, nullptr);
     ipush(the_names[cst_hbox], code);
     push_trace();
     return code;
@@ -320,8 +320,8 @@ auto Stack::temporary() -> Xmlp {
 void Stack::init_all(string a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
-    Xmlp V   = new Xml(Istring(a), 0);
-    V->push_back(0); // Make a hole for the color pool
+    Xmlp V   = new Xml(Istring(a), nullptr);
+    V->push_back(nullptr); // Make a hole for the color pool
     V->change_id(1);
     ipush(the_names[cst_document], V);
     newline_xml = new Xml(Istring("\n"));
@@ -396,7 +396,7 @@ void Stack::pop(Istring a) {
         err_ns::local_buf << bf_reset << "Error in pop; stack empty; trying to pop " << a;
         the_parser.signal_error();
         Istring S = the_names[cst_document];
-        ipush(S, new Xml(S, 0)); // stack should never be empty
+        ipush(S, new Xml(S, nullptr)); // stack should never be empty
     }
 }
 
@@ -404,7 +404,7 @@ void Stack::pop(Istring a) {
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
 auto Stack::push_par(int k) -> Xid {
-    Xmlp res = new Xml(cst_p, 0);
+    Xmlp res = new Xml(cst_p, nullptr);
     Xid  id  = res->get_id();
     push(the_names[cst_p], res);
     cur_mode = mode_h; // we are in horizontal mode now
@@ -415,7 +415,7 @@ auto Stack::push_par(int k) -> Xid {
 
 auto Stack::fonts1(name_positions x) -> Xmlp {
     bool     w   = the_main->use_font_elt();
-    Xmlp     res = new Xml(w ? x : cst_hi, 0);
+    Xmlp     res = new Xml(w ? x : cst_hi, nullptr);
     AttList &W   = res->get_id().get_att();
     if (!w) W.push_back(np_rend, x);
     return res;
@@ -462,7 +462,7 @@ void Stack::check_font() {
         }
         if (nonempty) {
             Istring  a   = Istring(the_main->SH.hash_find());
-            Xmlp     res = new Xml(cst_hi, 0);
+            Xmlp     res = new Xml(cst_hi, nullptr);
             AttList &W   = res->get_id().get_att();
             W.push_back(the_names[np_rend], a);
             W.push_back(the_names[cst_flaghi], Istring(1));
@@ -480,7 +480,7 @@ void Stack::check_font() {
     }
     Istring c = the_parser.cur_font.get_color();
     if (!(c.empty() || c.null())) {
-        Xmlp     res = new Xml(cst_hi, 0);
+        Xmlp     res = new Xml(cst_hi, nullptr);
         AttList &W   = res->get_id().get_att();
         W.push_back(np_color, c);
         W.push_back(the_names[cst_flaghi], Istring(1));
@@ -490,10 +490,10 @@ void Stack::check_font() {
 }
 
 // Push a new XML element
-void Stack::push1(Istring name, name_positions x) { push(name, new Xml(x, 0)); }
+void Stack::push1(Istring name, name_positions x) { push(name, new Xml(x, nullptr)); }
 
 // Push a new XML element
-void Stack::push1(name_positions x) { push(the_names[x], new Xml(x, 0)); }
+void Stack::push1(name_positions x) { push(the_names[x], new Xml(x, nullptr)); }
 
 // Code done when a module ends. pop until stack (nearly) empty
 void Stack::end_module() {
@@ -533,8 +533,8 @@ auto Stack::new_array_info(Xid id) -> ArrayInfo & {
 
 // This finds the table info given an ID
 auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
-    if (AI.empty()) return 0;
-    if (!AI.back().its_me(id)) return 0;
+    if (AI.empty()) return nullptr;
+    if (!AI.back().its_me(id)) return nullptr;
     return &AI.back();
 }
 

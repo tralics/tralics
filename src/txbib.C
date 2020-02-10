@@ -96,7 +96,7 @@ auto CitationItem::get_bid() -> Istring {
 auto Parser::make_cit_ref(Istring type, Istring ref) -> Xmlp {
     int     n   = the_bibliography.find_citation_item(type, ref, true);
     Istring id  = the_bibliography.citation_table[n].get_bid();
-    Xmlp    res = new Xml(np_ref, 0);
+    Xmlp    res = new Xml(np_ref, nullptr);
     res->get_id().add_attribute(np_target, id);
     return res;
 }
@@ -247,7 +247,7 @@ void Parser::T_cite_one() {
     Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
     cur_tok      = T;
     Istring ref  = Istring(fetch_name0_nopar());
-    Xmlp    arg  = is_simple ? 0 : xT_arg_nopar();
+    Xmlp    arg  = is_simple ? nullptr : xT_arg_nopar();
     // signal error after argument parsing
     if (bbl.is_too_late()) {
         parse_error("Citation after loading biblio?");
@@ -277,7 +277,7 @@ void Parser::T_cite_one() {
 void Parser::add_bib_marker(bool force) {
     Bibliography &T = the_bibliography;
     if (!force && T.location_exists()) return;
-    Xmlp mark = new Xml(Istring(""), 0);
+    Xmlp mark = new Xml(Istring(""), nullptr);
     Xmlp Foo  = new Xml(Istring(""), mark);
     the_stack.add_last(Foo);
     T.set_location(mark, force);
@@ -566,7 +566,7 @@ void Parser::T_start_the_biblio() {
     the_stack.set_arg_mode();
     Istring name = Istring(a);
     the_stack.set_v_mode();
-    the_stack.push(the_names[cst_biblio], new Xml(name, 0));
+    the_stack.push(the_names[cst_biblio], new Xml(name, nullptr));
 }
 
 // Returns true if this is the same object.
@@ -623,7 +623,7 @@ void Parser::T_cititem() {
     need_bib_mode();
     the_stack.set_arg_mode();
     Istring name = Istring(a);
-    the_stack.push(name, new Xml(name, 0));
+    the_stack.push(name, new Xml(name, nullptr));
     T_arg();
     the_stack.pop(name);
     the_stack.set_mode(m);
@@ -830,7 +830,7 @@ auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
         for (int i = 0; i < len; i++)
             if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
     }
-    return 0;
+    return nullptr;
 }
 
 auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
@@ -845,7 +845,7 @@ auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
     int       len = all_entries.size();
-    BibEntry *res = 0;
+    BibEntry *res = nullptr;
     if (old_ra) {
         for (int i = 0; i < len; i++)
             if (all_entries[i]->cite_key.is_same_lower_old(s)) {
@@ -870,7 +870,7 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
 auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
     int       len = all_entries.size();
-    BibEntry *res = 0;
+    BibEntry *res = nullptr;
     for (int i = 0; i < len; i++)
         if (all_entries[i]->cite_key.is_similar(s)) {
             res = all_entries[i];
@@ -956,7 +956,7 @@ void Parser::solve_cite(bool user) {
     Istring from = Istring("");
     if (user) {
         implicit_par(zero_code);
-        the_stack.add_last(new Xml(np_bibitem, 0));
+        the_stack.add_last(new Xml(np_bibitem, nullptr));
         Istring ukey = nT_optarg_nopar();
         the_stack.get_xid().get_att().push_back(np_bibkey, ukey);
         n = the_stack.get_xid().value;
@@ -1343,7 +1343,7 @@ void Bibtex::read_one_field(bool store) {
     } else {
         bool k = scan_identifier(0);
         if (store && !k) {
-            int macro = find_a_macro(token_buf, false, 0, 0);
+            int macro = find_a_macro(token_buf, false, nullptr, nullptr);
             if (macro == not_found) {
                 err_in_file("", false);
                 log_and_tty << "undefined macro " << token_buf << ".\n";
@@ -1411,13 +1411,13 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
     for (int i = 0; i < int(omitcite_list.size()); i++)
         if (omitcite_list[i] == cur_entry_name) {
             the_log << lg_start << "bib: Omitting " << cur_entry_name << lg_end;
-            return 0;
+            return nullptr;
         }
     BibEntry *X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
     if (!X) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
-        return 0;
+        return nullptr;
     }
     if (old_ra && default_prefix() == from_refer) X->cite_key.move_to_refer();
     int ext = int(cn) - int(type_extension);
@@ -1501,7 +1501,7 @@ void Bibtex::parse_one_item() {
     } else if (cn == type_string) {
         k = scan_identifier(2);
         if (k) return;
-        int X = find_a_macro(token_buf, true, 0, 0);
+        int X = find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
         read_field(true);
         mac_set_val(X, field_buf.special_convert(false));
@@ -1763,7 +1763,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(cite_key.get_name());
     bbl.push_back_braced(unique_id.c_str());
     bbl.push_back_braced(from_to_string());
-    String my_name = 0;
+    String my_name = nullptr;
     if (is_extension)
         my_name = the_main->get_bibtex_extensions()[is_extension - 1].c_str();
     else

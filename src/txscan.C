@@ -51,7 +51,7 @@ void lg_start_io(Logger &L) {
 // and no file attached to them
 
 TexOutStream::TexOutStream() {
-    for (int i = 0; i < nb_input_channels; i++) write_file[i] = 0;
+    for (int i = 0; i < nb_input_channels; i++) write_file[i] = nullptr;
     for (int i = 0; i < nb_output_channels; i++) write_open[i] = false;
 }
 
@@ -62,7 +62,7 @@ void TexOutStream::close(int chan) {
         fstream *F = write_file[chan];
         F->close();
         delete F;
-        write_file[chan] = 0;
+        write_file[chan] = nullptr;
         write_open[chan] = false;
     }
 }
@@ -1076,7 +1076,7 @@ auto Parser::scan_int(Token t, int n, String s) -> int {
     int N = scan_int(t);
     if (N < 0 || N > n) {
         err_ns::local_buf << bf_reset << "Bad " << s << " replaced by 0\n";
-        signal_ovf(t, 0, N, n);
+        signal_ovf(t, nullptr, N, n);
         cur_val.set_int_val(0);
         return 0;
     }

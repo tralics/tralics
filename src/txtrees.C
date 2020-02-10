@@ -54,7 +54,7 @@ void AllIndex::new_index(const string &s, const string &title) {
     int n = value.size();
     for (int i = 0; i < n; i++)
         if (value[i]->has_name(s)) return;
-    int id = the_main->the_stack->next_xid(0).value;
+    int id = the_main->the_stack->next_xid(nullptr).value;
     value.push_back(new OneIndex(s, title, id));
 }
 
@@ -69,7 +69,7 @@ auto Parser::get_index_value() -> int {
 // Case \printglossary or \printindex[foo].
 // Marks the place where to insert the index
 void AllIndex::mark_print(int g) {
-    Xmlp mark = new Xml(Istring(""), 0);
+    Xmlp mark = new Xml(Istring(""), nullptr);
     Xmlp Foo  = new Xml(Istring(""), mark);
     the_main->the_stack->add_last(Foo);
     value[g]->set_position(mark);
@@ -211,7 +211,7 @@ void Parser::finish_index() {
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
-        Xmlp res = new Xml(j == 0 ? np_theglossary : np_theindex, 0); // OK?
+        Xmlp res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
         Xid  id  = res->get_id();
         {
             const string &t = CI->get_title();
@@ -553,7 +553,7 @@ auto date_ns::month_length(int y, int m) -> int {
 
 // Return true if valid, signals error otherwise
 auto date_ns::check_date(int y, int m, int d) -> bool {
-    String Bad = 0;
+    String Bad = nullptr;
     int    ml  = 0;
     if (y <= 0)
         Bad = "year<1";

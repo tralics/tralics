@@ -43,9 +43,9 @@ class XmlAction {
     Xmlp       xml_val;    // input or output xml value
     Istring    string_val; // name of element ot work on
 public:
-    XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(0), string_val(Istring()) {}
+    XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(Istring()) {}
     XmlAction(Istring M, recur_type w, Xmlp X) : match(M), what(w), int_val(0), xml_val(X), string_val(Istring()) {}
-    XmlAction(Istring M, recur_type w, Istring X) : match(M), what(w), int_val(0), xml_val(0), string_val(X) {}
+    XmlAction(Istring M, recur_type w, Istring X) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(X) {}
     auto get_what() const -> recur_type { return what; }
     void incr_int_val() { int_val++; }
     void mark_found() { int_val = 1; }
@@ -68,7 +68,7 @@ class WordList {
 
 public:
     void set_next(WordList *n) { next = n; }
-    auto next_empty() const -> bool { return next == 0; }
+    auto next_empty() const -> bool { return next == nullptr; }
     WordList(String s, int h, WordList *N) : next(N), name(s), hash(h), freq(1) {}
     auto is_here(String s, int h) const -> bool { return hash == h && strcmp(name, s) == 0; }
     void incr_freq() { freq++; }

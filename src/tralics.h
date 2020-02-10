@@ -23,8 +23,6 @@
 #include <cstdio>
 #include <cstring>
 
-// use this for debug
-#define the_tty cout
 using uint = unsigned int;
 
 using namespace std;

@@ -34,7 +34,7 @@ public:
     void add_last_string(const Buffer &B);
     void add_nl();
     void add_non_empty_to(Xmlp res);
-    auto back() -> Xmlp { return tree.empty() ? 0 : tree.back(); }
+    auto back() -> Xmlp { return tree.empty() ? nullptr : tree.back(); }
     void change_name(Istring s) { name = s; }
     void change_name(name_positions s) { name = the_names[s]; }
     void compo_special();

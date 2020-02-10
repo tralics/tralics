@@ -31,7 +31,7 @@ void arith_ns::end_err() { the_parser.signal_error(the_parser.err_tok, "Arithmet
 // This makes sure that n fits on 30 bits
 void ScaledInt::ovf30() {
     if (value > max_dimension || -value > max_dimension) {
-        start_err(0);
+        start_err(nullptr);
         err_ns::local_buf << ", threshold=" << max_dimension << ", cur val=" << value;
         end_err();
         value = max_dimension;
@@ -42,7 +42,7 @@ void ScaledInt::ovf30() {
 // On a 32 bit machine, only -(max_integer+1) can overflow
 void ScaledInt::ovf31() {
     if (value > max_integer || value < -max_integer) {
-        start_err(0);
+        start_err(nullptr);
         err_ns::local_buf << ", threshold=" << max_integer << ", cur val=" << value;
         end_err();
         value = 0;
@@ -68,7 +68,7 @@ auto Token::tex_is_digit(int radix) -> int {
 
 // Divide by zero.
 void Glue::zdv() {
-    start_err(0);
+    start_err(nullptr);
     err_ns::local_buf << ", division by 0";
     end_err();
 }
@@ -80,7 +80,7 @@ void ScaledInt::divide(int n) {
     int x = value;
     if (n == 0) {
         // value = 0;
-        start_err(0);
+        start_err(nullptr);
         err_ns::local_buf << ", division by 0\nin " << x << "/0";
         end_err();
         return;
@@ -126,7 +126,7 @@ void ScaledInt::scale(int n, int d, int max_answer) {
     int  x        = value;
     bool negative = false;
     if (scale(x, n, d, max_answer, negative)) {
-        start_err(0);
+        start_err(nullptr);
         err_ns::local_buf << "\nin " << x << "*" << n << "/" << d;
         end_err();
     }
@@ -637,7 +637,7 @@ auto Mactab::new_macro(Macro *s) -> subtypes {
 void Mactab::rc_mac_realloc() {
     int           k         = cur_rc_mac_len;
     int           ns        = k + 400;
-    static Macro *empty_mac = 0;
+    static Macro *empty_mac = nullptr;
     if (!empty_mac) empty_mac = new Macro;
     Macro **T1 = new Macro *[ns];
     int *   T2 = new int[ns];

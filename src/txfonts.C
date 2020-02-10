@@ -122,7 +122,7 @@ auto FontInfo::size_name() const -> String {
     else if (tsize == fi_big_size6)
         return "\\HUGE";
     else
-        return 0;
+        return nullptr;
 }
 
 // Idem. This function deals with the shape.
@@ -134,7 +134,7 @@ auto FontInfo::shape_name() const -> String {
     else if (shape == fi_sc_shape)
         return "\\scshape";
     else
-        return 0;
+        return nullptr;
 }
 
 // Idem. This function deals with the family.
@@ -144,7 +144,7 @@ auto FontInfo::family_name() const -> String {
     else if (family == fi_tt_family)
         return "\\ttfamily";
     else
-        return 0;
+        return nullptr;
 }
 
 // Idem. This function deals with the series. (the function is inline).
@@ -157,7 +157,7 @@ auto FontInfo::series_name() const -> String {
         return "\\semiboldseries";
     else if (series == fi_c_series)
         return "\\condensedseries";
-    return 0;
+    return nullptr;
 }
 
 // This prints everything.
@@ -342,15 +342,15 @@ void TexFont::make_null() {
     kern_len      = 0;
     exten_len     = 0;
     param_len     = 0;
-    char_table    = 0;
-    width_table   = 0;
-    height_table  = 0;
-    depth_table   = 0;
-    italic_table  = 0;
-    ligkern_table = 0;
-    kern_table    = 0;
-    exten_table   = 0;
-    param_table   = 0;
+    char_table    = nullptr;
+    width_table   = nullptr;
+    height_table  = nullptr;
+    depth_table   = nullptr;
+    italic_table  = nullptr;
+    ligkern_table = nullptr;
+    kern_table    = nullptr;
+    exten_table   = nullptr;
+    param_table   = nullptr;
     hyphen_char   = 0;
     skew_char     = 0;
     name          = "";

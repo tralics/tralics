@@ -62,7 +62,7 @@ void Parser::fnhack() {
 void Parser::interpret_rc() {
     TokenList L = read_arg();
     Tbuf << bf_reset << L;
-    Xml *res = new Xml(np_rclist, 0);
+    Xml *res = new Xml(np_rclist, nullptr);
     the_stack.add_last(res);
     config_ns::check_RC(Tbuf, res);
 }
@@ -83,7 +83,7 @@ void Parser::T_rasection() {
     Istring iname    = Istring(name);
     leave_h_mode();
     the_stack.add_nl();
-    Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, 0);
+    Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
     if (!elt_name.empty()) cur->get_id().add_attribute(np_name, iname);
     if (iname == cst_composition) compo_id = cur->get_id();
     the_stack.push(the_names[cst_rasection], cur);

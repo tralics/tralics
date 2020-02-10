@@ -582,7 +582,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
         if (*a && *a == ' ') ++a;
         return a;
     }
-    return 0;
+    return nullptr;
 }
 
 void obsolete(string s) { cout << "Obsolete option `-" << s << "' ignored\n"; }
@@ -614,8 +614,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_external_prog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
-        case pa_leftquote: leftquote_val = strtol(a, NULL, 16); return;
-        case pa_rightquote: rightquote_val = strtol(a, NULL, 16); return;
+        case pa_leftquote: leftquote_val = strtol(a, nullptr, 16); return;
+        case pa_rightquote: rightquote_val = strtol(a, nullptr, 16); return;
         case pa_defaultclass: default_class = a; return;
         case pa_infile: see_name(a); return;
         case pa_indata:
@@ -1236,7 +1236,7 @@ inline void MainClass::show_input_size() {
 
 // Creates the .tex file
 void MainClass::mk_empty() {
-    LinePtr *res = 0;
+    LinePtr *res = nullptr;
     res          = new LinePtr;
     res->reset(".tex");
     res->insert(1, "\\message{File ignored^^J}\\endinput", false);

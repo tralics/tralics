@@ -40,7 +40,7 @@ auto math_ns::get_builtin_alt(int p) -> Xmlp { return math_data.get_builtin_alt(
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
-    for (int i = 0; i < 128; i++) single_chars[i] = 0;
+    for (int i = 0; i < 128; i++) single_chars[i] = nullptr;
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(the_names[np_letter_a + x - 'a']); }
     for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(the_names[np_letter_A + x - 'A']); }
 }
@@ -1016,7 +1016,7 @@ void math_ns::fill_math_char_slots() {
 
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(String a) -> Xmlp {
-    Xmlp b = new Xml(cst_mspace, 0);
+    Xmlp b = new Xml(cst_mspace, nullptr);
     b->add_att(np_cst_width, Istring(a));
     return b;
 }
@@ -1367,7 +1367,7 @@ void MathDataP::boot_xml_lr_tables() {
         if (built_in_table[k]) continue;
         B.reset();
         B.push_back(i);
-        built_in_table[k] = new Xml(cst_mo, 0);
+        built_in_table[k] = new Xml(cst_mo, nullptr);
         built_in_table[k]->push_back(new Xml(the_main->SH));
     }
 
@@ -1514,20 +1514,20 @@ void MathDataP::boot2() {
     Xmlp y = new Xml(Istring(cst_mpadded), get_builtin(int_code));
     y->add_att(np_cst_width, Istring("-3pt"));
     Xmlp z = get_builtin(xml_thickmu_space_loc);
-    x      = new Xml(cst_mrow, 0);
+    x      = new Xml(cst_mrow, nullptr);
     x->push_back(z);
     x->push_back(y);
     x->push_back(y);
     x->push_back(z);
     init_builtin("iint", iint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, 0);
+    x = new Xml(cst_mrow, nullptr);
     x->push_back(z);
     x->push_back(y);
     x->push_back(y);
     x->push_back(y);
     x->push_back(z);
     init_builtin("iiint", iiint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, 0);
+    x = new Xml(cst_mrow, nullptr);
     x->push_back(z);
     x->push_back(y);
     x->push_back(y);
@@ -1535,21 +1535,21 @@ void MathDataP::boot2() {
     x->push_back(y);
     x->push_back(z);
     init_builtin("iiiint", iiiint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, 0);
+    x = new Xml(cst_mrow, nullptr);
     x->push_back(get_builtin(int_code));
     x->push_back(math_data.get_mc_table(6));
     x->push_back(get_builtin(int_code));
     init_builtin("idotsint", idotsint_code, x, mathop_cmd);
-    x                                         = new Xml(Istring("none"), 0);
+    x                                         = new Xml(Istring("none"), nullptr);
     the_parser.hash_table.mmlnone_token       = init_builtin("mmlnone", mml_none_code, x, mathord_cmd);
-    x                                         = new Xml(Istring("mprescripts"), 0);
+    x                                         = new Xml(Istring("mprescripts"), nullptr);
     the_parser.hash_table.mmlprescripts_token = init_builtin("mmlprescripts", mml_prescripts_code, x, mathord_cmd);
 }
 
 void MathDataP::boot() {
     no_ent_names = the_main->use_noent_names();
-    for (int i = 0; i < last_math_loc; i++) built_in_table[i] = 0;
-    for (int i = 0; i < last_math_loc; i++) built_in_table_alt[i] = 0;
+    for (int i = 0; i < last_math_loc; i++) built_in_table[i] = nullptr;
+    for (int i = 0; i < last_math_loc; i++) built_in_table_alt[i] = nullptr;
     boot_table();
     fill_single_char();
     fill_math_char_slots();

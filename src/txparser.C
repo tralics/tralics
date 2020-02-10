@@ -1820,7 +1820,7 @@ auto Parser::M_counter(bool def) -> bool {
     if (counter_check(b, def)) return true;
     back_input();
     if (!def) return false;
-    return counter_aux(b.to_string(2), 0, T);
+    return counter_aux(b.to_string(2), nullptr, T);
 }
 
 // Used by the bootstrap phase to define a dependent counter
@@ -3210,7 +3210,7 @@ void Parser::M_newcommand(rd_flag redef) {
     symcodes what    = is_star ? user_cmd : userl_cmd;
     Token    name    = get_r_token(true);
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
-    Macro *X = 0;
+    Macro *X = nullptr;
     {
         SaveErrTok sv(name);
         X = read_latex_macro();
@@ -3239,7 +3239,7 @@ void Parser::M_new_env(rd_flag redef) {
     string   name    = group_to_string();
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
     Token  T = find_env_token(name, true); // this is \foo
-    Macro *X = 0;
+    Macro *X = nullptr;
     {
         SaveErrTok sv(T);
         X = read_latex_macro();
@@ -4146,7 +4146,7 @@ void Parser::box_end(Xmlp res, int pos) {
 void Parser::begin_box(int src, subtypes c) {
     Token T = cur_tok;
     int   res;
-    Xmlp  cur_box = 0;
+    Xmlp  cur_box = nullptr;
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();
@@ -4157,7 +4157,7 @@ void Parser::begin_box(int src, subtypes c) {
     if (c == box_code) {
         res     = scan_reg_num();
         cur_box = box_table[res].get_val();
-        box_table[res].set_val(0);
+        box_table[res].set_val(nullptr);
         box_end(cur_box, src);
         return;
     }
@@ -4178,7 +4178,7 @@ void Parser::begin_box(int src, subtypes c) {
         if (cur_box)
             cur_box = cur_box->deep_copy();
         else
-            cur_box = new Xml(Istring(""), 0);
+            cur_box = new Xml(Istring(""), nullptr);
         box_end(cur_box, src);
         return;
     }

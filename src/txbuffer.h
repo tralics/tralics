@@ -97,7 +97,7 @@ public:
     void chars_to_buffer(Buffer &);
     void check_before_brace(String);
     auto check_cat_perso(int, int, bool) -> string;
-    auto contains(String s) const -> bool { return strstr(buf, s) != 0; }
+    auto contains(String s) const -> bool { return strstr(buf, s) != nullptr; }
     auto contains_braced(String env) -> bool;
     auto contains_env(String env) -> bool;
     auto contains_here(String) const -> bool;

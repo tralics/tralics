@@ -112,10 +112,10 @@ public:
 };
 
 class TitlePage {
-    int   len2{1};      // size of bigtable and Data
-    bool  valid{false}; // is this initialised and not killed ?
-    int   size{0};      // allocated size of bigtable
-    Xmlp *Data{0};      // the array of xml data
+    int   len2{1};       // size of bigtable and Data
+    bool  valid{false};  // is this initialised and not killed ?
+    int   size{0};       // allocated size of bigtable
+    Xmlp *Data{nullptr}; // the array of xml data
 public:
     vector<TitlePageAux> bigtable; // the table
     int                  state;    // current state of the parser

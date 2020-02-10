@@ -323,7 +323,7 @@ void Parser::invalid_key(Token T, string key, const TokenList &val) {
 }
 
 void Parser::verb_error(Token T, int msg) {
-    String s = 0;
+    String s = nullptr;
     switch (msg) {
     case 0: s = "in argument of a command"; break;
     case 1: s = "at end of line"; break;

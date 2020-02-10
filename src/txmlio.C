@@ -68,11 +68,11 @@ namespace {
 auto read_xml(string s) -> Xmlp {
     if (!tralics_ns::find_in_path(s)) {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
-        return 0;
+        return nullptr;
     }
     string file = main_ns::path_buffer.to_string();
     XmlIO  res;
-    if (res.init(file)) return 0;
+    if (res.init(file)) return nullptr;
     return res.prun();
 }
 
@@ -112,7 +112,7 @@ auto XmlIO::init(const string &name) -> bool {
 
 // This parses the whole XML file
 void XmlIO::run() {
-    cur_xml = new Xml(Istring("root"), 0);
+    cur_xml = new Xml(Istring("root"), nullptr);
     cur_stack.push_back(cur_xml);
     B.reset();
     eof_ok = true;
@@ -274,7 +274,7 @@ void XmlIO::pop_this() {
 void XmlIO::parse_tag() {
     reread_list.push_back(cur_char);
     scan_name();
-    Xml *res = new Xml(Istring(B), 0);
+    Xml *res = new Xml(Istring(B), nullptr);
     cur_xml->push_back(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -670,7 +670,7 @@ void XmlIO::parse_dec_attlist() {
 
 void XmlIO::parse_dec_doctype() {
     expect("DOCTYPE");
-    Xml *res = new Xml(Istring("DOCTYPE"), 0);
+    Xml *res = new Xml(Istring("DOCTYPE"), nullptr);
     res->change_id(-2);      // mark this as a declaration
     cur_xml->push_back(res); // Insert this in the tree
     skip_space();

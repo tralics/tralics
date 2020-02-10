@@ -210,8 +210,8 @@ auto Buffer::look_at_space(string s) -> bool {
 // attribute list.
 auto Buffer::xml_and_attrib(string s) -> Xmlp {
     bool has_spaces = look_at_space(s);
-    if (!has_spaces) return new Xml(Istring(s), 0);
-    Xmlp res = new Xml(Istring(buf), 0);
+    if (!has_spaces) return new Xml(Istring(s), nullptr);
+    Xmlp res = new Xml(Istring(buf), nullptr);
     push_back_special_att(res->get_id());
     return res;
 }

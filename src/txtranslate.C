@@ -20,7 +20,7 @@ namespace {
     Buffer Tbuf;
     Buffer Abuf;
     Buffer tpa_buffer;
-    Xmlp   unfinished_par = 0;
+    Xmlp   unfinished_par = nullptr;
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 } // namespace
 
@@ -129,7 +129,7 @@ auto Parser::ileave_v_mode() -> Xid {
     Xid res = the_stack.push_par(k);
     if (unfinished_par) {
         res.add_attribute(unfinished_par->get_id().get_att(), true);
-        unfinished_par = 0;
+        unfinished_par = nullptr;
     }
     return res;
 }
@@ -137,7 +137,7 @@ auto Parser::ileave_v_mode() -> Xid {
 // Quits horizontal mode. Said otherwise finishes a paragraph.
 void Parser::leave_h_mode() {
     if (the_stack.in_h_mode()) {
-        unfinished_par = 0;
+        unfinished_par = nullptr;
         flush_buffer0();
         the_stack.pop(cst_p);
         Xmlp p = the_stack.top_stack()->back();
@@ -201,7 +201,7 @@ auto Parser::nT_arg_nopar() -> Istring {
 auto Parser::xT_optarg_nopar() -> Xmlp {
     TokenList L;
     read_optarg(L);
-    if (L.empty()) return 0;
+    if (L.empty()) return nullptr;
     return translate_list(L);
 }
 
@@ -402,7 +402,7 @@ void Parser::T_par1(Istring u) {
 void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
     string s   = sT_arg_nopar();
-    Xmlp   res = new Xml(Istring(s), 0);
+    Xmlp   res = new Xml(Istring(s), nullptr);
     if (w) {
         if (w == two_code) res->set_id(-1); // XML comment
         flush_buffer();
@@ -429,7 +429,7 @@ void Parser::T_arg1(name_positions y) {
 // Case of an item in a list...
 void Parser::T_item(int c) {
     leave_h_mode();
-    unfinished_par = 0;
+    unfinished_par = nullptr;
     the_stack.pop_if_frame(the_names[np_item]);
     skip_initial_space_and_back_input();
     Istring att = T_item_label(c);
@@ -496,7 +496,7 @@ void Parser::start_paras(int y, string Y, bool star) {
         else
             the_stack.add_new_anchor();
     }
-    Xmlp opt = 0;
+    Xmlp opt = nullptr;
     if (module)
         create_label("mod:" + Y, the_stack.get_cur_id()); // should be the id above
     else
@@ -1021,7 +1021,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 // This creates a new color item, to be pushed on the color stack
 // Note that used is false, set to true by get_id.
 ColSpec::ColSpec(string a, string b, string c) : name(a), model(b), value(c), used(false) {
-    xval = new Xml(np_color, 0);
+    xval = new Xml(np_color, nullptr);
     if (!name.empty()) xval->get_id().add_attribute(Istring("name"), Istring(name));
     xval->get_id().add_attribute(Istring("model"), Istring(model));
     xval->get_id().add_attribute(Istring("value"), Istring(value));
@@ -1040,7 +1040,7 @@ void Parser::finish_color() {
     for (int i = 0; i < n; i++)
         if (all_colors[i]->is_used()) k++;
     if (k == 0) return;
-    Xmlp res = new Xml(Istring("colorpool"), 0);
+    Xmlp res = new Xml(Istring("colorpool"), nullptr);
     for (int i = 0; i < n; i++)
         if (all_colors[i]->is_used()) {
             res->push_back(all_colors[i]->get_val());
@@ -1216,7 +1216,7 @@ void Parser::T_cap_or_note(bool cap) {
     push_level(bt_local);
     word_define(incentering_code, 0, false);
     the_stack.push1(name);
-    Xmlp opt = 0, note = 0;
+    Xmlp opt = nullptr, note = nullptr;
     if (cap) { // case of Caption
         opt  = xT_optarg_nopar();
         note = the_stack.top_stack();
@@ -1492,7 +1492,7 @@ auto Parser::T_hanl_url() -> Xmlp {
 // c is 0 for \htmladdnormallink, 2 for \href
 void Parser::T_hanl(subtypes c) {
     leave_v_mode();
-    the_stack.push(the_names[cst_hanl], 0);
+    the_stack.push(the_names[cst_hanl], nullptr);
     the_stack.hack_for_hanl();
     Xmlp B, val;
     if (c == 2) {
@@ -1522,7 +1522,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
         TokenList L = read_arg();
         back_input(hash_table.par_token);
         back_input(L);
-        return 0;
+        return nullptr;
     }
     mode m = the_stack.get_mode();
     the_stack.set_arg_mode();
@@ -1533,7 +1533,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     else
         Y = Istring(tpa_buffer.c_str());
     if (par) the_stack.set_v_mode();
-    the_stack.push(Y, new Xml(Y, 0));
+    the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();
     Xid cid = the_stack.get_top_id();
     if (has_atts) tpa_buffer.push_back_special_att(cid);
@@ -1582,7 +1582,7 @@ auto Parser::tpa_exec(String cmd) -> Xmlp {
     mode m = the_stack.get_mode();
     the_stack.set_arg_mode();
     Istring Y = Istring(cmd);
-    the_stack.push(Y, new Xml(Istring(), 0));
+    the_stack.push(Y, new Xml(Istring(), nullptr));
     tpa_buffer << bf_reset << cmd;
     finish_csname(tpa_buffer, cmd);
     get_token();

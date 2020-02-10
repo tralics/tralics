@@ -28,7 +28,7 @@ using tralics_ns::strip_end;
 // This converts `endfoo' to `foo'. It does not check that the
 // string starts with `end', just that is is not zero.
 auto tralics_ns::strip_end(String s) -> String {
-    if (!s) return 0;
+    if (!s) return nullptr;
     return s + 3;
 }
 
@@ -70,7 +70,7 @@ auto CmdChr::token_error_name() const -> String {
     case latexwarningnoline_code: return "@latex@warning@no@line";
     case latexinfo_code: return "@latex@info";
     case latexinfonoline_code: return "@latex@info@no@line";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -84,7 +84,7 @@ auto CmdChr::token_monthday_name() const -> String {
     case md_germand_code: return "@daynamegerman";
     case md_englishm_code: return "@monthnameenglish";
     case md_englishd_code: return "@daynameenglish";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -114,7 +114,7 @@ auto CmdChr::token_xkeyval_name() const -> String {
     case declare_optionsX_code: return "DeclareOptionX";
     case execute_optionsX_code: return "ExecuteOptionsX";
     case process_optionsX_code: return "ProcessOptionsX";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -189,7 +189,7 @@ auto CmdChr::token_specialmath_name() const -> String {
     case thismath_attribute_code: return "thismathattribute";
     case formula_attribute_code: return "formulaattribute";
     case table_attribute_code: return "tableattribute";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -703,7 +703,7 @@ auto CmdChr::token_math_name() const -> String {
     case idotsint_code: return "idotsint";
     case mml_none_code: return "mmlnone";
     case mml_prescripts_code: return "mmlprescripts";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -724,7 +724,7 @@ auto CmdChr::tipa_name() const -> String {
     case 12: return "tipa@circumdot";
     case 13: return "tipa@tildedot";
     case 14: return "tipa@brevemacro";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -740,7 +740,7 @@ auto CmdChr::token_fancy_name() const -> String {
     case fancy_head_code: return "fancyhead";
     case fancy_foot_code: return "fancyfoot";
     case fancy_hf_code: return "fancyhf";
-    default: return 0;
+    default: return nullptr;
     }
 }
 auto CmdChr::token_color_name() const -> String {
@@ -751,7 +751,7 @@ auto CmdChr::token_color_name() const -> String {
     case pagecolor_code: return "pagecolor";
     case colorbox_code: return "colorbox";
     case fcolorbox_code: return "fcolorbox";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -763,7 +763,7 @@ auto CmdChr::token_fbox_name() const -> String {
     case scalebox_code: return "scalebox";
     case raisebox_code: return "raisebox";
     case dashbox_code: return "dashbox";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -773,7 +773,7 @@ auto CmdChr::token_linebreak_name() const -> String {
     case nopagebreak_code: return "nopagebreak";
     case linebreak_code: return "linebreak";
     case nolinebreak_code: return "nolinebreak";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -789,7 +789,7 @@ auto CmdChr::token_mark_name() const -> String {
     case botmarks_code: return "botmarks";
     case splitfirstmarks_code: return "splitfirstmarks";
     case splitbotmarks_code: return "splitbotmarks";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -798,7 +798,7 @@ auto CmdChr::token_fiorelse_name() const -> String {
     case fi_code: return "fi";
     case or_code: return "or";
     case else_code: return "else";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -825,7 +825,7 @@ auto CmdChr::token_iftest_name() const -> String {
     case if_csname_code: return "ifcsname";
     case if_fontchar_code: return "iffontchar";
     case if_leapyear_code: return "ifleapyear";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -837,7 +837,7 @@ auto CmdChr::token_counter_name() const -> String {
     case setcounter_code: return "setcounter";
     case value_code: return "value";
     case addtoreset_code: return "@addtoreset";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -861,7 +861,7 @@ auto CmdChr::token_accent_name() const -> String {
     case 'd': return "d";
     case 'D': return "D";
     case 'h': return "H";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -883,7 +883,7 @@ auto CmdChr::token_convert_name() const -> String {
     case sanitize_code: return "@onelevel@sanitize";
     case twodigits_code: return "two@digits";
     case rayear_code: return "ra@year";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -901,7 +901,7 @@ auto CmdChr::token_for_name() const -> String {
     case tforloop_code: return "@tforloop";
     case breaktfor_code: return "@break@tfor";
     case xkv_breaktfor_code: return "tralics@for@break";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -948,7 +948,7 @@ auto CmdChr::token_lastitem_name() const -> String {
     case glueshrink_code: return "glueshrink";
     case mutoglue_code: return "mutoglue";
     case gluetomu_code: return "gluetomu";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -960,7 +960,7 @@ auto CmdChr::token_over_name() const -> String {
     case abovewithdelims_code: return "abovewithdelims";
     case overwithdelims_code: return "overwithdelims";
     case atopwithdelims_code: return "atopwithdelims";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -969,7 +969,7 @@ auto CmdChr::token_limits_name() const -> String {
     case 0: return "displaylimits";
     case 2: return "limits";
     case 1: return "nolimits";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -979,7 +979,7 @@ auto CmdChr::token_style_name() const -> String {
     case textstyle_code: return "textstyle";
     case scriptstyle_code: return "scriptstyle";
     case scriptscriptstyle_code: return "scriptscriptstyle";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1001,7 +1001,7 @@ auto CmdChr::token_big_name() const -> String {
     case Bigm_code: return "Bigm";
     case biggm_code: return "biggm";
     case Biggm_code: return "Biggm";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1016,7 +1016,7 @@ auto CmdChr::token_mathcomp_name() const -> String {
     case punct_noad: return "mathpunct";
     case inner_noad: return "mathinner";
     case between_noad: return "mathbetween";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1026,7 +1026,7 @@ auto CmdChr::token_eignorec_name() const -> String {
     case comment_code: return "endcomment";
     case rawhtml_code: return "endrawhtml";
     case LaTeXonly_code: return "endLaTeXonly";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1036,7 +1036,7 @@ auto CmdChr::token_eignore_name() const -> String {
     case abstract_code: return "endabstract";
     case latexonly_code: return "endlatexonly";
     case xmlonly_code: return "endxmlonly";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1045,7 +1045,7 @@ auto CmdChr::token_efigure_name() const -> String {
     case 0: return "endfigure";
     case 1: return "endfigure*";
     case 2: return "endwrapfigure";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1057,7 +1057,7 @@ auto CmdChr::token_ecenter_name() const -> String {
     case flushleft_code: return "endflushleft";
     case flushright_code: return "endflushright";
     case verse_code: return "endverse";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1074,7 +1074,7 @@ auto CmdChr::token_file_name() const -> String {
     case include_code: return "include";
     case scantokens_code: return "scantokens";
     case readxml_code: return "readxml";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1084,7 +1084,7 @@ auto CmdChr::token_dashline_name() const -> String {
     case drawline_code: return "drawline";
     case dottedline_code: return "dottedline";
     case circle_code: return "circle";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1097,7 +1097,7 @@ auto CmdChr::token_put_name() const -> String {
     case multiput_code: return "multiput";
     case scaleput_code: return "scaleput";
     case frame_code: return "frame";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1111,7 +1111,7 @@ auto CmdChr::token_caseshift_name() const -> String {
     case 5: return "MakeTextUppercase";
     case 6: return "tl_to_lowercase";
     case 7: return "tl_to_uppercase";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1120,7 +1120,7 @@ auto CmdChr::token_centering_name() const -> String {
     case center_code: return "centering";
     case flushright_code: return "raggedleft";
     case flushleft_code: return "raggedright";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1129,7 +1129,7 @@ auto CmdChr::token_box_name() const -> String {
     case mbox_code: return "mbox";
     case makebox_code: return "makebox";
     case text_code: return "text";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1144,7 +1144,7 @@ auto CmdChr::token_section_name() const -> String {
     case subparagraph_code: return "subparagraph";
     case endsec_code: return "endsec";
     case toplevel_sec_code: return "toplevelsection";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1157,7 +1157,7 @@ auto CmdChr::token_cite_name() const -> String {
     case yearcite_code: return "yearcite";
     case natcite_code: return "natcite";
     case natcite_e_code: return "endnatcite";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1172,7 +1172,7 @@ auto CmdChr::token_latexctr_name() const -> String {
     case at_alph_code: return "@alph";
     case at_Alph_code: return "@Alph";
     case at_fnsymbol_code: return "@fnsymbol";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1193,7 +1193,7 @@ auto CmdChr::token_mathfont2_name() const -> String {
     case math_f_sansserif_italic: return "mml@font@sanserifitalic";
     case math_f_sansserif_bold_italic: return "mml@font@sanserifbolditalic";
     case math_f_monospace: return "mml@font@monospace";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1209,7 +1209,7 @@ auto CmdChr::token_mathfont1_name() const -> String {
     case mathbb_code: return "mathbb";
     case mathsf_code: return "mathsf";
     case mathnormal_code: return "mathnormal";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1219,7 +1219,7 @@ auto CmdChr::token_setinteraction_name() const -> String {
     case nonstopmode_code: return "nonstopmode";
     case scrollmode_code: return "scrollmode";
     case errorstopmode_code: return "errorstopmode";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1230,7 +1230,7 @@ auto CmdChr::token_shape_name() const -> String {
     case clubpenalties_code: return "clubpenalties";
     case widowpenalties_code: return "widowpenalties";
     case displaywidowpenalties_code: return "displaywidowpenalties";
-    default: return 0;
+    default: return nullptr;
     }
 }
 auto CmdChr::token_def_name() const -> String {
@@ -1293,7 +1293,7 @@ auto CmdChr::token_def_name() const -> String {
     case provide_code: return "providecommand";
     case checkcommand_code: return "CheckCommand";
     case declare_math_operator_code: return "DeclareMathOperator";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1306,7 +1306,7 @@ auto CmdChr::token_shorthand_name() const -> String {
     case skip_def_code: return "skipdef";
     case mu_skip_def_code: return "muskipdef";
     case toks_def_code: return "toksdef";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1316,7 +1316,7 @@ auto CmdChr::token_prefix_name() const -> String {
     case long_code: return "long";
     case outer_code: return "outer";
     case protected_code: return "protected";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1326,7 +1326,7 @@ auto CmdChr::token_register_name() const -> String {
     case it_dimen: return "dimen";
     case it_glue: return "skip";
     case it_mu: return "muskip";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1335,7 +1335,7 @@ auto CmdChr::token_deffamily_name() const -> String {
     case textfont_code: return "textfont";
     case scriptfont_code: return "scriptfont";
     case scriptscriptfont_code: return "scriptscriptfont";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1347,7 +1347,7 @@ auto CmdChr::token_defcode_name() const -> String {
     case uc_code_offset: return "uccode";
     case sf_code_offset: return "sfcode";
     case del_code_offset: return "delcode";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1356,7 +1356,7 @@ auto CmdChr::token_setboxdimen_name() const -> String {
     case wd_code: return "wd";
     case ht_code: return "ht";
     case dp_code: return "dp";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1370,7 +1370,7 @@ auto CmdChr::token_setpagedimen_name() const -> String {
     case pagefilllstretch_code: return "pagefilllstretch";
     case pageshrink_code: return "pageshrink";
     case pagedepth_code: return "pagedepth";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1556,7 +1556,7 @@ auto CmdChr::token_leader_name() const -> String {
     case leaders_code: return "leaders";
     case cleaders_code: return "cleaders";
     case xleaders_code: return "xleaders";
-    default: return 0;
+    default: return nullptr;
     }
 }
 auto CmdChr::token_index_name() const -> String {
@@ -1568,7 +1568,7 @@ auto CmdChr::token_index_name() const -> String {
     case makeindex_code: return "makeindex";
     case makeglossary_code: return "makeglossary";
     case newindex_code: return "@newindex";
-    default: return 0;
+    default: return nullptr;
     }
 }
 auto CmdChr::token_newcount_name() const -> String {
@@ -1582,7 +1582,7 @@ auto CmdChr::token_newcount_name() const -> String {
     case newread_code: return "newread";
     case newwrite_code: return "newwrite";
     case newlanguage_code: return "newlanguage";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1593,7 +1593,7 @@ auto CmdChr::token_line_name() const -> String {
     case centerline_code: return "centerline";
     case llap_code: return "llap";
     case rlap_code: return "rlap";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1612,7 +1612,7 @@ auto CmdChr::token_makebox_name() const -> String {
     case xbox_code: return "xbox";
     case parbox_code: return "parbox";
     case marginpar_code: return "marginpar";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1622,7 +1622,7 @@ auto CmdChr::token_move_name() const -> String {
     case moveright_code: return "moveright";
     case raise_code: return "raise";
     case lower_code: return "lower";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1639,7 +1639,7 @@ auto CmdChr::token_xray_name() const -> String {
     case showtokens_code: return "showtokens";
     case register_show_code: return "__kernel_register_show:N";
     case registerc_show_code: return "__kernel_register_show:c";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1652,7 +1652,7 @@ auto CmdChr::token_extension_name() const -> String {
     case write_term_code: return "iow_term:x";
     case typeout_code: return "typeout";
     case wlog_code: return "wlog";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1662,7 +1662,7 @@ auto CmdChr::token_unbox_name() const -> String {
     case unhcopy_code: return "unhcopy";
     case unvbox_code: return "unvbox";
     case unvcopy_code: return "unvcopy";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1672,7 +1672,7 @@ auto CmdChr::token_ltfont_name() const -> String {
     case fontfamily_code: return "fontfamily";
     case fontseries_code: return "fontseries";
     case fontshape_code: return "fontshape";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1680,7 +1680,7 @@ auto CmdChr::token_ign2_name() const -> String {
     switch (chr) {
     case HTMLset_code: return "HTMLset";
     case fontsize_code: return "fontsize";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1693,7 +1693,7 @@ auto CmdChr::token_ign1_name() const -> String {
     case includeonly_code: return "includeonly";
     case showhyphens_code: return "showhyphens";
 
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1745,7 +1745,7 @@ auto CmdChr::token_ignore_name() const -> String {
     case normalmarginpar_code: return "normalmarginpar";
     case normalbaselines_code: return "normalbaselines";
     case removelastskip_code: return "removelastskip";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1761,7 +1761,7 @@ auto CmdChr::token_fontsize_name() const -> String {
     case LARGE_code: return "LARGE";
     case huge_code: return "huge";
     case Huge_code: return "Huge";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1778,7 +1778,7 @@ auto CmdChr::token_argfont_name() const -> String {
     case sc_shape_code: return "textsc";
     case em_code: return "emph";
     case normalfont_code: return "textnormal";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1792,7 +1792,7 @@ auto CmdChr::token_soul_name() const -> String {
     case soul_so_code: return "so";
     case soul_st_code: return "st";
     case soul_ul_code: return "ul";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1805,7 +1805,7 @@ auto CmdChr::token_oldfont_name() const -> String {
     case it_shape_code: return "it";
     case sc_shape_code: return "sc";
     case sl_shape_code: return "sl";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1822,7 +1822,7 @@ auto CmdChr::token_noargfont_name() const -> String {
     case sc_shape_code: return "scshape";
     case em_code: return "em";
     case normalfont_code: return "normalfont";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1840,7 +1840,7 @@ auto CmdChr::token_trees_name() const -> String {
     case nodecircle_code: return "nodecircle";
     case barnodeconnect_code: return "barnodeconnect";
     case abarnodeconnect_code: return "abarnodeconnect";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1883,7 +1883,7 @@ auto CmdChr::token_unimp_font_name() const -> String {
     case DeclareOldFontCommand_code: return "DeclareOldFontCommand";
     case setsize_code: return "@setsize";
     case setfontsize_code: return "@setfontsize";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1919,7 +1919,7 @@ auto CmdChr::token_unimp_name() const -> String {
     case abort_code: return "tralics@abort";
     case sleep_code: return "tralics@sleep";
     case prompt_code: return "tralics@prompt";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -1997,7 +1997,7 @@ auto CmdChr::l3_ifx_name() const -> String {
     case l3_TF_cc_code: return "cs_if_eq:ccTF";
     case l3_T_cc_code: return "cs_if_eq:ccT";
     case l3_F_cc_code: return "cs_if_eq:ccF";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2017,7 +2017,7 @@ auto CmdChr::l3_expand_aux_name() const -> String {
     case l3expvu_code: return "::v_unbraced";
     case l3expVu_code: return "::V_unbraced";
     case l3expxu_code: return "::x_unbraced";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2085,7 +2085,7 @@ auto CmdChr::l3_expand_base_name() const -> String {
     case l3exp_NnNou_code: return "exp_last_unbraced:NnNo";
     case l3exp_Nxu_code: return "exp_last_unbraced:Nx";
     case l3exp_Nouou_code: return "exp_last_two_unbraced:Noo";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2119,7 +2119,7 @@ auto CmdChr::l3str_ifeq_name() const -> String {
     case l3_TF_code + 24: return "str_if_eq:VVTF";
     case l3_T_code + 24: return "str_if_eq:VVT";
     case l3_F_code + 24: return "str_if_eq:VVF";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2157,7 +2157,7 @@ auto CmdChr::l3_set_cat_name() const -> String {
     case active_catcode + 16: return "char_set_catcode_active:N";
     case invalid_catcode + 16: return "char_set_catcode_invalid:N";
     case comment_catcode + 16: return "char_set_catcode_comment:N";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2207,7 +2207,7 @@ auto CmdChr::cat_ifeq_name() const -> String {
     case active_catcode * 4 + l3_TF_code: return "token_if_active:NTF";
     case active_catcode * 4 + l3_T_code: return "token_if_active:NT";
     case active_catcode * 4 + l3_F_code: return "token_active:NF";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2282,7 +2282,7 @@ auto CmdChr::token_if_name() const -> String {
     case tok_if_toks_code * 4 + l3_F_code: return "token_if_toks_register:NF";
     case tok_if_primitive_code * 4 + l3_F_code: return "token_if_primitive:NF";
 
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2303,7 +2303,7 @@ auto CmdChr::l3_set_num_name() const -> String {
     case setsf_code: return "char_set_sfcode:nn";
     case thesf_code: return "char_value_sfcode:n";
     case showsf_code: return "char_show_value_sfcode:n";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2321,7 +2321,7 @@ auto CmdChr::l3str_case_name() const -> String {
     case l3_TF_code + 8: return "str_case:onTF";
     case l3_T_code + 8: return "str_case:onT";
     case l3_F_code + 8: return "str_case:onF";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2341,7 +2341,7 @@ auto CmdChr::l3_tl_basic_name() const -> String {
     case l3_tlx_xconst_code: return "tl_const:cx";
     case l3_tlx_clearnew_code: return "tl_clear_new:c";
     case l3_tlx_gclearnew_code: return "tl_gclear_new:c";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2351,7 +2351,7 @@ auto CmdChr::tl_concat_name() const -> String {
     case 1: return "tl_concat:ccc";
     case 2: return "tl_gconcat:NNN";
     case 3: return "tl_gconcat:ccc";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2381,7 +2381,7 @@ auto CmdChr::tl_set_name() const -> String {
     case l3expx_code + 9 + 18: return "tl_gset:cx";
     case l3expV_code + 9 + 18: return "tl_gset:cV";
     case l3expv_code + 9 + 18: return "tl_gset:cv";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2419,7 +2419,7 @@ auto CmdChr::tl_put_left_name() const -> String {
     case l3expo_code + 9 + 18 + 36: return "tl_gput_right:co";
     case l3expx_code + 9 + 18 + 36: return "tl_gput_right:cx";
     case l3expV_code + 9 + 18 + 36: return "tl_gput_right:cV";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2438,7 +2438,7 @@ auto CmdChr::l3_rescan_name() const -> String {
     case 10: return "tl_gset_rescan:cno";
     case 11: return "tl_gset_rescan:cnx";
     case 12: return "tl_gset_rescan:nn";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2459,7 +2459,7 @@ auto CmdChr::special_name() const -> String {
     case 13: return "impossible (active character)";
     case 14: return "impossible (comment)";
     case 15: return "impossible (ignored)";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2512,19 +2512,19 @@ auto CmdChr::name() const -> String {
         if (chr == smallskip_code) return "smallskip";
         if (chr == medskip_code) return "medskip";
         if (chr == bigskip_code) return "bigskip";
-        return 0;
+        return nullptr;
     case hfill_cmd:
         if (chr == hfil_code) return "hfil";
         if (chr == hfill_code) return "hfill";
         if (chr == hfilneg_code) return "hfilneg";
         if (chr == hss_code) return "hss";
-        return 0;
+        return nullptr;
     case vfill_cmd:
         if (chr == vfil_code) return "vfil";
         if (chr == vfill_code) return "vfill";
         if (chr == vfilneg_code) return "vfilneg";
         if (chr == vss_code) return "vss";
-        return 0;
+        return nullptr;
     case soul_cmd:
     case sub_cmd: return token_soul_name();
     case oldfont_cmd: return token_oldfont_name();
@@ -2549,7 +2549,7 @@ auto CmdChr::name() const -> String {
         case kvo_disable_code: return "DisableKeyvalOption";
         case kvo_decdef_code: return "DeclareDefaultOption";
         case kvo_process_code: return "ProcessKeyvalOptions";
-        default: return 0;
+        default: return nullptr;
         }
     case pers_cmd:
         switch (chr) {
@@ -2579,7 +2579,7 @@ auto CmdChr::name() const -> String {
         case 1: return "@dblfloat";
         case 2: return "float@end";
         case 3: return "float@dblend";
-        default: return 0;
+        default: return nullptr;
         }
     case subfigure_cmd: return "subfigure";
     case pop_stack_cmd: return "pop@stack";
@@ -2595,7 +2595,7 @@ auto CmdChr::name() const -> String {
         switch (chr) {
         case eqno_code: return "eqno";
         case leqno_code: return "leqno";
-        default: return 0;
+        default: return nullptr;
         }
     case tag_cmd:
         switch (chr) {
@@ -2619,7 +2619,7 @@ auto CmdChr::name() const -> String {
         case addatt_to_doc_code: return "addattributetodocument";
         case addatt_to_code: return "XMLaddatt";
         case addatt_to_index_code: return "addattributetoindex";
-        default: return 0;
+        default: return nullptr;
         }
     case over_cmd: return token_over_name();
     case begingroup_cmd: return chr == 0 ? "begingroup" : chr == 1 ? "endgroup" : "endenv";
@@ -2673,7 +2673,7 @@ auto CmdChr::name() const -> String {
         case mainmatter_code: return "mainmatter";
         case frontmatter_code: return "frontmatter";
         case backmatter_code: return "backmatter";
-        default: return 0;
+        default: return nullptr;
         }
     case cr_cmd:
         switch (chr) {
@@ -2681,7 +2681,7 @@ auto CmdChr::name() const -> String {
         case mycr_code: return "cr";
         case crcr_code: return "crcr";
         case crwithargs_code: return "cr withargs";
-        default: return 0;
+        default: return nullptr;
         }
     case scan_glue_cmd:
         if (chr == hskip_code) return "hskip";
@@ -2704,7 +2704,7 @@ auto CmdChr::name() const -> String {
         case xml_parent_code: return "XML@parent";
         case xml_setA_code: return "XML@setA";
         case xml_setB_code: return "XML@setB";
-        default: return 0;
+        default: return nullptr;
         }
     case char_num_cmd: return "char";
     case cst1_cmd:
@@ -2851,7 +2851,7 @@ auto CmdChr::name() const -> String {
         if (chr == theorem_style_code) return "theoremstyle";
         if (chr == theorem_bodyfont_code) return "theorembodyfont";
         if (chr == theorem_headerfont_code) return "theoremheaderfont";
-        return 0;
+        return nullptr;
     case start_thm_cmd: return chr == 2 ? "@endtheorem" : "@begintheorem";
     case setmode_cmd: return "@setmode";
     case set_shape_cmd: return token_shape_name();
@@ -2884,7 +2884,7 @@ auto CmdChr::name() const -> String {
         case nletcc_code: return "cs_new_eq:cc";
         case undef_code: return "cs_undefine:N";
         case undefc_code: return "cs_undefine:c";
-        default: return 0;
+        default: return nullptr;
         }
     case shorthand_def_cmd: return token_shorthand_name();
     case read_to_cs_cmd: return chr == 0 ? "read" : "readline";
@@ -2927,7 +2927,7 @@ auto CmdChr::name() const -> String {
         if (chr == l3expf_code) return "exp_not:f";
         if (chr == l3expv_code) return "exp_not:v";
         if (chr == l3expV_code) return "exp_not:V";
-        return 0;
+        return nullptr;
     case expandafter_cmd: return chr == 0 ? "expandafter" : "unless";
     case titlepage_cmd: return "titlepage";
     case noexpand_cmd: return "noexpand";
@@ -2982,7 +2982,7 @@ auto CmdChr::name() const -> String {
         case 1: return "__chk_if_free_cs:c";
         case 2: return "__chk_if_exist_cs:N";
         case 3: return "__chk_if_exist_cs:c";
-        default: return 0;
+        default: return nullptr;
         }
     case l3_gen_from_ac_cmd:
         return (chr == 0) ? "cs_generate_from_arg_count:NNnn"
@@ -3015,7 +3015,7 @@ auto CmdChr::name() const -> String {
         if (chr == thicklines_code) return "thicklines";
         if (chr == thinlines_code) return "thinlines";
         if (chr == linethickness_code) return "linethickness";
-        return 0;
+        return nullptr;
     case bibliographystyle_cmd: return "bibliographystyle";
     case insertbibliohere_cmd: return "insertbibliohere";
     case inhibit_xml_cmd: return "syntaxonly";
@@ -3031,7 +3031,7 @@ auto CmdChr::name() const -> String {
         case closecurve_code: return "closecurve";
         case curve_code: return "curve";
         case tagcurve_code: return "tagcurve";
-        default: return 0;
+        default: return nullptr;
         }
     case check_date_cmd:
         switch (chr) {
@@ -3040,7 +3040,7 @@ auto CmdChr::name() const -> String {
         case 2: return "nextdate";
         case 3: return "prevdate";
         case 4: return "datebynumber";
-        default: return 0;
+        default: return nullptr;
         }
     case refstepcounter_cmd: return "refstepcounter";
     case month_day_cmd: return token_monthday_name();
@@ -3061,6 +3061,6 @@ auto CmdChr::name() const -> String {
     case ifdefinable_cmd: return "@ifdefinable";
     case dblarg_cmd: return "@dblarg";
     case makelabel_cmd: return "tralics@makelabel";
-    default: return 0;
+    default: return nullptr;
     }
 }

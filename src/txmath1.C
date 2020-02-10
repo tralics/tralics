@@ -495,7 +495,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
         if (M.is_next_change(i)) {
             Xmlp xval = front().remove_prefix();
             if (cur_type == mt_flag_dummy) {
-                if (M.in_mrow()) xval = 0;
+                if (M.in_mrow()) xval = nullptr;
                 // else cout << "bad dummy\n"; no error ??
             }
             if (xval) M.push_in_t(xval);
@@ -522,7 +522,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
 }
 
 void MathF::pop_last(Xmlp xval) {
-    Xmlp p = 0;
+    Xmlp p = nullptr;
     if (!in_mrow() && !res.empty()) {
         p = res.back().remove_prefix();
         res.pop_back();
@@ -551,13 +551,13 @@ void MathF::change_state() {
 void MathF::handle_t() {
     if (state) {
         res.push_back(MathElt(new Xml(cst_mrow, t), -1, t_big ? mt_flag_big : mt_flag_small));
-        t = 0;
+        t = nullptr;
         the_parser.my_stats.one_more_small();
     }
 }
 
 void MathF::push_in_t(Xmlp x) {
-    if (!t) t = new Xml(cst_temporary, 0);
+    if (!t) t = new Xml(cst_temporary, nullptr);
     t->push_back(x);
 }
 
@@ -1634,7 +1634,7 @@ void Math::special2(bool &ok, Xmlp &res) const {
 // This handles the exponent. The case 10^e and 10^o is handled
 // elsewhere. We consider here only 10^{something}
 auto MathElt::special3() const -> Xmlp {
-    if (!is_list()) return 0;
+    if (!is_list()) return nullptr;
     const_math_iterator L1;
     const_math_iterator E1;
     get_list().is_font_cmd1_list(L1, E1);
@@ -1663,9 +1663,9 @@ void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
 // This handles the case of i{\`e}me. Removes initial font change,
 // looks at letters. If OK, return a valid XML exponent.
 auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> Xmlp {
-    if (L == E) return 0;
+    if (L == E) return nullptr;
     if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
-    if (L == E) return 0;
+    if (L == E) return nullptr;
     if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
     Buffer &B = aux_buffer;
     B.reset();
@@ -1675,11 +1675,11 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
         else if (L->is_e_grave())
             B.push_back(Utf8Char(0350));
         else
-            return 0;
+            return nullptr;
         ++L;
     }
     String expo = B.special_exponent();
-    if (!expo) return 0;
+    if (!expo) return nullptr;
     return new Xml(Istring(expo));
 }
 
@@ -1713,28 +1713,28 @@ auto Buffer::special_exponent() const -> String {
     else if (strcmp(buf, "\303\250re") == 0 || strcmp(buf, "re") == 0)
         return "re";
     else
-        return 0;
+        return nullptr;
 }
 
 // This is the main function.
 auto Math::special1() const -> Xmlp {
     bool ok = false;
-    Xmlp U  = 0;
+    Xmlp U  = nullptr;
     special2(ok, U);
     if (!ok) return U;
     const MathElt &W    = value.back();
-    Xmlp           xval = 0;
+    Xmlp           xval = nullptr;
     if (W.get_cmd() == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);
     else if (W.get_cmd() == letter_catcode && W.get_char() == 'e')
         xval = math_ns::get_builtin(xml_e_loc);
     else {
         xval = W.special3();
-        if (!xval) return 0;
+        if (!xval) return nullptr;
     }
     xval = math_ns::make_sup(xval);
     if (!U) return xval;
-    Xmlp res = new Xml(cst_temporary, 0);
+    Xmlp res = new Xml(cst_temporary, nullptr);
     res->push_back(U);
     res->push_back(xval);
     return res;

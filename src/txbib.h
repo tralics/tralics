@@ -58,7 +58,7 @@ class Bibliography {
 private:
     string         bib_style;               // The bibliography style
     string         bib_cmd;                 // The bibliography command
-    Xmlp           biblio_loc{0};           // location of biblio in the XML tree
+    Xmlp           biblio_loc{nullptr};     // location of biblio in the XML tree
     vector<string> biblio_src;              // database file names
     bool           nocite{false};           // have  we seen \nocite* ?
     bool           biblio_loc_force{false}; // force location
@@ -191,8 +191,8 @@ public:
 class BibEntry {
     friend class Bibtex;
 
-    BibEntry *  crossref{0};            // In case of a crossref
-    BibEntry *  crossref_from{0};       // reverse crossref
+    BibEntry *  crossref{nullptr};      // In case of a crossref
+    BibEntry *  crossref_from{nullptr}; // reverse crossref
     entry_type  type_int{type_unknown}; // the type of the entry
     CitationKey cite_key;               // the cite_key structure
     bib_creator why_me;                 // reason why this entry is considered
@@ -377,7 +377,7 @@ public:
     friend class BibEntry;
     friend class BblAndTty;
     Bbl() {
-        file     = 0;
+        file     = nullptr;
         too_late = false;
     }
     auto get_lines() -> LinePtr & { return ptr; }
@@ -398,7 +398,7 @@ public:
     void finish() {
         file->close();
         delete file;
-        file     = 0;
+        file     = nullptr;
         too_late = true;
     }
     void open() {

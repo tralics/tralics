@@ -723,7 +723,7 @@ auto Xml::try_cline_again(bool action) -> bool {
     for (int k = 0; k < len; k++) {
         if (!tree[k]) continue;
         if (action) {
-            tree[k] = 0;
+            tree[k] = nullptr;
             continue;
         }
         if (tree[k]->is_xmlc() && k == len - 1) {
@@ -777,11 +777,11 @@ void Parser::T_cline() {
             tot_span = cline_first - 1 - tot_span;
             if (0 <= tot_span) {
                 if (tot_span) {
-                    Xml *x = new Xml(np_cell, 0);
+                    Xml *x = new Xml(np_cell, nullptr);
                     R->push_back(x);
                     x->get_id().add_span(tot_span);
                 }
-                Xml *x = new Xml(np_cell, 0);
+                Xml *x = new Xml(np_cell, nullptr);
                 R->push_back(x);
                 x->get_id().add_span(cl_span);
                 x->get_id().add_bottom_rule();

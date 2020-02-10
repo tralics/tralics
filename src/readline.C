@@ -21,8 +21,8 @@ const char *read_line_rcsid = "$Id: readline.C,v 2.14 2011/06/28 08:15:25 grimm 
 // The line editor
 class Slined;
 
-static Slined *  the_editor   = 0;
-static Slined *  the_editor_c = 0;
+static Slined *  the_editor   = nullptr;
+static Slined *  the_editor_c = nullptr;
 static const int buf_size     = 2048;
 static const int in_size      = 4096;
 static bool      term_set     = false;
@@ -190,7 +190,7 @@ Slined::Slined(int sz, String P) : m_prompt("> "), m_hpos(0) {
 // Constructs two copies, one for showing the history.
 // This function is called only once.
 void readline_ns::make_edit() {
-    the_editor_c = new Slined(in_size, 0);
+    the_editor_c = new Slined(in_size, nullptr);
     the_editor   = new Slined(0, "%% start of history (say \\stop to exit)");
 }
 

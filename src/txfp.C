@@ -2834,7 +2834,7 @@ auto CmdChr::token_fp_names() const -> String {
     case fp_qsolve_code: return "FPqsolve";
     case fp_csolve_code: return "FPcsolve";
     case fp_qqsolve_code: return "FPqqsolve";
-    default: return 0;
+    default: return nullptr;
     }
 }
 
@@ -2881,7 +2881,7 @@ auto CmdChr::token_fpi_names() const -> String {
     case fp_qsolve_code: return "FP@qsolve";
     case fp_csolve_code: return "FP@csolve";
     case fp_qqsolve_code: return "FP@qqsolve";
-    default: return 0;
+    default: return nullptr;
     }
 }
 

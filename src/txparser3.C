@@ -701,7 +701,7 @@ auto Parser::is_env_on_stack(const string &s) -> SaveAuxEnv * {
         SaveAuxEnv *q = static_cast<SaveAuxEnv *>(p);
         if (q->get_name() == s) return q;
     }
-    return 0;
+    return nullptr;
 }
 
 // Returns the number of environments

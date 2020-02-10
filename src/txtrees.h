@@ -60,7 +60,7 @@ public:
     auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
     auto get_iid(int i) const -> int { return value[i]->iid; }
     auto has_name(const string &s) const -> bool { return name == s; }
-    OneIndex(string a, string b, int c) : name(a), title(b), position(0), AL(c) {}
+    OneIndex(string a, string b, int c) : name(a), title(b), position(nullptr), AL(c) {}
 };
 
 class AllIndex {

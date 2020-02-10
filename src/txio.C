@@ -572,8 +572,8 @@ void LinePtr::normalise_final_cr() {
     line_iterator C = value.begin();
     line_iterator E = value.end();
     if (C == E) return;
-    Clines *prev = 0;
-    Clines *cur  = 0;
+    Clines *prev = nullptr;
+    Clines *cur  = nullptr;
     for (;;) {
         if (C == E) return;
         cur = &*C;
@@ -593,7 +593,7 @@ void LinePtr::normalise_final_cr() {
                 prev->set_chars(normal);
             }
         } else
-            prev = 0;
+            prev = nullptr;
     }
 }
 
@@ -1299,8 +1299,8 @@ void Parser::T_filecontents(int spec) {
         filename = sT_arg_nopar();
     }
     int      action     = 0;
-    fstream *outfile    = 0;
-    LinePtr *res        = 0;
+    fstream *outfile    = nullptr;
+    LinePtr *res        = nullptr;
     bool     is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;

@@ -43,7 +43,7 @@ extern void show_unused_options();
 void Parser::init_all(string doc_elt) {
     open_paren_xml  = new Xml(Istring("("));
     close_paren_xml = new Xml(Istring(")"));
-    the_page_xml    = new Xml(Istring("thepage"), 0);
+    the_page_xml    = new Xml(Istring("thepage"), nullptr);
     glo_xml         = new Xml(np_glo_name);
     eqtb_int_table[endlinechar_code].val_and_level('\r', level_one);
     eqtb_int_table[newlinechar_code].val_and_level('\n', level_one);
@@ -632,7 +632,7 @@ void Parser::T_xmlenv(subtypes c) {
     else if (c == 2) {
         if (the_stack.in_v_mode()) leave_v_mode();
     }
-    the_stack.push(the_names[cst_elt], new Xml(Istring(a), 0));
+    the_stack.push(the_names[cst_elt], new Xml(Istring(a), nullptr));
     if (c == 2) the_stack.set_v_mode();
     remove_initial_space_and_back_input();
 }
@@ -824,7 +824,7 @@ void Parser::T_un_box(subtypes c) {
     if (c == unhbox_code) leave_v_mode();
     Xmlp cur_box = box_table[i].get_val();
     the_stack.unbox(cur_box);
-    if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(0);
+    if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
     return; // else does nothing
 }
 

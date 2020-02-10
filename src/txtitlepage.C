@@ -382,7 +382,7 @@ void TitlePageAux::exec(int v, bool vb) {
         Titlepage[idx]->add_last_nl(convert(2));
         return;
     }
-    Xmlp R = 0;
+    Xmlp R = nullptr;
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
         R = convert(3, Istring(T2));
     else { // we have to read the argument.
@@ -776,7 +776,7 @@ auto TitlePageAux::convert(int i, Xmlp r) -> Xmlp {
 // Otherwise, just remove trailing space.
 
 auto Buffer::see_config_kw(String s, bool c) -> String {
-    if (!see_equals(s)) return 0;
+    if (!see_equals(s)) return nullptr;
     if (c) {
         int k = ptr;
         while (buf[k] && buf[k] != '%' && buf[k] != '#') k++;
@@ -880,7 +880,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
 
 // This finds one type. prints on the log. Remembers it.
 void Buffer::find_one_type(vector<string> &S) {
-    if (is_begin_something(0) == 5) {
+    if (is_begin_something(nullptr) == 5) {
         string s = to_string(ptr1);
         S.push_back(s);
         the_log << "Defined type: " << s << "\n";

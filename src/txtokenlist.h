@@ -127,8 +127,8 @@ public:
 // points to it, i.e. if the reference count is zero)
 class Mactab {
 private:
-    Macro **table{0};          // this contains the table
-    int *   rc_table{0};       // this contains the reference counts
+    Macro **table{nullptr};    // this contains the table
+    int *   rc_table{nullptr}; // this contains the reference counts
     int     cur_rc_mac_len{0}; // size of the table.
     int     ptr{-1};           // pointer to the first free position
 private:

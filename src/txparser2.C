@@ -1775,7 +1775,7 @@ void Parser::formatdate() {
     string     s = sT_arg_nopar();
     FormatDate FP;
     if (!FP.interpret(s, err_tok)) { the_log << "Date to scan was " << s << "\n"; }
-    Xmlp X = new Xml(Istring("date"), 0);
+    Xmlp X = new Xml(Istring("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->get_id().get_att();
     Buffer & B  = local_buf;
@@ -2387,7 +2387,7 @@ void Parser::T_listenv(symcodes x) {
         int   pos = T.eqtb_loc();
         if (!hash_table.eqtb[pos].is_undefined()) back_input(T);
     }
-    Xmlp res = new Xml(np_list, 0);
+    Xmlp res = new Xml(np_list, nullptr);
     the_stack.push(the_names[np_list], res);
     res->get_id().add_attribute(np_type, np);
 }

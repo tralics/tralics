@@ -104,7 +104,7 @@ public:
     void push_in_res(MathElt x) { res.push_back(x); }
     void push_in_res(Xmlp x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
     void reset() {
-        t     = 0;
+        t     = nullptr;
         state = true;
         t_big = false;
     }
