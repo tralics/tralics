@@ -16,7 +16,7 @@
 
 namespace accent_ns {
     auto fetch_accent(int chr, int accent_code) -> Token;
-    auto fetch_double_accent(int chr, int) -> Token;
+    auto fetch_double_accent(int a, int) -> Token;
     auto combine_accents(int, int) -> int;
     auto double_a_accent(int acc3) -> int;
     auto double_e_accent(int acc3) -> int;

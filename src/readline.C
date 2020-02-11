@@ -96,7 +96,7 @@ namespace readline_ns {
     auto skip_over_letters(String buf, int j) -> int;
     void tycleol();
     void right_fill();
-    void shift_string(char *S, int s, int p, int n);
+    void shift_string(char *S, int len, int source, int target);
     void rl_delete0(char *s, int pos, int size, int w);
     auto find_word_beg(char *buf, int size) -> int;
 } // namespace readline_ns

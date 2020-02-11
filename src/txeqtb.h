@@ -96,7 +96,7 @@ private:
     Token val;
 
 public:
-    SaveErrTok(Token c);
+    SaveErrTok(Token t);
     ~SaveErrTok();
 };
 

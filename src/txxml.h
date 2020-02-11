@@ -18,8 +18,8 @@ public:
     Xml(Istring n) : id(0), name(n) {}
     Xml(const Buffer &n) : id(0), name(Istring(n.c_str())) {}
     Xml(StrHash &X) : id(0), name(Istring(X.hash_find())) {}
-    Xml(Istring x, Xml *z);
-    Xml(name_positions x, Xml *z);
+    Xml(Istring N, Xml *z);
+    Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}
     Xml() : id(0), name(Istring(0)) {}
 
@@ -28,8 +28,8 @@ public:
     void               add_att(name_positions a, name_positions b) { id.add_attribute(a, b); }
     void               add_first(Xml *x);
     void               add_ref(string s);
-    void               add_tmp(Xml *val);
-    void               add_last_nl(Xml *val);
+    void               add_tmp(Xml *x);
+    void               add_last_nl(Xml *x);
     void               add_last_string(const Buffer &B);
     void               add_nl();
     void               add_non_empty_to(Xml *res);
@@ -54,9 +54,9 @@ public:
     [[nodiscard]] auto get_name() const -> Istring { return name; }
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
-    auto               how_many_env(Istring name) -> int;
+    auto               how_many_env(Istring match) -> int;
     void               insert_at(int pos, Xml *x);
-    auto               insert_at_ck(int pos, Xml *x) -> bool;
+    auto               insert_at_ck(int n, Xml *v) -> bool;
     void               insert_bib(Xml *bib, Xml *match);
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }
     auto               is_child(Xml *) const -> bool;
@@ -71,7 +71,7 @@ public:
     [[nodiscard]] auto last_is_string() const -> bool;
     void               last_to_SH();
     void               make_hole(int pos);
-    void               move(Istring name, Xml *res);
+    void               move(Istring match, Xml *res);
     void               one_fig_tab(bool is_fig);
     [[nodiscard]] auto only_hi() const -> bool;
     [[nodiscard]] auto only_recur_hi() const -> bool;
@@ -81,9 +81,9 @@ public:
     void               postprocess_fig_table(bool);
     auto               prev_sibling(Xml *) -> Xml *;
     auto               put_at(int n, Xml *x) -> bool;
-    void               put_in_buffer(Buffer &x);
+    void               put_in_buffer(Buffer &b);
     void               push_back(Buffer &B) { push_back(new Xml(B)); }
-    void               push_back(Xml *val);
+    void               push_back(Xml *x);
     void               push_back_list(Xml *);
     [[nodiscard]] auto real_size() const -> int;
     void               recurse(XmlAction &X);
@@ -102,7 +102,7 @@ public:
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto size() const -> int { return tree.size(); }
-    void               subst_env0(Istring name, Xml *value);
+    void               subst_env0(Istring match, Xml *vl);
     void               swap_x(Xml *);
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     void               to_buffer(Buffer &) const;

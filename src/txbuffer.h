@@ -97,7 +97,7 @@ public:
     void               check_before_brace(String);
     auto               check_cat_perso(int, int, bool) -> string;
     auto               contains(String s) const -> bool { return strstr(buf, s) != nullptr; }
-    auto               contains_braced(String env) -> bool;
+    auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String) const -> bool;
     [[nodiscard]] auto convert(int k) const -> String;
@@ -144,7 +144,7 @@ public:
     auto               get_machine_name() -> string;
     [[nodiscard]] auto get_ptr() const -> int { return ptr; }
     [[nodiscard]] auto get_ptr1() const -> int { return ptr1; }
-    [[nodiscard]] auto hashcode(int hash) const -> int;
+    [[nodiscard]] auto hashcode(int prime) const -> int;
     [[nodiscard]] auto head() const -> char { return buf[ptr]; }
     auto               is_not_char(int p, uchar x) -> bool { return uchar(buf[p]) != x; }
     auto               holds_documentclass(Buffer &a, Buffer &b, Buffer &c) -> int;
@@ -174,7 +174,7 @@ public:
     auto               is_begin_something(String) -> int;
     auto               is_begin_something(String, bool) -> int;
     auto               is_equal(String x) const -> bool { return strcmp(buf, x) == 0; }
-    auto               is_at_end(String x) const -> bool;
+    auto               is_at_end(String s) const -> bool;
     auto               is_here(String s) -> bool;
     auto               is_here_case(String s) -> bool;
     [[nodiscard]] auto is_letter_digit() const -> bool;
@@ -221,7 +221,7 @@ public:
     void out_log(Utf8Char ch, output_encoding_type T);
     auto pack_or_class(Buffer &aux) -> int;
     void pt_to_mu();
-    void process_big_char(unsigned int c);
+    void process_big_char(unsigned int n);
     void purify();
     void purify(String s);
     void push_back(char c);
@@ -236,8 +236,8 @@ public:
     void push_back(const AttPair &);
     void push_back(const Macro &);
     void push_back(const Macro &, bool);
-    auto push_back(Token c) -> bool;
-    void insert_token(Token c, bool);
+    auto push_back(Token T) -> bool;
+    void insert_token(Token T, bool);
     void push_back_alt(const AttPair &);
     void push_back_braced(string);
     void push_back_braced(String);
@@ -270,7 +270,7 @@ public:
     void push_back(Utf8Char c);
     void push_back3(unsigned int);
     void push_back9(unsigned int);
-    void put_at_end(String x);
+    void put_at_end(String s);
     auto remove_digits(string) -> string;
     auto remove_space(const string &) -> string;
     void rrl() {

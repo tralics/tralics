@@ -33,7 +33,7 @@ public:
     [[nodiscard]] auto has_full_name(const string &x) const -> bool { return full_name == x; }
     auto               has_name(String x) const -> bool { return name == x; }
     void               dump(Buffer &B) const { B << full_name; };
-    void               use(TokenList &L) const;
+    void               use(TokenList &A) const;
     void               kill() {
         val  = TokenList();
         used = true;
@@ -71,9 +71,9 @@ public:
     [[nodiscard]] auto pack_or_class() const -> String { return is_class() ? "class " : "package "; }
     [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
     void               print_options();
-    void               check_global_options(TokenList &res, bool X);
+    void               check_global_options(TokenList &action, bool X);
     void               check_local_options(TokenList &res, bool X);
-    void               check_all_options(TokenList &res, TokenList &, int X);
+    void               check_all_options(TokenList &action, TokenList &, int X);
     void               reload();
 };
 

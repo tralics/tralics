@@ -27,7 +27,7 @@ namespace {
 } // namespace
 
 namespace translate_ns {
-    auto find_color(const string &a, const string &b) -> Istring;
+    auto find_color(const string &model, const string &value) -> Istring;
 }
 
 class ColSpec {

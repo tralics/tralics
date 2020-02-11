@@ -222,7 +222,7 @@ public:
     void               signal_error(Token, String);
     void               signal_ovf(Token, String, int, int);
     auto               special_expand(TokenList *args) -> TokenList;
-    auto               special_tpa_arg(String n, String y, bool par, bool env, bool qf) -> Xml *;
+    auto               special_tpa_arg(String n, String y, bool par, bool env, bool has_q) -> Xml *;
     void               T_titlepage_finish(int v);
     auto               tpa_exec(String) -> Xml *;
     void               M_tracingall();
@@ -230,11 +230,11 @@ public:
     void               translate_all();
     void               word_define(int a, int c, bool gbl);
     auto               find_a_save_key(const string &mykey) -> bool;
-    auto               expand_mac_inner(const TokenList &X, TokenList *) -> TokenList;
+    auto               expand_mac_inner(const TokenList &W, TokenList *) -> TokenList;
     void               mu_error(String, int);
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &);
-    void               create_label(const string &, Istring value);
+    void               create_label(const string &, Istring S);
 
     // private functions, alphabetic order
 private:
@@ -252,7 +252,7 @@ private:
     void accent_err4();
     void add_bib_marker(bool);
     void add_math_label(Xml *);
-    void tokenize_buffer(Buffer &b, TokenList &X, const string &);
+    void tokenize_buffer(Buffer &b, TokenList &L, const string &);
     void add_vspace(Token T, ScaledInt, Xid);
     void after_parameter(bool exp, int);
     void after_math(bool);
@@ -267,7 +267,7 @@ private:
     void bad_counter1(const Buffer &, Equivalent &);
     void bad_csname(bool);
     void bad_definition(Token, int);
-    void bad_delimited(int, Token name);
+    void bad_delimited(int, Token x);
     void bad_end_env(int);
     void bad_group_char();
     void bad_macro_prefix(Token, Token);
@@ -378,7 +378,7 @@ private:
     auto fetch_name1(TokenList &L) -> String;
     void fetch_name2();
     auto fetch_name_opt() -> String;
-    auto find_env_token(const string &s, bool beg) -> Token;
+    auto find_env_token(const string &name, bool beg) -> Token;
     void E_get_config(int c);
     void finish_a_cell(Token T, Istring a);
     void finish_counter_cmd(Token, TokenList &L);
@@ -424,7 +424,7 @@ private:
     auto fp_read_int() -> int;
     void fp_set();
     void fp_setseed();
-    void fp_special_expand(TokenList &L);
+    void fp_special_expand(TokenList &B);
     void french_punctuation(CmdChr);
     auto get_a_new_line() -> bool;
     auto get_attval() -> string;
@@ -434,7 +434,7 @@ private:
     void get_counter(Token, int &);
     auto get_index_value() -> int;
     void get_date_ctrs(int &, int &, int &);
-    void get_def_nbargs(Macro *X, Token t);
+    void get_def_nbargs(Macro *X, Token name);
     auto get_lrcs_opt() -> name_positions;
     auto cs_from_input() -> Token;
     auto get_mac_value(Token) -> TokenList;
@@ -557,7 +557,7 @@ private:
     void M_newif_aux(Token T, string s, bool b);
     void new_font();
     auto new_line_for_read(bool) -> bool;
-    void new_macro(const string &L, Token name);
+    void new_macro(const string &s, Token name);
     void new_macro(TokenList &L, Token name, bool gbl);
     void new_macro(TokenList &L, Token name);
     auto new_math_list(int, math_list_type, subtypes s) -> subtypes;
@@ -590,10 +590,10 @@ private:
     void prev_date();
     void print_token(ostream &fp, Token x);
     void process_char(uchar c);
-    void process_string(String c);
+    void process_string(String s);
     void process_char(Utf8Char c);
     void process_char(uint c);
-    void process_char(int c);
+    void process_char(int s);
     void push_input_stack(const string &, bool, bool);
     void push_level(boundary_type);
     void push_module();
@@ -641,7 +641,7 @@ private:
     auto scan_char_num() -> int;
     auto scan_color(const string &opt, const string &name) -> Istring;
     auto scan_date_ctrs() -> bool;
-    auto scan_dim_helper(bool mu, bool ai) -> bool;
+    auto scan_dim_helper(bool mu, bool allow_int) -> bool;
     auto scan_dim2(RealNumber &, bool) -> bool;
     void scan_dimen(bool, Token T);
     void scan_dimen(bool mu, bool inf, glue_spec &, bool shortcut);
@@ -654,15 +654,15 @@ private:
     auto scan_fifteen_bit_int() -> int;
     auto scan_file_name() -> string;
     auto scan_font_ident() -> int;
-    auto scan_for_eval(Buffer &B, bool sw) -> bool;
+    auto scan_for_eval(Buffer &B, bool in_env) -> bool;
     auto scan_general_text() -> TokenList;
     auto scan_group0(TokenList &, int) -> bool;
-    auto scan_group1(TokenList &L, int &b, int cl) -> bool;
+    auto scan_group1(TokenList &res, int &b, int cl) -> bool;
     auto scan_group2(TokenList &) -> bool;
     void scan_group3(TokenList &, int, bool, int);
     void scan_group4(TokenList &, int);
     auto scan_group_opt(TokenList &L, bool &) -> bool;
-    auto scan_group_del(TokenList &L, const TokenList &) -> bool;
+    auto scan_group_del(TokenList &res, const TokenList &) -> bool;
     auto scan_group_del1(TokenList &, Token x) -> bool;
     void scan_hbox(int, subtypes c);
     void scan_ignore_group();
@@ -706,11 +706,11 @@ private:
     auto scan_twenty_seven_bit_int() -> int;
     void E_scan_up_down(TokenList &, TokenList &, TokenList &, TokenList &);
     void E_scan_up_down();
-    void scan_unit(RealNumber f);
+    void scan_unit(RealNumber R);
     void see_font_change(subtypes);
     void M_future_let(bool);
     void M_let(bool);
-    void M_let(Token A, bool gbl, bool redef);
+    void M_let(Token A, bool global, bool redef);
     void M_let(Token, Token, bool, bool);
     void M_let_fast(Token, Token, bool);
     void M_let(int, bool);
@@ -832,7 +832,7 @@ private:
     auto T_hline_parse(subtypes) -> int;
     void T_hspace(subtypes);
     void T_if_package_later(bool c);
-    void T_if_package_loaded(bool c);
+    void T_if_package_loaded(bool type);
     void T_if_package_with(bool c);
     void T_ignoreA();
     void T_index(subtypes);

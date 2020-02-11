@@ -77,7 +77,7 @@ public:
     void               before_close(bool);
     void               clear() { value.clear(); }
     void               clear_and_copy(LinePtr &X);
-    void               change_encoding(int k);
+    void               change_encoding(int wc);
     [[nodiscard]] auto dump_name() const -> String;
     void               find_tex_encoding();
     auto               find_aliases(const vector<string> &, string &res) -> bool;

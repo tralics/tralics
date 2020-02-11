@@ -119,8 +119,8 @@ public:
     auto     is_valid(int) -> bool;
     auto     name(int) -> string;
     void     full_name(Buffer &, int k);
-    auto     get_int_param(int k, int m) -> int;
-    auto     get_dimen_param(int k, int m) -> ScaledInt;
+    auto     get_int_param(int ft, int pos) -> int;
+    auto     get_dimen_param(int ft, int pos) -> ScaledInt;
     void     set_int_param(int, int, int);
     void     set_dimen_param(int, int, ScaledInt);
     auto     find_font(string, int, int) -> int;

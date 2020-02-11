@@ -98,7 +98,7 @@ namespace main_ns {
     auto param_hack(String) -> bool;
     auto extract_year(Buffer &B, Buffer &C) -> int;
     void check_lowercase(Buffer &B);
-    void check_year(int, Buffer &B, const string &, const string &);
+    void check_year(int, Buffer &C, const string &, const string &);
 } // namespace main_ns
 
 extern void set_everyjob(const string &s);

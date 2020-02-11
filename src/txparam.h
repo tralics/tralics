@@ -148,7 +148,7 @@ public:
     void               set_ent_names(String);
     void               set_foot_hack(bool b) { footnote_hack = b; }
     void               set_fp_len(int a) { cur_fp_len = a; }
-    void               set_input_encoding(int a);
+    void               set_input_encoding(int wc);
     void               set_tcf_file(string s) {
         tcf_file = s;
         use_tcf  = true;

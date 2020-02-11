@@ -26,7 +26,7 @@ namespace token_ns {
     auto expand_nct(TokenList &L, int n, uchar c, int &, TokenList &) -> bool;
     void expand_star(TokenList &);
     auto fast_get_block(TokenList &) -> TokenList;
-    void fast_get_block(TokenList &, TokenList &w);
+    void fast_get_block(TokenList &, TokenList &res);
     auto get_a_param(TokenList &, bool) -> TokenList;
     auto get_block(TokenList &) -> TokenList;
     auto get_unique(TokenList &L) -> Token;
@@ -42,7 +42,7 @@ namespace token_ns {
     void replace(TokenList &A, Token x1, Token x2);
     auto replace_space(TokenList &A, Token x2, Token x3) -> int;
     void show(const TokenList &);
-    auto split_at(Token x1, Token x2, Token x3, TokenList &L, TokenList &z, bool) -> bool;
+    auto split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z, bool) -> bool;
     auto string_to_list(Istring s) -> TokenList;
     auto string_to_list(String s, bool) -> TokenList;
     auto string_to_list(const string &s, bool) -> TokenList;
@@ -78,9 +78,9 @@ public:
     void remove_first_n(int n);
     void remove_spaces();
     void split_after(int n, TokenList &z);
-    auto split_at(Token x, Token y, TokenList &z) -> Token;
+    auto split_at(Token x, Token x2, TokenList &z) -> Token;
     void split_after(token_iterator X, TokenList &z);
-    auto split_at_p(TokenList &, TokenList &z) -> bool;
+    auto split_at_p(TokenList &, TokenList &B) -> bool;
     void to_postfix();
     void fp_check_paren();
 };

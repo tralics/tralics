@@ -26,7 +26,7 @@ public:
     [[nodiscard]] auto get_value() const -> int { return value; }
     auto               operator-() const -> ScaledInt { return ScaledInt(-value); }
     void               operator+=(ScaledInt X) { value += X.value; }
-    void               add_dim(ScaledInt x);
+    void               add_dim(ScaledInt Y);
     [[nodiscard]] auto null() const -> bool { return value == 0; }
     void               neg() { value = -value; }
     void               divide(int);
@@ -66,11 +66,11 @@ public:
     void               kill();
     void               normalise();
     void               negate();
-    void               add(const Glue &x);
-    void               multiply(int v);
-    void               divide(int v);
+    void               add(const Glue &r);
+    void               multiply(int n);
+    void               divide(int n);
     void               incr_width(int x) { width += x; }
-    void               scale(int n, int f);
+    void               scale(int n, int d);
     void               quotient(int f);
     void               check_overflow();
     void               expr_mul(int f);
@@ -135,7 +135,7 @@ public:
             int_val = -int_val;
     }
     void fast_negate() { int_val = -int_val; }
-    void attach_fraction(RealNumber f);
+    void attach_fraction(RealNumber x);
     void attach_sign(bool negative);
     void set_int(int a) {
         int_val = a;
@@ -180,7 +180,7 @@ public:
     void quotient(int);
     void check_overflow(scan_expr_t t);
     void normalise();
-    void expr_mul(int f);
+    void expr_mul(int n);
     void add_ovf(const SthInternal &r);
 };
 

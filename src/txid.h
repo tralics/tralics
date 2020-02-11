@@ -20,7 +20,7 @@ public:
     void               add_attribute(Istring A, Istring B);
     void               add_attribute(Istring A, Istring B, bool f);
     void               add_attribute(name_positions A, name_positions B);
-    void               add_attribute(name_positions n, name_positions v, bool);
+    void               add_attribute(name_positions A, name_positions B, bool);
     void               add_attribute(name_positions n, Istring v);
     void               add_attribute(const AttList &L, bool f);
     void               add_attribute_but_rend(Xid b);

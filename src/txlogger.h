@@ -14,7 +14,7 @@
 // or both.
 
 extern auto operator<<(ostream &fp, const Glue &x) -> ostream &;
-extern auto operator<<(ostream &fp, const Istring &x) -> ostream &;
+extern auto operator<<(ostream &fp, const Istring &L) -> ostream &;
 extern auto operator<<(ostream &fp, const Macro &x) -> ostream &;
 extern auto operator<<(ostream &fp, const TokenList &L) -> ostream &;
 extern auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
@@ -160,11 +160,11 @@ auto operator<<(Logger &X, const Glue &x) -> Logger &;
 auto operator<<(Logger &X, const Macro &x) -> Logger &;
 auto operator<<(Logger &X, const SthInternal &x) -> Logger &;
 auto operator<<(Logger &X, const FontInfo &x) -> Logger &;
-auto operator<<(Logger &X, Token x) -> Logger &;
-auto operator<<(Logger &X, const Utf8Char &x) -> Logger &;
-auto operator<<(FullLogger &X, const Utf8Char &x) -> FullLogger &;
-auto operator<<(FullLogger &X, Token x) -> FullLogger &;
-auto operator<<(FullLogger &X, const Macro &x) -> FullLogger &;
+auto operator<<(Logger &fp, Token t) -> Logger &;
+auto operator<<(Logger &fp, const Utf8Char &x) -> Logger &;
+auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger &;
+auto operator<<(FullLogger &fp, Token t) -> FullLogger &;
+auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger &;
 auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;
 auto operator<<(FullLogger &X, String s) -> FullLogger &;
 auto operator<<(FullLogger &X, Istring s) -> FullLogger &;

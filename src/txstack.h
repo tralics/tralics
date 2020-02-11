@@ -130,7 +130,7 @@ public:
     void               pop(Istring a);
     void               pop(name_positions a);
     void               pop_if_frame(Istring x);
-    void               push(Istring a, Xml *b);
+    void               push(Istring fr, Xml *V);
     void               push1(Istring name, name_positions x);
     void               push1(name_positions x);
     auto               push_hbox(Istring) -> Xml *;
@@ -157,6 +157,6 @@ public:
     void               trace_stack();
     void               unbox(Xml *);
     auto               xml2_space(Istring a, Xml *c, Xml *d) -> Xml *;
-    auto               xml2_space(Istring a, Istring, Istring, Xml *c, Xml *d) -> Xml *;
-    auto               xml2_space(Istring a, Istring, Xml *c, Xml *d) -> Xml *;
+    auto               xml2_space(Istring elt, Istring, Istring, Xml *f_arg, Xml *s_arg) -> Xml *;
+    auto               xml2_space(Istring elt, Istring, Xml *first_arg, Xml *second_arg) -> Xml *;
 };

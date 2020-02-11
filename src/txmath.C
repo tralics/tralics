@@ -34,7 +34,7 @@ extern bool only_input_data;
 
 using namespace math_ns;
 namespace math_ns {
-    void add_to_trace(Token x);
+    void add_to_trace(Token T);
     void add_to_trace(char);
     void add_to_trace(const string &x);
     void remove_from_trace();

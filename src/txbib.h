@@ -223,7 +223,7 @@ private:
     [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
     void               output_bibitem();
     void               out_something(field_pos p);
-    void               out_something(field_pos p, string w);
+    void               out_something(field_pos p, string s);
     void               out_something(field_pos p, int w);
     void               set_explicit_cit() { explicit_cit = true; }
     [[nodiscard]] auto get_from() const -> bib_from { return cite_key.get_from(); }
@@ -244,7 +244,7 @@ private:
     void               sort_key();
     void               format_author(bool);
     void               forward_pass(string &previous_label, int &last_num);
-    void               reverse_pass(int &extra_num);
+    void               reverse_pass(int &next_extra);
     auto               find_all_names(String) -> BibtexName *;
     auto               format_lab_names(String s) -> String;
     auto               sort_format_names(String s) -> String;
@@ -310,8 +310,8 @@ private:
     auto               check_entry_end(int) -> int;
     auto               check_field_end(int) -> int;
     auto               cur_char() -> Utf8Char { return input_line[input_line_pos]; }
-    void               define_a_macro(String a, String b);
-    auto               find_a_macro(Buffer &B, bool insert, String, String) -> int;
+    void               define_a_macro(String name, String value);
+    auto               find_a_macro(Buffer &name, bool insert, String, String) -> int;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
@@ -352,12 +352,12 @@ public:
     auto               wrong_class(int, const string &y, bib_from from) -> bool;
     void               work();
     void               read(String src, bib_from);
-    auto               read0(Buffer &src, bib_from) -> bool;
-    void               read1(const string &src);
+    auto               read0(Buffer &B, bib_from) -> bool;
+    void               read1(const string &cur);
     void               read_ra();
     void               err_in_file(String s, bool last);
-    void               err_in_entry(String s);
-    void               err_in_name(String s, int i);
+    void               err_in_entry(String a);
+    void               err_in_name(String a, int i);
     void               bad_year(const string &given, String wanted);
     void               boot(string, bool);
     void               bootagain();

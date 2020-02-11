@@ -44,11 +44,11 @@ namespace tralics_ns {
     auto make_string(String) -> String;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
-    auto file_exists(string name) -> bool;
+    auto file_exists(string B) -> bool;
     auto file_exists(Buffer &) -> bool;
     void bibtex_bootagain();
     void bibtex_boot(String b, String, string, bool, bool);
-    void Titlepage_create(LinePtr &x);
+    void Titlepage_create(LinePtr &lines);
     void Titlepage_start(bool);
     auto exists(const vector<string> &, string) -> bool;
     void bibtex_set_nocite();
@@ -69,7 +69,7 @@ namespace err_ns {
 namespace config_ns {
     auto find_one_key(const string &name, const string &key) -> string;
     auto pers_rc(const string &rc) -> string;
-    void check_RC(Buffer &s, Xml *);
+    void check_RC(Buffer &B, Xml *);
     auto find_keys(const string &name) -> string;
     auto start_interpret(Buffer &B, String s) -> bool;
     void interpret_list(const string &, Buffer &B);

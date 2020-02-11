@@ -13,7 +13,7 @@
 
 namespace err_ns {
     Buffer local_buf;
-    void   convert_to_string(const TokenList &t);
+    void   convert_to_string(const TokenList &L);
     void   unexpected_char(String s, int k);
     void   fatal_error(String s);
 } // namespace err_ns

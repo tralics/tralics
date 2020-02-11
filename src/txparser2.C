@@ -32,13 +32,13 @@ namespace xkv_ns {
     auto find_key_of(const TokenList &L, int type) -> string;
     void merge(TokenList &W, TokenList &L, int type);
     void remove(TokenList &W, TokenList &L, int type);
-    void makehd(const string &L);
+    void makehd(const string &fam);
     auto is_Gin(const TokenList &x) -> bool;
 } // namespace xkv_ns
 
 namespace token_ns {
     void lower_case(TokenList &L);
-    auto find_in(TokenList &A, TokenList &B, Token C, bool, int &) -> bool;
+    auto find_in(TokenList &A, TokenList &B, Token t, bool, int &) -> bool;
     void int_to_roman(Buffer &b, int n);
 } // namespace token_ns
 

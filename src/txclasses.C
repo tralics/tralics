@@ -30,12 +30,12 @@ namespace classes_ns {
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
     auto compare_options(const OptionList &A, const OptionList &B) -> bool;
-    void dump_options(const OptionList &A, String b);
+    void dump_options(const OptionList &A, String x);
     void dump_file_list();
     auto cur_options(bool, TokenList &, bool) -> TokenList;
     auto make_keyval(TokenList &L) -> KeyAndVal;
     void register_key(const string &);
-    void unknown_optionX(TokenList &action, TokenList &);
+    void unknown_optionX(TokenList &cur, TokenList &);
     void unknown_option(KeyAndVal &cur_keyval, TokenList &, TokenList &, int);
     void add_to_filelist(const string &, const string &);
     void add_sharp(TokenList &L);
