@@ -11,14 +11,14 @@
 if [ $# -eq 0 ]; then
     tralics=../build/tralics
     config_dir=../confdir
-    modele_dir=../Modele
+    modele_dir=./modele
 else
     source_dir=$1
     binary_dir=$2
     config_dir=$source_dir/confdir
-    modele_dir=$source_dir/Modele
+    modele_dir=$source_dir/test/modele
     tralics=$binary_dir/tralics
-    cp $source_dir/Test/* .
+    cp $source_dir/test/*.* .
 fi
 
 # This checks that no error is signaled.

@@ -50,7 +50,7 @@ CLASSES="book.clt std.clt article.clt report.clt tralics-iso.plt \
   booktabs.plt expl3.plt zwgetfdate.plt ziffer.plt 12many.plt"
 
 
-TEST="README torture.tex torture.bib tortureaux.tex \
+tEST="README torture.tex torture.bib tortureaux.tex \
   tormath.tex tormath1.tex fptest.tex lxdoc.tex taux1.tex taux2.tex tpa.tex \
   hello.tex hello1.tex hello2.tex hello3.tex xhello.tex bo.tex bo.bib bi.bib\
   tralics.bib txtc.tex tpa2.tex tralics-ex1.tex tralics-ex2.tex mathmlc.tex\
@@ -88,7 +88,7 @@ rm -rf $DIR
 mkdir $DIR
 mkdir $DIR/src
 mkdir $DIR/confdir
-mkdir $DIR/Test
+mkdir $DIR/test
 mkdir $DIR/Modele
 
 
@@ -105,9 +105,9 @@ done
 
 
 
-for f in $TEST
+for f in $tEST
 do
-    cp -p Test/$f $DIR/Test
+    cp -p test/$f $DIR/test
 done
 
 for f in $MODELE
@@ -125,12 +125,12 @@ done
 ### debug....
 ## cp -p -r CR $DIR
 
-ln -s xhello.tex $DIR/Test/hello2003.tex
-ln -s xhello.tex $DIR/Test/hello2004.tex
-ln -s xhello.tex $DIR/Test/hello2006.tex
+ln -s xhello.tex $DIR/test/hello2003.tex
+ln -s xhello.tex $DIR/test/hello2004.tex
+ln -s xhello.tex $DIR/test/hello2006.tex
 cp etc/Copyright $DIR/src
 ln -s README $DIR/confdir/COPYING
-cp -p confdir/tralics.sty $DIR/Test
+cp -p confdir/tralics.sty $DIR/test
 
 cd tmp
 

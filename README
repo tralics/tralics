@@ -30,9 +30,9 @@ These files are used by Tralics; when you install a new version, you should
 copy them in the appropriate place.
 
 
-The Test directory contains some test files
+The test directory contains some test files
 The Modele directory contains translation of the test files.
-The Test directory contains `alltests',
+The test directory contains `alltests',
   this is a shell script that compiles the test files and compares
   them against models.
 
