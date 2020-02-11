@@ -179,7 +179,7 @@ void Parser::T_cite(subtypes sw) {
     }
     TokenList res;
     TokenList prenote;
-    Istring   type = Istring("");
+    auto      type = Istring("");
     if (is_natbib) {
         Istring x = nT_optarg_nopar();
         if (!x.empty()) the_stack.add_att_to_last(the_names[np_cite_type], x);
@@ -244,8 +244,8 @@ void Parser::T_cite_one() {
     flush_buffer();
     Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
     cur_tok      = T;
-    Istring ref  = Istring(fetch_name0_nopar());
-    Xmlp    arg  = is_simple ? nullptr : xT_arg_nopar();
+    auto ref     = Istring(fetch_name0_nopar());
+    Xmlp arg     = is_simple ? nullptr : xT_arg_nopar();
     // signal error after argument parsing
     if (bbl.is_too_late()) {
         parse_error("Citation after loading biblio?");
@@ -259,9 +259,9 @@ void Parser::T_cite_one() {
     }
     leave_v_mode();
     TokenList L     = get_mac_value(hash_table.cite_type_token);
-    Istring   xtype = Istring(fetch_name1(L));
+    auto      xtype = Istring(fetch_name1(L));
     L               = get_mac_value(hash_table.cite_prenote_token);
-    Istring prenote = Istring(fetch_name1(L));
+    auto prenote    = Istring(fetch_name1(L));
     res->add_tmp(arg);
     the_stack.add_last(new Xml(np_cit, res));
     if (!type.empty()) the_stack.add_att_to_last(the_names[np_rend], type);
@@ -502,8 +502,8 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump(B);
     if (B.empty()) return;
     T.dump_data(B);
-    string   auxname = tralics_ns::get_short_jobname() + ".aux";
-    fstream *fp      = new fstream(auxname.c_str(), std::ios::out);
+    string auxname = tralics_ns::get_short_jobname() + ".aux";
+    auto * fp      = new fstream(auxname.c_str(), std::ios::out);
     if (!*fp) {
         log_and_tty << "Cannot open file " << auxname << " for output \n"
                     << "Bibliography will be missing\n";
@@ -562,7 +562,7 @@ void Parser::T_start_the_biblio() {
     L1.push_back(hash_table.refname_token);
     String a = fetch_name1(L1);
     the_stack.set_arg_mode();
-    Istring name = Istring(a);
+    auto name = Istring(a);
     the_stack.set_v_mode();
     the_stack.push(the_names[cst_biblio], new Xml(name, nullptr));
 }
@@ -584,7 +584,7 @@ auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) ->
     for (int i = 0; i < n; i++)
         if (citation_table[i].match(key, from)) return i;
     if (!insert) return -1;
-    citation_table.push_back(CitationItem(key, from));
+    citation_table.emplace_back(key, from);
     return n;
 }
 
@@ -599,7 +599,7 @@ auto Bibliography::find_citation_star(Istring from, Istring key) -> int {
     n = citation_table.size();
     for (int i = 0; i < n; i++)
         if (citation_table[i].match_star(key)) return i;
-    citation_table.push_back(CitationItem(key, from));
+    citation_table.emplace_back(key, from);
     return n;
 }
 
@@ -620,7 +620,7 @@ void Parser::T_cititem() {
     mode m = the_stack.get_mode();
     need_bib_mode();
     the_stack.set_arg_mode();
-    Istring name = Istring(a);
+    auto name = Istring(a);
     the_stack.push(name, new Xml(name, nullptr));
     T_arg();
     the_stack.pop(name);
@@ -662,9 +662,9 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
     if (res >= 0 || !insert) return res;
     res = all_macros.size();
     if (xname)
-        all_macros.push_back(BibMacro(h, xname, val));
+        all_macros.emplace_back(h, xname, val);
     else
-        all_macros.push_back(BibMacro(h, name));
+        all_macros.emplace_back(h, name);
     return res;
 }
 
@@ -674,7 +674,7 @@ void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf
 // Return an integer associated to a field position.
 auto Bibtex::find_field_pos(String s) const -> field_pos {
     if (!s) return fp_unknown;
-    Istring S = Istring(s);
+    auto S = Istring(s);
     // Check is this has to be ignored
     vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
     int              additional_s = Bib_s.size();
@@ -723,7 +723,7 @@ auto Bibtex::find_field_pos(String s) const -> field_pos {
 // Finds the type of an entry (or comment, string, preamble).
 auto Bibtex::find_type(String s) -> entry_type {
     if (s[0] == 0) return type_comment; // in case of error.
-    Istring S = Istring(s);
+    auto S = Istring(s);
 
     vector<Istring> &Bib2        = the_main->get_bibtex_extensions_s();
     int              additional2 = Bib2.size();
@@ -900,7 +900,7 @@ void Bibtex::make_entry(const CitationKey &a, Istring myid) { make_entry(a, beca
 
 // Generic code
 auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry * {
-    BibEntry *X  = new BibEntry;
+    auto *X      = new BibEntry;
     X->cite_key  = a;
     X->why_me    = b;
     X->id        = all_entries.size();
@@ -948,10 +948,10 @@ void Parser::T_bibitem() {
 // Flag true for bibitem, \bibitem[opt]{key}
 // false in the case of \XMLsolvecite[id][from]{key}
 void Parser::solve_cite(bool user) {
-    Token   T    = cur_tok;
-    bool    F    = true;
-    int     n    = the_stack.cur_xid().value;
-    Istring from = Istring("");
+    Token T    = cur_tok;
+    bool  F    = true;
+    int   n    = the_stack.cur_xid().value;
+    auto  from = Istring("");
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));
@@ -963,9 +963,9 @@ void Parser::solve_cite(bool user) {
         n    = read_elt_id(T);
         from = Istring(fetch_name_opt());
     }
-    from        = normalise_for_bib(from);
-    cur_tok     = T;
-    Istring key = Istring(fetch_name0_nopar());
+    from     = normalise_for_bib(from);
+    cur_tok  = T;
+    auto key = Istring(fetch_name0_nopar());
     if (user) insert_every_bib();
     if (n == 0) return;
     Xid           N = Xid(n);
@@ -1406,8 +1406,8 @@ auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
 // and is not empty. If OK, we start to fill the entry.
 
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
-    for (int i = 0; i < int(omitcite_list.size()); i++)
-        if (omitcite_list[i] == cur_entry_name) {
+    for (const auto &i : omitcite_list)
+        if (i == cur_entry_name) {
             the_log << lg_start << "bib: Omitting " << cur_entry_name << lg_end;
             return nullptr;
         }
@@ -1688,7 +1688,7 @@ void BibEntry::numeric_label(int i) {
 }
 
 BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), unique_id("") {
-    for (int i = 0; i < fp_unknown; i++) all_fields[i] = "";
+    for (auto &all_field : all_fields) all_field = "";
     vector<Istring> &Bib = the_main->get_bibtex_fields();
     int              n   = Bib.size();
     if (n) {
@@ -2192,7 +2192,7 @@ void BibEntry::handle_one_namelist(string &src, BibtexName &X) {
     biblio_buf5.reset();
     name_buffer.normalise_for_bibtex(src.c_str());
     int          n     = name_buffer.length() + 1;
-    bchar_type * table = new bchar_type[n];
+    auto *       table = new bchar_type[n];
     NameSplitter W(table);
     name_buffer.fill_table(table);
     W.handle_the_names();
@@ -3003,7 +3003,7 @@ void Bibtex::boot(string S, bool inra) {
     in_ra        = inra;
     want_numeric = false;
     if (the_main->in_ra()) want_numeric = true;
-    for (int i = 0; i < 128; i++) id_class[i] = legal_id_char;
+    for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (int i = 0; i < 32; i++) id_class[i] = illegal_id_char;
     id_class[(unsigned char)' ']  = illegal_id_char;
     id_class[(unsigned char)'\t'] = illegal_id_char;

@@ -319,7 +319,7 @@ void FpNum::prop_carry(Digit *z) {
 void FpNum::mul(FpNum X, FpNum Y) {
     bool  xs = X.sign == Y.sign;
     Digit x[12], y[12], z[24];
-    for (int i = 0; i < 24; i++) z[i] = 0;
+    for (unsigned int &i : z) i = 0;
     X.mul_split(x);
     Y.mul_split(y);
     int xmax, xmin, ymax, ymin;
@@ -339,7 +339,7 @@ void FpNum::mul(FpNum X, int y) {
         y  = -y;
         xs = !xs;
     }
-    for (int i = 0; i < 24; i++) z[i] = 0;
+    for (unsigned int &i : z) i = 0;
     X.mul_split(x);
     for (int i = 0; i < 12; i++) z[i + 6] = x[i] * y;
     prop_carry(z);
@@ -732,10 +732,10 @@ void FpNum::div(int n) {
     }
     mul_split(x);
     Digit carry = 0;
-    for (int i = 0; i < 12; i++) {
-        Digit a = 1000 * carry + x[i];
+    for (unsigned int &i : x) {
+        Digit a = 1000 * carry + i;
         carry   = a % n;
-        x[i]    = a / n;
+        i       = a / n;
     }
     unsplit_mul4(x);
 }
@@ -1692,9 +1692,9 @@ auto Parser::fp_read_value() -> FpNum {
 // list are characters.
 auto FpGenList::find_str(int &n) const -> Token {
     tkbuf.reset();
-    const_token_iterator C = value.begin();
-    const_token_iterator E = value.end();
-    n                      = 0;
+    auto C = value.begin();
+    auto E = value.end();
+    n      = 0;
     while (C != E) {
         Token x = *C;
         ++C;
@@ -1739,8 +1739,8 @@ void FpGenList::split_after(token_iterator X, TokenList &z) {
 // Finds the first x1 or x2. Splits there. before is put in z.
 // Returns x1 or x2 (the token that is found) or 0 (if nothing is found).
 auto FpGenList::split_at(Token x1, Token x2, TokenList &z) -> Token {
-    token_iterator X = value.begin();
-    token_iterator E = value.end();
+    auto X = value.begin();
+    auto E = value.end();
     for (;;) {
         if (X == E) return Token(0);
         Token x = *X;
@@ -1755,7 +1755,7 @@ auto FpGenList::split_at(Token x1, Token x2, TokenList &z) -> Token {
 // The first N tokens are put in z.
 // the Token that follows is recycled
 void FpGenList::split_after(int n, TokenList &z) {
-    token_iterator X = value.begin();
+    auto X = value.begin();
     while (n > 0) {
         ++X;
         n--;
@@ -1873,11 +1873,11 @@ void FpGenList::fp_gen_add() {
 // This replaces foo,bar or foo:bar by  foo bar.
 // If a character has been replaced, a space is added at the end.
 void FpGenList::fp_gen_komma() {
-    bool           need_space = false;
-    token_iterator X          = value.begin();
-    token_iterator E          = value.end();
-    Token          x1         = the_parser.hash_table.comma_token;
-    Token          x2         = Token(other_t_offset, ':');
+    bool  need_space = false;
+    auto  X          = value.begin();
+    auto  E          = value.end();
+    Token x1         = the_parser.hash_table.comma_token;
+    Token x2         = Token(other_t_offset, ':');
     while (X != E) {
         if (*X == x1 || *X == x2) {
             need_space = true;
@@ -1892,12 +1892,12 @@ void FpGenList::fp_gen_komma() {
 // In case of X(Y)Z, puts X in A, Y in B, leaves Z in *this
 // First closing parenthesis is considered. Then last opening one is taken.
 auto FpGenList::split_at_p(TokenList &A, TokenList &B) -> bool {
-    Token          x1 = Token(other_t_offset, '(');
-    Token          x2 = Token(other_t_offset, ')');
-    token_iterator X  = value.begin();
-    token_iterator E  = value.end();
-    token_iterator p1 = E; // at open paren
-    token_iterator p2 = E; // at close paren
+    Token x1 = Token(other_t_offset, '(');
+    Token x2 = Token(other_t_offset, ')');
+    auto  X  = value.begin();
+    auto  E  = value.end();
+    auto  p1 = E; // at open paren
+    auto  p2 = E; // at close paren
     for (;;) {
         if (X == E) return false;
         Token x = *X;
@@ -1941,15 +1941,15 @@ void FpGenList::to_postfix() {
 // In the case of (+3+4)*(-5-6),
 // this  gives    (3+4)*(0-5-6),
 void FpGenList::fp_check_paren() {
-    Token          x0(other_t_offset, '(');
-    Token          x1 = the_parser.hash_table.minus_token;
-    Token          x2 = the_parser.hash_table.plus_token;
-    token_iterator X  = value.begin();
-    token_iterator E  = value.end();
+    Token x0(other_t_offset, '(');
+    Token x1 = the_parser.hash_table.minus_token;
+    Token x2 = the_parser.hash_table.plus_token;
+    auto  X  = value.begin();
+    auto  E  = value.end();
     while (X != E) {
         Token x = *X;
         if (x == x0) {
-            token_iterator Y = X;
+            auto Y = X;
             ++Y;
             if (Y == E) return;
             Token y = *Y;
@@ -2658,7 +2658,7 @@ void Parser::boot_fp() {
     LinePtr L;
     L.insert("%% Begin bootstrap commands for FP");
     L.insert("\\def\\FPe{2.718281828459045235}");
-    L.insert("\\let\\ifFPtest\\iftrue");
+    L.insert(R"(\let\ifFPtest\iftrue)");
     lines.splice_first(L);
     e_powers[0].init(0, 1, 0, 0);
     e_powers[1].init(0, 2, 718281828, 459045235);

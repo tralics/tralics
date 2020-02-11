@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics/marelle (Jose' Grimm) 2006 2015
@@ -38,7 +40,7 @@ class Clines {
 public:
     auto next_byte(Buffer &B) -> unsigned int;
     Clines(int n) : number(n), chars(""), converted(true) {}
-    Clines(int n, string c, bool C) : number(n), chars(c), converted(C) {}
+    Clines(int n, string c, bool C) : number(n), chars(std::move(c)), converted(C) {}
     auto to_string(string &C, bool &cv) const -> int {
         C  = chars;
         cv = converted;
@@ -164,7 +166,7 @@ public:
         X.set_interactive(L.get_interactive());
     }
     InputStack(string N, int l, states S, int cfp, bool eof, bool eof_o)
-        : s(S), line_no(l), name(N), restore_at(-1), file_pos(cfp), every_eof(eof), eof_outer(eof_o) {}
+        : s(S), line_no(l), name(std::move(N)), restore_at(-1), file_pos(cfp), every_eof(eof), eof_outer(eof_o) {}
 };
 
 // data structure associated to \input3=some_file.
@@ -176,7 +178,8 @@ class FileForInput {
 public:
     void open(string, bool);
     void close();
-    FileForInput(){};
+    FileForInput() = default;
+    ;
     auto is_open() -> bool { return open_flag; }
     auto get_lines() -> LinePtr & { return the_lines; }
     void set_lines(LinePtr X) { the_lines = X; }

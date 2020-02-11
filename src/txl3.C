@@ -16,7 +16,7 @@ namespace {
     const TokenList empty_list;
     //  TokenList double_at_list,double_at_no_list;
     Buffer   local_buffer, local_bufferB, local_bufferC;
-    Token    q_nil, q_stop, q_recursion_stop, q_recursion_tail;
+    Token    q_nil, q_stop, q_recursion_stop;
     Token    T_roman, T_use1, T_use2, T_usen, T_use_nonen;
     Token    T_exp_notN, T_exp_notn, T_empty;
     Token    gen_from_sig_tok, expargsnc_tok, T3col_tok;
@@ -984,7 +984,7 @@ void Parser::define_definer(String base, String nsig, String osig) {
     TokenList L;
     L.push_back(gen_from_sig_tok);
     L.push_back(ot);
-    Macro *X = new Macro(L);
+    auto *X = new Macro(L);
     mac_define(nt, X, true, rd_always, userp_cmd);
 }
 
@@ -1000,7 +1000,7 @@ void Parser::define_definer(String base) {
     TokenList L;
     L.push_back(expargsnc_tok);
     L.push_back(ot);
-    Macro *X = new Macro(L);
+    auto *X = new Macro(L);
     mac_define(nt, X, true, rd_always, userp_cmd);
     // gain
     B << bf_reset << "cs_" << base << ":cx";
@@ -1010,7 +1010,7 @@ void Parser::define_definer(String base) {
     TokenList L2;
     L2.push_back(expargsnc_tok);
     L2.push_back(ot);
-    Macro *X2 = new Macro(L2);
+    auto *X2 = new Macro(L2);
     mac_define(nt, X2, true, rd_always, userp_cmd);
 }
 
@@ -1098,7 +1098,7 @@ void Parser::l3_generate_variant(const string &var, bool prot, Token orig) {
     TokenList body;
     body.push_back(converter);
     body.push_back(orig);
-    Macro *X = new Macro(body);
+    auto *X = new Macro(body);
     mac_define(newfun, X, true, rd_always, prot ? userp_cmd : user_cmd);
     if (!hash_table.eqtb[converter.eqtb_loc()].is_undefined()) return;
     TokenList cb;
@@ -1643,12 +1643,12 @@ void Parser::L3_load(bool preload) {
     L.insert("%% Begin bootstrap commands for latex3");
     L.insert("\\message{Bootstrapping latex3}");
     // Change catcode code for underscore and colon
-    L.insert("\\edef\\tmp{\\catcode58=\\the\\catcode58 ");
-    L.insert("  \\catcode95=\\the\\catcode95 \\let\\noexpand\\tmp\\relax}");
+    L.insert(R"(\edef\tmp{\catcode58=\the\catcode58 )");
+    L.insert(R"(  \catcode95=\the\catcode95 \let\noexpand\tmp\relax})");
     L.insert("\\catcode58=11 \\catcode95=11 ");
-    L.insert("\\def\\token_to_str:c{\\exp_args:Nc\\token_to_str:N}");
-    L.insert("\\def\\token_new:Nn#1#2{\\cs_new_eq:NN #1#2}");
-    L.insert("\\def\\c_catcode_active_tl{\\noexpand~}");
+    L.insert(R"(\def\token_to_str:c{\exp_args:Nc\token_to_str:N})");
+    L.insert(R"(\def\token_new:Nn#1#2{\cs_new_eq:NN #1#2})");
+    L.insert(R"(\def\c_catcode_active_tl{\noexpand~})");
     L.insert("\\tmp\\wlog{Loading latex3 (done)}");
     if (!preload) {
         flush_buffer();

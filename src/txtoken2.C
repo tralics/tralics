@@ -128,7 +128,7 @@ void Hashtab::boot_keyval() {
 Hashtab::Hashtab() {
     hash_used  = hash_size;
     hash_usage = 0;
-    for (int k = 0; k < eqtb_size; k++) eqtb[k].reset();
+    for (auto &k : eqtb) k.reset();
     frozen_undef_token = nohash_primitive("undefined", CmdChr(undef_cmd, zero_code));
     temp_token         = nohash_primitive("temp", CmdChr(undef_cmd, zero_code));
     endv_token         = nohash_primitive("endv", CmdChr(endv_cmd, zero_code));

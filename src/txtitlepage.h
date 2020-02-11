@@ -51,7 +51,7 @@ public:
     [[nodiscard]] auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
     [[nodiscard]] auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
     [[nodiscard]] auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
-    TitlePageAux() {}
+    TitlePageAux() = default;
     TitlePageAux(TitlePageFullLine &X);
     auto               find_UR(String s, int n) const -> int;
     auto               get_T1() -> string { return T1; }
@@ -119,7 +119,7 @@ class TitlePage {
 public:
     vector<TitlePageAux> bigtable; // the table
     int                  state;    // current state of the parser
-    TitlePage() {}
+    TitlePage() = default;
     auto               operator[](int k) -> Xmlp & { return Data[k]; }
     auto               get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
     [[nodiscard]] auto get_len2() const -> int { return len2; }

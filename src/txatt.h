@@ -12,11 +12,8 @@
 #include "txstring.h"
 
 // This is an attribute list.
-class AttPair {
-public:
-    Istring name;
-    Istring value;
-    AttPair(Istring a, Istring b) : name(a), value(b) {}
+struct AttPair {
+    Istring name, value;
 };
 
 class AttList {
@@ -43,11 +40,10 @@ public:
 // This is a table of AttList. We should use a vector instead
 class AttListTable {
     AttList *table{nullptr}; // the table
-    Xml *    xtable;
+    Xml *    xtable{nullptr};
     int      len{0};  // the length of the table
     int      size{0}; // the size of the table
 public:
-    AttListTable() {}
     void destroy();
     void resize();
     void init();

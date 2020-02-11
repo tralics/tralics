@@ -638,8 +638,8 @@ void Mactab::rc_mac_realloc() {
     int           ns        = k + 400;
     static Macro *empty_mac = nullptr;
     if (!empty_mac) empty_mac = new Macro;
-    Macro **T1 = new Macro *[ns];
-    int *   T2 = new int[ns];
+    auto **T1 = new Macro *[ns];
+    int *  T2 = new int[ns];
     for (int i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];

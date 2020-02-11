@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008
@@ -131,7 +133,7 @@ class LabelInfo {
     string  file_name;      // file of definition
 public:
     LabelInfo() : id(Istring()), name(Istring()), file_name("") {}
-    LabelInfo(Istring k) : used(false), defined(false), id(Istring()), name(k), lineno(0), file_name("") {}
+    LabelInfo(Istring k) : id(Istring()), name(k), file_name("") {}
     [[nodiscard]] auto is_used() const -> bool { return used; }
     [[nodiscard]] auto is_defined() const -> bool { return defined; }
     auto               set_used() -> bool {
@@ -161,7 +163,7 @@ class Splitter {
     int    size;
 
 public:
-    Splitter(const string &w) : S(w), pos(0) { size = S.size(); }
+    Splitter(string w) : S(std::move(w)), pos(0) { size = S.size(); }
     [[nodiscard]] auto at_end() const -> bool { return pos == size; }
     [[nodiscard]] auto count() const -> int;
     auto               get_next_raw() -> String;

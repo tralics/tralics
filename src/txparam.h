@@ -11,6 +11,8 @@
 
 // This is one include  file for the tralics software
 
+#include <utility>
+
 #include "txio.h"
 
 class MainClass {
@@ -259,8 +261,8 @@ public:
     string key;
     string value;
     bool   is_used;
-    ParamDataSlot(string a, string b) : key(a), value(b), is_used(false) {}
-    ParamDataSlot(string a, string b, bool c) : key(a), value(b), is_used(c) {}
+    ParamDataSlot(string a, string b) : key(std::move(a)), value(std::move(b)), is_used(false) {}
+    ParamDataSlot(string a, string b, bool c) : key(std::move(a)), value(std::move(b)), is_used(c) {}
     void               mark_used() { is_used = true; }
     auto               matches(const string &x) -> bool { return is_used && x == key; }
     [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
@@ -277,7 +279,7 @@ public:
 public:
     void check_other();
     auto its_me(const string &s) -> bool { return name == s; }
-    ParamDataList(string s) : name(s) {}
+    ParamDataList(string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(ParamDataSlot x) { data.push_back(x); }
     [[nodiscard]] auto size() const -> int { return data.size(); }

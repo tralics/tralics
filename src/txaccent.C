@@ -353,7 +353,7 @@ void Parser::E_accent_a() {
         parse_error(err_tok, "Bad syntax of \\a, argument not a character ", t, "", "bad accent");
         return;
     }
-    Token Y = Token(t.chr_val() + single_offset);
+    auto Y = Token(t.chr_val() + single_offset);
     token_from_list(Y);
     if (cur_cmd_chr.get_cmd() != accent_cmd) {
         parse_error(err_tok, "Bad syntax of \\a, argument is ", t, "", "bad accent");

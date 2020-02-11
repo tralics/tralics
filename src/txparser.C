@@ -326,9 +326,9 @@ auto Parser::scan_group_del(TokenList &res, const TokenList &L) -> bool {
     int b  = -1;
     for (;;) {
         // First check if L is found
-        TokenList            backup;
-        const_token_iterator C = L.begin();
-        const_token_iterator E = L.end();
+        TokenList backup;
+        auto      C = L.begin();
+        auto      E = L.end();
         for (;;) {
             if (C == E) { // ok found
                 if (b == 0) {
@@ -360,8 +360,8 @@ auto Parser::scan_group_del(TokenList &res, const TokenList &L) -> bool {
 // in the case below, a closing brace is inserted so that no runaway is signaled.
 // \def\tfoo a{} \edef\xx{\tfoo}
 auto Parser::skip_prefix(const TokenList &L) -> bool {
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     while (C != E) {
         Token T = *C;
         ++C;
@@ -1160,9 +1160,9 @@ void Macro::correct_type() {
     if (type == dt_empty) type = dt_normal; // Is this needed ?
     if (type == dt_normal && body.empty() && nbargs == 0) type = dt_empty;
     if (type == dt_optional && nbargs > 1) {
-        const TokenList &    L = delimiters[1];
-        const_token_iterator A = L.begin();
-        const_token_iterator B = L.end();
+        const TokenList &L = delimiters[1];
+        auto             A = L.begin();
+        auto             B = L.end();
         if (A == B) return;
         if (*A != the_parser.hash_table.dblarg_token) return;
         ++A;
@@ -1176,7 +1176,7 @@ void Parser::M_def(bool edef, bool gbl, symcodes what, rd_flag fl) {
     skip_initial_space();
     Token name = cur_tok;
     if (cur_tok.not_a_cmd()) bad_redefinition(2, name);
-    Macro *X = new Macro;
+    auto *X = new Macro;
     {
         SaveErrTok sv(name);
         get_def_nbargs(X, name);
@@ -1194,7 +1194,7 @@ void Parser::M_declare_math_operator() {
     bool  see_star = remove_initial_star();
     Token name     = get_r_token(true);
     if (tracing_commands()) the_log << lg_startbracebs << "DeclareMathOperator " << name << lg_endbrace;
-    Macro *    X = new Macro;
+    auto *     X = new Macro;
     TokenList &L = X->get_body();
     read_mac_body(L, false, 0);
     brace_me(L);
@@ -1457,9 +1457,9 @@ void Parser::expand_mac(Macro &X) {
 // note that Tex uses a completely different method (there is a stack with
 // all arguments of all macros; here we have just one table).
 auto Parser::expand_mac_inner(const TokenList &W, TokenList *arguments) -> TokenList {
-    const_token_iterator C = W.begin();
-    const_token_iterator E = W.end();
-    TokenList            res;
+    auto      C = W.begin();
+    auto      E = W.end();
+    TokenList res;
     while (C != E) {
         Token x = *C;
         ++C;
@@ -2093,18 +2093,18 @@ void Parser::make_token(String s) {
 // new_macro constructs a command without arguments.
 // unless gbl is true, the definition will be local
 void Parser::new_macro(TokenList &L, Token name, bool gbl) {
-    Macro *X = new Macro(L);
+    auto *X = new Macro(L);
     mac_define(name, X, gbl, rd_always, user_cmd);
 }
 void Parser::new_macro(TokenList &L, Token name) {
-    Macro *X = new Macro(L);
+    auto *X = new Macro(L);
     mac_define(name, X, false, rd_always, user_cmd);
 }
 
 void Parser::new_macro(const string &s, Token name) {
     Thbuf1 << bf_reset << s;
     TokenList L = Thbuf1.str_toks11(false);
-    Macro *   X = new Macro(L);
+    auto *    X = new Macro(L);
     mac_define(name, X, false, rd_always, user_cmd);
 }
 
@@ -2113,7 +2113,7 @@ void Parser::new_macro(const string &s, Token name) {
 // Nothing appears in the transcript file.
 
 void Parser::new_prim(Token name, TokenList &L) {
-    Macro *  X = new Macro(L);
+    auto *   X = new Macro(L);
     subtypes B = mac_table.new_macro(X);
     eq_define(name.eqtb_loc(), CmdChr(user_cmd, B), true);
 }
@@ -3050,7 +3050,7 @@ void Parser::E_afterelsefi() {
     TokenList L1 = read_until(T1);
     TokenList L2 = read_until(T2);
     if (tracing_macros()) {
-        the_log << lg_start << cur_tok << "#1\\else#2\\fi->\\fi#1" << lg_end;
+        the_log << lg_start << cur_tok << R"(#1\else#2\fi->\fi#1)" << lg_end;
         the_log << "#1<-" << L1;
         the_log << "#2<-" << L2;
     }
@@ -3255,8 +3255,8 @@ void Parser::M_new_env(rd_flag redef) {
 
 // Common code for \newcommand and \newenv, constructs the macro
 auto Parser::read_latex_macro() -> Macro * {
-    Macro *X = new Macro;
-    int    n = read_mac_nbargs();
+    auto *X = new Macro;
+    int   n = read_mac_nbargs();
     X->set_nbargs(n);
     TokenList op_arg;
     bool      have_op_arg = read_optarg(op_arg);
@@ -4193,7 +4193,7 @@ void Parser::begin_box(int src, subtypes c) {
         return;
     }
     flush_buffer();
-    Istring box_name = Istring("");
+    auto box_name = Istring("");
     if (c == parbox_code) {
         // same arguments as minipage
         ignore_optarg();              // position
@@ -4322,7 +4322,7 @@ void Parser::M_prefixed() {
         flags -= 8;
         b_global = true;
     }
-    symcodes K = symcodes(user_cmd + flags);
+    auto     K = symcodes(user_cmd + flags);
     symcodes C = cur_cmd_chr.get_cmd();
     if (C <= max_non_prefixed_command) {
         if (b_global || flags) prefix_error(b_global, K);

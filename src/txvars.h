@@ -30,7 +30,7 @@ class Parser;
 class TpiOneItem;
 class XmlAction;
 class AttList;
-class AttPair;
+struct AttPair;
 class FpNum;
 class Token;
 class Stats;

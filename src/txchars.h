@@ -19,7 +19,7 @@ private:
 
 public:
     Utf8Char(unsigned int x) : value(x) {}
-    Utf8Char() {}
+    Utf8Char() = default;
 
 public:
     void               make_invalid() { value = 0xFFFF; } // Not a Unicode char

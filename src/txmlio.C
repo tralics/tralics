@@ -84,7 +84,7 @@ auto XmlIO::prun() -> Xmlp {
 
 // This reads the XML file, without conversion
 auto XmlIO::init(const string &name) -> bool {
-    for (int i = 0; i < 128; i++) Type[i] = xt_invalid;
+    for (auto &i : Type) i = xt_invalid;
     for (int i = '0'; i <= '9'; i++) Type[i] = xt_digit;
     for (int i = 'a'; i <= 'z'; i++) Type[i] = xt_letter;
     for (int i = 'A'; i <= 'Z'; i++) Type[i] = xt_letter;
@@ -246,7 +246,7 @@ void XmlIO::parse_lt() {
 void XmlIO::parse_end() {
     scan_name();
     skip_space();
-    Istring ref = Istring(B);
+    auto ref = Istring(B);
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
         cout << "Got " << ref << ", Expected " << cur_xml->get_name() << "\n";
@@ -328,9 +328,9 @@ void XmlIO::parse_attributes() {
         }
         // Now we have an attribute pair
         scan_name();
-        Istring att_name = Istring(B);
+        auto att_name = Istring(B);
         parse_att_val();
-        Istring att_val = Istring(B);
+        auto att_val = Istring(B);
         cur_xml->get_id().add_attribute(att_name, att_val);
     }
 }
@@ -543,7 +543,7 @@ void XmlIO::parse_dec_entity() {
     if (!parse_sys_pub()) {
         parse_quoted();
         aux << " '" << B << "'";
-        if (parameter) entities.push_back(EntityDef(name, B.to_string()));
+        if (parameter) entities.emplace_back(name, B.to_string());
     }
     skip_space();
     // We might have NDATA here, if parameter==false

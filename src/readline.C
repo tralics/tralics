@@ -180,7 +180,7 @@ Slined::Slined(int sz, String P) : m_prompt("> "), m_hpos(0) {
     for (int i = 0; i < buf_size; i++) m_buffer[i] = ' ';
     if (sz) m_inbuf = new char[sz];
     if (P) {
-        m_history.push_back(P);
+        m_history.emplace_back(P);
         m_history_size = 1; // first line is a comment
     }
 }
@@ -494,9 +494,9 @@ void Slined::toggle_char() {
     if (c1 == c2) // we can  hack
         rl_move(pos, pos + 1);
     else {
-        rl_delete(1); // must delete 2 chars and insert 2 chars
+        rl_delete(true); // must delete 2 chars and insert 2 chars
         rl_move(pos, pos - 1);
-        rl_delete(1);
+        rl_delete(true);
         insert(1, c2);
         insert(1, c1);
     }
@@ -520,7 +520,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
     if (sw) {
         rl_move(m_inpos, debut);
         for (int i = 0; i < taille; i++)
-            if (m_inpos < m_inmax) rl_delete(0);
+            if (m_inpos < m_inmax) rl_delete(false);
         redisplay();
     }
 }
@@ -747,7 +747,7 @@ void Slined::replace_string() {
 // If the line is not empty, it is stored in the history.
 void Slined::store_line() {
     if (m_inmax > 0) {
-        m_history.push_back(string(m_inbuf, m_inmax));
+        m_history.emplace_back(m_inbuf, m_inmax);
         m_history_size++;
     }
 }
@@ -891,12 +891,12 @@ void Slined::do_n_command(int n, unsigned char c) {
         for (aux = 0; aux < n; aux++) {
             rl_move(pos, pos - 1);
             pos--;
-            rl_delete(1);
+            rl_delete(true);
         }
         return;
     case 4:
         for (aux = 0; aux < n; aux++) {
-            if (pos < m_inmax) rl_delete(1);
+            if (pos < m_inmax) rl_delete(true);
         }
         return;
     case 11: delete_string(1, pos, max); return;

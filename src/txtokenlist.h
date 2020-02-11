@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm)  2006, 2007,2008
@@ -62,7 +64,7 @@ public:
     TokenList value;
 
 public:
-    FpGenList(TokenList A) : value(A) {}
+    FpGenList(TokenList A) : value(std::move(A)) {}
     void add_last_space(String);
     void add_last_space(TokenList &, String);
     auto find_str(int &n) const -> Token;
@@ -105,8 +107,8 @@ class Macro {
     TokenList delimiters[10];  // deleimiters bewtween arguments
     TokenList body;            // the body
 public:
-    Macro() {}
-    Macro(TokenList L) : nbargs(0), type(dt_normal), body(L) { correct_type(); }
+    Macro() = default;
+    Macro(TokenList L) : body(std::move(L)) { correct_type(); }
     // other methods
     [[nodiscard]] auto get_type() const -> def_type { return type; }
     [[nodiscard]] auto get_nbargs() const -> int { return nbargs; }
@@ -134,7 +136,8 @@ private:
     void rc_mac_realloc();
 
 public:
-    Mactab(){};
+    Mactab() = default;
+    ;
     void incr_macro_ref(int c) { rc_table[c]++; }
     void delete_macro_ref(int i);
     auto get_macro(int k) -> Macro & { return *table[k]; }

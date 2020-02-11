@@ -10,6 +10,8 @@
 
 // This file contains a big part of the Tralics translator
 
+#include <utility>
+
 #include "tralics.h"
 
 extern void readline_newprompt(string s);
@@ -410,7 +412,7 @@ void Parser::T_xmlelt(subtypes w) {
         return;
     }
     leave_v_mode();
-    Istring name = Istring("xmlelt");
+    auto name = Istring("xmlelt");
     the_stack.push(name, res);
     T_arg();
     the_stack.pop(name);
@@ -943,7 +945,7 @@ void Parser::includegraphics(subtypes C) {
             AL.push_back(Istring(skey), Istring(B), true);
         } else if (skey == "bb" || skey == "viewport" || skey == "trim") {
             TokenList aux;
-            Token     SP = Token(space_token_val);
+            auto      SP = Token(space_token_val);
             for (int i = 0; i < 4; i++) {
                 token_ns::remove_initial_spaces(val);
                 val.push_back(SP);
@@ -1020,7 +1022,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 //  Colors.
 // This creates a new color item, to be pushed on the color stack
 // Note that used is false, set to true by get_id.
-ColSpec::ColSpec(string a, string b, string c) : name(a), model(b), value(c), used(false) {
+ColSpec::ColSpec(string a, string b, string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
     xval = new Xml(np_color, nullptr);
     if (!name.empty()) xval->get_id().add_attribute(Istring("name"), Istring(name));
     xval->get_id().add_attribute(Istring("model"), Istring(model));
@@ -1581,7 +1583,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
 auto Parser::tpa_exec(String cmd) -> Xmlp {
     mode m = the_stack.get_mode();
     the_stack.set_arg_mode();
-    Istring Y = Istring(cmd);
+    auto Y = Istring(cmd);
     the_stack.push(Y, new Xml(Istring(), nullptr));
     tpa_buffer << bf_reset << cmd;
     finish_csname(tpa_buffer, cmd);
@@ -1677,9 +1679,9 @@ void Parser::T_case_shift(int c) {
         pop_level(bt_brace);
     }
     if (tracing_commands()) the_log << lg_startbrace << T << "(a)->" << L << lg_endbrace;
-    token_iterator P = L.begin();
-    token_iterator E = L.end();
-    TokenList      res;
+    auto      P = L.begin();
+    auto      E = L.end();
+    TokenList res;
     while (P != E) {
         Token a = *P;
         ++P;

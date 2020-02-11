@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008
@@ -16,7 +18,7 @@ class EntityDef {
     string value;
 
 public:
-    EntityDef(string a, string b) : name(a), value(b) {}
+    EntityDef(string a, string b) : name(std::move(a)), value(std::move(b)) {}
     [[nodiscard]] auto has_name(const string &x) const -> bool { return x == name; }
     auto               get_val() -> string { return value; }
 };

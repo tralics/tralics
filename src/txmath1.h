@@ -54,7 +54,7 @@ public:
 
 class MathPAuxSmall : public unary_function<MathPAux, bool> {
 public:
-    explicit MathPAuxSmall() {}
+    explicit MathPAuxSmall() = default;
     auto operator()(const MathPAux &m) -> bool { return m.is_small(); }
 };
 
@@ -84,10 +84,10 @@ private:
 
 // Helper for finding start and end of <mrow>
 class MathF {
-    bool      state;
+    bool      state{true};
     bool      t_big;
-    int       next_change;
-    int       next_finish;
+    int       next_change{-1};
+    int       next_finish{-1};
     MathQList aux;
     MathList  res;
     Xmlp      t;

@@ -28,16 +28,14 @@ auto AttList::has_value(Istring x) const -> int {
 auto Xid::has_attribute(Istring n) -> Istring {
     AttList &X = get_att();
     int      i = X.has_value(n);
-    if (i >= 0)
-        return X.get_val(i);
-    else
-        return Istring();
+    if (i >= 0) return X.get_val(i);
+    return Istring();
 }
 
 // Return true if this id has special attribute pair.
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
-    Istring n = Istring(cst_flaghi);
+    Istring n(cst_flaghi);
     return get_att().has_value(n) != -1;
 }
 
@@ -52,7 +50,7 @@ void AttList::push_back(Istring a, Istring b, bool force) {
         if (force) val[T].value = b;
         return;
     }
-    val.push_back(AttPair(a, b));
+    val.push_back({a, b});
 }
 
 // Same function with a name_positions instead of an istring

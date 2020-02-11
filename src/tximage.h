@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007,2008
@@ -17,8 +19,8 @@ public:
     int    occ;   // number of occurences
     int    flags; // existence flags
 public:
-    Image() {}
-    Image(string N, int oc_val) : name(N), occ(oc_val), flags(0) {}
+    Image() = default;
+    Image(string N, int oc_val) : name(std::move(N)), occ(oc_val), flags(0) {}
     auto file_exists(String) -> bool;
     void check_existence();
     void check();

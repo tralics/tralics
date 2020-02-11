@@ -626,8 +626,8 @@ void Parser::pop_all_levels() {
         SaveAux *tmp = the_save_stack.back();
         cout << to_string(tmp->type) << " at " << tmp->line_no << "\n";
         if (tmp->type == st_env) {
-            SaveAuxEnv *q = static_cast<SaveAuxEnv *>(tmp);
-            ename         = q->get_name();
+            auto *q = static_cast<SaveAuxEnv *>(tmp);
+            ename   = q->get_name();
         }
         if (tmp->type == st_boundary) {
             boundary_type w = static_cast<SaveAuxBoundary *>(tmp)->get_val();
@@ -697,7 +697,7 @@ auto Parser::is_env_on_stack(const string &s) -> SaveAuxEnv * {
     for (int i = n - 1; i >= 0; i--) {
         SaveAux *p = the_save_stack[i];
         if (p->type != st_env) continue;
-        SaveAuxEnv *q = static_cast<SaveAuxEnv *>(p);
+        auto *q = static_cast<SaveAuxEnv *>(p);
         if (q->get_name() == s) return q;
     }
     return nullptr;

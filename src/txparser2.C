@@ -793,7 +793,7 @@ void Parser::define_cmd_key(subtypes c) {
         L.push_front(hash_table.locate("def"));
         brace_me(L);
         back_input(L);
-        Macro *X = new Macro;
+        auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
         read_mac_body(X->get_body(), false, 1);
@@ -960,7 +960,7 @@ void Parser::define_bool_key(subtypes c) {
         L.push_front(hash_table.xkv_cc_token);
         brace_me(L);
         back_input(L);
-        Macro *X = new Macro;
+        auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
         read_mac_body(X->get_body(), false, 1);
@@ -1020,7 +1020,7 @@ void Parser::disable_keys() {
             TokenList L = B.str_toks(nlt_space); // should be irrelevant
             brace_me(L);
             L.push_front(hash_table.xkv_warn_token);
-            Macro *X = new Macro(L);
+            auto *X = new Macro(L);
             X->set_nbargs(1);
             X->set_type(dt_normal);
             mac_define(T, X, false, rd_always, user_cmd);
@@ -1051,11 +1051,11 @@ auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
 // Otherwise we look for \savevalue or \gsavevalue, skip equals.
 // We set some booleans
 auto xkv_ns::find_key_of(const TokenList &L, int type) -> string {
-    Hashtab &            H      = the_parser.hash_table;
-    Token                equals = H.equals_token;
-    const_token_iterator C      = L.begin();
-    const_token_iterator E      = L.end();
-    TokenList            x; // will hold the tokens
+    Hashtab & H      = the_parser.hash_table;
+    Token     equals = H.equals_token;
+    auto      C      = L.begin();
+    auto      E      = L.end();
+    TokenList x; // will hold the tokens
     while (C != E) {
         if (*C == equals) break;
         x.push_back(*C);
@@ -1190,7 +1190,7 @@ void Parser::internal_define_key_default(Token T, TokenList &L) {
 
 // This is like \def\T#1, optimised
 void Parser::internal_define_key(Token T) {
-    Macro *X = new Macro;
+    auto *X = new Macro;
     X->set_nbargs(1);
     X->set_type(dt_normal);
     read_mac_body(X->get_body(), false, 1);
@@ -1261,9 +1261,9 @@ void Parser::xkv_fetch_prefix_family() {
 }
 
 void token_ns::lower_case(TokenList &L) {
-    token_iterator P      = L.begin();
-    token_iterator E      = L.end();
-    int            offset = lc_code_offset;
+    auto P      = L.begin();
+    auto E      = L.end();
+    int  offset = lc_code_offset;
     while (P != E) {
         Token a = *P;
         if (a.get_val() < single_offset) {
@@ -1491,8 +1491,8 @@ void Parser::setkeys(bool c) {
 }
 
 auto xkv_ns::is_Gin(const TokenList &x) -> bool {
-    const_token_iterator C = x.begin();
-    const_token_iterator E = x.end();
+    auto C = x.begin();
+    auto E = x.end();
     if (C == E) return false;
     if (*C != Token(letter_t_offset, 'G')) return false;
     ++C;
@@ -2314,14 +2314,14 @@ auto Parser::optional_enumerate(TokenList &L, String ctr) -> bool {
         res.push_back(the_ctr);
     }
     if (cmd == H.relax_token) return false; // Invalid argument, no warning ?
-    Macro *X = new Macro(res);
-    Token  t = hash_table.itemlabel_token;
+    auto *X = new Macro(res);
+    Token t = hash_table.itemlabel_token;
     mac_define(t, X, false, rd_always, user_cmd);
     B << bf_reset << ctr;
     TokenList the_ctr_value = B.str_toks11(true);
     brace_me(the_ctr_value);
     the_ctr_value.push_front(cmd);
-    Macro *Y = new Macro(the_ctr_value);
+    auto *Y = new Macro(the_ctr_value);
     mac_define(the_ctr, Y, false, rd_always, user_cmd);
     return true;
 }
@@ -2372,7 +2372,7 @@ void Parser::T_listenv(symcodes x) {
     }
     if (x == list_cmd) {
         TokenList L = read_arg();
-        Macro *   X = new Macro(L);
+        auto *    X = new Macro(L);
         mac_define(t, X, false, rd_always, user_cmd);
         TokenList L2 = read_arg();
         back_input(L2); // remove a pair of braces here

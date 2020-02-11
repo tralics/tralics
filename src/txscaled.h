@@ -12,13 +12,15 @@
 // This defines the classes: ScaledInt, Glue, RealNumber,
 // SthInternal ScanSlot TexRule
 
+#include <utility>
+
 #include "txtokenlist.h"
 
 // this is a wrapper around an int
 class ScaledInt {
     int value{0}; // the integer, considered as a scaled number
 public:
-    ScaledInt() {}
+    ScaledInt() = default;
     void set_value(int i) { value = i; }
     ScaledInt(int v) : value(v) {}
     [[nodiscard]] auto get_value() const -> int { return value; }
@@ -50,7 +52,7 @@ class Glue {
     glue_spec shrink_order{glue_spec_pt};  // fill, symbolically
     glue_spec stretch_order{glue_spec_pt}; // pt, symbolically
 public:
-    Glue() {}
+    Glue() = default;
     [[nodiscard]] auto get_width() const -> ScaledInt { return width; }
     [[nodiscard]] auto get_shrink() const -> ScaledInt { return shrink; }
     [[nodiscard]] auto get_stretch() const -> ScaledInt { return stretch; }
@@ -89,7 +91,7 @@ public:
     [[nodiscard]] auto get_fpart() const -> int { return fpart; }
     void               change_sign() { negative = !negative; }
     void               set_negative(bool x) { negative = x; }
-    RealNumber() {}
+    RealNumber() = default;
     void set_neg() { negative = true; }
     void change_sign_i() { ipart = -ipart; }
     auto get_negative() -> bool { return negative; };
@@ -193,8 +195,8 @@ public:
 
 public:
     ScanSlot(internal_type L, SthInternal E, SthInternal T, scan_expr_t R, scan_expr_t S, int N)
-        : expr_type(L), expr_so_far(E), term_so_far(T), expr_state(R), term_state(S), numerator(N) {}
-    ScanSlot() {}
+        : expr_type(L), expr_so_far(std::move(E)), term_so_far(std::move(T)), expr_state(R), term_state(S), numerator(N) {}
+    ScanSlot() = default;
     [[nodiscard]] auto get_next_type() const -> internal_type { return term_state == se_none ? expr_type : it_int; }
     void               kill();
     void               compute_term(scan_expr_t &next_state, SthInternal f, char &);

@@ -16,7 +16,7 @@ class ModChecker {
     bool    has_info{false}; // does this have some infos ?
 public:
     ModChecker() : id(0) {}
-    ModChecker(Istring I, bool mod) : id(I), is_mod(mod), has_info(false) {}
+    ModChecker(Istring I, bool mod) : id(I), is_mod(mod) {}
     void set(Istring I) {
         if (id == I) has_info = true;
     }

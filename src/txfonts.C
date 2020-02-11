@@ -428,7 +428,7 @@ void TexFonts::set_dimen_param(int ft, int p, ScaledInt v) {
 void TexFont::realloc_param(int p) {
     int k = 1;
     while (p >= k) k *= 2;
-    ScaledInt *T = new ScaledInt[k];
+    auto *T = new ScaledInt[k];
     for (int i = 0; i < k; i++) T[i].set_value(0);
     for (int i = 0; i < param_len; i++) T[i] = param_table[i];
     if (param_table) delete[] param_table;

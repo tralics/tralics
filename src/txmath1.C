@@ -42,8 +42,8 @@ void MathPAux::print(ostream &fp) const {
 // This prints the whole MathP list on the stream
 
 auto operator<<(ostream &fp, const MathP &X) -> ostream & {
-    const_math_p_iterator C = X.value.begin();
-    const_math_p_iterator E = X.value.end();
+    auto C = X.value.begin();
+    auto E = X.value.end();
     while (C != E) {
         C->print(fp);
         ++C;
@@ -54,8 +54,8 @@ auto operator<<(ostream &fp, const MathP &X) -> ostream & {
 // This prints the whole MathQ list on the stream
 
 auto operator<<(ostream &fp, const MathQList &X) -> ostream & {
-    MathQList::const_iterator C = X.begin();
-    MathQList::const_iterator E = X.end();
+    auto C = X.begin();
+    auto E = X.end();
     while (C != E) {
         C->print(fp);
         ++C;
@@ -67,9 +67,9 @@ auto operator<<(ostream &fp, const MathQList &X) -> ostream & {
 
 // Returns true if there is a small.
 auto MathP::has_small() const -> bool {
-    const_math_p_iterator B = value.begin();
-    const_math_p_iterator E = value.end();
-    const_math_p_iterator C = find_if(B, E, MathPAuxSmall());
+    auto B = value.begin();
+    auto E = value.end();
+    auto C = find_if(B, E, MathPAuxSmall());
     return C != E;
 }
 
@@ -92,14 +92,14 @@ auto MathP::has_small() const -> bool {
 // Returns an empty list in the case $(\frac12)$.
 
 void Math::find_paren0(MathP &aux) const {
-    int                 unbalance  = 0;
-    bool                seen_big   = false;
-    bool                inner_big  = false;
-    bool                seen_small = false;
-    int                 i          = 0;
-    const_math_iterator L          = value.begin();
-    const_math_iterator E          = value.end();
-    int                 nb_pairs   = 0;
+    int  unbalance  = 0;
+    bool seen_big   = false;
+    bool inner_big  = false;
+    bool seen_small = false;
+    int  i          = 0;
+    auto L          = value.begin();
+    auto E          = value.end();
+    int  nb_pairs   = 0;
     while (L != E) { // create the list of indices
         if (L->get_cmd() == math_xml_cmd) {
             math_types t    = L->get_xmltype();
@@ -151,9 +151,9 @@ void Math::find_paren0(MathP &aux) const {
 // The next function returns true if the formula is acceptable if we split
 // at:  rel and bin if w is true, rel if w is false.
 auto MathP::analyse1(bool w) const -> bool {
-    int                   nb_small = 0;
-    const_math_p_iterator C        = value.begin();
-    const_math_p_iterator E        = value.end();
+    int  nb_small = 0;
+    auto C        = value.begin();
+    auto E        = value.end();
     while (C != E) {
         math_types t = C->get_type();
         ++C;
@@ -198,11 +198,11 @@ auto MathP::find_big(int &k) -> MathP {
 // 2 delims only, a big between them, no big ouside.
 //  assumes that there is a big at the end of the list (ignored)
 auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
-    const_math_p_iterator B = value.begin();
-    const_math_p_iterator E = value.end();
-    seen_d1                 = -1;
-    seen_d2                 = -1;
-    bool seen_big           = false;
+    auto B        = value.begin();
+    auto E        = value.end();
+    seen_d1       = -1;
+    seen_d2       = -1;
+    bool seen_big = false;
     ;
     if (B == E) return false;
     for (;;) {
@@ -229,10 +229,10 @@ auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
 }
 
 auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
-    const_math_p_iterator B = value.begin();
-    const_math_p_iterator E = value.end();
-    seen_d1                 = -1;
-    seen_d2                 = -1;
+    auto B  = value.begin();
+    auto E  = value.end();
+    seen_d1 = -1;
+    seen_d2 = -1;
     if (B == E) return false;
     for (;;) {
         if (B == E) break;
@@ -254,10 +254,10 @@ auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
 // Return true if Pairing is OK.
 // Handles the case of brakets (\langle  a \mid b\rangle)
 auto MathP::find_paren_matched1() const -> bool {
-    const_math_p_iterator B         = value.begin();
-    const_math_p_iterator E         = value.end();
-    bool                  is_out    = true;
-    bool                  allow_mid = false;
+    auto B         = value.begin();
+    auto E         = value.end();
+    bool is_out    = true;
+    bool allow_mid = false;
     for (;;) {
         if (B == E) return is_out;
         if (B->get_type() == mt_flag_small_m) {
@@ -278,9 +278,9 @@ auto MathP::find_paren_matched1() const -> bool {
 }
 
 void MathP::find_paren_matched2(MathQList &res) const {
-    const_math_p_iterator B = value.begin();
-    const_math_p_iterator E = value.end();
-    int                   k = 0;
+    auto B = value.begin();
+    auto E = value.end();
+    int  k = 0;
     aux_buffer.reset();
     while (B != E) {
         if (B->get_type() == mt_flag_small_l) k = B->get_pos();
@@ -293,11 +293,11 @@ void MathP::find_paren_matched2(MathQList &res) const {
 }
 
 auto MathP::find_paren_rec(MathQList &res) const -> bool {
-    const_math_p_iterator B     = value.begin();
-    const_math_p_iterator E     = value.end();
-    int                   level = 0, p = -1;
-    bool                  allow_mid = false;
-    bool                  retval    = false;
+    auto B     = value.begin();
+    auto E     = value.end();
+    int  level = 0, p = -1;
+    bool allow_mid = false;
+    bool retval    = false;
     for (;;) {
         if (B == E) return retval;
         if (B->get_type() == mt_flag_small_m) {
@@ -564,13 +564,13 @@ void MathF::finish(MathList &value) {
     value.swap(res);
 }
 
-MathF::MathF() : state(true), next_change(-1), next_finish(-1) {}
+MathF::MathF() {}
 
 // debug
 void MathF::dump_aux() {
     if (aux.empty()) return;
-    std::list<MathQ>::const_iterator C = aux.begin();
-    std::list<MathQ>::const_iterator E = aux.end();
+    auto C = aux.begin();
+    auto E = aux.end();
     while (C != E) {
         C->print(cout);
         ++C;
@@ -810,8 +810,8 @@ void MathElt::cv_noML_special() {
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
         c == mathcsymbol_code || c == multiscripts_code || c == mathbox_code) {
-        const_math_iterator X = L.begin();
-        const_math_iterator Y = L.end();
+        auto X = L.begin();
+        auto Y = L.end();
         ++X;
         for (;;) {
             if (X == Y) break;
@@ -846,7 +846,7 @@ void MathElt::cv_noML_special() {
     }
     if (c == genfrac_code) {
         if (L.empty()) return;
-        del_pos k = del_pos(L.front().get_chr());
+        auto k = del_pos(L.front().get_chr());
         if (k == del_dot)
             mathml_buffer.push_back("{}");
         else
@@ -859,7 +859,7 @@ void MathElt::cv_noML_special() {
         else
             math_ns::insert_delimiter(k);
         L.pop_front();
-        Istring sz = Istring(L.front().get_chr());
+        auto sz = Istring(L.front().get_chr());
         mathml_buffer << '{' << sz << '}';
         L.pop_front();
         if (L.front().get_cmd() == style_cmd) {
@@ -912,8 +912,8 @@ void MathElt::cv_noMLt_special0() {
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
         c == mathcsymbol_code || c == multiscripts_code || c == mathbox_code) {
-        const_math_iterator X = L.begin();
-        const_math_iterator Y = L.end();
+        auto X = L.begin();
+        auto Y = L.end();
         ++X;
         mathml_buffer.remove_last();
         for (;;) {
@@ -951,7 +951,7 @@ void MathElt::cv_noMLt_special0() {
     if (c == genfrac_code) {
         if (L.empty()) return;
         mathml_buffer.remove_last();
-        del_pos k = del_pos(L.front().get_chr());
+        auto k = del_pos(L.front().get_chr());
         if (k != del_dot) {
             att_buffer.reset();
             math_ns::insert_delimiter_t(k);
@@ -968,7 +968,7 @@ void MathElt::cv_noMLt_special0() {
             L.pop_front();
         }
         if (!L.empty()) {
-            Istring sz = Istring(L.front().get_chr());
+            auto sz = Istring(L.front().get_chr());
             att_buffer.reset();
             att_buffer << sz;
             if (!att_buffer.empty()) mathml_buffer << " size='" << att_buffer << "'";
@@ -1213,7 +1213,7 @@ void MathElt::cv_noML() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        Istring w = Istring(name_positions(np_mml_normal + c));
+        auto w = Istring(name_positions(np_mml_normal + c));
         if (w.empty()) return;
         ;
         mathml_buffer.push_back("\\");
@@ -1269,7 +1269,7 @@ void MathElt::cv_noMLt() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        Istring w = Istring(name_positions(np_mml_normal + c));
+        auto w = Istring(name_positions(np_mml_normal + c));
         if (w.empty()) return;
         mathml_buffer << "<font name='" << w.p_str() << "'/>";
         return;
@@ -1288,7 +1288,7 @@ void MathElt::cv_noMLt() {
         cv_noMLt_list();
         return;
     case relax_cmd: {
-        Token  T = Token(get_font());
+        auto   T = Token(get_font());
         int    x = T.hash_loc();
         String s = x < 0 ? "Strange." : the_parser.hash_table[x];
         mathml_buffer.push_back_math_tag(s, pbm_empty);
@@ -1356,8 +1356,8 @@ auto Math::convert_math_noML(bool spec) -> Xmlp {
 
 // True if the list contains only digits, that are put in the buffer.
 auto Math::only_digits(Buffer &B) const -> bool {
-    const_math_iterator L = value.begin();
-    const_math_iterator E = value.end();
+    auto L = value.begin();
+    auto E = value.end();
     if (L == E) return false;
     for (;;) {
         if (L == E) return true;
@@ -1375,8 +1375,8 @@ auto Math::only_digits(Buffer &B) const -> bool {
 // is not reset !!
 auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
     if (!rec) B.reset();
-    const_math_iterator L = value.begin();
-    const_math_iterator E = value.end();
+    auto L = value.begin();
+    auto E = value.end();
     for (;;) {
         if (L == E) return true;
         // DEBUG    cout << "cmd:" << B << ".\n";
@@ -1414,8 +1414,8 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
 // Slightly modified procedure.
 auto Math::chars_to_mb1(Buffer &B) const -> bool {
     B.reset();
-    const_math_iterator L = value.begin();
-    const_math_iterator E = value.end();
+    auto L = value.begin();
+    auto E = value.end();
     for (;;) {
         if (L == E) return true;
         CmdChr w = L->get_cmd_chr();
@@ -1438,8 +1438,8 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
 // Slightly modified procedure. First token is ignored
 auto Math::chars_to_mb2(Buffer &B) const -> bool {
     B.reset();
-    const_math_iterator L = value.begin();
-    const_math_iterator E = value.end();
+    auto L = value.begin();
+    auto E = value.end();
     if (L == E) return false;
     ++L;
     if (L == E) return false;
@@ -1576,8 +1576,8 @@ auto Math::remove_req_arg() -> string {
 }
 
 auto Math::remove_req_arg_noerr() const -> string {
-    const_math_iterator C = value.begin();
-    const_math_iterator E = value.end();
+    auto C = value.begin();
+    auto E = value.end();
     while (C != E && C->is_space()) ++C;
     if (C == E) return "empty";
     if (!C->is_list()) return "not-list";
@@ -1606,9 +1606,9 @@ auto math_ns::make_sup(Xmlp xval) -> Xmlp {
 // of digits, OK is true, res the value of X.
 
 void Math::special2(bool &ok, Xmlp &res) const {
-    const_math_iterator L = value.begin();
-    const_math_iterator E = value.end();
-    Buffer &            B = aux_buffer;
+    auto    L = value.begin();
+    auto    E = value.end();
+    Buffer &B = aux_buffer;
     B.reset();
     while (L != E) {
         if (L->get_cmd() == hat_catcode) {

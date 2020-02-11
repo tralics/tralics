@@ -189,7 +189,7 @@ auto ParamDataVector::find_list(const string &name, bool creat) -> ParamDataList
     for (int i = 0; i < n; i++)
         if (data[i]->its_me(name)) return data[i];
     if (!creat) return nullptr;
-    ParamDataList *res = new ParamDataList(name);
+    auto *res = new ParamDataList(name);
     data.push_back(res);
     return res;
 }
@@ -509,9 +509,9 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
         ptr1     = a;
         string k = substring();
         if (keep)
-            bib.push_back(Istring(k));
+            bib.emplace_back(k);
         else
-            bib2.push_back(Istring(k));
+            bib2.emplace_back(k);
         the_log << k << " ";
     }
     the_log << "\n";

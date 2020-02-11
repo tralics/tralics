@@ -38,7 +38,7 @@ auto math_ns::get_builtin_alt(int p) -> Xmlp { return math_data.get_builtin_alt(
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
-    for (int i = 0; i < 128; i++) single_chars[i] = nullptr;
+    for (auto &single_char : single_chars) single_char = nullptr;
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(the_names[np_letter_a + x - 'a']); }
     for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(the_names[np_letter_A + x - 'A']); }
 }
@@ -212,8 +212,8 @@ void math_ns::fill_math_char_slots_ent() {
 }
 
 void math_ns::fill_math_char_slots() {
-    for (int i = 0; i < 128; i++)
-        for (int j = 0; j < 15; j++) math_chars[i][j] = "";
+    for (auto &math_char : math_chars)
+        for (int j = 0; j < 15; j++) math_char[j] = "";
     // Position 0 : normal
     math_chars[uchar('A')][math_f_normal] = "A";
     math_chars[uchar('B')][math_f_normal] = "B";
@@ -1313,7 +1313,7 @@ void MathDataP::mk_ic(String name, String ent, String ent2, math_loc pos) { mk_g
 
 // Case where the symbol has a bold variant
 void MathDataP::mk_icb(String name, String ent, String ent2, math_loc pos) {
-    math_loc pos2 = math_loc(pos - alpha_code + alpha_bcode);
+    auto pos2 = math_loc(pos - alpha_code + alpha_bcode);
     mk_gen(name, ent, ent2, pos, pos2, cst_mi, mathord_cmd, true);
 }
 
@@ -1546,8 +1546,8 @@ void MathDataP::boot2() {
 
 void MathDataP::boot() {
     no_ent_names = the_main->use_noent_names();
-    for (int i = 0; i < last_math_loc; i++) built_in_table[i] = nullptr;
-    for (int i = 0; i < last_math_loc; i++) built_in_table_alt[i] = nullptr;
+    for (auto &i : built_in_table) i = nullptr;
+    for (auto &i : built_in_table_alt) i = nullptr;
     boot_table();
     fill_single_char();
     fill_math_char_slots();

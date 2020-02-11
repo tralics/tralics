@@ -25,7 +25,7 @@ public:
     [[nodiscard]] auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
     [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto is_same_lower_old(const CitationKey &w) const -> bool;
-    CitationKey() {}
+    CitationKey() = default;
     CitationKey(String, String);
     CitationKey(bib_from, String);
     [[nodiscard]] auto get_name() const -> string { return full_key; }
@@ -79,7 +79,7 @@ public:
     [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() -> int { return biblio_src.size(); }
-    void               push_back_src(String x) { biblio_src.push_back(string(x)); }
+    void               push_back_src(String x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
     void               set_cmd(string x) { bib_cmd = x; }
     void               set_location(Xmlp X, bool f) {
@@ -103,7 +103,7 @@ public:
     void set_value(string v) { value = v; }
     auto get_value() -> string { return value; }
     void set_default_value() { value = name; }
-    BibMacro() {}
+    BibMacro() = default;
     BibMacro(int hash, Buffer &s1) : h(hash), name(s1.to_string()) {}
     BibMacro(int hash, String &s1, String s2) : h(hash), name(s1), value(s2) {}
 };

@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) 2003-2004 2006, 2007 INRIA, Jos\'e Grimm
@@ -108,19 +110,19 @@ private:
 
 class MathIsSpace : public unary_function<MathElt, bool> {
 public:
-    explicit MathIsSpace() {}
+    explicit MathIsSpace() = default;
     auto operator()(const MathElt &m) -> bool { return m.is_space(); }
 };
 
 class MathIsDollar : public unary_function<MathElt, bool> {
 public:
-    explicit MathIsDollar() {}
+    explicit MathIsDollar() = default;
     auto operator()(const Token &m) -> bool { return m.is_math_shift(); }
 };
 
 class MathIsOver : public unary_function<MathElt, bool> {
 public:
-    explicit MathIsOver() {}
+    explicit MathIsOver() = default;
     auto operator()(const MathElt &m) -> bool { return m.get_cmd() == over_cmd; }
 };
 
@@ -137,7 +139,7 @@ class Math {
     subtypes       sname{nomathenv_code};
 
 public:
-    Math() {}
+    Math() = default;
 
 public:
     [[nodiscard]] auto duplicate(bool) const -> subtypes;
@@ -420,7 +422,7 @@ class Cv3Helper {
 
 public:
     int state;
-    Cv3Helper(Math X) : object(X), special(false) {}
+    Cv3Helper(Math X) : object(std::move(X)), special(false) {}
     void reinit();
     void non_script();
     void find_kernel();
@@ -464,7 +466,7 @@ namespace math_ns {
 //  Some inline functions
 
 inline auto Math::has_two_elements() const -> bool {
-    const_math_iterator X = value.begin();
+    auto X = value.begin();
     if (X == value.end()) return false;
     ++X;
     if (X == value.end()) return false;
@@ -472,7 +474,7 @@ inline auto Math::has_two_elements() const -> bool {
 }
 
 inline auto Math::has_one_element() const -> bool {
-    const_math_iterator X = value.begin();
+    auto X = value.begin();
     if (X == value.end()) return false;
     ++X;
     if (X == value.end()) return true;
@@ -480,13 +482,13 @@ inline auto Math::has_one_element() const -> bool {
 }
 
 inline auto Math::second_element() const -> const MathElt & {
-    const_math_iterator X = value.begin();
+    auto X = value.begin();
     ++X;
     return *X;
 }
 
 inline auto Math::third_element() const -> const MathElt & {
-    const_math_iterator X = value.begin();
+    auto X = value.begin();
     ++X;
     ++X;
     return *X;

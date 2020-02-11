@@ -65,7 +65,7 @@ void Parser::signal_error(Token T, String s) {
     signal_error();
     if (main_ns::no_xml_error) return;
     if (T.is_null()) return;
-    Istring str = Istring(s);
+    auto str = Istring(s);
     the_stack.add_newid0(np_error);
     Istring cmd = local_buf.convert_for_xml_err(T);
     the_stack.add_att_to_last(np_letter_c, str);
@@ -75,10 +75,10 @@ void Parser::signal_error(Token T, String s) {
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)
 void err_ns::convert_to_string(const TokenList &L) {
-    Buffer &             B = local_buf;
-    static Buffer        buffer_for_log;
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    Buffer &      B = local_buf;
+    static Buffer buffer_for_log;
+    auto          C = L.begin();
+    auto          E = L.end();
     while (C != E) {
         buffer_for_log.reset();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';

@@ -81,7 +81,7 @@ class CmdChr {
 public:
     CmdChr(symcodes a, subtypes b) : cmd(a), chr(b) {}
     explicit CmdChr(uchar b) : cmd(other_catcode), chr(subtypes(b)) {}
-    CmdChr() {}
+    CmdChr() = default;
     void reset() {
         cmd = undef_cmd;
         chr = zero_code;
@@ -239,7 +239,7 @@ public:
     Token(spec_offsets a, Utf8Char b) : val(a + b.get_value()) {}
     Token(spec_offsets a, uchar b) : val(a + b) {}
     explicit Token(Utf8Char c) : val(c.get_value() + single_offset) {}
-    Token() {}
+    Token() = default;
 
     [[nodiscard]] auto get_val() const -> uint { return val; }
 

@@ -108,9 +108,9 @@ auto token_ns::check_brace(Token x, int &bl) -> bool {
 
 // Replace x1 by x2 at toplevel in the list a
 void token_ns::replace(TokenList &A, Token x1, Token x2) {
-    token_iterator C  = A.begin();
-    token_iterator E  = A.end();
-    int            bl = 0;
+    auto C  = A.begin();
+    auto E  = A.end();
+    int  bl = 0;
     while (C != E) {
         Token x = *C;
         check_brace(x, bl);
@@ -124,11 +124,11 @@ void token_ns::replace(TokenList &A, Token x1, Token x2) {
 // a single occurence.
 auto token_ns::replace_space(TokenList &A, Token x2, Token x3) -> int {
     remove_first_last_space(A);
-    token_iterator C             = A.begin();
-    token_iterator E             = A.end();
-    int            bl            = 0;
-    int            n             = 0;
-    bool           prev_is_space = false;
+    auto C             = A.begin();
+    auto E             = A.end();
+    int  bl            = 0;
+    int  n             = 0;
+    bool prev_is_space = false;
     while (C != E) {
         Token x = *C;
         check_brace(x, bl);
@@ -353,10 +353,10 @@ void Hashtab::eval_let_local(String a, String b) {
 }
 
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
-    const_token_iterator C1 = A.begin();
-    const_token_iterator E1 = A.end();
-    const_token_iterator C2 = B.begin();
-    const_token_iterator E2 = B.end();
+    auto C1 = A.begin();
+    auto E1 = A.end();
+    auto C2 = B.begin();
+    auto E2 = B.end();
     for (;;) {
         if (C1 == E1 || C2 == E2) return C1 == E1 && C2 == E2;
         if (!(*C1).is_same_token(*C2)) return false;
@@ -380,8 +380,8 @@ void token_ns::remove_ext_braces(TokenList &L) {
     if (L.empty()) return;
     if (!L.front().is_OB_token()) return;
     if (!L.back().is_CB_token()) return;
-    token_iterator C = L.begin();
-    token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     ++C;
     --E;
     int b = 0;
@@ -430,10 +430,10 @@ auto token_ns::get_block(TokenList &L) -> TokenList {
 // If the sublist is everything, returns -1.
 // in case of problem, returns -2.
 auto token_ns::block_size(const TokenList &L) -> int {
-    int                  res = 0;
-    int                  bl  = 0;
-    const_token_iterator C   = L.begin();
-    const_token_iterator E   = L.end();
+    int  res = 0;
+    int  bl  = 0;
+    auto C   = L.begin();
+    auto E   = L.end();
     while (C != E) {
         Token t = *C;
         ++C;
@@ -459,7 +459,7 @@ auto token_ns::fast_get_block(TokenList &L) -> TokenList {
         L.swap(res);
         return res;
     }
-    token_iterator C = L.begin();
+    auto C = L.begin();
     while (len > 0) {
         len--;
         ++C;
@@ -480,7 +480,7 @@ void token_ns::fast_get_block(TokenList &L, TokenList &res) {
         res.splice(res.end(), L);
         return;
     }
-    token_iterator C = L.begin();
+    auto C = L.begin();
     while (len > 0) {
         len--;
         ++C;
@@ -560,9 +560,9 @@ void token_ns::expand_star(TokenList &L) {
 
 auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     TokenList L;
-    Token     SP = Token(space_token_val);
-    Token     CR = Token(space_t_offset + '\n'); // behaves as space
-    Token     NL = Token(other_t_offset + '\n'); // is ^^J
+    auto      SP = Token(space_token_val);
+    auto      CR = Token(space_t_offset + '\n'); // behaves as space
+    auto      NL = Token(other_t_offset + '\n'); // is ^^J
     reset_ptr();
     for (;;) {
         if (at_eol()) return L;
@@ -580,7 +580,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
 
 // Use character code 11 whenever possible
 auto Buffer::str_toks11(bool nl) -> TokenList {
-    Token     SP = Token(space_token_val);
+    auto      SP = Token(space_token_val);
     Token     NL = the_parser.hash_table.newline_token;
     TokenList L;
     reset_ptr();
@@ -628,8 +628,8 @@ auto token_ns::string_to_list(Istring s) -> TokenList {
 
 // Converts a Token list into a String.
 auto Buffer::operator<<(const TokenList &L) -> Buffer & {
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     while (C != E) {
         insert_token(*C, false);
         ++C;
@@ -640,8 +640,8 @@ auto Buffer::operator<<(const TokenList &L) -> Buffer & {
 // Prints a token list.
 // Note: conversion to log_encoding
 auto operator<<(ostream &fp, const TokenList &L) -> ostream & {
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     while (C != E) {
         buffer_for_log.reset();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
@@ -724,11 +724,11 @@ StrHash::StrHash() {
 
 // This is called in case the table is too small.
 void StrHash::re_alloc() {
-    int         k  = hash_len + 10000;
-    String *    T1 = new String[k];
-    int *       T2 = new int[k];
-    LabelInfo **T3 = new LabelInfo *[k];
-    String *    T4 = new String[k];
+    int    k  = hash_len + 10000;
+    auto * T1 = new String[k];
+    int *  T2 = new int[k];
+    auto **T3 = new LabelInfo *[k];
+    auto * T4 = new String[k];
     for (int i = 0; i < hash_len; i++) {
         T1[i] = Text[i];
         T2[i] = Next[i];
@@ -831,8 +831,8 @@ void Buffer::push_back(const Istring &X) {
 
 // True if L has a single token
 auto token_ns::has_a_single_token(const TokenList &L) -> bool {
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     if (C == E) return false;
     ++C;
     if (C == E) return true;
@@ -841,8 +841,8 @@ auto token_ns::has_a_single_token(const TokenList &L) -> bool {
 
 // True if L has a single token that is T
 auto token_ns::has_a_single_token(const TokenList &L, Token t) -> bool {
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     if (C == E) return false;
     if (*C != t) return false;
     ++C;
@@ -1002,10 +1002,10 @@ auto token_ns::split_at(Token m, TokenList &L, TokenList &z) -> bool {
 
 // For all level-zero characters c, use a category code 12 char instead
 void token_ns::sanitize_one(TokenList &L, uchar c) {
-    Token          T  = Token(other_t_offset, c);
-    token_iterator C  = L.begin();
-    token_iterator E  = L.end();
-    int            bl = 0;
+    Token T  = Token(other_t_offset, c);
+    auto  C  = L.begin();
+    auto  E  = L.end();
+    int   bl = 0;
     while (C != E) {
         Token x = *C;
         check_brace(x, bl);
@@ -1017,9 +1017,9 @@ void token_ns::sanitize_one(TokenList &L, uchar c) {
 // Replace in L all character tokens by  category code 12 ones
 // All other tokens are discarded
 void token_ns::sanitize_one(TokenList &L) {
-    TokenList      res;
-    token_iterator C = L.begin();
-    token_iterator E = L.end();
+    TokenList res;
+    auto      C = L.begin();
+    auto      E = L.end();
     while (C != E) {
         Token x = *C;
         if (x.is_a_char()) res.push_back(Token(other_t_offset, x.char_val()));
@@ -1031,16 +1031,16 @@ void token_ns::sanitize_one(TokenList &L) {
 // For all characters c in s, at level at most n
 // use a category code 12 char instead
 void token_ns::sanitize_one(TokenList &L, TokenList &s, int n) {
-    token_iterator C  = L.begin();
-    token_iterator E  = L.end();
-    int            bl = 0;
+    auto C  = L.begin();
+    auto E  = L.end();
+    int  bl = 0;
     while (C != E) {
         Token x = *C;
         check_brace(x, bl);
         if (bl <= n && x.is_a_char()) {
-            Utf8Char       c  = x.char_val();
-            token_iterator sC = s.begin();
-            token_iterator sE = s.end();
+            Utf8Char c  = x.char_val();
+            auto     sC = s.begin();
+            auto     sE = s.end();
             while (sC != sE) {
                 if (sC->char_val() == c) *C = *sC;
                 break;
@@ -1093,11 +1093,11 @@ void Parser::E_split() {
 }
 
 auto token_ns::length_normalise(TokenList &L) -> int {
-    Token          u = Token(space_t_offset + '\n');
-    Token          v = Token(space_t_offset + ' ');
-    token_iterator A = L.begin();
-    token_iterator B = L.end();
-    int            n = 0;
+    auto u = Token(space_t_offset + '\n');
+    auto v = Token(space_t_offset + ' ');
+    auto A = L.begin();
+    auto B = L.end();
+    int  n = 0;
     while (A != B) {
         if (*A == u) *A = v;
         ++n;
@@ -1124,11 +1124,11 @@ auto token_ns::is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped
     int m = length_normalise(B);
     int k = m - n;
     if (k < 0) return false;
-    token_iterator AA      = A.begin();
-    token_iterator BB      = B.begin();
-    bool           found   = false;
-    int            skipped = -1;
-    Token          to_skip = A.front();
+    auto  AA      = A.begin();
+    auto  BB      = B.begin();
+    bool  found   = false;
+    int   skipped = -1;
+    Token to_skip = A.front();
     while (k >= 0) {
         if (*BB == to_skip) ++skipped;
         if (is_sublist(AA, BB, n)) {
@@ -1139,7 +1139,7 @@ auto token_ns::is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped
         --k;
     }
     if (remove && found) {
-        token_iterator CC = BB;
+        auto CC = BB;
         --n;
         while (n > 0) {
             ++CC;

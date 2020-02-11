@@ -231,7 +231,7 @@ void Parser::create_label(const string &X, Istring S) {
         V->set_id(S);
         V->set_lineno(get_cur_line());
         V->set_filename(get_cur_filename());
-        defined_labels.push_back(make_pair(S, V));
+        defined_labels.emplace_back(S, V);
     }
 }
 
@@ -243,9 +243,9 @@ void tralics_ns::add_ref(int v, const string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
     Istring B = Istring(s);
     if (idx)
-        refindex_list.push_back(make_pair(v, B));
+        refindex_list.emplace_back(v, B);
     else
-        ref_list.push_back(make_pair(v, B));
+        ref_list.emplace_back(v, B);
     LabelInfo *V = the_main->SH.lab_val_check(B);
     if (!V->set_used()) the_parser.my_stats.one_more_used_ref();
     if (!V->get_lineno()) V->set_lineno(the_parser.get_cur_line());
@@ -257,17 +257,17 @@ void tralics_ns::add_ref(int v, const string &s, bool idx) {
 // hash table of the label. After the translation is complete,
 // we know the value of the label, and can add the attribute target=xxx.
 void Parser::check_all_ids() {
-    for (unsigned int i = 0; i < ref_list.size(); i++) {
-        int        E = ref_list[i].first;
-        Istring    V = ref_list[i].second;
+    for (auto &i : ref_list) {
+        int        E = i.first;
+        Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
         if (!L->is_defined()) {
             main_ns::log_and_tty << lg_start << "Error signaled in postprocessor\n"
                                  << "undefined label `" << V << "' (first use at line " << L->get_lineno() << " in file "
                                  << L->get_filename() << ")";
             Istring B = L->get_id();
-            for (unsigned int j = 0; j < removed_labels.size(); j++) {
-                if (removed_labels[j].second == B) main_ns::log_and_tty << "\n(Label was removed with `" << removed_labels[j].first << "')";
+            for (auto &removed_label : removed_labels) {
+                if (removed_label.second == B) main_ns::log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                 break;
             }
             main_ns::log_and_tty << "\n";
@@ -280,9 +280,9 @@ void Parser::check_all_ids() {
 
 //
 void tralics_ns::find_index_labels(vector<string> &W) {
-    for (unsigned int i = 0; i < refindex_list.size(); i++) {
-        int        E = refindex_list[i].first;
-        Istring    V = refindex_list[i].second;
+    for (auto &i : refindex_list) {
+        int        E = i.first;
+        Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
         if (!L->is_defined()) continue; // should not happen
         Istring B = L->get_id();
@@ -296,8 +296,8 @@ void tralics_ns::find_index_labels(vector<string> &W) {
 
 // This removes the object S, together with the label n
 void post_ns::remove_label(String s, Istring n) {
-    for (unsigned int i = 0; i < ref_list.size(); i++) {
-        Istring    V  = ref_list[i].second;
+    for (auto &i : ref_list) {
+        Istring    V  = i.second;
         LabelInfo *li = the_main->SH.lab_val(V);
         if (li->get_id() != n) continue;
         if (!li->is_used()) continue;
@@ -305,11 +305,11 @@ void post_ns::remove_label(String s, Istring n) {
                              << "Removing `" << s << "' made the following label disappear: " << V << "\n";
         main_ns::nb_errs++;
     }
-    for (unsigned int i = 0; i < defined_labels.size(); i++) {
-        Istring    j = defined_labels[i].first;
-        LabelInfo *V = defined_labels[i].second;
+    for (auto &defined_label : defined_labels) {
+        Istring    j = defined_label.first;
+        LabelInfo *V = defined_label.second;
         if (j == n && V->is_defined() && !V->is_used()) {
-            removed_labels.push_back(make_pair(s, n));
+            removed_labels.emplace_back(s, n);
             V->set_undefined();
         }
     }
@@ -998,8 +998,8 @@ auto post_ns::figline(Xmlp from, int &ctr, Xmlp junk) -> Xmlp {
 
 void post_ns::raw_subfigure(Xmlp from, Xmlp to, Xmlp junk) {
     to->get_id().add_attribute(np_rend, np_subfigure);
-    int            n          = 0;
-    static Istring parid_name = Istring("parid");
+    int         n          = 0;
+    static auto parid_name = Istring("parid");
     for (;;) {
         Xmlp P = from->get_first_env(cst_p);
         if (!P) break;
@@ -1008,7 +1008,7 @@ void post_ns::raw_subfigure(Xmlp from, Xmlp to, Xmlp junk) {
             continue;
         }
         scbuf << bf_reset << n;
-        Istring par_id = Istring(scbuf);
+        auto par_id = Istring(scbuf);
         ++n;
         for (;;) {
             Xmlp sf = P->get_first_env(np_subfigure);
@@ -1166,10 +1166,9 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
 
 // Finish dumping the words
 void all_words_ns::dump_words(string name) {
-    WordList *WL = new WordList(nullptr, 0, nullptr);
+    auto *    WL = new WordList(nullptr, 0, nullptr);
     WordList *W  = WL;
-    for (int i = 0; i < 100; i++) {
-        WordList *L = WL0[i];
+    for (auto L : WL0) {
         if (!L) continue;
         while (W->get_next()) W = W->get_next();
         W->set_next(L);

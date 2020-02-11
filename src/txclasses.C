@@ -9,6 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains ltclass.dtx
+#include <utility>
+
 #include "tralics.h"
 #include "txclasses.h"
 
@@ -195,7 +197,7 @@ void Parser::T_if_package_with(bool c) // true for class
 // Class data ctor
 ClassesData::ClassesData() { packages.push_back(new LatexPackage("Fdummy file")); }
 
-LatexPackage::LatexPackage(string A) : name(A), has_a_default(false), seen_process(false), checked(false) {}
+LatexPackage::LatexPackage(string A) : name(std::move(A)), has_a_default(false), seen_process(false), checked(false) {}
 
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
@@ -921,8 +923,8 @@ void Parser::T_class_error(subtypes c) {
         else
             on_line = false;
     }
-    const_token_iterator C = L.begin();
-    const_token_iterator E = L.end();
+    auto C = L.begin();
+    auto E = L.end();
     while (C != E) {
         if (*C == message_break_token)
             B << "\n" << prefix;

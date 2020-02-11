@@ -15,7 +15,7 @@ class Xid {
 public:
     int value{0}; // value of the id
     Xid(int v) : value(v) {}
-    Xid() {}
+    Xid() = default;
     [[nodiscard]] auto get_att() const -> AttList &;
     void               add_attribute(Istring A, Istring B);
     void               add_attribute(Istring A, Istring B, bool f);

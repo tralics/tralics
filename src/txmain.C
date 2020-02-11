@@ -158,7 +158,7 @@ auto MainClass::print_os() const -> String {
 }
 
 // Ctor of the main class
-MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) { conf_path.push_back(CONFDIR); }
+MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) { conf_path.emplace_back(CONFDIR); }
 
 // ----------------------------------------------------------------------
 // Setting paths
@@ -179,37 +179,37 @@ void main_ns::find_conf_path() {
     if (try_conf(conf_path[0])) return;
     String S = "/usr/share/tralics";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "/usr/lib/tralics/confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "/usr/local/lib/tralics/confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "/sw/share/tralics/confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "../confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "../../confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
     S = "/user/grimm/home/cvs/tralics/confdir";
     if (try_conf(S)) {
-        conf_path.push_back(S);
+        conf_path.emplace_back(S);
         return;
     }
 }
@@ -236,7 +236,7 @@ void main_ns::check_in_dir() {
     int n = input_path.size();
     for (int i = 0; i < n; i++)
         if (input_path[i].empty()) return;
-    input_path.push_back("");
+    input_path.emplace_back("");
 }
 
 // If input file has the form foo/bar, then \jobname is foo/bar
@@ -260,7 +260,7 @@ auto main_ns::hack_for_input(const string &s) -> string {
     if (log_name.empty()) log_name = file_name;
     if (k > 0 && input_path.size() == 1) {
         input_path[0] = path;
-        input_path.push_back("");
+        input_path.emplace_back("");
         return fn;
     }
     return s;
@@ -361,8 +361,8 @@ void MainClass::check_for_input() {
     path_buffer.decr_wptr();
     path_buffer.decr_wptr();
     path_buffer.push_back("ult");
-    ult_name    = path_buffer.to_string();
-    fstream *fp = new fstream(s.c_str(), std::ios::in);
+    ult_name = path_buffer.to_string();
+    auto *fp = new fstream(s.c_str(), std::ios::in);
     if (!fp) {
         cout << "Empty input file " << s << "\n";
         exit(1);
@@ -458,8 +458,8 @@ void MainClass::open_log() {
 }
 
 auto tralics_ns::exists(const vector<string> &ST, string d) -> bool {
-    for (unsigned int j = 0; j < ST.size(); j++)
-        if (ST[j] == d) return true;
+    for (const auto &j : ST)
+        if (j == d) return true;
     return false;
 }
 
@@ -602,13 +602,13 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_type: type_option = a; return;
         case pa_config: user_config_file = a; return;
         case pa_refer:
-            after_conf.push_back("distinguish_refer_in_rabib");
-            after_conf.push_back(a);
+            after_conf.emplace_back("distinguish_refer_in_rabib");
+            after_conf.emplace_back(a);
             return;
         case pa_confdir:
             if (a[0] == '0') return;                // ignore empty component
             if (a[0] == '/' && a[1] == '0') return; // ignore root
-            conf_path.push_back(a);
+            conf_path.emplace_back(a);
             return;
         case pa_external_prog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
@@ -630,8 +630,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_param:
             if (main_ns::param_hack(a)) return;
             if (p >= argc - 1) { return; }
-            other_options.push_back(a);
-            other_options.push_back(argv[p + 1]);
+            other_options.emplace_back(a);
+            other_options.emplace_back(argv[p + 1]);
             p++;
             return;
         default:; // Should be pa_none

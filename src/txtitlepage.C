@@ -511,8 +511,8 @@ auto TitlePage::find_UR(const string &s, string name) const -> int {
     B.kill_at(j);
     String match = B.c_str();
     int    res   = 0;
-    for (unsigned int k = 0; k < bigtable.size(); k++) {
-        res = bigtable[k].find_UR(match, j);
+    for (const auto &k : bigtable) {
+        res = k.find_UR(match, j);
         if (res) break;
     }
     if (!res) return 0;
@@ -540,7 +540,7 @@ auto TitlePage::find_cmd(const string &s) const -> int {
 }
 
 // Ctor from a TitlePageFullLine. It's just a copy.
-TitlePageAux::TitlePageAux(TitlePageFullLine &X) : idx(0), type(tpi_zero) {
+TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
     T1     = X.item1.get_value();
     T2     = X.item2.get_value();
     T3     = X.item3.get_value();
@@ -587,14 +587,14 @@ auto Buffer::is_begin_something(String s) -> int {
 
 // We remove everything that is not of type S.
 void LinePtr::parse_and_extract_clean(String s) {
-    LinePtr             res;
-    int                 b    = 0;
-    Buffer &            B    = local_buf;
-    bool                keep = true;
-    bool                cv   = true; // unused. We assume that the line is always converted
-    line_iterator_const C    = value.begin();
-    line_iterator_const E    = value.end();
-    line_iterator_const W    = value.begin();
+    LinePtr res;
+    int     b    = 0;
+    Buffer &B    = local_buf;
+    bool    keep = true;
+    bool    cv   = true; // unused. We assume that the line is always converted
+    auto    C    = value.begin();
+    auto    E    = value.end();
+    auto    W    = value.begin();
     while (C != E) {
         B.reset();
         int n = C->to_buffer(B, cv);
@@ -627,14 +627,14 @@ void LinePtr::parse_and_extract_clean(String s) {
 
 // Returns all line in a begin/end block named s
 auto LinePtr::parse_and_extract(String s) const -> LinePtr {
-    LinePtr             res;
-    int                 b    = 0;
-    Buffer &            B    = local_buf;
-    bool                keep = false;
-    bool                cv; // unused.
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
-    line_iterator_const W = value.begin();
+    LinePtr res;
+    int     b    = 0;
+    Buffer &B    = local_buf;
+    bool    keep = false;
+    bool    cv; // unused.
+    auto    C = value.begin();
+    auto    E = value.end();
+    auto    W = value.begin();
     while (C != E) {
         B.reset();
         C->to_buffer(B, cv);
@@ -658,11 +658,11 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
 
 // Execute all lines that are not in an block via see_main_a
 void LinePtr::parse_conf_toplevel() const {
-    int                 b = 0;
-    bool                cv; // unused. We assume that the line is always converted
-    Buffer              B;
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    int    b = 0;
+    bool   cv; // unused. We assume that the line is always converted
+    Buffer B;
+    auto   C = value.begin();
+    auto   E = value.end();
     while (C != E) {
         B.reset();
         init_file_pos = C->to_buffer(B, cv);
@@ -866,7 +866,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     ++C;
     int b = B.see_config_env();
     if (b != 1) return C;
-    line_iterator_const E = value.end();
+    auto E = value.end();
     while (C != E) {
         B << bf_reset << C->get_chars();
         ++C;

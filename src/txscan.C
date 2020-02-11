@@ -50,8 +50,8 @@ void lg_start_io(Logger &L) {
 // and no file attached to them
 
 TexOutStream::TexOutStream() {
-    for (int i = 0; i < nb_input_channels; i++) write_file[i] = nullptr;
-    for (int i = 0; i < nb_output_channels; i++) write_open[i] = false;
+    for (auto &i : write_file) i = nullptr;
+    for (bool &i : write_open) i = false;
 }
 
 // This closes an output channel.
@@ -71,8 +71,8 @@ void TexOutStream::close(int chan) {
 void TexOutStream::open(int chan, string file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
     close(chan);
-    String   fn = tralics_ns::get_out_dir(file_name);
-    fstream *fp = new fstream(fn, std::ios::out);
+    String fn = tralics_ns::get_out_dir(file_name);
+    auto * fp = new fstream(fn, std::ios::out);
     if (!fp) return;  // no error ?
     if (!*fp) return; // no error ?
     write_file[chan] = fp;
@@ -167,7 +167,7 @@ void FileForInput::open(string file, bool action) {
 // This puts in cur_input_stack a new slot, containing the current state
 // of affairs. It kills the input buffer and the current line.
 void Parser::push_input_stack(const string &name, bool restore_at, bool re) {
-    InputStack *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
+    auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     int n = cur_input_stack.size();
     if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->get_name() << lg_end;
@@ -851,7 +851,7 @@ void Parser::store_new_line(int n, bool vb) {
 void Parser::insert_endline_char() {
     input_line_pos = 0;
     int cc         = eqtb_int_table[endlinechar_code].get_val();
-    if (cc >= 0 && cc < int(nb_characters)) input_line.push_back(Utf8Char(cc));
+    if (cc >= 0 && cc < int(nb_characters)) input_line.emplace_back(cc);
 }
 
 // Like get_a_newline below. But we never print the line in the log file.

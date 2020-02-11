@@ -20,7 +20,7 @@ namespace stack_ns {
 extern bool booted;
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
-    attributes.push_back(AttList());
+    attributes.emplace_back();
     enames.push_back(elt);
     //  if(booted && elt) cout << "XX" << last_xid+1 << elt << "\n";
     last_xid++;
@@ -460,7 +460,7 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            Istring  a   = Istring(the_main->SH.hash_find());
+            auto     a   = Istring(the_main->SH.hash_find());
             Xmlp     res = new Xml(cst_hi, nullptr);
             AttList &W   = res->get_id().get_att();
             W.push_back(the_names[np_rend], a);
@@ -526,7 +526,7 @@ void Stack::para_aux(int x) {
 
 // This allocates a slot for a new table.
 auto Stack::new_array_info(Xid id) -> ArrayInfo & {
-    AI.push_back(ArrayInfo(id));
+    AI.emplace_back(id);
     return AI.back();
 }
 

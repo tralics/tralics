@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008
@@ -22,8 +24,8 @@ private:
     TokenList val;       // value of the option, eg '={\val,etc}'.
     bool      used;      // set to true when option is used
 public:
-    KeyAndVal() {}
-    KeyAndVal(string a, TokenList b, string all) : full_name(all), name(a), val(b), used(false) {}
+    KeyAndVal() = default;
+    KeyAndVal(string a, TokenList b, string all) : full_name(std::move(all)), name(std::move(a)), val(std::move(b)), used(false) {}
     [[nodiscard]] auto get_name() const -> const string & { return name; }
     [[nodiscard]] auto get_full_name() const -> const string & { return full_name; }
     [[nodiscard]] auto get_val() const -> const TokenList & { return val; }

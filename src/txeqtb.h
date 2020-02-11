@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
@@ -139,7 +141,7 @@ public:
     int       line_no; // current line number at start
 public:
     virtual void unsave(bool, Parser &) = 0;
-    virtual ~SaveAux() {}
+    virtual ~SaveAux()                  = default;
     SaveAux(save_type t) : type(t), line_no(0) {}
     void               set_line(int l) { line_no = l; }
     [[nodiscard]] auto get_line() const -> int { return line_no; }
@@ -153,9 +155,9 @@ class SaveAuxBoundary : public SaveAux {
     boundary_type val; // explains why we opened a new group
 public:
     [[nodiscard]] auto get_val() const -> boundary_type { return val; }
-    void               unsave(bool, Parser &);
+    void               unsave(bool, Parser &) override;
     SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
-    ~SaveAuxBoundary() {}
+    ~SaveAuxBoundary() override = default;
     void dump(int);
 };
 
@@ -166,8 +168,8 @@ class SaveAuxInt : public SaveAux {
     int val;   // the value to be restored
 public:
     SaveAuxInt(int l, int a, int b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxInt() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxInt() override = default;
 };
 
 // This restores a dimension
@@ -177,8 +179,8 @@ class SaveAuxDim : public SaveAux {
     ScaledInt val;   // the value to be restored
 public:
     SaveAuxDim(int l, int a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxDim() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxDim() override = default;
 };
 
 // data structure for restoring a command
@@ -188,8 +190,8 @@ class SaveAuxCmd : public SaveAux {
     CmdChr val;   // the CmdChr to be restored
 public:
     SaveAuxCmd(int a, Equivalent X) : SaveAux(st_cmd), level(X.get_level()), cs(a), val(X.get_cmdchr()) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxCmd() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxCmd() override = default;
 };
 
 // data structure fopr restoring a box
@@ -199,8 +201,8 @@ class SaveAuxBox : public SaveAux {
     Xmlp val;   // the value to be restored
 public:
     SaveAuxBox(int l, int a, Xmlp b) : SaveAux(st_box), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxBox() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxBox() override = default;
 };
 
 // case of \setbox0=\hbox{...} , remember the number and the box
@@ -209,8 +211,8 @@ class SaveAuxBoxend : public SaveAux {
     Xmlp val; // the value of the box
 public:
     SaveAuxBoxend(int a, Xmlp b) : SaveAux(st_box_end), pos(a), val(b) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxBoxend() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxBoxend() override = default;
 };
 
 // data structure for restoring a token list
@@ -219,9 +221,9 @@ class SaveAuxToken : public SaveAux {
     int       pos;   // pthe position in toks_registers
     TokenList val;   // the value to be restored
 public:
-    SaveAuxToken(int l, int p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(v) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxToken() {}
+    SaveAuxToken(int l, int p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxToken() override = default;
 };
 
 // data structure for restoring glue
@@ -231,8 +233,8 @@ class SaveAuxGlue : public SaveAux {
     Glue val;   // the value to be restored
 public:
     SaveAuxGlue(int l, int p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxGlue() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxGlue() override = default;
 };
 
 // data structure for restoring glue
@@ -241,9 +243,9 @@ class SaveAuxString : public SaveAux {
     int    pos; // the position in glue_table
     string val; // the value to be restored
 public:
-    SaveAuxString(int l, int p, string s) : SaveAux(st_string), level(l), pos(p), val(s) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxString() {}
+    SaveAuxString(int l, int p, string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxString() override = default;
 };
 
 // data structure for a \begin{something}
@@ -260,9 +262,10 @@ public:
     [[nodiscard]] auto get_val() const -> CmdChr { return cc; }
     [[nodiscard]] auto get_token() const -> Token { return T; }
     auto               get_name() -> string { return newname; }
-    void               unsave(bool, Parser &);
-    SaveAuxEnv(string a, string aa, int ll, Token b, CmdChr c) : SaveAux(st_env), oldname(a), newname(aa), line(ll), T(b), cc(c) {}
-    ~SaveAuxEnv() {}
+    void               unsave(bool, Parser &) override;
+    SaveAuxEnv(string a, string aa, int ll, Token b, CmdChr c)
+        : SaveAux(st_env), oldname(std::move(a)), newname(std::move(aa)), line(ll), T(b), cc(c) {}
+    ~SaveAuxEnv() override = default;
 };
 
 // data structure for a font change
@@ -271,9 +274,9 @@ class SaveAuxFont : public SaveAux {
     int     value; // the value to be restored
     Istring color; // the color to restore
 public:
-    void unsave(bool, Parser &);
+    void unsave(bool, Parser &) override;
     SaveAuxFont(int l, int v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
-    ~SaveAuxFont() {}
+    ~SaveAuxFont() override = default;
 };
 
 // This pops a token at the end of the group. Does not depend on a level
@@ -281,8 +284,8 @@ class SaveAuxAftergroup : public SaveAux {
     Token value; // the token to pop
 public:
     SaveAuxAftergroup(Token v) : SaveAux(st_save), value(v) {}
-    void unsave(bool, Parser &);
-    ~SaveAuxAftergroup() {}
+    void unsave(bool, Parser &) override;
+    ~SaveAuxAftergroup() override = default;
 };
 
 // EQBT entry for an integer
@@ -294,7 +297,7 @@ class EqtbInt {
     int val{0};           // value of the object
     int level{level_one}; // level at which this is defined
 public:
-    EqtbInt() {}
+    EqtbInt() = default;
     [[nodiscard]] auto get_val() const -> int { return val; }
     void               set_val(int x) { val = x; }
     void               set_level(int x) { level = x; }
@@ -344,7 +347,7 @@ class EqtbGlue {
     Glue val;              // value of the object
     int  level{level_one}; // level at which this is defined
 public:
-    EqtbGlue() {}
+    EqtbGlue() = default;
     [[nodiscard]] auto get_level() const -> int { return level; }
     [[nodiscard]] auto get_val() const -> Glue { return val; }
     void               val_and_level(Glue a, int b) {
@@ -359,7 +362,7 @@ class EqtbToken {
     TokenList val;              // value of the object
     int       level{level_one}; // level at which this is defined
 public:
-    EqtbToken() {}
+    EqtbToken() = default;
     [[nodiscard]] auto get_val() const -> TokenList { return val; }
     [[nodiscard]] auto get_level() const -> int { return level; }
     void               val_and_level(TokenList a, int b) {
@@ -377,7 +380,7 @@ public:
     void               set_val(Xmlp X) { val = X; }
     [[nodiscard]] auto get_val() const -> Xmlp { return val; }
     [[nodiscard]] auto get_level() const -> int { return level; }
-    EqtbBox() {}
+    EqtbBox() = default;
     void val_and_level(Xmlp a, int b) {
         val   = a;
         level = b;

@@ -56,7 +56,8 @@ class Istring {
     int value{0};
 
 public:
-    Istring(){};
+    Istring() = default;
+    ;
     Istring(name_positions N) : value(the_names[N].value) {}
     Istring(const Buffer &X);
     explicit Istring(int N) : value(N) {}

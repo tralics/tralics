@@ -54,13 +54,13 @@ using tralics_ns::math_env_props;
 // It removes tokens preceeded by the special marker.
 
 auto Math::duplicate(bool nomath) const -> subtypes {
-    subtypes            k  = math_data.find_math_location(type, sname);
-    Math &              cp = math_data.get_list(k);
-    int                 sp = 0, sm = 0;
-    bool                skipping  = false;
-    bool                skip_next = false;
-    const_math_iterator C         = value.begin();
-    const_math_iterator E         = value.end();
+    subtypes k  = math_data.find_math_location(type, sname);
+    Math &   cp = math_data.get_list(k);
+    int      sp = 0, sm = 0;
+    bool     skipping  = false;
+    bool     skip_next = false;
+    auto     C         = value.begin();
+    auto     E         = value.end();
     while (C != E) {
         skip_next = skipping;
         if (C->get_cmd() == nomath_cmd) {
@@ -315,9 +315,9 @@ void Math::print() const {
     if (empty())
         Trace << "empty";
     else {
-        int                 k = 0;
-        const_math_iterator C = value.begin();
-        const_math_iterator E = value.end();
+        int  k = 0;
+        auto C = value.begin();
+        auto E = value.end();
         while (C != E) {
             k++;
             Trace << k << " ";
@@ -509,7 +509,7 @@ void Math::push_front(CmdChr X, subtypes c) { value.push_front(MathElt(X, c)); }
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
-    subtypes font = subtypes(the_parser.eqtb_int_table[math_font_pos].get_val());
+    auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].get_val());
     push_back(MathElt(X, font));
 }
 
@@ -1146,8 +1146,8 @@ void Parser::scan_math(int res, math_list_type type) {
         case relax_cmd: math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val())); continue;
         case mathord_cmd: // may be bold
         {
-            subtypes F = subtypes(cur_tok.get_val());
-            CmdChr   R = cur_cmd_chr;
+            auto   F = subtypes(cur_tok.get_val());
+            CmdChr R = cur_cmd_chr;
             if (math_loc(c) > first_inline_hack && math_loc(c) < last_inline_bhack && is_pos_par(atmathversion_code))
                 R = CmdChr(mathordb_cmd, c);
             math_data.push_back(res, R, F);
@@ -1169,7 +1169,7 @@ void Parser::scan_math(int res, math_list_type type) {
                 cur_cmd_chr = CmdChr(T, c);
             }
             if (T < 16) { // Case of a character
-                subtypes font = subtypes(eqtb_int_table[math_font_pos].get_val());
+                auto font = subtypes(eqtb_int_table[math_font_pos].get_val());
                 math_data.push_back(res, cur_cmd_chr, font);
             } else
                 math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
@@ -1590,7 +1590,7 @@ auto Parser::scan_math_kern(symcodes T, subtypes &c) -> ScaledInt {
 // Case of a \not\in read as \notin, \not= read as \ne
 // What should we do in other cases?
 void Parser::scan_math_rel(subtypes c, int res) {
-    subtypes w = subtypes(cur_tok.get_val());
+    auto w = subtypes(cur_tok.get_val());
     if (c == subtypes(not_code)) {
         Token not_token = cur_tok;
         get_x_token();
@@ -1737,7 +1737,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
         brace_me(L);
         back_input(L);
         subtypes r1 = math_argument(0, ct);
-        T.push_back(MathElt(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd)));
+        T.emplace_back(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd));
     }
     int n       = T.size();
     n           = n / 2;
@@ -2032,12 +2032,12 @@ void Xml::bordermatrix() {
     if (n <= 0) return;
     Xml *F = tree[0];
     if (F && !F->is_xmlc() && F->tree.size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
-    Istring att = Istring("rowspan");
+    auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
     B << n;
-    Istring attval = Istring(B);
-    F              = tree[1];
+    auto attval = Istring(B);
+    F           = tree[1];
     if (F && !F->is_xmlc() && F->tree.size() > 1) {
         Xml *aux = new Xml(cst_mtd, math_data.mk_mo("("));
         aux->add_att(att, attval);
@@ -2056,7 +2056,7 @@ void Xml::bordermatrix() {
 auto Math::trivial_math_index(symcodes cmd) -> Xmlp {
     Buffer &B = math_buffer;
     B.reset();
-    const_math_iterator L = value.begin();
+    auto L = value.begin();
     ++L;
     name_positions loc       = cmd == underscore_catcode ? np_s_sub : np_s_sup;
     CmdChr         w         = L->get_cmd_chr();
@@ -2065,9 +2065,9 @@ auto Math::trivial_math_index(symcodes cmd) -> Xmlp {
     if (w.is_letter() || w.is_other())
         B.push_back(w.char_val());
     else if (L->is_list()) {
-        const Math &        A = L->get_list();
-        const_math_iterator C = A.value.begin();
-        const_math_iterator E = A.value.end();
+        const Math &A = L->get_list();
+        auto        C = A.value.begin();
+        auto        E = A.value.end();
         if (C == E) return nullptr;
         if (C->get_cmd() == mathfont_cmd) {
             have_font  = true;
@@ -2130,7 +2130,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xmlp {
 auto Math::trivial_math(int action) -> Xmlp {
     action = action % 8;
     if (action == 0) return nullptr;
-    const_math_iterator L = value.begin();
+    auto L = value.begin();
     if (L == value.end()) return nullptr; // empty formula is never trivial
     int len = 1;
     ++L;
@@ -2319,23 +2319,23 @@ auto Math::check_align() -> int {
 
 // Create <mi>...</mi> and friends
 auto MathElt::cv_mi(math_style cms) -> MathElt {
-    Math &              L   = get_list();
-    subtypes            c   = get_fml_subtype();
-    const_math_iterator X   = L.begin();
-    const_math_iterator Y   = L.end();
-    Xmlp                res = nullptr;
+    Math &   L   = get_list();
+    subtypes c   = get_fml_subtype();
+    auto     X   = L.begin();
+    auto     Y   = L.end();
+    Xmlp     res = nullptr;
     if (c == mathbox_code) {
         Xmlp xs = X->get_list().M_cv(cms, 0).get_value(); // OK
         res     = new Xml(Istring(L.get_sname()), xs);    // OK
     } else if (c == multiscripts_code) {
-        Xmlp           xs = X->get_list().M_cv(cms, 0).get_value();
-        name_positions w  = name_positions(c - mathmi_code + cst_mi);
-        res               = new Xml(w, xs);
+        Xmlp xs = X->get_list().M_cv(cms, 0).get_value();
+        auto w  = name_positions(c - mathmi_code + cst_mi);
+        res     = new Xml(w, xs);
     } else {
-        string         s  = X->get_list().convert_this_to_string(math_buffer);
-        Xmlp           xs = new Xml(Istring(s));
-        name_positions w  = name_positions(c - mathmi_code + cst_mi);
-        res               = new Xml(w, xs);
+        string s  = X->get_list().convert_this_to_string(math_buffer);
+        Xmlp   xs = new Xml(Istring(s));
+        auto   w  = name_positions(c - mathmi_code + cst_mi);
+        res       = new Xml(w, xs);
     }
     ++X;
     for (;;) {
@@ -2677,9 +2677,9 @@ void MathElt::change_type(int t) {
 
 // We have an \over somewhere...
 auto Math::M_cv0(math_style cms) -> XmlAndType {
-    Math     A;
-    subtypes c = subtypes(atopwithdelims_code + 1);
-    cms        = next_frac_style(cms);
+    Math A;
+    auto c = subtypes(atopwithdelims_code + 1);
+    cms    = next_frac_style(cms);
     while (!empty()) {
         if (front().get_cmd() == over_cmd) {
             c = front().get_chr();
@@ -3348,9 +3348,9 @@ auto Math::convert_math(math_style k) -> Xmlp { return M_cv(k, 1).get_value(); }
 
 // Removes an an initial group that is the consequence of \refstepcounter
 void Math::remove_initial_group() {
-    bool                initial_relax = false;
-    const_math_iterator B             = value.begin();
-    const_math_iterator E             = value.end();
+    bool initial_relax = false;
+    auto B             = value.begin();
+    auto E             = value.end();
     if (B == E) return;
     if (B->get_cmd() == relax_cmd) {
         initial_relax = true;

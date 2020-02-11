@@ -1363,7 +1363,7 @@ void Parser::enter_file_in_table(const string &nm, bool ok) {
             return;
         }
     }
-    the_images.push_back(Image(nm, ok ? 1 : 0));
+    the_images.emplace_back(nm, ok ? 1 : 0);
 }
 
 void operator<<(fstream &X, const Image &Y) {
@@ -1416,9 +1416,9 @@ void operator<<(fstream &X, const Image &Y) {
 void Parser::finish_images() {
     int s = the_images.size();
     if (s == 0) return;
-    string   name = tralics_ns::get_short_jobname() + ".img";
-    String   wn   = tralics_ns::get_out_dir(name);
-    fstream *fp   = new fstream(wn, std::ios::out);
+    string name = tralics_ns::get_short_jobname() + ".img";
+    String wn   = tralics_ns::get_out_dir(name);
+    auto * fp   = new fstream(wn, std::ios::out);
     if (!*fp) return;
     *fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();

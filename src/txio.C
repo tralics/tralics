@@ -394,8 +394,8 @@ void Clines::convert_line(int wc) {
 
 // Initialises encoding tables
 void io_ns::check_for_encoding() {
-    for (int i = 0; i < max_encoding - 2; i++)
-        for (int j = 0; j < lmaxchar; ++j) custom_table[i][j] = j;
+    for (auto &i : custom_table)
+        for (int j = 0; j < lmaxchar; ++j) i[j] = j;
 }
 
 // Why is v limited to 16bit chars?
@@ -489,9 +489,9 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
 
 // inserts a copy of aux
 void LinePtr::insert(const LinePtr &aux) {
-    cur_encoding          = 0;
-    line_iterator_const C = aux.value.begin();
-    line_iterator_const E = aux.value.end();
+    cur_encoding = 0;
+    auto C       = aux.value.begin();
+    auto E       = aux.value.end();
     while (C != E) {
         Clines L = *C;
         L.clear_converted();
@@ -508,7 +508,7 @@ void LinePtr::insert(const LinePtr &aux) {
 void tralics_ns::read_a_file(LinePtr &L, string x, int spec) {
     L.reset(x);
     if (main_ns::use_pool(L)) return;
-    fstream *fp = new fstream(x.c_str(), std::ios::in);
+    auto *fp = new fstream(x.c_str(), std::ios::in);
     if (!fp) return;
     string old_name             = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
@@ -568,8 +568,8 @@ void io_ns::show_encoding(int wc, const string &name) {
 
 // If a line ends with \, we take the next line, and append it to this one
 void LinePtr::normalise_final_cr() {
-    line_iterator C = value.begin();
-    line_iterator E = value.end();
+    auto C = value.begin();
+    auto E = value.end();
     if (C == E) return;
     Clines *prev = nullptr;
     Clines *cur  = nullptr;
@@ -1011,7 +1011,7 @@ auto tralics_ns::file_exists(Buffer &B) -> bool { return tralics_ns::file_exists
 
 // This exits if the file cannot be opened and argument is true
 auto tralics_ns::open_file(String name, bool fatal) -> fstream * {
-    fstream *fp = new fstream(name, std::ios::out);
+    auto *fp = new fstream(name, std::ios::out);
     if (log_is_open && !*fp) the_log << "Cannot open file " << name << " for output \n";
     if (fatal && !*fp) {
         cout << "Cannot open file " << name << " for output \n";
@@ -1038,19 +1038,19 @@ void LinePtr::reset(string x) {
 }
 
 // Insert a line at the end of the file
-void LinePtr::insert(int n, string c, bool cv) { value.push_back(Clines(n, c, cv)); }
+void LinePtr::insert(int n, string c, bool cv) { value.emplace_back(n, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
 void LinePtr::insert(string c, bool cv) {
     cur_line++;
-    value.push_back(Clines(cur_line, c, cv));
+    value.emplace_back(cur_line, c, cv);
 }
 
 // Insert a line at the end of the file, incrementing the line no
 // We assume that the const char* is ascii 7 bits
 void LinePtr::insert(String c) {
     cur_line++;
-    value.push_back(Clines(cur_line, c, true));
+    value.emplace_back(cur_line, c, true);
 }
 
 // Like insert, but we do not insert an empty line after an empty line.
@@ -1165,8 +1165,8 @@ auto LinePtr::get_next(string &b, bool &cv) -> int {
 /// This finds a line with documentclass in it
 // uses B and the buffer.
 auto LinePtr::find_documentclass(Buffer &B) -> string {
-    line_iterator C = value.begin();
-    line_iterator E = value.end();
+    auto C = value.begin();
+    auto E = value.end();
     the_main->set_doc_class_pos(E);
     while (C != E) {
         B.reset();
@@ -1193,7 +1193,7 @@ void LinePtr::add_buffer(LinePtr &B, line_iterator C) {
 // The idea is to insert text from the config file to the main file
 // It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(Buffer &B, line_iterator C) {
-    line_iterator E = value.end();
+    auto E = value.end();
     if (C == E)
         value.push_front(Clines(1, B.to_string(), true));
     else
@@ -1203,9 +1203,9 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 // This finds a line with documentclass in it
 // uses B and the buffer.
 auto LinePtr::find_configuration(Buffer &B) -> string {
-    int                 N = 0;
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    int  N = 0;
+    auto C = value.begin();
+    auto E = value.end();
     while (C != E) {
         B.reset();
         B.push_back(C->get_chars());
@@ -1222,9 +1222,9 @@ auto LinePtr::find_configuration(Buffer &B) -> string {
 // uses B and the buffer.
 void LinePtr::find_doctype(Buffer &B, string &res) {
     if (!res.empty()) return; // use command line option if given
-    int                 N = 0;
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    int  N = 0;
+    auto C = value.begin();
+    auto E = value.end();
     while (C != E) {
         B.reset();
         B.push_back(C->get_chars());
@@ -1269,8 +1269,8 @@ void LinePtr::split_string(String x, int l) {
 }
 
 void LinePtr::print(fstream *outfile) {
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    auto C = value.begin();
+    auto E = value.end();
     while (C != E) {
         *outfile << C->get_chars();
         ++C;
@@ -1279,8 +1279,8 @@ void LinePtr::print(fstream *outfile) {
 
 // For debug
 void LinePtr::print() {
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    auto C = value.begin();
+    auto E = value.end();
     while (C != E) {
         cout << C->get_number() << "  " << C->get_chars();
         ++C;

@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
@@ -39,7 +41,7 @@ public:
     int                level;
     int                iid; // index in the reference table
     [[nodiscard]] auto is_same(int l, const string &k) const -> bool { return level == l && k == aux; }
-    Indexer(string k, string a, Xmlp x, int l, int u) : key(k), aux(a), translation(x), level(l), iid(u) {}
+    Indexer(string k, string a, Xmlp x, int l, int u) : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
 };
 
 class OneIndex {
@@ -60,7 +62,7 @@ public:
     [[nodiscard]] auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
     [[nodiscard]] auto get_iid(int i) const -> int { return value[i]->iid; }
     [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
-    OneIndex(string a, string b, int c) : name(a), title(b), position(nullptr), AL(c) {}
+    OneIndex(string a, string b, int c) : name(std::move(a)), title(std::move(b)), position(nullptr), AL(c) {}
 };
 
 class AllIndex {

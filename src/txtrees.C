@@ -79,11 +79,11 @@ void AllIndex::mark_print(int g) {
 
 // This normalises spaces
 void trees_ns::normalise_space(TokenList &L) {
-    bool                 prev_space = false;
-    TokenList            res;
-    Token                SP = Token(space_token_val);
-    const_token_iterator C  = L.begin();
-    const_token_iterator E  = L.end();
+    bool      prev_space = false;
+    TokenList res;
+    auto      SP = Token(space_token_val);
+    auto      C  = L.begin();
+    auto      E  = L.end();
     while (C != E) {
         if (C->is_space_token()) {
             if (!prev_space) res.push_back(SP);
@@ -443,10 +443,10 @@ void gb4eboot() {
     string  simple_index = "\\sb" + matha1 + "\\;";
     string  double_index = "\\sb{" + matha1 + "\\sb{#2}}";
     L.insert("%% Begin bootstrap commands for gb4e", true);
-    L.insert("\\def\\lb#1{\\@ifnextchar [{\\@glarph{#1}}{\\@bl{#1}}}", true);
+    L.insert(R"(\def\lb#1{\@ifnextchar [{\@glarph{#1}}{\@bl{#1}}})", true);
     L.insert(mk_ensure("\\def\\@glarph#1[#2]", open_bra + double_index), true);
     L.insert(mk_ensure("\\def\\@bl#1", open_bra + simple_index), true);
-    L.insert("\\def\\rb#1{\\@ifnextchar [{\\@grarph{#1}}{\\@br{#1}}}", true);
+    L.insert(R"(\def\rb#1{\@ifnextchar [{\@grarph{#1}}{\@br{#1}}})", true);
     L.insert(mk_ensure("\\def\\@grarph#1[#2]", close_bra + double_index), true);
     L.insert(mk_ensure("\\def\\@br#1", close_bra + simple_index), true);
 }
