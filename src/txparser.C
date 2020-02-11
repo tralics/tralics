@@ -580,7 +580,7 @@ auto Parser::is_verbatim_end() -> bool {
     if (file_ended) return false;
     bool res = input_buffer.contains_env(get_cur_env_name().c_str());
     if (res) {
-        if (!input_buffer.head())
+        if (input_buffer.head() == 0)
             kill_line();
         else { // remove chars from input_line
             int n = input_line.size();
@@ -1549,7 +1549,7 @@ auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
     bool r = list_to_string(L, b);
     b.push_back(s2);
     if (r) {
-        bad_csname(s);
+        bad_csname(s != nullptr);
         return true;
     }
     finish_csname(b, s);
@@ -1695,7 +1695,7 @@ void Parser::E_ifempty() {
     TokenList L = read_arg();
     TokenList a = read_arg();
     TokenList b = read_arg();
-    if (c) token_ns::remove_first_last_space(L);
+    if (c != 0u) token_ns::remove_first_last_space(L);
     bool ok = L.empty();
     if (tracing_commands()) the_log << lg_startbrace << T << " " << boolean(ok) << lg_endbrace;
     one_of_two(a, b, ok);
@@ -1857,7 +1857,7 @@ auto Parser::counter_check(Buffer &b, bool def) -> bool {
 // If s is a valid string, it contains the optional argument
 
 auto Parser::counter_read_opt(String s) -> int {
-    if (s) {
+    if (s != nullptr) {
         if (s[0] == 0) return 0; // s empty says no opt arg
         Buffer &b = Thbuf2;
         b << bf_reset << "cl@" << s;
@@ -2022,14 +2022,14 @@ void Parser::E_setlength(int c) {
     TokenList L;
     if (calc_loaded) {
         L.push_back(t);
-        if (c) L.push_front(hash_table.advance_token);
+        if (c != 0) L.push_front(hash_table.advance_token);
         brace_me(L);
         L.push_front(hash_table.calc_token);
     } else {
         L = read_arg();
         L.push_back(hash_table.relax_token);
         L.push_front(t);
-        if (c) L.push_front(hash_table.advance_token);
+        if (c != 0) L.push_front(hash_table.advance_token);
     }
     finish_counter_cmd(caller, L);
 }
@@ -2222,7 +2222,7 @@ void Parser::T_end(const string &s) {
         return;
     }
     SaveAuxEnv *X = is_env_on_stack(s);
-    if (!X) {
+    if (X == nullptr) {
         parse_error(err_tok, "cannot close environment ", s, "bad \\end");
         return;
     }
@@ -2239,7 +2239,7 @@ void Parser::T_end(const string &s) {
     if (X->get_val().is_user()) {
         cur_cmd_chr = X->get_val();
         Macro &T    = mac_table.get_macro(cur_cmd_chr.get_chr());
-        if (T.get_nbargs())
+        if (T.get_nbargs() != 0)
             parse_error(err_tok, "Illegal end of environment");
         else
             expand();
@@ -2649,7 +2649,7 @@ void Parser::iexpand() {
     case afterfi_cmd: E_afterfi(); return;
     case afterelsefi_cmd: E_afterelsefi(); return;
     case expandafter_cmd:
-        if (c)
+        if (c != 0u)
             E_unless();
         else
             E_expandafter();
@@ -2680,7 +2680,7 @@ void Parser::iexpand() {
     case gobble_cmd:
     case ignore_n_args_cmd: E_ignore_n_args(vb, c); return;
     case zapspace_cmd:
-        if (c) {
+        if (c != 0u) {
             TokenList a = read_arg();
             token_ns::remove_first_last_space(a);
             back_input(a);
@@ -2997,7 +2997,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     case if_void_code: {
         int  n = scan_reg_num();
         Xml *x = box_table[n].get_val();
-        if (!x) return true;
+        if (x == nullptr) return true;
         return x->empty();
     }
     case if_hbox_code:
@@ -4173,7 +4173,7 @@ void Parser::begin_box(int src, subtypes c) {
     }
     if (c == useboxA_code || c == useboxB_code) {
         cur_box = (c == useboxA_code ? the_xmlA : the_xmlB);
-        if (cur_box)
+        if (cur_box != nullptr)
             cur_box = cur_box->deep_copy();
         else
             cur_box = new Xml(Istring(""), nullptr);
@@ -4296,7 +4296,7 @@ void Parser::M_xray(subtypes c) {
 }
 
 void Parser::show_box(Xml *X) {
-    if (X)
+    if (X != nullptr)
         main_ns::log_and_tty << X << "\n";
     else
         main_ns::log_and_tty << "empty.\n";
@@ -4325,16 +4325,16 @@ void Parser::M_prefixed() {
     auto     K = symcodes(user_cmd + flags);
     symcodes C = cur_cmd_chr.get_cmd();
     if (C <= max_non_prefixed_command) {
-        if (b_global || flags) prefix_error(b_global, K);
+        if (b_global || (flags != 0)) prefix_error(b_global, K);
         if (cur_tok.is_valid()) back_input(); // case of prefix at end of list
         return;
     }
-    if (C != def_cmd && flags) prefix_error(b_global, K);
+    if (C != def_cmd && (flags != 0)) prefix_error(b_global, K);
     // look at \globaldefs
     int gd = eqtb_int_table[globaldefs_code].get_val();
     if (gd > 0) b_global = true;
     if (gd < 0) b_global = false;
-    if (tracing_commands() && (b_global || flags)) {
+    if (tracing_commands() && (b_global || (flags != 0))) {
         the_log << lg_startbrace;
         trace_buffer.reset();
         trace_buffer.dump_prefix(true, b_global, K);

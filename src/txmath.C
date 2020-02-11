@@ -247,7 +247,7 @@ auto Math::get_name() const -> String {
     subtypes w = get_sname();
     if (w == nomathenv_code) return "";
     String S = tralics_ns::math_env_name(w);
-    if (S) return S + 3;
+    if (S != nullptr) return S + 3;
     return "bad";
 }
 
@@ -267,7 +267,7 @@ auto operator<<(ostream &X, math_list_type y) -> ostream & {
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
         String w = x.name();
-        if (w)
+        if (w != nullptr)
             X << "Argument list for \\" << w;
         else
             X << "impossible " << int(y);
@@ -295,7 +295,7 @@ auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
         String w = x.name();
-        if (w)
+        if (w != nullptr)
             X << "Argument list for \\" << w;
         else
             X << "cimpossible " << int(y);
@@ -710,8 +710,8 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
             math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
             parse_error(math_buffer.c_str());
         }
-        if (math_env_props(type) & 16) ignore_optarg();
-        if (math_env_props(type) & 32) read_arg();
+        if ((math_env_props(type) & 16) != 0) ignore_optarg();
+        if ((math_env_props(type) & 32) != 0) read_arg();
         return type == math_code;
     }
 }
@@ -720,9 +720,9 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
 // If multi is true, more than one is allowed
 void MathHelper::check_for_eqnum(subtypes type, bool multi) {
     int fl = math_env_props(type);
-    if (fl & 2)
+    if ((fl & 2) != 0)
         eqnum_status = 1;
-    else if (fl & 4)
+    else if ((fl & 4) != 0)
         eqnum_status = multi ? 2 : 3;
     else
         eqnum_status = 0;
@@ -790,7 +790,7 @@ void Parser::T_math(subtypes type) {
     Math &u1          = math_data.get_list(0);
     bool  is_inline   = start_scan_math(u1, type);
     cmi.set_type(is_inline);
-    cmi.check_for_eqnum(type, eqtb_int_table[multimlabel_code].get_val());
+    cmi.check_for_eqnum(type, eqtb_int_table[multimlabel_code].get_val() != 0);
     if (type == nomathenv_code || type == math_code || type == displaymath_code) {
         int       position  = is_inline ? everymath_code : everydisplay_code;
         TokenList everymath = toks_registers[position].get_val();
@@ -829,7 +829,7 @@ void Parser::T_math(subtypes type) {
     Math &u   = math_data.get_list(loc_of_cp);
     // Translate the formula into res
     Xml *res = nullptr;
-    if (!(math_env_props(type) & 8)) u.set_type(math_open_cd);
+    if ((math_env_props(type) & 8) == 0) u.set_type(math_open_cd);
     if (u.has_type(math_env_cd)) {
         res = u.M_array(cmi.get_eqnum_status() == 2, is_inline ? ms_T : ms_D);
     } else {
@@ -837,7 +837,7 @@ void Parser::T_math(subtypes type) {
         if (is_inline) {
             int k = eqtb_int_table[notrivialmath_code].get_val();
             res   = u.trivial_math(k);
-            if (res) {
+            if (res != nullptr) {
                 finish_trivial_math(res);
                 return;
             }
@@ -852,7 +852,7 @@ void Parser::T_math(subtypes type) {
     x->add_tmp(res);
     if (!is_inline) x->add_att(cst_mode, cst_display);
     Xml *res1 = new Xml(np_formula, x);
-    if (alter) res1->push_back(alter);
+    if (alter != nullptr) res1->push_back(alter);
 
     res1->change_id(cmi.get_fid());
     res1->add_att(np_type, cmi.get_pos_att());
@@ -886,7 +886,7 @@ void Parser::scan_math3(int x, math_list_type t, int m) {
     boundary_type aux = bt_math;
     {
         Math &u = math_data.get_list(x);
-        if (math_env_props(u.get_sname()) & 8)
+        if ((math_env_props(u.get_sname()) & 8) != 0)
             aux = bt_cell;
         else if (t == math_open_cd)
             aux = bt_brace;
@@ -1404,12 +1404,12 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
     subtypes et = nomathenv_code;
     if (cur_cmd_chr.get_cmd() == math_env_cmd) et = cur_cmd_chr.get_chr();
     if (at_start) {
-        if (et == nomathenv_code || (math_env_props(et) & 1)) {
+        if (et == nomathenv_code || ((math_env_props(et) & 1) != 0)) {
             Buffer &B = math_buffer;
             B << bf_reset << "Illegal \\begin{" << s << "} found in math mode";
             parse_error(err_tok, B.c_str(), "bad env");
         }
-        if (math_env_props(et) & 16) ignore_optarg();
+        if ((math_env_props(et) & 16) != 0) ignore_optarg();
         new_math_list(res, math_env_cd, et);
         return false;
     }
@@ -1643,7 +1643,7 @@ void Parser::scan_hbox(int ptr, subtypes c) {
 auto Parser::math_argument(int w, Token t) -> subtypes {
     Token xfct_caller = fct_caller;
     fct_caller        = t;
-    if (w & 1) {
+    if ((w & 1) != 0) {
         remove_initial_space_relax();
         if (!cur_tok.is_invalid()) back_input();
     }
@@ -1826,8 +1826,8 @@ void Parser::interpret_math_cmd(int res, subtypes c) {
         r2 = math_argument(0, ct);
     Math &u = math_data.get_list(k);
     u.push_back_list(r1, math_argument_cd);
-    if (r2) u.push_back_list(r2, math_argument_cd);
-    if (r3) u.push_back_list(r3, math_argument_cd);
+    if (r2 != 0u) u.push_back_list(r2, math_argument_cd);
+    if (r3 != 0u) u.push_back_list(r3, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
 }
 
@@ -1840,7 +1840,7 @@ void Math::skip_initial_space() {
 // Creates a table for array specifications.
 void StrHash::rlc_to_string(String s, vector<AttList> &res) {
     int i = 0;
-    while (s[i]) {
+    while (s[i] != 0) {
         char c = s[i];
         ++i;
         if (c != 'r' && c != 'l' && c != 'c') continue;
@@ -1928,7 +1928,7 @@ auto Math::convert_cell(int &n, vector<AttList> &table, math_style W) -> Xml * {
         args = L.get_arg3();
     }
     int k = args.check_align();
-    if (k) tbl_align = k;
+    if (k != 0) tbl_align = k;
     if (tbl_align == 1)
         id.add_attribute(np_columnalign, np_left);
     else if (tbl_align == 2)
@@ -1944,7 +1944,7 @@ auto Math::convert_cell(int &n, vector<AttList> &table, math_style W) -> Xml * {
 auto Math::split_as_array(vector<AttList> &table, math_style W, bool numbered) -> Xml * {
     Math cell;
     bool is_multline = sname == multline_code || sname == multline_star_code;
-    bool needs_dp    = math_env_props(sname) & 1;
+    bool needs_dp    = (math_env_props(sname) & 1) != 0;
     if (sname == aligned_code) needs_dp = true; // OK FIXME
     if (sname == split_code) needs_dp = true;   // OK FIXME
     int  n    = 0;                              // index of cell in row.
@@ -2031,14 +2031,14 @@ void Xml::bordermatrix() {
     int n = tree.size() - 1;
     if (n <= 0) return;
     Xml *F = tree[0];
-    if (F && !F->is_xmlc() && F->tree.size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
+    if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
     auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
     B << n;
     auto attval = Istring(B);
     F           = tree[1];
-    if (F && !F->is_xmlc() && F->tree.size() > 1) {
+    if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {
         Xml *aux = new Xml(cst_mtd, math_data.mk_mo("("));
         aux->add_att(att, attval);
         F->insert_at(1, aux);
@@ -2141,12 +2141,12 @@ auto Math::trivial_math(int action) -> Xml * {
     }
     symcodes cmd = front().get_cmd();
     Xml *    res = nullptr;
-    if ((action & 4) && len == 2 && (cmd == underscore_catcode || cmd == hat_catcode)) res = trivial_math_index(cmd);
-    if (res) return res;
-    if (action & 1) res = special1();
-    if (res) return res;
+    if (((action & 4) != 0) && len == 2 && (cmd == underscore_catcode || cmd == hat_catcode)) res = trivial_math_index(cmd);
+    if (res != nullptr) return res;
+    if ((action & 1) != 0) res = special1();
+    if (res != nullptr) return res;
     if (len != 1) return nullptr;
-    if (!(action & 2)) return nullptr;
+    if ((action & 2) == 0) return nullptr;
     if (front().is_digit()) {
         Istring sval = the_names[cst_dig0 + front().val_as_digit()];
         return new Xml(sval);
@@ -2243,7 +2243,7 @@ auto MathElt::cv_char() -> MathElt {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (::is_letter(c)) {
         int w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
-        if (w & (1 << F))
+        if ((w & (1 << F)) != 0)
             return MathElt(math_ns::mk_mi(c, F), mt);
         else
             return MathElt(math_ns::make_math_char(c, F), mt);
@@ -2525,7 +2525,7 @@ auto MathElt::cv_special1(math_style cms) -> MathElt {
         cms = next_math_style(cms);
     Math tmp = L.get_arg1();
     int  k   = tmp.check_align();
-    if (!numalign) numalign = k;
+    if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
     if (c == sqrt_code) return MathElt(new Xml(cst_msqrt, A1), mt_flag_big);
     Xml *          A2          = nullptr;
@@ -2736,7 +2736,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
 auto math_ns::finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
                                 int open, int close) -> Xml * {
     Istring Pos;
-    if (pos) Pos = the_names[pos];
+    if (pos != 0) Pos = the_names[pos];
     Xml *R = the_main->the_stack->xml2_space(s, Pos, a, b);
     if (!sz.null()) R->add_att(the_names[np_linethickness], sz);
     if (isfrac) {
@@ -2800,7 +2800,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         math_types new_type    = mt_flag_rel;
         int        t           = 0;
         if (cmd == nonscript_cmd) {
-            if (cms == ms_T || ms_D) continue;
+            if (cms == ms_T || (ms_D != 0u)) continue;
             res.push_back(cur);
             continue;
         }
@@ -2857,7 +2857,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     Xml *tmp = new Xml(cst_temporary, nullptr);
     res1.concat(tmp);
     Xml *res22 = nullptr;
-    if (need_row)
+    if (need_row != 0)
         res22 = new Xml(cst_mrow, tmp);
     else
         res22 = tmp;
@@ -3094,7 +3094,7 @@ void Cv3Helper::find_index(math_style cms) {
     if (C == limits_cmd) {
         int k = get_chr(); // displaylimits, nolimits, limits
         pop_front();
-        if (index || exponent) return; // allow x_2\limits^3
+        if ((index != nullptr) || (exponent != nullptr)) return; // allow x_2\limits^3
         if (special == 0) return;
         if (k == 0) k = cms == ms_D ? 2 : 1;
         special = special & 7; // clear flags
@@ -3108,7 +3108,7 @@ void Cv3Helper::find_index(math_style cms) {
         non_script();
         return;
     }
-    if (C == underscore_catcode && !index) {
+    if (C == underscore_catcode && (index == nullptr)) {
         pop_front();
         if (empty()) {
             the_parser.parse_error("Math formula should not finish with _");
@@ -3120,7 +3120,7 @@ void Cv3Helper::find_index(math_style cms) {
         }
         return;
     }
-    if (C == hat_catcode && !exponent) {
+    if (C == hat_catcode && (exponent == nullptr)) {
         pop_front();
         if (empty()) {
             the_parser.parse_error("Math formula should not finish with ^");
@@ -3154,8 +3154,8 @@ void Cv3Helper::find_index(math_style cms) {
 // B=0 (not a big op), B=1 (\sum, \lim, \mathop), B=2(\int, \sin)
 auto Cv3Helper::find_operator(math_style cms) -> name_positions {
     int what = 0;
-    if (index) what++;
-    if (exponent) what += 2;
+    if (index != nullptr) what++;
+    if (exponent != nullptr) what += 2;
     name_positions bl = cst_msub;
     if (what == 3)
         bl = cst_msubsup;
@@ -3169,10 +3169,10 @@ auto Cv3Helper::find_operator(math_style cms) -> name_positions {
     else if (special == 1 && cms != ms_D)
         special = 0; // implicit \displaylimits
 
-    if (!special) return bl;
+    if (special == 0) return bl;
     if (special > 8) { // \lim\limits_1 : define movablelimits='false'
         Xml *q = p->spec_copy();
-        if (q) {
+        if (q != nullptr) {
             p = q;
             p->add_att(np_movablelimits, np_false);
         }
@@ -3187,7 +3187,7 @@ auto Cv3Helper::find_operator(math_style cms) -> name_positions {
 }
 
 void Cv3Helper::add_kernel(math_style cms) {
-    if (!index && !exponent) {
+    if ((index == nullptr) && (exponent == nullptr)) {
         res.push_back(p, ploc, ptype);
         return;
     }
@@ -3199,7 +3199,8 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
     Xml *tmp = new Xml(bl, nullptr);
     // case a_b_c. If we do nothing, the mathml interpreter will barf
-    if (p && !p->is_xmlc() && (p->has_name(cst_msup) || p->has_name(cst_msub) || p->has_name(cst_msubsup))) p = new Xml(cst_mrow, p);
+    if ((p != nullptr) && !p->is_xmlc() && (p->has_name(cst_msup) || p->has_name(cst_msub) || p->has_name(cst_msubsup)))
+        p = new Xml(cst_mrow, p);
     if (ptype == mt_flag_small_l || ptype == mt_flag_small_r || ptype == mt_flag_small_m) {
         res.push_back(p, ploc, ptype);
         //      static int dmc =0;
@@ -3213,11 +3214,11 @@ void Cv3Helper::add_kernel(math_style cms) {
     // case {\sum}_1
     tmp->add_tmp(p);
     tmp->push_back(xmlspace);
-    if (index) {
+    if (index != nullptr) {
         tmp->add_tmp(index);
         tmp->push_back(xmlspace);
     }
-    if (exponent) {
+    if (exponent != nullptr) {
         tmp->add_tmp(exponent);
         tmp->push_back(xmlspace);
     }

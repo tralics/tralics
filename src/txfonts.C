@@ -164,13 +164,13 @@ auto FontInfo::series_name() const -> String {
 auto operator<<(ostream &fp, const FontInfo &L) -> ostream & {
     String s;
     s = L.size_name();
-    if (s) fp << s;
+    if (s != nullptr) fp << s;
     s = L.shape_name();
-    if (s) fp << s;
+    if (s != nullptr) fp << s;
     s = L.family_name();
-    if (s) fp << s;
+    if (s != nullptr) fp << s;
     s = L.series_name();
-    if (s) fp << s;
+    if (s != nullptr) fp << s;
     return fp;
 }
 
@@ -232,7 +232,7 @@ void FontInfo::see_font_change(subtypes c) {
     case sl_shape_code: shape = fi_sl_shape; return;
     case sc_shape_code: shape = fi_sc_shape; return;
     case em_code:
-        if (shape)
+        if (shape != 0)
             shape = 0;
         else
             shape = fi_it_shape;
@@ -297,7 +297,7 @@ void FontInfo::ltfont(string s, subtypes c) {
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(string n, int a, int s) -> int {
     for (uint i = 0; i < nb_tex_fonts; i++)
-        if (data[i] && data[i]->its_me(n, a, s)) return i;
+        if ((data[i] != nullptr) && data[i]->its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
 }
 
@@ -361,7 +361,7 @@ void TexFont::make_null() {
 // True if k is a valid font ID
 auto TexFonts::is_valid(int k) -> bool {
     if (k < 0 || k >= int(nb_tex_fonts)) return false;
-    if (!data[k]) return false;
+    if (data[k] == nullptr) return false;
     return true;
 }
 
@@ -376,11 +376,11 @@ auto TexFonts::name(int k) -> string {
 void TexFonts::full_name(Buffer &B, int k) {
     if (!is_valid(k)) return;
     B.push_back(data[k]->name);
-    if (data[k]->scaled_val) {
+    if (data[k]->scaled_val != 0) {
         B.push_back(" scaled ");
         B.push_back_int(data[k]->scaled_val);
     }
-    if (data[k]->at_val) {
+    if (data[k]->at_val != 0) {
         B.push_back(" at ");
         B.push_back(ScaledInt(data[k]->at_val), glue_spec_pt);
     }
@@ -431,7 +431,7 @@ void TexFont::realloc_param(int p) {
     auto *T = new ScaledInt[k];
     for (int i = 0; i < k; i++) T[i].set_value(0);
     for (int i = 0; i < param_len; i++) T[i] = param_table[i];
-    if (param_table) delete[] param_table;
+    if (param_table != nullptr) delete[] param_table;
     param_table = T;
     param_len   = k;
 }

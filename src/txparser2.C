@@ -244,7 +244,7 @@ void Parser::E_get_config(int c) {
     string    resource = list_to_string_c(L1, "Problem scanning resource name");
     string    key;
     string    res;
-    if (c) {
+    if (c != 0) {
         TokenList L2 = read_arg();
         key          = list_to_string_c(L2, "Problem scanning key");
         res          = config_ns::find_one_key(resource, key);
@@ -254,7 +254,7 @@ void Parser::E_get_config(int c) {
     TokenList L = mac_buf.str_toks11(false);
     if (tracing_macros()) {
         the_log << lg_start << T << " #1=" << resource;
-        if (c) the_log << " #2=" << key;
+        if (c != 0) the_log << " #2=" << key;
         the_log << " -> " << L << lg_end;
     }
     back_input(L);
@@ -1038,7 +1038,7 @@ auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
     Buffer &B   = local_buf;
     bool    ret = !hash_table.is_defined(B);
     if (c && ret) {
-        B << bf_reset << "No " << (c2 ? "presets" : " save keys") << " defined for `" << xkv_header << "'";
+        B << bf_reset << "No " << (c2 != 0 ? "presets" : " save keys") << " defined for `" << xkv_header << "'";
         parse_error(err_tok, B.to_string());
         return true;
     }
@@ -1269,7 +1269,7 @@ void token_ns::lower_case(TokenList &L) {
         if (a.get_val() < single_offset) {
             int b  = a.chr_val();
             int cx = the_parser.eqtb_int_table[b + offset].get_val();
-            if (cx) *P = Token(a.get_val() - b + cx);
+            if (cx != 0) *P = Token(a.get_val() - b + cx);
         }
         ++P;
     }
@@ -2039,9 +2039,9 @@ auto FormatDate::parse_format(Buffer &B) -> bool {
     int  c1 = 0, c2 = 0, c3 = 0;
     bool ok = false;
     c1      = next_format_char(B);
-    if (c1) c2 = next_format_char(B);
-    if (c2) c3 = next_format_char(B);
-    if (c3) {
+    if (c1 != 0) c2 = next_format_char(B);
+    if (c2 != 0) c3 = next_format_char(B);
+    if (c3 != 0) {
         B.skip_sp_tab_nl();
         if (B.at_eol()) ok = true;
     }
@@ -2293,7 +2293,7 @@ auto Parser::optional_enumerate(TokenList &L, String ctr) -> bool {
             else
                 b--;
         }
-        if (b) {
+        if (b != 0) {
             res.push_back(T);
             continue;
         }
@@ -2647,7 +2647,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         B.push_back16(r, false);
         the_log << lg_start << T << c << B << "." << lg_end;
     }
-    if (!r) {
+    if (r == 0) {
         Buffer &B = err_ns::local_buf;
         B << bf_reset << "Invalid chararacter specification ";
         B.push_back(T);

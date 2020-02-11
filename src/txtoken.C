@@ -30,7 +30,7 @@ namespace token_ns {
 void Stats::token_stats() {
     main_ns::log_or_tty << "Math stats: formulas " << m_cv << ", kernels " << m_k << ", trivial " << m_trivial << ", \\mbox " << m_spec_box
                         << ", large " << m_large << ", small " << m_small << ".\n";
-    if (nb_hdr) main_ns::log_or_tty << "Number of HdR: " << nb_hdr << ".\n";
+    if (nb_hdr != 0) main_ns::log_or_tty << "Number of HdR: " << nb_hdr << ".\n";
     main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << str_length << ", merge " << m_merge
                         << "\n"
                         << "Macros created " << nb_macros << ", deleted " << nb_macros_del << "; hash size "
@@ -177,7 +177,7 @@ auto Hashtab::find_empty(String s) -> int {
             main_ns::log_and_tty << "hash table full\n" << lg_fatal;
             abort();
         }
-        if (!Text[hash_used]) break;
+        if (Text[hash_used] == nullptr) break;
     }
     Text[hash_used] = s;
     hash_bad++;
@@ -198,13 +198,13 @@ auto Hashtab::find_empty(String s) -> int {
 auto Hashtab::hash_find(const Buffer &b, String name) -> int {
     int p = b.hashcode(hash_prime);
     for (;;) {
-        if (Text[p] && b == Text[p]) return p;
-        if (Next[p])
+        if ((Text[p] != nullptr) && b == Text[p]) return p;
+        if (Next[p] != 0)
             p = Next[p];
         else
             break;
     }
-    if (!name) name = b.convert_to_str();
+    if (name == nullptr) name = b.convert_to_str();
     return find_aux(p, name);
 }
 
@@ -212,8 +212,8 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> int {
 auto Hashtab::hash_find() -> int {
     int p = B.hashcode(hash_prime);
     for (;;) {
-        if (Text[p] && B == Text[p]) return p;
-        if (Next[p])
+        if ((Text[p] != nullptr) && B == Text[p]) return p;
+        if (Next[p] != 0)
             p = Next[p];
         else
             break;
@@ -226,7 +226,7 @@ auto Hashtab::hash_find() -> int {
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
 auto Hashtab::find_aux(int p, String name) -> int {
-    if (Text[p]) {
+    if (Text[p] != nullptr) {
         int q   = find_empty(name);
         Next[p] = q;
         return q;
@@ -243,7 +243,7 @@ auto Hashtab::find_aux(int p, String name) -> int {
 auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
     hash_used--;
     int p = hash_used;
-    if (Text[p] || p < hash_prime) {
+    if ((Text[p] != nullptr) || p < hash_prime) {
         main_ns::log_and_tty << "Size of hash table is " << hash_size << "\n";
         main_ns::log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
         main_ns::log_and_tty << "Current position is " << p << "\n";
@@ -273,7 +273,7 @@ auto Buffer::hashcode(int prime) const -> int {
 // Returns the hash table location of the string s.
 // The string must be a non-empty permanent string
 auto Hashtab::locate(String s) -> Token {
-    if (!s[1]) return Token(uchar(s[0]) + single_offset);
+    if (s[1] == 0) return Token(uchar(s[0]) + single_offset);
     B << bf_reset << s;
     return Token(hash_find(B, s) + hash_offset);
 }
@@ -306,8 +306,8 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
         else {
             int p = b.hashcode(hash_prime);
             for (;;) {
-                if (Text[p] && b == Text[p]) break;
-                if (Next[p])
+                if ((Text[p] != nullptr) && b == Text[p]) break;
+                if (Next[p] != 0)
                     p = Next[p];
                 else
                     return false;
@@ -757,18 +757,18 @@ void StrHash::re_alloc() {
 // to search. result is never zero
 auto StrHash::hash_find() -> int {
     the_parser.my_stats.one_more_sh_find();
-    if (!mybuf[0]) return 1;
+    if (mybuf[0] == 0) return 1;
     int p = mybuf.hashcode(hash_prime) + 3;
     for (;;) {
-        if (Text[p] && mybuf == Text[p]) return p;
-        if (Next[p])
+        if ((Text[p] != nullptr) && mybuf == Text[p]) return p;
+        if (Next[p] != 0)
             p = Next[p];
         else
             break;
     }
     String name  = mybuf.convert_to_str();
     String value = mybuf.convert_to_out_encoding(name);
-    if (!Text[p]) {
+    if (Text[p] == nullptr) {
         the_parser.my_stats.one_more_sh_used();
         Text[p]  = name;
         Value[p] = value;
@@ -811,7 +811,7 @@ auto StrHash::find_scaled(ScaledInt s) -> Istring {
 
 void Buffer::push_back(const Istring &X) {
     int v = X.get_value();
-    if (!v) return;
+    if (v == 0) return;
     if (v == 1) return;
     push_back(X.p_str());
 }
@@ -896,11 +896,11 @@ void Logger::dump0(String s) {
 void Parser::print_cmd_chr(CmdChr X) {
     String a = X.special_name();
     String b = X.name();
-    if (a && b) { // print both values
+    if ((a != nullptr) && (b != nullptr)) { // print both values
         the_log << "\\" << b << " " << a;
         return;
     }
-    if (a) { // chr
+    if (a != nullptr) { // chr
         the_log << a;
         Utf8Char y = X.get_chr();
         Buffer & B = buffer_for_log;
@@ -908,7 +908,7 @@ void Parser::print_cmd_chr(CmdChr X) {
         B.out_log(y, the_main->get_log_encoding());
         return;
     }
-    if (b)
+    if (b != nullptr)
         the_log << "\\" << b;
     else
         the_log << "(Unknown " << X.get_cmd() << "," << X.get_chr() << ")";

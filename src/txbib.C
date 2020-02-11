@@ -201,7 +201,7 @@ void Parser::T_cite(subtypes sw) {
     for (;;) {
         if (S.at_end()) break;
         String cur = S.get_next();
-        if (!cur[0]) continue;
+        if (cur[0] == 0) continue;
         if (sw == nocite_code) {
             if (strcmp(cur, "*") == 0)
                 the_bibliography.set_nocite();
@@ -288,7 +288,7 @@ void Parser::T_bibliostyle() {
     String        Val = fetch_name0_nopar();
     Bibliography &T   = the_bibliography;
     if (strncmp(Val, "bibtex:", 7) == 0) {
-        if (Val[7]) T.set_style(string(Val + 7));
+        if (Val[7] != 0) T.set_style(string(Val + 7));
         T.set_cmd("bibtex " + get_job_name());
     } else if (strncmp(Val, "program:", 8) == 0)
         T.set_cmd(string(Val + 8) + " " + get_job_name() + ".aux");
@@ -306,7 +306,7 @@ void Parser::T_biblio() {
     Splitter S(list);
     while (!S.at_end()) {
         String w = S.get_next();
-        if (!w[0]) continue;
+        if (w[0] == 0) continue;
         the_bibliography.push_back_src(w);
     }
 }
@@ -364,7 +364,7 @@ void CitationItem::dump_bibtex() {
     if (is_solved()) return;
     CitationKey ref(from.c_str(), key.c_str());
     BibEntry *  X = the_bibtex->find_entry(ref);
-    if (X) {
+    if (X != nullptr) {
         err_ns::local_buf << bf_reset << "Conflicts with tralics bib" << ref.get_name();
         the_parser.signal_error(the_parser.err_tok, "bib");
         return;
@@ -454,7 +454,7 @@ void Bibtex::read_ra() {
 void Bibliography::dump_bibtex() {
     if (seen_nocite()) the_bibtex->nocitestar_true();
     int n = citation_table.size();
-    if (n) bbl.open();
+    if (n != 0) bbl.open();
     for (int i = 0; i < n; i++) citation_table[i].dump_bibtex();
     n = biblio_src.size();
     if (n > 0) {
@@ -472,7 +472,7 @@ void Bibliography::stats() {
         if (citation_table[i].is_solved()) solved++;
     }
     main_ns::log_or_tty << "Bib stats: seen " << total;
-    if (solved) main_ns::log_or_tty << "(" << solved << ")";
+    if (solved != 0) main_ns::log_or_tty << "(" << solved << ")";
     main_ns::log_or_tty << " entries.\n";
 }
 
@@ -656,12 +656,12 @@ auto Bibtex::look_at_macro(int h, String name) -> int {
 // [ if xname true, we define a system macro,
 //   otherwise we define/redefine user one]
 auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> int {
-    if (xname) name << bf_reset << xname;
+    if (xname != nullptr) name << bf_reset << xname;
     int h   = name.hashcode(bib_hash_mod);
     int res = look_at_macro(h, name.c_str());
     if (res >= 0 || !insert) return res;
     res = all_macros.size();
-    if (xname)
+    if (xname != nullptr)
         all_macros.emplace_back(h, xname, val);
     else
         all_macros.emplace_back(h, name);
@@ -673,7 +673,7 @@ void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf
 
 // Return an integer associated to a field position.
 auto Bibtex::find_field_pos(String s) const -> field_pos {
-    if (!s) return fp_unknown;
+    if (s == nullptr) return fp_unknown;
     auto S = Istring(s);
     // Check is this has to be ignored
     vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
@@ -874,7 +874,7 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
             res = all_entries[i];
             n++;
         }
-    if (res) {
+    if (res != nullptr) {
         n = -n;
         return res;
     }
@@ -882,7 +882,7 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
     for (int i = 0; i < len; i++)
         if (all_entries[i]->cite_key.is_similar_lower(s)) {
             n++;
-            if (!res) {
+            if (res == nullptr) {
                 res = all_entries[i];
                 continue;
             }
@@ -1138,7 +1138,7 @@ static const String scan_msgs[] = {
 // in case we are at EOF.
 auto Bibtex::scan_identifier(int what) -> bool {
     int ret = scan_identifier0(what);
-    if (ret) log_and_tty << scan_msgs[ret > 0 ? ret : -ret];
+    if (ret != 0) log_and_tty << scan_msgs[ret > 0 ? ret : -ret];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
@@ -1266,7 +1266,7 @@ auto Buffer::special_convert(bool init) -> string {
     bool space = true;
     for (;;) {
         unsigned char c = next_char();
-        if (!c) break;
+        if (c == 0u) break;
         if (is_space(c)) {
             if (!space) {
                 biblio_buf1.push_back(' ');
@@ -1363,11 +1363,11 @@ auto Bibtex::auto_cite() -> bool {
 auto Bibtex::find_entry(String s, const string &prefix, bib_creator bc) -> BibEntry * {
     CitationKey key(prefix.c_str(), s);
     BibEntry *  X = find_entry(key);
-    if (X) return X;
+    if (X != nullptr) return X;
     int n = 0;
     X     = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);
-    if (!X) return make_new_entry(key, bc);
+    if (X == nullptr) return make_new_entry(key, bc);
     return X;
 }
 
@@ -1392,10 +1392,10 @@ auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
         return X;
     }
     BibEntry *X = find_entry(key);
-    if (X) return X;
+    if (X != nullptr) return X;
     X = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);
-    if (!X && create) return make_new_entry(key, bc);
+    if ((X == nullptr) && create) return make_new_entry(key, bc);
     return X;
 }
 
@@ -1412,7 +1412,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             return nullptr;
         }
     BibEntry *X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
-    if (!X) return X;
+    if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
         return nullptr;
@@ -1446,7 +1446,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
     if (scan_identifier(3)) return;
     field_pos where = fp_unknown;
     bool      store = false;
-    if (X) { // if X null, we just read, but store nothing
+    if (X != nullptr) { // if X null, we just read, but store nothing
         cur_field_name = token_buf.to_string();
         where          = find_field_pos(token_buf.c_str());
         if (where != fp_unknown) store = true;
@@ -1537,13 +1537,13 @@ void BibEntry::parse_crossref() {
     BibEntry *  Y  = the_bibtex->find_entry(name, true, bc);
     if (this == Y) return; /// should not happen
     crossref = Y;
-    if (!Y->crossref_from) Y->crossref_from = this;
+    if (Y->crossref_from == nullptr) Y->crossref_from = this;
 }
 
 // Assume that X has a crossref to Y. Then all empty fields will be
 // replaced by the fields of Y, except crossref and key.
 void BibEntry::un_crossref() {
-    if (!crossref) return;
+    if (crossref == nullptr) return;
     copy_from(crossref, 2);
 }
 
@@ -1629,7 +1629,7 @@ void BibEntry::work(int serial) {
     cur_entry_name = cite_key.get_name();
     if (type_int == type_unknown) {
         the_bibtex->err_in_entry("undefined reference.\n");
-        if (crossref_from) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.get_name() << "\n";
+        if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.get_name() << "\n";
         return;
     }
     if (explicit_cit) return;
@@ -1691,7 +1691,7 @@ BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), 
     for (auto &all_field : all_fields) all_field = "";
     vector<Istring> &Bib = the_main->get_bibtex_fields();
     int              n   = Bib.size();
-    if (n) {
+    if (n != 0) {
         user_fields = new string[n];
         for (int i = 0; i < n; i++) user_fields[i] = "";
     }
@@ -1762,7 +1762,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(unique_id.c_str());
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
-    if (is_extension)
+    if (is_extension != 0)
         my_name = the_main->get_bibtex_extensions()[is_extension - 1].c_str();
     else
         my_name = the_names[type_to_string(type_int)].c_str();
@@ -1980,7 +1980,7 @@ void Buffer::skip_over_brace() {
     int bl = 0;
     for (;;) {
         uchar c = head();
-        if (!c) return;
+        if (c == 0u) return;
         ptr++;
         if (c == '\\') {
             if (head() == 0) return;
@@ -2021,7 +2021,7 @@ auto bib_ns::last_chars(const string &s, int k) -> string {
     B.push_back(s);
     B.reset_ptr();
     int n = -k;
-    while (B.head()) {
+    while (B.head() != 0) {
         n++;
         B.next_bibtex_char();
     }
@@ -2069,8 +2069,8 @@ void BibEntry::add_warning(int dy) {
 auto bib_ns::skip_dp(const string &str) -> string {
     String s = str.c_str();
     int    i = 0;
-    while (s[i] && s[i] != ':') i++;
-    if (s[i] && s[i + 1]) return s + i + 1;
+    while ((s[i] != 0) && s[i] != ':') i++;
+    if ((s[i] != 0) && (s[i + 1] != 0)) return s + i + 1;
     return str;
 }
 
@@ -2163,7 +2163,7 @@ void Buffer::special_title(string s) {
             continue;
         }
         if (c == '{') level++;
-        if (c != '{' || i == n - 1 || blevel || level != 1) {
+        if (c != '{' || i == n - 1 || (blevel != 0) || level != 1) {
             push_back(c);
             continue;
         }
@@ -2245,7 +2245,7 @@ void Buffer::fill_table(bchar_type *table) {
     for (;;) {
         int   i = ptr;
         uchar c = head();
-        if (!c) {
+        if (c == 0u) {
             table[i] = bct_end;
             return;
         }
@@ -2318,7 +2318,7 @@ void Buffer::fill_table(bchar_type *table) {
         int j    = i;
         table[i] = bct_brace;
         for (;;) {
-            if (!head()) {
+            if (head() == 0) {
                 the_bibtex->err_in_name("this cannot happen!", j);
                 buf[j]   = 0;
                 table[j] = bct_end;
@@ -2701,7 +2701,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
     B.reset();
     for (;;) {
         unsigned char c = uhead();
-        if (!c) return;
+        if (c == 0u) return;
         advance();
         if (c == '|') {
             B.push_back("\\vbar ");

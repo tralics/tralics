@@ -422,7 +422,7 @@ class Cv3Helper {
 
 public:
     int state;
-    Cv3Helper(Math X) : object(std::move(X)), special(false) {}
+    Cv3Helper(Math X) : object(std::move(X)), special(0) {}
     void reinit();
     void non_script();
     void find_kernel();

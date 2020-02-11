@@ -129,7 +129,7 @@ void Parser::leave_v_mode() {
 auto Parser::ileave_v_mode() -> Xid {
     int k   = cur_centering();
     Xid res = the_stack.push_par(k);
-    if (unfinished_par) {
+    if (unfinished_par != nullptr) {
         res.add_attribute(unfinished_par->get_id().get_att(), true);
         unfinished_par = nullptr;
     }
@@ -143,7 +143,7 @@ void Parser::leave_h_mode() {
         flush_buffer0();
         the_stack.pop(cst_p);
         Xml *p = the_stack.top_stack()->back();
-        if (p && p->is_empty_p()) the_stack.top_stack()->pop_back();
+        if ((p != nullptr) && p->is_empty_p()) the_stack.top_stack()->pop_back();
         the_stack.add_nl();
     }
 }
@@ -219,7 +219,7 @@ auto Parser::special_next_arg() -> string {
 // Returns next optional argument as a string
 auto Parser::sT_optarg_nopar() -> string {
     Xml *res = xT_optarg_nopar();
-    if (!res) return "";
+    if (res == nullptr) return "";
     return res->convert_to_string();
 }
 
@@ -348,7 +348,7 @@ void Parser::implicit_par(subtypes c) {
     flush_buffer();
     if (the_stack.in_h_mode() && cur_centering() != 1) {
         Xml *cp = the_stack.get_cur_par();
-        if (!cp) {
+        if (cp == nullptr) {
             parse_error("Invalid \\par command");
             return;
         }
@@ -377,7 +377,7 @@ void Parser::T_par1() {
     flush_buffer();
     if (the_stack.in_h_mode()) {
         Xml *cp = the_stack.get_cur_par();
-        if (!cp) {
+        if (cp == nullptr) {
             parse_error("Invalid \\par command: paragraph not started");
         } else if (cp->par_is_empty()) {
             unfinished_par = cp;
@@ -405,7 +405,7 @@ void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
     string s   = sT_arg_nopar();
     Xml *  res = new Xml(Istring(s), nullptr);
-    if (w) {
+    if (w != 0u) {
         if (w == two_code) res->set_id(-1); // XML comment
         flush_buffer();
         the_stack.add_last(res);
@@ -464,7 +464,7 @@ auto Parser::T_item_label(int c) -> Istring {
     the_stack.set_arg_mode();
     T_translate(L);
     the_stack.pop(np_label_item);
-    if (!(c || get_cur_env_name() == "enumerate")) return Istring(0);
+    if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0);
     Xml *res = the_stack.remove_last();
     res->change_name(Istring(1));
     string w = res->convert_to_string();
@@ -513,7 +513,7 @@ void Parser::start_paras(int y, string Y, bool star) {
     current_head.reset();
     title->put_in_buffer(current_head);
     the_stack.pop(np_head);
-    if (opt) the_stack.add_last(new Xml(np_alt_section, opt));
+    if (opt != nullptr) the_stack.add_last(new Xml(np_alt_section, opt));
     the_stack.add_nl();
     the_stack.set_v_mode();
     static int first_print_level = 10;
@@ -793,7 +793,7 @@ void Parser::T_grabenv() {
     Token     cmd = get_r_token();
     TokenList value;
     skip_initial_space_and_back_input();
-    if (!nb_env_on_stack()) {
+    if (nb_env_on_stack() == 0) {
         parse_error("\\grabenv must be used in an environment");
     } else
         grab_env(value);
@@ -1004,7 +1004,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     if (the_stack.in_h_mode()) {
         flush_buffer();
         Xml *cp = the_stack.get_cur_par();
-        if (!cp) {
+        if (cp == nullptr) {
             parse_error("Expected a p element on the stack"); //  this is bad.
             return;
         }
@@ -1206,7 +1206,7 @@ void Parser::T_mbox(subtypes c) {
     }
     // Hack the box
     Xml *u = mbox->single_non_empty();
-    if (u && u->has_name(the_names[np_figure])) mbox->kill_name();
+    if ((u != nullptr) && u->has_name(the_names[np_figure])) mbox->kill_name();
     if (mbox->only_text()) mbox->kill_name();
     if (mbox->only_hi()) mbox->kill_name();
 }
@@ -1243,7 +1243,7 @@ void Parser::T_cap_or_note(bool cap) {
         font_has_changed();
     }
     the_stack.pop(name);
-    if (opt) the_stack.add_last(new Xml(np_alt_caption, opt));
+    if (opt != nullptr) the_stack.add_last(new Xml(np_alt_caption, opt));
     pop_level(bt_local);
     if (the_main->get_footnote_hack()) note->remove_par_bal_if_ok();
 }
@@ -1378,7 +1378,7 @@ void Parser::T_fbox(subtypes cc) {
     Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->get_id().get_att();
     if (cc == scalebox_code) {
-        if (aux && aux->has_name(the_names[np_figure])) {
+        if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
             aux->get_id().add_attribute(the_names[np_scale], iscale, true);
             aux->get_id().add_attribute(Istring("vscale"), iwidth);
             cur->kill_name();
@@ -1388,7 +1388,7 @@ void Parser::T_fbox(subtypes cc) {
         }
         return;
     }
-    if (aux && aux->has_name(the_names[np_figure])) {
+    if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
         aux->get_id().add_attribute(np_framed, np_true);
         cur->kill_name();
     } else {
@@ -1520,7 +1520,7 @@ void Parser::T_hanl(subtypes c) {
 // If env is true, we grab the content of the env.
 
 auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has_q) -> Xml * {
-    if (!y || y[0] == 0) {
+    if ((y == nullptr) || y[0] == 0) {
         TokenList L = read_arg();
         back_input(hash_table.par_token);
         back_input(L);
@@ -1621,7 +1621,7 @@ void Parser::T_reevaluate() {
     if (in_env) {    // unread tokens should be \end{cur}
         get_token(); // the \end token
         string s = group_to_string();
-        if (!is_env_on_stack(s)) {
+        if (is_env_on_stack(s) == nullptr) {
             parse_error(err_tok, "cannot close environment ", s, "bad \\end");
             return;
         }
@@ -1720,7 +1720,7 @@ void Parser::T_case_shift(int c) {
         if (a.char_or_active()) {
             int b  = a.chr_val();
             int cx = eqtb_int_table[b + offset].get_val();
-            if (cx) {
+            if (cx != 0) {
                 res.push_back(Token(a.get_val() - b + cx));
                 continue;
             }
@@ -1807,7 +1807,7 @@ void Parser::T_bezier(int c) {
     Istring w;
     {
         TokenList L;
-        if (c)
+        if (c != 0)
             read_optarg(L);
         else
             L = read_arg();
@@ -2087,11 +2087,11 @@ void Parser::T_xmladdatt(subtypes c) {
     if (key.empty()) {
         if (!force) return;
         Xml *e = the_stack.elt_from_id(n);
-        if (!e) return;
+        if (e == nullptr) return;
         e->change_name(val);
         return;
     }
-    if (n) Xid(n).add_attribute(key, val, force);
+    if (n != 0) Xid(n).add_attribute(key, val, force);
 }
 
 // Returns the value of an attribute or element
@@ -2102,7 +2102,7 @@ auto Parser::get_attval() -> string {
     Istring key = nT_arg_nopar();
     if (key.empty()) {
         Xml *e = the_stack.elt_from_id(n);
-        if (!e) return "";
+        if (e == nullptr) return "";
         return e->get_name().c_str();
     }
     Istring res = Xid(n).has_attribute(key);

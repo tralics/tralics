@@ -492,7 +492,7 @@ void Parser::E_accent() {
     } else {
         err_ns::local_buf << bf_reset << msg1;
         err_ns::local_buf << tfe.tok_to_str();
-        if (acc_code2) err_ns::local_buf << tfe2.tok_to_str();
+        if (acc_code2 != 0) err_ns::local_buf << tfe2.tok_to_str();
         if (Y.is_invalid())
             err_ns::local_buf << "\nEnd of data reached while scanning argument";
         else if (!cur_tok.not_a_cmd())
@@ -505,7 +505,7 @@ void Parser::E_accent() {
     Token res;
     bool  spec = false;
     if (achar < nb_accents) {
-        if (acc_code2) {
+        if (acc_code2 != 0) {
             int acc3_code = accent_ns::combine_accents(acc_code, acc_code2);
             res           = accent_ns::fetch_double_accent(achar, acc3_code);
         } else {
@@ -524,7 +524,7 @@ void Parser::E_accent() {
             achar >= 128 ? "a non 7-bit character" : is_letter(achar) ? "letter" : is_digit(achar) ? "digit" : "non-letter character";
         err_ns::local_buf << bf_reset << msg1;
         err_ns::local_buf << tfe.tok_to_str();
-        if (acc_code2) err_ns::local_buf << tfe2.tok_to_str();
+        if (acc_code2 != 0) err_ns::local_buf << tfe2.tok_to_str();
         err_ns::local_buf << "\nCannot put accent on " << s;
         if (achar < 128) err_ns::local_buf << " " << char(achar);
         signal_error(err_tok, msg2);

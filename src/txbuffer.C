@@ -226,7 +226,7 @@ auto Buffer::after_slash() -> bool {
     if (head() != '\\') return false;
     set_ptr1();
     advance();
-    if (!head()) return false;
+    if (head() == 0) return false;
     if (!is_letter(head()))
         advance();
     else
@@ -237,7 +237,7 @@ auto Buffer::after_slash() -> bool {
 // Sets (ptr1,ptr) to the next macro. In case of failure, returns false.
 auto Buffer::next_macro() -> bool {
     if (at_eol()) return false;
-    while (head() && head() != '\\') advance();
+    while ((head() != 0) && head() != '\\') advance();
     return after_slash();
 }
 
@@ -266,7 +266,7 @@ auto Buffer::next_env_spec() -> bool {
         set_ptr1();
         advance();
         skip_letter();
-        if (is_begin_end()) return true;
+        if (is_begin_end() != 0) return true;
     }
 }
 
@@ -288,7 +288,7 @@ auto Buffer::see_something(const String *Table) -> int {
         if (!next_macro()) return -1;
         ptr1++; /// skip over the backslash
         for (int k = 0;; k++) {
-            if (!Table[k]) break;
+            if (Table[k] == nullptr) break;
             if (contains_here(Table[k])) return k;
         }
     }
@@ -301,7 +301,7 @@ auto Buffer::see_begin_end(Buffer &before, Buffer &after) -> int {
     for (;;) {
         if (!next_macro()) return 0;
         res = is_begin_end();
-        if (res) break;
+        if (res != 0) break;
     }
     after.reset0();
     after.push_back(buf + ptr);
@@ -374,7 +374,7 @@ auto Buffer::full_brace_match() -> bool {
         else if (c == '}') {
             level--;
             if (level == 0) return true;
-        } else if (!c)
+        } else if (c == 0u)
             return false;
     }
 }
@@ -392,7 +392,7 @@ auto Buffer::full_bracket_match() -> bool {
             level--;
         else if (c == ']' && level == 0)
             return true;
-        else if (!c)
+        else if (c == 0u)
             return false;
     }
 }
@@ -515,8 +515,8 @@ auto Splitter::get_next_raw() -> String {
 // Uses next_for_splitter to see the start and end of the keyword
 auto Splitter::get_next() -> String {
     String T = get_next_raw();
-    while (T[0] && is_space(T[0])) T++;
-    if (!T[0]) return "";
+    while ((T[0] != 0) && is_space(T[0])) T++;
+    if (T[0] == 0) return "";
     Buffer &B = local_buf;
     B.reset();
     B.push_back(T);
@@ -530,9 +530,9 @@ void Splitter::extract_keyval(string &key, string &val) {
     key      = "";
     val      = "";
     String T = get_next_raw();
-    if (!T[0]) return;
+    if (T[0] == 0) return;
     int i = 0;
-    while (T[i] && T[i] != '=') i++;
+    while ((T[i] != 0) && T[i] != '=') i++;
     if (T[i] == '=') {
         thebuffer.kill_at(i);
         val = local_buf.without_end_spaces(T + i + 1);
@@ -584,7 +584,7 @@ void Buffer::remove_space_at_end() {
 // This removes initial and final spaces. The result is a temporary.
 auto Buffer::without_end_spaces(String T) -> String {
     while (is_space(T[0])) T++;
-    if (!T[0]) return "";
+    if (T[0] == 0) return "";
     reset();
     push_back(T);
     while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
@@ -862,7 +862,7 @@ void Buffer::push_back(const Glue &x) {
 // Replaces all `pt' by `mu'
 void Buffer::pt_to_mu() {
     for (int i = 0;; i++) {
-        if (!buf[i]) return;
+        if (buf[i] == 0) return;
         if (buf[i] != 'p') continue;
         if (buf[i + 1] == 't') {
             buf[i]     = 'm';
@@ -1053,7 +1053,7 @@ auto Buffer::tex_comment_line() const -> bool {
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
     String s   = strstr(buf, cmd);
-    if (!s) return false;
+    if (s == nullptr) return false;
     int k = s - buf;
     for (int j = 0; j < k; j++)
         if (buf[j] == '%' && buf[j + 1] == '%') return false; // double comment
@@ -1086,15 +1086,15 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
 auto Buffer::find_configuration(Buffer &aux) -> bool {
     if (buf[0] != '%') return false;
     String s = strstr(buf, "ralics configuration file");
-    if (!s) return false;
+    if (s == nullptr) return false;
     int k = s - buf;
-    while (buf[k] && buf[k] != '\'') k++;
-    if (!buf[k]) return false;
+    while ((buf[k] != 0) && buf[k] != '\'') k++;
+    if (buf[k] == 0) return false;
     k++;
     int len = 0;
     aux.reset();
     for (;;) {
-        if (!buf[k]) return false;
+        if (buf[k] == 0) return false;
         if (buf[k] == '\'') break;
         aux.push_back(buf[k]);
         len++;
@@ -1110,11 +1110,11 @@ auto Buffer::find_doctype() -> int {
     if (buf[0] != '%') return 0;
     String S = "ralics DOCTYPE ";
     String s = strstr(buf, S);
-    if (!s) return 0;
+    if (s == nullptr) return 0;
     int k = s - buf;
     k += strlen(S);
-    while (buf[k] && (buf[k] == ' ' || buf[k] == '=')) k++;
-    if (!buf[k]) return 0;
+    while ((buf[k] != 0) && (buf[k] == ' ' || buf[k] == '=')) k++;
+    if (buf[k] == 0) return 0;
     return k;
 }
 
@@ -1153,7 +1153,7 @@ void Buffer::init_from_buffer(Buffer &b) {
 
 auto Buffer::find_char(char c) -> bool {
     ptr = 0;
-    while (head() && head() != c) advance();
+    while ((head() != 0) && head() != c) advance();
     return head() == c;
 }
 
@@ -1176,7 +1176,7 @@ auto Buffer::split_at_colon(string &before, string &after) -> bool {
 auto Buffer::find_equals() -> bool {
     skip_sp_tab_nl();
     set_ptr1();
-    while (head() && head() != '=') advance();
+    while ((head() != 0) && head() != '=') advance();
     return head() == '=';
 }
 
@@ -1198,11 +1198,11 @@ auto Buffer::backup_space() -> bool {
 auto Buffer::string_delims() -> bool {
     skip_sp_tab_nl();
     char c = head();
-    if (!c) return false;
+    if (c == 0) return false;
     advance();
     set_ptr1();
-    while (head() && head() != c) advance();
-    if (!head()) return false;
+    while ((head() != 0) && head() != c) advance();
+    if (head() == 0) return false;
     kill_at(ptr);
     return true;
 }
@@ -1215,14 +1215,14 @@ auto Buffer::slash_separated(string &a) -> bool {
     tmp.reset();
     int p = 0;
     skip_sp_tab();
-    if (!head()) return false;
+    if (head() == 0) return false;
     for (;;) {
         char c = head();
-        if (!c) return false;
+        if (c == 0) return false;
         advance();
         if (c == '/') break;
         if (c == '\\') {
-            if (!head()) return false;
+            if (head() == 0) return false;
             if (head() == ' ') { p = tmp.size() + 1; }
             c = head();
             advance();
@@ -1338,10 +1338,10 @@ Buffer check_image1;
 Buffer check_image2;
 // This checks that there is a unique source for the image
 void Image::check() {
-    int a = flags & 1 ? 1 : 0;
-    int b = flags & 2 ? 1 : 0;
-    int c = flags & 4 ? 1 : 0;
-    int d = flags & 8 ? 1 : 0;
+    int a = (flags & 1) != 0 ? 1 : 0;
+    int b = (flags & 2) != 0 ? 1 : 0;
+    int c = (flags & 4) != 0 ? 1 : 0;
+    int d = (flags & 8) != 0 ? 1 : 0;
     int e = a + b + c + d;
     if (e > 1) {
         if (!check_image1.empty()) check_image1 << ", ";
@@ -1369,41 +1369,41 @@ void Parser::enter_file_in_table(const string &nm, bool ok) {
 void operator<<(fstream &X, const Image &Y) {
     X << "see_image(\"" << Y.name << "\",";
     int k = Y.flags;
-    if (!k)
+    if (k == 0)
         X << 0;
     else {
         bool first = true;
-        if (k & 1) {
+        if ((k & 1) != 0) {
             if (!first) X << "+";
             X << 1;
             first = false;
         }
-        if (k & 2) {
+        if ((k & 2) != 0) {
             if (!first) X << "+";
             X << 2;
             first = false;
         }
-        if (k & 4) {
+        if ((k & 4) != 0) {
             if (!first) X << "+";
             X << 4;
             first = false;
         }
-        if (k & 8) {
+        if ((k & 8) != 0) {
             if (!first) X << "+";
             X << 8;
             first = false;
         }
-        if (k & 16) {
+        if ((k & 16) != 0) {
             if (!first) X << "+";
             X << 16;
             first = false;
         }
-        if (k & 32) {
+        if ((k & 32) != 0) {
             if (!first) X << "+";
             X << 32;
             first = false;
         }
-        if (k & 64) {
+        if ((k & 64) != 0) {
             if (!first) X << "+";
             X << 64;
             first = false;
@@ -1424,7 +1424,7 @@ void Parser::finish_images() {
     check_image1.reset();
     check_image2.reset();
     for (int i = 0; i < s; i++) {
-        if (the_images[i].occ) {
+        if (the_images[i].occ != 0) {
             the_images[i].check_existence();
             the_images[i].check();
             *fp << the_images[i];
@@ -1432,7 +1432,7 @@ void Parser::finish_images() {
     }
     fp->close();
     delete fp;
-    if (!s)
+    if (s == 0)
         main_ns::log_or_tty << "There was no image.\n";
     else
         main_ns::log_or_tty << "There were " << s << " images.\n";

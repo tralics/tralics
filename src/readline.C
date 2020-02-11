@@ -178,8 +178,8 @@ Slined::Slined(int sz, String P) : m_prompt("> "), m_hpos(0) {
     m_mark                            = 0;
     m_buffer                          = new char[buf_size];
     for (int i = 0; i < buf_size; i++) m_buffer[i] = ' ';
-    if (sz) m_inbuf = new char[sz];
-    if (P) {
+    if (sz != 0) m_inbuf = new char[sz];
+    if (P != nullptr) {
         m_history.emplace_back(P);
         m_history_size = 1; // first line is a comment
     }
@@ -366,7 +366,7 @@ void Slined::insert_in_image(int n, char c1, char c2) {
         redisplay();
     else {
         for (int i = 0; i < n; i++) {
-            if (c1) std::cerr.put(c1);
+            if (c1 != 0) std::cerr.put(c1);
             std::cerr.put(c2);
         }
         if (p == m) {
@@ -517,7 +517,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
 
     int taille = fin - debut + 1; // Size of what must be killed.
     m_killbuf  = string(m_inbuf + debut, taille);
-    if (sw) {
+    if (sw != 0) {
         rl_move(m_inpos, debut);
         for (int i = 0; i < taille; i++)
             if (m_inpos < m_inmax) rl_delete(false);
@@ -614,7 +614,7 @@ auto Slined::Hfind(int n) -> bool {
     int    pos       = m_hpos;
     while (pos > 0) {
         pos--;
-        if (strstr(m_history[pos].c_str(), s)) {
+        if (strstr(m_history[pos].c_str(), s) != nullptr) {
             seen_once = true;
             n--;
             if (n == 0) {
@@ -819,7 +819,7 @@ void Slined::do_esc_command(int n, char c) {
         m_search = "";
         search_string(n);
         return;
-    case 'w': delete_string(false, m_mark, m_inpos); return;
+    case 'w': delete_string(0, m_mark, m_inpos); return;
     case '@': m_mark = m_inpos; return;
     case '?':
         color_black();
@@ -903,7 +903,7 @@ void Slined::do_n_command(int n, unsigned char c) {
     case 21:
     case 24: delete_string(1, 0, pos - 1); return;
     case 25:
-        if (m_killbuf.size())
+        if (m_killbuf.size() != 0u)
             insert_substring(n, m_killbuf.c_str(), m_killbuf.size());
         else
             tybeep();
@@ -993,7 +993,7 @@ void Slined::run() {
 }
 
 void readline(char *buffer, int screen_size) {
-    if (!the_editor) readline_ns::make_edit();
+    if (the_editor == nullptr) readline_ns::make_edit();
     the_editor->initialise(buffer, cur_prompt, screen_size);
     set_termio();
     the_editor->run();

@@ -528,7 +528,7 @@ void Parser::get_date_ctrs(int &year, int &month, int &day) {
 // True if year Y is a leap year
 
 auto tralics_ns::is_leap_year(int y) -> bool {
-    if (y % 4) return false;
+    if ((y % 4) != 0) return false;
     if (y <= 1500) return true;
     if (y % 100 == 0) return y % 400 == 0;
     return true;
@@ -569,7 +569,7 @@ auto date_ns::check_date(int y, int m, int d) -> bool {
         else if (y == 1582 && m == 10 && d > 4 && d < 15)
             Bad = "inexistant day";
     }
-    if (!Bad) return true;
+    if (Bad == nullptr) return true;
     local_buf << bf_reset << "Date error: ";
     if (Bad[0] == '.')
         local_buf << "day>" << ml;
@@ -690,7 +690,7 @@ void Parser::is_date_valid() {
 void Parser::month_day(subtypes c) {
     Token T = cur_tok;
     int   n = scan_braced_int(cur_tok);
-    if (n <= 0 || n > (int(c) & 1 ? 7 : 12)) {
+    if (n <= 0 || n > ((int(c) & 1) != 0 ? 7 : 12)) {
         if (tracing_macros()) the_log << T << "<-" << lg_end;
         return;
     }

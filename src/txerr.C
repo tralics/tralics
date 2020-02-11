@@ -157,7 +157,7 @@ void Parser::bad_delimited(int cl, Token x) {
 
 void Parser::err_one_arg(const TokenList &L) {
     local_buf << bf_reset << "The command " << err_tok.tok_to_str() << " takes one token as argument instead of " << int(L.size());
-    if (L.size()) err_ns::local_buf << "\nargument is: " << L;
+    if (L.size() != 0u) err_ns::local_buf << "\nargument is: " << L;
     signal_error(err_tok, "onearg");
 }
 
@@ -175,7 +175,7 @@ void Parser::runaway(int cl) {
     else {
         local_buf << "Runaway argument?\n"
                   << "Paragraph ended while scanning an argument of " << err_tok.tok_to_str();
-        if (cl && cl != get_cur_line()) local_buf << ";\nscanning started on line " << cl;
+        if ((cl != 0) && cl != get_cur_line()) local_buf << ";\nscanning started on line " << cl;
     }
     signal_error(err_tok, "Runaway argument");
 }
@@ -388,7 +388,7 @@ void Parser::missing_flush() {
 }
 
 void Parser::signal_ovf(Token T, String h, int cur, int max) {
-    if (h) local_buf << bf_reset << h;
+    if (h != nullptr) local_buf << bf_reset << h;
     local_buf << T.tok_to_str() << " wants 0<=N<=" << max << ", with N=" << cur;
     signal_error(T, "number too big");
 }

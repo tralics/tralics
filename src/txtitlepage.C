@@ -119,7 +119,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     }
     if (del == '<') del = '>'; // else del is ""
     while (in.head() != del) {
-        if (!in.head()) {
+        if (in.head() == 0) {
             tpage_ns::init_error();
             main_ns::log_and_tty << "could not find end delimiter\n";
             out << bf_reset << "notfound";
@@ -204,9 +204,9 @@ auto TitlePageFullLine::classify(int w, int state) -> tpi_vals {
     if (item1.has_a_char() || item4.has_a_char()) return tpi_err;
     if (w == 0) return tpi_zero; // ignore this item
     if (w == 2133) {
-        if (state) return tpi_err;
+        if (state != 0) return tpi_err;
     } else {
-        if (!state) return tpi_err;
+        if (state == 0) return tpi_err;
     }
     if (w == 1000)
         return item2.only_dash() ? tpi_E : tpi_err;
@@ -428,8 +428,8 @@ void Parser::T_titlepage_finish(int v) {
     string        tmp      = tpa.get_T4();
     bool          finished = false;
     bool          also_bib = false;
-    if (strstr(tmp.c_str(), "'only title page'")) finished = true;
-    if (strstr(tmp.c_str(), "'translate also bibliography'")) also_bib = true;
+    if (strstr(tmp.c_str(), "'only title page'") != nullptr) finished = true;
+    if (strstr(tmp.c_str(), "'translate also bibliography'") != nullptr) also_bib = true;
     Xid(1).add_special_att(tmp);
     Xml *res = tpa.convert(2);
     res->get_id().add_special_att(tpa.get_T3());
@@ -506,16 +506,16 @@ auto TitlePage::find_UR(const string &s, string name) const -> int {
     Buffer &B = local_buf;
     B << bf_reset << s;
     int j = 0;
-    while (B[j] && !is_space(B[j])) j++;
+    while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
     B.kill_at(j);
     String match = B.c_str();
     int    res   = 0;
     for (const auto &k : bigtable) {
         res = k.find_UR(match, j);
-        if (res) break;
+        if (res != 0) break;
     }
-    if (!res) return 0;
+    if (res == 0) return 0;
     if (!name.empty()) {
         string w = B.to_string(j + 1);
         B << bf_reset << name;
@@ -569,13 +569,13 @@ auto Buffer::is_begin_something(String s) -> int {
         if (ptr == 9) return 2; // bad
         set_ptr1();
         skip_letter();
-        if (ptr == ptr1) return 2; // bad
-        kill_at(ptr);              // what follows the type is a comment
-        if (!s) return 5;          // s=0 for type lookup
+        if (ptr == ptr1) return 2;  // bad
+        kill_at(ptr);               // what follows the type is a comment
+        if (s == nullptr) return 5; // s=0 for type lookup
         if (strcmp(buf + ptr1, s) == 0) return 3;
         return 1;
     }
-    if (!s) return 0;
+    if (s == nullptr) return 0;
     ptr = 5;
     set_ptr1();
     skip_letter();
@@ -642,7 +642,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
         ++C;
         int open = B.see_config_env();
         b += open;
-        if (open) keep = false; // status changed
+        if (open != 0) keep = false; // status changed
         if (b < 0) {
             b = 0;
             continue;
@@ -777,7 +777,7 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
     if (!see_equals(s)) return nullptr;
     if (c) {
         int k = ptr;
-        while (buf[k] && buf[k] != '%' && buf[k] != '#') k++;
+        while ((buf[k] != 0) && buf[k] != '%' && buf[k] != '#') k++;
         wptr   = k;
         buf[k] = 0;
     }
@@ -817,7 +817,7 @@ auto LinePtr::find_top_val(String s, bool c) -> string {
     while (C != E) {
         B << bf_reset << C->get_chars();
         String res = B.see_config_kw(s, c);
-        if (res) return res;
+        if (res != nullptr) return res;
         C = skip_env(C, B);
     }
     return "";
@@ -948,7 +948,7 @@ auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
     if (ptr == 0) return false;
     set_ptr1();
     advance_letter_dig();
-    if (ptr1 == ptr) return ""; // this is bad
+    if (ptr1 == ptr) return true; // this is bad
     string pot_res      = substring();
     bool   local_potres = false;
     if (tralics_ns::exists(SL, pot_res)) local_potres = true;
@@ -1013,7 +1013,7 @@ auto Buffer::remove_digits(string s) -> string {
 
 // This gets the DTD.
 void Buffer::extract_dtd(String a, string &b, string &c) {
-    if (!a) return;
+    if (a == nullptr) return;
     reset();
     push_back(a);
     ptr = 0;

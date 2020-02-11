@@ -363,7 +363,7 @@ void MainClass::check_for_input() {
     path_buffer.push_back("ult");
     ult_name = path_buffer.to_string();
     auto *fp = new fstream(s.c_str(), std::ios::in);
-    if (!fp) {
+    if (fp == nullptr) {
         cout << "Empty input file " << s << "\n";
         exit(1);
     }
@@ -442,7 +442,7 @@ void MainClass::open_log() {
     b << " right quote is ";
     b.out_log(Utf8Char(rightquote_val), log_encoding);
     the_log << b << "\n";
-    if (trivial_math) the_log << "\\notrivialmath=" << trivial_math << "\n";
+    if (trivial_math != 0) the_log << "\\notrivialmath=" << trivial_math << "\n";
     io_ns::check_for_encoding();
     if (!default_class.empty()) the_log << "Default class is " << default_class << "\n";
     int n = input_path.size();
@@ -450,7 +450,7 @@ void MainClass::open_log() {
         b.reset();
         b << "Input path (";
         for (int i = 0; i < n; i++) {
-            if (i) b << ":";
+            if (i != 0) b << ":";
             b << input_path[i];
         }
         the_log << b << ")\n";
@@ -482,7 +482,7 @@ void MainClass::parse_args(int argc, char **argv) {
     if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
         s = argv[i];
-        if (!s) continue;
+        if (s == nullptr) continue;
         if (s[0] == 0) continue;
         if (s[0] == '-')
             parse_option(i, argc, argv);
@@ -542,7 +542,7 @@ auto MainClass::split_one_arg(String a, int &p) -> String {
         if (c == 0) break;
         ++i;
         if (c == '=') {
-            while (a[i] && a[i] == ' ') ++i;
+            while ((a[i] != 0) && a[i] == ' ') ++i;
             p = i;
             break;
         }
@@ -577,7 +577,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     } else {
         ++p;
         String a = argv[p];
-        if (*a && *a == ' ') ++a;
+        if ((*a != 0) && *a == ' ') ++a;
         return a;
     }
     return nullptr;
@@ -637,7 +637,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         default:; // Should be pa_none
         }
     }
-    if (eqpos) {
+    if (eqpos != 0) {
         banner();
         cout << "Illegal equal sign in option " << argv[p] << "\n";
         usage_and_quit(1);
@@ -847,7 +847,7 @@ void MainClass::usage_and_quit(int v) {
 
 // Handles argument of -tpa_status switch
 void MainClass::set_tpa_status(String s) {
-    if (!s || s[0] == 0) return; //
+    if ((s == nullptr) || s[0] == 0) return; //
     if (s[0] == 'a' || s[0] == 'A')
         tpa_mode = 1; // case 'all'
     else if (s[0] == 't' || s[0] == 'T')

@@ -45,7 +45,7 @@ Stack::Stack() {
 void Stack::dump_xml_table() {
     int k = enames.size();
     for (int i = xid_boot + 1; i < k; i++)
-        if (enames[i]) {
+        if (enames[i] != nullptr) {
             cout << i << "::"; //<< enames[i] -> get_name() << "\n";
             cout << enames[i] << "\n";
         }
@@ -57,7 +57,7 @@ auto Stack::fetch_by_id(int n) -> Xml * {
     if (n <= 0) return nullptr; // no need to look at this
     if (int(enames.size()) <= n) return nullptr;
     Xml *x = enames[n];
-    if (!x) return nullptr;
+    if (x == nullptr) return nullptr;
     if (x->get_id().value == n) return x;
     cout << "This cannot happen: bug in table at position " << n << "\n";
     return nullptr;
@@ -65,7 +65,7 @@ auto Stack::fetch_by_id(int n) -> Xml * {
 
 // returns a parent of x
 auto Stack::find_parent(Xml *x) -> Xml * {
-    if (!x) return nullptr;
+    if (x == nullptr) return nullptr;
     int k = enames.size();
     // debug: print all parents
     // cout << "Search parent of " << x << "\n";
@@ -74,7 +74,7 @@ auto Stack::find_parent(Xml *x) -> Xml * {
     //     cout << "fount at " << enames[i] << "\n";
     // }
     for (int i = xid_boot + 1; i < k; i++) {
-        if (!enames[i]) continue;
+        if (enames[i] == nullptr) continue;
         if (enames[i]->is_child(x)) return enames[i];
     }
     return nullptr;
@@ -105,12 +105,12 @@ void Stack::add_att_to_cur(Istring A, Istring B, bool force) { cur_xid().get_att
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(Istring N, Xml *z) : name(N) {
     id = the_main->the_stack->next_xid(this);
-    if (z) add_tmp(z);
+    if (z != nullptr) add_tmp(z);
 }
 
 Xml::Xml(name_positions N, Xml *z) : name(Istring(N)) {
     id = the_main->the_stack->next_xid(this);
-    if (z) add_tmp(z);
+    if (z != nullptr) add_tmp(z);
 }
 
 void Stack::hack_for_hanl() {
@@ -140,14 +140,14 @@ void Stack::add_last(Xml *x) { top_stack()->push_back(x); }
 
 // This adds x at the end the element
 void Xml::push_back(Xml *x) {
-    if (x) tree.push_back(x);
+    if (x != nullptr) tree.push_back(x);
 }
 
 // Adds B to the tail of the current list.
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return tree.size() > 0 && tree.back() && tree.back()->get_id().value == 0; }
+auto Xml::last_is_string() const -> bool { return tree.size() > 0 && (tree.back() != nullptr) && tree.back()->get_id().value == 0; }
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
@@ -173,7 +173,7 @@ void Xml::add_last_string(const Buffer &B) {
 
 // This adds x and a \n at the end of this.
 void Xml::add_last_nl(Xml *x) {
-    if (x) {
+    if (x != nullptr) {
         tree.push_back(x);
         tree.push_back(the_main->the_stack->newline_xml);
     }
@@ -237,7 +237,7 @@ auto Stack::get_cur_par() -> Xml * {
 // be flush left, etc.)
 void Stack::add_center_to_p() {
     Xml *x = get_cur_par();
-    if (!x) return;
+    if (x == nullptr) return;
     int w = the_parser.cur_centering();
     x->get_id().get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
 }
@@ -355,7 +355,7 @@ void Stack::trace_pop(bool sw) {
 void Stack::StackSlot::fulldump(int i) {
     the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.c_str() : "()") << ", mode"
             << stack_ns::mode_to_string(md) << ":\n";
-    if (obj) the_log << obj << "\n";
+    if (obj != nullptr) the_log << obj << "\n";
 }
 
 // This prints the whole stack.
@@ -437,24 +437,24 @@ void Stack::check_font() {
         aux.reset();
         bool nonempty = false;
         s             = the_parser.cur_font.size_change();
-        if (s) {
+        if (s != 0u) {
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
-        if (s) {
+        if (s != 0u) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
-        if (s) {
+        if (s != 0u) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
-        if (s) {
+        if (s != 0u) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
@@ -469,13 +469,13 @@ void Stack::check_font() {
         }
     } else {
         s = the_parser.cur_font.size_change();
-        if (s) fonts0(s);
+        if (s != 0u) fonts0(s);
         s = the_parser.cur_font.shape_change();
-        if (s) fonts0(s);
+        if (s != 0u) fonts0(s);
         s = the_parser.cur_font.family_change();
-        if (s) fonts0(s);
+        if (s != 0u) fonts0(s);
         s = the_parser.cur_font.series_change();
-        if (s) fonts0(s);
+        if (s != 0u) fonts0(s);
     }
     Istring c = the_parser.cur_font.get_color();
     if (!(c.empty() || c.null())) {
@@ -563,7 +563,7 @@ auto Stack::find_ctrid(subtypes m) -> int {
         Istring frame = Table[k].frame;
         Xml *   obj   = Table[k].obj;
         k--;
-        if (!obj) continue;
+        if (obj == nullptr) continue;
         if (frame.spec_empty()) continue;
         if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->get_id().value;
         if (m == xmlcurcell_code && frame == the_names[np_cell]) return obj->get_id().value;
@@ -577,7 +577,7 @@ auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
     Xid rid, tid;
     find_cid_rid_tid(cid, rid, tid);
     ArrayInfo *A = find_cell_props(tid);
-    if (!A) {
+    if (A == nullptr) {
         main_ns::log_and_tty << tid.value << "find_cell_prop_failure\n" << lg_fatal;
         abort();
     }
@@ -637,7 +637,7 @@ void Stack::finish_cell(int w) {
         n = 0;
     else
         n = atoi(B.c_str());
-    if (n) {
+    if (n != 0) {
         cell_no += n;
     } else {
         cell_no++;
@@ -686,7 +686,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
     return id;
 }
 
-auto Xml::tail_is_anchor() const -> bool { return tree.size() > 0 && tree.back() && tree.back()->is_anchor(); }
+auto Xml::tail_is_anchor() const -> bool { return tree.size() > 0 && (tree.back() != nullptr) && tree.back()->is_anchor(); }
 
 // Add an anchor if needed.
 auto Stack::add_anchor(const string &s, bool spec) -> Istring {

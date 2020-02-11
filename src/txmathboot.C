@@ -1362,7 +1362,7 @@ void MathDataP::boot_xml_lr_tables() {
     Buffer &B = the_main->SH.shbuf();
     for (uchar i = 0; i < nb_mathchars; i++) {
         int k = i + math_c_loc;
-        if (built_in_table[k]) continue;
+        if (built_in_table[k] != nullptr) continue;
         B.reset();
         B.push_back(i);
         built_in_table[k] = new Xml(cst_mo, nullptr);

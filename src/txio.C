@@ -198,11 +198,11 @@ void Stats::io_convert_stats() {
     int bl = the_converter.bad_lines;
     int bc = the_converter.bad_chars;
     int lc = the_converter.lines_converted;
-    if (bl) {
+    if (bl != 0) {
         main_ns::log_or_tty << "Input conversion errors: " << bl << " line" << io_ns::plural(bl) << ", " << bc << " char"
                             << io_ns::plural(bc) << ".\n";
     }
-    if (lc) main_ns::log_or_tty << "Input conversion: " << lc << " line" << io_ns::plural(lc) << " converted.\n";
+    if (lc != 0) main_ns::log_or_tty << "Input conversion: " << lc << " line" << io_ns::plural(lc) << " converted.\n";
 }
 
 // If an error is signaled on current line, we do not signal again
@@ -442,17 +442,17 @@ void LinePtr::change_encoding(int wc) {
 // Reading characters from files
 
 auto io_ns::find_encoding(String cl) -> int {
-    if (strstr(cl, "-*-")) {
-        if (strstr(cl, "coding: utf-8")) return 0;
-        if (strstr(cl, "coding: utf8")) return 0;
-        if (strstr(cl, "coding: latin1")) return 1;
-        if (strstr(cl, "coding: iso-8859-1")) return 1;
+    if (strstr(cl, "-*-") != nullptr) {
+        if (strstr(cl, "coding: utf-8") != nullptr) return 0;
+        if (strstr(cl, "coding: utf8") != nullptr) return 0;
+        if (strstr(cl, "coding: latin1") != nullptr) return 1;
+        if (strstr(cl, "coding: iso-8859-1") != nullptr) return 1;
     }
-    if (strstr(cl, "iso-8859-1")) return 1;
-    if (strstr(cl, "utf8-encoded")) return 0;
-    if (strstr(cl, "%&TEX encoding = UTF-8")) return 1;
+    if (strstr(cl, "iso-8859-1") != nullptr) return 1;
+    if (strstr(cl, "utf8-encoded") != nullptr) return 0;
+    if (strstr(cl, "%&TEX encoding = UTF-8") != nullptr) return 1;
     String s = strstr(cl, "tralics-encoding:");
-    if (!s) return -1;
+    if (s == nullptr) return -1;
     if (!is_digit(s[17])) return -1;
     int k = s[17] - '0';
     if (is_digit(s[18])) { k = 10 * k + s[18] - '0'; }
@@ -509,7 +509,7 @@ void tralics_ns::read_a_file(LinePtr &L, string x, int spec) {
     L.reset(x);
     if (main_ns::use_pool(L)) return;
     auto *fp = new fstream(x.c_str(), std::ios::in);
-    if (!fp) return;
+    if (fp == nullptr) return;
     string old_name             = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;
@@ -539,7 +539,7 @@ void tralics_ns::read_a_file(LinePtr &L, string x, int spec) {
                 emit = B.push_back_newline_spec();
             else
                 B.push_back_newline();
-            if (co_try) {
+            if (co_try != 0) {
                 co_try--;
                 int k = io_ns::find_encoding(B.c_str());
                 if (k >= 0) {
@@ -582,12 +582,12 @@ void LinePtr::normalise_final_cr() {
         bool          special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
         string        normal  = s;
         if (special) normal = string(s, 0, n - 2);
-        if (prev) {
+        if (prev != nullptr) {
             prev->set_chars(prev->get_chars() + normal);
             cur->set_chars("\n");
         }
         if (special) {
-            if (!prev) {
+            if (prev == nullptr) {
                 prev = cur;
                 prev->set_chars(normal);
             }
@@ -997,8 +997,8 @@ void FullLogger::init(string name, bool status) {
 // transcript file is not yet open.
 auto tralics_ns::file_exists(String name) -> bool {
     FILE *f = fopen(name, "r");
-    if (log_is_open) the_log << lg_start_io << "file " << name << (f ? " exists" : " does not exist") << lg_endsentence;
-    if (f) {
+    if (log_is_open) the_log << lg_start_io << "file " << name << (f != nullptr ? " exists" : " does not exist") << lg_endsentence;
+    if (f != nullptr) {
         fclose(f);
         return true;
     }
@@ -1138,7 +1138,7 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
     bool converted = false; // unused
     int  n         = value.front().to_buffer(b, converted);
     value.pop_front();
-    if (w) {
+    if (w != 0) {
         the_converter.cur_file_name = file_name;
         b.convert_line(n, w);
     }
@@ -1229,7 +1229,7 @@ void LinePtr::find_doctype(Buffer &B, string &res) {
         B.reset();
         B.push_back(C->get_chars());
         int k = B.find_doctype();
-        if (k) {
+        if (k != 0) {
             res = B.to_string(k);
             return;
         }
@@ -1314,7 +1314,7 @@ void Parser::T_filecontents(int spec) {
         String fn = tralics_ns::get_out_dir(filename);
         outfile   = tralics_ns::open_file(fn, false);
         main_ns::log_and_tty << lg_start << "Writing file `" << fn << "'\n";
-        if (!outfile)
+        if (outfile == nullptr)
             parse_error("unable to open file for writing");
         else {
             action = 1;

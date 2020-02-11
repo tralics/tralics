@@ -139,14 +139,14 @@ void Buffer::push_back(const AttPair &X) {
     if (b.null()) return;
     String B = b.p_str();
     String A = a.p_str();
-    if (!A) A = "_bug_";
-    if (!B) B = "_bug_";
+    if (A == nullptr) A = "_bug_";
+    if (B == nullptr) B = "_bug_";
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
     push_back('=');
     push_back('\'');
-    while (*A) {
+    while (*A != 0) {
         if (*A == '\'')
             push_back("&apos;");
         else
@@ -164,14 +164,14 @@ void Buffer::push_back_alt(const AttPair &X) {
     if (b.null()) return;
     String B = b.p_str();
     String A = a.p_str();
-    if (!A) A = "_bug_";
-    if (!B) B = "_bug_";
+    if (A == nullptr) A = "_bug_";
+    if (B == nullptr) B = "_bug_";
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
     push_back('=');
     push_back('\"');
-    while (*A) {
+    while (*A != 0) {
         if (*A == '\"')
             push_back("&quot;");
         else

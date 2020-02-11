@@ -485,7 +485,8 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
         if (after_dummy) {
             after_dummy = false;
             Xml *xval   = front().remove_prefix();
-            if (xval && !xval->is_xmlc() && (xval->has_name(cst_msup) || xval->has_name(cst_msub) || xval->has_name(cst_msubsup))) {
+            if ((xval != nullptr) && !xval->is_xmlc() &&
+                (xval->has_name(cst_msup) || xval->has_name(cst_msub) || xval->has_name(cst_msubsup))) {
                 M.pop_last(xval);
             }
         }
@@ -496,7 +497,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
                 if (M.in_mrow()) xval = nullptr;
                 // else cout << "bad dummy\n"; no error ??
             }
-            if (xval) M.push_in_t(xval);
+            if (xval != nullptr) M.push_in_t(xval);
             M.handle_t();
             M.change_state();
             if (M.is_next_change(i)) {
@@ -524,7 +525,7 @@ void MathF::pop_last(Xml *xval) {
     if (!in_mrow() && !res.empty()) {
         p = res.back().remove_prefix();
         res.pop_back();
-    } else if (in_mrow() && t)
+    } else if (in_mrow() && (t != nullptr))
         p = t->remove_last();
     else
         return; // should  not happen
@@ -555,12 +556,12 @@ void MathF::handle_t() {
 }
 
 void MathF::push_in_t(Xml *x) {
-    if (!t) t = new Xml(cst_temporary, nullptr);
+    if (t == nullptr) t = new Xml(cst_temporary, nullptr);
     t->push_back(x);
 }
 
 void MathF::finish(MathList &value) {
-    if (t && t->size() > 0) the_parser.signal_error("internal bug in finish_translate");
+    if ((t != nullptr) && t->size() > 0) the_parser.signal_error("internal bug in finish_translate");
     value.swap(res);
 }
 
@@ -657,10 +658,10 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
     if (x.get_cmd() > 16) {
         push_back('\\');
         String s = x.name();
-        if (!s) s = "unknown.";
+        if (s == nullptr) s = "unknown.";
         push_back_math_aux(s);
         if (!space) return;
-        if (!s[0]) return;
+        if (s[0] == 0) return;
         if (s[1] == 0 && !is_letter(s[0])) return;
         push_back_space();
     } else
@@ -674,7 +675,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
 void Buffer::push_back_math_tag(const CmdChr &x, int type) {
     if (x.get_cmd() > 16) {
         String s = x.name();
-        if (!s) s = "unknown.";
+        if (s == nullptr) s = "unknown.";
         push_back_math_tag(s, type);
     } else { // Let's hope no tag needed here
         if (type == pbm_end) return;
@@ -1466,7 +1467,7 @@ auto Math::chars_to_mb3() -> Istring {
         Utf8Char C = front().get_char();
         pop_front();
         if (C == '+' || C == '-') {
-            if (sz || bc) {
+            if ((sz != 0) || (bc != 0)) {
                 sz = 0;
                 break;
             }
@@ -1475,7 +1476,7 @@ auto Math::chars_to_mb3() -> Istring {
         }
         if (C == ',') C = '.';
         if (C == '.') {
-            if (dot || bc) {
+            if (dot || (bc != 0)) {
                 sz = 0;
                 break;
             }
@@ -1488,7 +1489,7 @@ auto Math::chars_to_mb3() -> Istring {
             sz++;
             continue;
         } else if (C.is_digit()) {
-            if (bc) {
+            if (bc != 0) {
                 sz = 0;
                 break;
             }
@@ -1677,7 +1678,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
         ++L;
     }
     String expo = B.special_exponent();
-    if (!expo) return nullptr;
+    if (expo == nullptr) return nullptr;
     return new Xml(Istring(expo));
 }
 
@@ -1728,10 +1729,10 @@ auto Math::special1() const -> Xml * {
         xval = math_ns::get_builtin(xml_e_loc);
     else {
         xval = W.special3();
-        if (!xval) return nullptr;
+        if (xval == nullptr) return nullptr;
     }
     xval = math_ns::make_sup(xval);
-    if (!U) return xval;
+    if (U == nullptr) return xval;
     Xml *res = new Xml(cst_temporary, nullptr);
     res->push_back(U);
     res->push_back(xval);
@@ -1863,7 +1864,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     Buffer & B = aux_buffer;
     B.reset();
     if (f == 1) B.push_back(' ');
-    bool spec = (f == 1) || (w & (1 << f));
+    bool spec = (f == 1) || ((w & (1 << f)) != 0);
     uint c    = W.get_chr();
     if (spec)
         B.push_back(uchar(c));

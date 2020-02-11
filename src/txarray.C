@@ -35,7 +35,7 @@ void NewArray::boot(Parser *Q) {
 // This informs the system that char c is defined to be the token t.
 void NewArray::add_a_type(uchar c, Token t) {
     if (c == 0) return;
-    if (c && nct_bool[c] == false) nct_size++;
+    if (nct_bool[c] == false) nct_size++;
     nct_bool[c] = true;
     nct_tok[c]  = t;
 }
@@ -480,7 +480,7 @@ void Parser::start_a_row(int a) {
     Xid prev_row(2); // dummy id as default value
     {
         Xml *V = the_stack.top_stack()->last_addr();
-        if (V) prev_row = V->get_id();
+        if (V != nullptr) prev_row = V->get_id();
     }
     bool initial_hline = false;
     if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(a));
@@ -578,7 +578,7 @@ void Parser::T_start_tabular(subtypes c) {
     }
     {
         int pos = get_ctb_opt(); // Lamport does not mention c, who cares
-        if (pos) id.add_attribute(the_names[np_vpos], the_names[pos]);
+        if (pos != 0) id.add_attribute(the_names[np_vpos], the_names[pos]);
     }
     new_array_object.run(id, true);
     the_stack.set_array_mode(); // Is the mode ok ?
@@ -678,7 +678,7 @@ auto Xml::try_cline(bool action) -> bool {
             a    = (cline_last - cline_first) + 1;
             a_ok = true;
         }
-        if (!tree[k]) continue;
+        if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc()) {
             Istring N = tree[k]->get_name();
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
@@ -699,7 +699,7 @@ auto Xml::total_span(int &res) const -> bool {
     int r   = 0;
     int len = size();
     for (int k = 0; k < len; k++) {
-        if (!tree[k]) continue;
+        if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc()) {
             Istring N = tree[k]->get_name();
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
@@ -720,7 +720,7 @@ auto Xml::try_cline_again(bool action) -> bool {
     bool seen_cell = false;
     int  len       = size();
     for (int k = 0; k < len; k++) {
-        if (!tree[k]) continue;
+        if (tree[k] == nullptr) continue;
         if (action) {
             tree[k] = nullptr;
             continue;
@@ -766,7 +766,7 @@ void Stack::add_border(int a, int b) {
 void Parser::T_cline() {
     Xml *R       = the_stack.top_stack()->last_addr();
     int  cl_span = (cline_last - cline_first) + 1;
-    if (R) {
+    if (R != nullptr) {
         if (R->try_cline(false)) {
             R->try_cline(true);
             return;
@@ -775,7 +775,7 @@ void Parser::T_cline() {
         if (R->total_span(tot_span)) {
             tot_span = cline_first - 1 - tot_span;
             if (0 <= tot_span) {
-                if (tot_span) {
+                if (tot_span != 0) {
                     Xml *x = new Xml(np_cell, nullptr);
                     R->push_back(x);
                     x->get_id().add_span(tot_span);

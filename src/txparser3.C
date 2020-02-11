@@ -495,7 +495,7 @@ void SaveAuxBoundary::unsave(bool trace, Parser &P) {
     if (trace) the_log << lg_startstack << "level - " << P.get_cur_level() << " for " << val << " from line " << line_no << lg_end;
     P.decr_cur_level();
     if (the_box_position >= 0) {
-        if (the_box_to_end) the_box_to_end->remove_last_empty_hi();
+        if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();
         P.box_end(the_box_to_end, the_box_position);
         the_box_position = -1;
     }

@@ -118,7 +118,7 @@ void config_ns::interpret_theme_list(const Buffer &B) {
 // This function is called when we translate a theme value.
 auto MainClass::check_theme(const string &s) -> string {
     string res = Txbuf.add_with_space(s.c_str());
-    if (!strstr(all_themes.c_str(), Txbuf.c_str())) {
+    if (strstr(all_themes.c_str(), Txbuf.c_str()) == nullptr) {
         err_ns::local_buf.reset();
         if (s.empty())
             err_ns::local_buf << "Empty or missing theme\n";
@@ -206,7 +206,7 @@ void ParamDataList::keys_to_buffer(Buffer &B) const {
 // Converts the whole data struture as foo1=bar1,foo2=bar2,
 auto config_ns::find_keys(const string &name) -> string {
     ParamDataList *X = config_data.find_list(name, false);
-    if (!X) return "";
+    if (X == nullptr) return "";
     Txbuf.reset();
     int n = X->size();
     for (int i = 0; i < n; i++) X->data[i].to_buffer(Txbuf);
@@ -221,7 +221,7 @@ auto config_ns::find_one_key(const string &name, const string &key) -> string {
     if (name == "fullsection") return check_section(key);
     if (name == "section") return check_spec_section(key);
     ParamDataList *X = config_data.find_list(name, false);
-    if (!X) {
+    if (X == nullptr) {
         the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
         return "";
     }
@@ -314,7 +314,7 @@ auto config_ns::start_interpret(Buffer &B, String s) -> bool {
         the_log << "+";
     } else
         ret_val = true;
-    if (s[0] && B.head() == '/') B.advance();
+    if ((s[0] != 0) && B.head() == '/') B.advance();
     return ret_val;
 }
 
@@ -343,7 +343,7 @@ void config_ns::interpret_data_list(Buffer &B, const string &name) {
 auto config_ns::next_RC_in_buffer(Buffer &B, string &sname, string &lname) -> int {
     vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
-    if (!B.head()) return -1;
+    if (B.head() == 0) return -1;
     if (strncmp(B.c_str(B.get_ptr()), "\\UR", 3) == 0) {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
@@ -401,7 +401,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     }
     ur_size = nb;
     if (nb == 1) have_default_ur = true;
-    if (nb) {
+    if (nb != 0) {
         the_log << "Localisation " << temp2 << "\n";
         return;
     }
@@ -471,7 +471,7 @@ auto Buffer::add_with_space(String s) -> string {
     while (s[i] == ' ') ++i;
     reset();
     push_back_space();
-    while (s[i] && s[i] != ' ') {
+    while ((s[i] != 0) && s[i] != ' ') {
         push_back(s[i]);
         ++i;
     }
@@ -496,16 +496,16 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
     for (;;) {
         bool keep = true;
         skip_sp_tab();
-        if (!head()) break;
+        if (head() == 0) break;
         int a = ptr;
         if (head() == '-') {
             keep = false;
             advance();
-            if (!head()) break; // final dash ignored
+            if (head() == 0) break; // final dash ignored
             a++;
             the_log << "--";
         }
-        while (head() && !is_space(head())) advance();
+        while ((head() != 0) && !is_space(head())) advance();
         ptr1     = a;
         string k = substring();
         if (keep)

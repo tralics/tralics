@@ -402,7 +402,7 @@ public:
         too_late = true;
     }
     void open() {
-        if (!file) file = tralics_ns::open_file(name, true);
+        if (file == nullptr) file = tralics_ns::open_file(name, true);
     }
 
     void install_file(String b) { name = b; }

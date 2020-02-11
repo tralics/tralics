@@ -163,7 +163,7 @@ void Parser::T_if_package_loaded(bool type) // true for class
     string name = sE_arg_nopar();
     int    i    = the_class_data.find_package(name, type, false);
     bool   res  = false;
-    if (i && !the_class_data.packages[i]->date.empty()) res = true;
+    if ((i != 0) && !the_class_data.packages[i]->date.empty()) res = true;
     one_of_two(res);
 }
 
@@ -176,7 +176,7 @@ void Parser::T_if_package_later(bool c) // true for class
     int    idate = parse_version(date);
     int    pdate = 0;
     int    i     = the_class_data.find_package(name, c, false);
-    if (i) pdate = parse_version(the_class_data.packages[i]->date);
+    if (i != 0) pdate = parse_version(the_class_data.packages[i]->date);
     one_of_two(pdate >= idate);
 }
 
@@ -189,7 +189,7 @@ void Parser::T_if_package_with(bool c) // true for class
     OptionList A;
     OptionList B = make_options(options);
     int        p = the_class_data.find_package(name, c, false);
-    if (p) A = the_class_data.packages[p]->Uoptions;
+    if (p != 0) A = the_class_data.packages[p]->Uoptions;
     bool res = compare_options(A, B);
     one_of_two(res);
 }
@@ -483,14 +483,14 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
     int         n  = CO.size();
     for (int i = 0; i < n; i++) {
         string name = CO[i].get_name();
-        int    j    = find_option(X ? name : CO[i].get_full_name());
+        int    j    = find_option(X != 0 ? name : CO[i].get_full_name());
         if (j == -1) {
             unknown_option(CO[i], action, spec, X);
         } else {
             the_class_data.remove_from_unused(name);
             if (DO[j].is_used()) continue;
             local_buf << bf_comma << DO[j].get_name();
-            DO[j].use_and_kill(action, CO[i], X);
+            DO[j].use_and_kill(action, CO[i], X != 0);
         }
     }
     // clear memory
@@ -745,7 +745,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = np_german;
     Xid doc_att(1);
-    if (b && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
+    if ((b != 0u) && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
 }
 
 // unused (can be used for debug)
@@ -939,7 +939,7 @@ void Parser::T_class_error(subtypes c) {
     }
     if (what != mt_error) B << ".\n";
     if (std && what == mt_error) skip = 1;
-    if (skip) ignore_arg();
+    if (skip != 0) ignore_arg();
     if (skip == 2) ignore_arg();
     out_warning(B, what);
 }

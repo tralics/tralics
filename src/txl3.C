@@ -69,15 +69,15 @@ auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
     else
         return false;
     set_ptr1();
-    while (head() && head() != '.') advance();
+    while ((head() != 0) && head() != '.') advance();
     buf[ptr] = 0;
     name     = buf + ptr1;
     advance();
-    while (head() && head() != ' ') advance(); // ignore file name extension
+    while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
     set_ptr1();
     if (head() == '-') return true;
-    while (head() && head() != ' ') advance();
+    while ((head() != 0) && head() != ' ') advance();
     buf[ptr] = 0;
     version  = buf + ptr1;
     advance();
@@ -597,7 +597,7 @@ void Parser::l3_tl_set(int c) {
 // \tl_concat:NNN \tl_concat:ccc and global version.
 // Args 2 and 3  are expanded once
 void Parser::l3_tl_concat(int c) {
-    bool  c_flag = (c & 1);
+    bool  c_flag = (c & 1) != 0;
     Token name   = fetch_csname(c_flag);
     // TODO:  if(check_declaration) check all 3 arg are not undef_or_relax
     TokenList A, B;
@@ -781,7 +781,7 @@ void Parser::L3_set_num_code(int c) {
         break;
     }
     Token T = cur_tok;
-    if (max) {
+    if (max != 0) {
         TokenList L1 = read_arg();
         int       N  = l3_read_int(T);
         if (N < 0 || N > max) {
@@ -826,9 +826,9 @@ void Parser::E_cat_ifeq(subtypes c) {
     Token    caller = cur_tok;
     symcodes a;
     subtypes b;
-    int      test = false;
-    if (!l3_get_cat(a, b, caller)) test = a == (c / 4);
-    l3_after_cond(caller, test, subtypes(c % 4));
+    int      test = 0;
+    if (!l3_get_cat(a, b, caller)) test = static_cast<int>(a == (c / 4));
+    l3_after_cond(caller, test != 0, subtypes(c % 4));
 }
 
 // \token_if_eq_catcode and variants

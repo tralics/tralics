@@ -213,7 +213,7 @@ void FpNum::div_by_10() {
 
 // Puts in T the three 1000-base digits of A. Assumes T==0.
 inline void fp::mul_split_aux(Digit A, Digit *T) {
-    if (A) {
+    if (A != 0u) {
         T[2] = A % 1000;
         A    = A / 1000;
         T[1] = A % 1000;
@@ -349,7 +349,8 @@ void FpNum::mul(FpNum X, int y) {
 // Converts the 24 1000-base number into a 12 1000-base number
 // by complaining for the first 6, and ignoring the last 6.
 void FpNum::finish_mul(bool xs, Digit *z) {
-    if (z[0] || z[1] || z[2] || z[3] || z[4] || z[5]) the_parser.parse_error("Overflow in FPmul");
+    if ((z[0] != 0u) || (z[1] != 0u) || (z[2] != 0u) || (z[3] != 0u) || (z[4] != 0u) || (z[5] != 0u))
+        the_parser.parse_error("Overflow in FPmul");
     unsplit_mul4(z + 6);
     sign = xs;
     correct_sign();
@@ -456,7 +457,7 @@ auto FpNum::to_list() const -> TokenList {
     TokenList res;
     int       i = 0;
     if (buf[0] == '+') i++;
-    while (buf[i]) {
+    while (buf[i] != 0) {
         res.push_back(Token(other_t_offset + buf[i]));
         i++;
     }
@@ -742,9 +743,9 @@ void FpNum::div(int n) {
 
 // It divides by 2.
 void FpNum::divide2() {
-    if (data[0] % 2) data[1] += fp_max;
-    if (data[1] % 2) data[2] += fp_max;
-    if (data[2] % 2) data[3] += fp_max;
+    if ((data[0] % 2) != 0u) data[1] += fp_max;
+    if ((data[1] % 2) != 0u) data[2] += fp_max;
+    if ((data[2] % 2) != 0u) data[3] += fp_max;
     data[0] /= 2;
     data[1] /= 2;
     data[2] /= 2;
@@ -792,7 +793,7 @@ void FpNum::exec_ln() {
         mul_by_10();
         n++;
     }
-    while (data[0] || data[1] >= 10) {
+    while ((data[0] != 0u) || data[1] >= 10) {
         div_by_10();
         n--;
     }
@@ -813,12 +814,12 @@ void FpNum::exec_ln() {
 // Returns true if overflow
 auto FpNum::large_exp() -> bool {
     int k = data[1];
-    if (!sign && (data[0] || k > 42)) {
+    if (!sign && ((data[0] != 0u) || k > 42)) {
         reset();
         sign = true;
         return true;
     }
-    if (sign && (data[0] || k > 41)) {
+    if (sign && ((data[0] != 0u) || k > 41)) {
         init(0, 1, 0, 0);
         the_parser.parse_error("Overflow in FPexp");
         return true;
@@ -1148,7 +1149,7 @@ void FpNum::mean(FpNum a, FpNum b) {
     data[2] = a.data[2] + b.data[2];
     data[3] = a.data[3] + b.data[3];
     data[3] /= 2;
-    if (data[2] % 2) data[3] += 500000000;
+    if ((data[2] % 2) != 0u) data[3] += 500000000;
     data[2] /= 2;
     if (data[3] >= fp_max) {
         data[3] -= fp_max;
@@ -1166,7 +1167,7 @@ auto FpNum::sincos_transform() -> bool {
     // put 1-x^2 in y
     y.mul(*this, *this);
     y.data[2] = fp_max - y.data[2];
-    if (y.data[3]) {
+    if (y.data[3] != 0u) {
         y.data[3] = fp_max - y.data[3];
         y.data[2]--;
     }
@@ -1214,10 +1215,10 @@ auto FpNum::sincos_transform() -> bool {
 // hence f(x) = arcsin(x)
 auto FpNum::arcsincos_loop() -> bool {
     bool ovf = false;
-    if (data[0]) ovf = true;
+    if (data[0] != 0u) ovf = true;
     if (data[1] > 1) ovf = true;
     if (data[1] == 1) {
-        if (data[2] || data[3]) ovf = true;
+        if ((data[2] != 0u) || (data[3] != 0u)) ovf = true;
     }
     if (ovf) {
         the_parser.parse_error(the_parser.err_tok, "Number greater than one for ", fp_name, "", "OVF");
@@ -1609,7 +1610,7 @@ void fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum &r4, FpNum A, FpNum B, F
             }
         }
     }
-    if (n) {
+    if (n != 0) {
         r1 += T;
         r2 += T;
     }
@@ -1713,7 +1714,7 @@ void FpGenList::add_last_space(String S) {
     push_back(the_parser.hash_table.space_token);
     for (int i = 0;; i++) {
         uchar c = S[i];
-        if (!c) return;
+        if (c == 0u) return;
         if (c > 128) err_ns::fatal_error("add last space: internal error");
         push_back(Token(letter_t_offset, c));
     }

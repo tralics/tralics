@@ -21,7 +21,7 @@ using arith_ns::start_err;
 // This prepares for an arithmetic error.
 void arith_ns::start_err(String s) {
     err_ns::local_buf << bf_reset << "Arithmetic overflow";
-    if (s) err_ns::local_buf << ", threshold=" << s;
+    if (s != nullptr) err_ns::local_buf << ", threshold=" << s;
 }
 
 // Signals the error in the buffer.
@@ -176,7 +176,7 @@ auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bo
     int r = (d / 2) - d;
     int h = -r;
     for (;;) {
-        if (n & 1) {
+        if ((n & 1) != 0) {
             r = r + x;
             if (r >= 0) {
                 r = r - d;
@@ -637,15 +637,15 @@ void Mactab::rc_mac_realloc() {
     int           k         = cur_rc_mac_len;
     int           ns        = k + 400;
     static Macro *empty_mac = nullptr;
-    if (!empty_mac) empty_mac = new Macro;
+    if (empty_mac == nullptr) empty_mac = new Macro;
     auto **T1 = new Macro *[ns];
     int *  T2 = new int[ns];
     for (int i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];
     }
-    if (table) delete[] table;
-    if (rc_table) delete[] rc_table;
+    if (table != nullptr) delete[] table;
+    if (rc_table != nullptr) delete[] rc_table;
     table    = T1;
     rc_table = T2;
     for (int i = k; i < ns; i++) {

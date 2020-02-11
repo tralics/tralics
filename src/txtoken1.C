@@ -27,7 +27,7 @@ using tralics_ns::strip_end;
 // This converts `endfoo' to `foo'. It does not check that the
 // string starts with `end', just that is is not zero.
 auto tralics_ns::strip_end(String s) -> String {
-    if (!s) return nullptr;
+    if (s == nullptr) return nullptr;
     return s + 3;
 }
 

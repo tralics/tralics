@@ -73,8 +73,8 @@ void TexOutStream::open(int chan, string file_name) {
     close(chan);
     String fn = tralics_ns::get_out_dir(file_name);
     auto * fp = new fstream(fn, std::ios::out);
-    if (!fp) return;  // no error ?
-    if (!*fp) return; // no error ?
+    if (fp == nullptr) return; // no error ?
+    if (!*fp) return;          // no error ?
     write_file[chan] = fp;
     write_open[chan] = true;
 }
@@ -212,7 +212,7 @@ void Parser::pop_input_stack(bool vb) {
     input_line.insert(input_line.end(), W->get_B().begin(), W->get_B().end());
     input_line_pos = W->get_line_pos();
     back_input(W->get_TL());
-    if (cur_file_pos) insert_hook(cur_file_pos);
+    if (cur_file_pos != 0) insert_hook(cur_file_pos);
     cur_file_pos = W->get_file_pos();
     every_eof    = W->get_every_eof();
     the_log << lg_start_io << "cur_file_pos restored to " << cur_file_pos << lg_end;
@@ -231,7 +231,7 @@ void InputStack::destroy() {
 // This kills all pending input
 void Parser::close_all() {
     if (tracing_io()) the_log << lg_start_io << "close all files\n";
-    while (cur_input_stack.size()) pop_input_stack(true);
+    while (cur_input_stack.size() != 0u) pop_input_stack(true);
     TL.clear();
     input_line.clear();
     input_line_pos = 0;
@@ -1173,7 +1173,7 @@ auto Parser::scan_int_digs() -> int {
         if (d == -1) break;
         vacuous = false;
         if (val >= m && (val > m || d > 7 || radix != 10)) {
-            if (!ok_so_far) {
+            if (ok_so_far == 0) {
                 parse_error(err_tok, "number too big");
             } else if (ok_so_far > 1000) {
                 parse_error(err_tok, "number too big (infinite recursion?)");
@@ -1257,7 +1257,7 @@ void Parser::scan_something_internal(internal_type level) {
         }
         case xmlAname_code: xml_name(the_xmlA, level); return;
         case xmlBname_code: xml_name(the_xmlB, level); return;
-        case xmlAsize_code: cur_val.set_int(the_xmlA ? the_xmlA->real_size() : -1); return;
+        case xmlAsize_code: cur_val.set_int(the_xmlA != nullptr ? the_xmlA->real_size() : -1); return;
         case xmlcurrentid_code: cur_val.set_int(the_stack.cur_xid().value); return;
         case xmlcurrow_code:
         case xmlcurcell_code:
@@ -1352,7 +1352,7 @@ void Parser::scan_something_internal(internal_type level) {
     case set_mathprop_cmd: {
         int k = scan_mathfont_ident();
         int w = eqtb_int_table[mathprop_ctr_code].get_val();
-        w     = (w & (1 << k)) ? 1 : 0;
+        w     = (w & (1 << k)) != 0 ? 1 : 0;
         cur_val.set_int(w);
         return;
     }
@@ -1441,7 +1441,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
 }
 
-void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x ? x->get_id().value : -4); }
+void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->get_id().value : -4); }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {
@@ -1456,7 +1456,7 @@ void Parser::parshape_aux(subtypes m) {
     else if (m == parshapeindent_code)
         q = 1;
     else {
-        if (v & 1) q = 1;
+        if ((v & 1) != 0) q = 1;
         v = (v + q) / 2;
     }
     if (v >= n) v = n;
@@ -1887,7 +1887,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         uint w    = eqtb_int_table[mathprop_ctr_code].get_val();
         scan_optional_equals();
         int v = scan_int(T);
-        if (v)
+        if (v != 0)
             w |= mask;
         else
             w &= ~mask;
@@ -2099,12 +2099,12 @@ void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
             tfonts.full_name(B, val.get_chr());
     } else if (K > 16) {
         String s = val.name();
-        if (!s) s = "unknown.";
+        if (s == nullptr) s = "unknown.";
         B.insert_escape_char_raw();
         B << s;
     } else {
         String s = val.special_name();
-        if (!s) s = "[unknown command code!]";
+        if (s == nullptr) s = "[unknown command code!]";
         B << s << " " << val.char_val();
         if (val.char_val() == 0) B << "^^@";
     }
@@ -2145,7 +2145,7 @@ void Parser::initialise_font() {
 void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
     B.reset();
-    if (x) B.push_back(x->get_name());
+    if (x != nullptr) B.push_back(x->get_name());
     if (level != it_tok) {
         bad_number1(B);
         return;
