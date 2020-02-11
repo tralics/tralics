@@ -1320,7 +1320,7 @@ auto CmdChr::token_prefix_name() const -> String {
 }
 
 auto CmdChr::token_register_name() const -> String {
-    switch (chr) {
+    switch (static_cast<internal_type>(chr)) {
     case it_int: return "count";
     case it_dimen: return "dimen";
     case it_glue: return "skip";
@@ -2123,7 +2123,7 @@ auto CmdChr::l3str_ifeq_name() const -> String {
 }
 
 auto CmdChr::l3_set_cat_name() const -> String {
-    switch (chr) {
+    switch (static_cast<symcodes>(chr)) {
     case escape_catcode: return "char_set_catcode_escape:n";
     case open_catcode: return "char_set_catcode_group_begin:n";
     case close_catcode: return "char_set_catcode_group_end:n";

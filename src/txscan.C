@@ -1430,7 +1430,7 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case register_cmd: // \count, \dimen, etc
         v = scan_reg_num();
-        switch (m) {
+        switch (static_cast<internal_type>(m)) {
         case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].get_val()); return;
         case it_dimen: cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
         case it_glue: cur_val.set_glue(glue_table[v].get_val()); return;
