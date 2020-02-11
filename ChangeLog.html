@@ -1,190 +1,188 @@
-<!-- -*- html -*- -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-
-<!-- $Id: ChangeLog,v 2.358 2017/05/29 06:22:57 grimm Exp $ -->
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <meta name="Author" content="José Grimm"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="Author" content="José Grimm" />
   <title>ChangeLog for TRALICS </title>
-  <link rel="stylesheet" href="tralics.css"/>
-  <meta name="keywords" content="latex xml translator"/>
+  <link rel="stylesheet" href="tralics.css" />
+  <meta name="keywords" content="latex xml translator" />
 </head>
+
 <body>
 
-<h1> ChangeLog for the Tralics software</h1>
-<p>See file <a href="ChangeLog0.html">Old ChangeLog</a> for older versions.
-Patches to current version (2.15.4) start <a href="#v2-15-4">here</a>.
-Difference with the previous version (2.15.0) start <a href="#v2-15-0">here</a>.
-</p>
+  <h1> ChangeLog for the Tralics software</h1>
+  <p>See file <a href="ChangeLog0.html">Old ChangeLog</a> for older versions.
+    Patches to current version (2.15.4) start <a href="#v2-15-4">here</a>.
+    Difference with the previous version (2.15.0) start <a href="#v2-15-0">here</a>.
+  </p>
 
 
-<h3>History</h3>
-<ul>
+  <h3>History</h3>
+  <ul>
 
-<li> <a href="ChangeLog0.html#v2-8">Version 2.8, released 01-08-2006.</a> </li>
-<li> <a href="ChangeLog0.html#v2-9">Version 2.9, released 26-10-2006.</a> </li>
-<li> <a href="ChangeLog0.html#v2-10">Version 2.10 released 02-05-2007.</a>  </li>
-<li><a href="ChangeLog0.html#v2-11">Version 2.11 released 29-11-2007.</a>  </li>
-<li><a href="ChangeLog0.html#v2-12">Version 2.12 released 21-04-2008.</a>  </li>
-<li><a href="ChangeLog0.html#v2-13">Version 2.13 released 20-07-2008.</a>  </li>
-<li><a href="#v2-14">Version 2.14 released 24-01-2011.</a>  </li>
-<li><a href="#v2-14-5">Version 2.14.5 released 15-05-2012.</a>  </li>
-<li><a href="#v2-15-0">Version 2.15.0 released 31-08-2012.</a>  </li>
-<li><a href="#v2-15-3">Version 2.15.3 released 06-08-2015.</a>  </li>
-<li><a href="#v2-15-4">Version 2.15.4 released 25-11-2015.</a>  </li>
-</ul>
+    <li> <a href="ChangeLog0.html#v2-8">Version 2.8, released 01-08-2006.</a> </li>
+    <li> <a href="ChangeLog0.html#v2-9">Version 2.9, released 26-10-2006.</a> </li>
+    <li> <a href="ChangeLog0.html#v2-10">Version 2.10 released 02-05-2007.</a> </li>
+    <li><a href="ChangeLog0.html#v2-11">Version 2.11 released 29-11-2007.</a> </li>
+    <li><a href="ChangeLog0.html#v2-12">Version 2.12 released 21-04-2008.</a> </li>
+    <li><a href="ChangeLog0.html#v2-13">Version 2.13 released 20-07-2008.</a> </li>
+    <li><a href="#v2-14">Version 2.14 released 24-01-2011.</a> </li>
+    <li><a href="#v2-14-5">Version 2.14.5 released 15-05-2012.</a> </li>
+    <li><a href="#v2-15-0">Version 2.15.0 released 31-08-2012.</a> </li>
+    <li><a href="#v2-15-3">Version 2.15.3 released 06-08-2015.</a> </li>
+    <li><a href="#v2-15-4">Version 2.15.4 released 25-11-2015.</a> </li>
+  </ul>
 
-<h2 id="v2-14">Version 2.14</h2>
-<ol>
-  <li id="v2-14-1">  <b> [2011-01-24, Version 2.14.1] </b>
-     <br/> [bibtex] Added the serial number to the bibtex sort key .
-     <br/> [txmath]  Corrected tracing of <samp>$\hspace{2mm}$</samp>.
-     <br/> Improved printing of math tokens  in case of fonts.
-     <br/> Corrected translation of <samp>\left</samp> in nomath-2
-    mode.
-    <br/> Added <samp>\negmedspace \negthickspace </samp>.
-    <br/> Corrected error message for <samp>\sin\int</samp> outside
-    math.
-    <br/> Corrected <samp>\left\updownarrow</samp> in nomathml mode.
-    <br/> [amsmath.plt] Changed definition of <samp>xxalignat</samp>
-     and Co. Corrected the no-mathml translation.
-    <br/> No label generated for  starred version
-     of  <samp>align</samp> env.
-    <br/> Implemented dual mathmode in case <samp>\@nomathl=-3</samp>. 
-    <br/>  Argument of <samp>\bibliography</samp> may contain a
-     trailing <tt class='samp'>bib</tt> extension (Eric Bischoff).
-    <br/> [2011/04/11] Added <samp>\tableattribute</samp> env.
-    <br/> No error in <tt class='ccode'>missing_flush</tt> if buffer contains only
-     of spaces.
-    <br/> No error in cases like <samp>$\mbox{\hspace {2mm}}$</samp>.
-    <br/> Implemented  <samp>\bordermatrix</samp>.
-    <br/> Improved some error messages.
-</li>
-<li>
-   <b> [2011-05-02, Version 2.14.3] released </b>
-   <br/> Fixed the font/size/color in <samp>\footnote</samp>.
-   <br/> Allows <samp>\ChangeElementName{use_font_elt}{true}</samp>.
-   <br/> Implemented <samp>\appendix</samp> in classes.
-   <br/> Commands like <samp>\newpage</samp> implicitly call <samp>\par</samp>.
-   <br/> Added <samp>\nouppercase</samp>
-   and <samp>\fancypagestyle</samp> commands in <span class='file'>fancyhdr.plt</span>
-   <br/> Implemented <samp>\listoftables</samp> and
-    <samp>\listoffigures</samp>.
-   <br/> Command <samp>\tableofcontents</samp> finishes a paragraph
-   and inserts the value of <samp>tocdepth</samp> counter.
-   <br/> Corrected error message in case of bad hbox. Produces a
-   <tt class='xml_in'>&lt;merror&gt;</tt> element.
-</li>
-<li>
-   <b> [2011-11-07, Version 2.14.4] released </b>
-  <br/> Removed final
-   <tt class='xml_in'>&lt;allowbreak/&gt;</tt> in url [2012-01-19, V Lefevre].
-   <br/> IO encoding easier to understand in the transcript file.
-   <br/> Added an option <span class='samp'>>-dualmath</span>,
-   and <span class='samp'>-nomathml</span> reverted
-   to old meaning.
-   <br/> Changed printing of some characters.
-   <br/> Extended the four-hat notation to five hats.
-   <br/> Implemented a starred version <samp>\url*</samp>.
-   <br/> Added the <samp>\grabenv</samp> command.
-   <br/> Default output encoding is UTF8.
-   <br/> Translation  of <samp>\phi</samp> is <tt class='xml_in'>&amp;phiv;&amp;#x3D5;</tt>
-     i.e., &#x3D5;, translation of <samp>\varphi</samp> also changed. 
-   <br/> Translation  of <samp>\longmapsfrom\Longmapsfrom\longmapsto\Longmapsto$
-</samp> is now <tt class='xml_in'>&amp;#x27FB;&amp;#x27FD;&amp;&amp;#x27FC;&amp;#x27FE;</tt>
-<tt class='xml_in'>&#x27FB;&#x27FD;&#x27FC;&#x27FE;</tt> (Heiko Schroeder).
-</li>
-<li>
-   <b id="v2-14-5"> [2012-07-06, Version 2.14.5] released </b>
-    <br/> Added a possibility to specify an XML style sheet.
-    <br/> No terminator needed after a display math formula in interactive
-   mode   (Allen Downey).
-    <br/> Sections in raweb mode may be mandatory.
+  <h2 id="v2-14">Version 2.14</h2>
+  <ol>
+    <li id="v2-14-1"> <b> [2011-01-24, Version 2.14.1] </b>
+      <br /> [bibtex] Added the serial number to the bibtex sort key .
+      <br /> [txmath] Corrected tracing of <samp>$\hspace{2mm}$</samp>.
+      <br /> Improved printing of math tokens in case of fonts.
+      <br /> Corrected translation of <samp>\left</samp> in nomath-2
+      mode.
+      <br /> Added <samp>\negmedspace \negthickspace </samp>.
+      <br /> Corrected error message for <samp>\sin\int</samp> outside
+      math.
+      <br /> Corrected <samp>\left\updownarrow</samp> in nomathml mode.
+      <br /> [amsmath.plt] Changed definition of <samp>xxalignat</samp>
+      and Co. Corrected the no-mathml translation.
+      <br /> No label generated for starred version
+      of <samp>align</samp> env.
+      <br /> Implemented dual mathmode in case <samp>\@nomathl=-3</samp>.
+      <br /> Argument of <samp>\bibliography</samp> may contain a
+      trailing <tt class='samp'>bib</tt> extension (Eric Bischoff).
+      <br /> [2011/04/11] Added <samp>\tableattribute</samp> env.
+      <br /> No error in <tt class='ccode'>missing_flush</tt> if buffer contains only
+      of spaces.
+      <br /> No error in cases like <samp>$\mbox{\hspace {2mm}}$</samp>.
+      <br /> Implemented <samp>\bordermatrix</samp>.
+      <br /> Improved some error messages.
     </li>
-</ol>
-<h2 id="v2-15">Version 2.15</h2>
-<ol>
-  <li id="v2-15-0">
-    <b>[2012-08-31, Version 2.15.0]</b>
-    <br/> [2013-01-21] Number of pages always inserted in the bibliography.
-   </li> 
-   <li><b>[2013-07-22, Version 2.15.1]</b>
-    <br/> Removed some unused variables in the code [Julien Schueller].
-    <br/> There are no more affiliations in the RA2013 (Marie-Pierre Durollet).
-    <br/> Replaced 2007 by current year in 
-    <span class='error'>The configuration file for the RA is ra2007.tcf or
-    ra.tcf</span>.
-    <br/> [2014-03-31] A module cannot start in a paragraph;
-    implicit <samp>\par</samp> added  (Marie-Pierre Durollet).
-  </li>
-  <li>  <b>[2015-01-22, Version 2.15.2]</b>
-  <br/> [2015-01-22] corrected a bug in printing the encoding of the
-  transcript file   (David Binderman).
-  <br/> If the save stack holds a font command, this is popped at the
-  end of the process (it might be pushed by a
-  global <samp>\normalfont</samp>).
-  <br/> The types of the objects remaining on the save stack is
-  printed on the transcript file at the end of the process.
-  <br/> [2015-06-24] Support for math symbols added. 
-  <br/>  [2015-07-14] Changed implementation of <samp>\cline</samp>.
-  <br/>  Added  <samp>\@sptoken</samp> to the kernel.
-  <br/>  New command <samp>\hlinee</samp> as extension of 
-  <samp>\hline \cline</samp>; this allow to specify the thickness of a
-  rule and its surrounding space in a table.  
-  <br/>  Implemented the <span class='package'>booktabs</span> package 
-  <br/>  Corrected french translation of <samp>\aparaitre</samp>.
-  <br/>  Corrected <samp>\textasciibreve,\textasciicaron</samp>.
-  <br/>  Corrected a nasty bug that inhibits tags
-  in <samp>align</samp> environment (or any usee defined environment
-  that expands to <samp>@align</samp>).
-  <br/> Implemented <samp>\XMLcurrentcellid \XMLcurrentrowid \XMLcurrentarrayid</samp>.
-  <br/> Removed the obsolete NoTitle hack.
-  <br/> Corrected the postprocessing, removing loops in unused XML elements.
-  <br/> Corrected <samp>\vcenter</samp>.
-  <br/> Changed <samp>\xmlemptyelt</samp>.
-  <br/> Added a bunch of commands that make acces to the XML tree
-  (<samp>\XML@fetch,\XML@parent,XML@insert</samp> etc (for details,
-  see documentation of one of these commands).
-  <br/> Added the possibility to use the result of <samp>\readxml</samp>.
-  <br/> No error in <samp>$\muskip0=\lastskip$</samp>.
-  <br/> An error is signaled in <samp>$a\above-ptb$</samp>.
-  <br/> No error is signaled in <samp>$a\overwithdelims\relax()b$</samp>.
-  <br/> There is always a <tt class='xml_in'>rend</tt> attribute in <samp>figure, table</samp>.
-  <br/> No more loss of attributes in
-  <samp>\begin{table}  \begin{tabular*}{17pt}[b] {c}   y \end{tabular*}\end{table}</samp>.
+    <li>
+      <b> [2011-05-02, Version 2.14.3] released </b>
+      <br /> Fixed the font/size/color in <samp>\footnote</samp>.
+      <br /> Allows <samp>\ChangeElementName{use_font_elt}{true}</samp>.
+      <br /> Implemented <samp>\appendix</samp> in classes.
+      <br /> Commands like <samp>\newpage</samp> implicitly call <samp>\par</samp>.
+      <br /> Added <samp>\nouppercase</samp>
+      and <samp>\fancypagestyle</samp> commands in <span class='file'>fancyhdr.plt</span>
+      <br /> Implemented <samp>\listoftables</samp> and
+      <samp>\listoffigures</samp>.
+      <br /> Command <samp>\tableofcontents</samp> finishes a paragraph
+      and inserts the value of <samp>tocdepth</samp> counter.
+      <br /> Corrected error message in case of bad hbox. Produces a
+      <tt class='xml_in'>&lt;merror&gt;</tt> element.
+    </li>
+    <li>
+      <b> [2011-11-07, Version 2.14.4] released </b>
+      <br /> Removed final
+      <tt class='xml_in'>&lt;allowbreak/&gt;</tt> in url [2012-01-19, V Lefevre].
+      <br /> IO encoding easier to understand in the transcript file.
+      <br /> Added an option <span class='samp'>>-dualmath</span>,
+      and <span class='samp'>-nomathml</span> reverted
+      to old meaning.
+      <br /> Changed printing of some characters.
+      <br /> Extended the four-hat notation to five hats.
+      <br /> Implemented a starred version <samp>\url*</samp>.
+      <br /> Added the <samp>\grabenv</samp> command.
+      <br /> Default output encoding is UTF8.
+      <br /> Translation of <samp>\phi</samp> is <tt class='xml_in'>&amp;phiv;&amp;#x3D5;</tt>
+      i.e., &#x3D5;, translation of <samp>\varphi</samp> also changed.
+      <br /> Translation of <samp>\longmapsfrom\Longmapsfrom\longmapsto\Longmapsto$
+      </samp> is now <tt class='xml_in'>&amp;#x27FB;&amp;#x27FD;&amp;&amp;#x27FC;&amp;#x27FE;</tt>
+      <tt class='xml_in'>&#x27FB;&#x27FD;&#x27FC;&#x27FE;</tt> (Heiko Schroeder).
+    </li>
+    <li>
+      <b id="v2-14-5"> [2012-07-06, Version 2.14.5] released </b>
+      <br /> Added a possibility to specify an XML style sheet.
+      <br /> No terminator needed after a display math formula in interactive
+      mode (Allen Downey).
+      <br /> Sections in raweb mode may be mandatory.
+    </li>
+  </ol>
+  <h2 id="v2-15">Version 2.15</h2>
+  <ol>
+    <li id="v2-15-0">
+      <b>[2012-08-31, Version 2.15.0]</b>
+      <br /> [2013-01-21] Number of pages always inserted in the bibliography.
+    </li>
+    <li><b>[2013-07-22, Version 2.15.1]</b>
+      <br /> Removed some unused variables in the code [Julien Schueller].
+      <br /> There are no more affiliations in the RA2013 (Marie-Pierre Durollet).
+      <br /> Replaced 2007 by current year in
+      <span class='error'>The configuration file for the RA is ra2007.tcf or
+        ra.tcf</span>.
+      <br /> [2014-03-31] A module cannot start in a paragraph;
+      implicit <samp>\par</samp> added (Marie-Pierre Durollet).
+    </li>
+    <li> <b>[2015-01-22, Version 2.15.2]</b>
+      <br /> [2015-01-22] corrected a bug in printing the encoding of the
+      transcript file (David Binderman).
+      <br /> If the save stack holds a font command, this is popped at the
+      end of the process (it might be pushed by a
+      global <samp>\normalfont</samp>).
+      <br /> The types of the objects remaining on the save stack is
+      printed on the transcript file at the end of the process.
+      <br /> [2015-06-24] Support for math symbols added.
+      <br /> [2015-07-14] Changed implementation of <samp>\cline</samp>.
+      <br /> Added <samp>\@sptoken</samp> to the kernel.
+      <br /> New command <samp>\hlinee</samp> as extension of
+      <samp>\hline \cline</samp>; this allow to specify the thickness of a
+      rule and its surrounding space in a table.
+      <br /> Implemented the <span class='package'>booktabs</span> package
+      <br /> Corrected french translation of <samp>\aparaitre</samp>.
+      <br /> Corrected <samp>\textasciibreve,\textasciicaron</samp>.
+      <br /> Corrected a nasty bug that inhibits tags
+      in <samp>align</samp> environment (or any usee defined environment
+      that expands to <samp>@align</samp>).
+      <br /> Implemented <samp>\XMLcurrentcellid \XMLcurrentrowid \XMLcurrentarrayid</samp>.
+      <br /> Removed the obsolete NoTitle hack.
+      <br /> Corrected the postprocessing, removing loops in unused XML elements.
+      <br /> Corrected <samp>\vcenter</samp>.
+      <br /> Changed <samp>\xmlemptyelt</samp>.
+      <br /> Added a bunch of commands that make acces to the XML tree
+      (<samp>\XML@fetch,\XML@parent,XML@insert</samp> etc (for details,
+      see documentation of one of these commands).
+      <br /> Added the possibility to use the result of <samp>\readxml</samp>.
+      <br /> No error in <samp>$\muskip0=\lastskip$</samp>.
+      <br /> An error is signaled in <samp>$a\above-ptb$</samp>.
+      <br /> No error is signaled in <samp>$a\overwithdelims\relax()b$</samp>.
+      <br /> There is always a <tt class='xml_in'>rend</tt> attribute in <samp>figure, table</samp>.
+      <br /> No more loss of attributes in
+      <samp>\begin{table} \begin{tabular*}{17pt}[b] {c} y \end{tabular*}\end{table}</samp>.
 
-</li>
-<li >  <b id="v2-15-3">[2015-08-06, Version 2.15.3]</b>
-    <br/>  Corrected error message in <samp>\newcounter</samp> overflow.
-    <br/>  The Raweb requires no more
-    a <span class='samp'>theme_vals</span> entry in the config file.
-   <br/>  Made <samp>\@firstofone</samp>  expandable.
-   <br/> Corrected a bug in <samp>\ra@year</samp> in non-ra mode.
-   <br/> What comes after <samp>\end{document}</samp> is ignored. 
-   <br/> The last line in the XML file contains only the end of the
-   document element.
-   <br/> Removed useless code of module check. 
-   <br/> An external program is called for the bibliography only if
-    write18 is enabled.
-   <br/> Single error signaled in case of <samp>\newcommand{\foo\bar}{}</samp>.
-   <br/>  Corrected <samp>\string^^^^1234</samp>.
-   <br/> Corrected  <samp>\expandafter\string\csname\endcsname</samp>.
-   <br/> Handles correctly the case <samp>\escapechar=0</samp>.
-   <br/> Accepts <samp>\@gobble{\par}</samp>.
-   <br/>For many command that read an optional argument, paragraphs
-   are forbidden.
-   <br/> In case of <samp>\def\foo#1 #2{}\foo1 2</samp>, both spaces
-   can be replaced by a new line.
-   <br/> Command <samp>\newcount</samp> never allocates register 255.
-   <br/> Count registers no more used for allocation commands like
-   <samp>\newcount</samp>.
-   <br/> Internal: made <samp>\outer</samp> tests faster than <samp>\protected</samp>
-   <br/> Corrected bug in <samp>\marks</samp>.
-   <br/> Simplified <samp>\message</samp>.
-   <br/> Corrected error handling in <samp>\def\foo#1#2{#1}\foo\bad\par</samp>
+    </li>
+    <li> <b id="v2-15-3">[2015-08-06, Version 2.15.3]</b>
+      <br /> Corrected error message in <samp>\newcounter</samp> overflow.
+      <br /> The Raweb requires no more
+      a <span class='samp'>theme_vals</span> entry in the config file.
+      <br /> Made <samp>\@firstofone</samp> expandable.
+      <br /> Corrected a bug in <samp>\ra@year</samp> in non-ra mode.
+      <br /> What comes after <samp>\end{document}</samp> is ignored.
+      <br /> The last line in the XML file contains only the end of the
+      document element.
+      <br /> Removed useless code of module check.
+      <br /> An external program is called for the bibliography only if
+      write18 is enabled.
+      <br /> Single error signaled in case of <samp>\newcommand{\foo\bar}{}</samp>.
+      <br /> Corrected <samp>\string^^^^1234</samp>.
+      <br /> Corrected <samp>\expandafter\string\csname\endcsname</samp>.
+      <br /> Handles correctly the case <samp>\escapechar=0</samp>.
+      <br /> Accepts <samp>\@gobble{\par}</samp>.
+      <br />For many command that read an optional argument, paragraphs
+      are forbidden.
+      <br /> In case of <samp>\def\foo#1 #2{}\foo1 2</samp>, both spaces
+      can be replaced by a new line.
+      <br /> Command <samp>\newcount</samp> never allocates register 255.
+      <br /> Count registers no more used for allocation commands like
+      <samp>\newcount</samp>.
+      <br /> Internal: made <samp>\outer</samp> tests faster than <samp>\protected</samp>
+      <br /> Corrected bug in <samp>\marks</samp>.
+      <br /> Simplified <samp>\message</samp>.
+      <br /> Corrected error handling in <samp>\def\foo#1#2{#1}\foo\bad\par</samp>
    the second argument gives a runaway; this stops argument scanning
    and inhibits evaluation of body.
    <br/> Indicates a corrects size for virtual files. 

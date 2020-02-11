@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txcommands_rcsid = "$Id: txcommands.C,v 2.164 2017/05/29 06:22:57 grimm Exp $";
 
 // This file contains the big switch that interprets (most) commands
 

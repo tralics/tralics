@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-//$Id: txvars.h,v 2.141 2015/10/16 16:51:09 grimm Exp $
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
 
 // This software is governed by the CeCILL license under French law and

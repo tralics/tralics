@@ -17,7 +17,6 @@
 
 #include "tralics.h"
 #include <ctime>
-const char *tralics_rcsid = "$Id: tralics.C,v 2.212 2015/11/18 17:58:11 grimm Exp $";
 
 static Buffer auxb; // chars to be added to the input file
 

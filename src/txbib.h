@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-// $Id: txbib.h,v 2.30 2011/01/20 15:57:33 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

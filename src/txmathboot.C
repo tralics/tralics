@@ -13,8 +13,6 @@
 #include "tralics.h"
 #include "txmath.h"
 
-const char *txmathboot_rcsid = "$Id: txmathboot.C,v 2.90 2015/11/18 17:58:11 grimm Exp $";
-
 extern MathDataP math_data;
 using namespace math_ns;
 extern bool compatibility;

@@ -1,2 +1,2 @@
 ---
-Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard'
+Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard,-readability-braces-around-statements'

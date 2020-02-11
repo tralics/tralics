@@ -11,7 +11,6 @@
 // This file contains the TeX scanner of tralics
 
 #include "tralics.h"
-const char *txscan_rcsid = "$Id: txscan.C,v 2.125 2015/11/23 16:14:00 grimm Exp $";
 
 namespace {
     Buffer               file_name_buffer;                   // a buffer for reading file names

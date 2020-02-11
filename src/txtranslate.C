@@ -9,8 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains a big part of the Tralics translator
+
 #include "tralics.h"
-const char *txtranslate_rcsid = "$Id: txtranslate.C,v 2.161 2017/05/29 06:22:58 grimm Exp $";
 
 extern void readline_newprompt(string s);
 extern void txsleep(int);

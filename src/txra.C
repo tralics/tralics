@@ -9,8 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains commands needed for the RA
+
 #include "tralics.h"
-const char *txra_rcsid = "$Id: txra.C,v 2.16 2015/11/18 17:58:11 grimm Exp $";
 
 static Buffer  Tbuf;
 vector<string> module_list;

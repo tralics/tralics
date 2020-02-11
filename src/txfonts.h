@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-// $Id: txfonts.h,v 2.11 2008/11/12 09:43:56 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

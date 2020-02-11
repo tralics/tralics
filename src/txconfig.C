@@ -12,8 +12,6 @@
 
 #include "tralics.h"
 
-const char *txconfig_rcsid = "$Id: txconfig.C,v 2.20 2015/10/28 17:38:45 grimm Exp $";
-
 namespace config_ns {
     Buffer          sec_buffer;
     string          all_themes = "";

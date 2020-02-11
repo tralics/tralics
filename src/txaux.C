@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txaux_rcsid = "$Id: txaux.C,v 2.34 2015/10/28 17:38:45 grimm Exp $";
 
 namespace arith_ns {
     void start_err(String);

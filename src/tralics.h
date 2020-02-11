@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-// $Id: tralics.h,v 2.46 2008/11/12 09:43:56 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002,2004,2006,2007,2008
 
 // This software is governed by the CeCILL license under French law and

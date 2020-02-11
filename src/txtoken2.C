@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txtoken2_rcsid = "$Id: txtoken2.C,v 2.29 2017/05/29 06:22:57 grimm Exp $";
 
 void Hashtab::boot_etex() {
     primitive("TeXXeTstate", assign_int_cmd, TeXXetstate_code);

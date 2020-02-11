@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txarray_rcsid = "$Id: txarray.C,v 2.59 2015/11/10 17:32:46 grimm Exp $";
 
 static NewArray new_array_object;
 static char     char_for_error = 'c';

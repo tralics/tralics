@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-// $Id: txtoken.h,v 2.37 2015/11/09 10:02:25 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007, 2015
 
 // This software is governed by the CeCILL license under French law and

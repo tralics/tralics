@@ -16,8 +16,6 @@
 #include <csignal>
 #include <sys/types.h>
 
-const char *read_line_rcsid = "$Id: readline.C,v 2.14 2011/06/28 08:15:25 grimm Exp $";
-
 // The line editor
 class Slined;
 

@@ -9,8 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-const char *txerr_rcsid = "$Id: txerr.C,v 2.60 2015/11/27 17:06:16 grimm Exp $";
-
 #include "tralics.h"
 
 namespace err_ns {

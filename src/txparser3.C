@@ -11,7 +11,6 @@
 // This file contains a part of the TeX parser of tralics
 
 #include "tralics.h"
-const char *txparser3_rcsid = "$Id: txparser3.C,v 2.25 2015/11/10 17:32:46 grimm Exp $";
 
 namespace parser_ns {
     auto to_string(boundary_type v) -> String;

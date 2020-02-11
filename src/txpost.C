@@ -13,8 +13,6 @@
 #include "txpost.h"
 #include "txtrees.h"
 
-const char *txpost_rcsid = "$Id: txpost.C,v 2.80 2015/11/18 17:58:11 grimm Exp $";
-
 namespace {
     Buffer                             scbuf;          // scratch buffer for printing XML, and other things
     vector<pair<int, Istring>>         ref_list;       // list of all \ref

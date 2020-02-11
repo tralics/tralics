@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txtoken1_rcsid = "$Id: txtoken1.C,v 2.99 2017/05/29 06:22:57 grimm Exp $";
 
 // We define functions that return the name of a token;
 

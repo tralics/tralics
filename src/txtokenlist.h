@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-// $Id: txtokenlist.h,v 2.15 2015/10/28 17:38:46 grimm Exp $
 // Copyright INRIA/apics (Jose' Grimm)  2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

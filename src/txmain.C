@@ -33,8 +33,6 @@
 #include "tralics.h"
 #include "txpath.h"
 
-const char *txmain_rcsid = "$Id: txmain.C,v 2.188 2015/11/10 17:32:46 grimm Exp $";
-
 inline void MainClass::set_version() {
     version_string = "2.15.4"; // current version number
 }

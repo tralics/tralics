@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-//$Id: txcmd.h,v 2.62 2017/05/29 06:22:57 grimm Exp $
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2008
 
 // This software is governed by the CeCILL license under French law and

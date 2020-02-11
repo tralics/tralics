@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-// $Id: txeqtb.h,v 2.15 2015/11/09 10:02:24 grimm Exp $
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

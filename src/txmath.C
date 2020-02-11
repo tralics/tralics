@@ -13,8 +13,6 @@
 #include "tralics.h"
 #include "txmath.h"
 
-const char *txmath_rcsid = "$Id: txmath.C,v 2.159 2015/11/24 17:08:44 grimm Exp $";
-
 namespace {
     Buffer       math_buffer;
     Buffer       special_buffer;

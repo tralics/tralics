@@ -10,7 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txfonts_rcsid = "$Id: txfonts.C,v 2.28 2015/10/22 16:23:50 grimm Exp $";
+
 // Font info stuff.
 
 // This returns the position of the name of a font attribute

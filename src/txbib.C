@@ -9,8 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-const char *txbib_rcsid = "$Id: txbib.C,v 2.91 2017/05/29 06:22:57 grimm Exp $";
-
 #include "tralics.h"
 #include "txbib.h"
 

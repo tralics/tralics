@@ -9,10 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains the TeX parser of tralics
-//
 
 #include "tralics.h"
-const char *txparser_rcsid = "$Id: txparser.C,v 2.177 2015/11/27 17:06:16 grimm Exp $";
 
 namespace {
     Buffer trace_buffer;

@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-// $Id: txparam.h,v 2.47 2012/09/03 08:45:48 grimm Exp $
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2002,2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-// $Id: txio.h,v 2.28 2015/10/29 16:38:22 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics/marelle (Jose' Grimm) 2006 2015
 
 // This software is governed by the CeCILL license under French law and

@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-// $Id: txmlio.h,v 2.5 2015/07/29 16:10:40 grimm Exp $
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

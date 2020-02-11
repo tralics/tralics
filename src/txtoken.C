@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txtoken_rcsid = "$Id: txtoken.C,v 2.75 2015/11/09 10:02:25 grimm Exp $";
 
 // token lists.
 namespace {

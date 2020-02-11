@@ -14,8 +14,6 @@
 #include "txmath.h"
 #include "txmath1.h"
 
-const char *txmath1_rcsid = "$Id: txmath1.C,v 2.59 2015/11/24 17:08:44 grimm Exp $";
-
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer    mathml_buffer;
 static Buffer    aux_buffer;

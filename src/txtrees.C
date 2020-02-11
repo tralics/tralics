@@ -10,10 +10,9 @@
 
 // This file contains a lot of stuff dealing with trees
 // It contains also some eTeX extensions.
+
 #include "tralics.h"
 #include "txtrees.h"
-
-const char *txtrees_rcsid = "$Id: txtrees.C,v 2.30 2015/11/18 17:58:11 grimm Exp $";
 
 namespace trees_ns {
     void normalise_space(TokenList &L);

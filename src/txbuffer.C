@@ -11,8 +11,6 @@
 // This file contains a lot of stuff dealing with buffers.
 #include "tralics.h"
 
-const char *txbuffer_rcsid = "$Id: txbuffer.C,v 2.100 2015/10/16 16:51:09 grimm Exp $";
-
 namespace {
     Buffer       thebuffer;      // a scratch buffer
     Buffer       substring_buf;  // another buffer

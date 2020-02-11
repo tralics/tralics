@@ -13,7 +13,6 @@
 
 #include "tralics.h"
 #include <sstream>
-const char *txio_rcsid = "$Id: txio.C,v 2.49 2015/11/09 10:02:24 grimm Exp $";
 
 extern void readline(char *buffer, int screen_size);
 

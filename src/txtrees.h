@@ -1,5 +1,5 @@
+#pragma once
 // -*- C++ -*-
-//$Id: txtrees.h,v 2.1 2009/06/12 14:15:53 grimm Exp $
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
 
 // This software is governed by the CeCILL license under French law and

@@ -12,8 +12,6 @@
 #include "tralics.h"
 #include "txclasses.h"
 
-const char *txclasses_rcsid = "$Id: txclasses.C,v 2.44 2015/10/28 17:38:45 grimm Exp $";
-
 namespace {
     Buffer      local_buf;
     Buffer      file_list;

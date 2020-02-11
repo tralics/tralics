@@ -13,7 +13,6 @@
 // iso-8859-1)
 
 #include "tralics.h"
-const char *txaccent_rcsid = "$Id: txaccent.C,v 2.21 2015/10/29 16:38:22 grimm Exp $";
 
 namespace accent_ns {
     auto fetch_accent(int chr, int accent_code) -> Token;

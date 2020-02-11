@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-// $Id: txbuffer.h,v 2.81 2015/10/16 16:51:09 grimm Exp $
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2004, 2007,2008
 
 // This software is governed by the CeCILL license under French law and

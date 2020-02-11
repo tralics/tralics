@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txatt_rcsid = "$Id: txatt.C,v 2.16 2015/08/06 09:28:44 grimm Exp $";
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.

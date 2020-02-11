@@ -12,7 +12,6 @@
 
 #include "tralics.h"
 #include "txmlio.h"
-const char *txmlio_rcsid = "$Id: txmlio.C,v 2.10 2015/10/28 17:38:46 grimm Exp $";
 
 class EOD {};
 

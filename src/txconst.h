@@ -1,6 +1,5 @@
 #pragma once
 // -*- C++ -*-
-//$Id: txconst.h,v 2.9 2008/03/17 07:41:00 grimm Exp $
 // Copyright (c)INRIA/apics (Jose' Grimm) 2006, 2007
 
 // This software is governed by the CeCILL license under French law and

@@ -8,8 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-const char *txtitlepage_rcsid = "$Id: txtitlepage.C,v 2.41 2015/10/28 17:38:46 grimm Exp $";
-
 #include "tralics.h"
 #include "txtitlepage.h"
 

@@ -15,8 +15,6 @@
 #include "txclasses.h"
 #include "txparser2.h"
 
-const char *txparser2_rcsid = "$Id: txparser2.C,v 2.53 2015/11/18 17:58:11 grimm Exp $";
-
 bool xkv_patch = false; // for pass_option_to class; where is this set ????
 
 namespace {

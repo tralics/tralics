@@ -12,7 +12,6 @@
 
 #include "tralics.h"
 #include <cstring>
-const char *txstack_rcsid = "$Id: txstack.C,v 2.60 2015/11/18 17:58:11 grimm Exp $";
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;

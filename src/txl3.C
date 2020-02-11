@@ -11,7 +11,6 @@
 // This file contains stuff for latex3
 
 #include "tralics.h"
-const char *txpl3_rcsid = "$Id: txl3.C,v 2.24 2015/11/25 07:38:28 grimm Exp $";
 
 namespace {
     const TokenList empty_list;

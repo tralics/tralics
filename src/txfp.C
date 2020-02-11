@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
-const char *txfp_rcsif = "$Id: txfp.C,v 2.35 2015/10/28 17:38:46 grimm Exp $";
 
 using Digit = unsigned int;
 
