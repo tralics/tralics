@@ -23,7 +23,7 @@ extern bool bad_minus;
 // sans-serif-italic, sans-serif-bold-italic, monospace
 typedef string math_char_slot[15];
 math_char_slot math_chars[128];
-Xmlp           single_chars[128];
+Xml *          single_chars[128];
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"
@@ -34,7 +34,7 @@ auto get_math_char(uchar c, int f) -> string { return math_chars[c][f]; }
 
 void set_math_char(uchar c, int f, string s) { math_chars[c][f] = s; }
 
-auto math_ns::get_builtin_alt(int p) -> Xmlp { return math_data.get_builtin_alt(p); }
+auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
@@ -1013,14 +1013,14 @@ void math_ns::fill_math_char_slots() {
 }
 
 // Converts foo into <mspace width='foo'/>
-auto math_ns::mk_space(String a) -> Xmlp {
-    Xmlp b = new Xml(cst_mspace, nullptr);
+auto math_ns::mk_space(String a) -> Xml * {
+    Xml *b = new Xml(cst_mspace, nullptr);
     b->add_att(np_cst_width, Istring(a));
     return b;
 }
 
-auto MathDataP::mk_mo(String a) -> Xmlp {
-    Xmlp x = new Xml(Istring(a));
+auto MathDataP::mk_mo(String a) -> Xml * {
+    Xml *x = new Xml(Istring(a));
     return new Xml(cst_mo, x);
 }
 
@@ -1227,7 +1227,7 @@ auto math_ns::math_space_code(int c) -> bool {
 }
 
 // Returns the value of a constant,
-auto math_ns::math_constants(int c) -> Xmlp {
+auto math_ns::math_constants(int c) -> Xml * {
     switch (c) {
     case dots_code: return math_data.get_mc_table(5);
     case ldots_code: return math_data.get_mc_table(6);
@@ -1254,7 +1254,7 @@ auto math_ns::math_constants(int c) -> Xmlp {
     return math_data.get_mc_table(0);
 }
 
-auto MathDataP::init_builtin(String name, math_loc pos, Xmlp x, symcodes t) -> Token {
+auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token {
     init_builtin(pos, x);
     return the_parser.hash_table.primitive(name, t, subtypes(pos));
 }
@@ -1266,7 +1266,7 @@ auto MathDataP::init_builtin(String name, math_loc pos, Xmlp x, symcodes t) -> T
 // then ent2 is used instead of ent, so that \alpha gives &#x3B1;
 
 auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, name_positions bl, symcodes t, bool hack) -> Token {
-    Xmlp x = new Xml(Istring(no_ent_names ? ent2 : ent));
+    Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     x = new Xml(bl, x);
     return init_builtin(name, pos, x, t);
@@ -1275,9 +1275,9 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, name_
 // Special case where a bold variant exists
 auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, name_positions bl, symcodes t, bool hack)
     -> Token {
-    Xmlp x = new Xml(Istring(no_ent_names ? ent2 : ent));
+    Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
-    Xmlp bold = new Xml(bl, x);
+    Xml *bold = new Xml(bl, x);
     bold->add_att(cst_mathvariant, cstf_bold);
     init_builtin(pos2, bold);
     x = new Xml(bl, x);
@@ -1288,7 +1288,7 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
 // the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
 // This is currently unused
 void MathDataP::mk_moc(String name, String ent, math_loc pos) {
-    Xmlp x = mk_mo(ent);
+    Xml *x = mk_mo(ent);
     x->add_att(np_form, np_prefix);
     init_builtin(name, pos, x, mathord_cmd);
 }
@@ -1296,7 +1296,7 @@ void MathDataP::mk_moc(String name, String ent, math_loc pos) {
 // This defines name to be a math ord command.
 // the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
 void MathDataP::mk_moo(String name, String ent, math_loc pos) {
-    Xmlp x = mk_mo(ent);
+    Xml *x = mk_mo(ent);
     x->add_att(np_form, np_prefix);
     symcodes T = mathopn_cmd;
     if (first_w_limit_code <= pos && pos <= last_w_limit_code) {
@@ -1440,15 +1440,15 @@ void MathDataP::boot_xml_lr_tables() {
     mc_table[26] = mk_mo(no_ent_names ? "&#x2DC;" : "&tilde;");
 }
 
-auto math_ns::make_math_char(uchar c, int n) -> Xmlp {
+auto math_ns::make_math_char(uchar c, int n) -> Xml * {
     Buffer &B = the_main->SH.shbuf();
     B.reset();
     if (n <= 1)
         B.push_back(c);
     else
         B.push_back(math_chars[c][n]);
-    Xmlp v   = new Xml(the_main->SH);
-    Xmlp res = new Xml(cst_mi, v);
+    Xml *v   = new Xml(the_main->SH);
+    Xml *res = new Xml(cst_mi, v);
     if (n == 1) res->add_att(cst_mathvariant, cstf_normal);
     return res;
 }
@@ -1471,8 +1471,8 @@ void MathDataP::boot_chars() {
     for (uchar i = 0; i < nb_simplemath; i++) {
         B.reset();
         B.push_back(i);
-        Xmlp res = new Xml(np_simplemath, new Xml(the_main->SH));
-        Xmlp X   = new Xml(np_formula, res);
+        Xml *res = new Xml(np_simplemath, new Xml(the_main->SH));
+        Xml *X   = new Xml(np_formula, res);
         X->add_att(np_type, np_inline);
         simplemath_table[i] = X;
     }
@@ -1481,14 +1481,14 @@ void MathDataP::boot_chars() {
 // Creates complicated objects
 void MathDataP::boot2() {
     // Define \colon
-    Xmlp colon = mk_mo(":");
+    Xml *colon = mk_mo(":");
     colon->add_att(Istring("lspace"), Istring("0pt"));
     init_builtin("colon", colon_code, colon, mathord_cmd);
     // Constructs varlim etc
 
-    Xmlp lim_op = mk_mo("lim");
+    Xml *lim_op = mk_mo("lim");
     lim_op->add_att(np_movablelimits, np_false);
-    Xmlp x = xml2sons(Istring(cst_mover), lim_op, get_mc_table(1));
+    Xml *x = xml2sons(Istring(cst_mover), lim_op, get_mc_table(1));
     init_builtin("varlimsup", varlimsup_code, x, mathop_cmd);
 
     x = xml2sons(Istring(cst_munder), lim_op, get_mc_table(3));
@@ -1509,9 +1509,9 @@ void MathDataP::boot2() {
     init_builtin("strut", strut_code, x, mathord_cmd);
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
-    Xmlp y = new Xml(Istring(cst_mpadded), get_builtin(int_code));
+    Xml *y = new Xml(Istring(cst_mpadded), get_builtin(int_code));
     y->add_att(np_cst_width, Istring("-3pt"));
-    Xmlp z = get_builtin(xml_thickmu_space_loc);
+    Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(cst_mrow, nullptr);
     x->push_back(z);
     x->push_back(y);

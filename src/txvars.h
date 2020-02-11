@@ -40,7 +40,6 @@ class MainClass;
 
 // Some typedef declarations
 using String = const char *;
-using Xmlp   = Xml *;
 using uchar  = unsigned char;
 using Digit  = unsigned int;
 

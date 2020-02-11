@@ -37,17 +37,17 @@ class Indexer {
 public:
     string             key; // sort key
     string             aux;
-    Xmlp               translation;
+    Xml *              translation;
     int                level;
     int                iid; // index in the reference table
     [[nodiscard]] auto is_same(int l, const string &k) const -> bool { return level == l && k == aux; }
-    Indexer(string k, string a, Xmlp x, int l, int u) : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
+    Indexer(string k, string a, Xml *x, int l, int u) : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
 };
 
 class OneIndex {
     string            name;
     string            title;
-    Xmlp              position; // Position on the XML of the index
+    Xml *             position; // Position on the XML of the index
     int               AL;       // The attribute list index
     vector<Indexer *> value;
 
@@ -57,9 +57,9 @@ public:
     void               do_sort() { sort(value.begin(), value.end(), trees_ns::xless); }
     [[nodiscard]] auto get_AL() const -> int { return AL; }
     [[nodiscard]] auto get_title() const -> const string & { return title; }
-    [[nodiscard]] auto get_position() const -> Xmlp { return position; }
-    void               set_position(Xmlp x) { position = x; }
-    [[nodiscard]] auto get_translation(int i) const -> Xmlp { return value[i]->translation; }
+    [[nodiscard]] auto get_position() const -> Xml * { return position; }
+    void               set_position(Xml *x) { position = x; }
+    [[nodiscard]] auto get_translation(int i) const -> Xml * { return value[i]->translation; }
     [[nodiscard]] auto get_iid(int i) const -> int { return value[i]->iid; }
     [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
     OneIndex(string a, string b, int c) : name(std::move(a)), title(std::move(b)), position(nullptr), AL(c) {}

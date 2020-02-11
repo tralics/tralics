@@ -42,8 +42,8 @@ class MathElt {
 public:
     MathElt(CmdChr X, subtypes c) : val(X), Font(c) {}
     MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
-    MathElt(Xmlp, math_types);
-    MathElt(Xmlp A, int b, math_types c);
+    MathElt(Xml *, math_types);
+    MathElt(Xml *A, int b, math_types c);
     // access to elements
     [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
     void               set_xmltype(math_types x) { Font = subtypes(x); }
@@ -57,7 +57,7 @@ public:
     [[nodiscard]] auto get_cmd() const -> symcodes { return val.get_cmd(); }
     void               set_cmd(symcodes c) { val.set_cmd(c); }
     [[nodiscard]] auto get_list() const -> Math &;
-    [[nodiscard]] auto get_xml_val() const -> Xmlp;
+    [[nodiscard]] auto get_xml_val() const -> Xml *;
 
     // some tests on the elements
     [[nodiscard]] auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }
@@ -75,7 +75,7 @@ public:
     [[nodiscard]] auto maybe_iseq() const -> bool;
     // other functions
     auto               large2() -> del_pos;
-    [[nodiscard]] auto remove_prefix() const -> Xmlp;
+    [[nodiscard]] auto remove_prefix() const -> Xml *;
     void               cv_noMLt();
     void               cv_noML();
     void               cv_noMLt_special();
@@ -85,9 +85,9 @@ public:
     void               cv_noML_list();
     auto               cv1(math_style, bool) -> MathElt;
     void               change_type(int t);
-    auto               try_math_op() -> Xmlp;
+    auto               try_math_op() -> Xml *;
     [[nodiscard]] auto is_e_grave() const -> bool;
-    [[nodiscard]] auto special3() const -> Xmlp;
+    [[nodiscard]] auto special3() const -> Xml *;
     void               print() const;
     [[nodiscard]] auto val_as_digit() const -> int { return val.val_as_digit(); }
 
@@ -150,8 +150,8 @@ public:
     auto               chars_to_mb2(Buffer &) const -> bool;
     auto               chars_to_mb3() -> Istring;
     void               clear() { value.clear(); }
-    auto               convert_math(math_style) -> Xmlp;
-    auto               convert_math_noML(bool) -> Xmlp;
+    auto               convert_math(math_style) -> Xml *;
+    auto               convert_math_noML(bool) -> Xml *;
     void               convert_math_noML0();
     void               convert_math_noMLt0();
     auto               convert_opname() -> string;
@@ -175,7 +175,7 @@ public:
     [[nodiscard]] auto has_two_elements() const -> bool;
     void               is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
     [[nodiscard]] auto length_one() const -> bool { return value.size() == 1; }
-    auto               M_array(bool, math_style) -> Xmlp;
+    auto               M_array(bool, math_style) -> Xml *;
     auto               M_cv(math_style, int need_row) -> XmlAndType;
     void               pop_back() { value.pop_back(); }
     void               pop_front() { value.pop_front(); }
@@ -185,7 +185,7 @@ public:
     void               push_back_font(subtypes X, subtypes c);
     void               push_back(CmdChr);
     void               push_back(MathElt x) { value.push_back(x); }
-    void               push_back(Xmlp, int, math_types);
+    void               push_back(Xml *, int, math_types);
     void               push_front(CmdChr, subtypes);
     void               remove_initial_group();
     void               remove_last();
@@ -197,17 +197,17 @@ public:
     void               set_nondisplay_type() { type = math_dollar_cd; }
     void               set_type(math_list_type c) { type = c; }
     [[nodiscard]] auto third_element() const -> const MathElt &;
-    auto               trivial_math(int) -> Xmlp;
-    auto               trivial_math_index(symcodes) -> Xmlp;
+    auto               trivial_math(int) -> Xml *;
+    auto               trivial_math_index(symcodes) -> Xml *;
     auto               check_align() -> int;
 
 private:
     void               add_cur_cont();
     void               add_cur_font();
     auto               add_fence(bool, MathF &) -> bool;
-    void               concat(Xmlp);
-    void               concat_space(Xmlp);
-    auto               convert_cell(int &n, vector<AttList> &table, math_style) -> Xmlp;
+    void               concat(Xml *);
+    void               concat_space(Xml *);
+    auto               convert_cell(int &n, vector<AttList> &table, math_style) -> Xml *;
     auto               convert_char_seq(MathElt W) -> MathElt;
     auto               convert_char_iseq(MathElt W, bool) -> MathElt;
     void               fetch_rlc(vector<AttList> &);
@@ -219,23 +219,23 @@ private:
     void               handle_mbox_not();
     [[nodiscard]] auto has_over() const -> bool;
     auto               is_font_cmd1() -> bool;
-    auto               large1(MathElt &, math_style) -> Xmlp;
+    auto               large1(MathElt &, math_style) -> Xml *;
     auto               M_cv0(math_style) -> XmlAndType;
     auto               M_cv3(math_style) -> Math;
     void               handle_cmd_Big(math_style);
     auto               handle_cmd_Big_aux(math_style) -> bool;
     void               cv_hspace_t(MathElt &cur);
     auto               M_cvaux() -> Math;
-    auto               M_ref() -> Xmlp;
+    auto               M_ref() -> Xml *;
     auto               M_mbox1(Buffer &, subtypes &) -> int;
     auto               only_digits(Buffer &) const -> bool;
     void               push_back(Math &);
-    void               push_back_small(Xmlp a);
+    void               push_back_small(Xml *a);
     void               push_front(Math &);
     void               skip_initial_space();
-    [[nodiscard]] auto special1() const -> Xmlp;
-    void               special2(bool &, Xmlp &) const;
-    auto               split_as_array(vector<AttList> &table, math_style, bool) -> Xmlp;
+    [[nodiscard]] auto special1() const -> Xml *;
+    void               special2(bool &, Xml *&) const;
+    auto               split_as_array(vector<AttList> &table, math_style, bool) -> Xml *;
     void               remove_opt_arg(bool star);
     auto               remove_req_arg() -> string;
     [[nodiscard]] auto remove_req_arg_noerr() const -> string;
@@ -274,7 +274,7 @@ public:
     void dump_labels();
     void ml_check_labels();
     void new_label(string s, bool a);
-    void ml_second_pass(Xmlp row, bool);
+    void ml_second_pass(Xml *row, bool);
     void ml_last_pass(bool);
     void insert_special_tag(string s) { multi_labels[last_ml_pos - 2] = s; }
     void new_multi_label(string s, int t) {
@@ -334,8 +334,8 @@ private:
 // This is a global object for math handling
 class MathDataP {
     static const int m_offset = 10000;
-    Xmlp             built_in_table[last_math_loc];     // the static math table
-    Xmlp             built_in_table_alt[last_math_loc]; // the static math table
+    Xml *            built_in_table[last_math_loc];     // the static math table
+    Xml *            built_in_table_alt[last_math_loc]; // the static math table
     Xml **           xml_math_table;                    // the dynamic math table
     int              xmath_size;                        // size of the dynamic table
     int              xmath_pos;                         // number of slots used in the dynamic table
@@ -345,8 +345,8 @@ class MathDataP {
     int        lmath_pos;                       // number of slots used in the math table
     Istring    xml_lr_ptable[del_tablesize];    // table of fence attributes
     math_types math_char_type[nb_mathchars];    // the math type for +, = etc
-    Xmlp       simplemath_table[nb_simplemath]; // translation of $x$ etc
-    Xmlp       mc_table[29];
+    Xml *      simplemath_table[nb_simplemath]; // translation of $x$ etc
+    Xml *      mc_table[29];
     bool       no_ent_names;
     Token      nomathsw0; // says next token is for nomathml only
     Token      nomathsw1; // says next token is for normal mode only
@@ -370,7 +370,7 @@ private:
     void mk_accent(String a, String b, String b2, subtypes pos);
     void fill_lr(int, String, String);
     void fill_lr(int, String);
-    auto init_builtin(String, math_loc, Xmlp, symcodes) -> Token;
+    auto init_builtin(String, math_loc, Xml *, symcodes) -> Token;
 
 public:
     void boot();
@@ -379,18 +379,18 @@ public:
     void realloc_xml();
     auto find_math_location(math_list_type k, subtypes s) -> subtypes;
     auto find_xml_location() -> subtypes;
-    auto find_xml_location(Xmlp) -> subtypes;
-    auto make_mfenced(int open, int close, Xmlp val) -> Xmlp;
-    auto add_style(int lvl, Xmlp val) -> Xmlp;
+    auto find_xml_location(Xml *) -> subtypes;
+    auto make_mfenced(int open, int close, Xml *val) -> Xml *;
+    auto add_style(int lvl, Xml *val) -> Xml *;
     void TM_mk(String a, String b, math_types c);
     void finish_math_mem();
-    auto get_mc_table(int i) -> Xmlp { return mc_table[i]; }
-    auto get_builtin(int p) -> Xmlp { return built_in_table[p]; }
-    auto get_builtin_alt(int p) -> Xmlp { return built_in_table_alt[p]; }
-    void init_builtin(int i, Xmlp X) { built_in_table[i] = X; }
+    auto get_mc_table(int i) -> Xml * { return mc_table[i]; }
+    auto get_builtin(int p) -> Xml * { return built_in_table[p]; }
+    auto get_builtin_alt(int p) -> Xml * { return built_in_table_alt[p]; }
+    void init_builtin(int i, Xml *X) { built_in_table[i] = X; }
     void init_builtin(int i, int j) { built_in_table[i] = built_in_table[j]; }
     void init_builtin(int i, Buffer &B) { built_in_table[i] = new Xml(B); }
-    auto get_xml_val(int i) -> Xmlp {
+    auto get_xml_val(int i) -> Xml * {
         if (i < m_offset)
             return built_in_table[i];
         else
@@ -398,20 +398,20 @@ public:
     }
     auto get_list(int k) -> Math & { return math_table[k]; }
     void push_back(int k, CmdChr, subtypes c);
-    auto get_simplemath_val(int i) -> Xmlp { return simplemath_table[i]; }
+    auto get_simplemath_val(int i) -> Xml * { return simplemath_table[i]; }
     auto get_fence(int k) -> Istring { return xml_lr_ptable[k]; }
     auto get_math_char_type(int i) -> math_types { return math_char_type[i]; }
-    auto mk_mo(String a) -> Xmlp;
+    auto mk_mo(String a) -> Xml *;
     void set_type(int k, math_list_type c) { math_table[k].set_type(c); }
 };
 
 class Cv3Helper {
     Math               res;
-    Xmlp               p;
+    Xml *              p;
     int                ploc;
     math_types         ptype;
     math_types         prefix_type;
-    Xmlp               index, exponent;
+    Xml *              index, *exponent;
     Math               object;
     int                special; // Sum or product
     void               pop_front() { object.pop_front(); }
@@ -435,31 +435,31 @@ public:
 namespace math_ns {
     void add_attribute_spec(Istring a, Istring b);
     auto cv_special_string(int c) -> name_positions;
-    auto get_builtin(int p) -> Xmlp;
-    auto get_builtin_alt(int p) -> Xmlp;
+    auto get_builtin(int p) -> Xml *;
+    auto get_builtin_alt(int p) -> Xml *;
     auto get_delimiter(CmdChr X) -> del_pos;
     auto get_delimiter(int X) -> del_pos;
-    auto handle_hspace(Buffer &B) -> Xmlp;
-    auto handle_space(Buffer &) -> Xmlp;
+    auto handle_hspace(Buffer &B) -> Xml *;
+    auto handle_space(Buffer &) -> Xml *;
     void insert_delimiter(del_pos k);
     void insert_delimiter_t(del_pos k);
-    auto math_constants(int c) -> Xmlp;
+    auto math_constants(int c) -> Xml *;
     auto math_space_code(int c) -> bool;
-    auto make_sup(Xmlp xval) -> Xmlp;
-    auto mk_mi(Utf8Char c) -> Xmlp;
-    auto mk_mi(uchar c, int font) -> Xmlp;
-    auto mk_space(String) -> Xmlp;
+    auto make_sup(Xml *xval) -> Xml *;
+    auto mk_mi(Utf8Char c) -> Xml *;
+    auto mk_mi(uchar c, int font) -> Xml *;
+    auto mk_space(String) -> Xml *;
     auto nb_args_for_cmd(int) -> int;
     void fill_math_char_slots();
     void fill_math_char_slots_ent();
     void fill_single_char();
     auto next_math_style(math_style x) -> math_style;
     auto next_frac_style(math_style x) -> math_style;
-    auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xmlp;
+    auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xml *;
     auto special_fence(subtypes s, int &open, int &close) -> bool;
     auto style_level(subtypes tt) -> math_style;
-    auto make_math_char(uchar, int) -> Xmlp;
-    auto xml2sons(Istring elt, Xmlp first_arg, Xmlp second_arg) -> Xmlp;
+    auto make_math_char(uchar, int) -> Xml *;
+    auto xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml *;
 }; // namespace math_ns
 
 //---------------------------------------------------------------------

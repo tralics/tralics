@@ -29,9 +29,9 @@ class TitlePageAux {
 
 public:
     auto classify(tpi_vals, int &) -> bool;
-    auto convert(int) -> Xmlp;
-    auto convert(int, Xmlp) -> Xmlp;
-    auto convert(int i, Istring s) -> Xmlp { return convert(i, new Xml(s)); }
+    auto convert(int) -> Xml *;
+    auto convert(int, Xml *) -> Xml *;
+    auto convert(int i, Istring s) -> Xml * { return convert(i, new Xml(s)); }
     void dump(int);
     void exec_start(int);
     void exec_post();
@@ -115,12 +115,12 @@ class TitlePage {
     int   len2{1};       // size of bigtable and Data
     bool  valid{false};  // is this initialised and not killed ?
     int   size{0};       // allocated size of bigtable
-    Xmlp *Data{nullptr}; // the array of xml data
+    Xml **Data{nullptr}; // the array of xml data
 public:
     vector<TitlePageAux> bigtable; // the table
     int                  state;    // current state of the parser
     TitlePage() = default;
-    auto               operator[](int k) -> Xmlp & { return Data[k]; }
+    auto               operator[](int k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
     [[nodiscard]] auto get_len2() const -> int { return len2; }
     auto               is_valid() -> bool { return valid; }

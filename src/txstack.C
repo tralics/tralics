@@ -53,10 +53,10 @@ void Stack::dump_xml_table() {
 
 // Returns the element in the table with id n
 // This should be at position N
-auto Stack::fetch_by_id(int n) -> Xmlp {
+auto Stack::fetch_by_id(int n) -> Xml * {
     if (n <= 0) return nullptr; // no need to look at this
     if (int(enames.size()) <= n) return nullptr;
-    Xmlp x = enames[n];
+    Xml *x = enames[n];
     if (!x) return nullptr;
     if (x->get_id().value == n) return x;
     cout << "This cannot happen: bug in table at position " << n << "\n";
@@ -64,7 +64,7 @@ auto Stack::fetch_by_id(int n) -> Xmlp {
 }
 
 // returns a parent of x
-auto Stack::find_parent(Xmlp x) -> Xmlp {
+auto Stack::find_parent(Xml *x) -> Xml * {
     if (!x) return nullptr;
     int k = enames.size();
     // debug: print all parents
@@ -136,10 +136,10 @@ auto Stack::add_newid0(name_positions x) -> AttList & {
 }
 
 // Adds x to the tail of the current list.
-void Stack::add_last(Xmlp x) { top_stack()->push_back(x); }
+void Stack::add_last(Xml *x) { top_stack()->push_back(x); }
 
 // This adds x at the end the element
-void Xml::push_back(Xmlp x) {
+void Xml::push_back(Xml *x) {
     if (x) tree.push_back(x);
 }
 
@@ -172,7 +172,7 @@ void Xml::add_last_string(const Buffer &B) {
 }
 
 // This adds x and a \n at the end of this.
-void Xml::add_last_nl(Xmlp x) {
+void Xml::add_last_nl(Xml *x) {
     if (x) {
         tree.push_back(x);
         tree.push_back(the_main->the_stack->newline_xml);
@@ -180,7 +180,7 @@ void Xml::add_last_nl(Xmlp x) {
 }
 
 // Implements unhbox, etc.
-void Stack::unbox(Xmlp x) { top_stack()->unbox(x); }
+void Stack::unbox(Xml *x) { top_stack()->unbox(x); }
 
 // Removes a trailing space on the current tree.
 void Stack::remove_last_space() { top_stack()->remove_last_space(); }
@@ -223,7 +223,7 @@ auto Stack::first_frame() const -> Istring {
 
 // Returns the first p on the stack.
 // Too bad that the frame AND the element have to be called p.
-auto Stack::get_cur_par() -> Xmlp {
+auto Stack::get_cur_par() -> Xml * {
     const StackSlot &X     = first_non_empty();
     Istring          pname = the_names[cst_p];
     if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname))
@@ -236,7 +236,7 @@ auto Stack::get_cur_par() -> Xmlp {
 // and has no rend attribute, then add one to it (can be center, can also
 // be flush left, etc.)
 void Stack::add_center_to_p() {
-    Xmlp x = get_cur_par();
+    Xml *x = get_cur_par();
     if (!x) return;
     int w = the_parser.cur_centering();
     x->get_id().get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
@@ -285,18 +285,18 @@ void Stack::push_trace() {
 }
 
 // Internal code of push
-void Stack::ipush(Istring fr, Xmlp V) { Table.push_back(StackSlot(V, the_parser.get_cur_line(), fr, cur_mode, cur_lid)); }
+void Stack::ipush(Istring fr, Xml *V) { Table.push_back(StackSlot(V, the_parser.get_cur_line(), fr, cur_mode, cur_lid)); }
 
 // Pushes code with frame.
-void Stack::push(Istring fr, Xmlp V) {
+void Stack::push(Istring fr, Xml *V) {
     top_stack()->push_back(V);
     ipush(fr, V);
     push_trace();
 }
 
 // Pushes a new empty object, for \hbox, etc
-auto Stack::push_hbox(Istring name) -> Xmlp {
-    Xmlp code = new Xml(name, nullptr);
+auto Stack::push_hbox(Istring name) -> Xml * {
+    Xml *code = new Xml(name, nullptr);
     ipush(the_names[cst_hbox], code);
     push_trace();
     return code;
@@ -305,8 +305,8 @@ auto Stack::push_hbox(Istring name) -> Xmlp {
 // Creates a temporary, sets mode to argument mode.
 // The number of the element is 2. No other element has 2 as number
 // (see Stack::Stack).
-auto Stack::temporary() -> Xmlp {
-    Xmlp res = new Xml(cst_temporary, Xid(2));
+auto Stack::temporary() -> Xml * {
+    Xml *res = new Xml(cst_temporary, Xid(2));
     ipush(the_names[cst_argument], res);
     cur_mode = mode_argument;
     push_trace();
@@ -319,7 +319,7 @@ auto Stack::temporary() -> Xmlp {
 void Stack::init_all(string a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
-    Xmlp V   = new Xml(Istring(a), nullptr);
+    Xml *V   = new Xml(Istring(a), nullptr);
     V->push_back(nullptr); // Make a hole for the color pool
     V->change_id(1);
     ipush(the_names[cst_document], V);
@@ -403,7 +403,7 @@ void Stack::pop(Istring a) {
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
 auto Stack::push_par(int k) -> Xid {
-    Xmlp res = new Xml(cst_p, nullptr);
+    Xml *res = new Xml(cst_p, nullptr);
     Xid  id  = res->get_id();
     push(the_names[cst_p], res);
     cur_mode = mode_h; // we are in horizontal mode now
@@ -412,9 +412,9 @@ auto Stack::push_par(int k) -> Xid {
     return id;
 }
 
-auto Stack::fonts1(name_positions x) -> Xmlp {
+auto Stack::fonts1(name_positions x) -> Xml * {
     bool     w   = the_main->use_font_elt();
-    Xmlp     res = new Xml(w ? x : cst_hi, nullptr);
+    Xml *    res = new Xml(w ? x : cst_hi, nullptr);
     AttList &W   = res->get_id().get_att();
     if (!w) W.push_back(np_rend, x);
     return res;
@@ -422,7 +422,7 @@ auto Stack::fonts1(name_positions x) -> Xmlp {
 
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(name_positions x) {
-    Xmlp res = fonts1(x);
+    Xml *res = fonts1(x);
     res->get_id().get_att().push_back(the_names[cst_flaghi], Istring(1));
     push(Istring(2), res);
 }
@@ -461,7 +461,7 @@ void Stack::check_font() {
         }
         if (nonempty) {
             auto     a   = Istring(the_main->SH.hash_find());
-            Xmlp     res = new Xml(cst_hi, nullptr);
+            Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->get_id().get_att();
             W.push_back(the_names[np_rend], a);
             W.push_back(the_names[cst_flaghi], Istring(1));
@@ -479,7 +479,7 @@ void Stack::check_font() {
     }
     Istring c = the_parser.cur_font.get_color();
     if (!(c.empty() || c.null())) {
-        Xmlp     res = new Xml(cst_hi, nullptr);
+        Xml *    res = new Xml(cst_hi, nullptr);
         AttList &W   = res->get_id().get_att();
         W.push_back(np_color, c);
         W.push_back(the_names[cst_flaghi], Istring(1));
@@ -561,7 +561,7 @@ auto Stack::find_ctrid(subtypes m) -> int {
     int k = Table.size() - 1;
     while (k >= 0) {
         Istring frame = Table[k].frame;
-        Xmlp    obj   = Table[k].obj;
+        Xml *   obj   = Table[k].obj;
         k--;
         if (!obj) continue;
         if (frame.spec_empty()) continue;
@@ -661,7 +661,7 @@ auto Xml::get_cell_span() const -> int {
 void Stack::mark_omit_cell() { Table.back().omit_cell = true; }
 
 // This removes the last element of the top-stack
-auto Stack::remove_last() -> Xmlp { return top_stack()->remove_last(); }
+auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
 inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].get_val()); }
 

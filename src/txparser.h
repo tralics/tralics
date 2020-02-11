@@ -33,7 +33,7 @@ public:
     Token         uclc_list[22];                        // upper, lowert case equivalent of \ij etc
     FontInfo      cur_font;                             // info for the current font
     vector<Image> the_images;                           // file data for images
-    vector<Xmlp>  all_heads;
+    vector<Xml *> all_heads;
     Stats         my_stats; // for the statistics
     Token         err_tok;  // in case of error
 private:
@@ -71,22 +71,22 @@ private:
     string year_string;   // the year (effective number)
     string job_name;      // the name, without extensions
 
-    Buffer           input_buffer;                         // input buffer
-    Buffer           mac_buffer;                           // buffer the current macro
-    Buffer           group_buffer;                         // buffer for arg of \begin{...} \end(...)
-    Buffer           unprocessed_xml;                      // chars to be converted into an XML element
-    Buffer           fetch_name_res;                       // used by fetch_name
-    LinePtr          lines;                                // the lines to  be read
-    TokenList        TL;                                   // list of tokens to be read again
-    Condition        conditions;                           // condition stack for current \if
-    SthInternal      cur_val;                              // result of scan_something internal
-    TokenList        document_hook;                        // the document-hook
-    TokenList        end_document_hook;                    // the end-document-hook
-    Utf8Char         verb_saved_char;                      // Char to use for verb by ShortVewrb
-    vector<Utf8Char> input_line;                           // input line converted to chars
-    uint             input_line_pos{0};                    // position in input_line
-    Xmlp             the_xmlA{nullptr}, the_xmlB{nullptr}; // for XML tree manipulations
-                                                           // private inline functions
+    Buffer           input_buffer;                          // input buffer
+    Buffer           mac_buffer;                            // buffer the current macro
+    Buffer           group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer           unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer           fetch_name_res;                        // used by fetch_name
+    LinePtr          lines;                                 // the lines to  be read
+    TokenList        TL;                                    // list of tokens to be read again
+    Condition        conditions;                            // condition stack for current \if
+    SthInternal      cur_val;                               // result of scan_something internal
+    TokenList        document_hook;                         // the document-hook
+    TokenList        end_document_hook;                     // the end-document-hook
+    Utf8Char         verb_saved_char;                       // Char to use for verb by ShortVewrb
+    vector<Utf8Char> input_line;                            // input line converted to chars
+    uint             input_line_pos{0};                     // position in input_line
+    Xml *            the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    // private inline functions
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
@@ -171,7 +171,7 @@ public:
     void               after_main_text();
     void               boot();
     void               boot_special_names();
-    void               box_end(Xmlp, int);
+    void               box_end(Xml *, int);
     auto               list_to_string0(Buffer &b) -> bool;
     auto               list_to_string(TokenList &L, Buffer &b) -> bool;
     auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
@@ -222,9 +222,9 @@ public:
     void               signal_error(Token, String);
     void               signal_ovf(Token, String, int, int);
     auto               special_expand(TokenList *args) -> TokenList;
-    auto               special_tpa_arg(String n, String y, bool par, bool env, bool qf) -> Xmlp;
+    auto               special_tpa_arg(String n, String y, bool par, bool env, bool qf) -> Xml *;
     void               T_titlepage_finish(int v);
-    auto               tpa_exec(String) -> Xmlp;
+    auto               tpa_exec(String) -> Xml *;
     void               M_tracingall();
     void               translate0();
     void               translate_all();
@@ -251,7 +251,7 @@ private:
     void accent_err3();
     void accent_err4();
     void add_bib_marker(bool);
-    void add_math_label(Xmlp);
+    void add_math_label(Xml *);
     void tokenize_buffer(Buffer &b, TokenList &X, const string &);
     void add_vspace(Token T, ScaledInt, Xid);
     void after_parameter(bool exp, int);
@@ -284,7 +284,7 @@ private:
     void boot_uclc();
     void boot_verbatim();
     void boot_xspace();
-    void box_define(int a, Xmlp c, bool gbl);
+    void box_define(int a, Xml *c, bool gbl);
     void calc_aux(SthInternal &A);
     void calc_main(internal_type type, SthInternal &res, TokenList &B);
     void calc_mul_aux(SthInternal &res);
@@ -371,7 +371,7 @@ private:
 
     auto false_end_tabular(const string &) -> bool;
     void fast_new_macro(TokenList &L, Token name);
-    void fetch_box_id(Xmlp);
+    void fetch_box_id(Xml *);
     auto fetch_csname(bool) -> Token;
     auto fetch_name0() -> String;
     auto fetch_name0_nopar() -> String;
@@ -391,7 +391,7 @@ private:
     void finish_kvo_bool(Token, const string &, const string &);
     void finish_iwhile(TokenList &A, Token D);
     void finish_par_cmd(bool, Istring);
-    void finish_trivial_math(Xmlp);
+    void finish_trivial_math(Xml *);
     void finish_no_mathml(bool, int);
     auto first_boundary() -> boundary_type;
     void E_all_of_one(Token, int);
@@ -480,7 +480,7 @@ private:
     void internal_choice_key();
     void internal_define_key(Token T);
     void internal_define_key_default(Token T, TokenList &L);
-    auto internal_makebox() -> Xmlp;
+    auto internal_makebox() -> Xml *;
     void interpret_genfrac_cmd(int res, subtypes, CmdChr);
     void interpret_mathchoice_cmd(int res, subtypes, CmdChr);
     void interpret_math_cmd(int res, subtypes);
@@ -515,7 +515,7 @@ private:
     void lost_if(Token T, int);
     void mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes);
     void make_catcodes();
-    auto make_cit_ref(Istring, Istring) -> Xmlp;
+    auto make_cit_ref(Istring, Istring) -> Xml *;
     void make_constants();
     void makelabel();
     void make_token(String);
@@ -566,7 +566,7 @@ private:
     void new_prim(Token, Token);
     void new_primx(String, String);
     void new_prim(Token, TokenList &);
-    void new_xref(Xmlp val, string v, bool err);
+    void new_xref(Xml *val, string v, bool err);
     void no_arg_font();
     void no_extension(AttList &, const string &);
     auto T_optarg_nopar() -> Istring;
@@ -729,7 +729,7 @@ private:
     auto shorthand_gdefine(int cmd, String, int) -> Token;
     void M_shortverb(int x);
     void short_verb_error(Token T, Token t, int x);
-    void show_box(Xmlp);
+    void show_box(Xml *);
     void skip_group(TokenList &);
     void skip_group0(TokenList &);
     void skip_initial_space();
@@ -826,8 +826,8 @@ private:
     void T_glossaire_end();
     void T_grabenv();
     void T_hanl(subtypes);
-    auto T_hanl_text() -> Xmlp;
-    auto T_hanl_url() -> Xmlp;
+    auto T_hanl_text() -> Xml *;
+    auto T_hanl_url() -> Xml *;
     void T_hline(subtypes);
     auto T_hline_parse(subtypes) -> int;
     void T_hspace(subtypes);
@@ -975,7 +975,7 @@ private:
     void translate1();
     void translate_char(CmdChr);
     void translate_char(uchar, uchar);
-    auto translate_list(TokenList &L) -> Xmlp;
+    auto translate_list(TokenList &L) -> Xml *;
     void translate_font_size();
     void typeout(int);
     void umlaut();
@@ -1018,11 +1018,11 @@ private:
     void xkv_process_options();
     void xkv_execute_options();
     void xkv_pass_options(bool c);
-    void xml_name(Xmlp x, internal_type);
+    void xml_name(Xml *x, internal_type);
     auto T_xmllatex() -> string;
     void xsetfontsize();
-    auto xT_arg_nopar() -> Xmlp;
-    auto xT_optarg_nopar() -> Xmlp;
+    auto xT_arg_nopar() -> Xml *;
+    auto xT_optarg_nopar() -> Xml *;
     void M_xray(subtypes);
     void E_zapspace();
     auto read_token_arg(Token t) -> bool;

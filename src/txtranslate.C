@@ -22,7 +22,7 @@ namespace {
     Buffer Tbuf;
     Buffer Abuf;
     Buffer tpa_buffer;
-    Xmlp   unfinished_par = nullptr;
+    Xml *  unfinished_par = nullptr;
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 } // namespace
 
@@ -35,7 +35,7 @@ class ColSpec {
     string  model;
     string  value;
     Istring id;
-    Xmlp    xval;
+    Xml *   xval;
     bool    used;
 
 public:
@@ -46,7 +46,7 @@ public:
         return id;
     }
     [[nodiscard]] auto is_used() const -> bool { return used; }
-    [[nodiscard]] auto get_val() const -> Xmlp { return xval; }
+    [[nodiscard]] auto get_val() const -> Xml * { return xval; }
 };
 vector<ColSpec *> all_colors;
 
@@ -142,13 +142,13 @@ void Parser::leave_h_mode() {
         unfinished_par = nullptr;
         flush_buffer0();
         the_stack.pop(cst_p);
-        Xmlp p = the_stack.top_stack()->back();
+        Xml *p = the_stack.top_stack()->back();
         if (p && p->is_empty_p()) the_stack.top_stack()->pop_back();
         the_stack.add_nl();
     }
 }
 
-inline auto xml_to_string(Xmlp X) -> string {
+inline auto xml_to_string(Xml *X) -> string {
     string s = X->convert_to_string();
     return s;
 }
@@ -175,15 +175,15 @@ void Parser::T_optarg() {
 }
 
 // Translates a list of token in argument mode. Returns the value.
-auto Parser::translate_list(TokenList &L) -> Xmlp {
-    Xmlp res = the_stack.temporary();
+auto Parser::translate_list(TokenList &L) -> Xml * {
+    Xml *res = the_stack.temporary();
     T_translate(L);
     the_stack.pop(cst_argument);
     return res;
 }
 
 // Same, but reads the list of tokens.
-auto Parser::xT_arg_nopar() -> Xmlp {
+auto Parser::xT_arg_nopar() -> Xml * {
     TokenList L = read_arg_nopar();
     return translate_list(L);
 }
@@ -200,7 +200,7 @@ auto Parser::nT_arg_nopar() -> Istring {
 }
 
 // Return 0 if the argument is empty or does not exist.
-auto Parser::xT_optarg_nopar() -> Xmlp {
+auto Parser::xT_optarg_nopar() -> Xml * {
     TokenList L;
     read_optarg(L);
     if (L.empty()) return nullptr;
@@ -218,7 +218,7 @@ auto Parser::special_next_arg() -> string {
 
 // Returns next optional argument as a string
 auto Parser::sT_optarg_nopar() -> string {
-    Xmlp res = xT_optarg_nopar();
+    Xml *res = xT_optarg_nopar();
     if (!res) return "";
     return res->convert_to_string();
 }
@@ -229,7 +229,7 @@ auto Parser::nT_optarg_nopar() -> Istring {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) return Istring();
-    Xmlp   x = translate_list(L);
+    Xml *  x = translate_list(L);
     string y = x->convert_to_string();
     return Istring(y);
 }
@@ -333,7 +333,7 @@ void Parser::arg_font(subtypes c) {
 // \textsuperscript, \textsubscript, etc.
 void Parser::T_fonts(name_positions x) {
     leave_v_mode();
-    Xmlp res = the_stack.fonts1(x);
+    Xml *res = the_stack.fonts1(x);
     the_stack.push(the_names[cst_fonts], res);
     T_arg();
     the_stack.pop(cst_fonts);
@@ -347,7 +347,7 @@ void Parser::implicit_par(subtypes c) {
     bool noindent = c == zero_code;
     flush_buffer();
     if (the_stack.in_h_mode() && cur_centering() != 1) {
-        Xmlp cp = the_stack.get_cur_par();
+        Xml *cp = the_stack.get_cur_par();
         if (!cp) {
             parse_error("Invalid \\par command");
             return;
@@ -376,13 +376,13 @@ void Parser::T_par1() {
     if (frame == the_names[cst_hbox]) return;
     flush_buffer();
     if (the_stack.in_h_mode()) {
-        Xmlp cp = the_stack.get_cur_par();
+        Xml *cp = the_stack.get_cur_par();
         if (!cp) {
             parse_error("Invalid \\par command: paragraph not started");
         } else if (cp->par_is_empty()) {
             unfinished_par = cp;
             the_stack.pop(cst_p);
-            Xmlp tp = the_stack.top_stack();
+            Xml *tp = the_stack.top_stack();
             if (tp->back() == cp)
                 tp->pop_back();
             else
@@ -404,7 +404,7 @@ void Parser::T_par1(Istring u) {
 void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
     string s   = sT_arg_nopar();
-    Xmlp   res = new Xml(Istring(s), nullptr);
+    Xml *  res = new Xml(Istring(s), nullptr);
     if (w) {
         if (w == two_code) res->set_id(-1); // XML comment
         flush_buffer();
@@ -465,7 +465,7 @@ auto Parser::T_item_label(int c) -> Istring {
     T_translate(L);
     the_stack.pop(np_label_item);
     if (!(c || get_cur_env_name() == "enumerate")) return Istring(0);
-    Xmlp res = the_stack.remove_last();
+    Xml *res = the_stack.remove_last();
     res->change_name(Istring(1));
     string w = res->convert_to_string();
     return Istring(w);
@@ -498,14 +498,14 @@ void Parser::start_paras(int y, string Y, bool star) {
         else
             the_stack.add_new_anchor();
     }
-    Xmlp opt = nullptr;
+    Xml *opt = nullptr;
     if (module)
         create_label("mod:" + Y, the_stack.get_cur_id()); // should be the id above
     else
         opt = xT_optarg_nopar();
     the_stack.set_arg_mode();
     the_stack.push1(np_head);
-    Xmlp      title = the_stack.top_stack();
+    Xml *     title = the_stack.top_stack();
     TokenList L     = read_arg();
     if (module) check_module_title(L);
     brace_me(L);
@@ -1003,7 +1003,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     // Now we have a \vskip.
     if (the_stack.in_h_mode()) {
         flush_buffer();
-        Xmlp cp = the_stack.get_cur_par();
+        Xml *cp = the_stack.get_cur_par();
         if (!cp) {
             parse_error("Expected a p element on the stack"); //  this is bad.
             return;
@@ -1042,7 +1042,7 @@ void Parser::finish_color() {
     for (int i = 0; i < n; i++)
         if (all_colors[i]->is_used()) k++;
     if (k == 0) return;
-    Xmlp res = new Xml(Istring("colorpool"), nullptr);
+    Xml *res = new Xml(Istring("colorpool"), nullptr);
     for (int i = 0; i < n; i++)
         if (all_colors[i]->is_used()) {
             res->push_back(all_colors[i]->get_val());
@@ -1108,7 +1108,7 @@ void Parser::T_color(subtypes c) {
         string  opt  = sT_optarg_nopar();
         string  name = sT_arg_nopar();
         Istring C    = scan_color(opt, name);
-        Xmlp    mbox = internal_makebox();
+        Xml *   mbox = internal_makebox();
         mbox->get_id().add_attribute(np_color, C);
         return;
     }
@@ -1118,7 +1118,7 @@ void Parser::T_color(subtypes c) {
         string  name2 = sT_arg_nopar();
         Istring C1    = scan_color(opt, name1);
         Istring C2    = scan_color(opt, name2);
-        Xmlp    mbox  = internal_makebox();
+        Xml *   mbox  = internal_makebox();
         mbox->get_id().add_attribute(np_color, C1);
         mbox->get_id().add_attribute(np_color2, C2);
         return;
@@ -1172,10 +1172,10 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     x.add_attribute(the_names[np_spacebefore], k, true);
 }
 
-auto Parser::internal_makebox() -> Xmlp {
+auto Parser::internal_makebox() -> Xml * {
     leave_v_mode();
     the_stack.push1(np_mbox);
-    Xmlp      mbox = the_stack.top_stack();
+    Xml *     mbox = the_stack.top_stack();
     TokenList d    = read_arg();
     brace_me(d);
     T_translate(d);
@@ -1198,14 +1198,14 @@ void Parser::T_mbox(subtypes c) {
         iwidth = get_opt_dim(T);
         ipos   = the_names[get_ctb_opt()];
     }
-    Xmlp mbox = internal_makebox();
+    Xml *mbox = internal_makebox();
     if (!ipos.null() || !iwidth.null()) {
         mbox->get_id().add_attribute(np_box_pos, ipos);
         mbox->get_id().add_attribute(np_box_width, iwidth);
         return;
     }
     // Hack the box
-    Xmlp u = mbox->single_non_empty();
+    Xml *u = mbox->single_non_empty();
     if (u && u->has_name(the_names[np_figure])) mbox->kill_name();
     if (mbox->only_text()) mbox->kill_name();
     if (mbox->only_hi()) mbox->kill_name();
@@ -1218,7 +1218,7 @@ void Parser::T_cap_or_note(bool cap) {
     push_level(bt_local);
     word_define(incentering_code, 0, false);
     the_stack.push1(name);
-    Xmlp opt = nullptr, note = nullptr;
+    Xml *opt = nullptr, *note = nullptr;
     if (cap) { // case of Caption
         opt  = xT_optarg_nopar();
         note = the_stack.top_stack();
@@ -1285,7 +1285,7 @@ void Parser::T_save_box(bool simple) {
         }
         the_stack.push1(np_mbox);
         the_stack.set_arg_mode();
-        Xmlp      mbox = the_stack.top_stack();
+        Xml *     mbox = the_stack.top_stack();
         TokenList d    = read_arg();
         brace_me(d);
         T_translate(d);
@@ -1372,10 +1372,10 @@ void Parser::T_fbox(subtypes cc) {
     }
     leave_v_mode();
     the_stack.push1(cc == scalebox_code ? np_sbox : np_fbox);
-    Xmlp cur = the_stack.top_stack(); // will contain the argument.
+    Xml *cur = the_stack.top_stack(); // will contain the argument.
     T_arg_local();
     the_stack.pop(cc == scalebox_code ? np_sbox : np_fbox);
-    Xmlp     aux = cur->single_non_empty();
+    Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->get_id().get_att();
     if (cc == scalebox_code) {
         if (aux && aux->has_name(the_names[np_figure])) {
@@ -1399,7 +1399,7 @@ void Parser::T_fbox(subtypes cc) {
 }
 
 // Returns <xref url='v'>val</xref>
-void Parser::new_xref(Xmlp val, string v, bool err) {
+void Parser::new_xref(Xml *val, string v, bool err) {
     my_stats.one_more_href();
     the_stack.add_last(new Xml(the_names[np_xref], val));
     the_stack.add_att_to_last(the_names[np_url], Istring(v));
@@ -1468,25 +1468,25 @@ void Parser::T_url(subtypes c) {
         string x = translate_list(Y)->convert_to_string();
         if (!no_hack) url_hack(X);
         brace_me(X);
-        Xmlp y = translate_list(X);
+        Xml *y = translate_list(X);
         new_xref(y, x, true);
     }
 }
 
 // Grabs the text of the URL. This does nothing special with ~.
 // Argument is translated in a group.
-auto Parser::T_hanl_text() -> Xmlp {
+auto Parser::T_hanl_text() -> Xml * {
     push_level(bt_local);
-    Xmlp val = xT_arg_nopar();
+    Xml *val = xT_arg_nopar();
     pop_level(bt_local);
     return val;
 }
 
 // This fetches the URL.
-auto Parser::T_hanl_url() -> Xmlp {
+auto Parser::T_hanl_url() -> Xml * {
     InUrlHandler  something;
     InLoadHandler something_else;
-    Xmlp          B = xT_arg_nopar();
+    Xml *         B = xT_arg_nopar();
     return B;
 }
 
@@ -1496,7 +1496,7 @@ void Parser::T_hanl(subtypes c) {
     leave_v_mode();
     the_stack.push(the_names[cst_hanl], nullptr);
     the_stack.hack_for_hanl();
-    Xmlp B, val;
+    Xml *B, *val;
     if (c == 2) {
         B   = T_hanl_url();
         val = T_hanl_text();
@@ -1519,7 +1519,7 @@ void Parser::T_hanl(subtypes c) {
 // This should work, whatever the mode...
 // If env is true, we grab the content of the env.
 
-auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has_q) -> Xmlp {
+auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has_q) -> Xml * {
     if (!y || y[0] == 0) {
         TokenList L = read_arg();
         back_input(hash_table.par_token);
@@ -1580,7 +1580,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     return the_stack.remove_last();
 }
 
-auto Parser::tpa_exec(String cmd) -> Xmlp {
+auto Parser::tpa_exec(String cmd) -> Xml * {
     mode m = the_stack.get_mode();
     the_stack.set_arg_mode();
     auto Y = Istring(cmd);

@@ -952,7 +952,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = np_Warning;
     if (!Istring(np_warning).empty()) {
         flush_buffer();
-        Xmlp res = new Xml(np_warning, new Xml(Istring(B)));
+        Xml *res = new Xml(np_warning, new Xml(Istring(B)));
         res->get_id().add_attribute(np_letter_c, w);
         res->get_id().add_attribute(np_letter_l, cur_line_to_istring());
         the_stack.add_last(res);

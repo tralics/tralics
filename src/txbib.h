@@ -58,7 +58,7 @@ class Bibliography {
 private:
     string         bib_style;               // The bibliography style
     string         bib_cmd;                 // The bibliography command
-    Xmlp           biblio_loc{nullptr};     // location of biblio in the XML tree
+    Xml *          biblio_loc{nullptr};     // location of biblio in the XML tree
     vector<string> biblio_src;              // database file names
     bool           nocite{false};           // have  we seen \nocite* ?
     bool           biblio_loc_force{false}; // force location
@@ -75,14 +75,14 @@ public:
     auto               find_citation_item(Istring, Istring, bool) -> int;
     auto               find_citation_star(Istring, Istring) -> int;
     [[nodiscard]] auto get_cmd() const -> string { return bib_cmd; }
-    [[nodiscard]] auto get_location() const -> Xmlp { return biblio_loc; }
+    [[nodiscard]] auto get_location() const -> Xml * { return biblio_loc; }
     [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() -> int { return biblio_src.size(); }
     void               push_back_src(String x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
     void               set_cmd(string x) { bib_cmd = x; }
-    void               set_location(Xmlp X, bool f) {
+    void               set_location(Xml *X, bool f) {
         biblio_loc       = X;
         biblio_loc_force = f;
     }

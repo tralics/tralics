@@ -38,7 +38,7 @@ public:
 // This is the stack
 class Stack {
     class StackSlot {
-        Xmlp    obj;
+        Xml *   obj;
         int     line;
         Istring frame;
         mode    md;
@@ -46,7 +46,7 @@ class Stack {
         bool    omit_cell;
         void    dump();
         void    fulldump(int);
-        StackSlot(Xmlp a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
+        StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
         friend class Stack;
     };
     vector<StackSlot> Table;
@@ -62,7 +62,7 @@ private:
     mode              cur_mode;   // the mode to be pushed on modes[]
 public:
     Stack();
-    Xmlp newline_xml;
+    Xml *newline_xml;
 
     auto               add_anchor(const string &, bool) -> Istring;
     void               add_att_to_last(Istring, Istring, bool);
@@ -74,7 +74,7 @@ public:
     void               add_border(int a, int b);
     void               add_borders(int a, int b);
     void               add_center_to_p();
-    void               add_last(Xmlp);
+    void               add_last(Xml *);
     void               add_last_string(const Buffer &B);
     auto               add_new_anchor() -> Istring;
     auto               add_new_anchor_spec() -> Istring;
@@ -87,23 +87,23 @@ public:
     void               delete_table_atts();
     void               dump();
     void               dump_xml_table();
-    auto               document_element() -> Xmlp { return Table[0].obj; }
+    auto               document_element() -> Xml * { return Table[0].obj; }
     auto               elt_from_id(int n) -> Xml * { return enames[n]; }
     void               end_module();
-    auto               fetch_by_id(int n) -> Xmlp;
+    auto               fetch_by_id(int n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
     void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
     auto               find_ctrid(subtypes) -> int;
-    auto               find_parent(Xmlp) -> Xmlp;
+    auto               find_parent(Xml *) -> Xml *;
     void               finish_cell(int w);
     [[nodiscard]] auto first_frame() const -> Istring;
     [[nodiscard]] auto first_non_empty() const -> const StackSlot &;
     void               fonts0(name_positions x);
-    auto               fonts1(name_positions x) -> Xmlp;
+    auto               fonts1(name_positions x) -> Xml *;
     auto               get_att_list(int k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
-    auto               get_cur_par() -> Xmlp;
-    auto               get_father() -> Xmlp;
+    auto               get_cur_par() -> Xml *;
+    auto               get_father() -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     auto               get_my_table(Xid &) -> ArrayInfo *;
     auto               get_top_id() -> Xid { return top_stack()->get_id(); }
@@ -117,7 +117,7 @@ public:
     [[nodiscard]] auto in_bib_mode() const -> bool { return get_mode() == mode_bib; }
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
     void               init_all(string a);
-    void               ipush(Istring, Xmlp);
+    void               ipush(Istring, Xml *);
     auto               is_float() -> bool;
     [[nodiscard]] auto is_frame(name_positions) const -> bool;
     [[nodiscard]] auto is_frame2(name_positions) const -> bool;
@@ -130,14 +130,14 @@ public:
     void               pop(Istring a);
     void               pop(name_positions a);
     void               pop_if_frame(Istring x);
-    void               push(Istring a, Xmlp b);
+    void               push(Istring a, Xml *b);
     void               push1(Istring name, name_positions x);
     void               push1(name_positions x);
-    auto               push_hbox(Istring) -> Xmlp;
+    auto               push_hbox(Istring) -> Xml *;
     void               push_pop_cell(int);
     void               push_trace();
     auto               push_par(int) -> Xid;
-    auto               remove_last() -> Xmlp;
+    auto               remove_last() -> Xml *;
     void               remove_last_space();
     void               set_arg_mode() { cur_mode = mode_argument; }
     void               set_array_mode() { cur_mode = mode_array; }
@@ -151,12 +151,12 @@ public:
     void               set_xid_boot() { xid_boot = last_xid; }
     void               T_ampersand();
     void               T_hline();
-    auto               temporary() -> Xmlp;
-    auto               top_stack() -> Xmlp { return Table.back().obj; }
+    auto               temporary() -> Xml *;
+    auto               top_stack() -> Xml * { return Table.back().obj; }
     void               trace_pop(bool);
     void               trace_stack();
-    void               unbox(Xmlp);
-    auto               xml2_space(Istring a, Xmlp c, Xmlp d) -> Xmlp;
-    auto               xml2_space(Istring a, Istring, Istring, Xmlp c, Xmlp d) -> Xmlp;
-    auto               xml2_space(Istring a, Istring, Xmlp c, Xmlp d) -> Xmlp;
+    void               unbox(Xml *);
+    auto               xml2_space(Istring a, Xml *c, Xml *d) -> Xml *;
+    auto               xml2_space(Istring a, Istring, Istring, Xml *c, Xml *d) -> Xml *;
+    auto               xml2_space(Istring a, Istring, Xml *c, Xml *d) -> Xml *;
 };

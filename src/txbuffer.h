@@ -369,7 +369,7 @@ public:
     void               uppercase();
     void               utf8_error(bool);
     void               utf8_ovf(int);
-    auto               xml_and_attrib(string s) -> Xmlp;
+    auto               xml_and_attrib(string s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;
     void               l3_fabricate_cond(const string &, const string &, subtypes);

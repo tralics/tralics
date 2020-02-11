@@ -479,7 +479,7 @@ void Xid::add_bottom_rule() {
 void Parser::start_a_row(int a) {
     Xid prev_row(2); // dummy id as default value
     {
-        Xmlp V = the_stack.top_stack()->last_addr();
+        Xml *V = the_stack.top_stack()->last_addr();
         if (V) prev_row = V->get_id();
     }
     bool initial_hline = false;
@@ -764,7 +764,7 @@ void Stack::add_border(int a, int b) {
 
 // This is now cline
 void Parser::T_cline() {
-    Xmlp R       = the_stack.top_stack()->last_addr();
+    Xml *R       = the_stack.top_stack()->last_addr();
     int  cl_span = (cline_last - cline_first) + 1;
     if (R) {
         if (R->try_cline(false)) {

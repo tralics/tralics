@@ -91,10 +91,10 @@ auto CitationItem::get_bid() -> Istring {
 // to be solved later. In the case of \footcite[p.25]{Knuth},
 // the arguments of the function are foot and Knuth; the `p.25' will be
 // considered elsewhere.
-auto Parser::make_cit_ref(Istring type, Istring ref) -> Xmlp {
+auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
     int     n   = the_bibliography.find_citation_item(type, ref, true);
     Istring id  = the_bibliography.citation_table[n].get_bid();
-    Xmlp    res = new Xml(np_ref, nullptr);
+    Xml *   res = new Xml(np_ref, nullptr);
     res->get_id().add_attribute(np_target, id);
     return res;
 }
@@ -245,13 +245,13 @@ void Parser::T_cite_one() {
     Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
     cur_tok      = T;
     auto ref     = Istring(fetch_name0_nopar());
-    Xmlp arg     = is_simple ? nullptr : xT_arg_nopar();
+    Xml *arg     = is_simple ? nullptr : xT_arg_nopar();
     // signal error after argument parsing
     if (bbl.is_too_late()) {
         parse_error("Citation after loading biblio?");
         return;
     }
-    Xmlp res = make_cit_ref(type, ref);
+    Xml *res = make_cit_ref(type, ref);
     if (is_simple) {
         flush_buffer();
         the_stack.add_last(res);
@@ -275,8 +275,8 @@ void Parser::T_cite_one() {
 void Parser::add_bib_marker(bool force) {
     Bibliography &T = the_bibliography;
     if (!force && T.location_exists()) return;
-    Xmlp mark = new Xml(Istring(""), nullptr);
-    Xmlp Foo  = new Xml(Istring(""), mark);
+    Xml *mark = new Xml(Istring(""), nullptr);
+    Xml *Foo  = new Xml(Istring(""), mark);
     the_stack.add_last(Foo);
     T.set_location(mark, force);
 }
@@ -530,7 +530,7 @@ void Parser::after_main_text() {
     }
     init(bbl.get_lines());
     if (!lines.is_empty()) {
-        Xmlp res = the_stack.temporary();
+        Xml *res = the_stack.temporary();
         the_stack.push1(np_biblio);
         AttList &L = the_stack.get_att_list(3);
         the_stack.cur_xid().add_attribute(L, true);

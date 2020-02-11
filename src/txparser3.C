@@ -19,7 +19,7 @@ namespace parser_ns {
 
 namespace {
     vector<SaveAux *> the_save_stack;
-    Xmlp              the_box_to_end;
+    Xml *             the_box_to_end;
     int               the_box_position = -1;
     Buffer            Thbuf1;
 } // namespace
@@ -318,7 +318,7 @@ void Parser::glue_define(int a, Glue c, bool gbl) {
 }
 
 // Define for a box quantity
-void Parser::box_define(int a, Xmlp c, bool gbl) {
+void Parser::box_define(int a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
         the_log << lg_startbrace << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.get_val();

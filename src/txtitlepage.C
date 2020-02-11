@@ -380,7 +380,7 @@ void TitlePageAux::exec(int v, bool vb) {
         Titlepage[idx]->add_last_nl(convert(2));
         return;
     }
-    Xmlp R = nullptr;
+    Xml *R = nullptr;
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
         R = convert(3, Istring(T2));
     else { // we have to read the argument.
@@ -431,7 +431,7 @@ void Parser::T_titlepage_finish(int v) {
     if (strstr(tmp.c_str(), "'only title page'")) finished = true;
     if (strstr(tmp.c_str(), "'translate also bibliography'")) also_bib = true;
     Xid(1).add_special_att(tmp);
-    Xmlp res = tpa.convert(2);
+    Xml *res = tpa.convert(2);
     res->get_id().add_special_att(tpa.get_T3());
     kmax = Titlepage.get_len2();
     for (int k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
@@ -474,7 +474,7 @@ void Parser::T_titlepage(int v) {
 // This is executed when the translation begins.
 void TitlePage::start_thing(bool verbose) {
     if (!valid) return;
-    Data = new Xmlp[len2];
+    Data = new Xml *[len2];
     for (unsigned int k = 0; k < bigtable.size(); k++) {
         if (verbose) bigtable[k].dump(k);
         bigtable[k].exec_start(k);
@@ -756,15 +756,15 @@ void TitlePageAux::dump(int k) {
 }
 
 // Converts one of the strings into an empty XML element
-auto TitlePageAux::convert(int i) -> Xmlp {
+auto TitlePageAux::convert(int i) -> Xml * {
     string s = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
     return local_buf.xml_and_attrib(s);
 }
 
 // Converts one of the strings into a XML element containing R.
-auto TitlePageAux::convert(int i, Xmlp r) -> Xmlp {
+auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
     string s   = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
-    Xmlp   res = local_buf.xml_and_attrib(s);
+    Xml *  res = local_buf.xml_and_attrib(s);
     res->push_back(r);
     return res;
 }

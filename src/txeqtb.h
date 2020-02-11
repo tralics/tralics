@@ -198,9 +198,9 @@ public:
 class SaveAuxBox : public SaveAux {
     int  level; // the level that was active when this was pushed
     int  pos;   // the position in box_table to be restored
-    Xmlp val;   // the value to be restored
+    Xml *val;   // the value to be restored
 public:
-    SaveAuxBox(int l, int a, Xmlp b) : SaveAux(st_box), level(l), pos(a), val(b) {}
+    SaveAuxBox(int l, int a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
     void unsave(bool, Parser &) override;
     ~SaveAuxBox() override = default;
 };
@@ -208,9 +208,9 @@ public:
 // case of \setbox0=\hbox{...} , remember the number and the box
 class SaveAuxBoxend : public SaveAux {
     int  pos; // the box number
-    Xmlp val; // the value of the box
+    Xml *val; // the value of the box
 public:
-    SaveAuxBoxend(int a, Xmlp b) : SaveAux(st_box_end), pos(a), val(b) {}
+    SaveAuxBoxend(int a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
     void unsave(bool, Parser &) override;
     ~SaveAuxBoxend() override = default;
 };
@@ -375,13 +375,13 @@ public:
 // EQTB entry for a box
 class EqtbBox {
     int  level{level_one}; // level at which this is defined
-    Xmlp val;              // value of the object
+    Xml *val;              // value of the object
 public:
-    void               set_val(Xmlp X) { val = X; }
-    [[nodiscard]] auto get_val() const -> Xmlp { return val; }
+    void               set_val(Xml *X) { val = X; }
+    [[nodiscard]] auto get_val() const -> Xml * { return val; }
     [[nodiscard]] auto get_level() const -> int { return level; }
     EqtbBox() = default;
-    void val_and_level(Xmlp a, int b) {
+    void val_and_level(Xml *a, int b) {
         val   = a;
         level = b;
     }

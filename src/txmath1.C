@@ -18,7 +18,7 @@ enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer    mathml_buffer;
 static Buffer    aux_buffer;
 static Buffer    att_buffer;
-extern Xmlp      single_chars[128];
+extern Xml *     single_chars[128];
 extern auto      get_math_char(uchar c, int f) -> string;
 extern bool      cmi_verbose;
 extern MathDataP math_data;
@@ -484,14 +484,14 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
         }
         if (after_dummy) {
             after_dummy = false;
-            Xmlp xval   = front().remove_prefix();
+            Xml *xval   = front().remove_prefix();
             if (xval && !xval->is_xmlc() && (xval->has_name(cst_msup) || xval->has_name(cst_msub) || xval->has_name(cst_msubsup))) {
                 M.pop_last(xval);
             }
         }
         if (cur_type == mt_flag_dummy && (final || M.in_mrow())) after_dummy = true;
         if (M.is_next_change(i)) {
-            Xmlp xval = front().remove_prefix();
+            Xml *xval = front().remove_prefix();
             if (cur_type == mt_flag_dummy) {
                 if (M.in_mrow()) xval = nullptr;
                 // else cout << "bad dummy\n"; no error ??
@@ -519,8 +519,8 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
     return ret_val;
 }
 
-void MathF::pop_last(Xmlp xval) {
-    Xmlp p = nullptr;
+void MathF::pop_last(Xml *xval) {
+    Xml *p = nullptr;
     if (!in_mrow() && !res.empty()) {
         p = res.back().remove_prefix();
         res.pop_back();
@@ -554,7 +554,7 @@ void MathF::handle_t() {
     }
 }
 
-void MathF::push_in_t(Xmlp x) {
+void MathF::push_in_t(Xml *x) {
     if (!t) t = new Xml(cst_temporary, nullptr);
     t->push_back(x);
 }
@@ -1341,7 +1341,7 @@ void Math::convert_math_noMLt0() {
 
 // Main function. Converts the buffer into XML, adds attributes.
 // If spec is true, we produce <in/> otherwise \in
-auto Math::convert_math_noML(bool spec) -> Xmlp {
+auto Math::convert_math_noML(bool spec) -> Xml * {
     mathml_buffer.reset();
     if (spec)
         convert_math_noMLt0();
@@ -1593,8 +1593,8 @@ auto Math::remove_req_arg_noerr() const -> string {
 // like that by 10\textsuperscript{e}.
 
 // This realises the \textsuperscript, given the translation of the argument
-auto math_ns::make_sup(Xmlp xval) -> Xmlp {
-    Xmlp tmp = the_main->the_stack->fonts1(np_s_sup);
+auto math_ns::make_sup(Xml *xval) -> Xml * {
+    Xml *tmp = the_main->the_stack->fonts1(np_s_sup);
     tmp->push_back(xval);
     return tmp;
 }
@@ -1605,7 +1605,7 @@ auto math_ns::make_sup(Xmlp xval) -> Xmlp {
 // In case X^Y, where Y is the tail (can be a group), and X is formed
 // of digits, OK is true, res the value of X.
 
-void Math::special2(bool &ok, Xmlp &res) const {
+void Math::special2(bool &ok, Xml *&res) const {
     auto    L = value.begin();
     auto    E = value.end();
     Buffer &B = aux_buffer;
@@ -1631,7 +1631,7 @@ void Math::special2(bool &ok, Xmlp &res) const {
 
 // This handles the exponent. The case 10^e and 10^o is handled
 // elsewhere. We consider here only 10^{something}
-auto MathElt::special3() const -> Xmlp {
+auto MathElt::special3() const -> Xml * {
     if (!is_list()) return nullptr;
     const_math_iterator L1;
     const_math_iterator E1;
@@ -1660,7 +1660,7 @@ void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
 
 // This handles the case of i{\`e}me. Removes initial font change,
 // looks at letters. If OK, return a valid XML exponent.
-auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> Xmlp {
+auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> Xml * {
     if (L == E) return nullptr;
     if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
     if (L == E) return nullptr;
@@ -1715,13 +1715,13 @@ auto Buffer::special_exponent() const -> String {
 }
 
 // This is the main function.
-auto Math::special1() const -> Xmlp {
+auto Math::special1() const -> Xml * {
     bool ok = false;
-    Xmlp U  = nullptr;
+    Xml *U  = nullptr;
     special2(ok, U);
     if (!ok) return U;
     const MathElt &W    = value.back();
-    Xmlp           xval = nullptr;
+    Xml *          xval = nullptr;
     if (W.get_cmd() == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);
     else if (W.get_cmd() == letter_catcode && W.get_char() == 'e')
@@ -1732,7 +1732,7 @@ auto Math::special1() const -> Xmlp {
     }
     xval = math_ns::make_sup(xval);
     if (!U) return xval;
-    Xmlp res = new Xml(cst_temporary, nullptr);
+    Xml *res = new Xml(cst_temporary, nullptr);
     res->push_back(U);
     res->push_back(xval);
     return res;
@@ -1805,18 +1805,18 @@ void Parser::TM_fonts() {
 }
 
 // Convert the character c  into <mi>c</mi>
-auto math_ns::mk_mi(Utf8Char c) -> Xmlp {
+auto math_ns::mk_mi(Utf8Char c) -> Xml * {
     aux_buffer.reset();
     aux_buffer.push_back_real_utf8(c);
-    Xmlp x = new Xml(Istring(aux_buffer));
+    Xml *x = new Xml(Istring(aux_buffer));
     return new Xml(cst_mi, x);
 }
 
 // Converts a letter with a into into <mi mathvariant='foo'>X</mi>
 // Assumes 2<=font<=14 and 'a'<=c<='z' || 'A'<=c<='Z'
-auto math_ns::mk_mi(uchar c, int font) -> Xmlp {
-    Xmlp x = single_chars[c];
-    Xmlp y = new Xml(cst_mi, x);
+auto math_ns::mk_mi(uchar c, int font) -> Xml * {
+    Xml *x = single_chars[c];
+    Xml *y = new Xml(cst_mi, x);
     y->add_att(cst_mathvariant, name_positions(cstf_normal + font));
     return y;
 }
@@ -1859,7 +1859,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 auto Math::convert_char_seq(MathElt W) -> MathElt {
     subtypes f = W.get_font();
     int      w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
-    Xmlp     res;
+    Xml *    res;
     Buffer & B = aux_buffer;
     B.reset();
     if (f == 1) B.push_back(' ');
@@ -1903,7 +1903,7 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
             B.push_back(uchar(c));
             pop_front();
         }
-    Xmlp res = new Xml(Istring(B));
+    Xml *res = new Xml(Istring(B));
     res      = new Xml(cst_mn, res);
     if (f > 1) res->add_att(cst_mathvariant, name_positions(cstf_normal + f));
     return MathElt(res, mt_flag_small);

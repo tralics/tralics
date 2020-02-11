@@ -80,5 +80,5 @@ private:
 public:
     XmlIO() : cur_char(' ') {}
     auto init(const string &) -> bool;
-    auto prun() -> Xmlp;
+    auto prun() -> Xml *;
 };

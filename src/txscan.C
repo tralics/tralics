@@ -36,7 +36,7 @@ namespace io_ns {
 extern void readline(char *buffer, int screen_size);
 extern void set_math_char(uchar c, int f, string s);
 extern auto get_math_char(uchar c, int f) -> string;
-extern auto read_xml(string) -> Xmlp;
+extern auto read_xml(string) -> Xml *;
 
 void lg_start_io(Logger &L) {
     L.finish_seq();
@@ -1441,7 +1441,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
 }
 
-void Parser::fetch_box_id(Xmlp x) { cur_val.set_int(x ? x->get_id().value : -4); }
+void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x ? x->get_id().value : -4); }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {
@@ -2142,7 +2142,7 @@ void Parser::initialise_font() {
 }
 
 // puts in cur_val the name of x
-void Parser::xml_name(Xmlp x, internal_type level) {
+void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
     B.reset();
     if (x) B.push_back(x->get_name());

@@ -64,7 +64,7 @@ namespace {
 // where foo is element, X, Z is name4 choice or seq
 
 // The external function. Needs to be completed
-auto read_xml(string s) -> Xmlp {
+auto read_xml(string s) -> Xml * {
     if (!tralics_ns::find_in_path(s)) {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;
@@ -75,7 +75,7 @@ auto read_xml(string s) -> Xmlp {
     return res.prun();
 }
 
-auto XmlIO::prun() -> Xmlp {
+auto XmlIO::prun() -> Xml * {
     try {
         run();
     } catch (EOD cc) {};

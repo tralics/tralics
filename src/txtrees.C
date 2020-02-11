@@ -68,8 +68,8 @@ auto Parser::get_index_value() -> int {
 // Case \printglossary or \printindex[foo].
 // Marks the place where to insert the index
 void AllIndex::mark_print(int g) {
-    Xmlp mark = new Xml(Istring(""), nullptr);
-    Xmlp Foo  = new Xml(Istring(""), mark);
+    Xml *mark = new Xml(Istring(""), nullptr);
+    Xml *Foo  = new Xml(Istring(""), mark);
     the_main->the_stack->add_last(Foo);
     value[g]->set_position(mark);
 }
@@ -137,8 +137,8 @@ auto Parser::index_aux(TokenList &L, int father, int g) -> int {
     B << key;
     B.lowercase();
     B.no_newline();
-    Xmlp res = translate_list(L);
-    Xmlp x   = new Xml(np_index, res);
+    Xml *res = translate_list(L);
+    Xml *x   = new Xml(np_index, res);
     if (!encap.empty()) x->get_id().add_attribute(np_encap, Istring(encap));
     x->get_id().add_attribute(np_level, name_positions(cst_dig0 + level));
     int iid = the_index.next_iid();
@@ -210,7 +210,7 @@ void Parser::finish_index() {
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
-        Xmlp res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
+        Xml *res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
         Xid  id  = res->get_id();
         {
             const string &t = CI->get_title();
@@ -221,12 +221,12 @@ void Parser::finish_index() {
             id.add_attribute(L, true);
         }
         for (int i = 0; i < n; i++) {
-            Xmlp A = CI->get_translation(i);
+            Xml *A = CI->get_translation(i);
             A->get_id().add_attribute(np_target, Istring(labels[CI->get_iid(i)]));
         }
         CI->do_sort();
         for (int i = 0; i < n; i++) {
-            Xmlp A = CI->get_translation(i);
+            Xml *A = CI->get_translation(i);
             res->push_back(A);
             res->add_nl();
         }

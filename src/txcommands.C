@@ -24,10 +24,10 @@ namespace {
     bool      seen_document = false; // did we see \begin{document} ?
     bool      quote_started = false;
     TokenList onlypreamble; // token-list allowed only in preamble
-    Xmlp      open_paren_xml;
-    Xmlp      close_paren_xml;
-    Xmlp      the_page_xml;
-    Xmlp      glo_xml;
+    Xml *     open_paren_xml;
+    Xml *     close_paren_xml;
+    Xml *     the_page_xml;
+    Xml *     glo_xml;
 } // namespace
 
 namespace tcommands {
@@ -298,7 +298,7 @@ void Parser::T_cst2(int c) {
     if (c == Numero_code) process_string("N");
     flush_buffer();
     {
-        Xmlp   res = the_stack.fonts1(np_s_sup);
+        Xml *  res = the_stack.fonts1(np_s_sup);
         String s   = "o";
         if (c == ier_code)
             s = "er";
@@ -710,7 +710,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
 void Parser::T_figure_table_end(bool is_fig) {
     Istring name = the_names[is_fig ? np_float_figure : np_float_table];
     leave_h_mode();
-    Xmlp aux = the_stack.top_stack();
+    Xml *aux = the_stack.top_stack();
     if (!aux->has_name(name))
         parse_error("no figure/table on stack");
     else if (!nofloat_hack)
@@ -821,7 +821,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
 void Parser::T_un_box(subtypes c) {
     int i = scan_reg_num();
     if (c == unhbox_code) leave_v_mode();
-    Xmlp cur_box = box_table[i].get_val();
+    Xml *cur_box = box_table[i].get_val();
     the_stack.unbox(cur_box);
     if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
     return; // else does nothing

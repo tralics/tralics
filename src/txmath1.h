@@ -90,7 +90,7 @@ class MathF {
     int       next_finish{-1};
     MathQList aux;
     MathList  res;
-    Xmlp      t;
+    Xml *     t;
 
 public:
     MathF();
@@ -100,9 +100,9 @@ public:
     void               change_state();
     void               make_t_big() { t_big = true; }
     void               handle_t();
-    void               push_in_t(Xmlp x);
+    void               push_in_t(Xml *x);
     void               push_in_res(MathElt x) { res.push_back(x); }
-    void               push_in_res(Xmlp x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
+    void               push_in_res(Xml *x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
     void               reset() {
         t     = nullptr;
         state = true;
@@ -110,5 +110,5 @@ public:
     }
     void finish(MathList &);
     void dump_aux();
-    void pop_last(Xmlp);
+    void pop_last(Xml *);
 };

@@ -205,10 +205,10 @@ auto Buffer::look_at_space(string s) -> bool {
 // In the case of "foo" (no space), returns <foo>
 // In the case of space, what follows the spaces is considered as
 // attribute list.
-auto Buffer::xml_and_attrib(string s) -> Xmlp {
+auto Buffer::xml_and_attrib(string s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(Istring(s), nullptr);
-    Xmlp res = new Xml(Istring(buf), nullptr);
+    Xml *res = new Xml(Istring(buf), nullptr);
     push_back_special_att(res->get_id());
     return res;
 }

@@ -2996,7 +2996,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     }
     case if_void_code: {
         int  n = scan_reg_num();
-        Xmlp x = box_table[n].get_val();
+        Xml *x = box_table[n].get_val();
         if (!x) return true;
         return x->empty();
     }
@@ -4113,7 +4113,7 @@ void Parser::scan_box(int bc) {
 // It will be put in a element named <leaders>. In the case of \box
 // we fill the box (numbered pos or pos-M).
 // An error is signaled in the case of \shipout, the box is inserted otherwise.
-void Parser::box_end(Xmlp res, int pos) {
+void Parser::box_end(Xml *res, int pos) {
     if (pos < last_register)
         box_define(pos, res, false);
     else if (pos <= setbox_last)
@@ -4126,7 +4126,7 @@ void Parser::box_end(Xmlp res, int pos) {
         the_xmlB = res;
     else if (pos == leaders_location || pos == cleaders_location || pos == xleaders_location) {
         name_positions p = pos == leaders_location ? np_leaders : pos == cleaders_location ? np_cleaders : np_xleaders;
-        Xmlp           Y = new Xml(p, res);
+        Xml *          Y = new Xml(p, res);
         flush_buffer();
         the_stack.add_last(Y);
 
@@ -4144,7 +4144,7 @@ void Parser::box_end(Xmlp res, int pos) {
 void Parser::begin_box(int src, subtypes c) {
     Token T = cur_tok;
     int   res;
-    Xmlp  cur_box = nullptr;
+    Xml * cur_box = nullptr;
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();
@@ -4236,7 +4236,7 @@ void Parser::begin_box(int src, subtypes c) {
         }
         back_input(L);
     }
-    Xmlp     cur_boxa = the_stack.push_hbox(box_name);
+    Xml *    cur_boxa = the_stack.push_hbox(box_name);
     SaveAux *x        = new SaveAuxBoxend(src, cur_boxa);
     push_save_stack(x);
     the_stack.set_arg_mode();
@@ -4295,7 +4295,7 @@ void Parser::M_xray(subtypes c) {
     }
 }
 
-void Parser::show_box(Xmlp X) {
+void Parser::show_box(Xml *X) {
     if (X)
         main_ns::log_and_tty << X << "\n";
     else
