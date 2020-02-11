@@ -9,3 +9,7 @@ add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wpedanti
 
 file (GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C)
 add_executable(tralics ${sources})
+
+add_custom_target(alltests ALL 
+    ../Test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+    DEPENDS tralics)

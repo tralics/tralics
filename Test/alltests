@@ -6,71 +6,83 @@
 # We make sure that we call the right binary by saying ../src/tralics
 # We also specify where to search for configuration files.
 
+# This is meant to be called from CMake, syntax is "alltests source_dir binary_dir"
+
+if [ $# -eq 0 ]; then
+    echo "Running tests in-place"
+    tralics=../build/tralics
+    config_dir=../confdir
+    modele_dir=../Modele
+else
+    echo "Running from CMake"
+    source_dir=$1
+    binary_dir=$2
+    config_dir=$source_dir/confdir
+    modele_dir=$source_dir/Modele
+    tralics=$binary_dir/tralics
+    cp $source_dir/Test/* .
+fi
 
 # This checks that no error is signaled.
 run_tralics() {
-   local status
-   echo testing $1
-   ../build/tralics -confdir=../confdir $* >> Trace
-   status=$?
-   if [[ $status != 0 ]] ;  then
-     echo "Tralics failed for $1"
-     exit 1
-   fi
+    local status
+    $tralics -confdir=$config_dir $* >>Trace
+    status=$?
+    if [[ $status != 0 ]]; then
+        echo "Tralics failed for $1"
+        exit 1
+    fi
 }
 
 # in Tralics \read16 reads from the tty, and we use echo to provide a value
 # the line is also printed on stderr, that we redirect to /dev/null
 run_tralics_with_param() {
-   local status
-   echo testing $1 with $2
-   echo $2 | ../build/tralics -confdir=../confdir $1 >> Trace 2>/dev/null
-   status=$?
-   if [[ $status != 0 ]] ;  then
-     echo "Tralics failed for $1"
-     exit 1
-   fi
+    local status
+    echo $2 | $tralics -confdir=$config_dir $1 >>Trace 2>/dev/null
+    status=$?
+    if [[ $status != 0 ]]; then
+        echo "Tralics failed for $1 with $2"
+        exit 1
+    fi
 }
 
 # Checking errors: we check for a string in the transcript file
 # The XML file should contain an item for each error
 run_tralics_with_err() {
     local status
-   echo testing $1
-   ../build/tralics -confdir=../confdir $1 $3 >> Trace
-   grep -q "$2" $1.log
-   status=$?
-   if [[ $status != 0 ]] ;  then
-     echo "Tralics failed for $1"
-     exit 1
-   fi  
+    $tralics -confdir=$config_dir $1 $3 >>Trace
+    grep -q "$2" $1.log
+    status=$?
+    if [[ $status != 0 ]]; then
+        echo "Tralics failed for $1"
+        exit 1
+    fi
 }
 
-# 
-compare_file () {
-  local nb hl
-  nb=4 
-  hl=2
-  if [ $# = 2 ]; then 
-    nb=$2 
-  fi
-  if [ $# = 3 ]; then 
-    nb=$2 ; hl=$3
-  fi
-  head -n $hl $1 > fileA
-  head -n $hl ../Modele/$1 > fileB
-  tail -n +$nb $1 >> fileA
-  tail -n +$nb ../Modele/$1 >> fileB
-  diff -q fileA fileB 
-  if [[ $? != 0 ]] ;  then
-     diff $1 ../Modele/$1
-     echo "Wrong translation of $1 "
-     exit 1
-   fi
+compare_file() {
+    local nb hl
+    nb=4
+    hl=2
+    if [ $# = 2 ]; then
+        nb=$2
+    fi
+    if [ $# = 3 ]; then
+        nb=$2
+        hl=$3
+    fi
+    head -n $hl $1 >fileA
+    head -n $hl $modele_dir/$1 >fileB
+    tail -n +$nb $1 >>fileA
+    tail -n +$nb $modele_dir/$1 >>fileB
+    diff -q fileA fileB
+    if [[ $? != 0 ]]; then
+        diff $1 $modele_dir/$1
+        echo "Wrong translation of $1 "
+        exit 1
+    fi
 }
 
-
-echo "Tralics tests started at $(date) " > Trace
+echo "Tralics tests started at $(date) " >Trace
 run_tralics hello
 run_tralics hello1
 run_tralics hello2.tex -config=hello.tcf -oe8
@@ -90,17 +102,17 @@ run_tralics mathmlc
 run_tralics_with_err tpa "No value given for command "
 run_tralics tpa2 -nofloathack
 mv tpa2.xml tpa2x.xml
-run_tralics tpa2 
+run_tralics tpa2
 run_tralics_with_err txerr "There were 8 errors." -oe8a
 run_tralics testpack
-run_tralics testpackii  -param bibtex_fields -year  -param bibtex_extensions -phdthesis
+run_tralics testpackii -param bibtex_fields -year -param bibtex_extensions -phdthesis
 run_tralics bo
 run_tralics testhtml
-run_tralics testclass  -defaultclass=article
-run_tralics_with_err testkeyval "There were 32 errors." 
+run_tralics testclass -defaultclass=article
+run_tralics_with_err testkeyval "There were 32 errors."
 run_tralics xii
 run_tralics_with_param comp_pi 100
-run_tralics_with_err teststr "There were 64 errors." 
+run_tralics_with_err teststr "There were 64 errors."
 run_tralics_with_err testerr "Following images not defined: gee." "-year=2008"
 run_tralics beauvilams2
 run_tralics testbe
@@ -130,7 +142,7 @@ mv exemple.xml exemple2011.xml
 run_tralics exemple2013
 mv exemple.xml exemple2013.xml
 run_tralics exemple2015
-mv exemple.xml exemple2015.xml 
+mv exemple.xml exemple2015.xml
 run_tralics testm1 -oe8
 mv testm1.xml testm1a.xml
 run_tralics testm1 -nomathml -oe8
@@ -138,14 +150,11 @@ mv testm1.xml testm1b.xml
 run_tralics testm1 -dualmath -oe8
 mv testm1.xml testm1c.xml
 run_tralics xtp
-run_tralics_with_err booktabs "There were 71 errors." 
+run_tralics_with_err booktabs "There were 71 errors."
 run_tralics manip
 run_tralics tl3 -l3
-run_tralics_with_err tl3err "There were 63 errors." 
-run_tralics_with_err omitcite "There were 3 errors." 
-
-echo 
-echo Comparing results with models
+run_tralics_with_err tl3err "There were 63 errors."
+run_tralics_with_err omitcite "There were 3 errors."
 
 compare_file hello.xml
 compare_file hello1.xml
@@ -166,9 +175,9 @@ compare_file amsldoc.xml
 compare_file bo.xml 9 # there is a date on line 8
 compare_file testhtml.xml
 compare_file testclass.xml
-compare_file torture.xml 6 
-compare_file txerr.xml 
-compare_file xii.xml 
+compare_file torture.xml 6
+compare_file txerr.xml
+compare_file xii.xml
 compare_file testkeyval.xml
 compare_file comp_pi.xml
 compare_file testpack.xml
@@ -188,20 +197,18 @@ compare_file exemple2009.xml 5
 compare_file exemple2011.xml 5
 compare_file exempleb2011.xml 5
 compare_file exemple2013.xml 5
-compare_file beauvilams2.xml 
-compare_file testm1a.xml 
-compare_file testm1b.xml 
-compare_file testm1c.xml 
-compare_file testmath.xml 
-compare_file testot2.xml 
-compare_file testmathfont.xml 
-compare_file booktabs.xml 
-compare_file manip.xml 
-compare_file xtp.xml 
-compare_file tl3.xml 
-compare_file tl3err.xml 
-compare_file omitcite.xml 
+compare_file beauvilams2.xml
+compare_file testm1a.xml
+compare_file testm1b.xml
+compare_file testm1c.xml
+compare_file testmath.xml
+compare_file testot2.xml
+compare_file testmathfont.xml
+compare_file booktabs.xml
+compare_file manip.xml
+compare_file xtp.xml
+compare_file tl3.xml
+compare_file tl3err.xml
+compare_file omitcite.xml
 
-echo done
-
-
+echo "All tests successful"
