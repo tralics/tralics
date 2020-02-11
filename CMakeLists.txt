@@ -12,4 +12,5 @@ add_executable(tralics ${sources})
 
 add_custom_target(alltests ALL 
     ../Test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
-    DEPENDS tralics)
+    DEPENDS tralics
+    COMMENT "Running tests")

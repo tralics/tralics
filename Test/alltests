@@ -9,12 +9,10 @@
 # This is meant to be called from CMake, syntax is "alltests source_dir binary_dir"
 
 if [ $# -eq 0 ]; then
-    echo "Running tests in-place"
     tralics=../build/tralics
     config_dir=../confdir
     modele_dir=../Modele
 else
-    echo "Running from CMake"
     source_dir=$1
     binary_dir=$2
     config_dir=$source_dir/confdir
@@ -211,4 +209,6 @@ compare_file tl3.xml
 compare_file tl3err.xml
 compare_file omitcite.xml
 
-echo "All tests successful"
+if [ $# -eq 0 ]; then
+    echo "All tests successful"
+fi
