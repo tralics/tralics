@@ -265,6 +265,7 @@ void Parser::check_all_ids() {
             main_ns::log_and_tty << lg_start << "Error signaled in postprocessor\n"
                                  << "undefined label `" << V << "' (first use at line " << L->get_lineno() << " in file "
                                  << L->get_filename() << ")";
+            Xid(E).add_attribute(the_names[np_target], V);
             Istring B = L->get_id();
             for (auto &removed_label : removed_labels) {
                 if (removed_label.second == B) main_ns::log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";

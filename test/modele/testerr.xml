@@ -131,7 +131,7 @@ Error here
 <error n='\tralics@get@config' l='264' c='illegal data'/><error n='\tralics@get@config' l='264' c='illegal data'/><error n='\tralics@get@config' l='264' c='illegal data'/><pers prenom='a' nom='de Pers3' affiliation='' profession='' hdr='hdr' research-centre='Lyon'>d</pers></p>
 <p>X<error n='&amp;' l='266' c='Unexpected ampersand'/><error n='\\' l='266' c='Bad use of \\'/>and <error n='\newline' l='266' c='Bad use of \newline'/>
 <figure rend='inline' file='a.b.c'/><error n='\error' l='267' c='Wrong dots in graphic file a.b.c'/>
-<ref/>
+<ref target='mod:a'/>
 <error n='\PackageError' l='269' c='uerror'/></p>
 <accueil isproject='true' html='testerr'>
 <theme><error n='\tralics@get@config' l='279' c='Bad theme'/>com</theme>

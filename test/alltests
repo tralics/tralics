@@ -74,7 +74,7 @@ compare_file() {
     tail -n +$nb $modele_dir/$1 >>fileB
     diff -q fileA fileB
     if [[ $? != 0 ]]; then
-        diff $1 $modele_dir/$1
+        diff -u $1 $modele_dir/$1
         echo "Wrong translation of $1 "
         exit 1
     fi

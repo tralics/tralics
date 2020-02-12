@@ -1,2 +1,2 @@
 ---
-Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard,-readability-braces-around-statements'
+Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard,-readability-braces-around-statements,-cppcoreguidelines-non-private-member-variables-in-classes'
