@@ -10,6 +10,7 @@
 - Merging of the various documentation files, reorganization of the directory
   structure to make it more readable
 - Transition to CMake, and automatic run of the tests as part of the build
+- Remove a few unused function parameters
   
 ### Changes affecting the output
 
