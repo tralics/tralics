@@ -64,7 +64,7 @@ public:
     void more_math_destroy(int k) { m_destroyed += k; }
     void one_more_merge() { m_merge++; }
     Stats() = default;
-    ;
+
     void token_stats();
     void io_convert_stats();
     void print_module_stats();

@@ -210,7 +210,7 @@ namespace arith_ns {
     auto xn_over_d(int x, int n, int d, int &remainder) -> int;
     auto quotient(int n, int d) -> int;
     auto add_ovf(ScaledInt x, ScaledInt y) -> int;
-}; // namespace arith_ns
+} // namespace arith_ns
 
 class TexRule {
 public:

@@ -24,7 +24,7 @@ namespace buffer_ns {
     auto current_escape_char() -> int;
     auto null_cs_name() -> String;
     void dump_identification(String);
-}; // namespace buffer_ns
+} // namespace buffer_ns
 
 Buffer::~Buffer() {
     // cout <<"delete buffer "<< asize << " " <<name <<"\n";

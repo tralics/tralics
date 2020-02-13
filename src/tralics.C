@@ -2455,6 +2455,7 @@ auto config_ns::assign_att(String A, String B) -> bool {
             the_names[np_pos] = Istring(B);
             return true;
         }
+        return false;
     case 'q':
         if (strcmp(A, "quote") == 0) {
             the_names[np_center_etc2] = Istring(B);
@@ -2514,6 +2515,7 @@ auto config_ns::assign_att(String A, String B) -> bool {
             the_names[np_textype] = Istring(B);
             return true;
         }
+        return false;
     case 'u':
         if (strcmp(A, "unit_length") == 0) {
             the_names[np_unit_length] = Istring(B);

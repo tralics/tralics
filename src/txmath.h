@@ -460,7 +460,7 @@ namespace math_ns {
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar, int) -> Xml *;
     auto xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml *;
-}; // namespace math_ns
+} // namespace math_ns
 
 //---------------------------------------------------------------------
 //  Some inline functions

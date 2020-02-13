@@ -179,7 +179,7 @@ public:
     void open(string, bool);
     void close();
     FileForInput() = default;
-    ;
+
     auto is_open() -> bool { return open_flag; }
     auto get_lines() -> LinePtr & { return the_lines; }
     void set_lines(LinePtr X) { the_lines = X; }

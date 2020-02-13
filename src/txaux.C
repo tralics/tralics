@@ -13,7 +13,7 @@
 namespace arith_ns {
     void start_err(String);
     void end_err();
-}; // namespace arith_ns
+} // namespace arith_ns
 
 using arith_ns::end_err;
 using arith_ns::start_err;

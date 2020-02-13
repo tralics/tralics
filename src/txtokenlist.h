@@ -137,7 +137,7 @@ private:
 
 public:
     Mactab() = default;
-    ;
+
     void incr_macro_ref(int c) { rc_table[c]++; }
     void delete_macro_ref(int i);
     auto get_macro(int k) -> Macro & { return *table[k]; }

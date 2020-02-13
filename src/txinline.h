@@ -59,7 +59,7 @@ namespace tralics_ns {
     auto only_digits(const string &s) -> bool;
     auto get_out_dir(string) -> String;
     auto get_short_jobname() -> string;
-}; // namespace tralics_ns
+} // namespace tralics_ns
 
 namespace err_ns {
     extern Buffer local_buf;

@@ -421,12 +421,12 @@ void Parser::missing_number() {
 void Parser::mu_error(String s, int i) {
     local_buf << bf_reset << "Incompatible glue units in " << err_tok.tok_to_str() << "\n" << s;
     switch (i) {
-    case it_int: local_buf << "integer";
-    case it_dimen: local_buf << "dimension";
-    case it_glue: local_buf << "glue";
-    case it_mu: local_buf << "muglue";
-    case it_ident: local_buf << "font indentifier";
-    case it_tok: local_buf << "token";
+    case it_int: local_buf << "integer"; break;
+    case it_dimen: local_buf << "dimension"; break;
+    case it_glue: local_buf << "glue"; break;
+    case it_mu: local_buf << "muglue"; break;
+    case it_ident: local_buf << "font indentifier"; break;
+    case it_tok: local_buf << "token"; break;
     }
     signal_error(err_tok, "Incompatible glue units");
 }

@@ -41,7 +41,7 @@ namespace math_ns {
     void bad_math_warn(Buffer &);
     auto finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
                            int close) -> Xml *;
-}; // namespace math_ns
+} // namespace math_ns
 
 namespace tralics_ns {
     auto math_env_name(subtypes c) -> String;
