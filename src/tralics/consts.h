@@ -35,4 +35,4 @@ inline constexpr uint special_relax = nb_characters + 1;
 inline constexpr uint scan_char_num_max = nb_characters - 1; // nb_characters-1  is the max
 
 // This is the number of other registers
-static const uint nb_registers = 1024;
+inline constexpr uint nb_registers = 1024;
