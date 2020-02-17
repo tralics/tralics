@@ -22,11 +22,11 @@
 #include <cstdio>
 #include <cstring>
 
-using uint = unsigned int;
-
 using namespace std;
 extern auto is_letter(char c) -> bool;
 class EndOfData {};
+
+#include "tralics/types.h"
 
 #include "txchars.h"
 #include "txcond.h"

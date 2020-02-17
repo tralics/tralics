@@ -1,5 +1,7 @@
 #pragma once
 
+#include "consts.h"
+
 // Command codes.
 enum symcodes {
     // Lets start with the catcodes
@@ -1951,3 +1953,21 @@ enum subtypes {
     letter_vcode  = 'v',
     letter_ticode = '~'
 };
+
+// nb_characters*cur_cmd for catcode 11 and 12.
+enum spec_offsets {
+    letter_t_offset    = letter_catcode * nb_characters,
+    other_t_offset     = other_catcode * nb_characters,
+    hat_t_offset       = hat_catcode * nb_characters,
+    space_t_offset     = space_catcode * nb_characters,
+    ampersand_t_offset = alignment_catcode * nb_characters,
+    RB_limit           = 3 * nb_characters,
+    CB_t_offset        = 2 * nb_characters,
+    OB_t_offset        = 1 * nb_characters,
+    eol_t_offset       = nb_characters * eol_catcode,
+    dollar_t_offset    = nb_characters * dollar_catcode,
+    dollar_limit       = nb_characters * (dollar_catcode + 1),
+};
+
+inline constexpr uint space_token_val   = space_t_offset + ' ';
+inline constexpr uint newline_token_val = space_t_offset + '\n';

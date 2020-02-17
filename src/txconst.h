@@ -9,11 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// This file contains some constants that define table sizes
+#include "tralics/consts.h"
 
-// This is the number of characters; see txtoken.h
-// This is also the size of tables that remember character properties
-static const uint nb_characters = 65536;
+// This file contains some constants that define table sizes
 
 // This is the number of other registers
 static const uint nb_registers = 1024;

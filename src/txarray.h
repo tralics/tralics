@@ -21,11 +21,13 @@
 // <-arg 2   -           b    10 5
 // >-arg 3   -
 
+#include "tralics/Token.h"
+#include <array>
+
 #include "txarray.h"
 #include "txatt.h"
 #include "txstack.h"
 #include "txtokenlist.h"
-#include <array>
 
 // Class used to implement array.sty
 class NewArray {
