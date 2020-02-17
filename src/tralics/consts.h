@@ -1,5 +1,4 @@
 #pragma once
-
 #include "types.h"
 
 // This is the number of characters; see txtoken.h

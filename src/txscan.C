@@ -475,7 +475,7 @@ auto Parser::scan_double_hat(Utf8Char c) -> bool {
     }
     Utf8Char C = input_line[p + 1];
     if (!C.is_ascii()) return false;
-    uchar c1 = C.ascii_value();
+    uchar c1 = C.value;
     input_line_pos++;
     input_line[p + 1] = Utf8Char(c1 < 64 ? c1 + 64 : c1 - 64);
     return true;
@@ -490,7 +490,7 @@ auto Parser::cs_from_input() -> Token {
         --input_line_pos;
         return Token(null_tok_val);
     }
-    int C = get_catcode(c.get_value());
+    int C = get_catcode(c.value);
     if (C == letter_catcode) {
         mac_buffer.reset();
         mac_buffer.push_back(c);
@@ -501,7 +501,7 @@ auto Parser::cs_from_input() -> Token {
                 --input_line_pos;
                 break;
             } // abort
-            C = get_catcode(c.get_value());
+            C = get_catcode(c.value);
             if (C == letter_catcode) {
                 mac_buffer.push_back(c);
                 continue;
@@ -536,7 +536,7 @@ auto Parser::next_from_line0() -> bool {
         Buffer &B = local_buf;
         B.reset();
         B.push_back('"');
-        B.push_back16(c.get_value(), false);
+        B.push_back16(c.value, false);
         int k = B.size();
         back_input(hash_table.space_token);
         while (k > 0) {
@@ -547,14 +547,14 @@ auto Parser::next_from_line0() -> bool {
         see_cs_token(hash_table.char_token);
         return false;
     }
-    cur_cmd_chr = CmdChr(get_catcode(c.get_value()), subtypes(c.get_value()));
+    cur_cmd_chr = CmdChr(get_catcode(c.value), subtypes(c.value));
     switch (cur_cmd_chr.get_cmd()) {
     case escape_catcode:
         cur_tok = cs_from_input();
         see_cs_token();
         return false;
     case active_catcode:
-        cur_tok.active_char(c.get_value());
+        cur_tok.active_char(c.value);
         see_cs_token();
         state = state_M;
         return false;
@@ -957,7 +957,7 @@ auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
         for (;;) {
             if (at_eol()) break;
             Utf8Char c = get_next_char();
-            if (c.get_value() == ' ')
+            if (c.value == ' ')
                 L.push_back(hash_table.space_token);
             else
                 L.push_back(Token(other_t_offset, c));

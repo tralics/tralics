@@ -1,5 +1,4 @@
 #pragma once
-
 #include "consts.h"
 
 // Command codes.

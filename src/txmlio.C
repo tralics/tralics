@@ -194,7 +194,7 @@ void XmlIO::scan_name() {
     for (;;) {
         Utf8Char x = XmlIO::peek_char();
         if (x.is_ascii()) {
-            x_type w = Type[x.get_value()];
+            x_type w = Type[x.value];
             if (w == xt_space || w == xt_invalid) return;
         }
         skip_char();

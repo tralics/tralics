@@ -288,7 +288,7 @@ auto Hashtab::locate(const string &s) -> Token {
 auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.size() == 0) return Token(null_tok_val);
     Utf8Char c = b.unique_character();
-    if (c.non_null()) return Token(c.get_value() + single_offset);
+    if (c.non_null()) return Token(c.value + single_offset);
     return Token(hash_find(b, nullptr) + hash_offset);
 }
 
@@ -302,7 +302,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
     else {
         Utf8Char c = b.unique_character();
         if (c.non_null())
-            T = c.get_value() + single_offset;
+            T = c.value + single_offset;
         else {
             int p = b.hashcode(hash_prime);
             for (;;) {

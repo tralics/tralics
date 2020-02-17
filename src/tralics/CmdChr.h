@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Utf8Char.h"
 #include "enums.h"
 

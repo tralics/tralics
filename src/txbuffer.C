@@ -691,7 +691,7 @@ auto Buffer::push_back(Token T) -> bool {
         Utf8Char c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
-            push_back(uchar(c.get_value() + '0')); // parameter
+            push_back(uchar(c.value + '0')); // parameter
         } else if (cmd == parameter_catcode) {
             out_log(c, enc);
             out_log(c, enc);
@@ -702,7 +702,7 @@ auto Buffer::push_back(Token T) -> bool {
     if (!T.char_or_active()) insert_escape_char();
     if (T.active_or_single()) {
         out_log(T.char_val(), enc);
-        return the_parser.has_letter_catcode(T.char_val().get_value());
+        return the_parser.has_letter_catcode(T.char_val().value);
     } else if (T.is_in_hash()) {
         Tmp.reset();
         Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
@@ -727,7 +727,7 @@ void Buffer::insert_token(Token T, bool sw) {
             int cmd = T.cmd_val();
             if (cmd == eol_catcode) {
                 push_back('#');
-                push_back(uchar(c.get_value() + '0')); // parameter
+                push_back(uchar(c.value + '0')); // parameter
             } else if (T.is_space_token())
                 push_back(' '); // space or newline
             else if (c.is_null())
@@ -755,7 +755,7 @@ void Buffer::insert_token(Token T, bool sw) {
             push_back("^^@");
         else
             push_back(c);
-        bool need_space = sw ? c.is_letter() : the_parser.has_letter_catcode(c.get_value());
+        bool need_space = sw ? c.is_letter() : the_parser.has_letter_catcode(c.value);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         push_back(the_parser.hash_table[T.hash_loc()]);
@@ -933,7 +933,7 @@ auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
 // We use internal encoding here.
 auto operator<<(ostream &fp, const Utf8Char &x) -> ostream & {
     if (x.is_ascii())
-        fp << x.ascii_value();
+        fp << static_cast<uchar>(x.value);
     else {
         thebuffer.reset();
         thebuffer.push_back(x);
@@ -944,7 +944,7 @@ auto operator<<(ostream &fp, const Utf8Char &x) -> ostream & {
 // Duplicate code...
 auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger & {
     if (x.is_ascii())
-        fp << x.ascii_value();
+        fp << static_cast<uchar>(x.value);
     else {
         thebuffer.reset();
         thebuffer.push_back(x);
@@ -956,7 +956,7 @@ auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger & {
 // We use log encoding here.
 auto operator<<(Logger &fp, const Utf8Char &x) -> Logger & {
     if (x.is_ascii())
-        fp << x.ascii_value();
+        fp << static_cast<uchar>(x.value);
     else {
         thebuffer.reset();
         thebuffer.out_log(x, the_main->get_log_encoding());

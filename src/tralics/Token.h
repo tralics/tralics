@@ -1,5 +1,4 @@
 #pragma once
-
 #include "CmdChr.h"
 
 class Token {
@@ -7,15 +6,15 @@ class Token {
 
 public:
     explicit Token(uint x) : val(x) {}
-    Token(spec_offsets a, Utf8Char b) : val(a + b.get_value()) {}
+    Token(spec_offsets a, Utf8Char b) : val(a + b.value) {}
     Token(spec_offsets a, uchar b) : val(a + b) {}
-    explicit Token(Utf8Char c) : val(c.get_value() + single_offset) {}
+    explicit Token(Utf8Char c) : val(c.value + single_offset) {}
     Token() = default;
 
     [[nodiscard]] auto get_val() const -> uint { return val; }
 
     void               kill() { val = 0; }
-    void               from_cmd_chr(CmdChr X) { val = nb_characters * X.get_cmd() + X.char_val().get_value(); }
+    void               from_cmd_chr(CmdChr X) { val = nb_characters * X.get_cmd() + X.char_val().value; }
     void               active_char(uint cs) { val = cs + eqtb_offset; }
     [[nodiscard]] auto eqtb_loc() const -> int { return val - eqtb_offset; }
     [[nodiscard]] auto hash_loc() const -> int { return val - hash_offset; }

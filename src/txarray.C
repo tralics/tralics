@@ -54,7 +54,7 @@ void Parser::T_newcolumn_type() {
     bool bad = read_token_arg(cur_tok);
     if (!bad) {
         Token T = cur_tok;
-        if (T.is_a_char()) c = T.char_val().get_value();
+        if (T.is_a_char()) c = T.char_val().value;
         if (!(c > 0 && c < nb_newcolumn)) {
             parse_error("Argument to \\newcolumntype is not a 7bit character");
             c = 0;
@@ -209,8 +209,7 @@ void NewArray::test_pach() {
             current_token = current_list.front();
     }
     uint c = 0;
-    if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13)
-        c = current_token.char_val().get_value();
+    if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13) c = current_token.char_val().value;
     if (c == 'c') {
         cur_h_pos = np_c_center;
         ch_num    = chn_c;

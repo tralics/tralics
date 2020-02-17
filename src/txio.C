@@ -328,7 +328,7 @@ auto Buffer::next_utf8_char() -> Utf8Char {
     if (the_converter.local_error)
         return 0;
     else if (res.is_verybig()) {
-        utf8_ovf(res.get_value());
+        utf8_ovf(res.value);
         return 0;
     } else
         return res;
@@ -422,7 +422,7 @@ auto io_ns::get_enc_param(int enc, int pos) -> int {
     if (!(enc >= 2 && enc < max_encoding)) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return custom_table[enc][pos].get_value();
+    return custom_table[enc][pos].value;
 }
 
 void MainClass::set_input_encoding(int wc) {
@@ -601,7 +601,7 @@ void LinePtr::normalise_final_cr() {
 
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(Utf8Char c) {
-    uint x = c.get_value();
+    uint x = c.value;
     if (x < 128) {
         push_back(uchar(x));
         return;
@@ -706,7 +706,7 @@ void Buffer::out_four_hats(Utf8Char ch) {
         push_back('\t');
         return;
     }
-    uint c = ch.get_value();
+    uint c = ch.value;
     if (ch.is_control()) {
         push_back("^^");
         push_back(uchar(c + 64));
@@ -720,7 +720,7 @@ void Buffer::out_four_hats(Utf8Char ch) {
 
 // This inserts &#xabc;
 void Buffer::push_back_ent(Utf8Char ch) {
-    int c = ch.get_value();
+    int c = ch.value;
     if (c == 65534 || c == 65535) return; // these chars are illegal
     push_back('&');
     push_back('#');
@@ -804,11 +804,11 @@ void Buffer::out_log(Utf8Char ch, output_encoding_type T) {
     else if (ch.is_control())
         out_four_hats(ch);
     else if (ch.is_ascii())
-        push_back(uchar(ch.get_value()));
+        push_back(uchar(ch.value));
     else if (T == en_utf8)
         push_back(ch);
     else if (ch.is_small() && T == en_latin)
-        push_back(uchar(ch.get_value()));
+        push_back(uchar(ch.value));
     else
         out_four_hats(ch);
 }
@@ -837,9 +837,9 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
         if (c.is_null() && I.at_eol()) break;
         if (c.is_null()) continue;
         if (c.is_ascii())
-            O.push_back(c.char_val());
+            O.push_back(static_cast<uchar>(c.value));
         else if (c.is_small() && nonascii)
-            O.push_back(c.char_val());
+            O.push_back(static_cast<uchar>(c.value));
         else
             O.push_back_ent(c);
     }
@@ -899,7 +899,7 @@ void Buffer::to_seven_bits() {
         Utf8Char c = I.next_utf8_char();
         if (I.at_eol()) remove_space_at_end();
         return;
-        int x = c.get_value();
+        int x = c.value;
         if (x < 128) push_back(x);
         continue;
         if (x > 256) push_back('?');

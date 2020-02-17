@@ -95,15 +95,15 @@ void Parser::umlaut() {
         back_input(T);
         return;
     }
-    if ((!cur_cmd_chr.is_letter() && !cur_cmd_chr.is_other()) || cur_tok.char_val().get_value() > int(nb_characters)) { //
-        if (cur_tok.eqtb_loc() == '~') { // "~ -> dash , strange
+    if ((!cur_cmd_chr.is_letter() && !cur_cmd_chr.is_other()) || cur_tok.char_val().value > int(nb_characters)) { //
+        if (cur_tok.eqtb_loc() == '~') {                                                                          // "~ -> dash , strange
             translate_char(CmdChr(uchar('-')));
             return;
         }
         umlaut_bad();
         return;
     }
-    switch (cur_tok.char_val().get_value()) {
+    switch (cur_tok.char_val().value) {
     case 'a': translate_char(CmdChr(uchar('\344'))); break;
     case 'o': translate_char(CmdChr(uchar('\366'))); break;
     case 'u': translate_char(CmdChr(uchar('\374'))); break;
@@ -180,7 +180,7 @@ void Parser::translate_char(CmdChr X) {
         process_char(c);
         return;
     }
-    switch (c.get_value()) {
+    switch (c.value) {
     case '-': minus_sign(X); return;
     case '\'':
     case '`':
@@ -207,7 +207,7 @@ void Parser::translate_char(CmdChr X) {
 // This translates `'<>
 // In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X) {
-    uchar c = X.char_val().get_value(); // Should be a small int
+    uchar c = X.char_val().value; // Should be a small int
     if (InUrlHandler::global_in_url || InLoadHandler::global_in_load) {
         if (c == '<')
             process_string("&lt;");
@@ -271,7 +271,7 @@ void Parser::minus_sign(CmdChr X) {
 
 // This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X) {
-    uchar c = X.char_val().get_value();
+    uchar c = X.char_val().value;
     if (InUrlHandler::global_in_url || InLoadHandler::global_in_load || X.is_letter() || !cur_lang_fr()) {
         extended_chars(c);
         return;

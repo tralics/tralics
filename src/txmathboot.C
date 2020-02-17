@@ -1122,7 +1122,7 @@ auto math_ns::special_fence(subtypes s, int &open, int &close) -> bool {
 auto math_ns::get_delimiter(CmdChr X) -> del_pos {
     if (X.is_other()) {
         if (!X.char_val().is_ascii()) return del_invalid;
-        switch (X.char_val().ascii_value()) {
+        switch (static_cast<uchar>(X.char_val().value)) {
         case '<': return del_open_ket;
         case '>': return del_close_ket;
         case '.': return del_dot;

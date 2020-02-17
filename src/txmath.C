@@ -2152,7 +2152,7 @@ auto Math::trivial_math(int action) -> Xml * {
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
-        uint c = front().get_char().get_value();
+        uint c = front().get_char().value;
         if (c < nb_simplemath) return math_data.get_simplemath_val(c);
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(Istring("&#x2013;"));

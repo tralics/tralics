@@ -606,7 +606,7 @@ auto Parser::vb_tokens(Utf8Char test, TokenList &L, bool before) -> bool {
         if (at_eol()) return true;
         Utf8Char c = get_next_char();
         if (c == test) break;
-        res.push_back(verbatim_chars[c.get_value()]);
+        res.push_back(verbatim_chars[c.value]);
     }
     if (res.empty() && !before) res.push_back(hash_table.tilda_token);
     res.push_front(hash_table.verbatim_font);
@@ -815,8 +815,8 @@ auto Parser::delimiter_for_saveverb() -> Utf8Char {
         Utf8Char c = get_next_char();
         if (c == 0) return c;
         if (c.is_big()) return 0;
-        if (get_catcode(c.get_value()) == space_catcode) continue;
-        if (get_catcode(c.get_value()) == special_catcode) return c;
+        if (get_catcode(c.value) == space_catcode) continue;
+        if (get_catcode(c.value) == special_catcode) return c;
         return 0;
     }
 }
@@ -1504,7 +1504,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
         if (cur_cmd_chr.get_cmd() == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd()) {
             Utf8Char w = cur_cmd_chr.char_val();
-            if (w.is_upper_case()) w = Utf8Char(w.get_value() + 'a' - 'A');
+            if (w.is_upper_case()) w = Utf8Char(w.value + 'a' - 'A');
             b.push_back(w);
         } else
             return true;

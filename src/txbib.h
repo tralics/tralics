@@ -317,7 +317,7 @@ private:
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
-    auto               get_class(Utf8Char c) -> id_type { return id_class[c.get_value()]; }
+    auto               get_class(Utf8Char c) -> id_type { return id_class[c.value]; }
     void               handle_multiple_entries(BibEntry *);
     void               kill_the_lists();
     auto               look_at_macro(const Buffer &) -> int;
