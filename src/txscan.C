@@ -15,7 +15,6 @@
 #include "tralics.h"
 
 namespace {
-    Buffer               file_name_buffer;                   // a buffer for reading file names
     Buffer               scratch;                            // See insert_string
     TexFonts             tfonts;                             // the font table
     TexOutStream         tex_out_stream;                     // the output streams
@@ -35,7 +34,7 @@ namespace io_ns {
     auto get_enc_param(int enc, int pos) -> int;
 } // namespace io_ns
 
-// TODO: These belong in a header file
+/// \todo These belong in a header file
 extern void readline(char *buffer, int screen_size);
 extern void set_math_char(uchar c, int f, string s);
 extern auto get_math_char(uchar c, int f) -> string;
@@ -245,17 +244,18 @@ void Parser::close_all() {
 // A file name is a special thing in TeX.
 // We read until we find a non-char, or a space.
 auto Parser::scan_file_name() -> string {
+    static Buffer file_name;
+
     if (name_in_progress) return "sabotage!"; // recursion killer.
     name_in_progress = true;
     remove_initial_space_and_back_input();
-    Buffer &B = file_name_buffer;
-    B.reset();
+    file_name.reset();
     for (;;) {
         if (get_x_token()) break;
         if (cur_cmd_chr.is_letter_other())
-            B.push_back(cur_cmd_chr.char_val());
+            file_name.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.get_cmd() == underscore_catcode) // allow foo_bar
-            B.push_back(cur_cmd_chr.char_val());
+            file_name.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.is_space())
             break;
         else {
@@ -264,7 +264,7 @@ auto Parser::scan_file_name() -> string {
         }
     }
     name_in_progress = false;
-    return B.to_string();
+    return file_name.to_string();
 }
 
 // This implements \endinput, \scantokens
