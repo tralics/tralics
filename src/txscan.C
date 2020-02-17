@@ -17,7 +17,6 @@
 namespace {
     Buffer               scratch;                            // See insert_string
     TexFonts             tfonts;                             // the font table
-    TexOutStream         tex_out_stream;                     // the output streams
     vector<InputStack *> cur_input_stack;                    // the input streams
     bool                 name_in_progress = false;           // see the source of TeX
     FileForInput         tex_input_files[nb_input_channels]; // the input files
@@ -100,16 +99,16 @@ auto Parser::string_to_write(int chan) -> String {
 // and \iow_term:x \iow_log:x of latex3
 // action is \immediate, since there is no shipout routine
 void Parser::M_extension(int cc) {
-    int   chan = 0;
-    Token T    = cur_tok;
+    static TexOutStream tex_out_stream; // the output streams
+    int                 chan = 0;
     if (cc == openout_code)
-        chan = scan_int(T, max_openout, "output channel number");
+        chan = scan_int(cur_tok, max_openout, "output channel number");
     else if (cc == write_log_code || cc == wlog_code)
         chan = negative_out_slot;
     else if (cc == write_term_code || cc == typeout_code)
         chan = positive_out_slot;
     else {
-        chan = scan_int(T);
+        chan = scan_int(cur_tok);
         if (chan < 0)
             chan = negative_out_slot;
         else if (chan > max_openout && chan != write18_slot)
