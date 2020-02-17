@@ -12,8 +12,8 @@
 // for the fp package. this implements fixed point arithmetic
 class FpNum {
 public:
-    bool         sign{true}; // sign of the number
-    unsigned int data[4];    // the digits
+    bool                        sign{true}; // sign of the number
+    std::array<unsigned int, 4> data;       // the digits
 
     FpNum(Digit a, Digit b, Digit c, Digit d) {
         data[0] = a;
