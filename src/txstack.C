@@ -11,6 +11,7 @@
 // This file implements the XML stack for Tralics
 
 #include "tralics.h"
+#include "txparser.h"
 #include <cstring>
 #include <utility>
 

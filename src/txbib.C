@@ -9,10 +9,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include <utility>
-
 #include "tralics.h"
 #include "txbib.h"
+#include "txparser.h"
+#include <utility>
 
 using main_ns::log_and_tty; // used for error signalling
 

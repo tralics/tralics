@@ -9,7 +9,9 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains a lot of stuff dealing with buffers.
+
 #include "tralics.h"
+#include "txparser.h"
 
 namespace {
     Buffer       thebuffer;      // a scratch buffer

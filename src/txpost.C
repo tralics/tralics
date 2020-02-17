@@ -9,11 +9,12 @@
 // (See the file COPYING in the main directory for details)
 
 // Post processing for tralics
-#include <utility>
 
 #include "tralics.h"
+#include "txparser.h"
 #include "txpost.h"
 #include "txtrees.h"
+#include <utility>
 
 namespace {
     Buffer                             scbuf;          // scratch buffer for printing XML, and other things

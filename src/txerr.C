@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace err_ns {
     Buffer local_buf;

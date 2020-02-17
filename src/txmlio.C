@@ -12,6 +12,7 @@
 
 #include "tralics.h"
 #include "txmlio.h"
+#include "txparser.h"
 
 class EOD {};
 

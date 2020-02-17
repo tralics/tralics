@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace arith_ns {
     void start_err(String);

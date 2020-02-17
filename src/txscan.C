@@ -10,9 +10,9 @@
 
 // This file contains the TeX scanner of tralics
 
-#include <utility>
-
 #include "tralics.h"
+#include "txparser.h"
+#include <utility>
 
 namespace {
     Buffer               scratch;                            // See insert_string

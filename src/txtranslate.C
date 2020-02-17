@@ -10,9 +10,9 @@
 
 // This file contains a big part of the Tralics translator
 
-#include <utility>
-
 #include "tralics.h"
+#include "txparser.h"
+#include <utility>
 
 extern void readline_newprompt(string s);
 extern void txsleep(int);

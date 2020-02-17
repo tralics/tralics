@@ -31,6 +31,7 @@
 // knowledge of the CeCILL license and that you accept its terms.
 
 #include "tralics.h"
+#include "txparser.h"
 #include "txpath.h"
 
 inline void MainClass::set_version() {

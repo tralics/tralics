@@ -9,10 +9,11 @@
 // (See the file COPYING in the main directory for details)
 
 // This file contains ltclass.dtx
-#include <utility>
 
 #include "tralics.h"
 #include "txclasses.h"
+#include "txparser.h"
+#include <utility>
 
 namespace {
     Buffer      local_buf;

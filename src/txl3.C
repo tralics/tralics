@@ -11,6 +11,7 @@
 // This file contains stuff for latex3
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace {
     const TokenList empty_list;

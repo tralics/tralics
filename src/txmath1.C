@@ -13,6 +13,7 @@
 #include "tralics.h"
 #include "txmath.h"
 #include "txmath1.h"
+#include "txparser.h"
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer    mathml_buffer;

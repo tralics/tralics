@@ -13,6 +13,7 @@
 // iso-8859-1)
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace accent_ns {
     auto fetch_accent(int chr, int accent_code) -> Token;

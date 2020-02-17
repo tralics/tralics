@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txparser.h"
 
 static NewArray new_array_object;
 static char     char_for_error = 'c';

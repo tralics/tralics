@@ -11,6 +11,7 @@
 // This file contains the TeX parser of tralics
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace {
     Buffer trace_buffer;

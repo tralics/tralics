@@ -9,9 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include <utility>
-
 #include "tralics.h"
+#include "txparser.h"
+#include <utility>
 
 // Font info stuff.
 

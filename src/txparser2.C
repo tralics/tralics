@@ -13,6 +13,7 @@
 
 #include "tralics.h"
 #include "txclasses.h"
+#include "txparser.h"
 #include "txparser2.h"
 
 bool xkv_patch = false; // for pass_option_to class; where is this set ????

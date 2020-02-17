@@ -11,6 +11,7 @@
 // This file contains a part of the TeX parser of tralics
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace parser_ns {
     auto to_string(boundary_type v) -> String;

@@ -11,6 +11,7 @@
 // The file contains code for configurating the Raweb
 
 #include "tralics.h"
+#include "txparser.h"
 
 namespace config_ns {
     Buffer          sec_buffer;

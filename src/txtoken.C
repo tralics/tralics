@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txparser.h"
 
 // token lists.
 namespace {
@@ -815,19 +816,6 @@ void Buffer::push_back(const Istring &X) {
     if (v == 1) return;
     push_back(X.p_str());
 }
-
-// Prints a token list. Unused
-// void token_ns::show (const TokenList&L)
-// {
-//   Buffer B;
-//   const_token_iterator C = L.begin();
-//   const_token_iterator E = L.end();
-//   while(C != E) {
-//     B.insert_token0(*C);
-//     cout << B.c_str() << " ";
-//     ++C;
-//   }
-// }
 
 // True if L has a single token
 auto token_ns::has_a_single_token(const TokenList &L) -> bool {

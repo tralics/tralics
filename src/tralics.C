@@ -16,6 +16,7 @@
 // The file contains the main data structures, and code to fill the tables.
 
 #include "tralics.h"
+#include "txparser.h"
 #include <ctime>
 
 static Buffer auxb; // chars to be added to the input file

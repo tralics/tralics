@@ -23,8 +23,8 @@
 #include <cstring>
 
 using namespace std;
-extern auto is_letter(char c) -> bool;
-class EndOfData {};
+
+auto is_letter(char c) -> bool;
 
 #include "tralics/Token.h"
 #include "tralics/Utf8Char.h"
@@ -49,9 +49,3 @@ class EndOfData {};
 #include "txio.h"
 #include "txlogger.h"
 #include "txparam.h"
-#include "txparser.h"
-#include "txscaled.h"
-#include "txstack.h"
-#include "txstring.h"
-#include "txtokenlist.h"
-#include "txxml.h"

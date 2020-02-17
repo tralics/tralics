@@ -12,6 +12,7 @@
 
 #include "tralics.h"
 #include "txmath.h"
+#include "txparser.h"
 
 namespace {
     Buffer        math_buffer;

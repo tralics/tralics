@@ -12,6 +12,7 @@
 // Handle also utf8 input output
 
 #include "tralics.h"
+#include "txparser.h"
 #include <sstream>
 #include <utility>
 
