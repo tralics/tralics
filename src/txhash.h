@@ -105,7 +105,7 @@ class SpecialHash {
     vector<string> key;   // the keys
     vector<string> value; // the values
 public:
-    SpecialHash(string s) : size(0) { create(s.c_str()); }
+    SpecialHash(const string &s) : size(0) { create(s.c_str()); }
     void               create(String s);
     auto               find(String) const -> string;
     [[nodiscard]] auto get_size() const -> int { return size; }
@@ -153,7 +153,7 @@ public:
     [[nodiscard]] auto get_lineno() const -> int { return lineno; }
     [[nodiscard]] auto get_filename() const -> string { return file_name; }
     void               set_lineno(int i) { lineno = i; }
-    void               set_filename(string i) { file_name = i; }
+    void               set_filename(string i) { file_name = std::move(i); }
 };
 
 // This class returns foo then bar then gee from `foo,bar,gee'
@@ -192,8 +192,8 @@ public:
         wild_pack = X;
         return X ? 1 : 0;
     }
-    void set_package(string X) { package = X; }
-    void set_options(string X) { options = X; }
+    void set_package(string X) { package = std::move(X); }
+    void set_options(string X) { options = std::move(X); }
     void print();
     auto get_attrib() -> string { return attrib; }
     auto find_att(string cur_pack, string cur_options) -> bool;

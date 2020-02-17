@@ -60,7 +60,7 @@ public:
     Istring(name_positions N) : value(the_names[N].value) {}
     Istring(const Buffer &X);
     explicit Istring(int N) : value(N) {}
-    explicit Istring(string s);
+    explicit Istring(const string &s);
     explicit Istring(String s);
 
     [[nodiscard]] auto null() const -> bool { return value == 0; }       // null string

@@ -1874,7 +1874,7 @@ auto Parser::counter_read_opt(String s) -> int {
 
 // This defines a new counter, named name; second arg is for counter_read_opt
 // cur_tok (o be read again) holds the token \c@foo
-auto Parser::counter_aux(string name, String opt, Token T) -> bool {
+auto Parser::counter_aux(const string &name, String opt, Token T) -> bool {
     Buffer &b = Thbuf1;
     // We are defining a counter now
     // We construct a macro without argument that expands to \number\c@foo
@@ -2057,7 +2057,7 @@ void Parser::M_newif() {
 // \def\footrue{\let\iffoo\iftrue} and \def\foofalse{\let\iffoo\iffalse}
 // this code does one or the other definitions,
 // given T=\iffoo, s=foo and b=true of false
-void Parser::M_newif_aux(Token T, string S, bool b) {
+void Parser::M_newif_aux(Token T, const string &S, bool b) {
     TokenList L1;
     L1.push_front(hash_table.let_token);
     L1.push_back(T);

@@ -9,6 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <utility>
+
 #include "tralics.h"
 
 // Font info stuff.
@@ -242,7 +244,7 @@ void FontInfo::see_font_change(subtypes c) {
 }
 
 // This implements \fontfamily etc
-void FontInfo::ltfont(string s, subtypes c) {
+void FontInfo::ltfont(const string &s, subtypes c) {
     switch (c) {
     case fontencoding_code: return; // Output encoding is always Unicode
     case fontfamily_code:           // rm, sf, or tt
@@ -295,7 +297,7 @@ void FontInfo::ltfont(string s, subtypes c) {
 // tex fonts
 
 // Finds a font given by name and size, or creates one if needed
-auto TexFonts::find_font(string n, int a, int s) -> int {
+auto TexFonts::find_font(const string &n, int a, int s) -> int {
     for (uint i = 0; i < nb_tex_fonts; i++)
         if ((data[i] != nullptr) && data[i]->its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
@@ -303,7 +305,7 @@ auto TexFonts::find_font(string n, int a, int s) -> int {
 
 // Ctor(name, at_value, scaled).
 // In TeX, only one of at_value and scaled can be given. Unused in Tralics.
-TexFont::TexFont(string n, int a, int s) {
+TexFont::TexFont(const string &n, int a, int s) {
     make_null();
     name       = n;
     at_val     = a;
@@ -320,7 +322,7 @@ auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
     }
     last_idx++;
     int k   = last_idx;
-    data[k] = new TexFont(n, a, s);
+    data[k] = new TexFont(std::move(n), a, s);
     return k;
 }
 
@@ -328,7 +330,7 @@ auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
 void TexFont::load() {}
 
 // This compares two fonts
-auto TexFont::its_me(string n, int a, int s) const -> bool { return name == n && at_val == a && scaled_val == s; }
+auto TexFont::its_me(const string &n, int a, int s) const -> bool { return name == n && at_val == a && scaled_val == s; }
 
 // This kills all tables.
 void TexFont::make_null() {

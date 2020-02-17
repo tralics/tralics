@@ -10,6 +10,8 @@
 
 // Tralics math; boot part. This constructs all data structures.
 
+#include <utility>
+
 #include "tralics.h"
 #include "txmath.h"
 
@@ -32,7 +34,7 @@ Xml *          single_chars[128];
 
 auto get_math_char(uchar c, int f) -> string { return math_chars[c][f]; }
 
-void set_math_char(uchar c, int f, string s) { math_chars[c][f] = s; }
+void set_math_char(uchar c, int f, string s) { math_chars[c][f] = std::move(s); }
 
 auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
 

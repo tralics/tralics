@@ -9,6 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 // Post processing for tralics
+#include <utility>
+
 #include "tralics.h"
 #include "txpost.h"
 #include "txtrees.h"
@@ -44,7 +46,7 @@ namespace all_words_ns {
     fstream * fp = nullptr;
     void      add_a_word(String s, int h);
     void      dump_and_list(WordList *, int i);
-    void      dump_words(string name);
+    void      dump_words(const string &name);
     auto      is_entity(String s) -> int;
 } // namespace all_words_ns
 
@@ -237,7 +239,7 @@ void Parser::create_label(const string &X, Istring S) {
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
 // and create/update the LabelInfo. We remember the ref in the ref_list.
-void Xid::add_ref(string s) { tralics_ns::add_ref(value, s, false); }
+void Xid::add_ref(const string &s) { tralics_ns::add_ref(value, s, false); }
 
 void tralics_ns::add_ref(int v, const string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
@@ -1166,7 +1168,7 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
 }
 
 // Finish dumping the words
-void all_words_ns::dump_words(string name) {
+void all_words_ns::dump_words(const string &name) {
     auto *    WL = new WordList(nullptr, 0, nullptr);
     WordList *W  = WL;
     for (auto L : WL0) {
@@ -1279,5 +1281,5 @@ void Xml::word_stats(string match) {
     scbuf.reset();
     word_stats_i();
     scbuf.new_word();
-    all_words_ns::dump_words(match);
+    all_words_ns::dump_words(std::move(match));
 }

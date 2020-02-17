@@ -190,7 +190,7 @@ public:
     [[nodiscard]] auto last_slash() const -> int;
     [[nodiscard]] auto length() const -> int { return wptr; }
     [[nodiscard]] auto size() const -> int { return wptr; }
-    auto               look_at_space(string s) -> bool;
+    auto               look_at_space(const string &s) -> bool;
     void               lowercase();
     void               make_citation(String a, String b);
     auto               make_unique_bid(int) -> string;
@@ -239,7 +239,7 @@ public:
     auto push_back(Token T) -> bool;
     void insert_token(Token T, bool);
     void push_back_alt(const AttPair &);
-    void push_back_braced(string);
+    void push_back_braced(const string &);
     void push_back_braced(String);
     void push_back_def(String, string);
     void push_back_elt(Istring, Xid, int);
@@ -271,7 +271,7 @@ public:
     void push_back3(unsigned int);
     void push_back9(unsigned int);
     void put_at_end(String s);
-    auto remove_digits(string) -> string;
+    auto remove_digits(const string &) -> string;
     auto remove_space(const string &) -> string;
     void rrl() {
         wptr--;
@@ -369,7 +369,7 @@ public:
     void               uppercase();
     void               utf8_error(bool);
     void               utf8_ovf(int);
-    auto               xml_and_attrib(string s) -> Xml *;
+    auto               xml_and_attrib(const string &s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;
     void               l3_fabricate_cond(const string &, const string &, subtypes);

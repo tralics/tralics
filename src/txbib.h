@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002, 2007,2008
@@ -81,13 +83,13 @@ public:
     auto               number_of_data_bases() -> int { return biblio_src.size(); }
     void               push_back_src(String x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
-    void               set_cmd(string x) { bib_cmd = x; }
+    void               set_cmd(string x) { bib_cmd = std::move(x); }
     void               set_location(Xml *X, bool f) {
         biblio_loc       = X;
         biblio_loc_force = f;
     }
     void set_nocite() { nocite = true; }
-    void set_style(string x) { bib_style = x; }
+    void set_style(string x) { bib_style = std::move(x); }
     void stats();
     auto unique_bid() -> Istring;
 };
@@ -100,7 +102,7 @@ private:
     string value; // the value of the macro (e.g. bar)
 public:
     auto is_same(int hash, String s) -> bool { return hash == h && name == s; }
-    void set_value(string v) { value = v; }
+    void set_value(string v) { value = std::move(v); }
     auto get_value() -> string { return value; }
     void set_default_value() { value = name; }
     BibMacro() = default;
@@ -321,7 +323,7 @@ private:
     auto               look_at_macro(const Buffer &) -> int;
     auto               look_at_macro(int h, String name) -> int;
     void               mac_def_val(int X) { all_macros[X].set_default_value(); }
-    void               mac_set_val(int X, string s) { all_macros[X].set_value(s); }
+    void               mac_set_val(int X, string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator, Istring) -> BibEntry *;
     auto               next_char() -> Utf8Char { return input_line[input_line_pos++]; }
     void               next_line(bool);
@@ -345,7 +347,7 @@ public:
     auto               get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
     auto               find_field_pos(String s) const -> field_pos;
     auto               find_type(String s) -> entry_type;
-    auto               exec_bibitem(const string &, string) -> Istring;
+    auto               exec_bibitem(const string &, const string &) -> Istring;
     void               nocitestar_true() { nocitestar = true; }
     auto               implement_cit(String x, string w) -> int;
     auto               is_year_string(const string &y, bib_from from) -> String;
@@ -384,9 +386,9 @@ public:
 
     void newline();
     void push_back(String s) { B.push_back(s); }
-    void push_back(string s) { B.push_back(s); }
+    void push_back(const string &s) { B.push_back(s); }
     void push_back_braced(String s) { B.push_back_braced(s); }
-    void push_back_braced(string s) { B.push_back_braced(s); }
+    void push_back_braced(string s) { B.push_back_braced(std::move(s)); }
     void push_back_cmd(String s) {
         B.push_back('\\');
         B.push_back(s);
@@ -434,7 +436,7 @@ public:
         cout << "\n";
         *(X->file) << "\n";
     }
-    void out_string(string s) {
+    void out_string(const string &s) {
         cout << s;
         *(X->file) << s;
     }

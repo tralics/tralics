@@ -9,6 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <utility>
+
 #include "tralics.h"
 #include "txbib.h"
 
@@ -41,7 +43,7 @@ namespace bib_ns {
     auto last_chars(const string &s, int k) -> string;
     auto skip_dp(const string &str) -> string;
     void bib_explain();
-    void handle_special_string(string s, Buffer &A, Buffer &B);
+    void handle_special_string(const string &s, Buffer &A, Buffer &B);
     auto type_to_string(entry_type x) -> name_positions;
     auto is_noopsort(const string &s, int i) -> bool;
     bool raw_bib = false;
@@ -930,10 +932,10 @@ void Parser::T_bpers() {
 }
 
 void Stack::implement_cit(string b1, Istring b2, string a, string c) {
-    add_att_to_last(np_userid, Istring(b1));
+    add_att_to_last(np_userid, Istring(std::move(b1)));
     add_att_to_last(np_id, b2);
-    add_att_to_last(np_key, Istring(a));
-    add_att_to_last(np_from, Istring(c));
+    add_att_to_last(np_key, Istring(std::move(a)));
+    add_att_to_last(np_from, Istring(std::move(c)));
 }
 
 // case \bibitem
@@ -1009,7 +1011,7 @@ void Parser::T_empty_bibitem() {
     the_stack.pop(np_citation);
 }
 
-auto Bibtex::exec_bibitem(const string &w, string b) -> Istring {
+auto Bibtex::exec_bibitem(const string &w, const string &b) -> Istring {
     BibEntry *X = find_entry(b.c_str(), w, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
@@ -1703,7 +1705,7 @@ BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), 
 void BibEntry::out_something(field_pos p, string s) {
     bbl.push_back_cmd("cititem");
     bbl.push_back_braced(bib_xml_name[p]);
-    bbl.push_back_braced(s);
+    bbl.push_back_braced(std::move(s));
     bbl.newline();
 }
 
@@ -2971,7 +2973,7 @@ void Bibtex::read(String src, bib_from ct) {
 
 /// -------------------------   a virer
 
-void bib_ns::handle_special_string(string s, Buffer &A, Buffer &B) {
+void bib_ns::handle_special_string(const string &s, Buffer &A, Buffer &B) {
     if (s.empty()) {
         B.reset();
         return;
@@ -2987,7 +2989,7 @@ void tralics_ns::bibtex_boot(String b, String dy, string no_year, bool inra, boo
     distinguish_refer = db;
     bbl.install_file(b);
     the_bibtex = new Bibtex(dy);
-    the_bibtex->boot(no_year, inra);
+    the_bibtex->boot(std::move(no_year), inra);
 }
 
 void tralics_ns::bibtex_bootagain() { the_bibtex->bootagain(); }
@@ -2999,7 +3001,7 @@ void tralics_ns::bibtex_insert_jobname() {
 }
 
 void Bibtex::boot(string S, bool inra) {
-    no_year      = S;
+    no_year      = std::move(S);
     in_ra        = inra;
     want_numeric = false;
     if (the_main->in_ra()) want_numeric = true;

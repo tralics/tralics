@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2003-2004, 2007,2008
@@ -140,22 +142,22 @@ public:
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
     [[nodiscard]] auto get_ra_year() const -> int { return ra_year; }
     [[nodiscard]] auto get_year_string() const -> string { return year_string; }
-    void               init(LinePtr x) { lines = x; }
-    void               remember_ur(string s) { the_url_val = s; }
+    void               init(LinePtr x) { lines = std::move(x); }
+    void               remember_ur(string s) { the_url_val = std::move(s); }
     void               set_cur_line(int x) { cur_line = x; }
     void               set_cur_file_pos(int k) { cur_file_pos = k; }
     void               set_cur_env_name(string s) {
-        cur_env_name   = s;
+        cur_env_name   = std::move(s);
         begin_env_line = cur_line;
     }
     void set_cur_env_name(string s, int x) {
-        cur_env_name   = s;
+        cur_env_name   = std::move(s);
         begin_env_line = x;
     }
     void               set_ra_year(int x) { ra_year = x; }
-    void               set_job_name(string s) { job_name = s; }
-    void               set_projet_val(string s) { the_projetval = s; }
-    void               set_year_string(string s) { year_string = s; }
+    void               set_job_name(string s) { job_name = std::move(s); }
+    void               set_projet_val(string s) { the_projetval = std::move(s); }
+    void               set_year_string(string s) { year_string = std::move(s); }
     [[nodiscard]] auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
     [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
     [[nodiscard]] auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
@@ -306,7 +308,7 @@ private:
     void count_days();
     auto M_counter(bool def) -> bool;
     void E_counter(int);
-    auto counter_aux(string, String, Token T) -> bool;
+    auto counter_aux(const string &, String, Token T) -> bool;
     void counter_boot(String, String);
     auto counter_check(Buffer &, bool) -> bool;
     auto counter_read_opt(String) -> int;
@@ -485,7 +487,7 @@ private:
     void interpret_mathchoice_cmd(int res, subtypes, CmdChr);
     void interpret_math_cmd(int res, subtypes);
     void interpret_rc();
-    void invalid_key(Token T, string, const TokenList &);
+    void invalid_key(Token T, const string &, const TokenList &);
     auto is_delimiter(const TokenList &L) -> bool;
     void is_date_valid();
     auto is_env_on_stack(const string &s) -> SaveAuxEnv *;
@@ -536,7 +538,7 @@ private:
     void mk_hi(String, char);
     void month_day(subtypes);
     void more_bootstrap();
-    void multiple_label(String, int, string);
+    void multiple_label(String, int, const string &);
     void multiply_dim(RealNumber val, int v);
     void E_multispan();
     auto my_csname(String s1, String s2, TokenList &L, String s) -> bool;
@@ -554,7 +556,7 @@ private:
     void new_constant(subtypes);
     void new_constant(String name, int max_val, subtypes alloc_pos, symcodes c);
     void M_newif();
-    void M_newif_aux(Token T, string s, bool b);
+    void M_newif_aux(Token T, const string &s, bool b);
     void new_font();
     auto new_line_for_read(bool) -> bool;
     void new_macro(const string &s, Token name);
@@ -615,7 +617,7 @@ private:
     auto read_until_nopar(Token x) -> TokenList;
     void read_into(TokenList &X);
     auto read_unit() -> int;
-    auto make_label_inner(string name) -> string;
+    auto make_label_inner(const string &name) -> string;
     void refstepcounter();
     void refstepcounter(String, bool);
     void refstepcounter(TokenList &, bool);
@@ -744,7 +746,7 @@ private:
     void start_a_cell(bool);
     void start_a_row(int);
     auto start_scan_math(Math &, subtypes) -> bool;
-    void start_paras(int, string, bool);
+    void start_paras(int, const string &, bool);
     void store_new_line(int, bool);
     void string_define(int a, const string &c, bool gbl);
     void strip_pt();
@@ -968,7 +970,7 @@ private:
     void trace_if(int);
     void trace_if(String, int, String);
     void trace_if(String, int, int);
-    void trace_scan_expr(String s, const SthInternal, char t, Token T);
+    void trace_scan_expr(String s, const SthInternal &, char t, Token T);
     void translate01();
     void translate02();
     void translate03();

@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003,  2007, 2008
@@ -42,7 +44,7 @@ public:
     void               dump(String s);
     void               dump0(String s);
     void               set_finished() { finished = true; }
-    void               set_file_name(string x) { filename = x; }
+    void               set_file_name(string x) { filename = std::move(x); }
     void               abort();
     [[nodiscard]] auto get_filename() const -> string { return filename; }
     auto               operator<<(logger_fn f) -> Logger & {

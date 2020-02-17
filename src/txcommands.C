@@ -8,6 +8,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <utility>
+
 #include "tralics.h"
 
 // This file contains the big switch that interprets (most) commands
@@ -48,7 +50,7 @@ void Parser::init_all(string doc_elt) {
     eqtb_int_table[newlinechar_code].val_and_level('\n', level_one);
     TL.clear();
     my_stats.set_nb_xboot(the_stack.get_xid().value);
-    the_stack.init_all(doc_elt);
+    the_stack.init_all(std::move(doc_elt));
     the_stack.add_nl();
     onlypreamble.push_back(hash_table.let_token);
     onlypreamble.push_back(hash_table.atbd_token);

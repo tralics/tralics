@@ -273,11 +273,11 @@ public:
     auto end_of_row() -> bool;
     void dump_labels();
     void ml_check_labels();
-    void new_label(string s, bool a);
+    void new_label(const string &s, bool a);
     void ml_second_pass(Xml *row, bool);
     void ml_last_pass(bool);
-    void insert_special_tag(string s) { multi_labels[last_ml_pos - 2] = s; }
-    void new_multi_label(string s, int t) {
+    void insert_special_tag(string s) { multi_labels[last_ml_pos - 2] = std::move(s); }
+    void new_multi_label(const string &s, int t) {
         multi_labels.push_back(s);
         multi_labels_type.push_back(t);
     }
@@ -326,7 +326,7 @@ public:
 
 private:
     void set_label(string s) {
-        label_val  = s;
+        label_val  = std::move(s);
         seen_label = true;
     }
 };

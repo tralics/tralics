@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008
@@ -36,10 +38,10 @@ public:
     void exec_start(int);
     void exec_post();
     void exec(int, bool);
-    void set_T1(string x) { T1 = x; }
-    void set_T2(string x) { T2 = x; }
-    void set_T3(string x) { T3 = x; }
-    void set_T4(string x) { T4 = x; }
+    void set_T1(string x) { T1 = std::move(x); }
+    void set_T2(string x) { T2 = std::move(x); }
+    void set_T3(string x) { T3 = std::move(x); }
+    void set_T4(string x) { T4 = std::move(x); }
     void set_flags(int f) { xflags = f; }
 
     auto               get_type() -> tpi_vals { return type; }
@@ -61,7 +63,7 @@ public:
     [[nodiscard]] auto find_cmd(const string &s) const -> bool;
     void               move_T1T2(string x) {
         T1 = T2;
-        T2 = x;
+        T2 = std::move(x);
     }
     auto increment_flag() -> bool;
     void decode_flags();
@@ -133,6 +135,6 @@ public:
         return len2 - 1;
     }
     void               check_size();
-    [[nodiscard]] auto find_UR(const string &, string) const -> int;
+    [[nodiscard]] auto find_UR(const string &, const string &) const -> int;
     [[nodiscard]] auto find_cmd(const string &) const -> int;
 };

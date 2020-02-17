@@ -2188,7 +2188,7 @@ auto Parser::is_not_a_math_env(String s) -> bool {
 // This is done when we see a label in a math formula.
 // If anchor is true, we are in the case of \anchorlabel.
 // Only one label is allowed.
-void MathHelper::new_label(string s, bool anchor) {
+void MathHelper::new_label(const string &s, bool anchor) {
     if (eqnum_status == 2 || eqnum_status == 1) {
         if (anchor) the_parser.parse_error("Illegal \\anchorlabel");
         cmi.new_multi_label(s, 1);

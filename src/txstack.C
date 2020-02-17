@@ -12,6 +12,7 @@
 
 #include "tralics.h"
 #include <cstring>
+#include <utility>
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;
@@ -319,7 +320,7 @@ auto Stack::temporary() -> Xml * {
 void Stack::init_all(string a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
-    Xml *V   = new Xml(Istring(a), nullptr);
+    Xml *V   = new Xml(Istring(std::move(a)), nullptr);
     V->push_back(nullptr); // Make a hole for the color pool
     V->change_id(1);
     ipush(the_names[cst_document], V);
@@ -597,7 +598,7 @@ void Stack::delete_table_atts() {
 }
 
 // Adds a new <u>, <v>, and att-list slot
-void ArrayInfo::add_uv(TokenList &u, TokenList &v, AttList At) {
+void ArrayInfo::add_uv(TokenList &u, TokenList &v, const AttList &At) {
     u_table.push_back(u);
     v_table.push_back(v);
     attribs.push_back(At);

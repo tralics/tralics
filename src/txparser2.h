@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2008
@@ -23,7 +25,7 @@ class XkvToken {
 public:
     [[nodiscard]] auto key_empty() const -> bool { return keyname.empty(); }
     [[nodiscard]] auto val_empty() const -> bool { return value.empty(); }
-    void               set_initial(TokenList L) { initial = L; }
+    void               set_initial(TokenList L) { initial = std::move(L); }
     auto               get_all() -> TokenList { return initial; }
     auto               get_code() -> TokenList { return value; }
     auto               get_action() -> TokenList & { return action; }

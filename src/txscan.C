@@ -10,6 +10,8 @@
 
 // This file contains the TeX scanner of tralics
 
+#include <utility>
+
 #include "tralics.h"
 
 namespace {
@@ -33,10 +35,11 @@ namespace io_ns {
     auto get_enc_param(int enc, int pos) -> int;
 } // namespace io_ns
 
+// TODO: These belong in a header file
 extern void readline(char *buffer, int screen_size);
 extern void set_math_char(uchar c, int f, string s);
 extern auto get_math_char(uchar c, int f) -> string;
-extern auto read_xml(string) -> Xml *;
+extern auto read_xml(const string &) -> Xml *;
 
 void lg_start_io(Logger &L) {
     L.finish_seq();
@@ -71,7 +74,7 @@ void TexOutStream::close(int chan) {
 void TexOutStream::open(int chan, string file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
     close(chan);
-    String fn = tralics_ns::get_out_dir(file_name);
+    String fn = tralics_ns::get_out_dir(std::move(file_name));
     auto * fp = new fstream(fn, std::ios::out);
     if (fp == nullptr) return; // no error ?
     if (!*fp) return;          // no error ?
@@ -152,7 +155,7 @@ auto Parser::is_input_open() -> bool {
 
 // Open a file for \openin. if action is false, the file does not exist
 // No on-the fly conversion here
-void FileForInput::open(string file, bool action) {
+void FileForInput::open(const string &file, bool action) {
     if (!action) {
         the_log << lg_start_io << "Cannot open file " << file << " for input\n";
     } else {
@@ -2334,7 +2337,7 @@ void ScanSlot::add_or_sub(scan_expr_t &next_state, char &C) {
     expr_state = next_state;
 }
 
-void Parser::trace_scan_expr(String s, const SthInternal v, char t, Token T) {
+void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
     if (the_parser.tracing_commands() && t != ' ') the_log << lg_startcond << s << " so far for " << T << t << ' ' << v << lg_end;
 }
 

@@ -2166,7 +2166,7 @@ void Parser::numberwithin() {
     new_macro(L, thefoo, true);
 }
 
-auto Parser::make_label_inner(string name) -> string {
+auto Parser::make_label_inner(const string &name) -> string {
     TokenList res;
     Buffer &  b = local_buf;
     b << bf_reset << "the" << name;

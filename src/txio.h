@@ -53,7 +53,7 @@ public:
     }
     [[nodiscard]] auto get_number() const -> int { return number; }
     [[nodiscard]] auto get_chars() const -> const string & { return chars; }
-    void               set_chars(string x) { chars = x; }
+    void               set_chars(string x) { chars = std::move(x); }
     auto               starts_with(String) const -> bool;
     void               convert_line(int);
     void               clear_converted() { converted = false; }
@@ -99,8 +99,8 @@ public:
     auto               get_next(string &b, bool &cv) -> int;
     auto               get_value() -> std::list<Clines> & { return value; }
     void               incr_cur_line() { cur_line++; }
-    void               insert(int n, string c, bool);
-    void               insert(string c, bool);
+    void               insert(int n, const string &c, bool);
+    void               insert(const string &c, bool);
     void               insert(String c);
     void               insert_spec(int n, string c);
     void               insert(const LinePtr &);
@@ -111,13 +111,13 @@ public:
     void               print();
     void               print(fstream *);
     void               print1(fstream *);
-    void               push_front(Clines x) { value.push_front(x); }
-    void               push_back(Clines x) { value.push_back(x); }
+    void               push_front(const Clines &x) { value.push_front(x); }
+    void               push_back(const Clines &x) { value.push_back(x); }
     void               reset(string x);
     auto               read_from_tty(Buffer &b) -> int;
     void               set_cur_line(int x) { cur_line = x; }
     void               set_encoding(int k) { cur_encoding = k; }
-    void               set_file_name(string s) { file_name = s; }
+    void               set_file_name(string s) { file_name = std::move(s); }
     void               set_interactive();
     auto               skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void               splice_end(LinePtr &X);
@@ -176,13 +176,13 @@ class FileForInput {
     Buffer  cur_line;         // this holds the current line
     int     line_no;          // this holds the current line number
 public:
-    void open(string, bool);
+    void open(const string &, bool);
     void close();
     FileForInput() = default;
 
     auto is_open() -> bool { return open_flag; }
     auto get_lines() -> LinePtr & { return the_lines; }
-    void set_lines(LinePtr X) { the_lines = X; }
+    void set_lines(LinePtr X) { the_lines = std::move(X); }
     auto get_buffer() -> Buffer & { return cur_line; }
     auto get_line_no() -> int & { return line_no; }
 };
@@ -203,5 +203,5 @@ public:
     void               close(int);
     void               open(int, string);
     [[nodiscard]] auto is_open(int i) const -> bool { return write_open[i]; }
-    void               write(int chan, string s) { *(write_file[chan]) << s; }
+    void               write(int chan, const string &s) { *(write_file[chan]) << s; }
 };

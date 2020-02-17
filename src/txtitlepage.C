@@ -24,7 +24,7 @@ namespace {
 
 namespace tpage_ns {
     void init_error();
-    auto begins_with(string A, String B) -> bool;
+    auto begins_with(const string &A, String B) -> bool;
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
@@ -409,7 +409,7 @@ auto TitlePageAux::increment_flag() -> bool {
 }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.
-void Xid::add_special_att(string S) {
+void Xid::add_special_att(const string &S) {
     if (S.length() == 0) return;
     Buffer &B = local_buf;
     B.reset();
@@ -502,7 +502,7 @@ auto TitlePageAux::find_UR(String s, int n) const -> int {
 
 // For the case CE, \URsop ?+ <UR myflags>
 // We put `URsop myflags' in the buffer local_buf in case of success.
-auto TitlePage::find_UR(const string &s, string name) const -> int {
+auto TitlePage::find_UR(const string &s, const string &name) const -> int {
     Buffer &B = local_buf;
     B << bf_reset << s;
     int j = 0;
@@ -549,7 +549,7 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
 }
 
 // True if B is an initial substring of A
-auto tpage_ns::begins_with(string A, String B) -> bool {
+auto tpage_ns::begins_with(const string &A, String B) -> bool {
     unsigned int n = strlen(B);
     if (A.length() < n) return false;
     return strncmp(A.c_str(), B, n) == 0;
@@ -999,7 +999,7 @@ auto LinePtr::find_aliases(const vector<string> &SL, string &res) -> bool {
 }
 
 // This converts ra2003 to ra.
-auto Buffer::remove_digits(string s) -> string {
+auto Buffer::remove_digits(const string &s) -> string {
     reset();
     push_back(s);
     int k = wptr;

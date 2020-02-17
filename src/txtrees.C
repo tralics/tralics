@@ -432,7 +432,7 @@ void Parser::T_etex() { parse_error(cur_tok, "Unimplemented e-TeX extension ", c
 // --------------------------------------------------------------------
 // GB4e
 
-auto mk_ensure(string a, string b) -> string { return a + "{\\ensuremath{" + b + "}}"; }
+auto mk_ensure(const string &a, const string &b) -> string { return a + "{\\ensuremath{" + b + "}}"; }
 
 // We should perhaps do something with this list ??
 void gb4eboot() {

@@ -76,7 +76,7 @@ void Buffer::push_back_braced(String s) {
     push_back_close_brace();
 }
 
-void Buffer::push_back_braced(string s) {
+void Buffer::push_back_braced(const string &s) {
     push_back_open_brace();
     push_back(s);
     push_back_close_brace();

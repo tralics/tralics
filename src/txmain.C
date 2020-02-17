@@ -457,7 +457,7 @@ void MainClass::open_log() {
     }
 }
 
-auto tralics_ns::exists(const vector<string> &ST, string d) -> bool {
+auto tralics_ns::exists(const vector<string> &ST, const string &d) -> bool {
     for (const auto &j : ST)
         if (j == d) return true;
     return false;
@@ -583,7 +583,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     return nullptr;
 }
 
-void obsolete(string s) { cout << "Obsolete option `-" << s << "' ignored\n"; }
+void obsolete(const string &s) { cout << "Obsolete option `-" << s << "' ignored\n"; }
 
 // This interprets one option. If the option takes k arguments
 // it increments p by k
@@ -1209,7 +1209,7 @@ void MainClass::trans0() {
 }
 
 // returns output_dir+name
-auto tralics_ns::get_out_dir(string name) -> String {
+auto tralics_ns::get_out_dir(const string &name) -> String {
     Buffer &B = path_buffer;
     B << bf_reset << out_dir << bf_optslash << name;
     return B.c_str();

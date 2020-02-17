@@ -13,6 +13,7 @@
 
 #include "tralics.h"
 #include <sstream>
+#include <utility>
 
 extern void readline(char *buffer, int screen_size);
 
@@ -505,7 +506,7 @@ void LinePtr::insert(const LinePtr &aux) {
 // If 2 it's a tex file, and the file is converted later.
 // If 3, no conversion  done
 // If 4, its is the main file, log not yet open.
-void tralics_ns::read_a_file(LinePtr &L, string x, int spec) {
+void tralics_ns::read_a_file(LinePtr &L, const string &x, int spec) {
     L.reset(x);
     if (main_ns::use_pool(L)) return;
     auto *fp = new fstream(x.c_str(), std::ios::in);
@@ -986,7 +987,7 @@ void FullLogger::finish(int n) {
 }
 
 void FullLogger::init(string name, bool status) {
-    L.set_file_name(name);
+    L.set_file_name(std::move(name));
     L.fp = tralics_ns::open_file(L.get_filename(), true);
     L.set_finished();
     verbose     = status;
@@ -1005,7 +1006,7 @@ auto tralics_ns::file_exists(String name) -> bool {
     return false;
 }
 
-auto tralics_ns::file_exists(string B) -> bool { return tralics_ns::file_exists(B.c_str()); }
+auto tralics_ns::file_exists(const string &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
 
 auto tralics_ns::file_exists(Buffer &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
 
@@ -1021,7 +1022,7 @@ auto tralics_ns::open_file(String name, bool fatal) -> fstream * {
 }
 
 // This takes a string as argument
-auto tralics_ns::open_file(string name, bool f) -> fstream * { return tralics_ns::open_file(name.c_str(), f); }
+auto tralics_ns::open_file(const string &name, bool f) -> fstream * { return tralics_ns::open_file(name.c_str(), f); }
 
 // This is a static function
 void tralics_ns::close_file(fstream *fp) {
@@ -1034,14 +1035,14 @@ void LinePtr::reset(string x) {
     cur_encoding = 0;
     interactive  = false;
     clear();
-    file_name = x;
+    file_name = std::move(x);
 }
 
 // Insert a line at the end of the file
-void LinePtr::insert(int n, string c, bool cv) { value.emplace_back(n, c, cv); }
+void LinePtr::insert(int n, const string &c, bool cv) { value.emplace_back(n, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
-void LinePtr::insert(string c, bool cv) {
+void LinePtr::insert(const string &c, bool cv) {
     cur_line++;
     value.emplace_back(cur_line, c, cv);
 }

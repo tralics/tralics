@@ -30,7 +30,7 @@ public:
     void               set_cell_no(int k) { cell_no = k; }
     auto               get_cell_atts(int k) -> AttList;
     auto               get_u_or_v(bool, int) -> TokenList;
-    void               add_uv(TokenList &u, TokenList &v, AttList);
+    void               add_uv(TokenList &u, TokenList &v, const AttList &);
     auto               get_size() -> int { return size; }
     void               del_array_info();
 };

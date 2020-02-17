@@ -39,7 +39,7 @@ class XmlIO {
     int               cur_line_len;
     int               input_line_pos;
     int               enc; // 0=utf8, 1=latin1
-    void              error(string);
+    void              error(const string &);
     vector<EntityDef> entities;
     int               nb_cond;
     bool              eof_ok;

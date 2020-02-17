@@ -40,24 +40,24 @@ namespace tralics_ns {
     auto find_in_confdir(const string &s, bool retry) -> bool;
     auto find_in_path(const string &s) -> bool;
     auto find_no_path(const string &s) -> bool;
-    void read_a_file(LinePtr &, string x, int spec);
+    void read_a_file(LinePtr &, const string &x, int spec);
     auto make_string(String) -> String;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
-    auto file_exists(string B) -> bool;
+    auto file_exists(const string &B) -> bool;
     auto file_exists(Buffer &) -> bool;
     void bibtex_bootagain();
     void bibtex_boot(String b, String, string, bool, bool);
     void Titlepage_create(LinePtr &lines);
     void Titlepage_start(bool);
-    auto exists(const vector<string> &, string) -> bool;
+    auto exists(const vector<string> &, const string &) -> bool;
     void bibtex_set_nocite();
     void bibtex_insert_jobname();
     auto open_file(String name, bool) -> fstream *;
-    auto open_file(string name, bool) -> fstream *;
+    auto open_file(const string &name, bool) -> fstream *;
     void close_file(fstream *);
     auto only_digits(const string &s) -> bool;
-    auto get_out_dir(string) -> String;
+    auto get_out_dir(const string &) -> String;
     auto get_short_jobname() -> string;
 } // namespace tralics_ns
 
@@ -95,7 +95,7 @@ inline Istring::Istring(const Buffer &X) : value(the_main->SH.find(X.c_str())) {
 
 inline Istring::Istring(String s) : value(the_main->SH.find(s)) {}
 
-inline Istring::Istring(string s) : value(the_main->SH.find(s)) {}
+inline Istring::Istring(const string &s) : value(the_main->SH.find(s)) {}
 
 inline auto Istring::c_str() const -> String { return the_main->SH[value]; }
 

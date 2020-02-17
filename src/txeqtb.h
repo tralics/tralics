@@ -315,11 +315,11 @@ class EqtbString {
 public:
     EqtbString() : val("") {}
     [[nodiscard]] auto get_val() const -> string { return val; }
-    void               set_val(string x) { val = x; }
+    void               set_val(string x) { val = std::move(x); }
     void               set_level(int x) { level = x; }
     [[nodiscard]] auto get_level() const -> int { return level; }
     void               val_and_level(string a, int b) {
-        val   = a;
+        val   = std::move(a);
         level = b;
     }
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
@@ -366,7 +366,7 @@ public:
     [[nodiscard]] auto get_val() const -> TokenList { return val; }
     [[nodiscard]] auto get_level() const -> int { return level; }
     void               val_and_level(TokenList a, int b) {
-        val   = a;
+        val   = std::move(a);
         level = b;
     }
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }

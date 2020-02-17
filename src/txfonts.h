@@ -59,7 +59,7 @@ public:
     void               set_old_from_packed() { old = packed; }
     void               set_color(Istring c) { color = c; }
     [[nodiscard]] auto get_color() const -> Istring { return color; }
-    void               ltfont(string s, subtypes c);
+    void               ltfont(const string &s, subtypes c);
 };
 
 class TeXChar {
@@ -99,10 +99,10 @@ public:
     int        scaled_val;
     int        at_val;
 
-    TexFont(string, int, int);
+    TexFont(const string &, int, int);
 
     void               realloc_param(int);
-    [[nodiscard]] auto its_me(string, int, int) const -> bool;
+    [[nodiscard]] auto its_me(const string &, int, int) const -> bool;
     void               make_null();
     void               load();
 };
@@ -123,6 +123,6 @@ public:
     auto     get_dimen_param(int ft, int pos) -> ScaledInt;
     void     set_int_param(int, int, int);
     void     set_dimen_param(int, int, ScaledInt);
-    auto     find_font(string, int, int) -> int;
+    auto     find_font(const string &, int, int) -> int;
     auto     define_a_new_font(string n, int a, int s) -> int;
 };

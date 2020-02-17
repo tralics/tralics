@@ -158,7 +158,7 @@ public:
         type     = it_mu;
     }
     void set_toks(TokenList a) {
-        token_val = a;
+        token_val = std::move(a);
         type      = it_tok;
     }
     void change_level(internal_type);

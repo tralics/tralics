@@ -14,6 +14,8 @@
 
 #include <cctype>
 #include <csignal>
+#include <utility>
+
 #include <sys/types.h>
 
 // The line editor
@@ -85,7 +87,7 @@ inline void INIT_TERMIO() {
 }
 #endif
 
-void readline_newprompt(string s) { cur_prompt = s; }
+void readline_newprompt(string s) { cur_prompt = std::move(s); }
 
 namespace readline_ns {
     void make_edit();

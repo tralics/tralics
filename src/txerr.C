@@ -315,7 +315,7 @@ void Parser::bad_macro_prefix(Token x, Token C) {
     signal_error(err_tok, "bad prefix");
 }
 
-void Parser::invalid_key(Token T, string key, const TokenList &val) {
+void Parser::invalid_key(Token T, const string &key, const TokenList &val) {
     local_buf << bf_reset << "Invalid key in " << T << " " << key << " = " << val;
     signal_error(T, "invalid key");
 }
@@ -373,7 +373,7 @@ void Parser::bad_redefinition(int rd, Token T) {
     signal_error(err_tok, "bad definition");
 }
 
-void Parser::multiple_label(String name, int l, string f) {
+void Parser::multiple_label(String name, int l, const string &f) {
     local_buf << bf_reset << "Label '" << name << "' multiply defined (first use line " << l << " file " << f << ")";
     signal_error(hash_table.label_token, "already defined label");
 }

@@ -182,7 +182,7 @@ void Buffer::push_back_alt(const AttPair &X) {
 }
 
 // Returns true if there is a space. Kills at the space. Advance
-auto Buffer::look_at_space(string s) -> bool {
+auto Buffer::look_at_space(const string &s) -> bool {
     reset();
     push_back(s);
     bool has_space = false;
@@ -205,7 +205,7 @@ auto Buffer::look_at_space(string s) -> bool {
 // In the case of "foo" (no space), returns <foo>
 // In the case of space, what follows the spaces is considered as
 // attribute list.
-auto Buffer::xml_and_attrib(string s) -> Xml * {
+auto Buffer::xml_and_attrib(const string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(Istring(s), nullptr);
     Xml *res = new Xml(Istring(buf), nullptr);

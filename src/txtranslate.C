@@ -40,7 +40,7 @@ class ColSpec {
 
 public:
     ColSpec(string a, string b, string c);
-    auto compare(string a, string b) -> bool { return model == a && value == b; }
+    auto compare(const string &a, const string &b) -> bool { return model == a && value == b; }
     auto get_id() -> Istring {
         used = true;
         return id;
@@ -490,7 +490,7 @@ void Parser::T_glo() {
 // Since there are no more old modules  7 is replaced by 8
 // We have opened the current XML element,
 // we have to allow for a label and read the title.
-void Parser::start_paras(int y, string Y, bool star) {
+void Parser::start_paras(int y, const string &Y, bool star) {
     bool module = y == 7 || y == 8;
     if (!star || module) {
         if (y == 0)

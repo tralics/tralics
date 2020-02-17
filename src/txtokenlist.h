@@ -118,7 +118,7 @@ public:
     void               set_type(def_type n) { type = n; }
     [[nodiscard]] auto is_same(const Macro &) const -> bool;
     auto               operator[](int n) const -> const TokenList & { return delimiters[n]; }
-    void               set_delimiters(int k, TokenList L) { delimiters[k] = L; }
+    void               set_delimiters(int k, TokenList L) { delimiters[k] = std::move(L); }
     void               correct_type();
 };
 

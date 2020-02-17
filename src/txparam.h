@@ -150,15 +150,15 @@ public:
     void               set_fp_len(int a) { cur_fp_len = a; }
     void               set_input_encoding(int wc);
     void               set_tcf_file(string s) {
-        tcf_file = s;
+        tcf_file = std::move(s);
         use_tcf  = true;
     }
     void               set_use_font(bool b) { use_font_elt_sw = b; }
     void               set_pack_font(bool b) { pack_font_elt_sw = b; }
     void               set_use_sizes(bool b) { use_all_sizes_sw = b; }
-    void               set_start_date(string s) { start_date = s; }
-    void               set_short_date(string s) { short_date = s; }
-    void               set_default_class(string s) { default_class = s; }
+    void               set_start_date(string s) { start_date = std::move(s); }
+    void               set_short_date(string s) { short_date = std::move(s); }
+    void               set_default_class(string s) { default_class = std::move(s); }
     [[nodiscard]] auto get_short_date() const -> string { return short_date; }
     [[nodiscard]] auto get_default_class() const -> string { return default_class; }
     void               set_tpa_status(String);
@@ -281,7 +281,7 @@ public:
     auto its_me(const string &s) -> bool { return name == s; }
     ParamDataList(string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
-    void               push_back(ParamDataSlot x) { data.push_back(x); }
+    void               push_back(const ParamDataSlot &x) { data.push_back(x); }
     [[nodiscard]] auto size() const -> int { return data.size(); }
     void               keys_to_buffer(Buffer &) const;
     void               reset() { data = vector<ParamDataSlot>(); }
