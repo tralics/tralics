@@ -13,7 +13,7 @@
 // and most of all enums of tralics.
 // symcodes and subtypes are in txcmd.h
 
-#include "txconst.h"
+#include "tralics/consts.h"
 
 // forward declarations
 class Istring;

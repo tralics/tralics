@@ -30,22 +30,13 @@ auto is_letter(char c) -> bool;
 #include "tralics/Utf8Char.h"
 
 #include "txcond.h"
-#include "txconst.h"
 #include "txid.h"
 #include "tximage.h"
 #include "txstats.h"
 #include "txvars.h"
 
-// these may depend on the token class
-
 #include "txarray.h"
-#include "txatt.h"
-#include "txbuffer.h"
 #include "txeqtb.h"
 #include "txfonts.h"
-#include "txfp.h"
 #include "txhash.h"
 #include "txinline.h"
-#include "txio.h"
-#include "txlogger.h"
-#include "txparam.h"

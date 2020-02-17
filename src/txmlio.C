@@ -14,8 +14,6 @@
 #include "txmlio.h"
 #include "txparser.h"
 
-class EOD {};
-
 string xxx;
 
 namespace {
@@ -79,7 +77,7 @@ auto read_xml(const string &s) -> Xml * {
 auto XmlIO::prun() -> Xml * {
     try {
         run();
-    } catch (EOD cc) {};
+    } catch (EndOfData cc) {};
     return cur_xml;
 }
 
@@ -138,7 +136,7 @@ void XmlIO::next_line() {
             ;
         else
             error("Unexpected EOF");
-        throw EOD();
+        throw EndOfData();
     }
     cur_line = n;
     line_buffer.extract_chars(input_line);
