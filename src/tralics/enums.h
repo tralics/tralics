@@ -1,21 +1,4 @@
 #pragma once
-// -*- C++ -*-
-// Copyright (c)  INRIA/apics (Jose' Grimm) 2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-// This file contains some forward declarations, some typedef,
-// and most of all enums of tralics.
-
-// next three enum are BIGGG. All variables end with _cmd or _code
-// in contradiction with all other enums.
-
-#include "txconst.h"
 
 // Command codes.
 enum symcodes {
