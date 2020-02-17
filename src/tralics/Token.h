@@ -1,14 +1,13 @@
 #pragma once
 #include "CmdChr.h"
 
-class Token {
+struct Token {
     uint val{0};
 
-public:
     explicit Token(uint x) : val(x) {}
+    explicit Token(Utf8Char c) : val(c.value + single_offset) {}
     Token(spec_offsets a, Utf8Char b) : val(a + b.value) {}
     Token(spec_offsets a, uchar b) : val(a + b) {}
-    explicit Token(Utf8Char c) : val(c.value + single_offset) {}
     Token() = default;
 
     [[nodiscard]] auto get_val() const -> uint { return val; }

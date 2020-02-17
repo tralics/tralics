@@ -1,9 +1,8 @@
 #pragma once
 #include "types.h"
 
-// This is the number of characters; see txtoken.h
-// This is also the size of tables that remember character properties
-inline constexpr uint nb_characters = 65536;
+inline constexpr uint nb_characters = 65536; // Number of characters and size of char-index tables
+inline constexpr uint nb_registers  = 1024;  // This is the number of other registers
 
 // When the parser sees a character C with a catcode B then
 // We have then cur_tok = nb_characters* B + C  < eqtb_offset
@@ -28,10 +27,5 @@ inline constexpr uint first_multitok_val = nb_characters + single_offset;
 inline constexpr uint null_tok_val = first_multitok_val + 1;
 inline constexpr uint hash_offset  = null_tok_val + 1;
 
-// For \noexpand hack
-inline constexpr uint special_relax = nb_characters + 1;
-
+inline constexpr uint special_relax     = nb_characters + 1; // For \noexpand hack
 inline constexpr uint scan_char_num_max = nb_characters - 1; // nb_characters-1  is the max
-
-// This is the number of other registers
-inline constexpr uint nb_registers = 1024;

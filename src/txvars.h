@@ -32,7 +32,6 @@ class XmlAction;
 class AttList;
 struct AttPair;
 class FpNum;
-class Token;
 class Stats;
 class Buffer;
 class StrHash;
