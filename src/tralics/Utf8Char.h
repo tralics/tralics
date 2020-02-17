@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../txvars.h"
+#include "types.h"
 
 class Utf8Char {
 private:

@@ -38,10 +38,6 @@ class Buffer;
 class StrHash;
 class MainClass;
 
-// Some typedef declarations
-using String = const char *;
-using Digit  = unsigned int;
-
 // ------------------------------------------------
 // Some enums now
 
