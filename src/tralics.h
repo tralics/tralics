@@ -26,7 +26,7 @@ using namespace std;
 extern auto is_letter(char c) -> bool;
 class EndOfData {};
 
-#include "tralics/types.h"
+#include "tralics/Token.h"
 
 #include "txchars.h"
 #include "txcond.h"
@@ -36,7 +36,6 @@ class EndOfData {};
 #include "txstats.h"
 #include "txvars.h"
 
-#include "txtoken.h"
 // these may depend on the token class
 
 #include "txarray.h"

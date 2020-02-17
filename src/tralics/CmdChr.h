@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../txchars.h"
 #include "enums.h"
 
 // cmd, chr pair; The subtype can have 16bits

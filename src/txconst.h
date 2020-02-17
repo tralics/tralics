@@ -13,9 +13,6 @@
 
 // This file contains some constants that define table sizes
 
-// This is the number of other registers
-static const uint nb_registers = 1024;
-
 // This is the number of different TeX fonts
 static const uint nb_tex_fonts = 256;
 
