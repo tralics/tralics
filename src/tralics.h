@@ -27,8 +27,8 @@ extern auto is_letter(char c) -> bool;
 class EndOfData {};
 
 #include "tralics/Token.h"
+#include "tralics/Utf8Char.h"
 
-#include "txchars.h"
 #include "txcond.h"
 #include "txconst.h"
 #include "txid.h"
