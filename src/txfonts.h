@@ -23,7 +23,7 @@ class FontInfo {
     Istring old_color;         // previous color
     bool    stackval{true};    // is the value on the stack ok ?
 public:
-    FontInfo() : size(6 * 2048), color(Istring()) {}
+    FontInfo() : size(6 * 2048) {}
     [[nodiscard]] auto shape_change() const -> name_positions;
     [[nodiscard]] auto shape_name() const -> String;
     [[nodiscard]] auto size_change() const -> name_positions;

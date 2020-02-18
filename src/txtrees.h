@@ -20,7 +20,7 @@ namespace tralics_ns {
 class Indexer;
 namespace trees_ns {
     auto xless(Indexer *A, Indexer *B) -> bool;
-}
+} // namespace trees_ns
 
 // This  holds the association between the index and the main text.
 // Seems to be unused

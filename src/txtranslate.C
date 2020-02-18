@@ -25,7 +25,7 @@ namespace {
 
 namespace translate_ns {
     auto find_color(const string &model, const string &value) -> Istring;
-}
+} // namespace translate_ns
 
 class ColSpec {
     string  name;
@@ -402,7 +402,7 @@ void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
     string s   = sT_arg_nopar();
     Xml *  res = new Xml(Istring(s), nullptr);
-    if (w != 0u) {
+    if (w != 0U) {
         if (w == two_code) res->set_id(-1); // XML comment
         flush_buffer();
         the_stack.add_last(res);

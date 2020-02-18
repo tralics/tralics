@@ -375,7 +375,7 @@ auto Buffer::full_brace_match() -> bool {
         else if (c == '}') {
             level--;
             if (level == 0) return true;
-        } else if (c == 0u)
+        } else if (c == 0U)
             return false;
     }
 }
@@ -393,7 +393,7 @@ auto Buffer::full_bracket_match() -> bool {
             level--;
         else if (c == ']' && level == 0)
             return true;
-        else if (c == 0u)
+        else if (c == 0U)
             return false;
     }
 }

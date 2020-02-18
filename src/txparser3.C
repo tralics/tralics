@@ -679,7 +679,7 @@ void Parser::final_checks() {
         SaveAux *p = the_save_stack[i];
         A.reset();
         A << to_string(p->type) << " at " << p->line_no;
-        if (B.size() == 0) {
+        if (B.empty()) {
             B << "  " << A;
         } else if (B.size() + A.size() < 78) {
             B << "; " << A;

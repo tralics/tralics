@@ -147,14 +147,14 @@ void XmlIO::next_line() {
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
 auto XmlIO::peek_char() -> Utf8Char {
-    if (reread_list.size() != 0u) return reread_list.back();
+    if (!reread_list.empty()) return reread_list.back();
     if (at_eol()) next_line();
     return input_line[input_line_pos];
 }
 
 // This removes the character, assuming peek-char has been called
 void XmlIO::skip_char() {
-    if (reread_list.size() != 0u)
+    if (!reread_list.empty())
         reread_list.pop_back();
     else
         input_line_pos++;

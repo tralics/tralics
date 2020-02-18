@@ -52,7 +52,7 @@ using namespace bib_ns;
 
 namespace io_ns {
     auto how_many_bytes(uchar) -> int;
-}
+} // namespace io_ns
 
 String bib_xml_name[] = {"bcrossref",     "bkey",         "baddress", "bauthors", "bbooktitle",   "bchapter", "bedition",      "beditors",
                          "bhowpublished", "binstitution", "bjournal", "bmonth",   "bnote",        "bnumber",  "borganization", "bpages",
@@ -1268,7 +1268,7 @@ auto Buffer::special_convert(bool init) -> string {
     bool space = true;
     for (;;) {
         unsigned char c = next_char();
-        if (c == 0u) break;
+        if (c == 0U) break;
         if (is_space(c)) {
             if (!space) {
                 biblio_buf1.push_back(' ');
@@ -1982,7 +1982,7 @@ void Buffer::skip_over_brace() {
     int bl = 0;
     for (;;) {
         uchar c = head();
-        if (c == 0u) return;
+        if (c == 0U) return;
         ptr++;
         if (c == '\\') {
             if (head() == 0) return;
@@ -2247,7 +2247,7 @@ void Buffer::fill_table(bchar_type *table) {
     for (;;) {
         int   i = ptr;
         uchar c = head();
-        if (c == 0u) {
+        if (c == 0U) {
             table[i] = bct_end;
             return;
         }
@@ -2703,7 +2703,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
     B.reset();
     for (;;) {
         unsigned char c = uhead();
-        if (c == 0u) return;
+        if (c == 0U) return;
         advance();
         if (c == '|') {
             B.push_back("\\vbar ");

@@ -42,17 +42,17 @@ bool InLoadHandler::global_in_load = false;
 
 // local variables
 namespace {
-    string everyjob_string = "";   //
-    bool   ra_ok           = true; // inhibits  redefinitions
+    string everyjob_string; //
+    bool   ra_ok = true;    // inhibits  redefinitions
 } // namespace
 
 namespace accent_ns {
     void boot_accents();
-}
+} // namespace accent_ns
 
 namespace tralics_ns {
     auto twodig(int n) -> String;
-}
+} // namespace tralics_ns
 using namespace tralics_ns;
 
 // This is the main function. It does the following:
@@ -662,7 +662,7 @@ void Parser::load_latex() {
     L.insert(R"(\def\incr@eqnum{\refstepcounter{equation}})");
     L.insert(R"(\def\@@theequation{\theparentequation\alph{equation}})");
 
-    if (!everyjob_string.empty()) L.insert(everyjob_string.c_str(), true); // is this converted ?
+    if (!everyjob_string.empty()) L.insert(everyjob_string, true); // is this converted ?
     L.insert("%% End bootstrap commands for latex");
     init(L);
     translate0();
@@ -1336,13 +1336,9 @@ auto config_ns::assign(Buffer &a, Buffer &b) -> bool {
         return true;
     }
     if (a == "distinguish_refer_in_rabib") {
-        if (b == "true")
+        if ((b == "true") || (b == "yes"))
             the_main->set_distinguish(true);
-        else if (b == "false")
-            the_main->set_distinguish(false);
-        else if (b == "yes")
-            the_main->set_distinguish(true);
-        else if (b == "no")
+        else if ((b == "false") || (b == "no"))
             the_main->set_distinguish(false);
         else
             b << bf_reset << "ignored";

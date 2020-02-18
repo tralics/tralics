@@ -132,8 +132,8 @@ class LabelInfo {
     int     lineno{0};      // line of definition
     string  file_name;      // file of definition
 public:
-    LabelInfo() : id(Istring()), name(Istring()), file_name("") {}
-    LabelInfo(Istring k) : id(Istring()), name(k), file_name("") {}
+    LabelInfo() : file_name("") {}
+    LabelInfo(Istring k) : name(k), file_name("") {}
     [[nodiscard]] auto is_used() const -> bool { return used; }
     [[nodiscard]] auto is_defined() const -> bool { return defined; }
     auto               set_used() -> bool {

@@ -1827,8 +1827,8 @@ void Parser::interpret_math_cmd(int res, subtypes c) {
         r2 = math_argument(0, ct);
     Math &u = math_data.get_list(k);
     u.push_back_list(r1, math_argument_cd);
-    if (r2 != 0u) u.push_back_list(r2, math_argument_cd);
-    if (r3 != 0u) u.push_back_list(r3, math_argument_cd);
+    if (r2 != 0U) u.push_back_list(r2, math_argument_cd);
+    if (r3 != 0U) u.push_back_list(r3, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
 }
 
@@ -2801,7 +2801,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         math_types new_type    = mt_flag_rel;
         int        t           = 0;
         if (cmd == nonscript_cmd) {
-            if (cms == ms_T || (ms_D != 0u)) continue;
+            if (cms == ms_T || (ms_D != 0U)) continue;
             res.push_back(cur);
             continue;
         }

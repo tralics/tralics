@@ -17,7 +17,7 @@
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;
-}
+} // namespace stack_ns
 
 extern bool booted;
 // Increases xid, makes sure that the attribute table is big enough
@@ -149,7 +149,7 @@ void Xml::push_back(Xml *x) {
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return tree.size() > 0 && (tree.back() != nullptr) && tree.back()->get_id().value == 0; }
+auto Xml::last_is_string() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->get_id().value == 0; }
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
@@ -205,7 +205,7 @@ void Stack::add_nl() { top_stack()->add_nl(); }
 
 // This adds a NL to the end of the element
 void Xml::add_nl() {
-    if (tree.size() > 0 && tree.back() == the_main->the_stack->newline_xml) return;
+    if (!tree.empty() && tree.back() == the_main->the_stack->newline_xml) return;
     tree.push_back(the_main->the_stack->newline_xml);
 }
 
@@ -439,24 +439,24 @@ void Stack::check_font() {
         aux.reset();
         bool nonempty = false;
         s             = the_parser.cur_font.size_change();
-        if (s != 0u) {
+        if (s != 0U) {
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
-        if (s != 0u) {
+        if (s != 0U) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
-        if (s != 0u) {
+        if (s != 0U) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
-        if (s != 0u) {
+        if (s != 0U) {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].c_str();
             nonempty = true;
@@ -471,13 +471,13 @@ void Stack::check_font() {
         }
     } else {
         s = the_parser.cur_font.size_change();
-        if (s != 0u) fonts0(s);
+        if (s != 0U) fonts0(s);
         s = the_parser.cur_font.shape_change();
-        if (s != 0u) fonts0(s);
+        if (s != 0U) fonts0(s);
         s = the_parser.cur_font.family_change();
-        if (s != 0u) fonts0(s);
+        if (s != 0U) fonts0(s);
         s = the_parser.cur_font.series_change();
-        if (s != 0u) fonts0(s);
+        if (s != 0U) fonts0(s);
     }
     Istring c = the_parser.cur_font.get_color();
     if (!(c.empty() || c.null())) {
@@ -688,7 +688,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
     return id;
 }
 
-auto Xml::tail_is_anchor() const -> bool { return tree.size() > 0 && (tree.back() != nullptr) && tree.back()->is_anchor(); }
+auto Xml::tail_is_anchor() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->is_anchor(); }
 
 // Add an anchor if needed.
 auto Stack::add_anchor(const string &s, bool spec) -> Istring {

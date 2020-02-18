@@ -20,7 +20,7 @@ namespace {
 
 namespace token_ns {
     void strip_pt(TokenList &L);
-}
+} // namespace token_ns
 
 inline auto boolean(bool x) -> String { return x ? "true" : "false"; }
 
@@ -1696,7 +1696,7 @@ void Parser::E_ifempty() {
     TokenList L = read_arg();
     TokenList a = read_arg();
     TokenList b = read_arg();
-    if (c != 0u) token_ns::remove_first_last_space(L);
+    if (c != 0U) token_ns::remove_first_last_space(L);
     bool ok = L.empty();
     if (tracing_commands()) the_log << lg_startbrace << T << " " << boolean(ok) << lg_endbrace;
     one_of_two(a, b, ok);
@@ -2218,7 +2218,7 @@ void Parser::T_end(const string &s) {
     if (s == "tabular" || s == "tabular*") {
         if (false_end_tabular(s)) return;
     }
-    if (s == "") {
+    if (s.empty()) {
         parse_error(err_tok, "Illegal \\end{}");
         return;
     }
@@ -2650,7 +2650,7 @@ void Parser::iexpand() {
     case afterfi_cmd: E_afterfi(); return;
     case afterelsefi_cmd: E_afterelsefi(); return;
     case expandafter_cmd:
-        if (c != 0u)
+        if (c != 0U)
             E_unless();
         else
             E_expandafter();
@@ -2681,7 +2681,7 @@ void Parser::iexpand() {
     case gobble_cmd:
     case ignore_n_args_cmd: E_ignore_n_args(vb, c); return;
     case zapspace_cmd:
-        if (c != 0u) {
+        if (c != 0U) {
             TokenList a = read_arg();
             token_ns::remove_first_last_space(a);
             back_input(a);
@@ -3854,7 +3854,7 @@ void Parser::calc_spec_mul(RealNumber val, SthInternal &res) {
 // and constructs \pm(tmp+f/2^16)
 // After that, we multiply.
 void Parser::calc_ratio_eval(int num, int den, SthInternal &res) {
-    static const unsigned int my_max = ((1u << 31) - 1);
+    static const unsigned int my_max = ((1U << 31) - 1);
     RealNumber                val;
     if (num < 0) {
         val.set_negative(true);

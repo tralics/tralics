@@ -39,10 +39,8 @@ public:
     }
 
     [[nodiscard]] auto to_lower() const -> Utf8Char {
-        if (is_upper_case())
-            return Utf8Char(value + ('a' - 'A'));
-        else
-            return *this;
+        if (is_upper_case()) return Utf8Char(value + ('a' - 'A'));
+        return *this;
     }
 
     void make_invalid() { value = 0xFFFF; } // Not a Unicode char

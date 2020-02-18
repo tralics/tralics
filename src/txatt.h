@@ -24,7 +24,7 @@ public:
 
     auto               get_val(int i) -> Istring { return val[i].value; }
     void               reset() { val = vector<AttPair>(); }
-    auto               empty() -> bool { return val.size() == 0; }
+    auto               empty() -> bool { return val.empty(); }
     void               push_back_empty(Istring n);
     void               push_back(name_positions n, Istring v);
     void               push_back(name_positions n, name_positions v);
@@ -49,10 +49,8 @@ public:
     void init();
     auto operator[](int k) -> AttList & { return table[k]; }
     auto get(int n) -> AttList {
-        if (n < len)
-            return table[n];
-        else
-            return AttList();
+        if (n < len) return table[n];
+        return AttList();
     }
     void               push_back(AttList X);
     void               push_back();

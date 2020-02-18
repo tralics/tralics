@@ -1158,7 +1158,7 @@ void Parser::translate03() {
     case box_cmd: T_mbox(c); return;
     case centering_cmd:
         word_define(incentering_code, c, false);
-        if (c != 0u) the_stack.add_center_to_p();
+        if (c != 0U) the_stack.add_center_to_p();
         return;
     case fbox_cmd:
         if (c == dashbox_code)
@@ -1190,7 +1190,7 @@ void Parser::translate03() {
     case dashline_cmd: T_dashline(c); return;
     case bezier_cmd: T_bezier(c); return;
     case grabenv_cmd: T_grabenv(); return;
-    case verb_cmd: T_verb(c != 0u ? verb_saved_char : 0); return;
+    case verb_cmd: T_verb(c != 0U ? verb_saved_char : 0); return;
     case gloss_cmd: T_gloss(c == 0); return;
     case only_preamble_cmd:
         get_r_token(true);

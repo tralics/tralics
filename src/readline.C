@@ -905,7 +905,7 @@ void Slined::do_n_command(int n, unsigned char c) {
     case 21:
     case 24: delete_string(1, 0, pos - 1); return;
     case 25:
-        if (m_killbuf.size() != 0u)
+        if (!m_killbuf.empty())
             insert_substring(n, m_killbuf.c_str(), m_killbuf.size());
         else
             tybeep();

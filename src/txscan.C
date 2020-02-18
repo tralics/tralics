@@ -226,7 +226,7 @@ void InputStack::destroy() {
 // This kills all pending input
 void Parser::close_all() {
     if (tracing_io()) the_log << lg_start_io << "close all files\n";
-    while (cur_input_stack.size() != 0u) pop_input_stack(true);
+    while (!cur_input_stack.empty()) pop_input_stack(true);
     TL.clear();
     input_line.clear();
     input_line_pos = 0;
@@ -905,7 +905,7 @@ auto Parser::get_a_new_line() -> bool {
             back_input(hash_table.eof_token);
             retval = false;
         }
-        if (cur_input_stack.size() == 0) {
+        if (cur_input_stack.empty()) {
             if (tracing_io()) the_log << lg_start_io << "Input stack empty at end of file\n";
             return retval;
         } else {

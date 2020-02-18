@@ -30,7 +30,7 @@ namespace {
 
 namespace l3_ns {
     auto conditional_aux(const string &p) -> subtypes;
-}
+} // namespace l3_ns
 
 // -----------------------------------------------------
 // misc functions
@@ -246,7 +246,7 @@ auto l3_ns::conditional_aux(const string &p) -> subtypes {
         return l3_T_code;
     else if (p == "F")
         return l3_F_code;
-    else if (p == "")
+    else if (p.empty())
         return l3_bad_code;
     else {
         err_ns::local_buf.reset();

@@ -18,7 +18,7 @@ vector<string> module_list;
 
 namespace ra_ns {
     void fnhack(TokenList &c, TokenList &d, TokenList &aux);
-}
+} // namespace ra_ns
 
 auto Parser::next_arg_is_project() -> bool {
     TokenList L = read_arg();

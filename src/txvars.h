@@ -1646,8 +1646,6 @@ inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }
 inline auto is_upper_case(char c) -> bool { return 'A' <= c && c <= 'Z'; }
 inline auto is_digit(char c) -> bool { return ('0' <= c && c <= '9'); }
 inline auto to_lower(uchar c) -> uchar {
-    if ('A' <= c && c <= 'Z')
-        return c + ('a' - 'A');
-    else
-        return c;
+    if ('A' <= c && c <= 'Z') return c + ('a' - 'A');
+    return c;
 }

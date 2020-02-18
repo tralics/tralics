@@ -104,7 +104,7 @@ void config_ns::interpret_list(const string &a, Buffer &b) {
         interpret_section_list(b, true);
     else if (a == "theme")
         interpret_theme_list(b);
-    else if (a == "") {
+    else if (a.empty()) {
     } else
         interpret_data_list(b, a);
 }

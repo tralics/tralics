@@ -36,7 +36,6 @@ namespace tralics_ns {
     auto year_length(int y) -> int;
     void make_names();
     void boot_math(bool);
-    auto file_exists(String name) -> bool;
     auto find_in_confdir(const string &s, bool retry) -> bool;
     auto find_in_path(const string &s) -> bool;
     auto find_no_path(const string &s) -> bool;

@@ -182,10 +182,8 @@ public:
     [[nodiscard]] auto is_good_ascii() const -> bool;
     [[nodiscard]] auto is_spaceh(int j) const -> bool { return is_space(buf[j]); }
     [[nodiscard]] auto last_char() const -> char {
-        if (wptr == 0)
-            return 0;
-        else
-            return buf[wptr - 1];
+        if (wptr == 0) return 0;
+        return buf[wptr - 1];
     }
     [[nodiscard]] auto last_slash() const -> int;
     [[nodiscard]] auto length() const -> int { return wptr; }

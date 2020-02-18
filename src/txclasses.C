@@ -242,7 +242,7 @@ void Parser::insert_hook(int n) {
     int k = the_class_data.packages.size();
     if (n <= 0 || n >= k) return;
     LatexPackage *C = the_class_data.packages[n];
-    if (!C->seen_process && C->Uoptions.size() > 0)
+    if (!C->seen_process && !C->Uoptions.empty())
         main_ns::log_and_tty << "Warning: " << C->pack_or_class() << C->real_name() << " has no \\ProcessOptions\n";
     back_input(C->hook);
     if (parse_version(C->date) < parse_version(C->req_date)) {
@@ -746,7 +746,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = np_german;
     Xid doc_att(1);
-    if ((b != 0u) && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
+    if ((b != 0U) && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
 }
 
 // unused (can be used for debug)

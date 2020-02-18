@@ -61,7 +61,7 @@ namespace {
 
 namespace tpage_ns {
     void after_conf_assign(vector<string> &V);
-}
+} // namespace tpage_ns
 
 using main_ns::path_buffer;
 
@@ -80,7 +80,7 @@ namespace io_ns {
 } // namespace io_ns
 namespace bib_ns {
     extern bool raw_bib;
-}
+} // namespace bib_ns
 
 namespace main_ns {
     void perl_assign(fstream *fp, String name, string value);
@@ -313,14 +313,14 @@ auto main_ns::search_in_confdir(const string &s) -> bool {
 }
 
 auto tralics_ns::find_no_path(const string &s) -> bool {
-    if (s.size() == 0) return false;
+    if (s.empty()) return false;
     path_buffer << bf_reset << s;
     return file_exists(path_buffer);
 }
 
 // This tries opens a TeX file
 auto tralics_ns::find_in_path(const string &s) -> bool {
-    if (s.size() == 0) return false;
+    if (s.empty()) return false;
     path_buffer << bf_reset << s;
     if (main_ns::search_in_pool(s)) return true;
     if (s[0] == '.' || s[0] == '/') return file_exists(path_buffer);
@@ -965,7 +965,7 @@ void MainClass::get_doc_type() {
             dft = 0;
         else if (dtype == "minimal")
             dft = 0;
-        else if (dtype == "")
+        else if (dtype.empty())
             return; // dft is 3
     }
     if (dtype.empty()) dtype = "unknown";

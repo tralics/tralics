@@ -158,7 +158,7 @@ void Parser::bad_delimited(int cl, Token x) {
 
 void Parser::err_one_arg(const TokenList &L) {
     local_buf << bf_reset << "The command " << err_tok.tok_to_str() << " takes one token as argument instead of " << int(L.size());
-    if (L.size() != 0u) err_ns::local_buf << "\nargument is: " << L;
+    if (!L.empty()) err_ns::local_buf << "\nargument is: " << L;
     signal_error(err_tok, "onearg");
 }
 

@@ -21,11 +21,11 @@ namespace {
 
 namespace classes_ns {
     void dump_file_list();
-}
+} // namespace classes_ns
 
 namespace token_ns {
     auto length_normalise(TokenList &) -> int;
-}
+} // namespace token_ns
 
 // Prints some statistics at enfd of run.
 void Stats::token_stats() {
