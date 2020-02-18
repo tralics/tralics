@@ -15,18 +15,18 @@
 // and the classes that allow us to print either on the tty, the log file
 // or both.
 
-extern auto operator<<(ostream &fp, const Glue &x) -> ostream &;
-extern auto operator<<(ostream &fp, const Istring &L) -> ostream &;
-extern auto operator<<(ostream &fp, const Macro &x) -> ostream &;
-extern auto operator<<(ostream &fp, const TokenList &L) -> ostream &;
-extern auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
-extern auto operator<<(ostream &fp, const SthInternal &x) -> ostream &;
-extern auto operator<<(ostream &fp, Token x) -> ostream &;
-extern auto operator<<(ostream &fp, Xid) -> ostream &;
-extern auto operator<<(ostream &fp, const Utf8Char &) -> ostream &;
-extern auto operator<<(ostream &fp, const Xml *) -> ostream &;
-extern auto operator<<(ostream &fp, const ScaledInt &x) -> ostream &;
-extern auto operator<<(ostream &fp, const boundary_type &x) -> ostream &;
+auto operator<<(ostream &fp, const Glue &x) -> ostream &;
+auto operator<<(ostream &fp, const Istring &L) -> ostream &;
+auto operator<<(ostream &fp, const Macro &x) -> ostream &;
+auto operator<<(ostream &fp, const TokenList &L) -> ostream &;
+auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
+auto operator<<(ostream &fp, const SthInternal &x) -> ostream &;
+auto operator<<(ostream &fp, Token x) -> ostream &;
+auto operator<<(ostream &fp, Xid) -> ostream &;
+auto operator<<(ostream &fp, const Utf8Char &) -> ostream &;
+auto operator<<(ostream &fp, const Xml *) -> ostream &;
+auto operator<<(ostream &fp, const ScaledInt &x) -> ostream &;
+auto operator<<(ostream &fp, const boundary_type &x) -> ostream &;
 
 inline auto operator<<(ostream &fp, const Buffer &L) -> ostream & { return fp << L.c_str(); }
 
@@ -124,7 +124,8 @@ public:
 // if Y is of type FullLogger, Y<< lg_start; is the same as
 // lg_start(Y.L), hence Y.L.finish_seq();
 
-extern void lg_start_io(Logger &L);
+void lg_start_io(Logger &L);
+
 inline void lg_flush(Logger &L) { (*(L.fp)).flush(); }
 inline void lg_start(Logger &L) { L.finish_seq(); }
 inline void lg_startstack(Logger &L) {

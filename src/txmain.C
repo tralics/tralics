@@ -102,7 +102,6 @@ namespace main_ns {
     void check_year(int, Buffer &C, const string &, const string &);
 } // namespace main_ns
 
-extern void set_everyjob(const string &s);
 using main_ns::log_and_tty;
 
 // This funtion sets cur_os to the current operating system as a symbolic string

@@ -33,12 +33,6 @@ namespace io_ns {
     auto get_enc_param(int enc, int pos) -> int;
 } // namespace io_ns
 
-/// \todo These belong in a header file
-extern void readline(char *buffer, int screen_size);
-extern void set_math_char(uchar c, int f, string s);
-extern auto get_math_char(uchar c, int f) -> string;
-extern auto read_xml(const string &) -> Xml *;
-
 void lg_start_io(Logger &L) {
     L.finish_seq();
     *(L.fp) << "++ ";

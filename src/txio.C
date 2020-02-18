@@ -16,8 +16,6 @@
 #include <sstream>
 #include <utility>
 
-extern void readline(char *buffer, int screen_size);
-
 static const int lmaxchar     = 256;
 static const int max_encoding = 34;
 

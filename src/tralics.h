@@ -12,19 +12,30 @@
 // This is the main include  file for the tralics software
 
 #include <algorithm>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <string>
 #include <vector>
 
-#include <cstdio>
-#include <cstring>
+#include "tralics/types.h"
 
 using namespace std;
 
+// \todo All these belong in their respective header files
+
+auto get_math_char(uchar c, int f) -> string;
 auto is_letter(char c) -> bool;
+auto txgethostname(char *name, size_t len) -> int;
+void readline_newprompt(string s);
+void readline(char *buffer, int screen_size);
+void set_everyjob(const string &s);
+void set_math_char(uchar c, int f, string s);
+void show_unused_options();
+void txsleep(int);
 
 #include "tralics/Token.h"
 #include "tralics/Utf8Char.h"

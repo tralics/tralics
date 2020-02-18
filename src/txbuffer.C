@@ -20,7 +20,6 @@ namespace {
     const String gptable[] = {"pt", "fil", "fill", "filll", "", "mu"};
 } // namespace
 static Buffer local_buf; // another buffer
-extern auto   txgethostname(char *name, size_t len) -> int;
 
 namespace buffer_ns {
     auto current_escape_char() -> int;

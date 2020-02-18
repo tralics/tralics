@@ -14,9 +14,6 @@
 #include "txparser.h"
 #include <utility>
 
-extern void readline_newprompt(string s);
-extern void txsleep(int);
-
 namespace {
     Buffer current_head;
     Buffer Tbuf;

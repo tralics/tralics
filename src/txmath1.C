@@ -20,7 +20,6 @@ static Buffer    mathml_buffer;
 static Buffer    aux_buffer;
 static Buffer    att_buffer;
 extern Xml *     single_chars[128];
-extern auto      get_math_char(uchar c, int f) -> string;
 extern bool      cmi_verbose;
 extern MathDataP math_data;
 

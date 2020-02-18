@@ -130,3 +130,5 @@ public:
     [[nodiscard]] auto get_value() const -> Xml * { return value; }
     [[nodiscard]] auto get_type() const -> math_types { return type; }
 };
+
+auto read_xml(const string &) -> Xml *;

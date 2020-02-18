@@ -37,8 +37,6 @@ namespace tcommands {
     auto vfill_to_np(subtypes c) -> name_positions;
 } // namespace tcommands
 
-extern void show_unused_options();
-
 // Initialises the translator. The argument is the name of
 // the document element.
 void Parser::init_all(string doc_elt) {
