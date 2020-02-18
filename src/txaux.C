@@ -639,14 +639,14 @@ void Mactab::rc_mac_realloc() {
     int           ns        = k + 400;
     static Macro *empty_mac = nullptr;
     if (empty_mac == nullptr) empty_mac = new Macro;
-    auto **T1 = new Macro *[ns];
-    int *  T2 = new int[ns];
+    auto T1 = new Macro *[ns];
+    auto T2 = new int[ns];
     for (int i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];
     }
-    if (table != nullptr) delete[] table;
-    if (rc_table != nullptr) delete[] rc_table;
+    delete[] table;
+    delete[] rc_table;
     table    = T1;
     rc_table = T2;
     for (int i = k; i < ns; i++) {

@@ -505,15 +505,15 @@ void Parser::create_aux_file_and_run_pgm() {
     if (B.empty()) return;
     T.dump_data(B);
     string auxname = tralics_ns::get_short_jobname() + ".aux";
-    auto * fp      = new fstream(auxname.c_str(), std::ios::out);
-    if (!*fp) {
+    try {
+        fstream fp(auxname.c_str(), std::ios::out);
+        fp << B.c_str();
+        fp.close();
+    } catch (...) {
         log_and_tty << "Cannot open file " << auxname << " for output \n"
                     << "Bibliography will be missing\n";
         return;
     }
-    *fp << B.c_str();
-    fp->close();
-    delete fp;
     the_log << "++ executing " << T.get_cmd().c_str() << ".\n";
     system(T.get_cmd().c_str());
     B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";

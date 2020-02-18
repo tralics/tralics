@@ -433,7 +433,7 @@ void TexFont::realloc_param(int p) {
     auto *T = new ScaledInt[k];
     for (int i = 0; i < k; i++) T[i].set_value(0);
     for (int i = 0; i < param_len; i++) T[i] = param_table[i];
-    if (param_table != nullptr) delete[] param_table;
+    delete[] param_table;
     param_table = T;
     param_len   = k;
 }
