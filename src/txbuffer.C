@@ -39,7 +39,7 @@ Buffer::Buffer() {
 
 auto Buffer::convert(int k) const -> String { return tralics_ns::make_string(buf + k); }
 
-auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
+auto is_letter(uchar c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
 // This returns a copy of the string
 auto tralics_ns::make_string(String a) -> String {

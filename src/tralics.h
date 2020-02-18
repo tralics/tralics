@@ -28,7 +28,7 @@ using namespace std;
 // \todo All these belong in their respective header files
 
 auto get_math_char(uchar c, int f) -> string;
-auto is_letter(char c) -> bool;
+auto is_letter(uchar c) -> bool;
 auto txgethostname(char *name, size_t len) -> int;
 void readline_newprompt(string s);
 void readline(char *buffer, int screen_size);

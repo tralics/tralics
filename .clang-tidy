@@ -1,2 +1,2 @@
 ---
-Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard,-readability-braces-around-statements,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-avoid-magic-numbers'
+Checks:            '*,-fuchsia-*,-google-*,-hicpp-*,-llvm-header-guard,-readability-braces-around-statements,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-avoid-magic-numbers,-misc-non-private-member-variables-in-classes,-readability-magic-numbers,-cppcoreguidelines-pro-bounds-constant-array-index'

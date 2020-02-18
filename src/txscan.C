@@ -413,17 +413,6 @@ void Parser::restore_the_state(SaveState &x) {
     restricted = x.get_restricted();
 }
 
-// Converts a Hex char (lower case) to digit.
-// Returns -1 if impossible.
-auto Utf8Char::hex_val() const -> int {
-    if (is_digit())
-        return val_as_digit();
-    else if (is_hex())
-        return val_as_hex();
-    else
-        return -1;
-}
-
 // We have seen a character c at category code 7, for instance ^
 // It could be ^^Z ^^ab ^^^^abce or ^^^^^abcde
 // If this is the case, a new character is constructed and replaces the last

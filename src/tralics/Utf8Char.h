@@ -12,7 +12,6 @@ public:
     Utf8Char(unsigned int x) : value(x) {}
     Utf8Char() = default;
 
-    [[nodiscard]] auto hex_val() const -> int;
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
     [[nodiscard]] auto is_control() const -> bool { return value < 32; }
@@ -29,9 +28,15 @@ public:
     [[nodiscard]] auto is_upper_case() const -> bool { return 'A' <= value && value <= 'Z'; }
     [[nodiscard]] auto is_verybig() const -> bool { return value > 0x1FFFF; }
     [[nodiscard]] auto non_null() const -> bool { return value != 0; }
-    [[nodiscard]] auto val_as_digit() const -> int { return value - '0'; }
-    [[nodiscard]] auto val_as_Hex() const -> int { return value - 'A' + 10; }
-    [[nodiscard]] auto val_as_hex() const -> int { return value - 'a' + 10; }
+    [[nodiscard]] auto val_as_digit() const -> uint { return value - '0'; }
+    [[nodiscard]] auto val_as_Hex() const -> uint { return value - 'A' + 10; }
+    [[nodiscard]] auto val_as_hex() const -> uint { return value - 'a' + 10; }
+
+    [[nodiscard]] auto hex_val() const -> int {
+        if (is_digit()) return val_as_digit();
+        if (is_hex()) return val_as_hex();
+        return -1;
+    }
 
     [[nodiscard]] auto to_lower() const -> Utf8Char {
         if (is_upper_case())
