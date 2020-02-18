@@ -65,7 +65,6 @@ namespace tpage_ns {
 
 using main_ns::path_buffer;
 
-bool nostraightquotes = false;
 bool nofloat_hack     = false;
 uint leftquote_val    = '`';
 uint rightquote_val   = '\'';

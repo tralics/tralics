@@ -14,10 +14,7 @@
 
 // This file contains the big switch that interprets (most) commands
 
-extern bool nostraightquotes;
 extern bool seen_enddocument;
-extern bool xkv_patch;
-
 extern uint leftquote_val;
 extern uint rightquote_val;
 extern bool nofloat_hack;
@@ -1129,12 +1126,7 @@ void Parser::translate03() {
     case inputclass_cmd: T_inputclass(); return;
     case expandtwoargs_cmd: expand_twoargs(); return;
     case removeelement_cmd: T_remove_element(); return;
-    case pass_options_cmd:
-        if (xkv_patch)
-            xkv_pass_options(c == 0);
-        else
-            T_pass_options(c == 0);
-        return;
+    case pass_options_cmd: T_pass_options(c == 0); return;
     case declare_options_cmd: T_declare_options(); return;
     case options_not_used_cmd: T_option_not_used(); return;
     case process_options_cmd: T_process_options(); return;

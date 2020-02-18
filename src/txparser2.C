@@ -16,8 +16,6 @@
 #include "txparser.h"
 #include "txparser2.h"
 
-bool xkv_patch = false; // for pass_option_to class; where is this set ????
-
 namespace {
     Buffer    local_buf, mac_buf, buf_for_del;
     TokenList KV_list;
