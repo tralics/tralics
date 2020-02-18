@@ -1,9 +1,13 @@
 #pragma once
 #include "types.h"
 
+// \todo This should be called Unicode or better just vanish (and we would use
+// char32_t everywhere in the code) if there is a reasonable path to do that
+// while keeping all the helper functions.
+
 struct Utf8Char {
 public:
-    unsigned int value{0};
+    char32_t value{0};
 
     Utf8Char(unsigned int x) : value(x) {}
     Utf8Char() = default;
