@@ -108,21 +108,18 @@ public:
 };
 
 class TexFonts {
-    uint last_idx;
-
 public:
-    TexFonts() {
-        data[0]  = new TexFont("", 0, 0);
-        last_idx = 0;
-    }
-    std::array<TexFont *, nb_tex_fonts> data;
-    auto                                is_valid(int) -> bool;
-    auto                                name(int) -> string;
-    void                                full_name(Buffer &, int k);
-    auto                                get_int_param(int ft, int pos) -> int;
-    auto                                get_dimen_param(int ft, int pos) -> ScaledInt;
-    void                                set_int_param(int, int, int);
-    void                                set_dimen_param(int, int, ScaledInt);
-    auto                                find_font(const string &, int, int) -> int;
-    auto                                define_a_new_font(string n, int a, int s) -> int;
+    std::vector<std::unique_ptr<TexFont>> data;
+
+    TexFonts() { data.push_back(std::make_unique<TexFont>("", 0, 0)); }
+
+    auto is_valid(int) -> bool;
+    auto name(int) -> string;
+    void full_name(Buffer &, int k);
+    auto get_int_param(int ft, int pos) -> int;
+    auto get_dimen_param(int ft, int pos) -> ScaledInt;
+    void set_int_param(int, int, int);
+    void set_dimen_param(int, int, ScaledInt);
+    auto find_font(const string &, int, int) -> int;
+    auto define_a_new_font(string n, int a, int s) -> int;
 };

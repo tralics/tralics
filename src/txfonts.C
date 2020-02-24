@@ -298,7 +298,7 @@ void FontInfo::ltfont(const string &s, subtypes c) {
 
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const string &n, int a, int s) -> int {
-    for (uint i = 0; i < nb_tex_fonts; i++)
+    for (uint i = 0; i < data.size(); i++)
         if ((data[i] != nullptr) && data[i]->its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
 }
@@ -316,14 +316,12 @@ TexFont::TexFont(const string &n, int a, int s) {
 
 // This allocates a new slot in the font list.
 auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
-    if (last_idx + 1 >= nb_tex_fonts) {
+    if (data.size() >= 256) { // \todo Perhaps remove this artificial limitation
         the_parser.parse_error("fatal: font table overflow");
         return 0;
     }
-    last_idx++;
-    int k   = last_idx;
-    data[k] = new TexFont(std::move(n), a, s);
-    return k;
+    data.push_back(std::make_unique<TexFont>(std::move(n), a, s));
+    return data.size() - 1;
 }
 
 // not yet done.
@@ -362,7 +360,7 @@ void TexFont::make_null() {
 
 // True if k is a valid font ID
 auto TexFonts::is_valid(int k) -> bool {
-    if (k < 0 || k >= int(nb_tex_fonts)) return false;
+    if (k < 0 || k >= static_cast<int>(data.size())) return false;
     if (data[k] == nullptr) return false;
     return true;
 }

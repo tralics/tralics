@@ -7,7 +7,6 @@ inline constexpr uint nb_newcolumn        = 128;   // Max char for newcolumntype
 inline constexpr uint nb_registers        = 1024;  // This is the number of other registers
 inline constexpr uint nb_shortverb_values = 256;   // This is the size of the table for shortverb
 inline constexpr uint nb_simplemath       = 128;   // Max char for which $x$ is trivial math
-inline constexpr uint nb_tex_fonts        = 256;   // The number of different TeX fonts
 inline constexpr uint nb_xspace_values    = 128;   // This is the size of the table ok_for_xspace
 
 inline constexpr int bib_hash_mod = 6397;

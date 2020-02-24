@@ -17,7 +17,8 @@
 using buffer_fn = void(Buffer &);
 
 // a big structure
-// \todo Probably this should be based on std::vector<char> instead of char*
+// \todo Probably this should be based on std::vector<char> instead of char*, or
+// even better if that works it should just be a std::string.
 class Buffer {
 private:
     char *buf;        // the characters
