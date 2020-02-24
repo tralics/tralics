@@ -92,145 +92,78 @@ auto accent_ns::fetch_accent(int chr, int acc) -> Token {
 
 auto accent_ns::combine_accents(int acc1, int acc2) -> int {
     // start with acute and something
-    if (acc1 == '\'' && acc2 == '~')
-        return 9;
-    else if (acc2 == '\'' && acc1 == '~')
-        return 9;
-    else if (acc1 == '\'' && acc2 == '=')
-        return 10;
-    else if (acc2 == '\'' && acc1 == '=')
-        return 10;
-    else if (acc1 == '\'' && acc2 == '.')
-        return 11;
-    else if (acc2 == '\'' && acc1 == '.')
-        return 11;
-    else if (acc1 == '\'' && acc2 == '^')
-        return 12;
-    else if (acc2 == '\'' && acc1 == '^')
-        return 12;
-    else if (acc1 == '\'' && acc2 == 'H')
-        return 16;
-    else if (acc2 == '\'' && acc1 == 'H')
-        return 16;
-    else if (acc1 == '\'' && acc2 == 'c')
-        return 17;
-    else if (acc2 == '\'' && acc1 == 'c')
-        return 17;
-    else if (acc1 == '\'' && acc2 == '"')
-        return 2;
-    else if (acc2 == '\'' && acc1 == '"')
-        return 2;
-    else if (acc1 == '\'' && acc2 == '^')
-        return 21;
-    else if (acc2 == '\'' && acc1 == '^')
-        return 21;
-    else if (acc1 == '\'' && acc2 == 'u')
-        return 34;
-    else if (acc2 == '\'' && acc1 == 'u')
-        return 34;
+    if (acc1 == '\'' && acc2 == '~') return 9;
+    if (acc2 == '\'' && acc1 == '~') return 9;
+    if (acc1 == '\'' && acc2 == '=') return 10;
+    if (acc2 == '\'' && acc1 == '=') return 10;
+    if (acc1 == '\'' && acc2 == '.') return 11;
+    if (acc2 == '\'' && acc1 == '.') return 11;
+    if (acc1 == '\'' && acc2 == '^') return 12;
+    if (acc2 == '\'' && acc1 == '^') return 12;
+    if (acc1 == '\'' && acc2 == 'H') return 16;
+    if (acc2 == '\'' && acc1 == 'H') return 16;
+    if (acc1 == '\'' && acc2 == 'c') return 17;
+    if (acc2 == '\'' && acc1 == 'c') return 17;
+    if (acc1 == '\'' && acc2 == '"') return 2;
+    if (acc2 == '\'' && acc1 == '"') return 2;
+    if (acc1 == '\'' && acc2 == '^') return 21;
+    if (acc2 == '\'' && acc1 == '^') return 21;
+    if (acc1 == '\'' && acc2 == 'u') return 34;
+    if (acc2 == '\'' && acc1 == 'u') return 34;
     // now grave and something
-    else if (acc1 == '`' && acc2 == '=')
-        return 13;
-    else if (acc2 == '`' && acc1 == '=')
-        return 13;
-    else if (acc1 == '`' && acc2 == '^')
-        return 15;
-    else if (acc2 == '`' && acc1 == '^')
-        return 15;
-    else if (acc1 == '`' && acc2 == 'H')
-        return 18;
-    else if (acc2 == '`' && acc1 == 'H')
-        return 18;
-    else if (acc1 == '`' && acc2 == '"')
-        return 4;
-    else if (acc2 == '`' && acc1 == '"')
-        return 4;
-    else if (acc1 == '`' && acc2 == 'u')
-        return 22;
-    else if (acc2 == '`' && acc1 == 'u')
-        return 22;
+    if (acc1 == '`' && acc2 == '=') return 13;
+    if (acc2 == '`' && acc1 == '=') return 13;
+    if (acc1 == '`' && acc2 == '^') return 15;
+    if (acc2 == '`' && acc1 == '^') return 15;
+    if (acc1 == '`' && acc2 == 'H') return 18;
+    if (acc2 == '`' && acc1 == 'H') return 18;
+    if (acc1 == '`' && acc2 == '"') return 4;
+    if (acc2 == '`' && acc1 == '"') return 4;
+    if (acc1 == '`' && acc2 == 'u') return 22;
+    if (acc2 == '`' && acc1 == 'u') return 22;
     // now dot and something
-    else if (acc1 == '.' && acc2 == '=')
-        return 5;
-    else if (acc2 == '.' && acc1 == '=')
-        return 5;
-    else if (acc1 == '.' && acc2 == 'v')
-        return 19;
-    else if (acc2 == '.' && acc1 == 'v')
-        return 19;
-    else if (acc1 == '.' && acc2 == 'd')
-        return 20;
-    else if (acc2 == '.' && acc1 == 'd')
-        return 20;
+    if (acc1 == '.' && acc2 == '=') return 5;
+    if (acc2 == '.' && acc1 == '=') return 5;
+    if (acc1 == '.' && acc2 == 'v') return 19;
+    if (acc2 == '.' && acc1 == 'v') return 19;
+    if (acc1 == '.' && acc2 == 'd') return 20;
+    if (acc2 == '.' && acc1 == 'd') return 20;
     // now hat and something
-    else if (acc1 == '^' && acc2 == 'h')
-        return 23;
-    else if (acc2 == '^' && acc1 == 'h')
-        return 23;
-    else if (acc1 == '^' && acc2 == '~')
-        return 24;
-    else if (acc2 == '^' && acc1 == '~')
-        return 24;
-    else if (acc1 == '^' && acc2 == 'd')
-        return 25;
-    else if (acc2 == '^' && acc1 == 'd')
-        return 25;
+    if (acc1 == '^' && acc2 == 'h') return 23;
+    if (acc2 == '^' && acc1 == 'h') return 23;
+    if (acc1 == '^' && acc2 == '~') return 24;
+    if (acc2 == '^' && acc1 == '~') return 24;
+    if (acc1 == '^' && acc2 == 'd') return 25;
+    if (acc2 == '^' && acc1 == 'd') return 25;
     // diaresis
-    else if (acc1 == '"' && acc2 == '=')
-        return 1;
-    else if (acc2 == '"' && acc1 == '=')
-        return 1;
-    else if (acc1 == '"' && acc2 == 'v')
-        return 3;
-    else if (acc2 == '"' && acc1 == 'v')
-        return 3;
-    else if (acc1 == '"' && acc2 == '~')
-        return 27;
-    else if (acc2 == '"' && acc1 == '~')
-        return 27;
+    if (acc1 == '"' && acc2 == '=') return 1;
+    if (acc2 == '"' && acc1 == '=') return 1;
+    if (acc1 == '"' && acc2 == 'v') return 3;
+    if (acc2 == '"' && acc1 == 'v') return 3;
+    if (acc1 == '"' && acc2 == '~') return 27;
+    if (acc2 == '"' && acc1 == '~') return 27;
     // other
-    else if (acc1 == '=' && acc2 == '~')
-        return 6;
-    else if (acc2 == '=' && acc1 == '~')
-        return 6;
-    else if (acc1 == 'k' && acc2 == '=')
-        return 7;
-    else if (acc2 == 'k' && acc1 == '=')
-        return 7;
-    else if (acc1 == 'd' && acc2 == '=')
-        return 14;
-    else if (acc2 == 'd' && acc1 == '=')
-        return 14;
-    else if (acc1 == 'u' && acc2 == 'c')
-        return 26;
-    else if (acc2 == 'u' && acc1 == 'c')
-        return 26;
-    else if (acc1 == 'H' && acc2 == 'h')
-        return 28;
-    else if (acc2 == 'H' && acc1 == 'h')
-        return 28;
-    else if (acc1 == 'H' && acc2 == '~')
-        return 29;
-    else if (acc2 == 'H' && acc1 == '~')
-        return 29;
-    else if (acc1 == 'H' && acc2 == 'd')
-        return 30;
-    else if (acc2 == 'H' && acc1 == 'd')
-        return 30;
-    else if (acc1 == 'u' && acc2 == 'h')
-        return 31;
-    else if (acc2 == 'u' && acc1 == 'h')
-        return 31;
-    else if (acc1 == 'u' && acc2 == '~')
-        return 32;
-    else if (acc2 == 'u' && acc1 == '~')
-        return 32;
-    else if (acc1 == 'u' && acc2 == 'd')
-        return 33;
-    else if (acc2 == 'u' && acc1 == 'd')
-        return 33;
-    else
-        return 0;
+    if (acc1 == '=' && acc2 == '~') return 6;
+    if (acc2 == '=' && acc1 == '~') return 6;
+    if (acc1 == 'k' && acc2 == '=') return 7;
+    if (acc2 == 'k' && acc1 == '=') return 7;
+    if (acc1 == 'd' && acc2 == '=') return 14;
+    if (acc2 == 'd' && acc1 == '=') return 14;
+    if (acc1 == 'u' && acc2 == 'c') return 26;
+    if (acc2 == 'u' && acc1 == 'c') return 26;
+    if (acc1 == 'H' && acc2 == 'h') return 28;
+    if (acc2 == 'H' && acc1 == 'h') return 28;
+    if (acc1 == 'H' && acc2 == '~') return 29;
+    if (acc2 == 'H' && acc1 == '~') return 29;
+    if (acc1 == 'H' && acc2 == 'd') return 30;
+    if (acc2 == 'H' && acc1 == 'd') return 30;
+    if (acc1 == 'u' && acc2 == 'h') return 31;
+    if (acc2 == 'u' && acc1 == 'h') return 31;
+    if (acc1 == 'u' && acc2 == '~') return 32;
+    if (acc2 == 'u' && acc1 == '~') return 32;
+    if (acc1 == 'u' && acc2 == 'd') return 33;
+    if (acc2 == 'u' && acc1 == 'd') return 33;
+    return 0;
 }
 
 // Fetches the position of a double accent on capital O
