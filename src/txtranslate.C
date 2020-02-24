@@ -544,17 +544,12 @@ void Parser::T_matter(subtypes c) {
     else if (c == backmatter_code)
         t = np_backmatter;
     the_stack.push1(the_names[np_module], t);
-    if (c == frontmatter_code || c == backmatter_code)
-        chapter_has_star = true;
-    else
-        chapter_has_star = false;
+    chapter_has_star = (c == frontmatter_code || c == backmatter_code);
 }
 
 // Translates \section, \chapter, etc.
 void Parser::T_paras(subtypes x) {
-    int y = x - sectionning_offset;
     if (x == toplevel_sec_code) {
-        y           = 0;
         TokenList L = read_arg();
         if (!L.empty()) {
             token_from_list(L.front());
@@ -565,6 +560,7 @@ void Parser::T_paras(subtypes x) {
         }
         return;
     }
+    int y = x - sectionning_offset;
     if (x == endsec_code) {
         y           = 0;
         TokenList L = read_arg();

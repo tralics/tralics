@@ -7,7 +7,7 @@
 struct codepoint {
     char32_t value;
 
-    explicit codepoint(unsigned int x = 0) : value(x) {}
+    explicit codepoint(unsigned int x = 0) noexcept : value(x) {}
 
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
@@ -39,8 +39,6 @@ struct codepoint {
         if (is_upper_case()) return codepoint(value + ('a' - 'A'));
         return *this;
     }
-
-    void make_invalid() { value = 0xFFFF; } // Not a Unicode char
 };
 
 inline auto operator==(const codepoint &a, const codepoint &b) -> bool { return a.value == b.value; }

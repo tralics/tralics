@@ -341,7 +341,7 @@ private:
     auto               scan_identifier0(int) -> int;
     auto               see_new_entry(entry_type, int) -> BibEntry *;
     void               skip_space();
-    auto               wrong_first_char(codepoint, int) -> int;
+    auto               wrong_first_char(codepoint c, int what) -> int;
 
 public:
     auto               get_an_entry(int i) -> BibEntry * { return all_entries[i]; }

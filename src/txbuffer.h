@@ -117,7 +117,7 @@ public:
     void               extract_cnrs_info();
     void               extract_dtd(String a, string &b, string &c);
     void               extract_strs(Buffer &A, Buffer &B);
-    void               extract_chars(vector<codepoint> &);
+    void               extract_chars(vector<codepoint> &V);
     auto               fetch_beg_end_spec(bool k, bool incat, int &com_loc, bool &seen_dollar, String &) -> int;
     auto               fetch_citation(String, String &a, String &b) -> bool;
     auto               fetch_spec_arg() -> bool;
@@ -215,7 +215,7 @@ public:
     void no_double_dot();
     void normalise_for_bibtex(String s);
     void optslash();
-    void out_four_hats(codepoint);
+    void out_four_hats(codepoint ch);
     void out_log(codepoint ch, output_encoding_type T);
     auto pack_or_class(Buffer &aux) -> int;
     void pt_to_mu();
@@ -244,7 +244,7 @@ public:
     void push_back_int(int);
     void push_back16(uint, bool);
     void push_back16l(bool, uint);
-    void push_back_ent(codepoint);
+    void push_back_ent(codepoint ch);
     void push_back_hex(uint);
     void push_back_Hex(uint);
     void push_back_math_token(const CmdChr &, bool);

@@ -23,7 +23,7 @@ auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
 auto operator<<(ostream &fp, const SthInternal &x) -> ostream &;
 auto operator<<(ostream &fp, Token x) -> ostream &;
 auto operator<<(ostream &fp, Xid) -> ostream &;
-auto operator<<(ostream &fp, const codepoint &) -> ostream &;
+auto operator<<(ostream &fp, const codepoint &x) -> ostream &;
 auto operator<<(ostream &fp, const Xml *) -> ostream &;
 auto operator<<(ostream &fp, const ScaledInt &x) -> ostream &;
 auto operator<<(ostream &fp, const boundary_type &x) -> ostream &;

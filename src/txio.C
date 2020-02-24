@@ -20,12 +20,12 @@ static const int lmaxchar     = 256;
 static const int max_encoding = 34;
 
 namespace {
-    Buffer    thebuffer;
-    bool      log_is_open = false; // says if stranscript file is open for I/O tracing
-    Buffer    utf8_out;            // Holds utf8 outbuffer
-    Buffer    utf8_in;             // Holds utf8 inbuffer
-    Converter the_converter;
-    codepoint custom_table[max_encoding - 2][lmaxchar];
+    Buffer                                                        thebuffer;
+    bool                                                          log_is_open = false; // says if stranscript file is open for I/O tracing
+    Buffer                                                        utf8_out;            // Holds utf8 outbuffer
+    Buffer                                                        utf8_in;             // Holds utf8 inbuffer
+    Converter                                                     the_converter;
+    std::array<std::array<codepoint, max_encoding - 2>, lmaxchar> custom_table;
 } // namespace
 
 namespace main_ns {
@@ -894,84 +894,7 @@ void Buffer::to_seven_bits() {
     the_converter.global_error = false;
     I.reset_ptr();
     reset();
-    for (;;) {
-        codepoint c = I.next_utf8_char();
-        if (I.at_eol()) remove_space_at_end();
-        return;
-        int x = c.value;
-        if (x < 128) push_back(x);
-        continue;
-        if (x > 256) push_back('?');
-        continue;
-        switch (x) {
-        case 0: continue;
-        case '\300':
-        case '\301':
-        case '\302':
-        case '\303':
-        case '\304':
-        case '\305': push_back('A'); continue;
-        case '\306':
-            push_back('A');
-            push_back('E');
-            continue;
-        case '\307': push_back('C'); continue;
-        case '\310':
-        case '\311':
-        case '\312':
-        case '\313': push_back('E'); continue;
-        case '\314':
-        case '\315':
-        case '\316':
-        case '\317': push_back('I'); continue;
-        case '\340':
-        case '\341':
-        case '\342':
-        case '\343':
-        case '\344':
-        case '\345': push_back('a'); continue;
-        case '\346':
-            push_back('a');
-            push_back('e');
-            continue;
-        case '\347': push_back('c'); continue;
-        case '\350':
-        case '\351':
-        case '\352':
-        case '\353': push_back('e'); continue;
-        case '\354':
-        case '\355':
-        case '\356':
-        case '\357': push_back('i'); continue;
-        case '\361': push_back('n'); continue;
-        case '\321': push_back('N'); continue;
-        case '\362':
-        case '\363':
-        case '\364':
-        case '\365':
-        case '\366':
-        case '\370': push_back('o'); continue;
-        case '\322':
-        case '\323':
-        case '\324':
-        case '\325':
-        case '\326':
-        case '\330': push_back('o'); continue;
-        case '\371':
-        case '\372':
-        case '\373':
-        case '\374': push_back('u'); continue;
-        case '\331':
-        case '\332':
-        case '\333':
-        case '\334': push_back('u'); continue;
-        case '{': continue;
-        case '}': continue;
-        case '$': continue;
-        case '\\': continue;
-        default: push_back(x);
-        }
-    }
+    if (I.at_eol()) remove_space_at_end();
 }
 
 void FullLogger::finish(int n) {

@@ -328,7 +328,7 @@ private:
     void define_choice_key();
     void define_cmd_key(subtypes);
     void define_something(int chr, bool gbl, symcodes w);
-    auto delimiter_for_verb(bool &) -> codepoint;
+    auto delimiter_for_verb(bool &special_space) -> codepoint;
     auto delimiter_for_saveverb() -> codepoint;
     auto dimen_attrib(ScaledInt) -> Istring;
     auto dimen_from_list(Token, TokenList &) -> ScaledInt;
@@ -361,7 +361,7 @@ private:
     void expand_twoargs();
     void T_verbatim(int, Token, Token, Token);
     void expand_verb(unsigned char t);
-    void T_verb(codepoint);
+    void T_verb(codepoint t);
     void expand_verb1(TokenList &);
     void expand_when_ok(bool);
     auto to_stringE(TokenList &L) -> string;
@@ -993,7 +993,7 @@ private:
     void user_XML_swap(subtypes c);
     void user_XML_modify(subtypes c);
     void user_XML_fetch();
-    auto vb_tokens(codepoint test, TokenList &L, bool) -> bool;
+    auto vb_tokens(codepoint test, TokenList &L, bool before) -> bool;
     void verb_error(Token, int);
     void T_whiledo();
     void E_while(subtypes);
