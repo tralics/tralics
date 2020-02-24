@@ -107,11 +107,8 @@ public:
     void               load();
 };
 
-class TexFonts {
-public:
-    std::vector<TexFont> data;
-
-    TexFonts() { data.emplace_back("nullfont", 0, 0); }
+struct TexFonts : public std::vector<TexFont> {
+    TexFonts() { emplace_back("nullfont", 0, 0); }
 
     auto is_valid(int) -> bool;
     auto name(int) -> string;
