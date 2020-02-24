@@ -32,17 +32,15 @@ Buffer::Buffer() {
     buf.push_back(0);
 }
 
-auto Buffer::convert(int k) const -> String { return tralics_ns::make_string(buf.data() + k); }
+auto Buffer::convert(int k) const -> std::string { return tralics_ns::make_string(buf.data() + k); }
 
 auto is_letter(uchar c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
 // This returns a copy of the string
-auto tralics_ns::make_string(String a) -> String {
+auto tralics_ns::make_string(String a) -> std::string {
     int n = strlen(a);
     the_parser.my_stats.one_more_string(n + 1);
-    char *res = new char[n + 1];
-    memcpy(res, a, n + 1);
-    return res;
+    return a;
 }
 
 // Returns of copy of the buffer as a string.

@@ -102,7 +102,7 @@ public:
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String) const -> bool;
-    [[nodiscard]] auto convert(int k) const -> String;
+    [[nodiscard]] auto convert(int k) const -> std::string;
     auto               convert_dim(int, int) -> string;
     [[nodiscard]] auto convert_to_str() const -> String;
     auto               convert_to_out_encoding(String) const -> String;

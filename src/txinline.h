@@ -40,7 +40,7 @@ namespace tralics_ns {
     auto find_in_path(const string &s) -> bool;
     auto find_no_path(const string &s) -> bool;
     void read_a_file(LinePtr &, const string &x, int spec);
-    auto make_string(String) -> String;
+    auto make_string(String) -> std::string;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
     auto file_exists(const string &B) -> bool;

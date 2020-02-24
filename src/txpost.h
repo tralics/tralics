@@ -61,16 +61,16 @@ public:
 
 // A class to count words...
 class WordList {
-    WordList *next;
-    String    name;
-    int       hash;
-    int       freq;
+    WordList *  next;
+    std::string name;
+    int         hash;
+    int         freq;
 
 public:
     void               set_next(WordList *n) { next = n; }
     [[nodiscard]] auto next_empty() const -> bool { return next == nullptr; }
-    WordList(String s, int h, WordList *N) : next(N), name(s), hash(h), freq(1) {}
-    auto               is_here(String s, int h) const -> bool { return hash == h && strcmp(name, s) == 0; }
+    WordList(std::string s, int h, WordList *N) : next(N), name(s), hash(h), freq(1) {}
+    auto               is_here(String s, int h) const -> bool { return hash == h && strcmp(name.c_str(), s) == 0; }
     void               incr_freq() { freq++; }
     [[nodiscard]] auto get_freq() const -> int { return freq; }
     [[nodiscard]] auto get_next() const -> WordList * { return next; }

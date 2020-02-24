@@ -1144,8 +1144,7 @@ void all_words_ns::add_a_word(String s, int h) {
         } else
             L = L->get_next();
     }
-    s      = tralics_ns::make_string(s);
-    WL0[H] = new WordList(s, h, WL0[H]);
+    WL0[H] = new WordList(tralics_ns::make_string(s), h, WL0[H]);
 }
 
 // Prints all words with frequency i. Removes them from the list
