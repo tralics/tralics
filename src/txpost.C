@@ -624,7 +624,7 @@ auto operator<<(ostream &fp, const Xml *T) -> ostream & {
 
 // This flushed the buffer, increments cur_fp_len.
 void Buffer::finish_xml_print() {
-    *cur_fp << buf;
+    *cur_fp << buf.data();
     the_main->incr_cur_fp_len(wptr);
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     int k = 0;
@@ -1221,7 +1221,7 @@ void Buffer::new_word() {
         }
         if (ok) buf[0] += 'a' - 'A';
     }
-    all_words_ns::add_a_word(buf, hashcode(6397));
+    all_words_ns::add_a_word(buf.data(), hashcode(6397));
     reset();
 }
 

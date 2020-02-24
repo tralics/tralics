@@ -21,14 +21,14 @@ using buffer_fn = void(Buffer &);
 // even better if that works it should just be a std::string.
 class Buffer {
 private:
-    char *buf;        // the characters
-    int   wptr{0};    // the write pointer
-    int   asize{128}; // allocated size
-    int   ptr{0};     // the read pointer
-    int   ptr1{0};    // a second read pointer
+    std::vector<char> buf;        // the characters
+    int               wptr{0};    // the write pointer
+    int               asize{128}; // allocated size
+    int               ptr{0};     // the read pointer
+    int               ptr1{0};    // a second read pointer
 public:
     Buffer();
-    ~Buffer();
+
     auto operator[](int k) const -> char { return buf[k]; }
     auto operator<<(String s) -> Buffer & {
         push_back(s);
@@ -93,12 +93,12 @@ public:
     void               bib_spec();
     void               brace_match();
     void               bracket_match();
-    [[nodiscard]] auto c_str(int k) const -> String { return buf + k; }
-    [[nodiscard]] auto c_str() const -> String { return buf; }
+    [[nodiscard]] auto c_str(int k) const -> String { return buf.data() + k; }
+    [[nodiscard]] auto c_str() const -> String { return buf.data(); }
     void               chars_to_buffer(Buffer &);
     void               check_before_brace(String);
     auto               check_cat_perso(int, int, bool) -> string;
-    auto               contains(String s) const -> bool { return strstr(buf, s) != nullptr; }
+    auto               contains(String s) const -> bool { return strstr(buf.data(), s) != nullptr; }
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String) const -> bool;
@@ -157,7 +157,7 @@ public:
     void               init_from_buffer(Buffer &);
     void               insert_and_kill(Buffer &a) {
         reset();
-        push_back(a.buf);
+        push_back(a.buf.data());
         a.reset();
     }
     void               insert_escape_char();
@@ -175,7 +175,7 @@ public:
     [[nodiscard]] auto is_begin_end() const -> int;
     auto               is_begin_something(String) -> int;
     auto               is_begin_something(String, bool) -> int;
-    auto               is_equal(String x) const -> bool { return strcmp(buf, x) == 0; }
+    auto               is_equal(String x) const -> bool { return strcmp(buf.data(), x) == 0; }
     auto               is_at_end(String s) const -> bool;
     auto               is_here(String s) -> bool;
     auto               is_here_case(String s) -> bool;
@@ -225,7 +225,7 @@ public:
     void purify();
     void purify(String s);
     void push_back(char c);
-    void push_back(const Buffer &b) { push_back(b.buf); }
+    void push_back(const Buffer &b) { push_back(b.buf.data()); }
     void push_back(const string &b) { push_back(b.c_str()); }
     void push_back(const Istring &);
     void push_back(String s);

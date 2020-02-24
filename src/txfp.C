@@ -279,7 +279,7 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
     if (buf[i] == '.') i--;    // Keep the zero in 0.1
     i--;
     buf[i] = X.sign ? '+' : '-'; // insert sign
-    return buf + i;
+    return buf.data() + i;
 }
 
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax

@@ -72,7 +72,7 @@ auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
     set_ptr1();
     while ((head() != 0) && head() != '.') advance();
     buf[ptr] = 0;
-    name     = buf + ptr1;
+    name     = buf.data() + ptr1;
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
@@ -80,7 +80,7 @@ auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
     buf[ptr] = 0;
-    version  = buf + ptr1;
+    version  = buf.data() + ptr1;
     advance();
     set_ptr1();
     if (wptr < ptr + 10) return true;
@@ -91,7 +91,7 @@ auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
         buf[ptr + 10] = 0;
     else
         return true;
-    date = buf + ptr1;
+    date = buf.data() + ptr1;
     return true;
 }
 

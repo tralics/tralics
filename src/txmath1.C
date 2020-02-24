@@ -1694,22 +1694,22 @@ auto MathElt::is_e_grave() const -> bool {
 
 // This is the list of valid exponents and the conversions.
 auto Buffer::special_exponent() const -> String {
-    if (strcmp(buf, "th") == 0)
+    if (strcmp(buf.data(), "th") == 0)
         return "th";
-    else if (strcmp(buf, "st") == 0)
+    else if (strcmp(buf.data(), "st") == 0)
         return "st";
-    else if (strcmp(buf, "rd") == 0)
+    else if (strcmp(buf.data(), "rd") == 0)
         return "rd";
-    else if (strcmp(buf, "nd") == 0)
+    else if (strcmp(buf.data(), "nd") == 0)
         return "nd";
-    else if (strcmp(buf, "e") == 0 || strcmp(buf, "ieme") == 0 || strcmp(buf, "eme") == 0 || strcmp(buf, "i\303\250me") == 0 ||
-             strcmp(buf, "\303\250me") == 0)
+    else if (strcmp(buf.data(), "e") == 0 || strcmp(buf.data(), "ieme") == 0 || strcmp(buf.data(), "eme") == 0 ||
+             strcmp(buf.data(), "i\303\250me") == 0 || strcmp(buf.data(), "\303\250me") == 0)
         return "e";
-    else if (strcmp(buf, "ier") == 0 || strcmp(buf, "er") == 0)
+    else if (strcmp(buf.data(), "ier") == 0 || strcmp(buf.data(), "er") == 0)
         return "er";
-    else if (strcmp(buf, "iemes") == 0 || strcmp(buf, "i\303\250mes") == 0 || strcmp(buf, "es") == 0)
+    else if (strcmp(buf.data(), "iemes") == 0 || strcmp(buf.data(), "i\303\250mes") == 0 || strcmp(buf.data(), "es") == 0)
         return "es";
-    else if (strcmp(buf, "\303\250re") == 0 || strcmp(buf, "re") == 0)
+    else if (strcmp(buf.data(), "\303\250re") == 0 || strcmp(buf.data(), "re") == 0)
         return "re";
     else
         return nullptr;

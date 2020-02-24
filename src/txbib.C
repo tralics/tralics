@@ -2314,7 +2314,7 @@ void Buffer::fill_table(bchar_type *table) {
             buf[ptr + 1] = c;
             buf[ptr]     = '\\';
             buf[ptr - 1] = '{';
-            the_log << lg_start << "+bibchanged " << buf << lg_end;
+            the_log << lg_start << "+bibchanged " << buf.data() << lg_end;
         }
         int bl   = 1;
         int j    = i;

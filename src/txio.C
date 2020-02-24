@@ -826,7 +826,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     Buffer &I = utf8_in;
     Buffer &O = utf8_out;
     I.reset();
-    I.push_back(buf);
+    I.push_back(buf.data());
     the_converter.global_error = false;
     O.reset();
     I.reset_ptr();
@@ -852,7 +852,7 @@ auto Buffer::convert_to_log_encoding() const -> String {
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();
     Buffer &I = utf8_in;
     I.reset();
-    I.push_back(buf);
+    I.push_back(buf.data());
     the_converter.global_error = false;
     I.reset_ptr();
     Buffer &O = utf8_out;
@@ -890,7 +890,7 @@ void Buffer::to_seven_bits() {
     if (is_all_ascii()) return;
     Buffer &I = utf8_in;
     I.reset();
-    I.push_back(buf);
+    I.push_back(buf.data());
     the_converter.global_error = false;
     I.reset_ptr();
     reset();

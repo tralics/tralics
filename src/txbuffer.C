@@ -27,17 +27,12 @@ namespace buffer_ns {
     void dump_identification(String);
 } // namespace buffer_ns
 
-Buffer::~Buffer() {
-    // cout <<"delete buffer "<< asize << " " <<name <<"\n";
-    delete[] buf;
-}
-
 Buffer::Buffer() {
-    buf    = new char[128];
-    buf[0] = 0;
+    buf.resize(128);
+    buf.push_back(0);
 }
 
-auto Buffer::convert(int k) const -> String { return tralics_ns::make_string(buf + k); }
+auto Buffer::convert(int k) const -> String { return tralics_ns::make_string(buf.data() + k); }
 
 auto is_letter(uchar c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
@@ -52,16 +47,16 @@ auto tralics_ns::make_string(String a) -> String {
 
 // Returns of copy of the buffer as a string.
 auto Buffer::to_string() const -> string {
-    int n = strlen(buf);
+    int n = strlen(buf.data());
     the_parser.my_stats.one_more_string(n + 1);
-    return string(buf);
+    return string(buf.data());
 }
 
 // Returns a copy, starting at k.
 auto Buffer::to_string(int k) const -> string {
-    int n = strlen(buf + k);
+    int n = strlen(buf.data() + k);
     the_parser.my_stats.one_more_string(n + 1);
-    return string(buf + k);
+    return string(buf.data() + k);
 }
 
 // Replaces all \r by a space.
@@ -114,7 +109,7 @@ void Buffer::push_back_xml_char(uchar c) {
 auto Buffer::convert_to_str() const -> String {
     the_parser.my_stats.one_more_string(wptr + 1);
     char *aux = new char[wptr + 1];
-    memcpy(aux, buf, wptr + 1);
+    memcpy(aux, buf.data(), wptr + 1);
     return aux;
 }
 
@@ -127,11 +122,10 @@ void Buffer::resize() {
 // This reallocates to the value of size.
 void Buffer::realloc() {
     the_parser.my_stats.one_more_buffer_realloc();
-    char *aux = new char[asize];
+    std::vector<char> aux(asize);
     kill_at(wptr);
-    memcpy(aux, buf, wptr);
-    delete[] buf;
-    buf = aux;
+    memcpy(aux.data(), buf.data(), wptr);
+    buf.swap(aux);
 }
 
 // Makes sure we can add n chars in the buffer
@@ -152,13 +146,13 @@ void Buffer::push_back(String s) {
         return;
     }
     alloc(n);
-    memcpy(buf + wptr, s, n + 1);
+    memcpy(buf.data() + wptr, s, n + 1);
     wptr += n;
 }
 
 void Buffer::push_back_substring(String S, int n) {
     alloc(n);
-    strncpy(buf + wptr, S, n);
+    strncpy(buf.data() + wptr, S, n);
     wptr += n;
     buf[wptr] = 0;
 }
@@ -305,9 +299,9 @@ auto Buffer::see_begin_end(Buffer &before, Buffer &after) -> int {
         if (res != 0) break;
     }
     after.reset0();
-    after.push_back(buf + ptr);
+    after.push_back(buf.data() + ptr);
     kill_at(ptr1);
-    before.push_back(buf);
+    before.push_back(buf.data());
     return res;
 }
 
@@ -316,8 +310,8 @@ void Buffer::extract_strs(Buffer &A, Buffer &B) {
     buf[ptr - 1] = 0;
     A.reset();
     B.reset();
-    B.push_back(buf + ptr);
-    A.push_back(buf + ptr1);
+    B.push_back(buf.data() + ptr);
+    A.push_back(buf.data() + ptr1);
 }
 
 // Converts the entire Buffer to lower case
@@ -445,7 +439,7 @@ auto Buffer::substring() -> string {
 // replaces the content of the buffer by the value of B
 void Buffer::copy(const Buffer &B) {
     reset0();
-    push_back(B.buf);
+    push_back(B.buf.data());
     ptr = B.ptr;
 }
 
@@ -466,25 +460,25 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (wptr == 1) return true; // keep empty lines
     if (buf[0] == '#') {
         const String match = "## tralics ident rc=";
-        if (strncmp(buf, match, 20) == 0) {
+        if (strncmp(buf.data(), match, 20) == 0) {
             int k = 20;
             while (k < wptr - 1 && buf[k] != '$') k++;
             if (buf[k] == '$') {
                 char c     = buf[k + 1];
                 buf[k + 1] = 0;
-                buffer_ns::dump_identification(buf + 20);
+                buffer_ns::dump_identification(buf.data() + 20);
                 buf[k + 1] = c;
-                main_ns::log_or_tty << " " << buf + k + 1;
+                main_ns::log_or_tty << " " << buf.data() + k + 1;
             } else
-                buffer_ns::dump_identification(buf + 20);
+                buffer_ns::dump_identification(buf.data() + 20);
         }
         return false;
     }
     if (buf[0] == '%' || is_space(buf[0])) return true;
-    if (strncmp(buf, "Begin", 5) == 0) return true;
-    if (strncmp(buf, "End", 3) == 0) return true;
+    if (strncmp(buf.data(), "Begin", 5) == 0) return true;
+    if (strncmp(buf.data(), "End", 3) == 0) return true;
     local_buf.reset0(); // THIS is thebuffer, (be careful)
-    local_buf.push_back(buf);
+    local_buf.push_back(buf.data());
     reset0();
     push_back(' ');
     push_back(local_buf.c_str());
@@ -568,9 +562,9 @@ void SpecialHash::create(String s) {
 void Buffer::remove_last_space() {
     if (wptr > 0 && is_spaceh(wptr - 1))
         wptr--;
-    else if (wptr >= 6 && strncmp(buf + wptr - 6, "&nbsp;", 6) == 0)
+    else if (wptr >= 6 && strncmp(buf.data() + wptr - 6, "&nbsp;", 6) == 0)
         wptr -= 6;
-    else if (wptr >= 6 && strncmp(buf + wptr - 6, "&#xA;", 6) == 0)
+    else if (wptr >= 6 && strncmp(buf.data() + wptr - 6, "&#xA;", 6) == 0)
         wptr -= 6;
     kill_at(wptr);
 }
@@ -590,7 +584,7 @@ auto Buffer::without_end_spaces(String T) -> String {
     push_back(T);
     while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
     kill_at(wptr);
-    return buf;
+    return buf.data();
 }
 
 // Returns the current escape char (used for printing)
@@ -844,7 +838,7 @@ auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
     push_back(v, glue_spec_pt);
     if (mu) pt_to_mu();
     push_back('\n');
-    return buf;
+    return buf.data();
 }
 
 // Adds glue likes 3pt plus 3 fill
@@ -1033,7 +1027,7 @@ void Buffer::push_back_Roman(int n) {
 // True is s is at ptr. If so, updates ptr
 auto Buffer::is_here(String s) -> bool {
     int n = strlen(s);
-    if (strncmp(buf + ptr, s, n) != 0) return false;
+    if (strncmp(buf.data() + ptr, s, n) != 0) return false;
     ptr += n;
     return true;
 }
@@ -1053,9 +1047,9 @@ auto Buffer::tex_comment_line() const -> bool {
 // returns the document class. value in aux
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
-    String s   = strstr(buf, cmd);
+    String s   = strstr(buf.data(), cmd);
     if (s == nullptr) return false;
-    int k = s - buf;
+    int k = s - buf.data();
     for (int j = 0; j < k; j++)
         if (buf[j] == '%' && buf[j + 1] == '%') return false; // double comment
     push_back("{}");                                          //  make sure we have braces
@@ -1076,7 +1070,7 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     int len = p - k - 1;
     if (len == 0) return false;
     aux.reset();
-    aux.push_back(buf + k + 1);
+    aux.push_back(buf.data() + k + 1);
     aux.buf[len] = 0;
     for (int i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
         if (!is_letter(aux[i]) && !is_digit(aux[i])) return false;
@@ -1086,9 +1080,9 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
 // returns the configuration value in aux
 auto Buffer::find_configuration(Buffer &aux) -> bool {
     if (buf[0] != '%') return false;
-    String s = strstr(buf, "ralics configuration file");
+    String s = strstr(buf.data(), "ralics configuration file");
     if (s == nullptr) return false;
-    int k = s - buf;
+    int k = s - buf.data();
     while ((buf[k] != 0) && buf[k] != '\'') k++;
     if (buf[k] == 0) return false;
     k++;
@@ -1110,9 +1104,9 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
 auto Buffer::find_doctype() -> int {
     if (buf[0] != '%') return 0;
     String S = "ralics DOCTYPE ";
-    String s = strstr(buf, S);
+    String s = strstr(buf.data(), S);
     if (s == nullptr) return 0;
-    int k = s - buf;
+    int k = s - buf.data();
     k += strlen(S);
     while ((buf[k] != 0) && (buf[k] == ' ' || buf[k] == '=')) k++;
     if (buf[k] == 0) return 0;
@@ -1149,7 +1143,7 @@ void Buffer::init_from_buffer(Buffer &b) {
     wptr = 0;
     ptr1 = 0;
     ptr  = 0;
-    if (!b.empty()) push_back(b.buf);
+    if (!b.empty()) push_back(b.buf.data());
 }
 
 auto Buffer::find_char(char c) -> bool {
@@ -1257,7 +1251,7 @@ auto Buffer::some_sub_string(int a, int b) -> string {
 }
 
 void Buffer::push_back_unless_punct(char c) {
-    if (wptr >= 6 && strncmp(buf + wptr - 6, "&nbsp;", 6) == 0) return;
+    if (wptr >= 6 && strncmp(buf.data() + wptr - 6, "&nbsp;", 6) == 0) return;
     if (wptr > 0 && is_spaceh(wptr - 1)) return;
     if (wptr > 0) {
         char test = buf[wptr - 1];
@@ -1444,9 +1438,9 @@ void Parser::finish_images() {
 auto Buffer::get_machine_name() -> string {
     reset();
     alloc(200);
-    if (txgethostname(buf, 199) != 0) push_back("unknown");
+    if (txgethostname(buf.data(), 199) != 0) push_back("unknown");
     buf[200] = 0;
-    wptr     = strlen(buf);
+    wptr     = strlen(buf.data());
     int n    = wptr;
     for (int i = 1; i < n; i++)
         if (buf[i] == '.') kill_at(i);
@@ -1477,12 +1471,12 @@ auto Buffer::last_slash() const -> int {
 // True if the string s is at the end of the buffer
 auto Buffer::is_at_end(String s) const -> bool {
     int n = strlen(s);
-    return wptr > n && strcmp(buf + wptr - n, s) == 0;
+    return wptr > n && strcmp(buf.data() + wptr - n, s) == 0;
 }
 
 // Inserts the string s is at the end of the buffer unless there
 void Buffer::put_at_end(String s) {
     int n = strlen(s);
-    if (wptr > n && strcmp(buf + wptr - n, s) == 0) return;
+    if (wptr > n && strcmp(buf.data() + wptr - n, s) == 0) return;
     push_back(s);
 }

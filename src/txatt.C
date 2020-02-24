@@ -208,7 +208,7 @@ auto Buffer::look_at_space(const string &s) -> bool {
 auto Buffer::xml_and_attrib(const string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(Istring(s), nullptr);
-    Xml *res = new Xml(Istring(buf), nullptr);
+    Xml *res = new Xml(Istring(buf.data()), nullptr);
     push_back_special_att(res->get_id());
     return res;
 }
@@ -234,7 +234,7 @@ auto Buffer::see_equals(String s) -> bool {
     ptr = 0;
     skip_sp_tab();
     int k = strlen(s);
-    if (strncmp(buf + ptr, s, k) != 0) return false;
+    if (strncmp(buf.data() + ptr, s, k) != 0) return false;
     ptr += k;
     skip_sp_tab();
     if (next_char() != '=') return false;

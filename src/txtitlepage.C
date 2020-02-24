@@ -46,12 +46,12 @@ void tpage_ns::init_error() { main_ns::log_and_tty << "Syntax error in init file
 // tl_normal otherwise
 auto Buffer::tp_fetch_something() -> tpa_line {
     ptr = 0;
-    if (strncmp(buf, "End", 3) == 0) return tl_end;
+    if (strncmp(buf.data(), "End", 3) == 0) return tl_end;
     skip_sp_tab();
     if (is_special_end()) return tl_empty;
     if (ptr == 0) {
         tpage_ns::init_error();
-        main_ns::log_and_tty << buf;
+        main_ns::log_and_tty << buf.data();
         main_ns::log_and_tty << "Wanted End, or line starting with space\n";
         return tl_empty;
     }
@@ -563,8 +563,8 @@ auto Clines::starts_with(String x) const -> bool { return tpage_ns::begins_with(
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type
 auto Buffer::is_begin_something(String s) -> int {
-    if (strncmp("Begin", buf, 5) != 0) return 0;
-    if (strncmp("Type", buf + 5, 4) == 0) {
+    if (strncmp("Begin", buf.data(), 5) != 0) return 0;
+    if (strncmp("Type", buf.data() + 5, 4) == 0) {
         ptr = 9;
         skip_sp_tab();
         if (ptr == 9) return 2; // bad
@@ -573,7 +573,7 @@ auto Buffer::is_begin_something(String s) -> int {
         if (ptr == ptr1) return 2;  // bad
         kill_at(ptr);               // what follows the type is a comment
         if (s == nullptr) return 5; // s=0 for type lookup
-        if (strcmp(buf + ptr1, s) == 0) return 3;
+        if (strcmp(buf.data() + ptr1, s) == 0) return 3;
         return 1;
     }
     if (s == nullptr) return 0;
@@ -582,7 +582,7 @@ auto Buffer::is_begin_something(String s) -> int {
     skip_letter();
     if (ptr == ptr1) return 2;
     kill_at(ptr);
-    if (strcmp(buf + ptr1, s) == 0) return 4;
+    if (strcmp(buf.data() + ptr1, s) == 0) return 4;
     return 2;
 }
 
@@ -783,7 +783,7 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
         buf[k] = 0;
     }
     remove_space_at_end();
-    return buf + ptr;
+    return buf.data() + ptr;
 }
 
 // This find a toplevel attributes. Real job done by next function.
@@ -838,11 +838,11 @@ void Buffer::find_top_atts() {
         Istring as = Istring(a);
         Istring bs = Istring(to_string(ptr + 1));
         Xid(1).add_attribute(as, bs);
-    } else if (strcmp(buf + ptr, "\\specialyear") == 0) {
+    } else if (strcmp(buf.data() + ptr, "\\specialyear") == 0) {
         Istring as = Istring(a);
         Istring bs = Istring(the_main->get_year_string());
         Xid(1).add_attribute(as, bs);
-    } else if (strcmp(buf + ptr, "\\tralics") == 0) {
+    } else if (strcmp(buf.data() + ptr, "\\tralics") == 0) {
         Istring as = Istring(a);
         reset();
         push_back("Tralics version ");
@@ -850,15 +850,15 @@ void Buffer::find_top_atts() {
         Istring bs = Istring(to_string());
         Xid(1).add_attribute(as, bs);
     } else {
-        docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (buf + ptr) << "}";
+        docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (buf.data() + ptr) << "}";
         the_main->add_to_from_config(init_file_pos, docspecial);
     }
 }
 
 // Returns +1 if begin, -1 if end, 0 otherwise.
 auto Buffer::see_config_env() const -> int {
-    if (strncmp(buf, "Begin", 5) == 0) return 1;
-    if (strncmp(buf, "End", 3) == 0) return -1;
+    if (strncmp(buf.data(), "Begin", 5) == 0) return 1;
+    if (strncmp(buf.data(), "End", 3) == 0) return -1;
     return 0;
 }
 
@@ -943,7 +943,7 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
 // Find one aliases in the config file.
 auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
     ptr = 0;
-    if (strncmp(buf, "End", 3) == 0) return false;
+    if (strncmp(buf.data(), "End", 3) == 0) return false;
     skip_sp_tab();
     if (is_special_end()) return false;
     if (ptr == 0) return false;
