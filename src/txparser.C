@@ -600,12 +600,12 @@ auto Parser::is_verbatim_end() -> bool {
 // pushed at the end of L (or with prefix  \verbprefix pushed at the start of L).
 // Returns true in case of problem
 
-auto Parser::vb_tokens(Utf8Char test, TokenList &L, bool before) -> bool {
+auto Parser::vb_tokens(codepoint test, TokenList &L, bool before) -> bool {
     TokenList res;
     state = state_M;
     for (;;) {
         if (at_eol()) return true;
-        Utf8Char c = get_next_char();
+        codepoint c = get_next_char();
         if (c == test) break;
         res.push_back(verbatim_chars[c.value]);
     }
@@ -667,7 +667,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
             word_define(my_number, n, true);
             token_ns::add_verbatim_number(res, hash_table, n);
         }
-        if (vb_tokens(Utf8Char('\r'), res, false)) {
+        if (vb_tokens(codepoint('\r'), res, false)) {
             ok = false;
             break;
         }
@@ -800,30 +800,30 @@ inline void RestoreVbSpace::operator()(Token T) { P->verbatim_chars[uchar(' ')] 
 // In the case of \verb+foo+, reads and returns the + character.
 // Sets special_space to true if spaces have to be treaded specially
 // Returns null in case of error
-auto Parser::delimiter_for_verb(bool &special_space) -> Utf8Char {
-    Utf8Char t = get_next_char();
+auto Parser::delimiter_for_verb(bool &special_space) -> codepoint {
+    codepoint t = get_next_char();
     if (!(t == '*')) return t;
-    if (at_eol()) return Utf8Char(0);
+    if (at_eol()) return codepoint(0);
     special_space = true;
     return get_next_char();
 }
 
 // In the case of \SaveVerb{ok}+foo+, reads and returns the + character,
 // which must have spacial_catcode. returns 0 in case of trouble
-auto Parser::delimiter_for_saveverb() -> Utf8Char {
+auto Parser::delimiter_for_saveverb() -> codepoint {
     for (;;) {
-        if (at_eol()) return Utf8Char(0);
-        Utf8Char c = get_next_char();
+        if (at_eol()) return codepoint(0);
+        codepoint c = get_next_char();
         if (c == 0) return c;
-        if (c.is_big()) return Utf8Char(0);
+        if (c.is_big()) return codepoint(0);
         if (get_catcode(c.value) == space_catcode) continue;
         if (get_catcode(c.value) == special_catcode) return c;
-        return Utf8Char(0);
+        return codepoint(0);
     }
 }
 
 // Case of the \verb command (t=0) or |foo|, where t is the char
-void Parser::T_verb(Utf8Char t) {
+void Parser::T_verb(codepoint t) {
     Token T = cur_tok;
     if (!TL.empty()) {
         verb_error(T, 0);
@@ -854,7 +854,7 @@ void Parser::T_saveverb() {
         verb_error(T, 0);
         return;
     }
-    Utf8Char c = delimiter_for_saveverb();
+    codepoint c = delimiter_for_saveverb();
     if (c == 0) {
         verb_error(T, 3);
         return;
@@ -1504,8 +1504,8 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
         if (get_x_token()) return true;
         if (cur_cmd_chr.get_cmd() == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd()) {
-            Utf8Char w = cur_cmd_chr.char_val();
-            if (w.is_upper_case()) w = Utf8Char(w.value + 'a' - 'A');
+            codepoint w = cur_cmd_chr.char_val();
+            if (w.is_upper_case()) w = codepoint(w.value + 'a' - 'A');
             b.push_back(w);
         } else
             return true;
@@ -2136,7 +2136,7 @@ void Parser::new_prim(String a, String b) {
         uchar c = b[i];
         if (c > 128) err_ns::fatal_error("internal error in new_prim");
         spec_offsets T = c == ' ' ? space_t_offset : is_letter(c) ? letter_t_offset : other_t_offset;
-        L.push_back(Token(T, Utf8Char(c)));
+        L.push_back(Token(T, codepoint(c)));
     }
     new_prim(hash_table.locate(a), L);
 }
@@ -2664,7 +2664,7 @@ void Parser::iexpand() {
     case l3str_case_cmd: E_l3str_case(c); return;
     case token_if_cmd: l3_token_check(c); return;
     case cat_ifeq_cmd: E_cat_ifeq(c); return;
-    case specchar_cmd: back_input(Token(other_t_offset, Utf8Char(c))); return;
+    case specchar_cmd: back_input(Token(other_t_offset, codepoint(c))); return;
     case splitfun_cmd: L3_user_split_next_name(c == 0); return;
     case user_cmd:
     case usero_cmd:

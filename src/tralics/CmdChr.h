@@ -1,5 +1,5 @@
 #pragma once
-#include "Utf8Char.h"
+#include "codepoint.h"
 #include "enums.h"
 
 // cmd, chr pair; The subtype can have 16bits
@@ -27,7 +27,7 @@ public:
         cmd = A;
         chr = B;
     }
-    [[nodiscard]] auto char_val() const -> Utf8Char { return Utf8Char(chr); }
+    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(chr); }
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
     [[nodiscard]] auto is_digit() const -> bool { return '0' <= chr && chr <= '9'; }
     [[nodiscard]] auto is_other() const -> bool { return cmd == other_catcode; }

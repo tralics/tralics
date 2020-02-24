@@ -51,7 +51,7 @@ public:
     [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
     [[nodiscard]] auto get_fml_subtype() const -> subtypes;
     [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
-    [[nodiscard]] auto get_char() const -> Utf8Char { return val.char_val(); }
+    [[nodiscard]] auto get_char() const -> codepoint { return val.char_val(); }
     [[nodiscard]] auto get_chr() const -> subtypes { return val.get_chr(); }
     void               set_chr(subtypes c) { val.set_chr(c); }
     [[nodiscard]] auto get_cmd() const -> symcodes { return val.get_cmd(); }
@@ -446,7 +446,7 @@ namespace math_ns {
     auto math_constants(int c) -> Xml *;
     auto math_space_code(int c) -> bool;
     auto make_sup(Xml *xval) -> Xml *;
-    auto mk_mi(Utf8Char c) -> Xml *;
+    auto mk_mi(codepoint c) -> Xml *;
     auto mk_mi(uchar c, int font) -> Xml *;
     auto mk_space(String) -> Xml *;
     auto nb_args_for_cmd(int) -> int;

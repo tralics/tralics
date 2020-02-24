@@ -23,7 +23,7 @@ auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
 auto operator<<(ostream &fp, const SthInternal &x) -> ostream &;
 auto operator<<(ostream &fp, Token x) -> ostream &;
 auto operator<<(ostream &fp, Xid) -> ostream &;
-auto operator<<(ostream &fp, const Utf8Char &) -> ostream &;
+auto operator<<(ostream &fp, const codepoint &) -> ostream &;
 auto operator<<(ostream &fp, const Xml *) -> ostream &;
 auto operator<<(ostream &fp, const ScaledInt &x) -> ostream &;
 auto operator<<(ostream &fp, const boundary_type &x) -> ostream &;
@@ -40,7 +40,7 @@ class Logger {
 public:
     fstream *          fp; // the stream to which we print
     void               finish_seq();
-    void               out_single_char(Utf8Char c);
+    void               out_single_char(codepoint c);
     void               dump(String s);
     void               dump0(String s);
     void               set_finished() { finished = true; }
@@ -164,8 +164,8 @@ auto operator<<(Logger &X, const Macro &x) -> Logger &;
 auto operator<<(Logger &X, const SthInternal &x) -> Logger &;
 auto operator<<(Logger &X, const FontInfo &x) -> Logger &;
 auto operator<<(Logger &fp, Token t) -> Logger &;
-auto operator<<(Logger &fp, const Utf8Char &x) -> Logger &;
-auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger &;
+auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
+auto operator<<(FullLogger &fp, const codepoint &x) -> FullLogger &;
 auto operator<<(FullLogger &fp, Token t) -> FullLogger &;
 auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger &;
 auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;

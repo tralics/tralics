@@ -418,7 +418,7 @@ void Parser::restore_the_state(SaveState &x) {
 // If this is the case, a new character is constructed and replaces the last
 // character read (i.e., will be returned by read_next_char)
 
-auto Parser::scan_double_hat(Utf8Char c) -> bool {
+auto Parser::scan_double_hat(codepoint c) -> bool {
     int sz = input_line.size();
     int p  = input_line_pos;
     int w  = sz - p + 1; // number of unread chars aon the line
@@ -432,7 +432,7 @@ auto Parser::scan_double_hat(Utf8Char c) -> bool {
         int hc4 = input_line[p + 8].hex_val();
         if (hc0 >= 0 && hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
             input_line_pos    = p + 8;
-            input_line[p + 8] = Utf8Char((hc0 << 16) + (hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4);
+            input_line[p + 8] = codepoint((hc0 << 16) + (hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4);
             return true;
         }
     }
@@ -443,7 +443,7 @@ auto Parser::scan_double_hat(Utf8Char c) -> bool {
         int hc4 = input_line[p + 6].hex_val();
         if (hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
             input_line_pos    = p + 6;
-            input_line[p + 6] = Utf8Char((hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4);
+            input_line[p + 6] = codepoint((hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4);
             return true;
         }
     }
@@ -452,23 +452,23 @@ auto Parser::scan_double_hat(Utf8Char c) -> bool {
         int hc2 = input_line[p + 2].hex_val();
         if (hc1 >= 0 && hc2 >= 0) {
             input_line_pos             = p + 2;
-            input_line[input_line_pos] = Utf8Char(16 * hc1 + hc2);
+            input_line[input_line_pos] = codepoint(16 * hc1 + hc2);
             return true;
         }
     }
-    Utf8Char C = input_line[p + 1];
+    codepoint C = input_line[p + 1];
     if (!C.is_ascii()) return false;
     uchar c1 = C.value;
     input_line_pos++;
-    input_line[p + 1] = Utf8Char(c1 < 64 ? c1 + 64 : c1 - 64);
+    input_line[p + 1] = codepoint(c1 < 64 ? c1 + 64 : c1 - 64);
     return true;
 }
 
 // This constructs a command name from the current line
 auto Parser::cs_from_input() -> Token {
     if (at_eol()) return Token(null_tok_val);
-    Utf8Char c = get_next_char();
-    state      = state_S;
+    codepoint c = get_next_char();
+    state       = state_S;
     if (c.is_big()) { // abort and return null_cs
         --input_line_pos;
         return Token(null_tok_val);
@@ -514,7 +514,7 @@ auto Parser::cs_from_input() -> Token {
 // (space or invalid chars), or because of ^^
 auto Parser::next_from_line0() -> bool {
     if (at_eol()) return true;
-    Utf8Char c = get_next_char();
+    codepoint c = get_next_char();
     if (c.is_big()) { // convert to \char"ABCD
         Buffer &B = local_buf;
         B.reset();
@@ -741,7 +741,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             }
             // Check brace level
             if (t.char_or_active()) {
-                Utf8Char c = t.char_val();
+                codepoint c = t.char_val();
                 if (c == '{')
                     b++;
                 else if (c == '}') {
@@ -759,8 +759,8 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
                 return false;
             continue; // this may set TL
         }
-        Utf8Char c = get_next_char();
-        if (c == '\r') c = Utf8Char('\n');
+        codepoint c = get_next_char();
+        if (c == '\r') c = codepoint('\n');
         B.push_back(c);
         if (c == '{') b++;
         if (c == '}') {
@@ -939,7 +939,7 @@ auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
     if (rl_sw) { // case of readline, only one line is read
         for (;;) {
             if (at_eol()) break;
-            Utf8Char c = get_next_char();
+            codepoint c = get_next_char();
             if (c.value == ' ')
                 L.push_back(hash_table.space_token);
             else
@@ -1544,7 +1544,7 @@ void Parser::scan_double(RealNumber &res) {
 // it reads a unit, returns
 auto Parser::read_unit() -> int {
     remove_initial_space();
-    Utf8Char c1, c2;
+    codepoint c1, c2;
     if (cur_tok.is_a_char()) {
         c1         = cur_cmd_chr.char_val().to_lower();
         Token save = cur_tok;

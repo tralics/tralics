@@ -269,7 +269,7 @@ class Berror {};
 class Bibtex {
 private:
     Buffer             inbuf;          // contains a line of the bib file
-    vector<Utf8Char>   input_line;     // line as Utf8Chars
+    vector<codepoint>  input_line;     // line as Utf8Chars
     uint               input_line_pos; // position in input_line
     Buffer             token_buf;
     LinePtr            in_lines;     // contains the bibfile
@@ -311,13 +311,13 @@ private:
     auto               check_entry_end() -> int;
     auto               check_entry_end(int) -> int;
     auto               check_field_end(int) -> int;
-    auto               cur_char() -> Utf8Char { return input_line[input_line_pos]; }
+    auto               cur_char() -> codepoint { return input_line[input_line_pos]; }
     void               define_a_macro(String name, String value);
     auto               find_a_macro(Buffer &name, bool insert, String, String) -> int;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
-    auto               get_class(Utf8Char c) -> id_type { return id_class[c.value]; }
+    auto               get_class(codepoint c) -> id_type { return id_class[c.value]; }
     void               handle_multiple_entries(BibEntry *);
     void               kill_the_lists();
     auto               look_at_macro(const Buffer &) -> int;
@@ -325,7 +325,7 @@ private:
     void               mac_def_val(int X) { all_macros[X].set_default_value(); }
     void               mac_set_val(int X, string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator, Istring) -> BibEntry *;
-    auto               next_char() -> Utf8Char { return input_line[input_line_pos++]; }
+    auto               next_char() -> codepoint { return input_line[input_line_pos++]; }
     void               next_line(bool);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
     void               parse_a_file();
@@ -341,7 +341,7 @@ private:
     auto               scan_identifier0(int) -> int;
     auto               see_new_entry(entry_type, int) -> BibEntry *;
     void               skip_space();
-    auto               wrong_first_char(Utf8Char, int) -> int;
+    auto               wrong_first_char(codepoint, int) -> int;
 
 public:
     auto               get_an_entry(int i) -> BibEntry * { return all_entries[i]; }

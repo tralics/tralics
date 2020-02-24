@@ -17,7 +17,7 @@
 string xxx;
 
 namespace {
-    inline auto is_spacer(Utf8Char c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
+    inline auto is_spacer(codepoint c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
 } // namespace
 
 // Rule 1 defines Document
@@ -115,7 +115,7 @@ void XmlIO::run() {
     B.reset();
     eof_ok = true;
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         // We should handle &foo; as well, but we cannot change it
         if (c != '<')
             B.push_back(c);
@@ -146,7 +146,7 @@ void XmlIO::next_line() {
 
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
-auto XmlIO::peek_char() -> Utf8Char {
+auto XmlIO::peek_char() -> codepoint {
     if (!reread_list.empty()) return reread_list.back();
     if (at_eol()) next_line();
     return input_line[input_line_pos];
@@ -161,8 +161,8 @@ void XmlIO::skip_char() {
 }
 
 // This returns the next character
-auto XmlIO::next_char() -> Utf8Char {
-    Utf8Char res = peek_char();
+auto XmlIO::next_char() -> codepoint {
+    codepoint res = peek_char();
     skip_char();
     return res;
 }
@@ -186,12 +186,12 @@ void XmlIO::flush_buffer() {
 // Scans a Name with a simplified syntax
 void XmlIO::scan_name() {
     B.reset();
-    Utf8Char x = XmlIO::peek_char();
+    codepoint x = XmlIO::peek_char();
     // x should be Letter underscore colon
     B.push_back(x);
     skip_char();
     for (;;) {
-        Utf8Char x = XmlIO::peek_char();
+        codepoint x = XmlIO::peek_char();
         if (x.is_ascii()) {
             x_type w = Type[x.value];
             if (w == xt_space || w == xt_invalid) return;
@@ -206,7 +206,7 @@ void XmlIO::scan_name() {
 void XmlIO::scan_name(uchar c) {
     B.reset();
     for (;;) {
-        Utf8Char x = XmlIO::peek_char();
+        codepoint x = XmlIO::peek_char();
         if (x == c || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -217,7 +217,7 @@ void XmlIO::scan_name(uchar c) {
 void XmlIO::scan_name(uchar c1, uchar c2) {
     B.reset();
     for (;;) {
-        Utf8Char x = XmlIO::peek_char();
+        codepoint x = XmlIO::peek_char();
         if (x == c1 || x == c2 || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -293,7 +293,7 @@ void XmlIO::parse_att_val() {
 
 void XmlIO::parse_quoted() {
     skip_space();
-    Utf8Char delim{' '};
+    codepoint delim{' '};
     if (cur_char == '\'' || cur_char == '"')
         delim = cur_char;
     else {
@@ -303,7 +303,7 @@ void XmlIO::parse_quoted() {
     skip_char();
     B.reset();
     for (;;) {
-        Utf8Char x = XmlIO::next_char();
+        codepoint x = XmlIO::next_char();
         if (x == delim) break;
         B.push_back(x);
     }
@@ -370,7 +370,7 @@ void XmlIO::parse_pi() {
         }
     } else
         for (;;) {
-            Utf8Char c = next_char();
+            codepoint c = next_char();
             if (c == '?') {
                 cur_char = peek_char();
                 if (cur_char == '>') {
@@ -388,8 +388,8 @@ void XmlIO::parse_pi() {
 
 // Scans a declaration. We test the first or second letter
 void XmlIO::parse_dec() {
-    cur_char   = next_char();
-    Utf8Char c = peek_char();
+    cur_char    = next_char();
+    codepoint c = peek_char();
     reread_list.push_back(cur_char);
     if (c == '-')
         parse_dec_comment();
@@ -430,7 +430,7 @@ void XmlIO::parse_dec_comment() {
     expect("--");
     B.reset();
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         B.push_back(c);
         if (c != '>') continue;
         int k = B.size(); // B[k-1] is >
@@ -449,7 +449,7 @@ void XmlIO::parse_dec_cdata() {
     B.push_back("<![CDATA ");
     skip_space();
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         B.push_back(c);
         if (c == '>') {
             int k = B.size(); // B[k-1] is >
@@ -466,7 +466,7 @@ void XmlIO::parse_dec_conditional() {
     B.push_back("<![");
     bool keep = false;
     skip_space();
-    Utf8Char c = peek_char();
+    codepoint c = peek_char();
     if (c == '%') {
         skip_char();
         expand_PEReference();
@@ -549,7 +549,7 @@ void XmlIO::parse_dec_entity() {
     if (cur_char != '>') {
         B.reset();
         for (;;) {
-            Utf8Char c = next_char();
+            codepoint c = next_char();
             if (c == '>') break;
             B.push_back(c);
         }
@@ -574,7 +574,7 @@ void XmlIO::parse_dec_element() {
     bool   first_space   = true;
     string elt_name;
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         if (c == '>') break;
         if (c == '%') {
             if (expand_PEReference()) continue;
@@ -624,7 +624,7 @@ void XmlIO::parse_dec_attlist() {
     bool   first_space   = true;
     string elt_name;
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         if (c == '>') break;
         if (c == '%') {
             if (expand_PEReference()) continue;
@@ -691,7 +691,7 @@ void XmlIO::parse_dec_doctype() {
     B.reset();
     B << " [";
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         if (c == '<')
             parse_lt();
         else {
@@ -722,7 +722,7 @@ void XmlIO::parse_dec_notation() {
     B.push_back("<!NOTATION ");
     skip_space();
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         B.push_back(c);
         if (c == '>') break;
     }
@@ -733,7 +733,7 @@ void XmlIO::parse_dec_notation() {
 auto XmlIO::expand_PEReference() -> bool {
     B.reset();
     for (;;) {
-        Utf8Char c = next_char();
+        codepoint c = next_char();
         if (c == ';') break;
         B.push_back(c);
     }
@@ -749,11 +749,11 @@ auto XmlIO::expand_PEReference() -> bool {
         }
     }
     if (!ok) B << ";";
-    vector<Utf8Char> V;
+    vector<codepoint> V;
     V.clear();
     B.reset_ptr();
     for (;;) {
-        Utf8Char c = B.next_utf8_char();
+        codepoint c = B.next_utf8_char();
         if (c == 0 && B.at_eol()) break;
         V.push_back(c);
     }

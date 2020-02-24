@@ -46,7 +46,7 @@ public:
     }
     auto operator<<(const TokenList &) -> Buffer &;
     auto operator<<(const Macro &) -> Buffer &;
-    auto operator<<(const Utf8Char &b) -> Buffer & {
+    auto operator<<(const codepoint &b) -> Buffer & {
         push_back(b);
         return *this;
     }
@@ -117,7 +117,7 @@ public:
     void               extract_cnrs_info();
     void               extract_dtd(String a, string &b, string &c);
     void               extract_strs(Buffer &A, Buffer &B);
-    void               extract_chars(vector<Utf8Char> &);
+    void               extract_chars(vector<codepoint> &);
     auto               fetch_beg_end_spec(bool k, bool incat, int &com_loc, bool &seen_dollar, String &) -> int;
     auto               fetch_citation(String, String &a, String &b) -> bool;
     auto               fetch_spec_arg() -> bool;
@@ -208,15 +208,15 @@ public:
     auto next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> bool;
     auto next_macro_spec() -> bool;
     auto next_utf8_byte() -> uchar;
-    auto next_utf8_char() -> Utf8Char;
-    auto next_utf8_char_aux() -> Utf8Char;
+    auto next_utf8_char() -> codepoint;
+    auto next_utf8_char_aux() -> codepoint;
     void no_control_M();
     void no_newline();
     void no_double_dot();
     void normalise_for_bibtex(String s);
     void optslash();
-    void out_four_hats(Utf8Char);
-    void out_log(Utf8Char ch, output_encoding_type T);
+    void out_four_hats(codepoint);
+    void out_log(codepoint ch, output_encoding_type T);
     auto pack_or_class(Buffer &aux) -> int;
     void pt_to_mu();
     void process_big_char(unsigned int n);
@@ -244,7 +244,7 @@ public:
     void push_back_int(int);
     void push_back16(uint, bool);
     void push_back16l(bool, uint);
-    void push_back_ent(Utf8Char);
+    void push_back_ent(codepoint);
     void push_back_hex(uint);
     void push_back_Hex(uint);
     void push_back_math_token(const CmdChr &, bool);
@@ -260,12 +260,12 @@ public:
     void push_back_space() { push_back(' '); };
     void push_back_special_att(Xid id);
     void push_back_special_string(String s);
-    void push_back_real_utf8(Utf8Char c);
+    void push_back_real_utf8(codepoint c);
     void push_back_xml_char(uchar c);
     void push_back_substring(String, int);
     void push_back_substring(const string &, int, int);
     void push_back_unless_punct(char c);
-    void push_back(Utf8Char c);
+    void push_back(codepoint c);
     void push_back3(unsigned int);
     void push_back9(unsigned int);
     void put_at_end(String s);
@@ -362,8 +362,8 @@ public:
     [[nodiscard]] auto uhead() const -> unsigned char { return buf[ptr]; }
     void               undo() { ptr--; }
     void               unicode_char(int);
-    [[nodiscard]] auto unique_character() const -> Utf8Char;
-    [[nodiscard]] auto make_character() const -> Utf8Char;
+    [[nodiscard]] auto unique_character() const -> codepoint;
+    [[nodiscard]] auto make_character() const -> codepoint;
     void               uppercase();
     void               utf8_error(bool);
     void               utf8_ovf(int);

@@ -1383,7 +1383,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         // DEBUG    cout << "cmd:" << B << ".\n";
         CmdChr w = L->get_cmd_chr();
         if (w.is_space() || w.is_letter() || w.is_other()) {
-            Utf8Char c = w.char_val();
+            codepoint c = w.char_val();
             if (c == '<')
                 B.push_back("&lt;");
             else if (c == '>')
@@ -1464,7 +1464,7 @@ auto Math::chars_to_mb3() -> Istring {
     for (;;) {
         if (empty()) break;
         if (!front().is_char()) break;
-        Utf8Char C = front().get_char();
+        codepoint C = front().get_char();
         pop_front();
         if (C == '+' || C == '-') {
             if ((sz != 0) || (bc != 0)) {
@@ -1474,7 +1474,7 @@ auto Math::chars_to_mb3() -> Istring {
             if (C == '-') sign = !sign;
             continue;
         }
-        if (C == ',') C = Utf8Char('.');
+        if (C == ',') C = codepoint('.');
         if (C == '.') {
             if (dot || (bc != 0)) {
                 sz = 0;
@@ -1554,7 +1554,7 @@ void Math::remove_opt_arg(bool star) {
     if (!front().is_bracket()) return;
     pop_front();
     while (!empty() && front().is_char()) {
-        Utf8Char c = front().get_char();
+        codepoint c = front().get_char();
         pop_front();
         if (c == ']') return;
         B.push_back(c);
@@ -1672,7 +1672,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
         if (L->is_char())
             B.push_back(L->get_char());
         else if (L->is_e_grave())
-            B.push_back(Utf8Char(0350));
+            B.push_back(codepoint(0350));
         else
             return nullptr;
         ++L;
@@ -1806,7 +1806,7 @@ void Parser::TM_fonts() {
 }
 
 // Convert the character c  into <mi>c</mi>
-auto math_ns::mk_mi(Utf8Char c) -> Xml * {
+auto math_ns::mk_mi(codepoint c) -> Xml * {
     aux_buffer.reset();
     aux_buffer.push_back_real_utf8(c);
     Xml *x = new Xml(Istring(aux_buffer));

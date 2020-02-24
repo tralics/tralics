@@ -129,27 +129,27 @@ public:
 
 // This allows us to temporarily read from elsewhere
 class InputStack {
-    vector<Utf8Char> B;
-    states           s;          // copy of scanner state
-    LinePtr          L;          // the lines
-    int              line_no;    // the current line number
-    TokenList        TL;         // saved token list
-    string           name;       // name of the current file
-    int              restore_at; // catcode of @ to restore
-    int              file_pos;   // file position to restore
-    int              Bpos;       // position in B
-    bool             every_eof;  // True if every_eof_token can be inserted
-    bool             eof_outer;  // True if eof is outer
+    vector<codepoint> B;
+    states            s;          // copy of scanner state
+    LinePtr           L;          // the lines
+    int               line_no;    // the current line number
+    TokenList         TL;         // saved token list
+    string            name;       // name of the current file
+    int               restore_at; // catcode of @ to restore
+    int               file_pos;   // file position to restore
+    int               Bpos;       // position in B
+    bool              every_eof;  // True if every_eof_token can be inserted
+    bool              eof_outer;  // True if eof is outer
 public:
     [[nodiscard]] auto get_name() const -> const string & { return name; }
     [[nodiscard]] auto get_line_no() const -> int { return line_no; }
     void               set_state(states X) { s = X; }
     auto               get_TL() -> TokenList & { return TL; }
-    auto               get_B() -> vector<Utf8Char> & { return B; }
+    auto               get_B() -> vector<codepoint> & { return B; }
     [[nodiscard]] auto get_state() const -> states { return s; }
     [[nodiscard]] auto get_line_pos() const -> int { return Bpos; }
     void               set_line_pos(int x) { Bpos = x; }
-    void               set_line_vector(const vector<Utf8Char> &x) { B = x; }
+    void               set_line_vector(const vector<codepoint> &x) { B = x; }
     [[nodiscard]] auto get_at_val() const -> int { return restore_at; }
     void               set_at_val(int x) { restore_at = x; }
     [[nodiscard]] auto get_file_pos() const -> int { return file_pos; }

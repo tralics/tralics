@@ -24,15 +24,15 @@ public:
 };
 
 class XmlIO {
-    Buffer           B; // holds current element
-    Buffer           aux;
-    Buffer           line_buffer; // holds current line
-    LinePtr          lines;       // input file
-    int              cur_line;
-    x_type           Type[128];
-    vector<Utf8Char> input_line;  // current line
-    vector<Utf8Char> reread_list; // current line
-    Utf8Char         cur_char;    // current character in some cases
+    Buffer            B; // holds current element
+    Buffer            aux;
+    Buffer            line_buffer; // holds current line
+    LinePtr           lines;       // input file
+    int               cur_line;
+    x_type            Type[128];
+    vector<codepoint> input_line;  // current line
+    vector<codepoint> reread_list; // current line
+    codepoint         cur_char;    // current character in some cases
 
     Xml *             cur_xml;
     vector<Xml *>     cur_stack;
@@ -45,9 +45,9 @@ class XmlIO {
     bool              eof_ok;
 
 private:
-    auto peek_char() -> Utf8Char;
+    auto peek_char() -> codepoint;
     void skip_char();
-    auto next_char() -> Utf8Char;
+    auto next_char() -> codepoint;
     void skip_space();
     void next_line();
     auto at_eol() -> bool { return input_line_pos >= cur_line_len; }

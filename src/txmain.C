@@ -437,9 +437,9 @@ void MainClass::open_log() {
     Buffer &b = confbuf;
     b.reset();
     b << "Left quote is ";
-    b.out_log(Utf8Char(leftquote_val), log_encoding);
+    b.out_log(codepoint(leftquote_val), log_encoding);
     b << " right quote is ";
-    b.out_log(Utf8Char(rightquote_val), log_encoding);
+    b.out_log(codepoint(rightquote_val), log_encoding);
     the_log << b << "\n";
     if (trivial_math != 0) the_log << "\\notrivialmath=" << trivial_math << "\n";
     io_ns::check_for_encoding();

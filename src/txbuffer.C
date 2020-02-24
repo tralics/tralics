@@ -105,7 +105,7 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c == '&')
         push_back("&amp;");
     else if (c < 32)
-        push_back_ent(Utf8Char(c));
+        push_back_ent(codepoint(c));
     else
         push_back(c);
 }
@@ -601,7 +601,7 @@ auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[
 void Buffer::insert_escape_char() {
     int c = buffer_ns::current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(Utf8Char(c), the_main->get_log_encoding());
+        out_log(codepoint(c), the_main->get_log_encoding());
     else if (c == 0)
         push_back("^^@");
 }
@@ -610,7 +610,7 @@ void Buffer::insert_escape_char() {
 void Buffer::insert_escape_char_raw() {
     int c = buffer_ns::current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(Utf8Char(c));
+        push_back(codepoint(c));
     else if (c == 0)
         push_back("^^@");
 }
@@ -624,7 +624,7 @@ auto buffer_ns::null_cs_name() -> String {
     else if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
-        B.out_log(Utf8Char(c), the_main->get_log_encoding());
+        B.out_log(codepoint(c), the_main->get_log_encoding());
         B << "endcsname";
         return B.c_str();
     } else if (c == 0)
@@ -659,9 +659,9 @@ auto Token::tok_to_str() const -> String {
         B.push_back(*this);
         return B.c_str();
     }
-    int      cat      = cmd_val();
-    Utf8Char c        = char_val();
-    bool     good_cat = false;
+    int       cat      = cmd_val();
+    codepoint c        = char_val();
+    bool      good_cat = false;
     if (!c.is_ascii() && cat == 12) good_cat = true;
     if (c.is_letter() && cat == 11) good_cat = true;
     if (good_cat)
@@ -688,8 +688,8 @@ auto Buffer::push_back(Token T) -> bool {
         return false;
     }
     if (T.is_a_char()) {
-        int      cmd = T.cmd_val();
-        Utf8Char c   = T.char_val();
+        int       cmd = T.cmd_val();
+        codepoint c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
             push_back(uchar(c.value + '0')); // parameter
@@ -723,7 +723,7 @@ void Buffer::insert_token(Token T, bool sw) {
         return;
     }
     if (T.char_or_active()) {
-        Utf8Char c = T.char_val();
+        codepoint c = T.char_val();
         if (T.is_a_char()) {
             int cmd = T.cmd_val();
             if (cmd == eol_catcode) {
@@ -751,7 +751,7 @@ void Buffer::insert_token(Token T, bool sw) {
     else
         insert_escape_char_raw();
     if (T.active_or_single()) {
-        Utf8Char c = T.char_val();
+        codepoint c = T.char_val();
         if (c.is_null())
             push_back("^^@");
         else
@@ -777,7 +777,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
         push_back("\\invalid.");
     else if (T.char_or_active()) {
         // We simplify the algorithm by printing the character as is
-        Utf8Char c = T.char_val();
+        codepoint c = T.char_val();
         if (c.is_null())
             push_back("^^@");
         else
@@ -785,7 +785,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
     } else {
         push_back('\\');
         if (T.active_or_single()) {
-            Utf8Char c = T.char_val();
+            codepoint c = T.char_val();
             if (c.is_null())
                 push_back("^^@");
             else
@@ -932,7 +932,7 @@ auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
 }
 
 // We use internal encoding here.
-auto operator<<(ostream &fp, const Utf8Char &x) -> ostream & {
+auto operator<<(ostream &fp, const codepoint &x) -> ostream & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
@@ -943,7 +943,7 @@ auto operator<<(ostream &fp, const Utf8Char &x) -> ostream & {
     return fp;
 }
 // Duplicate code...
-auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger & {
+auto operator<<(FullLogger &fp, const codepoint &x) -> FullLogger & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
@@ -955,7 +955,7 @@ auto operator<<(FullLogger &fp, const Utf8Char &x) -> FullLogger & {
 }
 
 // We use log encoding here.
-auto operator<<(Logger &fp, const Utf8Char &x) -> Logger & {
+auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {

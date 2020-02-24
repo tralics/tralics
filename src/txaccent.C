@@ -547,7 +547,7 @@ void Parser::E_accent() {
 }
 
 // Simple case of \^a that gives \342.
-inline auto accent_ns::mk_acc(uint s) -> Token { return Token(other_t_offset, Utf8Char(s)); }
+inline auto accent_ns::mk_acc(uint s) -> Token { return Token(other_t_offset, codepoint(s)); }
 
 // Creates the table for accents.
 void accent_ns::boot_accents() {

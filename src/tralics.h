@@ -38,7 +38,7 @@ void show_unused_options();
 void txsleep(int);
 
 #include "tralics/Token.h"
-#include "tralics/Utf8Char.h"
+#include "tralics/codepoint.h"
 
 #include "txcond.h"
 #include "txid.h"

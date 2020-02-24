@@ -2656,6 +2656,6 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         signal_error(T, "bad char spec");
         return;
     }
-    Token t = Token(other_t_offset, Utf8Char(r));
+    Token t = Token(other_t_offset, codepoint(r));
     back_input(t);
 }

@@ -56,9 +56,9 @@ void Parser::init_all(string doc_elt) {
 // Note: never use process_char('&'),
 inline void Parser::process_string(String s) { unprocessed_xml.push_back(s); }
 
-inline void Parser::process_char(int s) { process_char(Utf8Char(uint(s))); }
+inline void Parser::process_char(int s) { process_char(codepoint(uint(s))); }
 
-inline void Parser::process_char(uint c) { process_char(Utf8Char(c)); }
+inline void Parser::process_char(uint c) { process_char(codepoint(c)); }
 
 // This is useful for German unlaut. It translates two normal characters.
 void Parser::translate_char(uchar c1, uchar c2) {
@@ -168,7 +168,7 @@ void Parser::extended_chars(unsigned int c) {
 // Translate current character.
 void Parser::translate_char(CmdChr X) {
     if (!the_stack.in_h_mode()) LC();
-    Utf8Char c = X.char_val();
+    codepoint c = X.char_val();
     if (c.is_null()) return; // we do not want null chars in trace or Xml
     if (tracing_commands()) the_log.out_single_char(c);
     if (!c.is_small()) {
@@ -895,9 +895,9 @@ void Parser::translate03() {
         LC();
         // FIXME this is latex not xml
         if (eqtb_int_table[language_code].get_val() == 1) {
-            process_char(Utf8Char(0xE0));
+            process_char(codepoint(0xE0));
             process_string(" para");
-            process_char(Utf8Char(0xEE));
+            process_char(codepoint(0xEE));
             process_string("tre");
         } else
             process_string("to appear");
@@ -1190,7 +1190,7 @@ void Parser::translate03() {
     case dashline_cmd: T_dashline(c); return;
     case bezier_cmd: T_bezier(c); return;
     case grabenv_cmd: T_grabenv(); return;
-    case verb_cmd: T_verb(c != 0U ? verb_saved_char : Utf8Char(0)); return;
+    case verb_cmd: T_verb(c != 0U ? verb_saved_char : codepoint(0)); return;
     case gloss_cmd: T_gloss(c == 0); return;
     case only_preamble_cmd:
         get_r_token(true);

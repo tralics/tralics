@@ -2237,7 +2237,7 @@ auto MathElt::cv_char() -> MathElt {
     int        a;
     math_types mt = mt_flag_small;
     int        F  = get_font();
-    if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(Utf8Char(c)), mt_flag_small);
+    if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(codepoint(c)), mt_flag_small);
     if (::is_digit(c))
         a = c - '0' + math_dig_loc;
     else if (::is_letter(c) && F < 2) {
@@ -2911,7 +2911,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             default: return 3;
             }
         } else if (cmd == 11 || cmd == 12) {
-            B.push_back_real_utf8(Utf8Char(chr));
+            B.push_back_real_utf8(codepoint(chr));
             f = fn;
             continue;
         } else if (cmd == mathfont_cmd)
@@ -2926,7 +2926,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             else
                 return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
-            B.push_back_real_utf8(Utf8Char(chr));
+            B.push_back_real_utf8(codepoint(chr));
             continue;
         } else if (cmd == relax_cmd)
             continue;

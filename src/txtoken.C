@@ -288,7 +288,7 @@ auto Hashtab::locate(const string &s) -> Token {
 // This returns the token associated to the string in the buffer.
 auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.size() == 0) return Token(null_tok_val);
-    Utf8Char c = b.unique_character();
+    codepoint c = b.unique_character();
     if (c.non_null()) return Token(c.value + single_offset);
     return Token(hash_find(b, nullptr) + hash_offset);
 }
@@ -301,7 +301,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
     if (b.size() == 0)
         T = null_tok_val;
     else {
-        Utf8Char c = b.unique_character();
+        codepoint c = b.unique_character();
         if (c.non_null())
             T = c.value + single_offset;
         else {
@@ -567,7 +567,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     reset_ptr();
     for (;;) {
         if (at_eol()) return L;
-        Utf8Char c = next_utf8_char();
+        codepoint c = next_utf8_char();
         if (c == 0) {
         } // ignore bad chars
         else if (c == ' ')
@@ -587,7 +587,7 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
     reset_ptr();
     for (;;) {
         if (at_eol()) return L;
-        Utf8Char c = next_utf8_char();
+        codepoint c = next_utf8_char();
         if (c == 0) {
         } // ignore bad chars
         else if (c == ' ')
@@ -853,7 +853,7 @@ void Logger::finish_seq() {
 }
 
 // starts a sequence of characters if needed, adds character c
-void Logger::out_single_char(Utf8Char c) {
+void Logger::out_single_char(codepoint c) {
     if (finished) {
         finished = false;
         buffer_for_log2.reset();
@@ -890,8 +890,8 @@ void Parser::print_cmd_chr(CmdChr X) {
     }
     if (a != nullptr) { // chr
         the_log << a;
-        Utf8Char y(X.get_chr());
-        Buffer & B = buffer_for_log;
+        codepoint y(X.get_chr());
+        Buffer &  B = buffer_for_log;
         B.reset();
         B.out_log(y, the_main->get_log_encoding());
         return;
@@ -1026,9 +1026,9 @@ void token_ns::sanitize_one(TokenList &L, TokenList &s, int n) {
         Token x = *C;
         check_brace(x, bl);
         if (bl <= n && x.is_a_char()) {
-            Utf8Char c  = x.char_val();
-            auto     sC = s.begin();
-            auto     sE = s.end();
+            codepoint c  = x.char_val();
+            auto      sC = s.begin();
+            auto      sE = s.end();
             while (sC != sE) {
                 if (sC->char_val() == c) *C = *sC;
                 break;

@@ -582,7 +582,7 @@ void Parser::load_latex() {
     new_prim("NAT@cmt", ", ");
     {
         TokenList L;
-        L.push_back(Token(letter_t_offset, Utf8Char('&')));
+        L.push_back(Token(letter_t_offset, codepoint('&')));
         new_prim("amp", L);
     }
     more_bootstrap();

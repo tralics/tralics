@@ -1436,7 +1436,7 @@ void MathDataP::boot_xml_lr_tables() {
     mc_table[20] = mk_mo(no_ent_names ? "&#x0266D;" : "&flat;");
     mc_table[21] = mk_mo("_");
     mc_table[22] = mk_mo("#");
-    mc_table[23] = math_ns::mk_mi(Utf8Char('j'));
+    mc_table[23] = math_ns::mk_mi(codepoint('j'));
     mc_table[24] = mk_mo(no_ent_names ? "&#x02020;" : "&dagger;");
     mc_table[25] = mk_mo(no_ent_names ? "&#x02021;" : "&ddagger;");
     mc_table[26] = mk_mo(no_ent_names ? "&#x2DC;" : "&tilde;");

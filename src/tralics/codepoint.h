@@ -1,14 +1,13 @@
 #pragma once
-#include "types.h"
 
-// \todo This should be called Unicode or better just vanish (and we would use
-// char32_t everywhere in the code) if there is a reasonable path to do that
-// while keeping all the helper functions.
+// \todo This might better just vanish (and we would use char32_t everywhere in
+// the code) if there is a reasonable path to do that while keeping all the
+// helper functions.
 
-struct Utf8Char {
+struct codepoint {
     char32_t value;
 
-    explicit Utf8Char(unsigned int x = 0) : value(x) {}
+    explicit codepoint(unsigned int x = 0) : value(x) {}
 
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
@@ -36,15 +35,15 @@ struct Utf8Char {
         return -1;
     }
 
-    [[nodiscard]] auto to_lower() const -> Utf8Char {
-        if (is_upper_case()) return Utf8Char(value + ('a' - 'A'));
+    [[nodiscard]] auto to_lower() const -> codepoint {
+        if (is_upper_case()) return codepoint(value + ('a' - 'A'));
         return *this;
     }
 
     void make_invalid() { value = 0xFFFF; } // Not a Unicode char
 };
 
-inline auto operator==(const Utf8Char &a, const Utf8Char &b) -> bool { return a.value == b.value; }
-inline auto operator!=(const Utf8Char &a, const Utf8Char &b) -> bool { return a.value != b.value; }
-inline auto operator==(const Utf8Char &a, const unsigned char &b) -> bool { return a.value == uint(b); }
-inline auto operator!=(const Utf8Char &a, const unsigned char &b) -> bool { return a.value != uint(b); }
+inline auto operator==(const codepoint &a, const codepoint &b) -> bool { return a.value == b.value; }
+inline auto operator!=(const codepoint &a, const codepoint &b) -> bool { return a.value != b.value; }
+inline auto operator==(const codepoint &a, const unsigned char &b) -> bool { return a.value == uint(b); }
+inline auto operator!=(const codepoint &a, const unsigned char &b) -> bool { return a.value != uint(b); }

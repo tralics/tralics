@@ -73,25 +73,25 @@ private:
     string year_string;   // the year (effective number)
     string job_name;      // the name, without extensions
 
-    Buffer           input_buffer;                          // input buffer
-    Buffer           mac_buffer;                            // buffer the current macro
-    Buffer           group_buffer;                          // buffer for arg of \begin{...} \end(...)
-    Buffer           unprocessed_xml;                       // chars to be converted into an XML element
-    Buffer           fetch_name_res;                        // used by fetch_name
-    LinePtr          lines;                                 // the lines to  be read
-    TokenList        TL;                                    // list of tokens to be read again
-    Condition        conditions;                            // condition stack for current \if
-    SthInternal      cur_val;                               // result of scan_something internal
-    TokenList        document_hook;                         // the document-hook
-    TokenList        end_document_hook;                     // the end-document-hook
-    Utf8Char         verb_saved_char;                       // Char to use for verb by ShortVewrb
-    vector<Utf8Char> input_line;                            // input line converted to chars
-    uint             input_line_pos{0};                     // position in input_line
-    Xml *            the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    Buffer            input_buffer;                          // input buffer
+    Buffer            mac_buffer;                            // buffer the current macro
+    Buffer            group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer            unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer            fetch_name_res;                        // used by fetch_name
+    LinePtr           lines;                                 // the lines to  be read
+    TokenList         TL;                                    // list of tokens to be read again
+    Condition         conditions;                            // condition stack for current \if
+    SthInternal       cur_val;                               // result of scan_something internal
+    TokenList         document_hook;                         // the document-hook
+    TokenList         end_document_hook;                     // the end-document-hook
+    codepoint         verb_saved_char;                       // Char to use for verb by ShortVewrb
+    vector<codepoint> input_line;                            // input line converted to chars
+    uint              input_line_pos{0};                     // position in input_line
+    Xml *             the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
-    auto               get_next_char() -> Utf8Char { return input_line[input_line_pos++]; }
+    auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
     [[nodiscard]] auto get_catcode(int x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
     void               set_catcode(int x, int v) { // untraced version of catcode modification
         eqtb_int_table[x].set_val(v);
@@ -328,8 +328,8 @@ private:
     void define_choice_key();
     void define_cmd_key(subtypes);
     void define_something(int chr, bool gbl, symcodes w);
-    auto delimiter_for_verb(bool &) -> Utf8Char;
-    auto delimiter_for_saveverb() -> Utf8Char;
+    auto delimiter_for_verb(bool &) -> codepoint;
+    auto delimiter_for_saveverb() -> codepoint;
     auto dimen_attrib(ScaledInt) -> Istring;
     auto dimen_from_list(Token, TokenList &) -> ScaledInt;
     void dimen_from_list0(Token, TokenList &);
@@ -361,7 +361,7 @@ private:
     void expand_twoargs();
     void T_verbatim(int, Token, Token, Token);
     void expand_verb(unsigned char t);
-    void T_verb(Utf8Char);
+    void T_verb(codepoint);
     void expand_verb1(TokenList &);
     void expand_when_ok(bool);
     auto to_stringE(TokenList &L) -> string;
@@ -402,7 +402,7 @@ private:
     void fnhack();
     void font_has_changed();
     void formatdate();
-    auto scan_double_hat(Utf8Char cc) -> bool;
+    auto scan_double_hat(codepoint cc) -> bool;
     void fp_boolean(bool);
     void fp_calla(Token);
     void fp_callb(Token);
@@ -593,7 +593,7 @@ private:
     void print_token(ostream &fp, Token x);
     void process_char(uchar c);
     void process_string(String s);
-    void process_char(Utf8Char c);
+    void process_char(codepoint c);
     void process_char(uint c);
     void process_char(int s);
     void push_input_stack(const string &, bool, bool);
@@ -993,7 +993,7 @@ private:
     void user_XML_swap(subtypes c);
     void user_XML_modify(subtypes c);
     void user_XML_fetch();
-    auto vb_tokens(Utf8Char test, TokenList &L, bool) -> bool;
+    auto vb_tokens(codepoint test, TokenList &L, bool) -> bool;
     void verb_error(Token, int);
     void T_whiledo();
     void E_while(subtypes);

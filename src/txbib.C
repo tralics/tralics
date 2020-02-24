@@ -1115,7 +1115,7 @@ void Bibtex::scan_for_at() {
         if (at_eol())
             next_line(false);
         else {
-            Utf8Char c = next_char();
+            codepoint c = next_char();
             if (c == '@') return;
         }
     }
@@ -1156,7 +1156,7 @@ auto Bibtex::scan_identifier(int what) -> bool {
 auto Bibtex::scan_identifier0(int what) -> int {
     Buffer &B = token_buf;
     B.reset();
-    Utf8Char c = cur_char();
+    codepoint c = cur_char();
     if (!c.is_ascii() || c.is_digit() || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
         if (at_eol()) break;
@@ -1177,7 +1177,7 @@ auto Bibtex::scan_identifier0(int what) -> int {
 
 // A bunch of functions called when we see the end of an identifier.
 // We start with a function that complains if first character is wrong.
-auto Bibtex::wrong_first_char(Utf8Char c, int what) -> int {
+auto Bibtex::wrong_first_char(codepoint c, int what) -> int {
     err_in_file(scan_msgs[what], false);
     if (c.is_digit())
         log_and_tty << "\nit cannot start with a digit";
@@ -1200,7 +1200,7 @@ auto Bibtex::wrong_first_char(Utf8Char c, int what) -> int {
 // @comment(etc) is ignored
 auto Bibtex::check_entry_end() -> int {
     if (token_buf == "comment") return 0; // don't complain
-    Utf8Char c = cur_char();
+    codepoint c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
     log_and_tty << "\nexpected `('  or `{'";
@@ -1249,7 +1249,7 @@ auto Bibtex::check_field_end(int what) -> int {
 // Returns 0 ik OK, 4 otherwise.
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
-    Utf8Char c = cur_char();
+    codepoint c = cur_char();
     if (c.is_space() || c == '#' || c == ',' || c == right_outer_delim) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << "\nit cannot end with `" << c << "'\n"
@@ -1299,7 +1299,7 @@ void Bibtex::read_field(bool store) {
 
 // This reads a single field
 void Bibtex::read_one_field(bool store) {
-    Utf8Char c = cur_char();
+    codepoint c = cur_char();
     if (c == '{' || c == '\"') {
         uchar delimiter = c == '{' ? '}' : '\"';
         advance(); // reads left delimiter
@@ -1512,7 +1512,7 @@ void Bibtex::parse_one_item() {
         skip_space();
         for (;;) {
             if (at_eol()) break;
-            Utf8Char c = cur_char();
+            codepoint c = cur_char();
             if (c == ',' || c.is_space()) break;
             A << c;
             next_char();
@@ -1524,7 +1524,7 @@ void Bibtex::parse_one_item() {
         while (cur_char() != ')' && cur_char() != '}') parse_one_field(X);
         if (m > 1) handle_multiple_entries(X);
     }
-    Utf8Char c = cur_char();
+    codepoint c = cur_char();
     if (c == ')' || c == '}') advance();
     if (c != right_outer_delim) err_in_file("bad end delimiter", true);
 }
@@ -2221,11 +2221,11 @@ void Buffer::normalise_for_bibtex(String s) {
         if (c != '\\') continue;
         if (strncmp(s, "c{c}", 4) == 0) {
             wptr--;
-            push_back(Utf8Char(0347));
+            push_back(codepoint(0347));
             s += 4;
         } else if (strncmp(s, "c{C}", 4) == 0) {
             wptr--;
-            push_back(Utf8Char(0307));
+            push_back(codepoint(0307));
             s += 4;
         } else if (strncmp(s, "v{c}", 4) == 0) {
             s += 4;
@@ -2752,191 +2752,191 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             advance();
             if (c == '\'') {
                 if (C == 'a') {
-                    B.push_back(Utf8Char('\341'));
+                    B.push_back(codepoint('\341'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(Utf8Char('\351'));
+                    B.push_back(codepoint('\351'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(Utf8Char('\355'));
+                    B.push_back(codepoint('\355'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(Utf8Char('\363'));
+                    B.push_back(codepoint('\363'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(Utf8Char('\372'));
+                    B.push_back(codepoint('\372'));
                     continue;
                 }
                 if (C == 'y') {
-                    B.push_back(Utf8Char('\375'));
+                    B.push_back(codepoint('\375'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(Utf8Char('\301'));
+                    B.push_back(codepoint('\301'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(Utf8Char('\311'));
+                    B.push_back(codepoint('\311'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(Utf8Char('\315'));
+                    B.push_back(codepoint('\315'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(Utf8Char('\323'));
+                    B.push_back(codepoint('\323'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(Utf8Char('\332'));
+                    B.push_back(codepoint('\332'));
                     continue;
                 }
                 if (C == 'Y') {
-                    B.push_back(Utf8Char('\335'));
+                    B.push_back(codepoint('\335'));
                     continue;
                 }
             }
             if (c == '`') {
                 if (C == 'a') {
-                    B.push_back(Utf8Char('\340'));
+                    B.push_back(codepoint('\340'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(Utf8Char('\350'));
+                    B.push_back(codepoint('\350'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(Utf8Char('\354'));
+                    B.push_back(codepoint('\354'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(Utf8Char('\362'));
+                    B.push_back(codepoint('\362'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(Utf8Char('\371'));
+                    B.push_back(codepoint('\371'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(Utf8Char('\300'));
+                    B.push_back(codepoint('\300'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(Utf8Char('\310'));
+                    B.push_back(codepoint('\310'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(Utf8Char('\314'));
+                    B.push_back(codepoint('\314'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(Utf8Char('\322'));
+                    B.push_back(codepoint('\322'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(Utf8Char('\331'));
+                    B.push_back(codepoint('\331'));
                     continue;
                 }
             }
             if (c == '^') {
                 if (C == 'a') {
-                    B.push_back(Utf8Char('\342'));
+                    B.push_back(codepoint('\342'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(Utf8Char('\352'));
+                    B.push_back(codepoint('\352'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(Utf8Char('\356'));
+                    B.push_back(codepoint('\356'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(Utf8Char('\364'));
+                    B.push_back(codepoint('\364'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(Utf8Char('\373'));
+                    B.push_back(codepoint('\373'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(Utf8Char('\302'));
+                    B.push_back(codepoint('\302'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(Utf8Char('\312'));
+                    B.push_back(codepoint('\312'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(Utf8Char('\316'));
+                    B.push_back(codepoint('\316'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(Utf8Char('\324'));
+                    B.push_back(codepoint('\324'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(Utf8Char('\333'));
+                    B.push_back(codepoint('\333'));
                     continue;
                 }
             }
             if (c == '\"') {
                 if (C == 'a') {
-                    B.push_back(Utf8Char('\344'));
+                    B.push_back(codepoint('\344'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(Utf8Char('\353'));
+                    B.push_back(codepoint('\353'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(Utf8Char('\357'));
+                    B.push_back(codepoint('\357'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(Utf8Char('\366'));
+                    B.push_back(codepoint('\366'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(Utf8Char('\374'));
+                    B.push_back(codepoint('\374'));
                     continue;
                 }
                 if (C == 'y') {
-                    B.push_back(Utf8Char('\377'));
+                    B.push_back(codepoint('\377'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(Utf8Char('\304'));
+                    B.push_back(codepoint('\304'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(Utf8Char('\313'));
+                    B.push_back(codepoint('\313'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(Utf8Char('\317'));
+                    B.push_back(codepoint('\317'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(Utf8Char('\326'));
+                    B.push_back(codepoint('\326'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(Utf8Char('\334'));
+                    B.push_back(codepoint('\334'));
                     continue;
                 }
             }
             if (c == '~') {
                 if (C == 'n') {
-                    B.push_back(Utf8Char('\361'));
+                    B.push_back(codepoint('\361'));
                     continue;
                 }
                 if (C == 'N') {
-                    B.push_back(Utf8Char('\321'));
+                    B.push_back(codepoint('\321'));
                     continue;
                 }
             }

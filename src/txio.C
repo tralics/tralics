@@ -25,7 +25,7 @@ namespace {
     Buffer    utf8_out;            // Holds utf8 outbuffer
     Buffer    utf8_in;             // Holds utf8 inbuffer
     Converter the_converter;
-    Utf8Char  custom_table[max_encoding - 2][lmaxchar];
+    codepoint custom_table[max_encoding - 2][lmaxchar];
 } // namespace
 
 namespace main_ns {
@@ -36,7 +36,7 @@ namespace main_ns {
 namespace io_ns {
     void print_ascii(ostream &fp, uchar c);
     auto how_many_bytes(uchar) -> int;
-    auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> Utf8Char;
+    auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
     void check_for_encoding();
     void set_enc_param(int enc, int pos, int v);
@@ -277,74 +277,74 @@ auto io_ns::how_many_bytes(uchar C) -> int {
 
 // Creates a Unicode character from the bytes A, B, C and D.
 // Return 0 if invalid. Return 0 if overflow
-auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> Utf8Char {
+auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
     int n = io_ns::how_many_bytes(A);
     if (n == 0)
-        return Utf8Char(0);
+        return codepoint(0);
     else if (n == 1)
-        return Utf8Char(A);
+        return codepoint(A);
     else if (n == 2)
-        return Utf8Char(((A & 31) << 6) + (B & 63));
+        return codepoint(((A & 31) << 6) + (B & 63));
     else if (n == 3)
-        return Utf8Char((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
+        return codepoint((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
     else
-        return Utf8Char((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
+        return codepoint((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
 }
 
 // Returns 0 at end of line or error
 // may set local_error
-auto Buffer::next_utf8_char_aux() -> Utf8Char {
+auto Buffer::next_utf8_char_aux() -> codepoint {
     uchar c = next_char();
-    if (c == 0) return Utf8Char(0);
+    if (c == 0) return codepoint(0);
     int n = io_ns::how_many_bytes(c);
     if (n == 0) {
         utf8_error(true);
         the_converter.line_is_ascii = false;
-        return Utf8Char(0);
+        return codepoint(0);
     }
-    if (n == 1) return Utf8Char(c);
+    if (n == 1) return codepoint(c);
     the_converter.line_is_ascii = false;
     if (n == 2) {
         uint x = next_utf8_byte();
-        return Utf8Char(((c & 31) << 6) + x);
+        return codepoint(((c & 31) << 6) + x);
     } else if (n == 3) {
         uint z = next_utf8_byte();
         uint x = next_utf8_byte();
-        return Utf8Char(x + (z << 6) + ((c & 15) << 12));
+        return codepoint(x + (z << 6) + ((c & 15) << 12));
     } else {
         uint z = next_utf8_byte();
         uint y = next_utf8_byte();
         uint x = next_utf8_byte();
-        return Utf8Char((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
+        return codepoint((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
     }
 }
 
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
-auto Buffer::next_utf8_char() -> Utf8Char {
+auto Buffer::next_utf8_char() -> codepoint {
     the_converter.local_error = false;
-    Utf8Char res              = next_utf8_char_aux();
+    codepoint res             = next_utf8_char_aux();
     if (the_converter.local_error)
-        return Utf8Char(0);
+        return codepoint(0);
     else if (res.is_verybig()) {
         utf8_ovf(res.value);
-        return Utf8Char(0);
+        return codepoint(0);
     } else
         return res;
 }
 
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
-auto Buffer::unique_character() const -> Utf8Char {
+auto Buffer::unique_character() const -> codepoint {
     uchar c = buf[0];
     int   n = io_ns::how_many_bytes(c);
-    if (n == 0) return Utf8Char(0);
-    if (n != size()) return Utf8Char(0);
-    if (n == 1) return Utf8Char(c);
+    if (n == 0) return codepoint(0);
+    if (n != size()) return codepoint(0);
+    if (n == 1) return codepoint(c);
     if (n == 2) return io_ns::make_utf8char(buf[0], buf[1], 0, 0);
     if (n == 3) return io_ns::make_utf8char(buf[0], buf[1], buf[2], 0);
     if (n == 4) return io_ns::make_utf8char(buf[0], buf[1], buf[2], buf[3]);
-    return Utf8Char(0);
+    return codepoint(0);
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
@@ -353,14 +353,14 @@ auto Buffer::convert_line0(int wc) -> bool {
     Buffer &res = utf8_out;
     res.reset();
     reset_ptr();
-    Utf8Char c;
+    codepoint c;
     for (;;) {
         if (wc == 0)
             c = next_utf8_char();
         else {
             uchar C = next_char();
             if (wc == 1)
-                c = Utf8Char(C);
+                c = codepoint(C);
             else
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
@@ -395,7 +395,7 @@ void Clines::convert_line(int wc) {
 // Initialises encoding tables
 void io_ns::check_for_encoding() {
     for (auto &i : custom_table)
-        for (int j = 0; j < lmaxchar; ++j) i[j] = Utf8Char(j);
+        for (int j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
 }
 
 // Why is v limited to 16bit chars?
@@ -412,9 +412,9 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[enc][pos] = Utf8Char(v);
+        custom_table[enc][pos] = codepoint(v);
     else
-        custom_table[enc][pos] = Utf8Char(pos);
+        custom_table[enc][pos] = codepoint(pos);
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
@@ -599,7 +599,7 @@ void LinePtr::normalise_final_cr() {
 // ------------------------------------------------------
 
 // This puts x into the buffer in utf8 form
-void Buffer::push_back(Utf8Char c) {
+void Buffer::push_back(codepoint c) {
     uint x = c.value;
     if (x < 128) {
         push_back(uchar(x));
@@ -692,7 +692,7 @@ void Buffer::push_back16l(bool hat, uint n) {
 
 // This puts a 16bit char in the form ^^^^abcd in the buffer.
 // Uses ^^ab notation if better
-void Buffer::out_four_hats(Utf8Char ch) {
+void Buffer::out_four_hats(codepoint ch) {
     if (ch == '\n') {
         push_back('\n');
         return;
@@ -718,7 +718,7 @@ void Buffer::out_four_hats(Utf8Char ch) {
 }
 
 // This inserts &#xabc;
-void Buffer::push_back_ent(Utf8Char ch) {
+void Buffer::push_back_ent(codepoint ch) {
     int c = ch.value;
     if (c == 65534 || c == 65535) return; // these chars are illegal
     push_back('&');
@@ -742,7 +742,7 @@ void Buffer::process_big_char(uint n) {
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
-void Parser::process_char(Utf8Char c) {
+void Parser::process_char(codepoint c) {
     if (c.is_null())
         unprocessed_xml.push_back(""); // may be required
     else if (c == '\n')
@@ -763,7 +763,7 @@ void Parser::process_char(Utf8Char c) {
         unprocessed_xml.push_back(c);
 }
 
-void Buffer::push_back_real_utf8(Utf8Char c) {
+void Buffer::push_back_real_utf8(codepoint c) {
     if (c.is_null())
         push_back(""); // may be required
     else if (c == '\n')
@@ -789,11 +789,11 @@ void Parser::process_char(uchar c) {
     if (c < 128)
         unprocessed_xml.push_back(c);
     else
-        process_char(Utf8Char(c));
+        process_char(codepoint(c));
 }
 
 // This dumps a single character using log method
-void Buffer::out_log(Utf8Char ch, output_encoding_type T) {
+void Buffer::out_log(codepoint ch, output_encoding_type T) {
     if (ch == '\n')
         push_back('\n');
     else if (ch == '\r')
@@ -830,7 +830,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     the_converter.global_error = false;
     O.reset();
     I.reset_ptr();
-    Utf8Char c;
+    codepoint c;
     for (;;) {
         c = I.next_utf8_char();
         if (c.is_null() && I.at_eol()) break;
@@ -858,7 +858,7 @@ auto Buffer::convert_to_log_encoding() const -> String {
     Buffer &O = utf8_out;
     O.reset();
     for (;;) {
-        Utf8Char c = I.next_utf8_char();
+        codepoint c = I.next_utf8_char();
         if (c == 0) {
             if (I.at_eol())
                 break;
@@ -872,12 +872,12 @@ auto Buffer::convert_to_log_encoding() const -> String {
     return O.c_str();
 }
 
-void Buffer::extract_chars(vector<Utf8Char> &V) {
+void Buffer::extract_chars(vector<codepoint> &V) {
     the_converter.start_convert(the_parser.get_cur_line());
     V.clear();
     reset_ptr();
     for (;;) {
-        Utf8Char c = next_utf8_char();
+        codepoint c = next_utf8_char();
         if (c == 0 && at_eol()) return;
         V.push_back(c);
     }
@@ -895,7 +895,7 @@ void Buffer::to_seven_bits() {
     I.reset_ptr();
     reset();
     for (;;) {
-        Utf8Char c = I.next_utf8_char();
+        codepoint c = I.next_utf8_char();
         if (I.at_eol()) remove_space_at_end();
         return;
         int x = c.value;
