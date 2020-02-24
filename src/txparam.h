@@ -18,23 +18,23 @@
 class MainClass {
     //  MS ms;  // the ms data, see txcheck
     //  ProjectData project; // the project
-    string        infile;        // file argument given to the program
-    string        raweb_dir;     // the main tralics dir
-    string        raweb_dir_src; // is raweb_dir + "/src/"
-    string        no_year;       // is miaou
-    string        raclass;       // is ra2003
-    string        year_string;   // is 2003
-    string        dclass;        // documentclass of the file
-    string        type_option;   // the type option
-    string        dtd, dtdfile;  // the dtd, and its external location
-    string        dtype;         // the doc type found in the configuration file
-    string        start_date;    // string with date of start of run.
-    string        short_date;    // date of start of run.
-    string        tcf_file;
-    string        machine;
-    string        out_name;        // Name of output file
-    string        in_dir;          // Input directory
-    string        default_class;   //
+    std::string   infile;        // file argument given to the program
+    std::string   raweb_dir;     // the main tralics dir
+    std::string   raweb_dir_src; // is raweb_dir + "/src/"
+    std::string   no_year;       // is miaou
+    std::string   raclass;       // is ra2003
+    std::string   year_string;   // is 2003
+    std::string   dclass;        // documentclass of the file
+    std::string   type_option;   // the type option
+    std::string   dtd, dtdfile;  // the dtd, and its external location
+    std::string   dtype;         // the doc type found in the configuration file
+    std::string   start_date;    // string with date of start of run.
+    std::string   short_date;    // date of start of run.
+    std::string   tcf_file;
+    std::string   machine;
+    std::string   out_name;        // Name of output file
+    std::string   in_dir;          // Input directory
+    std::string   default_class;   //
     int           year{9876};      // current year
     int           env_number{0};   // number of environments seen
     int           current_line{0}; // current line number
@@ -50,12 +50,12 @@ class MainClass {
     line_iterator doc_class_pos;
     system_type   cur_os;
     // vector <EnvList> the_env; // the list of environments for checks
-    vector<Istring> bibtex_fields_s;
-    vector<Istring> bibtex_fields;
-    vector<Istring> bibtex_extensions;
-    vector<Istring> bibtex_extensions_s;
-    vector<string>  all_config_types;
-    Buffer          line_buffer; // buffer for current line
+    std::vector<Istring>     bibtex_fields_s;
+    std::vector<Istring>     bibtex_fields;
+    std::vector<Istring>     bibtex_extensions;
+    std::vector<Istring>     bibtex_extensions_s;
+    std::vector<std::string> all_config_types;
+    Buffer                   line_buffer; // buffer for current line
 
     Buffer               b_after, b_current; // aux buffers.
     String               external_prog{"rahandler.pl"};
@@ -99,24 +99,24 @@ public:
 public:
     MainClass();
     void               add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
-    void               bad(string, string);
-    void               bad1(string, string);
+    void               bad(std::string, std::string);
+    void               bad1(std::string, std::string);
     void               bad_char_before_brace(int k, String s, String info);
-    void               bad_end_env(string, int);
+    void               bad_end_env(std::string, int);
     void               bad_ignore_char(int k, String s);
-    auto               check_for_tcf(const string &) -> bool;
+    auto               check_for_tcf(const std::string &) -> bool;
     void               check_section_use();
-    auto               check_theme(const string &) -> string;
+    auto               check_theme(const std::string &) -> std::string;
     void               check_ur(const Buffer &);
-    auto               get_bibtex_fields() -> vector<Istring> & { return bibtex_fields; }
-    auto               get_bibtex_fields_s() -> vector<Istring> & { return bibtex_fields_s; }
-    auto               get_bibtex_extensions() -> vector<Istring> & { return bibtex_extensions; }
-    auto               get_bibtex_extensions_s() -> vector<Istring> & { return bibtex_extensions_s; }
+    auto               get_bibtex_fields() -> std::vector<Istring> & { return bibtex_fields; }
+    auto               get_bibtex_fields_s() -> std::vector<Istring> & { return bibtex_fields_s; }
+    auto               get_bibtex_extensions() -> std::vector<Istring> & { return bibtex_extensions; }
+    auto               get_bibtex_extensions_s() -> std::vector<Istring> & { return bibtex_extensions_s; }
     auto               get_fp_len() -> int { return cur_fp_len; }
     auto               get_footnote_hack() -> bool { return footnote_hack; }
     auto               get_no_undef_mac() -> bool { return no_undef_mac; }
-    auto               get_no_year() -> string { return no_year; }
-    auto               get_year_string() -> string { return year_string; }
+    auto               get_no_year() -> std::string { return no_year; }
+    auto               get_year_string() -> std::string { return year_string; }
     [[nodiscard]] auto get_input_encoding() const -> int { return input_encoding; }
     [[nodiscard]] auto get_output_encoding() const -> output_encoding_type { return output_encoding; }
     [[nodiscard]] auto get_log_encoding() const -> output_encoding_type { return log_encoding; }
@@ -126,7 +126,7 @@ public:
     [[nodiscard]] auto get_zws_mode() const -> bool { return no_zerowidthspace; }
     [[nodiscard]] auto get_zws_elt() const -> bool { return no_zerowidthelt; }
     [[nodiscard]] auto get_version() const -> String { return version_string; }
-    void               handle_one_bib_file(string);
+    void               handle_one_bib_file(std::string);
     void               incr_cur_fp_len(int a) { cur_fp_len += a; }
     [[nodiscard]] auto in_ra() const -> bool { return handling_ra; }
     [[nodiscard]] auto in_simple_ra() const -> bool { return simplified_ra; }
@@ -149,18 +149,18 @@ public:
     void               set_foot_hack(bool b) { footnote_hack = b; }
     void               set_fp_len(int a) { cur_fp_len = a; }
     void               set_input_encoding(int wc);
-    void               set_tcf_file(string s) {
+    void               set_tcf_file(std::string s) {
         tcf_file = std::move(s);
         use_tcf  = true;
     }
     void               set_use_font(bool b) { use_font_elt_sw = b; }
     void               set_pack_font(bool b) { pack_font_elt_sw = b; }
     void               set_use_sizes(bool b) { use_all_sizes_sw = b; }
-    void               set_start_date(string s) { start_date = std::move(s); }
-    void               set_short_date(string s) { short_date = std::move(s); }
-    void               set_default_class(string s) { default_class = std::move(s); }
-    [[nodiscard]] auto get_short_date() const -> string { return short_date; }
-    [[nodiscard]] auto get_default_class() const -> string { return default_class; }
+    void               set_start_date(std::string s) { start_date = std::move(s); }
+    void               set_short_date(std::string s) { short_date = std::move(s); }
+    void               set_default_class(std::string s) { default_class = std::move(s); }
+    [[nodiscard]] auto get_short_date() const -> std::string { return short_date; }
+    [[nodiscard]] auto get_default_class() const -> std::string { return default_class; }
     void               set_tpa_status(String);
     [[nodiscard]] auto use_all_sizes() const -> bool { return use_all_sizes_sw; }
     [[nodiscard]] auto use_noent_names() const -> bool { return noent_names; }
@@ -168,7 +168,7 @@ public:
     auto               use_old_phi() -> bool { return old_phi; }
     auto               use_double_quote_att() -> bool { return double_quote_att; }
     [[nodiscard]] auto pack_font_elt() const -> bool { return pack_font_elt_sw; }
-    void               unexpected_eof(string, int);
+    void               unexpected_eof(std::string, int);
     [[nodiscard]] auto d_verbose() const -> bool { return dverbose; }
     void               bad_year();
 
@@ -177,9 +177,9 @@ private:
     auto append_checked_line() -> int;
     void append_non_eof_line(String, int);
     auto append_nonempty_line() -> int;
-    void bad_mod(int a, string b, Buffer &c);
+    void bad_mod(int a, std::string b, Buffer &c);
     void boot_bibtex(bool);
-    void call_dvips(string);
+    void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
     auto check_for_alias_type(bool vb) -> bool;
@@ -197,7 +197,7 @@ private:
     void check_year_string(int, bool);
     void dubious_command(int k, bool where);
     void end_document();
-    void end_env(string);
+    void end_env(std::string);
     void end_mod();
     void end_with_help(int);
     auto find_config_file() -> bool;
@@ -220,7 +220,7 @@ private:
     void mk_empty();
     void more_boot();
     auto need_script() -> bool { return in_ra() && !in_simple_ra(); }
-    void one_bib_file(bib_from pre, string bib);
+    void one_bib_file(bib_from pre, std::string bib);
     void open_main_file();
     void open_config_file();
     void out_gathered_math();
@@ -228,7 +228,7 @@ private:
     void out_xml();
     void print_job();
     void print_mods();
-    void print_mods_end(fstream *);
+    void print_mods_end(std::fstream *);
     void print_mods_end_xml();
     void print_mods_start();
     void print_mods_start_xml();
@@ -248,7 +248,7 @@ private:
     void show_input_size();
     auto split_one_arg(String, int &) -> String;
     void start_document(Buffer &a);
-    void start_env(string);
+    void start_env(std::string);
     void start_error();
     void open_log();
     void trans0();
@@ -258,13 +258,13 @@ private:
 // parameterised data
 class ParamDataSlot {
 public:
-    string key;
-    string value;
-    bool   is_used;
-    ParamDataSlot(string a, string b) : key(std::move(a)), value(std::move(b)), is_used(false) {}
-    ParamDataSlot(string a, string b, bool c) : key(std::move(a)), value(std::move(b)), is_used(c) {}
+    std::string key;
+    std::string value;
+    bool        is_used;
+    ParamDataSlot(std::string a, std::string b) : key(std::move(a)), value(std::move(b)), is_used(false) {}
+    ParamDataSlot(std::string a, std::string b, bool c) : key(std::move(a)), value(std::move(b)), is_used(c) {}
     void               mark_used() { is_used = true; }
-    auto               matches(const string &x) -> bool { return is_used && x == key; }
+    auto               matches(const std::string &x) -> bool { return is_used && x == key; }
     [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
     void               to_buffer(Buffer &) const;
     void               key_to_buffer(Buffer &) const;
@@ -273,23 +273,23 @@ public:
 // We maintain a list of ParamDataSlot.
 class ParamDataList {
 public:
-    string                name;
-    vector<ParamDataSlot> data;
+    std::string                name;
+    std::vector<ParamDataSlot> data;
 
 public:
     void check_other();
-    auto its_me(const string &s) -> bool { return name == s; }
-    ParamDataList(string s) : name(std::move(s)) {}
+    auto its_me(const std::string &s) -> bool { return name == s; }
+    ParamDataList(std::string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(const ParamDataSlot &x) { data.push_back(x); }
     [[nodiscard]] auto size() const -> int { return data.size(); }
     void               keys_to_buffer(Buffer &) const;
-    void               reset() { data = vector<ParamDataSlot>(); }
+    void               reset() { data = std::vector<ParamDataSlot>(); }
 };
 
 class ParamDataVector {
 public:
-    vector<ParamDataList *> data;
+    std::vector<ParamDataList *> data;
     ParamDataVector();
-    auto find_list(const string &name, bool creat) -> ParamDataList *;
+    auto find_list(const std::string &name, bool creat) -> ParamDataList *;
 };

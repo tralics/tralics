@@ -11,8 +11,10 @@
 
 // This is the include file for the Buffer data structure
 
+#include "txid.h"
 #include "txscaled.h"
 #include "txtokenlist.h"
+#include <vector>
 
 using buffer_fn = void(Buffer &);
 
@@ -57,7 +59,7 @@ public:
         push_back(b);
         return *this;
     }
-    auto operator<<(const string &b) -> Buffer & {
+    auto operator<<(const std::string &b) -> Buffer & {
         push_back(b);
         return *this;
     }
@@ -77,7 +79,7 @@ public:
         f(*this);
         return *this;
     }
-    auto               add_with_space(String) -> string;
+    auto               add_with_space(String) -> std::string;
     void               advance() { ptr++; }
     void               advance(int k) { ptr += k; }
     void               alloc(int);
@@ -94,13 +96,13 @@ public:
     [[nodiscard]] auto c_str() const -> String { return data(); }
     void               chars_to_buffer(Buffer &);
     void               check_before_brace(String);
-    auto               check_cat_perso(int, int, bool) -> string;
+    auto               check_cat_perso(int, int, bool) -> std::string;
     auto               contains(String s) const -> bool { return strstr(data(), s) != nullptr; }
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String) const -> bool;
     [[nodiscard]] auto convert(int k) const -> std::string;
-    auto               convert_dim(int, int) -> string;
+    auto               convert_dim(int, int) -> std::string;
     [[nodiscard]] auto convert_to_str() const -> String;
     auto               convert_to_out_encoding(String) const -> String;
     [[nodiscard]] auto convert_to_log_encoding() const -> String;
@@ -114,16 +116,16 @@ public:
     void               dump_prefix(bool err, bool gbl, symcodes K);
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }
     void               extract_cnrs_info();
-    void               extract_dtd(String a, string &b, string &c);
+    void               extract_dtd(String a, std::string &b, std::string &c);
     void               extract_strs(Buffer &A, Buffer &B);
     void               extract_chars(vector<codepoint> &V);
     auto               fetch_beg_end_spec(bool k, bool incat, int &com_loc, bool &seen_dollar, String &) -> int;
     auto               fetch_citation(String, String &a, String &b) -> bool;
     auto               fetch_spec_arg() -> bool;
-    auto               figline(int &ctr, string &junk) -> string;
+    auto               figline(int &ctr, std::string &junk) -> std::string;
     void               figtable(String start, int id);
     void               fill_table(bchar_type *table);
-    auto               find_alias(const vector<string> &SL, string &res) -> bool;
+    auto               find_alias(const vector<std::string> &SL, std::string &res) -> bool;
     auto               find_and(bchar_type *table) -> bool;
     void               find_bibtex_name_token(int);
     auto               find_brace() -> int;
@@ -133,14 +135,14 @@ public:
     auto               find_documentclass(Buffer &) -> bool;
     auto               find_equals() -> bool;
     auto               find_one_bibtex_name() -> String;
-    void               find_one_type(vector<string> &);
+    void               find_one_type(vector<std::string> &);
     void               find_top_atts();
-    void               finish_figure(String start, string junk, int w);
+    void               finish_figure(String start, std::string junk, int w);
     void               finish_xml_print();
     auto               full_bracket_match() -> bool;
     auto               full_brace_match() -> bool;
     [[nodiscard]] auto get_int_val() const -> int;
-    auto               get_machine_name() -> string;
+    auto               get_machine_name() -> std::string;
     [[nodiscard]] auto get_ptr() const -> int { return ptr; }
     [[nodiscard]] auto get_ptr1() const -> int { return ptr1; }
     [[nodiscard]] auto hashcode(int prime) const -> int;
@@ -162,7 +164,7 @@ public:
     auto               insert_fp(const FpNum &) -> String;
     [[nodiscard]] auto insert_space_here(int) const -> bool;
     void               insert_string(const Buffer &s);
-    auto               insert_break(const string &) -> string;
+    auto               insert_break(const std::string &) -> std::string;
     void               insert_token0(Token c);
     auto               install_att(Xid idx, Istring match) -> bool;
     void               interpret_aux(vector<Istring> &, vector<Istring> &);
@@ -184,10 +186,10 @@ public:
     [[nodiscard]] auto last_slash() const -> int;
     [[nodiscard]] auto length() const -> int { return wptr; }
     [[nodiscard]] auto size() const -> int { return wptr; }
-    auto               look_at_space(const string &s) -> bool;
+    auto               look_at_space(const std::string &s) -> bool;
     void               lowercase();
     void               make_citation(String a, String b);
-    auto               make_unique_bid(int) -> string;
+    auto               make_unique_bid(int) -> std::string;
     void               modify(int p, char c) { at(p) = c; }
     void               new_keyword();
     void               new_word();
@@ -220,7 +222,7 @@ public:
     void purify(String s);
     void push_back(char c);
     void push_back(const Buffer &b) { push_back(b.data()); }
-    void push_back(const string &b) { push_back(b.c_str()); }
+    void push_back(const std::string &b) { push_back(b.c_str()); }
     void push_back(const Istring &);
     void push_back(String s);
     void push_back(ScaledInt v, glue_spec unit);
@@ -233,9 +235,9 @@ public:
     auto push_back(Token T) -> bool;
     void insert_token(Token T, bool);
     void push_back_alt(const AttPair &);
-    void push_back_braced(const string &);
+    void push_back_braced(const std::string &);
     void push_back_braced(String);
-    void push_back_def(String, string);
+    void push_back_def(String, std::string);
     void push_back_elt(Istring, Xid, int);
     void push_back_int(int);
     void push_back16(uint, bool);
@@ -259,14 +261,14 @@ public:
     void push_back_real_utf8(codepoint c);
     void push_back_xml_char(uchar c);
     void push_back_substring(String, int);
-    void push_back_substring(const string &, int, int);
+    void push_back_substring(const std::string &, int, int);
     void push_back_unless_punct(char c);
     void push_back(codepoint c);
     void push_back3(unsigned int);
     void push_back9(unsigned int);
     void put_at_end(String s);
-    auto remove_digits(const string &) -> string;
-    auto remove_space(const string &) -> string;
+    auto remove_digits(const std::string &) -> std::string;
+    auto remove_space(const std::string &) -> std::string;
     void rrl() {
         wptr--;
         at(wptr) = 0;
@@ -300,7 +302,7 @@ public:
     auto               see_config_kw(String s, bool c) -> String;
     auto               see_equals(String s) -> bool;
     auto               see_something(const String *Table) -> int;
-    auto               see_year(const string &a, string &b) -> int;
+    auto               see_year(const std::string &a, std::string &b) -> int;
     void               set(String s) {
         reset0();
         push_back(s);
@@ -332,25 +334,25 @@ public:
         while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
     }
     [[nodiscard]] auto single_char() const -> char;
-    auto               slash_separated(string &) -> bool;
+    auto               slash_separated(std::string &) -> bool;
     auto               some_substring(int a, int b) -> String;
-    auto               some_sub_string(int a, int b) -> string;
-    auto               split_at_colon(string &, string &) -> bool;
+    auto               some_sub_string(int a, int b) -> std::string;
+    auto               split_at_colon(std::string &, std::string &) -> bool;
     auto               sortify(String s) -> String;
-    auto               svn_id(string &name, string &date, string &version) -> bool;
+    auto               svn_id(std::string &name, std::string &date, std::string &version) -> bool;
     [[nodiscard]] auto space_or_underscore() const -> bool { return at(ptr) == '_' || at(ptr) == ' '; }
-    auto               special_convert(bool) -> string;
+    auto               special_convert(bool) -> std::string;
     [[nodiscard]] auto special_exponent() const -> String;
     void               special_purify(String s, int &pos);
-    void               special_title(string s);
+    void               special_title(std::string s);
     auto               str_toks(nl_to_tok) -> TokenList;
     auto               str_toks11(bool) -> TokenList;
     auto               string_delims() -> bool;
-    auto               substring() -> string;
+    auto               substring() -> std::string;
     [[nodiscard]] auto tex_comment_line() const -> bool;
     void               to_seven_bits();
-    [[nodiscard]] auto to_string() const -> string;
-    [[nodiscard]] auto to_string(int k) const -> string;
+    [[nodiscard]] auto to_string() const -> std::string;
+    [[nodiscard]] auto to_string(int k) const -> std::string;
     auto               convert_for_xml_err(Token t) -> Istring;
     auto               tp_next_char(char &) -> bool;
     auto               tp_fetch_something() -> tpa_line;
@@ -363,10 +365,10 @@ public:
     void               uppercase();
     void               utf8_error(bool);
     void               utf8_ovf(int);
-    auto               xml_and_attrib(const string &s) -> Xml *;
+    auto               xml_and_attrib(const std::string &s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;
-    void               l3_fabricate_cond(const string &, const string &, subtypes);
+    void               l3_fabricate_cond(const std::string &, const std::string &, subtypes);
     [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 private:

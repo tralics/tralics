@@ -1,3 +1,5 @@
+#include "tralics/Token.h"
+#include <list>
 #include <utility>
 
 #pragma once
@@ -44,7 +46,7 @@ namespace token_ns {
     auto split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z, bool) -> bool;
     auto string_to_list(Istring s) -> TokenList;
     auto string_to_list(String s, bool) -> TokenList;
-    auto string_to_list(const string &s, bool) -> TokenList;
+    auto string_to_list(const std::string &s, bool) -> TokenList;
     void double_hack(TokenList &key);
     auto split_at(Token m, TokenList &L, TokenList &z) -> bool;
     auto is_sublist(token_iterator A, token_iterator B, int) -> bool;

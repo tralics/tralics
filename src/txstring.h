@@ -37,7 +37,7 @@ public:
     void               re_alloc();
     auto               hash_find() -> int;
     auto               find(String) -> int;
-    auto               find(const string &) -> int;
+    auto               find(const std::string &) -> int;
     auto               find(int) -> int;
     auto               operator[](int k) const -> String { return Text[k]; }
     [[nodiscard]] auto p_str(int k) const -> String { return Value[k]; }
@@ -46,34 +46,12 @@ public:
     auto               lab_val_check(Istring k) -> LabelInfo *;
     auto               next_label_id() -> Istring;
     auto               next_top_label_id() -> Istring;
-    void               rlc_to_string(String s, vector<AttList> &);
+    void               rlc_to_string(String s, std::vector<AttList> &);
     [[nodiscard]] auto st_bool(bool x) const -> name_positions { return x ? np_true : np_false; };
     auto               find_scaled(ScaledInt) -> Istring;
     auto               skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
 };
 
-class Istring {
-    int value{0};
-
-public:
-    Istring() = default;
-    Istring(name_positions N) : value(the_names[N].value) {}
-    Istring(const Buffer &X);
-    explicit Istring(int N) : value(N) {}
-    explicit Istring(const string &s);
-    explicit Istring(String s);
-
-    [[nodiscard]] auto null() const -> bool { return value == 0; }       // null string
-    [[nodiscard]] auto empty() const -> bool { return value == 1; }      // ""
-    [[nodiscard]] auto spec_empty() const -> bool { return value == 2; } // ""
-    [[nodiscard]] auto only_space() const -> bool;
-    [[nodiscard]] auto starts_with_div() const -> uchar;
-    [[nodiscard]] auto only_space_spec() const -> bool;
-    auto               operator==(Istring X) const -> bool { return value == X.value; }
-    auto               operator!=(Istring X) const -> bool { return value != X.value; }
-    [[nodiscard]] auto get_value() const -> int { return value; }
-    [[nodiscard]] auto c_str() const -> String;
-    [[nodiscard]] auto p_str() const -> String;
-};
+#include "tralics/Istring.h"
 
 inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.get_value()]; }

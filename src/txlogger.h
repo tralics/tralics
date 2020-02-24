@@ -10,44 +10,46 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txfonts.h"
+#include <fstream>
+#include <iostream>
 #include <utility>
 
 // This include file holds some declarations for printing objects
 // and the classes that allow us to print either on the tty, the log file
 // or both.
 
-auto operator<<(ostream &fp, const Glue &x) -> ostream &;
-auto operator<<(ostream &fp, const Istring &L) -> ostream &;
-auto operator<<(ostream &fp, const Macro &x) -> ostream &;
-auto operator<<(ostream &fp, const TokenList &L) -> ostream &;
-auto operator<<(ostream &fp, const FontInfo &L) -> ostream &;
-auto operator<<(ostream &fp, const SthInternal &x) -> ostream &;
-auto operator<<(ostream &fp, Token x) -> ostream &;
-auto operator<<(ostream &fp, Xid) -> ostream &;
-auto operator<<(ostream &fp, const codepoint &x) -> ostream &;
-auto operator<<(ostream &fp, const Xml *) -> ostream &;
-auto operator<<(ostream &fp, const ScaledInt &x) -> ostream &;
-auto operator<<(ostream &fp, const boundary_type &x) -> ostream &;
+auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
+auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;
+auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream &;
+auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
+auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream &;
+auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream &;
+auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
+auto operator<<(std::ostream &fp, Xid) -> std::ostream &;
+auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;
+auto operator<<(std::ostream &fp, const Xml *) -> std::ostream &;
+auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
+auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
 
-inline auto operator<<(ostream &fp, const Buffer &L) -> ostream & { return fp << L.c_str(); }
+inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.c_str(); }
 
 class Logger;
 using logger_fn = void(Logger &);
 
 class Logger {
-    bool finished;   // if false, we are printing a character sequence and
-                     // a newline is required
-    string filename; // the name of the log file
+    bool finished;        // if false, we are printing a character sequence and
+                          // a newline is required
+    std::string filename; // the name of the log file
 public:
-    fstream *          fp; // the stream to which we print
+    std::fstream *     fp; // the stream to which we print
     void               finish_seq();
     void               out_single_char(codepoint c);
     void               dump(String s);
     void               dump0(String s);
     void               set_finished() { finished = true; }
-    void               set_file_name(string x) { filename = std::move(x); }
+    void               set_file_name(std::string x) { filename = std::move(x); }
     void               abort();
-    [[nodiscard]] auto get_filename() const -> string { return filename; }
+    [[nodiscard]] auto get_filename() const -> std::string { return filename; }
     auto               operator<<(logger_fn f) -> Logger & {
         f(*this);
         return *this;
@@ -77,7 +79,7 @@ public:
         *(fp) << c;
         return *this;
     }
-    auto operator<<(const string &s) -> Logger & {
+    auto operator<<(const std::string &s) -> Logger & {
         *(fp) << s;
         return *this;
     }
@@ -105,7 +107,7 @@ public:
         return *this;
     }
     void finish(int);
-    void init(string, bool);
+    void init(std::string, bool);
     void unexpected_char(String s, int k);
 };
 
@@ -173,7 +175,7 @@ auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;
 auto operator<<(FullLogger &X, String s) -> FullLogger &;
 auto operator<<(FullLogger &X, Istring s) -> FullLogger &;
 auto operator<<(FullLogger &X, int s) -> FullLogger &;
-auto operator<<(FullLogger &X, const string &s) -> FullLogger &;
+auto operator<<(FullLogger &X, const std::string &s) -> FullLogger &;
 auto operator<<(FullLogger &X, char s) -> FullLogger &;
 auto operator<<(FullLogger &X, unsigned char s) -> FullLogger &;
 auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger &;
@@ -182,4 +184,4 @@ auto operator<<(FullLogger &X, const Xml *s) -> FullLogger &;
 auto operator<<(HalfLogger &X, String s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, Istring s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, int s) -> HalfLogger &;
-auto operator<<(HalfLogger &X, const string &s) -> HalfLogger &;
+auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger &;

@@ -27,12 +27,12 @@ public:
     void               add_attribute(const AttList &L, bool f);
     void               add_attribute_but_rend(Xid b);
     void               add_attribute(Xid b);
-    void               add_ref(const string &);
+    void               add_ref(const std::string &);
     void               add_span(int);
     void               add_top_rule();
     void               add_bottom_rule();
     auto               operator==(Xid X) const -> bool { return value == X.value; }
     auto               has_attribute(Istring n) -> Istring;
     [[nodiscard]] auto is_font_change() const -> bool;
-    void               add_special_att(const string &S);
+    void               add_special_att(const std::string &S);
 };

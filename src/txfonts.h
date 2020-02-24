@@ -61,7 +61,7 @@ public:
     void               set_old_from_packed() { old = packed; }
     void               set_color(Istring c) { color = c; }
     [[nodiscard]] auto get_color() const -> Istring { return color; }
-    void               ltfont(const string &s, subtypes c);
+    void               ltfont(const std::string &s, subtypes c);
 };
 
 class TeXChar {
@@ -76,35 +76,35 @@ public:
 
 class TexFont {
 public:
-    int        smallest_char;
-    int        largest_char;
-    int        width_len;
-    int        height_len;
-    int        depth_len;
-    int        italic_len;
-    int        ligkern_len;
-    int        kern_len;
-    int        exten_len;
-    int        param_len;
-    TeXChar *  char_table;
-    int *      width_table;
-    int *      height_table;
-    int *      depth_table;
-    int *      italic_table;
-    int *      ligkern_table;
-    int *      kern_table;
-    int *      exten_table;
-    ScaledInt *param_table;
-    int        hyphen_char;
-    int        skew_char;
-    string     name;
-    int        scaled_val;
-    int        at_val;
+    int         smallest_char;
+    int         largest_char;
+    int         width_len;
+    int         height_len;
+    int         depth_len;
+    int         italic_len;
+    int         ligkern_len;
+    int         kern_len;
+    int         exten_len;
+    int         param_len;
+    TeXChar *   char_table;
+    int *       width_table;
+    int *       height_table;
+    int *       depth_table;
+    int *       italic_table;
+    int *       ligkern_table;
+    int *       kern_table;
+    int *       exten_table;
+    ScaledInt * param_table;
+    int         hyphen_char;
+    int         skew_char;
+    std::string name;
+    int         scaled_val;
+    int         at_val;
 
-    TexFont(const string &n, int a, int s);
+    TexFont(const std::string &n, int a, int s);
 
     void               realloc_param(int);
-    [[nodiscard]] auto its_me(const string &, int, int) const -> bool;
+    [[nodiscard]] auto its_me(const std::string &, int, int) const -> bool;
     void               make_null();
     void               load();
 };
@@ -113,12 +113,12 @@ struct TexFonts : public std::vector<TexFont> {
     TexFonts() { emplace_back("nullfont", 0, 0); }
 
     auto is_valid(int) -> bool;
-    auto name(int) -> string;
+    auto name(int) -> std::string;
     void full_name(Buffer &, int k);
     auto get_int_param(int ft, int pos) -> int;
     auto get_dimen_param(int ft, int pos) -> ScaledInt;
     void set_int_param(int, int, int);
     void set_dimen_param(int, int, ScaledInt);
-    auto find_font(const string &, int, int) -> int;
-    auto define_a_new_font(string n, int a, int s) -> int;
+    auto find_font(const std::string &, int, int) -> int;
+    auto define_a_new_font(std::string n, int a, int s) -> int;
 };
