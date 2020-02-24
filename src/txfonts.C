@@ -299,7 +299,7 @@ void FontInfo::ltfont(const string &s, subtypes c) {
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const string &n, int a, int s) -> int {
     for (uint i = 0; i < data.size(); i++)
-        if ((data[i] != nullptr) && data[i]->its_me(n, a, s)) return i;
+        if (data[i].its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
 }
 
@@ -320,7 +320,7 @@ auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
         the_parser.parse_error("fatal: font table overflow");
         return 0;
     }
-    data.push_back(std::make_unique<TexFont>(std::move(n), a, s));
+    data.emplace_back(std::move(n), a, s);
     return data.size() - 1;
 }
 
@@ -361,28 +361,26 @@ void TexFont::make_null() {
 // True if k is a valid font ID
 auto TexFonts::is_valid(int k) -> bool {
     if (k < 0 || k >= static_cast<int>(data.size())) return false;
-    if (data[k] == nullptr) return false;
     return true;
 }
 
 // Returns name of font
 auto TexFonts::name(int k) -> string {
-    if (k == 0) return "nullfont";
     if (!is_valid(k)) return "";
-    return data[k]->name;
+    return data[k].name;
 }
 
 // Returns name of font
 void TexFonts::full_name(Buffer &B, int k) {
     if (!is_valid(k)) return;
-    B.push_back(data[k]->name);
-    if (data[k]->scaled_val != 0) {
+    B.push_back(data[k].name);
+    if (data[k].scaled_val != 0) {
         B.push_back(" scaled ");
-        B.push_back_int(data[k]->scaled_val);
+        B.push_back_int(data[k].scaled_val);
     }
-    if (data[k]->at_val != 0) {
+    if (data[k].at_val != 0) {
         B.push_back(" at ");
-        B.push_back(ScaledInt(data[k]->at_val), glue_spec_pt);
+        B.push_back(ScaledInt(data[k].at_val), glue_spec_pt);
     }
 }
 
@@ -390,16 +388,16 @@ void TexFonts::full_name(Buffer &B, int k) {
 auto TexFonts::get_int_param(int ft, int pos) -> int {
     if (!is_valid(ft)) return -1;
     if (pos == 0)
-        return data[ft]->hyphen_char;
+        return data[ft].hyphen_char;
     else
-        return data[ft]->skew_char;
+        return data[ft].skew_char;
 }
 
 // Returns a dimension parameter for a font
 auto TexFonts::get_dimen_param(int ft, int pos) -> ScaledInt {
     if (!is_valid(ft)) return 0;
-    if (pos < 0 || pos >= data[ft]->param_len) return 0;
-    return data[ft]->param_table[pos];
+    if (pos < 0 || pos >= data[ft].param_len) return 0;
+    return data[ft].param_table[pos];
 }
 
 // Sets an integer parameter for a font
@@ -409,9 +407,9 @@ void TexFonts::set_int_param(int ft, int pos, int v) {
         return;
     }
     if (pos == 0)
-        data[ft]->hyphen_char = v;
+        data[ft].hyphen_char = v;
     else
-        data[ft]->skew_char = v;
+        data[ft].skew_char = v;
 }
 
 // Sets a dimension parameter for a font
@@ -420,8 +418,8 @@ void TexFonts::set_dimen_param(int ft, int p, ScaledInt v) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;
     }
-    if (p > data[ft]->param_len) data[ft]->realloc_param(p);
-    data[ft]->param_table[p] = v;
+    if (p > data[ft].param_len) data[ft].realloc_param(p);
+    data[ft].param_table[p] = v;
 }
 
 // All fonts can be resized...

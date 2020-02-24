@@ -99,7 +99,7 @@ public:
     int        scaled_val;
     int        at_val;
 
-    TexFont(const string &, int, int);
+    TexFont(const string &n, int a, int s);
 
     void               realloc_param(int);
     [[nodiscard]] auto its_me(const string &, int, int) const -> bool;
@@ -109,9 +109,9 @@ public:
 
 class TexFonts {
 public:
-    std::vector<std::unique_ptr<TexFont>> data;
+    std::vector<TexFont> data;
 
-    TexFonts() { data.push_back(std::make_unique<TexFont>("", 0, 0)); }
+    TexFonts() { data.emplace_back("nullfont", 0, 0); }
 
     auto is_valid(int) -> bool;
     auto name(int) -> string;
