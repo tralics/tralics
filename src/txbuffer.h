@@ -21,10 +21,9 @@ using buffer_fn = void(Buffer &);
 // much as possible but we can't because of all the zero-char manipulations.
 class Buffer : public std::vector<char> {
 private:
-    int wptr{0};    // the write pointer
-    int asize{128}; // allocated size
-    int ptr{0};     // the read pointer
-    int ptr1{0};    // a second read pointer
+    int wptr{0}; // the write pointer
+    int ptr{0};  // the read pointer
+    int ptr1{0}; // a second read pointer
 public:
     Buffer() : std::vector<char>(128, 0){};
 
@@ -371,7 +370,7 @@ public:
     [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 private:
-    void realloc();
+    void realloc(size_t s);
     auto after_slash() -> bool;
     void advance_letter_dig() {
         while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;

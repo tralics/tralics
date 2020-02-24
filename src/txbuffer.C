@@ -73,7 +73,7 @@ void Buffer::push_back_braced(const string &s) {
 
 // Inserts a character in the buffer. Always adds a null after it.
 void Buffer::push_back(char c) {
-    if (wptr >= asize - 2) resize();
+    if (size_t(wptr) >= std::vector<char>::size() - 2) resize();
     at(wptr) = c;
     wptr++;
     at(wptr) = 0;
@@ -107,28 +107,20 @@ auto Buffer::convert_to_str() const -> String {
 }
 
 // This doubles the size
-void Buffer::resize() {
-    asize *= 2;
-    realloc();
-}
+void Buffer::resize() { realloc(2 * std::vector<char>::size()); }
 
 // This reallocates to the value of size.
-void Buffer::realloc() {
+void Buffer::realloc(size_t s) {
     the_parser.my_stats.one_more_buffer_realloc();
-    std::vector<char> aux(asize);
+    std::vector<char>::resize(s);
     kill_at(wptr);
-    memcpy(aux.data(), data(), wptr);
-    swap(aux);
 }
 
 // Makes sure we can add n chars in the buffer
 // Note: we have wptr+1<size, so that at(wptr) can be assigned
 void Buffer::alloc(int n) {
     n = wptr + n + 1;
-    if (n >= asize) {
-        while (n >= asize) asize *= 2;
-        realloc();
-    }
+    while (size_t(n) >= std::vector<char>::size()) resize();
 }
 
 // Inserts a string. Always inserts a null character at the end.
