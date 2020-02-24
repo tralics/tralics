@@ -16,6 +16,9 @@ class MathP;
 class MathF;
 using MathQList = std::list<MathQ>;
 
+auto get_math_char(uchar c, int f) -> string;
+void set_math_char(uchar c, int f, string s);
+
 // A math object is a strange thing:
 // a math_elt object has 4 fields, one is a pointer to another object.
 // Other 3 objects are : cmd, chr, token in some cases.

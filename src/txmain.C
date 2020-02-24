@@ -34,6 +34,8 @@
 #include "txparser.h"
 #include "txpath.h"
 
+void set_everyjob(const string &s); // in tralics.C, but used only here
+
 inline void MainClass::set_version() {
     version_string = "2.15.4"; // current version number
 }
@@ -135,12 +137,6 @@ void txsleep(int i) { Sleep(1000 * i); }
 #else
 #include <unistd.h>
 void txsleep(int i) { sleep(i); }
-#endif
-
-#ifdef _MSC_VER
-int tcgethostname(char *name, size_t len) { return -1; }
-#else
-auto txgethostname(char *name, size_t len) -> int { return gethostname(name, len); }
 #endif
 
 // Converts the symbolic OS string to a real string

@@ -4,6 +4,8 @@
 // the code) if there is a reasonable path to do that while keeping all the
 // helper functions.
 
+auto is_letter(uchar c) -> bool;
+
 struct codepoint {
     char32_t value;
 

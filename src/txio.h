@@ -11,6 +11,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+void readline(char *buffer, int screen_size);
+
 // Implements:  FileForInput, LinePtr, TexOutStream
 // InputStack converter
 

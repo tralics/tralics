@@ -11,6 +11,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+void show_unused_options();
+
 // This holds the translation of \DeclareOption{foo}{bar}
 // or \usepackage[foo=bar]{pack}
 //  name foo, val bar

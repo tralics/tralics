@@ -12,6 +12,7 @@
 
 #include "tralics.h"
 #include "txparser.h"
+#include <unistd.h>
 
 namespace {
     Buffer       thebuffer;      // a scratch buffer
@@ -1423,7 +1424,7 @@ void Parser::finish_images() {
 auto Buffer::get_machine_name() -> string {
     reset();
     alloc(200);
-    if (txgethostname(data(), 199) != 0) push_back("unknown");
+    if (gethostname(data(), 199) != 0) push_back("unknown");
     at(200) = 0;
     wptr    = strlen(data());
     int n   = wptr;
