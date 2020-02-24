@@ -11,7 +11,9 @@
 // This file contains ltclass.dtx
 
 #include "tralics.h"
+#include "txatt.h"
 #include "txclasses.h"
+#include "txinline.h"
 #include "txparser.h"
 #include <utility>
 

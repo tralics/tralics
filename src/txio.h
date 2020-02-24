@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics/marelle (Jose' Grimm) 2006 2015
@@ -10,6 +8,9 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
+
+#include <array>
+#include <utility>
 
 void readline(char *buffer, int screen_size);
 

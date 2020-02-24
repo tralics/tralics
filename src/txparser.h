@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2003-2004, 2007,2008
@@ -10,6 +8,11 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
+
+#include "txhash.h"
+#include "txio.h"
+#include "txstack.h"
+#include <utility>
 
 // This file holds the definition of the Parser class, which is the main
 // data structure of the Tralics translator.

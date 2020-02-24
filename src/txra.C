@@ -11,6 +11,7 @@
 // This file contains commands needed for the RA
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txparser.h"
 
 static Buffer  Tbuf;

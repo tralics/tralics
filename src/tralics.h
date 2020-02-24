@@ -33,9 +33,3 @@ using namespace std;
 #include "tximage.h"
 #include "txstats.h"
 #include "txvars.h"
-
-#include "txarray.h"
-#include "txeqtb.h"
-#include "txfonts.h"
-#include "txhash.h"
-#include "txinline.h"

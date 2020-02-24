@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
@@ -10,6 +8,11 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
+
+#include "txscaled.h"
+#include "txstring.h"
+#include "txtokenlist.h"
+#include <utility>
 
 // Contains:
 //   equivalent, restore_vb_space, save_catcode, InLoadHandler,

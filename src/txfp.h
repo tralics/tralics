@@ -9,6 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "txtokenlist.h"
+#include <array>
+
 // for the fp package. this implements fixed point arithmetic
 class FpNum {
 public:

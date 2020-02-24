@@ -10,6 +10,8 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txarray.h"
+#include "txinline.h"
 #include "txparser.h"
 
 static NewArray new_array_object;

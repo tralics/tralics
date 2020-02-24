@@ -10,6 +10,10 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txatt.h"
+#include "txinline.h"
+#include "txparam.h"
+#include "txstack.h"
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.

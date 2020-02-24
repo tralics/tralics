@@ -10,6 +10,7 @@
 
 #include "tralics.h"
 #include "txfp.h"
+#include "txinline.h"
 #include "txparser.h"
 
 namespace {

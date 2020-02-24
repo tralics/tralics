@@ -11,6 +11,8 @@
 // This file contains a lot of stuff dealing with buffers.
 
 #include "tralics.h"
+#include "txhash.h"
+#include "txinline.h"
 #include "txparser.h"
 #include <unistd.h>
 

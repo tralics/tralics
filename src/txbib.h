@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002, 2007,2008
@@ -10,6 +8,10 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
+
+#include "txinline.h"
+#include "txio.h"
+#include <utility>
 
 // This is the unique identifier of a bibliography element
 // from the bibtex point of view. If used, a unique id (an integer will be

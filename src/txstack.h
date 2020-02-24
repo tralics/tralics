@@ -11,6 +11,7 @@
 
 // This file holds the stack and related stuff
 
+#include "txatt.h"
 #include "txbuffer.h"
 #include "txtokenlist.h"
 #include "txxml.h"

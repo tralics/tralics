@@ -11,6 +11,7 @@
 // This file contains a big part of the Tralics translator
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txparser.h"
 #include <utility>
 

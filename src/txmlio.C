@@ -11,6 +11,7 @@
 // This file contains the XML parser of tralics
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txmlio.h"
 #include "txparser.h"
 

@@ -16,6 +16,7 @@
 // fact internal encoding is always unicode, latin1 is a red herring here.
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txparser.h"
 
 namespace accent_ns {

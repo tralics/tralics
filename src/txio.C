@@ -12,6 +12,8 @@
 // Handle also utf8 input output
 
 #include "tralics.h"
+#include "txatt.h"
+#include "txinline.h"
 #include "txparser.h"
 #include <sstream>
 #include <utility>
@@ -20,11 +22,12 @@ static const int lmaxchar     = 256;
 static const int max_encoding = 34;
 
 namespace {
-    Buffer                                                        thebuffer;
-    bool                                                          log_is_open = false; // says if stranscript file is open for I/O tracing
-    Buffer                                                        utf8_out;            // Holds utf8 outbuffer
-    Buffer                                                        utf8_in;             // Holds utf8 inbuffer
-    Converter                                                     the_converter;
+    Buffer    thebuffer;
+    bool      log_is_open = false; // says if stranscript file is open for I/O tracing
+    Buffer    utf8_out;            // Holds utf8 outbuffer
+    Buffer    utf8_in;             // Holds utf8 inbuffer
+    Converter the_converter;
+
     std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 } // namespace
 

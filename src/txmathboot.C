@@ -11,6 +11,7 @@
 // Tralics math; boot part. This constructs all data structures.
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
 #include <utility>

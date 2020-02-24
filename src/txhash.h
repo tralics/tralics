@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008
@@ -10,6 +8,9 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
+
+#include "txeqtb.h"
+#include <utility>
 
 // This is the main hash table. If a token like \foo has hashcode p,
 // then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...

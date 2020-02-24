@@ -13,6 +13,7 @@
 
 #include "tralics.h"
 #include "txclasses.h"
+#include "txinline.h"
 #include "txparser.h"
 #include "txparser2.h"
 

@@ -10,7 +10,10 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txatt.h"
 #include "txbib.h"
+#include "txhash.h"
+#include "txinline.h"
 #include "txparser.h"
 #include <utility>
 

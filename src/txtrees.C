@@ -12,6 +12,7 @@
 // It contains also some eTeX extensions.
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txparser.h"
 #include "txtrees.h"
 

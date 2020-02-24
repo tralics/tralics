@@ -11,6 +11,7 @@
 // Tralics, math part II
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txmath.h"
 #include "txmath1.h"
 #include "txparser.h"

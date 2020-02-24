@@ -9,6 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "txstring.h"
+
 // This is how Tralics interprets a font
 class FontInfo {
     int     size;              // size, between 1 and 11 times 2048

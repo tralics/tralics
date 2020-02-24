@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txhash.h"
 
 void Hashtab::boot_etex() {
     primitive("TeXXeTstate", assign_int_cmd, TeXXetstate_code);

@@ -9,6 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics.h"
+#include "txhash.h"
+#include "txinline.h"
 #include "txparser.h"
 
 namespace arith_ns {

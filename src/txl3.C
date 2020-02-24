@@ -11,6 +11,7 @@
 // This file contains stuff for latex3
 
 #include "tralics.h"
+#include "txinline.h"
 #include "txparser.h"
 
 namespace {
