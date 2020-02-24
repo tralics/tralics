@@ -2236,7 +2236,7 @@ void Buffer::normalise_for_bibtex(String s) {
             s++;
         } else if (*s == ' ') {
             wptr--;
-            buf[wptr] = 0;
+            at(wptr) = 0;
         } // replace \space by space
     }
 }
@@ -2297,24 +2297,24 @@ void Buffer::fill_table(bchar_type *table) {
                 the_bibtex->err_in_name("commands allowed only within braces", i);
                 continue;
             }
-            if (is_letter(buf[ptr + 1])) {
+            if (is_letter(at(ptr + 1))) {
                 table[i]     = bct_cmd;
                 table[i + 1] = bct_continuation;
                 table[i + 2] = bct_continuation;
                 ptr += 2;
                 continue;
             }
-            if (buf[ptr + 1] != '{') {
+            if (at(ptr + 1) != '{') {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptr++;
                 the_bibtex->err_in_name("bad accent construct", i);
                 continue;
             }
-            buf[ptr + 1] = c;
-            buf[ptr]     = '\\';
-            buf[ptr - 1] = '{';
-            the_log << lg_start << "+bibchanged " << buf.data() << lg_end;
+            at(ptr + 1) = c;
+            at(ptr)     = '\\';
+            at(ptr - 1) = '{';
+            the_log << lg_start << "+bibchanged " << data() << lg_end;
         }
         int bl   = 1;
         int j    = i;
@@ -2322,7 +2322,7 @@ void Buffer::fill_table(bchar_type *table) {
         for (;;) {
             if (head() == 0) {
                 the_bibtex->err_in_name("this cannot happen!", j);
-                buf[j]   = 0;
+                at(j)    = 0;
                 table[j] = bct_end;
                 wptr     = j;
                 return;
@@ -2369,13 +2369,13 @@ auto Buffer::find_and(bchar_type *table) -> bool {
 
 // True if this is an `and'
 auto Buffer::is_and(int k) -> bool {
-    char c = buf[k];
+    char c = at(k);
     if (c != 'a' && c != 'A') return false;
-    c = buf[k + 1];
+    c = at(k + 1);
     if (c != 'n' && c != 'N') return false;
-    c = buf[k + 2];
+    c = at(k + 2);
     if (c != 'd' && c != 'D') return false;
-    c = buf[k + 3];
+    c = at(k + 3);
     if (c != ' ' && c != '\t' && c != '\n') return false;
     return true;
 }
@@ -2504,9 +2504,9 @@ void Bchar::invent_spaces() {
 // In J.G. Grimm,only the first dot matches.
 auto Buffer::insert_space_here(int k) const -> bool {
     if (k <= 0) return false;
-    if (buf[k] != '.') return false;
-    if (!is_upper_case(buf[k + 1])) return false;
-    if (!is_upper_case(buf[k - 1])) return false;
+    if (at(k) != '.') return false;
+    if (!is_upper_case(at(k + 1))) return false;
+    if (!is_upper_case(at(k - 1))) return false;
     return true;
 }
 
@@ -2641,11 +2641,11 @@ auto Bchar::special_print(Buffer &X, bool sw) -> int {
 }
 
 void Buffer::no_double_dot() {
-    if (wptr > 1 && buf[wptr - 2] == '.' && buf[wptr - 1] == '.') {
+    if (wptr > 1 && at(wptr - 2) == '.' && at(wptr - 1) == '.') {
         rrl();
         return;
     }
-    if (wptr > 2 && buf[wptr - 2] == '}' && buf[wptr - 3] == '.' && buf[wptr - 1] == '.') {
+    if (wptr > 2 && at(wptr - 2) == '}' && at(wptr - 3) == '.' && at(wptr - 1) == '.') {
         rrl();
         return;
     }

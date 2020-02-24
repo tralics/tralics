@@ -272,14 +272,14 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
     push_back('.');
     push_back9(X.data[2]);
     push_back9(X.data[3]);
-    while (buf[wptr - 1] == '0') wptr--; // remove trailing zeroes
+    while (at(wptr - 1) == '0') wptr--; // remove trailing zeroes
     kill_at(wptr);
     int i = 1;
-    while (buf[i] == '0') i++; // remove initial zeroes
-    if (buf[i] == '.') i--;    // Keep the zero in 0.1
+    while (at(i) == '0') i++; // remove initial zeroes
+    if (at(i) == '.') i--;    // Keep the zero in 0.1
     i--;
-    buf[i] = X.sign ? '+' : '-'; // insert sign
-    return buf.data() + i;
+    at(i) = X.sign ? '+' : '-'; // insert sign
+    return data() + i;
 }
 
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax

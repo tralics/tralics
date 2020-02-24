@@ -813,12 +813,12 @@ void Buffer::insert_string(const Buffer &s) {
     ptr   = 0;
     int k = 0;
     for (int j = 0; j < n; j++) {
-        char c = s.buf[j];
-        if (c != '\n' && c != '\r') buf[k++] = c;
+        char c = s.at(j);
+        if (c != '\n' && c != '\r') at(k++) = c;
     }
-    while (k > 0 && buf[k - 1] == ' ') k--;
-    buf[k] = 0;
-    wptr   = k;
+    while (k > 0 && at(k - 1) == ' ') k--;
+    at(k) = 0;
+    wptr  = k;
 }
 
 // This piece of code is executed when a new line, numbered N, is in

@@ -624,12 +624,12 @@ auto operator<<(ostream &fp, const Xml *T) -> ostream & {
 
 // This flushed the buffer, increments cur_fp_len.
 void Buffer::finish_xml_print() {
-    *cur_fp << buf.data();
+    *cur_fp << data();
     the_main->incr_cur_fp_len(wptr);
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     int k = 0;
     for (int i = 0; i < wptr; i++)
-        if (buf[i] == '\n') k++;
+        if (at(i) == '\n') k++;
     the_main->incr_cur_fp_len(k);
 #endif
     reset();
@@ -1200,10 +1200,10 @@ inline auto dig_char(char c) -> bool { return c == '-' || is_digit(c); }
 
 void Buffer::new_word() {
     if (wptr == 0) return;
-    if (wptr == 1) buf[0] = 'x';
+    if (wptr == 1) at(0) = 'x';
     bool ok = true;
     for (int i = 0; i < wptr; i++) {
-        if (!dig_char(buf[i])) {
+        if (!dig_char(at(i))) {
             ok = false;
             break;
         }
@@ -1214,13 +1214,13 @@ void Buffer::new_word() {
     }
     all_words_ns::nb_words++;
     ok = true;
-    if (is_upper_case(buf[0])) {
+    if (is_upper_case(at(0))) {
         for (int i = 1; i < wptr; i++) {
-            if (!is_lower_case(buf[i])) ok = false;
+            if (!is_lower_case(at(i))) ok = false;
         }
-        if (ok) buf[0] += 'a' - 'A';
+        if (ok) at(0) += 'a' - 'A';
     }
-    all_words_ns::add_a_word(buf.data(), hashcode(6397));
+    all_words_ns::add_a_word(data(), hashcode(6397));
     reset();
 }
 

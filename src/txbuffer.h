@@ -17,19 +17,17 @@
 using buffer_fn = void(Buffer &);
 
 // a big structure
-// \todo Probably this should be based on std::vector<char> instead of char*, or
-// even better if that works it should just be a std::string.
-class Buffer {
+// \todo This is kind of a messy class, would be better to use std::string as
+// much as possible but we can't because of all the zero-char manipulations.
+class Buffer : public std::vector<char> {
 private:
-    std::vector<char> buf;        // the characters
-    int               wptr{0};    // the write pointer
-    int               asize{128}; // allocated size
-    int               ptr{0};     // the read pointer
-    int               ptr1{0};    // a second read pointer
+    int wptr{0};    // the write pointer
+    int asize{128}; // allocated size
+    int ptr{0};     // the read pointer
+    int ptr1{0};    // a second read pointer
 public:
-    Buffer();
+    Buffer() : std::vector<char>(128, 0){};
 
-    auto operator[](int k) const -> char { return buf[k]; }
     auto operator<<(String s) -> Buffer & {
         push_back(s);
         return *this;
@@ -84,21 +82,21 @@ public:
     void               advance() { ptr++; }
     void               advance(int k) { ptr += k; }
     void               alloc(int);
-    [[nodiscard]] auto after_head() const -> char { return buf[ptr + 1]; }
-    [[nodiscard]] auto after_uhead() const -> uchar { return buf[ptr + 1]; }
-    [[nodiscard]] auto after_after_uhead() const -> uchar { return buf[ptr + 2]; }
+    [[nodiscard]] auto after_head() const -> char { return at(ptr + 1); }
+    [[nodiscard]] auto after_uhead() const -> char { return at(ptr + 1); }
+    [[nodiscard]] auto after_after_uhead() const -> char { return at(ptr + 2); }
     auto               append_checked_line(LinePtr &) -> int;
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }
     auto               backup_space() -> bool;
     void               bib_spec();
     void               brace_match();
     void               bracket_match();
-    [[nodiscard]] auto c_str(int k) const -> String { return buf.data() + k; }
-    [[nodiscard]] auto c_str() const -> String { return buf.data(); }
+    [[nodiscard]] auto c_str(int k) const -> String { return data() + k; }
+    [[nodiscard]] auto c_str() const -> String { return data(); }
     void               chars_to_buffer(Buffer &);
     void               check_before_brace(String);
     auto               check_cat_perso(int, int, bool) -> string;
-    auto               contains(String s) const -> bool { return strstr(buf.data(), s) != nullptr; }
+    auto               contains(String s) const -> bool { return strstr(data(), s) != nullptr; }
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String) const -> bool;
@@ -147,17 +145,17 @@ public:
     [[nodiscard]] auto get_ptr() const -> int { return ptr; }
     [[nodiscard]] auto get_ptr1() const -> int { return ptr1; }
     [[nodiscard]] auto hashcode(int prime) const -> int;
-    [[nodiscard]] auto head() const -> char { return buf[ptr]; }
-    auto               is_not_char(int p, uchar x) -> bool { return uchar(buf[p]) != x; }
+    [[nodiscard]] auto head() const -> char { return at(ptr); }
+    auto               is_not_char(int p, uchar x) -> bool { return uchar(at(p)) != x; }
     auto               holds_documentclass(Buffer &a, Buffer &b, Buffer &c) -> int;
     auto               holds_env(String &a, String &b, String &c) -> int;
     auto               horner(int) -> unsigned int;
     auto               how_many_bibtex_name_token() -> int;
-    void               kill_at(int p) { buf[p] = 0; }
+    void               kill_at(int p) { at(p) = 0; }
     void               init_from_buffer(Buffer &);
     void               insert_and_kill(Buffer &a) {
         reset();
-        push_back(a.buf.data());
+        push_back(a.data());
         a.reset();
     }
     void               insert_escape_char();
@@ -175,18 +173,15 @@ public:
     [[nodiscard]] auto is_begin_end() const -> int;
     auto               is_begin_something(String) -> int;
     auto               is_begin_something(String, bool) -> int;
-    auto               is_equal(String x) const -> bool { return strcmp(buf.data(), x) == 0; }
+    auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
     auto               is_at_end(String s) const -> bool;
     auto               is_here(String s) -> bool;
     auto               is_here_case(String s) -> bool;
     [[nodiscard]] auto is_letter_digit() const -> bool;
     [[nodiscard]] auto is_all_ascii() const -> bool;
     [[nodiscard]] auto is_good_ascii() const -> bool;
-    [[nodiscard]] auto is_spaceh(int j) const -> bool { return is_space(buf[j]); }
-    [[nodiscard]] auto last_char() const -> char {
-        if (wptr == 0) return 0;
-        return buf[wptr - 1];
-    }
+    [[nodiscard]] auto is_spaceh(int j) const -> bool { return is_space(at(j)); }
+    [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? 0 : at(wptr - 1); }
     [[nodiscard]] auto last_slash() const -> int;
     [[nodiscard]] auto length() const -> int { return wptr; }
     [[nodiscard]] auto size() const -> int { return wptr; }
@@ -194,13 +189,13 @@ public:
     void               lowercase();
     void               make_citation(String a, String b);
     auto               make_unique_bid(int) -> string;
-    void               modify(int p, char c) { buf[p] = c; }
+    void               modify(int p, char c) { at(p) = c; }
     void               new_keyword();
     void               new_word();
     void               next_bibtex_char();
     void               next_bibtex_name_token();
     auto               next_char() -> uchar {
-        uchar c = buf[ptr];
+        uchar c = at(ptr);
         ptr++;
         return c;
     }
@@ -225,7 +220,7 @@ public:
     void purify();
     void purify(String s);
     void push_back(char c);
-    void push_back(const Buffer &b) { push_back(b.buf.data()); }
+    void push_back(const Buffer &b) { push_back(b.data()); }
     void push_back(const string &b) { push_back(b.c_str()); }
     void push_back(const Istring &);
     void push_back(String s);
@@ -275,28 +270,28 @@ public:
     auto remove_space(const string &) -> string;
     void rrl() {
         wptr--;
-        buf[wptr] = 0;
+        at(wptr) = 0;
     } // really remove last
     void remove_last() {
         if (wptr > 0) rrl();
     }
     void remove_last_n(int n) {
         if (wptr >= n) wptr -= n;
-        buf[wptr] = 0;
+        at(wptr) = 0;
     }
     void remove_last_comma() {
-        if (wptr > 0 && buf[wptr - 1] == ',') rrl();
+        if (wptr > 0 && at(wptr - 1) == ',') rrl();
     }
     void remove_last_quote() {
-        if (wptr > 0 && buf[wptr - 1] == '\'') rrl();
+        if (wptr > 0 && at(wptr - 1) == '\'') rrl();
     }
     void remove_last_space();
     void remove_space_at_end();
     void remove_spec_chars(bool, Buffer &);
     void reset0() { wptr = 0; }
     void reset() {
-        wptr   = 0;
-        buf[0] = 0;
+        wptr  = 0;
+        at(0) = 0;
     }
     void               reset_ptr() { ptr = 0; }
     void               resize();
@@ -312,8 +307,8 @@ public:
         push_back(s);
     }
     void set_last(int k) {
-        wptr      = k;
-        buf[wptr] = 0;
+        wptr     = k;
+        at(wptr) = 0;
     }
     void               set_ptr(int j) { ptr = j; }
     void               set_ptr1(int j) { ptr1 = j; }
@@ -329,13 +324,13 @@ public:
         while (is_letter(head())) ptr++;
     }
     void skip_sp_tab() {
-        while (buf[ptr] == ' ' || buf[ptr] == '\t') ptr++;
+        while (at(ptr) == ' ' || at(ptr) == '\t') ptr++;
     }
     void skip_sp_tab_nl() {
-        while (is_space(buf[ptr])) ptr++;
+        while (is_space(at(ptr))) ptr++;
     }
     void skip_sp_tab_comma() {
-        while (buf[ptr] == ' ' || buf[ptr] == '\t' || buf[ptr] == ',') ptr++;
+        while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
     }
     [[nodiscard]] auto single_char() const -> char;
     auto               slash_separated(string &) -> bool;
@@ -344,7 +339,7 @@ public:
     auto               split_at_colon(string &, string &) -> bool;
     auto               sortify(String s) -> String;
     auto               svn_id(string &name, string &date, string &version) -> bool;
-    [[nodiscard]] auto space_or_underscore() const -> bool { return buf[ptr] == '_' || buf[ptr] == ' '; }
+    [[nodiscard]] auto space_or_underscore() const -> bool { return at(ptr) == '_' || at(ptr) == ' '; }
     auto               special_convert(bool) -> string;
     [[nodiscard]] auto special_exponent() const -> String;
     void               special_purify(String s, int &pos);
@@ -361,7 +356,7 @@ public:
     auto               tp_next_char(char &) -> bool;
     auto               tp_fetch_something() -> tpa_line;
     auto               trace_scan_dimen(Token, ScaledInt, bool) -> String;
-    [[nodiscard]] auto uhead() const -> unsigned char { return buf[ptr]; }
+    [[nodiscard]] auto uhead() const -> unsigned char { return at(ptr); }
     void               undo() { ptr--; }
     void               unicode_char(int);
     [[nodiscard]] auto unique_character() const -> codepoint;
@@ -373,19 +368,19 @@ public:
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;
     void               l3_fabricate_cond(const string &, const string &, subtypes);
-    [[nodiscard]] auto is_special_end() const -> bool { return buf[ptr] == '\n' || buf[ptr] == '#' || buf[ptr] == '%'; }
+    [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 private:
     void realloc();
     auto after_slash() -> bool;
     void advance_letter_dig() {
-        while (is_letter(buf[ptr]) || is_digit(buf[ptr])) ptr++;
+        while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;
     }
     void advance_letter_dig_dot() {
-        while (is_letter(buf[ptr]) || is_digit(buf[ptr]) || buf[ptr] == '.') ptr++;
+        while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.') ptr++;
     }
     void advance_letter_dig_dot_slash() {
-        while (is_letter(buf[ptr]) || is_digit(buf[ptr]) || buf[ptr] == '.' || buf[ptr] == '/') ptr++;
+        while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.' || at(ptr) == '/') ptr++;
     }
 };
 

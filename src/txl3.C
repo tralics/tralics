@@ -71,27 +71,27 @@ auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
         return false;
     set_ptr1();
     while ((head() != 0) && head() != '.') advance();
-    buf[ptr] = 0;
-    name     = buf.data() + ptr1;
+    at(ptr) = 0;
+    name    = data() + ptr1;
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
     set_ptr1();
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
-    buf[ptr] = 0;
-    version  = buf.data() + ptr1;
+    at(ptr) = 0;
+    version = data() + ptr1;
     advance();
     set_ptr1();
     if (wptr < ptr + 10) return true;
-    if (buf[ptr + 4] == '-') buf[ptr + 4] = '/';
-    if (buf[ptr + 7] == '-') buf[ptr + 7] = '/';
-    if (buf[ptr + 7] == '-') buf[ptr + 7] = '/';
-    if (buf[ptr + 10] == ' ')
-        buf[ptr + 10] = 0;
+    if (at(ptr + 4) == '-') at(ptr + 4) = '/';
+    if (at(ptr + 7) == '-') at(ptr + 7) = '/';
+    if (at(ptr + 7) == '-') at(ptr + 7) = '/';
+    if (at(ptr + 10) == ' ')
+        at(ptr + 10) = 0;
     else
         return true;
-    date = buf.data() + ptr1;
+    date = data() + ptr1;
     return true;
 }
 

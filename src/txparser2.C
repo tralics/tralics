@@ -1824,11 +1824,11 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
 auto Buffer::is_here_case(String s) -> bool {
     int n = strlen(s);
     for (int i = 0; i < n; i++) {
-        char c = buf[ptr + i];
+        char c = at(ptr + i);
         if (is_upper_case(c)) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
-    char c = buf[ptr + n];
+    char c = at(ptr + n);
     if (is_letter(c)) return false;
     ptr += n;
     return true;

@@ -165,7 +165,7 @@ void io_ns::print_ascii(ostream &fp, uchar c) {
 // returns true if only ascii 7 bits in the buffer
 auto Buffer::is_all_ascii() const -> bool {
     for (int i = 0; i < wptr; i++) {
-        uchar c = buf[i];
+        uchar c = at(i);
         if (c >= 128) return false;
         if (c < 32 && c != '\t' && c != '\n') return false;
     }
@@ -176,7 +176,7 @@ auto Buffer::is_all_ascii() const -> bool {
 // Non-ascii chars are printable (assumes buffer is valid UTF8).
 auto Buffer::is_good_ascii() const -> bool {
     for (int i = 0; i < wptr; i++) {
-        uchar c = buf[i];
+        uchar c = at(i);
         if (c < 32 && c != '\t' && c != '\n') return false;
     }
     return true;
@@ -233,7 +233,7 @@ void Buffer::utf8_error(bool first) {
                          << (first ? ", first byte" : ", continuation byte") << ")\n";
     main_ns::log_and_tty.L << "Position in line is " << ptr << lg_end;
     if (T.new_error()) return; // signal only one error per line
-    for (int i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.fp), buf[i]);
+    for (int i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.fp), at(i));
     the_log << lg_end;
 }
 
@@ -249,9 +249,9 @@ void Buffer::utf8_ovf(int n) {
 
 // This reads the next byte.
 // We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
-// As a consequence, buf[ptr] is valid after the call
+// As a consequence, at(ptr) is valid after the call
 auto Buffer::next_utf8_byte() -> uchar {
-    uchar x = buf[ptr];
+    uchar x = at(ptr);
     if ((x >> 6) == 2) {
         ++ptr;
         return x & 63;
@@ -336,14 +336,14 @@ auto Buffer::next_utf8_char() -> codepoint {
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
 auto Buffer::unique_character() const -> codepoint {
-    uchar c = buf[0];
+    uchar c = at(0);
     int   n = io_ns::how_many_bytes(c);
     if (n == 0) return codepoint(0);
     if (n != size()) return codepoint(0);
     if (n == 1) return codepoint(c);
-    if (n == 2) return io_ns::make_utf8char(buf[0], buf[1], 0, 0);
-    if (n == 3) return io_ns::make_utf8char(buf[0], buf[1], buf[2], 0);
-    if (n == 4) return io_ns::make_utf8char(buf[0], buf[1], buf[2], buf[3]);
+    if (n == 2) return io_ns::make_utf8char(at(0), at(1), 0, 0);
+    if (n == 3) return io_ns::make_utf8char(at(0), at(1), at(2), 0);
+    if (n == 4) return io_ns::make_utf8char(at(0), at(1), at(2), at(3));
     return codepoint(0);
 }
 
@@ -826,7 +826,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     Buffer &I = utf8_in;
     Buffer &O = utf8_out;
     I.reset();
-    I.push_back(buf.data());
+    I.push_back(data());
     the_converter.global_error = false;
     O.reset();
     I.reset_ptr();
@@ -852,7 +852,7 @@ auto Buffer::convert_to_log_encoding() const -> String {
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();
     Buffer &I = utf8_in;
     I.reset();
-    I.push_back(buf.data());
+    I.push_back(data());
     the_converter.global_error = false;
     I.reset_ptr();
     Buffer &O = utf8_out;
@@ -890,7 +890,7 @@ void Buffer::to_seven_bits() {
     if (is_all_ascii()) return;
     Buffer &I = utf8_in;
     I.reset();
-    I.push_back(buf.data());
+    I.push_back(data());
     the_converter.global_error = false;
     I.reset_ptr();
     reset();

@@ -261,10 +261,10 @@ auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
 auto Buffer::hashcode(int prime) const -> int {
     int          j = 1;
-    unsigned int h = (unsigned char)(buf[0]);
+    unsigned int h = (unsigned char)(at(0));
     if (h == 0) return 0;
     for (;;) {
-        unsigned char c = buf[j];
+        unsigned char c = at(j);
         if (c == 0) return h;
         h = (h + h + c) % prime;
         j++;
@@ -665,7 +665,7 @@ void Buffer::push_back(const Macro &x) {
         *this << x[1];
         for (int i = 1; i < K; i++) { *this << '#' << i + 1; }
     }
-    if (wptr > 0 && buf[wptr - 1] == '{') buf[wptr - 1] = '#';
+    if (wptr > 0 && at(wptr - 1) == '{') at(wptr - 1) = '#';
     *this << "->" << x.get_body();
 }
 
@@ -758,7 +758,7 @@ void StrHash::re_alloc() {
 // to search. result is never zero
 auto StrHash::hash_find() -> int {
     the_parser.my_stats.one_more_sh_find();
-    if (mybuf[0] == 0) return 1;
+    if (mybuf.at(0) == 0) return 1;
     int p = mybuf.hashcode(hash_prime) + 3;
     for (;;) {
         if ((Text[p] != nullptr) && mybuf == Text[p]) return p;
