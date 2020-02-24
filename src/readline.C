@@ -8,15 +8,14 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
-#include <cstdlib>
-#include <iostream>
-
 #include <cctype>
 #include <csignal>
+#include <cstdlib>
+#include <iostream>
+#include <sys/types.h>
 #include <utility>
 
-#include <sys/types.h>
+#include "tralics.h"
 
 // The line editor
 class Slined;
