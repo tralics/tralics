@@ -25,7 +25,7 @@ namespace {
     Buffer                                                        utf8_out;            // Holds utf8 outbuffer
     Buffer                                                        utf8_in;             // Holds utf8 inbuffer
     Converter                                                     the_converter;
-    std::array<std::array<codepoint, max_encoding - 2>, lmaxchar> custom_table;
+    std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 } // namespace
 
 namespace main_ns {
