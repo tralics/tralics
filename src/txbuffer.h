@@ -17,13 +17,14 @@
 using buffer_fn = void(Buffer &);
 
 // a big structure
+// \todo Probably this should be based on std::vector<char> instead of char*
 class Buffer {
 private:
     char *buf;        // the characters
     int   wptr{0};    // the write pointer
     int   asize{128}; // allocated size
     int   ptr{0};     // the read pointer
-    int   ptr1{0};    // a seconnd read pointer
+    int   ptr1{0};    // a second read pointer
 public:
     Buffer();
     ~Buffer();

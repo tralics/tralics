@@ -1038,9 +1038,8 @@ void MainClass::read_config_and_other() {
         open_config_file();
     else
         main_ns::log_or_tty << "No configuration file.\n";
-    bool found_type = use_tcf;
     if (!use_tcf) {
-        found_type = find_document_type();
+        bool found_type = find_document_type();
         if (dtype.empty()) found_type = false;
         if (found_type)
             the_log << "Using type " << dtype << "\n";

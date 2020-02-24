@@ -672,13 +672,6 @@ void Parser::load_latex() {
     back_input(ejob);
 }
 
-#define ADD_TO_BOTH(s)                                                                                                                     \
-    w = hash_table.locate(s);                                                                                                              \
-    L.push_back(T);                                                                                                                        \
-    L.push_back(w);                                                                                                                        \
-    L1.push_back(T1);                                                                                                                      \
-    L1.push_back(w);
-
 void Parser::more_bootstrap() {
     initialise_font(); // Define current font
     TokenList L;
@@ -735,6 +728,15 @@ void Parser::more_bootstrap() {
     T1 = hash_table.locate("do");
     TokenList L1;
     Token     w;
+
+    auto ADD_TO_BOTH = [&](const auto &s) {
+        w = hash_table.locate(s);
+        L.push_back(T);
+        L.push_back(w);
+        L1.push_back(T1);
+        L1.push_back(w);
+    };
+
     ADD_TO_BOTH(" ");
     ADD_TO_BOTH("\\");
     ADD_TO_BOTH("$");

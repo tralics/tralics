@@ -952,8 +952,8 @@ void Parser::T_bibitem() {
 void Parser::solve_cite(bool user) {
     Token T    = cur_tok;
     bool  F    = true;
-    int   n    = the_stack.cur_xid().value;
     auto  from = Istring("");
+    int   n;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));

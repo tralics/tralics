@@ -115,7 +115,7 @@ public:
     void               word_stats_i();
     auto               spec_copy() -> Xml *;
     void               replace_first(Xml *x) {
-        if (tree.size() != 0U) tree[0] = x;
+        if (!tree.empty()) tree[0] = x;
     }
     void bordermatrix();
 };

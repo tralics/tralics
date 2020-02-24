@@ -46,7 +46,7 @@ auto tralics_ns::make_string(String a) -> String {
     int n = strlen(a);
     the_parser.my_stats.one_more_string(n + 1);
     char *res = new char[n + 1];
-    strcpy(res, a);
+    memcpy(res, a, n + 1);
     return res;
 }
 
@@ -114,7 +114,7 @@ void Buffer::push_back_xml_char(uchar c) {
 auto Buffer::convert_to_str() const -> String {
     the_parser.my_stats.one_more_string(wptr + 1);
     char *aux = new char[wptr + 1];
-    strcpy(aux, buf);
+    memcpy(aux, buf, wptr + 1);
     return aux;
 }
 
@@ -129,7 +129,7 @@ void Buffer::realloc() {
     the_parser.my_stats.one_more_buffer_realloc();
     char *aux = new char[asize];
     kill_at(wptr);
-    strcpy(aux, buf);
+    memcpy(aux, buf, wptr);
     delete[] buf;
     buf = aux;
 }
@@ -152,7 +152,7 @@ void Buffer::push_back(String s) {
         return;
     }
     alloc(n);
-    strcpy(buf + wptr, s);
+    memcpy(buf + wptr, s, n + 1);
     wptr += n;
 }
 
@@ -1407,7 +1407,7 @@ void operator<<(fstream &X, const Image &Y) {
         if ((k & 64) != 0) {
             if (!first) X << "+";
             X << 64;
-            first = false;
+            // first = false;
         }
     }
     X << "," << Y.occ << ");\n";

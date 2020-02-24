@@ -2426,7 +2426,6 @@ void Parser::scan_rule(int c) {
         bool      b  = read_optarg(L1);
         TokenList L2 = read_arg();
         TokenList L3 = read_arg();
-        c            = vrule_code;
         if (b) R.rule_d = dimen_from_list(T, L1);
         R.rule_w = dimen_from_list(T, L2);
         R.rule_h = dimen_from_list(T, L3);
