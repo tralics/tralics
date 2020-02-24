@@ -293,7 +293,7 @@ void XmlIO::parse_att_val() {
 
 void XmlIO::parse_quoted() {
     skip_space();
-    Utf8Char delim = ' ';
+    Utf8Char delim{' '};
     if (cur_char == '\'' || cur_char == '"')
         delim = cur_char;
     else {

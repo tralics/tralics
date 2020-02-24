@@ -667,7 +667,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
             word_define(my_number, n, true);
             token_ns::add_verbatim_number(res, hash_table, n);
         }
-        if (vb_tokens('\r', res, false)) {
+        if (vb_tokens(Utf8Char('\r'), res, false)) {
             ok = false;
             break;
         }
@@ -803,7 +803,7 @@ inline void RestoreVbSpace::operator()(Token T) { P->verbatim_chars[uchar(' ')] 
 auto Parser::delimiter_for_verb(bool &special_space) -> Utf8Char {
     Utf8Char t = get_next_char();
     if (!(t == '*')) return t;
-    if (at_eol()) return 0;
+    if (at_eol()) return Utf8Char(0);
     special_space = true;
     return get_next_char();
 }
@@ -812,13 +812,13 @@ auto Parser::delimiter_for_verb(bool &special_space) -> Utf8Char {
 // which must have spacial_catcode. returns 0 in case of trouble
 auto Parser::delimiter_for_saveverb() -> Utf8Char {
     for (;;) {
-        if (at_eol()) return 0;
+        if (at_eol()) return Utf8Char(0);
         Utf8Char c = get_next_char();
         if (c == 0) return c;
-        if (c.is_big()) return 0;
+        if (c.is_big()) return Utf8Char(0);
         if (get_catcode(c.value) == space_catcode) continue;
         if (get_catcode(c.value) == special_catcode) return c;
-        return 0;
+        return Utf8Char(0);
     }
 }
 

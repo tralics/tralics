@@ -1190,7 +1190,7 @@ void Parser::translate03() {
     case dashline_cmd: T_dashline(c); return;
     case bezier_cmd: T_bezier(c); return;
     case grabenv_cmd: T_grabenv(); return;
-    case verb_cmd: T_verb(c != 0U ? verb_saved_char : 0); return;
+    case verb_cmd: T_verb(c != 0U ? verb_saved_char : Utf8Char(0)); return;
     case gloss_cmd: T_gloss(c == 0); return;
     case only_preamble_cmd:
         get_r_token(true);

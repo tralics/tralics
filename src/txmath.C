@@ -2911,7 +2911,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             default: return 3;
             }
         } else if (cmd == 11 || cmd == 12) {
-            B.push_back_real_utf8(chr);
+            B.push_back_real_utf8(Utf8Char(chr));
             f = fn;
             continue;
         } else if (cmd == mathfont_cmd)
@@ -2926,7 +2926,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             else
                 return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
-            B.push_back_real_utf8(chr);
+            B.push_back_real_utf8(Utf8Char(chr));
             continue;
         } else if (cmd == relax_cmd)
             continue;

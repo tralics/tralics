@@ -105,7 +105,7 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c == '&')
         push_back("&amp;");
     else if (c < 32)
-        push_back_ent(c);
+        push_back_ent(Utf8Char(c));
     else
         push_back(c);
 }

@@ -1474,7 +1474,7 @@ auto Math::chars_to_mb3() -> Istring {
             if (C == '-') sign = !sign;
             continue;
         }
-        if (C == ',') C = '.';
+        if (C == ',') C = Utf8Char('.');
         if (C == '.') {
             if (dot || (bc != 0)) {
                 sz = 0;

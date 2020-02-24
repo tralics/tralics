@@ -760,7 +760,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             continue; // this may set TL
         }
         Utf8Char c = get_next_char();
-        if (c == '\r') c = '\n';
+        if (c == '\r') c = Utf8Char('\n');
         B.push_back(c);
         if (c == '{') b++;
         if (c == '}') {
@@ -1544,7 +1544,7 @@ void Parser::scan_double(RealNumber &res) {
 // it reads a unit, returns
 auto Parser::read_unit() -> int {
     remove_initial_space();
-    Utf8Char c1 = 0, c2 = 0;
+    Utf8Char c1, c2;
     if (cur_tok.is_a_char()) {
         c1         = cur_cmd_chr.char_val().to_lower();
         Token save = cur_tok;

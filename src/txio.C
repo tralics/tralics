@@ -280,42 +280,42 @@ auto io_ns::how_many_bytes(uchar C) -> int {
 auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> Utf8Char {
     int n = io_ns::how_many_bytes(A);
     if (n == 0)
-        return 0;
+        return Utf8Char(0);
     else if (n == 1)
-        return A;
+        return Utf8Char(A);
     else if (n == 2)
-        return ((A & 31) << 6) + (B & 63);
+        return Utf8Char(((A & 31) << 6) + (B & 63));
     else if (n == 3)
-        return (C & 63) + ((B & 63) << 6) + ((A & 15) << 12);
+        return Utf8Char((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
     else
-        return (D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18);
+        return Utf8Char((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
 }
 
 // Returns 0 at end of line or error
 // may set local_error
 auto Buffer::next_utf8_char_aux() -> Utf8Char {
     uchar c = next_char();
-    if (c == 0) return 0;
+    if (c == 0) return Utf8Char(0);
     int n = io_ns::how_many_bytes(c);
     if (n == 0) {
         utf8_error(true);
         the_converter.line_is_ascii = false;
-        return 0;
+        return Utf8Char(0);
     }
-    if (n == 1) return c;
+    if (n == 1) return Utf8Char(c);
     the_converter.line_is_ascii = false;
     if (n == 2) {
         uint x = next_utf8_byte();
-        return ((c & 31) << 6) + x;
+        return Utf8Char(((c & 31) << 6) + x);
     } else if (n == 3) {
         uint z = next_utf8_byte();
         uint x = next_utf8_byte();
-        return x + (z << 6) + ((c & 15) << 12);
+        return Utf8Char(x + (z << 6) + ((c & 15) << 12));
     } else {
         uint z = next_utf8_byte();
         uint y = next_utf8_byte();
         uint x = next_utf8_byte();
-        return (x) + (y << 6) + (z << 12) + ((c & 7) << 18);
+        return Utf8Char((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
     }
 }
 
@@ -325,10 +325,10 @@ auto Buffer::next_utf8_char() -> Utf8Char {
     the_converter.local_error = false;
     Utf8Char res              = next_utf8_char_aux();
     if (the_converter.local_error)
-        return 0;
+        return Utf8Char(0);
     else if (res.is_verybig()) {
         utf8_ovf(res.value);
-        return 0;
+        return Utf8Char(0);
     } else
         return res;
 }
@@ -338,13 +338,13 @@ auto Buffer::next_utf8_char() -> Utf8Char {
 auto Buffer::unique_character() const -> Utf8Char {
     uchar c = buf[0];
     int   n = io_ns::how_many_bytes(c);
-    if (n == 0) return 0;
-    if (n != size()) return 0;
-    if (n == 1) return c;
+    if (n == 0) return Utf8Char(0);
+    if (n != size()) return Utf8Char(0);
+    if (n == 1) return Utf8Char(c);
     if (n == 2) return io_ns::make_utf8char(buf[0], buf[1], 0, 0);
     if (n == 3) return io_ns::make_utf8char(buf[0], buf[1], buf[2], 0);
     if (n == 4) return io_ns::make_utf8char(buf[0], buf[1], buf[2], buf[3]);
-    return 0;
+    return Utf8Char(0);
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
@@ -353,14 +353,14 @@ auto Buffer::convert_line0(int wc) -> bool {
     Buffer &res = utf8_out;
     res.reset();
     reset_ptr();
-    Utf8Char c = 0;
+    Utf8Char c;
     for (;;) {
         if (wc == 0)
             c = next_utf8_char();
         else {
             uchar C = next_char();
             if (wc == 1)
-                c = C;
+                c = Utf8Char(C);
             else
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
@@ -395,7 +395,7 @@ void Clines::convert_line(int wc) {
 // Initialises encoding tables
 void io_ns::check_for_encoding() {
     for (auto &i : custom_table)
-        for (int j = 0; j < lmaxchar; ++j) i[j] = j;
+        for (int j = 0; j < lmaxchar; ++j) i[j] = Utf8Char(j);
 }
 
 // Why is v limited to 16bit chars?
@@ -414,7 +414,7 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
     if (0 < v && v < int(nb_characters))
         custom_table[enc][pos] = Utf8Char(v);
     else
-        custom_table[enc][pos] = pos;
+        custom_table[enc][pos] = Utf8Char(pos);
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
@@ -830,7 +830,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     the_converter.global_error = false;
     O.reset();
     I.reset_ptr();
-    Utf8Char c = 0;
+    Utf8Char c;
     for (;;) {
         c = I.next_utf8_char();
         if (c.is_null() && I.at_eol()) break;

@@ -88,7 +88,7 @@ void Parser::translate01() {
 // Letters are printed elsewhere
 void Parser::translate02() {
     if (cur_cmd_chr.is_space()) {
-        if (!the_stack.in_v_mode()) the_log.out_single_char(' ');
+        if (!the_stack.in_v_mode()) the_log.out_single_char(Utf8Char(' '));
         return;
     }
     if (cur_cmd_chr.is_letter_other()) return;

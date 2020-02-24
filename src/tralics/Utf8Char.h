@@ -6,11 +6,9 @@
 // while keeping all the helper functions.
 
 struct Utf8Char {
-public:
-    char32_t value{0};
+    char32_t value;
 
-    Utf8Char(unsigned int x) : value(x) {}
-    Utf8Char() = default;
+    explicit Utf8Char(unsigned int x = 0) : value(x) {}
 
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
