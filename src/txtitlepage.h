@@ -24,10 +24,10 @@ static const int tp_C_flag    = 96;
 
 // data for a titlepage item
 class TitlePageAux {
-    string   T1, T2, T3, T4; // the four strings
-    int      idx{0};         // index into titlepage::Data
-    int      xflags{0};      // flags associated to the object
-    tpi_vals type{tpi_zero}; // type of object
+    std::string T1, T2, T3, T4; // the four strings
+    int         idx{0};         // index into titlepage::Data
+    int         xflags{0};      // flags associated to the object
+    tpi_vals    type{tpi_zero}; // type of object
 
 public:
     auto classify(tpi_vals, int &) -> bool;
@@ -38,10 +38,10 @@ public:
     void exec_start(int);
     void exec_post();
     void exec(int, bool);
-    void set_T1(string x) { T1 = std::move(x); }
-    void set_T2(string x) { T2 = std::move(x); }
-    void set_T3(string x) { T3 = std::move(x); }
-    void set_T4(string x) { T4 = std::move(x); }
+    void set_T1(std::string x) { T1 = std::move(x); }
+    void set_T2(std::string x) { T2 = std::move(x); }
+    void set_T3(std::string x) { T3 = std::move(x); }
+    void set_T4(std::string x) { T4 = std::move(x); }
     void set_flags(int f) { xflags = f; }
 
     auto               get_type() -> tpi_vals { return type; }
@@ -56,12 +56,12 @@ public:
     TitlePageAux() = default;
     TitlePageAux(TitlePageFullLine &X);
     auto               find_UR(String s, int n) const -> int;
-    auto               get_T1() -> string { return T1; }
-    auto               get_T2() -> string { return T2; }
-    auto               get_T3() -> string { return T3; }
-    auto               get_T4() -> string { return T4; }
-    [[nodiscard]] auto find_cmd(const string &s) const -> bool;
-    void               move_T1T2(string x) {
+    auto               get_T1() -> std::string { return T1; }
+    auto               get_T2() -> std::string { return T2; }
+    auto               get_T3() -> std::string { return T3; }
+    auto               get_T4() -> std::string { return T4; }
+    [[nodiscard]] auto find_cmd(const std::string &s) const -> bool;
+    void               move_T1T2(std::string x) {
         T1 = T2;
         T2 = std::move(x);
     }
@@ -71,10 +71,10 @@ public:
 
 // One item if a titlepage
 class TpiOneItem {
-    char     p1;    // first character modifier
-    char     p2;    // second character modifier
-    string   value; // the value
-    tpi_vals v;     // the type (none, string, command, or XML element)
+    char        p1;    // first character modifier
+    char        p2;    // second character modifier
+    std::string value; // the value
+    tpi_vals    v;     // the type (none, string, command, or XML element)
 public:
     TpiOneItem() { reset(); }
     [[nodiscard]] auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
@@ -89,7 +89,7 @@ public:
     [[nodiscard]] auto quest_plus() const -> bool { return p1 == '?' && p2 == '+'; }
     [[nodiscard]] auto second_char() const -> bool { return p2 != 0; }
     [[nodiscard]] auto get_v() const -> tpi_vals { return v; }
-    [[nodiscard]] auto get_value() const -> string { return value; }
+    [[nodiscard]] auto get_value() const -> std::string { return value; }
     [[nodiscard]] auto get_p1() const -> char { return p1; }
     void               set_p2(char c) { p2 = c; }
     void               set_p1(char c) { p1 = c; }
@@ -119,8 +119,8 @@ class TitlePage {
     int   size{0};       // allocated size of bigtable
     Xml **Data{nullptr}; // the array of xml data
 public:
-    vector<TitlePageAux> bigtable; // the table
-    int                  state;    // current state of the parser
+    std::vector<TitlePageAux> bigtable; // the table
+    int                       state;    // current state of the parser
     TitlePage() = default;
     auto               operator[](int k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
@@ -135,6 +135,6 @@ public:
         return len2 - 1;
     }
     void               check_size();
-    [[nodiscard]] auto find_UR(const string &, const string &) const -> int;
-    [[nodiscard]] auto find_cmd(const string &) const -> int;
+    [[nodiscard]] auto find_UR(const std::string &, const std::string &) const -> int;
+    [[nodiscard]] auto find_cmd(const std::string &) const -> int;
 };

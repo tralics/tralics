@@ -17,8 +17,8 @@ class MathP;
 class MathF;
 using MathQList = std::list<MathQ>;
 
-auto get_math_char(uchar c, int f) -> string;
-void set_math_char(uchar c, int f, string s);
+auto get_math_char(uchar c, int f) -> std::string;
+void set_math_char(uchar c, int f, std::string s);
 
 // A math object is a strange thing:
 // a math_elt object has 4 fields, one is a pointer to another object.
@@ -112,19 +112,20 @@ private:
     [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
 };
 
-class MathIsSpace : public unary_function<MathElt, bool> {
+// \todo unary_function is deprecated
+class MathIsSpace : public std::unary_function<MathElt, bool> {
 public:
     explicit MathIsSpace() = default;
     auto operator()(const MathElt &m) -> bool { return m.is_space(); }
 };
 
-class MathIsDollar : public unary_function<MathElt, bool> {
+class MathIsDollar : public std::unary_function<MathElt, bool> {
 public:
     explicit MathIsDollar() = default;
     auto operator()(const Token &m) -> bool { return m.is_math_shift(); }
 };
 
-class MathIsOver : public unary_function<MathElt, bool> {
+class MathIsOver : public std::unary_function<MathElt, bool> {
 public:
     explicit MathIsOver() = default;
     auto operator()(const MathElt &m) -> bool { return m.get_cmd() == over_cmd; }
@@ -158,8 +159,8 @@ public:
     auto               convert_math_noML(bool) -> Xml *;
     void               convert_math_noML0();
     void               convert_math_noMLt0();
-    auto               convert_opname() -> string;
-    auto               convert_this_to_string(Buffer &) -> string;
+    auto               convert_opname() -> std::string;
+    auto               convert_this_to_string(Buffer &) -> std::string;
     void               destroy();
     [[nodiscard]] auto empty() const -> bool { return value.empty(); }
     [[nodiscard]] auto end() const -> const_math_iterator { return value.end(); }
@@ -211,10 +212,10 @@ private:
     auto               add_fence(bool, MathF &) -> bool;
     void               concat(Xml *);
     void               concat_space(Xml *);
-    auto               convert_cell(int &n, vector<AttList> &table, math_style) -> Xml *;
+    auto               convert_cell(int &n, std::vector<AttList> &table, math_style) -> Xml *;
     auto               convert_char_seq(MathElt W) -> MathElt;
     auto               convert_char_iseq(MathElt W, bool) -> MathElt;
-    void               fetch_rlc(vector<AttList> &);
+    void               fetch_rlc(std::vector<AttList> &);
     void               find_paren0(MathP &) const;
     auto               finish_translate1(bool) -> bool;
     auto               finish_translate2() -> bool;
@@ -239,35 +240,35 @@ private:
     void               skip_initial_space();
     [[nodiscard]] auto special1() const -> Xml *;
     void               special2(bool &, Xml *&) const;
-    auto               split_as_array(vector<AttList> &table, math_style, bool) -> Xml *;
+    auto               split_as_array(std::vector<AttList> &table, math_style, bool) -> Xml *;
     void               remove_opt_arg(bool star);
-    auto               remove_req_arg() -> string;
-    [[nodiscard]] auto remove_req_arg_noerr() const -> string;
+    auto               remove_req_arg() -> std::string;
+    [[nodiscard]] auto remove_req_arg_noerr() const -> std::string;
 };
 
 // This is a global object for math handling
 // but math handling is not recursive. reset() is called on every formula.
 class MathHelper {
-    MathElt *      free_list;    // free list
-    bool           current_mode; // display or not, needed for \label
-    name_positions pos_att;      // position attribute, inline or display
-    bool           seen_label;   // do we see already have a label
-    bool           warned_label; // was the used warned for labels on this formula ?
-    string         label_val;    // name of the label
-    vector<string> multi_labels;
-    vector<int>    multi_labels_type;
-    TokenList      tag_list;       // value of \tag{foo}, if given
-    bool           is_tag_starred; // \tag or \tag* ?
-    Xid            cur_cell_id;    // Id of current cell
-    Xid            cur_row_id;     // Id of current row
-    Xid            cur_table_id;   // Id of current table
-    Xid            cur_math_id;    // Id of current math element
-    Xid            cur_formula_id; // Id of current formula
-    Xid            cur_texmath_id; // Id of current texmath
-    int            math_env_ctr;   // two counters for environments
-    int            all_env_ctr;
-    int            last_ml_pos;
-    int            eqnum_status; // how many numbers for this equation?
+    MathElt *                free_list;    // free list
+    bool                     current_mode; // display or not, needed for \label
+    name_positions           pos_att;      // position attribute, inline or display
+    bool                     seen_label;   // do we see already have a label
+    bool                     warned_label; // was the used warned for labels on this formula ?
+    std::string              label_val;    // name of the label
+    std::vector<std::string> multi_labels;
+    std::vector<int>         multi_labels_type;
+    TokenList                tag_list;       // value of \tag{foo}, if given
+    bool                     is_tag_starred; // \tag or \tag* ?
+    Xid                      cur_cell_id;    // Id of current cell
+    Xid                      cur_row_id;     // Id of current row
+    Xid                      cur_table_id;   // Id of current table
+    Xid                      cur_math_id;    // Id of current math element
+    Xid                      cur_formula_id; // Id of current formula
+    Xid                      cur_texmath_id; // Id of current texmath
+    int                      math_env_ctr;   // two counters for environments
+    int                      all_env_ctr;
+    int                      last_ml_pos;
+    int                      eqnum_status; // how many numbers for this equation?
 public:
     MathHelper() {
         math_env_ctr = 0;
@@ -277,20 +278,20 @@ public:
     auto end_of_row() -> bool;
     void dump_labels();
     void ml_check_labels();
-    void new_label(const string &s, bool a);
+    void new_label(const std::string &s, bool a);
     void ml_second_pass(Xml *row, bool);
     void ml_last_pass(bool);
-    void insert_special_tag(string s) { multi_labels[last_ml_pos - 2] = std::move(s); }
-    void new_multi_label(const string &s, int t) {
+    void insert_special_tag(std::string s) { multi_labels[last_ml_pos - 2] = std::move(s); }
+    void new_multi_label(const std::string &s, int t) {
         multi_labels.push_back(s);
         multi_labels_type.push_back(t);
     }
-    auto               get_multi_labels() -> vector<string> & { return multi_labels; }
+    auto               get_multi_labels() -> std::vector<std::string> & { return multi_labels; }
     void               finish_math_mem();
     void               set_type(bool);
     [[nodiscard]] auto get_eqnum_status() const -> int { return eqnum_status; }
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
-    [[nodiscard]] auto get_label_val() const -> string { return label_val; }
+    [[nodiscard]] auto get_label_val() const -> std::string { return label_val; }
     void               stats();
     [[nodiscard]] auto get_pos_att() const -> name_positions { return pos_att; }
     void               reset(bool);
@@ -329,7 +330,7 @@ public:
     void               check_for_eqnum(subtypes, bool);
 
 private:
-    void set_label(string s) {
+    void set_label(std::string s) {
         label_val  = std::move(s);
         seen_label = true;
     }

@@ -10,24 +10,23 @@
 
 // This file contains the TeX scanner of tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
 #include <utility>
 
 namespace {
-    Buffer               scratch;                            // See insert_string
-    TexFonts             tfonts;                             // the font table
-    vector<InputStack *> cur_input_stack;                    // the input streams
-    bool                 name_in_progress = false;           // see the source of TeX
-    FileForInput         tex_input_files[nb_input_channels]; // the input files
-    bool                 scan_glue_opt = false;              // true if optional glue as found
-    vector<int>          penalties[4];
-    vector<ScaledInt>    parshape_vector;
-    bool                 every_eof = false;  // true if every_eof can been inserted for the current file
-    Buffer               local_buf;          // a local buffer
-    bool                 require_eof = true; // eof is an outer token
+    Buffer                    scratch;                            // See insert_string
+    TexFonts                  tfonts;                             // the font table
+    std::vector<InputStack *> cur_input_stack;                    // the input streams
+    bool                      name_in_progress = false;           // see the source of TeX
+    FileForInput              tex_input_files[nb_input_channels]; // the input files
+    bool                      scan_glue_opt = false;              // true if optional glue as found
+    std::vector<int>          penalties[4];
+    std::vector<ScaledInt>    parshape_vector;
+    bool                      every_eof = false;  // true if every_eof can been inserted for the current file
+    Buffer                    local_buf;          // a local buffer
+    bool                      require_eof = true; // eof is an outer token
 } // namespace
 
 namespace io_ns {
@@ -55,7 +54,7 @@ TexOutStream::TexOutStream() {
 void TexOutStream::close(int chan) {
     if (chan < 0 || chan > max_openout) return; // this cannot happen
     if (write_open[chan]) {
-        fstream *F = write_file[chan];
+        std::fstream *F = write_file[chan];
         F->close();
         delete F;
         write_file[chan] = nullptr;
@@ -65,11 +64,11 @@ void TexOutStream::close(int chan) {
 
 // This opens an output channel.
 // What if the file cannot be opened ?
-void TexOutStream::open(int chan, string file_name) {
+void TexOutStream::open(int chan, std::string file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
     close(chan);
     String fn = tralics_ns::get_out_dir(std::move(file_name));
-    auto * fp = new fstream(fn, std::ios::out);
+    auto * fp = new std::fstream(fn, std::ios::out);
     if (fp == nullptr) return; // no error ?
     if (!*fp) return;          // no error ?
     write_file[chan] = fp;
@@ -113,7 +112,7 @@ void Parser::M_extension(int cc) {
     }
     if (cc == openout_code) {
         scan_optional_equals();
-        string file_name = scan_file_name();
+        std::string file_name = scan_file_name();
         tex_out_stream.open(chan, file_name);
     } else if (cc == closeout_code)
         tex_out_stream.close(chan);
@@ -149,7 +148,7 @@ auto Parser::is_input_open() -> bool {
 
 // Open a file for \openin. if action is false, the file does not exist
 // No on-the fly conversion here
-void FileForInput::open(const string &file, bool action) {
+void FileForInput::open(const std::string &file, bool action) {
     if (!action) {
         the_log << lg_start_io << "Cannot open file " << file << " for input\n";
     } else {
@@ -163,7 +162,7 @@ void FileForInput::open(const string &file, bool action) {
 
 // This puts in cur_input_stack a new slot, containing the current state
 // of affairs. It kills the input buffer and the current line.
-void Parser::push_input_stack(const string &name, bool restore_at, bool re) {
+void Parser::push_input_stack(const std::string &name, bool restore_at, bool re) {
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     int n = cur_input_stack.size();
@@ -238,7 +237,7 @@ void Parser::close_all() {
 
 // A file name is a special thing in TeX.
 // We read until we find a non-char, or a space.
-auto Parser::scan_file_name() -> string {
+auto Parser::scan_file_name() -> std::string {
     static Buffer file_name;
 
     if (name_in_progress) return "sabotage!"; // recursion killer.
@@ -306,9 +305,9 @@ void Parser::T_scantokens(TokenList &L) {
 
 // In TeX, you say \input foo, in latex you say \input{foo}
 // This accepts both syntaxes.
-auto Parser::latex_input(int q) -> string {
+auto Parser::latex_input(int q) -> std::string {
     remove_initial_space_and_back_input();
-    string file;
+    std::string file;
     if (q == include_code || cur_tok.is_OB_token()) {
         flush_buffer();
         if (!cur_tok.is_OB_token()) {
@@ -336,7 +335,7 @@ void Parser::T_input(int q) {
         tex_input_files[stream].close();
     }
     if (q == closein_code) return;
-    string file;
+    std::string file;
     if (q == Input_code || q == include_code || q == inputifexists_code) seen_star = remove_initial_star();
     if (q == inputifexists_code || q == ifexists_code) seen_plus = remove_initial_plus(true);
     if (q == Input_code) q = include_code;
@@ -364,8 +363,8 @@ void Parser::T_input(int q) {
             B << bf_reset << file;
             if (!B.is_at_end(".tex")) {
                 B.push_back(".tex");
-                string F = B.to_string();
-                res      = tralics_ns::find_in_path(F);
+                std::string F = B.to_string();
+                res           = tralics_ns::find_in_path(F);
             }
         }
     }
@@ -395,7 +394,7 @@ void Parser::T_input(int q) {
 
 // On-the-fly conversion allowed
 void Parser::open_tex_file(bool seen_star) {
-    string file = main_ns::path_buffer.to_string();
+    std::string file = main_ns::path_buffer.to_string();
     push_input_stack(file, seen_star, true);
     tralics_ns::read_a_file(lines, file, 2);
     lines.after_open();
@@ -924,7 +923,7 @@ auto Parser::get_a_new_line() -> bool {
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
 auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
-    string file_name = "tty";
+    std::string file_name = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
     else if (!tex_input_files[ch].is_open())
@@ -979,7 +978,7 @@ auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
 }
 
 // Fills the token list with the content of the buffer.
-void Parser::tokenize_buffer(Buffer &b, TokenList &L, const string &name) {
+void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
     SaveScannerStatus tmp(ss_normal);
     push_input_stack(name, false, true);
     uint n     = cur_input_stack.size();
@@ -1350,7 +1349,7 @@ void Parser::scan_something_internal(internal_type level) {
             bad_number();
             return;
         }
-        string s = get_math_char(uchar(v), k);
+        std::string s = get_math_char(uchar(v), k);
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1407,8 +1406,8 @@ void Parser::scan_something_internal(internal_type level) {
         }
         {
             back_input(); // push back, and use scan_font_ident as parser.
-            int           k = scan_font_ident();
-            const string &s = tfonts.name(k);
+            int                k = scan_font_ident();
+            const std::string &s = tfonts.name(k);
             cur_val.set_toks(token_ns::string_to_list(s, false));
         }
         return;
@@ -1884,7 +1883,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         int v = scan_int(T, 127, "mathchar");
         scan_optional_equals();
         flush_buffer();
-        string value = sT_arg_nopar();
+        std::string value = sT_arg_nopar();
         set_math_char(v, k, value);
         return;
     }
@@ -1944,7 +1943,7 @@ void Parser::M_prefixed_aux(bool gbl) {
                 parshape_vector[j] = cur_val.get_dim_val();
             }
         } else {
-            vector<int> &V = penalties[chr - 1];
+            std::vector<int> &V = penalties[chr - 1];
             if (q < 0) {
                 V.resize(0);
                 return;
@@ -2049,8 +2048,8 @@ void Parser::token_show(int what, Buffer &B) {
     token_for_show(lg, cur_cmd_chr, B);
     if (what == 2) { // find and strip the prefix
         if (!B.find_char('>')) return;
-        int    k = B.get_ptr();
-        string s = B.to_string(k + 1);
+        int         k = B.get_ptr();
+        std::string s = B.to_string(k + 1);
         B.reset();
         B.push_back(s);
     }
@@ -2103,9 +2102,9 @@ void Parser::new_font() {
     int u = cur_tok.eqtb_loc();
     eq_define(cur_tok.eqtb_loc(), CmdChr(set_font_cmd, zero_code), false);
     scan_optional_equals();
-    string name       = scan_file_name();
-    int    scaled_val = 0;
-    int    at_val     = 0;
+    std::string name       = scan_file_name();
+    int         scaled_val = 0;
+    int         at_val     = 0;
     if (scan_keyword("at")) {
         scan_dimen(false, T);
         at_val = cur_val.get_int_val();
@@ -2319,8 +2318,8 @@ void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
 }
 
 auto Parser::scan_expr(Token T, internal_type et) -> bool {
-    vector<ScanSlot> estack;
-    ScanSlot         W;
+    std::vector<ScanSlot> estack;
+    ScanSlot              W;
     W.expr_type = et;
     bool b      = false; // return value, true in case of overflow
     char tr_state;

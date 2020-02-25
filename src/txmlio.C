@@ -10,12 +10,11 @@
 
 // This file contains the XML parser of tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txmlio.h"
 #include "txparser.h"
 
-string xxx;
+std::string xxx;
 
 namespace {
     inline auto is_spacer(codepoint c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
@@ -64,13 +63,13 @@ namespace {
 // where foo is element, X, Z is name4 choice or seq
 
 // The external function. Needs to be completed
-auto read_xml(const string &s) -> Xml * {
+auto read_xml(const std::string &s) -> Xml * {
     if (!tralics_ns::find_in_path(s)) {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;
     }
-    string file = main_ns::path_buffer.to_string();
-    XmlIO  res;
+    std::string file = main_ns::path_buffer.to_string();
+    XmlIO       res;
     if (res.init(file)) return nullptr;
     return res.prun();
 }
@@ -83,7 +82,7 @@ auto XmlIO::prun() -> Xml * {
 }
 
 // This reads the XML file, without conversion
-auto XmlIO::init(const string &name) -> bool {
+auto XmlIO::init(const std::string &name) -> bool {
     for (auto &i : Type) i = xt_invalid;
     for (int i = '0'; i <= '9'; i++) Type[i] = xt_digit;
     for (int i = 'a'; i <= 'z'; i++) Type[i] = xt_letter;
@@ -249,7 +248,7 @@ void XmlIO::parse_end() {
     auto ref = Istring(B);
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
-        cout << "Got " << ref << ", Expected " << cur_xml->get_name() << "\n";
+        std::cout << "Got " << ref << ", Expected " << cur_xml->get_name() << "\n";
     }
     pop_this();
 }
@@ -258,7 +257,7 @@ void XmlIO::parse_end() {
 void XmlIO::pop_this() {
     if (cur_char != '>') {
         error("Expected > at end of element");
-        cout << " got " << cur_char << "\n";
+        std::cout << " got " << cur_char << "\n";
     }
     skip_char();
     if (cur_stack.size() < 2)
@@ -285,8 +284,8 @@ void XmlIO::parse_att_val() {
     skip_space();
     if (cur_char != '=') {
         error("Equals sign expected");
-        cout << " After " << xxx;
-        cout << " got " << cur_char << "\n";
+        std::cout << " After " << xxx;
+        std::cout << " got " << cur_char << "\n";
     }
     skip_char();
     parse_quoted();
@@ -299,7 +298,7 @@ void XmlIO::parse_quoted() {
         delim = cur_char;
     else {
         error("Quote expected");
-        cout << " got " << cur_char << "\n";
+        std::cout << " got " << cur_char << "\n";
     }
     skip_char();
     B.reset();
@@ -351,7 +350,7 @@ void XmlIO::parse_pi() {
                 cur_char = next_char();
                 if (cur_char != '>') {
                     error("Greater than sign expected");
-                    cout << " got " << cur_char << "\n";
+                    std::cout << " got " << cur_char << "\n";
                 }
                 break;
             }
@@ -384,7 +383,7 @@ void XmlIO::parse_pi() {
     Xml *res = new Xml(aux);
     res->change_id(-3); // mark this as a pi
     cur_xml->push_back(res);
-    if (is_tralics) cout << "Unrecognised PI " << B << "\n";
+    if (is_tralics) std::cout << "Unrecognised PI " << B << "\n";
 }
 
 // Scans a declaration. We test the first or second letter
@@ -537,7 +536,7 @@ void XmlIO::parse_dec_entity() {
         parameter = true;
     }
     scan_name(0);
-    string name = B.to_string(); // This is the entity name
+    std::string name = B.to_string(); // This is the entity name
     aux.push_back(name);
     skip_space();
     // entity value is defined by a name (system or public) or value
@@ -570,11 +569,11 @@ void XmlIO::parse_dec_element() {
     aux.reset();
     tmp.push_back("ELEMENT");
     expect("ELEMENT");
-    bool   ok            = true;
-    bool   is_first      = true;
-    bool   prev_is_space = false;
-    bool   first_space   = true;
-    string elt_name;
+    bool        ok            = true;
+    bool        is_first      = true;
+    bool        prev_is_space = false;
+    bool        first_space   = true;
+    std::string elt_name;
     for (;;) {
         codepoint c = next_char();
         if (c == '>') break;
@@ -620,11 +619,11 @@ void XmlIO::parse_dec_attlist() {
     aux.reset();
     aux.reset();
     tmp.push_back("ATTLIST");
-    bool   ok            = true;
-    bool   is_first      = true;
-    bool   prev_is_space = false;
-    bool   first_space   = true;
-    string elt_name;
+    bool        ok            = true;
+    bool        is_first      = true;
+    bool        prev_is_space = false;
+    bool        first_space   = true;
+    std::string elt_name;
     for (;;) {
         codepoint c = next_char();
         if (c == '>') break;
@@ -739,9 +738,9 @@ auto XmlIO::expand_PEReference() -> bool {
         if (c == ';') break;
         B.push_back(c);
     }
-    string s  = B.to_string();
-    bool   ok = false;
-    int    n  = entities.size();
+    std::string s  = B.to_string();
+    bool        ok = false;
+    int         n  = entities.size();
     for (int i = 0; i < n; i++) {
         if (entities[i].has_name(s)) {
             B.reset();
@@ -751,7 +750,7 @@ auto XmlIO::expand_PEReference() -> bool {
         }
     }
     if (!ok) B << ";";
-    vector<codepoint> V;
+    std::vector<codepoint> V;
     V.clear();
     B.reset_ptr();
     for (;;) {
@@ -766,7 +765,7 @@ auto XmlIO::expand_PEReference() -> bool {
     return ok;
 }
 
-void XmlIO::error(const string &s) {
+void XmlIO::error(const std::string &s) {
     main_ns::nb_errs++;
     main_ns::log_and_tty << "Error while parsing XML (line " << cur_line << ")\n" << s << ".\n";
 }

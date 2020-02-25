@@ -9,7 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txarray.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -278,8 +277,8 @@ void NewArray::test_pach() {
 void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
-        Istring       x = P->nT_arg_nopar();
-        const string &s = the_main->SH[x.get_value()];
+        Istring            x = P->nT_arg_nopar();
+        const std::string &s = the_main->SH[x.get_value()];
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble
@@ -826,7 +825,7 @@ void Parser::T_hline(subtypes c) {
 // This is executed when we see \end{tabular}
 // If true, the \end{tabular} is not executed.
 // and we have to push back the `\end{tabular}' tokens
-auto Parser::false_end_tabular(const string &s) -> bool {
+auto Parser::false_end_tabular(const std::string &s) -> bool {
     if (the_stack.is_frame(np_cell)) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);

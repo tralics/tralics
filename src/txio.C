@@ -11,7 +11,6 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
-#include "tralics.h"
 #include "txatt.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -37,7 +36,7 @@ namespace main_ns {
 } // namespace main_ns
 
 namespace io_ns {
-    void print_ascii(ostream &fp, uchar c);
+    void print_ascii(std::ostream &fp, uchar c);
     auto how_many_bytes(uchar) -> int;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
@@ -45,67 +44,67 @@ namespace io_ns {
     void set_enc_param(int enc, int pos, int v);
     auto get_enc_param(int enc, int pos) -> int;
     auto find_encoding(String cl) -> int;
-    void show_encoding(int wc, const string &name);
+    void show_encoding(int wc, const std::string &name);
 } // namespace io_ns
 
 // ---------------------------------------------------------
 
 auto operator<<(FullLogger &X, String s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, Istring s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, int s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, char s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, unsigned char s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
-auto operator<<(FullLogger &X, const string &s) -> FullLogger & {
-    if (X.verbose) cout << s;
+auto operator<<(FullLogger &X, const std::string &s) -> FullLogger & {
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const TokenList &s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const Xml *s) -> FullLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger & {
-    if (X.verbose) cout << x;
+    if (X.verbose) std::cout << x;
     X.L << x;
     return X;
 }
@@ -113,37 +112,37 @@ auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger & {
 auto operator<<(FullLogger &fp, Token t) -> FullLogger & { return fp << t.tok_to_str(); }
 
 auto operator<<(HalfLogger &X, String s) -> HalfLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(HalfLogger &X, Istring s) -> HalfLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 auto operator<<(HalfLogger &X, int s) -> HalfLogger & {
-    if (X.verbose) cout << s;
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
-auto operator<<(HalfLogger &X, const string &s) -> HalfLogger & {
-    if (X.verbose) cout << s;
+auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger & {
+    if (X.verbose) std::cout << s;
     X.L << s;
     return X;
 }
 
 // Prints an att list on a buffer, then a stream.
-void AttList::print(ostream &fp) {
+void AttList::print(std::ostream &fp) {
     thebuffer.reset();
     thebuffer.push_back(*this);
     fp << thebuffer;
 }
 
 // Prints an att list on a stream.
-auto operator<<(ostream &fp, Xid X) -> ostream & {
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream & {
     X.get_att().print(fp);
     return fp;
 }
@@ -154,7 +153,7 @@ auto operator<<(ostream &fp, Xid X) -> ostream & {
 // This prints a character in the form \230 if not ascii
 // Can be used in case where encoding is strange
 
-void io_ns::print_ascii(ostream &fp, uchar c) {
+void io_ns::print_ascii(std::ostream &fp, uchar c) {
     if (32 <= c && c < 127)
         fp << c;
     else {
@@ -471,7 +470,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     B.reset0();
     B << m_ligne << "\n";
     if (B.length() == 1) {
-        if (!prev_line) cout << "Say \\stop when finished, <ESC>-? for help.\n";
+        if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
         prev_line = false;
     } else
         prev_line = true;
@@ -500,12 +499,12 @@ void LinePtr::insert(const LinePtr &aux) {
 // If 2 it's a tex file, and the file is converted later.
 // If 3, no conversion  done
 // If 4, its is the main file, log not yet open.
-void tralics_ns::read_a_file(LinePtr &L, const string &x, int spec) {
+void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.reset(x);
     if (main_ns::use_pool(L)) return;
-    auto *fp = new fstream(x.c_str(), std::ios::in);
+    auto *fp = new std::fstream(x.c_str(), std::ios::in);
     if (fp == nullptr) return;
-    string old_name             = the_converter.cur_file_name;
+    std::string old_name        = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;
     int    wc = the_main->get_input_encoding();
@@ -556,8 +555,8 @@ void tralics_ns::read_a_file(LinePtr &L, const string &x, int spec) {
     }
 }
 
-void io_ns::show_encoding(int wc, const string &name) {
-    const string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
+void io_ns::show_encoding(int wc, const std::string &name) {
+    const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
     the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
 }
 
@@ -572,11 +571,11 @@ void LinePtr::normalise_final_cr() {
         if (C == E) return;
         cur = &*C;
         ++C;
-        const string &s       = cur->get_chars();
-        int           n       = s.size();
-        bool          special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
-        string        normal  = s;
-        if (special) normal = string(s, 0, n - 2);
+        const std::string &s       = cur->get_chars();
+        int                n       = s.size();
+        bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
+        std::string        normal  = s;
+        if (special) normal = std::string(s, 0, n - 2);
         if (prev != nullptr) {
             prev->set_chars(prev->get_chars() + normal);
             cur->set_chars("\n");
@@ -901,7 +900,7 @@ void FullLogger::finish(int n) {
     *this << "(For more information, see transcript file " << L.get_filename() << ")\n";
 }
 
-void FullLogger::init(string name, bool status) {
+void FullLogger::init(std::string name, bool status) {
     L.set_file_name(std::move(name));
     L.fp = tralics_ns::open_file(L.get_filename(), true);
     L.set_finished();
@@ -921,31 +920,31 @@ auto tralics_ns::file_exists(String name) -> bool {
     return false;
 }
 
-auto tralics_ns::file_exists(const string &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
+auto tralics_ns::file_exists(const std::string &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
 
 auto tralics_ns::file_exists(Buffer &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
 
 // This exits if the file cannot be opened and argument is true
-auto tralics_ns::open_file(String name, bool fatal) -> fstream * {
-    auto *fp = new fstream(name, std::ios::out);
+auto tralics_ns::open_file(String name, bool fatal) -> std::fstream * {
+    auto *fp = new std::fstream(name, std::ios::out);
     if (log_is_open && !*fp) the_log << "Cannot open file " << name << " for output \n";
     if (fatal && !*fp) {
-        cout << "Cannot open file " << name << " for output \n";
+        std::cout << "Cannot open file " << name << " for output \n";
         exit(1);
     }
     return fp;
 }
 
 // This takes a string as argument
-auto tralics_ns::open_file(const string &name, bool f) -> fstream * { return tralics_ns::open_file(name.c_str(), f); }
+auto tralics_ns::open_file(const std::string &name, bool f) -> std::fstream * { return tralics_ns::open_file(name.c_str(), f); }
 
 // This is a static function
-void tralics_ns::close_file(fstream *fp) {
+void tralics_ns::close_file(std::fstream *fp) {
     fp->close();
     delete fp;
 }
 
-void LinePtr::reset(string x) {
+void LinePtr::reset(std::string x) {
     cur_line     = 0;
     cur_encoding = 0;
     interactive  = false;
@@ -954,10 +953,10 @@ void LinePtr::reset(string x) {
 }
 
 // Insert a line at the end of the file
-void LinePtr::insert(int n, const string &c, bool cv) { value.emplace_back(n, c, cv); }
+void LinePtr::insert(int n, const std::string &c, bool cv) { value.emplace_back(n, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
-void LinePtr::insert(const string &c, bool cv) {
+void LinePtr::insert(const std::string &c, bool cv) {
     cur_line++;
     value.emplace_back(cur_line, c, cv);
 }
@@ -971,7 +970,7 @@ void LinePtr::insert(String c) {
 
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted
-void LinePtr::insert_spec(int n, string c) {
+void LinePtr::insert_spec(int n, std::string c) {
     if (!value.empty() && value.back().get_chars()[0] == '\n' && c[0] == '\n') return;
     insert(n, c, true);
 }
@@ -1071,7 +1070,7 @@ auto LinePtr::get_next_raw(Buffer &b) -> int {
 }
 
 // Puts the line in the string, instead of the buffer.
-auto LinePtr::get_next(string &b, bool &cv) -> int {
+auto LinePtr::get_next(std::string &b, bool &cv) -> int {
     if (value.empty()) return -1;
     int n = value.front().to_string(b, cv);
     value.pop_front();
@@ -1080,7 +1079,7 @@ auto LinePtr::get_next(string &b, bool &cv) -> int {
 
 /// This finds a line with documentclass in it
 // uses B and the buffer.
-auto LinePtr::find_documentclass(Buffer &B) -> string {
+auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     auto C = value.begin();
     auto E = value.end();
     the_main->set_doc_class_pos(E);
@@ -1118,7 +1117,7 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 
 // This finds a line with documentclass in it
 // uses B and the buffer.
-auto LinePtr::find_configuration(Buffer &B) -> string {
+auto LinePtr::find_configuration(Buffer &B) -> std::string {
     int  N = 0;
     auto C = value.begin();
     auto E = value.end();
@@ -1136,7 +1135,7 @@ auto LinePtr::find_configuration(Buffer &B) -> string {
 }
 // This finds a line with document type in it
 // uses B and the buffer.
-void LinePtr::find_doctype(Buffer &B, string &res) {
+void LinePtr::find_doctype(Buffer &B, std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int  N = 0;
     auto C = value.begin();
@@ -1184,7 +1183,7 @@ void LinePtr::split_string(String x, int l) {
     splice_first(L);
 }
 
-void LinePtr::print(fstream *outfile) {
+void LinePtr::print(std::fstream *outfile) {
     auto C = value.begin();
     auto E = value.end();
     while (C != E) {
@@ -1198,7 +1197,7 @@ void LinePtr::print() {
     auto C = value.begin();
     auto E = value.end();
     while (C != E) {
-        cout << C->get_number() << "  " << C->get_chars();
+        std::cout << C->get_number() << "  " << C->get_chars();
         ++C;
     }
 }
@@ -1207,16 +1206,16 @@ void LinePtr::print() {
 // \begin{filecontents}{name} some lines of code \end{filecontents}
 // spec=0 normal, =1 star, =2 plus
 void Parser::T_filecontents(int spec) {
-    string filename;
+    std::string filename;
     {
         flush_buffer();
         InLoadHandler somthing;
         filename = sT_arg_nopar();
     }
-    int      action     = 0;
-    fstream *outfile    = nullptr;
-    LinePtr *res        = nullptr;
-    bool     is_encoded = true;
+    int           action     = 0;
+    std::fstream *outfile    = nullptr;
+    LinePtr *     res        = nullptr;
+    bool          is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;
         res    = new LinePtr;

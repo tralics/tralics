@@ -10,11 +10,11 @@
 
 // Tralics, math part II
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txmath1.h"
 #include "txparser.h"
+#include <algorithm>
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer    mathml_buffer;
@@ -26,7 +26,7 @@ extern MathDataP math_data;
 
 // Codes are explained in Math::find_paren0 below.
 // This prints one token of the list.
-void MathPAux::print(ostream &fp) const {
+void MathPAux::print(std::ostream &fp) const {
     fp << pos;
     switch (type) {
     case mt_flag_small_l: fp << 'l'; break;
@@ -42,7 +42,7 @@ void MathPAux::print(ostream &fp) const {
 
 // This prints the whole MathP list on the stream
 
-auto operator<<(ostream &fp, const MathP &X) -> ostream & {
+auto operator<<(std::ostream &fp, const MathP &X) -> std::ostream & {
     auto C = X.value.begin();
     auto E = X.value.end();
     while (C != E) {
@@ -54,7 +54,7 @@ auto operator<<(ostream &fp, const MathP &X) -> ostream & {
 
 // This prints the whole MathQ list on the stream
 
-auto operator<<(ostream &fp, const MathQList &X) -> ostream & {
+auto operator<<(std::ostream &fp, const MathQList &X) -> std::ostream & {
     auto C = X.begin();
     auto E = X.end();
     while (C != E) {
@@ -70,7 +70,7 @@ auto operator<<(ostream &fp, const MathQList &X) -> ostream & {
 auto MathP::has_small() const -> bool {
     auto B = value.begin();
     auto E = value.end();
-    auto C = find_if(B, E, MathPAuxSmall());
+    auto C = std::find_if(B, E, MathPAuxSmall());
     return C != E;
 }
 
@@ -494,7 +494,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
             Xml *xval = front().remove_prefix();
             if (cur_type == mt_flag_dummy) {
                 if (M.in_mrow()) xval = nullptr;
-                // else cout << "bad dummy\n"; no error ??
+                // elsestd::cout<< "bad dummy\n"; no error ??
             }
             if (xval != nullptr) M.push_in_t(xval);
             M.handle_t();
@@ -572,10 +572,10 @@ void MathF::dump_aux() {
     auto C = aux.begin();
     auto E = aux.end();
     while (C != E) {
-        C->print(cout);
+        C->print(std::cout);
         ++C;
     }
-    cout << "\n";
+    std::cout << "\n";
 }
 
 // --------------------------------------------------------------------
@@ -793,8 +793,8 @@ void MathElt::cv_noML_special() {
     Math &   L = get_list();
     if (c == formula_attribute_code || c == thismath_attribute_code) {
         static Buffer att_buffer;
-        string        s1 = L.get_arg1().convert_this_to_string(att_buffer);
-        string        s2 = L.get_arg2().convert_this_to_string(att_buffer);
+        std::string   s1 = L.get_arg1().convert_this_to_string(att_buffer);
+        std::string   s2 = L.get_arg2().convert_this_to_string(att_buffer);
         Istring       A  = Istring(s1);
         Istring       B  = Istring(s2);
         math_ns::add_attribute_spec(A, B);
@@ -1088,7 +1088,7 @@ void Math::handle_mbox_no() {
         if (ok == 4) {
             Math w = front().get_list();
             pop_front();
-            string label = w.convert_opname();
+            std::string label = w.convert_opname();
             mathml_buffer.push_back("\\ref{");
             mathml_buffer.push_back(label);
             mathml_buffer.push_back("}");
@@ -1134,7 +1134,7 @@ void Math::handle_mbox_not() {
         if (ok == 4) {
             Math w = front().get_list();
             pop_front();
-            string label = w.convert_opname();
+            std::string label = w.convert_opname();
             mathml_buffer.push_back("<ref>");
             mathml_buffer.push_back(label);
             mathml_buffer.push_back("</ref>");
@@ -1329,7 +1329,7 @@ void Math::convert_math_noMLt0() {
         if (!empty() && (cmd == hat_catcode || cmd == underscore_catcode)) {
             cur = front();
             pop_front();
-            string s = cmd == hat_catcode ? "superscript" : "subscript";
+            std::string s = cmd == hat_catcode ? "superscript" : "subscript";
             mathml_buffer << "<" << s << ">";
             cur.cv_noMLt();
             mathml_buffer << "</" << s << ">";
@@ -1379,7 +1379,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
     auto E = value.end();
     for (;;) {
         if (L == E) return true;
-        // DEBUG    cout << "cmd:" << B << ".\n";
+        // DEBUG   std::cout<< "cmd:" << B << ".\n";
         CmdChr w = L->get_cmd_chr();
         if (w.is_space() || w.is_letter() || w.is_other()) {
             codepoint c = w.char_val();
@@ -1404,7 +1404,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         } else {
             main_ns::log_and_tty << lg_start << "First invalid token in math-to-string cmd=" << w.get_cmd() << " chr=" << w.get_chr()
                                  << lg_end;
-            cout << "\n";
+            std::cout << "\n";
             return false;
         }
         ++L;
@@ -1526,14 +1526,14 @@ void Buffer::show_uncomplete(String m) {
 
 // Converts a whole math list into a string. May signal an error.
 // In this case, the result is `error'.
-auto Math::convert_this_to_string(Buffer &B) -> string {
+auto Math::convert_this_to_string(Buffer &B) -> std::string {
     B.reset();
     if (!chars_to_mb(B, true)) B.show_uncomplete("Bad character in conversion to string");
     return B.to_string();
 }
 
 // Use of the alternate command
-auto Math::convert_opname() -> string {
+auto Math::convert_opname() -> std::string {
     Buffer &B = aux_buffer;
     if (!chars_to_mb1(B)) B.show_uncomplete("Bad character in conversion to string");
     return B.to_string();
@@ -1565,7 +1565,7 @@ void Math::remove_opt_arg(bool star) {
 // Case of \begin{foo}[bar]{gee}ETC, spaces are not yet removed
 // Returns the value of a required argument, as a string.
 // Here it can be "gee"; this is a sublist.
-auto Math::remove_req_arg() -> string {
+auto Math::remove_req_arg() -> std::string {
     skip_initial_space();
     if (empty() || !front().is_list()) {
         the_parser.signal_error("missing argument");
@@ -1576,7 +1576,7 @@ auto Math::remove_req_arg() -> string {
     return L.convert_this_to_string(aux_buffer);
 }
 
-auto Math::remove_req_arg_noerr() const -> string {
+auto Math::remove_req_arg_noerr() const -> std::string {
     auto C = value.begin();
     auto E = value.end();
     while (C != E && C->is_space()) ++C;

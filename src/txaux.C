@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -576,7 +575,7 @@ void RealNumber::convert_decimal_part(int k, const int *table) {
 }
 
 // Return true if the string contains only integers.
-auto tralics_ns::only_digits(const string &s) -> bool {
+auto tralics_ns::only_digits(const std::string &s) -> bool {
     String S = s.c_str();
     for (int i = 0;; i++) {
         char c = S[i];
@@ -587,7 +586,7 @@ auto tralics_ns::only_digits(const string &s) -> bool {
 
 // Returns: 0 if false, 1 if true, 2 if empty, 3 otherwise
 auto SpecialHash::find_true_false(String s) -> int {
-    string res = find(s);
+    std::string res = find(s);
     if (res.empty()) return 2;
     if (res == "true") return 1;
     if (res == "false") return 0;
@@ -605,7 +604,7 @@ auto SpecialHash::counter_val(int k) -> int {
 // but \c@foo is not a counter.
 // Otherwise, returns the register number of the counter
 auto SpecialHash::find_counter() -> int {
-    string s = find("counter");
+    std::string s = find("counter");
     if (s.empty()) return -1;
     if (tralics_ns::only_digits(s)) return counter_val(std::stoi(s));
     Buffer &B = the_parser.hash_table.my_buffer();

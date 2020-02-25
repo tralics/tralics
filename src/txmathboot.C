@@ -10,7 +10,6 @@
 
 // Tralics math; boot part. This constructs all data structures.
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
@@ -24,18 +23,18 @@ extern bool bad_minus;
 // mathml variants: normal, bold, italic, bold-italic, double-struck,
 // bold-fraktur, script, bold-script, fraktur, sans-serif, bold-sans-serif,
 // sans-serif-italic, sans-serif-bold-italic, monospace
-typedef string math_char_slot[15];
-math_char_slot math_chars[128];
-Xml *          single_chars[128];
+typedef std::string math_char_slot[15];
+math_char_slot      math_chars[128];
+Xml *               single_chars[128];
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"
 //#define LANGLE "&#x27E8;"
 //#define RANGLE "&#x27E9;"
 
-auto get_math_char(uchar c, int f) -> string { return math_chars[c][f]; }
+auto get_math_char(uchar c, int f) -> std::string { return math_chars[c][f]; }
 
-void set_math_char(uchar c, int f, string s) { math_chars[c][f] = std::move(s); }
+void set_math_char(uchar c, int f, std::string s) { math_chars[c][f] = std::move(s); }
 
 auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
 

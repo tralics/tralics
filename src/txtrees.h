@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
@@ -11,9 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <algorithm>
+#include <utility>
+
 namespace tralics_ns {
-    void add_ref(int v, const string &s, bool);
-    void find_index_labels(vector<string> &W);
+    void add_ref(int v, const std::string &s, bool);
+    void find_index_labels(std::vector<std::string> &W);
 
 } // namespace tralics_ns
 
@@ -35,46 +36,46 @@ public:
 //
 class Indexer {
 public:
-    string             key; // sort key
-    string             aux;
+    std::string        key; // sort key
+    std::string        aux;
     Xml *              translation;
     int                level;
     int                iid; // index in the reference table
-    [[nodiscard]] auto is_same(int l, const string &k) const -> bool { return level == l && k == aux; }
-    Indexer(string k, string a, Xml *x, int l, int u) : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
+    [[nodiscard]] auto is_same(int l, const std::string &k) const -> bool { return level == l && k == aux; }
+    Indexer(std::string k, std::string a, Xml *x, int l, int u) : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
 };
 
 class OneIndex {
-    string            name;
-    string            title;
-    Xml *             position; // Position on the XML of the index
-    int               AL;       // The attribute list index
-    vector<Indexer *> value;
+    std::string            name;
+    std::string            title;
+    Xml *                  position; // Position on the XML of the index
+    int                    AL;       // The attribute list index
+    std::vector<Indexer *> value;
 
 public:
     [[nodiscard]] auto size() const -> int { return value.size(); }
-    auto               get_data() -> vector<Indexer *> & { return value; }
-    void               do_sort() { sort(value.begin(), value.end(), trees_ns::xless); }
+    auto               get_data() -> std::vector<Indexer *> & { return value; }
+    void               do_sort() { std::sort(value.begin(), value.end(), trees_ns::xless); }
     [[nodiscard]] auto get_AL() const -> int { return AL; }
-    [[nodiscard]] auto get_title() const -> const string & { return title; }
+    [[nodiscard]] auto get_title() const -> const std::string & { return title; }
     [[nodiscard]] auto get_position() const -> Xml * { return position; }
     void               set_position(Xml *x) { position = x; }
     [[nodiscard]] auto get_translation(int i) const -> Xml * { return value[i]->translation; }
     [[nodiscard]] auto get_iid(int i) const -> int { return value[i]->iid; }
-    [[nodiscard]] auto has_name(const string &s) const -> bool { return name == s; }
-    OneIndex(string a, string b, int c) : name(std::move(a)), title(std::move(b)), position(nullptr), AL(c) {}
+    [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
+    OneIndex(std::string a, std::string b, int c) : name(std::move(a)), title(std::move(b)), position(nullptr), AL(c) {}
 };
 
 class AllIndex {
-    int                last_index{0};
-    int                last_iid{0};
-    vector<OneIndex *> value;
+    int                     last_index{0};
+    int                     last_iid{0};
+    std::vector<OneIndex *> value;
 
 public:
     auto               get_index(int j) -> OneIndex * { return value[j]; }
-    auto               find_index(const string &) -> int;
+    auto               find_index(const std::string &) -> int;
     [[nodiscard]] auto size() const -> int { return value.size(); }
-    auto               get_data(int i) -> vector<Indexer *> & { return value[i]->get_data(); }
+    auto               get_data(int i) -> std::vector<Indexer *> & { return value[i]->get_data(); }
     AllIndex();
     void mark_print(int g);
     auto next_iid() -> int {
@@ -87,5 +88,5 @@ public:
         return last_index;
     }
     [[nodiscard]] auto get_last_iid() const -> int { return last_iid; }
-    void               new_index(const string &, const string &);
+    void               new_index(const std::string &, const std::string &);
 };

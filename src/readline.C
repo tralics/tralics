@@ -8,15 +8,17 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/codepoint.h"
 #include <array>
 #include <cctype>
 #include <csignal>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
+#include <string>
 #include <sys/types.h>
 #include <utility>
-
-#include "tralics.h"
+#include <vector>
 
 // The line editor
 class Slined;
@@ -28,7 +30,7 @@ const int                in_size      = 4096;
 bool                     term_set     = false;
 std::array<int, in_size> word_beg{};
 std::array<int, in_size> word_end{};
-string                   cur_prompt{"> "s};
+std::string              cur_prompt{"> "};
 
 // Conditional code for windows
 
@@ -87,7 +89,7 @@ inline void INIT_TERMIO() {
 }
 #endif
 
-void readline_newprompt(string s) { cur_prompt = std::move(s); }
+void readline_newprompt(std::string s) { cur_prompt = std::move(s); }
 
 namespace readline_ns {
     void make_edit();
@@ -111,15 +113,15 @@ inline void color_black() {}
 class Slined {
     char *                     m_inbuf{nullptr};
     char                       m_buffer[buf_size];
-    string                     m_killbuf;
+    std::string                m_killbuf;
     int                        m_inpos{0};
     int                        m_inmax{0};
-    string                     m_prompt{"> "s};
-    std::vector<string>        m_history;
+    std::string                m_prompt{"> "};
+    std::vector<std::string>   m_history;
     int                        m_hpos{0};
     int                        m_history_size;
     int                        m_mark{0};
-    string                     m_search;
+    std::string                m_search;
     int                        m_left{0};
     int                        m_right{0};
     int                        m_pos{0};
@@ -174,7 +176,7 @@ public:
     void do_esc_command(int n, char c);
     void do_n_command(int n, unsigned char c);
     void do_command(int n, int c);
-    void initialise(char *buf, const string &prompt, int size);
+    void initialise(char *buf, const std::string &prompt, int size);
     void run();
 };
 
@@ -506,7 +508,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
     if (fin >= m_inmax) fin = m_inmax - 1;
 
     int taille = fin - debut + 1; // Size of what must be killed.
-    m_killbuf  = string(m_inbuf + debut, taille);
+    m_killbuf  = std::string(m_inbuf + debut, taille);
     if (sw != 0) {
         rl_move(m_inpos, debut);
         for (int i = 0; i < taille; i++)
@@ -726,8 +728,8 @@ void Slined::backword(bool sw, int n) {
 void Slined::replace_string() {
     maybe_store_line();
     cur_line_modified = false;
-    string s          = m_hpos < m_history_size ? m_history[m_hpos].c_str() : "";
-    int    l          = s.size();
+    std::string s     = m_hpos < m_history_size ? m_history[m_hpos].c_str() : "";
+    int         l     = s.size();
     strncpy(m_inbuf, s.c_str(), l);
     m_inmax = l;
     m_inpos = l;
@@ -955,7 +957,7 @@ void Slined::do_command(int n, int c) {
     do_n_command(n, c);
 }
 
-void Slined::initialise(char *buffer, const string &prompt, int size) {
+void Slined::initialise(char *buffer, const std::string &prompt, int size) {
     m_inbuf  = buffer;
     m_prompt = prompt;
     m_size   = size - prompt.size();

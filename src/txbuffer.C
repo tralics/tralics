@@ -10,7 +10,6 @@
 
 // This file contains a lot of stuff dealing with buffers.
 
-#include "tralics.h"
 #include "txhash.h"
 #include "tximage.h"
 #include "txinline.h"
@@ -43,17 +42,17 @@ auto tralics_ns::make_string(String a) -> std::string {
 }
 
 // Returns of copy of the buffer as a string.
-auto Buffer::to_string() const -> string {
+auto Buffer::to_string() const -> std::string {
     int n = strlen(data());
     the_parser.my_stats.one_more_string(n + 1);
-    return string(data());
+    return std::string(data());
 }
 
 // Returns a copy, starting at k.
-auto Buffer::to_string(int k) const -> string {
+auto Buffer::to_string(int k) const -> std::string {
     int n = strlen(data() + k);
     the_parser.my_stats.one_more_string(n + 1);
-    return string(data() + k);
+    return std::string(data() + k);
 }
 
 // Replaces all \r by a space.
@@ -69,7 +68,7 @@ void Buffer::push_back_braced(String s) {
     push_back_close_brace();
 }
 
-void Buffer::push_back_braced(const string &s) {
+void Buffer::push_back_braced(const std::string &s) {
     push_back_open_brace();
     push_back(s);
     push_back_close_brace();
@@ -146,7 +145,7 @@ void Buffer::push_back_substring(String S, int n) {
     at(wptr) = 0;
 }
 
-void Buffer::push_back_substring(const string &S, int p, int n) {
+void Buffer::push_back_substring(const std::string &S, int p, int n) {
     alloc(n);
     for (int i = 0; i < n; i++) at(wptr + i) = S[p + i];
     wptr += n;
@@ -417,11 +416,11 @@ auto Buffer::next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> boo
 }
 
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
-auto Buffer::substring() -> string {
-    char c   = at(ptr);
-    at(ptr)  = 0;
-    string s = c_str(ptr1);
-    at(ptr)  = c;
+auto Buffer::substring() -> std::string {
+    char c        = at(ptr);
+    at(ptr)       = 0;
+    std::string s = c_str(ptr1);
+    at(ptr)       = c;
     return s;
 }
 
@@ -510,7 +509,7 @@ auto Splitter::get_next() -> String {
 // Constructs the next pair. We first call next_for_splitter,
 // Assume that this puts Key=Val in the buffer. We set key and val.
 // If no equals sign is given, the string is the key, the value is empty.
-void Splitter::extract_keyval(string &key, string &val) {
+void Splitter::extract_keyval(std::string &key, std::string &val) {
     key      = "";
     val      = "";
     String T = get_next_raw();
@@ -525,7 +524,7 @@ void Splitter::extract_keyval(string &key, string &val) {
 }
 
 // Return the value associated to the key x, or empty string if not found.
-auto SpecialHash::find(String x) const -> string {
+auto SpecialHash::find(String x) const -> std::string {
     for (int i = 0; i < size; i++)
         if (key[i] == x) return value[i];
     return "";
@@ -539,7 +538,7 @@ void SpecialHash::create(String s) {
     value.reserve(n);
     size = n;
     for (int j = 0; j < size; j++) {
-        string a, b;
+        std::string a, b;
         S.extract_keyval(a, b);
         key.push_back(a);
         value.push_back(b);
@@ -873,9 +872,9 @@ void Buffer::push_back(const SthInternal &x) {
 
 auto operator<<(Logger &fp, Token t) -> Logger & { return fp << t.tok_to_str(); }
 
-auto operator<<(ostream &fp, Token x) -> ostream & { return fp << x.tok_to_str(); }
+auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 
-auto operator<<(ostream &fp, const ScaledInt &x) -> ostream & {
+auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
     thebuffer.reset();
     thebuffer.push_back(x, glue_spec_pt);
     return fp << thebuffer.c_str();
@@ -886,7 +885,7 @@ auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
     return X;
 }
 
-auto operator<<(ostream &fp, const Glue &x) -> ostream & {
+auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     thebuffer.reset();
     thebuffer.push_back(x);
     fp << thebuffer.c_str();
@@ -898,7 +897,7 @@ auto operator<<(Logger &X, const Glue &x) -> Logger & {
     return X;
 }
 
-auto operator<<(ostream &fp, const SthInternal &x) -> ostream & {
+auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
     thebuffer.reset();
     thebuffer.push_back(x);
     fp << thebuffer.c_str();
@@ -913,7 +912,7 @@ auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
 }
 
 // We use internal encoding here.
-auto operator<<(ostream &fp, const codepoint &x) -> ostream & {
+auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
@@ -1140,7 +1139,7 @@ auto Buffer::find_char(char c) -> bool {
 }
 
 // splits foo:bar into foo and bar
-auto Buffer::split_at_colon(string &before, string &after) -> bool {
+auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
         kill_at(ptr);
         after  = to_string(ptr + 1);
@@ -1191,7 +1190,7 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-auto Buffer::slash_separated(string &a) -> bool {
+auto Buffer::slash_separated(std::string &a) -> bool {
     static Buffer tmp;
     tmp.reset();
     int p = 0;
@@ -1228,7 +1227,7 @@ auto Buffer::some_substring(int a, int b) -> String {
 
 // Returns the substring between a and b.
 // Assume this is not substring_buf
-auto Buffer::some_sub_string(int a, int b) -> string {
+auto Buffer::some_sub_string(int a, int b) -> std::string {
     int c = b - a;
     substring_buf.reset();
     substring_buf.alloc(c + 1);
@@ -1335,7 +1334,7 @@ void Image::check() {
 }
 
 // Enter a new image file, if ok is false, do not increase the occ count
-void Parser::enter_file_in_table(const string &nm, bool ok) {
+void Parser::enter_file_in_table(const std::string &nm, bool ok) {
     int s = the_images.size();
     for (int i = 0; i < s; i++) {
         Image &X = the_images[i];
@@ -1347,7 +1346,7 @@ void Parser::enter_file_in_table(const string &nm, bool ok) {
     the_images.emplace_back(nm, ok ? 1 : 0);
 }
 
-void operator<<(fstream &X, const Image &Y) {
+void operator<<(std::fstream &X, const Image &Y) {
     X << "see_image(\"" << Y.name << "\",";
     int k = Y.flags;
     if (k == 0)
@@ -1397,9 +1396,9 @@ void operator<<(fstream &X, const Image &Y) {
 void Parser::finish_images() {
     int s = the_images.size();
     if (s == 0) return;
-    string name = tralics_ns::get_short_jobname() + ".img";
-    String wn   = tralics_ns::get_out_dir(name);
-    auto * fp   = new fstream(wn, std::ios::out);
+    std::string name = tralics_ns::get_short_jobname() + ".img";
+    String      wn   = tralics_ns::get_out_dir(name);
+    auto *      fp   = new std::fstream(wn, std::ios::out);
     if (!*fp) return;
     *fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
@@ -1421,7 +1420,7 @@ void Parser::finish_images() {
     if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2 << ".\n";
 }
 
-auto Buffer::get_machine_name() -> string {
+auto Buffer::get_machine_name() -> std::string {
     reset();
     alloc(200);
     if (gethostname(data(), 199) != 0) push_back("unknown");

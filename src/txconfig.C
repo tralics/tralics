@@ -10,17 +10,16 @@
 
 // The file contains code for configurating the Raweb
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
 namespace config_ns {
     Buffer          sec_buffer;
-    string          all_themes = "";
+    std::string     all_themes = "";
     Buffer          Txbuf;
     ParamDataVector config_data;
     bool            have_default_ur     = false;
-    string          the_default_rc      = "";
+    std::string     the_default_rc      = "";
     int             ur_size             = 0;
     int             composition_section = -1;
     bool            cur_sec_no_topic    = false;
@@ -29,12 +28,12 @@ namespace config_ns {
 namespace config_ns {
     void interpret_section_list(Buffer &B, bool new_syntax);
     void bad_conf(String);
-    void interpret_data_list(Buffer &B, const string &);
+    void interpret_data_list(Buffer &B, const std::string &);
     void interpret_theme_list(const Buffer &B);
-    auto is_good_ur(const string &x) -> bool;
-    auto next_RC_in_buffer(Buffer &B, string &sname, string &lname) -> int;
-    auto check_section(const string &) -> string;
-    auto check_spec_section(const string &s) -> string;
+    auto is_good_ur(const std::string &x) -> bool;
+    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> int;
+    auto check_section(const std::string &) -> std::string;
+    auto check_spec_section(const std::string &s) -> std::string;
 } // namespace config_ns
 
 using namespace config_ns;
@@ -98,7 +97,7 @@ void MainClass::finish_init() {
 // This interprets theme_vals = "foo bar"
 // and all consequences
 
-void config_ns::interpret_list(const string &a, Buffer &b) {
+void config_ns::interpret_list(const std::string &a, Buffer &b) {
     if (a == "section")
         interpret_section_list(b, false);
     else if (a == "fullsection")
@@ -118,8 +117,8 @@ void config_ns::interpret_theme_list(const Buffer &B) {
 }
 
 // This function is called when we translate a theme value.
-auto MainClass::check_theme(const string &s) -> string {
-    string res = Txbuf.add_with_space(s.c_str());
+auto MainClass::check_theme(const std::string &s) -> std::string {
+    std::string res = Txbuf.add_with_space(s.c_str());
     if (strstr(all_themes.c_str(), Txbuf.c_str()) == nullptr) {
         err_ns::local_buf.reset();
         if (s.empty())
@@ -152,7 +151,7 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
         sec_buffer.reset();
         composition_section = -1;
     }
-    string s = "", r = "";
+    std::string s, r;
     for (;;) {
         if (!B.slash_separated(s)) break;
         if (new_syntax) {
@@ -163,7 +162,7 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
         bool star = false;
         int  ns   = s.size();
         if (ns > 1 && s[ns - 1] == '*') {
-            s    = string(s, 0, ns - 1);
+            s    = std::string(s, 0, ns - 1);
             star = true;
         }
         if (r.empty()) r = s;
@@ -176,8 +175,8 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
 
 void MainClass::check_section_use() {
     if (in_ra()) {
-        vector<ParamDataSlot> &X = config_data.data[1]->data;
-        int                    n = X.size(); // number of sections
+        std::vector<ParamDataSlot> &X = config_data.data[1]->data;
+        int                         n = X.size(); // number of sections
         for (int i = 0; i < n; i++)
             if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");
     }
@@ -186,7 +185,7 @@ void MainClass::check_section_use() {
 // --------------------------------------------------
 
 // Return the data associated to name, may create depend on creat
-auto ParamDataVector::find_list(const string &name, bool creat) -> ParamDataList * {
+auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
     int n = data.size();
     for (int i = 0; i < n; i++)
         if (data[i]->its_me(name)) return data[i];
@@ -206,7 +205,7 @@ void ParamDataList::keys_to_buffer(Buffer &B) const {
 }
 
 // Converts the whole data struture as foo1=bar1,foo2=bar2,
-auto config_ns::find_keys(const string &name) -> string {
+auto config_ns::find_keys(const std::string &name) -> std::string {
     ParamDataList *X = config_data.find_list(name, false);
     if (X == nullptr) return "";
     Txbuf.reset();
@@ -217,7 +216,7 @@ auto config_ns::find_keys(const string &name) -> string {
 }
 
 // Return the value of the key in a list.
-auto config_ns::find_one_key(const string &name, const string &key) -> string {
+auto config_ns::find_one_key(const std::string &name, const std::string &key) -> std::string {
     if (name == "ur") return pers_rc(key);
     if (name == "theme") return the_main->check_theme(key);
     if (name == "fullsection") return check_section(key);
@@ -238,12 +237,12 @@ auto config_ns::find_one_key(const string &name, const string &key) -> string {
 }
 
 // return non-empty string only if section is new
-auto config_ns::check_section(const string &s) -> string {
+auto config_ns::check_section(const std::string &s) -> std::string {
     static int cur_section = -1;
     int        k           = -1;
     err_ns::local_buf.reset();
-    vector<ParamDataSlot> &X = config_data.data[1]->data;
-    int                    n = X.size(); // number of sections
+    std::vector<ParamDataSlot> &X = config_data.data[1]->data;
+    int                         n = X.size(); // number of sections
     if (s.empty())
         k = cur_section;
     else
@@ -293,7 +292,7 @@ auto config_ns::check_section(const string &s) -> string {
 
 // Special command. We assume that cur_sec_no_topic
 // is correctlty set.
-auto config_ns::check_spec_section(const string &s) -> string {
+auto config_ns::check_spec_section(const std::string &s) -> std::string {
     if (cur_sec_no_topic) return "";
     if (s.empty()) return "default";
     return s;
@@ -319,11 +318,11 @@ auto config_ns::start_interpret(Buffer &B, String s) -> bool {
 
 // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
 // This creates four slots in a table indexed by k.
-void config_ns::interpret_data_list(Buffer &B, const string &name) {
+void config_ns::interpret_data_list(Buffer &B, const std::string &name) {
     ParamDataList *V = config_data.find_list(name, true);
     if (start_interpret(B, "//")) V->reset();
     for (;;) {
-        string r1, r2;
+        std::string r1, r2;
         if (!B.slash_separated(r1)) return;
         if (!B.slash_separated(r2)) return;
         if (r1.empty()) continue;
@@ -339,8 +338,8 @@ void config_ns::interpret_data_list(Buffer &B, const string &name) {
 // returns -1 if there no other RC in the buffer.
 // returns -2 if the RC is invalid
 // returns location in the table otherwise
-auto config_ns::next_RC_in_buffer(Buffer &B, string &sname, string &lname) -> int {
-    vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> int {
+    std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
     if (strncmp(B.c_str(B.get_ptr()), "\\UR", 3) == 0) {
@@ -369,16 +368,16 @@ auto config_ns::next_RC_in_buffer(Buffer &B, string &sname, string &lname) -> in
 // Research Centers of the team;
 // May return  <URRocquencourt/><URSophia/>
 void config_ns::check_RC(Buffer &B, Xml *res) {
-    string tmp      = the_names[np_rcval].c_str();
-    bool   need_elt = tmp[0] == '+'; // Hack
-    String S        = nullptr;
+    std::string tmp      = the_names[np_rcval].c_str();
+    bool        need_elt = tmp[0] == '+'; // Hack
+    String      S        = nullptr;
     if (need_elt) S = tmp.c_str() + 1;
-    Buffer temp2;
-    string sname, lname;
+    Buffer      temp2;
+    std::string sname, lname;
     temp2.reset();
-    vector<int> vals;
-    int         nb = 0;
-    Xml *       new_elt;
+    std::vector<int> vals;
+    int              nb = 0;
+    Xml *            new_elt;
     B.reset_ptr();
     for (;;) {
         int j = next_RC_in_buffer(B, sname, lname);
@@ -388,7 +387,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             break;
         }
         if (need_elt)
-            new_elt = new Xml(Istring(string(S + sname)), nullptr);
+            new_elt = new Xml(Istring(std::string(S + sname)), nullptr);
         else {
             new_elt = new Xml(np_rcval, nullptr);
             new_elt->get_id().add_attribute(Istring("name"), Istring(sname));
@@ -418,7 +417,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
 // Interprets the RC argument of a pers command
 // This returns the short name, said otherwise, the argument.
 // Notice the space case when argument is empty, or +foo or =foo.
-auto config_ns::pers_rc(const string &rc) -> string {
+auto config_ns::pers_rc(const std::string &rc) -> std::string {
     if (rc.empty()) {
         if (have_default_ur) return the_default_rc;
         if (the_main->in_ra() && the_parser.get_ra_year() > 2006) {
@@ -430,13 +429,13 @@ auto config_ns::pers_rc(const string &rc) -> string {
         return the_default_rc;
     }
     if (rc[0] == '+') { return rc.c_str() + 1; }
-    bool   spec = (rc.size() >= 2 && rc[0] == '=');
-    string RC   = spec ? rc.c_str() + 1 : rc;
+    bool        spec = (rc.size() >= 2 && rc[0] == '=');
+    std::string RC   = spec ? rc.c_str() + 1 : rc;
     if (!is_good_ur(RC)) {
         err_ns::local_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
                           << "Use one of:";
-        vector<ParamDataSlot> &V = config_data.data[0]->data;
-        int                    n = V.size();
+        std::vector<ParamDataSlot> &V = config_data.data[0]->data;
+        int                         n = V.size();
         for (int i = 0; i < n; i++)
             if (V[i].is_used) V[i].key_to_buffer(err_ns::local_buf);
         the_parser.signal_error(the_parser.err_tok, "illegal data");
@@ -448,9 +447,9 @@ auto config_ns::pers_rc(const string &rc) -> string {
     return RC;
 }
 
-auto config_ns::is_good_ur(const string &x) -> bool {
-    vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
-    int                    n       = ur_list.size();
+auto config_ns::is_good_ur(const std::string &x) -> bool {
+    std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+    int                         n       = ur_list.size();
     if (ur_size == 0) {
         for (int i = 0; i < n; i++) ur_list[i].mark_used();
         ur_size = n;
@@ -463,7 +462,7 @@ auto config_ns::is_good_ur(const string &x) -> bool {
 // --------------------------------------------------
 
 // If S is, say `Cog A', this puts ` cog ' in the buffer, returns `cog'.
-auto Buffer::add_with_space(String s) -> string {
+auto Buffer::add_with_space(String s) -> std::string {
     int i = 0;
     while (s[i] == ' ') ++i;
     reset();
@@ -473,7 +472,7 @@ auto Buffer::add_with_space(String s) -> string {
         ++i;
     }
     lowercase();
-    string res = to_string(1);
+    std::string res = to_string(1);
     push_back_space();
     return res;
 }
@@ -503,8 +502,8 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
             the_log << "--";
         }
         while ((head() != 0) && !is_space(head())) advance();
-        ptr1     = a;
-        string k = substring();
+        ptr1          = a;
+        std::string k = substring();
         if (keep)
             bib.emplace_back(k);
         else

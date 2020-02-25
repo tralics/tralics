@@ -30,40 +30,39 @@
 // The fact that you are presently reading this means that you have had
 // knowledge of the CeCILL license and that you accept its terms.
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include "txpath.h"
 
-void set_everyjob(const string &s); // in tralics.C, but used only here
+void set_everyjob(const std::string &s); // in tralics.C, but used only here
 
 inline void MainClass::set_version() {
     version_string = "2.15.4"; // current version number
 }
 
 namespace {
-    vector<string>    after_conf;
-    vector<string>    conf_path;
-    vector<string>    input_path;
-    vector<string>    other_options;
-    Buffer            confbuf, bparse;
-    int               trivial_math = 1;
-    string            user_config_file;
-    string            ult_name;              // absolute name of input.ult
-    string            log_name;              // Name of transcript file
-    string            file_name;             // Job name, without directory
-    string            out_dir;               // Output directory
-    string            no_ext;                // file name without tex extension
-    vector<LinePtr *> file_pool;             // pool managed by filecontents
-    int               pool_position    = -1; // Position of file in pool
-    string            opt_doctype      = "";
-    bool              banner_printed   = false; // hack
-    bool              load_l3          = false;
-    bool              multi_math_label = false;
+    std::vector<std::string> after_conf;
+    std::vector<std::string> conf_path;
+    std::vector<std::string> input_path;
+    std::vector<std::string> other_options;
+    Buffer                   confbuf, bparse;
+    int                      trivial_math = 1;
+    std::string              user_config_file;
+    std::string              ult_name;           // absolute name of input.ult
+    std::string              log_name;           // Name of transcript file
+    std::string              file_name;          // Job name, without directory
+    std::string              out_dir;            // Output directory
+    std::string              no_ext;             // file name without tex extension
+    std::vector<LinePtr *>   file_pool;          // pool managed by filecontents
+    int                      pool_position = -1; // Position of file in pool
+    std::string              opt_doctype;
+    bool                     banner_printed   = false; // hack
+    bool                     load_l3          = false;
+    bool                     multi_math_label = false;
 } // namespace
 
 namespace tpage_ns {
-    void after_conf_assign(vector<string> &V);
+    void after_conf_assign(std::vector<std::string> &V);
 } // namespace tpage_ns
 
 using main_ns::path_buffer;
@@ -79,29 +78,29 @@ bool seen_enddocument = false;
 
 namespace io_ns {
     void check_for_encoding();
-    void show_encoding(int wc, const string &name);
+    void show_encoding(int wc, const std::string &name);
 } // namespace io_ns
 namespace bib_ns {
     extern bool raw_bib;
 } // namespace bib_ns
 
 namespace main_ns {
-    void perl_assign(fstream *fp, String name, string value);
-    void perl_assign(fstream *fp, String name, bool value);
-    auto try_conf(const string &) -> bool;
+    void perl_assign(std::fstream *fp, String name, std::string value);
+    void perl_assign(std::fstream *fp, String name, bool value);
+    auto try_conf(const std::string &) -> bool;
     void find_conf_path();
     auto find_param_type(String s) -> param_args;
-    auto search_in_confdir(const string &s) -> bool;
+    auto search_in_confdir(const std::string &s) -> bool;
     void new_in_dir(String);
     void check_in_dir();
-    auto hack_for_input(const string &s) -> string;
-    auto search_in_pool(const string &name) -> bool;
+    auto hack_for_input(const std::string &s) -> std::string;
+    auto search_in_pool(const std::string &name) -> bool;
     void register_file(LinePtr *);
     auto use_pool(LinePtr &L) -> bool;
     auto param_hack(String) -> bool;
     auto extract_year(Buffer &B, Buffer &C) -> int;
     void check_lowercase(Buffer &B);
-    void check_year(int, Buffer &C, const string &, const string &);
+    void check_year(int, Buffer &C, const std::string &, const std::string &);
 } // namespace main_ns
 
 using main_ns::log_and_tty;
@@ -161,7 +160,7 @@ MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) { conf_path.emplace_b
 
 // Returns true if prefix is the path to he conf_path
 // Tries to see if book.clt is there
-auto main_ns::try_conf(const string &prefix) -> bool {
+auto main_ns::try_conf(const std::string &prefix) -> bool {
     int n = prefix.size();
     if (n == 0) return false;
     Buffer &b = confbuf;
@@ -237,13 +236,13 @@ void main_ns::check_in_dir() {
 
 // If input file has the form foo/bar, then \jobname is foo/bar
 // but in some case we prefer the short name bar
-auto main_ns::hack_for_input(const string &s) -> string {
+auto main_ns::hack_for_input(const std::string &s) -> std::string {
     Buffer &B = path_buffer;
     B << bf_reset << s;
     int k = B.last_slash();
     the_parser.set_job_name(no_ext);
-    string path;
-    string fn = s;
+    std::string path;
+    std::string fn = s;
     if (k > 0) {
         B.kill_at(k);
         path = B.to_string();
@@ -276,7 +275,7 @@ auto main_ns::use_pool(LinePtr &L) -> bool {
 }
 
 // Returns true if the file is in the pool
-auto main_ns::search_in_pool(const string &name) -> bool {
+auto main_ns::search_in_pool(const std::string &name) -> bool {
     int n         = file_pool.size();
     pool_position = -1;
     for (int i = 0; i < n; i++) {
@@ -290,7 +289,7 @@ auto main_ns::search_in_pool(const string &name) -> bool {
 
 // Try to open the file, using alternate location if desired
 // Resulting filename is in the buffer.
-auto tralics_ns::find_in_confdir(const string &s, bool retry) -> bool {
+auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     path_buffer << bf_reset << s;
     if (main_ns::search_in_pool(s)) return true;
     if (file_exists(path_buffer)) return true;
@@ -300,7 +299,7 @@ auto tralics_ns::find_in_confdir(const string &s, bool retry) -> bool {
 }
 
 // Searches only in conf_path
-auto main_ns::search_in_confdir(const string &s) -> bool {
+auto main_ns::search_in_confdir(const std::string &s) -> bool {
     int n = conf_path.size();
     for (int i = n - 1; i >= 0; i--) {
         path_buffer << bf_reset << conf_path[i] << bf_optslash << s;
@@ -309,21 +308,21 @@ auto main_ns::search_in_confdir(const string &s) -> bool {
     return false;
 }
 
-auto tralics_ns::find_no_path(const string &s) -> bool {
+auto tralics_ns::find_no_path(const std::string &s) -> bool {
     if (s.empty()) return false;
     path_buffer << bf_reset << s;
     return file_exists(path_buffer);
 }
 
 // This tries opens a TeX file
-auto tralics_ns::find_in_path(const string &s) -> bool {
+auto tralics_ns::find_in_path(const std::string &s) -> bool {
     if (s.empty()) return false;
     path_buffer << bf_reset << s;
     if (main_ns::search_in_pool(s)) return true;
     if (s[0] == '.' || s[0] == '/') return file_exists(path_buffer);
     int n = input_path.size();
     for (int i = 0; i < n; i++) {
-        const string &p = input_path[i];
+        const std::string &p = input_path[i];
         if (p.empty())
             path_buffer << bf_reset << s;
         else
@@ -340,7 +339,7 @@ auto tralics_ns::find_in_path(const string &s) -> bool {
 
 void MainClass::check_for_input() {
     main_ns::check_in_dir();
-    string s = main_ns::hack_for_input(infile);
+    std::string s = main_ns::hack_for_input(infile);
     if (!non_interactive()) {
         input_content.set_interactive();
         input_content.push_front(Clines(1, "foo", true));
@@ -349,7 +348,7 @@ void MainClass::check_for_input() {
         return;
     }
     if (!tralics_ns::find_in_path(s)) {
-        cout << "Fatal error: Cannot open input file " << infile << "\n";
+        std::cout << "Fatal error: Cannot open input file " << infile << "\n";
         exit(1);
     }
     s = path_buffer.to_string();
@@ -358,9 +357,9 @@ void MainClass::check_for_input() {
     path_buffer.decr_wptr();
     path_buffer.push_back("ult");
     ult_name = path_buffer.to_string();
-    auto *fp = new fstream(s.c_str(), std::ios::in);
+    auto *fp = new std::fstream(s.c_str(), std::ios::in);
     if (fp == nullptr) {
-        cout << "Empty input file " << s << "\n";
+        std::cout << "Empty input file " << s << "\n";
         exit(1);
     }
     open_log();
@@ -385,10 +384,10 @@ void MainClass::check_for_input() {
 void MainClass::banner() {
     if (banner_printed) return;
     banner_printed = true;
-    cout << "This is tralics " << get_version() << ", a LaTeX to XML translator"
-         << ", running on " << machine << "\n";
-    cout << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n";
-    cout << "Licensed under the CeCILL Free Software Licensing Agreement\n";
+    std::cout << "This is tralics " << get_version() << ", a LaTeX to XML translator"
+              << ", running on " << machine << "\n";
+    std::cout << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n";
+    std::cout << "Licensed under the CeCILL Free Software Licensing Agreement\n";
 }
 
 // This opens the log file, and prints the banner as well as all information
@@ -453,7 +452,7 @@ void MainClass::open_log() {
     }
 }
 
-auto tralics_ns::exists(const vector<string> &ST, const string &d) -> bool {
+auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d) -> bool {
     for (const auto &j : ST)
         if (j == d) return true;
     return false;
@@ -487,7 +486,7 @@ void MainClass::parse_args(int argc, char **argv) {
     }
     if (infile.empty()) {
         banner();
-        cout << "Fatal: no source file given\n";
+        std::cout << "Fatal: no source file given\n";
         end_with_help(1);
     }
     if (leftquote_val == 0 || leftquote_val >= (1 << 16)) leftquote_val = '`';
@@ -548,7 +547,7 @@ auto MainClass::split_one_arg(String a, int &p) -> String {
     B.remove_space_at_end();
     if (B.empty()) {
         banner();
-        cout << "bad option " << a << "\n";
+        std::cout << "bad option " << a << "\n";
         usage_and_quit(1);
     }
     return B.c_str();
@@ -559,13 +558,13 @@ auto MainClass::split_one_arg(String a, int &p) -> String {
 auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     if (p >= argc - 1) {
         banner();
-        cout << "Argument missing for option " << argv[p] << "\n";
+        std::cout << "Argument missing for option " << argv[p] << "\n";
         usage_and_quit(1);
     }
     if (strcmp(argv[p + 1], "=") == 0) {
         if (p >= argc - 2) {
             banner();
-            cout << "Argument missing for option " << argv[p] << "\n";
+            std::cout << "Argument missing for option " << argv[p] << "\n";
             usage_and_quit(1);
         }
         p += 2;
@@ -577,7 +576,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     return a;
 }
 
-void obsolete(const string &s) { cout << "Obsolete option `-" << s << "' ignored\n"; }
+void obsolete(const std::string &s) { std::cout << "Obsolete option `-" << s << "' ignored\n"; }
 
 // This interprets one option. If the option takes k arguments
 // it increments p by k
@@ -614,7 +613,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             interactive_math = true;
             only_input_data  = true;
             see_name("texput");
-            set_everyjob("\\usepackage{amsmath}" + string(a) + "\\stop");
+            set_everyjob("\\usepackage{amsmath}" + std::string(a) + "\\stop");
             return;
         case pa_outfile: out_name = a; return;
         case pa_indir: main_ns::new_in_dir(a); return;
@@ -633,7 +632,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
     if (eqpos != 0) {
         banner();
-        cout << "Illegal equal sign in option " << argv[p] << "\n";
+        std::cout << "Illegal equal sign in option " << argv[p] << "\n";
         usage_and_quit(1);
     } else if (strcmp(s, "verbose") == 0)
         verbose = true;
@@ -761,7 +760,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         usage_and_quit(0);
     } else {
         banner();
-        cout << "bad option " << argv[p] << "\n";
+        std::cout << "bad option " << argv[p] << "\n";
         usage_and_quit(1);
     }
 }
@@ -783,59 +782,59 @@ auto main_ns::param_hack(String a) -> bool {
 
 // This explains the syntax of the tralics command.
 void MainClass::usage_and_quit(int v) {
-    cout << "Syntax:\n";
-    cout << "   tralics [options] source\n";
-    cout << "source is the name of the source file,\n";
-    cout << "   (with or without a extension .tex), does not start with a hyphen\n";
-    cout << "\n";
-    cout << "All options start with a single or double hyphen, they are:\n";
-    cout << "  -verbose: Prints much more things in the log file\n";
-    cout << "  -silent: Prints less information on the terminal\n";
-    cout << "  -input_file FILE: translates file FILE\n";
-    cout << "  -log_file LOG: uses LOG as transcript file\n";
-    cout << "  -input_path PATH: uses PATH as dir list for input\n";
-    cout << "  -output_dir DIR: pute result files in directory DIR\n";
-    cout << "  -type FOO: Uses FOO instead of the \\documentclass value\n";
-    cout << "  -config FILE: use FILE instead of default configuration file\n";
-    cout << "  -confdir : indicates where the configuration files are located\n";
-    cout << "  -noconfig: no configuration file is used\n";
-    cout << "  -interactivemath: reads from the terminal, \n";
-    cout << "      and prints math formulas on the terminal\n";
-    cout << "  -utf8: says that the source is encoded in utf8 instead of latin1\n";
-    cout << "  -latin1: overrides -utf8\n";
-    cout << "  -utf8output: same as -oe8\n";
-    cout << "  -oe8, -oe1, -oe8a -oe1a: specifies output encoding\n";
-    cout << "  -te8, -te1, -te8a -te1a: terminal and transcript encoding\n";
-    cout << "  -(no)trivialmath: special math hacking\n";
-    cout << "  -(no)etex; enable or disable e-TeX extensions\n";
-    cout << "  -nozerowidthelt: Use  &#x200B; rather than <zws/>\n";
-    cout << "  -nozerowidthspace: no special &#x200B; or <zws/> inserted\n";
-    cout << "  -noentnames: result contains &#A0; rather than &nbsp;\n";
-    cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
-    cout << "  -nomathml: this disables mathml mode\n";
-    cout << "  -dualmath: gives mathML and nomathML mode\n";
-    cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
-    cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
-    cout << "  -noundefmac: alternate XML output for undefined commands\n";
-    cout << "  -noxmlerror: no XML element is generated in case of error\n";
-    cout << "  -no_float_hack: Removes hacks for figures and tables\n";
-    cout << "  -nostraightquotes: same as right_quote=B4\n";
-    cout << "  -left_quote=2018: sets translation of ` to char U+2018\n";
-    cout << "  -right_quote=2019: sets translation of ' to char U+2019\n";
-    cout << "  -param foo bar: adds foo=\"bar\" to the configuratin file\n";
-    cout << "  -doctype=A-B; specifies the XML DOCTYPE\n";
-    cout << "  -usequotes: double quote gives two single quotes\n";
-    cout << "  -shell-escape: enable \\write18{SHELL COMMAND}\n";
-    cout << "  -tpa_status = title/all: translate all document or title only\n";
-    cout << "  -default_class=xx: use xx.clt if current class is unknown\n";
-    cout << "  -raw_bib: uses all bibtex fields\n";
-    cout << "  -distinguish_refer_in_rabib= true/false: special raweb hack \n";
-    cout << "  (the list of all options is avalaible at\n"
-         << "    http://www-sop.inria.fr/marelle/tralics/options.html )\n";
-    cout << "\n";
-    cout << "Tralics homepage: http://www-sop.inria.fr/marelle/tralics\n";
-    cout << "This software is governed by the CeCILL license that can be\n";
-    cout << "found at http://www.cecill.info.\n";
+    std::cout << "Syntax:\n";
+    std::cout << "   tralics [options] source\n";
+    std::cout << "source is the name of the source file,\n";
+    std::cout << "   (with or without a extension .tex), does not start with a hyphen\n";
+    std::cout << "\n";
+    std::cout << "All options start with a single or double hyphen, they are:\n";
+    std::cout << "  -verbose: Prints much more things in the log file\n";
+    std::cout << "  -silent: Prints less information on the terminal\n";
+    std::cout << "  -input_file FILE: translates file FILE\n";
+    std::cout << "  -log_file LOG: uses LOG as transcript file\n";
+    std::cout << "  -input_path PATH: uses PATH as dir list for input\n";
+    std::cout << "  -output_dir DIR: pute result files in directory DIR\n";
+    std::cout << "  -type FOO: Uses FOO instead of the \\documentclass value\n";
+    std::cout << "  -config FILE: use FILE instead of default configuration file\n";
+    std::cout << "  -confdir : indicates where the configuration files are located\n";
+    std::cout << "  -noconfig: no configuration file is used\n";
+    std::cout << "  -interactivemath: reads from the terminal, \n";
+    std::cout << "      and prints math formulas on the terminal\n";
+    std::cout << "  -utf8: says that the source is encoded in utf8 instead of latin1\n";
+    std::cout << "  -latin1: overrides -utf8\n";
+    std::cout << "  -utf8output: same as -oe8\n";
+    std::cout << "  -oe8, -oe1, -oe8a -oe1a: specifies output encoding\n";
+    std::cout << "  -te8, -te1, -te8a -te1a: terminal and transcript encoding\n";
+    std::cout << "  -(no)trivialmath: special math hacking\n";
+    std::cout << "  -(no)etex; enable or disable e-TeX extensions\n";
+    std::cout << "  -nozerowidthelt: Use  &#x200B; rather than <zws/>\n";
+    std::cout << "  -nozerowidthspace: no special &#x200B; or <zws/> inserted\n";
+    std::cout << "  -noentnames: result contains &#A0; rather than &nbsp;\n";
+    std::cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
+    std::cout << "  -nomathml: this disables mathml mode\n";
+    std::cout << "  -dualmath: gives mathML and nomathML mode\n";
+    std::cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
+    std::cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
+    std::cout << "  -noundefmac: alternate XML output for undefined commands\n";
+    std::cout << "  -noxmlerror: no XML element is generated in case of error\n";
+    std::cout << "  -no_float_hack: Removes hacks for figures and tables\n";
+    std::cout << "  -nostraightquotes: same as right_quote=B4\n";
+    std::cout << "  -left_quote=2018: sets translation of ` to char U+2018\n";
+    std::cout << "  -right_quote=2019: sets translation of ' to char U+2019\n";
+    std::cout << "  -param foo bar: adds foo=\"bar\" to the configuratin file\n";
+    std::cout << "  -doctype=A-B; specifies the XML DOCTYPE\n";
+    std::cout << "  -usequotes: double quote gives two single quotes\n";
+    std::cout << "  -shell-escape: enable \\write18{SHELL COMMAND}\n";
+    std::cout << "  -tpa_status = title/all: translate all document or title only\n";
+    std::cout << "  -default_class=xx: use xx.clt if current class is unknown\n";
+    std::cout << "  -raw_bib: uses all bibtex fields\n";
+    std::cout << "  -distinguish_refer_in_rabib= true/false: special raweb hack \n";
+    std::cout << "  (the list of all options is avalaible at\n"
+              << "    http://www-sop.inria.fr/marelle/tralics/options.html )\n";
+    std::cout << "\n";
+    std::cout << "Tralics homepage: http://www-sop.inria.fr/marelle/tralics\n";
+    std::cout << "This software is governed by the CeCILL license that can be\n";
+    std::cout << "found at http://www.cecill.info.\n";
     exit(v);
 }
 
@@ -854,12 +853,12 @@ void MainClass::set_tpa_status(String s) {
 
 void MainClass::end_with_help(int v) {
     banner();
-    cout << "Say tralics --help to get some help\n";
+    std::cout << "Say tralics --help to get some help\n";
     exit(v);
 }
 
-auto MainClass::check_for_tcf(const string &s) -> bool {
-    string tmp = s + ".tcf";
+auto MainClass::check_for_tcf(const std::string &s) -> bool {
+    std::string tmp = s + ".tcf";
     if (tralics_ns::find_in_confdir(tmp, true)) {
         set_tcf_file(path_buffer.to_string());
         return true;
@@ -881,10 +880,10 @@ auto MainClass::find_config_file() -> bool {
     }
     // If interactive, read config only if given as parameter
     if (!non_interactive()) return false;
-    string xclass = input_content.find_configuration(B);
+    std::string xclass = input_content.find_configuration(B);
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
-        if (xclass.find('.') == string::npos) xclass = xclass + ".tcf";
+        if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
         if (tralics_ns::find_in_confdir(xclass, true)) return true;
     }
     B.reset();
@@ -1004,7 +1003,7 @@ auto MainClass::find_document_type() -> bool {
 // Finds the DTD. If nothing given, creates a default, for instance
 // report from report.dtd
 void MainClass::find_dtd() {
-    string res = opt_doctype;
+    std::string res = opt_doctype;
     if (handling_ra || res.empty()) res = config_file.find_top_val("DocType", false);
     b_after.extract_dtd(res.c_str(), dtd, dtdfile);
     if (dtdfile.empty()) {
@@ -1048,7 +1047,7 @@ void MainClass::read_config_and_other() {
     config_file.parse_conf_toplevel();
     tpage_ns::after_conf_assign(other_options);
     tpage_ns::after_conf_assign(after_conf);
-    string tmp = b_after.remove_digits(dtype);
+    std::string tmp = b_after.remove_digits(dtype);
     if (!tmp.empty()) dtype = tmp;
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
@@ -1069,7 +1068,7 @@ void MainClass::read_config_and_other() {
 }
 
 void MainClass::bad_year() {
-    cout << "Fatal error: Input file name must be team name followed by " << year << "\n";
+    std::cout << "Fatal error: Input file name must be team name followed by " << year << "\n";
     log_and_tty << lg_fatal;
     end_with_help(1);
 }
@@ -1079,7 +1078,7 @@ void MainClass::bad_year() {
 void MainClass::see_name(String s) {
     Buffer &B = b_after;
     if (!infile.empty()) {
-        cout << "Fatal error: Seen two source files " << infile << " and " << s << "\n";
+        std::cout << "Fatal error: Seen two source files " << infile << " and " << s << "\n";
         exit(1);
     }
     B << bf_reset << s;
@@ -1109,11 +1108,11 @@ auto main_ns::extract_year(Buffer &B, Buffer &C) -> int {
 }
 
 // Here y C are as above. We check valididy
-void main_ns::check_year(int y, Buffer &C, const string &dclass, const string &Y) {
+void main_ns::check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
     if (y < 2000 || y >= 2100) the_main->bad_year();
-    string raclass = string("ra") + C.to_string();
+    std::string raclass = std::string("ra") + C.to_string();
     if (dclass != raclass) {
-        cout << "Illegal document class " << dclass << " should be " << raclass << "\n";
+        std::cout << "Illegal document class " << dclass << " should be " << raclass << "\n";
         exit(1);
     }
     if (Y.empty()) return;
@@ -1127,13 +1126,13 @@ void main_ns::check_year(int y, Buffer &C, const string &dclass, const string &Y
 void main_ns::check_lowercase(Buffer &B) {
     int n = B.size();
     if (n == 0) {
-        cout << "Illegal file name of the form safir/2002.tex\n";
+        std::cout << "Illegal file name of the form safir/2002.tex\n";
         the_main->bad_year(); // never returns
     }
     for (int i = 0; i < n; i++)
         if (uint(B[i]) < 32 || uint(B[i]) > 127 || is_upper_case(B[i])) {
-            cout << "Fatal error\n";
-            cout << "Only lowercase letters allowed: " << B.c_str() << " \n";
+            std::cout << "Fatal error\n";
+            std::cout << "Only lowercase letters allowed: " << B.c_str() << " \n";
             exit(1);
         }
 }
@@ -1151,7 +1150,7 @@ void MainClass::see_name1() {
     }
     int k = B.last_slash(); // remove the directory part
     if (k >= 0) {
-        string s = B.to_string(k + 1);
+        std::string s = B.to_string(k + 1);
         B << bf_reset << s;
     }
     the_parser.set_projet_val(B.to_string()); // this is apics
@@ -1200,17 +1199,17 @@ void MainClass::trans0() {
 }
 
 // returns output_dir+name
-auto tralics_ns::get_out_dir(const string &name) -> String {
+auto tralics_ns::get_out_dir(const std::string &name) -> String {
     Buffer &B = path_buffer;
     B << bf_reset << out_dir << bf_optslash << name;
     return B.c_str();
 }
 
-auto tralics_ns::get_short_jobname() -> string { return file_name; }
+auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
 
 void MainClass::boot_bibtex(bool inra) {
-    string mybbl = out_name + "_.bbl";
-    String fn    = tralics_ns::get_out_dir(mybbl);
+    std::string mybbl = out_name + "_.bbl";
+    String      fn    = tralics_ns::get_out_dir(mybbl);
     tralics_ns::bibtex_boot(fn, year_string.c_str(), out_name, inra, distinguish_refer);
 }
 // --------------------------------------------------
@@ -1281,18 +1280,18 @@ void MainClass::run(int n, char **argv) {
         log_and_tty.finish(main_ns::nb_errs);
     } else
         log_and_tty << "Nothing written to " << out_name << ".xml.\n";
-    cout.flush();
+    std::cout.flush();
     tralics_ns::close_file(log_and_tty.L.fp);
 }
 
 // This ouputs the XML and compute the word list
 void MainClass::out_xml() {
-    Buffer X;
-    string u = tralics_ns::get_out_dir(out_name);
+    Buffer      X;
+    std::string u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
     X.put_at_end(".xml");
-    string   name = X.to_string();
-    fstream *fp   = tralics_ns::open_file(name, true);
+    std::string   name = X.to_string();
+    std::fstream *fp   = tralics_ns::open_file(name, true);
     X.reset();
     int aux = 4;
     if (output_encoding == en_utf8 || output_encoding == en_ascii8)

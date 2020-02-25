@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -38,7 +37,7 @@ namespace tcommands {
 
 // Initialises the translator. The argument is the name of
 // the document element.
-void Parser::init_all(string doc_elt) {
+void Parser::init_all(std::string doc_elt) {
     open_paren_xml  = new Xml(Istring("("));
     close_paren_xml = new Xml(Istring(")"));
     the_page_xml    = new Xml(Istring("thepage"), nullptr);
@@ -624,7 +623,7 @@ void Parser::T_minipage() {
 // \begin{xmlelement}
 void Parser::T_xmlenv(subtypes c) {
     flush_buffer();
-    string a = sT_arg_nopar();
+    std::string a = sT_arg_nopar();
     if (c == 0 && the_stack.in_v_mode()) {
         leave_v_mode();
     } else if (c == 1)
@@ -769,8 +768,8 @@ void Parser::T_begindocument() {
 // case \begin \end
 void Parser::T_beginend(symcodes x) {
     flush_buffer();
-    bool   begin = x == begin_cmd;
-    string S     = fetch_name0();
+    bool        begin = x == begin_cmd;
+    std::string S     = fetch_name0();
     if (tracing_commands()) the_log << lg_startbracebs << (begin ? "begin " : "end ") << S << lg_endbrace;
     if (begin)
         T_begin(S);
@@ -1151,8 +1150,8 @@ void Parser::translate03() {
     case hspace_cmd: T_hspace(c); return;
     case eqref_cmd: // Case \XMLref
     {
-        int    n = read_elt_id(cur_tok);
-        string a = sT_arg_nopar();
+        int         n = read_elt_id(cur_tok);
+        std::string a = sT_arg_nopar();
         Xid(n).add_ref(a);
     }
         return;

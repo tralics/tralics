@@ -10,13 +10,12 @@
 
 // This file contains a big part of the Tralics translator
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <utility>
 
-void readline_newprompt(string s); // in readline.C, but only used here
-void txsleep(int);                 // in txmain.C, but only used here
+void readline_newprompt(std::string s); // in readline.C, but only used here
+void txsleep(int);                      // in txmain.C, but only used here
 
 namespace {
     Buffer current_head;
@@ -28,20 +27,20 @@ namespace {
 } // namespace
 
 namespace translate_ns {
-    auto find_color(const string &model, const string &value) -> Istring;
+    auto find_color(const std::string &model, const std::string &value) -> Istring;
 } // namespace translate_ns
 
 class ColSpec {
-    string  name;
-    string  model;
-    string  value;
-    Istring id;
-    Xml *   xval;
-    bool    used;
+    std::string name;
+    std::string model;
+    std::string value;
+    Istring     id;
+    Xml *       xval;
+    bool        used;
 
 public:
-    ColSpec(string a, string b, string c);
-    auto compare(const string &a, const string &b) -> bool { return model == a && value == b; }
+    ColSpec(std::string a, std::string b, std::string c);
+    auto compare(const std::string &a, const std::string &b) -> bool { return model == a && value == b; }
     auto get_id() -> Istring {
         used = true;
         return id;
@@ -49,7 +48,7 @@ public:
     [[nodiscard]] auto is_used() const -> bool { return used; }
     [[nodiscard]] auto get_val() const -> Xml * { return xval; }
 };
-vector<ColSpec *> all_colors;
+std::vector<ColSpec *> all_colors;
 
 // This code translates everything, until end of file.
 void Parser::translate_all() {
@@ -149,8 +148,8 @@ void Parser::leave_h_mode() {
     }
 }
 
-inline auto xml_to_string(Xml *X) -> string {
-    string s = X->convert_to_string();
+inline auto xml_to_string(Xml *X) -> std::string {
+    std::string s = X->convert_to_string();
     return s;
 }
 
@@ -190,13 +189,13 @@ auto Parser::xT_arg_nopar() -> Xml * {
 }
 
 // Same, but returns a string
-auto Parser::sT_arg_nopar() -> string { return xT_arg_nopar()->convert_to_string(); }
+auto Parser::sT_arg_nopar() -> std::string { return xT_arg_nopar()->convert_to_string(); }
 
 // translates a token list, result is a string
-auto Parser::sT_translate(TokenList &L) -> string { return translate_list(L)->convert_to_string(); }
+auto Parser::sT_translate(TokenList &L) -> std::string { return translate_list(L)->convert_to_string(); }
 // Return an Id location for the next argument
 auto Parser::nT_arg_nopar() -> Istring {
-    string s = sT_arg_nopar();
+    std::string s = sT_arg_nopar();
     return Istring(s);
 }
 
@@ -209,7 +208,7 @@ auto Parser::xT_optarg_nopar() -> Xml * {
 }
 
 // Hacked version of sT_arg_nopar.
-auto Parser::special_next_arg() -> string {
+auto Parser::special_next_arg() -> std::string {
     InUrlHandler  something;
     InLoadHandler something_else;
     SaveCatcode   unused2('~', other_catcode);
@@ -218,7 +217,7 @@ auto Parser::special_next_arg() -> string {
 }
 
 // Returns next optional argument as a string
-auto Parser::sT_optarg_nopar() -> string {
+auto Parser::sT_optarg_nopar() -> std::string {
     Xml *res = xT_optarg_nopar();
     if (res == nullptr) return "";
     return res->convert_to_string();
@@ -230,8 +229,8 @@ auto Parser::nT_optarg_nopar() -> Istring {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) return Istring();
-    Xml *  x = translate_list(L);
-    string y = x->convert_to_string();
+    Xml *       x = translate_list(L);
+    std::string y = x->convert_to_string();
     return Istring(y);
 }
 
@@ -398,8 +397,8 @@ void Parser::T_par1(Istring u) {
 // if w generates <foo/> otherwise <foo>...</foo>
 void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
-    string s   = sT_arg_nopar();
-    Xml *  res = new Xml(Istring(s), nullptr);
+    std::string s   = sT_arg_nopar();
+    Xml *       res = new Xml(Istring(s), nullptr);
     if (w != 0U) {
         if (w == two_code) res->set_id(-1); // XML comment
         flush_buffer();
@@ -444,7 +443,7 @@ auto Parser::T_item_label(int c) -> Istring {
     TokenList L;
     bool      opt = cur_tok.is_open_bracket();
     if (opt) read_optarg_nopar(L);
-    string list_ctr = the_parser.eqtb_string_table[1].get_val();
+    std::string list_ctr = the_parser.eqtb_string_table[1].get_val();
     if (!list_ctr.empty()) refstepcounter(list_ctr.c_str(), false);
     if (!opt) {
         Token t = hash_table.itemlabel_token;
@@ -462,7 +461,7 @@ auto Parser::T_item_label(int c) -> Istring {
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0);
     Xml *res = the_stack.remove_last();
     res->change_name(Istring(1));
-    string w = res->convert_to_string();
+    std::string w = res->convert_to_string();
     return Istring(w);
 }
 
@@ -485,7 +484,7 @@ void Parser::T_glo() {
 // Since there are no more old modules  7 is replaced by 8
 // We have opened the current XML element,
 // we have to allow for a label and read the title.
-void Parser::start_paras(int y, const string &Y, bool star) {
+void Parser::start_paras(int y, const std::string &Y, bool star) {
     bool module = y == 7 || y == 8;
     if (!star || module) {
         if (y == 0)
@@ -516,7 +515,7 @@ void Parser::start_paras(int y, const string &Y, bool star) {
     String YY = current_head.convert_to_log_encoding();
     if (y <= first_print_level) {
         first_print_level = y;
-        cout << "Translating section command " << Y << ": " << YY << ".\n";
+        std::cout << "Translating section command " << Y << ": " << YY << ".\n";
     }
     the_log << lg_start << "Translating " << Y << ": " << YY << ".\n";
 }
@@ -602,7 +601,7 @@ void Parser::T_paras(subtypes x) {
 
 // Translates \ref or \pageref
 void Parser::T_ref(bool is_ref) {
-    string a = special_next_arg();
+    std::string a = special_next_arg();
     the_stack.add_newid0(np_ref);
     Xid X = the_stack.get_xid();
     X.add_ref(a);
@@ -650,11 +649,11 @@ void Parser::T_subequations(bool start) {
     M_let_fast(T_theequation, T_at_theparentequation, false);
 }
 
-auto Parser::scan_anchor(bool &h) -> string {
+auto Parser::scan_anchor(bool &h) -> std::string {
     static int anchor_id = 0;
     anchor_id++;
-    h        = remove_initial_star();
-    string s = sT_optarg_nopar();
+    h             = remove_initial_star();
+    std::string s = sT_optarg_nopar();
     if (!s.empty()) return s;
     mac_buffer << bf_reset << anchor_id;
     return mac_buffer.to_string();
@@ -663,15 +662,15 @@ auto Parser::scan_anchor(bool &h) -> string {
 // \label \anchor or \anchorlabel
 void Parser::T_label(int c) {
     if (c == 0) { // case of label
-        string a = special_next_arg();
+        std::string a = special_next_arg();
         create_label(a, the_stack.get_cur_id());
         return;
     }
-    bool    h;
-    string  s  = scan_anchor(h);
-    Istring id = the_stack.add_anchor(s, h);
+    bool        h;
+    std::string s  = scan_anchor(h);
+    Istring     id = the_stack.add_anchor(s, h);
     if (c == 2) {
-        string a = special_next_arg();
+        std::string a = special_next_arg();
         create_label(a, id);
     }
 }
@@ -682,10 +681,10 @@ void Parser::T_float(subtypes c) {
     case 0: //@float
     case 1: // @dblfloat
     {
-        Buffer &B    = Tbuf;
-        string  sarg = sT_arg_nopar();
-        Istring arg  = Istring(sarg);
-        Istring opt  = nT_optarg_nopar();
+        Buffer &    B    = Tbuf;
+        std::string sarg = sT_arg_nopar();
+        Istring     arg  = Istring(sarg);
+        Istring     opt  = nT_optarg_nopar();
         if (opt.null()) {
             B << bf_reset << "fps@" << sarg;
             expand_no_arg(B.to_string());
@@ -814,7 +813,7 @@ void Parser::T_keywords() {
 
 // Handle the case of an argument of \includegraphics
 // Extension is in Abuf, if needed
-void Parser::no_extension(AttList &AL, const string &s) {
+void Parser::no_extension(AttList &AL, const std::string &s) {
     int  k  = -1;
     bool ok = true;
     Tbuf.reset();
@@ -876,10 +875,10 @@ void Parser::includegraphics(subtypes C) {
     String bval = "Bad value in argument of includegraphics";
     Token  T    = cur_tok;
     remove_initial_star();
-    Token     comma  = hash_table.comma_token;
-    Token     equals = Token(other_t_offset, '=');
-    TokenList W, val, key;
-    string    file_name;
+    Token       comma  = hash_table.comma_token;
+    Token       equals = Token(other_t_offset, '=');
+    TokenList   W, val, key;
+    std::string file_name;
     {
         InLoadHandler something;
         if (ic) {
@@ -906,15 +905,15 @@ void Parser::includegraphics(subtypes C) {
         token_ns::remove_first_last_space(key);
         if (key.empty()) continue;
         token_ns::remove_first_last_space(val);
-        string skey = list_to_string_c(key, bkey);
+        std::string skey = list_to_string_c(key, bkey);
         B.reset();
         if (!ic && (skey == "file" || skey == "figure")) {
-            string sval = list_to_string_c(val, bval);
+            std::string sval = list_to_string_c(val, bval);
             no_extension(AL, sval);
             ic = true;
         } else if (skey == "keepaspectratio" || skey == "clip" || skey == "draft" || skey == "hiresbb") {
             name_positions V    = np_true;
-            string         sval = list_to_string_c(val, bval);
+            std::string    sval = list_to_string_c(val, bval);
             if (sval == "false") V = np_false;
             if (skey == "clip")
                 AL.push_back(np_clip, V, true);
@@ -922,7 +921,7 @@ void Parser::includegraphics(subtypes C) {
                 AL.push_back(Istring(skey), V, true);
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
-            string sval = list_to_string_c(val, bval);
+            std::string sval = list_to_string_c(val, bval);
             if (skey == "angle" && sval == "0") continue;
             Istring p = skey == "scale" ? the_names[np_scale] : skey == "angle" ? the_names[np_angle] : Istring(skey);
             AL.push_back(p, Istring(sval), true);
@@ -957,7 +956,7 @@ void Parser::T_epsfbox() {
     ScaledInt xdim     = eqtb_dim_table[xdim_pos].get_val();
     ScaledInt ydim     = eqtb_dim_table[ydim_pos].get_val();
     flush_buffer();
-    string y;
+    std::string y;
     {
         InLoadHandler something;
         y = sT_arg_nopar();
@@ -1013,7 +1012,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 //  Colors.
 // This creates a new color item, to be pushed on the color stack
 // Note that used is false, set to true by get_id.
-ColSpec::ColSpec(string a, string b, string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
+ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
     xval = new Xml(np_color, nullptr);
     if (!name.empty()) xval->get_id().add_attribute(Istring("name"), Istring(name));
     xval->get_id().add_attribute(Istring("model"), Istring(model));
@@ -1044,7 +1043,7 @@ void Parser::finish_color() {
 
 // Find a color in the stack, returns the id;
 // May add a new item to the stack
-auto translate_ns::find_color(const string &model, const string &value) -> Istring {
+auto translate_ns::find_color(const std::string &model, const std::string &value) -> Istring {
     int n = all_colors.size();
     for (int i = 0; i < n; i++)
         if (all_colors[i]->compare(model, value)) return all_colors[i]->get_id();
@@ -1055,7 +1054,7 @@ auto translate_ns::find_color(const string &model, const string &value) -> Istri
 // case of \color{red} or \color[rgb]{1,0,0}
 // In the first case, we look at \color@red if this is a command
 // with code color_md, subtype N, its color N-offset in the table.
-auto Parser::scan_color(const string &opt, const string &name) -> Istring {
+auto Parser::scan_color(const std::string &opt, const std::string &name) -> Istring {
     if (opt.empty() || opt == "named") { // case \color{red} or \color[named]{Red}
         Buffer &B = tpa_buffer;
         B << bf_reset << "\\color@" << name;
@@ -1081,43 +1080,43 @@ void Parser::T_color(subtypes c) {
         return;
     }
     if (c == color_code) {
-        string  opt  = sT_optarg_nopar();
-        string  name = sT_arg_nopar();
-        Istring C    = scan_color(opt, name);
+        std::string opt  = sT_optarg_nopar();
+        std::string name = sT_arg_nopar();
+        Istring     C    = scan_color(opt, name);
         cur_font.set_color(C);
         font_has_changed();
         return;
     }
     if (c == pagecolor_code) {
-        string   opt  = sT_optarg_nopar();
-        string   name = sT_arg_nopar();
-        Istring  C    = scan_color(opt, name);
-        AttList &res  = the_stack.add_newid0(np_pagecolor);
+        std::string opt  = sT_optarg_nopar();
+        std::string name = sT_arg_nopar();
+        Istring     C    = scan_color(opt, name);
+        AttList &   res  = the_stack.add_newid0(np_pagecolor);
         res.push_back(np_color, C);
     }
     if (c == colorbox_code) {
-        string  opt  = sT_optarg_nopar();
-        string  name = sT_arg_nopar();
-        Istring C    = scan_color(opt, name);
-        Xml *   mbox = internal_makebox();
+        std::string opt  = sT_optarg_nopar();
+        std::string name = sT_arg_nopar();
+        Istring     C    = scan_color(opt, name);
+        Xml *       mbox = internal_makebox();
         mbox->get_id().add_attribute(np_color, C);
         return;
     }
     if (c == fcolorbox_code) {
-        string  opt   = sT_optarg_nopar();
-        string  name1 = sT_arg_nopar();
-        string  name2 = sT_arg_nopar();
-        Istring C1    = scan_color(opt, name1);
-        Istring C2    = scan_color(opt, name2);
-        Xml *   mbox  = internal_makebox();
+        std::string opt   = sT_optarg_nopar();
+        std::string name1 = sT_arg_nopar();
+        std::string name2 = sT_arg_nopar();
+        Istring     C1    = scan_color(opt, name1);
+        Istring     C2    = scan_color(opt, name2);
+        Xml *       mbox  = internal_makebox();
         mbox->get_id().add_attribute(np_color, C1);
         mbox->get_id().add_attribute(np_color2, C2);
         return;
     }
     if (c == definecolor_code) {
-        string name  = sT_arg_nopar();
-        string model = sT_arg_nopar();
-        string value = sT_arg_nopar();
+        std::string name  = sT_arg_nopar();
+        std::string model = sT_arg_nopar();
+        std::string value = sT_arg_nopar();
         B << bf_reset << "\\color@" << name;
         Token C = hash_table.locate(B);
         if (!hash_table.eqtb[C.eqtb_loc()].is_undefined()) main_ns::log_and_tty << "Redefining color " << name << "\n";
@@ -1242,7 +1241,7 @@ void Parser::T_cap_or_note(bool cap) {
 void Parser::T_makebox(bool framed, Token C) {
     Istring A, B;
     T_twodims(A, B, C);
-    string oarg = sT_optarg_nopar();
+    std::string oarg = sT_optarg_nopar();
     leave_v_mode();
     the_stack.push1(np_box);
     AttList &cur = last_att_list();
@@ -1313,7 +1312,7 @@ void Parser::T_fbox_dash_box() {
     Istring   A = token_list_to_att(a, T, false);
     Istring   B, C;
     T_twodims(B, C, T);
-    string oarg = sT_optarg_nopar();
+    std::string oarg = sT_optarg_nopar();
     the_stack.push1(np_dashbox);
     Xid cur_id = the_stack.get_top_id();
     if (!oarg.empty()) cur_id.add_attribute(np_box_pos, Istring(oarg));
@@ -1390,7 +1389,7 @@ void Parser::T_fbox(subtypes cc) {
 }
 
 // Returns <xref url='v'>val</xref>
-void Parser::new_xref(Xml *val, string v, bool err) {
+void Parser::new_xref(Xml *val, std::string v, bool err) {
     my_stats.one_more_href();
     the_stack.add_last(new Xml(the_names[np_xref], val));
     the_stack.add_att_to_last(the_names[np_url], Istring(v));
@@ -1456,7 +1455,7 @@ void Parser::T_url(subtypes c) {
         brace_me(X);
         T_translate(X);
     } else {
-        string x = translate_list(Y)->convert_to_string();
+        std::string x = translate_list(Y)->convert_to_string();
         if (!no_hack) url_hack(X);
         brace_me(X);
         Xml *y = translate_list(X);
@@ -1499,8 +1498,8 @@ void Parser::T_hanl(subtypes c) {
     the_stack.pop(cst_hanl);
     int e              = main_ns::nb_errs;
     unexpected_seen_hi = false;
-    string b           = B->convert_to_string();
-    bool   failed      = e != main_ns::nb_errs;
+    std::string b      = B->convert_to_string();
+    bool        failed = e != main_ns::nb_errs;
     if (unexpected_seen_hi && failed)
         main_ns::log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
                              << "  instead of \\Href{y}{\\url{x}}\n";
@@ -1611,7 +1610,7 @@ void Parser::T_reevaluate() {
     if (!scan_for_eval(B, in_env)) parse_error("reevaluate has problems with end of input");
     if (in_env) {    // unread tokens should be \end{cur}
         get_token(); // the \end token
-        string s = group_to_string();
+        std::string s = group_to_string();
         if (is_env_on_stack(s) == nullptr) {
             parse_error(err_tok, "cannot close environment ", s, "bad \\end");
             return;
@@ -2037,7 +2036,7 @@ void Parser::T_error() {
         return;
     }
     flush_buffer();
-    string b = sT_arg_nopar(); // msg
+    std::string b = sT_arg_nopar(); // msg
     err_ns::local_buf << bf_reset << "Error: " << b;
     signal_error(err_tok, b.c_str());
 }
@@ -2086,7 +2085,7 @@ void Parser::T_xmladdatt(subtypes c) {
 }
 
 // Returns the value of an attribute or element
-auto Parser::get_attval() -> string {
+auto Parser::get_attval() -> std::string {
     Token T = cur_tok;
     flush_buffer();
     int     n   = read_elt_id(T);
@@ -2101,10 +2100,10 @@ auto Parser::get_attval() -> string {
 }
 
 void Parser::T_define_verbatim_env() {
-    string a  = group_to_string();
-    string b  = group_to_string();
-    Token  t1 = find_env_token(a, true);
-    Token  t2 = find_env_token(b, true);
+    std::string a  = group_to_string();
+    std::string b  = group_to_string();
+    Token       t1 = find_env_token(a, true);
+    Token       t2 = find_env_token(b, true);
     M_let_fast(t1, t2, true); // global assignments OK ?
     Token xt1 = find_env_token(a, false);
     Token xt2 = find_env_token(b, false);
@@ -2129,7 +2128,7 @@ void Parser::T_specimp(int c) {
         exit(0);
     case sleep_code: txsleep(scan_int(cur_tok)); return;
     case prompt_code: {
-        string S = string_to_write(write18_slot + 1);
+        std::string S = string_to_write(write18_slot + 1);
         readline_newprompt(S);
         return;
     }
@@ -2137,7 +2136,7 @@ void Parser::T_specimp(int c) {
         main_ns::log_and_tty << "Terminated with " << cur_tok << " at line  " << get_cur_line() << "\n";
         close_all();
         return;
-    case message_code: cout << string_to_write(0); return;
+    case message_code: std::cout << string_to_write(0); return;
     case errmessage_code:
         err_ns::local_buf << bf_reset << string_to_write(write18_slot + 1);
         signal_error();

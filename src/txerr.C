@@ -9,7 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txlogger.h"
 #include "txparser.h"
@@ -23,13 +22,13 @@ namespace err_ns {
 using err_ns::local_buf;
 
 void err_ns::fatal_error(String s) {
-    cout << "Fatal error " << s << "\n";
+    std::cout << "Fatal error " << s << "\n";
     abort();
 }
 
 // This is executed if we say the_log << lg_fatal.
 void Logger::abort() {
-    cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
+    std::cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
     if (!!*fp) {
         *fp << "Fatal_error for " << the_parser.get_job_name() << "\n";
         (*fp).flush();
@@ -41,8 +40,8 @@ void Logger::abort() {
 // then use the following function to signal it.
 
 void Parser::signal_error() {
-    int    line = get_cur_line();
-    string file = get_cur_filename();
+    int         line = get_cur_line();
+    std::string file = get_cur_filename();
     main_ns::nb_errs++;
     flush_buffer();
     the_log << lg_start;
@@ -52,7 +51,7 @@ void Parser::signal_error() {
     main_ns::log_and_tty << local_buf;
     main_ns::log_and_tty << ".\n";
     the_log << lg_flush;
-    cout.flush();
+    std::cout.flush();
     if (main_ns::nb_errs >= 5000) {
         main_ns::log_and_tty << "Translation aborted: Too many errors.\n";
         main_ns::log_and_tty.finish(main_ns::nb_errs);
@@ -97,7 +96,7 @@ void Parser::signal_error(String s) {
 }
 
 // Some generic errors (may add s to the XML)
-void Parser::parse_error(Token T, const string &s) {
+void Parser::parse_error(Token T, const std::string &s) {
     local_buf << bf_reset << s;
     signal_error(T, s.c_str());
 }
@@ -112,24 +111,24 @@ void Parser::parse_error(String s) {
     signal_error(err_tok, s);
 }
 
-void Parser::parse_error(Token T, const string &s1, const string &s2) {
+void Parser::parse_error(Token T, const std::string &s1, const std::string &s2) {
     local_buf << bf_reset << s1;
     signal_error(T, s2.c_str());
 }
 
-void Parser::parse_error(Token T, const string &s, TokenList &L) {
+void Parser::parse_error(Token T, const std::string &s, TokenList &L) {
     local_buf << bf_reset << s;
     err_ns::convert_to_string(L);
     signal_error(T, s.c_str());
 }
 
-void Parser::parse_error(Token T, const string &s1, const string &s2, const string &s3) {
+void Parser::parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3) {
     local_buf << bf_reset << s1 << s2;
     signal_error(T, s3.c_str());
 }
 
 /// Useful error. Here s2 is a token.
-void Parser::parse_error(Token T, const string &s1, Token s2, const string &s3, const string &s4) {
+void Parser::parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4) {
     local_buf << bf_reset << s1 << s2.tok_to_str() << s3;
     signal_error(T, s4.c_str());
 }
@@ -277,7 +276,7 @@ void Parser::undefined_mac() {
         signal_error(cur_tok, "Undefined command");
 }
 
-void Parser::undefined_env(const string &s) {
+void Parser::undefined_env(const std::string &s) {
     local_buf << bf_reset << "Undefined environment " << s;
     signal_error(cur_tok, "Undefined environment");
 }
@@ -318,7 +317,7 @@ void Parser::bad_macro_prefix(Token x, Token C) {
     signal_error(err_tok, "bad prefix");
 }
 
-void Parser::invalid_key(Token T, const string &key, const TokenList &val) {
+void Parser::invalid_key(Token T, const std::string &key, const TokenList &val) {
     local_buf << bf_reset << "Invalid key in " << T << " " << key << " = " << val;
     signal_error(T, "invalid key");
 }
@@ -376,7 +375,7 @@ void Parser::bad_redefinition(int rd, Token T) {
     signal_error(err_tok, "bad definition");
 }
 
-void Parser::multiple_label(String name, int l, const string &f) {
+void Parser::multiple_label(String name, int l, const std::string &f) {
     local_buf << bf_reset << "Label '" << name << "' multiply defined (first use line " << l << " file " << f << ")";
     signal_error(hash_table.label_token, "already defined label");
 }

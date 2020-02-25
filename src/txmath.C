@@ -10,24 +10,24 @@
 
 // Tralics, math part I
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
+#include <algorithm>
 
 namespace {
-    Buffer        math_buffer;
-    Buffer        special_buffer;
-    Buffer        math_buffer1;
-    Buffer        Trace;
-    int           old_pos = 0;       // pointer into trace
-    MathHelper    cmi;               // Data structure holding some global values
-    bool          trace_needs_space; // bool  for: \frac\pi y
-    bool          old_need = false;  // prev value of trace_needs_space
-    Xml *         xmlspace;          // Const, xml element containing a space
-    Token         fct_caller;
-    string        the_tag = "";
-    vector<Xml *> all_maths;
+    Buffer             math_buffer;
+    Buffer             special_buffer;
+    Buffer             math_buffer1;
+    Buffer             Trace;
+    int                old_pos = 0;       // pointer into trace
+    MathHelper         cmi;               // Data structure holding some global values
+    bool               trace_needs_space; // bool  for: \frac\pi y
+    bool               old_need = false;  // prev value of trace_needs_space
+    Xml *              xmlspace;          // Const, xml element containing a space
+    Token              fct_caller;
+    std::string        the_tag;
+    std::vector<Xml *> all_maths;
 } // namespace
 
 MathDataP math_data;
@@ -38,7 +38,7 @@ using namespace math_ns;
 namespace math_ns {
     void add_to_trace(Token T);
     void add_to_trace(char);
-    void add_to_trace(const string &x);
+    void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &);
     auto finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
@@ -132,7 +132,7 @@ void math_ns::add_to_trace(Token T) {
     if (x >= single_offset) trace_needs_space = true;
 }
 
-void math_ns::add_to_trace(const string &x) {
+void math_ns::add_to_trace(const std::string &x) {
     Trace.push_back_braced(x);
     trace_needs_space = false;
 }
@@ -256,7 +256,7 @@ auto Math::get_name() const -> String {
 // --------------------------------------------------
 
 // Interprets the meta data of the list
-auto operator<<(ostream &X, math_list_type y) -> ostream & {
+auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
     switch (y) {
     case invalid_cd: X << "Invalid list"; break;
     case math_open_cd: X << "simple group"; break;
@@ -418,7 +418,7 @@ void Parser::add_math_label(Xml *res) {
         the_tag = math_buffer.to_string();
     }
     the_stack.create_new_anchor(res->get_id(), my_id, Istring(the_tag));
-    const string &label = cmi.get_label_val();
+    const std::string &label = cmi.get_label_val();
     if (!label.empty()) create_label(label, my_id);
 }
 
@@ -746,16 +746,16 @@ void Parser::after_math(bool is_inline) {
 
 // This is called if no MathML should be generated.
 void Parser::finish_no_mathml(bool is_inline, int vp) {
-    Math &  u  = math_data.get_list(vp);
-    Xid     id = cmi.get_mid();
-    string  S  = u.get_name();
-    Istring s  = Istring(S);
+    Math &      u  = math_data.get_list(vp);
+    Xid         id = cmi.get_mid();
+    std::string S  = u.get_name();
+    Istring     s  = Istring(S);
     if (S.empty()) s = Istring(is_inline ? np_inline : np_display);
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].get_val() == -2);
     res->change_id(id);
-    if (the_main->is_interactive_math()) cout << res << "\n";
+    if (the_main->is_interactive_math()) std::cout << res << "\n";
     after_math(is_inline);
     the_stack.top_stack()->push_back(res);
     if (cmi.has_label()) add_math_label(res);
@@ -767,7 +767,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
 void Parser::finish_trivial_math(Xml *res) {
     if (tracing_math()) the_log << lg_start << "formula was math" << lg_end;
     the_parser.my_stats.one_more_trivial();
-    if (the_main->is_interactive_math()) cout << res << "\n";
+    if (the_main->is_interactive_math()) std::cout << res << "\n";
     leave_v_mode();
     cmi.finish_math_mem();
     the_stack.top_stack()->add_tmp(res);
@@ -814,8 +814,8 @@ void Parser::T_math(subtypes type) {
             return;
         }
     }
-    Xml *  alter   = nullptr;
-    string textype = math_data.get_list(0).get_name();
+    Xml *       alter   = nullptr;
+    std::string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
         Math &w = math_data.get_list(loc_of_cp);
         alter   = w.convert_math_noML(false);
@@ -856,9 +856,9 @@ void Parser::T_math(subtypes type) {
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->is_interactive_math()) {
         if (only_input_data)
-            cout << x << "\n";
+            std::cout << x << "\n";
         else
-            cout << res1 << "\n";
+            std::cout << res1 << "\n";
     }
     the_stack.add_last(res1);
     if (!is_inline) the_stack.add_nl();
@@ -1011,9 +1011,9 @@ void Parser::scan_math(int res, math_list_type type) {
                 parse_error("Illegal anchor in math mode");
                 continue;
             } else if (c == 2) { // anchorlabel
-                bool   h;
-                string s = scan_anchor(h);
-                string a = special_next_arg();
+                bool        h;
+                std::string s = scan_anchor(h);
+                std::string a = special_next_arg();
                 if (h) {
                     c           = mathlabel_code;
                     TokenList L = token_ns::string_to_list(a, true);
@@ -1040,7 +1040,7 @@ void Parser::scan_math(int res, math_list_type type) {
                 continue; // case anchorlabel ??
             }
             {
-                string s = special_next_arg();
+                std::string s = special_next_arg();
                 cmi.new_label(s, false);
             }
             continue;
@@ -1278,12 +1278,12 @@ auto MathHelper::end_of_row() -> bool {
 }
 
 void MathHelper::ml_second_pass(Xml *row, bool vb) {
-    bool       slabel = false, stag = false;
-    string     label = "";
-    string     tag   = "";
-    int        n     = multi_labels.size();
-    int        i;
-    static int N = 0;
+    bool        slabel = false, stag = false;
+    std::string label = "";
+    std::string tag   = "";
+    int         n     = multi_labels.size();
+    int         i;
+    static int  N = 0;
     if (last_ml_pos == 0) N = 0;
     N++;
     for (;;) {
@@ -1313,10 +1313,10 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
 }
 
 void MathHelper::ml_last_pass(bool vb) {
-    bool   slabel = false, stag = false;
-    string label = "";
-    string tag   = "";
-    int    n     = multi_labels.size();
+    bool        slabel = false, stag = false;
+    std::string label = "";
+    std::string tag   = "";
+    int         n     = multi_labels.size();
     for (int i = 0; i < n; i++) {
         int j = (multi_labels_type[i]);
         if (j == 0) continue;
@@ -1371,7 +1371,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         }
     }
     cmi.update_all_env_ctr(at_start);
-    string s = fetch_name0();
+    std::string s = fetch_name0();
     add_to_trace(s);
     Token  eenv    = find_env_token(s, false); // \endfoo
     CmdChr end_val = cur_cmd_chr;              // value of \endfoo
@@ -1501,7 +1501,7 @@ void Parser::scan_math_tag(subtypes c) {
         L.push_front(hash_table.ref_token);
         L.push_front(hash_table.let_token);
         brace_me(L);
-        string val = sT_translate(L);
+        std::string val = sT_translate(L);
         cmi.new_multi_label(val, (is_star ? 3 : 2));
         return;
     }
@@ -1716,13 +1716,13 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
 
 // Handles \mathmi[foo][bar][a][b]{etc} and friends
 void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
-    Token  ct = cur_tok;
-    string s  = "";
+    Token       ct = cur_tok;
+    std::string s  = "";
     if (c == mathbox_code) {
         s = group_to_string(); // name of the env (no expand here ?)
         add_to_trace(s);
     }
-    vector<MathElt> T; // the optional arguments
+    std::vector<MathElt> T; // the optional arguments
     for (;;) {
         remove_initial_space_and_back_input();
         if (!cur_tok.is_open_bracket()) break;
@@ -1832,7 +1832,7 @@ void Math::skip_initial_space() {
 }
 
 // Creates a table for array specifications.
-void StrHash::rlc_to_string(String s, vector<AttList> &res) {
+void StrHash::rlc_to_string(String s, std::vector<AttList> &res) {
     int i = 0;
     while (s[i] != 0) {
         char c = s[i];
@@ -1851,8 +1851,8 @@ void StrHash::rlc_to_string(String s, vector<AttList> &res) {
 // eqnarray is RCL, align is RL, and matrix is C*.
 // For aligned it is rlrlrlrl
 // Otherwise we must fetch an argument.
-void Math::fetch_rlc(vector<AttList> &table) {
-    string rlc = "rcl";
+void Math::fetch_rlc(std::vector<AttList> &table) {
+    std::string rlc = "rcl";
     switch (sname) {
     case gather_code:
     case gather_star_code:
@@ -1888,7 +1888,7 @@ void Math::fetch_rlc(vector<AttList> &table) {
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
-auto Math::convert_cell(int &n, vector<AttList> &table, math_style W) -> Xml * {
+auto Math::convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xml * {
     Xml *res = new Xml(cst_mtd, nullptr);
     if (empty()) {
         n++; // empty cell, no atts needed.
@@ -1935,7 +1935,7 @@ auto Math::convert_cell(int &n, vector<AttList> &table, math_style W) -> Xml * {
 }
 
 // Converts an array.
-auto Math::split_as_array(vector<AttList> &table, math_style W, bool numbered) -> Xml * {
+auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool numbered) -> Xml * {
     Math cell;
     bool is_multline = sname == multline_code || sname == multline_star_code;
     bool needs_dp    = (math_env_props(sname) & 1) != 0;
@@ -2004,7 +2004,7 @@ auto Math::split_as_array(vector<AttList> &table, math_style W, bool numbered) -
 
 // Converts an object that holds an array or something.
 auto Math::M_array(bool numbered, math_style cms) -> Xml * {
-    vector<AttList> table;
+    std::vector<AttList> table;
     fetch_rlc(table);
     Xml *res = split_as_array(table, cms, numbered);
     if (sname == bordermatrix_code) {
@@ -2180,7 +2180,7 @@ auto Parser::is_not_a_math_env(String s) -> bool {
 // This is done when we see a label in a math formula.
 // If anchor is true, we are in the case of \anchorlabel.
 // Only one label is allowed.
-void MathHelper::new_label(const string &s, bool anchor) {
+void MathHelper::new_label(const std::string &s, bool anchor) {
     if (eqnum_status == 2 || eqnum_status == 1) {
         if (anchor) the_parser.parse_error("Illegal \\anchorlabel");
         cmi.new_multi_label(s, 1);
@@ -2204,7 +2204,7 @@ void Math::remove_spaces() { value.remove_if(MathIsSpace()); }
 
 // Returns true if there is an \over or something like that in the list.
 auto Math::has_over() const -> bool {
-    int ovr = count_if(value.begin(), value.end(), MathIsOver());
+    int ovr = std::count_if(value.begin(), value.end(), MathIsOver());
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
 }
@@ -2322,17 +2322,17 @@ auto MathElt::cv_mi(math_style cms) -> MathElt {
         auto w  = name_positions(c - mathmi_code + cst_mi);
         res     = new Xml(w, xs);
     } else {
-        string s  = X->get_list().convert_this_to_string(math_buffer);
-        Xml *  xs = new Xml(Istring(s));
-        auto   w  = name_positions(c - mathmi_code + cst_mi);
-        res       = new Xml(w, xs);
+        std::string s  = X->get_list().convert_this_to_string(math_buffer);
+        Xml *       xs = new Xml(Istring(s));
+        auto        w  = name_positions(c - mathmi_code + cst_mi);
+        res            = new Xml(w, xs);
     }
     ++X;
     for (;;) {
         if (X == Y) break;
-        string s1 = X->get_list().convert_this_to_string(math_buffer);
+        std::string s1 = X->get_list().convert_this_to_string(math_buffer);
         ++X;
-        string s2 = "";
+        std::string s2 = "";
         if (X == Y) {
         } // Should we signal an error ?
         else {
@@ -2372,18 +2372,18 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     }
     case operatorname_code:
     case operatornamestar_code: {
-        string s   = L.get_arg1().convert_opname();
-        Xml *  xs  = new Xml(Istring(s));
-        Xml *  res = new Xml(cst_mo, xs);
+        std::string s   = L.get_arg1().convert_opname();
+        Xml *       xs  = new Xml(Istring(s));
+        Xml *       res = new Xml(cst_mo, xs);
         res->add_att(np_form, np_prefix);
         return MathElt(res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN);
     }
     case qopname_code: {
         // arg 1 is currently ignored
-        string s   = L.get_arg3().convert_opname();
-        string o   = L.get_arg2().convert_opname();
-        Xml *  xs  = new Xml(Istring(s));
-        Xml *  res = new Xml(cst_mo, xs);
+        std::string s   = L.get_arg3().convert_opname();
+        std::string o   = L.get_arg2().convert_opname();
+        Xml *       xs  = new Xml(Istring(s));
+        Xml *       res = new Xml(cst_mo, xs);
         res->add_att(np_form, np_prefix);
         return MathElt(res, (o == "o") ? mt_flag_opN : mt_flag_opD);
     }
@@ -2402,10 +2402,10 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case table_attribute_code:
     case formula_attribute_code:
     case thismath_attribute_code: {
-        string  s1 = L.get_arg1().convert_this_to_string(math_buffer);
-        string  s2 = L.get_arg2().convert_this_to_string(math_buffer);
-        Istring A  = Istring(s1);
-        Istring B  = Istring(s2);
+        std::string s1 = L.get_arg1().convert_this_to_string(math_buffer);
+        std::string s2 = L.get_arg2().convert_this_to_string(math_buffer);
+        Istring     A  = Istring(s1);
+        Istring     B  = Istring(s2);
         if (c == math_attribute_code)
             the_main->the_stack->add_att_to_last(A, B, true);
         else
@@ -2413,11 +2413,11 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         return MathElt(CmdChr(error_cmd, zero_code), zero_code);
     }
     case mathlabel_code: {
-        string  s1  = L.get_arg1().convert_this_to_string(math_buffer);
-        string  s2  = L.get_arg2().convert_this_to_string(math_buffer);
-        Xml *   x   = new Xml(cst_mrow, nullptr);
-        Istring id  = the_main->SH.next_label_id();
-        Xid     xid = x->get_id();
+        std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
+        std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
+        Xml *       x   = new Xml(cst_mrow, nullptr);
+        Istring     id  = the_main->SH.next_label_id();
+        Xid         xid = x->get_id();
         the_parser.the_stack.create_new_anchor(xid, id, Istring(s1));
         the_parser.create_label(s2, id);
         return MathElt(x, mt_flag_small);
@@ -2857,8 +2857,8 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
 auto Math::M_ref() -> Xml * {
     Math w = front().get_list();
     pop_front();
-    string label = w.convert_opname();
-    Xml *  X     = new Xml(cst_mref, nullptr);
+    std::string label = w.convert_opname();
+    Xml *       X     = new Xml(cst_mref, nullptr);
     X->get_id().add_ref(label);
     return X;
 }
@@ -3189,7 +3189,7 @@ void Cv3Helper::add_kernel(math_style cms) {
     if (ptype == mt_flag_small_l || ptype == mt_flag_small_r || ptype == mt_flag_small_m) {
         res.push_back(p, ploc, ptype);
         //      static int dmc =0;
-        //      cout << "Dmc=== " <<  ++dmc << "\n";
+        //     std::cout<< "Dmc=== " <<  ++dmc << "\n";
         Xml *q = p;
         //      special_buffer << bf_reset << "<mn>DMC " << dmc << "</mn>";
         //      q = new Xml (Istring(special_buffer.c_str()));

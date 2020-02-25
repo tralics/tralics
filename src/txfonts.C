@@ -9,7 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <utility>
@@ -110,7 +109,7 @@ auto FontInfo::series_name() const -> String {
 }
 
 // This prints everything.
-auto operator<<(ostream &fp, const FontInfo &L) -> ostream & {
+auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
     String s;
     s = L.size_name();
     if (s != nullptr) fp << s;
@@ -191,7 +190,7 @@ void FontInfo::see_font_change(subtypes c) {
 }
 
 // This implements \fontfamily etc
-void FontInfo::ltfont(const string &s, subtypes c) {
+void FontInfo::ltfont(const std::string &s, subtypes c) {
     switch (c) {
     case fontencoding_code: return; // Output encoding is always Unicode
     case fontfamily_code:           // rm, sf, or tt
@@ -244,7 +243,7 @@ void FontInfo::ltfont(const string &s, subtypes c) {
 // tex fonts
 
 // Finds a font given by name and size, or creates one if needed
-auto TexFonts::find_font(const string &n, int a, int s) -> int {
+auto TexFonts::find_font(const std::string &n, int a, int s) -> int {
     for (uint i = 0; i < size(); i++)
         if (at(i).its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
@@ -252,7 +251,7 @@ auto TexFonts::find_font(const string &n, int a, int s) -> int {
 
 // Ctor(name, at_value, scaled).
 // In TeX, only one of at_value and scaled can be given. Unused in Tralics.
-TexFont::TexFont(const string &n, int a, int s) {
+TexFont::TexFont(const std::string &n, int a, int s) {
     make_null();
     name       = n;
     at_val     = a;
@@ -262,7 +261,7 @@ TexFont::TexFont(const string &n, int a, int s) {
 }
 
 // This allocates a new slot in the font list.
-auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
+auto TexFonts::define_a_new_font(std::string n, int a, int s) -> int {
     if (size() >= 256) { // \todo Perhaps remove this artificial limitation
         the_parser.parse_error("fatal: font table overflow");
         return 0;
@@ -275,7 +274,7 @@ auto TexFonts::define_a_new_font(string n, int a, int s) -> int {
 void TexFont::load() {}
 
 // This compares two fonts
-auto TexFont::its_me(const string &n, int a, int s) const -> bool { return name == n && at_val == a && scaled_val == s; }
+auto TexFont::its_me(const std::string &n, int a, int s) const -> bool { return name == n && at_val == a && scaled_val == s; }
 
 // This kills all tables.
 void TexFont::make_null() {
@@ -312,7 +311,7 @@ auto TexFonts::is_valid(int k) -> bool {
 }
 
 // Returns name of font
-auto TexFonts::name(int k) -> string {
+auto TexFonts::name(int k) -> std::string {
     if (!is_valid(k)) return "";
     return at(k).name;
 }

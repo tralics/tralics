@@ -15,7 +15,6 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
-#include "tralics.h"
 #include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -42,8 +41,8 @@ bool InLoadHandler::global_in_load = false;
 
 // local variables
 namespace {
-    string everyjob_string; //
-    bool   ra_ok = true;    // inhibits  redefinitions
+    std::string everyjob_string; //
+    bool        ra_ok = true;    // inhibits  redefinitions
 } // namespace
 
 namespace accent_ns {
@@ -132,7 +131,7 @@ void Parser::boot_time() {
     std::srand(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month))));
     Buffer b;
     b << year << '/' << twodig(month) << month << '/' << twodig(day) << day;
-    string short_date = b.to_string();
+    std::string short_date = b.to_string();
     b << bf_reset << short_date << ' ' << twodig(hour) << hour << ':' << twodig(min) << min << ':' << twodig(sec) << sec;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
@@ -2635,7 +2634,7 @@ void Hashtab::boot_fancyhdr() {
     primitive("fancyinternal", xfancy_cmd);
     primitive("inert@thepage", xthepage_cmd);
 }
-void set_everyjob(const string &s) { everyjob_string = s; }
+void set_everyjob(const std::string &s) { everyjob_string = s; }
 
 // Todo Bouche
 // \def\Q{\mathbb{Q}} $\bar \Q$

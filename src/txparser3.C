@@ -10,7 +10,6 @@
 
 // This file contains a part of the TeX parser of tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
@@ -20,10 +19,10 @@ namespace parser_ns {
 } // namespace parser_ns
 
 namespace {
-    vector<SaveAux *> the_save_stack;
-    Xml *             the_box_to_end;
-    int               the_box_position = -1;
-    Buffer            Thbuf1;
+    std::vector<SaveAux *> the_save_stack;
+    Xml *                  the_box_to_end;
+    int                    the_box_position = -1;
+    Buffer                 Thbuf1;
 } // namespace
 
 // --------------------------------------------------
@@ -145,7 +144,7 @@ auto Parser::cur_group_type() -> int {
     }
 }
 
-auto operator<<(ostream &fp, const boundary_type &x) -> ostream & {
+auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & {
     fp << parser_ns::to_string(x);
     return fp;
 }
@@ -248,7 +247,7 @@ void Parser::word_define(int a, int c, bool gbl) {
     }
 }
 // Define for an string quantity. Like eq_define without reference counts.
-void Parser::string_define(int a, const string &c, bool gbl) {
+void Parser::string_define(int a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
     bool        reassign = !gbl && W.get_val() == c;
     if (tracing_assigns()) {
@@ -584,7 +583,7 @@ void Parser::pop_level(boundary_type v) {
         }
     }
     if (v == bt_env && cur_tok.is_valid()) {
-        string foo = cur_tok.tok_to_str();
+        std::string foo = cur_tok.tok_to_str();
         if (foo != "\\end" + cur_env_name) {
             err_ns::local_buf << bf_reset << "Environment '" << cur_env_name << "' started at line " << first_boundary_loc << " ended by "
                               << cur_tok;
@@ -617,14 +616,14 @@ void Parser::pop_level(boundary_type v) {
 void Parser::pop_all_levels() {
     cur_tok.kill();
     pop_level(bt_env); // pop the end document
-    bool    started = false;
-    string  ename   = "";
-    Buffer &B       = err_ns::local_buf;
+    bool        started = false;
+    std::string ename   = "";
+    Buffer &    B       = err_ns::local_buf;
     B.reset();
     for (;;) {
         if (the_save_stack.empty()) break;
         SaveAux *tmp = the_save_stack.back();
-        cout << to_string(tmp->type) << " at " << tmp->line_no << "\n";
+        std::cout << to_string(tmp->type) << " at " << tmp->line_no << "\n";
         if (tmp->type == st_env) {
             auto *q = static_cast<SaveAuxEnv *>(tmp);
             ename   = q->get_name();
@@ -692,7 +691,7 @@ void Parser::final_checks() {
 }
 
 // Returns the slot associated to the env S
-auto Parser::is_env_on_stack(const string &s) -> SaveAuxEnv * {
+auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
     int n = the_save_stack.size();
     for (int i = n - 1; i >= 0; i--) {
         SaveAux *p = the_save_stack[i];

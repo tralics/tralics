@@ -10,7 +10,6 @@
 
 // This file contains ltclass.dtx
 
-#include "tralics.h"
 #include "txatt.h"
 #include "txclasses.h"
 #include "txinline.h"
@@ -26,9 +25,9 @@ namespace {
 } // namespace
 
 namespace classes_ns {
-    auto parse_version(const string &s) -> int;
-    auto get_option_list(const string &name) -> OptionList;
-    auto is_in_vector(const OptionList &V, const string &s, bool) -> int;
+    auto parse_version(const std::string &s) -> int;
+    auto get_option_list(const std::string &name) -> OptionList;
+    auto is_in_vector(const OptionList &V, const std::string &s, bool) -> int;
     auto is_raw_option(const OptionList &V, String s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
@@ -37,10 +36,10 @@ namespace classes_ns {
     void dump_file_list();
     auto cur_options(bool, TokenList &, bool) -> TokenList;
     auto make_keyval(TokenList &L) -> KeyAndVal;
-    void register_key(const string &);
+    void register_key(const std::string &);
     void unknown_optionX(TokenList &cur, TokenList &);
     void unknown_option(KeyAndVal &cur_keyval, TokenList &, TokenList &, int);
-    void add_to_filelist(const string &, const string &);
+    void add_to_filelist(const std::string &, const std::string &);
     void add_sharp(TokenList &L);
 } // namespace classes_ns
 
@@ -58,8 +57,8 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     remove_first_last_space(key_val);
     remove_first_last_space(key);
     if (have_equals) key_val.push_front(equals);
-    string key_name = the_parser.list_to_string_c(key, "Invalid option");
-    string key_full = key_name;
+    std::string key_name = the_parser.list_to_string_c(key, "Invalid option");
+    std::string key_full = key_name;
     if (have_equals) {
         Buffer &B = local_buf;
         B << bf_reset << key_name << key_val;
@@ -119,8 +118,8 @@ auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
 
 // Returns true if slot is in the vector V with the same value
 auto classes_ns::is_in_option(const OptionList &V, const KeyAndVal &slot) -> bool {
-    const string &s = slot.get_name();
-    int           n = V.size();
+    const std::string &s = slot.get_name();
+    int                n = V.size();
     for (int i = 0; i < n; i++)
         if (V[i].has_name(s)) return compare(slot.get_val(), V[i].get_val());
     return false;
@@ -136,7 +135,7 @@ auto classes_ns::compare_options(const OptionList &A, const OptionList &B) -> bo
 
 // Like is_in_option, but returns a position
 // If X true, checks the keyname
-auto classes_ns::is_in_vector(const OptionList &V, const string &s, bool X) -> int {
+auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> int {
     int n = V.size();
     for (int i = 0; i < n; i++) {
         if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return i;
@@ -149,9 +148,9 @@ auto classes_ns::is_in_vector(const OptionList &V, const string &s, bool X) -> i
 // Find the index of a package in the list. Returns 0 in case of
 // failure (slot 0 does not hold a valid package)
 // Creates if creat is true.
-auto ClassesData::find_package(const string &name, bool type, bool creat) -> int {
-    string full_name = (type ? "C" : "P") + name;
-    int    n         = packages.size();
+auto ClassesData::find_package(const std::string &name, bool type, bool creat) -> int {
+    std::string full_name = (type ? "C" : "P") + name;
+    int         n         = packages.size();
     for (int i = 1; i < n; i++)
         if (packages[i]->has_name(full_name)) return i;
     if (!creat) return 0;
@@ -163,9 +162,9 @@ auto ClassesData::find_package(const string &name, bool type, bool creat) -> int
 // True if the date field is set (missing date in a package gives 0000/00/00)
 void Parser::T_if_package_loaded(bool type) // true for class
 {
-    string name = sE_arg_nopar();
-    int    i    = the_class_data.find_package(name, type, false);
-    bool   res  = false;
+    std::string name = sE_arg_nopar();
+    int         i    = the_class_data.find_package(name, type, false);
+    bool        res  = false;
     if ((i != 0) && !the_class_data.packages[i]->date.empty()) res = true;
     one_of_two(res);
 }
@@ -174,11 +173,11 @@ void Parser::T_if_package_loaded(bool type) // true for class
 // \@ifpackagelater{name}{YYYY/MM/DD}
 void Parser::T_if_package_later(bool c) // true for class
 {
-    string name  = sE_arg_nopar();
-    string date  = sE_arg_nopar();
-    int    idate = parse_version(date);
-    int    pdate = 0;
-    int    i     = the_class_data.find_package(name, c, false);
+    std::string name  = sE_arg_nopar();
+    std::string date  = sE_arg_nopar();
+    int         idate = parse_version(date);
+    int         pdate = 0;
+    int         i     = the_class_data.find_package(name, c, false);
     if (i != 0) pdate = parse_version(the_class_data.packages[i]->date);
     one_of_two(pdate >= idate);
 }
@@ -187,11 +186,11 @@ void Parser::T_if_package_later(bool c) // true for class
 // \@ifpackagewith{name}{option-list}
 void Parser::T_if_package_with(bool c) // true for class
 {
-    string     name    = sE_arg_nopar();
-    TokenList  options = read_arg();
-    OptionList A;
-    OptionList B = make_options(options);
-    int        p = the_class_data.find_package(name, c, false);
+    std::string name    = sE_arg_nopar();
+    TokenList   options = read_arg();
+    OptionList  A;
+    OptionList  B = make_options(options);
+    int         p = the_class_data.find_package(name, c, false);
     if (p != 0) A = the_class_data.packages[p]->Uoptions;
     bool res = compare_options(A, B);
     one_of_two(res);
@@ -200,7 +199,7 @@ void Parser::T_if_package_with(bool c) // true for class
 // Class data ctor
 ClassesData::ClassesData() { packages.push_back(new LatexPackage("Fdummy file")); }
 
-LatexPackage::LatexPackage(string A) : name(std::move(A)), has_a_default(false), seen_process(false), checked(false) {}
+LatexPackage::LatexPackage(std::string A) : name(std::move(A)), has_a_default(false), seen_process(false), checked(false) {}
 
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
@@ -212,7 +211,7 @@ auto ClassesData::cur_pack() -> LatexPackage * {
 
 // Date is something like 2004/12/03 converted to 20041203
 // Hack: we read at most 8 digits, ignore everything else
-auto classes_ns::parse_version(const string &s) -> int {
+auto classes_ns::parse_version(const std::string &s) -> int {
     int n = s.size();
     int r = 0;
     int k = 0;
@@ -255,7 +254,7 @@ void Parser::insert_hook(int n) {
 }
 
 // Store the file name (without dir) and date in the file_list buffer
-void classes_ns::add_to_filelist(const string &s, const string &date) {
+void classes_ns::add_to_filelist(const std::string &s, const std::string &date) {
     int n = s.size();
     int k = -1;
     for (int i = 0; i < n; i++)
@@ -273,8 +272,8 @@ void classes_ns::add_to_filelist(const string &s, const string &date) {
 // Also \ProvidesFile
 void Parser::T_provides_package(bool c) // True for a file
 {
-    string name = sE_arg_nopar();
-    string date = sE_optarg_nopar();
+    std::string name = sE_arg_nopar();
+    std::string date = sE_optarg_nopar();
     add_to_filelist(get_cur_filename(), date);
     the_log << lg_start;
     if (c) {
@@ -311,10 +310,10 @@ void classes_ns::dump_file_list() {
 
 void Parser::T_pass_options(bool c) // true if a class
 {
-    TokenList  Lopt = read_arg();
-    string     name = sE_arg_nopar();
-    OptionList L    = make_options(Lopt);
-    int        p    = the_class_data.find_package(name, c, true);
+    TokenList   Lopt = read_arg();
+    std::string name = sE_arg_nopar();
+    OptionList  L    = make_options(Lopt);
+    int         p    = the_class_data.find_package(name, c, true);
     the_class_data.packages[p]->add_options(L);
 }
 
@@ -324,7 +323,7 @@ void Parser::T_declare_options() {
     if (star)
         T_declare_option_star();
     else {
-        string        name = sE_arg_nopar();
+        std::string   name = sE_arg_nopar();
         TokenList     L    = read_arg();
         LatexPackage *C    = the_class_data.cur_pack();
         C->Poptions.push_back(KeyAndVal(name, L, name));
@@ -333,7 +332,7 @@ void Parser::T_declare_options() {
 
 // The xkeyval package uses also this function
 
-void classes_ns::register_key(const string &Key) {
+void classes_ns::register_key(const std::string &Key) {
     TokenList     L; // empty
     LatexPackage *C = the_class_data.cur_pack();
     C->Poptions.push_back(KeyAndVal(Key, L, Key));
@@ -384,8 +383,8 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
     OptionList &DO = Poptions;                      // Known options
     int         n  = GO.size();
     for (int i = 0; i < n; i++) {
-        string name = X ? GO[i].get_name() : GO[i].get_full_name();
-        int    j    = find_option(name);
+        std::string name = X ? GO[i].get_name() : GO[i].get_full_name();
+        int         j    = find_option(name);
         if (j <= 0) continue;
         if (DO[j].is_used()) continue; // should not happen
         GO[i].mark_used();
@@ -402,7 +401,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
     OptionList &CO = Uoptions;                      // arg of \usepackage
     int         n  = DO.size();
     for (int i = 0; i < n; i++) {
-        const string &name = DO[i].get_name();
+        const std::string &name = DO[i].get_name();
         if (DO[i].is_used()) continue; // should to happen
         int j = is_in_vector(CO, name, false);
         if (j >= 0) {
@@ -435,8 +434,8 @@ void classes_ns::unknown_optionX(TokenList &cur, TokenList &action) {
 
 // General case.
 void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec, int X) {
-    LatexPackage *C    = the_class_data.cur_pack();
-    const string &name = cur.get_full_name();
+    LatexPackage *     C    = the_class_data.cur_pack();
+    const std::string &name = cur.get_full_name();
     if (!C->has_a_default) {
         if (C->is_class()) {
         } else
@@ -485,8 +484,8 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
     OptionList &DO = Poptions; // Known options
     int         n  = CO.size();
     for (int i = 0; i < n; i++) {
-        string name = CO[i].get_name();
-        int    j    = find_option(X != 0 ? name : CO[i].get_full_name());
+        std::string name = CO[i].get_name();
+        int         j    = find_option(X != 0 ? name : CO[i].get_full_name());
         if (j == -1) {
             unknown_option(CO[i], action, spec, X);
         } else {
@@ -529,8 +528,8 @@ void Parser::T_execute_options() {
     OptionList L = make_options(opt);
     int        n = L.size();
     for (int i = 0; i < n; i++) {
-        const string &option = L[i].get_full_name();
-        int           k      = C->find_option(option);
+        const std::string &option = L[i].get_full_name();
+        int                k      = C->find_option(option);
         if (k >= 0) {
             b << bf_comma << pack[k].get_name();
             pack[k].use(action);
@@ -565,8 +564,8 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
 }
 
 void Parser::T_inputclass() {
-    string name = sE_arg_nopar();
-    bool   res  = tralics_ns::find_in_confdir(name + ".clt", true);
+    std::string name = sE_arg_nopar();
+    bool        res  = tralics_ns::find_in_confdir(name + ".clt", true);
     if (!res) {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
@@ -580,9 +579,9 @@ void Parser::T_inputclass() {
 // Implements \LoadClassWithOptions and \RequirePackageWithOptions
 void Parser::T_load_with_options(bool c) // c is true for a class
 {
-    string name                             = sE_arg_nopar();
+    std::string name                        = sE_arg_nopar();
     the_class_data.cur_pack()->seen_process = true; // someone else processes
-    string date                             = sE_optarg_nopar();
+    std::string date                        = sE_optarg_nopar();
     cur_opt_list                            = the_class_data.cur_pack()->Uoptions;
     bool b                                  = check_builtin_pack(name);
     use_a_package(name, c, date, b);
@@ -595,9 +594,9 @@ void Parser::T_documentclass(bool bad) {
     Token     T = cur_tok;
     TokenList Loptions;
     read_optarg_nopar(Loptions);
-    string name  = sE_arg_nopar();
-    string date  = sE_optarg_nopar();
-    cur_opt_list = make_options(Loptions);
+    std::string name = sE_arg_nopar();
+    std::string date = sE_optarg_nopar();
+    cur_opt_list     = make_options(Loptions);
     if (c == 0) { // else is LoadClass
         cur_tok = T;
         if (bad || the_class_data.seen_document_class) wrong_mode("Bad \\documentclass");
@@ -612,14 +611,14 @@ void Parser::T_documentclass(bool bad) {
 void Parser::T_usepackage() {
     TokenList Loptions;
     read_optarg_nopar(Loptions);
-    string name  = sE_arg_nopar(); // can be a list of names
-    string date  = sE_optarg_nopar();
-    cur_opt_list = make_options(Loptions);
+    std::string name = sE_arg_nopar(); // can be a list of names
+    std::string date = sE_optarg_nopar();
+    cur_opt_list     = make_options(Loptions);
     Splitter S(name);
     for (;;) {
         if (S.at_end()) return;
-        string pack = S.get_next();
-        bool   b    = check_builtin_pack(pack);
+        std::string pack = S.get_next();
+        bool        b    = check_builtin_pack(pack);
         use_a_package(pack, false, date, b);
     }
 }
@@ -635,7 +634,7 @@ void LatexPackage::reload() {
 
 // This implements \@onefilewithoptions. Arguments are
 // name of class/package,  class indicator, optional date, options.
-void Parser::use_a_package(const string &name, bool type, const string &date, bool builtin) {
+void Parser::use_a_package(const std::string &name, bool type, const std::string &date, bool builtin) {
     int           p   = the_class_data.find_package(name, type, true);
     LatexPackage *cur = the_class_data.packages[p];
     if (cur->checked) {
@@ -649,7 +648,7 @@ void Parser::use_a_package(const string &name, bool type, const string &date, bo
     bool   res                         = tralics_ns::find_in_confdir(name + (type ? ".clt" : ".plt"), true);
     the_class_data.using_default_class = false;
     if (!res) {
-        string D = the_main->get_default_class();
+        std::string D = the_main->get_default_class();
         if (type && !D.empty()) {
             res = tralics_ns::find_in_confdir(D + ".clt", true);
             if (res) {
@@ -674,7 +673,7 @@ void Parser::use_a_package(const string &name, bool type, const string &date, bo
 }
 
 // Built-in package handler
-auto Parser::check_builtin_pack(const string &pack) -> bool {
+auto Parser::check_builtin_pack(const std::string &pack) -> bool {
     if (pack == "calc") {
         calc_loaded = true;
         return false;
@@ -703,7 +702,7 @@ auto Parser::check_builtin_pack(const string &pack) -> bool {
 }
 
 // Built-in class handler. Class name unused
-void Parser::check_builtin_class(const string &) {
+void Parser::check_builtin_class(const std::string &) {
     Xid doc_att(1);
     if (is_raw_option(cur_opt_list, "useallsizes")) the_main->set_use_sizes(true);
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);
@@ -715,7 +714,7 @@ void Parser::check_language() {
     int lang = -1;
     int n    = cur_opt_list.size();
     for (int i = 0; i < n; i++) {
-        const string &s = cur_opt_list[i].get_name();
+        const std::string &s = cur_opt_list[i].get_name();
         if (s == "french" || s == "francais" || s == "frenchb" || s == "acadian" || s == "canadien") {
             if (lang == -1) the_log << "babel options: ";
             lang = 1;
@@ -755,18 +754,18 @@ void Parser::add_language_att() {
 // void LatexPackage::print_options()
 // {
 //   int n = Poptions.size();
-//   for(int i=0;i<n;i++)  cout << i<< Poptions[i].get_name() << " ";
-//   cout << "\n";
+//   for(int i=0;i<n;i++) std::cout<< i<< Poptions[i].get_name() << " ";
+//  std::cout<< "\n";
 // }
 
-auto LatexPackage::find_option(const string &name) -> int {
+auto LatexPackage::find_option(const std::string &name) -> int {
     int n = Poptions.size();
     for (int i = 0; i < n; i++)
         if (Poptions[i].has_name(name)) return i;
     return -1;
 }
 
-void ClassesData::remove_from_unused(const string &name) {
+void ClassesData::remove_from_unused(const std::string &name) {
     OptionList &GO = the_class_data.global_options;
     int         j  = is_in_vector(GO, name, true);
     if (j >= 0) GO[j].mark_used();
@@ -801,7 +800,7 @@ void Parser::T_at_end_of_class() {
 void Parser::T_class_error(subtypes c) {
     if (c == messagebreak_code) return;
     static Token message_break_token = hash_table.locate("MessageBreak");
-    string       prefix, prea;
+    std::string  prefix, prea;
     msg_type     what    = mt_none;
     bool         on_line = true;
     bool         std     = true;
@@ -900,7 +899,7 @@ void Parser::T_class_error(subtypes c) {
     Buffer &B = local_buf;
     B.reset();
     if (std) {
-        string name = prefix;
+        std::string name = prefix;
         if (!simple) B << "(" << prefix << ")";
         while (n > 0) {
             --n;
@@ -937,7 +936,7 @@ void Parser::T_class_error(subtypes c) {
     }
     if (on_line && what != mt_error) {
         B << " at line " << get_cur_line();
-        string f = get_cur_filename();
+        std::string f = get_cur_filename();
         if (!f.empty()) B << " of file " << f;
     }
     if (what != mt_error) B << ".\n";
@@ -972,10 +971,10 @@ void Parser::out_warning(Buffer &B, msg_type what) {
 
 void Parser::T_change_element_name() {
     flush_buffer();
-    bool   star  = remove_initial_star();
-    string name  = special_next_arg();
-    string value = sE_arg_nopar();
-    bool   res;
+    bool        star  = remove_initial_star();
+    std::string name  = special_next_arg();
+    std::string value = sE_arg_nopar();
+    bool        res;
     if (star) {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else
@@ -1015,7 +1014,7 @@ void classes_ns::add_sharp(TokenList &L) {
 }
 
 // Puts \define@key{fam}{arg} in front of L
-void Parser::call_define_key(TokenList &L, Token cmd, const string &arg, const string &fam) {
+void Parser::call_define_key(TokenList &L, Token cmd, const std::string &arg, const std::string &fam) {
     TokenList aux = string_to_list(arg, true);
     L.splice(L.begin(), aux);
     aux = string_to_list(fam, true);
@@ -1027,7 +1026,7 @@ void Parser::call_define_key(TokenList &L, Token cmd, const string &arg, const s
 
 // Generates
 // \define@key{Fam}{arg}[true]{\KVO@boolkey{Pfoo}{fam}{arg}{##1}}
-void Parser::finish_kvo_bool(Token T, const string &fam, const string &arg) {
+void Parser::finish_kvo_bool(Token T, const std::string &fam, const std::string &arg) {
     TokenList L, aux;
     classes_ns::register_key(arg);
     add_sharp(L);
@@ -1035,8 +1034,8 @@ void Parser::finish_kvo_bool(Token T, const string &fam, const string &arg) {
     L.splice(L.begin(), aux);
     aux = string_to_list(fam, true);
     L.splice(L.begin(), aux);
-    string s = the_class_data.cur_pack()->full_name();
-    aux      = string_to_list(s, true);
+    std::string s = the_class_data.cur_pack()->full_name();
+    aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@boolkey"));
     brace_me(L);
@@ -1048,10 +1047,10 @@ void Parser::finish_kvo_bool(Token T, const string &fam, const string &arg) {
 // \KVO@boolkey{Pfoo}{fam}{arg}{val}
 // checks that val is true/false and calls \fam@argval
 void Parser::kvo_bool_key() {
-    string A = sE_arg_nopar(); // package
-    string C = sE_arg_nopar(); // prefix
-    string D = sE_arg_nopar(); // key
-    string d = sE_arg_nopar(); // val
+    std::string A = sE_arg_nopar(); // package
+    std::string C = sE_arg_nopar(); // prefix
+    std::string D = sE_arg_nopar(); // key
+    std::string d = sE_arg_nopar(); // val
     if (!(d == "true" || d == "false")) {
         Buffer &B = local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
@@ -1070,11 +1069,11 @@ void Parser::kvo_string_opt() {
     Token     cmd = cur_tok;
     TokenList init, defval;
     read_optarg(init);
-    string arg         = sE_arg_nopar();
-    bool   has_default = read_optarg(defval);
+    std::string arg         = sE_arg_nopar();
+    bool        has_default = read_optarg(defval);
     classes_ns::register_key(arg);
-    string  fam = kvo_getfam();
-    Buffer &B   = local_buf;
+    std::string fam = kvo_getfam();
+    Buffer &    B   = local_buf;
     B << bf_reset << fam << "@" << arg;
     Token T = hash_table.locate(B);
     if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
@@ -1098,18 +1097,18 @@ void Parser::kvo_string_opt() {
 
 // Signals an error if the option is not @VOID@
 void Parser::kvo_void_key() {
-    read_arg();                // package (should appear in the error message)
-    string C = sE_arg_nopar(); // current option
-    string d = sE_arg_nopar(); // option value
+    read_arg();                     // package (should appear in the error message)
+    std::string C = sE_arg_nopar(); // current option
+    std::string d = sE_arg_nopar(); // option value
     if (d == "@VOID@") return;
     parse_error(err_tok, "Option " + C + " takes no argument", "bad opt");
 }
 
 void Parser::kvo_process() {
-    bool      ok  = remove_initial_star();
-    string    fam = ok ? kvo_getfam() : sE_arg_nopar();
-    TokenList spec;
-    TokenList L = classes_ns::cur_options(true, spec, true);
+    bool        ok  = remove_initial_star();
+    std::string fam = ok ? kvo_getfam() : sE_arg_nopar();
+    TokenList   spec;
+    TokenList   L = classes_ns::cur_options(true, spec, true);
     brace_me(L);
     back_input(L);
     TokenList aux = string_to_list(fam, true);
@@ -1119,10 +1118,10 @@ void Parser::kvo_process() {
 }
 
 void Parser::kvo_void_opt() {
-    Token   cmd = cur_tok;
-    string  arg = sE_arg_nopar();
-    string  fam = kvo_getfam();
-    Buffer &B   = local_buf;
+    Token       cmd = cur_tok;
+    std::string arg = sE_arg_nopar();
+    std::string fam = kvo_getfam();
+    Buffer &    B   = local_buf;
     classes_ns::register_key(arg);
     B << bf_reset << fam << "@" << arg;
     Token T = hash_table.locate(B);
@@ -1137,8 +1136,8 @@ void Parser::kvo_void_opt() {
     L.push_back(T);
     aux = string_to_list(arg, true);
     L.splice(L.begin(), aux);
-    string s = the_class_data.cur_pack()->full_name();
-    aux      = string_to_list(s, true);
+    std::string s = the_class_data.cur_pack()->full_name();
+    aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@voidkey"));
     brace_me(L);
@@ -1150,16 +1149,16 @@ void Parser::kvo_void_opt() {
 // Implements \DeclareBoolOption[def]{name}
 // defined a boolean foo
 void Parser::kvo_bool_opt() {
-    Token  T   = cur_tok;
-    string df  = sE_optarg_nopar();
-    string arg = sE_arg_nopar();
+    Token       T   = cur_tok;
+    std::string df  = sE_optarg_nopar();
+    std::string arg = sE_arg_nopar();
     // Optional argument must be true or false
     if (!(df.empty() || df == "false" || df == "true")) {
         main_ns::log_and_tty << "Bad option " << df << " of " << arg << " replaced by false\n";
     }
-    subtypes v   = df == "true" ? if_true_code : if_false_code;
-    string   fam = kvo_getfam();
-    string   s   = fam + '@' + arg;
+    subtypes    v   = df == "true" ? if_true_code : if_false_code;
+    std::string fam = kvo_getfam();
+    std::string s   = fam + '@' + arg;
     if (!check_if_redef(s)) return;
     // This is \newif
     Token W = cur_tok;
@@ -1171,11 +1170,11 @@ void Parser::kvo_bool_opt() {
 
 // \DeclareComplementaryOption{new}{old}
 void Parser::kvo_comp_opt() {
-    Token   cmd  = cur_tok;
-    string  arg  = sE_arg_nopar();
-    string  comp = sE_arg_nopar();
-    string  fam  = kvo_getfam();
-    Buffer &B    = local_buf;
+    Token       cmd  = cur_tok;
+    std::string arg  = sE_arg_nopar();
+    std::string comp = sE_arg_nopar();
+    std::string fam  = kvo_getfam();
+    Buffer &    B    = local_buf;
     B << bf_reset << "if" << fam << '@' << comp;
     Token T = hash_table.locate(B);
     if (hash_table.eqtb[T.eqtb_loc()].is_undefined()) {
@@ -1201,8 +1200,8 @@ void Parser::kvo_comp_opt() {
 
 // Get/set for family and prefix
 void Parser::kvo_family_etc(subtypes k) {
-    string  s = the_class_data.cur_pack()->full_name();
-    Buffer &B = local_buf;
+    std::string s = the_class_data.cur_pack()->full_name();
+    Buffer &    B = local_buf;
     B << bf_reset << "KVO@";
     if (k == kvo_fam_set_code || k == kvo_fam_get_code)
         B << "family@";
@@ -1225,7 +1224,7 @@ void Parser::kvo_family_etc(subtypes k) {
 }
 
 // This gets prefix and family
-auto Parser::kvo_getfam() -> string {
+auto Parser::kvo_getfam() -> std::string {
     back_input(hash_table.CB_token);
     kvo_family_etc(kvo_fam_get_code);
     back_input(hash_table.OB_token);
@@ -1234,7 +1233,7 @@ auto Parser::kvo_getfam() -> string {
 
 // If arg is foo checks that \iffoo \footrue \foofalse
 // are undefined . Puts \iffo in cur_tok
-auto Parser::check_if_redef(const string &s) -> bool {
+auto Parser::check_if_redef(const std::string &s) -> bool {
     Buffer &B = local_buf;
     B << bf_reset << s << "true";
     Token T2 = hash_table.locate(B);

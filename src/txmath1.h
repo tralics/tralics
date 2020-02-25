@@ -20,7 +20,7 @@ public:
         i = start;
         t = end;
     }
-    void print(ostream &fp) const { fp << start << ", " << end << "; "; }
+    void print(std::ostream &fp) const { fp << start << ", " << end << "; "; }
 };
 
 // Helper for finding big small etc
@@ -36,7 +36,7 @@ public:
         i = pos;
         t = type;
     }
-    void               print(ostream &) const;
+    void               print(std::ostream &) const;
     [[nodiscard]] auto is_small() const -> bool { return type == mt_flag_small_l || type == mt_flag_small_r || type == mt_flag_small_m; }
 };
 
@@ -44,7 +44,7 @@ using MathPList             = std::list<MathPAux>;
 using const_math_p_iterator = std::list<MathPAux>::const_iterator;
 using math_p_iterator       = std::list<MathPAux>::iterator;
 
-class MathPAuxType : public unary_function<MathPAux, bool> {
+class MathPAuxType : public std::unary_function<MathPAux, bool> {
     math_types T;
 
 public:
@@ -52,7 +52,7 @@ public:
     auto operator()(const MathPAux &m) -> bool { return m.get_type() == T; }
 };
 
-class MathPAuxSmall : public unary_function<MathPAux, bool> {
+class MathPAuxSmall : public std::unary_function<MathPAux, bool> {
 public:
     explicit MathPAuxSmall() = default;
     auto operator()(const MathPAux &m) -> bool { return m.is_small(); }
@@ -62,7 +62,7 @@ class MathP {
     MathPList value;
 
 public:
-    friend auto        operator<<(ostream &fp, const MathP &X) -> ostream &;
+    friend auto        operator<<(std::ostream &fp, const MathP &X) -> std::ostream &;
     void               clear() { value.clear(); }
     [[nodiscard]] auto empty() const -> bool { return value.empty(); }
     auto               find_big(int &) -> MathP;

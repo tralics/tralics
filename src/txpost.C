@@ -10,7 +10,6 @@
 
 // Post processing for tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include "txpost.h"
@@ -18,12 +17,12 @@
 #include <utility>
 
 namespace {
-    Buffer                             scbuf;          // scratch buffer for printing XML, and other things
-    vector<pair<int, Istring>>         ref_list;       // list of all \ref
-    vector<pair<int, Istring>>         refindex_list;  // list of all \ref to \index
-    vector<pair<Istring, LabelInfo *>> defined_labels; // list of all \label
-    vector<pair<String, Istring>>      removed_labels; // list of all \label removed
-    ostream *                          cur_fp;         // the XML file
+    Buffer                                       scbuf;          // scratch buffer for printing XML, and other things
+    std::vector<std::pair<int, Istring>>         ref_list;       // list of all \ref
+    std::vector<std::pair<int, Istring>>         refindex_list;  // list of all \ref to \index
+    std::vector<std::pair<Istring, LabelInfo *>> defined_labels; // list of all \label
+    std::vector<std::pair<String, Istring>>      removed_labels; // list of all \label removed
+    std::ostream *                               cur_fp;         // the XML file
 
     int last_label_id     = 0;
     int last_top_label_id = 0;
@@ -43,13 +42,13 @@ namespace post_ns {
 
 // For finding words.
 namespace all_words_ns {
-    int       nb_words = 0;
-    WordList *WL0[100];
-    fstream * fp = nullptr;
-    void      add_a_word(String s, int h);
-    void      dump_and_list(WordList *, int i);
-    void      dump_words(const string &name);
-    auto      is_entity(String s) -> int;
+    int           nb_words = 0;
+    WordList *    WL0[100];
+    std::fstream *fp = nullptr;
+    void          add_a_word(String s, int h);
+    void          dump_and_list(WordList *, int i);
+    void          dump_words(const std::string &name);
+    auto          is_entity(String s) -> int;
 } // namespace all_words_ns
 
 //  --- Manipulating the XML tree
@@ -225,7 +224,7 @@ auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
 // We enter foo in the hashtab, and look at the LabelInfo value.
 // If the label is undefined, we define it,
 
-void Parser::create_label(const string &X, Istring S) {
+void Parser::create_label(const std::string &X, Istring S) {
     Istring    m = Istring(X);
     LabelInfo *V = the_main->SH.lab_val_check(m);
     if (V->set_defined()) {
@@ -241,9 +240,9 @@ void Parser::create_label(const string &X, Istring S) {
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
 // and create/update the LabelInfo. We remember the ref in the ref_list.
-void Xid::add_ref(const string &s) { tralics_ns::add_ref(value, s, false); }
+void Xid::add_ref(const std::string &s) { tralics_ns::add_ref(value, s, false); }
 
-void tralics_ns::add_ref(int v, const string &s, bool idx) {
+void tralics_ns::add_ref(int v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
     Istring B = Istring(s);
     if (idx)
@@ -284,7 +283,7 @@ void Parser::check_all_ids() {
 }
 
 //
-void tralics_ns::find_index_labels(vector<string> &W) {
+void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
         int        E = i.first;
         Istring    V = i.second;
@@ -577,7 +576,7 @@ void Xml::to_buffer(Buffer &b) const {
 }
 
 // This prints T on the file fp, using scbuf.
-auto operator<<(ostream &fp, const Xml *T) -> ostream & {
+auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
     scbuf.reset();
     cur_fp = &fp;
     if (T != nullptr)
@@ -731,9 +730,9 @@ void Xml::remove_empty_par() {
 
 // This swaps the trees of this and x
 void Xml::swap_x(Xml *x) {
-    vector<Xml *> T = tree;
-    tree            = x->tree;
-    x->tree         = T;
+    std::vector<Xml *> T = tree;
+    tree                 = x->tree;
+    x->tree              = T;
 }
 
 // Moves to res every son named match.
@@ -798,8 +797,8 @@ void Xml::postprocess_fig_table(bool is_fig) {
     if (T->is_empty()) return;
     main_ns::log_and_tty << lg_start << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
     {
-        int    n = the_parser.get_cur_line();
-        string f = the_parser.get_cur_filename();
+        int         n = the_parser.get_cur_line();
+        std::string f = the_parser.get_cur_filename();
         main_ns::log_and_tty << "detected on line " << n;
         if (!f.empty()) main_ns::log_and_tty << " of file " << f;
         main_ns::log_and_tty << ".\n";
@@ -1031,7 +1030,7 @@ void Xml::compo_special() {
 
 // This is used by sT_translate. It converts an XML element
 // to a string, using scbuf as temporary. clears the object
-auto Xml::convert_to_string() -> string {
+auto Xml::convert_to_string() -> std::string {
     scbuf.reset();
     convert_to_string(scbuf);
     tree.clear();
@@ -1134,7 +1133,7 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
 }
 
 // Finish dumping the words
-void all_words_ns::dump_words(const string &name) {
+void all_words_ns::dump_words(const std::string &name) {
     auto *    WL = new WordList(nullptr, 0, nullptr);
     WordList *W  = WL;
     for (auto L : WL0) {
@@ -1144,7 +1143,7 @@ void all_words_ns::dump_words(const string &name) {
     }
     if (WL->get_next() == nullptr) return;
     String wf = tralics_ns::get_out_dir("words");
-    fp        = new fstream(wf, std::ios::out);
+    fp        = new std::fstream(wf, std::ios::out);
     if (fp == nullptr) return;
     if (!*fp) return;
     if (!name.empty()) *fp << "Team " << name << "\n";
@@ -1243,7 +1242,7 @@ void Xml::word_stats_i() {
     }
 }
 
-void Xml::word_stats(string match) {
+void Xml::word_stats(std::string match) {
     scbuf.reset();
     word_stats_i();
     scbuf.new_word();

@@ -9,12 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txatt.h"
 #include "txbib.h"
 #include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <algorithm>
 #include <utility>
 
 using main_ns::log_and_tty; // used for error signalling
@@ -22,15 +22,15 @@ using main_ns::log_and_tty; // used for error signalling
 namespace {
     String my_constant_table[3];
     class Error {};
-    Bbl            bbl;
-    Buffer         biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
-    Buffer         CB;
-    Bibtex *       the_bibtex;
-    const int      not_found         = -1;
-    bool           distinguish_refer = false;
-    string         cur_entry_name; // name of entry under construction.
-    int            cur_entry_line; // position of entry in source file
-    vector<string> omitcite_list;
+    Bbl                      bbl;
+    Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
+    Buffer                   CB;
+    Bibtex *                 the_bibtex;
+    const int                not_found         = -1;
+    bool                     distinguish_refer = false;
+    std::string              cur_entry_name; // name of entry under construction.
+    int                      cur_entry_line; // position of entry in source file
+    std::vector<std::string> omitcite_list;
 
     BblAndTty    BAT;
     Bibliography the_bibliography;
@@ -42,13 +42,13 @@ namespace {
 namespace bib_ns {
     auto normalise_for_bib(Istring w) -> Istring;
     void boot_ra_prefix(String s);
-    auto first_three(const string &s) -> string;
-    auto last_chars(const string &s, int k) -> string;
-    auto skip_dp(const string &str) -> string;
+    auto first_three(const std::string &s) -> std::string;
+    auto last_chars(const std::string &s, int k) -> std::string;
+    auto skip_dp(const std::string &str) -> std::string;
     void bib_explain();
-    void handle_special_string(const string &s, Buffer &A, Buffer &B);
+    void handle_special_string(const std::string &s, Buffer &A, Buffer &B);
     auto type_to_string(entry_type x) -> name_positions;
-    auto is_noopsort(const string &s, int i) -> bool;
+    auto is_noopsort(const std::string &s, int i) -> bool;
     bool raw_bib = false;
 } // namespace bib_ns
 using namespace bib_ns;
@@ -126,7 +126,7 @@ auto bib_ns::normalise_for_bib(Istring w) -> Istring {
 // and logs it
 void Parser::T_omitcite() {
     flush_buffer();
-    string s = sT_arg_nopar();
+    std::string s = sT_arg_nopar();
     omitcite_list.push_back(s);
     the_log << lg_startbrace << "\\omitcite(" << int(omitcite_list.size());
     the_log << ") = " << s << lg_endbrace;
@@ -293,12 +293,12 @@ void Parser::T_bibliostyle() {
     String        Val = fetch_name0_nopar();
     Bibliography &T   = the_bibliography;
     if (strncmp(Val, "bibtex:", 7) == 0) {
-        if (Val[7] != 0) T.set_style(string(Val + 7));
+        if (Val[7] != 0) T.set_style(std::string(Val + 7));
         T.set_cmd("bibtex " + get_job_name());
     } else if (strncmp(Val, "program:", 8) == 0)
-        T.set_cmd(string(Val + 8) + " " + get_job_name() + ".aux");
+        T.set_cmd(std::string(Val + 8) + " " + get_job_name() + ".aux");
     else
-        T.set_style(string(Val));
+        T.set_style(std::string(Val));
 }
 
 // Translation of \bibliography{filename}. We add a marker.
@@ -396,7 +396,7 @@ auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
 
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
-void Bibtex::read1(const string &cur) {
+void Bibtex::read1(const std::string &cur) {
     Buffer &Tbuf = biblio_buf4;
     Tbuf.reset();
     Tbuf.push_back(cur);
@@ -507,9 +507,9 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump(B);
     if (B.empty()) return;
     T.dump_data(B);
-    string auxname = tralics_ns::get_short_jobname() + ".aux";
+    std::string auxname = tralics_ns::get_short_jobname() + ".aux";
     try {
-        fstream fp(auxname.c_str(), std::ios::out);
+        std::fstream fp(auxname.c_str(), std::ios::out);
         fp << B.c_str();
         fp.close();
     } catch (...) {
@@ -681,8 +681,8 @@ auto Bibtex::find_field_pos(String s) const -> field_pos {
     if (s == nullptr) return fp_unknown;
     auto S = Istring(s);
     // Check is this has to be ignored
-    vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
-    int              additional_s = Bib_s.size();
+    std::vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
+    int                   additional_s = Bib_s.size();
     for (int i = 0; i < additional_s; i++)
         if (Bib_s[i] == S) return fp_unknown;
 
@@ -718,8 +718,8 @@ auto Bibtex::find_field_pos(String s) const -> field_pos {
     if (S == cstb_year) return fp_year;
     if (S == cstb_crossref) return fp_crossref;
     // Check is this is additional
-    vector<Istring> &Bib        = the_main->get_bibtex_fields();
-    int              additional = Bib.size();
+    std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
+    int                   additional = Bib.size();
     for (int i = 0; i < additional; i++)
         if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
     return fp_unknown;
@@ -730,8 +730,8 @@ auto Bibtex::find_type(String s) -> entry_type {
     if (s[0] == 0) return type_comment; // in case of error.
     auto S = Istring(s);
 
-    vector<Istring> &Bib2        = the_main->get_bibtex_extensions_s();
-    int              additional2 = Bib2.size();
+    std::vector<Istring> &Bib2        = the_main->get_bibtex_extensions_s();
+    int                   additional2 = Bib2.size();
     for (int i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
     if (S == cstb_article) return type_article;
@@ -754,8 +754,8 @@ auto Bibtex::find_type(String s) -> entry_type {
     if (S == cstb_string) return type_string;
     if (S == cstb_unpublished) return type_unpublished;
 
-    vector<Istring> &Bib        = the_main->get_bibtex_extensions();
-    int              additional = Bib.size();
+    std::vector<Istring> &Bib        = the_main->get_bibtex_extensions();
+    int                   additional = Bib.size();
     for (int i = 0; i < additional; i++)
         if (Bib[i] == S) return entry_type(type_extension + i + 1);
     return type_unknown;
@@ -934,7 +934,7 @@ void Parser::T_bpers() {
     the_stack.add_att_to_last(np_prenom, a);
 }
 
-void Stack::implement_cit(string b1, Istring b2, string a, string c) {
+void Stack::implement_cit(std::string b1, Istring b2, std::string a, std::string c) {
     add_att_to_last(np_userid, Istring(std::move(b1)));
     add_att_to_last(np_id, b2);
     add_att_to_last(np_key, Istring(std::move(a)));
@@ -1003,10 +1003,10 @@ void Parser::solve_cite(bool user) {
 // this is the same as \bibitem[]{foo}{}
 void Parser::T_empty_bibitem() {
     flush_buffer();
-    string  w  = "";
-    string  a  = "";
-    string  b  = sT_arg_nopar();
-    Istring id = the_bibtex->exec_bibitem(w, b);
+    std::string w  = "";
+    std::string a  = "";
+    std::string b  = sT_arg_nopar();
+    Istring     id = the_bibtex->exec_bibitem(w, b);
     if (id.empty()) return;
     leave_v_mode();
     the_stack.push1(np_citation);
@@ -1014,7 +1014,7 @@ void Parser::T_empty_bibitem() {
     the_stack.pop(np_citation);
 }
 
-auto Bibtex::exec_bibitem(const string &w, const string &b) -> Istring {
+auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> Istring {
     BibEntry *X = find_entry(b.c_str(), w, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
@@ -1028,11 +1028,11 @@ auto Bibtex::exec_bibitem(const string &w, const string &b) -> Istring {
 // Translation of \citation{key}{userid}{id}{from}{type}[alpha-key]
 void Parser::T_citation() {
     flush_buffer();
-    string  a  = sT_arg_nopar();
-    string  b1 = special_next_arg();
-    string  b2 = sT_arg_nopar();
-    string  c  = sT_arg_nopar();
-    Istring d  = nT_arg_nopar();
+    std::string a  = sT_arg_nopar();
+    std::string b1 = special_next_arg();
+    std::string b2 = sT_arg_nopar();
+    std::string c  = sT_arg_nopar();
+    Istring     d  = nT_arg_nopar();
     the_stack.add_nl();
     the_stack.push1(np_citation);
     the_stack.add_att_to_last(np_type, d);
@@ -1263,7 +1263,7 @@ auto Bibtex::check_val_end() -> int {
 // In any case, a tab is converted into a space, multiple space chars
 // are replaced by single ones.
 // We can safely assume that buffer is ASCII
-auto Buffer::special_convert(bool init) -> string {
+auto Buffer::special_convert(bool init) -> std::string {
     ptr = 0;
     if (init) skip_sp_tab_nl();
     biblio_buf1.reset();
@@ -1364,7 +1364,7 @@ auto Bibtex::auto_cite() -> bool {
 
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
-auto Bibtex::find_entry(String s, const string &prefix, bib_creator bc) -> BibEntry * {
+auto Bibtex::find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry * {
     CitationKey key(prefix.c_str(), s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
@@ -1568,7 +1568,7 @@ void BibEntry::copy_from(BibEntry *Y, int k) {
         return; // Should signal an error
     }
     for (int i = k; i < fp_unknown; i++) {
-        //    cout << bib_xml_name[i] << all_fields[i].empty() << Y->all_fields[i] <<"\n";
+        //   std::cout<< bib_xml_name[i] << all_fields[i].empty() << Y->all_fields[i] <<"\n";
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
     int n = the_main->get_bibtex_fields().size();
@@ -1613,9 +1613,9 @@ void Bibtex::work() {
     int nb_entries = all_entries_table.size();
     main_ns::log_or_tty << "Seen " << nb_entries << " bibliographic entries.\n";
     // Sort the entries
-    sort(all_entries_table.begin(), all_entries_table.end(), xless);
-    string previous_label = "";
-    int    last_num       = 0;
+    std::sort(all_entries_table.begin(), all_entries_table.end(), xless);
+    std::string previous_label = "";
+    int         last_num       = 0;
     for (int i = 0; i < nb_entries; i++) all_entries_table[i]->forward_pass(previous_label, last_num);
     int next_extra = 0;
     for (int i = nb_entries - 1; i >= 0; i--) all_entries_table[i]->reverse_pass(next_extra);
@@ -1645,7 +1645,7 @@ void BibEntry::work(int serial) {
 
 // This computes the extra_num field. It's k if this is the k-th entry
 // with the same label (0 for the first entry).
-void BibEntry::forward_pass(string &previous_label, int &last_num) {
+void BibEntry::forward_pass(std::string &previous_label, int &last_num) {
     if (label == previous_label) {
         last_num++;
         extra_num = last_num;
@@ -1692,10 +1692,10 @@ void BibEntry::numeric_label(int i) {
 
 BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), unique_id("") {
     for (auto &all_field : all_fields) all_field = "";
-    vector<Istring> &Bib = the_main->get_bibtex_fields();
-    int              n   = Bib.size();
+    std::vector<Istring> &Bib = the_main->get_bibtex_fields();
+    int                   n   = Bib.size();
     if (n != 0) {
-        user_fields = new string[n];
+        user_fields = new std::string[n];
         for (int i = 0; i < n; i++) user_fields[i] = "";
     }
 }
@@ -1703,7 +1703,7 @@ BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), 
 // -----------------------------------------------------------------------
 // printing the bbl.
 
-void BibEntry::out_something(field_pos p, string s) {
+void BibEntry::out_something(field_pos p, std::string s) {
     bbl.push_back_cmd("cititem");
     bbl.push_back_braced(bib_xml_name[p]);
     bbl.push_back_braced(std::move(s));
@@ -1713,13 +1713,13 @@ void BibEntry::out_something(field_pos p, string s) {
 // output a generic field as \cititem{k}{value}
 // If no value, and w>0, a default value will be used.
 void BibEntry::out_something(field_pos p, int w) {
-    string s = all_fields[p];
+    std::string s = all_fields[p];
     if (s.empty()) s = my_constant_table[w - 1];
     out_something(p, s);
 }
 
 void BibEntry::out_something(field_pos p) {
-    string s = all_fields[p];
+    std::string s = all_fields[p];
     if (s.empty()) return;
     out_something(p, s);
 }
@@ -1739,7 +1739,7 @@ void BibEntry::format_series_etc(bool pa) {
 void BibEntry::format_author(bool au) {
     field_pos p = au ? fp_author : fp_editor;
     if (all_fields[p].empty()) return;
-    string data = au ? author_data.value : editor_data.value;
+    std::string data = au ? author_data.value : editor_data.value;
     bbl.push_back_cmd(bib_xml_name[p]);
     bbl.push_back_braced(data);
     bbl.newline();
@@ -1775,7 +1775,7 @@ void BibEntry::call_type() {
         call_type_special();
 
     out_something(fp_doi);
-    string s = all_fields[fp_url];
+    std::string s = all_fields[fp_url];
     if (!s.empty()) {
         Buffer &B = biblio_buf1;
         if (strncmp(s.c_str(), "\\rrrt", 5) == 0)
@@ -1788,10 +1788,10 @@ void BibEntry::call_type() {
         }
         bbl.newline();
     }
-    vector<Istring> &Bib        = the_main->get_bibtex_fields();
-    int              additional = Bib.size();
+    std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
+    int                   additional = Bib.size();
     for (int i = 0; i < additional; i++) {
-        string s = user_fields[i];
+        std::string s = user_fields[i];
         if (!s.empty()) {
             bbl.push_back_cmd("cititem");
             bbl.push_back_braced(Bib[i].c_str());
@@ -1912,7 +1912,7 @@ void BibEntry::call_type_special() {
 // In the bibliobraphy \url="foo bar"
 // gives \href{foobar}{\url{foo\allowbreak bar}}
 // We handle here the first string
-auto Buffer::remove_space(const string &x) -> string {
+auto Buffer::remove_space(const std::string &x) -> std::string {
     int n = x.size();
     reset();
     for (int i = 0; i < n; i++)
@@ -1921,7 +1921,7 @@ auto Buffer::remove_space(const string &x) -> string {
 }
 
 // We create here the second string
-auto Buffer::insert_break(const string &x) -> string {
+auto Buffer::insert_break(const std::string &x) -> std::string {
     int n = x.size();
     reset();
     push_back("{\\url{");
@@ -1997,7 +1997,7 @@ void Buffer::skip_over_brace() {
 }
 
 // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
-auto bib_ns::first_three(const string &s) -> string {
+auto bib_ns::first_three(const std::string &s) -> std::string {
     Buffer &B = biblio_buf1;
     B.reset();
     B.push_back(s);
@@ -2015,7 +2015,7 @@ auto bib_ns::first_three(const string &s) -> string {
 
 // In the case of `Lo{\"i}c', returns  `{\"i}c' for k=2.
 // In the case of `Lo\"i c', returns the whole string.
-auto bib_ns::last_chars(const string &s, int k) -> string {
+auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
     Buffer &B = biblio_buf1;
     B.reset();
     B.push_back(s);
@@ -2035,7 +2035,7 @@ auto bib_ns::last_chars(const string &s, int k) -> string {
 }
 
 // Signals an error if the year is invalid in the case of refer.
-auto Bibtex::wrong_class(int y, const string &Y, bib_from from) -> bool {
+auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     if (from != from_refer) return false;
     if (old_ra) return false;
     int ry = the_parser.get_ra_year();
@@ -2066,7 +2066,7 @@ void BibEntry::add_warning(int dy) {
 }
 
 // Converts cite:foo into foo, with some heuristic tests.
-auto bib_ns::skip_dp(const string &str) -> string {
+auto bib_ns::skip_dp(const std::string &str) -> std::string {
     String s = str.c_str();
     int    i = 0;
     while ((s[i] != 0) && s[i] != ':') i++;
@@ -2074,7 +2074,7 @@ auto bib_ns::skip_dp(const string &str) -> string {
     return str;
 }
 
-void Bibtex::bad_year(const string &given, String wanted) {
+void Bibtex::bad_year(const std::string &given, String wanted) {
     the_bibtex->err_in_entry("");
     log_and_tty << "the year field of this entry should be " << wanted << ", ";
     if (given.empty())
@@ -2088,13 +2088,13 @@ void BibEntry::presort(int serial) {
     sort_author(type_int != type_proceedings);
     sort_author(type_int == type_proceedings);
     if (lab1.empty()) {
-        string s = all_fields[fp_key];
+        std::string s = all_fields[fp_key];
         if (s.empty()) s = skip_dp(cite_key.get_name());
         lab1 = first_three(s);
         lab2 = s;
         lab3 = s;
     }
-    string y = all_fields[fp_year];
+    std::string y = all_fields[fp_year];
     // Removed in version 2.13.2.
     //   if(the_main->in_ra() && !the_main->get_no_bibyearmodify()) {
     //     if(the_bibtex->wrong_class(cur_year,y,get_from()))
@@ -2105,7 +2105,7 @@ void BibEntry::presort(int serial) {
     //   if(yy)
     //     the_bibtex->bad_year(y,yy);
     {
-        string s = last_chars(y, 2);
+        std::string s = last_chars(y, 2);
         if (!s.empty()) {
             if (!is_digit(s[0])) s = "";
         }
@@ -2126,7 +2126,7 @@ void BibEntry::presort(int serial) {
 
 // True if \sortnoop, \SortNoop, \noopsort plus brace or space
 // First char to test is at i+1
-auto bib_ns::is_noopsort(const string &s, int i) -> bool {
+auto bib_ns::is_noopsort(const std::string &s, int i) -> bool {
     int n = s.size();
     if (i + 10 >= n) return false;
     if (s[i + 10] != '{' && !is_space(s[i + 10])) return false;
@@ -2143,7 +2143,7 @@ auto bib_ns::is_noopsort(const string &s, int i) -> bool {
 // removes braces in the case title="study of {$H^p}, part {I}"
 // Brace followed by Uppercase or dollar
 // Also, handles {\noopsort foo} removes the braces and the command.
-void Buffer::special_title(string s) {
+void Buffer::special_title(std::string s) {
     int level  = 0;
     int blevel = 0;
     int n      = s.size();
@@ -2184,7 +2184,7 @@ void Buffer::special_title(string s) {
     }
 }
 
-void BibEntry::handle_one_namelist(string &src, BibtexName &X) {
+void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     if (src.empty()) return;
     biblio_buf1.reset();
     biblio_buf2.reset();
@@ -2674,8 +2674,8 @@ void Bchar::print_first_name(Buffer &B1, Buffer &B2, Buffer &B3) {
 void BibEntry::normalise() {
     handle_one_namelist(all_fields[fp_author], author_data);
     handle_one_namelist(all_fields[fp_editor], editor_data);
-    string y = all_fields[fp_year];
-    int    n = y.size();
+    std::string y = all_fields[fp_year];
+    int         n = y.size();
     if (n == 0) return;
     cur_year = -1;
     int res  = 0;
@@ -2972,7 +2972,7 @@ void Bibtex::read(String src, bib_from ct) {
 
 /// -------------------------   a virer
 
-void bib_ns::handle_special_string(const string &s, Buffer &A, Buffer &B) {
+void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
     if (s.empty()) {
         B.reset();
         return;
@@ -2984,7 +2984,7 @@ void bib_ns::handle_special_string(const string &s, Buffer &A, Buffer &B) {
 // ----------------------------------------
 // Boot strapping the system
 
-void tralics_ns::bibtex_boot(String b, String dy, string no_year, bool inra, bool db) {
+void tralics_ns::bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db) {
     distinguish_refer = db;
     bbl.install_file(b);
     the_bibtex = new Bibtex(dy);
@@ -2999,7 +2999,7 @@ void tralics_ns::bibtex_insert_jobname() {
     if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(tralics_ns::get_short_jobname().c_str()); }
 }
 
-void Bibtex::boot(string S, bool inra) {
+void Bibtex::boot(std::string S, bool inra) {
     no_year      = std::move(S);
     in_ra        = inra;
     want_numeric = false;

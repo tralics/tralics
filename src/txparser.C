@@ -10,7 +10,6 @@
 
 // This file contains the TeX parser of tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
@@ -549,11 +548,11 @@ void Parser::read_toks_edef(TokenList &L) {
 // --------------------------------------------------
 
 // Adds the content of the buffer to the document-hook token list.
-void Parser::add_buffer_to_document_hook(Buffer &b, const string &name) { tokenize_buffer(b, document_hook, name); }
+void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) { tokenize_buffer(b, document_hook, name); }
 
 // Evaluates now a token string. First action is to put chars in a buffer
 // (because we add a '\n' at the end of the string).
-void Parser::titlepage_evaluate(String s, const string &cmd) {
+void Parser::titlepage_evaluate(String s, const std::string &cmd) {
     mac_buffer << bf_reset << s;
     TokenList L;
     tokenize_buffer(mac_buffer, L, "(tpa post " + cmd + ")");
@@ -711,7 +710,7 @@ void Parser::T_verbatim() {
     // Now, we know if we have an optional argument.
     TokenList largs;
     if (optional) read_optarg(largs);
-    string hook = get_cur_env_name() + "@hook";
+    std::string hook = get_cur_env_name() + "@hook";
     if (noparse) {
         Token t1 = hash_table.locate(hook);
         new_macro(largs, t1, true); // definition is outside env
@@ -724,7 +723,7 @@ void Parser::T_verbatim() {
     TokenList lopt = get_mac_value(hook);
     largs.push_back(hash_table.comma_token);
     largs.splice(largs.end(), lopt);
-    string      args        = to_stringE(largs);
+    std::string args        = to_stringE(largs);
     bool        want_number = false;
     SpecialHash S(args);
     //  Check if numbering wanted
@@ -736,8 +735,8 @@ void Parser::T_verbatim() {
     int reg_number = S.find_counter();
     if (reg_number >= 0) reset = false;
     // Check if a start number is given
-    int    n = 0;
-    string w = S.find("firstnumber");
+    int         n = 0;
+    std::string w = S.find("firstnumber");
     if (w.empty())
         n = 1;
     else if (w == "last") {
@@ -753,11 +752,11 @@ void Parser::T_verbatim() {
     }
     if (want_number && reg_number < 0) reg_number = 21; // hardcoded
     if (reset) word_define(reg_number + count_reg_offset, n - 1, true);
-    Token  t2 = hash_table.relax_token;
-    Token  t3 = hash_table.relax_token;
-    Token  t4 = hash_table.relax_token;
-    string w2 = S.find("style");
-    string w3 = S.find("pre");
+    Token       t2 = hash_table.relax_token;
+    Token       t3 = hash_table.relax_token;
+    Token       t4 = hash_table.relax_token;
+    std::string w2 = S.find("style");
+    std::string w3 = S.find("pre");
     if (!w2.empty()) t2 = hash_table.locate("FV@style@" + w2);
     if (!w3.empty()) t3 = hash_table.locate("FV@pre@" + w3);
     if (!w3.empty()) t4 = hash_table.locate("FV@post@" + w3);
@@ -767,11 +766,11 @@ void Parser::T_verbatim() {
 // Still incomplete
 void Parser::special_fvset() {
     flush_buffer();
-    string args = sT_arg_nopar();
+    std::string args = sT_arg_nopar();
     {
         static const uint loc = uchar(' ');
         SpecialHash       S(args);
-        string            s = S.find("showspaces");
+        std::string       s = S.find("showspaces");
         if (s.empty()) return;
         if (s == "true")
             verbatim_chars[loc] = hash_table.textvisiblespace_token;
@@ -870,7 +869,7 @@ void Parser::T_saveverb() {
 // we make sure that reading is not from a token list
 // Ignores everything, until end of environment.
 // or take it verbatim
-auto Parser::T_raw_env(bool want_result) -> string {
+auto Parser::T_raw_env(bool want_result) -> std::string {
     kill_line();
     if (!TL.empty()) {
         parse_error(err_tok, "Verbatim-like environment in argument : ", get_cur_env_name(), "Verbatim-like environment in argument");
@@ -1020,7 +1019,7 @@ void Parser::T_mark(subtypes c) {
 }
 
 // a special kind of csname, without expand. Returns a name
-auto Parser::group_to_string() -> string {
+auto Parser::group_to_string() -> std::string {
     skip_initial_space();
     if (!cur_cmd_chr.is_open_brace()) {
         missing_open_brace();
@@ -1048,25 +1047,25 @@ void Parser::unskip_group(String s) {
     back_input(L);
 }
 
-auto Parser::sE_arg() -> string {
+auto Parser::sE_arg() -> std::string {
     TokenList L = read_arg();
     return to_stringE(L);
 }
 
-auto Parser::sE_arg_nopar() -> string {
+auto Parser::sE_arg_nopar() -> std::string {
     TokenList L = read_arg_nopar();
     return to_stringE(L);
 }
 
 // Returns next arg as a string (not translated)
-auto Parser::sE_optarg_nopar() -> string {
+auto Parser::sE_optarg_nopar() -> std::string {
     TokenList L;
     read_optarg_nopar(L);
     return to_stringE(L);
 }
 
 // Here, we expand all tokens, and gather all non-expandable tokens
-auto Parser::to_stringE(TokenList &L) -> string {
+auto Parser::to_stringE(TokenList &L) -> std::string {
     read_toks_edef(L);
     Buffer &B = group_buffer;
     B.reset();
@@ -1201,8 +1200,8 @@ void Parser::M_declare_math_operator() {
 // \newtheorem{name}[c]{text}    case 3
 // \newtheorem*{name}{text}      case 4
 void Parser::M_new_thm() {
-    bool   star = remove_initial_star();
-    string name = group_to_string();
+    bool        star = remove_initial_star();
+    std::string name = group_to_string();
     if (tracing_commands()) the_log << lg_startbracebs << "newtheorem " << name << lg_endbrace;
     TokenList ctr;
     int       which_case = star ? 4 : 2;
@@ -1512,7 +1511,7 @@ auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
 }
 
 // Signals an error; returns the string or bad
-auto Parser::list_to_string_c(TokenList &x, String msg) -> string {
+auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
     Buffer &B = Thbuf1;
     B.reset();
     if (list_to_string(x, B)) {
@@ -1866,7 +1865,7 @@ auto Parser::counter_read_opt(String s) -> int {
 
 // This defines a new counter, named name; second arg is for counter_read_opt
 // cur_tok (o be read again) holds the token \c@foo
-auto Parser::counter_aux(const string &name, String opt, Token T) -> bool {
+auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
     Buffer &b = Thbuf1;
     // We are defining a counter now
     // We construct a macro without argument that expands to \number\c@foo
@@ -2049,7 +2048,7 @@ void Parser::M_newif() {
 // \def\footrue{\let\iffoo\iftrue} and \def\foofalse{\let\iffoo\iffalse}
 // this code does one or the other definitions,
 // given T=\iffoo, s=foo and b=true of false
-void Parser::M_newif_aux(Token T, const string &S, bool b) {
+void Parser::M_newif_aux(Token T, const std::string &S, bool b) {
     TokenList L1;
     L1.push_front(hash_table.let_token);
     L1.push_back(T);
@@ -2093,7 +2092,7 @@ void Parser::new_macro(TokenList &L, Token name) {
     mac_define(name, X, false, rd_always, user_cmd);
 }
 
-void Parser::new_macro(const string &s, Token name) {
+void Parser::new_macro(const std::string &s, Token name) {
     Thbuf1 << bf_reset << s;
     TokenList L = Thbuf1.str_toks11(false);
     auto *    X = new Macro(L);
@@ -2162,7 +2161,7 @@ void Parser::M_shortverb(int x) {
 }
 
 // Returns the token \foo or \endfoo.
-auto Parser::find_env_token(const string &name, bool beg) -> Token {
+auto Parser::find_env_token(const std::string &name, bool beg) -> Token {
     mac_buffer.reset();
     if (!beg) mac_buffer << "end";
     mac_buffer << name;
@@ -2171,10 +2170,10 @@ auto Parser::find_env_token(const string &name, bool beg) -> Token {
 }
 
 // Hack for \begin{foo}
-auto Parser::env_helper(const string &s) -> SaveAuxEnv * {
+auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
     int cl = get_cur_line();
     find_env_token(s, true);
-    string cur_e_name = get_cur_env_name();
+    std::string cur_e_name = get_cur_env_name();
     if (cur_cmd_chr.is_undef())
         undefined_env(s);
     else
@@ -2186,7 +2185,7 @@ auto Parser::env_helper(const string &s) -> SaveAuxEnv * {
 }
 
 // This implements \begin{foo}
-void Parser::T_begin(const string &s) {
+void Parser::T_begin(const std::string &s) {
     SaveAuxEnv *X = env_helper(s);
     push_level(bt_env);
     push_save_stack(X);
@@ -2200,7 +2199,7 @@ void SaveAuxEnv::unsave(bool trace, Parser &P) {
 }
 
 // This is the code of \end{foo}.
-void Parser::T_end(const string &s) {
+void Parser::T_end(const std::string &s) {
     if (s == "document") // hack, because document is at outer level
     {
         T_begin(s);
@@ -2246,7 +2245,7 @@ void Parser::T_end(const string &s) {
 // Given a string like foo, this evaluates to \expandafter{\foo}
 // If \foo is undefined, the result is {}; if \foo expands to 'gee'
 // the result is {gee}. The result can be obtained via read_arg.
-void Parser::expand_no_arg(const string &s) {
+void Parser::expand_no_arg(const std::string &s) {
     Token t = hash_table.locate(s);
     back_input(hash_table.CB_token);
     back_input(t);
@@ -2265,7 +2264,7 @@ void Parser::expand_when_ok(bool allow_undef) {
 
 // Returns the value of the macro \foo;
 // If \foo is not a user macro without args, returns empty list
-auto Parser::get_mac_value(const string &s) -> TokenList { return get_mac_value(hash_table.locate(s)); }
+auto Parser::get_mac_value(const std::string &s) -> TokenList { return get_mac_value(hash_table.locate(s)); }
 
 auto Parser::get_mac_value(Token t) -> TokenList {
     TokenList res;
@@ -3217,9 +3216,9 @@ void Parser::M_newcommand(rd_flag redef) {
 
 // Code of \newenvironment{foo}...
 void Parser::M_new_env(rd_flag redef) {
-    bool     is_star = remove_initial_star(); // false means long
-    symcodes what    = is_star ? user_cmd : userl_cmd;
-    string   name    = group_to_string();
+    bool        is_star = remove_initial_star(); // false means long
+    symcodes    what    = is_star ? user_cmd : userl_cmd;
+    std::string name    = group_to_string();
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
     Token  T = find_env_token(name, true); // this is \foo
     Macro *X = nullptr;
@@ -4282,7 +4281,7 @@ void Parser::show_box(Xml *X) {
 }
 
 void Parser::E_useverb() {
-    string name = group_to_string();
+    std::string name = group_to_string();
     mac_buffer << bf_reset << "savedverb@" << name;
     Token t = hash_table.locate(mac_buffer);
     back_input(t);

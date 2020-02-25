@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include "txtitlepage.h"
@@ -26,12 +25,12 @@ namespace {
 
 namespace tpage_ns {
     void init_error();
-    auto begins_with(const string &A, String B) -> bool;
+    auto begins_with(const std::string &A, String B) -> bool;
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
     auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
-    void after_conf_assign(vector<string> &V);
+    void after_conf_assign(std::vector<std::string> &V);
 } // namespace tpage_ns
 
 // needed elsewhere, because we have to call add_language_add.
@@ -406,7 +405,7 @@ auto TitlePageAux::increment_flag() -> bool {
 }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.
-void Xid::add_special_att(const string &S) {
+void Xid::add_special_att(const std::string &S) {
     if (S.length() == 0) return;
     Buffer &B = local_buf;
     B.reset();
@@ -422,7 +421,7 @@ void Parser::T_titlepage_finish(int v) {
     for (int k = 0; k < kmax; k++) Titlepage.bigtable[k].exec_post();
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
-    string        tmp      = tpa.get_T4();
+    std::string   tmp      = tpa.get_T4();
     bool          finished = false;
     bool          also_bib = false;
     if (strstr(tmp.c_str(), "'only title page'") != nullptr) finished = true;
@@ -496,7 +495,7 @@ auto TitlePageAux::find_UR(String s, int n) const -> int {
 
 // For the case CE, \URsop ?+ <UR myflags>
 // We put `URsop myflags' in the buffer local_buf in case of success.
-auto TitlePage::find_UR(const string &s, const string &name) const -> int {
+auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> int {
     Buffer &B = local_buf;
     B << bf_reset << s;
     int j = 0;
@@ -511,7 +510,7 @@ auto TitlePage::find_UR(const string &s, const string &name) const -> int {
     }
     if (res == 0) return 0;
     if (!name.empty()) {
-        string w = B.to_string(j + 1);
+        std::string w = B.to_string(j + 1);
         B << bf_reset << name;
         if (have_space) B << ' ' << w;
     }
@@ -519,14 +518,14 @@ auto TitlePage::find_UR(const string &s, const string &name) const -> int {
 }
 
 // true if this OK for CCS and the nams is right.
-auto TitlePageAux::find_cmd(const string &s) const -> bool {
+auto TitlePageAux::find_cmd(const std::string &s) const -> bool {
     if (type != tpi_rt_normal && type != tpi_rt_list) return false;
     if (T1 != s) return false;
     return true;
 }
 
 // Returns the index for a CCS.
-auto TitlePage::find_cmd(const string &s) const -> int {
+auto TitlePage::find_cmd(const std::string &s) const -> int {
     for (unsigned int k = 0; k < bigtable.size(); k++) {
         if (bigtable[k].find_cmd(s)) return k;
     }
@@ -543,7 +542,7 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
 }
 
 // True if B is an initial substring of A
-auto tpage_ns::begins_with(const string &A, String B) -> bool {
+auto tpage_ns::begins_with(const std::string &A, String B) -> bool {
     unsigned int n = strlen(B);
     if (A.length() < n) return false;
     return strncmp(A.c_str(), B, n) == 0;
@@ -753,14 +752,14 @@ void TitlePageAux::dump(int k) {
 
 // Converts one of the strings into an empty XML element
 auto TitlePageAux::convert(int i) -> Xml * {
-    string s = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
+    std::string s = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
     return local_buf.xml_and_attrib(s);
 }
 
 // Converts one of the strings into a XML element containing R.
 auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
-    string s   = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
-    Xml *  res = local_buf.xml_and_attrib(s);
+    std::string s   = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
+    Xml *       res = local_buf.xml_and_attrib(s);
     res->push_back(r);
     return res;
 }
@@ -793,7 +792,7 @@ void LinePtr::find_top_atts(Buffer &B) {
 }
 
 // A loop to find all types  and put them in res.
-void LinePtr::find_all_types(vector<string> &res) {
+void LinePtr::find_all_types(std::vector<std::string> &res) {
     Buffer &            B = local_buf;
     line_iterator_const C = value.begin();
     line_iterator_const E = value.end();
@@ -806,7 +805,7 @@ void LinePtr::find_all_types(vector<string> &res) {
 }
 
 // This find a toplevel value.
-auto LinePtr::find_top_val(String s, bool c) -> string {
+auto LinePtr::find_top_val(String s, bool c) -> std::string {
     Buffer &            B = local_buf;
     line_iterator_const C = value.begin();
     line_iterator_const E = value.end();
@@ -824,7 +823,7 @@ void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
     ptr1 = ptr;
     skip_letter();
-    string a = substring();
+    std::string a = substring();
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();
@@ -873,9 +872,9 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
 }
 
 // This finds one type. prints on the log. Remembers it.
-void Buffer::find_one_type(vector<string> &S) {
+void Buffer::find_one_type(std::vector<std::string> &S) {
     if (is_begin_something(nullptr) == 5) {
-        string s = to_string(ptr1);
+        std::string s = to_string(ptr1);
         S.push_back(s);
         the_log << "Defined type: " << s << "\n";
     }
@@ -897,7 +896,7 @@ auto tpage_ns::see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool {
     return false;
 }
 
-void tpage_ns::after_conf_assign(vector<string> &V) {
+void tpage_ns::after_conf_assign(std::vector<std::string> &V) {
     int n = V.size();
     int i = 0;
     for (;;) {
@@ -936,7 +935,7 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
 }
 
 // Find one aliases in the config file.
-auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
+auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) -> bool {
     ptr = 0;
     if (strncmp(data(), "End", 3) == 0) return false;
     skip_sp_tab();
@@ -945,8 +944,8 @@ auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
     set_ptr1();
     advance_letter_dig();
     if (ptr1 == ptr) return true; // this is bad
-    string pot_res      = substring();
-    bool   local_potres = false;
+    std::string pot_res      = substring();
+    bool        local_potres = false;
     if (tralics_ns::exists(SL, pot_res)) local_potres = true;
     for (;;) {
         skip_sp_tab();
@@ -954,8 +953,8 @@ auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
         set_ptr1();
         advance_letter_dig();
         if (ptr1 == ptr) break;
-        string a  = substring();
-        bool   ok = a == res;
+        std::string a  = substring();
+        bool        ok = a == res;
         if (ok) {
             the_log << "Potential type " << res << " aliased to " << pot_res << "\n";
             if (!local_potres) local_potres = the_main->check_for_tcf(pot_res);
@@ -972,7 +971,7 @@ auto Buffer::find_alias(const vector<string> &SL, string &res) -> bool {
 }
 
 // Find all aliases in the config file.
-auto LinePtr::find_aliases(const vector<string> &SL, string &res) -> bool {
+auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
     Buffer &            B        = local_buf;
     line_iterator_const C        = value.begin();
     line_iterator_const E        = value.end();
@@ -995,7 +994,7 @@ auto LinePtr::find_aliases(const vector<string> &SL, string &res) -> bool {
 }
 
 // This converts ra2003 to ra.
-auto Buffer::remove_digits(const string &s) -> string {
+auto Buffer::remove_digits(const std::string &s) -> std::string {
     reset();
     push_back(s);
     size_t k = wptr;
@@ -1008,7 +1007,7 @@ auto Buffer::remove_digits(const string &s) -> string {
 }
 
 // This gets the DTD.
-void Buffer::extract_dtd(String a, string &b, string &c) {
+void Buffer::extract_dtd(String a, std::string &b, std::string &c) {
     if (a == nullptr) return;
     reset();
     push_back(a);

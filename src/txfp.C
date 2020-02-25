@@ -12,8 +12,6 @@
 #include "txinline.h"
 #include "txparser.h"
 
-#include "tralics.h"
-
 namespace {
     Token       fp_tmp_token, fp_test_token;
     Token       fps[fp_last_code];
@@ -59,7 +57,7 @@ namespace fp {
 } // namespace fp
 
 // This prints a FpNum on a ostream
-auto operator<<(ostream &fp, const FpNum &X) -> ostream & {
+auto operator<<(std::ostream &fp, const FpNum &X) -> std::ostream & {
     fp << X.to_string();
     return fp;
 }

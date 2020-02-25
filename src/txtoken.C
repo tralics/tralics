@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
@@ -190,7 +189,7 @@ auto Hashtab::find_empty(String s) -> int {
 // void Hashtab::dump()
 // {
 //   for(int i=0;i<hash_size;i++) {
-//     if(Text[i]) cout << i << " " << Text[i] << "\n";
+//     if(Text[i])std::cout<< i << " " << Text[i] << "\n";
 //   }
 // }
 
@@ -279,7 +278,7 @@ auto Hashtab::locate(String s) -> Token {
     return Token(hash_find(B, s) + hash_offset);
 }
 
-auto Hashtab::locate(const string &s) -> Token {
+auto Hashtab::locate(const std::string &s) -> Token {
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
     B << bf_reset << s;
     return locate(B);
@@ -611,7 +610,7 @@ auto token_ns::string_to_list(String s, bool b) -> TokenList {
     return L;
 }
 
-auto token_ns::string_to_list(const string &s, bool b) -> TokenList {
+auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
     Buffer &B = buffer_for_log;
     B << bf_reset << s;
     TokenList L = B.str_toks(nlt_space);
@@ -640,7 +639,7 @@ auto Buffer::operator<<(const TokenList &L) -> Buffer & {
 
 // Prints a token list.
 // Note: conversion to log_encoding
-auto operator<<(ostream &fp, const TokenList &L) -> ostream & {
+auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
     auto C = L.begin();
     auto E = L.end();
     while (C != E) {
@@ -653,7 +652,7 @@ auto operator<<(ostream &fp, const TokenList &L) -> ostream & {
 }
 
 // Prints a token list.
-auto operator<<(ostream &fp, const Istring &L) -> ostream & { return fp << L.c_str(); }
+auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.c_str(); }
 
 // Puts a macro into a buffer.
 void Buffer::push_back(const Macro &x) {
@@ -688,7 +687,7 @@ auto Buffer::operator<<(const Macro &x) -> Buffer & {
 }
 
 // Puts a macro definition in a file.
-auto operator<<(ostream &fp, const Macro &x) -> ostream & {
+auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
     Buffer &B = buffer_for_log;
     B << bf_reset;
     B.push_back(x, true);
@@ -792,7 +791,7 @@ auto StrHash::find(String s) -> int {
 }
 
 // The string can be a temporary
-auto StrHash::find(const string &s) -> int {
+auto StrHash::find(const std::string &s) -> int {
     mybuf << bf_reset << s;
     return hash_find();
 }

@@ -10,12 +10,11 @@
 
 // This file contains commands needed for the RA
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
-static Buffer  Tbuf;
-vector<string> module_list;
+static Buffer            Tbuf;
+std::vector<std::string> module_list;
 
 namespace ra_ns {
     void fnhack(TokenList &c, TokenList &d, TokenList &aux);
@@ -80,9 +79,9 @@ void Parser::T_rasection_end() {
 
 // \begin{RAsection} or \tralics@push@section
 void Parser::T_rasection() {
-    string  name     = sT_arg_nopar();
-    Istring elt_name = the_names[np_rasection];
-    Istring iname    = Istring(name);
+    std::string name     = sT_arg_nopar();
+    Istring     elt_name = the_names[np_rasection];
+    Istring     iname    = Istring(name);
     leave_h_mode();
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
@@ -95,11 +94,11 @@ void Parser::T_rasection() {
 }
 
 void Parser::push_module() {
-    string aux = sT_arg_nopar();
+    std::string aux = sT_arg_nopar();
     push_module(aux);
 }
 
-void Parser::push_module(const string &aux) {
+void Parser::push_module(const std::string &aux) {
     if (the_stack.in_h_mode()) { parse_error("Invalid \\begin{module} in a paragraph"); }
     leave_h_mode();
     the_stack.add_nl();

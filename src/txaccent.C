@@ -15,7 +15,6 @@
 // \todo The first 256 characters of Unicode are identical to Latin-1. So in
 // fact internal encoding is always unicode, latin1 is a red herring here.
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 

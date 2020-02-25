@@ -10,27 +10,26 @@
 
 // This file contains stuff for latex3
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 
 namespace {
     const TokenList empty_list;
     //  TokenList double_at_list,double_at_no_list;
-    Buffer   local_buffer, local_bufferB, local_bufferC;
-    Token    q_nil, q_stop, q_recursion_stop;
-    Token    T_roman, T_use1, T_use2, T_usen, T_use_nonen;
-    Token    T_exp_notN, T_exp_notn, T_empty;
-    Token    gen_from_sig_tok, expargsnc_tok, T3col_tok;
-    Token    Tc_zero, Tc_true_bool, Tc_false_bool, cmd_name;
-    Token    token_to_split;
-    string   tok_base, tok_sig; // result of split
-    subtypes how_to_generate;   // set by genenate_cond
-                                //  bool check_declaration = false; should set and use this, TODO
+    Buffer      local_buffer, local_bufferB, local_bufferC;
+    Token       q_nil, q_stop, q_recursion_stop;
+    Token       T_roman, T_use1, T_use2, T_usen, T_use_nonen;
+    Token       T_exp_notN, T_exp_notn, T_empty;
+    Token       gen_from_sig_tok, expargsnc_tok, T3col_tok;
+    Token       Tc_zero, Tc_true_bool, Tc_false_bool, cmd_name;
+    Token       token_to_split;
+    std::string tok_base, tok_sig; // result of split
+    subtypes    how_to_generate;   // set by genenate_cond
+                                   //  bool check_declaration = false; should set and use this, TODO
 } // namespace
 
 namespace l3_ns {
-    auto conditional_aux(const string &p) -> subtypes;
+    auto conditional_aux(const std::string &p) -> subtypes;
 } // namespace l3_ns
 
 // -----------------------------------------------------
@@ -39,17 +38,17 @@ namespace l3_ns {
 // Compares two strings; l3 functions below
 
 void Parser::E_pdfstrcmp() {
-    Token     T  = cur_tok;
-    string    s1 = sE_arg();
-    string    s2 = sE_arg();
-    int       cp = strcmp(s1.c_str(), s2.c_str());
-    TokenList L  = token_ns::string_to_list(cp == 0 ? "0" : (cp < 0 ? "-1" : "1"), false);
+    Token       T  = cur_tok;
+    std::string s1 = sE_arg();
+    std::string s2 = sE_arg();
+    int         cp = strcmp(s1.c_str(), s2.c_str());
+    TokenList   L  = token_ns::string_to_list(cp == 0 ? "0" : (cp < 0 ? "-1" : "1"), false);
     if (tracing_macros()) the_log << lg_start << T << s1 << "==" << s2 << lg_arrow << L << lg_end;
     back_input(L);
 }
 
 // Parses svn info. returns false in case of bad syntax
-auto Buffer::svn_id(string &name, string &date, string &version) -> bool {
+auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) -> bool {
     reset_ptr();
     date    = "0000/00/00";
     version = "-1";
@@ -108,7 +107,7 @@ void Parser::L3_getid() {
     Buffer &B = local_buffer;
     B.reset();
     B << l;
-    string name, date, version;
+    std::string name, date, version;
     B.svn_id(name, date, version);
     new_macro(name, hash_table.ExplFileName_token);
     new_macro(date, hash_table.ExplFileDate_token);
@@ -195,7 +194,7 @@ void Parser::L3_user_split_next_name(bool base) {
     B.reset();
     B << hash_table[cur_tok.hash_loc()];
     B.split_at_colon(tok_base, tok_sig);
-    string res = base ? tok_base : tok_sig;
+    std::string res = base ? tok_base : tok_sig;
     if (tracing_macros()) the_log << lg_start << T << cur_tok << lg_arrow << res << lg_end;
     B << res;
     TokenList L = B.str_toks(nlt_cr); // is this needed?
@@ -222,7 +221,7 @@ void Parser::L3_new_conditional(subtypes s) {
 }
 
 // creates the name of the variant. foo:N this gives foo_p:N  or foo:NTF
-void Buffer::l3_fabricate_cond(const string &base, const string &sig, subtypes w) {
+void Buffer::l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w) {
     reset();
     push_back(base);
     if (w == l3_p_code)
@@ -238,7 +237,7 @@ void Buffer::l3_fabricate_cond(const string &base, const string &sig, subtypes w
         push_back("TF");
 }
 
-auto l3_ns::conditional_aux(const string &p) -> subtypes {
+auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
     if (p == "p") return l3_p_code;
     if (p == "TF") return l3_TF_code;
     if (p == "T") return l3_T_code;
@@ -253,13 +252,13 @@ auto l3_ns::conditional_aux(const string &p) -> subtypes {
 
 // read variant and body, loops over variants
 void Parser::L3_new_conditional_aux(TokenList &arg_spec, subtypes s) {
-    string    spec = sE_arg_nopar();
-    TokenList body = read_arg();
-    Splitter  S(spec);
+    std::string spec = sE_arg_nopar();
+    TokenList   body = read_arg();
+    Splitter    S(spec);
     for (;;) {
         if (S.at_end()) return;
-        string   p = S.get_next();
-        subtypes c = l3_ns::conditional_aux(p);
+        std::string p = S.get_next();
+        subtypes    c = l3_ns::conditional_aux(p);
         if (c == l3_bad_code) continue;
         L3_generate_form(c, arg_spec, body, s);
     }
@@ -321,17 +320,17 @@ void Parser::L3_eq_conditional(subtypes s) {
         read_arg();
         return;
     }
-    string tok_base1 = tok_base;
-    string tok_sig1  = tok_sig;
-    bool   bad       = L3_split_next_name();
-    string spec      = sE_arg_nopar();
+    std::string tok_base1 = tok_base;
+    std::string tok_sig1  = tok_sig;
+    bool        bad       = L3_split_next_name();
+    std::string spec      = sE_arg_nopar();
     if (bad) return;
     Buffer & B = local_buffer;
     Splitter S(spec);
     for (;;) {
         if (S.at_end()) return;
-        string   p = S.get_next();
-        subtypes c = l3_ns::conditional_aux(p);
+        std::string p = S.get_next();
+        subtypes    c = l3_ns::conditional_aux(p);
         if (c == l3_bad_code) continue;
         B.l3_fabricate_cond(tok_base, tok_sig, c);
         if (!hash_table.is_defined(B)) {
@@ -411,7 +410,7 @@ void Parser::E_l3_ifx(subtypes c) {
 // There is a variant \str_if_eq_x:nn with with full expansion
 // and two variants v and o (for each argument).
 
-auto Parser::l3_to_string(subtypes c, TokenList &L) -> string {
+auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::string {
     switch (c) {
     case l3expx_code: read_toks_edef(L); break;
     case l3expo_code: l3_reexpand_o(L); break;
@@ -449,10 +448,10 @@ void Parser::E_l3str_ifeq(subtypes c) {
         c    = subtypes(c - 4);
     }
 
-    TokenList a1 = read_arg();
-    TokenList a2 = read_arg();
-    string    s1 = l3_to_string(exp1, a1);
-    string    s2 = l3_to_string(exp2, a2);
+    TokenList   a1 = read_arg();
+    TokenList   a2 = read_arg();
+    std::string s1 = l3_to_string(exp1, a1);
+    std::string s2 = l3_to_string(exp2, a2);
     l3_after_cond(caller, s1 == s2, c);
 }
 
@@ -473,8 +472,8 @@ void Parser::E_l3str_case(subtypes c) {
     TokenList clauses = read_arg();
     if (c == l3_TF_code || c == l3_T_code) true_res = read_arg();
     if (c == l3_TF_code || c == l3_F_code) false_res = read_arg();
-    bool   match = false;
-    string s1    = l3_to_string(exp, as1);
+    bool        match = false;
+    std::string s1    = l3_to_string(exp, as1);
     if (exp == l3expo_code) exp = l3expn_code;
     if (tracing_macros()) the_log << lg_start << caller << " compares " << s1 << lg_end;
     for (;;) {
@@ -482,8 +481,8 @@ void Parser::E_l3str_case(subtypes c) {
         if (clauses.empty()) break;
         TokenList as2 = token_ns::get_a_param(clauses, false);
         // should we check for bad termination?
-        TokenList code = token_ns::get_a_param(clauses, false);
-        string    s2   = l3_to_string(exp, as2);
+        TokenList   code = token_ns::get_a_param(clauses, false);
+        std::string s2   = l3_to_string(exp, as2);
         if (s1 == s2) {
             match = true;
             res   = code;
@@ -502,8 +501,8 @@ void Parser::L3_check_cmd(int c) {
     Token T = cur_tok;
     Token what;
     if (c == 1 || c == 3) {
-        string name = sE_arg_nopar();
-        what        = hash_table.locate(name);
+        std::string name = sE_arg_nopar();
+        what             = hash_table.locate(name);
     } else {
         if (l3_get_name(T)) return;
         what = cur_tok;
@@ -1024,13 +1023,13 @@ void Parser::l3_generate_variant() {
         undefined_mac();
         nok = true;
     }
-    string spec = sE_arg_nopar();
+    std::string spec = sE_arg_nopar();
     if (nok) return; // an error has already been generated
     if (tracing_commands()) the_log << lg_startbrace << "Generating variants for " << orig << " with " << spec << lg_endbrace;
     Splitter S(spec);
     for (;;) {
         if (S.at_end()) return;
-        string p = S.get_next();
+        std::string p = S.get_next();
         l3_generate_variant(p, prot, orig);
     }
 }
@@ -1047,7 +1046,7 @@ void Parser::l3_generate_variant(String orig, String var) {
 }
 
 // This produces a single variant;
-void Parser::l3_generate_variant(const string &var, bool prot, Token orig) {
+void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) {
     int n = var.size();
     if (n == 0) return; // ignore empty sepc
     if (n > int(tok_sig.size())) {

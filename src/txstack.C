@@ -10,7 +10,6 @@
 
 // This file implements the XML stack for Tralics
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <cstring>
@@ -25,7 +24,7 @@ extern bool booted;
 auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
     enames.push_back(elt);
-    //  if(booted && elt) cout << "XX" << last_xid+1 << elt << "\n";
+    //  if(booted && elt)std::cout<< "XX" << last_xid+1 << elt << "\n";
     last_xid++;
     return last_xid;
 }
@@ -49,8 +48,8 @@ void Stack::dump_xml_table() {
     int k = enames.size();
     for (int i = xid_boot + 1; i < k; i++)
         if (enames[i] != nullptr) {
-            cout << i << "::"; //<< enames[i] -> get_name() << "\n";
-            cout << enames[i] << "\n";
+            std::cout << i << "::"; //<< enames[i] -> get_name() << "\n";
+            std::cout << enames[i] << "\n";
         }
 }
 
@@ -62,7 +61,7 @@ auto Stack::fetch_by_id(int n) -> Xml * {
     Xml *x = enames[n];
     if (x == nullptr) return nullptr;
     if (x->get_id().value == n) return x;
-    cout << "This cannot happen: bug in table at position " << n << "\n";
+    std::cout << "This cannot happen: bug in table at position " << n << "\n";
     return nullptr;
 }
 
@@ -71,10 +70,10 @@ auto Stack::find_parent(Xml *x) -> Xml * {
     if (x == nullptr) return nullptr;
     int k = enames.size();
     // debug: print all parents
-    // cout << "Search parent of " << x << "\n";
+    // std::cout<< "Search parent of " << x << "\n";
     // for(int i= 0; i< k; i++) {
     //   if(enames[i] && enames[i]-> is_child (x))
-    //     cout << "fount at " << enames[i] << "\n";
+    //    std::cout<< "fount at " << enames[i] << "\n";
     // }
     for (int i = xid_boot + 1; i < k; i++) {
         if (enames[i] == nullptr) continue;
@@ -315,7 +314,7 @@ auto Stack::temporary() -> Xml * {
 // We assume that document is numbered 1. This simplifies  the mechanism
 // for adding attributes to the document.
 // Called after all math elements are created
-void Stack::init_all(string a) {
+void Stack::init_all(std::string a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
     Xml *V   = new Xml(Istring(std::move(a)), nullptr);
@@ -686,7 +685,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
 auto Xml::tail_is_anchor() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->is_anchor(); }
 
 // Add an anchor if needed.
-auto Stack::add_anchor(const string &s, bool spec) -> Istring {
+auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {
     if (!spec && (top_stack()->tail_is_anchor())) return get_cur_id();
     Istring id = the_main->SH.next_label_id();
     set_cur_id(id);

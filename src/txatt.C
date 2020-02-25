@@ -9,7 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txatt.h"
 #include "txinline.h"
 #include "txparam.h"
@@ -109,7 +108,7 @@ void AttList::delete_att(name_positions a) {
 }
 
 // This kills the whole list
-void AttList::destroy() { val = vector<AttPair>(); }
+void AttList::destroy() { val = std::vector<AttPair>(); }
 
 // Puts in the buffer the value of the attribute M of element idx
 // returns false if there is no such value.
@@ -186,7 +185,7 @@ void Buffer::push_back_alt(const AttPair &X) {
 }
 
 // Returns true if there is a space. Kills at the space. Advance
-auto Buffer::look_at_space(const string &s) -> bool {
+auto Buffer::look_at_space(const std::string &s) -> bool {
     reset();
     push_back(s);
     bool has_space = false;
@@ -209,7 +208,7 @@ auto Buffer::look_at_space(const string &s) -> bool {
 // In the case of "foo" (no space), returns <foo>
 // In the case of space, what follows the spaces is considered as
 // attribute list.
-auto Buffer::xml_and_attrib(const string &s) -> Xml * {
+auto Buffer::xml_and_attrib(const std::string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(Istring(s), nullptr);
     Xml *res = new Xml(Istring(data()), nullptr);

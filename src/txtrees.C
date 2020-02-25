@@ -11,14 +11,13 @@
 // This file contains a lot of stuff dealing with trees
 // It contains also some eTeX extensions.
 
-#include "tralics.h"
 #include "txinline.h"
 #include "txparser.h"
 #include "txtrees.h"
 
 namespace trees_ns {
     void normalise_space(TokenList &L);
-    auto which_index(string) -> int;
+    auto which_index(std::string) -> int;
 } // namespace trees_ns
 
 namespace date_ns {
@@ -44,14 +43,14 @@ AllIndex::AllIndex() {
 
 // Returns the index location associated to the name S
 // If S is not found, the main index is used
-auto AllIndex::find_index(const string &s) -> int {
+auto AllIndex::find_index(const std::string &s) -> int {
     int n = value.size();
     for (int i = 0; i < n; i++)
         if (value[i]->has_name(s)) return i;
     return 1;
 }
 
-void AllIndex::new_index(const string &s, const string &title) {
+void AllIndex::new_index(const std::string &s, const std::string &title) {
     int n = value.size();
     for (int i = 0; i < n; i++)
         if (value[i]->has_name(s)) return;
@@ -62,8 +61,8 @@ void AllIndex::new_index(const string &s, const string &title) {
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
 auto Parser::get_index_value() -> int {
-    string s = sT_optarg_nopar();
-    int    i = the_index.find_index(s);
+    std::string s = sT_optarg_nopar();
+    int         i = the_index.find_index(s);
     return the_index.get_index(i)->get_AL();
 }
 
@@ -106,7 +105,7 @@ auto Parser::index_aux(TokenList &L, int father, int g) -> int {
     static const Token actual_t(other_t_offset, '@');
     static const Token actualb_t(letter_t_offset, '@');
     static const Token encap_t(other_t_offset, '|');
-    string             key, encap;
+    std::string        key, encap;
     bool               have_key = false;
     TokenList          z;
     if (token_ns::split_at(escape_t, actual_t, actualb_t, L, z, false)) {
@@ -124,11 +123,11 @@ auto Parser::index_aux(TokenList &L, int father, int g) -> int {
         token_ns::remove_first_last_space(z);
         key = to_stringE(z);
     }
-    z          = L;
-    string aux = to_stringE(z);
+    z               = L;
+    std::string aux = to_stringE(z);
     // We have now: key@aux|encap
-    vector<Indexer *> &IR    = the_index.get_data(g);
-    int                level = 1;
+    std::vector<Indexer *> &IR    = the_index.get_data(g);
+    int                     level = 1;
     if (father != -1) level = 1 + IR[father]->level;
     int n = IR.size();
     for (int i = 0; i < n; i++)
@@ -154,15 +153,15 @@ void Parser::T_index(subtypes c) {
     flush_buffer();
     if (c == index_code) remove_initial_star();
     if (c == newindex_code) {
-        string s     = sT_arg_nopar();
-        string title = sT_arg_nopar();
+        std::string s     = sT_arg_nopar();
+        std::string title = sT_arg_nopar();
         the_index.new_index(s, title);
         return;
     }
     int g = 0;
     if (c == printindex_code || c == index_code) {
-        string s = sT_optarg_nopar();
-        g        = the_index.find_index(s);
+        std::string s = sT_optarg_nopar();
+        g             = the_index.find_index(s);
     }
     if (c == printindex_code || c == printglossary_code) {
         the_index.mark_print(g);
@@ -193,14 +192,14 @@ void Parser::T_index(subtypes c) {
     int nid = the_index.next_index();
     ;
     local_buf << bf_reset << "lid" << nid;
-    string  W  = local_buf.to_string();
-    Istring id = the_stack.add_anchor(W, false);
+    std::string W  = local_buf.to_string();
+    Istring     id = the_stack.add_anchor(W, false);
     create_label(W, id);
     tralics_ns::add_ref(iid, W, true);
 }
 
 void Parser::finish_index() {
-    vector<string> labels = vector<string>(the_index.get_last_iid(), "");
+    std::vector<std::string> labels = std::vector<std::string>(the_index.get_last_iid(), "");
     tralics_ns::find_index_labels(labels);
     int idx_size = 0;
     int idx_nb   = 0;
@@ -215,7 +214,7 @@ void Parser::finish_index() {
         Xml *res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
         Xid  id  = res->get_id();
         {
-            const string &t = CI->get_title();
+            const std::string &t = CI->get_title();
             if (!t.empty()) id.add_attribute(the_names[cstb_title], Istring(t));
         }
         {
@@ -434,16 +433,16 @@ void Parser::T_etex() { parse_error(cur_tok, "Unimplemented e-TeX extension ", c
 // --------------------------------------------------------------------
 // GB4e
 
-auto mk_ensure(const string &a, const string &b) -> string { return a + "{\\ensuremath{" + b + "}}"; }
+auto mk_ensure(const std::string &a, const std::string &b) -> std::string { return a + "{\\ensuremath{" + b + "}}"; }
 
 // We should perhaps do something with this list ??
 void gb4eboot() {
-    LinePtr L;
-    string  matha1       = "{\\mathrm{#1}}";
-    string  open_bra     = "{[}";
-    string  close_bra    = "{]}";
-    string  simple_index = "\\sb" + matha1 + "\\;";
-    string  double_index = "\\sb{" + matha1 + "\\sb{#2}}";
+    LinePtr     L;
+    std::string matha1       = "{\\mathrm{#1}}";
+    std::string open_bra     = "{[}";
+    std::string close_bra    = "{]}";
+    std::string simple_index = "\\sb" + matha1 + "\\;";
+    std::string double_index = "\\sb{" + matha1 + "\\sb{#2}}";
     L.insert("%% Begin bootstrap commands for gb4e", true);
     L.insert(R"(\def\lb#1{\@ifnextchar [{\@glarph{#1}}{\@bl{#1}}})", true);
     L.insert(mk_ensure("\\def\\@glarph#1[#2]", open_bra + double_index), true);
