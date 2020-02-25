@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txvars.h"
+#include <string>
 
 // Adress of attribute list of an xml object
 // is a wrapper around an int

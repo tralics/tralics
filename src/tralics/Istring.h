@@ -1,5 +1,6 @@
 #pragma once
-#include "../txvars.h"
+#include "../txbuffer.h"
+#include "enums.h"
 #include <string>
 
 class Istring {
