@@ -375,10 +375,8 @@ auto fp::compare(const FpNum &X, const FpNum &Y) -> int {
     if (X.sign && !Y.sign) return 1;
     if (!X.sign && Y.sign) return -1;
     int res = compare_abs(X, Y);
-    if (X.sign)
-        return res;
-    else
-        return -res;
+    if (X.sign) return res;
+    return -res;
 }
 
 // This reads at most p, at most 9 digits from the buffer
@@ -966,33 +964,30 @@ auto FpNum::octand() -> int {
             if (fp::compare_abs(*this, pi_table[7]) > 0) {
                 neg_sub_abs(pi_table[8]);
                 return 7;
-            } else {
-                sub_abs(pi_table[6]);
-                return 6;
             }
+            sub_abs(pi_table[6]);
+            return 6;
         }
         if (fp::compare_abs(*this, pi_table[5]) > 0) {
             neg_sub_abs(pi_table[6]);
             return 5;
-        } else {
-            sub_abs(pi_table[4]);
-            return 4;
         }
+        sub_abs(pi_table[4]);
+        return 4;
     }
     if (fp::compare_abs(*this, pi_table[2]) > 0) {
         if (fp::compare_abs(*this, pi_table[3]) > 0) {
             neg_sub_abs(pi_table[4]);
             return 3;
-        } else {
-            sub_abs(pi_table[2]);
-            return 2;
         }
+        sub_abs(pi_table[2]);
+        return 2;
     }
     if (fp::compare_abs(*this, pi_table[1]) > 0) {
         neg_sub_abs(pi_table[2]);
         return 1;
-    } else
-        return 0;
+    }
+    return 0;
 }
 
 // Computes \sum x^n/n! , with a sign, and only half terms

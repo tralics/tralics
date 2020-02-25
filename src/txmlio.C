@@ -510,13 +510,14 @@ auto XmlIO::parse_sys_pub() -> bool {
         parse_quoted();
         aux << B << "'";
         return true;
-    } else if (cur_char == 'S') {
+    }
+    if (cur_char == 'S') {
         expect("SYSTEM");
         parse_quoted();
         aux << " SYSTEM '" << B << "'";
         return true;
-    } else
-        return false;
+    }
+    return false;
 }
 
 // We scan one of

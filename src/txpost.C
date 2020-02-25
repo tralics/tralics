@@ -433,8 +433,8 @@ auto Xml::last_box() -> Xml * {
     if ((res != nullptr) && !res->is_xmlc()) {
         tree.pop_back();
         return res;
-    } else
-        return nullptr;
+    }
+    return nullptr;
 }
 
 // Remove last item if its an empty <hi>
@@ -1107,8 +1107,8 @@ void all_words_ns::add_a_word(String s, int h) {
         if (L->is_here(s, h)) {
             L->incr_freq();
             return;
-        } else
-            L = L->get_next();
+        }
+        L = L->get_next();
     }
     WL0[H] = new WordList(tralics_ns::make_string(s), h, WL0[H]);
 }

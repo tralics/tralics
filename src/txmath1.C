@@ -216,9 +216,8 @@ auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
             if (seen_d1 == -1) return false;
             seen_big = true;
         } else if (N.is_small()) {
-            if (seen_d2 != -1)
-                return false;
-            else if (seen_d1 != -1)
+            if (seen_d2 != -1) return false;
+            if (seen_d1 != -1)
                 seen_d2 = N.get_pos();
             else
                 seen_d1 = N.get_pos();
@@ -240,9 +239,8 @@ auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
         MathPAux N = *B;
         ++B;
         if (N.is_small()) {
-            if (seen_d2 != -1)
-                return false;
-            else if (seen_d1 != -1)
+            if (seen_d2 != -1) return false;
+            if (seen_d1 != -1)
                 seen_d2 = N.get_pos();
             else
                 seen_d1 = N.get_pos();
@@ -340,8 +338,8 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
     if (aux.find_paren_rec(res)) {
         if (verbose) *(the_log.fp) << "MF: rec " << res << "\n";
         return false;
-    } else
-        res.clear();
+    }
+    res.clear();
     int start = -1;
     int end   = -1;
     while (!aux.empty()) {
@@ -1489,7 +1487,8 @@ auto Math::chars_to_mb3() -> Istring {
             dot = true;
             sz++;
             continue;
-        } else if (C.is_digit()) {
+        }
+        if (C.is_digit()) {
             if (bc != 0) {
                 sz = 0;
                 break;
@@ -1620,7 +1619,8 @@ void Math::special2(bool &ok, Xml *&res) const {
             if (L != E) return; // hack only in case single object after hat
             ok = true;
             break;
-        } else if (L->is_digit())
+        }
+        if (L->is_digit())
             B.push_back(L->get_char());
         else if (L->is_list()) {
             if (!L->get_list().only_digits(B)) return;
@@ -1695,25 +1695,17 @@ auto MathElt::is_e_grave() const -> bool {
 
 // This is the list of valid exponents and the conversions.
 auto Buffer::special_exponent() const -> String {
-    if (strcmp(data(), "th") == 0)
-        return "th";
-    else if (strcmp(data(), "st") == 0)
-        return "st";
-    else if (strcmp(data(), "rd") == 0)
-        return "rd";
-    else if (strcmp(data(), "nd") == 0)
-        return "nd";
-    else if (strcmp(data(), "e") == 0 || strcmp(data(), "ieme") == 0 || strcmp(data(), "eme") == 0 || strcmp(data(), "i\303\250me") == 0 ||
-             strcmp(data(), "\303\250me") == 0)
+    if (strcmp(data(), "th") == 0) return "th";
+    if (strcmp(data(), "st") == 0) return "st";
+    if (strcmp(data(), "rd") == 0) return "rd";
+    if (strcmp(data(), "nd") == 0) return "nd";
+    if (strcmp(data(), "e") == 0 || strcmp(data(), "ieme") == 0 || strcmp(data(), "eme") == 0 || strcmp(data(), "i\303\250me") == 0 ||
+        strcmp(data(), "\303\250me") == 0)
         return "e";
-    else if (strcmp(data(), "ier") == 0 || strcmp(data(), "er") == 0)
-        return "er";
-    else if (strcmp(data(), "iemes") == 0 || strcmp(data(), "i\303\250mes") == 0 || strcmp(data(), "es") == 0)
-        return "es";
-    else if (strcmp(data(), "\303\250re") == 0 || strcmp(data(), "re") == 0)
-        return "re";
-    else
-        return nullptr;
+    if (strcmp(data(), "ier") == 0 || strcmp(data(), "er") == 0) return "er";
+    if (strcmp(data(), "iemes") == 0 || strcmp(data(), "i\303\250mes") == 0 || strcmp(data(), "es") == 0) return "es";
+    if (strcmp(data(), "\303\250re") == 0 || strcmp(data(), "re") == 0) return "re";
+    return nullptr;
 }
 
 // This is the main function.

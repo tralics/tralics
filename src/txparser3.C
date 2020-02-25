@@ -48,10 +48,8 @@ auto to_string(save_type v) -> String {
 
 auto gbl_or_assign(bool gbl, bool re) -> String {
     if (gbl) return "globally changing ";
-    if (re)
-        return "reassigning ";
-    else
-        return "changing ";
+    if (re) return "reassigning ";
+    return "changing ";
 }
 
 auto parser_ns::save_string_name(int n) -> String {
@@ -609,8 +607,8 @@ void Parser::pop_level(boundary_type v) {
             if (must_throw) {
                 cur_level++;
                 throw EndOfData();
-            } else
-                return;
+            }
+            return;
         }
     }
 }

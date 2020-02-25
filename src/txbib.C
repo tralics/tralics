@@ -1187,9 +1187,8 @@ auto Bibtex::wrong_first_char(codepoint c, int what) -> int {
     else
         log_and_tty << "\nit cannot start with `" << c << "'";
     if (c == '%') log_and_tty << "\n(A percent sign is not a comment character in bibtex)";
-    if (what == 1 || what == 2)
-        return 5;
-    else if (what == 0) {
+    if (what == 1 || what == 2) return 5;
+    if (what == 0) {
         if (c == '}') { // this brace might be the end of the entry
             return 6;
         }
@@ -1475,16 +1474,15 @@ auto BibEntry::store_field(field_pos where) -> bool {
         if (all_fields[where].empty()) {
             all_fields[where] = field_buf.special_convert(true);
             return true;
-        } else
-            return false;
-    } else {
-        int k = int(where) - fp_unknown - 1;
-        if (user_fields[k].empty()) {
-            user_fields[k] = field_buf.special_convert(true);
-            return true;
-        } else
-            return false;
+        }
+        return false;
     }
+    int k = int(where) - fp_unknown - 1;
+    if (user_fields[k].empty()) {
+        user_fields[k] = field_buf.special_convert(true);
+        return true;
+    }
+    return false;
 }
 
 // This parses an @something.
@@ -1748,12 +1746,9 @@ void BibEntry::format_author(bool au) {
 }
 
 auto CitationKey::from_to_string() const -> String {
-    if (cite_prefix == from_year)
-        return "year";
-    else if (cite_prefix == from_refer)
-        return "refer";
-    else
-        return "foot";
+    if (cite_prefix == from_year) return "year";
+    if (cite_prefix == from_refer) return "refer";
+    return "foot";
 }
 
 void BibEntry::call_type() {
@@ -2159,7 +2154,8 @@ void Buffer::special_title(string s) {
             i++;
             if (i < n) push_back(s[i]);
             continue;
-        } else if (c == '}') {
+        }
+        if (c == '}') {
             if (level != blevel)
                 push_back(c);
             else

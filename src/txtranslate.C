@@ -253,10 +253,8 @@ auto Parser::get_ctb_opt() -> name_positions {
     if (c == 't') return np_letter_t;
     if (c == 'b') return np_letter_b;
     if (c == 'l') return np_letter_l;
-    if (c == 'r')
-        return np_letter_r;
-    else
-        return cst_invalid;
+    if (c == 'r') return np_letter_r;
+    return cst_invalid;
 }
 
 // Nodes: tblr, or 2 letters
@@ -273,19 +271,15 @@ auto Parser::get_trees_opt() -> name_positions {
         if (c == 'l') return np_letter_l;
         if (c == 'r') return np_letter_r;
         if (c == 't') return np_letter_t;
-        if (c == 'b')
-            return np_letter_b;
-        else
-            return cst_invalid;
+        if (c == 'b') return np_letter_b;
+        return cst_invalid;
     }
     if (t2.cmd_val() != letter_catcode) return cst_invalid;
     uint c2 = t2.val_as_letter();
     if (c != 't' && c != 'b') return cst_invalid;
     if (c2 != 'l' && c2 != 'r') return cst_invalid;
-    if (c == 't')
-        return c2 == 'l' ? np_letters_tl : np_letters_tr;
-    else
-        return c2 == 'l' ? np_letters_bl : np_letters_br;
+    if (c == 't') return c2 == 'l' ? np_letters_tl : np_letters_tr;
+    return c2 == 'l' ? np_letters_bl : np_letters_br;
 }
 
 // In the case where the font has changed and we are in text mode, we call
@@ -1073,8 +1067,8 @@ auto Parser::scan_color(const string &opt, const string &name) -> Istring {
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
         return Istring();
-    } else
-        return translate_ns::find_color(opt, name);
+    }
+    return translate_ns::find_color(opt, name);
 }
 
 // Implements color and variants (code = color_cmd)

@@ -294,12 +294,9 @@ auto config_ns::check_section(const string &s) -> string {
 // Special command. We assume that cur_sec_no_topic
 // is correctlty set.
 auto config_ns::check_spec_section(const string &s) -> string {
-    if (cur_sec_no_topic)
-        return "";
-    else if (s.empty())
-        return "default";
-    else
-        return s;
+    if (cur_sec_no_topic) return "";
+    if (s.empty()) return "default";
+    return s;
 }
 
 // We add a final slash, or double slash, this makes parsing easier;
@@ -431,26 +428,24 @@ auto config_ns::pers_rc(const string &rc) -> string {
         }
         have_default_ur = true;
         return the_default_rc;
-    } else if (rc[0] == '+') {
-        return rc.c_str() + 1;
-    } else {
-        bool   spec = (rc.size() >= 2 && rc[0] == '=');
-        string RC   = spec ? rc.c_str() + 1 : rc;
-        if (!is_good_ur(RC)) {
-            err_ns::local_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
-                              << "Use one of:";
-            vector<ParamDataSlot> &V = config_data.data[0]->data;
-            int                    n = V.size();
-            for (int i = 0; i < n; i++)
-                if (V[i].is_used) V[i].key_to_buffer(err_ns::local_buf);
-            the_parser.signal_error(the_parser.err_tok, "illegal data");
-        }
-        if (spec) {
-            the_default_rc  = RC;
-            have_default_ur = true;
-        }
-        return RC;
     }
+    if (rc[0] == '+') { return rc.c_str() + 1; }
+    bool   spec = (rc.size() >= 2 && rc[0] == '=');
+    string RC   = spec ? rc.c_str() + 1 : rc;
+    if (!is_good_ur(RC)) {
+        err_ns::local_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
+                          << "Use one of:";
+        vector<ParamDataSlot> &V = config_data.data[0]->data;
+        int                    n = V.size();
+        for (int i = 0; i < n; i++)
+            if (V[i].is_used) V[i].key_to_buffer(err_ns::local_buf);
+        the_parser.signal_error(the_parser.err_tok, "illegal data");
+    }
+    if (spec) {
+        the_default_rc  = RC;
+        have_default_ur = true;
+    }
+    return RC;
 }
 
 auto config_ns::is_good_ur(const string &x) -> bool {

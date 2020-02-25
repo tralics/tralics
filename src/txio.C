@@ -191,10 +191,8 @@ auto Buffer::is_good_ascii() const -> bool {
 Converter::Converter() { cur_file_name = "tty"; }
 
 auto io_ns::plural(int n) -> String {
-    if (n > 1)
-        return "s";
-    else
-        return "";
+    if (n > 1) return "s";
+    return "";
 }
 
 void Stats::io_convert_stats() {
@@ -282,16 +280,11 @@ auto io_ns::how_many_bytes(uchar C) -> int {
 // Return 0 if invalid. Return 0 if overflow
 auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
     int n = io_ns::how_many_bytes(A);
-    if (n == 0)
-        return codepoint(0);
-    else if (n == 1)
-        return codepoint(A);
-    else if (n == 2)
-        return codepoint(((A & 31) << 6) + (B & 63));
-    else if (n == 3)
-        return codepoint((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
-    else
-        return codepoint((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
+    if (n == 0) return codepoint(0);
+    if (n == 1) return codepoint(A);
+    if (n == 2) return codepoint(((A & 31) << 6) + (B & 63));
+    if (n == 3) return codepoint((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
+    return codepoint((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
 }
 
 // Returns 0 at end of line or error
@@ -310,16 +303,16 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
     if (n == 2) {
         uint x = next_utf8_byte();
         return codepoint(((c & 31) << 6) + x);
-    } else if (n == 3) {
+    }
+    if (n == 3) {
         uint z = next_utf8_byte();
         uint x = next_utf8_byte();
         return codepoint(x + (z << 6) + ((c & 15) << 12));
-    } else {
-        uint z = next_utf8_byte();
-        uint y = next_utf8_byte();
-        uint x = next_utf8_byte();
-        return codepoint((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
     }
+    uint z = next_utf8_byte();
+    uint y = next_utf8_byte();
+    uint x = next_utf8_byte();
+    return codepoint((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
 }
 
 // Returns 0 at end of line or error
@@ -327,13 +320,12 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
 auto Buffer::next_utf8_char() -> codepoint {
     the_converter.local_error = false;
     codepoint res             = next_utf8_char_aux();
-    if (the_converter.local_error)
-        return codepoint(0);
-    else if (res.is_verybig()) {
+    if (the_converter.local_error) return codepoint(0);
+    if (res.is_verybig()) {
         utf8_ovf(res.value);
         return codepoint(0);
-    } else
-        return res;
+    }
+    return res;
 }
 
 // If the buffer contains a unique character, return it
@@ -863,10 +855,8 @@ auto Buffer::convert_to_log_encoding() const -> String {
     for (;;) {
         codepoint c = I.next_utf8_char();
         if (c == 0) {
-            if (I.at_eol())
-                break;
-            else
-                O << "<null>";
+            if (I.at_eol()) break;
+            O << "<null>";
         } else if (c == '\r')
             O << "^^M";
         else

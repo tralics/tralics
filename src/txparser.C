@@ -156,13 +156,10 @@ void Parser::scan_ignore_group() {
 // Returns true if EOF; otherwise cur_tok holds the next token
 auto Parser::edef_aux(TokenList &L) -> bool {
     for (;;) {
-        if (get_token())
-            return true;
-        else if (!cur_cmd_chr.is_expandable())
-            return false;
-        else if (cur_cmd_chr.is_protected())
-            return false;
-        else if (cur_cmd_chr.get_cmd() != the_cmd)
+        if (get_token()) return true;
+        if (!cur_cmd_chr.is_expandable()) return false;
+        if (cur_cmd_chr.is_protected()) return false;
+        if (cur_cmd_chr.get_cmd() != the_cmd)
             expand();
         else {
             Token     T = cur_tok;
@@ -223,26 +220,25 @@ auto Parser::scan_group1(TokenList &res, int &b, int cl) -> bool {
         if (scan_group0(res, cl)) {
             res.push_back(hash_table.CB_token); // Insert the closing brace
             return true;
-        } else {
-            res.push_back(cur_tok);
-            b++;
-            return false;
         }
-    } else if (aux.is_CB_token()) {
-        extra_close_brace(cl);
-        return true;
-    } else {
-        if (aux == hash_table.par_token && long_state != ls_long) {
-            if (long_state == ls_bad)
-                long_state = ls_normal;
-            else
-                runaway(cl);
-            return true;
-        }
-        b = 2;
-        res.push_back(aux);
+        res.push_back(cur_tok);
+        b++;
         return false;
     }
+    if (aux.is_CB_token()) {
+        extra_close_brace(cl);
+        return true;
+    }
+    if (aux == hash_table.par_token && long_state != ls_long) {
+        if (long_state == ls_bad)
+            long_state = ls_normal;
+        else
+            runaway(cl);
+        return true;
+    }
+    b = 2;
+    res.push_back(aux);
+    return false;
 }
 
 // In the case of \foo {x} and \foo x, this command reads an optional space
@@ -489,11 +485,12 @@ auto Parser::read_token_arg(int cl) -> bool {
             }
             err_one_arg(L);
             return true;
-        } else if (cur_tok.is_CB_token()) {
+        }
+        if (cur_tok.is_CB_token()) {
             parse_error(err_tok, "Extra } ignored", "extra}");
             return true;
-        } else
-            return false;
+        }
+        return false;
     }
 }
 
@@ -706,12 +703,9 @@ void Parser::T_verbatim() {
                 back_input();
                 break;
             }
-            if (cur_tok.is_only_space_token())
-                continue; // ok for space, not newline.
-            else {
-                back_input();
-                break;
-            }
+            if (cur_tok.is_only_space_token()) continue; // ok for space, not newline.
+            back_input();
+            break;
         }
     }
     // Now, we know if we have an optional argument.
@@ -1143,13 +1137,10 @@ void Parser::get_def_nbargs(Macro *X, Token name) {
             L.push_back(cur_tok);
             continue;
         }
-        if (cur_cmd_chr.get_cmd() == open_catcode) break; // start of body
-        if (cur_cmd_chr.get_cmd() == close_catcode)
-            break; // will signal an error later
-        else {
-            code = dt_delim;
-            L.push_back(cur_tok);
-        }
+        if (cur_cmd_chr.get_cmd() == open_catcode) break;  // start of body
+        if (cur_cmd_chr.get_cmd() == close_catcode) break; // will signal an error later
+        code = dt_delim;
+        L.push_back(cur_tok);
     }
     scanner_status = ss_normal;
     X->set_delimiters(nb, L);
@@ -1654,18 +1645,17 @@ auto Parser::fetch_csname(bool exp) -> Token {
     if (exp) {
         fetch_name0();
         return hash_table.locate(fetch_name_res);
-    } else
-        return get_r_token(true);
+    }
+    return get_r_token(true);
 }
 
 // Use a non-long method
 auto Parser::fetch_name_opt() -> String {
     TokenList L;
     bool      res = read_optarg_nopar(L);
-    if (!res || L.empty())
-        return "";
-    else
-        return fetch_name1(L);
+    if (!res || L.empty()) return "";
+
+    return fetch_name1(L);
 }
 
 // Implements \@ifundefined{cmd} {A}{B}
@@ -2764,22 +2754,18 @@ void CondAux::dump(int i) const {
 // for \currentifbranch
 auto Condition::top_branch() const -> int {
     int k = top_limit();
-    if (k == or_code || k == else_code)
-        return 1;
-    else if (k == fi_code)
-        return -1;
-    else
-        return 0;
+    if (k == or_code || k == else_code) return 1;
+    if (k == fi_code) return -1;
+    return 0;
 }
 
 // for \currentiftype
 auto Condition::top_type() const -> int {
     if (D.empty()) return 0;
     int n = D.back().cur_if;
-    if (n < unless_code)
-        return n + 1;
-    else
-        return -(n - unless_code + 1);
+    if (n < unless_code) return n + 1;
+
+    return -(n - unless_code + 1);
 }
 
 // Prints trace for \if in pass_text
@@ -2923,10 +2909,9 @@ void Parser::E_if_test(subtypes test, bool negate) {
     for (;;) {
         pass_text(Tfe);
         if (conditions.is_this_if(sz)) {
-            if (cur_cmd_chr.get_chr() != or_code)
-                break;
-            else
-                extra_fi_or_else();
+            if (cur_cmd_chr.get_chr() != or_code) break;
+
+            extra_fi_or_else();
         } else if (cur_cmd_chr.get_chr() == fi_code)
             conditions.pop();
     }
@@ -2948,10 +2933,8 @@ auto Parser::eval_condition(subtypes test) -> bool {
         subtypes b1, b2;
         get_x_token_or_active_char(a1, b1);
         get_x_token_or_active_char(a2, b2);
-        if (test == if_char_code)
-            return b1 == b2;
-        else
-            return a1 == a2;
+        if (test == if_char_code) return b1 == b2;
+        return a1 == a2;
     }
     case if_odd_code: {
         int k = scan_int(cur_tok);
@@ -3031,8 +3014,8 @@ auto Parser::E_ifx() -> bool {
         Macro &A = mac_table.get_macro(cur_cmd_chr.get_chr());
         Macro &B = mac_table.get_macro(pq.get_chr());
         return A.is_same(B);
-    } else
-        return (cur_cmd_chr.get_chr() == pq.get_chr());
+    }
+    return (cur_cmd_chr.get_chr() == pq.get_chr());
 }
 
 void Parser::E_afterfi() {
@@ -3500,14 +3483,10 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> int {
     }
     p     = cur_cmd_chr.get_chr();
     int m = scan_reg_num();
-    if (p == it_int)
-        return m + count_reg_offset;
-    else if (p == it_dimen)
-        return m;
-    else if (p == it_glue)
-        return m;
-    else
-        return m + muskip_reg_offset;
+    if (p == it_int) return m + count_reg_offset;
+    if (p == it_dimen) return m;
+    if (p == it_glue) return m;
+    return m + muskip_reg_offset;
 }
 
 // This is a more complex function.
@@ -3972,31 +3951,29 @@ void Parser::calc_aux(SthInternal &A) {
                 TokenList y; // empty
                 ratio_evaluate(y, x, A);
                 continue;
-            } else { // case 3 * \real{1.5}
-                calc_mul_aux(A);
-                continue;
-            }
+            } // case 3 * \real{1.5}
+            calc_mul_aux(A);
+            continue;
+        }
+        // Could be anything, says (2+3)*(4+5);
+        // Must be an integer...
+        SthInternal aux;
+        aux.initialise(it_int);
+        back_input();
+        calc_primitive(aux);
+        int v = aux.get_int_val();
+        if (mul) {
+            if (A.is_glue())
+                A.glue_multiply(v);
+            else if (A.is_int())
+                A.get_scaled().mult_integer(v);
+            else
+                A.get_scaled().mult_scaled(v);
         } else {
-            // Could be anything, says (2+3)*(4+5);
-            // Must be an integer...
-            SthInternal aux;
-            aux.initialise(it_int);
-            back_input();
-            calc_primitive(aux);
-            int v = aux.get_int_val();
-            if (mul) {
-                if (A.is_glue())
-                    A.glue_multiply(v);
-                else if (A.is_int())
-                    A.get_scaled().mult_integer(v);
-                else
-                    A.get_scaled().mult_scaled(v);
-            } else {
-                if (A.is_glue())
-                    A.glue_divide(v);
-                else
-                    A.get_scaled().divide(v);
-            }
+            if (A.is_glue())
+                A.glue_divide(v);
+            else
+                A.get_scaled().divide(v);
         }
     }
 }

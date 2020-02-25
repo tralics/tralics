@@ -291,15 +291,13 @@ auto arith_ns::nx_plus_y(int n, int x, int y) -> int {
         n = -n;
     }
     if (n == 0) return y;
-    if (x <= (max_dimension - y) / n && -x <= (max_dimension + y) / n)
-        return n * x + y;
-    else {
-        start_err("2^{30}");
-        err_ns::local_buf << "\nin " << n << "*" << x << "+" << y;
-        end_err();
-        return 0;
-    }
+    if (x <= (max_dimension - y) / n && -x <= (max_dimension + y) / n) return n * x + y;
+    start_err("2^{30}");
+    err_ns::local_buf << "\nin " << n << "*" << x << "+" << y;
+    end_err();
+    return 0;
 }
+
 // Was arith_ns::mult_integers
 // Multiplies the scaled number considered as an int by the integer.
 void ScaledInt::mult_integer(int x) {

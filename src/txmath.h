@@ -395,10 +395,8 @@ public:
     void init_builtin(int i, int j) { built_in_table[i] = built_in_table[j]; }
     void init_builtin(int i, Buffer &B) { built_in_table[i] = new Xml(B); }
     auto get_xml_val(int i) -> Xml * {
-        if (i < m_offset)
-            return built_in_table[i];
-        else
-            return xml_math_table[i - m_offset];
+        if (i < m_offset) return built_in_table[i];
+        return xml_math_table[i - m_offset];
     }
     auto get_list(int k) -> Math & { return math_table[k]; }
     void push_back(int k, CmdChr, subtypes c);

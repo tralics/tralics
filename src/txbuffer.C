@@ -601,18 +601,16 @@ void Buffer::insert_escape_char_raw() {
 // an empty name, without initial escape char.
 auto buffer_ns::null_cs_name() -> String {
     int c = buffer_ns::current_escape_char();
-    if (c == '\\')
-        return "csname\\endcsname";
-    else if (c > 0 && c < int(nb_characters)) {
+    if (c == '\\') return "csname\\endcsname";
+    if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
         B.out_log(codepoint(c), the_main->get_log_encoding());
         B << "endcsname";
         return B.c_str();
-    } else if (c == 0)
-        return "csname^^@endcsname";
-    else
-        return "csnameendcsname";
+    }
+    if (c == 0) return "csname^^@endcsname";
+    return "csnameendcsname";
 }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
@@ -686,15 +684,15 @@ auto Buffer::push_back(Token T) -> bool {
     if (T.active_or_single()) {
         out_log(T.char_val(), enc);
         return the_parser.has_letter_catcode(T.char_val().value);
-    } else if (T.is_in_hash()) {
+    }
+    if (T.is_in_hash()) {
         Tmp.reset();
         Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
         push_back(Tmp.convert_to_log_encoding());
         return true;
-    } else {
-        push_back(buffer_ns::null_cs_name());
-        return true;
     }
+    push_back(buffer_ns::null_cs_name());
+    return true;
 }
 
 // if sw is true, we assume that the list will be re-evaluated in a standard env
@@ -1147,11 +1145,10 @@ auto Buffer::split_at_colon(string &before, string &after) -> bool {
         after  = to_string(ptr + 1);
         before = to_string();
         return true;
-    } else {
-        before = to_string();
-        after  = "";
-        return false;
     }
+    before = to_string();
+    after  = "";
+    return false;
 }
 
 // Sets ptr1 to the first non-space
@@ -1438,9 +1435,8 @@ auto Buffer::get_machine_name() -> string {
 // Adds a slash at the end unless there is already one.
 //
 void Buffer::optslash() {
-    if (wptr == 0)
-        return;
-    else if (wptr == 1 && at(0) == '/')
+    if (wptr == 0) return;
+    if (wptr == 1 && at(0) == '/')
         reset();
     else if (at(wptr - 1) == '/')
         return;

@@ -498,16 +498,15 @@ auto Parser::cs_from_input() -> Token {
             break;
         }
         return hash_table.locate(mac_buffer);
-    } else if (C == space_catcode)
-        return Token(c);
-    else if (C == hat_catcode) {
+    }
+    if (C == space_catcode) return Token(c);
+    if (C == hat_catcode) {
         if (scan_double_hat(c)) return cs_from_input();
         state = state_M;
         return Token(c);
-    } else {
-        state = state_M;
-        return Token(c);
     }
+    state = state_M;
+    return Token(c);
 }
 
 // This constructs a new token by reading characters from the buffer.
@@ -557,13 +556,14 @@ auto Parser::next_from_line0() -> bool {
         if (state == state_N) {
             see_cs_token(hash_table.par_token);
             return false;
-        } else if (state == state_M) {
+        }
+        if (state == state_M) {
             // this is different from TeX
             cur_cmd_chr = CmdChr(space_catcode, subtypes('\n'));
             cur_tok     = hash_table.newline_token;
             return false;
-        } else
-            return true; // stateS
+        }
+        return true; // stateS
     case hat_catcode:
         if (scan_double_hat(c)) return true; // cur char has changed
         state = state_M;
@@ -910,10 +910,9 @@ auto Parser::get_a_new_line() -> bool {
         if (cur_input_stack.empty()) {
             if (tracing_io()) the_log << lg_start_io << "Input stack empty at end of file\n";
             return retval;
-        } else {
-            pop_input_stack(true);
-            return false;
         }
+        pop_input_stack(true);
+        return false;
     }
     store_new_line(n, tracing_io());
     insert_endline_char();
@@ -965,8 +964,8 @@ auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
                 if (b == 0) {
                     parse_error(err_tok, "too many closing braces in \\read");
                     continue;
-                } else
-                    b--;
+                }
+                b--;
             }
             L.push_back(cur_tok);
             if (cur_tok.is_OB_token()) b++;
@@ -1113,13 +1112,12 @@ auto Parser::scan_int_internal() -> int {
         missing_number();
         return 0;
     }
-    if (cur_tok.is_backquote())
-        return scan_alpha();
-    else if (cur_cmd_chr.is_ok_for_the()) {
+    if (cur_tok.is_backquote()) return scan_alpha();
+    if (cur_cmd_chr.is_ok_for_the()) {
         scan_something_internal(it_int, false);
         return cur_val.get_int_val();
-    } else
-        return scan_int_digs();
+    }
+    return scan_int_digs();
 }
 
 // Read an alpha token.
@@ -1133,10 +1131,9 @@ auto Parser::scan_alpha() -> int {
         int t = cur_tok.chr_val();
         read_one_space();
         return t;
-    } else {
-        improper_alpha();
-        return 0;
     }
+    improper_alpha();
+    return 0;
 }
 
 // This reads the digits for scan_int, with an overflow check.
@@ -2235,14 +2232,10 @@ void Parser::scan_expr(subtypes m) {
 // a closing paren.
 auto Parser::scan_expr_next(Token T, bool stack_empty) -> scan_expr_t {
     remove_initial_space();
-    if (cur_tok.is_plus_token())
-        return se_add;
-    else if (cur_tok.is_minus_token())
-        return se_sub;
-    else if (cur_tok.is_star_token())
-        return se_mult;
-    else if (cur_tok.is_slash_token())
-        return se_div;
+    if (cur_tok.is_plus_token()) return se_add;
+    if (cur_tok.is_minus_token()) return se_sub;
+    if (cur_tok.is_star_token()) return se_mult;
+    if (cur_tok.is_slash_token()) return se_div;
     if (stack_empty) {
         // read a \relax, push back otherwise
         if (!cur_cmd_chr.is_relax()) back_input();
@@ -2364,19 +2357,16 @@ auto Parser::scan_expr(Token T, internal_type et) -> bool {
 // OK for \font, or \scriptfont, or \nullfont or \tenrm
 auto Parser::scan_font_ident() -> int {
     remove_initial_space();
-    if (cur_cmd_chr.get_cmd() == def_font_cmd)
-        return eqtb_int_table[cur_font_loc].get_val();
-    else if (cur_cmd_chr.get_cmd() == set_font_cmd)
-        return cur_cmd_chr.get_chr();
-    else if (cur_cmd_chr.get_cmd() == def_family_cmd) {
+    if (cur_cmd_chr.get_cmd() == def_font_cmd) return eqtb_int_table[cur_font_loc].get_val();
+    if (cur_cmd_chr.get_cmd() == set_font_cmd) return cur_cmd_chr.get_chr();
+    if (cur_cmd_chr.get_cmd() == def_family_cmd) {
         int a = cur_cmd_chr.get_chr();
         int b = scan_int(cur_tok, 15, "family number");
         return eqtb_int_table[a + b].get_val();
-    } else {
-        if (cur_tok.is_valid()) back_input();
-        parse_error(err_tok, "Missing font identifier");
-        return -1;
     }
+    if (cur_tok.is_valid()) back_input();
+    parse_error(err_tok, "Missing font identifier");
+    return -1;
 }
 
 // OK for \mml@font@fraktur, or a font like that or an integer.
@@ -2474,12 +2464,10 @@ void Parser::scan_prime() {
             TokenList aux = read_arg();
             L.splice(L.end(), aux);
             break;
-        } else if (cur_cmd_chr.is_single_quote())
-            continue;
-        else {
-            back_input();
-            break;
         }
+        if (cur_cmd_chr.is_single_quote()) continue;
+        back_input();
+        break;
     }
     brace_me(L);
     back_input(L);

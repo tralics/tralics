@@ -232,11 +232,10 @@ auto Hashtab::find_aux(int p, String name) -> int {
         int q   = find_empty(name);
         Next[p] = q;
         return q;
-    } else {
-        hash_usage++;
-        Text[p] = name;
-        return p;
     }
+    hash_usage++;
+    Text[p] = name;
+    return p;
 }
 
 // Defines the command named a, but hash_find will not find it.

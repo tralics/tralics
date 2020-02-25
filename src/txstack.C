@@ -125,10 +125,8 @@ void Stack::hack_for_hanl() {
 // Returns element below topstack.
 auto Stack::get_father() -> Xml * {
     int ptr = Table.size() - 1;
-    if (ptr > 0)
-        return Table[ptr - 1].obj;
-    else
-        return nullptr;
+    if (ptr > 0) return Table[ptr - 1].obj;
+    return nullptr;
 }
 
 // Creates an empty element named x, and adds it to the stack.
@@ -229,10 +227,8 @@ auto Stack::first_frame() const -> Istring {
 auto Stack::get_cur_par() -> Xml * {
     const StackSlot &X     = first_non_empty();
     Istring          pname = the_names[cst_p];
-    if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname))
-        return X.obj;
-    else
-        return nullptr;
+    if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname)) return X.obj;
+    return nullptr;
 }
 
 // In case the current element happens to be a P,
@@ -621,10 +617,8 @@ auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
 }
 
 auto ArrayInfo::get_cell_atts(int k) -> AttList {
-    if (k < 0 || k >= size)
-        return AttList();
-    else
-        return attribs[k];
+    if (k < 0 || k >= size) return AttList();
+    return attribs[k];
 }
 
 // Adds positions attributes to the current cell, given the current

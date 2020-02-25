@@ -546,10 +546,8 @@ auto date_ns::year_length(int y) -> int {
 // Returns number of days in the month
 auto date_ns::month_length(int y, int m) -> int {
     if (m != 2) return month_length_table[m];
-    if (is_leap_year(y))
-        return 29;
-    else
-        return 28;
+    if (is_leap_year(y)) return 29;
+    return 28;
 }
 
 // Return true if valid, signals error otherwise

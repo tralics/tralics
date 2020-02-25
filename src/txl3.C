@@ -239,22 +239,16 @@ void Buffer::l3_fabricate_cond(const string &base, const string &sig, subtypes w
 }
 
 auto l3_ns::conditional_aux(const string &p) -> subtypes {
-    if (p == "p")
-        return l3_p_code;
-    else if (p == "TF")
-        return l3_TF_code;
-    else if (p == "T")
-        return l3_T_code;
-    else if (p == "F")
-        return l3_F_code;
-    else if (p.empty())
-        return l3_bad_code;
-    else {
-        err_ns::local_buf.reset();
-        err_ns::local_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
-        the_parser.signal_error(the_parser.err_tok, "bad spec");
-        return l3_bad_code;
-    }
+    if (p == "p") return l3_p_code;
+    if (p == "TF") return l3_TF_code;
+    if (p == "T") return l3_T_code;
+    if (p == "F") return l3_F_code;
+    if (p.empty()) return l3_bad_code;
+
+    err_ns::local_buf.reset();
+    err_ns::local_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
+    the_parser.signal_error(the_parser.err_tok, "bad spec");
+    return l3_bad_code;
 }
 
 // read variant and body, loops over variants

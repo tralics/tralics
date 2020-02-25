@@ -153,12 +153,9 @@ auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
     }
     if (!tpage_ns::scan_item(in, out, c)) return tpi_err;
     Toi.set_value(out);
-    if (c == '<')
-        return tpi_elt;
-    else if (c == '\\')
-        return tpi_cmd;
-    else
-        return tpi_str;
+    if (c == '<') return tpi_elt;
+    if (c == '\\') return tpi_cmd;
+    return tpi_str;
 }
 
 // This reads up to four items.
@@ -210,11 +207,9 @@ auto TitlePageFullLine::classify(int w, int state) -> tpi_vals {
     } else {
         if (state == 0) return tpi_err;
     }
-    if (w == 1000)
-        return item2.only_dash() ? tpi_E : tpi_err;
-    else if (w == 3000)
-        return tpi_S;
-    else if (w == 4200 || w == 4233) {
+    if (w == 1000) return item2.only_dash() ? tpi_E : tpi_err;
+    if (w == 3000) return tpi_S;
+    if (w == 4200 || w == 4233) {
         if (item2.has_a_char() || item3.has_a_char()) return tpi_err;
         if (state == 1 && w == 4233) return tpi_ACSS;
         if (state == 2 && w == 4200) return tpi_AC;
@@ -443,9 +438,8 @@ void Parser::T_titlepage_finish(int v) {
     the_stack.add_nl();
     ileave_v_mode();
     Titlepage.make_invalid();
-    if (the_main->get_tpa_mode() == 1)
-        return;
-    else if (the_main->get_tpa_mode() == 2)
+    if (the_main->get_tpa_mode() == 1) return;
+    if (the_main->get_tpa_mode() == 2)
         finished = true;
     else if (the_main->get_tpa_mode() == 0) {
         if (main_ns::nb_errs > 0) finished = true;
@@ -496,10 +490,8 @@ void TpiOneItem::reset() {
 auto TitlePageAux::find_UR(String s, int n) const -> int {
     if (type != tpi_rt_urlist) return 0;
     String w = T2.c_str();
-    if (strncmp(w, s, n) == 0)
-        return idx;
-    else
-        return 0;
+    if (strncmp(w, s, n) == 0) return idx;
+    return 0;
 }
 
 // For the case CE, \URsop ?+ <UR myflags>
@@ -611,12 +603,14 @@ void LinePtr::parse_and_extract_clean(String s) {
         if (b == 0 && open == -1) { // cur env has closed
             keep = true;
             continue;
-        } else if (b == 1 && open == 1) { // something new started
+        }
+        if (b == 1 && open == 1) { // something new started
             int v = B.is_begin_something(s);
             if (v == 1) {
                 keep = false;
                 continue;
-            } else if (v == 3) {
+            }
+            if (v == 3) {
                 keep = true;
                 continue;
             }

@@ -380,8 +380,8 @@ void NewArray::run(Xid ID, bool main_fct) {
     if (main_fct) {
         ac_maybe_finish();
         return;
-    } else
-        ac_maybe_finish_multi(seen);
+    }
+    ac_maybe_finish_multi(seen);
     // Case of \multicolumn,
     id.add_attribute(attribs, true);
     attribs.reset();

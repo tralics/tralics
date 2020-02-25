@@ -556,16 +556,11 @@ auto math_ns::next_frac_style(math_style x) -> math_style {
 
 // Takes the code of a command like \textstyle, returns ms_T
 auto math_ns::style_level(subtypes tt) -> math_style {
-    if (tt == displaystyle_code)
-        return ms_D;
-    else if (tt == textstyle_code)
-        return ms_T;
-    else if (tt == scriptstyle_code)
-        return ms_S;
-    else if (tt == scriptscriptstyle_code)
-        return ms_SS;
-    else
-        return ms_T;
+    if (tt == displaystyle_code) return ms_D;
+    if (tt == textstyle_code) return ms_T;
+    if (tt == scriptstyle_code) return ms_S;
+    if (tt == scriptscriptstyle_code) return ms_SS;
+    return ms_T;
 }
 
 // ------------------------------------------------------------------
@@ -700,22 +695,21 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
             add_to_trace(cur_tok);
             u.set_display_type();
             return false;
-        } else {
-            if (cur_tok != hash_table.relax_token) back_input();
-            u.set_nondisplay_type();
-            return true;
         }
-    } else { // case of \begin{...}
-        u.set_type(math_env_cd);
-        if ((math_env_props(type) & 1) == 0) {
-            math_buffer << bf_reset;
-            math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
-            parse_error(math_buffer.c_str());
-        }
-        if ((math_env_props(type) & 16) != 0) ignore_optarg();
-        if ((math_env_props(type) & 32) != 0) read_arg();
-        return type == math_code;
+        if (cur_tok != hash_table.relax_token) back_input();
+        u.set_nondisplay_type();
+        return true;
     }
+    // case of \begin{...}
+    u.set_type(math_env_cd);
+    if ((math_env_props(type) & 1) == 0) {
+        math_buffer << bf_reset;
+        math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
+        parse_error(math_buffer.c_str());
+    }
+    if ((math_env_props(type) & 16) != 0) ignore_optarg();
+    if ((math_env_props(type) & 32) != 0) read_arg();
+    return type == math_code;
 }
 
 // Defines how many equation numbers are to be created
@@ -1077,10 +1071,9 @@ void Parser::scan_math(int res, math_list_type type) {
             if (type == math_LR_cd) {
                 math_data.get_list(res).push_back(CmdChr(right_cmd, subtypes(k)));
                 return;
-            } else {
-                parse_error("Unexpected \\right");
-                continue;
             }
+            parse_error("Unexpected \\right");
+            continue;
         }
         case special_math_cmd: interpret_math_cmd(res, c); continue;
         case multicolumn_cmd: interpret_math_cmd(res, multicolumn_code); continue;
@@ -1108,10 +1101,9 @@ void Parser::scan_math(int res, math_list_type type) {
         case alignment_catcode: // case & and \\ in a table
         case backslash_cmd:
             if (stack_math_in_cell()) {
-                if (scan_math_endcell(t))
-                    return;
-                else
-                    continue;
+                if (scan_math_endcell(t)) return;
+
+                continue;
             }
             scan_math_endcell_ok(res);
             continue;
@@ -2093,10 +2085,8 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
                 B.push_back(C->get_char());
             else if (C->get_cmd() == mathfont_cmd) {
                 ++C;
-                if (C == E)
-                    break;
-                else
-                    return nullptr;
+                if (C == E) break;
+                return nullptr;
             } else
                 return nullptr;
             ++C;
@@ -2245,10 +2235,8 @@ auto MathElt::cv_char() -> MathElt {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (::is_letter(c)) {
         int w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
-        if ((w & (1 << F)) != 0)
-            return MathElt(math_ns::mk_mi(c, F), mt);
-        else
-            return MathElt(math_ns::make_math_char(c, F), mt);
+        if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(c, F), mt);
+        return MathElt(math_ns::make_math_char(c, F), mt);
     } else {
         a  = c + math_c_loc;
         mt = math_data.get_math_char_type(c);
@@ -2849,12 +2837,10 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     if (res1.length_one()) {
         Xml *W = res1.front().get_xml_val();
         if (need_row == 2) W = new Xml(cst_mrow, W);
-        if (!seen_style)
-            return XmlAndType(W, res_type);
-        else {
-            Xml *res2 = math_data.add_style(cms, W);
-            return XmlAndType(res2, res_type);
-        }
+        if (!seen_style) return XmlAndType(W, res_type);
+
+        Xml *res2 = math_data.add_style(cms, W);
+        return XmlAndType(res2, res_type);
     }
     Xml *tmp = new Xml(cst_temporary, nullptr);
     res1.concat(tmp);
@@ -2901,9 +2887,8 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
         subtypes fn  = front().get_font();
         MathElt  old = front();
         pop_front();
-        if (cmd == space_catcode || (cmd == other_catcode && chr == '~'))
-            return 3;
-        else if (cmd == cst1_cmd && math_space_code(chr)) {
+        if (cmd == space_catcode || (cmd == other_catcode && chr == '~')) return 3;
+        if (cmd == cst1_cmd && math_space_code(chr)) {
             switch (chr) {
             case quad_code: return 5;
             case qquad_code: return 6;
@@ -2922,10 +2907,8 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
         else if (is_m_font(cmd))
             continue;
         else if (cmd == ref_cmd) {
-            if (front().get_cmd() == math_list_cmd && front().get_list().type == math_open_cd)
-                return 4;
-            else
-                return 2; // Should signal an error
+            if (front().get_cmd() == math_list_cmd && front().get_list().type == math_open_cd) return 4;
+            return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
             B.push_back_real_utf8(codepoint(chr));
             continue;
@@ -3296,8 +3279,8 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
         Xml *res = new Xml(cst_mrow, nullptr);
         res->add_tmp(res1);
         return res;
-    } else
-        return math_data.make_mfenced(open, close, res1);
+    }
+    return math_data.make_mfenced(open, close, res1);
 }
 
 // This piece of code tries to add some <mfenced> commands

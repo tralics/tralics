@@ -1268,10 +1268,9 @@ auto Parser::XKV_parse_filename() -> TokenList {
     if (cur_tok == Token(other_t_offset, '<')) {
         get_token();
         return read_until_nopar(Token(other_t_offset, '>'));
-    } else {
-        LatexPackage *C = the_class_data.cur_pack();
-        local_buf << bf_reset << C->real_name();
-        local_buf << (C->is_class() ? ".cls" : ".sty");
-        return local_buf.str_toks11(false);
     }
+    LatexPackage *C = the_class_data.cur_pack();
+    local_buf << bf_reset << C->real_name();
+    local_buf << (C->is_class() ? ".cls" : ".sty");
+    return local_buf.str_toks11(false);
 }

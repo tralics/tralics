@@ -227,10 +227,8 @@ auto Slined::newpos(int x, int n) -> int {
             y++;
         i++;
     }
-    if (y >= m_left && y < m_right)
-        return y;
-    else
-        return -1 - y;
+    if (y >= m_left && y < m_right) return y;
+    return -1 - y;
 }
 
 // Beeps
@@ -467,9 +465,8 @@ void Slined::rl_move(int y, int x) {
 
 // Move from a visible point to another visible point
 void Slined::I_move(int pos, int x) {
-    if (x == pos)
-        return;
-    else if (x > pos)
+    if (x == pos) return;
+    if (x > pos)
         while (x > pos) {
             std::cerr.put(m_buffer[pos]); // advance -> output current char
             pos++;

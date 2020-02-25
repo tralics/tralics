@@ -801,11 +801,10 @@ void Parser::T_scan_glue(subtypes c) {
         scan_glue(it_mu, T);
         // ignore value...
         return;
-    } else {
-        scan_glue(it_glue, T);
-        // not perfect...
-        append_glue(T, ScaledInt(cur_val.get_glue_width()), c == vskip_code);
     }
+    scan_glue(it_glue, T);
+    // not perfect...
+    append_glue(T, ScaledInt(cur_val.get_glue_width()), c == vskip_code);
 }
 
 // Translates \bauthors{...} or \beditors{...}

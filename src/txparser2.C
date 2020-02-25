@@ -105,23 +105,28 @@ void Parser::T_fancy() {
             T_fancy("elh", L1);
             T_fancy("olh", L2);
             return;
-        } else if (c == fancy_chead_code) {
+        }
+        if (c == fancy_chead_code) {
             T_fancy("ech", L1);
             T_fancy("och", L2);
             return;
-        } else if (c == fancy_rhead_code) {
+        }
+        if (c == fancy_rhead_code) {
             T_fancy("erh", L1);
             T_fancy("orh", L2);
             return;
-        } else if (c == fancy_lfoot_code) {
+        }
+        if (c == fancy_lfoot_code) {
             T_fancy("elf", L1);
             T_fancy("olf", L2);
             return;
-        } else if (c == fancy_cfoot_code) {
+        }
+        if (c == fancy_cfoot_code) {
             T_fancy("ecf", L1);
             T_fancy("ocf", L2);
             return;
-        } else if (c == fancy_rfoot_code) {
+        }
+        if (c == fancy_rfoot_code) {
             T_fancy("erf", L1);
             T_fancy("orf", L2);
             return;

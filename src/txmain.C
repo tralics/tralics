@@ -570,13 +570,11 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
         }
         p += 2;
         return argv[p];
-    } else {
-        ++p;
-        String a = argv[p];
-        if ((*a != 0) && *a == ' ') ++a;
-        return a;
     }
-    return nullptr;
+    ++p;
+    String a = argv[p];
+    if ((*a != 0) && *a == ' ') ++a;
+    return a;
 }
 
 void obsolete(const string &s) { cout << "Obsolete option `-" << s << "' ignored\n"; }
@@ -878,10 +876,8 @@ auto MainClass::find_config_file() -> bool {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
         if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B);
-        if (!B.is_at_end(".tcf"))
-            return main_ns::search_in_confdir(user_config_file + ".tcf");
-        else
-            return main_ns::search_in_confdir(user_config_file);
+        if (!B.is_at_end(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
+        return main_ns::search_in_confdir(user_config_file);
     }
     // If interactive, read config only if given as parameter
     if (!non_interactive()) return false;
