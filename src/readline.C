@@ -20,14 +20,14 @@
 // The line editor
 class Slined;
 
-static Slined *  the_editor   = nullptr;
-static Slined *  the_editor_c = nullptr;
-static const int buf_size     = 2048;
-static const int in_size      = 4096;
-static bool      term_set     = false;
-static int       word_beg[in_size];
-static int       word_end[in_size];
-string           cur_prompt = "> ";
+Slined *                 the_editor   = nullptr;
+Slined *                 the_editor_c = nullptr;
+const int                buf_size     = 2048;
+const int                in_size      = 4096;
+bool                     term_set     = false;
+std::array<int, in_size> word_beg{};
+std::array<int, in_size> word_end{};
+string                   cur_prompt{"> "s};
 
 // Conditional code for windows
 
@@ -108,31 +108,39 @@ inline void color_red() {} // dummy function
 inline void color_black() {}
 
 class Slined {
-    char *              m_inbuf;
-    char *              m_buffer;
-    string              m_killbuf;
-    int                 m_inpos;
-    int                 m_inmax;
-    string              m_prompt;
-    std::vector<string> m_history;
-    int                 m_hpos;
-    int                 m_history_size;
-    int                 m_mark;
-    string              m_search;
-    int                 m_left;
-    int                 m_right;
-    int                 m_pos;
-    int                 m_max;
-    int                 m_size;
-    bool                m_hack;
-    bool                cur_line_modified;
-    char                g_buffer[buf_size];
-    bool                done;
+    char *                     m_inbuf{nullptr};
+    char                       m_buffer[buf_size];
+    string                     m_killbuf;
+    int                        m_inpos{0};
+    int                        m_inmax{0};
+    string                     m_prompt{"> "s};
+    std::vector<string>        m_history;
+    int                        m_hpos{0};
+    int                        m_history_size;
+    int                        m_mark{0};
+    string                     m_search;
+    int                        m_left{0};
+    int                        m_right{0};
+    int                        m_pos{0};
+    int                        m_max{0};
+    int                        m_size{0};
+    bool                       m_hack{false};
+    bool                       cur_line_modified{false};
+    bool                       done{false};
+    std::array<char, buf_size> g_buffer{};
 
 public:
+    Slined(int sz, String P) {
+        for (int i = 0; i < buf_size; i++) m_buffer[i] = ' ';
+        if (sz != 0) m_inbuf = new char[sz];
+        if (P != nullptr) {
+            m_history.emplace_back(P);
+            m_history_size = 1; // first line is a comment
+        }
+    }
+
     auto newpos(int x, int n) -> int;
-    Slined(int, String);
-    auto copystring(String string, int s, int inpos, bool) -> int;
+    auto copystring(String string, int s, int inpos, bool sw) -> int;
     void redisplay();
     void redisplay0();
     void redisplay1(int x);
@@ -155,7 +163,7 @@ public:
     void Hlast();
     void Hprevious(int n);
     void Hnext(int n);
-    void search_string(int);
+    void search_string(int n);
     void forword(bool sw, int n);
     void backword(bool sw, int n);
     void replace_string();
@@ -168,23 +176,6 @@ public:
     void initialise(char *buf, const string &prompt, int size);
     void run();
 };
-
-// constructor.
-Slined::Slined(int sz, String P) : m_prompt("> "), m_hpos(0) {
-    m_inpos = 0;
-    m_inmax = 0;
-    m_left = m_right = m_size = m_max = 0;
-    m_search                          = "";
-    m_killbuf                         = "";
-    m_mark                            = 0;
-    m_buffer                          = new char[buf_size];
-    for (int i = 0; i < buf_size; i++) m_buffer[i] = ' ';
-    if (sz != 0) m_inbuf = new char[sz];
-    if (P != nullptr) {
-        m_history.emplace_back(P);
-        m_history_size = 1; // first line is a comment
-    }
-}
 
 // Constructs two copies, one for showing the history.
 // This function is called only once.
@@ -242,7 +233,7 @@ void readline_ns::tybeep() { std::cerr.put(7); }
 auto Slined::copystring(String string, int s, int inpos, bool sw) -> int {
     int           j = 0;
     unsigned char cn;
-    char *        buf = sw ? m_buffer : g_buffer;
+    char *        buf = sw ? m_buffer : g_buffer.data();
     for (int i = 0; i < s; i++) {
         if (i == inpos) m_pos = j;
         cn = string[i];
@@ -556,7 +547,7 @@ void Slined::fast_ins(int n, String s, int l) {
     aux     = size - pos;
     if (aux != 0) shift_string(buffer, aux, pos, pos + j * n); // make room here also
     for (int i = 0; i < n; i++) {
-        strncpy(buffer + pos, g_buffer, j);
+        strncpy(buffer + pos, g_buffer.data(), j);
         pos += j;
         size += j;
     }

@@ -537,7 +537,7 @@ private:
     void missing_flush();
     void missing_open_brace();
     void mklcuc(int c, int lc, int uc);
-    void mklcuc(int c, int);
+    void mklcuc(int c, int uc);
     void mk_hi(String, char);
     void month_day(subtypes);
     void more_bootstrap();

@@ -29,12 +29,12 @@ public:
     void               add_dim(ScaledInt Y);
     [[nodiscard]] auto null() const -> bool { return value == 0; }
     void               neg() { value = -value; }
-    void               divide(int);
-    void               quotient(int);
-    void               scale(int, int, int);
-    auto               scale(int, int, int, int, bool &) -> bool;
-    void               mult_scaled(int);
-    void               mult_integer(int);
+    void               divide(int n);
+    void               quotient(int d);
+    void               scale(int n, int d, int max_answer);
+    auto               scale(int x, int n, int d, int max_answer, bool &negative) -> bool;
+    void               mult_scaled(int x);
+    void               mult_integer(int x);
     void               times_10_18();
     void               times_18_10();
     void               ovf30();
@@ -84,7 +84,7 @@ class RealNumber {
     int  ipart{0};        // fractional part
     int  fpart{0};        // integer part, is <2^16
 public:
-    void               convert_decimal_part(int k, int *table);
+    void               convert_decimal_part(int k, const int *table);
     void               set_ipart(int x) { ipart = x; }
     void               set_fpart(int x) { fpart = x; }
     [[nodiscard]] auto get_ipart() const -> int { return ipart; }
@@ -165,7 +165,7 @@ public:
     void glue_to_mu() {
         if (type >= it_glue) int_val = glue_val.get_width().get_value();
     }
-    void add(const SthInternal &);
+    void add(const SthInternal &r);
     void incr_int(int x) { int_val += x; }
     void incr_dim(ScaledInt x) { int_val += x.get_value(); }
     void incr_glue(Glue x) { glue_val.add(x); }
@@ -175,9 +175,9 @@ public:
     void cv_dim_to_mu();
     void cv_mu_to_glue();
     void cv_glue_to_mu();
-    void get_info(subtypes);
-    void scale(int, int);
-    void quotient(int);
+    void get_info(subtypes m);
+    void scale(int n, int d);
+    void quotient(int f);
     void check_overflow(scan_expr_t t);
     void normalise();
     void expr_mul(int n);

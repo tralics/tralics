@@ -285,7 +285,7 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
 
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax
 // In case x=0, we have xmin=xmax
-void FpNum::set_xmax(Digit *x, int &xmin, int &xmax) {
+void FpNum::set_xmax(const Digit *x, int &xmin, int &xmax) {
     int M = 12;
     while (M > 0) {
         if (x[M - 1] == 0)

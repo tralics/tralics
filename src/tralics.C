@@ -21,8 +21,6 @@
 #include "txparser.h"
 #include <ctime>
 
-static Buffer auxb; // chars to be added to the input file
-
 namespace main_ns {
     FullLogger log_and_tty;             // the logger
     HalfLogger log_or_tty;              // the logger
@@ -1366,15 +1364,15 @@ auto config_ns::assign(Buffer &a, Buffer &b) -> bool {
         return true;
     }
     if (a == "url_font") {
-        Buffer &c = auxb;
-        c << bf_reset << "\\def\\urlfont{" << B << "}";
-        the_main->add_to_from_config(1, c);
+        Buffer aux;
+        aux << "\\def\\urlfont{" << B << "}";
+        the_main->add_to_from_config(1, aux);
         return true;
     }
     if (a == "everyjob") {
-        Buffer &c = auxb;
-        c << bf_reset << "\\everyjob={" << B << "}";
-        everyjob_string = c.to_string();
+        Buffer aux;
+        aux << "\\everyjob={" << B << "}";
+        everyjob_string = aux.to_string();
         return true;
     }
     if (a == "no_footnote_hack") {

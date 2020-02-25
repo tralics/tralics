@@ -127,7 +127,7 @@ public:
     void               figtable(String start, int id);
     void               fill_table(bchar_type *table);
     auto               find_alias(const vector<std::string> &SL, std::string &res) -> bool;
-    auto               find_and(bchar_type *table) -> bool;
+    auto               find_and(const bchar_type *table) -> bool;
     void               find_bibtex_name_token(int);
     auto               find_brace() -> int;
     auto               find_bracket() -> int;

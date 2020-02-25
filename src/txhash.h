@@ -120,7 +120,7 @@ public:
         }
     }
     auto        find_true_false(String s) -> int;
-    static auto counter_val(int) -> int;
+    static auto counter_val(int k) -> int;
     auto        find_counter() -> int;
 };
 

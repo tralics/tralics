@@ -2357,7 +2357,7 @@ void NameSplitter::handle_the_names() {
     }
 }
 
-auto Buffer::find_and(bchar_type *table) -> bool {
+auto Buffer::find_and(const bchar_type *table) -> bool {
     for (;;) {
         char c = head();
         if (c == 0) return true;

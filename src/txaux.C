@@ -367,9 +367,7 @@ void Glue::negate() {
 // Adds y to this, assuming we have dimensions.
 void ScaledInt::add_dim(ScaledInt Y) {
     int x = get_value(), y = Y.get_value(), mx = max_dimension;
-    if (x >= 0 && y <= mx - x)
-        value = x + y;
-    else if (x <= 0 && y >= -mx - x)
+    if ((x >= 0 && y <= mx - x) || (x <= 0 && y >= -mx - x))
         value = x + y;
     else {
         value = max_dimension;
@@ -568,7 +566,7 @@ void RealNumber::from_int(int x) {
 
 // Assume that we have read x=0.142. i.e. k=3 digits  in the table.
 // This computes y=x* 2^{17}, then (y+1)/2.
-void RealNumber::convert_decimal_part(int k, int *table) {
+void RealNumber::convert_decimal_part(int k, const int *table) {
     int f = 0;
     while (k > 0) {
         k--;
@@ -609,7 +607,7 @@ auto SpecialHash::counter_val(int k) -> int {
 auto SpecialHash::find_counter() -> int {
     string s = find("counter");
     if (s.empty()) return -1;
-    if (tralics_ns::only_digits(s)) return counter_val(atoi(s.c_str()));
+    if (tralics_ns::only_digits(s)) return counter_val(std::stoi(s));
     Buffer &B = the_parser.hash_table.my_buffer();
     B << bf_reset << "c@" << s;
     Token t  = the_parser.hash_table.locate(B);
