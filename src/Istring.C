@@ -1,5 +1,6 @@
 #include "tralics/Istring.h"
 #include "txinline.h"
+#include <cstring>
 
 Istring::Istring(name_positions N) : value(the_names[N].value) {}
 

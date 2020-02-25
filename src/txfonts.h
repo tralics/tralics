@@ -20,7 +20,7 @@ class FontInfo {
     int     series{0};         // bf or normal
     int     packed{0};         // packed value of the font
     int     level{level_zero}; // the level, as for any EQTB object
-    int     old;               // previous value
+    int     old{-1};           // previous value
     Istring color;             // current color
     Istring old_color;         // previous color
     bool    stackval{true};    // is the value on the stack ok ?

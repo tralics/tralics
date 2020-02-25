@@ -13,6 +13,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <array>
+
 class Hashtab;
 
 using TokenList      = std::list<Token>;
@@ -103,10 +105,10 @@ public:
 
 // This represents the value of a user-defined command
 class Macro {
-    int       nbargs{0};       // number of arguments
-    def_type  type{dt_normal}; // type of macro
-    TokenList delimiters[10];  // deleimiters bewtween arguments
-    TokenList body;            // the body
+    int                       nbargs{0};       // number of arguments
+    def_type                  type{dt_normal}; // type of macro
+    std::array<TokenList, 10> delimiters;      // delimiters between arguments
+    TokenList                 body;            // the body
 public:
     Macro() = default;
     Macro(TokenList L) : body(std::move(L)) { correct_type(); }

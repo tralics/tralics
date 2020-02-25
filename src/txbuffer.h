@@ -14,6 +14,7 @@
 #include "txid.h"
 #include "txscaled.h"
 #include "txtokenlist.h"
+#include <cstring>
 #include <vector>
 
 using buffer_fn = void(Buffer &);
@@ -182,7 +183,7 @@ public:
     [[nodiscard]] auto is_all_ascii() const -> bool;
     [[nodiscard]] auto is_good_ascii() const -> bool;
     [[nodiscard]] auto is_spaceh(int j) const -> bool { return is_space(at(j)); }
-    [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? 0 : at(wptr - 1); }
+    [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
     [[nodiscard]] auto last_slash() const -> int;
     [[nodiscard]] auto length() const -> int { return wptr; }
     [[nodiscard]] auto size() const -> int { return wptr; }
@@ -228,13 +229,13 @@ public:
     void push_back(ScaledInt v, glue_spec unit);
     void push_back(const SthInternal &);
     void push_back(const Glue &);
-    void push_back(const AttList &);
-    void push_back(const AttPair &);
+    void push_back(const AttList &Y);
+    void push_back(const AttPair &X);
     void push_back(const Macro &);
     void push_back(const Macro &, bool);
     auto push_back(Token T) -> bool;
     void insert_token(Token T, bool);
-    void push_back_alt(const AttPair &);
+    void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &);
     void push_back_braced(String);
     void push_back_def(String, std::string);

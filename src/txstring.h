@@ -47,9 +47,10 @@ public:
     auto               next_label_id() -> Istring;
     auto               next_top_label_id() -> Istring;
     void               rlc_to_string(String s, std::vector<AttList> &);
-    [[nodiscard]] auto st_bool(bool x) const -> name_positions { return x ? np_true : np_false; };
     auto               find_scaled(ScaledInt) -> Istring;
-    auto               skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
+
+    static auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
+    static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };
 
 #include "tralics/Istring.h"

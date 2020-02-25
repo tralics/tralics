@@ -28,11 +28,11 @@ public:
     void               push_back_empty(Istring n);
     void               push_back(name_positions n, Istring v);
     void               push_back(name_positions n, name_positions v);
-    void               push_back(name_positions a, name_positions b, bool);
+    void               push_back(name_positions a, name_positions b, bool force);
     void               push_back(Istring n, Istring v);
     void               push_back(Istring a, Istring b, bool f);
     [[nodiscard]] auto has_value(Istring x) const -> int;
-    void               delete_att(name_positions);
+    void               delete_att(name_positions a);
     void               destroy();
     void               print(ostream &);
 };
