@@ -12,6 +12,7 @@
 
 #include "tralics.h"
 #include "txhash.h"
+#include "tximage.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <unistd.h>

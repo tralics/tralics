@@ -11,9 +11,9 @@
 
 // a xml object
 class Xml {
-    Xid           id;   // id of the objet
-    Istring       name; // name of the element
-    vector<Xml *> tree; // the aux field
+    Xid                id;   // id of the objet
+    Istring            name; // name of the element
+    std::vector<Xml *> tree; // the aux field
 public:
     Xml(Istring n) : id(0), name(n) {}
     Xml(const Buffer &n) : id(0), name(Istring(n.c_str())) {}
@@ -27,7 +27,7 @@ public:
     void               add_att(Istring a, Istring b) { id.add_attribute(a, b); }
     void               add_att(name_positions a, name_positions b) { id.add_attribute(a, b); }
     void               add_first(Xml *x);
-    void               add_ref(string s);
+    void               add_ref(std::string s);
     void               add_tmp(Xml *x);
     void               add_last_nl(Xml *x);
     void               add_last_string(const Buffer &B);
@@ -39,7 +39,7 @@ public:
     void               compo_special();
     auto               contains_env(Istring name) -> bool;
     void               convert_to_string(Buffer &B);
-    auto               convert_to_string() -> string;
+    auto               convert_to_string() -> std::string;
     auto               delete_one_env0(Istring name) -> Xid;
     auto               deep_copy() -> Xml *;
     [[nodiscard]] auto empty() const -> bool;
@@ -111,7 +111,7 @@ public:
     auto               try_cline_again(bool) -> bool;
     void               unbox(Xml *);
     auto               value_at(int) -> Xml *;
-    void               word_stats(string);
+    void               word_stats(std::string);
     void               word_stats_i();
     auto               spec_copy() -> Xml *;
     void               replace_first(Xml *x) {
@@ -131,4 +131,4 @@ public:
     [[nodiscard]] auto get_type() const -> math_types { return type; }
 };
 
-auto read_xml(const string &) -> Xml *;
+auto read_xml(const std::string &) -> Xml *;

@@ -8,6 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <array>
 #include <cctype>
 #include <csignal>
 #include <cstdlib>

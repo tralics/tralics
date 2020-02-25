@@ -15,6 +15,7 @@
 #include <utility>
 
 #include "txtokenlist.h"
+#include "txvars.h"
 
 // this is a wrapper around an int
 class ScaledInt {

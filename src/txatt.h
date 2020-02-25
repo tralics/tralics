@@ -20,10 +20,10 @@ class AttList {
     // vector of attribute, like colspan=4, width=3.4cm
     // name (first) and val (second) are pointers into the SH table
 public:
-    vector<AttPair> val; // the value
+    std::vector<AttPair> val; // the value
 
     auto               get_val(int i) -> Istring { return val[i].value; }
-    void               reset() { val = vector<AttPair>(); }
+    void               reset() { val = std::vector<AttPair>(); }
     auto               empty() -> bool { return val.empty(); }
     void               push_back_empty(Istring n);
     void               push_back(name_positions n, Istring v);
@@ -34,7 +34,7 @@ public:
     [[nodiscard]] auto has_value(Istring x) const -> int;
     void               delete_att(name_positions a);
     void               destroy();
-    void               print(ostream &);
+    void               print(std::ostream &);
 };
 
 // This is a table of AttList. We should use a vector instead

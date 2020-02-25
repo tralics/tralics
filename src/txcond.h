@@ -9,6 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <vector>
+
 struct CondAux {
     int if_limit; // specifies the largest code of a fi_or_else command
     int cur_if;   // is the name of the current type of conditional
@@ -20,8 +22,8 @@ struct CondAux {
 
 // This is used to implement \if, \else, \fi
 class Condition {
-    int             if_serial;
-    vector<CondAux> D;
+    int                  if_serial;
+    std::vector<CondAux> D;
 
 public:
     Condition() { if_serial = 0; }

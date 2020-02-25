@@ -1,5 +1,3 @@
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007,2008
@@ -11,16 +9,19 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <string>
+#include <utility>
+
 // data structure for file arguments of \includegraphics
 
 class Image {
 public:
-    string name;     // name
-    int    occ{0};   // number of occurences
-    int    flags{0}; // existence flags
+    std::string name;     // name
+    int         occ{0};   // number of occurences
+    int         flags{0}; // existence flags
 public:
     Image() = default;
-    Image(string N, int oc_val) : name(std::move(N)), occ(oc_val) {}
+    Image(std::string N, int oc_val) : name(std::move(N)), occ(oc_val) {}
     auto file_exists(String) -> bool;
     void check_existence();
     void check();

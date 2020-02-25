@@ -12,6 +12,7 @@
 #include "txscaled.h"
 #include "txstring.h"
 #include "txtokenlist.h"
+#include <string>
 #include <utility>
 
 // Contains:
@@ -242,11 +243,11 @@ public:
 
 // data structure for restoring glue
 class SaveAuxString : public SaveAux {
-    int    level;
-    int    pos; // the position in glue_table
-    string val; // the value to be restored
+    int         level;
+    int         pos; // the position in glue_table
+    std::string val; // the value to be restored
 public:
-    SaveAuxString(int l, int p, string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
+    SaveAuxString(int l, int p, std::string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxString() override = default;
 };
@@ -254,19 +255,19 @@ public:
 // data structure for a \begin{something}
 // had an unused field: int val;
 class SaveAuxEnv : public SaveAux {
-    string oldname;
-    string newname;
-    int    line;
-    Token  T;
-    CmdChr cc;
+    std::string oldname;
+    std::string newname;
+    int         line;
+    Token       T;
+    CmdChr      cc;
 
 public:
     void               set_line(int x) { line = x; }
     [[nodiscard]] auto get_val() const -> CmdChr { return cc; }
     [[nodiscard]] auto get_token() const -> Token { return T; }
-    auto               get_name() -> string { return newname; }
+    auto               get_name() -> std::string { return newname; }
     void               unsave(bool trace, Parser &P) override;
-    SaveAuxEnv(string a, string aa, int ll, Token b, CmdChr c)
+    SaveAuxEnv(std::string a, std::string aa, int ll, Token b, CmdChr c)
         : SaveAux(st_env), oldname(std::move(a)), newname(std::move(aa)), line(ll), T(b), cc(c) {}
     ~SaveAuxEnv() override = default;
 };
@@ -313,15 +314,15 @@ public:
 };
 
 class EqtbString {
-    string val;              // value of the object
-    int    level{level_one}; // level at which this is defined
+    std::string val;              // value of the object
+    int         level{level_one}; // level at which this is defined
 public:
     EqtbString() : val("") {}
-    [[nodiscard]] auto get_val() const -> string { return val; }
-    void               set_val(string x) { val = std::move(x); }
+    [[nodiscard]] auto get_val() const -> std::string { return val; }
+    void               set_val(std::string x) { val = std::move(x); }
     void               set_level(int x) { level = x; }
     [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(string a, int b) {
+    void               val_and_level(std::string a, int b) {
         val   = std::move(a);
         level = b;
     }

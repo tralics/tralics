@@ -9,8 +9,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txtokenlist.h"
+#include "tralics/Token.h"
 #include <array>
+
+class Buffer;
 
 // for the fp package. this implements fixed point arithmetic
 class FpNum {

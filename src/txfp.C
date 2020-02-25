@@ -8,10 +8,11 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics.h"
 #include "txfp.h"
 #include "txinline.h"
 #include "txparser.h"
+
+#include "tralics.h"
 
 namespace {
     Token       fp_tmp_token, fp_test_token;

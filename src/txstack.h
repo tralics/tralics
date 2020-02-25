@@ -18,11 +18,11 @@
 
 // Array management
 class ArrayInfo {
-    Xid               id;      // the id of the table
-    int               cell_no; // current cell number, first on row is zero
-    vector<AttList>   attribs; // positions attributes for each row
-    vector<TokenList> u_table, v_table;
-    int               size;
+    Xid                    id;      // the id of the table
+    int                    cell_no; // current cell number, first on row is zero
+    std::vector<AttList>   attribs; // positions attributes for each row
+    std::vector<TokenList> u_table, v_table;
+    int                    size;
 
 public:
     ArrayInfo(Xid a1) : id(a1), cell_no(0), size(0) {}
@@ -50,22 +50,22 @@ class Stack {
         StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
         friend class Stack;
     };
-    vector<StackSlot> Table;
+    std::vector<StackSlot> Table;
 
 private:
-    int               last_xid; // id of the last
-    int               xid_boot;
-    Istring           cur_lid;    // the id to be pushed on uids[]
-    vector<AttList>   attributes; // the main table of attributes
-    vector<Xml *>     enames;     // the main table of element names
-    Buffer            mybuffer;   // a buffer
-    vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
-    mode              cur_mode;   // the mode to be pushed on modes[]
+    int                    last_xid; // id of the last
+    int                    xid_boot;
+    Istring                cur_lid;    // the id to be pushed on uids[]
+    std::vector<AttList>   attributes; // the main table of attributes
+    std::vector<Xml *>     enames;     // the main table of element names
+    Buffer                 mybuffer;   // a buffer
+    std::vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
+    mode                   cur_mode;   // the mode to be pushed on modes[]
 public:
     Stack();
     Xml *newline_xml;
 
-    auto               add_anchor(const string &, bool) -> Istring;
+    auto               add_anchor(const std::string &, bool) -> Istring;
     void               add_att_to_last(Istring, Istring, bool);
     void               add_att_to_last(Istring, Istring);
     void               add_att_to_last(name_positions, name_positions);
@@ -111,13 +111,13 @@ public:
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     auto               get_xid() -> Xid { return last_xid; }
     void               hack_for_hanl();
-    void               implement_cit(string b1, Istring b2, string a, string c);
+    void               implement_cit(std::string b1, Istring b2, std::string a, std::string c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
     [[nodiscard]] auto in_bib_mode() const -> bool { return get_mode() == mode_bib; }
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
-    void               init_all(string a);
+    void               init_all(std::string a);
     void               ipush(Istring, Xml *);
     auto               is_float() -> bool;
     [[nodiscard]] auto is_frame(name_positions) const -> bool;

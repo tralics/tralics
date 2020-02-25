@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txeqtb.h"
+#include <string>
 #include <utility>
 
 // This is the main hash table. If a token like \foo has hashcode p,
@@ -79,9 +80,9 @@ private:
 public:
     Hashtab();
     auto               my_buffer() -> Buffer & { return B; }
-    auto               locate(String s) -> Token;        // used by primitive, etc
-    auto               locate(const string &s) -> Token; // used by primitive, etc
-    auto               locate(const Buffer &) -> Token;  // used by primitive, etc
+    auto               locate(String s) -> Token;             // used by primitive, etc
+    auto               locate(const std::string &s) -> Token; // used by primitive, etc
+    auto               locate(const Buffer &) -> Token;       // used by primitive, etc
     [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
     [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
     auto               hash_find(const Buffer &b, String name) -> int;
@@ -102,15 +103,15 @@ public:
 
 // This is an association table. We could use a standard C++ class here
 class SpecialHash {
-    int            size;  // number of terms
-    vector<string> key;   // the keys
-    vector<string> value; // the values
+    int                      size;  // number of terms
+    std::vector<std::string> key;   // the keys
+    std::vector<std::string> value; // the values
 public:
-    SpecialHash(const string &s) : size(0) { create(s.c_str()); }
+    SpecialHash(const std::string &s) : size(0) { create(s.c_str()); }
     void               create(String s);
-    auto               find(String) const -> string;
+    auto               find(String) const -> std::string;
     [[nodiscard]] auto get_size() const -> int { return size; }
-    void               get_pair(int k, string &a, string &b) {
+    void               get_pair(int k, std::string &a, std::string &b) {
         if (k < size) {
             a = key[k];
             b = value[k];
@@ -126,12 +127,12 @@ public:
 
 // Data structure for label and references.
 class LabelInfo {
-    bool    used{false};    // is this ID used ?
-    bool    defined{false}; // is this ID defined ?
-    Istring id;             // value of the ID
-    Istring name;           // name of the ID (pointer into SH)
-    int     lineno{0};      // line of definition
-    string  file_name;      // file of definition
+    bool        used{false};    // is this ID used ?
+    bool        defined{false}; // is this ID defined ?
+    Istring     id;             // value of the ID
+    Istring     name;           // name of the ID (pointer into SH)
+    int         lineno{0};      // line of definition
+    std::string file_name;      // file of definition
 public:
     LabelInfo() : file_name("") {}
     LabelInfo(Istring k) : name(k), file_name("") {}
@@ -152,39 +153,39 @@ public:
     [[nodiscard]] auto get_name() const -> Istring { return name; }
     void               set_id(Istring i) { id = i; }
     [[nodiscard]] auto get_lineno() const -> int { return lineno; }
-    [[nodiscard]] auto get_filename() const -> string { return file_name; }
+    [[nodiscard]] auto get_filename() const -> std::string { return file_name; }
     void               set_lineno(int i) { lineno = i; }
-    void               set_filename(string i) { file_name = std::move(i); }
+    void               set_filename(std::string i) { file_name = std::move(i); }
 };
 
 // This class returns foo then bar then gee from `foo,bar,gee'
 class Splitter {
-    string S;   // the string to split
-    int    pos; // current position
-    int    size;
+    std::string S;   // the string to split
+    int         pos; // current position
+    int         size;
 
 public:
-    Splitter(string w) : S(std::move(w)), pos(0) { size = S.size(); }
+    Splitter(std::string w) : S(std::move(w)), pos(0) { size = S.size(); }
     [[nodiscard]] auto at_end() const -> bool { return pos == size; }
     [[nodiscard]] auto count() const -> int;
     auto               get_next_raw() -> String;
     auto               get_next() -> String;
-    void               extract_keyval(string &, string &);
+    void               extract_keyval(std::string &, std::string &);
 };
 
 // This is used in order to extract things from \documentclass[]{}
 // and \usepackage[]{}
 // Not used anymore
 class PackMatcher {
-    string attrib;           // attribute to set
-    string value;            // value of attribute
-    string package;          // package name
-    string options;          // option
-    bool   wild_pack{false}; // wild card in package
-    bool   att_star{false};  // one star in attribute
-    bool   match_document;   // usepackage? or \documentclass ?
-    bool   att_plus{false};  //
-    bool   used{false};      // did we use this rule ?
+    std::string attrib;           // attribute to set
+    std::string value;            // value of attribute
+    std::string package;          // package name
+    std::string options;          // option
+    bool        wild_pack{false}; // wild card in package
+    bool        att_star{false};  // one star in attribute
+    bool        match_document;   // usepackage? or \documentclass ?
+    bool        att_plus{false};  //
+    bool        used{false};      // did we use this rule ?
 public:
     PackMatcher(bool c = false) : match_document(c) {}
     auto ok_for_match(bool c) -> bool { return c == match_document && !used; }
@@ -193,11 +194,11 @@ public:
         wild_pack = X;
         return X ? 1 : 0;
     }
-    void set_package(string X) { package = std::move(X); }
-    void set_options(string X) { options = std::move(X); }
+    void set_package(std::string X) { package = std::move(X); }
+    void set_options(std::string X) { options = std::move(X); }
     void print();
-    auto get_attrib() -> string { return attrib; }
-    auto find_att(string cur_pack, string cur_options) -> bool;
-    auto find_att_val(string cur_pack, string cur_options) -> Istring;
-    void initialise(string A, string B);
+    auto get_attrib() -> std::string { return attrib; }
+    auto find_att(std::string cur_pack, std::string cur_options) -> bool;
+    auto find_att_val(std::string cur_pack, std::string cur_options) -> Istring;
+    void initialise(std::string A, std::string B);
 };

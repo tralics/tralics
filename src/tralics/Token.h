@@ -1,5 +1,6 @@
 #pragma once
 #include "CmdChr.h"
+#include <list>
 
 struct Token {
     uint val{0};
@@ -72,3 +73,5 @@ struct Token {
 };
 
 inline auto make_char_token(unsigned char c, int cat) -> Token { return Token(nb_characters * cat + c); }
+
+using TokenList = std::list<Token>;

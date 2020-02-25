@@ -1,4 +1,5 @@
 #pragma once
+#include "types.h"
 
 // \todo This might better just vanish (and we would use char32_t everywhere in
 // the code) if there is a reasonable path to do that while keeping all the

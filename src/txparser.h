@@ -9,9 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "txcond.h"
 #include "txhash.h"
+#include "tximage.h"
 #include "txio.h"
 #include "txstack.h"
+#include "txstats.h"
 #include <utility>
 
 // This file holds the definition of the Parser class, which is the main
@@ -37,8 +40,8 @@ public:
     std::array<bool, nb_xspace_values>        ok_for_xspace;     // status of char w.r.t. \xspace
     std::array<Token, 22>                     uclc_list;         // upper, lowert case equivalent of \ij etc
     FontInfo                                  cur_font;          // info for the current font
-    vector<Image>                             the_images;        // file data for images
-    vector<Xml *>                             all_heads;
+    std::vector<Image>                        the_images;        // file data for images
+    std::vector<Xml *>                        all_heads;
     Stats                                     my_stats; // for the statistics
     Token                                     err_tok;  // in case of error
 private:
@@ -70,27 +73,27 @@ private:
     int       cur_in_chan;             // if get_token call get_a_new_line
     int       cur_file_pos{0};         // pos of file in the package list (0= none)
 
-    string cur_env_name;  // name of current environment
-    string the_url_val;   // this may be <URSophia>, raweb only
-    string the_projetval; // this could be miaou
-    string year_string;   // the year (effective number)
-    string job_name;      // the name, without extensions
+    std::string cur_env_name;  // name of current environment
+    std::string the_url_val;   // this may be <URSophia>, raweb only
+    std::string the_projetval; // this could be miaou
+    std::string year_string;   // the year (effective number)
+    std::string job_name;      // the name, without extensions
 
-    Buffer            input_buffer;                          // input buffer
-    Buffer            mac_buffer;                            // buffer the current macro
-    Buffer            group_buffer;                          // buffer for arg of \begin{...} \end(...)
-    Buffer            unprocessed_xml;                       // chars to be converted into an XML element
-    Buffer            fetch_name_res;                        // used by fetch_name
-    LinePtr           lines;                                 // the lines to  be read
-    TokenList         TL;                                    // list of tokens to be read again
-    Condition         conditions;                            // condition stack for current \if
-    SthInternal       cur_val;                               // result of scan_something internal
-    TokenList         document_hook;                         // the document-hook
-    TokenList         end_document_hook;                     // the end-document-hook
-    codepoint         verb_saved_char;                       // Char to use for verb by ShortVewrb
-    vector<codepoint> input_line;                            // input line converted to chars
-    uint              input_line_pos{0};                     // position in input_line
-    Xml *             the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    Buffer                 input_buffer;                          // input buffer
+    Buffer                 mac_buffer;                            // buffer the current macro
+    Buffer                 group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer                 unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer                 fetch_name_res;                        // used by fetch_name
+    LinePtr                lines;                                 // the lines to  be read
+    TokenList              TL;                                    // list of tokens to be read again
+    Condition              conditions;                            // condition stack for current \if
+    SthInternal            cur_val;                               // result of scan_something internal
+    TokenList              document_hook;                         // the document-hook
+    TokenList              end_document_hook;                     // the end-document-hook
+    codepoint              verb_saved_char;                       // Char to use for verb by ShortVewrb
+    std::vector<codepoint> input_line;                            // input line converted to chars
+    uint                   input_line_pos{0};                     // position in input_line
+    Xml *                  the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
@@ -105,8 +108,8 @@ private:
         return x;
     }
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
-    [[nodiscard]] auto get_projet_val() const -> string { return the_projetval; }
-    auto               get_ur_val() -> string { return the_url_val; }
+    [[nodiscard]] auto get_projet_val() const -> std::string { return the_projetval; }
+    auto               get_ur_val() -> std::string { return the_url_val; }
     [[nodiscard]] auto is_pos_par(int k) const -> bool { return eqtb_int_table[k].get_val() > 0; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr(); }
@@ -125,7 +128,7 @@ private:
     [[nodiscard]] auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }
     // public inline functions
 public:
-    auto get_cur_env_name() -> string & { return cur_env_name; }
+    auto get_cur_env_name() -> std::string & { return cur_env_name; }
 
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
@@ -136,31 +139,31 @@ public:
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].get_val() == 2; }
     auto               cur_line_to_istring() -> Istring;
     void               decr_cur_level() { cur_level--; }
-    auto               get_cur_filename() -> string { return lines.get_file_name(); }
+    auto               get_cur_filename() -> std::string { return lines.get_file_name(); }
     [[nodiscard]] auto get_cur_file_pos() const -> int { return cur_file_pos; }
     auto               get_cur_level() -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal & { return cur_val; }
-    [[nodiscard]] auto get_job_name() const -> string { return job_name; }
+    [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
     [[nodiscard]] auto get_ra_year() const -> int { return ra_year; }
-    [[nodiscard]] auto get_year_string() const -> string { return year_string; }
+    [[nodiscard]] auto get_year_string() const -> std::string { return year_string; }
     void               init(LinePtr x) { lines = std::move(x); }
-    void               remember_ur(string s) { the_url_val = std::move(s); }
+    void               remember_ur(std::string s) { the_url_val = std::move(s); }
     void               set_cur_line(int x) { cur_line = x; }
     void               set_cur_file_pos(int k) { cur_file_pos = k; }
-    void               set_cur_env_name(string s) {
+    void               set_cur_env_name(std::string s) {
         cur_env_name   = std::move(s);
         begin_env_line = cur_line;
     }
-    void set_cur_env_name(string s, int x) {
+    void set_cur_env_name(std::string s, int x) {
         cur_env_name   = std::move(s);
         begin_env_line = x;
     }
     void               set_ra_year(int x) { ra_year = x; }
-    void               set_job_name(string s) { job_name = std::move(s); }
-    void               set_projet_val(string s) { the_projetval = std::move(s); }
-    void               set_year_string(string s) { year_string = std::move(s); }
+    void               set_job_name(std::string s) { job_name = std::move(s); }
+    void               set_projet_val(std::string s) { the_projetval = std::move(s); }
+    void               set_year_string(std::string s) { year_string = std::move(s); }
     [[nodiscard]] auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
     [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
     [[nodiscard]] auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
@@ -171,7 +174,7 @@ public:
 public:
     Parser();
 
-    void               add_buffer_to_document_hook(Buffer &b, const string &);
+    void               add_buffer_to_document_hook(Buffer &b, const std::string &);
     void               add_language_att();
     void               after_main_text();
     void               boot();
@@ -182,12 +185,12 @@ public:
     auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
     void               list_to_string_c(TokenList &x, String s1, String s2, String msg, Buffer &B);
     auto               list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
-    auto               list_to_string_c(TokenList &x, String msg) -> string;
+    auto               list_to_string_c(TokenList &x, String msg) -> std::string;
     auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
     void               eq_define(int a, CmdChr, bool gbl);
-    void               titlepage_evaluate(String s, const string &);
+    void               titlepage_evaluate(String s, const std::string &);
     void               final_checks();
     void               finish_images();
     void               flush_buffer();
@@ -197,7 +200,7 @@ public:
     [[nodiscard]] auto get_scanner_status() const -> scan_stat { return scanner_status; }
     [[nodiscard]] auto get_long_state() const -> l_state { return long_state; }
     [[nodiscard]] auto has_letter_catcode(int x) const -> bool { return get_catcode(x) == letter_catcode; }
-    void               init_all(string);
+    void               init_all(std::string);
     void               load_latex();
     auto               read_arg() -> TokenList;
     auto               read_arg_nopar() -> TokenList;
@@ -205,13 +208,13 @@ public:
     auto               nE_arg_nopar() -> Istring;
     auto               nT_arg_nopar() -> Istring;
     auto               nT_optarg_nopar() -> Istring;
-    void               parse_error(Token, const string &, TokenList &);
-    void               parse_error(Token, const string &);
+    void               parse_error(Token, const std::string &, TokenList &);
+    void               parse_error(Token, const std::string &);
     void               parse_error(Token, String);
     void               parse_error(String);
-    void               parse_error(Token, const string &, const string &);
-    void               parse_error(Token, const string &, Token, const string &, const string &);
-    void               parse_error(Token, const string &, const string &, const string &);
+    void               parse_error(Token, const std::string &, const std::string &);
+    void               parse_error(Token, const std::string &, Token, const std::string &, const std::string &);
+    void               parse_error(Token, const std::string &, const std::string &, const std::string &);
     void               print_cmd_chr(CmdChr);
     void               remove_junk();
     void               scan_eqno(math_list_type);
@@ -234,12 +237,12 @@ public:
     void               translate0();
     void               translate_all();
     void               word_define(int a, int c, bool gbl);
-    auto               find_a_save_key(const string &mykey) -> bool;
+    auto               find_a_save_key(const std::string &mykey) -> bool;
     auto               expand_mac_inner(const TokenList &W, TokenList *) -> TokenList;
     void               mu_error(String, int);
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &);
-    void               create_label(const string &, Istring S);
+    void               create_label(const std::string &, Istring S);
 
     // private functions, alphabetic order
 private:
@@ -257,7 +260,7 @@ private:
     void accent_err4();
     void add_bib_marker(bool);
     void add_math_label(Xml *);
-    void tokenize_buffer(Buffer &b, TokenList &L, const string &);
+    void tokenize_buffer(Buffer &b, TokenList &L, const std::string &);
     void add_vspace(Token T, ScaledInt, Xid);
     void after_parameter(bool exp, int);
     void after_math(bool);
@@ -296,13 +299,13 @@ private:
     void calc_primitive(SthInternal &A);
     void calc_ratio_eval(int num, int den, SthInternal &res);
     void calc_spec_mul(RealNumber, SthInternal &res);
-    void call_define_key(TokenList &L, Token cmd, const string &arg, const string &fam);
+    void call_define_key(TokenList &L, Token cmd, const std::string &arg, const std::string &fam);
     void T_case_shift(int);
     void check_all_ids();
     auto check_brace(int &) -> bool;
-    auto check_builtin_pack(const string &) -> bool;
-    void check_builtin_class(const string &);
-    auto check_if_redef(const string &s) -> bool;
+    auto check_builtin_pack(const std::string &) -> bool;
+    void check_builtin_class(const std::string &);
+    auto check_if_redef(const std::string &s) -> bool;
     void check_language();
     void check_module_title(TokenList &L);
     void check_outer_validity();
@@ -311,7 +314,7 @@ private:
     void count_days();
     auto M_counter(bool def) -> bool;
     void E_counter(int);
-    auto counter_aux(const string &, String, Token T) -> bool;
+    auto counter_aux(const std::string &, String, Token T) -> bool;
     void counter_boot(String, String);
     auto counter_check(Buffer &, bool) -> bool;
     auto counter_read_opt(String) -> int;
@@ -343,8 +346,8 @@ private:
     void dump_save_stack();
     auto edef_aux(TokenList &L) -> bool;
     void english_quotes(CmdChr);
-    void enter_file_in_table(const string &, bool);
-    auto env_helper(const string &s) -> SaveAuxEnv *;
+    void enter_file_in_table(const std::string &, bool);
+    auto env_helper(const std::string &s) -> SaveAuxEnv *;
     void examine_token(Token);
     void exec_calc();
     void exec_fp_cmd(subtypes);
@@ -359,7 +362,7 @@ private:
     void expand_mac(Macro &X);
     void T_mark(subtypes);
     void expand_no_arg0(Token);
-    void expand_no_arg(const string &);
+    void expand_no_arg(const std::string &);
     void expand_spaces();
     void expand_twoargs();
     void T_verbatim(int, Token, Token, Token);
@@ -367,14 +370,14 @@ private:
     void T_verb(codepoint t);
     void expand_verb1(TokenList &);
     void expand_when_ok(bool);
-    auto to_stringE(TokenList &L) -> string;
+    auto to_stringE(TokenList &L) -> std::string;
     void extended_chars(unsigned int);
     void extra_close_brace(int cl);
     void extra_fi_or_else();
-    void extract_keys(TokenList, vector<string> &);
+    void extract_keys(TokenList, std::vector<std::string> &);
     auto eval_condition(subtypes) -> bool;
 
-    auto false_end_tabular(const string &) -> bool;
+    auto false_end_tabular(const std::string &) -> bool;
     void fast_new_macro(TokenList &L, Token name);
     void fetch_box_id(Xml *);
     auto fetch_csname(bool) -> Token;
@@ -383,7 +386,7 @@ private:
     auto fetch_name1(TokenList &L) -> String;
     void fetch_name2();
     auto fetch_name_opt() -> String;
-    auto find_env_token(const string &name, bool beg) -> Token;
+    auto find_env_token(const std::string &name, bool beg) -> Token;
     void E_get_config(int c);
     void finish_a_cell(Token T, Istring a);
     void finish_counter_cmd(Token, TokenList &L);
@@ -393,7 +396,7 @@ private:
     void finish_index();
     void finish_color();
     void finish_pers();
-    void finish_kvo_bool(Token, const string &, const string &);
+    void finish_kvo_bool(Token, const std::string &, const std::string &);
     void finish_iwhile(TokenList &A, Token D);
     void finish_par_cmd(bool, Istring);
     void finish_trivial_math(Xml *);
@@ -432,7 +435,7 @@ private:
     void fp_special_expand(TokenList &B);
     void french_punctuation(CmdChr);
     auto get_a_new_line() -> bool;
-    auto get_attval() -> string;
+    auto get_attval() -> std::string;
     auto get_ctb_opt() -> name_positions;
     auto get_trees_opt() -> name_positions;
     auto get_c_val(Token) -> Istring;
@@ -443,7 +446,7 @@ private:
     auto get_lrcs_opt() -> name_positions;
     auto cs_from_input() -> Token;
     auto get_mac_value(Token) -> TokenList;
-    auto get_mac_value(const string &) -> TokenList;
+    auto get_mac_value(const std::string &) -> TokenList;
     auto read_mac_nbargs() -> int;
     void M_newcommand(rd_flag redef);
     void get_new_command_aux(const TokenList &);
@@ -459,8 +462,8 @@ private:
     void glue_define(int a, Glue c, bool gbl);
     auto grab_env_comma(TokenList &) -> bool;
     void grab_env(TokenList &);
-    auto group_to_string() -> string;
-    auto group_to_string_spec(bool) -> string;
+    auto group_to_string() -> std::string;
+    auto group_to_string_spec(bool) -> std::string;
     void iexpand();
     void T_ifdefinable();
     void E_ifempty();
@@ -468,7 +471,7 @@ private:
     void T_ifstar();
     void E_ifundefined(bool);
     void ignore_arg();
-    auto T_raw_env(bool) -> string;
+    auto T_raw_env(bool) -> std::string;
     void ignore_optarg();
     auto ileave_v_mode() -> Xid;
     void implicit_par(subtypes);
@@ -490,10 +493,10 @@ private:
     void interpret_mathchoice_cmd(int res, subtypes, CmdChr);
     void interpret_math_cmd(int res, subtypes);
     void interpret_rc();
-    void invalid_key(Token T, const string &, const TokenList &);
+    void invalid_key(Token T, const std::string &, const TokenList &);
     auto is_delimiter(const TokenList &L) -> bool;
     void is_date_valid();
-    auto is_env_on_stack(const string &s) -> SaveAuxEnv *;
+    auto is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
     auto is_input_open() -> bool;
     auto is_inner_math() -> bool;
     auto is_not_a_math_env(String s) -> bool;
@@ -505,7 +508,7 @@ private:
     void kvo_comp_opt();
     void kvo_family(subtypes k);
     void kvo_family_etc(subtypes k);
-    auto kvo_getfam() -> string;
+    auto kvo_getfam() -> std::string;
     void kvo_process();
     void kvo_string_opt();
     void kvo_void_opt();
@@ -513,7 +516,7 @@ private:
     auto last_att_list() -> AttList &;
     void E_latex_ctr();
     void E_latex_ctr_fnsymbol(int, TokenList &);
-    auto latex_input(int) -> string;
+    auto latex_input(int) -> std::string;
     void LC();
     void leave_h_mode();
     void leave_v_mode();
@@ -541,11 +544,11 @@ private:
     void mk_hi(String, char);
     void month_day(subtypes);
     void more_bootstrap();
-    void multiple_label(String, int, const string &);
+    void multiple_label(String, int, const std::string &);
     void multiply_dim(RealNumber val, int v);
     void E_multispan();
     auto my_csname(String s1, String s2, TokenList &L, String s) -> bool;
-    auto nb_env_on_stack(const string &s) -> int;
+    auto nb_env_on_stack(const std::string &s) -> int;
     auto nb_env_on_stack() -> int;
     void need_array_mode();
     void need_bib_mode();
@@ -559,10 +562,10 @@ private:
     void new_constant(subtypes);
     void new_constant(String name, int max_val, subtypes alloc_pos, symcodes c);
     void M_newif();
-    void M_newif_aux(Token T, const string &s, bool b);
+    void M_newif_aux(Token T, const std::string &s, bool b);
     void new_font();
     auto new_line_for_read(bool) -> bool;
-    void new_macro(const string &s, Token name);
+    void new_macro(const std::string &s, Token name);
     void new_macro(TokenList &L, Token name, bool gbl);
     void new_macro(TokenList &L, Token name);
     auto new_math_list(int, math_list_type, subtypes s) -> subtypes;
@@ -571,9 +574,9 @@ private:
     void new_prim(Token, Token);
     void new_primx(String, String);
     void new_prim(Token, TokenList &);
-    void new_xref(Xml *val, string v, bool err);
+    void new_xref(Xml *val, std::string v, bool err);
     void no_arg_font();
-    void no_extension(AttList &, const string &);
+    void no_extension(AttList &, const std::string &);
     auto T_optarg_nopar() -> Istring;
     void numberwithin();
     auto ok_to_define(Token a, rd_flag redef) -> bool;
@@ -593,16 +596,16 @@ private:
     void pop_level(boundary_type);
     void pop_all_levels();
     void prev_date();
-    void print_token(ostream &fp, Token x);
+    void print_token(std::ostream &fp, Token x);
     void process_char(uchar c);
     void process_string(String s);
     void process_char(codepoint c);
     void process_char(uint c);
     void process_char(int s);
-    void push_input_stack(const string &, bool, bool);
+    void push_input_stack(const std::string &, bool, bool);
     void push_level(boundary_type);
     void push_module();
-    void push_module(const string &aux);
+    void push_module(const std::string &aux);
     auto push_par() -> Xid;
     void push_save_stack(SaveAux *v);
     void push_tpa();
@@ -620,7 +623,7 @@ private:
     auto read_until_nopar(Token x) -> TokenList;
     void read_into(TokenList &X);
     auto read_unit() -> int;
-    auto make_label_inner(const string &name) -> string;
+    auto make_label_inner(const std::string &name) -> std::string;
     void refstepcounter();
     void refstepcounter(String, bool);
     void refstepcounter(TokenList &, bool);
@@ -632,9 +635,9 @@ private:
     void remove_initial_space_relax();
     auto remove_initial_star() -> bool;
     void restore_the_state(SaveState &x);
-    auto rT_arg_nopar() -> string;
-    auto sE_arg() -> string;
-    auto sE_optarg_nopar() -> string;
+    auto rT_arg_nopar() -> std::string;
+    auto sE_arg() -> std::string;
+    auto sE_optarg_nopar() -> std::string;
     void runaway(int);
     void err_one_arg(const TokenList &);
     void save_font();
@@ -644,7 +647,7 @@ private:
     void scan_box(int);
     auto scan_braced_int(Token) -> int;
     auto scan_char_num() -> int;
-    auto scan_color(const string &opt, const string &name) -> Istring;
+    auto scan_color(const std::string &opt, const std::string &name) -> Istring;
     auto scan_date_ctrs() -> bool;
     auto scan_dim_helper(bool mu, bool allow_int) -> bool;
     auto scan_dim2(RealNumber &, bool) -> bool;
@@ -657,7 +660,7 @@ private:
     void scan_expr_arg(Token T, internal_type);
     auto scan_expr_next(Token, bool) -> scan_expr_t;
     auto scan_fifteen_bit_int() -> int;
-    auto scan_file_name() -> string;
+    auto scan_file_name() -> std::string;
     auto scan_font_ident() -> int;
     auto scan_for_eval(Buffer &B, bool in_env) -> bool;
     auto scan_general_text() -> TokenList;
@@ -743,20 +746,20 @@ private:
     auto skip_prefix(const TokenList &L) -> bool;
     void solve_cite(bool);
     void special_fvset();
-    auto special_next_arg() -> string;
+    auto special_next_arg() -> std::string;
     void T_verbatim();
     void T_subequations(bool);
     void start_a_cell(bool);
     void start_a_row(int);
     auto start_scan_math(Math &, subtypes) -> bool;
-    void start_paras(int, const string &, bool);
+    void start_paras(int, const std::string &, bool);
     void store_new_line(int, bool);
-    void string_define(int a, const string &c, bool gbl);
+    void string_define(int a, const std::string &c, bool gbl);
     void strip_pt();
-    auto sE_arg_nopar() -> string;
-    auto sT_arg_nopar() -> string;
-    auto sT_optarg_nopar() -> string;
-    auto sT_translate(TokenList &L) -> string;
+    auto sE_arg_nopar() -> std::string;
+    auto sT_arg_nopar() -> std::string;
+    auto sT_optarg_nopar() -> std::string;
+    auto sT_translate(TokenList &L) -> std::string;
 
     void T_addtomacro(bool);
     void E_addtoreset();
@@ -776,7 +779,7 @@ private:
     void T_bpers();
     void T_beginend(symcodes);
     void T_begindocument();
-    void T_begin(const string &);
+    void T_begin(const std::string &);
     void T_cap_or_note(bool);
     void T_change_element_name();
     void T_catperso();
@@ -803,7 +806,7 @@ private:
     void T_documentclass(bool);
     void T_empty_bibitem();
     void T_end_tabular(subtypes);
-    void T_end(const string &);
+    void T_end(const std::string &);
     void T_enddocument(subtypes);
     void T_endv();
     void T_end_the_biblio();
@@ -850,7 +853,7 @@ private:
     void T_keywords();
     void T_label(int);
     void T_line(subtypes);
-    auto scan_anchor(bool &h) -> string;
+    auto scan_anchor(bool &h) -> std::string;
     void T_listenv(symcodes);
     void T_listenv_end();
     void T_linethickness(int);
@@ -929,7 +932,7 @@ private:
     void T_url(subtypes);
     void T_usefont();
     void T_usepackage();
-    void T_use_counter(const string &);
+    void T_use_counter(const std::string &);
     void T_use_counter();
     void T_xmlelt(subtypes);
     void T_xmlenv(subtypes);
@@ -944,7 +947,7 @@ private:
 
     void Tat_pers();
     void Tat_pers_ra();
-    void testoptd(string s);
+    void testoptd(std::string s);
     void M_extension(int);
     auto string_to_write(int) -> String;
     auto E_toks(subtypes) -> TokenList;
@@ -985,13 +988,13 @@ private:
     void typeout(int);
     void umlaut();
     void umlaut_bad();
-    void undefined_env(const string &);
+    void undefined_env(const std::string &);
     void undefined_mac();
     void unexpected_close_brace();
     void unskip_group(String s);
     void upn_eval(TokenList &);
     void url_hack(TokenList &);
-    void use_a_package(const string &, bool, const string &, bool);
+    void use_a_package(const std::string &, bool, const std::string &, bool);
     void E_usename(int, bool);
     void user_XML_swap(subtypes c);
     void user_XML_modify(subtypes c);
@@ -1024,7 +1027,7 @@ private:
     void xkv_execute_options();
     void xkv_pass_options(bool c);
     void xml_name(Xml *x, internal_type);
-    auto T_xmllatex() -> string;
+    auto T_xmllatex() -> std::string;
     void xsetfontsize();
     auto xT_arg_nopar() -> Xml *;
     auto xT_optarg_nopar() -> Xml *;
@@ -1054,7 +1057,7 @@ private:
     void Tl3_gen_from_ac(int);
     void l3_generate_variant();
     void l3_generate_variant(String orig, String var);
-    void l3_generate_variant(const string &var, bool prot, Token orig);
+    void l3_generate_variant(const std::string &var, bool prot, Token orig);
     void L3_getid();
     auto l3_get_name(Token T) -> bool;
     void E_cat_ifeq(subtypes c);
@@ -1068,7 +1071,7 @@ private:
     auto l3_parms_from_ac(int, Token T, bool s) -> TokenList;
     void E_prg_return(int);
     auto L3_split_next_name() -> bool;
-    auto l3_to_string(subtypes, TokenList &) -> string;
+    auto l3_to_string(subtypes, TokenList &) -> std::string;
     void L3_user_split_next_name(bool base);
     void tex_string(Buffer &, Token, bool);
     auto l3_read_int(Token T) -> int;

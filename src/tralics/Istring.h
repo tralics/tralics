@@ -1,7 +1,8 @@
 #pragma once
-#include "../txbuffer.h"
 #include "enums.h"
 #include <string>
+
+class Buffer;
 
 class Istring {
     int value{0};

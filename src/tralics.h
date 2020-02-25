@@ -27,9 +27,3 @@ using namespace std;
 
 #include "tralics/Token.h"
 #include "tralics/codepoint.h"
-
-#include "txcond.h"
-#include "txid.h"
-#include "tximage.h"
-#include "txstats.h"
-#include "txvars.h"

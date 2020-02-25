@@ -1,7 +1,3 @@
-#include "tralics/Token.h"
-#include <list>
-#include <utility>
-
 #pragma once
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm)  2006, 2007,2008
@@ -13,11 +9,16 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Istring.h"
+#include "tralics/Token.h"
+#include "txfp.h"
+#include "txvars.h"
 #include <array>
+#include <list>
+#include <utility>
 
 class Hashtab;
 
-using TokenList      = std::list<Token>;
 using token_iterator = std::list<Token>::iterator;
 
 namespace token_ns {
