@@ -74,7 +74,7 @@ inline void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
 // In verbatim mode, all chars are of catcode 12, with these exceptions.
 // that are of catcode 11.
 void Parser::boot_verbatim() {
-    Token *T = verbatim_chars;
+    Token *T = verbatim_chars.data();
     for (uint i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, i);
     T[uint(' ')] = hash_table.tilda_token;
     mk_letter(T, '\'');
@@ -731,7 +731,7 @@ void Parser::more_bootstrap() {
     TokenList L1;
     Token     w;
 
-    auto ADD_TO_BOTH = [&](const auto &s) {
+    auto ADD_TO_BOTH = [&](String s) {
         w = hash_table.locate(s);
         L.push_back(T);
         L.push_back(w);
@@ -1307,15 +1307,15 @@ void tralics_ns::make_names() {
     the_names[np_letters_tr] = Istring("tr");
     the_names[np_letters_bl] = Istring("bl");
     the_names[np_letters_br] = Istring("br");
-    char foo[2];
+    std::array<char, 2> foo{};
     foo[1] = 0;
     for (char x = 'a'; x <= 'z'; x++) {
         foo[0]                           = x;
-        the_names[np_letter_a + x - 'a'] = Istring(foo);
+        the_names[np_letter_a + x - 'a'] = Istring(foo.data());
     }
     for (char x = 'A'; x <= 'Z'; x++) {
         foo[0]                           = x;
-        the_names[np_letter_A + x - 'A'] = Istring(foo);
+        the_names[np_letter_A + x - 'A'] = Istring(foo.data());
     }
 }
 

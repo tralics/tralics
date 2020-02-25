@@ -1747,7 +1747,7 @@ auto Math::special1() const -> Xml * {
 // stored somewhere in eqtb. This does not interpret the fonts;
 // It justs reads the tokens, and backinputs them
 void Parser::TM_fonts() {
-    Token *table = hash_table.my_mathfont_table;
+    Token *table = hash_table.my_mathfont_table.data();
     int    T;
     bool   bold = is_pos_par(atmathversion_code);
     if (cur_cmd_chr.is_math_font()) {

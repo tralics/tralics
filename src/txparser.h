@@ -22,25 +22,25 @@ class Parser {
     friend class XkvSetkeys;
 
 public:
-    Hashtab       hash_table;                           // the hash table
-    Mactab        mac_table;                            // the table of macros
-    Stack         the_stack;                            // the stack
-    EqtbString    eqtb_string_table[10];                // eqtb strings
-    EqtbInt       eqtb_int_table[integer_table_size];   // EQTB, integers
-    EqtbDim       eqtb_dim_table[dimension_table_size]; // EQTB, dimensions
-    EqtbToken     toks_registers[toks_register_size];   // EQTB, token lists
-    EqtbBox       box_table[nb_registers];              // EQTB, boxes
-    EqtbGlue      glue_table[glue_table_size];          // EQTB, glue
-    Token         verbatim_chars[nb_characters];        // value of a character in verbatim mode
-    int           old_catcode[nb_shortverb_values];     // catcodes for undefineshortverb
-    int           allocation_table[9];                  // values for \newcount etc
-    bool          ok_for_xspace[nb_xspace_values];      // status of char w.r.t. \xspace
-    Token         uclc_list[22];                        // upper, lowert case equivalent of \ij etc
-    FontInfo      cur_font;                             // info for the current font
-    vector<Image> the_images;                           // file data for images
-    vector<Xml *> all_heads;
-    Stats         my_stats; // for the statistics
-    Token         err_tok;  // in case of error
+    Hashtab                                   hash_table;        // the hash table
+    Mactab                                    mac_table;         // the table of macros
+    Stack                                     the_stack;         // the stack
+    std::array<EqtbString, 10>                eqtb_string_table; // eqtb strings
+    std::array<EqtbInt, integer_table_size>   eqtb_int_table;    // EQTB, integers
+    std::array<EqtbDim, dimension_table_size> eqtb_dim_table;    // EQTB, dimensions
+    std::array<EqtbToken, toks_register_size> toks_registers;    // EQTB, token lists
+    std::array<EqtbBox, nb_registers>         box_table;         // EQTB, boxes
+    std::array<EqtbGlue, glue_table_size>     glue_table;        // EQTB, glue
+    std::array<Token, nb_characters>          verbatim_chars;    // value of a character in verbatim mode
+    std::array<int, nb_shortverb_values>      old_catcode;       // catcodes for undefineshortverb
+    std::array<int, 9>                        allocation_table;  // values for \newcount etc
+    std::array<bool, nb_xspace_values>        ok_for_xspace;     // status of char w.r.t. \xspace
+    std::array<Token, 22>                     uclc_list;         // upper, lowert case equivalent of \ij etc
+    FontInfo                                  cur_font;          // info for the current font
+    vector<Image>                             the_images;        // file data for images
+    vector<Xml *>                             all_heads;
+    Stats                                     my_stats; // for the statistics
+    Token                                     err_tok;  // in case of error
 private:
     bool      unexpected_seen_hi{false}; // check for wrongly placed font changes
     bool      calc_loaded;               // did we see \usepackage{calc} ?
@@ -219,7 +219,7 @@ public:
     void               scan_glue(internal_type level, Token T);
     void               scan_glue(internal_type level, Token T, bool);
     void               list_to_glue(internal_type level, Token t, TokenList &L);
-    void               set_default_language(int);
+    void               set_default_language(int v);
     void               set_scanner_status(scan_stat c) { scanner_status = c; }
     void               set_long_state(l_state c) { long_state = c; }
     void               signal_error(String);

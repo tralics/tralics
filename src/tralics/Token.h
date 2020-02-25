@@ -61,8 +61,8 @@ struct Token {
     [[nodiscard]] auto val_as_other() const -> uint { return val - other_t_offset; }
     [[nodiscard]] auto val_as_digit() const -> uint { return val - other_t_offset - '0'; }
     [[nodiscard]] auto val_as_letter() const -> uint { return val - letter_t_offset; }
-    [[nodiscard]] auto no_case_letter(char) const -> bool;
-    auto               tex_is_digit(int) -> int;
+    [[nodiscard]] auto no_case_letter(char x) const -> bool;
+    auto               tex_is_digit(int radix) -> int;
     [[nodiscard]] auto is_dec_separator() const -> bool { return val == other_t_offset + ',' || val == other_t_offset + '.'; }
     [[nodiscard]] auto to_string() const -> String;
     [[nodiscard]] auto tok_to_str() const -> String;

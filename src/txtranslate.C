@@ -1652,7 +1652,7 @@ void Parser::T_case_shift(int c) {
     bool      to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
     int       offset   = to_upper ? uc_code_offset : lc_code_offset;
     int       k        = to_upper ? +1 : -1;
-    Token *   table    = to_upper ? uclc_list : uclc_list + 1;
+    Token *   table    = to_upper ? uclc_list.data() : uclc_list.data() + 1;
     bool      ltx      = (c >= 2);
     bool      extended = (c == 4 || c == 5);
     bool      latex3   = (c >= 6);

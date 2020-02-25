@@ -14,7 +14,7 @@
 #include "txparser.h"
 
 namespace arith_ns {
-    void start_err(String);
+    void start_err(String s);
     void end_err();
 } // namespace arith_ns
 

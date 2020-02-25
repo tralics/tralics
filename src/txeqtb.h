@@ -158,7 +158,7 @@ class SaveAuxBoundary : public SaveAux {
     boundary_type val; // explains why we opened a new group
 public:
     [[nodiscard]] auto get_val() const -> boundary_type { return val; }
-    void               unsave(bool, Parser &) override;
+    void               unsave(bool trace, Parser &P) override;
     SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
     ~SaveAuxBoundary() override = default;
     void dump(int);
@@ -171,7 +171,7 @@ class SaveAuxInt : public SaveAux {
     int val;   // the value to be restored
 public:
     SaveAuxInt(int l, int a, int b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxInt() override = default;
 };
 
@@ -182,7 +182,7 @@ class SaveAuxDim : public SaveAux {
     ScaledInt val;   // the value to be restored
 public:
     SaveAuxDim(int l, int a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxDim() override = default;
 };
 
@@ -193,7 +193,7 @@ class SaveAuxCmd : public SaveAux {
     CmdChr val;   // the CmdChr to be restored
 public:
     SaveAuxCmd(int a, Equivalent X) : SaveAux(st_cmd), level(X.get_level()), cs(a), val(X.get_cmdchr()) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
 };
 
@@ -204,7 +204,7 @@ class SaveAuxBox : public SaveAux {
     Xml *val;   // the value to be restored
 public:
     SaveAuxBox(int l, int a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxBox() override = default;
 };
 
@@ -214,7 +214,7 @@ class SaveAuxBoxend : public SaveAux {
     Xml *val; // the value of the box
 public:
     SaveAuxBoxend(int a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxBoxend() override = default;
 };
 
@@ -225,7 +225,7 @@ class SaveAuxToken : public SaveAux {
     TokenList val;   // the value to be restored
 public:
     SaveAuxToken(int l, int p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxToken() override = default;
 };
 
@@ -236,7 +236,7 @@ class SaveAuxGlue : public SaveAux {
     Glue val;   // the value to be restored
 public:
     SaveAuxGlue(int l, int p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxGlue() override = default;
 };
 
@@ -247,7 +247,7 @@ class SaveAuxString : public SaveAux {
     string val; // the value to be restored
 public:
     SaveAuxString(int l, int p, string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxString() override = default;
 };
 
@@ -265,7 +265,7 @@ public:
     [[nodiscard]] auto get_val() const -> CmdChr { return cc; }
     [[nodiscard]] auto get_token() const -> Token { return T; }
     auto               get_name() -> string { return newname; }
-    void               unsave(bool, Parser &) override;
+    void               unsave(bool trace, Parser &P) override;
     SaveAuxEnv(string a, string aa, int ll, Token b, CmdChr c)
         : SaveAux(st_env), oldname(std::move(a)), newname(std::move(aa)), line(ll), T(b), cc(c) {}
     ~SaveAuxEnv() override = default;
@@ -277,7 +277,7 @@ class SaveAuxFont : public SaveAux {
     int     value; // the value to be restored
     Istring color; // the color to restore
 public:
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     SaveAuxFont(int l, int v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
     ~SaveAuxFont() override = default;
 };
@@ -287,7 +287,7 @@ class SaveAuxAftergroup : public SaveAux {
     Token value; // the token to pop
 public:
     SaveAuxAftergroup(Token v) : SaveAux(st_save), value(v) {}
-    void unsave(bool, Parser &) override;
+    void unsave(bool trace, Parser &P) override;
     ~SaveAuxAftergroup() override = default;
 };
 
@@ -378,7 +378,7 @@ public:
 // EQTB entry for a box
 class EqtbBox {
     int  level{level_one}; // level at which this is defined
-    Xml *val;              // value of the object
+    Xml *val{nullptr};     // value of the object
 public:
     void               set_val(Xml *X) { val = X; }
     [[nodiscard]] auto get_val() const -> Xml * { return val; }

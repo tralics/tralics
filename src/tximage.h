@@ -20,7 +20,7 @@ public:
     int    flags{0}; // existence flags
 public:
     Image() = default;
-    Image(string N, int oc_val) : name(std::move(N)), occ(oc_val), flags(0) {}
+    Image(string N, int oc_val) : name(std::move(N)), occ(oc_val) {}
     auto file_exists(String) -> bool;
     void check_existence();
     void check();

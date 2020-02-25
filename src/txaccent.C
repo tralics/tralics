@@ -21,42 +21,42 @@
 
 namespace accent_ns {
     auto fetch_accent(int chr, int accent_code) -> Token;
-    auto fetch_double_accent(int a, int) -> Token;
-    auto combine_accents(int, int) -> int;
+    auto fetch_double_accent(int a, int acc3) -> Token;
+    auto combine_accents(int acc1, int acc2) -> int;
     auto double_a_accent(int acc3) -> int;
     auto double_e_accent(int acc3) -> int;
     auto double_o_accent(int acc3) -> int;
     auto double_u_accent(int acc3) -> int;
-    auto double_other_accent(int, int acc3) -> int;
+    auto double_other_accent(int a, int acc3) -> int;
     void boot_accents();
     auto mk_acc(uint s) -> Token;
     void special_acc_hack(TokenList &y);
     auto special_double_acc(int chr, int acc) -> Token;
 
     // Accent tables. Holds the result of the expansion
-    Token accent_cir[nb_accents];        // \^
-    Token accent_acute[nb_accents];      // \'
-    Token accent_grave[nb_accents];      // \`
-    Token accent_trema[nb_accents];      // \"
-    Token accent_cedille[nb_accents];    // \c
-    Token accent_breve[nb_accents];      // \u
-    Token accent_check[nb_accents];      // \v
-    Token accent_tilde[nb_accents];      // \~
-    Token accent_uml[nb_accents];        // \H
-    Token accent_ogon[nb_accents];       // \k
-    Token accent_dotabove[nb_accents];   // \.
-    Token accent_macron[nb_accents];     // \=
-    Token accent_ring[nb_accents];       // \r
-    Token accent_barunder[nb_accents];   // \b
-    Token accent_dotunder[nb_accents];   // \d
-    Token accent_ibreve[nb_accents];     // \f (inverted breve)
-    Token accent_dgrave[nb_accents];     // \C like \`\`
-    Token accent_tildeunder[nb_accents]; // \T
-    Token accent_circunder[nb_accents];  // \V
-    Token accent_rondunder[nb_accents];  // \D
-    Token accent_hook[nb_accents];       // \h
-    Token other_accent[special_table_length];
-    Token special_double[20];
+    std::array<Token, nb_accents>           accent_cir;        // \^
+    std::array<Token, nb_accents>           accent_acute;      // \'
+    std::array<Token, nb_accents>           accent_grave;      // \`
+    std::array<Token, nb_accents>           accent_trema;      // \"
+    std::array<Token, nb_accents>           accent_cedille;    // \c
+    std::array<Token, nb_accents>           accent_breve;      // \u
+    std::array<Token, nb_accents>           accent_check;      // \v
+    std::array<Token, nb_accents>           accent_tilde;      // \~
+    std::array<Token, nb_accents>           accent_uml;        // \H
+    std::array<Token, nb_accents>           accent_ogon;       // \k
+    std::array<Token, nb_accents>           accent_dotabove;   // \.
+    std::array<Token, nb_accents>           accent_macron;     // \=
+    std::array<Token, nb_accents>           accent_ring;       // \r
+    std::array<Token, nb_accents>           accent_barunder;   // \b
+    std::array<Token, nb_accents>           accent_dotunder;   // \d
+    std::array<Token, nb_accents>           accent_ibreve;     // \f (inverted breve)
+    std::array<Token, nb_accents>           accent_dgrave;     // \C like \`\`
+    std::array<Token, nb_accents>           accent_tildeunder; // \T
+    std::array<Token, nb_accents>           accent_circunder;  // \V
+    std::array<Token, nb_accents>           accent_rondunder;  // \D
+    std::array<Token, nb_accents>           accent_hook;       // \h
+    std::array<Token, special_table_length> other_accent;
+    std::array<Token, 20>                   special_double;
 } // namespace accent_ns
 
 // Returns the token associated to acc for character chr.
@@ -425,8 +425,7 @@ void Parser::E_accent() {
         achar = 6;
     if (cur_cmd_chr.get_cmd() == cst1_cmd && achar == i_code)
         achar = 'i';
-    else if (cur_cmd_chr.get_cmd() == specchar_cmd) {
-    } else if (cur_cmd_chr.is_letter_other()) {
+    else if ((cur_cmd_chr.get_cmd() == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
     } else {
         err_ns::local_buf << bf_reset << msg1;
         err_ns::local_buf << tfe.tok_to_str();

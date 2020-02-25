@@ -15,7 +15,7 @@ class Stats {
     int st_alloc{0};                    // total number of totals in a list
     int stb_alloc{0};                   // number of buffer realloc
     int st_nb_string{0};                // number of strings created
-    int str_length;                     // total size of string created
+    int str_length{0};                  // total size of string created
     int nb_macros{0}, nb_macros_del{0}; // number of macross added end deleted
     int level_up{0}, level_down{0};     // number of push and pop nest.
     int sh_boot{0}, sh_find{0}, sh_used{0};

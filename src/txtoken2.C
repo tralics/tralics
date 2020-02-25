@@ -139,7 +139,7 @@ Hashtab::Hashtab() {
     iterate_token      = nohash_primitive("iterate", CmdChr(undef_cmd, zero_code));
     frozen_relax_token = nohash_primitive("relax", CmdChr(relax_cmd, relax_code));
     eof_token          = nohash_primitive("eof", CmdChr(eof_marker_cmd, zero_code));
-    Token *T           = my_mathfont_table;
+    Token *T           = my_mathfont_table.data();
     T[0]               = primitive("mml@font@normal", mathfont_cmd, math_f_normal);
     T[1]               = primitive("mml@font@upright", mathfont_cmd, math_f_upright);
     T[2]               = primitive("mml@font@bold", mathfont_cmd, math_f_bold);

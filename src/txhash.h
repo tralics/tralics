@@ -56,22 +56,22 @@ public:
         allowbreak_token;
     Token increqnum_token, makelabel_token, stepcounter_token;
     Token nomathsw0_token, nomathsw1_token;
-    Token my_mathfont_table[15];
-    Token genfrac_mode[5];
     Token xkv_resa_token, xkv_warn_token, xkv_prefix_token, xkv_fams_token, xkv_na_token, xkv_rm_token, xkv_tfam_token, usevalue_token,
         xkv_header_token, xkv_tkey_token, gsavevalue_token, savevalue_token, empty_token, composite_token;
     Token ExplFileName_token, ExplFileDate_token, ExplFileVersion_token, ExplFileDescription_token;
     Token last_tok;
-    // the big tables
-    Equivalent eqtb[eqtb_size];
+
+    std::array<Token, 15>             my_mathfont_table;
+    std::array<Token, 5>              genfrac_mode;
+    std::array<Equivalent, eqtb_size> eqtb;
 
 private:
-    String Text[hash_size]; // the strings
-    int    Next[hash_size]; // points to next
-    Buffer B;               // internal buffer
-    int    hash_used;       // all places above this one are used
-    int    hash_usage;      // number of commands in the table
-    int    hash_bad;        // number of items not at hash position
+    std::array<String, hash_size> Text;       // the strings
+    std::array<int, hash_size>    Next;       // points to next
+    Buffer                        B;          // internal buffer
+    int                           hash_used;  // all places above this one are used
+    int                           hash_usage; // number of commands in the table
+    int                           hash_bad;   // number of items not at hash position
 private:
     auto find_empty(String s) -> int; // find an empty slot
     auto find_aux(int p, String name) -> int;
