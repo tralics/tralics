@@ -23,9 +23,9 @@ using buffer_fn = void(Buffer &);
 // much as possible but we can't because of all the zero-char manipulations.
 class Buffer : public std::vector<char> {
 private:
-    int wptr{0}; // the write pointer
-    int ptr{0};  // the read pointer
-    int ptr1{0}; // a second read pointer
+    size_t wptr{0}; // the write pointer
+    size_t ptr{0};  // the read pointer
+    size_t ptr1{0}; // a second read pointer
 public:
     Buffer() : std::vector<char>(128, 0){};
 
@@ -276,7 +276,7 @@ public:
     void remove_last() {
         if (wptr > 0) rrl();
     }
-    void remove_last_n(int n) {
+    void remove_last_n(size_t n) {
         if (wptr >= n) wptr -= n;
         at(wptr) = 0;
     }

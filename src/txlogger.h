@@ -67,6 +67,10 @@ public:
         (*fp) << s;
         return *this;
     }
+    auto operator<<(size_t s) -> Logger & {
+        (*fp) << s;
+        return *this;
+    }
     auto operator<<(Istring s) -> Logger & {
         (*fp) << s;
         return *this;

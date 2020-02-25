@@ -304,7 +304,7 @@ void Buffer::extract_strs(Buffer &A, Buffer &B) {
 
 // Converts the entire Buffer to lower case
 void Buffer::lowercase() {
-    for (int j = 0; j < wptr; j++)
+    for (size_t j = 0; j < wptr; j++)
         if (is_upper_case(at(j))) at(j) += 'a' - 'A';
 }
 
@@ -316,7 +316,7 @@ void Buffer::uppercase() {
 
 // Replaces newline by space
 void Buffer::no_newline() {
-    for (int j = 0; j < wptr; j++)
+    for (size_t j = 0; j < wptr; j++)
         if (at(j) == '\n') at(j) = ' ';
 }
 
@@ -383,7 +383,7 @@ auto Buffer::full_bracket_match() -> bool {
 // True if letter (or digit, hyphen, but not first char).
 // Is also ok in case of underscore (Laurent Pierron)
 auto Buffer::is_letter_digit() const -> bool {
-    for (int j = 0; j < wptr; j++) {
+    for (size_t j = 0; j < wptr; j++) {
         if (is_letter(at(j))) continue;
         if (j == 0) return false;
         if (at(j) == '-') continue;
@@ -449,8 +449,8 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (at(0) == '#') {
         const String match = "## tralics ident rc=";
         if (strncmp(data(), match, 20) == 0) {
-            int k = 20;
-            while (k < wptr - 1 && at(k) != '$') k++;
+            size_t k = 20;
+            while (k + 1 < wptr && at(k) != '$') k++;
             if (at(k) == '$') {
                 char c    = at(k + 1);
                 at(k + 1) = 0;
@@ -952,7 +952,7 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
 void Buffer::push_back_roman(int n) {
     int k = wptr;
     push_back_Roman(n);
-    for (int i = k; i < wptr; i++) at(i) += 'a' - 'A';
+    for (size_t i = k; i < wptr; i++) at(i) += 'a' - 'A';
 }
 
 // Adds n as roman upper case.
@@ -1168,7 +1168,7 @@ auto Buffer::find_equals() -> bool {
 // puts a null char there.
 // returns false in case of trouble (only spaces).
 auto Buffer::backup_space() -> bool {
-    int j = ptr;
+    size_t j = ptr;
     while (j > ptr1 && is_spaceh(j - 1)) j--;
     if (j == ptr1) return false;
     kill_at(j);
@@ -1265,7 +1265,7 @@ auto Buffer::fetch_spec_arg() -> bool {
 
 // Returns true if the string S is between ptr1 and ptr.
 auto Buffer::contains_here(String s) const -> bool {
-    int k = ptr1, j = 0;
+    size_t k = ptr1, j = 0;
     for (;;) {
         char c = s[j];
         if (c == 0) return k == ptr;
@@ -1451,20 +1451,20 @@ void Buffer::optslash() {
 // returns location of last slash in the buffer
 auto Buffer::last_slash() const -> int {
     int k = -1;
-    for (int i = 0; i < wptr; i++)
+    for (size_t i = 0; i < wptr; i++)
         if (at(i) == '/') k = i;
     return k;
 }
 
 // True if the string s is at the end of the buffer
 auto Buffer::is_at_end(String s) const -> bool {
-    int n = strlen(s);
+    size_t n = strlen(s);
     return wptr > n && strcmp(data() + wptr - n, s) == 0;
 }
 
 // Inserts the string s is at the end of the buffer unless there
 void Buffer::put_at_end(String s) {
-    int n = strlen(s);
+    size_t n = strlen(s);
     if (wptr > n && strcmp(data() + wptr - n, s) == 0) return;
     push_back(s);
 }

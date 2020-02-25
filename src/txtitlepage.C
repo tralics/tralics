@@ -1004,7 +1004,7 @@ auto LinePtr::find_aliases(const vector<string> &SL, string &res) -> bool {
 auto Buffer::remove_digits(const string &s) -> string {
     reset();
     push_back(s);
-    int k = wptr;
+    size_t k = wptr;
     while (k > 0 && is_digit(at(k - 1))) k--;
     if (k != wptr) {
         at(k) = 0;

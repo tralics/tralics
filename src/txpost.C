@@ -1168,7 +1168,7 @@ void Buffer::new_word() {
     if (wptr == 0) return;
     if (wptr == 1) at(0) = 'x';
     bool ok = true;
-    for (int i = 0; i < wptr; i++) {
+    for (unsigned i = 0; i < wptr; i++) {
         if (!dig_char(at(i))) {
             ok = false;
             break;
@@ -1181,7 +1181,7 @@ void Buffer::new_word() {
     all_words_ns::nb_words++;
     ok = true;
     if (is_upper_case(at(0))) {
-        for (int i = 1; i < wptr; i++) {
+        for (size_t i = 1; i < wptr; i++) {
             if (!is_lower_case(at(i))) ok = false;
         }
         if (ok) at(0) += 'a' - 'A';

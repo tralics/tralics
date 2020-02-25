@@ -18,7 +18,6 @@ public:
     [[nodiscard]] auto empty() const -> bool { return value == 1; }      // ""
     [[nodiscard]] auto spec_empty() const -> bool { return value == 2; } // ""
     [[nodiscard]] auto only_space() const -> bool;
-    [[nodiscard]] auto starts_with_div() const -> uchar;
     [[nodiscard]] auto only_space_spec() const -> bool;
     auto               operator==(Istring X) const -> bool { return value == X.value; }
     auto               operator!=(Istring X) const -> bool { return value != X.value; }
