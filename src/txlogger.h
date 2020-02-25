@@ -37,11 +37,11 @@ class Logger;
 using logger_fn = void(Logger &);
 
 class Logger {
-    bool finished;        // if false, we are printing a character sequence and
+    bool finished{true};  // if false, we are printing a character sequence and
                           // a newline is required
     std::string filename; // the name of the log file
 public:
-    std::fstream *     fp; // the stream to which we print
+    std::fstream *     fp{nullptr}; // the stream to which we print
     void               finish_seq();
     void               out_single_char(codepoint c);
     void               dump(String s);
@@ -104,7 +104,7 @@ public:
 class FullLogger {
 public:
     Logger L;
-    bool   verbose;
+    bool   verbose{false};
     void   abort() { L.abort(); }
     auto   operator<<(logger_fn f) -> FullLogger & {
         f(L);

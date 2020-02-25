@@ -15,9 +15,9 @@
 
 class Image {
 public:
-    string name;  // name
-    int    occ;   // number of occurences
-    int    flags; // existence flags
+    string name;     // name
+    int    occ{0};   // number of occurences
+    int    flags{0}; // existence flags
 public:
     Image() = default;
     Image(string N, int oc_val) : name(std::move(N)), occ(oc_val), flags(0) {}

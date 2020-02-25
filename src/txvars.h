@@ -14,6 +14,7 @@
 // symcodes and subtypes are in txcmd.h
 
 #include "tralics/consts.h"
+#include <array>
 
 // forward declarations
 class Istring;
@@ -1066,9 +1067,9 @@ enum param_args {
     pa_indata
 };
 
-extern Parser     the_parser;
-extern MainClass *the_main;
-extern Istring    the_names[np_last];
+extern Parser                       the_parser;
+extern MainClass *                  the_main;
+extern std::array<Istring, np_last> the_names;
 
 inline auto is_space(char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }
 inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }

@@ -33,10 +33,10 @@ namespace main_ns {
     bool       bib_allow_break = true;  // <allowbreak> in bibliography
 } // namespace main_ns
 
-Logger &   the_log = main_ns::log_and_tty.L; // the log file part of the logger.
-MainClass *the_main;                         // the main class data structure
-Parser     the_parser;                       // the big object
-Istring    the_names[np_last];
+Logger &                     the_log = main_ns::log_and_tty.L; // the log file part of the logger.
+MainClass *                  the_main;                         // the main class data structure
+Parser                       the_parser;                       // the big object
+std::array<Istring, np_last> the_names;
 
 // variables declared static in some files.
 bool InUrlHandler::global_in_url   = false;

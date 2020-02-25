@@ -170,7 +170,8 @@ public:
         X.set_interactive(L.get_interactive());
     }
     InputStack(std::string N, int l, states S, int cfp, bool eof, bool eof_o)
-        : s(S), line_no(l), name(std::move(N)), restore_at(-1), file_pos(cfp), Bpos(eof), every_eof(eof), eof_outer(eof_o) {}
+        : s(S), line_no(l), name(std::move(N)), restore_at(-1), file_pos(cfp), Bpos(0), every_eof(eof),
+          eof_outer(eof_o) {}
 };
 
 // data structure associated to \input3=some_file.
@@ -178,7 +179,7 @@ class FileForInput {
     bool    open_flag{false}; // is this file active ?
     LinePtr the_lines;        // the lines that not yet read by TeX
     Buffer  cur_line;         // this holds the current line
-    int     line_no;          // this holds the current line number
+    int     line_no{0};       // this holds the current line number
 public:
     void open(const std::string &, bool);
     void close();
