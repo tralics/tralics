@@ -12,8 +12,6 @@
 #include "tralics/Istring.h"
 #include "tralics/Token.h"
 #include "txvars.h"
-#include <array>
-#include <list>
 #include <utility>
 
 class Hashtab;

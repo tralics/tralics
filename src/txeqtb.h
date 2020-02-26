@@ -9,10 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txscaled.h"
 #include "txstring.h"
-#include <string>
-#include <utility>
 
 // Contains:
 //   equivalent, restore_vb_space, save_catcode, InLoadHandler,

@@ -12,10 +12,7 @@
 // This defines the classes: ScaledInt, Glue, RealNumber,
 // SthInternal ScanSlot TexRule
 
-#include <utility>
-
 #include "txtokenlist.h"
-#include "txvars.h"
 
 // this is a wrapper around an int
 class ScaledInt {

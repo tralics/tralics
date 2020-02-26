@@ -285,7 +285,7 @@ The test directory contains
    torture.tex, tormath.tex fptest.tex : the 3 main testfiles
    torture.bib: a bibtex associated to it
    tortureaux.tex taux1.tex taux2.tex: 
-      test file (fort testing \openin)
+      test file (for testing `\openin`)
    tpa.tex:  a file for testing the titlepage stuff
    lxdoc.tex  : 
       the source of the documentation (now obsolete)

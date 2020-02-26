@@ -12,7 +12,6 @@
 #include "txfonts.h"
 #include <fstream>
 #include <iostream>
-#include <utility>
 
 // This include file holds some declarations for printing objects
 // and the classes that allow us to print either on the tty, the log file

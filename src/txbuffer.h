@@ -13,7 +13,6 @@
 
 #include "txid.h"
 #include "txscaled.h"
-#include "txtokenlist.h"
 #include <cstring>
 #include <vector>
 

@@ -10,8 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbuffer.h"
-#include "txtokenlist.h"
-#include <utility>
 
 void show_unused_options();
 

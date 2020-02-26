@@ -10,8 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txeqtb.h"
-#include <string>
-#include <utility>
 
 // This is the main hash table. If a token like \foo has hashcode p,
 // then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...

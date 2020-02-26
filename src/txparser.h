@@ -15,7 +15,6 @@
 #include "txio.h"
 #include "txstack.h"
 #include "txstats.h"
-#include <utility>
 
 // This file holds the definition of the Parser class, which is the main
 // data structure of the Tralics translator.
