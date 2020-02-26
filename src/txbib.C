@@ -9,6 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/globals.h"
 #include "txbib.h"
 #include "txparser.h"
 #include <algorithm>
@@ -43,7 +44,6 @@ namespace bib_ns {
     void handle_special_string(const std::string &s, Buffer &A, Buffer &B);
     auto type_to_string(entry_type x) -> name_positions;
     auto is_noopsort(const std::string &s, int i) -> bool;
-    bool raw_bib = false;
 } // namespace bib_ns
 using namespace bib_ns;
 
@@ -1763,7 +1763,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(my_name);
     bbl.push_back(aux_label);
     bbl.newline();
-    if (type_int == type_extension || bib_ns::raw_bib)
+    if (type_int == type_extension || raw_bib)
         call_type_all();
     else
         call_type_special();

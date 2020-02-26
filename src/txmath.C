@@ -10,6 +10,7 @@
 
 // Tralics, math part I
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
@@ -31,8 +32,6 @@ namespace {
 } // namespace
 
 MathDataP math_data;
-
-extern bool only_input_data;
 
 using namespace math_ns;
 namespace math_ns {

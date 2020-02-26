@@ -8,16 +8,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/globals.h"
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
 
 // This file contains the big switch that interprets (most) commands
-
-extern bool seen_enddocument;
-extern uint leftquote_val;
-extern uint rightquote_val;
-extern bool nofloat_hack;
 
 namespace {
     bool      seen_document = false; // did we see \begin{document} ?
@@ -662,7 +658,7 @@ void Parser::T_atdocument(subtypes c) {
         end_document_hook.splice(end_document_hook.end(), L);
 }
 
-/// Translates \begin{glossaire}
+/// Translates `\begin{glossaire}`
 void Parser::T_glossaire() {
     leave_h_mode();
     the_stack.push1(the_names[np_gloss], np_list);
@@ -671,7 +667,7 @@ void Parser::T_glossaire() {
     the_stack.set_no_mode();
 }
 
-/// Translates \end{glossaire}
+/// Translates `\end{glossaire}`
 void Parser::T_glossaire_end() {
     int n = the_stack.top_stack()->size();
     the_stack.pop(np_gloss);

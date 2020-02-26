@@ -10,14 +10,13 @@
 
 // Tralics math; boot part. This constructs all data structures.
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
 
 extern MathDataP math_data;
 using namespace math_ns;
-extern bool compatibility;
-extern bool bad_minus;
 
 // mathml variants: normal, bold, italic, bold-italic, double-struck,
 // bold-fraktur, script, bold-script, fraktur, sans-serif, bold-sans-serif,

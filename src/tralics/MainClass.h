@@ -7,7 +7,7 @@
 #endif
 
 class MainClass {
-    std::string infile;       // file argument given to the program
+    std::string infile;       ///< file argument given to the program
     std::string no_year;      // is miaou
     std::string raclass;      // is ra2003
     std::string year_string;  // is 2003
@@ -113,7 +113,6 @@ public:
     [[nodiscard]] auto is_interactive_math() const -> bool { return interactive_math; }
     [[nodiscard]] auto is_shell_escape_allowed() const -> bool { return shell_escape_allowed; }
     [[nodiscard]] auto non_interactive() const -> bool { return !interactive_math; }
-    [[nodiscard]] auto print_os() const -> String;
     [[nodiscard]] auto get_short_date() const -> std::string { return short_date; }
     [[nodiscard]] auto get_default_class() const -> std::string { return default_class; }
     [[nodiscard]] auto use_all_sizes() const -> bool { return use_all_sizes_sw; }
@@ -121,6 +120,12 @@ public:
     [[nodiscard]] auto use_font_elt() const -> bool { return use_font_elt_sw; }
     [[nodiscard]] auto pack_font_elt() const -> bool { return pack_font_elt_sw; }
     [[nodiscard]] auto d_verbose() const -> bool { return dverbose; }
+
+    [[nodiscard]] auto print_os() const -> String; ///< Converts the symbolic OS string to a real string
+
+    void banner();                                    ///< Prints the banner on the tty
+    void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
+    void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
 
     void add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
     void bad(std::string, std::string);
@@ -144,10 +149,7 @@ public:
     void handle_one_bib_file(std::string);
     void incr_cur_fp_len(int a) { cur_fp_len += a; }
     void inhibit_xml() { todo_xml = false; }
-    void parse_args(int argc, char **argv);
-    void parse_option(int &, int, char **argv);
-    void banner();
-    void read_config_and_other();
+    void read_config_and_other(); ///< Read the config file and extract all relevant information
     void RRbib(String);
     void run();
     void run(int n, char **argv);
@@ -164,90 +166,86 @@ public:
     void set_start_date(std::string s) { start_date = std::move(s); }
     void set_short_date(std::string s) { short_date = std::move(s); }
     void set_default_class(std::string s) { default_class = std::move(s); }
-    void set_tpa_status(String);
+    void set_tpa_status(String); ///< Handles argument of -tpa_status switch
     auto use_old_phi() -> bool { return old_phi; }
     auto use_double_quote_att() -> bool { return double_quote_att; }
     void unexpected_eof(std::string, int);
     void bad_year();
 
 private:
-    void after_main_text();
     auto append_checked_line() -> int;
-    void append_non_eof_line(String, int);
     auto append_nonempty_line() -> int;
+    auto check_for_alias_type(bool vb) -> bool;
+    auto check_for_arg(int &p, int argc, char **argv) -> String; ///< This gets foo, unless we are in the case tralics type=foo
+    auto check_line_aux(Buffer &) -> bool;
+    auto check_section() -> int;
+    auto find_config_file() -> bool;   ///< Puts in main_ns::path_buffer the name of the config file
+    auto find_document_type() -> bool; ///< Massage the output of get_doc_type
+    auto find_opt_field(String info) -> bool;
+    auto get_a_new_line() -> bool;
+    auto need_script() -> bool { return in_ra() && !in_simple_ra(); }
+    auto split_one_arg(String, int &) -> String; ///< This considers the case of tralics conf_dir=foo
+    void after_main_text();
+    void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
     void boot_bibtex(bool);
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
-    auto check_for_alias_type(bool vb) -> bool;
-    auto check_for_arg(int &p, int argc, char **argv) -> String;
-    void check_for_input();
+    void check_for_input(); ///< Reads the input file named in `infile`
     void check_kw(int, Buffer &);
     void check_line(Buffer &);
-    auto check_line_aux(Buffer &) -> bool;
     void check_mod();
     void check_options();
     void check_presentation();
     void check_project(Buffer &a);
     void check_ra_dir();
-    auto check_section() -> int;
     void check_year_string(int, bool);
     void dubious_command(int k, bool where);
     void end_document();
     void end_env(std::string);
     void end_mod();
     void end_with_help(int);
-    auto find_config_file() -> bool;
-    auto find_document_type() -> bool;
-    void find_dtd();
+    void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
-    auto find_opt_field(String info) -> bool;
-    void finish_init();
+    void finish_init(); ///< RA related stuff
     void finish_xml();
-    auto get_a_new_line() -> bool;
-    void get_doc_type();
+    void get_doc_type(); ///< Determine document type from various sources
     void get_machine_name();
-    void get_os();
-    void get_type_from_config();
+    void get_os();               ///< Sets cur_os to the current OS as a symbolic string
+    void get_type_from_config(); ///< Extracts a type from the configuration file
     void handle_latex2init(String file_name);
     void ignore_text();
     void make_perl_script();
     void merge_bib();
+    void mk_empty(); ///< Create an empty TeX file
     void mkcfg();
-    void mk_empty();
-    void more_boot();
-    auto need_script() -> bool { return in_ra() && !in_simple_ra(); }
+    void more_boot(); ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
+    void open_config_file(); ///< Reads the config file b=named in `main_ns::path_buffer`
+    void open_log();         ///< Opens the log file, prints the banner ann all information
     void open_main_file();
-    void open_config_file();
     void out_gathered_math();
     void out_sep();
-    void out_xml();
+    void out_xml(); ///< Ouput the XML and compute the word list
     void print_job();
-    void print_mods();
-    void print_mods_end(std::fstream *);
     void print_mods_end_xml();
-    void print_mods_start();
+    void print_mods_end(std::fstream *);
     void print_mods_start_xml();
+    void print_mods_start();
+    void print_mods();
     void print_nb_error(int n);
     void read_one_file();
+    void run_not_ra();
     void run_ra();
     void run_simple_ra();
-    void run_not_ra();
     void see_aux_info(int k);
-    void see_name(String s);
-    void see_name1();
-    void see_name2();
-    void see_name3();
-    void see_project();
-    void see_topic();
+    void see_name(String s); ///< Extract versions of a filename with and without ext
+    void see_name1();        ///< Post-process file names
     void show_input_size();
-    auto split_one_arg(String, int &) -> String;
     void start_document(Buffer &a);
     void start_env(std::string);
     void start_error();
-    void open_log();
-    void trans0();
-    void usage_and_quit(int);
+    void trans0();            ///< Start the latex to XML translation
+    void usage_and_quit(int); ///< Shows the command syntax and exits
 };

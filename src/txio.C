@@ -11,11 +11,10 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <sstream>
-
-static const int lmaxchar = 256;
 
 namespace {
     Buffer    thebuffer;
@@ -23,8 +22,6 @@ namespace {
     Buffer    utf8_out;            // Holds utf8 outbuffer
     Buffer    utf8_in;             // Holds utf8 inbuffer
     Converter the_converter;
-
-    std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 } // namespace
 
 namespace main_ns {
@@ -37,11 +34,9 @@ namespace io_ns {
     auto how_many_bytes(uchar) -> int;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
-    void check_for_encoding();
     void set_enc_param(int enc, int pos, int v);
     auto get_enc_param(int enc, int pos) -> int;
     auto find_encoding(String cl) -> int;
-    void show_encoding(int wc, const std::string &name);
 } // namespace io_ns
 
 // ---------------------------------------------------------
@@ -382,12 +377,6 @@ void Clines::convert_line(int wc) {
     set_chars(utf8_out.c_str());
 }
 
-// Initialises encoding tables
-void io_ns::check_for_encoding() {
-    for (auto &i : custom_table)
-        for (int j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
-}
-
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(int enc, int pos, int v) {
     if (!(enc >= 2 && enc < max_encoding)) {
@@ -542,11 +531,6 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
         }
         if (c == EOF) break;
     }
-}
-
-void io_ns::show_encoding(int wc, const std::string &name) {
-    const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
-    the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
 }
 
 // If a line ends with \, we take the next line, and append it to this one

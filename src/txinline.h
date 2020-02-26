@@ -34,8 +34,8 @@ namespace tralics_ns {
     auto year_length(int y) -> int;
     void make_names();
     void boot_math(bool);
-    auto find_in_confdir(const std::string &s, bool retry) -> bool;
-    auto find_in_path(const std::string &s) -> bool;
+    auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
+    auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
     auto find_no_path(const std::string &s) -> bool;
     void read_a_file(LinePtr &, const std::string &x, int spec);
     auto make_string(String) -> std::string;
@@ -54,7 +54,7 @@ namespace tralics_ns {
     auto open_file(const std::string &name, bool) -> std::fstream *;
     void close_file(std::fstream *);
     auto only_digits(const std::string &s) -> bool;
-    auto get_out_dir(const std::string &) -> String;
+    auto get_out_dir(const std::string &) -> String; /// Returns output_dir+name
     auto get_short_jobname() -> std::string;
 } // namespace tralics_ns
 

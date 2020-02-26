@@ -17,12 +17,10 @@ namespace stack_ns {
     auto mode_to_string(mode x) -> String;
 } // namespace stack_ns
 
-extern bool booted;
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
     enames.push_back(elt);
-    //  if(booted && elt)std::cout<< "XX" << last_xid+1 << elt << "\n";
     last_xid++;
     return last_xid;
 }

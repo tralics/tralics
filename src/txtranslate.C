@@ -10,11 +10,11 @@
 
 // This file contains a big part of the Tralics translator
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 
 void readline_newprompt(std::string s); // in readline.C, but only used here
-void txsleep(int);                      // in txmain.C, but only used here
 
 namespace {
     Buffer current_head;
