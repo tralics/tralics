@@ -2,15 +2,4 @@
 /warnings.log
 /build
 /.vscode
-/test/*.aux
-/test/*.bbl
-/test/*.blg
-/test/*.fdb_latexmk
-/test/*.fls
-/test/*.log
-/test/*.xml
-/test/*.img
-/test/Trace
-/test/fileA
-/test/fileB
-/test/tout.tex
+/docs
