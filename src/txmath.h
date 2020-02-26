@@ -147,64 +147,64 @@ public:
     Math() = default;
 
 public:
-    [[nodiscard]] auto duplicate(bool) const -> subtypes;
-    auto               back() -> MathElt & { return value.back(); }
-    [[nodiscard]] auto begin() const -> const_math_iterator { return value.begin(); }
-    auto               chars_to_mb(Buffer &, bool) const -> bool;
-    auto               chars_to_mb1(Buffer &) const -> bool;
-    auto               chars_to_mb2(Buffer &) const -> bool;
-    auto               chars_to_mb3() -> Istring;
-    void               clear() { value.clear(); }
-    auto               convert_math(math_style) -> Xml *;
-    auto               convert_math_noML(bool) -> Xml *;
-    void               convert_math_noML0();
-    void               convert_math_noMLt0();
-    auto               convert_opname() -> std::string;
-    auto               convert_this_to_string(Buffer &) -> std::string;
-    void               destroy();
-    [[nodiscard]] auto empty() const -> bool { return value.empty(); }
-    [[nodiscard]] auto end() const -> const_math_iterator { return value.end(); }
-    auto               find_parens(MathQList &, bool) const -> bool;
-    auto               front() -> MathElt & { return value.front(); }
-    [[nodiscard]] auto front() const -> const MathElt & { return value.front(); }
-    auto               get_arg1() -> Math { return front().get_list(); }
-    auto               get_arg2() -> Math { return second_element().get_list(); }
-    auto               get_arg3() -> Math { return third_element().get_list(); }
-    [[nodiscard]] auto get_type() const -> math_list_type { return type; }
-    [[nodiscard]] auto get_sname() const -> subtypes { return sname; }
-    [[nodiscard]] auto get_name() const -> String;
-    [[nodiscard]] auto get_list(int) const -> Math &;
-    void               hack_type(int);
-    [[nodiscard]] auto has_type(int x) const -> bool { return type == x; }
-    [[nodiscard]] auto has_one_element() const -> bool;
-    [[nodiscard]] auto has_two_elements() const -> bool;
-    void               is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
-    [[nodiscard]] auto length_one() const -> bool { return value.size() == 1; }
-    auto               M_array(bool, math_style) -> Xml *;
-    auto               M_cv(math_style, int need_row) -> XmlAndType;
-    void               pop_back() { value.pop_back(); }
-    void               pop_front() { value.pop_front(); }
-    void               print() const;
-    void               push_back(CmdChr, subtypes);
-    void               push_back_list(subtypes X, math_list_type c);
-    void               push_back_font(subtypes X, subtypes c);
-    void               push_back(CmdChr);
-    void               push_back(MathElt x) { value.push_back(x); }
-    void               push_back(Xml *, int, math_types);
-    void               push_front(CmdChr, subtypes);
-    void               remove_initial_group();
-    void               remove_last();
-    void               remove_spaces();
-    [[nodiscard]] auto second_element() const -> const MathElt &;
-    void               set_display_type() { type = math_ddollar_cd; }
-    void               set_env_name(int);
-    void               set_name(subtypes X) { sname = X; }
-    void               set_nondisplay_type() { type = math_dollar_cd; }
-    void               set_type(math_list_type c) { type = c; }
-    [[nodiscard]] auto third_element() const -> const MathElt &;
-    auto               trivial_math(int) -> Xml *;
-    auto               trivial_math_index(symcodes) -> Xml *;
-    auto               check_align() -> int;
+    [[nodiscard]] auto        duplicate(bool) const -> subtypes;
+    auto                      back() -> MathElt & { return value.back(); }
+    [[nodiscard]] auto        begin() const -> const_math_iterator { return value.begin(); }
+    auto                      chars_to_mb(Buffer &, bool) const -> bool;
+    auto                      chars_to_mb1(Buffer &) const -> bool;
+    auto                      chars_to_mb2(Buffer &) const -> bool;
+    auto                      chars_to_mb3() -> Istring;
+    void                      clear() { value.clear(); }
+    auto                      convert_math(math_style) -> Xml *;
+    auto                      convert_math_noML(bool) -> Xml *;
+    void                      convert_math_noML0();
+    void                      convert_math_noMLt0();
+    auto                      convert_opname() -> std::string;
+    auto                      convert_this_to_string(Buffer &) -> std::string;
+    void                      destroy();
+    [[nodiscard]] auto        empty() const -> bool { return value.empty(); }
+    [[nodiscard]] auto        end() const -> const_math_iterator { return value.end(); }
+    auto                      find_parens(MathQList &, bool) const -> bool;
+    auto                      front() -> MathElt & { return value.front(); }
+    [[nodiscard]] auto        front() const -> const MathElt & { return value.front(); }
+    auto                      get_arg1() -> Math { return front().get_list(); }
+    auto                      get_arg2() -> Math { return second_element().get_list(); }
+    auto                      get_arg3() -> Math { return third_element().get_list(); }
+    [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
+    [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
+    [[nodiscard]] auto        get_name() const -> String;
+    [[nodiscard]] static auto get_list(int) -> Math &;
+    void                      hack_type(int);
+    [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
+    [[nodiscard]] auto        has_one_element() const -> bool;
+    [[nodiscard]] auto        has_two_elements() const -> bool;
+    void                      is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
+    [[nodiscard]] auto        length_one() const -> bool { return value.size() == 1; }
+    auto                      M_array(bool, math_style) -> Xml *;
+    auto                      M_cv(math_style, int need_row) -> XmlAndType;
+    void                      pop_back() { value.pop_back(); }
+    void                      pop_front() { value.pop_front(); }
+    void                      print() const;
+    void                      push_back(CmdChr, subtypes);
+    void                      push_back_list(subtypes X, math_list_type c);
+    void                      push_back_font(subtypes X, subtypes c);
+    void                      push_back(CmdChr);
+    void                      push_back(MathElt x) { value.push_back(x); }
+    void                      push_back(Xml *, int, math_types);
+    void                      push_front(CmdChr, subtypes);
+    void                      remove_initial_group();
+    void                      remove_last();
+    void                      remove_spaces();
+    [[nodiscard]] auto        second_element() const -> const MathElt &;
+    void                      set_display_type() { type = math_ddollar_cd; }
+    void                      set_env_name(int);
+    void                      set_name(subtypes X) { sname = X; }
+    void                      set_nondisplay_type() { type = math_dollar_cd; }
+    void                      set_type(math_list_type c) { type = c; }
+    [[nodiscard]] auto        third_element() const -> const MathElt &;
+    auto                      trivial_math(int) -> Xml *;
+    auto                      trivial_math_index(symcodes) -> Xml *;
+    auto                      check_align() -> int;
 
 private:
     void               add_cur_cont();
@@ -378,34 +378,34 @@ private:
     auto init_builtin(String, math_loc, Xml *, symcodes) -> Token;
 
 public:
-    void boot();
-    void realloc_list0();
-    void realloc_list();
-    void realloc_xml();
-    auto find_math_location(math_list_type c, subtypes n) -> subtypes;
-    auto find_xml_location() -> subtypes;
-    auto find_xml_location(Xml *) -> subtypes;
-    auto make_mfenced(int open, int close, Xml *val) -> Xml *;
-    auto add_style(int lvl, Xml *res) -> Xml *;
-    void TM_mk(String a, String b, math_types c);
-    void finish_math_mem();
-    auto get_mc_table(int i) -> Xml * { return mc_table[i]; }
-    auto get_builtin(int p) -> Xml * { return built_in_table[p]; }
-    auto get_builtin_alt(int p) -> Xml * { return built_in_table_alt[p]; }
-    void init_builtin(int i, Xml *X) { built_in_table[i] = X; }
-    void init_builtin(int i, int j) { built_in_table[i] = built_in_table[j]; }
-    void init_builtin(int i, Buffer &B) { built_in_table[i] = new Xml(B); }
-    auto get_xml_val(int i) -> Xml * {
+    void        boot();
+    void        realloc_list0();
+    void        realloc_list();
+    void        realloc_xml();
+    auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
+    auto        find_xml_location() -> subtypes;
+    auto        find_xml_location(Xml *) -> subtypes;
+    auto        make_mfenced(int open, int close, Xml *val) -> Xml *;
+    static auto add_style(int lvl, Xml *res) -> Xml *;
+    void        TM_mk(String a, String b, math_types c);
+    void        finish_math_mem();
+    auto        get_mc_table(int i) -> Xml * { return mc_table[i]; }
+    auto        get_builtin(int p) -> Xml * { return built_in_table[p]; }
+    auto        get_builtin_alt(int p) -> Xml * { return built_in_table_alt[p]; }
+    void        init_builtin(int i, Xml *X) { built_in_table[i] = X; }
+    void        init_builtin(int i, int j) { built_in_table[i] = built_in_table[j]; }
+    void        init_builtin(int i, Buffer &B) { built_in_table[i] = new Xml(B); }
+    auto        get_xml_val(int i) -> Xml * {
         if (i < m_offset) return built_in_table[i];
         return xml_math_table[i - m_offset];
     }
-    auto get_list(int k) -> Math & { return math_table[k]; }
-    void push_back(int k, CmdChr, subtypes c);
-    auto get_simplemath_val(int i) -> Xml * { return simplemath_table[i]; }
-    auto get_fence(int k) -> Istring { return xml_lr_ptable[k]; }
-    auto get_math_char_type(int i) -> math_types { return math_char_type[i]; }
-    auto mk_mo(String a) -> Xml *;
-    void set_type(int k, math_list_type c) { math_table[k].set_type(c); }
+    auto        get_list(int k) -> Math & { return math_table[k]; }
+    void        push_back(int k, CmdChr, subtypes c);
+    auto        get_simplemath_val(int i) -> Xml * { return simplemath_table[i]; }
+    auto        get_fence(int k) -> Istring { return xml_lr_ptable[k]; }
+    auto        get_math_char_type(int i) -> math_types { return math_char_type[i]; }
+    static auto mk_mo(String a) -> Xml *;
+    void        set_type(int k, math_list_type c) { math_table[k].set_type(c); }
 };
 
 class Cv3Helper {

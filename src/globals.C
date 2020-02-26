@@ -134,8 +134,8 @@ void main_ns::new_in_dir(String s) {
 }
 
 void main_ns::check_in_dir() {
-    for (size_t i = 0; i < input_path.size(); i++)
-        if (input_path[i].empty()) return;
+    for (auto &i : input_path)
+        if (i.empty()) return;
     input_path.emplace_back("");
 }
 

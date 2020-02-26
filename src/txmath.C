@@ -493,7 +493,7 @@ void Math::push_back(Math &X) { value.splice(value.end(), X.value); }
 
 auto MathElt::get_list() const -> Math & { return math_data.get_list(get_chr()); }
 
-auto Math::get_list(int w) const -> Math & { return math_data.get_list(w); }
+auto Math::get_list(int w) -> Math & { return math_data.get_list(w); }
 
 // Adds a token to the list
 void Math::push_back(CmdChr X, subtypes c) { push_back(MathElt(X, c)); }

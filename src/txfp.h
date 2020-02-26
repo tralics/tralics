@@ -40,8 +40,8 @@ public:
     auto               create(Buffer &) -> bool;
     [[nodiscard]] auto to_list() const -> TokenList;
     void               add(FpNum);
-    void               set_xmax(const Digit *x, int &xmin, int &xmax);
-    void               prop_carry(Digit *z);
+    static void        set_xmax(const Digit *x, int &xmin, int &xmax);
+    static void        prop_carry(Digit *z);
     void               finish_mul(bool xs, Digit *z);
     void               unsplit_mul4(const Digit *);
     void               add_int(FpNum);

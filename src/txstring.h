@@ -46,7 +46,7 @@ public:
     auto               lab_val_check(Istring k) -> LabelInfo *;
     auto               next_label_id() -> Istring;
     auto               next_top_label_id() -> Istring;
-    void               rlc_to_string(String s, std::vector<AttList> &);
+    static void        rlc_to_string(String s, std::vector<AttList> &);
     auto               find_scaled(ScaledInt) -> Istring;
 
     static auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }

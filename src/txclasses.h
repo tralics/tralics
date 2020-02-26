@@ -89,24 +89,24 @@ public:
     bool                        using_default_class{false}; // inhibits warning
 public:
     ClassesData();
-    auto cur_pack() -> LatexPackage *;
-    auto find_package(const std::string &name, bool, bool) -> int;
-    void new_unused_global_option(const KeyAndVal &s) { unused_options.push_back(s); }
-    void remove_from_unused(const std::string &name);
-    void show_unused();
+    auto        cur_pack() -> LatexPackage *;
+    auto        find_package(const std::string &name, bool, bool) -> int;
+    void        new_unused_global_option(const KeyAndVal &s) { unused_options.push_back(s); }
+    static void remove_from_unused(const std::string &name);
+    static void show_unused();
 };
 
 // The  date parser
 class FormatDate {
-    int   field1{0}, field2{0}, field3{0};
-    Token err_tok;
-    auto  scan_a_field(Buffer &, int &) -> bool;
-    auto  scan_a_month(Buffer &, int &) -> bool;
-    auto  scan_next(Buffer &, int &) -> bool;
-    auto  sort() -> bool;
-    auto  next_format_char(Buffer &) -> int;
-    auto  parse_format(Buffer &) -> bool;
-    auto  parse(Buffer &) -> bool;
+    int         field1{0}, field2{0}, field3{0};
+    Token       err_tok;
+    auto        scan_a_field(Buffer &, int &) -> bool;
+    static auto scan_a_month(Buffer &, int &) -> bool;
+    auto        scan_next(Buffer &, int &) -> bool;
+    auto        sort() -> bool;
+    static auto next_format_char(Buffer &) -> int;
+    auto        parse_format(Buffer &) -> bool;
+    auto        parse(Buffer &) -> bool;
 
 public:
     auto               interpret(const std::string &, Token T) -> bool;

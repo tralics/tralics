@@ -365,7 +365,7 @@ public:
     [[nodiscard]] auto make_character() const -> codepoint;
     void               uppercase();
     void               utf8_error(bool);
-    void               utf8_ovf(int);
+    static void        utf8_ovf(int);
     auto               xml_and_attrib(const std::string &s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;

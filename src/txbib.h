@@ -183,10 +183,12 @@ class NameSplitter {
 
 public:
     NameSplitter(bchar_type *T) : table(T) {}
+
     void handle_the_names();
     void handle_one_name(bool ifn, bool iln, int serial);
-    auto want_handle_key(int, bool) -> bool;
     auto is_this_other() -> bool;
+
+    static auto want_handle_key(int, bool) -> bool;
 };
 
 // A bibliographic entry
@@ -221,47 +223,49 @@ public:
     [[nodiscard]] auto Sort_label() const -> const std::string & { return sort_label; }
 
 private:
-    void               find_cnrs_type(Buffer &);
     [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
-    void               output_bibitem();
-    void               out_something(field_pos p);
-    void               out_something(field_pos p, std::string s);
-    void               out_something(field_pos p, int w);
-    void               set_explicit_cit() { explicit_cit = true; }
+    [[nodiscard]] auto ra_prefix() const -> String;
     [[nodiscard]] auto get_from() const -> bib_from { return cite_key.get_from(); }
     [[nodiscard]] auto get_name() const -> std::string { return cite_key.get_name(); }
-    auto               is_empty(String s) -> bool;
-    void               move_to_year() { cite_key.move_to_year(); }
-    void               use_extra_num();
-    void               numeric_label(int);
-    void               call_type();
-    void               call_type_all();
-    void               call_type_special();
-    void               format_series_etc(bool);
-    void               sort_author(bool);
-    void               sort_editor();
-    void               sort_organization();
-    void               sort_check(String);
-    void               presort(int);
-    void               sort_key();
-    void               format_author(bool);
-    void               forward_pass(std::string &previous_label, int &last_num);
-    void               reverse_pass(int &next_extra);
-    auto               find_all_names(String) -> BibtexName *;
-    auto               format_lab_names(String s) -> String;
-    auto               sort_format_names(String s) -> String;
-    void               normalise();
-    [[nodiscard]] auto ra_prefix() const -> String;
-    void               handle_one_namelist(std::string &s, BibtexName &X);
-    void               un_crossref();
-    void               copy_from(BibEntry *);
-    void               copy_from(BibEntry *, int);
-    void               normalise_statut(Buffer &);
-    void               one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
-    void               add_warning(int);
-    auto               store_field(field_pos) -> bool;
-    void               parse_crossref();
-    void               work(int);
+
+    void find_cnrs_type(Buffer &);
+    void output_bibitem();
+    void out_something(field_pos p);
+    void out_something(field_pos p, int w);
+    void set_explicit_cit() { explicit_cit = true; }
+    auto is_empty(String s) -> bool;
+    void move_to_year() { cite_key.move_to_year(); }
+    void use_extra_num();
+    void numeric_label(int);
+    void call_type();
+    void call_type_all();
+    void call_type_special();
+    void format_series_etc(bool);
+    void sort_author(bool);
+    void sort_editor();
+    void sort_organization();
+    void sort_check(String);
+    void presort(int);
+    void sort_key();
+    void format_author(bool);
+    void forward_pass(std::string &previous_label, int &last_num);
+    void reverse_pass(int &next_extra);
+    auto find_all_names(String) -> BibtexName *;
+    auto format_lab_names(String s) -> String;
+    auto sort_format_names(String s) -> String;
+    void normalise();
+    void un_crossref();
+    void copy_from(BibEntry *);
+    void copy_from(BibEntry *, int);
+    void normalise_statut(Buffer &);
+    void one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
+    void add_warning(int);
+    auto store_field(field_pos) -> bool;
+    void parse_crossref();
+    void work(int);
+
+    static void handle_one_namelist(std::string &s, BibtexName &X);
+    static void out_something(field_pos p, std::string s);
 };
 
 class Berror {};
@@ -344,27 +348,29 @@ private:
     auto               wrong_first_char(codepoint c, int what) -> int;
 
 public:
-    auto               get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
-    auto               find_field_pos(String s) const -> field_pos;
-    auto               find_type(String s) -> entry_type;
-    auto               exec_bibitem(const std::string &, const std::string &) -> Istring;
-    void               nocitestar_true() { nocitestar = true; }
-    auto               implement_cit(String x, std::string w) -> int;
-    auto               is_year_string(const std::string &y, bib_from from) -> String;
-    auto               wrong_class(int, const std::string &y, bib_from from) -> bool;
-    void               work();
-    void               read(String src, bib_from);
-    auto               read0(Buffer &B, bib_from) -> bool;
-    void               read1(const std::string &cur);
-    void               read_ra();
-    void               err_in_file(String s, bool last);
-    void               err_in_entry(String a);
-    void               err_in_name(String a, int i);
-    void               bad_year(const std::string &given, String wanted);
-    void               boot(std::string, bool);
-    void               bootagain();
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
-    void               enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
+
+    auto get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
+    auto exec_bibitem(const std::string &, const std::string &) -> Istring;
+    void nocitestar_true() { nocitestar = true; }
+    auto implement_cit(String x, std::string w) -> int;
+    auto is_year_string(const std::string &y, bib_from from) -> String;
+    void work();
+    void read(String src, bib_from);
+    auto read0(Buffer &B, bib_from) -> bool;
+    void read1(const std::string &cur);
+    void read_ra();
+    void err_in_file(String s, bool last);
+    void err_in_name(String a, int i);
+    void boot(std::string, bool);
+    void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
+    void bootagain();
+
+    static void bad_year(const std::string &given, String wanted);
+    static void err_in_entry(String a);
+    static auto find_field_pos(String s) -> field_pos;
+    static auto find_type(String s) -> entry_type;
+    static auto wrong_class(int, const std::string &y, bib_from from) -> bool;
 };
 
 class Bbl {

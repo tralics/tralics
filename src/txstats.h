@@ -65,7 +65,7 @@ public:
     void one_more_merge() { m_merge++; }
     Stats() = default;
 
-    void token_stats();
-    void io_convert_stats();
-    void print_module_stats();
+    void        token_stats();
+    static void io_convert_stats();
+    void        print_module_stats();
 };

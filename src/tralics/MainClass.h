@@ -135,7 +135,6 @@ public:
     void bad_ignore_char(int k, String s);
     auto check_for_tcf(const std::string &) -> bool;
     void check_section_use();
-    auto check_theme(const std::string &) -> std::string;
     void check_ur(const Buffer &);
     auto get_bibtex_fields() -> std::vector<Istring> & { return bibtex_fields; }
     auto get_bibtex_fields_s() -> std::vector<Istring> & { return bibtex_fields_s; }
@@ -218,7 +217,6 @@ private:
     void ignore_text();
     void make_perl_script();
     void merge_bib();
-    void mk_empty(); ///< Create an empty TeX file
     void mkcfg();
     void more_boot(); ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
@@ -246,6 +244,10 @@ private:
     void start_document(Buffer &a);
     void start_env(std::string);
     void start_error();
-    void trans0();            ///< Start the latex to XML translation
-    void usage_and_quit(int); ///< Shows the command syntax and exits
+    void trans0(); ///< Start the latex to XML translation
+
+public:
+    static auto check_theme(const std::string &) -> std::string;
+    static void mk_empty();          ///< Create an empty TeX file
+    static void usage_and_quit(int); ///< Shows the command syntax and exits
 };

@@ -376,7 +376,7 @@ void SaveAuxFont::unsave(bool trace, Parser &P) {
 // If you say: \let\foo=1 \global\let\foo=2
 // the first \let saves the old value on the stack. The \global makes this
 // irrelevant.
-void SaveAux::restore_or_retain(bool rt, String s) const { the_log << lg_startstack << (rt ? "restoring " : "retaining ") << s; }
+void SaveAux::restore_or_retain(bool rt, String s) { the_log << lg_startstack << (rt ? "restoring " : "retaining ") << s; }
 
 // This done when we restore an integer value
 void SaveAuxInt::unsave(bool trace, Parser &P) {

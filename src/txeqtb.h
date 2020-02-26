@@ -146,7 +146,7 @@ public:
     void               set_line(int l) { line_no = l; }
     [[nodiscard]] auto get_line() const -> int { return line_no; }
     void               unsave_trace_aux(String s, int pos, bool rt);
-    void               restore_or_retain(bool, String) const;
+    static void        restore_or_retain(bool, String);
 };
 
 // A boundary object is created when we see an open brace, or something

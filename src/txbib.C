@@ -671,7 +671,7 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
 void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf1, true, name, value); }
 
 // Return an integer associated to a field position.
-auto Bibtex::find_field_pos(String s) const -> field_pos {
+auto Bibtex::find_field_pos(String s) -> field_pos {
     if (s == nullptr) return fp_unknown;
     auto S = Istring(s);
     // Check is this has to be ignored

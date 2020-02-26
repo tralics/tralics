@@ -98,7 +98,7 @@ public:
     [[nodiscard]] auto first_frame() const -> Istring;
     [[nodiscard]] auto first_non_empty() const -> const StackSlot &;
     void               fonts0(name_positions x);
-    auto               fonts1(name_positions x) -> Xml *;
+    static auto        fonts1(name_positions x) -> Xml *;
     auto               get_att_list(int k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
     auto               get_cur_par() -> Xml *;
@@ -156,6 +156,6 @@ public:
     void               trace_stack();
     void               unbox(Xml *);
     auto               xml2_space(Istring a, Xml *c, Xml *d) -> Xml *;
-    auto               xml2_space(Istring elt, Istring, Istring, Xml *f_arg, Xml *s_arg) -> Xml *;
-    auto               xml2_space(Istring elt, Istring, Xml *first_arg, Xml *second_arg) -> Xml *;
+    static auto        xml2_space(Istring elt, Istring, Istring, Xml *f_arg, Xml *s_arg) -> Xml *;
+    static auto        xml2_space(Istring elt, Istring, Xml *first_arg, Xml *second_arg) -> Xml *;
 };
