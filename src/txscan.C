@@ -13,7 +13,6 @@
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
-#include <utility>
 
 namespace {
     Buffer                    scratch;                            // See insert_string

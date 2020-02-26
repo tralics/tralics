@@ -13,7 +13,6 @@
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
-#include <utility>
 
 extern MathDataP math_data;
 using namespace math_ns;

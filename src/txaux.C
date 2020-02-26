@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
 

@@ -11,7 +11,6 @@
 
 #include "txinline.h"
 #include "txparser.h"
-#include <utility>
 
 // Font info stuff.
 

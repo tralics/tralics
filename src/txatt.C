@@ -9,9 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txatt.h"
 #include "txinline.h"
-#include "txparam.h"
 #include "txstack.h"
 
 // This returns the attribute list of this id.

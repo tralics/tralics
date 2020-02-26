@@ -10,11 +10,9 @@
 
 // This file contains ltclass.dtx
 
-#include "txatt.h"
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
-#include <utility>
 
 namespace {
     Buffer      local_buf;

@@ -11,7 +11,6 @@
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
-#include <utility>
 
 // This file contains the big switch that interprets (most) commands
 

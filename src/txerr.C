@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txinline.h"
-#include "txlogger.h"
 #include "txparser.h"
 
 namespace err_ns {

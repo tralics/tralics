@@ -15,7 +15,6 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
-#include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <ctime>

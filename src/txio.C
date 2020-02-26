@@ -11,11 +11,9 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
-#include "txatt.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <sstream>
-#include <utility>
 
 static const int lmaxchar     = 256;
 static const int max_encoding = 34;

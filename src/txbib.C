@@ -9,13 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txatt.h"
 #include "txbib.h"
-#include "txhash.h"
-#include "txinline.h"
 #include "txparser.h"
 #include <algorithm>
-#include <utility>
 
 using main_ns::log_and_tty; // used for error signalling
 

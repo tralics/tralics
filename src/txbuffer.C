@@ -10,8 +10,6 @@
 
 // This file contains a lot of stuff dealing with buffers.
 
-#include "txhash.h"
-#include "tximage.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <unistd.h>

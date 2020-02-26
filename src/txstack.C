@@ -12,8 +12,6 @@
 
 #include "txinline.h"
 #include "txparser.h"
-#include <cstring>
-#include <utility>
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;
