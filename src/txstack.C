@@ -380,7 +380,7 @@ void Stack::pop(Istring a) {
         Table.pop_back();
     }
     if (a != Table.back().frame) {
-        err_ns::local_buf << bf_reset << "Error in pop; stack holds " << Table.back().frame << "; trying to pop " << a;
+        err_buf << bf_reset << "Error in pop; stack holds " << Table.back().frame << "; trying to pop " << a;
         the_parser.signal_error();
         return;
     }
@@ -388,7 +388,7 @@ void Stack::pop(Istring a) {
     cur_lid  = Table.back().uid;
     Table.pop_back();
     if (Table.empty()) {
-        err_ns::local_buf << bf_reset << "Error in pop; stack empty; trying to pop " << a;
+        err_buf << bf_reset << "Error in pop; stack empty; trying to pop " << a;
         the_parser.signal_error();
         Istring S = the_names[cst_document];
         ipush(S, new Xml(S, nullptr)); // stack should never be empty

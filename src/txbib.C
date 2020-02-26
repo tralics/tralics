@@ -364,7 +364,7 @@ void CitationItem::dump_bibtex() {
     CitationKey ref(from.c_str(), key.c_str());
     BibEntry *  X = the_bibtex->find_entry(ref);
     if (X != nullptr) {
-        err_ns::local_buf << bf_reset << "Conflicts with tralics bib" << ref.get_name();
+        err_buf << bf_reset << "Conflicts with tralics bib" << ref.get_name();
         the_parser.signal_error(the_parser.err_tok, "bib");
         return;
     }
@@ -975,7 +975,7 @@ void Parser::solve_cite(bool user) {
         n = B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[n];
     if (CI.is_solved()) {
-        err_ns::local_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
+        err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
@@ -985,7 +985,7 @@ void Parser::solve_cite(bool user) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(my_id));
         else {
-            err_ns::local_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
+            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }

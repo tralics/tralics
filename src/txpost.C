@@ -1047,17 +1047,17 @@ void Xml::convert_to_string(Buffer &buf) {
         for (int k = 0; k < len; k++) tree[k]->convert_to_string(buf);
         return;
     }
-    err_ns::local_buf.reset();
+    err_buf.reset();
     if (id.is_font_change()) {
         Istring w = get_id().has_attribute(the_names[np_rend]);
         if (!w.null()) {
-            err_ns::local_buf << "unexpected font change " << w;
+            err_buf << "unexpected font change " << w;
             the_parser.unexpected_font();
             the_parser.signal_error();
             return;
         }
     }
-    err_ns::local_buf << "unexpected element " << name;
+    err_buf << "unexpected element " << name;
     the_parser.signal_error();
 }
 

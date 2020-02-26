@@ -150,13 +150,13 @@ void Parser::E_prg_return(int c) {
 // s is true when n is given by specification, false when by value
 auto Parser::l3_parms_from_ac(int n, Token t, bool s) -> TokenList {
     if (n < 0) {
-        err_ns::local_buf << bf_reset << "Negative number of arguments " << n << " for " << t;
+        err_buf << bf_reset << "Negative number of arguments " << n << " for " << t;
         signal_error(err_tok, "bad args");
         n = 0;
     }
     if (n > 9) {
-        err_ns::local_buf << bf_reset << "Too many arguments " << n << " for " << t;
-        if (s) err_ns::local_buf << " (wrong argument specification)";
+        err_buf << bf_reset << "Too many arguments " << n << " for " << t;
+        if (s) err_buf << " (wrong argument specification)";
         signal_error(err_tok, "bad args");
         n = 0;
     }
@@ -179,7 +179,7 @@ auto Parser::L3_split_next_name() -> bool {
     B << hash_table[cur_tok.hash_loc()];
     bool ok = B.split_at_colon(tok_base, tok_sig);
     if (!ok) {
-        err_ns::local_buf << bf_reset << "Missing colon in macro name " << cur_tok << " by " << err_tok;
+        err_buf << bf_reset << "Missing colon in macro name " << cur_tok << " by " << err_tok;
         signal_error(err_tok, "no colon in name");
         return true;
     }
@@ -244,8 +244,8 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
     if (p == "F") return l3_F_code;
     if (p.empty()) return l3_bad_code;
 
-    err_ns::local_buf.reset();
-    err_ns::local_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
+    err_buf.reset();
+    err_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
     the_parser.signal_error(the_parser.err_tok, "bad spec");
     return l3_bad_code;
 }
@@ -283,8 +283,8 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
         body.push_back(Tc_true_bool);
         body.push_back(Tc_false_bool);
         if (pt) { // predicate, requires non-protected
-            err_ns::local_buf.reset();
-            err_ns::local_buf << cmd_name << " for \\" << tok_base << ":" << tok_sig << ": A predicate cannot be protected";
+            err_buf.reset();
+            err_buf << cmd_name << " for \\" << tok_base << ":" << tok_sig << ": A predicate cannot be protected";
             signal_error(err_tok, "bad protected");
         }
         break;
@@ -1050,8 +1050,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     int n = var.size();
     if (n == 0) return; // ignore empty sepc
     if (n > int(tok_sig.size())) {
-        err_ns::local_buf.reset();
-        err_ns::local_buf << "New spec size '" << var << "' too big for " << orig;
+        err_buf.reset();
+        err_buf << "New spec size '" << var << "' too big for " << orig;
         signal_error(err_tok, "spec too big");
         return;
     }
@@ -1070,8 +1070,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
             osig.modify(i, nc);
             last_ok = i + 1;
         } else {
-            err_ns::local_buf.reset();
-            err_ns::local_buf << "Old spec at position " << i << " should be n or N for " << orig;
+            err_buf.reset();
+            err_buf << "Old spec at position " << i << " should be n or N for " << orig;
             signal_error(err_tok, "variant, bad orig");
             return;
         }

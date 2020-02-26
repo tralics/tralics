@@ -362,9 +362,8 @@ void Parser::E_accent() {
     // Fetch the accent
     TokenList y = read_arg();
     if (y.empty()) {
-        err_ns::local_buf << bf_reset << msg1 << tfe.tok_to_str();
-        err_ns::local_buf << (acc_code == '~' ? "\n\\~{} is the wrong way to put a tilde in an URL"
-                                              : "\nThings like {\\'{}} are a bit strange");
+        err_buf << bf_reset << msg1 << tfe.tok_to_str();
+        err_buf << (acc_code == '~' ? "\n\\~{} is the wrong way to put a tilde in an URL" : "\nThings like {\\'{}} are a bit strange");
         signal_error(err_tok, msg2);
         return;
     }
@@ -427,15 +426,15 @@ void Parser::E_accent() {
         achar = 'i';
     else if ((cur_cmd_chr.get_cmd() == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
     } else {
-        err_ns::local_buf << bf_reset << msg1;
-        err_ns::local_buf << tfe.tok_to_str();
-        if (acc_code2 != 0) err_ns::local_buf << tfe2.tok_to_str();
+        err_buf << bf_reset << msg1;
+        err_buf << tfe.tok_to_str();
+        if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
         if (Y.is_invalid())
-            err_ns::local_buf << "\nEnd of data reached while scanning argument";
+            err_buf << "\nEnd of data reached while scanning argument";
         else if (!cur_tok.not_a_cmd())
-            err_ns::local_buf << "\nLetter needed instead of " << cur_tok.tok_to_str();
+            err_buf << "\nLetter needed instead of " << cur_tok.tok_to_str();
         else
-            err_ns::local_buf << "\nLetter needed";
+            err_buf << "\nLetter needed";
         signal_error(err_tok, msg2);
         return;
     }
@@ -459,11 +458,11 @@ void Parser::E_accent() {
     if (res.is_null()) {
         String s = achar >= 128 ? "a non 7-bit character"
                                 : is_letter(achar) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
-        err_ns::local_buf << bf_reset << msg1;
-        err_ns::local_buf << tfe.tok_to_str();
-        if (acc_code2 != 0) err_ns::local_buf << tfe2.tok_to_str();
-        err_ns::local_buf << "\nCannot put accent on " << s;
-        if (achar < 128) err_ns::local_buf << " " << char(achar);
+        err_buf << bf_reset << msg1;
+        err_buf << tfe.tok_to_str();
+        if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
+        err_buf << "\nCannot put accent on " << s;
+        if (achar < 128) err_buf << " " << char(achar);
         signal_error(err_tok, msg2);
         return;
     }

@@ -1462,3 +1462,6 @@ void Buffer::put_at_end(String s) {
     if (wptr > n && strcmp(data() + wptr - n, s) == 0) return;
     push_back(s);
 }
+
+Buffer Txbuf;
+Buffer err_buf;

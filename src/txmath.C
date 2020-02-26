@@ -998,8 +998,8 @@ void Parser::scan_math(int res, math_list_type type) {
             if (scan_math_dollar(res, type)) return;
             continue;
         case par_cmd:
-            err_ns::local_buf << bf_reset << "Unexpected \\par";
-            if (type == math_argument_cd) err_ns::local_buf << " while scanning argument of " << fct_caller.tok_to_str();
+            err_buf << bf_reset << "Unexpected \\par";
+            if (type == math_argument_cd) err_buf << " while scanning argument of " << fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
             return;
         case eqno_cmd: scan_eqno(type); continue;

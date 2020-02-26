@@ -38,3 +38,22 @@ void MainClass::finish_init() {
     int n = config_data.data.size();
     for (int i = 2; i < n; i++) config_data.data[i]->check_other();
 }
+
+// This function is called when we translate a theme value.
+
+auto MainClass::check_theme(const std::string &s) -> std::string {
+    std::string res = Txbuf.add_with_space(s.c_str());
+    if (strstr(all_themes.c_str(), Txbuf.c_str()) == nullptr) {
+        err_buf.reset();
+        if (s.empty())
+            err_buf << "Empty or missing theme\n";
+        else
+            err_buf << "Invalid theme " << s << "\n";
+        if (all_themes.empty())
+            err_buf << "Configuration file defines nothing";
+        else
+            err_buf << "Valid themes are" << all_themes;
+        the_parser.signal_error(the_parser.err_tok, "Bad theme");
+    }
+    return res;
+}

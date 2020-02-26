@@ -573,7 +573,7 @@ void Parser::pop_level(boundary_type v) {
             must_throw = true;
         else if (w == bt_env) {
             if (v == bt_semisimple) v = bt_esemisimple;
-            err_ns::local_buf << bf_reset << "Extra " << parser_ns::to_string(v) << " found in unclosed environment " << cur_env_name;
+            err_buf << bf_reset << "Extra " << parser_ns::to_string(v) << " found in unclosed environment " << cur_env_name;
             signal_error(err_tok, "extra brace");
             return;
         } else {
@@ -585,8 +585,7 @@ void Parser::pop_level(boundary_type v) {
     if (v == bt_env && cur_tok.is_valid()) {
         std::string foo = cur_tok.tok_to_str();
         if (foo != "\\end" + cur_env_name) {
-            err_ns::local_buf << bf_reset << "Environment '" << cur_env_name << "' started at line " << first_boundary_loc << " ended by "
-                              << cur_tok;
+            err_buf << bf_reset << "Environment '" << cur_env_name << "' started at line " << first_boundary_loc << " ended by " << cur_tok;
             signal_error(err_tok, "bad end env");
         }
         // this is the wrong env, we nevertheless pop
@@ -618,7 +617,7 @@ void Parser::pop_all_levels() {
     pop_level(bt_env); // pop the end document
     bool        started = false;
     std::string ename   = "";
-    Buffer &    B       = err_ns::local_buf;
+    Buffer &    B       = err_buf;
     B.reset();
     for (;;) {
         if (the_save_stack.empty()) break;
@@ -670,7 +669,7 @@ void Parser::final_checks() {
     }
     if (n == 0) return;
     the_log << "Number of items on the save stack: " << n << "\n";
-    Buffer &B = err_ns::local_buf;
+    Buffer &B = err_buf;
     B.reset();
     Buffer &A = Thbuf1;
     for (int i = n - 1; i >= 0; i--) {

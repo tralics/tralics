@@ -2036,7 +2036,7 @@ void Parser::T_error() {
     }
     flush_buffer();
     std::string b = sT_arg_nopar(); // msg
-    err_ns::local_buf << bf_reset << "Error: " << b;
+    err_buf << bf_reset << "Error: " << b;
     signal_error(err_tok, b.c_str());
 }
 
@@ -2046,7 +2046,7 @@ auto Parser::read_elt_id(Token T) -> int {
     int upper = the_stack.get_xid().value;
     int n     = scan_special_int_d(T, cur);
     if (n > 0 && n <= upper) return n;
-    err_ns::local_buf << bf_reset << "Bad xml id replaced by 0: " << n;
+    err_buf << bf_reset << "Bad xml id replaced by 0: " << n;
     signal_error(err_tok, "number too big");
     return 0;
 }
@@ -2137,7 +2137,7 @@ void Parser::T_specimp(int c) {
         return;
     case message_code: std::cout << string_to_write(0); return;
     case errmessage_code:
-        err_ns::local_buf << bf_reset << string_to_write(write18_slot + 1);
+        err_buf << bf_reset << string_to_write(write18_slot + 1);
         signal_error();
         return;
     case discretionary_code:

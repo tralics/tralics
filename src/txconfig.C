@@ -18,7 +18,6 @@ std::string     all_themes;
 
 namespace config_ns {
     Buffer      sec_buffer;
-    Buffer      Txbuf;
     bool        have_default_ur     = false;
     std::string the_default_rc      = "";
     int         ur_size             = 0;
@@ -80,24 +79,6 @@ void config_ns::interpret_theme_list(const Buffer &B) {
     Txbuf << bf_reset << ' ' << B << ' ';
     Txbuf.lowercase();
     all_themes = Txbuf.to_string();
-}
-
-// This function is called when we translate a theme value.
-auto MainClass::check_theme(const std::string &s) -> std::string {
-    std::string res = Txbuf.add_with_space(s.c_str());
-    if (strstr(all_themes.c_str(), Txbuf.c_str()) == nullptr) {
-        err_ns::local_buf.reset();
-        if (s.empty())
-            err_ns::local_buf << "Empty or missing theme\n";
-        else
-            err_ns::local_buf << "Invalid theme " << s << "\n";
-        if (all_themes.empty())
-            err_ns::local_buf << "Configuration file defines nothing";
-        else
-            err_ns::local_buf << "Valid themes are" << all_themes;
-        the_parser.signal_error(the_parser.err_tok, "Bad theme");
-    }
-    return res;
 }
 
 // --------------------------------------------------
@@ -195,9 +176,9 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
     int n = X->size();
     for (int i = 0; i < n; i++)
         if (X->data[i].key == key) return X->data[i].value;
-    err_ns::local_buf << bf_reset << "Illegal value '" << key << "' for " << name << "\n"
-                      << "Use one of:";
-    X->keys_to_buffer(err_ns::local_buf);
+    err_buf << bf_reset << "Illegal value '" << key << "' for " << name << "\n"
+            << "Use one of:";
+    X->keys_to_buffer(err_buf);
     the_parser.signal_error(the_parser.err_tok, "illegal data");
     return "";
 }
@@ -206,7 +187,7 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
 auto config_ns::check_section(const std::string &s) -> std::string {
     static int cur_section = -1;
     int        k           = -1;
-    err_ns::local_buf.reset();
+    err_buf.reset();
     std::vector<ParamDataSlot> &X = config_data.data[1]->data;
     int                         n = X.size(); // number of sections
     if (s.empty())
@@ -218,8 +199,8 @@ auto config_ns::check_section(const std::string &s) -> std::string {
                 break;
             }
     if (k > 0 && k < cur_section) {
-        err_ns::local_buf << "Bad section " << s << " after " << X[cur_section - 1].key << "\n"
-                          << "Order of sections is" << sec_buffer;
+        err_buf << "Bad section " << s << " after " << X[cur_section - 1].key << "\n"
+                << "Order of sections is" << sec_buffer;
         the_parser.signal_error();
     } else if (k == -1) {
         if (n == 0) {
@@ -227,8 +208,8 @@ auto config_ns::check_section(const std::string &s) -> std::string {
             return "";
         }
         if (!s.empty()) {
-            err_ns::local_buf << "Invalid section " << s << "\n"
-                              << "Valid sections are" << sec_buffer;
+            err_buf << "Invalid section " << s << "\n"
+                    << "Valid sections are" << sec_buffer;
             the_parser.signal_error();
             if (cur_section < 0) cur_section = 1;
         }
@@ -370,13 +351,13 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         return;
     }
 
-    err_ns::local_buf << bf_reset;
+    err_buf << bf_reset;
     if (B.empty())
-        err_ns::local_buf << "Empty localisation value\n";
+        err_buf << "Empty localisation value\n";
     else
-        err_ns::local_buf << "Illegal localisation value: " << B.c_str() << "\n";
-    err_ns::local_buf << "Use one or more of:";
-    config_data.data[0]->keys_to_buffer(err_ns::local_buf);
+        err_buf << "Illegal localisation value: " << B.c_str() << "\n";
+    err_buf << "Use one or more of:";
+    config_data.data[0]->keys_to_buffer(err_buf);
     the_parser.signal_error();
 }
 
@@ -398,12 +379,12 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
     bool        spec = (rc.size() >= 2 && rc[0] == '=');
     std::string RC   = spec ? rc.c_str() + 1 : rc;
     if (!is_good_ur(RC)) {
-        err_ns::local_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
-                          << "Use one of:";
+        err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
+                << "Use one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
         int                         n = V.size();
         for (int i = 0; i < n; i++)
-            if (V[i].is_used) V[i].key_to_buffer(err_ns::local_buf);
+            if (V[i].is_used) V[i].key_to_buffer(err_buf);
         the_parser.signal_error(the_parser.err_tok, "illegal data");
     }
     if (spec) {

@@ -2652,7 +2652,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         the_log << lg_start << T << c << B << "." << lg_end;
     }
     if (r == 0) {
-        Buffer &B = err_ns::local_buf;
+        Buffer &B = err_buf;
         B << bf_reset << "Invalid chararacter specification ";
         B.push_back(T);
         B.push_back("{");

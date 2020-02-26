@@ -45,7 +45,7 @@ inline auto boolean(bool x) -> String { return x ? "true" : "false"; }
 // Replaces offending token by space
 
 void Parser::check_outer_validity() {
-    Buffer &B = err_ns::local_buf;
+    Buffer &B = err_buf;
     B.reset();
     switch (scanner_status) {
     case ss_skipping:
@@ -1936,7 +1936,7 @@ void Parser::new_constant(String name, int max_val, subtypes alloc_pos, symcodes
     get_r_token(true);
     int k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_ns::local_buf << bf_reset << "Overflow in " << T << "; max value is " << max_val;
+        err_buf << bf_reset << "Overflow in " << T << "; max value is " << max_val;
         signal_error(T, "allocation overflow");
         return;
     }

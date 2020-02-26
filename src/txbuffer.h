@@ -391,3 +391,5 @@ inline void bf_optslash(Buffer &B) { B.optslash(); }
 inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
+
+extern Buffer Txbuf, err_buf;

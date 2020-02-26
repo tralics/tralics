@@ -1058,7 +1058,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> int {
 auto Parser::scan_int(Token t, int n, String s) -> int {
     int N = scan_int(t);
     if (N < 0 || N > n) {
-        err_ns::local_buf << bf_reset << "Bad " << s << " replaced by 0\n";
+        err_buf << bf_reset << "Bad " << s << " replaced by 0\n";
         signal_ovf(t, nullptr, N, n);
         cur_val.set_int_val(0);
         return 0;
@@ -2005,7 +2005,7 @@ void Parser::assign_toks(Token T, int p, bool gbl) {
     else if (c == toks_register_cmd)
         q = scan_reg_num();
     else if (c != assign_toks_cmd) {
-        err_ns::local_buf << bf_reset << "Missing { inserted for token register " << T << "; got " << cur_tok;
+        err_buf << bf_reset << "Missing { inserted for token register " << T << "; got " << cur_tok;
         signal_error(T, "missing brace");
         back_input();
         have_reg = false;

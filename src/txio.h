@@ -10,10 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbuffer.h"
-#include <array>
 #include <fstream>
-#include <string>
-#include <utility>
 
 void readline(char *buffer, int screen_size);
 
