@@ -2626,7 +2626,7 @@ void MathElt::dump_for_err() const {
 
 void MathElt::cv1_err() {
     dump_for_err();
-    main_ns::log_and_tty << lg_start << "--- " << Token(get_font()) << "\n";
+    log_and_tty << lg_start << "--- " << Token(get_font()) << "\n";
     the_parser.signal_error("Bad math expression");
 }
 
@@ -3000,7 +3000,7 @@ void Math::handle_mbox(Math &res) {
 auto MathElt::remove_prefix() const -> Xml * {
     if (get_cmd() == math_xml_cmd) return get_xml_val();
     dump_for_err();
-    main_ns::log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) << "\n";
+    log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) << "\n";
     return new Xml(Istring("BAD"));
 }
 

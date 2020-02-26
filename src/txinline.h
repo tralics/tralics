@@ -14,12 +14,12 @@
 
 // We also declare some global variables here
 
+#include "tralics/MainClass.h"
 #include "txlogger.h"
 #include "txparam.h"
 
 // See comments in tralics.C where these variables are defined
 namespace main_ns {
-    extern FullLogger log_and_tty;
     extern HalfLogger log_or_tty;
     extern Buffer     path_buffer;
     extern int        nb_errs;
@@ -28,8 +28,6 @@ namespace main_ns {
     extern bool       use_quotes;
     extern bool       bib_allow_break;
 } // namespace main_ns
-
-extern Logger &the_log; // not in a namespace ?
 
 namespace tralics_ns {
     auto is_leap_year(int y) -> bool;

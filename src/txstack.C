@@ -574,7 +574,7 @@ auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
     find_cid_rid_tid(cid, rid, tid);
     ArrayInfo *A = find_cell_props(tid);
     if (A == nullptr) {
-        main_ns::log_and_tty << tid.value << "find_cell_prop_failure\n" << lg_fatal;
+        log_and_tty << tid.value << "find_cell_prop_failure\n" << lg_fatal;
         abort();
     }
     return A;

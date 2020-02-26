@@ -1081,3 +1081,5 @@ private:
     void tl_set_rescan(int c);
     void T_scantokens(TokenList &L);
 };
+
+extern Parser the_parser;

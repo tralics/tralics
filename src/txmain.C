@@ -103,8 +103,6 @@ namespace main_ns {
     void check_year(int, Buffer &C, const std::string &, const std::string &);
 } // namespace main_ns
 
-using main_ns::log_and_tty;
-
 // This funtion sets cur_os to the current operating system as a symbolic string
 inline void MainClass::get_os() {
 #if defined(__alpha)
@@ -397,7 +395,7 @@ void MainClass::open_log() {
     B << bf_reset << out_dir << bf_optslash << log_name;
     B.put_at_end(".log");
     log_and_tty.init(B.to_string(), !special);
-    main_ns::log_or_tty.L       = main_ns::log_and_tty.L;
+    main_ns::log_or_tty.L       = log_and_tty.L;
     main_ns::log_or_tty.verbose = !silent;
     if (special) main_ns::log_or_tty.verbose = false;
     if (output_encoding == en_boot) output_encoding = en_utf8;

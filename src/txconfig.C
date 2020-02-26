@@ -13,21 +13,21 @@
 #include "txinline.h"
 #include "txparser.h"
 
+ParamDataVector config_data;
+std::string     all_themes;
+
 namespace config_ns {
-    Buffer          sec_buffer;
-    std::string     all_themes = "";
-    Buffer          Txbuf;
-    ParamDataVector config_data;
-    bool            have_default_ur     = false;
-    std::string     the_default_rc      = "";
-    int             ur_size             = 0;
-    int             composition_section = -1;
-    bool            cur_sec_no_topic    = false;
+    Buffer      sec_buffer;
+    Buffer      Txbuf;
+    bool        have_default_ur     = false;
+    std::string the_default_rc      = "";
+    int         ur_size             = 0;
+    int         composition_section = -1;
+    bool        cur_sec_no_topic    = false;
 } // namespace config_ns
 
 namespace config_ns {
     void interpret_section_list(Buffer &B, bool new_syntax);
-    void bad_conf(String);
     void interpret_data_list(Buffer &B, const std::string &);
     void interpret_theme_list(const Buffer &B);
     auto is_good_ur(const std::string &x) -> bool;
@@ -46,15 +46,6 @@ using namespace config_ns;
 // transformed into a vector of data, named FOO, with some execptions.
 
 // This error is fatal
-void config_ns::bad_conf(String s) {
-    main_ns::log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
-                         << "It must define a value for the parameter " << s << "\n"
-                         << "See transcript file " << the_log.get_filename() << " for details\n"
-                         << "No xml file generated\n"
-                         << lg_fatal;
-    exit(1);
-}
-
 // We make sure these four items always exist
 ParamDataVector::ParamDataVector() {
     data.push_back(new ParamDataList("ur"));
@@ -66,31 +57,6 @@ ParamDataVector::ParamDataVector() {
 // We may add a special slot at the end
 void ParamDataList::check_other() {
     if (is_lower_case(name[0]) && !empty()) push_back(ParamDataSlot("Other", "Other"));
-}
-
-// There are 5 values required for the RA. In the case of themes,
-// we just store a string with initial and final space, and use strstr
-// for finding. The case of section is defined in txcheck.
-// In the case of profession and affiliation, we add Other at the end.
-
-void MainClass::finish_init() {
-    if (in_ra()) {
-        if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
-        if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
-        if (config_data.data[0]->empty()) bad_conf("ur_vals");
-        if (year >= 2007) {
-            if (config_data.data[2]->empty()) bad_conf("profession_vals");
-            if (year >= 2013)
-                config_data.data[3]->reset(); // kill this
-            else if (config_data.data[3]->empty())
-                bad_conf("affiliation_vals");
-        }
-        int n = config_data.data[1]->size();
-        if (n == 0) bad_conf("sections_vals");
-        if (n < 2) bad_conf("Config file did not provide sections");
-    }
-    int n = config_data.data.size();
-    for (int i = 2; i < n; i++) config_data.data[i]->check_other();
 }
 
 // --------------------------------------------------
@@ -345,8 +311,8 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     if (strncmp(B.c_str(B.get_ptr()), "\\UR", 3) == 0) {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
-            main_ns::log_and_tty << "You should use Lille instead of \\URLille,\n";
-            main_ns::log_and_tty << "Nancy instead of \\URNancy, etc.\n";
+            log_and_tty << "You should use Lille instead of \\URLille,\n";
+            log_and_tty << "Nancy instead of \\URNancy, etc.\n";
             warned = true;
         }
         B.advance(3);

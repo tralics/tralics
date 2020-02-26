@@ -9,7 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "txbuffer.h"
 #include <array>
+#include <fstream>
 #include <string>
 #include <utility>
 

@@ -876,7 +876,7 @@ void Parser::translate03() {
     case insertbibliohere_cmd: add_bib_marker(true); return;
     case inhibit_xml_cmd:
         the_main->inhibit_xml();
-        main_ns::log_and_tty << "\nsyntaxonly: no XML file will be produced\n";
+        log_and_tty << "\nsyntaxonly: no XML file will be produced\n";
         return;
     case endcsname_cmd: parse_error("Extra \\endcsname"); return;
     case xmllatex_cmd:

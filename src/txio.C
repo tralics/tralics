@@ -227,9 +227,9 @@ void Converter::start_convert(int l) {
 void Buffer::utf8_error(bool first) {
     Converter &T = the_converter;
     T.bad_chars++;
-    main_ns::log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
-                         << (first ? ", first byte" : ", continuation byte") << ")\n";
-    main_ns::log_and_tty.L << "Position in line is " << ptr << lg_end;
+    log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
+                << (first ? ", first byte" : ", continuation byte") << ")\n";
+    log_and_tty.L << "Position in line is " << ptr << lg_end;
     if (T.new_error()) return; // signal only one error per line
     for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.fp), at(i));
     the_log << lg_end;
@@ -239,8 +239,7 @@ void Buffer::utf8_ovf(int n) {
     Converter &T = the_converter;
     thebuffer.reset();
     thebuffer.push_back16(n, true);
-    main_ns::log_and_tty << "UTF-8 parsing overflow (char " << thebuffer << ", line " << T.cur_file_line << ", file " << T.cur_file_name
-                         << ")\n";
+    log_and_tty << "UTF-8 parsing overflow (char " << thebuffer << ", line " << T.cur_file_line << ", file " << T.cur_file_name << ")\n";
     T.bad_chars++;
     T.new_error();
 }
@@ -1221,12 +1220,12 @@ void Parser::T_filecontents(int spec) {
         main_ns::register_file(res);
         if (spec == 3) is_encoded = false;
     } else if (tralics_ns::find_in_path(filename)) {
-        main_ns::log_and_tty << lg_start << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
-                             << "Not generating it from this source\n";
+        log_and_tty << lg_start << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
+                    << "Not generating it from this source\n";
     } else {
         String fn = tralics_ns::get_out_dir(filename);
         outfile   = tralics_ns::open_file(fn, false);
-        main_ns::log_and_tty << lg_start << "Writing file `" << fn << "'\n";
+        log_and_tty << lg_start << "Writing file `" << fn << "'\n";
         if (outfile == nullptr)
             parse_error("unable to open file for writing");
         else {

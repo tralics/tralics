@@ -173,9 +173,9 @@ auto Hashtab::find_empty(String s) -> int {
     for (;;) {
         hash_used--;
         if (hash_used <= 0) {
-            main_ns::log_and_tty << "Size of hash table is " << hash_size << "\n";
-            main_ns::log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
-            main_ns::log_and_tty << "hash table full\n" << lg_fatal;
+            log_and_tty << "Size of hash table is " << hash_size << "\n";
+            log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
+            log_and_tty << "hash table full\n" << lg_fatal;
             abort();
         }
         if (Text[hash_used] == nullptr) break;
@@ -244,10 +244,10 @@ auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
     hash_used--;
     int p = hash_used;
     if ((Text[p] != nullptr) || p < hash_prime) {
-        main_ns::log_and_tty << "Size of hash table is " << hash_size << "\n";
-        main_ns::log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
-        main_ns::log_and_tty << "Current position is " << p << "\n";
-        main_ns::log_and_tty << "Bug in nohash_primitive\n" << lg_fatal;
+        log_and_tty << "Size of hash table is " << hash_size << "\n";
+        log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
+        log_and_tty << "Current position is " << p << "\n";
+        log_and_tty << "Bug in nohash_primitive\n" << lg_fatal;
         abort();
     }
     hash_bad++;

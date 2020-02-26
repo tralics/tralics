@@ -188,3 +188,6 @@ auto operator<<(HalfLogger &X, String s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, Istring s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, int s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger &;
+
+extern Logger &   the_log;
+extern FullLogger log_and_tty;

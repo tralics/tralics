@@ -264,16 +264,16 @@ void Parser::check_all_ids() {
         Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
         if (!L->is_defined()) {
-            main_ns::log_and_tty << lg_start << "Error signaled in postprocessor\n"
-                                 << "undefined label `" << V << "' (first use at line " << L->get_lineno() << " in file "
-                                 << L->get_filename() << ")";
+            log_and_tty << lg_start << "Error signaled in postprocessor\n"
+                        << "undefined label `" << V << "' (first use at line " << L->get_lineno() << " in file " << L->get_filename()
+                        << ")";
             Xid(E).add_attribute(the_names[np_target], V);
             Istring B = L->get_id();
             for (auto &removed_label : removed_labels) {
-                if (removed_label.second == B) main_ns::log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
+                if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                 break;
             }
-            main_ns::log_and_tty << "\n";
+            log_and_tty << "\n";
             main_ns::nb_errs++;
         }
         Istring B = L->get_id();
@@ -304,8 +304,8 @@ void post_ns::remove_label(String s, Istring n) {
         LabelInfo *li = the_main->SH.lab_val(V);
         if (li->get_id() != n) continue;
         if (!li->is_used()) continue;
-        main_ns::log_and_tty << "Error signaled by postprocessor\n"
-                             << "Removing `" << s << "' made the following label disappear: " << V << "\n";
+        log_and_tty << "Error signaled by postprocessor\n"
+                    << "Removing `" << s << "' made the following label disappear: " << V << "\n";
         main_ns::nb_errs++;
     }
     for (auto &defined_label : defined_labels) {
@@ -347,7 +347,7 @@ void Xml::recurse0(XmlAction &X) {
                 tree[k] = nullptr;
                 X.mark_found();
                 return;
-            default: main_ns::log_and_tty << "illegal value in recurse0\n" << lg_fatal; abort();
+            default: log_and_tty << "illegal value in recurse0\n" << lg_fatal; abort();
             }
         y->recurse0(X);
         if (X.is_ok()) return;
@@ -402,7 +402,7 @@ void Xml::recurse(XmlAction &X) {
                 return;     // nothing more to do.
             }
             case rc_rename: T->change_name(X.get_string_val()); break;
-            default: main_ns::log_and_tty << "illegal value in recurse\n" << lg_fatal; abort();
+            default: log_and_tty << "illegal value in recurse\n" << lg_fatal; abort();
             }
         }
         T->recurse(X);
@@ -794,13 +794,13 @@ void Xml::postprocess_fig_table(bool is_fig) {
     T->remove_empty_par();
     T->remove_par_bal_if_ok();
     if (T->is_empty()) return;
-    main_ns::log_and_tty << lg_start << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
+    log_and_tty << lg_start << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
     {
         int         n = the_parser.get_cur_line();
         std::string f = the_parser.get_cur_filename();
-        main_ns::log_and_tty << "detected on line " << n;
-        if (!f.empty()) main_ns::log_and_tty << " of file " << f;
-        main_ns::log_and_tty << ".\n";
+        log_and_tty << "detected on line " << n;
+        if (!f.empty()) log_and_tty << " of file " << f;
+        log_and_tty << ".\n";
     }
     Xml *U = new Xml(Istring("unexpected"), nullptr);
     push_back(U);

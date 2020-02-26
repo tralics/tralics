@@ -796,7 +796,7 @@ void Parser::L3_set_num_code(int c) {
     }
     int v = eqtb_int_table[m + offset].get_val();
     if (show)
-        main_ns::log_and_tty << T << "{" << m << "}=" << v << "\n";
+        log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {
         Buffer &B = local_buffer;
         if (tracing_commands()) the_log << lg_start << T << "->" << m << "." << lg_end;

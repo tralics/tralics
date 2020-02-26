@@ -20,7 +20,6 @@
 #include <ctime>
 
 namespace main_ns {
-    FullLogger log_and_tty;             // the logger
     HalfLogger log_or_tty;              // the logger
     int        nb_errs = 0;             // number of errors seen so far
     Buffer     path_buffer;             // Result of search_in_path is here
@@ -29,9 +28,10 @@ namespace main_ns {
     bool       bib_allow_break = true;  // <allowbreak> in bibliography
 } // namespace main_ns
 
-Logger &                     the_log = main_ns::log_and_tty.L; // the log file part of the logger.
-MainClass *                  the_main;                         // the main class data structure
-Parser                       the_parser;                       // the big object
+FullLogger                   log_and_tty;             // the logger
+Logger &                     the_log = log_and_tty.L; // the log file part of the logger.
+MainClass *                  the_main;                // the main class data structure
+Parser                       the_parser;              // the big object
 std::array<Istring, np_last> the_names;
 
 // variables declared static in some files.

@@ -234,9 +234,9 @@ void Parser::finish_index() {
         the_stack.document_element()->insert_bib(res, CI->get_position());
     }
     if (idx_size == 0) return;
-    main_ns::log_and_tty << "Index has " << idx_size << " entries";
-    if (idx_nb > 1) main_ns::log_and_tty << " in " << idx_nb << " clusters";
-    main_ns::log_and_tty << "\n";
+    log_and_tty << "Index has " << idx_size << " entries";
+    if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
+    log_and_tty << "\n";
 }
 
 // -----------------------------------------------

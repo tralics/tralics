@@ -1065,7 +1065,6 @@ enum param_args {
     pa_indata
 };
 
-extern Parser                       the_parser;
 extern MainClass *                  the_main;
 extern std::array<Istring, np_last> the_names;
 

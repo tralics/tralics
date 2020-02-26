@@ -657,7 +657,7 @@ void Mactab::rc_mac_realloc() {
 // Decrements the reference count. If it is zero, we kill the macro.
 void Mactab::delete_macro_ref(int i) {
     if (rc_table[i] <= 0) {
-        main_ns::log_and_tty << "FATAL: macro reference count negative\n" << lg_fatal;
+        log_and_tty << "FATAL: macro reference count negative\n" << lg_fatal;
         abort();
     }
     rc_table[i]--;

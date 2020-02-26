@@ -44,17 +44,17 @@ void Parser::signal_error() {
     main_ns::nb_errs++;
     flush_buffer();
     the_log << lg_start;
-    main_ns::log_and_tty << "Error signaled at line " << line;
-    if (!file.empty()) main_ns::log_and_tty << " of file " << file;
-    main_ns::log_and_tty << ":\n";
-    main_ns::log_and_tty << local_buf;
-    main_ns::log_and_tty << ".\n";
+    log_and_tty << "Error signaled at line " << line;
+    if (!file.empty()) log_and_tty << " of file " << file;
+    log_and_tty << ":\n";
+    log_and_tty << local_buf;
+    log_and_tty << ".\n";
     the_log << lg_flush;
     std::cout.flush();
     if (main_ns::nb_errs >= 5000) {
-        main_ns::log_and_tty << "Translation aborted: Too many errors.\n";
-        main_ns::log_and_tty.finish(main_ns::nb_errs);
-        tralics_ns::close_file(main_ns::log_and_tty.L.fp);
+        log_and_tty << "Translation aborted: Too many errors.\n";
+        log_and_tty.finish(main_ns::nb_errs);
+        tralics_ns::close_file(log_and_tty.L.fp);
         exit(1);
     }
 }
@@ -212,7 +212,7 @@ void Parser::math_only() {
     parse_error(cur_tok, "Math only command ", cur_tok, "", "Mathonly command");
     static bool first_time = true;
     if (first_time) {
-        main_ns::log_and_tty << "(Contrarily to TeX, Tralics does not switch to math mode in such a case.)\n";
+        log_and_tty << "(Contrarily to TeX, Tralics does not switch to math mode in such a case.)\n";
         first_time = false;
     }
 }

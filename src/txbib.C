@@ -13,8 +13,6 @@
 #include "txparser.h"
 #include <algorithm>
 
-using main_ns::log_and_tty; // used for error signalling
-
 namespace {
     String my_constant_table[3];
     class Error {};
