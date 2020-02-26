@@ -215,7 +215,7 @@ void math_ns::fill_math_char_slots_ent() {
 
 void math_ns::fill_math_char_slots() {
     for (auto &math_char : math_chars)
-        for (int j = 0; j < 15; j++) math_char[j] = "";
+        for (auto &j : math_char) j = "";
     // Position 0 : normal
     math_chars[uchar('A')][math_f_normal] = "A";
     math_chars[uchar('B')][math_f_normal] = "B";

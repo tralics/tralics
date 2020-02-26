@@ -112,7 +112,7 @@ inline void color_black() {}
 
 class Slined {
     char *                     m_inbuf{nullptr};
-    char                       m_buffer[buf_size];
+    std::array<char, buf_size> m_buffer;
     std::string                m_killbuf;
     int                        m_inpos{0};
     int                        m_inmax{0};
@@ -134,7 +134,7 @@ class Slined {
 
 public:
     Slined(int sz, String P) {
-        for (int i = 0; i < buf_size; i++) m_buffer[i] = ' ';
+        for (char &i : m_buffer) i = ' ';
         if (sz != 0) m_inbuf = new char[sz];
         if (P != nullptr) {
             m_history.emplace_back(P);
@@ -234,12 +234,11 @@ void readline_ns::tybeep() { std::cerr.put(7); }
 // inpos is copied, its location will be in m_pos.
 
 auto Slined::copystring(String string, int s, int inpos, bool sw) -> int {
-    int           j = 0;
-    unsigned char cn;
-    char *        buf = sw ? m_buffer : g_buffer.data();
+    int   j   = 0;
+    char *buf = sw ? m_buffer.data() : g_buffer.data();
     for (int i = 0; i < s; i++) {
         if (i == inpos) m_pos = j;
-        cn = string[i];
+        auto cn = string[i];
         if (not_printable(cn)) {
             buf[j] = '^';
             j++;
@@ -283,7 +282,6 @@ void Slined::redisplay0() {
     m_left = left;
     if (left != 0) std::cerr << "> "; // show that there are unseen characters there
     finish_redisplay(left, right);
-    return;
 }
 
 // clear to end of line.
@@ -339,7 +337,7 @@ void Slined::insert_in_image(int n, char c1, char c2) {
     int size = m - p; // number of chars after cur pos
     int k    = n;
     if (c1 != 0) k += n; // k is the number of chars to insert
-    char *buf = m_buffer;
+    char *buf = m_buffer.data();
     buf       = buf + p;
     if (size != 0) shift_string(buf, size, 0, k); // make room
     for (int i = 0; i < n; i++) {                 // copy
@@ -381,7 +379,7 @@ void readline_ns::rl_delete0(char *s, int pos, int size, int w) {
 // delete and redisplay
 void Slined::delete_in_image(int w) {
     int p = m_pos;
-    rl_delete0(m_buffer, p, m_max, w);
+    rl_delete0(m_buffer.data(), p, m_max, w);
     m_right -= w;
     m_max -= w;
     if (p == m_right) { // deleted all chars after cursor
@@ -545,7 +543,7 @@ void Slined::fast_ins(int n, String s, int l) {
     m_inmax = size;
     int j   = copystring(s, l, -1, false);
     pos     = m_pos;
-    buffer  = m_buffer;
+    buffer  = m_buffer.data();
     size    = m_max;
     aux     = size - pos;
     if (aux != 0) shift_string(buffer, aux, pos, pos + j * n); // make room here also
@@ -561,10 +559,10 @@ void Slined::fast_ins(int n, String s, int l) {
 
 // show history
 void Slined::Hshow() {
-    int     n      = 0;
-    int     sz     = m_history.size();
-    Slined *new_ed = the_editor_c;
-    char    p[4];
+    int                 n      = 0;
+    int                 sz     = m_history.size();
+    Slined *            new_ed = the_editor_c;
+    std::array<char, 4> p{};
     p[2]           = ' ';
     p[3]           = 0;
     new_ed->m_size = m_size + m_prompt.size() - 3;
@@ -576,7 +574,7 @@ void Slined::Hshow() {
         else
             p[0] = '0' + (n / 10);
         p[1]             = '0' + (n % 10);
-        new_ed->m_prompt = p;
+        new_ed->m_prompt = p.data();
         new_ed->m_inpos  = 0;
         String S         = m_history[i].c_str();
         int    k         = strlen(S);

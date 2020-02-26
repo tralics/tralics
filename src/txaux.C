@@ -485,7 +485,7 @@ void SthInternal::add(const SthInternal &r) {
         int_val = x + y;
         return;
     }
-    start_err(type == it_int ? "2^{31}" : "2^{30}");
+    start_err(static_cast<String>(type == it_int ? "2^{31}" : "2^{30}"));
     err_ns::local_buf << "\nin " << x << "+" << y;
     end_err();
     int_val = mx;

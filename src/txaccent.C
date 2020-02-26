@@ -443,21 +443,21 @@ void Parser::E_accent() {
     if (achar < nb_accents) {
         if (acc_code2 != 0) {
             int acc3_code = accent_ns::combine_accents(acc_code, acc_code2);
-            res           = accent_ns::fetch_double_accent(achar, acc3_code);
+            res           = accent_ns::fetch_double_accent(static_cast<int>(achar), acc3_code);
         } else {
-            res = accent_ns::fetch_accent(achar, acc_code);
+            res = accent_ns::fetch_accent(static_cast<int>(achar), acc_code);
             if (res.is_null() && achar < 128) {
                 if (is_letter(achar)) {
                     spec = true; // T. Bouche veut une erreur
                     res  = accent_ns::fetch_accent(0, acc_code);
                 } else
-                    res = accent_ns::special_double_acc(achar, acc_code);
+                    res = accent_ns::special_double_acc(static_cast<int>(achar), acc_code);
             }
         }
     }
     if (res.is_null()) {
-        String s =
-            achar >= 128 ? "a non 7-bit character" : is_letter(achar) ? "letter" : is_digit(achar) ? "digit" : "non-letter character";
+        String s = achar >= 128 ? "a non 7-bit character"
+                                : is_letter(achar) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
         err_ns::local_buf << bf_reset << msg1;
         err_ns::local_buf << tfe.tok_to_str();
         if (acc_code2 != 0) err_ns::local_buf << tfe2.tok_to_str();

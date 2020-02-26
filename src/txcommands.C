@@ -110,7 +110,7 @@ void Parser::umlaut() {
     case 'U': translate_char(CmdChr(uchar('\334'))); break;
     case 'I': translate_char(CmdChr(uchar('\317'))); break;
     case 'E': translate_char(CmdChr(uchar('\313'))); break;
-    case 's': back_input(uclc_list[14]); return;
+    case 's':
     case 'z': back_input(uclc_list[14]); return;
     case 'S': back_input(uclc_list[15]); return;
     case 'Z': translate_char('S', 'Z'); return;
@@ -130,10 +130,10 @@ void Parser::umlaut() {
     case 'R': translate_char('R', 'R'); return;
     case 't': translate_char('t', 't'); return;
     case 'T': translate_char('T', 'T'); return;
-    case '-': translate_char(CmdChr(uchar('-'))); return;
+    case '-':
     case '~': translate_char(CmdChr(uchar('-'))); return;
-    case '|': return;
-    case '"': return;
+    case '|':
+    case '"':
     case '=': return;
     case '`':
         LC();
@@ -335,7 +335,7 @@ void Parser::T_cst1(int c) {
         return;
         ;
     case SS_code: process_string("SS"); return;
-    case dots_code: process_string("..."); return;
+    case dots_code: // process_string("..."); return;
     // TODO: in the softcover fork, the next line becomes
     // case ldots_code: process_string("&#x85;"); return;
     case ldots_code: process_string("..."); return;
@@ -376,7 +376,7 @@ void Parser::T_cst1(int c) {
         process_char(0xA0);
         return;
     case amp_code: process_string("&amp;"); return;
-    case comma_code: process_char(0xA0); return;
+    case comma_code:
     case nbsp_code: process_char(0xA0); return;
     case j_code:
         process_char('j');
@@ -783,7 +783,6 @@ void Parser::T_setmode() {
     int n = scan_int(cur_tok);
     if (!(n >= 0 && n <= 6)) n = 0;
     the_stack.set_mode(mode(n));
-    return;
 }
 
 // Translates \aftergroup\token
@@ -823,7 +822,6 @@ void Parser::T_un_box(subtypes c) {
     Xml *cur_box = box_table[i].get_val();
     the_stack.unbox(cur_box);
     if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
-    return; // else does nothing
 }
 
 auto tcommands::hfill_to_np(subtypes c) -> name_positions {

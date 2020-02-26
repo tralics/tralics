@@ -76,7 +76,8 @@ public:
     void               check_overflow();
     void               expr_mul(int f);
     void               add_ovf(const Glue &);
-    void               zdv();
+
+    static void zdv();
 };
 
 // The value of the number is sign*(i+f/2^16);
