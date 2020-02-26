@@ -112,7 +112,7 @@ private:
     [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
 };
 
-// \todo unary_function is deprecated
+/// \todo `unary_function` is deprecated
 class MathIsSpace : public std::unary_function<MathElt, bool> {
 public:
     explicit MathIsSpace() = default;

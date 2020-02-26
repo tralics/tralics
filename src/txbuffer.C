@@ -588,7 +588,7 @@ void Buffer::insert_escape_char() {
         push_back("^^@");
 }
 
-/// This one is for \meaning
+/// This one is for `\meaning`
 void Buffer::insert_escape_char_raw() {
     int c = buffer_ns::current_escape_char();
     if (c > 0 && c < int(nb_characters))

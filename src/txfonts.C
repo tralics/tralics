@@ -262,7 +262,7 @@ TexFont::TexFont(const std::string &n, int a, int s) {
 
 // This allocates a new slot in the font list.
 auto TexFonts::define_a_new_font(std::string n, int a, int s) -> int {
-    if (size() >= 256) { // \todo Perhaps remove this artificial limitation
+    if (size() >= 256) { /// \todo Perhaps remove this artificial limitation
         the_parser.parse_error("fatal: font table overflow");
         return 0;
     }

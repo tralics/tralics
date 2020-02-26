@@ -18,9 +18,10 @@
 
 using buffer_fn = void(Buffer &);
 
-// a big structure
-// \todo This is kind of a messy class, would be better to use std::string as
-// much as possible but we can't because of all the zero-char manipulations.
+/// a big structure \todo This is kind of a messy class, would be better off
+/// using `std::string` as much as possible but we can't because of all the
+/// zero-char manipulations.
+
 class Buffer : public std::vector<char> {
 private:
     size_t wptr{0}; // the write pointer
