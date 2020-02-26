@@ -9,6 +9,7 @@ inline constexpr uint nb_shortverb_values = 256;   // This is the size of the ta
 inline constexpr uint nb_simplemath       = 128;   // Max char for which $x$ is trivial math
 inline constexpr uint nb_xspace_values    = 128;   // This is the size of the table ok_for_xspace
 
+inline constexpr int max_encoding = 34;
 inline constexpr int bib_hash_mod = 6397;
 
 inline constexpr int  max_dimension       = 07777777777;

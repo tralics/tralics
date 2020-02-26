@@ -45,7 +45,7 @@ class MainClass {
 
     Buffer               b_after, b_current; // aux buffers.
     String               external_prog{"rahandler.pl"};
-    String               version_string;
+    std::string          version_string{"2.15.4"};
     int                  input_encoding{1};
     output_encoding_type output_encoding{en_boot};
     output_encoding_type log_encoding{en_boot};
@@ -111,7 +111,7 @@ public:
     [[nodiscard]] auto get_math_variant() const -> bool { return use_math_variant; }
     [[nodiscard]] auto get_zws_mode() const -> bool { return no_zerowidthspace; }
     [[nodiscard]] auto get_zws_elt() const -> bool { return no_zerowidthelt; }
-    [[nodiscard]] auto get_version() const -> String { return version_string; }
+    [[nodiscard]] auto get_version() const -> std::string { return version_string; }
     void               handle_one_bib_file(std::string);
     void               incr_cur_fp_len(int a) { cur_fp_len += a; }
     [[nodiscard]] auto in_ra() const -> bool { return handling_ra; }
@@ -230,7 +230,6 @@ private:
     void see_name3();
     void see_project();
     void see_topic();
-    void set_version();
     void show_input_size();
     auto split_one_arg(String, int &) -> String;
     void start_document(Buffer &a);

@@ -120,15 +120,6 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
     }
 }
 
-void MainClass::check_section_use() {
-    if (in_ra()) {
-        std::vector<ParamDataSlot> &X = config_data.data[1]->data;
-        int                         n = X.size(); // number of sections
-        for (int i = 0; i < n; i++)
-            if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");
-    }
-}
-
 // --------------------------------------------------
 
 // Return the data associated to name, may create depend on creat

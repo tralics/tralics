@@ -15,8 +15,7 @@
 #include "txparser.h"
 #include <sstream>
 
-static const int lmaxchar     = 256;
-static const int max_encoding = 34;
+static const int lmaxchar = 256;
 
 namespace {
     Buffer    thebuffer;
@@ -413,13 +412,6 @@ auto io_ns::get_enc_param(int enc, int pos) -> int {
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
     return custom_table[enc][pos].value;
-}
-
-void MainClass::set_input_encoding(int wc) {
-    if (wc >= 0 && wc < max_encoding) {
-        input_encoding = wc;
-        the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
-    }
 }
 
 void LinePtr::change_encoding(int wc) {
