@@ -23,9 +23,8 @@ extern bool bad_minus;
 // mathml variants: normal, bold, italic, bold-italic, double-struck,
 // bold-fraktur, script, bold-script, fraktur, sans-serif, bold-sans-serif,
 // sans-serif-italic, sans-serif-bold-italic, monospace
-typedef std::string math_char_slot[15];
-math_char_slot      math_chars[128];
-Xml *               single_chars[128];
+std::array<std::array<std::string, 15>, 128> math_chars;
+std::array<Xml *, 128>                       single_chars;
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"
