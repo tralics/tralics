@@ -13,7 +13,7 @@
 // and most of all enums of tralics.
 // symcodes and subtypes are in txcmd.h
 
-#include "tralics/consts.h"
+#include "tralics/enums.h"
 #include <array>
 
 // forward declarations
@@ -456,8 +456,6 @@ enum recur_type {
     rc_composition,
     rc_rename,
 };
-
-#include "tralics/enums.h"
 
 // A code for each math object
 enum math_loc {

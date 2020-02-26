@@ -53,6 +53,4 @@ public:
     static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };
 
-#include "tralics/Istring.h"
-
 inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.get_value()]; }

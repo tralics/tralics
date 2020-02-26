@@ -11,7 +11,6 @@
 
 #include "tralics/Istring.h"
 #include "tralics/Token.h"
-#include "txfp.h"
 #include "txvars.h"
 #include <array>
 #include <list>
