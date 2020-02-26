@@ -1463,5 +1463,4 @@ void Buffer::put_at_end(String s) {
     push_back(s);
 }
 
-Buffer Txbuf;
-Buffer err_buf;
+Buffer Txbuf, err_buf, ssa2;

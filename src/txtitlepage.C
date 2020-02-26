@@ -8,6 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 #include "txtitlepage.h"
@@ -17,7 +18,6 @@ namespace {
     Buffer            docspecial;        // Buffer for document special things
     Buffer            tp_main_buf;
     Buffer            local_buf; // some local buffer
-    Buffer            ssa2;
     TitlePage         Titlepage; // title page info
     TitlePageFullLine tpfl;
     TpiOneItem        Toi;
@@ -30,7 +30,6 @@ namespace tpage_ns {
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
     auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
-    void after_conf_assign(std::vector<std::string> &V);
 } // namespace tpage_ns
 
 // needed elsewhere, because we have to call add_language_add.
@@ -887,27 +886,13 @@ auto tpage_ns::see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool {
     val.reset();
     int k = tpage_ns::see_an_assignment(in, key, val);
     if (k == 1) {
-        bool res = config_ns::assign(key, val);
+        bool res = assign(key, val);
         if (res) {
             if (!ssa2.empty()) the_log << key << "=" << val.convert_to_log_encoding() << "\n";
             return true;
         }
     }
     return false;
-}
-
-void tpage_ns::after_conf_assign(std::vector<std::string> &V) {
-    int n = V.size();
-    int i = 0;
-    for (;;) {
-        if (i >= n) return;
-        ssa2 << bf_reset << V[i];
-        i++;
-        local_buf << bf_reset << V[i];
-        i++;
-        bool res = config_ns::assign(ssa2, local_buf);
-        if (res) the_log << ssa2.c_str() << "=" << local_buf.c_str() << "\n";
-    }
 }
 
 // Returns 0, unless we see A="B", fills the buffers A and B.

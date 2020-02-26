@@ -10,11 +10,11 @@
 
 // The file contains code for configurating the Raweb
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 
 ParamDataVector config_data;
-std::string     all_themes;
 
 namespace config_ns {
     Buffer      sec_buffer;

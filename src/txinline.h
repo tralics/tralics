@@ -70,7 +70,6 @@ namespace config_ns {
     auto find_keys(const std::string &name) -> std::string;
     auto start_interpret(Buffer &B, String s) -> bool;
     void interpret_list(const std::string &, Buffer &B);
-    auto assign(Buffer &a, Buffer &b) -> bool;
     auto assign_name(String A, String B) -> bool;
     auto assign_att(String A, String B) -> bool;
 } // namespace config_ns

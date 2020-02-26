@@ -364,6 +364,8 @@ a) uncomment the line RAOPT=somevalue
 b) edit the file txpath.h and define TRALICSDIR there.
 You can do the same for confdir
 
+(VB) except, TRALICSDIR is never read ...
+
 In case of problem contact: tralics@sophia.inria.fr
 or consult the Web page: http://www.inria.fr//tralics
 Report all bugs at the address mentioned above.

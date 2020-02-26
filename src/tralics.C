@@ -15,6 +15,7 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <ctime>
@@ -40,8 +41,7 @@ bool InLoadHandler::global_in_load = false;
 
 // local variables
 namespace {
-    std::string everyjob_string; //
-    bool        ra_ok = true;    // inhibits  redefinitions
+    bool ra_ok = true; // inhibits  redefinitions
 } // namespace
 
 namespace accent_ns {
@@ -1317,16 +1317,16 @@ void tralics_ns::make_names() {
 
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised
-auto config_ns::assign(Buffer &a, Buffer &b) -> bool {
+auto assign(Buffer &a, Buffer &b) -> bool {
     String A = a.c_str();
     String B = b.c_str();
     int    n = a.size();
-    if (A[0] == 'e' && A[1] == 'l' && A[2] == 't' && A[3] == '_') return assign_name(A + 4, B);
+    if (A[0] == 'e' && A[1] == 'l' && A[2] == 't' && A[3] == '_') return config_ns::assign_name(A + 4, B);
     if (A[0] == 'x' && A[1] == 'm' && A[2] == 'l' && A[3] == '_') {
         if (A[n - 1] == 'e' && A[n - 2] == 'm' && A[n - 3] == 'a' && A[n - 4] == 'n' && A[n - 5] == '_') { a.kill_at(n - 5); }
-        return assign_name(A + 4, B);
+        return config_ns::assign_name(A + 4, B);
     }
-    if (A[0] == 'a' && A[1] == 't' && A[2] == 't' && A[3] == '_') return assign_att(A + 4, B);
+    if (A[0] == 'a' && A[1] == 't' && A[2] == 't' && A[3] == '_') return config_ns::assign_att(A + 4, B);
     if (a == "lang_fr") {
         the_names[np_french] = Istring(B);
         return true;
@@ -1405,7 +1405,7 @@ auto config_ns::assign(Buffer &a, Buffer &b) -> bool {
     }
     if (n > 5 && A[n - 5] == '_' && A[n - 4] == 'v' && A[n - 3] == 'a' && A[n - 2] == 'l' && A[n - 1] == 's') {
         a.kill_at(n - 5);
-        interpret_list(a.to_string(), b);
+        config_ns::interpret_list(a.to_string(), b);
         a.reset();
         return true;
     }
@@ -2633,7 +2633,6 @@ void Hashtab::boot_fancyhdr() {
     primitive("fancyinternal", xfancy_cmd);
     primitive("inert@thepage", xthepage_cmd);
 }
-void set_everyjob(const std::string &s) { everyjob_string = s; }
 
 // Todo Bouche
 // \def\Q{\mathbb{Q}} $\bar \Q$

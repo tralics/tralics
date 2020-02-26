@@ -1,45 +1,7 @@
 #include "tralics/MainClass.h"
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
-#include "txpath.h"
-
-extern std::string all_themes;
-
-namespace {
-    std::vector<std::string> after_conf;
-    std::vector<std::string> conf_path;
-    std::vector<std::string> input_path;
-    std::vector<std::string> other_options;
-    Buffer                   confbuf, bparse;
-    int                      trivial_math = 1;
-    std::string              user_config_file;
-    std::string              ult_name;           // absolute name of input.ult
-    std::string              log_name;           // Name of transcript file
-    std::string              file_name;          // Job name, without directory
-    std::string              out_dir;            // Output directory
-    std::string              no_ext;             // file name without tex extension
-    std::vector<LinePtr *>   file_pool;          // pool managed by filecontents
-    int                      pool_position = -1; // Position of file in pool
-    std::string              opt_doctype;
-    bool                     banner_printed   = false; // hack
-    bool                     load_l3          = false;
-    bool                     multi_math_label = false;
-} // namespace
-
-void bad_conf(String s) {
-    log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
-                << "It must define a value for the parameter " << s << "\n"
-                << "See transcript file " << the_log.get_filename() << " for details\n"
-                << "No xml file generated\n"
-                << lg_fatal;
-    exit(1);
-}
-
-void set_everyjob(const std::string &s); // in tralics.C, but used only here
-
-namespace tpage_ns {
-    void after_conf_assign(std::vector<std::string> &V);
-} // namespace tpage_ns
 
 using main_ns::path_buffer;
 
@@ -79,6 +41,8 @@ namespace main_ns {
     void check_year(int, Buffer &C, const std::string &, const std::string &);
 } // namespace main_ns
 
+MainClass::MainClass() { conf_path.emplace_back(CONFDIR); }
+
 // This funtion sets cur_os to the current operating system as a symbolic string
 inline void MainClass::get_os() {
 #if defined(__alpha)
@@ -102,7 +66,7 @@ inline void MainClass::get_os() {
 #else
     cur_os = st_unknown;
 #endif
-    machine = bparse.get_machine_name();
+    machine = Buffer().get_machine_name();
 }
 
 #ifdef _MSC_VER
@@ -127,7 +91,6 @@ auto MainClass::print_os() const -> String {
 }
 
 // Ctor of the main class
-MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) { conf_path.emplace_back(CONFDIR); }
 
 // ----------------------------------------------------------------------
 // Setting paths
@@ -137,8 +100,8 @@ MainClass::MainClass() : infile(""), raweb_dir(TRALICSDIR) { conf_path.emplace_b
 auto main_ns::try_conf(const std::string &prefix) -> bool {
     int n = prefix.size();
     if (n == 0) return false;
-    Buffer &b = confbuf;
-    b << bf_reset << prefix << bf_optslash << "book.clt";
+    Buffer b;
+    b << prefix << bf_optslash << "book.clt";
     return tralics_ns::file_exists(b);
 }
 
@@ -356,6 +319,7 @@ void MainClass::check_for_input() {
 
 // Fetches some version, OS and machine name, prints the banner on the tty
 void MainClass::banner() {
+    static bool banner_printed = false;
     if (banner_printed) return;
     banner_printed = true;
     std::cout << "This is tralics " << get_version() << ", a LaTeX to XML translator"
@@ -404,8 +368,7 @@ void MainClass::open_log() {
         the_log << ", and iso-8859-1 for transcript.\n";
     else
         the_log << ", and random for transcript.\n";
-    Buffer &b = confbuf;
-    b.reset();
+    Buffer b;
     b << "Left quote is ";
     b.out_log(codepoint(leftquote_val), log_encoding);
     b << " right quote is ";
@@ -502,9 +465,8 @@ auto main_ns::find_param_type(String s) -> param_args {
 // puts confdir in the buffer, and returns that; sets p to the first
 // valid char after = sign, and 0 if none
 auto MainClass::split_one_arg(String a, int &p) -> String {
-    Buffer &B = bparse;
-    p         = 0;
-    B.reset();
+    Buffer B;
+    p     = 0;
     int i = 0;
     for (;;) {
         char c = a[i];
@@ -740,8 +702,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
 }
 
 auto main_ns::param_hack(String a) -> bool {
-    Buffer &B = bparse;
-    B.reset();
+    Buffer B;
     B.reset_ptr();
     B.push_back(a);
     if (!B.find_equals()) return false;
@@ -1019,8 +980,8 @@ void MainClass::read_config_and_other() {
             config_file.clear();
     }
     config_file.parse_conf_toplevel();
-    tpage_ns::after_conf_assign(other_options);
-    tpage_ns::after_conf_assign(after_conf);
+    after_conf_assign(other_options);
+    after_conf_assign(after_conf);
     std::string tmp = b_after.remove_digits(dtype);
     if (!tmp.empty()) dtype = tmp;
 
@@ -1354,4 +1315,9 @@ void MainClass::set_input_encoding(int wc) {
         input_encoding = wc;
         the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
     }
+}
+
+void MainClass::set_tcf_file(std::string s) {
+    tcf_file = std::move(s);
+    use_tcf  = true;
 }

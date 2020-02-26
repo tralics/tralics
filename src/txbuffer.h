@@ -392,4 +392,4 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-extern Buffer Txbuf, err_buf;
+extern Buffer Txbuf, err_buf, ssa2;
