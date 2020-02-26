@@ -32,7 +32,8 @@ target_link_libraries (tralics ${CONAN_LIBS})
 
 find_package(Doxygen REQUIRED dot)
 if (${DOXYGEN_FOUND})
-  add_custom_target (docs ALL doxygen WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+  add_custom_target (docs ALL doxygen WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMENT "Building documentation")
 endif()
 
 add_custom_target(alltests ALL 
