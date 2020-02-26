@@ -24,9 +24,16 @@ if(CCACHE)
   set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 endif()
 
-file (GLOB sources ${PROJECT_SOURCE_DIR}/src/*.C)
+file (GLOB_RECURSE sources CONFIGURE_DEPENDS *.C)
+file (GLOB_RECURSE headers CONFIGURE_DEPENDS *.h)
+
 add_executable(tralics ${sources})
 target_link_libraries (tralics ${CONAN_LIBS})
+
+find_package(Doxygen REQUIRED dot)
+if (${DOXYGEN_FOUND})
+  add_custom_target (docs ALL doxygen WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+endif()
 
 add_custom_target(alltests ALL 
     ../test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
