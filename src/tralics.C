@@ -71,7 +71,7 @@ inline void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
 // that are of catcode 11.
 void Parser::boot_verbatim() {
     Token *T = verbatim_chars.data();
-    for (uint i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, i);
+    for (uint i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, codepoint(i));
     T[uint(' ')] = hash_table.tilda_token;
     mk_letter(T, '\'');
     mk_letter(T, '`');
@@ -127,7 +127,7 @@ void Parser::boot_time() {
     eqtb_int_table[day_code].set_val(day);
     eqtb_int_table[month_code].set_val(month);
     eqtb_int_table[year_code].set_val(year);
-    std::srand(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month))));
+    std::srand(static_cast<unsigned>(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
     Buffer b;
     b << year << '/' << twodig(month) << month << '/' << twodig(day) << day;
     std::string short_date = b.to_string();
@@ -170,27 +170,27 @@ void Parser::make_constants() {
 
 // This is for lower-case upper-case conversions.
 // Defines values for the character c
-void Parser::mklcuc(int c, int lc, int uc) {
-    eqtb_int_table[c + lc_code_offset].set_val(lc);
-    eqtb_int_table[c + uc_code_offset].set_val(uc);
+void Parser::mklcuc(size_t c, size_t lc, size_t uc) {
+    eqtb_int_table[c + lc_code_offset].set_val(static_cast<int>(lc));
+    eqtb_int_table[c + uc_code_offset].set_val(static_cast<int>(uc));
 }
 
 // This is for lower-case upper-case conversions.
 // Defines values for the pair lc, uc
-void Parser::mklcuc(int lc, int uc) {
-    eqtb_int_table[lc + lc_code_offset].set_val(lc);
-    eqtb_int_table[lc + uc_code_offset].set_val(uc);
-    eqtb_int_table[uc + lc_code_offset].set_val(lc);
-    eqtb_int_table[uc + uc_code_offset].set_val(uc);
+void Parser::mklcuc(size_t lc, size_t uc) {
+    eqtb_int_table[lc + lc_code_offset].set_val(static_cast<int>(lc));
+    eqtb_int_table[lc + uc_code_offset].set_val(static_cast<int>(uc));
+    eqtb_int_table[uc + lc_code_offset].set_val(static_cast<int>(lc));
+    eqtb_int_table[uc + uc_code_offset].set_val(static_cast<int>(uc));
 }
 
 // This creates the lc and uc tables.
 // Only ascii characters have a non-zero value
 void Parser::make_uclc_table() {
-    for (int i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
-    for (int i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
-    for (int i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
-    for (int i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
+    for (unsigned i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
+    for (unsigned i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
+    for (unsigned i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
+    for (unsigned i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
     mklcuc(215, 0, 0);
     mklcuc(247, 0, 0);    // multiplication division (\367 \327)
     mklcuc(223, 0, 0);    // sharp s (\377 347)
@@ -681,8 +681,8 @@ void Parser::more_bootstrap() {
     L.push_back(T);
     new_prim("@spaces", L);
     {
-        int A    = ' '; // eqtb loc of active space
-        int Bval = T.eqtb_loc();
+        int  A    = ' '; // eqtb loc of active space
+        auto Bval = T.eqtb_loc();
         eq_define(A, hash_table.eqtb[Bval].get_cmdchr(), true);
         A    = '#';
         Bval = hash_table.locate("#").eqtb_loc();
@@ -1306,12 +1306,12 @@ void tralics_ns::make_names() {
     std::array<char, 2> foo{};
     foo[1] = 0;
     for (char x = 'a'; x <= 'z'; x++) {
-        foo[0]                           = x;
-        the_names[np_letter_a + x - 'a'] = Istring(foo.data());
+        foo[0]                                                = x;
+        the_names[static_cast<size_t>(np_letter_a + x - 'a')] = Istring(foo.data());
     }
     for (char x = 'A'; x <= 'Z'; x++) {
-        foo[0]                           = x;
-        the_names[np_letter_A + x - 'A'] = Istring(foo.data());
+        foo[0]                                                = x;
+        the_names[static_cast<size_t>(np_letter_A + x - 'A')] = Istring(foo.data());
     }
 }
 
@@ -1320,7 +1320,7 @@ void tralics_ns::make_names() {
 auto assign(Buffer &a, Buffer &b) -> bool {
     String A = a.c_str();
     String B = b.c_str();
-    int    n = a.size();
+    auto   n = a.size();
     if (A[0] == 'e' && A[1] == 'l' && A[2] == 't' && A[3] == '_') return config_ns::assign_name(A + 4, B);
     if (A[0] == 'x' && A[1] == 'm' && A[2] == 'l' && A[3] == '_') {
         if (A[n - 1] == 'e' && A[n - 2] == 'm' && A[n - 3] == 'a' && A[n - 4] == 'n' && A[n - 5] == '_') { a.kill_at(n - 5); }
@@ -2581,12 +2581,12 @@ auto config_ns::assign_att(String A, String B) -> bool {
 
 // Fills the catcode table. Catcodes are at the start of eqtb_int_table
 void Parser::make_catcodes() {
-    for (uint i = 0; i < nb_characters; i++) {
+    for (unsigned i = 0; i < nb_characters; i++) {
         set_cat(i, other_catcode);
         eqtb_int_table[i].set_level(1);
     }
-    for (int i = 'a'; i <= 'z'; i++) set_cat(i, letter_catcode);
-    for (int i = 'A'; i <= 'Z'; i++) set_cat(i, letter_catcode);
+    for (unsigned i = 'a'; i <= 'z'; i++) set_cat(i, letter_catcode);
+    for (unsigned i = 'A'; i <= 'Z'; i++) set_cat(i, letter_catcode);
     set_cat('\\', 0);
     set_cat('{', 1);
     set_cat('}', 2);

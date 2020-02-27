@@ -65,9 +65,9 @@ void Parser::T_newcolumn_type() {
     Buffer &B = hash_table.my_buffer();
     B.reset();
     B.push_back("newcolumtype@");
-    B.push_back(uchar(c)); // special hack if c=0 !
+    B.push_back(static_cast<char>(c)); // special hack if c=0 !
     cur_tok = hash_table.locate(B);
-    new_array_object.add_a_type(c, cur_tok);
+    new_array_object.add_a_type(static_cast<uchar>(c), cur_tok);
     back_input();
     M_newcommand(rd_always); // definition is local
 }
@@ -101,8 +101,8 @@ void Parser::expand_nct(TokenList &L) {
             parse_error("array preamble expansion: Infinite loop?");
             return;
         }
-        for (int i = 1; i < int(nb_newcolumn); i++) {
-            uchar c = i;
+        for (uchar i = 1; i < nb_newcolumn; i++) {
+            const uchar c = i;
             if (!new_array_object.nct_exists(c)) continue;
             Token     T = new_array_object.nct_token(c);
             TokenList body;
@@ -229,7 +229,7 @@ void NewArray::test_pach() {
     }
     ch_num = chn_c; // in case of error
     // These want an argument
-    char_for_error = c;
+    char_for_error = static_cast<char>(c);
     if (c == '|') {
         ch_class = chc_bar;
         return;
@@ -578,7 +578,7 @@ void Parser::T_start_tabular(subtypes c) {
         if (!cur_cmd_chr.is_relax()) back_input();
     }
     {
-        int pos = get_ctb_opt(); // Lamport does not mention c, who cares
+        auto pos = get_ctb_opt(); // Lamport does not mention c, who cares
         if (pos != 0) id.add_attribute(the_names[np_vpos], the_names[pos]);
     }
     new_array_object.run(id, true);
@@ -672,8 +672,8 @@ auto Parser::T_hline_parse(subtypes c) -> int {
 auto Xml::try_cline(bool action) -> bool {
     int  a    = cline_first - 1;
     bool a_ok = false; // true after skip
-    int  len  = size();
-    for (int k = 0; k < len; k++) {
+    auto len  = size();
+    for (size_t k = 0; k < len; k++) {
         if (a == 0) {
             if (a_ok) return true;
             a    = (cline_last - cline_first) + 1;
@@ -697,9 +697,9 @@ auto Xml::try_cline(bool action) -> bool {
 
 // Puts the total span in res, return false in case of trouble
 auto Xml::total_span(int &res) const -> bool {
-    int r   = 0;
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    int  r   = 0;
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc()) {
             Istring N = tree[k]->get_name();
@@ -719,8 +719,8 @@ auto Xml::total_span(int &res) const -> bool {
 // If action is true, we kill the cell/newline
 auto Xml::try_cline_again(bool action) -> bool {
     bool seen_cell = false;
-    int  len       = size();
-    for (int k = 0; k < len; k++) {
+    auto len       = size();
+    for (size_t k = 0; k < len; k++) {
         if (tree[k] == nullptr) continue;
         if (action) {
             tree[k] = nullptr;

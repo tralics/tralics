@@ -10,7 +10,9 @@ auto is_letter(char c) -> bool;
 struct codepoint {
     char32_t value;
 
-    explicit codepoint(unsigned int x = 0) noexcept : value(x) {}
+    explicit codepoint(unsigned x = 0) noexcept : value(x) {}
+    explicit codepoint(uchar c) noexcept : value(c) {}
+    explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }

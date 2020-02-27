@@ -94,7 +94,7 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c == '&')
         push_back("&amp;");
     else if (c < 32)
-        push_back_ent(codepoint(c));
+        push_back_ent(codepoint(static_cast<char>(c)));
     else
         push_back(c);
 }
@@ -581,7 +581,7 @@ auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[
 void Buffer::insert_escape_char() {
     int c = buffer_ns::current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(c), the_main->get_log_encoding());
+        out_log(codepoint(static_cast<unsigned>(c)), the_main->get_log_encoding());
     else if (c == 0)
         push_back("^^@");
 }
@@ -590,7 +590,7 @@ void Buffer::insert_escape_char() {
 void Buffer::insert_escape_char_raw() {
     int c = buffer_ns::current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(codepoint(c));
+        push_back(codepoint(static_cast<unsigned>(c)));
     else if (c == 0)
         push_back("^^@");
 }
@@ -603,7 +603,7 @@ auto buffer_ns::null_cs_name() -> String {
     if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
-        B.out_log(codepoint(c), the_main->get_log_encoding());
+        B.out_log(codepoint(static_cast<unsigned>(c)), the_main->get_log_encoding());
         B << "endcsname";
         return B.c_str();
     }

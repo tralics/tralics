@@ -970,7 +970,7 @@ void Parser::solve_cite(bool user) {
         n = B.find_citation_star(from, key);
     else
         n = B.find_citation_item(from, key, true);
-    CitationItem &CI = B.citation_table[n];
+    CitationItem &CI = B.citation_table[static_cast<size_t>(n)];
     if (CI.is_solved()) {
         err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
         the_parser.signal_error(the_parser.err_tok, "bad solve");
@@ -980,7 +980,7 @@ void Parser::solve_cite(bool user) {
     int      my_id = AL.has_value(np_id);
     if (my_id >= 0) {
         if (CI.has_empty_id())
-            CI.set_id(AL.get_val(my_id));
+            CI.set_id(AL.get_val(static_cast<size_t>(my_id)));
         else {
             err_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
             the_parser.signal_error(the_parser.err_tok, "bad solve");
@@ -1242,7 +1242,7 @@ auto Bibtex::check_field_end(int what) -> int {
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
     codepoint c = cur_char();
-    if (c.is_space() || c == '#' || c == ',' || c == right_outer_delim) return 0;
+    if (c.is_space() || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << "\nit cannot end with `" << c << "'\n"
                 << "expecting `,', `#' or `" << right_outer_delim << "'";
@@ -2210,11 +2210,11 @@ void Buffer::normalise_for_bibtex(String s) {
         if (c != '\\') continue;
         if (strncmp(s, "c{c}", 4) == 0) {
             wptr--;
-            push_back(codepoint(0347));
+            push_back(codepoint(0347U));
             s += 4;
         } else if (strncmp(s, "c{C}", 4) == 0) {
             wptr--;
-            push_back(codepoint(0307));
+            push_back(codepoint(0307U));
             s += 4;
         } else if (strncmp(s, "v{c}", 4) == 0) {
             s += 4;

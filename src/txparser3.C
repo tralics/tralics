@@ -78,7 +78,7 @@ SaveErrTok::SaveErrTok(Token t) {
     the_parser.err_tok = t;
 }
 
-Parser::Parser() : cur_env_name("document"), verb_saved_char(0) {
+Parser::Parser() : cur_env_name("document") {
     sectionning_offset                 = section_code;
     restricted                         = false;
     cur_level                          = level_one;

@@ -27,7 +27,7 @@ public:
         cmd = A;
         chr = B;
     }
-    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(chr); }
+    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(static_cast<unsigned>(chr)); }
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
     [[nodiscard]] auto is_digit() const -> bool { return '0' <= chr && chr <= '9'; }
     [[nodiscard]] auto is_other() const -> bool { return cmd == other_catcode; }

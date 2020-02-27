@@ -985,7 +985,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
         int k = ((dim >> 16) + 2) / 4;
         while (k > 0) {
             k--;
-            process_char(codepoint(0xA0));
+            process_char(codepoint(0xA0U));
         }
         return;
     }

@@ -73,14 +73,14 @@ public:
     void               dump(Buffer &b);
     void               dump_bibtex();
     void               dump_data(Buffer &b);
-    auto               get_bid(int n) -> Istring { return citation_table[n].get_bid(); }
+    auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
     auto               find_citation_item(Istring from, Istring key, bool insert) -> int;
     auto               find_citation_star(Istring from, Istring key) -> int;
     [[nodiscard]] auto get_cmd() const -> std::string { return bib_cmd; }
     [[nodiscard]] auto get_location() const -> Xml * { return biblio_loc; }
     [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
-    auto               number_of_data_bases() -> int { return biblio_src.size(); }
+    auto               number_of_data_bases() { return biblio_src.size(); }
     void               push_back_src(String x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
     void               set_cmd(std::string x) { bib_cmd = std::move(x); }
@@ -208,7 +208,7 @@ class BibEntry {
     int          extra_num{0};                 // extra char added to the label
     int          cur_year{0};                  // current year, if year field can be parsed
     std::string  lab1, lab2, lab3;             // two temporaries.
-    int          id{0};
+    size_t       id{0};
     Istring      unique_id;
     bool         explicit_cit{false};
     c_primaire   main_c_type;
@@ -326,8 +326,8 @@ private:
     void               kill_the_lists();
     auto               look_at_macro(const Buffer &name) -> int;
     auto               look_at_macro(int h, String name) -> int;
-    void               mac_def_val(int X) { all_macros[X].set_default_value(); }
-    void               mac_set_val(int X, std::string s) { all_macros[X].set_value(std::move(s)); }
+    void               mac_def_val(size_t X) { all_macros[X].set_default_value(); }
+    void               mac_set_val(size_t X, std::string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;
     auto               next_char() -> codepoint { return input_line[input_line_pos++]; }
     void               next_line(bool what);
@@ -350,7 +350,7 @@ private:
 public:
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
 
-    auto get_an_entry(int i) -> BibEntry * { return all_entries[i]; }
+    auto get_an_entry(size_t i) { return all_entries[i]; }
     auto exec_bibitem(const std::string &w, const std::string &b) -> Istring;
     void nocitestar_true() { nocitestar = true; }
     auto implement_cit(String x, std::string w) -> int;

@@ -52,14 +52,14 @@ void ScaledInt::ovf31() {
 // If this is a TeX token representing a valid digit in base radix,
 // returns the value,
 // otherwise return -1.
-auto Token::tex_is_digit(int radix) -> int {
-    int w = val_as_other();
+auto Token::tex_is_digit(unsigned radix) -> int {
+    auto w = val_as_other();
     if ('0' <= w && w <= radix + '0' && w <= '9') // do not use is_digit...
-        return w - '0';
+        return static_cast<int>(w) - '0';
     if (radix != 16) return -1;
-    if (w <= 'F' && w >= 'A') return w - 'A' + 10;
+    if (w <= 'F' && w >= 'A') return static_cast<int>(w) - 'A' + 10;
     w = val_as_letter(); // allow category code 11 digits
-    if (w <= 'F' && w >= 'A') return w - 'A' + 10;
+    if (w <= 'F' && w >= 'A') return static_cast<int>(w) - 'A' + 10;
     return -1;
 }
 
@@ -609,7 +609,7 @@ auto SpecialHash::find_counter() -> int {
     Buffer &B = the_parser.hash_table.my_buffer();
     B << bf_reset << "c@" << s;
     Token t  = the_parser.hash_table.locate(B);
-    int   cs = t.eqtb_loc();
+    auto  cs = t.eqtb_loc();
     if (the_parser.hash_table.eqtb[cs].get_cmd() != assign_int_cmd) return -1;
     return counter_val(the_parser.hash_table.eqtb[cs].get_chr() - count_reg_offset);
 }
@@ -631,13 +631,13 @@ auto Mactab::new_macro(Macro *s) -> subtypes {
 // Initially cur_rc_mac_len=0, tables are empty
 // Note that the table always contains a valid pointer
 void Mactab::rc_mac_realloc() {
-    int           k         = cur_rc_mac_len;
-    int           ns        = k + 400;
+    auto          k         = cur_rc_mac_len;
+    auto          ns        = k + 400;
     static Macro *empty_mac = nullptr;
     if (empty_mac == nullptr) empty_mac = new Macro;
     auto T1 = new Macro *[ns];
     auto T2 = new int[ns];
-    for (int i = 0; i < k; i++) {
+    for (size_t i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];
     }
@@ -645,11 +645,11 @@ void Mactab::rc_mac_realloc() {
     delete[] rc_table;
     table    = T1;
     rc_table = T2;
-    for (int i = k; i < ns; i++) {
+    for (size_t i = k; i < ns; i++) {
         table[i]    = empty_mac;
-        rc_table[i] = i + 1;
+        rc_table[i] = static_cast<int>(i + 1);
     }
-    ptr              = k == 0 ? 1 : k;
+    ptr              = k == 0 ? 1 : static_cast<int>(k);
     rc_table[ns - 1] = -1;
     cur_rc_mac_len   = ns;
 }

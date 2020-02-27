@@ -20,14 +20,14 @@
 #include "txparser.h"
 
 namespace accent_ns {
-    auto fetch_accent(int chr, int accent_code) -> Token;
+    auto fetch_accent(size_t chr, int accent_code) -> Token;
     auto fetch_double_accent(int a, int acc3) -> Token;
     auto combine_accents(int acc1, int acc2) -> int;
-    auto double_a_accent(int acc3) -> int;
-    auto double_e_accent(int acc3) -> int;
-    auto double_o_accent(int acc3) -> int;
-    auto double_u_accent(int acc3) -> int;
-    auto double_other_accent(int a, int acc3) -> int;
+    auto double_a_accent(int acc3) -> unsigned;
+    auto double_e_accent(int acc3) -> unsigned;
+    auto double_o_accent(int acc3) -> unsigned;
+    auto double_u_accent(int acc3) -> unsigned;
+    auto double_other_accent(int a, int acc3) -> unsigned;
     void boot_accents();
     auto mk_acc(uint s) -> Token;
     void special_acc_hack(TokenList &y);
@@ -61,7 +61,7 @@ namespace accent_ns {
 
 // Returns the token associated to acc for character chr.
 // Return zero-token in case of failure
-auto accent_ns::fetch_accent(int chr, int acc) -> Token {
+auto accent_ns::fetch_accent(size_t chr, int acc) -> Token {
     switch (acc) {
     case '\'': return accent_acute[chr];
     case '`': return accent_grave[chr];
@@ -168,7 +168,7 @@ auto accent_ns::combine_accents(int acc1, int acc2) -> int {
 }
 
 // Fetches the position of a double accent on capital O
-auto accent_ns::double_o_accent(int acc3) -> int {
+auto accent_ns::double_o_accent(int acc3) -> unsigned {
     switch (acc3) {
     case 1: return Odiamacro_cc;
     case 5: return Odotmacro_cc;
@@ -194,7 +194,7 @@ auto accent_ns::double_o_accent(int acc3) -> int {
 }
 
 // Fetches the position of a double accent on capital E
-auto accent_ns::double_e_accent(int acc3) -> int {
+auto accent_ns::double_e_accent(int acc3) -> unsigned {
     if (acc3 == 10) return Ebaracute_cc;
     if (acc3 == 12) return Eciracute_cc;
     if (acc3 == 13) return Ebargrave_cc;
@@ -207,7 +207,7 @@ auto accent_ns::double_e_accent(int acc3) -> int {
 }
 
 // Fetches the position of a double accent on capital A
-auto accent_ns::double_a_accent(int acc3) -> int {
+auto accent_ns::double_a_accent(int acc3) -> unsigned {
     if (acc3 == 1) return Adiamacro_cc;
     if (acc3 == 5) return Adotmacro_cc;
     if (acc3 == 12) return Aciracute_cc;
@@ -224,7 +224,7 @@ auto accent_ns::double_a_accent(int acc3) -> int {
 }
 
 // Fetches the position of a double accent on capital U
-auto accent_ns::double_u_accent(int acc3) -> int {
+auto accent_ns::double_u_accent(int acc3) -> unsigned {
     if (acc3 == 1) return Udiamacro_cc;
     if (acc3 == 2) return Udiaacute_cc;
     if (acc3 == 3) return Udiacaron_cc;
@@ -239,7 +239,7 @@ auto accent_ns::double_u_accent(int acc3) -> int {
 }
 
 // Fetches the position of a double accent on a, not in the list above
-auto accent_ns::double_other_accent(int a, int acc3) -> int {
+auto accent_ns::double_other_accent(int a, int acc3) -> unsigned {
     if (a == 'I') {
         if (acc3 == 2) return Itremaacute_cc;
     }
@@ -445,9 +445,9 @@ void Parser::E_accent() {
             int acc3_code = accent_ns::combine_accents(acc_code, acc_code2);
             res           = accent_ns::fetch_double_accent(static_cast<int>(achar), acc3_code);
         } else {
-            res = accent_ns::fetch_accent(static_cast<int>(achar), acc_code);
+            res = accent_ns::fetch_accent(achar, acc_code);
             if (res.is_null() && achar < 128) {
-                if (is_letter(achar)) {
+                if (is_letter(static_cast<char>(achar))) {
                     spec = true; // T. Bouche veut une erreur
                     res  = accent_ns::fetch_accent(0, acc_code);
                 } else
@@ -456,8 +456,10 @@ void Parser::E_accent() {
         }
     }
     if (res.is_null()) {
-        String s = achar >= 128 ? "a non 7-bit character"
-                                : is_letter(achar) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
+        String s =
+            achar >= 128
+                ? "a non 7-bit character"
+                : is_letter(static_cast<char>(achar)) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
         err_buf << bf_reset << msg1;
         err_buf << tfe.tok_to_str();
         if (acc_code2 != 0) err_buf << tfe2.tok_to_str();

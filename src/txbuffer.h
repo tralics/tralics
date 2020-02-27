@@ -349,7 +349,7 @@ public:
     auto               tp_next_char(char &res) -> bool;
     auto               tp_fetch_something() -> tpa_line;
     auto               trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
-    [[nodiscard]] auto uhead() const -> unsigned char { return at(ptr); }
+    [[nodiscard]] auto uhead() const { return at(ptr); }
     void               undo() { ptr--; }
     void               unicode_char(int);
     [[nodiscard]] auto unique_character() const -> codepoint;

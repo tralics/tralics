@@ -97,11 +97,9 @@ private:
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
-    [[nodiscard]] auto get_catcode(int x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
-    void               set_catcode(int x, int v) { // untraced version of catcode modification
-        eqtb_int_table[x].set_val(v);
-    }
-    auto get_after_ass_tok() -> Token {
+    [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
+    void               set_catcode(size_t x, int v) { eqtb_int_table[x].set_val(v); }
+    auto               get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
         after_assignment_token.kill();
         return x;
@@ -121,7 +119,7 @@ private:
         cur_cmd_chr.set_chr(t.chr_val());
     }
     void               set_after_ass_tok(Token x) { after_assignment_token = x; }
-    void               set_cat(int c, int v) { eqtb_int_table[c].set_val(v); }
+    void               set_cat(size_t c, int v) { eqtb_int_table[c].set_val(v); }
     void               set_def_language_num(int x) { default_language_num = x; }
     [[nodiscard]] auto tracing_io() const -> bool { return is_pos_par(tracingoutput_code); }
     [[nodiscard]] auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }
@@ -538,8 +536,8 @@ private:
     void        missing_equals(Token T);
     void        missing_flush();
     void        missing_open_brace();
-    void        mklcuc(int c, int lc, int uc);
-    void        mklcuc(int c, int uc);
+    void        mklcuc(size_t c, size_t lc, size_t uc);
+    void        mklcuc(size_t lc, size_t uc);
     static void mk_hi(String X, char c);
     void        month_day(subtypes c);
     void        more_bootstrap();

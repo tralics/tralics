@@ -90,7 +90,7 @@ public:
     void               eval_let(String a, String b);
     auto               eval_letv(String a, String b) -> Token;
     void               eval_let_local(String a, String b);
-    auto               operator[](int k) const -> String { return Text[k]; }
+    auto               operator[](size_t k) const { return Text[k]; }
     void               dump();
     void               boot_fancyhdr();
     void               boot_etex();
@@ -101,15 +101,15 @@ public:
 
 // This is an association table. We could use a standard C++ class here
 class SpecialHash {
-    int                      size;  // number of terms
+    size_t                   size;  // number of terms
     std::vector<std::string> key;   // the keys
     std::vector<std::string> value; // the values
 public:
     SpecialHash(const std::string &s) : size(0) { create(s.c_str()); }
     void               create(String s);
     auto               find(String x) const -> std::string;
-    [[nodiscard]] auto get_size() const -> int { return size; }
-    void               get_pair(int k, std::string &a, std::string &b) {
+    [[nodiscard]] auto get_size() const { return size; }
+    void               get_pair(size_t k, std::string &a, std::string &b) {
         if (k < size) {
             a = key[k];
             b = value[k];
@@ -159,8 +159,8 @@ public:
 // This class returns foo then bar then gee from `foo,bar,gee'
 class Splitter {
     std::string S;   // the string to split
-    int         pos; // current position
-    int         size;
+    size_t      pos; // current position
+    size_t      size;
 
 public:
     Splitter(std::string w) : S(std::move(w)), pos(0) { size = S.size(); }

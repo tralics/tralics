@@ -1669,7 +1669,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
         if (L->is_char())
             B.push_back(L->get_char());
         else if (L->is_e_grave())
-            B.push_back(codepoint(0350));
+            B.push_back(codepoint(0350U));
         else
             return nullptr;
         ++L;

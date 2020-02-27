@@ -797,7 +797,7 @@ inline void RestoreVbSpace::operator()(Token T) { P->verbatim_chars[uchar(' ')] 
 auto Parser::delimiter_for_verb(bool &special_space) -> codepoint {
     codepoint t = get_next_char();
     if (!(t == '*')) return t;
-    if (at_eol()) return codepoint(0);
+    if (at_eol()) return codepoint();
     special_space = true;
     return get_next_char();
 }
@@ -806,13 +806,13 @@ auto Parser::delimiter_for_verb(bool &special_space) -> codepoint {
 // which must have spacial_catcode. returns 0 in case of trouble
 auto Parser::delimiter_for_saveverb() -> codepoint {
     for (;;) {
-        if (at_eol()) return codepoint(0);
+        if (at_eol()) return codepoint();
         codepoint c = get_next_char();
         if (c == 0) return c;
-        if (c.is_big()) return codepoint(0);
+        if (c.is_big()) return codepoint();
         if (get_catcode(c.value) == space_catcode) continue;
         if (get_catcode(c.value) == special_catcode) return c;
-        return codepoint(0);
+        return codepoint();
     }
 }
 
@@ -2654,7 +2654,7 @@ void Parser::iexpand() {
     case l3str_case_cmd: E_l3str_case(c); return;
     case token_if_cmd: l3_token_check(c); return;
     case cat_ifeq_cmd: E_cat_ifeq(c); return;
-    case specchar_cmd: back_input(Token(other_t_offset, codepoint(c))); return;
+    case specchar_cmd: back_input(Token(other_t_offset, codepoint(static_cast<unsigned>(c)))); return;
     case splitfun_cmd: L3_user_split_next_name(c == 0); return;
     case user_cmd:
     case usero_cmd:

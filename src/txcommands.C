@@ -888,9 +888,9 @@ void Parser::translate03() {
         LC();
         // FIXME this is latex not xml
         if (eqtb_int_table[language_code].get_val() == 1) {
-            process_char(codepoint(0xE0));
+            process_char(codepoint(0xE0U));
             process_string(" para");
-            process_char(codepoint(0xEE));
+            process_char(codepoint(0xEEU));
             process_string("tre");
         } else
             process_string("to appear");
@@ -1183,7 +1183,7 @@ void Parser::translate03() {
     case dashline_cmd: T_dashline(c); return;
     case bezier_cmd: T_bezier(c); return;
     case grabenv_cmd: T_grabenv(); return;
-    case verb_cmd: T_verb(c != 0U ? verb_saved_char : codepoint(0)); return;
+    case verb_cmd: T_verb(c != 0U ? verb_saved_char : codepoint(0U)); return;
     case gloss_cmd: T_gloss(c == 0); return;
     case only_preamble_cmd:
         get_r_token(true);

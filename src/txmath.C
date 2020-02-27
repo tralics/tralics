@@ -2881,7 +2881,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
     B.reset();
     while (!empty()) {
         symcodes cmd = front().get_cmd();
-        int      chr = front().get_chr();
+        auto     chr = front().get_chr();
         subtypes fn  = front().get_font();
         MathElt  old = front();
         pop_front();
@@ -2895,7 +2895,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             default: return 3;
             }
         } else if (cmd == 11 || cmd == 12) {
-            B.push_back_real_utf8(codepoint(chr));
+            B.push_back_real_utf8(codepoint(static_cast<unsigned>(chr)));
             f = fn;
             continue;
         } else if (cmd == mathfont_cmd)
@@ -2908,7 +2908,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             if (front().get_cmd() == math_list_cmd && front().get_list().type == math_open_cd) return 4;
             return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
-            B.push_back_real_utf8(codepoint(chr));
+            B.push_back_real_utf8(codepoint(static_cast<unsigned>(chr)));
             continue;
         } else if (cmd == relax_cmd)
             continue;

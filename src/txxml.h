@@ -101,7 +101,7 @@ public:
     void               set_id(int i) { id = i; }
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
-    [[nodiscard]] auto size() const -> int { return tree.size(); }
+    [[nodiscard]] auto size() const { return tree.size(); }
     void               subst_env0(Istring match, Xml *vl);
     void               swap_x(Xml *x);
     [[nodiscard]] auto tail_is_anchor() const -> bool;

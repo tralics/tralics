@@ -271,23 +271,23 @@ auto io_ns::how_many_bytes(uchar C) -> int {
 // Return 0 if invalid. Return 0 if overflow
 auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
     int n = io_ns::how_many_bytes(A);
-    if (n == 0) return codepoint(0);
+    if (n == 0) return codepoint(0U);
     if (n == 1) return codepoint(A);
-    if (n == 2) return codepoint(((A & 31) << 6) + (B & 63));
-    if (n == 3) return codepoint((C & 63) + ((B & 63) << 6) + ((A & 15) << 12));
-    return codepoint((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18));
+    if (n == 2) return codepoint(static_cast<unsigned>(((A & 31) << 6) + (B & 63)));
+    if (n == 3) return codepoint(static_cast<unsigned>((C & 63) + ((B & 63) << 6) + ((A & 15) << 12)));
+    return codepoint(static_cast<unsigned>((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18)));
 }
 
 // Returns 0 at end of line or error
 // may set local_error
 auto Buffer::next_utf8_char_aux() -> codepoint {
     uchar c = next_char();
-    if (c == 0) return codepoint(0);
+    if (c == 0) return codepoint();
     int n = io_ns::how_many_bytes(c);
     if (n == 0) {
         utf8_error(true);
         the_converter.line_is_ascii = false;
-        return codepoint(0);
+        return codepoint();
     }
     if (n == 1) return codepoint(c);
     the_converter.line_is_ascii = false;
@@ -311,10 +311,10 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
 auto Buffer::next_utf8_char() -> codepoint {
     the_converter.local_error = false;
     codepoint res             = next_utf8_char_aux();
-    if (the_converter.local_error) return codepoint(0);
+    if (the_converter.local_error) return codepoint();
     if (res.is_verybig()) {
         utf8_ovf(res.value);
-        return codepoint(0);
+        return codepoint();
     }
     return res;
 }
@@ -324,13 +324,13 @@ auto Buffer::next_utf8_char() -> codepoint {
 auto Buffer::unique_character() const -> codepoint {
     uchar c = at(0);
     int   n = io_ns::how_many_bytes(c);
-    if (n == 0) return codepoint(0);
-    if (n != size()) return codepoint(0);
+    if (n == 0) return codepoint();
+    if (n != size()) return codepoint();
     if (n == 1) return codepoint(c);
     if (n == 2) return io_ns::make_utf8char(at(0), at(1), 0, 0);
     if (n == 3) return io_ns::make_utf8char(at(0), at(1), at(2), 0);
     if (n == 4) return io_ns::make_utf8char(at(0), at(1), at(2), at(3));
-    return codepoint(0);
+    return codepoint();
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
@@ -392,9 +392,9 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[enc][pos] = codepoint(v);
+        custom_table[enc][pos] = codepoint(static_cast<unsigned>(v));
     else
-        custom_table[enc][pos] = codepoint(pos);
+        custom_table[enc][pos] = codepoint(static_cast<unsigned>(pos));
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
