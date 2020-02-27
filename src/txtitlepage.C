@@ -559,7 +559,7 @@ auto Buffer::is_begin_something(String s) -> int {
         ptr = 9;
         skip_sp_tab();
         if (ptr == 9) return 2; // bad
-        set_ptr1();
+        set_ptr1_to_ptr();
         skip_letter();
         if (ptr == ptr1) return 2;  // bad
         kill_at(ptr);               // what follows the type is a comment
@@ -569,7 +569,7 @@ auto Buffer::is_begin_something(String s) -> int {
     }
     if (s == nullptr) return 0;
     ptr = 5;
-    set_ptr1();
+    set_ptr1_to_ptr();
     skip_letter();
     if (ptr == ptr1) return 2;
     kill_at(ptr);
@@ -926,7 +926,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     skip_sp_tab();
     if (is_special_end()) return false;
     if (ptr == 0) return false;
-    set_ptr1();
+    set_ptr1_to_ptr();
     advance_letter_dig();
     if (ptr1 == ptr) return true; // this is bad
     std::string pot_res      = substring();
@@ -935,7 +935,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     for (;;) {
         skip_sp_tab();
         if (is_special_end()) break;
-        set_ptr1();
+        set_ptr1_to_ptr();
         advance_letter_dig();
         if (ptr1 == ptr) break;
         std::string a  = substring();

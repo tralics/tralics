@@ -5,12 +5,11 @@ Istring::Istring(name_positions N) : value(the_names[N].value) {}
 // True if the string holds only white space
 auto Istring::only_space() const -> bool {
     const std::string &s = the_main->SH[value];
-    int                i = 0;
-    int                l = s.length();
+    size_t             i = 0, l = s.length();
     while (i < l) {
         if (is_space(s[i]))
             i++;
-        else if (uchar(s[i]) == 194 && i + 1 < l && uchar(s[i + 1]) == 160)
+        else if (s[i] == static_cast<char>(194) && i + 1 < l && s[i + 1] == static_cast<char>(160))
             i += 2;
         else
             return false;

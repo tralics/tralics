@@ -30,7 +30,7 @@ namespace buffer_ns {
 
 auto Buffer::convert(int k) const -> std::string { return tralics_ns::make_string(data() + k); }
 
-auto is_letter(uchar c) -> bool { return is_upper_case(c) || is_lower_case(c); }
+auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
 // This returns a copy of the string
 auto tralics_ns::make_string(String a) -> std::string {
@@ -47,7 +47,7 @@ auto Buffer::to_string() const -> std::string {
 }
 
 // Returns a copy, starting at k.
-auto Buffer::to_string(int k) const -> std::string {
+auto Buffer::to_string(size_t k) const -> std::string {
     int n = strlen(data() + k);
     the_parser.my_stats.one_more_string(n + 1);
     return std::string(data() + k);
@@ -205,7 +205,7 @@ auto Buffer::is_begin_end() const -> int {
 // of failure, either because cur char is not a \, or last char is \.
 auto Buffer::after_slash() -> bool {
     if (head() != '\\') return false;
-    set_ptr1();
+    set_ptr1_to_ptr();
     advance();
     if (head() == 0) return false;
     if (!is_letter(head()))
@@ -244,7 +244,7 @@ auto Buffer::next_macro_spec() -> bool {
 auto Buffer::next_env_spec() -> bool {
     for (;;) {
         if (!next_macro_spec()) return false;
-        set_ptr1();
+        set_ptr1_to_ptr();
         advance();
         skip_letter();
         if (is_begin_end() != 0) return true;
@@ -1152,7 +1152,7 @@ auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
 // sets ptr to the next equals sign. Returns false if no such sign exists
 auto Buffer::find_equals() -> bool {
     skip_sp_tab_nl();
-    set_ptr1();
+    set_ptr1_to_ptr();
     while ((head() != 0) && head() != '=') advance();
     return head() == '=';
 }
@@ -1177,7 +1177,7 @@ auto Buffer::string_delims() -> bool {
     char c = head();
     if (c == 0) return false;
     advance();
-    set_ptr1();
+    set_ptr1_to_ptr();
     while ((head() != 0) && head() != c) advance();
     if (head() == 0) return false;
     kill_at(ptr);
@@ -1248,7 +1248,7 @@ auto Buffer::fetch_spec_arg() -> bool {
     skip_sp_tab_nl();
     if (head() != '{') return false;
     advance();
-    set_ptr1();
+    set_ptr1_to_ptr();
     for (;;) {
         uchar c = uhead();
         if (c == 0 || c == '{' || c == '%') return false;
@@ -1272,10 +1272,10 @@ auto Buffer::contains_here(String s) const -> bool {
 // Returns true if the buffer contains the string s with braces.
 // After that, ptr1 is reset, ptr set to after the closing brace.
 auto Buffer::contains_braced(String s) -> bool {
-    int k = get_ptr1();
+    auto k = ptr1;
     if (!fetch_spec_arg()) return false;
     if (!contains_here(s)) return false;
-    set_ptr1(k);
+    ptr1 = k;
     advance();
     return true;
 }

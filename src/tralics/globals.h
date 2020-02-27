@@ -63,8 +63,8 @@ namespace main_ns {
 
 #ifdef _MSC_VER
 #include <windows.h> // 'Sleep()'
-inline void txsleep(int i) { Sleep(1000 * i); }
+inline void txsleep(unsigned i) { Sleep(1000 * i); }
 #else
 #include <unistd.h>
-inline void txsleep(int i) { sleep(i); }
+inline void txsleep(unsigned i) { sleep(i); }
 #endif

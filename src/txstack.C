@@ -186,9 +186,9 @@ void Xml::remove_last_space() {
     if (!last_is_string()) return;
     Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
     last_to_SH();
-    int k = aux.length();
+    int k = aux.size();
     aux.remove_space_at_end();
-    if (k != aux.length()) {
+    if (k != aux.size()) {
         tree.pop_back();
         if (!aux.empty()) tree.push_back(new Xml(the_main->SH));
     }

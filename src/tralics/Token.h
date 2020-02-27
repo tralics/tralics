@@ -68,10 +68,9 @@ struct Token {
     [[nodiscard]] auto to_string() const -> String;
     [[nodiscard]] auto tok_to_str() const -> String;
     [[nodiscard]] auto tok_to_str1() const -> String;
-    [[nodiscard]] auto get_ival() const -> int { return val; }
     void               testpach();
 };
 
-inline auto make_char_token(unsigned char c, int cat) -> Token { return Token(nb_characters * cat + c); }
+inline auto make_char_token(unsigned char c, unsigned cat) -> Token { return Token(nb_characters * cat + c); }
 
 using TokenList = std::list<Token>;

@@ -420,15 +420,15 @@ auto FpNum::create(Buffer &B) -> bool {
         else
             break;
     }
-    int k = B.get_ptr(); // index of first non-zero digit.
+    int k = B.ptr; // index of first non-zero digit.
     for (;;) {
         if (B.head() != '.')
             B.advance();
         else
             break;
     }
-    int n = B.get_ptr() - k; // number of chars before dot
-    B.set_ptr(k);
+    int n = B.ptr - k; // number of chars before dot
+    B.ptr = k;
     if (n > 18) retval = true;
     data[0] = B.horner(n - 9);
     data[1] = B.horner(n);

@@ -92,7 +92,7 @@ auto CitationItem::get_bid() -> Istring {
 // considered elsewhere.
 auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
     int     n   = the_bibliography.find_citation_item(type, ref, true);
-    Istring id  = the_bibliography.citation_table[n].get_bid();
+    Istring id  = the_bibliography.citation_table[static_cast<size_t>(n)].get_bid();
     Xml *   res = new Xml(np_ref, nullptr);
     res->get_id().add_attribute(np_target, id);
     return res;
@@ -374,8 +374,8 @@ void CitationItem::dump_bibtex() {
 // This creates the full aux file, for use with bibtex.
 void Bibliography::dump(Buffer &b) {
     if (seen_nocite()) b << "\\citation{*}\n";
-    int n = citation_table.size();
-    for (int i = 0; i < n; i++) citation_table[i].dump(b);
+    size_t n = citation_table.size();
+    for (size_t i = 0; i < n; i++) citation_table[i].dump(b);
 }
 
 // This reads conditionally a file. Returns true if the file exists.
@@ -394,7 +394,7 @@ void Bibtex::read1(const std::string &cur) {
     Buffer &Tbuf = biblio_buf4;
     Tbuf.reset();
     Tbuf.push_back(cur);
-    int n = Tbuf.length();
+    auto n = Tbuf.size();
     if (read0(Tbuf, from_year)) return;
     String Str = Tbuf.c_str();
     if (n > 5 && strcmp(Str + n - 5, "+foot.bib") == 0) {
@@ -452,21 +452,21 @@ void Bibtex::read_ra() {
 // This dumps the whole biblio for use by Tralics.
 void Bibliography::dump_bibtex() {
     if (seen_nocite()) the_bibtex->nocitestar_true();
-    int n = citation_table.size();
+    size_t n = citation_table.size();
     if (n != 0) bbl.open();
-    for (int i = 0; i < n; i++) citation_table[i].dump_bibtex();
+    for (size_t i = 0; i < n; i++) citation_table[i].dump_bibtex();
     n = biblio_src.size();
     if (n > 0) {
         bbl.open();
-        for (int i = 0; i < n; i++) the_bibtex->read1(biblio_src[i]);
+        for (size_t i = 0; i < n; i++) the_bibtex->read1(biblio_src[i]);
     } else
         the_bibtex->read_ra();
 }
 
 void Bibliography::stats() {
-    int solved = 0, total = 0;
-    int n = citation_table.size();
-    for (int i = 0; i < n; i++) {
+    int    solved = 0, total = 0;
+    size_t n = citation_table.size();
+    for (size_t i = 0; i < n; i++) {
         total++;
         if (citation_table[i].is_solved()) solved++;
     }
@@ -477,11 +477,11 @@ void Bibliography::stats() {
 
 // This dumps the whole biblio for use by bibtex.
 void Bibliography::dump_data(Buffer &b) {
-    int n = biblio_src.size();
+    auto n = biblio_src.size();
     b << "\\bibstyle{" << bib_style.c_str() << "}\n";
     b << "\\bibdata{";
     if (n == 0) b << tralics_ns::get_short_jobname();
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         if (i > 0) b.push_back(",");
         b.push_back(biblio_src[i]);
     }
@@ -579,12 +579,12 @@ auto CitationItem::match_star(Istring A) -> bool { return key == A && !is_solved
 // If not found, we may insert a new item (normal case),
 // or return -1 (in case of failure)
 auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) -> int {
-    int n = citation_table.size();
-    for (int i = 0; i < n; i++)
-        if (citation_table[i].match(key, from)) return i;
+    auto n = citation_table.size();
+    for (size_t i = 0; i < n; i++)
+        if (citation_table[i].match(key, from)) return static_cast<int>(i);
     if (!insert) return -1;
     citation_table.emplace_back(key, from);
-    return n;
+    return static_cast<int>(n);
 }
 
 // This is like the function above. In the case \footcite{Kunth},
@@ -593,13 +593,12 @@ auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) ->
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.
 auto Bibliography::find_citation_star(Istring from, Istring key) -> int {
-    int n = find_citation_item(from, key, false);
-    if (n >= 0) return n;
-    n = citation_table.size();
-    for (int i = 0; i < n; i++)
-        if (citation_table[i].match_star(key)) return i;
+    if (int n = find_citation_item(from, key, false); n >= 0) return n;
+    auto n = citation_table.size();
+    for (size_t i = 0; i < n; i++)
+        if (citation_table[i].match_star(key)) return static_cast<int>(i);
     citation_table.emplace_back(key, from);
-    return n;
+    return static_cast<int>(n);
 }
 
 // \cititem{foo}{bar} translates \cititem-foo{bar}
@@ -643,9 +642,9 @@ auto Bibtex::look_at_macro(const Buffer &name) -> int {
 }
 
 auto Bibtex::look_at_macro(int h, String name) -> int {
-    int n = all_macros.size();
-    for (int i = 0; i < n; i++)
-        if (all_macros[i].is_same(h, name)) return i;
+    size_t n = all_macros.size();
+    for (size_t i = 0; i < n; i++)
+        if (all_macros[i].is_same(h, name)) return static_cast<int>(i);
     return not_found;
 }
 
@@ -659,7 +658,7 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
     int h   = name.hashcode(bib_hash_mod);
     int res = look_at_macro(h, name.c_str());
     if (res >= 0 || !insert) return res;
-    res = all_macros.size();
+    res = static_cast<int>(all_macros.size());
     if (xname != nullptr)
         all_macros.emplace_back(h, xname, val);
     else
@@ -676,8 +675,8 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
     auto S = Istring(s);
     // Check is this has to be ignored
     std::vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
-    int                   additional_s = Bib_s.size();
-    for (int i = 0; i < additional_s; i++)
+    size_t                additional_s = Bib_s.size();
+    for (size_t i = 0; i < additional_s; i++)
         if (Bib_s[i] == S) return fp_unknown;
 
     // Check is this is standard
@@ -713,8 +712,8 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
     if (S == cstb_crossref) return fp_crossref;
     // Check is this is additional
     std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
-    int                   additional = Bib.size();
-    for (int i = 0; i < additional; i++)
+    size_t                additional = Bib.size();
+    for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
     return fp_unknown;
 }
@@ -725,8 +724,8 @@ auto Bibtex::find_type(String s) -> entry_type {
     auto S = Istring(s);
 
     std::vector<Istring> &Bib2        = the_main->get_bibtex_extensions_s();
-    int                   additional2 = Bib2.size();
-    for (int i = 0; i < additional2; i++)
+    size_t                additional2 = Bib2.size();
+    for (size_t i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
     if (S == cstb_article) return type_article;
     if (S == cstb_book) return type_book;
@@ -749,8 +748,8 @@ auto Bibtex::find_type(String s) -> entry_type {
     if (S == cstb_unpublished) return type_unpublished;
 
     std::vector<Istring> &Bib        = the_main->get_bibtex_extensions();
-    int                   additional = Bib.size();
-    for (int i = 0; i < additional; i++)
+    size_t                additional = Bib.size();
+    for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return entry_type(type_extension + i + 1);
     return type_unknown;
 }
@@ -782,11 +781,11 @@ String ra_pretable[8];
 
 void bib_ns::boot_ra_prefix(String s) {
     char *tmp = new char[3 * 8];
-    for (int i = 0; i < 8; i++) {
-        int j          = i * 3;
+    for (unsigned i = 0; i < 8; i++) {
+        size_t j       = i * 3;
         ra_pretable[i] = tmp + j;
         tmp[j]         = s[1];
-        tmp[j + 1]     = 'A' + i;
+        tmp[j + 1]     = 'A' + static_cast<char>(i);
         tmp[j + 2]     = 0;
     }
     tmp[0] = s[0];
@@ -819,12 +818,12 @@ auto BibEntry::ra_prefix() const -> String {
 
 // This finds a citation that matches exactly S
 auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
-    int len = all_entries.size();
+    auto len = all_entries.size();
     if (old_ra) {
-        for (int i = 0; i < len; i++)
+        for (size_t i = 0; i < len; i++)
             if (all_entries[i]->cite_key.is_same_old(s)) return all_entries[i];
     } else {
-        for (int i = 0; i < len; i++)
+        for (size_t i = 0; i < len; i++)
             if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
     }
     return nullptr;
@@ -841,16 +840,15 @@ auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
 // Puts in N the number of citations found.
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
-    int       len = all_entries.size();
     BibEntry *res = nullptr;
     if (old_ra) {
-        for (int i = 0; i < len; i++)
+        for (size_t i = 0; i < all_entries.size(); i++)
             if (all_entries[i]->cite_key.is_same_lower_old(s)) {
                 res = all_entries[i];
                 n++;
             }
     } else
-        for (int i = 0; i < len; i++)
+        for (size_t i = 0; i < all_entries.size(); i++)
             if (all_entries[i]->cite_key.is_same_lower(s)) {
                 res = all_entries[i];
                 n++;
@@ -866,9 +864,8 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
 // Returns 0 if nothing was found.
 auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
-    int       len = all_entries.size();
     BibEntry *res = nullptr;
-    for (int i = 0; i < len; i++)
+    for (size_t i = 0; i < all_entries.size(); i++)
         if (all_entries[i]->cite_key.is_similar(s)) {
             res = all_entries[i];
             n++;
@@ -878,7 +875,7 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
         return res;
     }
     bool bad = false;
-    for (int i = 0; i < len; i++)
+    for (size_t i = 0; i < all_entries.size(); i++)
         if (all_entries[i]->cite_key.is_similar_lower(s)) {
             n++;
             if (res == nullptr) {
@@ -2002,7 +1999,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == 0) return s;
-    B.set_last(B.get_ptr());
+    B.set_last(B.ptr);
     return B.to_string();
 }
 
@@ -2024,7 +2021,7 @@ auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
         n--;
         B.next_bibtex_char();
     }
-    return B.to_string(B.get_ptr());
+    return B.to_string(B.ptr);
 }
 
 // Signals an error if the year is invalid in the case of refer.
@@ -2185,7 +2182,7 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     biblio_buf4.reset();
     biblio_buf5.reset();
     name_buffer.normalise_for_bibtex(src.c_str());
-    int          n     = name_buffer.length() + 1;
+    int          n     = name_buffer.size() + 1;
     auto *       table = new bchar_type[n];
     NameSplitter W(table);
     name_buffer.fill_table(table);
@@ -2338,9 +2335,9 @@ void NameSplitter::handle_the_names() {
     int  pos           = 1; // there is a space at position 0
     main_data.init(table);
     for (;;) {
-        name_buffer.set_ptr(pos);
+        name_buffer.ptr   = pos;
         bool is_last_name = name_buffer.find_and(table);
-        int  k            = name_buffer.get_ptr();
+        int  k            = name_buffer.ptr;
         main_data.init(pos, k);
         handle_one_name(is_first_name, is_last_name, serial);
         if (is_last_name) return;

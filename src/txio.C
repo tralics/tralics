@@ -54,6 +54,12 @@ auto operator<<(FullLogger &X, int s) -> FullLogger & {
     return X;
 }
 
+auto operator<<(FullLogger &X, size_t s) -> FullLogger & {
+    if (X.verbose) std::cout << s;
+    X.L << s;
+    return X;
+}
+
 auto operator<<(FullLogger &X, char s) -> FullLogger & {
     if (X.verbose) std::cout << s;
     X.L << s;
@@ -442,7 +448,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     cur_line++;
     B.reset0();
     B << m_ligne << "\n";
-    if (B.length() == 1) {
+    if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
         prev_line = false;
     } else

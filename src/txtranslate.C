@@ -1734,7 +1734,7 @@ auto Parser::dimen_attrib(ScaledInt A) -> Istring {
     Buffer &B = the_main->SH.shbuf();
     B.reset();
     B.push_back(A, glue_spec_empty);
-    int i = B.length();
+    int i = B.size();
     if (i > 0 && B[i - 1] == '0') {
         B.remove_last();
         i--;

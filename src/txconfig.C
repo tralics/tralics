@@ -280,7 +280,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
-    if (strncmp(B.c_str(B.get_ptr()), "\\UR", 3) == 0) {
+    if (strncmp(B.c_str(B.ptr), "\\UR", 3) == 0) {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
             log_and_tty << "You should use Lille instead of \\URLille,\n";
@@ -289,7 +289,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
         }
         B.advance(3);
     }
-    B.set_ptr1();
+    B.set_ptr1_to_ptr();
     B.skip_letter();
     int k = ur_list.size();
     for (int j = 0; j < k; j++)

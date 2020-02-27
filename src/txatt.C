@@ -18,9 +18,9 @@ auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_lis
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
 auto AttList::has_value(Istring x) const -> int {
-    int n = val.size();
-    for (int i = 0; i < n; i++)
-        if (val[i].name == x) return i;
+    size_t n = val.size();
+    for (size_t i = 0; i < n; i++)
+        if (val[i].name == x) return static_cast<int>(i);
     return -1;
 }
 
@@ -29,7 +29,7 @@ auto AttList::has_value(Istring x) const -> int {
 auto Xid::has_attribute(Istring n) -> Istring {
     AttList &X = get_att();
     int      i = X.has_value(n);
-    if (i >= 0) return X.get_val(i);
+    if (i >= 0) return X.get_val(static_cast<size_t>(i));
     return Istring();
 }
 
@@ -48,7 +48,7 @@ void AttList::push_back(Istring a, Istring b, bool force) {
     if (b.null()) return;
     int T = has_value(a);
     if (T >= 0) {
-        if (force) val[T].value = b;
+        if (force) val[static_cast<size_t>(T)].value = b;
         return;
     }
     val.push_back({a, b});
@@ -80,16 +80,16 @@ void Xid::add_attribute(name_positions n, Istring v) { get_att().push_back(n, v)
 // Adds the list L to the attribute list of this id.
 
 void Xid::add_attribute(const AttList &L, bool force) {
-    int      n = L.val.size();
+    size_t   n = L.val.size();
     AttList &l = get_att();
-    for (int i = 0; i < n; i++) l.push_back(L.val[i].name, L.val[i].value, force);
+    for (size_t i = 0; i < n; i++) l.push_back(L.val[i].name, L.val[i].value, force);
 }
 
 void Xid::add_attribute_but_rend(Xid b) {
     AttList &L = b.get_att();
-    int      n = L.val.size();
+    size_t   n = L.val.size();
     AttList &l = get_att();
-    for (int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
         if (L.val[i].name != np_rend) l.push_back(L.val[i].name, L.val[i].value, true);
 }
 
@@ -102,7 +102,7 @@ void Xid::add_attribute(Xid b) {
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
     int i = has_value(Istring(a));
-    if (i > 0) val[i].name = Istring(0);
+    if (i > 0) val[static_cast<size_t>(i)].name = Istring(0);
 }
 
 // This kills the whole list
@@ -115,7 +115,7 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
     int      k = L.has_value(m);
     if (k == -1) return false;
     reset();
-    push_back(L.get_val(k).c_str());
+    push_back(L.get_val(static_cast<size_t>(k)).c_str());
     return true;
 }
 
@@ -126,11 +126,11 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
 // Print in reverse order, because this was in the previous version
 
 void Buffer::push_back(const AttList &Y) {
-    int n = Y.val.size();
+    auto n = Y.val.size();
     if (the_main->use_double_quote_att())
-        for (int i = n - 1; i >= 0; i--) push_back_alt(Y.val[i]);
+        for (auto i = n; i > 0; i--) push_back_alt(Y.val[i - 1]);
     else
-        for (int i = n - 1; i >= 0; i--) push_back(Y.val[i]);
+        for (auto i = n; i > 0; i--) push_back(Y.val[i - 1]);
 }
 
 void Buffer::push_back(const AttPair &X) {
@@ -218,7 +218,7 @@ auto Buffer::xml_and_attrib(const std::string &s) -> Xml * {
 void Buffer::push_back_special_att(Xid id) {
     for (;;) {
         if (!find_equals()) return;
-        int J = get_ptr1();
+        auto J = ptr1;
         if (!backup_space()) return;
         advance();
         if (!string_delims()) return;
@@ -234,7 +234,7 @@ void Buffer::push_back_special_att(Xid id) {
 auto Buffer::see_equals(String s) -> bool {
     ptr = 0;
     skip_sp_tab();
-    int k = strlen(s);
+    auto k = strlen(s);
     if (strncmp(data() + ptr, s, k) != 0) return false;
     ptr += k;
     skip_sp_tab();

@@ -1,7 +1,7 @@
 #pragma once
 #include "types.h"
 
-auto is_letter(uchar c) -> bool;
+auto is_letter(char c) -> bool;
 
 /// \todo This might better just vanish (and we would use `char32_t` everywhere
 /// in the code) if there is a reasonable path to do that while keeping all the
@@ -20,7 +20,7 @@ struct codepoint {
     [[nodiscard]] auto is_Hex() const -> bool { return 'A' <= value && value <= 'F'; }
     [[nodiscard]] auto is_hex() const -> bool { return 'a' <= value && value <= 'f'; }
     [[nodiscard]] auto is_invalid() const -> bool { return value == 0xFFFF; }
-    [[nodiscard]] auto is_letter() const -> bool { return is_ascii() && ::is_letter(value); }
+    [[nodiscard]] auto is_letter() const -> bool { return is_ascii() && ::is_letter(static_cast<char>(value)); }
     [[nodiscard]] auto is_lower_case() const -> bool { return 'a' <= value && value <= 'z'; }
     [[nodiscard]] auto is_null() const -> bool { return value == 0; }
     [[nodiscard]] auto is_small() const -> bool { return value < 256; }
@@ -33,8 +33,8 @@ struct codepoint {
     [[nodiscard]] auto val_as_hex() const -> uint { return value - 'a' + 10; }
 
     [[nodiscard]] auto hex_val() const -> int {
-        if (is_digit()) return val_as_digit();
-        if (is_hex()) return val_as_hex();
+        if (is_digit()) return static_cast<int>(val_as_digit());
+        if (is_hex()) return static_cast<int>(val_as_hex());
         return -1;
     }
 

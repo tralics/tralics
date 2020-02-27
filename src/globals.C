@@ -43,8 +43,7 @@ void bad_conf(String s) {
 void set_everyjob(const std::string &s) { everyjob_string = s; }
 
 void after_conf_assign(std::vector<std::string> &V) {
-    int n = V.size();
-    int i = 0;
+    size_t n = V.size(), i = 0;
     for (;;) {
         if (i >= n) return;
         ssa2 << bf_reset << V[i];
@@ -62,7 +61,7 @@ void obsolete(const std::string &s) { std::cout << "Obsolete option `-" << s << 
 // Initialises encoding tables
 void check_for_encoding() {
     for (auto &i : custom_table)
-        for (int j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
+        for (unsigned j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
 }
 
 void show_encoding(int wc, const std::string &name) {
@@ -71,8 +70,7 @@ void show_encoding(int wc, const std::string &name) {
 }
 
 auto main_ns::try_conf(const std::string &prefix) -> bool {
-    int n = prefix.size();
-    if (n == 0) return false;
+    if (prefix.size() == 0) return false;
     Buffer b;
     b << prefix << bf_optslash << "book.clt";
     return tralics_ns::file_exists(b);
@@ -147,10 +145,10 @@ auto main_ns::hack_for_input(const std::string &s) -> std::string {
     std::string path;
     std::string fn = s;
     if (k > 0) {
-        B.kill_at(k);
+        B.kill_at(static_cast<size_t>(k));
         path = B.to_string();
         if (out_dir.empty()) out_dir = path;
-        fn = B.to_string(k + 1);
+        fn = B.to_string(static_cast<size_t>(k) + 1);
     }
     B << bf_reset << fn;
     B.remove_last_n(4);
@@ -168,17 +166,17 @@ void main_ns::register_file(LinePtr *x) { file_pool.push_back(x); }
 
 auto main_ns::use_pool(LinePtr &L) -> bool {
     if (pool_position == -1) return false; // should not happen
-    L.insert(*file_pool[pool_position]);
+    L.insert(*file_pool[static_cast<size_t>(pool_position)]);
     pool_position = -1;
     return true;
 }
 
 auto main_ns::search_in_pool(const std::string &name) -> bool {
-    int n         = file_pool.size();
+    size_t n      = file_pool.size();
     pool_position = -1;
-    for (int i = 0; i < n; i++) {
+    for (unsigned i = 0; i < n; i++) {
         if (file_pool[i]->get_file_name() == name) {
-            pool_position = i;
+            pool_position = static_cast<int>(i);
             return true;
         }
     }
@@ -195,9 +193,9 @@ auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
 }
 
 auto main_ns::search_in_confdir(const std::string &s) -> bool {
-    int n = conf_path.size();
-    for (int i = n - 1; i >= 0; i--) {
-        main_ns::path_buffer << bf_reset << conf_path[i] << bf_optslash << s;
+    auto n = conf_path.size();
+    for (auto i = n; i != 0; i--) {
+        main_ns::path_buffer << bf_reset << conf_path[i - 1] << bf_optslash << s;
         if (tralics_ns::file_exists(main_ns::path_buffer)) return true;
     }
     return false;
@@ -214,8 +212,8 @@ auto tralics_ns::find_in_path(const std::string &s) -> bool {
     main_ns::path_buffer << bf_reset << s;
     if (main_ns::search_in_pool(s)) return true;
     if (s[0] == '.' || s[0] == '/') return file_exists(main_ns::path_buffer);
-    int n = input_path.size();
-    for (int i = 0; i < n; i++) {
+    auto n = input_path.size();
+    for (size_t i = 0; i < n; i++) {
         const std::string &p = input_path[i];
         if (p.empty())
             main_ns::path_buffer << bf_reset << s;
@@ -265,25 +263,22 @@ auto main_ns::param_hack(String a) -> bool {
     B.reset_ptr();
     B.push_back(a);
     if (!B.find_equals()) return false;
-    int J = B.get_ptr1();
     if (!B.backup_space()) return false;
     B.advance();
     B.skip_sp_tab();
-    other_options.push_back(B.to_string(J));
-    other_options.push_back(B.to_string(B.get_ptr()));
+    other_options.push_back(B.to_string(B.ptr1));
+    other_options.push_back(B.to_string(B.ptr));
     return true;
 }
 
 auto main_ns::extract_year(Buffer &B, Buffer &C) -> int {
-    int m = B.size();
-    int n = m;
-    int k = 0;
+    size_t m = B.size(), n = m, k = 0;
     while (k < 4 && n > 0 && is_digit(B[n - 1])) {
         n--;
         k++;
     }
     int y = 0;
-    for (int i = n; i < m; i++) {
+    for (auto i = n; i < m; i++) {
         y = 10 * y + B[i] - '0';
         C.push_back(B[i]);
     }
@@ -306,13 +301,13 @@ void main_ns::check_year(int y, Buffer &C, const std::string &dclass, const std:
 }
 
 void main_ns::check_lowercase(Buffer &B) {
-    int n = B.size();
+    auto n = B.size();
     if (n == 0) {
         std::cout << "Illegal file name of the form safir/2002.tex\n";
         the_main->bad_year(); // never returns
     }
-    for (int i = 0; i < n; i++)
-        if (uint(B[i]) < 32 || uint(B[i]) > 127 || is_upper_case(B[i])) {
+    for (size_t i = 0; i < n; i++)
+        if (B[i] < 32 || B[i] > 127 || is_upper_case(B[i])) {
             std::cout << "Fatal error\n";
             std::cout << "Only lowercase letters allowed: " << B.c_str() << " \n";
             exit(1);

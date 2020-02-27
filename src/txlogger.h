@@ -178,6 +178,7 @@ auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;
 auto operator<<(FullLogger &X, String s) -> FullLogger &;
 auto operator<<(FullLogger &X, Istring s) -> FullLogger &;
 auto operator<<(FullLogger &X, int s) -> FullLogger &;
+auto operator<<(FullLogger &X, size_t s) -> FullLogger &;
 auto operator<<(FullLogger &X, const std::string &s) -> FullLogger &;
 auto operator<<(FullLogger &X, char s) -> FullLogger &;
 auto operator<<(FullLogger &X, unsigned char s) -> FullLogger &;

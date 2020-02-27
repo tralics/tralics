@@ -22,7 +22,7 @@ class AttList {
 public:
     std::vector<AttPair> val; // the value
 
-    auto               get_val(int i) -> Istring { return val[i].value; }
+    auto               get_val(size_t i) -> Istring { return val[i].value; }
     void               reset() { val = std::vector<AttPair>(); }
     auto               empty() -> bool { return val.empty(); }
     void               push_back_empty(Istring n);

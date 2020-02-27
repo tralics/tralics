@@ -147,11 +147,11 @@ void MainClass::open_log() {
     if (trivial_math != 0) the_log << "\\notrivialmath=" << trivial_math << "\n";
     check_for_encoding();
     if (!default_class.empty()) the_log << "Default class is " << default_class << "\n";
-    int n = input_path.size();
+    auto n = input_path.size();
     if (n > 1) {
         b.reset();
         b << "Input path (";
-        for (int i = 0; i < n; i++) {
+        for (size_t i = 0; i < n; i++) {
             if (i != 0) b << ":";
             b << input_path[i];
         }
@@ -264,8 +264,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_external_prog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
-        case pa_leftquote: leftquote_val = strtol(a, nullptr, 16); return;
-        case pa_rightquote: rightquote_val = strtol(a, nullptr, 16); return;
+        case pa_leftquote: leftquote_val = static_cast<unsigned>(strtoul(a, nullptr, 16)); return;
+        case pa_rightquote: rightquote_val = static_cast<unsigned>(strtoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
         case pa_infile: see_name(a); return;
         case pa_indata:
@@ -551,16 +551,16 @@ void MainClass::open_config_file() {
     // special case where the config file is a tcf file
     use_tcf = true;
     B.remove_last_n(4);
-    int n = B.size();
+    int n = static_cast<int>(B.size());
     int k = B.last_slash();
     for (int i = n - 1;; i--) {
         if (i <= k + 1) break;
-        if (!is_digit(B[i])) {
-            B.kill_at(i + 1);
+        if (!is_digit(B[static_cast<unsigned>(i)])) {
+            B.kill_at(static_cast<size_t>(i + 1));
             break;
         }
     }
-    dtype = B.to_string(k + 1);
+    dtype = B.to_string(static_cast<size_t>(k + 1));
     the_log << "Using tcf type " << dtype << "\n";
 }
 
@@ -724,7 +724,7 @@ void MainClass::see_name1() {
     }
     int k = B.last_slash(); // remove the directory part
     if (k >= 0) {
-        std::string s = B.to_string(k + 1);
+        std::string s = B.to_string(static_cast<size_t>(k + 1));
         B << bf_reset << s;
     }
     the_parser.set_projet_val(B.to_string()); // this is apics
@@ -739,8 +739,8 @@ void MainClass::see_name1() {
     if (out_name.empty()) { // might be given as an option
         out_name = no_ext;
         B << bf_reset << no_ext; // remove the directory part
-        int k = B.last_slash();
-        if (k >= 0) out_name = B.to_string(k + 1); // This is apics2003
+        int kk = B.last_slash();
+        if (kk >= 0) out_name = B.to_string(static_cast<size_t>(kk + 1)); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
@@ -860,7 +860,7 @@ void MainClass::out_xml() {
     }
     X << "<!DOCTYPE " << dtd << " SYSTEM '" << dtdfile << "'>\n";
     X << "<!-- Translated from latex by tralics " << get_version() << ", date: " << short_date << "-->\n";
-    int a = X.length();
+    auto a = X.size();
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     a += aux;
 #endif
@@ -894,8 +894,8 @@ void MainClass::finish_init() {
         if (n == 0) bad_conf("sections_vals");
         if (n < 2) bad_conf("Config file did not provide sections");
     }
-    int n = config_data.data.size();
-    for (int i = 2; i < n; i++) config_data.data[i]->check_other();
+    auto n = config_data.data.size();
+    for (size_t i = 2; i < n; i++) config_data.data[i]->check_other();
 }
 
 auto MainClass::check_theme(const std::string &s) -> std::string {
@@ -918,8 +918,8 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
 void MainClass::check_section_use() {
     if (in_ra()) {
         std::vector<ParamDataSlot> &X = config_data.data[1]->data;
-        int                         n = X.size(); // number of sections
-        for (int i = 0; i < n; i++)
+        auto                        n = X.size(); // number of sections
+        for (size_t i = 0; i < n; i++)
             if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");
     }
 }

@@ -27,10 +27,11 @@ class MainClass {
     int bibtex_size{0};
     int bibtex_extension_size{0};
     int tpa_mode{3};
-    int dft{3};        // default dtd for standard classes
-    int cur_fp_len{0}; // number of bytes sent to XML file
+    int dft{3}; // default dtd for standard classes
     int input_encoding{1};
     int trivial_math{1};
+
+    size_t cur_fp_len{0}; ///< number of bytes sent to XML file
 
     LinePtr input_content; // content of the tex source
     LinePtr tex_source;    // the data to be translated
@@ -136,13 +137,13 @@ public:
     auto get_bibtex_fields_s() -> std::vector<Istring> & { return bibtex_fields_s; }
     auto get_bibtex_extensions() -> std::vector<Istring> & { return bibtex_extensions; }
     auto get_bibtex_extensions_s() -> std::vector<Istring> & { return bibtex_extensions_s; }
-    auto get_fp_len() -> int { return cur_fp_len; }
+    auto get_fp_len() -> size_t { return cur_fp_len; }
     auto get_footnote_hack() -> bool { return footnote_hack; }
     auto get_no_undef_mac() -> bool { return no_undef_mac; }
     auto get_no_year() -> std::string { return no_year; }
     auto get_year_string() -> std::string { return year_string; }
     void handle_one_bib_file(std::string);
-    void incr_cur_fp_len(int a) { cur_fp_len += a; }
+    void incr_cur_fp_len(size_t a) { cur_fp_len += a; }
     void inhibit_xml() { todo_xml = false; }
     void read_config_and_other(); ///< Read the config file and extract all relevant information
     void RRbib(String);
@@ -152,7 +153,7 @@ public:
     void set_doc_class_pos(line_iterator x) { doc_class_pos = x; }
     void set_ent_names(String s);
     void set_foot_hack(bool b) { footnote_hack = b; }
-    void set_fp_len(int a) { cur_fp_len = a; }
+    void set_fp_len(size_t a) { cur_fp_len = a; }
     void set_input_encoding(int wc);
     void set_tcf_file(std::string s);
     void set_use_font(bool b) { use_font_elt_sw = b; }
