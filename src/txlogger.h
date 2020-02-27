@@ -9,9 +9,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txfonts.h"
 #include <fstream>
 #include <iostream>
+
+class FontInfo;
 
 // This include file holds some declarations for printing objects
 // and the classes that allow us to print either on the tty, the log file

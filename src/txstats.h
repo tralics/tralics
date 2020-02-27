@@ -18,7 +18,6 @@ class Stats {
     int nb_macros{0}, nb_macros_del{0}; // number of macross added end deleted
     int level_up{0}, level_down{0};     // number of push and pop nest.
     int sh_boot{0}, sh_find{0}, sh_used{0};
-    int nb_xboot{0}; // number of elements created at boot tme.
     int nb_ref{0}, nb_used_ref{0}, nb_label_defined{0};
     int nb_href{0};
     int nb_hdr{0};
@@ -29,6 +28,7 @@ class Stats {
     int m_allocated{0}, m_destroyed{0}, m_merge{0};
     int footnotes{0};
 
+    size_t nb_xboot{0};   ///< number of elements created at boot tme.
     size_t str_length{0}; ///< total size of strings created
 
 public:
@@ -53,7 +53,7 @@ public:
     void one_more_label() { nb_label_defined++; }
     void one_more_href() { nb_href++; }
     void one_more_hdr() { nb_hdr++; }
-    void set_nb_xboot(int k) { nb_xboot = k; }
+    void set_nb_xboot(size_t k) { nb_xboot = k; }
     void one_more_small() { m_small++; }
     void one_more_kernel() { m_k++; }
     void one_more_large() { m_large++; }

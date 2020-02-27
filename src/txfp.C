@@ -246,7 +246,7 @@ void Buffer::push_back3(Digit x) {
     char a = (x % 10) + '0';
     x      = x / 10;
     char b = (x % 10) + '0';
-    char c = (x / 10) + '0';
+    char c = static_cast<char>((x / 10) + '0');
     push_back(c);
     push_back(b);
     push_back(a);
@@ -274,7 +274,7 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
     push_back9(X.data[3]);
     while (at(wptr - 1) == '0') wptr--; // remove trailing zeroes
     kill_at(wptr);
-    int i = 1;
+    size_t i = 1;
     while (at(i) == '0') i++; // remove initial zeroes
     if (at(i) == '.') i--;    // Keep the zero in 0.1
     i--;
@@ -341,7 +341,7 @@ void FpNum::mul(FpNum X, int y) {
     }
     for (unsigned int &i : z) i = 0;
     X.mul_split(x);
-    for (int i = 0; i < 12; i++) z[i + 6] = x[i] * y;
+    for (int i = 0; i < 12; i++) z[i + 6] = x[i] * static_cast<unsigned>(y);
     prop_carry(z);
     finish_mul(xs, z);
 }
@@ -386,7 +386,7 @@ auto Buffer::horner(int p) -> Digit {
     if (p > 9) p = 9;
     Digit res = 0;
     while (p > 0) {
-        res = res * 10 + (next_char() - '0');
+        res = res * 10 + static_cast<unsigned>(next_char() - '0');
         p--;
     }
     return res;
@@ -401,7 +401,7 @@ auto Buffer::reverse_horner() -> Digit {
     Digit res = 0;
     for (;;) {
         if (at_eol()) return res;
-        res += power_table[i] * (next_char() - '0');
+        res += static_cast<unsigned>(power_table[i] * (next_char() - '0'));
         i--;
         if (i < 0) return res;
     }
@@ -420,15 +420,15 @@ auto FpNum::create(Buffer &B) -> bool {
         else
             break;
     }
-    int k = B.ptr; // index of first non-zero digit.
+    auto k = B.ptr; // index of first non-zero digit.
     for (;;) {
         if (B.head() != '.')
             B.advance();
         else
             break;
     }
-    int n = B.ptr - k; // number of chars before dot
-    B.ptr = k;
+    auto n = B.ptr - k; // number of chars before dot
+    B.ptr  = k;
     if (n > 18) retval = true;
     data[0] = B.horner(n - 9);
     data[1] = B.horner(n);

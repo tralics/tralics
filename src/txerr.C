@@ -265,7 +265,7 @@ void Parser::undefined_mac() {
     if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.get_cmd();
     if (noxml) {
         signal_error(Token(), "Undefined command");
-        eq_define(cur_tok.eqtb_loc(), CmdChr(self_insert_cmd, zero_code), true);
+        eq_define(static_cast<int>(cur_tok.eqtb_loc()), CmdChr(self_insert_cmd, zero_code), true);
         back_input(cur_tok);
     } else
         signal_error(cur_tok, "Undefined command");
@@ -377,7 +377,7 @@ void Parser::multiple_label(String name, int l, const std::string &f) {
 
 // Called when unprocessed_xml is not empty.
 void Parser::missing_flush() {
-    int k = unprocessed_xml.size();
+    auto k = unprocessed_xml.size();
     while (k > 0 && unprocessed_xml.is_spaceh(k - 1)) k--;
     if (k == 0) return;
     err_buf << bf_reset << "Internal error, non-empty buffer \n" << unprocessed_xml.to_string() << "\nSome text may be lost";

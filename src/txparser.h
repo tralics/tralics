@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txcond.h"
+#include "txfonts.h"
 #include "txhash.h"
 #include "tximage.h"
 #include "txio.h"

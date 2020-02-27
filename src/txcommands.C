@@ -198,18 +198,18 @@ void Parser::translate_char(CmdChr X) {
 // This translates `'<>
 // In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X) {
-    uchar c = X.char_val().value; // Should be a small int
+    auto c = X.char_val().value; // Should be a small int
     if (InUrlHandler::global_in_url || InLoadHandler::global_in_load) {
         if (c == '<')
             process_string("&lt;");
         else if (c == '>')
             process_string("&gt;");
         else
-            unprocessed_xml.push_back(c);
+            unprocessed_xml.push_back(static_cast<char>(c));
     } else {
         if (X.is_other() && (c == '\'' || c == '`' || cur_lang_fr())) {
             get_x_token();
-            if (cur_cmd_chr.is_other() && cur_cmd_chr.char_val() == uint(c)) {
+            if (cur_cmd_chr.is_other() && cur_cmd_chr.char_val() == codepoint(c)) {
                 if (c == '\'')
                     process_char(0x201d);
                 else if (c == '`')
@@ -231,7 +231,7 @@ void Parser::english_quotes(CmdChr X) {
         else if (c == '`' && X.is_other())
             process_char(leftquote_val);
         else
-            unprocessed_xml.push_back(c);
+            unprocessed_xml.push_back(static_cast<char>(c));
     }
     if (X.is_letter() && !the_main->get_zws_mode()) process_string(the_main->get_zws_elt() ? "&#x200B;" : "<zws/>");
 }
@@ -262,7 +262,7 @@ void Parser::minus_sign(CmdChr X) {
 
 // This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X) {
-    uchar c = X.char_val().value;
+    auto c = X.char_val().value;
     if (InUrlHandler::global_in_url || InLoadHandler::global_in_load || X.is_letter() || !cur_lang_fr()) {
         extended_chars(c);
         return;
@@ -669,7 +669,7 @@ void Parser::T_glossaire() {
 
 /// Translates `\end{glossaire}`
 void Parser::T_glossaire_end() {
-    int n = the_stack.top_stack()->size();
+    auto n = the_stack.top_stack()->size();
     the_stack.pop(np_gloss);
     if (n == 1) parse_error("empty glossaire");
 }
@@ -814,9 +814,9 @@ void Parser::T_bauteursediteurs(subtypes c) {
 void Parser::T_un_box(subtypes c) {
     int i = scan_reg_num();
     if (c == unhbox_code) leave_v_mode();
-    Xml *cur_box = box_table[i].get_val();
+    Xml *cur_box = box_table[static_cast<size_t>(i)].get_val();
     the_stack.unbox(cur_box);
-    if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
+    if (c == unhbox_code || c == unvbox_code) box_table[static_cast<size_t>(i)].set_val(nullptr);
 }
 
 auto tcommands::hfill_to_np(subtypes c) -> name_positions {
@@ -863,7 +863,7 @@ void Parser::translate03() {
         return;
     case letter_catcode:
     case other_catcode: translate_char(cur_cmd_chr); return;
-    case char_num_cmd: extended_chars(scan_27bit_int()); return;
+    case char_num_cmd: extended_chars(static_cast<unsigned>(scan_27bit_int())); return;
     case char_given_cmd: extended_chars(c); return;
     case fvset_cmd: special_fvset(); return;
     case biblio_cmd: T_biblio(); return;

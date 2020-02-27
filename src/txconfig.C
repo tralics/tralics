@@ -20,7 +20,7 @@ namespace config_ns {
     Buffer      sec_buffer;
     bool        have_default_ur = false;
     std::string the_default_rc;
-    int         ur_size             = 0;
+    size_t      ur_size{0};
     int         composition_section = -1;
     bool        cur_sec_no_topic    = false;
 } // namespace config_ns
@@ -107,14 +107,14 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
             r = "";
         if (s.empty()) continue;
         bool star = false;
-        int  ns   = s.size();
+        auto ns   = s.size();
         if (ns > 1 && s[ns - 1] == '*') {
             s    = std::string(s, 0, ns - 1);
             star = true;
         }
         if (r.empty()) r = s;
         the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-        if (s == "composition") composition_section = V->size() + 1;
+        if (s == "composition") composition_section = static_cast<int>(V->size() + 1);
         sec_buffer << " " << s;
         V->push_back(ParamDataSlot(s, r, !star));
     }
@@ -124,8 +124,8 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
 
 // Return the data associated to name, may create depend on creat
 auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
-    int n = data.size();
-    for (int i = 0; i < n; i++)
+    auto n = data.size();
+    for (size_t i = 0; i < n; i++)
         if (data[i]->its_me(name)) return data[i];
     if (!creat) return nullptr;
     auto *res = new ParamDataList(name);
@@ -138,8 +138,8 @@ inline void ParamDataSlot::to_buffer(Buffer &B) const { B << key << "=" << value
 inline void ParamDataSlot::key_to_buffer(Buffer &B) const { B << " " << key; }
 
 void ParamDataList::keys_to_buffer(Buffer &B) const {
-    int n = size();
-    for (int i = 0; i < n; i++) data[i].key_to_buffer(B);
+    auto n = size();
+    for (size_t i = 0; i < n; i++) data[i].key_to_buffer(B);
 }
 
 // Converts the whole data struture as foo1=bar1,foo2=bar2,
@@ -147,8 +147,8 @@ auto config_ns::find_keys(const std::string &name) -> std::string {
     ParamDataList *X = config_data.find_list(name, false);
     if (X == nullptr) return "";
     Txbuf.reset();
-    int n = X->size();
-    for (int i = 0; i < n; i++) X->data[i].to_buffer(Txbuf);
+    auto n = X->size();
+    for (size_t i = 0; i < n; i++) X->data[i].to_buffer(Txbuf);
     if (n > 0) Txbuf.rrl();
     return Txbuf.to_string();
 }
@@ -164,8 +164,8 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
         the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
         return "";
     }
-    int n = X->size();
-    for (int i = 0; i < n; i++)
+    auto n = X->size();
+    for (size_t i = 0; i < n; i++)
         if (X->data[i].key == key) return X->data[i].value;
     err_buf << bf_reset << "Illegal value '" << key << "' for " << name << "\n"
             << "Use one of:";
@@ -180,17 +180,17 @@ auto config_ns::check_section(const std::string &s) -> std::string {
     int        k           = -1;
     err_buf.reset();
     std::vector<ParamDataSlot> &X = config_data.data[1]->data;
-    int                         n = X.size(); // number of sections
+    auto                        n = X.size(); // number of sections
     if (s.empty())
         k = cur_section;
     else
-        for (int i = 0; i < n; i++)
+        for (size_t i = 0; i < n; i++)
             if (X[i].key == s) {
-                k = i + 1;
+                k = static_cast<int>(i + 1);
                 break;
             }
     if (k > 0 && k < cur_section) {
-        err_buf << "Bad section " << s << " after " << X[cur_section - 1].key << "\n"
+        err_buf << "Bad section " << s << " after " << X[static_cast<size_t>(cur_section - 1)].key << "\n"
                 << "Order of sections is" << sec_buffer;
         the_parser.signal_error();
     } else if (k == -1) {
@@ -223,9 +223,9 @@ auto config_ns::check_section(const std::string &s) -> std::string {
     static int prev = -1;
     if (prev == cur_section) return "";
     prev             = cur_section;
-    cur_sec_no_topic = X[cur_section - 1].no_topic();
-    X[cur_section - 1].mark_used(); // incompatible with topics
-    return X[cur_section - 1].value;
+    cur_sec_no_topic = X[static_cast<size_t>(cur_section - 1)].no_topic();
+    X[static_cast<size_t>(cur_section - 1)].mark_used(); // incompatible with topics
+    return X[static_cast<size_t>(cur_section - 1)].value;
 }
 
 // Special command. We assume that cur_sec_no_topic
@@ -291,13 +291,13 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     }
     B.set_ptr1_to_ptr();
     B.skip_letter();
-    int k = ur_list.size();
-    for (int j = 0; j < k; j++)
+    auto k = ur_list.size();
+    for (size_t j = 0; j < k; j++)
         if (B.contains_here(ur_list[j].key.c_str())) {
             sname = ur_list[j].key;
             lname = ur_list[j].value;
             ur_list[j].mark_used();
-            return j;
+            return static_cast<int>(j);
         }
     return -2;
 }
@@ -314,7 +314,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     std::string sname, lname;
     temp2.reset();
     std::vector<int> vals;
-    int              nb = 0;
+    size_t           nb = 0;
     Xml *            new_elt;
     B.reset_ptr();
     for (;;) {
@@ -373,8 +373,8 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
         err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
                 << "Use one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
-        int                         n = V.size();
-        for (int i = 0; i < n; i++)
+        auto                        n = V.size();
+        for (size_t i = 0; i < n; i++)
             if (V[i].is_used) V[i].key_to_buffer(err_buf);
         the_parser.signal_error(the_parser.err_tok, "illegal data");
     }
@@ -387,12 +387,12 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
 
 auto config_ns::is_good_ur(const std::string &x) -> bool {
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
-    int                         n       = ur_list.size();
+    auto                        n       = ur_list.size();
     if (ur_size == 0) {
-        for (int i = 0; i < n; i++) ur_list[i].mark_used();
+        for (size_t i = 0; i < n; i++) ur_list[i].mark_used();
         ur_size = n;
     }
-    for (int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
         if (ur_list[i].matches(x)) return true;
     return false;
 }
@@ -431,7 +431,7 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
         bool keep = true;
         skip_sp_tab();
         if (head() == 0) break;
-        int a = ptr;
+        auto a = ptr;
         if (head() == '-') {
             keep = false;
             advance();
