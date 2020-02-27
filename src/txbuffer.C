@@ -25,7 +25,7 @@ static Buffer local_buf; // another buffer
 namespace buffer_ns {
     auto current_escape_char() -> int;
     auto null_cs_name() -> String;
-    void dump_identification(String);
+    void dump_identification(String s);
 } // namespace buffer_ns
 
 auto Buffer::convert(int k) const -> std::string { return tralics_ns::make_string(data() + k); }

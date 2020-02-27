@@ -24,8 +24,8 @@ public:
     void               mark_used() { is_used = true; }
     auto               matches(const std::string &x) -> bool { return is_used && x == key; }
     [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
-    void               to_buffer(Buffer &) const;
-    void               key_to_buffer(Buffer &) const;
+    void               to_buffer(Buffer &B) const;
+    void               key_to_buffer(Buffer &B) const;
 };
 
 // We maintain a list of ParamDataSlot.
@@ -41,7 +41,7 @@ public:
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(const ParamDataSlot &x) { data.push_back(x); }
     [[nodiscard]] auto size() const -> int { return data.size(); }
-    void               keys_to_buffer(Buffer &) const;
+    void               keys_to_buffer(Buffer &B) const;
     void               reset() { data = std::vector<ParamDataSlot>(); }
 };
 

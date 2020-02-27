@@ -3,7 +3,13 @@
 #include "txinline.h"
 #include "txparser.h"
 
-MainClass::MainClass() { conf_path.emplace_back(CONFDIR); }
+MainClass::MainClass() {
+#ifdef CONFDIR
+    conf_path.emplace_back(CONFDIR);
+#else
+    conf_path.emplace_back("../confdir");
+#endif
+}
 
 void MainClass::get_os() {
 #if defined(__alpha)

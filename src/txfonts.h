@@ -43,13 +43,13 @@ public:
     auto is_ok() -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
     void pack() { packed = tsize + shape + family + series + size; }
     void unpack();
-    void change_size(int);
+    void change_size(int c);
     void kill() {
         shape  = 0;
         family = 0;
         series = 0;
     }
-    void               see_font_change(subtypes);
+    void               see_font_change(subtypes c);
     auto               show_font() -> String;
     auto               get_level() -> int { return level; }
     auto               get_size() -> int { return size >> 11; }
@@ -103,8 +103,8 @@ public:
 
     TexFont(const std::string &n, int a, int s);
 
-    void               realloc_param(int);
-    [[nodiscard]] auto its_me(const std::string &, int, int) const -> bool;
+    void               realloc_param(int p);
+    [[nodiscard]] auto its_me(const std::string &n, int a, int s) const -> bool;
     void               make_null();
     void               load();
 };
@@ -112,13 +112,13 @@ public:
 struct TexFonts : public std::vector<TexFont> {
     TexFonts() { emplace_back("nullfont", 0, 0); }
 
-    auto is_valid(int) -> bool;
-    auto name(int) -> std::string;
-    void full_name(Buffer &, int k);
+    auto is_valid(int k) -> bool;
+    auto name(int k) -> std::string;
+    void full_name(Buffer &B, int k);
     auto get_int_param(int ft, int pos) -> int;
     auto get_dimen_param(int ft, int pos) -> ScaledInt;
-    void set_int_param(int, int, int);
-    void set_dimen_param(int, int, ScaledInt);
-    auto find_font(const std::string &, int, int) -> int;
+    void set_int_param(int ft, int pos, int v);
+    void set_dimen_param(int ft, int p, ScaledInt v);
+    auto find_font(const std::string &n, int a, int s) -> int;
     auto define_a_new_font(std::string n, int a, int s) -> int;
 };

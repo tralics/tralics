@@ -27,11 +27,11 @@ namespace config_ns {
 
 namespace config_ns {
     void interpret_section_list(Buffer &B, bool new_syntax);
-    void interpret_data_list(Buffer &B, const std::string &);
+    void interpret_data_list(Buffer &B, const std::string &name);
     void interpret_theme_list(const Buffer &B);
     auto is_good_ur(const std::string &x) -> bool;
     auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> int;
-    auto check_section(const std::string &) -> std::string;
+    auto check_section(const std::string &s) -> std::string;
     auto check_spec_section(const std::string &s) -> std::string;
 } // namespace config_ns
 

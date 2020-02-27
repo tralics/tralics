@@ -146,7 +146,7 @@ public:
     void               set_line(int l) { line_no = l; }
     [[nodiscard]] auto get_line() const -> int { return line_no; }
     void               unsave_trace_aux(String s, int pos, bool rt);
-    static void        restore_or_retain(bool, String);
+    static void        restore_or_retain(bool rt, String s);
 };
 
 // A boundary object is created when we see an open brace, or something
@@ -158,7 +158,7 @@ public:
     void               unsave(bool trace, Parser &P) override;
     SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
     ~SaveAuxBoundary() override = default;
-    void dump(int);
+    void dump(int n);
 };
 
 // This restores an integer value.

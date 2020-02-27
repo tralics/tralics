@@ -37,7 +37,7 @@ namespace xkv_ns {
 
 namespace token_ns {
     void lower_case(TokenList &L);
-    auto find_in(TokenList &A, TokenList &B, Token t, bool, int &) -> bool;
+    auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
     void int_to_roman(Buffer &b, int n);
 } // namespace token_ns
 

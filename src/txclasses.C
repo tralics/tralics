@@ -25,19 +25,19 @@ namespace {
 namespace classes_ns {
     auto parse_version(const std::string &s) -> int;
     auto get_option_list(const std::string &name) -> OptionList;
-    auto is_in_vector(const OptionList &V, const std::string &s, bool) -> int;
+    auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> int;
     auto is_raw_option(const OptionList &V, String s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
     auto compare_options(const OptionList &A, const OptionList &B) -> bool;
     void dump_options(const OptionList &A, String x);
     void dump_file_list();
-    auto cur_options(bool, TokenList &, bool) -> TokenList;
+    auto cur_options(bool star, TokenList &spec, bool normal) -> TokenList;
     auto make_keyval(TokenList &L) -> KeyAndVal;
-    void register_key(const std::string &);
-    void unknown_optionX(TokenList &cur, TokenList &);
-    void unknown_option(KeyAndVal &cur_keyval, TokenList &, TokenList &, int);
-    void add_to_filelist(const std::string &, const std::string &);
+    void register_key(const std::string &Key);
+    void unknown_optionX(TokenList &cur, TokenList &action);
+    void unknown_option(KeyAndVal &cur_keyval, TokenList &res, TokenList &spec, int X);
+    void add_to_filelist(const std::string &s, const std::string &date);
     void add_sharp(TokenList &L);
 } // namespace classes_ns
 
@@ -600,7 +600,7 @@ void Parser::T_documentclass(bool bad) {
         if (bad || the_class_data.seen_document_class) wrong_mode("Bad \\documentclass");
         the_class_data.seen_document_class = true;
     }
-    check_builtin_class(name); // handles builtin classes here
+    check_builtin_class(); // handles builtin classes here
     if (c == 0) the_class_data.global_options = cur_opt_list;
     use_a_package(name, true, date, false);
 }
@@ -700,7 +700,7 @@ auto Parser::check_builtin_pack(const std::string &pack) -> bool {
 }
 
 // Built-in class handler. Class name unused
-void Parser::check_builtin_class(const std::string &) {
+void Parser::check_builtin_class() {
     Xid doc_att(1);
     if (is_raw_option(cur_opt_list, "useallsizes")) the_main->set_use_sizes(true);
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);

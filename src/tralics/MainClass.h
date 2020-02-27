@@ -2,10 +2,6 @@
 #include "../txio.h"
 #include "../txstring.h"
 
-#ifndef CONFDIR
-#define CONFDIR "../confdir"
-#endif
-
 class MainClass {
     std::string infile;       ///< file argument given to the program
     std::string no_year;      // is miaou
@@ -133,7 +129,7 @@ public:
     void bad_char_before_brace(int k, String s, String info);
     void bad_end_env(std::string, int);
     void bad_ignore_char(int k, String s);
-    auto check_for_tcf(const std::string &) -> bool;
+    auto check_for_tcf(const std::string &s) -> bool;
     void check_section_use();
     void check_ur(const Buffer &);
     auto get_bibtex_fields() -> std::vector<Istring> & { return bibtex_fields; }
@@ -154,7 +150,7 @@ public:
     void run(int n, char **argv);
     void set_distinguish(bool b) { distinguish_refer = b; }
     void set_doc_class_pos(line_iterator x) { doc_class_pos = x; }
-    void set_ent_names(String);
+    void set_ent_names(String s);
     void set_foot_hack(bool b) { footnote_hack = b; }
     void set_fp_len(int a) { cur_fp_len = a; }
     void set_input_encoding(int wc);
@@ -165,7 +161,7 @@ public:
     void set_start_date(std::string s) { start_date = std::move(s); }
     void set_short_date(std::string s) { short_date = std::move(s); }
     void set_default_class(std::string s) { default_class = std::move(s); }
-    void set_tpa_status(String); ///< Handles argument of -tpa_status switch
+    void set_tpa_status(String s); ///< Handles argument of -tpa_status switch
     auto use_old_phi() -> bool { return old_phi; }
     auto use_double_quote_att() -> bool { return double_quote_att; }
     void unexpected_eof(std::string, int);
@@ -183,11 +179,11 @@ private:
     auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
     auto need_script() -> bool { return in_ra() && !in_simple_ra(); }
-    auto split_one_arg(String, int &) -> String; ///< This considers the case of tralics conf_dir=foo
+    auto split_one_arg(String a, int &p) -> String; ///< This considers the case of tralics conf_dir=foo
     void after_main_text();
     void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
-    void boot_bibtex(bool);
+    void boot_bibtex(bool inra);
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
@@ -204,7 +200,7 @@ private:
     void end_document();
     void end_env(std::string);
     void end_mod();
-    void end_with_help(int);
+    void end_with_help(int v);
     void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
     void finish_init(); ///< RA related stuff
@@ -247,7 +243,7 @@ private:
     void trans0(); ///< Start the latex to XML translation
 
 public:
-    static auto check_theme(const std::string &) -> std::string;
-    static void mk_empty();          ///< Create an empty TeX file
-    static void usage_and_quit(int); ///< Shows the command syntax and exits
+    static auto check_theme(const std::string &s) -> std::string;
+    static void mk_empty();            ///< Create an empty TeX file
+    static void usage_and_quit(int v); ///< Shows the command syntax and exits
 };

@@ -24,9 +24,9 @@ auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
 auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream &;
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream &;
 auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
-auto operator<<(std::ostream &fp, Xid) -> std::ostream &;
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream &;
 auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, const Xml *) -> std::ostream &;
+auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;
 auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
 
@@ -109,8 +109,8 @@ public:
         f(L);
         return *this;
     }
-    void finish(int);
-    void init(std::string, bool);
+    void finish(int n);
+    void init(std::string name, bool status);
     void unexpected_char(String s, int k);
 };
 

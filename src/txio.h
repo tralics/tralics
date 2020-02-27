@@ -32,7 +32,7 @@ public:
 public:
     Converter();
     auto new_error() -> bool;
-    void start_convert(int);
+    void start_convert(int l);
 };
 
 // Whenever Tralics reads a file, it puts the result in a structure like this
@@ -57,8 +57,8 @@ public:
     [[nodiscard]] auto get_number() const -> int { return number; }
     [[nodiscard]] auto get_chars() const -> const std::string & { return chars; }
     void               set_chars(std::string x) { chars = std::move(x); }
-    auto               starts_with(String) const -> bool;
-    void               convert_line(int);
+    auto               starts_with(String x) const -> bool;
+    void               convert_line(int wc);
     void               clear_converted() { converted = false; }
 };
 
@@ -73,21 +73,21 @@ private:
     std::string       file_name;          // file name associated to the lines
     int               cur_encoding{1};    // current file encoding
 public:
-    void               add(int n, Buffer &b, bool);
-    void               add_buffer(Buffer &, line_iterator);
-    void               add_buffer(LinePtr &, line_iterator);
+    void               add(int n, Buffer &b, bool cv);
+    void               add_buffer(Buffer &B, line_iterator C);
+    void               add_buffer(LinePtr &B, line_iterator C);
     void               after_open();
-    void               before_close(bool);
+    void               before_close(bool sigforce);
     void               clear() { value.clear(); }
     void               clear_and_copy(LinePtr &X);
     void               change_encoding(int wc);
     [[nodiscard]] auto dump_name() const -> String;
     void               find_tex_encoding();
-    auto               find_aliases(const std::vector<std::string> &, std::string &res) -> bool;
-    void               find_all_types(std::vector<std::string> &);
-    auto               find_configuration(Buffer &) -> std::string;
-    void               find_doctype(Buffer &, std::string &);
-    auto               find_documentclass(Buffer &) -> std::string;
+    auto               find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;
+    void               find_all_types(std::vector<std::string> &res);
+    auto               find_configuration(Buffer &B) -> std::string;
+    void               find_doctype(Buffer &B, std::string &res);
+    auto               find_documentclass(Buffer &B) -> std::string;
     void               find_top_atts(Buffer &B);
     auto               find_top_val(String s, bool c) -> std::string;
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
@@ -97,22 +97,22 @@ public:
     void               set_interactive(bool sw) { interactive = sw; }
     auto               get_last_line_no() -> int { return value.back().get_number(); }
     auto               get_next_raw(Buffer &b) -> int;
-    auto               get_next_cv(Buffer &b, int) -> int;
+    auto               get_next_cv(Buffer &b, int w) -> int;
     auto               get_next(Buffer &b) -> int;
     auto               get_next(std::string &b, bool &cv) -> int;
     auto               get_value() -> std::list<Clines> & { return value; }
     void               incr_cur_line() { cur_line++; }
-    void               insert(int n, const std::string &c, bool);
-    void               insert(const std::string &c, bool);
+    void               insert(int n, const std::string &c, bool cv);
+    void               insert(const std::string &c, bool cv);
     void               insert(String c);
     void               insert_spec(int n, std::string c);
-    void               insert(const LinePtr &);
+    void               insert(const LinePtr &aux);
     [[nodiscard]] auto is_empty() const -> bool { return value.empty(); }
     void               parse_and_extract_clean(String s);
     void               parse_conf_toplevel() const;
     auto               parse_and_extract(String s) const -> LinePtr;
     void               print();
-    void               print(std::fstream *);
+    void               print(std::fstream *outfile);
     void               print1(std::fstream *);
     void               push_front(const Clines &x) { value.push_front(x); }
     void               push_back(const Clines &x) { value.push_back(x); }
@@ -179,7 +179,7 @@ class FileForInput {
     Buffer  cur_line;         // this holds the current line
     int     line_no{0};       // this holds the current line number
 public:
-    void open(const std::string &, bool);
+    void open(const std::string &file, bool action);
     void close();
     FileForInput() = default;
 
@@ -203,8 +203,8 @@ class TexOutStream {
 
 public:
     TexOutStream();
-    void               close(int);
-    void               open(int, std::string);
+    void               close(int chan);
+    void               open(int chan, std::string file_name);
     [[nodiscard]] auto is_open(int i) const -> bool { return write_open[i]; }
     void               write(int chan, const std::string &s) { *(write_file[chan]) << s; }
 };

@@ -61,19 +61,19 @@ class XkvSetkeys {
     bool                     in_pox;  // are in in \ProcessOptionsX ?
 public:
     XkvSetkeys(Parser *P);
-    void run(bool);
+    void run(bool c);
     void run2(bool);
-    void check_preset(String);
+    void check_preset(String s);
     void extract_keys(TokenList &L, std::vector<std::string> &R);
     void fetch_fams();
     void special_fams();
     void fetch_na();
-    void fetch_keys(bool);
-    void check_action(XkvToken &);
-    void run_key(Token, XkvToken &, const std::string &);
+    void fetch_keys(bool c);
+    void check_action(XkvToken &cur);
+    void run_key(Token mac, XkvToken &cur, const std::string &fam);
     void save_key(const std::string &Key, TokenList &L);
-    void run_default(const std::string &, Token mac, bool);
-    void replace_pointers(TokenList &);
+    void run_default(const std::string &Key, Token mac, bool s);
+    void replace_pointers(TokenList &L);
     void new_unknown(TokenList &L) {
         delayed.splice(delayed.end(), L);
         delayed.push_back(comma_token);
@@ -82,7 +82,7 @@ public:
     void        finish();
     void        set_aux(TokenList &W, int idx);
     void        set_aux() { set_aux(keyvals, -1); }
-    static void find_pointer(const std::string &);
+    static void find_pointer(const std::string &Key);
     void        set_inpox() { in_pox = true; }
     void        dump_keys();
 };

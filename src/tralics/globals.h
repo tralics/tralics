@@ -49,16 +49,16 @@ namespace main_ns {
     auto extract_year(Buffer &B, Buffer &C) -> int;           ///< If B holds apics2006, puts apics in B, 2006 in C, returns 2006
     void find_conf_path();                                    ///< Locate the config dir, using a few sources
     auto hack_for_input(const std::string &s) -> std::string; ///< Sometimes, we want `bar` if `\jobname` is `foo/bar`
-    void new_in_dir(String);                                  ///< Split a `:`-separated path list into paths
-    void register_file(LinePtr *);                            ///< Push a file onto the pool
+    void new_in_dir(String s);                                ///< Split a `:`-separated path list into paths
+    void register_file(LinePtr *x);                           ///< Push a file onto the pool
     auto search_in_confdir(const std::string &s) -> bool;     ///< Searches for a file in conf_path
     auto search_in_pool(const std::string &name) -> bool;     ///< Returns true if the file is in the pool
     auto try_conf(const std::string &prefix) -> bool;         ///< Returns true if prefix is the path to the conf_path
     auto use_pool(LinePtr &L) -> bool;                        ///< Use a file from the pool
 
     auto find_param_type(String s) -> param_args;
-    auto param_hack(String) -> bool;
-    void check_year(int, Buffer &C, const std::string &, const std::string &);
+    auto param_hack(String a) -> bool;
+    void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y);
 } // namespace main_ns
 
 #ifdef _MSC_VER

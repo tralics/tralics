@@ -24,7 +24,7 @@ namespace classes_ns {
 } // namespace classes_ns
 
 namespace token_ns {
-    auto length_normalise(TokenList &) -> int;
+    auto length_normalise(TokenList &L) -> int;
 } // namespace token_ns
 
 // Prints some statistics at enfd of run.

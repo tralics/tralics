@@ -46,7 +46,7 @@ class MathElt {
 public:
     MathElt(CmdChr X, subtypes c) : val(X), Font(c) {}
     MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
-    MathElt(Xml *, math_types);
+    MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
     // access to elements
     [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
@@ -74,8 +74,8 @@ public:
     [[nodiscard]] auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }
     [[nodiscard]] auto is_bracket() const -> bool { return is_other_token() && get_char() == '['; }
     [[nodiscard]] auto maybe_seq() const -> bool;
-    [[nodiscard]] auto maybe_seq(subtypes) const -> bool;
-    [[nodiscard]] auto maybe_iseq(subtypes) const -> bool;
+    [[nodiscard]] auto maybe_seq(subtypes f) const -> bool;
+    [[nodiscard]] auto maybe_iseq(subtypes f) const -> bool;
     [[nodiscard]] auto maybe_iseq() const -> bool;
     // other functions
     auto               large2() -> del_pos;
@@ -87,7 +87,7 @@ public:
     void               cv_noMLt_list();
     void               cv_noML_special();
     void               cv_noML_list();
-    auto               cv1(math_style, bool) -> MathElt;
+    auto               cv1(math_style cms, bool ph) -> MathElt;
     void               change_type(int t);
     auto               try_math_op() -> Xml *;
     [[nodiscard]] auto is_e_grave() const -> bool;
@@ -102,11 +102,11 @@ private:
     }
     auto               cv_char() -> MathElt;
     auto               cv_cst() -> MathElt;
-    auto               cv_special(math_style) -> MathElt;
-    auto               cv_special1(math_style) -> MathElt;
-    auto               cv_list(math_style, bool) -> MathElt;
+    auto               cv_special(math_style cms) -> MathElt;
+    auto               cv_special1(math_style cms) -> MathElt;
+    auto               cv_list(math_style cms, bool ph) -> MathElt;
     auto               cv_list_no() -> MathElt;
-    auto               cv_mi(math_style) -> MathElt;
+    auto               cv_mi(math_style cms) -> MathElt;
     void               cv1_err();
     void               dump_for_err() const;
     [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
@@ -147,24 +147,24 @@ public:
     Math() = default;
 
 public:
-    [[nodiscard]] auto        duplicate(bool) const -> subtypes;
+    [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
     auto                      back() -> MathElt & { return value.back(); }
     [[nodiscard]] auto        begin() const -> const_math_iterator { return value.begin(); }
-    auto                      chars_to_mb(Buffer &, bool) const -> bool;
-    auto                      chars_to_mb1(Buffer &) const -> bool;
-    auto                      chars_to_mb2(Buffer &) const -> bool;
+    auto                      chars_to_mb(Buffer &B, bool rec) const -> bool;
+    auto                      chars_to_mb1(Buffer &B) const -> bool;
+    auto                      chars_to_mb2(Buffer &B) const -> bool;
     auto                      chars_to_mb3() -> Istring;
     void                      clear() { value.clear(); }
-    auto                      convert_math(math_style) -> Xml *;
-    auto                      convert_math_noML(bool) -> Xml *;
+    auto                      convert_math(math_style k) -> Xml *;
+    auto                      convert_math_noML(bool spec) -> Xml *;
     void                      convert_math_noML0();
     void                      convert_math_noMLt0();
     auto                      convert_opname() -> std::string;
-    auto                      convert_this_to_string(Buffer &) -> std::string;
+    auto                      convert_this_to_string(Buffer &B) -> std::string;
     void                      destroy();
     [[nodiscard]] auto        empty() const -> bool { return value.empty(); }
     [[nodiscard]] auto        end() const -> const_math_iterator { return value.end(); }
-    auto                      find_parens(MathQList &, bool) const -> bool;
+    auto                      find_parens(MathQList &res, bool verbose) const -> bool;
     auto                      front() -> MathElt & { return value.front(); }
     [[nodiscard]] auto        front() const -> const MathElt & { return value.front(); }
     auto                      get_arg1() -> Math { return front().get_list(); }
@@ -173,25 +173,25 @@ public:
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
     [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
     [[nodiscard]] auto        get_name() const -> String;
-    [[nodiscard]] static auto get_list(int) -> Math &;
+    [[nodiscard]] static auto get_list(int w) -> Math &;
     void                      hack_type(int);
     [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
     [[nodiscard]] auto        has_one_element() const -> bool;
     [[nodiscard]] auto        has_two_elements() const -> bool;
     void                      is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
     [[nodiscard]] auto        length_one() const -> bool { return value.size() == 1; }
-    auto                      M_array(bool, math_style) -> Xml *;
-    auto                      M_cv(math_style, int need_row) -> XmlAndType;
+    auto                      M_array(bool numbered, math_style cms) -> Xml *;
+    auto                      M_cv(math_style cms, int need_row) -> XmlAndType;
     void                      pop_back() { value.pop_back(); }
     void                      pop_front() { value.pop_front(); }
     void                      print() const;
-    void                      push_back(CmdChr, subtypes);
+    void                      push_back(CmdChr X, subtypes c);
     void                      push_back_list(subtypes X, math_list_type c);
     void                      push_back_font(subtypes X, subtypes c);
-    void                      push_back(CmdChr);
+    void                      push_back(CmdChr X);
     void                      push_back(MathElt x) { value.push_back(x); }
-    void                      push_back(Xml *, int, math_types);
-    void                      push_front(CmdChr, subtypes);
+    void                      push_back(Xml *A, int b, math_types c);
+    void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
     void                      remove_last();
     void                      remove_spaces();
@@ -202,45 +202,45 @@ public:
     void                      set_nondisplay_type() { type = math_dollar_cd; }
     void                      set_type(math_list_type c) { type = c; }
     [[nodiscard]] auto        third_element() const -> const MathElt &;
-    auto                      trivial_math(int) -> Xml *;
-    auto                      trivial_math_index(symcodes) -> Xml *;
+    auto                      trivial_math(int action) -> Xml *;
+    auto                      trivial_math_index(symcodes cmd) -> Xml *;
     auto                      check_align() -> int;
 
 private:
     void               add_cur_cont();
     void               add_cur_font();
-    auto               add_fence(bool, MathF &) -> bool;
-    void               concat(Xml *);
-    void               concat_space(Xml *);
-    auto               convert_cell(int &n, std::vector<AttList> &table, math_style) -> Xml *;
+    auto               add_fence(bool final, MathF &M) -> bool;
+    void               concat(Xml *res);
+    void               concat_space(Xml *res);
+    auto               convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xml *;
     auto               convert_char_seq(MathElt W) -> MathElt;
-    auto               convert_char_iseq(MathElt W, bool) -> MathElt;
-    void               fetch_rlc(std::vector<AttList> &);
-    void               find_paren0(MathP &) const;
-    auto               finish_translate1(bool) -> bool;
+    auto               convert_char_iseq(MathElt W, bool multiple) -> MathElt;
+    void               fetch_rlc(std::vector<AttList> &table);
+    void               find_paren0(MathP &aux) const;
+    auto               finish_translate1(bool vb) -> bool;
     auto               finish_translate2() -> bool;
-    void               handle_mbox(Math &);
+    void               handle_mbox(Math &res);
     void               handle_mbox_no();
     void               handle_mbox_not();
     [[nodiscard]] auto has_over() const -> bool;
     auto               is_font_cmd1() -> bool;
-    auto               large1(MathElt &, math_style) -> Xml *;
-    auto               M_cv0(math_style) -> XmlAndType;
-    auto               M_cv3(math_style) -> Math;
-    void               handle_cmd_Big(math_style);
-    auto               handle_cmd_Big_aux(math_style) -> bool;
+    auto               large1(MathElt &cl, math_style cms) -> Xml *;
+    auto               M_cv0(math_style cms) -> XmlAndType;
+    auto               M_cv3(math_style cms) -> Math;
+    void               handle_cmd_Big(math_style cms);
+    auto               handle_cmd_Big_aux(math_style cms) -> bool;
     void               cv_hspace_t(MathElt &cur);
     auto               M_cvaux() -> Math;
     auto               M_ref() -> Xml *;
-    auto               M_mbox1(Buffer &, subtypes &) -> int;
-    auto               only_digits(Buffer &) const -> bool;
-    void               push_back(Math &);
+    auto               M_mbox1(Buffer &B, subtypes &f) -> int;
+    auto               only_digits(Buffer &B) const -> bool;
+    void               push_back(Math &X);
     void               push_back_small(Xml *a);
-    void               push_front(Math &);
+    void               push_front(Math &X);
     void               skip_initial_space();
     [[nodiscard]] auto special1() const -> Xml *;
-    void               special2(bool &, Xml *&) const;
-    auto               split_as_array(std::vector<AttList> &table, math_style, bool) -> Xml *;
+    void               special2(bool &ok, Xml *&res) const;
+    auto               split_as_array(std::vector<AttList> &table, math_style W, bool numbered) -> Xml *;
     void               remove_opt_arg(bool star);
     auto               remove_req_arg() -> std::string;
     [[nodiscard]] auto remove_req_arg_noerr() const -> std::string;
@@ -279,8 +279,8 @@ public:
     void dump_labels();
     void ml_check_labels();
     void new_label(const std::string &s, bool a);
-    void ml_second_pass(Xml *row, bool);
-    void ml_last_pass(bool);
+    void ml_second_pass(Xml *row, bool vb);
+    void ml_last_pass(bool vb);
     void insert_special_tag(std::string s) { multi_labels[last_ml_pos - 2] = std::move(s); }
     void new_multi_label(const std::string &s, int t) {
         multi_labels.push_back(s);
@@ -288,13 +288,13 @@ public:
     }
     auto               get_multi_labels() -> std::vector<std::string> & { return multi_labels; }
     void               finish_math_mem();
-    void               set_type(bool);
+    void               set_type(bool b);
     [[nodiscard]] auto get_eqnum_status() const -> int { return eqnum_status; }
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
     [[nodiscard]] auto get_label_val() const -> std::string { return label_val; }
     void               stats();
     [[nodiscard]] auto get_pos_att() const -> name_positions { return pos_att; }
-    void               reset(bool);
+    void               reset(bool dual);
     [[nodiscard]] auto get_free_list() const -> MathElt * { return free_list; }
     void               set_free_list(MathElt *x) { free_list = x; }
     [[nodiscard]] auto is_inline() const -> bool { return current_mode; }
@@ -316,7 +316,7 @@ public:
     }
     [[nodiscard]] auto get_math_env_ctr() const -> int { return math_env_ctr; }
     [[nodiscard]] auto get_all_env_ctr() const -> int { return all_env_ctr; }
-    void               add_attribute(Istring, Istring, subtypes);
+    void               add_attribute(Istring a, Istring b, subtypes c);
     [[nodiscard]] auto get_cid() const -> Xid { return cur_cell_id; }
     [[nodiscard]] auto get_rid() const -> Xid { return cur_row_id; }
     [[nodiscard]] auto get_mid() const -> Xid { return cur_math_id; }
@@ -327,7 +327,7 @@ public:
     void               set_rid(Xid i) { cur_row_id = i; }
     void               set_taid(Xid i) { cur_table_id = i; }
     void               starred_tag() { is_tag_starred = true; }
-    void               check_for_eqnum(subtypes, bool);
+    void               check_for_eqnum(subtypes type, bool multi);
 
 private:
     void set_label(std::string s) {
@@ -369,13 +369,13 @@ private:
     void mk_ocol(String name, String ent, String ent2, math_loc pos);
     void mk_ocb(String name, String ent, String ent2, math_loc pos);
     void mk_ocr(String name, String ent, String ent2, math_loc pos);
-    void mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool);
+    void mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack);
     void mk_moc(String name, String ent, math_loc pos);
     void mk_moo(String name, String ent, math_loc pos);
     void mk_accent(String name, String ent, String ent2, subtypes pos);
-    void fill_lr(int, String, String);
-    void fill_lr(int, String);
-    auto init_builtin(String, math_loc, Xml *, symcodes) -> Token;
+    void fill_lr(int a, String b, String c);
+    void fill_lr(int a, String b);
+    auto init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token;
 
 public:
     void        boot();
@@ -384,7 +384,7 @@ public:
     void        realloc_xml();
     auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
     auto        find_xml_location() -> subtypes;
-    auto        find_xml_location(Xml *) -> subtypes;
+    auto        find_xml_location(Xml *y) -> subtypes;
     auto        make_mfenced(int open, int close, Xml *val) -> Xml *;
     static auto add_style(int lvl, Xml *res) -> Xml *;
     void        TM_mk(String a, String b, math_types c);
@@ -400,7 +400,7 @@ public:
         return xml_math_table[i - m_offset];
     }
     auto        get_list(int k) -> Math & { return math_table[k]; }
-    void        push_back(int k, CmdChr, subtypes c);
+    void        push_back(int k, CmdChr X, subtypes c);
     auto        get_simplemath_val(int i) -> Xml * { return simplemath_table[i]; }
     auto        get_fence(int k) -> Istring { return xml_lr_ptable[k]; }
     auto        get_math_char_type(int i) -> math_types { return math_char_type[i]; }
@@ -429,9 +429,9 @@ public:
     void reinit();
     void non_script();
     void find_kernel();
-    void find_index(math_style);
-    void add_kernel(math_style);
-    auto find_operator(math_style) -> name_positions;
+    void find_index(math_style cms);
+    void add_kernel(math_style cms);
+    auto find_operator(math_style cms) -> name_positions;
     auto finish() -> Math { return res; }
 };
 
@@ -451,8 +451,8 @@ namespace math_ns {
     auto make_sup(Xml *xval) -> Xml *;
     auto mk_mi(codepoint c) -> Xml *;
     auto mk_mi(uchar c, int font) -> Xml *;
-    auto mk_space(String) -> Xml *;
-    auto nb_args_for_cmd(int) -> int;
+    auto mk_space(String a) -> Xml *;
+    auto nb_args_for_cmd(int c) -> int;
     void fill_math_char_slots();
     void fill_math_char_slots_ent();
     void fill_single_char();
@@ -461,7 +461,7 @@ namespace math_ns {
     auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xml *;
     auto special_fence(subtypes s, int &open, int &close) -> bool;
     auto style_level(subtypes tt) -> math_style;
-    auto make_math_char(uchar, int) -> Xml *;
+    auto make_math_char(uchar c, int n) -> Xml *;
     auto xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml *;
 } // namespace math_ns
 

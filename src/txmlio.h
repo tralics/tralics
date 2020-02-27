@@ -39,7 +39,7 @@ class XmlIO {
     int                    cur_line_len;
     int                    input_line_pos;
     int                    enc; // 0=utf8, 1=latin1
-    void                   error(const std::string &);
+    void                   error(const std::string &s);
     std::vector<EntityDef> entities;
     int                    nb_cond;
     bool                   eof_ok;
@@ -52,8 +52,8 @@ private:
     void next_line();
     auto at_eol() -> bool { return input_line_pos >= cur_line_len; }
     void scan_name();
-    void scan_name(uchar);
-    void scan_name(uchar, uchar);
+    void scan_name(uchar c);
+    void scan_name(uchar c1, uchar c2);
     void parse_lt();
     void parse_end();
     void parse_dec();
@@ -66,7 +66,7 @@ private:
     void parse_dec_conditional();
     void parse_dec_notation();
     auto parse_sys_pub() -> bool;
-    void expect(String);
+    void expect(String s);
     void parse_pi();
     void parse_tag();
     void parse_attributes();
@@ -79,6 +79,6 @@ private:
 
 public:
     XmlIO() : cur_char(' ') {}
-    auto init(const std::string &) -> bool;
+    auto init(const std::string &name) -> bool;
     auto prun() -> Xml *;
 };

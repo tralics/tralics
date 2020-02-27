@@ -30,14 +30,14 @@ class TitlePageAux {
     tpi_vals    type{tpi_zero}; // type of object
 
 public:
-    auto classify(tpi_vals, int &) -> bool;
-    auto convert(int) -> Xml *;
-    auto convert(int, Xml *) -> Xml *;
+    auto classify(tpi_vals w, int &state) -> bool;
+    auto convert(int i) -> Xml *;
+    auto convert(int i, Xml *r) -> Xml *;
     auto convert(int i, Istring s) -> Xml * { return convert(i, new Xml(s)); }
-    void dump(int);
-    void exec_start(int);
+    void dump(int k);
+    void exec_start(int k);
     void exec_post();
-    void exec(int, bool);
+    void exec(int v, bool vb);
     void set_T1(std::string x) { T1 = std::move(x); }
     void set_T2(std::string x) { T2 = std::move(x); }
     void set_T3(std::string x) { T3 = std::move(x); }
@@ -108,9 +108,9 @@ public:
     friend class TitlePageAux;
     auto               read() -> int;
     void               kill();
-    auto               classify(int, int state) -> tpi_vals;
+    auto               classify(int w, int state) -> tpi_vals;
     [[nodiscard]] auto get_flags() const -> int { return flags; }
-    auto               encode_flags(char, char) -> bool;
+    auto               encode_flags(char c1, char c2) -> bool;
 };
 
 class TitlePage {
@@ -128,13 +128,13 @@ public:
     auto               is_valid() -> bool { return valid; }
     void               make_invalid() { valid = false; }
     void               make_valid() { valid = true; }
-    void               start_thing(bool);
+    void               start_thing(bool verbose);
     void               parse();
     auto               increase_data() -> int {
         len2++;
         return len2 - 1;
     }
     void               check_size();
-    [[nodiscard]] auto find_UR(const std::string &, const std::string &) const -> int;
-    [[nodiscard]] auto find_cmd(const std::string &) const -> int;
+    [[nodiscard]] auto find_UR(const std::string &s, const std::string &name) const -> int;
+    [[nodiscard]] auto find_cmd(const std::string &s) const -> int;
 };

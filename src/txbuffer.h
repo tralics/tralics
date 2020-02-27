@@ -46,8 +46,8 @@ public:
         push_back_int(c);
         return *this;
     }
-    auto operator<<(const TokenList &) -> Buffer &;
-    auto operator<<(const Macro &) -> Buffer &;
+    auto operator<<(const TokenList &L) -> Buffer &;
+    auto operator<<(const Macro &x) -> Buffer &;
     auto operator<<(const codepoint &b) -> Buffer & {
         push_back(b);
         return *this;
@@ -80,10 +80,10 @@ public:
         f(*this);
         return *this;
     }
-    auto               add_with_space(String) -> std::string;
+    auto               add_with_space(String s) -> std::string;
     void               advance() { ptr++; }
     void               advance(int k) { ptr += k; }
-    void               alloc(int);
+    void               alloc(int n);
     [[nodiscard]] auto after_head() const -> char { return at(ptr + 1); }
     [[nodiscard]] auto after_uhead() const -> char { return at(ptr + 1); }
     [[nodiscard]] auto after_after_uhead() const -> char { return at(ptr + 2); }
@@ -101,17 +101,17 @@ public:
     auto               contains(String s) const -> bool { return strstr(data(), s) != nullptr; }
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
-    auto               contains_here(String) const -> bool;
+    auto               contains_here(String s) const -> bool;
     [[nodiscard]] auto convert(int k) const -> std::string;
     auto               convert_dim(int, int) -> std::string;
     [[nodiscard]] auto convert_to_str() const -> String;
-    auto               convert_to_out_encoding(String) const -> String;
+    auto               convert_to_out_encoding(String a) const -> String;
     [[nodiscard]] auto convert_to_log_encoding() const -> String;
-    [[nodiscard]] auto convert_to_latin1(bool) const -> String;
+    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String;
     void               convert_custom(int l);
-    auto               convert_line0(int) -> bool;
-    void               convert_line(int l, int);
-    void               copy(const Buffer &);
+    auto               convert_line0(int wc) -> bool;
+    void               convert_line(int l, int wc);
+    void               copy(const Buffer &B);
     void               decr_wptr() { wptr--; };
     auto               double_hat_aux(int) -> bool;
     void               dump_prefix(bool err, bool gbl, symcodes K);
@@ -131,12 +131,12 @@ public:
     void               find_bibtex_name_token(int);
     auto               find_brace() -> int;
     auto               find_bracket() -> int;
-    auto               find_configuration(Buffer &) -> bool;
+    auto               find_configuration(Buffer &aux) -> bool;
     auto               find_doctype() -> int;
-    auto               find_documentclass(Buffer &) -> bool;
+    auto               find_documentclass(Buffer &aux) -> bool;
     auto               find_equals() -> bool;
     auto               find_one_bibtex_name() -> String;
-    void               find_one_type(vector<std::string> &);
+    void               find_one_type(vector<std::string> &S);
     void               find_top_atts();
     void               finish_figure(String start, std::string junk, int w);
     void               finish_xml_print();
@@ -151,10 +151,10 @@ public:
     auto               is_not_char(int p, uchar x) -> bool { return uchar(at(p)) != x; }
     auto               holds_documentclass(Buffer &a, Buffer &b, Buffer &c) -> int;
     auto               holds_env(String &a, String &b, String &c) -> int;
-    auto               horner(int) -> unsigned int;
+    auto               horner(int p) -> unsigned int;
     auto               how_many_bibtex_name_token() -> int;
     void               kill_at(int p) { at(p) = 0; }
-    void               init_from_buffer(Buffer &);
+    void               init_from_buffer(Buffer &b);
     void               insert_and_kill(Buffer &a) {
         reset();
         push_back(a.data());
@@ -162,18 +162,18 @@ public:
     }
     void               insert_escape_char();
     void               insert_escape_char_raw();
-    auto               insert_fp(const FpNum &) -> String;
-    [[nodiscard]] auto insert_space_here(int) const -> bool;
+    auto               insert_fp(const FpNum &X) -> String;
+    [[nodiscard]] auto insert_space_here(int k) const -> bool;
     void               insert_string(const Buffer &s);
-    auto               insert_break(const std::string &) -> std::string;
+    auto               insert_break(const std::string &x) -> std::string;
     void               insert_token0(Token c);
     auto               install_att(Xid idx, Istring match) -> bool;
-    void               interpret_aux(vector<Istring> &, vector<Istring> &);
+    void               interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
     void               interpret_bibtex_list();
     void               interpret_bibtex_extension_list();
-    auto               is_and(int) -> bool;
+    auto               is_and(int k) -> bool;
     [[nodiscard]] auto is_begin_end() const -> int;
-    auto               is_begin_something(String) -> int;
+    auto               is_begin_something(String s) -> int;
     auto               is_begin_something(String, bool) -> int;
     auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
     auto               is_at_end(String s) const -> bool;
@@ -224,52 +224,52 @@ public:
     void push_back(char c);
     void push_back(const Buffer &b) { push_back(b.data()); }
     void push_back(const std::string &b) { push_back(b.c_str()); }
-    void push_back(const Istring &);
+    void push_back(const Istring &X);
     void push_back(String s);
     void push_back(ScaledInt v, glue_spec unit);
-    void push_back(const SthInternal &);
-    void push_back(const Glue &);
+    void push_back(const SthInternal &x);
+    void push_back(const Glue &x);
     void push_back(const AttList &Y);
     void push_back(const AttPair &X);
-    void push_back(const Macro &);
-    void push_back(const Macro &, bool);
+    void push_back(const Macro &x);
+    void push_back(const Macro &x, bool sw);
     auto push_back(Token T) -> bool;
-    void insert_token(Token T, bool);
+    void insert_token(Token T, bool sw);
     void push_back_alt(const AttPair &X);
-    void push_back_braced(const std::string &);
-    void push_back_braced(String);
+    void push_back_braced(const std::string &s);
+    void push_back_braced(String s);
     void push_back_def(String, std::string);
-    void push_back_elt(Istring, Xid, int);
-    void push_back_int(int);
-    void push_back16(uint, bool);
-    void push_back16l(bool, uint);
+    void push_back_elt(Istring name, Xid id, int w);
+    void push_back_int(int n);
+    void push_back16(uint n, bool uni);
+    void push_back16l(bool hat, uint n);
     void push_back_ent(codepoint ch);
-    void push_back_hex(uint);
-    void push_back_Hex(uint);
-    void push_back_math_token(const CmdChr &, bool);
-    void push_back_math_tag(const CmdChr &, int);
-    void push_back_math_tag(String, int);
-    void push_back_math_aux(String);
+    void push_back_hex(uint c);
+    void push_back_Hex(uint c);
+    void push_back_math_token(const CmdChr &x, bool space);
+    void push_back_math_tag(const CmdChr &x, int type);
+    void push_back_math_tag(String s, int type);
+    void push_back_math_aux(String s);
     void push_back_newline();
     auto push_back_newline_spec() -> bool;
     void push_back_open_brace() { push_back('{'); };
     void push_back_close_brace() { push_back('}'); };
-    void push_back_roman(int);
-    void push_back_Roman(int);
+    void push_back_roman(int n);
+    void push_back_Roman(int n);
     void push_back_space() { push_back(' '); };
     void push_back_special_att(Xid id);
     void push_back_special_string(String s);
     void push_back_real_utf8(codepoint c);
     void push_back_xml_char(uchar c);
-    void push_back_substring(String, int);
-    void push_back_substring(const std::string &, int, int);
+    void push_back_substring(String S, int n);
+    void push_back_substring(const std::string &S, int p, int n);
     void push_back_unless_punct(char c);
     void push_back(codepoint c);
-    void push_back3(unsigned int);
-    void push_back9(unsigned int);
+    void push_back3(unsigned int x);
+    void push_back9(unsigned int x);
     void put_at_end(String s);
-    auto remove_digits(const std::string &) -> std::string;
-    auto remove_space(const std::string &) -> std::string;
+    auto remove_digits(const std::string &s) -> std::string;
+    auto remove_space(const std::string &x) -> std::string;
     void rrl() {
         wptr--;
         at(wptr) = 0;
@@ -289,7 +289,7 @@ public:
     }
     void remove_last_space();
     void remove_space_at_end();
-    void remove_spec_chars(bool, Buffer &);
+    void remove_spec_chars(bool url, Buffer &B);
     void reset0() { wptr = 0; }
     void reset() {
         wptr  = 0;
@@ -315,7 +315,7 @@ public:
     void               set_ptr(int j) { ptr = j; }
     void               set_ptr1(int j) { ptr1 = j; }
     void               set_ptr1() { ptr1 = ptr; }
-    void               show_uncomplete(String);
+    void               show_uncomplete(String m);
     void               skip_over_brace();
     void               skip_over_comment();
     [[nodiscard]] auto skip_space(int j) const -> int {
@@ -335,19 +335,19 @@ public:
         while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
     }
     [[nodiscard]] auto single_char() const -> char;
-    auto               slash_separated(std::string &) -> bool;
+    auto               slash_separated(std::string &a) -> bool;
     auto               some_substring(int a, int b) -> String;
     auto               some_sub_string(int a, int b) -> std::string;
-    auto               split_at_colon(std::string &, std::string &) -> bool;
+    auto               split_at_colon(std::string &before, std::string &after) -> bool;
     auto               sortify(String s) -> String;
     auto               svn_id(std::string &name, std::string &date, std::string &version) -> bool;
     [[nodiscard]] auto space_or_underscore() const -> bool { return at(ptr) == '_' || at(ptr) == ' '; }
-    auto               special_convert(bool) -> std::string;
+    auto               special_convert(bool init) -> std::string;
     [[nodiscard]] auto special_exponent() const -> String;
     void               special_purify(String s, int &pos);
     void               special_title(std::string s);
-    auto               str_toks(nl_to_tok) -> TokenList;
-    auto               str_toks11(bool) -> TokenList;
+    auto               str_toks(nl_to_tok nl) -> TokenList;
+    auto               str_toks11(bool nl) -> TokenList;
     auto               string_delims() -> bool;
     auto               substring() -> std::string;
     [[nodiscard]] auto tex_comment_line() const -> bool;
@@ -355,21 +355,21 @@ public:
     [[nodiscard]] auto to_string() const -> std::string;
     [[nodiscard]] auto to_string(int k) const -> std::string;
     auto               convert_for_xml_err(Token t) -> Istring;
-    auto               tp_next_char(char &) -> bool;
+    auto               tp_next_char(char &res) -> bool;
     auto               tp_fetch_something() -> tpa_line;
-    auto               trace_scan_dimen(Token, ScaledInt, bool) -> String;
+    auto               trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
     [[nodiscard]] auto uhead() const -> unsigned char { return at(ptr); }
     void               undo() { ptr--; }
     void               unicode_char(int);
     [[nodiscard]] auto unique_character() const -> codepoint;
     [[nodiscard]] auto make_character() const -> codepoint;
     void               uppercase();
-    void               utf8_error(bool);
-    static void        utf8_ovf(int);
+    void               utf8_error(bool first);
+    static void        utf8_ovf(int n);
     auto               xml_and_attrib(const std::string &s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;
-    void               l3_fabricate_cond(const std::string &, const std::string &, subtypes);
+    void               l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 private:

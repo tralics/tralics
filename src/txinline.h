@@ -33,28 +33,28 @@ namespace tralics_ns {
     auto is_leap_year(int y) -> bool;
     auto year_length(int y) -> int;
     void make_names();
-    void boot_math(bool);
+    void boot_math(bool mv);
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
     auto find_no_path(const std::string &s) -> bool;
-    void read_a_file(LinePtr &, const std::string &x, int spec);
-    auto make_string(String) -> std::string;
+    void read_a_file(LinePtr &L, const std::string &x, int spec);
+    auto make_string(String a) -> std::string;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
     auto file_exists(const std::string &B) -> bool;
-    auto file_exists(Buffer &) -> bool;
+    auto file_exists(Buffer &B) -> bool;
     void bibtex_bootagain();
-    void bibtex_boot(String b, String, std::string, bool, bool);
+    void bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db);
     void Titlepage_create(LinePtr &lines);
-    void Titlepage_start(bool);
-    auto exists(const std::vector<std::string> &, const std::string &) -> bool;
+    void Titlepage_start(bool verbose);
+    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
     void bibtex_set_nocite();
     void bibtex_insert_jobname();
-    auto open_file(String name, bool) -> std::fstream *;
-    auto open_file(const std::string &name, bool) -> std::fstream *;
-    void close_file(std::fstream *);
+    auto open_file(String name, bool fatal) -> std::fstream *;
+    auto open_file(const std::string &name, bool f) -> std::fstream *;
+    void close_file(std::fstream *fp);
     auto only_digits(const std::string &s) -> bool;
-    auto get_out_dir(const std::string &) -> String; /// Returns output_dir+name
+    auto get_out_dir(const std::string &name) -> String; /// Returns output_dir+name
     auto get_short_jobname() -> std::string;
 } // namespace tralics_ns
 
@@ -66,10 +66,10 @@ namespace err_ns {
 namespace config_ns {
     auto find_one_key(const std::string &name, const std::string &key) -> std::string;
     auto pers_rc(const std::string &rc) -> std::string;
-    void check_RC(Buffer &B, Xml *);
+    void check_RC(Buffer &B, Xml *res);
     auto find_keys(const std::string &name) -> std::string;
     auto start_interpret(Buffer &B, String s) -> bool;
-    void interpret_list(const std::string &, Buffer &B);
+    void interpret_list(const std::string &a, Buffer &B);
     auto assign_name(String A, String B) -> bool;
     auto assign_att(String A, String B) -> bool;
 } // namespace config_ns

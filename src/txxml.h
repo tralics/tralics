@@ -59,7 +59,7 @@ public:
     auto               insert_at_ck(int n, Xml *v) -> bool;
     void               insert_bib(Xml *bib, Xml *match);
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }
-    auto               is_child(Xml *) const -> bool;
+    auto               is_child(Xml *x) const -> bool;
     [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
     [[nodiscard]] auto is_empty_spec() const -> bool;
@@ -78,23 +78,23 @@ public:
     [[nodiscard]] auto only_text() const -> bool;
     auto               par_is_empty() -> bool;
     void               pop_back() { tree.pop_back(); }
-    void               postprocess_fig_table(bool);
-    auto               prev_sibling(Xml *) -> Xml *;
+    void               postprocess_fig_table(bool is_fig);
+    auto               prev_sibling(Xml *x) -> Xml *;
     auto               put_at(int n, Xml *x) -> bool;
     void               put_in_buffer(Buffer &b);
     void               push_back(Buffer &B) { push_back(new Xml(B)); }
     void               push_back(Xml *x);
-    void               push_back_list(Xml *);
+    void               push_back_list(Xml *x);
     [[nodiscard]] auto real_size() const -> int;
     void               recurse(XmlAction &X);
     void               recurse0(XmlAction &X);
     void               remove_empty_par();
-    auto               remove_at(int) -> bool;
+    auto               remove_at(int n) -> bool;
     auto               remove_last() -> Xml *;
     void               remove_last_empty_hi();
     void               remove_last_space();
     void               remove_par_bal_if_ok();
-    void               rename(Istring, Istring);
+    void               rename(Istring old_name, Istring new_name);
     void               reset();
     void               sans_titre();
     auto               sans_titre(Xml *) -> String;
@@ -103,15 +103,15 @@ public:
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto size() const -> int { return tree.size(); }
     void               subst_env0(Istring match, Xml *vl);
-    void               swap_x(Xml *);
+    void               swap_x(Xml *x);
     [[nodiscard]] auto tail_is_anchor() const -> bool;
-    void               to_buffer(Buffer &) const;
+    void               to_buffer(Buffer &b) const;
     auto               total_span(int &res) const -> bool;
     auto               try_cline(bool action) -> bool;
-    auto               try_cline_again(bool) -> bool;
-    void               unbox(Xml *);
-    auto               value_at(int) -> Xml *;
-    void               word_stats(std::string);
+    auto               try_cline_again(bool action) -> bool;
+    void               unbox(Xml *x);
+    auto               value_at(int n) -> Xml *;
+    void               word_stats(std::string match);
     void               word_stats_i();
     auto               spec_copy() -> Xml *;
     void               replace_first(Xml *x) {
@@ -131,4 +131,4 @@ public:
     [[nodiscard]] auto get_type() const -> math_types { return type; }
 };
 
-auto read_xml(const std::string &) -> Xml *;
+auto read_xml(const std::string &s) -> Xml *;

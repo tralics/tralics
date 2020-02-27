@@ -80,16 +80,16 @@ public:
     auto               my_buffer() -> Buffer & { return B; }
     auto               locate(String s) -> Token;             // used by primitive, etc
     auto               locate(const std::string &s) -> Token; // used by primitive, etc
-    auto               locate(const Buffer &) -> Token;       // used by primitive, etc
+    auto               locate(const Buffer &b) -> Token;      // used by primitive, etc
     [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
     [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
     auto               hash_find(const Buffer &b, String name) -> int;
     auto               hash_find() -> int;
     auto               primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
-    auto               nohash_primitive(String a, CmdChr) -> Token;
-    void               eval_let(String, String);
-    auto               eval_letv(String, String) -> Token;
-    void               eval_let_local(String, String);
+    auto               nohash_primitive(String a, CmdChr b) -> Token;
+    void               eval_let(String a, String b);
+    auto               eval_letv(String a, String b) -> Token;
+    void               eval_let_local(String a, String b);
     auto               operator[](int k) const -> String { return Text[k]; }
     void               dump();
     void               boot_fancyhdr();
@@ -107,7 +107,7 @@ class SpecialHash {
 public:
     SpecialHash(const std::string &s) : size(0) { create(s.c_str()); }
     void               create(String s);
-    auto               find(String) const -> std::string;
+    auto               find(String x) const -> std::string;
     [[nodiscard]] auto get_size() const -> int { return size; }
     void               get_pair(int k, std::string &a, std::string &b) {
         if (k < size) {
@@ -168,7 +168,7 @@ public:
     [[nodiscard]] auto count() const -> int;
     auto               get_next_raw() -> String;
     auto               get_next() -> String;
-    void               extract_keyval(std::string &, std::string &);
+    void               extract_keyval(std::string &key, std::string &val);
 };
 
 // This is used in order to extract things from \documentclass[]{}

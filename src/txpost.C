@@ -45,7 +45,7 @@ namespace all_words_ns {
     WordList *    WL0[100];
     std::fstream *fp = nullptr;
     void          add_a_word(String s, int h);
-    void          dump_and_list(WordList *, int i);
+    void          dump_and_list(WordList *WL, int i);
     void          dump_words(const std::string &name);
     auto          is_entity(String s) -> int;
 } // namespace all_words_ns

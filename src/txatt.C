@@ -209,7 +209,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
 auto Buffer::xml_and_attrib(const std::string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(Istring(s), nullptr);
-    Xml *res = new Xml(Istring(data()), nullptr);
+    auto res = new Xml(Istring(data()), nullptr);
     push_back_special_att(res->get_id());
     return res;
 }

@@ -17,7 +17,7 @@ struct CondAux {
     int if_line;  // is the line number at which it began
     int serial;   // is the serial number
 
-    void dump(int) const;
+    void dump(int i) const;
 };
 
 // This is used to implement \if, \else, \fi
@@ -28,7 +28,7 @@ class Condition {
 public:
     Condition() { if_serial = 0; }
     void               pop();
-    auto               push(int) -> uint;
+    auto               push(int chr) -> uint;
     void               wait_for_fi() { D.back().if_limit = fi_code; }
     void               terminate();
     [[nodiscard]] auto top_serial() const -> int { return D.empty() ? -1 : D.back().serial; }

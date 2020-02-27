@@ -28,8 +28,8 @@ public:
     [[nodiscard]] auto get_cell_no() const -> int { return cell_no; }
     void               set_cell_no(int k) { cell_no = k; }
     auto               get_cell_atts(int k) -> AttList;
-    auto               get_u_or_v(bool, int) -> TokenList;
-    void               add_uv(TokenList &u, TokenList &v, const AttList &);
+    auto               get_u_or_v(bool u_or_v, int pos) -> TokenList;
+    void               add_uv(TokenList &u, TokenList &v, const AttList &At);
     auto               get_size() -> int { return size; }
     void               del_array_info();
 };
@@ -44,7 +44,7 @@ class Stack {
         Istring uid;
         bool    omit_cell;
         void    dump();
-        void    fulldump(int);
+        void    fulldump(int i);
         StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
         friend class Stack;
     };
@@ -63,25 +63,25 @@ public:
     Stack();
     Xml *newline_xml;
 
-    auto               add_anchor(const std::string &, bool) -> Istring;
-    void               add_att_to_last(Istring, Istring, bool);
-    void               add_att_to_last(Istring, Istring);
-    void               add_att_to_last(name_positions, name_positions);
-    void               add_att_to_last(name_positions, Istring);
+    auto               add_anchor(const std::string &s, bool spec) -> Istring;
+    void               add_att_to_last(Istring A, Istring B, bool force);
+    void               add_att_to_last(Istring A, Istring B);
+    void               add_att_to_last(name_positions A, name_positions B);
+    void               add_att_to_last(name_positions A, Istring B);
     void               add_att_to_cur(Istring A, Istring B);
-    void               add_att_to_cur(Istring A, Istring B, bool);
+    void               add_att_to_cur(Istring A, Istring B, bool force);
     void               add_border(int a, int b);
     void               add_borders(int a, int b);
     void               add_center_to_p();
-    void               add_last(Xml *);
+    void               add_last(Xml *x);
     void               add_last_string(const Buffer &B);
     auto               add_new_anchor() -> Istring;
     auto               add_new_anchor_spec() -> Istring;
     void               add_nl();
-    auto               add_newid0(name_positions) -> AttList &;
+    auto               add_newid0(name_positions x) -> AttList &;
     void               add_sp_to_p(int pid, int vid);
     void               check_font();
-    void               create_new_anchor(Xid, Istring, Istring);
+    void               create_new_anchor(Xid xid, Istring id, Istring idtext);
     auto               cur_xid() -> Xid { return top_stack()->get_id(); }
     void               delete_table_atts();
     void               dump();
@@ -92,8 +92,8 @@ public:
     auto               fetch_by_id(int n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
     void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
-    auto               find_ctrid(subtypes) -> int;
-    auto               find_parent(Xml *) -> Xml *;
+    auto               find_ctrid(subtypes m) -> int;
+    auto               find_parent(Xml *x) -> Xml *;
     void               finish_cell(int w);
     [[nodiscard]] auto first_frame() const -> Istring;
     [[nodiscard]] auto first_non_empty() const -> const StackSlot &;
@@ -104,7 +104,7 @@ public:
     auto               get_cur_par() -> Xml *;
     auto               get_father() -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
-    auto               get_my_table(Xid &) -> ArrayInfo *;
+    auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_top_id() -> Xid { return top_stack()->get_id(); }
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     auto               get_xid() -> Xid { return last_xid; }
@@ -116,15 +116,15 @@ public:
     [[nodiscard]] auto in_bib_mode() const -> bool { return get_mode() == mode_bib; }
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
     void               init_all(std::string a);
-    void               ipush(Istring, Xml *);
+    void               ipush(Istring fr, Xml *V);
     auto               is_float() -> bool;
-    [[nodiscard]] auto is_frame(name_positions) const -> bool;
-    [[nodiscard]] auto is_frame2(name_positions) const -> bool;
+    [[nodiscard]] auto is_frame(name_positions s) const -> bool;
+    [[nodiscard]] auto is_frame2(name_positions S) const -> bool;
     auto               is_omit_cell() -> bool { return Table.back().omit_cell; }
     auto               last_att_list() -> AttList & { return get_xid().get_att(); }
     void               mark_omit_cell();
     auto               new_array_info(Xid i) -> ArrayInfo &;
-    auto               next_xid(Xml *) -> Xid;
+    auto               next_xid(Xml *elt) -> Xid;
     void               para_aux(int x);
     void               pop(Istring a);
     void               pop(name_positions a);
@@ -132,10 +132,10 @@ public:
     void               push(Istring fr, Xml *V);
     void               push1(Istring name, name_positions x);
     void               push1(name_positions x);
-    auto               push_hbox(Istring) -> Xml *;
-    void               push_pop_cell(int);
+    auto               push_hbox(Istring name) -> Xml *;
+    void               push_pop_cell(int dir);
     void               push_trace();
-    auto               push_par(int) -> Xid;
+    auto               push_par(int k) -> Xid;
     auto               remove_last() -> Xml *;
     void               remove_last_space();
     void               set_arg_mode() { cur_mode = mode_argument; }
@@ -152,10 +152,10 @@ public:
     void               T_hline();
     auto               temporary() -> Xml *;
     auto               top_stack() -> Xml * { return Table.back().obj; }
-    void               trace_pop(bool);
+    void               trace_pop(bool sw);
     void               trace_stack();
-    void               unbox(Xml *);
+    void               unbox(Xml *x);
     auto               xml2_space(Istring a, Xml *c, Xml *d) -> Xml *;
-    static auto        xml2_space(Istring elt, Istring, Istring, Xml *f_arg, Xml *s_arg) -> Xml *;
-    static auto        xml2_space(Istring elt, Istring, Xml *first_arg, Xml *second_arg) -> Xml *;
+    static auto        xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_arg) -> Xml *;
+    static auto        xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> Xml *;
 };

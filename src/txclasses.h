@@ -75,7 +75,7 @@ public:
     void               print_options();
     void               check_global_options(TokenList &action, bool X);
     void               check_local_options(TokenList &res, bool X);
-    void               check_all_options(TokenList &action, TokenList &, int X);
+    void               check_all_options(TokenList &action, TokenList &spec, int X);
     void               reload();
 };
 
@@ -90,7 +90,7 @@ public:
 public:
     ClassesData();
     auto        cur_pack() -> LatexPackage *;
-    auto        find_package(const std::string &name, bool, bool) -> int;
+    auto        find_package(const std::string &name, bool type, bool creat) -> int;
     void        new_unused_global_option(const KeyAndVal &s) { unused_options.push_back(s); }
     static void remove_from_unused(const std::string &name);
     static void show_unused();
@@ -100,16 +100,16 @@ public:
 class FormatDate {
     int         field1{0}, field2{0}, field3{0};
     Token       err_tok;
-    auto        scan_a_field(Buffer &, int &) -> bool;
-    static auto scan_a_month(Buffer &, int &) -> bool;
-    auto        scan_next(Buffer &, int &) -> bool;
+    auto        scan_a_field(Buffer &B, int &res) -> bool;
+    static auto scan_a_month(Buffer &B, int &res) -> bool;
+    auto        scan_next(Buffer &B, int &res) -> bool;
     auto        sort() -> bool;
-    static auto next_format_char(Buffer &) -> int;
-    auto        parse_format(Buffer &) -> bool;
-    auto        parse(Buffer &) -> bool;
+    static auto next_format_char(Buffer &B) -> int;
+    auto        parse_format(Buffer &B) -> bool;
+    auto        parse(Buffer &B) -> bool;
 
 public:
-    auto               interpret(const std::string &, Token T) -> bool;
+    auto               interpret(const std::string &s, Token T) -> bool;
     [[nodiscard]] auto get_year() const -> int { return field3; }
     [[nodiscard]] auto get_month() const -> int { return field1; }
     [[nodiscard]] auto get_day() const -> int { return field2; }

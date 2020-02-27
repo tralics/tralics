@@ -45,7 +45,7 @@ class NewArray {
 
 public:
     auto               dump_slot() -> String;
-    void               boot(Parser *);
+    void               boot(Parser *Q);
     void               add_a_type(uchar c, Token t);
     void               remove_a_type(uchar c);
     auto               nct_exists(uchar c) -> bool { return nct_bool[c]; }
@@ -53,10 +53,10 @@ public:
     [[nodiscard]] auto has_a_nct() const -> bool { return nct_size > 0; }
     void               test_pach();
     void               ac_maybe_finish();
-    void               ac_maybe_finish_multi(bool &);
+    void               ac_maybe_finish_multi(bool &seen);
     void               ac_pre_cell();
     void               ac_pre_inter();
     void               ac_inter();
-    void               run(Xid, bool);
+    void               run(Xid /*ID*/, bool main_fct);
     auto               ac_next() -> bool;
 };

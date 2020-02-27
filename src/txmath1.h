@@ -36,7 +36,7 @@ public:
         i = pos;
         t = type;
     }
-    void               print(std::ostream &) const;
+    void               print(std::ostream &fp) const;
     [[nodiscard]] auto is_small() const -> bool { return type == mt_flag_small_l || type == mt_flag_small_r || type == mt_flag_small_m; }
 };
 
@@ -65,11 +65,11 @@ public:
     friend auto        operator<<(std::ostream &fp, const MathP &X) -> std::ostream &;
     void               clear() { value.clear(); }
     [[nodiscard]] auto empty() const -> bool { return value.empty(); }
-    auto               find_big(int &) -> MathP;
-    auto               is_lbr(int &, int &) const -> bool;
-    auto               is_lbr2(int &, int &) const -> bool;
+    auto               find_big(int &k) -> MathP;
+    auto               is_lbr(int &seen_d1, int &seen_d2) const -> bool;
+    auto               is_lbr2(int &seen_d1, int &seen_d2) const -> bool;
     auto               find_paren_rec(MathQList &res) const -> bool;
-    void               find_paren2(int start, MathQList &res, bool);
+    void               find_paren2(int start, MathQList &res, bool verbose);
     void               push_back(MathPAux N) { value.push_back(N); }
     void               remove_binrel();
     [[nodiscard]] auto has_small() const -> bool;
@@ -77,9 +77,9 @@ public:
     void               find_paren_matched2(MathQList &res) const;
 
 private:
-    [[nodiscard]] auto analyse1(bool) const -> bool;
-    auto               find_relbin(int &) -> MathP;
-    void               find_paren1(int start1, int end1, MathQList &res, bool);
+    [[nodiscard]] auto analyse1(bool w) const -> bool;
+    auto               find_relbin(int &k) -> MathP;
+    void               find_paren1(int start1, int end1, MathQList &res, bool verbose);
 };
 
 // Helper for finding start and end of <mrow>
@@ -108,7 +108,7 @@ public:
         state = true;
         t_big = false;
     }
-    void finish(MathList &);
+    void finish(MathList &value);
     void dump_aux();
-    void pop_last(Xml *);
+    void pop_last(Xml *xval);
 };

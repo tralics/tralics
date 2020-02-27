@@ -13,7 +13,7 @@
 #include <utility>
 
 namespace tralics_ns {
-    void add_ref(int v, const std::string &s, bool);
+    void add_ref(int v, const std::string &s, bool idx);
     void find_index_labels(std::vector<std::string> &W);
 
 } // namespace tralics_ns
@@ -73,7 +73,7 @@ class AllIndex {
 
 public:
     auto               get_index(int j) -> OneIndex * { return value[j]; }
-    auto               find_index(const std::string &) -> int;
+    auto               find_index(const std::string &s) -> int;
     [[nodiscard]] auto size() const -> int { return value.size(); }
     auto               get_data(int i) -> std::vector<Indexer *> & { return value[i]->get_data(); }
     AllIndex();
@@ -88,5 +88,5 @@ public:
         return last_index;
     }
     [[nodiscard]] auto get_last_iid() const -> int { return last_iid; }
-    void               new_index(const std::string &, const std::string &);
+    void               new_index(const std::string &s, const std::string &title);
 };

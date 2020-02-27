@@ -34,7 +34,7 @@ public:
     [[nodiscard]] auto has_value(Istring x) const -> int;
     void               delete_att(name_positions a);
     void               destroy();
-    void               print(std::ostream &);
+    void               print(std::ostream &fp);
 };
 
 // This is a table of AttList. We should use a vector instead

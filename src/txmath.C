@@ -36,10 +36,10 @@ MathDataP math_data;
 using namespace math_ns;
 namespace math_ns {
     void add_to_trace(Token T);
-    void add_to_trace(char);
+    void add_to_trace(char x);
     void add_to_trace(const std::string &x);
     void remove_from_trace();
-    void bad_math_warn(Buffer &);
+    void bad_math_warn(Buffer &B);
     auto finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
                            int close) -> Xml *;
 } // namespace math_ns

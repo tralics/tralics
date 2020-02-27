@@ -15,7 +15,7 @@
 
 namespace parser_ns {
     auto to_string(boundary_type v) -> String;
-    auto save_string_name(int) -> String;
+    auto save_string_name(int n) -> String;
 } // namespace parser_ns
 
 namespace {

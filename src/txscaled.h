@@ -160,7 +160,7 @@ public:
         token_val = std::move(a);
         type      = it_tok;
     }
-    void change_level(internal_type);
+    void change_level(internal_type level);
     void glue_to_mu() {
         if (type >= it_glue) int_val = glue_val.get_width().get_value();
     }
@@ -198,8 +198,8 @@ public:
     ScanSlot() = default;
     [[nodiscard]] auto get_next_type() const -> internal_type { return term_state == se_none ? expr_type : it_int; }
     void               kill();
-    void               compute_term(scan_expr_t &next_state, SthInternal f, char &);
-    void               add_or_sub(scan_expr_t &next_state, char &);
+    void               compute_term(scan_expr_t &next_state, SthInternal f, char &C);
+    void               add_or_sub(scan_expr_t &next_state, char &C);
 };
 
 namespace arith_ns {
@@ -215,7 +215,7 @@ class TexRule {
 public:
     ScaledInt rule_w, rule_h, rule_d;
     void      reset();
-    void      convert(AttList &);
+    void      convert(AttList &res);
     void      init_vrule() { rule_w = 26214; }
     void      init_hrule() {
         rule_h = 26214;

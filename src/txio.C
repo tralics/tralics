@@ -31,7 +31,7 @@ namespace main_ns {
 
 namespace io_ns {
     void print_ascii(std::ostream &fp, uchar c);
-    auto how_many_bytes(uchar) -> int;
+    auto how_many_bytes(uchar C) -> int;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
     void set_enc_param(int enc, int pos, int v);
