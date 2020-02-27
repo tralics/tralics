@@ -590,13 +590,13 @@ auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) ->
 // If not found, we try \cite[?]{Kunth}, using any possibility for the first
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.
-auto Bibliography::find_citation_star(Istring from, Istring key) -> int {
-    if (int n = find_citation_item(from, key, false); n >= 0) return n;
+auto Bibliography::find_citation_star(Istring from, Istring key) -> size_t {
+    if (int n = find_citation_item(from, key, false); n >= 0) return static_cast<size_t>(n);
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
-        if (citation_table[i].match_star(key)) return static_cast<int>(i);
+        if (citation_table[i].match_star(key)) return i;
     citation_table.emplace_back(key, from);
-    return static_cast<int>(n);
+    return n;
 }
 
 // \cititem{foo}{bar} translates \cititem-foo{bar}
@@ -779,7 +779,7 @@ void bib_ns::boot_ra_prefix(String s) {
         size_t j       = i * 3;
         ra_pretable[i] = tmp + j;
         tmp[j]         = s[1];
-        tmp[j + 1]     = 'A' + static_cast<char>(i);
+        tmp[j + 1]     = static_cast<char>('A' + static_cast<int>(i));
         tmp[j + 2]     = 0;
     }
     tmp[0] = s[0];
@@ -938,10 +938,10 @@ void Parser::T_bibitem() {
 // Flag true for bibitem, \bibitem[opt]{key}
 // false in the case of \XMLsolvecite[id][from]{key}
 void Parser::solve_cite(bool user) {
-    Token T    = cur_tok;
-    bool  F    = true;
-    auto  from = Istring("");
-    int   n;
+    Token  T    = cur_tok;
+    bool   F    = true;
+    auto   from = Istring("");
+    size_t n;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));
@@ -1546,13 +1546,12 @@ void BibEntry::copy_from(BibEntry *Y) {
     copy_from(Y, 0);
 }
 
-void BibEntry::copy_from(BibEntry *Y, int k) {
+void BibEntry::copy_from(BibEntry *Y, size_t k) {
     if (Y->type_int == type_unknown) {
         log_and_tty << "Unknown reference in crossref " << Y->cite_key.get_name() << "\n";
         return; // Should signal an error
     }
-    for (int i = k; i < fp_unknown; i++) {
-        //   std::cout<< bib_xml_name[i] << all_fields[i].empty() << Y->all_fields[i] <<"\n";
+    for (size_t i = k; i < fp_unknown; i++) {
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
     auto n = the_main->get_bibtex_fields().size();
@@ -2982,7 +2981,7 @@ void Bibtex::boot(std::string S, bool inra) {
     want_numeric = false;
     if (the_main->in_ra()) want_numeric = true;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
-    for (int i = 0; i < 32; i++) id_class[i] = illegal_id_char;
+    for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;
     id_class[static_cast<unsigned char>('\t')] = illegal_id_char;
     id_class[static_cast<unsigned char>('"')]  = illegal_id_char;

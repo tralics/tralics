@@ -890,7 +890,7 @@ void MainClass::finish_init() {
             else if (config_data.data[3]->empty())
                 bad_conf("affiliation_vals");
         }
-        int n = config_data.data[1]->size();
+        auto n = config_data.data[1]->size();
         if (n == 0) bad_conf("sections_vals");
         if (n < 2) bad_conf("Config file did not provide sections");
     }

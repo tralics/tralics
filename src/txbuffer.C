@@ -34,7 +34,7 @@ auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
 
 // This returns a copy of the string
 auto tralics_ns::make_string(String a) -> std::string {
-    int n = strlen(a);
+    auto n = strlen(a);
     the_parser.my_stats.one_more_string(n + 1);
     return a;
 }

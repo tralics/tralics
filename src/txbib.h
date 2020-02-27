@@ -75,7 +75,7 @@ public:
     void               dump_data(Buffer &b);
     auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
     auto               find_citation_item(Istring from, Istring key, bool insert) -> int;
-    auto               find_citation_star(Istring from, Istring key) -> int;
+    auto               find_citation_star(Istring from, Istring key) -> size_t;
     [[nodiscard]] auto get_cmd() const -> std::string { return bib_cmd; }
     [[nodiscard]] auto get_location() const -> Xml * { return biblio_loc; }
     [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
@@ -195,14 +195,14 @@ public:
 class BibEntry {
     friend class Bibtex;
 
-    BibEntry *  crossref{nullptr};      // In case of a crossref
-    BibEntry *  crossref_from{nullptr}; // reverse crossref
-    entry_type  type_int{type_unknown}; // the type of the entry
-    CitationKey cite_key;               // the cite_key structure
-    bib_creator why_me;                 // reason why this entry is considered
-    std::string all_fields[fp_unknown]; // all the fields
-    BibtexName  author_data;            // already processed author data
-    BibtexName  editor_data;            // already processed editor data
+    BibEntry *                          crossref{nullptr};      // In case of a crossref
+    BibEntry *                          crossref_from{nullptr}; // reverse crossref
+    entry_type                          type_int{type_unknown}; // the type of the entry
+    CitationKey                         cite_key;               // the cite_key structure
+    bib_creator                         why_me;                 // reason why this entry is considered
+    std::array<std::string, fp_unknown> all_fields;             // all the fields
+    BibtexName                          author_data;            // already processed author data
+    BibtexName                          editor_data;            // already processed editor data
 
     std::string  label, sort_label, aux_label; // cite label and sort label
     int          extra_num{0};                 // extra char added to the label
@@ -256,7 +256,7 @@ private:
     void normalise();
     void un_crossref();
     void copy_from(BibEntry *Y);
-    void copy_from(BibEntry *Y, int k);
+    void copy_from(BibEntry *Y, size_t k);
     void normalise_statut(Buffer &);
     void one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
     void add_warning(int dy);
@@ -272,9 +272,9 @@ class Berror {};
 
 class Bibtex {
 private:
-    Buffer                   inbuf;          // contains a line of the bib file
-    std::vector<codepoint>   input_line;     // line as Utf8Chars
-    uint                     input_line_pos; // position in input_line
+    Buffer                   inbuf;             // contains a line of the bib file
+    std::vector<codepoint>   input_line;        // line as Utf8Chars
+    size_t                   input_line_pos{0}; // position in input_line
     Buffer                   token_buf;
     LinePtr                  in_lines;     // contains the bibfile
     String                   src_name;     // name of the bibfile
@@ -286,8 +286,8 @@ private:
     std::vector<BibEntry *>  all_entries_table; // real entries
     std::vector<std::string> user_model;
     bib_from                 entry_prefix;
-    bool                     nocitestar;
-    bool                     normal_biblio;
+    bool                     nocitestar{false};
+    bool                     normal_biblio{true};
     bool                     refer_biblio;
     bool                     in_ra;
     String                   default_year;
@@ -295,11 +295,11 @@ private:
     std::string              cur_field_name;
     std::string              no_year;
     bool                     noyearerror;
-    bool                     interactive;
-    id_type                  id_class[128];
+    bool                     interactive{false};
+    std::array<id_type, 128> id_class;
 
 public:
-    Bibtex(String dy) : input_line_pos(0), nocitestar(false), normal_biblio(true), default_year(dy), interactive(false) {}
+    Bibtex(String dy) : default_year(dy) {}
     auto               find_entry(const CitationKey &s) -> BibEntry *;
     auto               find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry *;
     auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;

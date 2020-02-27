@@ -1143,7 +1143,7 @@ void Parser::translate03() {
     case hspace_cmd: T_hspace(c); return;
     case eqref_cmd: // Case \XMLref
     {
-        int         n = read_elt_id(cur_tok);
+        auto        n = read_elt_id(cur_tok);
         std::string a = sT_arg_nopar();
         Xid(n).add_ref(a);
     }
