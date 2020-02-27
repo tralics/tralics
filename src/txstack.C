@@ -254,8 +254,7 @@ auto Stack::is_frame2(name_positions S) const -> bool {
     if (k < 1) return false;
     k--;
     while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == s) return true;
-    return false;
+    return Table[k].frame == s;
 }
 
 // Returns true inside a float (table or figure)
@@ -310,10 +309,10 @@ auto Stack::temporary() -> Xml * {
 // We assume that document is numbered 1. This simplifies  the mechanism
 // for adding attributes to the document.
 // Called after all math elements are created
-void Stack::init_all(std::string a) {
+void Stack::init_all(const std::string &a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
-    Xml *V   = new Xml(Istring(std::move(a)), nullptr);
+    Xml *V   = new Xml(Istring(a), nullptr);
     V->push_back(nullptr); // Make a hole for the color pool
     V->change_id(1);
     ipush(the_names[cst_document], V);

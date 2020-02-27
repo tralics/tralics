@@ -496,7 +496,6 @@ void XmlIO::parse_dec_conditional() {
     cur_stack.push_back(cur_xml);
     ++nb_cond;
     B.reset();
-    return;
 }
 
 // Parses SYSTEM 'foo' or PUBLIC 'foo' 'bar'

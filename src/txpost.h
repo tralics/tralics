@@ -1,3 +1,5 @@
+#include <utility>
+
 #pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007,2008
@@ -69,7 +71,7 @@ class WordList {
 public:
     void               set_next(WordList *n) { next = n; }
     [[nodiscard]] auto next_empty() const -> bool { return next == nullptr; }
-    WordList(std::string s, int h, WordList *N) : next(N), name(s), hash(h), freq(1) {}
+    WordList(std::string s, int h, WordList *N) : next(N), name(std::move(s)), hash(h), freq(1) {}
     auto               is_here(String s, int h) const -> bool { return hash == h && strcmp(name.c_str(), s) == 0; }
     void               incr_freq() { freq++; }
     [[nodiscard]] auto get_freq() const -> int { return freq; }

@@ -1418,12 +1418,9 @@ auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int {
     FpNum delta = B * B - C;
     if (!delta.sign) return 0; // no solutions
     delta.sqrt();
-    if (B.sign)
-        delta.sign = true;
-    else
-        delta.sign = false;
-    r2 = -(delta + B);
-    r1 = C / r2;
+    delta.sign = B.sign;
+    r2         = -(delta + B);
+    r1         = C / r2;
     return 2;
 }
 

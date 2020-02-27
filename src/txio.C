@@ -24,11 +24,6 @@ namespace {
     Converter the_converter;
 } // namespace
 
-namespace main_ns {
-    void register_file(LinePtr *);
-    auto use_pool(LinePtr &L) -> bool;
-} // namespace main_ns
-
 namespace io_ns {
     void print_ascii(std::ostream &fp, uchar c);
     auto how_many_bytes(uchar C) -> int;
@@ -884,7 +879,7 @@ void FullLogger::init(std::string name, bool status) {
 // This can be used to check if the main file exists. In this case the
 // transcript file is not yet open.
 auto tralics_ns::file_exists(String name) -> bool {
-    FILE *f = fopen(name, "r");
+    FILE *f = fopen(name, "re");
     if (log_is_open) the_log << lg_start_io << "file " << name << (f != nullptr ? " exists" : " does not exist") << lg_endsentence;
     if (f != nullptr) {
         fclose(f);

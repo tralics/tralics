@@ -37,7 +37,7 @@ void NewArray::boot(Parser *Q) {
 // This informs the system that char c is defined to be the token t.
 void NewArray::add_a_type(uchar c, Token t) {
     if (c == 0) return;
-    if (nct_bool[c] == false) nct_size++;
+    if (!nct_bool[c]) nct_size++;
     nct_bool[c] = true;
     nct_tok[c]  = t;
 }
@@ -143,7 +143,7 @@ auto token_ns::expand_nct(TokenList &L, int n, uchar c, int &MX, TokenList &body
         MX--;
         if (MX < 0) return true;
         for (int k = 0; k < n; k++) Table[k + 1] = get_a_param(L, false);
-        TokenList W = the_parser.expand_mac_inner(body, Table);
+        TokenList W = Parser::expand_mac_inner(body, Table);
         L.splice(L.begin(), W);
     }
     L.splice(L.end(), res);

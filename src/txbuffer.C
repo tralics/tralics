@@ -1080,8 +1080,7 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
         k++;
     }
     aux[len] = 0;
-    if (len == 0) return false;
-    return true;
+    return len != 0;
 }
 
 // returns the configuration value in aux

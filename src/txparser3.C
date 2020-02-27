@@ -223,8 +223,7 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
         bad_redefinition(0, a);
         return false;
     }
-    if (redef == rd_skip && !undef_or_relax) return false;
-    return true;
+    return !(redef == rd_skip && !undef_or_relax);
 }
 
 // Define for an integer quantity. Like eq_define without reference counts.
@@ -432,7 +431,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
             if (val.is_user())
                 P.token_for_show(val);
             else
-                P.print_cmd_chr(val);
+                Parser::print_cmd_chr(val);
         }
         the_log << lg_endsentence;
     }
@@ -530,8 +529,7 @@ auto Parser::stack_math_in_cell() -> bool {
             first = false;
             continue;
         }
-        if (cur == bt_cell) return true;
-        return false;
+        return cur == bt_cell;
     }
     return false;
 }
@@ -616,8 +614,8 @@ void Parser::pop_all_levels() {
     cur_tok.kill();
     pop_level(bt_env); // pop the end document
     bool        started = false;
-    std::string ename   = "";
-    Buffer &    B       = err_buf;
+    std::string ename;
+    Buffer &    B = err_buf;
     B.reset();
     for (;;) {
         if (the_save_stack.empty()) break;

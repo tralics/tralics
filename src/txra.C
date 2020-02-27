@@ -81,7 +81,7 @@ void Parser::T_rasection_end() {
 void Parser::T_rasection() {
     std::string name     = sT_arg_nopar();
     Istring     elt_name = the_names[np_rasection];
-    Istring     iname    = Istring(name);
+    auto        iname    = Istring(name);
     leave_h_mode();
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);

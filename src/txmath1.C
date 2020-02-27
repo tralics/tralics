@@ -164,8 +164,7 @@ auto MathP::analyse1(bool w) const -> bool {
             nb_small = 0;
         }
     }
-    if (nb_small == 1) return false;
-    return true;
+    return nb_small != 1;
 }
 
 // This removes all bin, and then all rel, in order to get an acceptable
@@ -224,8 +223,7 @@ auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
         }
     }
     if (!seen_big) return false;
-    if (seen_d2 != -1) return true;
-    return false;
+    return seen_d2 != -1;
 }
 
 auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
@@ -246,8 +244,7 @@ auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
                 seen_d1 = N.get_pos();
         }
     }
-    if (seen_d2 != -1) return true;
-    return false;
+    return seen_d2 != -1;
 }
 
 // Return true if Pairing is OK.
@@ -564,7 +561,7 @@ void MathF::finish(MathList &value) {
     value.swap(res);
 }
 
-MathF::MathF() {}
+MathF::MathF() = default;
 
 // debug
 void MathF::dump_aux() {
@@ -795,8 +792,8 @@ void MathElt::cv_noML_special() {
         static Buffer att_buffer;
         std::string   s1 = L.get_arg1().convert_this_to_string(att_buffer);
         std::string   s2 = L.get_arg2().convert_this_to_string(att_buffer);
-        Istring       A  = Istring(s1);
-        Istring       B  = Istring(s2);
+        auto          A  = Istring(s1);
+        auto          B  = Istring(s2);
         math_ns::add_attribute_spec(A, B);
         return;
     }
@@ -1594,7 +1591,7 @@ auto Math::remove_req_arg_noerr() const -> std::string {
 
 // This realises the \textsuperscript, given the translation of the argument
 auto math_ns::make_sup(Xml *xval) -> Xml * {
-    Xml *tmp = the_main->the_stack->fonts1(np_s_sup);
+    Xml *tmp = Stack::fonts1(np_s_sup);
     tmp->push_back(xval);
     return tmp;
 }

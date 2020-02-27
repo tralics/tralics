@@ -3392,7 +3392,6 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     CmdChr R(ncmd, subtypes(k));
     eq_define(pos, R, gbl);
     the_log << lg_startbracebs << name << " " << tbd << "=\\" << R.name() << lg_endbrace;
-    return;
 }
 
 // For bootstrap; always traced
@@ -3740,10 +3739,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
                 res = false;
             else {
                 get_token();
-                if (cur_cmd_chr.get_cmd() == if_test_cmd && cur_cmd_chr.get_chr() == if_true_code)
-                    res = true;
-                else
-                    res = false;
+                res = cur_cmd_chr.get_cmd() == if_test_cmd && cur_cmd_chr.get_chr() == if_true_code;
             }
         } else if (x == hash_table.equal_token) {
             TokenList L1 = read_arg();
@@ -3816,7 +3812,6 @@ void Parser::T_whiledo() {
     back_input_braced(A);
     back_input(t);
     back_input(B);
-    return;
 }
 
 // implementation of the calc package.

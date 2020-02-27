@@ -120,5 +120,5 @@ struct TexFonts : public std::vector<TexFont> {
     void set_int_param(int ft, int pos, int v);
     void set_dimen_param(int ft, int p, ScaledInt v);
     auto find_font(const std::string &n, int a, int s) -> int;
-    auto define_a_new_font(std::string n, int a, int s) -> int;
+    auto define_a_new_font(const std::string &n, int a, int s) -> int;
 };

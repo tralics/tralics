@@ -403,7 +403,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
         if (DO[i].is_used()) continue; // should to happen
         int j = is_in_vector(CO, name, false);
         if (j >= 0) {
-            the_class_data.remove_from_unused(name);
+            ClassesData::remove_from_unused(name);
             DO[i].use_and_kill(res, CO[j], X);
         } else if (is_class())
             continue;
@@ -487,7 +487,7 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
         if (j == -1) {
             unknown_option(CO[i], action, spec, X);
         } else {
-            the_class_data.remove_from_unused(name);
+            ClassesData::remove_from_unused(name);
             if (DO[j].is_used()) continue;
             local_buf << bf_comma << DO[j].get_name();
             DO[j].use_and_kill(action, CO[i], X != 0);
@@ -769,7 +769,7 @@ void ClassesData::remove_from_unused(const std::string &name) {
     if (j >= 0) GO[j].mark_used();
 }
 
-void show_unused_options() { the_class_data.show_unused(); }
+void show_unused_options() { ClassesData::show_unused(); }
 
 void ClassesData::show_unused() {
     OptionList &GO = the_class_data.global_options;

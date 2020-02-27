@@ -748,7 +748,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     Math &      u  = math_data.get_list(vp);
     Xid         id = cmi.get_mid();
     std::string S  = u.get_name();
-    Istring     s  = Istring(S);
+    auto        s  = Istring(S);
     if (S.empty()) s = Istring(is_inline ? np_inline : np_display);
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
@@ -1278,9 +1278,9 @@ auto MathHelper::end_of_row() -> bool {
 
 void MathHelper::ml_second_pass(Xml *row, bool vb) {
     bool        slabel = false, stag = false;
-    std::string label = "";
-    std::string tag   = "";
-    int         n     = multi_labels.size();
+    std::string label;
+    std::string tag;
+    int         n = multi_labels.size();
     int         i;
     static int  N = 0;
     if (last_ml_pos == 0) N = 0;
@@ -1313,9 +1313,9 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
 
 void MathHelper::ml_last_pass(bool vb) {
     bool        slabel = false, stag = false;
-    std::string label = "";
-    std::string tag   = "";
-    int         n     = multi_labels.size();
+    std::string label;
+    std::string tag;
+    int         n = multi_labels.size();
     for (int i = 0; i < n; i++) {
         int j = (multi_labels_type[i]);
         if (j == 0) continue;
@@ -1716,7 +1716,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
 // Handles \mathmi[foo][bar][a][b]{etc} and friends
 void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
     Token       ct = cur_tok;
-    std::string s  = "";
+    std::string s;
     if (c == mathbox_code) {
         s = group_to_string(); // name of the env (no expand here ?)
         add_to_trace(s);
@@ -1738,7 +1738,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
     subtypes r1 = math_argument(0, ct);
     Math &   u  = math_data.get_list(k);
     if (c == mathbox_code) {
-        Istring ss = Istring(s);
+        auto ss = Istring(s);
         u.set_name(subtypes(ss.get_value()));
     }
     u.push_back_list(r1, math_argument_cd);
@@ -2032,10 +2032,10 @@ void Xml::bordermatrix() {
     auto attval = Istring(B);
     F           = tree[1];
     if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {
-        Xml *aux = new Xml(cst_mtd, math_data.mk_mo("("));
+        Xml *aux = new Xml(cst_mtd, MathDataP::mk_mo("("));
         aux->add_att(att, attval);
         F->insert_at(1, aux);
-        aux = new Xml(cst_mtd, math_data.mk_mo(")"));
+        aux = new Xml(cst_mtd, MathDataP::mk_mo(")"));
         aux->add_att(att, attval);
         F->push_back(aux);
     }
@@ -2092,10 +2092,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         }
     } else
         return nullptr;
-    Xml *tmp  = the_main->the_stack->fonts1(loc);
+    Xml *tmp  = Stack::fonts1(loc);
     Xml *xval = new Xml(Istring(B));
     if (have_font) {
-        Xml *tmp2 = the_main->the_stack->fonts1(font_pos);
+        Xml *tmp2 = Stack::fonts1(font_pos);
         tmp2->push_back(xval);
         xval = tmp2;
     }
@@ -2172,8 +2172,7 @@ void Parser::TM_math_fonts(Math &x) {
 
 auto Parser::is_not_a_math_env(String s) -> bool {
     find_env_token(s, false);
-    if (cur_cmd_chr.is_user()) return true;
-    return false;
+    return cur_cmd_chr.is_user();
 }
 
 // This is done when we see a label in a math formula.
@@ -2331,7 +2330,7 @@ auto MathElt::cv_mi(math_style cms) -> MathElt {
         if (X == Y) break;
         std::string s1 = X->get_list().convert_this_to_string(math_buffer);
         ++X;
-        std::string s2 = "";
+        std::string s2;
         if (X == Y) {
         } // Should we signal an error ?
         else {
@@ -2403,8 +2402,8 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case thismath_attribute_code: {
         std::string s1 = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2 = L.get_arg2().convert_this_to_string(math_buffer);
-        Istring     A  = Istring(s1);
-        Istring     B  = Istring(s2);
+        auto        A  = Istring(s1);
+        auto        B  = Istring(s2);
         if (c == math_attribute_code)
             the_main->the_stack->add_att_to_last(A, B, true);
         else
@@ -3129,7 +3128,6 @@ void Cv3Helper::find_index(math_style cms) {
         return;
     }
     state = 2;
-    return;
 }
 
 // x_1 and \sum_1 produce <msub> or <munder>

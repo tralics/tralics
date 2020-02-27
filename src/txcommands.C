@@ -41,7 +41,7 @@ void Parser::init_all(std::string doc_elt) {
     eqtb_int_table[newlinechar_code].val_and_level('\n', level_one);
     TL.clear();
     my_stats.set_nb_xboot(the_stack.get_xid().value);
-    the_stack.init_all(std::move(doc_elt));
+    the_stack.init_all(doc_elt);
     the_stack.add_nl();
     onlypreamble.push_back(hash_table.let_token);
     onlypreamble.push_back(hash_table.atbd_token);
@@ -291,7 +291,7 @@ void Parser::T_cst2(int c) {
     if (c == Numero_code) process_string("N");
     flush_buffer();
     {
-        Xml *  res = the_stack.fonts1(np_s_sup);
+        Xml *  res = Stack::fonts1(np_s_sup);
         String s   = "o";
         if (c == ier_code)
             s = "er";

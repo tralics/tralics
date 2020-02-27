@@ -928,11 +928,11 @@ void Parser::T_bpers() {
     the_stack.add_att_to_last(np_prenom, a);
 }
 
-void Stack::implement_cit(std::string b1, Istring b2, std::string a, std::string c) {
-    add_att_to_last(np_userid, Istring(std::move(b1)));
+void Stack::implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c) {
+    add_att_to_last(np_userid, Istring(b1));
     add_att_to_last(np_id, b2);
-    add_att_to_last(np_key, Istring(std::move(a)));
-    add_att_to_last(np_from, Istring(std::move(c)));
+    add_att_to_last(np_key, Istring(a));
+    add_att_to_last(np_from, Istring(c));
 }
 
 // case \bibitem
@@ -997,8 +997,8 @@ void Parser::solve_cite(bool user) {
 // this is the same as \bibitem[]{foo}{}
 void Parser::T_empty_bibitem() {
     flush_buffer();
-    std::string w  = "";
-    std::string a  = "";
+    std::string w;
+    std::string a;
     std::string b  = sT_arg_nopar();
     Istring     id = the_bibtex->exec_bibitem(w, b);
     if (id.empty()) return;
@@ -1143,8 +1143,7 @@ auto Bibtex::scan_identifier(int what) -> bool {
         reset_input();
         skip_space();
     }
-    if (ret > 0) return true;
-    return false;
+    return ret > 0;
 }
 
 // Scans an identifier. It will be in lower case in token_buf.
@@ -1608,8 +1607,8 @@ void Bibtex::work() {
     main_ns::log_or_tty << "Seen " << nb_entries << " bibliographic entries.\n";
     // Sort the entries
     std::sort(all_entries_table.begin(), all_entries_table.end(), xless);
-    std::string previous_label = "";
-    int         last_num       = 0;
+    std::string previous_label;
+    int         last_num = 0;
     for (int i = 0; i < nb_entries; i++) all_entries_table[i]->forward_pass(previous_label, last_num);
     int next_extra = 0;
     for (int i = nb_entries - 1; i >= 0; i--) all_entries_table[i]->reverse_pass(next_extra);
@@ -1700,7 +1699,7 @@ BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), 
 void BibEntry::out_something(field_pos p, std::string s) {
     bbl.push_back_cmd("cititem");
     bbl.push_back_braced(bib_xml_name[p]);
-    bbl.push_back_braced(std::move(s));
+    bbl.push_back_braced(s);
     bbl.newline();
 }
 
@@ -2369,8 +2368,7 @@ auto Buffer::is_and(int k) -> bool {
     c = at(k + 2);
     if (c != 'd' && c != 'D') return false;
     c = at(k + 3);
-    if (c != ' ' && c != '\t' && c != '\n') return false;
-    return true;
+    return !(c != ' ' && c != '\t' && c != '\n');
 }
 
 auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
@@ -2545,8 +2543,7 @@ auto NameSplitter::is_this_other() -> bool {
     if (!jr_name.empty()) return false;
     int a = last_name.first;
     int b = last_name.last;
-    if (b - a == 6 && strncmp(name_buffer.c_str() + a, "others", 6) == 0) return true;
-    return false;
+    return b - a == 6 && strncmp(name_buffer.c_str() + a, "others", 6) == 0;
 }
 
 // We use the fact that first cannot be zero
@@ -2952,8 +2949,8 @@ void Bibtex::read(String src, bib_from ct) {
     bbl.push_back(src);
     bbl.newline();
     entry_prefix  = ct;
-    normal_biblio = ct == from_year ? true : false;
-    refer_biblio  = ct == from_refer ? true : false;
+    normal_biblio = ct == from_year;
+    refer_biblio  = ct == from_refer;
     tralics_ns::read_a_file(in_lines, src, 1);
     interactive = false;
     parse_a_file();

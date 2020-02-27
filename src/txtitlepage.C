@@ -828,15 +828,15 @@ void Buffer::find_top_atts() {
     remove_space_at_end();
     if (at(ptr) == '\"' && at(wptr - 1) == '\"' && ptr < wptr - 1) at(wptr - 1) = 0;
     if (at(ptr) == '\"') {
-        Istring as = Istring(a);
+        auto    as = Istring(a);
         Istring bs = Istring(to_string(ptr + 1));
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\specialyear") == 0) {
-        Istring as = Istring(a);
+        auto    as = Istring(a);
         Istring bs = Istring(the_main->get_year_string());
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\tralics") == 0) {
-        Istring as = Istring(a);
+        auto as = Istring(a);
         reset();
         push_back("Tralics version ");
         push_back(the_main->get_version());

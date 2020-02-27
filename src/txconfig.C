@@ -18,8 +18,8 @@ ParamDataVector config_data;
 
 namespace config_ns {
     Buffer      sec_buffer;
-    bool        have_default_ur     = false;
-    std::string the_default_rc      = "";
+    bool        have_default_ur = false;
+    std::string the_default_rc;
     int         ur_size             = 0;
     int         composition_section = -1;
     bool        cur_sec_no_topic    = false;
@@ -156,7 +156,7 @@ auto config_ns::find_keys(const std::string &name) -> std::string {
 // Return the value of the key in a list.
 auto config_ns::find_one_key(const std::string &name, const std::string &key) -> std::string {
     if (name == "ur") return pers_rc(key);
-    if (name == "theme") return the_main->check_theme(key);
+    if (name == "theme") return MainClass::check_theme(key);
     if (name == "fullsection") return check_section(key);
     if (name == "section") return check_spec_section(key);
     ParamDataList *X = config_data.find_list(name, false);

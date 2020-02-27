@@ -63,10 +63,10 @@ void TexOutStream::close(int chan) {
 
 // This opens an output channel.
 // What if the file cannot be opened ?
-void TexOutStream::open(int chan, std::string file_name) {
+void TexOutStream::open(int chan, const std::string &file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
     close(chan);
-    String fn = tralics_ns::get_out_dir(std::move(file_name));
+    String fn = tralics_ns::get_out_dir(file_name);
     auto * fp = new std::fstream(fn, std::ios::out);
     if (fp == nullptr) return; // no error ?
     if (!*fp) return;          // no error ?

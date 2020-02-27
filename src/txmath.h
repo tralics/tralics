@@ -472,16 +472,14 @@ inline auto Math::has_two_elements() const -> bool {
     auto X = value.begin();
     if (X == value.end()) return false;
     ++X;
-    if (X == value.end()) return false;
-    return true;
+    return X != value.end();
 }
 
 inline auto Math::has_one_element() const -> bool {
     auto X = value.begin();
     if (X == value.end()) return false;
     ++X;
-    if (X == value.end()) return true;
-    return false;
+    return X == value.end();
 }
 
 inline auto Math::second_element() const -> const MathElt & {

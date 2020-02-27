@@ -111,7 +111,7 @@ public:
     auto               try_cline_again(bool action) -> bool;
     void               unbox(Xml *x);
     auto               value_at(int n) -> Xml *;
-    void               word_stats(std::string match);
+    void               word_stats(const std::string &match);
     void               word_stats_i();
     auto               spec_copy() -> Xml *;
     void               replace_first(Xml *x) {

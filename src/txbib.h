@@ -53,7 +53,7 @@ public:
     auto               match(Istring A, Istring B) -> bool;
     auto               match_star(Istring A) -> bool;
     [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
-    CitationItem(Istring A, Istring B) : key(A), from(B), bid(""), solved(Xid()) {}
+    CitationItem(Istring A, Istring B) : key(A), from(B), bid("") {}
 };
 
 class Bibliography {
@@ -394,7 +394,7 @@ public:
     void push_back(String s) { B.push_back(s); }
     void push_back(const std::string &s) { B.push_back(s); }
     void push_back_braced(String s) { B.push_back_braced(s); }
-    void push_back_braced(std::string s) { B.push_back_braced(std::move(s)); }
+    void push_back_braced(const std::string &s) { B.push_back_braced(s); }
     void push_back_cmd(String s) {
         B.push_back('\\');
         B.push_back(s);

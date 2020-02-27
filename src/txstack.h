@@ -109,13 +109,13 @@ public:
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     auto               get_xid() -> Xid { return last_xid; }
     void               hack_for_hanl();
-    void               implement_cit(std::string b1, Istring b2, std::string a, std::string c);
+    void               implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
     [[nodiscard]] auto in_bib_mode() const -> bool { return get_mode() == mode_bib; }
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
-    void               init_all(std::string a);
+    void               init_all(const std::string &a);
     void               ipush(Istring fr, Xml *V);
     auto               is_float() -> bool;
     [[nodiscard]] auto is_frame(name_positions s) const -> bool;

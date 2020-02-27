@@ -21,8 +21,8 @@ namespace {
     TokenList   KV_list;
     bool        xkv_is_global;
     bool        xkv_is_save;
-    std::string xkv_prefix = "";
-    std::string xkv_header = "";
+    std::string xkv_prefix;
+    std::string xkv_header;
     TokenList   xkv_action;
 } // namespace
 
@@ -982,7 +982,7 @@ void Parser::key_ifundefined() {
     TokenList   key       = read_arg();
     std::string Key       = list_to_string_c(key, "problem scanning key");
     std::string Fams      = list_to_string_c(fams, "Problem with the families");
-    std::string fam       = "";
+    std::string fam;
     Splitter    S(Fams);
     for (;;) {
         if (S.at_end()) break;
@@ -1506,8 +1506,7 @@ auto xkv_ns::is_Gin(const TokenList &x) -> bool {
     if (C == E) return false;
     if (*C != Token(letter_t_offset, 'n')) return false;
     ++C;
-    if (C == E) return true;
-    return false;
+    return C == E;
 }
 
 void XkvSetkeys::run(bool c) {

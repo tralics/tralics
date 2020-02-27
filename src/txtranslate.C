@@ -326,7 +326,7 @@ void Parser::arg_font(subtypes c) {
 // \textsuperscript, \textsubscript, etc.
 void Parser::T_fonts(name_positions x) {
     leave_v_mode();
-    Xml *res = the_stack.fonts1(x);
+    Xml *res = Stack::fonts1(x);
     the_stack.push(the_names[cst_fonts], res);
     T_arg();
     the_stack.pop(cst_fonts);
@@ -346,7 +346,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->get_id().add_attribute(np_noindent, the_main->SH.st_bool(noindent), false);
+            cp->get_id().add_attribute(np_noindent, StrHash::st_bool(noindent), false);
             return;
         }
     }
@@ -358,7 +358,7 @@ void Parser::finish_par_cmd(bool noindent, Istring xs) {
     int k  = cur_centering();
     Xid id = ileave_v_mode();
     if (!xs.null()) id.add_attribute(the_names[np_spacebefore], xs);
-    if (k != 1) id.add_attribute(np_noindent, the_main->SH.st_bool(noindent));
+    if (k != 1) id.add_attribute(np_noindent, StrHash::st_bool(noindent));
 }
 
 // Translation of \par
@@ -682,7 +682,7 @@ void Parser::T_float(subtypes c) {
     {
         Buffer &    B    = Tbuf;
         std::string sarg = sT_arg_nopar();
-        Istring     arg  = Istring(sarg);
+        auto        arg  = Istring(sarg);
         Istring     opt  = nT_optarg_nopar();
         if (opt.null()) {
             B << bf_reset << "fps@" << sarg;

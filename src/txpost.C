@@ -224,7 +224,7 @@ auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
 // If the label is undefined, we define it,
 
 void Parser::create_label(const std::string &X, Istring S) {
-    Istring    m = Istring(X);
+    auto       m = Istring(X);
     LabelInfo *V = the_main->SH.lab_val_check(m);
     if (V->set_defined()) {
         multiple_label(m.c_str(), V->get_lineno(), V->get_filename());
@@ -243,7 +243,7 @@ void Xid::add_ref(const std::string &s) { tralics_ns::add_ref(value, s, false); 
 
 void tralics_ns::add_ref(int v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
-    Istring B = Istring(s);
+    auto B = Istring(s);
     if (idx)
         refindex_list.emplace_back(v, B);
     else
@@ -461,8 +461,7 @@ auto Xml::only_hi() const -> bool {
     Xml *x = single_non_empty();
     if (x == nullptr) return false;
     if (x->is_xmlc()) return false;
-    if (x->id.is_font_change()) return true;
-    return false;
+    return x->id.is_font_change();
 }
 
 // Adds the content of x to this. Attributes are lost
@@ -1241,9 +1240,9 @@ void Xml::word_stats_i() {
     }
 }
 
-void Xml::word_stats(std::string match) {
+void Xml::word_stats(const std::string &match) {
     scbuf.reset();
     word_stats_i();
     scbuf.new_word();
-    all_words_ns::dump_words(std::move(match));
+    all_words_ns::dump_words(match);
 }

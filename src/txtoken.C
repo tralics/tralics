@@ -822,8 +822,7 @@ auto token_ns::has_a_single_token(const TokenList &L) -> bool {
     auto E = L.end();
     if (C == E) return false;
     ++C;
-    if (C == E) return true;
-    return false;
+    return C == E;
 }
 
 // True if L has a single token that is T
@@ -833,8 +832,7 @@ auto token_ns::has_a_single_token(const TokenList &L, Token t) -> bool {
     if (C == E) return false;
     if (*C != t) return false;
     ++C;
-    if (C == E) return true;
-    return false;
+    return C == E;
 }
 
 // Removes first and last spaces in a token list.

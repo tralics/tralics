@@ -260,12 +260,12 @@ TexFont::TexFont(const std::string &n, int a, int s) {
 }
 
 // This allocates a new slot in the font list.
-auto TexFonts::define_a_new_font(std::string n, int a, int s) -> int {
+auto TexFonts::define_a_new_font(const std::string &n, int a, int s) -> int {
     if (size() >= 256) { /// \todo Perhaps remove this artificial limitation
         the_parser.parse_error("fatal: font table overflow");
         return 0;
     }
-    emplace_back(std::move(n), a, s);
+    emplace_back(n, a, s);
     return size() - 1;
 }
 
@@ -304,10 +304,7 @@ void TexFont::make_null() {
 }
 
 // True if k is a valid font ID
-auto TexFonts::is_valid(int k) -> bool {
-    if (k < 0 || k >= static_cast<int>(size())) return false;
-    return true;
-}
+auto TexFonts::is_valid(int k) -> bool { return !(k < 0 || k >= static_cast<int>(size())); }
 
 // Returns name of font
 auto TexFonts::name(int k) -> std::string {
