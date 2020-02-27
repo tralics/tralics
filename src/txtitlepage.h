@@ -25,8 +25,8 @@ static const int tp_C_flag    = 96;
 // data for a titlepage item
 class TitlePageAux {
     std::string T1, T2, T3, T4; // the four strings
-    int         idx{0};         // index into titlepage::Data
-    int         xflags{0};      // flags associated to the object
+    size_t      idx{0};         // index into titlepage::Data
+    size_t      xflags{0};      // flags associated to the object
     tpi_vals    type{tpi_zero}; // type of object
 
 public:
@@ -34,20 +34,18 @@ public:
     auto convert(int i) -> Xml *;
     auto convert(int i, Xml *r) -> Xml *;
     auto convert(int i, Istring s) -> Xml * { return convert(i, new Xml(s)); }
-    void dump(int k);
-    void exec_start(int k);
+    void dump(size_t k);
+    void exec_start(size_t k);
     void exec_post();
-    void exec(int v, bool vb);
+    void exec(size_t v, bool vb);
     void set_T1(std::string x) { T1 = std::move(x); }
     void set_T2(std::string x) { T2 = std::move(x); }
     void set_T3(std::string x) { T3 = std::move(x); }
     void set_T4(std::string x) { T4 = std::move(x); }
-    void set_flags(int f) { xflags = f; }
 
     auto               get_type() -> tpi_vals { return type; }
     auto               get_typeref() -> tpi_vals & { return type; }
-    auto               get_idx() -> int { return idx; }
-    [[nodiscard]] auto get_flags2() const -> int { return 32 * (xflags / 32); }
+    [[nodiscard]] auto get_flags2() const -> size_t { return 32U * (xflags / 32U); }
     [[nodiscard]] auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
     [[nodiscard]] auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
     [[nodiscard]] auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
@@ -55,7 +53,7 @@ public:
     [[nodiscard]] auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
     TitlePageAux() = default;
     TitlePageAux(TitlePageFullLine &X);
-    auto               find_UR(String s, int n) const -> int;
+    auto               find_UR(String s, size_t n) const -> size_t;
     auto               get_T1() -> std::string { return T1; }
     auto               get_T2() -> std::string { return T2; }
     auto               get_T3() -> std::string { return T3; }
@@ -102,39 +100,36 @@ public:
 // temporary class, will bew copied into a TitlePageAux
 class TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
-    int        flags;                      // the flags
+    size_t     flags;                      // the flags
 public:
     friend class titlepage;
     friend class TitlePageAux;
     auto               read() -> int;
     void               kill();
     auto               classify(int w, int state) -> tpi_vals;
-    [[nodiscard]] auto get_flags() const -> int { return flags; }
+    [[nodiscard]] auto get_flags() const -> size_t { return flags; }
     auto               encode_flags(char c1, char c2) -> bool;
 };
 
 class TitlePage {
-    int   len2{1};       // size of bigtable and Data
-    bool  valid{false};  // is this initialised and not killed ?
-    int   size{0};       // allocated size of bigtable
-    Xml **Data{nullptr}; // the array of xml data
+    size_t len2{1};       // size of bigtable and Data
+    bool   valid{false};  // is this initialised and not killed ?
+    int    size{0};       // allocated size of bigtable
+    Xml ** Data{nullptr}; // the array of xml data
 public:
     std::vector<TitlePageAux> bigtable; // the table
     int                       state;    // current state of the parser
     TitlePage() = default;
-    auto               operator[](int k) -> Xml *& { return Data[k]; }
+    auto               operator[](size_t k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(size_t k) -> TitlePageAux & { return bigtable[k]; }
-    [[nodiscard]] auto get_len2() const -> int { return len2; }
+    [[nodiscard]] auto get_len2() const -> size_t { return len2; }
     auto               is_valid() -> bool { return valid; }
     void               make_invalid() { valid = false; }
     void               make_valid() { valid = true; }
     void               start_thing(bool verbose);
     void               parse();
-    auto               increase_data() -> int {
-        len2++;
-        return len2 - 1;
-    }
+    auto               increase_data() -> size_t { return len2++; }
     void               check_size();
-    [[nodiscard]] auto find_UR(const std::string &s, const std::string &name) const -> int;
-    [[nodiscard]] auto find_cmd(const std::string &s) const -> int;
+    [[nodiscard]] auto find_UR(const std::string &s, const std::string &name) const -> size_t;
+    [[nodiscard]] auto find_cmd(const std::string &s) const -> size_t;
 };

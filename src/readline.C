@@ -112,7 +112,7 @@ inline void color_black() {}
 
 class Slined {
     char *                     m_inbuf{nullptr};
-    std::array<char, buf_size> m_buffer;
+    std::array<char, buf_size> m_buffer{};
     std::string                m_killbuf;
     int                        m_inpos{0};
     int                        m_inmax{0};
@@ -406,8 +406,8 @@ void Slined::insert1(unsigned n, char c) {
     buffer       = buffer + pos;
     if (aux != 0) shift_string(buffer, size, 0, static_cast<int>(n));
     for (unsigned i = 0; i < n; i++) buffer[i] = c; // insert
-    size += n;
-    pos += n;
+    size    = size + static_cast<int>(n);
+    pos     = pos + static_cast<int>(n);
     m_inpos = pos;
     m_inmax = size;
     char c1 = 0, c2 = c;

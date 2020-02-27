@@ -70,7 +70,7 @@ void show_encoding(size_t wc, const std::string &name) {
 }
 
 auto main_ns::try_conf(const std::string &prefix) -> bool {
-    if (prefix.size() == 0) return false;
+    if (prefix.empty()) return false;
     Buffer b;
     b << prefix << bf_optslash << "book.clt";
     return tralics_ns::file_exists(b);

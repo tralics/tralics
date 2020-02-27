@@ -267,7 +267,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         return true;
     case tpi_CE: // case \URsop ?+ <UR>
     {
-        int k = Titlepage.find_UR(T2, T1);
+        auto k = Titlepage.find_UR(T2, T1);
         if (k == 0) return false;
         state = 2;
         type  = tpi_rt_ur;
@@ -285,7 +285,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         return true;
     case tpi_CEE: // \Paris ?<UR> <Rocqu>
     {
-        int k = Titlepage.find_UR(T2, "");
+        auto k = Titlepage.find_UR(T2, "");
         if (k == 0) return false;
         state = 2;
         type  = tpi_rt_ur;
@@ -296,7 +296,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
     }
     case tpi_CCS: // case \myself \author "JG"
     {
-        int k = Titlepage.find_cmd(T2);
+        auto k = Titlepage.find_cmd(T2);
         if (k == 0) return false;
         TitlePageAux &R = Titlepage.bigtable[k];
         state           = 2;
@@ -317,7 +317,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
 }
 
 // Evaluates at start of translation
-void TitlePageAux::exec_start(int k) {
+void TitlePageAux::exec_start(size_t k) {
     if (type == tpi_rt_urlist) { // no command here
         Titlepage[idx] = convert(2, new Xml(the_names[cst_nl]));
         return;
@@ -334,7 +334,7 @@ void TitlePageAux::exec_start(int k) {
     }
     // remaining types are:  tp, ur, normal_def, list_def, and normal
     if (type != tpi_rt_normal) return;
-    int fl = get_flags2(); // this is 0,1, 2 or 3
+    auto fl = get_flags2(); // this is 0,1, 2 or 3
     if (fl == 0) {
         Titlepage[idx] = convert(2, Istring(T4));
         return;
@@ -365,7 +365,7 @@ void TitlePageAux::exec_post() {
 }
 
 // This is executed when the user asks for a titlepage command.
-void TitlePageAux::exec(int v, bool vb) {
+void TitlePageAux::exec(size_t v, bool vb) {
     if (vb) the_log << lg_startbrace << "\\titlepage " << v << "=\\" << T1 << lg_endbrace;
     if (type == tpi_rt_tp) {
         the_parser.T_titlepage_finish(v);
@@ -415,9 +415,9 @@ void Xid::add_special_att(const std::string &S) {
 
 // This is executed when we see the \titlepage command,
 // After that, no more titlepage ...
-void Parser::T_titlepage_finish(int v) {
-    int kmax = Titlepage.bigtable.size();
-    for (int k = 0; k < kmax; k++) Titlepage.bigtable[k].exec_post();
+void Parser::T_titlepage_finish(size_t v) {
+    auto kmax = Titlepage.bigtable.size();
+    for (size_t k = 0; k < kmax; k++) Titlepage.bigtable[k].exec_post();
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
     std::string   tmp      = tpa.get_T4();
@@ -429,7 +429,7 @@ void Parser::T_titlepage_finish(int v) {
     Xml *res = tpa.convert(2);
     res->get_id().add_special_att(tpa.get_T3());
     kmax = Titlepage.get_len2();
-    for (int k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
+    for (size_t k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
     the_stack.pop_if_frame(the_names[cst_p]);
     the_stack.add_nl();
     the_stack.add_last(res);
@@ -452,13 +452,13 @@ void Parser::T_titlepage_finish(int v) {
     }
 }
 
-void Parser::T_titlepage(int v) {
+void Parser::T_titlepage(size_t v) {
     if (tracing_commands()) the_log << lg_startbrace << "\\titlepage " << v << lg_endbrace;
     if (!Titlepage.is_valid()) {
         log_and_tty << "No title page info, bug?\n";
         return; // why ?
     }
-    if (v < 0 || v >= int(Titlepage.bigtable.size())) {
+    if (v >= Titlepage.bigtable.size()) {
         log_and_tty << "T_titlepage strange\n" << lg_fatal;
         abort();
     }
@@ -485,7 +485,7 @@ void TpiOneItem::reset() {
 
 // For the case CEE, \Paris ?<UR flags> <Rocq>
 // s is the string without attribs, and n is the length
-auto TitlePageAux::find_UR(String s, int n) const -> int {
+auto TitlePageAux::find_UR(String s, size_t n) const -> size_t {
     if (type != tpi_rt_urlist) return 0;
     String w = T2.c_str();
     if (strncmp(w, s, n) == 0) return idx;
@@ -494,15 +494,15 @@ auto TitlePageAux::find_UR(String s, int n) const -> int {
 
 // For the case CE, \URsop ?+ <UR myflags>
 // We put `URsop myflags' in the buffer local_buf in case of success.
-auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> int {
+auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> size_t {
     Buffer &B = local_buf;
     B << bf_reset << s;
-    int j = 0;
+    size_t j = 0;
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
     B.kill_at(j);
     String match = B.c_str();
-    int    res   = 0;
+    size_t res   = 0;
     for (const auto &k : bigtable) {
         res = k.find_UR(match, j);
         if (res != 0) break;
@@ -524,7 +524,7 @@ auto TitlePageAux::find_cmd(const std::string &s) const -> bool {
 }
 
 // Returns the index for a CCS.
-auto TitlePage::find_cmd(const std::string &s) const -> int {
+auto TitlePage::find_cmd(const std::string &s) const -> size_t {
     for (unsigned int k = 0; k < bigtable.size(); k++) {
         if (bigtable[k].find_cmd(s)) return k;
     }
@@ -542,7 +542,7 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
 
 // True if B is an initial substring of A
 auto tpage_ns::begins_with(const std::string &A, String B) -> bool {
-    unsigned int n = strlen(B);
+    auto n = strlen(B);
     if (A.length() < n) return false;
     return strncmp(A.c_str(), B, n) == 0;
 }
@@ -695,10 +695,9 @@ auto TitlePageFullLine::encode_flags(char c1, char c2) -> bool {
 
 // This prints the flags, in a symbolic way.
 void TitlePageAux::decode_flags() {
-    int f1 = 0, f2 = 0;
-    f2 = xflags / 16;
-    f1 = xflags % 16;
-    f1 = f1 / 2;
+    auto f2 = xflags / 16;
+    auto f1 = xflags % 16;
+    f1      = f1 / 2;
     if (f1 == 0 && f2 == 0) return;
     the_log << " (flags";
     if (f1 == 1) the_log << " +par";
@@ -713,7 +712,7 @@ void TitlePageAux::decode_flags() {
 }
 
 // This prints a slot.
-void TitlePageAux::dump(int k) {
+void TitlePageAux::dump(size_t k) {
     tpi_vals t = get_type();
     if (t == tpi_rt_alias) {
         the_log << lg_start << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
@@ -770,7 +769,7 @@ auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
 auto Buffer::see_config_kw(String s, bool c) -> String {
     if (!see_equals(s)) return nullptr;
     if (c) {
-        int k = ptr;
+        auto k = ptr;
         while ((at(k) != 0) && at(k) != '%' && at(k) != '#') k++;
         wptr  = k;
         at(k) = 0;

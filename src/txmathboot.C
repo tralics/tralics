@@ -29,9 +29,9 @@ std::array<Xml *, 128>                       single_chars;
 //#define LANGLE "&#x27E8;"
 //#define RANGLE "&#x27E9;"
 
-auto get_math_char(uchar c, int f) -> std::string { return math_chars[c][f]; }
+auto get_math_char(uchar c, size_t f) -> std::string { return math_chars[c][f]; }
 
-void set_math_char(uchar c, int f, std::string s) { math_chars[c][f] = std::move(s); }
+void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
 
 auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
 
@@ -1342,7 +1342,7 @@ void MathDataP::mk_accent(String name, String ent, String ent2, subtypes pos) {
 // This is for a character: the single character in A
 // is defined to be <mo> with value b.
 void MathDataP::TM_mk(String a, String b, math_types c) {
-    int A = uchar(a[0]);
+    auto A = uchar(a[0]);
     init_builtin(A + math_c_loc, mk_mo(b));
     math_char_type[A] = c;
 }
@@ -1363,7 +1363,7 @@ void MathDataP::boot_xml_lr_tables() {
         int k = i + math_c_loc;
         if (built_in_table[k] != nullptr) continue;
         B.reset();
-        B.push_back(i);
+        B.push_back(static_cast<char>(i));
         built_in_table[k] = new Xml(cst_mo, nullptr);
         built_in_table[k]->push_back(new Xml(the_main->SH));
     }
@@ -1439,11 +1439,11 @@ void MathDataP::boot_xml_lr_tables() {
     mc_table[26] = mk_mo(no_ent_names ? "&#x2DC;" : "&tilde;");
 }
 
-auto math_ns::make_math_char(uchar c, int n) -> Xml * {
+auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
     Buffer &B = the_main->SH.shbuf();
     B.reset();
     if (n <= 1)
-        B.push_back(c);
+        B.push_back(static_cast<char>(c));
     else
         B.push_back(math_chars[c][n]);
     Xml *v   = new Xml(the_main->SH);
@@ -1453,7 +1453,7 @@ auto math_ns::make_math_char(uchar c, int n) -> Xml * {
 }
 
 void MathDataP::boot_chars() {
-    for (int i = 0; i <= 9; i++) {
+    for (unsigned i = 0; i <= 9; i++) {
         Istring K = the_names[cst_dig0 + i];
         init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K)));
     }
@@ -1469,7 +1469,7 @@ void MathDataP::boot_chars() {
     // nb_simplemath should be 128
     for (uchar i = 0; i < nb_simplemath; i++) {
         B.reset();
-        B.push_back(i);
+        B.push_back(static_cast<char>(i));
         Xml *res = new Xml(np_simplemath, new Xml(the_main->SH));
         Xml *X   = new Xml(np_formula, res);
         X->add_att(np_type, np_inline);

@@ -229,7 +229,7 @@ public:
     void               signal_ovf(Token T, String h, int cur, int max);
     auto               special_expand(TokenList *args) -> TokenList;
     auto               special_tpa_arg(String n, String y, bool par, bool env, bool has_q) -> Xml *;
-    void               T_titlepage_finish(int v);
+    void               T_titlepage_finish(size_t v);
     auto               tpa_exec(String cmd) -> Xml *;
     void               M_tracingall();
     void               translate0();
@@ -916,7 +916,7 @@ private:
     void        T_start_the_biblio();
     void        T_start_theorem(int c);
     void        T_testopt();
-    void        T_titlepage(int v);
+    void        T_titlepage(size_t v);
     void        T_trees(int c);
     void        T_translate(TokenList &X);
     void        T_typein();

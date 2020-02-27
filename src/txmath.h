@@ -17,8 +17,8 @@ class MathP;
 class MathF;
 using MathQList = std::list<MathQ>;
 
-auto get_math_char(uchar c, int f) -> std::string;
-void set_math_char(uchar c, int f, std::string s);
+auto get_math_char(uchar c, size_t f) -> std::string;
+void set_math_char(uchar c, size_t f, std::string s);
 
 // A math object is a strange thing:
 // a math_elt object has 4 fields, one is a pointer to another object.
@@ -392,9 +392,9 @@ public:
     auto        get_mc_table(int i) -> Xml * { return mc_table[i]; }
     auto        get_builtin(int p) -> Xml * { return built_in_table[p]; }
     auto        get_builtin_alt(int p) -> Xml * { return built_in_table_alt[p]; }
-    void        init_builtin(int i, Xml *X) { built_in_table[i] = X; }
-    void        init_builtin(int i, int j) { built_in_table[i] = built_in_table[j]; }
-    void        init_builtin(int i, Buffer &B) { built_in_table[i] = new Xml(B); }
+    void        init_builtin(size_t i, Xml *X) { built_in_table[i] = X; }
+    void        init_builtin(size_t i, int j) { built_in_table[i] = built_in_table[j]; }
+    void        init_builtin(size_t i, Buffer &B) { built_in_table[i] = new Xml(B); }
     auto        get_xml_val(int i) -> Xml * {
         if (i < m_offset) return built_in_table[i];
         return xml_math_table[i - m_offset];
@@ -461,7 +461,7 @@ namespace math_ns {
     auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xml *;
     auto special_fence(subtypes s, int &open, int &close) -> bool;
     auto style_level(subtypes tt) -> math_style;
-    auto make_math_char(uchar c, int n) -> Xml *;
+    auto make_math_char(uchar c, size_t n) -> Xml *;
     auto xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml *;
 } // namespace math_ns
 

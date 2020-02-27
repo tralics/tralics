@@ -45,8 +45,8 @@ class XmlAction {
     Xml *      xml_val;    // input or output xml value
     Istring    string_val; // name of element ot work on
 public:
-    XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(Istring()) {}
-    XmlAction(Istring M, recur_type w, Xml *X) : match(M), what(w), int_val(0), xml_val(X), string_val(Istring()) {}
+    XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(nullptr) {}
+    XmlAction(Istring M, recur_type w, Xml *X) : match(M), what(w), int_val(0), xml_val(X) {}
     XmlAction(Istring M, recur_type w, Istring X) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(X) {}
     [[nodiscard]] auto get_what() const -> recur_type { return what; }
     void               incr_int_val() { int_val++; }

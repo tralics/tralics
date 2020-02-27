@@ -244,7 +244,7 @@ void Buffer::utf8_ovf(size_t n) {
 // We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
 // As a consequence, at(ptr) is valid after the call
 auto Buffer::next_utf8_byte() -> uchar {
-    uchar x = static_cast<uchar>(at(ptr));
+    auto x = static_cast<uchar>(at(ptr));
     if ((x >> 6) == 2) {
         ++ptr;
         return x & 63;

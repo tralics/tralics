@@ -17,8 +17,9 @@ conan_cmake_run(REQUIRES
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
-                    -Wpedantic -Wold-style-cast -Wunused -Wconversion
-                    -Wsign-conversion -Wnull-dereference -Wdouble-promotion -O3)
+                    -Wpedantic -Wold-style-cast -Wunused
+                    -Wunused-member-function -Wconversion -Wsign-conversion
+                    -Wnull-dereference -Wdouble-promotion -O3)
 
 find_program(CCACHE ccache)
 if(CCACHE)
