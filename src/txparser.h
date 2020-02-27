@@ -197,7 +197,7 @@ public:
     [[nodiscard]] auto get_scanner_status() const -> scan_stat { return scanner_status; }
     [[nodiscard]] auto get_long_state() const -> l_state { return long_state; }
     [[nodiscard]] auto has_letter_catcode(size_t x) const { return get_catcode(x) == letter_catcode; }
-    void               init_all(std::string doc_elt);
+    void               init_all(const std::string &doc_elt);
     void               load_latex();
     auto               read_arg() -> TokenList;
     auto               read_arg_nopar() -> TokenList;
@@ -320,7 +320,7 @@ private:
     static void create_aux_file_and_run_pgm();
     void        E_csname();
     void        csname_arg();
-    auto        cur_group_type() -> int;
+    static auto cur_group_type() -> int;
     void        date_commands(int c);
     void        datebynumber();
     void        dbl_arg();

@@ -16,8 +16,9 @@
 #include <fmt/format.h>
 
 namespace {
-    String my_constant_table[3];
     class Error {};
+
+    std::array<String, 3>    my_constant_table;
     Bbl                      bbl;
     Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
     Buffer                   CB;
@@ -51,13 +52,10 @@ namespace io_ns {
     auto how_many_bytes(char) -> size_t;
 } // namespace io_ns
 
-String bib_xml_name[] = {"bcrossref",     "bkey",         "baddress", "bauthors", "bbooktitle",   "bchapter", "bedition",      "beditors",
-                         "bhowpublished", "binstitution", "bjournal", "bmonth",   "bnote",        "bnumber",  "borganization", "bpages",
-                         "bpublisher",    "bschool",      "bseries",  "btitle",   "btype",        "burl",     "bvolume",       "byear",
-                         "bdoi",          "bsubtype",     "bunite",   "bequipe",  "bidentifiant", "bunknown"};
-
-// Ctor of the bibliography stuff.
-Bibliography::Bibliography() : bib_style("plain"), bib_cmd("") {}
+std::array<String, 30> bib_xml_name{
+    "bcrossref", "bkey",   "baddress", "bauthors", "bbooktitle",    "bchapter", "bedition",   "beditors", "bhowpublished", "binstitution",
+    "bjournal",  "bmonth", "bnote",    "bnumber",  "borganization", "bpages",   "bpublisher", "bschool",  "bseries",       "btitle",
+    "btype",     "burl",   "bvolume",  "byear",    "bdoi",          "bsubtype", "bunite",     "bequipe",  "bidentifiant",  "bunknown"};
 
 // Main idea. The TeX file has commands like \cite , \nocite, which produce
 // a CitationItem (new or old). There are stored in citation_table. They have
@@ -773,7 +771,7 @@ auto bib_ns::type_to_string(entry_type x) -> name_positions {
 }
 
 // This is a table of prefixes, for the RA only
-String ra_pretable[8];
+std::array<String, 8> ra_pretable;
 
 void bib_ns::boot_ra_prefix(String s) {
     char *tmp = new char[3 * 8];
@@ -838,15 +836,15 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
     BibEntry *res = nullptr;
     if (old_ra) {
-        for (size_t i = 0; i < all_entries.size(); i++)
-            if (all_entries[i]->cite_key.is_same_lower_old(s)) {
-                res = all_entries[i];
+        for (auto &all_entrie : all_entries)
+            if (all_entrie->cite_key.is_same_lower_old(s)) {
+                res = all_entrie;
                 n++;
             }
     } else
-        for (size_t i = 0; i < all_entries.size(); i++)
-            if (all_entries[i]->cite_key.is_same_lower(s)) {
-                res = all_entries[i];
+        for (auto &all_entrie : all_entries)
+            if (all_entrie->cite_key.is_same_lower(s)) {
+                res = all_entrie;
                 n++;
             }
     return res;
@@ -861,9 +859,9 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
 auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
     n             = 0;
     BibEntry *res = nullptr;
-    for (size_t i = 0; i < all_entries.size(); i++)
-        if (all_entries[i]->cite_key.is_similar(s)) {
-            res = all_entries[i];
+    for (auto &all_entrie : all_entries)
+        if (all_entrie->cite_key.is_similar(s)) {
+            res = all_entrie;
             n++;
         }
     if (res != nullptr) {
@@ -871,14 +869,14 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
         return res;
     }
     bool bad = false;
-    for (size_t i = 0; i < all_entries.size(); i++)
-        if (all_entries[i]->cite_key.is_similar_lower(s)) {
+    for (auto &all_entrie : all_entries)
+        if (all_entrie->cite_key.is_similar_lower(s)) {
             n++;
             if (res == nullptr) {
-                res = all_entries[i];
+                res = all_entrie;
                 continue;
             }
-            if (!all_entries[i]->cite_key.is_similar(res->cite_key)) bad = true;
+            if (!all_entrie->cite_key.is_similar(res->cite_key)) bad = true;
         }
     if (!bad) n = -n;
     return res;
@@ -1111,7 +1109,7 @@ void Bibtex::scan_for_at() {
     }
 }
 
-static const String scan_msgs[] = {
+static const std::array<String, 9> scan_msgs{
     "bad syntax for a field type",
     "bad syntax for an entry type",
     "bad syntax for a string name",
@@ -1128,9 +1126,9 @@ static const String scan_msgs[] = {
 // If the retval of scan_identifier0 is <=0, but not -4
 // Note: The error message must be output before skip_space,
 // in case we are at EOF.
-auto Bibtex::scan_identifier(int what) -> bool {
+auto Bibtex::scan_identifier(size_t what) -> bool {
     int ret = scan_identifier0(what);
-    if (ret != 0) log_and_tty << scan_msgs[ret > 0 ? ret : -ret];
+    if (ret != 0) log_and_tty << scan_msgs[static_cast<size_t>(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
@@ -1142,7 +1140,7 @@ auto Bibtex::scan_identifier(int what) -> bool {
 // Scans an identifier. It will be in lower case in token_buf.
 // Scans also something after it. Invariant: at_eol() is false on entry.
 // it is also false on exit
-auto Bibtex::scan_identifier0(int what) -> int {
+auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
     B.reset();
     codepoint c = cur_char();
@@ -1166,7 +1164,7 @@ auto Bibtex::scan_identifier0(int what) -> int {
 
 // A bunch of functions called when we see the end of an identifier.
 // We start with a function that complains if first character is wrong.
-auto Bibtex::wrong_first_char(codepoint c, int what) -> int {
+auto Bibtex::wrong_first_char(codepoint c, size_t what) -> int {
     err_in_file(scan_msgs[what], false);
     if (c.is_digit())
         log_and_tty << "\nit cannot start with a digit";
@@ -1212,7 +1210,7 @@ auto Bibtex::check_entry_end(int k) -> int {
 // We have seen foo in foo=bar. We have skipped over spaces
 // Returns 0 if OK. We try to read some characters on the current line
 // in case of error
-auto Bibtex::check_field_end(int what) -> int {
+auto Bibtex::check_field_end(size_t what) -> int {
     if (cur_char() == '=') {
         advance();
         skip_space();
@@ -1676,20 +1674,15 @@ void BibEntry::numeric_label(int i) {
     label = B.to_string();
 }
 
-BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), unique_id("") {
-    for (auto &all_field : all_fields) all_field = "";
+BibEntry::BibEntry() {
     std::vector<Istring> &Bib = the_main->get_bibtex_fields();
-    auto                  n   = Bib.size();
-    if (n != 0) {
-        user_fields = new std::string[n];
-        for (size_t i = 0; i < n; i++) user_fields[i] = "";
-    }
+    if (auto n = Bib.size(); n != 0) { user_fields = new std::string[n]; }
 }
 
 // -----------------------------------------------------------------------
 // printing the bbl.
 
-void BibEntry::out_something(field_pos p, std::string s) {
+void BibEntry::out_something(field_pos p, const std::string &s) {
     bbl.push_back_cmd("cititem");
     bbl.push_back_braced(bib_xml_name[p]);
     bbl.push_back_braced(s);
@@ -1698,7 +1691,7 @@ void BibEntry::out_something(field_pos p, std::string s) {
 
 // output a generic field as \cititem{k}{value}
 // If no value, and w>0, a default value will be used.
-void BibEntry::out_something(field_pos p, int w) {
+void BibEntry::out_something(field_pos p, size_t w) {
     std::string s = all_fields[p];
     if (s.empty()) s = my_constant_table[w - 1];
     out_something(p, s);

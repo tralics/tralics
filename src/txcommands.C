@@ -32,7 +32,7 @@ namespace tcommands {
 
 // Initialises the translator. The argument is the name of
 // the document element.
-void Parser::init_all(std::string doc_elt) {
+void Parser::init_all(const std::string &doc_elt) {
     open_paren_xml  = new Xml(Istring("("));
     close_paren_xml = new Xml(Istring(")"));
     the_page_xml    = new Xml(Istring("thepage"), nullptr);

@@ -59,7 +59,7 @@ public:
 
 class Bibliography {
 private:
-    std::string              bib_style;               // The bibliography style
+    std::string              bib_style{"plain"};      // The bibliography style
     std::string              bib_cmd;                 // The bibliography command
     Xml *                    biblio_loc{nullptr};     // location of biblio in the XML tree
     std::vector<std::string> biblio_src;              // database file names
@@ -68,7 +68,6 @@ private:
     int                      last_bid{-1};            // current number for unique_bid
 public:
     std::vector<CitationItem> citation_table;
-    Bibliography();
 
 public:
     void               dump(Buffer &b);
@@ -210,12 +209,12 @@ class BibEntry {
     int          cur_year{0};                  // current year, if year field can be parsed
     std::string  lab1, lab2, lab3;             // two temporaries.
     size_t       id{0};
-    Istring      unique_id;
+    Istring      unique_id{""};
     bool         explicit_cit{false};
     c_primaire   main_c_type;
     c_secondaire second_c_type;
     int          first_line{-1};
-    std::string *user_fields;
+    std::string *user_fields{nullptr};
     int          is_extension;
 
 public:
@@ -232,7 +231,7 @@ private:
     void find_cnrs_type(Buffer &);
     void output_bibitem();
     void out_something(field_pos p);
-    void out_something(field_pos p, int w);
+    void out_something(field_pos p, size_t w);
     void set_explicit_cit() { explicit_cit = true; }
     auto is_empty(String s) -> bool;
     void move_to_year() { cite_key.move_to_year(); }
@@ -266,7 +265,7 @@ private:
     void work(int serial);
 
     static void handle_one_namelist(std::string &s, BibtexName &X);
-    static void out_something(field_pos p, std::string s);
+    static void out_something(field_pos p, const std::string &s);
 };
 
 class Berror {};
@@ -315,7 +314,7 @@ private:
     auto               check_val_end() -> int;
     auto               check_entry_end() -> int;
     auto               check_entry_end(int k) -> int;
-    auto               check_field_end(int what) -> int;
+    auto               check_field_end(size_t what) -> int;
     auto               cur_char() -> codepoint { return input_line[input_line_pos]; }
     void               define_a_macro(String name, String value);
     auto               find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t>;
@@ -342,30 +341,30 @@ private:
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
     void               scan_for_at();
-    auto               scan_identifier(int what) -> bool;
-    auto               scan_identifier0(int what) -> int;
+    auto               scan_identifier(size_t what) -> bool;
+    auto               scan_identifier0(size_t what) -> int;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     void               skip_space();
-    auto               wrong_first_char(codepoint c, int what) -> int;
+    auto               wrong_first_char(codepoint c, size_t what) -> int;
 
 public:
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
 
-    auto get_an_entry(size_t i) { return all_entries[i]; }
-    auto exec_bibitem(const std::string &w, const std::string &b) -> Istring;
-    void nocitestar_true() { nocitestar = true; }
-    auto implement_cit(String x, std::string w) -> int;
-    auto is_year_string(const std::string &y, bib_from from) -> String;
-    void work();
-    void read(String src, bib_from ct);
-    auto read0(Buffer &B, bib_from ct) -> bool;
-    void read1(const std::string &cur);
-    void read_ra();
-    void err_in_file(String s, bool last);
-    void err_in_name(String a, int i);
-    void boot(std::string S, bool inra);
-    void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
-    void bootagain();
+    auto        get_an_entry(size_t i) { return all_entries[i]; }
+    auto        exec_bibitem(const std::string &w, const std::string &b) -> Istring;
+    void        nocitestar_true() { nocitestar = true; }
+    auto        implement_cit(String x, std::string w) -> int;
+    auto        is_year_string(const std::string &y, bib_from from) -> String;
+    void        work();
+    void        read(String src, bib_from ct);
+    auto        read0(Buffer &B, bib_from ct) -> bool;
+    void        read1(const std::string &cur);
+    void        read_ra();
+    void        err_in_file(String s, bool last);
+    static void err_in_name(String a, int i);
+    void        boot(std::string S, bool inra);
+    void        enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
+    void        bootagain();
 
     static void bad_year(const std::string &given, String wanted);
     static void err_in_entry(String a);
@@ -377,20 +376,16 @@ public:
 class Bbl {
 private:
     Buffer        B;
-    std::fstream *file;
+    std::fstream *file{nullptr};
     std::string   name;
     LinePtr       ptr;
-    bool          too_late;
+    bool          too_late{false};
 
 public:
     friend class BibEntry;
     friend class BblAndTty;
-    Bbl() {
-        file     = nullptr;
-        too_late = false;
-    }
-    auto get_lines() -> LinePtr & { return ptr; }
 
+    auto get_lines() -> LinePtr & { return ptr; }
     void newline();
     void push_back(String s) { B.push_back(s); }
     void push_back(const std::string &s) { B.push_back(s); }
