@@ -89,7 +89,7 @@ auto CitationItem::get_bid() -> Istring {
 // the arguments of the function are foot and Knuth; the `p.25' will be
 // considered elsewhere.
 auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
-    int     n   = the_bibliography.find_citation_item(type, ref, true);
+    auto    n   = *the_bibliography.find_citation_item(type, ref, true);
     Istring id  = the_bibliography.citation_table[static_cast<size_t>(n)].get_bid();
     Xml *   res = new Xml(np_ref, nullptr);
     res->get_id().add_attribute(np_target, id);
@@ -576,13 +576,13 @@ auto CitationItem::match_star(Istring A) -> bool { return key == A && !is_solved
 // the first two arguments are the Istrings associated to foot and Knuth.
 // If not found, we may insert a new item (normal case),
 // or return -1 (in case of failure)
-auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) -> int {
+auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) -> std::optional<size_t> {
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
-        if (citation_table[i].match(key, from)) return static_cast<int>(i);
-    if (!insert) return -1;
+        if (citation_table[i].match(key, from)) return i;
+    if (!insert) return {};
     citation_table.emplace_back(key, from);
-    return static_cast<int>(n);
+    return n;
 }
 
 // This is like the function above. In the case \footcite{Kunth},
@@ -591,7 +591,7 @@ auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) ->
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.
 auto Bibliography::find_citation_star(Istring from, Istring key) -> size_t {
-    if (int n = find_citation_item(from, key, false); n >= 0) return static_cast<size_t>(n);
+    if (auto n = find_citation_item(from, key, false)) return *n;
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
         if (citation_table[i].match_star(key)) return i;
@@ -963,7 +963,7 @@ void Parser::solve_cite(bool user) {
     if (F)
         n = B.find_citation_star(from, key);
     else
-        n = B.find_citation_item(from, key, true);
+        n = *B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[static_cast<size_t>(n)];
     if (CI.is_solved()) {
         err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();

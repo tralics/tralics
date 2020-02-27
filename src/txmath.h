@@ -267,7 +267,7 @@ class MathHelper {
     Xid                      cur_texmath_id; // Id of current texmath
     int                      math_env_ctr;   // two counters for environments
     int                      all_env_ctr;
-    int                      last_ml_pos;
+    size_t                   last_ml_pos{0};
     int                      eqnum_status; // how many numbers for this equation?
 public:
     MathHelper() {

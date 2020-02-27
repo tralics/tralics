@@ -51,7 +51,7 @@ class Stack {
     std::vector<StackSlot> Table;
 
 private:
-    int                    last_xid; // id of the last
+    size_t                 last_xid; // id of the last
     int                    xid_boot;
     Istring                cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes

@@ -74,7 +74,7 @@ public:
     void               dump_bibtex();
     void               dump_data(Buffer &b);
     auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
-    auto               find_citation_item(Istring from, Istring key, bool insert) -> int;
+    auto               find_citation_item(Istring from, Istring key, bool insert) -> std::optional<size_t>;
     auto               find_citation_star(Istring from, Istring key) -> size_t;
     [[nodiscard]] auto get_cmd() const -> std::string { return bib_cmd; }
     [[nodiscard]] auto get_location() const -> Xml * { return biblio_loc; }

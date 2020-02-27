@@ -203,7 +203,7 @@ class TexOutStream {
 
 public:
     TexOutStream();
-    void               close(int chan);
+    void               close(size_t chan);
     void               open(int chan, const std::string &file_name);
     [[nodiscard]] auto is_open(size_t i) const -> bool { return write_open[i]; }
     void               write(size_t chan, const std::string &s) { *(write_file[chan]) << s; }

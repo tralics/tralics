@@ -50,7 +50,7 @@ TexOutStream::TexOutStream() {
 }
 
 // This closes an output channel.
-void TexOutStream::close(int chan) {
+void TexOutStream::close(size_t chan) {
     if (chan < 0 || chan > max_openout) return; // this cannot happen
     if (write_open[chan]) {
         std::fstream *F = write_file[chan];
