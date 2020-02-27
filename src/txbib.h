@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txinline.h"
+#include <optional>
 
 // This is the unique identifier of a bibliography element
 // from the bibtex point of view. If used, a unique id (an integer will be
@@ -127,12 +128,12 @@ public:
 
 class Bchar {
 public:
-    int         first; // index of first char
-    int         last;  // index of one-after-last char
+    size_t      first; // index of first char
+    size_t      last;  // index of one-after-last char
     bchar_type *table;
 
 public:
-    void init(int i, int j) {
+    void init(size_t i, size_t j) {
         first = i;
         last  = j;
     }
@@ -145,19 +146,19 @@ public:
     void               print_first_name(Buffer &B1, Buffer &B2, Buffer &B3);
     void               make_key(bool sw, Buffer &B);
     void               remove_junk();
-    [[nodiscard]] auto find_a_lower() const -> int;
-    [[nodiscard]] auto find_a_space() const -> int;
+    [[nodiscard]] auto find_a_lower() const -> size_t;
+    [[nodiscard]] auto find_a_space() const -> size_t;
     void               invent_spaces();
-    void               find_a_comma(int &first_c, int &second_c, int &howmany) const;
+    void               find_a_comma(size_t &first_c, size_t &second_c, size_t &howmany) const;
 
 private:
     void               make_key_aux(bool sw, Buffer &B);
-    auto               is_junk(int i) -> bool;
-    [[nodiscard]] auto like_space(int i) const -> bool {
+    auto               is_junk(size_t i) -> bool;
+    [[nodiscard]] auto like_space(size_t i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dash;
     }
-    [[nodiscard]] auto like_special_space(int i) const -> bool {
+    [[nodiscard]] auto like_special_space(size_t i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dot;
     }
@@ -165,10 +166,10 @@ private:
         bchar_type b = table[first];
         return b == bct_normal || b == bct_cmd || b == bct_brace || b == bct_extended;
     }
-    auto is_name_start(int i) -> bool;
-    auto print_for_key(Buffer &X) -> int;
-    auto special_print(Buffer &X, bool sw) -> int;
-    auto print(Buffer &X) -> int;
+    auto is_name_start(size_t i) -> bool;
+    auto print_for_key(Buffer &X) -> size_t;
+    auto special_print(Buffer &X, bool sw) -> size_t;
+    auto print(Buffer &X) -> size_t;
 };
 
 // In the case of a name like  `Carrasco, J.', num_tokens will be 2,
@@ -317,15 +318,15 @@ private:
     auto               check_field_end(int what) -> int;
     auto               cur_char() -> codepoint { return input_line[input_line_pos]; }
     void               define_a_macro(String name, String value);
-    auto               find_a_macro(Buffer &name, bool insert, String xname, String val) -> int;
+    auto               find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t>;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
     auto               get_class(codepoint c) -> id_type { return id_class[c.value]; }
     void               handle_multiple_entries(BibEntry *Y);
     void               kill_the_lists();
-    auto               look_at_macro(const Buffer &name) -> int;
-    auto               look_at_macro(int h, String name) -> int;
+    auto               look_at_macro(const Buffer &name) -> std::optional<size_t>;
+    auto               look_at_macro(int h, String name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].set_default_value(); }
     void               mac_set_val(size_t X, std::string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;

@@ -87,7 +87,7 @@ public:
     void               dump();
     void               dump_xml_table();
     auto               document_element() -> Xml * { return Table[0].obj; }
-    auto               elt_from_id(int n) -> Xml * { return enames[n]; }
+    auto               elt_from_id(size_t n) { return enames[n]; }
     void               end_module();
     auto               fetch_by_id(int n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
@@ -99,7 +99,7 @@ public:
     [[nodiscard]] auto first_non_empty() const -> const StackSlot &;
     void               fonts0(name_positions x);
     static auto        fonts1(name_positions x) -> Xml *;
-    auto               get_att_list(int k) -> AttList & { return attributes[k]; }
+    auto               get_att_list(size_t k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
     auto               get_cur_par() -> Xml *;
     auto               get_father() -> Xml *;

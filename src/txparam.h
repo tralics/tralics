@@ -40,7 +40,7 @@ public:
     ParamDataList(std::string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(const ParamDataSlot &x) { data.push_back(x); }
-    [[nodiscard]] auto size() const -> int { return data.size(); }
+    [[nodiscard]] auto size() const { return data.size(); }
     void               keys_to_buffer(Buffer &B) const;
     void               reset() { data = std::vector<ParamDataSlot>(); }
 };

@@ -26,7 +26,7 @@ namespace {
 
 namespace io_ns {
     void print_ascii(std::ostream &fp, uchar c);
-    auto how_many_bytes(uchar C) -> int;
+    auto how_many_bytes(char C) -> size_t;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
     void set_enc_param(int enc, int pos, int v);
@@ -257,7 +257,8 @@ auto Buffer::next_utf8_byte() -> uchar {
 // given the first byte. Returns 0 in case of error
 // Note: max Unicode value is 10FFFF. this is represented by F48FBFBF
 // if the first 3 bits are set, y is 0, 1, 2 3 or 4 plus 16.
-auto io_ns::how_many_bytes(uchar C) -> int {
+auto io_ns::how_many_bytes(char c) -> size_t {
+    auto C = static_cast<uchar>(c);
     if (C < 128) return 1;       // ascii
     if ((C >> 5) == 6) return 2; // 2 bytes
     if ((C >> 5) != 7) return 0; // cannot start with 10

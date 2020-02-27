@@ -118,8 +118,8 @@ public:
     void               set_nbargs(int n) { nbargs = n; }
     void               set_type(def_type n) { type = n; }
     [[nodiscard]] auto is_same(const Macro &aux) const -> bool;
-    auto               operator[](int n) const -> const TokenList & { return delimiters[n]; }
-    void               set_delimiters(int k, TokenList L) { delimiters[k] = std::move(L); }
+    auto               operator[](size_t n) const -> const TokenList & { return delimiters[n]; }
+    void               set_delimiters(size_t k, TokenList L) { delimiters[k] = std::move(L); }
     void               correct_type();
 };
 

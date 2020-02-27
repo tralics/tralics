@@ -107,7 +107,7 @@ private:
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
     [[nodiscard]] auto get_projet_val() const -> std::string { return the_projetval; }
     auto               get_ur_val() -> std::string { return the_url_val; }
-    [[nodiscard]] auto is_pos_par(int k) const -> bool { return eqtb_int_table[k].get_val() > 0; }
+    [[nodiscard]] auto is_pos_par(size_t k) const { return eqtb_int_table[k].get_val() > 0; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr(); }
     void               see_cs_token(Token T) {
@@ -196,7 +196,7 @@ public:
     void               fp_send_one_arg(TokenList &res);
     [[nodiscard]] auto get_scanner_status() const -> scan_stat { return scanner_status; }
     [[nodiscard]] auto get_long_state() const -> l_state { return long_state; }
-    [[nodiscard]] auto has_letter_catcode(int x) const -> bool { return get_catcode(x) == letter_catcode; }
+    [[nodiscard]] auto has_letter_catcode(size_t x) const { return get_catcode(x) == letter_catcode; }
     void               init_all(std::string doc_elt);
     void               load_latex();
     auto               read_arg() -> TokenList;

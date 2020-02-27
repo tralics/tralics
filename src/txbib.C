@@ -13,6 +13,7 @@
 #include "txbib.h"
 #include "txparser.h"
 #include <algorithm>
+#include <fmt/format.h>
 
 namespace {
     String my_constant_table[3];
@@ -21,7 +22,6 @@ namespace {
     Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
     Buffer                   CB;
     Bibtex *                 the_bibtex;
-    const int                not_found         = -1;
     bool                     distinguish_refer = false;
     std::string              cur_entry_name; // name of entry under construction.
     int                      cur_entry_line; // position of entry in source file
@@ -43,12 +43,12 @@ namespace bib_ns {
     void bib_explain();
     void handle_special_string(const std::string &s, Buffer &A, Buffer &B);
     auto type_to_string(entry_type x) -> name_positions;
-    auto is_noopsort(const std::string &s, int i) -> bool;
+    auto is_noopsort(const std::string &s, size_t i) -> bool;
 } // namespace bib_ns
 using namespace bib_ns;
 
 namespace io_ns {
-    auto how_many_bytes(uchar) -> int;
+    auto how_many_bytes(char) -> size_t;
 } // namespace io_ns
 
 String bib_xml_name[] = {"bcrossref",     "bkey",         "baddress", "bauthors", "bbooktitle",   "bchapter", "bedition",      "beditors",
@@ -636,16 +636,12 @@ void Bbl::newline() {
 }
 
 // Returns the index of the macro named name if it exists,  not_found otherwise.
-auto Bibtex::look_at_macro(const Buffer &name) -> int {
-    int h = name.hashcode(bib_hash_mod);
-    return look_at_macro(h, name.c_str());
-}
+auto Bibtex::look_at_macro(const Buffer &name) -> std::optional<size_t> { return look_at_macro(name.hashcode(bib_hash_mod), name.c_str()); }
 
-auto Bibtex::look_at_macro(int h, String name) -> int {
-    size_t n = all_macros.size();
-    for (size_t i = 0; i < n; i++)
-        if (all_macros[i].is_same(h, name)) return static_cast<int>(i);
-    return not_found;
+auto Bibtex::look_at_macro(int h, String name) -> std::optional<size_t> {
+    for (size_t i = 0; i < all_macros.size(); i++)
+        if (all_macros[i].is_same(h, name)) return i;
+    return {};
 }
 
 // This looks for a macro named name or xname. If the macro is not found
@@ -653,12 +649,12 @@ auto Bibtex::look_at_macro(int h, String name) -> int {
 // the macro is initialised to val.
 // [ if xname true, we define a system macro,
 //   otherwise we define/redefine user one]
-auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> int {
+auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
     if (xname != nullptr) name << bf_reset << xname;
-    int h   = name.hashcode(bib_hash_mod);
-    int res = look_at_macro(h, name.c_str());
-    if (res >= 0 || !insert) return res;
-    res = static_cast<int>(all_macros.size());
+    int  h   = name.hashcode(bib_hash_mod);
+    auto lfm = look_at_macro(h, name.c_str());
+    if (lfm || !insert) return lfm;
+    auto res = all_macros.size();
     if (xname != nullptr)
         all_macros.emplace_back(h, xname, val);
     else
@@ -1259,8 +1255,8 @@ auto Buffer::special_convert(bool init) -> std::string {
     biblio_buf1.reset();
     bool space = true;
     for (;;) {
-        unsigned char c = next_char();
-        if (c == 0U) break;
+        auto c = next_char();
+        if (c == 0) break;
         if (is_space(c)) {
             if (!space) {
                 biblio_buf1.push_back(' ');
@@ -1335,12 +1331,12 @@ void Bibtex::read_one_field(bool store) {
     } else {
         bool k = scan_identifier(0);
         if (store && !k) {
-            int macro = find_a_macro(token_buf, false, nullptr, nullptr);
-            if (macro == not_found) {
+            auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
+            if (!macro) {
                 err_in_file("", false);
                 log_and_tty << "undefined macro " << token_buf << ".\n";
             } else
-                field_buf << all_macros[macro].get_value();
+                field_buf << all_macros[*macro].get_value();
         }
     }
 }
@@ -1436,7 +1432,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
     }
     start_comma = true;
     skip_space();
-    if (cur_char() == right_outer_delim) return;
+    if (cur_char() == codepoint(right_outer_delim)) return;
     if (scan_identifier(3)) return;
     field_pos where = fp_unknown;
     bool      store = false;
@@ -1492,7 +1488,7 @@ void Bibtex::parse_one_item() {
     } else if (cn == type_string) {
         k = scan_identifier(2);
         if (k) return;
-        int X = find_a_macro(token_buf, true, nullptr, nullptr);
+        auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
         read_field(true);
         mac_set_val(X, field_buf.special_convert(false));
@@ -1517,7 +1513,7 @@ void Bibtex::parse_one_item() {
     }
     codepoint c = cur_char();
     if (c == ')' || c == '}') advance();
-    if (c != right_outer_delim) err_in_file("bad end delimiter", true);
+    if (c != codepoint(right_outer_delim)) err_in_file("bad end delimiter", true);
 }
 
 // When we see crossref=y, we expect to see entry Y later
@@ -1561,15 +1557,15 @@ void BibEntry::copy_from(BibEntry *Y, int k) {
         //   std::cout<< bib_xml_name[i] << all_fields[i].empty() << Y->all_fields[i] <<"\n";
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
-    int n = the_main->get_bibtex_fields().size();
-    for (int i = 0; i < n; i++)
+    auto n = the_main->get_bibtex_fields().size();
+    for (size_t i = 0; i < n; i++)
         if (user_fields[i].empty()) user_fields[i] = Y->user_fields[i];
 }
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {
     CitationKey s   = Y->cite_key;
-    int         len = all_entries.size();
-    for (int i = 0; i < len; i++)
+    auto        len = all_entries.size();
+    for (size_t i = 0; i < len; i++)
         if (all_entries[i]->cite_key.is_similar(s)) {
             BibEntry *X = all_entries[i];
             if (X == Y) continue;
@@ -1593,25 +1589,25 @@ auto xless(BibEntry *A, BibEntry *B) -> bool { return A->Sort_label() < B->Sort_
 
 // This is the main function.
 void Bibtex::work() {
-    int n = all_entries.size();
+    auto n = all_entries.size();
     if (n == 0) return;
     if (bbl.non_empty_buf()) bbl.newline();
     boot_ra_prefix("ABC");
     all_entries_table.reserve(n);
-    for (int i = 0; i < n; i++) all_entries[i]->un_crossref();
-    for (int i = 0; i < n; i++) all_entries[i]->work(i);
-    int nb_entries = all_entries_table.size();
-    main_ns::log_or_tty << "Seen " << nb_entries << " bibliographic entries.\n";
+    for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
+    for (size_t i = 0; i < n; i++) all_entries[i]->work(static_cast<int>(i));
+    auto nb_entries = all_entries_table.size();
+    main_ns::log_or_tty << fmt::format("Seen {} bibliographic entries.\n", nb_entries);
     // Sort the entries
     std::sort(all_entries_table.begin(), all_entries_table.end(), xless);
     std::string previous_label;
     int         last_num = 0;
-    for (int i = 0; i < nb_entries; i++) all_entries_table[i]->forward_pass(previous_label, last_num);
+    for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->forward_pass(previous_label, last_num);
     int next_extra = 0;
-    for (int i = nb_entries - 1; i >= 0; i--) all_entries_table[i]->reverse_pass(next_extra);
+    for (size_t i = nb_entries; i > 0; i--) all_entries_table[i - 1]->reverse_pass(next_extra);
     if (want_numeric)
-        for (int i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(i + 1);
-    for (int i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
+        for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(static_cast<int>(i) + 1);
+    for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
     bbl.finish();
 }
 
@@ -1683,10 +1679,10 @@ void BibEntry::numeric_label(int i) {
 BibEntry::BibEntry() : label(""), sort_label(""), lab1(""), lab2(""), lab3(""), unique_id("") {
     for (auto &all_field : all_fields) all_field = "";
     std::vector<Istring> &Bib = the_main->get_bibtex_fields();
-    int                   n   = Bib.size();
+    auto                  n   = Bib.size();
     if (n != 0) {
         user_fields = new std::string[n];
-        for (int i = 0; i < n; i++) user_fields[i] = "";
+        for (size_t i = 0; i < n; i++) user_fields[i] = "";
     }
 }
 
@@ -1753,7 +1749,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
     if (is_extension != 0)
-        my_name = the_main->get_bibtex_extensions()[is_extension - 1].c_str();
+        my_name = the_main->get_bibtex_extensions()[static_cast<size_t>(is_extension - 1)].c_str();
     else
         my_name = the_names[type_to_string(type_int)].c_str();
     bbl.push_back_braced(my_name);
@@ -1779,13 +1775,13 @@ void BibEntry::call_type() {
         bbl.newline();
     }
     std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
-    int                   additional = Bib.size();
-    for (int i = 0; i < additional; i++) {
-        std::string s = user_fields[i];
-        if (!s.empty()) {
+    auto                  additional = Bib.size();
+    for (size_t i = 0; i < additional; i++) {
+        auto ss = user_fields[i];
+        if (!ss.empty()) {
             bbl.push_back_cmd("cititem");
             bbl.push_back_braced(Bib[i].c_str());
-            bbl.push_back_braced(s);
+            bbl.push_back_braced(ss);
             bbl.newline();
         }
     }
@@ -1903,19 +1899,19 @@ void BibEntry::call_type_special() {
 // gives \href{foobar}{\url{foo\allowbreak bar}}
 // We handle here the first string
 auto Buffer::remove_space(const std::string &x) -> std::string {
-    int n = x.size();
+    auto n = x.size();
     reset();
-    for (int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
         if (x[i] != ' ') push_back(x[i]);
     return to_string();
 }
 
 // We create here the second string
 auto Buffer::insert_break(const std::string &x) -> std::string {
-    int n = x.size();
+    auto n = x.size();
     reset();
     push_back("{\\url{");
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         if (x[i] == ' ' && main_ns::bib_allow_break) push_back("\\allowbreak");
         push_back(x[i]);
     }
@@ -1941,7 +1937,7 @@ void BibEntry::sort_author(bool au) {
 // In case of Lo{\"i}c, repeated calls will set head() to L, o, { and c.
 // It works also in the case of non-ascii characters
 void Buffer::next_bibtex_char() {
-    uchar c = head();
+    auto c = head();
     if (c == 0) return;
     if (c == '\\') {
         ptr++;
@@ -1951,7 +1947,7 @@ void Buffer::next_bibtex_char() {
         if (ptr > wptr) ptr = wptr;
         return;
     }
-    int n = io_ns::how_many_bytes(c);
+    auto n = io_ns::how_many_bytes(c);
     if (n > 1) {
         ptr += n;
         if (ptr > wptr) ptr = wptr;
@@ -1969,8 +1965,8 @@ void Buffer::next_bibtex_char() {
 void Buffer::skip_over_brace() {
     int bl = 0;
     for (;;) {
-        uchar c = head();
-        if (c == 0U) return;
+        auto c = head();
+        if (c == 0) return;
         ptr++;
         if (c == '\\') {
             if (head() == 0) return;
@@ -2116,8 +2112,8 @@ void BibEntry::presort(int serial) {
 
 // True if \sortnoop, \SortNoop, \noopsort plus brace or space
 // First char to test is at i+1
-auto bib_ns::is_noopsort(const std::string &s, int i) -> bool {
-    int n = s.size();
+auto bib_ns::is_noopsort(const std::string &s, size_t i) -> bool {
+    auto n = s.size();
     if (i + 10 >= n) return false;
     if (s[i + 10] != '{' && !is_space(s[i + 10])) return false;
     if (s[i + 1] != '\\') return false;
@@ -2134,10 +2130,10 @@ auto bib_ns::is_noopsort(const std::string &s, int i) -> bool {
 // Brace followed by Uppercase or dollar
 // Also, handles {\noopsort foo} removes the braces and the command.
 void Buffer::special_title(std::string s) {
-    int level  = 0;
-    int blevel = 0;
-    int n      = s.size();
-    for (int i = 0; i < n; i++) {
+    int  level  = 0;
+    int  blevel = 0;
+    auto n      = s.size();
+    for (size_t i = 0; i < n; i++) {
         char c = s[i];
         if (c == '\\') {
             push_back(c);
@@ -2182,7 +2178,7 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     biblio_buf4.reset();
     biblio_buf5.reset();
     name_buffer.normalise_for_bibtex(src.c_str());
-    int          n     = name_buffer.size() + 1;
+    auto         n     = name_buffer.size() + 1;
     auto *       table = new bchar_type[n];
     NameSplitter W(table);
     name_buffer.fill_table(table);
@@ -2200,7 +2196,7 @@ void Buffer::normalise_for_bibtex(String s) {
     reset();
     push_back(' '); // make sure we can always backup one char
     for (;;) {
-        unsigned char c = *s;
+        auto c = *s;
         if (c == 0) {
             reset_ptr();
             return;
@@ -2234,18 +2230,18 @@ void Buffer::normalise_for_bibtex(String s) {
 void Buffer::fill_table(bchar_type *table) {
     ptr = 0;
     for (;;) {
-        int   i = ptr;
-        uchar c = head();
+        auto i = ptr;
+        auto c = head();
         if (c == 0U) {
             table[i] = bct_end;
             return;
         }
         ptr++;
-        if (c >= 128 + 64) {
+        if (static_cast<uchar>(c) >= 128 + 64) {
             table[i] = bct_extended;
             continue;
         }
-        if (c >= 128) {
+        if (static_cast<uchar>(c) >= 128) {
             table[i] = bct_continuation;
             continue;
         }
@@ -2266,12 +2262,12 @@ void Buffer::fill_table(bchar_type *table) {
             continue;
         }
         if (c == '&') {
-            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", i);
+            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", static_cast<int>(i));
             table[i] = bct_bad;
             continue;
         }
         if (c == '}') {
-            the_bibtex->err_in_name("too many closing braces", i);
+            the_bibtex->err_in_name("too many closing braces", static_cast<int>(i));
             table[i] = bct_bad;
             continue;
         }
@@ -2283,7 +2279,7 @@ void Buffer::fill_table(bchar_type *table) {
             c = head();
             if (!is_accent_char(c)) {
                 table[i] = bct_bad;
-                the_bibtex->err_in_name("commands allowed only within braces", i);
+                the_bibtex->err_in_name("commands allowed only within braces", static_cast<int>(i));
                 continue;
             }
             if (is_letter(at(ptr + 1))) {
@@ -2297,7 +2293,7 @@ void Buffer::fill_table(bchar_type *table) {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptr++;
-                the_bibtex->err_in_name("bad accent construct", i);
+                the_bibtex->err_in_name("bad accent construct", static_cast<int>(i));
                 continue;
             }
             at(ptr + 1) = c;
@@ -2305,12 +2301,12 @@ void Buffer::fill_table(bchar_type *table) {
             at(ptr - 1) = '{';
             the_log << lg_start << "+bibchanged " << data() << lg_end;
         }
-        int bl   = 1;
-        int j    = i;
+        int  bl  = 1;
+        auto j   = i;
         table[i] = bct_brace;
         for (;;) {
             if (head() == 0) {
-                the_bibtex->err_in_name("this cannot happen!", j);
+                the_bibtex->err_in_name("this cannot happen!", static_cast<int>(j));
                 at(j)    = 0;
                 table[j] = bct_end;
                 wptr     = j;
@@ -2330,14 +2326,14 @@ void Buffer::fill_table(bchar_type *table) {
 
 // This handles all the names in the list.
 void NameSplitter::handle_the_names() {
-    bool is_first_name = true;
-    int  serial        = 1;
-    int  pos           = 1; // there is a space at position 0
+    bool   is_first_name = true;
+    int    serial        = 1;
+    size_t pos           = 1; // there is a space at position 0
     main_data.init(table);
     for (;;) {
         name_buffer.ptr   = pos;
         bool is_last_name = name_buffer.find_and(table);
-        int  k            = name_buffer.ptr;
+        auto k            = name_buffer.ptr;
         main_data.init(pos, k);
         handle_one_name(is_first_name, is_last_name, serial);
         if (is_last_name) return;
@@ -2357,7 +2353,7 @@ auto Buffer::find_and(const bchar_type *table) -> bool {
 }
 
 // True if this is an `and'
-auto Buffer::is_and(int k) -> bool {
+auto Buffer::is_and(size_t k) -> bool {
     char c = at(k);
     if (c != 'a' && c != 'A') return false;
     c = at(k + 1);
@@ -2369,9 +2365,9 @@ auto Buffer::is_and(int k) -> bool {
 }
 
 auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
-    int i = Y.first;
-    int j = Y.last;
-    for (int k = i; k < j; k++)
+    auto i = Y.first;
+    auto j = Y.last;
+    for (auto k = i; k < j; k++)
         if (Y.table[k] != bct_bad) X.push_back(name_buffer[k]);
     return X;
 }
@@ -2386,9 +2382,9 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     last_name.init(table);
     jr_name.init(table);
     main_data.remove_junk();
-    int F  = main_data.first;
-    int L  = main_data.last;
-    int fc = 0, lc = 0, hm = 0;
+    auto   F  = main_data.first;
+    auto   L  = main_data.last;
+    size_t fc = 0, lc = 0, hm = 0;
     main_data.find_a_comma(fc, lc, hm);
     if (hm >= 2) {
         last_name.init(F, fc);
@@ -2402,7 +2398,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
         first_name.init(fc + 1, L);
         last_name.init(F, fc);
     } else { // no comma
-        int k = main_data.find_a_lower();
+        auto k = main_data.find_a_lower();
         if (k == L) {
             k = main_data.find_a_space();
             if (k == L) {
@@ -2456,8 +2452,8 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     biblio_buf4 << last_name << " " << jr_name << " ";
 }
 
-void Bchar::find_a_comma(int &first_c, int &second_c, int &howmany) const {
-    for (int i = first; i < last; i++)
+void Bchar::find_a_comma(size_t &first_c, size_t &second_c, size_t &howmany) const {
+    for (auto i = first; i < last; i++)
         if (table[i] == bct_comma) {
             if (howmany == 0) first_c = i;
             if (howmany == 1) second_c = i;
@@ -2465,15 +2461,15 @@ void Bchar::find_a_comma(int &first_c, int &second_c, int &howmany) const {
         }
 }
 
-auto Bchar::find_a_space() const -> int {
-    for (int i = last - 1; i >= first; i--)
-        if (like_special_space(i)) return i;
+auto Bchar::find_a_space() const -> size_t {
+    for (auto i = last; i > first; i--)
+        if (like_special_space(i - 1)) return i - 1;
     return last;
 }
 
 //
-auto Bchar::find_a_lower() const -> int {
-    for (int i = first; i < last - 1; i++) {
+auto Bchar::find_a_lower() const -> size_t {
+    for (auto i = first; i < last - 1; i++) {
         if (!like_space(i)) continue;
         char c = '0';
         if (table[i + 1] == bct_extended) continue; // too complicated a case
@@ -2485,13 +2481,13 @@ auto Bchar::find_a_lower() const -> int {
 }
 
 void Bchar::invent_spaces() {
-    for (int i = first; i < last; i++)
+    for (auto i = first; i < last; i++)
         if (table[i] == bct_normal && name_buffer.insert_space_here(i)) table[i] = bct_dot;
 }
 
 // In J.G. Grimm,only the first dot matches.
-auto Buffer::insert_space_here(int k) const -> bool {
-    if (k <= 0) return false;
+auto Buffer::insert_space_here(size_t k) const -> bool {
+    if (k == 0) return false;
     if (at(k) != '.') return false;
     if (!is_upper_case(at(k + 1))) return false;
     if (!is_upper_case(at(k - 1))) return false;
@@ -2499,7 +2495,7 @@ auto Buffer::insert_space_here(int k) const -> bool {
 }
 
 // Returns true if character can be removed (between names)
-auto Bchar::is_junk(int i) -> bool {
+auto Bchar::is_junk(size_t i) -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
@@ -2513,15 +2509,15 @@ auto Bchar::is_junk(int i) -> bool {
 // Remove initial and final junk (space, dash, tilde).
 void Bchar::remove_junk() {
     if (empty()) return;
-    for (int i = first; i < last; i++)
+    for (auto i = first; i < last; i++)
         if (is_junk(i))
             first = i + 1;
         else
             break;
-    for (int j = last - 1; j >= first; j--) {
-        if (table[j] == bct_continuation || table[j] == bct_bad) continue;
-        if (is_junk(j))
-            last = j;
+    for (auto j = last; j > first; j--) {
+        if (table[j - 1] == bct_continuation || table[j - 1] == bct_bad) continue;
+        if (is_junk(j - 1))
+            last = j - 1;
         else
             break;
     }
@@ -2538,15 +2534,15 @@ auto NameSplitter::want_handle_key(int s, bool last) -> bool {
 auto NameSplitter::is_this_other() -> bool {
     if (!first_name.empty()) return false;
     if (!jr_name.empty()) return false;
-    int a = last_name.first;
-    int b = last_name.last;
+    auto a = last_name.first;
+    auto b = last_name.last;
     return b - a == 6 && strncmp(name_buffer.c_str() + a, "others", 6) == 0;
 }
 
 // We use the fact that first cannot be zero
 void Bchar::make_key(bool sw, Buffer &B) {
-    int        oldfirst = first;
-    int        w        = first - 1;
+    auto       oldfirst = first;
+    auto       w        = first - 1;
     bchar_type old      = table[w];
     table[w]            = bct_space;
     make_key_aux(sw, B);
@@ -2556,7 +2552,7 @@ void Bchar::make_key(bool sw, Buffer &B) {
 
 void Bchar::make_key_aux(bool sw, Buffer &B) {
     int k = 0;
-    for (int i = first; i < last; i++)
+    for (auto i = first; i < last; i++)
         if (is_name_start(i)) k++;
     if (k >= 3 || sw) {
         while (first < last) {
@@ -2582,7 +2578,7 @@ void Bchar::make_key_aux(bool sw, Buffer &B) {
     }
 }
 
-auto Bchar::is_name_start(int i) -> bool {
+auto Bchar::is_name_start(size_t i) -> bool {
     bchar_type A = table[i - 1];
     bchar_type B = table[i];
     if (A != bct_space && A != bct_dash && A != bct_tilde) return false;
@@ -2590,8 +2586,8 @@ auto Bchar::is_name_start(int i) -> bool {
     return true;
 }
 
-auto Bchar::print_for_key(Buffer &X) -> int {
-    int i = first;
+auto Bchar::print_for_key(Buffer &X) -> size_t {
+    auto i = first;
     while (i < last && table[i] == bct_bad) i++;
     if (i >= last) return i;
     if (table[i] == bct_brace && is_letter(name_buffer[i + 1])) {
@@ -2607,8 +2603,8 @@ auto Bchar::print_for_key(Buffer &X) -> int {
     return print(X);
 }
 
-auto Bchar::print(Buffer &X) -> int {
-    int i = first;
+auto Bchar::print(Buffer &X) -> size_t {
+    auto i = first;
     while (i < last && table[i] == bct_bad) i++;
     if (i >= last) return i;
     X.push_back(name_buffer[i]);
@@ -2620,8 +2616,8 @@ auto Bchar::print(Buffer &X) -> int {
     return i;
 }
 
-auto Bchar::special_print(Buffer &X, bool sw) -> int {
-    int i = print(X);
+auto Bchar::special_print(Buffer &X, bool sw) -> size_t {
+    auto i = print(X);
     if (sw) X.push_back('.');
     X.no_double_dot();
     return i;
@@ -2643,13 +2639,13 @@ void Bchar::print_first_name(Buffer &B1, Buffer &B2, Buffer &B3) {
     while (first < last) {
         bchar_type c = table[first];
         if (c == bct_space || c == bct_tilde || c == bct_dash || c == bct_dot) {
-            int i = special_print(B1, false);
+            auto i = special_print(B1, false);
             special_print(B2, false);
             special_print(B3, false);
             print_next = true;
             first      = i;
         } else if (print_next) {
-            int i = special_print(B1, true);
+            auto i = special_print(B1, true);
             special_print(B2, true);
             special_print(B3, true);
             print_next = false;
@@ -2663,11 +2659,11 @@ void BibEntry::normalise() {
     handle_one_namelist(all_fields[fp_author], author_data);
     handle_one_namelist(all_fields[fp_editor], editor_data);
     std::string y = all_fields[fp_year];
-    int         n = y.size();
+    auto        n = y.size();
     if (n == 0) return;
     cur_year = -1;
     int res  = 0;
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         char c = y[i];
         if (!is_digit(c)) return;
         res = res * 10 + (c - '0');
@@ -2689,7 +2685,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
     reset_ptr();
     B.reset();
     for (;;) {
-        unsigned char c = uhead();
+        auto c = uhead();
         if (c == 0U) return;
         advance();
         if (c == '|') {
@@ -2731,7 +2727,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             continue;
         }
         if (is_accent_char(c)) {
-            unsigned char C = uhead();
+            auto C = uhead();
             if (C == '{') {
                 advance();
                 C = uhead();
@@ -2994,18 +2990,18 @@ void Bibtex::boot(std::string S, bool inra) {
     if (the_main->in_ra()) want_numeric = true;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (int i = 0; i < 32; i++) id_class[i] = illegal_id_char;
-    id_class[(unsigned char)' ']  = illegal_id_char;
-    id_class[(unsigned char)'\t'] = illegal_id_char;
-    id_class[(unsigned char)'"']  = illegal_id_char;
-    id_class[(unsigned char)'#']  = illegal_id_char;
-    id_class[(unsigned char)'%']  = illegal_id_char;
-    id_class[(unsigned char)'\''] = illegal_id_char;
-    id_class[(unsigned char)'(']  = illegal_id_char;
-    id_class[(unsigned char)')']  = illegal_id_char;
-    id_class[(unsigned char)',']  = illegal_id_char;
-    id_class[(unsigned char)'=']  = illegal_id_char;
-    id_class[(unsigned char)'{']  = illegal_id_char;
-    id_class[(unsigned char)'}']  = illegal_id_char;
+    id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('\t')] = illegal_id_char;
+    id_class[static_cast<unsigned char>('"')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('#')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('%')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('\'')] = illegal_id_char;
+    id_class[static_cast<unsigned char>('(')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>(')')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>(',')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('=')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('{')]  = illegal_id_char;
+    id_class[static_cast<unsigned char>('}')]  = illegal_id_char;
     bootagain();
 }
 

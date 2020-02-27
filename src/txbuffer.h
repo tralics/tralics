@@ -161,7 +161,7 @@ public:
     void               insert_escape_char();
     void               insert_escape_char_raw();
     auto               insert_fp(const FpNum &X) -> String;
-    [[nodiscard]] auto insert_space_here(int k) const -> bool;
+    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;
     void               insert_string(const Buffer &s);
     auto               insert_break(const std::string &x) -> std::string;
     void               insert_token0(Token c);
@@ -169,7 +169,7 @@ public:
     void               interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
     void               interpret_bibtex_list();
     void               interpret_bibtex_extension_list();
-    auto               is_and(int k) -> bool;
+    auto               is_and(size_t k) -> bool;
     [[nodiscard]] auto is_begin_end() const -> int;
     auto               is_begin_something(String s) -> int;
     auto               is_begin_something(String, bool) -> int;
