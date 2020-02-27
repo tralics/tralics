@@ -12,6 +12,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 #include <unistd.h>
 
 namespace {
@@ -41,22 +42,22 @@ auto tralics_ns::make_string(String a) -> std::string {
 
 // Returns of copy of the buffer as a string.
 auto Buffer::to_string() const -> std::string {
-    int n = strlen(data());
+    auto n = strlen(data());
     the_parser.my_stats.one_more_string(n + 1);
     return std::string(data());
 }
 
 // Returns a copy, starting at k.
 auto Buffer::to_string(size_t k) const -> std::string {
-    int n = strlen(data() + k);
+    auto n = strlen(data() + k);
     the_parser.my_stats.one_more_string(n + 1);
     return std::string(data() + k);
 }
 
 // Replaces all \r by a space.
 void Buffer::no_control_M() {
-    int k = wptr;
-    for (int j = 0; j < k; j++)
+    auto k = wptr;
+    for (size_t j = 0; j < k; j++)
         if (at(j) == '\r') at(j) = ' ';
 }
 
@@ -96,7 +97,7 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c < 32)
         push_back_ent(codepoint(static_cast<char>(c)));
     else
-        push_back(c);
+        push_back(static_cast<char>(c));
 }
 
 // Converts the buffer into a string.
@@ -119,14 +120,14 @@ void Buffer::realloc(size_t s) {
 
 // Makes sure we can add n chars in the buffer
 // Note: we have wptr+1<size, so that at(wptr) can be assigned
-void Buffer::alloc(int n) {
+void Buffer::alloc(size_t n) {
     n = wptr + n + 1;
-    while (size_t(n) >= std::vector<char>::size()) resize();
+    while (std::vector<char>::size() <= n) resize();
 }
 
 // Inserts a string. Always inserts a null character at the end.
 void Buffer::push_back(String s) {
-    int n = strlen(s);
+    auto n = strlen(s);
     if (n == 0) {
         at(wptr) = 0;
         return;
@@ -136,16 +137,16 @@ void Buffer::push_back(String s) {
     wptr += n;
 }
 
-void Buffer::push_back_substring(String S, int n) {
+void Buffer::push_back_substring(String S, size_t n) {
     alloc(n);
     strncpy(data() + wptr, S, n);
     wptr += n;
     at(wptr) = 0;
 }
 
-void Buffer::push_back_substring(const std::string &S, int p, int n) {
+void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
     alloc(n);
-    for (int i = 0; i < n; i++) at(wptr + i) = S[p + i];
+    for (size_t i = 0; i < n; i++) at(wptr + i) = S[p + i];
     wptr += n;
     at(wptr) = 0;
 }
@@ -154,7 +155,7 @@ void Buffer::push_back_substring(const std::string &S, int p, int n) {
 // at least one digit is printed.
 void Buffer::push_back_int(int n) {
     static int dig[30];
-    int        k = 0;
+    size_t     k = 0;
     if (n < 0) {
         push_back('-');
         if (n > -100000000)
@@ -180,7 +181,7 @@ void Buffer::push_back_int(int n) {
     }
     while (k > 0) { // print the list
         k--;
-        push_back('0' + dig[k]);
+        push_back('0' + static_cast<char>(dig[k]));
     }
 }
 
@@ -308,8 +309,8 @@ void Buffer::lowercase() {
 
 // Converts the entire buffer to upper case
 void Buffer::uppercase() {
-    for (int j = wptr - 1; j >= 0; j--)
-        if (is_lower_case(at(j))) at(j) += 'A' - 'a';
+    for (auto j = wptr; j > 0; j--)
+        if (is_lower_case(at(j - 1))) at(j - 1) += 'A' - 'a';
 }
 
 // Replaces newline by space
@@ -349,13 +350,13 @@ auto Buffer::find_bracket() -> int {
 auto Buffer::full_brace_match() -> bool {
     int level = 0;
     for (;;) {
-        uchar c = next_char();
+        auto c = next_char();
         if (c == '{')
             level++;
         else if (c == '}') {
             level--;
             if (level == 0) return true;
-        } else if (c == 0U)
+        } else if (c == 0)
             return false;
     }
 }
@@ -366,14 +367,14 @@ auto Buffer::full_bracket_match() -> bool {
     int level = 0;
     advance();
     for (;;) {
-        uchar c = next_char();
+        auto c = next_char();
         if (c == '{')
             level++;
         else if (c == '}')
             level--;
         else if (c == ']' && level == 0)
             return true;
-        else if (c == 0U)
+        else if (c == 0)
             return false;
     }
 }
@@ -402,7 +403,7 @@ auto Buffer::next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> boo
         if (c == 0) return false;
         if (c == '$' && incat) seen_dollar = true;
         if (c == '%') {
-            com_loc = ptr;
+            com_loc = static_cast<int>(ptr);
             return false;
         }
         if (c == '\\') {
@@ -472,18 +473,18 @@ auto Buffer::push_back_newline_spec() -> bool {
 }
 
 // This returns the number of keywords in the list.
-auto Splitter::count() const -> int {
-    int n = 1;
-    for (int i = 0; i < size; i++)
+auto Splitter::count() const -> size_t {
+    size_t n = 1;
+    for (size_t i = 0; i < size; i++)
         if (S[i] == ',') n++;
     return n;
 }
 
 // This returns the next keyword
 auto Splitter::get_next_raw() -> String {
-    int p = pos;
+    auto p = pos;
     while (pos < size && S[pos] != ',') pos++;
-    int n = pos - p;
+    auto n = pos - p;
     if (pos < size && S[pos] == ',') pos++;
     if (n == 0) return "";
     Buffer &B = thebuffer;
@@ -512,7 +513,7 @@ void Splitter::extract_keyval(std::string &key, std::string &val) {
     val      = "";
     String T = get_next_raw();
     if (T[0] == 0) return;
-    int i = 0;
+    size_t i = 0;
     while ((T[i] != 0) && T[i] != '=') i++;
     if (T[i] == '=') {
         thebuffer.kill_at(i);
@@ -523,7 +524,7 @@ void Splitter::extract_keyval(std::string &key, std::string &val) {
 
 // Return the value associated to the key x, or empty string if not found.
 auto SpecialHash::find(String x) const -> std::string {
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++)
         if (key[i] == x) return value[i];
     return "";
 }
@@ -531,11 +532,11 @@ auto SpecialHash::find(String x) const -> std::string {
 // This splits the string S, then creates a hash table.
 void SpecialHash::create(String s) {
     Splitter S(s);
-    int      n = S.count();
+    auto     n = S.count();
     key.reserve(n);
     value.reserve(n);
     size = n;
-    for (int j = 0; j < size; j++) {
+    for (size_t j = 0; j < size; j++) {
         std::string a, b;
         S.extract_keyval(a, b);
         key.push_back(a);
@@ -670,7 +671,7 @@ auto Buffer::push_back(Token T) -> bool {
         codepoint c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
-            push_back(uchar(c.value + '0')); // parameter
+            push_back(static_cast<char>(c.value + '0')); // parameter
         } else if (cmd == parameter_catcode) {
             out_log(c, enc);
             out_log(c, enc);
@@ -706,7 +707,7 @@ void Buffer::insert_token(Token T, bool sw) {
             int cmd = T.cmd_val();
             if (cmd == eol_catcode) {
                 push_back('#');
-                push_back(uchar(c.value + '0')); // parameter
+                push_back(static_cast<char>(c.value + '0')); // parameter
             } else if (T.is_space_token())
                 push_back(' '); // space or newline
             else if (c.is_null())
@@ -770,10 +771,10 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
                 push_back_real_utf8(c);
         } else if (T.is_in_hash()) {
             String s  = the_parser.hash_table[T.hash_loc()];
-            int    n  = strlen(s);
+            auto   n  = strlen(s);
             bool   ok = true;
-            for (int i = 0; i < n; i++) {
-                uchar c = s[i];
+            for (size_t i = 0; i < n; i++) {
+                auto c = s[i];
                 if (c == '<' || c == '>' || c == '&' || c < 32) {
                     ok = false;
                     break;
@@ -782,7 +783,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
             if (ok)
                 push_back(s);
             else
-                for (int i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+                for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
         } else
             push_back("csname\\endcsname");
     }
@@ -804,7 +805,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
     int delta = 10;
     for (;;) {
         if (delta > unity) s = s + 0100000 - 50000; // s + 2^16/2 -10^6/2
-        push_back('0' + (s / unity));
+        push_back(static_cast<char>('0' + (s / unity)));
         s     = 10 * (s % unity);
         delta = delta * 10;
         if (s <= delta) break;
@@ -840,7 +841,7 @@ void Buffer::push_back(const Glue &x) {
 
 // Replaces all `pt' by `mu'
 void Buffer::pt_to_mu() {
-    for (int i = 0;; i++) {
+    for (size_t i = 0;; i++) {
         if (at(i) == 0) return;
         if (at(i) != 'p') continue;
         if (at(i + 1) == 't') {
@@ -946,9 +947,9 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
 void Buffer::push_back_roman(int n) {
-    int k = wptr;
+    auto k = wptr;
     push_back_Roman(n);
-    for (size_t i = k; i < wptr; i++) at(i) += 'a' - 'A';
+    for (auto i = k; i < wptr; i++) at(i) += 'a' - 'A';
 }
 
 // Adds n as roman upper case.
@@ -1010,7 +1011,7 @@ void Buffer::push_back_Roman(int n) {
 
 // True is s is at ptr. If so, updates ptr
 auto Buffer::is_here(String s) -> bool {
-    int n = strlen(s);
+    auto n = strlen(s);
     if (strncmp(data() + ptr, s, n) != 0) return false;
     ptr += n;
     return true;
@@ -1018,9 +1019,9 @@ auto Buffer::is_here(String s) -> bool {
 
 // True if this line contains only a comment
 auto Buffer::tex_comment_line() const -> bool {
-    int j = 0;
+    size_t j = 0;
     for (;;) {
-        uchar c = at(j);
+        auto c = at(j);
         if (c == 0) return false;
         if (c == '%') return true;
         if (!is_space(c)) return false;
@@ -1033,15 +1034,15 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
     String s   = strstr(data(), cmd);
     if (s == nullptr) return false;
-    int k = s - data();
-    for (int j = 0; j < k; j++)
+    auto k = static_cast<size_t>(s - data());
+    for (size_t j = 0; j < k; j++)
         if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
     push_back("{}");                                        //  make sure we have braces
     k += strlen(cmd);                                       // skip command name
     while (at(k) == ' ') ++k;                               // skip spaces
     if (at(k) == '[') {
-        int cur_len = size() - 2;
-        int cur_k   = k;
+        auto cur_len = size() - 2;
+        auto cur_k   = k;
         while (k < cur_len && at(k) != ']') ++k;
         if (at(k) == ']')
             ++k;
@@ -1049,14 +1050,14 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
             k = cur_k;
     }
     while (at(k) != '{') k++;
-    int p = k;
+    auto p = k;
     while (at(p) != '}') p++;
-    int len = p - k - 1;
+    auto len = p - k - 1;
     if (len == 0) return false;
     aux.reset();
     aux.push_back(data() + k + 1);
     aux[len] = 0;
-    for (int i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
+    for (size_t i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
         if (!is_letter(aux[i]) && !is_digit(aux[i])) return false;
     return true;
 }
@@ -1066,11 +1067,11 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
     if (at(0) != '%') return false;
     String s = strstr(data(), "ralics configuration file");
     if (s == nullptr) return false;
-    int k = s - data();
+    auto k = static_cast<size_t>(s - data());
     while ((at(k) != 0) && at(k) != '\'') k++;
     if (at(k) == 0) return false;
     k++;
-    int len = 0;
+    size_t len = 0;
     aux.reset();
     for (;;) {
         if (at(k) == 0) return false;
@@ -1084,12 +1085,12 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
 }
 
 // returns the configuration value in aux
-auto Buffer::find_doctype() -> int {
+auto Buffer::find_doctype() -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";
     String s = strstr(data(), S);
     if (s == nullptr) return 0;
-    int k = s - data();
+    auto k = static_cast<size_t>(s - data());
     k += strlen(S);
     while ((at(k) != 0) && (at(k) == ' ' || at(k) == '=')) k++;
     if (at(k) == 0) return 0;
@@ -1099,7 +1100,7 @@ auto Buffer::find_doctype() -> int {
 // If the buffer holds a single char (plus space) returns it.
 // Note: this returns 0 in case of a non-7bit character
 auto Buffer::single_char() const -> char {
-    int j = skip_space(0);
+    auto j = skip_space(0);
     if (at(j) == 0) return 0;
     char c = at(j);
     j++;
@@ -1112,8 +1113,8 @@ auto Buffer::single_char() const -> char {
 // Otherwise returns -1;
 auto Buffer::get_int_val() const -> int {
     int n = 0;
-    for (int p = 0;; p++) {
-        char c = at(p);
+    for (size_t p = 0;; p++) {
+        auto c = at(p);
         if (c == 0) return n;
         if (!is_digit(c)) return -1;
         n = 10 * n + (c - '0');
@@ -1190,7 +1191,7 @@ auto Buffer::string_delims() -> bool {
 auto Buffer::slash_separated(std::string &a) -> bool {
     static Buffer tmp;
     tmp.reset();
-    int p = 0;
+    size_t p = 0;
     skip_sp_tab();
     if (head() == 0) return false;
     for (;;) {
@@ -1206,30 +1207,11 @@ auto Buffer::slash_separated(std::string &a) -> bool {
         }
         tmp.push_back(c);
     }
-    int b = tmp.size();
+    auto b = tmp.size();
     while (b > p && is_space(tmp[b - 1])) b--;
     tmp.kill_at(b);
     a = tmp.to_string();
     return true;
-}
-
-// Returns the substring between a and b.
-auto Buffer::some_substring(int a, int b) -> String {
-    int   c = b - a;
-    char *S = new char[c + 1];
-    for (int j = 0; j < c; j++) S[j] = at(a + j);
-    S[c] = 0;
-    return S;
-}
-
-// Returns the substring between a and b.
-// Assume this is not substring_buf
-auto Buffer::some_sub_string(int a, int b) -> std::string {
-    int c = b - a;
-    substring_buf.reset();
-    substring_buf.alloc(c + 1);
-    for (int j = 0; j < c; j++) substring_buf.push_back(at(a + j));
-    return substring_buf.to_string();
 }
 
 void Buffer::push_back_unless_punct(char c) {
@@ -1250,7 +1232,7 @@ auto Buffer::fetch_spec_arg() -> bool {
     advance();
     set_ptr1_to_ptr();
     for (;;) {
-        uchar c = uhead();
+        auto c = uhead();
         if (c == 0 || c == '{' || c == '%') return false;
         if (c == '}') return true;
         advance();
@@ -1332,8 +1314,8 @@ void Image::check() {
 
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
-    int s = the_images.size();
-    for (int i = 0; i < s; i++) {
+    auto s = the_images.size();
+    for (size_t i = 0; i < s; i++) {
         Image &X = the_images[i];
         if (X.name == nm) {
             if (ok) X.occ++;
@@ -1391,7 +1373,7 @@ void operator<<(std::fstream &X, const Image &Y) {
 
 // finish handling the images,
 void Parser::finish_images() {
-    int s = the_images.size();
+    auto s = the_images.size();
     if (s == 0) return;
     std::string name = tralics_ns::get_short_jobname() + ".img";
     String      wn   = tralics_ns::get_out_dir(name);
@@ -1400,7 +1382,7 @@ void Parser::finish_images() {
     *fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
     check_image2.reset();
-    for (int i = 0; i < s; i++) {
+    for (size_t i = 0; i < s; i++) {
         if (the_images[i].occ != 0) {
             the_images[i].check_existence();
             the_images[i].check();
@@ -1412,7 +1394,7 @@ void Parser::finish_images() {
     if (s == 0)
         main_ns::log_or_tty << "There was no image.\n";
     else
-        main_ns::log_or_tty << "There were " << s << " images.\n";
+        main_ns::log_or_tty << fmt::format("There were {} images.\n", s);
     if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << check_image1 << ".\n";
     if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2 << ".\n";
 }
@@ -1423,8 +1405,8 @@ auto Buffer::get_machine_name() -> std::string {
     if (gethostname(data(), 199) != 0) push_back("unknown");
     at(200) = 0;
     wptr    = strlen(data());
-    int n   = wptr;
-    for (int i = 1; i < n; i++)
+    auto n  = wptr;
+    for (size_t i = 1; i < n; i++)
         if (at(i) == '.') kill_at(i);
     return to_string();
 }
@@ -1445,7 +1427,7 @@ void Buffer::optslash() {
 auto Buffer::last_slash() const -> int {
     int k = -1;
     for (size_t i = 0; i < wptr; i++)
-        if (at(i) == '/') k = i;
+        if (at(i) == '/') k = static_cast<int>(i);
     return k;
 }
 

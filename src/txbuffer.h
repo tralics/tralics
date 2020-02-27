@@ -83,7 +83,7 @@ public:
     auto               add_with_space(String s) -> std::string;
     void               advance() { ptr++; }
     void               advance(size_t k) { ptr += k; }
-    void               alloc(int n);
+    void               alloc(size_t n);
     [[nodiscard]] auto after_head() const -> char { return at(ptr + 1); }
     [[nodiscard]] auto after_uhead() const -> char { return at(ptr + 1); }
     [[nodiscard]] auto after_after_uhead() const -> char { return at(ptr + 2); }
@@ -93,7 +93,7 @@ public:
     void               bib_spec();
     void               brace_match();
     void               bracket_match();
-    [[nodiscard]] auto c_str(int k) const -> String { return data() + k; }
+    [[nodiscard]] auto c_str(size_t k) const -> String { return data() + k; }
     [[nodiscard]] auto c_str() const -> String { return data(); }
     void               chars_to_buffer(Buffer &);
     void               check_before_brace(String);
@@ -109,8 +109,8 @@ public:
     [[nodiscard]] auto convert_to_log_encoding() const -> String;
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String;
     void               convert_custom(int l);
-    auto               convert_line0(int wc) -> bool;
-    void               convert_line(int l, int wc);
+    auto               convert_line0(size_t wc) -> bool;
+    void               convert_line(int l, size_t wc);
     void               copy(const Buffer &B);
     void               decr_wptr() { wptr--; };
     auto               double_hat_aux(int) -> bool;
@@ -132,7 +132,7 @@ public:
     auto               find_brace() -> int;
     auto               find_bracket() -> int;
     auto               find_configuration(Buffer &aux) -> bool;
-    auto               find_doctype() -> int;
+    auto               find_doctype() -> size_t;
     auto               find_documentclass(Buffer &aux) -> bool;
     auto               find_equals() -> bool;
     auto               find_one_bibtex_name() -> String;
@@ -234,7 +234,7 @@ public:
     void               push_back_def(String, std::string);
     void               push_back_elt(Istring name, Xid id, int w);
     void               push_back_int(int n);
-    void               push_back16(uint n, bool uni);
+    void               push_back16(size_t n, bool uni);
     void               push_back16l(bool hat, uint n);
     void               push_back_ent(codepoint ch);
     void               push_back_hex(uint c);
@@ -254,8 +254,8 @@ public:
     void               push_back_special_string(String s);
     void               push_back_real_utf8(codepoint c);
     void               push_back_xml_char(uchar c);
-    void               push_back_substring(String S, int n);
-    void               push_back_substring(const std::string &S, int p, int n);
+    void               push_back_substring(String S, size_t n);
+    void               push_back_substring(const std::string &S, size_t p, size_t n);
     void               push_back_unless_punct(char c);
     void               push_back(codepoint c);
     void               push_back3(unsigned int x);
@@ -327,8 +327,6 @@ public:
     }
     [[nodiscard]] auto single_char() const -> char;
     auto               slash_separated(std::string &a) -> bool;
-    auto               some_substring(int a, int b) -> String;
-    auto               some_sub_string(int a, int b) -> std::string;
     auto               split_at_colon(std::string &before, std::string &after) -> bool;
     auto               sortify(String s) -> String;
     auto               svn_id(std::string &name, std::string &date, std::string &version) -> bool;
@@ -356,7 +354,7 @@ public:
     [[nodiscard]] auto make_character() const -> codepoint;
     void               uppercase();
     void               utf8_error(bool first);
-    static void        utf8_ovf(int n);
+    static void        utf8_ovf(size_t n);
     auto               xml_and_attrib(const std::string &s) -> Xml *;
     auto               without_end_spaces(String T) -> String;
     auto               find_char(char c) -> bool;

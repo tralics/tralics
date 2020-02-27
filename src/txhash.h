@@ -165,7 +165,7 @@ class Splitter {
 public:
     Splitter(std::string w) : S(std::move(w)), pos(0) { size = S.size(); }
     [[nodiscard]] auto at_end() const -> bool { return pos == size; }
-    [[nodiscard]] auto count() const -> int;
+    [[nodiscard]] auto count() const -> size_t;
     auto               get_next_raw() -> String;
     auto               get_next() -> String;
     void               extract_keyval(std::string &key, std::string &val);

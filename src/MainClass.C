@@ -80,9 +80,9 @@ void MainClass::check_for_input() {
         exit(1);
     }
     {
-        int wc = input_content.get_encoding();
+        auto wc = input_content.get_encoding();
         if (wc < 0) {
-            wc = the_main->get_input_encoding();
+            wc = the_main->input_encoding;
             input_content.set_encoding(wc);
         }
         show_encoding(wc, "the main file");
@@ -924,8 +924,8 @@ void MainClass::check_section_use() {
     }
 }
 
-void MainClass::set_input_encoding(int wc) {
-    if (wc >= 0 && wc < max_encoding) {
+void MainClass::set_input_encoding(size_t wc) {
+    if (wc < max_encoding) {
         input_encoding = wc;
         the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
     }

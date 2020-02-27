@@ -40,7 +40,7 @@ void bad_conf(String s);
 void check_for_encoding();
 void obsolete(const std::string &s);
 void set_everyjob(const std::string &s);
-void show_encoding(int wc, const std::string &name);
+void show_encoding(size_t wc, const std::string &name);
 
 namespace main_ns {
     void check_in_dir();                                      ///< Adds current directory in input path unless present

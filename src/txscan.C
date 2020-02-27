@@ -63,7 +63,7 @@ void TexOutStream::close(size_t chan) {
 
 // This opens an output channel.
 // What if the file cannot be opened ?
-void TexOutStream::open(int chan, const std::string &file_name) {
+void TexOutStream::open(size_t chan, const std::string &file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
     close(chan);
     String fn = tralics_ns::get_out_dir(file_name);
@@ -1360,7 +1360,7 @@ void Parser::scan_something_internal(internal_type level) {
         else if (m == 2)
             cur_val.set_int(lines.get_encoding());
         else if (m == 3)
-            cur_val.set_int(the_main->get_input_encoding());
+            cur_val.set_int(the_main->input_encoding);
         else if (m == 4)
             cur_val.set_int(cur_font.get_size());
         return;
@@ -1903,7 +1903,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         else {
             q = scan_int(T); // \spacefactor or \input@encoding
             if (chr == 2) lines.change_encoding(q);
-            if (chr == 3) the_main->set_input_encoding(q);
+            if (chr == 3) the_main->set_input_encoding(q >= 0 ? static_cast<size_t>(q) : 0);
             if (chr == 4) {
                 cur_font.change_size(q);
                 font_has_changed();

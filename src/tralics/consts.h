@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 
+inline constexpr uint max_encoding        = 34;
 inline constexpr uint max_newcolumn_loops = 10000; // max nb of iterations
 inline constexpr uint nb_characters       = 65536; // Number of characters and size of char-index tables
 inline constexpr uint nb_mathchars        = 128;   // This is the number of slots for Mathml characters
@@ -13,7 +14,6 @@ inline constexpr uint nb_xspace_values    = 128;   // This is the size of the ta
 inline constexpr int bib_hash_mod  = 6397;
 inline constexpr int lmaxchar      = 256;
 inline constexpr int max_dimension = 07777777777;
-inline constexpr int max_encoding  = 34;
 inline constexpr int max_integer   = 017777777777;
 
 // When the parser sees a character C with a catcode B then

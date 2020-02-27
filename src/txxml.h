@@ -98,7 +98,7 @@ public:
     void               reset();
     void               sans_titre();
     auto               sans_titre(Xml *) -> String;
-    void               set_id(int i) { id = i; }
+    void               set_id(size_t i) { id = i; }
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto size() const { return tree.size(); }

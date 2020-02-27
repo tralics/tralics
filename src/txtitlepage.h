@@ -123,7 +123,7 @@ public:
     int                       state;    // current state of the parser
     TitlePage() = default;
     auto               operator[](int k) -> Xml *& { return Data[k]; }
-    auto               get_bigtable(int k) -> TitlePageAux & { return bigtable[k]; }
+    auto               get_bigtable(size_t k) -> TitlePageAux & { return bigtable[k]; }
     [[nodiscard]] auto get_len2() const -> int { return len2; }
     auto               is_valid() -> bool { return valid; }
     void               make_invalid() { valid = false; }

@@ -58,7 +58,7 @@ public:
     [[nodiscard]] auto get_chars() const -> const std::string & { return chars; }
     void               set_chars(std::string x) { chars = std::move(x); }
     auto               starts_with(String x) const -> bool;
-    void               convert_line(int wc);
+    void               convert_line(size_t wc);
     void               clear_converted() { converted = false; }
 };
 
@@ -71,7 +71,7 @@ private:
     int               cur_line{0};        // current line number
     bool              interactive{false}; // is this file or a tty ?
     std::string       file_name;          // file name associated to the lines
-    int               cur_encoding{1};    // current file encoding
+    size_t            cur_encoding{1};    // current file encoding
 public:
     void               add(int n, Buffer &b, bool cv);
     void               add_buffer(Buffer &B, line_iterator C);
@@ -91,7 +91,7 @@ public:
     void               find_top_atts(Buffer &B);
     auto               find_top_val(String s, bool c) -> std::string;
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
-    [[nodiscard]] auto get_encoding() const -> int { return cur_encoding; }
+    [[nodiscard]] auto get_encoding() const { return cur_encoding; }
     [[nodiscard]] auto get_file_name() const -> std::string { return file_name; }
     [[nodiscard]] auto get_interactive() const -> bool { return interactive; }
     void               set_interactive(bool sw) { interactive = sw; }
@@ -119,7 +119,7 @@ public:
     void               reset(std::string x);
     auto               read_from_tty(Buffer &b) -> int;
     void               set_cur_line(int x) { cur_line = x; }
-    void               set_encoding(int k) { cur_encoding = k; }
+    void               set_encoding(size_t k) { cur_encoding = k; }
     void               set_file_name(std::string s) { file_name = std::move(s); }
     void               set_interactive();
     auto               skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
@@ -204,7 +204,7 @@ class TexOutStream {
 public:
     TexOutStream();
     void               close(size_t chan);
-    void               open(int chan, const std::string &file_name);
+    void               open(size_t chan, const std::string &file_name);
     [[nodiscard]] auto is_open(size_t i) const -> bool { return write_open[i]; }
     void               write(size_t chan, const std::string &s) { *(write_file[chan]) << s; }
 };

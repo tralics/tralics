@@ -28,7 +28,6 @@ class MainClass {
     int bibtex_extension_size{0};
     int tpa_mode{3};
     int dft{3}; // default dtd for standard classes
-    int input_encoding{1};
     int trivial_math{1};
 
     size_t cur_fp_len{0}; ///< number of bytes sent to XML file
@@ -89,13 +88,13 @@ class MainClass {
     bool load_l3{false};
 
 public:
-    Stack * the_stack; // pointer to the stack
-    StrHash SH;        // the XML hash table
+    Stack * the_stack;         // pointer to the stack
+    StrHash SH;                // the XML hash table
+    size_t  input_encoding{1}; ///< Encoding of the input file
 
 public:
     MainClass();
 
-    [[nodiscard]] auto get_input_encoding() const -> int { return input_encoding; }
     [[nodiscard]] auto get_output_encoding() const -> output_encoding_type { return output_encoding; }
     [[nodiscard]] auto get_log_encoding() const -> output_encoding_type { return log_encoding; }
     [[nodiscard]] auto get_tpa_mode() const -> int { return tpa_mode; }
@@ -154,7 +153,7 @@ public:
     void set_ent_names(String s);
     void set_foot_hack(bool b) { footnote_hack = b; }
     void set_fp_len(size_t a) { cur_fp_len = a; }
-    void set_input_encoding(int wc);
+    void set_input_encoding(size_t wc);
     void set_tcf_file(std::string s);
     void set_use_font(bool b) { use_font_elt_sw = b; }
     void set_pack_font(bool b) { pack_font_elt_sw = b; }

@@ -64,7 +64,7 @@ void check_for_encoding() {
         for (unsigned j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
 }
 
-void show_encoding(int wc, const std::string &name) {
+void show_encoding(size_t wc, const std::string &name) {
     const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
     the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
 }

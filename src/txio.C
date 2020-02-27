@@ -25,7 +25,7 @@ namespace {
 } // namespace
 
 namespace io_ns {
-    void print_ascii(std::ostream &fp, uchar c);
+    void print_ascii(std::ostream &fp, char c);
     auto how_many_bytes(char C) -> size_t;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
@@ -146,13 +146,14 @@ auto operator<<(std::ostream &fp, Xid X) -> std::ostream & {
 // This prints a character in the form \230 if not ascii
 // Can be used in case where encoding is strange
 
-void io_ns::print_ascii(std::ostream &fp, uchar c) {
+void io_ns::print_ascii(std::ostream &fp, char c) {
     if (32 <= c && c < 127)
         fp << c;
     else {
-        uint z = c & 7;
-        uint y = (c >> 3) & 7;
-        uint x = (c >> 6) & 7;
+        auto C = static_cast<uchar>(c);
+        uint z = C & 7;
+        uint y = (C >> 3) & 7;
+        uint x = (C >> 6) & 7;
         fp << "\\" << uchar(x + '0') << uchar(y + '0') << uchar(z + '0');
     }
 }
@@ -160,8 +161,8 @@ void io_ns::print_ascii(std::ostream &fp, uchar c) {
 // returns true if only ascii 7 bits in the buffer
 auto Buffer::is_all_ascii() const -> bool {
     for (size_t i = 0; i < wptr; i++) {
-        uchar c = at(i);
-        if (c >= 128) return false;
+        auto c = at(i);
+        if (static_cast<uchar>(c) >= 128) return false;
         if (c < 32 && c != '\t' && c != '\n') return false;
     }
     return true;
@@ -171,7 +172,7 @@ auto Buffer::is_all_ascii() const -> bool {
 // Non-ascii chars are printable (assumes buffer is valid UTF8).
 auto Buffer::is_good_ascii() const -> bool {
     for (size_t i = 0; i < wptr; i++) {
-        uchar c = at(i);
+        auto c = at(i);
         if (c < 32 && c != '\t' && c != '\n') return false;
     }
     return true;
@@ -230,7 +231,7 @@ void Buffer::utf8_error(bool first) {
     the_log << lg_end;
 }
 
-void Buffer::utf8_ovf(int n) {
+void Buffer::utf8_ovf(size_t n) {
     Converter &T = the_converter;
     thebuffer.reset();
     thebuffer.push_back16(n, true);
@@ -243,7 +244,7 @@ void Buffer::utf8_ovf(int n) {
 // We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
 // As a consequence, at(ptr) is valid after the call
 auto Buffer::next_utf8_byte() -> uchar {
-    uchar x = at(ptr);
+    uchar x = static_cast<uchar>(at(ptr));
     if ((x >> 6) == 2) {
         ++ptr;
         return x & 63;
@@ -271,7 +272,7 @@ auto io_ns::how_many_bytes(char c) -> size_t {
 // Creates a Unicode character from the bytes A, B, C and D.
 // Return 0 if invalid. Return 0 if overflow
 auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
-    int n = io_ns::how_many_bytes(A);
+    auto n = io_ns::how_many_bytes(static_cast<char>(A));
     if (n == 0) return codepoint(0U);
     if (n == 1) return codepoint(A);
     if (n == 2) return codepoint(static_cast<unsigned>(((A & 31) << 6) + (B & 63)));
@@ -282,9 +283,9 @@ auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
 // Returns 0 at end of line or error
 // may set local_error
 auto Buffer::next_utf8_char_aux() -> codepoint {
-    uchar c = next_char();
+    auto c = next_char();
     if (c == 0) return codepoint();
-    int n = io_ns::how_many_bytes(c);
+    auto n = io_ns::how_many_bytes(c);
     if (n == 0) {
         utf8_error(true);
         the_converter.line_is_ascii = false;
@@ -294,17 +295,17 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
     the_converter.line_is_ascii = false;
     if (n == 2) {
         uint x = next_utf8_byte();
-        return codepoint(((c & 31) << 6) + x);
+        return codepoint(((static_cast<uchar>(c) & 31U) << 6U) + x);
     }
     if (n == 3) {
         uint z = next_utf8_byte();
         uint x = next_utf8_byte();
-        return codepoint(x + (z << 6) + ((c & 15) << 12));
+        return codepoint(x + (z << 6U) + ((static_cast<uchar>(c) & 15U) << 12U));
     }
     uint z = next_utf8_byte();
     uint y = next_utf8_byte();
     uint x = next_utf8_byte();
-    return codepoint((x) + (y << 6) + (z << 12) + ((c & 7) << 18));
+    return codepoint((x) + (y << 6U) + (z << 12U) + ((static_cast<uchar>(c) & 7U) << 18U));
 }
 
 // Returns 0 at end of line or error
@@ -323,20 +324,22 @@ auto Buffer::next_utf8_char() -> codepoint {
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
 auto Buffer::unique_character() const -> codepoint {
-    uchar c = at(0);
-    int   n = io_ns::how_many_bytes(c);
+    auto c = at(0);
+    auto n = io_ns::how_many_bytes(c);
     if (n == 0) return codepoint();
     if (n != size()) return codepoint();
     if (n == 1) return codepoint(c);
-    if (n == 2) return io_ns::make_utf8char(at(0), at(1), 0, 0);
-    if (n == 3) return io_ns::make_utf8char(at(0), at(1), at(2), 0);
-    if (n == 4) return io_ns::make_utf8char(at(0), at(1), at(2), at(3));
+    if (n == 2) return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), 0, 0);
+    if (n == 3) return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), static_cast<uchar>(at(2)), 0);
+    if (n == 4)
+        return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), static_cast<uchar>(at(2)),
+                                    static_cast<uchar>(at(3)));
     return codepoint();
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
 // Otherwise, the result is in utf8_out.
-auto Buffer::convert_line0(int wc) -> bool {
+auto Buffer::convert_line0(size_t wc) -> bool {
     Buffer &res = utf8_out;
     res.reset();
     reset_ptr();
@@ -345,7 +348,7 @@ auto Buffer::convert_line0(int wc) -> bool {
         if (wc == 0)
             c = next_utf8_char();
         else {
-            uchar C = next_char();
+            auto C = static_cast<uchar>(next_char());
             if (wc == 1)
                 c = codepoint(C);
             else
@@ -360,7 +363,7 @@ auto Buffer::convert_line0(int wc) -> bool {
 
 // This converts a line in UTF8 format
 // Result of conversion is pushed back in the buffer
-void Buffer::convert_line(int l, int wc) {
+void Buffer::convert_line(int l, size_t wc) {
     the_converter.start_convert(l);
     if (convert_line0(wc)) return;
     the_converter.lines_converted++;
@@ -369,7 +372,7 @@ void Buffer::convert_line(int l, int wc) {
 }
 
 // This converts a line of a file
-void Clines::convert_line(int wc) {
+void Clines::convert_line(size_t wc) {
     utf8_in.reset();
     utf8_in.push_back(chars);
     converted = true;
@@ -393,16 +396,16 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[enc][pos] = codepoint(static_cast<unsigned>(v));
+        custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)] = codepoint(static_cast<unsigned>(v));
     else
-        custom_table[enc][pos] = codepoint(static_cast<unsigned>(pos));
+        custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)] = codepoint(static_cast<unsigned>(pos));
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
     if (!(enc >= 2 && enc < max_encoding)) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return custom_table[enc][pos].value;
+    return static_cast<int>(custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)].value);
 }
 
 void LinePtr::change_encoding(int wc) {
@@ -437,7 +440,7 @@ auto io_ns::find_encoding(String cl) -> int {
 void LinePtr::set_interactive() {
     interactive  = true;
     file_name    = "tty";
-    cur_encoding = the_main->get_input_encoding();
+    cur_encoding = the_main->input_encoding;
 }
 
 // interface with the line editor.
@@ -487,10 +490,10 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     std::string old_name        = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;
-    int    wc = the_main->get_input_encoding();
+    int    wc = the_main->input_encoding;
     if (spec == 4) wc = -1;
     bool converted = spec < 2;
-    L.set_encoding(the_main->get_input_encoding());
+    L.set_encoding(the_main->input_encoding);
     int co_try = spec == 3 ? 0 : 20;
     for (;;) {
         int  c    = fp->get();
@@ -507,7 +510,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
             delete fp;
             the_converter.cur_file_name = old_name;
         } else
-            B.push_back(c);
+            B.push_back(static_cast<char>(c));
         if (emit) {
             if (spec == 0) // special case of config file
                 emit = B.push_back_newline_spec();
@@ -524,7 +527,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                             << x << lg_end;
                 }
             }
-            if (converted) B.convert_line(L.get_cur_line() + 1, wc);
+            if (converted) B.convert_line(L.get_cur_line() + 1, static_cast<size_t>(wc));
             if (emit)
                 L.insert(B.to_string(), converted);
             else
@@ -547,7 +550,7 @@ void LinePtr::normalise_final_cr() {
         cur = &*C;
         ++C;
         const std::string &s       = cur->get_chars();
-        int                n       = s.size();
+        auto               n       = s.size();
         bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
         std::string        normal  = s;
         if (special) normal = std::string(s, 0, n - 2);
@@ -571,7 +574,7 @@ void LinePtr::normalise_final_cr() {
 void Buffer::push_back(codepoint c) {
     uint x = c.value;
     if (x < 128) {
-        push_back(uchar(x));
+        push_back(static_cast<char>(x));
         return;
     }
     int x1 = x >> 18;
@@ -579,36 +582,36 @@ void Buffer::push_back(codepoint c) {
     int x3 = (x >> 6) & 63;
     int x4 = x & 63;
     if (x1 > 0 || x2 >= 16) {
-        push_back(uchar(x1 + 128 + 64 + 32 + 16));
-        push_back(uchar(x2 + 128));
-        push_back(uchar(x3 + 128));
-        push_back(uchar(x4 + 128));
+        push_back(static_cast<char>(x1 + 128 + 64 + 32 + 16));
+        push_back(static_cast<char>(x2 + 128));
+        push_back(static_cast<char>(x3 + 128));
+        push_back(static_cast<char>(x4 + 128));
     } else if (x2 > 0 || x3 >= 32) {
-        push_back(uchar(x2 + 128 + 64 + 32));
-        push_back(uchar(x3 + 128));
-        push_back(uchar(x4 + 128));
+        push_back(static_cast<char>(x2 + 128 + 64 + 32));
+        push_back(static_cast<char>(x3 + 128));
+        push_back(static_cast<char>(x4 + 128));
     } else {
-        push_back(uchar(x3 + 128 + 64));
-        push_back(uchar(x4 + 128));
+        push_back(static_cast<char>(x3 + 128 + 64));
+        push_back(static_cast<char>(x4 + 128));
     }
 }
 
 inline void Buffer::push_back_hex(uint c) {
     if (c < 10)
-        push_back(c + '0');
+        push_back(static_cast<char>(c + '0'));
     else
-        push_back(c + 'a' - 10);
+        push_back(static_cast<char>(c + 'a' - 10));
 }
 
 inline void Buffer::push_back_Hex(uint c) {
     if (c < 10)
-        push_back(c + '0');
+        push_back(static_cast<char>(c + '0'));
     else
-        push_back(c + 'A' - 10);
+        push_back(static_cast<char>(c + 'A' - 10));
 }
 
 // Converts in uppercase hex. If uni is ptrue, produces U+00AB
-void Buffer::push_back16(uint n, bool uni) {
+void Buffer::push_back16(size_t n, bool uni) {
     static uint dig[9];
     int         k = 0;
     for (;;) { // construct the list of digits
@@ -677,18 +680,18 @@ void Buffer::out_four_hats(codepoint ch) {
     uint c = ch.value;
     if (ch.is_control()) {
         push_back("^^");
-        push_back(uchar(c + 64));
+        push_back(static_cast<char>(c + 64));
     } else if (ch.is_delete())
         push_back("^^?");
     else if (ch.is_ascii())
-        push_back(uchar(c));
+        push_back(static_cast<char>(c));
     else
         push_back16l(true, c);
 }
 
 // This inserts &#xabc;
 void Buffer::push_back_ent(codepoint ch) {
-    int c = ch.value;
+    auto c = ch.value;
     if (c == 65534 || c == 65535) return; // these chars are illegal
     push_back('&');
     push_back('#');
@@ -756,7 +759,7 @@ void Buffer::push_back_real_utf8(codepoint c) {
 // Assumes that c is not a special char
 void Parser::process_char(uchar c) {
     if (c < 128)
-        unprocessed_xml.push_back(c);
+        unprocessed_xml.push_back(static_cast<char>(c));
     else
         process_char(codepoint(c));
 }
@@ -772,11 +775,11 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
     else if (ch.is_control())
         out_four_hats(ch);
     else if (ch.is_ascii())
-        push_back(uchar(ch.value));
+        push_back(static_cast<char>(ch.value));
     else if (T == en_utf8)
         push_back(ch);
     else if (ch.is_small() && T == en_latin)
-        push_back(uchar(ch.value));
+        push_back(static_cast<char>(ch.value));
     else
         out_four_hats(ch);
 }
@@ -805,9 +808,9 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
         if (c.is_null() && I.at_eol()) break;
         if (c.is_null()) continue;
         if (c.is_ascii())
-            O.push_back(static_cast<uchar>(c.value));
+            O.push_back(static_cast<char>(c.value));
         else if (c.is_small() && nonascii)
-            O.push_back(static_cast<uchar>(c.value));
+            O.push_back(static_cast<char>(c.value));
         else
             O.push_back_ent(c);
     }

@@ -16,7 +16,7 @@ static Buffer make_name_buffer; // used for token names
 
 namespace tralics_ns {
     auto make_name(String x, int y) -> String;
-    auto make_name16(String x, int y) -> String;
+    auto make_name16(String x, size_t y) -> String;
     auto strip_end(String s) -> String;
     auto math_env_name(subtypes c) -> String;
 } // namespace tralics_ns
@@ -38,7 +38,7 @@ auto tralics_ns::make_name(String x, int y) -> String {
     return make_name_buffer.c_str();
 }
 
-auto tralics_ns::make_name16(String x, int y) -> String {
+auto tralics_ns::make_name16(String x, size_t y) -> String {
     make_name_buffer << bf_reset << x << '"';
     make_name_buffer.push_back16(y, false);
     return make_name_buffer.c_str();

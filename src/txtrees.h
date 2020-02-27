@@ -53,15 +53,15 @@ class OneIndex {
     std::vector<Indexer *> value;
 
 public:
-    [[nodiscard]] auto size() const -> int { return value.size(); }
+    [[nodiscard]] auto size() const { return value.size(); }
     auto               get_data() -> std::vector<Indexer *> & { return value; }
     void               do_sort() { std::sort(value.begin(), value.end(), trees_ns::xless); }
     [[nodiscard]] auto get_AL() const -> int { return AL; }
     [[nodiscard]] auto get_title() const -> const std::string & { return title; }
     [[nodiscard]] auto get_position() const -> Xml * { return position; }
     void               set_position(Xml *x) { position = x; }
-    [[nodiscard]] auto get_translation(int i) const -> Xml * { return value[i]->translation; }
-    [[nodiscard]] auto get_iid(int i) const -> int { return value[i]->iid; }
+    [[nodiscard]] auto get_translation(size_t i) const -> Xml * { return value[i]->translation; }
+    [[nodiscard]] auto get_iid(size_t i) const -> int { return value[i]->iid; }
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     OneIndex(std::string a, std::string b, int c) : name(std::move(a)), title(std::move(b)), position(nullptr), AL(c) {}
 };
@@ -72,10 +72,10 @@ class AllIndex {
     std::vector<OneIndex *> value;
 
 public:
-    auto               get_index(int j) -> OneIndex * { return value[j]; }
+    auto               get_index(size_t j) -> OneIndex * { return value[j]; }
     auto               find_index(const std::string &s) -> int;
-    [[nodiscard]] auto size() const -> int { return value.size(); }
-    auto               get_data(int i) -> std::vector<Indexer *> & { return value[i]->get_data(); }
+    [[nodiscard]] auto size() const { return value.size(); }
+    auto               get_data(size_t i) -> std::vector<Indexer *> & { return value[i]->get_data(); }
     AllIndex();
     void mark_print(int g);
     auto next_iid() -> int {
