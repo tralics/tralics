@@ -90,7 +90,7 @@ public:
 public:
     ClassesData();
     auto        cur_pack() -> LatexPackage *;
-    auto        find_package(const std::string &name, bool type, bool creat) -> int;
+    auto        find_package(const std::string &name, bool type, bool creat) -> size_t;
     void        new_unused_global_option(const KeyAndVal &s) { unused_options.push_back(s); }
     static void remove_from_unused(const std::string &name);
     static void show_unused();
