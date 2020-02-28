@@ -149,7 +149,7 @@ public:
     auto               is_not_char(size_t p, uchar x) -> bool { return uchar(at(p)) != x; }
     auto               holds_documentclass(Buffer &a, Buffer &b, Buffer &c) -> int;
     auto               holds_env(String &a, String &b, String &c) -> int;
-    auto               horner(int p) -> unsigned int;
+    auto               horner(size_t p) -> unsigned int;
     auto               how_many_bibtex_name_token() -> int;
     void               kill_at(size_t p) { at(p) = 0; }
     void               init_from_buffer(Buffer &b);

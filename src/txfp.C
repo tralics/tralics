@@ -11,6 +11,7 @@
 #include "txfp.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace {
     Token       fp_tmp_token, fp_test_token;
@@ -31,7 +32,7 @@ namespace {
     FpNum *     pascal_table[64];
     bool        pascal_table_created = false;
 
-    const int power_table[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
+    constexpr std::array<uint, 10> power_table{1, 10, 100, 1'000, 10'000, 100'000, 1'000'000, 10'000'000, 100'000'000, 1'000'000'000};
 } // namespace
 
 namespace fp {
@@ -40,8 +41,8 @@ namespace fp {
     auto compare_abs(const FpNum &X, const FpNum &Y) -> int;
     auto compare(const FpNum &X, const FpNum &Y) -> int;
     void create_pascal_table();
-    auto truncate_n(Digit x, int n) -> Digit;
-    auto round_n(Digit x, int n) -> Digit;
+    auto truncate_n(Digit x, size_t n) -> Digit;
+    auto round_n(Digit x, size_t n) -> Digit;
     void sincos(FpNum &res1, FpNum &res2, FpNum x, subtypes i);
     void arcsincos(FpNum &res1, FpNum &res2, FpNum x, subtypes i);
     auto quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool;
@@ -382,7 +383,7 @@ auto fp::compare(const FpNum &X, const FpNum &Y) -> int {
 // Computes \sum a_k b_k, where a_k is the next digit, b_k = 10^k
 // via Horner (k is decreasing until 0).
 // Ok for the integer part of 1234.5678
-auto Buffer::horner(int p) -> Digit {
+auto Buffer::horner(size_t p) -> Digit {
     if (p > 9) p = 9;
     Digit res = 0;
     while (p > 0) {
@@ -397,13 +398,12 @@ auto Buffer::horner(int p) -> Digit {
 // multiplied by 10^9. Reading ends after 9 digits or EOL.
 // Ok for the fractional part of 1234.5678
 auto Buffer::reverse_horner() -> Digit {
-    int   i   = 8;
-    Digit res = 0;
+    size_t i   = 8;
+    Digit  res = 0;
     for (;;) {
         if (at_eol()) return res;
-        res += static_cast<unsigned>(power_table[i] * (next_char() - '0'));
-        i--;
-        if (i < 0) return res;
+        res += power_table[i] * static_cast<unsigned>(next_char() - '0');
+        if (i-- == 0) return res;
     }
 }
 
@@ -430,7 +430,7 @@ auto FpNum::create(Buffer &B) -> bool {
     auto n = B.ptr - k; // number of chars before dot
     B.ptr  = k;
     if (n > 18) retval = true;
-    data[0] = B.horner(n - 9);
+    data[0] = n >= 9 ? B.horner(n - 9) : 0;
     data[1] = B.horner(n);
     for (;;) {
         if (B.next_char() == '.') break; // ignore possible unused chars
@@ -453,10 +453,10 @@ auto FpNum::to_string() const -> String {
 auto FpNum::to_list() const -> TokenList {
     String    buf = to_string();
     TokenList res;
-    int       i = 0;
+    size_t    i = 0;
     if (buf[0] == '+') i++;
     while (buf[i] != 0) {
-        res.push_back(Token(other_t_offset + buf[i]));
+        res.push_back(Token(static_cast<unsigned>(other_t_offset + buf[i])));
         i++;
     }
     return res;
@@ -487,7 +487,7 @@ void FpNum::add_abs(FpNum Y) {
 }
 
 // This adds a digit (>=0 would be better)
-void FpNum::add_digit(int y) {
+void FpNum::add_digit(size_t y) {
     data[3] += y;
     if (data[3] >= fp_max) {
         data[2]++;
@@ -569,11 +569,11 @@ void FpNum::add_int(FpNum Y) {
 
 // Creates the Pascal Table
 void fp::create_pascal_table() {
-    for (int i = 0; i < 64; i++) {
+    for (size_t i = 0; i < 64; i++) {
         pascal_table[i] = new FpNum[i + 1];
         pascal_table[i][0].init(0, 1, 0, 0);
         pascal_table[i][i].init(0, 1, 0, 0);
-        for (int j = 1; j < i; j++) {
+        for (size_t j = 1; j < i; j++) {
             pascal_table[i][j] = pascal_table[i - 1][j - 1];
             pascal_table[i][j].add_int(pascal_table[i - 1][j]);
         }
@@ -608,15 +608,15 @@ void Parser::fp_e_pascal() {
 }
 
 // Truncate x to n digits.
-auto fp::truncate_n(Digit x, int n) -> Digit {
+auto fp::truncate_n(Digit x, size_t n) -> Digit {
     if (n == 0) return 0;
     if (n == 9) return x;
-    int k = power_table[9 - n];
+    auto k = power_table[9 - n];
     return (x / k) * k;
 }
 
 // Round to n digits.
-auto fp::round_n(Digit x, int n) -> Digit {
+auto fp::round_n(Digit x, size_t n) -> Digit {
     if (n == 9) return x;
     if (n == 0) return 0;
     Digit k = power_table[9 - n];
@@ -637,10 +637,10 @@ void FpNum::truncate(int n) {
     }
     if (n == 0) { data[2] = data[3] = 0; }
     if (n <= 9) {
-        data[2] = fp::truncate_n(data[2], n);
+        data[2] = fp::truncate_n(data[2], static_cast<size_t>(n));
         data[3] = 0;
     } else
-        data[3] = fp::truncate_n(data[3], n - 9);
+        data[3] = fp::truncate_n(data[3], static_cast<size_t>(n - 9));
     correct_sign(); // result could be negative zero
 }
 
@@ -665,10 +665,7 @@ void FpNum::round0() {
 void FpNum::round(int n) {
     if (n >= 18) return;
     if (n < 0) {
-        tkbuf.reset();
-        tkbuf << "Negative number ";
-        tkbuf << n << " in round";
-        the_parser.parse_error(tkbuf.c_str());
+        the_parser.parse_error(fmt::format("Negative number {} in round", n).c_str());
         return;
     }
     if (n == 0) {
@@ -685,9 +682,9 @@ void FpNum::round(int n) {
         return;
     }
     if (n > 9)
-        data[3] = fp::round_n(data[3], n - 9);
+        data[3] = fp::round_n(data[3], static_cast<size_t>(n - 9));
     else {
-        data[2] = fp::round_n(data[2], n);
+        data[2] = fp::round_n(data[2], static_cast<size_t>(n));
         data[3] = 0;
     }
 }
@@ -733,8 +730,8 @@ void FpNum::div(int n) {
     Digit carry = 0;
     for (unsigned int &i : x) {
         Digit a = 1000 * carry + i;
-        carry   = a % n;
-        i       = a / n;
+        carry   = a % static_cast<unsigned>(n);
+        i       = a / static_cast<unsigned>(n);
     }
     unsplit_mul4(x);
 }
@@ -811,7 +808,7 @@ void FpNum::exec_ln() {
 // Replaces *this by the exponential of its integer part.
 // Returns true if overflow
 auto FpNum::large_exp() -> bool {
-    int k = data[1];
+    auto k = data[1];
     if (!sign && ((data[0] != 0U) || k > 42)) {
         reset();
         sign = true;
@@ -866,8 +863,8 @@ void FpNum::pow(FpNum X, FpNum Y, subtypes i) {
 
 // Replaces *this by *this-Y, as longh as the result is positive
 // Returns  how many times this was done.
-auto FpNum::count_times(FpNum Y) -> int {
-    int i = 0;
+auto FpNum::count_times(FpNum Y) -> size_t {
+    size_t i = 0;
     for (;;) {
         if (fp::compare_abs(*this, Y) >= 0) {
             i++;
@@ -908,7 +905,7 @@ void FpNum::div(FpNum X, FpNum Y) {
     }
     for (;;) {
         if (Y.is_zero()) break;
-        int i = X.count_times(Y);
+        auto i = X.count_times(Y);
         Y.div_by_10();
         mul_by_10();
         add_digit(i);
@@ -1116,8 +1113,8 @@ void FpNum::cosine() {
 void FpNum::trigo_xy(int x) {
     reset();
     sign    = true;
-    Digit a = x;
-    Digit b = x + 1;
+    Digit a = static_cast<Digit>(x);
+    Digit b = static_cast<Digit>(x + 1);
     Digit c = 0;
     a *= 1000;
     c       = a / b;
@@ -1257,7 +1254,7 @@ void FpNum::trigo_inv() {
     r.reset();
     for (;;) {
         if (is_zero()) break;
-        int i = x.count_times(*this);
+        auto i = x.count_times(*this);
         div_by_10();
         r.mul_by_10();
         r.add_digit(i);
@@ -1657,7 +1654,7 @@ auto Parser::fp_read_value() -> FpNum {
         A.pop_front();
         if (x.is_space_token()) break;
         if (x.is_digit_token())
-            fp_in_buf.push_back(x.get_val() - other_t_offset);
+            fp_in_buf.push_back(static_cast<char>(x.get_val() - other_t_offset));
         else
             fp_parse_error(x, name);
     }
@@ -1669,7 +1666,7 @@ auto Parser::fp_read_value() -> FpNum {
         B.pop_front();
         if (x.is_space_token()) break;
         if (x.is_digit_token())
-            fp_in_buf.push_back(x.get_val() - other_t_offset);
+            fp_in_buf.push_back(static_cast<char>(x.get_val() - other_t_offset));
         else
             fp_parse_error(x, name);
     }
@@ -1692,7 +1689,7 @@ auto FpGenList::find_str(int &n) const -> Token {
         Token x = *C;
         ++C;
         if (x.is_lowercase_token()) {
-            tkbuf.push_back(x.val_as_letter());
+            tkbuf.push_back(static_cast<char>(x.val_as_letter()));
             n++;
         } else
             return x;
@@ -1704,11 +1701,11 @@ auto FpGenList::find_str(int &n) const -> Token {
 // Assumes that S is ascii
 void FpGenList::add_last_space(String S) {
     push_back(the_parser.hash_table.space_token);
-    for (int i = 0;; i++) {
-        uchar c = S[i];
-        if (c == 0U) return;
-        if (c > 128) err_ns::fatal_error("add last space: internal error");
-        push_back(Token(letter_t_offset, c));
+    for (size_t i = 0;; i++) {
+        auto c = S[i];
+        if (c == 0) return;
+        if (static_cast<uchar>(c) > 128) err_ns::fatal_error("add last space: internal error");
+        push_back(Token(letter_t_offset, static_cast<uchar>(c)));
     }
 }
 
@@ -2071,13 +2068,13 @@ void Parser::fp_setseed() {
 void FpNum::random() {
     Digit cst_q = 127773;
     Digit cst_m = 2147483647;
-    Digit S     = the_parser.eqtb_int_table[fpseed_code].get_val();
+    Digit S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].get_val());
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
-    int   w     = xib * 16807 - xia * 2836;
+    int   w     = static_cast<int>(xib * 16807) - static_cast<int>(xia * 2836);
     if (w <= 0) w += cst_m;
     the_parser.eqtb_int_table[fpseed_code].set_val(w);
-    fp_rand2.data[1] = w;
+    fp_rand2.data[1] = static_cast<unsigned>(w);
     div(fp_rand2, fp_rand1);
 }
 
@@ -2239,8 +2236,8 @@ void Parser::upn_eval(TokenList &l) {
     if (n == 4 && strcmp(str, "copy") == 0) {
         L.remove_first_n(n);
         S.pop_upn(a1);
-        TokenList a2 = a1;
-        S.push_upn(a2);
+        auto aa2 = a1;
+        S.push_upn(aa2);
         S.push_upn(a1);
         return;
     }
@@ -2359,7 +2356,7 @@ void Parser::upn_eval(TokenList &l) {
     if (n == 4 && strcmp(str, "seed") == 0) {
         L.remove_first_n(n);
         S.pop_upn(x1);
-        eqtb_int_table[fpseed_code].set_val(x1.data[1]);
+        eqtb_int_table[fpseed_code].set_val(static_cast<int>(x1.data[1]));
         return;
     }
     if (n == 4 && strcmp(str, "root") == 0) {
@@ -2408,7 +2405,7 @@ void Parser::upn_eval(TokenList &l) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
-        x1.round(x2.data[1]);
+        x1.round(static_cast<int>(x2.data[1]));
         x1.round0();
         S.push_upn(x1);
         return;
@@ -2417,7 +2414,7 @@ void Parser::upn_eval(TokenList &l) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
-        x1.truncate(x2.data[1]);
+        x1.truncate(static_cast<int>(x2.data[1]));
         S.push_upn(x1);
         return;
     }
@@ -3086,11 +3083,11 @@ void Parser::exec_fpi_cmd(subtypes i) {
     case fp_min_code:
     case fp_max_code: {
         fp_prepare();
-        FpNum X   = fp_read_value();
+        FpNum XX  = fp_read_value();
         FpNum Y   = fp_read_value();
-        int   res = fp::compare(X, Y);
+        int   res = fp::compare(XX, Y);
         if (i == fp_min_code) res = -res;
-        fp_finish(res > 0 ? X : Y);
+        fp_finish(res > 0 ? XX : Y);
         return;
     }
     case fp_div_code: {
@@ -3163,9 +3160,9 @@ void Parser::exec_fpi_cmd(subtypes i) {
         fp_prepare();
         if (i == fp_sincos_code || i == fp_tancot_code) fp_res2 = get_r_token();
 
-        FpNum X = fp_read_value();
+        FpNum XX = fp_read_value();
         FpNum a, b;
-        fp::sincos(a, b, X, i);
+        fp::sincos(a, b, XX, i);
         fp_finish(a);
         if (i == fp_sincos_code || i == fp_tancot_code) {
             fp_res = fp_res2;

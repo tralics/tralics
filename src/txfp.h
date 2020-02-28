@@ -53,7 +53,7 @@ public:
     void               sub_abs(FpNum Y);
     void               neg_sub_abs(FpNum Y);
     void               mod2pi();
-    auto               count_times(FpNum Y) -> int;
+    auto               count_times(FpNum Y) -> size_t;
     [[nodiscard]] auto to_string() const -> String;
     void               neg();
     void               mul_split(unsigned int *T) const;
@@ -62,7 +62,7 @@ public:
     void               mul(FpNum X);
     void               div(FpNum X);
     void               div_by_10();
-    void               add_digit(int y);
+    void               add_digit(size_t y);
     void               sgn();
     void               truncate(int n);
     void               round(int n);
