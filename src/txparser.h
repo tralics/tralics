@@ -98,7 +98,7 @@ private:
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
-    [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].get_val()); }
+    [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
     void               set_catcode(size_t x, int v) { eqtb_int_table[x].set_val(v); }
     auto               get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
@@ -108,7 +108,7 @@ private:
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
     [[nodiscard]] auto get_projet_val() const -> std::string { return the_projetval; }
     auto               get_ur_val() -> std::string { return the_url_val; }
-    [[nodiscard]] auto is_pos_par(size_t k) const { return eqtb_int_table[k].get_val() > 0; }
+    [[nodiscard]] auto is_pos_par(size_t k) const { return eqtb_int_table[k].val > 0; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr(); }
     void               see_cs_token(Token T) {
@@ -132,9 +132,9 @@ public:
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
     void               brace_me(TokenList &L);
-    [[nodiscard]] auto cur_centering() const -> int { return eqtb_int_table[incentering_code].get_val(); }
-    [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].get_val() == 1; }
-    [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].get_val() == 2; }
+    [[nodiscard]] auto cur_centering() const -> int { return eqtb_int_table[incentering_code].val; }
+    [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
+    [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
     auto               cur_line_to_istring() -> Istring;
     void               decr_cur_level() { cur_level--; }
     auto               get_cur_filename() -> std::string { return lines.get_file_name(); }

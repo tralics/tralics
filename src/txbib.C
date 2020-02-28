@@ -1028,7 +1028,7 @@ void Parser::T_citation() {
 }
 
 void Parser::insert_every_bib() {
-    TokenList everybib = toks_registers[everybibitem_code].get_val();
+    TokenList everybib = toks_registers[everybibitem_code].val;
     if (everybib.empty()) return;
     if (tracing_commands()) the_log << lg_startbrace << "<everybibitem> " << everybib << lg_endbrace;
     back_input(everybib);

@@ -510,7 +510,7 @@ void Math::push_front(CmdChr X, subtypes c) { value.push_front(MathElt(X, c)); }
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
-    auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].get_val());
+    auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].val);
     push_back(MathElt(X, font));
 }
 
@@ -752,7 +752,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     if (S.empty()) s = Istring(is_inline ? np_inline : np_display);
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
-    Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].get_val() == -2);
+    Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->change_id(id);
     if (the_main->is_interactive_math()) std::cout << res << "\n";
     after_math(is_inline);
@@ -778,17 +778,17 @@ auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
 void Parser::T_math(subtypes type) {
-    int nm = eqtb_int_table[nomath_code].get_val();
+    int nm = eqtb_int_table[nomath_code].val;
     cmi.reset(nm == -3);
     Trace.reset();
     trace_needs_space = false;
     Math &u1          = math_data.get_list(0);
     bool  is_inline   = start_scan_math(u1, type);
     cmi.set_type(is_inline);
-    cmi.check_for_eqnum(type, eqtb_int_table[multimlabel_code].get_val() != 0);
+    cmi.check_for_eqnum(type, eqtb_int_table[multimlabel_code].val != 0);
     if (type == nomathenv_code || type == math_code || type == displaymath_code) {
         int       position  = is_inline ? everymath_code : everydisplay_code;
-        TokenList everymath = toks_registers[position].get_val();
+        TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
             if (tracing_commands())
                 the_log << lg_startbrace << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << lg_endbrace;
@@ -830,7 +830,7 @@ void Parser::T_math(subtypes type) {
     } else {
         u.remove_spaces();
         if (is_inline) {
-            int k = eqtb_int_table[notrivialmath_code].get_val();
+            int k = eqtb_int_table[notrivialmath_code].val;
             res   = u.trivial_math(k);
             if (res != nullptr) {
                 finish_trivial_math(res);
@@ -952,7 +952,7 @@ auto Parser::scan_math1(int res) -> int {
         if (the_stack.get_mode() == mode_math) {
             int c = cur_cmd_chr.get_chr();
             if (c > 0 && c < int(nb_characters)) {
-                int u = eqtb_int_table[c + math_code_offset].get_val();
+                int u = eqtb_int_table[c + math_code_offset].val;
                 if (u == 32768) {
                     cur_tok.active_char(c);
                     back_input();
@@ -962,7 +962,7 @@ auto Parser::scan_math1(int res) -> int {
         }
     }
     if (is_m_font(T)) {
-        if (eqtb_int_table[nomath_code].get_val() == -2) {
+        if (eqtb_int_table[nomath_code].val == -2) {
             math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
             return 1;
         }
@@ -1162,7 +1162,7 @@ void Parser::scan_math(int res, math_list_type type) {
                 cur_cmd_chr = CmdChr(T, c);
             }
             if (T < 16) { // Case of a character
-                auto font = subtypes(eqtb_int_table[math_font_pos].get_val());
+                auto font = subtypes(eqtb_int_table[math_font_pos].val);
                 math_data.push_back(res, cur_cmd_chr, font);
             } else
                 math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
@@ -1457,7 +1457,7 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
         // fall through
     case math_hbox_cd: {
         // it's a math formula inside a formula
-        TokenList everymath = toks_registers[everymath_code].get_val();
+        TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
             if (tracing_commands()) the_log << lg_startbrace << "<everymath> " << everymath << lg_endbrace;
             back_input(everymath);
@@ -1486,7 +1486,7 @@ void Parser::scan_math_tag(subtypes c) {
         } else if (cmi.get_eqnum_status() == 0) {
             parse_error("Illegal \\notag");
         } else { // decrement equation number
-            int v = eqtb_int_table[equation_ctr_pos].get_val();
+            int v = eqtb_int_table[equation_ctr_pos].val;
             word_define(equation_ctr_pos, v - 1, true);
         }
         return;
@@ -1607,7 +1607,7 @@ void Parser::scan_math_rel(subtypes c, int res) {
 
 // Case of a \hbox; like \mbox, but inserts \everyhbox tokens
 void Parser::scan_math_hbox(int res, subtypes c) {
-    TokenList L = toks_registers[everyhbox_code].get_val();
+    TokenList L = toks_registers[everyhbox_code].val;
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
@@ -2159,7 +2159,7 @@ auto Math::trivial_math(int action) -> Xml * {
 
 // Inserts the current font in the list
 void Math::add_cur_font() {
-    int c = the_parser.eqtb_int_table[math_font_pos].get_val();
+    int c = the_parser.eqtb_int_table[math_font_pos].val;
     push_back_font(subtypes(c), zero_code);
 }
 
@@ -2232,7 +2232,7 @@ auto MathElt::cv_char() -> MathElt {
     else if (::is_letter(c) && F < 2) {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (::is_letter(c)) {
-        int w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
+        int w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(c, F), mt);
         return MathElt(math_ns::make_math_char(c, F), mt);
     } else {

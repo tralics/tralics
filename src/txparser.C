@@ -638,7 +638,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     kill_line();
     Token par      = hash_table.par_token;
     Token noindent = hash_table.noindent_token;
-    int   cc       = eqtb_int_table[endlinechar_code].get_val();
+    int   cc       = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].set_val('\r');
 
     bool ok          = true;
@@ -646,7 +646,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     int  n           = 0;
     if (my_number >= 0) {
         my_number += count_reg_offset;
-        n           = eqtb_int_table[my_number].get_val();
+        n           = eqtb_int_table[my_number].val;
         want_number = true;
     }
     int cl = get_cur_line();
@@ -1226,7 +1226,7 @@ void Parser::M_new_thm() {
         M_let_fast(thename_cmd, hash_table.relax_token, true); // in case of error
         text.push_back(thename_cmd);
     }
-    TokenList aux = toks_registers[theorem_bodyfont_code].get_val();
+    TokenList aux = toks_registers[theorem_bodyfont_code].val;
     brace_me(aux);
     text.splice(text.end(), aux);
     aux = token_ns::string_to_list(name, true);
@@ -1237,7 +1237,7 @@ void Parser::M_new_thm() {
     } else
         aux = token_ns::string_to_list(name, true);
     text.splice(text.end(), aux);
-    aux = toks_registers[theorem_style_code].get_val();
+    aux = toks_registers[theorem_style_code].val;
     brace_me(aux);
     text.splice(text.end(), aux);
     text.push_front(hash_table.bth_token);
@@ -1316,7 +1316,7 @@ void Parser::T_start_theorem(int c) {
             name.push_back(Token(other_t_offset, ')'));
         }
         brace_me(name);
-        TokenList font1 = toks_registers[theorem_headerfont_code].get_val();
+        TokenList font1 = toks_registers[theorem_headerfont_code].val;
         name.splice(name.begin(), font1);
         brace_me(name);
         name.push_back(hash_table.space_token);
@@ -3508,7 +3508,7 @@ void Parser::do_register_command(bool gbl) {
                 scan_dimen(false, T);
             if (q == advance_cmd) {
                 if (p == it_int)
-                    cur_val.incr_int(eqtb_int_table[l].get_val());
+                    cur_val.incr_int(eqtb_int_table[l].val);
                 else
                     cur_val.incr_dim(eqtb_dim_table[l].get_val());
             }
@@ -3520,7 +3520,7 @@ void Parser::do_register_command(bool gbl) {
         int v = scan_int(T); // Here we need an integer.
         if (p < it_glue) {
             if (p == it_int)
-                cur_val.set_int(eqtb_int_table[l].get_val());
+                cur_val.set_int(eqtb_int_table[l].val);
             else
                 cur_val.set_dim(eqtb_dim_table[l].get_val());
             ScaledInt &W = cur_val.get_scaled();
@@ -4035,7 +4035,7 @@ void Parser::exec_calc() {
         else if (p == it_dimen)
             cur_val.incr_dim(eqtb_dim_table[l].get_val());
         else
-            cur_val.incr_int(eqtb_int_table[l].get_val());
+            cur_val.incr_int(eqtb_int_table[l].val);
     }
     if (p == it_glue)
         glue_define(l, cur_val.get_glue_val(), gbl);
@@ -4191,13 +4191,13 @@ void Parser::begin_box(int src, subtypes c) {
     push_level(bt_brace);
     TokenList L;
     if (c == xbox_code)
-        L = toks_registers[everyxbox_code].get_val();
+        L = toks_registers[everyxbox_code].val;
     else if (c == vbox_code)
-        L = toks_registers[everyvbox_code].get_val();
+        L = toks_registers[everyvbox_code].val;
     else if (c == vtop_code)
-        L = toks_registers[everyvbox_code].get_val();
+        L = toks_registers[everyvbox_code].val;
     else if (c == hbox_code)
-        L = toks_registers[everyhbox_code].get_val();
+        L = toks_registers[everyhbox_code].val;
     if (!L.empty()) {
         if (tracing_commands()) {
             String name = "<everyvbox> ";
@@ -4304,7 +4304,7 @@ void Parser::M_prefixed() {
     }
     if (C != def_cmd && (flags != 0)) prefix_error(b_global, K);
     // look at \globaldefs
-    int gd = eqtb_int_table[globaldefs_code].get_val();
+    int gd = eqtb_int_table[globaldefs_code].val;
     if (gd > 0) b_global = true;
     if (gd < 0) b_global = false;
     if (tracing_commands() && (b_global || (flags != 0))) {

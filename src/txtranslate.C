@@ -616,7 +616,7 @@ void Parser::T_subequations(bool start) {
             return;
         }
         in_subequations = false;
-        int v           = eqtb_int_table[equation_ctr_pos + 1].get_val();
+        int v           = eqtb_int_table[equation_ctr_pos + 1].val;
         word_define(equation_ctr_pos, v, true);
         state = state_S;
         return;
@@ -642,7 +642,7 @@ void Parser::T_subequations(bool start) {
     TokenList theparent;
     read_mac_body(theparent, true, 0);
     new_macro(theparent, T_theparentequation);
-    int v = eqtb_int_table[equation_ctr_pos].get_val();
+    int v = eqtb_int_table[equation_ctr_pos].val;
     word_define(equation_ctr_pos + 1, v, true); // par = cur
     word_define(equation_ctr_pos, 0, true);     // cur = 0
     M_let_fast(T_theequation, T_at_theparentequation, false);
@@ -1708,7 +1708,7 @@ void Parser::T_case_shift(int c) {
         }
         if (a.char_or_active()) {
             int b  = a.chr_val();
-            int cx = eqtb_int_table[b + offset].get_val();
+            int cx = eqtb_int_table[b + offset].val;
             if (cx != 0) {
                 res.push_back(Token(a.get_val() - b + cx));
                 continue;

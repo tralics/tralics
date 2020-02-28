@@ -575,7 +575,7 @@ auto Buffer::without_end_spaces(String T) -> String {
 }
 
 // Returns the current escape char (used for printing)
-auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[escapechar_code].get_val(); }
+auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[escapechar_code].val; }
 
 // Inserts the current escape char, unless zero or out of range.
 // This is used for transcript only

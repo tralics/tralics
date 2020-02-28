@@ -848,7 +848,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
     case 2: // a subfigure
         //    T->remove_empty_par();
         X = new Xml(cst_p, nullptr); // will contain junk
-        if (the_parser.eqtb_int_table[use_subfigure_code].get_val() != 0)
+        if (the_parser.eqtb_int_table[use_subfigure_code].val != 0)
             post_ns::raw_subfigure(from, to, X);
         else
             post_ns::table_subfigure(from, to, X);

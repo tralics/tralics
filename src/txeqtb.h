@@ -293,12 +293,12 @@ public:
 // Level_one is the outer level. The old value must be saved in case
 // the current level is different fron the old one, and is greater than one.
 // These objects are defined at level_one
-class EqtbInt {
+struct EqtbInt {
     int val{0};           // value of the object
     int level{level_one}; // level at which this is defined
-public:
+
     EqtbInt() = default;
-    [[nodiscard]] auto get_val() const -> int { return val; }
+
     void               set_val(int x) { val = x; }
     void               set_level(int x) { level = x; }
     [[nodiscard]] auto get_level() const -> int { return level; }
@@ -358,12 +358,12 @@ public:
 };
 
 // EQTB entry for a token list
-class EqtbToken {
+struct EqtbToken {
     TokenList val;              // value of the object
     int       level{level_one}; // level at which this is defined
-public:
+
     EqtbToken() = default;
-    [[nodiscard]] auto get_val() const -> TokenList { return val; }
+
     [[nodiscard]] auto get_level() const -> int { return level; }
     void               val_and_level(TokenList a, int b) {
         val   = std::move(a);

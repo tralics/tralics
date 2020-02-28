@@ -1113,8 +1113,8 @@ void FpNum::cosine() {
 void FpNum::trigo_xy(int x) {
     reset();
     sign    = true;
-    Digit a = static_cast<Digit>(x);
-    Digit b = static_cast<Digit>(x + 1);
+    auto  a = static_cast<Digit>(x);
+    auto  b = static_cast<Digit>(x + 1);
     Digit c = 0;
     a *= 1000;
     c       = a / b;
@@ -2068,7 +2068,7 @@ void Parser::fp_setseed() {
 void FpNum::random() {
     Digit cst_q = 127773;
     Digit cst_m = 2147483647;
-    Digit S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].get_val());
+    auto  S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].val);
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
     int   w     = static_cast<int>(xib * 16807) - static_cast<int>(xia * 2836);

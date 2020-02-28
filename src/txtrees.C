@@ -482,7 +482,7 @@ void Parser::get_counter(Token T, int &c) {
     c = 0;
     see_cs_token(T);
     if (cur_cmd_chr.get_cmd() != assign_int_cmd) return;
-    c = eqtb_int_table[cur_cmd_chr.get_chr()].get_val();
+    c = eqtb_int_table[cur_cmd_chr.get_chr()].val;
 }
 
 // Reads three counter names; return true if OK

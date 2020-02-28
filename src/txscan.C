@@ -171,7 +171,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     W->set_line_vector(input_line);
     W->get_TL().swap(TL);
     if (restore_at) {
-        W->set_at_val(eqtb_int_table[uchar('@')].get_val());
+        W->set_at_val(eqtb_int_table[uchar('@')].val);
         eqtb_int_table[uchar('@')].set_val(11);
         the_log << lg_start_io << "Made @ a letter\n";
     }
@@ -835,7 +835,7 @@ void Parser::store_new_line(int n, bool vb) {
 
 void Parser::insert_endline_char() {
     input_line_pos = 0;
-    int cc         = eqtb_int_table[endlinechar_code].get_val();
+    int cc         = eqtb_int_table[endlinechar_code].val;
     if (cc >= 0 && cc < int(nb_characters)) input_line.emplace_back(static_cast<unsigned>(cc));
 }
 
@@ -890,7 +890,7 @@ auto Parser::get_a_new_line() -> bool {
         n = lines.get_next(scratch);
         if (n < 0 && every_eof) {
             every_eof   = false;
-            TokenList L = toks_registers[everyeof_code].get_val();
+            TokenList L = toks_registers[everyeof_code].val;
             if (!L.empty()) {
                 if (tracing_io()) the_log << lg_start_io << "everyeof=" << L << ".\n";
                 back_input(L);
@@ -1297,10 +1297,10 @@ void Parser::scan_something_internal(internal_type level) {
         v = m;
         if (cur_cmd_chr.get_cmd() == toks_register_cmd) // read the 349 in `\toks349'
             v = scan_reg_num();
-        cur_val.set_toks(toks_registers[v].get_val());
+        cur_val.set_toks(toks_registers[v].val);
         return;
     case assign_int_cmd: // \year etc
-        cur_val.set_int(eqtb_int_table[m].get_val());
+        cur_val.set_int(eqtb_int_table[m].val);
         return;
     case assign_dimen_cmd: // \parindent etc
         cur_val.set_dim(eqtb_dim_table[m].get_val());
@@ -1333,7 +1333,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
     case set_mathprop_cmd: {
         int k = scan_mathfont_ident();
-        int w = eqtb_int_table[mathprop_ctr_code].get_val();
+        int w = eqtb_int_table[mathprop_ctr_code].val;
         w     = (w & (1 << k)) != 0 ? 1 : 0;
         cur_val.set_int(w);
         return;
@@ -1394,7 +1394,7 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case def_code_cmd: // \catcode, \lccode etc
         v = scan_char_num();
-        cur_val.set_int(eqtb_int_table[v + m].get_val());
+        cur_val.set_int(eqtb_int_table[v + m].val);
         return;
     case def_family_cmd:       // \textfont
     case set_font_cmd:         // a font (like \tenrm in plain)
@@ -1413,7 +1413,7 @@ void Parser::scan_something_internal(internal_type level) {
     case register_cmd: // \count, \dimen, etc
         v = scan_reg_num();
         switch (static_cast<internal_type>(m)) {
-        case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].get_val()); return;
+        case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].val); return;
         case it_dimen: cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
         case it_glue: cur_val.set_glue(glue_table[v].get_val()); return;
         case it_mu: cur_val.set_mu(glue_table[v + muskip_reg_offset].get_val()); return;
@@ -1866,7 +1866,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     case set_mathprop_cmd: {
         int  k    = scan_mathfont_ident();
         int  mask = 1 << k;
-        uint w    = eqtb_int_table[mathprop_ctr_code].get_val();
+        uint w    = eqtb_int_table[mathprop_ctr_code].val;
         scan_optional_equals();
         int v = scan_int(T);
         if (v != 0)
@@ -2012,7 +2012,7 @@ void Parser::assign_toks(Token T, int p, bool gbl) {
     }
     if (have_reg) {
         if (p == q) return;
-        TokenList Q = toks_registers[q].get_val();
+        TokenList Q = toks_registers[q].val;
         token_list_define(p, Q, gbl);
     } else { // this is scan_toks (false,false)
         SaveScannerStatus tmp(ss_absorbing);
@@ -2355,12 +2355,12 @@ auto Parser::scan_expr(Token T, internal_type et) -> bool {
 // OK for \font, or \scriptfont, or \nullfont or \tenrm
 auto Parser::scan_font_ident() -> int {
     remove_initial_space();
-    if (cur_cmd_chr.get_cmd() == def_font_cmd) return eqtb_int_table[cur_font_loc].get_val();
+    if (cur_cmd_chr.get_cmd() == def_font_cmd) return eqtb_int_table[cur_font_loc].val;
     if (cur_cmd_chr.get_cmd() == set_font_cmd) return cur_cmd_chr.get_chr();
     if (cur_cmd_chr.get_cmd() == def_family_cmd) {
         int a = cur_cmd_chr.get_chr();
         int b = scan_int(cur_tok, 15, "family number");
-        return eqtb_int_table[a + b].get_val();
+        return eqtb_int_table[a + b].val;
     }
     if (cur_tok.is_valid()) back_input();
     parse_error(err_tok, "Missing font identifier");

@@ -413,7 +413,7 @@ void Parser::T_typein() {
         has_opt = true;
     }
     log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
-    int cc = eqtb_int_table[endlinechar_code].get_val();
+    int cc = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].set_val(-1);
     TokenList L = read_from_file(0, false);
     eqtb_int_table[endlinechar_code].set_val(cc);
@@ -1272,7 +1272,7 @@ void token_ns::lower_case(TokenList &L) {
         Token a = *P;
         if (a.get_val() < single_offset) {
             int b  = a.chr_val();
-            int cx = the_parser.eqtb_int_table[b + offset].get_val();
+            int cx = the_parser.eqtb_int_table[b + offset].val;
             if (cx != 0) *P = Token(a.get_val() - b + cx);
         }
         ++P;
@@ -2349,7 +2349,7 @@ void token_ns::int_to_roman(Buffer &b, int n) {
 void Parser::T_listenv(symcodes x) {
     leave_h_mode();
     bool is_enum   = x == enumerate_cmd;
-    int  listdepth = eqtb_int_table[list_depth_code].get_val();
+    int  listdepth = eqtb_int_table[list_depth_code].val;
     listdepth += is_enum ? 100 : 1;
     word_define(list_depth_code, listdepth, false);
     int n = listdepth;

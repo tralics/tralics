@@ -1778,7 +1778,7 @@ void Parser::TM_fonts() {
         return;
     }
     TokenList L = read_arg();
-    int       c = eqtb_int_table[math_font_pos].get_val();
+    int       c = eqtb_int_table[math_font_pos].val;
     back_input(table[c]);
     back_input(hash_table.nomathsw0_token);
     L.push_back(hash_table.nomathsw1_token);
@@ -1848,7 +1848,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 // the list
 auto Math::convert_char_seq(MathElt W) -> MathElt {
     subtypes f = W.get_font();
-    int      w = the_parser.eqtb_int_table[mathprop_ctr_code].get_val();
+    int      w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res;
     Buffer & B = aux_buffer;
     B.reset();

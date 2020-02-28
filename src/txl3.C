@@ -98,7 +98,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
 // In latex3, a space is ignored, so locally redefine the catcode
 void Parser::L3_getid() {
     get_token(); // should be a dollar sign, but hack!
-    int spcat = eqtb_int_table[uchar(' ')].get_val();
+    int spcat = eqtb_int_table[uchar(' ')].val;
     eqtb_int_table[uchar(' ')].set_val(10);
     TokenList l    = read_until(cur_tok);
     TokenList info = read_arg();
@@ -794,7 +794,7 @@ void Parser::L3_set_num_code(int c) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;
     }
-    int v = eqtb_int_table[m + offset].get_val();
+    int v = eqtb_int_table[m + offset].val;
     if (show)
         log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {

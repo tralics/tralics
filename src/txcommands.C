@@ -887,7 +887,7 @@ void Parser::translate03() {
     case aparaitre_cmd:
         LC();
         // FIXME this is latex not xml
-        if (eqtb_int_table[language_code].get_val() == 1) {
+        if (eqtb_int_table[language_code].val == 1) {
             process_char(codepoint(0xE0U));
             process_string(" para");
             process_char(codepoint(0xEEU));
@@ -1219,7 +1219,7 @@ void Parser::translate03() {
             static bool inserted = false;
             if (!inserted) the_stack.top_stack()->change_id(4);
             inserted  = true;
-            int     k = eqtb_int_table[42 + count_reg_offset].get_val();
+            int     k = eqtb_int_table[42 + count_reg_offset].val;
             Buffer &b = mac_buffer;
             b.reset();
             b << k;

@@ -666,7 +666,7 @@ void Parser::load_latex() {
     translate0();
 
     eqtb_int_table[uchar('@')].set_val(12); // this is \makeatother
-    TokenList ejob = toks_registers[everyjob_code].get_val();
+    TokenList ejob = toks_registers[everyjob_code].val;
     back_input(ejob);
 }
 
@@ -2602,7 +2602,7 @@ void Parser::make_catcodes() {
     set_cat(160, 13); // non breaking space
     set_cat('~', 13);
     set_cat('%', 14);
-    for (uint i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].get_val();
+    for (uint i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].val;
     set_cat('@', 11);
 }
 

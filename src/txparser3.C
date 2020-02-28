@@ -102,7 +102,7 @@ Parser::Parser() : cur_env_name("document") {
 
 // Saves in *this the catcode at position c, modifies it to be nc
 SaveCatcode::SaveCatcode(int c, int nc) : character(c) {
-    code = the_parser.eqtb_int_table[character].get_val();
+    code = the_parser.eqtb_int_table[character].val;
     the_parser.eqtb_int_table[character].set_val(nc);
 }
 
@@ -229,10 +229,10 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
 // Define for an integer quantity. Like eq_define without reference counts.
 void Parser::word_define(int a, int c, bool gbl) {
     EqtbInt &W        = eqtb_int_table[a];
-    bool     reassign = !gbl && W.get_val() == c;
+    bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_int_cmd, subtypes(a));
-        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.get_val();
+        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << lg_endbrace;
     }
@@ -241,7 +241,7 @@ void Parser::word_define(int a, int c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.get_level(), a, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.get_level(), a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -333,10 +333,10 @@ void Parser::box_define(int a, Xml *c, bool gbl) {
 // Same code for a token list.
 void Parser::token_list_define(int p, TokenList &c, bool gbl) {
     EqtbToken &W        = toks_registers[p];
-    bool       reassign = !gbl && W.get_val() == c;
+    bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_toks_cmd, subtypes(p));
-        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.get_val();
+        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << lg_endbrace;
     }
@@ -345,7 +345,7 @@ void Parser::token_list_define(int p, TokenList &c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.get_level(), p, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.get_level(), p, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -509,7 +509,7 @@ auto       Parser::first_boundary() -> boundary_type {
         SaveAux *p = the_save_stack[i];
         if (p->type != st_boundary) continue;
         first_boundary_loc = p->get_line();
-        return static_cast<SaveAuxBoundary *>(p)->get_val();
+        return dynamic_cast<SaveAuxBoundary *>(p)->get_val();
     }
     return bt_impossible;
 }
@@ -522,7 +522,7 @@ auto Parser::stack_math_in_cell() -> bool {
     for (int i = n - 1; i >= 0; i--) {
         SaveAux *p = the_save_stack[i];
         if (p->type != st_boundary) continue;
-        boundary_type cur = static_cast<SaveAuxBoundary *>(p)->get_val();
+        boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->get_val();
         if (cur == bt_brace || cur == bt_semisimple) continue;
         if (first) {
             if (cur != bt_math) return false;
@@ -540,7 +540,7 @@ void Parser::dump_save_stack() {
     for (int i = n - 1; i >= 0; i--) {
         SaveAux *p = the_save_stack[i];
         if (p->type != st_boundary) continue;
-        static_cast<SaveAuxBoundary *>(p)->dump(L);
+        dynamic_cast<SaveAuxBoundary *>(p)->dump(L);
         --L;
     }
     the_log << "### bottom level\n";
@@ -622,11 +622,11 @@ void Parser::pop_all_levels() {
         SaveAux *tmp = the_save_stack.back();
         std::cout << to_string(tmp->type) << " at " << tmp->line_no << "\n";
         if (tmp->type == st_env) {
-            auto *q = static_cast<SaveAuxEnv *>(tmp);
+            auto *q = dynamic_cast<SaveAuxEnv *>(tmp);
             ename   = q->get_name();
         }
         if (tmp->type == st_boundary) {
-            boundary_type w = static_cast<SaveAuxBoundary *>(tmp)->get_val();
+            boundary_type w = dynamic_cast<SaveAuxBoundary *>(tmp)->get_val();
             int           l = tmp->get_line();
             if (started) {
                 B << ".\n"; // finish prev line
@@ -693,7 +693,7 @@ auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
     for (int i = n - 1; i >= 0; i--) {
         SaveAux *p = the_save_stack[i];
         if (p->type != st_env) continue;
-        auto *q = static_cast<SaveAuxEnv *>(p);
+        auto *q = dynamic_cast<SaveAuxEnv *>(p);
         if (q->get_name() == s) return q;
     }
     return nullptr;

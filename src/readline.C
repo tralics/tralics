@@ -504,7 +504,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
     if (debut < 0) debut = 0;
     if (fin >= m_inmax) fin = m_inmax - 1;
 
-    auto taille = static_cast<size_t>(fin - debut + 1); // Size of what must be killed.
+    auto taille = static_cast<unsigned>(fin - debut + 1); // Size of what must be killed.
     m_killbuf   = std::string(m_inbuf + debut, taille);
     if (sw != 0) {
         rl_move(m_inpos, debut);
