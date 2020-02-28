@@ -1120,13 +1120,13 @@ auto Parser::scan_int_internal() -> int {
 
 // Read an alpha token.
 // we allow }, \} or active ~. One optional space is read.
-auto Parser::scan_alpha() -> int {
+auto Parser::scan_alpha() -> size_t {
     if (get_token()) {
         improper_alpha();
         return 0;
     }
     if (cur_tok.active_or_single()) {
-        int t = cur_tok.chr_val();
+        auto t = cur_tok.chr_val();
         read_one_space();
         return t;
     }

@@ -51,7 +51,7 @@ public:
     [[nodiscard]] auto is_protected() const -> bool {
         return cmd == userp_cmd || cmd == userlp_cmd || cmd == userpo_cmd || cmd == userlpo_cmd;
     }
-    [[nodiscard]] auto val_as_digit() const -> int { return chr - '0'; }
+    [[nodiscard]] auto val_as_digit() const -> unsigned { return chr - '0'; }
     void               set_mathml() { cmd = math_xml_cmd; }
     [[nodiscard]] auto is_math_openclosebetween() const -> bool {
         return cmd == mathbetween_cmd || cmd == mathopen_cmd || cmd == mathclose_cmd;

@@ -384,7 +384,7 @@ void Clines::convert_line(size_t wc) {
 
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(int enc, int pos, int v) {
-    if (!(enc >= 2 && enc < max_encoding)) {
+    if (!(enc >= 2 && enc < static_cast<int>(max_encoding))) {
         thebuffer << bf_reset << "Illegal encoding " << enc;
         the_parser.parse_error(thebuffer.c_str());
         return;
@@ -402,15 +402,15 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
-    if (!(enc >= 2 && enc < max_encoding)) return pos;
+    if (!(enc >= 2 && enc < static_cast<int>(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
     return static_cast<int>(custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)].value);
 }
 
 void LinePtr::change_encoding(int wc) {
-    if (wc >= 0 && wc < max_encoding) {
-        cur_encoding = wc;
+    if (wc >= 0 && wc < static_cast<int>(max_encoding)) {
+        cur_encoding = static_cast<uint>(wc);
         the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << lg_end;
     }
 }
@@ -433,7 +433,7 @@ auto io_ns::find_encoding(String cl) -> int {
     if (!is_digit(s[17])) return -1;
     int k = s[17] - '0';
     if (is_digit(s[18])) { k = 10 * k + s[18] - '0'; }
-    if (k < max_encoding) return k;
+    if (k < static_cast<int>(max_encoding)) return k;
     return -1;
 }
 
@@ -459,7 +459,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
         prev_line = true;
     if (B[0] == '%') { // debug
         int k = io_ns::find_encoding(B.c_str());
-        if (k >= 0) cur_encoding = k;
+        if (k >= 0) cur_encoding = static_cast<size_t>(k);
     }
     return cur_line;
 }
@@ -490,9 +490,8 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     std::string old_name        = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;
-    int    wc = the_main->input_encoding;
-    if (spec == 4) wc = -1;
-    bool converted = spec < 2;
+    auto   wc        = the_main->input_encoding;
+    bool   converted = spec < 2;
     L.set_encoding(the_main->input_encoding);
     int co_try = spec == 3 ? 0 : 20;
     for (;;) {
@@ -520,14 +519,14 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 co_try--;
                 int k = io_ns::find_encoding(B.c_str());
                 if (k >= 0) {
-                    wc = k;
-                    L.set_encoding(k);
+                    wc = static_cast<unsigned>(k);
+                    L.set_encoding(wc);
                     co_try = 0;
                     the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.get_cur_line() + 1 << " of file "
                             << x << lg_end;
                 }
             }
-            if (converted) B.convert_line(L.get_cur_line() + 1, static_cast<size_t>(wc));
+            if (converted) B.convert_line(L.get_cur_line() + 1, wc);
             if (emit)
                 L.insert(B.to_string(), converted);
             else
@@ -1033,7 +1032,7 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
     value.pop_front();
     if (w != 0) {
         the_converter.cur_file_name = file_name;
-        b.convert_line(n, w);
+        b.convert_line(n, static_cast<size_t>(w));
     }
     return n;
 }
@@ -1121,7 +1120,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
     while (C != E) {
         B.reset();
         B.push_back(C->get_chars());
-        int k = B.find_doctype();
+        auto k = B.find_doctype();
         if (k != 0) {
             res = B.to_string(k);
             return;

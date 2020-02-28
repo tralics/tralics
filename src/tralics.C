@@ -493,7 +493,7 @@ void Parser::load_latex() {
     counter_boot("figure", "");
     counter_boot("subfigure", "figure");
     counter_boot("equation", "");
-    equation_ctr_pos = allocation_table[newcount_code] + count_reg_offset;
+    equation_ctr_pos = static_cast<size_t>(allocation_table[newcount_code] + count_reg_offset);
     counter_boot("parentequation", "");
 
     // \newcount

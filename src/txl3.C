@@ -12,6 +12,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace {
     const TokenList empty_list;
@@ -163,7 +164,7 @@ auto Parser::l3_parms_from_ac(int n, Token t, bool s) -> TokenList {
     TokenList L;
     for (int i = 0; i < n; i++) {
         L.push_back(make_char_token('#', 6));
-        L.push_back(Token(other_t_offset, '1' + i));
+        L.push_back(Token(other_t_offset, '1' + static_cast<uchar>(i)));
     }
     return L;
 }
@@ -216,7 +217,7 @@ void Parser::L3_new_conditional_parm(subtypes s) {
 void Parser::L3_new_conditional(subtypes s) {
     cmd_name = cur_tok;
     if (L3_split_next_name()) return;
-    TokenList parms = l3_parms_from_ac(tok_sig.size(), token_to_split, true);
+    TokenList parms = l3_parms_from_ac(static_cast<int>(tok_sig.size()), token_to_split, true);
     L3_new_conditional_aux(parms, s);
 }
 
@@ -709,16 +710,17 @@ void Parser::L3_set_cat_code(int c) {
         c -= 16;
         alpha = true;
     }
-    int w;
+    size_t w;
     if (alpha)
         w = scan_alpha();
     else {
-        Token T = cur_tok;
-        w       = l3_read_int(T);
-        if (w < 0 || w > int(scan_char_num_max)) {
-            signal_ovf(T, "Bad character code replaced by 0\n", w, scan_char_num_max);
+        Token T  = cur_tok;
+        auto  ww = l3_read_int(T);
+        if (ww < 0 || ww > int(scan_char_num_max)) {
+            signal_ovf(T, "Bad character code replaced by 0\n", ww, scan_char_num_max);
             w = 0;
-        }
+        } else
+            w = static_cast<size_t>(ww);
     }
     word_define(w, c, false);
 }
@@ -786,7 +788,7 @@ void Parser::L3_set_num_code(int c) {
         back_input(L1);
         cur_tok = T;
         int m   = scan_char_num();
-        word_define(m + offset, N, false);
+        word_define(static_cast<size_t>(m + offset), N, false);
         return;
     }
     int m = l3_read_int(T);
@@ -794,7 +796,7 @@ void Parser::L3_set_num_code(int c) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;
     }
-    int v = eqtb_int_table[m + offset].val;
+    int v = eqtb_int_table[static_cast<size_t>(m + offset)].val;
     if (show)
         log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {
@@ -946,7 +948,7 @@ void Parser::generate_from_sig() {
         ignore_arg();
         return;
     }
-    TokenList parms = l3_parms_from_ac(tok_sig.size(), token_to_split, true);
+    TokenList parms = l3_parms_from_ac(static_cast<int>(tok_sig.size()), token_to_split, true);
     back_input(parms);
     back_input(token_to_split);
     back_input(definer);
@@ -1047,9 +1049,9 @@ void Parser::l3_generate_variant(String orig, String var) {
 
 // This produces a single variant;
 void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) {
-    int n = var.size();
+    auto n = var.size();
     if (n == 0) return; // ignore empty sepc
-    if (n > int(tok_sig.size())) {
+    if (n > tok_sig.size()) {
         err_buf.reset();
         err_buf << "New spec size '" << var << "' too big for " << orig;
         signal_error(err_tok, "spec too big");
@@ -1061,8 +1063,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     osig << bf_reset << tok_sig;
     nsig << bf_reset << var;
     changes.reset();
-    int last_ok = 0;
-    for (int i = 0; i < n; i++) {
+    size_t last_ok = 0;
+    for (size_t i = 0; i < n; i++) {
         char oc = osig[i], nc = nsig[i];
         if (oc == nc) {                              // no conversion needed
             if (!(nc == 'N' || nc == 'p')) nc = 'n'; // cannot always use n
@@ -1071,7 +1073,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
             last_ok = i + 1;
         } else {
             err_buf.reset();
-            err_buf << "Old spec at position " << i << " should be n or N for " << orig;
+            err_buf << fmt::format("Old spec at position {} should be n or N for ", i) << orig;
             signal_error(err_tok, "variant, bad orig");
             return;
         }
@@ -1079,7 +1081,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     }
     changes.kill_at(last_ok);
     bool need_prot = false; // Protect result and aux function
-    for (int i = 0; i < last_ok; i++)
+    for (size_t i = 0; i < last_ok; i++)
         if (changes[i] == 'x') need_prot = true;
     if (need_prot) prot = true;
     nsig << bf_reset << tok_base << ':' << osig;
@@ -1097,7 +1099,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     mac_define(newfun, X, true, rd_always, prot ? userp_cmd : user_cmd);
     if (!hash_table.eqtb[converter.eqtb_loc()].is_undefined()) return;
     TokenList cb;
-    for (int i = 0;; i++) {
+    for (size_t i = 0;; i++) {
         char c = changes[i];
         if (c == 0) c = ':';
         nsig << bf_reset << "::" << c;

@@ -93,7 +93,7 @@ public:
     [[nodiscard]] auto is_e_grave() const -> bool;
     [[nodiscard]] auto special3() const -> Xml *;
     void               print() const;
-    [[nodiscard]] auto val_as_digit() const -> int { return val.val_as_digit(); }
+    [[nodiscard]] auto val_as_digit() const -> unsigned { return val.val_as_digit(); }
 
 private:
     void set_xml_subtype(math_types x) {
@@ -212,7 +212,7 @@ private:
     auto               add_fence(bool final, MathF &M) -> bool;
     void               concat(Xml *res);
     void               concat_space(Xml *res);
-    auto               convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xml *;
+    auto               convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml *;
     auto               convert_char_seq(MathElt W) -> MathElt;
     auto               convert_char_iseq(MathElt W, bool multiple) -> MathElt;
     void               fetch_rlc(std::vector<AttList> &table);
@@ -342,12 +342,12 @@ class MathDataP {
     Xml *            built_in_table[last_math_loc];     // the static math table
     Xml *            built_in_table_alt[last_math_loc]; // the static math table
     Xml **           xml_math_table;                    // the dynamic math table
-    int              xmath_size;                        // size of the dynamic table
-    int              xmath_pos;                         // number of slots used in the dynamic table
+    size_t           xmath_size;                        // size of the dynamic table
+    size_t           xmath_pos;                         // number of slots used in the dynamic table
 
     Math *     math_table;                      // the table of math lists
-    int        lmath_size;                      // the size of the math table
-    int        lmath_pos;                       // number of slots used in the math table
+    size_t     lmath_size;                      // the size of the math table
+    size_t     lmath_pos;                       // number of slots used in the math table
     Istring    xml_lr_ptable[del_tablesize];    // table of fence attributes
     math_types math_char_type[nb_mathchars];    // the math type for +, = etc
     Xml *      simplemath_table[nb_simplemath]; // translation of $x$ etc

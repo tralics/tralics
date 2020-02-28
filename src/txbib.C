@@ -14,6 +14,7 @@
 #include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <optional>
 
 namespace {
     class Error {};

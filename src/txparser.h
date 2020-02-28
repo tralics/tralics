@@ -62,7 +62,7 @@ private:
     int       ra_year{1789};           // default year if none given as argument
     int       default_language_num{0}; // default language
     int       cur_level;               // current level on the execution stack
-    int       equation_ctr_pos;        // position in the table of the counter equation
+    size_t    equation_ctr_pos;        // position in the table of the counter equation
     states    state;                   // current state of the scanner
     Token     cur_tok;                 // current token
     Token     after_assignment_token;  // token for \afterassignment
@@ -234,7 +234,7 @@ public:
     void               M_tracingall();
     void               translate0();
     void               translate_all();
-    void               word_define(int a, int c, bool gbl);
+    void               word_define(size_t a, int c, bool gbl);
     auto               find_a_save_key(const std::string &mykey) -> bool;
     static auto        expand_mac_inner(const TokenList &W, TokenList *arguments) -> TokenList;
     void               mu_error(String s, int i);
@@ -641,7 +641,7 @@ private:
     void        save_font();
     void        save_the_state(SaveState &x);
     auto        scan_27bit_int() -> int;
-    auto        scan_alpha() -> int;
+    auto        scan_alpha() -> size_t;
     void        scan_box(int bc);
     auto        scan_braced_int(Token T) -> int;
     auto        scan_char_num() -> int;

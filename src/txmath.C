@@ -21,7 +21,7 @@ namespace {
     Buffer             special_buffer;
     Buffer             math_buffer1;
     Buffer             Trace;
-    int                old_pos = 0;       // pointer into trace
+    size_t             old_pos = 0;       // pointer into trace
     MathHelper         cmi;               // Data structure holding some global values
     bool               trace_needs_space; // bool  for: \frac\pi y
     bool               old_need = false;  // prev value of trace_needs_space
@@ -40,7 +40,7 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
+    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
                            int close) -> Xml *;
 } // namespace math_ns
 
@@ -455,9 +455,9 @@ auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg)
 
 // This reallocates the math_table
 void MathDataP::realloc_list() {
-    int   k = 2 * lmath_size;
+    auto  k = 2 * lmath_size;
     Math *T = new Math[k];
-    for (int i = 0; i < lmath_size; i++) T[i] = math_table[i];
+    for (size_t i = 0; i < lmath_size; i++) T[i] = math_table[i];
     delete[] math_table;
     math_table = T;
     lmath_size = k;
@@ -466,17 +466,17 @@ void MathDataP::realloc_list() {
 
 // Makes sure there is enough place for two copies
 void MathDataP::realloc_list0() {
-    int n = lmath_pos + 1;
+    auto n = lmath_pos + 1;
     if (n + n + n > lmath_size) realloc_list();
     if (n + n + n > lmath_size) realloc_list();
 }
 
 // This reallocates the xml_math_table
 void MathDataP::realloc_xml() {
-    int   k = 2 * xmath_size;
+    auto  k = 2 * xmath_size;
     Xml **T = new Xml *[k];
-    for (int i = 0; i < k; i++) T[i] = nullptr;
-    for (int i = 0; i < xmath_size; i++) T[i] = xml_math_table[i];
+    for (size_t i = 0; i < k; i++) T[i] = nullptr;
+    for (size_t i = 0; i < xmath_size; i++) T[i] = xml_math_table[i];
     delete[] xml_math_table;
     xml_math_table = T;
     xmath_size     = k;
@@ -570,7 +570,7 @@ void MathDataP::boot_table() {
     math_table     = new Math[lmath_size];
     xmath_size     = 10;
     xml_math_table = new Xml *[xmath_size];
-    for (int i = 0; i < xmath_size; i++) xml_math_table[i] = nullptr;
+    for (size_t i = 0; i < xmath_size; i++) xml_math_table[i] = nullptr;
     xmath_pos = 0;
     lmath_pos = 0;
 }
@@ -612,7 +612,7 @@ void MathHelper::set_type(bool b) {
 // Note: the return value is never zero.
 auto MathDataP::find_math_location(math_list_type c, subtypes n) -> subtypes {
     lmath_pos++;
-    int res = lmath_pos;
+    auto res = lmath_pos;
     if (res >= lmath_size) realloc_list();
     math_table[res].set_type(c);
     math_table[res].set_name(n);
@@ -647,7 +647,7 @@ void MathHelper::finish_math_mem() {
 
 // This kills the math elements
 void MathDataP::finish_math_mem() {
-    for (int i = 0; i <= lmath_pos; i++) math_table[i].destroy();
+    for (size_t i = 0; i <= lmath_pos; i++) math_table[i].destroy();
     lmath_pos = 0;
     xmath_pos = 0;
 }
@@ -787,7 +787,7 @@ void Parser::T_math(subtypes type) {
     cmi.set_type(is_inline);
     cmi.check_for_eqnum(type, eqtb_int_table[multimlabel_code].val != 0);
     if (type == nomathenv_code || type == math_code || type == displaymath_code) {
-        int       position  = is_inline ? everymath_code : everydisplay_code;
+        size_t    position  = is_inline ? everymath_code : everydisplay_code;
         TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
             if (tracing_commands())
@@ -952,9 +952,9 @@ auto Parser::scan_math1(int res) -> int {
         if (the_stack.get_mode() == mode_math) {
             int c = cur_cmd_chr.get_chr();
             if (c > 0 && c < int(nb_characters)) {
-                int u = eqtb_int_table[c + math_code_offset].val;
+                int u = eqtb_int_table[static_cast<size_t>(c + math_code_offset)].val;
                 if (u == 32768) {
-                    cur_tok.active_char(c);
+                    cur_tok.active_char(static_cast<unsigned>(c));
                     back_input();
                     return 1;
                 }
@@ -1057,11 +1057,11 @@ void Parser::scan_math(int res, math_list_type type) {
         case left_cmd: {
             del_pos k   = math_lr_value();
             int     tmp = new_math_list(res, math_LR_cd, nomathenv_code);
-            Math &  w   = math_data.get_list(tmp);
-            w.push_front(CmdChr(T, subtypes(k)), zero_code);
-            if (w.back().get_cmd() != right_cmd) {
+            Math &  ww  = math_data.get_list(tmp);
+            ww.push_front(CmdChr(T, subtypes(k)), zero_code);
+            if (ww.back().get_cmd() != right_cmd) {
                 parse_error("Missing \\right. inserted");
-                w.push_back(CmdChr(right_cmd, subtypes(del_dot)), zero_code);
+                ww.push_back(CmdChr(right_cmd, subtypes(del_dot)), zero_code);
             }
             continue;
         }
@@ -1121,17 +1121,17 @@ void Parser::scan_math(int res, math_list_type type) {
         case scan_glue_cmd:
         case hspace_cmd: {
             ScaledInt val = scan_math_kern(T, c);
-            CmdChr    w   = CmdChr(hspace_cmd, c);
-            math_data.push_back(res, w, subtypes(val.get_value()));
+            CmdChr    ww  = CmdChr(hspace_cmd, c);
+            math_data.push_back(res, ww, subtypes(val.get_value()));
             continue;
         }
         case start_par_cmd:
             // no error ?
             continue;
         case char_num_cmd: {
-            int    C = scan_27bit_int();
-            CmdChr w = CmdChr(char_given_cmd, subtypes(C));
-            math_data.push_back(res, w, subtypes(0));
+            int    C  = scan_27bit_int();
+            CmdChr ww = CmdChr(char_given_cmd, subtypes(C));
+            math_data.push_back(res, ww, subtypes(0));
         }
             continue;
         case char_given_cmd:
@@ -1189,8 +1189,8 @@ auto Parser::scan_math_endcell(Token t) -> bool {
 
 // debug
 void MathHelper::dump_labels() {
-    int n = multi_labels.size();
-    for (int i = 0; i < n; i++) {
+    auto n = multi_labels.size();
+    for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
         if (v == 0)
             the_log << "\n";
@@ -1215,11 +1215,11 @@ void MathHelper::dump_labels() {
 
 //
 void MathHelper::ml_check_labels() {
-    int         n      = multi_labels.size();
+    auto        n      = multi_labels.size();
     int         l      = 1;
     Buffer &    B      = math_buffer;
     static bool warned = false;
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
         if (v == 0)
             l++;
@@ -1251,17 +1251,17 @@ void MathHelper::ml_check_labels() {
 // true if no equation number has to be produced
 // leaves a hole for the label
 auto MathHelper::end_of_row() -> bool {
-    int  k          = last_ml_pos;
-    int  n          = multi_labels.size();
-    bool seen_label = false;
-    bool seen_notag = false;
-    bool seen_tag   = false;
-    for (int i = k; i < n; i++) {
+    auto k           = last_ml_pos;
+    auto n           = multi_labels.size();
+    bool sseen_label = false;
+    bool seen_notag  = false;
+    bool seen_tag    = false;
+    for (size_t i = k; i < n; i++) {
         int v = multi_labels_type[i];
         if (v == 0) continue; // boundary
         if (v == 1) {         // a label
-            if (seen_label) { multi_labels_type[i] = -v; }
-            seen_label = true;
+            if (sseen_label) { multi_labels_type[i] = -v; }
+            sseen_label = true;
         } else if (v == 2 || v == 3) { // a tag
             if (seen_tag) { multi_labels_type[i] = -v; }
             seen_tag = true;
@@ -1269,7 +1269,7 @@ auto MathHelper::end_of_row() -> bool {
             seen_notag = true;
     }
     bool ok = seen_tag || seen_notag;
-    if (seen_notag && seen_label && !seen_tag) ok = false; // ??
+    if (seen_notag && sseen_label && !seen_tag) ok = false; // ??
     if (!ok) new_multi_label("", 5);
     new_multi_label("", 0); // add a new boundary
     last_ml_pos = multi_labels.size();
@@ -1280,8 +1280,8 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     bool        slabel = false, stag = false;
     std::string label;
     std::string tag;
-    int         n = multi_labels.size();
-    int         i;
+    auto        n = multi_labels.size();
+    size_t      i;
     static int  N = 0;
     if (last_ml_pos == 0) N = 0;
     N++;
@@ -1315,8 +1315,8 @@ void MathHelper::ml_last_pass(bool vb) {
     bool        slabel = false, stag = false;
     std::string label;
     std::string tag;
-    int         n = multi_labels.size();
-    for (int i = 0; i < n; i++) {
+    auto        n = multi_labels.size();
+    for (size_t i = 0; i < n; i++) {
         int j = (multi_labels_type[i]);
         if (j == 0) continue;
         if (j == 1) {
@@ -1478,7 +1478,6 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
 
 // We have seen \tag, \@xtag o<r \@ytag
 // 0: \tag, 1=\@xtag 2=\@ytag 3=\notag 4=\nonumber
-
 void Parser::scan_math_tag(subtypes c) {
     if (c == 3 || c == 4) {
         if (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1) {
@@ -1537,7 +1536,7 @@ void Parser::scan_eqno(math_list_type type) {
         }
         if (cur_cmd_chr.get_cmd() == char_num_cmd) {
             int C   = scan_char_num();
-            cur_tok = Token(other_t_offset, C);
+            cur_tok = Token(other_t_offset, static_cast<uchar>(C));
             back_input();
             continue;
         }
@@ -1657,10 +1656,10 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
 auto Parser::scan_style() -> Token {
     TokenList L = read_arg();
     Token     t = token_ns::get_unique(L);
-    int       p = 4;
+    size_t    p = 4;
     if (t.cmd_val() == other_catcode) {
-        int tt = t.val_as_digit();
-        if (tt >= 0 && tt <= 3) p = tt;
+        auto tt = t.val_as_digit();
+        if (tt <= 3) p = tt;
     }
     return hash_table.genfrac_mode[p];
 }
@@ -1732,7 +1731,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
         subtypes r1 = math_argument(0, ct);
         T.emplace_back(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd));
     }
-    int n       = T.size();
+    auto n      = T.size();
     n           = n / 2;
     n           = n + n; // Ignore last if odd
     subtypes r1 = math_argument(0, ct);
@@ -1742,7 +1741,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
         u.set_name(subtypes(ss.get_value()));
     }
     u.push_back_list(r1, math_argument_cd);
-    for (int i = 0; i < n; i++) u.push_back(T[i]);
+    for (size_t i = 0; i < n; i++) u.push_back(T[i]);
     math_data.push_back(res, W, subtypes(u.get_type()));
 }
 
@@ -1887,7 +1886,7 @@ void Math::fetch_rlc(std::vector<AttList> &table) {
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
-auto Math::convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xml * {
+auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml * {
     Xml *res = new Xml(cst_mtd, nullptr);
     if (empty()) {
         n++; // empty cell, no atts needed.
@@ -1898,7 +1897,7 @@ auto Math::convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xm
     cmi.set_cid(id);
     Math args = *this;
     if (!(front().get_cmd() == special_math_cmd && front().get_lcmd() == sub_to_math(multicolumn_code))) {
-        int m = table.size();
+        auto m = table.size();
         if (n < m) id.add_attribute(table[n], true);
         n++;
     } else {
@@ -1912,7 +1911,7 @@ auto Math::convert_cell(int &n, std::vector<AttList> &table, math_style W) -> Xm
             n++;
         else {
             id.add_attribute(np_columnspan, Istring(the_main->SH.find(k)));
-            n += k;
+            n += static_cast<size_t>(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
         char c = math_buffer.single_char();
@@ -1940,12 +1939,12 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     bool needs_dp    = (math_env_props(sname) & 1) != 0;
     if (sname == aligned_code) needs_dp = true; // OK FIXME
     if (sname == split_code) needs_dp = true;   // OK FIXME
-    int  n    = 0;                              // index of cell in row.
-    Xml *res  = new Xml(cst_mtable, nullptr);
-    Xml *row  = new Xml(cst_mtr, nullptr);
-    Xid  rid  = cmi.get_rid(); // old rid, to be restored at the end
-    Xid  cid  = cmi.get_cid();
-    Xid  taid = cmi.get_taid();
+    size_t n    = 0;                            // index of cell in row.
+    Xml *  res  = new Xml(cst_mtable, nullptr);
+    Xml *  row  = new Xml(cst_mtr, nullptr);
+    Xid    rid  = cmi.get_rid(); // old rid, to be restored at the end
+    Xid    cid  = cmi.get_cid();
+    Xid    taid = cmi.get_taid();
     cmi.set_taid(res->get_id());
     cmi.set_rid(row->get_id());
     if (needs_dp) W = ms_D;
@@ -2021,14 +2020,14 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
 }
 
 void Xml::bordermatrix() {
-    int n = tree.size() - 1;
-    if (n <= 0) return;
+    if (tree.size() <= 1) return;
+    auto n = tree.size() - 1;
     Xml *F = tree[0];
     if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
     auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
-    B << n;
+    B << static_cast<int>(n);
     auto attval = Istring(B);
     F           = tree[1];
     if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {
@@ -2143,8 +2142,8 @@ auto Math::trivial_math(int action) -> Xml * {
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
-        uint c = front().get_char().value;
-        if (c < nb_simplemath) return math_data.get_simplemath_val(c);
+        auto c = front().get_char().value;
+        if (c < nb_simplemath) return math_data.get_simplemath_val(static_cast<int>(c));
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(Istring("&#x2013;"));
     if (front().get_cmd() == mathord_cmd || front().get_cmd() == mathordb_cmd || front().get_cmd() == mathbin_cmd ||
@@ -2202,7 +2201,7 @@ void Math::remove_spaces() { value.remove_if(MathIsSpace()); }
 
 // Returns true if there is an \over or something like that in the list.
 auto Math::has_over() const -> bool {
-    int ovr = std::count_if(value.begin(), value.end(), MathIsOver());
+    auto ovr = std::count_if(value.begin(), value.end(), MathIsOver());
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
 }
@@ -2222,22 +2221,22 @@ auto MathElt::try_math_op() -> Xml * {
 
 // This converts a character into a MathML object
 auto MathElt::cv_char() -> MathElt {
-    uint       c = get_chr();
-    int        a;
-    math_types mt = mt_flag_small;
-    int        F  = get_font();
+    uint c = get_chr();
+    int  a;
+    auto mt = mt_flag_small;
+    auto F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(codepoint(c)), mt_flag_small);
-    if (::is_digit(c))
-        a = c - '0' + math_dig_loc;
-    else if (::is_letter(c) && F < 2) {
-        a = math_char_normal_loc + F * nb_mathchars + c;
-    } else if (::is_letter(c)) {
+    if (::is_digit(static_cast<char>(c)))
+        a = static_cast<int>(c) - '0' + math_dig_loc;
+    else if (::is_letter(static_cast<char>(c)) && F < 2) {
+        a = math_char_normal_loc + F * static_cast<int>(nb_mathchars) + static_cast<int>(c);
+    } else if (::is_letter(static_cast<char>(c))) {
         int w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
-        if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(c, F), mt);
-        return MathElt(math_ns::make_math_char(c, F), mt);
+        if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
+        return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
-        a  = c + math_c_loc;
-        mt = math_data.get_math_char_type(c);
+        a  = static_cast<int>(c) + math_c_loc;
+        mt = math_data.get_math_char_type(static_cast<int>(c));
     }
     return MathElt(subtypes(a), mt);
 }
@@ -2521,7 +2520,7 @@ auto MathElt::cv_special1(math_style cms) -> MathElt {
     Istring        s           = the_names[ns];
     bool           is_fraction = ns == cst_mfrac;
     bool           is_mathop   = false;
-    int            pos         = 0;
+    size_t         pos         = 0;
     if (c == xleftarrow_code || c == xrightarrow_code) {
         tmp = L.get_arg2();
         tmp.check_align();
@@ -2535,13 +2534,13 @@ auto MathElt::cv_special1(math_style cms) -> MathElt {
             A1 = A3;
             s  = the_names[cst_munder];
         } else {
-            Xml *tmp = new Xml(the_names[cst_munderover], nullptr);
-            tmp->add_tmp(A3);
-            tmp->push_back(xmlspace);
-            tmp->add_tmp(A1);
-            tmp->push_back(xmlspace);
-            tmp->add_tmp(A2);
-            return MathElt(tmp, mt_flag_big);
+            Xml *tmp2 = new Xml(the_names[cst_munderover], nullptr);
+            tmp2->add_tmp(A3);
+            tmp2->push_back(xmlspace);
+            tmp2->add_tmp(A1);
+            tmp2->push_back(xmlspace);
+            tmp2->add_tmp(A2);
+            return MathElt(tmp2, mt_flag_big);
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
         A2  = get_builtin(c);
@@ -2721,7 +2720,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     return XmlAndType(res, mt_flag_big);
 }
 
-auto math_ns::finish_cv_special(bool isfrac, Istring s, int pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
+auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
                                 int open, int close) -> Xml * {
     Istring Pos;
     if (pos != 0) Pos = the_names[pos];
@@ -2770,8 +2769,8 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             B.reset();
             int n = cur.get_font();
             B.push_back(ScaledInt(n), glue_spec_pt);
-            Xml *value = mk_space(B.c_str());
-            res.push_back(MathElt(value, mt_flag_space));
+            Xml *v = mk_space(B.c_str());
+            res.push_back(MathElt(v, mt_flag_space));
             continue;
         }
         if (cmd == style_cmd) {
@@ -2913,9 +2912,9 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
         } else if (cmd == relax_cmd)
             continue;
         else if (cmd == mathspace_cmd) {
-            if (chr == xml_thickmu_space_loc) return 10;
-            if (chr == xml_thinmu_space_loc) return 7;
-            if (chr == xml_medmu_space_loc) return 9;
+            if (chr == static_cast<int>(xml_thickmu_space_loc)) return 10;
+            if (chr == static_cast<int>(xml_thinmu_space_loc)) return 7;
+            if (chr == static_cast<int>(xml_medmu_space_loc)) return 9;
             return 0;
         } else if (cmd == kern_cmd || cmd == scan_glue_cmd || cmd == hspace_cmd) {
             cur_math_space = ScaledInt(old.get_font());
@@ -3352,7 +3351,7 @@ void tralics_ns::boot_math(bool mv) {
     xmlspace = new Xml(Istring(" "));
     math_data.boot();
     if (mv) {
-        uint w = (2 << 15) - 1;
+        int w = (2 << 15) - 1;
         the_parser.word_define(mathprop_ctr_code, w, true);
     }
 }
