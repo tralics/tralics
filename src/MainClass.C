@@ -551,12 +551,12 @@ void MainClass::open_config_file() {
     // special case where the config file is a tcf file
     use_tcf = true;
     B.remove_last_n(4);
-    int n = static_cast<int>(B.size());
-    int k = B.last_slash();
-    for (int i = n - 1;; i--) {
-        if (i <= k + 1) break;
-        if (!is_digit(B[static_cast<unsigned>(i)])) {
-            B.kill_at(static_cast<size_t>(i + 1));
+    auto n = B.size();
+    int  k = B.last_slash();
+    for (size_t i = n - 1;; i--) {
+        if (i <= static_cast<size_t>(k + 1)) break;
+        if (!is_digit(B[i])) {
+            B.kill_at(i + 1);
             break;
         }
     }
