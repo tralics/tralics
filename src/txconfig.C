@@ -114,7 +114,7 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
         }
         if (r.empty()) r = s;
         the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-        if (s == "composition") composition_section = static_cast<int>(V->size() + 1);
+        if (s == "composition") composition_section = to_signed(V->size() + 1);
         sec_buffer << " " << s;
         V->push_back(ParamDataSlot(s, r, !star));
     }
@@ -186,11 +186,11 @@ auto config_ns::check_section(const std::string &s) -> std::string {
     else
         for (size_t i = 0; i < n; i++)
             if (X[i].key == s) {
-                k = static_cast<int>(i + 1);
+                k = to_signed(i + 1);
                 break;
             }
     if (k > 0 && k < cur_section) {
-        err_buf << "Bad section " << s << " after " << X[static_cast<size_t>(cur_section - 1)].key << "\n"
+        err_buf << "Bad section " << s << " after " << X[to_unsigned(cur_section - 1)].key << "\n"
                 << "Order of sections is" << sec_buffer;
         the_parser.signal_error();
     } else if (k == -1) {
@@ -223,9 +223,9 @@ auto config_ns::check_section(const std::string &s) -> std::string {
     static int prev = -1;
     if (prev == cur_section) return "";
     prev             = cur_section;
-    cur_sec_no_topic = X[static_cast<size_t>(cur_section - 1)].no_topic();
-    X[static_cast<size_t>(cur_section - 1)].mark_used(); // incompatible with topics
-    return X[static_cast<size_t>(cur_section - 1)].value;
+    cur_sec_no_topic = X[to_unsigned(cur_section - 1)].no_topic();
+    X[to_unsigned(cur_section - 1)].mark_used(); // incompatible with topics
+    return X[to_unsigned(cur_section - 1)].value;
 }
 
 // Special command. We assume that cur_sec_no_topic
@@ -297,7 +297,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
             sname = ur_list[j].key;
             lname = ur_list[j].value;
             ur_list[j].mark_used();
-            return static_cast<int>(j);
+            return to_signed(j);
         }
     return -2;
 }

@@ -403,7 +403,7 @@ auto Buffer::next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> boo
         if (c == 0) return false;
         if (c == '$' && incat) seen_dollar = true;
         if (c == '%') {
-            com_loc = static_cast<int>(ptr);
+            com_loc = to_signed(ptr);
             return false;
         }
         if (c == '\\') {
@@ -582,7 +582,7 @@ auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[
 void Buffer::insert_escape_char() {
     int c = buffer_ns::current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(static_cast<unsigned>(c)), the_main->get_log_encoding());
+        out_log(codepoint(to_unsigned(c)), the_main->get_log_encoding());
     else if (c == 0)
         push_back("^^@");
 }
@@ -591,7 +591,7 @@ void Buffer::insert_escape_char() {
 void Buffer::insert_escape_char_raw() {
     int c = buffer_ns::current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(codepoint(static_cast<unsigned>(c)));
+        push_back(codepoint(to_unsigned(c)));
     else if (c == 0)
         push_back("^^@");
 }
@@ -604,7 +604,7 @@ auto buffer_ns::null_cs_name() -> String {
     if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
-        B.out_log(codepoint(static_cast<unsigned>(c)), the_main->get_log_encoding());
+        B.out_log(codepoint(to_unsigned(c)), the_main->get_log_encoding());
         B << "endcsname";
         return B.c_str();
     }
@@ -1034,7 +1034,7 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
     String s   = strstr(data(), cmd);
     if (s == nullptr) return false;
-    auto k = static_cast<size_t>(s - data());
+    auto k = to_unsigned(s - data());
     for (size_t j = 0; j < k; j++)
         if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
     push_back("{}");                                        //  make sure we have braces
@@ -1067,7 +1067,7 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
     if (at(0) != '%') return false;
     String s = strstr(data(), "ralics configuration file");
     if (s == nullptr) return false;
-    auto k = static_cast<size_t>(s - data());
+    auto k = to_unsigned(s - data());
     while ((at(k) != 0) && at(k) != '\'') k++;
     if (at(k) == 0) return false;
     k++;
@@ -1090,7 +1090,7 @@ auto Buffer::find_doctype() -> size_t {
     String S = "ralics DOCTYPE ";
     String s = strstr(data(), S);
     if (s == nullptr) return 0;
-    auto k = static_cast<size_t>(s - data());
+    auto k = to_unsigned(s - data());
     k += strlen(S);
     while ((at(k) != 0) && (at(k) == ' ' || at(k) == '=')) k++;
     if (at(k) == 0) return 0;
@@ -1427,7 +1427,7 @@ void Buffer::optslash() {
 auto Buffer::last_slash() const -> int {
     int k = -1;
     for (size_t i = 0; i < wptr; i++)
-        if (at(i) == '/') k = static_cast<int>(i);
+        if (at(i) == '/') k = to_signed(i);
     return k;
 }
 

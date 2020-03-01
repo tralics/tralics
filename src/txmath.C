@@ -952,9 +952,9 @@ auto Parser::scan_math1(int res) -> int {
         if (the_stack.get_mode() == mode_math) {
             int c = cur_cmd_chr.get_chr();
             if (c > 0 && c < int(nb_characters)) {
-                int u = eqtb_int_table[static_cast<size_t>(c + math_code_offset)].val;
+                int u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
                 if (u == 32768) {
-                    cur_tok.active_char(static_cast<unsigned>(c));
+                    cur_tok.active_char(to_unsigned(c));
                     back_input();
                     return 1;
                 }
@@ -1911,7 +1911,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
             n++;
         else {
             id.add_attribute(np_columnspan, Istring(the_main->SH.find(k)));
-            n += static_cast<size_t>(k);
+            n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
         char c = math_buffer.single_char();
@@ -2027,7 +2027,7 @@ void Xml::bordermatrix() {
     auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
-    B << static_cast<int>(n);
+    B << to_signed(n);
     auto attval = Istring(B);
     F           = tree[1];
     if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {
@@ -2143,7 +2143,7 @@ auto Math::trivial_math(int action) -> Xml * {
     }
     if (front().is_letter_token()) {
         auto c = front().get_char().value;
-        if (c < nb_simplemath) return math_data.get_simplemath_val(static_cast<int>(c));
+        if (c < nb_simplemath) return math_data.get_simplemath_val(to_signed(c));
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(Istring("&#x2013;"));
     if (front().get_cmd() == mathord_cmd || front().get_cmd() == mathordb_cmd || front().get_cmd() == mathbin_cmd ||
@@ -2227,16 +2227,16 @@ auto MathElt::cv_char() -> MathElt {
     auto F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(codepoint(c)), mt_flag_small);
     if (::is_digit(static_cast<char>(c)))
-        a = static_cast<int>(c) - '0' + math_dig_loc;
+        a = to_signed(c) - '0' + math_dig_loc;
     else if (::is_letter(static_cast<char>(c)) && F < 2) {
-        a = math_char_normal_loc + F * static_cast<int>(nb_mathchars) + static_cast<int>(c);
+        a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);
     } else if (::is_letter(static_cast<char>(c))) {
         int w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
-        a  = static_cast<int>(c) + math_c_loc;
-        mt = math_data.get_math_char_type(static_cast<int>(c));
+        a  = to_signed(c) + math_c_loc;
+        mt = math_data.get_math_char_type(to_signed(c));
     }
     return MathElt(subtypes(a), mt);
 }
@@ -2894,7 +2894,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             default: return 3;
             }
         } else if (cmd == 11 || cmd == 12) {
-            B.push_back_real_utf8(codepoint(static_cast<unsigned>(chr)));
+            B.push_back_real_utf8(codepoint(char32_t(chr)));
             f = fn;
             continue;
         } else if (cmd == mathfont_cmd)
@@ -2907,14 +2907,14 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             if (front().get_cmd() == math_list_cmd && front().get_list().type == math_open_cd) return 4;
             return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
-            B.push_back_real_utf8(codepoint(static_cast<unsigned>(chr)));
+            B.push_back_real_utf8(codepoint(char32_t(chr)));
             continue;
         } else if (cmd == relax_cmd)
             continue;
         else if (cmd == mathspace_cmd) {
-            if (chr == static_cast<int>(xml_thickmu_space_loc)) return 10;
-            if (chr == static_cast<int>(xml_thinmu_space_loc)) return 7;
-            if (chr == static_cast<int>(xml_medmu_space_loc)) return 9;
+            if (chr == subtypes(xml_thickmu_space_loc)) return 10;
+            if (chr == subtypes(xml_thinmu_space_loc)) return 7;
+            if (chr == subtypes(xml_medmu_space_loc)) return 9;
             return 0;
         } else if (cmd == kern_cmd || cmd == scan_glue_cmd || cmd == hspace_cmd) {
             cur_math_space = ScaledInt(old.get_font());

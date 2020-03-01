@@ -35,8 +35,8 @@ struct codepoint {
     [[nodiscard]] auto val_as_hex() const -> uint { return value - 'a' + 10; }
 
     [[nodiscard]] auto hex_val() const -> int {
-        if (is_digit()) return static_cast<int>(val_as_digit());
-        if (is_hex()) return static_cast<int>(val_as_hex());
+        if (is_digit()) return to_signed(val_as_digit());
+        if (is_hex()) return to_signed(val_as_hex());
         return -1;
     }
 

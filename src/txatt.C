@@ -20,7 +20,7 @@ auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_lis
 auto AttList::has_value(Istring x) const -> int {
     size_t n = val.size();
     for (size_t i = 0; i < n; i++)
-        if (val[i].name == x) return static_cast<int>(i);
+        if (val[i].name == x) return to_signed(i);
     return -1;
 }
 
@@ -29,7 +29,7 @@ auto AttList::has_value(Istring x) const -> int {
 auto Xid::has_attribute(Istring n) -> Istring {
     AttList &X = get_att();
     int      i = X.has_value(n);
-    if (i >= 0) return X.get_val(static_cast<size_t>(i));
+    if (i >= 0) return X.get_val(to_unsigned(i));
     return Istring();
 }
 
@@ -48,7 +48,7 @@ void AttList::push_back(Istring a, Istring b, bool force) {
     if (b.null()) return;
     int T = has_value(a);
     if (T >= 0) {
-        if (force) val[static_cast<size_t>(T)].value = b;
+        if (force) val[to_unsigned(T)].value = b;
         return;
     }
     val.push_back({a, b});
@@ -102,7 +102,7 @@ void Xid::add_attribute(Xid b) {
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
     int i = has_value(Istring(a));
-    if (i > 0) val[static_cast<size_t>(i)].name = Istring(0);
+    if (i > 0) val[to_unsigned(i)].name = Istring(0);
 }
 
 // This kills the whole list
@@ -115,7 +115,7 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
     int      k = L.has_value(m);
     if (k == -1) return false;
     reset();
-    push_back(L.get_val(static_cast<size_t>(k)).c_str());
+    push_back(L.get_val(to_unsigned(k)).c_str());
     return true;
 }
 

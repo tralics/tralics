@@ -305,40 +305,40 @@ void TexFont::make_null() {
 
 /// True if k is a valid font ID
 /// \todo Replace that with size_t or std::optional<size_t>
-auto TexFonts::is_valid(int k) -> bool { return (k >= 0) && (k < static_cast<int>(size())); }
+auto TexFonts::is_valid(int k) -> bool { return (k >= 0) && (k < to_signed(size())); }
 
 // Returns name of font
 auto TexFonts::name(int k) -> std::string {
     if (!is_valid(k)) return "";
-    return at(static_cast<size_t>(k)).name;
+    return at(to_unsigned(k)).name;
 }
 
 // Returns name of font
 void TexFonts::full_name(Buffer &B, int k) {
     if (!is_valid(k)) return;
-    B.push_back(at(static_cast<size_t>(k)).name);
-    if (at(static_cast<size_t>(k)).scaled_val != 0) {
+    B.push_back(at(to_unsigned(k)).name);
+    if (at(to_unsigned(k)).scaled_val != 0) {
         B.push_back(" scaled ");
-        B.push_back_int(at(static_cast<size_t>(k)).scaled_val);
+        B.push_back_int(at(to_unsigned(k)).scaled_val);
     }
-    if (at(static_cast<size_t>(k)).at_val != 0) {
+    if (at(to_unsigned(k)).at_val != 0) {
         B.push_back(" at ");
-        B.push_back(ScaledInt(at(static_cast<size_t>(k)).at_val), glue_spec_pt);
+        B.push_back(ScaledInt(at(to_unsigned(k)).at_val), glue_spec_pt);
     }
 }
 
 // Returns an integer parameter for a font
 auto TexFonts::get_int_param(int ft, int pos) -> int {
     if (!is_valid(ft)) return -1;
-    if (pos == 0) return at(static_cast<size_t>(ft)).hyphen_char;
-    return at(static_cast<size_t>(ft)).skew_char;
+    if (pos == 0) return at(to_unsigned(ft)).hyphen_char;
+    return at(to_unsigned(ft)).skew_char;
 }
 
 // Returns a dimension parameter for a font
 auto TexFonts::get_dimen_param(int ft, int pos) -> ScaledInt {
     if (!is_valid(ft)) return 0;
-    if (pos < 0 || pos >= at(static_cast<size_t>(ft)).param_len) return 0;
-    return at(static_cast<size_t>(ft)).param_table[pos];
+    if (pos < 0 || pos >= at(to_unsigned(ft)).param_len) return 0;
+    return at(to_unsigned(ft)).param_table[pos];
 }
 
 // Sets an integer parameter for a font
@@ -348,9 +348,9 @@ void TexFonts::set_int_param(int ft, int pos, int v) {
         return;
     }
     if (pos == 0)
-        at(static_cast<size_t>(ft)).hyphen_char = v;
+        at(to_unsigned(ft)).hyphen_char = v;
     else
-        at(static_cast<size_t>(ft)).skew_char = v;
+        at(to_unsigned(ft)).skew_char = v;
 }
 
 // Sets a dimension parameter for a font
@@ -359,15 +359,15 @@ void TexFonts::set_dimen_param(int ft, int p, ScaledInt v) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;
     }
-    if (p > at(static_cast<size_t>(ft)).param_len) at(static_cast<size_t>(ft)).realloc_param(p);
-    at(static_cast<size_t>(ft)).param_table[p] = v;
+    if (p > at(to_unsigned(ft)).param_len) at(to_unsigned(ft)).realloc_param(p);
+    at(to_unsigned(ft)).param_table[p] = v;
 }
 
 // All fonts can be resized...
 void TexFont::realloc_param(int p) {
     int k = 1;
     while (p >= k) k *= 2;
-    auto *T = new ScaledInt[static_cast<size_t>(k)];
+    auto *T = new ScaledInt[to_unsigned(k)];
     for (int i = 0; i < k; i++) T[i].set_value(0);
     for (int i = 0; i < param_len; i++) T[i] = param_table[i];
     delete[] param_table;

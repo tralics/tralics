@@ -127,7 +127,7 @@ void Parser::boot_time() {
     eqtb_int_table[day_code].set_val(day);
     eqtb_int_table[month_code].set_val(month);
     eqtb_int_table[year_code].set_val(year);
-    std::srand(static_cast<unsigned>(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
+    std::srand(to_unsigned(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
     Buffer b;
     b << year << '/' << twodig(month) << month << '/' << twodig(day) << day;
     std::string short_date = b.to_string();
@@ -171,17 +171,17 @@ void Parser::make_constants() {
 // This is for lower-case upper-case conversions.
 // Defines values for the character c
 void Parser::mklcuc(size_t c, size_t lc, size_t uc) {
-    eqtb_int_table[c + lc_code_offset].set_val(static_cast<int>(lc));
-    eqtb_int_table[c + uc_code_offset].set_val(static_cast<int>(uc));
+    eqtb_int_table[c + lc_code_offset].set_val(to_signed(lc));
+    eqtb_int_table[c + uc_code_offset].set_val(to_signed(uc));
 }
 
 // This is for lower-case upper-case conversions.
 // Defines values for the pair lc, uc
 void Parser::mklcuc(size_t lc, size_t uc) {
-    eqtb_int_table[lc + lc_code_offset].set_val(static_cast<int>(lc));
-    eqtb_int_table[lc + uc_code_offset].set_val(static_cast<int>(uc));
-    eqtb_int_table[uc + lc_code_offset].set_val(static_cast<int>(lc));
-    eqtb_int_table[uc + uc_code_offset].set_val(static_cast<int>(uc));
+    eqtb_int_table[lc + lc_code_offset].set_val(to_signed(lc));
+    eqtb_int_table[lc + uc_code_offset].set_val(to_signed(uc));
+    eqtb_int_table[uc + lc_code_offset].set_val(to_signed(lc));
+    eqtb_int_table[uc + uc_code_offset].set_val(to_signed(uc));
 }
 
 // This creates the lc and uc tables.
@@ -493,7 +493,7 @@ void Parser::load_latex() {
     counter_boot("figure", "");
     counter_boot("subfigure", "figure");
     counter_boot("equation", "");
-    equation_ctr_pos = static_cast<size_t>(allocation_table[newcount_code] + count_reg_offset);
+    equation_ctr_pos = to_unsigned(allocation_table[newcount_code] + count_reg_offset);
     counter_boot("parentequation", "");
 
     // \newcount
@@ -1306,12 +1306,12 @@ void tralics_ns::make_names() {
     std::array<char, 2> foo{};
     foo[1] = 0;
     for (char x = 'a'; x <= 'z'; x++) {
-        foo[0]                                                = x;
-        the_names[static_cast<size_t>(np_letter_a + x - 'a')] = Istring(foo.data());
+        foo[0]                                        = x;
+        the_names[to_unsigned(np_letter_a + x - 'a')] = Istring(foo.data());
     }
     for (char x = 'A'; x <= 'Z'; x++) {
-        foo[0]                                                = x;
-        the_names[static_cast<size_t>(np_letter_A + x - 'A')] = Istring(foo.data());
+        foo[0]                                        = x;
+        the_names[to_unsigned(np_letter_A + x - 'A')] = Istring(foo.data());
     }
 }
 

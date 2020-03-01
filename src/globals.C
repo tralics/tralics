@@ -145,10 +145,10 @@ auto main_ns::hack_for_input(const std::string &s) -> std::string {
     std::string path;
     std::string fn = s;
     if (k > 0) {
-        B.kill_at(static_cast<size_t>(k));
+        B.kill_at(to_unsigned(k));
         path = B.to_string();
         if (out_dir.empty()) out_dir = path;
-        fn = B.to_string(static_cast<size_t>(k) + 1);
+        fn = B.to_string(to_unsigned(k) + 1);
     }
     B << bf_reset << fn;
     B.remove_last_n(4);
@@ -166,7 +166,7 @@ void main_ns::register_file(LinePtr *x) { file_pool.push_back(x); }
 
 auto main_ns::use_pool(LinePtr &L) -> bool {
     if (pool_position == -1) return false; // should not happen
-    L.insert(*file_pool[static_cast<size_t>(pool_position)]);
+    L.insert(*file_pool[to_unsigned(pool_position)]);
     pool_position = -1;
     return true;
 }
@@ -176,7 +176,7 @@ auto main_ns::search_in_pool(const std::string &name) -> bool {
     pool_position = -1;
     for (unsigned i = 0; i < n; i++) {
         if (file_pool[i]->get_file_name() == name) {
-            pool_position = static_cast<int>(i);
+            pool_position = to_signed(i);
             return true;
         }
     }

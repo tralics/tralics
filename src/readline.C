@@ -72,7 +72,7 @@ inline auto is_interrupt(char cc) -> bool {
 inline void INIT_TERMIO() {
     tcgetattr(0, &orig_termio);
     rl_termio = orig_termio;
-    rl_termio.c_iflag &= ~static_cast<unsigned long>((BRKINT | PARMRK | INPCK | IXOFF | IMAXBEL));
+    rl_termio.c_iflag &= ~to_unsigned((BRKINT | PARMRK | INPCK | IXOFF | IMAXBEL));
     rl_termio.c_iflag |= (IGNBRK | IGNPAR);
     rl_termio.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH);
     rl_termio.c_lflag |= (ISIG);
@@ -215,7 +215,7 @@ auto Slined::newpos(int x, int n) -> int {
         y = m_pos;
     }
     while (i < x) {
-        if (not_printable(m_inbuf[static_cast<size_t>(i)]))
+        if (not_printable(m_inbuf[to_unsigned(i)]))
             y += 2;
         else
             y++;
@@ -237,7 +237,7 @@ auto Slined::copystring(String string, int s, int inpos, bool sw) -> unsigned {
     unsigned j   = 0;
     char *   buf = sw ? m_buffer.data() : g_buffer.data();
     for (int i = 0; i < s; i++) {
-        if (i == inpos) m_pos = static_cast<int>(j);
+        if (i == inpos) m_pos = to_signed(j);
         auto cn = string[i];
         if (not_printable(cn)) {
             buf[j] = '^';
@@ -253,8 +253,8 @@ auto Slined::copystring(String string, int s, int inpos, bool sw) -> unsigned {
 // Full redisplay.
 void Slined::redisplay() {
     auto j = copystring(m_inbuf, m_inmax, m_inpos, true);
-    if (m_inpos >= m_inmax) m_pos = static_cast<int>(j); // set cursor to EOL
-    m_max = static_cast<int>(j);
+    if (m_inpos >= m_inmax) m_pos = to_signed(j); // set cursor to EOL
+    m_max = to_signed(j);
     color_black();
     std::cerr << "\r" << m_prompt;
     color_red();
@@ -265,7 +265,7 @@ void Slined::redisplay() {
 // Redisplay after prompt.
 void Slined::redisplay0() {
     int left, right; // position of left and right chars
-    int s = static_cast<int>(m_size), p = m_pos, m = m_max;
+    int s = to_signed(m_size), p = m_pos, m = m_max;
     if (m <= s) { // we have a short line, ok
         left  = 0;
         right = m;
@@ -306,7 +306,7 @@ void Slined::redisplay1(int x) {
 // redisplay what's at right of cursor.
 void Slined::redisplay_eol() {
     tycleol();
-    int f = m_left + static_cast<int>(m_size);
+    int f = m_left + to_signed(m_size);
     if (m_left != 0) f -= 2;
     if (f >= m_max)
         f = m_max;
@@ -339,8 +339,8 @@ void Slined::insert_in_image(unsigned n, char c1, char c2) {
     if (c1 != 0) k += n; // k is the number of chars to insert
     char *buf = m_buffer.data();
     buf       = buf + p;
-    if (size != 0) shift_string(buf, size, 0, static_cast<int>(k)); // make room
-    for (unsigned i = 0; i < n; i++) {                              // copy
+    if (size != 0) shift_string(buf, size, 0, to_signed(k)); // make room
+    for (unsigned i = 0; i < n; i++) {                       // copy
         if (c1 != 0) *(buf++) = c1;
         *(buf++) = c2;
     }
@@ -348,12 +348,12 @@ void Slined::insert_in_image(unsigned n, char c1, char c2) {
     m_max = m; // new size
     p += k;
     m_pos   = p; // new position, cursor is after inserted chars
-    int d   = m_right + static_cast<int>(k);
+    int d   = m_right + to_signed(k);
     m_right = d; // new position of last char
     auto s  = m_size;
     if (m_left != 0) s -= 2;
-    if (m != d) s -= 2;                   // s is number of free positions on line
-    if (d - m_left > static_cast<int>(s)) // cursor invisible, full redisplay needed
+    if (m != d) s -= 2;            // s is number of free positions on line
+    if (d - m_left > to_signed(s)) // cursor invisible, full redisplay needed
         redisplay();
     else {
         for (unsigned i = 0; i < n; i++) {
@@ -391,7 +391,7 @@ void Slined::delete_in_image(int w) {
 
 // Insert a character n times
 void Slined::insert(unsigned n, char c) {
-    if (static_cast<unsigned>(n + static_cast<unsigned>(m_inmax)) >= buf_size - 1) // overfull
+    if (n + to_unsigned(m_inmax) >= buf_size - 1) // overfull
         tybeep();
     else
         insert1(n, c);
@@ -404,10 +404,10 @@ void Slined::insert1(unsigned n, char c) {
     int   aux    = size - pos;
     char *buffer = m_inbuf;
     buffer       = buffer + pos;
-    if (aux != 0) shift_string(buffer, size, 0, static_cast<int>(n));
+    if (aux != 0) shift_string(buffer, size, 0, to_signed(n));
     for (unsigned i = 0; i < n; i++) buffer[i] = c; // insert
-    size    = size + static_cast<int>(n);
-    pos     = pos + static_cast<int>(n);
+    size    = size + to_signed(n);
+    pos     = pos + to_signed(n);
     m_inpos = pos;
     m_inmax = size;
     char c1 = 0, c2 = c;
@@ -421,7 +421,7 @@ void Slined::insert1(unsigned n, char c) {
 
 // delete a character. Redisplay only if sw true.
 void Slined::rl_delete(bool sw) {
-    auto cn = m_inbuf[static_cast<size_t>(m_inpos)];
+    auto cn = m_inbuf[to_unsigned(m_inpos)];
     rl_delete0(m_inbuf, m_inpos, m_inmax, 1);
     m_inmax--;
     cur_line_modified = true;
@@ -459,7 +459,7 @@ void Slined::I_move(int pos, int x) {
     if (x == pos) return;
     if (x > pos)
         while (x > pos) {
-            std::cerr.put(m_buffer[static_cast<size_t>(pos)]); // advance -> output current char
+            std::cerr.put(m_buffer[to_unsigned(pos)]); // advance -> output current char
             pos++;
         }
     else
@@ -479,7 +479,7 @@ void Slined::toggle_char() {
         rl_move(pos, pos - 1);
         pos--;
     }
-    auto c1 = m_inbuf[static_cast<size_t>(pos - 1)], c2 = m_inbuf[static_cast<size_t>(pos)];
+    auto c1 = m_inbuf[to_unsigned(pos - 1)], c2 = m_inbuf[to_unsigned(pos)];
     if (c1 == c2) // we can  hack
         rl_move(pos, pos + 1);
     else {
@@ -504,7 +504,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
     if (debut < 0) debut = 0;
     if (fin >= m_inmax) fin = m_inmax - 1;
 
-    auto taille = static_cast<unsigned>(fin - debut + 1); // Size of what must be killed.
+    auto taille = to_unsigned(fin - debut + 1); // Size of what must be killed.
     m_killbuf   = std::string(m_inbuf + debut, taille);
     if (sw != 0) {
         rl_move(m_inpos, debut);
@@ -516,7 +516,7 @@ void Slined::delete_string(int sw, int deb, int fn) {
 
 // inserts  a  string n times
 void Slined::insert_substring(unsigned n, String s, size_t l) {
-    if (static_cast<unsigned>(m_inmax) + n * l >= buf_size - 1)
+    if (to_unsigned(m_inmax) + n * l >= buf_size - 1)
         tybeep();
     else if (n * l > 10)
         fast_ins(n, s, l);
@@ -532,7 +532,7 @@ void Slined::fast_ins(unsigned n, String s, size_t l) {
     int   size   = m_inmax;
     char *buffer = m_inbuf;
     int   aux    = size - pos;
-    if (aux != 0) shift_string(buffer, aux, pos, pos + static_cast<int>(n * l)); // make room
+    if (aux != 0) shift_string(buffer, aux, pos, pos + to_signed(n * l)); // make room
     for (size_t i = 0; i < n; i++) {
         strncpy(buffer + pos, s, l);
         pos += l;
@@ -540,12 +540,12 @@ void Slined::fast_ins(unsigned n, String s, size_t l) {
     }
     m_inpos = pos;
     m_inmax = size;
-    auto j  = copystring(s, static_cast<int>(l), -1, false);
+    auto j  = copystring(s, to_signed(l), -1, false);
     pos     = m_pos;
     buffer  = m_buffer.data();
     size    = m_max;
     aux     = size - pos;
-    if (aux != 0) shift_string(buffer, aux, pos, pos + static_cast<int>(j * n)); // make room here also
+    if (aux != 0) shift_string(buffer, aux, pos, pos + to_signed(j * n)); // make room here also
     for (size_t i = 0; i < n; i++) {
         strncpy(buffer + pos, g_buffer.data(), j);
         pos += j;
@@ -578,7 +578,7 @@ void Slined::Hshow() {
         String S         = m_history[i].c_str();
         auto   k         = strlen(S);
         if (k > buf_size - 2) k = buf_size - 2;
-        new_ed->m_inmax = static_cast<int>(k);
+        new_ed->m_inmax = to_signed(k);
         strncpy(new_ed->m_inbuf, S, k);
         new_ed->m_inbuf[k] = 0;
         new_ed->redisplay();
@@ -603,7 +603,7 @@ auto Slined::Hfind(unsigned n) -> bool {
     int    pos       = m_hpos;
     while (pos > 0) {
         pos--;
-        if (strstr(m_history[static_cast<size_t>(pos)].c_str(), s) != nullptr) {
+        if (strstr(m_history[to_unsigned(pos)].c_str(), s) != nullptr) {
             seen_once = true;
             n--;
             if (n == 0) {
@@ -634,7 +634,7 @@ void Slined::Hprevious(unsigned n) {
         n--;
         m_hack = true;
     }
-    int k = m_hpos - static_cast<int>(n);
+    int k = m_hpos - to_signed(n);
     if (k < 0) k = 0;
     m_hpos = k;
 }
@@ -642,9 +642,9 @@ void Slined::Hprevious(unsigned n) {
 // advance by n lines
 void Slined::Hnext(unsigned n) {
     int k = m_history_size - 1;
-    n += static_cast<unsigned>(m_hpos);
-    if (static_cast<int>(n) > k) n = static_cast<unsigned>(k);
-    m_hpos = static_cast<int>(n);
+    n += to_unsigned(m_hpos);
+    if (to_signed(n) > k) n = to_unsigned(k);
+    m_hpos = to_signed(n);
 }
 
 auto readline_ns::skip_over_letters(String buf, int j) -> int {
@@ -664,9 +664,9 @@ auto readline_ns::find_word_beg(char *buf, int size) -> int {
         buf[size] = '*';
         while (buf[j] == ' ') j++;
         if (j >= size) return i;
-        word_beg[static_cast<size_t>(i)] = j;
-        buf[size]                        = ' ';
-        c                                = buf[j];
+        word_beg[to_unsigned(i)] = j;
+        buf[size]                = ' ';
+        c                        = buf[j];
         j++;
         if (c == '\\') {
             c = buf[j];
@@ -674,7 +674,7 @@ auto readline_ns::find_word_beg(char *buf, int size) -> int {
             if (is_letter(c)) j = skip_over_letters(buf, j);
         } else if (is_letter(c))
             j = skip_over_letters(buf, j);
-        word_end[static_cast<size_t>(i)] = j;
+        word_end[to_unsigned(i)] = j;
     }
 }
 
@@ -683,16 +683,16 @@ void Slined::forword(bool sw, unsigned n) {
     int i = find_word_beg(m_inbuf, m_inmax);
     int y = m_inpos;
     int k = 0;
-    while (k < i && y >= word_end[static_cast<size_t>(k)]) k++; // k = index of cur word
+    while (k < i && y >= word_end[to_unsigned(k)]) k++; // k = index of cur word
     if (k >= i)
         y = m_inmax;
     else
-        y = word_beg[static_cast<size_t>(k)]; // y is here boundary
-    k = k + static_cast<int>(n) - 1;
+        y = word_beg[to_unsigned(k)]; // y is here boundary
+    k = k + to_signed(n) - 1;
     if (k >= i)
         k = m_inmax;
     else
-        k = word_end[static_cast<size_t>(k)]; // k is there boundary
+        k = word_end[to_unsigned(k)]; // k is there boundary
     if (sw)
         rl_move(m_inpos, k);
     else if (k > y) // do nothing if k=0
@@ -705,16 +705,16 @@ void Slined::backword(bool sw, unsigned n) {
     int i = find_word_beg(m_inbuf, m_inmax);
     int y = m_inpos;
     int k = i - 1;
-    while (k >= 0 && y <= word_beg[static_cast<size_t>(k)]) k--;
+    while (k >= 0 && y <= word_beg[to_unsigned(k)]) k--;
     if (k < 0)
         y = 0;
     else
-        y = word_end[static_cast<size_t>(k)];
-    k = k - static_cast<int>(n) + 1;
+        y = word_end[to_unsigned(k)];
+    k = k - to_signed(n) + 1;
     if (k < 0)
         k = 0;
     else
-        k = word_beg[static_cast<size_t>(k)];
+        k = word_beg[to_unsigned(k)];
     if (sw)
         rl_move(m_inpos, k);
     else if (k < y)
@@ -725,11 +725,11 @@ void Slined::backword(bool sw, unsigned n) {
 void Slined::replace_string() {
     maybe_store_line();
     cur_line_modified = false;
-    std::string s     = m_hpos < m_history_size ? m_history[static_cast<size_t>(m_hpos)].c_str() : "";
+    std::string s     = m_hpos < m_history_size ? m_history[to_unsigned(m_hpos)].c_str() : "";
     auto        l     = s.size();
     strncpy(m_inbuf, s.c_str(), l);
-    m_inmax = static_cast<int>(l);
-    m_inpos = static_cast<int>(l);
+    m_inmax = to_signed(l);
+    m_inpos = to_signed(l);
     redisplay();
 }
 
@@ -752,7 +752,7 @@ void Slined::do_esc_command(unsigned n) {
     if ('1' <= c && c <= '9') { // non zero digit; ignore n
         char cc;
         std::cin.get(cc);
-        do_command(static_cast<unsigned>(c - '0'), cc);
+        do_command(to_unsigned(c - '0'), cc);
         return;
     }
     if ('A' <= c && c <= 'Z') // ignore case
@@ -769,7 +769,7 @@ void Slined::do_esc_command(unsigned n, char c) {
         for (;;) {
             std::cin.get(c);
             if ('0' <= c && c <= '9')
-                count = count * 10 + static_cast<unsigned>(c - '0');
+                count = count * 10 + to_unsigned(c - '0');
             else
                 break;
         }
@@ -851,7 +851,7 @@ void Slined::do_n_command(unsigned n, char c) {
         rl_move(pos, 0);
         return;
     case 2: // ^B
-        aux = pos - static_cast<int>(n);
+        aux = pos - to_signed(n);
         if (aux < 0) aux = 0;
         rl_move(pos, aux);
         return;
@@ -859,7 +859,7 @@ void Slined::do_n_command(unsigned n, char c) {
         rl_move(pos, max);
         return;
     case 6: // ^F
-        aux = pos + static_cast<int>(n);
+        aux = pos + to_signed(n);
         if (aux > max) aux = max;
         rl_move(pos, aux);
         return;
@@ -876,7 +876,7 @@ void Slined::do_n_command(unsigned n, char c) {
         return;
     case 127:
     case 8:
-        if (static_cast<int>(n) > pos) n = static_cast<unsigned>(pos);
+        if (to_signed(n) > pos) n = to_unsigned(pos);
         for (unsigned i = 0; i < n; i++) {
             rl_move(pos, pos - 1);
             pos--;

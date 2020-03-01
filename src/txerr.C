@@ -265,7 +265,7 @@ void Parser::undefined_mac() {
     if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.get_cmd();
     if (noxml) {
         signal_error(Token(), "Undefined command");
-        eq_define(static_cast<int>(cur_tok.eqtb_loc()), CmdChr(self_insert_cmd, zero_code), true);
+        eq_define(to_signed(cur_tok.eqtb_loc()), CmdChr(self_insert_cmd, zero_code), true);
         back_input(cur_tok);
     } else
         signal_error(cur_tok, "Undefined command");

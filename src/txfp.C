@@ -342,7 +342,7 @@ void FpNum::mul(FpNum X, int y) {
     }
     for (unsigned int &i : z) i = 0;
     X.mul_split(x);
-    for (int i = 0; i < 12; i++) z[i + 6] = x[i] * static_cast<unsigned>(y);
+    for (int i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
     prop_carry(z);
     finish_mul(xs, z);
 }
@@ -387,7 +387,7 @@ auto Buffer::horner(size_t p) -> Digit {
     if (p > 9) p = 9;
     Digit res = 0;
     while (p > 0) {
-        res = res * 10 + static_cast<unsigned>(next_char() - '0');
+        res = res * 10 + to_unsigned(next_char() - '0');
         p--;
     }
     return res;
@@ -402,7 +402,7 @@ auto Buffer::reverse_horner() -> Digit {
     Digit  res = 0;
     for (;;) {
         if (at_eol()) return res;
-        res += power_table[i] * static_cast<unsigned>(next_char() - '0');
+        res += power_table[i] * to_unsigned(next_char() - '0');
         if (i-- == 0) return res;
     }
 }
@@ -456,7 +456,7 @@ auto FpNum::to_list() const -> TokenList {
     size_t    i = 0;
     if (buf[0] == '+') i++;
     while (buf[i] != 0) {
-        res.push_back(Token(static_cast<unsigned>(other_t_offset + buf[i])));
+        res.push_back(Token(to_unsigned(other_t_offset + buf[i])));
         i++;
     }
     return res;
@@ -637,10 +637,10 @@ void FpNum::truncate(int n) {
     }
     if (n == 0) { data[2] = data[3] = 0; }
     if (n <= 9) {
-        data[2] = fp::truncate_n(data[2], static_cast<size_t>(n));
+        data[2] = fp::truncate_n(data[2], to_unsigned(n));
         data[3] = 0;
     } else
-        data[3] = fp::truncate_n(data[3], static_cast<size_t>(n - 9));
+        data[3] = fp::truncate_n(data[3], to_unsigned(n - 9));
     correct_sign(); // result could be negative zero
 }
 
@@ -682,9 +682,9 @@ void FpNum::round(int n) {
         return;
     }
     if (n > 9)
-        data[3] = fp::round_n(data[3], static_cast<size_t>(n - 9));
+        data[3] = fp::round_n(data[3], to_unsigned(n - 9));
     else {
-        data[2] = fp::round_n(data[2], static_cast<size_t>(n));
+        data[2] = fp::round_n(data[2], to_unsigned(n));
         data[3] = 0;
     }
 }
@@ -730,8 +730,8 @@ void FpNum::div(int n) {
     Digit carry = 0;
     for (unsigned int &i : x) {
         Digit a = 1000 * carry + i;
-        carry   = a % static_cast<unsigned>(n);
-        i       = a / static_cast<unsigned>(n);
+        carry   = a % to_unsigned(n);
+        i       = a / to_unsigned(n);
     }
     unsplit_mul4(x);
 }
@@ -2071,10 +2071,10 @@ void FpNum::random() {
     auto  S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].val);
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
-    int   w     = static_cast<int>(xib * 16807) - static_cast<int>(xia * 2836);
+    int   w     = to_signed(xib * 16807) - to_signed(xia * 2836);
     if (w <= 0) w += cst_m;
     the_parser.eqtb_int_table[fpseed_code].set_val(w);
-    fp_rand2.data[1] = static_cast<unsigned>(w);
+    fp_rand2.data[1] = to_unsigned(w);
     div(fp_rand2, fp_rand1);
 }
 
@@ -2356,7 +2356,7 @@ void Parser::upn_eval(TokenList &l) {
     if (n == 4 && strcmp(str, "seed") == 0) {
         L.remove_first_n(n);
         S.pop_upn(x1);
-        eqtb_int_table[fpseed_code].set_val(static_cast<int>(x1.data[1]));
+        eqtb_int_table[fpseed_code].set_val(to_signed(x1.data[1]));
         return;
     }
     if (n == 4 && strcmp(str, "root") == 0) {
@@ -2405,7 +2405,7 @@ void Parser::upn_eval(TokenList &l) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
-        x1.round(static_cast<int>(x2.data[1]));
+        x1.round(to_signed(x2.data[1]));
         x1.round0();
         S.push_upn(x1);
         return;
@@ -2414,7 +2414,7 @@ void Parser::upn_eval(TokenList &l) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
-        x1.truncate(static_cast<int>(x2.data[1]));
+        x1.truncate(to_signed(x2.data[1]));
         S.push_upn(x1);
         return;
     }

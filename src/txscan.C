@@ -432,7 +432,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         int hc4 = input_line[p + 8].hex_val();
         if (hc0 >= 0 && hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
             input_line_pos    = p + 8;
-            input_line[p + 8] = codepoint(static_cast<unsigned>((hc0 << 16) + (hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
+            input_line[p + 8] = codepoint(to_unsigned((hc0 << 16) + (hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
             return true;
         }
     }
@@ -443,7 +443,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         int hc4 = input_line[p + 6].hex_val();
         if (hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
             input_line_pos    = p + 6;
-            input_line[p + 6] = codepoint(static_cast<unsigned>((hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
+            input_line[p + 6] = codepoint(to_unsigned((hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
             return true;
         }
     }
@@ -452,7 +452,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         int hc2 = input_line[p + 2].hex_val();
         if (hc1 >= 0 && hc2 >= 0) {
             input_line_pos             = p + 2;
-            input_line[input_line_pos] = codepoint(static_cast<unsigned>(16 * hc1 + hc2));
+            input_line[input_line_pos] = codepoint(to_unsigned(16 * hc1 + hc2));
             return true;
         }
     }
@@ -460,7 +460,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
     if (!C.is_ascii()) return false;
     uchar c1 = C.value;
     input_line_pos++;
-    input_line[p + 1] = codepoint(static_cast<unsigned>(c1 < 64 ? c1 + 64 : c1 - 64));
+    input_line[p + 1] = codepoint(to_unsigned(c1 < 64 ? c1 + 64 : c1 - 64));
     return true;
 }
 
@@ -836,7 +836,7 @@ void Parser::store_new_line(int n, bool vb) {
 void Parser::insert_endline_char() {
     input_line_pos = 0;
     int cc         = eqtb_int_table[endlinechar_code].val;
-    if (cc >= 0 && cc < int(nb_characters)) input_line.emplace_back(static_cast<unsigned>(cc));
+    if (cc >= 0 && cc < int(nb_characters)) input_line.emplace_back(to_unsigned(cc));
 }
 
 // Like get_a_newline below. But we never print the line in the log file.
@@ -1903,7 +1903,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         else {
             q = scan_int(T); // \spacefactor or \input@encoding
             if (chr == 2) lines.change_encoding(q);
-            if (chr == 3) the_main->set_input_encoding(q >= 0 ? static_cast<size_t>(q) : 0);
+            if (chr == 3) the_main->set_input_encoding(q >= 0 ? to_unsigned(q) : 0);
             if (chr == 4) {
                 cur_font.change_size(q);
                 font_has_changed();

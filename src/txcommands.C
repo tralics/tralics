@@ -814,9 +814,9 @@ void Parser::T_bauteursediteurs(subtypes c) {
 void Parser::T_un_box(subtypes c) {
     int i = scan_reg_num();
     if (c == unhbox_code) leave_v_mode();
-    Xml *cur_box = box_table[static_cast<size_t>(i)].get_val();
+    Xml *cur_box = box_table[to_unsigned(i)].get_val();
     the_stack.unbox(cur_box);
-    if (c == unhbox_code || c == unvbox_code) box_table[static_cast<size_t>(i)].set_val(nullptr);
+    if (c == unhbox_code || c == unvbox_code) box_table[to_unsigned(i)].set_val(nullptr);
 }
 
 auto tcommands::hfill_to_np(subtypes c) -> name_positions {
@@ -863,7 +863,7 @@ void Parser::translate03() {
         return;
     case letter_catcode:
     case other_catcode: translate_char(cur_cmd_chr); return;
-    case char_num_cmd: extended_chars(static_cast<unsigned>(scan_27bit_int())); return;
+    case char_num_cmd: extended_chars(to_unsigned(scan_27bit_int())); return;
     case char_given_cmd: extended_chars(c); return;
     case fvset_cmd: special_fvset(); return;
     case biblio_cmd: T_biblio(); return;

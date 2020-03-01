@@ -275,9 +275,9 @@ auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
     auto n = io_ns::how_many_bytes(static_cast<char>(A));
     if (n == 0) return codepoint(0U);
     if (n == 1) return codepoint(A);
-    if (n == 2) return codepoint(static_cast<unsigned>(((A & 31) << 6) + (B & 63)));
-    if (n == 3) return codepoint(static_cast<unsigned>((C & 63) + ((B & 63) << 6) + ((A & 15) << 12)));
-    return codepoint(static_cast<unsigned>((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18)));
+    if (n == 2) return codepoint(to_unsigned(((A & 31) << 6) + (B & 63)));
+    if (n == 3) return codepoint(to_unsigned((C & 63) + ((B & 63) << 6) + ((A & 15) << 12)));
+    return codepoint(to_unsigned((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18)));
 }
 
 // Returns 0 at end of line or error
@@ -384,7 +384,7 @@ void Clines::convert_line(size_t wc) {
 
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(int enc, int pos, int v) {
-    if (!(enc >= 2 && enc < static_cast<int>(max_encoding))) {
+    if (!(enc >= 2 && enc < to_signed(max_encoding))) {
         thebuffer << bf_reset << "Illegal encoding " << enc;
         the_parser.parse_error(thebuffer.c_str());
         return;
@@ -396,21 +396,21 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)] = codepoint(static_cast<unsigned>(v));
+        custom_table[to_unsigned(enc)][to_unsigned(pos)] = codepoint(to_unsigned(v));
     else
-        custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)] = codepoint(static_cast<unsigned>(pos));
+        custom_table[to_unsigned(enc)][to_unsigned(pos)] = codepoint(to_unsigned(pos));
 }
 
 auto io_ns::get_enc_param(int enc, int pos) -> int {
-    if (!(enc >= 2 && enc < static_cast<int>(max_encoding))) return pos;
+    if (!(enc >= 2 && enc < to_signed(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return static_cast<int>(custom_table[static_cast<size_t>(enc)][static_cast<size_t>(pos)].value);
+    return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)].value);
 }
 
 void LinePtr::change_encoding(int wc) {
-    if (wc >= 0 && wc < static_cast<int>(max_encoding)) {
-        cur_encoding = static_cast<uint>(wc);
+    if (wc >= 0 && wc < to_signed(max_encoding)) {
+        cur_encoding = to_unsigned(wc);
         the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << lg_end;
     }
 }
@@ -433,7 +433,7 @@ auto io_ns::find_encoding(String cl) -> int {
     if (!is_digit(s[17])) return -1;
     int k = s[17] - '0';
     if (is_digit(s[18])) { k = 10 * k + s[18] - '0'; }
-    if (k < static_cast<int>(max_encoding)) return k;
+    if (k < to_signed(max_encoding)) return k;
     return -1;
 }
 
@@ -459,7 +459,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
         prev_line = true;
     if (B[0] == '%') { // debug
         int k = io_ns::find_encoding(B.c_str());
-        if (k >= 0) cur_encoding = static_cast<size_t>(k);
+        if (k >= 0) cur_encoding = to_unsigned(k);
     }
     return cur_line;
 }
@@ -519,7 +519,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 co_try--;
                 int k = io_ns::find_encoding(B.c_str());
                 if (k >= 0) {
-                    wc = static_cast<unsigned>(k);
+                    wc = to_unsigned(k);
                     L.set_encoding(wc);
                     co_try = 0;
                     the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.get_cur_line() + 1 << " of file "
@@ -1032,7 +1032,7 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
     value.pop_front();
     if (w != 0) {
         the_converter.cur_file_name = file_name;
-        b.convert_line(n, static_cast<size_t>(w));
+        b.convert_line(n, to_unsigned(w));
     }
     return n;
 }

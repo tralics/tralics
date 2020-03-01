@@ -46,6 +46,10 @@ public:
         push_back_int(c);
         return *this;
     }
+    auto operator<<(long c) -> Buffer & {
+        push_back_int(c);
+        return *this;
+    }
     auto operator<<(const TokenList &L) -> Buffer &;
     auto operator<<(const Macro &x) -> Buffer &;
     auto operator<<(const codepoint &b) -> Buffer & {

@@ -264,8 +264,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_external_prog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
-        case pa_leftquote: leftquote_val = static_cast<unsigned>(strtoul(a, nullptr, 16)); return;
-        case pa_rightquote: rightquote_val = static_cast<unsigned>(strtoul(a, nullptr, 16)); return;
+        case pa_leftquote: leftquote_val = strtoul(a, nullptr, 16); return;
+        case pa_rightquote: rightquote_val = strtoul(a, nullptr, 16); return;
         case pa_defaultclass: default_class = a; return;
         case pa_infile: see_name(a); return;
         case pa_indata:
@@ -554,13 +554,13 @@ void MainClass::open_config_file() {
     auto n = B.size();
     int  k = B.last_slash();
     for (size_t i = n - 1;; i--) {
-        if (i <= static_cast<size_t>(k + 1)) break;
+        if (i <= to_unsigned(k + 1)) break;
         if (!is_digit(B[i])) {
             B.kill_at(i + 1);
             break;
         }
     }
-    dtype = B.to_string(static_cast<size_t>(k + 1));
+    dtype = B.to_string(to_unsigned(k + 1));
     the_log << "Using tcf type " << dtype << "\n";
 }
 
@@ -724,7 +724,7 @@ void MainClass::see_name1() {
     }
     int k = B.last_slash(); // remove the directory part
     if (k >= 0) {
-        std::string s = B.to_string(static_cast<size_t>(k + 1));
+        std::string s = B.to_string(to_unsigned(k + 1));
         B << bf_reset << s;
     }
     the_parser.set_projet_val(B.to_string()); // this is apics
@@ -740,7 +740,7 @@ void MainClass::see_name1() {
         out_name = no_ext;
         B << bf_reset << no_ext; // remove the directory part
         int kk = B.last_slash();
-        if (kk >= 0) out_name = B.to_string(static_cast<size_t>(kk + 1)); // This is apics2003
+        if (kk >= 0) out_name = B.to_string(to_unsigned(kk + 1)); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();

@@ -55,11 +55,11 @@ void ScaledInt::ovf31() {
 auto Token::tex_is_digit(unsigned radix) -> int {
     auto w = val_as_other();
     if ('0' <= w && w <= radix + '0' && w <= '9') // do not use is_digit...
-        return static_cast<int>(w) - '0';
+        return to_signed(w) - '0';
     if (radix != 16) return -1;
-    if (w <= 'F' && w >= 'A') return static_cast<int>(w) - 'A' + 10;
+    if (w <= 'F' && w >= 'A') return to_signed(w) - 'A' + 10;
     w = val_as_letter(); // allow category code 11 digits
-    if (w <= 'F' && w >= 'A') return static_cast<int>(w) - 'A' + 10;
+    if (w <= 'F' && w >= 'A') return to_signed(w) - 'A' + 10;
     return -1;
 }
 
@@ -647,9 +647,9 @@ void Mactab::rc_mac_realloc() {
     rc_table = T2;
     for (size_t i = k; i < ns; i++) {
         table[i]    = empty_mac;
-        rc_table[i] = static_cast<int>(i + 1);
+        rc_table[i] = to_signed(i + 1);
     }
-    ptr              = k == 0 ? 1 : static_cast<int>(k);
+    ptr              = k == 0 ? 1 : to_signed(k);
     rc_table[ns - 1] = -1;
     cur_rc_mac_len   = ns;
 }

@@ -2654,7 +2654,7 @@ void Parser::iexpand() {
     case l3str_case_cmd: E_l3str_case(c); return;
     case token_if_cmd: l3_token_check(c); return;
     case cat_ifeq_cmd: E_cat_ifeq(c); return;
-    case specchar_cmd: back_input(Token(other_t_offset, codepoint(static_cast<unsigned>(c)))); return;
+    case specchar_cmd: back_input(Token(other_t_offset, codepoint(char32_t(c)))); return;
     case splitfun_cmd: L3_user_split_next_name(c == 0); return;
     case user_cmd:
     case usero_cmd:

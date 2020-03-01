@@ -887,7 +887,7 @@ void Parser::print_cmd_chr(CmdChr X) {
     }
     if (a != nullptr) { // chr
         the_log << a;
-        codepoint y(static_cast<unsigned>(X.get_chr()));
+        codepoint y(char32_t(X.get_chr()));
         Buffer &  B = buffer_for_log;
         B.reset();
         B.out_log(y, the_main->get_log_encoding());

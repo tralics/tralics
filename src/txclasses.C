@@ -136,7 +136,7 @@ auto classes_ns::compare_options(const OptionList &A, const OptionList &B) -> bo
 auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> int {
     auto n = V.size();
     for (size_t i = 0; i < n; i++) {
-        if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return static_cast<int>(i);
+        if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return to_signed(i);
     }
     return -1;
 }
@@ -204,7 +204,7 @@ LatexPackage::LatexPackage(std::string A) : name(std::move(A)), has_a_default(fa
 auto ClassesData::cur_pack() -> LatexPackage * {
     int n = the_parser.get_cur_file_pos();
     if (n < 0) n = -n;
-    return packages[static_cast<size_t>(n)];
+    return packages[to_unsigned(n)];
 }
 
 // Date is something like 2004/12/03 converted to 20041203
@@ -239,8 +239,8 @@ void KeyAndVal::use(TokenList &A) const {
 // The integer n is the value of cur_file_type
 void Parser::insert_hook(int n) {
     auto k = the_class_data.packages.size();
-    if (n <= 0 || n >= static_cast<int>(k)) return;
-    LatexPackage *C = the_class_data.packages[static_cast<size_t>(n)];
+    if (n <= 0 || n >= to_signed(k)) return;
+    LatexPackage *C = the_class_data.packages[to_unsigned(n)];
     if (!C->seen_process && !C->Uoptions.empty())
         log_and_tty << "Warning: " << C->pack_or_class() << C->real_name() << " has no \\ProcessOptions\n";
     back_input(C->hook);
@@ -256,9 +256,9 @@ void classes_ns::add_to_filelist(const std::string &s, const std::string &date) 
     auto n = s.size();
     int  k = -1;
     for (size_t i = 0; i < n; i++)
-        if (s[i] == '/') k = static_cast<int>(i);
+        if (s[i] == '/') k = to_signed(i);
     String S  = s.c_str() + k + 1;
-    int    nn = 12 - static_cast<int>(strlen(S));
+    int    nn = 12 - to_signed(strlen(S));
     while (nn > 0) {
         file_list << ' ';
         --nn;
@@ -356,7 +356,7 @@ void Parser::T_option_not_used() {
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
     int       j = is_in_vector(GO, s.get_full_name(), true);
-    if (j >= 0) GO[static_cast<size_t>(j)].mark_un_used();
+    if (j >= 0) GO[to_unsigned(j)].mark_un_used();
 }
 
 // We execute key=val (from U), with code in this
@@ -384,10 +384,10 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
         std::string nname = X ? GO[i].get_name() : GO[i].get_full_name();
         int         j     = find_option(nname);
         if (j <= 0) continue;
-        if (DO[static_cast<size_t>(j)].is_used()) continue; // should not happen
+        if (DO[to_unsigned(j)].is_used()) continue; // should not happen
         GO[i].mark_used();
         local_buf << bf_comma << nname;
-        DO[static_cast<size_t>(j)].use_and_kill(action, GO[i], X);
+        DO[to_unsigned(j)].use_and_kill(action, GO[i], X);
     }
 }
 
@@ -404,14 +404,14 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
         int j = is_in_vector(CO, nname, false);
         if (j >= 0) {
             ClassesData::remove_from_unused(nname);
-            DO[i].use_and_kill(res, CO[static_cast<size_t>(j)], X);
+            DO[i].use_and_kill(res, CO[to_unsigned(j)], X);
         } else if (is_class())
             continue;
         else {
             j = is_in_vector(GO, nname, X);
             if (j >= 0) {
-                DO[i].use_and_kill(res, GO[static_cast<size_t>(j)], X);
-                GO[static_cast<size_t>(j)].mark_used();
+                DO[i].use_and_kill(res, GO[to_unsigned(j)], X);
+                GO[to_unsigned(j)].mark_used();
             } else
                 continue;
         }
@@ -488,9 +488,9 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
             unknown_option(CO[i], action, spec, X);
         } else {
             ClassesData::remove_from_unused(nname);
-            if (DO[static_cast<size_t>(j)].is_used()) continue;
-            local_buf << bf_comma << DO[static_cast<size_t>(j)].get_name();
-            DO[static_cast<size_t>(j)].use_and_kill(action, CO[i], X != 0);
+            if (DO[to_unsigned(j)].is_used()) continue;
+            local_buf << bf_comma << DO[to_unsigned(j)].get_name();
+            DO[to_unsigned(j)].use_and_kill(action, CO[i], X != 0);
         }
     }
     // clear memory
@@ -529,8 +529,8 @@ void Parser::T_execute_options() {
         const std::string &option = L[i].get_full_name();
         int                k      = C->find_option(option);
         if (k >= 0) {
-            b << bf_comma << pack[static_cast<size_t>(k)].get_name();
-            pack[static_cast<size_t>(k)].use(action);
+            b << bf_comma << pack[to_unsigned(k)].get_name();
+            pack[to_unsigned(k)].use(action);
         }
     }
     T_process_options_aux(action);
@@ -662,7 +662,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     }
     cur->date = "0000/00/00";
     open_tex_file(true);
-    set_cur_file_pos(static_cast<int>(p));
+    set_cur_file_pos(to_signed(p));
     Buffer &b = local_buf;
     b << bf_reset << name;
     TokenList cc    = b.str_toks11(false);
@@ -751,14 +751,14 @@ void Parser::add_language_att() {
 auto LatexPackage::find_option(const std::string &nname) -> int {
     auto n = Poptions.size();
     for (size_t i = 0; i < n; i++)
-        if (Poptions[i].has_name(nname)) return static_cast<int>(i);
+        if (Poptions[i].has_name(nname)) return to_signed(i);
     return -1;
 }
 
 void ClassesData::remove_from_unused(const std::string &name) {
     OptionList &GO = the_class_data.global_options;
     int         j  = is_in_vector(GO, name, true);
-    if (j >= 0) GO[static_cast<size_t>(j)].mark_used();
+    if (j >= 0) GO[to_unsigned(j)].mark_used();
 }
 
 void show_unused_options() { ClassesData::show_unused(); }
@@ -1150,7 +1150,7 @@ void Parser::kvo_bool_opt() {
     if (!check_if_redef(s)) return;
     // This is \newif
     Token W = cur_tok;
-    eq_define(static_cast<int>(W.eqtb_loc()), CmdChr(if_test_cmd, v), false);
+    eq_define(to_signed(W.eqtb_loc()), CmdChr(if_test_cmd, v), false);
     M_newif_aux(W, s, true);
     M_newif_aux(W, s, false);
     finish_kvo_bool(T, fam, arg);

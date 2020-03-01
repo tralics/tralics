@@ -91,7 +91,7 @@ auto CitationItem::get_bid() -> Istring {
 // considered elsewhere.
 auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
     auto    n   = *the_bibliography.find_citation_item(type, ref, true);
-    Istring id  = the_bibliography.citation_table[static_cast<size_t>(n)].get_bid();
+    Istring id  = the_bibliography.citation_table[n].get_bid();
     Xml *   res = new Xml(np_ref, nullptr);
     res->get_id().add_attribute(np_target, id);
     return res;
@@ -780,7 +780,7 @@ void bib_ns::boot_ra_prefix(String s) {
         size_t j       = i * 3;
         ra_pretable[i] = tmp + j;
         tmp[j]         = s[1];
-        tmp[j + 1]     = static_cast<char>('A' + static_cast<int>(i));
+        tmp[j + 1]     = static_cast<char>('A' + to_signed(i));
         tmp[j + 2]     = 0;
     }
     tmp[0] = s[0];
@@ -965,7 +965,7 @@ void Parser::solve_cite(bool user) {
         n = B.find_citation_star(from, key);
     else
         n = *B.find_citation_item(from, key, true);
-    CitationItem &CI = B.citation_table[static_cast<size_t>(n)];
+    CitationItem &CI = B.citation_table[n];
     if (CI.is_solved()) {
         err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
         the_parser.signal_error(the_parser.err_tok, "bad solve");
@@ -975,7 +975,7 @@ void Parser::solve_cite(bool user) {
     int      my_id = AL.has_value(np_id);
     if (my_id >= 0) {
         if (CI.has_empty_id())
-            CI.set_id(AL.get_val(static_cast<size_t>(my_id)));
+            CI.set_id(AL.get_val(to_unsigned(my_id)));
         else {
             err_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
             the_parser.signal_error(the_parser.err_tok, "bad solve");
@@ -1129,7 +1129,7 @@ static const std::array<String, 9> scan_msgs{
 // in case we are at EOF.
 auto Bibtex::scan_identifier(size_t what) -> bool {
     int ret = scan_identifier0(what);
-    if (ret != 0) log_and_tty << scan_msgs[static_cast<size_t>(ret > 0 ? ret : -ret)];
+    if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
@@ -1593,7 +1593,7 @@ void Bibtex::work() {
     boot_ra_prefix("ABC");
     all_entries_table.reserve(n);
     for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
-    for (size_t i = 0; i < n; i++) all_entries[i]->work(static_cast<int>(i));
+    for (size_t i = 0; i < n; i++) all_entries[i]->work(to_signed(i));
     auto nb_entries = all_entries_table.size();
     main_ns::log_or_tty << fmt::format("Seen {} bibliographic entries.\n", nb_entries);
     // Sort the entries
@@ -1604,7 +1604,7 @@ void Bibtex::work() {
     int next_extra = 0;
     for (size_t i = nb_entries; i > 0; i--) all_entries_table[i - 1]->reverse_pass(next_extra);
     if (want_numeric)
-        for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(static_cast<int>(i) + 1);
+        for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(to_signed(i) + 1);
     for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
     bbl.finish();
 }
@@ -1742,7 +1742,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
     if (is_extension != 0)
-        my_name = the_main->get_bibtex_extensions()[static_cast<size_t>(is_extension - 1)].c_str();
+        my_name = the_main->get_bibtex_extensions()[to_unsigned(is_extension - 1)].c_str();
     else
         my_name = the_names[type_to_string(type_int)].c_str();
     bbl.push_back_braced(my_name);
@@ -2255,12 +2255,12 @@ void Buffer::fill_table(bchar_type *table) {
             continue;
         }
         if (c == '&') {
-            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", static_cast<int>(i));
+            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
         if (c == '}') {
-            the_bibtex->err_in_name("too many closing braces", static_cast<int>(i));
+            the_bibtex->err_in_name("too many closing braces", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
@@ -2272,7 +2272,7 @@ void Buffer::fill_table(bchar_type *table) {
             c = head();
             if (!is_accent_char(c)) {
                 table[i] = bct_bad;
-                the_bibtex->err_in_name("commands allowed only within braces", static_cast<int>(i));
+                the_bibtex->err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
             if (is_letter(at(ptr + 1))) {
@@ -2286,7 +2286,7 @@ void Buffer::fill_table(bchar_type *table) {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptr++;
-                the_bibtex->err_in_name("bad accent construct", static_cast<int>(i));
+                the_bibtex->err_in_name("bad accent construct", to_signed(i));
                 continue;
             }
             at(ptr + 1) = c;
@@ -2299,7 +2299,7 @@ void Buffer::fill_table(bchar_type *table) {
         table[i] = bct_brace;
         for (;;) {
             if (head() == 0) {
-                the_bibtex->err_in_name("this cannot happen!", static_cast<int>(j));
+                the_bibtex->err_in_name("this cannot happen!", to_signed(j));
                 at(j)    = 0;
                 table[j] = bct_end;
                 wptr     = j;

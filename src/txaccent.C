@@ -443,7 +443,7 @@ void Parser::E_accent() {
     if (achar < nb_accents) {
         if (acc_code2 != 0) {
             int acc3_code = accent_ns::combine_accents(acc_code, acc_code2);
-            res           = accent_ns::fetch_double_accent(static_cast<int>(achar), acc3_code);
+            res           = accent_ns::fetch_double_accent(to_signed(achar), acc3_code);
         } else {
             res = accent_ns::fetch_accent(achar, acc_code);
             if (res.is_null() && achar < 128) {
@@ -451,7 +451,7 @@ void Parser::E_accent() {
                     spec = true; // T. Bouche veut une erreur
                     res  = accent_ns::fetch_accent(0, acc_code);
                 } else
-                    res = accent_ns::special_double_acc(static_cast<int>(achar), acc_code);
+                    res = accent_ns::special_double_acc(to_signed(achar), acc_code);
             }
         }
     }

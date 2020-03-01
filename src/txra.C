@@ -70,7 +70,7 @@ void Parser::interpret_rc() {
 
 // --------------------------------------------------
 // \end{RAsection} or \tralics@pop@section
-Xid  compo_id = Xid(static_cast<size_t>(-1));
+Xid  compo_id = Xid(to_unsigned(-1));
 void Parser::T_rasection_end() {
     Xml *in = the_stack.top_stack();
     if (in->get_id() == compo_id) in->compo_special();

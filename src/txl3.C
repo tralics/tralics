@@ -217,7 +217,7 @@ void Parser::L3_new_conditional_parm(subtypes s) {
 void Parser::L3_new_conditional(subtypes s) {
     cmd_name = cur_tok;
     if (L3_split_next_name()) return;
-    TokenList parms = l3_parms_from_ac(static_cast<int>(tok_sig.size()), token_to_split, true);
+    TokenList parms = l3_parms_from_ac(to_signed(tok_sig.size()), token_to_split, true);
     L3_new_conditional_aux(parms, s);
 }
 
@@ -720,7 +720,7 @@ void Parser::L3_set_cat_code(int c) {
             signal_ovf(T, "Bad character code replaced by 0\n", ww, scan_char_num_max);
             w = 0;
         } else
-            w = static_cast<size_t>(ww);
+            w = to_unsigned(ww);
     }
     word_define(w, c, false);
 }
@@ -788,7 +788,7 @@ void Parser::L3_set_num_code(int c) {
         back_input(L1);
         cur_tok = T;
         int m   = scan_char_num();
-        word_define(static_cast<size_t>(m + offset), N, false);
+        word_define(to_unsigned(m + offset), N, false);
         return;
     }
     int m = l3_read_int(T);
@@ -796,7 +796,7 @@ void Parser::L3_set_num_code(int c) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;
     }
-    int v = eqtb_int_table[static_cast<size_t>(m + offset)].val;
+    int v = eqtb_int_table[to_unsigned(m + offset)].val;
     if (show)
         log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {
@@ -823,9 +823,9 @@ void Parser::E_cat_ifeq(subtypes c) {
     Token    caller = cur_tok;
     symcodes a;
     subtypes b;
-    int      test = 0;
-    if (!l3_get_cat(a, b, caller)) test = static_cast<int>(a == (c / 4));
-    l3_after_cond(caller, test != 0, subtypes(c % 4));
+    bool     test = false;
+    if (!l3_get_cat(a, b, caller)) test = (a == (c / 4));
+    l3_after_cond(caller, test, subtypes(c % 4));
 }
 
 // \token_if_eq_catcode and variants
@@ -948,7 +948,7 @@ void Parser::generate_from_sig() {
         ignore_arg();
         return;
     }
-    TokenList parms = l3_parms_from_ac(static_cast<int>(tok_sig.size()), token_to_split, true);
+    TokenList parms = l3_parms_from_ac(to_signed(tok_sig.size()), token_to_split, true);
     back_input(parms);
     back_input(token_to_split);
     back_input(definer);
