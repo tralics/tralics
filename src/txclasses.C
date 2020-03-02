@@ -25,7 +25,7 @@ namespace {
 namespace classes_ns {
     auto parse_version(const std::string &s) -> int;
     auto get_option_list(const std::string &name) -> OptionList;
-    auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> int;
+    auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> long;
     auto is_raw_option(const OptionList &V, String s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
@@ -133,7 +133,7 @@ auto classes_ns::compare_options(const OptionList &A, const OptionList &B) -> bo
 
 // Like is_in_option, but returns a position
 // If X true, checks the keyname
-auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> int {
+auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> long {
     auto n = V.size();
     for (size_t i = 0; i < n; i++) {
         if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return to_signed(i);
@@ -202,7 +202,7 @@ LatexPackage::LatexPackage(std::string A) : name(std::move(A)), has_a_default(fa
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
 auto ClassesData::cur_pack() -> LatexPackage * {
-    int n = the_parser.get_cur_file_pos();
+    auto n = the_parser.get_cur_file_pos();
     if (n < 0) n = -n;
     return packages[to_unsigned(n)];
 }
@@ -254,11 +254,11 @@ void Parser::insert_hook(int n) {
 // Store the file name (without dir) and date in the file_list buffer
 void classes_ns::add_to_filelist(const std::string &s, const std::string &date) {
     auto n = s.size();
-    int  k = -1;
+    long k = -1;
     for (size_t i = 0; i < n; i++)
         if (s[i] == '/') k = to_signed(i);
     String S  = s.c_str() + k + 1;
-    int    nn = 12 - to_signed(strlen(S));
+    auto   nn = 12 - to_signed(strlen(S));
     while (nn > 0) {
         file_list << ' ';
         --nn;
@@ -355,7 +355,7 @@ void Parser::T_option_not_used() {
     expand_no_arg("CurrentOption");
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
-    int       j = is_in_vector(GO, s.get_full_name(), true);
+    auto      j = is_in_vector(GO, s.get_full_name(), true);
     if (j >= 0) GO[to_unsigned(j)].mark_un_used();
 }
 
@@ -382,7 +382,7 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
     auto        n  = GO.size();
     for (size_t i = 0; i < n; i++) {
         std::string nname = X ? GO[i].get_name() : GO[i].get_full_name();
-        int         j     = find_option(nname);
+        auto        j     = find_option(nname);
         if (j <= 0) continue;
         if (DO[to_unsigned(j)].is_used()) continue; // should not happen
         GO[i].mark_used();
@@ -401,7 +401,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
     for (size_t i = 0; i < n; i++) {
         const std::string &nname = DO[i].get_name();
         if (DO[i].is_used()) continue; // should to happen
-        int j = is_in_vector(CO, nname, false);
+        auto j = is_in_vector(CO, nname, false);
         if (j >= 0) {
             ClassesData::remove_from_unused(nname);
             DO[i].use_and_kill(res, CO[to_unsigned(j)], X);
@@ -483,7 +483,7 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
     auto        n  = CO.size();
     for (size_t i = 0; i < n; i++) {
         std::string nname = CO[i].get_name();
-        int         j     = find_option(X != 0 ? nname : CO[i].get_full_name());
+        auto        j     = find_option(X != 0 ? nname : CO[i].get_full_name());
         if (j == -1) {
             unknown_option(CO[i], action, spec, X);
         } else {
@@ -527,7 +527,7 @@ void Parser::T_execute_options() {
     auto       n = L.size();
     for (size_t i = 0; i < n; i++) {
         const std::string &option = L[i].get_full_name();
-        int                k      = C->find_option(option);
+        auto               k      = C->find_option(option);
         if (k >= 0) {
             b << bf_comma << pack[to_unsigned(k)].get_name();
             pack[to_unsigned(k)].use(action);
@@ -567,7 +567,7 @@ void Parser::T_inputclass() {
     if (!res) {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
-        int k = cur_file_pos;
+        auto k = cur_file_pos;
         open_tex_file(true);
         if (k > 0) k = -k;
         set_cur_file_pos(k);
@@ -748,7 +748,7 @@ void Parser::add_language_att() {
     if ((b != 0U) && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
 }
 
-auto LatexPackage::find_option(const std::string &nname) -> int {
+auto LatexPackage::find_option(const std::string &nname) -> long {
     auto n = Poptions.size();
     for (size_t i = 0; i < n; i++)
         if (Poptions[i].has_name(nname)) return to_signed(i);
@@ -757,7 +757,7 @@ auto LatexPackage::find_option(const std::string &nname) -> int {
 
 void ClassesData::remove_from_unused(const std::string &name) {
     OptionList &GO = the_class_data.global_options;
-    int         j  = is_in_vector(GO, name, true);
+    auto        j  = is_in_vector(GO, name, true);
     if (j >= 0) GO[to_unsigned(j)].mark_used();
 }
 

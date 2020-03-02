@@ -66,7 +66,7 @@ public:
     LatexPackage(std::string A);
     void               add_to_hook(TokenList &L) { hook.splice(hook.end(), L); }
     void               add_options(const OptionList &L);
-    auto               find_option(const std::string &name) -> int;
+    auto               find_option(const std::string &name) -> long;
     [[nodiscard]] auto is_class() const -> bool { return name[0] == 'C'; }
     [[nodiscard]] auto real_name() const -> String { return name.c_str() + 1; }
     [[nodiscard]] auto full_name() const -> std::string { return name; }

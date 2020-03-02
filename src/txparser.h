@@ -71,7 +71,7 @@ private:
     l_state   long_state;              // Error recovery handling (\long)
     scan_stat scanner_status;          // Error recovery handling (\outer)
     int       cur_in_chan;             // if get_token call get_a_new_line
-    int       cur_file_pos{0};         // pos of file in the package list (0= none)
+    long      cur_file_pos{0};         // pos of file in the package list (0= none)
 
     std::string cur_env_name;  // name of current environment
     std::string the_url_val;   // this may be <URSophia>, raweb only
@@ -138,7 +138,7 @@ public:
     auto               cur_line_to_istring() -> Istring;
     void               decr_cur_level() { cur_level--; }
     auto               get_cur_filename() -> std::string { return lines.get_file_name(); }
-    [[nodiscard]] auto get_cur_file_pos() const -> int { return cur_file_pos; }
+    [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
     auto               get_cur_level() -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal & { return cur_val; }
@@ -149,7 +149,7 @@ public:
     void               init(LinePtr x) { lines = std::move(x); }
     void               remember_ur(std::string s) { the_url_val = std::move(s); }
     void               set_cur_line(int x) { cur_line = x; }
-    void               set_cur_file_pos(int k) { cur_file_pos = k; }
+    void               set_cur_file_pos(long k) { cur_file_pos = k; }
     void               set_cur_env_name(std::string s) {
         cur_env_name   = std::move(s);
         begin_env_line = cur_line;
