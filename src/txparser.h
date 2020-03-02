@@ -598,7 +598,7 @@ private:
     void        process_char(uchar c);
     void        process_string(String s);
     void        process_char(codepoint c);
-    void        process_char(uint c);
+    void        process_char(size_t c);
     void        process_char(int s);
     void        push_input_stack(const std::string &name, bool restore_at, bool re);
     void        push_level(boundary_type v);

@@ -19,8 +19,8 @@ std::vector<LinePtr *> file_pool;
 
 int pool_position{-1};
 
-uint leftquote_val{'`'};
-uint rightquote_val{'\''};
+size_t leftquote_val{'`'};
+size_t rightquote_val{'\''};
 
 bool bad_minus{false};
 bool compatibility{false};

@@ -23,7 +23,7 @@ extern std::vector<LinePtr *> file_pool; // pool managed by filecontents
 
 extern int pool_position; // Position of file in pool
 
-extern uint leftquote_val, rightquote_val;
+extern size_t leftquote_val, rightquote_val;
 
 extern bool bad_minus;
 extern bool compatibility;

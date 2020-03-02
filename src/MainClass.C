@@ -140,9 +140,9 @@ void MainClass::open_log() {
         the_log << ", and random for transcript.\n";
     Buffer b;
     b << "Left quote is ";
-    b.out_log(codepoint(leftquote_val), log_encoding);
+    b.out_log(codepoint(char32_t(leftquote_val)), log_encoding);
     b << " right quote is ";
-    b.out_log(codepoint(rightquote_val), log_encoding);
+    b.out_log(codepoint(char32_t(rightquote_val)), log_encoding);
     the_log << b << "\n";
     if (trivial_math != 0) the_log << "\\notrivialmath=" << trivial_math << "\n";
     check_for_encoding();

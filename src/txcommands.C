@@ -54,7 +54,7 @@ inline void Parser::process_string(String s) { unprocessed_xml.push_back(s); }
 
 inline void Parser::process_char(int s) { process_char(codepoint(uint(s))); }
 
-inline void Parser::process_char(uint c) { process_char(codepoint(c)); }
+inline void Parser::process_char(size_t c) { process_char(codepoint(char32_t(c))); }
 
 // This is useful for German unlaut. It translates two normal characters.
 void Parser::translate_char(uchar c1, uchar c2) {
@@ -156,7 +156,7 @@ void Parser::umlaut_bad() {
 void Parser::extended_chars(unsigned int c) {
     LC();
     if (c < 1 << 16)
-        process_char(c);
+        process_char(codepoint(c));
     else
         unprocessed_xml.process_big_char(c);
 }
@@ -859,7 +859,7 @@ void Parser::translate03() {
     case leave_v_mode_cmd: leave_v_mode(); return;
     case space_catcode:
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return;
-        process_char(uint(c));
+        process_char(codepoint(char32_t(c)));
         return;
     case letter_catcode:
     case other_catcode: translate_char(cur_cmd_chr); return;
