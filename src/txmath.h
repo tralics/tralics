@@ -202,7 +202,7 @@ public:
     void                      set_nondisplay_type() { type = math_dollar_cd; }
     void                      set_type(math_list_type c) { type = c; }
     [[nodiscard]] auto        third_element() const -> const MathElt &;
-    auto                      trivial_math(int action) -> Xml *;
+    auto                      trivial_math(long action) -> Xml *;
     auto                      trivial_math_index(symcodes cmd) -> Xml *;
     auto                      check_align() -> int;
 

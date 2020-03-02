@@ -2041,7 +2041,7 @@ void Parser::T_error() {
 }
 
 // scans an element id, in brackets, default is cur_id
-auto Parser::read_elt_id(Token T) -> size_t {
+auto Parser::read_elt_id(Token T) -> int {
     auto cur   = the_stack.cur_xid().value;
     auto upper = the_stack.get_xid().value;
     int  n     = scan_special_int_d(T, cur);

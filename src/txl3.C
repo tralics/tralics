@@ -99,7 +99,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
 // In latex3, a space is ignored, so locally redefine the catcode
 void Parser::L3_getid() {
     get_token(); // should be a dollar sign, but hack!
-    int spcat = eqtb_int_table[uchar(' ')].val;
+    auto spcat = eqtb_int_table[uchar(' ')].val;
     eqtb_int_table[uchar(' ')].set_val(10);
     TokenList l    = read_until(cur_tok);
     TokenList info = read_arg();
@@ -149,7 +149,7 @@ void Parser::E_prg_return(int c) {
 
 // Generate #1#2#3 etc
 // s is true when n is given by specification, false when by value
-auto Parser::l3_parms_from_ac(int n, Token t, bool s) -> TokenList {
+auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
     if (n < 0) {
         err_buf << bf_reset << "Negative number of arguments " << n << " for " << t;
         signal_error(err_tok, "bad args");
@@ -796,7 +796,7 @@ void Parser::L3_set_num_code(int c) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;
     }
-    int v = eqtb_int_table[to_unsigned(m + offset)].val;
+    auto v = eqtb_int_table[to_unsigned(m + offset)].val;
     if (show)
         log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {

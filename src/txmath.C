@@ -778,7 +778,7 @@ auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
 void Parser::T_math(subtypes type) {
-    int nm = eqtb_int_table[nomath_code].val;
+    auto nm = eqtb_int_table[nomath_code].val;
     cmi.reset(nm == -3);
     Trace.reset();
     trace_needs_space = false;
@@ -830,8 +830,8 @@ void Parser::T_math(subtypes type) {
     } else {
         u.remove_spaces();
         if (is_inline) {
-            int k = eqtb_int_table[notrivialmath_code].val;
-            res   = u.trivial_math(k);
+            auto k = eqtb_int_table[notrivialmath_code].val;
+            res    = u.trivial_math(k);
             if (res != nullptr) {
                 finish_trivial_math(res);
                 return;
@@ -952,7 +952,7 @@ auto Parser::scan_math1(int res) -> int {
         if (the_stack.get_mode() == mode_math) {
             int c = cur_cmd_chr.get_chr();
             if (c > 0 && c < int(nb_characters)) {
-                int u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
+                auto u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
                 if (u == 32768) {
                     cur_tok.active_char(to_unsigned(c));
                     back_input();
@@ -1485,7 +1485,7 @@ void Parser::scan_math_tag(subtypes c) {
         } else if (cmi.get_eqnum_status() == 0) {
             parse_error("Illegal \\notag");
         } else { // decrement equation number
-            int v = eqtb_int_table[equation_ctr_pos].val;
+            auto v = eqtb_int_table[equation_ctr_pos].val;
             word_define(equation_ctr_pos, v - 1, true);
         }
         return;
@@ -2117,7 +2117,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
 // We handle also the case of $_{foo}$ that gives \textsubscript{foo}
 // provided that a special switch is true.
 
-auto Math::trivial_math(int action) -> Xml * {
+auto Math::trivial_math(long action) -> Xml * {
     action = action % 8;
     if (action == 0) return nullptr;
     auto L = value.begin();
@@ -2158,7 +2158,7 @@ auto Math::trivial_math(int action) -> Xml * {
 
 // Inserts the current font in the list
 void Math::add_cur_font() {
-    int c = the_parser.eqtb_int_table[math_font_pos].val;
+    auto c = the_parser.eqtb_int_table[math_font_pos].val;
     push_back_font(subtypes(c), zero_code);
 }
 
@@ -2231,7 +2231,7 @@ auto MathElt::cv_char() -> MathElt {
     else if (::is_letter(static_cast<char>(c)) && F < 2) {
         a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);
     } else if (::is_letter(static_cast<char>(c))) {
-        int w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+        auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
@@ -3230,7 +3230,7 @@ auto Math::M_cv3(math_style cms) -> Math {
 auto Xml::spec_copy() -> Xml * {
     if (name != Istring(cst_mo)) return nullptr;
     AttList &X = get_id().get_att();
-    int      i = X.has_value(the_names[np_movablelimits]);
+    auto     i = X.has_value(the_names[np_movablelimits]);
     if (i < 0) return nullptr;
     Xml *res  = new Xml(name, nullptr);
     res->tree = tree;

@@ -682,10 +682,10 @@ void Buffer::push_back_math_tag(const CmdChr &x, int type) {
 // We must consider the case where the command is \& or the like
 // We produce <elt name='&amp;'> otherwise
 void Buffer::push_back_math_tag(String s, int type) {
-    int  n  = strlen(s);
+    auto n  = strlen(s);
     bool ok = true; // true if letter
-    for (int i = 0; i < n; i++) {
-        uchar c = s[i];
+    for (size_t i = 0; i < n; i++) {
+        auto c = s[i];
         if (!is_letter(c)) {
             if (strcmp(s, "@root") == 0) {
                 s = "root";
@@ -703,7 +703,7 @@ void Buffer::push_back_math_tag(String s, int type) {
         push_back("elt");
         if (type != pbm_end) {
             push_back(" name='");
-            for (int i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+            for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
             push_back("'");
         }
     }
@@ -714,11 +714,11 @@ void Buffer::push_back_math_tag(String s, int type) {
 
 // Case of a string, we check if the string can be inserted directly.
 void Buffer::push_back_math_aux(String s) {
-    int  n  = strlen(s);
+    auto n  = strlen(s);
     bool ok = true;
-    for (int i = 0; i < n; i++) {
-        uchar c = s[i];
-        if (c == '<' || c == '>' || c == '&' || c < 32) {
+    for (size_t i = 0; i < n; i++) {
+        auto c = s[i];
+        if (c == '<' || c == '>' || c == '&' || static_cast<uchar>(c) < 32) {
             ok = false;
             break;
         }
@@ -726,7 +726,7 @@ void Buffer::push_back_math_aux(String s) {
     if (ok)
         push_back(s);
     else
-        for (int i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+        for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
 }
 
 // Returns the number of arguments of the command.
@@ -860,8 +860,8 @@ void MathElt::cv_noML_special() {
         mathml_buffer << '{' << sz << '}';
         L.pop_front();
         if (L.front().get_cmd() == style_cmd) {
-            int k = math_ns::style_level(L.front().get_chr());
-            mathml_buffer.push_back_int(k);
+            int kk = math_ns::style_level(L.front().get_chr());
+            mathml_buffer.push_back_int(kk);
         } else
             mathml_buffer.push_back("{}");
         L.pop_front();
@@ -973,9 +973,9 @@ void MathElt::cv_noMLt_special0() {
         }
         if (!L.empty()) {
             if (L.front().get_cmd() == style_cmd) {
-                int k = math_ns::style_level(L.front().get_chr());
+                int kk = math_ns::style_level(L.front().get_chr());
                 mathml_buffer.push_back(" style='");
-                mathml_buffer.push_back_int(k);
+                mathml_buffer.push_back_int(kk);
                 mathml_buffer.push_back("'");
             }
             L.pop_front();
@@ -1286,8 +1286,8 @@ void MathElt::cv_noMLt() {
         return;
     case relax_cmd: {
         auto   T = Token(get_font());
-        int    x = T.hash_loc();
-        String s = x < 0 ? "Strange." : the_parser.hash_table[x];
+        auto   x = T.hash_loc();
+        String s = the_parser.hash_table[x];
         mathml_buffer.push_back_math_tag(s, pbm_empty);
         return;
     }
@@ -1778,7 +1778,7 @@ void Parser::TM_fonts() {
         return;
     }
     TokenList L = read_arg();
-    int       c = eqtb_int_table[math_font_pos].val;
+    auto      c = eqtb_int_table[math_font_pos].val;
     back_input(table[c]);
     back_input(hash_table.nomathsw0_token);
     L.push_back(hash_table.nomathsw1_token);
@@ -1815,8 +1815,8 @@ auto math_ns::mk_mi(uchar c, int font) -> Xml * {
 auto MathElt::maybe_seq() const -> bool {
     if (get_cmd() != letter_catcode) return false;
     if (get_font() == 0) return false;
-    uint c = get_chr();
-    return c < 128 && ::is_letter(uchar(c));
+    auto c = get_chr();
+    return c < 128 && ::is_letter(char(uchar(c)));
 }
 
 // True is this can form a sequence of characters to put in a <mi>
@@ -1824,15 +1824,15 @@ auto MathElt::maybe_seq() const -> bool {
 auto MathElt::maybe_seq(subtypes f) const -> bool {
     if (get_cmd() != letter_catcode) return false;
     if (get_font() != f) return false;
-    uint c = get_chr();
-    return c < 128 && ::is_letter(uchar(c));
+    auto c = get_chr();
+    return c < 128 && ::is_letter(char(uchar(c)));
 }
 
 // True is this can form a sequence of digits to put in a <mn>
 auto MathElt::maybe_iseq() const -> bool {
     if (get_cmd() != other_catcode) return false;
-    uint c = get_chr();
-    return c < 128 && ::is_digit(uchar(c));
+    auto c = get_chr();
+    return c < 128 && ::is_digit(char(uchar(c)));
 }
 
 // True is this can form a sequence of characters to put in a <mn>
@@ -1840,15 +1840,15 @@ auto MathElt::maybe_iseq() const -> bool {
 auto MathElt::maybe_iseq(subtypes f) const -> bool {
     if (get_cmd() != other_catcode) return false;
     if (get_font() != f) return false;
-    uint c = get_chr();
-    return c < 128 && ::is_digit(uchar(c));
+    auto c = get_chr();
+    return c < 128 && ::is_digit(char(uchar(c)));
 }
 
 // Converts a character sequence; first char W already removed from
 // the list
 auto Math::convert_char_seq(MathElt W) -> MathElt {
     subtypes f = W.get_font();
-    int      w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+    auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res;
     Buffer & B = aux_buffer;
     B.reset();
@@ -1856,7 +1856,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     bool spec = (f == 1) || ((w & (1 << f)) != 0);
     uint c    = W.get_chr();
     if (spec)
-        B.push_back(uchar(c));
+        B.push_back(char(uchar(c)));
     else
         B.push_back(get_math_char(uchar(c), f));
     for (;;) {
@@ -1864,7 +1864,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
         if (!front().maybe_seq(f)) break;
         c = front().get_chr();
         if (spec)
-            B.push_back(uchar(c));
+            B.push_back(char(uchar(c)));
         else
             B.push_back(get_math_char(uchar(c), f));
         pop_front();
@@ -1884,13 +1884,13 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
     Buffer & B = aux_buffer;
     B.reset();
     uint c = W.get_chr();
-    B.push_back(uchar(c));
+    B.push_back(char(uchar(c)));
     if (multiple)
         for (;;) {
             if (empty()) break;
             if (!front().maybe_iseq(f)) break;
             c = front().get_chr();
-            B.push_back(uchar(c));
+            B.push_back(char(uchar(c)));
             pop_front();
         }
     Xml *res = new Xml(Istring(B));

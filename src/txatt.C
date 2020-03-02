@@ -14,7 +14,7 @@
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.
-auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(value); }
+auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(to_unsigned(value)); }
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
 auto AttList::has_value(Istring x) const -> long {

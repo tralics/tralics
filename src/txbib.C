@@ -939,10 +939,10 @@ void Parser::T_bibitem() {
 // Flag true for bibitem, \bibitem[opt]{key}
 // false in the case of \XMLsolvecite[id][from]{key}
 void Parser::solve_cite(bool user) {
-    Token  T    = cur_tok;
-    bool   F    = true;
-    auto   from = Istring("");
-    size_t n;
+    Token T    = cur_tok;
+    bool  F    = true;
+    auto  from = Istring("");
+    long  n;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));
@@ -961,11 +961,12 @@ void Parser::solve_cite(bool user) {
     if (n == 0) return;
     Xid           N = Xid(n);
     Bibliography &B = the_bibliography;
+    size_t        nn;
     if (F)
-        n = B.find_citation_star(from, key);
+        nn = B.find_citation_star(from, key);
     else
-        n = *B.find_citation_item(from, key, true);
-    CitationItem &CI = B.citation_table[n];
+        nn = *B.find_citation_item(from, key, true);
+    CitationItem &CI = B.citation_table[nn];
     if (CI.is_solved()) {
         err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
         the_parser.signal_error(the_parser.err_tok, "bad solve");

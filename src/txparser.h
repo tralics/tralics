@@ -234,7 +234,7 @@ public:
     void               M_tracingall();
     void               translate0();
     void               translate_all();
-    void               word_define(size_t a, int c, bool gbl);
+    void               word_define(size_t a, long c, bool gbl);
     auto               find_a_save_key(const std::string &mykey) -> bool;
     static auto        expand_mac_inner(const TokenList &W, TokenList *arguments) -> TokenList;
     void               mu_error(String s, int i);
@@ -609,7 +609,7 @@ private:
     void        push_tpa();
     void        ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     auto        read_delimited(const TokenList &L) -> TokenList;
-    auto        read_elt_id(Token T) -> size_t;
+    auto        read_elt_id(Token T) -> int;
     auto        read_for_variable() -> Token;
     auto        read_from_file(int ch, bool rl_sw) -> TokenList;
     auto        read_mac_body(bool exp) -> TokenList;
@@ -1062,7 +1062,7 @@ private:
     void L3_new_conditional(subtypes s);
     void L3_new_conditional_aux(TokenList &arg_spec, subtypes s);
     void L3_new_conditional_parm(subtypes s);
-    auto l3_parms_from_ac(int n, Token T, bool s) -> TokenList;
+    auto l3_parms_from_ac(long n, Token T, bool s) -> TokenList;
     void E_prg_return(int c);
     auto L3_split_next_name() -> bool;
     auto l3_to_string(subtypes c, TokenList &L) -> std::string;

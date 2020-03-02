@@ -227,7 +227,7 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
 }
 
 // Define for an integer quantity. Like eq_define without reference counts.
-void Parser::word_define(size_t a, int c, bool gbl) {
+void Parser::word_define(size_t a, long c, bool gbl) {
     EqtbInt &W        = eqtb_int_table[a];
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {

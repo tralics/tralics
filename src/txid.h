@@ -16,9 +16,9 @@
 // is a wrapper around an int
 class Xid {
 public:
-    size_t value; // value of the id
+    long value; // value of the id
 
-    Xid(size_t v = 0) : value(v) {}
+    Xid(long v = 0) : value(v) {}
 
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;

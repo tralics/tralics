@@ -36,8 +36,8 @@ class XmlIO {
 
     Xml *                  cur_xml;
     std::vector<Xml *>     cur_stack;
-    int                    cur_line_len;
-    int                    input_line_pos;
+    size_t                 cur_line_len;
+    size_t                 input_line_pos;
     int                    enc; // 0=utf8, 1=latin1
     void                   error(const std::string &s);
     std::vector<EntityDef> entities;

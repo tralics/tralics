@@ -191,13 +191,13 @@ void XmlIO::scan_name() {
     B.push_back(x);
     skip_char();
     for (;;) {
-        codepoint x = XmlIO::peek_char();
-        if (x.is_ascii()) {
-            x_type w = Type[x.value];
+        codepoint xx = XmlIO::peek_char();
+        if (xx.is_ascii()) {
+            x_type w = Type[xx.value];
             if (w == xt_space || w == xt_invalid) return;
         }
         skip_char();
-        B.push_back(x);
+        B.push_back(xx);
     }
 }
 
@@ -411,10 +411,10 @@ void XmlIO::parse_dec() {
 
 // Note that first character is in cur_char
 void XmlIO::expect(String s) {
-    int n = strlen(s);
-    for (int i = 0; i < n; i++) {
+    auto n = strlen(s);
+    for (size_t i = 0; i < n; i++) {
         cur_char = next_char();
-        if (cur_char != s[i]) {
+        if (cur_char != uchar(s[i])) {
             static Buffer aux;
             aux.reset();
             aux << "Expected " << s[i] << " got " << cur_char;
@@ -433,7 +433,7 @@ void XmlIO::parse_dec_comment() {
         codepoint c = next_char();
         B.push_back(c);
         if (c != '>') continue;
-        int k = B.size(); // B[k-1] is >
+        auto k = B.size(); // B[k-1] is >
         if (k >= 3 && B[k - 2] == '-' && B[k - 3] == '-') break;
     }
     B.remove_last_n(3);
@@ -452,7 +452,7 @@ void XmlIO::parse_dec_cdata() {
         codepoint c = next_char();
         B.push_back(c);
         if (c == '>') {
-            int k = B.size(); // B[k-1] is >
+            auto k = B.size(); // B[k-1] is >
             if (B[k - 2] == ']' && B[k - 3] == ']') break;
         }
     }
@@ -739,8 +739,8 @@ auto XmlIO::expand_PEReference() -> bool {
     }
     std::string s  = B.to_string();
     bool        ok = false;
-    int         n  = entities.size();
-    for (int i = 0; i < n; i++) {
+    auto        n  = entities.size();
+    for (size_t i = 0; i < n; i++) {
         if (entities[i].has_name(s)) {
             B.reset();
             B.push_back(entities[i].get_val());

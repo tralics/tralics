@@ -40,7 +40,7 @@ void Parser::init_all(const std::string &doc_elt) {
     eqtb_int_table[endlinechar_code].val_and_level('\r', level_one);
     eqtb_int_table[newlinechar_code].val_and_level('\n', level_one);
     TL.clear();
-    my_stats.set_nb_xboot(the_stack.get_xid().value);
+    my_stats.set_nb_xboot(to_unsigned(the_stack.get_xid().value));
     the_stack.init_all(doc_elt);
     the_stack.add_nl();
     onlypreamble.push_back(hash_table.let_token);
