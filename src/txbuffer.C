@@ -24,7 +24,7 @@ namespace {
 static Buffer local_buf; // another buffer
 
 namespace buffer_ns {
-    auto current_escape_char() -> int;
+    auto current_escape_char() -> long;
     auto null_cs_name() -> String;
     void dump_identification(String s);
 } // namespace buffer_ns
@@ -153,18 +153,18 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
 
 // Inserts an integer (this is the print_int procedure from TeX)
 // at least one digit is printed.
-void Buffer::push_back_int(int n) {
-    static int dig[30];
-    size_t     k = 0;
+void Buffer::push_back_int(long n) {
+    static long dig[30];
+    size_t      k = 0;
     if (n < 0) {
         push_back('-');
         if (n > -100000000)
             n = -n;
         else {
-            int m = -1 - n;
-            n     = m / 10;
-            m     = (m % 10) + 1;
-            k     = 1;
+            auto m = -1 - n;
+            n      = m / 10;
+            m      = (m % 10) + 1;
+            k      = 1;
             if (m < 10)
                 dig[0] = m;
             else {
@@ -395,8 +395,8 @@ auto Buffer::is_letter_digit() const -> bool {
 
 // Find a command, but in some case sets a flag if we see a dollar sign
 // Stops at a comment.  If it returns true, then we have a command
-// between ptr1 and ptr
-auto Buffer::next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> bool {
+// between ptr1 and ptr \todo unused?
+auto Buffer::next_macro_spec(bool incat, long &com_loc, bool &seen_dollar) -> bool {
     com_loc = -1;
     for (;;) {
         char c = head();
@@ -575,23 +575,23 @@ auto Buffer::without_end_spaces(String T) -> String {
 }
 
 // Returns the current escape char (used for printing)
-auto buffer_ns::current_escape_char() -> int { return the_parser.eqtb_int_table[escapechar_code].val; }
+auto buffer_ns::current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
 
 // Inserts the current escape char, unless zero or out of range.
 // This is used for transcript only
 void Buffer::insert_escape_char() {
-    int c = buffer_ns::current_escape_char();
+    auto c = buffer_ns::current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(to_unsigned(c)), the_main->get_log_encoding());
+        out_log(codepoint(char32_t(to_unsigned(c))), the_main->get_log_encoding());
     else if (c == 0)
         push_back("^^@");
 }
 
 /// This one is for `\meaning`
 void Buffer::insert_escape_char_raw() {
-    int c = buffer_ns::current_escape_char();
+    auto c = buffer_ns::current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(codepoint(to_unsigned(c)));
+        push_back(codepoint(char32_t(to_unsigned(c))));
     else if (c == 0)
         push_back("^^@");
 }
@@ -599,12 +599,12 @@ void Buffer::insert_escape_char_raw() {
 // Returns a temporary string, corresponding to the command with
 // an empty name, without initial escape char.
 auto buffer_ns::null_cs_name() -> String {
-    int c = buffer_ns::current_escape_char();
+    auto c = buffer_ns::current_escape_char();
     if (c == '\\') return "csname\\endcsname";
     if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
-        B.out_log(codepoint(to_unsigned(c)), the_main->get_log_encoding());
+        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->get_log_encoding());
         B << "endcsname";
         return B.c_str();
     }
@@ -1423,9 +1423,9 @@ void Buffer::optslash() {
         push_back('/');
 }
 
-// returns location of last slash in the buffer
-auto Buffer::last_slash() const -> int {
-    int k = -1;
+// returns location of last slash in the buffer \todo std::optional<size_t>
+auto Buffer::last_slash() const -> long {
+    long k = -1;
     for (size_t i = 0; i < wptr; i++)
         if (at(i) == '/') k = to_signed(i);
     return k;

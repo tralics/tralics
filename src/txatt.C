@@ -17,7 +17,7 @@
 auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(value); }
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
-auto AttList::has_value(Istring x) const -> int {
+auto AttList::has_value(Istring x) const -> long {
     size_t n = val.size();
     for (size_t i = 0; i < n; i++)
         if (val[i].name == x) return to_signed(i);
@@ -28,7 +28,7 @@ auto AttList::has_value(Istring x) const -> int {
 // Returns null string otherwise
 auto Xid::has_attribute(Istring n) -> Istring {
     AttList &X = get_att();
-    int      i = X.has_value(n);
+    auto     i = X.has_value(n);
     if (i >= 0) return X.get_val(to_unsigned(i));
     return Istring();
 }
@@ -46,7 +46,7 @@ auto Xid::is_font_change() const -> bool {
 // Does nothing if b is null (ok if b is empty).
 void AttList::push_back(Istring a, Istring b, bool force) {
     if (b.null()) return;
-    int T = has_value(a);
+    auto T = has_value(a);
     if (T >= 0) {
         if (force) val[to_unsigned(T)].value = b;
         return;
@@ -101,7 +101,7 @@ void Xid::add_attribute(Xid b) {
 
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
-    int i = has_value(Istring(a));
+    auto i = has_value(Istring(a));
     if (i > 0) val[to_unsigned(i)].name = Istring(0);
 }
 
@@ -112,7 +112,7 @@ void AttList::destroy() { val = std::vector<AttPair>(); }
 // returns false if there is no such value.
 auto Buffer::install_att(Xid idx, Istring m) -> bool {
     AttList &L = idx.get_att();
-    int      k = L.has_value(m);
+    auto     k = L.has_value(m);
     if (k == -1) return false;
     reset();
     push_back(L.get_val(to_unsigned(k)).c_str());

@@ -972,7 +972,7 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    int      my_id = AL.has_value(np_id);
+    auto     my_id = AL.has_value(np_id);
     if (my_id >= 0) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(to_unsigned(my_id)));
@@ -1058,7 +1058,7 @@ void Bibtex::err_in_entry(String a) {
     log_and_tty << "\n" << a;
 }
 
-void Bibtex::err_in_name(String a, int i) {
+void Bibtex::err_in_name(String a, long i) {
     err_in_entry(a);
     log_and_tty << "\nbad syntax in author or editor name\n";
     log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer.c_str() << ".\n";
@@ -1611,7 +1611,7 @@ void Bibtex::work() {
 
 // Some entries are discarded, others are pushed in all_entries_table.
 // For these we call normalise and presort
-void BibEntry::work(int serial) {
+void BibEntry::work(long serial) {
     cur_entry_line = -1;
     cur_entry_name = cite_key.get_name();
     if (type_int == type_unknown) {
@@ -1666,7 +1666,7 @@ void BibEntry::reverse_pass(int &next_extra) {
 }
 
 // Creates a numeric version of the label, and (optional) alpha one.
-void BibEntry::numeric_label(int i) {
+void BibEntry::numeric_label(long i) {
     Buffer &B = biblio_buf1;
     B << bf_reset << '[' << label << ']';
     aux_label = B.to_string();
@@ -2062,7 +2062,7 @@ void Bibtex::bad_year(const std::string &given, String wanted) {
         log_and_tty << "it is `" << given << "'.\n";
 }
 
-void BibEntry::presort(int serial) {
+void BibEntry::presort(long serial) {
     Buffer &B = biblio_buf1;
     sort_author(type_int != type_proceedings);
     sort_author(type_int == type_proceedings);

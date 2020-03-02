@@ -21,7 +21,7 @@ namespace config_ns {
     bool        have_default_ur = false;
     std::string the_default_rc;
     size_t      ur_size{0};
-    int         composition_section = -1;
+    long        composition_section = -1;
     bool        cur_sec_no_topic    = false;
 } // namespace config_ns
 
@@ -30,7 +30,7 @@ namespace config_ns {
     void interpret_data_list(Buffer &B, const std::string &name);
     void interpret_theme_list(const Buffer &B);
     auto is_good_ur(const std::string &x) -> bool;
-    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> int;
+    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long;
     auto check_section(const std::string &s) -> std::string;
     auto check_spec_section(const std::string &s) -> std::string;
 } // namespace config_ns
@@ -176,8 +176,8 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
 
 // return non-empty string only if section is new
 auto config_ns::check_section(const std::string &s) -> std::string {
-    static int cur_section = -1;
-    int        k           = -1;
+    static long cur_section = -1;
+    long        k           = -1;
     err_buf.reset();
     std::vector<ParamDataSlot> &X = config_data.data[1]->data;
     auto                        n = X.size(); // number of sections
@@ -220,7 +220,7 @@ auto config_ns::check_section(const std::string &s) -> std::string {
             return "";
         }
     }
-    static int prev = -1;
+    static long prev = -1;
     if (prev == cur_section) return "";
     prev             = cur_section;
     cur_sec_no_topic = X[to_unsigned(cur_section - 1)].no_topic();
@@ -276,7 +276,7 @@ void config_ns::interpret_data_list(Buffer &B, const std::string &name) {
 // returns -1 if there no other RC in the buffer.
 // returns -2 if the RC is invalid
 // returns location in the table otherwise
-auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> int {
+auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
@@ -318,7 +318,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     Xml *            new_elt;
     B.reset_ptr();
     for (;;) {
-        int j = next_RC_in_buffer(B, sname, lname);
+        auto j = next_RC_in_buffer(B, sname, lname);
         if (j == -1) break;
         if (j == -2) {
             nb = 0;

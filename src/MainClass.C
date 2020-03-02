@@ -552,7 +552,7 @@ void MainClass::open_config_file() {
     use_tcf = true;
     B.remove_last_n(4);
     auto n = B.size();
-    int  k = B.last_slash();
+    auto k = B.last_slash();
     for (size_t i = n - 1;; i--) {
         if (i <= to_unsigned(k + 1)) break;
         if (!is_digit(B[i])) {
@@ -722,7 +722,7 @@ void MainClass::see_name1() {
         y = main_ns::extract_year(B, C);
         main_ns::check_year(y, C, dclass, year_string);
     }
-    int k = B.last_slash(); // remove the directory part
+    auto k = B.last_slash(); // remove the directory part
     if (k >= 0) {
         std::string s = B.to_string(to_unsigned(k + 1));
         B << bf_reset << s;
@@ -739,7 +739,7 @@ void MainClass::see_name1() {
     if (out_name.empty()) { // might be given as an option
         out_name = no_ext;
         B << bf_reset << no_ext; // remove the directory part
-        int kk = B.last_slash();
+        auto kk = B.last_slash();
         if (kk >= 0) out_name = B.to_string(to_unsigned(kk + 1)); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option

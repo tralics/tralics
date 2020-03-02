@@ -186,7 +186,7 @@ public:
     [[nodiscard]] auto is_good_ascii() const -> bool;
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
     [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
-    [[nodiscard]] auto last_slash() const -> int;
+    [[nodiscard]] auto last_slash() const -> long;
     [[nodiscard]] auto size() const -> size_t { return wptr; }
     auto               look_at_space(const std::string &s) -> bool;
     void               lowercase();
@@ -201,7 +201,7 @@ public:
     auto               next_env_spec() -> bool;
     auto               next_kw() -> bool;
     auto               next_macro() -> bool;
-    auto               next_macro_spec(bool incat, int &com_loc, bool &seen_dollar) -> bool;
+    auto               next_macro_spec(bool incat, long &com_loc, bool &seen_dollar) -> bool;
     auto               next_macro_spec() -> bool;
     auto               next_utf8_byte() -> uchar;
     auto               next_utf8_char() -> codepoint;
@@ -237,7 +237,7 @@ public:
     void               push_back_braced(String s);
     void               push_back_def(String, std::string);
     void               push_back_elt(Istring name, Xid id, int w);
-    void               push_back_int(int n);
+    void               push_back_int(long n);
     void               push_back16(size_t n, bool uni);
     void               push_back16l(bool hat, uint n);
     void               push_back_ent(codepoint ch);

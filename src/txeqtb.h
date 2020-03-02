@@ -294,12 +294,12 @@ public:
 // the current level is different fron the old one, and is greater than one.
 // These objects are defined at level_one
 struct EqtbInt {
-    int val{0};           // value of the object
-    int level{level_one}; // level at which this is defined
+    long val{0};           // value of the object
+    int  level{level_one}; // level at which this is defined
 
     EqtbInt() = default;
 
-    void               set_val(int x) { val = x; }
+    void               set_val(long x) { val = x; }
     void               set_level(int x) { level = x; }
     [[nodiscard]] auto get_level() const -> int { return level; }
     void               val_and_level(int a, int b) {

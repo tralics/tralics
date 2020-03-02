@@ -54,6 +54,12 @@ auto operator<<(FullLogger &X, int s) -> FullLogger & {
     return X;
 }
 
+auto operator<<(FullLogger &X, long s) -> FullLogger & {
+    if (X.verbose) std::cout << s;
+    X.L << s;
+    return X;
+}
+
 auto operator<<(FullLogger &X, size_t s) -> FullLogger & {
     if (X.verbose) std::cout << s;
     X.L << s;

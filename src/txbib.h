@@ -236,7 +236,7 @@ private:
     auto is_empty(String s) -> bool;
     void move_to_year() { cite_key.move_to_year(); }
     void use_extra_num();
-    void numeric_label(int i);
+    void numeric_label(long i);
     void call_type();
     void call_type_all();
     void call_type_special();
@@ -245,7 +245,7 @@ private:
     void sort_editor();
     void sort_organization();
     void sort_check(String);
-    void presort(int serial);
+    void presort(long serial);
     void sort_key();
     void format_author(bool au);
     void forward_pass(std::string &previous_label, int &last_num);
@@ -262,7 +262,7 @@ private:
     void add_warning(int dy);
     auto store_field(field_pos where) -> bool;
     void parse_crossref();
-    void work(int serial);
+    void work(long serial);
 
     static void handle_one_namelist(std::string &s, BibtexName &X);
     static void out_something(field_pos p, const std::string &s);
@@ -361,7 +361,7 @@ public:
     void        read1(const std::string &cur);
     void        read_ra();
     void        err_in_file(String s, bool last);
-    static void err_in_name(String a, int i);
+    static void err_in_name(String a, long i);
     void        boot(std::string S, bool inra);
     void        enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
     void        bootagain();

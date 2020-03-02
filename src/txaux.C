@@ -621,7 +621,7 @@ auto SpecialHash::find_counter() -> int {
 auto Mactab::new_macro(Macro *s) -> subtypes {
     the_parser.my_stats.one_more_macro();
     if (ptr < 0) rc_mac_realloc();
-    int w       = ptr;
+    auto w      = ptr;
     ptr         = rc_table[w];
     rc_table[w] = 0;
     table[w]    = s;
@@ -636,7 +636,7 @@ void Mactab::rc_mac_realloc() {
     static Macro *empty_mac = nullptr;
     if (empty_mac == nullptr) empty_mac = new Macro;
     auto T1 = new Macro *[ns];
-    auto T2 = new int[ns];
+    auto T2 = new long[ns];
     for (size_t i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];

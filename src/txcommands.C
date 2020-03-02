@@ -1219,7 +1219,7 @@ void Parser::translate03() {
             static bool inserted = false;
             if (!inserted) the_stack.top_stack()->change_id(4);
             inserted  = true;
-            int     k = eqtb_int_table[42 + count_reg_offset].val;
+            auto    k = eqtb_int_table[42 + count_reg_offset].val;
             Buffer &b = mac_buffer;
             b.reset();
             b << k;

@@ -140,7 +140,7 @@ void main_ns::check_in_dir() {
 auto main_ns::hack_for_input(const std::string &s) -> std::string {
     Buffer B;
     B << s;
-    int k = B.last_slash();
+    auto k = B.last_slash();
     the_parser.set_job_name(no_ext);
     std::string path;
     std::string fn = s;

@@ -54,7 +54,7 @@ public:
         f(*this);
         return *this;
     }
-    // some trivial functions
+    // some trivial functions \todo those should be a single template
     auto operator<<(String s) -> Logger & {
         (*fp) << s;
         return *this;
@@ -64,6 +64,10 @@ public:
         return *this;
     }
     auto operator<<(int s) -> Logger & {
+        (*fp) << s;
+        return *this;
+    }
+    auto operator<<(long s) -> Logger & {
         (*fp) << s;
         return *this;
     }
@@ -179,6 +183,7 @@ auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;
 auto operator<<(FullLogger &X, String s) -> FullLogger &;
 auto operator<<(FullLogger &X, Istring s) -> FullLogger &;
 auto operator<<(FullLogger &X, int s) -> FullLogger &;
+auto operator<<(FullLogger &X, long s) -> FullLogger &;
 auto operator<<(FullLogger &X, size_t s) -> FullLogger &;
 auto operator<<(FullLogger &X, const std::string &s) -> FullLogger &;
 auto operator<<(FullLogger &X, char s) -> FullLogger &;

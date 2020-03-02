@@ -35,7 +35,7 @@ public:
     std::array<EqtbBox, nb_registers>         box_table;         // EQTB, boxes
     std::array<EqtbGlue, glue_table_size>     glue_table;        // EQTB, glue
     std::array<Token, nb_characters>          verbatim_chars;    // value of a character in verbatim mode
-    std::array<int, nb_shortverb_values>      old_catcode;       // catcodes for undefineshortverb
+    std::array<long, nb_shortverb_values>     old_catcode;       // catcodes for undefineshortverb
     std::array<int, 9>                        allocation_table;  // values for \newcount etc
     std::array<bool, nb_xspace_values>        ok_for_xspace;     // status of char w.r.t. \xspace
     std::array<Token, 22>                     uclc_list;         // upper, lowert case equivalent of \ij etc
@@ -132,7 +132,7 @@ public:
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
     void               brace_me(TokenList &L);
-    [[nodiscard]] auto cur_centering() const -> int { return eqtb_int_table[incentering_code].val; }
+    [[nodiscard]] auto cur_centering() const -> long { return eqtb_int_table[incentering_code].val; }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
     auto               cur_line_to_istring() -> Istring;
