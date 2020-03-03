@@ -76,7 +76,7 @@ void Glue::zdv() {
 // This is called x_over_n in TeX
 // Divides this by n.
 // No overflow possible. Division by zero may happen.
-void ScaledInt::divide(int n) {
+void ScaledInt::divide(long n) {
     auto x = value;
     if (n == 0) {
         // value = 0;
@@ -122,7 +122,7 @@ auto arith_ns::xn_over_d(int x, int n, int d, int &remainder) -> int {
 
 // Returns floor(xn/d +1/2)
 // This is used when you say \numexpr X*Y/Z
-void ScaledInt::scale(int n, int d, int max_answer) {
+void ScaledInt::scale(long n, long d, long max_answer) {
     auto x        = value;
     bool negative = false;
     if (scale(x, n, d, max_answer, negative)) {
@@ -134,7 +134,7 @@ void ScaledInt::scale(int n, int d, int max_answer) {
 }
 
 // Return true if overflow.
-auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bool {
+auto ScaledInt::scale(long x, long n, long d, long max_answer, bool &negative) -> bool {
     value = 0;
     if (x == 0) return false;
     if (n == 0) return false;
@@ -208,7 +208,7 @@ auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bo
 // Computes x/n, rounded
 // No overflow possible. Division by zero must be checked by caller.
 // This is used when you say \dimexpr 2pt/3
-void ScaledInt::quotient(int d) {
+void ScaledInt::quotient(long d) {
     bool negative = false;
     auto n        = value;
     if (n < 0) {
@@ -409,7 +409,7 @@ void Glue::add(const Glue &r) {
 // Inlined call to attach sign
 void SthInternal::attach_fraction(RealNumber x) {
     int_val = x.get_ipart();
-    int f   = x.get_fpart();
+    long f  = x.get_fpart();
     if (int_val.get_value() >= (1 << 14)) {
         start_err("2^{14}");
         err_buf << "\nfor " << int_val.get_value();

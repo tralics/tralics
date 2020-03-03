@@ -16,21 +16,21 @@
 
 // this is a wrapper around an int
 class ScaledInt {
-    int value{0}; // the integer, considered as a scaled number
+    long value{0}; // the integer, considered as a scaled number
 public:
     ScaledInt() = default;
-    void set_value(int i) { value = i; }
-    ScaledInt(int v) : value(v) {}
-    [[nodiscard]] auto get_value() const -> int { return value; }
+    void set_value(long i) { value = i; }
+    ScaledInt(long v) : value(long(int(v))) {} // \todo getting parameter as `long` makes tests fail, not sure why.
+    [[nodiscard]] auto get_value() const -> long { return value; }
     auto               operator-() const -> ScaledInt { return ScaledInt(-value); }
     void               operator+=(ScaledInt X) { value += X.value; }
     void               add_dim(ScaledInt Y);
     [[nodiscard]] auto null() const -> bool { return value == 0; }
     void               neg() { value = -value; }
-    void               divide(int n);
-    void               quotient(int d);
-    void               scale(int n, int d, int max_answer);
-    auto               scale(int x, int n, int d, int max_answer, bool &negative) -> bool;
+    void               divide(long n);
+    void               quotient(long d);
+    void               scale(long n, long d, long max_answer);
+    auto               scale(long x, long n, long d, long max_answer, bool &negative) -> bool;
     void               mult_scaled(int x);
     void               mult_integer(int x);
     void               times_10_18();
@@ -117,14 +117,14 @@ public:
         type = it_int;
     }
     void               set_type(internal_type X) { type = X; }
-    [[nodiscard]] auto get_int_val() const -> int { return int_val.get_value(); }
+    [[nodiscard]] auto get_int_val() const -> long { return int_val.get_value(); }
     [[nodiscard]] auto get_dim_val() const -> ScaledInt { return int_val; }
     auto               get_scaled() -> ScaledInt & { return int_val; }
     [[nodiscard]] auto get_token_val() const -> TokenList { return token_val; }
     void               set_int_val(int k) { int_val = k; }
     void               set_scaled_val(ScaledInt k) { int_val = k; }
     [[nodiscard]] auto get_glue_val() const -> const Glue & { return glue_val; }
-    [[nodiscard]] auto get_glue_width() const -> int { return glue_val.get_width().get_value(); }
+    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.get_width().get_value(); }
     void               initialise(internal_type t);
     void               copy(const SthInternal &x);
     void               negate() {

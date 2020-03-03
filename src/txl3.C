@@ -780,7 +780,7 @@ void Parser::L3_set_num_code(int c) {
     Token T = cur_tok;
     if (max != 0) {
         TokenList L1 = read_arg();
-        int       N  = l3_read_int(T);
+        auto      N  = l3_read_int(T);
         if (N < 0 || N > max) {
             signal_ovf(T, "Invalid code (out of bounds)\n", N, max);
             N = 0;
@@ -791,7 +791,7 @@ void Parser::L3_set_num_code(int c) {
         word_define(to_unsigned(m + offset), N, false);
         return;
     }
-    int m = l3_read_int(T);
+    auto m = l3_read_int(T);
     if (m < 0 || m > int(scan_char_num_max)) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;

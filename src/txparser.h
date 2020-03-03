@@ -226,7 +226,7 @@ public:
     void               signal_error(String s);
     void               signal_error();
     void               signal_error(Token T, String s);
-    void               signal_ovf(Token T, String h, int cur, int max);
+    void               signal_ovf(Token T, String h, long cur, long max);
     auto               special_expand(TokenList *args) -> TokenList;
     auto               special_tpa_arg(String n, String y, bool par, bool env, bool has_q) -> Xml *;
     void               T_titlepage_finish(size_t v);

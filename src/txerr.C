@@ -386,7 +386,7 @@ void Parser::missing_flush() {
     signal_error(Token(), "non-empty buffer");
 }
 
-void Parser::signal_ovf(Token T, String h, int cur, int max) {
+void Parser::signal_ovf(Token T, String h, long cur, long max) {
     if (h != nullptr) err_buf << bf_reset << h;
     err_buf << T.tok_to_str() << " wants 0<=N<=" << max << ", with N=" << cur;
     signal_error(T, "number too big");
