@@ -135,7 +135,7 @@ public:
     auto               push_hbox(Istring name) -> Xml *;
     void               push_pop_cell(int dir);
     void               push_trace();
-    auto               push_par(int k) -> Xid;
+    auto               push_par(long k) -> Xid;
     auto               remove_last() -> Xml *;
     void               remove_last_space();
     void               set_arg_mode() { cur_mode = mode_argument; }

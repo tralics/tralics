@@ -395,7 +395,7 @@ void Stack::pop(Istring a) {
 // Pushes a <p>. The argument a is (an attribute value for) a vertical space
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
-auto Stack::push_par(int k) -> Xid {
+auto Stack::push_par(long k) -> Xid {
     Xml *res = new Xml(cst_p, nullptr);
     Xid  id  = res->get_id();
     push(the_names[cst_p], res);

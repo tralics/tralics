@@ -54,8 +54,8 @@ public:
     [[nodiscard]] auto get_name() const -> Istring { return name; }
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
-    auto               how_many_env(Istring match) -> int;
-    void               insert_at(int pos, Xml *x);
+    auto               how_many_env(Istring match) -> long;
+    void               insert_at(size_t pos, Xml *x);
     auto               insert_at_ck(int n, Xml *v) -> bool;
     void               insert_bib(Xml *bib, Xml *match);
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }
@@ -70,7 +70,7 @@ public:
     [[nodiscard]] auto last_is(name_positions) const -> bool;
     [[nodiscard]] auto last_is_string() const -> bool;
     void               last_to_SH();
-    void               make_hole(int pos);
+    void               make_hole(size_t pos);
     void               move(Istring match, Xml *res);
     void               one_fig_tab(bool is_fig);
     [[nodiscard]] auto only_hi() const -> bool;

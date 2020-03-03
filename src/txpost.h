@@ -41,7 +41,7 @@ public:
 class XmlAction {
     Istring    match;      // the name of the object to match
     recur_type what;       // the type of the action to perform
-    int        int_val;    // number of results, or xid
+    long       int_val;    // number of results, or xid
     Xml *      xml_val;    // input or output xml value
     Istring    string_val; // name of element ot work on
 public:
@@ -53,11 +53,11 @@ public:
     void               mark_found() { int_val = 1; }
     auto               is_ok() -> bool { return int_val != 0; }
     [[nodiscard]] auto get_xml_val() const -> Xml * { return xml_val; }
-    [[nodiscard]] auto get_int_val() const -> int { return int_val; }
+    [[nodiscard]] auto get_int_val() const -> long { return int_val; }
     [[nodiscard]] auto get_string_val() const -> Istring { return string_val; }
     void               set_string_val(Istring s) { string_val = s; }
     void               set_xml_val(Xml *s) { xml_val = s; }
-    void               set_int_val(int s) { int_val = s; }
+    void               set_int_val(long s) { int_val = s; }
     [[nodiscard]] auto get_match() const -> Istring { return match; }
 };
 

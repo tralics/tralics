@@ -126,8 +126,8 @@ void Parser::leave_v_mode() {
 }
 
 auto Parser::ileave_v_mode() -> Xid {
-    int k   = cur_centering();
-    Xid res = the_stack.push_par(k);
+    auto k   = cur_centering();
+    Xid  res = the_stack.push_par(k);
     if (unfinished_par != nullptr) {
         res.add_attribute(unfinished_par->get_id().get_att(), true);
         unfinished_par = nullptr;
@@ -245,7 +245,7 @@ auto Parser::get_ctb_opt() -> name_positions {
     Token t = token_ns::get_unique(L);
     if (t.is_null()) return cst_invalid;
     if (t.cmd_val() != letter_catcode) return cst_invalid;
-    char c = t.val_as_letter();
+    auto c = t.val_as_letter();
     if (c == 'c') return np_letter_c;
     if (c == 's') return np_letter_s;
     if (c == 't') return np_letter_t;
@@ -264,7 +264,7 @@ auto Parser::get_trees_opt() -> name_positions {
     token_ns::get_unique(L, t1, t2);
     if (t1.is_null()) return cst_invalid;
     if (t1.cmd_val() != letter_catcode) return cst_invalid;
-    uint c = t1.val_as_letter();
+    auto c = t1.val_as_letter();
     if (t2.is_null()) {
         if (c == 'l') return np_letter_l;
         if (c == 'r') return np_letter_r;
@@ -273,7 +273,7 @@ auto Parser::get_trees_opt() -> name_positions {
         return cst_invalid;
     }
     if (t2.cmd_val() != letter_catcode) return cst_invalid;
-    uint c2 = t2.val_as_letter();
+    auto c2 = t2.val_as_letter();
     if (c != 't' && c != 'b') return cst_invalid;
     if (c2 != 'l' && c2 != 'r') return cst_invalid;
     if (c == 't') return c2 == 'l' ? np_letters_tl : np_letters_tr;

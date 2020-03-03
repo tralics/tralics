@@ -31,7 +31,7 @@ namespace post_ns {
     void remove_label(String s, Istring n);
     void remove_me_from_heads(Xml *X);
     void print_no_title(int i, String s);
-    auto is_entity(String s) -> int;
+    auto is_entity(String s) -> size_t;
     void raw_subfigure(Xml *from, Xml *to, Xml *junk);
     void table_subfigure(Xml *from, Xml *to, Xml *junk);
     auto figline(Xml *from, int &ctr, Xml *junk) -> Xml *;
@@ -47,7 +47,6 @@ namespace all_words_ns {
     void          add_a_word(String s, int h);
     void          dump_and_list(WordList *WL, int i);
     void          dump_words(const std::string &name);
-    auto          is_entity(String s) -> int;
 } // namespace all_words_ns
 
 //  --- Manipulating the XML tree
@@ -55,9 +54,9 @@ namespace all_words_ns {
 // return the true size, excluding null elements
 auto Xml::real_size() const -> int {
     if (is_xmlc()) return -2;
-    int n = 0;
-    int k = tree.size();
-    for (int i = 0; i < k; i++)
+    int  n = 0;
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++)
         if (tree[i] != nullptr) n++;
     return n;
 }
@@ -65,8 +64,8 @@ auto Xml::real_size() const -> int {
 // returns the value at n, excluding null elements
 auto Xml::value_at(int n) -> Xml * {
     if (is_xmlc() || n < 0) return nullptr;
-    int k = tree.size();
-    for (int i = 0; i < k; i++) {
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++) {
         if (tree[i] != nullptr) {
             if (n == 0) return tree[i];
             n--;
@@ -77,8 +76,8 @@ auto Xml::value_at(int n) -> Xml * {
 
 auto Xml::put_at(int n, Xml *x) -> bool {
     if (is_xmlc()) return false;
-    int k = tree.size();
-    for (int i = 0; i < k; i++) {
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++) {
         if (tree[i] != nullptr) {
             if (n == 0) {
                 tree[i] = x;
@@ -93,8 +92,8 @@ auto Xml::put_at(int n, Xml *x) -> bool {
 // returns the value at n, excluding null elements, returns true if OK
 auto Xml::remove_at(int n) -> bool {
     if (is_xmlc()) return false;
-    int k = tree.size();
-    for (int i = 0; i < k; i++) {
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++) {
         if (tree[i] != nullptr) {
             if (n == 0) {
                 tree[i] = nullptr;
@@ -110,8 +109,8 @@ auto Xml::remove_at(int n) -> bool {
 // returns true if OK
 auto Xml::insert_at_ck(int n, Xml *v) -> bool {
     if (is_xmlc()) return false;
-    int k = tree.size();
-    for (int i = 0; i < k; i++) {
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++) {
         if (n == 0) {
             insert_at(i, v);
             return true;
@@ -127,8 +126,8 @@ auto Xml::insert_at_ck(int n, Xml *v) -> bool {
 
 auto Xml::is_child(Xml *x) const -> bool {
     if (is_xmlc()) return false;
-    int k = tree.size();
-    for (int i = 0; i < k; i++)
+    auto k = tree.size();
+    for (size_t i = 0; i < k; i++)
         if (tree[i] == x) return true;
     return false;
 }
@@ -139,9 +138,9 @@ void Parser::user_XML_swap(subtypes c) {
     else if (c == one_code)
         the_xmlA = the_xmlB;
     else {
-        Xml *c   = the_xmlA;
+        Xml *cc  = the_xmlA;
         the_xmlA = the_xmlB;
-        the_xmlB = c;
+        the_xmlB = cc;
     }
 }
 
@@ -149,8 +148,8 @@ auto Xml::deep_copy() -> Xml * {
     if (is_xmlc()) return this;
     Xml *res = new Xml(name, nullptr);
     res->id.add_attribute(id);
-    int n = size();
-    for (int i = 0; i < n; i++) {
+    auto n = size();
+    for (size_t i = 0; i < n; i++) {
         if (tree[i] != nullptr) res->push_back(tree[i]->deep_copy());
     }
     return res;
@@ -181,7 +180,7 @@ void Parser::user_XML_modify(subtypes c) {
     case xml_get_code: the_xmlB = the_xmlA != nullptr ? the_xmlA->value_at(n) : nullptr; return;
     case xml_ins_code:
         if ((the_xmlA == nullptr) || n < 0) return;
-        the_xmlA->insert_at(n, the_xmlB != nullptr ? the_xmlB->deep_copy() : nullptr);
+        the_xmlA->insert_at(to_unsigned(n), the_xmlB != nullptr ? the_xmlB->deep_copy() : nullptr);
         return;
     case xml_del_code:
         if ((the_xmlA == nullptr) || n < 0) return;
@@ -284,7 +283,7 @@ void Parser::check_all_ids() {
 //
 void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
-        int        E = i.first;
+        auto       E = to_unsigned(i.first);
         Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
         if (!L->is_defined()) continue; // should not happen
@@ -320,16 +319,16 @@ void post_ns::remove_label(String s, Istring n) {
 
 // This removes X from the list of all heads.
 void post_ns::remove_me_from_heads(Xml *X) {
-    int j = the_parser.all_heads.size();
-    for (int i = 0; i < j; i++)
+    auto j = the_parser.all_heads.size();
+    for (size_t i = 0; i < j; i++)
         if (the_parser.all_heads[i] == X) the_parser.all_heads[i] = nullptr;
 }
 
 // This finds a sub element named match, and does some action X
 // Recursion stops when found.
 void Xml::recurse0(XmlAction &X) {
-    int tl = size();
-    for (int k = 0; k < tl; k++) {
+    auto tl = size();
+    for (size_t k = 0; k < tl; k++) {
         Xml *y = tree[k];
         if ((y == nullptr) || y->is_xmlc()) continue;
         if (y->has_name(X.get_match())) switch (X.get_what()) {
@@ -356,8 +355,8 @@ void Xml::recurse0(XmlAction &X) {
 
 // This does some action for every element named X.
 void Xml::recurse(XmlAction &X) {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if ((T == nullptr) || T->is_xmlc()) continue;
         if (T->has_name(X.get_match())) {
@@ -387,8 +386,8 @@ void Xml::recurse(XmlAction &X) {
                 if (!an.null()) post_ns::remove_label("module in composition", an);
                 tree[k] = nullptr;
                 k--;
-                int Len = T->size();
-                for (int j = 0; j < Len; j++) {
+                auto Len = T->size();
+                for (size_t j = 0; j < Len; j++) {
                     Xml *W = T->tree[j];
                     if (W == nullptr) continue;
                     if (!W->is_xmlc() && W->has_name(np_head)) {
@@ -410,22 +409,22 @@ void Xml::recurse(XmlAction &X) {
 }
 
 // Should we use insert here ?
-void Xml::make_hole(int pos) {
-    int l = size();
+void Xml::make_hole(size_t pos) {
+    auto l = size();
     tree.push_back(nullptr);
-    for (int i = l; i > pos; i--) tree[i] = tree[i - 1];
+    for (size_t i = l; i > pos; i--) tree[i] = tree[i - 1];
 }
 
 // Returns a pointer to the last son.
 auto Xml::last_addr() const -> Xml * {
-    int len = size();
+    auto len = size();
     return len > 0 ? tree[len - 1] : nullptr;
 }
 
 // Returns a pointer to the last element
 // and removes it if it is a Box
 auto Xml::last_box() -> Xml * {
-    int len = size();
+    auto len = size();
     if (len == 0) return nullptr;
     Xml *res = tree[len - 1];
     if ((res != nullptr) && !res->is_xmlc()) {
@@ -437,7 +436,7 @@ auto Xml::last_box() -> Xml * {
 
 // Remove last item if its an empty <hi>
 void Xml::remove_last_empty_hi() {
-    int len = size();
+    auto len = size();
     if (len == 0) return;
     Xml *T = tree[len - 1];
     if ((T == nullptr) || T->is_xmlc()) return;
@@ -467,8 +466,8 @@ auto Xml::only_hi() const -> bool {
 // Adds the content of x to this. Attributes are lost
 // Assumes that x is not a string.
 void Xml::push_back_list(Xml *x) {
-    int n = x->size();
-    for (int i = 0; i < n; i++) {
+    auto n = x->size();
+    for (size_t i = 0; i < n; i++) {
         Xml *y = x->tree[i];
         if (y != nullptr) tree.push_back(y);
     }
@@ -484,7 +483,7 @@ void Xml::add_tmp(Xml *x) {
 }
 
 // Inserts x at position pos.
-void Xml::insert_at(int pos, Xml *x) {
+void Xml::insert_at(size_t pos, Xml *x) {
     make_hole(pos);
     tree[pos] = x;
 }
@@ -497,15 +496,15 @@ void Xml::add_first(Xml *x) {
 
 // This find an element with a single son, the son should be res.
 auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
-    int n = size();
-    for (int i = 0; i < n; i++) {
+    auto n = size();
+    for (size_t i = 0; i < n; i++) {
         Xml *T = tree[i];
         if ((T != nullptr) && !T->is_xmlc() && T->size() == 1 && T->tree[0] == check) {
             *res = T;
             return true;
         }
     }
-    for (int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
         if ((tree[i] != nullptr) && !tree[i]->is_xmlc() && tree[i]->find_on_tree(check, res)) return true;
     return false;
 }
@@ -541,9 +540,9 @@ void Xml::to_buffer(Buffer &b) const {
         else if (id.value == -1)
             b << "<!--" << name << "-->";
         else if (id.value == -2) {
-            int len = size();
+            auto len = size();
             b << "<!" << name;
-            for (int i = 0; i < len; i++) {
+            for (size_t i = 0; i < len; i++) {
                 if (tree[i] != nullptr) tree[i]->to_buffer(b);
             }
             b << ">";
@@ -552,9 +551,9 @@ void Xml::to_buffer(Buffer &b) const {
             b << "<?" << name << "?>";
         return;
     }
-    int len  = size();
-    int rlen = 0;
-    for (int i = 0; i < len; i++)
+    auto len  = size();
+    int  rlen = 0;
+    for (size_t i = 0; i < len; i++)
         if (tree[i] != nullptr) rlen++;
     if (name.get_value() > 1) {
         if (rlen != 0)
@@ -565,7 +564,7 @@ void Xml::to_buffer(Buffer &b) const {
         }
     }
     //  www ++; if (www <0) b << "...loop ... "; else
-    for (int i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
         if (tree[i] != nullptr) tree[i]->to_buffer(b);
     }
     //  www --;
@@ -605,7 +604,7 @@ void Xml::subst_env0(Istring match, Xml *vl) {
 }
 
 // Returns number of sons named <match>.
-auto Xml::how_many_env(Istring match) -> int {
+auto Xml::how_many_env(Istring match) -> long {
     XmlAction X(match, rc_how_many);
     recurse(X);
     return X.get_int_val();
@@ -620,8 +619,8 @@ auto Xml::get_first_env(name_positions N) -> Xml * {
 
 // Returns the element that is just before x.
 auto Xml::prev_sibling(Xml *x) -> Xml * {
-    int len = size();
-    for (int i = 1; i < len; i++)
+    auto len = size();
+    for (size_t i = 1; i < len; i++)
         if (tree[i] == x) return tree[i - 1];
     return nullptr;
 }
@@ -629,8 +628,8 @@ auto Xml::prev_sibling(Xml *x) -> Xml * {
 // This returns true if it is possible to remove the p
 auto Xml::is_empty_p() const -> bool {
     if (!has_name(cst_p)) return false;
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         return false;
@@ -645,8 +644,8 @@ auto Xml::is_empty_p() const -> bool {
 // Returns true if empty
 auto Xml::empty() const -> bool {
     if (!name.empty()) return false;
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         if (tree[k] != nullptr) return false;
     }
     return true;
@@ -654,8 +653,8 @@ auto Xml::empty() const -> bool {
 
 // Returns true if empty (white space only)
 auto Xml::is_empty() const -> bool {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
@@ -666,8 +665,8 @@ auto Xml::is_empty() const -> bool {
 
 // Returns true if empty (white space or &nbsp; only)
 auto Xml::is_empty_spec() const -> bool {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
@@ -678,9 +677,9 @@ auto Xml::is_empty_spec() const -> bool {
 
 // If there is one non-empty son returns it.
 auto Xml::single_non_empty() const -> Xml * {
-    int  len = size();
+    auto len = size();
     Xml *res = nullptr;
-    for (int k = 0; k < len; k++) {
+    for (size_t k = 0; k < len; k++) {
         Xml *y = tree[k];
         if (y == nullptr) continue;
         if (!y->is_xmlc()) {
@@ -696,8 +695,8 @@ auto Xml::single_non_empty() const -> Xml * {
 
 // Returns true if text only.
 auto Xml::only_text() const -> bool {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *y = tree[k];
         if (y == nullptr) continue;
         if (!y->is_xmlc()) return false;
@@ -707,9 +706,9 @@ auto Xml::only_text() const -> bool {
 
 // Returns the only son, or 0 if more than one sons.
 auto Xml::single_son() const -> Xml * {
-    int  len = size();
+    auto len = size();
     Xml *res = nullptr;
-    for (int k = 0; k < len; k++) {
+    for (size_t k = 0; k < len; k++) {
         Xml *y = tree[k];
         if (y == nullptr) continue;
         if (res == nullptr)
@@ -1008,8 +1007,8 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
 
 // Adds all non-empty elements to res
 void Xml::add_non_empty_to(Xml *res) {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (T->is_xmlc() && T->get_name().only_space()) continue;
@@ -1042,8 +1041,8 @@ void Xml::convert_to_string(Buffer &buf) {
         return;
     }
     if (empty_name() || name == the_names[cst_temporary]) {
-        int len = size();
-        for (int k = 0; k < len; k++) tree[k]->convert_to_string(buf);
+        auto len = size();
+        for (size_t k = 0; k < len; k++) tree[k]->convert_to_string(buf);
         return;
     }
     err_buf.reset();
@@ -1063,8 +1062,8 @@ void Xml::convert_to_string(Buffer &buf) {
 // Puts *this in the buffer B. Uses Internal Encoding
 // Used to print the title of a section.
 void Xml::put_in_buffer(Buffer &b) {
-    int len = size();
-    for (int k = 0; k < len; k++) {
+    auto len = size();
+    for (size_t k = 0; k < len; k++) {
         if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc())
             b << tree[k]->get_name().c_str();
@@ -1077,7 +1076,7 @@ void Xml::put_in_buffer(Buffer &b) {
 
 // Removes and returns the last element
 auto Xml::remove_last() -> Xml * {
-    int len = size();
+    auto len = size();
     if (len == 0) return nullptr;
     Xml *res = tree.back();
     tree.pop_back();
@@ -1086,7 +1085,7 @@ auto Xml::remove_last() -> Xml * {
 
 // True if this is empty, or contains only a <hi> element which is empty
 auto Xml::par_is_empty() -> bool {
-    int len = size();
+    auto len = size();
     if (len > 1) return false;
     if (len == 0) return true;
     if (tree[0] == nullptr) return true;
@@ -1191,11 +1190,11 @@ const String entities[] = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&l
 
 // This is static. If s is &foo;bar, returns the length
 // of the &foo; part. Rturns 0 if this is not an entity.
-auto post_ns::is_entity(String s) -> int {
+auto post_ns::is_entity(String s) -> size_t {
     for (int k = 0;; k++) {
         String w = entities[k];
         if (w == nullptr) return 0;
-        int n = strlen(w);
+        auto n = strlen(w);
         if (strncmp(s, w, n) == 0) return n;
     }
 }
@@ -1219,7 +1218,7 @@ void Xml::word_stats_i() {
                     scbuf << "&";
                     continue;
                 }
-                int w = post_ns::is_entity(s + i);
+                auto w = post_ns::is_entity(s + i);
                 if (w != 0) {
                     i += w - 1;
                     scbuf.new_word();
@@ -1234,8 +1233,8 @@ void Xml::word_stats_i() {
         }
     } else {
         if (name == the_names[np_formula]) return;
-        int len = size();
-        for (int i = 0; i < len; i++)
+        auto len = size();
+        for (size_t i = 0; i < len; i++)
             if (tree[i] != nullptr) tree[i]->word_stats_i();
     }
 }
