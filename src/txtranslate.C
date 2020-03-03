@@ -355,8 +355,8 @@ void Parser::implicit_par(subtypes c) {
 
 void Parser::finish_par_cmd(bool noindent, Istring xs) {
     leave_h_mode();
-    int k  = cur_centering();
-    Xid id = ileave_v_mode();
+    auto k  = cur_centering();
+    Xid  id = ileave_v_mode();
     if (!xs.null()) id.add_attribute(the_names[np_spacebefore], xs);
     if (k != 1) id.add_attribute(np_noindent, StrHash::st_bool(noindent));
 }
@@ -567,7 +567,7 @@ void Parser::T_paras(subtypes x) {
     }
     if (y < 0) y = 0;
     if (y > 6) y = 6;
-    Istring Y = the_names[cst_div0 + y];
+    Istring Y = the_names[cst_div0 + to_unsigned(y)];
     leave_h_mode();
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();
@@ -616,7 +616,7 @@ void Parser::T_subequations(bool start) {
             return;
         }
         in_subequations = false;
-        int v           = eqtb_int_table[equation_ctr_pos + 1].val;
+        auto v          = eqtb_int_table[equation_ctr_pos + 1].val;
         word_define(equation_ctr_pos, v, true);
         state = state_S;
         return;
@@ -642,7 +642,7 @@ void Parser::T_subequations(bool start) {
     TokenList theparent;
     read_mac_body(theparent, true, 0);
     new_macro(theparent, T_theparentequation);
-    int v = eqtb_int_table[equation_ctr_pos].val;
+    auto v = eqtb_int_table[equation_ctr_pos].val;
     word_define(equation_ctr_pos + 1, v, true); // par = cur
     word_define(equation_ctr_pos, 0, true);     // cur = 0
     M_let_fast(T_theequation, T_at_theparentequation, false);
@@ -813,12 +813,12 @@ void Parser::T_keywords() {
 // Handle the case of an argument of \includegraphics
 // Extension is in Abuf, if needed
 void Parser::no_extension(AttList &AL, const std::string &s) {
-    int  k  = -1;
+    long k  = -1;
     bool ok = true;
     Tbuf.reset();
     Tbuf.push_back(s);
-    int i  = 0;
-    int ii = 0;
+    size_t i  = 0;
+    size_t ii = 0;
     for (;;) {
         if (Tbuf[i] == '.' && Tbuf[i + 1] == '.' && Tbuf[i + 2] == '/') {
             i += 3;
@@ -834,12 +834,12 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     if (Tbuf[i] == '.') ok = false;
     for (;; i++) {
         if (Tbuf[i] == 0) {
-            if (k == i - 1) ok = false;
+            if (k == to_signed(i) - 1) ok = false;
             break;
         }
         if (Tbuf[i] == '.') {
             if (k == -1)
-                k = i;
+                k = to_signed(i);
             else {
                 ok = false;
                 break;
@@ -853,8 +853,8 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(np_fileextension, Istring(Tbuf.c_str(k + 1)));
-        Tbuf.kill_at(k);
+        AL.push_back(np_fileextension, Istring(Tbuf.c_str(to_unsigned(k) + 1)));
+        Tbuf.kill_at(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.to_string(ii), ok);
     AL.push_back(np_file, Istring(Tbuf));
@@ -877,13 +877,13 @@ void Parser::includegraphics(subtypes C) {
     Token       comma  = hash_table.comma_token;
     Token       equals = Token(other_t_offset, '=');
     TokenList   W, val, key;
-    std::string file_name;
+    std::string file_name_2;
     {
         InLoadHandler something;
         if (ic) {
             read_optarg(W);
             flush_buffer();
-            file_name = sT_arg_nopar();
+            file_name_2 = sT_arg_nopar();
         } else
             W = read_arg();
     }
@@ -894,7 +894,7 @@ void Parser::includegraphics(subtypes C) {
     }
     leave_v_mode();
     AttList &AL = the_stack.add_newid0(np_figure);
-    if (ic) no_extension(AL, file_name);
+    if (ic) no_extension(AL, file_name_2);
     Buffer &B = tpa_buffer;
     while (!W.empty()) {
         token_ns::split_at(comma, W, val);
@@ -950,8 +950,8 @@ void Parser::includegraphics(subtypes C) {
 }
 
 void Parser::T_epsfbox() {
-    int       xdim_pos = 11; //  \epsfxsize hard-coded
-    int       ydim_pos = 12; // \epsfysize hard-coded
+    size_t    xdim_pos = 11; //  \epsfxsize hard-coded
+    size_t    ydim_pos = 12; // \epsfysize hard-coded
     ScaledInt xdim     = eqtb_dim_table[xdim_pos].get_val();
     ScaledInt ydim     = eqtb_dim_table[ydim_pos].get_val();
     flush_buffer();
@@ -980,9 +980,9 @@ void Parser::T_hspace(subtypes c) {
 // Code of \vspace, or \vskip, after we have fetched the dimension.
 void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     if (!vert) {
-        int dim = dimen.get_value();
+        auto dim = dimen.get_value();
         leave_v_mode();
-        int k = ((dim >> 16) + 2) / 4;
+        auto k = ((dim >> 16) + 2) / 4;
         while (k > 0) {
             k--;
             process_char(codepoint(0xA0U));
@@ -1026,13 +1026,13 @@ ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a
 }
 
 void Parser::finish_color() {
-    int n = all_colors.size();
-    int k = 0;
-    for (int i = 0; i < n; i++)
+    auto n = all_colors.size();
+    int  k = 0;
+    for (size_t i = 0; i < n; i++)
         if (all_colors[i]->is_used()) k++;
     if (k == 0) return;
     Xml *res = new Xml(Istring("colorpool"), nullptr);
-    for (int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
         if (all_colors[i]->is_used()) {
             res->push_back(all_colors[i]->get_val());
             res->add_nl();
@@ -1043,8 +1043,8 @@ void Parser::finish_color() {
 // Find a color in the stack, returns the id;
 // May add a new item to the stack
 auto translate_ns::find_color(const std::string &model, const std::string &value) -> Istring {
-    int n = all_colors.size();
-    for (int i = 0; i < n; i++)
+    auto n = all_colors.size();
+    for (size_t i = 0; i < n; i++)
         if (all_colors[i]->compare(model, value)) return all_colors[i]->get_id();
     all_colors.push_back(new ColSpec("", model, value));
     return all_colors[n]->get_id();
@@ -1059,9 +1059,9 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> Istr
         B << bf_reset << "\\color@" << name;
         token_from_list(hash_table.locate(B));
         if (cur_cmd_chr.get_cmd() == color_cmd) {
-            int n = all_colors.size();
-            int k = cur_cmd_chr.get_chr() - color_offset;
-            if (k >= 0 && k < n) return all_colors[k]->get_id();
+            auto n = all_colors.size();
+            int  k = cur_cmd_chr.get_chr() - color_offset;
+            if (k >= 0 && to_unsigned(k) < n) return all_colors[to_unsigned(k)]->get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
         return Istring();
@@ -1122,15 +1122,15 @@ void Parser::T_color(subtypes c) {
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
-            Buffer &B = tpa_buffer;
-            B << bf_reset << "\\color@" << value;
-            Token T = hash_table.locate(B);
+            Buffer &BB = tpa_buffer;
+            BB << bf_reset << "\\color@" << value;
+            Token T = hash_table.locate(BB);
             M_let_fast(C, T, true);
             return;
         }
         // case \definecolor{myred}{rgb}{1,2,3}
         // is \global\let \color@myred \colorN
-        int n = all_colors.size();
+        auto n = all_colors.size();
         all_colors.push_back(new ColSpec(name, model, value));
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
@@ -1138,10 +1138,10 @@ void Parser::T_color(subtypes c) {
         return;
     }
     // Now c >= color_offset
-    int n = all_colors.size();
-    int k = c - color_offset;
-    if (k >= 0 && k < n) {
-        Istring C = all_colors[k]->get_id();
+    auto n = all_colors.size();
+    int  k = c - color_offset;
+    if (k >= 0 && to_unsigned(k) < n) {
+        Istring C = all_colors[to_unsigned(k)]->get_id();
         cur_font.set_color(C);
         font_has_changed();
     }
@@ -1150,9 +1150,9 @@ void Parser::T_color(subtypes c) {
 // Add the given dimension as spacebefore value to the paragraph x.
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
-    int      K = L.has_value(the_names[np_spacebefore]);
+    auto     K = L.has_value(the_names[np_spacebefore]);
     if (K >= 0) {
-        Istring   k  = L.get_val(K);
+        Istring   k  = L.get_val(to_unsigned(K));
         TokenList La = token_ns::string_to_list(k.c_str(), false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
@@ -1660,9 +1660,9 @@ void Parser::T_case_shift(int c) {
             M_let_fast(hash_table.ensuremath_token, hash_table.ensuremath_i_token, false);
         }
         for (int i = 0; i < 11; i++) {
-            TokenList L;
-            L.push_back(table[2 * i + k]);
-            new_macro(L, table[2 * i]);
+            TokenList LL;
+            LL.push_back(table[2 * i + k]);
+            new_macro(LL, table[2 * i]);
         }
         read_toks_edef(L);
         pop_level(bt_brace);
@@ -1707,10 +1707,10 @@ void Parser::T_case_shift(int c) {
             continue;
         }
         if (a.char_or_active()) {
-            int b  = a.chr_val();
-            int cx = eqtb_int_table[b + offset].val;
+            auto b  = a.chr_val();
+            auto cx = eqtb_int_table[to_unsigned(b + offset)].val;
             if (cx != 0) {
-                res.push_back(Token(a.get_val() - b + cx));
+                res.push_back(Token(a.get_val() - b + to_unsigned(cx)));
                 continue;
             }
         }
@@ -1734,7 +1734,7 @@ auto Parser::dimen_attrib(ScaledInt A) -> Istring {
     Buffer &B = the_main->SH.shbuf();
     B.reset();
     B.push_back(A, glue_spec_empty);
-    int i = B.size();
+    auto i = B.size();
     if (i > 0 && B[i - 1] == '0') {
         B.remove_last();
         i--;
@@ -2056,7 +2056,7 @@ void Parser::T_xmladdatt(subtypes c) {
     Token T     = cur_tok;
     bool  force = remove_initial_star();
     flush_buffer();
-    int           n = 0;
+    long          n = 0;
     InLoadHandler something_else;
 
     if (c == addatt_to_cur_code)
@@ -2066,7 +2066,7 @@ void Parser::T_xmladdatt(subtypes c) {
     else if (c == addatt_to_doc_code)
         n = 1;
     else if (c == addatt_to_index_code)
-        n = get_index_value();
+        n = to_signed(get_index_value());
     else
         n = read_elt_id(T);
     cur_tok     = T;
@@ -2075,7 +2075,7 @@ void Parser::T_xmladdatt(subtypes c) {
     Istring val = nT_arg_nopar();
     if (key.empty()) {
         if (!force) return;
-        Xml *e = the_stack.elt_from_id(n);
+        Xml *e = the_stack.elt_from_id(to_unsigned(n));
         if (e == nullptr) return;
         e->change_name(val);
         return;
@@ -2090,7 +2090,7 @@ auto Parser::get_attval() -> std::string {
     auto    n   = read_elt_id(T);
     Istring key = nT_arg_nopar();
     if (key.empty()) {
-        Xml *e = the_stack.elt_from_id(n);
+        Xml *e = the_stack.elt_from_id(to_unsigned(n));
         if (e == nullptr) return "";
         return e->get_name().c_str();
     }
@@ -2125,7 +2125,7 @@ void Parser::T_specimp(int c) {
         close_all();
         tralics_ns::close_file(log_and_tty.L.fp);
         exit(0);
-    case sleep_code: txsleep(scan_int(cur_tok)); return;
+    case sleep_code: txsleep(to_unsigned(scan_int(cur_tok))); return;
     case prompt_code: {
         std::string S = string_to_write(write18_slot + 1);
         readline_newprompt(S);
@@ -2159,7 +2159,7 @@ void Parser::T_unimp(subtypes c) {
     parse_error(cur_tok, "Unimplemented command ", cur_tok, "", "unimplemented");
 
     switch (c) {
-    case accent_code: extended_chars(scan_27bit_int()); return;
+    case accent_code: extended_chars(to_unsigned(scan_27bit_int())); return;
     case delimiter_code:
         scan_int(cur_tok); // no overflow check
         return;

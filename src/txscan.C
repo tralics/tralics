@@ -1067,7 +1067,7 @@ auto Parser::scan_int(Token t, int n, String s) -> int {
 }
 
 // Here we may have an optional argument; default value is d
-auto Parser::scan_special_int_d(Token T, int d) -> int {
+auto Parser::scan_special_int_d(Token T, long d) -> int {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) {

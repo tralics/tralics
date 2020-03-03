@@ -704,7 +704,7 @@ private:
     auto        scan_sign() -> bool;
     void        scan_something_internal(internal_type level, bool negative);
     void        scan_something_internal(internal_type level);
-    auto        scan_special_int_d(Token T, int d) -> int;
+    auto        scan_special_int_d(Token T, long d) -> int;
     auto        scan_style() -> Token;
     void        read_toks_edef(TokenList &L);
     void        scan_toks_absorb();
