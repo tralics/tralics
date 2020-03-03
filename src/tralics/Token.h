@@ -3,21 +3,21 @@
 #include <list>
 
 struct Token {
-    uint val{0};
+    size_t val{0};
 
-    explicit Token(uint x) : val(x) {}
+    explicit Token(size_t x) : val(x) {}
     explicit Token(codepoint c) : val(c.value + single_offset) {}
     Token(spec_offsets a, codepoint b) : val(a + b.value) {}
     Token(spec_offsets a, uchar b) : val(a + b) {}
     Token() = default;
 
-    [[nodiscard]] auto get_val() const -> uint { return val; }
+    [[nodiscard]] auto get_val() const -> size_t { return val; }
 
     void               kill() { val = 0; }
     void               from_cmd_chr(CmdChr X) { val = nb_characters * X.get_cmd() + X.char_val().value; }
-    void               active_char(uint cs) { val = cs + eqtb_offset; }
-    [[nodiscard]] auto eqtb_loc() const -> uint { return val - eqtb_offset; }
-    [[nodiscard]] auto hash_loc() const -> uint { return val - hash_offset; }
+    void               active_char(size_t cs) { val = cs + eqtb_offset; }
+    [[nodiscard]] auto eqtb_loc() const -> size_t { return val - eqtb_offset; }
+    [[nodiscard]] auto hash_loc() const -> size_t { return val - hash_offset; }
     [[nodiscard]] auto is_in_hash() const -> bool { return val >= hash_offset; }
     [[nodiscard]] auto cmd_val() const -> symcodes { return symcodes(val / nb_characters); }
     [[nodiscard]] auto chr_val() const -> subtypes { return subtypes(val % nb_characters); }
@@ -49,7 +49,7 @@ struct Token {
     [[nodiscard]] auto is_bs_oparen() const -> bool { return val == single_offset + '('; }
     [[nodiscard]] auto is_bs_cparen() const -> bool { return val == single_offset + ')'; }
     [[nodiscard]] auto is_dot() const -> bool { return val == other_t_offset + '.'; }
-    [[nodiscard]] auto is_letter(uchar c) const -> bool { return val == uint(letter_t_offset) + c; }
+    [[nodiscard]] auto is_letter(uchar c) const -> bool { return val == size_t(letter_t_offset) + c; }
     [[nodiscard]] auto is_digit_token() const -> bool { return val >= other_t_offset + '0' && val <= other_t_offset + '9'; }
     [[nodiscard]] auto is_lowercase_token() const -> bool { return val >= letter_t_offset + 'a' && val <= letter_t_offset + 'z'; }
     [[nodiscard]] auto is_null() const -> bool { return val == 0; }
@@ -59,11 +59,11 @@ struct Token {
     [[nodiscard]] auto is_a_char() const -> bool { return val < eqtb_offset; }
     [[nodiscard]] auto active_or_single() const -> bool { return val < first_multitok_val; }
     [[nodiscard]] auto char_or_active() const -> bool { return val < single_offset; }
-    [[nodiscard]] auto val_as_other() const -> uint { return val - other_t_offset; }
-    [[nodiscard]] auto val_as_digit() const -> uint { return val - other_t_offset - '0'; }
-    [[nodiscard]] auto val_as_letter() const -> uint { return val - letter_t_offset; }
+    [[nodiscard]] auto val_as_other() const -> size_t { return val - other_t_offset; }
+    [[nodiscard]] auto val_as_digit() const -> size_t { return val - other_t_offset - '0'; }
+    [[nodiscard]] auto val_as_letter() const -> size_t { return val - letter_t_offset; }
     [[nodiscard]] auto no_case_letter(char x) const -> bool;
-    auto               tex_is_digit(unsigned radix) -> int;
+    auto               tex_is_digit(unsigned radix) -> long;
     [[nodiscard]] auto is_dec_separator() const -> bool { return val == other_t_offset + ',' || val == other_t_offset + '.'; }
     [[nodiscard]] auto to_string() const -> String;
     [[nodiscard]] auto tok_to_str() const -> String;

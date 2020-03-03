@@ -121,7 +121,7 @@ void math_ns::remove_from_trace() {
 void math_ns::add_to_trace(Token T) {
     old_need = trace_needs_space;
     old_pos  = Trace.size();
-    uint x   = T.get_val();
+    auto x   = T.get_val();
     if (trace_needs_space && T.cmd_val() == letter_catcode) Trace.push_back(' ');
     if (T.is_a_char() && T.char_val() == '\n')
         Trace.push_back("^^J");

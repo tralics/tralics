@@ -52,7 +52,7 @@ void ScaledInt::ovf31() {
 // If this is a TeX token representing a valid digit in base radix,
 // returns the value,
 // otherwise return -1.
-auto Token::tex_is_digit(unsigned radix) -> int {
+auto Token::tex_is_digit(unsigned radix) -> long {
     auto w = val_as_other();
     if ('0' <= w && w <= radix + '0' && w <= '9') // do not use is_digit...
         return to_signed(w) - '0';

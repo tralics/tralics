@@ -413,7 +413,7 @@ void Parser::T_typein() {
         has_opt = true;
     }
     log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
-    int cc = eqtb_int_table[endlinechar_code].val;
+    auto cc = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].set_val(-1);
     TokenList L = read_from_file(0, false);
     eqtb_int_table[endlinechar_code].set_val(cc);
@@ -784,19 +784,19 @@ void Parser::define_cmd_key(subtypes c) {
             TokenList D = dft;
             internal_define_key_default(T, D);
         }
-        TokenList L;
+        TokenList LL;
         if (c == define_cmdkey_code) { // case of cmdkey
             TokenList u = read_arg();
-            L.splice(L.end(), u);
+            LL.splice(LL.end(), u);
         }
-        L.push_front(hash_table.CB_token);
-        L.push_front(Token(other_t_offset, '1'));
-        L.push_front(make_char_token('#', 6));
-        L.push_front(hash_table.OB_token);
-        L.push_front(cmd);
-        L.push_front(hash_table.locate("def"));
-        brace_me(L);
-        back_input(L);
+        LL.push_front(hash_table.CB_token);
+        LL.push_front(Token(other_t_offset, '1'));
+        LL.push_front(make_char_token('#', 6));
+        LL.push_front(hash_table.OB_token);
+        LL.push_front(cmd);
+        LL.push_front(hash_table.locate("def"));
+        brace_me(LL);
+        back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
@@ -943,27 +943,27 @@ void Parser::define_bool_key(subtypes c) {
             u.splice(u.end(), add1);
         }
         brace_me(u);
-        TokenList L;
-        L.splice(L.end(), u);
+        TokenList LL;
+        LL.splice(LL.end(), u);
         if (if_plus) {
             TokenList add2 = read_arg();
             brace_me(add2);
-            L.splice(L.end(), add2);
+            LL.splice(LL.end(), add2);
         }
         brace_me(v);
-        L.splice(L.begin(), v);
-        L.push_front(hash_table.CB_token);
-        L.push_front(Token(other_t_offset, '1'));
-        L.push_front(make_char_token('#', 6));
-        L.push_front(hash_table.OB_token);
-        L.push_front(Token(other_t_offset, ']'));
-        L.push_front(hash_table.xkv_resa_token);
-        L.push_front(Token(other_t_offset, '['));
-        if (if_plus) L.push_front(Token(other_t_offset, '+'));
-        L.push_front(Token(other_t_offset, '*'));
-        L.push_front(hash_table.xkv_cc_token);
-        brace_me(L);
-        back_input(L);
+        LL.splice(LL.begin(), v);
+        LL.push_front(hash_table.CB_token);
+        LL.push_front(Token(other_t_offset, '1'));
+        LL.push_front(make_char_token('#', 6));
+        LL.push_front(hash_table.OB_token);
+        LL.push_front(Token(other_t_offset, ']'));
+        LL.push_front(hash_table.xkv_resa_token);
+        LL.push_front(Token(other_t_offset, '['));
+        if (if_plus) LL.push_front(Token(other_t_offset, '+'));
+        LL.push_front(Token(other_t_offset, '*'));
+        LL.push_front(hash_table.xkv_cc_token);
+        brace_me(LL);
+        back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
@@ -1242,7 +1242,7 @@ void Parser::xkv_makehd(TokenList &L) {
     Buffer &B = local_buf;
     B.reset();
     B << xkv_prefix;
-    int k = B.size();
+    auto k = B.size();
     if (list_to_string(L, B)) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV family (more errors may follow)", "bad kv family");
         B.set_last(k);
@@ -1267,13 +1267,13 @@ void Parser::xkv_fetch_prefix_family() {
 void token_ns::lower_case(TokenList &L) {
     auto P      = L.begin();
     auto E      = L.end();
-    int  offset = lc_code_offset;
+    auto offset = lc_code_offset;
     while (P != E) {
         Token a = *P;
         if (a.get_val() < single_offset) {
-            int b  = a.chr_val();
-            int cx = the_parser.eqtb_int_table[b + offset].val;
-            if (cx != 0) *P = Token(a.get_val() - b + cx);
+            auto b  = a.chr_val();
+            auto cx = the_parser.eqtb_int_table[b + offset].val;
+            if (cx != 0) *P = Token(a.get_val() - b + to_unsigned(cx));
         }
         ++P;
     }
@@ -1531,8 +1531,8 @@ void XkvSetkeys::run(bool c) {
 
 void XkvSetkeys::check_preset(String s) {
     Buffer &B = local_buf;
-    int     N = Fams.size();
-    for (int i = 0; i < N; i++) {
+    auto    N = Fams.size();
+    for (size_t i = 0; i < N; i++) {
         xkv_ns::makehd(Fams[i]);
         B << bf_reset << "XKV@" << xkv_header << s;
         if (P->hash_table.is_defined(B)) {
@@ -1562,12 +1562,12 @@ void XkvSetkeys::set_aux(TokenList &W, int idx) {
         if (cur.ignore_this(Na)) continue;
         if (idx >= 0 && cur.ignore_this(Keys)) continue;
         bool found = false;
-        int  N     = Fams.size();
+        auto N     = Fams.size();
         // if idx>=0, execute the loop once
-        int i = 0;
+        size_t i = 0;
         if (idx >= 0) {
-            i = idx;
-            N = idx + 1;
+            i = to_unsigned(idx);
+            N = to_unsigned(idx + 1);
         }
         for (; i < N; i++) {
             if (!cur.is_defined(Fams[i])) continue;

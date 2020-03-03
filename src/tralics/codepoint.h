@@ -11,6 +11,7 @@ struct codepoint {
     char32_t value;
 
     explicit codepoint(unsigned x = 0) noexcept : value(x) {}
+    explicit codepoint(size_t c) noexcept : value(static_cast<char32_t>(c)) {}
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 

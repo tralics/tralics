@@ -1084,7 +1084,7 @@ auto Parser::scan_general_text() -> TokenList {
 }
 
 // number of arguments for \newcommand; tries to be clever.
-auto Parser::read_mac_nbargs() -> unsigned {
+auto Parser::read_mac_nbargs() -> size_t {
     TokenList L;
     read_optarg(L);
     if (!L.empty() && L.front().is_plus_token()) L.pop_front();

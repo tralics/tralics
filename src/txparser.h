@@ -445,7 +445,7 @@ private:
     auto        cs_from_input() -> Token;
     auto        get_mac_value(Token T) -> TokenList;
     auto        get_mac_value(const std::string &s) -> TokenList;
-    auto        read_mac_nbargs() -> unsigned;
+    auto        read_mac_nbargs() -> size_t;
     void        M_newcommand(rd_flag redef);
     void        get_new_command_aux(const TokenList &a);
     void        M_new_env(rd_flag redef);
