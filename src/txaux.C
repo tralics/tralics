@@ -228,21 +228,21 @@ void ScaledInt::quotient(long d) {
 }
 
 // Three of the four functions defined above apply to glue.
-void Glue::quotient(int f) {
+void Glue::quotient(long f) {
     width.quotient(f);
     stretch.quotient(f);
     shrink.quotient(f);
     normalise();
 }
 
-void Glue::scale(int n, int d) {
+void Glue::scale(long n, long d) {
     width.scale(n, d, max_dimension);
     stretch.scale(n, d, max_dimension);
     shrink.scale(n, d, max_dimension);
     normalise();
 }
 
-void Glue::divide(int n) {
+void Glue::divide(long n) {
     if (n == 0) {
         zdv();
         return;
@@ -255,7 +255,7 @@ void Glue::divide(int n) {
 
 // Two of the four functions defined above apply to everything
 // (\numexpr, etc).
-void SthInternal::quotient(int f) {
+void SthInternal::quotient(long f) {
     if (f == 0) {
         the_parser.parse_error("Division by zero");
         return;
@@ -266,7 +266,7 @@ void SthInternal::quotient(int f) {
         int_val.quotient(f);
 }
 
-void SthInternal::scale(int n, int d) {
+void SthInternal::scale(long n, long d) {
     if (d == 0) {
         the_parser.parse_error("Division by zero");
         return;
@@ -298,7 +298,7 @@ auto arith_ns::nx_plus_y(int n, int x, int y) -> int {
 
 // Was arith_ns::mult_integers
 // Multiplies the scaled number considered as an int by the integer.
-void ScaledInt::mult_integer(int x) {
+void ScaledInt::mult_integer(long x) {
     auto n = value;
     if (n < 0) {
         x = -x;
@@ -317,7 +317,7 @@ void ScaledInt::mult_integer(int x) {
 
 // Was arith_ns::nx_plus_y with 2 args
 // Multiplies the scaled number considered as a dimension by the integer.
-void ScaledInt::mult_scaled(int x) {
+void ScaledInt::mult_scaled(long x) {
     auto n = value;
     if (n < 0) {
         x = -x;
@@ -334,7 +334,7 @@ void ScaledInt::mult_scaled(int x) {
     }
 }
 
-void SthInternal::expr_mul(int n) {
+void SthInternal::expr_mul(long n) {
     if (type == it_glue || type == it_mu)
         glue_val.multiply(n);
     else if (type == it_dimen)
@@ -345,7 +345,7 @@ void SthInternal::expr_mul(int n) {
 
 // Multiplies a glue by an integer n
 // What is the difference with void Glue::expr_mul(int n) ??
-void Glue::multiply(int n) {
+void Glue::multiply(long n) {
     if (n == 0) {
         kill();
         return;
@@ -565,8 +565,8 @@ void RealNumber::from_int(int x) {
 
 // Assume that we have read x=0.142. i.e. k=3 digits  in the table.
 // This computes y=x* 2^{17}, then (y+1)/2.
-void RealNumber::convert_decimal_part(int k, const int *table) {
-    int f = 0;
+void RealNumber::convert_decimal_part(size_t k, const long *table) {
+    long f = 0;
     while (k > 0) {
         k--;
         f = (f + (table[k] << 17)) / 10;

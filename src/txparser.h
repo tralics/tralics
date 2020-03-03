@@ -295,7 +295,7 @@ private:
     void        calc_main(internal_type type, SthInternal &res, TokenList &B);
     void        calc_mul_aux(SthInternal &res);
     void        calc_primitive(SthInternal &A);
-    void        calc_ratio_eval(int num, int den, SthInternal &res);
+    void        calc_ratio_eval(long num, long den, SthInternal &res);
     void        calc_spec_mul(RealNumber val, SthInternal &res);
     void        call_define_key(TokenList &L, Token cmd, const std::string &arg, const std::string &fam);
     void        T_case_shift(int c);
@@ -543,7 +543,7 @@ private:
     void        month_day(subtypes c);
     void        more_bootstrap();
     void        multiple_label(String name, int L, const std::string &f);
-    void        multiply_dim(RealNumber val, int v);
+    void        multiply_dim(RealNumber val, long v);
     void        E_multispan();
     auto        my_csname(String s1, String s2, TokenList &L, String s) -> bool;
     auto        nb_env_on_stack(const std::string &s) -> int;

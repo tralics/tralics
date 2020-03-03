@@ -1523,8 +1523,8 @@ void Parser::scan_double(RealNumber &res) {
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
     get_token(); // read the . or ,
-    int table[17];
-    int k = 0;
+    long table[17];
+    int  k = 0;
     for (;;) {
         get_x_token();
         if (!cur_tok.is_digit_token()) break;
@@ -1707,7 +1707,7 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
 }
 
 // Multiplies a dimension by an integer
-void Parser::multiply_dim(RealNumber val, int v) {
+void Parser::multiply_dim(RealNumber val, long v) {
     int rem; // unused but modified
     int A = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
     int B = arith_ns::nx_plus_y(val.get_ipart(), v, A);

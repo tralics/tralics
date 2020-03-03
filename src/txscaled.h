@@ -32,8 +32,8 @@ public:
     void               quotient(long d);
     void               scale(long n, long d, long max_answer);
     auto               scale(long x, long n, long d, long max_answer, bool &negative) -> bool;
-    void               mult_scaled(int x);
-    void               mult_integer(int x);
+    void               mult_scaled(long x);
+    void               mult_integer(long x);
     void               times_10_18();
     void               times_18_10();
     void               ovf30();
@@ -66,13 +66,13 @@ public:
     void               normalise();
     void               negate();
     void               add(const Glue &r);
-    void               multiply(int n);
-    void               divide(int n);
-    void               incr_width(int x) { width += x; }
-    void               scale(int n, int d);
-    void               quotient(int f);
+    void               multiply(long n);
+    void               divide(long n);
+    void               incr_width(long x) { width += x; }
+    void               scale(long n, long d);
+    void               quotient(long f);
     void               check_overflow();
-    void               expr_mul(int f);
+    void               expr_mul(long f);
     void               add_ovf(const Glue &);
 
     static void zdv();
@@ -81,14 +81,14 @@ public:
 // The value of the number is sign*(i+f/2^16);
 class RealNumber {
     bool negative{false}; // true if negative
-    int  ipart{0};        // fractional part
-    int  fpart{0};        // integer part, is <2^16
+    long ipart{0};        // fractional part
+    long fpart{0};        // integer part, is <2^16
 public:
-    void               convert_decimal_part(int k, const int *table);
-    void               set_ipart(int x) { ipart = x; }
-    void               set_fpart(int x) { fpart = x; }
-    [[nodiscard]] auto get_ipart() const -> int { return ipart; }
-    [[nodiscard]] auto get_fpart() const -> int { return fpart; }
+    void               convert_decimal_part(size_t k, const long *table);
+    void               set_ipart(long x) { ipart = x; }
+    void               set_fpart(long x) { fpart = x; }
+    [[nodiscard]] auto get_ipart() const -> long { return ipart; }
+    [[nodiscard]] auto get_fpart() const -> long { return fpart; }
     void               change_sign() { negative = !negative; }
     void               set_negative(bool x) { negative = x; }
     RealNumber() = default;
@@ -122,7 +122,7 @@ public:
     [[nodiscard]] auto get_dim_val() const -> ScaledInt { return int_val; }
     auto               get_scaled() -> ScaledInt & { return int_val; }
     [[nodiscard]] auto get_token_val() const -> TokenList { return token_val; }
-    void               set_int_val(int k) { int_val = k; }
+    void               set_int_val(long k) { int_val = k; }
     void               set_scaled_val(ScaledInt k) { int_val = k; }
     [[nodiscard]] auto get_glue_val() const -> const Glue & { return glue_val; }
     [[nodiscard]] auto get_glue_width() const -> long { return glue_val.get_width().get_value(); }
@@ -137,11 +137,11 @@ public:
     void fast_negate() { int_val = -int_val; }
     void attach_fraction(RealNumber x);
     void attach_sign(bool negative);
-    void set_int(int a) {
+    void set_int(long a) {
         int_val = a;
         type    = it_int;
     }
-    void set_dim(int a) {
+    void set_dim(long a) {
         int_val = a;
         type    = it_dimen;
     }
@@ -166,21 +166,21 @@ public:
         if (type >= it_glue) int_val = glue_val.get_width().get_value();
     }
     void add(const SthInternal &r);
-    void incr_int(int x) { int_val += x; }
+    void incr_int(long x) { int_val += x; }
     void incr_dim(ScaledInt x) { int_val += x.get_value(); }
     void incr_glue(Glue x) { glue_val.add(x); }
-    void glue_multiply(int v) { glue_val.multiply(v); }
-    void glue_divide(int v) { glue_val.divide(v); }
+    void glue_multiply(long v) { glue_val.multiply(v); }
+    void glue_divide(long v) { glue_val.divide(v); }
     void set_glue_val(Glue x) { glue_val = x; }
     void cv_dim_to_mu();
     void cv_mu_to_glue();
     void cv_glue_to_mu();
     void get_info(subtypes m);
-    void scale(int n, int d);
-    void quotient(int f);
+    void scale(long n, long d);
+    void quotient(long f);
     void check_overflow(scan_expr_t t);
     void normalise();
-    void expr_mul(int n);
+    void expr_mul(long n);
     void add_ovf(const SthInternal &r);
 };
 

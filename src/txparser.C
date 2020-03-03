@@ -3826,7 +3826,7 @@ void Parser::calc_spec_mul(RealNumber val, SthInternal &res) {
 // This computes num/den with 6 decimals (why not use C++ code ?)
 // and constructs \pm(tmp+f/2^16)
 // After that, we multiply.
-void Parser::calc_ratio_eval(int num, int den, SthInternal &res) {
+void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
     static const unsigned int my_max = ((1U << 31) - 1);
     RealNumber                val;
     if (num < 0) {
@@ -3845,9 +3845,9 @@ void Parser::calc_ratio_eval(int num, int den, SthInternal &res) {
         parse_error(hash_table.calc_token, "Division by zero");
         return;
     }
-    int A = num / den;
+    auto A = num / den;
     val.set_ipart(A); // Integer part of the thing.
-    int table[17];
+    long table[17];
     for (int k = 0; k < 10; k++) {
         num -= A * den;
         num *= 10;
@@ -3954,7 +3954,7 @@ void Parser::calc_aux(SthInternal &A) {
         aux.initialise(it_int);
         back_input();
         calc_primitive(aux);
-        int v = aux.get_int_val();
+        auto v = aux.get_int_val();
         if (mul) {
             if (A.is_glue())
                 A.glue_multiply(v);
