@@ -75,13 +75,13 @@ void Parser::T_newcolumn_type() {
 // Assume that T is the token defined and stored by the procedures above
 // This returns -1 in case something strange happened (like redefinition)
 // returns the number of arguments of the function otherwise.
-auto Parser::nct_aux(Token T, TokenList &body) -> int {
+auto Parser::nct_aux(Token T, TokenList &body) -> long { // \todo std::optional<size_t>?
     see_cs_token(T);
     if (!cur_cmd_chr.is_user()) return -1; // bad
     Macro &X = mac_table.get_macro(cur_cmd_chr.get_chr());
     if (!(X.get_type() == dt_empty || X.get_type() == dt_normal)) return -1;
     body = X.get_body();
-    return X.get_nbargs();
+    return to_signed(X.get_nbargs());
 }
 
 // This piece of code expands all the \newcolumntype commands
@@ -106,7 +106,7 @@ void Parser::expand_nct(TokenList &L) {
             if (!new_array_object.nct_exists(c)) continue;
             Token     T = new_array_object.nct_token(c);
             TokenList body;
-            int       n = nct_aux(T, body);
+            auto      n = nct_aux(T, body);
             if (n == -1) {
                 new_array_object.remove_a_type(c);
                 continue;
@@ -122,7 +122,7 @@ void Parser::expand_nct(TokenList &L) {
 // Here we have to find the character c.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-auto token_ns::expand_nct(TokenList &L, int n, uchar c, int &MX, TokenList &body) -> bool {
+auto token_ns::expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &body) -> bool {
     TokenList res;
     bool      result = false;
     TokenList Table[10]; // arguments of the commands

@@ -77,7 +77,7 @@ void Glue::zdv() {
 // Divides this by n.
 // No overflow possible. Division by zero may happen.
 void ScaledInt::divide(int n) {
-    int x = value;
+    auto x = value;
     if (n == 0) {
         // value = 0;
         start_err(nullptr);
@@ -123,7 +123,7 @@ auto arith_ns::xn_over_d(int x, int n, int d, int &remainder) -> int {
 // Returns floor(xn/d +1/2)
 // This is used when you say \numexpr X*Y/Z
 void ScaledInt::scale(int n, int d, int max_answer) {
-    int  x        = value;
+    auto x        = value;
     bool negative = false;
     if (scale(x, n, d, max_answer, negative)) {
         start_err(nullptr);
@@ -150,10 +150,10 @@ auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bo
         n        = -n;
         negative = !negative;
     }
-    int t = n / d;
+    long t = n / d;
     if (t > max_answer / x) return true;
-    int a = t * x;
-    n     = n - t * d; // answer is a + xn/d, with n<d
+    auto a = t * x;
+    n      = n - t * d; // answer is a + xn/d, with n<d
     if (n == 0) {
         value = a;
         return false;
@@ -173,9 +173,9 @@ auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bo
     }
     // Invariants -d<=r<0<n<=x<d
     // f+ floor[(xn+(r+d))/d]  = floor(x0n0/d+1/2)
-    int f = 0;
-    int r = (d / 2) - d;
-    int h = -r;
+    long f = 0;
+    long r = (d / 2) - d;
+    auto h = -r;
     for (;;) {
         if ((n & 1) != 0) {
             r = r + x;
@@ -210,7 +210,7 @@ auto ScaledInt::scale(int x, int n, int d, int max_answer, bool &negative) -> bo
 // This is used when you say \dimexpr 2pt/3
 void ScaledInt::quotient(int d) {
     bool negative = false;
-    int  n        = value;
+    auto n        = value;
     if (n < 0) {
         n        = -n;
         negative = !negative;
@@ -219,9 +219,9 @@ void ScaledInt::quotient(int d) {
         d        = -d;
         negative = !negative;
     }
-    int a = n / d;
-    n     = n - a * d;
-    d     = n - d;
+    auto a = n / d;
+    n      = n - a * d;
+    d      = n - d;
     if (d + n >= 0) ++a;
     if (negative) a = -a;
     value = a;
@@ -299,7 +299,7 @@ auto arith_ns::nx_plus_y(int n, int x, int y) -> int {
 // Was arith_ns::mult_integers
 // Multiplies the scaled number considered as an int by the integer.
 void ScaledInt::mult_integer(int x) {
-    int n = value;
+    auto n = value;
     if (n < 0) {
         x = -x;
         n = -n;
@@ -318,7 +318,7 @@ void ScaledInt::mult_integer(int x) {
 // Was arith_ns::nx_plus_y with 2 args
 // Multiplies the scaled number considered as a dimension by the integer.
 void ScaledInt::mult_scaled(int x) {
-    int n = value;
+    auto n = value;
     if (n < 0) {
         x = -x;
         n = -n;
@@ -364,7 +364,8 @@ void Glue::negate() {
 
 // Adds y to this, assuming we have dimensions.
 void ScaledInt::add_dim(ScaledInt Y) {
-    int x = get_value(), y = Y.get_value(), mx = max_dimension;
+    auto x = get_value(), y = Y.get_value();
+    auto mx = max_dimension;
     if ((x >= 0 && y <= mx - x) || (x <= 0 && y >= -mx - x))
         value = x + y;
     else {
@@ -474,8 +475,8 @@ void SthInternal::add(const SthInternal &r) {
         glue_val.add(r.glue_val);
         return;
     }
-    int x = int_val.get_value(), y = r.int_val.get_value();
-    int mx = type == it_int ? max_integer : max_dimension;
+    auto x = int_val.get_value(), y = r.int_val.get_value();
+    int  mx = type == it_int ? max_integer : max_dimension;
     if (x >= 0 && y <= mx - x) {
         int_val = x + y;
         return;

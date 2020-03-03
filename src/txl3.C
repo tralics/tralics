@@ -694,7 +694,7 @@ void Parser::tl_set_rescan(int c) {
 // --------------------------------------------------
 // Character codes
 
-auto Parser::l3_read_int(Token T) -> int {
+auto Parser::l3_read_int(Token T) -> long {
     TokenList L = read_arg();
     back_input(hash_table.relax_token);
     back_input(L);

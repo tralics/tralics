@@ -92,14 +92,14 @@ private:
     TokenList              end_document_hook;                     // the end-document-hook
     codepoint              verb_saved_char;                       // Char to use for verb by ShortVewrb
     std::vector<codepoint> input_line;                            // input line converted to chars
-    uint                   input_line_pos{0};                     // position in input_line
+    size_t                 input_line_pos{0};                     // position in input_line
     Xml *                  the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
 private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
     [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
-    void               set_catcode(size_t x, int v) { eqtb_int_table[x].set_val(v); }
+    void               set_catcode(size_t x, long v) { eqtb_int_table[x].set_val(v); }
     auto               get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
         after_assignment_token.kill();
@@ -187,7 +187,7 @@ public:
     auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
-    void               eq_define(int a, CmdChr bc, bool gbl);
+    void               eq_define(size_t a, CmdChr bc, bool gbl);
     void               titlepage_evaluate(String s, const std::string &cmd);
     void               final_checks();
     void               finish_images();
@@ -202,7 +202,7 @@ public:
     void               load_latex();
     auto               read_arg() -> TokenList;
     auto               read_arg_nopar() -> TokenList;
-    auto               nct_aux(Token T, TokenList &body) -> int;
+    auto               nct_aux(Token T, TokenList &body) -> long;
     auto               nE_arg_nopar() -> Istring;
     auto               nT_arg_nopar() -> Istring;
     auto               nT_optarg_nopar() -> Istring;
@@ -260,7 +260,7 @@ private:
     void        add_math_label(Xml *res);
     void        tokenize_buffer(Buffer &b, TokenList &L, const std::string &name);
     void        add_vspace(Token T, ScaledInt dimen, Xid X);
-    void        after_parameter(bool exp, int N);
+    void        after_parameter(bool exp, size_t N);
     void        after_math(bool is_inline);
     void        append_glue(Token T, ScaledInt dimen, bool vert);
     void        arg_font(subtypes c);
@@ -272,7 +272,7 @@ private:
     void        bad_counter0();
     void        bad_counter1(const Buffer &B, Equivalent &E);
     void        bad_csname(bool orig);
-    void        bad_definition(Token name, int nb);
+    void        bad_definition(Token name, size_t nb);
     void        bad_delimited(int cl, Token x);
     void        bad_end_env(int cl);
     void        bad_group_char();
@@ -337,7 +337,7 @@ private:
     static auto dimen_attrib(ScaledInt A) -> Istring;
     auto        dimen_from_list(Token T, TokenList &L) -> ScaledInt;
     void        dimen_from_list0(Token T, TokenList &L);
-    void        dim_define(int a, ScaledInt c, bool gbl);
+    void        dim_define(size_t a, ScaledInt c, bool gbl);
     void        disable_keys();
     auto        do_register_arg(int q, int &p, Token &tfe) -> int;
     void        do_register_command(bool gbl);
@@ -445,7 +445,7 @@ private:
     auto        cs_from_input() -> Token;
     auto        get_mac_value(Token T) -> TokenList;
     auto        get_mac_value(const std::string &s) -> TokenList;
-    auto        read_mac_nbargs() -> int;
+    auto        read_mac_nbargs() -> unsigned;
     void        M_newcommand(rd_flag redef);
     void        get_new_command_aux(const TokenList &a);
     void        M_new_env(rd_flag redef);
@@ -457,7 +457,7 @@ private:
     auto        get_r_token(bool br = false) -> Token;
     auto        get_x_token() -> bool;
     void        get_x_token_or_active_char(symcodes &a, subtypes &b);
-    void        glue_define(int a, Glue c, bool gbl);
+    void        glue_define(size_t a, Glue c, bool gbl);
     auto        grab_env_comma(TokenList &v) -> bool;
     void        grab_env(TokenList &v);
     auto        group_to_string() -> std::string;
@@ -613,7 +613,7 @@ private:
     auto        read_for_variable() -> Token;
     auto        read_from_file(int ch, bool rl_sw) -> TokenList;
     auto        read_mac_body(bool exp) -> TokenList;
-    void        read_mac_body(TokenList &L, bool exp, int N);
+    void        read_mac_body(TokenList &L, bool exp, size_t N);
     void        read_one_space();
     auto        read_optarg(TokenList &L) -> bool;
     auto        read_optarg_nopar(TokenList &L) -> bool;
@@ -665,7 +665,7 @@ private:
     auto        scan_group0(TokenList &res, int cl) -> bool;
     auto        scan_group1(TokenList &res, int &b, int cl) -> bool;
     auto        scan_group2(TokenList &L) -> bool;
-    void        scan_group3(TokenList &res, int cl, bool exp, int N);
+    void        scan_group3(TokenList &res, int cl, bool exp, size_t N);
     void        scan_group4(TokenList &res, int cl);
     auto        scan_group_opt(TokenList &L, bool &have_arg) -> bool;
     auto        scan_group_del(TokenList &res, const TokenList &L) -> bool;
@@ -1068,7 +1068,7 @@ private:
     auto l3_to_string(subtypes c, TokenList &L) -> std::string;
     void L3_user_split_next_name(bool base);
     void tex_string(Buffer &B, Token T, bool esc);
-    auto l3_read_int(Token T) -> int;
+    auto l3_read_int(Token T) -> long;
     void L3_set_cat_code(int c);
     void L3_set_num_code(int c);
     auto l3_get_cat(symcodes &a, subtypes &b, Token caller) -> bool;

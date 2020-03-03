@@ -174,7 +174,7 @@ void Parser::push_tpa() {
 // command, we must increase the reference count, and if we override
 // a user defined command we must decrease its reference count (maybe kill).
 // If the definition is local, the old definition is saved on the save stack.
-void Parser::eq_define(int a, CmdChr bc, bool gbl) {
+void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
     if (bc.is_user()) mac_table.incr_macro_ref(bc.get_chr());
     if (!gbl && hash_table.eqtb[a].must_push(cur_level))
         push_save_stack(new SaveAuxCmd(a, hash_table.eqtb[a]));
@@ -265,7 +265,7 @@ void Parser::string_define(int a, const std::string &c, bool gbl) {
 }
 
 // Define for a dimension quantity. Like eq_define without reference counts.
-void Parser::dim_define(int a, ScaledInt c, bool gbl) {
+void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     EqtbDim &W        = eqtb_dim_table[a];
     bool     reassign = !gbl && W.get_val() == c;
     if (tracing_assigns()) {
@@ -290,7 +290,7 @@ auto operator==(const Glue &a, const Glue &b) -> bool {
 }
 
 // Define for a glue quantity
-void Parser::glue_define(int a, Glue c, bool gbl) {
+void Parser::glue_define(size_t a, Glue c, bool gbl) {
     EqtbGlue &W        = glue_table[a];
     bool      reassign = !gbl && W.get_val() == c;
     if (tracing_assigns()) {

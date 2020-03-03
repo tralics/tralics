@@ -681,7 +681,7 @@ void Parser::more_bootstrap() {
     L.push_back(T);
     new_prim("@spaces", L);
     {
-        int  A    = ' '; // eqtb loc of active space
+        auto A    = uchar(' '); // eqtb loc of active space
         auto Bval = T.eqtb_loc();
         eq_define(A, hash_table.eqtb[Bval].get_cmdchr(), true);
         A    = '#';

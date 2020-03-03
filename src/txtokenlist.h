@@ -21,10 +21,10 @@ using token_iterator = std::list<Token>::iterator;
 namespace token_ns {
     void add_env(TokenList &L, String name);
     void add_par_noindent(TokenList &, const Hashtab &);
-    void add_verbatim_number(TokenList &L, const Hashtab &H, int n);
+    void add_verbatim_number(TokenList &L, const Hashtab &H, long n);
     auto block_size(const TokenList &L) -> int;
     void expand_nct(TokenList &);
-    auto expand_nct(TokenList &L, int n, uchar c, int &MX, TokenList &body) -> bool;
+    auto expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &body) -> bool;
     void expand_star(TokenList &L);
     auto fast_get_block(TokenList &L) -> TokenList;
     void fast_get_block(TokenList &L, TokenList &res);
@@ -34,8 +34,8 @@ namespace token_ns {
     void get_unique(TokenList &L, Token &t1, Token &t2);
     auto has_a_single_token(const TokenList &L) -> bool;
     auto has_a_single_token(const TokenList &L, Token t) -> bool;
-    auto posint_to_list(int n) -> TokenList;
-    void push_back_i(TokenList &L, int n);
+    auto posint_to_list(long n) -> TokenList;
+    void push_back_i(TokenList &L, long n);
     void remove_block(TokenList &L);
     void remove_ext_braces(TokenList &L);
     void remove_initial_spaces(TokenList &L);
@@ -103,7 +103,7 @@ public:
 
 // This represents the value of a user-defined command
 class Macro {
-    int                       nbargs{0};       // number of arguments
+    size_t                    nbargs{0};       // number of arguments
     def_type                  type{dt_normal}; // type of macro
     std::array<TokenList, 10> delimiters;      // delimiters between arguments
     TokenList                 body;            // the body
@@ -112,10 +112,10 @@ public:
     Macro(TokenList L) : body(std::move(L)) { correct_type(); }
     // other methods
     [[nodiscard]] auto get_type() const -> def_type { return type; }
-    [[nodiscard]] auto get_nbargs() const -> int { return nbargs; }
+    [[nodiscard]] auto get_nbargs() const -> size_t { return nbargs; } // \todo remove
     auto               get_body() -> TokenList & { return body; }
     [[nodiscard]] auto get_body() const -> const TokenList & { return body; }
-    void               set_nbargs(int n) { nbargs = n; }
+    void               set_nbargs(size_t n) { nbargs = n; } // \todo remove
     void               set_type(def_type n) { type = n; }
     [[nodiscard]] auto is_same(const Macro &aux) const -> bool;
     auto               operator[](size_t n) const -> const TokenList & { return delimiters[n]; }

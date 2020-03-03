@@ -1684,7 +1684,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
         k2 = math_lr_value();
     }
     TokenList L3    = read_arg();
-    int       dmres = 0;
+    long      dmres = 0;
     if (!L3.empty()) {
         back_input(L3);
         scan_dimen(false, ct);

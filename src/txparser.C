@@ -173,7 +173,7 @@ auto Parser::edef_aux(TokenList &L) -> bool {
 // We are reading a macro body with N arguments, so that #1 must be interpreted.
 // par tokens are allowed, no runaway test
 
-void Parser::scan_group3(TokenList &res, int cl, bool exp, int N) {
+void Parser::scan_group3(TokenList &res, int cl, bool exp, size_t N) {
     int b = 1;
     for (;;) {
         bool stop = exp ? edef_aux(res) : get_token();
@@ -202,7 +202,6 @@ void Parser::scan_group4(TokenList &res, int cl) {
             parse_error(err_tok, "Too many closing braces");
             return;
         }
-        //    if(cur_cmd_chr.is_parameter()) after_parameter(true,0);
         res.push_back(cur_tok);
     }
 }
@@ -519,7 +518,7 @@ auto Parser::read_delimited(const TokenList &L) -> TokenList {
 
 // Reads the body of a \def ou \xdef. A space is skipped,
 // and an open brace is read first.
-void Parser::read_mac_body(TokenList &L, bool exp, int N) {
+void Parser::read_mac_body(TokenList &L, bool exp, size_t N) {
     scanner_status = ss_defining;
     skip_initial_space();
     if (cur_cmd_chr.is_open_brace())
@@ -581,8 +580,8 @@ auto Parser::is_verbatim_end() -> bool {
         if (input_buffer.head() == 0)
             kill_line();
         else { // remove chars from input_line
-            int n = input_line.size();
-            for (int i = 0; i < n; i++)
+            auto n = input_line.size();
+            for (size_t i = 0; i < n; i++)
                 if (input_line[i] == '}') {
                     input_line_pos = i + 1;
                     break;
@@ -621,7 +620,7 @@ auto Parser::vb_tokens(codepoint test, TokenList &L, bool before) -> bool {
 }
 
 // A number N gives: {\verbatimnumberfont{N}}\space
-void token_ns::add_verbatim_number(TokenList &L, const Hashtab &H, int n) {
+void token_ns::add_verbatim_number(TokenList &L, const Hashtab &H, long n) {
     L.push_back(H.OB_token);
     L.push_back(H.verbatim_number_font);
     L.push_back(H.OB_token);
@@ -638,15 +637,15 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     kill_line();
     Token par      = hash_table.par_token;
     Token noindent = hash_table.noindent_token;
-    int   cc       = eqtb_int_table[endlinechar_code].val;
+    auto  cc       = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].set_val('\r');
 
     bool ok          = true;
     bool want_number = false;
-    int  n           = 0;
+    long n           = 0;
     if (my_number >= 0) {
         my_number += count_reg_offset;
-        n           = eqtb_int_table[my_number].val;
+        n           = eqtb_int_table[to_unsigned(my_number)].val;
         want_number = true;
     }
     int cl = get_cur_line();
@@ -661,7 +660,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
         res.push_back(noindent);
         n++;
         if (want_number) {
-            word_define(my_number, n, true);
+            word_define(to_unsigned(my_number), n, true);
             token_ns::add_verbatim_number(res, hash_table, n);
         }
         if (vb_tokens(codepoint('\r'), res, false)) {
@@ -751,7 +750,7 @@ void Parser::T_verbatim() {
         n     = 0;
     }
     if (want_number && reg_number < 0) reg_number = 21; // hardcoded
-    if (reset) word_define(reg_number + count_reg_offset, n - 1, true);
+    if (reset) word_define(to_unsigned(reg_number + count_reg_offset), n - 1, true);
     Token       t2 = hash_table.relax_token;
     Token       t3 = hash_table.relax_token;
     Token       t4 = hash_table.relax_token;
@@ -990,7 +989,7 @@ auto Parser::remove_initial_star() -> bool {
 
 // This is done if we see a # while reading the body of a command.
 // if exp is true, the token that follows the # is expanded,
-void Parser::after_parameter(bool exp, int N) {
+void Parser::after_parameter(bool exp, size_t N) {
     Token s    = cur_tok;
     bool  stop = exp ? get_x_token() : get_token();
     if (stop) {
@@ -999,7 +998,7 @@ void Parser::after_parameter(bool exp, int N) {
     }
     if (cur_cmd_chr.is_parameter()) return; //  ## gives #
     if (cur_tok.is_digit_token()) {
-        int n = cur_cmd_chr.val_as_digit();
+        auto n = cur_cmd_chr.val_as_digit();
         if (0 < n && n <= N) {
             cur_tok = Token(eol_t_offset + n);
             return;
@@ -1085,7 +1084,7 @@ auto Parser::scan_general_text() -> TokenList {
 }
 
 // number of arguments for \newcommand; tries to be clever.
-auto Parser::read_mac_nbargs() -> int {
+auto Parser::read_mac_nbargs() -> unsigned {
     TokenList L;
     read_optarg(L);
     if (!L.empty() && L.front().is_plus_token()) L.pop_front();
@@ -1101,7 +1100,7 @@ auto Parser::read_mac_nbargs() -> int {
         return 0;
     }
     if (t.cmd_val() == other_catcode) {
-        int tt = t.val_as_digit();
+        auto tt = t.val_as_digit();
         if (tt >= 0 && tt <= 9) return tt;
     }
     bad_nbargs(-3);
@@ -1111,7 +1110,7 @@ auto Parser::read_mac_nbargs() -> int {
 // scans the `#1#2foo' part of \def\bar#1#2foo{}
 void Parser::get_def_nbargs(Macro *X, Token name) {
     def_type  code = dt_normal;
-    int       nb   = 0;
+    size_t    nb   = 0;
     TokenList L;
     scanner_status = ss_defining;
     for (;;) {
@@ -1412,9 +1411,9 @@ void Parser::expand_mac(Macro &X) {
     if (skip_prefix(X[0])) return;
     bool      optional      = spec == dt_optional || spec == dt_spec_opt;
     bool      spec_optional = spec == dt_spec_opt;
-    int       n             = X.get_nbargs();
+    auto      n             = X.get_nbargs();
     TokenList arguments[10];
-    for (int i = 1; i <= n; i++) {
+    for (size_t i = 1; i <= n; i++) {
         if (spec == dt_delim || spec == dt_brace) {
             if (!X[i].empty()) {
                 if (scan_group_del(arguments[i], X[i])) return;
@@ -1562,8 +1561,8 @@ void Parser::fetch_name2() {
 // Converts the buffer into a command; locally defines it to \relax if undef
 // result is in cur_tok
 void Parser::finish_csname(const Buffer &b) {
-    cur_tok = hash_table.locate(b);
-    int pos = cur_tok.eqtb_loc();
+    cur_tok  = hash_table.locate(b);
+    auto pos = cur_tok.eqtb_loc();
     if (hash_table.eqtb[pos].is_undefined()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
 }
 
@@ -2121,10 +2120,10 @@ void Parser::new_primx(String a, String b) {
 // new_prim("@plus","plus"); implements \def\@plus{plus}
 void Parser::new_prim(String a, String b) {
     TokenList L;
-    int       n = strlen(b);
-    for (int i = 0; i < n; i++) {
-        uchar c = b[i];
-        if (c > 128) err_ns::fatal_error("internal error in new_prim");
+    auto      n = strlen(b);
+    for (size_t i = 0; i < n; i++) {
+        auto c = b[i];
+        if (uchar(c) > 128) err_ns::fatal_error("internal error in new_prim");
         spec_offsets T = c == ' ' ? space_t_offset : is_letter(c) ? letter_t_offset : other_t_offset;
         L.push_back(Token(T, codepoint(c)));
     }
@@ -2137,7 +2136,7 @@ void Parser::M_shortverb(int x) {
     Token Tfe = cur_tok;
     if (read_token_arg(Tfe)) return;
     Token t = cur_tok;
-    int   T = t.get_val() - single_offset;
+    auto  T = t.get_val() - single_offset;
     if (0 < T && T < int(nb_characters)) {
         if (x == 0) { // define
             if (get_catcode(T) == special_catcode) {
@@ -2236,7 +2235,7 @@ void Parser::T_end(const std::string &s) {
             expand();
     } else {
         Token t = hash_table.temp_token;
-        int   k = t.eqtb_loc();
+        auto  k = t.eqtb_loc();
         hash_table.eqtb[k].setnl(X->get_val());
         back_input(t);
     }
@@ -2572,12 +2571,12 @@ void Parser::E_ignore_n_args(bool vb, subtypes c) {
 // If the tokens that follows are that of the string S (upper or lower case)
 // then they are read. Initial spaces are read. Full expansion.
 auto Parser::scan_keyword(String s) -> bool {
-    int       k = 0;
+    size_t    k = 0;
     TokenList L;
     for (;;) {
         if (s[k] == 0) return true;
         get_x_token();
-        if (cur_tok.not_a_cmd() && (cur_cmd_chr.char_val() == s[k] || cur_cmd_chr.char_val() == s[k] + 'A' - 'a')) {
+        if (cur_tok.not_a_cmd() && (cur_cmd_chr.char_val() == uchar(s[k]) || cur_cmd_chr.char_val() == uchar(s[k] + 'A' - 'a'))) {
             L.push_back(cur_tok);
             k++;
         } else if (L.empty() && cur_cmd_chr.is_space())
@@ -2683,15 +2682,15 @@ void Parser::iexpand() {
         TokenList L = read_arg();
         back_input(L);
         int i = scan_int(cur_tok);
-        if (i >= 0 && i < 10) back_input(Token(other_t_offset, char(i + '0')));
-        if (i >= 10 && i < 16) back_input(Token(letter_t_offset, char(i + 'A' - 10)));
+        if (i >= 0 && i < 10) back_input(Token(other_t_offset, uchar(i + '0')));
+        if (i >= 10 && i < 16) back_input(Token(letter_t_offset, uchar(i + 'A' - 10)));
     }
         return;
     case strippt_cmd: {
-        Token     T = cur_tok;
-        TokenList L = E_the(the_code);
+        Token     TT = cur_tok;
+        TokenList L  = E_the(the_code);
         token_ns::strip_pt(L);
-        if (vb) the_log << lg_start << T << lg_arrow << L << "." << lg_end;
+        if (vb) the_log << lg_start << TT << lg_arrow << L << "." << lg_end;
         back_input(L);
         return;
     }
@@ -2732,11 +2731,11 @@ void Parser::insert_relax() {
 // Conditional code
 
 void Condition::dump() const {
-    int n = D.size();
-    for (int i = n - 1; i >= 0; i--) D[i].dump(i);
+    auto n = D.size();
+    for (size_t i = n; i > 0; i--) D[i - 1].dump(to_signed(i - 1));
 }
 
-void CondAux::dump(int i) const {
+void CondAux::dump(long i) const {
     the_log << lg_start << "### level " << i << " serial " << serial << ": ";
     int T = cur_if;
     if (T >= unless_code) {
@@ -2812,7 +2811,7 @@ void Parser::pass_text(Token Tfe) {
 }
 
 // Pushes a new conditional
-auto Condition::push(int chr) -> uint {
+auto Condition::push(int chr) -> size_t {
     if_serial++;
     D.push_back({if_code, chr, the_parser.get_cur_line(), if_serial});
     return D.size();
@@ -2828,7 +2827,7 @@ void Condition::pop() {
 
 // This pops all conditions, signaling errors.
 void Condition::terminate() {
-    int n = D.size();
+    auto n = D.size();
     while (n > 0) {
         n--;
         main_ns::nb_errs++;
@@ -2871,7 +2870,7 @@ void Parser::E_unless() {
 
 void Parser::E_if_test(subtypes test, bool negate) {
     Token Tfe = cur_tok;
-    uint  sz  = conditions.push(negate ? test + unless_code : test);
+    auto  sz  = conditions.push(negate ? test + unless_code : test);
     int   k   = conditions.top_serial();
     trace_if(negate ? -1 : -2);
     if (test == if_case_code) {
@@ -2947,9 +2946,9 @@ auto Parser::eval_condition(subtypes test) -> bool {
             scan_int(T);
         else
             scan_dimen(false, T);
-        int n = cur_val.get_int_val();
+        auto n = cur_val.get_int_val();
         remove_initial_space();
-        int r = cur_tok.val_as_other();
+        auto r = cur_tok.val_as_other();
         if (r == '=' || r == '<' || r == '>') {
         } else {
             r = '=';
@@ -2980,7 +2979,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     }
     case if_void_code: {
         int  n = scan_reg_num();
-        Xml *x = box_table[n].get_val();
+        Xml *x = box_table[to_unsigned(n)].get_val();
         if (x == nullptr) return true;
         return x->empty();
     }
@@ -3083,7 +3082,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
         the_log << cur_tok << lg_endbrace;
     }
     if (redef && !ok_to_define(A, rd_if_undef)) return;
-    int pos = A.eqtb_loc();
+    auto pos = A.eqtb_loc();
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
         the_log << lg_startbrace << action << "changing " << A << "=";
@@ -3172,7 +3171,7 @@ void Parser::M_let(int chr, bool gbl) {
 // This implements \futurelet\A\B\C
 void Parser::M_future_let(bool gbl) {
     Token A = get_r_token();
-    int   p = cur_tok.eqtb_loc();
+    auto  p = cur_tok.eqtb_loc();
     get_token();
     Token B = cur_tok;
     get_token();
@@ -3240,7 +3239,7 @@ void Parser::M_new_env(rd_flag redef) {
 // Common code for \newcommand and \newenv, constructs the macro
 auto Parser::read_latex_macro() -> Macro * {
     auto *X = new Macro;
-    int   n = read_mac_nbargs();
+    auto  n = read_mac_nbargs();
     X->set_nbargs(n);
     TokenList op_arg;
     bool      have_op_arg = read_optarg(op_arg);
@@ -3301,9 +3300,9 @@ void Parser::define_something(int chr, bool gbl, symcodes w) {
 
 // This handles \catcode, \lccode etc, in a set context.
 void Parser::assign_def_something(bool gbl) {
-    Token T = cur_tok;
-    int   n;
-    int   offset = cur_cmd_chr.get_chr();
+    Token  T = cur_tok;
+    int    n;
+    size_t offset = cur_cmd_chr.get_chr();
     if (offset == 0)
         n = 15; // catcode
     else if (offset == math_code_offset)
@@ -3317,7 +3316,7 @@ void Parser::assign_def_something(bool gbl) {
     else
         n = 0; // This should not happen
     int k = scan_char_num();
-    offset += k;
+    offset += to_unsigned(k);
     scan_optional_equals();
     k = scan_int(T);
     if ((k < 0 && offset < del_code_offset) || k > n) {
@@ -3342,7 +3341,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     Token t   = cur_tok;
     Token tbd = get_r_token();
     if (tbd == hash_table.frozen_protection) return;
-    int pos = cur_tok.eqtb_loc();
+    auto pos = cur_tok.eqtb_loc();
     eq_define(pos, CmdChr(relax_cmd, relax_code), gbl);
     scan_optional_equals();
     cur_tok = t;
@@ -3397,7 +3396,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
 // For bootstrap; always traced
 auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
     Token    T = hash_table.locate(sh);
-    int      p = T.eqtb_loc(); // return value
+    auto     p = T.eqtb_loc(); // return value
     symcodes ncmd;
     String   name;
     switch (cmd) {
@@ -3494,8 +3493,8 @@ void Parser::do_register_command(bool gbl) {
     Token T = cur_tok;
     int   q = cur_cmd_chr.get_cmd();
     int   p;
-    int   l = do_register_arg(q, p, T); // changes T from \advance to \skip
-    if (cur_tok.is_invalid()) return;   // was an error
+    auto  l = to_unsigned(do_register_arg(q, p, T)); // changes T from \advance to \skip
+    if (cur_tok.is_invalid()) return;                // was an error
     if (q == register_cmd)
         scan_optional_equals();
     else
@@ -3581,13 +3580,13 @@ void Parser::E_latex_ctr() {
     case fnsymbol_code: res.push_front(hash_table.fnsymbol_token); break;
     case at_alph_code:
         if (n >= 1 && n <= 26)
-            res.push_front(Token(letter_t_offset + 'a' - 1 + n));
+            res.push_front(Token(letter_t_offset + 'a' - 1 + to_unsigned(n)));
         else
             counter_overflow(T, n, 26);
         break;
     case at_Alph_code:
         if (n > 0 && n <= 26)
-            res.push_front(Token(letter_t_offset + 'A' - 1 + n));
+            res.push_front(Token(letter_t_offset + 'A' - 1 + to_unsigned(n)));
         else
             counter_overflow(T, n, 26);
         break;
@@ -4015,7 +4014,7 @@ void Parser::exec_calc() {
     a.pop_front();
     token_from_list(T);
     internal_type p;
-    int           l = cur_cmd_chr.get_chr();
+    unsigned      l = cur_cmd_chr.get_chr();
     if (cur_cmd_chr.get_cmd() == assign_int_cmd)
         p = it_int;
     else if (cur_cmd_chr.get_cmd() == assign_dimen_cmd)
@@ -4024,7 +4023,7 @@ void Parser::exec_calc() {
         p = it_glue; // ok ? should add a test here....
     if (tracing_commands()) {
         String s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
-        the_log << lg_startcalc << "modifying " << s << " at position " << l << lg_endbrace;
+        the_log << lg_startcalc << "modifying " << s << " at position " << to_signed(l) << lg_endbrace;
     }
     SthInternal res;
     calc_main(p, res, b);
@@ -4127,14 +4126,14 @@ void Parser::begin_box(int src, subtypes c) {
     }
     if (c == box_code) {
         res     = scan_reg_num();
-        cur_box = box_table[res].get_val();
-        box_table[res].set_val(nullptr);
+        cur_box = box_table[to_unsigned(res)].get_val();
+        box_table[to_unsigned(res)].set_val(nullptr);
         box_end(cur_box, src);
         return;
     }
     if (c == copy_code) {
         res     = scan_reg_num();
-        cur_box = box_table[res].get_val();
+        cur_box = box_table[to_unsigned(res)].get_val();
         box_end(cur_box, src);
         return;
     }
@@ -4225,7 +4224,7 @@ void Parser::M_xray(subtypes c) {
     case showbox_code: {
         int k = scan_reg_num();
         log_and_tty << "Box " << k << ": ";
-        show_box(box_table[k].get_val());
+        show_box(box_table[to_unsigned(k)].get_val());
         return;
     }
     case show_xmlA_code:
@@ -4304,7 +4303,7 @@ void Parser::M_prefixed() {
     }
     if (C != def_cmd && (flags != 0)) prefix_error(b_global, K);
     // look at \globaldefs
-    int gd = eqtb_int_table[globaldefs_code].val;
+    auto gd = eqtb_int_table[globaldefs_code].val;
     if (gd > 0) b_global = true;
     if (gd < 0) b_global = false;
     if (tracing_commands() && (b_global || (flags != 0))) {

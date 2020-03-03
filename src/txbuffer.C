@@ -794,7 +794,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
 // This is the algorithm of Knuth
 void Buffer::push_back(ScaledInt V, glue_spec unit) {
     const int unity = 1 << 16;
-    int       s     = V.get_value();
+    auto      s     = V.get_value();
     if (s < 0) {
         push_back('-');
         s = -s;

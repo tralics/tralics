@@ -48,7 +48,7 @@ void Stats::token_stats() {
 
 // Converts an integer into a token list, catcode 12
 // Assumes n>0, otherwise result is empty.
-auto token_ns::posint_to_list(int n) -> TokenList {
+auto token_ns::posint_to_list(long n) -> TokenList {
     TokenList L;
     if (n <= 0) return L;
     while (n != 0) {
@@ -63,7 +63,7 @@ auto token_ns::posint_to_list(int n) -> TokenList {
 // Adds an integer to the end of the token list.
 // Uses a temporary list, since we get digits from right to left.
 // Noting done if n<0. This is used for inserting verbatim line numbers.
-void token_ns::push_back_i(TokenList &L, int n) {
+void token_ns::push_back_i(TokenList &L, long n) {
     TokenList tmp = posint_to_list(n);
     L.splice(L.end(), tmp);
 }

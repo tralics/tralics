@@ -11,6 +11,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace err_ns {
     void convert_to_string(const TokenList &L);
@@ -228,9 +229,10 @@ void Parser::extra_fi_or_else() {
 }
 
 // Case of \def\foo#2{}
-void Parser::bad_definition(Token name, int nb) {
-    err_buf << bf_reset << "Error while scanning definition of " << name.tok_to_str();
-    err_buf << "\ngot #" << cur_tok.tok_to_str() << ", expected #" << nb + 1;
+void Parser::bad_definition(Token name, size_t nb) {
+    err_buf << bf_reset;
+    err_buf << fmt::format("Error while scanning definition of {}\n", name.tok_to_str());
+    err_buf << fmt::format("got #{}, expected #{}", cur_tok.tok_to_str(), nb + 1);
     signal_error(name, "bad char after #");
 }
 
@@ -265,7 +267,7 @@ void Parser::undefined_mac() {
     if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.get_cmd();
     if (noxml) {
         signal_error(Token(), "Undefined command");
-        eq_define(to_signed(cur_tok.eqtb_loc()), CmdChr(self_insert_cmd, zero_code), true);
+        eq_define(cur_tok.eqtb_loc(), CmdChr(self_insert_cmd, zero_code), true);
         back_input(cur_tok);
     } else
         signal_error(cur_tok, "Undefined command");

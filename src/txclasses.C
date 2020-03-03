@@ -1150,7 +1150,7 @@ void Parser::kvo_bool_opt() {
     if (!check_if_redef(s)) return;
     // This is \newif
     Token W = cur_tok;
-    eq_define(to_signed(W.eqtb_loc()), CmdChr(if_test_cmd, v), false);
+    eq_define(W.eqtb_loc(), CmdChr(if_test_cmd, v), false);
     M_newif_aux(W, s, true);
     M_newif_aux(W, s, false);
     finish_kvo_bool(T, fam, arg);
