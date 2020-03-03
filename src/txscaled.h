@@ -20,7 +20,8 @@ class ScaledInt {
 public:
     ScaledInt() = default;
     void set_value(long i) { value = i; }
-    ScaledInt(long v) : value(long(int(v))) {} // \todo getting parameter as `long` makes tests fail, not sure why.
+    ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
+    ScaledInt(long v) : value(v) {}
     [[nodiscard]] auto get_value() const -> long { return value; }
     auto               operator-() const -> ScaledInt { return ScaledInt(-value); }
     void               operator+=(ScaledInt X) { value += X.value; }
