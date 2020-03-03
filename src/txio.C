@@ -451,13 +451,13 @@ void LinePtr::set_interactive() {
 
 // interface with the line editor.
 auto LinePtr::read_from_tty(Buffer &B) -> int {
-    static bool prev_line = false; // was previous line non-blank ?
-    static char m_ligne[4096];
-    readline(m_ligne, 78);
-    if (strcmp(m_ligne, "\\stop") == 0) return -1;
+    static bool                   prev_line = false; // was previous line non-blank ?
+    static std::array<char, 4096> m_ligne;
+    readline(m_ligne.data(), 78);
+    if (strcmp(m_ligne.data(), "\\stop") == 0) return -1;
     cur_line++;
     B.reset0();
-    B << m_ligne << "\n";
+    B << m_ligne.data() << "\n";
     if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
         prev_line = false;

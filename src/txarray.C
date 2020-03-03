@@ -123,9 +123,9 @@ void Parser::expand_nct(TokenList &L) {
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
 auto token_ns::expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &body) -> bool {
-    TokenList res;
-    bool      result = false;
-    TokenList Table[10]; // arguments of the commands
+    TokenList                 res;
+    bool                      result = false;
+    std::array<TokenList, 10> Table; // arguments of the commands
     while (!L.empty()) {
         Token t = L.front();
         L.pop_front();
@@ -142,8 +142,8 @@ auto token_ns::expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &bod
         result = true; // We found something
         MX--;
         if (MX < 0) return true;
-        for (int k = 0; k < n; k++) Table[k + 1] = get_a_param(L, false);
-        TokenList W = Parser::expand_mac_inner(body, Table);
+        for (size_t k = 0; to_signed(k) < n; k++) Table[k + 1] = get_a_param(L, false);
+        TokenList W = Parser::expand_mac_inner(body, Table.data());
         L.splice(L.begin(), W);
     }
     L.splice(L.end(), res);

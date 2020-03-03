@@ -80,7 +80,7 @@ public:
     }
     void        more_action(TokenList &L) { action.splice(action.end(), L); }
     void        finish();
-    void        set_aux(TokenList &W, int idx);
+    void        set_aux(TokenList &W, long idx);
     void        set_aux() { set_aux(keyvals, -1); }
     static void find_pointer(const std::string &Key);
     void        set_inpox() { in_pox = true; }

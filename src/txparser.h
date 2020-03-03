@@ -437,9 +437,9 @@ private:
     auto        get_ctb_opt() -> name_positions;
     auto        get_trees_opt() -> name_positions;
     auto        get_c_val(Token X) -> Istring;
-    void        get_counter(Token T, int &c);
-    auto        get_index_value() -> int;
-    void        get_date_ctrs(int &year, int &month, int &day);
+    void        get_counter(Token T, long &c);
+    auto        get_index_value() -> size_t;
+    void        get_date_ctrs(long &year, long &month, long &day);
     void        get_def_nbargs(Macro *X, Token name);
     auto        get_lrcs_opt() -> name_positions;
     auto        cs_from_input() -> Token;
@@ -475,7 +475,7 @@ private:
     void        implicit_par(subtypes c);
     void        improper_alpha();
     void        includegraphics(subtypes c);
-    auto        index_aux(TokenList &L, int father, int g) -> int;
+    auto        index_aux(TokenList &L, long father, size_t g) -> size_t;
     void        initialise_font();
     void        E_the_traced(Token T, subtypes c);
     auto        E_the(subtypes c) -> TokenList;
@@ -728,8 +728,8 @@ private:
     void        select_math_font();
     void        E_setlength(int c);
     void        set_boolean();
-    void        set_counter(Token T, int c);
-    void        set_date_ctrs(int year, int month, int day);
+    void        set_counter(Token T, long c);
+    void        set_date_ctrs(long year, long month, long day);
     void        setkeys(bool c);
     void        M_shorthand_define(int cmd, bool gbl);
     auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;

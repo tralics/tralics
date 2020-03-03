@@ -16,10 +16,10 @@
 #include <unistd.h>
 
 namespace {
-    Buffer       thebuffer;      // a scratch buffer
-    Buffer       substring_buf;  // another buffer
-    Buffer       null_cs_buffer; // buffer for \csname\endcsname
-    const String gptable[] = {"pt", "fil", "fill", "filll", "", "mu"};
+    Buffer                      thebuffer;      // a scratch buffer
+    Buffer                      substring_buf;  // another buffer
+    Buffer                      null_cs_buffer; // buffer for \csname\endcsname
+    const std::array<String, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
 } // namespace
 static Buffer local_buf; // another buffer
 
@@ -154,8 +154,8 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
 // Inserts an integer (this is the print_int procedure from TeX)
 // at least one digit is printed.
 void Buffer::push_back_int(long n) {
-    static long dig[30];
-    size_t      k = 0;
+    static std::array<long, 30> dig;
+    size_t                      k = 0;
     if (n < 0) {
         push_back('-');
         if (n > -100000000)

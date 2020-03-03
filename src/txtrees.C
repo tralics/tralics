@@ -21,11 +21,11 @@ namespace trees_ns {
 } // namespace trees_ns
 
 namespace date_ns {
-    auto check_date(int y, int m, int d) -> bool;
-    auto year_length(int y) -> int;
-    auto month_length(int y, int m) -> int;
-    void prev_date(int &year, int &month, int &day);
-    void next_date(int &year, int &month, int &day);
+    auto check_date(long y, long m, long d) -> bool;
+    auto year_length(long y) -> long;
+    auto month_length(long y, long m) -> long;
+    void prev_date(long &year, long &month, long &day);
+    void next_date(long &year, long &month, long &day);
 } // namespace date_ns
 
 namespace {
@@ -43,32 +43,32 @@ AllIndex::AllIndex() {
 
 // Returns the index location associated to the name S
 // If S is not found, the main index is used
-auto AllIndex::find_index(const std::string &s) -> int {
-    int n = value.size();
-    for (int i = 0; i < n; i++)
+auto AllIndex::find_index(const std::string &s) -> size_t {
+    auto n = value.size();
+    for (size_t i = 0; i < n; i++)
         if (value[i]->has_name(s)) return i;
     return 1;
 }
 
 void AllIndex::new_index(const std::string &s, const std::string &title) {
-    int n = value.size();
-    for (int i = 0; i < n; i++)
+    auto n = value.size();
+    for (size_t i = 0; i < n; i++)
         if (value[i]->has_name(s)) return;
-    int id = the_main->the_stack->next_xid(nullptr).value;
-    value.push_back(new OneIndex(s, title, id));
+    auto id = the_main->the_stack->next_xid(nullptr).value;
+    value.push_back(new OneIndex(s, title, to_unsigned(id)));
 }
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
-auto Parser::get_index_value() -> int {
+auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
-    int         i = the_index.find_index(s);
+    auto        i = the_index.find_index(s);
     return the_index.get_index(i)->get_AL();
 }
 
 // Case \printglossary or \printindex[foo].
 // Marks the place where to insert the index
-void AllIndex::mark_print(int g) {
+void AllIndex::mark_print(size_t g) {
     Xml *mark = new Xml(Istring(""), nullptr);
     Xml *Foo  = new Xml(Istring(""), mark);
     the_main->the_stack->add_last(Foo);
@@ -100,7 +100,7 @@ void trees_ns::normalise_space(TokenList &L) {
 
 auto trees_ns::xless(Indexer *A, Indexer *B) -> bool { return A->key < B->key; }
 
-auto Parser::index_aux(TokenList &L, int father, int g) -> int {
+auto Parser::index_aux(TokenList &L, long father, size_t g) -> size_t {
     static const Token escape_t(other_t_offset, '"');
     static const Token actual_t(other_t_offset, '@');
     static const Token actualb_t(letter_t_offset, '@');
@@ -128,13 +128,13 @@ auto Parser::index_aux(TokenList &L, int father, int g) -> int {
     // We have now: key@aux|encap
     std::vector<Indexer *> &IR    = the_index.get_data(g);
     int                     level = 1;
-    if (father != -1) level = 1 + IR[father]->level;
-    int n = IR.size();
-    for (int i = 0; i < n; i++)
+    if (father != -1) level = 1 + IR[to_unsigned(father)]->level;
+    auto n = IR.size();
+    for (size_t i = 0; i < n; i++)
         if (IR[i]->is_same(level, aux)) return i;
     Buffer &B = local_buf;
     B.reset();
-    if (father != -1) B << IR[father]->key << "____";
+    if (father != -1) B << IR[to_unsigned(father)]->key << "____";
     B << key;
     B.lowercase();
     B.no_newline();
@@ -142,7 +142,7 @@ auto Parser::index_aux(TokenList &L, int father, int g) -> int {
     Xml *x   = new Xml(np_index, res);
     if (!encap.empty()) x->get_id().add_attribute(np_encap, Istring(encap));
     x->get_id().add_attribute(np_level, name_positions(cst_dig0 + level));
-    int iid = the_index.next_iid();
+    auto iid = the_index.next_iid();
     IR.push_back(new Indexer(B.to_string(), aux, x, level, iid));
     return n;
 }
@@ -158,7 +158,7 @@ void Parser::T_index(subtypes c) {
         the_index.new_index(s, title);
         return;
     }
-    int g = 0;
+    size_t g = 0;
     if (c == printindex_code || c == index_code) {
         std::string s = sT_optarg_nopar();
         g             = the_index.find_index(s);
@@ -181,33 +181,33 @@ void Parser::T_index(subtypes c) {
             level = 2; // z1, L
     }
     // If level != 1, make sure parent exists
-    int position = -1;
-    if (level > 1) position = index_aux(z1, position, g);
+    long position = -1;
+    if (level > 1) position = to_signed(index_aux(z1, position, g));
     // If level == 3, make sure grand parent exists
-    if (level == 3) position = index_aux(z2, position, g);
+    if (level == 3) position = to_signed(index_aux(z2, position, g));
     // make sure this exists
-    position = index_aux(L, position, g);
+    position = to_signed(index_aux(L, position, g));
     // Now, add a label here
-    int iid = the_index.get_data(g)[position]->iid;
-    int nid = the_index.next_index();
+    auto iid = the_index.get_data(g)[to_unsigned(position)]->iid;
+    int  nid = the_index.next_index();
     ;
     local_buf << bf_reset << "lid" << nid;
     std::string W  = local_buf.to_string();
     Istring     id = the_stack.add_anchor(W, false);
     create_label(W, id);
-    tralics_ns::add_ref(iid, W, true);
+    tralics_ns::add_ref(to_signed(iid), W, true);
 }
 
 void Parser::finish_index() {
-    std::vector<std::string> labels = std::vector<std::string>(the_index.get_last_iid(), "");
+    auto labels = std::vector<std::string>(the_index.get_last_iid(), "");
     tralics_ns::find_index_labels(labels);
-    int idx_size = 0;
-    int idx_nb   = 0;
-    int q        = the_index.size();
-    for (int jj = 1; jj <= q; jj++) {
-        int       j  = jj == q ? 0 : jj;
-        OneIndex *CI = the_index.get_index(j);
-        int       n  = CI->size();
+    int  idx_size = 0;
+    int  idx_nb   = 0;
+    auto q        = the_index.size();
+    for (size_t jj = 1; jj <= q; jj++) {
+        auto j  = jj == q ? 0 : jj;
+        auto CI = the_index.get_index(j);
+        auto n  = CI->size();
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
@@ -221,12 +221,12 @@ void Parser::finish_index() {
             AttList &L = the_stack.get_att_list(CI->get_AL());
             id.add_attribute(L, true);
         }
-        for (int i = 0; i < n; i++) {
+        for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
             A->get_id().add_attribute(np_target, Istring(labels[CI->get_iid(i)]));
         }
         CI->do_sort();
-        for (int i = 0; i < n; i++) {
+        for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
             res->push_back(A);
             res->add_nl();
@@ -471,14 +471,14 @@ void Parser::date_commands(int c) {
 }
 
 // Stores the value c in the counter T if possible
-void Parser::set_counter(Token T, int c) {
+void Parser::set_counter(Token T, long c) {
     see_cs_token(T);
     if (cur_cmd_chr.get_cmd() != assign_int_cmd) return;
     word_define(cur_cmd_chr.get_chr(), c, false);
 }
 
 // Stores the value c in the counter T if possible
-void Parser::get_counter(Token T, int &c) {
+void Parser::get_counter(Token T, long &c) {
     c = 0;
     see_cs_token(T);
     if (cur_cmd_chr.get_cmd() != assign_int_cmd) return;
@@ -513,14 +513,14 @@ auto Parser::scan_date_ctrs() -> bool {
 }
 
 // This sets the three counters
-void Parser::set_date_ctrs(int year, int month, int day) {
+void Parser::set_date_ctrs(long year, long month, long day) {
     set_counter(year_ctr, year);
     set_counter(month_ctr, month);
     set_counter(day_ctr, day);
 }
 
 // This sets the three counters
-void Parser::get_date_ctrs(int &year, int &month, int &day) {
+void Parser::get_date_ctrs(long &year, long &month, long &day) {
     get_counter(year_ctr, year);
     get_counter(month_ctr, month);
     get_counter(day_ctr, day);
@@ -528,7 +528,7 @@ void Parser::get_date_ctrs(int &year, int &month, int &day) {
 
 // True if year Y is a leap year
 
-auto tralics_ns::is_leap_year(int y) -> bool {
+auto tralics_ns::is_leap_year(long y) -> bool {
     if ((y % 4) != 0) return false;
     if (y <= 1500) return true;
     if (y % 100 == 0) return y % 400 == 0;
@@ -536,23 +536,23 @@ auto tralics_ns::is_leap_year(int y) -> bool {
 }
 
 // Returns number of days in the year
-auto date_ns::year_length(int y) -> int {
+auto date_ns::year_length(long y) -> long {
     if (y == 1582) return 355;
     if (is_leap_year(y)) return 366;
     return 365;
 }
 
 // Returns number of days in the month
-auto date_ns::month_length(int y, int m) -> int {
+auto date_ns::month_length(long y, long m) -> long {
     if (m != 2) return month_length_table[m];
     if (is_leap_year(y)) return 29;
     return 28;
 }
 
 // Return true if valid, signals error otherwise
-auto date_ns::check_date(int y, int m, int d) -> bool {
+auto date_ns::check_date(long y, long m, long d) -> bool {
     String Bad = nullptr;
-    int    ml  = 0;
+    long   ml  = 0;
     if (y <= 0)
         Bad = "year<1";
     else if (m <= 0)
@@ -609,7 +609,7 @@ void Parser::datebynumber() {
     int year = start;
     int c    = 1;
     for (;;) {
-        int n = date_ns::year_length(year);
+        auto n = date_ns::year_length(year);
         if (c + n <= val) {
             c += n;
             ++year;
@@ -619,7 +619,7 @@ void Parser::datebynumber() {
     month = 1;
     day   = 1;
     for (int i = 1; i <= 12; i++) {
-        int n = date_ns::month_length(year, month);
+        auto n = date_ns::month_length(year, month);
         if (c + n <= val) {
             c += n;
             ++month;
@@ -634,7 +634,7 @@ void Parser::datebynumber() {
 }
 
 // gives date of yesterday
-void date_ns::prev_date(int &year, int &month, int &day) {
+void date_ns::prev_date(long &year, long &month, long &day) {
     --day;
     if (year == 1582 && month == 10 && day == 14) day = 4;
     if (day > 0) return;
@@ -647,10 +647,10 @@ void date_ns::prev_date(int &year, int &month, int &day) {
 }
 
 // gives date of tomorrow
-void date_ns::next_date(int &year, int &month, int &day) {
+void date_ns::next_date(long &year, long &month, long &day) {
     ++day;
     if (year == 1582 && month == 10 && day == 5) day = 15;
-    int ml = date_ns::month_length(year, month);
+    auto ml = date_ns::month_length(year, month);
     if (day <= ml) return;
     day = 1;
     ++month;
@@ -661,7 +661,7 @@ void date_ns::next_date(int &year, int &month, int &day) {
 
 void Parser::next_date() {
     scan_date_ctrs(); // fetch the counters
-    int year, month, day;
+    long year, month, day;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::next_date(year, month, day);
@@ -670,7 +670,7 @@ void Parser::next_date() {
 
 void Parser::prev_date() {
     scan_date_ctrs(); // fetch the counters
-    int year, month, day;
+    long year, month, day;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::prev_date(year, month, day);

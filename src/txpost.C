@@ -241,7 +241,7 @@ void Parser::create_label(const std::string &X, Istring S) {
 // and create/update the LabelInfo. We remember the ref in the ref_list.
 void Xid::add_ref(const std::string &s) { tralics_ns::add_ref(value, s, false); }
 
-void tralics_ns::add_ref(int v, const std::string &s, bool idx) {
+void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
     auto B = Istring(s);
     if (idx)

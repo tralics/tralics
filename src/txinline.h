@@ -30,8 +30,7 @@ namespace main_ns {
 } // namespace main_ns
 
 namespace tralics_ns {
-    auto is_leap_year(int y) -> bool;
-    auto year_length(int y) -> int;
+    auto is_leap_year(long y) -> bool;
     void make_names();
     void boot_math(bool mv);
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed

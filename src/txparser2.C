@@ -38,7 +38,7 @@ namespace xkv_ns {
 namespace token_ns {
     void lower_case(TokenList &L);
     auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
-    void int_to_roman(Buffer &b, int n);
+    void int_to_roman(Buffer &b, long n);
 } // namespace token_ns
 
 namespace classes_ns {
@@ -1538,14 +1538,14 @@ void XkvSetkeys::check_preset(String s) {
         if (P->hash_table.is_defined(B)) {
             Token     T = P->hash_table.locate(B);
             TokenList W = P->get_mac_value(T);
-            set_aux(W, i);
+            set_aux(W, to_signed(i));
         }
     }
 }
 
 // If i=-1 this is the normal case, else
 // we are in preset and i is the family index
-void XkvSetkeys::set_aux(TokenList &W, int idx) {
+void XkvSetkeys::set_aux(TokenList &W, long idx) {
     TokenList val;
     XkvToken  cur;
     for (;;) {
@@ -1597,8 +1597,8 @@ void XkvToken::extract() {
 
 // True if the key is in the ignore list
 auto XkvToken::ignore_this(std::vector<std::string> &igna) -> bool {
-    int n = igna.size();
-    for (int i = 0; i < n; i++)
+    auto n = igna.size();
+    for (size_t i = 0; i < n; i++)
         if (keyname == igna[i]) return true;
     return false;
 }
@@ -1666,11 +1666,11 @@ void XkvSetkeys::run_key(Token mac, XkvToken &cur, const std::string &fam) {
     if (cur.val_empty())
         run_default(Key, mac, s);
     else {
-        TokenList L = cur.get_code();
-        replace_pointers(L);
+        TokenList LL = cur.get_code();
+        replace_pointers(LL);
         action.push_back(mac);
-        P->brace_me(L);
-        more_action(L);
+        P->brace_me(LL);
+        more_action(LL);
     }
 }
 
@@ -1814,7 +1814,7 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
     res = 0;
     for (;;) {
         if (B.at_eol()) return true;
-        uchar c = B.uhead();
+        auto c = B.uhead();
         if (!is_digit(c)) { return true; }
         B.advance();
         res = 10 * res + (c - '0');
@@ -1826,8 +1826,8 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
 }
 
 auto Buffer::is_here_case(String s) -> bool {
-    int n = strlen(s);
-    for (int i = 0; i < n; i++) {
+    auto n = strlen(s);
+    for (size_t i = 0; i < n; i++) {
         char c = at(ptr + i);
         if (is_upper_case(c)) c += 'a' - 'A';
         if (c != s[i]) return false;
@@ -2010,7 +2010,7 @@ auto FormatDate::scan_next(Buffer &B, int &res) -> bool {
         the_parser.parse_error(err_tok, "Missing fields in date");
         return false;
     }
-    uchar c = B.head();
+    auto c = B.head();
     if (c == '-' || c == '/' || c == ',' || c == ';') {
         B.advance();
         B.skip_sp_tab_nl();
@@ -2030,7 +2030,7 @@ auto FormatDate::scan_next(Buffer &B, int &res) -> bool {
 
 auto FormatDate::next_format_char(Buffer &B) -> int {
     if (B.at_eol()) return 0;
-    uchar c = B.next_char();
+    auto c = B.next_char();
     if (c == 'j' || c == 'J' || c == 'D' || c == 'd') return 2;
     if (c == 'M' || c == 'm') return 1;
     if (c == 'Y' || c == 'y' || c == 'A' || c == 'a') return 3;
@@ -2329,7 +2329,7 @@ auto Parser::optional_enumerate(TokenList &L, String ctr) -> bool {
     return true;
 }
 
-void token_ns::int_to_roman(Buffer &b, int n) {
+void token_ns::int_to_roman(Buffer &b, long n) {
     switch (n) {
     case 1: b << "i"; break;
     case 2: b << "ii"; break;
@@ -2349,10 +2349,10 @@ void token_ns::int_to_roman(Buffer &b, int n) {
 void Parser::T_listenv(symcodes x) {
     leave_h_mode();
     bool is_enum   = x == enumerate_cmd;
-    int  listdepth = eqtb_int_table[list_depth_code].val;
+    auto listdepth = eqtb_int_table[list_depth_code].val;
     listdepth += is_enum ? 100 : 1;
     word_define(list_depth_code, listdepth, false);
-    int n = listdepth;
+    auto n = listdepth;
     if (is_enum) n = n / 100;
     n         = n % 100;
     Buffer &b = local_buf;
@@ -2374,8 +2374,8 @@ void Parser::T_listenv(symcodes x) {
         }
     }
     if (x == list_cmd) {
-        TokenList L = read_arg();
-        auto *    X = new Macro(L);
+        TokenList LL = read_arg();
+        auto *    X  = new Macro(LL);
         mac_define(t, X, false, rd_always, user_cmd);
         TokenList L2 = read_arg();
         back_input(L2); // remove a pair of braces here
@@ -2385,7 +2385,7 @@ void Parser::T_listenv(symcodes x) {
         token_ns::int_to_roman(b, n);
         b << "@hook";
         Token T   = hash_table.locate(b);
-        int   pos = T.eqtb_loc();
+        auto  pos = T.eqtb_loc();
         if (!hash_table.eqtb[pos].is_undefined()) back_input(T);
     }
     Xml *res = new Xml(np_list, nullptr);
@@ -2647,7 +2647,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         Buffer &B = mac_buffer;
         B.reset();
         B.push_back("-> \\char\"");
-        B.push_back16(r, false);
+        B.push_back16(to_unsigned(r), false);
         the_log << lg_start << T << c << B << "." << lg_end;
     }
     if (r == 0) {
