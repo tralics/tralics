@@ -66,10 +66,10 @@ public:
 
 class SaveCatcode {
 private:
-    int character; // a character
-    int code;      // the code of the character to restore
+    char32_t character; // a character
+    long     code;      // the code of the character to restore
 public:
-    SaveCatcode(int c, int nc);
+    SaveCatcode(char32_t c, long nc);
     ~SaveCatcode();
 };
 
@@ -163,11 +163,11 @@ public:
 
 // This restores an integer value.
 class SaveAuxInt : public SaveAux {
-    int level; // the level that was active when this was pushed
-    int pos;   // the position in eqbt_int_table
-    int val;   // the value to be restored
+    int    level; // the level that was active when this was pushed
+    size_t pos;   // the position in eqbt_int_table
+    long   val;   // the value to be restored
 public:
-    SaveAuxInt(int l, int a, int b) : SaveAux(st_int), level(l), pos(a), val(b) {}
+    SaveAuxInt(int l, size_t a, long b) : SaveAux(st_int), level(l), pos(a), val(b) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxInt() override = default;
 };
@@ -175,10 +175,10 @@ public:
 // This restores a dimension
 class SaveAuxDim : public SaveAux {
     int       level; // the level that was active when this was pushed
-    int       pos;   // the position in eqbt_dim_table
+    size_t    pos;   // the position in eqbt_dim_table
     ScaledInt val;   // the value to be restored
 public:
-    SaveAuxDim(int l, int a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
+    SaveAuxDim(int l, size_t a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxDim() override = default;
 };
@@ -186,31 +186,31 @@ public:
 // data structure for restoring a command
 class SaveAuxCmd : public SaveAux {
     int    level; // the level that was active when this was pushed
-    int    cs;    // ths position in eqtb to be restored
+    size_t cs;    // ths position in eqtb to be restored
     CmdChr val;   // the CmdChr to be restored
 public:
-    SaveAuxCmd(int a, Equivalent X) : SaveAux(st_cmd), level(X.get_level()), cs(a), val(X.get_cmdchr()) {}
+    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.get_level()), cs(a), val(X.get_cmdchr()) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
 };
 
 // data structure fopr restoring a box
 class SaveAuxBox : public SaveAux {
-    int  level; // the level that was active when this was pushed
-    int  pos;   // the position in box_table to be restored
-    Xml *val;   // the value to be restored
+    int    level; // the level that was active when this was pushed
+    size_t pos;   // the position in box_table to be restored
+    Xml *  val;   // the value to be restored
 public:
-    SaveAuxBox(int l, int a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
+    SaveAuxBox(int l, size_t a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxBox() override = default;
 };
 
 // case of \setbox0=\hbox{...} , remember the number and the box
 class SaveAuxBoxend : public SaveAux {
-    int  pos; // the box number
-    Xml *val; // the value of the box
+    size_t pos; // the box number
+    Xml *  val; // the value of the box
 public:
-    SaveAuxBoxend(int a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
+    SaveAuxBoxend(size_t a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxBoxend() override = default;
 };
@@ -218,21 +218,21 @@ public:
 // data structure for restoring a token list
 class SaveAuxToken : public SaveAux {
     int       level; // the level that was active when this was pushed
-    int       pos;   // pthe position in toks_registers
+    size_t    pos;   // pthe position in toks_registers
     TokenList val;   // the value to be restored
 public:
-    SaveAuxToken(int l, int p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
+    SaveAuxToken(int l, size_t p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxToken() override = default;
 };
 
 // data structure for restoring glue
 class SaveAuxGlue : public SaveAux {
-    int  level; // the level that was active when this was pushed
-    int  pos;   // the position in glue_table
-    Glue val;   // the value to be restored
+    int    level; // the level that was active when this was pushed
+    size_t pos;   // the position in glue_table
+    Glue   val;   // the value to be restored
 public:
-    SaveAuxGlue(int l, int p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
+    SaveAuxGlue(int l, size_t p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxGlue() override = default;
 };
@@ -240,10 +240,10 @@ public:
 // data structure for restoring glue
 class SaveAuxString : public SaveAux {
     int         level;
-    int         pos; // the position in glue_table
+    size_t      pos; // the position in glue_table
     std::string val; // the value to be restored
 public:
-    SaveAuxString(int l, int p, std::string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
+    SaveAuxString(int l, size_t p, std::string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxString() override = default;
 };
@@ -302,7 +302,7 @@ struct EqtbInt {
     void               set_val(long x) { val = x; }
     void               set_level(int x) { level = x; }
     [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(int a, int b) {
+    void               val_and_level(long a, int b) {
         val   = a;
         level = b;
     }

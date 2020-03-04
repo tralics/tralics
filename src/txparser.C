@@ -4070,7 +4070,7 @@ auto Parser::dimen_from_list(Token T, TokenList &L) -> ScaledInt {
 // The command reads a box, and performs some action.
 // Exception: you can say \cleaders\hrule.
 
-void Parser::scan_box(int bc) {
+void Parser::scan_box(size_t bc) {
     remove_initial_space_relax();
     if (cur_cmd_chr.get_cmd() == make_box_cmd)
         begin_box(bc, cur_cmd_chr.get_chr());
@@ -4085,7 +4085,7 @@ void Parser::scan_box(int bc) {
 // It will be put in a element named <leaders>. In the case of \box
 // we fill the box (numbered pos or pos-M).
 // An error is signaled in the case of \shipout, the box is inserted otherwise.
-void Parser::box_end(Xml *res, int pos) {
+void Parser::box_end(Xml *res, size_t pos) {
     if (pos < last_register)
         box_define(pos, res, false);
     else if (pos <= setbox_last)
@@ -4113,7 +4113,7 @@ void Parser::box_end(Xml *res, int pos) {
 // In some cases, the box is already there, and the code is easy.
 // Otherwise we push a continuation on the stack.
 
-void Parser::begin_box(int src, subtypes c) {
+void Parser::begin_box(size_t src, subtypes c) {
     Token T = cur_tok;
     int   res;
     Xml * cur_box = nullptr;

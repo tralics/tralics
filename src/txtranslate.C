@@ -1258,7 +1258,7 @@ void Parser::T_save_box(bool simple) {
     TokenList L = read_arg();
     back_input(hash_table.equals_token);
     back_input(L);
-    int i = scan_reg_num();
+    auto i = to_unsigned(scan_reg_num());
     scan_optional_equals();
     skip_initial_space_and_back_input();
     //  leave_v_mode();

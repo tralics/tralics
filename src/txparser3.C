@@ -15,13 +15,13 @@
 
 namespace parser_ns {
     auto to_string(boundary_type v) -> String;
-    auto save_string_name(int n) -> String;
+    auto save_string_name(size_t n) -> String;
 } // namespace parser_ns
 
 namespace {
     std::vector<SaveAux *> the_save_stack;
     Xml *                  the_box_to_end;
-    int                    the_box_position = -1;
+    long                   the_box_position = -1; // \todo std::optional<size_t>
     Buffer                 Thbuf1;
 } // namespace
 
@@ -51,7 +51,7 @@ auto gbl_or_assign(bool gbl, bool re) -> String {
     return "changing ";
 }
 
-auto parser_ns::save_string_name(int n) -> String {
+auto parser_ns::save_string_name(size_t n) -> String {
     if (n == 0) return "current label";
     if (n == 1) return "current counter";
     return "unknown";
@@ -101,7 +101,7 @@ Parser::Parser() : cur_env_name("document") {
 }
 
 // Saves in *this the catcode at position c, modifies it to be nc
-SaveCatcode::SaveCatcode(int c, int nc) : character(c) {
+SaveCatcode::SaveCatcode(char32_t c, long nc) : character(c) {
     code = the_parser.eqtb_int_table[character].val;
     the_parser.eqtb_int_table[character].set_val(nc);
 }
@@ -213,7 +213,7 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
     if (a.not_a_cmd()) return false; // Should not happen
     if (a == hash_table.frozen_protection) return false;
     if (redef == rd_always) return true;
-    int  A              = a.eqtb_loc();
+    auto A              = a.eqtb_loc();
     bool undef_or_relax = hash_table.eqtb[A].is_undef_or_relax();
     if (redef == rd_if_defined && undef_or_relax) {
         bad_redefinition(1, a);
@@ -246,7 +246,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     }
 }
 // Define for an string quantity. Like eq_define without reference counts.
-void Parser::string_define(int a, const std::string &c, bool gbl) {
+void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
     bool        reassign = !gbl && W.get_val() == c;
     if (tracing_assigns()) {
@@ -316,7 +316,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
 }
 
 // Define for a box quantity
-void Parser::box_define(int a, Xml *c, bool gbl) {
+void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
         the_log << lg_startbrace << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.get_val();
@@ -331,7 +331,7 @@ void Parser::box_define(int a, Xml *c, bool gbl) {
 }
 
 // Same code for a token list.
-void Parser::token_list_define(int p, TokenList &c, bool gbl) {
+void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
     EqtbToken &W        = toks_registers[p];
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
@@ -474,7 +474,7 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
     P.flush_buffer();
     P.the_stack.pop(the_names[cst_hbox]);
     the_box_to_end   = val;
-    the_box_position = pos;
+    the_box_position = to_signed(pos);
 }
 
 // \aftergroup\foo{}: When the group is finished, the token \foo is
@@ -494,7 +494,7 @@ void SaveAuxBoundary::unsave(bool trace, Parser &P) {
     P.decr_cur_level();
     if (the_box_position >= 0) {
         if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();
-        P.box_end(the_box_to_end, the_box_position);
+        P.box_end(the_box_to_end, to_unsigned(the_box_position));
         the_box_position = -1;
     }
 }
@@ -504,9 +504,9 @@ void SaveAuxBoundary::unsave(bool trace, Parser &P) {
 
 static int first_boundary_loc = 0;
 auto       Parser::first_boundary() -> boundary_type {
-    int n = the_save_stack.size();
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    auto n = the_save_stack.size();
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_boundary) continue;
         first_boundary_loc = p->get_line();
         return dynamic_cast<SaveAuxBoundary *>(p)->get_val();
@@ -517,10 +517,10 @@ auto       Parser::first_boundary() -> boundary_type {
 // case where a table preamble says  >{}c<{xx$yy} and we see &
 // here xy can be } or \endgroup
 auto Parser::stack_math_in_cell() -> bool {
-    int  n     = the_save_stack.size();
+    auto n     = the_save_stack.size();
     bool first = true;
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_boundary) continue;
         boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->get_val();
         if (cur == bt_brace || cur == bt_semisimple) continue;
@@ -535,10 +535,10 @@ auto Parser::stack_math_in_cell() -> bool {
 }
 
 void Parser::dump_save_stack() {
-    int L = cur_level - 1;
-    int n = the_save_stack.size();
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    int  L = cur_level - 1;
+    auto n = the_save_stack.size();
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_boundary) continue;
         dynamic_cast<SaveAuxBoundary *>(p)->dump(L);
         --L;
@@ -654,7 +654,7 @@ void Parser::pop_all_levels() {
 // We try to pop a font command
 void Parser::final_checks() {
     conditions.terminate();
-    int n = the_save_stack.size();
+    auto n = the_save_stack.size();
     if (n == 1) {
         SaveAux *tmp = the_save_stack.back();
         if (tmp->type == st_font) {
@@ -670,8 +670,8 @@ void Parser::final_checks() {
     Buffer &B = err_buf;
     B.reset();
     Buffer &A = Thbuf1;
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         A.reset();
         A << to_string(p->type) << " at " << p->line_no;
         if (B.empty()) {
@@ -689,9 +689,9 @@ void Parser::final_checks() {
 
 // Returns the slot associated to the env S
 auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
-    int n = the_save_stack.size();
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    auto n = the_save_stack.size();
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p);
         if (q->get_name() == s) return q;
@@ -701,10 +701,10 @@ auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
 
 // Returns the number of environments
 auto Parser::nb_env_on_stack() -> int {
-    int n = the_save_stack.size();
-    int k = 0;
-    for (int i = n - 1; i >= 0; i--) {
-        SaveAux *p = the_save_stack[i];
+    auto n = the_save_stack.size();
+    int  k = 0;
+    for (size_t i = n; i > 0; i--) {
+        SaveAux *p = the_save_stack[i - 1];
         if (p->type == st_env) ++k;
     }
     return k;

@@ -177,7 +177,7 @@ public:
     void               after_main_text();
     void               boot();
     void               boot_special_names();
-    void               box_end(Xml *res, int pos);
+    void               box_end(Xml *res, size_t pos);
     auto               list_to_string0(Buffer &b) -> bool;
     auto               list_to_string(TokenList &L, Buffer &b) -> bool;
     auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
@@ -283,14 +283,14 @@ private:
     void        bad_number1(Buffer &B);
     void        bad_redefinition(int rd, Token T);
     auto        before_mac_arg() -> bool;
-    void        begin_box(int src, subtypes c);
+    void        begin_box(size_t src, subtypes c);
     void        boot_NAO();
     void        boot_fp();
     void        boot_time();
     void        boot_uclc();
     void        boot_verbatim();
     void        boot_xspace();
-    void        box_define(int a, Xml *c, bool gbl);
+    void        box_define(size_t a, Xml *c, bool gbl);
     void        calc_aux(SthInternal &A);
     void        calc_main(internal_type type, SthInternal &res, TokenList &B);
     void        calc_mul_aux(SthInternal &res);
@@ -642,7 +642,7 @@ private:
     void        save_the_state(SaveState &x);
     auto        scan_27bit_int() -> int;
     auto        scan_alpha() -> size_t;
-    void        scan_box(int bc);
+    void        scan_box(size_t bc);
     auto        scan_braced_int(Token T) -> int;
     auto        scan_char_num() -> int;
     auto        scan_color(const std::string &opt, const std::string &name) -> Istring;
@@ -752,7 +752,7 @@ private:
     auto        start_scan_math(Math &u, subtypes type) -> bool;
     void        start_paras(int y, const std::string &Y, bool star);
     void        store_new_line(int n, bool vb);
-    void        string_define(int a, const std::string &c, bool gbl);
+    void        string_define(size_t a, const std::string &c, bool gbl);
     void        strip_pt();
     auto        sE_arg_nopar() -> std::string;
     auto        sT_arg_nopar() -> std::string;
@@ -964,7 +964,7 @@ private:
     void        tipa_tildedot();
     void        tipa_syllabic();
     void        token_from_list(Token t);
-    void        token_list_define(int p, TokenList &c, bool gbl);
+    void        token_list_define(size_t p, TokenList &c, bool gbl);
     auto        token_list_to_dim(TokenList &a, Token C, bool spec) -> ScaledInt;
     auto        token_list_to_att(TokenList &a, Token C, bool spec) -> Istring;
     void        token_show(int what, Buffer &B);
