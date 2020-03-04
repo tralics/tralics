@@ -139,7 +139,7 @@ class InputStack {
     TokenList              TL;         // saved token list
     std::string            name;       // name of the current file
     int                    restore_at; // catcode of @ to restore
-    int                    file_pos;   // file position to restore
+    long                   file_pos;   // file position to restore
     int                    Bpos;       // position in B
     bool                   every_eof;  // True if every_eof_token can be inserted
     bool                   eof_outer;  // True if eof is outer
@@ -155,7 +155,7 @@ public:
     void               set_line_vector(const std::vector<codepoint> &x) { B = x; }
     [[nodiscard]] auto get_at_val() const -> int { return restore_at; }
     void               set_at_val(int x) { restore_at = x; }
-    [[nodiscard]] auto get_file_pos() const -> int { return file_pos; }
+    [[nodiscard]] auto get_file_pos() const -> long { return file_pos; }
     [[nodiscard]] auto get_every_eof() const -> bool { return every_eof; }
     [[nodiscard]] auto get_eof_outer() const -> bool { return eof_outer; }
     void               destroy();
@@ -168,7 +168,7 @@ public:
         X.clear_and_copy(L);
         X.set_interactive(L.get_interactive());
     }
-    InputStack(std::string N, int l, states S, int cfp, bool eof, bool eof_o)
+    InputStack(std::string N, int l, states S, long cfp, bool eof, bool eof_o)
         : s(S), line_no(l), name(std::move(N)), restore_at(-1), file_pos(cfp), Bpos(0), every_eof(eof), eof_outer(eof_o) {}
 };
 

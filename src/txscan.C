@@ -109,19 +109,20 @@ void Parser::M_extension(int cc) {
             chan = positive_out_slot;
         if (chan == write18_slot && !the_main->is_shell_escape_allowed()) chan = positive_out_slot;
     }
+    auto uchan = to_unsigned(chan);
     if (cc == openout_code) {
         scan_optional_equals();
         std::string file_name = scan_file_name();
-        tex_out_stream.open(chan, file_name);
+        tex_out_stream.open(uchan, file_name);
     } else if (cc == closeout_code)
-        tex_out_stream.close(chan);
-    else { // write to chan
+        tex_out_stream.close(uchan);
+    else { // write to uchan
         String s = string_to_write(chan);
-        if (chan == write18_slot)
+        if (uchan == write18_slot)
             system(s);
-        else if (tex_out_stream.is_open(chan))
-            tex_out_stream.write(chan, s);
-        else if (chan == negative_out_slot)
+        else if (tex_out_stream.is_open(uchan))
+            tex_out_stream.write(uchan, s);
+        else if (uchan == negative_out_slot)
             the_log << s;
         else
             log_and_tty << s;
@@ -164,7 +165,7 @@ void FileForInput::open(const std::string &file, bool action) {
 void Parser::push_input_stack(const std::string &name, bool restore_at, bool re) {
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
-    int n = cur_input_stack.size();
+    auto n = cur_input_stack.size();
     if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->get_name() << lg_end;
     W->set_line_ptr(lines);
     W->set_line_pos(input_line_pos);
@@ -187,7 +188,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
 // If vb is false, we are reading from a token list or something like that.
 // Otherwise, we read from a real file, and indicate that it is closed.
 void Parser::pop_input_stack(bool vb) {
-    int n = cur_input_stack.size();
+    auto n = cur_input_stack.size();
     if (n == 0) {
         if (tracing_io()) the_log << lg_start_io << "Input stack empty\n";
         return;
@@ -272,8 +273,8 @@ void Parser::E_input(int q) {
     }
     if (q == end_all_input_code) {
         if (tracing_commands()) the_log.dump("endallinput");
-        int n = cur_input_stack.size();
-        for (int i = 0; i < n; i++) cur_input_stack[i]->destroy();
+        auto n = cur_input_stack.size();
+        for (size_t i = 0; i < n; i++) cur_input_stack[i]->destroy();
         force_eof = true;
         return;
     }
@@ -419,9 +420,9 @@ void Parser::restore_the_state(SaveState &x) {
 // character read (i.e., will be returned by read_next_char)
 
 auto Parser::scan_double_hat(codepoint c) -> bool {
-    int sz = input_line.size();
-    int p  = input_line_pos;
-    int w  = sz - p + 1; // number of unread chars aon the line
+    auto sz = input_line.size();
+    auto p  = input_line_pos;
+    auto w  = sz - p + 1; // number of unread chars aon the line
     if (w < 3) return false;
     if (input_line[p] != c) return false;
     if (w >= 10 && input_line[p + 1] == c && input_line[p + 2] == c && input_line[p + 3] == c) {
@@ -458,9 +459,9 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
     }
     codepoint C = input_line[p + 1];
     if (!C.is_ascii()) return false;
-    uchar c1 = C.value;
+    auto c1 = C.value;
     input_line_pos++;
-    input_line[p + 1] = codepoint(to_unsigned(c1 < 64 ? c1 + 64 : c1 - 64));
+    input_line[p + 1] = codepoint(c1 < 64 ? c1 + 64 : c1 - 64);
     return true;
 }
 
@@ -519,7 +520,7 @@ auto Parser::next_from_line0() -> bool {
         B.reset();
         B.push_back('"');
         B.push_back16(c.value, false);
-        int k = B.size();
+        auto k = B.size();
         back_input(hash_table.space_token);
         while (k > 0) {
             back_input(Token(other_t_offset, B[k - 1]));
@@ -778,7 +779,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
         if (!in_env) continue;
         if (b != 0) continue;
         if (c == 'b') {
-            uint p = input_line_pos;
+            auto p = input_line_pos;
             if (p + 3 < input_line.size() && input_line[p] == 'e' && input_line[p + 1] == 'g' && input_line[p + 2] == 'i' &&
                 input_line[p + 3] == 'n' &&
                 (p + 4 == input_line.size() // this is silly
@@ -786,7 +787,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
                 elevel++;
         }
         if (c == 'e') {
-            uint p = input_line_pos;
+            auto p = input_line_pos;
             if (p + 1 < input_line.size() && input_line[p] == 'n' && input_line[p + 1] == 'd' &&
                 (p + 2 == input_line.size() // this is silly
                  || !input_line[p + 2].is_letter())) {
@@ -807,12 +808,12 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
 // Puts a line of input in the buffer;
 // Ignores CR LF. Removes spaces at end of line.
 void Buffer::insert_string(const Buffer &s) {
-    wptr  = 0;
-    int n = s.wptr;
+    wptr   = 0;
+    auto n = s.wptr;
     alloc(n + 5); // make sure it is big enough
     ptr   = 0;
     int k = 0;
-    for (int j = 0; j < n; j++) {
+    for (size_t j = 0; j < n; j++) {
         char c = s.at(j);
         if (c != '\n' && c != '\r') at(k++) = c;
     }
@@ -835,7 +836,7 @@ void Parser::store_new_line(int n, bool vb) {
 
 void Parser::insert_endline_char() {
     input_line_pos = 0;
-    int cc         = eqtb_int_table[endlinechar_code].val;
+    auto cc        = eqtb_int_table[endlinechar_code].val;
     if (cc >= 0 && cc < int(nb_characters)) input_line.emplace_back(to_unsigned(cc));
 }
 
@@ -980,7 +981,7 @@ auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
 void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
     SaveScannerStatus tmp(ss_normal);
     push_input_stack(name, false, true);
-    uint n     = cur_input_stack.size();
+    auto n     = cur_input_stack.size();
     bool s     = restricted;
     restricted = false;
     b.push_back('\n');
@@ -1151,7 +1152,7 @@ auto Parser::scan_int_digs() -> int {
     bool vacuous = true;
     int  val     = 0;
     for (;;) {
-        int d = cur_tok.tex_is_digit(radix);
+        auto d = cur_tok.tex_is_digit(radix);
         if (d == -1) break;
         vacuous = false;
         if (val >= m && (val > m || d > 7 || radix != 10)) {
@@ -1228,13 +1229,13 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlAid_code: fetch_box_id(the_xmlA); return;
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {
-            int v = scan_reg_num();
-            fetch_box_id(box_table[v].get_val());
+            auto vv = scan_reg_num();
+            fetch_box_id(box_table[vv].get_val());
             return;
         }
         case XMLboxname_code: {
-            int v = scan_reg_num();
-            xml_name(box_table[v].get_val(), level);
+            auto vv = scan_reg_num();
+            xml_name(box_table[vv].get_val(), level);
             return;
         }
         case xmlAname_code: xml_name(the_xmlA, level); return;
@@ -1333,7 +1334,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
     case set_mathprop_cmd: {
         int k = scan_mathfont_ident();
-        int w = eqtb_int_table[mathprop_ctr_code].val;
+        auto w = eqtb_int_table[mathprop_ctr_code].val;
         w     = (w & (1 << k)) != 0 ? 1 : 0;
         cur_val.set_int(w);
         return;
@@ -1342,13 +1343,13 @@ void Parser::scan_something_internal(internal_type level) {
     {
         Token T = cur_tok;
         int   k = scan_mathfont_ident();
-        int   v = scan_int(T, 127, "mathchar");
+        auto  vv = scan_int(T, 127, "mathchar");
         if (level != it_tok) {
             cur_tok = T;
             bad_number();
             return;
         }
-        std::string s = get_math_char(uchar(v), k);
+        std::string s = get_math_char(uchar(vv), k);
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1430,7 +1431,7 @@ void Parser::parshape_aux(subtypes m) {
     int v = scan_int(cur_tok);
     cur_val.set_dim(0);
     if (v <= 0) return;
-    int n = parshape_vector.size() / 2;
+    auto n = parshape_vector.size() / 2;
     if (n == 0) return;
     int q = 0;
     if (m == parshapelength_code)
@@ -1584,9 +1585,9 @@ void Parser::scan_unit(RealNumber R) {
     int        num                 = numerator_table[k];
     int        den                 = denominator_table[k];
     if (k != unit_pt) {
-        int i = R.get_ipart();
-        int f = R.get_fpart();
-        int remainder;
+        auto i = R.get_ipart();
+        auto f = R.get_fpart();
+        int  remainder;
         i = arith_ns::xn_over_d(i, num, den, remainder);
         f = (num * f + (remainder << 16)) / den;
         i += f >> 16;
@@ -1865,8 +1866,8 @@ void Parser::M_prefixed_aux(bool gbl) {
     }
     case set_mathprop_cmd: {
         int  k    = scan_mathfont_ident();
-        int  mask = 1 << k;
-        uint w    = eqtb_int_table[mathprop_ctr_code].val;
+        auto  mask = 1U << k;
+        auto w    = eqtb_int_table[mathprop_ctr_code].val;
         scan_optional_equals();
         int v = scan_int(T);
         if (v != 0)
@@ -1957,7 +1958,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         int b = scan_font_ident();
         scan_optional_equals();
         scan_dimen(false, T);
-        int c = cur_val.get_int_val();
+        auto c = cur_val.get_int_val();
         tfonts.set_dimen_param(b, a, c);
         return;
     }
@@ -2047,7 +2048,7 @@ void Parser::token_show(int what, Buffer &B) {
     token_for_show(lg, cur_cmd_chr, B);
     if (what == 2) { // find and strip the prefix
         if (!B.find_char('>')) return;
-        int         k = B.ptr;
+        auto        k = B.ptr;
         std::string s = B.to_string(k + 1);
         B.reset();
         B.push_back(s);
@@ -2098,7 +2099,7 @@ void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
 void Parser::new_font() {
     Token T = cur_tok;
     get_r_token();
-    int u = cur_tok.eqtb_loc();
+    auto u = cur_tok.eqtb_loc();
     eq_define(cur_tok.eqtb_loc(), CmdChr(set_font_cmd, zero_code), false);
     scan_optional_equals();
     std::string name       = scan_file_name();
@@ -2117,8 +2118,8 @@ void Parser::new_font() {
 // \font\tenrm = cmr10 at 10pt \tenrm"
 void Parser::initialise_font() {
     Token cmd = hash_table.locate("tenrm");
-    int   u   = cmd.eqtb_loc();
-    int   res = tfonts.find_font("cmr10", 10 << 16, 0);
+    auto  u   = cmd.eqtb_loc();
+    auto  res = tfonts.find_font("cmr10", 10 << 16, 0);
     eq_define(u, CmdChr(set_font_cmd, subtypes(res)), false);
     word_define(cur_font_loc, res, false);
 }
