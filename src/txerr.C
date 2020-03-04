@@ -356,7 +356,7 @@ void Parser::fp_parse_error(Token a, Token b) {
     signal_error(b, "nondigit");
 }
 
-void Parser::counter_overflow(Token T, int n, int nmax) {
+void Parser::counter_overflow(Token T, long n, int nmax) {
     err_buf << bf_reset << "Illegal counter value " << n << " for " << T.tok_to_str() << "\n";
     if (n <= 0)
         err_buf << "Value must be positive";

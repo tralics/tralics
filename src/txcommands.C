@@ -397,8 +397,8 @@ void Parser::T_cst1(int c) {
 // This translates \ding{N}, a reference to Zapf Dingbats
 // In latex, this calls \char. Here we call scan_braced_int
 void Parser::T_ding() {
-    int c = scan_braced_int(cur_tok);
-    int r = 0;
+    auto c = scan_braced_int(cur_tok);
+    int  r = 0;
     switch (c) {
     case 33: r = 0x2701; break;
     case 34: r = 0x2702; break;

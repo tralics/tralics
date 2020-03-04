@@ -116,7 +116,7 @@ struct TexFonts : public std::vector<TexFont> {
     auto name(int k) -> std::string;
     void full_name(Buffer &B, int k);
     auto get_int_param(int ft, int pos) -> int;
-    auto get_dimen_param(int ft, int pos) -> ScaledInt;
+    auto get_dimen_param(int ft, long pos) -> ScaledInt;
     void set_int_param(int ft, int pos, int v);
     void set_dimen_param(int ft, int p, ScaledInt v);
     auto find_font(const std::string &n, int a, int s) -> size_t;

@@ -2978,7 +2978,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
         return k != 0;
     }
     case if_void_code: {
-        int  n = scan_reg_num();
+        auto n = scan_reg_num();
         Xml *x = box_table[to_unsigned(n)].get_val();
         if (x == nullptr) return true;
         return x->empty();
@@ -3315,7 +3315,7 @@ void Parser::assign_def_something(bool gbl) {
         n = nb_characters - 1;
     else
         n = 0; // This should not happen
-    int k = scan_char_num();
+    auto k = scan_char_num();
     offset += to_unsigned(k);
     scan_optional_equals();
     k = scan_int(T);
@@ -3345,7 +3345,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     eq_define(pos, CmdChr(relax_cmd, relax_code), gbl);
     scan_optional_equals();
     cur_tok = t;
-    int      k;
+    long     k;
     symcodes ncmd;
     String   name = "unknown";
     switch (cmd) {
@@ -3445,7 +3445,7 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
 // We may have seen \advance, then \foo, where \foo is defined by
 // \countdef, so that we can return after seeing \foo.
 // In any case, returns a position and sets p to the type.
-auto Parser::do_register_arg(int q, int &p, Token &tfe) -> int {
+auto Parser::do_register_arg(int q, int &p, Token &tfe) -> long {
     Token T = cur_tok;
     if (q != register_cmd) {
         get_x_token();
@@ -3478,8 +3478,8 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> int {
         cur_tok.kill();
         return 0;
     }
-    p     = cur_cmd_chr.get_chr();
-    int m = scan_reg_num();
+    p      = cur_cmd_chr.get_chr();
+    auto m = scan_reg_num();
     if (p == it_int) return m + count_reg_offset;
     if (p == it_dimen) return m;
     if (p == it_glue) return m;
@@ -3516,7 +3516,7 @@ void Parser::do_register_command(bool gbl) {
             if (q == advance_cmd) cur_val.incr_glue(glue_table[l].get_val());
         }
     } else {
-        int v = scan_int(T); // Here we need an integer.
+        auto v = scan_int(T); // Here we need an integer.
         if (p < it_glue) {
             if (p == it_int)
                 cur_val.set_int(eqtb_int_table[l].val);
@@ -3563,7 +3563,7 @@ void Parser::M_tracingall() {
 void Parser::E_latex_ctr() {
     int       t = cur_cmd_chr.get_chr();
     Token     T = cur_tok;
-    int       n = 0;
+    long      n = 0;
     TokenList res;
     if (t < at_number_code) {
         M_counter(false);
@@ -3601,7 +3601,7 @@ void Parser::E_latex_ctr() {
 }
 
 // In some cases,  we must enter math mode.
-void Parser::E_latex_ctr_fnsymbol(int n, TokenList &res) {
+void Parser::E_latex_ctr_fnsymbol(long n, TokenList &res) {
     if (n == 1) {
         res.push_back(hash_table.star_token);
         return;
@@ -3715,8 +3715,8 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             TokenList L = read_arg();
             back_input(hash_table.relax_token);
             back_input(L);
-            int n = scan_int(x);
-            res   = (n & 1) != 0;
+            auto n = scan_int(x);
+            res    = (n & 1) != 0;
         } else if (x == hash_table.isundefined_token) {
             TokenList L = read_arg();
             if (L.empty())
@@ -4115,7 +4115,7 @@ void Parser::box_end(Xml *res, size_t pos) {
 
 void Parser::begin_box(size_t src, subtypes c) {
     Token T = cur_tok;
-    int   res;
+    long  res;
     Xml * cur_box = nullptr;
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
@@ -4222,7 +4222,7 @@ void Parser::M_xray(subtypes c) {
         token_show(0, trace_buffer);
         return;
     case showbox_code: {
-        int k = scan_reg_num();
+        auto k = scan_reg_num();
         log_and_tty << "Box " << k << ": ";
         show_box(box_table[to_unsigned(k)].get_val());
         return;

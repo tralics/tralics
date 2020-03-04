@@ -30,7 +30,7 @@ namespace io_ns {
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
     void set_enc_param(int enc, int pos, int v);
-    auto get_enc_param(int enc, int pos) -> int;
+    auto get_enc_param(long enc, long pos) -> long;
     auto find_encoding(String cl) -> int;
 } // namespace io_ns
 
@@ -407,7 +407,7 @@ void io_ns::set_enc_param(int enc, int pos, int v) {
         custom_table[to_unsigned(enc)][to_unsigned(pos)] = codepoint(to_unsigned(pos));
 }
 
-auto io_ns::get_enc_param(int enc, int pos) -> int {
+auto io_ns::get_enc_param(long enc, long pos) -> long {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;

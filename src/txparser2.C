@@ -2397,8 +2397,8 @@ void Parser::T_listenv(symcodes x) {
 // what=1 is OT2, everything else is T1
 void Parser::E_parse_encoding(bool vb, subtypes what) {
     Token T = cur_tok;
-    int   c = scan_braced_int(T);
-    int   r = 0;
+    auto  c = scan_braced_int(T);
+    long  r = 0;
     if (what == 1) {
         switch (c) {
         case 0: r = 0x40A; break; // 0-15

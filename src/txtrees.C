@@ -585,14 +585,14 @@ void Parser::count_days() {
     bool  bad = M_counter(false);
     if (!bad) get_token();
     Token ctr   = cur_tok;
-    int   start = scan_braced_int(T);
-    int   cur   = scan_braced_int(T);
-    int   month = scan_braced_int(T);
-    int   day   = scan_braced_int(T);
+    auto  start = scan_braced_int(T);
+    auto  cur   = scan_braced_int(T);
+    auto  month = scan_braced_int(T);
+    auto  day   = scan_braced_int(T);
     if (bad) return;
     int        c               = 0;
     static int month_table[13] = {0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
-    for (int y = start; y < cur; y++) c += date_ns::year_length(y);
+    for (auto y = start; y < cur; y++) c += date_ns::year_length(y);
     c += month_table[month];
     if (is_leap_year(cur) && month > 2) c++;
     if (cur == 1582 && (month > 10 || (month == 10 && day > 14))) c -= 10;
@@ -602,12 +602,12 @@ void Parser::count_days() {
 
 void Parser::datebynumber() {
     Token T     = cur_tok;
-    int   start = scan_braced_int(T); // start date
-    int   val   = scan_braced_int(T); // value to convert
+    auto  start = scan_braced_int(T); // start date
+    auto  val   = scan_braced_int(T); // value to convert
     scan_date_ctrs();                 // fetch the counters
-    int month = 1, day = 1;
-    int year = start;
-    int c    = 1;
+    int  month = 1, day = 1;
+    auto year = start;
+    int  c    = 1;
     for (;;) {
         auto n = date_ns::year_length(year);
         if (c + n <= val) {
@@ -679,16 +679,16 @@ void Parser::prev_date() {
 
 void Parser::is_date_valid() {
     Token T = cur_tok;
-    int   y = scan_braced_int(T);
-    int   m = scan_braced_int(T);
-    int   d = scan_braced_int(T);
+    auto  y = scan_braced_int(T);
+    auto  m = scan_braced_int(T);
+    auto  d = scan_braced_int(T);
     date_ns::check_date(y, m, d);
 }
 
 // C is even for a month, odd for a day
 void Parser::month_day(subtypes c) {
     Token T = cur_tok;
-    int   n = scan_braced_int(cur_tok);
+    auto  n = scan_braced_int(cur_tok);
     if (n <= 0 || n > ((int(c) & 1) != 0 ? 7 : 12)) {
         if (tracing_macros()) the_log << T << "<-" << lg_end;
         return;

@@ -316,7 +316,7 @@ private:
     void        counter_boot(String s, String aux);
     auto        counter_check(Buffer &b, bool def) -> bool;
     auto        counter_read_opt(String s) -> int;
-    void        counter_overflow(Token T, int n, int nmax);
+    void        counter_overflow(Token T, long n, int nmax);
     void        close_all();
     static void create_aux_file_and_run_pgm();
     void        E_csname();
@@ -339,7 +339,7 @@ private:
     void        dimen_from_list0(Token T, TokenList &L);
     void        dim_define(size_t a, ScaledInt c, bool gbl);
     void        disable_keys();
-    auto        do_register_arg(int q, int &p, Token &tfe) -> int;
+    auto        do_register_arg(int q, int &p, Token &tfe) -> long;
     void        do_register_command(bool gbl);
     void        dump_save_stack();
     auto        edef_aux(TokenList &L) -> bool;
@@ -513,7 +513,7 @@ private:
     void        kvo_void_key();
     auto        last_att_list() -> AttList &;
     void        E_latex_ctr();
-    void        E_latex_ctr_fnsymbol(int n, TokenList &res);
+    void        E_latex_ctr_fnsymbol(long n, TokenList &res);
     auto        latex_input(int q) -> std::string;
     void        LC();
     void        leave_h_mode();
@@ -643,7 +643,7 @@ private:
     auto        scan_27bit_int() -> long;
     auto        scan_alpha() -> size_t;
     void        scan_box(size_t bc);
-    auto        scan_braced_int(Token T) -> int;
+    auto        scan_braced_int(Token T) -> long;
     auto        scan_char_num() -> long;
     auto        scan_color(const std::string &opt, const std::string &name) -> Istring;
     auto        scan_date_ctrs() -> bool;
@@ -675,7 +675,7 @@ private:
     auto        scan_int(TokenList &L, Token T) -> long;
     auto        scan_int(Token T) -> long;
     auto        scan_int(Token T, int n, String s) -> long;
-    auto        scan_int_digs() -> int;
+    auto        scan_int_digs() -> long;
     auto        scan_int_internal() -> long;
     auto        scan_keyword(String s) -> bool;
     void        scan_left_brace();
@@ -947,7 +947,7 @@ private:
     void        Tat_pers_ra();
     void        testoptd(std::string s);
     void        M_extension(int cc);
-    auto        string_to_write(int chan) -> String;
+    auto        string_to_write(long chan) -> String;
     void        tipa_acutemacron();
     void        tipa_brevemacro();
     void        tipa_circumdot();

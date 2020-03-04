@@ -335,7 +335,7 @@ auto TexFonts::get_int_param(int ft, int pos) -> int {
 }
 
 // Returns a dimension parameter for a font
-auto TexFonts::get_dimen_param(int ft, int pos) -> ScaledInt {
+auto TexFonts::get_dimen_param(int ft, long pos) -> ScaledInt {
     if (!is_valid(ft)) return 0;
     if (pos < 0 || pos >= at(to_unsigned(ft)).param_len) return 0;
     return at(to_unsigned(ft)).param_table[pos];

@@ -587,7 +587,7 @@ void fp::create_pascal_table() {
 void Parser::fp_e_pascal() {
     fp_prepare();
     if (!pascal_table_created) fp::create_pascal_table();
-    int j = scan_braced_int(fp_name);
+    auto j = scan_braced_int(fp_name);
     if (j < 0 || j >= 64) {
         tkbuf.reset();
         tkbuf << "out of bound ";
@@ -626,7 +626,7 @@ auto fp::round_n(Digit x, size_t n) -> Digit {
 }
 
 // Truncate a FpNum to n digits
-void FpNum::truncate(int n) {
+void FpNum::truncate(long n) {
     if (n >= 18) return;
     if (n < 0) {
         tkbuf.reset();
@@ -662,7 +662,7 @@ void FpNum::round0() {
 }
 
 // Round to n digits
-void FpNum::round(int n) {
+void FpNum::round(long n) {
     if (n >= 18) return;
     if (n < 0) {
         the_parser.parse_error(fmt::format("Negative number {} in round", n).c_str());
@@ -3113,7 +3113,7 @@ void Parser::exec_fpi_cmd(subtypes i) {
         fp_prepare();
         X = fp_read_value();
         if (i != fp_clip_code) {
-            int j = scan_braced_int(fp_name);
+            auto j = scan_braced_int(fp_name);
             if (i == fp_round_code) {
                 X.round(j);
                 X.round0();

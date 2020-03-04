@@ -30,7 +30,7 @@ namespace {
 
 namespace io_ns {
     void set_enc_param(int enc, int pos, int v);
-    auto get_enc_param(int enc, int pos) -> int;
+    auto get_enc_param(long enc, long pos) -> long;
 } // namespace io_ns
 
 void lg_start_io(Logger &L) {
@@ -78,7 +78,7 @@ void TexOutStream::open(size_t chan, const std::string &file_name) {
 // A new line is added, except if chan is 18 or 19
 // Since version 2.15.4, \message print a newline
 // In the case of \write18, the string is printed on the log file
-auto Parser::string_to_write(int chan) -> String {
+auto Parser::string_to_write(long chan) -> String {
     TokenList L = scan_general_text();
     read_toks_edef(L);
     Buffer &B = local_buf;
@@ -94,7 +94,7 @@ auto Parser::string_to_write(int chan) -> String {
 // action is \immediate, since there is no shipout routine
 void Parser::M_extension(int cc) {
     static TexOutStream tex_out_stream; // the output streams
-    int                 chan = 0;
+    long                chan = 0;
     if (cc == openout_code)
         chan = scan_int(cur_tok, max_openout, "output channel number");
     else if (cc == write_log_code || cc == wlog_code)
@@ -142,7 +142,7 @@ void FileForInput::close() {
 
 // This implements \ifeof
 auto Parser::is_input_open() -> bool {
-    int ch = scan_int(cur_tok, max_openin, "input channel number");
+    auto ch = scan_int(cur_tok, max_openin, "input channel number");
     return !tex_input_files[ch].is_open();
 }
 
@@ -326,7 +326,7 @@ auto Parser::latex_input(int q) -> std::string {
 // This implements \IfFileExists, \InputIfFileExists,
 //  \input, \include, \openin, \closein
 void Parser::T_input(int q) {
-    int   stream    = 0;
+    long  stream    = 0;
     bool  seen_star = false;
     bool  seen_plus = false;
     Token T         = cur_tok;
@@ -523,7 +523,7 @@ auto Parser::next_from_line0() -> bool {
         auto k = B.size();
         back_input(hash_table.space_token);
         while (k > 0) {
-            back_input(Token(other_t_offset, B[k - 1]));
+            back_input(Token(other_t_offset, static_cast<uchar>(B[k - 1])));
             k--;
         }
         state = state_M;
@@ -1040,7 +1040,7 @@ void Parser::scan_glue(internal_type level, Token T) {
 // \setcounter{foo}{10} is the same as \c@foo=10\relax.
 // This function reads a token list, puts it back in the
 // input, then calls scan_int.
-auto Parser::scan_braced_int(Token T) -> int {
+auto Parser::scan_braced_int(Token T) -> long {
     TokenList L = read_arg();
     return scan_int(L, T);
 }
@@ -1049,7 +1049,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> long {
     Token marker = hash_table.relax_token;
     back_input(marker);
     back_input(L);
-    int n = scan_int(T);
+    auto n = scan_int(T);
     read_until(marker);
     return n;
 }
@@ -1057,7 +1057,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> long {
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
 auto Parser::scan_int(Token t, int n, String s) -> long {
-    int N = scan_int(t);
+    auto N = scan_int(t);
     if (N < 0 || N > n) {
         err_buf << bf_reset << "Bad " << s << " replaced by 0\n";
         signal_ovf(t, nullptr, N, n);
@@ -1136,7 +1136,7 @@ auto Parser::scan_alpha() -> size_t {
 }
 
 // This reads the digits for scan_int, with an overflow check.
-auto Parser::scan_int_digs() -> int {
+auto Parser::scan_int_digs() -> long {
     unsigned radix     = 10;
     int      m         = 214748364;
     int      ok_so_far = 0;
@@ -1150,7 +1150,7 @@ auto Parser::scan_int_digs() -> int {
         get_x_token();
     }
     bool vacuous = true;
-    int  val     = 0;
+    long val     = 0;
     for (;;) {
         auto d = cur_tok.tex_is_digit(radix);
         if (d == -1) break;
@@ -1166,7 +1166,7 @@ auto Parser::scan_int_digs() -> int {
             ok_so_far++;
             val = max_integer; // this is 2^{31}-1
         } else
-            val = val * radix + d;
+            val = val * to_signed(radix) + d;
         get_x_token();
     }
     if (vacuous) { // cur_tok cannot be a space here
@@ -1215,7 +1215,7 @@ void SthInternal::change_level(internal_type level) {
 
 void Parser::scan_something_internal(internal_type level) {
     subtypes m = cur_cmd_chr.get_chr();
-    int      v;
+    long     v;
     switch (cur_cmd_chr.get_cmd()) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
@@ -1230,12 +1230,12 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {
             auto vv = scan_reg_num();
-            fetch_box_id(box_table[vv].get_val());
+            fetch_box_id(box_table[to_unsigned(vv)].get_val());
             return;
         }
         case XMLboxname_code: {
             auto vv = scan_reg_num();
-            xml_name(box_table[vv].get_val(), level);
+            xml_name(box_table[to_unsigned(vv)].get_val(), level);
             return;
         }
         case xmlAname_code: xml_name(the_xmlA, level); return;
@@ -1248,7 +1248,7 @@ void Parser::scan_something_internal(internal_type level) {
         case currentgrouplevel_code: cur_val.set_int(cur_level - 1); return;
         case currentgrouptype_code: cur_val.set_int(cur_group_type()); return;
         case etexversion_code: cur_val.set_int(2); return;
-        case currentiflevel_code: cur_val.set_int(conditions.top_level()); return;
+        case currentiflevel_code: cur_val.set_int(to_signed(conditions.top_level())); return;
         case currentiftype_code: cur_val.set_int(conditions.top_type()); return;
         case currentifbranch_code: cur_val.set_int(conditions.top_branch()); return;
         case fontcharwd_code:
@@ -1298,7 +1298,7 @@ void Parser::scan_something_internal(internal_type level) {
         v = m;
         if (cur_cmd_chr.get_cmd() == toks_register_cmd) // read the 349 in `\toks349'
             v = scan_reg_num();
-        cur_val.set_toks(toks_registers[v].val);
+        cur_val.set_toks(toks_registers[to_unsigned(v)].val);
         return;
     case assign_int_cmd: // \year etc
         cur_val.set_int(eqtb_int_table[m].val);
@@ -1314,8 +1314,8 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case assign_font_dimen_cmd: // \fontdimen
     {
-        int a = scan_int(cur_tok); // read the position in the table
-        int k = scan_font_ident(); // read the font ID
+        auto a = scan_int(cur_tok); // read the position in the table
+        auto k = scan_font_ident(); // read the font ID
         cur_val.set_dim(tfonts.get_dimen_param(k, a).get_value());
         return;
     }
@@ -1327,13 +1327,13 @@ void Parser::scan_something_internal(internal_type level) {
     }
     case assign_enc_char_cmd: {
         Token T   = cur_tok;
-        int   enc = scan_int(T);
-        int   pos = scan_int(T);
+        auto  enc = scan_int(T);
+        auto  pos = scan_int(T);
         cur_val.set_int(io_ns::get_enc_param(enc, pos));
         return;
     }
     case set_mathprop_cmd: {
-        int  k = scan_mathfont_ident();
+        auto k = scan_mathfont_ident();
         auto w = eqtb_int_table[mathprop_ctr_code].val;
         w      = (w & (1 << k)) != 0 ? 1 : 0;
         cur_val.set_int(w);
@@ -1349,7 +1349,7 @@ void Parser::scan_something_internal(internal_type level) {
             bad_number();
             return;
         }
-        std::string s = get_math_char(uchar(vv), k);
+        std::string s = get_math_char(uchar(vv), to_unsigned(k));
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1359,9 +1359,9 @@ void Parser::scan_something_internal(internal_type level) {
         else if (m == 1)
             cur_val.set_dim(0);
         else if (m == 2)
-            cur_val.set_int(lines.get_encoding());
+            cur_val.set_int(to_signed(lines.get_encoding()));
         else if (m == 3)
-            cur_val.set_int(the_main->input_encoding);
+            cur_val.set_int(to_signed(the_main->input_encoding));
         else if (m == 4)
             cur_val.set_int(cur_font.get_size());
         return;
@@ -1378,13 +1378,13 @@ void Parser::scan_something_internal(internal_type level) {
         if (m == parshape_code)
             cur_val.set_int(parshape_vector.size() / 2);
         else { // interlinepenalties, etc
-            int k = scan_int(cur_tok);
+            auto k = scan_int(cur_tok);
             if (k < 0)
                 cur_val.set_int(0);
             else if (k == 0)
-                cur_val.set_int(penalties[m - 1].size());
+                cur_val.set_int(to_signed(penalties[m - 1].size()));
             else if (k <= int(penalties[m - 1].size()))
-                cur_val.set_int(penalties[m - 1][k - 1]);
+                cur_val.set_int(penalties[m - 1][to_unsigned(k - 1)]);
             else
                 cur_val.set_int(penalties[m - 1].back());
         }

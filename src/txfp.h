@@ -64,8 +64,8 @@ public:
     void               div_by_10();
     void               add_digit(size_t y);
     void               sgn();
-    void               truncate(int n);
-    void               round(int n);
+    void               truncate(long n);
+    void               round(long n);
     void               round0();
     void               exec_ln();
     void               exec_ln_a();
