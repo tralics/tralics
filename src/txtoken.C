@@ -1015,7 +1015,7 @@ void token_ns::sanitize_one(TokenList &L) {
 
 // For all characters c in s, at level at most n
 // use a category code 12 char instead
-void token_ns::sanitize_one(TokenList &L, TokenList &s, int n) {
+void token_ns::sanitize_one(TokenList &L, TokenList &s, long n) {
     auto C  = L.begin();
     auto E  = L.end();
     int  bl = 0;

@@ -70,7 +70,7 @@ public:
     void               add_att_to_last(name_positions A, Istring B);
     void               add_att_to_cur(Istring A, Istring B);
     void               add_att_to_cur(Istring A, Istring B, bool force);
-    void               add_border(int a, int b);
+    void               add_border(long a, long b);
     void               add_borders(int a, int b);
     void               add_center_to_p();
     void               add_last(Xml *x);
@@ -89,7 +89,7 @@ public:
     auto               document_element() -> Xml * { return Table[0].obj; }
     auto               elt_from_id(size_t n) { return enames[n]; }
     void               end_module();
-    auto               fetch_by_id(int n) -> Xml *;
+    auto               fetch_by_id(long n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
     void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
     auto               find_ctrid(subtypes m) -> int;

@@ -1391,7 +1391,7 @@ void Parser::xkv_checksanitize(Token A, TokenList &B, bool c) {
 
 void Parser::selective_sanitize() {
     Token     T = cur_tok;
-    int       n = 10000;
+    long      n = 10000;
     TokenList nb;
     read_optarg_nopar(nb);
     if (!nb.empty()) n = scan_int(nb, T);

@@ -53,7 +53,7 @@ namespace token_ns {
     auto is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped) -> bool;
     void normalise_list(char c, TokenList &L);
     void sanitize_one(TokenList &L, uchar c);
-    void sanitize_one(TokenList &L, TokenList &s, int n);
+    void sanitize_one(TokenList &L, TokenList &s, long n);
     void sanitize_one(TokenList &L);
     auto check_brace(Token x, int &bl) -> bool;
     auto compare(const TokenList &A, const TokenList &B) -> bool;

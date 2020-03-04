@@ -153,7 +153,7 @@ void Parser::umlaut_bad() {
 
 // This translates a character, that could be a not 8bit character.
 // The result might be &#xFFF; or UTF8
-void Parser::extended_chars(unsigned int c) {
+void Parser::extended_chars(size_t c) {
     LC();
     if (c < 1 << 16)
         process_char(codepoint(c));
@@ -775,7 +775,7 @@ void Parser::T_beginend(symcodes x) {
 // Case of \@setmode=12
 void Parser::T_setmode() {
     scan_optional_equals();
-    int n = scan_int(cur_tok);
+    auto n = scan_int(cur_tok);
     if (!(n >= 0 && n <= 6)) n = 0;
     the_stack.set_mode(mode(n));
 }
@@ -812,7 +812,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
 
 // Translates \unhbox, \unhcopy \unvbox \unvcopy
 void Parser::T_un_box(subtypes c) {
-    int i = scan_reg_num();
+    auto i = scan_reg_num();
     if (c == unhbox_code) leave_v_mode();
     Xml *cur_box = box_table[to_unsigned(i)].get_val();
     the_stack.unbox(cur_box);

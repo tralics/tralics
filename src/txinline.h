@@ -92,6 +92,6 @@ inline Istring::Istring(String s) : value(the_main->SH.find(s)) {}
 
 inline Istring::Istring(const std::string &s) : value(the_main->SH.find(s)) {}
 
-inline auto Istring::c_str() const -> String { return the_main->SH[value]; }
+inline auto Istring::c_str() const -> String { return the_main->SH[to_unsigned(value)]; }
 
 inline auto Istring::p_str() const -> String { return the_main->SH.p_str(value); }

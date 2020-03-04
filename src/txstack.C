@@ -51,7 +51,7 @@ void Stack::dump_xml_table() {
 
 // Returns the element in the table with id n
 // This should be at position N
-auto Stack::fetch_by_id(int n) -> Xml * {
+auto Stack::fetch_by_id(long n) -> Xml * {
     if (n <= 0) return nullptr; // no need to look at this
     if (int(enames.size()) <= n) return nullptr;
     Xml *x = enames[n];

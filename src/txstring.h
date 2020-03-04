@@ -34,21 +34,23 @@ class StrHash {
     Buffer      mybuf;     // local buffer
 public:
     StrHash();
-    void               re_alloc();
-    auto               hash_find() -> int;
-    auto               find(String s) -> int;
-    auto               find(const std::string &s) -> int;
-    auto               find(int s) -> int;
-    auto               operator[](int k) const -> String { return Text[k]; }
-    [[nodiscard]] auto p_str(int k) const -> String { return Value[k]; }
-    auto               shbuf() -> Buffer & { return mybuf; }
-    auto               lab_val(Istring k) -> LabelInfo *;
-    auto               lab_val_check(Istring k) -> LabelInfo *;
-    auto               next_label_id() -> Istring;
-    auto               next_top_label_id() -> Istring;
-    static void        rlc_to_string(String s, std::vector<AttList> &res);
-    auto               find_scaled(ScaledInt s) -> Istring;
 
+    [[nodiscard]] auto p_str(long k) const -> String { return Value[k]; }
+
+    void re_alloc();
+    auto hash_find() -> int;
+    auto find(String s) -> int;
+    auto find(const std::string &s) -> int;
+    auto find(int s) -> int;
+    auto operator[](size_t k) const -> String { return Text[k]; }
+    auto shbuf() -> Buffer & { return mybuf; }
+    auto lab_val(Istring k) -> LabelInfo *;
+    auto lab_val_check(Istring k) -> LabelInfo *;
+    auto next_label_id() -> Istring;
+    auto next_top_label_id() -> Istring;
+    auto find_scaled(ScaledInt s) -> Istring;
+
+    static void rlc_to_string(String s, std::vector<AttList> &res);
     static auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
     static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };

@@ -21,7 +21,7 @@ public:
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}
-    Xml() : id(0), name(Istring(0)) {}
+    Xml() : id(0), name(Istring(0L)) {}
 
     void               change_id(Xid n) { id = n; } // use with care
     void               add_att(Istring a, Istring b) { id.add_attribute(a, b); }
@@ -80,7 +80,7 @@ public:
     void               pop_back() { tree.pop_back(); }
     void               postprocess_fig_table(bool is_fig);
     auto               prev_sibling(Xml *x) -> Xml *;
-    auto               put_at(int n, Xml *x) -> bool;
+    auto               put_at(long n, Xml *x) -> bool;
     void               put_in_buffer(Buffer &b);
     void               push_back(Buffer &B) { push_back(new Xml(B)); }
     void               push_back(Xml *x);
@@ -89,7 +89,7 @@ public:
     void               recurse(XmlAction &X);
     void               recurse0(XmlAction &X);
     void               remove_empty_par();
-    auto               remove_at(int n) -> bool;
+    auto               remove_at(long n) -> bool;
     auto               remove_last() -> Xml *;
     void               remove_last_empty_hi();
     void               remove_last_space();
@@ -106,11 +106,11 @@ public:
     void               swap_x(Xml *x);
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     void               to_buffer(Buffer &b) const;
-    auto               total_span(int &res) const -> bool;
+    auto               total_span(long &res) const -> bool;
     auto               try_cline(bool action) -> bool;
     auto               try_cline_again(bool action) -> bool;
     void               unbox(Xml *x);
-    auto               value_at(int n) -> Xml *;
+    auto               value_at(long n) -> Xml *;
     void               word_stats(const std::string &match);
     void               word_stats_i();
     auto               spec_copy() -> Xml *;

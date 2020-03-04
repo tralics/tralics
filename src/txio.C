@@ -707,7 +707,7 @@ void Buffer::push_back_ent(codepoint ch) {
 
 // This handles the case of \char 1234, where the number is at least 2^16
 // Uses hex representation.
-void Buffer::process_big_char(uint n) {
+void Buffer::process_big_char(size_t n) {
     push_back('&');
     push_back('#');
     push_back('x');

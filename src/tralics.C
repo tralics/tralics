@@ -904,7 +904,7 @@ void tralics_ns::make_names() {
     the_names[cst_denalign]       = Istring("denomalign");
     // math fonts
     the_names[cstf_normal]                = Istring("normal"); // no attrib
-    the_names[cstf_upright]               = Istring(0);
+    the_names[cstf_upright]               = Istring(0L);
     the_names[cstf_bold]                  = Istring("bold");
     the_names[cstf_italic]                = Istring("italic");
     the_names[cstf_bold_italic]           = Istring("bold-italic");
@@ -1110,7 +1110,7 @@ void tralics_ns::make_names() {
 
     the_names[np_label_glo]      = Istring("label");
     the_names[np_label_item]     = Istring("label");
-    the_names[np_language]       = Istring(0); //
+    the_names[np_language]       = Istring(0L); //
     the_names[np_leaders]        = Istring("leaders");
     the_names[np_left]           = Istring("left");
     the_names[np_leftborder]     = Istring("left-border");
@@ -1398,7 +1398,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     }
     if (a == "mfenced_separator_val") {
         if (strcmp(B, "NONE") == 0)
-            the_names[np_separator] = Istring(0);
+            the_names[np_separator] = Istring(0L);
         else
             the_names[np_separator] = Istring(B);
         return true;

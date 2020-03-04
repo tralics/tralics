@@ -1341,7 +1341,7 @@ void Parser::T_start_theorem(int c) {
         }
         the_stack.set_v_mode();
         Xid res = ileave_v_mode();
-        res.add_attribute(Istring(0), Istring(""));
+        res.add_attribute(Istring(0L), Istring(""));
         remove_initial_space_and_back_input();
     }
 }
@@ -2487,7 +2487,7 @@ void Parser::E_ensuremath() {
 //  Produces a random number
 void Parser::E_random() {
     Token T = cur_tok;
-    int   t = scan_int(T);
+    auto  t = scan_int(T);
     int   u = std::rand();
     if (t > 0) u = u % t;
     Buffer B;
@@ -2681,7 +2681,7 @@ void Parser::iexpand() {
     case hexnumber_cmd: {
         TokenList L = read_arg();
         back_input(L);
-        int i = scan_int(cur_tok);
+        auto i = scan_int(cur_tok);
         if (i >= 0 && i < 10) back_input(Token(other_t_offset, uchar(i + '0')));
         if (i >= 10 && i < 16) back_input(Token(letter_t_offset, uchar(i + 'A' - 10)));
     }
@@ -2784,7 +2784,7 @@ void Parser::trace_if(String a, int k, String b) {
 }
 
 // same code
-void Parser::trace_if(String a, int k, int b) {
+void Parser::trace_if(String a, int k, long b) {
     if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << lg_end;
 }
 
@@ -2874,7 +2874,7 @@ void Parser::E_if_test(subtypes test, bool negate) {
     int   k   = conditions.top_serial();
     trace_if(negate ? -1 : -2);
     if (test == if_case_code) {
-        int n = scan_int(cur_tok);
+        auto n = scan_int(cur_tok);
         trace_if("\\ifcase", k, n);
         while (n != 0) {
             pass_text(Tfe);
@@ -2935,7 +2935,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
         return a1 == a2;
     }
     case if_odd_code: {
-        int k = scan_int(cur_tok);
+        auto k = scan_int(cur_tok);
         return (k & 1) == 1;
     }
     case if_leapyear_code: return tralics_ns::is_leap_year(scan_braced_int(cur_tok));

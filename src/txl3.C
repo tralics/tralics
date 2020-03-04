@@ -787,7 +787,7 @@ void Parser::L3_set_num_code(int c) {
         }
         back_input(L1);
         cur_tok = T;
-        int m   = scan_char_num();
+        auto m  = scan_char_num();
         word_define(to_unsigned(m + offset), N, false);
         return;
     }
@@ -961,7 +961,7 @@ void Parser::Tl3_gen_from_ac(int c) {
     TokenList L       = read_arg();
     back_input(hash_table.relax_token);
     back_input(L);
-    int n = scan_int(caller);
+    auto n = scan_int(caller);
     read_until(hash_table.relax_token); // read all unused tokens
     TokenList parms = l3_parms_from_ac(n, fun, false);
     if (tracing_commands()) the_log << lg_startbrace << caller << "-> " << creator << fun << parms << lg_endbrace;

@@ -32,7 +32,7 @@ public:
     void add_attribute_but_rend(Xid b);
     void add_attribute(Xid b);
     void add_ref(const std::string &s);
-    void add_span(int n);
+    void add_span(long n);
     void add_top_rule();
     void add_bottom_rule();
     auto has_attribute(Istring n) -> Istring;

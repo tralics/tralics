@@ -237,7 +237,7 @@ void KeyAndVal::use(TokenList &A) const {
 // Insert the \AtEndOfClass hook, and other stuff
 // This is called by pop_input_stack when the end of a file is seen.
 // The integer n is the value of cur_file_type
-void Parser::insert_hook(int n) {
+void Parser::insert_hook(long n) {
     auto k = the_class_data.packages.size();
     if (n <= 0 || n >= to_signed(k)) return;
     LatexPackage *C = the_class_data.packages[to_unsigned(n)];

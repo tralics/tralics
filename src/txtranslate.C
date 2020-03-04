@@ -450,14 +450,14 @@ auto Parser::T_item_label(int c) -> Istring {
         if (!cur_cmd_chr.is_relax())
             L.push_back(t);
         else
-            return Istring(0);
+            return Istring(0L);
     }
     brace_me(L); // \item[\bf x] puts only x in \bf
     the_stack.push1(np_label_item);
     the_stack.set_arg_mode();
     T_translate(L);
     the_stack.pop(np_label_item);
-    if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0);
+    if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0L);
     Xml *res = the_stack.remove_last();
     res->change_name(Istring(1));
     std::string w = res->convert_to_string();
@@ -1074,7 +1074,7 @@ void Parser::T_color(subtypes c) {
     Buffer &B = tpa_buffer;
     flush_buffer();
     if (c == normalcolor_code) {
-        cur_font.set_color(Istring(0));
+        cur_font.set_color(Istring(0L));
         font_has_changed();
         return;
     }
@@ -1951,7 +1951,7 @@ void Parser::T_multiput() {
     Dy          = token_list_to_dim(dy, C, false);
     TokenList w = read_arg();
     back_input(w);
-    int       r = scan_int(C);
+    auto      r = scan_int(C);
     TokenList L = read_arg();
     brace_me(L);
     while (r > 0) {
@@ -2041,10 +2041,10 @@ void Parser::T_error() {
 }
 
 // scans an element id, in brackets, default is cur_id
-auto Parser::read_elt_id(Token T) -> int {
+auto Parser::read_elt_id(Token T) -> long {
     auto cur   = the_stack.cur_xid().value;
     auto upper = the_stack.get_xid().value;
-    int  n     = scan_special_int_d(T, cur);
+    auto n     = scan_special_int_d(T, cur);
     if (n > 0 && n <= upper) return n;
     err_buf << bf_reset << "Bad xml id replaced by 0: " << n;
     signal_error(err_tok, "number too big");
@@ -2125,7 +2125,7 @@ void Parser::T_specimp(int c) {
         close_all();
         tralics_ns::close_file(log_and_tty.L.fp);
         exit(0);
-    case sleep_code: txsleep(to_unsigned(scan_int(cur_tok))); return;
+    case sleep_code: txsleep(static_cast<unsigned>(scan_int(cur_tok))); return;
     case prompt_code: {
         std::string S = string_to_write(write18_slot + 1);
         readline_newprompt(S);

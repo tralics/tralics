@@ -215,7 +215,7 @@ public:
     void               out_log(codepoint ch, output_encoding_type T);
     auto               pack_or_class(Buffer &aux) -> int;
     void               pt_to_mu();
-    void               process_big_char(unsigned int n);
+    void               process_big_char(size_t n);
     void               purify();
     void               purify(String s);
     void               push_back(char c);

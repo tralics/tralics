@@ -19,7 +19,7 @@ static char     char_for_error = 'c';
 namespace {
     bool    in_hlinee, have_above, have_below;
     Istring hlinee_width, hlinee_above, hlinee_below;
-    int     cline_first, cline_last;
+    long    cline_first, cline_last;
     Buffer  errbuf;
 } // namespace
 
@@ -278,7 +278,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
-        const std::string &s = the_main->SH[x.get_value()];
+        const std::string &s = the_main->SH[to_unsigned(x.get_value())];
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble
@@ -477,7 +477,7 @@ void Xid::add_bottom_rule() {
 
 // Start a row. If a=-1, it is the first row
 // If a>0 it is a dimension to put between rows.
-void Parser::start_a_row(int a) {
+void Parser::start_a_row(long a) {
     Xid prev_row(2); // dummy id as default value
     {
         Xml *V = the_stack.top_stack()->last_addr();
@@ -670,7 +670,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
 // row, including the spans of the cells, is adapted to the pattern.
 // If action is true, we do something
 auto Xml::try_cline(bool action) -> bool {
-    int  a    = cline_first - 1;
+    auto a    = cline_first - 1;
     bool a_ok = false; // true after skip
     auto len  = size();
     for (size_t k = 0; k < len; k++) {
@@ -696,7 +696,7 @@ auto Xml::try_cline(bool action) -> bool {
 }
 
 // Puts the total span in res, return false in case of trouble
-auto Xml::total_span(int &res) const -> bool {
+auto Xml::total_span(long &res) const -> bool {
     int  r   = 0;
     auto len = size();
     for (size_t k = 0; k < len; k++) {
@@ -741,7 +741,7 @@ auto Xml::try_cline_again(bool action) -> bool {
 }
 
 // adds a span value of n to the current cell
-void Xid::add_span(int n) {
+void Xid::add_span(long n) {
     if (n == 1) return;
     errbuf.reset();
     errbuf << n;
@@ -750,7 +750,7 @@ void Xid::add_span(int n) {
 
 // If the previous fails, we add a row of empty cells,
 // This adds a-1 empty cells, then b cells with a bottom_border
-void Stack::add_border(int a, int b) {
+void Stack::add_border(long a, long b) {
     push1(np_row);
     push_pop_cell(push_only);
     if (a != 1) {
@@ -766,13 +766,13 @@ void Stack::add_border(int a, int b) {
 // This is now cline
 void Parser::T_cline() {
     Xml *R       = the_stack.top_stack()->last_addr();
-    int  cl_span = (cline_last - cline_first) + 1;
+    auto cl_span = (cline_last - cline_first) + 1;
     if (R != nullptr) {
         if (R->try_cline(false)) {
             R->try_cline(true);
             return;
         }
-        int tot_span;
+        long tot_span;
         if (R->total_span(tot_span)) {
             tot_span = cline_first - 1 - tot_span;
             if (0 <= tot_span) {
@@ -791,7 +791,7 @@ void Parser::T_cline() {
         if (!R->is_xmlc() && R->has_name(the_names[np_row])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
-                R->change_name(Istring(0));
+                R->change_name(Istring(0L));
                 the_stack.add_border(cline_first, cl_span);
                 the_log << "\\cline killed a cell \n";
                 return;
@@ -858,7 +858,7 @@ void Parser::T_endv() {
 // This is done when we see a \\.
 void Parser::T_cr() {
     flush_buffer();
-    int a = 0;
+    long a = 0;
     if (cur_cmd_chr.get_chr() == crwithargs_code) a = scan_int(cur_tok);
     if (!the_stack.is_frame(np_cell)) {
         parse_error("bad \\cr");
@@ -875,7 +875,7 @@ void Parser::T_cr() {
 void Parser::E_multispan() {
     Token omit = hash_table.locate("omit");
     Token span = hash_table.locate("span");
-    int   n    = scan_int(cur_tok);
+    auto  n    = scan_int(cur_tok);
     back_input(omit);
     while (n > 1) {
         back_input(span);

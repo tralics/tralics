@@ -369,7 +369,7 @@ private:
     void        expand_verb1(TokenList &);
     void        expand_when_ok(bool allow_undef);
     auto        to_stringE(TokenList &L) -> std::string;
-    void        extended_chars(unsigned int c);
+    void        extended_chars(size_t c);
     void        extra_close_brace(int cl);
     void        extra_fi_or_else();
     void        extract_keys(TokenList, std::vector<std::string> &);
@@ -482,7 +482,7 @@ private:
     void        insert_endline_char();
     void        insert_every_bib();
     void        insert_relax();
-    void        insert_hook(int n);
+    void        insert_hook(long n);
     void        internal_choice_key();
     void        internal_define_key(Token T);
     void        internal_define_key_default(Token T, TokenList &L);
@@ -609,7 +609,7 @@ private:
     void        push_tpa();
     void        ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     auto        read_delimited(const TokenList &L) -> TokenList;
-    auto        read_elt_id(Token T) -> int;
+    auto        read_elt_id(Token T) -> long; // \todo Should be size_t, answer is always nonnegative
     auto        read_for_variable() -> Token;
     auto        read_from_file(int ch, bool rl_sw) -> TokenList;
     auto        read_mac_body(bool exp) -> TokenList;
@@ -640,11 +640,11 @@ private:
     void        err_one_arg(const TokenList &L);
     void        save_font();
     void        save_the_state(SaveState &x);
-    auto        scan_27bit_int() -> int;
+    auto        scan_27bit_int() -> long;
     auto        scan_alpha() -> size_t;
     void        scan_box(size_t bc);
     auto        scan_braced_int(Token T) -> int;
-    auto        scan_char_num() -> int;
+    auto        scan_char_num() -> long;
     auto        scan_color(const std::string &opt, const std::string &name) -> Istring;
     auto        scan_date_ctrs() -> bool;
     auto        scan_dim_helper(bool mu, bool allow_int) -> bool;
@@ -657,7 +657,7 @@ private:
     auto        scan_expr(Token T, internal_type et) -> bool;
     void        scan_expr_arg(Token T, internal_type X);
     auto        scan_expr_next(Token T, bool stack_empty) -> scan_expr_t;
-    auto        scan_fifteen_bit_int() -> int;
+    auto        scan_fifteen_bit_int() -> long;
     auto        scan_file_name() -> std::string;
     auto        scan_font_ident() -> int;
     auto        scan_for_eval(Buffer &B, bool in_env) -> bool;
@@ -672,11 +672,11 @@ private:
     auto        scan_group_del1(TokenList &res, Token x) -> bool;
     void        scan_hbox(int ptr, subtypes c);
     void        scan_ignore_group();
-    auto        scan_int(TokenList &L, Token T) -> int;
-    auto        scan_int(Token T) -> int;
-    auto        scan_int(Token T, int n, String s) -> int;
+    auto        scan_int(TokenList &L, Token T) -> long;
+    auto        scan_int(Token T) -> long;
+    auto        scan_int(Token T, int n, String s) -> long;
     auto        scan_int_digs() -> int;
-    auto        scan_int_internal() -> int;
+    auto        scan_int_internal() -> long;
     auto        scan_keyword(String s) -> bool;
     void        scan_left_brace();
     void        scan_left_brace_and_back_input();
@@ -697,14 +697,14 @@ private:
     void        scan_optional_equals();
     auto        scan_pair_ints(Token T, TokenList &L) -> bool;
     void        scan_prime();
-    auto        scan_reg_num() -> int;
+    auto        scan_reg_num() -> long;
     void        scan_rule(int c);
     void        E_sideset();
     void        E_split();
     auto        scan_sign() -> bool;
     void        scan_something_internal(internal_type level, bool negative);
     void        scan_something_internal(internal_type level);
-    auto        scan_special_int_d(Token T, long d) -> int;
+    auto        scan_special_int_d(Token T, long d) -> long;
     auto        scan_style() -> Token;
     void        read_toks_edef(TokenList &L);
     void        scan_toks_absorb();
@@ -748,7 +748,7 @@ private:
     void        T_verbatim();
     void        T_subequations(bool start);
     void        start_a_cell(bool started);
-    void        start_a_row(int a);
+    void        start_a_row(long a);
     auto        start_scan_math(Math &u, subtypes type) -> bool;
     void        start_paras(int y, const std::string &Y, bool star);
     void        store_new_line(int n, bool vb);
@@ -971,7 +971,7 @@ private:
     void        token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void        trace_if(int k);
     void        trace_if(String a, int k, String b);
-    void        trace_if(String a, int k, int b);
+    void        trace_if(String a, int k, long b);
     static void trace_scan_expr(String s, const SthInternal &v, char t, Token T);
     void        translate01();
     void        translate02();

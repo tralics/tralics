@@ -199,7 +199,7 @@ void Parser::pop_input_stack(bool vb) {
     state = W->get_state();
     W->get_line_ptr(lines);
     require_eof = W->get_eof_outer();
-    int at      = W->get_at_val();
+    auto at     = W->get_at_val();
     if (at >= 0) {
         eqtb_int_table[uchar('@')].set_val(at);
         if (tracing_io()) the_log << lg_start_io << "Catcode of @ restored to " << at << lg_end;
@@ -811,8 +811,8 @@ void Buffer::insert_string(const Buffer &s) {
     wptr   = 0;
     auto n = s.wptr;
     alloc(n + 5); // make sure it is big enough
-    ptr   = 0;
-    int k = 0;
+    ptr      = 0;
+    size_t k = 0;
     for (size_t j = 0; j < n; j++) {
         char c = s.at(j);
         if (c != '\n' && c != '\r') at(k++) = c;
@@ -1010,11 +1010,11 @@ void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
 
 // This is the one argument scanint function. It calls two auxiliary functions
 // puts the result in cur_val, and returns it. It may log it.
-auto Parser::scan_int(Token T) -> int {
+auto Parser::scan_int(Token T) -> long {
     Token et      = err_tok;
     err_tok       = T;
     bool negative = scan_sign();
-    int  val      = scan_int_internal();
+    auto val      = scan_int_internal();
     err_tok       = et;
     if (negative) val = -val;
     cur_val.set_int(val);
@@ -1045,7 +1045,7 @@ auto Parser::scan_braced_int(Token T) -> int {
     return scan_int(L, T);
 }
 
-auto Parser::scan_int(TokenList &L, Token T) -> int {
+auto Parser::scan_int(TokenList &L, Token T) -> long {
     Token marker = hash_table.relax_token;
     back_input(marker);
     back_input(L);
@@ -1056,7 +1056,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> int {
 
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
-auto Parser::scan_int(Token t, int n, String s) -> int {
+auto Parser::scan_int(Token t, int n, String s) -> long {
     int N = scan_int(t);
     if (N < 0 || N > n) {
         err_buf << bf_reset << "Bad " << s << " replaced by 0\n";
@@ -1068,7 +1068,7 @@ auto Parser::scan_int(Token t, int n, String s) -> int {
 }
 
 // Here we may have an optional argument; default value is d
-auto Parser::scan_special_int_d(Token T, long d) -> int {
+auto Parser::scan_special_int_d(Token T, long d) -> long {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) {
@@ -1081,14 +1081,14 @@ auto Parser::scan_special_int_d(Token T, long d) -> int {
 }
 
 // The following functions all call the previous scan_int.
-auto Parser::scan_reg_num() -> int { return scan_int(cur_tok, nb_registers - 1, "register code"); }
+auto Parser::scan_reg_num() -> long { return scan_int(cur_tok, nb_registers - 1, "register code"); }
 
 // Why not max Unicode 10FFFF ?
-auto Parser::scan_27bit_int() -> int { return scan_int(cur_tok, (1 << 27) - 1, "character code"); }
+auto Parser::scan_27bit_int() -> long { return scan_int(cur_tok, (1 << 27) - 1, "character code"); }
 
-auto Parser::scan_char_num() -> int { return scan_int(cur_tok, scan_char_num_max, "character code"); }
+auto Parser::scan_char_num() -> long { return scan_int(cur_tok, scan_char_num_max, "character code"); }
 
-auto Parser::scan_fifteen_bit_int() -> int { return scan_int(cur_tok, 32767, "mathchar"); }
+auto Parser::scan_fifteen_bit_int() -> long { return scan_int(cur_tok, 32767, "mathchar"); }
 
 // Scan a sign (plus, minus, spaces, etc.). After that cur_tok is the first
 // unread token.
@@ -1106,12 +1106,12 @@ auto Parser::scan_sign() -> bool {
 
 // This is now the scan_int routine. It reads either `\A or
 // \language or '12345.
-auto Parser::scan_int_internal() -> int {
+auto Parser::scan_int_internal() -> long {
     if (cur_tok.is_invalid()) {
         missing_number();
         return 0;
     }
-    if (cur_tok.is_backquote()) return scan_alpha();
+    if (cur_tok.is_backquote()) return to_signed(scan_alpha());
     if (cur_cmd_chr.is_ok_for_the()) {
         scan_something_internal(it_int, false);
         return cur_val.get_int_val();
@@ -1137,9 +1137,9 @@ auto Parser::scan_alpha() -> size_t {
 
 // This reads the digits for scan_int, with an overflow check.
 auto Parser::scan_int_digs() -> int {
-    int radix     = 10;
-    int m         = 214748364;
-    int ok_so_far = 0;
+    unsigned radix     = 10;
+    int      m         = 214748364;
+    int      ok_so_far = 0;
     if (cur_tok.is_singlequote()) {
         radix = 8;
         m     = 1 << 28;
@@ -1333,16 +1333,16 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     }
     case set_mathprop_cmd: {
-        int k = scan_mathfont_ident();
+        int  k = scan_mathfont_ident();
         auto w = eqtb_int_table[mathprop_ctr_code].val;
-        w     = (w & (1 << k)) != 0 ? 1 : 0;
+        w      = (w & (1 << k)) != 0 ? 1 : 0;
         cur_val.set_int(w);
         return;
     }
     case set_mathchar_cmd: // returns the cur math char as a token list
     {
-        Token T = cur_tok;
-        int   k = scan_mathfont_ident();
+        Token T  = cur_tok;
+        int   k  = scan_mathfont_ident();
         auto  vv = scan_int(T, 127, "mathchar");
         if (level != it_tok) {
             cur_tok = T;
@@ -1866,7 +1866,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     }
     case set_mathprop_cmd: {
         int  k    = scan_mathfont_ident();
-        auto  mask = 1U << k;
+        auto mask = 1U << k;
         auto w    = eqtb_int_table[mathprop_ctr_code].val;
         scan_optional_equals();
         int v = scan_int(T);

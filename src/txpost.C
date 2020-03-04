@@ -62,7 +62,7 @@ auto Xml::real_size() const -> int {
 }
 
 // returns the value at n, excluding null elements
-auto Xml::value_at(int n) -> Xml * {
+auto Xml::value_at(long n) -> Xml * {
     if (is_xmlc() || n < 0) return nullptr;
     auto k = tree.size();
     for (size_t i = 0; i < k; i++) {
@@ -74,7 +74,7 @@ auto Xml::value_at(int n) -> Xml * {
     return nullptr;
 }
 
-auto Xml::put_at(int n, Xml *x) -> bool {
+auto Xml::put_at(long n, Xml *x) -> bool {
     if (is_xmlc()) return false;
     auto k = tree.size();
     for (size_t i = 0; i < k; i++) {
@@ -90,7 +90,7 @@ auto Xml::put_at(int n, Xml *x) -> bool {
 }
 
 // returns the value at n, excluding null elements, returns true if OK
-auto Xml::remove_at(int n) -> bool {
+auto Xml::remove_at(long n) -> bool {
     if (is_xmlc()) return false;
     auto k = tree.size();
     for (size_t i = 0; i < k; i++) {
@@ -158,7 +158,7 @@ auto Xml::deep_copy() -> Xml * {
 // puts in the_xmlA the element whose id is the argument of the command
 void Parser::user_XML_fetch() {
     Token T  = cur_tok;
-    int   n  = scan_int(T);
+    auto  n  = scan_int(T);
     the_xmlA = the_stack.fetch_by_id(n);
 }
 
@@ -175,7 +175,7 @@ void Parser::user_XML_modify(subtypes c) {
         the_xmlB = the_stack.find_parent(the_xmlA);
         return;
     }
-    int n = scan_int(cur_tok);
+    auto n = scan_int(cur_tok);
     switch (c) {
     case xml_get_code: the_xmlB = the_xmlA != nullptr ? the_xmlA->value_at(n) : nullptr; return;
     case xml_ins_code:
@@ -213,7 +213,7 @@ auto StrHash::next_top_label_id() -> Istring {
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
-    int K = k.get_value();
+    auto K = k.get_value();
     if (Labinfo[K] == nullptr) Labinfo[K] = new LabelInfo(k);
     return Labinfo[K];
 }

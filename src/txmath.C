@@ -1129,7 +1129,7 @@ void Parser::scan_math(int res, math_list_type type) {
             // no error ?
             continue;
         case char_num_cmd: {
-            int    C  = scan_27bit_int();
+            auto   C  = scan_27bit_int();
             CmdChr ww = CmdChr(char_given_cmd, subtypes(C));
             math_data.push_back(res, ww, subtypes(0));
         }
@@ -1535,7 +1535,7 @@ void Parser::scan_eqno(math_list_type type) {
             return;
         }
         if (cur_cmd_chr.get_cmd() == char_num_cmd) {
-            int C   = scan_char_num();
+            auto C  = scan_char_num();
             cur_tok = Token(other_t_offset, static_cast<uchar>(C));
             back_input();
             continue;
