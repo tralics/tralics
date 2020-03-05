@@ -26,11 +26,11 @@ class AttListTable;
 class StrHash {
     String *    Text;      // the Text table
     String *    Value;     // the Value table
-    int *       Next;      // the Next table
+    long *      Next;      // the Next table
     LabelInfo **Labinfo;   // the LabelInfo
-    int         hash_len;  // size of the table
+    size_t      hash_len;  // size of the table
     int         hash_used; // number of slots used
-    int         hash_last; // last slot used
+    size_t      hash_last; // last slot used
     Buffer      mybuf;     // local buffer
 public:
     StrHash();
@@ -38,10 +38,10 @@ public:
     [[nodiscard]] auto p_str(long k) const -> String { return Value[k]; }
 
     void re_alloc();
-    auto hash_find() -> int;
-    auto find(String s) -> int;
-    auto find(const std::string &s) -> int;
-    auto find(int s) -> int;
+    auto hash_find() -> long;
+    auto find(String s) -> long;
+    auto find(const std::string &s) -> long;
+    auto find(int s) -> long;
     auto operator[](size_t k) const -> String { return Text[k]; }
     auto shbuf() -> Buffer & { return mybuf; }
     auto lab_val(Istring k) -> LabelInfo *;

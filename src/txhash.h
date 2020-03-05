@@ -73,7 +73,7 @@ private:
     int                           hash_bad;   // number of items not at hash position
 private:
     auto find_empty(String s) -> int; // find an empty slot
-    auto find_aux(int p, String name) -> int;
+    auto find_aux(size_t p, String name) -> long;
 
 public:
     Hashtab();
@@ -83,8 +83,8 @@ public:
     auto               locate(const Buffer &b) -> Token;      // used by primitive, etc
     [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
     [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
-    auto               hash_find(const Buffer &b, String name) -> int;
-    auto               hash_find() -> int;
+    auto               hash_find(const Buffer &b, String name) -> long;
+    auto               hash_find() -> long;
     auto               primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
     auto               nohash_primitive(String a, CmdChr b) -> Token;
     void               eval_let(String a, String b);

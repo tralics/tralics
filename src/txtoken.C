@@ -32,14 +32,15 @@ void Stats::token_stats() {
     main_ns::log_or_tty << "Math stats: formulas " << m_cv << ", kernels " << m_k << ", trivial " << m_trivial << ", \\mbox " << m_spec_box
                         << ", large " << m_large << ", small " << m_small << ".\n";
     if (nb_hdr != 0) main_ns::log_or_tty << "Number of HdR: " << nb_hdr << ".\n";
-    main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << str_length << ", merge " << m_merge
-                        << "\n"
+    main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << static_cast<int>(str_length)
+                        << ", merge " << m_merge << "\n"
                         << "Macros created " << nb_macros << ", deleted " << nb_macros_del << "; hash size "
                         << the_parser.hash_table.get_hash_usage() << " + " << the_parser.hash_table.get_hash_bad() << "; foonotes "
                         << footnotes << ".\n"
                         << "Save stack +" << level_up << " -" << level_down << ".\n"
                         << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
-                        << the_main->the_stack->get_xid().value << " elements (" << nb_xboot << " at boot).\n"
+                        << static_cast<int>(the_main->the_stack->get_xid().value) << " elements (" << static_cast<int>(nb_xboot)
+                        << " at boot).\n"
                         << "Number of ref " << nb_ref << ", of used labels " << nb_used_ref << ", of defined labels " << nb_label_defined
                         << ", of ext. ref. " << nb_href << ".\n";
     classes_ns::dump_file_list();
@@ -150,7 +151,7 @@ auto token_ns::replace_space(TokenList &A, Token x2, Token x3) -> int {
 // True if the Token is upper case or lower case x
 auto Token::no_case_letter(char x) const -> bool {
     if (cmd_val() != letter_catcode) return false;
-    int c = val_as_letter();
+    auto c = to_signed(val_as_letter());
     if (c == x) return true;
     if (c == x + 'A' - 'a') return true;
     return false;
@@ -178,9 +179,9 @@ auto Hashtab::find_empty(String s) -> int {
             log_and_tty << "hash table full\n" << lg_fatal;
             abort();
         }
-        if (Text[hash_used] == nullptr) break;
+        if (Text[to_unsigned(hash_used)] == nullptr) break;
     }
-    Text[hash_used] = s;
+    Text[to_unsigned(hash_used)] = s;
     hash_bad++;
     return hash_used;
 }
@@ -196,12 +197,12 @@ auto Hashtab::find_empty(String s) -> int {
 // Returns the hash location of the name in the buffer.
 // If a new slot has to be created, uses the string name, if not empty.
 // The string name must be a permanent string
-auto Hashtab::hash_find(const Buffer &b, String name) -> int {
-    int p = b.hashcode(hash_prime);
+auto Hashtab::hash_find(const Buffer &b, String name) -> long {
+    auto p = to_unsigned(b.hashcode(hash_prime));
     for (;;) {
-        if ((Text[p] != nullptr) && b == Text[p]) return p;
+        if ((Text[p] != nullptr) && b == Text[p]) return to_signed(p);
         if (Next[p] != 0)
-            p = Next[p];
+            p = to_unsigned(Next[p]);
         else
             break;
     }
@@ -210,12 +211,12 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> int {
 }
 
 // Finds the object in the buffer B.
-auto Hashtab::hash_find() -> int {
-    int p = B.hashcode(hash_prime);
+auto Hashtab::hash_find() -> long {
+    auto p = to_unsigned(B.hashcode(hash_prime));
     for (;;) {
-        if ((Text[p] != nullptr) && B == Text[p]) return p;
+        if ((Text[p] != nullptr) && B == Text[p]) return to_signed(p);
         if (Next[p] != 0)
-            p = Next[p];
+            p = to_unsigned(Next[p]);
         else
             break;
     }
@@ -226,7 +227,7 @@ auto Hashtab::hash_find() -> int {
 // If Text[p] is empty, then p is not Next[q] so p is the hash code of s
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
-auto Hashtab::find_aux(int p, String name) -> int {
+auto Hashtab::find_aux(size_t p, String name) -> long {
     if (Text[p] != nullptr) {
         int q   = find_empty(name);
         Next[p] = q;
@@ -234,7 +235,7 @@ auto Hashtab::find_aux(int p, String name) -> int {
     }
     hash_usage++;
     Text[p] = name;
-    return p;
+    return to_signed(p); // \todo make that size_t
 }
 
 // Defines the command named a, but hash_find will not find it.
@@ -242,28 +243,28 @@ auto Hashtab::find_aux(int p, String name) -> int {
 // This must be used at bootstrap code.
 auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
     hash_used--;
-    int p = hash_used;
+    auto p = to_unsigned(hash_used);
     if ((Text[p] != nullptr) || p < hash_prime) {
         log_and_tty << "Size of hash table is " << hash_size << "\n";
         log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
-        log_and_tty << "Current position is " << p << "\n";
+        log_and_tty << "Current position is " << to_signed(p) << "\n";
         log_and_tty << "Bug in nohash_primitive\n" << lg_fatal;
         abort();
     }
     hash_bad++;
     Text[p] = a;
-    int t   = p + hash_offset;
+    auto t  = p + hash_offset;
     eqtb[t - eqtb_offset].special_prim(b); // allows to define an undefined command
     return Token(t);
 }
 
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
 auto Buffer::hashcode(int prime) const -> int {
-    int          j = 1;
-    unsigned int h = (unsigned char)(at(0));
+    size_t j = 1;
+    auto   h = static_cast<uchar>(at(0));
     if (h == 0) return 0;
     for (;;) {
-        unsigned char c = at(j);
+        auto c = static_cast<uchar>(at(j));
         if (c == 0) return h;
         h = (h + h + c) % prime;
         j++;
@@ -275,7 +276,7 @@ auto Buffer::hashcode(int prime) const -> int {
 auto Hashtab::locate(String s) -> Token {
     if (s[1] == 0) return Token(uchar(s[0]) + single_offset);
     B << bf_reset << s;
-    return Token(hash_find(B, s) + hash_offset);
+    return Token(to_unsigned(hash_find(B, s)) + hash_offset);
 }
 
 auto Hashtab::locate(const std::string &s) -> Token {
@@ -289,14 +290,14 @@ auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.size() == 0) return Token(null_tok_val);
     codepoint c = b.unique_character();
     if (c.non_null()) return Token(c.value + single_offset);
-    return Token(hash_find(b, nullptr) + hash_offset);
+    return Token(to_unsigned(hash_find(b, nullptr)) + hash_offset);
 }
 
 // This returns true if the token associated to the string in the buffer
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
 auto Hashtab::is_defined(const Buffer &b) -> bool {
-    int T = 0;
+    size_t T = 0;
     if (b.size() == 0)
         T = null_tok_val;
     else {
@@ -304,11 +305,11 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
         if (c.non_null())
             T = c.value + single_offset;
         else {
-            int p = b.hashcode(hash_prime);
+            auto p = to_unsigned(b.hashcode(hash_prime));
             for (;;) {
                 if ((Text[p] != nullptr) && b == Text[p]) break;
                 if (Next[p] != 0)
-                    p = Next[p];
+                    p = to_unsigned(Next[p]);
                 else
                     return false;
             }
@@ -323,7 +324,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
 // The string s must be a permanent string
 auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
     Token res = locate(s);
-    int   w   = res.eqtb_loc();
+    auto  w   = res.eqtb_loc();
     eqtb[w].primitive(CmdChr(c, v));
     return res;
 }
@@ -331,15 +332,15 @@ auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
 // \global\let\firststring = \secondstring
 // Both strings must be permanent strings
 void Hashtab::eval_let(String a, String b) {
-    int A    = locate(a).eqtb_loc();
-    int Bval = locate(b).eqtb_loc();
+    auto A    = locate(a).eqtb_loc();
+    auto Bval = locate(b).eqtb_loc();
     the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), true);
 }
 
 auto Hashtab::eval_letv(String a, String b) -> Token {
     Token Av   = locate(a);
-    int   A    = Av.eqtb_loc();
-    int   Bval = locate(b).eqtb_loc();
+    auto  A    = Av.eqtb_loc();
+    auto  Bval = locate(b).eqtb_loc();
     the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), true);
     return Av;
 }
@@ -347,8 +348,8 @@ auto Hashtab::eval_letv(String a, String b) -> Token {
 // \let\firststring = \secondstring
 // Both strings must be permanent strings
 void Hashtab::eval_let_local(String a, String b) {
-    int A    = locate(a).eqtb_loc();
-    int Bval = locate(b).eqtb_loc();
+    auto A    = locate(a).eqtb_loc();
+    auto Bval = locate(b).eqtb_loc();
     the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), false);
 }
 
@@ -370,7 +371,7 @@ auto Macro::is_same(const Macro &aux) const -> bool {
     if (nbargs != aux.nbargs) return false;
     if (type != aux.type) return false;
     if (!token_ns::compare(body, aux.body)) return false;
-    for (int i = 0; i < 10; i++)
+    for (size_t i = 0; i < 10; i++)
         if (!token_ns::compare(delimiters[i], aux.delimiters[i])) return false;
     return true;
 }
@@ -536,7 +537,7 @@ void token_ns::expand_star(TokenList &L) {
             TokenList v = fast_get_block(L);
             remove_ext_braces(u);
             remove_ext_braces(v);
-            int n = 0;
+            size_t n = 0;
             while (!u.empty()) {
                 Token q = u.front();
                 u.pop_front();
@@ -657,12 +658,12 @@ auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return f
 // Puts a macro into a buffer.
 void Buffer::push_back(const Macro &x) {
     *this << x[0];
-    int K = x.get_nbargs();
+    auto K = x.get_nbargs();
     if (x.get_type() != dt_optional) {
-        for (int i = 0; i < K; i++) { *this << '#' << i + 1 << x[i + 1]; }
+        for (size_t i = 0; i < K; i++) { *this << '#' << to_signed(i) + 1 << x[i + 1]; }
     } else {
         *this << x[1];
-        for (int i = 1; i < K; i++) { *this << '#' << i + 1; }
+        for (size_t i = 1; i < K; i++) { *this << '#' << to_signed(i) + 1; }
     }
     if (wptr > 0 && at(wptr - 1) == '{') at(wptr - 1) = '#';
     *this << "->" << x.get_body();
@@ -706,9 +707,9 @@ StrHash::StrHash() {
     hash_len = hash_size;
     Text     = new String[hash_len];
     Value    = new String[hash_len];
-    Next     = new int[hash_len];
+    Next     = new long[hash_len];
     Labinfo  = new LabelInfo *[hash_len];
-    for (int i = 0; i < hash_len; i++) {
+    for (size_t i = 0; i < hash_len; i++) {
         Text[i]    = nullptr;
         Next[i]    = 0;
         Labinfo[i] = nullptr;
@@ -723,13 +724,13 @@ StrHash::StrHash() {
 }
 
 // This is called in case the table is too small.
-void StrHash::re_alloc() {
-    int    k  = hash_len + 10000;
+void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
+    auto   k  = hash_len + 10000;
     auto * T1 = new String[k];
-    int *  T2 = new int[k];
+    long * T2 = new long[k];
     auto **T3 = new LabelInfo *[k];
     auto * T4 = new String[k];
-    for (int i = 0; i < hash_len; i++) {
+    for (size_t i = 0; i < hash_len; i++) {
         T1[i] = Text[i];
         T2[i] = Next[i];
         T3[i] = Labinfo[i];
@@ -743,7 +744,7 @@ void StrHash::re_alloc() {
     Labinfo = T3;
     delete[] Value;
     Value = T4;
-    for (int i = hash_len; i < k; i++) {
+    for (size_t i = hash_len; i < k; i++) {
         Text[i]    = nullptr;
         Next[i]    = 0;
         Labinfo[i] = nullptr;
@@ -755,10 +756,10 @@ void StrHash::re_alloc() {
 
 // Find something in the StrHash table. The buffer mybuf holds the string
 // to search. result is never zero
-auto StrHash::hash_find() -> int {
+auto StrHash::hash_find() -> long {
     the_parser.my_stats.one_more_sh_find();
     if (mybuf.at(0) == 0) return 1;
-    int p = mybuf.hashcode(hash_prime) + 3;
+    long p = mybuf.hashcode(hash_prime) + 3;
     for (;;) {
         if ((Text[p] != nullptr) && mybuf == Text[p]) return p;
         if (Next[p] != 0)
@@ -775,29 +776,29 @@ auto StrHash::hash_find() -> int {
         return p;
     }
     if (hash_last >= hash_len) re_alloc();
-    int k = hash_last;
+    auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();
     Text[k]  = name;
     Value[k] = value;
-    Next[p]  = k;
-    return k;
+    Next[p]  = to_signed(k);
+    return to_signed(k);
 }
 
 // The string can be a temporary
-auto StrHash::find(String s) -> int {
+auto StrHash::find(String s) -> long {
     mybuf << bf_reset << s;
     return hash_find();
 }
 
 // The string can be a temporary
-auto StrHash::find(const std::string &s) -> int {
+auto StrHash::find(const std::string &s) -> long {
     mybuf << bf_reset << s;
     return hash_find();
 }
 
 // Converts s into a string and returns its hash table location.
-auto StrHash::find(int s) -> int {
+auto StrHash::find(int s) -> long {
     mybuf << bf_reset << s;
     return hash_find();
 }
@@ -810,7 +811,7 @@ auto StrHash::find_scaled(ScaledInt s) -> Istring {
 }
 
 void Buffer::push_back(const Istring &X) {
-    int v = X.get_value();
+    auto v = X.get_value();
     if (v == 0) return;
     if (v == 1) return;
     push_back(X.p_str());
