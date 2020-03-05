@@ -80,7 +80,7 @@ public:
     void               before_close(bool sigforce);
     void               clear() { value.clear(); }
     void               clear_and_copy(LinePtr &X);
-    void               change_encoding(int wc);
+    void               change_encoding(long wc);
     [[nodiscard]] auto dump_name() const -> String;
     void               find_tex_encoding();
     auto               find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;

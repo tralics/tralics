@@ -41,8 +41,8 @@ Stack::Stack() {
 
 // Debug: this prints all elements, except those allocated at boot
 void Stack::dump_xml_table() {
-    int k = enames.size();
-    for (int i = xid_boot + 1; i < k; i++)
+    auto k = enames.size();
+    for (size_t i = to_unsigned(xid_boot + 1); i < k; i++)
         if (enames[i] != nullptr) {
             std::cout << i << "::"; //<< enames[i] -> get_name() << "\n";
             std::cout << enames[i] << "\n";
@@ -53,8 +53,8 @@ void Stack::dump_xml_table() {
 // This should be at position N
 auto Stack::fetch_by_id(long n) -> Xml * {
     if (n <= 0) return nullptr; // no need to look at this
-    if (int(enames.size()) <= n) return nullptr;
-    Xml *x = enames[n];
+    if (enames.size() <= to_unsigned(n)) return nullptr;
+    Xml *x = enames[to_unsigned(n)];
     if (x == nullptr) return nullptr;
     if (x->get_id().value == n) return x;
     std::cout << "This cannot happen: bug in table at position " << n << "\n";
@@ -64,14 +64,14 @@ auto Stack::fetch_by_id(long n) -> Xml * {
 // returns a parent of x
 auto Stack::find_parent(Xml *x) -> Xml * {
     if (x == nullptr) return nullptr;
-    int k = enames.size();
+    auto k = enames.size();
     // debug: print all parents
     // std::cout<< "Search parent of " << x << "\n";
     // for(int i= 0; i< k; i++) {
     //   if(enames[i] && enames[i]-> is_child (x))
     //    std::cout<< "fount at " << enames[i] << "\n";
     // }
-    for (int i = xid_boot + 1; i < k; i++) {
+    for (size_t i = to_unsigned(xid_boot + 1); i < k; i++) {
         if (enames[i] == nullptr) continue;
         if (enames[i]->is_child(x)) return enames[i];
     }

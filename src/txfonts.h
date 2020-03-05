@@ -13,14 +13,14 @@
 
 // This is how Tralics interprets a font
 class FontInfo {
-    int     size;              // size, between 1 and 11 times 2048
+    long    size;              // size, between 1 and 11 times 2048
     int     tsize{0};          // is fi_normal_size, etc
     int     shape{0};          // it, sl, sc, or normal
     int     family{0};         // tt, sf, or normal
     int     series{0};         // bf or normal
-    int     packed{0};         // packed value of the font
+    long    packed{0};         // packed value of the font
     int     level{level_zero}; // the level, as for any EQTB object
-    int     old{-1};           // previous value
+    long    old{-1};           // previous value
     Istring color;             // current color
     Istring old_color;         // previous color
     bool    stackval{true};    // is the value on the stack ok ?
@@ -43,7 +43,7 @@ public:
     auto is_ok() -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
     void pack() { packed = tsize + shape + family + series + size; }
     void unpack();
-    void change_size(int c);
+    void change_size(long c);
     void kill() {
         shape  = 0;
         family = 0;
@@ -52,12 +52,12 @@ public:
     void               see_font_change(subtypes c);
     auto               show_font() -> String;
     auto               get_level() -> int { return level; }
-    auto               get_size() -> int { return size >> 11; }
+    auto               get_size() -> long { return size >> 11; }
     void               set_level(int k) { level = k; }
     void               set_packed(int k) { packed = k; }
-    auto               get_old() -> int { return old; }
+    auto               get_old() -> long { return old; }
     auto               get_old_color() -> Istring { return old_color; }
-    auto               get_packed() -> int { return packed; }
+    auto               get_packed() -> long { return packed; }
     void               set_old_from_packed() { old = packed; }
     void               set_color(Istring c) { color = c; }
     [[nodiscard]] auto get_color() const -> Istring { return color; }

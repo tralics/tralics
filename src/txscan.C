@@ -922,7 +922,7 @@ auto Parser::get_a_new_line() -> bool {
 // Reads from file (or the tty if the file is closed).
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
-auto Parser::read_from_file(int ch, bool rl_sw) -> TokenList {
+auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
     std::string file_name = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
@@ -1395,7 +1395,7 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case def_code_cmd: // \catcode, \lccode etc
         v = scan_char_num();
-        cur_val.set_int(eqtb_int_table[v + m].val);
+        cur_val.set_int(eqtb_int_table[to_unsigned(v + m)].val);
         return;
     case def_family_cmd:       // \textfont
     case set_font_cmd:         // a font (like \tenrm in plain)
@@ -1414,10 +1414,10 @@ void Parser::scan_something_internal(internal_type level) {
     case register_cmd: // \count, \dimen, etc
         v = scan_reg_num();
         switch (static_cast<internal_type>(m)) {
-        case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].val); return;
-        case it_dimen: cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
-        case it_glue: cur_val.set_glue(glue_table[v].get_val()); return;
-        case it_mu: cur_val.set_mu(glue_table[v + muskip_reg_offset].get_val()); return;
+        case it_int: cur_val.set_int(eqtb_int_table[to_unsigned(v + count_reg_offset)].val); return;
+        case it_dimen: cur_val.set_dim(eqtb_dim_table[to_unsigned(v)].get_val()); return;
+        case it_glue: cur_val.set_glue(glue_table[to_unsigned(v)].get_val()); return;
+        case it_mu: cur_val.set_mu(glue_table[to_unsigned(v + muskip_reg_offset)].get_val()); return;
         default: parse_error(err_tok, "Confusion in \\register"); return;
         }
     default: parse_error(err_tok, "You can't use `", cur_tok, "' after \\the", "You can't use x after...");
@@ -1428,7 +1428,7 @@ void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->get_id().v
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {
-    int v = scan_int(cur_tok);
+    auto v = scan_int(cur_tok);
     cur_val.set_dim(0);
     if (v <= 0) return;
     auto n = parshape_vector.size() / 2;
@@ -1442,9 +1442,9 @@ void Parser::parshape_aux(subtypes m) {
         if ((v & 1) != 0) q = 1;
         v = (v + q) / 2;
     }
-    if (v >= n) v = n;
+    if (v >= to_signed(n)) v = to_signed(n);
     v = 2 * v - q - 1;
-    cur_val.set_dim(parshape_vector[v]);
+    cur_val.set_dim(parshape_vector[to_unsigned(v)]);
 }
 
 // This implements \the. The result is a token list, of catcode 12
@@ -1507,10 +1507,10 @@ void Parser::scan_double(RealNumber &res) {
             missing_number();
             return;
         }
-        int val = 0;
+        long val = 0;
         if (cur_tok.is_backquote()) {
             is_decimal = false;
-            val        = scan_alpha();
+            val        = to_signed(scan_alpha());
         } else if (cur_cmd_chr.is_ok_for_the()) {
             is_decimal = false;
             scan_something_internal(it_int, false);
@@ -1524,13 +1524,13 @@ void Parser::scan_double(RealNumber &res) {
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
     get_token(); // read the . or ,
-    long table[17];
-    int  k = 0;
+    long   table[17];
+    size_t k = 0;
     for (;;) {
         get_x_token();
         if (!cur_tok.is_digit_token()) break;
         if (k < 17) {
-            table[k] = cur_tok.val_as_digit();
+            table[k] = to_signed(cur_tok.val_as_digit());
             k++;
         }
     }
@@ -1587,7 +1587,7 @@ void Parser::scan_unit(RealNumber R) {
     if (k != unit_pt) {
         auto i = R.get_ipart();
         auto f = R.get_fpart();
-        int  remainder;
+        long remainder;
         i = arith_ns::xn_over_d(i, num, den, remainder);
         f = (num * f + (remainder << 16)) / den;
         i += f >> 16;
@@ -1709,9 +1709,9 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
 
 // Multiplies a dimension by an integer
 void Parser::multiply_dim(RealNumber val, long v) {
-    int rem; // unused but modified
-    int A = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
-    int B = arith_ns::nx_plus_y(val.get_ipart(), v, A);
+    long rem; // unused but modified
+    auto A = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
+    auto B = arith_ns::nx_plus_y(val.get_ipart(), v, A);
     cur_val.set_int_val(B);
     cur_val.attach_sign(val.get_negative());
 }
@@ -1816,12 +1816,12 @@ void Parser::M_prefixed_aux(bool gbl) {
     int   chr = cur_cmd_chr.get_chr();
     Token T   = cur_tok;
     int   p;
-    int   q = 0;
+    long  q = 0;
     switch (cur_cmd_chr.get_cmd()) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
     case shorthand_def_cmd: M_shorthand_define(chr, gbl); return;
     case read_to_cs_cmd: {
-        int ch = scan_int(T);
+        auto ch = scan_int(T);
         if (!scan_keyword("to")) parse_error(T, "Missing `to' inserted");
         Token pp       = get_r_token();
         scanner_status = ss_defining;
@@ -1836,13 +1836,13 @@ void Parser::M_prefixed_aux(bool gbl) {
         p = chr;
         scan_optional_equals();
         q = scan_int(T);
-        word_define(p, q, gbl);
+        word_define(to_unsigned(p), q, gbl);
         return;
     case assign_dimen_cmd:
         p = chr;
         scan_optional_equals();
         scan_dimen(false, T);
-        dim_define(p, cur_val.get_dim_val(), gbl);
+        dim_define(to_unsigned(p), cur_val.get_dim_val(), gbl);
         return;
     case assign_glue_cmd:
     case assign_mu_glue_cmd: {
@@ -1853,15 +1853,15 @@ void Parser::M_prefixed_aux(bool gbl) {
             scan_glue(it_mu, T);
         else
             scan_glue(it_glue, T);
-        glue_define(p, cur_val.get_glue_val(), gbl);
+        glue_define(to_unsigned(p), cur_val.get_glue_val(), gbl);
         return;
     }
     case def_code_cmd: assign_def_something(gbl); return;
     case def_family_cmd: {
-        int a = scan_int(cur_tok, 15, "family number");
+        auto a = scan_int(cur_tok, 15, "family number");
         scan_optional_equals();
         int c = scan_font_ident();
-        word_define(a + chr, c, gbl);
+        word_define(to_unsigned(a + chr), c, gbl);
         return;
     }
     case set_mathprop_cmd: {
@@ -1869,7 +1869,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         auto mask = 1U << k;
         auto w    = eqtb_int_table[mathprop_ctr_code].val;
         scan_optional_equals();
-        int v = scan_int(T);
+        auto v = scan_int(T);
         if (v != 0)
             w |= mask;
         else
@@ -1879,12 +1879,12 @@ void Parser::M_prefixed_aux(bool gbl) {
     }
     case set_mathchar_cmd: // set a slot in the math font table
     {
-        int k = scan_mathfont_ident();
-        int v = scan_int(T, 127, "mathchar");
+        int  k = scan_mathfont_ident();
+        auto v = scan_int(T, 127, "mathchar");
         scan_optional_equals();
         flush_buffer();
         std::string value = sT_arg_nopar();
-        set_math_char(v, k, value);
+        set_math_char(static_cast<uchar>(v), to_unsigned(k), value);
         return;
     }
     case register_cmd:
@@ -1892,7 +1892,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     case multiply_cmd:
     case divide_cmd: do_register_command(gbl); return;
     case set_box_cmd: { // \setbox0 =
-        int i = scan_reg_num();
+        auto i = to_unsigned(scan_reg_num());
         scan_optional_equals();
         scan_box(gbl ? setbox_offset + i : i);
         return;
@@ -1937,8 +1937,8 @@ void Parser::M_prefixed_aux(bool gbl) {
                 return;
             }
             q = 2 * q;
-            parshape_vector.resize(q);
-            for (int j = 0; j < q; j++) {
+            parshape_vector.resize(to_unsigned(q));
+            for (size_t j = 0; j < to_unsigned(q); j++) {
                 scan_dimen(false, T);
                 parshape_vector[j] = cur_val.get_dim_val();
             }
@@ -1949,7 +1949,7 @@ void Parser::M_prefixed_aux(bool gbl) {
                 return;
             }
             V.resize(q);
-            for (int j = 0; j < q; j++) V[j] = scan_int(T);
+            for (size_t j = 0; j < to_unsigned(q); j++) V[j] = scan_int(T); // \todo range for
         }
     }
         return;
@@ -2110,7 +2110,7 @@ void Parser::new_font() {
         at_val = cur_val.get_int_val();
     } else if (scan_keyword("scaled"))
         scaled_val = scan_int(T);
-    int res = tfonts.find_font(name, at_val, scaled_val);
+    auto res = tfonts.find_font(name, at_val, scaled_val);
     eq_define(u, CmdChr(set_font_cmd, subtypes(res)), false);
 }
 

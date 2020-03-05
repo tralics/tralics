@@ -98,17 +98,17 @@ void ScaledInt::divide(long n) {
 // computes xn/d , returns quotient and remainder
 // Assumes n>0 and d>0.  Quotient is < 2^30
 // This is used for instance when converting 38cm into 38*n/d pt
-auto arith_ns::xn_over_d(int x, int n, int d, int &remainder) -> int {
+auto arith_ns::xn_over_d(long x, long n, long d, long &remainder) -> long {
     const int two_fifteen = 1 << 15;
     bool      positive    = true;
     if (x < 0) {
         positive = false;
         x        = -x;
     }
-    int t = (x % two_fifteen) * n;
-    int u = (x / two_fifteen) * n + (t / two_fifteen);
-    int v = (u % d) * two_fifteen + (t % two_fifteen);
-    int w = u / d;
+    auto t = (x % two_fifteen) * n;
+    auto u = (x / two_fifteen) * n + (t / two_fifteen);
+    auto v = (u % d) * two_fifteen + (t % two_fifteen);
+    auto w = u / d;
     if (w >= two_fifteen) {
         start_err("2^{30}");
         err_buf << "\nin " << x << "*" << n << "/" << d;
@@ -283,7 +283,7 @@ void SthInternal::scale(long n, long d) {
 
 // Computes nx+y. Overflow is 2^30.
 // We assume |y|< 2^{30};  so that overflow_threshold \pm y is OK
-auto arith_ns::nx_plus_y(int n, int x, int y) -> int {
+auto arith_ns::nx_plus_y(long n, long x, long y) -> long {
     if (n < 0) {
         x = -x;
         n = -n;
@@ -550,7 +550,7 @@ void Glue::kill() {
 }
 
 // put x in this, but change the sign is *this<0
-void RealNumber::from_int(int x) {
+void RealNumber::from_int(long x) {
     if (negative) x = -x;
     if (x > 0) {
         ipart    = x;

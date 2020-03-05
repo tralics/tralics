@@ -70,7 +70,7 @@ private:
     int       sectionning_offset;      // what is the main section, part, chapter ?
     l_state   long_state;              // Error recovery handling (\long)
     scan_stat scanner_status;          // Error recovery handling (\outer)
-    int       cur_in_chan;             // if get_token call get_a_new_line
+    long      cur_in_chan;             // if get_token call get_a_new_line
     long      cur_file_pos{0};         // pos of file in the package list (0= none)
 
     std::string cur_env_name;  // name of current environment
@@ -611,7 +611,7 @@ private:
     auto        read_delimited(const TokenList &L) -> TokenList;
     auto        read_elt_id(Token T) -> long; // \todo Should be size_t, answer is always nonnegative
     auto        read_for_variable() -> Token;
-    auto        read_from_file(int ch, bool rl_sw) -> TokenList;
+    auto        read_from_file(long ch, bool rl_sw) -> TokenList;
     auto        read_mac_body(bool exp) -> TokenList;
     void        read_mac_body(TokenList &L, bool exp, size_t N);
     void        read_one_space();

@@ -136,7 +136,7 @@ void FontInfo::unpack() {
 }
 
 // This implements a command like \small.
-void FontInfo::change_size(int c) {
+void FontInfo::change_size(long c) {
     if (c < 0) c = 0;
     if (c > 12) c = 12;
     size = c << 11;

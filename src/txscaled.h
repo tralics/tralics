@@ -95,7 +95,7 @@ public:
     void set_neg() { negative = true; }
     void change_sign_i() { ipart = -ipart; }
     auto get_negative() -> bool { return negative; };
-    void from_int(int x);
+    void from_int(long x);
 };
 
 // This is a union of different things
@@ -204,10 +204,10 @@ public:
 };
 
 namespace arith_ns {
-    auto nx_plus_y(int n, int x, int y) -> int;
+    auto nx_plus_y(long n, long x, long y) -> long;
     auto n_times_x(int n, ScaledInt x) -> ScaledInt;
     void scaled_div(ScaledInt &x, int n);
-    auto xn_over_d(int x, int n, int d, int &remainder) -> int;
+    auto xn_over_d(long x, long n, long d, long &remainder) -> long;
     auto quotient(int n, int d) -> int;
     auto add_ovf(ScaledInt x, ScaledInt y) -> int;
 } // namespace arith_ns
