@@ -191,7 +191,7 @@ public:
     SthInternal   term_so_far;
     scan_expr_t   expr_state{se_none};
     scan_expr_t   term_state{se_none};
-    int           numerator{0};
+    long          numerator{0};
 
 public:
     ScanSlot(internal_type L, SthInternal E, SthInternal T, scan_expr_t R, scan_expr_t S, int N)

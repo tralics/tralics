@@ -271,11 +271,11 @@ public:
 // data structure for a font change
 class SaveAuxFont : public SaveAux {
     int     level; // the level that was active when this was pushed
-    int     value; // the value to be restored
+    long    value; // the value to be restored
     Istring color; // the color to restore
 public:
     void unsave(bool trace, Parser &P) override;
-    SaveAuxFont(int l, int v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
+    SaveAuxFont(int l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
     ~SaveAuxFont() override = default;
 };
 

@@ -29,7 +29,7 @@ namespace io_ns {
     auto how_many_bytes(char C) -> size_t;
     auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
-    void set_enc_param(int enc, int pos, int v);
+    void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
     auto find_encoding(String cl) -> int;
 } // namespace io_ns
@@ -389,7 +389,7 @@ void Clines::convert_line(size_t wc) {
 }
 
 // Why is v limited to 16bit chars?
-void io_ns::set_enc_param(int enc, int pos, int v) {
+void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
         thebuffer << bf_reset << "Illegal encoding " << enc;
         the_parser.parse_error(thebuffer.c_str());

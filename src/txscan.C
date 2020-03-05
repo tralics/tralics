@@ -15,21 +15,21 @@
 #include "txparser.h"
 
 namespace {
-    Buffer                    scratch;                            // See insert_string
-    TexFonts                  tfonts;                             // the font table
-    std::vector<InputStack *> cur_input_stack;                    // the input streams
-    bool                      name_in_progress = false;           // see the source of TeX
-    FileForInput              tex_input_files[nb_input_channels]; // the input files
-    bool                      scan_glue_opt = false;              // true if optional glue as found
-    std::vector<int>          penalties[4];
-    std::vector<ScaledInt>    parshape_vector;
-    bool                      every_eof = false;  // true if every_eof can been inserted for the current file
-    Buffer                    local_buf;          // a local buffer
-    bool                      require_eof = true; // eof is an outer token
+    Buffer                           scratch;                            // See insert_string
+    TexFonts                         tfonts;                             // the font table
+    std::vector<InputStack *>        cur_input_stack;                    // the input streams
+    bool                             name_in_progress = false;           // see the source of TeX
+    FileForInput                     tex_input_files[nb_input_channels]; // the input files
+    bool                             scan_glue_opt = false;              // true if optional glue as found
+    std::array<std::vector<long>, 4> penalties;
+    std::vector<ScaledInt>           parshape_vector;
+    bool                             every_eof = false;  // true if every_eof can been inserted for the current file
+    Buffer                           local_buf;          // a local buffer
+    bool                             require_eof = true; // eof is an outer token
 } // namespace
 
 namespace io_ns {
-    void set_enc_param(int enc, int pos, int v);
+    void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
 } // namespace io_ns
 
@@ -1321,7 +1321,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
     case assign_font_int_cmd: // hyphenchar, \skewchar. Read a font ID
     {
-        int k = scan_font_ident();
+        auto k = scan_font_ident();
         cur_val.set_int(tfonts.get_int_param(k, m));
         return;
     }
@@ -1342,7 +1342,7 @@ void Parser::scan_something_internal(internal_type level) {
     case set_mathchar_cmd: // returns the cur math char as a token list
     {
         Token T  = cur_tok;
-        int   k  = scan_mathfont_ident();
+        auto  k  = scan_mathfont_ident();
         auto  vv = scan_int(T, 127, "mathchar");
         if (level != it_tok) {
             cur_tok = T;
@@ -1406,7 +1406,7 @@ void Parser::scan_something_internal(internal_type level) {
         }
         {
             back_input(); // push back, and use scan_font_ident as parser.
-            int                k = scan_font_ident();
+            auto               k = scan_font_ident();
             const std::string &s = tfonts.name(k);
             cur_val.set_toks(token_ns::string_to_list(s, false));
         }
@@ -1813,7 +1813,7 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 // Handles a command like \advance\count0 by, that allows \global before it.
 // here cur_tok would be \advance
 void Parser::M_prefixed_aux(bool gbl) {
-    int   chr = cur_cmd_chr.get_chr();
+    auto  chr = cur_cmd_chr.get_chr();
     Token T   = cur_tok;
     int   p;
     long  q = 0;
@@ -1860,12 +1860,12 @@ void Parser::M_prefixed_aux(bool gbl) {
     case def_family_cmd: {
         auto a = scan_int(cur_tok, 15, "family number");
         scan_optional_equals();
-        int c = scan_font_ident();
+        auto c = scan_font_ident();
         word_define(to_unsigned(a + chr), c, gbl);
         return;
     }
     case set_mathprop_cmd: {
-        int  k    = scan_mathfont_ident();
+        auto k    = scan_mathfont_ident();
         auto mask = 1U << k;
         auto w    = eqtb_int_table[mathprop_ctr_code].val;
         scan_optional_equals();
@@ -1879,7 +1879,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     }
     case set_mathchar_cmd: // set a slot in the math font table
     {
-        int  k = scan_mathfont_ident();
+        auto k = scan_mathfont_ident();
         auto v = scan_int(T, 127, "mathchar");
         scan_optional_equals();
         flush_buffer();
@@ -1943,19 +1943,19 @@ void Parser::M_prefixed_aux(bool gbl) {
                 parshape_vector[j] = cur_val.get_dim_val();
             }
         } else {
-            std::vector<int> &V = penalties[chr - 1];
+            std::vector<long> &V = penalties[chr - 1];
             if (q < 0) {
                 V.resize(0);
                 return;
             }
-            V.resize(q);
-            for (size_t j = 0; j < to_unsigned(q); j++) V[j] = scan_int(T); // \todo range for
+            V.resize(to_unsigned(q));
+            for (size_t j = 0; j < V.size(); j++) V[j] = scan_int(T); // \todo range for
         }
     }
         return;
     case assign_font_dimen_cmd: {
-        int a = scan_int(T);
-        int b = scan_font_ident();
+        auto a = scan_int(T);
+        auto b = scan_font_ident();
         scan_optional_equals();
         scan_dimen(false, T);
         auto c = cur_val.get_int_val();
@@ -1963,21 +1963,21 @@ void Parser::M_prefixed_aux(bool gbl) {
         return;
     }
     case assign_font_int_cmd: {
-        int k = scan_font_ident();
+        auto k = scan_font_ident();
         scan_optional_equals();
-        int v = scan_int(T);
+        auto v = scan_int(T);
         tfonts.set_int_param(k, chr, v);
         return;
     }
     case assign_enc_char_cmd: {
-        int enc = scan_int(T);
-        int pos = scan_int(T);
+        auto enc = scan_int(T);
+        auto pos = scan_int(T);
         scan_optional_equals();
-        int v = scan_int(T);
+        auto v = scan_int(T);
         if (pos < 0 && v >= 0 && pos - v <= 256) {
-            int start = v;
-            int bound = v - pos;
-            for (int i = start; i < bound; i++) {
+            auto start = v;
+            auto bound = v - pos;
+            for (auto i = start; i < bound; i++) {
                 v = scan_int(T);
                 io_ns::set_enc_param(enc, i, v);
             }
@@ -1994,13 +1994,13 @@ void Parser::M_prefixed_aux(bool gbl) {
 // Case of \everypar or \toks0.
 // Location in table is subtype (for \everypar) or argument (for \toks)
 // here p is subtype of object to assign
-void Parser::assign_toks(Token T, int p, bool gbl) {
+void Parser::assign_toks(Token T, long p, bool gbl) {
     if (cur_cmd_chr.get_cmd() == toks_register_cmd) p = scan_reg_num();
     scan_optional_equals();
     remove_initial_space_relax();
     int  c        = cur_cmd_chr.get_cmd();
     bool have_reg = true;
-    int  q        = cur_cmd_chr.get_chr();
+    long q        = cur_cmd_chr.get_chr();
     if (c == open_catcode)
         have_reg = false;
     else if (c == toks_register_cmd)
@@ -2013,13 +2013,13 @@ void Parser::assign_toks(Token T, int p, bool gbl) {
     }
     if (have_reg) {
         if (p == q) return;
-        TokenList Q = toks_registers[q].val;
-        token_list_define(p, Q, gbl);
+        TokenList Q = toks_registers[to_unsigned(q)].val;
+        token_list_define(to_unsigned(p), Q, gbl);
     } else { // this is scan_toks (false,false)
         SaveScannerStatus tmp(ss_absorbing);
         TokenList         Q;
         skip_group0(Q);
-        token_list_define(p, Q, gbl);
+        token_list_define(to_unsigned(p), Q, gbl);
     }
 }
 
@@ -2103,8 +2103,8 @@ void Parser::new_font() {
     eq_define(cur_tok.eqtb_loc(), CmdChr(set_font_cmd, zero_code), false);
     scan_optional_equals();
     std::string name       = scan_file_name();
-    int         scaled_val = 0;
-    int         at_val     = 0;
+    long        scaled_val = 0;
+    long        at_val     = 0;
     if (scan_keyword("at")) {
         scan_dimen(false, T);
         at_val = cur_val.get_int_val();
@@ -2121,7 +2121,7 @@ void Parser::initialise_font() {
     auto  u   = cmd.eqtb_loc();
     auto  res = tfonts.find_font("cmr10", 10 << 16, 0);
     eq_define(u, CmdChr(set_font_cmd, subtypes(res)), false);
-    word_define(cur_font_loc, res, false);
+    word_define(cur_font_loc, to_signed(res), false);
 }
 
 // puts in cur_val the name of x
@@ -2138,7 +2138,7 @@ void Parser::xml_name(Xml *x, internal_type level) {
 
 // Convert handles \string, \number, \meaning, etc
 void Parser::E_convert() {
-    int    n;
+    long   n;
     Token  T = cur_tok;
     Buffer B;
     B.reset();
@@ -2176,7 +2176,7 @@ void Parser::E_convert() {
     case meaning_code: token_show(1, B); break;
     case sanitize_code: token_show(2, B); break;
     case fontname_code: {
-        int k = scan_font_ident();
+        auto k = scan_font_ident();
         tfonts.full_name(B, k);
         break;
     }
@@ -2354,14 +2354,14 @@ auto Parser::scan_expr(Token T, internal_type et) -> bool {
 }
 
 // OK for \font, or \scriptfont, or \nullfont or \tenrm
-auto Parser::scan_font_ident() -> int {
+auto Parser::scan_font_ident() -> long {
     remove_initial_space();
     if (cur_cmd_chr.get_cmd() == def_font_cmd) return eqtb_int_table[cur_font_loc].val;
     if (cur_cmd_chr.get_cmd() == set_font_cmd) return cur_cmd_chr.get_chr();
     if (cur_cmd_chr.get_cmd() == def_family_cmd) {
-        int a = cur_cmd_chr.get_chr();
-        int b = scan_int(cur_tok, 15, "family number");
-        return eqtb_int_table[a + b].val;
+        auto a = cur_cmd_chr.get_chr();
+        auto b = scan_int(cur_tok, 15, "family number");
+        return eqtb_int_table[a + to_unsigned(b)].val;
     }
     if (cur_tok.is_valid()) back_input();
     parse_error(err_tok, "Missing font identifier");
@@ -2369,7 +2369,7 @@ auto Parser::scan_font_ident() -> int {
 }
 
 // OK for \mml@font@fraktur, or a font like that or an integer.
-auto Parser::scan_mathfont_ident() -> int {
+auto Parser::scan_mathfont_ident() -> long {
     Token T = cur_tok;
     remove_initial_space();
     if (cur_cmd_chr.get_cmd() == mathfont_cmd) return cur_cmd_chr.get_chr();

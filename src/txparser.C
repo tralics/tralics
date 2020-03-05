@@ -2973,7 +2973,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
         return !cur_cmd_chr.is_undef();
     }
     case if_fontchar_code: {
-        int k = scan_font_ident();
+        auto k = scan_font_ident();
         scan_char_num(); // pretend all chars are in the font
         return k != 0;
     }

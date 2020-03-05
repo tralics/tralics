@@ -946,14 +946,14 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
 }
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
-void Buffer::push_back_roman(int n) {
+void Buffer::push_back_roman(long n) {
     auto k = wptr;
     push_back_Roman(n);
     for (auto i = k; i < wptr; i++) at(i) += 'a' - 'A';
 }
 
 // Adds n as roman upper case.
-void Buffer::push_back_Roman(int n) {
+void Buffer::push_back_Roman(long n) {
     while (n >= 1000) {
         push_back('M');
         n -= 1000;

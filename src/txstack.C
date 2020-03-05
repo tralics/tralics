@@ -81,20 +81,20 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(Istring A, Istring B) { get_att_list(last_xid).push_back(A, B); }
+void Stack::add_att_to_last(Istring A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, Istring B) { get_att_list(last_xid).push_back(A, B); }
+void Stack::add_att_to_last(name_positions A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(last_xid).push_back(A, B); }
+void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(Istring A, Istring B) { cur_xid().add_attribute(A, B); }
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(Istring A, Istring B, bool force) { get_att_list(last_xid).push_back(A, B, force); }
+void Stack::add_att_to_last(Istring A, Istring B, bool force) { get_att_list(to_unsigned(last_xid)).push_back(A, B, force); }
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
@@ -112,16 +112,9 @@ Xml::Xml(name_positions N, Xml *z) : name(Istring(N)) {
 }
 
 void Stack::hack_for_hanl() {
-    int ptr = Table.size() - 1;
+    auto ptr = Table.size() - 1;
     if (ptr > 0) { Table[ptr].obj = Table[ptr - 1].obj; }
     // else ?
-}
-
-// Returns element below topstack.
-auto Stack::get_father() -> Xml * {
-    int ptr = Table.size() - 1;
-    if (ptr > 0) return Table[ptr - 1].obj;
-    return nullptr;
 }
 
 // Creates an empty element named x, and adds it to the stack.
@@ -186,7 +179,7 @@ void Xml::remove_last_space() {
     if (!last_is_string()) return;
     Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
     last_to_SH();
-    int k = aux.size();
+    auto k = aux.size();
     aux.remove_space_at_end();
     if (k != aux.size()) {
         tree.pop_back();
@@ -206,7 +199,7 @@ void Xml::add_nl() {
 // Returns the slot of the first non-empty frame
 // It is assumed that the first frame is "document", hence never empty.
 auto Stack::first_non_empty() const -> const Stack::StackSlot & {
-    int k = Table.size() - 1;
+    auto k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
     return Table[k];
 }
@@ -232,7 +225,7 @@ auto Stack::get_cur_par() -> Xml * {
 void Stack::add_center_to_p() {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
-    int w = the_parser.cur_centering();
+    auto w = the_parser.cur_centering();
     x->get_id().get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
 }
 
@@ -242,7 +235,7 @@ auto Stack::is_frame(name_positions s) const -> bool { return first_frame() == t
 // ignores a font change
 auto Stack::is_frame2(name_positions S) const -> bool {
     Istring s = the_names[S];
-    int     k = Table.size() - 1;
+    auto    k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == s) return true;
     if (Table[k].frame == the_names[cst_fonts]) {
@@ -259,8 +252,8 @@ auto Stack::is_frame2(name_positions S) const -> bool {
 
 // Returns true inside a float (table or figure)
 auto Stack::is_float() -> bool {
-    int k = Table.size();
-    for (int i = 0; i < k; i++) {
+    auto k = Table.size();
+    for (size_t i = 0; i < k; i++) {
         if (Table[i].frame.spec_empty()) continue;
         if (Table[i].frame == the_names[np_float_figure]) return true;
         if (Table[i].frame == the_names[np_float_table]) return true;

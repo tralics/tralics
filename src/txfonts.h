@@ -54,7 +54,7 @@ public:
     auto               get_level() -> int { return level; }
     auto               get_size() -> long { return size >> 11; }
     void               set_level(int k) { level = k; }
-    void               set_packed(int k) { packed = k; }
+    void               set_packed(long k) { packed = k; }
     auto               get_old() -> long { return old; }
     auto               get_old_color() -> Istring { return old_color; }
     auto               get_packed() -> long { return packed; }
@@ -95,16 +95,16 @@ public:
     int *       kern_table;
     int *       exten_table;
     ScaledInt * param_table;
-    int         hyphen_char;
-    int         skew_char;
+    long        hyphen_char;
+    long        skew_char;
     std::string name;
     int         scaled_val;
     int         at_val;
 
     TexFont(const std::string &n, int a, int s);
 
-    void               realloc_param(int p);
-    [[nodiscard]] auto its_me(const std::string &n, int a, int s) const -> bool;
+    void               realloc_param(long p);
+    [[nodiscard]] auto its_me(const std::string &n, long a, long s) const -> bool;
     void               make_null();
     void               load();
 };
@@ -112,13 +112,13 @@ public:
 struct TexFonts : public std::vector<TexFont> {
     TexFonts() { emplace_back("nullfont", 0, 0); }
 
-    auto is_valid(int k) -> bool;
-    auto name(int k) -> std::string;
-    void full_name(Buffer &B, int k);
-    auto get_int_param(int ft, int pos) -> int;
-    auto get_dimen_param(int ft, long pos) -> ScaledInt;
-    void set_int_param(int ft, int pos, int v);
-    void set_dimen_param(int ft, int p, ScaledInt v);
-    auto find_font(const std::string &n, int a, int s) -> size_t;
-    auto define_a_new_font(const std::string &n, int a, int s) -> size_t;
+    auto is_valid(long k) -> bool;
+    auto name(long k) -> std::string;
+    void full_name(Buffer &B, long k);
+    auto get_int_param(long ft, int pos) -> long;
+    auto get_dimen_param(long ft, long pos) -> ScaledInt;
+    void set_int_param(long ft, int pos, long v);
+    void set_dimen_param(long ft, long p, ScaledInt v);
+    auto find_font(const std::string &n, long a, long s) -> size_t;
+    auto define_a_new_font(const std::string &n, long a, long s) -> size_t;
 };

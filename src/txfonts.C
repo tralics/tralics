@@ -242,7 +242,7 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
 // tex fonts
 
 // Finds a font given by name and size, or creates one if needed
-auto TexFonts::find_font(const std::string &n, int a, int s) -> size_t {
+auto TexFonts::find_font(const std::string &n, long a, long s) -> size_t {
     for (uint i = 0; i < size(); i++)
         if (at(i).its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
@@ -260,7 +260,7 @@ TexFont::TexFont(const std::string &n, int a, int s) {
 }
 
 // This allocates a new slot in the font list.
-auto TexFonts::define_a_new_font(const std::string &n, int a, int s) -> size_t {
+auto TexFonts::define_a_new_font(const std::string &n, long a, long s) -> size_t {
     if (size() >= 256) { /// \todo Perhaps remove this artificial limitation
         the_parser.parse_error("fatal: font table overflow");
         return 0;
@@ -273,7 +273,7 @@ auto TexFonts::define_a_new_font(const std::string &n, int a, int s) -> size_t {
 void TexFont::load() {}
 
 // This compares two fonts
-auto TexFont::its_me(const std::string &n, int a, int s) const -> bool { return name == n && at_val == a && scaled_val == s; }
+auto TexFont::its_me(const std::string &n, long a, long s) const -> bool { return name == n && at_val == a && scaled_val == s; }
 
 // This kills all tables.
 void TexFont::make_null() {
@@ -305,16 +305,16 @@ void TexFont::make_null() {
 
 /// True if k is a valid font ID
 /// \todo Replace that with size_t or std::optional<size_t>
-auto TexFonts::is_valid(int k) -> bool { return (k >= 0) && (k < to_signed(size())); }
+auto TexFonts::is_valid(long k) -> bool { return (k >= 0) && (k < to_signed(size())); }
 
 // Returns name of font
-auto TexFonts::name(int k) -> std::string {
+auto TexFonts::name(long k) -> std::string {
     if (!is_valid(k)) return "";
     return at(to_unsigned(k)).name;
 }
 
 // Returns name of font
-void TexFonts::full_name(Buffer &B, int k) {
+void TexFonts::full_name(Buffer &B, long k) {
     if (!is_valid(k)) return;
     B.push_back(at(to_unsigned(k)).name);
     if (at(to_unsigned(k)).scaled_val != 0) {
@@ -328,21 +328,21 @@ void TexFonts::full_name(Buffer &B, int k) {
 }
 
 // Returns an integer parameter for a font
-auto TexFonts::get_int_param(int ft, int pos) -> int {
+auto TexFonts::get_int_param(long ft, int pos) -> long {
     if (!is_valid(ft)) return -1;
     if (pos == 0) return at(to_unsigned(ft)).hyphen_char;
     return at(to_unsigned(ft)).skew_char;
 }
 
 // Returns a dimension parameter for a font
-auto TexFonts::get_dimen_param(int ft, long pos) -> ScaledInt {
+auto TexFonts::get_dimen_param(long ft, long pos) -> ScaledInt {
     if (!is_valid(ft)) return 0;
     if (pos < 0 || pos >= at(to_unsigned(ft)).param_len) return 0;
     return at(to_unsigned(ft)).param_table[pos];
 }
 
 // Sets an integer parameter for a font
-void TexFonts::set_int_param(int ft, int pos, int v) {
+void TexFonts::set_int_param(long ft, int pos, long v) {
     if (!is_valid(ft)) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;
@@ -354,7 +354,7 @@ void TexFonts::set_int_param(int ft, int pos, int v) {
 }
 
 // Sets a dimension parameter for a font
-void TexFonts::set_dimen_param(int ft, int p, ScaledInt v) {
+void TexFonts::set_dimen_param(long ft, long p, ScaledInt v) {
     if (!is_valid(ft) || p < 0 || p > 100000) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;
@@ -364,7 +364,7 @@ void TexFonts::set_dimen_param(int ft, int p, ScaledInt v) {
 }
 
 // All fonts can be resized...
-void TexFont::realloc_param(int p) {
+void TexFont::realloc_param(long p) { // \todo making param_table a vector would be easier
     int k = 1;
     while (p >= k) k *= 2;
     auto *T = new ScaledInt[to_unsigned(k)];

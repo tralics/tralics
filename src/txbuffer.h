@@ -251,8 +251,8 @@ public:
     auto               push_back_newline_spec() -> bool;
     void               push_back_open_brace() { push_back('{'); };
     void               push_back_close_brace() { push_back('}'); };
-    void               push_back_roman(int n);
-    void               push_back_Roman(int n);
+    void               push_back_roman(long n);
+    void               push_back_Roman(long n);
     void               push_back_space() { push_back(' '); };
     void               push_back_special_att(Xid id);
     void               push_back_special_string(String s);

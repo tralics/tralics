@@ -265,7 +265,7 @@ private:
     void        append_glue(Token T, ScaledInt dimen, bool vert);
     void        arg_font(subtypes c);
     void        assign_def_something(bool gbl);
-    void        assign_toks(Token T, int p, bool gbl);
+    void        assign_toks(Token T, long p, bool gbl);
     void        back_input_braced(TokenList &L);
     void        back_input_pt(bool spec);
     void        back_input_unless_space();
@@ -659,7 +659,7 @@ private:
     auto        scan_expr_next(Token T, bool stack_empty) -> scan_expr_t;
     auto        scan_fifteen_bit_int() -> long;
     auto        scan_file_name() -> std::string;
-    auto        scan_font_ident() -> int;
+    auto        scan_font_ident() -> long;
     auto        scan_for_eval(Buffer &B, bool in_env) -> bool;
     auto        scan_general_text() -> TokenList;
     auto        scan_group0(TokenList &res, int cl) -> bool;
@@ -688,7 +688,7 @@ private:
     auto        scan_math_endcell(Token t) -> bool;
     void        scan_math_endcell_ok(int res);
     auto        scan_math_env(int res, math_list_type type) -> bool;
-    auto        scan_mathfont_ident() -> int;
+    auto        scan_mathfont_ident() -> long;
     auto        scan_math_kern(symcodes T, subtypes &c) -> ScaledInt;
     void        scan_math_hbox(int res, subtypes c);
     void        scan_math_mi(int res, subtypes c, subtypes k, CmdChr W);

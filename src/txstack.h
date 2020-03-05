@@ -102,7 +102,6 @@ public:
     auto               get_att_list(size_t k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
     auto               get_cur_par() -> Xml *;
-    auto               get_father() -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_top_id() -> Xid { return top_stack()->get_id(); }
