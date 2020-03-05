@@ -264,7 +264,7 @@ auto Stack::is_float() -> bool {
 // Prints something in trace mode when we push a non-empty frame.
 void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
-        int     ptr = Table.size() - 1;
+        auto    ptr = Table.size() - 1;
         Istring fr  = Table[ptr].frame;
         if (!fr.spec_empty()) the_log << lg_startbrace << "Push " << fr << " " << ptr << lg_endbrace;
     }
@@ -338,7 +338,7 @@ void Stack::trace_pop(bool sw) {
 }
 
 // Dumps a stack slot
-void Stack::StackSlot::fulldump(int i) {
+void Stack::StackSlot::fulldump(size_t i) {
     the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.c_str() : "()") << ", mode"
             << stack_ns::mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
@@ -346,8 +346,8 @@ void Stack::StackSlot::fulldump(int i) {
 
 // This prints the whole stack.
 void Stack::dump() {
-    int l = Table.size();
-    for (int i = 0; i < l; i++) Table[i].fulldump(i);
+    auto l = Table.size();
+    for (size_t i = 0; i < l; i++) Table[i].fulldump(i);
 }
 
 // This prints a simplified version of the stack.
@@ -355,8 +355,8 @@ void Stack::StackSlot::dump() { the_log << " " << (!frame.spec_empty() ? frame.c
 
 // Like Stack::dump, less verbose.
 void Stack::trace_stack() {
-    int l = Table.size();
-    for (int i = 0; i < l; i++) Table[i].dump();
+    auto l = Table.size();
+    for (size_t i = 0; i < l; i++) Table[i].dump();
 }
 
 // Pop an element, top-stack should be a.
@@ -525,7 +525,7 @@ auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
 
 // This finds the cell row and table ID currently on the  stack.
 void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
-    int k = Table.size() - 1;
+    auto k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == the_names[np_cell]) {
         cid = Table[k].obj->get_id();
@@ -543,11 +543,11 @@ void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
     }
 }
 
-auto Stack::find_ctrid(subtypes m) -> int {
-    int k = Table.size() - 1;
+auto Stack::find_ctrid(subtypes m) -> long {
+    auto k = to_signed(Table.size()) - 1;
     while (k >= 0) {
-        Istring frame = Table[k].frame;
-        Xml *   obj   = Table[k].obj;
+        Istring frame = Table[to_unsigned(k)].frame;
+        Xml *   obj   = Table[to_unsigned(k)].obj;
         k--;
         if (obj == nullptr) continue;
         if (frame.spec_empty()) continue;
@@ -572,7 +572,7 @@ auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
 
 // This is the Dtor
 void ArrayInfo::del_array_info() {
-    for (int i = 0; i < size; i++) { attribs[i].destroy(); }
+    for (size_t i = 0; i < size; i++) { attribs[i].destroy(); }
 }
 
 // This deletes a table-information slot from the stack.
@@ -592,8 +592,8 @@ void ArrayInfo::add_uv(TokenList &u, TokenList &v, const AttList &At) {
 
 // This gets u-part or v-part
 auto ArrayInfo::get_u_or_v(bool u_or_v, int pos) -> TokenList {
-    if (pos < 0 || pos >= size) return TokenList();
-    return u_or_v ? u_table[pos] : v_table[pos];
+    if (pos < 0 || to_unsigned(pos) >= size) return TokenList();
+    return u_or_v ? u_table[to_unsigned(pos)] : v_table[to_unsigned(pos)];
 }
 
 auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
@@ -604,8 +604,8 @@ auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
 }
 
 auto ArrayInfo::get_cell_atts(int k) -> AttList {
-    if (k < 0 || k >= size) return AttList();
-    return attribs[k];
+    if (k < 0 || to_unsigned(k) >= size) return AttList();
+    return attribs[to_unsigned(k)];
 }
 
 // Adds positions attributes to the current cell, given the current
@@ -650,7 +650,7 @@ auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].get_val()); }
 
 void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext) {
-    AttList &AL = get_att_list(xid.value);
+    AttList &AL = get_att_list(to_unsigned(xid.value));
     AL.push_back(the_names[np_id], id);
     AL.push_back(the_names[np_idtext], idtext);
 }

@@ -20,17 +20,17 @@ class ArrayInfo {
     int                    cell_no; // current cell number, first on row is zero
     std::vector<AttList>   attribs; // positions attributes for each row
     std::vector<TokenList> u_table, v_table;
-    int                    size;
+    size_t                 size{0};
 
 public:
-    ArrayInfo(Xid a1) : id(a1), cell_no(0), size(0) {}
+    ArrayInfo(Xid a1) : id(a1), cell_no(0) {}
     auto               its_me(Xid a) -> bool { return id == a; }
     [[nodiscard]] auto get_cell_no() const -> int { return cell_no; }
     void               set_cell_no(int k) { cell_no = k; }
     auto               get_cell_atts(int k) -> AttList;
     auto               get_u_or_v(bool u_or_v, int pos) -> TokenList;
     void               add_uv(TokenList &u, TokenList &v, const AttList &At);
-    auto               get_size() -> int { return size; }
+    auto               get_size() -> size_t { return size; }
     void               del_array_info();
 };
 
@@ -44,7 +44,7 @@ class Stack {
         Istring uid;
         bool    omit_cell;
         void    dump();
-        void    fulldump(int i);
+        void    fulldump(size_t i);
         StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
         friend class Stack;
     };
@@ -92,7 +92,7 @@ public:
     auto               fetch_by_id(long n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
     void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
-    auto               find_ctrid(subtypes m) -> int;
+    auto               find_ctrid(subtypes m) -> long;
     auto               find_parent(Xml *x) -> Xml *;
     void               finish_cell(int w);
     [[nodiscard]] auto first_frame() const -> Istring;
