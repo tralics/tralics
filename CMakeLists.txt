@@ -18,7 +18,15 @@ conan_cmake_run(REQUIRES
 
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
                     -Wpedantic -Wold-style-cast -Wunused -Wconversion
-                    -Wsign-conversion -Wnull-dereference -Wdouble-promotion -O3)
+                    -Wsign-conversion -Wnull-dereference -Wdouble-promotion)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  message("debug mode")
+  add_compile_options(-g)
+else()
+  message("release mode")
+  add_compile_options(-O3 -DNDEBUG)
+endif()
 
 find_program(CCACHE ccache)
 if(CCACHE)
