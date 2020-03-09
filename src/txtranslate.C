@@ -1151,8 +1151,8 @@ void Parser::T_color(subtypes c) {
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
     auto     K = L.has_value(the_names[np_spacebefore]);
-    if (K >= 0) {
-        Istring   k  = L.get_val(to_unsigned(K));
+    if (K) {
+        Istring   k  = L.get_val(*K);
         TokenList La = token_ns::string_to_list(k.c_str(), false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());

@@ -1,6 +1,7 @@
 #pragma once
 #include "../txvars.h"
 #include "codepoint.h"
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ extern std::string everyjob_string; //
 
 extern std::vector<LinePtr *> file_pool; // pool managed by filecontents
 
-extern int pool_position; // Position of file in pool
+extern std::optional<size_t> pool_position; // Position of file in pool
 
 extern size_t leftquote_val, rightquote_val;
 

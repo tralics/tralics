@@ -16,7 +16,7 @@ std::string everyjob_string;
 
 std::vector<LinePtr *> file_pool;
 
-int pool_position{-1};
+std::optional<size_t> pool_position;
 
 size_t leftquote_val{'`'};
 size_t rightquote_val{'\''};
@@ -164,18 +164,18 @@ auto main_ns::hack_for_input(const std::string &s) -> std::string {
 void main_ns::register_file(LinePtr *x) { file_pool.push_back(x); }
 
 auto main_ns::use_pool(LinePtr &L) -> bool {
-    if (pool_position == -1) return false; // should not happen
-    L.insert(*file_pool[to_unsigned(pool_position)]);
-    pool_position = -1;
+    if (!pool_position) return false; // should not happen
+    L.insert(*file_pool[*pool_position]);
+    pool_position = {};
     return true;
 }
 
 auto main_ns::search_in_pool(const std::string &name) -> bool {
     size_t n      = file_pool.size();
-    pool_position = -1;
-    for (unsigned i = 0; i < n; i++) {
+    pool_position = {};
+    for (size_t i = 0; i < n; i++) {
         if (file_pool[i]->get_file_name() == name) {
-            pool_position = to_signed(i);
+            pool_position = i;
             return true;
         }
     }

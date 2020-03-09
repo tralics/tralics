@@ -17,11 +17,10 @@
 auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(to_unsigned(value)); }
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
-auto AttList::has_value(Istring x) const -> long {
-    size_t n = val.size();
-    for (size_t i = 0; i < n; i++)
-        if (val[i].name == x) return to_signed(i);
-    return -1;
+auto AttList::has_value(Istring x) const -> std::optional<size_t> {
+    for (size_t i = 0; i < val.size(); ++i)
+        if (val[i].name == x) return i;
+    return {};
 }
 
 // Return att value if this id has attribute value n.
@@ -29,7 +28,7 @@ auto AttList::has_value(Istring x) const -> long {
 auto Xid::has_attribute(Istring n) -> Istring {
     AttList &X = get_att();
     auto     i = X.has_value(n);
-    if (i >= 0) return X.get_val(to_unsigned(i));
+    if (i) return X.get_val(*i);
     return Istring();
 }
 
@@ -37,7 +36,7 @@ auto Xid::has_attribute(Istring n) -> Istring {
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
     Istring n(cst_flaghi);
-    return get_att().has_value(n) != -1;
+    return static_cast<bool>(get_att().has_value(n));
 }
 
 // adds a=b, unless there is already an a in the list.
@@ -47,8 +46,8 @@ auto Xid::is_font_change() const -> bool {
 void AttList::push_back(Istring a, Istring b, bool force) {
     if (b.null()) return;
     auto T = has_value(a);
-    if (T >= 0) {
-        if (force) val[to_unsigned(T)].value = b;
+    if (T) {
+        if (force) val[*T].value = b;
         return;
     }
     val.push_back({a, b});
@@ -102,7 +101,7 @@ void Xid::add_attribute(Xid b) {
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
     auto i = has_value(Istring(a));
-    if (i > 0) val[to_unsigned(i)].name = Istring(0UL);
+    if (i && (*i > 0)) val[*i].name = Istring(0UL);
 }
 
 // This kills the whole list
@@ -113,9 +112,9 @@ void AttList::destroy() { val = std::vector<AttPair>(); }
 auto Buffer::install_att(Xid idx, Istring m) -> bool {
     AttList &L = idx.get_att();
     auto     k = L.has_value(m);
-    if (k == -1) return false;
+    if (!k) return false;
     reset();
-    push_back(L.get_val(to_unsigned(k)).c_str());
+    push_back(L.get_val(*k).c_str());
     return true;
 }
 

@@ -975,9 +975,9 @@ void Parser::solve_cite(bool user) {
     }
     AttList &AL    = N.get_att();
     auto     my_id = AL.has_value(Istring(np_id));
-    if (my_id >= 0) {
+    if (my_id) {
         if (CI.has_empty_id())
-            CI.set_id(AL.get_val(to_unsigned(my_id)));
+            CI.set_id(AL.get_val(*my_id));
         else {
             err_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
             the_parser.signal_error(the_parser.err_tok, "bad solve");
