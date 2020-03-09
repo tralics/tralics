@@ -82,9 +82,9 @@ inline auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c =
 
 inline auto is_tp_delim(char c) -> bool { return c == '<' || c == '\\' || c == '"'; }
 
-inline auto operator==(Token a, Token b) -> bool { return a.get_val() == b.get_val(); }
+inline auto operator==(Token a, Token b) -> bool { return a.val == b.val; }
 
-inline auto operator!=(Token a, Token b) -> bool { return a.get_val() != b.get_val(); }
+inline auto operator!=(Token a, Token b) -> bool { return a.val != b.val; }
 
 inline Istring::Istring(const Buffer &X) : value(the_main->SH.find(X.c_str())) {}
 

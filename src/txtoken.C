@@ -334,14 +334,14 @@ auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
 void Hashtab::eval_let(String a, String b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), true);
+    the_parser.eq_define(A, eqtb[Bval].value, true);
 }
 
 auto Hashtab::eval_letv(String a, String b) -> Token {
     Token Av   = locate(a);
     auto  A    = Av.eqtb_loc();
     auto  Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), true);
+    the_parser.eq_define(A, eqtb[Bval].value, true);
     return Av;
 }
 
@@ -350,7 +350,7 @@ auto Hashtab::eval_letv(String a, String b) -> Token {
 void Hashtab::eval_let_local(String a, String b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].get_cmdchr(), false);
+    the_parser.eq_define(A, eqtb[Bval].value, false);
 }
 
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
@@ -623,7 +623,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
 // Special hack, because we insert the number, not the value
 auto token_ns::string_to_list(Istring s) -> TokenList {
     Buffer &B = buffer_for_log;
-    B << bf_reset << s.get_value();
+    B << bf_reset << s.value;
     return B.str_toks(nlt_space);
 }
 
@@ -811,7 +811,7 @@ auto StrHash::find_scaled(ScaledInt s) -> Istring {
 }
 
 void Buffer::push_back(const Istring &X) {
-    auto v = X.get_value();
+    auto v = X.value;
     if (v == 0) return;
     if (v == 1) return;
     push_back(X.p_str());

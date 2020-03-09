@@ -13,18 +13,19 @@
 
 // This is how Tralics interprets a font
 class FontInfo {
-    long    size;              // size, between 1 and 11 times 2048
-    int     tsize{0};          // is fi_normal_size, etc
-    int     shape{0};          // it, sl, sc, or normal
-    int     family{0};         // tt, sf, or normal
-    int     series{0};         // bf or normal
-    long    packed{0};         // packed value of the font
-    int     level{level_zero}; // the level, as for any EQTB object
-    long    old{-1};           // previous value
-    Istring color;             // current color
-    Istring old_color;         // previous color
-    bool    stackval{true};    // is the value on the stack ok ?
+    int  tsize{0};       // is fi_normal_size, etc
+    int  shape{0};       // it, sl, sc, or normal
+    int  family{0};      // tt, sf, or normal
+    int  series{0};      // bf or normal
+    bool stackval{true}; // is the value on the stack ok ?
 public:
+    int     level{0};  // the level, as for any EQTB object
+    long    old{-1};   // previous value
+    long    packed{0}; // packed value of the font
+    long    size;      // size, between 1 and 11 times 2048
+    Istring color;     // current color
+    Istring old_color; // previous color
+
     FontInfo() : size(6 * 2048) {}
     [[nodiscard]] auto shape_change() const -> name_positions;
     [[nodiscard]] auto shape_name() const -> String;
@@ -49,19 +50,14 @@ public:
         family = 0;
         series = 0;
     }
-    void               see_font_change(subtypes c);
-    auto               show_font() -> String;
-    auto               get_level() -> int { return level; }
-    auto               get_size() -> long { return size >> 11; }
-    void               set_level(int k) { level = k; }
-    void               set_packed(long k) { packed = k; }
-    auto               get_old() -> long { return old; }
-    auto               get_old_color() -> Istring { return old_color; }
-    auto               get_packed() -> long { return packed; }
-    void               set_old_from_packed() { old = packed; }
-    void               set_color(Istring c) { color = c; }
-    [[nodiscard]] auto get_color() const -> Istring { return color; }
-    void               ltfont(const std::string &s, subtypes c);
+    void see_font_change(subtypes c);
+    auto show_font() -> String;
+    auto get_size() -> long { return size >> 11; }
+    void set_level(int k) { level = k; }
+    void set_packed(long k) { packed = k; }
+    void set_old_from_packed() { old = packed; }
+    void set_color(Istring c) { color = c; }
+    void ltfont(const std::string &s, subtypes c);
 };
 
 class TeXChar {

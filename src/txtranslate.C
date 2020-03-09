@@ -1408,8 +1408,7 @@ void Parser::url_hack(TokenList &L) {
         L.pop_front();
         if (L.empty()) continue;                                        // no break needed at end.
         if (T.is_slash_token() && L.front().is_slash_token()) continue; // no break at the start of http://
-        if ((T.is_slash_token() || T.get_val() == other_t_offset + '.') && main_ns::bib_allow_break)
-            R.push_back(hash_table.allowbreak_token);
+        if ((T.is_slash_token() || T.val == other_t_offset + '.') && main_ns::bib_allow_break) R.push_back(hash_table.allowbreak_token);
     }
 }
 
@@ -1710,7 +1709,7 @@ void Parser::T_case_shift(int c) {
             auto b  = a.chr_val();
             auto cx = eqtb_int_table[to_unsigned(b + offset)].val;
             if (cx != 0) {
-                res.push_back(Token(a.get_val() - b + to_unsigned(cx)));
+                res.push_back(Token(a.val - b + to_unsigned(cx)));
                 continue;
             }
         }

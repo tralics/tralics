@@ -1654,7 +1654,7 @@ auto Parser::fp_read_value() -> FpNum {
         A.pop_front();
         if (x.is_space_token()) break;
         if (x.is_digit_token())
-            fp_in_buf.push_back(static_cast<char>(x.get_val() - other_t_offset));
+            fp_in_buf.push_back(static_cast<char>(x.val - other_t_offset));
         else
             fp_parse_error(x, name);
     }
@@ -1666,7 +1666,7 @@ auto Parser::fp_read_value() -> FpNum {
         B.pop_front();
         if (x.is_space_token()) break;
         if (x.is_digit_token())
-            fp_in_buf.push_back(static_cast<char>(x.get_val() - other_t_offset));
+            fp_in_buf.push_back(static_cast<char>(x.val - other_t_offset));
         else
             fp_parse_error(x, name);
     }
@@ -2221,7 +2221,7 @@ void Parser::upn_eval(TokenList &l) {
     Token     t1 = the_parser.hash_table.space_token;
     Token     t2 = the_parser.hash_table.newline_token;
     TokenList z;
-    if (L.split_at(t1, t2, z).get_val() != 0) {
+    if (L.split_at(t1, t2, z).val != 0) {
         upn_eval(z);
         upn_eval(L.value);
         return;

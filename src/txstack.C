@@ -463,7 +463,7 @@ void Stack::check_font() {
         s = the_parser.cur_font.series_change();
         if (s != 0U) fonts0(s);
     }
-    Istring c = the_parser.cur_font.get_color();
+    auto c = the_parser.cur_font.color;
     if (!(c.empty() || c.null())) {
         Xml *    res = new Xml(cst_hi, nullptr);
         AttList &W   = res->get_id().get_att();

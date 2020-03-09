@@ -278,7 +278,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
-        const std::string &s = the_main->SH[to_unsigned(x.get_value())];
+        const std::string &s = the_main->SH[to_unsigned(x.value)];
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble

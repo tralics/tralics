@@ -121,7 +121,7 @@ void math_ns::remove_from_trace() {
 void math_ns::add_to_trace(Token T) {
     old_need = trace_needs_space;
     old_pos  = Trace.size();
-    auto x   = T.get_val();
+    auto x   = T.val;
     if (trace_needs_space && T.cmd_val() == letter_catcode) Trace.push_back(' ');
     if (T.is_a_char() && T.char_val() == '\n')
         Trace.push_back("^^J");
@@ -963,11 +963,11 @@ auto Parser::scan_math1(int res) -> int {
     }
     if (is_m_font(T)) {
         if (eqtb_int_table[nomath_code].val == -2) {
-            math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+            math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             return 1;
         }
         math_data.push_back(res, CmdChr(nomath_cmd, one_code), zero_code);
-        math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+        math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
         TM_fonts();
         return 1;
     }
@@ -1083,13 +1083,13 @@ void Parser::scan_math(int res, math_list_type type) {
             if (c == hbox_code)
                 scan_math_hbox(res, hbox_S_code);
             else
-                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             continue;
         case fbox_cmd:
             if (c == fbox_code)
                 scan_math_hbox(res, fbox_S_code);
             else
-                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             continue;
         case box_cmd:
             if (c == text_code)
@@ -1107,7 +1107,7 @@ void Parser::scan_math(int res, math_list_type type) {
             scan_math_endcell_ok(res);
             continue;
         case mathfont_cmd:
-            math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+            math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             word_define(math_font_pos, c, false);
             continue;
         case undef_cmd: undefined_mac(); continue;
@@ -1136,10 +1136,10 @@ void Parser::scan_math(int res, math_list_type type) {
             continue;
         case char_given_cmd:
         case math_given_cmd: math_data.push_back(res, cur_cmd_chr, subtypes(0)); continue;
-        case relax_cmd: math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val())); continue;
+        case relax_cmd: math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val)); continue;
         case mathord_cmd: // may be bold
         {
-            auto   F = subtypes(cur_tok.get_val());
+            auto   F = subtypes(cur_tok.val);
             CmdChr R = cur_cmd_chr;
             if (math_loc(c) > first_inline_hack && math_loc(c) < last_inline_bhack && is_pos_par(atmathversion_code))
                 R = CmdChr(mathordb_cmd, c);
@@ -1165,7 +1165,7 @@ void Parser::scan_math(int res, math_list_type type) {
                 auto font = subtypes(eqtb_int_table[math_font_pos].val);
                 math_data.push_back(res, cur_cmd_chr, font);
             } else
-                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+                math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
         }
     }
 }
@@ -1339,7 +1339,7 @@ void MathHelper::ml_last_pass(bool vb) {
 
 // We have seen & or \\. Must interpret it
 void Parser::scan_math_endcell_ok(int res) {
-    math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.get_val()));
+    math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
     if (cur_cmd_chr.get_cmd() == backslash_cmd && res == 0 && cmi.get_eqnum_status() == 2) {
         bool w = cmi.end_of_row();
         if (!w) {
@@ -1582,7 +1582,7 @@ auto Parser::scan_math_kern(symcodes T, subtypes &c) -> ScaledInt {
 // Case of a \not\in read as \notin, \not= read as \ne
 // What should we do in other cases?
 void Parser::scan_math_rel(subtypes c, int res) {
-    auto w = subtypes(cur_tok.get_val());
+    auto w = subtypes(cur_tok.val);
     if (c == subtypes(not_code)) {
         Token not_token = cur_tok;
         get_x_token();
@@ -1590,11 +1590,11 @@ void Parser::scan_math_rel(subtypes c, int res) {
         } else if (cur_tok.not_a_cmd() && cur_cmd_chr.get_chr() == '=') {
             add_to_trace(cur_tok);
             cur_cmd_chr.set_cmd_chr(mathrel_cmd, subtypes(ne_code));
-            w = subtypes(not_token.get_val());
+            w = subtypes(not_token.val);
         } else if (cur_cmd_chr.get_cmd() == mathbin_cmd && cur_cmd_chr.get_chr() == subtypes(in_code)) {
             add_to_trace(cur_tok);
             cur_cmd_chr.set_cmd_chr(mathbin_cmd, subtypes(notin_code));
-            w = subtypes(not_token.get_val());
+            w = subtypes(not_token.val);
         } else {
             back_input();
             cur_tok = not_token;
@@ -1706,7 +1706,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
 
     token_from_list(m);
     cur_tok = m;
-    u.push_back(cur_cmd_chr, subtypes(cur_tok.get_val()));
+    u.push_back(cur_cmd_chr, subtypes(cur_tok.val));
     u.push_back_list(r1, math_argument_cd);
     u.push_back_list(r2, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
@@ -1738,7 +1738,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
     Math &   u  = math_data.get_list(k);
     if (c == mathbox_code) {
         auto ss = Istring(s);
-        u.set_name(subtypes(ss.get_value()));
+        u.set_name(subtypes(ss.value));
     }
     u.push_back_list(r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);

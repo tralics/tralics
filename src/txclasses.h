@@ -21,16 +21,14 @@ void show_unused_options();
 // and val is bar or empty. In the case \usepackage, this is different
 class KeyAndVal {
 private:
-    std::string full_name;   // In case 'key = {\val,etc}' holds all chars
-    std::string name;        // name of the option, e.g. 'key'
-    TokenList   val;         // value of the option, eg '={\val,etc}'.
-    bool        used{false}; // set to true when option is used
+    bool used{false}; // set to true when option is used
 public:
+    std::string name;      // name of the option, e.g. 'key'
+    std::string full_name; // In case 'key = {\val,etc}' holds all chars
+    TokenList   val;       // value of the option, eg '={\val,etc}'.
+
     KeyAndVal() = default;
-    KeyAndVal(std::string a, TokenList b, std::string all) : full_name(std::move(all)), name(std::move(a)), val(std::move(b)) {}
-    [[nodiscard]] auto get_name() const -> const std::string & { return name; }
-    [[nodiscard]] auto get_full_name() const -> const std::string & { return full_name; }
-    [[nodiscard]] auto get_val() const -> const TokenList & { return val; }
+    KeyAndVal(std::string a, TokenList b, std::string all) : name(std::move(a)), full_name(std::move(all)), val(std::move(b)) {}
     [[nodiscard]] auto has_name(const std::string &x) const -> bool { return name == x; }
     [[nodiscard]] auto has_full_name(const std::string &x) const -> bool { return full_name == x; }
     auto               has_name(String x) const -> bool { return name == x; }

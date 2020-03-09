@@ -4,10 +4,9 @@
 
 class Buffer;
 
-class Istring {
+struct Istring {
     long value{0};
 
-public:
     Istring() = default;
     Istring(name_positions N);
     Istring(const Buffer &X);
@@ -20,7 +19,6 @@ public:
     [[nodiscard]] auto spec_empty() const -> bool { return value == 2; } // ""
     [[nodiscard]] auto only_space() const -> bool;
     [[nodiscard]] auto only_space_spec() const -> bool;
-    [[nodiscard]] auto get_value() const -> long { return value; }
     [[nodiscard]] auto c_str() const -> String;
     [[nodiscard]] auto p_str() const -> String;
 

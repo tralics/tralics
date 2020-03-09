@@ -17,7 +17,7 @@
 #include <array>
 
 // forward declarations
-class Istring;
+struct Istring;
 class Xml;
 class Macro;
 class Math;
@@ -242,10 +242,6 @@ enum bchar_type {
     bct_end,
     bct_bad
 };
-
-// level_zero is undefined, level_one is the bottom level
-// used for knowing whether to restore a variable when we leave a group
-enum tex_level { level_zero, level_one };
 
 // for push_level .. pop_level
 enum boundary_type { bt_brace, bt_cell, bt_local, bt_semisimple, bt_esemisimple, bt_env, bt_tpa, bt_math, bt_impossible };

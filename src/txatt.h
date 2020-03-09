@@ -37,7 +37,7 @@ public:
     void               print(std::ostream &fp);
 };
 
-// This is a table of AttList. We should use a vector instead
+// This is a table of AttList. \todo We should use a vector instead
 class AttListTable {
     AttList *table{nullptr}; // the table
     Xml *    xtable{nullptr};
@@ -52,9 +52,8 @@ public:
         if (n < len) return table[n];
         return AttList();
     }
-    void               push_back(AttList X);
-    void               push_back();
-    void               push_back(Istring, Istring);
-    void               push_back(name_positions, name_positions);
-    [[nodiscard]] auto get_size() const -> int { return size; }
+    void push_back(AttList X);
+    void push_back();
+    void push_back(Istring, Istring);
+    void push_back(name_positions, name_positions);
 };

@@ -81,7 +81,7 @@ SaveErrTok::SaveErrTok(Token t) {
 Parser::Parser() : cur_env_name("document") {
     sectionning_offset                 = section_code;
     restricted                         = false;
-    cur_level                          = level_one;
+    cur_level                          = 1;
     calc_loaded                        = false;
     cur_in_chan                        = main_in_chan;
     long_state                         = ls_long;
@@ -195,7 +195,7 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
         CmdChr nv = CmdChr(what, mac_table.new_macro(b));
         if (tracing_assigns()) {
             the_log << lg_startbrace << gbl_or_assign(gbl, false) << a << "=";
-            token_for_show(hash_table.eqtb[a.eqtb_loc()].get_cmdchr());
+            token_for_show(hash_table.eqtb[a.eqtb_loc()].value);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
             the_log << lg_endbrace;
@@ -237,7 +237,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else if (reassign)
         return;
     else {
@@ -255,7 +255,7 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else if (reassign)
         return;
     else {
@@ -275,7 +275,7 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else if (reassign)
         return;
     else {
@@ -306,7 +306,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else if (reassign)
         return;
     else {
@@ -323,7 +323,7 @@ void Parser::box_define(size_t a, Xml *c, bool gbl) {
         the_log << " into \\box" << a << "=" << c << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(W.get_level(), a, W.get_val()));
         W.val_and_level(c, cur_level);
@@ -341,7 +341,7 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, level_one);
+        W.val_and_level(c, 1);
     else if (reassign)
         return;
     else {
@@ -354,8 +354,8 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
 // It pushes the value on the save stack if needed.
 void Parser::save_font() {
     if (tracing_commands()) the_log << lg_startbrace << "font change " << cur_font << lg_endbrace;
-    if (cur_font.get_level() == cur_level) return;
-    push_save_stack(new SaveAuxFont(cur_font.get_level(), cur_font.get_old(), cur_font.get_old_color()));
+    if (cur_font.level == cur_level) return;
+    push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
     cur_font.set_level(cur_level);
 }
 
@@ -379,7 +379,7 @@ void SaveAux::restore_or_retain(bool rt, String s) { the_log << lg_startstack <<
 
 // This done when we restore an integer value
 void SaveAuxInt::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_int_table[pos].get_level() != level_one;
+    bool rt = P.eqtb_int_table[pos].get_level() != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_int_cmd, subtypes(pos));
@@ -391,14 +391,14 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 // This done when we restore a string value
 //
 void SaveAuxString::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_string_table[pos].get_level() != level_one;
+    bool rt = P.eqtb_string_table[pos].get_level() != 1;
     if (trace) { the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos) << "=" << val << lg_endsentence; }
     if (rt) P.eqtb_string_table[pos].val_and_level(val, level);
 }
 
 // This done when we restore a dimension value
 void SaveAuxDim::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_dim_table[pos].get_level() != level_one;
+    bool rt = P.eqtb_dim_table[pos].get_level() != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_dimen_cmd, subtypes(pos));
@@ -409,7 +409,7 @@ void SaveAuxDim::unsave(bool trace, Parser &P) {
 
 // Restore glue
 void SaveAuxGlue::unsave(bool trace, Parser &P) {
-    bool rt = P.glue_table[pos].get_level() != level_one;
+    bool rt = P.glue_table[pos].get_level() != 1;
     if (trace) {
         Thbuf1 << bf_reset << val;
         if (pos >= thinmuskip_code) Thbuf1.pt_to_mu();
@@ -422,11 +422,11 @@ void SaveAuxGlue::unsave(bool trace, Parser &P) {
 
 // Restore command. We have to take care to free memory for user commands.
 void SaveAuxCmd::unsave(bool trace, Parser &P) {
-    int lvl = P.hash_table.eqtb[cs].get_level();
+    int lvl = P.hash_table.eqtb[cs].level;
     if (trace) {
-        String S = lvl == level_one ? "retaining " : (val.is_undef() ? "killing " : "restoring ");
+        String S = lvl == 1 ? "retaining " : (val.is_undef() ? "killing " : "restoring ");
         the_log << lg_startstack << S << Token(cs + eqtb_offset);
-        if (lvl > level_one && !val.is_undef()) {
+        if (lvl > 1 && !val.is_undef()) {
             the_log << "=";
             if (val.is_user())
                 P.token_for_show(val);
@@ -435,7 +435,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
         }
         the_log << lg_endsentence;
     }
-    if (lvl == level_one) { // retain old value, so kill val
+    if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.get_chr());
     } else {
         if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
@@ -446,7 +446,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
 
 // Restore token list.
 void SaveAuxToken::unsave(bool trace, Parser &P) {
-    bool rt = P.toks_registers[pos].get_level() != level_one;
+    bool rt = P.toks_registers[pos].get_level() != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_toks_cmd, subtypes(pos));
@@ -458,7 +458,7 @@ void SaveAuxToken::unsave(bool trace, Parser &P) {
 // Restore box. Called in the case {\setbox0=\hbox{...}}
 // when we see the last closing brace. This may restore box0.
 void SaveAuxBox::unsave(bool trace, Parser &P) {
-    bool rt = P.box_table[pos].get_level() != level_one;
+    bool rt = P.box_table[pos].get_level() != 1;
     if (trace) {
         restore_or_retain(rt, "\\box");
         the_log << pos << lg_endsentence;

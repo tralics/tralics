@@ -37,8 +37,8 @@ void Parser::init_all(const std::string &doc_elt) {
     close_paren_xml = new Xml(Istring(")"));
     the_page_xml    = new Xml(Istring("thepage"), nullptr);
     glo_xml         = new Xml(np_glo_name);
-    eqtb_int_table[endlinechar_code].val_and_level('\r', level_one);
-    eqtb_int_table[newlinechar_code].val_and_level('\n', level_one);
+    eqtb_int_table[endlinechar_code].val_and_level('\r', 1);
+    eqtb_int_table[newlinechar_code].val_and_level('\n', 1);
     TL.clear();
     my_stats.set_nb_xboot(to_unsigned(the_stack.get_xid().value));
     the_stack.init_all(doc_elt);
@@ -741,7 +741,7 @@ void Parser::T_begindocument() {
     if (!tralics_ns::titlepage_is_valid()) add_language_att();
     cur_tok.kill();
     pop_level(bt_env);
-    cur_level = level_one; // this is the outer level...
+    cur_level = 1; // this is the outer level...
     if (the_main->d_verbose()) M_tracingall();
     if (tracing_commands()) the_log << lg_startstack << "level set to 1" << lg_end;
     tralics_ns::bibtex_bootagain();

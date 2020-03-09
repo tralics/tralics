@@ -25,25 +25,24 @@
 // EQTB for commands. No Ctor(?) but reset() is called for every object.
 // The values is a (symcodes, subtype) pair
 class Equivalent {
+public:
     int    level; // level at which this is defined
     CmdChr value; // the modifier
-public:
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    [[nodiscard]] auto get_cmdchr() const -> CmdChr { return value; }
+
     [[nodiscard]] auto get_cmd() const -> symcodes { return value.get_cmd(); }
     [[nodiscard]] auto get_chr() const -> subtypes { return value.get_chr(); }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
-        level = level_zero;
+        level = 0;
         value.reset();
     }
     void special_prim(CmdChr b) {
         value = b;
-        if (!b.is_undef()) level = level_one;
+        if (!b.is_undef()) level = 1;
     }
     void primitive(CmdChr b) {
         value = b;
-        level = level_one;
+        level = 1;
     }
     void set(CmdChr c, int lvl) {
         value = c;
@@ -189,7 +188,7 @@ class SaveAuxCmd : public SaveAux {
     size_t cs;    // ths position in eqtb to be restored
     CmdChr val;   // the CmdChr to be restored
 public:
-    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.get_level()), cs(a), val(X.get_cmdchr()) {}
+    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.level), cs(a), val(X.value) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
 };
@@ -292,10 +291,10 @@ public:
 // Every eqtb entry has a level. Level_zero means undefined
 // Level_one is the outer level. The old value must be saved in case
 // the current level is different fron the old one, and is greater than one.
-// These objects are defined at level_one
+// These objects are defined at 1
 struct EqtbInt {
-    long val{0};           // value of the object
-    int  level{level_one}; // level at which this is defined
+    long val{0};   // value of the object
+    int  level{1}; // level at which this is defined
 
     EqtbInt() = default;
 
@@ -306,12 +305,12 @@ struct EqtbInt {
         val   = a;
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
 class EqtbString {
-    std::string val;              // value of the object
-    int         level{level_one}; // level at which this is defined
+    std::string val;      // value of the object
+    int         level{1}; // level at which this is defined
 public:
     EqtbString() : val("") {}
     [[nodiscard]] auto get_val() const -> std::string { return val; }
@@ -322,13 +321,13 @@ public:
         val   = std::move(a);
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
 // EQBT entry for a dimension.
 class EqtbDim {
-    ScaledInt val;              // value of the object
-    int       level{level_one}; // level at which this is defined
+    ScaledInt val;      // value of the object
+    int       level{1}; // level at which this is defined
 public:
     EqtbDim() : val(0) {}
     [[nodiscard]] auto get_val() const -> ScaledInt { return val; }
@@ -339,13 +338,13 @@ public:
         val   = a;
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
 // EQTB entry for a glue
 class EqtbGlue {
-    Glue val;              // value of the object
-    int  level{level_one}; // level at which this is defined
+    Glue val;      // value of the object
+    int  level{1}; // level at which this is defined
 public:
     EqtbGlue() = default;
     [[nodiscard]] auto get_level() const -> int { return level; }
@@ -354,13 +353,13 @@ public:
         val   = a;
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
 // EQTB entry for a token list
 struct EqtbToken {
-    TokenList val;              // value of the object
-    int       level{level_one}; // level at which this is defined
+    TokenList val;      // value of the object
+    int       level{1}; // level at which this is defined
 
     EqtbToken() = default;
 
@@ -369,13 +368,13 @@ struct EqtbToken {
         val   = std::move(a);
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
 // EQTB entry for a box
 class EqtbBox {
-    int  level{level_one}; // level at which this is defined
-    Xml *val{nullptr};     // value of the object
+    int  level{1};     // level at which this is defined
+    Xml *val{nullptr}; // value of the object
 public:
     void               set_val(Xml *X) { val = X; }
     [[nodiscard]] auto get_val() const -> Xml * { return val; }
@@ -385,5 +384,5 @@ public:
         val   = a;
         level = b;
     }
-    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > level_one; }
+    [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };

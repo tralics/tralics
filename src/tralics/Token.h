@@ -11,8 +11,6 @@ struct Token {
     Token(spec_offsets a, uchar b) : val(a + b) {}
     Token() = default;
 
-    [[nodiscard]] auto get_val() const -> size_t { return val; }
-
     void               kill() { val = 0; }
     void               from_cmd_chr(CmdChr X) { val = nb_characters * X.get_cmd() + X.char_val().value; }
     void               active_char(size_t cs) { val = cs + eqtb_offset; }

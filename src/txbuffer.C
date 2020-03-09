@@ -617,7 +617,7 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) {
     if (T.not_a_cmd())
         B.push_back(T.char_val());
     else {
-        auto x = T.get_val();
+        auto x = T.val;
         if (esc && x >= single_offset) B.insert_escape_char_raw();
         if (x >= hash_offset)
             B.push_back(hash_table[T.hash_loc()]);

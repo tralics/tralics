@@ -2136,7 +2136,7 @@ void Parser::M_shortverb(int x) {
     Token Tfe = cur_tok;
     if (read_token_arg(Tfe)) return;
     Token t = cur_tok;
-    auto  T = t.get_val() - single_offset;
+    auto  T = t.val - single_offset;
     if (0 < T && T < int(nb_characters)) {
         if (x == 0) { // define
             if (get_catcode(T) == special_catcode) {
@@ -3086,7 +3086,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
         the_log << lg_startbrace << action << "changing " << A << "=";
-        token_for_show(hash_table.eqtb[pos].get_cmdchr());
+        token_for_show(hash_table.eqtb[pos].value);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
         the_log << lg_endbrace;
@@ -3197,7 +3197,7 @@ void Parser::M_newcommand(rd_flag redef) {
         X = read_latex_macro();
         if (redef == rd_never) { // case \CheckCommand
             bool   is_same = true;
-            CmdChr pq      = hash_table.eqtb[name.eqtb_loc()].get_cmdchr();
+            CmdChr pq      = hash_table.eqtb[name.eqtb_loc()].value;
             if (pq.get_cmd() != what)
                 is_same = false;
             else {
@@ -3654,7 +3654,7 @@ void Parser::set_boolean() {
         return;
     }
     if (my_csname("", s, A, "setboolean")) return;
-    if (hash_table.eqtb[cur_tok.eqtb_loc()].get_cmdchr().is_relax()) {
+    if (hash_table.eqtb[cur_tok.eqtb_loc()].value.is_relax()) {
         get_token();
         parse_error(T, "Undefined boolean ", cur_tok, "", "undefined boolean");
     }

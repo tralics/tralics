@@ -510,12 +510,12 @@ void Parser::create_aux_file_and_run_pgm() {
                     << "Bibliography will be missing\n";
         return;
     }
-    the_log << "++ executing " << T.get_cmd().c_str() << ".\n";
-    system(T.get_cmd().c_str());
+    the_log << "++ executing " << T.cmd << ".\n";
+    system(T.cmd.c_str());
     B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
     // NOTE: can we use on-the-fly encoding ?
     the_log << "++ reading " << B.c_str() << ".\n";
-    tralics_ns::read_a_file(bbl.get_lines(), B.c_str(), 1);
+    tralics_ns::read_a_file(bbl.lines, B.c_str(), 1);
 }
 
 void Parser::after_main_text() {
@@ -526,7 +526,7 @@ void Parser::after_main_text() {
         the_bibliography.dump_bibtex();
         the_bibtex->work();
     }
-    init(bbl.get_lines());
+    init(bbl.lines);
     if (!lines.is_empty()) {
         Xml *res = the_stack.temporary();
         the_stack.push1(np_biblio);
@@ -535,7 +535,7 @@ void Parser::after_main_text() {
         translate0();
         the_stack.pop(np_biblio);
         the_stack.pop(cst_argument);
-        the_stack.document_element()->insert_bib(res, the_bibliography.get_location());
+        the_stack.document_element()->insert_bib(res, the_bibliography.location);
     }
     finish_color();
     finish_index();
@@ -630,7 +630,7 @@ void Parser::T_cititem() {
 void Bbl::newline() {
     B.push_back("\n");
     *file << B.convert_to_log_encoding();
-    ptr.insert(B.to_string(), true);
+    lines.insert(B.to_string(), true);
     B.reset();
 }
 
@@ -1009,7 +1009,7 @@ auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> Istring
     }
     X->type_int = type_article;
     X->set_explicit_cit();
-    return X->get_unique_id();
+    return X->unique_id;
 }
 
 // Translation of \citation{key}{userid}{id}{from}{type}[alpha-key]
@@ -1336,7 +1336,7 @@ void Bibtex::read_one_field(bool store) {
                 err_in_file("", false);
                 log_and_tty << "undefined macro " << token_buf << ".\n";
             } else
-                field_buf << all_macros[*macro].get_value();
+                field_buf << all_macros[*macro].value;
         }
     }
 }

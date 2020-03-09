@@ -213,7 +213,7 @@ auto StrHash::next_top_label_id() -> Istring {
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
-    auto K = k.get_value();
+    auto K = k.value;
     if (Labinfo[K] == nullptr) Labinfo[K] = new LabelInfo(k);
     return Labinfo[K];
 }
@@ -555,7 +555,7 @@ void Xml::to_buffer(Buffer &b) const {
     int  rlen = 0;
     for (size_t i = 0; i < len; i++)
         if (tree[i] != nullptr) rlen++;
-    if (name.get_value() > 1) {
+    if (name.value > 1) {
         if (rlen != 0)
             b.push_back_elt(name, id, 1);
         else {
@@ -568,7 +568,7 @@ void Xml::to_buffer(Buffer &b) const {
         if (tree[i] != nullptr) tree[i]->to_buffer(b);
     }
     //  www --;
-    if (name.get_value() > 1) b.push_back_elt(name, id, 2);
+    if (name.value > 1) b.push_back_elt(name, id, 2);
     b.finish_xml_print();
 }
 

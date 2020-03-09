@@ -116,10 +116,10 @@ auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
 
 // Returns true if slot is in the vector V with the same value
 auto classes_ns::is_in_option(const OptionList &V, const KeyAndVal &slot) -> bool {
-    const std::string &s = slot.get_name();
+    const std::string &s = slot.name;
     auto               n = V.size();
     for (size_t i = 0; i < n; i++)
-        if (V[i].has_name(s)) return compare(slot.get_val(), V[i].get_val());
+        if (V[i].has_name(s)) return compare(slot.val, V[i].val);
     return false;
 }
 
@@ -355,7 +355,7 @@ void Parser::T_option_not_used() {
     expand_no_arg("CurrentOption");
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
-    auto      j = is_in_vector(GO, s.get_full_name(), true);
+    auto      j = is_in_vector(GO, s.full_name, true);
     if (j >= 0) GO[to_unsigned(j)].mark_un_used();
 }
 
@@ -381,7 +381,7 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
     OptionList &DO = Poptions;                      // Known options
     auto        n  = GO.size();
     for (size_t i = 0; i < n; i++) {
-        std::string nname = X ? GO[i].get_name() : GO[i].get_full_name();
+        std::string nname = X ? GO[i].name : GO[i].full_name;
         auto        j     = find_option(nname);
         if (j <= 0) continue;
         if (DO[to_unsigned(j)].is_used()) continue; // should not happen
@@ -399,7 +399,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
     OptionList &CO = Uoptions;                      // arg of \usepackage
     auto        n  = DO.size();
     for (size_t i = 0; i < n; i++) {
-        const std::string &nname = DO[i].get_name();
+        const std::string &nname = DO[i].name;
         if (DO[i].is_used()) continue; // should to happen
         auto j = is_in_vector(CO, nname, false);
         if (j >= 0) {
@@ -433,7 +433,7 @@ void classes_ns::unknown_optionX(TokenList &cur, TokenList &action) {
 // General case.
 void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec, int X) {
     LatexPackage *     C    = the_class_data.cur_pack();
-    const std::string &name = cur.get_full_name();
+    const std::string &name = cur.full_name;
     if (!C->has_a_default) {
         if (C->is_class()) {
         } else
@@ -442,12 +442,12 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
         TokenList u = cur.to_list();
         if (X == 1) {
             TokenList w;
-            w = string_to_list(cur.get_name(), true);
+            w = string_to_list(cur.name, true);
             spec.push_back(the_parser.hash_table.def_token);
             spec.push_back(the_parser.hash_table.CurrentOptionKey_token);
             spec.splice(spec.end(), w);
 
-            w = cur.get_val();
+            w = cur.val;
             if (w.empty())
                 w.push_back(the_parser.hash_table.relax_token);
             else
@@ -482,14 +482,14 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
     OptionList &DO = Poptions; // Known options
     auto        n  = CO.size();
     for (size_t i = 0; i < n; i++) {
-        std::string nname = CO[i].get_name();
-        auto        j     = find_option(X != 0 ? nname : CO[i].get_full_name());
+        std::string nname = CO[i].name;
+        auto        j     = find_option(X != 0 ? nname : CO[i].full_name);
         if (j == -1) {
             unknown_option(CO[i], action, spec, X);
         } else {
             ClassesData::remove_from_unused(nname);
             if (DO[to_unsigned(j)].is_used()) continue;
-            local_buf << bf_comma << DO[to_unsigned(j)].get_name();
+            local_buf << bf_comma << DO[to_unsigned(j)].name;
             DO[to_unsigned(j)].use_and_kill(action, CO[i], X != 0);
         }
     }
@@ -526,10 +526,10 @@ void Parser::T_execute_options() {
     OptionList L = make_options(opt);
     auto       n = L.size();
     for (size_t i = 0; i < n; i++) {
-        const std::string &option = L[i].get_full_name();
+        const std::string &option = L[i].full_name;
         auto               k      = C->find_option(option);
         if (k >= 0) {
-            b << bf_comma << pack[to_unsigned(k)].get_name();
+            b << bf_comma << pack[to_unsigned(k)].name;
             pack[to_unsigned(k)].use(action);
         }
     }
@@ -712,7 +712,7 @@ void Parser::check_language() {
     int  lang = -1;
     auto n    = cur_opt_list.size();
     for (size_t i = 0; i < n; i++) {
-        const std::string &s = cur_opt_list[i].get_name();
+        const std::string &s = cur_opt_list[i].name;
         if (s == "french" || s == "francais" || s == "frenchb" || s == "acadian" || s == "canadien") {
             if (lang == -1) the_log << "babel options: ";
             lang = 1;

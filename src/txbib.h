@@ -58,16 +58,17 @@ public:
 };
 
 class Bibliography {
+public:
+    std::string               bib_style{"plain"}; // The bibliography style
+    std::string               cmd;                // The bibliography command
+    std::vector<CitationItem> citation_table;
+    Xml *                     location{nullptr}; // location of biblio in the XML tree
+
 private:
-    std::string              bib_style{"plain"};      // The bibliography style
-    std::string              bib_cmd;                 // The bibliography command
-    Xml *                    biblio_loc{nullptr};     // location of biblio in the XML tree
     std::vector<std::string> biblio_src;              // database file names
     bool                     nocite{false};           // have  we seen \nocite* ?
     bool                     biblio_loc_force{false}; // force location
     int                      last_bid{-1};            // current number for unique_bid
-public:
-    std::vector<CitationItem> citation_table;
 
 public:
     void               dump(Buffer &b);
@@ -76,16 +77,14 @@ public:
     auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
     auto               find_citation_item(Istring from, Istring key, bool insert) -> std::optional<size_t>;
     auto               find_citation_star(Istring from, Istring key) -> size_t;
-    [[nodiscard]] auto get_cmd() const -> std::string { return bib_cmd; }
-    [[nodiscard]] auto get_location() const -> Xml * { return biblio_loc; }
-    [[nodiscard]] auto has_cmd() const -> bool { return !bib_cmd.empty(); }
+    [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() { return biblio_src.size(); }
     void               push_back_src(String x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
-    void               set_cmd(std::string x) { bib_cmd = std::move(x); }
+    void               set_cmd(std::string x) { cmd = std::move(x); }
     void               set_location(Xml *X, bool f) {
-        biblio_loc       = X;
+        location         = X;
         biblio_loc_force = f;
     }
     void set_nocite() { nocite = true; }
@@ -97,13 +96,13 @@ public:
 // A bibtex macro, like @string(foo="bar")
 class BibMacro {
 private:
-    int         h;     // hash code of the name
-    std::string name;  // the name of the name (e.g. foo)
-    std::string value; // the value of the macro (e.g. bar)
+    int         h;    // hash code of the name
+    std::string name; // the name of the name (e.g. foo)
 public:
+    std::string value; // the value of the macro (e.g. bar)
+
     auto is_same(int hash, String s) -> bool { return hash == h && name == s; }
     void set_value(std::string v) { value = std::move(v); }
-    auto get_value() -> std::string { return value; }
     void set_default_value() { value = name; }
     BibMacro() = default;
     BibMacro(int hash, Buffer &s1) : h(hash), name(s1.to_string()) {}
@@ -209,7 +208,6 @@ class BibEntry {
     int          cur_year{0};                  // current year, if year field can be parsed
     std::string  lab1, lab2, lab3;             // two temporaries.
     size_t       id{0};
-    Istring      unique_id{""};
     bool         explicit_cit{false};
     c_primaire   main_c_type;
     c_secondaire second_c_type;
@@ -218,8 +216,9 @@ class BibEntry {
     int          is_extension;
 
 public:
+    Istring unique_id{""};
+
     BibEntry();
-    [[nodiscard]] auto get_unique_id() const -> Istring { return unique_id; }
     [[nodiscard]] auto Sort_label() const -> const std::string & { return sort_label; }
 
 private:
@@ -378,14 +377,14 @@ private:
     Buffer        B;
     std::fstream *file{nullptr};
     std::string   name;
-    LinePtr       ptr;
     bool          too_late{false};
 
 public:
     friend class BibEntry;
     friend class BblAndTty;
 
-    auto get_lines() -> LinePtr & { return ptr; }
+    LinePtr lines;
+
     void newline();
     void push_back(String s) { B.push_back(s); }
     void push_back(const std::string &s) { B.push_back(s); }
@@ -397,7 +396,7 @@ public:
     }
     auto non_empty_buf() -> bool { return !B.empty(); }
     void reset() { B.reset(); }
-    void reset_lines() { ptr.clear(); }
+    void reset_lines() { lines.clear(); }
     auto is_too_late() -> bool { return too_late; }
     void finish() {
         file->close();
