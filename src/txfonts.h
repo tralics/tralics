@@ -81,7 +81,7 @@ public:
     int         ligkern_len;
     int         kern_len;
     int         exten_len;
-    int         param_len;
+    size_t      param_len;
     TeXChar *   char_table;
     int *       width_table;
     int *       height_table;
@@ -99,7 +99,7 @@ public:
 
     TexFont(const std::string &n, int a, int s);
 
-    void               realloc_param(long p);
+    void               realloc_param(size_t p);
     [[nodiscard]] auto its_me(const std::string &n, long a, long s) const -> bool;
     void               make_null();
     void               load();

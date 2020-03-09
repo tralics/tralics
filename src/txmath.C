@@ -950,11 +950,11 @@ auto Parser::scan_math1(int res) -> int {
     if (T == 11 || T == 12 || T == char_given_cmd) {
         // FIXME what is the purpose of this math mode test
         if (the_stack.get_mode() == mode_math) {
-            int c = cur_cmd_chr.chr;
+            auto c = cur_cmd_chr.chr;
             if (c > 0 && c < int(nb_characters)) {
                 auto u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
                 if (u == 32768) {
-                    cur_tok.active_char(to_unsigned(c));
+                    cur_tok.active_char(c);
                     back_input();
                     return 1;
                 }

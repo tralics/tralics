@@ -186,9 +186,9 @@ void Parser::T_index(subtypes c) {
     // If level == 3, make sure grand parent exists
     if (level == 3) position = to_signed(index_aux(z2, position, g));
     // make sure this exists
-    position = to_signed(index_aux(L, position, g));
+    auto pposition = index_aux(L, position, g);
     // Now, add a label here
-    auto iid = the_index.get_data(g)[to_unsigned(position)]->iid;
+    auto iid = the_index.get_data(g)[pposition]->iid;
     int  nid = the_index.next_index();
     ;
     local_buf << bf_reset << "lid" << nid;

@@ -1639,15 +1639,15 @@ void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
 
 // Translates \uppercase, \MakeUpperCase, etc
 void Parser::T_case_shift(int c) {
-    Token     T        = cur_tok;
-    bool      to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
-    int       offset   = to_upper ? uc_code_offset : lc_code_offset;
-    int       k        = to_upper ? +1 : -1;
-    Token *   table    = to_upper ? uclc_list.data() : uclc_list.data() + 1;
-    bool      ltx      = (c >= 2);
-    bool      extended = (c == 4 || c == 5);
-    bool      latex3   = (c >= 6);
-    TokenList L        = ltx ? read_arg() : scan_general_text();
+    Token        T        = cur_tok;
+    bool         to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
+    const size_t offset   = to_upper ? uc_code_offset : lc_code_offset;
+    int          k        = to_upper ? +1 : -1;
+    Token *      table    = to_upper ? uclc_list.data() : uclc_list.data() + 1;
+    bool         ltx      = (c >= 2);
+    bool         extended = (c == 4 || c == 5);
+    bool         latex3   = (c >= 6);
+    TokenList    L        = ltx ? read_arg() : scan_general_text();
     if (ltx && !latex3) {
         push_level(bt_brace);
         //    if(to_upper) {} // definir \i et \j
@@ -1707,7 +1707,7 @@ void Parser::T_case_shift(int c) {
         }
         if (a.char_or_active()) {
             auto b  = a.chr_val();
-            auto cx = eqtb_int_table[to_unsigned(b + offset)].val;
+            auto cx = eqtb_int_table[b + offset].val;
             if (cx != 0) {
                 res.push_back(Token(a.val - b + to_unsigned(cx)));
                 continue;
