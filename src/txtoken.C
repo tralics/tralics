@@ -707,7 +707,7 @@ StrHash::StrHash() {
     hash_len = hash_size;
     Text     = new String[hash_len];
     Value    = new String[hash_len];
-    Next     = new long[hash_len];
+    Next     = new size_t[hash_len];
     Labinfo  = new LabelInfo *[hash_len];
     for (size_t i = 0; i < hash_len; i++) {
         Text[i]    = nullptr;
@@ -727,7 +727,7 @@ StrHash::StrHash() {
 void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
     auto   k  = hash_len + 10000;
     auto * T1 = new String[k];
-    long * T2 = new long[k];
+    auto * T2 = new size_t[k];
     auto **T3 = new LabelInfo *[k];
     auto * T4 = new String[k];
     for (size_t i = 0; i < hash_len; i++) {
@@ -781,7 +781,7 @@ auto StrHash::hash_find() -> size_t { // \todo size_t
     the_parser.my_stats.one_more_sh_used();
     Text[k]  = name;
     Value[k] = value;
-    Next[p]  = to_signed(k);
+    Next[p]  = k;
     return k;
 }
 

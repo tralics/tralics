@@ -25,7 +25,7 @@ class LabelInfo;
 class StrHash {
     String *    Text;      // the Text table
     String *    Value;     // the Value table
-    long *      Next;      // the Next table \todo size_t
+    size_t *    Next;      // the Next table \todo size_t
     LabelInfo **Labinfo;   // the LabelInfo
     size_t      hash_len;  // size of the table
     int         hash_used; // number of slots used
