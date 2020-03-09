@@ -1506,7 +1506,7 @@ auto Math::chars_to_mb3() -> Istring {
         B.reset();
         B.push_back("0pt");
     }
-    return Istring(the_main->SH.hash_find());
+    return Istring(to_signed(the_main->SH.hash_find()));
 }
 
 // Procedure called in case of errors

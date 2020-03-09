@@ -96,17 +96,17 @@ public:
 // A bibtex macro, like @string(foo="bar")
 class BibMacro {
 private:
-    int         h;    // hash code of the name
+    size_t      h;    // hash code of the name
     std::string name; // the name of the name (e.g. foo)
 public:
     std::string value; // the value of the macro (e.g. bar)
 
-    auto is_same(int hash, String s) -> bool { return hash == h && name == s; }
+    auto is_same(size_t hash, String s) -> bool { return hash == h && name == s; } // \todo operator==
     void set_value(std::string v) { value = std::move(v); }
     void set_default_value() { value = name; }
     BibMacro() = default;
-    BibMacro(int hash, Buffer &s1) : h(hash), name(s1.to_string()) {}
-    BibMacro(int hash, String &s1, String s2) : h(hash), name(s1), value(s2) {}
+    BibMacro(size_t hash, Buffer &s1) : h(hash), name(s1.to_string()) {}
+    BibMacro(size_t hash, String &s1, String s2) : h(hash), name(s1), value(s2) {}
 };
 
 // Consider for instance the name list :
@@ -323,8 +323,8 @@ private:
     auto               get_class(codepoint c) -> id_type { return id_class[c.value]; }
     void               handle_multiple_entries(BibEntry *Y);
     void               kill_the_lists();
-    auto               look_at_macro(const Buffer &name) -> std::optional<size_t>;
-    auto               look_at_macro(int h, String name) -> std::optional<size_t>;
+    auto               look_for_macro(const Buffer &name) -> std::optional<size_t>;
+    auto               look_for_macro(size_t h, String name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].set_default_value(); }
     void               mac_set_val(size_t X, std::string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;

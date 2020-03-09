@@ -1739,7 +1739,7 @@ auto Parser::dimen_attrib(ScaledInt A) -> Istring {
         i--;
     }
     if (i > 0 && B[i - 1] == '.') B.remove_last();
-    return Istring(the_main->SH.hash_find());
+    return Istring(to_signed(the_main->SH.hash_find()));
 }
 
 void Parser::back_input_pt(bool spec) {

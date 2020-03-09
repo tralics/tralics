@@ -5,7 +5,7 @@
 class Buffer;
 
 struct Istring {
-    long value{0};
+    long value{0}; // \todo size_t ?
 
     Istring() = default;
     explicit Istring(name_positions N);

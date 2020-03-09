@@ -782,23 +782,23 @@ auto StrHash::hash_find() -> size_t { // \todo size_t
     Text[k]  = name;
     Value[k] = value;
     Next[p]  = to_signed(k);
-    return to_signed(k);
+    return k;
 }
 
 // The string can be a temporary
-auto StrHash::find(String s) -> long {
+auto StrHash::find(String s) -> size_t {
     mybuf << bf_reset << s;
     return hash_find();
 }
 
 // The string can be a temporary
-auto StrHash::find(const std::string &s) -> long {
+auto StrHash::find(const std::string &s) -> size_t {
     mybuf << bf_reset << s;
     return hash_find();
 }
 
 // Converts s into a string and returns its hash table location.
-auto StrHash::find(int s) -> long {
+auto StrHash::find(int s) -> size_t {
     mybuf << bf_reset << s;
     return hash_find();
 }
@@ -807,7 +807,7 @@ auto StrHash::find(int s) -> long {
 auto StrHash::find_scaled(ScaledInt s) -> Istring {
     mybuf.reset();
     mybuf.push_back(s, glue_spec_pt);
-    return Istring(hash_find());
+    return Istring(to_signed(hash_find()));
 }
 
 void Buffer::push_back(const Istring &X) {

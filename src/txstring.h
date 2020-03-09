@@ -25,7 +25,7 @@ class LabelInfo;
 class StrHash {
     String *    Text;      // the Text table
     String *    Value;     // the Value table
-    long *      Next;      // the Next table
+    long *      Next;      // the Next table \todo size_t
     LabelInfo **Labinfo;   // the LabelInfo
     size_t      hash_len;  // size of the table
     int         hash_used; // number of slots used
@@ -38,9 +38,9 @@ public:
 
     void re_alloc();
     auto hash_find() -> size_t;
-    auto find(String s) -> long;
-    auto find(const std::string &s) -> long;
-    auto find(int s) -> long;
+    auto find(String s) -> size_t;
+    auto find(const std::string &s) -> size_t;
+    auto find(int s) -> size_t;
     auto operator[](size_t k) const -> String { return Text[k]; }
     auto shbuf() -> Buffer & { return mybuf; }
     auto lab_val(Istring k) -> LabelInfo *;

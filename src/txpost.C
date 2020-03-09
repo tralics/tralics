@@ -44,7 +44,7 @@ namespace all_words_ns {
     int           nb_words = 0;
     WordList *    WL0[100];
     std::fstream *fp = nullptr;
-    void          add_a_word(String s, int h);
+    void          add_a_word(String s, size_t h);
     void          dump_and_list(WordList *WL, int i);
     void          dump_words(const std::string &name);
 } // namespace all_words_ns
@@ -201,7 +201,7 @@ void Parser::user_XML_modify(subtypes c) {
 auto StrHash::next_label_id() -> Istring {
     last_label_id++;
     mybuf << bf_reset << "uid" << last_label_id;
-    return Istring(hash_find());
+    return Istring(to_signed(hash_find()));
 }
 
 // Implementation of \label, \ref
@@ -209,7 +209,7 @@ auto StrHash::next_label_id() -> Istring {
 auto StrHash::next_top_label_id() -> Istring {
     last_top_label_id++;
     mybuf << bf_reset << "cid" << last_top_label_id;
-    return Istring(hash_find());
+    return Istring(to_signed(hash_find()));
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
@@ -1096,8 +1096,8 @@ auto Xml::par_is_empty() -> bool {
 //--------------------------- Word stats
 
 // This is called when a new word is seen.
-void all_words_ns::add_a_word(String s, int h) {
-    int       H = h % 100;
+void all_words_ns::add_a_word(String s, size_t h) {
+    auto      H = h % 100;
     WordList *L = WL0[H];
     while (L != nullptr) {
         if (L->is_here(s, h)) {

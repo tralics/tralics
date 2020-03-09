@@ -1693,7 +1693,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
         B.reset();
         Trace.push_back(ScaledInt(dmres), glue_spec_pt);
         B.push_back(ScaledInt(dmres), glue_spec_pt);
-        dmres = the_main->SH.hash_find();
+        dmres = to_signed(the_main->SH.hash_find());
     }
     Token m = scan_style();
     add_to_trace(m);
@@ -1910,7 +1910,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         if (k <= 0)
             n++;
         else {
-            id.add_attribute(np_columnspan, Istring(the_main->SH.find(k)));
+            id.add_attribute(np_columnspan, Istring(to_signed(the_main->SH.find(k))));
             n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
