@@ -1258,7 +1258,7 @@ void Parser::T_save_box(bool simple) {
     TokenList L = read_arg();
     back_input(hash_table.equals_token);
     back_input(L);
-    auto i = to_unsigned(scan_reg_num());
+    auto i = scan_reg_num();
     scan_optional_equals();
     skip_initial_space_and_back_input();
     //  leave_v_mode();
@@ -2158,7 +2158,7 @@ void Parser::T_unimp(subtypes c) {
     parse_error(cur_tok, "Unimplemented command ", cur_tok, "", "unimplemented");
 
     switch (c) {
-    case accent_code: extended_chars(to_unsigned(scan_27bit_int())); return;
+    case accent_code: extended_chars(scan_27bit_int()); return;
     case delimiter_code:
         scan_int(cur_tok); // no overflow check
         return;

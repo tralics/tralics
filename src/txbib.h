@@ -213,7 +213,7 @@ class BibEntry {
     c_secondaire second_c_type;
     int          first_line{-1};
     std::string *user_fields{nullptr};
-    int          is_extension;
+    size_t       is_extension;
 
 public:
     Istring unique_id{""};

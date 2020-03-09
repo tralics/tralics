@@ -265,7 +265,7 @@ private:
     void        append_glue(Token T, ScaledInt dimen, bool vert);
     void        arg_font(subtypes c);
     void        assign_def_something(bool gbl);
-    void        assign_toks(Token T, long p, bool gbl);
+    void        assign_toks(Token T, size_t p, bool gbl);
     void        back_input_braced(TokenList &L);
     void        back_input_pt(bool spec);
     void        back_input_unless_space();
@@ -339,7 +339,7 @@ private:
     void        dimen_from_list0(Token T, TokenList &L);
     void        dim_define(size_t a, ScaledInt c, bool gbl);
     void        disable_keys();
-    auto        do_register_arg(int q, int &p, Token &tfe) -> long;
+    auto        do_register_arg(int q, int &p, Token &tfe) -> size_t;
     void        do_register_command(bool gbl);
     void        dump_save_stack();
     auto        edef_aux(TokenList &L) -> bool;
@@ -640,11 +640,11 @@ private:
     void        err_one_arg(const TokenList &L);
     void        save_font();
     void        save_the_state(SaveState &x);
-    auto        scan_27bit_int() -> long;
+    auto        scan_27bit_int() -> size_t;
     auto        scan_alpha() -> size_t;
     void        scan_box(size_t bc);
     auto        scan_braced_int(Token T) -> long;
-    auto        scan_char_num() -> long;
+    auto        scan_char_num() -> size_t;
     auto        scan_color(const std::string &opt, const std::string &name) -> Istring;
     auto        scan_date_ctrs() -> bool;
     auto        scan_dim_helper(bool mu, bool allow_int) -> bool;
@@ -657,7 +657,7 @@ private:
     auto        scan_expr(Token T, internal_type et) -> bool;
     void        scan_expr_arg(Token T, internal_type X);
     auto        scan_expr_next(Token T, bool stack_empty) -> scan_expr_t;
-    auto        scan_fifteen_bit_int() -> long;
+    auto        scan_fifteen_bit_int() -> size_t;
     auto        scan_file_name() -> std::string;
     auto        scan_font_ident() -> long;
     auto        scan_for_eval(Buffer &B, bool in_env) -> bool;
@@ -674,7 +674,7 @@ private:
     void        scan_ignore_group();
     auto        scan_int(TokenList &L, Token T) -> long;
     auto        scan_int(Token T) -> long;
-    auto        scan_int(Token T, int n, String s) -> long;
+    auto        scan_int(Token T, int n, String s) -> size_t;
     auto        scan_int_digs() -> long;
     auto        scan_int_internal() -> long;
     auto        scan_keyword(String s) -> bool;
@@ -688,7 +688,7 @@ private:
     auto        scan_math_endcell(Token t) -> bool;
     void        scan_math_endcell_ok(int res);
     auto        scan_math_env(int res, math_list_type type) -> bool;
-    auto        scan_mathfont_ident() -> long;
+    auto        scan_mathfont_ident() -> size_t;
     auto        scan_math_kern(symcodes T, subtypes &c) -> ScaledInt;
     void        scan_math_hbox(int res, subtypes c);
     void        scan_math_mi(int res, subtypes c, subtypes k, CmdChr W);
@@ -697,7 +697,7 @@ private:
     void        scan_optional_equals();
     auto        scan_pair_ints(Token T, TokenList &L) -> bool;
     void        scan_prime();
-    auto        scan_reg_num() -> long;
+    auto        scan_reg_num() -> size_t;
     void        scan_rule(int c);
     void        E_sideset();
     void        E_split();

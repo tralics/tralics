@@ -96,7 +96,7 @@ void Parser::M_extension(int cc) {
     static TexOutStream tex_out_stream; // the output streams
     long                chan = 0;
     if (cc == openout_code)
-        chan = scan_int(cur_tok, max_openout, "output channel number");
+        chan = to_signed(scan_int(cur_tok, max_openout, "output channel number"));
     else if (cc == write_log_code || cc == wlog_code)
         chan = negative_out_slot;
     else if (cc == write_term_code || cc == typeout_code)
@@ -326,10 +326,10 @@ auto Parser::latex_input(int q) -> std::string {
 // This implements \IfFileExists, \InputIfFileExists,
 //  \input, \include, \openin, \closein
 void Parser::T_input(int q) {
-    long  stream    = 0;
-    bool  seen_star = false;
-    bool  seen_plus = false;
-    Token T         = cur_tok;
+    size_t stream    = 0;
+    bool   seen_star = false;
+    bool   seen_plus = false;
+    Token  T         = cur_tok;
     if (q == openin_code || q == closein_code) {
         stream = scan_int(cur_tok, max_openin, "input channel number");
         tex_input_files[stream].close();
@@ -1056,7 +1056,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> long {
 
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
-auto Parser::scan_int(Token t, int n, String s) -> long {
+auto Parser::scan_int(Token t, int n, String s) -> size_t {
     auto N = scan_int(t);
     if (N < 0 || N > n) {
         err_buf << bf_reset << "Bad " << s << " replaced by 0\n";
@@ -1064,7 +1064,7 @@ auto Parser::scan_int(Token t, int n, String s) -> long {
         cur_val.set_int_val(0);
         return 0;
     }
-    return N;
+    return to_unsigned(N);
 }
 
 // Here we may have an optional argument; default value is d
@@ -1081,14 +1081,14 @@ auto Parser::scan_special_int_d(Token T, long d) -> long {
 }
 
 // The following functions all call the previous scan_int.
-auto Parser::scan_reg_num() -> long { return scan_int(cur_tok, nb_registers - 1, "register code"); }
+auto Parser::scan_reg_num() -> size_t { return scan_int(cur_tok, nb_registers - 1, "register code"); }
 
 // Why not max Unicode 10FFFF ?
-auto Parser::scan_27bit_int() -> long { return scan_int(cur_tok, (1 << 27) - 1, "character code"); }
+auto Parser::scan_27bit_int() -> size_t { return scan_int(cur_tok, (1 << 27) - 1, "character code"); }
 
-auto Parser::scan_char_num() -> long { return scan_int(cur_tok, scan_char_num_max, "character code"); }
+auto Parser::scan_char_num() -> size_t { return scan_int(cur_tok, scan_char_num_max, "character code"); }
 
-auto Parser::scan_fifteen_bit_int() -> long { return scan_int(cur_tok, 32767, "mathchar"); }
+auto Parser::scan_fifteen_bit_int() -> size_t { return scan_int(cur_tok, 32767, "mathchar"); }
 
 // Scan a sign (plus, minus, spaces, etc.). After that cur_tok is the first
 // unread token.
@@ -1215,7 +1215,7 @@ void SthInternal::change_level(internal_type level) {
 
 void Parser::scan_something_internal(internal_type level) {
     subtypes m = cur_cmd_chr.chr;
-    long     v;
+    size_t   v; // \todo size_t?
     switch (cur_cmd_chr.cmd) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
@@ -1230,12 +1230,12 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {
             auto vv = scan_reg_num();
-            fetch_box_id(box_table[to_unsigned(vv)].get_val());
+            fetch_box_id(box_table[vv].get_val());
             return;
         }
         case XMLboxname_code: {
             auto vv = scan_reg_num();
-            xml_name(box_table[to_unsigned(vv)].get_val(), level);
+            xml_name(box_table[vv].get_val(), level);
             return;
         }
         case xmlAname_code: xml_name(the_xmlA, level); return;
@@ -1298,7 +1298,7 @@ void Parser::scan_something_internal(internal_type level) {
         v = m;
         if (cur_cmd_chr.cmd == toks_register_cmd) // read the 349 in `\toks349'
             v = scan_reg_num();
-        cur_val.set_toks(toks_registers[to_unsigned(v)].val);
+        cur_val.set_toks(toks_registers[v].val);
         return;
     case assign_int_cmd: // \year etc
         cur_val.set_int(eqtb_int_table[m].val);
@@ -1349,7 +1349,7 @@ void Parser::scan_something_internal(internal_type level) {
             bad_number();
             return;
         }
-        std::string s = get_math_char(uchar(vv), to_unsigned(k));
+        std::string s = get_math_char(uchar(vv), k);
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1395,7 +1395,7 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case def_code_cmd: // \catcode, \lccode etc
         v = scan_char_num();
-        cur_val.set_int(eqtb_int_table[to_unsigned(v + m)].val);
+        cur_val.set_int(eqtb_int_table[v + m].val);
         return;
     case def_family_cmd:       // \textfont
     case set_font_cmd:         // a font (like \tenrm in plain)
@@ -1414,10 +1414,10 @@ void Parser::scan_something_internal(internal_type level) {
     case register_cmd: // \count, \dimen, etc
         v = scan_reg_num();
         switch (static_cast<internal_type>(m)) {
-        case it_int: cur_val.set_int(eqtb_int_table[to_unsigned(v + count_reg_offset)].val); return;
-        case it_dimen: cur_val.set_dim(eqtb_dim_table[to_unsigned(v)].get_val()); return;
-        case it_glue: cur_val.set_glue(glue_table[to_unsigned(v)].get_val()); return;
-        case it_mu: cur_val.set_mu(glue_table[to_unsigned(v + muskip_reg_offset)].get_val()); return;
+        case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].val); return;
+        case it_dimen: cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
+        case it_glue: cur_val.set_glue(glue_table[v].get_val()); return;
+        case it_mu: cur_val.set_mu(glue_table[v + muskip_reg_offset].get_val()); return;
         default: parse_error(err_tok, "Confusion in \\register"); return;
         }
     default: parse_error(err_tok, "You can't use `", cur_tok, "' after \\the", "You can't use x after...");
@@ -1861,7 +1861,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         auto a = scan_int(cur_tok, 15, "family number");
         scan_optional_equals();
         auto c = scan_font_ident();
-        word_define(to_unsigned(a + chr), c, gbl);
+        word_define(a + chr, c, gbl);
         return;
     }
     case set_mathprop_cmd: {
@@ -1884,7 +1884,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         scan_optional_equals();
         flush_buffer();
         std::string value = sT_arg_nopar();
-        set_math_char(static_cast<uchar>(v), to_unsigned(k), value);
+        set_math_char(static_cast<uchar>(v), k, value);
         return;
     }
     case register_cmd:
@@ -1892,7 +1892,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     case multiply_cmd:
     case divide_cmd: do_register_command(gbl); return;
     case set_box_cmd: { // \setbox0 =
-        auto i = to_unsigned(scan_reg_num());
+        auto i = scan_reg_num();
         scan_optional_equals();
         scan_box(gbl ? setbox_offset + i : i);
         return;
@@ -1994,13 +1994,13 @@ void Parser::M_prefixed_aux(bool gbl) {
 // Case of \everypar or \toks0.
 // Location in table is subtype (for \everypar) or argument (for \toks)
 // here p is subtype of object to assign
-void Parser::assign_toks(Token T, long p, bool gbl) {
+void Parser::assign_toks(Token T, size_t p, bool gbl) {
     if (cur_cmd_chr.cmd == toks_register_cmd) p = scan_reg_num();
     scan_optional_equals();
     remove_initial_space_relax();
-    int  c        = cur_cmd_chr.cmd;
-    bool have_reg = true;
-    long q        = cur_cmd_chr.chr;
+    int    c        = cur_cmd_chr.cmd;
+    bool   have_reg = true;
+    size_t q        = cur_cmd_chr.chr;
     if (c == open_catcode)
         have_reg = false;
     else if (c == toks_register_cmd)
@@ -2013,13 +2013,13 @@ void Parser::assign_toks(Token T, long p, bool gbl) {
     }
     if (have_reg) {
         if (p == q) return;
-        TokenList Q = toks_registers[to_unsigned(q)].val;
-        token_list_define(to_unsigned(p), Q, gbl);
+        TokenList Q = toks_registers[q].val;
+        token_list_define(p, Q, gbl);
     } else { // this is scan_toks (false,false)
         SaveScannerStatus tmp(ss_absorbing);
         TokenList         Q;
         skip_group0(Q);
-        token_list_define(to_unsigned(p), Q, gbl);
+        token_list_define(p, Q, gbl);
     }
 }
 
@@ -2361,7 +2361,7 @@ auto Parser::scan_font_ident() -> long {
     if (cur_cmd_chr.cmd == def_family_cmd) {
         auto a = cur_cmd_chr.chr;
         auto b = scan_int(cur_tok, 15, "family number");
-        return eqtb_int_table[a + to_unsigned(b)].val;
+        return eqtb_int_table[a + b].val;
     }
     if (cur_tok.is_valid()) back_input();
     parse_error(err_tok, "Missing font identifier");
@@ -2369,7 +2369,7 @@ auto Parser::scan_font_ident() -> long {
 }
 
 // OK for \mml@font@fraktur, or a font like that or an integer.
-auto Parser::scan_mathfont_ident() -> long {
+auto Parser::scan_mathfont_ident() -> size_t {
     Token T = cur_tok;
     remove_initial_space();
     if (cur_cmd_chr.cmd == mathfont_cmd) return cur_cmd_chr.chr;

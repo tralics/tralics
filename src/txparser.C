@@ -2979,7 +2979,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     }
     case if_void_code: {
         auto n = scan_reg_num();
-        Xml *x = box_table[to_unsigned(n)].get_val();
+        Xml *x = box_table[n].get_val();
         if (x == nullptr) return true;
         return x->empty();
     }
@@ -3315,7 +3315,7 @@ void Parser::assign_def_something(bool gbl) {
         n = nb_characters - 1;
     else
         n = 0; // This should not happen
-    auto k = scan_char_num();
+    auto k = to_signed(scan_char_num());
     offset += to_unsigned(k);
     scan_optional_equals();
     k = scan_int(T);
@@ -3345,7 +3345,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     eq_define(pos, CmdChr(relax_cmd, relax_code), gbl);
     scan_optional_equals();
     cur_tok = t;
-    long     k;
+    size_t   k;
     symcodes ncmd;
     String   name = "unknown";
     switch (cmd) {
@@ -3445,12 +3445,12 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
 // We may have seen \advance, then \foo, where \foo is defined by
 // \countdef, so that we can return after seeing \foo.
 // In any case, returns a position and sets p to the type.
-auto Parser::do_register_arg(int q, int &p, Token &tfe) -> long {
+auto Parser::do_register_arg(int q, int &p, Token &tfe) -> size_t {
     Token T = cur_tok;
     if (q != register_cmd) {
         get_x_token();
-        tfe   = cur_tok;
-        int m = cur_cmd_chr.chr;
+        tfe    = cur_tok;
+        auto m = cur_cmd_chr.chr;
         if (cur_cmd_chr.cmd == assign_int_cmd) {
             p = it_int;
             return m;
@@ -3493,8 +3493,8 @@ void Parser::do_register_command(bool gbl) {
     Token T = cur_tok;
     int   q = cur_cmd_chr.cmd;
     int   p;
-    auto  l = to_unsigned(do_register_arg(q, p, T)); // changes T from \advance to \skip
-    if (cur_tok.is_invalid()) return;                // was an error
+    auto  l = do_register_arg(q, p, T); // changes T from \advance to \skip
+    if (cur_tok.is_invalid()) return;   // was an error
     if (q == register_cmd)
         scan_optional_equals();
     else
@@ -4114,9 +4114,9 @@ void Parser::box_end(Xml *res, size_t pos) {
 // Otherwise we push a continuation on the stack.
 
 void Parser::begin_box(size_t src, subtypes c) {
-    Token T = cur_tok;
-    long  res;
-    Xml * cur_box = nullptr;
+    Token  T = cur_tok;
+    size_t res;
+    Xml *  cur_box = nullptr;
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();
@@ -4126,14 +4126,14 @@ void Parser::begin_box(size_t src, subtypes c) {
     }
     if (c == box_code) {
         res     = scan_reg_num();
-        cur_box = box_table[to_unsigned(res)].get_val();
-        box_table[to_unsigned(res)].set_val(nullptr);
+        cur_box = box_table[res].get_val();
+        box_table[res].set_val(nullptr);
         box_end(cur_box, src);
         return;
     }
     if (c == copy_code) {
         res     = scan_reg_num();
-        cur_box = box_table[to_unsigned(res)].get_val();
+        cur_box = box_table[res].get_val();
         box_end(cur_box, src);
         return;
     }
@@ -4224,7 +4224,7 @@ void Parser::M_xray(subtypes c) {
     case showbox_code: {
         auto k = scan_reg_num();
         log_and_tty << "Box " << k << ": ";
-        show_box(box_table[to_unsigned(k)].get_val());
+        show_box(box_table[k].get_val());
         return;
     }
     case show_xmlA_code:

@@ -788,7 +788,7 @@ void Parser::L3_set_num_code(int c) {
         back_input(L1);
         cur_tok = T;
         auto m  = scan_char_num();
-        word_define(to_unsigned(m + offset), N, false);
+        word_define(to_unsigned(to_signed(m) + offset), N, false); // \todo is offset always >=0?
         return;
     }
     auto m = l3_read_int(T);

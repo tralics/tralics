@@ -1409,9 +1409,8 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
         return nullptr;
     }
     if (old_ra && default_prefix() == from_refer) X->cite_key.move_to_refer();
-    int ext = int(cn) - int(type_extension);
-    if (ext > 0) {
-        X->is_extension = ext;
+    if (cn > type_extension) {
+        X->is_extension = cn - type_extension;
         cn              = type_extension;
     } else
         X->is_extension = 0;
@@ -1743,8 +1742,8 @@ void BibEntry::call_type() {
     bbl.push_back_braced(unique_id.c_str());
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
-    if (is_extension != 0)
-        my_name = the_main->get_bibtex_extensions()[to_unsigned(is_extension - 1)].c_str();
+    if (is_extension > 0)
+        my_name = the_main->get_bibtex_extensions()[is_extension - 1].c_str();
     else
         my_name = the_names[type_to_string(type_int)].c_str();
     bbl.push_back_braced(my_name);
