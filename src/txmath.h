@@ -112,25 +112,6 @@ private:
     [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
 };
 
-/// \todo `unary_function` is deprecated
-class MathIsSpace : public std::unary_function<MathElt, bool> {
-public:
-    explicit MathIsSpace() = default;
-    auto operator()(const MathElt &m) -> bool { return m.is_space(); }
-};
-
-class MathIsDollar : public std::unary_function<MathElt, bool> {
-public:
-    explicit MathIsDollar() = default;
-    auto operator()(const Token &m) -> bool { return m.is_math_shift(); }
-};
-
-class MathIsOver : public std::unary_function<MathElt, bool> {
-public:
-    explicit MathIsOver() = default;
-    auto operator()(const MathElt &m) -> bool { return m.get_cmd() == over_cmd; }
-};
-
 using MathList            = std::list<MathElt>;
 using const_math_iterator = std::list<MathElt>::const_iterator;
 using math_iterator       = std::list<MathElt>::iterator;

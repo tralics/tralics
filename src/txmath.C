@@ -1494,7 +1494,7 @@ void Parser::scan_math_tag(subtypes c) {
     if (c == 0) is_star = remove_initial_star();
     TokenList L = read_arg();
     if (c == 0 && (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1)) {
-        L.remove_if(MathIsDollar());
+        L.remove_if([](const Token &m) { return m.is_math_shift(); });
         L.push_front(hash_table.relax_token);
         L.push_front(hash_table.ref_token);
         L.push_front(hash_table.let_token);
@@ -1509,7 +1509,7 @@ void Parser::scan_math_tag(subtypes c) {
     }
     if (c == 0) {
         brace_me(L);
-        L.remove_if(MathIsDollar());
+        L.remove_if([](const Token &m) { return m.is_math_shift(); });
         L.push_front(is_star ? hash_table.ytag_token : hash_table.xtag_token);
         back_input(L);
     } else {
@@ -2197,11 +2197,13 @@ void MathHelper::new_label(const std::string &s, bool anchor) {
 }
 
 // This removes the spaces.
-void Math::remove_spaces() { value.remove_if(MathIsSpace()); }
+void Math::remove_spaces() {
+    value.remove_if([](const MathElt &v) { return v.is_space(); });
+}
 
 // Returns true if there is an \over or something like that in the list.
 auto Math::has_over() const -> bool {
-    auto ovr = std::count_if(value.begin(), value.end(), MathIsOver());
+    auto ovr = std::count_if(value.begin(), value.end(), [](const MathElt &m) { return m.get_cmd() == over_cmd; });
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
 }

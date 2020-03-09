@@ -44,20 +44,6 @@ using MathPList             = std::list<MathPAux>;
 using const_math_p_iterator = std::list<MathPAux>::const_iterator;
 using math_p_iterator       = std::list<MathPAux>::iterator;
 
-class MathPAuxType : public std::unary_function<MathPAux, bool> {
-    math_types T;
-
-public:
-    explicit MathPAuxType(math_types TT) : T(TT) {}
-    auto operator()(const MathPAux &m) -> bool { return m.get_type() == T; }
-};
-
-class MathPAuxSmall : public std::unary_function<MathPAux, bool> {
-public:
-    explicit MathPAuxSmall() = default;
-    auto operator()(const MathPAux &m) -> bool { return m.is_small(); }
-};
-
 class MathP {
     MathPList value;
 

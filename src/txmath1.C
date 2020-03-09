@@ -70,7 +70,7 @@ auto operator<<(std::ostream &fp, const MathQList &X) -> std::ostream & {
 auto MathP::has_small() const -> bool {
     auto B = value.begin();
     auto E = value.end();
-    auto C = std::find_if(B, E, MathPAuxSmall());
+    auto C = std::find_if(B, E, [](const MathPAux &m) { return m.is_small(); });
     return C != E;
 }
 
@@ -172,9 +172,9 @@ auto MathP::analyse1(bool w) const -> bool {
 // 0b 2l 6r 9R 10m 12m 13b.
 void MathP::remove_binrel() {
     if (analyse1(true)) return;
-    value.remove_if(MathPAuxType(mt_flag_bin));
+    value.remove_if([](const MathPAux &m) { return m.get_type() == mt_flag_bin; });
     if (analyse1(false)) return;
-    value.remove_if(MathPAuxType(mt_flag_rel));
+    value.remove_if([](const MathPAux &m) { return m.get_type() == mt_flag_rel; });
 }
 
 // The next function assumes that there is a big at the end of the list.
