@@ -1,4 +1,3 @@
-#include "tralics/MainClass.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"

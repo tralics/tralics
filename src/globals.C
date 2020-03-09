@@ -1,6 +1,5 @@
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txlogger.h"
 #include "txparser.h"
 
 std::vector<std::string> conf_path;
