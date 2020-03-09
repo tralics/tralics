@@ -36,24 +36,3 @@ public:
     void               destroy();
     void               print(std::ostream &fp);
 };
-
-// This is a table of AttList. \todo We should use a vector instead
-class AttListTable {
-    AttList *table{nullptr}; // the table
-    Xml *    xtable{nullptr};
-    int      len{0};  // the length of the table
-    int      size{0}; // the size of the table
-public:
-    void destroy();
-    void resize();
-    void init();
-    auto operator[](int k) -> AttList & { return table[k]; }
-    auto get(int n) -> AttList {
-        if (n < len) return table[n];
-        return AttList();
-    }
-    void push_back(AttList X);
-    void push_back();
-    void push_back(Istring, Istring);
-    void push_back(name_positions, name_positions);
-};

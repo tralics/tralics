@@ -13,7 +13,6 @@
 
 // This file holds the hash table, and XML.
 class LabelInfo;
-class AttListTable;
 
 // The string_hash table. It is like the hashtable below (Text and Next)
 // but it is extensible (maybe, we should make the hashtable extensible)

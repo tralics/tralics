@@ -393,27 +393,6 @@ auto Buffer::is_letter_digit() const -> bool {
     return true;
 }
 
-// Find a command, but in some case sets a flag if we see a dollar sign
-// Stops at a comment.  If it returns true, then we have a command
-// between ptr1 and ptr \todo unused?
-auto Buffer::next_macro_spec(bool incat, long &com_loc, bool &seen_dollar) -> bool {
-    com_loc = -1;
-    for (;;) {
-        char c = head();
-        if (c == 0) return false;
-        if (c == '$' && incat) seen_dollar = true;
-        if (c == '%') {
-            com_loc = to_signed(ptr);
-            return false;
-        }
-        if (c == '\\') {
-            after_slash();
-            return true;
-        }
-        advance();
-    }
-}
-
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
 auto Buffer::substring() -> std::string {
     char c        = at(ptr);

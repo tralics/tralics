@@ -201,7 +201,6 @@ public:
     auto               next_env_spec() -> bool;
     auto               next_kw() -> bool;
     auto               next_macro() -> bool;
-    auto               next_macro_spec(bool incat, long &com_loc, bool &seen_dollar) -> bool;
     auto               next_macro_spec() -> bool;
     auto               next_utf8_byte() -> uchar;
     auto               next_utf8_char() -> codepoint;
