@@ -951,7 +951,7 @@ void Parser::solve_cite(bool user) {
         n = the_stack.get_xid().value;
     } else {
         F    = remove_initial_star();
-        n    = read_elt_id(T);
+        n    = to_signed(read_elt_id(T));
         from = Istring(fetch_name_opt());
     }
     from     = normalise_for_bib(from);

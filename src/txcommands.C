@@ -1145,7 +1145,7 @@ void Parser::translate03() {
     {
         auto        n = read_elt_id(cur_tok);
         std::string a = sT_arg_nopar();
-        Xid(n).add_ref(a);
+        Xid(to_signed(n)).add_ref(a);
     }
         return;
     case box_cmd: T_mbox(c); return;

@@ -16,7 +16,7 @@
 // is a wrapper around an int
 class Xid {
 public:
-    long value; // value of the id
+    long value; // value of the id \todo should this be size_t ?
 
     Xid(long v = 0) : value(v) {}
 

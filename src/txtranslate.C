@@ -2040,11 +2040,11 @@ void Parser::T_error() {
 }
 
 // scans an element id, in brackets, default is cur_id
-auto Parser::read_elt_id(Token T) -> long {
+auto Parser::read_elt_id(Token T) -> size_t {
     auto cur   = the_stack.cur_xid().value;
     auto upper = the_stack.get_xid().value;
     auto n     = scan_special_int_d(T, cur);
-    if (n > 0 && n <= upper) return n;
+    if (n > 0 && n <= upper) return to_unsigned(n);
     err_buf << bf_reset << "Bad xml id replaced by 0: " << n;
     signal_error(err_tok, "number too big");
     return 0;
@@ -2067,7 +2067,7 @@ void Parser::T_xmladdatt(subtypes c) {
     else if (c == addatt_to_index_code)
         n = to_signed(get_index_value());
     else
-        n = read_elt_id(T);
+        n = to_signed(read_elt_id(T));
     cur_tok     = T;
     Istring key = nT_arg_nopar();
     cur_tok     = T;
@@ -2089,11 +2089,11 @@ auto Parser::get_attval() -> std::string {
     auto    n   = read_elt_id(T);
     Istring key = nT_arg_nopar();
     if (key.empty()) {
-        Xml *e = the_stack.elt_from_id(to_unsigned(n));
+        Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return "";
         return e->get_name().c_str();
     }
-    Istring res = Xid(n).has_attribute(key);
+    Istring res = Xid(to_signed(n)).has_attribute(key);
     return res.c_str();
 }
 

@@ -609,7 +609,7 @@ private:
     void        push_tpa();
     void        ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     auto        read_delimited(const TokenList &L) -> TokenList;
-    auto        read_elt_id(Token T) -> long; // \todo Should be size_t, answer is always nonnegative
+    auto        read_elt_id(Token T) -> size_t;
     auto        read_for_variable() -> Token;
     auto        read_from_file(long ch, bool rl_sw) -> TokenList;
     auto        read_mac_body(bool exp) -> TokenList;
