@@ -75,13 +75,13 @@ void Parser::T_newcolumn_type() {
 // Assume that T is the token defined and stored by the procedures above
 // This returns -1 in case something strange happened (like redefinition)
 // returns the number of arguments of the function otherwise.
-auto Parser::nct_aux(Token T, TokenList &body) -> long { // \todo std::optional<size_t>?
+auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
     see_cs_token(T);
-    if (!cur_cmd_chr.is_user()) return -1; // bad
+    if (!cur_cmd_chr.is_user()) return {}; // bad
     Macro &X = mac_table.get_macro(cur_cmd_chr.chr);
-    if (!(X.type == dt_empty || X.type == dt_normal)) return -1;
+    if (!(X.type == dt_empty || X.type == dt_normal)) return {};
     body = X.body;
-    return to_signed(X.nbargs);
+    return X.nbargs;
 }
 
 // This piece of code expands all the \newcolumntype commands
@@ -107,11 +107,11 @@ void Parser::expand_nct(TokenList &L) {
             Token     T = new_array_object.nct_token(c);
             TokenList body;
             auto      n = nct_aux(T, body);
-            if (n == -1) {
+            if (!n) {
                 new_array_object.remove_a_type(c);
                 continue;
             }
-            if (token_ns::expand_nct(L, n, c, max_iter, body)) {
+            if (token_ns::expand_nct(L, *n, c, max_iter, body)) {
                 action = true;
                 if (tracing_commands()) the_log << "array preamble after " << c << ": " << L << "\n";
             }
@@ -122,7 +122,7 @@ void Parser::expand_nct(TokenList &L) {
 // Here we have to find the character c.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-auto token_ns::expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &body) -> bool {
+auto token_ns::expand_nct(TokenList &L, size_t n, uchar c, int &MX, TokenList &body) -> bool {
     TokenList                 res;
     bool                      result = false;
     std::array<TokenList, 10> Table; // arguments of the commands
@@ -142,7 +142,7 @@ auto token_ns::expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &bod
         result = true; // We found something
         MX--;
         if (MX < 0) return true;
-        for (size_t k = 0; to_signed(k) < n; k++) Table[k + 1] = get_a_param(L, false);
+        for (size_t k = 0; k < n; k++) Table[k + 1] = get_a_param(L, false);
         TokenList W = Parser::expand_mac_inner(body, Table.data());
         L.splice(L.begin(), W);
     }

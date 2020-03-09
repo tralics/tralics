@@ -202,7 +202,7 @@ public:
     void               load_latex();
     auto               read_arg() -> TokenList;
     auto               read_arg_nopar() -> TokenList;
-    auto               nct_aux(Token T, TokenList &body) -> long;
+    auto               nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
     auto               nE_arg_nopar() -> Istring;
     auto               nT_arg_nopar() -> Istring;
     auto               nT_optarg_nopar() -> Istring;

@@ -24,7 +24,7 @@ namespace token_ns {
     void add_verbatim_number(TokenList &L, const Hashtab &H, long n);
     auto block_size(const TokenList &L) -> int;
     void expand_nct(TokenList &);
-    auto expand_nct(TokenList &L, long n, uchar c, int &MX, TokenList &body) -> bool;
+    auto expand_nct(TokenList &L, size_t n, uchar c, int &MX, TokenList &body) -> bool;
     void expand_star(TokenList &L);
     auto fast_get_block(TokenList &L) -> TokenList;
     void fast_get_block(TokenList &L, TokenList &res);
