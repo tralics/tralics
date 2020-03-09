@@ -4,7 +4,7 @@ Istring::Istring(name_positions N) : value(the_names[N].value) {}
 
 // True if the string holds only white space
 auto Istring::only_space() const -> bool {
-    const std::string &s = the_main->SH[to_unsigned(value)];
+    const std::string &s = the_main->SH[value];
     size_t             i = 0, l = s.length();
     while (i < l) {
         if (is_space(s[i]))

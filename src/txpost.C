@@ -201,7 +201,7 @@ void Parser::user_XML_modify(subtypes c) {
 auto StrHash::next_label_id() -> Istring {
     last_label_id++;
     mybuf << bf_reset << "uid" << last_label_id;
-    return Istring(to_signed(hash_find()));
+    return Istring(hash_find());
 }
 
 // Implementation of \label, \ref
@@ -209,7 +209,7 @@ auto StrHash::next_label_id() -> Istring {
 auto StrHash::next_top_label_id() -> Istring {
     last_top_label_id++;
     mybuf << bf_reset << "cid" << last_top_label_id;
-    return Istring(to_signed(hash_find()));
+    return Istring(hash_find());
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {

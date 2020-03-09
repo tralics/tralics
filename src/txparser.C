@@ -1341,7 +1341,7 @@ void Parser::T_start_theorem(int c) {
         }
         the_stack.set_v_mode();
         Xid res = ileave_v_mode();
-        res.add_attribute(Istring(0L), Istring(""));
+        res.add_attribute(Istring(0UL), Istring(""));
         remove_initial_space_and_back_input();
     }
 }

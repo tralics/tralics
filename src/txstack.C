@@ -446,7 +446,7 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = Istring(to_signed(the_main->SH.hash_find()));
+            auto     a   = Istring(the_main->SH.hash_find());
             Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->get_id().get_att();
             W.push_back(the_names[np_rend], a);

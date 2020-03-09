@@ -623,7 +623,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
 // Special hack, because we insert the number, not the value
 auto token_ns::string_to_list(Istring s) -> TokenList {
     Buffer &B = buffer_for_log;
-    B << bf_reset << s.value;
+    B << bf_reset << to_signed(s.value); // \todo define <<(size_t)
     return B.str_toks(nlt_space);
 }
 
@@ -807,7 +807,7 @@ auto StrHash::find(int s) -> size_t {
 auto StrHash::find_scaled(ScaledInt s) -> Istring {
     mybuf.reset();
     mybuf.push_back(s, glue_spec_pt);
-    return Istring(to_signed(hash_find()));
+    return Istring(hash_find());
 }
 
 void Buffer::push_back(const Istring &X) {

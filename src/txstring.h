@@ -34,7 +34,7 @@ class StrHash {
 public:
     StrHash();
 
-    [[nodiscard]] auto p_str(long k) const -> String { return Value[k]; }
+    [[nodiscard]] auto p_str(size_t k) const -> String { return Value[k]; }
 
     void re_alloc();
     auto hash_find() -> size_t;

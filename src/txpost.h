@@ -17,7 +17,7 @@ class ModChecker {
     bool    is_mod{false};   // is this a module?
     bool    has_info{false}; // does this have some infos ?
 public:
-    ModChecker() : id(0L) {}
+    ModChecker() : id(0UL) {}
     ModChecker(Istring I, bool mod) : id(I), is_mod(mod) {}
     void set(Istring I) {
         if (id == I) has_info = true;

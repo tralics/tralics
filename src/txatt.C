@@ -102,7 +102,7 @@ void Xid::add_attribute(Xid b) {
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
     auto i = has_value(Istring(a));
-    if (i > 0) val[to_unsigned(i)].name = Istring(0L);
+    if (i > 0) val[to_unsigned(i)].name = Istring(0UL);
 }
 
 // This kills the whole list

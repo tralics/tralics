@@ -5,12 +5,12 @@
 class Buffer;
 
 struct Istring {
-    long value{0}; // \todo size_t ?
+    size_t value{0};
 
     Istring() = default;
     explicit Istring(name_positions N);
     explicit Istring(const Buffer &X);
-    explicit Istring(long N) : value(N) {}
+    explicit Istring(size_t N) : value(N) {}
     explicit Istring(const std::string &s);
     explicit Istring(String s);
 

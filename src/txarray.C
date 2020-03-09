@@ -278,7 +278,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
-        const std::string &s = the_main->SH[to_unsigned(x.value)];
+        const std::string &s = the_main->SH[x.value];
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble
@@ -484,7 +484,7 @@ void Parser::start_a_row(long a) {
         if (V != nullptr) prev_row = V->get_id();
     }
     bool initial_hline = false;
-    if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(a));
+    if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(to_unsigned(a)));
     for (;;) {
         remove_initial_space_and_back_input(); // get first non-space xtoken
         symcodes S = cur_cmd_chr.cmd;
@@ -791,7 +791,7 @@ void Parser::T_cline() {
         if (!R->is_xmlc() && R->has_name(the_names[np_row])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
-                R->change_name(Istring(0L));
+                R->change_name(Istring(0UL));
                 the_stack.add_border(cline_first, cl_span);
                 the_log << "\\cline killed a cell \n";
                 return;
