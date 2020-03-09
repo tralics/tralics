@@ -651,7 +651,7 @@ void math_ns::insert_delimiter_t(del_pos k) {
 // This inserts something like \alpha, with a space at the end when needed
 // if the boolean space is false, no space is added at the end.
 void Buffer::push_back_math_token(const CmdChr &x, bool space) {
-    if (x.get_cmd() > 16) {
+    if (x.cmd > 16) {
         push_back('\\');
         String s = x.name();
         if (s == nullptr) s = "unknown.";
@@ -669,7 +669,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
 // We must take
 
 void Buffer::push_back_math_tag(const CmdChr &x, int type) {
-    if (x.get_cmd() > 16) {
+    if (x.cmd > 16) {
         String s = x.name();
         if (s == nullptr) s = "unknown.";
         push_back_math_tag(s, type);
@@ -1386,20 +1386,20 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
                 B.push_back("&gt;");
             else
                 B.push_back(c);
-        } else if (w.get_cmd() == cst1_cmd && w.get_chr() == sharp_code)
+        } else if (w.cmd == cst1_cmd && w.chr == sharp_code)
             B.push_back("#");
-        else if (w.get_cmd() == cst1_cmd && w.get_chr() == underscore_code)
+        else if (w.cmd == cst1_cmd && w.chr == underscore_code)
             B.push_back("_");
-        else if (w.get_cmd() == cst1_cmd && w.get_chr() == amp_code)
+        else if (w.cmd == cst1_cmd && w.chr == amp_code)
             B.push_back("&amp;");
-        else if (w.get_cmd() == char_given_cmd)
+        else if (w.cmd == char_given_cmd)
             B.push_back_real_utf8(w.char_val());
-        else if (w.get_cmd() == relax_cmd)
+        else if (w.cmd == relax_cmd)
             continue;
-        else if (rec && w.get_cmd() == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
+        else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
             if (!L->get_list().chars_to_mb(B, true)) return false;
         } else {
-            log_and_tty << lg_start << "First invalid token in math-to-string cmd=" << w.get_cmd() << " chr=" << w.get_chr() << lg_end;
+            log_and_tty << lg_start << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << lg_end;
             std::cout << "\n";
             return false;
         }
@@ -1419,11 +1419,11 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
         } // spaces are ignored
         else if (w.is_letter() || w.is_other())
             B.push_back(w.char_val());
-        else if (w.get_cmd() == cst1_cmd && w.get_chr() == comma_code)
+        else if (w.cmd == cst1_cmd && w.chr == comma_code)
             B.push_back(" ");
-        else if (w.get_cmd() == relax_cmd)
+        else if (w.cmd == relax_cmd)
             continue;
-        else if (w.get_cmd() == mathspace_cmd)
+        else if (w.cmd == mathspace_cmd)
             B.push_back(" ");
         else
             return false;
@@ -1739,7 +1739,7 @@ void Parser::TM_fonts() {
     int    T;
     bool   bold = is_pos_par(atmathversion_code);
     if (cur_cmd_chr.is_math_font()) {
-        switch (cur_cmd_chr.get_chr()) {
+        switch (cur_cmd_chr.chr) {
         case cal_code:
             back_input(table[bold ? math_f_bold_script : math_f_script]);
             back_input(hash_table.nomathsw0_token);
@@ -1756,7 +1756,7 @@ void Parser::TM_fonts() {
         default: T = -1;
         }
     } else { // this is a textfont
-        switch (cur_cmd_chr.get_chr()) {
+        switch (cur_cmd_chr.chr) {
         case rm_family_code: T = math_f_upright; break;
         case sf_family_code: T = bold ? math_f_bold_sansserif : math_f_sansserif; break;
         case tt_family_code: T = math_f_monospace; break;
@@ -1770,7 +1770,7 @@ void Parser::TM_fonts() {
         default: T = -1;
         }
     }
-    if (cur_cmd_chr.get_cmd() == oldfont_cmd || cur_cmd_chr.get_cmd() == noargfont_cmd) {
+    if (cur_cmd_chr.cmd == oldfont_cmd || cur_cmd_chr.cmd == noargfont_cmd) {
         if (T != -1) {
             back_input(table[T]);
             back_input(hash_table.nomathsw0_token);

@@ -148,7 +148,7 @@ public:
     auto               full_brace_match() -> bool;
     [[nodiscard]] auto get_int_val() const -> int;
     auto               get_machine_name() -> std::string;
-    [[nodiscard]] auto hashcode(int prime) const -> int;
+    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;
     [[nodiscard]] auto head() const -> char { return at(ptr); }
     auto               is_not_char(size_t p, uchar x) -> bool { return uchar(at(p)) != x; }
     auto               holds_documentclass(Buffer &a, Buffer &b, Buffer &c) -> int;

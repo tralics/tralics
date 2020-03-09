@@ -198,7 +198,7 @@ auto Hashtab::find_empty(String s) -> int {
 // If a new slot has to be created, uses the string name, if not empty.
 // The string name must be a permanent string
 auto Hashtab::hash_find(const Buffer &b, String name) -> long {
-    auto p = to_unsigned(b.hashcode(hash_prime));
+    auto p = b.hashcode(hash_prime);
     for (;;) {
         if ((Text[p] != nullptr) && b == Text[p]) return to_signed(p);
         if (Next[p] != 0)
@@ -212,7 +212,7 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> long {
 
 // Finds the object in the buffer B.
 auto Hashtab::hash_find() -> long {
-    auto p = to_unsigned(B.hashcode(hash_prime));
+    auto p = B.hashcode(hash_prime);
     for (;;) {
         if ((Text[p] != nullptr) && B == Text[p]) return to_signed(p);
         if (Next[p] != 0)
@@ -259,12 +259,12 @@ auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
 }
 
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
-auto Buffer::hashcode(int prime) const -> int {
+auto Buffer::hashcode(size_t prime) const -> size_t {
     size_t j = 1;
-    auto   h = static_cast<uchar>(at(0));
+    size_t h = static_cast<uchar>(at(0));
     if (h == 0) return 0;
     for (;;) {
-        auto c = static_cast<uchar>(at(j));
+        size_t c = static_cast<uchar>(at(j));
         if (c == 0) return h;
         h = (h + h + c) % prime;
         j++;
@@ -305,7 +305,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
         if (c.non_null())
             T = c.value + single_offset;
         else {
-            auto p = to_unsigned(b.hashcode(hash_prime));
+            auto p = b.hashcode(hash_prime);
             for (;;) {
                 if ((Text[p] != nullptr) && b == Text[p]) break;
                 if (Next[p] != 0)
@@ -658,15 +658,15 @@ auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return f
 // Puts a macro into a buffer.
 void Buffer::push_back(const Macro &x) {
     *this << x[0];
-    auto K = x.get_nbargs();
-    if (x.get_type() != dt_optional) {
+    auto K = x.nbargs;
+    if (x.type != dt_optional) {
         for (size_t i = 0; i < K; i++) { *this << '#' << to_signed(i) + 1 << x[i + 1]; }
     } else {
         *this << x[1];
         for (size_t i = 1; i < K; i++) { *this << '#' << to_signed(i) + 1; }
     }
     if (wptr > 0 && at(wptr - 1) == '{') at(wptr - 1) = '#';
-    *this << "->" << x.get_body();
+    *this << "->" << x.body;
 }
 
 // Puts a macro into a buffer.
@@ -756,10 +756,10 @@ void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
 
 // Find something in the StrHash table. The buffer mybuf holds the string
 // to search. result is never zero
-auto StrHash::hash_find() -> long {
+auto StrHash::hash_find() -> size_t { // \todo size_t
     the_parser.my_stats.one_more_sh_find();
     if (mybuf.at(0) == 0) return 1;
-    long p = mybuf.hashcode(hash_prime) + 3;
+    auto p = mybuf.hashcode(hash_prime) + 3; // \todo why this +3 ???
     for (;;) {
         if ((Text[p] != nullptr) && mybuf == Text[p]) return p;
         if (Next[p] != 0)
@@ -888,7 +888,7 @@ void Parser::print_cmd_chr(CmdChr X) {
     }
     if (a != nullptr) { // chr
         the_log << a;
-        codepoint y(char32_t(X.get_chr()));
+        codepoint y(char32_t(X.chr));
         Buffer &  B = buffer_for_log;
         B.reset();
         B.out_log(y, the_main->get_log_encoding());
@@ -897,7 +897,7 @@ void Parser::print_cmd_chr(CmdChr X) {
     if (b != nullptr)
         the_log << "\\" << b;
     else
-        the_log << "(Unknown " << X.get_cmd() << "," << X.get_chr() << ")";
+        the_log << "(Unknown " << X.cmd << "," << X.chr << ")";
 }
 
 // ------------------------ token lists ----------------------------

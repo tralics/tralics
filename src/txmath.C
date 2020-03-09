@@ -357,8 +357,8 @@ void MathElt::print() const {
 // General fence around val.
 auto MathDataP::make_mfenced(int open, int close, Xml *val) -> Xml * {
     Xml *res = new Xml(cst_mfenced, nullptr);
-    res->add_att(np_close, xml_lr_ptable[close]);
-    res->add_att(np_open, xml_lr_ptable[open]);
+    res->add_att(Istring(np_close), xml_lr_ptable[close]);
+    res->add_att(Istring(np_open), xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names[np_separator] == the_names[cst_mrow]) {
         if (!single_elt) val = new Xml(cst_mrow, val);
@@ -690,7 +690,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
     if (type == nomathenv_code) { // case of $...
         add_to_trace(cur_tok);
         get_token(); // no expansion
-        if (cur_cmd_chr.get_cmd() == 3) {
+        if (cur_cmd_chr.cmd == 3) {
             add_to_trace(cur_tok);
             u.set_display_type();
             return false;
@@ -739,7 +739,7 @@ void Parser::after_math(bool is_inline) {
         leave_h_mode();
         if (the_main->is_interactive_math()) return; // no need to be subtle
         remove_initial_space_and_back_input();
-        if (w && cur_cmd_chr.get_cmd() != par_cmd) back_input(hash_table.noindent_token);
+        if (w && cur_cmd_chr.cmd != par_cmd) back_input(hash_table.noindent_token);
     }
 }
 
@@ -851,7 +851,7 @@ void Parser::T_math(subtypes type) {
 
     res1->change_id(cmi.get_fid());
     res1->add_att(np_type, cmi.get_pos_att());
-    if (!textype.empty()) res1->add_att(np_textype, Istring(textype));
+    if (!textype.empty()) res1->add_att(Istring(np_textype), Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->is_interactive_math()) {
         if (only_input_data)
@@ -926,17 +926,17 @@ auto Parser::scan_math1(int res) -> int {
         parse_error("End of input reached");
         return 0;
     }
-    symcodes T = cur_cmd_chr.get_cmd();
+    symcodes T = cur_cmd_chr.cmd;
     if (T == nobreakspace_cmd) {
         back_input(Token(other_t_offset, '~'));
         return 1;
     }
     // replace \{ by \lbrace
-    if (T == cst1_cmd && cur_cmd_chr.get_chr() == rbrace_chr) {
+    if (T == cst1_cmd && cur_cmd_chr.chr == rbrace_chr) {
         back_input(hash_table.rbrace_token);
         return 1;
     }
-    if (T == cst1_cmd && cur_cmd_chr.get_chr() == lbrace_chr) {
+    if (T == cst1_cmd && cur_cmd_chr.chr == lbrace_chr) {
         back_input(hash_table.lbrace_token);
         return 1;
     }
@@ -950,7 +950,7 @@ auto Parser::scan_math1(int res) -> int {
     if (T == 11 || T == 12 || T == char_given_cmd) {
         // FIXME what is the purpose of this math mode test
         if (the_stack.get_mode() == mode_math) {
-            int c = cur_cmd_chr.get_chr();
+            int c = cur_cmd_chr.chr;
             if (c > 0 && c < int(nb_characters)) {
                 auto u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
                 if (u == 32768) {
@@ -982,8 +982,8 @@ void Parser::scan_math(int res, math_list_type type) {
         int w = scan_math1(res);
         if (w == 0) return;
         if (w == 1) continue;
-        symcodes T = cur_cmd_chr.get_cmd();
-        subtypes c = cur_cmd_chr.get_chr();
+        symcodes T = cur_cmd_chr.cmd;
+        subtypes c = cur_cmd_chr.chr;
         Token    t = cur_tok;
         switch (T) {
         case 1: // open brace, read a group
@@ -1340,7 +1340,7 @@ void MathHelper::ml_last_pass(bool vb) {
 // We have seen & or \\. Must interpret it
 void Parser::scan_math_endcell_ok(int res) {
     math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
-    if (cur_cmd_chr.get_cmd() == backslash_cmd && res == 0 && cmi.get_eqnum_status() == 2) {
+    if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.get_eqnum_status() == 2) {
         bool w = cmi.end_of_row();
         if (!w) {
             refstepcounter("equation", false);
@@ -1354,7 +1354,7 @@ void Parser::scan_math_endcell_ok(int res) {
 // We have seen \begin or \end
 // return false if parsing continues, true otherwise (case of \end)
 auto Parser::scan_math_env(int res, math_list_type type) -> bool {
-    symcodes T        = cur_cmd_chr.get_cmd();
+    symcodes T        = cur_cmd_chr.cmd;
     bool     at_start = T == begin_cmd;
     // Check if v-part of template has to be inserted here
     if (!at_start && stack_math_in_cell()) {
@@ -1395,7 +1395,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
     }
     // non-user env
     subtypes et = nomathenv_code;
-    if (cur_cmd_chr.get_cmd() == math_env_cmd) et = cur_cmd_chr.get_chr();
+    if (cur_cmd_chr.cmd == math_env_cmd) et = cur_cmd_chr.chr;
     if (at_start) {
         if (et == nomathenv_code || ((math_env_props(et) & 1) != 0)) {
             Buffer &B = math_buffer;
@@ -1447,7 +1447,7 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
     case math_ddollar_cd: // We want $$ or equivalent
         get_x_token();
         add_to_trace(cur_tok);
-        if (cur_cmd_chr.get_cmd() != 3) parse_error("Display math should end with $$");
+        if (cur_cmd_chr.cmd != 3) parse_error("Display math should end with $$");
         return true;
     case math_open_cd:
         if (!the_stack.in_h_mode()) {
@@ -1524,7 +1524,7 @@ void Parser::scan_eqno(math_list_type type) {
         parse_error(err_tok, "Command \\eqno allowed only in display math", "bad \\eqno");
         return;
     }
-    name_positions w = cur_cmd_chr.get_chr() == leqno_code ? np_left : np_right;
+    name_positions w = cur_cmd_chr.chr == leqno_code ? np_left : np_right;
     cmi.get_fid().add_attribute(np_eqnpos, w, true);
     TokenList L;
     int       balance = 0;
@@ -1534,15 +1534,15 @@ void Parser::scan_eqno(math_list_type type) {
             parse_error("End of input reached while scanning \\eqno");
             return;
         }
-        if (cur_cmd_chr.get_cmd() == char_num_cmd) {
+        if (cur_cmd_chr.cmd == char_num_cmd) {
             auto C  = scan_char_num();
             cur_tok = Token(other_t_offset, static_cast<uchar>(C));
             back_input();
             continue;
         }
-        if (cur_cmd_chr.get_cmd() == 12 && cur_cmd_chr.get_chr() == '\'') cur_tok = hash_table.apostrophe_token;
+        if (cur_cmd_chr.cmd == 12 && cur_cmd_chr.chr == '\'') cur_tok = hash_table.apostrophe_token;
         check_brace(balance);
-        if (balance == 0 && cur_cmd_chr.get_cmd() == 3) break;
+        if (balance == 0 && cur_cmd_chr.cmd == 3) break;
         L.push_back(cur_tok);
     }
     back_input();
@@ -1587,18 +1587,18 @@ void Parser::scan_math_rel(subtypes c, int res) {
         Token not_token = cur_tok;
         get_x_token();
         if (cur_tok.is_invalid()) {
-        } else if (cur_tok.not_a_cmd() && cur_cmd_chr.get_chr() == '=') {
+        } else if (cur_tok.not_a_cmd() && cur_cmd_chr.chr == '=') {
             add_to_trace(cur_tok);
-            cur_cmd_chr.set_cmd_chr(mathrel_cmd, subtypes(ne_code));
+            cur_cmd_chr.set(mathrel_cmd, subtypes(ne_code));
             w = subtypes(not_token.val);
-        } else if (cur_cmd_chr.get_cmd() == mathbin_cmd && cur_cmd_chr.get_chr() == subtypes(in_code)) {
+        } else if (cur_cmd_chr.cmd == mathbin_cmd && cur_cmd_chr.chr == subtypes(in_code)) {
             add_to_trace(cur_tok);
-            cur_cmd_chr.set_cmd_chr(mathbin_cmd, subtypes(notin_code));
+            cur_cmd_chr.set(mathbin_cmd, subtypes(notin_code));
             w = subtypes(not_token.val);
         } else {
             back_input();
             cur_tok = not_token;
-            cur_cmd_chr.set_cmd_chr(mathord_cmd, subtypes(not_code));
+            cur_cmd_chr.set(mathord_cmd, subtypes(not_code));
         }
     }
     math_data.push_back(res, cur_cmd_chr, w);
@@ -2013,8 +2013,8 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
     bool nf = special_fence(sname, open, close);
     if (nf) {
         res = new Xml(the_names[cst_mfenced], res);
-        res->add_att(np_close, math_data.get_fence(close));
-        res->add_att(np_open, math_data.get_fence(open));
+        res->add_att(Istring(np_close), math_data.get_fence(close));
+        res->add_att(Istring(np_open), math_data.get_fence(open));
     }
     return res;
 }
@@ -2164,7 +2164,7 @@ void Math::add_cur_font() {
 
 // Insert the font in the list and saves the font.
 void Parser::TM_math_fonts(Math &x) {
-    subtypes cur_chr = cur_cmd_chr.get_chr();
+    subtypes cur_chr = cur_cmd_chr.chr;
     the_parser.word_define(math_font_pos, cur_chr, false);
     x.push_back_font(cur_chr, zero_code);
 }

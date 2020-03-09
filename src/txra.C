@@ -86,7 +86,7 @@ void Parser::T_rasection() {
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
     if (!elt_name.empty()) cur->get_id().add_attribute(np_name, iname);
-    if (iname == cst_composition) compo_id = cur->get_id();
+    if (iname == Istring(cst_composition)) compo_id = cur->get_id();
     the_stack.push(the_names[cst_rasection], cur);
     string_define(0, name, false);
     Istring id = the_stack.add_new_anchor();

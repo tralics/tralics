@@ -1968,7 +1968,7 @@ void Parser::fp_special_expand(TokenList &B) {
     if (B.empty()) B.push_back(hash_table.zero_token);
     Token B1 = B.front();
     token_from_list(B1);
-    if (cur_cmd_chr.get_cmd() == other_catcode) {
+    if (cur_cmd_chr.cmd == other_catcode) {
         back_input(B);
         return;
     }

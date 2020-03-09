@@ -305,14 +305,14 @@ void Parser::see_font_change(subtypes c) {
 
 // Case of a command like \small.
 void Parser::translate_font_size() {
-    cur_font.change_size(cur_cmd_chr.get_chr());
+    cur_font.change_size(cur_cmd_chr.chr);
     font_has_changed();
 }
 
 // \rm is : \normalfont\rmfamily (in latex, it changes also math fonts)
 void Parser::old_font() {
     cur_font.kill();
-    see_font_change(cur_cmd_chr.get_chr());
+    see_font_change(cur_cmd_chr.chr);
 }
 
 // \textit{x} is coded as {\itshape x}
@@ -550,7 +550,7 @@ void Parser::T_paras(subtypes x) {
         if (!L.empty()) {
             token_from_list(L.front());
             sectionning_offset = section_code;
-            if (cur_cmd_chr.get_cmd() == section_cmd) sectionning_offset = cur_cmd_chr.get_chr();
+            if (cur_cmd_chr.cmd == section_cmd) sectionning_offset = cur_cmd_chr.chr;
             if (sectionning_offset == chapter_code) Xid(1).add_attribute(np_chapters, np_true);
             if (sectionning_offset == part_code) Xid(1).add_attribute(np_part, np_true);
         }
@@ -562,7 +562,7 @@ void Parser::T_paras(subtypes x) {
         TokenList L = read_arg();
         if (!L.empty()) {
             token_from_list(L.front());
-            if (cur_cmd_chr.get_cmd() == section_cmd) y = cur_cmd_chr.get_chr() - sectionning_offset;
+            if (cur_cmd_chr.cmd == section_cmd) y = cur_cmd_chr.chr - sectionning_offset;
         }
     }
     if (y < 0) y = 0;
@@ -917,7 +917,7 @@ void Parser::includegraphics(subtypes C) {
             if (skey == "clip")
                 AL.push_back(np_clip, V, true);
             else
-                AL.push_back(Istring(skey), V, true);
+                AL.push_back(Istring(skey), Istring(V), true);
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
@@ -1058,9 +1058,9 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> Istr
         Buffer &B = tpa_buffer;
         B << bf_reset << "\\color@" << name;
         token_from_list(hash_table.locate(B));
-        if (cur_cmd_chr.get_cmd() == color_cmd) {
+        if (cur_cmd_chr.cmd == color_cmd) {
             auto n = all_colors.size();
-            int  k = cur_cmd_chr.get_chr() - color_offset;
+            int  k = cur_cmd_chr.chr - color_offset;
             if (k >= 0 && to_unsigned(k) < n) return all_colors[to_unsigned(k)]->get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
@@ -1428,7 +1428,7 @@ void Parser::T_url(subtypes c) {
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);
-        if (cur_cmd_chr.get_chr() == 1 && cur_cmd_chr.get_cmd() == url_cmd) {
+        if (cur_cmd_chr.chr == 1 && cur_cmd_chr.cmd == url_cmd) {
             X.pop_front();
             is_rrrt = true;
         }
@@ -2029,7 +2029,7 @@ void Parser::LC() {
 }
 
 void Parser::T_error() {
-    if (cur_cmd_chr.get_chr() == 1) {
+    if (cur_cmd_chr.chr == 1) {
         parse_error(cur_tok, "Can be used only in preamble: ", cur_tok, "", "noprerr");
         return;
     }

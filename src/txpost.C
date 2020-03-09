@@ -637,7 +637,7 @@ auto Xml::is_empty_p() const -> bool {
     AttList &X = id.get_att();
     if (X.empty()) return true;
     if (X.val.size() != 1) return false;
-    if (X.val.front().name == np_noindent) return true;
+    if (X.val.front().name == Istring(np_noindent)) return true;
     return false;
 }
 
@@ -721,7 +721,7 @@ auto Xml::single_son() const -> Xml * {
 
 // Removes empty <p> elements
 void Xml::remove_empty_par() {
-    XmlAction X(cst_p, rc_delete_empty);
+    XmlAction X(Istring(cst_p), rc_delete_empty);
     recurse(X);
 }
 
@@ -808,10 +808,10 @@ void Xml::postprocess_fig_table(bool is_fig) {
 // Post processor of figure.
 void post_ns::postprocess_figure(Xml *to, Xml *from) {
     Xml *     X;
-    XmlAction X1(np_table, rc_contains);
-    XmlAction X2(np_subfigure, rc_contains);
-    XmlAction X3(np_figure, rc_how_many);
-    XmlAction X4(np_pre, rc_contains);
+    XmlAction X1(Istring(np_table), rc_contains);
+    XmlAction X2(Istring(np_subfigure), rc_contains);
+    XmlAction X3(Istring(np_figure), rc_how_many);
+    XmlAction X4(Istring(np_pre), rc_contains);
     from->recurse0(X1);
     from->recurse0(X2);
     from->recurse(X3);
@@ -860,7 +860,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         from->subst_env0(the_names[np_hfill], nbsp);
         from->subst_env0(the_names[np_hfil], nbsp);
         from->move(the_names[cst_p], to);
-        XmlAction X5(np_figure, rc_return_first);
+        XmlAction X5(Istring(np_figure), rc_return_first);
         from->recurse0(X5);
         if (X5.get_xml_val() != nullptr) // dommage
             from->add_non_empty_to(to);
@@ -871,7 +871,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
 // Post processor table.
 
 void post_ns::postprocess_table(Xml *to, Xml *from) {
-    XmlAction X1(np_table, rc_how_many);
+    XmlAction X1(Istring(np_table), rc_how_many);
     from->recurse(X1);
     // Special case: more than one tabular in the table
     // We move in to all tabular
@@ -1021,7 +1021,7 @@ void Xml::reset() { tree.erase(tree.begin(), tree.end()); }
 
 // Postprocessor for <composition>
 void Xml::compo_special() {
-    XmlAction X(np_module, rc_composition);
+    XmlAction X(Istring(np_module), rc_composition);
     recurse(X);
 }
 

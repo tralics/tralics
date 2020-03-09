@@ -264,7 +264,7 @@ void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
 void Parser::undefined_mac() {
     bool noxml = the_main->get_no_undef_mac();
     err_buf << bf_reset << "Undefined command " << cur_tok.tok_to_str();
-    if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.get_cmd();
+    if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.cmd;
     if (noxml) {
         signal_error(Token(), "Undefined command");
         eq_define(cur_tok.eqtb_loc(), CmdChr(self_insert_cmd, zero_code), true);

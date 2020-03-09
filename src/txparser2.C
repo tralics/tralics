@@ -87,7 +87,7 @@ void Parser::T_fancy(String s, TokenList &L) {
 }
 
 void Parser::T_fancy() {
-    subtypes c  = cur_cmd_chr.get_chr();
+    subtypes c  = cur_cmd_chr.chr;
     int      hf = 0;
     if (c == fancy_head_code)
         hf = 1;
@@ -800,7 +800,7 @@ void Parser::define_cmd_key(subtypes c) {
         auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
-        read_mac_body(X->get_body(), false, 1);
+        read_mac_body(X->body, false, 1);
         X->correct_type();
         mac_define(T, X, false, rd_always, user_cmd);
     }
@@ -967,7 +967,7 @@ void Parser::define_bool_key(subtypes c) {
         auto *X = new Macro;
         X->set_nbargs(1);
         X->set_type(dt_normal);
-        read_mac_body(X->get_body(), false, 1);
+        read_mac_body(X->body, false, 1);
         X->correct_type();
         mac_define(T, X, false, rd_always, user_cmd);
     }
@@ -1197,7 +1197,7 @@ void Parser::internal_define_key(Token T) {
     auto *X = new Macro;
     X->set_nbargs(1);
     X->set_type(dt_normal);
-    read_mac_body(X->get_body(), false, 1);
+    read_mac_body(X->body, false, 1);
     X->correct_type();
     mac_define(T, X, false, rd_always, user_cmd);
 }

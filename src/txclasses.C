@@ -588,7 +588,7 @@ void Parser::T_load_with_options(bool c) // c is true for a class
 // This implements \documentclass, and \LoadClass
 // bad is true in not vertical mode of after \begin{document}
 void Parser::T_documentclass(bool bad) {
-    int       c = cur_cmd_chr.get_chr();
+    int       c = cur_cmd_chr.chr;
     Token     T = cur_tok;
     TokenList Loptions;
     read_optarg_nopar(Loptions);

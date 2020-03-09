@@ -1374,8 +1374,8 @@ void Parser::finish_images() {
         main_ns::log_or_tty << "There was no image.\n";
     else
         main_ns::log_or_tty << fmt::format("There were {} images.\n", s);
-    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << check_image1 << ".\n";
-    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2 << ".\n";
+    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << Istring(check_image1) << ".\n";
+    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << Istring(check_image2) << ".\n";
 }
 
 auto Buffer::get_machine_name() -> std::string {

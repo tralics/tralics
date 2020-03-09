@@ -78,10 +78,10 @@ void Parser::T_newcolumn_type() {
 auto Parser::nct_aux(Token T, TokenList &body) -> long { // \todo std::optional<size_t>?
     see_cs_token(T);
     if (!cur_cmd_chr.is_user()) return -1; // bad
-    Macro &X = mac_table.get_macro(cur_cmd_chr.get_chr());
-    if (!(X.get_type() == dt_empty || X.get_type() == dt_normal)) return -1;
-    body = X.get_body();
-    return to_signed(X.get_nbargs());
+    Macro &X = mac_table.get_macro(cur_cmd_chr.chr);
+    if (!(X.type == dt_empty || X.type == dt_normal)) return -1;
+    body = X.body;
+    return to_signed(X.nbargs);
 }
 
 // This piece of code expands all the \newcolumntype commands
@@ -487,7 +487,7 @@ void Parser::start_a_row(long a) {
     if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(a));
     for (;;) {
         remove_initial_space_and_back_input(); // get first non-space xtoken
-        symcodes S = cur_cmd_chr.get_cmd();
+        symcodes S = cur_cmd_chr.cmd;
         if (S == ifnextchar_cmd) {
             get_token();
             T_ifnextchar(true);
@@ -495,7 +495,7 @@ void Parser::start_a_row(long a) {
         }
         if (S == hline_cmd) {
             SaveErrTok sv(cur_tok);
-            subtypes   c = cur_cmd_chr.get_chr();
+            subtypes   c = cur_cmd_chr.chr;
             get_token();
             int w = T_hline_parse(c);
             if (w == 2) T_cline();
@@ -522,8 +522,8 @@ void Parser::start_a_cell(bool started) {
         push_level(bt_cell);
     }
     remove_initial_space_and_back_input();
-    symcodes S = cur_cmd_chr.get_cmd();
-    if (S == unimp_cmd && cur_cmd_chr.get_chr() == omit_code) {
+    symcodes S = cur_cmd_chr.cmd;
+    if (S == unimp_cmd && cur_cmd_chr.chr == omit_code) {
         get_token();
         the_stack.mark_omit_cell();
     } else if (S == end_cmd) { // has to be \end{tabular}
@@ -859,7 +859,7 @@ void Parser::T_endv() {
 void Parser::T_cr() {
     flush_buffer();
     long a = 0;
-    if (cur_cmd_chr.get_chr() == crwithargs_code) a = scan_int(cur_tok);
+    if (cur_cmd_chr.chr == crwithargs_code) a = scan_int(cur_tok);
     if (!the_stack.is_frame(np_cell)) {
         parse_error("bad \\cr");
         return;

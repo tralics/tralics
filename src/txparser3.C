@@ -175,7 +175,7 @@ void Parser::push_tpa() {
 // a user defined command we must decrease its reference count (maybe kill).
 // If the definition is local, the old definition is saved on the save stack.
 void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
-    if (bc.is_user()) mac_table.incr_macro_ref(bc.get_chr());
+    if (bc.is_user()) mac_table.incr_macro_ref(bc.chr);
     if (!gbl && hash_table.eqtb[a].must_push(cur_level))
         push_save_stack(new SaveAuxCmd(a, hash_table.eqtb[a]));
     else if (hash_table.eqtb[a].is_user())
@@ -436,7 +436,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
         the_log << lg_endsentence;
     }
     if (lvl == 1) { // retain old value, so kill val
-        if (val.is_user()) P.mac_table.delete_macro_ref(val.get_chr());
+        if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
         if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
             P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].get_chr());
@@ -727,9 +727,9 @@ void Parser::mk_hi(String x, char c) {
 
 void Parser::tipa_star() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.get_cmd();
+    int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.get_chr();
+        int n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'k') {
                 extended_chars(0x29e);
@@ -778,9 +778,9 @@ void Parser::tipa_star() {
 
 void Parser::tipa_semi() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.get_cmd();
+    int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.get_chr();
+        int n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'E' || n == 'J' || n == 'A' || n == 'U') {
                 mk_hi("sc", char(n));
@@ -817,9 +817,9 @@ void Parser::tipa_semi() {
 
 void Parser::tipa_colon() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.get_cmd();
+    int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.get_chr();
+        int n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'd') {
                 extended_chars(0x256);
@@ -860,9 +860,9 @@ void Parser::tipa_colon() {
 
 void Parser::tipa_exclam() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.get_cmd();
+    int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.get_chr();
+        int n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'G') {
                 extended_chars(0x29b);
@@ -895,9 +895,9 @@ void Parser::tipa_exclam() {
 
 void Parser::tipa_normal() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.get_cmd();
+    int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.get_chr();
+        int n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == '0') {
                 extended_chars(0x289);

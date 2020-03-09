@@ -68,7 +68,7 @@ void Parser::check_outer_validity() {
     default: // matching
         B << "Runaway argument?\n";
     }
-    if (cur_cmd_chr.get_cmd() == eof_marker_cmd)
+    if (cur_cmd_chr.cmd == eof_marker_cmd)
         B << "End of file";
     else
         B << "Forbidden control sequence " << cur_tok.tok_to_str();
@@ -85,7 +85,7 @@ void Parser::check_outer_validity() {
         B << " of " << err_tok.tok_to_str();
     }
     signal_error(err_tok, "Runaway argument");
-    if (cur_cmd_chr.get_cmd() == eof_marker_cmd) return;
+    if (cur_cmd_chr.cmd == eof_marker_cmd) return;
     cur_tok     = hash_table.space_token;
     cur_cmd_chr = CmdChr(space_catcode, subtypes(' '));
 }
@@ -124,7 +124,7 @@ auto Parser::scan_group0(TokenList &res, int cl) -> bool {
                 runaway(cl);
             return true;
         }
-        if (cur_cmd_chr.get_cmd() == eof_marker_cmd) return true;
+        if (cur_cmd_chr.cmd == eof_marker_cmd) return true;
         res.push_back(cur_tok);
     }
 }
@@ -158,11 +158,11 @@ auto Parser::edef_aux(TokenList &L) -> bool {
         if (get_token()) return true;
         if (!cur_cmd_chr.is_expandable()) return false;
         if (cur_cmd_chr.is_protected()) return false;
-        if (cur_cmd_chr.get_cmd() != the_cmd)
+        if (cur_cmd_chr.cmd != the_cmd)
             expand();
         else {
             Token     T = cur_tok;
-            TokenList q = E_the(cur_cmd_chr.get_chr());
+            TokenList q = E_the(cur_cmd_chr.chr);
             if (tracing_commands()) the_log << lg_start << T << "->" << q << "." << lg_end;
             L.splice(L.end(), q);
         }
@@ -677,7 +677,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     if (pre != hash_table.relax_token) res.push_front(pre);
     if (post != hash_table.relax_token) res.push_back(post);
     remove_initial_space_and_back_input();
-    if (cur_cmd_chr.get_cmd() != par_cmd) { // add final \par\noindent
+    if (cur_cmd_chr.cmd != par_cmd) { // add final \par\noindent
         res.push_back(par);
         res.push_back(noindent);
     }
@@ -689,8 +689,8 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
 // interpreted. Needs to be completed.
 
 void Parser::T_verbatim() {
-    bool extended = cur_cmd_chr.get_chr() == one_code;
-    bool noparse  = cur_cmd_chr.get_chr() == two_code;
+    bool extended = cur_cmd_chr.chr == one_code;
+    bool noparse  = cur_cmd_chr.chr == two_code;
     bool optional = false;
     if (extended || noparse) {
         // do not read the next line (unless we have a % here)
@@ -1027,7 +1027,7 @@ auto Parser::group_to_string() -> std::string {
     group_buffer.reset();
     for (;;) {
         get_token();
-        symcodes S = cur_cmd_chr.get_cmd();
+        symcodes S = cur_cmd_chr.cmd;
         if (S == close_catcode) return group_buffer.to_string();
         if (S == space_catcode)
             group_buffer.push_back(' ');
@@ -1117,7 +1117,7 @@ void Parser::get_def_nbargs(Macro *X, Token name) {
         if (get_token()) break; // will signal an error later
         if (cur_cmd_chr.is_parameter()) {
             if (get_token()) break;
-            if (cur_cmd_chr.is_other() && cur_cmd_chr.get_chr() == nb + '1') {
+            if (cur_cmd_chr.is_other() && cur_cmd_chr.chr == nb + '1') {
                 X->set_delimiters(nb, L);
                 L.clear();
                 nb++;
@@ -1135,8 +1135,8 @@ void Parser::get_def_nbargs(Macro *X, Token name) {
             L.push_back(cur_tok);
             continue;
         }
-        if (cur_cmd_chr.get_cmd() == open_catcode) break;  // start of body
-        if (cur_cmd_chr.get_cmd() == close_catcode) break; // will signal an error later
+        if (cur_cmd_chr.cmd == open_catcode) break;  // start of body
+        if (cur_cmd_chr.cmd == close_catcode) break; // will signal an error later
         code = dt_delim;
         L.push_back(cur_tok);
     }
@@ -1172,7 +1172,7 @@ void Parser::M_def(bool edef, bool gbl, symcodes what, rd_flag fl) {
         SaveErrTok sv(name);
         get_def_nbargs(X, name);
         back_input();
-        read_mac_body(X->get_body(), edef, X->get_nbargs());
+        read_mac_body(X->body, edef, X->nbargs);
         X->correct_type();
     }
     mac_define(name, X, gbl, fl, what);
@@ -1186,7 +1186,7 @@ void Parser::M_declare_math_operator() {
     Token name     = get_r_token(true);
     if (tracing_commands()) the_log << lg_startbracebs << "DeclareMathOperator " << name << lg_endbrace;
     auto *     X = new Macro;
-    TokenList &L = X->get_body();
+    TokenList &L = X->body;
     read_mac_body(L, false, 0);
     brace_me(L);
     if (see_star) L.push_front(hash_table.star_token);
@@ -1360,8 +1360,8 @@ void Parser::grab_env(TokenList &v) {
             ++b;
             continue;
         }
-        if (b == 1 && cur_cmd_chr.get_cmd() == begin_cmd) elevel++;
-        if (b == 1 && cur_cmd_chr.get_cmd() == end_cmd) {
+        if (b == 1 && cur_cmd_chr.cmd == begin_cmd) elevel++;
+        if (b == 1 && cur_cmd_chr.cmd == end_cmd) {
             if (elevel == 0) {
                 back_input();
                 return;
@@ -1388,8 +1388,8 @@ auto Parser::grab_env_comma(TokenList &v) -> bool {
             continue;
         }
         if (b == 1 && elevel == 0 && cur_tok.is_comma_token()) return false;
-        if (b == 1 && cur_cmd_chr.get_cmd() == begin_cmd) elevel++;
-        if (b == 1 && cur_cmd_chr.get_cmd() == end_cmd) {
+        if (b == 1 && cur_cmd_chr.cmd == begin_cmd) elevel++;
+        if (b == 1 && cur_cmd_chr.cmd == end_cmd) {
             if (elevel == 0) {
                 back_input();
                 return true;
@@ -1406,12 +1406,12 @@ auto Parser::grab_env_comma(TokenList &v) -> bool {
 // Assumes that cur_tok holds the macro name, the argument the value.
 void Parser::expand_mac(Macro &X) {
     if (tracing_macros()) the_log << lg_start << " " << X << lg_end;
-    def_type spec = X.get_type();
+    def_type spec = X.type;
     if (spec == dt_empty) return;
     if (skip_prefix(X[0])) return;
     bool      optional      = spec == dt_optional || spec == dt_spec_opt;
     bool      spec_optional = spec == dt_spec_opt;
-    auto      n             = X.get_nbargs();
+    auto      n             = X.nbargs;
     TokenList arguments[10];
     for (size_t i = 1; i <= n; i++) {
         if (spec == dt_delim || spec == dt_brace) {
@@ -1439,7 +1439,7 @@ void Parser::expand_mac(Macro &X) {
         }
         if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << lg_end;
     }
-    TokenList res = expand_mac_inner(X.get_body(), arguments);
+    TokenList res = expand_mac_inner(X.body, arguments);
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
     back_input(res);
 }
@@ -1471,7 +1471,7 @@ auto Parser::expand_mac_inner(const TokenList &W, TokenList *arguments) -> Token
 auto Parser::list_to_string0(Buffer &b) -> bool {
     for (;;) {
         if (get_x_token()) return true;
-        if (cur_cmd_chr.get_cmd() == endcsname_cmd) return false;
+        if (cur_cmd_chr.cmd == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd()) {
             b.push_back(cur_cmd_chr.char_val());
         } else
@@ -1492,7 +1492,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
     back_input(L);
     for (;;) {
         if (get_x_token()) return true;
-        if (cur_cmd_chr.get_cmd() == endcsname_cmd) return false;
+        if (cur_cmd_chr.cmd == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd()) {
             codepoint w = cur_cmd_chr.char_val();
             if (w.is_upper_case()) w = codepoint(w.value + 'a' - 'A');
@@ -1681,7 +1681,7 @@ void Parser::E_ifundefined(bool c) {
 // Implements \@iftempty#1{A}{B} \@ifbempty#1{A}{B}
 void Parser::E_ifempty() {
     Token     T = cur_tok;
-    subtypes  c = cur_cmd_chr.get_chr();
+    subtypes  c = cur_cmd_chr.chr;
     TokenList L = read_arg();
     TokenList a = read_arg();
     TokenList b = read_arg();
@@ -2228,8 +2228,8 @@ void Parser::T_end(const std::string &s) {
     cur_tok = X->get_token();
     if (X->get_val().is_user()) {
         cur_cmd_chr = X->get_val();
-        Macro &T    = mac_table.get_macro(cur_cmd_chr.get_chr());
-        if (T.get_nbargs() != 0)
+        Macro &T    = mac_table.get_macro(cur_cmd_chr.chr);
+        if (T.nbargs != 0)
             parse_error(err_tok, "Illegal end of environment");
         else
             expand();
@@ -2270,11 +2270,11 @@ auto Parser::get_mac_value(Token t) -> TokenList {
     if (t.not_a_cmd()) return res;
     see_cs_token(t);
     if (!cur_cmd_chr.is_user()) return res;
-    subtypes c = cur_cmd_chr.get_chr();
+    subtypes c = cur_cmd_chr.chr;
     Macro &  M = mac_table.get_macro(c);
-    if (M.get_type() != dt_normal) return res;
-    if (M.get_nbargs() != 0) return res;
-    return M.get_body();
+    if (M.type != dt_normal) return res;
+    if (M.nbargs != 0) return res;
+    return M.body;
 }
 
 // c is the number of arguments, c=0 is the same as 1, 5 is 12of3
@@ -2382,21 +2382,21 @@ void Parser::E_scan_up_down(TokenList &A, TokenList &B, TokenList &C, TokenList 
         scan_prime();
         get_token();
     }
-    if (cur_cmd_chr.get_cmd() == hat_catcode) {
+    if (cur_cmd_chr.cmd == hat_catcode) {
         df_up = read_arg();
         get_token();
-        if (cur_cmd_chr.get_cmd() == underscore_catcode) {
+        if (cur_cmd_chr.cmd == underscore_catcode) {
             df_down = read_arg();
         } else
             back_input();
-    } else if (cur_cmd_chr.get_cmd() == underscore_catcode) {
+    } else if (cur_cmd_chr.cmd == underscore_catcode) {
         df_down = read_arg();
         get_token();
         if (cur_cmd_chr.is_single_quote()) {
             scan_prime();
             get_token();
         }
-        if (cur_cmd_chr.get_cmd() == hat_catcode) {
+        if (cur_cmd_chr.cmd == hat_catcode) {
             df_up = read_arg();
         } else
             back_input();
@@ -2597,8 +2597,8 @@ void Parser::expand() {
 }
 
 void Parser::iexpand() {
-    subtypes c  = cur_cmd_chr.get_chr();
-    symcodes C  = cur_cmd_chr.get_cmd();
+    subtypes c  = cur_cmd_chr.chr;
+    symcodes C  = cur_cmd_chr.cmd;
     Token    T  = cur_tok;
     bool     vb = tracing_macros();
     switch (C) {
@@ -2799,11 +2799,11 @@ void Parser::pass_text(Token Tfe) {
             lost_if(Tfe, conditions.top_line());
             return;
         }
-        if (cur_cmd_chr.get_cmd() == fi_or_else_cmd) {
+        if (cur_cmd_chr.cmd == fi_or_else_cmd) {
             trace_if(l);
             if (l == 0) return;
-            if (cur_cmd_chr.get_chr() == fi_code) l--;
-        } else if (cur_cmd_chr.get_cmd() == if_test_cmd || cur_cmd_chr.get_cmd() == fpif_cmd) {
+            if (cur_cmd_chr.chr == fi_code) l--;
+        } else if (cur_cmd_chr.cmd == if_test_cmd || cur_cmd_chr.cmd == fpif_cmd) {
             l++;
             trace_if(l);
         }
@@ -2850,18 +2850,18 @@ void Parser::E_fi_or_else() {
     int K = conditions.top_limit();
     if (K == if_code)
         insert_relax();
-    else if (cur_cmd_chr.get_chr() > K)
+    else if (cur_cmd_chr.chr > K)
         extra_fi_or_else();
     else {
-        while (cur_cmd_chr.get_chr() != fi_code) pass_text(T);
+        while (cur_cmd_chr.chr != fi_code) pass_text(T);
         conditions.pop();
     }
 }
 
 void Parser::E_unless() {
     get_token();
-    if (cur_cmd_chr.get_cmd() == if_test_cmd && cur_cmd_chr.get_chr() != if_case_code)
-        E_if_test(cur_cmd_chr.get_chr(), true);
+    if (cur_cmd_chr.cmd == if_test_cmd && cur_cmd_chr.chr != if_case_code)
+        E_if_test(cur_cmd_chr.chr, true);
     else {
         parse_error(err_tok, "You cannot use \\unless before ", cur_tok, "", "bad unless");
         back_input();
@@ -2879,9 +2879,9 @@ void Parser::E_if_test(subtypes test, bool negate) {
         while (n != 0) {
             pass_text(Tfe);
             if (conditions.is_this_if(sz)) {
-                if (cur_cmd_chr.get_chr() == or_code)
+                if (cur_cmd_chr.chr == or_code)
                     n--;
-                else if (cur_cmd_chr.get_chr() == fi_code) {
+                else if (cur_cmd_chr.chr == fi_code) {
                     trace_if("\\ifcase", k, "failed");
                     conditions.pop();
                     return;
@@ -2890,7 +2890,7 @@ void Parser::E_if_test(subtypes test, bool negate) {
                     conditions.wait_for_fi();
                     return;
                 }
-            } else if (cur_cmd_chr.get_chr() == fi_code)
+            } else if (cur_cmd_chr.chr == fi_code)
                 conditions.pop();
         }
         conditions.set_limit(sz, or_code);
@@ -2907,13 +2907,13 @@ void Parser::E_if_test(subtypes test, bool negate) {
     for (;;) {
         pass_text(Tfe);
         if (conditions.is_this_if(sz)) {
-            if (cur_cmd_chr.get_chr() != or_code) break;
+            if (cur_cmd_chr.chr != or_code) break;
 
             extra_fi_or_else();
-        } else if (cur_cmd_chr.get_chr() == fi_code)
+        } else if (cur_cmd_chr.chr == fi_code)
             conditions.pop();
     }
-    if (cur_cmd_chr.get_chr() == fi_code)
+    if (cur_cmd_chr.chr == fi_code)
         conditions.pop();
     else
         conditions.wait_for_fi();
@@ -3007,13 +3007,13 @@ auto Parser::E_ifx() -> bool {
     }
     Token b = cur_tok;
     if (tracing_commands()) the_log << "\\ifx compares " << a << b << "\n";
-    if (cur_cmd_chr.get_cmd() != pq.get_cmd()) return false;
+    if (cur_cmd_chr.cmd != pq.cmd) return false;
     if (cur_cmd_chr.is_user()) {
-        Macro &A = mac_table.get_macro(cur_cmd_chr.get_chr());
-        Macro &B = mac_table.get_macro(pq.get_chr());
+        Macro &A = mac_table.get_macro(cur_cmd_chr.chr);
+        Macro &B = mac_table.get_macro(pq.chr);
         return A.is_same(B);
     }
-    return (cur_cmd_chr.get_chr() == pq.get_chr());
+    return (cur_cmd_chr.chr == pq.chr);
 }
 
 void Parser::E_afterfi() {
@@ -3198,10 +3198,10 @@ void Parser::M_newcommand(rd_flag redef) {
         if (redef == rd_never) { // case \CheckCommand
             bool   is_same = true;
             CmdChr pq      = hash_table.eqtb[name.eqtb_loc()].value;
-            if (pq.get_cmd() != what)
+            if (pq.cmd != what)
                 is_same = false;
             else {
-                Macro &B = mac_table.get_macro(pq.get_chr());
+                Macro &B = mac_table.get_macro(pq.chr);
                 is_same  = X->is_same(B);
             }
             if (!is_same) {
@@ -3230,7 +3230,7 @@ void Parser::M_new_env(rd_flag redef) {
     X = new Macro;
     {
         SaveErrTok sv(T);
-        read_mac_body(X->get_body(), false, 0);
+        read_mac_body(X->body, false, 0);
         X->correct_type();
     }
     mac_define(T, X, false, redef, what);
@@ -3245,7 +3245,7 @@ auto Parser::read_latex_macro() -> Macro * {
     bool      have_op_arg = read_optarg(op_arg);
     X->set_delimiters(1, op_arg);
     X->set_type(have_op_arg ? dt_optional : dt_normal);
-    read_mac_body(X->get_body(), false, n);
+    read_mac_body(X->body, false, n);
     X->correct_type();
     return X;
 }
@@ -3302,7 +3302,7 @@ void Parser::define_something(int chr, bool gbl, symcodes w) {
 void Parser::assign_def_something(bool gbl) {
     Token  T = cur_tok;
     int    n;
-    size_t offset = cur_cmd_chr.get_chr();
+    size_t offset = cur_cmd_chr.chr;
     if (offset == 0)
         n = 15; // catcode
     else if (offset == math_code_offset)
@@ -3450,20 +3450,20 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> long {
     if (q != register_cmd) {
         get_x_token();
         tfe   = cur_tok;
-        int m = cur_cmd_chr.get_chr();
-        if (cur_cmd_chr.get_cmd() == assign_int_cmd) {
+        int m = cur_cmd_chr.chr;
+        if (cur_cmd_chr.cmd == assign_int_cmd) {
             p = it_int;
             return m;
         }
-        if (cur_cmd_chr.get_cmd() == assign_dimen_cmd) {
+        if (cur_cmd_chr.cmd == assign_dimen_cmd) {
             p = it_dimen;
             return m;
         }
-        if (cur_cmd_chr.get_cmd() == assign_glue_cmd) {
+        if (cur_cmd_chr.cmd == assign_glue_cmd) {
             p = it_glue;
             return m;
         }
-        if (cur_cmd_chr.get_cmd() == assign_mu_glue_cmd) {
+        if (cur_cmd_chr.cmd == assign_mu_glue_cmd) {
             p = it_mu;
             return m;
         }
@@ -3473,12 +3473,12 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> long {
         return 0;
     }
     // T is caller,
-    if (cur_cmd_chr.get_cmd() != register_cmd) {
+    if (cur_cmd_chr.cmd != register_cmd) {
         parse_error(T, "Invalid argument for ", T, "", "bad register");
         cur_tok.kill();
         return 0;
     }
-    p      = cur_cmd_chr.get_chr();
+    p      = cur_cmd_chr.chr;
     auto m = scan_reg_num();
     if (p == it_int) return m + count_reg_offset;
     if (p == it_dimen) return m;
@@ -3491,7 +3491,7 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> long {
 
 void Parser::do_register_command(bool gbl) {
     Token T = cur_tok;
-    int   q = cur_cmd_chr.get_cmd();
+    int   q = cur_cmd_chr.cmd;
     int   p;
     auto  l = to_unsigned(do_register_arg(q, p, T)); // changes T from \advance to \skip
     if (cur_tok.is_invalid()) return;                // was an error
@@ -3561,7 +3561,7 @@ void Parser::M_tracingall() {
 
 // This implements \arabic, \@arabic, etc
 void Parser::E_latex_ctr() {
-    int       t = cur_cmd_chr.get_chr();
+    int       t = cur_cmd_chr.chr;
     Token     T = cur_tok;
     long      n = 0;
     TokenList res;
@@ -3738,7 +3738,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
                 res = false;
             else {
                 get_token();
-                res = cur_cmd_chr.get_cmd() == if_test_cmd && cur_cmd_chr.get_chr() == if_true_code;
+                res = cur_cmd_chr.cmd == if_test_cmd && cur_cmd_chr.chr == if_true_code;
             }
         } else if (x == hash_table.equal_token) {
             TokenList L1 = read_arg();
@@ -3880,8 +3880,8 @@ void Parser::calc_primitive(SthInternal &A) {
     }
     if (cur_tok.is_open_paren())
         calc_aux(A);
-    else if (cur_cmd_chr.get_cmd() == unimp_cmd &&
-             (cur_cmd_chr.get_chr() == widthof_code || cur_cmd_chr.get_chr() == depthof_code || cur_cmd_chr.get_chr() == heightof_code)) {
+    else if (cur_cmd_chr.cmd == unimp_cmd &&
+             (cur_cmd_chr.chr == widthof_code || cur_cmd_chr.chr == depthof_code || cur_cmd_chr.chr == heightof_code)) {
         ignore_arg();
         A.initialise(A.get_type()); // this puts 0 in A.
     } else {
@@ -4014,10 +4014,10 @@ void Parser::exec_calc() {
     a.pop_front();
     token_from_list(T);
     internal_type p;
-    unsigned      l = cur_cmd_chr.get_chr();
-    if (cur_cmd_chr.get_cmd() == assign_int_cmd)
+    unsigned      l = cur_cmd_chr.chr;
+    if (cur_cmd_chr.cmd == assign_int_cmd)
         p = it_int;
-    else if (cur_cmd_chr.get_cmd() == assign_dimen_cmd)
+    else if (cur_cmd_chr.cmd == assign_dimen_cmd)
         p = it_dimen;
     else
         p = it_glue; // ok ? should add a test here....
@@ -4072,10 +4072,10 @@ auto Parser::dimen_from_list(Token T, TokenList &L) -> ScaledInt {
 
 void Parser::scan_box(size_t bc) {
     remove_initial_space_relax();
-    if (cur_cmd_chr.get_cmd() == make_box_cmd)
-        begin_box(bc, cur_cmd_chr.get_chr());
-    else if (bc >= leaders_location && cur_cmd_chr.get_cmd() == rule_cmd) {
-        scan_rule(cur_cmd_chr.get_chr());
+    if (cur_cmd_chr.cmd == make_box_cmd)
+        begin_box(bc, cur_cmd_chr.chr);
+    else if (bc >= leaders_location && cur_cmd_chr.cmd == rule_cmd) {
+        scan_rule(cur_cmd_chr.chr);
         box_end(the_stack.remove_last(), bc);
     } else
         parse_error(err_tok, "A box was assumed to be here, got ", cur_tok, "", "Missing box");
@@ -4285,8 +4285,8 @@ void Parser::E_useverb() {
 // This is called an assignment, so \afterassignment is completed here
 void Parser::M_prefixed() {
     int flags = 0;
-    while (cur_cmd_chr.get_cmd() == prefix_cmd) {
-        flags |= cur_cmd_chr.get_chr();
+    while (cur_cmd_chr.cmd == prefix_cmd) {
+        flags |= cur_cmd_chr.chr;
         remove_initial_space_relax();
     }
     bool b_global = false;
@@ -4295,7 +4295,7 @@ void Parser::M_prefixed() {
         b_global = true;
     }
     auto     K = symcodes(user_cmd + flags);
-    symcodes C = cur_cmd_chr.get_cmd();
+    symcodes C = cur_cmd_chr.cmd;
     if (C <= max_non_prefixed_command) {
         if (b_global || (flags != 0)) prefix_error(b_global, K);
         if (cur_tok.is_valid()) back_input(); // case of prefix at end of list
@@ -4313,9 +4313,9 @@ void Parser::M_prefixed() {
         the_log << trace_buffer << cur_tok << lg_endbrace;
     }
     if (C == let_cmd)
-        M_let(cur_cmd_chr.get_chr(), b_global);
+        M_let(cur_cmd_chr.chr, b_global);
     else if (C == def_cmd)
-        define_something(cur_cmd_chr.get_chr(), b_global, K);
+        define_something(cur_cmd_chr.chr, b_global, K);
     else
         M_prefixed_aux(b_global);
     Token aat = get_after_ass_tok();

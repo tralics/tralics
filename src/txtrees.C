@@ -473,16 +473,16 @@ void Parser::date_commands(int c) {
 // Stores the value c in the counter T if possible
 void Parser::set_counter(Token T, long c) {
     see_cs_token(T);
-    if (cur_cmd_chr.get_cmd() != assign_int_cmd) return;
-    word_define(cur_cmd_chr.get_chr(), c, false);
+    if (cur_cmd_chr.cmd != assign_int_cmd) return;
+    word_define(cur_cmd_chr.chr, c, false);
 }
 
 // Stores the value c in the counter T if possible
 void Parser::get_counter(Token T, long &c) {
     c = 0;
     see_cs_token(T);
-    if (cur_cmd_chr.get_cmd() != assign_int_cmd) return;
-    c = eqtb_int_table[cur_cmd_chr.get_chr()].val;
+    if (cur_cmd_chr.cmd != assign_int_cmd) return;
+    c = eqtb_int_table[cur_cmd_chr.chr].val;
 }
 
 // Reads three counter names; return true if OK

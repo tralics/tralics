@@ -103,18 +103,15 @@ public:
 
 // This represents the value of a user-defined command
 class Macro {
-    size_t                    nbargs{0};       // number of arguments
-    def_type                  type{dt_normal}; // type of macro
-    std::array<TokenList, 10> delimiters;      // delimiters between arguments
-    TokenList                 body;            // the body
+    std::array<TokenList, 10> delimiters; // delimiters between arguments
 public:
+    size_t    nbargs{0};       // number of arguments
+    def_type  type{dt_normal}; // type of macro
+    TokenList body;            // the body
+
     Macro() = default;
     Macro(TokenList L) : body(std::move(L)) { correct_type(); }
-    // other methods
-    [[nodiscard]] auto get_type() const -> def_type { return type; }
-    [[nodiscard]] auto get_nbargs() const -> size_t { return nbargs; } // \todo remove
-    auto               get_body() -> TokenList & { return body; }
-    [[nodiscard]] auto get_body() const -> const TokenList & { return body; }
+
     void               set_nbargs(size_t n) { nbargs = n; } // \todo remove
     void               set_type(def_type n) { type = n; }
     [[nodiscard]] auto is_same(const Macro &aux) const -> bool;

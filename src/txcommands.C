@@ -36,7 +36,7 @@ void Parser::init_all(const std::string &doc_elt) {
     open_paren_xml  = new Xml(Istring("("));
     close_paren_xml = new Xml(Istring(")"));
     the_page_xml    = new Xml(Istring("thepage"), nullptr);
-    glo_xml         = new Xml(np_glo_name);
+    glo_xml         = new Xml(Istring(np_glo_name));
     eqtb_int_table[endlinechar_code].val_and_level('\r', 1);
     eqtb_int_table[newlinechar_code].val_and_level('\n', 1);
     TL.clear();
@@ -271,8 +271,8 @@ void Parser::french_punctuation(CmdChr X) {
         for (;;) {
             get_x_token();
             if (cur_cmd_chr.is_space()) continue;
-            if (cur_cmd_chr.get_cmd() == cst_cmd && cur_cmd_chr.get_chr() == nobreakspace_code) break;
-            if (cur_cmd_chr.get_cmd() == cst1_cmd && cur_cmd_chr.get_chr() == comma_code) break;
+            if (cur_cmd_chr.cmd == cst_cmd && cur_cmd_chr.chr == nobreakspace_code) break;
+            if (cur_cmd_chr.cmd == cst1_cmd && cur_cmd_chr.chr == comma_code) break;
             if (cur_tok.is_valid()) back_input();
             break;
         }
@@ -836,12 +836,12 @@ auto tcommands::vfill_to_np(subtypes c) -> name_positions {
 // Translates a command.
 
 void Parser::translate03() {
-    if (cur_cmd_chr.get_cmd() == underscore_catcode && InLoadHandler::global_in_load) {
+    if (cur_cmd_chr.cmd == underscore_catcode && InLoadHandler::global_in_load) {
         translate_char(cur_cmd_chr);
         return;
     }
-    subtypes c = cur_cmd_chr.get_chr();
-    symcodes x = cur_cmd_chr.get_cmd();
+    subtypes c = cur_cmd_chr.chr;
+    symcodes x = cur_cmd_chr.cmd;
     switch (x) {
     case cst1_cmd:
     case cst_cmd:

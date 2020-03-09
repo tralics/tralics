@@ -37,7 +37,7 @@ public:
     [[nodiscard]] auto p_str(long k) const -> String { return Value[k]; }
 
     void re_alloc();
-    auto hash_find() -> long;
+    auto hash_find() -> size_t;
     auto find(String s) -> long;
     auto find(const std::string &s) -> long;
     auto find(int s) -> long;

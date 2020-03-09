@@ -90,7 +90,7 @@ void Xid::add_attribute_but_rend(Xid b) {
     size_t   n = L.val.size();
     AttList &l = get_att();
     for (size_t i = 0; i < n; i++)
-        if (L.val[i].name != np_rend) l.push_back(L.val[i].name, L.val[i].value, true);
+        if (L.val[i].name != Istring(np_rend)) l.push_back(L.val[i].name, L.val[i].value, true);
 }
 
 // Add attribute list of element B to this id.

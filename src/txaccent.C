@@ -293,7 +293,7 @@ void Parser::E_accent_a() {
     }
     auto Y = Token(t.chr_val() + single_offset);
     token_from_list(Y);
-    if (cur_cmd_chr.get_cmd() != accent_cmd) {
+    if (cur_cmd_chr.cmd != accent_cmd) {
         parse_error(err_tok, "Bad syntax of \\a, argument is ", t, "", "bad accent");
         return;
     }
@@ -350,7 +350,7 @@ auto accent_ns::special_double_acc(int chr, int acc) -> Token {
 // cur_tok, cur_cmd_chr explain what to do.
 void Parser::E_accent() {
     if (tracing_macros()) the_log << lg_startbrace << "accent " << cur_tok << lg_endbrace;
-    int acc_code = cur_cmd_chr.get_chr();
+    int acc_code = cur_cmd_chr.chr;
     if (InUrlHandler::global_in_url && acc_code == '~') {
         if (tracing_macros()) { the_log << lg_startbrace << "\\~ gives ~ " << lg_endbrace; }
         back_input(Token(other_t_offset, '~'));
@@ -372,7 +372,7 @@ void Parser::E_accent() {
     if (y.size() >= 2) {
         token_from_list(y.front()); // Get the meaning of the start of y
         // case \'{\a'e};
-        if (cur_cmd_chr.get_cmd() == a_cmd) {
+        if (cur_cmd_chr.cmd == a_cmd) {
             y.pop_front(); // discard the \a
             accent_ns::special_acc_hack(y);
             if (y.empty()) {
@@ -387,18 +387,18 @@ void Parser::E_accent() {
             y.pop_front(); // discard the accent
             tfe2 = Token(t.chr_val() + single_offset);
             token_from_list(tfe2);
-            if (cur_cmd_chr.get_cmd() != accent_cmd) {
+            if (cur_cmd_chr.cmd != accent_cmd) {
                 parse_error(err_tok, "Bad syntax of \\a,  argument is ", t, "", msg2);
                 return;
             }
-        } else if (cur_cmd_chr.get_cmd() == accent_cmd) {
+        } else if (cur_cmd_chr.cmd == accent_cmd) {
             tfe2 = cur_tok;
             y.pop_front();
         } else {
             parse_error(err_tok, msg1, tfe, "\nWanted a single token", msg2);
             return;
         }
-        acc_code2 = cur_cmd_chr.get_chr();
+        acc_code2 = cur_cmd_chr.chr;
         accent_ns::special_acc_hack(y);
         if (y.size() != 1) {
             parse_error(err_tok, msg1, tfe, "\nWanted a single token", msg2);
@@ -407,7 +407,7 @@ void Parser::E_accent() {
     }
     Token Y = token_ns::get_unique(y);
     token_from_list(Y);
-    unsigned int achar = cur_cmd_chr.get_chr();
+    unsigned int achar = cur_cmd_chr.chr;
     if (achar <= 8)
         achar = 8; // make these invalid
     else if (achar == 0xc6)
@@ -422,9 +422,9 @@ void Parser::E_accent() {
         achar = 5;
     else if (achar == 0xf8)
         achar = 6;
-    if (cur_cmd_chr.get_cmd() == cst1_cmd && achar == i_code)
+    if (cur_cmd_chr.cmd == cst1_cmd && achar == i_code)
         achar = 'i';
-    else if ((cur_cmd_chr.get_cmd() == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
+    else if ((cur_cmd_chr.cmd == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
     } else {
         err_buf << bf_reset << msg1;
         err_buf << tfe.tok_to_str();

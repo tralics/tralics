@@ -1014,7 +1014,7 @@ void math_ns::fill_math_char_slots() {
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(String a) -> Xml * {
     Xml *b = new Xml(cst_mspace, nullptr);
-    b->add_att(np_cst_width, Istring(a));
+    b->add_att(Istring(np_cst_width), Istring(a));
     return b;
 }
 
@@ -1133,7 +1133,7 @@ auto math_ns::get_delimiter(CmdChr X) -> del_pos {
         }
     }
     if (X.is_math_openclosebetween()) {
-        switch (int(X.get_chr())) {
+        switch (int(X.chr)) {
         case rangle_code: return del_rangle;
         case langle_code: return del_langle;
         case lbrace_code: return del_lbrace;
@@ -1161,8 +1161,8 @@ auto math_ns::get_delimiter(CmdChr X) -> del_pos {
         default:;
         }
     }
-    if (X.is_cst1_cmd() && X.get_chr() == lbrace_chr) return del_lbrace;
-    if (X.is_cst1_cmd() && X.get_chr() == rbrace_chr) return del_rbrace;
+    if (X.is_cst1_cmd() && X.chr == lbrace_chr) return del_lbrace;
+    if (X.is_cst1_cmd() && X.chr == rbrace_chr) return del_rbrace;
     return del_invalid;
 }
 
@@ -1509,7 +1509,7 @@ void MathDataP::boot2() {
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
     Xml *y = new Xml(Istring(cst_mpadded), get_builtin(int_code));
-    y->add_att(np_cst_width, Istring("-3pt"));
+    y->add_att(Istring(np_cst_width), Istring("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(cst_mrow, nullptr);
     x->push_back(z);

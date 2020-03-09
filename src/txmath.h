@@ -39,7 +39,7 @@ inline auto is_m_font(symcodes cmd) -> bool {
     return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd;
 }
 
-class MathElt {
+class MathElt { // \todo make it inherit from CmdChr
     CmdChr   val;
     subtypes Font;
 
@@ -48,20 +48,21 @@ public:
     MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
     MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
-    // access to elements
-    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
-    void               set_xmltype(math_types x) { Font = subtypes(x); }
+
+    [[nodiscard]] auto get_char() const -> codepoint { return val.char_val(); }
+    [[nodiscard]] auto get_chr() const -> subtypes { return val.chr; }
+    [[nodiscard]] auto get_cmd() const -> symcodes { return val.cmd; }
+    [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
+    [[nodiscard]] auto get_fml_subtype() const -> subtypes;
     [[nodiscard]] auto get_font() const -> subtypes { return Font; }
     [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
-    [[nodiscard]] auto get_fml_subtype() const -> subtypes;
-    [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
-    [[nodiscard]] auto get_char() const -> codepoint { return val.char_val(); }
-    [[nodiscard]] auto get_chr() const -> subtypes { return val.get_chr(); }
-    void               set_chr(subtypes c) { val.set_chr(c); }
-    [[nodiscard]] auto get_cmd() const -> symcodes { return val.get_cmd(); }
-    void               set_cmd(symcodes c) { val.set_cmd(c); }
     [[nodiscard]] auto get_list() const -> Math &;
     [[nodiscard]] auto get_xml_val() const -> Xml *;
+    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
+
+    void set_chr(subtypes c) { val.chr = c; }
+    void set_cmd(symcodes c) { val.cmd = c; }
+    void set_xmltype(math_types x) { Font = subtypes(x); }
 
     // some tests on the elements
     [[nodiscard]] auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }

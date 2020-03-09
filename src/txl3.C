@@ -857,15 +857,15 @@ void Parser::l3_token_check(subtypes c) {
         break;
     case tok_if_long_code:
         if (read_token_arg(caller)) break;
-        res = (cur_cmd_chr.get_cmd() == userl_cmd);
+        res = (cur_cmd_chr.cmd == userl_cmd);
         break;
     case tok_if_prot_code:
         if (read_token_arg(caller)) break;
-        res = (cur_cmd_chr.get_cmd() == userp_cmd);
+        res = (cur_cmd_chr.cmd == userp_cmd);
         break;
     case tok_if_longprot_code:
         if (read_token_arg(caller)) break;
-        res = (cur_cmd_chr.get_cmd() == userlp_cmd);
+        res = (cur_cmd_chr.cmd == userlp_cmd);
         break;
     case tok_if_expandable_code:
         if (read_token_arg(caller)) break;
@@ -878,49 +878,49 @@ void Parser::l3_token_check(subtypes c) {
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == char_given_cmd);
+            res = (cur_cmd_chr.cmd == char_given_cmd);
         break;
     case tok_if_mathchardef_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == math_given_cmd);
+            res = (cur_cmd_chr.cmd == math_given_cmd);
         break;
     case tok_if_dim_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == assign_dimen_cmd && cur_cmd_chr.get_chr() < int(nb_registers));
+            res = (cur_cmd_chr.cmd == assign_dimen_cmd && cur_cmd_chr.chr < int(nb_registers));
         break;
     case tok_if_skip_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == assign_glue_cmd && cur_cmd_chr.get_chr() < int(nb_registers));
+            res = (cur_cmd_chr.cmd == assign_glue_cmd && cur_cmd_chr.chr < int(nb_registers));
         break;
     case tok_if_muskip_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == assign_mu_glue_cmd && cur_cmd_chr.get_chr() >= muskip_reg_offset);
+            res = (cur_cmd_chr.cmd == assign_mu_glue_cmd && cur_cmd_chr.chr >= muskip_reg_offset);
         break;
     case tok_if_toks_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == assign_toks_cmd && int(cur_cmd_chr.get_chr()) < int(nb_registers));
+            res = (cur_cmd_chr.cmd == assign_toks_cmd && int(cur_cmd_chr.chr) < int(nb_registers));
         break;
     case tok_if_int_code:
         if (read_token_arg(caller))
             break;
         else
-            res = (cur_cmd_chr.get_cmd() == assign_int_cmd && cur_cmd_chr.get_chr() >= count_reg_offset &&
-                   cur_cmd_chr.get_chr() < int(count_reg_offset + nb_registers));
+            res = (cur_cmd_chr.cmd == assign_int_cmd && cur_cmd_chr.chr >= count_reg_offset &&
+                   cur_cmd_chr.chr < int(count_reg_offset + nb_registers));
         break;
     case tok_if_primitive_code:
         if (read_token_arg(caller)) break;
         {
-            symcodes K = cur_cmd_chr.get_cmd();
+            symcodes K = cur_cmd_chr.cmd;
             if (K == undef_cmd)
                 res = false; // undefined
             else if (K >= user_cmd)
@@ -1020,7 +1020,7 @@ void Parser::l3_generate_variant() {
     Token orig = cur_tok;
     bool  prot = false; // do we need to protect
     if (!cur_cmd_chr.is_expandable()) prot = true;
-    if (cur_cmd_chr.get_cmd() >= userp_cmd) prot = true;
+    if (cur_cmd_chr.cmd >= userp_cmd) prot = true;
     if (cur_cmd_chr.is_undef()) {
         undefined_mac();
         nok = true;

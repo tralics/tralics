@@ -24,13 +24,13 @@
 // Defined EQTB, the table of equivalents
 // EQTB for commands. No Ctor(?) but reset() is called for every object.
 // The values is a (symcodes, subtype) pair
-class Equivalent {
+class Equivalent { // \todo should inherit from CmdChr
 public:
     int    level; // level at which this is defined
     CmdChr value; // the modifier
 
-    [[nodiscard]] auto get_cmd() const -> symcodes { return value.get_cmd(); }
-    [[nodiscard]] auto get_chr() const -> subtypes { return value.get_chr(); }
+    [[nodiscard]] auto get_cmd() const -> symcodes { return value.cmd; }
+    [[nodiscard]] auto get_chr() const -> subtypes { return value.chr; }
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
         level = 0;

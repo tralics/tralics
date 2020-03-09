@@ -237,7 +237,7 @@ void Parser::T_cite(subtypes sw) {
 // Translates to <cit><ref target="xx">p25</ref></cit>
 // and \cite@simple{Knuth} gives <ref target="xx"/>
 void Parser::T_cite_one() {
-    bool  is_simple = cur_cmd_chr.get_chr() != 0;
+    bool  is_simple = cur_cmd_chr.chr != 0;
     Token T         = cur_tok;
     flush_buffer();
     Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
@@ -610,7 +610,7 @@ void Parser::T_cititem() {
     B << bf_reset << "cititem-" << a;
     finish_csname(B);
     see_cs_token();
-    if (cur_cmd_chr.get_cmd() != relax_cmd) {
+    if (cur_cmd_chr.cmd != relax_cmd) {
         back_input();
         return;
     }
@@ -675,36 +675,36 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
         if (Bib_s[i] == S) return fp_unknown;
 
     // Check is this is standard
-    if (S == cstb_address) return fp_address;
-    if (S == cstb_author) return fp_author;
-    if (S == cstb_booktitle) return fp_booktitle;
-    if (S == cstb_chapter) return fp_chapter;
-    if (S == cstb_doi) return fp_doi;
-    if (S == cstb_edition) return fp_edition;
-    if (S == cstb_editor) return fp_editor;
-    if (S == cstb_howpublished) return fp_howpublished;
-    if (S == cstb_institution) return fp_institution;
-    if (S == cstb_isbn) return fp_isbn;
-    if (S == cstb_issn) return fp_issn;
-    if (S == cstb_isrn) return fp_isrn;
-    if (S == cstb_journal) return fp_journal;
-    if (S == cstb_key) return fp_key;
-    if (S == cstb_month) return fp_month;
-    if (S == cstb_langue) return fp_langue;
-    if (S == cstb_language) return fp_langue;
-    if (S == cstb_note) return fp_note;
-    if (S == cstb_number) return fp_number;
-    if (S == cstb_organization) return fp_organization;
-    if (S == cstb_pages) return fp_pages;
-    if (S == cstb_publisher) return fp_publisher;
-    if (S == cstb_school) return fp_school;
-    if (S == cstb_series) return fp_series;
-    if (S == cstb_title) return fp_title;
-    if (S == cstb_type) return fp_type;
-    if (S == cstb_url) return fp_url;
-    if (S == cstb_volume) return fp_volume;
-    if (S == cstb_year) return fp_year;
-    if (S == cstb_crossref) return fp_crossref;
+    if (S == Istring(cstb_address)) return fp_address;
+    if (S == Istring(cstb_author)) return fp_author;
+    if (S == Istring(cstb_booktitle)) return fp_booktitle;
+    if (S == Istring(cstb_chapter)) return fp_chapter;
+    if (S == Istring(cstb_doi)) return fp_doi;
+    if (S == Istring(cstb_edition)) return fp_edition;
+    if (S == Istring(cstb_editor)) return fp_editor;
+    if (S == Istring(cstb_howpublished)) return fp_howpublished;
+    if (S == Istring(cstb_institution)) return fp_institution;
+    if (S == Istring(cstb_isbn)) return fp_isbn;
+    if (S == Istring(cstb_issn)) return fp_issn;
+    if (S == Istring(cstb_isrn)) return fp_isrn;
+    if (S == Istring(cstb_journal)) return fp_journal;
+    if (S == Istring(cstb_key)) return fp_key;
+    if (S == Istring(cstb_month)) return fp_month;
+    if (S == Istring(cstb_langue)) return fp_langue;
+    if (S == Istring(cstb_language)) return fp_langue;
+    if (S == Istring(cstb_note)) return fp_note;
+    if (S == Istring(cstb_number)) return fp_number;
+    if (S == Istring(cstb_organization)) return fp_organization;
+    if (S == Istring(cstb_pages)) return fp_pages;
+    if (S == Istring(cstb_publisher)) return fp_publisher;
+    if (S == Istring(cstb_school)) return fp_school;
+    if (S == Istring(cstb_series)) return fp_series;
+    if (S == Istring(cstb_title)) return fp_title;
+    if (S == Istring(cstb_type)) return fp_type;
+    if (S == Istring(cstb_url)) return fp_url;
+    if (S == Istring(cstb_volume)) return fp_volume;
+    if (S == Istring(cstb_year)) return fp_year;
+    if (S == Istring(cstb_crossref)) return fp_crossref;
     // Check is this is additional
     std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
     size_t                additional = Bib.size();
@@ -722,25 +722,25 @@ auto Bibtex::find_type(String s) -> entry_type {
     size_t                additional2 = Bib2.size();
     for (size_t i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
-    if (S == cstb_article) return type_article;
-    if (S == cstb_book) return type_book;
-    if (S == cstb_booklet) return type_booklet;
-    if (S == cstb_conference) return type_conference;
-    if (S == cstb_coursenotes) return type_coursenotes;
-    if (S == cstb_comment) return type_comment;
-    if (S == cstb_inbook) return type_inbook;
-    if (S == cstb_incollection) return type_incollection;
-    if (S == cstb_inproceedings) return type_inproceedings;
-    if (S == cstb_manual) return type_manual;
-    if (S == cstb_masterthesis) return type_masterthesis;
-    if (S == cstb_mastersthesis) return type_masterthesis;
-    if (S == cstb_misc) return type_misc;
-    if (S == cstb_phdthesis) return type_phdthesis;
-    if (S == cstb_proceedings) return type_proceedings;
-    if (S == cstb_preamble) return type_preamble;
-    if (S == cstb_techreport) return type_techreport;
-    if (S == cstb_string) return type_string;
-    if (S == cstb_unpublished) return type_unpublished;
+    if (S == Istring(cstb_article)) return type_article;
+    if (S == Istring(cstb_book)) return type_book;
+    if (S == Istring(cstb_booklet)) return type_booklet;
+    if (S == Istring(cstb_conference)) return type_conference;
+    if (S == Istring(cstb_coursenotes)) return type_coursenotes;
+    if (S == Istring(cstb_comment)) return type_comment;
+    if (S == Istring(cstb_inbook)) return type_inbook;
+    if (S == Istring(cstb_incollection)) return type_incollection;
+    if (S == Istring(cstb_inproceedings)) return type_inproceedings;
+    if (S == Istring(cstb_manual)) return type_manual;
+    if (S == Istring(cstb_masterthesis)) return type_masterthesis;
+    if (S == Istring(cstb_mastersthesis)) return type_masterthesis;
+    if (S == Istring(cstb_misc)) return type_misc;
+    if (S == Istring(cstb_phdthesis)) return type_phdthesis;
+    if (S == Istring(cstb_proceedings)) return type_proceedings;
+    if (S == Istring(cstb_preamble)) return type_preamble;
+    if (S == Istring(cstb_techreport)) return type_techreport;
+    if (S == Istring(cstb_string)) return type_string;
+    if (S == Istring(cstb_unpublished)) return type_unpublished;
 
     std::vector<Istring> &Bib        = the_main->get_bibtex_extensions();
     size_t                additional = Bib.size();
@@ -973,7 +973,7 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto     my_id = AL.has_value(np_id);
+    auto     my_id = AL.has_value(Istring(np_id));
     if (my_id >= 0) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(to_unsigned(my_id)));

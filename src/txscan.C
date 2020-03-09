@@ -248,7 +248,7 @@ auto Parser::scan_file_name() -> std::string {
         if (get_x_token()) break;
         if (cur_cmd_chr.is_letter_other())
             file_name.push_back(cur_cmd_chr.char_val());
-        else if (cur_cmd_chr.get_cmd() == underscore_catcode) // allow foo_bar
+        else if (cur_cmd_chr.cmd == underscore_catcode) // allow foo_bar
             file_name.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.is_space())
             break;
@@ -531,7 +531,7 @@ auto Parser::next_from_line0() -> bool {
         return false;
     }
     cur_cmd_chr = CmdChr(get_catcode(c.value), subtypes(c.value));
-    switch (cur_cmd_chr.get_cmd()) {
+    switch (cur_cmd_chr.cmd) {
     case escape_catcode:
         cur_tok = cs_from_input();
         see_cs_token();
@@ -658,7 +658,7 @@ void Parser::next_from_list() {
         see_char_token(t);
     else {
         see_cs_token();
-        if (cur_cmd_chr.get_cmd() == dont_expand_cmd) { // see comment below
+        if (cur_cmd_chr.cmd == dont_expand_cmd) { // see comment below
             if (TL.empty()) return;
             t = TL.front();
             TL.pop_front();
@@ -700,8 +700,8 @@ void Parser::next_from_list() {
 
 void Parser::get_x_token_or_active_char(symcodes &a, subtypes &b) {
     get_x_token();
-    a = cur_cmd_chr.get_cmd();
-    b = cur_cmd_chr.get_chr();
+    a = cur_cmd_chr.cmd;
+    b = cur_cmd_chr.chr;
     if (a == relax_cmd && b == special_relax) {
         if (cur_tok.char_or_active()) {
             a = active_catcode;
@@ -1214,9 +1214,9 @@ void SthInternal::change_level(internal_type level) {
 // in fonts.
 
 void Parser::scan_something_internal(internal_type level) {
-    subtypes m = cur_cmd_chr.get_chr();
+    subtypes m = cur_cmd_chr.chr;
     long     v;
-    switch (cur_cmd_chr.get_cmd()) {
+    switch (cur_cmd_chr.cmd) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
     case last_item_cmd: // \lastkern etc
@@ -1296,7 +1296,7 @@ void Parser::scan_something_internal(internal_type level) {
             return;
         }
         v = m;
-        if (cur_cmd_chr.get_cmd() == toks_register_cmd) // read the 349 in `\toks349'
+        if (cur_cmd_chr.cmd == toks_register_cmd) // read the 349 in `\toks349'
             v = scan_reg_num();
         cur_val.set_toks(toks_registers[to_unsigned(v)].val);
         return;
@@ -1813,11 +1813,11 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 // Handles a command like \advance\count0 by, that allows \global before it.
 // here cur_tok would be \advance
 void Parser::M_prefixed_aux(bool gbl) {
-    auto  chr = cur_cmd_chr.get_chr();
+    auto  chr = cur_cmd_chr.chr;
     Token T   = cur_tok;
     int   p;
     long  q = 0;
-    switch (cur_cmd_chr.get_cmd()) {
+    switch (cur_cmd_chr.cmd) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
     case shorthand_def_cmd: M_shorthand_define(chr, gbl); return;
     case read_to_cs_cmd: {
@@ -1847,7 +1847,7 @@ void Parser::M_prefixed_aux(bool gbl) {
     case assign_glue_cmd:
     case assign_mu_glue_cmd: {
         p     = chr;
-        int n = cur_cmd_chr.get_cmd();
+        int n = cur_cmd_chr.cmd;
         scan_optional_equals();
         if (n == assign_mu_glue_cmd)
             scan_glue(it_mu, T);
@@ -1995,12 +1995,12 @@ void Parser::M_prefixed_aux(bool gbl) {
 // Location in table is subtype (for \everypar) or argument (for \toks)
 // here p is subtype of object to assign
 void Parser::assign_toks(Token T, long p, bool gbl) {
-    if (cur_cmd_chr.get_cmd() == toks_register_cmd) p = scan_reg_num();
+    if (cur_cmd_chr.cmd == toks_register_cmd) p = scan_reg_num();
     scan_optional_equals();
     remove_initial_space_relax();
-    int  c        = cur_cmd_chr.get_cmd();
+    int  c        = cur_cmd_chr.cmd;
     bool have_reg = true;
-    long q        = cur_cmd_chr.get_chr();
+    long q        = cur_cmd_chr.chr;
     if (c == open_catcode)
         have_reg = false;
     else if (c == toks_register_cmd)
@@ -2066,20 +2066,20 @@ void Parser::token_for_show(const CmdChr &val) {
 
 // This is the common code
 void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
-    symcodes K = val.get_cmd();
+    symcodes K = val.cmd;
     if (K == undef_cmd)
         B << "undefined";
     else if (K >= user_cmd) {
-        Macro &X = mac_table.get_macro(val.get_chr());
-        if (X.get_type() == dt_optional) B << "opt ";
+        Macro &X = mac_table.get_macro(val.chr);
+        if (X.type == dt_optional) B << "opt ";
         B.dump_prefix(false, false, K);
         B << "macro:" << (lg ? " " : "") << X;
     } else if (K == set_font_cmd) {
         B << "select font ";
-        if (val.get_chr() == 0)
+        if (val.chr == 0)
             B << "nullfont";
         else
-            tfonts.full_name(B, val.get_chr());
+            tfonts.full_name(B, val.chr);
     } else if (K > 16) {
         String s = val.name();
         if (s == nullptr) s = "unknown.";
@@ -2142,7 +2142,7 @@ void Parser::E_convert() {
     Token  T = cur_tok;
     Buffer B;
     B.reset();
-    int c = cur_cmd_chr.get_chr();
+    int c = cur_cmd_chr.chr;
     switch (c) {
     case number_code:
     case at_arabic_code:
@@ -2356,10 +2356,10 @@ auto Parser::scan_expr(Token T, internal_type et) -> bool {
 // OK for \font, or \scriptfont, or \nullfont or \tenrm
 auto Parser::scan_font_ident() -> long {
     remove_initial_space();
-    if (cur_cmd_chr.get_cmd() == def_font_cmd) return eqtb_int_table[cur_font_loc].val;
-    if (cur_cmd_chr.get_cmd() == set_font_cmd) return cur_cmd_chr.get_chr();
-    if (cur_cmd_chr.get_cmd() == def_family_cmd) {
-        auto a = cur_cmd_chr.get_chr();
+    if (cur_cmd_chr.cmd == def_font_cmd) return eqtb_int_table[cur_font_loc].val;
+    if (cur_cmd_chr.cmd == set_font_cmd) return cur_cmd_chr.chr;
+    if (cur_cmd_chr.cmd == def_family_cmd) {
+        auto a = cur_cmd_chr.chr;
         auto b = scan_int(cur_tok, 15, "family number");
         return eqtb_int_table[a + to_unsigned(b)].val;
     }
@@ -2372,9 +2372,9 @@ auto Parser::scan_font_ident() -> long {
 auto Parser::scan_mathfont_ident() -> long {
     Token T = cur_tok;
     remove_initial_space();
-    if (cur_cmd_chr.get_cmd() == mathfont_cmd) return cur_cmd_chr.get_chr();
-    if (cur_cmd_chr.get_cmd() == math_font_cmd) {
-        switch (cur_cmd_chr.get_chr()) {
+    if (cur_cmd_chr.cmd == mathfont_cmd) return cur_cmd_chr.chr;
+    if (cur_cmd_chr.cmd == math_font_cmd) {
+        switch (cur_cmd_chr.chr) {
         case mathtt_code: return math_f_monospace;
         case mathcal_code: return math_f_script;
         case mathbf_code: return math_f_bold;
@@ -2459,7 +2459,7 @@ void Parser::scan_prime() {
     for (;;) {
         L.push_back(T);
         if (get_token()) break;
-        if (cur_cmd_chr.get_cmd() == hat_catcode) { // TeX wants a hat token
+        if (cur_cmd_chr.cmd == hat_catcode) { // TeX wants a hat token
             TokenList aux = read_arg();
             L.splice(L.end(), aux);
             break;

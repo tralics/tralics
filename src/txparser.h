@@ -116,8 +116,8 @@ private:
         see_cs_token();
     }
     void see_char_token(Token t) {
-        cur_cmd_chr.set_cmd(t.cmd_val());
-        cur_cmd_chr.set_chr(t.chr_val());
+        cur_cmd_chr.cmd = t.cmd_val();
+        cur_cmd_chr.chr = t.chr_val();
     }
     void               set_after_ass_tok(Token x) { after_assignment_token = x; }
     void               set_cat(size_t c, int v) { eqtb_int_table[c].set_val(v); }
