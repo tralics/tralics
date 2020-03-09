@@ -143,11 +143,11 @@ auto main_ns::hack_for_input(const std::string &s) -> std::string {
     the_parser.set_job_name(no_ext);
     std::string path;
     std::string fn = s;
-    if (k > 0) {
-        B.kill_at(to_unsigned(k));
+    if (k && (*k > 0)) {
+        B.kill_at(*k);
         path = B.to_string();
         if (out_dir.empty()) out_dir = path;
-        fn = B.to_string(to_unsigned(k) + 1);
+        fn = B.to_string(*k + 1);
     }
     B << bf_reset << fn;
     B.remove_last_n(4);

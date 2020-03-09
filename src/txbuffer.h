@@ -14,6 +14,7 @@
 #include "txid.h"
 #include "txscaled.h"
 #include <cstring>
+#include <optional>
 #include <vector>
 
 using buffer_fn = void(Buffer &);
@@ -186,7 +187,7 @@ public:
     [[nodiscard]] auto is_good_ascii() const -> bool;
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
     [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
-    [[nodiscard]] auto last_slash() const -> long;
+    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;
     [[nodiscard]] auto size() const -> size_t { return wptr; }
     auto               look_at_space(const std::string &s) -> bool;
     void               lowercase();

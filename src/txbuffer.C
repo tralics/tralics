@@ -1402,12 +1402,11 @@ void Buffer::optslash() {
         push_back('/');
 }
 
-// returns location of last slash in the buffer \todo std::optional<size_t>
-auto Buffer::last_slash() const -> long {
-    long k = -1;
-    for (size_t i = 0; i < wptr; i++)
-        if (at(i) == '/') k = to_signed(i);
-    return k;
+// returns location of last slash in the buffer
+auto Buffer::last_slash() const -> std::optional<size_t> {
+    for (size_t i = wptr; i > 0; --i)
+        if (at(i - 1) == '/') { return i - 1; }
+    return {};
 }
 
 // True if the string s is at the end of the buffer

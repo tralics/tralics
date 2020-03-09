@@ -550,16 +550,17 @@ void MainClass::open_config_file() {
     // special case where the config file is a tcf file
     use_tcf = true;
     B.remove_last_n(4);
-    auto n = B.size();
-    auto k = B.last_slash();
+    auto n  = B.size();
+    auto k  = B.last_slash();
+    auto kk = k ? *k + 1 : 0UL;
     for (size_t i = n - 1;; i--) {
-        if (i <= to_unsigned(k + 1)) break;
+        if (i <= kk) break;
         if (!is_digit(B[i])) {
             B.kill_at(i + 1);
             break;
         }
     }
-    dtype = B.to_string(to_unsigned(k + 1));
+    dtype = B.to_string(kk);
     the_log << "Using tcf type " << dtype << "\n";
 }
 
@@ -722,8 +723,8 @@ void MainClass::see_name1() {
         main_ns::check_year(y, C, dclass, year_string);
     }
     auto k = B.last_slash(); // remove the directory part
-    if (k >= 0) {
-        std::string s = B.to_string(to_unsigned(k + 1));
+    if (k) {
+        std::string s = B.to_string(*k + 1);
         B << bf_reset << s;
     }
     the_parser.set_projet_val(B.to_string()); // this is apics
@@ -739,7 +740,7 @@ void MainClass::see_name1() {
         out_name = no_ext;
         B << bf_reset << no_ext; // remove the directory part
         auto kk = B.last_slash();
-        if (kk >= 0) out_name = B.to_string(to_unsigned(kk + 1)); // This is apics2003
+        if (kk) out_name = B.to_string(*kk + 1); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
