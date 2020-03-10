@@ -170,7 +170,7 @@ auto Token::no_case_letter(char x) const -> bool {
 // Finds an empty slot in the hash table; fills it with name s.
 // Return value is hash_used
 // The string s must be a permanent string
-auto Hashtab::find_empty(String s) -> int {
+auto Hashtab::find_empty(String s) -> size_t {
     for (;;) {
         hash_used--;
         if (hash_used <= 0) {
@@ -179,9 +179,9 @@ auto Hashtab::find_empty(String s) -> int {
             log_and_tty << "hash table full\n" << lg_fatal;
             abort();
         }
-        if (Text[to_unsigned(hash_used)] == nullptr) break;
+        if (Text[hash_used] == nullptr) break;
     }
-    Text[to_unsigned(hash_used)] = s;
+    Text[hash_used] = s;
     hash_bad++;
     return hash_used;
 }
@@ -197,12 +197,12 @@ auto Hashtab::find_empty(String s) -> int {
 // Returns the hash location of the name in the buffer.
 // If a new slot has to be created, uses the string name, if not empty.
 // The string name must be a permanent string
-auto Hashtab::hash_find(const Buffer &b, String name) -> long {
+auto Hashtab::hash_find(const Buffer &b, String name) -> size_t {
     auto p = b.hashcode(hash_prime);
     for (;;) {
-        if ((Text[p] != nullptr) && b == Text[p]) return to_signed(p);
+        if ((Text[p] != nullptr) && (b == Text[p])) return p;
         if (Next[p] != 0)
-            p = to_unsigned(Next[p]);
+            p = Next[p];
         else
             break;
     }
@@ -211,12 +211,12 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> long {
 }
 
 // Finds the object in the buffer B.
-auto Hashtab::hash_find() -> long {
+auto Hashtab::hash_find() -> size_t {
     auto p = B.hashcode(hash_prime);
     for (;;) {
-        if ((Text[p] != nullptr) && B == Text[p]) return to_signed(p);
+        if ((Text[p] != nullptr) && (B == Text[p])) return p;
         if (Next[p] != 0)
-            p = to_unsigned(Next[p]);
+            p = Next[p];
         else
             break;
     }
@@ -227,15 +227,15 @@ auto Hashtab::hash_find() -> long {
 // If Text[p] is empty, then p is not Next[q] so p is the hash code of s
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
-auto Hashtab::find_aux(size_t p, String name) -> long {
+auto Hashtab::find_aux(size_t p, String name) -> size_t {
     if (Text[p] != nullptr) {
-        int q   = find_empty(name);
+        auto q  = find_empty(name);
         Next[p] = q;
         return q;
     }
     hash_usage++;
     Text[p] = name;
-    return to_signed(p); // \todo make that size_t
+    return p;
 }
 
 // Defines the command named a, but hash_find will not find it.
@@ -243,7 +243,7 @@ auto Hashtab::find_aux(size_t p, String name) -> long {
 // This must be used at bootstrap code.
 auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
     hash_used--;
-    auto p = to_unsigned(hash_used);
+    auto p = hash_used;
     if ((Text[p] != nullptr) || p < hash_prime) {
         log_and_tty << "Size of hash table is " << hash_size << "\n";
         log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
@@ -276,7 +276,7 @@ auto Buffer::hashcode(size_t prime) const -> size_t {
 auto Hashtab::locate(String s) -> Token {
     if (s[1] == 0) return Token(uchar(s[0]) + single_offset);
     B << bf_reset << s;
-    return Token(to_unsigned(hash_find(B, s)) + hash_offset);
+    return Token(hash_find(B, s) + hash_offset);
 }
 
 auto Hashtab::locate(const std::string &s) -> Token {
@@ -290,7 +290,7 @@ auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.size() == 0) return Token(null_tok_val);
     codepoint c = b.unique_character();
     if (c.non_null()) return Token(c.value + single_offset);
-    return Token(to_unsigned(hash_find(b, nullptr)) + hash_offset);
+    return Token(hash_find(b, nullptr) + hash_offset);
 }
 
 // This returns true if the token associated to the string in the buffer
@@ -309,7 +309,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
             for (;;) {
                 if ((Text[p] != nullptr) && b == Text[p]) break;
                 if (Next[p] != 0)
-                    p = to_unsigned(Next[p]);
+                    p = Next[p];
                 else
                     return false;
             }

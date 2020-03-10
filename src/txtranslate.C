@@ -1058,10 +1058,9 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> Istr
         Buffer &B = tpa_buffer;
         B << bf_reset << "\\color@" << name;
         token_from_list(hash_table.locate(B));
-        if (cur_cmd_chr.cmd == color_cmd) {
-            auto n = all_colors.size();
-            int  k = cur_cmd_chr.chr - color_offset;
-            if (k >= 0 && to_unsigned(k) < n) return all_colors[to_unsigned(k)]->get_id();
+        if ((cur_cmd_chr.cmd == color_cmd) && (cur_cmd_chr.chr >= color_offset)) {
+            auto k = to_unsigned(cur_cmd_chr.chr - color_offset);
+            if (k < all_colors.size()) return all_colors[k]->get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
         return Istring();
@@ -1137,13 +1136,13 @@ void Parser::T_color(subtypes c) {
         if (tracing_assigns()) the_log << lg_startbrace << "Globally changing " << C << " into color number " << n << lg_endbrace;
         return;
     }
-    // Now c >= color_offset
-    auto n = all_colors.size();
-    int  k = c - color_offset;
-    if (k >= 0 && to_unsigned(k) < n) {
-        Istring C = all_colors[to_unsigned(k)]->get_id();
-        cur_font.set_color(C);
-        font_has_changed();
+    if (c >= color_offset) {
+        auto k = to_unsigned(c - color_offset);
+        if (k < all_colors.size()) {
+            Istring C = all_colors[k]->get_id();
+            cur_font.set_color(C);
+            font_has_changed();
+        }
     }
 }
 

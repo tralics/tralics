@@ -28,7 +28,6 @@ class StrHash {
     size_t *    Next;      // the Next table \todo size_t
     LabelInfo **Labinfo;   // the LabelInfo
     size_t      hash_len;  // size of the table
-    int         hash_used; // number of slots used
     size_t      hash_last; // last slot used
     Buffer      mybuf;     // local buffer
 public:

@@ -66,14 +66,14 @@ public:
 
 private:
     std::array<String, hash_size> Text;       // the strings
-    std::array<int, hash_size>    Next;       // points to next
+    std::array<size_t, hash_size> Next;       // points to next
     Buffer                        B;          // internal buffer
-    int                           hash_used;  // all places above this one are used
+    size_t                        hash_used;  // all places above this one are used
     int                           hash_usage; // number of commands in the table
     int                           hash_bad;   // number of items not at hash position
 private:
-    auto find_empty(String s) -> int; // find an empty slot
-    auto find_aux(size_t p, String name) -> long;
+    auto find_empty(String s) -> size_t; // find an empty slot
+    auto find_aux(size_t p, String name) -> size_t;
 
 public:
     Hashtab();
@@ -83,8 +83,8 @@ public:
     auto               locate(const Buffer &b) -> Token;      // used by primitive, etc
     [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
     [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
-    auto               hash_find(const Buffer &b, String name) -> long;
-    auto               hash_find() -> long;
+    auto               hash_find(const Buffer &b, String name) -> size_t;
+    auto               hash_find() -> size_t;
     auto               primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
     auto               nohash_primitive(String a, CmdChr b) -> Token;
     void               eval_let(String a, String b);
