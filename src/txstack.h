@@ -16,22 +16,21 @@
 
 // Array management
 class ArrayInfo {
-    Xid                    id;      // the id of the table
-    int                    cell_no; // current cell number, first on row is zero \todo size_t
     std::vector<AttList>   attribs; // positions attributes for each row
     std::vector<TokenList> u_table, v_table;
-    size_t                 size{0};
 
 public:
+    Xid    id;      // the id of the table
+    size_t cell_no; // current cell number, first on row is zero
+    size_t size{0};
+
     ArrayInfo(Xid a1) : id(a1), cell_no(0) {}
-    auto               its_me(Xid a) -> bool { return id == a; }
-    [[nodiscard]] auto get_cell_no() const -> int { return cell_no; }
-    void               set_cell_no(int k) { cell_no = k; }
-    auto               get_cell_atts(int k) -> AttList;
-    auto               get_u_or_v(bool u_or_v, int pos) -> TokenList;
-    void               add_uv(TokenList &u, TokenList &v, const AttList &At);
-    auto               get_size() -> size_t { return size; }
-    void               del_array_info();
+    auto its_me(Xid a) -> bool { return id == a; }
+    void set_cell_no(size_t k) { cell_no = k; }
+    auto get_cell_atts(size_t k) -> AttList;
+    auto get_u_or_v(bool u_or_v, size_t pos) -> TokenList;
+    void add_uv(TokenList &u, TokenList &v, const AttList &At);
+    void del_array_info();
 };
 
 // This is the stack

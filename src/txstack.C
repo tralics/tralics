@@ -589,21 +589,21 @@ void ArrayInfo::add_uv(TokenList &u, TokenList &v, const AttList &At) {
 }
 
 // This gets u-part or v-part
-auto ArrayInfo::get_u_or_v(bool u_or_v, int pos) -> TokenList {
-    if (pos < 0 || to_unsigned(pos) >= size) return TokenList();
-    return u_or_v ? u_table[to_unsigned(pos)] : v_table[to_unsigned(pos)];
+auto ArrayInfo::get_u_or_v(bool u_or_v, size_t pos) -> TokenList {
+    if (pos >= size) return TokenList();
+    return u_or_v ? u_table[pos] : v_table[pos];
 }
 
 auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
     Xid        unused;
     ArrayInfo *A       = get_my_table(unused);
-    int        cell_no = A->get_cell_no();
+    auto       cell_no = A->cell_no;
     return A->get_u_or_v(u_or_v, cell_no);
 }
 
-auto ArrayInfo::get_cell_atts(int k) -> AttList {
-    if (k < 0 || to_unsigned(k) >= size) return AttList();
-    return attribs[to_unsigned(k)];
+auto ArrayInfo::get_cell_atts(size_t k) -> AttList {
+    if (k >= size) return AttList();
+    return attribs[k];
 }
 
 // Adds positions attributes to the current cell, given the current
@@ -611,7 +611,7 @@ auto ArrayInfo::get_cell_atts(int k) -> AttList {
 void Stack::finish_cell(int w) {
     Xid        cid;
     ArrayInfo *A       = get_my_table(cid);
-    int        cell_no = A->get_cell_no();
+    auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
     Buffer &   B       = the_main->SH.shbuf();
     int        n;
@@ -620,13 +620,12 @@ void Stack::finish_cell(int w) {
     else
         n = atoi(B.c_str());
     if (n != 0) {
-        cell_no += n;
+        cell_no += to_unsigned(n);
     } else {
         cell_no++;
         cid.add_attribute(atts, true);
     }
-    if (w == -1) w = cell_no;
-    A->set_cell_no(w);
+    A->set_cell_no(w == -1 ? cell_no : to_unsigned(w));
 }
 
 // This returns the span of the current cell; -1 in case of trouble
