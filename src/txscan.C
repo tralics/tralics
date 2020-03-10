@@ -1383,7 +1383,7 @@ void Parser::scan_something_internal(internal_type level) {
                 cur_val.set_int(0);
             else if (k == 0)
                 cur_val.set_int(to_signed(penalties[m - 1].size()));
-            else if (k <= int(penalties[m - 1].size()))
+            else if (k <= to_signed(penalties[m - 1].size()))
                 cur_val.set_int(penalties[m - 1][to_unsigned(k - 1)]);
             else
                 cur_val.set_int(penalties[m - 1].back());
@@ -1428,12 +1428,13 @@ void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->get_id().v
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {
-    auto v = scan_int(cur_tok);
+    auto vv = scan_int(cur_tok);
     cur_val.set_dim(0);
-    if (v <= 0) return;
+    if (vv <= 0) return;
+    auto v = to_unsigned(vv);
     auto n = parshape_vector.size() / 2;
     if (n == 0) return;
-    int q = 0;
+    size_t q = 0;
     if (m == parshapelength_code)
         q = 0;
     else if (m == parshapeindent_code)
@@ -1442,9 +1443,9 @@ void Parser::parshape_aux(subtypes m) {
         if ((v & 1) != 0) q = 1;
         v = (v + q) / 2;
     }
-    if (v >= to_signed(n)) v = to_signed(n);
+    if (v >= n) v = n;
     v = 2 * v - q - 1;
-    cur_val.set_dim(parshape_vector[to_unsigned(v)]);
+    cur_val.set_dim(parshape_vector[v]);
 }
 
 // This implements \the. The result is a token list, of catcode 12
