@@ -544,12 +544,10 @@ void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
 }
 
 auto Stack::find_ctrid(subtypes m) -> long {
-    auto k = to_signed(Table.size()) - 1;
-    while (k >= 0) {
-        Istring frame = Table[to_unsigned(k)].frame;
-        Xml *   obj   = Table[to_unsigned(k)].obj;
-        k--;
+    for (auto k = Table.size(); k-- >= 1;) {
+        Xml *obj = Table[k].obj;
         if (obj == nullptr) continue;
+        Istring frame = Table[k].frame;
         if (frame.spec_empty()) continue;
         if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->get_id().value;
         if (m == xmlcurcell_code && frame == the_names[np_cell]) return obj->get_id().value;

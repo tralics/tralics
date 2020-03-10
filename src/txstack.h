@@ -17,7 +17,7 @@
 // Array management
 class ArrayInfo {
     Xid                    id;      // the id of the table
-    int                    cell_no; // current cell number, first on row is zero
+    int                    cell_no; // current cell number, first on row is zero \todo size_t
     std::vector<AttList>   attribs; // positions attributes for each row
     std::vector<TokenList> u_table, v_table;
     size_t                 size{0};
