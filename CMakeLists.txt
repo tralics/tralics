@@ -34,7 +34,7 @@ if(CCACHE)
   set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
 endif()
 
-file (GLOB_RECURSE sources CONFIGURE_DEPENDS *.C)
+file (GLOB_RECURSE sources CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 add_executable(tralics ${sources})
 target_link_libraries (tralics ${CONAN_LIBS})

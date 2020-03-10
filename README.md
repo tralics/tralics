@@ -160,7 +160,7 @@ The src directory contains the following files
   Copyright: copy of the copyright notice
   README: explains how to create the Tralics binary
   Makefile  : this is the Makefile
-  *.C *.h : the sources.
+  *.cpp *.h : the sources.
 You get a binary version of Tralics by saying `make' in this directory.
 
 The confdir directory contains the following files
@@ -215,7 +215,7 @@ The src directory contains the following files
   Copyright: copy of the copyriht notice
   README: explains how to create the Tralics binary
   Makefile  : this is the Makefile
-  *.C *.h : the sources.
+  *.cpp *.h : the sources.
 
 
 The confdir directory contains the following files

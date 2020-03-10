@@ -14,7 +14,7 @@
 #include "txinline.h"
 #include "txparser.h"
 
-void readline_newprompt(std::string s); // in readline.C, but only used here
+void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
 namespace {
     Buffer current_head;

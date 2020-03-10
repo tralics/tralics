@@ -12,7 +12,7 @@
 #include "txbuffer.h"
 #include <fstream>
 
-void readline(char *buffer, size_t screen_size); ///< Read a line from standart input (readline.C)
+void readline(char *buffer, size_t screen_size); ///< Read a line from standart input (readline.cpp)
 
 // Implements:  FileForInput, LinePtr, TexOutStream
 // InputStack converter

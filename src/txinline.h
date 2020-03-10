@@ -18,7 +18,7 @@
 #include "txlogger.h"
 #include "txparam.h"
 
-// See comments in tralics.C where these variables are defined
+// See comments in tralics.cpp where these variables are defined
 namespace main_ns {
     extern HalfLogger log_or_tty;
     extern Buffer     path_buffer;
