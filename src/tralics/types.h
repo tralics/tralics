@@ -1,5 +1,6 @@
 #pragma once
 #include <cassert>
+#include <stddef.h>
 #include <type_traits>
 
 using uint   = unsigned int;

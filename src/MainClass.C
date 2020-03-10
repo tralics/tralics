@@ -193,7 +193,8 @@ void MainClass::parse_args(int argc, char **argv) {
 }
 
 auto MainClass::split_one_arg(String a, int &p) -> String {
-    Buffer B;
+    static Buffer B;
+    B.reset();
     p     = 0;
     int i = 0;
     for (;;) {
