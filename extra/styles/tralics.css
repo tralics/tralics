@@ -1,0 +1,269 @@
+
+/* for body.  padding: 2em 1em 2em 70px;  margin: 0; */
+/* for body.  padding: top right bottom left;  margin: 0; */
+
+body {
+ padding: 1em 1em 1em 1em;  
+ margin: 0px 0px 0px 0px; 
+ font-family: serif;
+ color: black;
+ background: rgb(255,242,226);
+ background-position: top left;
+ background-repeat: no-repeat;
+}
+
+
+a[href] {  text-decoration:underline; }
+
+@media print {
+ body{   font-size: 11pt;}
+ pre{   font-size: 9pt;}
+}
+
+.sansserif {font-family: Helvetica,Verdana,Arial}
+.sansserifd {font-family: Monaco,Verdana,Arial,Helvetica}
+.colA { color: blue  }
+.colB { color: red  }
+.colC { color: green  }
+.colD { color: purple  }
+.colE { color: olive  }
+.colF { color: #00bbbb  }
+
+.blanc { background: #ffffff }
+
+li p {text-indent:0px}
+p {text-indent:2em}
+p:first-letter {font-size: 130%;}
+
+pre { margin-left: 2em }
+
+pre, code { font-family: monospace } 
+pre {
+    margin-left: 1em;
+}
+
+.ltx-source {
+    width: 80%;
+    border: none;
+    background-color: #eee;
+    color: maroon;
+    margin-left: 2em;
+}
+
+.tty_out {
+    width: 80%;
+    color: black;
+    background-color: #eee;
+    border: 2px;
+    border-style: dotted;
+    border-color:  #ffa400; /* orange */
+}
+
+.xml_out {
+    margin-left: 0em;
+    border: 3px;
+    border-style: solid;
+    border-color: #14c800;
+    width: 98%;
+    color: black;
+    background-color: #eee;
+}
+
+.log_out {
+    width: 100%;
+    color: black;
+    background-color: #eee;
+    border: solid;
+   border-color: rgb(80,0,200); 
+}
+
+.xml-code {
+    border: 3px;
+    border: none;
+    width: 80%;
+    color: #42a;
+    background-color :rgb(248,248,248);
+    margin-left: 2em;
+}
+
+
+.latex-code {
+    width: 80%;
+    border: none;
+    background-color: rgb(248,248,248);
+    color: maroon;
+    margin-left: 2em;
+}
+
+.log-code {
+    width: 80%;
+    border: none;
+    background-color: rgb(237,237,255);
+    color: black;
+    margin-left: 2em;
+}
+
+
+.maplettyout {
+    width: 80%;
+    border: none;
+    background-color: rgb(210,248,248);
+    color: maroon;
+    margin-left: 2em;
+}
+
+.maple-in {
+    width: 80%;
+    border: 2px;
+    border-style: dotted;
+    border-color:  #ffa400; /* orange */
+    background-color: rgb(227,248,248);
+    color: maroon;
+    margin-left: 2em;
+}
+
+.maple-out {
+    width: 80%;
+    border: none;
+    background-color: rgb(235,248,248);
+    color: black;
+    margin-left: 2em;
+}
+
+
+
+
+pre.ltx-source {
+    margin-left: 2em;
+}
+
+samp { color: maroon;}
+.samp { color: maroon;}
+
+
+.bl { color: blue;
+}
+.black { color: black;
+}
+
+.important {
+ color: red;
+ font-size: 120%;
+ font-weight: bold;
+}
+
+.colbad { color: red;
+}
+
+.colblack { color: black;
+}
+
+/* xml comment */
+.xc { color: blue;
+}
+
+.txt { color:  #42a; }
+
+.verb { color:  #363; }
+
+.vc { vertical-align: middle ;}
+.hc { text-align: center ;}
+div.hc { text-align: center ;}
+
+.noindent{ text-indent:0em}
+p.nofirst:first-letter{ font-size:100% }
+
+.idx1 { text-indent:0em; margin-top:2px}
+.idx2 { text-indent:2em;}
+.idx3 { text-indent:4em;}
+
+.prenumber {
+   font-size:small;
+   font-family: serif;
+   color: black;
+   background: rgb(255,242,226);
+} 
+
+.eqno {
+    font-style: normal;
+    text-align:right;
+    width:4em;
+    text-indent:0px;
+}
+.mathdisplay{
+    text-align:center;
+    text-indent:0px;
+}
+
+.leqno{
+    font-style: normal;
+    width:4em;
+    text-indent:0px; 
+}
+
+.leftequation{
+    text-align:left;
+    text-indent:4em;
+    padding-right:2em;
+}
+
+
+.theorem-theorem { background: rgb(255,242,200); }
+.theorem-lemma { background: rgb(255,242,195); }
+.theorem-definition { background: rgb(255,242,190); }
+.theorem-proposition { background: rgb(255,242,185); }
+.theorem-corollary { background: rgb(255,242,180); }
+.theorem-example { background: rgb(255,242,170); }
+.theorem-remark { background: rgb(255,242,160); }
+.theorem-problem { background: rgb(255,242,175); }
+.theorem-algorithm { background: rgb(255,242,175); }
+.theorem-proof { background: rgb(255,242,210); }
+
+.thesis-heading {
+margin:1mm 2cm 1cm 2cm;
+}
+
+.float-center    { text-align:center; font-size:large; width :80% }
+.float-left    {  float:left; }
+.float-right    {  float:right; }       
+
+/* For amsart class */
+
+
+.amskeywords:before {font-weight : bold;  content: "Key words and phrases: "; }
+.amskeywords:after { content: "."; }
+.amscontributor:before {font-weight : bold;  content: "Contributors "; }
+.amscontributor:after { content: "."; }
+.amscommby:before {font-weight : bold;  content: "Communicated by: "; }
+.amscommby:after { content: "."; }
+.amstranslator:before {font-weight : bold;  content: "Translated by: "; }
+.amstranslator:after { content: "."; }
+.amsdedicatory:before {font-weight : bold;  content: "Dedicatory: "; }
+.amssubjclass:before
+	 {font-weight : bold;  content: "Mathematics Subject Classification"; }
+.amssubjclass:after { content: "."; }
+
+.thanks {font-style:italic}
+
+.short-title {font-size:small}
+.short-title:before {
+   font-size:small; font-weight : bold;  content: "Short title: ";}
+.short-authors {font-size:small}
+.short-authors:before {
+   font-size:small; font-weight : bold;  content: "Short authors: ";}
+
+.title {text-align:center}
+.authors {text-align:center}
+.author {font-weight:bold}
+
+.abstract {margin-left:10%; margin-right:10%;}
+.abstract p:first-child:before {font-weight:bold; content : "Abstract. "}
+.proof p:first-child:before {font-style:italic; content : "Proof. "}
+
+
+
+@media print {
+.thesis-heading {
+margin:1mm 5mm 1cm 5mm;
+}
+}

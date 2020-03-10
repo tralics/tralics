@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- dtd raweb  2003 modified for 2004 -->
+<!-- Some features added for 2005; essentially anchor was removed -->
+<!-- $Id: raweb3.dtd,v 2.8 2007/07/06 15:53:16 grimm Exp $ -->
+
+<!-- 
+  Copyright 2002-2004, 2005,2006 Jose Grimm/ INRIA/ Apics Project
+  You have the right to use this file in any way, with the following 
+  restriction: you cannot distribute modifications of this file under 
+  its name raweb3.dtd, the name raweb.dtd, 
+  nor rawebXXXX.dtd,  where XXXX are four digits like 2004.  
+  The name `raweb3.dtd' is associated to the raweb DTD of YEAR 2003.
+-->
+
+<!ENTITY amp "&#x26;#x26;" >
+<!ENTITY lt  "&#x26;#x3C;" >
+
+<!ENTITY  ier "<hi rend='sup'>er</hi>">
+<!ENTITY  iers "<hi rend='sup'>ers</hi>">
+<!ENTITY  iere "<hi rend='sup'>re</hi>">
+<!ENTITY  ieres "<hi rend='sup'>res</hi>">
+<!ENTITY  ieme "<hi rend='sup'>e</hi>">
+<!ENTITY  iemes "<hi rend='sup'>es</hi>">
+<!ENTITY  numero "n<hi rend='sup'>o</hi>">
+<!ENTITY  Numero "N<hi rend='sup'>o</hi>">
+
+<!ENTITY % list.qname           "m:list" >
+<!ENTITY % ident.qname           "m:ident" >
+
+<!ENTITY % mathml PUBLIC "mathml" "mathml2.dtd">
+%mathml;
+
+
+<!ENTITY % tei-aux "(p | list | note | formula | table | figure)+" >
+
+<!ENTITY % texte-general 
+   "ident | code | hi | term| ref| xref | formula | cit | label | list | note | figure | table | TeX | LaTeX" >
+
+<!ENTITY % texte-restreint
+  "ident | code |  hi | term | ref| xref | formula | TeX | LaTeX" >
+
+<!ENTITY % tei-common-atts
+	'id ID #IMPLIED
+	rend CDATA #IMPLIED'>
+
+<!ELEMENT code (#PCDATA) >
+<!ATTLIST code  %tei-common-atts; >
+
+
+<!ELEMENT ident (#PCDATA) >
+<!ATTLIST ident %tei-common-atts; >
+
+
+<!ELEMENT cit (ref) >
+<!ATTLIST cit rend CDATA #IMPLIED >
+
+
+<!ELEMENT list 
+	( head?, (item* | (label, item)+)) >
+<!ATTLIST list 
+	%tei-common-atts;
+	type (simple|gloss|ordered|description)  "simple" >
+
+
+<!ELEMENT item 
+	(#PCDATA | %texte-general; | p )* >
+<!ATTLIST item 
+	id ID #IMPLIED
+	rend CDATA #IMPLIED >
+
+<!ELEMENT label 
+	(#PCDATA | %texte-restreint; )* >
+<!ATTLIST label %tei-common-atts; >
+
+<!ENTITY % div0-textp "(div1|div2|div3|div4)+">
+<!ENTITY % div0-texts "(div1|div2|div3|div4)*">
+<!ENTITY % div1-textp "(div2|div3|div4)+">
+<!ENTITY % div1-texts "(div2|div3|div4)*">
+<!ENTITY % div2-textp "(div3|div4)+">
+<!ENTITY % div2-texts "(div3|div4)*">
+<!ENTITY % div3-textp "(div4)+">
+<!ENTITY % div3-texts "(div4)*">
+
+
+<!ENTITY % particip "participant|participants|participante|participantes" >
+<!ENTITY % ramodule-header "(moreinfo|keywords|%particip;)*">
+
+<!ENTITY % tei-div-atts '
+	%tei-common-atts;
+	type CDATA #IMPLIED '>
+
+<!ELEMENT module
+    (head, %ramodule-header;, (%div1-textp; | (%tei-aux;, %div1-texts;))) >
+
+<!ATTLIST module %tei-div-atts; 
+       html CDATA #REQUIRED
+        topic CDATA #IMPLIED >
+
+<!ELEMENT div2
+    (head, %ramodule-header;, (%div2-textp; | (%tei-aux;, %div2-texts;))) >
+
+<!ATTLIST div2 %tei-div-atts; >
+
+<!ELEMENT div3
+   (head, %ramodule-header;, (%div3-textp; | (%tei-aux;, %div3-texts;))) >
+
+<!ATTLIST div3 %tei-div-atts; >
+
+<!ELEMENT div4
+	(head, %ramodule-header;, %tei-aux;) >
+
+<!ATTLIST div4 %tei-div-atts; >
+
+<!ELEMENT table 
+	(head*, row+) >
+
+<!ATTLIST table 
+	%tei-common-atts;
+	rows NMTOKEN #IMPLIED
+	cols NMTOKEN #IMPLIED >
+
+<!ELEMENT row 
+	(cell )+ >
+<!ATTLIST row 
+	%tei-common-atts;
+        top-border (true|false) "false"
+        bottom-border (true|false) "false"
+        space-before CDATA #IMPLIED
+	role CDATA "data" >
+
+<!ELEMENT cell 
+	(#PCDATA | %texte-general;)* >
+<!ATTLIST cell 
+	%tei-common-atts;
+	role CDATA "data"
+	rows NMTOKEN "1"
+	cols NMTOKEN "1" 
+        right-border (true|false) "false"
+        left-border (true|false) "false"
+        halign CDATA #IMPLIED
+        top-border (true|false) "false"
+        bottom-border (true|false) "false"
+   >
+
+
+<!ELEMENT figure 
+	(head?, p*)>
+<!ATTLIST figure 
+        id ID #IMPLIED
+	rend (inline|float|array) "float"
+	file CDATA #IMPLIED
+	framed CDATA #IMPLIED
+	width CDATA #IMPLIED
+	height CDATA #IMPLIED
+	scale CDATA #IMPLIED
+	angle CDATA #IMPLIED>
+
+<!ELEMENT formula 
+	(simplemath |math) >
+<!ATTLIST formula 
+	%tei-common-atts;
+	type (inline|display) "inline" >
+
+<!ELEMENT simplemath (#PCDATA) >
+
+<!ELEMENT keywords (term+) >
+<!ATTLIST keywords %tei-common-atts;
+        titre CDATA #FIXED "Key words: " 
+   >
+
+<!ELEMENT term 
+	(#PCDATA | %texte-restreint;)* >
+<!ATTLIST term 
+	%tei-common-atts;
+	type CDATA #IMPLIED >
+
+<!ELEMENT p 
+	(#PCDATA | %texte-general; )* >
+
+<!ATTLIST p 
+	%tei-common-atts; 
+	spacebefore CDATA #IMPLIED
+	noindent CDATA #IMPLIED>
+
+<!ELEMENT hi 
+	(#PCDATA | %texte-general; )* >
+<!ATTLIST hi 
+	id ID #IMPLIED
+	rend CDATA #REQUIRED >
+
+<!ELEMENT ref 
+	(#PCDATA | %texte-general; )* >
+<!ATTLIST ref 
+	%tei-common-atts;
+	type CDATA #IMPLIED
+	target IDREF #IMPLIED >
+
+<!ELEMENT xref 
+	(#PCDATA | %texte-general; )* >
+<!ATTLIST xref 
+	%tei-common-atts;
+	type CDATA #IMPLIED
+	url CDATA #IMPLIED>
+
+<!ELEMENT head 
+	(#PCDATA | %texte-general; )* >
+<!ATTLIST head 
+	%tei-common-atts;
+	type CDATA #IMPLIED >
+
+<!ELEMENT note 
+	(#PCDATA | %texte-general; |  p )* >
+<!ATTLIST note 
+	id ID #IMPLIED
+	rend CDATA #IMPLIED
+	type CDATA #IMPLIED
+	place CDATA "unspecified"
+	anchored (yes | no) "yes"
+	target IDREFS #IMPLIED >
+
+
+<!ELEMENT anchor EMPTY >
+
+<!ATTLIST anchor 
+	n CDATA #IMPLIED
+	rend CDATA #IMPLIED
+	type CDATA #IMPLIED
+	function CDATA #IMPLIED
+	id ID #REQUIRED	 >
+
+<!ELEMENT raweb (accueil, moreinfo?, composition, presentation,
+  fondements?,domaine?, logiciels?, resultats,contrats?,international?,
+  diffusion?,biblio) >
+<!ATTLIST raweb year CDATA #IMPLIED >
+<!ATTLIST raweb language CDATA #IMPLIED >
+<!ATTLIST raweb creator CDATA #IMPLIED >
+
+<!ELEMENT composition (moreinfo?,catperso+)>
+<!ATTLIST composition 
+           titre CDATA #FIXED "Team"
+           html CDATA #FIXED "composition"
+           numero CDATA #FIXED "1" 
+           id ID #IMPLIED>
+
+<!ELEMENT presentation (module+) >
+<!ATTLIST presentation 
+          titre CDATA #FIXED "Overall Objectives"
+          numero CDATA #FIXED "2" 
+          id ID #IMPLIED>
+
+
+<!ELEMENT fondements (module+) >
+<!ATTLIST fondements 
+          titre CDATA #FIXED "Scientific Foundations" 
+          numero CDATA #FIXED "3"
+          id ID #IMPLIED>
+
+
+<!ELEMENT domaine (module+) >
+<!ATTLIST domaine
+	titre CDATA #FIXED "Application Domains"
+	numero CDATA #FIXED "4"
+	id ID #IMPLIED>
+
+
+
+<!ELEMENT logiciels (module+) >
+<!ATTLIST logiciels 
+	titre CDATA #FIXED "Software"
+	numero CDATA #FIXED "5"
+	id ID #IMPLIED>
+
+
+<!ELEMENT resultats (module+) >
+<!ATTLIST resultats 
+	titre CDATA #FIXED "New Results"
+	numero CDATA #FIXED "6"
+	id ID #IMPLIED>
+
+
+<!ELEMENT contrats (module+) >
+<!ATTLIST contrats 
+	titre CDATA #FIXED "Contracts and Grants with Industry"
+	numero CDATA #FIXED "7"
+	id ID #IMPLIED>
+
+
+<!ELEMENT international (module+) >
+<!ATTLIST international
+	titre CDATA #FIXED "Other Grants and Activities"
+	numero CDATA #FIXED "8"
+	id ID #IMPLIED>
+
+
+<!ELEMENT diffusion (module+) >
+<!ATTLIST diffusion 
+	titre CDATA #FIXED "Dissemination"
+	numero CDATA #FIXED "9"
+	id ID #IMPLIED>
+
+
+<!ELEMENT accueil (theme,projet,projetdeveloppe,UR,topic*) >
+<!ATTLIST accueil html CDATA #REQUIRED >
+<!ATTLIST accueil isproject (true|false) "true">
+<!ELEMENT addresse (#PCDATA) >
+
+<!ELEMENT theme (#PCDATA)>
+<!ELEMENT typeprojet (#PCDATA)>
+<!ELEMENT projet (#PCDATA|hi)*>
+<!ELEMENT projetdeveloppe (#PCDATA|hi)* >
+<!ELEMENT UR (URSophia|URRocquencourt|URRhoneAlpes|URRennes|URLorraine|URFuturs)+ >
+
+
+<!ELEMENT URRocquencourt EMPTY>
+<!ATTLIST URRocquencourt 
+     url  CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-rocq.en.html" 
+     nom  CDATA #FIXED "Rocquencourt" >
+
+<!ELEMENT URRennes EMPTY>
+<!ATTLIST URRennes 
+     url CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-ren.en.html"
+     nom CDATA #FIXED "Rennes" >
+
+<!ELEMENT URSophia EMPTY>
+<!ATTLIST URSophia
+    url CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-sop.en.html"
+    nom CDATA #FIXED "Sophia Antipolis" >
+
+<!ELEMENT URLorraine EMPTY>
+<!ATTLIST URLorraine 
+    url CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-lor.en.html"
+    nom CDATA #FIXED "Lorraine" >
+
+<!ELEMENT URRhoneAlpes EMPTY>
+<!ATTLIST URRhoneAlpes
+   url CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-ra.en.html" 
+   nom CDATA #FIXED "Rhône-Alpes" >
+
+<!ELEMENT URFuturs EMPTY>
+<!ATTLIST URFuturs
+   url CDATA #FIXED "http://www.inria.fr/inria/organigramme/fiche_ur-futurs.en.html"
+   nom CDATA #FIXED "Futurs" >
+
+
+<!ELEMENT participants (pers)+ >
+<!ELEMENT participantes (pers)+ >
+<!ELEMENT participante (pers)+ >
+<!ELEMENT participant (pers)+ >
+
+<!ATTLIST participants titre CDATA #FIXED "Participants: ">
+<!ATTLIST participantes titre CDATA #FIXED "Participants: ">
+<!ATTLIST participante titre CDATA #FIXED "Participant: ">
+<!ATTLIST participant titre CDATA #FIXED "Participant: ">
+
+
+<!ELEMENT catperso (head,pers+)>
+
+<!ELEMENT pers (#PCDATA|hi|note|xref|ref)* >
+<!ATTLIST pers prenom CDATA #REQUIRED
+               nom CDATA #REQUIRED
+                profession  CDATA #IMPLIED
+                research-centre  CDATA #IMPLIED
+                affiliation  CDATA #IMPLIED
+                hdr  CDATA #IMPLIED >
+
+<!ELEMENT moreinfo (p+) >
+
+<!ELEMENT topic (t_titre) >
+<!ELEMENT t_titre (#PCDATA) >
+<!ATTLIST topic num CDATA #IMPLIED>
+
+<!ELEMENT biblio (citation)* >
+<!ATTLIST biblio 
+	html CDATA #FIXED "bibliography"
+	titre CDATA #FIXED "Bibliography"
+	numero CDATA #FIXED "10">
+
+<!-- biblio -->
+<!ENTITY % bibliostuff "bnote|bauteurs|bediteur|btitle|borganization|
+     bschool|byear|bmonth|xref|bseries|bnumber|bvolume|bedition|
+     binstitution|baddress|bpages|bhowpublished|bbooktitle
+     |bpublisher|bjournal|bchapter|btype|bdoi">
+
+<!ELEMENT citation (%bibliostuff;)*>
+<!ATTLIST citation key CDATA #REQUIRED
+                  userid CDATA #IMPLIED
+                  id ID #REQUIRED
+                  type (book|booklet|proceedings|phdthesis|article|inbook|
+         incollection|inproceedings|conference|manual|techreport|coursenotes
+        |unpublished |misc|masterthesis|mastersthesis) #REQUIRED 
+                  from (year|foot|refer) #REQUIRED >
+<!ELEMENT borganization (#PCDATA) >
+<!ATTLIST borganization bname CDATA #FIXED "organisation" >
+<!ELEMENT binstitution (#PCDATA|hi)* >
+<!ATTLIST binstitution bname CDATA #FIXED "institution" >
+<!ELEMENT baddress (#PCDATA) >
+<!ATTLIST baddress bname CDATA #FIXED "address" >
+<!ELEMENT bjournal (#PCDATA|hi)* >
+<!ATTLIST bjournal bname CDATA #FIXED "journal" >
+<!ELEMENT bseries (#PCDATA|hi)* >
+<!ATTLIST bseries bname CDATA #FIXED "series" >
+<!ELEMENT bbooktitle (#PCDATA|hi)* >
+<!ATTLIST bbooktitle bname CDATA #FIXED "booktitle" >
+<!ELEMENT bpublisher (#PCDATA |hi)* >
+<!ATTLIST bpublisher bname CDATA #FIXED "publisher" >
+<!ELEMENT bpages (#PCDATA) >
+<!ATTLIST bpages bname CDATA #FIXED "pages" >
+<!ELEMENT bchapter (#PCDATA) >
+<!ATTLIST bchapter bname CDATA #FIXED "chapter" >
+<!ELEMENT btype (#PCDATA|hi)* >
+<!ATTLIST btype bname CDATA #FIXED "type" >
+<!ELEMENT bhowpublished (#PCDATA|xref|hi)* >
+<!ATTLIST bhowpublished bname CDATA #FIXED "howpublished" >
+<!ELEMENT bedition (#PCDATA) >
+<!ATTLIST bedition bname CDATA #FIXED "edition" >
+<!ELEMENT bnumber (#PCDATA) >
+<!ATTLIST bnumber bname CDATA #FIXED "number" >
+<!ELEMENT bvolume (#PCDATA|hi)* >
+<!ATTLIST bvolume bname CDATA #FIXED "volume" >
+<!ELEMENT bmonth (#PCDATA) >
+<!ATTLIST bmonth bname CDATA #FIXED "month" >
+<!ELEMENT byear (#PCDATA|hi)* >
+<!ATTLIST byear bname CDATA #FIXED "year" >
+<!ELEMENT bdoi (#PCDATA)* >
+<!ATTLIST bdoi bname CDATA #FIXED "DOI" >
+<!ELEMENT bnote (#PCDATA|xref|hi|cit|formula)* >
+<!ATTLIST bnote bname CDATA #FIXED "note" >
+<!ELEMENT bschool (#PCDATA|hi)* >
+<!ATTLIST bschool bname CDATA #FIXED "school" >
+<!ELEMENT btitle (#PCDATA|hi|TeX|LaTeX|formula)* >
+<!ATTLIST btitle bname CDATA #FIXED "title" >
+<!ELEMENT bauteurs (bpers|etal)* >
+<!ATTLIST bauteurs bname CDATA #FIXED "authors" >
+<!ELEMENT bediteur (bpers|etal)* >
+<!ATTLIST bediteur bname CDATA #FIXED "editors" >
+
+<!ELEMENT etal EMPTY>
+<!ATTLIST etal nom CDATA #FIXED "et al." >
+
+
+<!ELEMENT bpers EMPTY>
+<!ATTLIST bpers prenom CDATA #REQUIRED
+                part CDATA #IMPLIED 
+                prenomcomplet CDATA #IMPLIED 
+                nom CDATA #REQUIRED
+                junior CDATA #IMPLIED>
+
+<!ELEMENT TeX EMPTY>
+<!ELEMENT LaTeX EMPTY>
+<!-- pour les RR -->
+<!ELEMENT RRstart (UR,title, etitle, projet, theme, motcle, keyword,
+   resume, abstract, author,date, RRnumber)*>
+<!ELEMENT title (#PCDATA|hi|LaTeX)* >
+<!ELEMENT etitle (#PCDATA|hi|LaTeX)* >
+<!ELEMENT resume (#PCDATA|hi|p|LaTeX)* >
+<!ELEMENT abstract (#PCDATA|hi|p|LaTeX)* >
+<!ELEMENT motcle (#PCDATA|hi|LaTeX)* >
+<!ELEMENT keyword (#PCDATA|hi|LaTeX)* >
+<!ELEMENT RRnumber (#PCDATA)* >
+<!ELEMENT date (#PCDATA)* >
+<!ELEMENT author (auth)* >
+<!ELEMENT auth (#PCDATA)* >
+
+<!ELEMENT div1
+    (head, (%div1-textp; | (%tei-aux;, %div1-texts;))) >
+<!ELEMENT div0
+    (head, (%div0-textp; | (%tei-aux;, %div0-texts;))) >
+<!ELEMENT rr (RRstart,div0*)>
+<!ATTLIST rr language CDATA #IMPLIED type CDATA #IMPLIED>

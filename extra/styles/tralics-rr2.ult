@@ -1,0 +1,25 @@
+%% -*- latex -*-
+%$Id: tralics-rr2.ult,v 1.6 2007/01/17 16:20:02 grimm Exp $
+%% This is the ult file for tralics-rr.tex 
+\let\item\@item
+\newskip\footskip
+\newskip\topmargin
+\newenvironment{theindex}{}{}
+
+\let\itDelta\Delta
+\def\DeclareMathSymbol#1#2#3#4{}
+\def\verbatim@hook{}
+\def\verbatimnumberfont#1{\xbox{vbnumber}{#1}}
+
+\AtBeginDocument{
+\def\htmlprefix#1{\addattributestodocument{htmlprefix}{#1}}
+\def\LTC#1{\xbox{latexcode}{#1}}
+\def\XC#1{\xbox{xmlcode}{#1}}
+\def\xmlcolor#1{\xbox{xmlcolor}{#1}}
+\def\Pdf{Pdf}
+\def\Tralics{\textit{Tralics}} %% is always in italics in the main doc
+\def\latexcode#1{\xbox{latexcode}{#1}}
+\def\xmlcode#1{\xbox{xmlcode}{#1}}}
+
+
+\endinput

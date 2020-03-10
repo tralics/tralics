@@ -1,0 +1,105 @@
+\ProvidesPackage{fotex-add}[2007/01/26: version 1.1. addition support for XSL formatting, J Grimm]
+
+%
+% Copyright 2002 Sebastian Rahtz/Oxford University  
+%      <sebastian.rahtz@oucs.ox.ac.uk>
+%
+% Permission is hereby granted, free of charge, to any person obtaining
+% a copy of this software and any associated documentation files (the
+% ``Software''), to deal in the Software without restriction, including
+% without limitation the rights to use, copy, modify, merge, publish,
+% distribute, sublicense, and/or sell copies of the Software, and to
+% permit persons to whom the Software is furnished to do so, subject to
+% the following conditions:
+% 
+% The above copyright notice and this permission notice shall be included
+% in all copies or substantial portions of the Software.
+
+% Additions for tralics:  by J. Grimm
+%   1) loading Unicode does not modify meaning of \tilde
+%   2) Packages preview and curves are loaded. Only useful for making images
+
+%% Loading hyperref provokes a warning for each page when creating images
+%% Hence the switch. Say \hyperreffalse in fotex-supp.tex 
+%% if you do not want hyperref
+\newif\ifhyperref \hyperreftrue 
+
+
+\RequirePackage{graphicx}
+
+\def\confirmnomulticols{
+        \RequirePackage{nomulticol}[2003/01/09]
+        \typeout{INFO (nomulticol.sty:  fo:block span="all" works}
+}
+\def\warnnomulticols{
+        \RequirePackage{multicol}[1997/12/16]
+        \typeout{WARNING (multicol.sty:  fo:block span="all" does not work}
+        \fakenomulticols
+}
+\def\warnmulticols{
+        \typeout{WARNING (no multicol.sty:  multiple columns not available}
+        \newenvironment{multicols}[1]{\typeout{Warning,  at line \the\inputlineno, multicol package not available}}{}
+        \fakenomulticols
+}
+\def\fakenomulticols{
+        \def\nobeginmulticols##1{\begin{multicols}{##1}}
+        \def\noendmulticols{\end{multicols}}
+        \def\interbeginmulticols##1{}
+        \let\interendmulticols\relax
+        \let\refreshmulticols\relax
+}
+
+\IfFileExists{nomulticol.sty}
+{\confirmnomulticols}
+{\IfFileExists{multicol.sty}
+        {\warnnomulticols}
+        {\warnmulticols}
+}
+
+
+\IfFileExists{multicol.sty}
+  {\RequirePackage{multicol}[1997/12/16]}
+  {\newenvironment{multicols}[1]%
+  {\typeout{Warning,  at line \the\inputlineno, multicol package not available}}{}%
+}
+\InputIfFileExists{fotex-supp.tex}{}{}
+\RequirePackage{rotating}
+\RequirePackage{soul}
+\RequirePackage{curves}
+\RequirePackage{array}
+\gdef\arraybackslash{\let\\=\@arraycr}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\arraybackslash}p{#1}}
+\RequirePackage{amsmath}
+\let\Vec\undefined
+\RequirePackage{longtable}
+\RequirePackage[obeyspaces]{url}
+\urlstyle{same}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{color}
+\RequirePackage{times}
+\RequirePackage{mlnames}
+\let\xxtilde\tilde
+\RequirePackage{unicode}
+\let\tilde\xxtilde
+\RequirePackage{marvosym}
+\IfFileExists{ipa.sty}
+   {\RequirePackage{ipa}}
+   {\typeout{ipa package not available}}
+\IfFileExists{ifsym.sty}{
+  \let\Letter\relax\let\Sun\relax\let\Lightning\relax
+  \RequirePackage[misc,electronic,weather]{ifsym}}
+   {\typeout{ifsym package not available}}
+\RequirePackage{ucharacters}
+\RequirePackage{nameref}
+\ifhyperref
+\RequirePackage[colorlinks=false,plainpages=true,hypertexnames=false,pdfborder={1 0 0}]{hyperref}[1999/08/1]
+\fi
+
+\RequirePackage{raweb-uni} % patch everything that preceeds
+
+\def\Family@LatinModern{lmr}
+
+\endinput

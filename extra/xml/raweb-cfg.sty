@@ -1,0 +1,1455 @@
+%  -*- latex -*-
+% $Id: raweb-cfg.sty,v 2.34 2007/08/02 12:28:39 grimm Exp $
+\makeatletter
+\immediate\write20{Loading mathml support and raweb extensions $Revision: 2.34 $}
+
+%\tracingoutput=2
+%%%%%%%%%%
+% patch to xmltex.tex plus mathml2.xmt plus other stuff
+%% Copyright 2000 David Carlisle, for the original mathml part
+%% Copyright 2004, 2006 Jos\'e Grimm
+
+%% This file is distributed under the LaTeX Project Public License
+%% (LPPL) as found at http://www.latex-project.org/lppl.txt
+%% Either version 1.0, or at your option, any later version.
+
+%\expandafter\def\csname grimmentitiesx26\endcsname{\string&}
+%\expandafter\def\csname grimmentities38\endcsname{\string&}
+%\expandafter\def\csname grimmentities9738\endcsname{\string&}
+%\expandafter\def\csname grimmentitiesx260A\endcsname{\string&}
+%\expandafter\def\csname grimmentities amp\endcsname{\string&}
+
+
+%\def\bmmax{0} % no needed
+
+
+\def\utfeightaz@jg@int{\noexpand\utfeightaz\noexpand}
+\def\utfeightb@jg@int#1#2{\noexpand\utfeightb#1\string#2}
+\def\utfeightc@jg@int#1#2#3{\noexpand\utfeightc#1\string#2\string#3}
+\def\utfeightd@jg@int#1#2#3#4{\noexpand\utfeightd#1\string#2\string#3\string#4}
+\def\utfeightb@jg@#1#2{#1\string#2}
+\def\utfeightc@jg@#1#2#3{#1\string#2\string#3}
+\def\utfeightd@jg@#1#2#3#4{#1\string#2\string#3\string#4}
+
+\def\utfeight@protect@chars{%
+  \let\utfeightax\string
+  \let\utfeightay\string
+  \let\utfeightaz\string
+  \let\utfeightb\utfeightb@jg@
+  \let\utfeightc\utfeightc@jg@
+  \let\utfeightd\utfeightd@jg@}
+
+\begingroup
+\catcode`<\active
+\catcode`&\active
+\gdef\utfeight@protect@internal{%
+  \let\utfeightax\noexpand
+  \let\utfeightay\noexpand
+  \let\utfeightaz\utfeightaz@jg@int
+  \let<\relax\let&\relax
+  \let\utfeightb\utfeightb@jg@int
+  \let\utfeightc\utfeightc@jg@int
+  \let\utfeightd\utfeightd@jg@int}
+
+\gdef\utfeight@chardef#1{%
+  \begingroup
+  \utfeight@protect@chars
+  \let&\XML@amp@markup@jg      % <-  modified
+  \xdef\x@temp{#1}%
+  \endgroup
+  \let#1\x@temp}
+
+\catcode`\<=13
+\catcode`\>=13
+\catcode`\^^I=13
+
+% Needs to be redefined with a Tab instead of a space
+\gdef\xmltexforall#1#2{
+  \xmltexf@rall#1#2<^^I>\@empty}
+\gdef\xmltexf@rall#1#2<#3^^I#4>#5\@empty{%
+  \ifx\relax#3\relax
+  \else
+  \def\xml@name{#3}#1{<#3^^I#4>#5}%
+  \expandafter\xmltexf@rall\expandafter#1%
+  \fi}
+\gdef\elt@name#1{\elt@name@aux#1<X^^I>\@empty}
+\gdef\elt@name@aux#1<#2^^I#3>#4\@empty{\def\xml@name{#2}}
+\endgroup
+
+\def\XML@amp@markup@jg#1;{%
+  \XML@amp@markup@jgw#1;amp;\@nil}
+\def\XML@amp@markup@jgw#1amp;#2\@nil{%
+  \ifx b#2b\XML@amp@markup#1;\else\string&\fi}
+% end of patch
+%%%%%%%%%%
+
+% We do not want mathml to be loaded after this file
+\global\expandafter\let\csname xmt:mathml2.xmt\endcsname\@ne
+
+
+\DeclareNamespace{m}{http://www.w3.org/1998/Math/MathML}
+\DeclareNamespace{fotex}{http://www.tug.org/fotex}
+\DeclareNamespace{fo}{http://www.w3.org/1999/XSL/Format}
+
+\global\delcode`{"66308
+\global\delcode`}"67309
+
+% Puts in \temp the first token of the argument delimited by \relax
+\def\@firstchar#1#2\relax{\def\temp{#1}}
+
+\let\XXacute\acuteX
+
+% hack
+\let\notinover\relax
+\def\cur@mo@content{(Error)}
+\let\jg@cur@acc\relax
+
+% We have to redefine some operators...
+\def\jg@tilde@acc{\mathaccent"707E }
+\def\jg@check@acc{\mathaccent"7014 }
+\def\jg@breve@acc{\mathaccent"7015 }
+\def\jg@hat@acc{\mathaccent"705E }
+\def\jg@dot@acc{\mathaccent"705F }
+\def\jg@ddot@acc{\mathaccent"707F }
+\def\jg@grave@acc{\mathaccent"7012 } %" emacs
+\def\jg@ring@acc{\protect \mathaccentV {mathring}017 }
+\def\jg@overRarrow@acc{\let\rightarrow\JGG@orig@rarrow\mathpalette{\overarrow@\rightarrowfill@}}
+\def\jg@overLarrow@acc{\let\leftarrow\JGG@orig@larrow
+\mathpalette{\overarrow@\leftarrowfill@}}
+\def\jg@underRarrow@acc{\let\rightarrow\JGG@orig@rarrow\mathpalette{\underarrow@\rightarrowfill@}}
+\def\jg@underLarrow@acc{\let\leftarrow\JGG@orig@larrow\mathpalette{\underarrow@\leftarrowfill@}}
+
+% Redefine these as large operators
+\def\jg@tilde@acc{\widetilde}
+\def\jg@hat@acc{\widehat}
+\def\jg@breve@acc{\breve}
+\let\jg@dot@acc\dot % No  \def please
+
+%\def\jg@dot@acc{\dot}
+
+
+\XMLstring\att@sub<>sub</>
+\XMLstring\att@true<>true</>
+\XMLstring\att@false<>false</>
+\XMLstring\jg@lt<>&lt;</>
+\XMLstring\jg@gt<>&gt;</>
+\XMLstring\jg@accgrave<>`</>
+\XMLstring\jg@accdddot<>&#x20DB;</>
+\XMLstring\jg@accddddot<>&#x20DC;</>
+\XMLstring\jg@lbra<>&#x2329;</>
+\XMLstring\jg@rbra<>&#x232A;</>
+\XMLstring\jg@xlbra<>&#x27E8;</>
+\XMLstring\jg@xrbra<>&#x27E9;</>
+\XMLstring\jg@verbar<>&#x2016;</>
+\XMLstring\jg@parallel<>&#x2225;</>
+\XMLstring\jg@Verbar<>&#8214;</>
+\XMLstring\jg@lfloor<>&#x230A;</>
+\XMLstring\jg@rfloor<>&#x230B;</>
+\XMLstring\jg@lceil<>&#x2308;</>
+\XMLstring\jg@rceil<>&#x2309;</>
+\XMLstring\jg@lmoustache<>&#x23B0;</>
+\XMLstring\jg@rmoustache<>&#x23B1;</>
+\XMLstring\jg@lgroup<>&#x3014;</>
+\XMLstring\jg@rgroup<>&#x3015;</>
+\XMLstring\jg@uparrow<>&#x2191;</>
+\XMLstring\jg@Uparrow<>&#x21D1;</>
+\XMLstring\jg@downarrow<>&#x2193;</>
+\XMLstring\jg@Downarrow<>&#x21D3;</>
+\XMLstring\jg@updownarrow<>&#x2195;</>
+\XMLstring\jg@Updownarrow<>&#x21D5;</>
+\XMLstring\jg@OverBrace<>&#xFE37;</>
+\XMLstring\jg@UnderBrace<>&#xFE38;</>
+\XMLstring\jg@OverBar<>&#xAF;</>
+\XMLstring\jg@backslash<>&#x2216;</>
+\XMLstring\jg@UnderBAr<>&#x332;</>
+\XMLstring\att@mtd@left<>left</>
+\XMLstring\att@mtd@right<>right</>
+\XMLstring\att@mtd@center<>center</>
+\XMLstring\att@none<>none</>
+\XMLstring\elt@none<>3:none</>
+\XMLstring\elt@mo<>3:mo</>
+\XMLstring\att@dzero<>0</>
+\XMLstring\att@done<>1</>
+\XMLstring\att@dtwo<>2</>
+\XMLstring\att@l<>l</>
+\XMLstring\att@r<>r</>
+\XMLstring\att@t<>t</>
+\XMLstring\att@b<>b</>
+\XMLstring\att@lt<>lt</>
+\XMLstring\att@lb<>lb</>
+\XMLstring\att@rt<>rt</>
+\XMLstring\att@rb<>rb</>
+\XMLstring\att@tl<>tl</>
+\XMLstring\att@bl<>bl</>
+\XMLstring\att@tr<>tr</>
+\XMLstring\att@br<>br</>
+\XMLstring\att@default<>default</>
+
+\XMLstring\att@mathml@tt<>monospace</>
+\XMLstring\att@mathml@rm<>rm</>
+\XMLstring\att@display<>display</>
+\XMLstring\att@PREFIX<>prefix</>
+\XMLstring\att@EQUATION<>equation</>
+\XMLstring\elt@prescripts<>3:mprescripts</>
+
+
+
+\@namedef{mathfont-bold}{\mathbf}
+\@namedef{mathfont-italic}{\mathsl}
+\@namedef{mathfont-bold-italic}{\mathbit}
+\@namedef{mathfont-script}{\mathscr}
+\@namedef{mathfont-bold-script}{\mathmit}
+\@namedef{mathfont-fraktur}{\mathfrak}
+\@namedef{mathfont-double-struck}{\mbbfont}
+\@namedef{mathfont-bold-fraktur}{\mathslbb}
+\@namedef{mathfont-sans-serif}{\mathsf}
+\@namedef{mathfont-bold-sans-serif}{\mathsfbf}
+\@namedef{mathfont-sans-serif-italic}{\mathsfsl}
+\@namedef{mathfont-sans-serif-bold-italic}{\mathsfbfsl}
+\@namedef{mathfont-monospace}{\mathtt}
+\@namedef{mathfont-default}{\mathrm}
+\@namedef{mathfont-normal}{\mathrm}
+
+
+\def\left@eqnnum{\hbox to1sp{}\rlap{\normalfont\normalcolor
+    \hskip -\displaywidth\tagform@\theequation}}
+\def\right@eqnnum{{\normalfont\normalcolor \tagform@\theequation}}
+
+
+
+% Only used for inline math
+\XMLelement{m:math}
+  {}
+  {$}
+  {$}
+
+
+\XMLelement{m:msub}
+  {}
+  {\xmlgrab}
+  {\xmltextwochildren\@firstofone\sb#1}
+
+\XMLelement{m:msup}
+  {}
+  {\xmlgrab}
+  {\xmltextwochildren\@firstofone\sp#1}
+
+
+\XMLelement{m:msubsup}
+  {}
+  {\xmlgrab}
+  {\xmltexthreechildren\@firstofone\sb\sp#1}
+
+\XMLelement{m:mover}
+  {\XMLattribute{accent}{\XML@overaccent}{none}}
+  {\xmlgrab}
+  {\xmltextwochildren\xml@implement@over{}#1}
+
+\XMLelement{m:munder}
+  {\XMLattribute{accentunder}{\XML@underaccent}{none}}
+  {\xmlgrab}
+  {\xmltextwochildren\xml@implement@under{}#1}
+
+\XMLelement{m:munderover}
+  { }
+  {\xmlgrab}
+  {\xmltexthreechildren\@firstofone@mo\sb\sp#1}
+
+
+% OK ?
+\def\@firstofone@mo#1{\mathop{#1}\limits}
+
+\XMLelement{m:mfrac}
+  {\XMLattribute{linethickness}{\XML@linethickness}{true}%
+   \XMLattribute{numalign}{\XML@numalign}{center}%
+   \XMLattribute{denomalign}{\XML@denomalign}{center}%
+  }
+  {\xmlgrab}
+  {\xmltextwochildren\xml@implement@frac{}#1}
+
+
+%\XMLelement{m:mo}
+%  {\XMLattribute{form}{\XML@mathmlform}{inline}%
+%   \XMLattribute{movablelimits}{\XML@movablelimits}{false}}
+%  {\xmlgrab}
+%  {\ifx\XML@mathmlform\att@PREFIX
+%% Tralics generates <munder> if under needed, <msub> otherwise. 
+%     \ifx\XML@movablelimits\att@true
+%       \mathop{\operator@font #1}\display`limits
+%     \else
+%       \mathop{\operator@font #1}\nolimits
+%     \fi
+%   \else\special@mo{#1}\fi}
+
+
+%% Uses \mathop if first character is ASCII
+\XMLelement{m:mo}
+  {\XMLattribute{form}{\XML@mathmlform}{inline}%
+%   \XMLattribute{movablelimits}{\XML@movablelimits}{false}
+  }
+  {\xmlgrab}
+  {\def\jg@tck{#1}% save the argument
+   \@firstchar#10\relax
+   \expandafter\ifcat \expandafter\noexpand\temp x\mathop{\operator@font #1}\nolimits
+   \else\special@mo{#1}\fi}
+ 
+
+
+
+\def\special@mo#1{%
+     \ifx\notinover\over% we cannot typeset here
+        \ifx\jg@tck\jg@accgrave % strange 
+          \global\let\jg@cur@acc\jg@grave@acc
+          \global\let\cur@mo@content\relax
+        \else \ifx\jg@tck\jg@accdddot % strange 
+          \global\let\jg@cur@acc\dddot
+          \global\let\cur@mo@content\relax
+        \else \ifx\jg@tck\jg@accddddot % strange 
+          \global\let\jg@cur@acc\ddddot
+          \global\let\cur@mo@content\relax
+        \else\gdef\cur@mo@content{#1}\fi\fi\fi
+     \else % typeset the argument, handle < and > in the correct way
+     \ifx\jg@tck\jg@gt\string>\else
+     \ifx\jg@tck\jg@lt\string<\else
+     #1\fi\fi\fi
+}
+
+
+% <mover>
+\def\jg@bindings{%
+   \def\texttildelow {\global\let\jg@cur@acc\jg@tilde@acc}%
+%   \def\textasciimacron {\global\let\jg@cur@acc\jg@cur@accB}%
+    \def\textasciicircum{\global\let\jg@cur@acc\jg@hat@acc}
+   \def\textasciicaron {\global\let\jg@cur@acc\jg@check@acc}%
+   \def\u{\global\let\jg@cur@acc\jg@breve@acc}%
+   \def\hat##1{\global\let\jg@cur@acc\jg@hat@acc}%
+   \def\dot##1{\global\let\jg@cur@acc\jg@dot@acc}%
+   \def\mathring##1{\global\let\jg@cur@acc\jg@ring@acc}%
+   \def\textasciidieresis{\global\let\jg@cur@acc\jg@ddot@acc}%
+   \let\JGG@orig@rarrow\rightarrow
+   \let\JGG@orig@larrow\leftarrow
+   \def\rightarrow{\global\let\jg@cur@acc\jg@overRarrow@acc}%
+   \def\leftarrow{\global\let\jg@cur@acc\jg@overLarrow@acc}%
+   \def\textoverbrace{\global\let\jg@cur@acc\overbrace}
+   \def\textunderbrace{\global\let\jg@cur@acc\underbrace}
+   \def\textasciiacute{\global\let\jg@cur@acc\acute}
+   \def\asciimacron{\global\let\jg@cur@acc\overline}
+   \def\ring{\global\let\jg@cur@acc\mathring}
+}
+
+\def\jg@a@bindings{
+  \def\asciimacron{\global\let\jg@cur@acc\overline}
+  \def\textoverbrace{\global\let\jg@cur@acc\overbrace}
+}
+% <munder>
+\def\jg@ubindings{%
+  \let\JGG@orig@rarrow\rightarrow
+  \let\JGG@orig@larrow\leftarrow
+  \def\jg@acute{\global\let\jg@cur@acc\acute}
+  \def\texttildelow {\global\let\jg@cur@acc\jg@tilde@acc}%
+  \def\asciimacron {\global\let\jg@cur@acc\underline}%
+  \def\textasciicaron {\global\let\jg@cur@acc\jg@check@acc}%
+  \def\u{\global\let\jg@cur@acc\jg@breve@acc}%
+  \def\hat##1{\global\let\jg@cur@acc\jg@hat@acc}%
+  \def\dot##1{\global\let\jg@cur@acc\jg@dot@acc}%
+  \def\textasciidieresis{\global\let\jg@cur@acc\jg@ddot@acc}%
+  \let\JGG@orig@rarrow\rightarrow
+  \let\JGG@orig@larrow\leftarrow
+  \def\rightarrow{\global\let\jg@cur@acc\jg@underRarrow@acc}%
+  \def\leftarrow{\global\let\jg@cur@acc\jg@underLarrow@acc}%
+  \def\textoverbrace{\global\let\jg@cur@acc\overbrace}
+  \def\textunderbrace{\global\let\jg@cur@acc\underbrace}
+  \def\jgunderline{\global\let\jg@cur@acc\underline}
+}
+
+\def\jg@a@ubindings{
+  \def\jgunderline{\global\let\jg@cur@acc\underline}
+  \def\textunderbrace{\global\let\jg@cur@acc\underbrace}
+}
+
+
+ \gdef\xml@implement@frac#1#2{%
+  \ifx\XML@numalign\att@mtd@left\def\x@num{#1\hfill}\else
+  \ifx\XML@numalign\att@mtd@right\def\x@num{\hfill#1}\else
+  \def\x@num{#1}\fi\fi
+  \ifx\XML@denomalign\att@mtd@left\def\x@den{#2\hfill}\else
+  \ifx\XML@denomalign\att@mtd@right\def\x@den{\hfill#2}\else
+  \def\x@den{#2}\fi\fi
+  \ifx\XML@linethickness\att@true\frac{\x@num}{\x@den}%
+  \else\expandafter\change@linethickness\XML@linethickness pt\relax
+   \genfrac{}{}\XML@linethickness{}{\x@num}{\x@den}\fi
+}
+\gdef\change@linethickness#1pt#2\relax{\def\XML@linethickness{#1pt}}
+
+
+
+\def\s@frac#1#2{\frac{\scriptstyle#1}{\scriptstyle#2}}
+\def\ss@frac#1#2{\frac{\scriptscriptstyle#1}{\scriptscriptstyle#2}}
+
+\def\unusedxml@implement@frac#1#2{%
+ \ifx\XML@scriptlevel\att@none 
+  \ifx\XML@linethickness\att@true\frac{#1}{#2}%
+  \else \genfrac{}{}\XML@linethickness{}{#1}{#2}\fi
+ \else
+    \ifx\XML@scriptlevel\att@dzero
+      \ifx\XML@linethickness\att@true\dfrac{#1}{#2}%
+      \else \genfrac{}{}\XML@linethickness{0}{#1}{#2}\fi
+    \else
+      \ifx\XML@scriptlevel\att@done
+         \ifx\XML@linethickness\att@true\tfrac{#1}{#2}%
+         \else \genfrac{}{}\XML@linethickness{1}{#1}{#2}\fi
+      \else
+       \ifx\XML@linethickness\att@true\ss@frac{#1}{#2}%
+       \else \genfrac{}{}\XML@linethickness{2}{#1}{#2}\fi
+      \fi
+    \fi
+ \fi}
+
+% <mover>xy</mover> uses stackrel, unless it is an accent
+% Otherwise, we call \jg@bindings, evaluate the second argument in
+% a context where \notinover is \over. We assume that 
+% \cur@mo@content\jg@cur@acc{x}  will typeset what is needed.
+\def\xml@implement@over#1#2{%
+ \elt@name{#2}\ifx\xml@name\elt@mo\xml@implement@over@aux{#1}{#2}\else
+  \stackrel{#2}{#1}\fi}
+
+\def\xml@implement@under#1#2{%
+ \elt@name{#2}\ifx\xml@name\elt@mo\xml@implement@under@aux{#1}{#2}\else
+  \underset{#2}{#1}\fi}
+
+\def\xml@implement@over@aux#1#2{{%
+    \def\jg@cur@acc{\stackrel{#2}}
+    \ifx\XML@overaccent\att@true \jg@bindings \else \jg@a@bindings\fi
+    \let\notinover\over #2\let\notinover\relax
+    \setbox0=\hbox{$\cur@mo@content$}
+    \jg@cur@acc{#1}
+}}
+
+% <munder>xy</munder> uses underset, unless it is an accent
+% Otherwise, we call \jg@bindings, evaluate the second argument in
+% a context where \notinover is \over. We assume that 
+% \cur@mo@content\jg@cur@acc{x} will typeset what is needed.
+\def\xml@implement@under@aux#1#2{{%
+    \def\jg@cur@acc{\underset{#2}}
+    \ifx\XML@underaccent\att@true \jg@ubindings \else \jg@a@ubindings\fi
+    \let\notinover\over #2\let\notinover\relax
+    \setbox0=\hbox{\cur@mo@content}%
+    \jg@cur@acc{#1}%
+}}
+
+\XMLelement{m:mspace}
+  {\XMLattribute{width}{\XML@mspacewidth}{0}}
+  {}
+  {\@defaultunits\dimen@\XML@mspacewidth pt\relax\@nnil
+   \ifnum\dimen@=\z@\else\kern\dimen@\fi}
+
+%% This is a copy of the array package
+\AtBeginDocument{
+\def\@array[#1]#2{%
+  \@tempdima \ht \strutbox
+  \advance \@tempdima by\extrarowheight
+  \setbox \@arstrutbox \hbox{\vrule
+             \@height \arraystretch \@tempdima
+             \@depth \arraystretch \dp \strutbox
+             \@width \z@}%
+  \begingroup
+  \@mkpream{#2}%
+  \xdef\@preamble{\noexpand \ialign \@halignto
+                  \bgroup \@arstrut \@preamble
+                          \tabskip \z@ \cr}%
+  \endgroup
+  \@arrayleft
+  \if #1t\vtop \else \if#1b\vbox \else \vcenter \fi \fi
+  \bgroup
+  \let \@sharp ##\let \protect \relax
+  %% \lineskip \z@ CHANGES JG
+  \baselineskip \z@
+    \lineskip\jg@skip
+    \lineskiplimit=5pt
+  \m@th
+  \let\\\@arraycr \let\tabularnewline\\\let\par\@empty \@preamble}
+ \let\@@array\@array
+}
+
+
+
+
+\newskip\jg@skip \jg@skip=2pt
+
+
+\newtoks\jg@mtable@toks
+\newtoks\jg@mrow@toks
+\newtoks\jg@table@toks
+\newtoks\jg@row@toks
+\newtoks\jg@apply@toks
+\newtoks\jg@multiscripts@toks
+\newtoks\jg@premultiscripts@toks
+\newcount\jg@msstate
+
+\newif\ifStartRow\newif\ifStartTable
+\newif\ifStartRowx\newif\ifStartTablex
+
+\newcommand\merge@cmd[2]{%
+  \expandafter\gaddto@hook\expandafter#1\expandafter{#2}}
+\newcommand\merge@toks[2]{%
+  \expandafter\gaddto@hook\expandafter#1\expandafter{\the#2}}
+\long\def\gaddto@hook#1#2{\global#1\expandafter{\the#1#2}}
+
+\newcommand\jg@start@mtable{%
+ \jg@mtable@toks{\begin{array}{*{99}{c}}}%
+\openup3\jot
+ \jg@mrow@toks{}%
+ \StartTabletrue}
+
+\newcommand\jg@end@mtable{%
+ \merge@toks\jg@mtable@toks\jg@mrow@toks
+ \addto@hook\jg@mtable@toks{\end{array}}%
+ \ifx\XML@frame\att@solid\boxed{\the\jg@mtable@toks}
+ \else \the\jg@mtable@toks\fi}
+
+\newcommand\jg@start@mtr{%
+  \merge@toks\jg@mtable@toks\jg@mrow@toks
+  \ifStartTable
+     \global\StartTablefalse
+  \else \gaddto@hook\jg@mtable@toks{\\}\fi
+  \jg@mrow@toks{}%
+  \StartRowtrue}
+
+\newcommand\jg@start@mtd[1]{%
+   \ifStartRow
+     \global\StartRowfalse
+   \else\gaddto@hook\jg@mrow@toks{\tabcellsep}\fi
+   \ifx\XML@mtdalign\att@mtd@left
+      \def\temp{#1\hfill{}}%
+    \else\ifx\XML@mtdalign\att@mtd@right
+      \def\temp{\hfill#1}%
+        \else \def\temp{#1}\fi\fi%
+  \ifx\XML@displaystyle\att@true
+   \toks0=\expandafter{\temp}%
+   \edef\temp{\displaystyle\the\toks0}
+  \fi
+  \ifnum\XML@mtdspan=1\else
+   \toks0=\expandafter{\temp}%
+   \edef\temp{\noexpand\multicolumn{\XML@mtdspan}{c}{\the\toks0}}%
+  \fi
+  \merge@cmd\jg@mrow@toks\temp}
+
+
+
+\XMLelement{m:mtable}
+  {
+    \XMLattribute{frame}{\XML@frame}{none}
+    \XMLattribute{displaystyle}{\XML@displaystyle}{false}
+  }
+  {\xmlgrab }
+  { \jg@skip=3pt \ifx\XML@displaystyle\att@true \jg@skip=5pt \fi
+    \jg@start@mtable#1\jg@end@mtable}
+
+\XMLelement{m:mtr}
+  {}
+  {\xmlgrab }
+  {\jg@start@mtr#1}
+
+\XMLelement{m:mtd}
+ {\XMLattribute{columnalign}{\XML@mtdalign}{center}
+  \XMLattribute{columnspan}{\XML@mtdspan}{1}}
+ {\xmlgrab}
+ {\jg@start@mtd{#1}}
+
+\XMLelement{m:mstyle}
+ {\XMLattribute{displaystyle}{\XML@att@displaystyle}{foo} %
+   \XMLattribute{scriptlevel}{\XML@scriptlevel}{0}%
+   \XMLattribute{color}{\XML@color}{}%
+   \XMLattribute{mathcolor}{\XML@mcolor}{}%
+ }
+ {\xmlgrab}
+ {{\ifx\XML@att@displaystyle\att@true\displaystyle
+   \else\ifx\XML@att@displaystyle\att@false
+    \ifx\XML@scriptlevel\att@dzero\textstyle
+     \else\ifx\XML@scriptlevel\att@done\scriptstyle
+      \else \scriptscriptstyle\fi\fi
+   \fi %do nothing if neither true nor false
+   \fi
+   \ifx\XML@mcolor\@empty
+      \ifx\XML@color\@empty
+         \else \color{\XML@color}%
+      \fi
+   \else
+   \expandafter\color{\XML@color}%
+   \fi#1}}
+
+
+% is this ok ?
+\XMLelement{m:mrow}
+  {}
+  {\bgroup}
+  {\egroup}
+
+
+
+\XMLelement{m:mphantom}
+  {}
+  {\xmlgrab}
+  {\phantom{#1}}
+
+\XMLelement{m:mpadded}
+  { \XMLattribute{width}{\XML@width}{none}
+    \XMLattribute{height}{\XML@height}{none}
+    \XMLattribute{depth}{\XML@depth}{none}
+  }
+  {\xmlgrab}
+  {\mathpalette\mpadded@i{#1}}
+
+\def\mpadded@i#1#2{\setbox\z@\hbox{$\m@th#1{#2}$}\mpadded@e}
+
+\def\Xadvance#1by#2{%
+\dimen@=#1 \advance\dimen@ by#2 #1=\dimen@}
+
+
+%% Expression is in box0
+\def\mpadded@e{%
+  \expandafter\@firstchar\XML@width\relax
+  \ifx\XML@width\att@none
+  \else\if+\temp\Xadvance\wd0by \XML@width
+  \else\if-\temp\Xadvance\wd0by \XML@width
+  \else\wd0= \XML@width \fi\fi\fi
+  \expandafter\@firstchar\XML@height\relax
+  \ifx\XML@height\att@none
+  \else\if+\temp\Xadvance\ht0by \XML@height
+  \else\if-\temp\Xadvance\ht0by \XML@height
+  \else\ht0= \XML@height\fi\fi\fi
+  \expandafter\@firstchar\XML@depth\relax
+  \ifx\XML@depth\att@none
+  \else\if+\temp\Xadvance\dp0by \XML@depth
+  \else\if-\temp\Xadvance\dp0by \XML@depth
+  \else\dp0= \XML@depth\fi\fi\fi
+  \box\z@
+}
+
+\def\hsmash{\relax % \relax, in case this comes first in \halign
+  \ifmmode\def\next{\mathpalette\mathhsm@sh}\else\let\next\makehsm@sh
+  \fi\next}
+
+\def\makehsm@sh#1{\setbox\z@\hbox{#1}\finhsm@sh}
+
+
+
+\def\finhsm@sh{\wd\z@\z@ \box\z@}
+
+
+\XMLelement{m:none}
+   {}{\xmlgrab}{}
+
+\XMLelement{m:mmultiscripts}
+  {}
+  {\xmlgrab}  
+  {\jg@multiscripts@toks{}\jg@premultiscripts@toks{}\jg@msstate=0 %
+    \xmltexforall\multiscripts{#1}%
+    \merge@toks\jg@premultiscripts@toks\jg@multiscripts@toks
+%\showthe\jg@premultiscripts@toks
+    \the\jg@premultiscripts@toks}
+
+\def\multiscripts#1{%
+  \ifx\xml@name\elt@prescripts
+   \jg@msstate=4
+  \else\ifcase\jg@msstate
+    \def\the@kernel{\vphantom{#1}}%
+    \addto@hook\jg@multiscripts@toks{{#1}}\jg@msstate=1
+    \or \addto@hook\jg@multiscripts@toks{_{#1}}\jg@msstate=2
+    \or \addto@hook\jg@multiscripts@toks{^{#1}}\jg@msstate=3
+    \or \addto@hook\jg@multiscripts@toks{{\the@kernel}_{#1}}\jg@msstate=2
+    \or \addto@hook\jg@premultiscripts@toks{{\the@kernel}_{#1}}\jg@msstate=5
+    \or \addto@hook\jg@premultiscripts@toks{^{#1}}\jg@msstate=4
+  \fi\fi}
+
+
+\XMLelement{m:mroot}
+  {}
+  {\xmlgrab}
+  {\xmltextwochildren\mathmlroot{}#1}
+
+\def\mathmlroot#1#2{\root#2\of{#1}}
+
+\XMLelement{m:msqrt}
+  {}
+  {\xmlgrab}
+  {\sqrt{#1}}
+
+
+\XMLelement{m:merror}
+  {}
+  {\xmlgrab}
+  {{\color{red}#1}}
+
+\XMLelement{m:mn}
+  {\XMLattribute{mathvariant}{\XML@mathmlvariant}{normal}}
+  {\xmlgrab}
+  { \mathcode`,=`,
+  \ifx \XML@mathmlvariant\att@default\mathrm{#1}
+  \else \@nameuse{mathfont-\XML@mathmlvariant}{#1}\fi}
+
+\XMLelement{m:cn}
+  {\XMLattribute{mathvariant}{\XML@mathmlvariant}{normal}}
+  {\xmlgrab}
+  { \mathcode`,=`,
+  \ifx \XML@mathmlvariant\att@default\mathrm{#1}
+  \else \@nameuse{mathfont-\XML@mathmlvariant}{#1}\fi}
+
+\XMLelement{m:mtext}
+  {\XMLattribute{mathvariant}{\XML@mathmlvariant}{default}}
+  {\xmlgrab}
+  { \ifx \XML@mathmlvariant\att@default\text{#1}
+  \else \@nameuse{mathfont-\XML@mathmlvariant}{#1}\fi}
+
+
+\XMLelement{m:mi}
+  {\XMLattribute{mathvariant}{\XML@mathmlvariant}{default}}
+  {\xmlgrab}
+  {\mi@test#1\relax}
+
+\XMLelement{m:ci}
+  {\XMLattribute{mathvariant}{\XML@mathmlvariant}{default}}
+  {\xmlgrab}
+  {\mi@test#1\relax}
+
+\def\mi@test#1\relax{
+ \ifx\mi@test#1\mi@test % ignore empty elements
+  \else\mi@@test#1\relax\fi
+}
+
+\def\showfonts{\typeout{
+\the\textfont0 
+\the\textfont1
+\the\textfont2 
+\the\textfont3 
+\the\textfont4 
+\the\textfont5 
+\the\textfont6 
+\the\textfont7 
+\the\textfont8 
+\the\textfont8 
+\the\textfont10 
+\the\textfont11
+\the\textfont12
+\the\textfont13
+\the\textfont14
+\the\textfont15}}
+
+\gdef\mi@@test#1#2\relax{
+ \ifx \XML@mathmlvariant\att@default 
+   \ifx\mi@test#2\mi@test
+    \expandafter#1
+  \else
+    \mathrm{#1#2}
+  \fi
+ \else \@nameuse{mathfont-\XML@mathmlvariant}{#1#2}\fi}
+
+\XMLelement{m:mfenced}
+  { \XMLattribute{open}{\XML@fenceopen}{(}
+    \XMLattribute{close}{\XML@fenceclose}{)}
+  }
+  {\jg@hacko\left\XML@fenceopen}
+  {\jg@hackc\right\XML@fenceclose}
+
+\def\jg@hacko{%
+  \ifx\XML@fenceopen\empty\let\XML@fenceopen.\fi
+  \ifx\XML@fenceopen\jg@lt\let\XML@fenceopen\langle\fi
+  \ifx\XML@fenceopen\jg@lbra\let\XML@fenceopen\langle\fi
+  \ifx\XML@fenceopen\jg@xlbra\let\XML@fenceopen\langle\fi
+  \ifx\XML@fenceopen\jg@gt\let\XML@fenceopen\rangle\fi
+  \ifx\XML@fenceopen\jg@rbra\let\XML@fenceopen\rangle\fi
+  \ifx\XML@fenceopen\jg@xrbra\let\XML@fenceopen\rangle\fi
+  \ifx\XML@fenceopen\jg@verbar\let\XML@fenceopen\|\fi
+  \ifx\XML@fenceopen\jg@parallel\let\XML@fenceopen\|\fi
+  \ifx\XML@fenceopen\jg@backslash\let\XML@fenceopen\backslash\fi
+  \ifx\XML@fenceopen\jg@Verbar\let\XML@fenceopen\|\fi
+  \ifx\XML@fenceopen\jg@lfloor\let\XML@fenceopen\lfloor\fi
+  \ifx\XML@fenceopen\jg@rfloor\let\XML@fenceopen\rfloor\fi
+  \ifx\XML@fenceopen\jg@lceil\let\XML@fenceopen\lceil\fi
+  \ifx\XML@fenceopen\jg@rceil\let\XML@fenceopen\rceil\fi
+  \ifx\XML@fenceopen\jg@lmoustache\let\XML@fenceopen\lmoustache\fi
+  \ifx\XML@fenceopen\jg@rmoustache\let\XML@fenceopen\rmoustache\fi
+  \ifx\XML@fenceopen\jg@lgroup\let\XML@fenceopen\lgroup\fi
+  \ifx\XML@fenceopen\jg@rgroup\let\XML@fenceopen\rgroup\fi
+  \ifx\XML@fenceopen\jg@uparrow\let\XML@fenceopen\uparrow\fi
+  \ifx\XML@fenceopen\jg@downarrow\let\XML@fenceopen\downarrow\fi
+  \ifx\XML@fenceopen\jg@Uparrow\let\XML@fenceopen\Uparrow\fi
+  \ifx\XML@fenceopen\jg@Downarrow\let\XML@fenceopen\Downarrow\fi
+  \ifx\XML@fenceopen\jg@updownarrow\let\XML@fenceopen\updownarrow\fi
+  \ifx\XML@fenceopen\jg@Updownarrow\let\XML@fenceopen\Updownarrow\fi
+
+}
+\def\jg@hackc{%
+  \ifx\XML@fenceclose\empty\let\XML@fenceclose.\fi
+  \ifx\XML@fenceclose\jg@gt\let\XML@fenceclose\rangle\fi
+  \ifx\XML@fenceclose\jg@rbra\let\XML@fenceclose\rangle\fi
+  \ifx\XML@fenceclose\jg@xrbra\let\XML@fenceclose\rangle\fi
+  \ifx\XML@fenceclose\jg@lt\let\XML@fenceclose\langle\fi
+  \ifx\XML@fenceclose\jg@lbra\let\XML@fenceclose\langle\fi
+  \ifx\XML@fenceclose\jg@xlbra\let\XML@fenceclose\langle\fi
+  \ifx\XML@fenceclose\jg@verbar\let\XML@fenceclose\|\fi
+  \ifx\XML@fenceclose\jg@Verbar\let\XML@fenceclose\|\fi
+  \ifx\XML@fenceclose\jg@parallel\let\XML@fenceclose\|\fi
+  \ifx\XML@fenceclose\jg@backslash\let\XML@fenceclose\backslash\fi
+  \ifx\XML@fenceclose\jg@lfloor\let\XML@fenceclose\lfloor\fi
+  \ifx\XML@fenceclose\jg@rfloor\let\XML@fenceclose\rfloor\fi
+  \ifx\XML@fenceclose\jg@lceil\let\XML@fenceclose\lceil\fi
+  \ifx\XML@fenceclose\jg@rceil\let\XML@fenceclose\rceil\fi
+  \ifx\XML@fenceclose\jg@lmoustache\let\XML@fenceclose\lmoustache\fi
+  \ifx\XML@fenceclose\jg@rmoustache\let\XML@fenceclose\rmoustache\fi
+  \ifx\XML@fenceclose\jg@lgroup\let\XML@fenceclose\lgroup\fi
+  \ifx\XML@fenceclose\jg@rgroup\let\XML@fenceclose\rgroup\fi
+  \ifx\XML@fenceclose\jg@uparrow\let\XML@fenceclose\uparrow\fi
+  \ifx\XML@fenceclose\jg@downarrow\let\XML@fenceclose\downarrow\fi
+  \ifx\XML@fenceclose\jg@Uparrow\let\XML@fenceclose\Uparrow\fi
+  \ifx\XML@fenceclose\jg@Downarrow\let\XML@fenceclose\Downarrow\fi
+  \ifx\XML@fenceclose\jg@updownarrow\let\XML@fenceclose\updownarrow\fi
+  \ifx\XML@fenceclose\jg@Updownarrow\let\XML@fenceclose\Updownarrow\fi
+}
+
+\newcounter{treecounter}
+\newcounter{localcolcounter}
+\newcounter{globalcolcounter}
+\XMLelement{tree}
+ {\XMLattribute{hpos}{\XML@hpos}{0pt}
+   \XMLattribute{vpos}{\XML@vpos}{0pt}
+ }
+ {
+ \stepcounter{treecounter}
+ \let\formula@start\relax
+ \let\formula@end\relax
+ \startdimen=\XML@hpos
+ \enddimen=\XML@vpos
+ \@inlinemathA{\thetreecounter}
+  }
+ {\@inlinemathZ}
+
+\XMLelement{node}
+ {\XMLattribute{name}{\XML@name}{somenode}}
+ {\xmlgrab}
+ {\node{\XML@name}{#1}}
+
+\XMLelement{nodepoint}
+ {\XMLattribute{name}{\XML@name}{somenode}
+  \XMLattribute{xpos}{\XML@xpos}{0pt} 
+  \XMLattribute{ypos}{\XML@ypos}{0pt}}
+ {\xmlgrab}
+ {\nodepoint{\XML@name}[\XML@xpos][\XML@ypos]}
+
+\XMLelement{nodeconnect}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{posA}{\XML@posA}{b}
+  \XMLattribute{posB}{\XML@posB}{t}
+ }
+ {\xmlgrab}
+ {\nodeconnect[\XML@posA]{\XML@nameA}[\XML@posB]{\XML@nameB}}
+
+\XMLelement{anodeconnect}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{posA}{\XML@posA}{b}
+  \XMLattribute{posB}{\XML@posB}{t}
+ }
+ {\xmlgrab}
+ {\anodeconnect[\XML@posA]{\XML@nameA}[\XML@posB]{\XML@nameB}}
+
+\XMLelement{barnodeconnect}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{depth}{\XML@depth}{5pt}
+ }
+ {\xmlgrab}
+ {\barnodeconnect[\XML@depth]{\XML@nameA}{\XML@nameB}}
+
+\XMLelement{abarnodeconnect}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{depth}{\XML@depth}{5pt}
+ }
+ {\xmlgrab}
+ {\abarnodeconnect[\XML@depth]{\XML@nameA}{\XML@nameB}}
+
+\XMLelement{nodecurve}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{posA}{\XML@posA}{b}
+  \XMLattribute{posB}{\XML@posB}{t}
+  \XMLattribute{depthA}{\XML@depthA}{5pt}
+  \XMLattribute{depthB}{\XML@depthB}{5pt}
+ }
+ {\xmlgrab}
+ {\nodecurve[\XML@posA]{\XML@nameA}[\XML@posB]{\XML@nameB}{\XML@depthA}[\XML@depthB]}
+
+\XMLelement{anodecurve}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+  \XMLattribute{posA}{\XML@posA}{b}
+  \XMLattribute{posB}{\XML@posB}{t}
+  \XMLattribute{depthA}{\XML@depthA}{5pt}
+  \XMLattribute{depthB}{\XML@depthB}{5pt}
+ }
+ {\xmlgrab}
+ {\anodecurve[\XML@posA]{\XML@nameA}[\XML@posB]{\XML@nameB}{\XML@depthA}[\XML@depthB]}
+
+
+\XMLelement{nodetriangle}
+ {\XMLattribute{nameA}{\XML@nameA}{nodeA}
+  \XMLattribute{nameB}{\XML@nameB}{nodeB} 
+ }
+ {\xmlgrab}
+ {\nodetriangle{\XML@nameA}{\XML@nameB}}
+
+\XMLelement{nodebox}
+ {\XMLattribute{nameA}{\XML@nameA}{somenode}
+ }
+ {\xmlgrab}
+ {\nodebox{\XML@nameA}}
+
+\XMLelement{nodeoval}
+ {\XMLattribute{nameA}{\XML@nameA}{somenode}
+ }
+ {\xmlgrab}
+ {\nodeoval{\XML@nameA}}
+
+\XMLelement{nodecircle}
+ {\XMLattribute{nameA}{\XML@nameA}{somenode}
+  \XMLattribute{depth}{\XML@depth}{0pt}
+ }
+ {\xmlgrab}
+ {\nodecircle[\XML@depth]{\XML@nameA}}
+
+%%%%%%%%%%%%
+%% Arrays
+
+
+\XMLelement{table}
+  {\XMLattribute{vpos}{\XML@vpos}{b}}
+  {\xmlgrab }
+  {\jg@start@table#1\jg@end@table }
+
+\XMLelement{row}
+  {
+  \XMLattribute{spaceafter}{\XML@spaceafter}{0pt}
+  \XMLattribute{top-border}{\XML@topborder}{false}
+  \XMLattribute{bottom-border}{\XML@bottomborder}{false}
+  }
+  {\xmlgrab }
+  {\jg@start@tr#1}
+
+\XMLelement{cell}
+ {\XMLattribute{cols}{\XML@cols}{1}
+  \XMLattribute{rows}{\XML@rows}{1}
+  \XMLattribute{halign}{\XML@halign}{center}
+  \XMLattribute{right-border}{\XML@rightborder}{false}
+  \XMLattribute{left-border}{\XML@leftborder}{false}
+ }
+ {\xmlgrab}
+ {\jg@start@td{#1}}
+
+\newcommand\jg@start@table{%
+ \let\arraystretch\@myarraystretch
+ \jg@table@toks{}%
+ \jg@row@toks{}%
+ \setcounter{globalcolcounter}{1}%
+ \StartTablextrue}
+
+\newcommand\jg@end@table{%
+ \merge@toks\jg@table@toks\jg@row@toks
+ \ifx\Rowsep\empty\else 
+    \gaddto@hook\jg@table@toks{\\}%
+    \merge@cmd\jg@table@toks\Rowsep\fi
+ \addto@hook\jg@table@toks{\end{tabular}}%
+ \ifnum\value{localcolcounter}>\value{globalcolcounter}%
+ \setcounter{globalcolcounter}{\value{localcolcounter}}\fi
+ \edef\foo{\noexpand\begin{tabular}{*{\theglobalcolcounter}{c}}\the\jg@table@toks}%
+ \foo}
+ 
+
+\newcommand\jg@start@tr{%
+  \merge@toks\jg@table@toks\jg@row@toks
+  \ifStartTablex
+     \global\StartTablexfalse
+  \else 
+    \gaddto@hook\jg@table@toks{\\}%
+    \merge@cmd\jg@table@toks\Rowsep
+    \ifnum\value{localcolcounter}>\value{globalcolcounter}%
+    \setcounter{globalcolcounter}{\value{localcolcounter}}\fi
+  \fi
+  \jg@row@toks{}%
+  \ifx\XML@bottomborder\att@true
+    \ifdim\XML@spaceafter=0pt  \gdef\Rowsep{\hline}\else
+    \xdef\Rowsep{[\XML@spaceafter\noexpand\hline]}\fi
+  \else
+    \ifdim\XML@spaceafter=0pt  \gdef\Rowsep{}\else
+    \xdef\Rowsep{[\XML@spaceafter]}\fi
+  \fi
+  \ifx\XML@topborder\att@true\gaddto@hook\jg@row@toks{\hline}\fi
+  \setcounter{localcolcounter}{0}%
+  \global\StartRowxtrue}
+
+%% A cell in a table
+\newcommand\jg@start@td[1]{%
+   \ifStartRowx\global\StartRowxfalse
+   \else \gaddto@hook\jg@row@toks{\tabcellsep}\fi
+  \addtocounter{localcolcounter}{\XML@cols}%
+   \ifx\XML@halign\att@mtd@left
+      \def\temp{#1\hfill\null}%
+    \else\ifx\XML@halign\att@mtd@right
+      \def\temp{\hfill#1}%
+        \else \def\temp{#1}\fi\fi%
+  \ifnum\XML@cols=1 \else
+   \toks0=\expandafter{\temp}%
+   \edef\temp{\noexpand\multicolumn{\XML@cols}{c}{\the\toks0}}%
+  \fi
+  \expandafter\gaddto@hook\expandafter\jg@row@toks\expandafter{\temp}}
+
+
+\XMLelement{fotex:table-and-caption}
+  {\XMLattribute{id}{\FOid}{}}
+  {\begin{table} \FOlabel\centering}
+  {\end{table}} 
+
+
+\XMLelement{fotex:table}
+  {\XMLattribute{id}{\FOid}{}}
+  {\xmlgrab }
+  {\jg@start@table#1\jg@end@table} 
+
+\XMLelement{fotex:table-caption}
+  {}
+  {\par\vskip10pt}
+  {\par} 
+
+
+\XMLelement{fotex:row}
+  {
+  \XMLattribute{spaceafter}{\XML@spaceafter}{0pt}
+  \XMLattribute{top-border}{\XML@topborder}{false}
+  \XMLattribute{bottom-border}{\XML@bottomborder}{false}
+  }
+  {\xmlgrab }
+  {\jg@start@tr#1}
+
+\XMLelement{fotex:cell}
+ {\XMLattribute{cols}{\XML@cols}{1}
+  \XMLattribute{rows}{\XML@rows}{1}
+  \XMLattribute{halign}{\XML@halign}{center}
+  \XMLattribute{right-border}{\XML@rightborder}{false}
+  \XMLattribute{left-border}{\XML@leftborder}{false}
+ }
+ {\xmlgrab}
+ {\jg@start@td{#1}}
+
+
+
+\let\rend@it\textit
+\let\rend@bf\textbf
+\let\rend@rm\textrm
+\def\rend@small#1{{\small #1}}
+\def\rend@sub#1{\textsubscript{#1}}
+\let\rend@sup\textsuperscriptscript
+\XMLelement{hi}
+ {\XMLattribute{rend}{\XML@rend}{rm}}
+ {\xmlgrab}
+ {\csname rend@\XML@rend\endcsname{#1}}
+
+
+%%%%%%%%%%%%%%%%%%
+
+
+\XMLelement{picture}
+  {\XMLattribute{width}{\XML@width}{1}
+   \XMLattribute{height}{\XML@height}{1}
+   \XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{ypos}{\XML@ypos}{0}
+  }
+  {\begin{picture}(\XML@width,\XML@height)(\XML@xpos,\XML@ypos)}
+  {\end{picture}}
+
+\XMLelement{pic-put}
+  {\XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{ypos}{\XML@ypos}{0}}
+  {\xmlgrab}
+  {\put(\XML@xpos,\XML@ypos){#1}}
+
+\XMLelement{pic-arc}
+  {\XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{angle}{\XML@angle}{0}
+   \XMLattribute{ypos}{\XML@ypos}{0}}
+  {\xmlgrab}
+  {\arc(\XML@xpos,\XML@ypos){\XML@angle}}
+
+\XMLelement{pic-scaleput}
+  {\XMLattribute{xscale}{\xscale}{1.0}
+   \XMLattribute{yscale}{\yscale}{1.0}
+   \XMLattribute{xscaley}{\xscaley}{0.0}
+   \XMLattribute{yscalex}{\yscalex}{0.0}
+   \XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{ypos}{\XML@ypos}{0}}
+  {\xmlgrab}
+  {\scaleput(\XML@xpos,\XML@ypos){#1}}
+
+\XMLelement{pic-thicklines}
+  {}{}{\aftergroup\thicklines}
+
+\XMLelement{pic-thinlines}
+  {}{}{\aftergroup\thinlines}
+
+\XMLelement{pic-linethickness}
+  {\XMLattribute{size}{\XML@size}{1pt}}
+  {}
+  {\xdef\temp{\noexpand\linethickness{\XML@size}}\aftergroup\temp}
+   
+
+\XMLelement{pic-multiput}
+  {\XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{ypos}{\XML@ypos}{0}
+   \XMLattribute{repeat}{\XML@repeat}{1}
+   \XMLattribute{dx}{\XML@dx}{1}
+   \XMLattribute{dy}{\XML@dy}{1}}
+  {\xmlgrab}
+  {\multiput(\XML@xpos,\XML@ypos)(\XML@dx,\XML@dy){\XML@repeat}{#1}}
+
+
+\XMLelement{pic-bezier}
+  {\XMLattribute{a1}{\XML@ai}{0}
+   \XMLattribute{a2}{\XML@aii}{0}
+   \XMLattribute{b1}{\XML@bi}{0}
+   \XMLattribute{b2}{\XML@bii}{0}
+   \XMLattribute{c1}{\XML@ci}{0}
+   \XMLattribute{c2}{\XML@cii}{0}
+   \XMLattribute{repeat}{\XML@repeat}{0}}
+  {}
+  {
+   \qbezier[\XML@repeat](\XML@ai,\XML@aii)(\XML@bi,\XML@bii)(\XML@ci,\XML@cii)
+  }
+
+
+\XMLelement{pic-line}
+  {\XMLattribute{xdir}{\XML@xdir}{0}
+   \XMLattribute{ydir}{\XML@ydir}{0}
+   \XMLattribute{width}{\XML@width}{0}}
+  {}
+  {\line(\XML@xdir,\XML@ydir){\XML@width}}
+
+\XMLelement{pic-vector}
+  {\XMLattribute{xdir}{\XML@xdir}{0}
+   \XMLattribute{ydir}{\XML@ydir}{0}
+   \XMLattribute{width}{\XML@width}{0}}
+  {}
+  {\vector(\XML@xdir,\XML@ydir){\XML@width}}
+
+\newdimen\jgunitlength
+\newcommand\withulength[1]{%
+  {\def\ignorespaces{}%
+   \jgunitlength=\unitlength \setlength\unitlength{\XML@ulength pt}%
+   #1\global\unitlength\jgunitlength}}
+
+\XMLelement{pic-curve}
+  {\XMLattribute{unit-length}{\XML@ulength}{1}}
+  {\xmlgrab}
+  {\withulength{\curve(#1)}}
+
+\XMLelement{pic-closecurve}
+  {\XMLattribute{unit-length}{\XML@ulength}{1}}
+  {\xmlgrab}
+  {\withulength{\closecurve(#1)}}
+
+\XMLelement{pic-tagcurve}
+  {\XMLattribute{unit-length}{\XML@ulength}{1}}
+  {\xmlgrab}
+  {\withulength{\tagcurve(#1)}}
+
+
+\XMLelement{pic-frame}
+ {}
+ {\xmlgrab}
+ {\frame{#1}}
+
+
+\XMLelement{pic-circle}
+  {\XMLattribute{size}{\XML@size}{1}
+   \XMLattribute{full}{\XML@full}{false}}
+  {}
+  {\ifx\XML@full\att@false\circle{\XML@size}\else \circle*{\XML@size}\fi}
+
+\XMLelement{pic-bigcircle}
+  {\XMLattribute{size}{\XML@size}{1}
+   \XMLattribute{unit-length}{\XML@ulength}{1}}     
+  {}
+  {\withulength{\bigcircle{\XML@size}}}
+
+\def\@att@to@rtb#1#2{%
+  \ifx\XML@pos\att@l \def\jg@tmp{#1[l]{#2}}
+  \else\ifx\XML@pos\att@r \def\jg@tmp{#1[r]{#2}}%
+  \else\ifx\XML@pos\att@t \def\jg@tmp{#1[t]{#2}}%
+  \else\ifx\XML@pos\att@b \def\jg@tmp{#1[b]{#2}}%
+  \else\ifx\XML@pos\att@lt \def\jg@tmp{#1[lt]{#2}}%
+  \else\ifx\XML@pos\att@lb \def\jg@tmp{#1[lb]{#2}}%
+  \else\ifx\XML@pos\att@rt \def\jg@tmp{#1[rt]{#2}}%
+  \else\ifx\XML@pos\att@rb \def\jg@tmp{#1[rb]{#2}}%
+  \else\ifx\XML@pos\att@tl \def\jg@tmp{#1[lt]{#2}}%
+  \else\ifx\XML@pos\att@bl \def\jg@tmp{#1[lb]{#2}}%
+  \else\ifx\XML@pos\att@tr \def\jg@tmp{#1[rt]{#2}}%
+  \else\ifx\XML@pos\att@br \def\jg@tmp{#1[rb]{#2}}%
+  \else \def\jg@tmp{#1{#2}}
+ \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+\jg@tmp
+}
+
+\XMLelement{pic-framebox}
+  {\XMLattribute{width}{\XML@width}{0}
+   \XMLattribute{height}{\XML@height}{0}
+   \XMLattribute{position}{\XML@pos}{}
+   \XMLattribute{framed}{\XML@framed}{false}
+  }
+ {\xmlgrab}
+ {\let\cmd\framebox\ifx\XML@framed\att@false\let\cmd\makebox\fi
+  \@att@to@rtb{\cmd(\XML@width,\XML@height)}{#1}}
+
+\XMLelement{pic-dashbox}
+  {\XMLattribute{width}{\XML@width}{0}
+   \XMLattribute{height}{\XML@height}{0}
+   \XMLattribute{position}{\XML@pos}{w}
+   \XMLattribute{dashdim}{\XML@dashdim}{1pt}
+  }
+ {\xmlgrab}
+ {\@att@to@rtb{\dashbox{\XML@dashdim}(\XML@width,\XML@height)}{#1}}
+
+
+\XMLelement{pic-oval}
+  {\XMLattribute{xpos}{\XML@xpos}{0}
+   \XMLattribute{specs}{\XML@pos}{}
+   \XMLattribute{ypos}{\XML@ypos}{0}}
+  {\xmlgrab}
+  {\@att@to@rtb{\oval(\XML@xpos,\XML@ypos)}{#1}}
+
+\newif\ifnoheightcheck
+\catcode`\:\active
+
+\def\myNoTableSetup{%
+  \ifx\FOwidth\att@auto\else
+   \TableWidth\FOwidth
+   \advance\TableWidth by -\tabcolsep
+   \advance\TableWidth by -\FOmarginleft
+   \advance\TableWidth by -\FOmarginright
+ \fi
+\initialNoTableSetup
+}
+\catcode`\:12\relax
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Content markup
+
+
+\XMLelement{m:eq}{}{}{=}
+\XMLelement{m:power}{}{}{\mbox{\textasciicircum}}
+\XMLelement{m:divide}{}{}{\div}
+\XMLelement{m:minus}{}{}{-}
+\XMLelement{m:plus}{}{}{+}
+\XMLelement{m:times}{}{}{*}
+\XMLelement{m:root}{}{}{\surd}
+
+
+
+\XMLelement{m:degree}
+  {}{\xmlgrab}{
+    \mathrm{Degree}=#1}
+
+\XMLelement{m:apply}
+  {}
+  {\xmlgrab}
+  {
+  \let\firstapply0
+  \jg@apply@toks{} \xmltexforall\mapply{#1}% 
+  \addto@hook\jg@apply@toks{)}
+  \the\jg@apply@toks}
+
+\def\mapply#1{
+ \if\firstapply0\else\if\firstapply1\addto@hook\jg@apply@toks{(}\else
+ \addto@hook\jg@apply@toks{,}\fi\fi
+ \addto@hook\jg@apply@toks{#1}
+ \if\firstapply0\let\firstapply1\else\let\firstapply2\fi
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% two new elements
+
+\XMLelement{allowbreak}
+{}{\penalty100 }{}
+
+\XMLelement{clearpage}
+{}{\clearpage}{}
+
+\XMLelement{TeX}
+  {}{\TeX{}}{}
+\XMLelement{LaTeX}
+  {}{\LaTeX{}}{}
+
+% for the preview
+\XMLelement{preview}
+  {}
+  {\begin{preview}}
+  {\end{preview}}
+
+%% page numbers in the margin
+
+
+\XMLelement{fotex:line-number}
+  {}
+  {\xmlgrab}
+  {\leavevmode\hb@xt@2em{\hss#1\kern.5em}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newbox\ra@atxybox
+\def\ra@atxy(#1,#2)#3{\global\setbox\ra@atxybox=\hbox
+ {\unhbox\ra@atxybox
+  \vtop to 0pt{\kern #2\hbox to 0pt{\kern #1\relax #3\hss}\vss}}}
+
+\def\ra@useatxy{{%
+  \let\@themargin\oddsidemargin
+  \vtop to 0pt{\kern-\headsep \kern-\topmargin \kern-\headheight
+               \kern-1in \kern-\voffset
+    \hbox to 0pt{\kern-\@themargin \kern-1in \kern-\hoffset
+    \unhbox\ra@atxybox \hss}\vss}}%
+    \global\let\@texttop\relax}
+
+\def\foratheme#1{\vskip8cm \vfil
+  \ra@atxy(74mm,175mm) {\hbox to 70mm{%
+       \hrulefill\hspace{8mm}
+       \def\firstchar##1##2\relax{##1##2} % ducon
+       \href{http://www.inria.fr/recherche/equipes/listes/theme_\firstchar#1\relax.en.html}{THEME \uppercase{#1}}%
+       \hspace{8mm}\hrulefill}}}
+
+
+\def\foinria{%
+  \ra@atxy(7.8cm,2.5cm){\includegraphics[width=5.7cm]{Logo-INRIA-couleur}}%
+  \ra@atxy(55mm,173mm){\includegraphics{LogoRA\ra@year}}%
+ \setbox0\hbox to 14cm{%
+     \noindent\hskip3cm\hfill
+     {\fontencoding{T1}\fontfamily{ptm}\fontseries{m}%
+   \fontshape{n}\fontsize{10pt}{12pt}\selectfont
+\href{http://www.inria.fr}{INSTITUT NATIONAL DE RECHERCHE EN INFORMATIQUE ET EN AUTOMATIQUE}}%
+      \hskip-5cm\hfill}%
+  \null\vskip0.7cm \leavevmode\hskip-3.5cm\box0\null\vskip2cm\vfil}
+
+\XMLelement{newpage}
+ {} {} {\newpage}
+
+
+\XMLelement{cleardoublepage}
+ {} {\cleardoublepage} {}
+
+\XMLelement{pagestylehrule}
+ {} {\hbox to0pt{\rule[-1ex]{\textwidth}{.03cm}\hss}} {}
+
+
+%%%% commands used by extract-math to 
+\newdimen\startdimen
+\newdimen\enddimen
+
+\def\@inlinemathA#1{%
+  \xdef\@mathenv{#1}%
+  \adjustnormalsize \newpage\clearpage
+  \setbox\sizebox=\hbox\bgroup
+  \vrule height2pt  width0pt 
+%  \vrule width1pt 
+  \kern\startdimen
+}
+
+%% \sizebox holds the formula with a strut at the start
+%% \dim1 = max (height, depth) + 1pt
+
+\def\@centerinlinemath{%
+  \dimen1=\ifdim\ht\sizebox<\dp\sizebox \dp\sizebox\else\ht\sizebox\fi
+  \vrule width0pt height\dimen1 depth\dimen1 
+  \dp\sizebox=\dimen1\ht\sizebox=\dimen1\relax}
+
+\def\@inlinemathZ{%
+  \egroup
+  \ifdim\enddimen>0pt 
+  \dimen1=\dp\sizebox\advance\dimen1by \enddimen\dp\sizebox=\dimen1\fi
+  \typeout{l2hSize %
+    :\@mathenv:\the\ht\sizebox::\the\dp\sizebox::\the\wd\sizebox.}
+  \box\sizebox
+  \clearpage
+}
+
+
+\def\formula@start{%
+  \@inlinemathA{\XML@formid}}
+
+\let\formula@end\@inlinemathZ
+
+\XMLelement{formula}
+ {\XMLattribute{id}{\XML@formid}{none}}
+ {\formula@start}
+ {\formula@end}
+
+%%% Pour la conversion en images...
+\newbox\sizebox
+
+\AtBeginDocument{
+\@namedef{Gin@rule@.eps}#1{{eps}{.eps}{#1}}
+\let\realnormalsize=\relax
+\def\adjustnormalsize{%
+  \def\normalsize{\mathsurround=0pt \realnormalsize
+   \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+  \def\phantompar{\csname par\endcsname}%
+  \normalsize}
+}
+
+%% Patch for inherited attributes. Removed \csname
+\def\inheritname{inherit}
+\def\jgXML@attrib@x#1#2{
+    \gdef\XML@tempb##1#1##2##3##4\relax\relax{
+       \def\tmp{#2}%
+        \ifx\tmp\inheritname\else\def##2{#2}%
+        \fi
+    ##1##4\relax\relax}}
+
+
+%% Patch for the other command.
+\def\jgexplicitattribute#1{{%
+   \def\tmp{#1}
+   \global\let\isexplicit\relax
+   \def\XML@doattribute##1##2##3{%
+      \def\atmp{##2}\ifx\tmp\atmp\global\let\isexplicit\empty\fi}
+    \the\XML@attribute@toks
+ }
+}
+
+\def\@myarraystretch{1.7}%
+{\catcode`\:=11 \gdef\Q:texxml{\Q:xmltex}}
+
+\def\asciimacron{\ifmmode\mbox{\textasciimacron}\else\textasciimacron\fi}
+
+\AtBeginDocument{
+  \UnicodeCharacter{x332}{\jgunderline}
+  \UnicodeCharacter{x3F5}{\ensuremath{\epsilon}}
+  \UnicodeCharacter{x3B5}{\ensuremath{\varepsilon}}
+  \UnicodeCharacter{x3D5}{\ensuremath{\varphi}}
+  \UnicodeCharacter{x3C6}{\ensuremath{\phi}}
+  \UnicodeCharacter{xAF}{\asciimacron}
+  \mathchardef\eth"567 % OK ?
+
+  \let\initialNoTableSetup\NoTableSetup
+  \let\NoTableSetup\myNoTableSetup
+  \let\XML@attrib@x\jgXML@attrib@x
+  \let\explicitattribute\jgexplicitattribute
+  \let\downslopeellipsis\ddots
+  \mathchardef\Rightarrow="3229
+  \let\@texttop\ra@useatxy
+%  \let\XURL\relax
+ \errorcontextlines=1000
+ \showboxdepth=1000
+ \showboxbreadth=1000
+%\tracingoutput=2
+%  \selectlanguage{french}
+  \selectlanguage{english}
+% \tracingall\tracingonline=0
+}

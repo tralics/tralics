@@ -1,0 +1,44 @@
+
+The raweb directory contains some files used to produce the raweb
+  (Inria's annual acticity report). These files are copyright Inria,
+  but the license is unclear. Contact the author before redistributing
+  modified versions.
+
+
+The xml directory contains the following files and directories
+  mathml2 (directory)
+    -> the mathml2 DTD, version 1.12, date 2003/11/04, downloaded 2004/09/15
+     (see the copyright notice in each of these files)
+
+  fotex.sty-patched, fotex-add.sty
+    a patched version of fotex.sty (by Sebastian Rahtz)
+    (see copyright notice in the file)
+    (see also README file in the xml directory)
+
+  raweb3-makecolspec.xsl raweb3-param.xsl raweb3-table.xsl
+   Three auxiliary style sheets, from the TEI by Sebastian Rahtz
+   adapted to Tralics (see the copyright notice in each of these files)
+
+  preview.xsl
+   Style sheet for producing small images.
+
+  raweb3fo.xsl rrfo3.xsl
+   Two style sheets, used at Inria, given as example.
+   Inspired by from the TEI by Sebastian Rahtz.
+   (see the copyright notice in each of these files)
+
+  raweb3.dtd
+    The Raweb DTD (for year 2003).
+
+  raweb-cfg.sty
+    re-implementation of the MathML to dvi converter
+    (distributed under the LaTeX Project Public License )
+
+  tralics-iso.sty
+    a TeX file that defines lots of mathematical symbols
+
+The icons directory contains some icons to be used for the raweb
+
+The styles directory contains some XSLT style sheets and ult files
+ used for converting some XML files to HTML.
+ (see tralics documentation, Part II, Chapter 8) 

@@ -1,0 +1,30 @@
+%% -*- latex -*-
+%% English version of thesis
+\let\item\@item
+
+%%%
+\let\varnothing\emptyset
+\let\newpage\relax
+\def\textlengthmark{^^^^02d0}
+\def\textglotstop{^^^^0294}
+\def\setuldepth#1{}
+
+\def\footnotemark{*}
+\def\footnotetext#1{\xbox{footnotetext}{#1}}
+
+
+\newenvironment{spacing}[1]{}{}
+
+\newlength\topmargin
+\def\pagestyle#1{}
+\def\thispagestyle#1{}
+
+
+\catcode`^=\active
+\def^#1{\ifmmode\sp{#1}\else$\sp{#1}$\fi}
+\catcode`_=\active
+\def_#1{\ifmmode\sb{#1}\else$\sb{#1}$\fi}
+
+\endinput
+
+------------

@@ -1,0 +1,41 @@
+%% -*- latex -*-
+%$Id: tralics-rr.ult,v 1.6 2008/03/03 07:53:26 grimm Exp $
+%% This is the ult file for tralics-rr.tex 
+
+\let\item\@item
+\newskip\footskip
+\newskip\topmargin
+\newenvironment{theindex}{}{}
+\let\mathbbm\mathbb
+\let\mathscr\mathcal
+
+\let\itDelta\Delta
+\def\DeclareMathSymbol#1#2#3#4{}
+\def\verbatim@hook{}
+\def\verbatimnumberfont#1{\xbox{vbnumber}{#1}}
+
+\def\fontencoding{\textit{fontencoding U}}
+\def\fontfamily{\textit{fontfamily U}}
+\def\fontseries{\textit{fontseries U}}
+\def\fontshape{\textit{fontshape U}}
+\def\fontsize{\textit{fontesize U}}
+\def\selectfont{\textit{selectfont U}}
+\newlength \tabcolsep
+%\newcounter{equation}
+
+
+\AtBeginDocument{
+\renewcommand*\syntax[1]{\mbox{<#1>}} % brackets are awful in HTML
+\def\htmlprefix#1{\addattributestodocument{htmlprefix}{#1}}
+\def\cstok#1{\ul{#1}}
+\def\LTC#1{\xbox{latexcode}{#1}}
+\def\XC#1{\xbox{xmlcode}{#1}}
+\def\xmlcolor#1{\xbox{xmlcolor}{#1}}
+\def\Pdf{Pdf}
+\def\Tralics{\textit{Tralics}} %% is always in italics in the main doc
+\def\latexcode#1{\xbox{latexcode}{#1}}
+\def\xmlcode#1{\xbox{xmlcode}{#1}}}
+
+
+
+\endinput

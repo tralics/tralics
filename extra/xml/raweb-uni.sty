@@ -1,0 +1,1208 @@
+%
+% $Id: raweb-uni.sty,v 2.19 2007/11/05 09:43:06 grimm Exp $
+% This file contains some definitions for evaluation of Unicode characters
+% together with ucharacters.sty, unicode.sty, etc.
+
+%%  Copyright Inria, Jose Grimm, Apics, 2004.
+%% This file is distributed with Tralics. See the Copyright notice
+%%  in the Tralics main directory
+
+%% This software is governed by the CeCILL license under French law and
+%% abiding by the rules of distribution of free software.  You can  use, 
+%% modify and/ or redistribute the software under the terms of the CeCILL
+%% license as circulated by CEA, CNRS and INRIA at the following URL
+%% "http://www.cecill.info". 
+%% (See the file COPYING in the main directory for details)
+
+
+%% Note Font families used in all types of math variants are used
+% 0\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 2\OMS/cmsy/m/n/10 3\OMX/cmex/m/n/10 
+% 4\U/msa/m/n/10 5\U/msb/m/n/10 6\U/wasy/m/n/10 7\U/stmry/m/n/10 
+% 8\U/euf/b/n/10 9\OT1/cmr/bx/n/10 10\U/eus/m/n/10 11\OT1/cmr/m/it/10 
+% 12\OT1/cmtt/m/n/10 13\U/euf/m/n/10 14\OT1/cmss/m/n/10 15\nullfont .
+
+
+% As you can see, there is one empty slot. Thus you can change 
+% one \iffalse to \iftrue. Or you can change more
+% and some math alphabets are missing
+
+\newif\if@font@matha \@font@mathafalse
+\newif\if@font@mathb \@font@mathbfalse
+\newif\if@font@mathC \@font@mathCfalse
+\newif\if@font@mathA \@font@mathAfalse
+
+
+%% Poor man bold, in math mode. From the TeX book.
+\newcommand\mpmb[1]{\setbox0=\hbox{$#1$}%
+  \kern-0.025em\copy0\kern-\wd0
+  \kern.05em\copy0\kern-\wd0
+  \kern-.025em\raise.0433em\box0}
+
+
+\DeclareFontFamily{U}{manual}{}
+\DeclareFontShape{U}{manual}{m}{n}{ <->  manfnt }{}
+\DeclareFontFamily{U}{mbb}{}
+\DeclareFontShape{U}{mbb}{m}{n}{ <->  mbb10 }{}
+
+
+%% Uncomment if you want to use the mathb fonts
+\if@font@mathb
+\DeclareSymbolFont{mathb}{U}{mathb}{m}{n}
+\DeclareFontSubstitution{U}{mathb}{m}{n}
+\DeclareMathSymbol{\dlsh}                  {3}{mathb}{"EA}
+\DeclareMathSymbol{\drsh}                  {3}{mathb}{"EB}
+\DeclareMathSymbol{\updownarrows}          {3}{mathb}{"D6}
+\DeclareMathSymbol{\downuparrows}          {3}{mathb}{"D7}
+\DeclareMathSymbol{\leftrightarrows}       {3}{mathb}{"D4}
+\DeclareMathSymbol{\leftsquigarrow}        {3}{mathb}{"F8}
+\DeclareMathSymbol{\varsqsubsetneq} {3}{mathb}{"8A}
+\DeclareMathSymbol{\varsqsupsetneq} {3}{mathb}{"8B}
+\DeclareMathSymbol{\sphericalangle}{0}{mathb}{"3F}
+\let\VDash\relax\DeclareMathSymbol{\VDash}{3}{mathb}{"28}
+\fi
+
+%% Uncomment if you want to use the matha fonts
+\if@font@matha
+\DeclareSymbolFont{matha}{U}{matha}{m}{n}
+\DeclareFontSubstitution{U}{matha}{m}{n}
+\DeclareMathSymbol{\leftrightharpoons}     {3}{matha}{"E8}
+\DeclareMathSymbol{\mathabxhash}         {0}{matha}{"23}
+\fi
+
+%% Uncomment if you want to use the matha fonts
+
+\if@font@mathC
+\DeclareSymbolFont{symbolsC}{U}{pxsyc}{m}{n}
+\SetSymbolFont{symbolsC}{bold}{U}{pxsyc}{bx}{n}
+\DeclareFontSubstitution{U}{pxsyc}{m}{n}
+
+\DeclareMathSymbol{\Nearrow}{\mathrel}{symbolsC}{"74}
+\DeclareMathSymbol{\Searrow}{\mathrel}{symbolsC}{"75}
+\DeclareMathSymbol{\Nwarrow}{\mathrel}{symbolsC}{"76}
+\DeclareMathSymbol{\Swarrow}{\mathrel}{symbolsC}{"77}
+\DeclareMathSymbol{\strictif}{\mathrel}{symbolsC}{"4A}
+\DeclareMathSymbol{\strictfi}{\mathrel}{symbolsC}{"4B}
+\DeclareMathSymbol{\multimapdotbothA}{\mathrel}{symbolsC}{"17}
+\DeclareMathSymbol{\multimapdotbothB}{\mathrel}{symbolsC}{"18}
+\DeclareMathSymbol{\varspadesuit}{\mathord}{symbolsC}{"73}
+\DeclareMathSymbol{\varclubsuit}{\mathord}{symbolsC}{"70}
+\DeclareMathSymbol{\varheartsuit}{\mathord}{symbolsC}{"72}
+\DeclareMathSymbol{\eqcolon}{\mathrel}{symbolsC}{"45}
+\fi
+
+\if@font@mathA
+\DeclareSymbolFont{largesymbolsA}{U}{pxexa}{m}{n}
+\SetSymbolFont{largesymbolsA}{bold}{U}{pxexa}{bx}{n}
+\DeclareFontSubstitution{U}{pxexa}{m}{n}
+
+\DeclareMathSymbol{\ointctrclockwiseop}{\mathop}{largesymbolsA}{"0A}
+\def\ointctrclockwise{\ointctrclockwiseop\nolimits}
+\DeclareMathSymbol{\varointclockwiseop}{\mathop}{largesymbolsA}{"2D}
+\def\varointclockwise{\varointclockwiseop\nolimits}
+%\DeclareMathSymbol{\diameter}      {0}{matha}{"49}
+\DeclareMathSymbol{\oiiintop}{\mathop}{largesymbolsA}{"29}
+\def\oiiint{\oiiintop\nolimits}
+\fi
+
+
+\DeclareSymbolFont{EulerFraktur}{U}{euf}{b}{n}
+\SetSymbolFont{EulerFraktur}{bold}{U}{euf}{b}{n}
+\DeclareSymbolFontAlphabet\mathslbb{EulerFraktur}
+
+
+\newcommand\pxr@font{\fontencoding{TS1}\fontfamily{pxr}\selectfont}
+\newcommand\cyr@font{\fontencoding{T2A}\fontfamily{cmr}\selectfont}
+\newcommand\lela@font{\fontencoding{LELA}\selectfont}
+\newcommand\pc@font{\fontencoding{U}\fontfamily{phon}\selectfont}
+\newcommand\bbold@font{\fontencoding{U}\fontfamily{bbold}\selectfont}
+\newcommand\mathb@font{\fontencoding{U}\fontfamily{mathb}\selectfont}
+\newcommand{\manfntsymbol}[1]{%
+    {\fontencoding{U}\fontfamily{manual}\selectfont\symbol{#1}}}
+\newcommand{\mbbchar}[1]{%
+    {\fontencoding{U}\fontfamily{mbb}\selectfont #1}}
+
+\newcommand{\mbbfont}[1]{%
+  \mbox{\fontencoding{U}\fontfamily{mbb}\selectfont #1}}
+
+\newcommand{\cmmichar}[1]{%
+    {\fontencoding{OML}\fontfamily{cmm}\fontshape{it}\selectfont #1}}
+\newcommand{\cmmibchar}[1]{%
+    {\fontencoding{OML}\fontfamily{cmm}\fontseries{b}\fontshape{it}\selectfont #1}}
+
+\newcommand{\mathsfbf}[1]{%
+   {\mbox{\fontencoding{OT1}\fontfamily{cmss}\fontseries{bx}\selectfont #1}}}
+\newcommand{\mathsfsl}[1]{%
+   {\mbox{\fontencoding{OT1}\fontfamily{cmss}\fontshape{sl}\selectfont #1}}}
+\newcommand{\mathsfbfsl}[1]{%
+   \mpmb{\mathsfsl {#1}}}
+
+\newcommand{\skaksymbol}[1]{{\font\skakfont=skak15 \skakfont\symbol{#1}}}
+\DeclareTextFontCommand{\textskak}{\skakfamily}
+
+
+\renewcommand\arrowwaveleft{\UnavailableSymbol{219c}}
+\renewcommand\arrowwaveright{\UnavailableSymbol{219d}}
+\let\DownArrowUpArrow\downuparrows
+\let\surfintegral\oiint
+\let\volintegral\oiiint
+\renewcommand\rightangle{\UnavailableSymbol{221F}}
+
+
+
+\let\mathsl\mathit
+
+\newcommand\mathbit[1]{\ensuremath{\mbox{\textbf{\itshape #1}}}}
+\newcommand\mathmit[1]{\mpmb{\mathscr{#1}}}
+\renewcommand\truestate{\models}
+
+\newcommand\adots{\mathinner{\mkern2mu\raise\p@\hbox{.}
+  \mkern2mu\raise4\p@\hbox{.}\mkern1mu
+  \raise7\p@\vbox{\kern7\p@\hbox{.}}\mkern1mu}}
+
+\newcommand\smathscr[1]{#1}
+\newcommand\bsmathscr[1]{\pmb{\mathit{#1}}}
+
+%%%%%%%%%%%%%%%%%
+
+
+
+\def\ensurenomath#1{\relax\ifmmode \mbox{#1}\else#1\fi}
+
+
+%/net/lib/texmf/tex3.14159-7.3.1/common/tex/latex/wsuipa/*sty
+% these commands put an accent below a lcharacter
+\newcommand\circle@below[1]{\hmode@bgroup \o@lign 
+  {\relax #1\crcr \hidewidth \sh@ft {10}\char 6 \hidewidth }\egroup}
+\newcommand\cir@below[1]{\hmode@bgroup \o@lign 
+  {\relax #1\crcr \hidewidth \sh@ft {10}\char 2 \hidewidth }\egroup}
+\newcommand\tilde@below[1]{\hmode@bgroup \o@lign 
+  {\relax #1\crcr \hidewidth \sh@ft {10}\char 3 \hidewidth }\egroup}
+\newcommand\something@below[2]{\hmode@bgroup \o@lign 
+  {\relax #1\crcr \hidewidth \sh@ft {10}\char #2 \hidewidth }\egroup}
+
+\newcommand\hook@above[1]{\leavevmode\setbox0\hbox{#1}\dimen@\ht0 \advance\dimen@.5ex
+ \rlap{\raise\dimen@\hbox{\kern2pt\char11}}#1}
+\newcommand\Ohorn{\mbox{\rlap{\raise1.3ex\hbox{\kern0.55em,}}O}}
+\newcommand\Uhorn{\mbox{\rlap{\raise1.7ex\hbox{\kern0.55em,}}U}}
+\newcommand\ohorn{\mbox{\rlap{\raise1.ex\hbox{\kern0.35em,}}o}}
+\newcommand\uhorn{\mbox{\rlap{\raise1.2ex\hbox{\kern0.33em,}}u}}
+
+% Latin1 
+
+
+\UnicodeCharacter{x5C}{\relax\ifmmode\setminus\else\textbackslash\fi}
+\UnicodeCharacter{x5E}{\ensurenomath\textasciicircum}
+\UnicodeCharacter{x5F}{\ensurenomath\textunderscore}
+\UnicodeCharacter{xB4}{\jg@acute} \def\jg@acute{\ensurenomath\textasciiacute}
+\UnicodeCharacter{xF0}{\ensuremath\eth}
+
+%\UnicodeCharacter{x127}{{\lela@font\char'070 }}
+\UnicodeCharacter{x127}{\hbar}
+\UnicodeCharacter{x135}{{\lela@font\^{\char'072 } }}
+\UnicodeCharacter{x14A}{{\lela@font\char'055  }}
+\UnicodeCharacter{x14B}{{\lela@font\char'075  }}
+
+%\mathchardef\eth"567 Why is this needed?
+\let\eth\relax
+\DeclareMathSymbol{\eth}{\mathord}{AMSb}{"67}
+
+% OK ?
+
+
+
+
+% Part 1a. Latin extended-B 1CD -> 1FF
+
+\UnicodeCharacter{x1CD}{\ifmmode \check{A}\else \v{A}\fi}
+\UnicodeCharacter{x1CE}{\ifmmode \check{a}\else \v{a}\fi}
+\UnicodeCharacter{x1CF}{\ifmmode \check{I}\else \v{I}\fi}
+\UnicodeCharacter{x1D0}{\ifmmode \check{\imath}\else \v{\i}\fi}
+\UnicodeCharacter{x1D1}{\ifmmode \check{O}\else \v{O}\fi}
+\UnicodeCharacter{x1D2}{\ifmmode \check{o}\else \v{o}\fi}
+\UnicodeCharacter{x1D3}{\ifmmode \check{U}\else \v{U}\fi}
+\UnicodeCharacter{x1D4}{\ifmmode \check{u}\else \v{u}\fi}
+\UnicodeCharacter{x1D5}{\ifmmode \mbox{\={\"{U}}}\else \={\"{U}}\fi}
+\UnicodeCharacter{x1D6}{\ifmmode \mbox{\={\"{u}}}\else \={\"u}\fi}
+\UnicodeCharacter{x1D7}{\ifmmode \mbox{\'{\"{U}}}\else \'{\"{U}}\fi}
+\UnicodeCharacter{x1D8}{\ifmmode \mbox{\'{\"{u}}}\else \'{\"u}\fi}
+\UnicodeCharacter{x1D9}{\ifmmode \mbox{\v{\"{U}}}\else \v{\"{U}}\fi}
+\UnicodeCharacter{x1DA}{\ifmmode \mbox{\v{\"{u}}}\else \v{\"u}\fi}
+\UnicodeCharacter{x1DB}{\ifmmode \mbox{\`{\"{U}}}\else \`{\"{U}}\fi}
+\UnicodeCharacter{x1DC}{\ifmmode \mbox{\`{\"{u}}}\else \`{\"u}\fi}
+\UnicodeCharacter{x1DE}{\ifmmode \mbox{\={\"{A}}}\else \={\"A}\fi}
+\UnicodeCharacter{x1DF}{\ifmmode \mbox{\={\"{a}}}\else \={\"a}\fi}
+\UnicodeCharacter{x1E0}{\ensuremath{\bar{\dot{\mbox{A}}}}}
+\UnicodeCharacter{x1E1}{\ensuremath{\bar{\dot{\mbox{a}}}}}
+\UnicodeCharacter{x1E2}{\ifmmode \mbox{\=\AE}\else \={\AE}\fi}
+\UnicodeCharacter{x1E3}{\ifmmode \mbox{\=\ae}\else \={\ae}\fi}
+\UnicodeCharacter{x1E6}{\ifmmode \check{G}\else \v{G}\fi}
+\UnicodeCharacter{x1E7}{\ifmmode \check{g}\else \v{g}\fi}
+\UnicodeCharacter{x1E8}{\ifmmode \check{K}\else \v{K}\fi}
+\UnicodeCharacter{x1E9}{\ifmmode \check{k}\else \v{k}\fi}
+\UnicodeCharacter{x1EA}{\ifmmode \k{O}\else \k{O}\fi}
+\UnicodeCharacter{x1EB}{\ifmmode \k{o}\else \k{o}\fi}
+\UnicodeCharacter{x1EC}{\ifmmode \bar{\k{O}}\else $\bar{\mbox{\k{O}}}$\fi}
+\UnicodeCharacter{x1ED}{\ifmmode \bar{\k{o}}\else $\bar{\mbox{\k{o}}}$\fi}
+\UnicodeCharacter{x1F0}{\ifmmode \check{j}\else \v{j}\fi}
+\UnicodeCharacter{x1F4}{\ifmmode \acute{G}\else \'{G}\fi}
+\UnicodeCharacter{x1F8}{\`{N}}
+\UnicodeCharacter{x1F9}{\`{n}}
+\UnicodeCharacter{x1FA}{\'{\AA}}
+\UnicodeCharacter{x1FB}{\'{\aa}}
+\UnicodeCharacter{x1FC}{\'{\AE}}
+\UnicodeCharacter{x1FD}{\'{\ae}}
+\UnicodeCharacter{x1FE}{\'{\O}}
+\UnicodeCharacter{x1FF}{\'{\o}}
+
+% Part 1b. Latin extended-B 200 -> 24F
+
+\UnicodeCharacter{x200}{{\cyr@font\C A}}
+\UnicodeCharacter{x201}{{\cyr@font\C a}}
+\UnicodeCharacter{x202}{{\cyr@font\f A}}
+\UnicodeCharacter{x203}{{\cyr@font\f a}}
+\UnicodeCharacter{x204}{{\cyr@font\C E}}
+\UnicodeCharacter{x205}{{\cyr@font\C e}}
+\UnicodeCharacter{x206}{{\cyr@font\f E}}
+\UnicodeCharacter{x207}{{\cyr@font\f e}}
+\UnicodeCharacter{x208}{{\cyr@font\C I}}
+\UnicodeCharacter{x209}{{\cyr@font\C \i}}
+\UnicodeCharacter{x20A}{{\cyr@font\f I}}
+\UnicodeCharacter{x20B}{{\cyr@font\f \i}}
+\UnicodeCharacter{x20C}{{\cyr@font\C O}}
+\UnicodeCharacter{x20D}{{\cyr@font\C o}}
+\UnicodeCharacter{x20E}{{\cyr@font\f O}}
+\UnicodeCharacter{x20F}{{\cyr@font\f o}}
+\UnicodeCharacter{x210}{{\cyr@font\C R}}
+\UnicodeCharacter{x211}{{\cyr@font\C r}}
+\UnicodeCharacter{x212}{{\cyr@font\f R}}
+\UnicodeCharacter{x213}{{\cyr@font\f r}}
+\UnicodeCharacter{x214}{{\cyr@font\C U}}
+\UnicodeCharacter{x215}{{\cyr@font\C u}}
+\UnicodeCharacter{x216}{{\cyr@font\f U}}
+\UnicodeCharacter{x217}{{\cyr@font\f u}}
+\UnicodeCharacter{x21E}{\ifmmode \check{K}\else \v{H}\fi}
+\UnicodeCharacter{x21F}{\ifmmode \check{k}\else \v{h}\fi}
+\UnicodeCharacter{x226}{\.A}
+\UnicodeCharacter{x227}{\.a}
+\UnicodeCharacter{x228}{\c E}
+\UnicodeCharacter{x229}{\c e}
+\UnicodeCharacter{x22a}{\={\"O}}
+\UnicodeCharacter{x22b}{\={\"o}}
+\UnicodeCharacter{x22c}{\={\~O}}
+\UnicodeCharacter{x22d}{\={\~o}}
+\UnicodeCharacter{x22e}{\.O}
+\UnicodeCharacter{x22f}{\.o}
+\UnicodeCharacter{x230}{\ensuremath{\bar{\mbox{\.O}}}}
+\UnicodeCharacter{x231}{\ensuremath{\bar{\mbox{\.o}}}}
+\UnicodeCharacter{x232}{\=Y}
+\UnicodeCharacter{x233}{\=y}
+
+\UnicodeCharacter{x3F6}{\backepsilon}
+
+
+% Part 1c. Cyrillic 400 -> 4FF
+% \cyr@char loads a font definition file, that defines the commands
+% used here, e.g. \CYRE, \CYRI, etc.
+\UnicodeCharacter{x400}{\cyr@char{\`\CYRE}}
+\UnicodeCharacter{x40D}{\cyr@char{\`\CYRI}}
+\UnicodeCharacter{x450}{\cyr@char{\`\cyre}}
+\UnicodeCharacter{x45D}{\cyr@char{\`\cyri}}
+\UnicodeCharacter{x4D0}{\cyr@char{\U\CYRA}}
+\UnicodeCharacter{x4D1}{\cyr@char{\U\cyra}}
+\UnicodeCharacter{x4D2}{\cyr@char{\"\CYRA}}
+\UnicodeCharacter{x4D3}{\cyr@char{\"\cyra}}
+\UnicodeCharacter{x4D6}{\cyr@char{\U\CYRE}}
+\UnicodeCharacter{x4D7}{\cyr@char{\U\cyre}}
+\UnicodeCharacter{x4DA}{\cyr@char{\"\CYRSCHWA}}
+\UnicodeCharacter{x4DB}{\cyr@char{\"\cyrschwa}}
+\UnicodeCharacter{x4DC}{\cyr@char{\"\CYRZH}}
+\UnicodeCharacter{x4DD}{\cyr@char{\"\cyrzh}}
+\UnicodeCharacter{x4DE}{\cyr@char{\"\CYRZ}}
+\UnicodeCharacter{x4DF}{\cyr@char{\"\cyrz}}
+\UnicodeCharacter{x4E2}{\cyr@char{\=\CYRI}}
+\UnicodeCharacter{x4E3}{\cyr@char{\=\cyri}}
+\UnicodeCharacter{x4E4}{\cyr@char{\"\CYRI}}
+\UnicodeCharacter{x4E5}{\cyr@char{\"\cyri}}
+\UnicodeCharacter{x4E6}{\cyr@char{\"\CYRO}}
+\UnicodeCharacter{x4E7}{\cyr@char{\"\cyro}}
+\UnicodeCharacter{x4EA}{\cyr@char{\"\CYROTLD}}
+\UnicodeCharacter{x4EB}{\cyr@char{\"\cyrotld}}
+\UnicodeCharacter{x4EC}{\cyr@char{\"\CYREREV}}
+\UnicodeCharacter{x4ED}{\cyr@char{\"\cyrerev}}
+\UnicodeCharacter{x4EE}{\cyr@char{\=\CYRU}}
+\UnicodeCharacter{x4EF}{\cyr@char{\=\cyru}}
+\UnicodeCharacter{x4F0}{\cyr@char{\"\CYRU}}
+\UnicodeCharacter{x4F1}{\cyr@char{\"\cyru}}
+\UnicodeCharacter{x4F2}{\cyr@char{\H\CYRU}}
+\UnicodeCharacter{x4F3}{\cyr@char{\H\cyru}}
+\UnicodeCharacter{x4F4}{\cyr@char{\"\CYRCH}}
+\UnicodeCharacter{x4F5}{\cyr@char{\"\cyrch}}
+\UnicodeCharacter{x4F8}{\cyr@char{\"\CYRERY}}
+\UnicodeCharacter{x4F9}{\cyr@char{\"\cyrery}}
+
+% Part 2a Latin extended Additional 1E00 -> 1EFF
+
+\UnicodeCharacter{x1E00}{\circle@below{A}}
+\UnicodeCharacter{x1E01}{\circle@below{a}}
+\UnicodeCharacter{x1E02}{\.B}
+\UnicodeCharacter{x1E03}{\.b}
+\UnicodeCharacter{x1E04}{\d B}
+\UnicodeCharacter{x1E05}{\d b}
+\UnicodeCharacter{x1E06}{\b B}
+\UnicodeCharacter{x1E07}{\b b}
+\UnicodeCharacter{x1E08}{\'{\c C}}
+\UnicodeCharacter{x1E09}{\'{\c c}}
+\UnicodeCharacter{x1E0A}{\.D}
+\UnicodeCharacter{x1E0B}{\.d}
+\UnicodeCharacter{x1E0C}{\d D}
+\UnicodeCharacter{x1E0D}{\d d}
+\UnicodeCharacter{x1E0E}{\b D}
+\UnicodeCharacter{x1E0F}{\b d}
+\UnicodeCharacter{x1E10}{\c D}
+\UnicodeCharacter{x1E11}{\c d}
+\UnicodeCharacter{x1E12}{\cir@below D}
+\UnicodeCharacter{x1E13}{\cir@below d}
+\UnicodeCharacter{x1E14}{\ensuremath{\grave{\mbox{\=E}}}}
+\UnicodeCharacter{x1E15}{\ensuremath{\grave{\mbox{\=e}}}}
+\UnicodeCharacter{x1E16}{\ensuremath{\acute{\mbox{\=E}}}}
+\UnicodeCharacter{x1E17}{\ensuremath{\acute{\mbox{\=e}}}}
+\UnicodeCharacter{x1E18}{\cir@below E}
+\UnicodeCharacter{x1E19}{\cir@below e}
+\UnicodeCharacter{x1E1A}{\tilde@below E}
+\UnicodeCharacter{x1E1B}{\tilde@below e}
+\UnicodeCharacter{x1E1C}{\c{\u E}}
+\UnicodeCharacter{x1E1D}{\c{\u e}}
+\UnicodeCharacter{x1E1E}{\.F}
+\UnicodeCharacter{x1E1F}{\.f}
+\UnicodeCharacter{x1E20}{\=G}
+\UnicodeCharacter{x1E21}{\=g}
+\UnicodeCharacter{x1E22}{\.H}
+\UnicodeCharacter{x1E23}{\.h}
+\UnicodeCharacter{x1E24}{\d H}
+\UnicodeCharacter{x1E25}{\d h}
+\UnicodeCharacter{x1E26}{\" H}
+\UnicodeCharacter{x1E27}{\" h}
+\UnicodeCharacter{x1E28}{\c H}
+\UnicodeCharacter{x1E29}{\c h}
+\UnicodeCharacter{x1E2A}{\something@below H{8}}
+\UnicodeCharacter{x1E2B}{\something@below h{8}}
+\UnicodeCharacter{x1E2C}{\tilde@below I}
+\UnicodeCharacter{x1E2D}{\tilde@below i}
+\UnicodeCharacter{x1E2E}{\'{\"I}}
+\UnicodeCharacter{x1E2F}{\'{\"\i}}
+\UnicodeCharacter{x1E30}{\'K}
+\UnicodeCharacter{x1E31}{\'k}
+\UnicodeCharacter{x1E32}{\d K}
+\UnicodeCharacter{x1E33}{\d k}
+\UnicodeCharacter{x1E34}{\b K}
+\UnicodeCharacter{x1E35}{\b k}
+\UnicodeCharacter{x1E36}{\d L}
+\UnicodeCharacter{x1E37}{\d l}
+\UnicodeCharacter{x1E38}{\d {\=L}}
+\UnicodeCharacter{x1E39}{\d {\=l}}
+\UnicodeCharacter{x1E3A}{\b L}
+\UnicodeCharacter{x1E3B}{\b l}
+\UnicodeCharacter{x1E3C}{\cir@below L}
+\UnicodeCharacter{x1E3D}{\cir@below l}
+\UnicodeCharacter{x1E3E}{\'M}
+\UnicodeCharacter{x1E3F}{\'m}
+\UnicodeCharacter{x1E40}{\.M}
+\UnicodeCharacter{x1E41}{\.m}
+\UnicodeCharacter{x1E42}{\d M}
+\UnicodeCharacter{x1E43}{\d m}
+\UnicodeCharacter{x1E44}{\.N}
+\UnicodeCharacter{x1E45}{\.n}
+\UnicodeCharacter{x1E46}{\d N}
+\UnicodeCharacter{x1E47}{\d n}
+\UnicodeCharacter{x1E48}{\b N}
+\UnicodeCharacter{x1E49}{\b n}
+\UnicodeCharacter{x1E4A}{\cir@below N}
+\UnicodeCharacter{x1E4B}{\cir@below n}
+\UnicodeCharacter{x1E4C}{\'{\~O}}
+\UnicodeCharacter{x1E4D}{\'{\~o}}
+\UnicodeCharacter{x1E4E}{\"{\~O}}
+\UnicodeCharacter{x1E4F}{\"{\~o}}
+\UnicodeCharacter{x1E50}{\ensuremath{\grave{\mbox{\=O}}}}
+\UnicodeCharacter{x1E51}{\ensuremath{\grave{\mbox{\=o}}}}
+\UnicodeCharacter{x1E52}{\ensuremath{\acute{\mbox{\=O}}}}
+\UnicodeCharacter{x1E53}{\ensuremath{\acute{\mbox{\=o}}}}
+\UnicodeCharacter{x1E54}{\'P}
+\UnicodeCharacter{x1E55}{\'p}
+\UnicodeCharacter{x1E56}{\.P}
+\UnicodeCharacter{x1E57}{\.p}
+\UnicodeCharacter{x1E58}{\.R}
+\UnicodeCharacter{x1E59}{\.r}
+\UnicodeCharacter{x1E5A}{\d R}
+\UnicodeCharacter{x1E5B}{\d r}
+\UnicodeCharacter{x1E5C}{\d{\= R}}
+\UnicodeCharacter{x1E5D}{\d{\= r}}
+\UnicodeCharacter{x1E5E}{\b R}
+\UnicodeCharacter{x1E5F}{\b r}
+\UnicodeCharacter{x1E60}{\.S}
+\UnicodeCharacter{x1E61}{\.s}
+\UnicodeCharacter{x1E62}{\d S}
+\UnicodeCharacter{x1E63}{\d s}
+\UnicodeCharacter{x1E64}{\.{\'S}}
+\UnicodeCharacter{x1E65}{\.{\'s}}
+\UnicodeCharacter{x1E66}{\.{\v S}}
+\UnicodeCharacter{x1E67}{\.{\v s}}
+\UnicodeCharacter{x1E68}{\d{\. S}}
+\UnicodeCharacter{x1E69}{\d{\. s}}
+\UnicodeCharacter{x1E6A}{\.T}
+\UnicodeCharacter{x1E6B}{\.t}
+\UnicodeCharacter{x1E6C}{\d T}
+\UnicodeCharacter{x1E6D}{\d t}
+\UnicodeCharacter{x1E6E}{\b T}
+\UnicodeCharacter{x1E6F}{\b t}
+\UnicodeCharacter{x1E70}{\cir@below T}
+\UnicodeCharacter{x1E71}{\cir@below t}
+\UnicodeCharacter{x1E72}{\something@below U{4}}
+\UnicodeCharacter{x1E73}{\something@below u{4}}
+\UnicodeCharacter{x1E74}{\tilde@below U}
+\UnicodeCharacter{x1E75}{\tilde@below u}
+\UnicodeCharacter{x1E76}{\cir@below U}
+\UnicodeCharacter{x1E77}{\cir@below u}
+\UnicodeCharacter{x1E78}{\ensuremath{\acute{\mbox{\~U}}}}
+\UnicodeCharacter{x1E79}{\ensuremath{\acute{\mbox{\~u}}}}
+\UnicodeCharacter{x1E7A}{\ensuremath{\ddot{\mbox{\=U}}}}
+\UnicodeCharacter{x1E7B}{\ensuremath{\ddot{\mbox{\=u}}}}
+\UnicodeCharacter{x1E7C}{\~ V}
+\UnicodeCharacter{x1E7D}{\~ v}
+\UnicodeCharacter{x1E7E}{\d V}
+\UnicodeCharacter{x1E7F}{\d v}
+\UnicodeCharacter{x1E80}{\`W}
+\UnicodeCharacter{x1E81}{\`w}
+\UnicodeCharacter{x1E82}{\'W}
+\UnicodeCharacter{x1E83}{\'w}
+\UnicodeCharacter{x1E84}{\"W}
+\UnicodeCharacter{x1E85}{\"w}
+\UnicodeCharacter{x1E86}{\.W}
+\UnicodeCharacter{x1E87}{\.w}
+\UnicodeCharacter{x1E88}{\d W}
+\UnicodeCharacter{x1E89}{\d w}
+\UnicodeCharacter{x1E8A}{\.X}
+\UnicodeCharacter{x1E8B}{\.x}
+\UnicodeCharacter{x1E8C}{\"X}
+\UnicodeCharacter{x1E8D}{\"x}
+\UnicodeCharacter{x1E8E}{\.Y}
+\UnicodeCharacter{x1E8F}{\.y}
+\UnicodeCharacter{x1E90}{\^Z}
+\UnicodeCharacter{x1E91}{\^z}
+\UnicodeCharacter{x1E92}{\d Z}
+\UnicodeCharacter{x1E93}{\d z}
+\UnicodeCharacter{x1E94}{\b Z}
+\UnicodeCharacter{x1E95}{\b z}
+\UnicodeCharacter{x1E96}{\b h}
+\UnicodeCharacter{x1E97}{\" t}
+\UnicodeCharacter{x1E98}{\r w}
+\UnicodeCharacter{x1E99}{\r y}
+\UnicodeCharacter{x1E9B}{\. {\lela@font\char'173 }}
+\UnicodeCharacter{x1EA0}{\d A}
+\UnicodeCharacter{x1EA1}{\d a}
+\UnicodeCharacter{x1EA2}{\hook@above A}
+\UnicodeCharacter{x1EA3}{\hook@above a}
+\UnicodeCharacter{x1EA4}{\'{\^A}}
+\UnicodeCharacter{x1EA5}{\'{\^a}}
+\UnicodeCharacter{x1EA6}{\`{\^A}}
+\UnicodeCharacter{x1EA7}{\`{\^a}}
+\UnicodeCharacter{x1EA8}{\hook@above{\^A}}
+\UnicodeCharacter{x1EA9}{\hook@above{\^a}}
+\UnicodeCharacter{x1EAA}{\~{\^A}}
+\UnicodeCharacter{x1EAB}{\~{\^a}}
+\UnicodeCharacter{x1EAC}{\d{\^A}}
+\UnicodeCharacter{x1EAD}{\d{\^a}}
+\UnicodeCharacter{x1EAE}{\'{\u A}}
+\UnicodeCharacter{x1EAF}{\'{\u a}}
+\UnicodeCharacter{x1EB0}{\`{\u A}}
+\UnicodeCharacter{x1EB1}{\`{\u a}}
+\UnicodeCharacter{x1EB2}{\hook@above{\u A}}
+\UnicodeCharacter{x1EB3}{\hook@above{\u a}}
+\UnicodeCharacter{x1EB4}{\~{\u A}}
+\UnicodeCharacter{x1EB5}{\~{\u a}}
+\UnicodeCharacter{x1EB6}{\d{\u A}}
+\UnicodeCharacter{x1EB7}{\d{\u a}}
+\UnicodeCharacter{x1EB8}{\d E}
+\UnicodeCharacter{x1EB9}{\d e}
+\UnicodeCharacter{x1EBA}{\hook@above E}
+\UnicodeCharacter{x1EBB}{\hook@above e}
+\UnicodeCharacter{x1EBC}{\~E}
+\UnicodeCharacter{x1EBD}{\~e}
+\UnicodeCharacter{x1EBE}{\'{\^E}}
+\UnicodeCharacter{x1EBF}{\'{\^e}}
+\UnicodeCharacter{x1EC0}{\`{\^E}}
+\UnicodeCharacter{x1EC1}{\`{\^e}}
+\UnicodeCharacter{x1EC2}{\hook@above{\^E}}
+\UnicodeCharacter{x1EC3}{\hook@above{\^e}}
+\UnicodeCharacter{x1EC4}{\~{\^E}}
+\UnicodeCharacter{x1EC5}{\~{\^e}}
+\UnicodeCharacter{x1EC6}{\d {\^E}}
+\UnicodeCharacter{x1EC7}{\d {\^e}}
+\UnicodeCharacter{x1EC8}{\hook@above I}
+\UnicodeCharacter{x1EC9}{\hook@above \i}
+\UnicodeCharacter{x1ECA}{\d I}
+\UnicodeCharacter{x1ECB}{\d i}
+\UnicodeCharacter{x1ECC}{\d O}
+\UnicodeCharacter{x1ECD}{\d o}
+\UnicodeCharacter{x1ECE}{\hook@above O}
+\UnicodeCharacter{x1ECF}{\hook@above o}
+\UnicodeCharacter{x1ED0}{\'{\^O}}
+\UnicodeCharacter{x1ED1}{\'{\^o}}
+\UnicodeCharacter{x1ED2}{\`{\^O}}
+\UnicodeCharacter{x1ED3}{\`{\^o}}
+\UnicodeCharacter{x1ED4}{\hook@above{\^O}}
+\UnicodeCharacter{x1ED5}{\hook@above{\^o}}
+\UnicodeCharacter{x1ED6}{\~{\^O}}
+\UnicodeCharacter{x1ED7}{\~{\^o}}
+\UnicodeCharacter{x1ED8}{\d{\^O}}
+\UnicodeCharacter{x1ED9}{\d{\^o}}
+\UnicodeCharacter{x1EDA}{\ensuremath{\acute{\Ohorn}}}
+\UnicodeCharacter{x1EDB}{\ensuremath{\acute{\ohorn}}}
+\UnicodeCharacter{x1EDC}{\ensuremath{\grave{\Ohorn}}}
+\UnicodeCharacter{x1EDD}{\ensuremath{\grave{\ohorn}}}
+\UnicodeCharacter{x1EDE}{\hook@above{\Ohorn}}
+\UnicodeCharacter{x1EDF}{\hook@above{\ohorn}}
+\UnicodeCharacter{x1EE0}{\ensuremath{\tilde{\Ohorn}}}
+\UnicodeCharacter{x1EE1}{\ensuremath{\tilde{\ohorn}}}
+\UnicodeCharacter{x1EE2}{\d{\Ohorn}}
+\UnicodeCharacter{x1EE3}{\d{\ohorn}}
+\UnicodeCharacter{x1EE4}{\d U}
+\UnicodeCharacter{x1EE5}{\d u}
+\UnicodeCharacter{x1EE6}{\hook@above U}
+\UnicodeCharacter{x1EE7}{\hook@above u}
+\UnicodeCharacter{x1EE8}{\ensuremath{\acute{\Uhorn}}}
+\UnicodeCharacter{x1EE9}{\ensuremath{\acute{\uhorn}}}
+\UnicodeCharacter{x1EEA}{\ensuremath{\grave{\Uhorn}}}
+\UnicodeCharacter{x1EEB}{\ensuremath{\grave{\uhorn}}}
+\UnicodeCharacter{x1EEC}{\hook@above{\Uhorn}}
+\UnicodeCharacter{x1EED}{\hook@above{\uhorn}}
+\UnicodeCharacter{x1EEE}{\ensuremath{\tilde{\Uhorn}}}
+\UnicodeCharacter{x1EEF}{\ensuremath{\tilde{\uhorn}}}
+\UnicodeCharacter{x1EF0}{\d{\Uhorn}}
+\UnicodeCharacter{x1EF1}{\d{\uhorn}}
+\UnicodeCharacter{x1EF2}{\`Y}
+\UnicodeCharacter{x1EF3}{\`y}
+\UnicodeCharacter{x1EF4}{\d Y}
+\UnicodeCharacter{x1EF5}{\d y}
+\UnicodeCharacter{x1EF6}{\hook@above Y}
+\UnicodeCharacter{x1EF7}{\hook@above y}
+\UnicodeCharacter{x1EF8}{\~ Y}
+\UnicodeCharacter{x1EF9}{\~ y}
+
+% Other characters
+
+% General punctuation
+  \UnicodeCharacter{x2013} {\ifmmode \hbox{\textendash} \else \textendash\fi}
+%  \UnicodeCharacter{x2020} {\ifmmode \dagger \else \textdagger\fi}
+%  \UnicodeCharacter{x2021} {\ifmmode \ddagger \else \textdaggerdbl\fi}
+%  \UnicodeCharacter{x2030} {\textperthousand}
+\UnicodeCharacter{x2031} {{\pxr@font\textpertenthousand}} % FONT
+\UnicodeCharacter{x2032} {\ifmmode{^{\prime}}\else \textasciiacute\fi}
+\UnicodeCharacter{x2033} {\ifmmode{^{\prime\prime}}\else\textacutedbl\fi}
+\UnicodeCharacter{x2034} {\ifmmode{^{\prime\prime\prime}}\else'''\fi}
+\UnicodeCharacter{x2057} {\ifmmode{^{\prime\prime\prime\prime}}\else\textacutedbl\textacutedbl\fi}
+\UnicodeCharacter{x2035} {\ifmmode{^\backprime}\else\textasciigrave\fi}
+\UnicodeCharacter{x2036} {\textgravedbl}
+\UnicodeCharacter{x203B} {{\pxr@font\textreferencemark}}
+\UnicodeCharacter{x203D} {{\pxr@font \textinterrobang}}
+\UnicodeCharacter{x2045} {{\pxr@font\textlquill}}
+\UnicodeCharacter{x2046} {{\pxr@font\textrquill}}
+\UnicodeCharacter{x2062} {}
+
+% Currency 
+\UnicodeCharacter{x20A4} {{\pxr@font\textlira}}
+\UnicodeCharacter{x20A6} {{\pxr@font\textnaira}}
+\UnicodeCharacter{x20A9} {{\pxr@font\textwon}}
+\UnicodeCharacter{x20AB} {{\pxr@font\textdong}}
+
+% Letter-like symbols, 2100-214F
+\UnicodeCharacter{x2100} {\ensuremath{a\!/\!c}}
+\UnicodeCharacter{x2101} {\ensuremath{a\!/\!s}}
+\UnicodeCharacter{x2103} {\ensurenomath{\textcelsius}}
+\UnicodeCharacter{x2104} {\UnavailableSymbol{2104}}
+\UnicodeCharacter{x2105} {\ensuremath{c\!/\!o}}
+\UnicodeCharacter{x2106} {\ensuremath{c\!/\!u}}
+\UnicodeCharacter{x2107} {\mathcal{E}}
+\UnicodeCharacter{x2108} {\UnavailableSymbol{2108}}
+\UnicodeCharacter{x2109} {\ensurenomath{\textdegree F}}
+\UnicodeCharacter{x210A} {\ensuremath{g}}
+\UnicodeCharacter{x210E} {\mathit{h}}
+\UnicodeCharacter{x2113} {\ensuremath{\ell}}
+\UnicodeCharacter{x2114} {\UnavailableSymbol{2114}}
+\UnicodeCharacter{x2116} {\ensurenomath{No}}
+\UnicodeCharacter{x2117} {\ensurenomath{\pxr@font\textcircledP}}
+\UnicodeCharacter{x211E} {\ensurenomath{\pxr@font\textrecipe}}
+\UnicodeCharacter{x211F} {\UnavailableSymbol{211f}}
+\UnicodeCharacter{x2120} {\ensurenomath{\pxr@font \textservicemark}}
+\UnicodeCharacter{x2121} {\ensurenomath{{\footnotesize TEL}}}
+\UnicodeCharacter{x2122} {\ensurenomath{\texttrademark}}
+\UnicodeCharacter{x2123} {\UnavailableSymbol{2123}}
+\UnicodeCharacter{x2125} {\UnavailableSymbol{2125}}
+\UnicodeCharacter{x2129} {\ensurenomath{\pc@font{\char"00 }}}
+\UnicodeCharacter{x212A} {\ensurenomath{K}}
+\UnicodeCharacter{x212B} {\ensurenomath{\AA}}
+\UnicodeCharacter{x212E} {\ensurenomath{\pxr@font \textestimated}}
+\UnicodeCharacter{x212F} {\ensuremath{e}}
+\UnicodeCharacter{x2132} {\Finv}
+\UnicodeCharacter{x2134} {o}
+\UnicodeCharacter{x2139} {\ensuremath{\mathbf{i}}}
+\UnicodeCharacter{x213A} {\UnavailableSymbol{213a}}
+\UnicodeCharacter{x213B} {\ensurenomath{\fax}}
+\UnicodeCharacter{x213D} {\ensurenomath{\bbold@font\char"0D }}
+\UnicodeCharacter{x213E} {\UnavailableSymbol{213E}}
+\UnicodeCharacter{x213F} {\UnavailableSymbol{213F}}
+\UnicodeCharacter{x2140} {\UnavailableSymbol{2140}}
+\UnicodeCharacter{x2141} {\Game}
+\UnicodeCharacter{x2142} {\UnavailableSymbol{2142}}
+\UnicodeCharacter{x2143} {\UnavailableSymbol{2143}}
+\UnicodeCharacter{x2144} {\UnavailableSymbol{2144}}
+\UnicodeCharacter{x2145} {\mathbb{D}}
+\UnicodeCharacter{x2146} {\ensurenomath{\bbold@font d}}
+\UnicodeCharacter{x2147} {\ensurenomath{\bbold@font e}}
+\UnicodeCharacter{x2148} {\ensurenomath{\bbold@font i}}
+\UnicodeCharacter{x2149} {\ensurenomath{\bbold@font j}}
+\UnicodeCharacter{x214A} {\UnavailableSymbol{2144}}
+\UnicodeCharacter{x214B} {\bindnasrepma}
+
+%% Arrows 2190 -- 21FF
+\UnicodeCharacter{x2192}{\ensuremath{\rightarrow}}
+\UnicodeCharacter{x219C}{\arrowwaveleft}
+\UnicodeCharacter{x219F}{\UnavailableSymbol{219f}}
+\UnicodeCharacter{x21A1}{\UnavailableSymbol{21a1}}
+\UnicodeCharacter{x21A4}{\mapsfrom}
+\UnicodeCharacter{x21A5}{\UnavailableSymbol{21a5}}
+\UnicodeCharacter{x21A6}{\mapsto}
+\UnicodeCharacter{x21A7}{\UnavailableSymbol{21a7}}
+\UnicodeCharacter{x21AF}{\lightning}
+\UnicodeCharacter{x21B2}{\dlsh}
+\UnicodeCharacter{x21B3}{\drsh}
+\UnicodeCharacter{x21C5}{\updownarrows}
+\UnicodeCharacter{x21C6}{\leftrightarrows}
+\UnicodeCharacter{x21CB}{\leftrightharpoons}
+\UnicodeCharacter{x21D0}{\Leftarrow}
+\UnicodeCharacter{x21D2}{\Rightarrow}
+\UnicodeCharacter{x21D4}{\Leftrightarrow}
+\UnicodeCharacter{x21D6}{\Nwarrow}
+\UnicodeCharacter{x21D7}{\Nearrow}
+\UnicodeCharacter{x21D8}{\Searrow}
+\UnicodeCharacter{x21D9}{\Swarrow}
+\UnicodeCharacter{x21DC}{\leftsquigarrow}
+\UnicodeCharacter{x21E0}{\dashleftarrow}
+\UnicodeCharacter{x21E2}{\dashrightarrow}
+\UnicodeCharacter{x21E4}{\UnavailableSymbol{21E4}}
+\UnicodeCharacter{x21E5}{\UnavailableSymbol{21E5}}
+\UnicodeCharacter{x21FD}{\leftarrowtriangle}
+\UnicodeCharacter{x21FE}{\rightarrowtriangle}
+\UnicodeCharacter{x21FF}{\leftrightarrowtriangle}
+
+
+%% Mathematical operators 2200 -- 22FF
+\UnicodeCharacter{x2206}{\Delta}
+\UnicodeCharacter{x220A}{{\scriptstyle \in}}
+\UnicodeCharacter{x220D}{{\scriptstyle\ni}}
+\UnicodeCharacter{x220E}{\blacksquare}
+\UnicodeCharacter{x2215}{/}
+\UnicodeCharacter{x221B}{\ensuremath{\sqrt[3]{}}}
+\UnicodeCharacter{x221C}{\ensuremath{\sqrt[4]{}}}
+\UnicodeCharacter{x2222}{\sphericalangle}
+\UnicodeCharacter{x2225}{\|} % Was \parallel
+\UnicodeCharacter{x2231}{\UnavailableSymbol{2231}}
+\UnicodeCharacter{x2232}{\varointclockwise}
+\UnicodeCharacter{x2233}{\ointctrclockwise}
+\UnicodeCharacter{x2236}{:}
+\UnicodeCharacter{x2237}{::}
+\UnicodeCharacter{x2238}{\frac{.}{\kern.7em}}
+\UnicodeCharacter{x2239}{\eqcolon}
+\UnicodeCharacter{x223B}{{\sim\!\!\!:}}
+\UnicodeCharacter{x223e}{\UnavailableSymbol{223E}}
+\UnicodeCharacter{x223f}{\UnavailableSymbol{223F}}
+\UnicodeCharacter{x2242}{\eqsim}
+\UnicodeCharacter{x2246}{\tilde{\not=}}
+\UnicodeCharacter{x224B}{\UnavailableSymbol{224B}}
+\UnicodeCharacter{x224C}{\UnavailableSymbol{224C}}
+\UnicodeCharacter{x2258}{\stackrel{\frown}{=}}
+\UnicodeCharacter{x2259}{\stackrel{\wedge}{=}}
+\UnicodeCharacter{x225a}{\stackrel{\vee}{=}}
+\UnicodeCharacter{x225b}{\stackrel{\star}{=}}
+\UnicodeCharacter{x225d}{\stackrel{\text{\tiny def}}{=}}
+\UnicodeCharacter{x225e}{\stackrel{m}{=}}
+\UnicodeCharacter{x225f}{\stackrel{?}{=}}
+\UnicodeCharacter{x2263}{{}^=_=}
+\UnicodeCharacter{x226d}{\ensuremath{\not\asymp}}
+\UnicodeCharacter{x2272}{\lesssim}
+\UnicodeCharacter{x2273}{\gtrsim}
+\UnicodeCharacter{x2274}{\not\lesssim}
+\UnicodeCharacter{x2275}{\not\gtrsim}
+\UnicodeCharacter{x2278}{\not\lessgtr}
+\UnicodeCharacter{x2279}{\not\gtrless}
+\UnicodeCharacter{x228C}{\UnavailableSymbol{228C}}
+\UnicodeCharacter{x228D}{\UnavailableSymbol{228D}}
+\UnicodeCharacter{x229C}{\UnavailableSymbol{229C}}
+\UnicodeCharacter{x22A6}{\mid\kern-4pt{\scriptscriptstyle \relbar}}
+\UnicodeCharacter{x22A7}{\ensuremath{{|\kern-2pt\scriptstyle=}}}
+\UnicodeCharacter{x22A8}{\ensuremath{\models}}
+\UnicodeCharacter{x22B0}{\ensuremath{\strictif}}
+\UnicodeCharacter{x22B1}{\ensuremath{\strictfi}}
+\UnicodeCharacter{x22B6}{\ensuremath{\multimapdotbothA}}
+\UnicodeCharacter{x22B7}{\ensuremath{\multimapdotbothB}}
+\UnicodeCharacter{x22B9}{\UnavailableSymbol{22B9}}
+\UnicodeCharacter{x22BD}{\ensuremath{\overline{\vee}}}
+\UnicodeCharacter{x22BE}{\UnavailableSymbol{22BE}}
+\UnicodeCharacter{x22BF}{\UnavailableSymbol{22BF}}
+\UnicodeCharacter{x22C0}{\bigwedge}
+\UnicodeCharacter{x22C1}{\bigvee}
+\UnicodeCharacter{x22D5}{\ensuremath{\mathabxhash}}
+\UnicodeCharacter{x22D8}{\ensuremath{\lll}}
+\UnicodeCharacter{x22D9}{\ensuremath{\ggg}}
+\UnicodeCharacter{x22E0}{\ensuremath{\not\preccurlyeq}}
+\UnicodeCharacter{x22E1}{\ensuremath{\not\succcurlyeq}}
+\UnicodeCharacter{x22E4}{\ensuremath{\varsqsubsetneq}}
+\UnicodeCharacter{x22E5}{\ensuremath{\varsqsupsetneq}}
+\UnicodeCharacter{x22E8}{\ensuremath{\precnsim}}
+\UnicodeCharacter{x22EC}{\ntrianglelefteqslant}
+\UnicodeCharacter{x22ED}{\ntrianglerighteqslant}
+\UnicodeCharacter{x22F0}{\ensuremath{\adots}}
+
+%% Miscellaneaius Technical 2300 -- 23FF
+\UnicodeCharacter{x2300}{\ensuremath{\diameter}}
+\UnicodeCharacter{x2303}{\ensurenomath{\upp}}
+\UnicodeCharacter{x2304}{\ensurenomath{\downp}}
+\UnicodeCharacter{x2306}{\UnavailableSymbol{2306}}
+\UnicodeCharacter{x230B}{\rfloor}
+\UnicodeCharacter{x2310}{\ensuremath{\invneg}}
+\UnicodeCharacter{x2311}{\ensuremath{\wasylozenge}}
+\UnicodeCharacter{x2314}{\ensurenomath{\manfntsymbol{35}}}
+\UnicodeCharacter{x2315}{\ensurenomath{\recorder}}
+\UnicodeCharacter{x2328}{\ensurenomath{\Keyboard}}
+\UnicodeCharacter{x2339}{\ensurenomath{\APLinv}}
+\UnicodeCharacter{x233D}{\baro}
+\UnicodeCharacter{x233F}{\ensurenomath{\notslash}}
+\UnicodeCharacter{x2340}{\ensurenomath{\notbackslash}}
+\UnicodeCharacter{x2347}{\ensurenomath{\APLleftarrowbox}}
+\UnicodeCharacter{x2348}{\ensurenomath{\APLrightarrowbox}}
+\UnicodeCharacter{x2350}{\ensurenomath{\APLuparrowbox}}
+\UnicodeCharacter{x2357}{\ensurenomath{\APLdownarrowbox}}
+\UnicodeCharacter{x235E}{\ensurenomath{\APLinput}}
+\UnicodeCharacter{x23B0}{\lmoustache}
+\UnicodeCharacter{x23B1}{\rmoustache}
+
+
+%% Miscellaneaous symbols 2600 - 26FF
+\UnicodeCharacter{x2601}{\ensurenomath{\FilledCloud}}
+\UnicodeCharacter{x2605}{\ensurenomath{\ding{72}}}
+\UnicodeCharacter{x2606}{\ensurenomath{\ding{73}}}
+\UnicodeCharacter{x2607}{\lightning}
+\UnicodeCharacter{x260B}{\bindnasrepma}
+\UnicodeCharacter{x260C}{\ensurenomath{\conjunction}}
+\UnicodeCharacter{x260D}{\ensurenomath{\opposition}}
+\UnicodeCharacter{x263D}{\ensurenomath{\rightmoon}}
+\UnicodeCharacter{x263E}{\ensurenomath{\leftmoon}}
+\UnicodeCharacter{x263f}{\ensurenomath{\Mercury}}
+\UnicodeCharacter{x2640}{\ensurenomath{\Venus}}
+\UnicodeCharacter{x2641}{\ensurenomath{\Earth}}
+\UnicodeCharacter{x2642}{\ensurenomath{\Mars}}
+\UnicodeCharacter{x2643}{\ensurenomath{\Jupiter}}
+\UnicodeCharacter{x2644}{\ensurenomath{\Saturn}}
+\UnicodeCharacter{x2645}{\ensurenomath{\Uranus}}
+\UnicodeCharacter{x2646}{\ensurenomath{\Neptune}}
+\UnicodeCharacter{x2647}{\ensurenomath{\Pluto}}
+\UnicodeCharacter{x2648}{\ensurenomath{\aries}}
+\UnicodeCharacter{x2649}{\ensurenomath{\taurus}}
+\UnicodeCharacter{x264a}{\ensurenomath{\gemini}}
+\UnicodeCharacter{x264b}{\ensurenomath{\cancer}}
+\UnicodeCharacter{x264c}{\ensurenomath{\leo}}
+\UnicodeCharacter{x264d}{\ensurenomath{\virgo}}
+\UnicodeCharacter{x264e}{\ensurenomath{\libra}}
+\UnicodeCharacter{x264f}{\ensurenomath{\scorpio}}
+\UnicodeCharacter{x2650}{\ensurenomath{\sagittarius}}
+\UnicodeCharacter{x2651}{\ensurenomath{\capricornus}}
+\UnicodeCharacter{x2652}{\ensurenomath{\aquarius}}
+\UnicodeCharacter{x2653}{\ensurenomath{\pisces}}
+\UnicodeCharacter{x2654}{\ensurenomath{\skaksymbol{'113}}}
+\UnicodeCharacter{x2655}{\ensurenomath{\skaksymbol{'121}}}
+\UnicodeCharacter{x2656}{\ensurenomath{\skaksymbol{'122}}}
+\UnicodeCharacter{x2657}{\ensurenomath{\skaksymbol{'102}}}
+\UnicodeCharacter{x2658}{\ensurenomath{\skaksymbol{'116}}}
+\UnicodeCharacter{x2659}{\ensurenomath{\skaksymbol{'120}}}
+\UnicodeCharacter{x265a}{\ensurenomath{\skaksymbol{'153}}}
+\UnicodeCharacter{x265b}{\ensurenomath{\skaksymbol{'161}}}
+\UnicodeCharacter{x265c}{\ensurenomath{\skaksymbol{'162}}}
+\UnicodeCharacter{x265d}{\ensurenomath{\skaksymbol{'142}}}
+\UnicodeCharacter{x265e}{\ensurenomath{\skaksymbol{'156}}}
+\UnicodeCharacter{x265f}{\ensurenomath{\skaksymbol{'160}}}
+\UnicodeCharacter{x2660}{\relax\ifmmode\spadesuit\else\ding{171}\fi}
+\UnicodeCharacter{x2661}{\heartsuit}
+\UnicodeCharacter{x2662}{\ensuremath{\diamondsuit}}
+\UnicodeCharacter{x2663}{\relax\ifmmode\clubsuit\else\ding{168}\fi}
+\UnicodeCharacter{x2664}{\ensuremath{\varspadesuit}}
+\UnicodeCharacter{x2665}{\ensuremath{\varheartsuit}}
+\UnicodeCharacter{x2666}{\relax\ifmmode\diamondsuit\else\ding{169}\fi}
+\UnicodeCharacter{x2667}{\ensuremath{\varclubsuit}}
+\UnicodeCharacter{x2680}{\ensurenomath{\Cube{1}}}
+\UnicodeCharacter{x2681}{\ensurenomath{\Cube{2}}}
+\UnicodeCharacter{x2682}{\ensurenomath{\Cube{3}}}
+\UnicodeCharacter{x2683}{\ensurenomath{\Cube{4}}}
+\UnicodeCharacter{x2684}{\ensurenomath{\Cube{5}}}
+\UnicodeCharacter{x2685}{\ensurenomath{\Cube{6}}}
+
+% misc math symbols
+\UnicodeCharacter{x27e6}{\ensuremath{\llbracket}}
+\UnicodeCharacter{x27e7}{\ensuremath{\rrbracket}}
+\UnicodeCharacter{x27e8}{\langle}
+\UnicodeCharacter{x27e9}{\rangle}
+\UnicodeCharacter{x27ea}{\ensuremath{\langle\!\langle}}
+\UnicodeCharacter{x27eb}{\ensuremath{\rangle\!\rangle}}
+
+% Supplemental Arrows A
+\UnicodeCharacter{x27F5}{\longleftarrow}
+\UnicodeCharacter{x27F6}{\longrightarrow}
+\UnicodeCharacter{x27f7}{\longleftrightarrow}
+\UnicodeCharacter{x27F8}{\Longleftarrow}
+\UnicodeCharacter{x27F9}{\Longrightarrow}
+\UnicodeCharacter{x27FA}{\longleftrightarrow}
+\UnicodeCharacter{x27FC}{\longmapsto}
+
+\UnicodeCharacter{x2906}{\Mapsfrom}
+\UnicodeCharacter{x2907}{\Mapsto}
+\UnicodeCharacter{x290E}{\dashleftarrow}
+\UnicodeCharacter{x290F}{\dashrightarrow}
+\UnicodeCharacter{x293A}{\curvearrowleft}
+\UnicodeCharacter{x293B}{\curvearrowright}
+\UnicodeCharacter{x2940}{\circlearrowleft}
+\UnicodeCharacter{x2941}{\circlearrowright}
+\UnicodeCharacter{x2987}{\llparenthesis}
+\UnicodeCharacter{x2988}{\rrparenthesis}
+\UnicodeCharacter{x29B6}{\obar}
+\UnicodeCharacter{x29BE}{\varocircle}
+\UnicodeCharacter{x29C0}{\olessthan}
+\UnicodeCharacter{x29C1}{\ogreaterthan}
+\UnicodeCharacter{x29C5}{\boxbslash}
+\UnicodeCharacter{x29C6}{\boxast}
+\UnicodeCharacter{x29C7}{\boxcircle}
+\UnicodeCharacter{x29C8}{\boxbox}
+
+
+\UnicodeCharacter{x2A00}{\bigodot}
+\UnicodeCharacter{x2A01}{\bigoplus}
+\UnicodeCharacter{x2A02}{\bigotimes}
+\UnicodeCharacter{x2A04}{\biguplus}
+\UnicodeCharacter{x2A06}{\bigsqcup}
+\UnicodeCharacter{x2A07}{\merge}
+\UnicodeCharacter{x2A1F}{\fatsemi}
+\UnicodeCharacter{x2A2D}{\inplus}
+\UnicodeCharacter{x2A2E}{\niplus}
+\UnicodeCharacter{x2AA6}{\leftslice}
+\UnicodeCharacter{x2AA7}{\rightslice}
+\UnicodeCharacter{x2AF4}{\interleave}
+\UnicodeCharacter{x2AFD}{\sslash}
+\UnicodeCharacter{x2AFF}{\talloblong}
+\UnicodeCharacter{x301A}{\llbracket}
+\UnicodeCharacter{x301B}{\rrbracket}
+
+
+% CJK compatibilty fe30 - fe4f
+\UnicodeCharacter{xfe37}{\textoverbrace}
+\UnicodeCharacter{xfe38}{\textunderbrace}
+
+
+% Part 3, math
+
+\UnicodeCharacter{xE3F}{{\pxr@font\textbaht}}
+
+%% ??
+\UnicodeCharacter{x3014}{\lgroup}
+\UnicodeCharacter{x3015}{\rgroup}
+
+% Mathematical Alphanumerical Symbols 1D400 -- 1D7FF
+\UnicodeCharacter{x1d4b6}{\ensuremath{\smathscr{a}}}
+\UnicodeCharacter{x1d4b7}{\ensuremath{\smathscr{b}}}
+\UnicodeCharacter{x1d4b8}{\ensuremath{\smathscr{c}}}
+\UnicodeCharacter{x1d4b9}{\ensuremath{\smathscr{d}}}
+\UnicodeCharacter{x1d4ba}{\ensuremath{\smathscr{e}}}
+\UnicodeCharacter{x1d4bb}{\ensuremath{\smathscr{f}}}
+\UnicodeCharacter{x1d4bc}{\ensuremath{\smathscr{g}}}
+\UnicodeCharacter{x1d4bd}{\ensuremath{\smathscr{h}}}
+\UnicodeCharacter{x1d4be}{\ensuremath{\smathscr{i}}}
+\UnicodeCharacter{x1d4bf}{\ensuremath{\smathscr{j}}}
+\UnicodeCharacter{x1d4c0}{\ensuremath{\smathscr{k}}}
+\UnicodeCharacter{x1d4c1}{\ensuremath{\smathscr{l}}}
+\UnicodeCharacter{x1d4c2}{\ensuremath{\smathscr{m}}}
+\UnicodeCharacter{x1d4c3}{\ensuremath{\smathscr{n}}}
+\UnicodeCharacter{x1d4c4}{\ensuremath{\smathscr{o}}}
+\UnicodeCharacter{x1d4c5}{\ensuremath{\smathscr{p}}}
+\UnicodeCharacter{x1d4c6}{\ensuremath{\smathscr{q}}}
+\UnicodeCharacter{x1d4c7}{\ensuremath{\smathscr{r}}}
+\UnicodeCharacter{x1d4c8}{\ensuremath{\smathscr{s}}}
+\UnicodeCharacter{x1d4c9}{\ensuremath{\smathscr{t}}}
+\UnicodeCharacter{x1d4ca}{\ensuremath{\smathscr{u}}}
+\UnicodeCharacter{x1d4cb}{\ensuremath{\smathscr{v}}}
+\UnicodeCharacter{x1d4cc}{\ensuremath{\smathscr{w}}}
+\UnicodeCharacter{x1d4cd}{\ensuremath{\smathscr{x}}}
+\UnicodeCharacter{x1d4ce}{\ensuremath{\smathscr{y}}}
+\UnicodeCharacter{x1d4cf}{\ensuremath{\smathscr{z}}}
+\UnicodeCharacter{x1d4ea}{\ensuremath{\bsmathscr{a}}}
+\UnicodeCharacter{x1d4eb}{\ensuremath{\bsmathscr{b}}}
+\UnicodeCharacter{x1d4ec}{\ensuremath{\bsmathscr{c}}}
+\UnicodeCharacter{x1d4ed}{\ensuremath{\bsmathscr{d}}}
+\UnicodeCharacter{x1d4ee}{\ensuremath{\bsmathscr{e}}}
+\UnicodeCharacter{x1d4ef}{\ensuremath{\bsmathscr{f}}}
+\UnicodeCharacter{x1d4f0}{\ensuremath{\bsmathscr{g}}}
+\UnicodeCharacter{x1d4f1}{\ensuremath{\bsmathscr{h}}}
+\UnicodeCharacter{x1d4f2}{\ensuremath{\bsmathscr{i}}}
+\UnicodeCharacter{x1d4f3}{\ensuremath{\bsmathscr{j}}}
+\UnicodeCharacter{x1d4f4}{\ensuremath{\bsmathscr{k}}}
+\UnicodeCharacter{x1d4f5}{\ensuremath{\bsmathscr{l}}}
+\UnicodeCharacter{x1d4f6}{\ensuremath{\bsmathscr{m}}}
+\UnicodeCharacter{x1d4f7}{\ensuremath{\bsmathscr{n}}}
+\UnicodeCharacter{x1d4f8}{\ensuremath{\bsmathscr{o}}}
+\UnicodeCharacter{x1d4f9}{\ensuremath{\bsmathscr{p}}}
+\UnicodeCharacter{x1d4fa}{\ensuremath{\bsmathscr{q}}}
+\UnicodeCharacter{x1d4fb}{\ensuremath{\bsmathscr{r}}}
+\UnicodeCharacter{x1d4fc}{\ensuremath{\bsmathscr{s}}}
+\UnicodeCharacter{x1d4fd}{\ensuremath{\bsmathscr{t}}}
+\UnicodeCharacter{x1d4fe}{\ensuremath{\bsmathscr{u}}}
+\UnicodeCharacter{x1d4ff}{\ensuremath{\bsmathscr{v}}}
+\UnicodeCharacter{x1d500}{\ensuremath{\bsmathscr{w}}}
+\UnicodeCharacter{x1d501}{\ensuremath{\bsmathscr{x}}}
+\UnicodeCharacter{x1d502}{\ensuremath{\bsmathscr{y}}}
+\UnicodeCharacter{x1d503}{\ensuremath{\bsmathscr{z}}}
+\UnicodeCharacter{x1d552}{\ensurenomath{\mbbchar{a}}}
+\UnicodeCharacter{x1d553}{\ensurenomath{\mbbchar{b}}}
+\UnicodeCharacter{x1d554}{\ensurenomath{\mbbchar{c}}}
+\UnicodeCharacter{x1d555}{\ensurenomath{\mbbchar{d}}}
+\UnicodeCharacter{x1d556}{\ensurenomath{\mbbchar{e}}}
+\UnicodeCharacter{x1d557}{\ensurenomath{\mbbchar{f}}}
+\UnicodeCharacter{x1d558}{\ensurenomath{\mbbchar{g}}}
+\UnicodeCharacter{x1d559}{\ensurenomath{\mbbchar{h}}}
+\UnicodeCharacter{x1d55a}{\ensurenomath{\mbbchar{i}}}
+\UnicodeCharacter{x1d55b}{\ensurenomath{\mbbchar{j}}}
+\UnicodeCharacter{x1d55c}{\ensurenomath{\mbbchar{k}}}
+\UnicodeCharacter{x1d55d}{\ensurenomath{\mbbchar{l}}}
+\UnicodeCharacter{x1d55e}{\ensurenomath{\mbbchar{m}}}
+\UnicodeCharacter{x1d55f}{\ensurenomath{\mbbchar{n}}}
+\UnicodeCharacter{x1d560}{\ensurenomath{\mbbchar{o}}}
+\UnicodeCharacter{x1d561}{\ensurenomath{\mbbchar{p}}}
+\UnicodeCharacter{x1d562}{\ensurenomath{\mbbchar{q}}}
+\UnicodeCharacter{x1d563}{\ensurenomath{\mbbchar{r}}}
+\UnicodeCharacter{x1d564}{\ensurenomath{\mbbchar{s}}}
+\UnicodeCharacter{x1d565}{\ensurenomath{\mbbchar{t}}}
+\UnicodeCharacter{x1d566}{\ensurenomath{\mbbchar{u}}}
+\UnicodeCharacter{x1d567}{\ensurenomath{\mbbchar{v}}}
+\UnicodeCharacter{x1d568}{\ensurenomath{\mbbchar{w}}}
+\UnicodeCharacter{x1d569}{\ensurenomath{\mbbchar{x}}}
+\UnicodeCharacter{x1d56a}{\ensurenomath{\mbbchar{y}}}
+\UnicodeCharacter{x1d56b}{\ensurenomath{\mbbchar{z}}}
+\UnicodeCharacter{x1d6ae}{\ensuremath{\mathbf{H}}}
+\UnicodeCharacter{x1d6b3}{\ensuremath{\mathbf{M}}}
+\UnicodeCharacter{x1d6b4}{\ensuremath{\mathbf{N}}}
+\UnicodeCharacter{x1d6b6}{\ensuremath{\mathbf{O}}}
+\UnicodeCharacter{x1d6b8}{\ensuremath{\mathbf{P}}}
+\UnicodeCharacter{x1d6b9}{\ensuremath{\mathbf{\Theta}}}
+\UnicodeCharacter{x1d6be}{\ensuremath{\mathbf{X}}}
+\UnicodeCharacter{x1d6c2}{\mpmb{\alpha}}
+\UnicodeCharacter{x1d6c3}{\mpmb{\beta}}
+\UnicodeCharacter{x1d6c4}{\mpmb{\gamma}}
+\UnicodeCharacter{x1d6c5}{\mpmb{\delta}}
+\UnicodeCharacter{x1d6c6}{\mpmb{\epsilon}}
+\UnicodeCharacter{x1d6c7}{\mpmb{\zeta}}
+\UnicodeCharacter{x1d6c8}{\mpmb{\eta}}
+\UnicodeCharacter{x1d6c9}{\mpmb{\theta}}
+\UnicodeCharacter{x1d6ca}{\mpmb{\iota}}
+\UnicodeCharacter{x1d6cb}{\mpmb{\kappa}}
+\UnicodeCharacter{x1d6cc}{\mpmb{\lambda}}
+\UnicodeCharacter{x1d6cd}{\mpmb{\mu}}
+\UnicodeCharacter{x1d6ce}{\mpmb{\nu}}
+\UnicodeCharacter{x1d6cf}{\mpmb{\xi}}
+\UnicodeCharacter{x1d6d0}{\mpmb{o}}
+\UnicodeCharacter{x1d6d1}{\mpmb{\pi}}
+\UnicodeCharacter{x1d6d2}{\mpmb{\rho}}
+\UnicodeCharacter{x1d6d3}{\mpmb{\varsigma}}
+\UnicodeCharacter{x1d6d4}{\mpmb{\sigma}}
+\UnicodeCharacter{x1d6d5}{\mpmb{\tau}}
+\UnicodeCharacter{x1d6d6}{\mpmb{\nu}}
+\UnicodeCharacter{x1d6d7}{\mpmb{\varphi}}
+\UnicodeCharacter{x1d6d8}{\mpmb{\chi}}
+\UnicodeCharacter{x1d6d9}{\mpmb{\psi}}
+\UnicodeCharacter{x1d6da}{\mpmb{\omega}}
+\UnicodeCharacter{x1d6db}{\mpmb{\partial}}
+\UnicodeCharacter{x1d6dc}{\mpmb{\varepsilon}}
+\UnicodeCharacter{x1d6dd}{\mpmb{\vartheta}}
+\UnicodeCharacter{x1d6de}{\mpmb{\varkappa}}
+\UnicodeCharacter{x1d6df}{\mpmb{\phi}}
+\UnicodeCharacter{x1d6e0}{\mpmb{\varrho}}
+\UnicodeCharacter{x1d6e1}{\mpmb{\varpi}}
+\UnicodeCharacter{x1d6e2}{{\ensurenomath{\cmmichar{\char'101 }}}}
+\UnicodeCharacter{x1d6e3}{{\ensurenomath{\cmmichar{\char'102 }}}}
+\UnicodeCharacter{x1d6e4}{{\ensurenomath{\cmmichar{\char'0 }}}}
+\UnicodeCharacter{x1d6e5}{{\ensurenomath{\cmmichar{\char'1 }}}}
+\UnicodeCharacter{x1d6e6}{{\ensurenomath{\cmmichar{\char'105 }}}}
+\UnicodeCharacter{x1d6e7}{{\ensurenomath{\cmmichar{\char'132 }}}}
+\UnicodeCharacter{x1d6e8}{{\ensurenomath{\cmmichar{\char'110 }}}}
+\UnicodeCharacter{x1d6e9}{{\ensurenomath{\cmmichar{\char'2 }}}}
+\UnicodeCharacter{x1d6ea}{{\ensurenomath{\cmmichar{\char'111 }}}}
+\UnicodeCharacter{x1d6eb}{{\ensurenomath{\cmmichar{\char'113 }}}}
+\UnicodeCharacter{x1d6ec}{{\ensurenomath{\cmmichar{\char'3 }}}}
+\UnicodeCharacter{x1d6ed}{{\ensurenomath{\cmmichar{\char'115 }}}}
+\UnicodeCharacter{x1d6ee}{{\ensurenomath{\cmmichar{\char'116 }}}}
+\UnicodeCharacter{x1d6ef}{{\ensurenomath{\cmmichar{\char'4 }}}}
+\UnicodeCharacter{x1d6f0}{{\ensurenomath{\cmmichar{\char'117 }}}}
+\UnicodeCharacter{x1d6f1}{{\ensurenomath{\cmmichar{\char'5 }}}}
+\UnicodeCharacter{x1d6f2}{{\ensurenomath{\cmmichar{\char'120 }}}}
+\UnicodeCharacter{x1d6f3}{{\ensurenomath{\cmmichar{\char'2 }}}}
+\UnicodeCharacter{x1d6f4}{{\ensurenomath{\cmmichar{\char'6 }}}}
+\UnicodeCharacter{x1d6f5}{{\ensurenomath{\cmmichar{\char'124 }}}}
+\UnicodeCharacter{x1d6f6}{{\ensurenomath{\cmmichar{\char'7 }}}}
+\UnicodeCharacter{x1d6f7}{{\ensurenomath{\cmmichar{\char'10 }}}}
+\UnicodeCharacter{x1d6f8}{{\ensurenomath{\cmmichar{\char'130 }}}}
+\UnicodeCharacter{x1d6f9}{{\ensurenomath{\cmmichar{\char'11 }}}}
+\UnicodeCharacter{x1d6fa}{{\ensurenomath{\cmmichar{\char'12 }}}}
+\UnicodeCharacter{x1d6fb}{{\ensuremath{\nabla}}}
+\UnicodeCharacter{x1d6fc}{{\ensurenomath{\cmmichar{\char'13 }}}}
+\UnicodeCharacter{x1d6fd}{{\ensurenomath{\cmmichar{\char'14 }}}}
+\UnicodeCharacter{x1d6fe}{{\ensurenomath{\cmmichar{\char'15 }}}}
+\UnicodeCharacter{x1d6ff}{{\ensurenomath{\cmmichar{\char'16 }}}}
+\UnicodeCharacter{x1d700}{{\ensurenomath{\cmmichar{\char'42 }}}}
+\UnicodeCharacter{x1d701}{{\ensurenomath{\cmmichar{\char'20 }}}}
+\UnicodeCharacter{x1d702}{{\ensurenomath{\cmmichar{\char'21 }}}}
+\UnicodeCharacter{x1d703}{{\ensurenomath{\cmmichar{\char'22 }}}}
+\UnicodeCharacter{x1d704}{{\ensurenomath{\cmmichar{\char'23 }}}}
+\UnicodeCharacter{x1d705}{{\ensurenomath{\cmmichar{\char'24 }}}}
+\UnicodeCharacter{x1d706}{{\ensurenomath{\cmmichar{\char'25 }}}}
+\UnicodeCharacter{x1d707}{{\ensurenomath{\cmmichar{\char'26 }}}}
+\UnicodeCharacter{x1d708}{{\ensurenomath{\cmmichar{\char'27 }}}}
+\UnicodeCharacter{x1d709}{{\ensurenomath{\cmmichar{\char'30 }}}}
+\UnicodeCharacter{x1d70a}{{\ensurenomath{\cmmichar{\char'157 }}}}
+\UnicodeCharacter{x1d70b}{{\ensurenomath{\cmmichar{\char'31 }}}}
+\UnicodeCharacter{x1d70c}{{\ensurenomath{\cmmichar{\char'32 }}}}
+\UnicodeCharacter{x1d70d}{{\ensurenomath{\cmmichar{\char'46 }}}}
+\UnicodeCharacter{x1d70e}{{\ensurenomath{\cmmichar{\char'33 }}}}
+\UnicodeCharacter{x1d70f}{{\ensurenomath{\cmmichar{\char'34 }}}}
+\UnicodeCharacter{x1d710}{{\ensurenomath{\cmmichar{\char'35 }}}}
+\UnicodeCharacter{x1d711}{{\ensurenomath{\cmmichar{\char'47 }}}}
+\UnicodeCharacter{x1d712}{{\ensurenomath{\cmmichar{\char'37 }}}}
+\UnicodeCharacter{x1d713}{{\ensurenomath{\cmmichar{\char'40 }}}}
+\UnicodeCharacter{x1d714}{{\ensurenomath{\cmmichar{\char'41 }}}}
+\UnicodeCharacter{x1d715}{\ensuremath{\partial}}
+\UnicodeCharacter{x1d716}{{\ensurenomath{\cmmichar{\char'17 }}}}
+\UnicodeCharacter{x1d717}{{\ensuremath{\varkappa}}}
+\UnicodeCharacter{x1d718}{{\ensurenomath{\cmmichar{\char'24 }}}}
+\UnicodeCharacter{x1d719}{{\ensurenomath{\cmmichar{\char'36 }}}}
+\UnicodeCharacter{x1d71a}{{\ensurenomath{\cmmichar{\char'45 }}}}
+\UnicodeCharacter{x1d71b}{{\ensurenomath{\cmmichar{\char'44 }}}}
+\UnicodeCharacter{x1d71c}{{\ensurenomath{\cmmibchar{\char'101 }}}}
+\UnicodeCharacter{x1d71d}{{\ensurenomath{\cmmibchar{\char'102 }}}}
+\UnicodeCharacter{x1d71e}{{\ensurenomath{\cmmibchar{\char'0 }}}}
+\UnicodeCharacter{x1d71f}{{\ensurenomath{\cmmibchar{\char'1 }}}}
+\UnicodeCharacter{x1d720}{{\ensurenomath{\cmmibchar{\char'105 }}}}
+\UnicodeCharacter{x1d721}{{\ensurenomath{\cmmibchar{\char'132 }}}}
+\UnicodeCharacter{x1d722}{{\ensurenomath{\cmmibchar{\char'110 }}}}
+\UnicodeCharacter{x1d723}{{\ensurenomath{\cmmibchar{\char'2 }}}}
+\UnicodeCharacter{x1d724}{{\ensurenomath{\cmmibchar{\char'111 }}}}
+\UnicodeCharacter{x1d725}{{\ensurenomath{\cmmibchar{\char'113 }}}}
+\UnicodeCharacter{x1d726}{{\ensurenomath{\cmmibchar{\char'3 }}}}
+\UnicodeCharacter{x1d727}{{\ensurenomath{\cmmibchar{\char'115 }}}}
+\UnicodeCharacter{x1d728}{{\ensurenomath{\cmmibchar{\char'116 }}}}
+\UnicodeCharacter{x1d729}{{\ensurenomath{\cmmibchar{\char'4 }}}}
+\UnicodeCharacter{x1d72a}{{\ensurenomath{\cmmibchar{\char'117 }}}}
+\UnicodeCharacter{x1d72b}{{\ensurenomath{\cmmibchar{\char'5 }}}}
+\UnicodeCharacter{x1d72c}{{\ensurenomath{\cmmibchar{\char'120 }}}}
+\UnicodeCharacter{x1d72d}{{\ensurenomath{\cmmibchar{\char'2 }}}}
+\UnicodeCharacter{x1d72e}{{\ensurenomath{\cmmibchar{\char'6 }}}}
+\UnicodeCharacter{x1d72f}{{\ensurenomath{\cmmibchar{\char'124 }}}}
+\UnicodeCharacter{x1d730}{{\ensurenomath{\cmmibchar{\char'7 }}}}
+\UnicodeCharacter{x1d731}{{\ensurenomath{\cmmibchar{\char'10 }}}}
+\UnicodeCharacter{x1d732}{{\ensurenomath{\cmmibchar{\char'130 }}}}
+\UnicodeCharacter{x1d733}{{\ensurenomath{\cmmibchar{\char'11 }}}}
+\UnicodeCharacter{x1d734}{{\ensurenomath{\cmmibchar{\char'12 }}}}
+\UnicodeCharacter{x1d735}{{\ensuremath{\nabla}}}
+\UnicodeCharacter{x1d736}{{\ensurenomath{\cmmibchar{\char'13 }}}}
+\UnicodeCharacter{x1d737}{{\ensurenomath{\cmmibchar{\char'14 }}}}
+\UnicodeCharacter{x1d738}{{\ensurenomath{\cmmibchar{\char'15 }}}}
+\UnicodeCharacter{x1d739}{{\ensurenomath{\cmmibchar{\char'16 }}}}
+\UnicodeCharacter{x1d73a}{{\ensurenomath{\cmmibchar{\char'42 }}}}
+\UnicodeCharacter{x1d73b}{{\ensurenomath{\cmmibchar{\char'20 }}}}
+\UnicodeCharacter{x1d73c}{{\ensurenomath{\cmmibchar{\char'21 }}}}
+\UnicodeCharacter{x1d73d}{{\ensurenomath{\cmmibchar{\char'22 }}}}
+\UnicodeCharacter{x1d73e}{{\ensurenomath{\cmmibchar{\char'23 }}}}
+\UnicodeCharacter{x1d73f}{{\ensurenomath{\cmmibchar{\char'24 }}}}
+\UnicodeCharacter{x1d740}{{\ensurenomath{\cmmibchar{\char'25 }}}}
+\UnicodeCharacter{x1d741}{{\ensurenomath{\cmmibchar{\char'26 }}}}
+\UnicodeCharacter{x1d742}{{\ensurenomath{\cmmibchar{\char'27 }}}}
+\UnicodeCharacter{x1d743}{{\ensurenomath{\cmmibchar{\char'30 }}}}
+\UnicodeCharacter{x1d744}{{\ensurenomath{\cmmibchar{\char'157 }}}}
+\UnicodeCharacter{x1d745}{{\ensurenomath{\cmmibchar{\char'31 }}}}
+\UnicodeCharacter{x1d746}{{\ensurenomath{\cmmibchar{\char'32 }}}}
+\UnicodeCharacter{x1d747}{{\ensurenomath{\cmmibchar{\char'46 }}}}
+\UnicodeCharacter{x1d748}{{\ensurenomath{\cmmibchar{\char'33 }}}}
+\UnicodeCharacter{x1d749}{{\ensurenomath{\cmmibchar{\char'34 }}}}
+\UnicodeCharacter{x1d74a}{{\ensurenomath{\cmmibchar{\char'35 }}}}
+\UnicodeCharacter{x1d74b}{{\ensurenomath{\cmmibchar{\char'47 }}}}
+\UnicodeCharacter{x1d74c}{{\ensurenomath{\cmmibchar{\char'37 }}}}
+\UnicodeCharacter{x1d74d}{{\ensurenomath{\cmmibchar{\char'40 }}}}
+\UnicodeCharacter{x1d74e}{{\ensurenomath{\cmmibchar{\char'41 }}}}
+\UnicodeCharacter{x1d74f}{{\ensuremath{\partial}}}
+\UnicodeCharacter{x1d750}{{\ensurenomath{\cmmibchar{\char'17 }}}}
+\UnicodeCharacter{x1d751}{{\ensuremath{\varkappa}}}
+\UnicodeCharacter{x1d752}{{\ensurenomath{\cmmibchar{\char'24 }}}}
+\UnicodeCharacter{x1d753}{{\ensurenomath{\cmmibchar{\char'36 }}}}
+\UnicodeCharacter{x1d754}{{\ensurenomath{\cmmibchar{\char'45 }}}}
+\UnicodeCharacter{x1d755}{{\ensurenomath{\cmmibchar{\char'44 }}}}
+\UnicodeCharacter{x1d758}{\mpmb{\Gamma}}
+\UnicodeCharacter{x1d759}{\mpmb{\Delta}}
+\UnicodeCharacter{x1d75c}{\mathsfbf{H}}
+\UnicodeCharacter{x1d75d}{\mpmb{\Theta}}
+\UnicodeCharacter{x1d760}{\mpmb{\Lambda}}
+\UnicodeCharacter{x1d761}{\mathsfbf{M}}
+\UnicodeCharacter{x1d762}{\mathsfbf{N}}
+\UnicodeCharacter{x1d763}{\mpmb{\Xi}}
+\UnicodeCharacter{x1d764}{\mathsfbf{O}}
+\UnicodeCharacter{x1d765}{\mpmb{\Pi}}
+\UnicodeCharacter{x1d766}{\mathsfbf{P}}
+\UnicodeCharacter{x1d767}{\mpmb{\Theta}}
+\UnicodeCharacter{x1d768}{\mpmb{\Sigma}}
+\UnicodeCharacter{x1d769}{\mathsfbf{T}}
+\UnicodeCharacter{x1d76a}{\mathsfbf{Y}}
+\UnicodeCharacter{x1d76b}{\mpmb{\Phi}}
+\UnicodeCharacter{x1d76c}{\mathsfbf{X}}
+\UnicodeCharacter{x1d76d}{\mpmb{\Psi}}
+\UnicodeCharacter{x1d76e}{\mpmb{\Omega}}
+\UnicodeCharacter{x1d76f}{\mpmb{\nabla}}
+\UnicodeCharacter{x1d7d8}{\ensurenomath{\mbbchar{0}}}
+\UnicodeCharacter{x1d7d9}{\ensurenomath{\mbbchar{1}}}
+\UnicodeCharacter{x1d7da}{\ensurenomath{\mbbchar{2}}}
+\UnicodeCharacter{x1d7db}{\ensurenomath{\mbbchar{3}}}
+\UnicodeCharacter{x1d7dc}{\ensurenomath{\mbbchar{4}}}
+\UnicodeCharacter{x1d7dd}{\ensurenomath{\mbbchar{5}}}
+\UnicodeCharacter{x1d7de}{\ensurenomath{\mbbchar{6}}}
+\UnicodeCharacter{x1d7df}{\ensurenomath{\mbbchar{7}}}
+\UnicodeCharacter{x1d7e0}{\ensurenomath{\mbbchar{8}}}
+\UnicodeCharacter{x1d7e1}{\ensurenomath{\mbbchar{9}}}
+
+% Is this Unicode 4.0 ?
+\UnicodeCharacter{xF576}{\longleftarrow}
+\UnicodeCharacter{xF577}{\longrightarrow}
+\UnicodeCharacter{xF579}{\Longleftarrow}
+\UnicodeCharacter{xF57A}{\Longrightarrow}
+\UnicodeCharacter{xF57D}{\longmapsto}
+\UnicodeCharacter{xF578}{\longleftrightarrow}
+\UnicodeCharacter{xF57B}{\Longleftrightarrow}
+
+
+\ifx\undefined\varheartsuit\let\varheartsuit\heartsuit\fi
+
+\let\baro\relax
+\DeclareMathSymbol\baro\mathbin{stmry}{"0B}
+
+
+\AtBeginDocument{
+      \@ifundefined{@ldc@l@r}{%
+        \let\@ldc@l@r\color
+        \def\color{%
+          \@ifundefined{if@inlabel}{}{%
+            \csname if@inlabel\expandafter\endcsname
+            \expandafter\leavevmode\csname fi\endcsname
+          }%
+          \@ldc@l@r
+        }%
+      }{}}%
+
+\endinput
