@@ -12,6 +12,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <spdlog/spdlog.h>
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;
@@ -51,13 +52,12 @@ void Stack::dump_xml_table() {
 
 // Returns the element in the table with id n
 // This should be at position N
-auto Stack::fetch_by_id(long n) -> Xml * {
-    if (n <= 0) return nullptr; // no need to look at this
-    if (enames.size() <= to_unsigned(n)) return nullptr;
-    Xml *x = enames[to_unsigned(n)];
+auto Stack::fetch_by_id(size_t n) -> Xml * {
+    if (enames.size() <= n) return nullptr;
+    Xml *x = enames[n];
     if (x == nullptr) return nullptr;
-    if (x->get_id().value == n) return x;
-    std::cout << "This cannot happen: bug in table at position " << n << "\n";
+    if (x->get_id().value == to_signed(n)) return x;
+    spdlog::error("This cannot happen: bug in table at position {}", n);
     return nullptr;
 }
 

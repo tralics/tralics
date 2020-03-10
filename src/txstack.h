@@ -88,7 +88,7 @@ public:
     auto               document_element() -> Xml * { return Table[0].obj; }
     auto               elt_from_id(size_t n) { return enames[n]; }
     void               end_module();
-    auto               fetch_by_id(long n) -> Xml *;
+    auto               fetch_by_id(size_t n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
     void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
     auto               find_ctrid(subtypes m) -> long;

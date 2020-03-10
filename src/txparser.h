@@ -475,7 +475,7 @@ private:
     void        implicit_par(subtypes c);
     void        improper_alpha();
     void        includegraphics(subtypes c);
-    auto        index_aux(TokenList &L, long father, size_t g) -> size_t;
+    auto        index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t;
     void        initialise_font();
     void        E_the_traced(Token T, subtypes c);
     auto        E_the(subtypes c) -> TokenList;

@@ -100,7 +100,7 @@ void trees_ns::normalise_space(TokenList &L) {
 
 auto trees_ns::xless(Indexer *A, Indexer *B) -> bool { return A->key < B->key; }
 
-auto Parser::index_aux(TokenList &L, long father, size_t g) -> size_t {
+auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t {
     static const Token escape_t(other_t_offset, '"');
     static const Token actual_t(other_t_offset, '@');
     static const Token actualb_t(letter_t_offset, '@');
@@ -128,13 +128,13 @@ auto Parser::index_aux(TokenList &L, long father, size_t g) -> size_t {
     // We have now: key@aux|encap
     std::vector<Indexer *> &IR    = the_index.get_data(g);
     int                     level = 1;
-    if (father != -1) level = 1 + IR[to_unsigned(father)]->level;
+    if (father) level = 1 + IR[*father]->level;
     auto n = IR.size();
     for (size_t i = 0; i < n; i++)
         if (IR[i]->is_same(level, aux)) return i;
     Buffer &B = local_buf;
     B.reset();
-    if (father != -1) B << IR[to_unsigned(father)]->key << "____";
+    if (father) B << IR[*father]->key << "____";
     B << key;
     B.lowercase();
     B.no_newline();
@@ -181,10 +181,10 @@ void Parser::T_index(subtypes c) {
             level = 2; // z1, L
     }
     // If level != 1, make sure parent exists
-    long position = -1;
-    if (level > 1) position = to_signed(index_aux(z1, position, g));
+    std::optional<size_t> position;
+    if (level > 1) position = index_aux(z1, position, g);
     // If level == 3, make sure grand parent exists
-    if (level == 3) position = to_signed(index_aux(z2, position, g));
+    if (level == 3) position = index_aux(z2, position, g);
     // make sure this exists
     auto pposition = index_aux(L, position, g);
     // Now, add a label here

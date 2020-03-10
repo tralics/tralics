@@ -159,7 +159,7 @@ auto Xml::deep_copy() -> Xml * {
 void Parser::user_XML_fetch() {
     Token T  = cur_tok;
     auto  n  = scan_int(T);
-    the_xmlA = the_stack.fetch_by_id(n);
+    the_xmlA = (n <= 0) ? nullptr : the_stack.fetch_by_id(to_unsigned(n));
 }
 
 void Parser::user_XML_modify(subtypes c) {
