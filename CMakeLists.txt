@@ -21,10 +21,10 @@ add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
                     -Wsign-conversion -Wnull-dereference -Wdouble-promotion)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  message("debug mode")
+  message("-- Debug mode")
   add_compile_options(-g)
 else()
-  message("release mode")
+  message("-- Release mode")
   add_compile_options(-O3 -DNDEBUG)
 endif()
 
@@ -35,16 +35,9 @@ if(CCACHE)
 endif()
 
 file (GLOB_RECURSE sources CONFIGURE_DEPENDS *.C)
-file (GLOB_RECURSE headers CONFIGURE_DEPENDS *.h)
 
 add_executable(tralics ${sources})
 target_link_libraries (tralics ${CONAN_LIBS})
-
-find_package(Doxygen REQUIRED dot)
-if (${DOXYGEN_FOUND})
-  add_custom_target (docs ALL doxygen WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    COMMENT "Building documentation")
-endif()
 
 add_custom_target(alltests ALL 
     ../test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
