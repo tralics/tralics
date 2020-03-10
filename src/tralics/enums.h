@@ -2539,5 +2539,5 @@ enum name_positions {
     np_last,
 };
 
-inline constexpr uint space_token_val   = space_t_offset + ' ';
-inline constexpr uint newline_token_val = space_t_offset + '\n';
+inline constexpr unsigned space_token_val   = space_t_offset + ' ';
+inline constexpr unsigned newline_token_val = space_t_offset + '\n';

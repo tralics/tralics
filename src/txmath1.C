@@ -1853,8 +1853,8 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     Buffer & B = aux_buffer;
     B.reset();
     if (f == 1) B.push_back(' ');
-    bool spec = (f == 1) || ((w & (1 << f)) != 0);
-    uint c    = W.get_chr();
+    bool     spec = (f == 1) || ((w & (1 << f)) != 0);
+    unsigned c    = W.get_chr();
     if (spec)
         B.push_back(char(uchar(c)));
     else
@@ -1883,7 +1883,7 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
     Buffer & B = aux_buffer;
     B.reset();
-    uint c = W.get_chr();
+    unsigned c = W.get_chr();
     B.push_back(char(uchar(c)));
     if (multiple)
         for (;;) {

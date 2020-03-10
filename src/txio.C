@@ -156,10 +156,10 @@ void io_ns::print_ascii(std::ostream &fp, char c) {
     if (32 <= c && c < 127)
         fp << c;
     else {
-        auto C = static_cast<uchar>(c);
-        uint z = C & 7;
-        uint y = (C >> 3) & 7;
-        uint x = (C >> 6) & 7;
+        auto     C = static_cast<uchar>(c);
+        unsigned z = C & 7;
+        unsigned y = (C >> 3) & 7;
+        unsigned x = (C >> 6) & 7;
         fp << "\\" << uchar(x + '0') << uchar(y + '0') << uchar(z + '0');
     }
 }
@@ -269,7 +269,7 @@ auto io_ns::how_many_bytes(char c) -> size_t {
     if (C < 128) return 1;       // ascii
     if ((C >> 5) == 6) return 2; // 2 bytes
     if ((C >> 5) != 7) return 0; // cannot start with 10
-    uint y = C & 31;
+    unsigned y = C & 31;
     if ((y & 16) == 0) return 3;
     if (y == 16 || y == 17 || y == 18 || y == 19 || y == 20) return 4;
     return 0; // overflow
@@ -300,17 +300,17 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
     if (n == 1) return codepoint(c);
     the_converter.line_is_ascii = false;
     if (n == 2) {
-        uint x = next_utf8_byte();
+        unsigned x = next_utf8_byte();
         return codepoint(((static_cast<uchar>(c) & 31U) << 6U) + x);
     }
     if (n == 3) {
-        uint z = next_utf8_byte();
-        uint x = next_utf8_byte();
+        unsigned z = next_utf8_byte();
+        unsigned x = next_utf8_byte();
         return codepoint(x + (z << 6U) + ((static_cast<uchar>(c) & 15U) << 12U));
     }
-    uint z = next_utf8_byte();
-    uint y = next_utf8_byte();
-    uint x = next_utf8_byte();
+    unsigned z = next_utf8_byte();
+    unsigned y = next_utf8_byte();
+    unsigned x = next_utf8_byte();
     return codepoint((x) + (y << 6U) + (z << 12U) + ((static_cast<uchar>(c) & 7U) << 18U));
 }
 
@@ -577,7 +577,7 @@ void LinePtr::normalise_final_cr() {
 
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(codepoint c) {
-    uint x = c.value;
+    unsigned x = c.value;
     if (x < 128) {
         push_back(static_cast<char>(x));
         return;
@@ -601,14 +601,14 @@ void Buffer::push_back(codepoint c) {
     }
 }
 
-inline void Buffer::push_back_hex(uint c) {
+inline void Buffer::push_back_hex(unsigned c) {
     if (c < 10)
         push_back(static_cast<char>(c + '0'));
     else
         push_back(static_cast<char>(c + 'a' - 10));
 }
 
-inline void Buffer::push_back_Hex(uint c) {
+inline void Buffer::push_back_Hex(unsigned c) {
     if (c < 10)
         push_back(static_cast<char>(c + '0'));
     else
@@ -617,8 +617,8 @@ inline void Buffer::push_back_Hex(uint c) {
 
 // Converts in uppercase hex. If uni is ptrue, produces U+00AB
 void Buffer::push_back16(size_t n, bool uni) {
-    static uint dig[9];
-    int         k = 0;
+    static unsigned dig[9];
+    int             k = 0;
     for (;;) { // construct the list of digits
         dig[k] = n % 16;
         n      = n / 16;
@@ -640,9 +640,9 @@ void Buffer::push_back16(size_t n, bool uni) {
 
 // Converts number in lower hex form (assumes n>=16, so k>=2)
 // if hat is true, inserts hats before
-void Buffer::push_back16l(bool hat, uint n) {
-    static uint dig[9];
-    int         k = 0;
+void Buffer::push_back16l(bool hat, unsigned n) {
+    static unsigned dig[9];
+    int             k = 0;
     for (;;) { // construct the list of digits
         dig[k] = n % 16;
         n      = n / 16;
@@ -682,7 +682,7 @@ void Buffer::out_four_hats(codepoint ch) {
         push_back('\t');
         return;
     }
-    uint c = ch.value;
+    unsigned c = ch.value;
     if (ch.is_control()) {
         push_back("^^");
         push_back(static_cast<char>(c + 64));

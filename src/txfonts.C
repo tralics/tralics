@@ -243,7 +243,7 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
 
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const std::string &n, long a, long s) -> size_t {
-    for (uint i = 0; i < size(); i++)
+    for (unsigned i = 0; i < size(); i++)
         if (at(i).its_me(n, a, s)) return i;
     return define_a_new_font(n, a, s);
 }

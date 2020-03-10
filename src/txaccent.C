@@ -28,7 +28,7 @@ namespace accent_ns {
     auto double_u_accent(int acc3) -> unsigned;
     auto double_other_accent(int a, int acc3) -> unsigned;
     void boot_accents();
-    auto mk_acc(uint s) -> Token;
+    auto mk_acc(unsigned s) -> Token;
     void special_acc_hack(TokenList &y);
     auto special_double_acc(int chr, int acc) -> Token;
 
@@ -480,7 +480,7 @@ void Parser::E_accent() {
 }
 
 // Simple case of \^a that gives \342.
-inline auto accent_ns::mk_acc(uint s) -> Token { return Token(other_t_offset, codepoint(s)); }
+inline auto accent_ns::mk_acc(unsigned s) -> Token { return Token(other_t_offset, codepoint(s)); }
 
 // Creates the table for accents.
 void accent_ns::boot_accents() {

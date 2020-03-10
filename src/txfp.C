@@ -32,7 +32,7 @@ namespace {
     FpNum *     pascal_table[64];
     bool        pascal_table_created = false;
 
-    constexpr std::array<uint, 10> power_table{1, 10, 100, 1'000, 10'000, 100'000, 1'000'000, 10'000'000, 100'000'000, 1'000'000'000};
+    constexpr std::array<unsigned, 10> power_table{1, 10, 100, 1'000, 10'000, 100'000, 1'000'000, 10'000'000, 100'000'000, 1'000'000'000};
 } // namespace
 
 namespace fp {

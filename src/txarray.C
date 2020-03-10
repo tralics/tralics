@@ -27,7 +27,7 @@ void Parser::boot_NAO() { new_array_object.boot(this); }
 
 void NewArray::boot(Parser *Q) {
     P = Q;
-    for (uint i = 0; i < nb_newcolumn; i++) {
+    for (unsigned i = 0; i < nb_newcolumn; i++) {
         nct_bool[i] = false;
         nct_tok[i]  = P->hash_table.relax_token;
     }
@@ -52,8 +52,8 @@ void NewArray::remove_a_type(uchar c) {
 // as \newcommand\cmd[opt]{body}
 // Here \cmd is some internal name, stored in nct_tok[C]
 void Parser::T_newcolumn_type() {
-    uint c   = 0;
-    bool bad = read_token_arg(cur_tok);
+    unsigned c   = 0;
+    bool     bad = read_token_arg(cur_tok);
     if (!bad) {
         Token T = cur_tok;
         if (T.is_a_char()) c = T.char_val().value;
@@ -210,7 +210,7 @@ void NewArray::test_pach() {
         else
             current_token = current_list.front();
     }
-    uint c = 0;
+    unsigned c = 0;
     if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13) c = current_token.char_val().value;
     if (c == 'c') {
         cur_h_pos = np_c_center;

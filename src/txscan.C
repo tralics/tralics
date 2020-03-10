@@ -426,34 +426,34 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
     if (w < 3) return false;
     if (input_line[p] != c) return false;
     if (w >= 10 && input_line[p + 1] == c && input_line[p + 2] == c && input_line[p + 3] == c) {
-        int hc0 = input_line[p + 4].hex_val();
-        int hc1 = input_line[p + 5].hex_val();
-        int hc2 = input_line[p + 6].hex_val();
-        int hc3 = input_line[p + 7].hex_val();
-        int hc4 = input_line[p + 8].hex_val();
-        if (hc0 >= 0 && hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
+        auto hc0 = input_line[p + 4].hex_val();
+        auto hc1 = input_line[p + 5].hex_val();
+        auto hc2 = input_line[p + 6].hex_val();
+        auto hc3 = input_line[p + 7].hex_val();
+        auto hc4 = input_line[p + 8].hex_val();
+        if (hc0 && hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 8;
-            input_line[p + 8] = codepoint(to_unsigned((hc0 << 16) + (hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
+            input_line[p + 8] = codepoint((*hc0 << 16) + (*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
             return true;
         }
     }
     if (w >= 8 && input_line[p + 1] == c && input_line[p + 2] == c) {
-        int hc1 = input_line[p + 3].hex_val();
-        int hc2 = input_line[p + 4].hex_val();
-        int hc3 = input_line[p + 5].hex_val();
-        int hc4 = input_line[p + 6].hex_val();
-        if (hc1 >= 0 && hc2 >= 0 && hc3 >= 0 && hc4 >= 0) {
+        auto hc1 = input_line[p + 3].hex_val();
+        auto hc2 = input_line[p + 4].hex_val();
+        auto hc3 = input_line[p + 5].hex_val();
+        auto hc4 = input_line[p + 6].hex_val();
+        if (hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 6;
-            input_line[p + 6] = codepoint(to_unsigned((hc1 << 12) + (hc2 << 8) + (hc3 << 4) + hc4));
+            input_line[p + 6] = codepoint((*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
             return true;
         }
     }
     if (w >= 4) {
-        int hc1 = input_line[p + 1].hex_val();
-        int hc2 = input_line[p + 2].hex_val();
-        if (hc1 >= 0 && hc2 >= 0) {
+        auto hc1 = input_line[p + 1].hex_val();
+        auto hc2 = input_line[p + 2].hex_val();
+        if (hc1 && hc2) {
             input_line_pos             = p + 2;
-            input_line[input_line_pos] = codepoint(to_unsigned(16 * hc1 + hc2));
+            input_line[input_line_pos] = codepoint(*hc1 * 16 + *hc2);
             return true;
         }
     }

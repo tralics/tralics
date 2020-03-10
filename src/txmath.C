@@ -2223,10 +2223,10 @@ auto MathElt::try_math_op() -> Xml * {
 
 // This converts a character into a MathML object
 auto MathElt::cv_char() -> MathElt {
-    uint c = get_chr();
-    int  a;
-    auto mt = mt_flag_small;
-    auto F  = get_font();
+    unsigned c = get_chr();
+    int      a;
+    auto     mt = mt_flag_small;
+    auto     F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(codepoint(c)), mt_flag_small);
     if (::is_digit(static_cast<char>(c)))
         a = to_signed(c) - '0' + math_dig_loc;

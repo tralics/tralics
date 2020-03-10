@@ -21,7 +21,7 @@ public:
     void kill() { set(invalid_cmd, zero_code); }
     void set_mathml() { cmd = math_xml_cmd; }
 
-    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(uint(chr)); }
+    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(unsigned(chr)); }
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
     [[nodiscard]] auto is_digit() const -> bool { return '0' <= chr && chr <= '9'; }
     [[nodiscard]] auto is_other() const -> bool { return cmd == other_catcode; }

@@ -595,7 +595,7 @@ auto SpecialHash::find_true_false(String s) -> int {
 
 // returns true if this is a valid register index.
 auto SpecialHash::counter_val(int k) -> int {
-    if (k >= 0 && uint(k) < nb_registers) return k;
+    if (k >= 0 && unsigned(k) < nb_registers) return k;
     return -1;
 }
 

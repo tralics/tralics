@@ -239,10 +239,10 @@ public:
     void               push_back_elt(Istring name, Xid id, int w);
     void               push_back_int(long n);
     void               push_back16(size_t n, bool uni);
-    void               push_back16l(bool hat, uint n);
+    void               push_back16l(bool hat, unsigned n);
     void               push_back_ent(codepoint ch);
-    void               push_back_hex(uint c);
-    void               push_back_Hex(uint c);
+    void               push_back_hex(unsigned c);
+    void               push_back_Hex(unsigned c);
     void               push_back_math_token(const CmdChr &x, bool space);
     void               push_back_math_tag(const CmdChr &x, int type);
     void               push_back_math_tag(String s, int type);
@@ -294,7 +294,7 @@ public:
     }
     void               reset_ptr() { ptr = 0; }
     void               resize();
-    auto               reverse_horner() -> uint;
+    auto               reverse_horner() -> unsigned;
     auto               see_begin_end(Buffer &before, Buffer &after) -> int;
     [[nodiscard]] auto see_config_env() const -> int;
     auto               see_config_kw(String s, bool c) -> String;

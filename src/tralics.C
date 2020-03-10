@@ -71,8 +71,8 @@ inline void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
 // that are of catcode 11.
 void Parser::boot_verbatim() {
     Token *T = verbatim_chars.data();
-    for (uint i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, codepoint(i));
-    T[uint(' ')] = hash_table.tilda_token;
+    for (unsigned i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, codepoint(i));
+    T[unsigned(' ')] = hash_table.tilda_token;
     mk_letter(T, '\'');
     mk_letter(T, '`');
     mk_letter(T, '-');
@@ -2602,7 +2602,7 @@ void Parser::make_catcodes() {
     set_cat(160, 13); // non breaking space
     set_cat('~', 13);
     set_cat('%', 14);
-    for (uint i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].val;
+    for (unsigned i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].val;
     set_cat('@', 11);
 }
 

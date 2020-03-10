@@ -25,7 +25,7 @@ namespace {
 namespace classes_ns {
     auto parse_version(const std::string &s) -> int;
     auto get_option_list(const std::string &name) -> OptionList;
-    auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> long;
+    auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> std::optional<size_t>;
     auto is_raw_option(const OptionList &V, String s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
@@ -133,12 +133,10 @@ auto classes_ns::compare_options(const OptionList &A, const OptionList &B) -> bo
 
 // Like is_in_option, but returns a position
 // If X true, checks the keyname
-auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> long {
-    auto n = V.size();
-    for (size_t i = 0; i < n; i++) {
-        if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return to_signed(i);
-    }
-    return -1;
+auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> std::optional<size_t> {
+    for (size_t i = 0; i < V.size(); i++)
+        if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return i;
+    return {};
 }
 
 // ------------------------------------------------------------
@@ -356,7 +354,7 @@ void Parser::T_option_not_used() {
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
     auto      j = is_in_vector(GO, s.full_name, true);
-    if (j >= 0) GO[to_unsigned(j)].mark_un_used();
+    if (j) GO[*j].mark_un_used();
 }
 
 // We execute key=val (from U), with code in this
@@ -402,16 +400,16 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
         const std::string &nname = DO[i].name;
         if (DO[i].is_used()) continue; // should to happen
         auto j = is_in_vector(CO, nname, false);
-        if (j >= 0) {
+        if (j) {
             ClassesData::remove_from_unused(nname);
-            DO[i].use_and_kill(res, CO[to_unsigned(j)], X);
+            DO[i].use_and_kill(res, CO[*j], X);
         } else if (is_class())
             continue;
         else {
             j = is_in_vector(GO, nname, X);
-            if (j >= 0) {
-                DO[i].use_and_kill(res, GO[to_unsigned(j)], X);
-                GO[to_unsigned(j)].mark_used();
+            if (j) {
+                DO[i].use_and_kill(res, GO[*j], X);
+                GO[*j].mark_used();
             } else
                 continue;
         }
@@ -758,7 +756,7 @@ auto LatexPackage::find_option(const std::string &nname) -> long {
 void ClassesData::remove_from_unused(const std::string &name) {
     OptionList &GO = the_class_data.global_options;
     auto        j  = is_in_vector(GO, name, true);
-    if (j >= 0) GO[to_unsigned(j)].mark_used();
+    if (j) GO[*j].mark_used();
 }
 
 void show_unused_options() { ClassesData::show_unused(); }

@@ -767,9 +767,9 @@ void Parser::special_fvset() {
     flush_buffer();
     std::string args = sT_arg_nopar();
     {
-        static const uint loc = uchar(' ');
-        SpecialHash       S(args);
-        std::string       s = S.find("showspaces");
+        static const unsigned loc = uchar(' ');
+        SpecialHash           S(args);
+        std::string           s = S.find("showspaces");
         if (s.empty()) return;
         if (s == "true")
             verbatim_chars[loc] = hash_table.textvisiblespace_token;

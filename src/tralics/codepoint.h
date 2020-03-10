@@ -1,5 +1,6 @@
 #pragma once
 #include "types.h"
+#include <optional>
 
 auto is_letter(char c) -> bool;
 
@@ -31,14 +32,14 @@ struct codepoint {
     [[nodiscard]] auto is_upper_case() const -> bool { return 'A' <= value && value <= 'Z'; }
     [[nodiscard]] auto is_verybig() const -> bool { return value > 0x1FFFF; }
     [[nodiscard]] auto non_null() const -> bool { return value != 0; }
-    [[nodiscard]] auto val_as_digit() const -> uint { return value - '0'; }
-    [[nodiscard]] auto val_as_Hex() const -> uint { return value - 'A' + 10; }
-    [[nodiscard]] auto val_as_hex() const -> uint { return value - 'a' + 10; }
+    [[nodiscard]] auto val_as_digit() const -> unsigned { return value - '0'; }
+    [[nodiscard]] auto val_as_Hex() const -> unsigned { return value - 'A' + 10; }
+    [[nodiscard]] auto val_as_hex() const -> unsigned { return value - 'a' + 10; }
 
-    [[nodiscard]] auto hex_val() const -> int {
-        if (is_digit()) return to_signed(val_as_digit());
-        if (is_hex()) return to_signed(val_as_hex());
-        return -1;
+    [[nodiscard]] auto hex_val() const -> std::optional<unsigned> {
+        if (is_digit()) return val_as_digit();
+        if (is_hex()) return val_as_hex();
+        return {};
     }
 
     [[nodiscard]] auto to_lower() const -> codepoint {
@@ -49,5 +50,5 @@ struct codepoint {
 
 inline auto operator==(const codepoint &a, const codepoint &b) -> bool { return a.value == b.value; }
 inline auto operator!=(const codepoint &a, const codepoint &b) -> bool { return a.value != b.value; }
-inline auto operator==(const codepoint &a, const unsigned char &b) -> bool { return a.value == uint(b); }
-inline auto operator!=(const codepoint &a, const unsigned char &b) -> bool { return a.value != uint(b); }
+inline auto operator==(const codepoint &a, const unsigned char &b) -> bool { return a.value == unsigned(b); }
+inline auto operator!=(const codepoint &a, const unsigned char &b) -> bool { return a.value != unsigned(b); }

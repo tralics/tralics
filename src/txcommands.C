@@ -52,7 +52,7 @@ void Parser::init_all(const std::string &doc_elt) {
 // Note: never use process_char('&'),
 inline void Parser::process_string(String s) { unprocessed_xml.push_back(s); }
 
-inline void Parser::process_char(int s) { process_char(codepoint(uint(s))); }
+inline void Parser::process_char(int s) { process_char(codepoint(unsigned(s))); }
 
 inline void Parser::process_char(size_t c) { process_char(codepoint(char32_t(c))); }
 
