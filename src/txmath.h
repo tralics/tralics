@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txxml.h"
-#include <utility>
 
 class MathQ;
 class MathP;

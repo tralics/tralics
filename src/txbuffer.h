@@ -14,7 +14,6 @@
 #include "txid.h"
 #include "txscaled.h"
 #include <cstring>
-#include <optional>
 #include <vector>
 
 using buffer_fn = void(Buffer &);

@@ -10,9 +10,9 @@
 
 // Tralics, math part I
 
+#include "txmath.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txmath.h"
 #include "txparser.h"
 #include <algorithm>
 

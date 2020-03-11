@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txinline.h"
-#include <optional>
 
 // This is the unique identifier of a bibliography element
 // from the bibtex point of view. If used, a unique id (an integer will be

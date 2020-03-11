@@ -1,7 +1,6 @@
 #pragma once
 #include "../txvars.h"
 #include "codepoint.h"
-#include <optional>
 #include <string>
 #include <vector>
 
