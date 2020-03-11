@@ -9,11 +9,13 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/globals.h"
 #include "txbib.h"
+#include "tralics/globals.h"
 #include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
+
+Bibtex *the_bibtex;
 
 namespace {
     class Error {};
@@ -22,7 +24,6 @@ namespace {
     Bbl                      bbl;
     Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
     Buffer                   CB;
-    Bibtex *                 the_bibtex;
     bool                     distinguish_refer = false;
     std::string              cur_entry_name; // name of entry under construction.
     int                      cur_entry_line; // position of entry in source file
@@ -2968,8 +2969,6 @@ void tralics_ns::bibtex_boot(String b, String dy, std::string no_year, bool inra
     the_bibtex = new Bibtex(dy);
     the_bibtex->boot(std::move(no_year), inra);
 }
-
-void tralics_ns::bibtex_bootagain() { the_bibtex->bootagain(); }
 
 void tralics_ns::bibtex_set_nocite() { the_bibliography.set_nocite(); }
 

@@ -26,6 +26,12 @@ namespace {
     bool                             every_eof = false;  // true if every_eof can been inserted for the current file
     Buffer                           local_buf;          // a local buffer
     bool                             require_eof = true; // eof is an outer token
+
+    auto find_no_path(const std::string &s) -> bool {
+        if (s.empty()) return false;
+        main_ns::path_buffer << bf_reset << s;
+        return tralics_ns::file_exists(main_ns::path_buffer);
+    }
 } // namespace
 
 namespace io_ns {
@@ -355,7 +361,7 @@ void Parser::T_input(int q) {
     }
     bool res = false;
     if (seen_plus)
-        res = tralics_ns::find_no_path(file);
+        res = find_no_path(file);
     else {
         res = tralics_ns::find_in_path(file);
         if (!res) {

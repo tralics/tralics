@@ -65,12 +65,6 @@ auto main_ns::search_in_confdir(const std::string &s) -> bool {
     return false;
 }
 
-auto tralics_ns::find_no_path(const std::string &s) -> bool {
-    if (s.empty()) return false;
-    main_ns::path_buffer << bf_reset << s;
-    return file_exists(main_ns::path_buffer);
-}
-
 auto tralics_ns::find_in_path(const std::string &s) -> bool {
     if (s.empty()) return false;
     main_ns::path_buffer << bf_reset << s;

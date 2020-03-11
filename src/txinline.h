@@ -34,14 +34,12 @@ namespace tralics_ns {
     void boot_math(bool mv);
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
-    auto find_no_path(const std::string &s) -> bool;
     void read_a_file(LinePtr &L, const std::string &x, int spec);
     auto make_string(String a) -> std::string;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
     auto file_exists(const std::string &B) -> bool;
     auto file_exists(Buffer &B) -> bool;
-    void bibtex_bootagain();
     void bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db);
     void Titlepage_create(LinePtr &lines);
     void Titlepage_start(bool verbose);

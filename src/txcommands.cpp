@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/globals.h"
+#include "txbib.h"
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -730,6 +731,8 @@ void Parser::T_enddocument(subtypes c) {
     }
 }
 
+extern Bibtex *the_bibtex;
+
 // case \begin{document}
 void Parser::T_begindocument() {
     if (seen_document) {
@@ -744,7 +747,7 @@ void Parser::T_begindocument() {
     cur_level = 1; // this is the outer level...
     if (the_main->d_verbose()) M_tracingall();
     if (tracing_commands()) the_log << lg_startstack << "level set to 1" << lg_end;
-    tralics_ns::bibtex_bootagain();
+    the_bibtex->bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
     {
         Buffer &  b = mac_buffer;
