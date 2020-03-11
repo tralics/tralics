@@ -23,6 +23,14 @@ namespace {
     Buffer tpa_buffer;
     Xml *  unfinished_par = nullptr;
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
+
+#ifdef _MSC_VER
+#include <windows.h> // 'Sleep()'
+    inline void txsleep(unsigned i) { Sleep(1000 * i); }
+#else
+#include <unistd.h>
+    inline void txsleep(unsigned i) { sleep(i); }
+#endif
 } // namespace
 
 namespace translate_ns {

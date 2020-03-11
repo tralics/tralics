@@ -22,6 +22,14 @@ namespace {
     Buffer    utf8_out;            // Holds utf8 outbuffer
     Buffer    utf8_in;             // Holds utf8 inbuffer
     Converter the_converter;
+
+    /// Use a file from the pool
+    auto use_pool(LinePtr &L) -> bool {
+        if (!pool_position) return false; // should not happen
+        L.insert(*file_pool[*pool_position]);
+        pool_position = {};
+        return true;
+    }
 } // namespace
 
 namespace io_ns {
@@ -490,7 +498,7 @@ void LinePtr::insert(const LinePtr &aux) {
 // If 4, its is the main file, log not yet open.
 void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.reset(x);
-    if (main_ns::use_pool(L)) return;
+    if (use_pool(L)) return;
     auto *fp = new std::fstream(x.c_str(), std::ios::in);
     if (fp == nullptr) return;
     std::string old_name        = the_converter.cur_file_name;

@@ -1,6 +1,224 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <spdlog/spdlog.h>
+
+namespace {
+    void after_conf_assign(std::vector<std::string> &V) {
+        size_t n = V.size(), i = 0;
+        for (;;) {
+            if (i >= n) return;
+            ssa2 << bf_reset << V[i];
+            i++;
+            Buffer local_buf;
+            local_buf << bf_reset << V[i];
+            i++;
+            bool res = assign(ssa2, local_buf);
+            if (res) the_log << ssa2.c_str() << "=" << local_buf.c_str() << "\n";
+        }
+    }
+
+    void bad_conf(String s) {
+        log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
+                    << "It must define a value for the parameter " << s << "\n"
+                    << "See transcript file " << the_log.get_filename() << " for details\n"
+                    << "No xml file generated\n"
+                    << lg_fatal;
+        exit(1);
+    }
+
+    /// Initialises encoding tables
+    void check_for_encoding() {
+        for (auto &i : custom_table)
+            for (unsigned j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
+    }
+
+    /// Checks that name is non-empty and all lowercase
+    void check_lowercase(Buffer &B) {
+        auto n = B.size();
+        if (n == 0) {
+            std::cout << "Illegal file name of the form safir/2002.tex\n";
+            the_main->bad_year(); // never returns
+        }
+        for (size_t i = 0; i < n; i++)
+            if (B[i] < 32 || B[i] > 127 || is_upper_case(B[i])) {
+                std::cout << "Fatal error\n";
+                std::cout << "Only lowercase letters allowed: " << B.c_str() << " \n";
+                exit(1);
+            }
+    }
+
+    void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
+        if (y < 2000 || y >= 2100) the_main->bad_year();
+        std::string raclass = std::string("ra") + C.to_string();
+        if (dclass != raclass) {
+            std::cout << "Illegal document class " << dclass << " should be " << raclass << "\n";
+            exit(1);
+        }
+        if (Y.empty()) return;
+        if (Y == C.to_string()) return;
+        log_and_tty << "Option -year=" << Y << " incompatible with year in source file \n";
+        log_and_tty << lg_fatal;
+        exit(1);
+    }
+
+    /// If B holds apics2006, puts apics in B, 2006 in C, returns 2006
+    auto extract_year(Buffer &B, Buffer &C) -> int {
+        size_t m = B.size(), n = m, k = 0;
+        while (k < 4 && n > 0 && is_digit(B[n - 1])) {
+            n--;
+            k++;
+        }
+        int y = 0;
+        for (auto i = n; i < m; i++) {
+            y = 10 * y + B[i] - '0';
+            C.push_back(B[i]);
+        }
+        B.set_last(n);
+        return y;
+    }
+
+    auto find_param_type(String s) -> param_args {
+        if (strcmp(s, "entnames") == 0) return pa_entnames;
+        if (strcmp(s, "tpastatus") == 0) return pa_tpastatus;
+        if (strcmp(s, "dir") == 0) return pa_dir;
+        if (strcmp(s, "year") == 0) return pa_year;
+        if (strcmp(s, "type") == 0) return pa_type;
+        if (strcmp(s, "configfile") == 0) return pa_config;
+        if (strcmp(s, "config") == 0) return pa_config;
+        if (strcmp(s, "distinguishreferinrabib") == 0) return pa_refer;
+        if (strcmp(s, "confdir") == 0) return pa_confdir;
+        if (strcmp(s, "externalprog") == 0) return pa_external_prog;
+        if (strcmp(s, "trivialmath") == 0) return pa_trivialmath;
+        if (strcmp(s, "leftquote") == 0) return pa_leftquote;
+        if (strcmp(s, "rightquote") == 0) return pa_rightquote;
+        if (strcmp(s, "defaultclass") == 0) return pa_defaultclass;
+        if (strcmp(s, "inputfile") == 0) return pa_infile;
+        if (strcmp(s, "inputdata") == 0) return pa_indata;
+        if (strcmp(s, "outputfile") == 0) return pa_outfile;
+        if (strcmp(s, "o") == 0) return pa_outfile;
+        if (strcmp(s, "inputdir") == 0) return pa_indir;
+        if (strcmp(s, "inputpath") == 0) return pa_indir;
+        if (strcmp(s, "outputdir") == 0) return pa_outdir;
+        if (strcmp(s, "logfile") == 0) return pa_logfile;
+        if (strcmp(s, "doctype") == 0) return pa_dtd;
+        if (strcmp(s, "param") == 0) return pa_param;
+        return pa_none;
+    }
+
+    /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
+    auto hack_for_input(const std::string &s) -> std::string {
+        Buffer B;
+        B << s;
+        auto k = B.last_slash();
+        the_parser.set_job_name(no_ext);
+        std::string path;
+        std::string fn = s;
+        if (k && (*k > 0)) {
+            B.kill_at(*k);
+            path = B.to_string();
+            if (out_dir.empty()) out_dir = path;
+            fn = B.to_string(*k + 1);
+        }
+        B << bf_reset << fn;
+        B.remove_last_n(4);
+        file_name = B.to_string();
+        if (log_name.empty()) log_name = file_name;
+        if (k > 0 && input_path.size() == 1) {
+            input_path[0] = path;
+            input_path.emplace_back("");
+            return fn;
+        }
+        return s;
+    }
+
+    /// Returns true if prefix is the path to the conf_path \todo std::filesystem
+    auto try_conf(const std::string &prefix) -> bool {
+        if (prefix.empty()) return false;
+        Buffer b;
+        b << prefix << bf_optslash << "book.clt";
+        return tralics_ns::file_exists(b);
+    }
+
+    /// Locate the config dir, using a few sources
+    void find_conf_path() {
+        if (try_conf(conf_path[0])) return;
+        String S = "/usr/share/tralics";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "/usr/lib/tralics/confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "/usr/local/lib/tralics/confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "/sw/share/tralics/confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "../confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "../../confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+        S = "/user/grimm/home/cvs/tralics/confdir";
+        if (try_conf(S)) {
+            conf_path.emplace_back(S);
+            return;
+        }
+    }
+
+    /// Split a `:`-separated path list into paths
+    void new_in_dir(String s) {
+        Buffer &b = main_ns::path_buffer;
+        b.reset();
+        for (int i = 0;; i++) {
+            char c = s[i];
+            if (c == 0 || c == ':') {
+                if (b.last_char() == '/') b.remove_last();
+                if (b.size() == 1 && b[0] == '.') b.remove_last();
+                input_path.push_back(b.to_string());
+                b.reset();
+                if (c == 0) return;
+            } else
+                b.push_back(c);
+        }
+    }
+
+    void obsolete(const std::string &s) { spdlog::info("Obsolete option `-{}' ignored\n", s); }
+
+    auto param_hack(String a) -> bool {
+        Buffer B;
+        B.reset_ptr();
+        B.push_back(a);
+        if (!B.find_equals()) return false;
+        if (!B.backup_space()) return false;
+        B.advance();
+        B.skip_sp_tab();
+        other_options.push_back(B.to_string(B.ptr1));
+        other_options.push_back(B.to_string(B.ptr));
+        return true;
+    }
+
+    void set_everyjob(const std::string &s) { everyjob_string = s; } // \todo inline
+
+    void show_encoding(size_t wc, const std::string &name) {
+        const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
+        the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
+    }
+} // namespace
 
 MainClass::MainClass() {
 #ifdef CONFDIR
@@ -48,8 +266,9 @@ auto MainClass::print_os() const -> String {
 }
 
 void MainClass::check_for_input() {
-    main_ns::check_in_dir();
-    std::string s = main_ns::hack_for_input(infile);
+    if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
+
+    std::string s = hack_for_input(infile);
     if (!non_interactive()) {
         input_content.set_interactive();
         input_content.push_front(Clines(1, "foo", true));
@@ -170,7 +389,7 @@ void MainClass::set_ent_names(String s) {
 }
 
 void MainClass::parse_args(int argc, char **argv) {
-    main_ns::find_conf_path();
+    find_conf_path();
     String s;
     if (argc == 1) end_with_help(0);
     if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
@@ -242,7 +461,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
 void MainClass::parse_option(int &p, int argc, char **argv) {
     int        eqpos   = 0;
     String     s       = split_one_arg(argv[p], eqpos);
-    param_args special = main_ns::find_param_type(s);
+    param_args special = find_param_type(s);
     if (special != pa_none) {
         String a = argv[p] + eqpos;
         if (eqpos == 0) a = check_for_arg(p, argc, argv);
@@ -275,12 +494,12 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             set_everyjob("\\usepackage{amsmath}" + std::string(a) + "\\stop");
             return;
         case pa_outfile: out_name = a; return;
-        case pa_indir: main_ns::new_in_dir(a); return;
+        case pa_indir: new_in_dir(a); return;
         case pa_outdir: out_dir = a; return;
         case pa_logfile: log_name = a; return;
         case pa_dtd: opt_doctype = a; return;
         case pa_param:
-            if (main_ns::param_hack(a)) return;
+            if (param_hack(a)) return;
             if (p >= argc - 1) { return; }
             other_options.emplace_back(a);
             other_options.emplace_back(argv[p + 1]);
@@ -720,8 +939,8 @@ void MainClass::see_name1() {
     B << bf_reset << no_ext;
     int y = 0;
     if (handling_ra) { // find and check the year from the file name
-        y = main_ns::extract_year(B, C);
-        main_ns::check_year(y, C, dclass, year_string);
+        y = extract_year(B, C);
+        check_year(y, C, dclass, year_string);
     }
     auto k = B.last_slash(); // remove the directory part
     if (k) {
@@ -729,8 +948,8 @@ void MainClass::see_name1() {
         B << bf_reset << s;
     }
     the_parser.set_projet_val(B.to_string()); // this is apics
-    if (handling_ra) {
-        main_ns::check_lowercase(B);
+    if (handling_ra) {                        // \todo handling_ra should disappear from tralics alltogether
+        check_lowercase(B);
         year_string = C.to_string();
         out_name    = B.to_string(); // This is apics
         year        = y;
