@@ -757,7 +757,7 @@ void Slined::do_esc_command(size_t n) {
         return;
     }
     if ('A' <= c && c <= 'Z') // ignore case
-        c = c - 'A' + 'a';
+        c = c + ('a' - 'A');
     do_esc_command(n, c);
 }
 

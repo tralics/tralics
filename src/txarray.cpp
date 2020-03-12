@@ -15,14 +15,13 @@
 #include "txparser.h"
 #include "txxml.h"
 
-static NewArray new_array_object;
-static char     char_for_error = 'c';
-
 namespace {
-    bool    in_hlinee, have_above, have_below;
-    Istring hlinee_width, hlinee_above, hlinee_below;
-    long    cline_first, cline_last;
-    Buffer  errbuf;
+    NewArray new_array_object;
+    char     char_for_error = 'c';
+    bool     in_hlinee, have_above, have_below;
+    Istring  hlinee_width, hlinee_above, hlinee_below;
+    long     cline_first, cline_last;
+    Buffer   errbuf;
 } // namespace
 
 void Parser::boot_NAO() { new_array_object.boot(this); }

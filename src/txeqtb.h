@@ -185,7 +185,7 @@ class SaveAuxCmd : public SaveAux {
     size_t cs;    // ths position in eqtb to be restored
     CmdChr val;   // the CmdChr to be restored
 public:
-    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.level), cs(a), val(X) {}
+    SaveAuxCmd(size_t a, const Equivalent &X) : SaveAux(st_cmd), level(X.level), cs(a), val(X) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
 };

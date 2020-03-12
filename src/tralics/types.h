@@ -1,6 +1,6 @@
 #pragma once
 #include <cassert>
-#include <stddef.h>
+#include <cstddef>
 #include <type_traits>
 
 using uchar  = unsigned char;

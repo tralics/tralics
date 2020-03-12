@@ -122,12 +122,11 @@ public:
 class HalfLogger {
 public:
     Logger L;
-    bool   verbose;
+    bool   verbose{true};
     auto   operator<<(logger_fn f) -> HalfLogger & {
         f(L);
         return *this;
     }
-    HalfLogger() { verbose = true; }
 };
 
 // if X is of type logger, then X << lg_start; is the same as
