@@ -898,7 +898,7 @@ void Parser::scan_math3(int x, math_list_type t, int m) {
     if (m == 0 && (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1)) {
         if (!cmi.end_of_row()) {
             refstepcounter("equation", false);
-            cmi.insert_special_tag(the_parser.eqtb_string_table[0].get_val());
+            cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
         if (tracing_math()) cmi.dump_labels();
         cmi.ml_check_labels();
@@ -1350,7 +1350,7 @@ void Parser::scan_math_endcell_ok(int res) {
         bool w = cmi.end_of_row();
         if (!w) {
             refstepcounter("equation", false);
-            cmi.insert_special_tag(the_parser.eqtb_string_table[0].get_val());
+            cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
     }
     pop_level(bt_cell); // start-end a group for the next cell
@@ -1423,7 +1423,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
     }
     if (type == math_env_cd && et == math_data.get_list(res).get_sname()) {
         if (res == 0) { // end of main formula
-            if (cmi.get_eqnum_status() > 1) the_tag = the_parser.eqtb_string_table[0].get_val();
+            if (cmi.get_eqnum_status() > 1) the_tag = the_parser.eqtb_string_table[0].val;
         }
         return true;
     }

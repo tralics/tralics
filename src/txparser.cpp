@@ -2193,7 +2193,7 @@ void Parser::T_begin(const std::string &s) {
 
 // This is executed when we pop a slot containing restore-foo-env
 void SaveAuxEnv::unsave(bool trace, Parser &P) {
-    if (trace) the_log << lg_startstack << "ending environment " << newname << "; resuming " << oldname << ".\n";
+    if (trace) the_log << lg_startstack << "ending environment " << name << "; resuming " << oldname << ".\n";
     P.set_cur_env_name(oldname, line);
 }
 
@@ -2223,11 +2223,11 @@ void Parser::T_end(const std::string &s) {
         cur_level++;
         throw EndOfData();
     }
-    back_input(X->get_token());
+    back_input(X->token);
     back_input(hash_table.sendgroup_token);
-    cur_tok = X->get_token();
-    if (X->get_val().is_user()) {
-        cur_cmd_chr = X->get_val();
+    cur_tok = X->token;
+    if (X->cc.is_user()) {
+        cur_cmd_chr = X->cc;
         Macro &T    = mac_table.get_macro(cur_cmd_chr.chr);
         if (T.nbargs != 0)
             parse_error(err_tok, "Illegal end of environment");
@@ -2236,7 +2236,7 @@ void Parser::T_end(const std::string &s) {
     } else {
         Token t = hash_table.temp_token;
         auto  k = t.eqtb_loc();
-        hash_table.eqtb[k].setnl(X->get_val());
+        hash_table.eqtb[k].setnl(X->cc);
         back_input(t);
     }
 }
@@ -2979,7 +2979,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     }
     case if_void_code: {
         auto n = scan_reg_num();
-        Xml *x = box_table[n].get_val();
+        Xml *x = box_table[n].val;
         if (x == nullptr) return true;
         return x->empty();
     }
@@ -3509,11 +3509,11 @@ void Parser::do_register_command(bool gbl) {
                 if (p == it_int)
                     cur_val.incr_int(eqtb_int_table[l].val);
                 else
-                    cur_val.incr_dim(eqtb_dim_table[l].get_val());
+                    cur_val.incr_dim(eqtb_dim_table[l].val);
             }
         } else {
             scan_glue(internal_type(p), T);
-            if (q == advance_cmd) cur_val.incr_glue(glue_table[l].get_val());
+            if (q == advance_cmd) cur_val.incr_glue(glue_table[l].val);
         }
     } else {
         auto v = scan_int(T); // Here we need an integer.
@@ -3521,7 +3521,7 @@ void Parser::do_register_command(bool gbl) {
             if (p == it_int)
                 cur_val.set_int(eqtb_int_table[l].val);
             else
-                cur_val.set_dim(eqtb_dim_table[l].get_val());
+                cur_val.set_dim(eqtb_dim_table[l].val);
             ScaledInt &W = cur_val.get_scaled();
             if (q == multiply_cmd)
                 if (p == it_int)
@@ -3532,7 +3532,7 @@ void Parser::do_register_command(bool gbl) {
                 W.divide(v);
             }
         } else {
-            Glue s = glue_table[l].get_val();
+            Glue s = glue_table[l].val;
             if (q == multiply_cmd)
                 s.multiply(cur_val.get_int_val());
             else
@@ -4030,9 +4030,9 @@ void Parser::exec_calc() {
     cur_val = res;
     if (advance) {
         if (p == it_glue)
-            cur_val.incr_glue(glue_table[l].get_val());
+            cur_val.incr_glue(glue_table[l].val);
         else if (p == it_dimen)
-            cur_val.incr_dim(eqtb_dim_table[l].get_val());
+            cur_val.incr_dim(eqtb_dim_table[l].val);
         else
             cur_val.incr_int(eqtb_int_table[l].val);
     }
@@ -4126,14 +4126,14 @@ void Parser::begin_box(size_t src, subtypes c) {
     }
     if (c == box_code) {
         res     = scan_reg_num();
-        cur_box = box_table[res].get_val();
+        cur_box = box_table[res].val;
         box_table[res].set_val(nullptr);
         box_end(cur_box, src);
         return;
     }
     if (c == copy_code) {
         res     = scan_reg_num();
-        cur_box = box_table[res].get_val();
+        cur_box = box_table[res].val;
         box_end(cur_box, src);
         return;
     }
@@ -4224,7 +4224,7 @@ void Parser::M_xray(subtypes c) {
     case showbox_code: {
         auto k = scan_reg_num();
         log_and_tty << "Box " << k << ": ";
-        show_box(box_table[k].get_val());
+        show_box(box_table[k].val);
         return;
     }
     case show_xmlA_code:

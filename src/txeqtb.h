@@ -114,9 +114,10 @@ public:
 
 // this saves two values
 class SaveState {
-    TokenList L;          // the token list to be restored
-    bool      restricted; // the restricted flag to be restored
+    TokenList L; // the token list to be restored
 public:
+    bool restricted; // the restricted flag to be restored
+
     void copy_and_reset(TokenList &X) {
         L.clear();
         L.splice(L.begin(), X);
@@ -125,35 +126,36 @@ public:
         X.clear();
         X.splice(X.begin(), L);
     }
-    void               set_restricted(bool b) { restricted = b; }
-    [[nodiscard]] auto get_restricted() const -> bool { return restricted; }
+    void set_restricted(bool b) { restricted = b; }
 };
 
 // This is a virtual class for saving an object that is in an EQTB table
 // In general we have a level field, a position field and a value field
+// \todo this needs some overhaul...
 class SaveAux {
 public:
     save_type type;    // the type of the real thing
-    int       line_no; // current line number at start
+    int       line{0}; // current line number at start
 public:
+    SaveAux(save_type t) : type(t) {}
+    virtual ~SaveAux() = default;
+
     virtual void unsave(bool, Parser &) = 0;
-    virtual ~SaveAux()                  = default;
-    SaveAux(save_type t) : type(t), line_no(0) {}
-    void               set_line(int l) { line_no = l; }
-    [[nodiscard]] auto get_line() const -> int { return line_no; }
-    void               unsave_trace_aux(String s, int pos, bool rt);
-    static void        restore_or_retain(bool rt, String s);
+    void         set_line(int l) { line = l; }
+    void         unsave_trace_aux(String s, int pos, bool rt);
+    static void  restore_or_retain(bool rt, String s);
 };
 
 // A boundary object is created when we see an open brace, or something
 // like that.
 class SaveAuxBoundary : public SaveAux {
-    boundary_type val; // explains why we opened a new group
 public:
-    [[nodiscard]] auto get_val() const -> boundary_type { return val; }
-    void               unsave(bool trace, Parser &P) override;
+    boundary_type val; // explains why we opened a new group
+
     SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
     ~SaveAuxBoundary() override = default;
+
+    void unsave(bool trace, Parser &P) override;
     void dump(int n);
 };
 
@@ -164,8 +166,9 @@ class SaveAuxInt : public SaveAux {
     long   val;   // the value to be restored
 public:
     SaveAuxInt(int l, size_t a, long b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxInt() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // This restores a dimension
@@ -175,8 +178,9 @@ class SaveAuxDim : public SaveAux {
     ScaledInt val;   // the value to be restored
 public:
     SaveAuxDim(int l, size_t a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxDim() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for restoring a command
@@ -186,8 +190,9 @@ class SaveAuxCmd : public SaveAux {
     CmdChr val;   // the CmdChr to be restored
 public:
     SaveAuxCmd(size_t a, const Equivalent &X) : SaveAux(st_cmd), level(X.level), cs(a), val(X) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure fopr restoring a box
@@ -197,8 +202,9 @@ class SaveAuxBox : public SaveAux {
     Xml *  val;   // the value to be restored
 public:
     SaveAuxBox(int l, size_t a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxBox() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // case of \setbox0=\hbox{...} , remember the number and the box
@@ -207,8 +213,9 @@ class SaveAuxBoxend : public SaveAux {
     Xml *  val; // the value of the box
 public:
     SaveAuxBoxend(size_t a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxBoxend() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for restoring a token list
@@ -218,8 +225,9 @@ class SaveAuxToken : public SaveAux {
     TokenList val;   // the value to be restored
 public:
     SaveAuxToken(int l, size_t p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxToken() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for restoring glue
@@ -229,8 +237,9 @@ class SaveAuxGlue : public SaveAux {
     Glue   val;   // the value to be restored
 public:
     SaveAuxGlue(int l, size_t p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxGlue() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for restoring glue
@@ -240,28 +249,27 @@ class SaveAuxString : public SaveAux {
     std::string val; // the value to be restored
 public:
     SaveAuxString(int l, size_t p, std::string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxString() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for a \begin{something}
 // had an unused field: int val;
 class SaveAuxEnv : public SaveAux {
+public:
     std::string oldname;
-    std::string newname;
+    std::string name;
     int         line;
-    Token       T;
+    Token       token;
     CmdChr      cc;
 
-public:
-    void               set_line(int x) { line = x; }
-    [[nodiscard]] auto get_val() const -> CmdChr { return cc; }
-    [[nodiscard]] auto get_token() const -> Token { return T; }
-    auto               get_name() -> std::string { return newname; }
-    void               unsave(bool trace, Parser &P) override;
     SaveAuxEnv(std::string a, std::string aa, int ll, Token b, CmdChr c)
-        : SaveAux(st_env), oldname(std::move(a)), newname(std::move(aa)), line(ll), T(b), cc(c) {}
+        : SaveAux(st_env), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
     ~SaveAuxEnv() override = default;
+
+    void set_line(int x) { line = x; }
+    void unsave(bool trace, Parser &P) override;
 };
 
 // data structure for a font change
@@ -270,9 +278,10 @@ class SaveAuxFont : public SaveAux {
     long    value; // the value to be restored
     Istring color; // the color to restore
 public:
-    void unsave(bool trace, Parser &P) override;
     SaveAuxFont(int l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
     ~SaveAuxFont() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // This pops a token at the end of the group. Does not depend on a level
@@ -280,8 +289,9 @@ class SaveAuxAftergroup : public SaveAux {
     Token value; // the token to pop
 public:
     SaveAuxAftergroup(Token v) : SaveAux(st_save), value(v) {}
-    void unsave(bool trace, Parser &P) override;
     ~SaveAuxAftergroup() override = default;
+
+    void unsave(bool trace, Parser &P) override;
 };
 
 // EQBT entry for an integer
@@ -289,16 +299,14 @@ public:
 // Level_one is the outer level. The old value must be saved in case
 // the current level is different fron the old one, and is greater than one.
 // These objects are defined at 1
+// \todo template<typename T> Eqtb { T val; ... }
 struct EqtbInt {
     long val{0};   // value of the object
     int  level{1}; // level at which this is defined
 
-    EqtbInt() = default;
-
-    void               set_val(long x) { val = x; }
-    void               set_level(int x) { level = x; }
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(long a, int b) {
+    void set_val(long x) { val = x; }
+    void set_level(int x) { level = x; }
+    void val_and_level(long a, int b) {
         val   = a;
         level = b;
     }
@@ -306,15 +314,13 @@ struct EqtbInt {
 };
 
 class EqtbString {
+public:
     std::string val;      // value of the object
     int         level{1}; // level at which this is defined
-public:
-    EqtbString() : val("") {}
-    [[nodiscard]] auto get_val() const -> std::string { return val; }
-    void               set_val(std::string x) { val = std::move(x); }
-    void               set_level(int x) { level = x; }
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(std::string a, int b) {
+
+    void set_val(std::string x) { val = std::move(x); }
+    void set_level(int x) { level = x; }
+    void val_and_level(std::string a, int b) {
         val   = std::move(a);
         level = b;
     }
@@ -323,15 +329,13 @@ public:
 
 // EQBT entry for a dimension.
 class EqtbDim {
-    ScaledInt val;      // value of the object
-    int       level{1}; // level at which this is defined
 public:
-    EqtbDim() : val(0) {}
-    [[nodiscard]] auto get_val() const -> ScaledInt { return val; }
-    void               set_val(ScaledInt x) { val = x; }
-    void               set_level(int x) { level = x; }
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(ScaledInt a, int b) {
+    ScaledInt val{0};   // value of the object
+    int       level{1}; // level at which this is defined
+
+    void set_val(ScaledInt x) { val = x; }
+    void set_level(int x) { level = x; }
+    void val_and_level(ScaledInt a, int b) {
         val   = a;
         level = b;
     }
@@ -340,13 +344,11 @@ public:
 
 // EQTB entry for a glue
 class EqtbGlue {
+public:
     Glue val;      // value of the object
     int  level{1}; // level at which this is defined
-public:
-    EqtbGlue() = default;
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    [[nodiscard]] auto get_val() const -> Glue { return val; }
-    void               val_and_level(Glue a, int b) {
+
+    void val_and_level(Glue a, int b) {
         val   = a;
         level = b;
     }
@@ -358,10 +360,7 @@ struct EqtbToken {
     TokenList val;      // value of the object
     int       level{1}; // level at which this is defined
 
-    EqtbToken() = default;
-
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    void               val_and_level(TokenList a, int b) {
+    void val_and_level(TokenList a, int b) {
         val   = std::move(a);
         level = b;
     }
@@ -370,13 +369,11 @@ struct EqtbToken {
 
 // EQTB entry for a box
 class EqtbBox {
+public:
     int  level{1};     // level at which this is defined
     Xml *val{nullptr}; // value of the object
-public:
-    void               set_val(Xml *X) { val = X; }
-    [[nodiscard]] auto get_val() const -> Xml * { return val; }
-    [[nodiscard]] auto get_level() const -> int { return level; }
-    EqtbBox() = default;
+
+    void set_val(Xml *X) { val = X; }
     void val_and_level(Xml *a, int b) {
         val   = a;
         level = b;

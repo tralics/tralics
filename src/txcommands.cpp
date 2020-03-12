@@ -817,7 +817,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
 void Parser::T_un_box(subtypes c) {
     auto i = scan_reg_num();
     if (c == unhbox_code) leave_v_mode();
-    Xml *cur_box = box_table[i].get_val();
+    Xml *cur_box = box_table[i].val;
     the_stack.unbox(cur_box);
     if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
 }

@@ -241,16 +241,16 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.get_level(), a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.level, a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
 // Define for an string quantity. Like eq_define without reference counts.
 void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
-    bool        reassign = !gbl && W.get_val() == c;
+    bool        reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << parser_ns::save_string_name(a) << "=" << W.get_val();
+        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << parser_ns::save_string_name(a) << "=" << W.val;
         if (!reassign) the_log << " into " << parser_ns::save_string_name(a) << "=" << c;
         the_log << lg_endbrace;
     }
@@ -259,7 +259,7 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxString(W.get_level(), a, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxString(W.level, a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -267,10 +267,10 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
 // Define for a dimension quantity. Like eq_define without reference counts.
 void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     EqtbDim &W        = eqtb_dim_table[a];
-    bool     reassign = !gbl && W.get_val() == c;
+    bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_dimen_cmd, subtypes(a));
-        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.get_val();
+        the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << lg_endbrace;
     }
@@ -279,7 +279,7 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxDim(W.get_level(), a, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxDim(W.level, a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -292,10 +292,10 @@ auto operator==(const Glue &a, const Glue &b) -> bool {
 // Define for a glue quantity
 void Parser::glue_define(size_t a, Glue c, bool gbl) {
     EqtbGlue &W        = glue_table[a];
-    bool      reassign = !gbl && W.get_val() == c;
+    bool      reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_glue_cmd, subtypes(a));
-        Thbuf1 << bf_reset << W.get_val();
+        Thbuf1 << bf_reset << W.val;
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
         the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << Thbuf1;
         if (!reassign) {
@@ -310,7 +310,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxGlue(W.get_level(), a, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxGlue(W.level, a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -319,13 +319,13 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
 void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
-        the_log << lg_startbrace << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.get_val();
+        the_log << lg_startbrace << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.val;
         the_log << " into \\box" << a << "=" << c << lg_endbrace;
     }
     if (gbl)
         W.val_and_level(c, 1);
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(W.get_level(), a, W.get_val()));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(W.level, a, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -345,7 +345,7 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.get_level(), p, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.level, p, W.val));
         W.val_and_level(c, cur_level);
     }
 }
@@ -379,7 +379,7 @@ void SaveAux::restore_or_retain(bool rt, String s) { the_log << lg_startstack <<
 
 // This done when we restore an integer value
 void SaveAuxInt::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_int_table[pos].get_level() != 1;
+    bool rt = P.eqtb_int_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_int_cmd, subtypes(pos));
@@ -391,14 +391,14 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 // This done when we restore a string value
 //
 void SaveAuxString::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_string_table[pos].get_level() != 1;
+    bool rt = P.eqtb_string_table[pos].level != 1;
     if (trace) { the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos) << "=" << val << lg_endsentence; }
     if (rt) P.eqtb_string_table[pos].val_and_level(val, level);
 }
 
 // This done when we restore a dimension value
 void SaveAuxDim::unsave(bool trace, Parser &P) {
-    bool rt = P.eqtb_dim_table[pos].get_level() != 1;
+    bool rt = P.eqtb_dim_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_dimen_cmd, subtypes(pos));
@@ -409,7 +409,7 @@ void SaveAuxDim::unsave(bool trace, Parser &P) {
 
 // Restore glue
 void SaveAuxGlue::unsave(bool trace, Parser &P) {
-    bool rt = P.glue_table[pos].get_level() != 1;
+    bool rt = P.glue_table[pos].level != 1;
     if (trace) {
         Thbuf1 << bf_reset << val;
         if (pos >= thinmuskip_code) Thbuf1.pt_to_mu();
@@ -446,7 +446,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
 
 // Restore token list.
 void SaveAuxToken::unsave(bool trace, Parser &P) {
-    bool rt = P.toks_registers[pos].get_level() != 1;
+    bool rt = P.toks_registers[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_toks_cmd, subtypes(pos));
@@ -458,7 +458,7 @@ void SaveAuxToken::unsave(bool trace, Parser &P) {
 // Restore box. Called in the case {\setbox0=\hbox{...}}
 // when we see the last closing brace. This may restore box0.
 void SaveAuxBox::unsave(bool trace, Parser &P) {
-    bool rt = P.box_table[pos].get_level() != 1;
+    bool rt = P.box_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\box");
         the_log << pos << lg_endsentence;
@@ -490,7 +490,7 @@ void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
 // But this function cannot call box_end (because we are still in the {...}
 // group. Hence box_end must be called after cur_level is decremented.
 void SaveAuxBoundary::unsave(bool trace, Parser &P) {
-    if (trace) the_log << lg_startstack << "level - " << P.get_cur_level() << " for " << val << " from line " << line_no << lg_end;
+    if (trace) the_log << lg_startstack << "level - " << P.get_cur_level() << " for " << val << " from line " << line << lg_end;
     P.decr_cur_level();
     if (the_box_position >= 0) {
         if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();
@@ -508,8 +508,8 @@ auto       Parser::first_boundary() -> boundary_type {
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_boundary) continue;
-        first_boundary_loc = p->get_line();
-        return dynamic_cast<SaveAuxBoundary *>(p)->get_val();
+        first_boundary_loc = p->line;
+        return dynamic_cast<SaveAuxBoundary *>(p)->val;
     }
     return bt_impossible;
 }
@@ -522,7 +522,7 @@ auto Parser::stack_math_in_cell() -> bool {
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_boundary) continue;
-        boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->get_val();
+        boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
         if (cur == bt_brace || cur == bt_semisimple) continue;
         if (first) {
             if (cur != bt_math) return false;
@@ -547,7 +547,7 @@ void Parser::dump_save_stack() {
 }
 void SaveAuxBoundary::dump(int n) {
     String s = val == bt_semisimple ? "semi simple" : parser_ns::to_string(val);
-    the_log << "### " << s << " group (level " << n << ") entered at line " << line_no << "\n";
+    the_log << "### " << s << " group (level " << n << ") entered at line " << line << "\n";
 }
 
 // The function called when we see a closing brace or \endgroup.
@@ -620,14 +620,14 @@ void Parser::pop_all_levels() {
     for (;;) {
         if (the_save_stack.empty()) break;
         SaveAux *tmp = the_save_stack.back();
-        std::cout << to_string(tmp->type) << " at " << tmp->line_no << "\n";
+        std::cout << to_string(tmp->type) << " at " << tmp->line << "\n";
         if (tmp->type == st_env) {
             auto *q = dynamic_cast<SaveAuxEnv *>(tmp);
-            ename   = q->get_name();
+            ename   = q->name;
         }
         if (tmp->type == st_boundary) {
-            boundary_type w = dynamic_cast<SaveAuxBoundary *>(tmp)->get_val();
-            int           l = tmp->get_line();
+            boundary_type w = dynamic_cast<SaveAuxBoundary *>(tmp)->val;
+            int           l = tmp->line;
             if (started) {
                 B << ".\n"; // finish prev line
                 main_ns::nb_errs++;
@@ -673,7 +673,7 @@ void Parser::final_checks() {
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1];
         A.reset();
-        A << to_string(p->type) << " at " << p->line_no;
+        A << to_string(p->type) << " at " << p->line;
         if (B.empty()) {
             B << "  " << A;
         } else if (B.size() + A.size() < 78) {
@@ -694,7 +694,7 @@ auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
         SaveAux *p = the_save_stack[i - 1];
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p);
-        if (q->get_name() == s) return q;
+        if (q->name == s) return q;
     }
     return nullptr;
 }

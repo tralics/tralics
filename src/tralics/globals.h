@@ -1,6 +1,7 @@
 #pragma once
 #include "codepoint.h"
 #include "enums.h"
+#include <array>
 #include <string>
 #include <vector>
 

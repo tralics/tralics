@@ -450,7 +450,7 @@ auto Parser::T_item_label(int c) -> Istring {
     TokenList L;
     bool      opt = cur_tok.is_open_bracket();
     if (opt) read_optarg_nopar(L);
-    std::string list_ctr = the_parser.eqtb_string_table[1].get_val();
+    std::string list_ctr = the_parser.eqtb_string_table[1].val;
     if (!list_ctr.empty()) refstepcounter(list_ctr.c_str(), false);
     if (!opt) {
         Token t = hash_table.itemlabel_token;
@@ -960,8 +960,8 @@ void Parser::includegraphics(subtypes C) {
 void Parser::T_epsfbox() {
     size_t    xdim_pos = 11; //  \epsfxsize hard-coded
     size_t    ydim_pos = 12; // \epsfysize hard-coded
-    ScaledInt xdim     = eqtb_dim_table[xdim_pos].get_val();
-    ScaledInt ydim     = eqtb_dim_table[ydim_pos].get_val();
+    ScaledInt xdim     = eqtb_dim_table[xdim_pos].val;
+    ScaledInt ydim     = eqtb_dim_table[ydim_pos].val;
     flush_buffer();
     std::string y;
     {

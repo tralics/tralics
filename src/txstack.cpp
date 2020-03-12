@@ -644,7 +644,7 @@ void Stack::mark_omit_cell() { Table.back().omit_cell = true; }
 // This removes the last element of the top-stack
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
-inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].get_val()); }
+inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].val); }
 
 void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));

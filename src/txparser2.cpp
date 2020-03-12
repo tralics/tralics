@@ -1777,28 +1777,28 @@ void Parser::formatdate() {
     the_stack.add_last(X);
     AttList &AL = X->get_id().get_att();
     Buffer & B  = local_buf;
-    B << bf_reset << FP.get_year();
+    B << bf_reset << FP.year;
     AL.push_back(Istring("year"), Istring(B));
-    int k = FP.get_month();
+    int k = FP.month;
     if (k < 0) k = -k;
     B << bf_reset << k;
     AL.push_back(Istring("month"), Istring(B));
-    B << bf_reset << FP.get_day();
+    B << bf_reset << FP.day;
     AL.push_back(Istring("day"), Istring(B));
 }
 
 // True if ok, parse_error otherwise
 auto FormatDate::sort() -> bool {
-    if (field1 > field2) std::swap(field1, field2);
-    if (field2 > field3) { // else ok
-        std::swap(field3, field2);
-        if (field1 > field2) std::swap(field1, field2);
+    if (month > day) std::swap(month, day);
+    if (day > year) { // else ok
+        std::swap(year, day);
+        if (month > day) std::swap(month, day);
     }
-    if (field2 > 31) {
+    if (day > 31) {
         the_parser.parse_error(err_tok, "Date has two fields with value>31");
         return false;
     }
-    if (field2 < 0) {
+    if (day < 0) {
         the_parser.parse_error(err_tok, "Date has two month fields");
         return false;
     }
@@ -2052,27 +2052,26 @@ auto FormatDate::parse_format(Buffer &B) -> bool {
     }
     if (c1 > c2) {
         std::swap(c1, c2);
-        std::swap(field1, field2);
+        std::swap(month, day);
     }
     if (c2 > c3) { // else ok
         std::swap(c2, c3);
-        std::swap(field2, field3);
+        std::swap(day, year);
         if (c1 > c2) {
             std::swap(c1, c2);
-            std::swap(field1, field2);
+            std::swap(month, day);
         }
     }
     // now c1=m c2=d c3=y
-    // hence field1=month, field2 = day field3 =year
-    if (field1 > 12) {
+    if (month > 12) {
         the_parser.parse_error(err_tok, "Bad month field");
         return false;
     }
-    if (field2 > 31 || field2 < 0) {
+    if (day > 31 || day < 0) {
         the_parser.parse_error(err_tok, "Bad day field");
         return false;
     }
-    if (field3 < 0) {
+    if (year < 0) {
         the_parser.parse_error(err_tok, "Bad year field");
         return false;
     }
@@ -2080,16 +2079,16 @@ auto FormatDate::parse_format(Buffer &B) -> bool {
 }
 
 auto FormatDate::parse(Buffer &B) -> bool {
-    if (!scan_next(B, field1)) return false;
-    if (!scan_next(B, field2)) return false;
-    if (!scan_next(B, field3)) return false;
+    if (!scan_next(B, month)) return false;
+    if (!scan_next(B, day)) return false;
+    if (!scan_next(B, year)) return false;
     B.skip_sp_tab_nl();
     if (!B.at_eol()) return parse_format(B);
     sort();
-    if (field3 > 31) {
-        if (field1 < 0) return true;
-        if (field1 == field2) return true;
-        if (field2 > 12) return true;
+    if (year > 31) {
+        if (month < 0) return true;
+        if (month == day) return true;
+        if (day > 12) return true;
     }
     the_parser.parse_error(err_tok, "Unable to distinguish between year day and month");
     return false;
@@ -2104,9 +2103,9 @@ auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     B << s;
     bool res = parse(B);
     if (!res) {
-        field1 = 1;
-        field2 = 1;
-        field3 = 2008;
+        month = 1;
+        day   = 1;
+        year  = 2008;
     }
     return res;
 }

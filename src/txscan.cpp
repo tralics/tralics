@@ -421,7 +421,7 @@ void Parser::save_the_state(SaveState &x) {
 void Parser::restore_the_state(SaveState &x) {
     TL.clear();
     x.restore(TL);
-    restricted = x.get_restricted();
+    restricted = x.restricted;
 }
 
 // We have seen a character c at category code 7, for instance ^
@@ -1240,12 +1240,12 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {
             auto vv = scan_reg_num();
-            fetch_box_id(box_table[vv].get_val());
+            fetch_box_id(box_table[vv].val);
             return;
         }
         case XMLboxname_code: {
             auto vv = scan_reg_num();
-            xml_name(box_table[vv].get_val(), level);
+            xml_name(box_table[vv].val, level);
             return;
         }
         case xmlAname_code: xml_name(the_xmlA, level); return;
@@ -1314,13 +1314,13 @@ void Parser::scan_something_internal(internal_type level) {
         cur_val.set_int(eqtb_int_table[m].val);
         return;
     case assign_dimen_cmd: // \parindent etc
-        cur_val.set_dim(eqtb_dim_table[m].get_val());
+        cur_val.set_dim(eqtb_dim_table[m].val);
         return;
     case assign_glue_cmd: // \baselineskip etc
-        cur_val.set_glue(glue_table[m].get_val());
+        cur_val.set_glue(glue_table[m].val);
         return;
     case assign_mu_glue_cmd: // \thinmuskip etc
-        cur_val.set_mu(glue_table[m].get_val());
+        cur_val.set_mu(glue_table[m].val);
         return;
     case assign_font_dimen_cmd: // \fontdimen
     {
@@ -1425,9 +1425,9 @@ void Parser::scan_something_internal(internal_type level) {
         v = scan_reg_num();
         switch (static_cast<internal_type>(m)) {
         case it_int: cur_val.set_int(eqtb_int_table[v + count_reg_offset].val); return;
-        case it_dimen: cur_val.set_dim(eqtb_dim_table[v].get_val()); return;
-        case it_glue: cur_val.set_glue(glue_table[v].get_val()); return;
-        case it_mu: cur_val.set_mu(glue_table[v + muskip_reg_offset].get_val()); return;
+        case it_dimen: cur_val.set_dim(eqtb_dim_table[v].val); return;
+        case it_glue: cur_val.set_glue(glue_table[v].val); return;
+        case it_mu: cur_val.set_mu(glue_table[v + muskip_reg_offset].val); return;
         default: parse_error(err_tok, "Confusion in \\register"); return;
         }
     default: parse_error(err_tok, "You can't use `", cur_tok, "' after \\the", "You can't use x after...");

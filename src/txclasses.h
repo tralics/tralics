@@ -95,8 +95,7 @@ public:
 };
 
 // The  date parser
-class FormatDate {
-    int         field1{0}, field2{0}, field3{0};
+class FormatDate { // \todo c++ standard class for date?
     Token       err_tok;
     auto        scan_a_field(Buffer &B, int &res) -> bool;
     static auto scan_a_month(Buffer &B, int &res) -> bool;
@@ -107,8 +106,7 @@ class FormatDate {
     auto        parse(Buffer &B) -> bool;
 
 public:
-    auto               interpret(const std::string &s, Token T) -> bool;
-    [[nodiscard]] auto get_year() const -> int { return field3; }
-    [[nodiscard]] auto get_month() const -> int { return field1; }
-    [[nodiscard]] auto get_day() const -> int { return field2; }
+    int month{0}, day{0}, year{0};
+
+    auto interpret(const std::string &s, Token T) -> bool;
 };
