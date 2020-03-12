@@ -190,7 +190,7 @@ public:
     static auto want_handle_key(int s, bool last) -> bool;
 };
 
-// A bibliographic entry
+// A bibliographic entry \todo derive from CitationKey?
 class BibEntry {
     friend class Bibtex;
 

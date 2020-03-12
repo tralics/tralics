@@ -65,38 +65,37 @@ public:
     std::array<Equivalent, eqtb_size> eqtb;
 
 private:
-    std::array<String, hash_size> Text;       // the strings
-    std::array<size_t, hash_size> Next;       // points to next
-    Buffer                        B;          // internal buffer
-    size_t                        hash_used;  // all places above this one are used
-    int                           hash_usage; // number of commands in the table
-    int                           hash_bad;   // number of items not at hash position
-private:
-    auto find_empty(String s) -> size_t; // find an empty slot
-    auto find_aux(size_t p, String name) -> size_t;
+    std::array<String, hash_size> Text;      // the strings
+    std::array<size_t, hash_size> Next;      // points to next
+    Buffer                        B;         // internal buffer
+    size_t                        hash_used; // all places above this one are used
 
 public:
+    int hash_bad;   // number of items not at hash position
+    int hash_usage; // number of commands in the table
+
     Hashtab();
-    auto               my_buffer() -> Buffer & { return B; }
-    auto               locate(String s) -> Token;             // used by primitive, etc
-    auto               locate(const std::string &s) -> Token; // used by primitive, etc
-    auto               locate(const Buffer &b) -> Token;      // used by primitive, etc
-    [[nodiscard]] auto get_hash_usage() const -> int { return hash_usage; }
-    [[nodiscard]] auto get_hash_bad() const -> int { return hash_bad; }
-    auto               hash_find(const Buffer &b, String name) -> size_t;
-    auto               hash_find() -> size_t;
-    auto               primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
-    auto               nohash_primitive(String a, CmdChr b) -> Token;
-    void               eval_let(String a, String b);
-    auto               eval_letv(String a, String b) -> Token;
-    void               eval_let_local(String a, String b);
-    auto               operator[](size_t k) const { return Text[k]; }
-    void               dump();
-    void               boot_fancyhdr();
-    void               boot_etex();
-    void               load_latex3();
-    void               boot_keyval();
-    auto               is_defined(const Buffer &b) -> bool;
+
+    auto my_buffer() -> Buffer & { return B; }
+    auto locate(String s) -> Token;             // used by primitive, etc
+    auto locate(const std::string &s) -> Token; // used by primitive, etc
+    auto locate(const Buffer &b) -> Token;      // used by primitive, etc
+    auto hash_find(const Buffer &b, String name) -> size_t;
+    auto hash_find() -> size_t;
+    auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
+    auto nohash_primitive(String a, CmdChr b) -> Token;
+    void eval_let(String a, String b);
+    auto eval_letv(String a, String b) -> Token;
+    void eval_let_local(String a, String b);
+    auto find_empty(String s) -> size_t; // find an empty slot
+    auto find_aux(size_t p, String name) -> size_t;
+    auto operator[](size_t k) const { return Text[k]; }
+    void dump();
+    void boot_fancyhdr();
+    void boot_etex();
+    void load_latex3();
+    void boot_keyval();
+    auto is_defined(const Buffer &b) -> bool;
 };
 
 // This is an association table. We could use a standard C++ class here

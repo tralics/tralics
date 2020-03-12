@@ -35,8 +35,8 @@ void Stats::token_stats() {
     main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << static_cast<int>(str_length)
                         << ", merge " << m_merge << "\n"
                         << "Macros created " << nb_macros << ", deleted " << nb_macros_del << "; hash size "
-                        << the_parser.hash_table.get_hash_usage() << " + " << the_parser.hash_table.get_hash_bad() << "; foonotes "
-                        << footnotes << ".\n"
+                        << the_parser.hash_table.hash_usage << " + " << the_parser.hash_table.hash_bad << "; foonotes " << footnotes
+                        << ".\n"
                         << "Save stack +" << level_up << " -" << level_down << ".\n"
                         << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
                         << static_cast<int>(the_main->the_stack->get_xid().value) << " elements (" << static_cast<int>(nb_xboot)
