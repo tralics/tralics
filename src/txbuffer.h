@@ -11,12 +11,12 @@
 
 // This is the include file for the Buffer data structure
 
+#include "tralics/Token.h"
 #include "txid.h"
 #include "txscaled.h"
 #include <cstring>
 #include <vector>
 
-class AttList;
 struct AttPair;
 class LinePtr;
 class Xml;

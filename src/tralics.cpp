@@ -659,18 +659,18 @@ auto tralics_ns::twodig(int n) -> String { return n < 10 ? "0" : ""; }
 void Parser::boot_time() {
     time_t xx;
     time(&xx);
-    struct tm *x        = localtime(&xx);
-    int        sec      = x->tm_sec;
-    int        min      = x->tm_min;
-    int        hour     = x->tm_hour;
-    int        the_time = min + hour * 60;
-    int        year     = x->tm_year + 1900;
-    int        month    = x->tm_mon + 1;
-    int        day      = x->tm_mday;
-    eqtb_int_table[time_code].set_val(the_time);
-    eqtb_int_table[day_code].set_val(day);
-    eqtb_int_table[month_code].set_val(month);
-    eqtb_int_table[year_code].set_val(year);
+    struct tm *x                   = localtime(&xx);
+    int        sec                 = x->tm_sec;
+    int        min                 = x->tm_min;
+    int        hour                = x->tm_hour;
+    int        the_time            = min + hour * 60;
+    int        year                = x->tm_year + 1900;
+    int        month               = x->tm_mon + 1;
+    int        day                 = x->tm_mday;
+    eqtb_int_table[time_code].val  = the_time;
+    eqtb_int_table[day_code].val   = day;
+    eqtb_int_table[month_code].val = month;
+    eqtb_int_table[year_code].val  = year;
     std::srand(to_unsigned(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
     Buffer b;
     b << year << '/' << twodig(month) << month << '/' << twodig(day) << day;
@@ -689,8 +689,7 @@ void Parser::boot_time() {
 
 // Installs the default language.
 void Parser::set_default_language(int v) {
-    eqtb_int_table[language_code].set_val(v);
-    eqtb_int_table[language_code].set_level(1);
+    eqtb_int_table[language_code] = {v, 1};
     set_def_language_num(v);
 }
 
@@ -715,17 +714,17 @@ void Parser::make_constants() {
 // This is for lower-case upper-case conversions.
 // Defines values for the character c
 void Parser::mklcuc(size_t c, size_t lc, size_t uc) {
-    eqtb_int_table[c + lc_code_offset].set_val(to_signed(lc));
-    eqtb_int_table[c + uc_code_offset].set_val(to_signed(uc));
+    eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
+    eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
 }
 
 // This is for lower-case upper-case conversions.
 // Defines values for the pair lc, uc
 void Parser::mklcuc(size_t lc, size_t uc) {
-    eqtb_int_table[lc + lc_code_offset].set_val(to_signed(lc));
-    eqtb_int_table[lc + uc_code_offset].set_val(to_signed(uc));
-    eqtb_int_table[uc + lc_code_offset].set_val(to_signed(lc));
-    eqtb_int_table[uc + uc_code_offset].set_val(to_signed(uc));
+    eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
+    eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
+    eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
+    eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
 }
 
 // This creates the lc and uc tables.
@@ -790,15 +789,15 @@ void Parser::load_latex() {
     hash_table.primitive("sp", hat_catcode, subtypes('^'));
     hash_table.primitive("sb", underscore_catcode, subtypes('_'));
     hash_table.primitive("@sptoken", space_catcode, subtypes(' '));
-    eqtb_int_table[escapechar_code].set_val('\\');
-    eqtb_dim_table[unitlength_code].set_val(ScaledInt(1 << 16));
-    eqtb_dim_table[textwidth_code].set_val(ScaledInt(427 << 16));
-    eqtb_dim_table[linewidth_code].set_val(ScaledInt(427 << 16));
-    eqtb_dim_table[textwidth_code].set_val(ScaledInt(427 << 16));
-    eqtb_dim_table[columnwidth_code].set_val(ScaledInt(427 << 16));
-    eqtb_dim_table[textheight_code].set_val(ScaledInt(570 << 16));
-    eqtb_int_table[pretolerance_code].set_val(100);
-    eqtb_int_table[tolerance_code].set_val(200);
+    eqtb_int_table[escapechar_code].val   = '\\';
+    eqtb_dim_table[unitlength_code].val   = ScaledInt(1 << 16);
+    eqtb_dim_table[textwidth_code].val    = ScaledInt(427 << 16);
+    eqtb_dim_table[linewidth_code].val    = ScaledInt(427 << 16);
+    eqtb_dim_table[textwidth_code].val    = ScaledInt(427 << 16);
+    eqtb_dim_table[columnwidth_code].val  = ScaledInt(427 << 16);
+    eqtb_dim_table[textheight_code].val   = ScaledInt(570 << 16);
+    eqtb_int_table[pretolerance_code].val = 100;
+    eqtb_int_table[tolerance_code].val    = 200;
 
     hash_table.eval_let("endgraf", "par");
     hash_table.eval_let("@@par", "par");
@@ -1130,7 +1129,7 @@ void Parser::load_latex() {
     more_bootstrap();
     LinePtr L;
     L.insert("%% Begin bootstrap commands for latex");
-    eqtb_int_table[uchar('@')].set_val(11); // this is \makeatletter
+    eqtb_int_table[uchar('@')].val = 11; // this is \makeatletter
     // initialise counters, dimen etc
     L.insert("\\@flushglue = 0pt plus 1fil");
     L.insert("\\hideskip =-1000pt plus 1fill");
@@ -1209,8 +1208,8 @@ void Parser::load_latex() {
     init(L);
     translate0();
 
-    eqtb_int_table[uchar('@')].set_val(12); // this is \makeatother
-    TokenList ejob = toks_registers[everyjob_code].val;
+    eqtb_int_table[uchar('@')].val = 12; // this is \makeatother
+    TokenList ejob                 = toks_registers[everyjob_code].val;
     back_input(ejob);
 }
 
@@ -2583,7 +2582,7 @@ auto config_ns::assign_att(String A, String B) -> bool {
 void Parser::make_catcodes() {
     for (unsigned i = 0; i < nb_characters; i++) {
         set_cat(i, other_catcode);
-        eqtb_int_table[i].set_level(1);
+        eqtb_int_table[i].level = 1;
     }
     for (unsigned i = 'a'; i <= 'z'; i++) set_cat(i, letter_catcode);
     for (unsigned i = 'A'; i <= 'Z'; i++) set_cat(i, letter_catcode);

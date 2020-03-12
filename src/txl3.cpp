@@ -99,11 +99,11 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
 // In latex3, a space is ignored, so locally redefine the catcode
 void Parser::L3_getid() {
     get_token(); // should be a dollar sign, but hack!
-    auto spcat = eqtb_int_table[uchar(' ')].val;
-    eqtb_int_table[uchar(' ')].set_val(10);
-    TokenList l    = read_until(cur_tok);
-    TokenList info = read_arg();
-    eqtb_int_table[uchar(' ')].set_val(spcat);
+    auto spcat                     = eqtb_int_table[uchar(' ')].val;
+    eqtb_int_table[uchar(' ')].val = 10;
+    TokenList l                    = read_until(cur_tok);
+    TokenList info                 = read_arg();
+    eqtb_int_table[uchar(' ')].val = spcat;
     read_toks_edef(l);
     Buffer &B = local_buffer;
     B.reset();

@@ -2073,8 +2073,8 @@ void FpNum::random() {
     Digit xib   = S % cst_q;
     int   w     = to_signed(xib * 16807) - to_signed(xia * 2836);
     if (w <= 0) w += cst_m;
-    the_parser.eqtb_int_table[fpseed_code].set_val(w);
-    fp_rand2.data[1] = to_unsigned(w);
+    the_parser.eqtb_int_table[fpseed_code].val = w;
+    fp_rand2.data[1]                           = to_unsigned(w);
     div(fp_rand2, fp_rand1);
 }
 
@@ -2356,7 +2356,7 @@ void Parser::upn_eval(TokenList &l) {
     if (n == 4 && strcmp(str, "seed") == 0) {
         L.remove_first_n(n);
         S.pop_upn(x1);
-        eqtb_int_table[fpseed_code].set_val(to_signed(x1.data[1]));
+        eqtb_int_table[fpseed_code].val = to_signed(x1.data[1]);
         return;
     }
     if (n == 4 && strcmp(str, "root") == 0) {
@@ -2579,10 +2579,10 @@ void Parser::boot_fp() {
     hash_table.primitive("FPupn", fp_cmd, fp_upn_code);
     fps[fp_random_code] = hash_table.primitive("FPrandom", fp_cmd, fp_random_code);
     //  fps[fp_seed_code]=hash_table.primitive("FPseed", fp_cmd,fp_seed_code);
-    fps[fp_seed_code] = hash_table.primitive("FPseed", assign_int_cmd, fpseed_code);
-    eqtb_int_table[fpseed_code].set_val(123456789);
-    fps[fp_e_code]      = hash_table.primitive("FPe", fp_cmd, fp_e_code);
-    fps[fp_pascal_code] = hash_table.primitive("FPpascal", fp_cmd, fp_pascal_code);
+    fps[fp_seed_code]               = hash_table.primitive("FPseed", assign_int_cmd, fpseed_code);
+    eqtb_int_table[fpseed_code].val = 123456789;
+    fps[fp_e_code]                  = hash_table.primitive("FPe", fp_cmd, fp_e_code);
+    fps[fp_pascal_code]             = hash_table.primitive("FPpascal", fp_cmd, fp_pascal_code);
     hash_table.primitive("FPexp", fp_cmd, fp_exp_code);
     hash_table.primitive("FPln", fp_cmd, fp_ln_code);
     hash_table.primitive("FPpow", fp_cmd, fp_pow_code);

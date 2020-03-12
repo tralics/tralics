@@ -14,30 +14,35 @@
 
 #include "txtokenlist.h"
 
+class AttList;
+
 // this is a wrapper around an int
 class ScaledInt {
     long value{0}; // the integer, considered as a scaled number
 public:
     ScaledInt() = default;
-    void set_value(long i) { value = i; }
     ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
     ScaledInt(long v) : value(v) {}
+
+    auto operator-() const -> ScaledInt { return ScaledInt(-value); }
+    void operator+=(ScaledInt X) { value += X.value; }
+
     [[nodiscard]] auto get_value() const -> long { return value; }
-    auto               operator-() const -> ScaledInt { return ScaledInt(-value); }
-    void               operator+=(ScaledInt X) { value += X.value; }
-    void               add_dim(ScaledInt Y);
     [[nodiscard]] auto null() const -> bool { return value == 0; }
-    void               neg() { value = -value; }
-    void               divide(long n);
-    void               quotient(long d);
-    void               scale(long n, long d, long max_answer);
-    auto               scale(long x, long n, long d, long max_answer, bool &negative) -> bool;
-    void               mult_scaled(long x);
-    void               mult_integer(long x);
-    void               times_10_18();
-    void               times_18_10();
-    void               ovf30();
-    void               ovf31();
+
+    void set_value(long i) { value = i; }
+    void add_dim(ScaledInt Y);
+    void neg() { value = -value; }
+    void divide(long n);
+    void quotient(long d);
+    void scale(long n, long d, long max_answer);
+    auto scale(long x, long n, long d, long max_answer, bool &negative) -> bool;
+    void mult_scaled(long x);
+    void mult_integer(long x);
+    void times_10_18();
+    void times_18_10();
+    void ovf30();
+    void ovf31();
 };
 
 inline auto operator==(const ScaledInt &a, const ScaledInt &b) -> bool { return a.get_value() == b.get_value(); }

@@ -102,12 +102,12 @@ Parser::Parser() : cur_env_name("document") {
 
 // Saves in *this the catcode at position c, modifies it to be nc
 SaveCatcode::SaveCatcode(char32_t c, long nc) : character(c) {
-    code = the_parser.eqtb_int_table[character].val;
-    the_parser.eqtb_int_table[character].set_val(nc);
+    code                                     = the_parser.eqtb_int_table[character].val;
+    the_parser.eqtb_int_table[character].val = nc;
 }
 
 // Undoes a catcode change
-SaveCatcode::~SaveCatcode() { the_parser.eqtb_int_table[character].set_val(code); }
+SaveCatcode::~SaveCatcode() { the_parser.eqtb_int_table[character].val = code; }
 
 // saving and restoring things
 
@@ -237,12 +237,12 @@ void Parser::word_define(size_t a, long c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else if (reassign)
         return;
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.level, a, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 // Define for an string quantity. Like eq_define without reference counts.
@@ -255,12 +255,12 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else if (reassign)
         return;
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxString(W.level, a, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 
@@ -275,12 +275,12 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else if (reassign)
         return;
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxDim(W.level, a, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 
@@ -306,12 +306,12 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else if (reassign)
         return;
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxGlue(W.level, a, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 
@@ -323,10 +323,10 @@ void Parser::box_define(size_t a, Xml *c, bool gbl) {
         the_log << " into \\box" << a << "=" << c << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(W.level, a, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 
@@ -341,12 +341,12 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
         the_log << lg_endbrace;
     }
     if (gbl)
-        W.val_and_level(c, 1);
+        W = {c, 1};
     else if (reassign)
         return;
     else {
         if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.level, p, W.val));
-        W.val_and_level(c, cur_level);
+        W = {c, cur_level};
     }
 }
 
@@ -385,7 +385,7 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
         CmdChr tmp(assign_int_cmd, subtypes(pos));
         the_log << tmp.name() << "=" << val << lg_endsentence;
     }
-    if (rt) P.eqtb_int_table[pos].val_and_level(val, level);
+    if (rt) P.eqtb_int_table[pos] = {val, level};
 }
 
 // This done when we restore a string value
@@ -393,7 +393,7 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 void SaveAuxString::unsave(bool trace, Parser &P) {
     bool rt = P.eqtb_string_table[pos].level != 1;
     if (trace) { the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos) << "=" << val << lg_endsentence; }
-    if (rt) P.eqtb_string_table[pos].val_and_level(val, level);
+    if (rt) P.eqtb_string_table[pos] = {val, level};
 }
 
 // This done when we restore a dimension value
@@ -404,7 +404,7 @@ void SaveAuxDim::unsave(bool trace, Parser &P) {
         CmdChr tmp(assign_dimen_cmd, subtypes(pos));
         the_log << tmp.name() << "=" << val << lg_endsentence;
     }
-    if (rt) P.eqtb_dim_table[pos].val_and_level(val, level);
+    if (rt) P.eqtb_dim_table[pos] = {val, level};
 }
 
 // Restore glue
@@ -417,7 +417,7 @@ void SaveAuxGlue::unsave(bool trace, Parser &P) {
         CmdChr tmp(assign_glue_cmd, subtypes(pos));
         the_log << tmp.name() << "=" << Thbuf1 << lg_endsentence;
     }
-    if (rt) P.glue_table[pos].val_and_level(val, level);
+    if (rt) P.glue_table[pos] = {val, level};
 }
 
 // Restore command. We have to take care to free memory for user commands.
@@ -452,7 +452,7 @@ void SaveAuxToken::unsave(bool trace, Parser &P) {
         CmdChr tmp(assign_toks_cmd, subtypes(pos));
         the_log << tmp.name() << "=" << val << lg_endsentence;
     }
-    if (rt) P.toks_registers[pos].val_and_level(val, level);
+    if (rt) P.toks_registers[pos] = {val, level};
 }
 
 // Restore box. Called in the case {\setbox0=\hbox{...}}
@@ -463,7 +463,7 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
         restore_or_retain(rt, "\\box");
         the_log << pos << lg_endsentence;
     }
-    if (rt) P.box_table[pos].val_and_level(val, level);
+    if (rt) P.box_table[pos] = {val, level};
 }
 
 // Restore box. Called in the case {\setbox0=\hbox{...}}

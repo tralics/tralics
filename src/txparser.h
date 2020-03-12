@@ -9,6 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/EQTB.h"
 #include "txcond.h"
 #include "txfonts.h"
 #include "txhash.h"
@@ -102,7 +103,7 @@ private:
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
     [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
-    void               set_catcode(size_t x, long v) { eqtb_int_table[x].set_val(v); }
+    void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
     auto               get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
         after_assignment_token.kill();
@@ -123,7 +124,7 @@ private:
         cur_cmd_chr.chr = t.chr_val();
     }
     void               set_after_ass_tok(Token x) { after_assignment_token = x; }
-    void               set_cat(size_t c, int v) { eqtb_int_table[c].set_val(v); }
+    void               set_cat(size_t c, int v) { eqtb_int_table[c].val = v; }
     void               set_def_language_num(int x) { default_language_num = x; }
     [[nodiscard]] auto tracing_io() const -> bool { return is_pos_par(tracingoutput_code); }
     [[nodiscard]] auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }

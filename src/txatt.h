@@ -10,6 +10,8 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txstring.h"
+#include <optional>
+#include <vector>
 
 // This is an attribute list.
 struct AttPair {

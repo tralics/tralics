@@ -34,12 +34,12 @@ namespace tcommands {
 // Initialises the translator. The argument is the name of
 // the document element.
 void Parser::init_all(const std::string &doc_elt) {
-    open_paren_xml  = new Xml(Istring("("));
-    close_paren_xml = new Xml(Istring(")"));
-    the_page_xml    = new Xml(Istring("thepage"), nullptr);
-    glo_xml         = new Xml(Istring(np_glo_name));
-    eqtb_int_table[endlinechar_code].val_and_level('\r', 1);
-    eqtb_int_table[newlinechar_code].val_and_level('\n', 1);
+    open_paren_xml                   = new Xml(Istring("("));
+    close_paren_xml                  = new Xml(Istring(")"));
+    the_page_xml                     = new Xml(Istring("thepage"), nullptr);
+    glo_xml                          = new Xml(Istring(np_glo_name));
+    eqtb_int_table[endlinechar_code] = {'\r', 1};
+    eqtb_int_table[newlinechar_code] = {'\n', 1};
     TL.clear();
     my_stats.set_nb_xboot(to_unsigned(the_stack.get_xid().value));
     the_stack.init_all(doc_elt);
@@ -819,7 +819,7 @@ void Parser::T_un_box(subtypes c) {
     if (c == unhbox_code) leave_v_mode();
     Xml *cur_box = box_table[i].val;
     the_stack.unbox(cur_box);
-    if (c == unhbox_code || c == unvbox_code) box_table[i].set_val(nullptr);
+    if (c == unhbox_code || c == unvbox_code) box_table[i].val = nullptr;
 }
 
 auto tcommands::hfill_to_np(subtypes c) -> name_positions {

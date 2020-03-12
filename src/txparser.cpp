@@ -635,10 +635,10 @@ void token_ns::add_verbatim_number(TokenList &L, const Hashtab &H, long n) {
 void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     TokenList res;
     kill_line();
-    Token par      = hash_table.par_token;
-    Token noindent = hash_table.noindent_token;
-    auto  cc       = eqtb_int_table[endlinechar_code].val;
-    eqtb_int_table[endlinechar_code].set_val('\r');
+    Token par                            = hash_table.par_token;
+    Token noindent                       = hash_table.noindent_token;
+    auto  cc                             = eqtb_int_table[endlinechar_code].val;
+    eqtb_int_table[endlinechar_code].val = '\r';
 
     bool ok          = true;
     bool want_number = false;
@@ -669,7 +669,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
         }
     }
     if (!ok) bad_end_env(cl);
-    eqtb_int_table[endlinechar_code].set_val(cc); // restore
+    eqtb_int_table[endlinechar_code].val = cc; // restore
     // pop save stack
     cur_tok.kill();
     pop_level(bt_env);
@@ -4125,9 +4125,9 @@ void Parser::begin_box(size_t src, subtypes c) {
         c = copy_code;
     }
     if (c == box_code) {
-        res     = scan_reg_num();
-        cur_box = box_table[res].val;
-        box_table[res].set_val(nullptr);
+        res                = scan_reg_num();
+        cur_box            = box_table[res].val;
+        box_table[res].val = nullptr;
         box_end(cur_box, src);
         return;
     }

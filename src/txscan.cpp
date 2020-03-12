@@ -183,7 +183,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     W->get_TL().swap(TL);
     if (restore_at) {
         W->set_at_val(eqtb_int_table[uchar('@')].val);
-        eqtb_int_table[uchar('@')].set_val(11);
+        eqtb_int_table[uchar('@')].val = 11;
         the_log << lg_start_io << "Made @ a letter\n";
     }
     every_eof   = false; // might be set to true
@@ -211,7 +211,7 @@ void Parser::pop_input_stack(bool vb) {
     require_eof = W->get_eof_outer();
     auto at     = W->get_at_val();
     if (at >= 0) {
-        eqtb_int_table[uchar('@')].set_val(at);
+        eqtb_int_table[uchar('@')].val = at;
         if (tracing_io()) the_log << lg_start_io << "Catcode of @ restored to " << at << lg_end;
     }
     input_line.clear();
