@@ -110,7 +110,7 @@ private:
     auto               get_ur_val() -> std::string { return the_url_val; }
     [[nodiscard]] auto is_pos_par(size_t k) const { return eqtb_int_table[k].val > 0; }
     void               kill_line() { input_line.clear(); }
-    void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].value; }
+    void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()]; }
     void               see_cs_token(Token T) {
         cur_tok = T;
         see_cs_token();

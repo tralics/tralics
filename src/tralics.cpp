@@ -1227,16 +1227,16 @@ void Parser::more_bootstrap() {
     {
         auto A    = uchar(' '); // eqtb loc of active space
         auto Bval = T.eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].value, true);
+        eq_define(A, hash_table.eqtb[Bval], true);
         A    = '#';
         Bval = hash_table.locate("#").eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].value, true);
+        eq_define(A, hash_table.eqtb[Bval], true);
         A    = '_';
         Bval = hash_table.locate("_").eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].value, true);
+        eq_define(A, hash_table.eqtb[Bval], true);
         A    = '\r'; // eqtbloc of active end-of-line (^^M)
         Bval = hash_table.par_token.eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].value, true);
+        eq_define(A, hash_table.eqtb[Bval], true);
     }
     L.clear();
     L.push_back(hash_table.par_token);

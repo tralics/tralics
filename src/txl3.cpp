@@ -1086,7 +1086,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     if (need_prot) prot = true;
     nsig << bf_reset << tok_base << ':' << osig;
     Token newfun = hash_table.locate(nsig);
-    if (!hash_table.eqtb[newfun.eqtb_loc()].is_undefined()) {
+    if (!hash_table.eqtb[newfun.eqtb_loc()].is_undef()) {
         the_log << "Variant " << newfun << " already defined, not changing it.\n";
         return;
     }
@@ -1097,7 +1097,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     body.push_back(orig);
     auto *X = new Macro(body);
     mac_define(newfun, X, true, rd_always, prot ? userp_cmd : user_cmd);
-    if (!hash_table.eqtb[converter.eqtb_loc()].is_undefined()) return;
+    if (!hash_table.eqtb[converter.eqtb_loc()].is_undef()) return;
     TokenList cb;
     for (size_t i = 0;; i++) {
         char c = changes[i];

@@ -1,6 +1,10 @@
+#pragma once
+#include "tralics/Token.h"
+#include "txclasses.h"
+#include "txinline.h"
+#include "txparser.h"
 #include <utility>
 
-#pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2008
 

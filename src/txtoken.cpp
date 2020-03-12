@@ -317,7 +317,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
         }
     }
     last_tok = Token(T);
-    return !eqtb[T - eqtb_offset].is_undefined();
+    return !eqtb[T - eqtb_offset].is_undef();
 }
 
 // Creates a primitive.
@@ -334,14 +334,14 @@ auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
 void Hashtab::eval_let(String a, String b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].value, true);
+    the_parser.eq_define(A, eqtb[Bval], true);
 }
 
 auto Hashtab::eval_letv(String a, String b) -> Token {
     Token Av   = locate(a);
     auto  A    = Av.eqtb_loc();
     auto  Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].value, true);
+    the_parser.eq_define(A, eqtb[Bval], true);
     return Av;
 }
 
@@ -350,7 +350,7 @@ auto Hashtab::eval_letv(String a, String b) -> Token {
 void Hashtab::eval_let_local(String a, String b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].value, false);
+    the_parser.eq_define(A, eqtb[Bval], false);
 }
 
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {

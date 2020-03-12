@@ -1125,7 +1125,7 @@ void Parser::T_color(subtypes c) {
         std::string value = sT_arg_nopar();
         B << bf_reset << "\\color@" << name;
         Token C = hash_table.locate(B);
-        if (!hash_table.eqtb[C.eqtb_loc()].is_undefined()) log_and_tty << "Redefining color " << name << "\n";
+        if (!hash_table.eqtb[C.eqtb_loc()].is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
@@ -1539,7 +1539,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     if (!env) {
         B << bf_reset << name << "@hook";
         cur_tok = hash_table.locate(B);
-        if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undefined()) {
+        if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undef()) {
             Token     T = cur_tok;
             TokenList L = read_arg();
             brace_me(L);
@@ -1553,7 +1553,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     push_tpa();
     B << bf_reset << name << "@helper";
     cur_tok = hash_table.locate(B);
-    if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undefined()) {
+    if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undef()) {
         back_input(cur_tok);
         if (!env) special_case = true;
     }

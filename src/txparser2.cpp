@@ -11,9 +11,6 @@
 // This file contains the TeX parser of tralics It contains a lot of other
 // things, but not the XML generator.
 
-#include "txclasses.h"
-#include "txinline.h"
-#include "txparser.h"
 #include "txparser2.h"
 
 namespace {
@@ -2234,8 +2231,8 @@ void Parser::T_use_counter(const std::string &s) {
     b << bf_reset << "c@" << s;
     Token       T = hash_table.locate(b);
     Equivalent &E = hash_table.eqtb[T.eqtb_loc()];
-    if (E.get_cmd() != assign_int_cmd) return;
-    word_define(E.get_chr(), 0, true);
+    if (E.cmd != assign_int_cmd) return;
+    word_define(E.chr, 0, true);
 }
 
 // \usecounter{foo}. Signals an error if foo is not a counter
@@ -2386,7 +2383,7 @@ void Parser::T_listenv(symcodes x) {
         b << "@hook";
         Token T   = hash_table.locate(b);
         auto  pos = T.eqtb_loc();
-        if (!hash_table.eqtb[pos].is_undefined()) back_input(T);
+        if (!hash_table.eqtb[pos].is_undef()) back_input(T);
     }
     Xml *res = new Xml(np_list, nullptr);
     the_stack.push(the_names[np_list], res);

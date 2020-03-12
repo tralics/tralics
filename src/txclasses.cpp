@@ -1163,7 +1163,7 @@ void Parser::kvo_comp_opt() {
     Buffer &    B    = local_buf;
     B << bf_reset << "if" << fam << '@' << comp;
     Token T = hash_table.locate(B);
-    if (hash_table.eqtb[T.eqtb_loc()].is_undefined()) {
+    if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
         B << bf_reset << "Cannot generate code for `" << arg << "', no parent " << comp;
         parse_error(err_tok, B.c_str(), "bad redef");
         return;
@@ -1198,7 +1198,7 @@ void Parser::kvo_family_etc(subtypes k) {
     if (k == kvo_fam_set_code || k == kvo_pre_set_code) {
         TokenList L = read_arg();
         new_macro(L, T);
-    } else if (hash_table.eqtb[T.eqtb_loc()].is_undefined()) {
+    } else if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
         B << bf_reset << s.c_str() + 1;
         if (k == kvo_pre_get_code) B << "@";
         TokenList res = B.str_toks11(false);

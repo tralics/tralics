@@ -24,34 +24,29 @@
 // Defined EQTB, the table of equivalents
 // EQTB for commands. No Ctor(?) but reset() is called for every object.
 // The values is a (symcodes, subtype) pair
-class Equivalent { // \todo should inherit from CmdChr
-public:
-    int    level; // level at which this is defined
-    CmdChr value; // the modifier
 
-    [[nodiscard]] auto get_cmd() const -> symcodes { return value.cmd; }
-    [[nodiscard]] auto get_chr() const -> subtypes { return value.chr; }
+struct Equivalent : public CmdChr {
+    int level; ///< level at which this is defined
+
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
+        CmdChr::reset();
         level = 0;
-        value.reset();
     }
+
+    void setnl(CmdChr c) { CmdChr::operator=(c); }
+
     void special_prim(CmdChr b) {
-        value = b;
-        if (!b.is_undef()) level = 1;
+        setnl(b);
+        if (!is_undef()) level = 1;
     }
-    void primitive(CmdChr b) {
-        value = b;
-        level = 1;
-    }
+
     void set(CmdChr c, int lvl) {
-        value = c;
+        setnl(c);
         level = lvl;
     }
-    void               setnl(CmdChr c) { value = c; }
-    [[nodiscard]] auto is_undefined() const -> bool { return value.is_undef(); }
-    [[nodiscard]] auto is_user() const -> bool { return value.is_user(); }
-    [[nodiscard]] auto is_undef_or_relax() const -> bool { return value.is_undef_or_relax(); }
+
+    void primitive(CmdChr b) { set(b, 1); }
 };
 
 class RestoreVbSpace {
@@ -188,7 +183,7 @@ class SaveAuxCmd : public SaveAux {
     size_t cs;    // ths position in eqtb to be restored
     CmdChr val;   // the CmdChr to be restored
 public:
-    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.level), cs(a), val(X.value) {}
+    SaveAuxCmd(size_t a, Equivalent X) : SaveAux(st_cmd), level(X.level), cs(a), val(X) {}
     void unsave(bool trace, Parser &P) override;
     ~SaveAuxCmd() override = default;
 };

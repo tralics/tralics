@@ -10,8 +10,8 @@
 
 // This file contains the TeX parser of tralics
 
-#include "txinline.h"
 #include "txparser.h"
+#include "txinline.h"
 
 namespace {
     Buffer trace_buffer;
@@ -1563,7 +1563,7 @@ void Parser::fetch_name2() {
 void Parser::finish_csname(const Buffer &b) {
     cur_tok  = hash_table.locate(b);
     auto pos = cur_tok.eqtb_loc();
-    if (hash_table.eqtb[pos].is_undefined()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
+    if (hash_table.eqtb[pos].is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
 }
 
 // Same as above, but the token is to be read again
@@ -1834,7 +1834,7 @@ auto Parser::counter_check(Buffer &b, bool def) -> bool {
             return true;
         }
     } else {
-        if (E.get_cmd() != assign_int_cmd) {
+        if (E.cmd != assign_int_cmd) {
             bad_counter1(b, E);
             return true;
         }
@@ -3086,7 +3086,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
         the_log << lg_startbrace << action << "changing " << A << "=";
-        token_for_show(hash_table.eqtb[pos].value);
+        token_for_show(hash_table.eqtb[pos]);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
         the_log << lg_endbrace;
@@ -3197,7 +3197,7 @@ void Parser::M_newcommand(rd_flag redef) {
         X = read_latex_macro();
         if (redef == rd_never) { // case \CheckCommand
             bool   is_same = true;
-            CmdChr pq      = hash_table.eqtb[name.eqtb_loc()].value;
+            CmdChr pq      = hash_table.eqtb[name.eqtb_loc()];
             if (pq.cmd != what)
                 is_same = false;
             else {
@@ -3654,7 +3654,7 @@ void Parser::set_boolean() {
         return;
     }
     if (my_csname("", s, A, "setboolean")) return;
-    if (hash_table.eqtb[cur_tok.eqtb_loc()].value.is_relax()) {
+    if (hash_table.eqtb[cur_tok.eqtb_loc()].is_relax()) {
         get_token();
         parse_error(T, "Undefined boolean ", cur_tok, "", "undefined boolean");
     }

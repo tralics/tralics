@@ -179,7 +179,7 @@ void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
     if (!gbl && hash_table.eqtb[a].must_push(cur_level))
         push_save_stack(new SaveAuxCmd(a, hash_table.eqtb[a]));
     else if (hash_table.eqtb[a].is_user())
-        mac_table.delete_macro_ref(hash_table.eqtb[a].get_chr());
+        mac_table.delete_macro_ref(hash_table.eqtb[a].chr);
     if (gbl)
         hash_table.eqtb[a].primitive(bc);
     else
@@ -195,7 +195,7 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
         CmdChr nv = CmdChr(what, mac_table.new_macro(b));
         if (tracing_assigns()) {
             the_log << lg_startbrace << gbl_or_assign(gbl, false) << a << "=";
-            token_for_show(hash_table.eqtb[a.eqtb_loc()].value);
+            token_for_show(hash_table.eqtb[a.eqtb_loc()]);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
             the_log << lg_endbrace;
@@ -439,7 +439,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
         if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
-            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].get_chr());
+            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].chr);
         P.hash_table.eqtb[cs].set(val, level);
     }
 }
