@@ -4,6 +4,12 @@
 #include <spdlog/spdlog.h>
 
 namespace {
+    std::string              log_name;
+    std::string              no_ext;
+    std::string              opt_doctype;
+    std::string              out_dir;
+    std::vector<std::string> other_options;
+
     void after_conf_assign(std::vector<std::string> &V) {
         size_t n = V.size(), i = 0;
         for (;;) {
@@ -219,6 +225,12 @@ namespace {
         the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
     }
 } // namespace
+
+auto tralics_ns::get_out_dir(const std::string &name) -> String {
+    Buffer &B = main_ns::path_buffer;
+    B << bf_reset << out_dir << bf_optslash << name;
+    return B.c_str();
+}
 
 MainClass::MainClass() {
 #ifdef CONFDIR

@@ -4,13 +4,8 @@
 
 std::vector<std::string> conf_path;
 std::vector<std::string> input_path;
-std::vector<std::string> other_options;
 
-std::string log_name;
 std::string file_name;
-std::string out_dir;
-std::string no_ext;
-std::string opt_doctype;
 std::string all_themes;
 std::string everyjob_string;
 
@@ -86,12 +81,6 @@ auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d
     for (const auto &j : ST)
         if (j == d) return true;
     return false;
-}
-
-auto tralics_ns::get_out_dir(const std::string &name) -> String {
-    Buffer &B = main_ns::path_buffer;
-    B << bf_reset << out_dir << bf_optslash << name;
-    return B.c_str();
 }
 
 auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
