@@ -14,6 +14,8 @@
 #include "txmath.h"
 #include "txparser.h"
 
+extern std::array<std::array<std::string, 15>, 128> math_chars;
+
 namespace {
     Buffer                           scratch;                            // See insert_string
     TexFonts                         tfonts;                             // the font table
@@ -32,6 +34,8 @@ namespace {
         main_ns::path_buffer << bf_reset << s;
         return tralics_ns::file_exists(main_ns::path_buffer);
     }
+
+    void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
 } // namespace
 
 namespace io_ns {

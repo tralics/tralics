@@ -29,6 +29,12 @@ namespace {
     Token              fct_caller;
     std::string        the_tag;
     std::vector<Xml *> all_maths;
+
+    auto is_m_font(symcodes cmd) -> bool {
+        return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd;
+    }
+
+    auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(x + fml_offset); }
 } // namespace
 
 MathDataP math_data;

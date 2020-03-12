@@ -29,10 +29,6 @@ std::array<Xml *, 128>                       single_chars;
 //#define LANGLE "&#x27E8;"
 //#define RANGLE "&#x27E9;"
 
-auto get_math_char(uchar c, size_t f) -> std::string { return math_chars[c][f]; }
-
-void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
-
 auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }

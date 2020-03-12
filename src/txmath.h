@@ -18,8 +18,10 @@ class MathF;
 
 using MathQList = std::list<MathQ>;
 
-auto get_math_char(uchar c, size_t f) -> std::string;
-void set_math_char(uchar c, size_t f, std::string s);
+extern std::array<std::array<std::string, 15>, 128> math_chars;
+
+inline auto get_math_char(uchar c, size_t f) -> std::string { return math_chars[c][f]; }
+inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 
 // A math object is a strange thing:
 // a math_elt object has 4 fields, one is a pointer to another object.
@@ -32,13 +34,6 @@ void set_math_char(uchar c, size_t f, std::string s);
 //     math_hbox_cd,math_argument_cd,
 // it can be math_xml_cmd, pos, type, where pos is a position into a
 //    table of XML elements.
-
-inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
-inline auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(x + fml_offset); }
-
-inline auto is_m_font(symcodes cmd) -> bool {
-    return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd;
-}
 
 class MathElt { // \todo make it inherit from CmdChr
     CmdChr   val;
