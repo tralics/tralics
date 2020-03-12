@@ -10,7 +10,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Istring.h"
-#include <string>
 
 class AttList;
 

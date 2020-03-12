@@ -1,8 +1,7 @@
 #pragma once
 #include "../txscaled.h"
-#include "../txxml.h"
-#include "Token.h"
-#include <string>
+
+class Xml;
 
 // Every eqtb entry has a level. Level_zero means undefined
 // Level_one is the outer level. The old value must be saved in case
