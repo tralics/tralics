@@ -12,6 +12,10 @@ inline constexpr unsigned nb_simplemath       = 128;   // Max char for which $x$
 inline constexpr unsigned nb_xspace_values    = 128;   // This is the size of the table ok_for_xspace
 
 inline constexpr int bib_hash_mod  = 6397;
+inline constexpr int fi_family_mul = 64;
+inline constexpr int fi_series_mul = 256;
+inline constexpr int fi_shape_mul  = 16;
+inline constexpr int fi_size_mul   = 2048;
 inline constexpr int lmaxchar      = 256;
 inline constexpr int max_dimension = 07777777777;
 inline constexpr int max_integer   = 017777777777;

@@ -1,5 +1,10 @@
 #pragma once
 #include "txstring.h"
+#include <vector>
+
+class Buffer;
+
+class XmlAction;
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008

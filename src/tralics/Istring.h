@@ -1,5 +1,6 @@
 #pragma once
 #include "enums.h"
+#include <array>
 #include <string>
 
 class Buffer;
@@ -25,3 +26,5 @@ struct Istring {
     auto operator==(Istring X) const -> bool { return value == X.value; }
     auto operator!=(Istring X) const -> bool { return value != X.value; }
 };
+
+extern std::array<Istring, np_last> the_names;

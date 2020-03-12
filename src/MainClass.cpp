@@ -218,8 +218,6 @@ namespace {
         return true;
     }
 
-    void set_everyjob(const std::string &s) { everyjob_string = s; } // \todo inline
-
     void show_encoding(size_t wc, const std::string &name) {
         const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
         the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
@@ -503,7 +501,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             interactive_math = true;
             only_input_data  = true;
             see_name("texput");
-            set_everyjob("\\usepackage{amsmath}" + std::string(a) + "\\stop");
+            everyjob_string = "\\usepackage{amsmath}" + std::string(a) + "\\stop";
             return;
         case pa_outfile: out_name = a; return;
         case pa_indir: new_in_dir(a); return;
@@ -615,7 +613,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         interactive_math = true;
         input_encoding   = 0;
         see_name("texput");
-        if (s[0] == 'a') set_everyjob("\\usepackage{dunnet}\\run");
+        if (s[0] == 'a') everyjob_string = "\\usepackage{dunnet}\\run";
     } else if (strcmp(s, "xmlall") == 0 || strcmp(s, "all") == 0)
         obsolete(s);
     else if (strcmp(s, "nobibyearerror") == 0)

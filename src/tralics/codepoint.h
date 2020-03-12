@@ -2,7 +2,15 @@
 #include "types.h"
 #include <optional>
 
-auto is_letter(char c) -> bool;
+inline auto is_digit(char c) -> bool { return ('0' <= c && c <= '9'); }
+inline auto is_space(char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }
+inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }
+inline auto is_upper_case(char c) -> bool { return 'A' <= c && c <= 'Z'; }
+inline auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
+inline auto to_lower(uchar c) -> uchar {
+    if ('A' <= c && c <= 'Z') return c + ('a' - 'A');
+    return c;
+}
 
 /// \todo This might better just vanish (and we would use `char32_t` everywhere
 /// in the code) if there is a reasonable path to do that while keeping all the

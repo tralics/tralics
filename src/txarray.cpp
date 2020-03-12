@@ -10,8 +10,10 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txarray.h"
+#include "tralics/Istring.h"
 #include "txinline.h"
 #include "txparser.h"
+#include "txxml.h"
 
 static NewArray new_array_object;
 static char     char_for_error = 'c';

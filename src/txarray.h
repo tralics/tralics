@@ -23,6 +23,8 @@
 
 #include "txstack.h"
 
+class Parser;
+
 // Class used to implement array.sty
 class NewArray {
     std::array<bool, nb_newcolumn>  nct_bool; // for \newcolumntype

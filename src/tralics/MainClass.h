@@ -2,6 +2,8 @@
 #include "../txio.h"
 #include "../txstring.h"
 
+class Stack;
+
 class MainClass {
     std::string infile;       ///< file argument given to the program
     std::string no_year;      // is miaou
@@ -247,3 +249,5 @@ public:
     static void mk_empty();            ///< Create an empty TeX file
     static void usage_and_quit(int v); ///< Shows the command syntax and exits
 };
+
+extern MainClass *the_main;

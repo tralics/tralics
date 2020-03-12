@@ -1,6 +1,6 @@
 #pragma once
-#include "../txvars.h"
 #include "codepoint.h"
+#include "enums.h"
 #include <string>
 #include <vector>
 

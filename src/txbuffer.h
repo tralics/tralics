@@ -16,6 +16,11 @@
 #include <cstring>
 #include <vector>
 
+class AttList;
+struct AttPair;
+class LinePtr;
+class Xml;
+
 using buffer_fn = void(Buffer &);
 
 /// a big structure \todo This is kind of a messy class, would be better off

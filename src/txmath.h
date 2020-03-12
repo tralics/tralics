@@ -11,9 +11,11 @@
 
 #include "txxml.h"
 
+class Math;
 class MathQ;
 class MathP;
 class MathF;
+
 using MathQList = std::list<MathQ>;
 
 auto get_math_char(uchar c, size_t f) -> std::string;

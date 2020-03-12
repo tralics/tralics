@@ -11,9 +11,9 @@
 
 #include "tralics/Istring.h"
 #include "tralics/Token.h"
-#include "txvars.h"
 #include <utility>
 
+class FpNum;
 class Hashtab;
 
 using token_iterator = std::list<Token>::iterator;

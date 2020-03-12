@@ -11,6 +11,8 @@
 
 #include "txstring.h"
 
+class Parser;
+
 // Contains:
 //   equivalent, restore_vb_space, save_catcode, InLoadHandler,
 //  InUrlHandler, SaveState
