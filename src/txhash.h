@@ -154,33 +154,3 @@ public:
     auto               get_next() -> String;
     void               extract_keyval(std::string &key, std::string &val);
 };
-
-// This is used in order to extract things from \documentclass[]{}
-// and \usepackage[]{}
-// Not used anymore
-class PackMatcher {
-    std::string attrib;           // attribute to set
-    std::string value;            // value of attribute
-    std::string package;          // package name
-    std::string options;          // option
-    bool        wild_pack{false}; // wild card in package
-    bool        att_star{false};  // one star in attribute
-    bool        match_document;   // usepackage? or \documentclass ?
-    bool        att_plus{false};  //
-    bool        used{false};      // did we use this rule ?
-public:
-    PackMatcher(bool c = false) : match_document(c) {}
-    auto ok_for_match(bool c) -> bool { return c == match_document && !used; }
-    void set_match_doc(bool X) { match_document = X; }
-    auto set_wild_pack(bool X) -> int {
-        wild_pack = X;
-        return X ? 1 : 0;
-    }
-    void set_package(std::string X) { package = std::move(X); }
-    void set_options(std::string X) { options = std::move(X); }
-    void print();
-    auto get_attrib() -> std::string { return attrib; }
-    auto find_att(std::string cur_pack, std::string cur_options) -> bool;
-    auto find_att_val(std::string cur_pack, std::string cur_options) -> Istring;
-    void initialise(std::string A, std::string B);
-};

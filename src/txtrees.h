@@ -23,16 +23,6 @@ namespace trees_ns {
     auto xless(Indexer *A, Indexer *B) -> bool;
 } // namespace trees_ns
 
-// This  holds the association between the index and the main text.
-// Seems to be unused
-class RefIndexElt {
-public:
-    int     index_nb; // Number of the index, 1=glossary
-    int     uid;
-    Istring value;
-    RefIndexElt(int n, int a, Istring b) : index_nb(n), uid(a), value(b) {}
-};
-
 //
 class Indexer {
 public:

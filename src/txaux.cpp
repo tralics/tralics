@@ -494,15 +494,9 @@ void SthInternal::add(const SthInternal &r) {
 // Converson between mu and normal units, assuming one em =10pt
 // The Tex algorithm is more complicated because we have to multiply by a
 // non integer. Whose sees the difference.
-// the inversion function times_18_10 is not used anymore
 void ScaledInt::times_10_18() {
     divide(18);
     mult_scaled(10);
-}
-
-void ScaledInt::times_18_10() {
-    divide(10);
-    mult_scaled(18);
 }
 
 void SthInternal::get_info(subtypes m) {

@@ -1041,7 +1041,7 @@ auto LinePtr::get_next(Buffer &b) -> int {
 
 auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
     if (value.empty()) return -1;
-    bool converted = false; // unused
+    bool converted = false; // \todo unused
     int  n         = value.front().to_buffer(b, converted);
     value.pop_front();
     if (w != 0) {

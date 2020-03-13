@@ -1281,15 +1281,6 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
 
 // This defines name to be a math ord command.
 // the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
-// This is currently unused
-void MathDataP::mk_moc(String name, String ent, math_loc pos) {
-    Xml *x = mk_mo(ent);
-    x->add_att(np_form, np_prefix);
-    init_builtin(name, pos, x, mathord_cmd);
-}
-
-// This defines name to be a math ord command.
-// the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
 void MathDataP::mk_moo(String name, String ent, math_loc pos) {
     Xml *x = mk_mo(ent);
     x->add_att(np_form, np_prefix);

@@ -255,7 +255,6 @@ public:
 };
 
 // data structure for a \begin{something}
-// had an unused field: int val;
 class SaveAuxEnv : public SaveAux {
 public:
     std::string oldname;

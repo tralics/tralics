@@ -40,7 +40,6 @@ public:
     void mult_scaled(long x);
     void mult_integer(long x);
     void times_10_18();
-    void times_18_10();
     void ovf30();
     void ovf31();
 };

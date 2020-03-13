@@ -348,7 +348,6 @@ private:
     void mk_ocb(String name, String ent, String ent2, math_loc pos);
     void mk_ocr(String name, String ent, String ent2, math_loc pos);
     void mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack);
-    void mk_moc(String name, String ent, math_loc pos);
     void mk_moo(String name, String ent, math_loc pos);
     void mk_accent(String name, String ent, String ent2, subtypes pos);
     void fill_lr(int a, String b, String c);

@@ -1372,20 +1372,6 @@ void Parser::xkv_pass_options(bool c) // true if a class
     new_macro(res, tname, true);
 }
 
-// If true sanitize on comma and equal, otherwise only comma
-// Currently unused
-void Parser::xkv_checksanitize(bool c) {
-    TokenList B = read_arg();
-    Token     A = get_r_token(true);
-    xkv_checksanitize(A, B, c);
-}
-
-void Parser::xkv_checksanitize(Token A, TokenList &B, bool c) {
-    if (c) token_ns::sanitize_one(B, '=');
-    token_ns::sanitize_one(B, ',');
-    new_macro(B, A);
-}
-
 void Parser::selective_sanitize() {
     Token     T = cur_tok;
     long      n = 10000;

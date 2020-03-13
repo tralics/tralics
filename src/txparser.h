@@ -1006,8 +1006,6 @@ private:
     void        wrong_pop(Token T, String a, String b);
     void        E_input(int q);
     void        xgetfontsize();
-    void        xkv_checksanitize(Token A, TokenList &B, bool c);
-    void        xkv_checksanitize(bool c);
     void        xkv_fetch_prefix_family();
     void        T_xkv_for(subtypes c);
     void        xkv_makehd(TokenList &L);

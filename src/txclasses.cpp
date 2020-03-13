@@ -346,7 +346,6 @@ void Parser::T_declare_option_star() {
 // This implements \OptionNotUsed
 // This is the default option handler. In the case of a package, ignore,
 // in the case of a class, remove the used flag
-// Not used by tralics.
 void Parser::T_option_not_used() {
     if (!the_class_data.cur_pack()->is_class()) return;
     OptionList &GO = the_class_data.global_options;
