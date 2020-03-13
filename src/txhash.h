@@ -1,4 +1,7 @@
 #pragma once
+#include "txeqtb.h"
+#include <utility>
+
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008
 
@@ -8,8 +11,6 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
-
-#include "txeqtb.h"
 
 // This is the main hash table. If a token like \foo has hashcode p,
 // then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...
@@ -100,15 +101,16 @@ public:
 
 // This is an association table. We could use a standard C++ class here
 class SpecialHash {
-    size_t                   size;  // number of terms
     std::vector<std::string> key;   // the keys
     std::vector<std::string> value; // the values
 public:
-    SpecialHash(const std::string &s) : size(0) { create(s.c_str()); }
-    void               create(String s);
-    auto               find(String x) const -> std::string;
-    [[nodiscard]] auto get_size() const { return size; }
-    void               get_pair(size_t k, std::string &a, std::string &b) {
+    size_t size{0}; // number of terms
+
+    SpecialHash(const std::string &s) { create(s.c_str()); }
+
+    void create(String s);
+    auto find(String x) const -> std::string;
+    void get_pair(size_t k, std::string &a, std::string &b) { // \todo return a pair!
         if (k < size) {
             a = key[k];
             b = value[k];
@@ -124,35 +126,18 @@ public:
 
 // Data structure for label and references.
 class LabelInfo {
-    bool        used{false};    // is this ID used ?
-    bool        defined{false}; // is this ID defined ?
+public:
     Istring     id;             // value of the ID
     Istring     name;           // name of the ID (pointer into SH)
+    std::string filename;       // file of definition
     int         lineno{0};      // line of definition
-    std::string file_name;      // file of definition
-public:
-    LabelInfo() : file_name("") {}
-    LabelInfo(Istring k) : name(k), file_name("") {}
-    [[nodiscard]] auto is_used() const -> bool { return used; }
-    [[nodiscard]] auto is_defined() const -> bool { return defined; }
-    auto               set_used() -> bool {
-        if (used) return true;
-        used = true;
-        return false;
-    }
-    auto set_defined() -> bool {
-        if (defined) return true;
-        defined = true;
-        return false;
-    }
-    void               set_undefined() { defined = false; }
-    [[nodiscard]] auto get_id() const -> Istring { return id; }
-    [[nodiscard]] auto get_name() const -> Istring { return name; }
-    void               set_id(Istring i) { id = i; }
-    [[nodiscard]] auto get_lineno() const -> int { return lineno; }
-    [[nodiscard]] auto get_filename() const -> std::string { return file_name; }
-    void               set_lineno(int i) { lineno = i; }
-    void               set_filename(std::string i) { file_name = std::move(i); }
+    bool        used{false};    // is this ID used ?
+    bool        defined{false}; // is this ID defined ?
+
+    LabelInfo(Istring k = {}) : name(k) {}
+
+    auto set_used() -> bool { return std::exchange(used, true); }
+    auto set_defined() -> bool { return std::exchange(defined, true); }
 };
 
 // This class returns foo then bar then gee from `foo,bar,gee'

@@ -52,7 +52,7 @@ public:
     }
     void see_font_change(subtypes c);
     auto show_font() -> String;
-    auto get_size() -> long { return size >> 11; }
+    auto get_size() -> long { return size >> 11; } // \todo Bit shift should only be applied to unsigned
     void set_level(int k) { level = k; }
     void set_packed(long k) { packed = k; }
     void set_old_from_packed() { old = packed; }

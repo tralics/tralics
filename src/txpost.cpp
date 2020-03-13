@@ -10,9 +10,9 @@
 
 // Post processing for tralics
 
+#include "txpost.h"
 #include "txinline.h"
 #include "txparser.h"
-#include "txpost.h"
 #include "txtrees.h"
 
 namespace {
@@ -226,12 +226,12 @@ void Parser::create_label(const std::string &X, Istring S) {
     auto       m = Istring(X);
     LabelInfo *V = the_main->SH.lab_val_check(m);
     if (V->set_defined()) {
-        multiple_label(m.c_str(), V->get_lineno(), V->get_filename());
+        multiple_label(m.c_str(), V->lineno, V->filename);
     } else {
         my_stats.one_more_label();
-        V->set_id(S);
-        V->set_lineno(get_cur_line());
-        V->set_filename(get_cur_filename());
+        V->id       = S;
+        V->lineno   = get_cur_line();
+        V->filename = get_cur_filename();
         defined_labels.emplace_back(S, V);
     }
 }
@@ -249,8 +249,8 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
         ref_list.emplace_back(v, B);
     LabelInfo *V = the_main->SH.lab_val_check(B);
     if (!V->set_used()) the_parser.my_stats.one_more_used_ref();
-    if (V->get_lineno() == 0) V->set_lineno(the_parser.get_cur_line());
-    if (V->get_filename().empty()) V->set_filename(the_parser.get_cur_filename());
+    if (V->lineno == 0) V->lineno = the_parser.get_cur_line();
+    if (V->filename.empty()) V->filename = the_parser.get_cur_filename();
 }
 
 // In ref_list, we have  (e,v), (e,v), (e,v) etc
@@ -262,12 +262,11 @@ void Parser::check_all_ids() {
         int        E = i.first;
         Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
-        if (!L->is_defined()) {
+        if (!L->defined) {
             log_and_tty << lg_start << "Error signaled in postprocessor\n"
-                        << "undefined label `" << V << "' (first use at line " << L->get_lineno() << " in file " << L->get_filename()
-                        << ")";
+                        << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
             Xid(E).add_attribute(the_names[np_target], V);
-            Istring B = L->get_id();
+            Istring B = L->id;
             for (auto &removed_label : removed_labels) {
                 if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                 break;
@@ -275,7 +274,7 @@ void Parser::check_all_ids() {
             log_and_tty << "\n";
             main_ns::nb_errs++;
         }
-        Istring B = L->get_id();
+        Istring B = L->id;
         Xid(E).add_attribute(the_names[np_target], B);
     }
 }
@@ -286,8 +285,8 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         auto       E = to_unsigned(i.first);
         Istring    V = i.second;
         LabelInfo *L = the_main->SH.lab_val(V);
-        if (!L->is_defined()) continue; // should not happen
-        Istring B = L->get_id();
+        if (!L->defined) continue; // should not happen
+        Istring B = L->id;
         scbuf.reset();
         scbuf.push_back(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
@@ -301,8 +300,8 @@ void post_ns::remove_label(String s, Istring n) {
     for (auto &i : ref_list) {
         Istring    V  = i.second;
         LabelInfo *li = the_main->SH.lab_val(V);
-        if (li->get_id() != n) continue;
-        if (!li->is_used()) continue;
+        if (li->id != n) continue;
+        if (!li->used) continue;
         log_and_tty << "Error signaled by postprocessor\n"
                     << "Removing `" << s << "' made the following label disappear: " << V << "\n";
         main_ns::nb_errs++;
@@ -310,9 +309,9 @@ void post_ns::remove_label(String s, Istring n) {
     for (auto &defined_label : defined_labels) {
         Istring    j = defined_label.first;
         LabelInfo *V = defined_label.second;
-        if (j == n && V->is_defined() && !V->is_used()) {
+        if (j == n && V->defined && !V->used) {
             removed_labels.emplace_back(s, n);
-            V->set_undefined();
+            V->defined = false;
         }
     }
 }

@@ -1,6 +1,10 @@
+#pragma once
+#include "tralics/Istring.h"
+#include <fstream>
 #include <utility>
 
-#pragma once
+class Xml;
+
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006, 2007,2008
 
