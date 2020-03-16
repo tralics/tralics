@@ -279,7 +279,7 @@ void MainClass::check_for_input() {
     if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
 
     std::string s = hack_for_input(infile);
-    if (!non_interactive()) {
+    if (interactive_math) {
         input_content.set_interactive();
         input_content.push_front(Clines(1, "foo", true));
         input_content.push_front(Clines(2, "foo", false));
@@ -321,7 +321,7 @@ void MainClass::banner() {
     static bool banner_printed = false;
     if (banner_printed) return;
     banner_printed = true;
-    std::cout << "This is tralics " << get_version() << ", a LaTeX to XML translator"
+    std::cout << "This is tralics " << version << ", a LaTeX to XML translator"
               << ", running on " << machine << "\n";
     std::cout << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n";
     std::cout << "Licensed under the CeCILL Free Software Licensing Agreement\n";
@@ -338,7 +338,7 @@ void MainClass::open_log() {
     if (special) main_ns::log_or_tty.verbose = false;
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
-    the_log << "Transcript file of tralics " << get_version() << " for file " << infile << "\n"
+    the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"
             << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n"
             << "Tralics is licensed under the CeCILL Free Software Licensing Agreement\n"
             << start_date << "OS: " << print_os() << ", machine " << machine << "\n"
@@ -389,13 +389,13 @@ void MainClass::open_log() {
 
 void MainClass::set_ent_names(String s) {
     if (strcmp(s, "true") == 0)
-        noent_names = false;
+        no_entnames = false;
     else if (strcmp(s, "yes") == 0)
-        noent_names = false;
+        no_entnames = false;
     else if (strcmp(s, "false") == 0)
-        noent_names = true;
+        no_entnames = true;
     else if (strcmp(s, "no") == 0)
-        noent_names = true;
+        no_entnames = true;
 }
 
 void MainClass::parse_args(int argc, char **argv) {
@@ -566,7 +566,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     else if (strcmp(s, "latin1") == 0)
         input_encoding = 1;
     else if (strcmp(s, "noentnames") == 0)
-        noent_names = true;
+        no_entnames = true;
     else if (strcmp(s, "nomultimathlabel") == 0)
         multi_math_label = false;
     else if (strcmp(s, "multimathlabel") == 0)
@@ -635,9 +635,9 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     else if (strcmp(s, "usequotes") == 0)
         main_ns::use_quotes = true;
     else if (strcmp(s, "mathvariant") == 0)
-        use_math_variant = true;
+        math_variant = true;
     else if (strcmp(s, "nomathvariant") == 0)
-        use_math_variant = false;
+        math_variant = false;
     else if (strcmp(s, "nomathml") == 0)
         nomathml = true;
     else if (strcmp(s, "dualmath") == 0)
@@ -748,7 +748,7 @@ auto MainClass::find_config_file() -> bool {
         return main_ns::search_in_confdir(user_config_file);
     }
     // If interactive, read config only if given as parameter
-    if (!non_interactive()) return false;
+    if (interactive_math) return false;
     std::string xclass = input_content.find_configuration(B);
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
@@ -1023,7 +1023,7 @@ void MainClass::mk_empty() {
 }
 
 void MainClass::more_boot() {
-    tralics_ns::boot_math(get_math_variant());
+    tralics_ns::boot_math(math_variant);
     if (etex_enabled) the_parser.hash_table.boot_etex();
     mk_empty();
     the_parser.my_stats.after_boot();
@@ -1045,9 +1045,9 @@ void MainClass::run(int n, char **argv) {
     the_log << "OK with the configuration file, dealing with the TeX file...\n";
     show_input_size();
     try {
-        boot_bibtex(in_ra());
+        boot_bibtex(handling_ra);
         trans0();
-        if (in_ra()) {
+        if (handling_ra) {
             if (the_names[np_language].null()) the_names[np_language] = Istring("language");
             the_parser.add_language_att();
         }
@@ -1089,7 +1089,7 @@ void MainClass::out_xml() {
         X << "<?xml-stylesheet href=\"" << sl.p_str() << "\" type=\"" << the_names[np_stylesheet_type].p_str() << "\"?>\n";
     }
     X << "<!DOCTYPE " << dtd << " SYSTEM '" << dtdfile << "'>\n";
-    X << "<!-- Translated from latex by tralics " << get_version() << ", date: " << short_date << "-->\n";
+    X << "<!-- Translated from latex by tralics " << version << ", date: " << short_date << "-->\n";
     auto a = X.size();
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     a += aux;
@@ -1098,7 +1098,7 @@ void MainClass::out_xml() {
     *fp << X;
     *fp << the_parser.the_stack.document_element();
     *fp << "\n";
-    log_and_tty << "Output written on " << name << " (" << get_fp_len() << " bytes).\n";
+    log_and_tty << "Output written on " << name << " (" << fp_len << " bytes).\n";
     tralics_ns::close_file(fp);
     if (the_main->find_words) {
         u = tralics_ns::get_out_dir(out_name);
@@ -1109,7 +1109,7 @@ void MainClass::out_xml() {
 }
 
 void MainClass::finish_init() {
-    if (in_ra()) {
+    if (handling_ra) {
         if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
         if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
         if (config_data.data[0]->empty()) bad_conf("ur_vals");
@@ -1146,7 +1146,7 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
 }
 
 void MainClass::check_section_use() {
-    if (in_ra()) {
+    if (handling_ra) {
         std::vector<ParamDataSlot> &X = config_data.data[1]->data;
         auto                        n = X.size(); // number of sections
         for (size_t i = 0; i < n; i++)

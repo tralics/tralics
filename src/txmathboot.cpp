@@ -1531,7 +1531,7 @@ void MathDataP::boot2() {
 }
 
 void MathDataP::boot() {
-    no_ent_names = the_main->use_noent_names();
+    no_ent_names = the_main->no_entnames;
     for (auto &i : built_in_table) i = nullptr;
     for (auto &i : built_in_table_alt) i = nullptr;
     boot_table();

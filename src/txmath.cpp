@@ -743,7 +743,7 @@ void Parser::after_math(bool is_inline) {
     else {
         bool w = the_stack.in_h_mode() || the_stack.in_v_mode();
         leave_h_mode();
-        if (the_main->is_interactive_math()) return; // no need to be subtle
+        if (the_main->interactive_math) return; // no need to be subtle
         remove_initial_space_and_back_input();
         if (w && cur_cmd_chr.cmd != par_cmd) back_input(hash_table.noindent_token);
     }
@@ -760,7 +760,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->change_id(id);
-    if (the_main->is_interactive_math()) std::cout << res << "\n";
+    if (the_main->interactive_math) std::cout << res << "\n";
     after_math(is_inline);
     the_stack.top_stack()->push_back(res);
     if (cmi.has_label()) add_math_label(res);
@@ -772,7 +772,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
 void Parser::finish_trivial_math(Xml *res) {
     if (tracing_math()) the_log << lg_start << "formula was math" << lg_end;
     the_parser.my_stats.one_more_trivial();
-    if (the_main->is_interactive_math()) std::cout << res << "\n";
+    if (the_main->interactive_math) std::cout << res << "\n";
     leave_v_mode();
     cmi.finish_math_mem();
     the_stack.top_stack()->add_tmp(res);
@@ -859,7 +859,7 @@ void Parser::T_math(subtypes type) {
     res1->add_att(np_type, cmi.get_pos_att());
     if (!textype.empty()) res1->add_att(Istring(np_textype), Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
-    if (the_main->is_interactive_math()) {
+    if (the_main->interactive_math) {
         if (only_input_data)
             std::cout << x << "\n";
         else
@@ -957,8 +957,8 @@ auto Parser::scan_math1(int res) -> int {
         // FIXME what is the purpose of this math mode test
         if (the_stack.get_mode() == mode_math) {
             auto c = cur_cmd_chr.chr;
-            if (c > 0 && c < int(nb_characters)) {
-                auto u = eqtb_int_table[to_unsigned(c + math_code_offset)].val;
+            if (c > 0 && c < nb_characters) {
+                auto u = eqtb_int_table[c + math_code_offset].val;
                 if (u == 32768) {
                     cur_tok.active_char(c);
                     back_input();
@@ -3182,7 +3182,7 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
     the_parser.my_stats.one_more_kernel();
     name_positions bl = find_operator(cms);
-    if (the_main->get_prime_hack() && exponent == math_data.get_mc_table(27) && bl == cst_msup) {
+    if (the_main->prime_hack && exponent == math_data.get_mc_table(27) && bl == cst_msup) {
         bl       = cst_mrow;
         exponent = get_builtin(varprime_code);
     }

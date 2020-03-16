@@ -8,10 +8,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "txtitlepage.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
-#include "txtitlepage.h"
 
 namespace {
     int               init_file_pos = 0; // position in init file
@@ -436,10 +436,10 @@ void Parser::T_titlepage_finish(size_t v) {
     the_stack.add_nl();
     ileave_v_mode();
     Titlepage.make_invalid();
-    if (the_main->get_tpa_mode() == 1) return;
-    if (the_main->get_tpa_mode() == 2)
+    if (the_main->tpa_mode == 1) return;
+    if (the_main->tpa_mode == 2)
         finished = true;
-    else if (the_main->get_tpa_mode() == 0) {
+    else if (the_main->tpa_mode == 0) {
         if (main_ns::nb_errs > 0) finished = true;
     }
     if (finished && also_bib) {
@@ -832,13 +832,13 @@ void Buffer::find_top_atts() {
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\specialyear") == 0) {
         auto    as = Istring(a);
-        Istring bs = Istring(the_main->get_year_string());
+        Istring bs = Istring(the_main->year_string);
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\tralics") == 0) {
         auto as = Istring(a);
         reset();
         push_back("Tralics version ");
-        push_back(the_main->get_version());
+        push_back(the_main->version);
         Istring bs = Istring(to_string());
         Xid(1).add_attribute(as, bs);
     } else {

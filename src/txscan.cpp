@@ -117,7 +117,7 @@ void Parser::M_extension(int cc) {
             chan = negative_out_slot;
         else if (chan > max_openout && chan != write18_slot)
             chan = positive_out_slot;
-        if (chan == write18_slot && !the_main->is_shell_escape_allowed()) chan = positive_out_slot;
+        if (chan == write18_slot && !the_main->shell_escape_allowed) chan = positive_out_slot;
     }
     auto uchan = to_unsigned(chan);
     if (cc == openout_code) {
@@ -2194,7 +2194,7 @@ void Parser::E_convert() {
     case jobname_code: B.push_back(get_job_name()); break;
     case ra_jobname_code: B.push_back(get_projet_val()); break;
     case attributeval_code: B.push_back(get_attval()); break;
-    case tralicsversion_code: B.push_back(the_main->get_version()); break;
+    case tralicsversion_code: B.push_back(the_main->version); break;
     case etexrevision_code: B.push_back(".0"); break;
     case rayear_code: B.push_back_int(the_parser.get_ra_year()); break;
     }

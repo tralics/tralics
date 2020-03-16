@@ -234,7 +234,7 @@ void Parser::english_quotes(CmdChr X) {
         else
             unprocessed_xml.push_back(static_cast<char>(c));
     }
-    if (X.is_letter() && !the_main->get_zws_mode()) process_string(the_main->get_zws_elt() ? "&#x200B;" : "<zws/>");
+    if (X.is_letter() && !the_main->no_zerowidthspace) process_string(the_main->no_zerowidthelt ? "&#x200B;" : "<zws/>");
 }
 
 // This translates -, --, or ---.
@@ -243,7 +243,7 @@ void Parser::minus_sign(CmdChr X) {
         process_char('-');
     else if (X.is_letter()) {
         process_char('-');
-        if (!the_main->get_zws_mode()) process_string(the_main->get_zws_elt() ? "&#x200B;" : "<zws/>");
+        if (!the_main->no_zerowidthspace) process_string(the_main->no_zerowidthelt ? "&#x200B;" : "<zws/>");
     } else {
         get_x_token();
         if (cur_cmd_chr.is_minus_sign()) {
@@ -745,7 +745,7 @@ void Parser::T_begindocument() {
     cur_tok.kill();
     pop_level(bt_env);
     cur_level = 1; // this is the outer level...
-    if (the_main->d_verbose()) M_tracingall();
+    if (the_main->dverbose) M_tracingall();
     if (tracing_commands()) the_log << lg_startstack << "level set to 1" << lg_end;
     the_bibtex->bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");

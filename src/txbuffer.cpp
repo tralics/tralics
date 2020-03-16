@@ -559,7 +559,7 @@ auto buffer_ns::current_escape_char() -> long { return the_parser.eqtb_int_table
 void Buffer::insert_escape_char() {
     auto c = buffer_ns::current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(char32_t(to_unsigned(c))), the_main->get_log_encoding());
+        out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
     else if (c == 0)
         push_back("^^@");
 }
@@ -581,7 +581,7 @@ auto buffer_ns::null_cs_name() -> String {
     if (c > 0 && c < int(nb_characters)) {
         Buffer &B = null_cs_buffer;
         B << bf_reset << "csname";
-        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->get_log_encoding());
+        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
         B << "endcsname";
         return B.c_str();
     }
@@ -621,10 +621,10 @@ auto Token::tok_to_str() const -> String {
     if (!c.is_ascii() && cat == 12) good_cat = true;
     if (c.is_letter() && cat == 11) good_cat = true;
     if (good_cat)
-        B.out_log(c, the_main->get_log_encoding());
+        B.out_log(c, the_main->log_encoding);
     else {
         B.push_back("{Character ");
-        B.out_log(c, the_main->get_log_encoding());
+        B.out_log(c, the_main->log_encoding);
         B.push_back(" of catcode ");
         B.push_back_int(cat);
         B.push_back("}");
@@ -638,7 +638,7 @@ auto Token::tok_to_str() const -> String {
 // returns true if a space could be added after the token
 auto Buffer::push_back(Token T) -> bool {
     static Buffer        Tmp;
-    output_encoding_type enc = the_main->get_log_encoding();
+    output_encoding_type enc = the_main->log_encoding;
     if (T.is_null()) {
         push_back("\\invalid.");
         return false;
@@ -916,7 +916,7 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
         fp << static_cast<uchar>(x.value);
     else {
         thebuffer.reset();
-        thebuffer.out_log(x, the_main->get_log_encoding());
+        thebuffer.out_log(x, the_main->log_encoding);
         fp << thebuffer.c_str();
     }
     return fp;

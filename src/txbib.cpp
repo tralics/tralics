@@ -489,7 +489,7 @@ void Bibliography::dump_data(Buffer &b) {
 
 // This creates the bbl file by running an external program.
 void Parser::create_aux_file_and_run_pgm() {
-    if (!the_main->is_shell_escape_allowed()) {
+    if (!the_main->shell_escape_allowed) {
         log_and_tty << "Cannot call external program unless using option -shell-escape\n";
         return;
     }
@@ -671,7 +671,7 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
     if (s == nullptr) return fp_unknown;
     auto S = Istring(s);
     // Check is this has to be ignored
-    std::vector<Istring> &Bib_s        = the_main->get_bibtex_fields_s();
+    std::vector<Istring> &Bib_s        = the_main->bibtex_fields_s;
     size_t                additional_s = Bib_s.size();
     for (size_t i = 0; i < additional_s; i++)
         if (Bib_s[i] == S) return fp_unknown;
@@ -708,7 +708,7 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
     if (S == Istring(cstb_year)) return fp_year;
     if (S == Istring(cstb_crossref)) return fp_crossref;
     // Check is this is additional
-    std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
+    std::vector<Istring> &Bib        = the_main->bibtex_fields;
     size_t                additional = Bib.size();
     for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
@@ -720,7 +720,7 @@ auto Bibtex::find_type(String s) -> entry_type {
     if (s[0] == 0) return type_comment; // in case of error.
     auto S = Istring(s);
 
-    std::vector<Istring> &Bib2        = the_main->get_bibtex_extensions_s();
+    std::vector<Istring> &Bib2        = the_main->bibtex_extensions_s;
     size_t                additional2 = Bib2.size();
     for (size_t i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
@@ -744,7 +744,7 @@ auto Bibtex::find_type(String s) -> entry_type {
     if (S == Istring(cstb_string)) return type_string;
     if (S == Istring(cstb_unpublished)) return type_unpublished;
 
-    std::vector<Istring> &Bib        = the_main->get_bibtex_extensions();
+    std::vector<Istring> &Bib        = the_main->bibtex_extensions;
     size_t                additional = Bib.size();
     for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return entry_type(type_extension + i + 1);
@@ -1557,7 +1557,7 @@ void BibEntry::copy_from(BibEntry *Y, size_t k) {
     for (size_t i = k; i < fp_unknown; i++) {
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
-    auto n = the_main->get_bibtex_fields().size();
+    auto n = the_main->bibtex_fields.size();
     for (size_t i = 0; i < n; i++)
         if (user_fields[i].empty()) user_fields[i] = Y->user_fields[i];
 }
@@ -1677,7 +1677,7 @@ void BibEntry::numeric_label(long i) {
 }
 
 BibEntry::BibEntry() {
-    std::vector<Istring> &Bib = the_main->get_bibtex_fields();
+    std::vector<Istring> &Bib = the_main->bibtex_fields;
     if (auto n = Bib.size(); n != 0) { user_fields = new std::string[n]; }
 }
 
@@ -1744,7 +1744,7 @@ void BibEntry::call_type() {
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
     if (is_extension > 0)
-        my_name = the_main->get_bibtex_extensions()[is_extension - 1].c_str();
+        my_name = the_main->bibtex_extensions[is_extension - 1].c_str();
     else
         my_name = the_names[type_to_string(type_int)].c_str();
     bbl.push_back_braced(my_name);
@@ -1769,7 +1769,7 @@ void BibEntry::call_type() {
         }
         bbl.newline();
     }
-    std::vector<Istring> &Bib        = the_main->get_bibtex_fields();
+    std::vector<Istring> &Bib        = the_main->bibtex_fields;
     auto                  additional = Bib.size();
     for (size_t i = 0; i < additional; i++) {
         auto ss = user_fields[i];
@@ -2093,7 +2093,7 @@ void BibEntry::presort(long serial) {
         label = lab1 + s;
     }
     B.reset();
-    if (the_main->in_ra()) B << ra_prefix() << lab3;
+    if (the_main->handling_ra) B << ra_prefix() << lab3;
     B << label << lab2 << "    " << y << "    ";
     B.special_title(all_fields[fp_title]);
     B.lowercase();
@@ -2980,7 +2980,7 @@ void Bibtex::boot(std::string S, bool inra) {
     no_year      = std::move(S);
     in_ra        = inra;
     want_numeric = false;
-    if (the_main->in_ra()) want_numeric = true;
+    if (the_main->handling_ra) want_numeric = true;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;

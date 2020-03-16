@@ -1241,7 +1241,7 @@ void Parser::T_cap_or_note(bool cap) {
     the_stack.pop(name);
     if (opt != nullptr) the_stack.add_last(new Xml(np_alt_caption, opt));
     pop_level(bt_local);
-    if (the_main->get_footnote_hack()) note->remove_par_bal_if_ok();
+    if (the_main->footnote_hack) note->remove_par_bal_if_ok();
 }
 
 void Parser::T_makebox(bool framed, Token C) {

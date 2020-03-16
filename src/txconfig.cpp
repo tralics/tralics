@@ -358,7 +358,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
 auto config_ns::pers_rc(const std::string &rc) -> std::string {
     if (rc.empty()) {
         if (have_default_ur) return the_default_rc;
-        if (the_main->in_ra() && the_parser.get_ra_year() > 2006) {
+        if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
             // signal error, make a default
             the_parser.parse_error("No default Research Centre defined");
             the_default_rc = "unknown";
@@ -453,14 +453,14 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
 
 void Buffer::interpret_bibtex_list() {
     the_log << "bibtex_fields: ";
-    vector<Istring> &bib  = the_main->get_bibtex_fields();
-    vector<Istring> &bib1 = the_main->get_bibtex_fields_s();
+    vector<Istring> &bib  = the_main->bibtex_fields;
+    vector<Istring> &bib1 = the_main->bibtex_fields_s;
     interpret_aux(bib, bib1);
 }
 
 void Buffer::interpret_bibtex_extension_list() {
     the_log << "bibtex_extensions: ";
-    vector<Istring> &bib  = the_main->get_bibtex_extensions();
-    vector<Istring> &bib2 = the_main->get_bibtex_extensions_s();
+    vector<Istring> &bib  = the_main->bibtex_extensions;
+    vector<Istring> &bib2 = the_main->bibtex_extensions_s;
     interpret_aux(bib, bib2);
 }

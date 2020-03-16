@@ -262,7 +262,7 @@ void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
 // This is a hack. In some cases, we define the command after signaling
 // the error. The hack is that no <error/> element must be created.
 void Parser::undefined_mac() {
-    bool noxml = the_main->get_no_undef_mac();
+    bool noxml = the_main->no_undef_mac;
     err_buf << bf_reset << "Undefined command " << cur_tok.tok_to_str();
     if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.cmd;
     if (noxml) {

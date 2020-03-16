@@ -399,7 +399,7 @@ auto Stack::push_par(long k) -> Xid {
 }
 
 auto Stack::fonts1(name_positions x) -> Xml * {
-    bool     w   = the_main->use_font_elt();
+    bool     w   = the_main->use_font_elt;
     Xml *    res = new Xml(w ? x : cst_hi, nullptr);
     AttList &W   = res->get_id().get_att();
     if (!w) W.push_back(np_rend, x);
@@ -416,7 +416,7 @@ void Stack::fonts0(name_positions x) {
 // Adds font info when required
 void Stack::check_font() {
     while (Table.back().frame.spec_empty()) Table.pop_back();
-    bool           w = the_main->pack_font_elt();
+    bool           w = the_main->pack_font_elt;
     name_positions s;
     if (w) {
         Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.

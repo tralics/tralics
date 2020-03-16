@@ -643,7 +643,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     bool   res                         = tralics_ns::find_in_confdir(name + (type ? ".clt" : ".plt"), true);
     the_class_data.using_default_class = false;
     if (!res) {
-        std::string D = the_main->get_default_class();
+        std::string D = the_main->default_class;
         if (type && !D.empty()) {
             res = tralics_ns::find_in_confdir(D + ".clt", true);
             if (res) {

@@ -1,6 +1,10 @@
+#pragma once
+#include "tralics/Istring.h"
+#include "tralics/enums.h"
+#include "txxml.h"
+#include <string>
 #include <utility>
 
-#pragma once
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008
 
@@ -14,6 +18,7 @@
 // This file contains stuff for title-page element.
 
 class TitlePageFullLine;
+
 static const int tp_p_flag    = 2;
 static const int tp_e_flag    = 4;
 static const int tp_q_flag    = 8;
