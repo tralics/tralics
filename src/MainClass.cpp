@@ -138,6 +138,72 @@ namespace {
         return s;
     }
 
+    /// Create an empty TeX file
+    void mk_empty() {
+        auto res = new LinePtr;
+        res->reset(".tex");
+        res->insert(1, "\\message{File ignored^^J}\\endinput", false);
+        main_ns::register_file(res);
+    }
+
+    /// Display usage message, then exit the program \todo Manage this centrally
+    void usage_and_quit(int v) {
+        std::cout << "Syntax:\n";
+        std::cout << "   tralics [options] source\n";
+        std::cout << "source is the name of the source file,\n";
+        std::cout << "   (with or without a extension .tex), does not start with a hyphen\n";
+        std::cout << "\n";
+        std::cout << "All options start with a single or double hyphen, they are:\n";
+        std::cout << "  -verbose: Prints much more things in the log file\n";
+        std::cout << "  -silent: Prints less information on the terminal\n";
+        std::cout << "  -input_file FILE: translates file FILE\n";
+        std::cout << "  -log_file LOG: uses LOG as transcript file\n";
+        std::cout << "  -input_path PATH: uses PATH as dir list for input\n";
+        std::cout << "  -output_dir DIR: pute result files in directory DIR\n";
+        std::cout << "  -type FOO: Uses FOO instead of the \\documentclass value\n";
+        std::cout << "  -config FILE: use FILE instead of default configuration file\n";
+        std::cout << "  -confdir : indicates where the configuration files are located\n";
+        std::cout << "  -noconfig: no configuration file is used\n";
+        std::cout << "  -interactivemath: reads from the terminal, \n";
+        std::cout << "      and prints math formulas on the terminal\n";
+        std::cout << "  -utf8: says that the source is encoded in utf8 instead of latin1\n";
+        std::cout << "  -latin1: overrides -utf8\n";
+        std::cout << "  -utf8output: same as -oe8\n";
+        std::cout << "  -oe8, -oe1, -oe8a -oe1a: specifies output encoding\n";
+        std::cout << "  -te8, -te1, -te8a -te1a: terminal and transcript encoding\n";
+        std::cout << "  -(no)trivialmath: special math hacking\n";
+        std::cout << "  -(no)etex; enable or disable e-TeX extensions\n";
+        std::cout << "  -nozerowidthelt: Use  &#x200B; rather than <zws/>\n";
+        std::cout << "  -nozerowidthspace: no special &#x200B; or <zws/> inserted\n";
+        std::cout << "  -noentnames: result contains &#A0; rather than &nbsp;\n";
+        std::cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
+        std::cout << "  -nomathml: this disables mathml mode\n";
+        std::cout << "  -dualmath: gives mathML and nomathML mode\n";
+        std::cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
+        std::cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
+        std::cout << "  -noundefmac: alternate XML output for undefined commands\n";
+        std::cout << "  -noxmlerror: no XML element is generated in case of error\n";
+        std::cout << "  -no_float_hack: Removes hacks for figures and tables\n";
+        std::cout << "  -nostraightquotes: same as right_quote=B4\n";
+        std::cout << "  -left_quote=2018: sets translation of ` to char U+2018\n";
+        std::cout << "  -right_quote=2019: sets translation of ' to char U+2019\n";
+        std::cout << "  -param foo bar: adds foo=\"bar\" to the configuratin file\n";
+        std::cout << "  -doctype=A-B; specifies the XML DOCTYPE\n";
+        std::cout << "  -usequotes: double quote gives two single quotes\n";
+        std::cout << "  -shell-escape: enable \\write18{SHELL COMMAND}\n";
+        std::cout << "  -tpa_status = title/all: translate all document or title only\n";
+        std::cout << "  -default_class=xx: use xx.clt if current class is unknown\n";
+        std::cout << "  -raw_bib: uses all bibtex fields\n";
+        std::cout << "  -distinguish_refer_in_rabib= true/false: special raweb hack \n";
+        std::cout << "  (the list of all options is avalaible at\n"
+                  << "    http://www-sop.inria.fr/marelle/tralics/options.html )\n";
+        std::cout << "\n";
+        std::cout << "Tralics homepage: http://www-sop.inria.fr/marelle/tralics\n";
+        std::cout << "This software is governed by the CeCILL license that can be\n";
+        std::cout << "found at http://www.cecill.info.\n";
+        exit(v);
+    }
+
     /// Returns true if prefix is the path to the conf_path \todo std::filesystem
     auto try_conf(const std::string &prefix) -> bool {
         if (prefix.empty()) return false;
@@ -218,6 +284,18 @@ namespace {
         return true;
     }
 
+    auto print_os(system_type os) -> std::string {
+        switch (os) {
+        case st_windows: return "Windows";
+        case st_decalpha: return "Dec alpha";
+        case st_solaris: return "Solaris";
+        case st_sgi: return "Sgi";
+        case st_apple: return "Apple";
+        case st_linux: return "Linux";
+        default: return "Unknown";
+        }
+    }
+
     void show_encoding(size_t wc, const std::string &name) {
         const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
         the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
@@ -261,18 +339,6 @@ void MainClass::get_os() {
     cur_os = st_unknown;
 #endif
     machine = Buffer().get_machine_name();
-}
-
-auto MainClass::print_os() const -> String {
-    switch (cur_os) {
-    case st_windows: return "Windows";
-    case st_decalpha: return "Dec alpha";
-    case st_solaris: return "Solaris";
-    case st_sgi: return "Sgi";
-    case st_apple: return "Apple";
-    case st_linux: return "Linux";
-    default: return "Unknown";
-    }
 }
 
 void MainClass::check_for_input() {
@@ -341,7 +407,7 @@ void MainClass::open_log() {
     the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"
             << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n"
             << "Tralics is licensed under the CeCILL Free Software Licensing Agreement\n"
-            << start_date << "OS: " << print_os() << ", machine " << machine << "\n"
+            << start_date << "OS: " << print_os(cur_os) << ", machine " << machine << "\n"
             << lg_flush;
     if (special)
         log_and_tty << "Starting translation of command line argument.\n";
@@ -387,7 +453,7 @@ void MainClass::open_log() {
     }
 }
 
-void MainClass::set_ent_names(String s) {
+void MainClass::set_ent_names(String s) { // \todo bool is_yes(String)
     if (strcmp(s, "true") == 0)
         no_entnames = false;
     else if (strcmp(s, "yes") == 0)
@@ -397,6 +463,8 @@ void MainClass::set_ent_names(String s) {
     else if (strcmp(s, "no") == 0)
         no_entnames = true;
 }
+
+void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
@@ -588,7 +656,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     else if (strcmp(s, "shellescape") == 0)
         shell_escape_allowed = true;
     else if (strcmp(s, "xml") == 0)
-        todo_xml = true;
+        no_xml = false;
     else if (strcmp(s, "allowbreak") == 0)
         main_ns::bib_allow_break = true;
     else if (strcmp(s, "noallowbreak") == 0)
@@ -653,63 +721,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
 }
 
-void MainClass::usage_and_quit(int v) {
-    std::cout << "Syntax:\n";
-    std::cout << "   tralics [options] source\n";
-    std::cout << "source is the name of the source file,\n";
-    std::cout << "   (with or without a extension .tex), does not start with a hyphen\n";
-    std::cout << "\n";
-    std::cout << "All options start with a single or double hyphen, they are:\n";
-    std::cout << "  -verbose: Prints much more things in the log file\n";
-    std::cout << "  -silent: Prints less information on the terminal\n";
-    std::cout << "  -input_file FILE: translates file FILE\n";
-    std::cout << "  -log_file LOG: uses LOG as transcript file\n";
-    std::cout << "  -input_path PATH: uses PATH as dir list for input\n";
-    std::cout << "  -output_dir DIR: pute result files in directory DIR\n";
-    std::cout << "  -type FOO: Uses FOO instead of the \\documentclass value\n";
-    std::cout << "  -config FILE: use FILE instead of default configuration file\n";
-    std::cout << "  -confdir : indicates where the configuration files are located\n";
-    std::cout << "  -noconfig: no configuration file is used\n";
-    std::cout << "  -interactivemath: reads from the terminal, \n";
-    std::cout << "      and prints math formulas on the terminal\n";
-    std::cout << "  -utf8: says that the source is encoded in utf8 instead of latin1\n";
-    std::cout << "  -latin1: overrides -utf8\n";
-    std::cout << "  -utf8output: same as -oe8\n";
-    std::cout << "  -oe8, -oe1, -oe8a -oe1a: specifies output encoding\n";
-    std::cout << "  -te8, -te1, -te8a -te1a: terminal and transcript encoding\n";
-    std::cout << "  -(no)trivialmath: special math hacking\n";
-    std::cout << "  -(no)etex; enable or disable e-TeX extensions\n";
-    std::cout << "  -nozerowidthelt: Use  &#x200B; rather than <zws/>\n";
-    std::cout << "  -nozerowidthspace: no special &#x200B; or <zws/> inserted\n";
-    std::cout << "  -noentnames: result contains &#A0; rather than &nbsp;\n";
-    std::cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
-    std::cout << "  -nomathml: this disables mathml mode\n";
-    std::cout << "  -dualmath: gives mathML and nomathML mode\n";
-    std::cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
-    std::cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
-    std::cout << "  -noundefmac: alternate XML output for undefined commands\n";
-    std::cout << "  -noxmlerror: no XML element is generated in case of error\n";
-    std::cout << "  -no_float_hack: Removes hacks for figures and tables\n";
-    std::cout << "  -nostraightquotes: same as right_quote=B4\n";
-    std::cout << "  -left_quote=2018: sets translation of ` to char U+2018\n";
-    std::cout << "  -right_quote=2019: sets translation of ' to char U+2019\n";
-    std::cout << "  -param foo bar: adds foo=\"bar\" to the configuratin file\n";
-    std::cout << "  -doctype=A-B; specifies the XML DOCTYPE\n";
-    std::cout << "  -usequotes: double quote gives two single quotes\n";
-    std::cout << "  -shell-escape: enable \\write18{SHELL COMMAND}\n";
-    std::cout << "  -tpa_status = title/all: translate all document or title only\n";
-    std::cout << "  -default_class=xx: use xx.clt if current class is unknown\n";
-    std::cout << "  -raw_bib: uses all bibtex fields\n";
-    std::cout << "  -distinguish_refer_in_rabib= true/false: special raweb hack \n";
-    std::cout << "  (the list of all options is avalaible at\n"
-              << "    http://www-sop.inria.fr/marelle/tralics/options.html )\n";
-    std::cout << "\n";
-    std::cout << "Tralics homepage: http://www-sop.inria.fr/marelle/tralics\n";
-    std::cout << "This software is governed by the CeCILL license that can be\n";
-    std::cout << "found at http://www.cecill.info.\n";
-    exit(v);
-}
-
 void MainClass::set_tpa_status(String s) {
     if ((s == nullptr) || s[0] == 0) return; //
     if (s[0] == 'a' || s[0] == 'A')
@@ -731,7 +742,8 @@ void MainClass::end_with_help(int v) {
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
     if (tralics_ns::find_in_confdir(tmp, true)) {
-        set_tcf_file(main_ns::path_buffer.to_string());
+        tcf_file = main_ns::path_buffer.to_string(); // \todo without using path_buffer?
+        use_tcf  = true;
         return true;
     }
     return false;
@@ -1015,13 +1027,6 @@ void MainClass::show_input_size() {
         the_log << "There are " << n << " lines\n";
 }
 
-void MainClass::mk_empty() {
-    auto res = new LinePtr;
-    res->reset(".tex");
-    res->insert(1, "\\message{File ignored^^J}\\endinput", false);
-    main_ns::register_file(res);
-}
-
 void MainClass::more_boot() {
     tralics_ns::boot_math(math_variant);
     if (etex_enabled) the_parser.hash_table.boot_etex();
@@ -1031,10 +1036,10 @@ void MainClass::more_boot() {
     //  the_parser.the_stack.dump_xml_table();
 }
 
-void MainClass::run(int n, char **argv) {
+void MainClass::run(int argc, char **argv) {
     get_os();
     the_parser.boot();              // create the hash table and all that
-    parse_args(n, argv);            // look at arguments
+    parse_args(argc, argv);         // look at arguments
     if (!only_input_data) banner(); // print banner
     more_boot();                    // finish bootstrap
     check_for_input();              // open the input file
@@ -1059,7 +1064,7 @@ void MainClass::run(int n, char **argv) {
     if (seen_enddocument) the_parser.the_stack.add_nl();
     the_parser.final_checks();
     //    the_parser.the_stack.dump_xml_table();
-    if (todo_xml) {
+    if (!no_xml) {
         the_parser.my_stats.token_stats();
         the_parser.finish_images();
         out_xml();
@@ -1094,7 +1099,7 @@ void MainClass::out_xml() {
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     a += aux;
 #endif
-    set_fp_len(a + 1); // for the \n that follows
+    fp_len = a + 1; // for the \n that follows
     *fp << X;
     *fp << the_parser.the_stack.document_element();
     *fp << "\n";
@@ -1159,9 +1164,4 @@ void MainClass::set_input_encoding(size_t wc) {
         input_encoding = wc;
         the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
     }
-}
-
-void MainClass::set_tcf_file(std::string s) {
-    tcf_file = std::move(s);
-    use_tcf  = true;
 }

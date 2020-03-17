@@ -680,8 +680,8 @@ void Parser::boot_time() {
     new_prim("today", today_tokens);
     b << bf_reset << "Start compilation: " << short_date << ' ' << twodig(hour) << hour << ':' << twodig(min) << min << ':' << twodig(sec)
       << sec << "\n";
-    the_main->set_start_date(b.to_string());
-    the_main->set_short_date(short_date);
+    the_main->start_date = b.to_string();
+    the_main->short_date = short_date;
     // Default year for the raweb. Until April its last year
     if (month <= 4) year--;
     the_parser.set_ra_year(year);
@@ -1336,9 +1336,9 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     }
     if (a == "distinguish_refer_in_rabib") {
         if ((b == "true") || (b == "yes"))
-            the_main->set_distinguish(true);
+            the_main->distinguish_refer = true;
         else if ((b == "false") || (b == "no"))
-            the_main->set_distinguish(false);
+            the_main->distinguish_refer = false;
         else
             b << bf_reset << "ignored";
         return true;
@@ -1348,7 +1348,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
         return true;
     }
     if (a == "default_class") {
-        the_main->set_default_class(b.to_string());
+        the_main->default_class = b.to_string();
         return true;
     }
     if (a == "alternate_item") {
@@ -1373,18 +1373,18 @@ auto assign(Buffer &a, Buffer &b) -> bool {
         return true;
     }
     if (a == "no_footnote_hack") {
-        if (b == "true") the_main->set_foot_hack(false);
-        if (b == "false") the_main->set_foot_hack(true);
+        if (b == "true") the_main->footnote_hack = false;
+        if (b == "false") the_main->footnote_hack = true;
         return true;
     }
     if (a == "use_font_elt") {
-        if (b == "true") the_main->set_use_font(true);
-        if (b == "false") the_main->set_use_font(false);
+        if (b == "true") the_main->use_font_elt = true;
+        if (b == "false") the_main->use_font_elt = false;
         return true;
     }
     if (a == "use_all_sizes") {
-        if (b == "true") the_main->set_use_sizes(true);
-        if (b == "false") the_main->set_use_sizes(false);
+        if (b == "true") the_main->use_all_sizes = true;
+        if (b == "false") the_main->use_all_sizes = false;
         return true;
     }
     if (a == "bibtex_fields") {
@@ -1960,8 +1960,8 @@ auto config_ns::assign_name(String A, String B) -> bool {
             return true;
         }
         if (strcmp(A, "pack_font_att") == 0) {
-            if (strcmp(B, "true") == 0) the_main->set_pack_font(true);
-            if (strcmp(B, "false") == 0) the_main->set_pack_font(false);
+            if (strcmp(B, "true") == 0) the_main->pack_font_elt = true;
+            if (strcmp(B, "false") == 0) the_main->pack_font_elt = false;
             return true;
         }
         return false;
@@ -2118,8 +2118,8 @@ auto config_ns::assign_name(String A, String B) -> bool {
             return true;
         }
         if (strcmp(A, "use_font_elt") == 0) {
-            if (strcmp(B, "true") == 0) the_main->set_use_font(true);
-            if (strcmp(B, "false") == 0) the_main->set_use_font(false);
+            if (strcmp(B, "true") == 0) the_main->use_font_elt = true;
+            if (strcmp(B, "false") == 0) the_main->use_font_elt = false;
             return true;
         }
         return false;

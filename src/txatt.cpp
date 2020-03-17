@@ -126,7 +126,7 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
 
 void Buffer::push_back(const AttList &Y) {
     auto n = Y.val.size();
-    if (the_main->use_double_quote_att())
+    if (the_main->double_quote_att)
         for (auto i = n; i > 0; i--) push_back_alt(Y.val[i - 1]);
     else
         for (auto i = n; i > 0; i--) push_back(Y.val[i - 1]);

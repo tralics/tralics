@@ -1560,7 +1560,7 @@ void MathDataP::boot() {
     mk_icb("sigma", "&sigma;", "&#x3C3;", sigma_code);
     mk_icb("tau", "&tau;", "&#x3C4;", tau_code);
     mk_icb("upsilon", "&upsi;", "&#x3C5;", upsilon_code);
-    if (the_main->use_old_phi()) {
+    if (the_main->old_phi) {
         mk_icb("varphi", "&phi;", "&#x3D5;", varphi_code);
         mk_icb("phi", "&phiv;", "&#x3C6;", phi_code);
     } else {

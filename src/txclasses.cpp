@@ -699,7 +699,7 @@ auto Parser::check_builtin_pack(const std::string &pack) -> bool {
 // Built-in class handler. Class name unused
 void Parser::check_builtin_class() {
     Xid doc_att(1);
-    if (is_raw_option(cur_opt_list, "useallsizes")) the_main->set_use_sizes(true);
+    if (is_raw_option(cur_opt_list, "useallsizes")) the_main->use_all_sizes = true;
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);
     if (is_raw_option(cur_opt_list, "english")) set_default_language(0);
 }

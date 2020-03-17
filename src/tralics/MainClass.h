@@ -12,11 +12,10 @@ class MainClass {
     std::string type_option;  // the type option
     std::string dtd, dtdfile; // the dtd, and its external location
     std::string dtype;        // the doc type found in the configuration file
-    std::string start_date;   // string with date of start of run.
     std::string out_name;     // Name of output file
     std::string in_dir;       // Input directory
     std::string ult_name;     // absolute name of input.ult
-    std::string tcf_file;
+    std::string tcf_file;     ///< File name of the `tcf` to use, if found \todo std::optional<std::string> instead of use_tcf?
     std::string machine;
     std::string user_config_file;
 
@@ -28,14 +27,10 @@ class MainClass {
     int dft{3}; // default dtd for standard classes
     int trivial_math{1};
 
-    size_t fp_len{0}; ///< number of bytes sent to XML file
-
     LinePtr input_content; // content of the tex source
     LinePtr tex_source;    // the data to be translated
     LinePtr config_file;   // content of configuratrion file
     LinePtr from_config;   // lines extracted from the configuration
-
-    line_iterator doc_class_pos;
 
     system_type cur_os;
 
@@ -46,16 +41,12 @@ class MainClass {
     Buffer b_after, b_current; // aux buffers.
 
     bool find_words{false};
-    bool distinguish_refer{true};
     bool noconfig{false};
     bool nomathml{false};
     bool dualmath{false};
-    bool old_phi{false};
-    bool silent{false};           // are we silent ?
-    bool double_quote_att{false}; // double quote as attribute value delimitor
+    bool silent{false}; // are we silent ?
     bool use_tcf{false};
     bool etex_enabled{true};
-    bool todo_xml{true};
     bool multi_math_label{false};
     bool load_l3{false};
     bool verbose{false}; ///< Are we verbose ?
@@ -65,7 +56,8 @@ public:
     StrHash SH;        ///< the XML hash table
 
     std::string default_class;     ///< The default class
-    std::string short_date;        ///< Date of start of run
+    std::string short_date;        ///< Date of start of run (short format) \todo short_date and start_date seem to be identical
+    std::string start_date;        ///< Date of start of run.
     std::string version{"2.15.4"}; ///< Version of tralics \todo set at a more reasonable place
     std::string year_string;       // is 2003
 
@@ -74,64 +66,54 @@ public:
     std::vector<Istring> bibtex_extensions;
     std::vector<Istring> bibtex_extensions_s;
 
+    size_t               fp_len{0};                ///< number of bytes sent to XML file
     size_t               input_encoding{1};        ///< Encoding of the input file \todo one type to rule all encodings
     output_encoding_type log_encoding{en_boot};    ///< Encoding of the log file \todo this should always be UTF-8
     output_encoding_type output_encoding{en_boot}; ///< Encoding of the XML output \todo this should always be UTF-8
 
+    line_iterator doc_class_pos;
+
     int tpa_mode{3};
 
-    bool dverbose{false}; ///< Are we verbose at begin document ?
-    bool footnote_hack{true};
+    bool distinguish_refer{true}; ///< Something to do with bibliographies in RA \todo remove
+    bool double_quote_att{false}; ///< double quote as attribute value delimitor
+    bool dverbose{false};         ///< Are we verbose at begin document ?
+    bool footnote_hack{true};     ///< Not sure what this activates
     bool handling_ra{true};       ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
     bool interactive_math{false}; ///< Are we in interactive mode? \todo get rid of interactive mode
     bool math_variant{false};
     bool no_entnames{false};
     bool no_undef_mac{false};
+    bool no_xml{false}; ///< Are we in syntax-only mode (no XML output)?
     bool no_zerowidthelt{false};
     bool no_zerowidthspace{false};
+    bool old_phi{false}; ///< Are we using `\phi` or `\varphi` to generate `&phi;`?
     bool pack_font_elt{false};
     bool prime_hack{false};
     bool shell_escape_allowed{false};
     bool use_all_sizes{false};
     bool use_font_elt{false};
 
-    MainClass();
+    MainClass(); ///< This just adds `"../confdir"` to `conf_path` \todo should disappear
 
-    [[nodiscard]] auto print_os() const -> String; ///< Converts the symbolic OS string to a real string
+    auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
-    void add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
-    void banner(); ///< Prints the banner on the tty
-    void check_section_use();
-    void incr_cur_fp_len(size_t a) { fp_len += a; }   ///< Increase cur_fp \todo remove
-    void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
-    void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
+    void add_to_from_config(int n, Buffer &b); ///< Add contents to `from_config`
+    void bad_year();                           ///< If the year is wrong, fail \todo this seems to be RA specific
+    void run(int argc, char **argv);           ///< Do everything
+    void set_ent_names(String s);              ///< Set no_entnames from a string saying yes or no
+    void set_input_encoding(size_t wc);        ///< Set default input file encoding and log the action \todo remove?
 
-    auto check_for_tcf(const std::string &s) -> bool;
-
-    void inhibit_xml() { todo_xml = false; }
-    void read_config_and_other(); ///< Read the config file and extract all relevant information
-    void run();
-    void run(int n, char **argv);
-    void set_distinguish(bool b) { distinguish_refer = b; }
-    void set_doc_class_pos(line_iterator x) { doc_class_pos = x; }
-    void set_ent_names(String s);
-    void set_foot_hack(bool b) { footnote_hack = b; }
-    void set_fp_len(size_t a) { fp_len = a; }
-    void set_input_encoding(size_t wc);
-    void set_tcf_file(std::string s);
-    void set_use_font(bool b) { use_font_elt = b; }
-    void set_pack_font(bool b) { pack_font_elt = b; }
-    void set_use_sizes(bool b) { use_all_sizes = b; }
-    void set_start_date(std::string s) { start_date = std::move(s); }
-    void set_short_date(std::string s) { short_date = std::move(s); }
-    void set_default_class(std::string s) { default_class = std::move(s); }
-    void set_tpa_status(String s); ///< Handles argument of -tpa_status switch
-    auto use_old_phi() -> bool { return old_phi; }
-    auto use_double_quote_att() -> bool { return double_quote_att; }
-    void unexpected_eof(std::string, int);
-    void bad_year();
+    static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
 
 private:
+    void banner();                                    ///< Prints the banner on the tty
+    void check_section_use();                         ///< Not sure what this does, RA related
+    void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
+    void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
+    void read_config_and_other();                     ///< Read the config file and extract all relevant information
+    void set_tpa_status(String s);                    ///< Handles argument of -tpa_status switch
+
     auto append_checked_line() -> int;
     auto append_nonempty_line() -> int;
     auto check_for_alias_type(bool vb) -> bool;
@@ -204,11 +186,6 @@ private:
     void start_env(std::string);
     void start_error();
     void trans0(); ///< Start the latex to XML translation
-
-public:
-    static auto check_theme(const std::string &s) -> std::string;
-    static void mk_empty();            ///< Create an empty TeX file
-    static void usage_and_quit(int v); ///< Shows the command syntax and exits
 };
 
 extern MainClass *the_main;

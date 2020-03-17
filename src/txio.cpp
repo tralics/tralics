@@ -1071,16 +1071,16 @@ auto LinePtr::get_next(std::string &b, bool &cv) -> int {
 /// This finds a line with documentclass in it
 // uses B and the buffer.
 auto LinePtr::find_documentclass(Buffer &B) -> std::string {
-    auto C = value.begin();
-    auto E = value.end();
-    the_main->set_doc_class_pos(E);
+    auto C                  = value.begin();
+    auto E                  = value.end();
+    the_main->doc_class_pos = E;
     while (C != E) {
         B.reset();
         B.push_back(C->get_chars());
         Buffer &aux = thebuffer;
         bool    s   = B.find_documentclass(aux);
         if (s) {
-            the_main->set_doc_class_pos(C);
+            the_main->doc_class_pos = C;
             return aux.to_string();
         }
         ++C;

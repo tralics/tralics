@@ -586,12 +586,12 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
 // This flushed the buffer, increments fp_len.
 void Buffer::finish_xml_print() {
     *cur_fp << data();
-    the_main->incr_cur_fp_len(wptr);
+    the_main->fp_len += wptr;
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     int k = 0;
     for (int i = 0; i < wptr; i++)
         if (at(i) == '\n') k++;
-    the_main->incr_cur_fp_len(k);
+    the_main->fp_len += k;
 #endif
     reset();
 }
