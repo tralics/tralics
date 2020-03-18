@@ -10,10 +10,8 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txarray.h"
-#include "tralics/Istring.h"
 #include "txinline.h"
 #include "txparser.h"
-#include "txxml.h"
 
 namespace {
     NewArray new_array_object;

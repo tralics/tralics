@@ -1,9 +1,5 @@
 #pragma once
-#include "tralics/Istring.h"
-#include "tralics/enums.h"
 #include "txxml.h"
-#include <string>
-#include <utility>
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008

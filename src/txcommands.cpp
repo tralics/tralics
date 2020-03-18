@@ -11,7 +11,6 @@
 #include "tralics/globals.h"
 #include "txbib.h"
 #include "txclasses.h"
-#include "txinline.h"
 #include "txparser.h"
 
 // This file contains the big switch that interprets (most) commands

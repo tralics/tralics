@@ -1,6 +1,5 @@
 #pragma once
 #include "txstring.h"
-#include <vector>
 
 class Buffer;
 
