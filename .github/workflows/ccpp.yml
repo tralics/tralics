@@ -11,6 +11,10 @@ jobs:
 
     runs-on: ubuntu-latest
     
+    strategy:    
+      matrix:
+        cc: [gcc, clang]
+    
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
