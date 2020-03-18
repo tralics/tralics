@@ -16,8 +16,6 @@ class MainClass {
     std::string in_dir;       // Input directory
     std::string ult_name;     // absolute name of input.ult
     std::string tcf_file;     ///< File name of the `tcf` to use, if found \todo std::optional<std::string> instead of use_tcf?
-    std::string machine;
-    std::string user_config_file;
 
     int year{9876};      // current year
     int env_number{0};   // number of environments seen
@@ -36,9 +34,6 @@ class MainClass {
 
     std::vector<std::string> all_config_types;
     std::vector<std::string> after_conf;
-
-    Buffer line_buffer;        // buffer for current line
-    Buffer b_after, b_current; // aux buffers.
 
     bool find_words{false};
     bool noconfig{false};

@@ -4,10 +4,15 @@
 #include <spdlog/spdlog.h>
 
 namespace {
-    std::string              log_name;
-    std::string              no_ext;
-    std::string              opt_doctype;
-    std::string              out_dir;
+    Buffer b_after;
+
+    std::string log_name;
+    std::string machine;
+    std::string no_ext;
+    std::string opt_doctype;
+    std::string out_dir;
+    std::string user_config_file;
+
     std::vector<std::string> other_options;
 
     void after_conf_assign(std::vector<std::string> &V) {

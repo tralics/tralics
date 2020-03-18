@@ -17,17 +17,17 @@ class XmlAction;
 
 // a xml object
 class Xml {
+public:
     Xid                id;   // id of the objet
     Istring            name; // name of the element
     std::vector<Xml *> tree; // the aux field
-public:
-    Xml(Istring n) : id(0), name(n) {}
+
+    Xml(Istring n = Istring(0UL)) : id(0), name(n) {}
     Xml(const Buffer &n) : id(0), name(Istring(n.c_str())) {}
     Xml(StrHash &X) : id(0), name(Istring(X.hash_find())) {}
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}
-    Xml() : id(0), name(Istring(0UL)) {}
 
     void               change_id(Xid n) { id = n; } // use with care
     void               add_att(Istring a, Istring b) { id.add_attribute(a, b); }
