@@ -18,8 +18,9 @@ class AttList;
 
 // this is a wrapper around an int
 class ScaledInt {
-    long value{0}; // the integer, considered as a scaled number
 public:
+    long value{0}; // the integer, considered as a scaled number
+
     ScaledInt() = default;
     ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
     ScaledInt(long v) : value(v) {}

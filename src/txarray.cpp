@@ -480,7 +480,7 @@ void Parser::start_a_row(long a) {
     Xid prev_row(2); // dummy id as default value
     {
         Xml *V = the_stack.top_stack()->last_addr();
-        if (V != nullptr) prev_row = V->get_id();
+        if (V != nullptr) prev_row = V->id;
     }
     bool initial_hline = false;
     if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(to_unsigned(a)));
@@ -680,14 +680,14 @@ auto Xml::try_cline(bool action) -> bool {
         }
         if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc()) {
-            Istring N = tree[k]->get_name();
+            Istring N = tree[k]->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
         int c = tree[k]->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) tree[k]->get_id().add_bottom_rule();
+        if (a_ok && action) tree[k]->id.add_bottom_rule();
         a = a - c;
         if (a < 0) return false;
     }
@@ -701,7 +701,7 @@ auto Xml::total_span(long &res) const -> bool {
     for (size_t k = 0; k < len; k++) {
         if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc()) {
-            Istring N = tree[k]->get_name();
+            Istring N = tree[k]->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
@@ -726,12 +726,12 @@ auto Xml::try_cline_again(bool action) -> bool {
             continue;
         }
         if (tree[k]->is_xmlc() && k == len - 1) {
-            Istring N = tree[k]->get_name();
+            Istring N = tree[k]->name;
             if (strcmp(N.c_str(), "\n") == 0) continue;
             return false;
         }
         if (tree[k]->get_cell_span() != 1) return false;
-        if (!tree[k]->get_id().has_attribute(the_names[np_topborder]).null()) return false;
+        if (!tree[k]->id.has_attribute(the_names[np_topborder]).null()) return false;
         if (seen_cell) return false;
         if (!tree[k]->is_empty()) return false;
         seen_cell = true;
@@ -778,19 +778,19 @@ void Parser::T_cline() {
                 if (tot_span != 0) {
                     Xml *x = new Xml(np_cell, nullptr);
                     R->push_back(x);
-                    x->get_id().add_span(tot_span);
+                    x->id.add_span(tot_span);
                 }
                 Xml *x = new Xml(np_cell, nullptr);
                 R->push_back(x);
-                x->get_id().add_span(cl_span);
-                x->get_id().add_bottom_rule();
+                x->id.add_span(cl_span);
+                x->id.add_bottom_rule();
                 return;
             }
         }
         if (!R->is_xmlc() && R->has_name(the_names[np_row])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
-                R->change_name(Istring(0UL));
+                R->name = Istring(0UL);
                 the_stack.add_border(cline_first, cl_span);
                 the_log << "\\cline killed a cell \n";
                 return;

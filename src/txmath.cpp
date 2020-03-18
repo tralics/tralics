@@ -422,7 +422,7 @@ void Parser::add_math_label(Xml *res) {
         math_buffer << bf_reset << "mid" << mid;
         the_tag = math_buffer.to_string();
     }
-    the_stack.create_new_anchor(res->get_id(), my_id, Istring(the_tag));
+    the_stack.create_new_anchor(res->id, my_id, Istring(the_tag));
     const std::string &label = cmi.get_label_val();
     if (!label.empty()) create_label(label, my_id);
 }
@@ -759,7 +759,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
-    res->change_id(id);
+    res->id  = id;
     if (the_main->interactive_math) std::cout << res << "\n";
     after_math(is_inline);
     the_stack.top_stack()->push_back(res);
@@ -822,9 +822,9 @@ void Parser::T_math(subtypes type) {
     Xml *       alter   = nullptr;
     std::string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
-        Math &w = math_data.get_list(loc_of_cp);
-        alter   = w.convert_math_noML(false);
-        alter->change_id(cmi.get_tid());
+        Math &w   = math_data.get_list(loc_of_cp);
+        alter     = w.convert_math_noML(false);
+        alter->id = cmi.get_tid();
     }
     loc_of_cp = math_data.get_list(0).duplicate(false);
     Math &u   = math_data.get_list(loc_of_cp);
@@ -848,14 +848,14 @@ void Parser::T_math(subtypes type) {
     after_math(is_inline);
     // Insert the result in the tree.
     Xml *x = new Xml(cst_math, nullptr);
-    x->change_id(cmi.get_mid());
+    x->id  = cmi.get_mid();
     x->add_att(cst_xmlns, cst_mathml);
     x->add_tmp(res);
     if (!is_inline) x->add_att(cst_mode, cst_display);
     Xml *res1 = new Xml(np_formula, x);
     if (alter != nullptr) res1->push_back(alter);
 
-    res1->change_id(cmi.get_fid());
+    res1->id = cmi.get_fid();
     res1->add_att(np_type, cmi.get_pos_att());
     if (!textype.empty()) res1->add_att(Istring(np_textype), Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
@@ -1128,7 +1128,7 @@ void Parser::scan_math(int res, math_list_type type) {
         case hspace_cmd: {
             ScaledInt val = scan_math_kern(T, c);
             CmdChr    ww  = CmdChr(hspace_cmd, c);
-            math_data.push_back(res, ww, subtypes(val.get_value()));
+            math_data.push_back(res, ww, subtypes(val.value));
             continue;
         }
         case start_par_cmd:
@@ -1311,7 +1311,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     }
     if (stag) {
         Istring id = the_main->SH.next_label_id();
-        the_parser.the_stack.create_new_anchor(row->get_id(), id, Istring(tag));
+        the_parser.the_stack.create_new_anchor(row->id, id, Istring(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
         the_parser.parse_error("Internal error");
@@ -1898,7 +1898,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         n++; // empty cell, no atts needed.
         return res;
     }
-    Xid id        = res->get_id();
+    Xid id        = res->id;
     int tbl_align = 0;
     cmi.set_cid(id);
     Math args = *this;
@@ -1951,8 +1951,8 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     Xid    rid  = cmi.get_rid(); // old rid, to be restored at the end
     Xid    cid  = cmi.get_cid();
     Xid    taid = cmi.get_taid();
-    cmi.set_taid(res->get_id());
-    cmi.set_rid(row->get_id());
+    cmi.set_taid(res->id);
+    cmi.set_rid(row->id);
     if (needs_dp) W = ms_D;
     res->push_back(row);
     bool first_cell = is_multline;
@@ -1977,7 +1977,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
 
             n   = 0;
             row = new Xml(cst_mtr, nullptr);
-            cmi.set_rid(row->get_id());
+            cmi.set_rid(row->id);
             res->push_back(row);
         } else if (cmd == space_catcode && cell.empty()) {
             pop_front();
@@ -2001,7 +2001,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     w.add_attribute(cmi.get_taid()); // move the attributes
     cmi.set_rid(rid);
     cmi.set_taid(taid);
-    res->change_id(w);
+    res->id = w;
     if (needs_dp) res->add_att(cst_displaystyle, np_true);
     return res;
 }
@@ -2262,7 +2262,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
     Math &X = get_list();
     if (get_lcmd() == math_open_cd) { // case of {x+y}
         XmlAndType res = X.M_cv(cms, ph ? 2 : 1);
-        return MathElt(res.get_value(), res.get_type());
+        return MathElt(res.value, res.type);
     }
     if (get_lcmd() == math_LR_cd) { // case \left(x+y\right)
         int a = X.front().get_chr();
@@ -2270,7 +2270,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
-        Xml *      res2 = math_data.make_mfenced(a, b, res.get_value());
+        Xml *      res2 = math_data.make_mfenced(a, b, res.value);
         return MathElt(res2, mt_flag_big);
     }
     if (get_lcmd() == math_env_cd) // case \begin{array}...
@@ -2320,10 +2320,10 @@ auto MathElt::cv_mi(math_style cms) -> MathElt {
     auto     Y   = L.end();
     Xml *    res = nullptr;
     if (c == mathbox_code) {
-        Xml *xs = X->get_list().M_cv(cms, 0).get_value(); // OK
-        res     = new Xml(Istring(L.get_sname()), xs);    // OK
+        Xml *xs = X->get_list().M_cv(cms, 0).value;    // OK
+        res     = new Xml(Istring(L.get_sname()), xs); // OK
     } else if (c == multiscripts_code) {
-        Xml *xs = X->get_list().M_cv(cms, 0).get_value();
+        Xml *xs = X->get_list().M_cv(cms, 0).value;
         auto w  = name_positions(c - mathmi_code + cst_mi);
         res     = new Xml(w, xs);
     } else {
@@ -2422,13 +2422,13 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
         Xml *       x   = new Xml(cst_mrow, nullptr);
         Istring     id  = the_main->SH.next_label_id();
-        Xid         xid = x->get_id();
+        Xid         xid = x->id;
         the_parser.the_stack.create_new_anchor(xid, id, Istring(s1));
         the_parser.create_label(s2, id);
         return MathElt(x, mt_flag_small);
     }
     case boxed_code: {
-        Xml *x = L.get_arg1().M_cv(cms, 0).get_value();
+        Xml *x = L.get_arg1().M_cv(cms, 0).value;
         x      = new Xml(cst_mtd, x);
         x      = new Xml(cst_mtr, x);
         x      = new Xml(cst_mtable, x);
@@ -2438,7 +2438,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case phantom_code:
     case hphantom_code:
     case vphantom_code: {
-        Xml *A = L.get_arg1().M_cv(cms, 0).get_value();
+        Xml *A = L.get_arg1().M_cv(cms, 0).value;
         if (c == hphantom_code || c == vphantom_code) {
             A = new Xml(cst_mpadded, A);
             if (c == vphantom_code) A->add_att(np_width, np_zerodim);
@@ -2449,7 +2449,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         return MathElt(R, mt_flag_small);
     }
     case smash_code: {
-        Xml *A = L.get_arg2().M_cv(cms, 0).get_value();
+        Xml *A = L.get_arg2().M_cv(cms, 0).value;
         Xml *R = new Xml(cst_mpadded, A);
         L.get_arg1().convert_this_to_string(math_buffer);
         char w = math_buffer[0];
@@ -2722,8 +2722,8 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     if (c == atop_code || c == atopwithdelims_code) sz = the_names[np_zerodim];
     numalign = A.check_align();
     denalign = check_align();
-    Xml *a   = A.M_cv(cms, 1).get_value();
-    Xml *b   = M_cv(cms, 1).get_value();
+    Xml *a   = A.M_cv(cms, 1).value;
+    Xml *b   = M_cv(cms, 1).value;
     Xml *res = finish_cv_special(true, the_names[cst_mfrac], 0, a, b, sz, numalign, denalign, -1, open, close);
     return XmlAndType(res, mt_flag_big);
 }
@@ -2864,7 +2864,7 @@ auto Math::M_ref() -> Xml * {
     pop_front();
     std::string label = w.convert_opname();
     Xml *       X     = new Xml(cst_mref, nullptr);
-    X->get_id().add_ref(label);
+    X->id.add_ref(label);
     return X;
 }
 
@@ -3237,12 +3237,12 @@ auto Math::M_cv3(math_style cms) -> Math {
 // attributes; return null otherwise.
 auto Xml::spec_copy() -> Xml * {
     if (name != Istring(cst_mo)) return nullptr;
-    AttList &X = get_id().get_att();
+    AttList &X = id.get_att();
     auto     i = X.has_value(the_names[np_movablelimits]);
     if (i < 0) return nullptr;
     Xml *res  = new Xml(name, nullptr);
     res->tree = tree;
-    res->get_id().add_attribute(X, true);
+    res->id.add_attribute(X, true);
     return res;
 }
 
@@ -3334,7 +3334,7 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
     return ok && try_again;
 }
 
-auto Math::convert_math(math_style k) -> Xml * { return M_cv(k, 1).get_value(); }
+auto Math::convert_math(math_style k) -> Xml * { return M_cv(k, 1).value; }
 
 // Removes an an initial group that is the consequence of \refstepcounter
 void Math::remove_initial_group() {

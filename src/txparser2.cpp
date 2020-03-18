@@ -1761,7 +1761,7 @@ void Parser::formatdate() {
     if (!FP.interpret(s, err_tok)) { the_log << "Date to scan was " << s << "\n"; }
     Xml *X = new Xml(Istring("date"), nullptr);
     the_stack.add_last(X);
-    AttList &AL = X->get_id().get_att();
+    AttList &AL = X->id.get_att();
     Buffer & B  = local_buf;
     B << bf_reset << FP.year;
     AL.push_back(Istring("year"), Istring(B));
@@ -2372,7 +2372,7 @@ void Parser::T_listenv(symcodes x) {
     }
     Xml *res = new Xml(np_list, nullptr);
     the_stack.push(the_names[np_list], res);
-    res->get_id().add_attribute(np_type, np);
+    res->id.add_attribute(np_type, np);
 }
 
 // converts T1/ OT2 into a Unicode character (expandable command)

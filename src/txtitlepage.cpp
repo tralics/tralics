@@ -427,7 +427,7 @@ void Parser::T_titlepage_finish(size_t v) {
     if (strstr(tmp.c_str(), "'translate also bibliography'") != nullptr) also_bib = true;
     Xid(1).add_special_att(tmp);
     Xml *res = tpa.convert(2);
-    res->get_id().add_special_att(tpa.get_T3());
+    res->id.add_special_att(tpa.get_T3());
     kmax = Titlepage.get_len2();
     for (size_t k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
     the_stack.pop_if_frame(the_names[cst_p]);

@@ -10,8 +10,8 @@
 
 // This file contains the XML parser of tralics
 
-#include "txinline.h"
 #include "txmlio.h"
+#include "txinline.h"
 #include "txparser.h"
 
 std::string xxx;
@@ -248,7 +248,7 @@ void XmlIO::parse_end() {
     auto ref = Istring(B);
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
-        std::cout << "Got " << ref << ", Expected " << cur_xml->get_name() << "\n";
+        std::cout << "Got " << ref << ", Expected " << cur_xml->name << "\n";
     }
     pop_this();
 }
@@ -330,7 +330,7 @@ void XmlIO::parse_attributes() {
         auto att_name = Istring(B);
         parse_att_val();
         auto att_val = Istring(B);
-        cur_xml->get_id().add_attribute(att_name, att_val);
+        cur_xml->id.add_attribute(att_name, att_val);
     }
 }
 
@@ -381,7 +381,7 @@ void XmlIO::parse_pi() {
             B << c;
         }
     Xml *res = new Xml(aux);
-    res->change_id(-3); // mark this as a pi
+    res->id  = -3; // mark this as a pi
     cur_xml->push_back(res);
     if (is_tralics) std::cout << "Unrecognised PI " << B << "\n";
 }
@@ -438,7 +438,7 @@ void XmlIO::parse_dec_comment() {
     }
     B.remove_last_n(3);
     Xml *res = new Xml(B);
-    res->change_id(-1); // mark this as a comment
+    res->id  = -1; // mark this as a comment
     cur_xml->push_back(res);
 }
 
@@ -490,7 +490,7 @@ void XmlIO::parse_dec_conditional() {
     else
         B << "[IGNORE[";
     Xml *res = new Xml(Istring(B));
-    res->change_id(-2); // mark this as a declaration
+    res->id  = -2; // mark this as a declaration
     cur_xml->push_back(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -557,7 +557,7 @@ void XmlIO::parse_dec_entity() {
     } else
         skip_char();
     Xml *res = new Xml(aux);
-    res->change_id(-2); // mark this as a declaration
+    res->id  = -2; // mark this as a declaration
     cur_xml->push_back(res);
 }
 
@@ -608,7 +608,7 @@ void XmlIO::parse_dec_element() {
         tmp << " ";
     tmp << " " << aux;
     Xml *res = new Xml(tmp);
-    res->change_id(-2); // mark this as a declaration
+    res->id  = -2; // mark this as a declaration
     cur_xml->push_back(res);
 }
 
@@ -662,14 +662,14 @@ void XmlIO::parse_dec_attlist() {
 
     tmp << " " << aux;
     Xml *res = new Xml(tmp);
-    res->change_id(-2); // mark this as a declaration
+    res->id  = -2; // mark this as a declaration
     cur_xml->push_back(res);
 }
 
 void XmlIO::parse_dec_doctype() {
     expect("DOCTYPE");
     Xml *res = new Xml(Istring("DOCTYPE"), nullptr);
-    res->change_id(-2);      // mark this as a declaration
+    res->id  = -2;           // mark this as a declaration
     cur_xml->push_back(res); // Insert this in the tree
     skip_space();
     scan_name(0);

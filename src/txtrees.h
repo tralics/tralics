@@ -1,4 +1,11 @@
 #pragma once
+#include <algorithm>
+#include <string>
+#include <utility>
+#include <vector>
+
+class Xml;
+
 // -*- C++ -*-
 // Copyright (c)  INRIA/apics (Jose' Grimm) 2002, 2004, 2007, 2008
 
@@ -8,9 +15,6 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
-
-#include <algorithm>
-#include <utility>
 
 namespace tralics_ns {
     void add_ref(long v, const std::string &s, bool idx);

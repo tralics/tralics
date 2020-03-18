@@ -11,9 +11,9 @@
 // This file contains a lot of stuff dealing with trees
 // It contains also some eTeX extensions.
 
+#include "txtrees.h"
 #include "txinline.h"
 #include "txparser.h"
-#include "txtrees.h"
 
 namespace trees_ns {
     void normalise_space(TokenList &L);
@@ -140,8 +140,8 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     B.no_newline();
     Xml *res = translate_list(L);
     Xml *x   = new Xml(np_index, res);
-    if (!encap.empty()) x->get_id().add_attribute(np_encap, Istring(encap));
-    x->get_id().add_attribute(np_level, name_positions(cst_dig0 + level));
+    if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
+    x->id.add_attribute(np_level, name_positions(cst_dig0 + level));
     auto iid = the_index.next_iid();
     IR.push_back(new Indexer(B.to_string(), aux, x, level, iid));
     return n;
@@ -212,7 +212,7 @@ void Parser::finish_index() {
         idx_size += n;
         idx_nb++;
         Xml *res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
-        Xid  id  = res->get_id();
+        Xid  id  = res->id;
         {
             const std::string &t = CI->get_title();
             if (!t.empty()) id.add_attribute(the_names[cstb_title], Istring(t));
@@ -223,7 +223,7 @@ void Parser::finish_index() {
         }
         for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
-            A->get_id().add_attribute(np_target, Istring(labels[CI->get_iid(i)]));
+            A->id.add_attribute(np_target, Istring(labels[CI->get_iid(i)]));
         }
         CI->do_sort();
         for (size_t i = 0; i < n; i++) {

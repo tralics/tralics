@@ -328,7 +328,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             new_elt = new Xml(Istring(std::string(S + sname)), nullptr);
         else {
             new_elt = new Xml(np_rcval, nullptr);
-            new_elt->get_id().add_attribute(Istring("name"), Istring(sname));
+            new_elt->id.add_attribute(Istring("name"), Istring(sname));
         }
         res->push_back(new_elt);
         temp2 << sname << " ";

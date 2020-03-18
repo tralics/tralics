@@ -1434,7 +1434,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
 }
 
-void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->get_id().value : -4); }
+void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->id.value : -4); }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {
@@ -2139,7 +2139,7 @@ void Parser::initialise_font() {
 void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
     B.reset();
-    if (x != nullptr) B.push_back(x->get_name());
+    if (x != nullptr) B.push_back(x->name);
     if (level != it_tok) {
         bad_number1(B);
         return;

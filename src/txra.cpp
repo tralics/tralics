@@ -73,7 +73,7 @@ void Parser::interpret_rc() {
 Xid  compo_id = Xid(decltype(Xid::value)(-1));
 void Parser::T_rasection_end() {
     Xml *in = the_stack.top_stack();
-    if (in->get_id() == compo_id) in->compo_special();
+    if (in->id == compo_id) in->compo_special();
     the_stack.pop(cst_rasection);
 }
 
@@ -85,8 +85,8 @@ void Parser::T_rasection() {
     leave_h_mode();
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
-    if (!elt_name.empty()) cur->get_id().add_attribute(np_name, iname);
-    if (iname == Istring(cst_composition)) compo_id = cur->get_id();
+    if (!elt_name.empty()) cur->id.add_attribute(np_name, iname);
+    if (iname == Istring(cst_composition)) compo_id = cur->id;
     the_stack.push(the_names[cst_rasection], cur);
     string_define(0, name, false);
     Istring id = the_stack.add_new_anchor();

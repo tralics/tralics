@@ -93,7 +93,7 @@ auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
     auto    n   = *the_bibliography.find_citation_item(type, ref, true);
     Istring id  = the_bibliography.citation_table[n].get_bid();
     Xml *   res = new Xml(np_ref, nullptr);
-    res->get_id().add_attribute(np_target, id);
+    res->id.add_attribute(np_target, id);
     return res;
 }
 

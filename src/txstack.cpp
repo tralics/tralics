@@ -56,7 +56,7 @@ auto Stack::fetch_by_id(size_t n) -> Xml * {
     if (enames.size() <= n) return nullptr;
     Xml *x = enames[n];
     if (x == nullptr) return nullptr;
-    if (x->get_id().value == to_signed(n)) return x;
+    if (x->id.value == to_signed(n)) return x;
     spdlog::error("This cannot happen: bug in table at position {}", n);
     return nullptr;
 }
@@ -136,7 +136,7 @@ void Xml::push_back(Xml *x) {
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->get_id().value == 0; }
+auto Xml::last_is_string() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->id.value == 0; }
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
@@ -226,7 +226,7 @@ void Stack::add_center_to_p() {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
     auto w = the_parser.cur_centering();
-    x->get_id().get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
+    x->id.get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
 }
 
 auto Stack::is_frame(name_positions s) const -> bool { return first_frame() == the_names[s]; }
@@ -307,7 +307,7 @@ void Stack::init_all(const std::string &a) {
     cur_lid  = Istring("uid1");
     Xml *V   = new Xml(Istring(a), nullptr);
     V->push_back(nullptr); // Make a hole for the color pool
-    V->change_id(1);
+    V->id = 1;
     ipush(the_names[cst_document], V);
     newline_xml = new Xml(Istring("\n"));
 }
@@ -390,7 +390,7 @@ void Stack::pop(Istring a) {
 // if a<0 ? beurks...
 auto Stack::push_par(long k) -> Xid {
     Xml *res = new Xml(cst_p, nullptr);
-    Xid  id  = res->get_id();
+    Xid  id  = res->id;
     push(the_names[cst_p], res);
     cur_mode = mode_h; // we are in horizontal mode now
     check_font();
@@ -401,7 +401,7 @@ auto Stack::push_par(long k) -> Xid {
 auto Stack::fonts1(name_positions x) -> Xml * {
     bool     w   = the_main->use_font_elt;
     Xml *    res = new Xml(w ? x : cst_hi, nullptr);
-    AttList &W   = res->get_id().get_att();
+    AttList &W   = res->id.get_att();
     if (!w) W.push_back(np_rend, x);
     return res;
 }
@@ -409,7 +409,7 @@ auto Stack::fonts1(name_positions x) -> Xml * {
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(name_positions x) {
     Xml *res = fonts1(x);
-    res->get_id().get_att().push_back(the_names[cst_flaghi], Istring(1));
+    res->id.get_att().push_back(the_names[cst_flaghi], Istring(1));
     push(Istring(2), res);
 }
 
@@ -448,7 +448,7 @@ void Stack::check_font() {
         if (nonempty) {
             auto     a   = Istring(the_main->SH.hash_find());
             Xml *    res = new Xml(cst_hi, nullptr);
-            AttList &W   = res->get_id().get_att();
+            AttList &W   = res->id.get_att();
             W.push_back(the_names[np_rend], a);
             W.push_back(the_names[cst_flaghi], Istring(1));
             push(Istring(2), res);
@@ -466,7 +466,7 @@ void Stack::check_font() {
     auto c = the_parser.cur_font.color;
     if (!(c.empty() || c.null())) {
         Xml *    res = new Xml(cst_hi, nullptr);
-        AttList &W   = res->get_id().get_att();
+        AttList &W   = res->id.get_att();
         W.push_back(np_color, c);
         W.push_back(the_names[cst_flaghi], Istring(1));
         push(Istring(2), res);
@@ -528,17 +528,17 @@ void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
     auto k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == the_names[np_cell]) {
-        cid = Table[k].obj->get_id();
+        cid = Table[k].obj->id;
         k--;
     }
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == the_names[np_row]) {
-        rid = Table[k].obj->get_id();
+        rid = Table[k].obj->id;
         k--;
     }
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == the_names[np_tabular] || Table[k].frame == the_names[np_tabular_star]) {
-        tid = Table[k].obj->get_id();
+        tid = Table[k].obj->id;
         k--;
     }
 }
@@ -549,9 +549,9 @@ auto Stack::find_ctrid(subtypes m) -> long {
         if (obj == nullptr) continue;
         Istring frame = Table[k].frame;
         if (frame.spec_empty()) continue;
-        if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->get_id().value;
-        if (m == xmlcurcell_code && frame == the_names[np_cell]) return obj->get_id().value;
-        if (m == xmlcurarray_code && (frame == the_names[np_tabular] || frame == the_names[np_tabular_star])) return obj->get_id().value;
+        if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->id.value;
+        if (m == xmlcurcell_code && frame == the_names[np_cell]) return obj->id.value;
+        if (m == xmlcurarray_code && (frame == the_names[np_tabular] || frame == the_names[np_tabular_star])) return obj->id.value;
     }
     return 0;
 }
@@ -633,8 +633,8 @@ void Stack::finish_cell(int w) {
 auto Xml::get_cell_span() const -> int {
     Buffer &B = the_main->SH.shbuf();
     if (is_xmlc()) return 0;
-    if (!has_name(the_names[np_cell])) return -1;               // not a cell
-    if (!B.install_att(get_id(), the_names[np_cols])) return 1; // no property, default is 1
+    if (!has_name(the_names[np_cell])) return -1;         // not a cell
+    if (!B.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
     return B.get_int_val();
 }
 

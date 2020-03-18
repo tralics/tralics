@@ -9,7 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txxml.h"
+#include "tralics/Xml.h"
 
 class Math;
 class MathQ;

@@ -48,7 +48,7 @@ class ColSpec {
 public:
     ColSpec(std::string a, std::string b, std::string c);
     auto compare(const std::string &a, const std::string &b) -> bool { return model == a && value == b; }
-    auto get_id() -> Istring {
+    auto get_id() -> Istring { // \todo weird name
         used = true;
         return id;
     }
@@ -137,7 +137,7 @@ auto Parser::ileave_v_mode() -> Xid {
     auto k   = cur_centering();
     Xid  res = the_stack.push_par(k);
     if (unfinished_par != nullptr) {
-        res.add_attribute(unfinished_par->get_id().get_att(), true);
+        res.add_attribute(unfinished_par->id.get_att(), true);
         unfinished_par = nullptr;
     }
     return res;
@@ -354,7 +354,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->get_id().add_attribute(np_noindent, StrHash::st_bool(noindent), false);
+            cp->id.add_attribute(np_noindent, StrHash::st_bool(noindent), false);
             return;
         }
     }
@@ -387,7 +387,7 @@ void Parser::T_par1() {
             if (tp->back() == cp)
                 tp->pop_back();
             else
-                cp->change_name(Istring());
+                cp->name = Istring();
             return;
         }
     }
@@ -466,8 +466,8 @@ auto Parser::T_item_label(int c) -> Istring {
     T_translate(L);
     the_stack.pop(np_label_item);
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0UL);
-    Xml *res = the_stack.remove_last();
-    res->change_name(Istring(1));
+    Xml *res      = the_stack.remove_last();
+    res->name     = Istring(1);
     std::string w = res->convert_to_string();
     return Istring(w);
 }
@@ -1006,7 +1006,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
             return;
         }
         if (cp->par_is_empty()) {
-            add_vspace(T, dimen, cp->get_id());
+            add_vspace(T, dimen, cp->id);
             return;
         }
     }
@@ -1021,16 +1021,16 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 // Note that used is false, set to true by get_id.
 ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
     xval = new Xml(np_color, nullptr);
-    if (!name.empty()) xval->get_id().add_attribute(Istring("name"), Istring(name));
-    xval->get_id().add_attribute(Istring("model"), Istring(model));
-    xval->get_id().add_attribute(Istring("value"), Istring(value));
+    if (!name.empty()) xval->id.add_attribute(Istring("name"), Istring(name));
+    xval->id.add_attribute(Istring("model"), Istring(model));
+    xval->id.add_attribute(Istring("value"), Istring(value));
     Buffer &B = tpa_buffer;
     B.reset();
     static int n = 0;
     ++n;
     B << "colid" << n;
     id = Istring(B); // This is a unique id
-    xval->get_id().add_attribute(np_id, id);
+    xval->id.add_attribute(np_id, id);
 }
 
 void Parser::finish_color() {
@@ -1105,7 +1105,7 @@ void Parser::T_color(subtypes c) {
         std::string name = sT_arg_nopar();
         Istring     C    = scan_color(opt, name);
         Xml *       mbox = internal_makebox();
-        mbox->get_id().add_attribute(np_color, C);
+        mbox->id.add_attribute(np_color, C);
         return;
     }
     if (c == fcolorbox_code) {
@@ -1115,8 +1115,8 @@ void Parser::T_color(subtypes c) {
         Istring     C1    = scan_color(opt, name1);
         Istring     C2    = scan_color(opt, name2);
         Xml *       mbox  = internal_makebox();
-        mbox->get_id().add_attribute(np_color, C1);
-        mbox->get_id().add_attribute(np_color2, C2);
+        mbox->id.add_attribute(np_color, C1);
+        mbox->id.add_attribute(np_color2, C2);
         return;
     }
     if (c == definecolor_code) {
@@ -1196,8 +1196,8 @@ void Parser::T_mbox(subtypes c) {
     }
     Xml *mbox = internal_makebox();
     if (!ipos.null() || !iwidth.null()) {
-        mbox->get_id().add_attribute(np_box_pos, ipos);
-        mbox->get_id().add_attribute(np_box_width, iwidth);
+        mbox->id.add_attribute(np_box_pos, ipos);
+        mbox->id.add_attribute(np_box_width, iwidth);
         return;
     }
     // Hack the box
@@ -1286,8 +1286,8 @@ void Parser::T_save_box(bool simple) {
         brace_me(d);
         T_translate(d);
         the_stack.pop(np_mbox);
-        mbox->get_id().add_attribute(np_box_pos, ipos);
-        mbox->get_id().add_attribute(np_box_width, iwidth);
+        mbox->id.add_attribute(np_box_pos, ipos);
+        mbox->id.add_attribute(np_box_width, iwidth);
     }
     box_end(the_stack.remove_last(), i);
 }
@@ -1372,11 +1372,11 @@ void Parser::T_fbox(subtypes cc) {
     T_arg_local();
     the_stack.pop(cc == scalebox_code ? np_sbox : np_fbox);
     Xml *    aux = cur->single_non_empty();
-    AttList &AL  = cur->get_id().get_att();
+    AttList &AL  = cur->id.get_att();
     if (cc == scalebox_code) {
         if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
-            aux->get_id().add_attribute(the_names[np_scale], iscale, true);
-            aux->get_id().add_attribute(Istring("vscale"), iwidth);
+            aux->id.add_attribute(the_names[np_scale], iscale, true);
+            aux->id.add_attribute(Istring("vscale"), iwidth);
             cur->kill_name();
         } else {
             AL.push_back(np_s_scale, iscale);
@@ -1385,7 +1385,7 @@ void Parser::T_fbox(subtypes cc) {
         return;
     }
     if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
-        aux->get_id().add_attribute(np_framed, np_true);
+        aux->id.add_attribute(np_framed, np_true);
         cur->kill_name();
     } else {
         AL.push_back(np_b_rend, np_boxed);
@@ -2083,7 +2083,7 @@ void Parser::T_xmladdatt(subtypes c) {
         if (!force) return;
         Xml *e = the_stack.elt_from_id(to_unsigned(n));
         if (e == nullptr) return;
-        e->change_name(val);
+        e->name = val;
         return;
     }
     if (n != 0) Xid(n).add_attribute(key, val, force);
@@ -2098,7 +2098,7 @@ auto Parser::get_attval() -> std::string {
     if (key.empty()) {
         Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return "";
-        return e->get_name().c_str();
+        return e->name.c_str();
     }
     Istring res = Xid(to_signed(n)).has_attribute(key);
     return res.c_str();

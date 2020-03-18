@@ -333,7 +333,7 @@ void Xml::recurse0(XmlAction &X) {
         if (y->has_name(X.get_match())) switch (X.get_what()) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
-                X.set_int_val(y->get_id().value);
+                X.set_int_val(y->id.value);
                 tree[k] = nullptr;
                 return;
             case rc_return_first:
@@ -381,7 +381,7 @@ void Xml::recurse(XmlAction &X) {
                 continue;
             case rc_composition: // a module in the comp section
             {
-                Istring an = T->get_id().has_attribute(the_names[np_id]);
+                Istring an = T->id.has_attribute(the_names[np_id]);
                 if (!an.null()) post_ns::remove_label("module in composition", an);
                 tree[k] = nullptr;
                 k--;
@@ -399,7 +399,7 @@ void Xml::recurse(XmlAction &X) {
                 recurse(X); // this->tree has changed
                 return;     // nothing more to do.
             }
-            case rc_rename: T->change_name(X.get_string_val()); break;
+            case rc_rename: T->name = X.get_string_val(); break;
             default: log_and_tty << "illegal value in recurse\n" << lg_fatal; abort();
             }
         }
@@ -657,7 +657,7 @@ auto Xml::is_empty() const -> bool {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
-        if (!T->get_name().only_space()) return false;
+        if (!T->name.only_space()) return false;
     }
     return true;
 }
@@ -669,7 +669,7 @@ auto Xml::is_empty_spec() const -> bool {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
-        if (!T->get_name().only_space_spec()) return false;
+        if (!T->name.only_space_spec()) return false;
     }
     return true;
 }
@@ -686,7 +686,7 @@ auto Xml::single_non_empty() const -> Xml * {
                 res = y;
             else
                 return nullptr;
-        } else if (!y->get_name().only_space())
+        } else if (!y->name.only_space())
             return nullptr;
     }
     return res;
@@ -749,7 +749,7 @@ void Xml::unbox(Xml *x) {
     if (x->is_xmlc()) {
         Buffer &b = scbuf;
         b.reset();
-        b.push_back(x->get_name());
+        b.push_back(x->name);
         add_last_string(b);
     } else
         push_back_list(x);
@@ -828,20 +828,20 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
     case 0: // a single figure
         X = from->get_first_env(np_figure);
         if (X != nullptr) { // copy all atributes of X but rend in this
-            to->get_id().add_attribute_but_rend(X->get_id());
+            to->id.add_attribute_but_rend(X->id);
         }
         return;
     case 1: // a table in the figure, move all tables
         X = new Xml(cst_p, nullptr);
         to->push_back(X);
         from->move(the_names[np_table], X);
-        to->get_id().add_attribute(np_rend, np_array);
+        to->id.add_attribute(np_rend, np_array);
         return;
     case 3: // verbatim material in the figure; move all lines
         X = new Xml(cst_empty, nullptr);
         to->push_back(X);
         from->move(the_names[np_pre], X);
-        to->get_id().add_attribute(np_rend, np_pre);
+        to->id.add_attribute(np_rend, np_pre);
         return;
     case 2: // a subfigure
         //    T->remove_empty_par();
@@ -878,13 +878,13 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
         Xml *X = new Xml(cst_p, nullptr);
         to->push_back(X);
         from->move(the_names[np_table], X);
-        to->get_id().add_attribute(np_rend, np_array);
+        to->id.add_attribute(np_rend, np_array);
         return;
     }
     // Normal case
     from->remove_empty_par();
     from->remove_par_bal_if_ok();
-    to->get_id().add_attribute(np_rend, np_display);
+    to->id.add_attribute(np_rend, np_display);
     Xml *C = from->single_non_empty();
     if ((C != nullptr) && !C->is_xmlc()) {
         if (C->has_name(np_figure)) {
@@ -898,7 +898,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
                 to->push_back_list(C);
             else
                 to->push_back(C); // This is strange...
-            to->get_id().add_attribute_but_rend(C->get_id());
+            to->id.add_attribute_but_rend(C->id);
             from->reset();
             to->change_name(np_table);
         }
@@ -906,7 +906,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
 }
 
 void post_ns::table_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->get_id().add_attribute(np_rend, np_array);
+    to->id.add_attribute(np_rend, np_array);
     int ctr = 'a';
     for (;;) {
         Xml *sf = from->get_first_env(cst_p);
@@ -941,7 +941,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
         if (texte != nullptr) {
             texte->change_name(np_cell);
             row1->push_back(texte);
-            texte->get_id().add_attribute(sf->get_id());
+            texte->id.add_attribute(sf->id);
         }
         if (leg != nullptr) {
             leg->change_name(np_cell);
@@ -955,14 +955,14 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     from->add_non_empty_to(junk);
     if (nrows == 0) return nullptr;
     Xml *res = new Xml(np_table, nullptr);
-    res->get_id().add_attribute(np_rend, np_inline);
+    res->id.add_attribute(np_rend, np_inline);
     res->push_back(row1);
     res->push_back(row2);
     return new Xml(cst_p, res);
 }
 
 void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->get_id().add_attribute(np_rend, np_subfigure);
+    to->id.add_attribute(np_rend, np_subfigure);
     int         n          = 0;
     static auto parid_name = Istring("parid");
     for (;;) {
@@ -985,7 +985,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
                 junk->push_back(sf);
                 continue;
             }
-            sf->get_id().add_attribute(parid_name, par_id);
+            sf->id.add_attribute(parid_name, par_id);
             Xml *leg   = sf->get_first_env(np_leg);
             Xml *texte = sf->get_first_env(np_texte);
             sf->add_non_empty_to(junk);
@@ -995,7 +995,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
             }
             if (texte != nullptr) {
                 Xml *xx = texte->get_first_env(np_figure);
-                if (xx != nullptr) { sf->get_id().add_attribute_but_rend(xx->get_id()); }
+                if (xx != nullptr) { sf->id.add_attribute_but_rend(xx->id); }
                 texte->add_non_empty_to(junk);
             }
             to->push_back(sf);
@@ -1010,7 +1010,7 @@ void Xml::add_non_empty_to(Xml *res) {
     for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
-        if (T->is_xmlc() && T->get_name().only_space()) continue;
+        if (T->is_xmlc() && T->name.only_space()) continue;
         res->push_back(T);
     }
 }
@@ -1039,14 +1039,14 @@ void Xml::convert_to_string(Buffer &buf) {
         buf << name.c_str();
         return;
     }
-    if (empty_name() || name == the_names[cst_temporary]) {
+    if (name.empty() || name == the_names[cst_temporary]) {
         auto len = size();
         for (size_t k = 0; k < len; k++) tree[k]->convert_to_string(buf);
         return;
     }
     err_buf.reset();
     if (id.is_font_change()) {
-        Istring w = get_id().has_attribute(the_names[np_rend]);
+        Istring w = id.has_attribute(the_names[np_rend]);
         if (!w.null()) {
             err_buf << "unexpected font change " << w;
             the_parser.unexpected_font();
@@ -1065,11 +1065,11 @@ void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < len; k++) {
         if (tree[k] == nullptr) continue;
         if (tree[k]->is_xmlc())
-            b << tree[k]->get_name().c_str();
+            b << tree[k]->name.c_str();
         else if (tree[k]->has_name(cst_hi))
             tree[k]->put_in_buffer(b);
         else
-            b << '<' << tree[k]->get_name() << "/>";
+            b << '<' << tree[k]->name << "/>";
     }
 }
 

@@ -11,8 +11,8 @@
 
 // This file holds the stack and related stuff
 
+#include "tralics/Xml.h"
 #include "txatt.h"
-#include "txxml.h"
 
 // Array management
 class ArrayInfo {
@@ -81,7 +81,8 @@ public:
     void               add_sp_to_p(int pid, int vid);
     void               check_font();
     void               create_new_anchor(Xid xid, Istring id, Istring idtext);
-    auto               cur_xid() -> Xid { return top_stack()->get_id(); }
+    auto               cur_xid() -> Xid { return top_stack()->id; }
+    auto               get_top_id() -> Xid { return top_stack()->id; }
     void               delete_table_atts();
     void               dump();
     void               dump_xml_table();
@@ -103,7 +104,6 @@ public:
     auto               get_cur_par() -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
-    auto               get_top_id() -> Xid { return top_stack()->get_id(); }
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     auto               get_xid() -> Xid { return last_xid; }
     void               hack_for_hanl();
