@@ -150,7 +150,7 @@ public:
     void               finish_xml_print();
     auto               full_bracket_match() -> bool;
     auto               full_brace_match() -> bool;
-    [[nodiscard]] auto get_int_val() const -> int;
+    [[nodiscard]] auto int_val() const -> int;
     auto               get_machine_name() -> std::string;
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;
     [[nodiscard]] auto head() const -> char { return at(ptr); }

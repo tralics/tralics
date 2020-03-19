@@ -11,7 +11,7 @@ std::string everyjob_string;
 
 std::vector<LinePtr *> file_pool;
 
-std::optional<size_t> pool_position;
+std::optional<size_t> pool_position; // \todo this is a global variable that should disappear
 
 size_t leftquote_val{'`'};
 size_t rightquote_val{'\''};
@@ -26,17 +26,11 @@ bool seen_enddocument{false};
 std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
 namespace {
-    /// Returns true if the file is in the pool
-    auto search_in_pool(const std::string &name) -> bool {
-        size_t n      = file_pool.size();
-        pool_position = {};
-        for (size_t i = 0; i < n; i++) {
-            if (file_pool[i]->get_file_name() == name) {
-                pool_position = i;
-                return true;
-            }
-        }
-        return false;
+    /// Look for a file in the pool
+    auto search_in_pool(const std::string &name) -> std::optional<size_t> {
+        for (size_t i = 0; i < file_pool.size(); i++)
+            if (file_pool[i]->get_file_name() == name) return i;
+        return {};
     }
 } // namespace
 
@@ -44,7 +38,8 @@ void main_ns::register_file(LinePtr *x) { file_pool.push_back(x); }
 
 auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     main_ns::path_buffer << bf_reset << s;
-    if (search_in_pool(s)) return true;
+    pool_position = search_in_pool(s);
+    if (pool_position) return true;
     if (file_exists(main_ns::path_buffer)) return true;
     if (!retry) return false;
     if (s.empty() || s[0] == '.' || s[0] == '/') return false;
@@ -63,11 +58,10 @@ auto main_ns::search_in_confdir(const std::string &s) -> bool {
 auto tralics_ns::find_in_path(const std::string &s) -> bool {
     if (s.empty()) return false;
     main_ns::path_buffer << bf_reset << s;
-    if (search_in_pool(s)) return true;
+    pool_position = search_in_pool(s);
+    if (pool_position) return true;
     if (s[0] == '.' || s[0] == '/') return file_exists(main_ns::path_buffer);
-    auto n = input_path.size();
-    for (size_t i = 0; i < n; i++) {
-        const std::string &p = input_path[i];
+    for (const auto &p : input_path) {
         if (p.empty())
             main_ns::path_buffer << bf_reset << s;
         else

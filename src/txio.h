@@ -36,14 +36,13 @@ public:
 };
 
 // Whenever Tralics reads a file, it puts the result in a structure like this
-class Clines {
+struct Clines {
     int         number;    // the number of the current line
     std::string chars;     // the characters on the line
     bool        converted; // true if line is already converted
-public:
-    auto next_byte(Buffer &B) -> unsigned int;
-    Clines(int n) : number(n), chars(""), converted(true) {}
-    Clines(int n, std::string c, bool C) : number(n), chars(std::move(c)), converted(C) {}
+
+    Clines(int n, std::string c = "", bool C = true) : number(n), chars(std::move(c)), converted(C) {}
+
     auto to_string(std::string &C, bool &cv) const -> int {
         C  = chars;
         cv = converted;
@@ -54,12 +53,9 @@ public:
         C = converted;
         return number;
     }
-    [[nodiscard]] auto get_number() const -> int { return number; }
-    [[nodiscard]] auto get_chars() const -> const std::string & { return chars; }
-    void               set_chars(std::string x) { chars = std::move(x); }
-    auto               starts_with(String x) const -> bool;
-    void               convert_line(size_t wc);
-    void               clear_converted() { converted = false; }
+    auto starts_with(String x) const -> bool;
+    void convert_line(size_t wc);
+    void clear_converted() { converted = false; }
 };
 
 using line_iterator_const = std::list<Clines>::const_iterator;
@@ -95,7 +91,7 @@ public:
     [[nodiscard]] auto get_file_name() const -> std::string { return file_name; }
     [[nodiscard]] auto get_interactive() const -> bool { return interactive; }
     void               set_interactive(bool sw) { interactive = sw; }
-    auto               get_last_line_no() -> int { return value.back().get_number(); }
+    auto               get_last_line_no() -> int { return value.back().number; }
     auto               get_next_raw(Buffer &b) -> int;
     auto               get_next_cv(Buffer &b, int w) -> int;
     auto               get_next(Buffer &b) -> int;

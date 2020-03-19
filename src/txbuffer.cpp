@@ -1088,7 +1088,7 @@ auto Buffer::single_char() const -> char {
 
 // If the buffer contains a small positive number returns it.
 // Otherwise returns -1;
-auto Buffer::get_int_val() const -> int {
+auto Buffer::int_val() const -> int {
     int n = 0;
     for (size_t p = 0;; p++) {
         auto c = at(p);

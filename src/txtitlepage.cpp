@@ -548,7 +548,7 @@ auto tpage_ns::begins_with(const std::string &A, String B) -> bool {
 }
 
 // True if current line starts with x.
-auto Clines::starts_with(String x) const -> bool { return tpage_ns::begins_with(get_chars(), x); }
+auto Clines::starts_with(String x) const -> bool { return tpage_ns::begins_with(chars, x); }
 
 // This compares a Begin line with the string s.
 // Returns : 0 not a begin; 1 not this type; 2 not this object
@@ -783,7 +783,7 @@ void LinePtr::find_top_atts(Buffer &B) {
     line_iterator_const C = value.begin();
     line_iterator_const E = value.end();
     while (C != E) {
-        B << bf_reset << C->get_chars();
+        B << bf_reset << C->chars;
         B.find_top_atts();
         C = skip_env(C, B);
     }
@@ -795,8 +795,8 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
     line_iterator_const C = value.begin();
     line_iterator_const E = value.end();
     while (C != E) {
-        init_file_pos = C->get_number();
-        B << bf_reset << C->get_chars();
+        init_file_pos = C->number;
+        B << bf_reset << C->chars;
         B.find_one_type(res);
         C = skip_env(C, B);
     }
@@ -808,7 +808,7 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
     line_iterator_const C = value.begin();
     line_iterator_const E = value.end();
     while (C != E) {
-        B << bf_reset << C->get_chars();
+        B << bf_reset << C->chars;
         String res = B.see_config_kw(s, c);
         if (res != nullptr) return res;
         C = skip_env(C, B);
@@ -861,7 +861,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     if (b != 1) return C;
     auto E = value.end();
     while (C != E) {
-        B << bf_reset << C->get_chars();
+        B << bf_reset << C->chars;
         ++C;
         b += B.see_config_env();
         if (b == 0) return C;
@@ -961,7 +961,7 @@ auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res)
     line_iterator_const E        = value.end();
     bool                in_alias = false;
     while (C != E) {
-        B << bf_reset << C->get_chars();
+        B << bf_reset << C->chars;
         if (in_alias) {
             if (B.find_alias(SL, res)) return true;
         }

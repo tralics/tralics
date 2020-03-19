@@ -390,10 +390,10 @@ void Clines::convert_line(size_t wc) {
     utf8_in.reset();
     utf8_in.push_back(chars);
     converted = true;
-    the_converter.start_convert(get_number());
+    the_converter.start_convert(number);
     if (utf8_in.convert_line0(wc)) return;
     the_converter.lines_converted++;
-    set_chars(utf8_out.c_str());
+    chars = utf8_out.c_str();
 }
 
 // Why is v limited to 16bit chars?
@@ -484,8 +484,8 @@ void LinePtr::insert(const LinePtr &aux) {
     auto C       = aux.value.begin();
     auto E       = aux.value.end();
     while (C != E) {
-        Clines L = *C;
-        L.clear_converted();
+        Clines L    = *C;
+        L.converted = false;
         push_back(L);
         ++C;
     }
@@ -562,19 +562,19 @@ void LinePtr::normalise_final_cr() {
         if (C == E) return;
         cur = &*C;
         ++C;
-        const std::string &s       = cur->get_chars();
+        const std::string &s       = cur->chars;
         auto               n       = s.size();
         bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
         std::string        normal  = s;
         if (special) normal = std::string(s, 0, n - 2);
         if (prev != nullptr) {
-            prev->set_chars(prev->get_chars() + normal);
-            cur->set_chars("\n");
+            prev->chars = prev->chars + normal;
+            cur->chars  = "\n";
         }
         if (special) {
             if (prev == nullptr) {
-                prev = cur;
-                prev->set_chars(normal);
+                prev        = cur;
+                prev->chars = normal;
             }
         } else
             prev = nullptr;
@@ -962,7 +962,7 @@ void LinePtr::insert(String c) {
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted
 void LinePtr::insert_spec(int n, std::string c) {
-    if (!value.empty() && value.back().get_chars()[0] == '\n' && c[0] == '\n') return;
+    if (!value.empty() && value.back().chars[0] == '\n' && c[0] == '\n') return;
     insert(n, c, true);
 }
 
@@ -999,8 +999,8 @@ void LinePtr::after_open() {
     if (value.empty())
         the_log << "; it is empty\n";
     else {
-        int n = value.front().get_number();
-        int m = value.back().get_number();
+        int n = value.front().number;
+        int m = value.back().number;
         if (n == 1) {
             if (m == 1)
                 the_log << "; it has 1 line\n";
@@ -1076,7 +1076,7 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     the_main->doc_class_pos = E;
     while (C != E) {
         B.reset();
-        B.push_back(C->get_chars());
+        B.push_back(C->chars);
         Buffer &aux = thebuffer;
         bool    s   = B.find_documentclass(aux);
         if (s) {
@@ -1114,7 +1114,7 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
     auto E = value.end();
     while (C != E) {
         B.reset();
-        B.push_back(C->get_chars());
+        B.push_back(C->chars);
         Buffer &aux = thebuffer;
         bool    s   = B.find_configuration(aux);
         if (s) return aux.to_string();
@@ -1133,7 +1133,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
     auto E = value.end();
     while (C != E) {
         B.reset();
-        B.push_back(C->get_chars());
+        B.push_back(C->chars);
         auto k = B.find_doctype();
         if (k != 0) {
             res = B.to_string(k);
@@ -1178,7 +1178,7 @@ void LinePtr::print(std::fstream *outfile) {
     auto C = value.begin();
     auto E = value.end();
     while (C != E) {
-        *outfile << C->get_chars();
+        *outfile << C->chars;
         ++C;
     }
 }
@@ -1188,7 +1188,7 @@ void LinePtr::print() {
     auto C = value.begin();
     auto E = value.end();
     while (C != E) {
-        std::cout << C->get_number() << "  " << C->get_chars();
+        std::cout << C->number << "  " << C->chars;
         ++C;
     }
 }

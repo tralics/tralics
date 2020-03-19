@@ -635,7 +635,7 @@ auto Xml::get_cell_span() const -> int {
     if (is_xmlc()) return 0;
     if (!has_name(the_names[np_cell])) return -1;         // not a cell
     if (!B.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
-    return B.get_int_val();
+    return B.int_val();
 }
 
 // hack...

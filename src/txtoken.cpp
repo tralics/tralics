@@ -11,17 +11,14 @@
 #include "txinline.h"
 #include "txparser.h"
 
+extern Buffer file_list;
+
 // token lists.
 namespace {
     Buffer buffer_for_log;
     // never use this outside function buffer::push_back(const macro&)
-    Buffer buffer_for_log1;
     Buffer buffer_for_log2;
 } // namespace
-
-namespace classes_ns {
-    void dump_file_list();
-} // namespace classes_ns
 
 namespace token_ns {
     auto length_normalise(TokenList &L) -> int;
@@ -43,7 +40,11 @@ void Stats::token_stats() {
                         << " at boot).\n"
                         << "Number of ref " << nb_ref << ", of used labels " << nb_used_ref << ", of defined labels " << nb_label_defined
                         << ", of ext. ref. " << nb_href << ".\n";
-    classes_ns::dump_file_list();
+    if (the_parser.get_list_files()) {
+        log_and_tty << " *File List*\n";
+        log_and_tty << file_list;
+        log_and_tty << " ***********\n";
+    }
     io_convert_stats();
 }
 
@@ -675,8 +676,7 @@ void Buffer::push_back(const Macro &x, bool sw) {
     if (!sw)
         push_back(x);
     else {
-        Buffer &B = buffer_for_log1; // Use some other buffer
-        B.reset();
+        Buffer B;
         B.push_back(x);
         push_back(B.convert_to_log_encoding());
     }

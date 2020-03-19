@@ -14,9 +14,10 @@
 #include "txinline.h"
 #include "txparser.h"
 
+Buffer file_list;
+
 namespace {
     Buffer      local_buf;
-    Buffer      file_list;
     ClassesData the_class_data;
     // global variable so that txparser.h does not need to know OptionList
     OptionList cur_opt_list;
@@ -24,14 +25,12 @@ namespace {
 
 namespace classes_ns {
     auto parse_version(const std::string &s) -> int;
-    auto get_option_list(const std::string &name) -> OptionList;
     auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> std::optional<size_t>;
     auto is_raw_option(const OptionList &V, String s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
     auto compare_options(const OptionList &A, const OptionList &B) -> bool;
     void dump_options(const OptionList &A, String x);
-    void dump_file_list();
     auto cur_options(bool star, TokenList &spec, bool normal) -> TokenList;
     auto make_keyval(TokenList &L) -> KeyAndVal;
     void register_key(const std::string &Key);
@@ -288,14 +287,6 @@ void Parser::T_provides_package(bool c) // True for a file
         log_and_tty << b;
     else
         the_log << b;
-}
-
-// Prints the file list at end of run is so required
-void classes_ns::dump_file_list() {
-    if (!the_parser.get_list_files()) return;
-    log_and_tty << " *File List*\n";
-    log_and_tty << file_list;
-    log_and_tty << " ***********\n";
 }
 
 // This implements \PassOptionsToPackage, \PassOptionsToClass
