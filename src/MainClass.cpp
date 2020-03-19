@@ -374,7 +374,7 @@ void MainClass::check_for_input() {
     }
     open_log();
     tralics_ns::read_a_file(input_content, s, 4);
-    if (input_content.is_empty()) {
+    if (input_content.empty()) {
         log_and_tty << "Empty input file " << s << "\n";
         exit(1);
     }
@@ -862,7 +862,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
 
 auto MainClass::find_document_type() -> bool {
     get_doc_type();
-    if (config_file.is_empty()) return false;
+    if (config_file.empty()) return false;
     if (dtype.empty()) return false;
     config_file.find_all_types(all_config_types);
     if (check_for_alias_type(false)) return true;

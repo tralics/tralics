@@ -100,7 +100,7 @@ auto XmlIO::init(const std::string &name) -> bool {
     input_line_pos = cur_line_len = 0;
     nb_cond                       = 0;
     eof_ok                        = false;
-    if (lines.is_empty()) {
+    if (lines.empty()) {
         cur_line = 0;
         error("Unable to read the XML input file");
         return true;

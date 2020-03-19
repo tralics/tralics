@@ -527,7 +527,7 @@ void Parser::after_main_text() {
         the_bibtex->work();
     }
     init(bbl.lines);
-    if (!lines.is_empty()) {
+    if (!lines.empty()) {
         Xml *res = the_stack.temporary();
         the_stack.push1(np_biblio);
         AttList &L = the_stack.get_att_list(3);

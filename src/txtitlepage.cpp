@@ -60,7 +60,7 @@ auto Buffer::tp_fetch_something() -> tpa_line {
 // This is the function that creates the title page data
 // from a list of lines
 void tralics_ns::Titlepage_create(LinePtr &lines) {
-    if (lines.is_empty()) return;
+    if (lines.empty()) return;
     Titlepage.make_valid();
     for (;;) {
         tp_main_buf.reset();
@@ -584,9 +584,9 @@ void LinePtr::parse_and_extract_clean(String s) {
     Buffer &B    = local_buf;
     bool    keep = true;
     bool    cv   = true; // unused. We assume that the line is always converted
-    auto    C    = value.begin();
-    auto    E    = value.end();
-    auto    W    = value.begin();
+    auto    C    = begin();
+    auto    E    = end();
+    auto    W    = begin();
     while (C != E) {
         B.reset();
         int n = C->to_buffer(B, cv);
@@ -626,9 +626,9 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
     Buffer &B    = local_buf;
     bool    keep = false;
     bool    cv; // unused.
-    auto    C = value.begin();
-    auto    E = value.end();
-    auto    W = value.begin();
+    auto    C = begin();
+    auto    E = end();
+    auto    W = begin();
     while (C != E) {
         B.reset();
         C->to_buffer(B, cv);
@@ -645,7 +645,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
             if (B.is_begin_something(s) == 4) keep = true;
             continue;
         }
-        if (keep) res.value.push_back(*W);
+        if (keep) res.push_back(*W);
     }
     return res;
 }
@@ -655,8 +655,8 @@ void LinePtr::parse_conf_toplevel() const {
     int    b = 0;
     bool   cv; // unused. We assume that the line is always converted
     Buffer B;
-    auto   C = value.begin();
-    auto   E = value.end();
+    auto   C = begin();
+    auto   E = end();
     while (C != E) {
         B.reset();
         init_file_pos = C->to_buffer(B, cv);
@@ -780,8 +780,8 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
 
 // This find a toplevel attributes. Real job done by next function.
 void LinePtr::find_top_atts(Buffer &B) {
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    line_iterator_const C = begin();
+    line_iterator_const E = end();
     while (C != E) {
         B << bf_reset << C->chars;
         B.find_top_atts();
@@ -792,8 +792,8 @@ void LinePtr::find_top_atts(Buffer &B) {
 // A loop to find all types  and put them in res.
 void LinePtr::find_all_types(std::vector<std::string> &res) {
     Buffer &            B = local_buf;
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    line_iterator_const C = begin();
+    line_iterator_const E = end();
     while (C != E) {
         init_file_pos = C->number;
         B << bf_reset << C->chars;
@@ -805,8 +805,8 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
 // This find a toplevel value.
 auto LinePtr::find_top_val(String s, bool c) -> std::string {
     Buffer &            B = local_buf;
-    line_iterator_const C = value.begin();
-    line_iterator_const E = value.end();
+    line_iterator_const C = begin();
+    line_iterator_const E = end();
     while (C != E) {
         B << bf_reset << C->chars;
         String res = B.see_config_kw(s, c);
@@ -859,7 +859,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     ++C;
     int b = B.see_config_env();
     if (b != 1) return C;
-    auto E = value.end();
+    auto E = end();
     while (C != E) {
         B << bf_reset << C->chars;
         ++C;
@@ -957,8 +957,8 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
 // Find all aliases in the config file.
 auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
     Buffer &            B        = local_buf;
-    line_iterator_const C        = value.begin();
-    line_iterator_const E        = value.end();
+    line_iterator_const C        = begin();
+    line_iterator_const E        = end();
     bool                in_alias = false;
     while (C != E) {
         B << bf_reset << C->chars;

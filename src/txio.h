@@ -61,20 +61,18 @@ struct Clines {
 using line_iterator_const = std::list<Clines>::const_iterator;
 using line_iterator       = std::list<Clines>::iterator;
 
-class LinePtr {
+class LinePtr : public std::list<Clines> {
 private:
-    std::list<Clines> value;
-    int               cur_line{0};        // current line number
-    bool              interactive{false}; // is this file or a tty ?
-    std::string       file_name;          // file name associated to the lines
-    size_t            cur_encoding{1};    // current file encoding
+    int         cur_line{0};        // current line number
+    bool        interactive{false}; // is this file or a tty ?
+    std::string file_name;          // file name associated to the lines
+    size_t      cur_encoding{1};    // current file encoding
 public:
     void               add(int n, Buffer &b, bool cv);
-    void               add_buffer(Buffer &B, line_iterator C);
+    void               add_buffer(Buffer &B, line_iterator C); // \todo is splice(C,B)
     void               add_buffer(LinePtr &B, line_iterator C);
     void               after_open();
     void               before_close(bool sigforce);
-    void               clear() { value.clear(); }
     void               clear_and_copy(LinePtr &X);
     void               change_encoding(long wc);
     [[nodiscard]] auto dump_name() const -> String;
@@ -91,27 +89,23 @@ public:
     [[nodiscard]] auto get_file_name() const -> std::string { return file_name; }
     [[nodiscard]] auto get_interactive() const -> bool { return interactive; }
     void               set_interactive(bool sw) { interactive = sw; }
-    auto               get_last_line_no() -> int { return value.back().number; }
+    auto               get_last_line_no() -> int { return back().number; }
     auto               get_next_raw(Buffer &b) -> int;
     auto               get_next_cv(Buffer &b, int w) -> int;
     auto               get_next(Buffer &b) -> int;
     auto               get_next(std::string &b, bool &cv) -> int;
-    auto               get_value() -> std::list<Clines> & { return value; }
     void               incr_cur_line() { cur_line++; }
-    void               insert(int n, const std::string &c, bool cv);
+    void               insert(int n, const std::string &c, bool cv); // \todo is emplace_back
     void               insert(const std::string &c, bool cv);
     void               insert(String c);
     void               insert_spec(int n, std::string c);
     void               insert(const LinePtr &aux);
-    [[nodiscard]] auto is_empty() const -> bool { return value.empty(); }
     void               parse_and_extract_clean(String s);
     void               parse_conf_toplevel() const;
     auto               parse_and_extract(String s) const -> LinePtr;
     void               print();
     void               print(std::fstream *outfile);
     void               print1(std::fstream *);
-    void               push_front(const Clines &x) { value.push_front(x); }
-    void               push_back(const Clines &x) { value.push_back(x); }
     void               reset(std::string x);
     auto               read_from_tty(Buffer &b) -> int;
     void               set_cur_line(int x) { cur_line = x; }
@@ -119,8 +113,8 @@ public:
     void               set_file_name(std::string s) { file_name = std::move(s); }
     void               set_interactive();
     auto               skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
-    void               splice_end(LinePtr &X);
-    void               splice_first(LinePtr &X);
+    void               splice_end(LinePtr &X);   // \todo inline
+    void               splice_first(LinePtr &X); // \todo inline
     void               split_string(String x, int l);
     LinePtr() : file_name("") {}
     void normalise_final_cr();

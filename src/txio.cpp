@@ -481,8 +481,8 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
 // inserts a copy of aux
 void LinePtr::insert(const LinePtr &aux) {
     cur_encoding = 0;
-    auto C       = aux.value.begin();
-    auto E       = aux.value.end();
+    auto C       = aux.begin();
+    auto E       = aux.end();
     while (C != E) {
         Clines L    = *C;
         L.converted = false;
@@ -553,8 +553,8 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
 
 // If a line ends with \, we take the next line, and append it to this one
 void LinePtr::normalise_final_cr() {
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     if (C == E) return;
     Clines *prev = nullptr;
     Clines *cur  = nullptr;
@@ -944,25 +944,19 @@ void LinePtr::reset(std::string x) {
 }
 
 // Insert a line at the end of the file
-void LinePtr::insert(int n, const std::string &c, bool cv) { value.emplace_back(n, c, cv); }
+void LinePtr::insert(int n, const std::string &c, bool cv) { emplace_back(n, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
-void LinePtr::insert(const std::string &c, bool cv) {
-    cur_line++;
-    value.emplace_back(cur_line, c, cv);
-}
+void LinePtr::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
 // We assume that the const char* is ascii 7 bits
-void LinePtr::insert(String c) {
-    cur_line++;
-    value.emplace_back(cur_line, c, true);
-}
+void LinePtr::insert(String c) { emplace_back(++cur_line, c, true); }
 
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted
 void LinePtr::insert_spec(int n, std::string c) {
-    if (!value.empty() && value.back().chars[0] == '\n' && c[0] == '\n') return;
+    if (!empty() && back().chars[0] == '\n' && c[0] == '\n') return;
     insert(n, c, true);
 }
 
@@ -973,15 +967,15 @@ void LinePtr::add(int n, Buffer &b, bool cv) {
 }
 
 // insert a file at the start
-void LinePtr::splice_first(LinePtr &X) { value.splice(value.begin(), X.value); }
+void LinePtr::splice_first(LinePtr &X) { splice(begin(), X); }
 
 // insert at the end
-void LinePtr::splice_end(LinePtr &X) { value.splice(value.end(), X.value); }
+void LinePtr::splice_end(LinePtr &X) { splice(end(), X); }
 
 // Copy X here,
 void LinePtr::clear_and_copy(LinePtr &X) {
-    value.clear();
-    value.splice(value.begin(), X.value);
+    clear();
+    splice(begin(), X);
     cur_encoding = X.cur_encoding;
     set_file_name(X.get_file_name());
 }
@@ -996,11 +990,11 @@ auto LinePtr::dump_name() const -> String {
 // Whenever a TeX file is opened for reading, we print this in the log
 void LinePtr::after_open() {
     the_log << lg_start_io << "Opened " << dump_name();
-    if (value.empty())
+    if (empty())
         the_log << "; it is empty\n";
     else {
-        int n = value.front().number;
-        int m = value.back().number;
+        int n = front().number;
+        int m = back().number;
         if (n == 1) {
             if (m == 1)
                 the_log << "; it has 1 line\n";
@@ -1015,7 +1009,7 @@ void LinePtr::after_open() {
 // we say if this was closed by a \endinput command.
 void LinePtr::before_close(bool sigforce) {
     the_log << lg_start_io << "End of " << dump_name();
-    if (sigforce && !value.empty()) the_log << " (forced by \\endinput)";
+    if (sigforce && !empty()) the_log << " (forced by \\endinput)";
     the_log << lg_end;
 }
 
@@ -1028,9 +1022,9 @@ auto LinePtr::get_next(Buffer &b) -> int {
         n = read_from_tty(b);
         if (n == -1) interactive = false;
     } else {
-        if (value.empty()) return -1;
-        n = value.front().to_buffer(b, converted);
-        value.pop_front();
+        if (empty()) return -1;
+        n = front().to_buffer(b, converted);
+        pop_front();
     }
     if (!converted) {
         the_converter.cur_file_name = file_name;
@@ -1040,10 +1034,10 @@ auto LinePtr::get_next(Buffer &b) -> int {
 }
 
 auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
-    if (value.empty()) return -1;
+    if (empty()) return -1;
     bool converted = false; // \todo unused
-    int  n         = value.front().to_buffer(b, converted);
-    value.pop_front();
+    int  n         = front().to_buffer(b, converted);
+    pop_front();
     if (w != 0) {
         the_converter.cur_file_name = file_name;
         b.convert_line(n, to_unsigned(w));
@@ -1053,26 +1047,26 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
 
 // same as get_next, without conversion
 auto LinePtr::get_next_raw(Buffer &b) -> int {
-    if (value.empty()) return -1;
+    if (empty()) return -1;
     bool unused;
-    int  n = value.front().to_buffer(b, unused);
-    value.pop_front();
+    int  n = front().to_buffer(b, unused);
+    pop_front();
     return n;
 }
 
 // Puts the line in the string, instead of the buffer.
 auto LinePtr::get_next(std::string &b, bool &cv) -> int {
-    if (value.empty()) return -1;
-    int n = value.front().to_string(b, cv);
-    value.pop_front();
+    if (empty()) return -1;
+    int n = front().to_string(b, cv);
+    pop_front();
     return n;
 }
 
 /// This finds a line with documentclass in it
 // uses B and the buffer.
 auto LinePtr::find_documentclass(Buffer &B) -> std::string {
-    auto C                  = value.begin();
-    auto E                  = value.end();
+    auto C                  = begin();
+    auto E                  = end();
     the_main->doc_class_pos = E;
     while (C != E) {
         B.reset();
@@ -1089,29 +1083,26 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
 }
 
 // This inserts B into this, before C
-void LinePtr::add_buffer(LinePtr &B, line_iterator C) {
-    if (B.value.empty()) return;
-    value.splice(C, B.value);
-}
+void LinePtr::add_buffer(LinePtr &B, line_iterator C) { splice(C, B); }
 
 // This inserts B into *this, before C
 // If C is the end pointer, B is inserted at the start.
 // The idea is to insert text from the config file to the main file
 // It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(Buffer &B, line_iterator C) {
-    auto E = value.end();
+    auto E = end();
     if (C == E)
-        value.push_front(Clines(1, B.to_string(), true));
+        push_front(Clines(1, B.to_string(), true));
     else
-        value.insert(C, Clines(1, B.to_string(), true));
+        std::list<Clines>::insert(C, Clines(1, B.to_string(), true)); // \todo ew
 }
 
 // This finds a line with documentclass in it
 // uses B and the buffer.
 auto LinePtr::find_configuration(Buffer &B) -> std::string {
     int  N = 0;
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     while (C != E) {
         B.reset();
         B.push_back(C->chars);
@@ -1129,8 +1120,8 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
 void LinePtr::find_doctype(Buffer &B, std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int  N = 0;
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     while (C != E) {
         B.reset();
         B.push_back(C->chars);
@@ -1175,8 +1166,8 @@ void LinePtr::split_string(String x, int l) {
 }
 
 void LinePtr::print(std::fstream *outfile) {
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     while (C != E) {
         *outfile << C->chars;
         ++C;
@@ -1185,8 +1176,8 @@ void LinePtr::print(std::fstream *outfile) {
 
 // For debug
 void LinePtr::print() {
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     while (C != E) {
         std::cout << C->number << "  " << C->chars;
         ++C;
