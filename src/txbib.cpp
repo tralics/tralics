@@ -1048,7 +1048,7 @@ void Parser::insert_every_bib() {
 // We do not use parse_error here
 void Bibtex::err_in_file(String s, bool last) {
     main_ns::nb_errs++;
-    log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.get_file_name() << "\n";
+    log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
     if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
     log_and_tty << s;
     if (last) log_and_tty << ".\n";

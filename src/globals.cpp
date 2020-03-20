@@ -29,7 +29,7 @@ namespace {
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
         for (size_t i = 0; i < file_pool.size(); i++)
-            if (file_pool[i]->get_file_name() == name) return i;
+            if (file_pool[i]->file_name == name) return i;
         return {};
     }
 } // namespace

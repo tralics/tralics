@@ -17,7 +17,7 @@
 #include <vector>
 
 struct AttPair;
-class LinePtr;
+struct LinePtr;
 class Xml;
 
 using buffer_fn = void(Buffer &);

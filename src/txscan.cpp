@@ -940,7 +940,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
         cur_in_chan = tty_in_chan;
     else {
         cur_in_chan = ch;
-        file_name   = tex_input_files[ch].get_lines().get_file_name();
+        file_name   = tex_input_files[ch].get_lines().file_name;
     }
     push_input_stack(file_name, false, true);
     TokenList L;
@@ -1369,7 +1369,7 @@ void Parser::scan_something_internal(internal_type level) {
         else if (m == 1)
             cur_val.set_dim(0);
         else if (m == 2)
-            cur_val.set_int(to_signed(lines.get_encoding()));
+            cur_val.set_int(to_signed(lines.encoding));
         else if (m == 3)
             cur_val.set_int(to_signed(the_main->input_encoding));
         else if (m == 4)

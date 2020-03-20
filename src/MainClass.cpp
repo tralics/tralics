@@ -379,7 +379,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
     {
-        auto wc = input_content.get_encoding();
+        auto wc = input_content.encoding;
         if (wc < 0) {
             wc = the_main->input_encoding;
             input_content.set_encoding(wc);
@@ -936,7 +936,7 @@ void MainClass::read_config_and_other() {
     LinePtr TP = config_file.parse_and_extract("TitlePage");
     tralics_ns::Titlepage_create(TP);
     if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
-    input_content.add_buffer(from_config, doc_class_pos);
+    input_content.splice(doc_class_pos, from_config);
     config_file.clear();
 }
 

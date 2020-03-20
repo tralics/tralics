@@ -424,7 +424,7 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
 
 void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
-        cur_encoding = to_unsigned(wc);
+        encoding = to_unsigned(wc);
         the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << lg_end;
     }
 }
@@ -452,9 +452,9 @@ auto io_ns::find_encoding(String cl) -> int {
 }
 
 void LinePtr::set_interactive() {
-    interactive  = true;
-    file_name    = "tty";
-    cur_encoding = the_main->input_encoding;
+    interactive = true;
+    file_name   = "tty";
+    encoding    = the_main->input_encoding;
 }
 
 // interface with the line editor.
@@ -473,16 +473,16 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
         prev_line = true;
     if (B[0] == '%') { // debug
         int k = io_ns::find_encoding(B.c_str());
-        if (k >= 0) cur_encoding = to_unsigned(k);
+        if (k >= 0) encoding = to_unsigned(k);
     }
     return cur_line;
 }
 
 // inserts a copy of aux
 void LinePtr::insert(const LinePtr &aux) {
-    cur_encoding = 0;
-    auto C       = aux.begin();
-    auto E       = aux.end();
+    encoding = 0;
+    auto C   = aux.begin();
+    auto E   = aux.end();
     while (C != E) {
         Clines L    = *C;
         L.converted = false;
@@ -536,11 +536,11 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     wc = to_unsigned(k);
                     L.set_encoding(wc);
                     co_try = 0;
-                    the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.get_cur_line() + 1 << " of file "
-                            << x << lg_end;
+                    the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x
+                            << lg_end;
                 }
             }
-            if (converted) B.convert_line(L.get_cur_line() + 1, wc);
+            if (converted) B.convert_line(L.cur_line + 1, wc);
             if (emit)
                 L.insert(B.to_string(), converted);
             else
@@ -936,9 +936,9 @@ void tralics_ns::close_file(std::fstream *fp) {
 }
 
 void LinePtr::reset(std::string x) {
-    cur_line     = 0;
-    cur_encoding = 0;
-    interactive  = false;
+    cur_line    = 0;
+    encoding    = 0;
+    interactive = false;
     clear();
     file_name = std::move(x);
 }
@@ -976,8 +976,8 @@ void LinePtr::splice_end(LinePtr &X) { splice(end(), X); }
 void LinePtr::clear_and_copy(LinePtr &X) {
     clear();
     splice(begin(), X);
-    cur_encoding = X.cur_encoding;
-    set_file_name(X.get_file_name());
+    encoding = X.encoding;
+    set_file_name(X.file_name);
 }
 
 auto LinePtr::dump_name() const -> String {
@@ -1028,7 +1028,7 @@ auto LinePtr::get_next(Buffer &b) -> int {
     }
     if (!converted) {
         the_converter.cur_file_name = file_name;
-        b.convert_line(n, cur_encoding);
+        b.convert_line(n, encoding);
     }
     return n;
 }
@@ -1082,16 +1082,12 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     return "";
 }
 
-// This inserts B into this, before C
-void LinePtr::add_buffer(LinePtr &B, line_iterator C) { splice(C, B); }
-
 // This inserts B into *this, before C
 // If C is the end pointer, B is inserted at the start.
 // The idea is to insert text from the config file to the main file
 // It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(Buffer &B, line_iterator C) {
-    auto E = end();
-    if (C == E)
+    if (C == end())
         push_front(Clines(1, B.to_string(), true));
     else
         std::list<Clines>::insert(C, Clines(1, B.to_string(), true)); // \todo ew

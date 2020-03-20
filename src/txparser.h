@@ -141,7 +141,7 @@ public:
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
     auto               cur_line_to_istring() -> Istring;
     void               decr_cur_level() { cur_level--; }
-    auto               get_cur_filename() -> std::string { return lines.get_file_name(); }
+    auto               get_cur_filename() -> std::string { return lines.file_name; }
     [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
     auto               get_cur_level() -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }

@@ -6,7 +6,7 @@
 #include <vector>
 
 class Buffer;
-class LinePtr;
+struct LinePtr;
 
 extern std::vector<std::string> conf_path;  //
 extern std::vector<std::string> input_path; //
