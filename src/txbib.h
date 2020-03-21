@@ -203,10 +203,9 @@ class BibEntry {
     BibtexName                          author_data;            // already processed author data
     BibtexName                          editor_data;            // already processed editor data
 
-    std::string  label, sort_label, aux_label; // cite label and sort label
-    int          extra_num{0};                 // extra char added to the label
-    int          cur_year{0};                  // current year, if year field can be parsed
-    std::string  lab1, lab2, lab3;             // two temporaries.
+    int          extra_num{0};     // extra char added to the label
+    int          cur_year{0};      // current year, if year field can be parsed
+    std::string  lab1, lab2, lab3; // two temporaries.
     size_t       id{0};
     bool         explicit_cit{false};
     c_primaire   main_c_type;
@@ -216,16 +215,15 @@ class BibEntry {
     size_t       is_extension;
 
 public:
-    Istring unique_id{""};
+    std::string label, sort_label, aux_label; // cite label and sort label
+    Istring     unique_id{""};
 
     BibEntry();
-    [[nodiscard]] auto Sort_label() const -> const std::string & { return sort_label; }
 
 private:
     [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
     [[nodiscard]] auto ra_prefix() const -> String;
-    [[nodiscard]] auto get_from() const -> bib_from { return cite_key.cite_prefix; }
-    [[nodiscard]] auto get_name() const -> std::string { return cite_key.full_key; }
+    [[nodiscard]] auto get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
 
     void find_cnrs_type(Buffer &);
     void output_bibitem();

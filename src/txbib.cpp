@@ -791,8 +791,8 @@ void bib_ns::boot_ra_prefix(String s) {
 
 // This returns a prefix from ra_pretable, according to from and type_int.
 auto BibEntry::ra_prefix() const -> String {
-    if (get_from() == from_refer) return ra_pretable[0];
-    if (get_from() == from_foot) return ra_pretable[1];
+    if (get_cite_prefix() == from_refer) return ra_pretable[0];
+    if (get_cite_prefix() == from_foot) return ra_pretable[1];
     switch (type_int) {
     case type_book:
     case type_booklet:
@@ -1585,7 +1585,7 @@ void Bibtex::parse_a_file() {
 //
 // Working with the entries
 
-auto xless(BibEntry *A, BibEntry *B) -> bool { return A->Sort_label() < B->Sort_label(); }
+auto xless(BibEntry *A, BibEntry *B) -> bool { return A->sort_label < B->sort_label; }
 
 // This is the main function.
 void Bibtex::work() {
@@ -1997,7 +1997,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
 // In the case of `Lo{\"i}c', returns  `{\"i}c' for k=2.
 // In the case of `Lo\"i c', returns the whole string.
 auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
-    Buffer &B = biblio_buf1;
+    Buffer B;
     B.reset();
     B.push_back(s);
     B.reset_ptr();
@@ -2038,7 +2038,7 @@ auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
 }
 
 void BibEntry::add_warning(int dy) {
-    if (get_from() != from_year) return;
+    if (get_cite_prefix() != from_year) return;
     int y = cur_year;
     if (y <= dy) return;
     if (!all_fields[fp_note].empty()) return;
@@ -2076,15 +2076,6 @@ void BibEntry::presort(long serial) {
         lab3 = s;
     }
     std::string y = all_fields[fp_year];
-    // Removed in version 2.13.2.
-    //   if(the_main->in_ra() && !the_main->get_no_bibyearmodify()) {
-    //     if(the_bibtex->wrong_class(cur_year,y,get_from()))
-    //       move_to_year();
-    //     add_warning(the_parser.get_ra_year());
-    //   }
-    //   String yy = the_bibtex->is_year_string(y,get_from());
-    //   if(yy)
-    //     the_bibtex->bad_year(y,yy);
     {
         std::string s = last_chars(y, 2);
         if (!s.empty()) {
