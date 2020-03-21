@@ -63,22 +63,12 @@ public:
     void do_sort() { std::sort(value.begin(), value.end(), trees_ns::xless); }
 };
 
-class AllIndex {
-    int                     last_index{0};
-    size_t                  last_iid{0};
-    std::vector<OneIndex *> value;
+struct AllIndex : public std::vector<OneIndex *> {
+    size_t last_index{0}, last_iid{0};
 
-public:
     AllIndex();
 
-    [[nodiscard]] auto size() const { return value.size(); }
-    [[nodiscard]] auto get_last_iid() const -> size_t { return last_iid; }
-
-    auto get_index(size_t j) -> OneIndex * { return value[j]; }
     auto find_index(const std::string &s) -> size_t;
-    auto get_data(size_t i) -> std::vector<Indexer *> & { return value[i]->get_data(); }
     void mark_print(size_t g);
-    auto next_iid() -> size_t { return last_iid++; }
-    auto next_index() -> int { return ++last_index; }
     void new_index(const std::string &s, const std::string &title);
 };

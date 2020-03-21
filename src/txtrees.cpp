@@ -14,6 +14,7 @@
 #include "txtrees.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace trees_ns {
     void normalise_space(TokenList &L);
@@ -37,25 +38,23 @@ namespace {
 
 // By default, this is a glossary and a main index
 AllIndex::AllIndex() {
-    value.push_back(new OneIndex("glossary", "Glossary", 6));
-    value.push_back(new OneIndex("default", "Index", 5));
+    push_back(new OneIndex("glossary", "Glossary", 6));
+    push_back(new OneIndex("default", "Index", 5));
 }
 
 // Returns the index location associated to the name S
 // If S is not found, the main index is used
 auto AllIndex::find_index(const std::string &s) -> size_t {
-    auto n = value.size();
-    for (size_t i = 0; i < n; i++)
-        if (value[i]->has_name(s)) return i;
+    for (size_t i = 0; i < size(); i++)
+        if (at(i)->has_name(s)) return i;
     return 1;
 }
 
 void AllIndex::new_index(const std::string &s, const std::string &title) {
-    auto n = value.size();
-    for (size_t i = 0; i < n; i++)
-        if (value[i]->has_name(s)) return;
+    for (size_t i = 0; i < size(); i++)
+        if (at(i)->has_name(s)) return;
     auto id = the_main->the_stack->next_xid(nullptr).value;
-    value.push_back(new OneIndex(s, title, to_unsigned(id)));
+    push_back(new OneIndex(s, title, to_unsigned(id)));
 }
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
@@ -63,7 +62,7 @@ void AllIndex::new_index(const std::string &s, const std::string &title) {
 auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
     auto        i = the_index.find_index(s);
-    return the_index.get_index(i)->get_AL();
+    return the_index.at(i)->get_AL();
 }
 
 // Case \printglossary or \printindex[foo].
@@ -72,7 +71,7 @@ void AllIndex::mark_print(size_t g) {
     Xml *mark = new Xml(Istring(""), nullptr);
     Xml *Foo  = new Xml(Istring(""), mark);
     the_main->the_stack->add_last(Foo);
-    value[g]->set_position(mark);
+    at(g)->set_position(mark);
 }
 
 // Case of \index{key@value|encap}
@@ -126,7 +125,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     z               = L;
     std::string aux = to_stringE(z);
     // We have now: key@aux|encap
-    std::vector<Indexer *> &IR    = the_index.get_data(g);
+    std::vector<Indexer *> &IR    = the_index.at(g)->get_data();
     int                     level = 1;
     if (father) level = 1 + IR[*father]->level;
     auto n = IR.size();
@@ -142,7 +141,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     Xml *x   = new Xml(np_index, res);
     if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
     x->id.add_attribute(np_level, name_positions(cst_dig0 + level));
-    auto iid = the_index.next_iid();
+    auto iid = the_index.last_iid++;
     IR.push_back(new Indexer(B.to_string(), aux, x, level, iid));
     return n;
 }
@@ -188,10 +187,10 @@ void Parser::T_index(subtypes c) {
     // make sure this exists
     auto pposition = index_aux(L, position, g);
     // Now, add a label here
-    auto iid = the_index.get_data(g)[pposition]->iid;
-    int  nid = the_index.next_index();
-    ;
-    local_buf << bf_reset << "lid" << nid;
+    auto iid = the_index.at(g)->get_data()[pposition]->iid;
+    auto nid = ++the_index.last_index;
+
+    local_buf << bf_reset << fmt::format("lid{}", nid);
     std::string W  = local_buf.to_string();
     Istring     id = the_stack.add_anchor(W, false);
     create_label(W, id);
@@ -199,14 +198,14 @@ void Parser::T_index(subtypes c) {
 }
 
 void Parser::finish_index() {
-    auto labels = std::vector<std::string>(the_index.get_last_iid(), "");
+    auto labels = std::vector<std::string>(the_index.last_iid, "");
     tralics_ns::find_index_labels(labels);
     int  idx_size = 0;
     int  idx_nb   = 0;
     auto q        = the_index.size();
     for (size_t jj = 1; jj <= q; jj++) {
         auto j  = jj == q ? 0 : jj;
-        auto CI = the_index.get_index(j);
+        auto CI = the_index.at(j);
         auto n  = CI->size();
         if (n == 0) continue;
         idx_size += n;

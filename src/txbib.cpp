@@ -363,7 +363,7 @@ void CitationItem::dump_bibtex() {
     CitationKey ref(from.c_str(), key.c_str());
     BibEntry *  X = the_bibtex->find_entry(ref);
     if (X != nullptr) {
-        err_buf << bf_reset << "Conflicts with tralics bib" << ref.get_name();
+        err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
         the_parser.signal_error(the_parser.err_tok, "bib");
         return;
     }
@@ -1542,7 +1542,7 @@ void BibEntry::copy_from(BibEntry *Y) {
         the_bibtex->err_in_file("duplicate entry ignored", true);
         return;
     }
-    the_log << "Copy Entry " << Y->cite_key.get_name() << " into " << cite_key.get_name() << "\n";
+    the_log << "Copy Entry " << Y->cite_key.full_key << " into " << cite_key.full_key << "\n";
     is_extension = Y->is_extension;
     type_int     = Y->type_int;
     first_line   = Y->first_line;
@@ -1551,7 +1551,7 @@ void BibEntry::copy_from(BibEntry *Y) {
 
 void BibEntry::copy_from(BibEntry *Y, size_t k) {
     if (Y->type_int == type_unknown) {
-        log_and_tty << "Unknown reference in crossref " << Y->cite_key.get_name() << "\n";
+        log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
         return; // Should signal an error
     }
     for (size_t i = k; i < fp_unknown; i++) {
@@ -1615,10 +1615,10 @@ void Bibtex::work() {
 // For these we call normalise and presort
 void BibEntry::work(long serial) {
     cur_entry_line = -1;
-    cur_entry_name = cite_key.get_name();
+    cur_entry_name = cite_key.full_key;
     if (type_int == type_unknown) {
         the_bibtex->err_in_entry("undefined reference.\n");
-        if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.get_name() << "\n";
+        if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
         return;
     }
     if (explicit_cit) return;
@@ -1739,7 +1739,7 @@ void BibEntry::call_type() {
     //  bbl.push_back("%%%");bbl.push_back(sort_label); bbl.newline();
     bbl.push_back_cmd("citation");
     bbl.push_back_braced(label);
-    bbl.push_back_braced(cite_key.get_name());
+    bbl.push_back_braced(cite_key.full_key);
     bbl.push_back_braced(unique_id.c_str());
     bbl.push_back_braced(from_to_string());
     String my_name = nullptr;
@@ -2070,7 +2070,7 @@ void BibEntry::presort(long serial) {
     sort_author(type_int == type_proceedings);
     if (lab1.empty()) {
         std::string s = all_fields[fp_key];
-        if (s.empty()) s = skip_dp(cite_key.get_name());
+        if (s.empty()) s = skip_dp(cite_key.full_key);
         lab1 = first_three(s);
         lab2 = s;
         lab3 = s;

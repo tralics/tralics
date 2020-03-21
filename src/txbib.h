@@ -15,27 +15,27 @@
 // This is the unique identifier of a bibliography element
 // from the bibtex point of view. If used, a unique id (an integer will be
 // computed). For the moment being it has a cite key, and a prefix.
-class CitationKey {
+struct CitationKey {
     std::string cite_key;           // cite key, say Foo
     std::string lower_cite_key;     // cite key, lower case, say foo
     bib_from    cite_prefix;        // symbolic prefix, say from_foot
     std::string full_key;           // something like footcite:Foo
     void        make_key(String s); // creates the key.
-public:
+
+    CitationKey() = default;
+    CitationKey(String a, String b);
+    CitationKey(bib_from a, String b);
+
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
     [[nodiscard]] auto is_same(const CitationKey &w) const -> bool { return is_similar(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
     [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto is_same_lower_old(const CitationKey &w) const -> bool;
-    CitationKey() = default;
-    CitationKey(String a, String b);
-    CitationKey(bib_from a, String b);
-    [[nodiscard]] auto get_name() const -> std::string { return full_key; }
-    [[nodiscard]] auto get_from() const -> bib_from { return cite_prefix; }
     [[nodiscard]] auto from_to_string() const -> String;
-    void               move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
-    void               move_to_refer() { cite_prefix = from_refer; }
+
+    void move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
+    void move_to_refer() { cite_prefix = from_refer; }
 };
 
 class CitationItem {
@@ -224,8 +224,8 @@ public:
 private:
     [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
     [[nodiscard]] auto ra_prefix() const -> String;
-    [[nodiscard]] auto get_from() const -> bib_from { return cite_key.get_from(); }
-    [[nodiscard]] auto get_name() const -> std::string { return cite_key.get_name(); }
+    [[nodiscard]] auto get_from() const -> bib_from { return cite_key.cite_prefix; }
+    [[nodiscard]] auto get_name() const -> std::string { return cite_key.full_key; }
 
     void find_cnrs_type(Buffer &);
     void output_bibitem();
