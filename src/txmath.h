@@ -227,26 +227,26 @@ private:
 // This is a global object for math handling
 // but math handling is not recursive. reset() is called on every formula.
 class MathHelper {
-    MathElt *                free_list;    // free list
-    bool                     current_mode; // display or not, needed for \label
-    name_positions           pos_att;      // position attribute, inline or display
-    bool                     seen_label;   // do we see already have a label
-    bool                     warned_label; // was the used warned for labels on this formula ?
-    std::string              label_val;    // name of the label
+    MathElt *                free_list{};    // free list
+    bool                     current_mode{}; // display or not, needed for \label
+    name_positions           pos_att;        // position attribute, inline or display
+    bool                     seen_label{};   // do we see already have a label
+    bool                     warned_label{}; // was the used warned for labels on this formula ?
+    std::string              label_val;      // name of the label
     std::vector<std::string> multi_labels;
     std::vector<int>         multi_labels_type;
-    TokenList                tag_list;       // value of \tag{foo}, if given
-    bool                     is_tag_starred; // \tag or \tag* ?
-    Xid                      cur_cell_id;    // Id of current cell
-    Xid                      cur_row_id;     // Id of current row
-    Xid                      cur_table_id;   // Id of current table
-    Xid                      cur_math_id;    // Id of current math element
-    Xid                      cur_formula_id; // Id of current formula
-    Xid                      cur_texmath_id; // Id of current texmath
-    int                      math_env_ctr;   // two counters for environments
+    TokenList                tag_list;         // value of \tag{foo}, if given
+    bool                     is_tag_starred{}; // \tag or \tag* ?
+    Xid                      cur_cell_id;      // Id of current cell
+    Xid                      cur_row_id;       // Id of current row
+    Xid                      cur_table_id;     // Id of current table
+    Xid                      cur_math_id;      // Id of current math element
+    Xid                      cur_formula_id;   // Id of current formula
+    Xid                      cur_texmath_id;   // Id of current texmath
+    int                      math_env_ctr;     // two counters for environments
     int                      all_env_ctr;
     size_t                   last_ml_pos{0};
-    int                      eqnum_status; // how many numbers for this equation?
+    int                      eqnum_status{}; // how many numbers for this equation?
 public:
     MathHelper() {
         math_env_ctr = 0;
@@ -317,20 +317,20 @@ private:
 // This is a global object for math handling
 class MathDataP {
     static const int m_offset = 10000;
-    Xml *            built_in_table[last_math_loc];     // the static math table
-    Xml *            built_in_table_alt[last_math_loc]; // the static math table
-    Xml **           xml_math_table;                    // the dynamic math table
-    size_t           xmath_size;                        // size of the dynamic table
-    size_t           xmath_pos;                         // number of slots used in the dynamic table
+    Xml *            built_in_table[last_math_loc]{};     // the static math table
+    Xml *            built_in_table_alt[last_math_loc]{}; // the static math table
+    Xml **           xml_math_table{};                    // the dynamic math table
+    size_t           xmath_size{};                        // size of the dynamic table
+    size_t           xmath_pos{};                         // number of slots used in the dynamic table
 
-    Math *     math_table;                      // the table of math lists
-    size_t     lmath_size;                      // the size of the math table
-    size_t     lmath_pos;                       // number of slots used in the math table
-    Istring    xml_lr_ptable[del_tablesize];    // table of fence attributes
-    math_types math_char_type[nb_mathchars];    // the math type for +, = etc
-    Xml *      simplemath_table[nb_simplemath]; // translation of $x$ etc
-    Xml *      mc_table[29];
-    bool       no_ent_names;
+    Math *     math_table{};                      // the table of math lists
+    size_t     lmath_size{};                      // the size of the math table
+    size_t     lmath_pos{};                       // number of slots used in the math table
+    Istring    xml_lr_ptable[del_tablesize];      // table of fence attributes
+    math_types math_char_type[nb_mathchars]{};    // the math type for +, = etc
+    Xml *      simplemath_table[nb_simplemath]{}; // translation of $x$ etc
+    Xml *      mc_table[29]{};
+    bool       no_ent_names{};
     Token      nomathsw0; // says next token is for nomathml only
     Token      nomathsw1; // says next token is for normal mode only
 private:
@@ -387,11 +387,11 @@ public:
 
 class Cv3Helper {
     Math               res;
-    Xml *              p;
-    int                ploc;
+    Xml *              p{};
+    int                ploc{};
     math_types         ptype;
     math_types         prefix_type;
-    Xml *              index, *exponent;
+    Xml *              index{}, *exponent{};
     Math               object;
     int                special; // Sum or product
     void               pop_front() { object.pop_front(); }
@@ -401,7 +401,7 @@ class Cv3Helper {
     auto               empty() -> bool { return object.empty(); }
 
 public:
-    int state;
+    int state{};
     Cv3Helper(Math X) : object(std::move(X)), special(0) {}
     void reinit();
     void non_script();

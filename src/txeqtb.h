@@ -28,7 +28,7 @@ class Parser;
 // The values is a (symcodes, subtype) pair
 
 struct Equivalent : public CmdChr {
-    int level; ///< level at which this is defined
+    int level{}; ///< level at which this is defined
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
@@ -116,7 +116,7 @@ public:
 class SaveState {
     TokenList L; // the token list to be restored
 public:
-    bool restricted; // the restricted flag to be restored
+    bool restricted{}; // the restricted flag to be restored
 
     void copy_and_reset(TokenList &X) {
         L.clear();

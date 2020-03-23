@@ -14,8 +14,6 @@
 #include "txmath.h"
 #include "txparser.h"
 
-extern std::array<std::array<std::string, 15>, 128> math_chars;
-
 namespace {
     Buffer                           scratch;                            // See insert_string
     TexFonts                         tfonts;                             // the font table
@@ -283,8 +281,7 @@ void Parser::E_input(int q) {
     }
     if (q == end_all_input_code) {
         if (tracing_commands()) the_log.dump("endallinput");
-        auto n = cur_input_stack.size();
-        for (size_t i = 0; i < n; i++) cur_input_stack[i]->destroy();
+        for (auto &i : cur_input_stack) i->destroy();
         force_eof = true;
         return;
     }
@@ -1960,7 +1957,7 @@ void Parser::M_prefixed_aux(bool gbl) {
                 return;
             }
             V.resize(to_unsigned(q));
-            for (long & j : V) j = scan_int(T); // \todo range for
+            for (long &j : V) j = scan_int(T); // \todo range for
         }
     }
         return;

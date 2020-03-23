@@ -27,22 +27,22 @@ class Parser;
 
 // Class used to implement array.sty
 class NewArray {
-    std::array<bool, nb_newcolumn>  nct_bool; // for \newcolumntype
-    std::array<Token, nb_newcolumn> nct_tok;  // for \newcolumntype
-    int                             nct_size; // number of slots in the nct table
+    std::array<bool, nb_newcolumn>  nct_bool{}; // for \newcolumntype
+    std::array<Token, nb_newcolumn> nct_tok;    // for \newcolumntype
+    int                             nct_size{}; // number of slots in the nct table
     array_class_type                ch_class, last_ch_class;
     array_class_number              ch_num; // for array management
     TokenList                       preamble;
-    bool                            have_token_list;
+    bool                            have_token_list{};
     Token                           current_token;
     TokenList                       current_list;
-    Parser *                        P;
-    ArrayInfo *                     AI;
+    Parser *                        P{};
+    ArrayInfo *                     AI{};
     Xid                             id;
     TokenList                       u_list, v_list;
     AttList                         attribs;
-    int                             ac_cell_no;
-    bool                            first_bar;
+    int                             ac_cell_no{};
+    bool                            first_bar{};
     name_positions                  cur_h_pos;
 
 public:

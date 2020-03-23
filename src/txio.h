@@ -169,8 +169,8 @@ public:
 // and both of these variables are always |false|.
 // Since \write18 is special, we added another slot in write_open
 class TexOutStream {
-    std::array<std::fstream *, nb_input_channels> write_file;
-    std::array<bool, nb_output_channels>          write_open;
+    std::array<std::fstream *, nb_input_channels> write_file{};
+    std::array<bool, nb_output_channels>          write_open{};
 
 public:
     TexOutStream();

@@ -1,4 +1,9 @@
 #pragma once
+#include "tralics/enums.h"
+#include "txmath.h"
+#include <iostream>
+#include <list>
+
 // -*- C++ -*-
 // TRALICS, copyright (C)INRIA/apics (Jose' Grimm) 2006, 2007,2008
 
@@ -71,12 +76,12 @@ private:
 // Helper for finding start and end of <mrow>
 class MathF {
     bool      state{true};
-    bool      t_big;
+    bool      t_big{};
     int       next_change{-1};
     int       next_finish{-1};
     MathQList aux;
     MathList  res;
-    Xml *     t;
+    Xml *     t{};
 
 public:
     MathF();

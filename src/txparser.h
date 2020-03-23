@@ -29,44 +29,44 @@ class Parser {
     friend class XkvSetkeys;
 
 public:
-    Hashtab                                   hash_table;        // the hash table
-    Mactab                                    mac_table;         // the table of macros
-    Stack                                     the_stack;         // the stack
-    std::array<EqtbString, 10>                eqtb_string_table; // eqtb strings
-    std::array<EqtbInt, integer_table_size>   eqtb_int_table;    // EQTB, integers
-    std::array<EqtbDim, dimension_table_size> eqtb_dim_table;    // EQTB, dimensions
-    std::array<EqtbToken, toks_register_size> toks_registers;    // EQTB, token lists
-    std::array<EqtbBox, nb_registers>         box_table;         // EQTB, boxes
-    std::array<EqtbGlue, glue_table_size>     glue_table;        // EQTB, glue
-    std::array<Token, nb_characters>          verbatim_chars;    // value of a character in verbatim mode
-    std::array<long, nb_shortverb_values>     old_catcode;       // catcodes for undefineshortverb
-    std::array<int, 9>                        allocation_table;  // values for \newcount etc
-    std::array<bool, nb_xspace_values>        ok_for_xspace;     // status of char w.r.t. \xspace
-    std::array<Token, 22>                     uclc_list;         // upper, lowert case equivalent of \ij etc
-    FontInfo                                  cur_font;          // info for the current font
-    std::vector<Image>                        the_images;        // file data for images
+    Hashtab                                   hash_table;         // the hash table
+    Mactab                                    mac_table;          // the table of macros
+    Stack                                     the_stack;          // the stack
+    std::array<EqtbString, 10>                eqtb_string_table;  // eqtb strings
+    std::array<EqtbInt, integer_table_size>   eqtb_int_table;     // EQTB, integers
+    std::array<EqtbDim, dimension_table_size> eqtb_dim_table;     // EQTB, dimensions
+    std::array<EqtbToken, toks_register_size> toks_registers;     // EQTB, token lists
+    std::array<EqtbBox, nb_registers>         box_table;          // EQTB, boxes
+    std::array<EqtbGlue, glue_table_size>     glue_table;         // EQTB, glue
+    std::array<Token, nb_characters>          verbatim_chars;     // value of a character in verbatim mode
+    std::array<long, nb_shortverb_values>     old_catcode{};      // catcodes for undefineshortverb
+    std::array<int, 9>                        allocation_table{}; // values for \newcount etc
+    std::array<bool, nb_xspace_values>        ok_for_xspace{};    // status of char w.r.t. \xspace
+    std::array<Token, 22>                     uclc_list;          // upper, lowert case equivalent of \ij etc
+    FontInfo                                  cur_font;           // info for the current font
+    std::vector<Image>                        the_images;         // file data for images
     std::vector<Xml *>                        all_heads;
     Stats                                     my_stats; // for the statistics
     Token                                     err_tok;  // in case of error
 private:
     bool      unexpected_seen_hi{false}; // check for wrongly placed font changes
     bool      calc_loaded;               // did we see \usepackage{calc} ?
-    bool      numbered_verbatim;         // has this verbatim line numbers ?
+    bool      numbered_verbatim{};       // has this verbatim line numbers ?
     bool      restricted;                // are we in restricted mode ?
     bool      force_eof{false};          // did we see \endinput ?
     bool      no_new_file{false};        // can we pop the input stack ?
-    bool      file_ended;                //
+    bool      file_ended{};              //
     bool      chapter_has_star{false};   // true in frontmatter, backmatter
-    bool      use_quotes;
+    bool      use_quotes{};
     bool      list_files_p;            // Should we list the files at the end ?
-    bool      tok_is_defined;          // use by \ifcsname
-    int       old_nberrs;              // previous number of errors
-    int       cur_line;                // current input line number
+    bool      tok_is_defined{};        // use by \ifcsname
+    int       old_nberrs{};            // previous number of errors
+    int       cur_line{};              // current input line number
     int       begin_env_line{0};       // input line number of
     int       ra_year{1789};           // default year if none given as argument
     int       default_language_num{0}; // default language
     int       cur_level;               // current level on the execution stack
-    size_t    equation_ctr_pos;        // position in the table of the counter equation
+    size_t    equation_ctr_pos{};      // position in the table of the counter equation
     states    state;                   // current state of the scanner
     Token     cur_tok;                 // current token
     Token     after_assignment_token;  // token for \afterassignment

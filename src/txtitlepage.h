@@ -70,8 +70,8 @@ public:
 
 // One item if a titlepage
 class TpiOneItem {
-    char        p1;    // first character modifier
-    char        p2;    // second character modifier
+    char        p1{};  // first character modifier
+    char        p2{};  // second character modifier
     std::string value; // the value
     tpi_vals    v;     // the type (none, string, command, or XML element)
 public:
@@ -101,7 +101,7 @@ public:
 // temporary class, will bew copied into a TitlePageAux
 class TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
-    size_t     flags;                      // the flags
+    size_t     flags{};                    // the flags
 public:
     friend class titlepage;
     friend class TitlePageAux;
@@ -119,7 +119,7 @@ class TitlePage {
     Xml ** Data{nullptr}; // the array of xml data
 public:
     std::vector<TitlePageAux> bigtable; // the table
-    int                       state;    // current state of the parser
+    int                       state{};  // current state of the parser
     TitlePage() = default;
     auto               operator[](size_t k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(size_t k) -> TitlePageAux & { return bigtable[k]; }

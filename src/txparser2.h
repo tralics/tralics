@@ -19,9 +19,9 @@ class XkvToken {
     TokenList   initial; // of the form \gsavevalue{foo}=bar
     TokenList   value;
     std::string keyname;
-    bool        is_global;
-    bool        has_save;
-    bool        has_val;
+    bool        is_global{};
+    bool        has_save{};
+    bool        has_val{};
     TokenList   action;
 
 public:

@@ -96,7 +96,7 @@ public:
 // A bibtex macro, like @string(foo="bar")
 class BibMacro {
 private:
-    size_t      h;    // hash code of the name
+    size_t      h{};  // hash code of the name
     std::string name; // the name of the name (e.g. foo)
 public:
     std::string value; // the value of the macro (e.g. bar)
@@ -175,10 +175,10 @@ private:
 // Here first_start is comma1, and is one (it's the second token).
 class NameSplitter {
     bchar_type *table;
-    Bchar       first_name;
-    Bchar       last_name;
-    Bchar       jr_name;
-    Bchar       main_data;
+    Bchar       first_name{};
+    Bchar       last_name{};
+    Bchar       jr_name{};
+    Bchar       main_data{};
 
 public:
     NameSplitter(bchar_type *T) : table(T) {}
@@ -212,7 +212,7 @@ class BibEntry {
     c_secondaire second_c_type;
     int          first_line{-1};
     std::string *user_fields{nullptr};
-    size_t       is_extension;
+    size_t       is_extension{};
 
 public:
     std::string label, sort_label, aux_label; // cite label and sort label
@@ -273,11 +273,11 @@ private:
     std::vector<codepoint>   input_line;        // line as Utf8Chars
     size_t                   input_line_pos{0}; // position in input_line
     Buffer                   token_buf;
-    LinePtr                  in_lines;     // contains the bibfile
-    String                   src_name;     // name of the bibfile
-    int                      cur_bib_line; // current line number
-    int                      last_ok_line; // start of current entry
-    char                     right_outer_delim;
+    LinePtr                  in_lines;       // contains the bibfile
+    String                   src_name{};     // name of the bibfile
+    int                      cur_bib_line{}; // current line number
+    int                      last_ok_line{}; // start of current entry
+    char                     right_outer_delim{};
     std::vector<BibMacro>    all_macros;
     std::vector<BibEntry *>  all_entries;       // potential entries
     std::vector<BibEntry *>  all_entries_table; // real entries
@@ -285,15 +285,15 @@ private:
     bib_from                 entry_prefix;
     bool                     nocitestar{false};
     bool                     normal_biblio{true};
-    bool                     refer_biblio;
-    bool                     in_ra;
+    bool                     refer_biblio{};
+    bool                     in_ra{};
     String                   default_year;
-    bool                     want_numeric;
+    bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
-    bool                     noyearerror;
+    bool                     noyearerror{};
     bool                     interactive{false};
-    std::array<id_type, 128> id_class;
+    std::array<id_type, 128> id_class{};
 
 public:
     Bibtex(String dy) : default_year(dy) {}
@@ -411,7 +411,7 @@ public:
 
 class BblAndTty {
 public:
-    Bbl *  X;
+    Bbl *  X{};
     Buffer lb;
     void   init() { lb.reset(); }
     void   out_bar() {

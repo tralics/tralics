@@ -72,27 +72,27 @@ public:
 
 class TexFont {
 public:
-    int         smallest_char;
-    int         largest_char;
-    int         width_len;
-    int         height_len;
-    int         depth_len;
-    int         italic_len;
-    int         ligkern_len;
-    int         kern_len;
-    int         exten_len;
-    size_t      param_len;
-    TeXChar *   char_table;
-    int *       width_table;
-    int *       height_table;
-    int *       depth_table;
-    int *       italic_table;
-    int *       ligkern_table;
-    int *       kern_table;
-    int *       exten_table;
-    ScaledInt * param_table;
-    long        hyphen_char;
-    long        skew_char;
+    int         smallest_char{};
+    int         largest_char{};
+    int         width_len{};
+    int         height_len{};
+    int         depth_len{};
+    int         italic_len{};
+    int         ligkern_len{};
+    int         kern_len{};
+    int         exten_len{};
+    size_t      param_len{};
+    TeXChar *   char_table{};
+    int *       width_table{};
+    int *       height_table{};
+    int *       depth_table{};
+    int *       italic_table{};
+    int *       ligkern_table{};
+    int *       kern_table{};
+    int *       exten_table{};
+    ScaledInt * param_table{};
+    long        hyphen_char{};
+    long        skew_char{};
     std::string name;
     int         scaled_val;
     int         at_val;

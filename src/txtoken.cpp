@@ -288,7 +288,7 @@ auto Hashtab::locate(const std::string &s) -> Token {
 
 // This returns the token associated to the string in the buffer.
 auto Hashtab::locate(const Buffer &b) -> Token {
-    if (b.size() == 0) return Token(null_tok_val);
+    if (b.empty()) return Token(null_tok_val);
     codepoint c = b.unique_character();
     if (c.non_null()) return Token(c.value + single_offset);
     return Token(hash_find(b, nullptr) + hash_offset);
@@ -299,7 +299,7 @@ auto Hashtab::locate(const Buffer &b) -> Token {
 // Sets last_tok to the result
 auto Hashtab::is_defined(const Buffer &b) -> bool {
     size_t T = 0;
-    if (b.size() == 0)
+    if (b.empty())
         T = null_tok_val;
     else {
         codepoint c = b.unique_character();

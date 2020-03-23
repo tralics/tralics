@@ -47,7 +47,7 @@ class MainClass {
     bool verbose{false}; ///< Are we verbose ?
 
 public:
-    Stack * the_stack; ///< pointer to the stack
+    Stack * the_stack{}; ///< pointer to the stack
     StrHash SH;        ///< the XML hash table
 
     std::string default_class;     ///< The default class

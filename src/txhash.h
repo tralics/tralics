@@ -65,13 +65,13 @@ public:
     std::array<Equivalent, eqtb_size> eqtb;
 
 private:
-    std::array<String, hash_size> Text;      // the strings
-    std::array<size_t, hash_size> Next;      // points to next
+    std::array<String, hash_size> Text{};    // the strings
+    std::array<size_t, hash_size> Next{};    // points to next
     Buffer                        B;         // internal buffer
     size_t                        hash_used; // all places above this one are used
 
 public:
-    int hash_bad;   // number of items not at hash position
+    int hash_bad{}; // number of items not at hash position
     int hash_usage; // number of commands in the table
 
     Hashtab();

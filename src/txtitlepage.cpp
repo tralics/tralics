@@ -780,9 +780,9 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
 
 // This find a toplevel attributes. Real job done by next function.
 void LinePtr::find_top_atts(Buffer &B) {
-    line_iterator_const C = begin();
-    line_iterator_const E = end();
-    while (C != E) {
+    auto C = cbegin();
+    auto E = cend();
+    while (C != E) { // \todo this should be an STL algorithm
         B << bf_reset << C->chars;
         B.find_top_atts();
         C = skip_env(C, B);
@@ -791,9 +791,9 @@ void LinePtr::find_top_atts(Buffer &B) {
 
 // A loop to find all types  and put them in res.
 void LinePtr::find_all_types(std::vector<std::string> &res) {
-    Buffer &            B = local_buf;
-    line_iterator_const C = begin();
-    line_iterator_const E = end();
+    Buffer &B = local_buf;
+    auto    C = cbegin();
+    auto    E = cend();
     while (C != E) {
         init_file_pos = C->number;
         B << bf_reset << C->chars;
@@ -804,9 +804,9 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
 
 // This find a toplevel value.
 auto LinePtr::find_top_val(String s, bool c) -> std::string {
-    Buffer &            B = local_buf;
-    line_iterator_const C = begin();
-    line_iterator_const E = end();
+    Buffer &B = local_buf;
+    auto    C = cbegin();
+    auto    E = cend();
     while (C != E) {
         B << bf_reset << C->chars;
         String res = B.see_config_kw(s, c);
@@ -831,8 +831,8 @@ void Buffer::find_top_atts() {
         Istring bs = Istring(to_string(ptr + 1));
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\specialyear") == 0) {
-        auto    as = Istring(a);
-        Istring bs = Istring(the_main->year_string);
+        auto as = Istring(a);
+        auto bs = Istring(the_main->year_string);
         Xid(1).add_attribute(as, bs);
     } else if (strcmp(data() + ptr, "\\tralics") == 0) {
         auto as = Istring(a);
@@ -956,10 +956,10 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
 
 // Find all aliases in the config file.
 auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
-    Buffer &            B        = local_buf;
-    line_iterator_const C        = begin();
-    line_iterator_const E        = end();
-    bool                in_alias = false;
+    Buffer &B        = local_buf;
+    auto    C        = cbegin();
+    auto    E        = cend();
+    bool    in_alias = false;
     while (C != E) {
         B << bf_reset << C->chars;
         if (in_alias) {

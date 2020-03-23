@@ -894,7 +894,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
             to->push_back(C);
             from->reset();
         } else if (C->has_name(np_table)) {
-            if (C->size() > 0)
+            if (!C->empty())
                 to->push_back_list(C);
             else
                 to->push_back(C); // This is strange...
