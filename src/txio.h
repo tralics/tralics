@@ -115,35 +115,24 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
 };
 
 // This allows us to temporarily read from elsewhere
-class InputStack {
-    std::vector<codepoint> B;
-    states                 s;          // copy of scanner state
-    LinePtr                L;          // the lines
-    int                    line_no;    // the current line number
-    TokenList              TL;         // saved token list
-    std::string            name;       // name of the current file
-    long                   restore_at; // catcode of @ to restore
-    long                   file_pos;   // file position to restore
-    size_t                 Bpos;       // position in B
-    bool                   every_eof;  // True if every_eof_token can be inserted
-    bool                   eof_outer;  // True if eof is outer
-public:
-    [[nodiscard]] auto get_name() const -> const std::string & { return name; }
-    [[nodiscard]] auto get_line_no() const -> int { return line_no; }
-    void               set_state(states X) { s = X; }
-    auto               get_TL() -> TokenList & { return TL; }
-    auto               get_B() -> std::vector<codepoint> & { return B; }
-    [[nodiscard]] auto get_state() const -> states { return s; }
-    [[nodiscard]] auto get_line_pos() const -> size_t { return Bpos; }
-    void               set_line_pos(size_t x) { Bpos = x; }
-    void               set_line_vector(const std::vector<codepoint> &x) { B = x; }
-    [[nodiscard]] auto get_at_val() const -> long { return restore_at; }
-    void               set_at_val(long x) { restore_at = x; }
-    [[nodiscard]] auto get_file_pos() const -> long { return file_pos; }
-    [[nodiscard]] auto get_every_eof() const -> bool { return every_eof; }
-    [[nodiscard]] auto get_eof_outer() const -> bool { return eof_outer; }
-    void               destroy();
-    void               set_line_ptr(LinePtr &X) {
+struct InputStack {
+    std::vector<codepoint> line;
+    states                 state;     // copy of scanner state
+    LinePtr                L;         // the lines
+    int                    line_no;   // the current line number
+    TokenList              TL;        // saved token list
+    std::string            name;      // name of the current file
+    long                   at_val;    // catcode of @ to restore
+    long                   file_pos;  // file position to restore
+    size_t                 line_pos;  // position in B
+    bool                   every_eof; // True if every_eof_token can be inserted
+    bool                   eof_outer; // True if eof is outer
+
+    InputStack(std::string N, int l, states S, long cfp, bool eof, bool eof_o)
+        : state(S), line_no(l), name(std::move(N)), at_val(-1), file_pos(cfp), line_pos(0), every_eof(eof), eof_outer(eof_o) {}
+
+    void destroy();
+    void set_line_ptr(LinePtr &X) {
         L.clear_and_copy(X);
         X.set_file_name("");
         L.set_interactive(X.interactive);
@@ -152,8 +141,6 @@ public:
         X.clear_and_copy(L);
         X.set_interactive(L.interactive);
     }
-    InputStack(std::string N, int l, states S, long cfp, bool eof, bool eof_o)
-        : s(S), line_no(l), name(std::move(N)), restore_at(-1), file_pos(cfp), Bpos(0), every_eof(eof), eof_outer(eof_o) {}
 };
 
 // data structure associated to \input3=some_file.

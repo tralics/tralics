@@ -33,6 +33,5 @@ public:
     void               push_back(Istring a, Istring b, bool f);
     [[nodiscard]] auto has_value(Istring x) const -> std::optional<size_t>;
     void               delete_att(name_positions a);
-    void               destroy();
     void               print(std::ostream &fp);
 };

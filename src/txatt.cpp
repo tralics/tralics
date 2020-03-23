@@ -104,9 +104,6 @@ void AttList::delete_att(name_positions a) {
     if (i && (*i > 0)) val[*i].name = Istring(0UL);
 }
 
-// This kills the whole list
-void AttList::destroy() { val = std::vector<AttPair>(); }
-
 // Puts in the buffer the value of the attribute M of element idx
 // returns false if there is no such value.
 auto Buffer::install_att(Xid idx, Istring m) -> bool {

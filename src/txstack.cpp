@@ -519,7 +519,7 @@ auto Stack::new_array_info(Xid id) -> ArrayInfo & {
 // This finds the table info given an ID
 auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
     if (AI.empty()) return nullptr;
-    if (!AI.back().its_me(id)) return nullptr;
+    if (!(AI.back().id == id)) return nullptr;
     return &AI.back();
 }
 
@@ -568,15 +568,9 @@ auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
     return A;
 }
 
-// This is the Dtor
-void ArrayInfo::del_array_info() {
-    for (size_t i = 0; i < size; i++) { attribs[i].destroy(); }
-}
-
 // This deletes a table-information slot from the stack.
 void Stack::delete_table_atts() {
     if (AI.empty()) return;
-    AI.back().del_array_info();
     AI.pop_back();
 }
 
@@ -585,12 +579,11 @@ void ArrayInfo::add_uv(TokenList &u, TokenList &v, const AttList &At) {
     u_table.push_back(u);
     v_table.push_back(v);
     attribs.push_back(At);
-    size++;
 }
 
 // This gets u-part or v-part
-auto ArrayInfo::get_u_or_v(bool u_or_v, size_t pos) -> TokenList {
-    if (pos >= size) return TokenList();
+auto ArrayInfo::get_u_or_v(bool u_or_v, size_t pos) const -> TokenList {
+    if (pos >= attribs.size()) return TokenList();
     return u_or_v ? u_table[pos] : v_table[pos];
 }
 
@@ -601,8 +594,8 @@ auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
     return A->get_u_or_v(u_or_v, cell_no);
 }
 
-auto ArrayInfo::get_cell_atts(size_t k) -> AttList {
-    if (k >= size) return AttList();
+auto ArrayInfo::get_cell_atts(size_t k) const -> AttList {
+    if (k >= attribs.size()) return AttList();
     return attribs[k];
 }
 
@@ -625,7 +618,7 @@ void Stack::finish_cell(int w) {
         cell_no++;
         cid.add_attribute(atts, true);
     }
-    A->set_cell_no(w == -1 ? cell_no : to_unsigned(w));
+    A->cell_no = (w == -1 ? cell_no : to_unsigned(w));
 }
 
 // This returns the span of the current cell; -1 in case of trouble

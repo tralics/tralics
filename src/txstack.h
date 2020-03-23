@@ -20,17 +20,14 @@ class ArrayInfo {
     std::vector<TokenList> u_table, v_table;
 
 public:
-    Xid    id;      // the id of the table
-    size_t cell_no; // current cell number, first on row is zero
-    size_t size{0};
+    Xid    id;         // the id of the table
+    size_t cell_no{0}; // current cell number, first on row is zero
 
-    ArrayInfo(Xid a1) : id(a1), cell_no(0) {}
-    auto its_me(Xid a) -> bool { return id == a; }
-    void set_cell_no(size_t k) { cell_no = k; }
-    auto get_cell_atts(size_t k) -> AttList;
-    auto get_u_or_v(bool u_or_v, size_t pos) -> TokenList;
-    void add_uv(TokenList &u, TokenList &v, const AttList &At);
-    void del_array_info();
+    ArrayInfo(Xid a1) : id(a1) {}
+
+    [[nodiscard]] auto get_cell_atts(size_t k) const -> AttList;
+    [[nodiscard]] auto get_u_or_v(bool u_or_v, size_t pos) const -> TokenList;
+    void               add_uv(TokenList &u, TokenList &v, const AttList &At);
 };
 
 // This is the stack
@@ -60,7 +57,7 @@ private:
     mode                   cur_mode;   // the mode to be pushed on modes[]
 public:
     Stack();
-    Xml *newline_xml;
+    Xml *newline_xml{};
 
     auto               add_anchor(const std::string &s, bool spec) -> Istring;
     void               add_att_to_last(Istring A, Istring B, bool force);

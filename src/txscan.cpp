@@ -176,13 +176,13 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     auto n = cur_input_stack.size();
-    if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->get_name() << lg_end;
+    if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->name << lg_end;
     W->set_line_ptr(lines);
-    W->set_line_pos(input_line_pos);
-    W->set_line_vector(input_line);
-    W->get_TL().swap(TL);
+    W->line_pos = input_line_pos;
+    W->line     = input_line;
+    W->TL.swap(TL);
     if (restore_at) {
-        W->set_at_val(eqtb_int_table[uchar('@')].val);
+        W->at_val                      = eqtb_int_table[uchar('@')].val;
         eqtb_int_table[uchar('@')].val = 11;
         the_log << lg_start_io << "Made @ a letter\n";
     }
@@ -205,32 +205,32 @@ void Parser::pop_input_stack(bool vb) {
     }
     InputStack *W = cur_input_stack.back();
     if (vb) lines.before_close(true);
-    set_cur_line(W->get_line_no());
-    state = W->get_state();
+    set_cur_line(W->line_no);
+    state = W->state;
     W->get_line_ptr(lines);
-    require_eof = W->get_eof_outer();
-    auto at     = W->get_at_val();
+    require_eof = W->eof_outer;
+    auto at     = W->at_val;
     if (at >= 0) {
         eqtb_int_table[uchar('@')].val = at;
         if (tracing_io()) the_log << lg_start_io << "Catcode of @ restored to " << at << lg_end;
     }
     input_line.clear();
-    input_line.insert(input_line.end(), W->get_B().begin(), W->get_B().end());
-    input_line_pos = W->get_line_pos();
-    back_input(W->get_TL());
+    input_line.insert(input_line.end(), W->line.begin(), W->line.end());
+    input_line_pos = W->line_pos;
+    back_input(W->TL);
     if (cur_file_pos != 0) insert_hook(cur_file_pos);
-    cur_file_pos = W->get_file_pos();
-    every_eof    = W->get_every_eof();
+    cur_file_pos = W->file_pos;
+    every_eof    = W->every_eof;
     the_log << lg_start_io << "cur_file_pos restored to " << cur_file_pos << lg_end;
     cur_input_stack.pop_back();
-    if (tracing_io()) the_log << lg_start_io << "Input stack -- " << n << " " << W->get_name() << lg_end;
+    if (tracing_io()) the_log << lg_start_io << "Input stack -- " << n << " " << W->name << lg_end;
     delete W;
 }
 
 // Make sure no character can be obtained from the stream
 void InputStack::destroy() {
     TL.clear();
-    B.clear();
+    line.clear();
     L.clear();
 }
 
@@ -1960,7 +1960,7 @@ void Parser::M_prefixed_aux(bool gbl) {
                 return;
             }
             V.resize(to_unsigned(q));
-            for (size_t j = 0; j < V.size(); j++) V[j] = scan_int(T); // \todo range for
+            for (long & j : V) j = scan_int(T); // \todo range for
         }
     }
         return;
