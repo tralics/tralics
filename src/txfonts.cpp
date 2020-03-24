@@ -319,7 +319,7 @@ void TexFonts::full_name(Buffer &B, long k) {
     B.push_back(at(to_unsigned(k)).name);
     if (at(to_unsigned(k)).scaled_val != 0) {
         B.push_back(" scaled ");
-        B.push_back_int(at(to_unsigned(k)).scaled_val);
+        B.push_back(at(to_unsigned(k)).scaled_val);
     }
     if (at(to_unsigned(k)).at_val != 0) {
         B.push_back(" at ");

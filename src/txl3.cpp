@@ -803,7 +803,7 @@ void Parser::L3_set_num_code(int c) {
         Buffer &B = local_buffer;
         if (tracing_commands()) the_log << lg_start << T << "->" << m << "." << lg_end;
         B.reset();
-        B.push_back_int(v);
+        B.push_back(v);
         TokenList res = B.str_toks(nlt_space);
         back_input(res);
     }

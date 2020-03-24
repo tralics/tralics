@@ -2702,12 +2702,12 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             B.push_back("\\vbar ");
             continue;
         } // bar is special
-        if (c == 's' && uhead() == 'p' && !is_letter(after_uhead())) {
+        if (c == 's' && uhead() == 'p' && !is_letter(at(ptr + 1))) {
             advance();
             B.push_back('^');
             continue;
         }
-        if (c == 's' && uhead() == 'b' && !is_letter(after_uhead())) {
+        if (c == 's' && uhead() == 'b' && !is_letter(at(ptr + 1))) {
             advance();
             B.push_back('_');
             continue;

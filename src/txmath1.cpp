@@ -860,7 +860,7 @@ void MathElt::cv_noML_special() {
         L.pop_front();
         if (L.front().get_cmd() == style_cmd) {
             int kk = math_ns::style_level(L.front().get_chr());
-            mathml_buffer.push_back_int(kk);
+            mathml_buffer.push_back(kk);
         } else
             mathml_buffer.push_back("{}");
         L.pop_front();
@@ -974,7 +974,7 @@ void MathElt::cv_noMLt_special0() {
             if (L.front().get_cmd() == style_cmd) {
                 int kk = math_ns::style_level(L.front().get_chr());
                 mathml_buffer.push_back(" style='");
-                mathml_buffer.push_back_int(kk);
+                mathml_buffer.push_back(kk);
                 mathml_buffer.push_back("'");
             }
             L.pop_front();

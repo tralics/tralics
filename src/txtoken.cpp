@@ -628,17 +628,6 @@ auto token_ns::string_to_list(Istring s) -> TokenList {
     return B.str_toks(nlt_space);
 }
 
-// Converts a Token list into a String.
-auto Buffer::operator<<(const TokenList &L) -> Buffer & {
-    auto C = L.begin();
-    auto E = L.end();
-    while (C != E) {
-        insert_token(*C, false);
-        ++C;
-    }
-    return *this;
-}
-
 // Prints a token list.
 // Note: conversion to log_encoding
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
@@ -680,11 +669,6 @@ void Buffer::push_back(const Macro &x, bool sw) {
         B.push_back(x);
         push_back(B.convert_to_log_encoding());
     }
-}
-
-auto Buffer::operator<<(const Macro &x) -> Buffer & {
-    push_back(x, false);
-    return *this;
 }
 
 // Puts a macro definition in a file.

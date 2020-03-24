@@ -20,8 +20,6 @@ struct AttPair;
 struct LinePtr;
 class Xml;
 
-using buffer_fn = void(Buffer &);
-
 /// a big structure \todo This is kind of a messy class, would be better off
 /// using `std::string` as much as possible but we can't because of all the
 /// zero-char manipulations.
@@ -34,75 +32,20 @@ public:
 
     Buffer() : std::vector<char>(128, 0){};
 
-    auto operator<<(String s) -> Buffer & {
-        push_back(s);
-        return *this;
-    }
-    auto operator<<(char c) -> Buffer & {
-        push_back(c);
-        return *this;
-    }
-    auto operator<<(uchar c) -> Buffer & {
-        push_back(static_cast<char>(c));
-        return *this;
-    }
-    auto operator<<(int c) -> Buffer & {
-        push_back_int(c);
-        return *this;
-    }
-    auto operator<<(long c) -> Buffer & {
-        push_back_int(c);
-        return *this;
-    }
-    auto operator<<(const TokenList &L) -> Buffer &;
-    auto operator<<(const Macro &x) -> Buffer &;
-    auto operator<<(const codepoint &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(const Buffer &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(Token b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(const std::string &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(const Istring &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(const SthInternal &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(const Glue &b) -> Buffer & {
-        push_back(b);
-        return *this;
-    }
-    auto operator<<(buffer_fn f) -> Buffer & {
-        f(*this);
-        return *this;
-    }
-    auto               add_with_space(String s) -> std::string;
-    void               advance() { ptr++; }
-    void               advance(size_t k) { ptr += k; }
-    void               alloc(size_t n);
-    [[nodiscard]] auto after_head() const -> char { return at(ptr + 1); }
-    [[nodiscard]] auto after_uhead() const -> char { return at(ptr + 1); }
-    [[nodiscard]] auto after_after_uhead() const -> char { return at(ptr + 2); }
-    auto               append_checked_line(LinePtr &) -> int;
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }
+    [[nodiscard]] auto c_str(size_t k = 0) const -> String { return data() + k; }
+
+    auto add_with_space(String s) -> std::string;
+
+    void advance() { ptr++; }
+    void advance(size_t k) { ptr += k; }
+    void alloc(size_t n);
+
+    auto               append_checked_line(LinePtr &) -> int;
     auto               backup_space() -> bool;
     void               bib_spec();
     void               brace_match();
     void               bracket_match();
-    [[nodiscard]] auto c_str(size_t k) const -> String { return data() + k; }
-    [[nodiscard]] auto c_str() const -> String { return data(); }
     void               chars_to_buffer(Buffer &);
     void               check_before_brace(String);
     auto               check_cat_perso(int, int, bool) -> std::string;
@@ -222,6 +165,7 @@ public:
     void               purify();
     void               purify(String s);
     void               push_back(char c);
+    void               push_back(uchar c);
     void               push_back(const Buffer &b) { push_back(b.data()); }
     void               push_back(const std::string &b) { push_back(b.c_str()); }
     void               push_back(const Istring &X);
@@ -234,43 +178,47 @@ public:
     void               push_back(const Macro &x);
     void               push_back(const Macro &x, bool sw);
     auto               push_back(Token T) -> bool;
-    void               insert_token(Token T, bool sw);
-    void               push_back_alt(const AttPair &X);
-    void               push_back_braced(const std::string &s);
-    void               push_back_braced(String s);
-    void               push_back_def(String, std::string);
-    void               push_back_elt(Istring name, Xid id, int w);
-    void               push_back_int(long n);
-    void               push_back16(size_t n, bool uni);
-    void               push_back16l(bool hat, unsigned n);
-    void               push_back_ent(codepoint ch);
-    void               push_back_hex(unsigned c);
-    void               push_back_Hex(unsigned c);
-    void               push_back_math_token(const CmdChr &x, bool space);
-    void               push_back_math_tag(const CmdChr &x, int type);
-    void               push_back_math_tag(String s, int type);
-    void               push_back_math_aux(String s);
-    void               push_back_newline();
-    auto               push_back_newline_spec() -> bool;
-    void               push_back_open_brace() { push_back('{'); };
-    void               push_back_close_brace() { push_back('}'); };
-    void               push_back_roman(long n);
-    void               push_back_Roman(long n);
-    void               push_back_space() { push_back(' '); };
-    void               push_back_special_att(Xid id);
-    void               push_back_special_string(String s);
-    void               push_back_real_utf8(codepoint c);
-    void               push_back_xml_char(uchar c);
-    void               push_back_substring(String S, size_t n);
-    void               push_back_substring(const std::string &S, size_t p, size_t n);
-    void               push_back_unless_punct(char c);
-    void               push_back(codepoint c);
-    void               push_back3(unsigned int x);
-    void               push_back9(unsigned int x);
-    void               put_at_end(String s);
-    auto               remove_digits(const std::string &s) -> std::string;
-    auto               remove_space(const std::string &x) -> std::string;
-    void               rrl() {
+    void               push_back(const TokenList &L) {
+        for (auto &C : L) { insert_token(C, false); }
+    }
+    void push_back(int n);
+    void push_back(long n);
+    void insert_token(Token T, bool sw);
+    void push_back_alt(const AttPair &X);
+    void push_back_braced(const std::string &s);
+    void push_back_braced(String s);
+    void push_back_def(String, std::string);
+    void push_back_elt(Istring name, Xid id, int w);
+    void push_back16(size_t n, bool uni);
+    void push_back16l(bool hat, unsigned n);
+    void push_back_ent(codepoint ch);
+    void push_back_hex(unsigned c);
+    void push_back_Hex(unsigned c);
+    void push_back_math_token(const CmdChr &x, bool space);
+    void push_back_math_tag(const CmdChr &x, int type);
+    void push_back_math_tag(String s, int type);
+    void push_back_math_aux(String s);
+    void push_back_newline();
+    auto push_back_newline_spec() -> bool;
+    void push_back_open_brace() { push_back('{'); };
+    void push_back_close_brace() { push_back('}'); };
+    void push_back_roman(long n);
+    void push_back_Roman(long n);
+    void push_back_space() { push_back(' '); };
+    void push_back_special_att(Xid id);
+    void push_back_special_string(String s);
+    void push_back_real_utf8(codepoint c);
+    void push_back_xml_char(uchar c);
+    void push_back_substring(String S, size_t n);
+    void push_back_substring(const std::string &S, size_t p, size_t n);
+    void push_back_unless_punct(char c);
+    void push_back(codepoint c);
+    void push_back3(unsigned int x);
+    void push_back9(unsigned int x);
+    void put_at_end(String s);
+    auto remove_digits(const std::string &s) -> std::string;
+    auto remove_space(const std::string &x) -> std::string;
+    void rrl() {
         wptr--;
         at(wptr) = 0;
     } // really remove last
@@ -296,7 +244,6 @@ public:
         at(0) = 0;
     }
     void               reset_ptr() { ptr = 0; }
-    void               resize();
     auto               reverse_horner() -> unsigned;
     auto               see_begin_end(Buffer &before, Buffer &after) -> int;
     [[nodiscard]] auto see_config_env() const -> int;
@@ -369,7 +316,6 @@ public:
     [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 private:
-    void realloc(size_t s);
     auto after_slash() -> bool;
     void advance_letter_dig() {
         while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;
@@ -379,6 +325,17 @@ private:
     }
     void advance_letter_dig_dot_slash() {
         while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.' || at(ptr) == '/') ptr++;
+    }
+
+public:
+    template <typename T> auto operator<<(const T &t) -> Buffer & {
+        push_back(t);
+        return *this;
+    }
+
+    auto operator<<(void f(Buffer &)) -> Buffer & {
+        f(*this);
+        return *this;
     }
 };
 

@@ -73,11 +73,13 @@ void Buffer::push_back_braced(const std::string &s) {
 
 // Inserts a character in the buffer. Always adds a null after it.
 void Buffer::push_back(char c) {
-    if (size_t(wptr) >= std::vector<char>::size() - 2) resize();
+    alloc(1);
     at(wptr) = c;
     wptr++;
     at(wptr) = 0;
 }
+
+void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
 // Same code, but takes a 7 bit character as argument.
 // It could also be a part of a utf8 characater. Is left unchanged then.
@@ -98,29 +100,19 @@ void Buffer::push_back_xml_char(uchar c) {
         push_back(static_cast<char>(c));
 }
 
+// Makes sure we can add n chars in the buffer
+// Note: we have wptr+1<size, so that at(wptr) can be assigned
+void Buffer::alloc(size_t n) {
+    resize(wptr + n + 1);
+    at(wptr) = 0;
+}
+
 // Converts the buffer into a string.
 auto Buffer::convert_to_str() const -> String {
     the_parser.my_stats.one_more_string(wptr + 1);
     char *aux = new char[wptr + 1];
     memcpy(aux, data(), wptr + 1);
     return aux;
-}
-
-// This doubles the size
-void Buffer::resize() { realloc(2 * std::vector<char>::size()); }
-
-// This reallocates to the value of size.
-void Buffer::realloc(size_t s) {
-    the_parser.my_stats.one_more_buffer_realloc();
-    std::vector<char>::resize(s);
-    kill_at(wptr);
-}
-
-// Makes sure we can add n chars in the buffer
-// Note: we have wptr+1<size, so that at(wptr) can be assigned
-void Buffer::alloc(size_t n) {
-    n = wptr + n + 1;
-    while (std::vector<char>::size() <= n) resize();
 }
 
 // Inserts a string. Always inserts a null character at the end.
@@ -149,46 +141,15 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
     at(wptr) = 0;
 }
 
-// Inserts an integer (this is the print_int procedure from TeX)
-// at least one digit is printed.
-void Buffer::push_back_int(long n) {
-    static std::array<long, 30> dig;
-    size_t                      k = 0;
-    if (n < 0) {
-        push_back('-');
-        if (n > -100000000)
-            n = -n;
-        else {
-            auto m = -1 - n;
-            n      = m / 10;
-            m      = (m % 10) + 1;
-            k      = 1;
-            if (m < 10)
-                dig[0] = m;
-            else {
-                dig[0] = 0;
-                n++;
-            }
-        }
-    }
-    for (;;) { // construct the list of digits
-        dig[k] = n % 10;
-        n      = n / 10;
-        k++;
-        if (n == 0) break;
-    }
-    while (k > 0) { // print the list
-        k--;
-        push_back('0' + static_cast<char>(dig[k]));
-    }
-}
+void Buffer::push_back(int n) { push_back(fmt::format("{}", n)); }
+void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
 
 // In case of error, we add the current line number as attribute
 // via this function
 auto Parser::cur_line_to_istring() -> Istring {
     Buffer &B = local_buf;
     B.reset();
-    B.push_back_int(get_cur_line());
+    B.push_back(get_cur_line());
     return Istring(B.c_str());
 }
 
@@ -231,7 +192,7 @@ auto Buffer::next_macro_spec() -> bool {
             if (at_eol()) return false;
         } else if (head() != '\\')
             advance();
-        else if (!is_letter(after_head()))
+        else if (!is_letter(at(ptr + 1)))
             advance(2);
         else
             return true;
@@ -626,7 +587,7 @@ auto Token::tok_to_str() const -> String {
         B.push_back("{Character ");
         B.out_log(c, the_main->log_encoding);
         B.push_back(" of catcode ");
-        B.push_back_int(cat);
+        B.push_back(cat);
         B.push_back("}");
     }
     return B.c_str();
@@ -776,7 +737,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
         push_back('-');
         s = -s;
     }
-    push_back_int(s / unity);
+    push_back(s / unity);
     push_back('.');
     s         = 10 * (s % unity) + 5;
     int delta = 10;
@@ -831,7 +792,7 @@ void Buffer::pt_to_mu() {
 // The \relax is a bit strange.
 void Buffer::push_back(const SthInternal &x) {
     switch (x.get_type()) {
-    case it_int: push_back_int(x.get_int_val()); break;
+    case it_int: push_back(x.get_int_val()); break;
     case it_dimen: push_back(ScaledInt(x.get_int_val()), glue_spec_pt); break;
     case it_glue:
         push_back(x.get_glue_val());

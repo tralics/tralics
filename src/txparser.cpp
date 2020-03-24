@@ -2491,7 +2491,7 @@ void Parser::E_random() {
     int   u = std::rand();
     if (t > 0) u = u % t;
     Buffer B;
-    B.push_back_int(u);
+    B.push_back(u);
     TokenList L = B.str_toks11(false);
     if (tracing_macros()) the_log << lg_start << T << t << "->" << L << lg_end;
     back_input(L);
