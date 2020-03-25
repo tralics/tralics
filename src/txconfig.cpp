@@ -293,7 +293,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     B.skip_letter();
     auto k = ur_list.size();
     for (size_t j = 0; j < k; j++)
-        if (B.contains_here(ur_list[j].key.c_str())) {
+        if (B.substring() == ur_list[j].key) {
             sname = ur_list[j].key;
             lname = ur_list[j].value;
             ur_list[j].mark_used();
@@ -400,18 +400,15 @@ auto config_ns::is_good_ur(const std::string &x) -> bool {
 // --------------------------------------------------
 
 // If S is, say `Cog A', this puts ` cog ' in the buffer, returns `cog'.
-auto Buffer::add_with_space(String s) -> std::string {
-    int i = 0;
+auto Buffer::add_with_space(const std::string &s) -> std::string {
+    size_t i = 0;
     while (s[i] == ' ') ++i;
     reset();
-    push_back_space();
-    while ((s[i] != 0) && s[i] != ' ') {
-        push_back(s[i]);
-        ++i;
-    }
+    push_back(' ');
+    while ((s[i] != 0) && (s[i] != ' ')) push_back(s[i++]);
     lowercase();
     std::string res = to_string(1);
-    push_back_space();
+    push_back(' ');
     return res;
 }
 

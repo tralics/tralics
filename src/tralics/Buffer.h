@@ -21,32 +21,31 @@ public:
 
     Buffer() : std::vector<char>(128, 0){};
 
+    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string;       ///< Weird RA stuff \todo remove
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }             ///< Is the read pointer at the end?
+    [[nodiscard]] auto backup_space() -> bool;                                    ///< Remove trailing spaces
     [[nodiscard]] auto c_str(size_t k = 0) const -> String { return data() + k; } ///< Buffer contents as a char*
-    [[nodiscard]] auto contains(String s) const -> bool;                          ///< Does the buffer has s as a substring?
+    [[nodiscard]] auto contains(const std::string &s) const -> bool;              ///< Does the buffer has s as a substring?
+    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;             ///< Do we contain s with braces? (sets ptr after `}`)
+    [[nodiscard]] auto contains_env(const std::string &env) -> bool;              ///< Do we contain `\end{env}`?
+    [[nodiscard]] auto convert_line0(size_t wc) -> bool;                          ///< Convert to UTF8 into utf8_out
     [[nodiscard]] auto convert_to_str() const -> String;                          ///< Make a copy of the contents as a new char*
+    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String;          ///< Convert to latin 1 or ASCII
+    [[nodiscard]] auto convert_to_log_encoding() const -> String;                 ///< Convert to logging encoding
+    [[nodiscard]] auto convert_to_out_encoding() const -> String;                 ///< Make a fresh copy with output encoding
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }              ///< Is the write pointer at 0?
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                    ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return at(ptr); }                   ///< The character under the read pointer
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;                  ///< Try to parse the contents as an integer
     [[nodiscard]] auto size() const -> size_t { return wptr; }                    ///< Size of the contents \todo match vector::size()
+    [[nodiscard]] auto substring() const -> std::string;                          ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;              ///< Buffer contents as a std::string
 
-    auto add_with_space(String s) -> std::string; ///< Weird RA stuff \todo remove
-    void advance(size_t k = 1) { ptr += k; }      ///< Move the read pointer forward
-    void alloc(size_t n);                         ///< Ensure that there is space for n+1 slots beyond wptr
-    auto backup_space() -> bool;                  ///< Remove trailing spaces
+    void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
+    void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
+    void convert_line(int l, size_t wc);              ///< Convert a line to UTF8
+    void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
 
-    auto               contains_braced(String s) -> bool;
-    auto               contains_env(String env) -> bool;
-    auto               contains_here(String s) const -> bool;
-    auto               convert_to_out_encoding(String a) const -> String;
-    [[nodiscard]] auto convert_to_log_encoding() const -> String;
-    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String;
-    auto               convert_line0(size_t wc) -> bool;
-    void               convert_line(int l, size_t wc);
-    void               copy(const Buffer &B);
-    void               dump_prefix(bool err, bool gbl, symcodes K);
     void               extract_dtd(String a, std::string &b, std::string &c);
     void               extract_chars(vector<codepoint> &V);
     auto               fetch_spec_arg() -> bool;
@@ -75,7 +74,7 @@ public:
     void               interpret_bibtex_list();
     void               interpret_bibtex_extension_list();
     [[nodiscard]] auto is_and(size_t k) const -> bool;
-    [[nodiscard]] auto is_begin_end() const -> int;
+    [[nodiscard]] auto is_begin_end() -> int;
     auto               is_begin_something(String s) -> int;
     auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
     auto               is_at_end(String s) const -> bool;
@@ -146,7 +145,6 @@ public:
     void push_back_close_brace() { push_back('}'); };
     void push_back_roman(long n);
     void push_back_Roman(long n);
-    void push_back_space() { push_back(' '); };
     void push_back_special_att(Xid id);
     void push_back_special_string(String s);
     void push_back_real_utf8(codepoint c);
@@ -217,7 +215,6 @@ public:
     auto               str_toks(nl_to_tok nl) -> TokenList;
     auto               str_toks11(bool nl) -> TokenList;
     auto               string_delims() -> bool;
-    auto               substring() -> std::string; ///< Get the slice [ptr1,ptr)
     auto               convert_for_xml_err(Token t) -> Istring;
     auto               tp_next_char(char &res) -> bool;
     auto               tp_fetch_something() -> tpa_line;

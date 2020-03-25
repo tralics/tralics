@@ -658,7 +658,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
         if (!space) return;
         if (s[0] == 0) return;
         if (s[1] == 0 && !is_letter(s[0])) return;
-        push_back_space();
+        push_back(' ');
     } else
         push_back_real_utf8(x.char_val());
 }

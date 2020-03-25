@@ -752,7 +752,7 @@ auto StrHash::hash_find() -> size_t { // \todo size_t
             break;
     }
     String name  = mybuf.convert_to_str();
-    String value = mybuf.convert_to_out_encoding(name);
+    String value = mybuf.convert_to_out_encoding();
     if (Text[p] == nullptr) {
         the_parser.my_stats.one_more_sh_used();
         Text[p]  = name;

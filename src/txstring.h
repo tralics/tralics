@@ -23,9 +23,9 @@ class LabelInfo;
 // which can be ascii, utf8 or latin1 (XML syntax)
 
 class StrHash {
-    String *    Text;      // the Text table
-    String *    Value;     // the Value table
-    size_t *    Next;      // the Next table \todo size_t
+    String *    Text;      // the Text table \todo use std::string
+    String *    Value;     // the Value table \todo use std::string
+    size_t *    Next;      // the Next table
     LabelInfo **Labinfo;   // the LabelInfo
     size_t      hash_len;  // size of the table
     size_t      hash_last; // last slot used

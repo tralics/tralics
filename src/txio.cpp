@@ -799,11 +799,9 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
 }
 
 // Converts the buffer to the output encoding
-// If conversion is trivial, returns string a.
-auto Buffer::convert_to_out_encoding(String a) const -> String {
+auto Buffer::convert_to_out_encoding() const -> String {
     auto T = the_main->output_encoding;
-    if (T == en_boot || T == en_utf8) return a;
-    if (is_all_ascii()) return a;
+    if (T == en_boot || T == en_utf8 || is_all_ascii()) return convert_to_str();
     return convert_to_latin1(T == en_latin);
 }
 
@@ -831,8 +829,6 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     return O.convert_to_str();
 }
 
-// Returns the buffer, converted into log encoding, to be printed
-// on the transcript file.
 auto Buffer::convert_to_log_encoding() const -> String {
     output_encoding_type T = the_main->log_encoding;
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();

@@ -140,9 +140,9 @@ auto Parser::cur_line_to_istring() -> Istring {
 
 // Returns 0, 1, 2 depending on whether there is \begin or \end in the buffer
 // between ptr1 and ptr.
-auto Buffer::is_begin_end() const -> int {
-    if (contains_here("\\begin")) return 1;
-    if (contains_here("\\end")) return 2;
+auto Buffer::is_begin_end() -> int {
+    if (substring() == "\\begin") return 1;
+    if (substring() == "\\end") return 2;
     return 0;
 }
 
@@ -215,20 +215,7 @@ void Buffer::no_newline() {
 }
 
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
-auto Buffer::substring() -> std::string {
-    char c        = at(ptr);
-    at(ptr)       = 0;
-    std::string s = c_str(ptr1);
-    at(ptr)       = c;
-    return s;
-}
-
-// replaces the content of the buffer by the value of B
-void Buffer::copy(const Buffer &B) {
-    wptr = 0;
-    push_back(B.data());
-    ptr = B.ptr;
-}
+auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptr1), begin() + to_signed(ptr)); }
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
@@ -874,12 +861,12 @@ auto Buffer::single_char() const -> char {
 // If the buffer contains a small positive number returns it.
 // Otherwise returns -1;
 auto Buffer::int_val() const -> std::optional<size_t> {
-    int n = 0;
+    size_t n = 0;
     for (size_t p = 0;; p++) {
         auto c = at(p);
         if (c == 0) return n;
         if (!is_digit(c)) return {};
-        n = 10 * n + (c - '0');
+        n = 10 * n + to_unsigned(c - '0');
         if (n > 1000000) return {};
     }
 }
@@ -993,24 +980,10 @@ auto Buffer::fetch_spec_arg() -> bool {
     }
 }
 
-// Returns true if the string S is between ptr1 and ptr.
-auto Buffer::contains_here(String s) const -> bool {
-    size_t k = ptr1, j = 0;
-    for (;;) {
-        char c = s[j];
-        if (c == 0) return k == ptr;
-        if (c != at(k)) return false;
-        k++;
-        j++;
-    }
-}
-
-// Returns true if the buffer contains the string s with braces.
-// After that, ptr1 is reset, ptr set to after the closing brace.
-auto Buffer::contains_braced(String s) -> bool {
+auto Buffer::contains_braced(const std::string &s) -> bool {
     auto k = ptr1;
     if (!fetch_spec_arg()) return false;
-    if (!contains_here(s)) return false;
+    if (substring() != s) return false;
     ptr1 = k;
     advance();
     return true;
@@ -1018,11 +991,11 @@ auto Buffer::contains_braced(String s) -> bool {
 
 // Returns true if the buffer contains \end{env} with spaces.
 // (used for detecting the end of a verbatim environment).
-auto Buffer::contains_env(String env) -> bool {
+auto Buffer::contains_env(const std::string &env) -> bool {
     skip_sp_tab_nl();
     ptr1 = ptr;
     ptr  = ptr1 + 4;
-    if (!contains_here("\\end")) return false;
+    if (substring() != "\\end") return false;
     skip_sp_tab_nl();
     if (!(contains_braced(env))) return false;
     skip_sp_tab_nl();
@@ -1197,6 +1170,6 @@ void Buffer::put_at_end(String s) {
     push_back(s);
 }
 
-auto Buffer::contains(String s) const -> bool { return to_string().find(s) != std::string::npos; }
+auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }
 
 Buffer Txbuf, err_buf, ssa2;
