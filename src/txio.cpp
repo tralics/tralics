@@ -40,7 +40,7 @@ namespace io_ns {
     auto plural(int n) -> String;
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
-    auto find_encoding(String cl) -> int;
+    auto find_encoding(const std::string &cl) -> int;
 } // namespace io_ns
 
 // ---------------------------------------------------------
@@ -433,21 +433,21 @@ void LinePtr::change_encoding(long wc) {
 // -----------------------------------------------------------------
 // Reading characters from files
 
-auto io_ns::find_encoding(String cl) -> int {
-    if (strstr(cl, "-*-") != nullptr) {
-        if (strstr(cl, "coding: utf-8") != nullptr) return 0;
-        if (strstr(cl, "coding: utf8") != nullptr) return 0;
-        if (strstr(cl, "coding: latin1") != nullptr) return 1;
-        if (strstr(cl, "coding: iso-8859-1") != nullptr) return 1;
+auto io_ns::find_encoding(const std::string &cl) -> int {
+    if (cl.find("-*-") != std::string::npos) {
+        if (cl.find("coding: utf-8") != std::string::npos) return 0;
+        if (cl.find("coding: utf8") != std::string::npos) return 0;
+        if (cl.find("coding: latin1") != std::string::npos) return 1;
+        if (cl.find("coding: iso-8859-1") != std::string::npos) return 1;
     }
-    if (strstr(cl, "iso-8859-1") != nullptr) return 1;
-    if (strstr(cl, "utf8-encoded") != nullptr) return 0;
-    if (strstr(cl, "%&TEX encoding = UTF-8") != nullptr) return 0; // \todo VB: check, this was 1 but that was dubious
-    String s = strstr(cl, "tralics-encoding:");
-    if (s == nullptr) return -1;
-    if (!is_digit(s[17])) return -1;
-    int k = s[17] - '0';
-    if (is_digit(s[18])) { k = 10 * k + s[18] - '0'; }
+    if (cl.find("iso-8859-1") != std::string::npos) return 1;
+    if (cl.find("utf8-encoded") != std::string::npos) return 0;
+    if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
+    auto kk = cl.find("tralics-encoding:");
+    if (kk == std::string::npos) return -1;
+    if (!is_digit(cl[kk + 17])) return -1;
+    int k = cl[kk + 17] - '0';
+    if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
     if (k < to_signed(max_encoding)) return k;
     return -1;
 }
@@ -473,7 +473,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     } else
         prev_line = true;
     if (B[0] == '%') { // debug
-        int k = io_ns::find_encoding(B.c_str());
+        int k = io_ns::find_encoding(B.to_string());
         if (k >= 0) encoding = to_unsigned(k);
     }
     return cur_line;
@@ -532,7 +532,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 B.push_back_newline();
             if (co_try != 0) {
                 co_try--;
-                int k = io_ns::find_encoding(B.c_str());
+                int k = io_ns::find_encoding(B.to_string());
                 if (k >= 0) {
                     wc = to_unsigned(k);
                     L.set_encoding(wc);

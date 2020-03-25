@@ -423,8 +423,8 @@ void Parser::T_titlepage_finish(size_t v) {
     std::string   tmp      = tpa.get_T4();
     bool          finished = false;
     bool          also_bib = false;
-    if (strstr(tmp.c_str(), "'only title page'") != nullptr) finished = true;
-    if (strstr(tmp.c_str(), "'translate also bibliography'") != nullptr) also_bib = true;
+    if (tmp.find("'only title page'") != std::string::npos) finished = true;
+    if (tmp.find("'translate also bibliography'") != std::string::npos) also_bib = true;
     Xid(1).add_special_att(tmp);
     Xml *res = tpa.convert(2);
     res->id.add_special_att(tpa.get_T3());

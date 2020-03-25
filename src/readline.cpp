@@ -599,12 +599,11 @@ void Slined::search_string(size_t n) {
 
 // Find a string in the history
 auto Slined::Hfind(size_t n) -> bool {
-    String s         = m_search.c_str();
-    bool   seen_once = false; // if seen at least once, do not kill
-    auto   pos       = m_hpos;
+    bool seen_once = false; // if seen at least once, do not kill
+    auto pos       = m_hpos;
     while (pos > 0) {
         pos--;
-        if (strstr(m_history[to_unsigned(pos)].c_str(), s) != nullptr) {
+        if (m_history[to_unsigned(pos)].find(m_search) != std::string::npos) {
             seen_once = true;
             n--;
             if (n == 0) {

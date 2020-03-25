@@ -16,18 +16,33 @@
 #include <unistd.h>
 
 namespace {
-    Buffer                      thebuffer;      // a scratch buffer
-    Buffer                      substring_buf;  // another buffer
-    Buffer                      null_cs_buffer; // buffer for \csname\endcsname
-    const std::array<String, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
-} // namespace
-static Buffer local_buf; // another buffer
+    Buffer thebuffer; // a scratch buffer
+    Buffer local_buf; // another buffer
 
-namespace buffer_ns {
-    auto current_escape_char() -> long;
-    auto null_cs_name() -> String;
-    void dump_identification(String s);
-} // namespace buffer_ns
+    /// Returns the current escape char (used for printing)
+    auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
+
+    /// This removes (returns false) for lines starting with #
+    /// Adds a space at first position if needed.
+    /// Assumes that *this is NOT local_buf !!
+    void dump_identification(String s) { main_ns::log_or_tty << "Configuration file identification: " << s; }
+
+    /// Returns a temporary string, corresponding to the command with
+    /// an empty name, without initial escape char.
+    auto null_cs_name() -> String {
+        auto c = current_escape_char();
+        if (c == '\\') return "csname\\endcsname";
+        if (c > 0 && c < int(nb_characters)) {
+            Buffer B;
+            B << bf_reset << "csname";
+            B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
+            B << "endcsname";
+            return B.c_str();
+        }
+        if (c == 0) return "csname^^@endcsname";
+        return "csnameendcsname";
+    }
+} // namespace
 
 // Returns a copy, starting at k.
 auto Buffer::to_string(size_t k) const -> std::string {
@@ -222,11 +237,6 @@ void Buffer::push_back_newline() {
     push_back('\n');
 }
 
-// This removes (returns false) for lines starting with #
-// Adds a space at first position if needed.
-// Assumes that *this is NOT local_buf !!
-void buffer_ns::dump_identification(String s) { main_ns::log_or_tty << "Configuration file identification: " << s; }
-
 auto Buffer::push_back_newline_spec() -> bool {
     push_back('\n');
     if (wptr == 1) return true; // keep empty lines
@@ -238,11 +248,11 @@ auto Buffer::push_back_newline_spec() -> bool {
             if (at(k) == '$') {
                 char c    = at(k + 1);
                 at(k + 1) = 0;
-                buffer_ns::dump_identification(data() + 20);
+                dump_identification(data() + 20);
                 at(k + 1) = c;
                 main_ns::log_or_tty << " " << data() + k + 1;
             } else
-                buffer_ns::dump_identification(data() + 20);
+                dump_identification(data() + 20);
         }
         return false;
     }
@@ -359,13 +369,10 @@ auto Buffer::without_end_spaces(String T) -> String {
     return data();
 }
 
-// Returns the current escape char (used for printing)
-auto buffer_ns::current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
-
 // Inserts the current escape char, unless zero or out of range.
 // This is used for transcript only
 void Buffer::insert_escape_char() {
-    auto c = buffer_ns::current_escape_char();
+    auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
         out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
     else if (c == 0)
@@ -374,27 +381,11 @@ void Buffer::insert_escape_char() {
 
 /// This one is for `\meaning`
 void Buffer::insert_escape_char_raw() {
-    auto c = buffer_ns::current_escape_char();
+    auto c = current_escape_char();
     if (c > 0 && c < int(nb_characters))
         push_back(codepoint(char32_t(to_unsigned(c))));
     else if (c == 0)
         push_back("^^@");
-}
-
-// Returns a temporary string, corresponding to the command with
-// an empty name, without initial escape char.
-auto buffer_ns::null_cs_name() -> String {
-    auto c = buffer_ns::current_escape_char();
-    if (c == '\\') return "csname\\endcsname";
-    if (c > 0 && c < int(nb_characters)) {
-        Buffer &B = null_cs_buffer;
-        B << bf_reset << "csname";
-        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
-        B << "endcsname";
-        return B.c_str();
-    }
-    if (c == 0) return "csname^^@endcsname";
-    return "csnameendcsname";
 }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
@@ -409,7 +400,7 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) {
         else if (x < first_multitok_val)
             B.push_back(T.char_val());
         else
-            B.push_back(buffer_ns::null_cs_name());
+            B.push_back(null_cs_name());
     }
 }
 
@@ -475,7 +466,7 @@ auto Buffer::push_back(Token T) -> bool {
         push_back(Tmp.convert_to_log_encoding());
         return true;
     }
-    push_back(buffer_ns::null_cs_name());
+    push_back(null_cs_name());
     return true;
 }
 
@@ -529,7 +520,7 @@ void Buffer::insert_token(Token T, bool sw) {
         if (sw)
             push_back("csname\\endcsname");
         else
-            push_back(buffer_ns::null_cs_name());
+            push_back(null_cs_name());
         push_back(' ');
     }
 }
@@ -595,6 +586,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
         delta = delta * 10;
         if (s <= delta) break;
     }
+    constexpr std::array<String, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
     push_back(gptable[unit]);
 }
 
@@ -805,9 +797,8 @@ auto Buffer::is_here(String s) -> bool {
 // returns the document class. value in aux
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
-    String s   = strstr(data(), cmd);
-    if (s == nullptr) return false;
-    auto k = to_unsigned(s - data());
+    auto   k   = to_string().find("\\documentclass");
+    if (k == std::string::npos) return false;
     for (size_t j = 0; j < k; j++)
         if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
     push_back("{}");                                        //  make sure we have braces
@@ -838,9 +829,8 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
 // returns the configuration value in aux
 auto Buffer::find_configuration(Buffer &aux) -> bool {
     if (at(0) != '%') return false;
-    String s = strstr(data(), "ralics configuration file");
-    if (s == nullptr) return false;
-    auto k = to_unsigned(s - data());
+    auto k = to_string().find("ralics configuration file");
+    if (k == std::string::npos) return false;
     while ((at(k) != 0) && at(k) != '\'') k++;
     if (at(k) == 0) return false;
     k++;
@@ -861,9 +851,8 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
 auto Buffer::find_doctype() -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";
-    String s = strstr(data(), S);
-    if (s == nullptr) return 0;
-    auto k = to_unsigned(s - data());
+    auto   k = to_string().find(S);
+    if (k == std::string::npos) return 0;
     k += strlen(S);
     while ((at(k) != 0) && (at(k) == ' ' || at(k) == '=')) k++;
     if (at(k) == 0) return 0;
@@ -1207,5 +1196,7 @@ void Buffer::put_at_end(String s) {
     if (wptr > n && strcmp(data() + wptr - n, s) == 0) return;
     push_back(s);
 }
+
+auto Buffer::contains(String s) const -> bool { return to_string().find(s) != std::string::npos; }
 
 Buffer Txbuf, err_buf, ssa2;

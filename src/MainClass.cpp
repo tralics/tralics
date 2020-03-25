@@ -1138,7 +1138,7 @@ void MainClass::finish_init() {
 
 auto MainClass::check_theme(const std::string &s) -> std::string {
     std::string res = Txbuf.add_with_space(s.c_str());
-    if (strstr(all_themes.c_str(), Txbuf.c_str()) == nullptr) {
+    if (all_themes.find(Txbuf.c_str()) == std::string::npos) {
         err_buf.reset();
         if (s.empty())
             err_buf << "Empty or missing theme\n";

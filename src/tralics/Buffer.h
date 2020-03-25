@@ -23,6 +23,7 @@ public:
 
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }             ///< Is the read pointer at the end?
     [[nodiscard]] auto c_str(size_t k = 0) const -> String { return data() + k; } ///< Buffer contents as a char*
+    [[nodiscard]] auto contains(String s) const -> bool;                          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_str() const -> String;                          ///< Make a copy of the contents as a new char*
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }              ///< Is the write pointer at 0?
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                    ///< Hash code of the string in the buffer
@@ -36,7 +37,6 @@ public:
     void alloc(size_t n);                         ///< Ensure that there is space for n+1 slots beyond wptr
     auto backup_space() -> bool;                  ///< Remove trailing spaces
 
-    auto               contains(String s) const -> bool { return strstr(data(), s) != nullptr; }
     auto               contains_braced(String s) -> bool;
     auto               contains_env(String env) -> bool;
     auto               contains_here(String s) const -> bool;
@@ -74,7 +74,7 @@ public:
     void               interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
     void               interpret_bibtex_list();
     void               interpret_bibtex_extension_list();
-    auto               is_and(size_t k) const -> bool;
+    [[nodiscard]] auto is_and(size_t k) const -> bool;
     [[nodiscard]] auto is_begin_end() const -> int;
     auto               is_begin_something(String s) -> int;
     auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
