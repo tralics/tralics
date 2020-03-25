@@ -409,7 +409,7 @@ void Xid::add_special_att(const std::string &S) {
     Buffer &B = local_buf;
     B.reset();
     B.push_back(S);
-    B.reset_ptr();
+    B.ptr = 0;
     B.push_back_special_att(*this);
 }
 
@@ -559,7 +559,7 @@ auto Buffer::is_begin_something(String s) -> int {
         ptr = 9;
         skip_sp_tab();
         if (ptr == 9) return 2; // bad
-        set_ptr1_to_ptr();
+        ptr1 = ptr;
         skip_letter();
         if (ptr == ptr1) return 2;  // bad
         kill_at(ptr);               // what follows the type is a comment
@@ -568,8 +568,8 @@ auto Buffer::is_begin_something(String s) -> int {
         return 1;
     }
     if (s == nullptr) return 0;
-    ptr = 5;
-    set_ptr1_to_ptr();
+    ptr  = 5;
+    ptr1 = ptr;
     skip_letter();
     if (ptr == ptr1) return 2;
     kill_at(ptr);
@@ -909,7 +909,7 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
     if (in.head() != '\"') return 0;
     in.advance();
     tpage_ns::scan_item(in, val, '\"');
-    key.reset_ptr();
+    key.ptr = 0;
     key.remove_space_at_end();
     for (;;) {
         if (key.head() == 0) return 1;
@@ -925,7 +925,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     skip_sp_tab();
     if (is_special_end()) return false;
     if (ptr == 0) return false;
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     advance_letter_dig();
     if (ptr1 == ptr) return true; // this is bad
     std::string pot_res      = substring();
@@ -934,7 +934,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     for (;;) {
         skip_sp_tab();
         if (is_special_end()) break;
-        set_ptr1_to_ptr();
+        ptr1 = ptr;
         advance_letter_dig();
         if (ptr1 == ptr) break;
         std::string a  = substring();

@@ -684,7 +684,7 @@ auto Xml::try_cline(bool action) -> bool {
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
-        int c = tree[k]->get_cell_span();
+        auto c = tree[k]->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
         if (a_ok && action) tree[k]->id.add_bottom_rule();
@@ -705,7 +705,7 @@ auto Xml::total_span(long &res) const -> bool {
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
-        int c = tree[k]->get_cell_span();
+        auto c = tree[k]->get_cell_span();
         if (c == -1) return false;
         r += c;
     }

@@ -623,12 +623,13 @@ void Stack::finish_cell(int w) {
 
 // This returns the span of the current cell; -1 in case of trouble
 // the default value is 1
-auto Xml::get_cell_span() const -> int {
+auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
     Buffer &B = the_main->SH.shbuf();
     if (is_xmlc()) return 0;
     if (!has_name(the_names[np_cell])) return -1;         // not a cell
     if (!B.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
-    return B.int_val();
+    auto o = B.int_val();
+    return o ? to_signed(*o) : -1;
 }
 
 // hack...

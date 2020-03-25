@@ -17,7 +17,7 @@ public:
     Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}
 
     [[nodiscard]] auto empty() const -> bool;
-    [[nodiscard]] auto get_cell_span() const -> int;
+    [[nodiscard]] auto get_cell_span() const -> long;
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }

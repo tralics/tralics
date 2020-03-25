@@ -35,7 +35,6 @@ namespace tralics_ns {
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
     void read_a_file(LinePtr &L, const std::string &x, int spec);
-    auto make_string(String a) -> std::string;
     auto titlepage_is_valid() -> bool;
     auto file_exists(String name) -> bool;
     auto file_exists(const std::string &B) -> bool;

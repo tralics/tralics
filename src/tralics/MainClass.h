@@ -48,7 +48,7 @@ class MainClass {
 
 public:
     Stack * the_stack{}; ///< pointer to the stack
-    StrHash SH;        ///< the XML hash table
+    StrHash SH;          ///< the XML hash table
 
     std::string default_class;     ///< The default class
     std::string short_date;        ///< Date of start of run (short format) \todo short_date and start_date seem to be identical
@@ -109,7 +109,6 @@ private:
     void read_config_and_other();                     ///< Read the config file and extract all relevant information
     void set_tpa_status(String s);                    ///< Handles argument of -tpa_status switch
 
-    auto append_checked_line() -> int;
     auto append_nonempty_line() -> int;
     auto check_for_alias_type(bool vb) -> bool;
     auto check_for_arg(int &p, int argc, char **argv) -> String; ///< This gets foo, unless we are in the case tralics type=foo

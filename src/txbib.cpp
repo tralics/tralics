@@ -356,8 +356,6 @@ void CitationKey::make_key(String s) {
 }
 
 // This prints an unsolved reference for use by Tralics.
-// Note that make_citation can produce the same result for two different
-// entries, this is bad.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
     CitationKey ref(from.c_str(), key.c_str());
@@ -1982,7 +1980,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     Buffer &B = biblio_buf1;
     B.reset();
     B.push_back(s);
-    B.reset_ptr();
+    B.ptr = 0;
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == '\\') return s;
@@ -2000,14 +1998,14 @@ auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
     Buffer B;
     B.reset();
     B.push_back(s);
-    B.reset_ptr();
+    B.ptr = 0;
     int n = -k;
     while (B.head() != 0) {
         n++;
         B.next_bibtex_char();
     }
     if (n <= 0) return s;
-    B.reset_ptr();
+    B.ptr = 0;
     while (n > 0) {
         n--;
         B.next_bibtex_char();
@@ -2184,7 +2182,7 @@ void Buffer::normalise_for_bibtex(String s) {
     for (;;) {
         auto c = *s;
         if (c == 0) {
-            reset_ptr();
+            ptr = 0;
             return;
         }
         push_back(c);
@@ -2339,7 +2337,7 @@ auto Buffer::find_and(const bchar_type *table) -> bool {
 }
 
 // True if this is an `and'
-auto Buffer::is_and(size_t k) -> bool {
+auto Buffer::is_and(size_t k) const -> bool {
     char c = at(k);
     if (c != 'a' && c != 'A') return false;
     c = at(k + 1);
@@ -2668,10 +2666,10 @@ void BibEntry::normalise() {
 }
 
 void Buffer::remove_spec_chars(bool url, Buffer &B) {
-    reset_ptr();
+    ptr = 0;
     B.reset();
     for (;;) {
-        auto c = uhead();
+        auto c = head();
         if (c == 0U) return;
         advance();
         if (c == '|') {
@@ -2692,7 +2690,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             B.push_back(c);
             continue;
         }
-        c = uhead();
+        c = head();
         advance();
         if (c == '{' || c == '}') {
             B.push_back(c);
@@ -2702,21 +2700,21 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             B.push_back("\\vbar ");
             continue;
         } // bar is special
-        if (c == 's' && uhead() == 'p' && !is_letter(at(ptr + 1))) {
+        if (c == 's' && head() == 'p' && !is_letter(at(ptr + 1))) {
             advance();
             B.push_back('^');
             continue;
         }
-        if (c == 's' && uhead() == 'b' && !is_letter(at(ptr + 1))) {
+        if (c == 's' && head() == 'b' && !is_letter(at(ptr + 1))) {
             advance();
             B.push_back('_');
             continue;
         }
         if (is_accent_char(c)) {
-            auto C = uhead();
+            auto C = head();
             if (C == '{') {
                 advance();
-                C = uhead();
+                C = head();
             }
             advance();
             if (c == '\'') {

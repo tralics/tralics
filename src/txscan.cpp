@@ -837,7 +837,7 @@ void Parser::store_new_line(int n, bool vb) {
     set_cur_line(n);
     input_buffer.insert_string(scratch);
     input_buffer.extract_chars(input_line);
-    input_buffer.reset_ptr();
+    input_buffer.ptr = 0;
     if (vb) the_log << lg_start << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
 }
 

@@ -244,7 +244,7 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
 auto config_ns::start_interpret(Buffer &B, String s) -> bool {
     bool ret_val = false;
     B.push_back(s);
-    B.reset_ptr();
+    B.ptr = 0;
     if (B.head() == '+') {
         B.advance();
         the_log << "+";
@@ -289,7 +289,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
         }
         B.advance(3);
     }
-    B.set_ptr1_to_ptr();
+    B.ptr1 = B.ptr;
     B.skip_letter();
     auto k = ur_list.size();
     for (size_t j = 0; j < k; j++)
@@ -316,7 +316,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     std::vector<int> vals;
     size_t           nb = 0;
     Xml *            new_elt;
-    B.reset_ptr();
+    B.ptr = 0;
     for (;;) {
         auto j = next_RC_in_buffer(B, sname, lname);
         if (j == -1) break;

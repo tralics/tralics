@@ -356,7 +356,7 @@ auto Buffer::unique_character() const -> codepoint {
 auto Buffer::convert_line0(size_t wc) -> bool {
     Buffer &res = utf8_out;
     res.reset();
-    reset_ptr();
+    ptr = 0;
     codepoint c;
     for (;;) {
         if (wc == 0)
@@ -464,7 +464,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     readline(m_ligne.data(), 78);
     if (strcmp(m_ligne.data(), "\\stop") == 0) return -1;
     cur_line++;
-    B.reset0();
+    B.wptr = 0;
     B << m_ligne.data() << "\n";
     if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
@@ -814,7 +814,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
     I.push_back(data());
     the_converter.global_error = false;
     O.reset();
-    I.reset_ptr();
+    I.ptr = 0;
     codepoint c;
     for (;;) {
         c = I.next_utf8_char();
@@ -839,8 +839,8 @@ auto Buffer::convert_to_log_encoding() const -> String {
     I.reset();
     I.push_back(data());
     the_converter.global_error = false;
-    I.reset_ptr();
-    Buffer &O = utf8_out;
+    I.ptr                      = 0;
+    Buffer &O                  = utf8_out;
     O.reset();
     for (;;) {
         codepoint c = I.next_utf8_char();
@@ -858,7 +858,7 @@ auto Buffer::convert_to_log_encoding() const -> String {
 void Buffer::extract_chars(vector<codepoint> &V) {
     the_converter.start_convert(the_parser.get_cur_line());
     V.clear();
-    reset_ptr();
+    ptr = 0;
     for (;;) {
         codepoint c = next_utf8_char();
         if (c == 0 && at_eol()) return;
@@ -867,18 +867,6 @@ void Buffer::extract_chars(vector<codepoint> &V) {
 }
 
 // --------------------------------------------
-
-// Replaces e-accent by e.
-void Buffer::to_seven_bits() {
-    if (is_all_ascii()) return;
-    Buffer &I = utf8_in;
-    I.reset();
-    I.push_back(data());
-    the_converter.global_error = false;
-    I.reset_ptr();
-    reset();
-    if (I.at_eol()) remove_space_at_end();
-}
 
 void FullLogger::finish(int n) {
     log_is_open = false;

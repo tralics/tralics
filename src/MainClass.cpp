@@ -278,7 +278,7 @@ namespace {
 
     auto param_hack(String a) -> bool {
         Buffer B;
-        B.reset_ptr();
+        B.ptr = 0;
         B.push_back(a);
         if (!B.find_equals()) return false;
         if (!B.backup_space()) return false;
@@ -362,9 +362,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
     s = main_ns::path_buffer.to_string();
-    main_ns::path_buffer.decr_wptr();
-    main_ns::path_buffer.decr_wptr();
-    main_ns::path_buffer.decr_wptr();
+    main_ns::path_buffer.wptr -= 3;
     main_ns::path_buffer.push_back("ult");
     ult_name = main_ns::path_buffer.to_string();
     auto *fp = new std::fstream(s.c_str(), std::ios::in);

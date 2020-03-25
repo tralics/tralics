@@ -50,7 +50,7 @@ void Parser::E_pdfstrcmp() {
 
 // Parses svn info. returns false in case of bad syntax
 auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) -> bool {
-    reset_ptr();
+    ptr     = 0;
     date    = "0000/00/00";
     version = "-1";
     name    = "";
@@ -70,20 +70,20 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
         advance();
     else
         return false;
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     while ((head() != 0) && head() != '.') advance();
     at(ptr) = 0;
     name    = data() + ptr1;
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
     at(ptr) = 0;
     version = data() + ptr1;
     advance();
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     if (wptr < ptr + 10) return true;
     if (at(ptr + 4) == '-') at(ptr + 4) = '/';
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';
@@ -1069,7 +1069,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
         if (oc == nc) {                              // no conversion needed
             if (!(nc == 'N' || nc == 'p')) nc = 'n'; // cannot always use n
         } else if (oc == 'N' || oc == 'n') {
-            osig.modify(i, nc);
+            osig[i] = nc;
             last_ok = i + 1;
         } else {
             err_buf.reset();

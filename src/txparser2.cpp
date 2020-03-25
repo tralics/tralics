@@ -1797,7 +1797,7 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
     res = 0;
     for (;;) {
         if (B.at_eol()) return true;
-        auto c = B.uhead();
+        auto c = B.head();
         if (!is_digit(c)) { return true; }
         B.advance();
         res = 10 * res + (c - '0');
@@ -2085,7 +2085,7 @@ auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     err_tok   = T;
     Buffer &B = local_buf;
     B.reset();
-    B.reset_ptr();
+    B.ptr = 0;
     B << s;
     bool res = parse(B);
     if (!res) {

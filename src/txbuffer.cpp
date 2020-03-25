@@ -29,34 +29,11 @@ namespace buffer_ns {
     void dump_identification(String s);
 } // namespace buffer_ns
 
-auto Buffer::convert(int k) const -> std::string { return tralics_ns::make_string(data() + k); }
-
-// This returns a copy of the string
-auto tralics_ns::make_string(String a) -> std::string {
-    auto n = strlen(a);
-    the_parser.my_stats.one_more_string(n + 1);
-    return a;
-}
-
-// Returns of copy of the buffer as a string.
-auto Buffer::to_string() const -> std::string {
-    auto n = strlen(data());
-    the_parser.my_stats.one_more_string(n + 1);
-    return std::string(data());
-}
-
 // Returns a copy, starting at k.
 auto Buffer::to_string(size_t k) const -> std::string {
     auto n = strlen(data() + k);
     the_parser.my_stats.one_more_string(n + 1);
     return std::string(data() + k);
-}
-
-// Replaces all \r by a space.
-void Buffer::no_control_M() {
-    auto k = wptr;
-    for (size_t j = 0; j < k; j++)
-        if (at(j) == '\r') at(j) = ' ';
 }
 
 void Buffer::push_back_braced(String s) {
@@ -100,14 +77,11 @@ void Buffer::push_back_xml_char(uchar c) {
         push_back(static_cast<char>(c));
 }
 
-// Makes sure we can add n chars in the buffer
-// Note: we have wptr+1<size, so that at(wptr) can be assigned
 void Buffer::alloc(size_t n) {
     resize(wptr + n + 1);
     at(wptr) = 0;
 }
 
-// Converts the buffer into a string.
 auto Buffer::convert_to_str() const -> String {
     the_parser.my_stats.one_more_string(wptr + 1);
     char *aux = new char[wptr + 1];
@@ -165,7 +139,7 @@ auto Buffer::is_begin_end() const -> int {
 // of failure, either because cur char is not a \, or last char is \.
 auto Buffer::after_slash() -> bool {
     if (head() != '\\') return false;
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     advance();
     if (head() == 0) return false;
     if (!is_letter(head()))
@@ -204,60 +178,11 @@ auto Buffer::next_macro_spec() -> bool {
 auto Buffer::next_env_spec() -> bool {
     for (;;) {
         if (!next_macro_spec()) return false;
-        set_ptr1_to_ptr();
+        ptr1 = ptr;
         advance();
         skip_letter();
         if (is_begin_end() != 0) return true;
     }
-}
-
-// Searches for \begin{motscle} or \end{motscle}.
-// Sets ptr1 to location of \, ptr to after closing brace.
-// Returns false in case of failure.
-auto Buffer::next_kw() -> bool {
-    for (;;) {
-        if (!next_env_spec()) return false;
-        if (contains_braced("motscle")) return true;
-    }
-}
-
-// Searches for a command in the NULL terminated table.
-// returns the index if found. Sets (ptr1,ptr).
-auto Buffer::see_something(const String *Table) -> int {
-    reset_ptr();
-    for (;;) {
-        if (!next_macro()) return -1;
-        ptr1++; /// skip over the backslash
-        for (int k = 0;; k++) {
-            if (Table[k] == nullptr) break;
-            if (contains_here(Table[k])) return k;
-        }
-    }
-}
-
-// Splits at \begin or \end. The return value says if it's \begin or \end.
-auto Buffer::see_begin_end(Buffer &before, Buffer &after) -> int {
-    ptr     = 0;
-    int res = 0;
-    for (;;) {
-        if (!next_macro()) return 0;
-        res = is_begin_end();
-        if (res != 0) break;
-    }
-    after.reset0();
-    after.push_back(data() + ptr);
-    kill_at(ptr1);
-    before.push_back(data());
-    return res;
-}
-
-// Returns the strings between ptr1 and ptr, between ptr and the end.
-void Buffer::extract_strs(Buffer &A, Buffer &B) {
-    at(ptr - 1) = 0;
-    A.reset();
-    B.reset();
-    B.push_back(data() + ptr);
-    A.push_back(data() + ptr1);
 }
 
 // Converts the entire Buffer to lower case
@@ -278,80 +203,6 @@ void Buffer::no_newline() {
         if (at(j) == '\n') at(j) = ' ';
 }
 
-// Single brace match. When we see a newline, it will later be replaced
-// by some other character. Search starts at ptr.
-// Returns 0, 1 or 2. Sets ptr to the position after the char.
-auto Buffer::find_brace() -> int {
-    for (;;) {
-        char c = head();
-        if (c == 0 || c == '\n') return 0;
-        advance();
-        if (c == '{') return 1;
-        if (c == '}') return 2;
-    }
-}
-
-// Same for [] and {}
-auto Buffer::find_bracket() -> int {
-    for (;;) {
-        char c = head();
-        if (c == 0 || c == '\n') return 0;
-        advance();
-        if (c == '{') return 1;
-        if (c == '}') return 2;
-        if (c == '[') return -1;
-        if (c == ']') return -2;
-    }
-}
-
-// We assume that there is an open brace at ptr.
-// Sets ptr to the matching closiung brace. Returns false in case of trouble.
-auto Buffer::full_brace_match() -> bool {
-    int level = 0;
-    for (;;) {
-        auto c = next_char();
-        if (c == '{')
-            level++;
-        else if (c == '}') {
-            level--;
-            if (level == 0) return true;
-        } else if (c == 0)
-            return false;
-    }
-}
-
-// Finds a non hidden closing bracket.
-// Assumes that braces do match. [}{] would be OK.
-auto Buffer::full_bracket_match() -> bool {
-    int level = 0;
-    advance();
-    for (;;) {
-        auto c = next_char();
-        if (c == '{')
-            level++;
-        else if (c == '}')
-            level--;
-        else if (c == ']' && level == 0)
-            return true;
-        else if (c == 0)
-            return false;
-    }
-}
-
-// True if letter (or digit, hyphen, but not first char).
-// Is also ok in case of underscore (Laurent Pierron)
-auto Buffer::is_letter_digit() const -> bool {
-    for (size_t j = 0; j < wptr; j++) {
-        if (is_letter(at(j))) continue;
-        if (j == 0) return false;
-        if (at(j) == '-') continue;
-        if (at(j) == '_') continue;
-        if (is_digit(at(j))) continue;
-        return false;
-    }
-    return true;
-}
-
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
 auto Buffer::substring() -> std::string {
     char c        = at(ptr);
@@ -363,7 +214,7 @@ auto Buffer::substring() -> std::string {
 
 // replaces the content of the buffer by the value of B
 void Buffer::copy(const Buffer &B) {
-    reset0();
+    wptr = 0;
     push_back(B.data());
     ptr = B.ptr;
 }
@@ -402,9 +253,9 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (at(0) == '%' || is_space(at(0))) return true;
     if (strncmp(data(), "Begin", 5) == 0) return true;
     if (strncmp(data(), "End", 3) == 0) return true;
-    local_buf.reset0(); // THIS is thebuffer, (be careful)
+    local_buf.wptr = 0; // THIS is thebuffer, (be careful)
     local_buf.push_back(data());
-    reset0();
+    wptr = 0;
     push_back(' ');
     push_back(local_buf.c_str());
     return true;
@@ -955,18 +806,6 @@ auto Buffer::is_here(String s) -> bool {
     return true;
 }
 
-// True if this line contains only a comment
-auto Buffer::tex_comment_line() const -> bool {
-    size_t j = 0;
-    for (;;) {
-        auto c = at(j);
-        if (c == 0) return false;
-        if (c == '%') return true;
-        if (!is_space(c)) return false;
-        j++;
-    }
-}
-
 // returns the document class. value in aux
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
@@ -1049,23 +888,15 @@ auto Buffer::single_char() const -> char {
 
 // If the buffer contains a small positive number returns it.
 // Otherwise returns -1;
-auto Buffer::int_val() const -> int {
+auto Buffer::int_val() const -> std::optional<size_t> {
     int n = 0;
     for (size_t p = 0;; p++) {
         auto c = at(p);
         if (c == 0) return n;
-        if (!is_digit(c)) return -1;
+        if (!is_digit(c)) return {};
         n = 10 * n + (c - '0');
-        if (n > 1000000) return -1;
+        if (n > 1000000) return {};
     }
-}
-
-// Copies b into this. Resets pointers.
-void Buffer::init_from_buffer(Buffer &b) {
-    wptr = 0;
-    ptr1 = 0;
-    ptr  = 0;
-    if (!b.empty()) push_back(b.data());
 }
 
 auto Buffer::find_char(char c) -> bool {
@@ -1091,7 +922,7 @@ auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
 // sets ptr to the next equals sign. Returns false if no such sign exists
 auto Buffer::find_equals() -> bool {
     skip_sp_tab_nl();
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     while ((head() != 0) && head() != '=') advance();
     return head() == '=';
 }
@@ -1116,7 +947,7 @@ auto Buffer::string_delims() -> bool {
     char c = head();
     if (c == 0) return false;
     advance();
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     while ((head() != 0) && head() != c) advance();
     if (head() == 0) return false;
     kill_at(ptr);
@@ -1168,9 +999,9 @@ auto Buffer::fetch_spec_arg() -> bool {
     skip_sp_tab_nl();
     if (head() != '{') return false;
     advance();
-    set_ptr1_to_ptr();
+    ptr1 = ptr;
     for (;;) {
-        auto c = uhead();
+        auto c = head();
         if (c == 0 || c == '{' || c == '%') return false;
         if (c == '}') return true;
         advance();

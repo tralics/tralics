@@ -266,7 +266,7 @@ void Buffer::push_back9(Digit x) {
 
 // Insert a number in the buffer. Returns the string value.
 auto Buffer::insert_fp(const FpNum &X) -> String {
-    reset0();
+    wptr = 0;
     push_back(' '); // reserve for the sign
     push_back9(X.data[0]);
     push_back9(X.data[1]);
@@ -410,7 +410,7 @@ auto Buffer::reverse_horner() -> Digit {
 // Assume that the buffer holds : sign digits dot digits
 // Creates a number with it. Returns true if overflow
 auto FpNum::create(Buffer &B) -> bool {
-    B.reset_ptr();
+    B.ptr       = 0;
     char c      = B.next_char();
     bool retval = false;
     sign        = c != '-';
