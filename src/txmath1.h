@@ -1,8 +1,6 @@
 #pragma once
-#include "tralics/enums.h"
 #include "txmath.h"
 #include <iostream>
-#include <list>
 
 // -*- C++ -*-
 // TRALICS, copyright (C)INRIA/apics (Jose' Grimm) 2006, 2007,2008

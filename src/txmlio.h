@@ -1,8 +1,5 @@
 #pragma once
-#include "txbuffer.h"
 #include "txio.h"
-#include <string>
-#include <utility>
 
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008

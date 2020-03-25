@@ -92,10 +92,6 @@ auto Buffer::convert_to_str() const -> String {
 // Inserts a string. Always inserts a null character at the end.
 void Buffer::push_back(String s) {
     auto n = strlen(s);
-    if (n == 0) {
-        at(wptr) = 0;
-        return;
-    }
     alloc(n);
     memcpy(data() + wptr, s, n + 1);
     wptr += n;
