@@ -575,7 +575,7 @@ auto Parser::is_verbatim_end() -> bool {
     file_ended = false;
     if (at_eol()) get_a_new_line();
     if (file_ended) return false;
-    bool res = input_buffer.contains_env(get_cur_env_name().c_str());
+    bool res = input_buffer.contains_env(get_cur_env_name());
     if (res) {
         if (input_buffer.head() == 0)
             kill_line();
