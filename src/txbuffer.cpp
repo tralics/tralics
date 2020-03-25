@@ -1043,7 +1043,7 @@ auto Buffer::contains_env(String env) -> bool {
 // returns true if the file exists with extension s.
 auto Image::file_exists(String s) -> bool {
     local_buf << bf_reset << name << '.' << s;
-    return tralics_ns::file_exists(local_buf.c_str());
+    return tralics_ns::file_exists(local_buf.to_string());
 }
 
 // This checks all possible extensions and remembers them

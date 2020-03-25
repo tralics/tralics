@@ -40,7 +40,7 @@ auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     main_ns::path_buffer << bf_reset << s;
     pool_position = search_in_pool(s);
     if (pool_position) return true;
-    if (file_exists(main_ns::path_buffer)) return true;
+    if (file_exists(main_ns::path_buffer.to_string())) return true;
     if (!retry) return false;
     if (s.empty() || s[0] == '.' || s[0] == '/') return false;
     return main_ns::search_in_confdir(s);
@@ -50,7 +50,7 @@ auto main_ns::search_in_confdir(const std::string &s) -> bool {
     auto n = conf_path.size();
     for (auto i = n; i != 0; i--) {
         main_ns::path_buffer << bf_reset << conf_path[i - 1] << bf_optslash << s;
-        if (tralics_ns::file_exists(main_ns::path_buffer)) return true;
+        if (tralics_ns::file_exists(main_ns::path_buffer.to_string())) return true;
     }
     return false;
 }
@@ -60,13 +60,13 @@ auto tralics_ns::find_in_path(const std::string &s) -> bool {
     main_ns::path_buffer << bf_reset << s;
     pool_position = search_in_pool(s);
     if (pool_position) return true;
-    if (s[0] == '.' || s[0] == '/') return file_exists(main_ns::path_buffer);
+    if (s[0] == '.' || s[0] == '/') return file_exists(main_ns::path_buffer.to_string());
     for (const auto &p : input_path) {
         if (p.empty())
             main_ns::path_buffer << bf_reset << s;
         else
             main_ns::path_buffer << bf_reset << p << bf_optslash << s;
-        if (file_exists(main_ns::path_buffer)) return true;
+        if (file_exists(main_ns::path_buffer.to_string())) return true;
     }
     return false;
 }

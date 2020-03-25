@@ -9,7 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txbuffer.h"
+#include "tralics/Buffer.h"
 #include <fstream>
 
 void readline(char *buffer, size_t screen_size); ///< Read a line from standart input (readline.cpp)

@@ -9,7 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txbuffer.h"
+#include "tralics/Buffer.h"
 
 // This file holds the hash table, and XML.
 class LabelInfo;

@@ -30,27 +30,26 @@ namespace main_ns {
 } // namespace main_ns
 
 namespace tralics_ns {
-    auto is_leap_year(long y) -> bool;
-    void boot_math(bool mv);
+    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
+    auto file_exists(const std::string &B) -> bool;
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
-    void read_a_file(LinePtr &L, const std::string &x, int spec);
+    auto get_out_dir(const std::string &name) -> String;            /// Returns output_dir+name
+    auto get_short_jobname() -> std::string;
+    auto is_leap_year(long y) -> bool;
+    auto only_digits(const std::string &s) -> bool;
+    auto open_file(const std::string &name, bool f) -> std::fstream *;
+    auto open_file(String name, bool fatal) -> std::fstream *;
     auto titlepage_is_valid() -> bool;
-    auto file_exists(String name) -> bool;
-    auto file_exists(const std::string &B) -> bool;
-    auto file_exists(Buffer &B) -> bool;
+
     void bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db);
+    void bibtex_insert_jobname();
+    void bibtex_set_nocite();
+    void boot_math(bool mv);
+    void close_file(std::fstream *fp);
+    void read_a_file(LinePtr &L, const std::string &x, int spec);
     void Titlepage_create(LinePtr &lines);
     void Titlepage_start(bool verbose);
-    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
-    void bibtex_set_nocite();
-    void bibtex_insert_jobname();
-    auto open_file(String name, bool fatal) -> std::fstream *;
-    auto open_file(const std::string &name, bool f) -> std::fstream *;
-    void close_file(std::fstream *fp);
-    auto only_digits(const std::string &s) -> bool;
-    auto get_out_dir(const std::string &name) -> String; /// Returns output_dir+name
-    auto get_short_jobname() -> std::string;
 } // namespace tralics_ns
 
 namespace err_ns {

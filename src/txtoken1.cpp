@@ -8,7 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txbuffer.h"
+#include "tralics/Buffer.h"
 
 // We define functions that return the name of a token;
 

@@ -14,6 +14,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <filesystem>
 #include <sstream>
 
 namespace {
@@ -889,19 +890,11 @@ void FullLogger::init(std::string name, bool status) {
 
 // This can be used to check if the main file exists. In this case the
 // transcript file is not yet open.
-auto tralics_ns::file_exists(String name) -> bool {
-    FILE *f = fopen(name, "re");
-    if (log_is_open) the_log << lg_start_io << "file " << name << (f != nullptr ? " exists" : " does not exist") << lg_endsentence;
-    if (f != nullptr) {
-        fclose(f);
-        return true;
-    }
-    return false;
+auto tralics_ns::file_exists(const std::string &name) -> bool {
+    auto e = std::filesystem::exists(name);
+    if (log_is_open) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << lg_endsentence;
+    return e;
 }
-
-auto tralics_ns::file_exists(const std::string &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
-
-auto tralics_ns::file_exists(Buffer &B) -> bool { return tralics_ns::file_exists(B.c_str()); }
 
 // This exits if the file cannot be opened and argument is true
 auto tralics_ns::open_file(String name, bool fatal) -> std::fstream * {

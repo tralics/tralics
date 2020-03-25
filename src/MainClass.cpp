@@ -214,7 +214,7 @@ namespace {
         if (prefix.empty()) return false;
         Buffer b;
         b << prefix << bf_optslash << "book.clt";
-        return tralics_ns::file_exists(b);
+        return tralics_ns::file_exists(b.to_string());
     }
 
     /// Locate the config dir, using a few sources
@@ -758,7 +758,7 @@ auto MainClass::find_config_file() -> bool {
     if (!user_config_file.empty()) {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
-        if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B);
+        if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B.to_string());
         if (!B.is_at_end(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
         return main_ns::search_in_confdir(user_config_file);
     }
@@ -774,7 +774,7 @@ auto MainClass::find_config_file() -> bool {
     String rc = ".tralics_rc";
     if (cur_os == st_windows) rc = "tralics_rc";
     B << bf_reset << rc;
-    if (tralics_ns::file_exists(B)) return true;
+    if (tralics_ns::file_exists(B.to_string())) return true;
     // Lines commented out were used instead of these two lines
     if (main_ns::search_in_confdir(rc)) return true;
     B.reset();

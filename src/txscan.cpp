@@ -27,10 +27,10 @@ namespace {
     Buffer                           local_buf;          // a local buffer
     bool                             require_eof = true; // eof is an outer token
 
-    auto find_no_path(const std::string &s) -> bool {
+    auto find_no_path(const std::string &s) -> bool { // \todo is that just file_exists, or is the side-effect necessary?
         if (s.empty()) return false;
         main_ns::path_buffer << bf_reset << s;
-        return tralics_ns::file_exists(main_ns::path_buffer);
+        return tralics_ns::file_exists(s);
     }
 
     void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
