@@ -13,7 +13,7 @@ jobs:
     
     strategy:    
       matrix:
-        cxx: [g++-8, g++-9, clang++]
+        cxx: [g++-9, clang++]
     
     steps:
     - uses: actions/checkout@v2
