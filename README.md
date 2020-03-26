@@ -1,4 +1,4 @@
-![C/C++ CI](https://github.com/vbeffara/tralics/workflows/C/C++%20CI/badge.svg)
+![C/C++ CI](https://github.com/UMS-Mathdoc/tralics/workflows/C/C++%20CI/badge.svg)
 
 This file is work in progress, below is all the documentation spread around the
 upstream distribution.
