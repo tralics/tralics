@@ -21,35 +21,35 @@ public:
 
     Buffer() : std::vector<char>(128, 0){};
 
-    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string;       ///< Weird RA stuff \todo remove
-    [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }             ///< Is the read pointer at the end?
-    [[nodiscard]] auto backup_space() -> bool;                                    ///< Remove trailing spaces
-    [[nodiscard]] auto c_str(size_t k = 0) const -> String { return data() + k; } ///< Buffer contents as a char*
-    [[nodiscard]] auto contains(const std::string &s) const -> bool;              ///< Does the buffer has s as a substring?
-    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;             ///< Do we contain s with braces? (sets ptr after `}`)
-    [[nodiscard]] auto contains_env(const std::string &env) -> bool;              ///< Do we contain `\end{env}`?
-    [[nodiscard]] auto convert_line0(size_t wc) -> bool;                          ///< Convert to UTF8 into utf8_out
-    [[nodiscard]] auto convert_to_str() const -> String;                          ///< Make a copy of the contents as a new char*
-    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String;          ///< Convert to latin 1 or ASCII
-    [[nodiscard]] auto convert_to_log_encoding() const -> String;                 ///< Convert to logging encoding
-    [[nodiscard]] auto convert_to_out_encoding() const -> String;                 ///< Make a fresh copy with output encoding
-    [[nodiscard]] auto empty() const -> bool { return size() == 0; }              ///< Is the write pointer at 0?
-    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                    ///< Hash code of the string in the buffer
-    [[nodiscard]] auto head() const -> char { return at(ptr); }                   ///< The character under the read pointer
-    [[nodiscard]] auto int_val() const -> std::optional<size_t>;                  ///< Try to parse the contents as an integer
-    [[nodiscard]] auto size() const -> size_t { return wptr; }                    ///< Size of the contents \todo match vector::size()
-    [[nodiscard]] auto substring() const -> std::string;                          ///< Get the slice [ptr1,ptr)
-    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;              ///< Buffer contents as a std::string
+    [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }    ///< Is the read pointer at the end?
+    [[nodiscard]] auto c_str(size_t k = 0) const -> String;              ///< Buffer contents as a char*
+    [[nodiscard]] auto contains(const std::string &s) const -> bool;     ///< Does the buffer has s as a substring?
+    [[nodiscard]] auto convert_to_str() const -> String;                 ///< Make a copy of the contents as a new char*
+    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> String; ///< Convert to latin 1 or ASCII
+    [[nodiscard]] auto convert_to_log_encoding() const -> String;        ///< Convert to logging encoding
+    [[nodiscard]] auto convert_to_out_encoding() const -> String;        ///< Make a fresh copy with output encoding
+    [[nodiscard]] auto empty() const -> bool { return size() == 0; }     ///< Is the write pointer at 0?
+    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;           ///< Hash code of the string in the buffer
+    [[nodiscard]] auto head() const -> char { return at(ptr); }          ///< The character under the read pointer
+    [[nodiscard]] auto int_val() const -> std::optional<size_t>;         ///< Try to parse the contents as an integer
+    [[nodiscard]] auto size() const -> size_t { return wptr; }           ///< Size of the contents \todo match vector::size()
+    [[nodiscard]] auto substring() const -> std::string;                 ///< Get the slice [ptr1,ptr)
+    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;     ///< Buffer contents as a std::string
 
-    void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
-    void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
-    void convert_line(int l, size_t wc);              ///< Convert a line to UTF8
-    void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
+    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
+    [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
+    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptr after `}`)
+    [[nodiscard]] auto contains_env(const std::string &env) -> bool;        ///< Do we contain `\end{env}`?
+    [[nodiscard]] auto convert_line0(size_t wc) -> bool;                    ///< Convert to UTF8 into utf8_out
+    [[nodiscard]] auto fetch_spec_arg() -> bool;                            ///< Try to read a braced argument
 
-    void               extract_dtd(String a, std::string &b, std::string &c);
-    void               extract_chars(vector<codepoint> &V);
-    auto               fetch_spec_arg() -> bool;
-    auto               figline(int &ctr, std::string &junk) -> std::string;
+    void advance(size_t k = 1) { ptr += k; }                                ///< Move the read pointer forward
+    void alloc(size_t n);                                                   ///< Ensure that there is space for n+1 slots beyond wptr
+    void convert_line(int l, size_t wc);                                    ///< Convert a line to UTF8
+    void dump_prefix(bool err, bool gbl, symcodes K);                       ///< Insert def qualifiers (`\global` etc.)
+    void extract_dtd(const std::string &a, std::string &b, std::string &c); ///< Get DTD name and file
+    void extract_chars(vector<codepoint> &V);                               ///< Translate contents into codepoints
+
     void               fill_table(bchar_type *table);
     auto               find_alias(const vector<std::string> &SL, std::string &res) -> bool;
     auto               find_and(const bchar_type *table) -> bool;

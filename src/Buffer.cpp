@@ -217,6 +217,8 @@ void Buffer::no_newline() {
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
 auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptr1), begin() + to_signed(ptr)); }
 
+auto Buffer::c_str(size_t k) const -> String { return data() + k; }
+
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
     if (wptr >= 1 && at(wptr - 1) == '\r') // for windows

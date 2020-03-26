@@ -991,8 +991,7 @@ auto Buffer::remove_digits(const std::string &s) -> std::string {
 }
 
 // This gets the DTD.
-void Buffer::extract_dtd(String a, std::string &b, std::string &c) {
-    if (a == nullptr) return;
+void Buffer::extract_dtd(const std::string &a, std::string &b, std::string &c) {
     reset();
     push_back(a);
     ptr = 0;

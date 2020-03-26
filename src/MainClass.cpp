@@ -878,7 +878,7 @@ auto MainClass::find_document_type() -> bool {
 void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (handling_ra || res.empty()) res = config_file.find_top_val("DocType", false);
-    b_after.extract_dtd(res.c_str(), dtd, dtdfile);
+    b_after.extract_dtd(res, dtd, dtdfile);
     if (dtdfile.empty()) {
         if (dft == 3) {
             dtd     = "unknown";
