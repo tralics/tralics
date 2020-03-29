@@ -264,7 +264,6 @@ void Buffer::push_back9(Digit x) {
     push_back3(A);
 }
 
-// Insert a number in the buffer. Returns the string value.
 auto Buffer::insert_fp(const FpNum &X) -> String {
     wptr = 0;
     push_back(' '); // reserve for the sign
@@ -274,7 +273,7 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
     push_back9(X.data[2]);
     push_back9(X.data[3]);
     while (at(wptr - 1) == '0') wptr--; // remove trailing zeroes
-    kill_at(wptr);
+    at(wptr) = 0;
     size_t i = 1;
     while (at(i) == '0') i++; // remove initial zeroes
     if (at(i) == '.') i--;    // Keep the zero in 0.1

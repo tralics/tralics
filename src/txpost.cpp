@@ -583,7 +583,6 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
     return fp;
 }
 
-// This flushed the buffer, increments fp_len.
 void Buffer::finish_xml_print() {
     *cur_fp << data();
     the_main->fp_len += wptr;

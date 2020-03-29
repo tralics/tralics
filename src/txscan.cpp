@@ -816,12 +816,12 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
 // Ignores CR LF. Removes spaces at end of line.
 void Buffer::insert_string(const Buffer &s) {
     wptr   = 0;
-    auto n = s.wptr;
+    auto n = s.size();
     alloc(n + 5); // make sure it is big enough
     ptr      = 0;
     size_t k = 0;
-    for (size_t j = 0; j < n; j++) {
-        char c = s.at(j);
+    for (size_t j = 0; j < s.size(); j++) {
+        char c = s[j];
         if (c != '\n' && c != '\r') at(k++) = c;
     }
     while (k > 0 && at(k - 1) == ' ') k--;

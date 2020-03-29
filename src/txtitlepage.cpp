@@ -500,9 +500,9 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     size_t j = 0;
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
-    B.kill_at(j);
-    String match = B.c_str();
-    size_t res   = 0;
+    B.at(j)         = 0;
+    String match    = B.c_str();
+    size_t res      = 0;
     for (const auto &k : bigtable) {
         res = k.find_UR(match, j);
         if (res != 0) break;
@@ -562,7 +562,7 @@ auto Buffer::is_begin_something(String s) -> int {
         ptr1 = ptr;
         skip_letter();
         if (ptr == ptr1) return 2;  // bad
-        kill_at(ptr);               // what follows the type is a comment
+        at(ptr) = 0;                // what follows the type is a comment
         if (s == nullptr) return 5; // s=0 for type lookup
         if (strcmp(data() + ptr1, s) == 0) return 3;
         return 1;
@@ -572,7 +572,7 @@ auto Buffer::is_begin_something(String s) -> int {
     ptr1 = ptr;
     skip_letter();
     if (ptr == ptr1) return 2;
-    kill_at(ptr);
+    at(ptr) = 0;
     if (strcmp(data() + ptr1, s) == 0) return 4;
     return 2;
 }
@@ -816,7 +816,6 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
     return "";
 }
 
-// This does something with DocAttribs.
 void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
     ptr1 = ptr;
@@ -869,7 +868,6 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     return C;
 }
 
-// This finds one type. prints on the log. Remembers it.
 void Buffer::find_one_type(std::vector<std::string> &S) {
     if (is_begin_something(nullptr) == 5) {
         std::string s = to_string(ptr1);
@@ -918,7 +916,6 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
     }
 }
 
-// Find one aliases in the config file.
 auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) -> bool {
     ptr = 0;
     if (strncmp(data(), "End", 3) == 0) return false;

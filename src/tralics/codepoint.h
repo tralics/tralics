@@ -17,7 +17,7 @@ inline auto to_lower(uchar c) -> uchar {
 /// helper functions.
 
 struct codepoint {
-    char32_t value;
+    char32_t value{};
 
     explicit codepoint(unsigned x = 0) noexcept : value(x) {}
     explicit codepoint(size_t c) noexcept : value(static_cast<char32_t>(c)) {}

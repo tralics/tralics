@@ -1079,8 +1079,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
         }
         changes << nc;
     }
-    changes.kill_at(last_ok);
-    bool need_prot = false; // Protect result and aux function
+    changes.at(last_ok) = 0;
+    bool need_prot      = false; // Protect result and aux function
     for (size_t i = 0; i < last_ok; i++)
         if (changes[i] == 'x') need_prot = true;
     if (need_prot) prot = true;

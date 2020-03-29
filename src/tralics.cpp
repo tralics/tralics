@@ -1322,7 +1322,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     auto   n = a.size();
     if (A[0] == 'e' && A[1] == 'l' && A[2] == 't' && A[3] == '_') return config_ns::assign_name(A + 4, B);
     if (A[0] == 'x' && A[1] == 'm' && A[2] == 'l' && A[3] == '_') {
-        if (A[n - 1] == 'e' && A[n - 2] == 'm' && A[n - 3] == 'a' && A[n - 4] == 'n' && A[n - 5] == '_') { a.kill_at(n - 5); }
+        if (A[n - 1] == 'e' && A[n - 2] == 'm' && A[n - 3] == 'a' && A[n - 4] == 'n' && A[n - 5] == '_') { a.at(n - 5) = 0; }
         return config_ns::assign_name(A + 4, B);
     }
     if (A[0] == 'a' && A[1] == 't' && A[2] == 't' && A[3] == '_') return config_ns::assign_att(A + 4, B);
@@ -1403,7 +1403,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
         return true;
     }
     if (n > 5 && A[n - 5] == '_' && A[n - 4] == 'v' && A[n - 3] == 'a' && A[n - 2] == 'l' && A[n - 1] == 's') {
-        a.kill_at(n - 5);
+        a.at(n - 5) = 0;
         config_ns::interpret_list(a.to_string(), b);
         a.reset();
         return true;

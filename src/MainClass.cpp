@@ -126,8 +126,8 @@ namespace {
         std::string path;
         std::string fn = s;
         if (k && (*k > 0)) {
-            B.kill_at(*k);
-            path = B.to_string();
+            B.at(*k) = 0;
+            path     = B.to_string();
             if (out_dir.empty()) out_dir = path;
             fn = B.to_string(*k + 1);
         }
@@ -801,7 +801,7 @@ void MainClass::open_config_file() {
     for (size_t i = n - 1;; i--) {
         if (i <= kk) break;
         if (!is_digit(B[i])) {
-            B.kill_at(i + 1);
+            B.at(i + 1) = 0;
             break;
         }
     }

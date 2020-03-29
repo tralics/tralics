@@ -300,8 +300,8 @@ void Splitter::extract_keyval(std::string &key, std::string &val) {
     size_t i = 0;
     while ((T[i] != 0) && T[i] != '=') i++;
     if (T[i] == '=') {
-        thebuffer.kill_at(i);
-        val = local_buf.without_end_spaces(T + i + 1);
+        thebuffer.at(i) = 0;
+        val             = local_buf.without_end_spaces(T + i + 1);
     }
     key = local_buf.without_end_spaces(T);
 }
@@ -337,14 +337,14 @@ void Buffer::remove_last_space() {
         wptr -= 6;
     else if (wptr >= 6 && strncmp(data() + wptr - 6, "&#xA;", 6) == 0)
         wptr -= 6;
-    kill_at(wptr);
+    at(wptr) = 0;
 }
 
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
     while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
-    kill_at(wptr);
+    at(wptr) = 0;
 }
 
 // This removes initial and final spaces. The result is a temporary.
@@ -354,7 +354,7 @@ auto Buffer::without_end_spaces(String T) -> String {
     reset();
     push_back(T);
     while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
-    kill_at(wptr);
+    at(wptr) = 0;
     return data();
 }
 
@@ -368,7 +368,6 @@ void Buffer::insert_escape_char() {
         push_back("^^@");
 }
 
-/// This one is for `\meaning`
 void Buffer::insert_escape_char_raw() {
     auto c = current_escape_char();
     if (c > 0 && c < int(nb_characters))
@@ -786,11 +785,11 @@ auto Buffer::is_here(String s) -> bool {
 // returns the document class. value in aux
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
-    auto   k   = to_string().find("\\documentclass");
+    auto   k   = to_string().find(cmd);
     if (k == std::string::npos) return false;
     for (size_t j = 0; j < k; j++)
         if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
-    push_back("{}");                                        //  make sure we have braces
+    push_back("{}");                                        //  make sure we have braces \todo [vb] at the end of the Buffer ??
     k += strlen(cmd);                                       // skip command name
     while (at(k) == ' ') ++k;                               // skip spaces
     if (at(k) == '[') {
@@ -815,8 +814,7 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     return true;
 }
 
-// returns the configuration value in aux
-auto Buffer::find_configuration(Buffer &aux) -> bool {
+auto Buffer::find_configuration(Buffer &aux) const -> bool {
     if (at(0) != '%') return false;
     auto k = to_string().find("ralics configuration file");
     if (k == std::string::npos) return false;
@@ -836,8 +834,7 @@ auto Buffer::find_configuration(Buffer &aux) -> bool {
     return len != 0;
 }
 
-// returns the configuration value in aux
-auto Buffer::find_doctype() -> size_t {
+auto Buffer::find_doctype() const -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";
     auto   k = to_string().find(S);
@@ -882,9 +879,9 @@ auto Buffer::find_char(char c) -> bool {
 // splits foo:bar into foo and bar
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
-        kill_at(ptr);
-        after  = to_string(ptr + 1);
-        before = to_string();
+        at(ptr) = 0;
+        after   = to_string(ptr + 1);
+        before  = to_string();
         return true;
     }
     before = to_string();
@@ -909,7 +906,7 @@ auto Buffer::backup_space() -> bool {
     size_t j = ptr;
     while (j > ptr1 && is_spaceh(j - 1)) j--;
     if (j == ptr1) return false;
-    kill_at(j);
+    at(j) = 0;
     return true;
 }
 
@@ -924,7 +921,7 @@ auto Buffer::string_delims() -> bool {
     ptr1 = ptr;
     while ((head() != 0) && head() != c) advance();
     if (head() == 0) return false;
-    kill_at(ptr);
+    at(ptr) = 0;
     return true;
 }
 
@@ -952,8 +949,8 @@ auto Buffer::slash_separated(std::string &a) -> bool {
     }
     auto b = tmp.size();
     while (b > p && is_space(tmp[b - 1])) b--;
-    tmp.kill_at(b);
-    a = tmp.to_string();
+    tmp.at(b) = 0;
+    a         = tmp.to_string();
     return true;
 }
 
@@ -1136,7 +1133,7 @@ auto Buffer::get_machine_name() -> std::string {
     wptr    = strlen(data());
     auto n  = wptr;
     for (size_t i = 1; i < n; i++)
-        if (at(i) == '.') kill_at(i);
+        if (at(i) == '.') at(i) = 0;
     return to_string();
 }
 

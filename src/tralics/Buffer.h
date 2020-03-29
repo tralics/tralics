@@ -11,7 +11,8 @@ class Xml;
 /// a big structure \todo This is kind of a messy class, would be better off
 /// using `std::string` as much as possible but we can't because of all the
 /// zero-char manipulations. Or at least, replace wptr and vector::size() by
-/// just size() and capacity() from the vector.
+/// just size() and capacity() from the vector. Many methods do not belong in a
+/// general class like that because they are specific to TeX.
 
 class Buffer : public std::vector<char> {
 public:
@@ -19,7 +20,7 @@ public:
     size_t ptr{0};  ///< the read pointer
     size_t ptr1{0}; ///< a second read pointer
 
-    Buffer() : std::vector<char>(128, 0){};
+    Buffer() : std::vector<char>(128, 0) {}
 
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }    ///< Is the read pointer at the end?
     [[nodiscard]] auto c_str(size_t k = 0) const -> String;              ///< Buffer contents as a char*
@@ -29,12 +30,37 @@ public:
     [[nodiscard]] auto convert_to_log_encoding() const -> String;        ///< Convert to logging encoding
     [[nodiscard]] auto convert_to_out_encoding() const -> String;        ///< Make a fresh copy with output encoding
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }     ///< Is the write pointer at 0?
+    [[nodiscard]] auto find_configuration(Buffer &aux) const -> bool;    ///< Extract config value \todo std::optional<std::string>
+    [[nodiscard]] auto find_doctype() const -> size_t;                   ///< Figure out the doctype of the Buffer contents
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;           ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return at(ptr); }          ///< The character under the read pointer
+    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;        ///< For typography
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;         ///< Try to parse the contents as an integer
     [[nodiscard]] auto size() const -> size_t { return wptr; }           ///< Size of the contents \todo match vector::size()
     [[nodiscard]] auto substring() const -> std::string;                 ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;     ///< Buffer contents as a std::string
+
+    void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
+    void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
+    void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
+
+    // Those have void return type but return parameters
+
+    void extract_dtd(const std::string &a, std::string &b, std::string &c); ///< Get DTD name and file
+    void extract_chars(vector<codepoint> &V);                               ///< Translate contents into codepoints
+    void fill_table(bchar_type *table);                                     ///< Not sure what this does?
+    void find_one_type(vector<std::string> &S);                             ///< Finds one type \todo [vb] what does that mean?
+
+    // Those have void return type but involve global variables
+
+    void convert_line(int l, size_t wc); ///< Convert a line to UTF8
+    void find_top_atts();                ///< This does something with DocAttribs \todo [vb] sic
+    void finish_xml_print();             ///< Flush the buffer, increment fp_len
+    void insert_escape_char();           ///< Inserts the current escape char
+    void insert_escape_char_raw();       ///< This one is for `\meaning`
+
+    // Those are not const and have a return value, mostly they leave some
+    // crucial info in ptr and ptr1 or just reset. \todo refactor all that
 
     [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
     [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
@@ -42,31 +68,16 @@ public:
     [[nodiscard]] auto contains_env(const std::string &env) -> bool;        ///< Do we contain `\end{env}`?
     [[nodiscard]] auto convert_line0(size_t wc) -> bool;                    ///< Convert to UTF8 into utf8_out
     [[nodiscard]] auto fetch_spec_arg() -> bool;                            ///< Try to read a braced argument
+    [[nodiscard]] auto find_alias(const vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
+    [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                           ///< True iff we do not contain 'and'
+    [[nodiscard]] auto find_documentclass(Buffer &aux) -> bool; ///< Extract the document class \todo optional tring
+    [[nodiscard]] auto find_equals() -> bool;                   ///< Locate a `sth=` pattern into ptr and ptr1
+    [[nodiscard]] auto get_machine_name() -> std::string;       ///< As name says \todo does not belong in Buffer
+    [[nodiscard]] auto horner(size_t p) -> Digit;               ///< Read an integer at `ptr`, advance
+    [[nodiscard]] auto insert_fp(const FpNum &X) -> String;     ///< Insert a number at buffer start
 
-    void advance(size_t k = 1) { ptr += k; }                                ///< Move the read pointer forward
-    void alloc(size_t n);                                                   ///< Ensure that there is space for n+1 slots beyond wptr
-    void convert_line(int l, size_t wc);                                    ///< Convert a line to UTF8
-    void dump_prefix(bool err, bool gbl, symcodes K);                       ///< Insert def qualifiers (`\global` etc.)
-    void extract_dtd(const std::string &a, std::string &b, std::string &c); ///< Get DTD name and file
-    void extract_chars(vector<codepoint> &V);                               ///< Translate contents into codepoints
+    // Those are still unsorted as refactoring proceeds
 
-    void               fill_table(bchar_type *table);
-    auto               find_alias(const vector<std::string> &SL, std::string &res) -> bool;
-    auto               find_and(const bchar_type *table) -> bool;
-    auto               find_configuration(Buffer &aux) -> bool;
-    auto               find_doctype() -> size_t;
-    auto               find_documentclass(Buffer &aux) -> bool;
-    auto               find_equals() -> bool;
-    void               find_one_type(vector<std::string> &S);
-    void               find_top_atts();
-    void               finish_xml_print();
-    auto               get_machine_name() -> std::string; // \todo does not belong in Buffer
-    auto               horner(size_t p) -> unsigned int;
-    void               kill_at(size_t p) { at(p) = 0; } // \todo inline
-    void               insert_escape_char();
-    void               insert_escape_char_raw();
-    auto               insert_fp(const FpNum &X) -> String;
-    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;
     void               insert_string(const Buffer &s);
     auto               insert_break(const std::string &x) -> std::string;
     auto               install_att(Xid idx, Istring match) -> bool;

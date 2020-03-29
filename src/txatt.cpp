@@ -188,7 +188,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
         if (head() == 0) break;
         if (is_space(head())) {
             has_space = true;
-            kill_at(ptr);
+            at(ptr)   = 0;
             advance();
             break;
         }
