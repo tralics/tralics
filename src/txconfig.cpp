@@ -149,7 +149,7 @@ auto config_ns::find_keys(const std::string &name) -> std::string {
     Txbuf.reset();
     auto n = X->size();
     for (size_t i = 0; i < n; i++) X->data[i].to_buffer(Txbuf);
-    if (n > 0) Txbuf.rrl();
+    if (n > 0) Txbuf.remove_last();
     return Txbuf.to_string();
 }
 

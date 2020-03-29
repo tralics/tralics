@@ -118,7 +118,7 @@ void Parser::select_math_font() {
 
 void math_ns::remove_from_trace() {
     trace_needs_space = old_need;
-    Trace.set_last(old_pos);
+    Trace.reset(old_pos);
 }
 
 // Three functions that add something to the trace.

@@ -1242,7 +1242,7 @@ void Parser::xkv_makehd(TokenList &L) {
     auto k = B.size();
     if (list_to_string(L, B)) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV family (more errors may follow)", "bad kv family");
-        B.set_last(k);
+        B.reset(k);
     }
     if (B.size() != k) B.push_back('@');
     xkv_header = B.c_str();

@@ -436,7 +436,7 @@ void XmlIO::parse_dec_comment() {
         auto k = B.size(); // B[k-1] is >
         if (k >= 3 && B[k - 2] == '-' && B[k - 3] == '-') break;
     }
-    B.remove_last_n(3);
+    B.remove_last(3);
     Xml *res = new Xml(B);
     res->id  = -1; // mark this as a comment
     cur_xml->push_back(res);
@@ -598,7 +598,7 @@ void XmlIO::parse_dec_element() {
         prev_is_space = false;
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
-    if (prev_is_space) aux.rrl();
+    if (prev_is_space) aux.remove_last();
     tmp << " " << elt_name;
     if (aux.is_equal("EMPTY"))
         ;
@@ -648,7 +648,7 @@ void XmlIO::parse_dec_attlist() {
         prev_is_space = false;
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
-    if (prev_is_space) aux.rrl();
+    if (prev_is_space) aux.remove_last();
     tmp << " " << elt_name;
     // Syntax Attdef*
     // AttDef ::= A Name S AttType S DefaultDecl

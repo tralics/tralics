@@ -44,6 +44,16 @@ namespace {
     }
 } // namespace
 
+void Buffer::reset(size_t k) {
+    wptr     = k;
+    at(wptr) = 0;
+}
+
+auto Buffer::skip_space(size_t j) const -> size_t {
+    while (is_spaceh(j)) j++;
+    return j;
+}
+
 // Returns a copy, starting at k.
 auto Buffer::to_string(size_t k) const -> std::string {
     auto n = strlen(data() + k);
@@ -138,14 +148,6 @@ auto Parser::cur_line_to_istring() -> Istring {
     return Istring(B.c_str());
 }
 
-// Returns 0, 1, 2 depending on whether there is \begin or \end in the buffer
-// between ptr1 and ptr.
-auto Buffer::is_begin_end() -> int {
-    if (substring() == "\\begin") return 1;
-    if (substring() == "\\end") return 2;
-    return 0;
-}
-
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
 auto Buffer::after_slash() -> bool {
@@ -192,7 +194,7 @@ auto Buffer::next_env_spec() -> bool {
         ptr1 = ptr;
         advance();
         skip_letter();
-        if (is_begin_end() != 0) return true;
+        if ((substring() == "\\begin") || (substring() == "\\end")) return true;
     }
 }
 
@@ -326,6 +328,17 @@ void SpecialHash::create(String s) {
         key.push_back(a);
         value.push_back(b);
     }
+}
+
+void Buffer::remove_last(size_t n) {
+    if (wptr >= n) {
+        wptr -= n;
+        at(wptr) = 0;
+    }
+}
+
+void Buffer::remove_last_quote() {
+    if (last_char() == '\'') remove_last();
 }
 
 // FIXME: utf8 space ok  here ?
@@ -851,8 +864,7 @@ auto Buffer::single_char() const -> char {
     auto j = skip_space(0);
     if (at(j) == 0) return 0;
     char c = at(j);
-    j++;
-    j = skip_space(j);
+    j      = skip_space(j + 1);
     if (at(j) != 0) return 0;
     return c;
 }
@@ -1170,5 +1182,13 @@ void Buffer::put_at_end(String s) {
 }
 
 auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }
+
+auto Buffer::is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
+
+auto Buffer::last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
+
+void Buffer::push_back(const TokenList &L) {
+    for (auto &C : L) { insert_token(C, false); }
+}
 
 Buffer Txbuf, err_buf, ssa2;

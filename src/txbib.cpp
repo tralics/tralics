@@ -395,23 +395,23 @@ void Bibtex::read1(const std::string &cur) {
     if (read0(Tbuf, from_year)) return;
     String Str = Tbuf.c_str();
     if (n > 5 && strcmp(Str + n - 5, "+foot.bib") == 0) {
-        Tbuf.set_last(n - 5);
+        Tbuf.reset(n - 5);
         if (read0(Tbuf, from_foot)) return;
     }
     if (n > 5 && strcmp(Str + n - 5, "+year.bib") == 0) {
-        Tbuf.set_last(n - 5);
+        Tbuf.reset(n - 5);
         if (read0(Tbuf, from_year)) return;
     }
     if (n > 4 && strcmp(Str + n - 4, "+all.bib") == 0) {
-        Tbuf.set_last(n - 4);
+        Tbuf.reset(n - 4);
         if (read0(Tbuf, from_any)) return;
     }
     if (n > 6 && strcmp(Str + n - 6, "+refer.bib") == 0) {
-        Tbuf.set_last(n - 6);
+        Tbuf.reset(n - 6);
         if (read0(Tbuf, from_refer)) return;
     }
     if (n > 4 && strcmp(Str + n - 4, ".bib.bib") == 0) {
-        Tbuf.set_last(n - 4);
+        Tbuf.reset(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
     log_and_tty << "Bibtex Info: no biblio file " << Tbuf << "\n";
@@ -1267,7 +1267,7 @@ auto Buffer::special_convert(bool init) -> std::string {
             space = false;
         }
     }
-    if (init && biblio_buf1.last_char() == ' ') biblio_buf1.rrl();
+    if (init && biblio_buf1.last_char() == ' ') biblio_buf1.remove_last();
     return biblio_buf1.to_string();
 }
 
@@ -1988,7 +1988,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == 0) return s;
-    B.set_last(B.ptr);
+    B.reset(B.ptr);
     return B.to_string();
 }
 
@@ -2345,7 +2345,7 @@ auto Buffer::is_and(size_t k) const -> bool {
     c = at(k + 2);
     if (c != 'd' && c != 'D') return false;
     c = at(k + 3);
-    return !(c != ' ' && c != '\t' && c != '\n');
+    return (c == ' ') || (c == '\t') || (c == '\n');
 }
 
 auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
@@ -2609,11 +2609,11 @@ auto Bchar::special_print(Buffer &X, bool sw) -> size_t {
 
 void Buffer::no_double_dot() {
     if (wptr > 1 && at(wptr - 2) == '.' && at(wptr - 1) == '.') {
-        rrl();
+        remove_last();
         return;
     }
     if (wptr > 2 && at(wptr - 2) == '}' && at(wptr - 3) == '.' && at(wptr - 1) == '.') {
-        rrl();
+        remove_last();
         return;
     }
 }

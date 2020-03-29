@@ -810,23 +810,14 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
     }
 }
 
-// We have to write now the function that reads a line from a file.
-// This function is used as an auxiliary.
-// Puts a line of input in the buffer;
-// Ignores CR LF. Removes spaces at end of line.
 void Buffer::insert_string(const Buffer &s) {
-    wptr   = 0;
-    auto n = s.size();
-    alloc(n + 5); // make sure it is big enough
-    ptr      = 0;
-    size_t k = 0;
+    reset();
     for (size_t j = 0; j < s.size(); j++) {
         char c = s[j];
-        if (c != '\n' && c != '\r') at(k++) = c;
+        if (c != '\n' && c != '\r') push_back(c);
     }
-    while (k > 0 && at(k - 1) == ' ') k--;
-    at(k) = 0;
-    wptr  = k;
+    while (last_char() == ' ') remove_last();
+    ptr = 0;
 }
 
 // This piece of code is executed when a new line, numbered N, is in

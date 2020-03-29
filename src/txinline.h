@@ -31,7 +31,7 @@ namespace main_ns {
 
 namespace tralics_ns {
     auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
-    auto file_exists(const std::string &B) -> bool;
+    auto file_exists(const std::string &name) -> bool;
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
     auto get_out_dir(const std::string &name) -> String;            /// Returns output_dir+name

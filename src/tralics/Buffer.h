@@ -36,13 +36,25 @@ public:
     [[nodiscard]] auto head() const -> char { return at(ptr); }          ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;        ///< For typography
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;         ///< Try to parse the contents as an integer
+    [[nodiscard]] auto is_all_ascii() const -> bool;                     ///< Is everything ASCII and not CRLF?
+    [[nodiscard]] auto is_and(size_t k) const -> bool;                   ///< Is the word at `k` an `and`?
+    [[nodiscard]] auto is_good_ascii() const -> bool;                    ///< Is there no control or CRLF? (>128 ok, for UTF8)
+    [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                ///< It the char at `j` a space?
+    [[nodiscard]] auto last_char() const -> char;                        ///< Last char if any, 0 if empty
+    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;      ///< Locate the last `/`, if any
+    [[nodiscard]] auto see_config_env() const -> int;                    ///< Do we start with `Begin` or `End`?
     [[nodiscard]] auto size() const -> size_t { return wptr; }           ///< Size of the contents \todo match vector::size()
+    [[nodiscard]] auto skip_space(size_t j) const -> size_t;             ///< Locate next non-space char after `j`
     [[nodiscard]] auto substring() const -> std::string;                 ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;     ///< Buffer contents as a std::string
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
+    void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
+    void remove_last(size_t n = 1);                   ///< Drop `n` chars, provided size is large enough
+    void remove_last_quote();                         ///< Drop last char if it is a `'`
+    void reset(size_t k = 0);                         ///< Truncate buffer at `k` chars
 
     // Those have void return type but return parameters
 
@@ -78,61 +90,51 @@ public:
 
     // Those are still unsorted as refactoring proceeds
 
-    void               insert_string(const Buffer &s);
-    auto               insert_break(const std::string &x) -> std::string;
-    auto               install_att(Xid idx, Istring match) -> bool;
-    void               interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
-    void               interpret_bibtex_list();
-    void               interpret_bibtex_extension_list();
-    [[nodiscard]] auto is_and(size_t k) const -> bool;
-    [[nodiscard]] auto is_begin_end() -> int;
-    auto               is_begin_something(String s) -> int;
-    auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
-    auto               is_at_end(String s) const -> bool;
-    auto               is_here(String s) -> bool;
-    auto               is_here_case(String s) -> bool;
-    [[nodiscard]] auto is_all_ascii() const -> bool;
-    [[nodiscard]] auto is_good_ascii() const -> bool;
-    [[nodiscard]] auto is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
-    [[nodiscard]] auto last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
-    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;
-    auto               look_at_space(const std::string &s) -> bool;
-    void               lowercase();
-    void               new_word();
-    void               next_bibtex_char();
-    auto               next_char() { return at(ptr++); }
-    auto               next_env_spec() -> bool;
-    auto               next_macro() -> bool;
-    auto               next_macro_spec() -> bool;
-    auto               next_utf8_byte() -> uchar;
-    auto               next_utf8_char() -> codepoint;
-    auto               next_utf8_char_aux() -> codepoint;
-    void               no_newline();
-    void               no_double_dot();
-    void               normalise_for_bibtex(String s);
-    void               optslash();
-    void               out_four_hats(codepoint ch);
-    void               out_log(codepoint ch, output_encoding_type T);
-    auto               pack_or_class(Buffer &aux) -> int;
-    void               pt_to_mu();
-    void               process_big_char(size_t n);
-    void               push_back(char c);
-    void               push_back(uchar c);
-    void               push_back(const Buffer &b) { push_back(b.data()); }
-    void               push_back(const std::string &b) { push_back(b.c_str()); }
-    void               push_back(const Istring &X);
-    void               push_back(String s);
-    void               push_back(ScaledInt v, glue_spec unit);
-    void               push_back(const SthInternal &x);
-    void               push_back(const Glue &x);
-    void               push_back(const AttList &Y);
-    void               push_back(const AttPair &X);
-    void               push_back(const Macro &x);
-    void               push_back(const Macro &x, bool sw);
-    auto               push_back(Token T) -> bool;
-    void               push_back(const TokenList &L) {
-        for (auto &C : L) { insert_token(C, false); }
-    }
+    auto insert_break(const std::string &x) -> std::string;
+    auto install_att(Xid idx, Istring match) -> bool;
+    void interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
+    void interpret_bibtex_list();
+    void interpret_bibtex_extension_list();
+    auto is_begin_something(String s) -> int;
+    auto is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
+    auto is_at_end(String s) const -> bool;
+    auto is_here(String s) -> bool;
+    auto is_here_case(String s) -> bool;
+    auto look_at_space(const std::string &s) -> bool;
+    void lowercase();
+    void new_word();
+    void next_bibtex_char();
+    auto next_char() { return at(ptr++); }
+    auto next_env_spec() -> bool;
+    auto next_macro() -> bool;
+    auto next_macro_spec() -> bool;
+    auto next_utf8_byte() -> uchar;
+    auto next_utf8_char() -> codepoint;
+    auto next_utf8_char_aux() -> codepoint;
+    void no_newline();
+    void no_double_dot();
+    void normalise_for_bibtex(String s);
+    void optslash();
+    void out_four_hats(codepoint ch);
+    void out_log(codepoint ch, output_encoding_type T);
+    auto pack_or_class(Buffer &aux) -> int;
+    void pt_to_mu();
+    void process_big_char(size_t n);
+    void push_back(char c);
+    void push_back(uchar c);
+    void push_back(const Buffer &b) { push_back(b.data()); }
+    void push_back(const std::string &b) { push_back(b.c_str()); }
+    void push_back(const Istring &X);
+    void push_back(String s);
+    void push_back(ScaledInt v, glue_spec unit);
+    void push_back(const SthInternal &x);
+    void push_back(const Glue &x);
+    void push_back(const AttList &Y);
+    void push_back(const AttPair &X);
+    void push_back(const Macro &x);
+    void push_back(const Macro &x, bool sw);
+    auto push_back(Token T) -> bool;
+    void push_back(const TokenList &L);
     void push_back(int n);
     void push_back(long n);
     void insert_token(Token T, bool sw);
@@ -169,41 +171,14 @@ public:
     void put_at_end(String s);
     auto remove_digits(const std::string &s) -> std::string;
     auto remove_space(const std::string &x) -> std::string;
-    void rrl() {
-        wptr--;
-        at(wptr) = 0;
-    } // really remove last
-    void remove_last() {
-        if (wptr > 0) rrl();
-    }
-    void remove_last_n(size_t n) {
-        if (wptr >= n) wptr -= n;
-        at(wptr) = 0;
-    }
-    void remove_last_quote() {
-        if (wptr > 0 && at(wptr - 1) == '\'') rrl();
-    }
     void remove_last_space();
     void remove_space_at_end();
     void remove_spec_chars(bool url, Buffer &B);
-    void reset() {
-        wptr  = 0;
-        at(0) = 0;
-    }
-    auto               reverse_horner() -> unsigned;
-    [[nodiscard]] auto see_config_env() const -> int;
-    auto               see_config_kw(String s, bool c) -> String;
-    auto               see_equals(String s) -> bool;
-    void               set_last(size_t k) {
-        wptr     = k;
-        at(wptr) = 0;
-    }
-    void               show_uncomplete(String m);
-    void               skip_over_brace();
-    [[nodiscard]] auto skip_space(size_t j) const {
-        while (is_spaceh(j)) j++;
-        return j;
-    }
+    auto reverse_horner() -> unsigned;
+    auto see_config_kw(String s, bool c) -> String;
+    auto see_equals(String s) -> bool;
+    void show_uncomplete(String m);
+    void skip_over_brace();
     void skip_letter() {
         while (is_letter(head())) ptr++;
     }

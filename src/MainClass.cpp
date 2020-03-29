@@ -85,7 +85,7 @@ namespace {
             y = 10 * y + B[i] - '0';
             C.push_back(B[i]);
         }
-        B.set_last(n);
+        B.reset(n);
         return y;
     }
 
@@ -132,7 +132,7 @@ namespace {
             fn = B.to_string(*k + 1);
         }
         B << bf_reset << fn;
-        B.remove_last_n(4);
+        B.remove_last(4);
         file_name = B.to_string();
         if (log_name.empty()) log_name = file_name;
         if (k > 0 && input_path.size() == 1) {
@@ -794,7 +794,7 @@ void MainClass::open_config_file() {
     if (!B.is_at_end(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;
-    B.remove_last_n(4);
+    B.remove_last(4);
     auto n  = B.size();
     auto k  = B.last_slash();
     auto kk = k ? *k + 1 : 0UL;
@@ -951,10 +951,10 @@ void MainClass::see_name(String s) {
         exit(1);
     }
     B << bf_reset << s;
-    if (B.is_at_end(".xml")) B.remove_last_n(4);
+    if (B.is_at_end(".xml")) B.remove_last(4);
     B.put_at_end(".tex");
     infile = B.to_string();
-    B.remove_last_n(4);
+    B.remove_last(4);
     no_ext = B.to_string();
 }
 
