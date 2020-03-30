@@ -368,10 +368,10 @@ void Parser::E_car(bool first) {
 
 // Translation of \foo is <foo/>
 void Parser::T_ignoreA() {
-    Token  T = cur_tok;
-    String s = T.tok_to_str();
-    if (s[0] == '\\') ++s;
-    if (strcmp(s, "newpage") == 0 || strcmp(s, "clearpage") == 0 || strcmp(s, "cleardoublepage") == 0) leave_h_mode();
+    Token T = cur_tok;
+    auto  s = T.tok_to_str();
+    if (s[0] == '\\') s.erase(0, 1);
+    if ((s == "newpage") || (s == "clearpage") || (s == "cleardoublepage")) leave_h_mode();
     flush_buffer();
     unprocessed_xml << "<" << s << "/>";
     flush_buffer();

@@ -64,7 +64,7 @@ struct Token {
     auto               tex_is_digit(unsigned radix) -> long;
     [[nodiscard]] auto is_dec_separator() const -> bool { return val == other_t_offset + ',' || val == other_t_offset + '.'; }
     [[nodiscard]] auto to_string() const -> String;
-    [[nodiscard]] auto tok_to_str() const -> String;
+    [[nodiscard]] auto tok_to_str() const -> std::string;
     [[nodiscard]] auto tok_to_str1() const -> String;
     void               testpach();
 };

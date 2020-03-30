@@ -290,7 +290,6 @@ auto Splitter::get_next() -> std::string {
     while ((T[0] != 0) && is_space(T[0])) T++;
     if (T[0] == 0) return "";
     Buffer B;
-    B.reset();
     B.push_back(T);
     B.remove_space_at_end();
     return B.to_string();
@@ -401,9 +400,8 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) {
 // Returns a temporary string: the name of the token
 // This is used for printing errors in the transcript file
 // Uses the function below, except for characters
-auto Token::tok_to_str() const -> String {
-    static Buffer B; // \todo make temporary, but needs to return a std::string
-    B.reset();
+auto Token::tok_to_str() const -> std::string {
+    Buffer B;
     if (!is_a_char() || cmd_val() == eol_catcode) {
         B.push_back(*this);
         return B.c_str();
