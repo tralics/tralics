@@ -198,10 +198,10 @@ void Parser::T_cite(subtypes sw) {
     Token    my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
     for (;;) {
         if (S.at_end()) break;
-        String cur = S.get_next();
-        if (cur[0] == 0) continue;
+        auto cur = S.get_next();
+        if (cur.empty()) continue;
         if (sw == nocite_code) {
-            if (strcmp(cur, "*") == 0)
+            if (cur == "*")
                 the_bibliography.set_nocite();
             else
                 the_bibliography.find_citation_item(type, Istring(cur), true);
@@ -303,8 +303,8 @@ void Parser::T_biblio() {
     add_bib_marker(false);
     Splitter S(list);
     while (!S.at_end()) {
-        String w = S.get_next();
-        if (w[0] == 0) continue;
+        auto w = S.get_next();
+        if (w.empty()) continue;
         the_bibliography.push_back_src(w);
     }
 }

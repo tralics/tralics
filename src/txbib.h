@@ -80,7 +80,7 @@ public:
     [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() { return biblio_src.size(); }
-    void               push_back_src(String x) { biblio_src.emplace_back(x); }
+    void               push_back_src(std::string x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
     void               set_cmd(std::string x) { cmd = std::move(x); }
     void               set_location(Xml *X, bool f) {

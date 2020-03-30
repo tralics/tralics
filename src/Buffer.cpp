@@ -285,15 +285,15 @@ auto Splitter::get_next_raw() -> String {
 
 // Returns the next keyword, or empty string if there is none.
 // Uses next_for_splitter to see the start and end of the keyword
-auto Splitter::get_next() -> String {
+auto Splitter::get_next() -> std::string {
     String T = get_next_raw();
     while ((T[0] != 0) && is_space(T[0])) T++;
     if (T[0] == 0) return "";
-    static Buffer B; // \todo make temporary, but needs to return a std::string
+    Buffer B;
     B.reset();
     B.push_back(T);
     B.remove_space_at_end();
-    return B.c_str();
+    return B.to_string();
 }
 // Constructs the next pair. We first call next_for_splitter,
 // Assume that this puts Key=Val in the buffer. We set key and val.
