@@ -17,7 +17,6 @@
 
 namespace {
     Buffer thebuffer; // a scratch buffer
-    Buffer local_buf; // another buffer
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
@@ -38,6 +37,15 @@ namespace {
         }
         if (c == 0) return "csname^^@endcsname";
         return "csnameendcsname";
+    }
+
+    /// Remove initial and final spaces.
+    auto without_end_spaces(String T) -> std::string {
+        while (is_space(T[0])) T++;
+        Buffer tmp;
+        tmp.push_back(T);
+        tmp.remove_space_at_end();
+        return tmp.to_string();
     }
 } // namespace
 
@@ -139,8 +147,7 @@ void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
 // In case of error, we add the current line number as attribute
 // via this function
 auto Parser::cur_line_to_istring() -> Istring {
-    Buffer &B = local_buf;
-    B.reset();
+    Buffer B;
     B.push_back(get_cur_line());
     return Istring(B.c_str());
 }
@@ -247,11 +254,11 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (at(0) == '%' || is_space(at(0))) return true;
     if (strncmp(data(), "Begin", 5) == 0) return true;
     if (strncmp(data(), "End", 3) == 0) return true;
-    local_buf.reset(); // THIS is thebuffer, (be careful)
-    local_buf.push_back(data());
-    wptr = 0;
+    Buffer B;
+    B.push_back(data());
+    reset();
     push_back(' ');
-    push_back(local_buf.c_str());
+    push_back(B.c_str());
     return true;
 }
 
@@ -282,7 +289,7 @@ auto Splitter::get_next() -> String {
     String T = get_next_raw();
     while ((T[0] != 0) && is_space(T[0])) T++;
     if (T[0] == 0) return "";
-    Buffer &B = local_buf;
+    static Buffer B; // \todo make temporary, but needs to return a std::string
     B.reset();
     B.push_back(T);
     B.remove_space_at_end();
@@ -291,7 +298,6 @@ auto Splitter::get_next() -> String {
 // Constructs the next pair. We first call next_for_splitter,
 // Assume that this puts Key=Val in the buffer. We set key and val.
 // If no equals sign is given, the string is the key, the value is empty.
-// \todo this is the only method that actually reads local_buf
 void Splitter::extract_keyval(std::string &key, std::string &val) {
     key      = "";
     val      = "";
@@ -301,9 +307,9 @@ void Splitter::extract_keyval(std::string &key, std::string &val) {
     while ((T[i] != 0) && T[i] != '=') i++;
     if (T[i] == '=') {
         thebuffer.at(i) = 0;
-        val             = local_buf.without_end_spaces(T + i + 1);
+        val             = without_end_spaces(T + i + 1);
     }
-    key = local_buf.without_end_spaces(T);
+    key = without_end_spaces(T);
 }
 
 // Return the value associated to the key x, or empty string if not found.
@@ -358,17 +364,6 @@ void Buffer::remove_space_at_end() {
     at(wptr) = 0;
 }
 
-// This removes initial and final spaces. The result is a temporary.
-auto Buffer::without_end_spaces(String T) -> String {
-    while (is_space(T[0])) T++;
-    if (T[0] == 0) return "";
-    reset();
-    push_back(T);
-    while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
-    at(wptr) = 0;
-    return data();
-}
-
 // Inserts the current escape char, unless zero or out of range.
 // This is used for transcript only
 void Buffer::insert_escape_char() {
@@ -407,7 +402,7 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) {
 // This is used for printing errors in the transcript file
 // Uses the function below, except for characters
 auto Token::tok_to_str() const -> String {
-    Buffer &B = local_buf;
+    static Buffer B; // \todo make temporary, but needs to return a std::string
     B.reset();
     if (!is_a_char() || cmd_val() == eol_catcode) {
         B.push_back(*this);

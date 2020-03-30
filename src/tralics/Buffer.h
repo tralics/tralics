@@ -206,7 +206,6 @@ public:
     void uppercase();
     void utf8_error(bool first);
     auto xml_and_attrib(const std::string &s) -> Xml *;
-    auto without_end_spaces(String T) -> String;
     auto find_char(char c) -> bool;
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     auto after_slash() -> bool;
