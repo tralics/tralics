@@ -923,7 +923,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     if (is_special_end()) return false;
     if (ptr == 0) return false;
     ptr1 = ptr;
-    advance_letter_dig();
+    skip_letter_dig();
     if (ptr1 == ptr) return true; // this is bad
     std::string pot_res      = substring();
     bool        local_potres = false;
@@ -932,7 +932,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         skip_sp_tab();
         if (is_special_end()) break;
         ptr1 = ptr;
-        advance_letter_dig();
+        skip_letter_dig();
         if (ptr1 == ptr) break;
         std::string a  = substring();
         bool        ok = a == res;
@@ -992,7 +992,7 @@ void Buffer::extract_dtd(const std::string &a, std::string &b, std::string &c) {
     reset();
     push_back(a);
     ptr = 0;
-    advance_letter_dig_dot();
+    skip_letter_dig_dot();
     if (ptr == 0) return;
     ptr1 = 0;
     b    = substring();
@@ -1002,7 +1002,7 @@ void Buffer::extract_dtd(const std::string &a, std::string &b, std::string &c) {
         skip_sp_tab();
     }
     ptr1 = ptr;
-    advance_letter_dig_dot_slash();
+    skip_letter_dig_dot_slash();
     if (ptr1 == ptr) return;
     c = substring();
 }

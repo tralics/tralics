@@ -40,11 +40,15 @@ public:
     [[nodiscard]] auto is_and(size_t k) const -> bool;                   ///< Is the word at `k` an `and`?
     [[nodiscard]] auto is_good_ascii() const -> bool;                    ///< Is there no control or CRLF? (>128 ok, for UTF8)
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                ///< It the char at `j` a space?
+    [[nodiscard]] auto is_special_end() const -> bool;                   ///< Is the current char `\\n`, `#` or `%`?
     [[nodiscard]] auto last_char() const -> char;                        ///< Last char if any, 0 if empty
     [[nodiscard]] auto last_slash() const -> std::optional<size_t>;      ///< Locate the last `/`, if any
+    [[nodiscard]] auto next_non_space(size_t j) const -> size_t;         ///< Locate next non-space char after `j`
     [[nodiscard]] auto see_config_env() const -> int;                    ///< Do we start with `Begin` or `End`?
+    [[nodiscard]] auto single_char() const -> char;                      ///< If only one (non-space) char, return it
+    [[nodiscard]] auto single_character() const -> codepoint;            ///< If only one (UTF8) character, return it
     [[nodiscard]] auto size() const -> size_t { return wptr; }           ///< Size of the contents \todo match vector::size()
-    [[nodiscard]] auto skip_space(size_t j) const -> size_t;             ///< Locate next non-space char after `j`
+    [[nodiscard]] auto special_exponent() const -> String;               ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                 ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;     ///< Buffer contents as a std::string
 
@@ -179,54 +183,33 @@ public:
     auto see_equals(String s) -> bool;
     void show_uncomplete(String m);
     void skip_over_brace();
-    void skip_letter() {
-        while (is_letter(head())) ptr++;
-    }
-    void skip_sp_tab() {
-        while (at(ptr) == ' ' || at(ptr) == '\t') ptr++;
-    }
-    void skip_sp_tab_nl() {
-        while (is_space(at(ptr))) ptr++;
-    }
-    void skip_sp_tab_comma() {
-        while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
-    }
-    [[nodiscard]] auto single_char() const -> char;
-    auto               slash_separated(std::string &a) -> bool;
-    auto               split_at_colon(std::string &before, std::string &after) -> bool;
-    auto               svn_id(std::string &name, std::string &date, std::string &version) -> bool;
-    auto               special_convert(bool init) -> std::string;
-    [[nodiscard]] auto special_exponent() const -> String;
-    void               special_title(std::string s);
-    auto               str_toks(nl_to_tok nl) -> TokenList;
-    auto               str_toks11(bool nl) -> TokenList;
-    auto               string_delims() -> bool;
-    auto               convert_for_xml_err(Token t) -> Istring;
-    auto               tp_next_char(char &res) -> bool;
-    auto               tp_fetch_something() -> tpa_line;
-    auto               trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
-    void               undo() { ptr--; }
-    [[nodiscard]] auto unique_character() const -> codepoint;
-    void               uppercase();
-    void               utf8_error(bool first);
-    static void        utf8_ovf(size_t n);
-    auto               xml_and_attrib(const std::string &s) -> Xml *;
-    auto               without_end_spaces(String T) -> String;
-    auto               find_char(char c) -> bool;
-    void               l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
-    [[nodiscard]] auto is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
-
-private:
+    void skip_letter();
+    void skip_sp_tab(); // \todo skip(const std::string&)
+    void skip_sp_tab_nl();
+    void skip_sp_tab_comma();
+    void skip_letter_dig();
+    void skip_letter_dig_dot();
+    void skip_letter_dig_dot_slash();
+    auto slash_separated(std::string &a) -> bool;
+    auto split_at_colon(std::string &before, std::string &after) -> bool;
+    auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
+    auto special_convert(bool init) -> std::string;
+    void special_title(std::string s);
+    auto str_toks(nl_to_tok nl) -> TokenList;
+    auto str_toks11(bool nl) -> TokenList;
+    auto string_delims() -> bool;
+    auto convert_for_xml_err(Token t) -> Istring;
+    auto tp_next_char(char &res) -> bool;
+    auto tp_fetch_something() -> tpa_line;
+    auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
+    void undo() { ptr--; }
+    void uppercase();
+    void utf8_error(bool first);
+    auto xml_and_attrib(const std::string &s) -> Xml *;
+    auto without_end_spaces(String T) -> String;
+    auto find_char(char c) -> bool;
+    void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     auto after_slash() -> bool;
-    void advance_letter_dig() {
-        while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;
-    }
-    void advance_letter_dig_dot() {
-        while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.') ptr++;
-    }
-    void advance_letter_dig_dot_slash() {
-        while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.' || at(ptr) == '/') ptr++;
-    }
 
 public:
     template <typename T> auto operator<<(const T &t) -> Buffer & {

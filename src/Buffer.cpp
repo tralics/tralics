@@ -22,9 +22,6 @@ namespace {
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
 
-    /// This removes (returns false) for lines starting with #
-    /// Adds a space at first position if needed.
-    /// Assumes that *this is NOT local_buf !!
     void dump_identification(String s) { main_ns::log_or_tty << "Configuration file identification: " << s; }
 
     /// Returns a temporary string, corresponding to the command with
@@ -34,7 +31,7 @@ namespace {
         if (c == '\\') return "csname\\endcsname";
         if (c > 0 && c < int(nb_characters)) {
             Buffer B;
-            B << bf_reset << "csname";
+            B << "csname";
             B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
             B << "endcsname";
             return B.c_str();
@@ -49,7 +46,7 @@ void Buffer::reset(size_t k) {
     at(wptr) = 0;
 }
 
-auto Buffer::skip_space(size_t j) const -> size_t {
+auto Buffer::next_non_space(size_t j) const -> size_t {
     while (is_spaceh(j)) j++;
     return j;
 }
@@ -250,7 +247,7 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (at(0) == '%' || is_space(at(0))) return true;
     if (strncmp(data(), "Begin", 5) == 0) return true;
     if (strncmp(data(), "End", 3) == 0) return true;
-    local_buf.wptr = 0; // THIS is thebuffer, (be careful)
+    local_buf.reset(); // THIS is thebuffer, (be careful)
     local_buf.push_back(data());
     wptr = 0;
     push_back(' ');
@@ -294,6 +291,7 @@ auto Splitter::get_next() -> String {
 // Constructs the next pair. We first call next_for_splitter,
 // Assume that this puts Key=Val in the buffer. We set key and val.
 // If no equals sign is given, the string is the key, the value is empty.
+// \todo this is the only method that actually reads local_buf
 void Splitter::extract_keyval(std::string &key, std::string &val) {
     key      = "";
     val      = "";
@@ -861,10 +859,10 @@ auto Buffer::find_doctype() const -> size_t {
 // If the buffer holds a single char (plus space) returns it.
 // Note: this returns 0 in case of a non-7bit character
 auto Buffer::single_char() const -> char {
-    auto j = skip_space(0);
+    auto j = next_non_space(0);
     if (at(j) == 0) return 0;
     char c = at(j);
-    j      = skip_space(j + 1);
+    j      = next_non_space(j + 1);
     if (at(j) != 0) return 0;
     return c;
 }
@@ -1014,10 +1012,7 @@ auto Buffer::contains_env(const std::string &env) -> bool {
 }
 
 // returns true if the file exists with extension s.
-auto Image::file_exists(String s) -> bool {
-    local_buf << bf_reset << name << '.' << s;
-    return tralics_ns::file_exists(local_buf.to_string());
-}
+auto Image::file_exists(const std::string &s) -> bool { return tralics_ns::file_exists(name + '.' + s); }
 
 // This checks all possible extensions and remembers them
 void Image::check_existence() {
@@ -1190,5 +1185,30 @@ auto Buffer::last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr 
 void Buffer::push_back(const TokenList &L) {
     for (auto &C : L) { insert_token(C, false); }
 }
+
+void Buffer::skip_letter() {
+    while (is_letter(head())) ptr++;
+}
+void Buffer::skip_sp_tab() {
+    while (at(ptr) == ' ' || at(ptr) == '\t') ptr++;
+}
+void Buffer::skip_sp_tab_nl() {
+    while (is_space(at(ptr))) ptr++;
+}
+void Buffer::skip_sp_tab_comma() {
+    while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
+}
+
+void Buffer::skip_letter_dig() {
+    while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;
+}
+void Buffer::skip_letter_dig_dot() {
+    while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.') ptr++;
+}
+void Buffer::skip_letter_dig_dot_slash() {
+    while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.' || at(ptr) == '/') ptr++;
+}
+
+auto Buffer::is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
 
 Buffer Txbuf, err_buf, ssa2;

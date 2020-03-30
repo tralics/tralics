@@ -33,7 +33,7 @@ auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
-    for (auto &single_char : single_chars) single_char = nullptr;
+    for (auto &c : single_chars) c = nullptr;
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(the_names[np_letter_a + x - 'a']); }
     for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(the_names[np_letter_A + x - 'A']); }
 }

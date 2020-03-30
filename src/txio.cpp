@@ -31,6 +31,16 @@ namespace {
         pool_position = {};
         return true;
     }
+
+    void utf8_ovf(size_t n) {
+        Converter &T = the_converter;
+        thebuffer.reset();
+        thebuffer.push_back16(n, true);
+        log_and_tty << "UTF-8 parsing overflow (char " << thebuffer << ", line " << T.cur_file_line << ", file " << T.cur_file_name
+                    << ")\n";
+        T.bad_chars++;
+        T.new_error();
+    }
 } // namespace
 
 namespace io_ns {
@@ -246,15 +256,6 @@ void Buffer::utf8_error(bool first) {
     the_log << lg_end;
 }
 
-void Buffer::utf8_ovf(size_t n) {
-    Converter &T = the_converter;
-    thebuffer.reset();
-    thebuffer.push_back16(n, true);
-    log_and_tty << "UTF-8 parsing overflow (char " << thebuffer << ", line " << T.cur_file_line << ", file " << T.cur_file_name << ")\n";
-    T.bad_chars++;
-    T.new_error();
-}
-
 // This reads the next byte.
 // We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
 // As a consequence, at(ptr) is valid after the call
@@ -338,7 +339,7 @@ auto Buffer::next_utf8_char() -> codepoint {
 
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
-auto Buffer::unique_character() const -> codepoint {
+auto Buffer::single_character() const -> codepoint {
     auto c = at(0);
     auto n = io_ns::how_many_bytes(c);
     if (n == 0) return codepoint();
