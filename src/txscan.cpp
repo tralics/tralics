@@ -13,6 +13,7 @@
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace {
     Buffer                           scratch;                            // See insert_string
@@ -2184,7 +2185,7 @@ void Parser::E_convert() {
     case attributeval_code: B.push_back(get_attval()); break;
     case tralicsversion_code: B.push_back(the_main->version); break;
     case etexrevision_code: B.push_back(".0"); break;
-    case rayear_code: B.push_back(the_parser.get_ra_year()); break;
+    case rayear_code: B.push_back(fmt::format("{}", the_parser.get_ra_year())); break;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
     if (tracing_commands()) the_log << lg_start << T << "->" << L << lg_end;

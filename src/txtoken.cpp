@@ -10,6 +10,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 extern Buffer file_list;
 
@@ -783,7 +784,7 @@ auto StrHash::find(const std::string &s) -> size_t {
 
 // Converts s into a string and returns its hash table location.
 auto StrHash::find(int s) -> size_t {
-    mybuf << bf_reset << s;
+    mybuf << bf_reset << fmt::format("{}", s);
     return hash_find();
 }
 

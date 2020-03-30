@@ -14,6 +14,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include <algorithm>
+#include <fmt/format.h>
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer    mathml_buffer;
@@ -281,7 +282,7 @@ void MathP::find_paren_matched2(MathQList &res) const {
         if (B->get_type() == mt_flag_small_l) k = B->get_pos();
         if (B->get_type() == mt_flag_small_r) {
             res.push_back(MathQ(k, B->get_pos()));
-            aux_buffer << k << ", " << B->get_pos() << "  ";
+            aux_buffer << fmt::format("{}, {} ", k, B->get_pos());
         }
         ++B;
     }
@@ -858,10 +859,9 @@ void MathElt::cv_noML_special() {
         auto sz = Istring(L.front().get_chr());
         mathml_buffer << '{' << sz << '}';
         L.pop_front();
-        if (L.front().get_cmd() == style_cmd) {
-            int kk = math_ns::style_level(L.front().get_chr());
-            mathml_buffer.push_back(kk);
-        } else
+        if (L.front().get_cmd() == style_cmd)
+            mathml_buffer << fmt::format("{}", math_ns::style_level(L.front().get_chr()));
+        else
             mathml_buffer.push_back("{}");
         L.pop_front();
     }
@@ -971,12 +971,7 @@ void MathElt::cv_noMLt_special0() {
             L.pop_front();
         }
         if (!L.empty()) {
-            if (L.front().get_cmd() == style_cmd) {
-                int kk = math_ns::style_level(L.front().get_chr());
-                mathml_buffer.push_back(" style='");
-                mathml_buffer.push_back(kk);
-                mathml_buffer.push_back("'");
-            }
+            if (L.front().get_cmd() == style_cmd) mathml_buffer << fmt::format(" style='{}'", math_ns::style_level(L.front().get_chr()));
             L.pop_front();
         }
         mathml_buffer.push_back('>');
@@ -1035,7 +1030,7 @@ void MathElt::cv_noML_list() {
         X.convert_math_noML0();
         mathml_buffer << "}";
         return;
-    default: mathml_buffer << "bad group" << T;
+    default: mathml_buffer << fmt::format("bad group{}", T);
     }
 }
 

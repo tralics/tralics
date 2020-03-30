@@ -12,6 +12,7 @@
 
 #include "txparser.h"
 #include "txinline.h"
+#include <fmt/format.h>
 
 namespace {
     Buffer trace_buffer;
@@ -73,7 +74,7 @@ void Parser::check_outer_validity() {
     else
         B << "Forbidden control sequence " << cur_tok.tok_to_str();
     if (scanner_status == ss_skipping)
-        B << " in conditional started at line " << conditions.top_line();
+        B << fmt::format(" in conditional started at line {}", conditions.top_line());
     else {
         B << " found while scanning ";
         if (scanner_status == ss_defining)
@@ -1935,7 +1936,7 @@ void Parser::new_constant(String name, int max_val, subtypes alloc_pos, symcodes
     get_r_token(true);
     int k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_buf << bf_reset << "Overflow in " << T << "; max value is " << max_val;
+        err_buf << bf_reset << "Overflow in " << T << fmt::format("; max value is {}", max_val);
         signal_error(T, "allocation overflow");
         return;
     }
@@ -2491,7 +2492,7 @@ void Parser::E_random() {
     int   u = std::rand();
     if (t > 0) u = u % t;
     Buffer B;
-    B.push_back(u);
+    B.push_back(fmt::format("{}", u));
     TokenList L = B.str_toks11(false);
     if (tracing_macros()) the_log << lg_start << T << t << "->" << L << lg_end;
     back_input(L);

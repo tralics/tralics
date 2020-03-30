@@ -19,6 +19,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include <ctime>
+#include <fmt/format.h>
 
 namespace main_ns {
     HalfLogger log_or_tty;              // the logger
@@ -592,11 +593,6 @@ namespace accent_ns {
     void boot_accents();
 } // namespace accent_ns
 
-namespace tralics_ns {
-    auto twodig(int n) -> String;
-} // namespace tralics_ns
-using namespace tralics_ns;
-
 // This is the main function. It does the following:
 // print a banner, boot the parser and the math part,
 // and execute the main prog.
@@ -650,9 +646,6 @@ void Parser::boot_xspace() {
     ok_for_xspace[uchar('~')]  = true;
 }
 
-// used below for printing numbersin dates  with 2 digits
-auto tralics_ns::twodig(int n) -> String { return n < 10 ? "0" : ""; }
-
 // This computes the current date (first thing done after printing the banner)
 // stores the date in the table of equivalents, computes the default year
 // for the RA.
@@ -672,17 +665,15 @@ void Parser::boot_time() {
     eqtb_int_table[month_code].val = month;
     eqtb_int_table[year_code].val  = year;
     std::srand(to_unsigned(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
+    auto   short_date = fmt::format("{}/{:02d}/{:02d}", year, month, day);
+    auto   long_date  = fmt::format("{} {:02d}:{:02d}:{:02d}", short_date, hour, min, sec);
     Buffer b;
-    b << year << '/' << twodig(month) << month << '/' << twodig(day) << day;
-    std::string short_date = b.to_string();
-    b << bf_reset << short_date << ' ' << twodig(hour) << hour << ':' << twodig(min) << min << ':' << twodig(sec) << sec;
+    b << long_date;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
-    b << bf_reset << "Start compilation: " << short_date << ' ' << twodig(hour) << hour << ':' << twodig(min) << min << ':' << twodig(sec)
-      << sec << "\n";
-    the_main->start_date = b.to_string();
+    the_main->start_date = fmt::format("Start compilation: {}\n", long_date);
     the_main->short_date = short_date;
-    // Default year for the raweb. Until April its last year
+    // Default year for the raweb. Until April its last year \todo remove RA stuff
     if (month <= 4) year--;
     the_parser.set_ra_year(year);
 }

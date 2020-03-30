@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Buffer.h"
+#include <fmt/format.h>
 
 // We define functions that return the name of a token;
 
@@ -34,7 +35,7 @@ auto tralics_ns::strip_end(String s) -> String {
 // This returns a temporary associated to \skip24
 // (given the name skip and the integer 24)
 auto tralics_ns::make_name(String x, int y) -> String {
-    make_name_buffer << bf_reset << x << y;
+    make_name_buffer << bf_reset << fmt::format("{}{}", x, y);
     return make_name_buffer.c_str();
 }
 

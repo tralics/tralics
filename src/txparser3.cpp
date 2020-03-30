@@ -12,6 +12,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace parser_ns {
     auto to_string(boundary_type v) -> String;
@@ -27,7 +28,7 @@ namespace {
 
 // --------------------------------------------------
 
-auto to_string(save_type v) -> String {
+auto to_string(save_type v) -> String { // \todo std::string
     switch (v) {
     case st_boundary: return "boundary";
     case st_cmd: return "command";
@@ -583,7 +584,8 @@ void Parser::pop_level(boundary_type v) {
     if (v == bt_env && cur_tok.is_valid()) {
         std::string foo = cur_tok.tok_to_str();
         if (foo != "\\end" + cur_env_name) {
-            err_buf << bf_reset << "Environment '" << cur_env_name << "' started at line " << first_boundary_loc << " ended by " << cur_tok;
+            err_buf << bf_reset << fmt::format("Environment '{}' started at line {}", cur_env_name, first_boundary_loc) << " ended by "
+                    << cur_tok;
             signal_error(err_tok, "bad end env");
         }
         // this is the wrong env, we nevertheless pop
@@ -635,7 +637,7 @@ void Parser::pop_all_levels() {
             started = true;
             B << "Non-closed " << parser_ns::to_string(w);
             if (w == bt_env) B << " `" << ename << "'";
-            B << " started at line " << l;
+            B << fmt::format(" started at line {}", l);
         }
         the_save_stack.pop_back();
         tmp->unsave(false, *this);
@@ -673,7 +675,7 @@ void Parser::final_checks() {
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1];
         A.reset();
-        A << to_string(p->type) << " at " << p->line;
+        A << fmt::format("{} at {}", to_string(p->type), p->line);
         if (B.empty()) {
             B << "  " << A;
         } else if (B.size() + A.size() < 78) {

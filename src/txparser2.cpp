@@ -12,6 +12,7 @@
 // things, but not the XML generator.
 
 #include "txparser2.h"
+#include <fmt/format.h>
 
 namespace {
     Buffer      local_buf, mac_buf, buf_for_del;
@@ -883,7 +884,7 @@ void Parser::internal_choice_key() {
     int       k;
     bool      found = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
     if (B2 != relax) {
-        local_buf << bf_reset << k;
+        local_buf << bf_reset << fmt::format("{}", k);
         TokenList u = local_buf.str_toks(nlt_cr); // Should be irrelevant ?
         new_macro(u, B2);
     }
@@ -1763,13 +1764,13 @@ void Parser::formatdate() {
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
     Buffer & B  = local_buf;
-    B << bf_reset << FP.year;
+    B << bf_reset << fmt::format("{}", FP.year);
     AL.push_back(Istring("year"), Istring(B));
     int k = FP.month;
     if (k < 0) k = -k;
-    B << bf_reset << k;
-    AL.push_back(Istring("month"), Istring(B));
-    B << bf_reset << FP.day;
+    B << bf_reset << fmt::format("{}", k);
+    AL.push_back(Istring("month"), Istring(B)); // \todo do it without B
+    B << bf_reset << fmt::format("{}", FP.day);
     AL.push_back(Istring("day"), Istring(B));
 }
 

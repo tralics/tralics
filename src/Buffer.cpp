@@ -119,12 +119,10 @@ auto Buffer::convert_to_str() const -> String {
     return aux;
 }
 
-// Inserts a string. Always inserts a null character at the end.
-void Buffer::push_back(String s) {
-    auto n = strlen(s);
-    alloc(n);
-    memcpy(data() + wptr, s, n + 1);
-    wptr += n;
+void Buffer::push_back(const std::string &s) {
+    alloc(s.size());
+    for (auto c : s) at(wptr++) = c;
+    at(wptr) = 0;
 }
 
 void Buffer::push_back_substring(String S, size_t n) {
@@ -141,16 +139,11 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
     at(wptr) = 0;
 }
 
-void Buffer::push_back(int n) { push_back(fmt::format("{}", n)); }
 void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
 
 // In case of error, we add the current line number as attribute
 // via this function
-auto Parser::cur_line_to_istring() -> Istring {
-    Buffer B;
-    B.push_back(get_cur_line());
-    return Istring(B.c_str());
-}
+auto Parser::cur_line_to_istring() -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
 
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
@@ -416,9 +409,7 @@ auto Token::tok_to_str() const -> std::string {
     else {
         B.push_back("{Character ");
         B.out_log(c, the_main->log_encoding);
-        B.push_back(" of catcode ");
-        B.push_back(cat);
-        B.push_back("}");
+        B.push_back(fmt::format(" of catcode {}}}", cat));
     }
     return B.c_str();
 }

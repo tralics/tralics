@@ -124,23 +124,6 @@ public:
     auto pack_or_class(Buffer &aux) -> int;
     void pt_to_mu();
     void process_big_char(size_t n);
-    void push_back(char c);
-    void push_back(uchar c);
-    void push_back(const Buffer &b) { push_back(b.data()); }
-    void push_back(const std::string &b) { push_back(b.c_str()); }
-    void push_back(const Istring &X);
-    void push_back(String s);
-    void push_back(ScaledInt v, glue_spec unit);
-    void push_back(const SthInternal &x);
-    void push_back(const Glue &x);
-    void push_back(const AttList &Y);
-    void push_back(const AttPair &X);
-    void push_back(const Macro &x);
-    void push_back(const Macro &x, bool sw);
-    auto push_back(Token T) -> bool;
-    void push_back(const TokenList &L);
-    void push_back(int n);
-    void push_back(long n);
     void insert_token(Token T, bool sw);
     void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &s);
@@ -169,7 +152,6 @@ public:
     void push_back_substring(String S, size_t n);
     void push_back_substring(const std::string &S, size_t p, size_t n);
     void push_back_unless_punct(char c);
-    void push_back(codepoint c);
     void push_back3(unsigned int x);
     void push_back9(unsigned int x);
     void put_at_end(String s);
@@ -210,17 +192,34 @@ public:
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     auto after_slash() -> bool;
 
-public:
-    template <typename T> auto operator<<(const T &t) -> Buffer & {
-        push_back(t);
-        return *this;
-    }
+    auto push_back(Token T) -> bool;
 
-    auto operator<<(void f(Buffer &)) -> Buffer & {
-        f(*this);
-        return *this;
-    }
+    void push_back(codepoint c);
+    void push_back(char c);
+    void push_back(uchar c);
+    void push_back(const Buffer &b) { push_back(b.data()); }
+    void push_back(const std::string &s);
+    void push_back(const Istring &X);
+    void push_back(ScaledInt v, glue_spec unit);
+    void push_back(const SthInternal &x);
+    void push_back(const Glue &x);
+    void push_back(const AttList &Y);
+    void push_back(const AttPair &X);
+    void push_back(const Macro &x);
+    void push_back(const Macro &x, bool sw);
+    void push_back(const TokenList &L);
+    void push_back(long n);
 };
+
+template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
+    B.push_back(t);
+    return B;
+}
+
+inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
+    f(B);
+    return B;
+}
 
 inline void bf_reset(Buffer &B) { B.wptr = 0; }
 inline void bf_optslash(Buffer &B) { B.optslash(); }

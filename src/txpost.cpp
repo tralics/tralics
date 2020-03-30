@@ -14,6 +14,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include "txtrees.h"
+#include <fmt/format.h>
 
 namespace {
     Buffer                                       scbuf;          // scratch buffer for printing XML, and other things
@@ -200,7 +201,7 @@ void Parser::user_XML_modify(subtypes c) {
 // This is assumed to create a unique ID.
 auto StrHash::next_label_id() -> Istring {
     last_label_id++;
-    mybuf << bf_reset << "uid" << last_label_id;
+    mybuf << bf_reset << fmt::format("uid{}", last_label_id);
     return Istring(hash_find());
 }
 
@@ -208,7 +209,7 @@ auto StrHash::next_label_id() -> Istring {
 // This is assumed to create a unique ID.
 auto StrHash::next_top_label_id() -> Istring {
     last_top_label_id++;
-    mybuf << bf_reset << "cid" << last_top_label_id;
+    mybuf << bf_reset << fmt::format("cid{}", last_top_label_id);
     return Istring(hash_find());
 }
 
@@ -971,7 +972,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
             junk->push_back(P);
             continue;
         }
-        scbuf << bf_reset << n;
+        scbuf << bf_reset << fmt::format("{}", n);
         auto par_id = Istring(scbuf);
         ++n;
         for (;;) {
@@ -1124,7 +1125,7 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
         L = N;
     }
     first->set_next(nullptr);
-    if (printed != 0) { scbuf << i << '=' << printed << ", "; }
+    if (printed != 0) { scbuf << fmt::format("{}={}, ", i, printed); }
 }
 
 // Finish dumping the words

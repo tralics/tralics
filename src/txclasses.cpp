@@ -13,6 +13,7 @@
 #include "txclasses.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 Buffer file_list;
 
@@ -913,7 +914,7 @@ void Parser::T_class_error(subtypes c) {
         ++C;
     }
     if (on_line && what != mt_error) {
-        B << " at line " << get_cur_line();
+        B << fmt::format(" at line {}", get_cur_line());
         std::string f = get_cur_filename();
         if (!f.empty()) B << " of file " << f;
     }

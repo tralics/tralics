@@ -15,6 +15,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include <algorithm>
+#include <fmt/format.h>
 
 namespace {
     Buffer             math_buffer;
@@ -305,7 +306,7 @@ auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
         if (w != nullptr)
             X << "Argument list for \\" << w;
         else
-            X << "cimpossible " << int(y);
+            X << fmt::format("cimpossible {}", y);
         break;
     }
     }
@@ -327,7 +328,7 @@ void Math::print() const {
         auto E = value.end();
         while (C != E) {
             k++;
-            Trace << k << " ";
+            Trace << fmt::format("{} ", k);
             C->print();
             ++C;
         }
@@ -343,17 +344,17 @@ void MathElt::print() const {
         Trace << "only for " << (chr == zero_code ? "math\n" : "nomath\n");
         return;
     }
-    Trace << "ME " << cmd << " - ";
+    Trace << fmt::format("ME {} - ", cmd);
     if (32 < chr && chr < 128)
-        Trace << "char " << uchar(chr);
+        Trace << fmt::format("char {}", uchar(chr));
     else
-        Trace << chr;
+        Trace << fmt::format("{}", chr);
     // is this secure ???
     //  if(cmd>16) Trace << " - " <<  Token(get_font());
     if (cmd == mathfont_cmd || is_m_font(symcodes(cmd)))
         Trace << " - " << Token(get_font()) << "\n";
     else
-        Trace << " - " << int(get_font()) << "\n";
+        Trace << fmt::format(" - {}\n", get_font());
     if (cmd == math_list_cmd || cmd == special_math_cmd) get_list().print(); // recurse
 }
 
@@ -419,7 +420,7 @@ void Parser::add_math_label(Xml *res) {
     if (the_tag.empty()) {
         static int mid = 0;
         mid++;
-        math_buffer << bf_reset << "mid" << mid;
+        math_buffer << bf_reset << fmt::format("mid{}", mid);
         the_tag = math_buffer.to_string();
     }
     the_stack.create_new_anchor(res->id, my_id, Istring(the_tag));
@@ -1234,7 +1235,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B << " for the current the formula";
             else {
-                B << " on row " << l << " of the formula";
+                B << fmt::format(" on row {} of the formula", l);
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
@@ -1245,7 +1246,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B << " for the current formula";
             else {
-                B << " on row " << l << " of formula";
+                B << fmt::format(" on row {} of formula", l);
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }

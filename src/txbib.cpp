@@ -75,7 +75,7 @@ std::array<String, 30> bib_xml_name{
 auto Bibliography::unique_bid() -> Istring {
     last_bid++;
     Buffer &B = biblio_buf4;
-    B << bf_reset << "bid" << last_bid;
+    B << bf_reset << fmt::format("bid{}", last_bid);
     return Istring(B);
 }
 
@@ -1649,7 +1649,7 @@ void BibEntry::use_extra_num() {
     if (extra_num <= 25)
         B << char('a' + extra_num);
     else
-        B << extra_num;
+        B << fmt::format("{}", extra_num);
     label = B.to_string();
 }
 
@@ -2962,7 +2962,7 @@ void tralics_ns::bibtex_boot(String b, String dy, std::string no_year, bool inra
 void tralics_ns::bibtex_set_nocite() { the_bibliography.set_nocite(); }
 
 void tralics_ns::bibtex_insert_jobname() {
-    if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(tralics_ns::get_short_jobname().c_str()); }
+    if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(tralics_ns::get_short_jobname()); }
 }
 
 void Bibtex::boot(std::string S, bool inra) {

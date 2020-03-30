@@ -13,6 +13,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
@@ -662,7 +663,7 @@ auto Parser::scan_anchor(bool &h) -> std::string {
     h             = remove_initial_star();
     std::string s = sT_optarg_nopar();
     if (!s.empty()) return s;
-    mac_buffer << bf_reset << anchor_id;
+    mac_buffer << bf_reset << fmt::format("{}", anchor_id);
     return mac_buffer.to_string();
 }
 
@@ -1028,7 +1029,7 @@ ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a
     B.reset();
     static int n = 0;
     ++n;
-    B << "colid" << n;
+    B << fmt::format("colid{}", n);
     id = Istring(B); // This is a unique id
     xval->id.add_attribute(np_id, id);
 }

@@ -11,6 +11,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 // Font info stuff.
 
@@ -317,10 +318,7 @@ auto TexFonts::name(long k) -> std::string {
 void TexFonts::full_name(Buffer &B, long k) {
     if (!is_valid(k)) return;
     B.push_back(at(to_unsigned(k)).name);
-    if (at(to_unsigned(k)).scaled_val != 0) {
-        B.push_back(" scaled ");
-        B.push_back(at(to_unsigned(k)).scaled_val);
-    }
+    if (at(to_unsigned(k)).scaled_val != 0) B << fmt::format(" scaled {}", at(to_unsigned(k)).scaled_val);
     if (at(to_unsigned(k)).at_val != 0) {
         B.push_back(" at ");
         B.push_back(ScaledInt(at(to_unsigned(k)).at_val), glue_spec_pt);

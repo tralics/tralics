@@ -10,6 +10,7 @@
 
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace arith_ns {
     void start_err(String s);
@@ -32,7 +33,7 @@ void arith_ns::end_err() { the_parser.signal_error(the_parser.err_tok, "Arithmet
 void ScaledInt::ovf30() {
     if (value > max_dimension || -value > max_dimension) {
         start_err(nullptr);
-        err_buf << ", threshold=" << max_dimension << ", cur val=" << value;
+        err_buf << fmt::format(", threshold={}, cur val=", max_dimension, value);
         end_err();
         value = max_dimension;
     }
@@ -43,7 +44,7 @@ void ScaledInt::ovf30() {
 void ScaledInt::ovf31() {
     if (value > max_integer || value < -max_integer) {
         start_err(nullptr);
-        err_buf << ", threshold=" << max_integer << ", cur val=" << value;
+        err_buf << fmt::format(", threshold={}, cur val={}", max_integer, value);
         end_err();
         value = 0;
     }

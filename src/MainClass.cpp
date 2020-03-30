@@ -989,7 +989,7 @@ void MainClass::see_name1() {
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
-        C << year;
+        C << fmt::format("{}", year);
         year_string = C.to_string();
     } else {
         year = atoi(year_string.c_str());

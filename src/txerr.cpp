@@ -134,27 +134,28 @@ void Parser::parse_error(Token T, const std::string &s1, Token s2, const std::st
 
 // May be signaled in case \end{verbatim} is missing
 void Parser::bad_end_env(int cl) {
-    err_buf << bf_reset << "End of data reached while scanning end of environment " << get_cur_env_name() << "\nscanning started line "
-            << cl;
+    err_buf << bf_reset
+            << fmt::format("End of data reached while scanning end of environment {}\nscanning started line {}", get_cur_env_name(), cl);
     signal_error(err_tok, "Bad end env");
 }
 
 // Error signaled if no closing brace is found
 void Parser::missing_close_brace(int cl) {
     err_buf << bf_reset << "End of data reached while scanning a group;\n"
-            << "scanning started line " << cl << "\nscanning argument of " << err_tok.tok_to_str();
+            << fmt::format("scanning started line {}\nscanning argument of {}", cl, err_tok.tok_to_str());
     signal_error(err_tok, "Missing close brace");
 }
 
 // Error signaled if EOF found while scanning a delimited argument
 void Parser::bad_delimited(int cl, Token x) {
-    err_buf << bf_reset << "End of data reached while scanning argument of " << err_tok.tok_to_str() << "\nscanning started at line " << cl;
+    err_buf << bf_reset << fmt::format("End of data reached while scanning argument of {}\n", err_tok.tok_to_str())
+            << fmt::format("scanning started at line {}", cl);
     if (!x.is_null()) err_buf << "\nexpected " << x.tok_to_str();
     signal_error(err_tok, "bad macro");
 }
 
 void Parser::err_one_arg(const TokenList &L) {
-    err_buf << bf_reset << "The command " << err_tok.tok_to_str() << " takes one token as argument instead of " << int(L.size());
+    err_buf << bf_reset << fmt::format("The command {} takes one token as argument instead of ", err_tok.tok_to_str(), L.size());
     if (!L.empty()) err_buf << "\nargument is: " << L;
     signal_error(err_tok, "onearg");
 }
@@ -173,7 +174,7 @@ void Parser::runaway(int cl) {
     else {
         err_buf << "Runaway argument?\n"
                 << "Paragraph ended while scanning an argument of " << err_tok.tok_to_str();
-        if ((cl != 0) && cl != get_cur_line()) err_buf << ";\nscanning started on line " << cl;
+        if ((cl != 0) && cl != get_cur_line()) err_buf << fmt::format(";\nscanning started on line {}", cl);
     }
     signal_error(err_tok, "Runaway argument");
 }
@@ -195,8 +196,7 @@ void Parser::bad_group_char() {
 
 // Error signaled when pass_test sees end of data.
 void Parser::lost_if(Token T, int l) {
-    err_buf << bf_reset << "End of data reached while scanning \\fi"
-            << "\nfor condition started on line " << l;
+    err_buf << bf_reset << fmt::format("End of data reached while scanning \\fi\nfor condition started on line {}", l);
     signal_error(T, "lostif");
 }
 
@@ -264,7 +264,7 @@ void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
 void Parser::undefined_mac() {
     bool noxml = the_main->no_undef_mac;
     err_buf << bf_reset << "Undefined command " << cur_tok.tok_to_str();
-    if (!cur_cmd_chr.is_undef()) err_buf << "; command code = " << cur_cmd_chr.cmd;
+    if (!cur_cmd_chr.is_undef()) err_buf << fmt::format("; command code = {}", cur_cmd_chr.cmd);
     if (noxml) {
         signal_error(Token(), "Undefined command");
         eq_define(cur_tok.eqtb_loc(), CmdChr(self_insert_cmd, zero_code), true);
@@ -303,7 +303,7 @@ void Parser::wrong_pop(Token T, String a, String b) {
 
 void Parser::extra_close_brace(int cl) {
     err_buf << bf_reset << "Extra closing brace\n"
-            << "scanning started at line " << cl << "\nfor argument to " << err_tok.tok_to_str();
+            << fmt::format("scanning started at line {}\nfor argument to ", cl, err_tok.tok_to_str());
     signal_error(err_tok, "extra close brace");
 }
 
@@ -361,7 +361,7 @@ void Parser::counter_overflow(Token T, long n, int nmax) {
     if (n <= 0)
         err_buf << "Value must be positive";
     else
-        err_buf << "Value must be at most " << nmax;
+        err_buf << fmt::format("Value must be at most {}", nmax);
     signal_error(T, "counter overflow");
 }
 
@@ -373,7 +373,7 @@ void Parser::bad_redefinition(int rd, Token T) {
 }
 
 void Parser::multiple_label(String name, int l, const std::string &f) {
-    err_buf << bf_reset << "Label '" << name << "' multiply defined (first use line " << l << " file " << f << ")";
+    err_buf << bf_reset << fmt::format("Label '{}' multiply defined (first use line {} file {})", name, l, f);
     signal_error(hash_table.label_token, "already defined label");
 }
 
