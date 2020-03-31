@@ -20,17 +20,14 @@
 #include <utility>
 #include <vector>
 
-// The line editor
-class Slined;
-
-Slined *                 the_editor   = nullptr;
-Slined *                 the_editor_c = nullptr;
-const unsigned           buf_size     = 2048;
-const unsigned           in_size      = 4096;
-bool                     term_set     = false;
-std::array<int, in_size> word_beg{};
-std::array<int, in_size> word_end{};
-std::string              cur_prompt{"> "};
+namespace {
+    const unsigned           buf_size = 2048;
+    const unsigned           in_size  = 4096;
+    bool                     term_set = false;
+    std::array<int, in_size> word_beg{};
+    std::array<int, in_size> word_end{};
+    std::string              cur_prompt{"> "};
+} // namespace
 
 // Conditional code for windows
 
@@ -180,11 +177,15 @@ public:
     void run();
 };
 
+namespace {
+    std::optional<Slined> the_editor, the_editor_c;
+} // namespace
+
 // Constructs two copies, one for showing the history.
 // This function is called only once.
 void readline_ns::make_edit() {
-    the_editor_c = new Slined(in_size, nullptr);
-    the_editor   = new Slined(0, "%% start of history (say \\stop to exit)");
+    the_editor_c.emplace(in_size, nullptr);
+    the_editor.emplace(0, "%% start of history (say \\stop to exit)");
 }
 
 // Copy len characters from source to target. Strings may overlap.
@@ -561,11 +562,11 @@ void Slined::fast_ins(size_t n, String s, size_t l) {
 void Slined::Hshow() {
     unsigned            n      = 0;
     auto                sz     = m_history.size();
-    Slined *            new_ed = the_editor_c;
+    Slined &            new_ed = *the_editor_c;
     std::array<char, 4> p{};
-    p[2]           = ' ';
-    p[3]           = 0;
-    new_ed->m_size = m_size + m_prompt.size() - 3;
+    p[2]          = ' ';
+    p[3]          = 0;
+    new_ed.m_size = m_size + m_prompt.size() - 3;
     for (size_t i = 0; i < sz; i++) {
         n++;
         if (n >= 100) n = n - 100;
@@ -573,16 +574,16 @@ void Slined::Hshow() {
             p[0] = ' ';
         else
             p[0] = '0' + static_cast<char>(n / 10);
-        p[1]             = '0' + (n % 10);
-        new_ed->m_prompt = p.data();
-        new_ed->m_inpos  = 0;
-        String S         = m_history[i].c_str();
-        auto   k         = strlen(S);
+        p[1]            = '0' + (n % 10);
+        new_ed.m_prompt = p.data();
+        new_ed.m_inpos  = 0;
+        String S        = m_history[i].c_str();
+        auto   k        = strlen(S);
         if (k > buf_size - 2) k = buf_size - 2;
-        new_ed->m_inmax = to_signed(k);
-        strncpy(new_ed->m_inbuf, S, k);
-        new_ed->m_inbuf[k] = 0;
-        new_ed->redisplay();
+        new_ed.m_inmax = to_signed(k);
+        strncpy(new_ed.m_inbuf, S, k);
+        new_ed.m_inbuf[k] = 0;
+        new_ed.redisplay();
         std::cerr.put('\n');
     }
 }
@@ -981,7 +982,7 @@ void Slined::run() {
 }
 
 void readline(char *buffer, size_t screen_size) {
-    if (the_editor == nullptr) readline_ns::make_edit();
+    if (!the_editor) readline_ns::make_edit();
     the_editor->initialise(buffer, cur_prompt, screen_size);
     set_termio();
     the_editor->run();

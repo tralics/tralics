@@ -51,15 +51,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class RestoreVbSpace {
-    Token   value; // value to restore
-    Parser *P;     // this object has a pointer to the parser
-public:
-    RestoreVbSpace(Parser *p);
-    ~RestoreVbSpace();
-    void operator()(Token T);
-};
-
 class SaveCatcode {
 private:
     char32_t character; // a character

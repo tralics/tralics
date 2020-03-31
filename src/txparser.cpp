@@ -15,8 +15,7 @@
 #include <fmt/format.h>
 
 namespace {
-    Buffer trace_buffer;
-    Buffer Thbuf1, Thbuf2;
+    Buffer trace_buffer, Thbuf1, Thbuf2;
 } // namespace
 
 namespace token_ns {
@@ -781,16 +780,6 @@ void Parser::special_fvset() {
     }
 }
 
-// We use RestoreVbSpace for changing temporarily expansion of space
-inline RestoreVbSpace::RestoreVbSpace(Parser *p) {
-    P     = p;
-    value = P->verbatim_chars[uchar(' ')];
-}
-
-inline RestoreVbSpace::~RestoreVbSpace() { P->verbatim_chars[uchar(' ')] = value; }
-
-inline void RestoreVbSpace::operator()(Token T) { P->verbatim_chars[uchar(' ')] = T; }
-
 // In the case of \verb+foo+, reads and returns the + character.
 // Sets special_space to true if spaces have to be treaded specially
 // Returns null in case of error
@@ -833,9 +822,11 @@ void Parser::T_verb(codepoint t) {
         verb_error(T, 1);
         return;
     }
-    RestoreVbSpace X(this);
-    if (special_space) X(hash_table.textvisiblespace_token);
+
+    auto saved = verbatim_chars[uchar(' ')];
+    if (special_space) verbatim_chars[uchar(' ')] = hash_table.textvisiblespace_token;
     if (vb_tokens(t, TL, true)) verb_error(T, 2);
+    verbatim_chars[uchar(' ')] = saved;
 }
 
 // Case of the \SaveVerb command
