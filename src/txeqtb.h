@@ -51,15 +51,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class SaveCatcode {
-private:
-    char32_t character; // a character
-    long     code;      // the code of the character to restore
-public:
-    SaveCatcode(char32_t c, long nc);
-    ~SaveCatcode();
-};
-
 class SaveScannerStatus {
 private:
     scan_stat code;

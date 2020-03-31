@@ -101,15 +101,6 @@ Parser::Parser() : cur_env_name("document") {
     cur_font.set_old_from_packed();
 }
 
-// Saves in *this the catcode at position c, modifies it to be nc
-SaveCatcode::SaveCatcode(char32_t c, long nc) : character(c) {
-    code                                     = the_parser.eqtb_int_table[character].val;
-    the_parser.eqtb_int_table[character].val = nc;
-}
-
-// Undoes a catcode change
-SaveCatcode::~SaveCatcode() { the_parser.eqtb_int_table[character].val = code; }
-
 // saving and restoring things
 
 // This converts a boundary_type to a String for printing
