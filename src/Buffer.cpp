@@ -339,13 +339,14 @@ void Buffer::remove_last_quote() {
 
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
+// \todo call substring or add tail method to Buffer
 void Buffer::remove_last_space() {
     if (wptr > 0 && is_spaceh(wptr - 1))
         wptr--;
     else if (wptr >= 6 && strncmp(data() + wptr - 6, "&nbsp;", 6) == 0)
         wptr -= 6;
-    else if (wptr >= 6 && strncmp(data() + wptr - 6, "&#xA;", 5) == 0)
-        wptr -= 6;
+    else if (wptr >= 5 && strncmp(data() + wptr - 5, "&#xA;", 5) == 0)
+        wptr -= 5;
     at(wptr) = 0;
 }
 
@@ -1092,22 +1093,20 @@ void operator<<(std::fstream &X, const Image &Y) {
 void Parser::finish_images() {
     auto s = the_images.size();
     if (s == 0) return;
-    std::string name = tralics_ns::get_short_jobname() + ".img";
-    String      wn   = tralics_ns::get_out_dir(name);
-    auto *      fp   = new std::fstream(wn, std::ios::out);
-    if (!*fp) return;
-    *fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
+    std::string  name = tralics_ns::get_short_jobname() + ".img";
+    String       wn   = tralics_ns::get_out_dir(name);
+    std::fstream fp(wn, std::ios::out);
+    fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
     check_image2.reset();
     for (size_t i = 0; i < s; i++) {
         if (the_images[i].occ != 0) {
             the_images[i].check_existence();
             the_images[i].check();
-            *fp << the_images[i];
+            fp << the_images[i];
         }
     }
-    fp->close();
-    delete fp;
+    fp.close();
     if (s == 0)
         main_ns::log_or_tty << "There was no image.\n";
     else
@@ -1167,7 +1166,7 @@ auto Buffer::is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
 auto Buffer::last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
 
 void Buffer::push_back(const TokenList &L) {
-    for (auto &C : L) { insert_token(C, false); }
+    for (const auto &C : L) { insert_token(C, false); }
 }
 
 void Buffer::skip_letter() {

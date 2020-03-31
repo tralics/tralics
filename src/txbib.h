@@ -18,7 +18,7 @@
 struct CitationKey {
     std::string cite_key;           // cite key, say Foo
     std::string lower_cite_key;     // cite key, lower case, say foo
-    bib_from    cite_prefix;        // symbolic prefix, say from_foot
+    bib_from    cite_prefix{};      // symbolic prefix, say from_foot
     std::string full_key;           // something like footcite:Foo
     void        make_key(String s); // creates the key.
 
@@ -197,7 +197,7 @@ class BibEntry {
     BibEntry *                          crossref_from{nullptr}; // reverse crossref
     entry_type                          type_int{type_unknown}; // the type of the entry
     CitationKey                         cite_key;               // the cite_key structure
-    bib_creator                         why_me;                 // reason why this entry is considered
+    bib_creator                         why_me{};               // reason why this entry is considered
     std::array<std::string, fp_unknown> all_fields;             // all the fields
     BibtexName                          author_data;            // already processed author data
     BibtexName                          editor_data;            // already processed editor data
@@ -207,8 +207,8 @@ class BibEntry {
     std::string  lab1, lab2, lab3; // two temporaries.
     size_t       id{0};
     bool         explicit_cit{false};
-    c_primaire   main_c_type;
-    c_secondaire second_c_type;
+    c_primaire   main_c_type{};
+    c_secondaire second_c_type{};
     int          first_line{-1};
     std::string *user_fields{nullptr};
     size_t       is_extension{};
@@ -281,7 +281,7 @@ private:
     std::vector<BibEntry *>  all_entries;       // potential entries
     std::vector<BibEntry *>  all_entries_table; // real entries
     std::vector<std::string> user_model;
-    bib_from                 entry_prefix;
+    bib_from                 entry_prefix{};
     bool                     nocitestar{false};
     bool                     normal_biblio{true};
     bool                     refer_biblio{};

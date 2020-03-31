@@ -626,13 +626,14 @@ auto Mactab::new_macro(Macro *s) -> subtypes {
 
 // Initially cur_rc_mac_len=0, tables are empty
 // Note that the table always contains a valid pointer
+// \todo use std::vector instead
 void Mactab::rc_mac_realloc() {
     auto          k         = cur_rc_mac_len;
     auto          ns        = k + 400;
     static Macro *empty_mac = nullptr;
     if (empty_mac == nullptr) empty_mac = new Macro;
-    auto T1 = new Macro *[ns];
-    auto T2 = new long[ns];
+    auto *T1 = new Macro *[ns];
+    auto *T2 = new long[ns];
     for (size_t i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];

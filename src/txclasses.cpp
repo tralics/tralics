@@ -15,6 +15,8 @@
 #include "txparser.h"
 #include <fmt/format.h>
 
+using namespace std::string_literals;
+
 Buffer file_list;
 
 namespace {
@@ -145,7 +147,7 @@ auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X)
 // failure (slot 0 does not hold a valid package)
 // Creates if creat is true.
 auto ClassesData::find_package(const std::string &name, bool type, bool creat) -> size_t {
-    std::string full_name = (type ? "C" : "P") + name;
+    std::string full_name = (type ? "C"s : "P"s) + name;
     auto        n         = packages.size();
     for (size_t i = 1; i < n; i++)
         if (packages[i]->has_name(full_name)) return i;
@@ -632,7 +634,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     cur->add_options(cur_opt_list);
     cur->req_date                      = date;
     String T                           = type ? "Class" : "Package";
-    bool   res                         = tralics_ns::find_in_confdir(name + (type ? ".clt" : ".plt"), true);
+    bool   res                         = tralics_ns::find_in_confdir(name + (type ? ".clt"s : ".plt"s), true);
     the_class_data.using_default_class = false;
     if (!res) {
         std::string D = the_main->default_class;
@@ -646,7 +648,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     }
     if (!res) {
         if (builtin) cur->date = "2006/01/01";
-        the_log << lg_start << T << " " << name << (builtin ? " builtin" : " unknown") << lg_end;
+        the_log << lg_start << T << " " << name << (builtin ? " builtin"s : " unknown"s) << lg_end;
         return;
     }
     cur->date = "0000/00/00";
@@ -953,12 +955,12 @@ void Parser::T_change_element_name() {
     bool        star  = remove_initial_star();
     std::string name  = special_next_arg();
     std::string value = sE_arg_nopar();
-    bool        res   = 0;
+    bool        res{};
     if (star) {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else
         res = config_ns::assign_name(name.c_str(), value.c_str());
-    if (res) the_log << lg_start << "Changed " << (star ? "att_" : "xml_") << name << " to " << value << lg_end;
+    if (res) the_log << lg_start << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << lg_end;
 }
 
 // -------------------------------------------------------------------

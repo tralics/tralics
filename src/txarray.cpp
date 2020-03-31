@@ -333,14 +333,7 @@ void NewArray::run(Xid ID, bool main_fct) {
             break;
         case chc_inter: current_list.clear(); break;
         case chc_pre_bar:
-            if (last_ch_class == chc_cell)
-                break;
-            else if (last_ch_class == chc_bar)
-                break;
-            else if (last_ch_class == chc_v)
-                break;
-            else if (last_ch_class == chc_u)
-                P->parse_error("illegal ! or @");
+            if (last_ch_class == chc_u) P->parse_error("illegal ! or @");
             break;
         case chc_pre_inter:
             if (last_ch_class == chc_u) P->parse_error("illegal ! or @");

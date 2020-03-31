@@ -1,6 +1,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <filesystem>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -145,7 +146,7 @@ namespace {
 
     /// Create an empty TeX file
     void mk_empty() {
-        auto res = new LinePtr;
+        auto *res = new LinePtr;
         res->reset(".tex");
         res->insert(1, "\\message{File ignored^^J}\\endinput", false);
         main_ns::register_file(res);
@@ -365,8 +366,7 @@ void MainClass::check_for_input() {
     main_ns::path_buffer.wptr -= 3;
     main_ns::path_buffer.push_back("ult");
     ult_name = main_ns::path_buffer.to_string();
-    auto *fp = new std::fstream(s.c_str(), std::ios::in);
-    if (fp == nullptr) {
+    if (!std::filesystem::exists(s)) {
         std::cout << "Empty input file " << s << "\n";
         exit(1);
     }
@@ -502,7 +502,7 @@ auto MainClass::split_one_arg(String a, int &p) -> String {
         if (c == 0) break;
         ++i;
         if (c == '=') {
-            while ((a[i] != 0) && a[i] == ' ') ++i;
+            while (a[i] == ' ') ++i;
             p = i;
             break;
         }
@@ -535,7 +535,7 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     }
     ++p;
     String a = argv[p];
-    if ((*a != 0) && *a == ' ') ++a;
+    if (*a == ' ') ++a;
     return a;
 }
 

@@ -30,7 +30,7 @@ class MainClass {
     LinePtr config_file;   // content of configuratrion file
     LinePtr from_config;   // lines extracted from the configuration
 
-    system_type cur_os;
+    system_type cur_os{};
 
     std::vector<std::string> all_config_types;
     std::vector<std::string> after_conf;
