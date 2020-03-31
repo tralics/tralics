@@ -99,7 +99,7 @@ private:
     size_t                 input_line_pos{0};                     // position in input_line
     Xml *                  the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
-private:
+
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
     [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
@@ -135,15 +135,15 @@ public:
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
-    void               brace_me(TokenList &L);
+    void               brace_me(TokenList &L) const;
     [[nodiscard]] auto cur_centering() const -> long { return eqtb_int_table[incentering_code].val; }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
-    auto               cur_line_to_istring() -> Istring;
+    auto               cur_line_to_istring() const -> Istring;
     void               decr_cur_level() { cur_level--; }
-    auto               get_cur_filename() -> std::string { return lines.file_name; }
+    auto               get_cur_filename() const -> std::string { return lines.file_name; }
     [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
-    auto               get_cur_level() -> int { return cur_level; }
+    auto               get_cur_level() const -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal & { return cur_val; }
     [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
@@ -173,7 +173,7 @@ public:
     void               unexpected_font() { unexpected_seen_hi = true; }
     void               L3_load(bool preload);
     // public functions
-public:
+
     Parser();
 
     void               add_buffer_to_document_hook(Buffer &b, const std::string &name);
@@ -345,7 +345,7 @@ private:
     void        disable_keys();
     auto        do_register_arg(int q, int &p, Token &tfe) -> size_t;
     void        do_register_command(bool gbl);
-    void        dump_save_stack();
+    void        dump_save_stack() const;
     auto        edef_aux(TokenList &L) -> bool;
     void        english_quotes(CmdChr X);
     void        enter_file_in_table(const std::string &nm, bool ok);
@@ -920,7 +920,7 @@ private:
     void        T_start_the_biblio();
     void        T_start_theorem(int c);
     void        T_testopt();
-    void        T_titlepage(size_t v);
+    void        T_titlepage(size_t v) const;
     void        T_trees(int c);
     void        T_translate(TokenList &X);
     void        T_typein();
@@ -944,7 +944,7 @@ private:
     void        T_xkeyval(subtypes c);
     void        E_xspace();
     void        TM_fonts();
-    void        TM_math_fonts(Math &x);
+    void        TM_math_fonts(Math &x) const;
     void        TM_tabular_arg(Xid id);
 
     void        Tat_pers();
@@ -974,8 +974,8 @@ private:
     void        token_show(int what, Buffer &B);
     void        token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void        trace_if(int k);
-    void        trace_if(String a, int k, String b);
-    void        trace_if(String a, int k, long b);
+    void        trace_if(String a, int k, String b) const;
+    void        trace_if(String a, int k, long b) const;
     static void trace_scan_expr(String s, const SthInternal &v, char t, Token T);
     void        translate01();
     void        translate02();
@@ -992,7 +992,7 @@ private:
     void        unexpected_close_brace();
     void        unskip_group(String s);
     void        upn_eval(TokenList &l);
-    void        url_hack(TokenList &L);
+    void        url_hack(TokenList &L) const;
     void        use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void        E_usename(int c, bool vb);
     void        user_XML_swap(subtypes c);
@@ -1069,7 +1069,7 @@ private:
     auto L3_split_next_name() -> bool;
     auto l3_to_string(subtypes c, TokenList &L) -> std::string;
     void L3_user_split_next_name(bool base);
-    void tex_string(Buffer &B, Token T, bool esc);
+    void tex_string(Buffer &B, Token T, bool esc) const;
     auto l3_read_int(Token T) -> long;
     void L3_set_cat_code(int c);
     void L3_set_num_code(int c);

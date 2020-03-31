@@ -41,7 +41,7 @@ public:
         old       = packed;
         old_color = color;
     }
-    auto is_ok() -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
+    auto is_ok() const -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
     void pack() { packed = tsize + shape + family + series + size; }
     void unpack();
     void change_size(long c);
@@ -52,7 +52,7 @@ public:
     }
     void see_font_change(subtypes c);
     auto show_font() -> String;
-    auto get_size() -> long { return size / 2048; }
+    auto get_size() const -> long { return size / 2048; }
     void set_level(int k) { level = k; }
     void set_packed(long k) { packed = k; }
     void set_old_from_packed() { old = packed; }

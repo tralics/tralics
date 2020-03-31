@@ -674,7 +674,7 @@ void Parser::T_label(int c) {
         create_label(a, the_stack.get_cur_id());
         return;
     }
-    bool        h;
+    bool        h  = 0;
     std::string s  = scan_anchor(h);
     Istring     id = the_stack.add_anchor(s, h);
     if (c == 2) {
@@ -1404,7 +1404,7 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
 }
 
 // Inserts a \allowbreak after dot and slash
-void Parser::url_hack(TokenList &L) {
+void Parser::url_hack(TokenList &L) const {
     TokenList R;
     for (;;) {
         if (L.empty()) {
@@ -1492,7 +1492,7 @@ void Parser::T_hanl(subtypes c) {
     leave_v_mode();
     the_stack.push(the_names[cst_hanl], nullptr);
     the_stack.hack_for_hanl();
-    Xml *B, *val;
+    Xml *B = nullptr, *val = nullptr;
     if (c == 2) {
         B   = T_hanl_url();
         val = T_hanl_text();
@@ -1827,7 +1827,7 @@ void Parser::T_put(subtypes c) {
     Token C = cur_tok;
     flush_buffer();
     Istring        A, B, D;
-    name_positions x0;
+    name_positions x0{};
     switch (c) {
     case put_code: x0 = np_put; break;
     case line_code: x0 = np_line; break;

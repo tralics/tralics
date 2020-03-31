@@ -118,9 +118,9 @@ public:
             b = "";
         }
     }
-    auto        find_true_false(String s) -> int;
+    auto        find_true_false(String s) const -> int;
     static auto counter_val(int k) -> int;
-    auto        find_counter() -> int;
+    auto        find_counter() const -> int;
 };
 
 // Data structure for label and references.

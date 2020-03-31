@@ -56,7 +56,7 @@ public:
     [[nodiscard]] auto get_what() const -> recur_type { return what; }
     void               incr_int_val() { int_val++; }
     void               mark_found() { int_val = 1; }
-    auto               is_ok() -> bool { return int_val != 0; }
+    auto               is_ok() const -> bool { return int_val != 0; }
     [[nodiscard]] auto get_xml_val() const -> Xml * { return xml_val; }
     [[nodiscard]] auto get_int_val() const -> long { return int_val; }
     [[nodiscard]] auto get_string_val() const -> Istring { return string_val; }

@@ -25,7 +25,7 @@ auto AttList::has_value(Istring x) const -> std::optional<size_t> {
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
-auto Xid::has_attribute(Istring n) -> Istring {
+auto Xid::has_attribute(Istring n) const -> Istring {
     AttList &X = get_att();
     auto     i = X.has_value(n);
     if (i) return X.get_val(*i);
@@ -65,26 +65,26 @@ void AttList::push_back(name_positions N, name_positions V) { push_back(the_name
 void AttList::push_back(name_positions N, Istring v) { push_back(the_names[N], v, true); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B) { get_att().push_back(A, B); }
+void Xid::add_attribute(Istring A, Istring B) const { get_att().push_back(A, B); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B, bool f) { get_att().push_back(A, B, f); }
+void Xid::add_attribute(Istring A, Istring B, bool f) const { get_att().push_back(A, B, f); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(name_positions A, name_positions B) { get_att().push_back(A, B); }
-void Xid::add_attribute(name_positions A, name_positions B, bool c) { get_att().push_back(A, B, c); }
+void Xid::add_attribute(name_positions A, name_positions B) const { get_att().push_back(A, B); }
+void Xid::add_attribute(name_positions A, name_positions B, bool c) const { get_att().push_back(A, B, c); }
 
-void Xid::add_attribute(name_positions n, Istring v) { get_att().push_back(n, v); }
+void Xid::add_attribute(name_positions n, Istring v) const { get_att().push_back(n, v); }
 
 // Adds the list L to the attribute list of this id.
 
-void Xid::add_attribute(const AttList &L, bool force) {
+void Xid::add_attribute(const AttList &L, bool force) const {
     size_t   n = L.val.size();
     AttList &l = get_att();
     for (size_t i = 0; i < n; i++) l.push_back(L.val[i].name, L.val[i].value, force);
 }
 
-void Xid::add_attribute_but_rend(Xid b) {
+void Xid::add_attribute_but_rend(Xid b) const {
     AttList &L = b.get_att();
     size_t   n = L.val.size();
     AttList &l = get_att();

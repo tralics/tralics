@@ -2280,7 +2280,7 @@ auto Parser::get_mac_value(Token t) -> TokenList {
 
 // c is the number of arguments, c=0 is the same as 1, 5 is 12of3
 void Parser::E_all_of_one(Token T, int c) {
-    String s;
+    String s  = nullptr;
     int    n  = 0;
     bool   vb = tracing_macros();
     switch (c) {
@@ -2780,12 +2780,12 @@ void Parser::trace_if(int k) {
     }
 }
 
-void Parser::trace_if(String a, int k, String b) {
+void Parser::trace_if(String a, int k, String b) const {
     if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << lg_end;
 }
 
 // same code
-void Parser::trace_if(String a, int k, long b) {
+void Parser::trace_if(String a, int k, long b) const {
     if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << lg_end;
 }
 
@@ -2928,8 +2928,8 @@ auto Parser::eval_condition(subtypes test) -> bool {
     case ifx_code: return E_ifx();
     case if_char_code:
     case if_cat_code: {
-        symcodes a1, a2;
-        subtypes b1, b2;
+        symcodes a1{}, a2{};
+        subtypes b1{}, b2{};
         get_x_token_or_active_char(a1, b1);
         get_x_token_or_active_char(a2, b2);
         if (test == if_char_code) return b1 == b2;
@@ -3301,8 +3301,8 @@ void Parser::define_something(int chr, bool gbl, symcodes w) {
 
 // This handles \catcode, \lccode etc, in a set context.
 void Parser::assign_def_something(bool gbl) {
-    Token  T = cur_tok;
-    int    n;
+    Token  T      = cur_tok;
+    int    n      = 0;
     size_t offset = cur_cmd_chr.chr;
     if (offset == 0)
         n = 15; // catcode
@@ -3345,9 +3345,9 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     auto pos = cur_tok.eqtb_loc();
     eq_define(pos, CmdChr(relax_cmd, relax_code), gbl);
     scan_optional_equals();
-    cur_tok = t;
-    size_t   k;
-    symcodes ncmd;
+    cur_tok    = t;
+    size_t   k = 0;
+    symcodes ncmd{};
     String   name = "unknown";
     switch (cmd) {
     case char_def_code:
@@ -3398,8 +3398,8 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
 auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
     Token    T = hash_table.locate(sh);
     auto     p = T.eqtb_loc(); // return value
-    symcodes ncmd;
-    String   name;
+    symcodes ncmd{};
+    String   name = nullptr;
     switch (cmd) {
     case char_def_code:
         name = "chardef";
@@ -3493,7 +3493,7 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> size_t {
 void Parser::do_register_command(bool gbl) {
     Token T = cur_tok;
     int   q = cur_cmd_chr.cmd;
-    int   p;
+    int   p = 0;
     auto  l = do_register_arg(q, p, T); // changes T from \advance to \skip
     if (cur_tok.is_invalid()) return;   // was an error
     if (q == register_cmd)
@@ -4014,7 +4014,7 @@ void Parser::exec_calc() {
     Token T = a.front();
     a.pop_front();
     token_from_list(T);
-    internal_type p;
+    internal_type p{};
     unsigned      l = cur_cmd_chr.chr;
     if (cur_cmd_chr.cmd == assign_int_cmd)
         p = it_int;
@@ -4115,8 +4115,8 @@ void Parser::box_end(Xml *res, size_t pos) {
 // Otherwise we push a continuation on the stack.
 
 void Parser::begin_box(size_t src, subtypes c) {
-    Token  T = cur_tok;
-    size_t res;
+    Token  T       = cur_tok;
+    size_t res     = 0;
     Xml *  cur_box = nullptr;
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();

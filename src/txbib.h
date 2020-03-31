@@ -80,7 +80,7 @@ public:
     [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() { return biblio_src.size(); }
-    void               push_back_src(const std::string& x) { biblio_src.emplace_back(x); }
+    void               push_back_src(const std::string &x) { biblio_src.emplace_back(x); }
     [[nodiscard]] auto seen_nocite() const -> bool { return nocite; }
     void               set_cmd(std::string x) { cmd = std::move(x); }
     void               set_location(Xml *X, bool f) {
@@ -130,7 +130,6 @@ public:
     size_t      last;  // index of one-after-last char
     bchar_type *table;
 
-public:
     void init(size_t i, size_t j) {
         first = i;
         last  = j;
@@ -146,12 +145,12 @@ public:
     void               remove_junk();
     [[nodiscard]] auto find_a_lower() const -> size_t;
     [[nodiscard]] auto find_a_space() const -> size_t;
-    void               invent_spaces();
+    void               invent_spaces() const;
     void               find_a_comma(size_t &first_c, size_t &second_c, size_t &howmany) const;
 
 private:
     void               make_key_aux(bool sw, Buffer &B);
-    auto               is_junk(size_t i) -> bool;
+    auto               is_junk(size_t i) const -> bool;
     [[nodiscard]] auto like_space(size_t i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dash;
@@ -164,10 +163,10 @@ private:
         bchar_type b = table[first];
         return b == bct_normal || b == bct_cmd || b == bct_brace || b == bct_extended;
     }
-    auto is_name_start(size_t i) -> bool;
+    auto is_name_start(size_t i) const -> bool;
     auto print_for_key(Buffer &X) -> size_t;
     auto special_print(Buffer &X, bool sw) -> size_t;
-    auto print(Buffer &X) -> size_t;
+    auto print(Buffer &X) const -> size_t;
 };
 
 // In the case of a name like  `Carrasco, J.', num_tokens will be 2,
@@ -302,7 +301,7 @@ public:
     auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;
     auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
     void               make_entry(const CitationKey &a, Istring myid);
-    auto               auto_cite() -> bool;
+    auto               auto_cite() const -> bool;
     [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
 
 private:
@@ -357,7 +356,7 @@ public:
     auto        read0(Buffer &B, bib_from ct) -> bool;
     void        read1(const std::string &cur);
     void        read_ra();
-    void        err_in_file(String s, bool last);
+    void        err_in_file(String s, bool last) const;
     static void err_in_name(String a, long i);
     void        boot(std::string S, bool inra);
     void        enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
@@ -395,7 +394,7 @@ public:
     auto non_empty_buf() -> bool { return !B.empty(); }
     void reset() { B.reset(); }
     void reset_lines() { lines.clear(); }
-    auto is_too_late() -> bool { return too_late; }
+    auto is_too_late() const -> bool { return too_late; }
     void finish() {
         file->close();
         delete file;
@@ -414,11 +413,11 @@ public:
     Bbl *  X{};
     Buffer lb;
     void   init() { lb.reset(); }
-    void   out_bar() {
+    void   out_bar() const {
         std::cout << "|";
         *(X->file) << "|";
     }
-    void out_buffer(Buffer &B) {
+    void out_buffer(Buffer &B) const {
         std::cout << B;
         *(X->file) << B;
     }
@@ -431,19 +430,19 @@ public:
         *(X->file) << B;
         out_bar();
     }
-    void out_nl() {
+    void out_nl() const {
         std::cout << "\n";
         *(X->file) << "\n";
     }
-    void out_string(const std::string &s) {
+    void out_string(const std::string &s) const {
         std::cout << s;
         *(X->file) << s;
     }
-    void out_string(int s) {
+    void out_string(int s) const {
         std::cout << s;
         *(X->file) << s;
     }
-    void out_string(char s) {
+    void out_string(char s) const {
         std::cout << s;
         *(X->file) << s;
     }

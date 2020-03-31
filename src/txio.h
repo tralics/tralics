@@ -29,8 +29,9 @@ public:
     int         lines_converted{0};   // number of lines converted
     int         bad_lines{0};         // number of lines with errors
     int         bad_chars{0};         // number of errors
-public:
+
     Converter();
+
     auto new_error() -> bool;
     void start_convert(int l);
 };
@@ -154,11 +155,11 @@ public:
     void close();
     FileForInput() = default;
 
-    auto is_open() -> bool { return open_flag; }
-    auto get_lines() -> LinePtr & { return the_lines; }
-    void set_lines(LinePtr X) { the_lines = std::move(X); }
-    auto get_buffer() -> Buffer & { return cur_line; }
-    auto get_line_no() -> int & { return line_no; }
+    [[nodiscard]] [[nodiscard]] auto is_open() const -> bool { return open_flag; }
+    auto                             get_lines() -> LinePtr & { return the_lines; }
+    void                             set_lines(LinePtr X) { the_lines = std::move(X); }
+    auto                             get_buffer() -> Buffer & { return cur_line; }
+    auto                             get_line_no() -> int & { return line_no; }
 };
 
 // From TeX:

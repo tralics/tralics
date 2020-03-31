@@ -65,7 +65,7 @@ public:
         T2 = std::move(x);
     }
     auto increment_flag() -> bool;
-    void decode_flags();
+    void decode_flags() const;
 };
 
 // One item if a titlepage
@@ -124,7 +124,7 @@ public:
     auto               operator[](size_t k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(size_t k) -> TitlePageAux & { return bigtable[k]; }
     [[nodiscard]] auto get_len2() const -> size_t { return len2; }
-    auto               is_valid() -> bool { return valid; }
+    auto               is_valid() const -> bool { return valid; }
     void               make_invalid() { valid = false; }
     void               make_valid() { valid = true; }
     void               start_thing(bool verbose);

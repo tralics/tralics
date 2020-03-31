@@ -153,7 +153,7 @@ auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger & {
 }
 
 // Prints an att list on a buffer, then a stream.
-void AttList::print(std::ostream &fp) {
+void AttList::print(std::ostream &fp) const {
     thebuffer.reset();
     thebuffer.push_back(*this);
     fp << thebuffer;
@@ -1026,8 +1026,8 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
 // same as get_next, without conversion
 auto LinePtr::get_next_raw(Buffer &b) -> int {
     if (empty()) return -1;
-    bool unused;
-    int  n = front().to_buffer(b, unused);
+    bool unused = 0;
+    int  n      = front().to_buffer(b, unused);
     pop_front();
     return n;
 }

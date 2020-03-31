@@ -314,9 +314,9 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     std::string sname, lname;
     temp2.reset();
     std::vector<int> vals;
-    size_t           nb = 0;
-    Xml *            new_elt;
-    B.ptr = 0;
+    size_t           nb      = 0;
+    Xml *            new_elt = nullptr;
+    B.ptr                    = 0;
     for (;;) {
         auto j = next_RC_in_buffer(B, sname, lname);
         if (j == -1) break;

@@ -143,7 +143,7 @@ void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
 
 // In case of error, we add the current line number as attribute
 // via this function
-auto Parser::cur_line_to_istring() -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
+auto Parser::cur_line_to_istring() const -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
 
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
@@ -344,7 +344,7 @@ void Buffer::remove_last_space() {
         wptr--;
     else if (wptr >= 6 && strncmp(data() + wptr - 6, "&nbsp;", 6) == 0)
         wptr -= 6;
-    else if (wptr >= 6 && strncmp(data() + wptr - 6, "&#xA;", 6) == 0)
+    else if (wptr >= 6 && strncmp(data() + wptr - 6, "&#xA;", 5) == 0)
         wptr -= 6;
     at(wptr) = 0;
 }
@@ -375,7 +375,7 @@ void Buffer::insert_escape_char_raw() {
 }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
-void Parser::tex_string(Buffer &B, Token T, bool esc) {
+void Parser::tex_string(Buffer &B, Token T, bool esc) const {
     if (T.not_a_cmd())
         B.push_back(T.char_val());
     else {
@@ -996,7 +996,7 @@ auto Buffer::contains_env(const std::string &env) -> bool {
 }
 
 // returns true if the file exists with extension s.
-auto Image::file_exists(const std::string &s) -> bool { return tralics_ns::file_exists(name + '.' + s); }
+auto Image::file_exists(const std::string &s) const -> bool { return tralics_ns::file_exists(name + '.' + s); }
 
 // This checks all possible extensions and remembers them
 void Image::check_existence() {
@@ -1013,7 +1013,7 @@ void Image::check_existence() {
 Buffer check_image1;
 Buffer check_image2;
 // This checks that there is a unique source for the image
-void Image::check() {
+void Image::check() const {
     int a = (flags & 1) != 0 ? 1 : 0;
     int b = (flags & 2) != 0 ? 1 : 0;
     int c = (flags & 4) != 0 ? 1 : 0;

@@ -19,10 +19,10 @@ public:
     std::string name;     // name
     int         occ{0};   // number of occurences
     int         flags{0}; // existence flags
-public:
+
     Image() = default;
     Image(std::string N, int oc_val) : name(std::move(N)), occ(oc_val) {}
-    auto file_exists(const std::string &s) -> bool;
+    auto file_exists(const std::string &s) const -> bool;
     void check_existence();
-    void check();
+    void check() const;
 };

@@ -650,7 +650,7 @@ void Parser::boot_xspace() {
 // stores the date in the table of equivalents, computes the default year
 // for the RA.
 void Parser::boot_time() {
-    time_t xx;
+    time_t xx = 0;
     time(&xx);
     struct tm *x                   = localtime(&xx);
     int        sec                 = x->tm_sec;

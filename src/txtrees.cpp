@@ -660,7 +660,7 @@ void date_ns::next_date(long &year, long &month, long &day) {
 
 void Parser::next_date() {
     scan_date_ctrs(); // fetch the counters
-    long year, month, day;
+    long year = 0, month = 0, day = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::next_date(year, month, day);
@@ -669,7 +669,7 @@ void Parser::next_date() {
 
 void Parser::prev_date() {
     scan_date_ctrs(); // fetch the counters
-    long year, month, day;
+    long year = 0, month = 0, day = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::prev_date(year, month, day);

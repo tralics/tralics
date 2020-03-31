@@ -48,7 +48,7 @@ public:
     void               dump0(String s);
     void               set_finished() { finished = true; }
     void               set_file_name(std::string x) { filename = std::move(x); }
-    void               abort();
+    void               abort() const;
     [[nodiscard]] auto get_filename() const -> std::string { return filename; }
     auto               operator<<(logger_fn f) -> Logger & {
         f(*this);

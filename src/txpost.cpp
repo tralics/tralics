@@ -239,7 +239,7 @@ void Parser::create_label(const std::string &X, Istring S) {
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
 // and create/update the LabelInfo. We remember the ref in the ref_list.
-void Xid::add_ref(const std::string &s) { tralics_ns::add_ref(value, s, false); }
+void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(value, s, false); }
 
 void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
@@ -806,7 +806,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
 
 // Post processor of figure.
 void post_ns::postprocess_figure(Xml *to, Xml *from) {
-    Xml *     X;
+    Xml *     X = nullptr;
     XmlAction X1(Istring(np_table), rc_contains);
     XmlAction X2(Istring(np_subfigure), rc_contains);
     XmlAction X3(Istring(np_figure), rc_how_many);

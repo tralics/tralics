@@ -343,9 +343,9 @@ void Parser::T_raisebox() {
 
 // Implements \in@ , evaluates \in@false or \in@true
 void Parser::T_isin() {
-    TokenList A = read_arg();
-    TokenList B = read_arg();
-    int       n; // unused
+    TokenList A     = read_arg();
+    TokenList B     = read_arg();
+    int       n     = 0; // unused
     bool      found = token_ns::is_in(A, B, false, n);
     back_input(found ? hash_table.intrue_token : hash_table.infalse_token);
 }
@@ -881,8 +881,8 @@ void Parser::internal_choice_key() {
         new_macro(u, B1);
     }
     TokenList xinput = input;
-    int       k;
-    bool      found = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
+    int       k      = 0;
+    bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
     if (B2 != relax) {
         local_buf << bf_reset << fmt::format("{}", k);
         TokenList u = local_buf.str_toks(nlt_cr); // Should be irrelevant ?
@@ -1348,7 +1348,7 @@ auto token_ns::find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> 
 // We add commas around A and B, and must remove them later
 void Parser::remove_element(TokenList &A, TokenList &B, Token C) {
     Token t = hash_table.comma_token;
-    int   n;
+    int   n = 0;
     token_ns::find_in(A, B, t, true, n);
     B.pop_front();
     if (!B.empty()) B.pop_back();

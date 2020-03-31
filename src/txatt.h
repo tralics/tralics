@@ -24,7 +24,7 @@ public:
 
     auto               get_val(size_t i) -> Istring { return val[i].value; }
     void               reset() { val = std::vector<AttPair>(); }
-    auto               empty() -> bool { return val.empty(); }
+    auto               empty() const -> bool { return val.empty(); }
     void               push_back_empty(Istring n);
     void               push_back(name_positions n, Istring v);
     void               push_back(name_positions n, name_positions v);
@@ -33,5 +33,5 @@ public:
     void               push_back(Istring a, Istring b, bool f);
     [[nodiscard]] auto has_value(Istring x) const -> std::optional<size_t>;
     void               delete_att(name_positions a);
-    void               print(std::ostream &fp);
+    void               print(std::ostream &fp) const;
 };

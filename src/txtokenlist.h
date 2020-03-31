@@ -64,7 +64,6 @@ class FpGenList {
 public:
     TokenList value;
 
-public:
     FpGenList(TokenList A) : value(std::move(A)) {}
     void add_last_space(String S);
     void add_last_space(TokenList &W, String S);
@@ -130,7 +129,7 @@ private:
     long *  rc_table{nullptr}; // this contains the reference counts
     size_t  cur_rc_mac_len{0}; // size of the table.
     long    ptr{-1};           // pointer to the first free position
-private:
+
     void rc_mac_realloc();
 
 public:

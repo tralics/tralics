@@ -110,8 +110,8 @@ auto FontInfo::series_name() const -> String {
 
 // This prints everything.
 auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
-    String s;
-    s = L.size_name();
+    String s = nullptr;
+    s        = L.size_name();
     if (s != nullptr) fp << s;
     s = L.shape_name();
     if (s != nullptr) fp << s;

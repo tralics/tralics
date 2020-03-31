@@ -26,7 +26,7 @@ namespace token_ns {
 } // namespace token_ns
 
 // Prints some statistics at enfd of run.
-void Stats::token_stats() {
+void Stats::token_stats() const {
     main_ns::log_or_tty << "Math stats: formulas " << m_cv << ", kernels " << m_k << ", trivial " << m_trivial << ", \\mbox " << m_spec_box
                         << ", large " << m_large << ", small " << m_small << ".\n";
     if (nb_hdr != 0) main_ns::log_or_tty << "Number of HdR: " << nb_hdr << ".\n";
@@ -912,7 +912,7 @@ void token_ns::get_unique(TokenList &L, Token &t1, Token &t2) {
 }
 
 // insert an open brace at the beginning, a close brace at the end.
-void Parser::brace_me(TokenList &L) {
+void Parser::brace_me(TokenList &L) const {
     L.push_front(hash_table.OB_token);
     L.push_back(hash_table.CB_token);
 }

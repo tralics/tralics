@@ -60,7 +60,7 @@ public:
     TokenList   hook;            // for \AtEndOfPackage
     bool        seen_process;    // have we seen a \ProcessOptions
     bool        checked;         // set by \usepakage (for re-use)
-public:
+
     LatexPackage(std::string A);
     void               add_to_hook(TokenList &L) { hook.splice(hook.end(), L); }
     void               add_options(const OptionList &L);
@@ -74,7 +74,7 @@ public:
     void               check_global_options(TokenList &action, bool X);
     void               check_local_options(TokenList &res, bool X);
     void               check_all_options(TokenList &action, TokenList &spec, int X);
-    void               reload();
+    void               reload() const;
 };
 
 class ClassesData {
@@ -85,7 +85,7 @@ public:
     TokenList                   documentclass_hook;         // single hook for all classes
     bool                        seen_document_class{false}; // have we seen a \documentclass command
     bool                        using_default_class{false}; // inhibits warning
-public:
+
     ClassesData();
     auto        cur_pack() -> LatexPackage *;
     auto        find_package(const std::string &name, bool type, bool creat) -> size_t;

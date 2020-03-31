@@ -942,7 +942,7 @@ void Parser::solve_cite(bool user) {
     Token T    = cur_tok;
     bool  F    = true;
     auto  from = Istring("");
-    long  n;
+    long  n    = 0;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));
@@ -959,9 +959,9 @@ void Parser::solve_cite(bool user) {
     auto key = Istring(fetch_name0_nopar());
     if (user) insert_every_bib();
     if (n == 0) return;
-    Xid           N = Xid(n);
-    Bibliography &B = the_bibliography;
-    size_t        nn;
+    Xid           N  = Xid(n);
+    Bibliography &B  = the_bibliography;
+    size_t        nn = 0;
     if (F)
         nn = B.find_citation_star(from, key);
     else
@@ -1044,7 +1044,7 @@ void Parser::insert_every_bib() {
 
 // Signals an error while reading the file.
 // We do not use parse_error here
-void Bibtex::err_in_file(String s, bool last) {
+void Bibtex::err_in_file(String s, bool last) const {
     main_ns::nb_errs++;
     log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
     if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
@@ -1342,7 +1342,7 @@ void Bibtex::read_one_field(bool store) {
 }
 
 // Returns true if because of \nocite{*}
-auto Bibtex::auto_cite() -> bool {
+auto Bibtex::auto_cite() const -> bool {
     if (refer_biblio) return true;
     if (normal_biblio && nocitestar) return true;
     return false;
@@ -2464,7 +2464,7 @@ auto Bchar::find_a_lower() const -> size_t {
     return last;
 }
 
-void Bchar::invent_spaces() {
+void Bchar::invent_spaces() const {
     for (auto i = first; i < last; i++)
         if (table[i] == bct_normal && name_buffer.insert_space_here(i)) table[i] = bct_dot;
 }
@@ -2479,7 +2479,7 @@ auto Buffer::insert_space_here(size_t k) const -> bool {
 }
 
 // Returns true if character can be removed (between names)
-auto Bchar::is_junk(size_t i) -> bool {
+auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
@@ -2562,7 +2562,7 @@ void Bchar::make_key_aux(bool sw, Buffer &B) {
     }
 }
 
-auto Bchar::is_name_start(size_t i) -> bool {
+auto Bchar::is_name_start(size_t i) const -> bool {
     bchar_type A = table[i - 1];
     bchar_type B = table[i];
     if (A != bct_space && A != bct_dash && A != bct_tilde) return false;
@@ -2587,7 +2587,7 @@ auto Bchar::print_for_key(Buffer &X) -> size_t {
     return print(X);
 }
 
-auto Bchar::print(Buffer &X) -> size_t {
+auto Bchar::print(Buffer &X) const -> size_t {
     auto i = first;
     while (i < last && table[i] == bct_bad) i++;
     if (i >= last) return i;

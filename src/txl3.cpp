@@ -710,7 +710,7 @@ void Parser::L3_set_cat_code(int c) {
         c -= 16;
         alpha = true;
     }
-    size_t w;
+    size_t w = 0;
     if (alpha)
         w = scan_alpha();
     else {
@@ -821,8 +821,8 @@ auto Parser::l3_get_cat(symcodes &a, subtypes &b, Token caller) -> bool {
 // Compares a character code
 void Parser::E_cat_ifeq(subtypes c) {
     Token    caller = cur_tok;
-    symcodes a;
-    subtypes b;
+    symcodes a{};
+    subtypes b{};
     bool     test = false;
     if (!l3_get_cat(a, b, caller)) test = (a == (c / 4));
     l3_after_cond(caller, test, subtypes(c % 4));
@@ -837,17 +837,17 @@ void Parser::l3_token_check(subtypes c) {
     case tok_eq_cat_code:  // \token_if_eq_catcode:NN
     case tok_eq_char_code: // \token_if_eq_charcode:NN
     {
-        symcodes a1;
-        subtypes b1;
-        symcodes a2;
-        subtypes b2;
+        symcodes a1{};
+        subtypes b1{};
+        symcodes a2{};
+        subtypes b2{};
         if (!l3_get_cat(a1, b1, caller))
             if (!l3_get_cat(a2, b2, caller)) res = ((c / 4) == tok_eq_cat_code ? a1 == a2 : b1 == b2);
         break;
     }
     case tok_if_cs_code: {
-        symcodes a1;
-        subtypes b1;
+        symcodes a1{};
+        subtypes b1{};
         if (!l3_get_cat(a1, b1, caller)) res = a1 == relax_cmd;
         break;
     }

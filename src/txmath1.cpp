@@ -353,8 +353,8 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
             if (verbose) *(the_log.fp) << "MF: sublist start=" << start << ' ' << content << "\n";
             content.find_paren2(start, res, verbose);
         }
-        start = end;
-        int seen_d1, seen_d2;
+        start       = end;
+        int seen_d1 = 0, seen_d2 = 0;
         if (aux.is_lbr2(seen_d1, seen_d2)) {
             if (verbose) *(the_log.fp) << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
             res.push_back(MathQ(seen_d1, seen_d2));
@@ -389,7 +389,7 @@ auto MathP::find_relbin(int &k) -> MathP {
 // (first and last included).
 void MathP::find_paren2(int start, MathQList &res, bool verbose) {
     while (!empty()) {
-        int   k;
+        int   k   = 0;
         MathP cur = find_relbin(k);
         if (verbose) *(the_log.fp) << "MF: Find paren2 k=" << k << " " << cur << "\n";
         if (cur.has_small()) cur.find_paren1(start + 1, k - 1, res, verbose);
@@ -413,8 +413,8 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     int       start_pos = -1;
     if (verbose) *(the_log.fp) << "MF: Find paren1 (" << start1 << ", " << end1 << ") " << *this << "\n";
     while (!empty()) {
-        int        i;
-        math_types k;
+        int        i = 0;
+        math_types k{};
         value.front().get_both(i, k);
         bool is_small = value.front().is_small();
         value.pop_front();
@@ -557,7 +557,7 @@ void MathF::push_in_t(Xml *x) {
 }
 
 void MathF::finish(MathList &value) {
-    if ((t != nullptr) && t->size() > 0) the_parser.signal_error("internal bug in finish_translate");
+    if ((t != nullptr) && !t->empty()) the_parser.signal_error("internal bug in finish_translate");
     value.swap(res);
 }
 
@@ -784,7 +784,7 @@ auto math_ns::nb_args_for_cmd(int c) -> int {
 auto MathElt::get_fml_subtype() const -> subtypes { return math_to_sub(get_lcmd()); }
 
 // Handles the case of a command like \sqrt, \frac
-void MathElt::cv_noML_special() {
+void MathElt::cv_noML_special() const {
     subtypes c = get_fml_subtype();
     CmdChr   Val(special_math_cmd, c);
     Math &   L = get_list();
@@ -896,7 +896,7 @@ void MathElt::cv_noMLt_special() {
     mathml_buffer.push_back_math_tag(Val, pbm_end);
 }
 
-void MathElt::cv_noMLt_special0() {
+void MathElt::cv_noMLt_special0() const {
     subtypes c = get_fml_subtype();
     int      n = math_ns::nb_args_for_cmd(c);
     Math &   L = get_list();
@@ -1005,7 +1005,7 @@ void MathElt::cv_noMLt_special0() {
 }
 
 // Handles the case of a group
-void MathElt::cv_noML_list() {
+void MathElt::cv_noML_list() const {
     Math &         X = get_list();
     math_list_type T = get_lcmd();
     switch (T) {
@@ -1035,7 +1035,7 @@ void MathElt::cv_noML_list() {
 }
 
 // Handles the case of a group
-void MathElt::cv_noMLt_list() {
+void MathElt::cv_noMLt_list() const {
     Math &         X = get_list();
     math_list_type T = get_lcmd();
     switch (T) {
@@ -1516,14 +1516,14 @@ void Buffer::show_uncomplete(String m) {
 
 // Converts a whole math list into a string. May signal an error.
 // In this case, the result is `error'.
-auto Math::convert_this_to_string(Buffer &B) -> std::string {
+auto Math::convert_this_to_string(Buffer &B) const -> std::string {
     B.reset();
     if (!chars_to_mb(B, true)) B.show_uncomplete("Bad character in conversion to string");
     return B.to_string();
 }
 
 // Use of the alternate command
-auto Math::convert_opname() -> std::string {
+auto Math::convert_opname() const -> std::string {
     Buffer &B = aux_buffer;
     if (!chars_to_mb1(B)) B.show_uncomplete("Bad character in conversion to string");
     return B.to_string();
@@ -1730,8 +1730,8 @@ auto Math::special1() const -> Xml * {
 // It justs reads the tokens, and backinputs them
 void Parser::TM_fonts() {
     Token *table = hash_table.my_mathfont_table.data();
-    int    T;
-    bool   bold = is_pos_par(atmathversion_code);
+    int    T     = 0;
+    bool   bold  = is_pos_par(atmathversion_code);
     if (cur_cmd_chr.is_math_font()) {
         switch (cur_cmd_chr.chr) {
         case cal_code:
@@ -1841,10 +1841,10 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 // Converts a character sequence; first char W already removed from
 // the list
 auto Math::convert_char_seq(MathElt W) -> MathElt {
-    subtypes f = W.get_font();
-    auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
-    Xml *    res;
-    Buffer & B = aux_buffer;
+    subtypes f   = W.get_font();
+    auto     w   = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+    Xml *    res = nullptr;
+    Buffer & B   = aux_buffer;
     B.reset();
     if (f == 1) B.push_back(' ');
     bool     spec = (f == 1) || ((w & (1 << f)) != 0);

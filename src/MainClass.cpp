@@ -386,7 +386,7 @@ void MainClass::check_for_input() {
     }
 }
 
-void MainClass::banner() {
+void MainClass::banner() const {
     static bool banner_printed = false;
     if (banner_printed) return;
     banner_printed = true;
@@ -471,7 +471,7 @@ void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, tru
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
-    String s;
+    String s = nullptr;
     if (argc == 1) end_with_help(0);
     if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
@@ -1030,7 +1030,7 @@ void MainClass::show_input_size() {
         the_log << "There are " << n << " lines\n";
 }
 
-void MainClass::more_boot() {
+void MainClass::more_boot() const {
     tralics_ns::boot_math(math_variant);
     if (etex_enabled) the_parser.hash_table.boot_etex();
     mk_empty();
@@ -1116,7 +1116,7 @@ void MainClass::out_xml() {
     }
 }
 
-void MainClass::finish_init() {
+void MainClass::finish_init() const {
     if (handling_ra) {
         if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
         if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
@@ -1153,7 +1153,7 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
     return res;
 }
 
-void MainClass::check_section_use() {
+void MainClass::check_section_use() const {
     if (handling_ra) {
         std::vector<ParamDataSlot> &X = config_data.data[1]->data;
         auto                        n = X.size(); // number of sections

@@ -98,11 +98,11 @@ public:
     static auto        fonts1(name_positions x) -> Xml *;
     auto               get_att_list(size_t k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
-    auto               get_cur_par() -> Xml *;
+    auto               get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_u_or_v(bool u_or_v) -> TokenList;
-    auto               get_xid() -> Xid { return last_xid; }
+    auto               get_xid() const -> Xid { return last_xid; }
     void               hack_for_hanl();
     void               implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }

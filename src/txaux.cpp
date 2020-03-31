@@ -53,7 +53,7 @@ void ScaledInt::ovf31() {
 // If this is a TeX token representing a valid digit in base radix,
 // returns the value,
 // otherwise return -1.
-auto Token::tex_is_digit(unsigned radix) -> long {
+auto Token::tex_is_digit(unsigned radix) const -> long {
     auto w = val_as_other();
     if ('0' <= w && w <= radix + '0' && w <= '9') // do not use is_digit...
         return to_signed(w) - '0';
@@ -580,7 +580,7 @@ auto tralics_ns::only_digits(const std::string &s) -> bool {
 }
 
 // Returns: 0 if false, 1 if true, 2 if empty, 3 otherwise
-auto SpecialHash::find_true_false(String s) -> int {
+auto SpecialHash::find_true_false(String s) const -> int {
     std::string res = find(s);
     if (res.empty()) return 2;
     if (res == "true") return 1;
@@ -598,7 +598,7 @@ auto SpecialHash::counter_val(int k) -> int {
 // counter=12345 was given, this is out_of_range,  counter=foo is given
 // but \c@foo is not a counter.
 // Otherwise, returns the register number of the counter
-auto SpecialHash::find_counter() -> int {
+auto SpecialHash::find_counter() const -> int {
     std::string s = find("counter");
     if (s.empty()) return -1;
     if (tralics_ns::only_digits(s)) return counter_val(std::stoi(s));

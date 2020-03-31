@@ -771,7 +771,7 @@ void Parser::T_cline() {
             R->try_cline(true);
             return;
         }
-        long tot_span;
+        long tot_span = 0;
         if (R->total_span(tot_span)) {
             tot_span = cline_first - 1 - tot_span;
             if (0 <= tot_span) {

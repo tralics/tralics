@@ -535,7 +535,7 @@ auto Parser::stack_math_in_cell() -> bool {
     return false;
 }
 
-void Parser::dump_save_stack() {
+void Parser::dump_save_stack() const {
     int  L = cur_level - 1;
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {

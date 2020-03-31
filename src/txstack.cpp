@@ -212,7 +212,7 @@ auto Stack::first_frame() const -> Istring {
 
 // Returns the first p on the stack.
 // Too bad that the frame AND the element have to be called p.
-auto Stack::get_cur_par() -> Xml * {
+auto Stack::get_cur_par() const -> Xml * {
     const StackSlot &X     = first_non_empty();
     Istring          pname = the_names[cst_p];
     if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname)) return X.obj;
@@ -417,7 +417,7 @@ void Stack::fonts0(name_positions x) {
 void Stack::check_font() {
     while (Table.back().frame.spec_empty()) Table.pop_back();
     bool           w = the_main->pack_font_elt;
-    name_positions s;
+    name_positions s{};
     if (w) {
         Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
         aux.reset();
@@ -607,7 +607,7 @@ void Stack::finish_cell(int w) {
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
     Buffer &   B       = the_main->SH.shbuf();
-    int        n;
+    int        n       = 0;
     if (!B.install_att(cid, the_names[np_cols]))
         n = 0;
     else

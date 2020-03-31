@@ -322,7 +322,7 @@ void FpNum::mul(FpNum X, FpNum Y) {
     for (unsigned int &i : z) i = 0;
     X.mul_split(x);
     Y.mul_split(y);
-    int xmax, xmin, ymax, ymin;
+    int xmax = 0, xmin = 0, ymax = 0, ymin = 0;
     set_xmax(x, xmin, xmax);
     set_xmax(y, ymin, ymax);
     for (int i = xmin; i < xmax; i++)
@@ -1179,7 +1179,7 @@ auto FpNum::sincos_transform() -> bool {
         oldval.data[2] = r.data[2];
         oldval.data[3] = r.data[3];
         rs.mul(r, r);
-        bool cmp;
+        bool cmp = 0;
         if (rs.data[2] < y.data[2])
             cmp = true;
         else if (rs.data[2] > y.data[2])
@@ -1533,14 +1533,14 @@ void fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum &r4, FpNum A, FpNum B, F
     }
     FpNum b2, b3, b4, T;
     B.div(4);
-    T  = -B;
-    b2 = B * B;
-    b3 = b2 * B;
-    b4 = b3 * B;
-    E  = E - B * D + C * b2 + (-3) * b4;
-    D  = D + (-2) * B * C + 8 * b3;
-    C  = C - 6 * b2;
-    int n;
+    T     = -B;
+    b2    = B * B;
+    b3    = b2 * B;
+    b4    = b3 * B;
+    E     = E - B * D + C * b2 + (-3) * b4;
+    D     = D + (-2) * B * C + 8 * b3;
+    C     = C - 6 * b2;
+    int n = 0;
     {
         if (D.is_zero()) {
             FpNum u, v;
@@ -1757,7 +1757,7 @@ void FpGenList::split_after(int n, TokenList &z) {
 // For instance sin 25 gives 25 sin
 void FpGenList::fp_gen_app() {
     while (!value.empty() && value.front().is_space_token()) value.pop_front();
-    int   n;
+    int   n = 0;
     Token x = find_str(n);
     if (!x.is_space_token()) return;
     String S = tkbuf.c_str();
@@ -2225,7 +2225,7 @@ void Parser::upn_eval(TokenList &l) {
         upn_eval(L.value);
         return;
     }
-    int       n;
+    int       n   = 0;
     Token     x   = L.find_str(n);
     String    str = tkbuf.c_str();
     TokenList a1, a2;

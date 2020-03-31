@@ -525,7 +525,7 @@ void Math::push_back(CmdChr X) {
 void Math::push_back(Xml *A, int b, math_types c) { push_back(MathElt(A, b, c)); }
 
 MathElt::MathElt(Xml *A, int b, math_types c) {
-    subtypes pos;
+    subtypes pos{};
     if (b >= 0)
         pos = subtypes(b);
     else
@@ -1017,7 +1017,7 @@ void Parser::scan_math(int res, math_list_type type) {
                 parse_error("Illegal anchor in math mode");
                 continue;
             } else if (c == 2) { // anchorlabel
-                bool        h;
+                bool        h = 0;
                 std::string s = scan_anchor(h);
                 std::string a = special_next_arg();
                 if (h) {
@@ -1288,7 +1288,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     std::string label;
     std::string tag;
     auto        n = multi_labels.size();
-    size_t      i;
+    size_t      i = 0;
     static int  N = 0;
     if (last_ml_pos == 0) N = 0;
     N++;
@@ -1675,7 +1675,7 @@ auto Parser::scan_style() -> Token {
 // \genfrac (){0pt}3{foo}{bar}
 void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
     Token     ct = cur_tok;
-    del_pos   k1, k2;
+    del_pos   k1{}, k2{};
     TokenList L1 = read_arg();
     if (L1.empty())
         k1 = del_dot;
@@ -1992,7 +1992,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         if (is_multline) cmi.get_cid().add_attribute(np_columnalign, np_right);
         cmi.set_cid(cid);
     }
-    if (row->size() == 0) // kill the last empty row \todo size() and empty() don't interact the way clang-tidy expects
+    if (row->size() == 0) // kill the last empty row \todo NOLINT size() and empty() don't interact the way clang-tidy expects
         res->pop_back();
     else {
         if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
@@ -2016,7 +2016,7 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
         res->bordermatrix();
         return res;
     }
-    int  open, close;
+    int  open = 0, close = 0;
     bool nf = special_fence(sname, open, close);
     if (nf) {
         res = new Xml(the_names[cst_mfenced], res);
@@ -2170,7 +2170,7 @@ void Math::add_cur_font() {
 }
 
 // Insert the font in the list and saves the font.
-void Parser::TM_math_fonts(Math &x) {
+void Parser::TM_math_fonts(Math &x) const {
     subtypes cur_chr = cur_cmd_chr.chr;
     the_parser.word_define(math_font_pos, cur_chr, false);
     x.push_back_font(cur_chr, zero_code);
@@ -2217,7 +2217,7 @@ auto Math::has_over() const -> bool {
 
 // Case of \mathop{\rm sin}. The this in the procedure is what follows the
 // \mathop.
-auto MathElt::try_math_op() -> Xml * {
+auto MathElt::try_math_op() const -> Xml * {
     if (!is_list()) return nullptr;
     Math &X = get_list();
     if (X.empty()) return nullptr;
@@ -2229,9 +2229,9 @@ auto MathElt::try_math_op() -> Xml * {
 }
 
 // This converts a character into a MathML object
-auto MathElt::cv_char() -> MathElt {
-    unsigned c = get_chr();
-    int      a;
+auto MathElt::cv_char() const -> MathElt {
+    unsigned c  = get_chr();
+    int      a  = 0;
     auto     mt = mt_flag_small;
     auto     F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(codepoint(c)), mt_flag_small);
@@ -2251,7 +2251,7 @@ auto MathElt::cv_char() -> MathElt {
 }
 
 // This converts a constant.
-auto MathElt::cv_cst() -> MathElt {
+auto MathElt::cv_cst() const -> MathElt {
     subtypes   c  = get_chr();
     Xml *      s  = math_constants(c);
     math_types mt = math_space_code(c) ? mt_flag_space : mt_flag_small;
@@ -2314,7 +2314,7 @@ auto Math::check_align() -> int {
 }
 
 // Create <mi>...</mi> and friends
-auto MathElt::cv_mi(math_style cms) -> MathElt {
+auto MathElt::cv_mi(math_style cms) const -> MathElt {
     Math &   L   = get_list();
     subtypes c   = get_fml_subtype();
     auto     X   = L.begin();
@@ -2464,7 +2464,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     }
 }
 
-auto MathElt::cv_special1(math_style cms) -> MathElt {
+auto MathElt::cv_special1(math_style cms) const -> MathElt {
     subtypes c        = get_fml_subtype();
     int      numalign = 0, denalign = 0;
     Math &   L = get_list();
@@ -2973,7 +2973,7 @@ void Math::handle_mbox(Math &res) {
         if (ok == 4) { // This is a \ref
             res.push_back_small(M_ref());
         } else if (ok == 3 || ok == 5 || ok == 6 || ok == 7 || ok == 8 || ok == 9 || ok == 10 || ok == 11) {
-            Xml *b;
+            Xml *b = nullptr;
             if (ok == 5)
                 b = math_data.get_mc_table(7);
             else if (ok == 6)
@@ -3236,7 +3236,7 @@ auto Math::M_cv3(math_style cms) -> Math {
 
 // returns the element with a new id, if it's a <mo> and has a np_movablelimits
 // attributes; return null otherwise.
-auto Xml::spec_copy() -> Xml * {
+auto Xml::spec_copy() const -> Xml * {
     if (name != Istring(cst_mo)) return nullptr;
     AttList &X = id.get_att();
     auto     i = X.has_value(the_names[np_movablelimits]);
@@ -3262,7 +3262,7 @@ void Math::concat(Xml *res) {
     }
 }
 
-auto MathElt::large2() -> del_pos { return get_delimiter(get_chr()); }
+auto MathElt::large2() const -> del_pos { return get_delimiter(get_chr()); }
 
 // The list holds something like [a+b, et cl is ]
 // returns <mfenced open=[ close=]>a+b</mfenced>

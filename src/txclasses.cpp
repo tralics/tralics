@@ -611,7 +611,7 @@ void Parser::T_usepackage() {
 }
 
 // This is done after the first \usepackage; may warn
-void LatexPackage::reload() {
+void LatexPackage::reload() const {
     if (compare_options(Uoptions, cur_opt_list)) // true if A contains opt
         return;
     log_and_tty << "Option clash in \\usepackage " << real_name() << "\n";
@@ -953,7 +953,7 @@ void Parser::T_change_element_name() {
     bool        star  = remove_initial_star();
     std::string name  = special_next_arg();
     std::string value = sE_arg_nopar();
-    bool        res;
+    bool        res   = 0;
     if (star) {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else

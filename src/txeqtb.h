@@ -136,7 +136,7 @@ class SaveAux {
 public:
     save_type type;    // the type of the real thing
     int       line{0}; // current line number at start
-public:
+
     SaveAux(save_type t) : type(t) {}
     virtual ~SaveAux() = default;
 

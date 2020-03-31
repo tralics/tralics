@@ -24,7 +24,7 @@ void err_ns::fatal_error(String s) {
 }
 
 // This is executed if we say the_log << lg_fatal.
-void Logger::abort() {
+void Logger::abort() const {
     std::cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
     if (!!*fp) {
         *fp << "Fatal_error for " << the_parser.get_job_name() << "\n";

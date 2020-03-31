@@ -135,7 +135,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
 // returns the type of the thing to create.
 auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
     Toi.reset();
-    char c;
+    char c = 0;
     if (!in.tp_next_char(c)) return tpi_noval;
     if (c == 'a' && in.is_here("lias")) return tpi_alias;
     if (c == 'e' && in.is_here("xecute")) return tpi_execute;
@@ -188,7 +188,7 @@ auto TitlePageFullLine::read() -> int {
     item4.set_v(w);
     res += (w - 1);
     if (w == tpi_noval) return res;
-    char c;
+    char c = 0;
     if (tp_main_buf.tp_next_char(c)) return -1;
     return res;
 }
@@ -452,7 +452,7 @@ void Parser::T_titlepage_finish(size_t v) {
     }
 }
 
-void Parser::T_titlepage(size_t v) {
+void Parser::T_titlepage(size_t v) const {
     if (tracing_commands()) the_log << lg_startbrace << "\\titlepage " << v << lg_endbrace;
     if (!Titlepage.is_valid()) {
         log_and_tty << "No title page info, bug?\n";
@@ -625,10 +625,10 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
     int     b    = 0;
     Buffer &B    = local_buf;
     bool    keep = false;
-    bool    cv; // unused.
-    auto    C = begin();
-    auto    E = end();
-    auto    W = begin();
+    bool    cv   = 0; // unused.
+    auto    C    = begin();
+    auto    E    = end();
+    auto    W    = begin();
     while (C != E) {
         B.reset();
         C->to_buffer(B, cv);
@@ -652,8 +652,8 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
 
 // Execute all lines that are not in an block via see_main_a
 void LinePtr::parse_conf_toplevel() const {
-    int    b = 0;
-    bool   cv; // unused. We assume that the line is always converted
+    int    b  = 0;
+    bool   cv = 0; // unused. We assume that the line is always converted
     Buffer B;
     auto   C = begin();
     auto   E = end();
@@ -694,7 +694,7 @@ auto TitlePageFullLine::encode_flags(char c1, char c2) -> bool {
 }
 
 // This prints the flags, in a symbolic way.
-void TitlePageAux::decode_flags() {
+void TitlePageAux::decode_flags() const {
     auto f2 = xflags / 16;
     auto f1 = xflags % 16;
     f1      = f1 / 2;

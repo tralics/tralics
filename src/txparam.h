@@ -19,10 +19,12 @@ public:
     std::string key;
     std::string value;
     bool        is_used;
+
     ParamDataSlot(std::string a, std::string b) : key(std::move(a)), value(std::move(b)), is_used(false) {}
     ParamDataSlot(std::string a, std::string b, bool c) : key(std::move(a)), value(std::move(b)), is_used(c) {}
+
     void               mark_used() { is_used = true; }
-    auto               matches(const std::string &x) -> bool { return is_used && x == key; }
+    [[nodiscard]] auto matches(const std::string &x) const -> bool { return is_used && x == key; }
     [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
     void               to_buffer(Buffer &B) const;
     void               key_to_buffer(Buffer &B) const;
@@ -34,9 +36,8 @@ public:
     std::string                name;
     std::vector<ParamDataSlot> data;
 
-public:
     void check_other();
-    auto its_me(const std::string &s) -> bool { return name == s; }
+    auto its_me(const std::string &s) const -> bool { return name == s; }
     ParamDataList(std::string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(const ParamDataSlot &x) { data.push_back(x); }

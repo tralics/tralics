@@ -39,7 +39,7 @@ class XmlIO {
     size_t                 cur_line_len{};
     size_t                 input_line_pos{};
     int                    enc{}; // 0=utf8, 1=latin1
-    void                   error(const std::string &s);
+    void                   error(const std::string &s) const;
     std::vector<EntityDef> entities;
     int                    nb_cond{};
     bool                   eof_ok{};
@@ -50,7 +50,7 @@ private:
     auto next_char() -> codepoint;
     void skip_space();
     void next_line();
-    auto at_eol() -> bool { return input_line_pos >= cur_line_len; }
+    auto at_eol() const -> bool { return input_line_pos >= cur_line_len; }
     void scan_name();
     void scan_name(uchar c);
     void scan_name(uchar c1, uchar c2);

@@ -1022,7 +1022,7 @@ auto Parser::scan_int(Token T) -> long {
 }
 
 void Parser::scan_dimen(bool mu, Token T) {
-    glue_spec unused;
+    glue_spec unused{};
     Token     te = err_tok;
     err_tok      = T;
     scan_dimen(mu, false, unused, false);
@@ -1214,7 +1214,7 @@ void SthInternal::change_level(internal_type level) {
 
 void Parser::scan_something_internal(internal_type level) {
     subtypes m = cur_cmd_chr.chr;
-    size_t   v; // \todo size_t?
+    size_t   v = 0; // \todo size_t?
     switch (cur_cmd_chr.cmd) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
@@ -1585,11 +1585,11 @@ void Parser::scan_unit(RealNumber R) {
     int        num                 = numerator_table[k];
     int        den                 = denominator_table[k];
     if (k != unit_pt) {
-        auto i = R.get_ipart();
-        auto f = R.get_fpart();
-        long remainder;
-        i = arith_ns::xn_over_d(i, num, den, remainder);
-        f = (num * f + (remainder << 16)) / den;
+        auto i         = R.get_ipart();
+        auto f         = R.get_fpart();
+        long remainder = 0;
+        i              = arith_ns::xn_over_d(i, num, den, remainder);
+        f              = (num * f + (remainder << 16)) / den;
         i += f >> 16;
         R.set_fpart(f % (1 << 16));
         R.set_ipart(i);
@@ -1709,9 +1709,9 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
 
 // Multiplies a dimension by an integer
 void Parser::multiply_dim(RealNumber val, long v) {
-    long rem; // unused but modified
-    auto A = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
-    auto B = arith_ns::nx_plus_y(val.get_ipart(), v, A);
+    long rem = 0; // unused but modified
+    auto A   = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
+    auto B   = arith_ns::nx_plus_y(val.get_ipart(), v, A);
     cur_val.set_int_val(B);
     cur_val.attach_sign(val.get_negative());
 }
@@ -1815,8 +1815,8 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 void Parser::M_prefixed_aux(bool gbl) {
     auto  chr = cur_cmd_chr.chr;
     Token T   = cur_tok;
-    int   p;
-    long  q = 0;
+    int   p   = 0;
+    long  q   = 0;
     switch (cur_cmd_chr.cmd) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
     case shorthand_def_cmd: M_shorthand_define(chr, gbl); return;
@@ -2138,7 +2138,7 @@ void Parser::xml_name(Xml *x, internal_type level) {
 
 // Convert handles \string, \number, \meaning, etc
 void Parser::E_convert() {
-    long   n;
+    long   n = 0;
     Token  T = cur_tok;
     Buffer B;
     B.reset();
@@ -2320,9 +2320,9 @@ void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
 auto Parser::scan_expr(Token T, internal_type et) -> bool {
     std::vector<ScanSlot> estack;
     ScanSlot              W;
-    W.expr_type = et;
-    bool b      = false; // return value, true in case of overflow
-    char tr_state;
+    W.expr_type   = et;
+    bool b        = false; // return value, true in case of overflow
+    char tr_state = 0;
     for (;;) {
         // next level is it_int in case we scan a factor,
         internal_type next_level = W.get_next_type();
@@ -2402,7 +2402,7 @@ void             TexRule::reset() {
     rule_d = default_rule_dimen;
 }
 
-void TexRule::convert(AttList &res) {
+void TexRule::convert(AttList &res) const {
     if (rule_h.get_value() != default_rule_dimen) res.push_back(np_height, the_main->SH.find_scaled(rule_h));
     if (rule_d.get_value() != default_rule_dimen) res.push_back(np_depth, the_main->SH.find_scaled(rule_d));
     if (rule_w.get_value() != default_rule_dimen) res.push_back(np_width, the_main->SH.find_scaled(rule_w));

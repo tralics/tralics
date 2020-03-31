@@ -264,7 +264,7 @@ void Slined::redisplay() {
 
 // Redisplay after prompt.
 void Slined::redisplay0() {
-    long left, right; // position of left and right chars
+    long left{}, right{}; // position of left and right chars
     auto s = to_signed(m_size);
     auto p = m_pos, m = m_max;
     if (m <= s) { // we have a short line, ok
@@ -494,7 +494,7 @@ void Slined::toggle_char() {
 
 // this deletes a string between deb and fn.
 void Slined::delete_string(int sw, long deb, long fn) {
-    long debut, fin;
+    long debut{}, fin{};
     if (deb < fn) {
         debut = deb;
         fin   = fn;
@@ -656,9 +656,8 @@ auto readline_ns::skip_over_letters(String buf, int j) -> int {
 
 // Find word boundaries
 auto readline_ns::find_word_beg(char *buf, long size) -> int {
-    int  i = -1;
-    char c;
-    int  j = 0;
+    int i = -1;
+    int j = 0;
     for (;;) {
         i++;
         buf[size] = '*';
@@ -666,7 +665,7 @@ auto readline_ns::find_word_beg(char *buf, long size) -> int {
         if (j >= size) return i;
         word_beg[to_unsigned(i)] = j;
         buf[size]                = ' ';
-        c                        = buf[j];
+        char c                   = buf[j];
         j++;
         if (c == '\\') {
             c = buf[j];
@@ -747,16 +746,16 @@ void Slined::maybe_store_line() {
 }
 
 void Slined::do_esc_command(size_t n) {
-    char c;
+    char c{};
     std::cin.get(c);
     if ('1' <= c && c <= '9') { // non zero digit; ignore n
-        char cc;
+        char cc{};
         std::cin.get(cc);
         do_command(to_unsigned(c - '0'), cc);
         return;
     }
     if ('A' <= c && c <= 'Z') // ignore case
-        c = c + ('a' - 'A');
+        c = static_cast<char>(c + ('a' - 'A'));
     do_esc_command(n, c);
 }
 
@@ -824,7 +823,7 @@ void Slined::do_esc_command(size_t n, char c) {
         return;
     case '[': // ESC[A is up-arrow
     {
-        char cc;
+        char cc{};
         std::cin.get(cc);
         switch (cc) {
         case 'A': do_n_command(n, 16); return;
@@ -909,7 +908,7 @@ void Slined::do_n_command(size_t n, char c) {
     case 20: toggle_char(); return;
     case 12: redisplay(); return;
     case 17: {
-        char cc;
+        char cc{};
         std::cin.get(cc);
         insert(n, cc);
         return;
@@ -929,7 +928,7 @@ void Slined::do_n_command(size_t n, char c) {
         return;
     case 3: {
         std::cerr << "\nreally quit ?\n";
-        char cc;
+        char cc{};
         std::cin.get(cc);
         if (is_interrupt(cc)) {
             reset_termio();
@@ -971,7 +970,7 @@ void Slined::initialise(char *buffer, const std::string &prompt, size_t size) {
 void Slined::run() {
     cur_line_modified = false;
     done              = false;
-    char c;
+    char c{};
     for (;;) {
         std::cin.get(c);
         do_command(1, c);

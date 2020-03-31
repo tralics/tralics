@@ -103,7 +103,7 @@ public:
     auto value_at(long n) -> Xml *;
     void word_stats(const std::string &match);
     void word_stats_i();
-    auto spec_copy() -> Xml *;
+    auto spec_copy() const -> Xml *;
     void replace_first(Xml *x) {
         if (!tree.empty()) tree[0] = x;
     }

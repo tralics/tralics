@@ -102,8 +102,8 @@ public:
     static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
 
 private:
-    void banner();                                    ///< Prints the banner on the tty
-    void check_section_use();                         ///< Not sure what this does, RA related
+    void banner() const;                              ///< Prints the banner on the tty
+    void check_section_use() const;                   ///< Not sure what this does, RA related
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
     void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
     void read_config_and_other();                     ///< Read the config file and extract all relevant information
@@ -142,7 +142,7 @@ private:
     void end_with_help(int v);
     void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
-    void finish_init(); ///< RA related stuff
+    void finish_init() const; ///< RA related stuff
     void finish_xml();
     void get_doc_type(); ///< Determine document type from various sources
     void get_machine_name();
@@ -153,7 +153,7 @@ private:
     void make_perl_script();
     void merge_bib();
     void mkcfg();
-    void more_boot(); ///< Finish bootstrapping
+    void more_boot() const; ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
     void open_config_file(); ///< Reads the config file b=named in `main_ns::path_buffer`
     void open_log();         ///< Opens the log file, prints the banner ann all information
