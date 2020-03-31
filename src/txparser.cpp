@@ -824,7 +824,7 @@ void Parser::T_verb(codepoint t) {
         return;
     }
 
-    auto saved = verbatim_chars[uchar(' ')];
+    auto saved = verbatim_chars[uchar(' ')]; // \todo use Saver for this
     if (special_space) verbatim_chars[uchar(' ')] = hash_table.textvisiblespace_token;
     if (vb_tokens(t, TL, true)) verb_error(T, 2);
     verbatim_chars[uchar(' ')] = saved;
