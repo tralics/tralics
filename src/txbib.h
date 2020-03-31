@@ -341,7 +341,7 @@ private:
     auto               scan_identifier0(size_t what) -> int;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     void               skip_space();
-    auto               wrong_first_char(codepoint c, size_t what) const -> int;
+    [[nodiscard]] auto wrong_first_char(codepoint c, size_t what) const -> int;
 
 public:
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }

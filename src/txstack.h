@@ -116,7 +116,7 @@ public:
     [[nodiscard]] auto is_frame(name_positions s) const -> bool;
     [[nodiscard]] auto is_frame2(name_positions S) const -> bool;
     auto               is_omit_cell() -> bool { return Table.back().omit_cell; }
-    auto               last_att_list() const -> AttList & { return get_xid().get_att(); }
+    [[nodiscard]] auto last_att_list() const -> AttList & { return get_xid().get_att(); }
     void               mark_omit_cell();
     auto               new_array_info(Xid i) -> ArrayInfo &;
     auto               next_xid(Xml *elt) -> Xid;
