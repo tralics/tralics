@@ -10,6 +10,7 @@
 
 // This file contains a big part of the Tralics translator
 
+#include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -18,17 +19,6 @@
 void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
 namespace {
-    class SaveCatcode { // \todo Saver
-    private:
-        char32_t character; // a character
-        long     code;      // the code of the character to restore
-    public:
-        SaveCatcode(char32_t c, long nc) : character(c), code(the_parser.eqtb_int_table[character].val) {
-            the_parser.eqtb_int_table[character].val = nc;
-        }
-        ~SaveCatcode() { the_parser.eqtb_int_table[character].val = code; }
-    };
-
     Buffer current_head;
     Buffer Tbuf;
     Buffer Abuf;

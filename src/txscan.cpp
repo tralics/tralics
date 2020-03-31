@@ -10,6 +10,7 @@
 
 // This file contains the TeX scanner of tralics
 
+#include "tralics/Saver.h"
 #include "txinline.h"
 #include "txmath.h"
 #include "txparser.h"

@@ -51,15 +51,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class SaveScannerStatus {
-private:
-    scan_stat code;
-
-public:
-    SaveScannerStatus(scan_stat c);
-    ~SaveScannerStatus();
-};
-
 class SaveLongState {
 private:
     l_state code;

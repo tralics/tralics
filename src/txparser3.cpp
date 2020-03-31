@@ -58,13 +58,6 @@ auto parser_ns::save_string_name(size_t n) -> String {
     return "unknown";
 }
 
-SaveScannerStatus::SaveScannerStatus(scan_stat c) {
-    code = the_parser.get_scanner_status();
-    the_parser.set_scanner_status(c);
-}
-
-SaveScannerStatus::~SaveScannerStatus() { the_parser.set_scanner_status(code); }
-
 SaveLongState::SaveLongState(l_state c) {
     code = the_parser.get_long_state();
     the_parser.set_long_state(c);

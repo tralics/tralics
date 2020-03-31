@@ -49,33 +49,35 @@ public:
     Stats                                     my_stats; // for the statistics
     Token                                     err_tok;  // in case of error
 private:
-    bool      unexpected_seen_hi{false}; // check for wrongly placed font changes
-    bool      calc_loaded;               // did we see \usepackage{calc} ?
-    bool      numbered_verbatim{};       // has this verbatim line numbers ?
-    bool      restricted;                // are we in restricted mode ?
-    bool      force_eof{false};          // did we see \endinput ?
-    bool      no_new_file{false};        // can we pop the input stack ?
-    bool      file_ended{};              //
-    bool      chapter_has_star{false};   // true in frontmatter, backmatter
-    bool      use_quotes{};
-    bool      list_files_p;            // Should we list the files at the end ?
-    bool      tok_is_defined{};        // use by \ifcsname
-    int       old_nberrs{};            // previous number of errors
-    int       cur_line{};              // current input line number
-    int       begin_env_line{0};       // input line number of
-    int       ra_year{1789};           // default year if none given as argument
-    int       default_language_num{0}; // default language
-    int       cur_level;               // current level on the execution stack
-    size_t    equation_ctr_pos{};      // position in the table of the counter equation
-    states    state;                   // current state of the scanner
-    Token     cur_tok;                 // current token
-    Token     after_assignment_token;  // token for \afterassignment
-    CmdChr    cur_cmd_chr;             // current command code and modifier
-    int       sectionning_offset;      // what is the main section, part, chapter ?
-    l_state   long_state;              // Error recovery handling (\long)
-    scan_stat scanner_status;          // Error recovery handling (\outer)
-    long      cur_in_chan;             // if get_token call get_a_new_line
-    long      cur_file_pos{0};         // pos of file in the package list (0= none)
+    bool    unexpected_seen_hi{false}; // check for wrongly placed font changes
+    bool    calc_loaded;               // did we see \usepackage{calc} ?
+    bool    numbered_verbatim{};       // has this verbatim line numbers ?
+    bool    restricted;                // are we in restricted mode ?
+    bool    force_eof{false};          // did we see \endinput ?
+    bool    no_new_file{false};        // can we pop the input stack ?
+    bool    file_ended{};              //
+    bool    chapter_has_star{false};   // true in frontmatter, backmatter
+    bool    use_quotes{};
+    bool    list_files_p;            // Should we list the files at the end ?
+    bool    tok_is_defined{};        // use by \ifcsname
+    int     old_nberrs{};            // previous number of errors
+    int     cur_line{};              // current input line number
+    int     begin_env_line{0};       // input line number of
+    int     ra_year{1789};           // default year if none given as argument
+    int     default_language_num{0}; // default language
+    int     cur_level;               // current level on the execution stack
+    size_t  equation_ctr_pos{};      // position in the table of the counter equation
+    states  state;                   // current state of the scanner
+    Token   cur_tok;                 // current token
+    Token   after_assignment_token;  // token for \afterassignment
+    CmdChr  cur_cmd_chr;             // current command code and modifier
+    int     sectionning_offset;      // what is the main section, part, chapter ?
+    l_state long_state;              // Error recovery handling (\long)
+public:
+    scan_stat scanner_status; // Error recovery handling (\outer)
+private:
+    long cur_in_chan;     // if get_token call get_a_new_line
+    long cur_file_pos{0}; // pos of file in the package list (0= none)
 
     std::string cur_env_name;  // name of current environment
     std::string the_url_val;   // this may be <URSophia>, raweb only
@@ -199,7 +201,6 @@ public:
     void               font_has_changed1();
     auto               fp_read_value() -> FpNum;
     void               fp_send_one_arg(TokenList &res);
-    [[nodiscard]] auto get_scanner_status() const -> scan_stat { return scanner_status; }
     [[nodiscard]] auto get_long_state() const -> l_state { return long_state; }
     [[nodiscard]] auto has_letter_catcode(size_t x) const { return get_catcode(x) == letter_catcode; }
     void               init_all(const std::string &doc_elt);
@@ -225,7 +226,6 @@ public:
     void               scan_glue(internal_type level, Token T, bool opt);
     void               list_to_glue(internal_type level, Token t, TokenList &L);
     void               set_default_language(int v);
-    void               set_scanner_status(scan_stat c) { scanner_status = c; }
     void               set_long_state(l_state c) { long_state = c; }
     void               signal_error(String s);
     void               signal_error();

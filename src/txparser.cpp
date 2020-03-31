@@ -11,6 +11,7 @@
 // This file contains the TeX parser of tralics
 
 #include "txparser.h"
+#include "tralics/Saver.h"
 #include "txinline.h"
 #include <fmt/format.h>
 
