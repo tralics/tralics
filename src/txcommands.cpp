@@ -946,7 +946,7 @@ void Parser::translate03() {
         the_stack.add_newid0(tcommands::vfill_to_np(c));
         return;
     case sub_cmd:
-    case soul_cmd: T_fonts(name_positions(np_s_sup + c)); return;
+    case soul_cmd: T_fonts(name_positions(long(np_s_sup) + long(c))); return; // \todo Ugly casting around
     case trees_cmd: T_trees(c); return;
     case matter_cmd: T_matter(c); return;
     case arg_font_cmd: T_fonts(np_font_sc); return;

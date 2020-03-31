@@ -35,7 +35,7 @@ namespace {
         return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd;
     }
 
-    auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(x + fml_offset); }
+    auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
 } // namespace
 
 MathDataP math_data;
@@ -2610,7 +2610,7 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
     case cst1_cmd: return cv_cst();
     case mathbin_cmd: return MathElt(c, mt_flag_bin);
     case mathrel_cmd: return MathElt(c, mt_flag_rel);
-    case mathordb_cmd: return MathElt(subtypes(c - alpha_code + alpha_bcode), mt_flag_small);
+    case mathordb_cmd: return MathElt(subtypes(long(c) - long(alpha_code) + long(alpha_bcode)), mt_flag_small);
     case mathord_cmd:
     case mathinner_cmd: return MathElt(c, mt_flag_small);
     case mathbetween_cmd: return MathElt(c, mt_flag_small_m);
@@ -2964,7 +2964,7 @@ void Math::handle_mbox(Math &res) {
         if (!math_buffer.empty()) {
             String s    = math_buffer.c_str();
             Xml *  Text = new Xml(cst_mtext, new Xml(Istring(s)));
-            if (int(font) > 1) Text->add_att(cst_mathvariant, name_positions(cstf_normal + font));
+            if (int(font) > 1) Text->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(font)));
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
         }
