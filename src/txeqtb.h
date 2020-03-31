@@ -51,15 +51,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class SaveLongState {
-private:
-    l_state code;
-
-public:
-    SaveLongState(l_state c);
-    ~SaveLongState();
-};
-
 class SaveErrTok {
 private:
     Token val;

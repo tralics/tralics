@@ -19,3 +19,8 @@ class SaveScannerStatus : public Saver<scan_stat> {
 public:
     SaveScannerStatus(scan_stat c) : Saver<scan_stat>(the_parser.scanner_status, c) {}
 };
+
+class SaveLongState : public Saver<l_state> {
+public:
+    SaveLongState(l_state c) : Saver<l_state>(the_parser.long_state, c) {}
+};

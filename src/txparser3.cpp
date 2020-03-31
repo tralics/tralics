@@ -58,13 +58,6 @@ auto parser_ns::save_string_name(size_t n) -> String {
     return "unknown";
 }
 
-SaveLongState::SaveLongState(l_state c) {
-    code = the_parser.get_long_state();
-    the_parser.set_long_state(c);
-}
-
-SaveLongState::~SaveLongState() { the_parser.set_long_state(code); }
-
 SaveErrTok::~SaveErrTok() { the_parser.err_tok = val; }
 
 SaveErrTok::SaveErrTok(Token t) {
