@@ -888,7 +888,7 @@ void MathElt::cv_noML_special() const {
 }
 
 // Handles the case of a command like \sqrt, \frac
-void MathElt::cv_noMLt_special() {
+void MathElt::cv_noMLt_special() const {
     subtypes c = get_fml_subtype();
     CmdChr   Val(special_math_cmd, c);
     mathml_buffer.push_back_math_tag(Val, pbm_start);

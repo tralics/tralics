@@ -24,7 +24,7 @@ public:
 
     auto               get_val(size_t i) -> Istring { return val[i].value; }
     void               reset() { val = std::vector<AttPair>(); }
-    auto               empty() const -> bool { return val.empty(); }
+    [[nodiscard]] auto empty() const -> bool { return val.empty(); }
     void               push_back_empty(Istring n);
     void               push_back(name_positions n, Istring v);
     void               push_back(name_positions n, name_positions v);

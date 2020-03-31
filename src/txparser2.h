@@ -36,7 +36,7 @@ public:
     auto               get_name() -> std::string & { return keyname; }
     void               prepare(const std::string &fam);
     auto               is_defined(const std::string &fam) -> bool;
-    auto               get_save() const -> bool { return has_save; }
+    [[nodiscard]] auto get_save() const -> bool { return has_save; }
     auto               check_save() -> bool;
 };
 

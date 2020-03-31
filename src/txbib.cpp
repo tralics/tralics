@@ -1166,7 +1166,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
 
 // A bunch of functions called when we see the end of an identifier.
 // We start with a function that complains if first character is wrong.
-auto Bibtex::wrong_first_char(codepoint c, size_t what) -> int {
+auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
     if (c.is_digit())
         log_and_tty << "\nit cannot start with a digit";

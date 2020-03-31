@@ -36,8 +36,8 @@ public:
     std::string                name;
     std::vector<ParamDataSlot> data;
 
-    void check_other();
-    auto its_me(const std::string &s) const -> bool { return name == s; }
+    void               check_other();
+    [[nodiscard]] auto its_me(const std::string &s) const -> bool { return name == s; }
     ParamDataList(std::string s) : name(std::move(s)) {}
     [[nodiscard]] auto empty() const -> bool { return data.empty(); }
     void               push_back(const ParamDataSlot &x) { data.push_back(x); }

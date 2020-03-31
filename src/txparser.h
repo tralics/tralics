@@ -139,11 +139,11 @@ public:
     [[nodiscard]] auto cur_centering() const -> long { return eqtb_int_table[incentering_code].val; }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
-    auto               cur_line_to_istring() const -> Istring;
+    [[nodiscard]] auto cur_line_to_istring() const -> Istring;
     void               decr_cur_level() { cur_level--; }
-    auto               get_cur_filename() const -> std::string { return lines.file_name; }
+    [[nodiscard]] auto get_cur_filename() const -> std::string { return lines.file_name; }
     [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
-    auto               get_cur_level() const -> int { return cur_level; }
+    [[nodiscard]] auto get_cur_level() const -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal & { return cur_val; }
     [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
@@ -517,7 +517,7 @@ private:
     void        kvo_void_key();
     auto        last_att_list() -> AttList &;
     void        E_latex_ctr();
-    void        E_latex_ctr_fnsymbol(long n, TokenList &res);
+    void        E_latex_ctr_fnsymbol(long n, TokenList &res) const;
     auto        latex_input(int q) -> std::string;
     void        LC();
     void        leave_h_mode();

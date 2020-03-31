@@ -222,7 +222,7 @@ auto Stack::get_cur_par() const -> Xml * {
 // In case the current element happens to be a P,
 // and has no rend attribute, then add one to it (can be center, can also
 // be flush left, etc.)
-void Stack::add_center_to_p() {
+void Stack::add_center_to_p() const {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
     auto w = the_parser.cur_centering();

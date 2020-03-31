@@ -45,37 +45,37 @@ class XmlIO {
     bool                   eof_ok{};
 
 private:
-    auto peek_char() -> codepoint;
-    void skip_char();
-    auto next_char() -> codepoint;
-    void skip_space();
-    void next_line();
-    auto at_eol() const -> bool { return input_line_pos >= cur_line_len; }
-    void scan_name();
-    void scan_name(uchar c);
-    void scan_name(uchar c1, uchar c2);
-    void parse_lt();
-    void parse_end();
-    void parse_dec();
-    void parse_dec_comment();
-    void parse_dec_entity();
-    void parse_dec_element();
-    void parse_dec_attlist();
-    void parse_dec_doctype();
-    void parse_dec_cdata();
-    void parse_dec_conditional();
-    void parse_dec_notation();
-    auto parse_sys_pub() -> bool;
-    void expect(String s);
-    void parse_pi();
-    void parse_tag();
-    void parse_attributes();
-    void parse_att_val();
-    void parse_quoted();
-    void pop_this();
-    void flush_buffer();
-    auto expand_PEReference() -> bool;
-    void run();
+    auto               peek_char() -> codepoint;
+    void               skip_char();
+    auto               next_char() -> codepoint;
+    void               skip_space();
+    void               next_line();
+    [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= cur_line_len; }
+    void               scan_name();
+    void               scan_name(uchar c);
+    void               scan_name(uchar c1, uchar c2);
+    void               parse_lt();
+    void               parse_end();
+    void               parse_dec();
+    void               parse_dec_comment();
+    void               parse_dec_entity();
+    void               parse_dec_element();
+    void               parse_dec_attlist();
+    void               parse_dec_doctype();
+    void               parse_dec_cdata();
+    void               parse_dec_conditional();
+    void               parse_dec_notation();
+    auto               parse_sys_pub() -> bool;
+    void               expect(String s);
+    void               parse_pi();
+    void               parse_tag();
+    void               parse_attributes();
+    void               parse_att_val();
+    void               parse_quoted();
+    void               pop_this();
+    void               flush_buffer();
+    auto               expand_PEReference() -> bool;
+    void               run();
 
 public:
     XmlIO() : cur_char(' ') {}

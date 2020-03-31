@@ -124,7 +124,7 @@ public:
     auto               operator[](size_t k) -> Xml *& { return Data[k]; }
     auto               get_bigtable(size_t k) -> TitlePageAux & { return bigtable[k]; }
     [[nodiscard]] auto get_len2() const -> size_t { return len2; }
-    auto               is_valid() const -> bool { return valid; }
+    [[nodiscard]] auto is_valid() const -> bool { return valid; }
     void               make_invalid() { valid = false; }
     void               make_valid() { valid = true; }
     void               start_thing(bool verbose);

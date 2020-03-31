@@ -109,7 +109,7 @@ class FullLogger {
 public:
     Logger L;
     bool   verbose{false};
-    void   abort() { L.abort(); }
+    void   abort() const { L.abort(); }
     auto   operator<<(logger_fn f) -> FullLogger & {
         f(L);
         return *this;

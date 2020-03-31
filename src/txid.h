@@ -24,20 +24,20 @@ public:
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;
 
-    void add_attribute(Istring A, Istring B) const;
-    void add_attribute(Istring A, Istring B, bool f) const;
-    void add_attribute(name_positions A, name_positions B) const;
-    void add_attribute(name_positions A, name_positions B, bool c) const;
-    void add_attribute(name_positions n, Istring v) const;
-    void add_attribute(const AttList &L, bool f) const;
-    void add_attribute_but_rend(Xid b) const;
-    void add_attribute(Xid b);
-    void add_ref(const std::string &s) const;
-    void add_span(long n);
-    void add_top_rule();
-    void add_bottom_rule();
-    auto has_attribute(Istring n) const -> Istring;
-    void add_special_att(const std::string &S);
+    void               add_attribute(Istring A, Istring B) const;
+    void               add_attribute(Istring A, Istring B, bool f) const;
+    void               add_attribute(name_positions A, name_positions B) const;
+    void               add_attribute(name_positions A, name_positions B, bool c) const;
+    void               add_attribute(name_positions n, Istring v) const;
+    void               add_attribute(const AttList &L, bool f) const;
+    void               add_attribute_but_rend(Xid b) const;
+    void               add_attribute(Xid b) const;
+    void               add_ref(const std::string &s) const;
+    void               add_span(long n) const;
+    void               add_top_rule() const;
+    void               add_bottom_rule() const;
+    [[nodiscard]] auto has_attribute(Istring n) const -> Istring;
+    void               add_special_att(const std::string &S);
 
     auto operator==(const Xid &X) const -> bool { return value == X.value; }
 };

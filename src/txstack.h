@@ -68,7 +68,7 @@ public:
     void               add_att_to_cur(Istring A, Istring B, bool force);
     void               add_border(long a, long b);
     void               add_borders(int a, int b);
-    void               add_center_to_p();
+    void               add_center_to_p() const;
     void               add_last(Xml *x);
     void               add_last_string(const Buffer &B);
     auto               add_new_anchor() -> Istring;
@@ -98,11 +98,11 @@ public:
     static auto        fonts1(name_positions x) -> Xml *;
     auto               get_att_list(size_t k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
-    auto               get_cur_par() const -> Xml *;
+    [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_u_or_v(bool u_or_v) -> TokenList;
-    auto               get_xid() const -> Xid { return last_xid; }
+    [[nodiscard]] auto get_xid() const -> Xid { return last_xid; }
     void               hack_for_hanl();
     void               implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
@@ -116,7 +116,7 @@ public:
     [[nodiscard]] auto is_frame(name_positions s) const -> bool;
     [[nodiscard]] auto is_frame2(name_positions S) const -> bool;
     auto               is_omit_cell() -> bool { return Table.back().omit_cell; }
-    auto               last_att_list() -> AttList & { return get_xid().get_att(); }
+    auto               last_att_list() const -> AttList & { return get_xid().get_att(); }
     void               mark_omit_cell();
     auto               new_array_info(Xid i) -> ArrayInfo &;
     auto               next_xid(Xml *elt) -> Xid;

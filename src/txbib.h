@@ -150,7 +150,7 @@ public:
 
 private:
     void               make_key_aux(bool sw, Buffer &B);
-    auto               is_junk(size_t i) const -> bool;
+    [[nodiscard]] auto is_junk(size_t i) const -> bool;
     [[nodiscard]] auto like_space(size_t i) const -> bool {
         bchar_type T = table[i];
         return T == bct_space || T == bct_tilde || T == bct_dash;
@@ -163,10 +163,10 @@ private:
         bchar_type b = table[first];
         return b == bct_normal || b == bct_cmd || b == bct_brace || b == bct_extended;
     }
-    auto is_name_start(size_t i) const -> bool;
-    auto print_for_key(Buffer &X) -> size_t;
-    auto special_print(Buffer &X, bool sw) -> size_t;
-    auto print(Buffer &X) const -> size_t;
+    [[nodiscard]] auto is_name_start(size_t i) const -> bool;
+    auto               print_for_key(Buffer &X) -> size_t;
+    auto               special_print(Buffer &X, bool sw) -> size_t;
+    auto               print(Buffer &X) const -> size_t;
 };
 
 // In the case of a name like  `Carrasco, J.', num_tokens will be 2,
@@ -301,7 +301,7 @@ public:
     auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;
     auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
     void               make_entry(const CitationKey &a, Istring myid);
-    auto               auto_cite() const -> bool;
+    [[nodiscard]] auto auto_cite() const -> bool;
     [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
 
 private:
@@ -341,7 +341,7 @@ private:
     auto               scan_identifier0(size_t what) -> int;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     void               skip_space();
-    auto               wrong_first_char(codepoint c, size_t what) -> int;
+    auto               wrong_first_char(codepoint c, size_t what) const -> int;
 
 public:
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
@@ -391,11 +391,11 @@ public:
         B.push_back('\\');
         B.push_back(s);
     }
-    auto non_empty_buf() -> bool { return !B.empty(); }
-    void reset() { B.reset(); }
-    void reset_lines() { lines.clear(); }
-    auto is_too_late() const -> bool { return too_late; }
-    void finish() {
+    auto               non_empty_buf() -> bool { return !B.empty(); }
+    void               reset() { B.reset(); }
+    void               reset_lines() { lines.clear(); }
+    [[nodiscard]] auto is_too_late() const -> bool { return too_late; }
+    void               finish() {
         file->close();
         delete file;
         file     = nullptr;
@@ -421,11 +421,11 @@ public:
         std::cout << B;
         *(X->file) << B;
     }
-    void out_field(Buffer &B) {
+    void out_field(Buffer &B) const {
         out_buffer(B);
         out_bar();
     }
-    void out_field(String B) {
+    void out_field(String B) const {
         std::cout << B;
         *(X->file) << B;
         out_bar();

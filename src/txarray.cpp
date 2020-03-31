@@ -457,7 +457,7 @@ void Stack::push_pop_cell(int dir) {
     if (dir != pop_only) { push1(np_cell); }
 }
 
-void Xid::add_top_rule() {
+void Xid::add_top_rule() const {
     add_attribute(np_topborder, np_true);
     if (in_hlinee) {
         add_attribute(np_border_topw, hlinee_width);
@@ -465,7 +465,7 @@ void Xid::add_top_rule() {
         if (have_below) add_attribute(np_rule_tsb, hlinee_below);
     }
 }
-void Xid::add_bottom_rule() {
+void Xid::add_bottom_rule() const {
     add_attribute(np_bottomborder, np_true);
     if (in_hlinee) {
         add_attribute(np_border_bottomw, hlinee_width);
@@ -740,7 +740,7 @@ auto Xml::try_cline_again(bool action) -> bool {
 }
 
 // adds a span value of n to the current cell
-void Xid::add_span(long n) {
+void Xid::add_span(long n) const {
     if (n == 1) return;
     errbuf.reset();
     errbuf << n;

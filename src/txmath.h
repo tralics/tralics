@@ -75,18 +75,18 @@ public:
     [[nodiscard]] auto maybe_iseq(subtypes f) const -> bool;
     [[nodiscard]] auto maybe_iseq() const -> bool;
     // other functions
-    auto               large2() const -> del_pos;
+    [[nodiscard]] auto large2() const -> del_pos;
     [[nodiscard]] auto remove_prefix() const -> Xml *;
     void               cv_noMLt();
     void               cv_noML();
-    void               cv_noMLt_special();
+    void               cv_noMLt_special() const;
     void               cv_noMLt_special0() const;
     void               cv_noMLt_list() const;
     void               cv_noML_special() const;
     void               cv_noML_list() const;
     auto               cv1(math_style cms, bool ph) -> MathElt;
     void               change_type(int t);
-    auto               try_math_op() const -> Xml *;
+    [[nodiscard]] auto try_math_op() const -> Xml *;
     [[nodiscard]] auto is_e_grave() const -> bool;
     [[nodiscard]] auto special3() const -> Xml *;
     void               print() const;
@@ -97,13 +97,13 @@ private:
         set_xmltype(x);
         val.set_mathml();
     }
-    auto               cv_char() const -> MathElt;
-    auto               cv_cst() const -> MathElt;
+    [[nodiscard]] auto cv_char() const -> MathElt;
+    [[nodiscard]] auto cv_cst() const -> MathElt;
     auto               cv_special(math_style cms) -> MathElt;
-    auto               cv_special1(math_style cms) const -> MathElt;
+    [[nodiscard]] auto cv_special1(math_style cms) const -> MathElt;
     auto               cv_list(math_style cms, bool ph) -> MathElt;
     auto               cv_list_no() -> MathElt;
-    auto               cv_mi(math_style cms) const -> MathElt;
+    [[nodiscard]] auto cv_mi(math_style cms) const -> MathElt;
     void               cv1_err();
     void               dump_for_err() const;
     [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
@@ -136,7 +136,7 @@ public:
     auto                      convert_math_noML(bool spec) -> Xml *;
     void                      convert_math_noML0();
     void                      convert_math_noMLt0();
-    auto                      convert_opname() const -> std::string;
+    [[nodiscard]] auto        convert_opname() const -> std::string;
     auto                      convert_this_to_string(Buffer &B) const -> std::string;
     void                      destroy();
     [[nodiscard]] auto        empty() const -> bool { return value.empty(); }
@@ -145,8 +145,8 @@ public:
     auto                      front() -> MathElt & { return value.front(); }
     [[nodiscard]] auto        front() const -> const MathElt & { return value.front(); }
     auto                      get_arg1() -> Math { return front().get_list(); }
-    auto                      get_arg2() const -> Math { return second_element().get_list(); }
-    auto                      get_arg3() const -> Math { return third_element().get_list(); }
+    [[nodiscard]] auto        get_arg2() const -> Math { return second_element().get_list(); }
+    [[nodiscard]] auto        get_arg3() const -> Math { return third_element().get_list(); }
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
     [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
     [[nodiscard]] auto        get_name() const -> String;

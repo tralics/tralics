@@ -41,23 +41,23 @@ public:
         old       = packed;
         old_color = color;
     }
-    auto is_ok() const -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
-    void pack() { packed = tsize + shape + family + series + size; }
-    void unpack();
-    void change_size(long c);
-    void kill() {
+    [[nodiscard]] auto is_ok() const -> bool { return (old & fi_data_mask) == (packed & fi_data_mask) && stackval && color == old_color; }
+    void               pack() { packed = tsize + shape + family + series + size; }
+    void               unpack();
+    void               change_size(long c);
+    void               kill() {
         shape  = 0;
         family = 0;
         series = 0;
     }
-    void see_font_change(subtypes c);
-    auto show_font() -> String;
-    auto get_size() const -> long { return size / 2048; }
-    void set_level(int k) { level = k; }
-    void set_packed(long k) { packed = k; }
-    void set_old_from_packed() { old = packed; }
-    void set_color(Istring c) { color = c; }
-    void ltfont(const std::string &s, subtypes c);
+    void               see_font_change(subtypes c);
+    auto               show_font() -> String;
+    [[nodiscard]] auto get_size() const -> long { return size / 2048; }
+    void               set_level(int k) { level = k; }
+    void               set_packed(long k) { packed = k; }
+    void               set_old_from_packed() { old = packed; }
+    void               set_color(Istring c) { color = c; }
+    void               ltfont(const std::string &s, subtypes c);
 };
 
 class TeXChar {

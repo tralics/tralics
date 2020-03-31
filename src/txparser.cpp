@@ -3602,7 +3602,7 @@ void Parser::E_latex_ctr() {
 }
 
 // In some cases,  we must enter math mode.
-void Parser::E_latex_ctr_fnsymbol(long n, TokenList &res) {
+void Parser::E_latex_ctr_fnsymbol(long n, TokenList &res) const {
     if (n == 1) {
         res.push_back(hash_table.star_token);
         return;

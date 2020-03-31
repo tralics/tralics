@@ -93,7 +93,7 @@ void Xid::add_attribute_but_rend(Xid b) const {
 }
 
 // Add attribute list of element B to this id.
-void Xid::add_attribute(Xid b) {
+void Xid::add_attribute(Xid b) const {
     AttList &L = b.get_att();
     add_attribute(L, true);
 }
