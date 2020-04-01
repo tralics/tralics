@@ -58,13 +58,6 @@ auto parser_ns::save_string_name(size_t n) -> String {
     return "unknown";
 }
 
-SaveErrTok::~SaveErrTok() { the_parser.err_tok = val; }
-
-SaveErrTok::SaveErrTok(Token t) {
-    val                = the_parser.err_tok;
-    the_parser.err_tok = t;
-}
-
 Parser::Parser() : cur_env_name("document") {
     sectionning_offset                 = section_code;
     restricted                         = false;

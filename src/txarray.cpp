@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txarray.h"
+#include "tralics/Saver.h"
 #include "txinline.h"
 #include "txparser.h"
 
@@ -486,8 +487,8 @@ void Parser::start_a_row(long a) {
             continue;
         }
         if (S == hline_cmd) {
-            SaveErrTok sv(cur_tok);
-            subtypes   c = cur_cmd_chr.chr;
+            auto     guard = SaveErrTok(cur_tok);
+            subtypes c     = cur_cmd_chr.chr;
             get_token();
             int w = T_hline_parse(c);
             if (w == 2) T_cline();

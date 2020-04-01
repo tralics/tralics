@@ -92,7 +92,7 @@ void Parser::T_translate(TokenList &X) {
 }
 
 void Parser::translate01() {
-    SaveErrTok sv(cur_tok);
+    auto guard = SaveErrTok(cur_tok);
     translate03();
 }
 
@@ -220,8 +220,8 @@ auto Parser::xT_optarg_nopar() -> Xml * {
 auto Parser::special_next_arg() -> std::string {
     InUrlHandler  something;
     InLoadHandler something_else;
-    SaveCatcode   unused2('~', other_catcode);
-    SaveCatcode   unused3('#', active_catcode);
+    auto          guard1 = SaveCatcode('~', other_catcode);
+    auto          guard2 = SaveCatcode('#', active_catcode);
     return sT_arg_nopar();
 }
 
@@ -739,7 +739,7 @@ void Parser::T_subfigure() {
     T_optarg();
     the_stack.pop(np_leg);
     {
-        SaveCatcode tmp('_', 13); // allow underscore in the file name (needed ?)
+        auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
         T_arg1(np_texte);
     }
     the_stack.pop(np_subfigure);
@@ -1430,10 +1430,10 @@ void Parser::T_url(subtypes c) {
     leave_v_mode();
     InUrlHandler  something;
     InLoadHandler something_else;
-    SaveCatcode   unused2('~', other_catcode);
-    SaveCatcode   unused3('&', active_catcode);
-    SaveCatcode   unused4('#', active_catcode);
-    TokenList     X = read_arg();
+    auto          guard1 = SaveCatcode('~', other_catcode);
+    auto          guard2 = SaveCatcode('&', active_catcode);
+    auto          guard3 = SaveCatcode('#', active_catcode);
+    TokenList     X      = read_arg();
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);

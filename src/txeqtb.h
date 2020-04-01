@@ -51,15 +51,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class SaveErrTok {
-private:
-    Token val;
-
-public:
-    SaveErrTok(Token t);
-    ~SaveErrTok();
-};
-
 class InLoadHandler {
     bool in_load; // a boolean value to restore
 public:

@@ -403,23 +403,23 @@ auto Parser::read_optarg(TokenList &L) -> bool {
 }
 
 void Parser::ignore_optarg() {
-    TokenList     L;
-    SaveLongState sth(ls_normal); // \par forbidden
+    TokenList L;
+    auto      guard = SaveLongState(ls_normal); // \par forbidden
     read_optarg(L);
 }
 
 // The three next commands set locally long_state to normal
 // Reads an optional argument in L, true if found
 auto Parser::read_optarg_nopar(TokenList &L) -> bool {
-    SaveLongState sth(ls_normal);
+    auto guard = SaveLongState(ls_normal);
     return read_optarg(L);
 }
 
 // Read an argument delimited by a token
 auto Parser::read_until_nopar(Token x) -> TokenList {
-    TokenList     res;
-    SaveLongState sv(ls_normal);
-    scanner_status = ss_matching;
+    TokenList res;
+    auto      guard = SaveLongState(ls_normal);
+    scanner_status  = ss_matching;
     scan_group_del1(res, x);
     scanner_status = ss_normal;
     return res;
@@ -428,9 +428,9 @@ auto Parser::read_until_nopar(Token x) -> TokenList {
 // This reads all tokens before x. The scanner status is set to matching
 // and to normal at the end.
 auto Parser::read_until(Token x) -> TokenList {
-    TokenList     res;
-    SaveLongState sv(ls_long);
-    scanner_status = ss_matching;
+    TokenList res;
+    auto      guard = SaveLongState(ls_long);
+    scanner_status  = ss_matching;
     scan_group_del1(res, x);
     scanner_status = ss_normal;
     return res;
@@ -438,9 +438,9 @@ auto Parser::read_until(Token x) -> TokenList {
 
 // Argument of macro. A single token, or a brace delimited non-expanded list
 auto Parser::read_arg() -> TokenList {
-    TokenList     L;
-    SaveLongState sth(ls_long);
-    scanner_status = ss_matching;
+    TokenList L;
+    auto      guard = SaveLongState(ls_long);
+    scanner_status  = ss_matching;
     scan_group2(L);
     scanner_status = ss_normal;
     return L;
@@ -448,9 +448,9 @@ auto Parser::read_arg() -> TokenList {
 
 // Read a normal argument
 auto Parser::read_arg_nopar() -> TokenList {
-    TokenList     L;
-    SaveLongState sth(ls_normal);
-    scanner_status = ss_matching;
+    TokenList L;
+    auto      guard = SaveLongState(ls_normal);
+    scanner_status  = ss_matching;
     scan_group2(L);
     scanner_status = ss_normal;
     return L;
@@ -459,10 +459,10 @@ auto Parser::read_arg_nopar() -> TokenList {
 // Argument of macro that should be a single token
 // sets cur_tok and cmd_chr,
 auto Parser::read_token_arg(Token T) -> bool {
-    SaveLongState sth(ls_long);
+    auto guard1    = SaveLongState(ls_long);
+    auto guard2    = SaveErrTok(T);
     scanner_status = ss_matching;
-    SaveErrTok sv(T);
-    bool       res = read_token_arg(get_cur_line());
+    bool res       = read_token_arg(get_cur_line());
     scanner_status = ss_normal;
     return res;
 }
@@ -496,7 +496,7 @@ auto Parser::read_token_arg(int cl) -> bool {
 // Paragraphs are forbidden in ignored arguments
 // Use read_arg() if \par allowed
 void Parser::ignore_arg() {
-    SaveLongState sth(ls_normal);
+    auto guard     = SaveLongState(ls_normal);
     scanner_status = ss_matching;
     skip_initial_space();
     if (cur_tok.is_invalid())
@@ -1070,8 +1070,8 @@ auto Parser::to_stringE(TokenList &L) -> std::string {
 auto Parser::scan_general_text() -> TokenList {
     TokenList L;
     scan_left_brace();
-    SaveLongState     sth(ls_long); // allows \par
-    SaveScannerStatus aux(ss_absorbing);
+    auto guard1 = SaveLongState(ls_long); // allows \par
+    auto guard2 = SaveScannerStatus(ss_absorbing);
     scan_group0(L, get_cur_line());
     return L;
 }
@@ -1162,7 +1162,7 @@ void Parser::M_def(bool edef, bool gbl, symcodes what, rd_flag fl) {
     if (cur_tok.not_a_cmd()) bad_redefinition(2, name);
     auto *X = new Macro;
     {
-        SaveErrTok sv(name);
+        auto guard = SaveErrTok(name);
         get_def_nbargs(X, name);
         back_input();
         read_mac_body(X->body, edef, X->nbargs);
@@ -2492,8 +2492,8 @@ void Parser::E_random() {
 
 void Parser::E_user(bool vb, subtypes c, symcodes C) {
     if (vb) the_log << lg_start << cur_tok;
-    SaveScannerStatus sth(ss_macro);
-    SaveLongState     sth2(ls_normal);
+    auto guard1 = SaveScannerStatus(ss_macro);
+    auto guard2 = SaveLongState(ls_normal);
     if (C == userl_cmd || C == userlo_cmd || C == userlp_cmd || C == userlpo_cmd) long_state = ls_long;
     expand_mac(mac_table.get_macro(c));
 }
@@ -2585,7 +2585,7 @@ auto Parser::scan_keyword(String s) -> bool {
 // ------------------------------------
 
 void Parser::expand() {
-    SaveErrTok sv(cur_tok);
+    auto guard = SaveErrTok(cur_tok);
     iexpand();
 }
 
@@ -2697,7 +2697,7 @@ void Parser::iexpand() {
         back_input(hash_table.dollar_token);
         return;
     case noexpand_cmd: { // see comments in txscan
-        SaveScannerStatus sth(ss_normal);
+        auto guard = SaveScannerStatus(ss_normal);
         if (get_token()) return;
         Token t = cur_tok;
         if (vb) the_log << lg_startbracebs << "noexpand " << t << lg_endbrace;
@@ -2783,8 +2783,8 @@ void Parser::trace_if(String a, int k, long b) const {
 
 // Find \fi, \else , \or at level zero.
 void Parser::pass_text(Token Tfe) {
-    int               l = 0;
-    SaveScannerStatus foo(ss_skipping);
+    int  l     = 0;
+    auto guard = SaveScannerStatus(ss_skipping);
     for (;;) {
         if (get_token()) {
             cur_tok     = hash_table.fi_token;
@@ -2961,7 +2961,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     case if_eof_code: return is_input_open();
     case if_csname_code: fetch_name2(); return hash_table.is_defined(fetch_name_res);
     case if_defined_code: {
-        SaveScannerStatus tmp(ss_normal);
+        auto guard = SaveScannerStatus(ss_normal);
         get_token();
         return !cur_cmd_chr.is_undef();
     }
@@ -3186,8 +3186,8 @@ void Parser::M_newcommand(rd_flag redef) {
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
     Macro *X = nullptr;
     {
-        SaveErrTok sv(name);
-        X = read_latex_macro();
+        auto guard = SaveErrTok(name);
+        X          = read_latex_macro();
         if (redef == rd_never) { // case \CheckCommand
             bool   is_same = true;
             CmdChr pq      = hash_table.eqtb[name.eqtb_loc()];
@@ -3215,14 +3215,14 @@ void Parser::M_new_env(rd_flag redef) {
     Token  T = find_env_token(name, true); // this is \foo
     Macro *X = nullptr;
     {
-        SaveErrTok sv(T);
-        X = read_latex_macro();
+        auto guard = SaveErrTok(T);
+        X          = read_latex_macro();
     }
     mac_define(T, X, false, redef, what);
     T = find_env_token(name, false);
     X = new Macro;
     {
-        SaveErrTok sv(T);
+        auto guard = SaveErrTok(T);
         read_mac_body(X->body, false, 0);
         X->correct_type();
     }

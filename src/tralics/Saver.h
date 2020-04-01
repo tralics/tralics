@@ -15,17 +15,7 @@ public:
     auto operator=(Saver &&S) = delete;
 };
 
-class SaveCatcode : public Saver<long> {
-public:
-    SaveCatcode(char32_t c, long nc) : Saver<long>(the_parser.eqtb_int_table[c].val, nc) {}
-};
-
-class SaveScannerStatus : public Saver<scan_stat> {
-public:
-    SaveScannerStatus(scan_stat c) : Saver<scan_stat>(the_parser.scanner_status, c) {}
-};
-
-class SaveLongState : public Saver<l_state> {
-public:
-    SaveLongState(l_state c) : Saver<l_state>(the_parser.long_state, c) {}
-};
+inline auto SaveCatcode(char32_t c, long nc) { return Saver(the_parser.eqtb_int_table[c].val, nc); }
+inline auto SaveScannerStatus(scan_stat c) { return Saver(the_parser.scanner_status, c); }
+inline auto SaveLongState(l_state c) { return Saver(the_parser.long_state, c); }
+inline auto SaveErrTok(Token t) { return Saver(the_parser.err_tok, t); }

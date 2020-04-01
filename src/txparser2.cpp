@@ -12,6 +12,7 @@
 // things, but not the XML generator.
 
 #include "txparser2.h"
+#include "tralics/Saver.h"
 #include <fmt/format.h>
 
 namespace {
@@ -603,7 +604,7 @@ void Parser::M_cons(Token cmd, TokenList &L) {
     L.push_front(cmd);
     push_level(bt_brace);
     M_let_fast(E, hash_table.relax_token, false);
-    SaveErrTok sv(cmd);
+    auto guard = SaveErrTok(cmd);
     read_toks_edef(L);
     pop_level(bt_brace);
     new_macro(L, cmd, true);

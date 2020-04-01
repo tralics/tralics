@@ -644,7 +644,7 @@ auto Parser::get_token() -> bool {
 // Reads a token that can be outer for \ifx \ifdefined or \show
 // no outer check, thus no error.
 auto Parser::get_token_o() -> bool {
-    SaveScannerStatus tmp(ss_normal);
+    auto guard = SaveScannerStatus(ss_normal);
     return get_itoken();
 }
 
@@ -979,7 +979,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
 
 // Fills the token list with the content of the buffer.
 void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
-    SaveScannerStatus tmp(ss_normal);
+    auto guard = SaveScannerStatus(ss_normal);
     push_input_stack(name, false, true);
     auto n     = cur_input_stack.size();
     bool s     = restricted;
@@ -2017,8 +2017,8 @@ void Parser::assign_toks(Token T, size_t p, bool gbl) {
         TokenList Q = toks_registers[q].val;
         token_list_define(p, Q, gbl);
     } else { // this is scan_toks (false,false)
-        SaveScannerStatus tmp(ss_absorbing);
-        TokenList         Q;
+        auto      guard = SaveScannerStatus(ss_absorbing);
+        TokenList Q;
         skip_group0(Q);
         token_list_define(p, Q, gbl);
     }
