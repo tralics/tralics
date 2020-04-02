@@ -11,6 +11,7 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
+#include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
@@ -1165,8 +1166,8 @@ void Parser::T_filecontents(int spec) {
     std::string filename;
     {
         flush_buffer();
-        InLoadHandler somthing;
-        filename = sT_arg_nopar();
+        auto guard = InLoadHandler();
+        filename   = sT_arg_nopar();
     }
     int           action     = 0;
     std::fstream *outfile    = nullptr;

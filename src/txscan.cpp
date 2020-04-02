@@ -323,8 +323,8 @@ auto Parser::latex_input(int q) -> std::string {
             parse_error(err_tok, "Missing {} for ", err_tok, "", "Missing brace");
             file = ".tex";
         } else {
-            InLoadHandler somthing;
-            file = sT_arg_nopar();
+            auto guard = InLoadHandler();
+            file       = sT_arg_nopar();
         }
     } else
         file = scan_file_name();
@@ -355,8 +355,8 @@ void Parser::T_input(int q) {
         file = latex_input(q);
     else {
         flush_buffer();
-        InLoadHandler somthing;
-        file = sT_arg_nopar();
+        auto guard = InLoadHandler();
+        file       = sT_arg_nopar();
     }
     if (q == readxml_code) {
         the_xmlA = read_xml(file);

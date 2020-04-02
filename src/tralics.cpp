@@ -37,8 +37,7 @@ Parser                       the_parser;              // the big object
 std::array<Istring, np_last> the_names;
 
 // variables declared static in some files.
-bool InUrlHandler::global_in_url   = false;
-bool InLoadHandler::global_in_load = false;
+bool InUrlHandler::global_in_url = false;
 
 // local variables
 namespace {

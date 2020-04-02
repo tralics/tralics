@@ -218,10 +218,10 @@ auto Parser::xT_optarg_nopar() -> Xml * {
 
 // Hacked version of sT_arg_nopar.
 auto Parser::special_next_arg() -> std::string {
-    InUrlHandler  something;
-    InLoadHandler something_else;
-    auto          guard1 = SaveCatcode('~', other_catcode);
-    auto          guard2 = SaveCatcode('#', active_catcode);
+    InUrlHandler something;
+    auto         guard1 = SaveCatcode('~', other_catcode);
+    auto         guard2 = SaveCatcode('#', active_catcode);
+    auto         guard3 = InLoadHandler();
     return sT_arg_nopar();
 }
 
@@ -889,7 +889,7 @@ void Parser::includegraphics(subtypes C) {
     TokenList   W, val, key;
     std::string file_name_2;
     {
-        InLoadHandler something;
+        auto guard = InLoadHandler();
         if (ic) {
             read_optarg(W);
             flush_buffer();
@@ -967,8 +967,8 @@ void Parser::T_epsfbox() {
     flush_buffer();
     std::string y;
     {
-        InLoadHandler something;
-        y = sT_arg_nopar();
+        auto guard = InLoadHandler();
+        y          = sT_arg_nopar();
     }
     AttList &res = the_stack.add_newid0(np_figure);
     no_extension(res, y);
@@ -1428,12 +1428,12 @@ void Parser::T_url(subtypes c) {
     bool is_rrrt = c == 1;
     bool no_hack = remove_initial_star();
     leave_v_mode();
-    InUrlHandler  something;
-    InLoadHandler something_else;
-    auto          guard1 = SaveCatcode('~', other_catcode);
-    auto          guard2 = SaveCatcode('&', active_catcode);
-    auto          guard3 = SaveCatcode('#', active_catcode);
-    TokenList     X      = read_arg();
+    InUrlHandler something;
+    auto         guard1 = SaveCatcode('~', other_catcode);
+    auto         guard2 = SaveCatcode('&', active_catcode);
+    auto         guard3 = SaveCatcode('#', active_catcode);
+    auto         guard4 = InLoadHandler();
+    TokenList    X      = read_arg();
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);
@@ -1481,9 +1481,9 @@ auto Parser::T_hanl_text() -> Xml * {
 
 // This fetches the URL.
 auto Parser::T_hanl_url() -> Xml * {
-    InUrlHandler  something;
-    InLoadHandler something_else;
-    Xml *         B = xT_arg_nopar();
+    InUrlHandler something;
+    auto         guard2 = InLoadHandler();
+    Xml *        B      = xT_arg_nopar();
     return B;
 }
 
@@ -2064,8 +2064,8 @@ void Parser::T_xmladdatt(subtypes c) {
     Token T     = cur_tok;
     bool  force = remove_initial_star();
     flush_buffer();
-    long          n = 0;
-    InLoadHandler something_else;
+    long n     = 0;
+    auto guard = InLoadHandler();
 
     if (c == addatt_to_cur_code)
         n = the_stack.cur_xid().value;

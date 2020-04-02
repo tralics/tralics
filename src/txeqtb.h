@@ -13,16 +13,6 @@
 
 class Parser;
 
-// Contains:
-//   equivalent, restore_vb_space, save_catcode, InLoadHandler,
-//  InUrlHandler, SaveState
-//   SaveAux, and derived types
-//     SaveAuxBoundary , SaveAuxInt , SaveAuxDim , SaveAuxCmd
-//     SaveAuxBox , SaveAuxBoxend, SaveAuxToken, SaveAuxGlue
-//     SaveAuxEnv , SaveAuxFont , SaveAuxAftergroup
-// the 5 types for eqtb:
-//   eqtb_int eqtb_dim eqtb_glue eqtb_token eqtb_box
-
 // Defined EQTB, the table of equivalents
 // EQTB for commands. No Ctor(?) but reset() is called for every object.
 // The values is a (symcodes, subtype) pair
@@ -49,14 +39,6 @@ struct Equivalent : public CmdChr {
     }
 
     void primitive(CmdChr b) { set(b, 1); }
-};
-
-class InLoadHandler {
-    bool in_load; // a boolean value to restore
-public:
-    static bool global_in_load;
-    InLoadHandler() : in_load(global_in_load) { global_in_load = true; }
-    ~InLoadHandler() { global_in_load = in_load; }
 };
 
 class InUrlHandler {

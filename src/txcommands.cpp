@@ -8,6 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txbib.h"
 #include "txclasses.h"
@@ -178,7 +179,7 @@ void Parser::translate_char(CmdChr X) {
     case '<':
     case '>': english_quotes(X); return;
     case '"':
-        if (X.is_letter() || InUrlHandler::global_in_url || InLoadHandler::global_in_load)
+        if (X.is_letter() || InUrlHandler::global_in_url || global_in_load)
             process_char(c);
         else
             umlaut();
@@ -199,7 +200,7 @@ void Parser::translate_char(CmdChr X) {
 // In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X) {
     auto c = X.char_val().value; // Should be a small int
-    if (InUrlHandler::global_in_url || InLoadHandler::global_in_load) {
+    if (InUrlHandler::global_in_url || global_in_load) {
         if (c == '<')
             process_string("&lt;");
         else if (c == '>')
@@ -238,7 +239,7 @@ void Parser::english_quotes(CmdChr X) {
 
 // This translates -, --, or ---.
 void Parser::minus_sign(CmdChr X) {
-    if (InUrlHandler::global_in_url || InLoadHandler::global_in_load)
+    if (InUrlHandler::global_in_url || global_in_load)
         process_char('-');
     else if (X.is_letter()) {
         process_char('-');
@@ -263,7 +264,7 @@ void Parser::minus_sign(CmdChr X) {
 // This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X) {
     auto c = X.char_val().value;
-    if (InUrlHandler::global_in_url || InLoadHandler::global_in_load || X.is_letter() || !cur_lang_fr()) {
+    if (InUrlHandler::global_in_url || global_in_load || X.is_letter() || !cur_lang_fr()) {
         extended_chars(c);
         return;
     }
@@ -838,7 +839,7 @@ auto tcommands::vfill_to_np(subtypes c) -> name_positions {
 // Translates a command.
 
 void Parser::translate03() {
-    if (cur_cmd_chr.cmd == underscore_catcode && InLoadHandler::global_in_load) {
+    if (cur_cmd_chr.cmd == underscore_catcode && global_in_load) {
         translate_char(cur_cmd_chr);
         return;
     }
@@ -918,7 +919,7 @@ void Parser::translate03() {
         return;
     case hat_catcode:
     case underscore_catcode:
-        if (InLoadHandler::global_in_load || is_pos_par(nomath_code))
+        if (global_in_load || is_pos_par(nomath_code))
             translate_char(CmdChr(letter_catcode, c));
         else
             parse_error(cur_tok, "Missing dollar not inserted, token ignored: ", cur_tok.tok_to_str(), "Missing dollar");
