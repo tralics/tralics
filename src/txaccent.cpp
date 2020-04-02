@@ -15,6 +15,7 @@
 /// \todo The first 256 characters of Unicode are identical to Latin-1. So in
 /// fact internal encoding is always unicode, latin1 is a red herring here.
 
+#include "tralics/Saver.h"
 #include "txinline.h"
 #include "txparser.h"
 
@@ -350,7 +351,7 @@ auto accent_ns::special_double_acc(int chr, int acc) -> Token {
 void Parser::E_accent() {
     if (tracing_macros()) the_log << lg_startbrace << "accent " << cur_tok << lg_endbrace;
     int acc_code = cur_cmd_chr.chr;
-    if (InUrlHandler::global_in_url && acc_code == '~') {
+    if (global_in_url && acc_code == '~') {
         if (tracing_macros()) { the_log << lg_startbrace << "\\~ gives ~ " << lg_endbrace; }
         back_input(Token(other_t_offset, '~'));
         return;

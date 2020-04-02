@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+// \todo move from extern to inline
+
 class Buffer;
 struct LinePtr;
 

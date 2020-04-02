@@ -179,7 +179,7 @@ void Parser::translate_char(CmdChr X) {
     case '<':
     case '>': english_quotes(X); return;
     case '"':
-        if (X.is_letter() || InUrlHandler::global_in_url || global_in_load)
+        if (X.is_letter() || global_in_url || global_in_load)
             process_char(c);
         else
             umlaut();
@@ -200,7 +200,7 @@ void Parser::translate_char(CmdChr X) {
 // In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X) {
     auto c = X.char_val().value; // Should be a small int
-    if (InUrlHandler::global_in_url || global_in_load) {
+    if (global_in_url || global_in_load) {
         if (c == '<')
             process_string("&lt;");
         else if (c == '>')
@@ -239,7 +239,7 @@ void Parser::english_quotes(CmdChr X) {
 
 // This translates -, --, or ---.
 void Parser::minus_sign(CmdChr X) {
-    if (InUrlHandler::global_in_url || global_in_load)
+    if (global_in_url || global_in_load)
         process_char('-');
     else if (X.is_letter()) {
         process_char('-');
@@ -264,7 +264,7 @@ void Parser::minus_sign(CmdChr X) {
 // This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X) {
     auto c = X.char_val().value;
-    if (InUrlHandler::global_in_url || global_in_load || X.is_letter() || !cur_lang_fr()) {
+    if (global_in_url || global_in_load || X.is_letter() || !cur_lang_fr()) {
         extended_chars(c);
         return;
     }
@@ -854,7 +854,7 @@ void Parser::translate03() {
     case cst2_cmd: T_cst2(c); return;
     case nobreakspace_cmd:
         LC();
-        if (InUrlHandler::global_in_url)
+        if (global_in_url)
             process_char('~');
         else
             process_char(0xA0);

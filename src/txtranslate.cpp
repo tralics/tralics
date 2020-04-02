@@ -218,10 +218,10 @@ auto Parser::xT_optarg_nopar() -> Xml * {
 
 // Hacked version of sT_arg_nopar.
 auto Parser::special_next_arg() -> std::string {
-    InUrlHandler something;
-    auto         guard1 = SaveCatcode('~', other_catcode);
-    auto         guard2 = SaveCatcode('#', active_catcode);
-    auto         guard3 = InLoadHandler();
+    auto guard1 = SaveCatcode('~', other_catcode);
+    auto guard2 = SaveCatcode('#', active_catcode);
+    auto guard3 = InLoadHandler();
+    auto guard4 = InUrlHandler();
     return sT_arg_nopar();
 }
 
@@ -1428,12 +1428,12 @@ void Parser::T_url(subtypes c) {
     bool is_rrrt = c == 1;
     bool no_hack = remove_initial_star();
     leave_v_mode();
-    InUrlHandler something;
-    auto         guard1 = SaveCatcode('~', other_catcode);
-    auto         guard2 = SaveCatcode('&', active_catcode);
-    auto         guard3 = SaveCatcode('#', active_catcode);
-    auto         guard4 = InLoadHandler();
-    TokenList    X      = read_arg();
+    auto      guard1 = SaveCatcode('~', other_catcode);
+    auto      guard2 = SaveCatcode('&', active_catcode);
+    auto      guard3 = SaveCatcode('#', active_catcode);
+    auto      guard4 = InLoadHandler();
+    auto      guard5 = InUrlHandler();
+    TokenList X      = read_arg();
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);
@@ -1481,9 +1481,9 @@ auto Parser::T_hanl_text() -> Xml * {
 
 // This fetches the URL.
 auto Parser::T_hanl_url() -> Xml * {
-    InUrlHandler something;
-    auto         guard2 = InLoadHandler();
-    Xml *        B      = xT_arg_nopar();
+    auto guard  = InUrlHandler();
+    auto guard2 = InLoadHandler();
+    Xml *B      = xT_arg_nopar();
     return B;
 }
 

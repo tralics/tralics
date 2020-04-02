@@ -41,14 +41,6 @@ struct Equivalent : public CmdChr {
     void primitive(CmdChr b) { set(b, 1); }
 };
 
-class InUrlHandler {
-    bool in_url; // a boolean value to restore
-public:
-    static bool global_in_url;
-    InUrlHandler() : in_url(global_in_url) { global_in_url = true; }
-    ~InUrlHandler() { global_in_url = in_url; }
-};
-
 // this saves two values
 class SaveState {
     TokenList L; // the token list to be restored

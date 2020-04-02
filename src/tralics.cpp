@@ -36,9 +36,6 @@ MainClass *                  the_main;                // the main class data str
 Parser                       the_parser;              // the big object
 std::array<Istring, np_last> the_names;
 
-// variables declared static in some files.
-bool InUrlHandler::global_in_url = false;
-
 // local variables
 namespace {
     bool ra_ok = true; // inhibits  redefinitions
