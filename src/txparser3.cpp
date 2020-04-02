@@ -123,7 +123,7 @@ auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & {
 // This adds a new element to the save stack.
 void Parser::push_save_stack(SaveAux *v) {
     my_stats.one_more_up();
-    v->set_line(get_cur_line());
+    v->line = get_cur_line();
     the_save_stack.push_back(v);
 }
 

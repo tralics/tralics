@@ -439,7 +439,7 @@ private:
     auto        get_ctb_opt() -> name_positions;
     auto        get_trees_opt() -> name_positions;
     auto        get_c_val(Token X) -> Istring;
-    long        get_counter(Token T);
+    auto        get_counter(Token T) -> long;
     auto        get_index_value() -> size_t;
     void        get_date_ctrs(long &year, size_t &month, long &day);
     void        get_def_nbargs(Macro *X, Token name);

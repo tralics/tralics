@@ -477,7 +477,7 @@ void Parser::set_counter(Token T, long c) {
 }
 
 // Stores the value c in the counter T if possible
-long Parser::get_counter(Token T) { // \todo rewrite properly
+auto Parser::get_counter(Token T) -> long { // \todo rewrite properly
     long c = 0;
     see_cs_token(T);
     if (cur_cmd_chr.cmd != assign_int_cmd) return c;

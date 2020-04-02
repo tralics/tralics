@@ -3840,7 +3840,7 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
     }
     auto A = num / den;
     val.set_ipart(A); // Integer part of the thing.
-    std::array<long, 17> table;
+    std::array<long, 17> table{};
     for (size_t k = 0; k < 10; k++) {
         num -= A * den;
         num *= 10;

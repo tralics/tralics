@@ -29,7 +29,7 @@ class XmlIO {
     Buffer                  line_buffer; // holds current line
     LinePtr                 lines;       // input file
     int                     cur_line{};
-    std::array<x_type, 128> Type;
+    std::array<x_type, 128> Type{};
     std::vector<codepoint>  input_line;  // current line
     std::vector<codepoint>  reread_list; // current line
     codepoint               cur_char;    // current character in some cases

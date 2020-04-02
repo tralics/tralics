@@ -318,8 +318,8 @@ void FpNum::prop_carry(Digit *z) {
 // (where B=1000).. The product gives a 24B number.
 void FpNum::mul(FpNum X, FpNum Y) {
     bool                  xs = X.sign == Y.sign;
-    std::array<Digit, 12> x, y;
-    std::array<Digit, 24> z;
+    std::array<Digit, 12> x{}, y{};
+    std::array<Digit, 24> z{};
     for (unsigned int &i : z) i = 0;
     X.mul_split(x.data()); // \todo pass the array instead (there should be no data() anywhere)
     Y.mul_split(y.data()); // \todo pass the array instead
@@ -334,8 +334,8 @@ void FpNum::mul(FpNum X, FpNum Y) {
 
 // Multiplies by an integer, assumed to be less than 1000 and positive
 void FpNum::mul(FpNum X, int y) {
-    std::array<Digit, 12> x;
-    std::array<Digit, 24> z;
+    std::array<Digit, 12> x{};
+    std::array<Digit, 24> z{};
     bool                  xs = X.sign;
     if (y < 0) {
         y  = -y;
@@ -719,7 +719,7 @@ void FpNum::add(FpNum X, FpNum Y) {
 
 // Divide by an integer n. Assumea that abs(n) <1000
 void FpNum::div(int n) {
-    std::array<Digit, 12> x;
+    std::array<Digit, 12> x{};
     if (n < 0) {
         sign = !sign;
         n    = -n;

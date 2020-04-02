@@ -1525,7 +1525,7 @@ void Parser::scan_double(RealNumber &res) {
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
     get_token(); // read the . or ,
-    std::array<long, 17> table;
+    std::array<long, 17> table{};
     size_t               k = 0;
     for (;;) {
         get_x_token();
