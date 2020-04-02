@@ -17,12 +17,12 @@
 #include <fmt/format.h>
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
-static Buffer    mathml_buffer;
-static Buffer    aux_buffer;
-static Buffer    att_buffer;
-extern Xml *     single_chars[128];
-extern bool      cmi_verbose;
-extern MathDataP math_data;
+static Buffer                 mathml_buffer;
+static Buffer                 aux_buffer;
+static Buffer                 att_buffer;
+extern std::array<Xml *, 128> single_chars;
+extern bool                   cmi_verbose;
+extern MathDataP              math_data;
 
 // Codes are explained in Math::find_paren0 below.
 // This prints one token of the list.

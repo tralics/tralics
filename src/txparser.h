@@ -76,8 +76,8 @@ public:
     l_state   long_state;     // Error recovery handling (\long)
     scan_stat scanner_status; // Error recovery handling (\outer)
 private:
-    long cur_in_chan;     // if get_token call get_a_new_line
-    long cur_file_pos{0}; // pos of file in the package list (0= none)
+    size_t cur_in_chan;     // if get_token call get_a_new_line
+    long   cur_file_pos{0}; // pos of file in the package list (0= none)
 
     std::string cur_env_name;  // name of current environment
     std::string the_url_val;   // this may be <URSophia>, raweb only
@@ -439,9 +439,9 @@ private:
     auto        get_ctb_opt() -> name_positions;
     auto        get_trees_opt() -> name_positions;
     auto        get_c_val(Token X) -> Istring;
-    void        get_counter(Token T, long &c);
+    long        get_counter(Token T);
     auto        get_index_value() -> size_t;
-    void        get_date_ctrs(long &year, long &month, long &day);
+    void        get_date_ctrs(long &year, size_t &month, long &day);
     void        get_def_nbargs(Macro *X, Token name);
     auto        get_lrcs_opt() -> name_positions;
     auto        cs_from_input() -> Token;
@@ -731,7 +731,7 @@ private:
     void        E_setlength(int c);
     void        set_boolean();
     void        set_counter(Token T, long c);
-    void        set_date_ctrs(long year, long month, long day);
+    void        set_date_ctrs(long year, size_t month, long day); // \todo day should be unsigned, not year
     void        setkeys(bool c);
     void        M_shorthand_define(int cmd, bool gbl);
     auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;

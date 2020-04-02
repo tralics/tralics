@@ -40,7 +40,7 @@ public:
     auto               create(Buffer &B) -> bool;
     [[nodiscard]] auto to_list() const -> TokenList;
     void               add(FpNum Y);
-    static void        set_xmax(const Digit *x, int &xmin, int &xmax);
+    static void        set_xmax(const Digit *x, int &xmin, int &xmax); // \todo size_t& ? std::pair<size_t,size_t> even better
     static void        prop_carry(Digit *z);
     void               finish_mul(bool xs, Digit *z);
     void               unsplit_mul4(const Digit *z);

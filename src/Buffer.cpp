@@ -140,6 +140,7 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
 }
 
 void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
+void Buffer::push_back(size_t n) { push_back(fmt::format("{}", n)); }
 
 // In case of error, we add the current line number as attribute
 // via this function

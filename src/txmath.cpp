@@ -47,8 +47,8 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style, int open,
-                           int close) -> Xml *;
+    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
+                           size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
 namespace tralics_ns {
@@ -148,7 +148,7 @@ void math_ns::add_to_trace(char x) {
     trace_needs_space = false;
 }
 
-auto math_ns::get_builtin(int p) -> Xml * { return math_data.get_builtin(p); }
+auto math_ns::get_builtin(size_t p) -> Xml * { return math_data.get_builtin(p); } // \todo why a separate global method?
 
 // -----------------------------------------------------------------------
 // Math environments. The following are recognised.
@@ -362,7 +362,7 @@ void MathElt::print() const {
 // Basic code generator
 
 // General fence around val.
-auto MathDataP::make_mfenced(int open, int close, Xml *val) -> Xml * {
+auto MathDataP::make_mfenced(size_t open, size_t close, Xml *val) -> Xml * {
     Xml *res = new Xml(cst_mfenced, nullptr);
     res->add_att(Istring(np_close), xml_lr_ptable[close]);
     res->add_att(Istring(np_open), xml_lr_ptable[open]);
@@ -2016,8 +2016,8 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
         res->bordermatrix();
         return res;
     }
-    int  open = 0, close = 0;
-    bool nf = special_fence(sname, open, close);
+    size_t open = 0, close = 0;
+    bool   nf = special_fence(sname, open, close);
     if (nf) {
         res = new Xml(the_names[cst_mfenced], res);
         res->add_att(Istring(np_close), math_data.get_fence(close));
@@ -2150,14 +2150,14 @@ auto Math::trivial_math(long action) -> Xml * {
     }
     if (front().is_letter_token()) {
         auto c = front().get_char().value;
-        if (c < nb_simplemath) return math_data.get_simplemath_val(to_signed(c));
+        if (c < nb_simplemath) return math_data.get_simplemath_val(c);
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(Istring("&#x2013;"));
     if (front().get_cmd() == mathord_cmd || front().get_cmd() == mathordb_cmd || front().get_cmd() == mathbin_cmd ||
         front().get_cmd() == mathop_cmd || front().get_cmd() == mathopn_cmd || front().get_cmd() == mathrel_cmd ||
         front().get_cmd() == mathinner_cmd || front().get_cmd() == mathbetween_cmd || front().get_cmd() == mathopen_cmd ||
         front().get_cmd() == mathclose_cmd) {
-        int c = front().get_chr();
+        size_t c = front().get_chr();
         if (first_inline_hack <= c && c <= last_inline_hack) return math_ns::get_builtin_alt(c);
     }
     return nullptr;
@@ -2245,7 +2245,7 @@ auto MathElt::cv_char() const -> MathElt {
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
         a  = to_signed(c) + math_c_loc;
-        mt = math_data.get_math_char_type(to_signed(c));
+        mt = math_data.get_math_char_type(c);
     }
     return MathElt(subtypes(a), mt);
 }
@@ -2266,8 +2266,8 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         return MathElt(res.value, res.type);
     }
     if (get_lcmd() == math_LR_cd) { // case \left(x+y\right)
-        int a = X.front().get_chr();
-        int b = X.back().get_chr();
+        auto a = X.front().get_chr();
+        auto b = X.back().get_chr();
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
@@ -2356,7 +2356,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     Math &   L = get_list();
     switch (c) {
     case mathchoice_code: {
-        Math table[4];
+        std::array<Math, 4> table;
         if (!L.empty()) {
             table[0] = L.get_arg1();
             L.pop_front();
@@ -2478,7 +2478,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         c = frac_code;
     }
     int     style = -1;                      // style to add to XML
-    int     open = del_dot, close = del_dot; // delimiters, in case
+    size_t  open = del_dot, close = del_dot; // delimiters, in case
     Istring sz;                              // fraction rule width
     if (c == genfrac_code) {
         open = L.front().get_chr();
@@ -2730,7 +2730,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
 }
 
 auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
-                                int open, int close) -> Xml * {
+                                size_t open, size_t close) -> Xml * {
     Istring Pos;
     if (pos != 0) Pos = the_names[pos];
     Xml *R = the_main->the_stack->xml2_space(s, Pos, a, b);
@@ -3268,9 +3268,9 @@ auto MathElt::large2() const -> del_pos { return get_delimiter(get_chr()); }
 // returns <mfenced open=[ close=]>a+b</mfenced>
 auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     the_parser.my_stats.one_more_large();
-    int  close = cl.large2();      // ok ??
-    int  open  = front().large2(); // ok ??
-    bool bad   = false;
+    size_t close = cl.large2();      // ok ??
+    size_t open  = front().large2(); // ok ??
+    bool   bad   = false;
     if (open == del_invalid || close == del_invalid) {
         bad = true;
         push_back(cl);

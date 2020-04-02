@@ -17,17 +17,17 @@
 #include <fmt/format.h>
 
 namespace {
-    Buffer                           scratch;                            // See insert_string
-    TexFonts                         tfonts;                             // the font table
-    std::vector<InputStack *>        cur_input_stack;                    // the input streams
-    bool                             name_in_progress = false;           // see the source of TeX
-    FileForInput                     tex_input_files[nb_input_channels]; // the input files
-    bool                             scan_glue_opt = false;              // true if optional glue as found
-    std::array<std::vector<long>, 4> penalties;
-    std::vector<ScaledInt>           parshape_vector;
-    bool                             every_eof = false;  // true if every_eof can been inserted for the current file
-    Buffer                           local_buf;          // a local buffer
-    bool                             require_eof = true; // eof is an outer token
+    Buffer                                      scratch;                  // See insert_string
+    TexFonts                                    tfonts;                   // the font table
+    std::vector<InputStack *>                   cur_input_stack;          // the input streams
+    bool                                        name_in_progress = false; // see the source of TeX
+    std::array<FileForInput, nb_input_channels> tex_input_files;          // the input files
+    bool                                        scan_glue_opt = false;    // true if optional glue as found
+    std::array<std::vector<long>, 4>            penalties;
+    std::vector<ScaledInt>                      parshape_vector;
+    bool                                        every_eof = false;  // true if every_eof can been inserted for the current file
+    Buffer                                      local_buf;          // a local buffer
+    bool                                        require_eof = true; // eof is an outer token
 
     auto find_no_path(const std::string &s) -> bool { // \todo is that just file_exists, or is the side-effect necessary?
         if (s.empty()) return false;
@@ -848,16 +848,16 @@ void Parser::insert_endline_char() {
 
 auto Parser::new_line_for_read(bool spec) -> bool {
     state = state_N;
-    static char m_ligne[4096];
-    static int  tty_line_no = 0;
-    int         n           = 0;
+    static std::array<char, 4096> m_ligne;
+    static int                    tty_line_no = 0;
+    int                           n           = 0;
     scratch.reset();
     input_line.clear();
     if (cur_in_chan == nb_input_channels) {
-        readline(m_ligne, 78);
+        readline(m_ligne.data(), 78); // \todo pass the array instead
         tty_line_no++;
         n = tty_line_no;
-        scratch.push_back(m_ligne);
+        scratch.push_back(m_ligne.data()); // \todo push_back(std::array<char>)
     } else
         n = tex_input_files[cur_in_chan].get_lines().get_next(scratch);
     if (n < 0) {
@@ -922,15 +922,15 @@ auto Parser::get_a_new_line() -> bool {
 // Reads from file (or the tty if the file is closed).
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
-auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
+auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should ch be unsigned?
     std::string file_name = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
-    else if (!tex_input_files[ch].is_open())
+    else if (!tex_input_files[to_unsigned(ch)].is_open())
         cur_in_chan = tty_in_chan;
     else {
-        cur_in_chan = ch;
-        file_name   = tex_input_files[ch].get_lines().file_name;
+        cur_in_chan = to_unsigned(ch);
+        file_name   = tex_input_files[to_unsigned(ch)].get_lines().file_name;
     }
     push_input_stack(file_name, false, true);
     TokenList L;
@@ -971,7 +971,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
         }
     }
     // common ending
-    if (ch < 16) tex_input_files[ch].get_line_no() = get_cur_line();
+    if (ch < 16) tex_input_files[to_unsigned(ch)].get_line_no() = get_cur_line();
     pop_input_stack(false);
     cur_in_chan = main_in_chan;
     return L;
@@ -1525,8 +1525,8 @@ void Parser::scan_double(RealNumber &res) {
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
     get_token(); // read the . or ,
-    long   table[17];
-    size_t k = 0;
+    std::array<long, 17> table;
+    size_t               k = 0;
     for (;;) {
         get_x_token();
         if (!cur_tok.is_digit_token()) break;
@@ -1536,12 +1536,12 @@ void Parser::scan_double(RealNumber &res) {
         }
     }
     back_input_unless_space();
-    res.convert_decimal_part(k, table);
+    res.convert_decimal_part(k, table.data()); // \todo pass the array instead
 }
 
 // This is a bit more efficient then a lot of scan_keyword...
 // it reads a unit, returns
-auto Parser::read_unit() -> int {
+auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
     codepoint c1, c2;
     if (cur_tok.is_a_char()) {
@@ -1571,20 +1571,21 @@ auto Parser::read_unit() -> int {
 // We have to read the cm and convert the cm into sp.
 void Parser::scan_unit(RealNumber R) {
     scan_keyword("true"); // \mag is ignored, hence no multiply....
-    int k = read_unit();
-    if (k < 0) {
+    int k0 = read_unit();
+    if (k0 < 0) {
         parse_error(err_tok, "Missing unit (replaced by pt) ", cur_tok, "", "missing unit");
-        k = unit_pt;
+        k0 = unit_pt;
     }
+    auto k = to_unsigned(k0);
     if (k == unit_sp) {
         cur_val.set_int_val(R.get_ipart());
         cur_val.attach_sign(R.get_negative());
         return; // special ignore frac. part
     }
-    static int numerator_table[]   = {0, 7227, 12, 7227, 7227, 7227, 1238, 14856, 0};
-    static int denominator_table[] = {0, 100, 1, 254, 2540, 7200, 1157, 1157, -1};
-    int        num                 = numerator_table[k];
-    int        den                 = denominator_table[k];
+    static std::array<int, 9> numerator_table   = {0, 7227, 12, 7227, 7227, 7227, 1238, 14856, 0};
+    static std::array<int, 9> denominator_table = {0, 100, 1, 254, 2540, 7200, 1157, 1157, -1};
+    int                       num               = numerator_table[k];
+    int                       den               = denominator_table[k];
     if (k != unit_pt) {
         auto i         = R.get_ipart();
         auto f         = R.get_fpart();

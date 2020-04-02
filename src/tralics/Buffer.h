@@ -209,6 +209,7 @@ public:
     void push_back(const Macro &x, bool sw);
     void push_back(const TokenList &L);
     void push_back(long n);
+    void push_back(size_t n);
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {

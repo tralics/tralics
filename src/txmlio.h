@@ -24,15 +24,15 @@ public:
 };
 
 class XmlIO {
-    Buffer                 B; // holds current element
-    Buffer                 aux;
-    Buffer                 line_buffer; // holds current line
-    LinePtr                lines;       // input file
-    int                    cur_line{};
-    x_type                 Type[128]{};
-    std::vector<codepoint> input_line;  // current line
-    std::vector<codepoint> reread_list; // current line
-    codepoint              cur_char;    // current character in some cases
+    Buffer                  B; // holds current element
+    Buffer                  aux;
+    Buffer                  line_buffer; // holds current line
+    LinePtr                 lines;       // input file
+    int                     cur_line{};
+    std::array<x_type, 128> Type;
+    std::vector<codepoint>  input_line;  // current line
+    std::vector<codepoint>  reread_list; // current line
+    codepoint               cur_char;    // current character in some cases
 
     Xml *                  cur_xml{};
     std::vector<Xml *>     cur_stack;

@@ -1402,10 +1402,10 @@ void Parser::expand_mac(Macro &X) {
     def_type spec = X.type;
     if (spec == dt_empty) return;
     if (skip_prefix(X[0])) return;
-    bool      optional      = spec == dt_optional || spec == dt_spec_opt;
-    bool      spec_optional = spec == dt_spec_opt;
-    auto      n             = X.nbargs;
-    TokenList arguments[10];
+    bool                      optional      = spec == dt_optional || spec == dt_spec_opt;
+    bool                      spec_optional = spec == dt_spec_opt;
+    auto                      n             = X.nbargs;
+    std::array<TokenList, 10> arguments;
     for (size_t i = 1; i <= n; i++) {
         if (spec == dt_delim || spec == dt_brace) {
             if (!X[i].empty()) {
@@ -1432,7 +1432,7 @@ void Parser::expand_mac(Macro &X) {
         }
         if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << lg_end;
     }
-    TokenList res = expand_mac_inner(X.body, arguments);
+    TokenList res = expand_mac_inner(X.body, arguments.data()); // \todo pass the array instead
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
     back_input(res);
 }
@@ -3840,14 +3840,14 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
     }
     auto A = num / den;
     val.set_ipart(A); // Integer part of the thing.
-    long table[17];
-    for (int k = 0; k < 10; k++) {
+    std::array<long, 17> table;
+    for (size_t k = 0; k < 10; k++) {
         num -= A * den;
         num *= 10;
         A        = num / den;
         table[k] = A;
     }
-    val.convert_decimal_part(10, table);
+    val.convert_decimal_part(10, table.data()); // \todo pass the std::array instead
     calc_spec_mul(val, res);
 }
 

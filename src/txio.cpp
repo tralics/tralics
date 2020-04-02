@@ -627,9 +627,9 @@ inline void Buffer::push_back_Hex(unsigned c) {
 }
 
 // Converts in uppercase hex. If uni is ptrue, produces U+00AB
-void Buffer::push_back16(size_t n, bool uni) {
-    static unsigned dig[9];
-    int             k = 0;
+void Buffer::push_back16(size_t n, bool uni) { // \todo fmt
+    static std::array<unsigned, 9> dig;
+    size_t                         k = 0;
     for (;;) { // construct the list of digits
         dig[k] = n % 16;
         n      = n / 16;
@@ -643,17 +643,14 @@ void Buffer::push_back16(size_t n, bool uni) {
         if (k < 2) push_back('0');
         if (k < 1) push_back('0');
     }
-    while (k > 0) { // print the list
-        k--;
-        push_back_Hex(dig[k]);
-    }
+    while (k > 0) push_back_Hex(dig[--k]);
 }
 
 // Converts number in lower hex form (assumes n>=16, so k>=2)
 // if hat is true, inserts hats before
 void Buffer::push_back16l(bool hat, unsigned n) {
-    static unsigned dig[9];
-    int             k = 0;
+    static std::array<unsigned, 9> dig;
+    size_t                         k = 0;
     for (;;) { // construct the list of digits
         dig[k] = n % 16;
         n      = n / 16;
@@ -661,7 +658,7 @@ void Buffer::push_back16l(bool hat, unsigned n) {
         if (n == 0) break;
     }
     if (hat) {
-        int res = k;
+        auto res = k;
         while (k > 0) {
             k--;
             push_back('^');
@@ -672,10 +669,7 @@ void Buffer::push_back16l(bool hat, unsigned n) {
         }
         k = res;
     }
-    while (k > 0) { // print the list
-        k--;
-        push_back_hex(dig[k]);
-    }
+    while (k > 0) push_back_hex(dig[--k]);
 }
 
 // This puts a 16bit char in the form ^^^^abcd in the buffer.

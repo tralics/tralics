@@ -84,9 +84,9 @@ auto XmlIO::prun() -> Xml * {
 // This reads the XML file, without conversion
 auto XmlIO::init(const std::string &name) -> bool {
     for (auto &i : Type) i = xt_invalid;
-    for (int i = '0'; i <= '9'; i++) Type[i] = xt_digit;
-    for (int i = 'a'; i <= 'z'; i++) Type[i] = xt_letter;
-    for (int i = 'A'; i <= 'Z'; i++) Type[i] = xt_letter;
+    for (size_t i = '0'; i <= '9'; i++) Type[i] = xt_digit;
+    for (size_t i = 'a'; i <= 'z'; i++) Type[i] = xt_letter;
+    for (size_t i = 'A'; i <= 'Z'; i++) Type[i] = xt_letter;
     Type[uchar(' ')]  = xt_space;
     Type[uchar('\r')] = xt_space;
     Type[uchar('\n')] = xt_space;

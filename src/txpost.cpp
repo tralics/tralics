@@ -42,12 +42,12 @@ namespace post_ns {
 
 // For finding words.
 namespace all_words_ns {
-    int           nb_words = 0;
-    WordList *    WL0[100];
-    std::fstream *fp = nullptr;
-    void          add_a_word(String s, size_t h);
-    void          dump_and_list(WordList *WL, int i);
-    void          dump_words(const std::string &name);
+    int                         nb_words = 0;
+    std::array<WordList *, 100> WL0;
+    std::fstream *              fp = nullptr;
+    void                        add_a_word(String s, size_t h);
+    void                        dump_and_list(WordList *WL, int i);
+    void                        dump_words(const std::string &name);
 } // namespace all_words_ns
 
 //  --- Manipulating the XML tree
@@ -1185,12 +1185,12 @@ void Buffer::new_word() {
     reset();
 }
 
-const String entities[] = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;", nullptr};
+const std::array<String, 7> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;", nullptr}; // \todo nullptr?
 
 // This is static. If s is &foo;bar, returns the length
-// of the &foo; part. Rturns 0 if this is not an entity.
+// of the &foo; part. Returns 0 if this is not an entity.
 auto post_ns::is_entity(String s) -> size_t {
-    for (int k = 0;; k++) {
+    for (size_t k = 0;; k++) {
         String w = entities[k];
         if (w == nullptr) return 0;
         auto n = strlen(w);

@@ -14,23 +14,23 @@
 #include <fmt/format.h>
 
 namespace {
-    Token       fp_tmp_token, fp_test_token;
-    Token       fps[fp_last_code];
-    FpStack     upn_stack;
-    Buffer      tkbuf;
-    Buffer      fp_in_buf;
-    const Digit fp_max  = 1000000000; // 10^9
-    const Digit ten_8   = 100000000;  // 10^8
-    Digit       fp_seed = 123456789;
-    FpNum       fp_rand1, fp_rand2;
-    FpNum       e_powers[42];
-    FpNum       neg_e_powers[43];
-    FpNum       log_table[4];
-    FpNum       log10_table[19];
-    Token       fp_res, fp_res2, fp_res3, fp_res4, fp_name;
-    FpNum       pi_table[9];
-    FpNum *     pascal_table[64];
-    bool        pascal_table_created = false;
+    Token                           fp_tmp_token, fp_test_token;
+    std::array<Token, fp_last_code> fps;
+    FpStack                         upn_stack;
+    Buffer                          tkbuf;
+    Buffer                          fp_in_buf;
+    const Digit                     fp_max  = 1000000000; // 10^9
+    const Digit                     ten_8   = 100000000;  // 10^8
+    Digit                           fp_seed = 123456789;
+    FpNum                           fp_rand1, fp_rand2;
+    std::array<FpNum, 42>           e_powers;
+    std::array<FpNum, 43>           neg_e_powers;
+    std::array<FpNum, 4>            log_table;
+    std::array<FpNum, 19>           log10_table;
+    Token                           fp_res, fp_res2, fp_res3, fp_res4, fp_name;
+    std::array<FpNum, 9>            pi_table;
+    std::array<FpNum *, 64>         pascal_table;
+    bool                            pascal_table_created = false;
 
     constexpr std::array<unsigned, 10> power_table{1, 10, 100, 1'000, 10'000, 100'000, 1'000'000, 10'000'000, 100'000'000, 1'000'000'000};
 } // namespace
@@ -317,33 +317,35 @@ void FpNum::prop_carry(Digit *z) {
 // Computes the product XY. Both numbers are considered as a 12B number
 // (where B=1000).. The product gives a 24B number.
 void FpNum::mul(FpNum X, FpNum Y) {
-    bool  xs = X.sign == Y.sign;
-    Digit x[12], y[12], z[24];
+    bool                  xs = X.sign == Y.sign;
+    std::array<Digit, 12> x, y;
+    std::array<Digit, 24> z;
     for (unsigned int &i : z) i = 0;
-    X.mul_split(x);
-    Y.mul_split(y);
+    X.mul_split(x.data()); // \todo pass the array instead (there should be no data() anywhere)
+    Y.mul_split(y.data()); // \todo pass the array instead
     int xmax = 0, xmin = 0, ymax = 0, ymin = 0;
-    set_xmax(x, xmin, xmax);
-    set_xmax(y, ymin, ymax);
-    for (int i = xmin; i < xmax; i++)
-        for (int j = ymin; j < ymax; j++) z[i + j + 1] += x[i] * y[j];
-    prop_carry(z);
-    finish_mul(xs, z);
+    set_xmax(x.data(), xmin, xmax); // \todo pass the array instead
+    set_xmax(y.data(), ymin, ymax); // \todo pass the array instead
+    for (auto i = to_unsigned(xmin); i < to_unsigned(xmax); i++)
+        for (auto j = to_unsigned(ymin); j < to_unsigned(ymax); j++) z[i + j + 1] += x[i] * y[j];
+    prop_carry(z.data());     // \todo pass the array instead
+    finish_mul(xs, z.data()); // \todo pass the array instead
 }
 
 // Multiplies by an integer, assumed to be less than 1000 and positive
 void FpNum::mul(FpNum X, int y) {
-    Digit x[12], z[24];
-    bool  xs = X.sign;
+    std::array<Digit, 12> x;
+    std::array<Digit, 24> z;
+    bool                  xs = X.sign;
     if (y < 0) {
         y  = -y;
         xs = !xs;
     }
     for (unsigned int &i : z) i = 0;
-    X.mul_split(x);
-    for (int i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
-    prop_carry(z);
-    finish_mul(xs, z);
+    X.mul_split(x.data()); // \todo pass the array instead
+    for (size_t i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
+    prop_carry(z.data());     // \todo pass the array instead
+    finish_mul(xs, z.data()); // \todo pass the array instead
 }
 
 // Converts the 24 1000-base number into a 12 1000-base number
@@ -595,11 +597,12 @@ void Parser::fp_e_pascal() {
         parse_error(tkbuf.c_str());
         return;
     }
+    auto      jj = to_unsigned(j);
     TokenList res;
     res.push_back(Token(other_t_offset, '['));
-    for (int i = 0; i <= j; i++) {
+    for (size_t i = 0; i <= jj; i++) {
         if (i != 0) res.push_back(hash_table.comma_token);
-        TokenList w = pascal_table[j][i].to_list();
+        TokenList w = pascal_table[jj][i].to_list();
         res.splice(res.end(), w);
     }
     res.push_back(Token(other_t_offset, ']'));
@@ -716,7 +719,7 @@ void FpNum::add(FpNum X, FpNum Y) {
 
 // Divide by an integer n. Assumea that abs(n) <1000
 void FpNum::div(int n) {
-    Digit x[12];
+    std::array<Digit, 12> x;
     if (n < 0) {
         sign = !sign;
         n    = -n;
@@ -725,14 +728,14 @@ void FpNum::div(int n) {
         the_parser.parse_error("Division by 0");
         return;
     }
-    mul_split(x);
+    mul_split(x.data()); // \todo pass the array instead
     Digit carry = 0;
     for (unsigned int &i : x) {
         Digit a = 1000 * carry + i;
         carry   = a % to_unsigned(n);
         i       = a / to_unsigned(n);
     }
-    unsplit_mul4(x);
+    unsplit_mul4(x.data()); // \todo pass the array instead
 }
 
 // It divides by 2.
@@ -792,14 +795,14 @@ void FpNum::exec_ln() {
         n--;
     }
     FpNum X;
-    X = log10_table[n < 0 ? -n : n];
+    X = log10_table[to_unsigned(n < 0 ? -n : n)];
     if (n > 0) X.sign = false;
     n = 0;
     while (data[1] >= 2) {
         divide2();
         n++;
     }
-    X.add(log_table[n]);
+    X.add(log_table[to_unsigned(n)]);
     exec_ln_a();
     add(X);
 }

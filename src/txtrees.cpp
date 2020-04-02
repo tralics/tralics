@@ -22,18 +22,18 @@ namespace trees_ns {
 } // namespace trees_ns
 
 namespace date_ns {
-    auto check_date(long y, long m, long d) -> bool;
+    auto check_date(long y, size_t m, long d) -> bool; // \todo there has to be a system library for that
     auto year_length(long y) -> long;
-    auto month_length(long y, long m) -> long;
-    void prev_date(long &year, long &month, long &day);
-    void next_date(long &year, long &month, long &day);
+    auto month_length(long y, size_t m) -> long;
+    void prev_date(long &year, size_t &month, long &day);
+    void next_date(long &year, size_t &month, long &day);
 } // namespace date_ns
 
 namespace {
-    Buffer   local_buf;
-    int      month_length_table[13] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    AllIndex the_index;
-    Token    day_ctr, year_ctr, month_ctr;
+    Buffer              local_buf;
+    std::array<int, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    AllIndex            the_index;
+    Token               day_ctr, year_ctr, month_ctr;
 } // namespace
 
 // By default, this is a glossary and a main index
@@ -477,11 +477,12 @@ void Parser::set_counter(Token T, long c) {
 }
 
 // Stores the value c in the counter T if possible
-void Parser::get_counter(Token T, long &c) {
-    c = 0;
+long Parser::get_counter(Token T) { // \todo rewrite properly
+    long c = 0;
     see_cs_token(T);
-    if (cur_cmd_chr.cmd != assign_int_cmd) return;
+    if (cur_cmd_chr.cmd != assign_int_cmd) return c;
     c = eqtb_int_table[cur_cmd_chr.chr].val;
+    return c;
 }
 
 // Reads three counter names; return true if OK
@@ -512,17 +513,17 @@ auto Parser::scan_date_ctrs() -> bool {
 }
 
 // This sets the three counters
-void Parser::set_date_ctrs(long year, long month, long day) {
+void Parser::set_date_ctrs(long year, size_t month, long day) {
     set_counter(year_ctr, year);
-    set_counter(month_ctr, month);
+    set_counter(month_ctr, to_signed(month));
     set_counter(day_ctr, day);
 }
 
 // This sets the three counters
-void Parser::get_date_ctrs(long &year, long &month, long &day) {
-    get_counter(year_ctr, year);
-    get_counter(month_ctr, month);
-    get_counter(day_ctr, day);
+void Parser::get_date_ctrs(long &year, size_t &month, long &day) {
+    year  = get_counter(year_ctr);
+    month = to_unsigned(get_counter(month_ctr));
+    day   = get_counter(day_ctr);
 }
 
 // True if year Y is a leap year
@@ -542,14 +543,14 @@ auto date_ns::year_length(long y) -> long {
 }
 
 // Returns number of days in the month
-auto date_ns::month_length(long y, long m) -> long {
+auto date_ns::month_length(long y, size_t m) -> long {
     if (m != 2) return month_length_table[m];
     if (is_leap_year(y)) return 29;
     return 28;
 }
 
 // Return true if valid, signals error otherwise
-auto date_ns::check_date(long y, long m, long d) -> bool {
+auto date_ns::check_date(long y, size_t m, long d) -> bool {
     String Bad = nullptr;
     long   ml  = 0;
     if (y <= 0)
@@ -586,11 +587,11 @@ void Parser::count_days() {
     Token ctr   = cur_tok;
     auto  start = scan_braced_int(T);
     auto  cur   = scan_braced_int(T);
-    auto  month = scan_braced_int(T);
+    auto  month = to_unsigned(scan_braced_int(T));
     auto  day   = scan_braced_int(T);
     if (bad) return;
-    int        c               = 0;
-    static int month_table[13] = {0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+    int                        c           = 0;
+    static std::array<int, 13> month_table = {0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
     for (auto y = start; y < cur; y++) c += date_ns::year_length(y);
     c += month_table[month];
     if (is_leap_year(cur) && month > 2) c++;
@@ -604,9 +605,10 @@ void Parser::datebynumber() {
     auto  start = scan_braced_int(T); // start date
     auto  val   = scan_braced_int(T); // value to convert
     scan_date_ctrs();                 // fetch the counters
-    int  month = 1, day = 1;
-    auto year = start;
-    int  c    = 1;
+    size_t month = 1;
+    int    day   = 1;
+    auto   year  = start;
+    int    c     = 1;
     for (;;) {
         auto n = date_ns::year_length(year);
         if (c + n <= val) {
@@ -633,7 +635,7 @@ void Parser::datebynumber() {
 }
 
 // gives date of yesterday
-void date_ns::prev_date(long &year, long &month, long &day) {
+void date_ns::prev_date(long &year, size_t &month, long &day) {
     --day;
     if (year == 1582 && month == 10 && day == 14) day = 4;
     if (day > 0) return;
@@ -646,7 +648,7 @@ void date_ns::prev_date(long &year, long &month, long &day) {
 }
 
 // gives date of tomorrow
-void date_ns::next_date(long &year, long &month, long &day) {
+void date_ns::next_date(long &year, size_t &month, long &day) {
     ++day;
     if (year == 1582 && month == 10 && day == 5) day = 15;
     auto ml = date_ns::month_length(year, month);
@@ -660,7 +662,9 @@ void date_ns::next_date(long &year, long &month, long &day) {
 
 void Parser::next_date() {
     scan_date_ctrs(); // fetch the counters
-    long year = 0, month = 0, day = 0;
+    long   year  = 0;
+    size_t month = 0;
+    long   day   = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::next_date(year, month, day);
@@ -669,7 +673,9 @@ void Parser::next_date() {
 
 void Parser::prev_date() {
     scan_date_ctrs(); // fetch the counters
-    long year = 0, month = 0, day = 0;
+    long   year  = 0;
+    size_t month = 0;
+    long   day   = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::prev_date(year, month, day);
@@ -679,32 +685,33 @@ void Parser::prev_date() {
 void Parser::is_date_valid() {
     Token T = cur_tok;
     auto  y = scan_braced_int(T);
-    auto  m = scan_braced_int(T);
+    auto  m = to_unsigned(scan_braced_int(T));
     auto  d = scan_braced_int(T);
     date_ns::check_date(y, m, d);
 }
 
 // C is even for a month, odd for a day
 void Parser::month_day(subtypes c) {
-    Token T = cur_tok;
-    auto  n = scan_braced_int(cur_tok);
-    if (n <= 0 || n > ((int(c) & 1) != 0 ? 7 : 12)) {
+    Token T  = cur_tok;
+    auto  n0 = scan_braced_int(cur_tok);
+    if (n0 <= 0 || n0 > ((int(c) & 1) != 0 ? 7 : 12)) {
         if (tracing_macros()) the_log << T << "<-" << lg_end;
         return;
     }
-    static String fm[12] = {"janvier", "f\\'evrier", "mars",      "avril",   "mai",      "juin",
-                            "juillet", "ao\\^ut",    "septembre", "octobre", "novembre", "d\\'ecembre"};
-    static String sm[12] = {"enero", "febrero", "marzo",      "abril",   "mayo",      "junio",
-                            "julio", "agosto",  "septiembre", "octubre", "noviembre", "diciembre"};
-    static String gm[12] = {"Januar", "Februar", "M\\\"arz",  "April",   "Mai",      "Juni",
-                            "Juli",   "August",  "September", "Oktober", "November", "Dezember"};
-    static String em[12] = {"January", "February", "March",     "April",   "May",      "June",
-                            "July",    "August",   "September", "October", "November", "December"};
+    auto                          n  = to_unsigned(n0);
+    static std::array<String, 12> fm = {"janvier", "f\\'evrier", "mars",      "avril",   "mai",      "juin",
+                                        "juillet", "ao\\^ut",    "septembre", "octobre", "novembre", "d\\'ecembre"};
+    static std::array<String, 12> sm = {"enero", "febrero", "marzo",      "abril",   "mayo",      "junio",
+                                        "julio", "agosto",  "septiembre", "octubre", "noviembre", "diciembre"};
+    static std::array<String, 12> gm = {"Januar", "Februar", "M\\\"arz",  "April",   "Mai",      "Juni",
+                                        "Juli",   "August",  "September", "Oktober", "November", "Dezember"};
+    static std::array<String, 12> em = {"January", "February", "March",     "April",   "May",      "June",
+                                        "July",    "August",   "September", "October", "November", "December"};
 
-    static String fd[7] = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
-    static String sd[7] = {"Lunes", "Martes", "Mi\\'ercoles", "Jueves", "Viernes", "S\\'abado", "Domingo"};
-    static String gd[7] = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
-    static String ed[7] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    static std::array<String, 7> fd = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
+    static std::array<String, 7> sd = {"Lunes", "Martes", "Mi\\'ercoles", "Jueves", "Viernes", "S\\'abado", "Domingo"};
+    static std::array<String, 7> gd = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
+    static std::array<String, 7> ed = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     local_buf.reset();
     switch (c) {

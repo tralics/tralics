@@ -29,7 +29,7 @@ std::array<Xml *, 128>                       single_chars;
 //#define LANGLE "&#x27E8;"
 //#define RANGLE "&#x27E9;"
 
-auto math_ns::get_builtin_alt(int p) -> Xml * { return math_data.get_builtin_alt(p); }
+auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // \todo Why a global function?
 
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
@@ -1083,7 +1083,7 @@ auto MathDataP::mk_mo(String a) -> Xml * {
 
 // Ams environments pmatrix, bmatrix, Bmatrix etc.
 // returns the fence  values
-auto math_ns::special_fence(subtypes s, int &open, int &close) -> bool {
+auto math_ns::special_fence(subtypes s, size_t &open, size_t &close) -> bool {
     switch (s) {
     case matrixB_code:
         open  = del_open_brace;
@@ -1340,14 +1340,14 @@ auto mk_cmd(String name, subtypes pos) -> Token { return the_parser.hash_table.p
 // For a command like \enspace.
 void mk_space(String name, int b) { the_parser.hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
-void        MathDataP::fill_lr(int a, String b, String c) { xml_lr_ptable[a] = Istring(no_ent_names ? c : b); }
-inline void MathDataP::fill_lr(int a, String b) { xml_lr_ptable[a] = Istring(b); }
+void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = Istring(no_ent_names ? c : b); }
+inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = Istring(b); }
 
 // This assumes that nb_mathchars is 128
 void MathDataP::boot_xml_lr_tables() {
     Buffer &B = the_main->SH.shbuf();
     for (uchar i = 0; i < nb_mathchars; i++) {
-        int k = i + math_c_loc;
+        size_t k = i + math_c_loc;
         if (built_in_table[k] != nullptr) continue;
         B.reset();
         B.push_back(static_cast<char>(i));
