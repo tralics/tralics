@@ -690,7 +690,7 @@ auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
 // This is the Ctor of strhash.
 StrHash::StrHash() {
     hash_len = hash_size;
-    data     = new record[hash_len];
+    data     = new StrHash_record[hash_len];
     Next     = new size_t[hash_len];
     for (size_t i = 0; i < hash_len; i++) {
         data[i] = {nullptr, nullptr, nullptr};
@@ -708,7 +708,7 @@ StrHash::StrHash() {
 // This is called in case the table is too small.
 void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
     auto  k  = hash_len + 10000;
-    auto *T1 = new record[k];
+    auto *T1 = new StrHash_record[k];
     auto *T2 = new size_t[k];
     for (size_t i = 0; i < hash_len; i++) {
         T1[i] = data[i];

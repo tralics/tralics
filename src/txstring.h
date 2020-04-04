@@ -22,17 +22,17 @@ class LabelInfo;
 // This uses utf8 encoding. The token can be dumped via its Value
 // which can be ascii, utf8 or latin1 (XML syntax)
 
-class StrHash {
-    struct record {
-        String     Text, Value;
-        LabelInfo *Labinfo;
-    };
+struct StrHash_record {
+    String     Text, Value;
+    LabelInfo *Labinfo;
+};
 
-    record *data;
-    size_t *Next;      // the Next table
-    size_t  hash_len;  // size of the table
-    size_t  hash_last; // last slot used
-    Buffer  mybuf;     // local buffer
+class StrHash {
+    StrHash_record *data;
+    size_t *        Next;      // the Next table
+    size_t          hash_len;  // size of the table
+    size_t          hash_last; // last slot used
+    Buffer          mybuf;     // local buffer
 public:
     StrHash();
 
@@ -45,7 +45,7 @@ public:
     auto find(int s) -> size_t;
     auto operator[](size_t k) const -> String { return data[k].Text; }
     auto shbuf() -> Buffer & { return mybuf; }
-    auto lab_val(Istring k) -> LabelInfo *;
+    auto lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; };
     auto lab_val_check(Istring k) -> LabelInfo *;
     auto next_label_id() -> Istring;
     auto next_top_label_id() -> Istring;
@@ -55,5 +55,3 @@ public:
     static auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
     static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };
-
-inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; }
