@@ -1,5 +1,6 @@
 #include "tralics/util.h"
 #include "tralics/codepoint.h"
+#include <cstring>
 
 auto only_space(const std::string &s) -> bool {
     for (size_t i = 0; i < s.length(); ++i) {
