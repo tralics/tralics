@@ -690,50 +690,37 @@ auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
 // This is the Ctor of strhash.
 StrHash::StrHash() {
     hash_len = hash_size;
-    Text     = new String[hash_len];
-    Value    = new String[hash_len];
+    data     = new record[hash_len];
     Next     = new size_t[hash_len];
-    Labinfo  = new LabelInfo *[hash_len];
     for (size_t i = 0; i < hash_len; i++) {
-        Text[i]    = nullptr;
-        Next[i]    = 0;
-        Labinfo[i] = nullptr;
+        data[i] = {nullptr, nullptr, nullptr};
+        Next[i] = 0;
     }
-    hash_last = hash_prime + 1;
-    Text[0]   = ""; // make sure these are allocated.
-    Text[1]   = "";
-    Text[2]   = " ";
-    Value[0]  = ""; // make sure these are allocated.
-    Value[1]  = "";
-    Value[2]  = " ";
+    hash_last     = hash_prime + 1;
+    data[0].Text  = ""; // make sure these are allocated.
+    data[1].Text  = "";
+    data[2].Text  = " ";
+    data[0].Value = ""; // make sure these are allocated.
+    data[1].Value = "";
+    data[2].Value = " ";
 }
 
 // This is called in case the table is too small.
 void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
-    auto   k  = hash_len + 10000;
-    auto * T1 = new String[k];
-    auto * T2 = new size_t[k];
-    auto **T3 = new LabelInfo *[k];
-    auto * T4 = new String[k];
+    auto  k  = hash_len + 10000;
+    auto *T1 = new record[k];
+    auto *T2 = new size_t[k];
     for (size_t i = 0; i < hash_len; i++) {
-        T1[i] = Text[i];
+        T1[i] = data[i];
         T2[i] = Next[i];
-        T3[i] = Labinfo[i];
-        T4[i] = Value[i];
     }
-    delete[] Text;
-    Text = T1;
+    delete[] data;
+    data = T1;
     delete[] Next;
     Next = T2;
-    delete[] Labinfo;
-    Labinfo = T3;
-    delete[] Value;
-    Value = T4;
     for (size_t i = hash_len; i < k; i++) {
-        Text[i]    = nullptr;
-        Next[i]    = 0;
-        Labinfo[i] = nullptr;
-        Value[i]   = nullptr;
+        data[i] = {nullptr, nullptr, nullptr};
+        Next[i] = 0;
     }
     hash_len = k;
     the_log << "Realloc str hash to " << k << "\n";
@@ -746,7 +733,7 @@ auto StrHash::hash_find() -> size_t { // \todo size_t
     if (mybuf.at(0) == 0) return 1;
     auto p = mybuf.hashcode(hash_prime) + 3; // \todo why this +3 ???
     for (;;) {
-        if ((Text[p] != nullptr) && mybuf == Text[p]) return p;
+        if ((data[p].Text != nullptr) && mybuf == data[p].Text) return p;
         if (Next[p] != 0)
             p = Next[p];
         else
@@ -754,19 +741,19 @@ auto StrHash::hash_find() -> size_t { // \todo size_t
     }
     String name  = mybuf.convert_to_str();
     String value = mybuf.convert_to_out_encoding();
-    if (Text[p] == nullptr) {
+    if (data[p].Text == nullptr) {
         the_parser.my_stats.one_more_sh_used();
-        Text[p]  = name;
-        Value[p] = value;
+        data[p].Text  = name;
+        data[p].Value = value;
         return p;
     }
     if (hash_last >= hash_len) re_alloc();
     auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();
-    Text[k]  = name;
-    Value[k] = value;
-    Next[p]  = k;
+    data[k].Text  = name;
+    data[k].Value = value;
+    Next[p]       = k;
     return k;
 }
 

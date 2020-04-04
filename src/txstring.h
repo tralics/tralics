@@ -23,24 +23,27 @@ class LabelInfo;
 // which can be ascii, utf8 or latin1 (XML syntax)
 
 class StrHash {
-    String *    Text;      // the Text table \todo use std::string
-    String *    Value;     // the Value table \todo use std::string
-    size_t *    Next;      // the Next table
-    LabelInfo **Labinfo;   // the LabelInfo
-    size_t      hash_len;  // size of the table
-    size_t      hash_last; // last slot used
-    Buffer      mybuf;     // local buffer
+    struct record {
+        String     Text, Value;
+        LabelInfo *Labinfo;
+    };
+
+    record *data;
+    size_t *Next;      // the Next table
+    size_t  hash_len;  // size of the table
+    size_t  hash_last; // last slot used
+    Buffer  mybuf;     // local buffer
 public:
     StrHash();
 
-    [[nodiscard]] auto p_str(size_t k) const -> String { return Value[k]; }
+    [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].Value; }
 
     void re_alloc();
     auto hash_find() -> size_t;
     auto find(String s) -> size_t;
     auto find(const std::string &s) -> size_t;
     auto find(int s) -> size_t;
-    auto operator[](size_t k) const -> String { return Text[k]; }
+    auto operator[](size_t k) const -> String { return data[k].Text; }
     auto shbuf() -> Buffer & { return mybuf; }
     auto lab_val(Istring k) -> LabelInfo *;
     auto lab_val_check(Istring k) -> LabelInfo *;
@@ -53,4 +56,4 @@ public:
     static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };
 
-inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.id]; }
+inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; }
