@@ -669,7 +669,7 @@ auto Xml::is_empty_spec() const -> bool {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
-        if (!T->name.only_space_spec()) return false;
+        if (!only_space_spec(T->name.c_str())) return false;
     }
     return true;
 }

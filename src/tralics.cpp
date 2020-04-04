@@ -34,7 +34,7 @@ FullLogger                   log_and_tty;             // the logger
 Logger &                     the_log = log_and_tty.L; // the log file part of the logger.
 MainClass *                  the_main;                // the main class data structure
 Parser                       the_parser;              // the big object
-std::array<Istring, np_last> the_names;
+std::array<Istring, np_last> the_names;               // \todo static in Istring
 
 // local variables
 namespace {
