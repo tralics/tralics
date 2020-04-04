@@ -625,7 +625,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
 // Special hack, because we insert the number, not the value
 auto token_ns::string_to_list(Istring s) -> TokenList {
     Buffer &B = buffer_for_log;
-    B << bf_reset << to_signed(s.value); // \todo define <<(size_t)
+    B << bf_reset << to_signed(s.id); // \todo define <<(size_t)
     return B.str_toks(nlt_space);
 }
 
@@ -796,7 +796,7 @@ auto StrHash::find_scaled(ScaledInt s) -> Istring {
 }
 
 void Buffer::push_back(const Istring &X) {
-    auto v = X.value;
+    auto v = X.id;
     if (v == 0) return;
     if (v == 1) return;
     push_back(X.p_str());

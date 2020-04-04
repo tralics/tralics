@@ -53,4 +53,4 @@ public:
     static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };
 
-inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.value]; }
+inline auto StrHash::lab_val(Istring k) -> LabelInfo * { return Labinfo[k.id]; }

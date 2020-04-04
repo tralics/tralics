@@ -1745,7 +1745,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
     Math &   u  = math_data.get_list(k);
     if (c == mathbox_code) {
         auto ss = Istring(s);
-        u.set_name(subtypes(ss.value));
+        u.set_name(subtypes(ss.id));
     }
     u.push_back_list(r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);
