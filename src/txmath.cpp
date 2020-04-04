@@ -2726,7 +2726,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     Xml *a   = A.M_cv(cms, 1).value;
     Xml *b   = M_cv(cms, 1).value;
     Xml *res = finish_cv_special(true, the_names[cst_mfrac], 0, a, b, sz, numalign, denalign, -1, open, close);
-    return XmlAndType(res, mt_flag_big);
+    return {res, mt_flag_big};
 }
 
 auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
@@ -2843,10 +2843,10 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     if (res1.length_one()) {
         Xml *W = res1.front().get_xml_val();
         if (need_row == 2) W = new Xml(cst_mrow, W);
-        if (!seen_style) return XmlAndType(W, res_type);
+        if (!seen_style) return {W, res_type};
 
         Xml *res2 = math_data.add_style(cms, W);
-        return XmlAndType(res2, res_type);
+        return {res2, res_type};
     }
     Xml *tmp = new Xml(cst_temporary, nullptr);
     res1.concat(tmp);
@@ -2856,7 +2856,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     else
         res22 = tmp;
     if (seen_style) res22 = math_data.add_style(cms, res22);
-    return XmlAndType(res22, res_type);
+    return {res22, res_type};
 }
 
 // Translate \ref
