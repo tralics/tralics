@@ -2,6 +2,8 @@
 #include "types.h"
 #include <optional>
 
+// \todo move these to util.h
+
 inline auto is_digit(char c) -> bool { return ('0' <= c && c <= '9'); }
 inline auto is_space(char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }
 inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }

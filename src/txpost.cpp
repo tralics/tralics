@@ -657,7 +657,7 @@ auto Xml::is_empty() const -> bool {
         Xml *T = tree[k];
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
-        if (!T->name.only_space()) return false;
+        if (!only_space(T->name.c_str())) return false;
     }
     return true;
 }
@@ -686,7 +686,7 @@ auto Xml::single_non_empty() const -> Xml * {
                 res = y;
             else
                 return nullptr;
-        } else if (!y->name.only_space())
+        } else if (!only_space(y->name.c_str()))
             return nullptr;
     }
     return res;
@@ -1010,7 +1010,7 @@ void Xml::add_non_empty_to(Xml *res) {
     for (size_t k = 0; k < len; k++) {
         Xml *T = tree[k];
         if (T == nullptr) continue;
-        if (T->is_xmlc() && T->name.only_space()) continue;
+        if (T->is_xmlc() && only_space(T->name.c_str())) continue;
         res->push_back(T);
     }
 }

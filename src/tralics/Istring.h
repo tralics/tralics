@@ -1,5 +1,6 @@
 #pragma once
 #include "enums.h"
+#include "util.h"
 #include <array>
 #include <string>
 
@@ -18,7 +19,6 @@ struct Istring {
     [[nodiscard]] auto null() const -> bool { return value == 0; }       // null string
     [[nodiscard]] auto empty() const -> bool { return value == 1; }      // ""
     [[nodiscard]] auto spec_empty() const -> bool { return value == 2; } // ""
-    [[nodiscard]] auto only_space() const -> bool;
     [[nodiscard]] auto only_space_spec() const -> bool;
     [[nodiscard]] auto c_str() const -> String;
     [[nodiscard]] auto p_str() const -> String;
