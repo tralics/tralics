@@ -20,7 +20,7 @@ public:
     size_t ptr{0};  ///< the read pointer
     size_t ptr1{0}; ///< a second read pointer
 
-    Buffer() : std::vector<char>(128, 0) {}
+    Buffer() : std::vector<char>(1, 0) {}
     Buffer(std::string s) : Buffer() { push_back(s); }
 
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }    ///< Is the read pointer at the end?
