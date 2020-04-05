@@ -2937,7 +2937,6 @@ enum recur_type {
     rc_return_first_and_kill,
     rc_delete,
     rc_delete_empty,
-    rc_empty_par,
     rc_how_many,
     rc_subst,
     rc_move,

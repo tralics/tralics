@@ -368,12 +368,6 @@ void Xml::recurse(XmlAction &X) {
                     continue;
                 }
                 break;
-            case rc_empty_par:
-                if (T->is_empty_spec()) {
-                    tree[k] = nullptr;
-                    continue;
-                }
-                break;
             case rc_how_many: X.incr_int_val(); break;
             case rc_subst: tree[k] = X.get_xml_val(); continue;
             case rc_move:
@@ -658,18 +652,6 @@ auto Xml::is_empty() const -> bool {
         if (T == nullptr) continue;
         if (!T->is_xmlc()) return false;
         if (!only_space(T->name.c_str())) return false;
-    }
-    return true;
-}
-
-// Returns true if empty (white space or &nbsp; only)
-auto Xml::is_empty_spec() const -> bool {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        Xml *T = tree[k];
-        if (T == nullptr) continue;
-        if (!T->is_xmlc()) return false;
-        if (!only_space_spec(T->name.c_str())) return false;
     }
     return true;
 }
