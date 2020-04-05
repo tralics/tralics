@@ -23,9 +23,6 @@ namespace {
     std::vector<std::pair<Istring, LabelInfo *>> defined_labels; // list of all \label
     std::vector<std::pair<String, Istring>>      removed_labels; // list of all \label removed
     std::ostream *                               cur_fp;         // the XML file
-
-    int last_label_id     = 0;
-    int last_top_label_id = 0;
 } // namespace
 
 namespace post_ns {
@@ -200,15 +197,8 @@ void Parser::user_XML_modify(subtypes c) {
 // Implementation of \label, \ref
 // This is assumed to create a unique ID.
 auto StrHash::next_label_id() -> Istring {
-    last_label_id++;
-    return Istring(fmt::format("uid{}", last_label_id));
-}
-
-// Implementation of \label, \ref
-// This is assumed to create a unique ID.
-auto StrHash::next_top_label_id() -> Istring {
-    last_top_label_id++;
-    return Istring(fmt::format("cid{}", last_top_label_id));
+    static size_t last_label_id = 0;
+    return Istring(fmt::format("uid{}", ++last_label_id));
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {

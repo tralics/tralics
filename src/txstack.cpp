@@ -20,7 +20,7 @@ namespace stack_ns {
 
 namespace {
     Buffer shbuf;
-}
+} // namespace
 
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
@@ -646,14 +646,15 @@ void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext) {
 
 // mark current element as target for a label.
 auto Stack::add_new_anchor() -> Istring {
-    Istring id = the_main->SH.next_label_id();
+    Istring id = StrHash::next_label_id();
     set_cur_id(id);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
 }
 
 auto Stack::add_new_anchor_spec() -> Istring {
-    Istring id = the_main->SH.next_top_label_id();
+    static size_t last_top_label_id = 0;
+    auto          id                = Istring(fmt::format("cid{}", ++last_top_label_id));
     set_cur_id(id);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
@@ -664,7 +665,7 @@ auto Xml::tail_is_anchor() const -> bool { return !tree.empty() && (tree.back() 
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {
     if (!spec && (top_stack()->tail_is_anchor())) return get_cur_id();
-    Istring id = the_main->SH.next_label_id();
+    Istring id = StrHash::next_label_id();
     set_cur_id(id);
     if (!spec) {
         add_newid0(np_anchor);

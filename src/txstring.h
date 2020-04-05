@@ -38,15 +38,14 @@ public:
 
     [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
 
-    void re_alloc();
-    auto hash_find(const std::string &s) -> size_t;
-    auto find(String s) -> size_t;
-    auto find(const std::string &s) -> size_t;
-    auto find(int s) -> size_t;
-    auto operator[](size_t k) const -> String { return data[k].name; }
-    auto lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; };
-    auto lab_val_check(Istring k) -> LabelInfo *;
-    auto next_label_id() -> Istring;
-    auto next_top_label_id() -> Istring;
-    auto find_scaled(ScaledInt s) -> Istring;
+    void        re_alloc();
+    auto        hash_find(const std::string &s) -> size_t;
+    auto        find(String s) -> size_t;
+    auto        find(const std::string &s) -> size_t;
+    auto        find(int s) -> size_t;
+    auto        operator[](size_t k) const -> String { return data[k].name; }
+    auto        lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; };
+    auto        lab_val_check(Istring k) -> LabelInfo *;
+    static auto next_label_id() -> Istring; // \todo Move outside
+    auto        find_scaled(ScaledInt s) -> Istring;
 };
