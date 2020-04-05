@@ -18,6 +18,10 @@ namespace stack_ns {
     auto mode_to_string(mode x) -> String;
 } // namespace stack_ns
 
+namespace {
+    Buffer shbuf;
+}
+
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
@@ -141,23 +145,21 @@ auto Xml::last_is_string() const -> bool { return !tree.empty() && (tree.back() 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
 void Xml::last_to_SH() {
-    Buffer &b = the_main->SH.shbuf(); // write directly in the buffer.
-    b.reset();
-    b.push_back(tree.back()->name.c_str());
+    shbuf.reset();
+    shbuf.push_back(tree.back()->name.c_str());
 }
 
 // This adds B at the end the element, via concatenation, if possible.
 void Xml::add_last_string(const Buffer &B) {
     if (B.empty()) return;
-    Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
-    aux.reset();
+    shbuf.reset();
     if (last_is_string()) {
         last_to_SH();
         tree.pop_back();
         the_parser.my_stats.one_more_merge();
     }
-    aux.push_back(B.c_str());
-    tree.push_back(new Xml(the_main->SH));
+    shbuf.push_back(B.c_str());
+    tree.push_back(new Xml(shbuf));
 }
 
 // This adds x and a \n at the end of this.
@@ -177,13 +179,12 @@ void Stack::remove_last_space() { top_stack()->remove_last_space(); }
 // Removes a trailing space on the tree.
 void Xml::remove_last_space() {
     if (!last_is_string()) return;
-    Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
     last_to_SH();
-    auto k = aux.size();
-    aux.remove_space_at_end();
-    if (k != aux.size()) {
+    auto k = shbuf.size();
+    shbuf.remove_space_at_end();
+    if (k != shbuf.size()) {
         tree.pop_back();
-        if (!aux.empty()) tree.push_back(new Xml(the_main->SH));
+        if (!shbuf.empty()) tree.push_back(new Xml(shbuf.to_string()));
     }
 }
 
@@ -419,10 +420,9 @@ void Stack::check_font() {
     bool           w = the_main->pack_font_elt;
     name_positions s{};
     if (w) {
-        Buffer &aux = the_main->SH.shbuf(); // write directly in the buffer.
-        aux.reset();
-        bool nonempty = false;
-        s             = the_parser.cur_font.size_change();
+        Buffer aux;
+        bool   nonempty = false;
+        s               = the_parser.cur_font.size_change();
         if (s != 0U) {
             aux << the_names[s].c_str();
             nonempty = true;
@@ -446,7 +446,7 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = Istring(the_main->SH.hash_find());
+            auto     a   = Istring(aux);
             Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names[np_rend], a);
@@ -606,12 +606,11 @@ void Stack::finish_cell(int w) {
     ArrayInfo *A       = get_my_table(cid);
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
-    Buffer &   B       = the_main->SH.shbuf();
     int        n       = 0;
-    if (!B.install_att(cid, the_names[np_cols]))
+    if (!shbuf.install_att(cid, the_names[np_cols]))
         n = 0;
     else
-        n = atoi(B.c_str());
+        n = atoi(shbuf.c_str());
     if (n != 0) {
         cell_no += to_unsigned(n);
     } else {
@@ -624,11 +623,10 @@ void Stack::finish_cell(int w) {
 // This returns the span of the current cell; -1 in case of trouble
 // the default value is 1
 auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
-    Buffer &B = the_main->SH.shbuf();
     if (is_xmlc()) return 0;
-    if (!has_name(the_names[np_cell])) return -1;         // not a cell
-    if (!B.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
-    auto o = B.int_val();
+    if (!has_name(the_names[np_cell])) return -1;             // not a cell
+    if (!shbuf.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
+    auto o = shbuf.int_val();
     return o ? to_signed(*o) : -1;
 }
 

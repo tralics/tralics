@@ -11,7 +11,6 @@ public:
 
     Xml(Istring n = {}) : name(n) {}
     Xml(const Buffer &n) : name(Istring(n.c_str())) {}
-    Xml(StrHash &X) : name(Istring(X.hash_find())) {}
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}

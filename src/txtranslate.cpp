@@ -33,6 +33,8 @@ namespace {
 #include <unistd.h>
     inline void txsleep(unsigned i) { sleep(i); }
 #endif
+
+    auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 } // namespace
 
 namespace translate_ns {
@@ -356,7 +358,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->id.add_attribute(np_noindent, StrHash::st_bool(noindent), false);
+            cp->id.add_attribute(np_noindent, st_bool(noindent), false);
             return;
         }
     }
@@ -368,7 +370,7 @@ void Parser::finish_par_cmd(bool noindent, Istring xs) {
     auto k  = cur_centering();
     Xid  id = ileave_v_mode();
     if (!xs.null()) id.add_attribute(the_names[np_spacebefore], xs);
-    if (k != 1) id.add_attribute(np_noindent, StrHash::st_bool(noindent));
+    if (k != 1) id.add_attribute(np_noindent, st_bool(noindent));
 }
 
 // Translation of \par
@@ -1739,8 +1741,7 @@ void Parser::T_twoints(TokenList &A, TokenList &B) {
 
 // Reads the tokens, converts them to dimension.
 auto Parser::dimen_attrib(ScaledInt A) -> Istring {
-    Buffer &B = the_main->SH.shbuf();
-    B.reset();
+    Buffer B;
     B.push_back(A, glue_spec_empty);
     auto i = B.size();
     if (i > 0 && B[i - 1] == '0') {
@@ -1748,7 +1749,7 @@ auto Parser::dimen_attrib(ScaledInt A) -> Istring {
         i--;
     }
     if (i > 0 && B[i - 1] == '.') B.remove_last();
-    return Istring(the_main->SH.hash_find());
+    return Istring(B.to_string());
 }
 
 void Parser::back_input_pt(bool spec) {

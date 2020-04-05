@@ -23,7 +23,8 @@ class LabelInfo;
 // which can be ascii, utf8 or latin1 (XML syntax)
 
 struct StrHash_record {
-    String     Text, Value;
+    String     name;
+    String     value;
     LabelInfo *Labinfo;
 };
 
@@ -32,19 +33,17 @@ class StrHash {
     size_t *        Next;      // the Next table
     size_t          hash_len;  // size of the table
     size_t          hash_last; // last slot used
-    Buffer          mybuf;     // local buffer
 public:
     StrHash();
 
-    [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].Value; }
+    [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
 
     void re_alloc();
-    auto hash_find() -> size_t;
+    auto hash_find(const std::string &s) -> size_t;
     auto find(String s) -> size_t;
     auto find(const std::string &s) -> size_t;
     auto find(int s) -> size_t;
-    auto operator[](size_t k) const -> String { return data[k].Text; }
-    auto shbuf() -> Buffer & { return mybuf; }
+    auto operator[](size_t k) const -> String { return data[k].name; }
     auto lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; };
     auto lab_val_check(Istring k) -> LabelInfo *;
     auto next_label_id() -> Istring;
@@ -52,6 +51,4 @@ public:
     auto find_scaled(ScaledInt s) -> Istring;
 
     static void rlc_to_string(String s, std::vector<AttList> &res);
-    static auto skip_val(int k) -> name_positions { return k == 0 ? np_3pt : k == 1 ? np_6pt : np_12pt; }
-    static auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
 };

@@ -201,16 +201,14 @@ void Parser::user_XML_modify(subtypes c) {
 // This is assumed to create a unique ID.
 auto StrHash::next_label_id() -> Istring {
     last_label_id++;
-    mybuf << bf_reset << fmt::format("uid{}", last_label_id);
-    return Istring(hash_find());
+    return Istring(fmt::format("uid{}", last_label_id));
 }
 
 // Implementation of \label, \ref
 // This is assumed to create a unique ID.
 auto StrHash::next_top_label_id() -> Istring {
     last_top_label_id++;
-    mybuf << bf_reset << fmt::format("cid{}", last_top_label_id);
-    return Istring(hash_find());
+    return Istring(fmt::format("cid{}", last_top_label_id));
 }
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
@@ -927,9 +925,9 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
         }
         if (leg != nullptr) {
             leg->change_name(np_cell);
-            Buffer &B = the_main->SH.shbuf();
-            B << bf_reset << '(' << uchar(ctr) << ')' << ' ';
-            leg->add_first(new Xml(the_main->SH));
+            Buffer B;
+            B << '(' << uchar(ctr) << ')' << ' ';
+            leg->add_first(new Xml(B));
             row2->push_back(leg);
         }
         ctr++;

@@ -1695,12 +1695,11 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
     if (!L3.empty()) {
         back_input(L3);
         scan_dimen(false, ct);
-        dmres     = cur_val.get_int_val();
-        Buffer &B = the_main->SH.shbuf();
-        B.reset();
+        dmres = cur_val.get_int_val();
         Trace.push_back(ScaledInt(dmres), glue_spec_pt);
+        Buffer B;
         B.push_back(ScaledInt(dmres), glue_spec_pt);
-        dmres = to_signed(the_main->SH.hash_find());
+        dmres = to_signed(the_main->SH.hash_find(B.to_string()));
     }
     Token m = scan_style();
     add_to_trace(m);

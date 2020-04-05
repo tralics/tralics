@@ -1444,12 +1444,11 @@ auto Math::chars_to_mb2(Buffer &B) const -> bool {
 // Yet another procedure. Reads the dimension in a command like \above
 // Something like -1,2cm  is OK
 auto Math::chars_to_mb3() -> Istring {
-    Buffer &B = the_main->SH.shbuf();
-    B.reset();
-    int  bc   = 0; // unit size
-    int  sz   = 0; // current size
-    bool dot  = false;
-    bool sign = false;
+    Buffer B;
+    int    bc   = 0; // unit size
+    int    sz   = 0; // current size
+    bool   dot  = false;
+    bool   sign = false;
     for (;;) {
         if (empty()) break;
         if (!front().is_char()) break;
@@ -1500,7 +1499,7 @@ auto Math::chars_to_mb3() -> Istring {
         B.reset();
         B.push_back("0pt");
     }
-    return Istring(the_main->SH.hash_find());
+    return Istring(B.to_string());
 }
 
 // Procedure called in case of errors

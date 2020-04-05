@@ -1345,14 +1345,13 @@ inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = Istring(
 
 // This assumes that nb_mathchars is 128
 void MathDataP::boot_xml_lr_tables() {
-    Buffer &B = the_main->SH.shbuf();
     for (uchar i = 0; i < nb_mathchars; i++) {
         size_t k = i + math_c_loc;
         if (built_in_table[k] != nullptr) continue;
-        B.reset();
+        Buffer B;
         B.push_back(static_cast<char>(i));
         built_in_table[k] = new Xml(cst_mo, nullptr);
-        built_in_table[k]->push_back(new Xml(the_main->SH));
+        built_in_table[k]->push_back(new Xml(B.to_string()));
     }
 
     // fill_lr(del_Vert, "&Verbar;", "&#x02016;");
@@ -1427,13 +1426,12 @@ void MathDataP::boot_xml_lr_tables() {
 }
 
 auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
-    Buffer &B = the_main->SH.shbuf();
-    B.reset();
+    Buffer B;
     if (n <= 1)
         B.push_back(static_cast<char>(c));
     else
         B.push_back(math_chars[c][n]);
-    Xml *v   = new Xml(the_main->SH);
+    Xml *v   = new Xml(B.to_string());
     Xml *res = new Xml(cst_mi, v);
     if (n == 1) res->add_att(cst_mathvariant, cstf_normal);
     return res;
@@ -1444,7 +1442,6 @@ void MathDataP::boot_chars() {
         Istring K = the_names[cst_dig0 + i];
         init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K)));
     }
-    Buffer &B = the_main->SH.shbuf();
 
     for (uchar i = 'A'; i <= 'Z'; i++) init_builtin(i + math_char_normal_loc, make_math_char(i, 0));
     for (uchar i = 'a'; i <= 'z'; i++) init_builtin(i + math_char_normal_loc, make_math_char(i, 0));
@@ -1455,9 +1452,9 @@ void MathDataP::boot_chars() {
     init_builtin(xml_o_loc, new Xml(the_names[np_letter_o]));
     // nb_simplemath should be 128
     for (uchar i = 0; i < nb_simplemath; i++) {
-        B.reset();
+        Buffer B;
         B.push_back(static_cast<char>(i));
-        Xml *res = new Xml(np_simplemath, new Xml(the_main->SH));
+        Xml *res = new Xml(np_simplemath, new Xml(B.to_string()));
         Xml *X   = new Xml(np_formula, res);
         X->add_att(np_type, np_inline);
         simplemath_table[i] = X;

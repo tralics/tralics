@@ -261,6 +261,7 @@ auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
 }
 
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
+// \todo standalone from std::string
 auto Buffer::hashcode(size_t prime) const -> size_t {
     size_t j = 1;
     size_t h = static_cast<uchar>(at(0));
@@ -697,12 +698,12 @@ StrHash::StrHash() {
         Next[i] = 0;
     }
     hash_last     = hash_prime + 1;
-    data[0].Text  = ""; // make sure these are allocated.
-    data[1].Text  = "";
-    data[2].Text  = " ";
-    data[0].Value = ""; // make sure these are allocated.
-    data[1].Value = "";
-    data[2].Value = " ";
+    data[0].name  = ""; // make sure these are allocated.
+    data[1].name  = "";
+    data[2].name  = " ";
+    data[0].value = ""; // make sure these are allocated.
+    data[1].value = "";
+    data[2].value = " ";
 }
 
 // This is called in case the table is too small.
@@ -728,58 +729,44 @@ void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
 
 // Find something in the StrHash table. The buffer mybuf holds the string
 // to search. result is never zero
-auto StrHash::hash_find() -> size_t { // \todo size_t
+auto StrHash::hash_find(const std::string &s) -> size_t {
     the_parser.my_stats.one_more_sh_find();
-    if (mybuf.at(0) == 0) return 1;
-    auto p = mybuf.hashcode(hash_prime) + 3; // \todo why this +3 ???
+    if (s.empty()) return 1;
+    auto p = Buffer(s).hashcode(hash_prime) + 3; // skip the special values 0, 1 and 2
     for (;;) {
-        if ((data[p].Text != nullptr) && mybuf == data[p].Text) return p;
+        if ((data[p].name != nullptr) && s == data[p].name) return p;
         if (Next[p] != 0)
             p = Next[p];
         else
             break;
     }
-    String name  = mybuf.convert_to_str();
-    String value = mybuf.convert_to_out_encoding();
-    if (data[p].Text == nullptr) {
+    String name  = (new std::string(s))->c_str(); // \todo memory leak here, name should be a std::string
+    String value = Buffer(s).convert_to_out_encoding();
+    if (data[p].name == nullptr) {
         the_parser.my_stats.one_more_sh_used();
-        data[p].Text  = name;
-        data[p].Value = value;
+        data[p].name  = name;
+        data[p].value = value;
         return p;
     }
     if (hash_last >= hash_len) re_alloc();
     auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();
-    data[k].Text  = name;
-    data[k].Value = value;
+    data[k].name  = name;
+    data[k].value = value;
     Next[p]       = k;
     return k;
 }
 
-// The string can be a temporary
-auto StrHash::find(String s) -> size_t {
-    mybuf << bf_reset << s;
-    return hash_find();
-}
-
-// The string can be a temporary
-auto StrHash::find(const std::string &s) -> size_t {
-    mybuf << bf_reset << s;
-    return hash_find();
-}
-
-// Converts s into a string and returns its hash table location.
-auto StrHash::find(int s) -> size_t {
-    mybuf << bf_reset << fmt::format("{}", s);
-    return hash_find();
-}
+auto StrHash::find(String s) -> size_t { return hash_find(s); }
+auto StrHash::find(const std::string &s) -> size_t { return hash_find(s); }
+auto StrHash::find(int s) -> size_t { return hash_find(fmt::format("{}", s)); }
 
 // if s is the integer associated to 15pt, returns its hash location.
 auto StrHash::find_scaled(ScaledInt s) -> Istring {
-    mybuf.reset();
-    mybuf.push_back(s, glue_spec_pt);
-    return Istring(hash_find());
+    Buffer B;
+    B.push_back(s, glue_spec_pt);
+    return Istring(hash_find(B.to_string()));
 }
 
 void Buffer::push_back(const Istring &X) {
