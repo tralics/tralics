@@ -49,6 +49,4 @@ public:
     auto next_label_id() -> Istring;
     auto next_top_label_id() -> Istring;
     auto find_scaled(ScaledInt s) -> Istring;
-
-    static void rlc_to_string(String s, std::vector<AttList> &res);
 };

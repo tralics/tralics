@@ -36,6 +36,21 @@ namespace {
     }
 
     auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
+
+    // Creates a table for array specifications.
+    auto rlc_to_string(const std::string &s) -> std::vector<AttList> {
+        std::vector<AttList> res;
+        for (char c : s) {
+            if (c != 'r' && c != 'l' && c != 'c') continue;
+            AttList L;
+            if (c == 'l')
+                L.push_back(np_columnalign, np_left);
+            else if (c == 'r')
+                L.push_back(np_columnalign, np_right);
+            res.push_back(L);
+        }
+        return res;
+    }
 } // namespace
 
 MathDataP math_data;
@@ -1835,22 +1850,6 @@ void Math::skip_initial_space() {
     while (!empty() && front().is_space()) pop_front();
 }
 
-// Creates a table for array specifications.
-void StrHash::rlc_to_string(String s, std::vector<AttList> &res) {
-    int i = 0;
-    while (s[i] != 0) {
-        char c = s[i];
-        ++i;
-        if (c != 'r' && c != 'l' && c != 'c') continue;
-        AttList L;
-        if (c == 'l')
-            L.push_back(np_columnalign, np_left);
-        else if (c == 'r')
-            L.push_back(np_columnalign, np_right);
-        res.push_back(L);
-    }
-}
-
 // Constructs the attributes list for a table.
 // eqnarray is RCL, align is RL, and matrix is C*.
 // For aligned it is rlrlrlrl
@@ -1888,7 +1887,7 @@ void Math::fetch_rlc(std::vector<AttList> &table) {
         break;
     default:;
     }
-    the_main->SH.rlc_to_string(rlc.c_str(), table);
+    table = rlc_to_string(rlc);
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
