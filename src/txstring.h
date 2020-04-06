@@ -29,10 +29,11 @@ struct StrHash_record {
 };
 
 class StrHash {
-    StrHash_record *data;
-    size_t *        Next;      // the Next table
-    size_t          hash_len;  // size of the table
-    size_t          hash_last; // last slot used
+    StrHash_record *    data;
+    std::vector<size_t> Next; // the Next table
+
+    size_t hash_len;  // size of the table
+    size_t hash_last; // last slot used
 public:
     StrHash() {
         hash_len = hash_size;
@@ -40,8 +41,7 @@ public:
         data = new StrHash_record[hash_len];
         for (size_t i = 0; i < hash_len; i++) { data[i] = {}; }
 
-        Next = new size_t[hash_len];
-        for (size_t i = 0; i < hash_len; i++) { Next[i] = 0; }
+        Next.resize(hash_len, 0);
 
         hash_last = hash_prime + 1;
 
@@ -62,16 +62,9 @@ public:
         for (size_t i = 0; i < hash_len; i++) { T1[i] = data[i]; }
         delete[] data;
         data = T1;
+        for (size_t i = hash_len; i < k; i++) { data[i] = {}; }
 
-        auto *T2 = new size_t[k];
-        for (size_t i = 0; i < hash_len; i++) { T2[i] = Next[i]; }
-        delete[] Next;
-        Next = T2;
-
-        for (size_t i = hash_len; i < k; i++) {
-            data[i] = {};
-            Next[i] = 0;
-        }
+        Next.resize(k, 0);
 
         hash_len = k;
     }
