@@ -10,7 +10,6 @@ struct Istring {
     size_t id{0};
 
     Istring() = default;
-    explicit Istring(name_positions N);
     explicit Istring(const Buffer &X);
     explicit Istring(size_t N) : id(N) {}
     explicit Istring(const std::string &s);

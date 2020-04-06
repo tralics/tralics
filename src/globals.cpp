@@ -78,5 +78,3 @@ auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d
 }
 
 auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
-
-Istring::Istring(name_positions N) : id(the_names[N].id) {}

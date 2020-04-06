@@ -1010,7 +1010,7 @@ void math_ns::fill_math_char_slots() {
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(String a) -> Xml * {
     Xml *b = new Xml(cst_mspace, nullptr);
-    b->add_att(Istring(np_cst_width), Istring(a));
+    b->add_att(the_names[np_cst_width], Istring(a));
     return b;
 }
 
@@ -1471,29 +1471,29 @@ void MathDataP::boot2() {
 
     Xml *lim_op = mk_mo("lim");
     lim_op->add_att(np_movablelimits, np_false);
-    Xml *x = xml2sons(Istring(cst_mover), lim_op, get_mc_table(1));
+    Xml *x = xml2sons(the_names[cst_mover], lim_op, get_mc_table(1));
     init_builtin("varlimsup", varlimsup_code, x, mathop_cmd);
 
-    x = xml2sons(Istring(cst_munder), lim_op, get_mc_table(3));
+    x = xml2sons(the_names[cst_munder], lim_op, get_mc_table(3));
     init_builtin("varliminf", varliminf_code, x, mathop_cmd);
 
-    x = xml2sons(Istring(cst_munder), lim_op, get_builtin(underrightarrow_code));
+    x = xml2sons(the_names[cst_munder], lim_op, get_builtin(underrightarrow_code));
     x->add_att(cst_accentunder, np_true);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 
-    x = xml2sons(Istring(cst_munder), lim_op, get_builtin(underleftarrow_code));
+    x = xml2sons(the_names[cst_munder], lim_op, get_builtin(underleftarrow_code));
     x->add_att(cst_accentunder, np_true);
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
     x = mk_mo("(");
-    x = new Xml(Istring(cst_mpadded), x);
+    x = new Xml(the_names[cst_mpadded], x);
     x->add_att(np_cst_width, np_zerodim);
-    x = new Xml(Istring(cst_mphantom), x);
+    x = new Xml(the_names[cst_mphantom], x);
     init_builtin("strut", strut_code, x, mathord_cmd);
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
-    Xml *y = new Xml(Istring(cst_mpadded), get_builtin(int_code));
-    y->add_att(Istring(np_cst_width), Istring("-3pt"));
+    Xml *y = new Xml(the_names[cst_mpadded], get_builtin(int_code));
+    y->add_att(the_names[np_cst_width], Istring("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(cst_mrow, nullptr);
     x->push_back(z);

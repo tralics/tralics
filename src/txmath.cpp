@@ -379,8 +379,8 @@ void MathElt::print() const {
 // General fence around val.
 auto MathDataP::make_mfenced(size_t open, size_t close, Xml *val) -> Xml * {
     Xml *res = new Xml(cst_mfenced, nullptr);
-    res->add_att(Istring(np_close), xml_lr_ptable[close]);
-    res->add_att(Istring(np_open), xml_lr_ptable[open]);
+    res->add_att(the_names[np_close], xml_lr_ptable[close]);
+    res->add_att(the_names[np_open], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names[np_separator] == the_names[cst_mrow]) {
         if (!single_elt) val = new Xml(cst_mrow, val);
@@ -771,7 +771,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     Xid         id = cmi.get_mid();
     std::string S  = u.get_name();
     auto        s  = Istring(S);
-    if (S.empty()) s = Istring(is_inline ? np_inline : np_display);
+    if (S.empty()) s = the_names[is_inline ? np_inline : np_display];
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
@@ -873,7 +873,7 @@ void Parser::T_math(subtypes type) {
 
     res1->id = cmi.get_fid();
     res1->add_att(np_type, cmi.get_pos_att());
-    if (!textype.empty()) res1->add_att(Istring(np_textype), Istring(textype));
+    if (!textype.empty()) res1->add_att(the_names[np_textype], Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->interactive_math) {
         if (only_input_data)
@@ -2018,8 +2018,8 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
     bool   nf = special_fence(sname, open, close);
     if (nf) {
         res = new Xml(the_names[cst_mfenced], res);
-        res->add_att(Istring(np_close), math_data.get_fence(close));
-        res->add_att(Istring(np_open), math_data.get_fence(open));
+        res->add_att(the_names[np_close], math_data.get_fence(close));
+        res->add_att(the_names[np_open], math_data.get_fence(open));
     }
     return res;
 }
@@ -2511,7 +2511,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (c == dbinom_code || c == tbinom_code || c == binom_code) {
         open  = del_open_par;
         close = del_close_par;
-        sz    = Istring(np_zerodim);
+        sz    = the_names[np_zerodim];
     }
     if (c == frac_code || c == binom_code || c == genfrac_code || c == dfrac_code || c == dbinom_code) {
         cms = next_frac_style(cms);
@@ -3235,7 +3235,7 @@ auto Math::M_cv3(math_style cms) -> Math {
 // returns the element with a new id, if it's a <mo> and has a np_movablelimits
 // attributes; return null otherwise.
 auto Xml::spec_copy() const -> Xml * {
-    if (name != Istring(cst_mo)) return nullptr;
+    if (name != the_names[cst_mo]) return nullptr;
     AttList &X = id.get_att();
     auto     i = X.has_value(the_names[np_movablelimits]);
     if (i < 0) return nullptr;

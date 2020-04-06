@@ -13,7 +13,7 @@ public:
     Xml(const Buffer &n) : name(Istring(n.c_str())) {}
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
-    Xml(name_positions x, Xid n) : id(n), name(Istring(x)) {}
+    Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}
 
     [[nodiscard]] auto empty() const -> bool;
     [[nodiscard]] auto get_cell_span() const -> long;

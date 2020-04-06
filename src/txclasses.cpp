@@ -895,7 +895,7 @@ void Parser::T_class_error(subtypes c) {
             posta = np_Error;
         else if (what == mt_warning)
             posta = np_Warning;
-        B << " " << Istring(posta) << ": ";
+        B << " " << the_names[posta] << ": ";
     }
     TokenList L = scan_general_text();
     L.push_back(hash_table.relax_token);
@@ -933,7 +933,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = np_Error;
     else if (what == mt_warning)
         w = np_Warning;
-    if (!Istring(np_warning).empty()) {
+    if (!the_names[np_warning].empty()) {
         flush_buffer();
         Xml *res = new Xml(np_warning, new Xml(Istring(B)));
         res->id.add_attribute(np_letter_c, w);

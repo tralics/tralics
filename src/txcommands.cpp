@@ -37,7 +37,7 @@ void Parser::init_all(const std::string &doc_elt) {
     open_paren_xml                   = new Xml(Istring("("));
     close_paren_xml                  = new Xml(Istring(")"));
     the_page_xml                     = new Xml(Istring("thepage"), nullptr);
-    glo_xml                          = new Xml(Istring(np_glo_name));
+    glo_xml                          = new Xml(the_names[np_glo_name]);
     eqtb_int_table[endlinechar_code] = {'\r', 1};
     eqtb_int_table[newlinechar_code] = {'\n', 1};
     TL.clear();

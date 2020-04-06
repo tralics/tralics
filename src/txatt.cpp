@@ -35,7 +35,7 @@ auto Xid::has_attribute(Istring n) const -> Istring {
 // Return true if this id has special attribute pair.
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
-    Istring n(cst_flaghi);
+    Istring n(the_names[cst_flaghi]);
     return static_cast<bool>(get_att().has_value(n));
 }
 
@@ -89,7 +89,7 @@ void Xid::add_attribute_but_rend(Xid b) const {
     size_t   n = L.val.size();
     AttList &l = get_att();
     for (size_t i = 0; i < n; i++)
-        if (L.val[i].name != Istring(np_rend)) l.push_back(L.val[i].name, L.val[i].value, true);
+        if (L.val[i].name != the_names[np_rend]) l.push_back(L.val[i].name, L.val[i].value, true);
 }
 
 // Add attribute list of element B to this id.
@@ -100,7 +100,7 @@ void Xid::add_attribute(Xid b) const {
 
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
-    auto i = has_value(Istring(a));
+    auto i = has_value(the_names[a]);
     if (i && (*i > 0)) val[*i].name = Istring(0UL);
 }
 

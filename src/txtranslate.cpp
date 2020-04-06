@@ -929,7 +929,7 @@ void Parser::includegraphics(subtypes C) {
             if (skey == "clip")
                 AL.push_back(np_clip, V, true);
             else
-                AL.push_back(Istring(skey), Istring(V), true);
+                AL.push_back(Istring(skey), the_names[V], true);
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
@@ -1363,7 +1363,7 @@ void Parser::T_fbox(subtypes cc) {
             return;
         }
         iwidth = get_opt_dim(T);
-        ipos   = Istring(get_ctb_opt());
+        ipos   = the_names[get_ctb_opt()];
     }
     if (cc == scalebox_code) {
         flush_buffer();

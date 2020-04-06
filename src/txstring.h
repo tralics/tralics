@@ -26,24 +26,19 @@ struct StrHash_record {
     String     name{nullptr};
     String     value{nullptr};
     LabelInfo *Labinfo{nullptr};
+    size_t     next{0};
 };
 
 class StrHash : public std::vector<StrHash_record> {
-    std::vector<size_t> Next{std::vector<size_t>(hash_size)}; // Because {hash_size} gives size 1
-    size_t              hash_last{hash_prime + 1};            // last slot used
+    size_t hash_last{hash_prime + 1}; // last slot used
 public:
     StrHash() : std::vector<StrHash_record>(hash_size) {
-        at(0) = {"", "", nullptr};
-        at(1) = {"", "", nullptr};
-        at(2) = {" ", " ", nullptr};
+        at(0) = {"", "", nullptr, 0};
+        at(1) = {"", "", nullptr, 0};
+        at(2) = {" ", " ", nullptr, 0};
     }
 
     [[nodiscard]] auto p_str(size_t k) const -> String { return at(k).value; }
-
-    void re_alloc() {
-        Next.resize(size() + 10'000);
-        resize(size() + 10'000);
-    }
 
     auto        hash_find(const std::string &s) -> size_t;
     auto        find(String s) -> size_t;

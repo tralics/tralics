@@ -110,7 +110,7 @@ Xml::Xml(Istring N, Xml *z) : name(N) {
     if (z != nullptr) add_tmp(z);
 }
 
-Xml::Xml(name_positions N, Xml *z) : name(Istring(N)) {
+Xml::Xml(name_positions N, Xml *z) : name(the_names[N]) {
     id = the_main->the_stack->next_xid(this);
     if (z != nullptr) add_tmp(z);
 }

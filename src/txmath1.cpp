@@ -1204,9 +1204,8 @@ void MathElt::cv_noML() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        auto w = Istring(name_positions(np_mml_normal + c));
+        auto w = the_names[name_positions(np_mml_normal + c)];
         if (w.empty()) return;
-        ;
         mathml_buffer.push_back("\\");
         mathml_buffer.push_back(w);
         mathml_buffer.push_back(' ');
@@ -1260,7 +1259,7 @@ void MathElt::cv_noMLt() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        auto w = Istring(name_positions(np_mml_normal + c));
+        auto w = the_names[name_positions(np_mml_normal + c)];
         if (w.empty()) return;
         mathml_buffer << "<font name='" << w.p_str() << "'/>";
         return;

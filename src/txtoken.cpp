@@ -696,12 +696,10 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
     auto p = Buffer(s).hashcode(hash_prime) + 3; // skip the special values 0, 1 and 2
     for (;;) {
         if ((at(p).name != nullptr) && s == at(p).name) return p;
-        if (Next[p] != 0)
-            p = Next[p];
-        else
-            break;
+        if (at(p).next == 0) break;
+        p = at(p).next;
     }
-    String name  = (new std::string(s))->c_str(); // \todo memory leak here, name should be a std::string
+    String name  = (new std::string(s))->c_str();
     String value = Buffer(s).convert_to_out_encoding();
     if (at(p).name == nullptr) {
         the_parser.my_stats.one_more_sh_used();
@@ -709,13 +707,13 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
         at(p).value = value;
         return p;
     }
-    if (hash_last >= size()) re_alloc();
+    if (hash_last >= size()) resize(size() + 10'000); // \todo simplify using push_back
     auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();
     at(k).name  = name;
     at(k).value = value;
-    Next[p]     = k;
+    at(p).next  = k;
     return k;
 }
 
