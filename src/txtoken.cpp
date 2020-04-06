@@ -688,45 +688,6 @@ auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
     return fp << B.c_str();
 }
 
-// This is the Ctor of strhash.
-StrHash::StrHash() {
-    hash_len = hash_size;
-    data     = new StrHash_record[hash_len];
-    Next     = new size_t[hash_len];
-    for (size_t i = 0; i < hash_len; i++) {
-        data[i] = {nullptr, nullptr, nullptr};
-        Next[i] = 0;
-    }
-    hash_last     = hash_prime + 1;
-    data[0].name  = ""; // make sure these are allocated.
-    data[1].name  = "";
-    data[2].name  = " ";
-    data[0].value = ""; // make sure these are allocated.
-    data[1].value = "";
-    data[2].value = " ";
-}
-
-// This is called in case the table is too small.
-void StrHash::re_alloc() { // \todo use vectors instead of reinventing the wheel
-    auto  k  = hash_len + 10000;
-    auto *T1 = new StrHash_record[k];
-    auto *T2 = new size_t[k];
-    for (size_t i = 0; i < hash_len; i++) {
-        T1[i] = data[i];
-        T2[i] = Next[i];
-    }
-    delete[] data;
-    data = T1;
-    delete[] Next;
-    Next = T2;
-    for (size_t i = hash_len; i < k; i++) {
-        data[i] = {nullptr, nullptr, nullptr};
-        Next[i] = 0;
-    }
-    hash_len = k;
-    the_log << "Realloc str hash to " << k << "\n";
-}
-
 // Find something in the StrHash table. The buffer mybuf holds the string
 // to search. result is never zero
 auto StrHash::hash_find(const std::string &s) -> size_t {

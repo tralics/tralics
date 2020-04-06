@@ -23,9 +23,9 @@ class LabelInfo;
 // which can be ascii, utf8 or latin1 (XML syntax)
 
 struct StrHash_record {
-    String     name;
-    String     value;
-    LabelInfo *Labinfo;
+    String     name{nullptr};
+    String     value{nullptr};
+    LabelInfo *Labinfo{nullptr};
 };
 
 class StrHash {
@@ -34,11 +34,48 @@ class StrHash {
     size_t          hash_len;  // size of the table
     size_t          hash_last; // last slot used
 public:
-    StrHash();
+    StrHash() {
+        hash_len = hash_size;
+
+        data = new StrHash_record[hash_len];
+        for (size_t i = 0; i < hash_len; i++) { data[i] = {}; }
+
+        Next = new size_t[hash_len];
+        for (size_t i = 0; i < hash_len; i++) { Next[i] = 0; }
+
+        hash_last = hash_prime + 1;
+
+        data[0].name  = ""; // make sure these are allocated.
+        data[1].name  = "";
+        data[2].name  = " ";
+        data[0].value = ""; // make sure these are allocated.
+        data[1].value = "";
+        data[2].value = " ";
+    }
 
     [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
 
-    void        re_alloc();
+    void re_alloc() { // \todo use vectors instead of reinventing the wheel
+        auto k = hash_len + 10000;
+
+        auto *T1 = new StrHash_record[k];
+        for (size_t i = 0; i < hash_len; i++) { T1[i] = data[i]; }
+        delete[] data;
+        data = T1;
+
+        auto *T2 = new size_t[k];
+        for (size_t i = 0; i < hash_len; i++) { T2[i] = Next[i]; }
+        delete[] Next;
+        Next = T2;
+
+        for (size_t i = hash_len; i < k; i++) {
+            data[i] = {};
+            Next[i] = 0;
+        }
+
+        hash_len = k;
+    }
+
     auto        hash_find(const std::string &s) -> size_t;
     auto        find(String s) -> size_t;
     auto        find(const std::string &s) -> size_t;
