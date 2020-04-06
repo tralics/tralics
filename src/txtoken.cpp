@@ -709,7 +709,7 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
         data[p].value = value;
         return p;
     }
-    if (hash_last >= hash_len) re_alloc();
+    if (hash_last >= data.size()) re_alloc();
     auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();

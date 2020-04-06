@@ -29,7 +29,6 @@ struct StrHash_record {
 };
 
 class StrHash {
-    size_t                      hash_len{hash_size};
     std::vector<StrHash_record> data{hash_size};
     std::vector<size_t>         Next{std::vector<size_t>(hash_size)}; // Because {hash_size} gives size 1
     size_t                      hash_last{hash_prime + 1};            // last slot used
@@ -43,10 +42,9 @@ public:
     [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
 
     void re_alloc() {
-        auto k = hash_len + 10000;
+        auto k = data.size() + 10000;
         data.resize(k);
         Next.resize(k, 0);
-        hash_len = k;
     }
 
     auto        hash_find(const std::string &s) -> size_t;
