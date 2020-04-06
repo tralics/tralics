@@ -28,31 +28,29 @@ struct StrHash_record {
     LabelInfo *Labinfo{nullptr};
 };
 
-class StrHash {
-    std::vector<StrHash_record> data{hash_size};
-    std::vector<size_t>         Next{std::vector<size_t>(hash_size)}; // Because {hash_size} gives size 1
-    size_t                      hash_last{hash_prime + 1};            // last slot used
+class StrHash : public std::vector<StrHash_record> {
+    std::vector<size_t> Next{std::vector<size_t>(hash_size)}; // Because {hash_size} gives size 1
+    size_t              hash_last{hash_prime + 1};            // last slot used
 public:
-    StrHash() {
-        data[0] = {"", "", nullptr};
-        data[1] = {"", "", nullptr};
-        data[2] = {" ", " ", nullptr};
+    StrHash() : std::vector<StrHash_record>(hash_size) {
+        at(0) = {"", "", nullptr};
+        at(1) = {"", "", nullptr};
+        at(2) = {" ", " ", nullptr};
     }
 
-    [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
+    [[nodiscard]] auto p_str(size_t k) const -> String { return at(k).value; }
 
     void re_alloc() {
-        auto k = data.size() + 10000;
-        data.resize(k);
-        Next.resize(k, 0);
+        Next.resize(size() + 10'000);
+        resize(size() + 10'000);
     }
 
     auto        hash_find(const std::string &s) -> size_t;
     auto        find(String s) -> size_t;
     auto        find(const std::string &s) -> size_t;
     auto        find(int s) -> size_t;
-    auto        operator[](size_t k) const -> String { return data[k].name; }
-    auto        lab_val(Istring k) -> LabelInfo * { return data[k.id].Labinfo; };
+    auto        operator[](size_t k) const -> String { return at(k).name; }
+    auto        lab_val(Istring k) -> LabelInfo * { return at(k.id).Labinfo; };
     auto        lab_val_check(Istring k) -> LabelInfo *;
     static auto next_label_id() -> Istring; // \todo Move outside
     auto        find_scaled(ScaledInt s) -> Istring;

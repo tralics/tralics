@@ -695,7 +695,7 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
     if (s.empty()) return 1;
     auto p = Buffer(s).hashcode(hash_prime) + 3; // skip the special values 0, 1 and 2
     for (;;) {
-        if ((data[p].name != nullptr) && s == data[p].name) return p;
+        if ((at(p).name != nullptr) && s == at(p).name) return p;
         if (Next[p] != 0)
             p = Next[p];
         else
@@ -703,19 +703,19 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
     }
     String name  = (new std::string(s))->c_str(); // \todo memory leak here, name should be a std::string
     String value = Buffer(s).convert_to_out_encoding();
-    if (data[p].name == nullptr) {
+    if (at(p).name == nullptr) {
         the_parser.my_stats.one_more_sh_used();
-        data[p].name  = name;
-        data[p].value = value;
+        at(p).name  = name;
+        at(p).value = value;
         return p;
     }
-    if (hash_last >= data.size()) re_alloc();
+    if (hash_last >= size()) re_alloc();
     auto k = hash_last;
     hash_last++;
     the_parser.my_stats.one_more_sh_used();
-    data[k].name  = name;
-    data[k].value = value;
-    Next[p]       = k;
+    at(k).name  = name;
+    at(k).value = value;
+    Next[p]     = k;
     return k;
 }
 

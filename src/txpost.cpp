@@ -203,8 +203,8 @@ auto StrHash::next_label_id() -> Istring {
 
 auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
     auto K = k.id;
-    if (data[K].Labinfo == nullptr) data[K].Labinfo = new LabelInfo(k);
-    return data[K].Labinfo;
+    if (at(K).Labinfo == nullptr) at(K).Labinfo = new LabelInfo(k);
+    return at(K).Labinfo;
 }
 
 // This implements \label{foo}; second argument is the anchor id
