@@ -29,43 +29,23 @@ struct StrHash_record {
 };
 
 class StrHash {
-    StrHash_record *    data;
-    std::vector<size_t> Next; // the Next table
-
-    size_t hash_len;  // size of the table
-    size_t hash_last; // last slot used
+    size_t                      hash_len{hash_size};
+    std::vector<StrHash_record> data{hash_size};
+    std::vector<size_t>         Next{std::vector<size_t>(hash_size)}; // Because {hash_size} gives size 1
+    size_t                      hash_last{hash_prime + 1};            // last slot used
 public:
     StrHash() {
-        hash_len = hash_size;
-
-        data = new StrHash_record[hash_len];
-        for (size_t i = 0; i < hash_len; i++) { data[i] = {}; }
-
-        Next.resize(hash_len, 0);
-
-        hash_last = hash_prime + 1;
-
-        data[0].name  = ""; // make sure these are allocated.
-        data[1].name  = "";
-        data[2].name  = " ";
-        data[0].value = ""; // make sure these are allocated.
-        data[1].value = "";
-        data[2].value = " ";
+        data[0] = {"", "", nullptr};
+        data[1] = {"", "", nullptr};
+        data[2] = {" ", " ", nullptr};
     }
 
     [[nodiscard]] auto p_str(size_t k) const -> String { return data[k].value; }
 
-    void re_alloc() { // \todo use vectors instead of reinventing the wheel
+    void re_alloc() {
         auto k = hash_len + 10000;
-
-        auto *T1 = new StrHash_record[k];
-        for (size_t i = 0; i < hash_len; i++) { T1[i] = data[i]; }
-        delete[] data;
-        data = T1;
-        for (size_t i = hash_len; i < k; i++) { data[i] = {}; }
-
+        data.resize(k);
         Next.resize(k, 0);
-
         hash_len = k;
     }
 
