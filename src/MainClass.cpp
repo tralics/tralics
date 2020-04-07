@@ -146,10 +146,10 @@ namespace {
 
     /// Create an empty TeX file
     void mk_empty() {
-        auto *res = new LinePtr;
-        res->reset(".tex");
-        res->insert(1, "\\message{File ignored^^J}\\endinput", false);
-        main_ns::register_file(res);
+        LinePtr res;
+        res.reset(".tex");
+        res.insert(1, "\\message{File ignored^^J}\\endinput", false);
+        main_ns::register_file(std::move(res));
     }
 
     /// Display usage message, then exit the program \todo Manage this centrally

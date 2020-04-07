@@ -28,7 +28,7 @@ namespace {
     /// Use a file from the pool
     auto use_pool(LinePtr &L) -> bool {
         if (!pool_position) return false; // should not happen
-        L.insert(*file_pool[*pool_position]);
+        L.insert(file_pool[*pool_position]);
         pool_position = {};
         return true;
     }
@@ -1165,13 +1165,12 @@ void Parser::T_filecontents(int spec) {
     }
     int           action     = 0;
     std::fstream *outfile    = nullptr;
-    LinePtr *     res        = nullptr;
     bool          is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;
-        res    = new LinePtr;
-        res->reset(filename);
-        main_ns::register_file(res);
+        LinePtr res;
+        res.reset(filename);
+        main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
     } else if (tralics_ns::find_in_path(filename)) {
         log_and_tty << lg_start << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
@@ -1201,7 +1200,7 @@ void Parser::T_filecontents(int spec) {
         if (action == 1) *outfile << input_buffer;
         if (action == 2) {
             int n = get_cur_line();
-            res->insert(n, input_buffer.c_str(), is_encoded);
+            file_pool.back().insert(n, input_buffer.c_str(), is_encoded);
         }
         kill_line();
     }

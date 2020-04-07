@@ -9,7 +9,7 @@ std::string file_name;
 std::string all_themes;
 std::string everyjob_string;
 
-std::vector<LinePtr *> file_pool;
+std::vector<LinePtr> file_pool;
 
 std::optional<size_t> pool_position; // \todo this is a global variable that should disappear
 
@@ -29,12 +29,12 @@ namespace {
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
         for (size_t i = 0; i < file_pool.size(); i++)
-            if (file_pool[i]->file_name == name) return i;
+            if (file_pool[i].file_name == name) return i;
         return {};
     }
 } // namespace
 
-void main_ns::register_file(LinePtr *x) { file_pool.push_back(x); }
+void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
 
 auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     main_ns::path_buffer << bf_reset << s;
