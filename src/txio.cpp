@@ -1142,22 +1142,7 @@ void LinePtr::split_string(String x, int l) {
 }
 
 void LinePtr::print(std::fstream *outfile) {
-    auto C = begin();
-    auto E = end();
-    while (C != E) {
-        *outfile << C->chars;
-        ++C;
-    }
-}
-
-// For debug
-void LinePtr::print() {
-    auto C = begin();
-    auto E = end();
-    while (C != E) {
-        std::cout << C->number << "  " << C->chars;
-        ++C;
-    }
+    for (auto &C : *this) *outfile << C.chars;
 }
 
 // This implements the filecontent environment.

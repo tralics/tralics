@@ -40,9 +40,9 @@ public:
     auto               create(Buffer &B) -> bool;
     [[nodiscard]] auto to_list() const -> TokenList;
     void               add(FpNum Y);
-    static void        set_xmax(const Digit *x, int &xmin, int &xmax); // \todo size_t& ? std::pair<size_t,size_t> even better
-    static void        prop_carry(Digit *z);
-    void               finish_mul(bool xs, Digit *z);
+    static void        set_xmax(std::array<Digit, 12> &x, size_t &xmin, size_t &xmax); // \todo std::pair<size_t,size_t> even better
+    static void        prop_carry(std::array<Digit, 24> &z);
+    void               finish_mul(bool xs, std::array<Digit, 24> &z);
     void               unsplit_mul4(const Digit *z);
     void               add_int(FpNum Y);
     void               div(int n);
@@ -56,7 +56,7 @@ public:
     auto               count_times(FpNum Y) -> size_t;
     [[nodiscard]] auto to_string() const -> String;
     void               neg();
-    void               mul_split(unsigned int *T) const;
+    void               mul_split(std::array<Digit, 12> &T) const;
     void               mul_by_10();
     void               mul_by_2();
     void               mul(FpNum X);

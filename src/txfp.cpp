@@ -226,12 +226,12 @@ inline void fp::mul_split_aux(Digit A, Digit *T) {
 inline auto fp::unsplit_mul(const Digit *z) -> Digit { return z[0] * 1000000 + z[1] * 1000 + z[2]; }
 
 // Splits into 12 times 1000-base digits
-void FpNum::mul_split(Digit *T) const {
-    for (int i = 0; i < 12; i++) T[i] = 0;
-    fp::mul_split_aux(data[0], T);
-    fp::mul_split_aux(data[1], T + 3);
-    fp::mul_split_aux(data[2], T + 6);
-    fp::mul_split_aux(data[3], T + 9);
+void FpNum::mul_split(std::array<Digit, 12> &T) const {
+    for (size_t i = 0; i < 12; i++) T[i] = 0;
+    fp::mul_split_aux(data[0], T.data());
+    fp::mul_split_aux(data[1], T.data() + 3);
+    fp::mul_split_aux(data[2], T.data() + 6);
+    fp::mul_split_aux(data[3], T.data() + 9);
 }
 
 // Converse of mul_split.
@@ -284,29 +284,25 @@ auto Buffer::insert_fp(const FpNum &X) -> String {
 
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax
 // In case x=0, we have xmin=xmax
-void FpNum::set_xmax(const Digit *x, int &xmin, int &xmax) {
-    int M = 12;
-    while (M > 0) {
-        if (x[M - 1] == 0)
-            M--;
-        else
+void FpNum::set_xmax(std::array<Digit, 12> &x, size_t &xmin, size_t &xmax) {
+    for (size_t M = 12; M > 0; --M) {
+        if (x[M - 1] != 0) {
+            xmax = M;
             break;
+        }
     }
-    xmax  = M;
-    int m = 0;
-    while (m < M) {
-        if (x[m] == 0)
-            m++;
-        else
+    for (size_t m = 0; m < xmax; ++m) {
+        if (x[m] != 0) {
+            xmin = m;
             break;
+        }
     }
-    xmin = m;
 }
 
 // Propagates the carry for a table of size 24 of 1000-based numbers
-void FpNum::prop_carry(Digit *z) {
+void FpNum::prop_carry(std::array<Digit, 24> &z) {
     Digit carry = 0;
-    for (int k = 23; k > 0; k--) {
+    for (size_t k = 23; k > 0; --k) {
         Digit u = carry + z[k];
         z[k]    = u % 1000;
         carry   = u / 1000;
@@ -321,15 +317,15 @@ void FpNum::mul(FpNum X, FpNum Y) {
     std::array<Digit, 12> x{}, y{};
     std::array<Digit, 24> z{};
     for (unsigned int &i : z) i = 0;
-    X.mul_split(x.data()); // \todo pass the array instead (there should be no data() anywhere)
-    Y.mul_split(y.data()); // \todo pass the array instead
-    int xmax = 0, xmin = 0, ymax = 0, ymin = 0;
-    set_xmax(x.data(), xmin, xmax); // \todo pass the array instead
-    set_xmax(y.data(), ymin, ymax); // \todo pass the array instead
-    for (auto i = to_unsigned(xmin); i < to_unsigned(xmax); i++)
-        for (auto j = to_unsigned(ymin); j < to_unsigned(ymax); j++) z[i + j + 1] += x[i] * y[j];
-    prop_carry(z.data());     // \todo pass the array instead
-    finish_mul(xs, z.data()); // \todo pass the array instead
+    X.mul_split(x);
+    Y.mul_split(y);
+    size_t xmax = 0, xmin = 0, ymax = 0, ymin = 0;
+    set_xmax(x, xmin, xmax);
+    set_xmax(y, ymin, ymax);
+    for (auto i = xmin; i < xmax; i++)
+        for (auto j = ymin; j < ymax; j++) z[i + j + 1] += x[i] * y[j];
+    prop_carry(z);
+    finish_mul(xs, z);
 }
 
 // Multiplies by an integer, assumed to be less than 1000 and positive
@@ -342,18 +338,18 @@ void FpNum::mul(FpNum X, int y) {
         xs = !xs;
     }
     for (unsigned int &i : z) i = 0;
-    X.mul_split(x.data()); // \todo pass the array instead
+    X.mul_split(x);
     for (size_t i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
-    prop_carry(z.data());     // \todo pass the array instead
-    finish_mul(xs, z.data()); // \todo pass the array instead
+    prop_carry(z);
+    finish_mul(xs, z);
 }
 
 // Converts the 24 1000-base number into a 12 1000-base number
 // by complaining for the first 6, and ignoring the last 6.
-void FpNum::finish_mul(bool xs, Digit *z) {
+void FpNum::finish_mul(bool xs, std::array<Digit, 24> &z) {
     if ((z[0] != 0U) || (z[1] != 0U) || (z[2] != 0U) || (z[3] != 0U) || (z[4] != 0U) || (z[5] != 0U))
         the_parser.parse_error("Overflow in FPmul");
-    unsplit_mul4(z + 6);
+    unsplit_mul4(z.data() + 6);
     sign = xs;
     correct_sign();
 }
@@ -728,7 +724,7 @@ void FpNum::div(int n) {
         the_parser.parse_error("Division by 0");
         return;
     }
-    mul_split(x.data()); // \todo pass the array instead
+    mul_split(x); // \todo pass the array instead
     Digit carry = 0;
     for (unsigned int &i : x) {
         Digit a = 1000 * carry + i;

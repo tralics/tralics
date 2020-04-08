@@ -100,7 +100,6 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void parse_and_extract_clean(String s);
     void parse_conf_toplevel() const;
     auto parse_and_extract(String s) const -> LinePtr;
-    void print();
     void print(std::fstream *outfile);
     void print1(std::fstream *);
     void reset(std::string x);
