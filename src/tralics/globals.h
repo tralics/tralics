@@ -19,8 +19,6 @@ extern std::string everyjob_string; //
 
 extern std::vector<LinePtr> file_pool; // pool managed by filecontents
 
-extern std::optional<size_t> pool_position; // Position of file in pool
-
 extern size_t leftquote_val, rightquote_val;
 
 extern bool bad_minus;

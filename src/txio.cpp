@@ -19,11 +19,12 @@
 #include <sstream>
 
 namespace {
-    Buffer    thebuffer;
-    bool      log_is_open = false; // says if stranscript file is open for I/O tracing
-    Buffer    utf8_out;            // Holds utf8 outbuffer
-    Buffer    utf8_in;             // Holds utf8 inbuffer
-    Converter the_converter;
+    Buffer                thebuffer;
+    bool                  log_is_open = false; // says if stranscript file is open for I/O tracing
+    Buffer                utf8_out;            // Holds utf8 outbuffer
+    Buffer                utf8_in;             // Holds utf8 inbuffer
+    Converter             the_converter;
+    std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
     /// Use a file from the pool
     auto use_pool(LinePtr &L) -> bool {
@@ -41,6 +42,12 @@ namespace {
                     << ")\n";
         T.bad_chars++;
         T.new_error();
+    }
+    /// Look for a file in the pool
+    auto search_in_pool(const std::string &name) -> std::optional<size_t> {
+        for (size_t i = 0; i < file_pool.size(); i++)
+            if (file_pool[i].file_name == name) return i;
+        return {};
     }
 } // namespace
 
@@ -1208,4 +1215,30 @@ void Parser::T_filecontents(int spec) {
     if (action == 1) tralics_ns::close_file(outfile);
     cur_tok.kill();
     pop_level(bt_env);
+}
+
+auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
+    main_ns::path_buffer << bf_reset << s;
+    pool_position = search_in_pool(s);
+    if (pool_position) return true;
+    if (file_exists(main_ns::path_buffer.to_string())) return true;
+    if (!retry) return false;
+    if (s.empty() || s[0] == '.' || s[0] == '/') return false;
+    return main_ns::search_in_confdir(s);
+}
+
+auto tralics_ns::find_in_path(const std::string &s) -> bool {
+    if (s.empty()) return false;
+    main_ns::path_buffer << bf_reset << s;
+    pool_position = search_in_pool(s);
+    if (pool_position) return true;
+    if (s[0] == '.' || s[0] == '/') return file_exists(main_ns::path_buffer.to_string());
+    for (const auto &p : input_path) {
+        if (p.empty())
+            main_ns::path_buffer << bf_reset << s;
+        else
+            main_ns::path_buffer << bf_reset << p << bf_optslash << s;
+        if (file_exists(main_ns::path_buffer.to_string())) return true;
+    }
+    return false;
 }
