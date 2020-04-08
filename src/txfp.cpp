@@ -242,49 +242,13 @@ void FpNum::unsplit_mul4(const Digit *z) {
     data[3] = fp::unsplit_mul(z + 9);
 }
 
-// Adds a 3digit number in the buffer
-void Buffer::push_back3(Digit x) {
-    char a = (x % 10) + '0';
-    x      = x / 10;
-    char b = (x % 10) + '0';
-    char c = static_cast<char>((x / 10) + '0');
-    push_back(c);
-    push_back(b);
-    push_back(a);
-}
-
 // Adds a 9digit number in the buffer
-void Buffer::push_back9(Digit x) {
-    Digit A = x % 1000;
-    x       = x / 1000;
-    Digit B = x % 1000;
-    Digit C = x / 1000;
-    push_back3(C);
-    push_back3(B);
-    push_back3(A);
-}
-
-auto Buffer::insert_fp(const FpNum &X) -> String {
-    wptr = 0;
-    push_back(' '); // reserve for the sign
-    push_back9(X.data[0]);
-    push_back9(X.data[1]);
-    push_back('.');
-    push_back9(X.data[2]);
-    push_back9(X.data[3]);
-    while (at(wptr - 1) == '0') wptr--; // remove trailing zeroes
-    at(wptr) = 0;
-    size_t i = 1;
-    while (at(i) == '0') i++; // remove initial zeroes
-    if (at(i) == '.') i--;    // Keep the zero in 0.1
-    i--;
-    at(i) = X.sign ? '+' : '-'; // insert sign
-    return data() + i;
-}
+void Buffer::push_back9(Digit x) { push_back(fmt::format("{:09d}", x)); }
 
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax
 // In case x=0, we have xmin=xmax
-void FpNum::set_xmax(std::array<Digit, 12> &x, size_t &xmin, size_t &xmax) {
+std::pair<size_t, size_t> FpNum::set_xmax(std::array<Digit, 12> &x) {
+    size_t xmin = 0, xmax = 0;
     for (size_t M = 12; M > 0; --M) {
         if (x[M - 1] != 0) {
             xmax = M;
@@ -297,6 +261,7 @@ void FpNum::set_xmax(std::array<Digit, 12> &x, size_t &xmin, size_t &xmax) {
             break;
         }
     }
+    return {xmin, xmax};
 }
 
 // Propagates the carry for a table of size 24 of 1000-based numbers
@@ -319,9 +284,8 @@ void FpNum::mul(FpNum X, FpNum Y) {
     for (unsigned int &i : z) i = 0;
     X.mul_split(x);
     Y.mul_split(y);
-    size_t xmax = 0, xmin = 0, ymax = 0, ymin = 0;
-    set_xmax(x, xmin, xmax);
-    set_xmax(y, ymin, ymax);
+    auto [xmin, xmax] = set_xmax(x);
+    auto [ymin, ymax] = set_xmax(y);
     for (auto i = xmin; i < xmax; i++)
         for (auto j = ymin; j < ymax; j++) z[i + j + 1] += x[i] * y[j];
     prop_carry(z);
@@ -438,17 +402,21 @@ auto FpNum::create(Buffer &B) -> bool {
     return retval;
 }
 
-// This puts the digits in a buffer, removes leading and trailing zeroes
-// This returns the buffer.
-auto FpNum::to_string() const -> String {
-    String buf = fp_in_buf.insert_fp(*this);
-    return buf;
+auto FpNum::to_string() const -> std::string {
+    auto s = fmt::format(" {:09d}{:09d}.{:09d}{:09d}", data[0], data[1], data[2], data[3]);
+    while (s.back() == '0') s.pop_back();
+    size_t i = 1;
+    while (s[i] == '0') ++i;
+    if (s[i] == '.') --i;
+    --i;
+    s[i] = sign ? '+' : '-';
+    return s.substr(i);
 }
 
 // This puts the digits in a buffer, then constructs a token list
 // Leading and trailing zeroes are removed.
 auto FpNum::to_list() const -> TokenList {
-    String    buf = to_string();
+    auto      buf = to_string();
     TokenList res;
     size_t    i = 0;
     if (buf[0] == '+') i++;
@@ -568,8 +536,8 @@ void FpNum::add_int(FpNum Y) {
 void fp::create_pascal_table() {
     for (size_t i = 0; i < 64; i++) {
         pascal_table[i] = new FpNum[i + 1];
-        pascal_table[i][0].init(0, 1, 0, 0);
-        pascal_table[i][i].init(0, 1, 0, 0);
+        pascal_table[i][0].set(0, 1, 0, 0);
+        pascal_table[i][i].set(0, 1, 0, 0);
         for (size_t j = 1; j < i; j++) {
             pascal_table[i][j] = pascal_table[i - 1][j - 1];
             pascal_table[i][j].add_int(pascal_table[i - 1][j]);
@@ -724,14 +692,14 @@ void FpNum::div(int n) {
         the_parser.parse_error("Division by 0");
         return;
     }
-    mul_split(x); // \todo pass the array instead
+    mul_split(x);
     Digit carry = 0;
     for (unsigned int &i : x) {
         Digit a = 1000 * carry + i;
         carry   = a % to_unsigned(n);
         i       = a / to_unsigned(n);
     }
-    unsplit_mul4(x.data()); // \todo pass the array instead
+    unsplit_mul4(x.data());
 }
 
 // It divides by 2.
@@ -813,7 +781,7 @@ auto FpNum::large_exp() -> bool {
         return true;
     }
     if (sign && ((data[0] != 0U) || k > 41)) {
-        init(0, 1, 0, 0);
+        set(0, 1, 0, 0);
         the_parser.parse_error("Overflow in FPexp");
         return true;
     }
@@ -829,7 +797,7 @@ void FpNum::exec_exp() {
     X.data[0] = X.data[1] = 0;
     FpNum Y               = X;
     FpNum res;
-    res.init(0, 1, 0, 0);
+    res.set(0, 1, 0, 0);
     res.add(X);
     int n = 1;
     for (;;) {
@@ -1010,7 +978,7 @@ void FpNum::sin0() {
 // cos for numbers between 0 and pi/4
 void FpNum::cos0() {
     FpNum x = *this, p;
-    init(0, 1, 0, 0);
+    set(0, 1, 0, 0);
     if (is_zero()) return; // cos(0)=1
     p.mul(x, x);
     p.div(2);
@@ -1165,7 +1133,7 @@ auto FpNum::sincos_transform() -> bool {
     FpNum xf, oldval;
     FpNum r, rs;
     sign = true;
-    init(0, 0, 710000000, 0); // xx near sqrt2 is a good starting point
+    set(0, 0, 710000000, 0); // xx near sqrt2 is a good starting point
     xf.reset();
     oldval.reset();
     for (;;) {
@@ -1248,7 +1216,7 @@ void FpNum::trigo_inv() {
         shift++;
     }
     FpNum x, r;
-    x.init(ten_8 * 10, 0, 0, 0);
+    x.set(ten_8 * 10, 0, 0, 0);
     r.reset();
     for (;;) {
         if (is_zero()) break;
@@ -1269,14 +1237,14 @@ void FpNum::trigo_inv() {
 void FpNum::trigo_sqrt() {
     FpNum y, one, L, t;
     y.mul(*this, *this);
-    one.init(0, 1, 0, 0);
+    one.set(0, 1, 0, 0);
     y.neg_sub_abs(one);     // 1-x^2
     y.data[2] += 250000000; // 1-x^2 +1/4
     Digit w = 444444444;
-    L.init(0, 0, w, w); // l = 4/9
+    L.set(0, 0, w, w); // l = 4/9
     y.mul(y, L);
     w = 666666666;
-    L.init(0, 0, w, w); // l = 2/3
+    L.set(0, 0, w, w); // l = 2/3
     *this = L;
     int i = 0;
     for (;;) {
@@ -1474,7 +1442,7 @@ auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpN
     fp::arcsincos(r1, r2, q, fp_arccos_code);
     q = r1 / 3;
     R = R * 2;
-    pi3.init(0, 1, 47197551, 196597746);
+    pi3.set(0, 1, 47197551, 196597746);
     r1 = q;
     r1.cosine();
     r1.neg();
@@ -1509,7 +1477,7 @@ void fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum &r4, FpNum A, FpNum B, F
     C /= A;
     D /= A;
     E /= A;
-    A.init(0, 1, 0, 0);
+    A.set(0, 1, 0, 0);
     if (special_case) {
         FpNum one(0, 1, 0, 0);
         FpNum two(0, 2, 0, 0);
@@ -2648,127 +2616,127 @@ void Parser::boot_fp() {
     L.insert("\\def\\FPe{2.718281828459045235}");
     L.insert(R"(\let\ifFPtest\iftrue)");
     lines.splice_first(L);
-    e_powers[0].init(0, 1, 0, 0);
-    e_powers[1].init(0, 2, 718281828, 459045235);
-    e_powers[2].init(0, 7, 389056098, 930650227);
-    e_powers[3].init(0, 20, 85536923, 187667741);
-    e_powers[4].init(0, 54, 598150033, 144239078);
-    e_powers[5].init(0, 148, 413159102, 576603421);
-    e_powers[6].init(0, 403, 428793492, 735122608);
-    e_powers[7].init(0, 1096, 633158428, 458599264);
-    e_powers[8].init(0, 2980, 957987041, 728274744);
-    e_powers[9].init(0, 8103, 83927575, 384007710);
-    e_powers[10].init(0, 22026, 465794806, 716516958);
-    e_powers[11].init(0, 59874, 141715197, 818455326);
-    e_powers[12].init(0, 162754, 791419003, 920808005);
-    e_powers[13].init(0, 442413, 392008920, 503326103);
-    e_powers[14].init(0, 1202604, 284164776, 777749237);
-    e_powers[15].init(0, 3269017, 372472110, 639301855);
-    e_powers[16].init(0, 8886110, 520507872, 636763024);
-    e_powers[17].init(0, 24154952, 753575298, 214775435);
-    e_powers[18].init(0, 65659969, 137330511, 138786503);
-    e_powers[19].init(0, 178482300, 963187260, 844910034);
-    e_powers[20].init(0, 485165195, 409790277, 969106831);
-    e_powers[21].init(1, 318815734, 483214697, 209998884);
-    e_powers[22].init(3, 584912846, 131591561, 681159946);
-    e_powers[23].init(9, 744803446, 248902600, 34632685);
-    e_powers[24].init(26, 489122129, 843472294, 139162153);
-    e_powers[25].init(72, 4899337, 385872524, 161351466);
-    e_powers[26].init(195, 729609428, 838764269, 776397876);
-    e_powers[27].init(532, 48240601, 798616683, 747304341);
-    e_powers[28].init(1446, 257064291, 475173677, 47422997);
-    e_powers[29].init(3931, 334297144, 42074388, 620580844);
-    e_powers[30].init(10686, 474581524, 462146990, 468650741);
-    e_powers[31].init(29048, 849665247, 425231085, 682111680);
-    e_powers[32].init(78962, 960182680, 695160978, 22635108);
-    e_powers[33].init(214643, 579785916, 64624297, 761531261);
-    e_powers[34].init(583461, 742527454, 881402902, 734610391);
-    e_powers[35].init(1586013, 452313430, 728129644, 625774660);
-    e_powers[36].init(4311231, 547115195, 227113422, 292856925);
-    e_powers[37].init(11719142, 372802611, 308772939, 791190195);
-    e_powers[38].init(31855931, 757113756, 220328671, 701298646);
-    e_powers[39].init(86593400, 423993746, 953606932, 719264934);
-    e_powers[40].init(235385266, 837019985, 407899910, 749034805);
-    e_powers[41].init(639843493, 530054949, 222663403, 515570819);
+    e_powers[0].set(0, 1, 0, 0);
+    e_powers[1].set(0, 2, 718281828, 459045235);
+    e_powers[2].set(0, 7, 389056098, 930650227);
+    e_powers[3].set(0, 20, 85536923, 187667741);
+    e_powers[4].set(0, 54, 598150033, 144239078);
+    e_powers[5].set(0, 148, 413159102, 576603421);
+    e_powers[6].set(0, 403, 428793492, 735122608);
+    e_powers[7].set(0, 1096, 633158428, 458599264);
+    e_powers[8].set(0, 2980, 957987041, 728274744);
+    e_powers[9].set(0, 8103, 83927575, 384007710);
+    e_powers[10].set(0, 22026, 465794806, 716516958);
+    e_powers[11].set(0, 59874, 141715197, 818455326);
+    e_powers[12].set(0, 162754, 791419003, 920808005);
+    e_powers[13].set(0, 442413, 392008920, 503326103);
+    e_powers[14].set(0, 1202604, 284164776, 777749237);
+    e_powers[15].set(0, 3269017, 372472110, 639301855);
+    e_powers[16].set(0, 8886110, 520507872, 636763024);
+    e_powers[17].set(0, 24154952, 753575298, 214775435);
+    e_powers[18].set(0, 65659969, 137330511, 138786503);
+    e_powers[19].set(0, 178482300, 963187260, 844910034);
+    e_powers[20].set(0, 485165195, 409790277, 969106831);
+    e_powers[21].set(1, 318815734, 483214697, 209998884);
+    e_powers[22].set(3, 584912846, 131591561, 681159946);
+    e_powers[23].set(9, 744803446, 248902600, 34632685);
+    e_powers[24].set(26, 489122129, 843472294, 139162153);
+    e_powers[25].set(72, 4899337, 385872524, 161351466);
+    e_powers[26].set(195, 729609428, 838764269, 776397876);
+    e_powers[27].set(532, 48240601, 798616683, 747304341);
+    e_powers[28].set(1446, 257064291, 475173677, 47422997);
+    e_powers[29].set(3931, 334297144, 42074388, 620580844);
+    e_powers[30].set(10686, 474581524, 462146990, 468650741);
+    e_powers[31].set(29048, 849665247, 425231085, 682111680);
+    e_powers[32].set(78962, 960182680, 695160978, 22635108);
+    e_powers[33].set(214643, 579785916, 64624297, 761531261);
+    e_powers[34].set(583461, 742527454, 881402902, 734610391);
+    e_powers[35].set(1586013, 452313430, 728129644, 625774660);
+    e_powers[36].set(4311231, 547115195, 227113422, 292856925);
+    e_powers[37].set(11719142, 372802611, 308772939, 791190195);
+    e_powers[38].set(31855931, 757113756, 220328671, 701298646);
+    e_powers[39].set(86593400, 423993746, 953606932, 719264934);
+    e_powers[40].set(235385266, 837019985, 407899910, 749034805);
+    e_powers[41].set(639843493, 530054949, 222663403, 515570819);
 
-    neg_e_powers[0].init(0, 1, 0, 0);
-    neg_e_powers[1].init(0, 0, 367879441, 171442322);
-    neg_e_powers[2].init(0, 0, 135335283, 236612692);
-    neg_e_powers[3].init(0, 0, 49787068, 367863943);
-    neg_e_powers[4].init(0, 0, 18315638, 888734180);
-    neg_e_powers[5].init(0, 0, 6737946, 999085467);
-    neg_e_powers[6].init(0, 0, 2478752, 176666358);
-    neg_e_powers[7].init(0, 0, 911881, 965554516);
-    neg_e_powers[8].init(0, 0, 335462, 627902512);
-    neg_e_powers[9].init(0, 0, 123409, 804086680);
-    neg_e_powers[10].init(0, 0, 45399, 929762485);
-    neg_e_powers[11].init(0, 0, 16701, 700790246);
-    neg_e_powers[12].init(0, 0, 6144, 212353328);
-    neg_e_powers[13].init(0, 0, 2260, 329406981);
-    neg_e_powers[14].init(0, 0, 831, 528719104);
-    neg_e_powers[15].init(0, 0, 305, 902320502);
-    neg_e_powers[16].init(0, 0, 112, 535174719);
-    neg_e_powers[17].init(0, 0, 41, 399377188);
-    neg_e_powers[18].init(0, 0, 15, 229979745);
-    neg_e_powers[19].init(0, 0, 5, 602796438);
-    neg_e_powers[20].init(0, 0, 2, 61153622);
-    neg_e_powers[21].init(0, 0, 0, 758256043);
-    neg_e_powers[22].init(0, 0, 0, 278946809);
-    neg_e_powers[23].init(0, 0, 0, 102618796);
-    neg_e_powers[24].init(0, 0, 0, 37751345);
-    neg_e_powers[25].init(0, 0, 0, 13887944);
-    neg_e_powers[26].init(0, 0, 0, 5109089);
-    neg_e_powers[27].init(0, 0, 0, 1879529);
-    neg_e_powers[28].init(0, 0, 0, 691440);
-    neg_e_powers[29].init(0, 0, 0, 254367);
-    neg_e_powers[30].init(0, 0, 0, 93576);
-    neg_e_powers[31].init(0, 0, 0, 34425);
-    neg_e_powers[32].init(0, 0, 0, 12664);
-    neg_e_powers[33].init(0, 0, 0, 4659);
-    neg_e_powers[34].init(0, 0, 0, 1714);
-    neg_e_powers[35].init(0, 0, 0, 631);
-    neg_e_powers[36].init(0, 0, 0, 232);
-    neg_e_powers[37].init(0, 0, 0, 85);
-    neg_e_powers[38].init(0, 0, 0, 31);
-    neg_e_powers[39].init(0, 0, 0, 12);
-    neg_e_powers[40].init(0, 0, 0, 4);
-    neg_e_powers[41].init(0, 0, 0, 2);
-    neg_e_powers[42].init(0, 0, 0, 1);
+    neg_e_powers[0].set(0, 1, 0, 0);
+    neg_e_powers[1].set(0, 0, 367879441, 171442322);
+    neg_e_powers[2].set(0, 0, 135335283, 236612692);
+    neg_e_powers[3].set(0, 0, 49787068, 367863943);
+    neg_e_powers[4].set(0, 0, 18315638, 888734180);
+    neg_e_powers[5].set(0, 0, 6737946, 999085467);
+    neg_e_powers[6].set(0, 0, 2478752, 176666358);
+    neg_e_powers[7].set(0, 0, 911881, 965554516);
+    neg_e_powers[8].set(0, 0, 335462, 627902512);
+    neg_e_powers[9].set(0, 0, 123409, 804086680);
+    neg_e_powers[10].set(0, 0, 45399, 929762485);
+    neg_e_powers[11].set(0, 0, 16701, 700790246);
+    neg_e_powers[12].set(0, 0, 6144, 212353328);
+    neg_e_powers[13].set(0, 0, 2260, 329406981);
+    neg_e_powers[14].set(0, 0, 831, 528719104);
+    neg_e_powers[15].set(0, 0, 305, 902320502);
+    neg_e_powers[16].set(0, 0, 112, 535174719);
+    neg_e_powers[17].set(0, 0, 41, 399377188);
+    neg_e_powers[18].set(0, 0, 15, 229979745);
+    neg_e_powers[19].set(0, 0, 5, 602796438);
+    neg_e_powers[20].set(0, 0, 2, 61153622);
+    neg_e_powers[21].set(0, 0, 0, 758256043);
+    neg_e_powers[22].set(0, 0, 0, 278946809);
+    neg_e_powers[23].set(0, 0, 0, 102618796);
+    neg_e_powers[24].set(0, 0, 0, 37751345);
+    neg_e_powers[25].set(0, 0, 0, 13887944);
+    neg_e_powers[26].set(0, 0, 0, 5109089);
+    neg_e_powers[27].set(0, 0, 0, 1879529);
+    neg_e_powers[28].set(0, 0, 0, 691440);
+    neg_e_powers[29].set(0, 0, 0, 254367);
+    neg_e_powers[30].set(0, 0, 0, 93576);
+    neg_e_powers[31].set(0, 0, 0, 34425);
+    neg_e_powers[32].set(0, 0, 0, 12664);
+    neg_e_powers[33].set(0, 0, 0, 4659);
+    neg_e_powers[34].set(0, 0, 0, 1714);
+    neg_e_powers[35].set(0, 0, 0, 631);
+    neg_e_powers[36].set(0, 0, 0, 232);
+    neg_e_powers[37].set(0, 0, 0, 85);
+    neg_e_powers[38].set(0, 0, 0, 31);
+    neg_e_powers[39].set(0, 0, 0, 12);
+    neg_e_powers[40].set(0, 0, 0, 4);
+    neg_e_powers[41].set(0, 0, 0, 2);
+    neg_e_powers[42].set(0, 0, 0, 1);
 
-    log_table[0].init(0, 0, 0, 0);
-    log_table[1].init(0, 0, 693147180, 559945309);
-    log_table[2].init(0, 1, 386294361, 119890618);
-    log_table[3].init(0, 2, 79441541, 679835928);
+    log_table[0].set(0, 0, 0, 0);
+    log_table[1].set(0, 0, 693147180, 559945309);
+    log_table[2].set(0, 1, 386294361, 119890618);
+    log_table[3].set(0, 2, 79441541, 679835928);
 
-    log10_table[0].init(0, 0, 0, 0);
-    log10_table[1].init(0, 2, 302585092, 994045684);
-    log10_table[2].init(0, 4, 605170185, 988091368);
-    log10_table[3].init(0, 6, 907755278, 982137052);
-    log10_table[4].init(0, 9, 210340371, 976182736);
-    log10_table[5].init(0, 11, 512925464, 970228420);
-    log10_table[6].init(0, 13, 815510557, 964274104);
-    log10_table[7].init(0, 16, 118095650, 958319788);
-    log10_table[8].init(0, 18, 420680743, 952365472);
-    log10_table[9].init(0, 20, 723265836, 946411156);
-    log10_table[10].init(0, 23, 25850929, 940456840);
-    log10_table[11].init(0, 25, 328436022, 934502524);
-    log10_table[12].init(0, 27, 631021115, 928548208);
-    log10_table[13].init(0, 29, 933606208, 922593892);
-    log10_table[14].init(0, 32, 236191301, 916639576);
-    log10_table[15].init(0, 34, 538776394, 910685260);
-    log10_table[16].init(0, 36, 841361487, 904730944);
-    log10_table[17].init(0, 39, 143946580, 898776628);
-    log10_table[18].init(0, 41, 446531673, 892822312);
+    log10_table[0].set(0, 0, 0, 0);
+    log10_table[1].set(0, 2, 302585092, 994045684);
+    log10_table[2].set(0, 4, 605170185, 988091368);
+    log10_table[3].set(0, 6, 907755278, 982137052);
+    log10_table[4].set(0, 9, 210340371, 976182736);
+    log10_table[5].set(0, 11, 512925464, 970228420);
+    log10_table[6].set(0, 13, 815510557, 964274104);
+    log10_table[7].set(0, 16, 118095650, 958319788);
+    log10_table[8].set(0, 18, 420680743, 952365472);
+    log10_table[9].set(0, 20, 723265836, 946411156);
+    log10_table[10].set(0, 23, 25850929, 940456840);
+    log10_table[11].set(0, 25, 328436022, 934502524);
+    log10_table[12].set(0, 27, 631021115, 928548208);
+    log10_table[13].set(0, 29, 933606208, 922593892);
+    log10_table[14].set(0, 32, 236191301, 916639576);
+    log10_table[15].set(0, 34, 538776394, 910685260);
+    log10_table[16].set(0, 36, 841361487, 904730944);
+    log10_table[17].set(0, 39, 143946580, 898776628);
+    log10_table[18].set(0, 41, 446531673, 892822312);
 
-    pi_table[0].init(628318530, 717958647, 692528676, 655900577); // 2\pi *10^17
-    pi_table[1].init(0, 0, 785398163, 397448310);                 //  1\pi/4
-    pi_table[2].init(0, 1, 570796326, 794896619);                 //  2\pi/4
-    pi_table[3].init(0, 2, 356194490, 192344929);                 //  3\pi/4
-    pi_table[4].init(0, 3, 141592653, 589793238);                 //  4\pi/4
-    pi_table[5].init(0, 3, 926990816, 987241548);                 //  5\pi/4
-    pi_table[6].init(0, 4, 712388980, 384689858);                 //  6\pi/4
-    pi_table[7].init(0, 5, 497787143, 782138167);                 //  7\pi/4
-    pi_table[8].init(0, 6, 283185307, 179586477);                 //  8\pi/4
+    pi_table[0].set(628318530, 717958647, 692528676, 655900577); // 2\pi *10^17
+    pi_table[1].set(0, 0, 785398163, 397448310);                 //  1\pi/4
+    pi_table[2].set(0, 1, 570796326, 794896619);                 //  2\pi/4
+    pi_table[3].set(0, 2, 356194490, 192344929);                 //  3\pi/4
+    pi_table[4].set(0, 3, 141592653, 589793238);                 //  4\pi/4
+    pi_table[5].set(0, 3, 926990816, 987241548);                 //  5\pi/4
+    pi_table[6].set(0, 4, 712388980, 384689858);                 //  6\pi/4
+    pi_table[7].set(0, 5, 497787143, 782138167);                 //  7\pi/4
+    pi_table[8].set(0, 6, 283185307, 179586477);                 //  8\pi/4
 }
 
 auto CmdChr::token_fp_names() const -> String {
