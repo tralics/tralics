@@ -242,9 +242,6 @@ void FpNum::unsplit_mul4(const Digit *z) {
     data[3] = fp::unsplit_mul(z + 9);
 }
 
-// Adds a 9digit number in the buffer
-void Buffer::push_back9(Digit x) { push_back(fmt::format("{:09d}", x)); }
-
 // Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax
 // In case x=0, we have xmin=xmax
 std::pair<size_t, size_t> FpNum::set_xmax(std::array<Digit, 12> &x) {

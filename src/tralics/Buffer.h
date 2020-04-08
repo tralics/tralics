@@ -152,7 +152,6 @@ public:
     void push_back_substring(String S, size_t n);
     void push_back_substring(const std::string &S, size_t p, size_t n);
     void push_back_unless_punct(char c);
-    void push_back9(unsigned int x);
     void put_at_end(String s);
     auto remove_digits(const std::string &s) -> std::string;
     auto remove_space(const std::string &x) -> std::string;
