@@ -357,7 +357,7 @@ void Parser::fp_parse_error(Token a, Token b) {
 }
 
 void Parser::counter_overflow(Token T, long n, int nmax) {
-    err_buf << bf_reset << "Illegal counter value " << n << " for " << T.tok_to_str() << "\n";
+    err_buf << bf_reset << fmt::format("Illegal counter value {} for {}\n", n, T.tok_to_str());
     if (n <= 0)
         err_buf << "Value must be positive";
     else
@@ -388,7 +388,7 @@ void Parser::missing_flush() {
 
 void Parser::signal_ovf(Token T, String h, long cur, long max) {
     if (h != nullptr) err_buf << bf_reset << h;
-    err_buf << T.tok_to_str() << " wants 0<=N<=" << max << ", with N=" << cur;
+    err_buf << fmt::format("{} wants 0<=N<={}, with N={}", T.tok_to_str(), max, cur);
     signal_error(T, "number too big");
 }
 

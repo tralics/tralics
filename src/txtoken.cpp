@@ -626,7 +626,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
 // Special hack, because we insert the number, not the value
 auto token_ns::string_to_list(Istring s) -> TokenList {
     Buffer &B = buffer_for_log;
-    B << bf_reset << to_signed(s.id); // \todo define <<(size_t)
+    B << bf_reset << std::to_string(s.id);
     return B.str_toks(nlt_space);
 }
 
@@ -652,10 +652,10 @@ void Buffer::push_back(const Macro &x) {
     *this << x[0];
     auto K = x.nbargs;
     if (x.type != dt_optional) {
-        for (size_t i = 0; i < K; i++) { *this << '#' << to_signed(i) + 1 << x[i + 1]; }
+        for (size_t i = 0; i < K; i++) { *this << fmt::format("#{}", i + 1) << x[i + 1]; }
     } else {
         *this << x[1];
-        for (size_t i = 1; i < K; i++) { *this << '#' << to_signed(i) + 1; }
+        for (size_t i = 1; i < K; i++) { *this << fmt::format("#{}", i + 1); }
     }
     if (wptr > 0 && at(wptr - 1) == '{') at(wptr - 1) = '#';
     *this << "->" << x.body;

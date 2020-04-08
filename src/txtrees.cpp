@@ -571,10 +571,10 @@ auto date_ns::check_date(long y, size_t m, long d) -> bool {
     if (Bad == nullptr) return true;
     local_buf << bf_reset << "Date error: ";
     if (Bad[0] == '.')
-        local_buf << "day>" << ml;
+        local_buf << fmt::format("day>{}", ml);
     else
         local_buf << Bad;
-    local_buf << " " << y << '/' << m << '/' << d;
+    local_buf << fmt::format(" {}/{}/{}", y, m, d);
     the_parser.parse_error(the_parser.err_tok, local_buf.to_string());
     return false;
 }

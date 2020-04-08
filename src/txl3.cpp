@@ -151,12 +151,12 @@ void Parser::E_prg_return(int c) {
 // s is true when n is given by specification, false when by value
 auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
     if (n < 0) {
-        err_buf << bf_reset << "Negative number of arguments " << n << " for " << t;
+        err_buf << bf_reset << fmt::format("Negative number of arguments {} for ", n) << t;
         signal_error(err_tok, "bad args");
         n = 0;
     }
     if (n > 9) {
-        err_buf << bf_reset << "Too many arguments " << n << " for " << t;
+        err_buf << bf_reset << fmt::format("Too many arguments {} for ", n) << t;
         if (s) err_buf << " (wrong argument specification)";
         signal_error(err_tok, "bad args");
         n = 0;
@@ -803,7 +803,7 @@ void Parser::L3_set_num_code(int c) {
         Buffer &B = local_buffer;
         if (tracing_commands()) the_log << lg_start << T << "->" << m << "." << lg_end;
         B.reset();
-        B.push_back(v);
+        B.push_back(std::to_string(v));
         TokenList res = B.str_toks(nlt_space);
         back_input(res);
     }

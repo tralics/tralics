@@ -2032,7 +2032,7 @@ void Xml::bordermatrix() {
     auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
-    B << to_signed(n);
+    B << std::to_string(n);
     auto attval = Istring(B);
     F           = tree[1];
     if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {

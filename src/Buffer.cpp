@@ -139,9 +139,6 @@ void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
     at(wptr) = 0;
 }
 
-void Buffer::push_back(long n) { push_back(fmt::format("{}", n)); }
-void Buffer::push_back(size_t n) { push_back(fmt::format("{}", n)); }
-
 // In case of error, we add the current line number as attribute
 // via this function
 auto Parser::cur_line_to_istring() const -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
@@ -560,8 +557,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
         push_back('-');
         s = -s;
     }
-    push_back(s / unity);
-    push_back('.');
+    push_back(fmt::format("{}.", s / unity));
     s         = 10 * (s % unity) + 5;
     int delta = 10;
     for (;;) {
@@ -616,7 +612,7 @@ void Buffer::pt_to_mu() {
 // The \relax is a bit strange.
 void Buffer::push_back(const SthInternal &x) {
     switch (x.get_type()) {
-    case it_int: push_back(x.get_int_val()); break;
+    case it_int: push_back(fmt::format("{}", x.get_int_val())); break;
     case it_dimen: push_back(ScaledInt(x.get_int_val()), glue_spec_pt); break;
     case it_glue:
         push_back(x.get_glue_val());

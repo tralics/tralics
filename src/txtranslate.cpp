@@ -2055,7 +2055,7 @@ auto Parser::read_elt_id(Token T) -> size_t {
     auto upper = the_stack.get_xid().value;
     auto n     = scan_special_int_d(T, cur);
     if (n > 0 && n <= upper) return to_unsigned(n);
-    err_buf << bf_reset << "Bad xml id replaced by 0: " << n;
+    err_buf << bf_reset << fmt::format("Bad xml id replaced by 0: {}", n);
     signal_error(err_tok, "number too big");
     return 0;
 }

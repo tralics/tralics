@@ -1482,7 +1482,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
     case it_ident: // case of a font name
     case it_tok:   // case of a token list
         return cur_val.get_token_val();
-    case it_int: B.push_back(cur_val.get_int_val()); break;
+    case it_int: B.push_back(std::to_string(cur_val.get_int_val())); break;
     case it_dimen: B.push_back(ScaledInt(cur_val.get_int_val()), glue_spec_pt); break;
     case it_glue: B.push_back(cur_val.get_glue_val()); break;
     case it_mu:
@@ -2149,7 +2149,7 @@ void Parser::E_convert() {
     case number_code:
     case at_arabic_code:
         n = scan_int(T);
-        B.push_back(n);
+        B.push_back(std::to_string(n));
         break;
     case twodigits_code: {
         TokenList L = read_arg();
@@ -2157,7 +2157,7 @@ void Parser::E_convert() {
     } // shit
         n = scan_int(T);
         if (n < 10) B.push_back('0');
-        B.push_back(n);
+        B.push_back(std::to_string(n));
         break;
     case romannumeral_code:
         n = scan_int(T);

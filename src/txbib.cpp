@@ -1670,7 +1670,7 @@ void BibEntry::numeric_label(long i) {
     Buffer &B = biblio_buf1;
     B << bf_reset << '[' << label << ']';
     aux_label = B.to_string();
-    B << bf_reset << i;
+    B << bf_reset << std::to_string(i);
     label = B.to_string();
 }
 
@@ -2086,11 +2086,7 @@ void BibEntry::presort(long serial) {
     B << label << lab2 << "    " << y << "    ";
     B.special_title(all_fields[fp_title]);
     B.lowercase();
-    if (serial < 10) B << '0';
-    if (serial < 100) B << '0';
-    if (serial < 1000) B << '0';
-    if (serial < 10000) B << '0';
-    B << serial;
+    B << fmt::format("{:05d}", serial);
     sort_label = B.to_string();
 }
 

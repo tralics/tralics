@@ -13,6 +13,7 @@
 #include "tralics/Saver.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 namespace {
     NewArray new_array_object;
@@ -602,7 +603,7 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     read_until(hash_table.relax_token);
     if (1 <= cline_first && cline_first <= cline_last) return false;
     errbuf.reset();
-    errbuf << "Bad range in " << T << ": " << cline_first << "-" << cline_last;
+    errbuf << "Bad range in " << T << fmt::format(": {}-{}", cline_first, cline_last);
     return true;
 }
 
@@ -737,7 +738,7 @@ auto Xml::try_cline_again(bool action) -> bool {
 void Xid::add_span(long n) const {
     if (n == 1) return;
     errbuf.reset();
-    errbuf << n;
+    errbuf << std::to_string(n);
     add_attribute(the_names[np_cols], Istring(errbuf));
 }
 

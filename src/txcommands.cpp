@@ -1225,7 +1225,7 @@ void Parser::translate03() {
             auto    k = eqtb_int_table[42 + count_reg_offset].val;
             Buffer &b = mac_buffer;
             b.reset();
-            b << k;
+            b << std::to_string(k);
             the_stack.add_att_to_cur(Istring("depth"), Istring(b));
         }
         the_stack.pop(np);

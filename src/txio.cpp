@@ -16,6 +16,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include <filesystem>
+#include <fmt/format.h>
 #include <sstream>
 
 namespace {
@@ -409,13 +410,13 @@ void Clines::convert_line(size_t wc) {
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
-        thebuffer << bf_reset << "Illegal encoding " << enc;
+        thebuffer << bf_reset << fmt::format("Illegal encoding {}", enc);
         the_parser.parse_error(thebuffer.c_str());
         return;
     }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
-        thebuffer << bf_reset << "Illegal encoding position " << pos;
+        thebuffer << bf_reset << fmt::format("Illegal encoding position {}", pos);
         the_parser.parse_error(thebuffer.c_str());
         return;
     }

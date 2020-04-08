@@ -551,10 +551,7 @@ void Parser::fp_e_pascal() {
     if (!pascal_table_created) fp::create_pascal_table();
     auto j = scan_braced_int(fp_name);
     if (j < 0 || j >= 64) {
-        tkbuf.reset();
-        tkbuf << "out of bound ";
-        tkbuf << j;
-        tkbuf << " max value is 63";
+        tkbuf << bf_reset << fmt::format("out of bound {} max value is 63", j);
         parse_error(tkbuf.c_str());
         return;
     }
@@ -592,9 +589,7 @@ auto fp::round_n(Digit x, size_t n) -> Digit {
 void FpNum::truncate(long n) {
     if (n >= 18) return;
     if (n < 0) {
-        tkbuf.reset();
-        tkbuf << "Negative number ";
-        tkbuf << n << " in truncate";
+        tkbuf << bf_reset << fmt::format("Negative number {} in truncate", n);
         the_parser.parse_error(tkbuf.c_str());
         return;
     }
