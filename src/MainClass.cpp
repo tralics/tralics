@@ -210,15 +210,9 @@ namespace {
         exit(v);
     }
 
-    /// Returns true if prefix is the path to the conf_path \todo std::filesystem
-    auto try_conf(const std::string &prefix) -> bool {
-        if (prefix.empty()) return false;
-        Buffer b;
-        b << prefix << bf_optslash << "book.clt";
-        return tralics_ns::file_exists(b.to_string());
-    }
+    auto try_conf(const std::filesystem::path &dir) -> bool { return tralics_ns::file_exists(dir / "book.clt"); }
 
-    /// Locate the config dir, using a few sources
+    /// Locate the config dir, using a few sources \todo do it better
     void find_conf_path() {
         if (try_conf(conf_path[0])) return;
         String S = "/usr/share/tralics";

@@ -2,8 +2,8 @@
 #include "txinline.h"
 #include "txparser.h"
 
-std::vector<std::string> conf_path;
-std::vector<std::string> input_path;
+std::vector<std::filesystem::path> conf_path;
+std::vector<std::string>           input_path;
 
 std::string file_name;
 std::string all_themes;
@@ -25,11 +25,10 @@ std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
 void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
 
-auto main_ns::search_in_confdir(const std::string &s) -> bool {
-    auto n = conf_path.size();
-    for (auto i = n; i != 0; i--) {
+auto main_ns::search_in_confdir(const std::string &s) -> bool { // \todo return std::optional<path>
+    for (auto i = conf_path.size(); i != 0; i--) {
         main_ns::path_buffer << bf_reset << conf_path[i - 1] << bf_optslash << s;
-        if (tralics_ns::file_exists(main_ns::path_buffer.to_string())) return true;
+        if (tralics_ns::file_exists(conf_path[i - 1] / s)) return true;
     }
     return false;
 }
