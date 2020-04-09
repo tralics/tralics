@@ -1278,10 +1278,10 @@ void MathElt::cv_noMLt() {
         cv_noMLt_list();
         return;
     case relax_cmd: {
-        auto   T = Token(get_font());
-        auto   x = T.hash_loc();
-        String s = the_parser.hash_table[x];
-        mathml_buffer.push_back_math_tag(s, pbm_empty);
+        auto T = Token(get_font());
+        auto x = T.hash_loc();
+        auto s = *the_parser.hash_table[x];
+        mathml_buffer.push_back_math_tag(s.c_str(), pbm_empty);
         return;
     }
     case hspace_cmd: {

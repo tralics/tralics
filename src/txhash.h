@@ -65,10 +65,10 @@ public:
     std::array<Equivalent, eqtb_size> eqtb;
 
 private:
-    std::array<String, hash_size> Text{};    // the strings
-    std::array<size_t, hash_size> Next{};    // points to next
-    Buffer                        B;         // internal buffer
-    size_t                        hash_used; // all places above this one are used
+    std::array<std::optional<std::string>, hash_size> Text;      // the strings \todo well this should be a standard hash table instead
+    std::array<size_t, hash_size>                     Next{};    // points to next
+    Buffer                                            B;         // internal buffer
+    size_t                                            hash_used; // all places above this one are used
 
 public:
     int hash_bad{}; // number of items not at hash position

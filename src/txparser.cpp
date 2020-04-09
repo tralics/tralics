@@ -1968,7 +1968,7 @@ void Parser::E_counter(int c) {
         L.push_back(hash_table.let_token);
         L.push_back(hash_table.elt_token);
         L.push_back(hash_table.killcounter_token);
-        group_buffer << bf_reset << "cl@" << (hash_table[t.hash_loc()] + 2);
+        group_buffer << bf_reset << "cl@" << (hash_table[t.hash_loc()]->substr(2));
         t = hash_table.locate(group_buffer);
         //  L.push_back(hash_table.OB_token);
         L.push_back(t);
@@ -2025,15 +2025,14 @@ void Parser::M_newif() {
         parse_error(err_tok, "Illegal argument of \\newif: ", T, "", "bad newif");
         return;
     }
-    String S = hash_table[T.hash_loc()];
+    auto S = *hash_table[T.hash_loc()];
     if (S[0] != 'i' || S[1] != 'f' || S[2] == 0) {
         parse_error(err_tok, "token list \\newif does not start with if");
         return;
     }
-    S = S + 2;
     eq_define(T.eqtb_loc(), CmdChr(if_test_cmd, if_false_code), false);
-    M_newif_aux(T, S, true);
-    M_newif_aux(T, S, false);
+    M_newif_aux(T, S.substr(2), true);
+    M_newif_aux(T, S.substr(2), false);
 }
 
 // If you say \newif\iffoo, this is the same as

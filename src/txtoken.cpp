@@ -181,7 +181,7 @@ auto Hashtab::find_empty(String s) -> size_t {
             log_and_tty << "hash table full\n" << lg_fatal;
             abort();
         }
-        if (Text[hash_used] == nullptr) break;
+        if (!Text[hash_used]) break;
     }
     Text[hash_used] = s;
     hash_bad++;
@@ -202,7 +202,7 @@ auto Hashtab::find_empty(String s) -> size_t {
 auto Hashtab::hash_find(const Buffer &b, String name) -> size_t {
     auto p = b.hashcode(hash_prime);
     for (;;) {
-        if ((Text[p] != nullptr) && (b == Text[p])) return p;
+        if (Text[p] && (b.to_string() == *Text[p])) return p;
         if (Next[p] != 0)
             p = Next[p];
         else
@@ -216,7 +216,7 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> size_t {
 auto Hashtab::hash_find() -> size_t {
     auto p = B.hashcode(hash_prime);
     for (;;) {
-        if ((Text[p] != nullptr) && (B == Text[p])) return p;
+        if (Text[p] && (B.to_string() == *Text[p])) return p;
         if (Next[p] != 0)
             p = Next[p];
         else
@@ -230,7 +230,7 @@ auto Hashtab::hash_find() -> size_t {
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
 auto Hashtab::find_aux(size_t p, String name) -> size_t {
-    if (Text[p] != nullptr) {
+    if (Text[p]) {
         auto q  = find_empty(name);
         Next[p] = q;
         return q;
@@ -246,7 +246,7 @@ auto Hashtab::find_aux(size_t p, String name) -> size_t {
 auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
     hash_used--;
     auto p = hash_used;
-    if ((Text[p] != nullptr) || p < hash_prime) {
+    if (Text[p] || (p < hash_prime)) {
         log_and_tty << "Size of hash table is " << hash_size << "\n";
         log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
         log_and_tty << "Current position is " << to_signed(p) << "\n";
@@ -310,7 +310,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
         else {
             auto p = b.hashcode(hash_prime);
             for (;;) {
-                if ((Text[p] != nullptr) && b == Text[p]) break;
+                if (Text[p] && (b.to_string() == *Text[p])) break;
                 if (Next[p] != 0)
                     p = Next[p];
                 else

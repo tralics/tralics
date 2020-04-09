@@ -26,7 +26,6 @@ public:
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }         ///< Is the read pointer at the end?
     [[nodiscard]] auto c_str(size_t k = 0) const -> String;                   ///< Buffer contents as a char*
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
-    [[nodiscard]] auto convert_to_str() const -> String;                      ///< Make a copy of the contents as a new char*
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_log_encoding() const -> std::string;        ///< Convert to logging encoding
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
@@ -52,6 +51,8 @@ public:
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string
+
+    [[nodiscard, deprecated]] auto convert_to_str() const -> String; ///< Make a copy of the contents as a new char*
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr

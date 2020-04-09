@@ -234,7 +234,7 @@ auto Parser::T_xmllatex() -> std::string {
         if (x.active_or_single())
             mac_buffer.push_back(x.char_val());
         else if (x.is_in_hash())
-            mac_buffer.push_back(hash_table[x.hash_loc()]);
+            mac_buffer.push_back(*hash_table[x.hash_loc()]);
         // else token is bad or null
     }
     if (tracing_commands()) the_log << lg_startbrace << "Rawxml: " << mac_buffer << lg_endbrace;
@@ -2248,7 +2248,7 @@ void Parser::T_ifdefinable() {
         bad = true;
     else {
         if (C.is_in_hash()) {
-            std::string s = hash_table[C.hash_loc()];
+            auto s = *hash_table[C.hash_loc()];
             if (s[0] == 'e' && s[1] == 'n' && s[2] == 'd') bad = true;
         }
     }
