@@ -23,10 +23,10 @@ class LabelInfo;
 // which can be ascii, utf8 or latin1 (XML syntax)
 
 struct StrHash_record {
-    String     name{nullptr};
-    String     value{nullptr};
-    LabelInfo *Labinfo{nullptr};
-    size_t     next{0};
+    String      name{nullptr};
+    std::string value;
+    LabelInfo * Labinfo{nullptr};
+    size_t      next{0};
 };
 
 class StrHash : public std::vector<StrHash_record> {
@@ -38,7 +38,7 @@ public:
         at(2) = {" ", " ", nullptr, 0};
     }
 
-    [[nodiscard]] auto p_str(size_t k) const -> String { return at(k).value; }
+    [[nodiscard]] auto p_str(size_t k) const -> String { return at(k).value.c_str(); } // \todo remove c_str
 
     auto        hash_find(const std::string &s) -> size_t;
     auto        find(String s) -> size_t;

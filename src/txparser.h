@@ -949,7 +949,7 @@ private:
     void        Tat_pers_ra();
     void        testoptd(std::string s);
     void        M_extension(int cc);
-    auto        string_to_write(long chan) -> String;
+    auto        string_to_write(long chan) -> std::string;
     void        tipa_acutemacron();
     void        tipa_brevemacro();
     void        tipa_circumdot();

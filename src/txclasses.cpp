@@ -941,7 +941,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         the_stack.add_last(res);
     }
     if (what == mt_none) return;
-    String res = B.convert_to_log_encoding();
+    auto res = B.convert_to_log_encoding();
     if (what == mt_error)
         parse_error(err_tok, res, "uerror");
     else if (what == mt_warning)

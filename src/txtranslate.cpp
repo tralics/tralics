@@ -523,7 +523,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     the_stack.set_v_mode();
     static int first_print_level = 10;
     if (module) first_print_level = 0;
-    String YY = current_head.convert_to_log_encoding();
+    auto YY = current_head.convert_to_log_encoding();
     if (y <= first_print_level) {
         first_print_level = y;
         std::cout << "Translating section command " << Y << ": " << YY << ".\n";
@@ -2136,7 +2136,7 @@ void Parser::T_specimp(int c) {
         exit(0);
     case sleep_code: txsleep(static_cast<unsigned>(scan_int(cur_tok))); return;
     case prompt_code: {
-        std::string S = string_to_write(write18_slot + 1);
+        auto S = string_to_write(write18_slot + 1);
         readline_newprompt(S);
         return;
     }

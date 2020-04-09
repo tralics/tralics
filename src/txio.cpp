@@ -23,7 +23,6 @@ namespace {
     Buffer                thebuffer;
     bool                  log_is_open = false; // says if stranscript file is open for I/O tracing
     Buffer                utf8_out;            // Holds utf8 outbuffer
-    Buffer                utf8_in;             // Holds utf8 inbuffer
     Converter             the_converter;
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
@@ -365,8 +364,7 @@ auto Buffer::single_character() const -> codepoint {
 // This converts a line in UTF8 format. Returns true if no conversion needed
 // Otherwise, the result is in utf8_out.
 auto Buffer::convert_line0(size_t wc) -> bool {
-    Buffer &res = utf8_out;
-    res.reset();
+    utf8_out.reset();
     ptr = 0;
     codepoint c;
     for (;;) {
@@ -380,7 +378,7 @@ auto Buffer::convert_line0(size_t wc) -> bool {
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
         }
-        if (c.non_null()) res.push_back(c);
+        if (c.non_null()) utf8_out.push_back(c);
         if (at_eol()) break;
     }
     return the_converter.line_is_ascii;
@@ -393,18 +391,18 @@ void Buffer::convert_line(int l, size_t wc) {
     if (convert_line0(wc)) return;
     the_converter.lines_converted++;
     reset();
-    push_back(utf8_out.c_str());
+    push_back(utf8_out);
 }
 
 // This converts a line of a file
 void Clines::convert_line(size_t wc) {
-    utf8_in.reset();
-    utf8_in.push_back(chars);
+    Buffer B;
+    B.push_back(chars);
     converted = true;
     the_converter.start_convert(number);
-    if (utf8_in.convert_line0(wc)) return;
+    if (B.convert_line0(wc)) return;
     the_converter.lines_converted++;
-    chars = utf8_out.c_str();
+    chars = utf8_out.to_string();
 }
 
 // Why is v limited to 16bit chars?
@@ -803,25 +801,21 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
 }
 
 // Converts the buffer to the output encoding
-auto Buffer::convert_to_out_encoding() const -> String {
+auto Buffer::convert_to_out_encoding() const -> std::string {
     auto T = the_main->output_encoding;
-    if (T == en_boot || T == en_utf8 || is_all_ascii()) return convert_to_str();
+    if (T == en_boot || T == en_utf8 || is_all_ascii()) return to_string(); // \todo use std::string
     return convert_to_latin1(T == en_latin);
 }
 
 // Convert to latin 1 or ASCII
-auto Buffer::convert_to_latin1(bool nonascii) const -> String {
-    Buffer &I = utf8_in;
-    Buffer &O = utf8_out;
-    I.reset();
-    I.push_back(data());
+auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
+    Buffer B; // \todo do it without temporary buffer
+    B.push_back(data());
+    Buffer O;
     the_converter.global_error = false;
-    O.reset();
-    I.ptr = 0;
-    codepoint c;
     for (;;) {
-        c = I.next_utf8_char();
-        if (c.is_null() && I.at_eol()) break;
+        codepoint c = B.next_utf8_char();
+        if (c.is_null() && B.at_eol()) break;
         if (c.is_null()) continue;
         if (c.is_ascii())
             O.push_back(static_cast<char>(c.value));
@@ -830,30 +824,28 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> String {
         else
             O.push_back_ent(c);
     }
-    return O.convert_to_str();
+    return O.to_string();
 }
 
-auto Buffer::convert_to_log_encoding() const -> String {
+auto Buffer::convert_to_log_encoding() const -> std::string {
     output_encoding_type T = the_main->log_encoding;
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();
-    Buffer &I = utf8_in;
-    I.reset();
-    I.push_back(data());
+    Buffer B; // \todo do it without temporary buffer
+    B.push_back(data());
     the_converter.global_error = false;
-    I.ptr                      = 0;
-    Buffer &O                  = utf8_out;
-    O.reset();
+    B.ptr                      = 0;
+    utf8_out.reset();
     for (;;) {
-        codepoint c = I.next_utf8_char();
+        codepoint c = B.next_utf8_char();
         if (c == 0) {
-            if (I.at_eol()) break;
-            O << "<null>";
+            if (B.at_eol()) break;
+            utf8_out << "<null>";
         } else if (c == '\r')
-            O << "^^M";
+            utf8_out << "^^M";
         else
-            O.out_log(c, T);
+            utf8_out.out_log(c, T);
     }
-    return O.c_str();
+    return utf8_out.c_str();
 }
 
 void Buffer::extract_chars(vector<codepoint> &V) {

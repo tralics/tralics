@@ -88,13 +88,13 @@ void TexOutStream::open(size_t chan, const std::string &file_name) {
 // A new line is added, except if chan is 18 or 19
 // Since version 2.15.4, \message print a newline
 // In the case of \write18, the string is printed on the log file
-auto Parser::string_to_write(long chan) -> String {
+auto Parser::string_to_write(long chan) -> std::string {
     TokenList L = scan_general_text();
     read_toks_edef(L);
     Buffer &B = local_buf;
     B << bf_reset << L;
     if (chan < write18_slot) B << "\n";
-    String res = B.convert_to_log_encoding();
+    auto res = B.convert_to_log_encoding();
     if (chan == write18_slot) the_log << lg_start << "\\write18=" << res << lg_end;
     return res;
 }
@@ -127,9 +127,9 @@ void Parser::M_extension(int cc) {
     } else if (cc == closeout_code)
         tex_out_stream.close(uchan);
     else { // write to uchan
-        String s = string_to_write(chan);
+        auto s = string_to_write(chan);
         if (uchan == write18_slot)
-            system(s);
+            system(s.c_str());
         else if (tex_out_stream.is_open(uchan))
             tex_out_stream.write(uchan, s);
         else if (uchan == negative_out_slot)

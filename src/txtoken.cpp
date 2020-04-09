@@ -700,7 +700,7 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
         p = at(p).next;
     }
     String name  = (new std::string(s))->c_str();
-    String value = Buffer(s).convert_to_out_encoding();
+    auto   value = Buffer(s).convert_to_out_encoding();
     if (at(p).name == nullptr) {
         the_parser.my_stats.one_more_sh_used();
         at(p).name  = name;
