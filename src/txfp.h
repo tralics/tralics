@@ -83,7 +83,4 @@ public:
     void trigo_xy(int x);
     void truncate(long n);
     void unsplit_mul4(const Digit *z);
-
-    static void                      prop_carry(std::array<Digit, 24> &z);
-    static std::pair<size_t, size_t> set_xmax(std::array<Digit, 12> &x);
 };

@@ -33,6 +33,35 @@ namespace {
     bool                            pascal_table_created = false;
 
     constexpr std::array<unsigned, 10> power_table{1, 10, 100, 1'000, 10'000, 100'000, 1'000'000, 10'000'000, 100'000'000, 1'000'000'000};
+
+    // Propagates the carry for a table of size 24 of 1000-based numbers
+    void prop_carry(std::array<Digit, 24> &z) {
+        Digit carry = 0;
+        for (size_t k = 23; k > 0; --k) {
+            Digit u = carry + z[k];
+            z[k]    = u % 1000;
+            carry   = u / 1000;
+        }
+        z[0] = carry;
+    }
+
+    // Minimum span outside which x is zero ({0,0} if x=0)
+    auto set_xmax(const std::array<Digit, 12> &x) -> std::pair<size_t, size_t> {
+        size_t xmin = 0, xmax = 0;
+        for (size_t M = 12; M > 0; --M) {
+            if (x[M - 1] != 0) {
+                xmax = M;
+                break;
+            }
+        }
+        for (size_t m = 0; m < xmax; ++m) {
+            if (x[m] != 0) {
+                xmin = m;
+                break;
+            }
+        }
+        return {xmin, xmax};
+    }
 } // namespace
 
 namespace fp {
@@ -240,36 +269,6 @@ void FpNum::unsplit_mul4(const Digit *z) {
     data[1] = fp::unsplit_mul(z + 3);
     data[2] = fp::unsplit_mul(z + 6);
     data[3] = fp::unsplit_mul(z + 9);
-}
-
-// Set xmin and xmax, so that x[i] is zero, unless xmin <= i < xmax
-// In case x=0, we have xmin=xmax
-std::pair<size_t, size_t> FpNum::set_xmax(std::array<Digit, 12> &x) {
-    size_t xmin = 0, xmax = 0;
-    for (size_t M = 12; M > 0; --M) {
-        if (x[M - 1] != 0) {
-            xmax = M;
-            break;
-        }
-    }
-    for (size_t m = 0; m < xmax; ++m) {
-        if (x[m] != 0) {
-            xmin = m;
-            break;
-        }
-    }
-    return {xmin, xmax};
-}
-
-// Propagates the carry for a table of size 24 of 1000-based numbers
-void FpNum::prop_carry(std::array<Digit, 24> &z) {
-    Digit carry = 0;
-    for (size_t k = 23; k > 0; --k) {
-        Digit u = carry + z[k];
-        z[k]    = u % 1000;
-        carry   = u / 1000;
-    }
-    z[0] = carry;
 }
 
 // Computes the product XY. Both numbers are considered as a 12B number
