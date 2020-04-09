@@ -172,7 +172,7 @@ auto Token::no_case_letter(char x) const -> bool {
 // Finds an empty slot in the hash table; fills it with name s.
 // Return value is hash_used
 // The string s must be a permanent string
-auto Hashtab::find_empty(std::string s) -> size_t {
+auto Hashtab::find_empty(const std::string &s) -> size_t {
     for (;;) {
         hash_used--;
         if (hash_used <= 0) {
@@ -220,7 +220,7 @@ auto Hashtab::hash_find() -> size_t {
 // If Text[p] is empty, then p is not Next[q] so p is the hash code of s
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
-auto Hashtab::find_aux(size_t p, std::string name) -> size_t {
+auto Hashtab::find_aux(size_t p, const std::string &name) -> size_t {
     if (Text[p]) {
         auto q  = find_empty(name);
         Next[p] = q;
@@ -234,7 +234,7 @@ auto Hashtab::find_aux(size_t p, std::string name) -> size_t {
 // Defines the command named a, but hash_find will not find it.
 // The string a must be a permanent string
 // This must be used at bootstrap code.
-auto Hashtab::nohash_primitive(std::string a, CmdChr b) -> Token {
+auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
     hash_used--;
     auto p = hash_used;
     if (Text[p] || (p < hash_prime)) {

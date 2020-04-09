@@ -83,12 +83,12 @@ public:
     auto hash_find(const Buffer &b, String name) -> size_t;
     auto hash_find() -> size_t;
     auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
-    auto nohash_primitive(std::string a, CmdChr b) -> Token;
+    auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     void eval_let(String a, String b);
     auto eval_letv(String a, String b) -> Token;
     void eval_let_local(String a, String b);
-    auto find_empty(std::string s) -> size_t; // find an empty slot
-    auto find_aux(size_t p, std::string name) -> size_t;
+    auto find_empty(const std::string &s) -> size_t; // find an empty slot
+    auto find_aux(size_t p, const std::string &name) -> size_t;
     auto operator[](size_t k) const { return Text[k]; }
     void dump();
     void boot_fancyhdr();
