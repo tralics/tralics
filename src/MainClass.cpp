@@ -753,8 +753,8 @@ auto MainClass::find_config_file() -> bool {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
         if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B.to_string());
-        if (!B.is_at_end(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
-        return main_ns::search_in_confdir(user_config_file);
+        if (!B.is_at_end(".tcf")) return static_cast<bool>(main_ns::search_in_confdir(user_config_file + ".tcf"));
+        return static_cast<bool>(main_ns::search_in_confdir(user_config_file));
     }
     // If interactive, read config only if given as parameter
     if (interactive_math) return false;

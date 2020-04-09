@@ -1202,7 +1202,7 @@ auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     if (file_exists(main_ns::path_buffer.to_string())) return true;
     if (!retry) return false;
     if (s.empty() || s[0] == '.' || s[0] == '/') return false;
-    return main_ns::search_in_confdir(s);
+    return static_cast<bool>(main_ns::search_in_confdir(s));
 }
 
 auto tralics_ns::find_in_path(const std::string &s) -> bool {

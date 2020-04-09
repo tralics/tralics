@@ -521,20 +521,11 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
             else
                 push_back_real_utf8(c);
         } else if (T.is_in_hash()) {
-            auto s  = *the_parser.hash_table[T.hash_loc()];
-            auto n  = s.size();
-            bool ok = true;
-            for (size_t i = 0; i < n; i++) { // \todo none_of
-                auto c = s[i];
-                if (c == '<' || c == '>' || c == '&' || c < 32) {
-                    ok = false;
-                    break;
-                }
-            }
-            if (ok)
+            auto s = *the_parser.hash_table[T.hash_loc()];
+            if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; }))
                 push_back(s);
             else
-                for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+                for (auto c : s) push_back_xml_char(uchar(c));
         } else
             push_back("csname\\endcsname");
     }

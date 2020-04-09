@@ -25,12 +25,13 @@ std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
 void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
 
-auto main_ns::search_in_confdir(const std::string &s) -> bool { // \todo return std::optional<path>
+auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {
-        main_ns::path_buffer << bf_reset << conf_path[i - 1] << bf_optslash << s;
-        if (tralics_ns::file_exists(conf_path[i - 1] / s)) return true;
+        auto f = conf_path[i - 1] / s;
+        main_ns::path_buffer << bf_reset << f; // \todo remove this
+        if (tralics_ns::file_exists(f)) return f;
     }
-    return false;
+    return {};
 }
 
 auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d) -> bool {
