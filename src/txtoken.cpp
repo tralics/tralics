@@ -172,7 +172,7 @@ auto Token::no_case_letter(char x) const -> bool {
 // Finds an empty slot in the hash table; fills it with name s.
 // Return value is hash_used
 // The string s must be a permanent string
-auto Hashtab::find_empty(String s) -> size_t {
+auto Hashtab::find_empty(std::string s) -> size_t {
     for (;;) {
         hash_used--;
         if (hash_used <= 0) {
@@ -188,14 +188,6 @@ auto Hashtab::find_empty(String s) -> size_t {
     return hash_used;
 }
 
-// unused, kept for debug
-// void Hashtab::dump()
-// {
-//   for(int i=0;i<hash_size;i++) {
-//     if(Text[i])std::cout<< i << " " << Text[i] << "\n";
-//   }
-// }
-
 // Returns the hash location of the name in the buffer.
 // If a new slot has to be created, uses the string name, if not empty.
 // The string name must be a permanent string
@@ -208,8 +200,7 @@ auto Hashtab::hash_find(const Buffer &b, String name) -> size_t {
         else
             break;
     }
-    if (name == nullptr) name = b.convert_to_str();
-    return find_aux(p, name);
+    return find_aux(p, (name == nullptr) ? b.to_string() : name);
 }
 
 // Finds the object in the buffer B.
@@ -222,14 +213,14 @@ auto Hashtab::hash_find() -> size_t {
         else
             break;
     }
-    return find_aux(p, B.convert_to_str());
+    return find_aux(p, B.to_string());
 }
 
 // This inserts name in the hash table.
 // If Text[p] is empty, then p is not Next[q] so p is the hash code of s
 // non empty, use this position. Otherwise find an empty position,
 // and set Next[p] to this position.
-auto Hashtab::find_aux(size_t p, String name) -> size_t {
+auto Hashtab::find_aux(size_t p, std::string name) -> size_t {
     if (Text[p]) {
         auto q  = find_empty(name);
         Next[p] = q;
@@ -243,7 +234,7 @@ auto Hashtab::find_aux(size_t p, String name) -> size_t {
 // Defines the command named a, but hash_find will not find it.
 // The string a must be a permanent string
 // This must be used at bootstrap code.
-auto Hashtab::nohash_primitive(String a, CmdChr b) -> Token {
+auto Hashtab::nohash_primitive(std::string a, CmdChr b) -> Token {
     hash_used--;
     auto p = hash_used;
     if (Text[p] || (p < hash_prime)) {

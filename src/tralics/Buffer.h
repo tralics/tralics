@@ -52,8 +52,6 @@ public:
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string
 
-    [[nodiscard, deprecated]] auto convert_to_str() const -> String; ///< Make a copy of the contents as a new char*
-
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)

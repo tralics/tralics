@@ -112,13 +112,6 @@ void Buffer::alloc(size_t n) {
     at(wptr) = 0;
 }
 
-auto Buffer::convert_to_str() const -> String {
-    the_parser.my_stats.one_more_string(wptr + 1);
-    char *aux = new char[wptr + 1];
-    memcpy(aux, data(), wptr + 1);
-    return aux;
-}
-
 void Buffer::push_back(const std::string &s) {
     alloc(s.size());
     for (auto c : s) at(wptr++) = c;
