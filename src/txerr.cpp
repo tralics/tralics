@@ -28,8 +28,8 @@ void Logger::abort() const {
     std::cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
     if (!!*fp) {
         *fp << "Fatal_error for " << the_parser.get_job_name() << "\n";
-        (*fp).flush();
-        (*fp).close();
+        fp->flush();
+        fp->close(); // \todo useless?
     }
 }
 
@@ -52,7 +52,7 @@ void Parser::signal_error() {
     if (main_ns::nb_errs >= 5000) {
         log_and_tty << "Translation aborted: Too many errors.\n";
         log_and_tty.finish(main_ns::nb_errs);
-        tralics_ns::close_file(log_and_tty.L.fp);
+        delete log_and_tty.L.fp;
         exit(1);
     }
 }

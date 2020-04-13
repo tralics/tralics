@@ -500,9 +500,7 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump_data(B);
     std::string auxname = tralics_ns::get_short_jobname() + ".aux";
     try {
-        std::fstream fp(auxname.c_str(), std::ios::out);
-        fp << B.c_str();
-        fp.close();
+        std::ofstream(auxname.c_str()) << B.c_str();
     } catch (...) {
         log_and_tty << "Cannot open file " << auxname << " for output \n"
                     << "Bibliography will be missing\n";

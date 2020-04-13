@@ -1109,22 +1109,20 @@ void all_words_ns::dump_words(const std::string &name) {
     }
     if (WL->get_next() == nullptr) return;
     String wf = tralics_ns::get_out_dir("words");
-    fp        = new std::fstream(wf, std::ios::out);
-    if (fp == nullptr) return;
-    if (!*fp) return;
-    if (!name.empty()) *fp << "Team " << name << "\n";
+
+    auto f = std::fstream(wf, std::ios::out);
+    if (!name.empty()) f << "Team " << name << "\n";
     scbuf.reset();
     int i = 0;
     while (WL->get_next() != nullptr) {
         i++;
         dump_and_list(WL, i);
     }
-    *fp << "Total " << nb_words << "  ";
+    f << "Total " << nb_words << "  ";
     scbuf.remove_last(); // space
     scbuf.remove_last(); // comma
     scbuf.push_back(".\n");
-    *fp << scbuf;
-    fp->close();
+    f << scbuf;
 }
 
 inline auto dig_char(char c) -> bool { return c == '-' || is_digit(c); }

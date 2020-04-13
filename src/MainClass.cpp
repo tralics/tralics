@@ -1002,7 +1002,7 @@ void MainClass::trans0() {
     tralics_ns::Titlepage_start(verbose);
     if (only_input_data) {
         log_and_tty.finish(main_ns::nb_errs);
-        tralics_ns::close_file(log_and_tty.L.fp);
+        delete log_and_tty.L.fp; // \todo make this a value instead of a pointer
         exit(0);
     }
 }
@@ -1066,7 +1066,7 @@ void MainClass::run(int argc, char **argv) {
     } else
         log_and_tty << "Nothing written to " << out_name << ".xml.\n";
     std::cout.flush();
-    tralics_ns::close_file(log_and_tty.L.fp);
+    delete log_and_tty.L.fp;
 }
 
 void MainClass::out_xml() {
@@ -1098,7 +1098,7 @@ void MainClass::out_xml() {
     *fp << the_parser.the_stack.document_element();
     *fp << "\n";
     log_and_tty << "Output written on " << name << " (" << fp_len << " bytes).\n";
-    tralics_ns::close_file(fp);
+    delete fp;
     if (the_main->find_words) {
         u = tralics_ns::get_out_dir(out_name);
         X << bf_reset << u;

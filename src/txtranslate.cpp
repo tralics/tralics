@@ -2132,7 +2132,7 @@ void Parser::T_specimp(int c) {
     case penalty_code: scan_int(cur_tok); return;
     case abort_code:
         close_all();
-        tralics_ns::close_file(log_and_tty.L.fp);
+        delete log_and_tty.L.fp;
         exit(0);
     case sleep_code: txsleep(static_cast<unsigned>(scan_int(cur_tok))); return;
     case prompt_code: {

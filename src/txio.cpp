@@ -528,7 +528,6 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
             emit = true;
         else if (c == EOF) {
             if (!B.empty()) emit = true;
-            fp->close();
             delete fp;
             the_converter.cur_file_name = old_name;
         } else
@@ -565,8 +564,8 @@ void LinePtr::normalise_final_cr() {
     auto C = begin();
     auto E = end();
     if (C == E) return;
-    Clines *prev = nullptr;
-    Clines *cur  = nullptr;
+    Clines *prev{nullptr};
+    Clines *cur{nullptr};
     for (;;) {
         if (C == E) return;
         cur = &*C;
@@ -902,12 +901,6 @@ auto tralics_ns::open_file(String name, bool fatal) -> std::fstream * {
 // This takes a string as argument
 auto tralics_ns::open_file(const std::string &name, bool f) -> std::fstream * { return tralics_ns::open_file(name.c_str(), f); }
 
-// This is a static function
-void tralics_ns::close_file(std::fstream *fp) {
-    fp->close();
-    delete fp;
-}
-
 void LinePtr::reset(std::string x) {
     cur_line    = 0;
     encoding    = 0;
@@ -1148,8 +1141,8 @@ void Parser::T_filecontents(int spec) {
         auto guard = InLoadHandler();
         filename   = sT_arg_nopar();
     }
-    int           action     = 0;
-    std::fstream *outfile    = nullptr;
+    int           action = 0;
+    std::fstream *outfile{nullptr}; // \todo without a pointer
     bool          is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;
@@ -1190,7 +1183,7 @@ void Parser::T_filecontents(int spec) {
         kill_line();
     }
     kill_line(); // who knows
-    if (action == 1) tralics_ns::close_file(outfile);
+    if (action == 1) delete outfile;
     cur_tok.kill();
     pop_level(bt_env);
 }

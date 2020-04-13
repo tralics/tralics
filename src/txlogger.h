@@ -105,7 +105,7 @@ public:
     }
 };
 
-class FullLogger {
+class FullLogger { // \todo public Logger
 public:
     Logger L;
     bool   verbose{false};

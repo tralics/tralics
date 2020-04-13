@@ -396,7 +396,6 @@ public:
     void               reset_lines() { lines.clear(); }
     [[nodiscard]] auto is_too_late() const -> bool { return too_late; }
     void               finish() {
-        file->close();
         delete file;
         file     = nullptr;
         too_late = true;

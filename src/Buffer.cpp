@@ -1024,7 +1024,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
     the_images.emplace_back(nm, ok ? 1 : 0);
 }
 
-void operator<<(std::fstream &X, const Image &Y) {
+void operator<<(std::fstream &X, const Image &Y) { // \todo ofstream
     X << "see_image(\"" << Y.name << "\",";
     int k = Y.flags;
     if (k == 0)
@@ -1087,7 +1087,6 @@ void Parser::finish_images() {
             fp << the_images[i];
         }
     }
-    fp.close();
     if (s == 0)
         main_ns::log_or_tty << "There was no image.\n";
     else

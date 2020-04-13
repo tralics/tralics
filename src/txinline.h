@@ -46,7 +46,6 @@ namespace tralics_ns {
     void bibtex_insert_jobname();
     void bibtex_set_nocite();
     void boot_math(bool mv);
-    void close_file(std::fstream *fp);
     void read_a_file(LinePtr &L, const std::string &x, int spec);
     void Titlepage_create(LinePtr &lines);
     void Titlepage_start(bool verbose);
