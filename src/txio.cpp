@@ -561,31 +561,24 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
 
 // If a line ends with \, we take the next line, and append it to this one
 void LinePtr::normalise_final_cr() {
-    auto C = begin();
-    auto E = end();
-    if (C == E) return;
-    Clines *prev{nullptr};
-    Clines *cur{nullptr};
-    for (;;) {
-        if (C == E) return;
-        cur = &*C;
-        ++C;
-        const std::string &s       = cur->chars;
+    line_iterator prev{end()};
+    for (auto C = begin(); C != end(); ++C) {
+        const std::string &s       = C->chars;
         auto               n       = s.size();
         bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
         std::string        normal  = s;
         if (special) normal = std::string(s, 0, n - 2);
-        if (prev != nullptr) {
+        if (prev != end()) {
             prev->chars = prev->chars + normal;
-            cur->chars  = "\n";
+            C->chars    = "\n";
         }
         if (special) {
-            if (prev == nullptr) {
-                prev        = cur;
+            if (prev == end()) {
+                prev        = C;
                 prev->chars = normal;
             }
         } else
-            prev = nullptr;
+            prev = end();
     }
 }
 
