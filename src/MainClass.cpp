@@ -1074,8 +1074,8 @@ void MainClass::out_xml() {
     std::string u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
     X.put_at_end(".xml");
-    std::string   name = X.to_string();
-    std::fstream *fp   = tralics_ns::open_file(name, true);
+    std::string  name = X.to_string();
+    std::fstream fp   = tralics_ns::open_file(name, true);
     X.reset();
     int aux = 4;
     if (output_encoding == en_utf8 || output_encoding == en_ascii8)
@@ -1094,11 +1094,10 @@ void MainClass::out_xml() {
     a += aux;
 #endif
     fp_len = a + 1; // for the \n that follows
-    *fp << X;
-    *fp << the_parser.the_stack.document_element();
-    *fp << "\n";
+    fp << X;
+    fp << the_parser.the_stack.document_element();
+    fp << "\n";
     log_and_tty << "Output written on " << name << " (" << fp_len << " bytes).\n";
-    delete fp;
     if (the_main->find_words) {
         u = tralics_ns::get_out_dir(out_name);
         X << bf_reset << u;

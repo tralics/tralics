@@ -371,10 +371,10 @@ public:
 
 class Bbl {
 private:
-    Buffer        B;
-    std::fstream *file{nullptr};
-    std::string   name;
-    bool          too_late{false};
+    Buffer       B;
+    std::fstream file;
+    std::string  name;
+    bool         too_late{false};
 
 public:
     friend class BibEntry;
@@ -395,13 +395,12 @@ public:
     void               reset() { B.reset(); }
     void               reset_lines() { lines.clear(); }
     [[nodiscard]] auto is_too_late() const -> bool { return too_late; }
-    void               finish() {
-        delete file;
-        file     = nullptr;
+    void               finish() { // \todo should this be called ~Bbl ?
+        file.close();
         too_late = true;
     }
     void open() {
-        if (file == nullptr) file = tralics_ns::open_file(name, true);
+        if (!file.is_open()) file = tralics_ns::open_file(name, true);
     }
 
     void install_file(String b) { name = b; }
@@ -414,11 +413,11 @@ public:
     void   init() { lb.reset(); }
     void   out_bar() const {
         std::cout << "|";
-        *(X->file) << "|";
+        X->file << "|";
     }
     void out_buffer(Buffer &B) const {
         std::cout << B;
-        *(X->file) << B;
+        X->file << B;
     }
     void out_field(Buffer &B) const {
         out_buffer(B);
@@ -426,23 +425,23 @@ public:
     }
     void out_field(String B) const {
         std::cout << B;
-        *(X->file) << B;
+        X->file << B;
         out_bar();
     }
     void out_nl() const {
         std::cout << "\n";
-        *(X->file) << "\n";
+        X->file << "\n";
     }
     void out_string(const std::string &s) const {
         std::cout << s;
-        *(X->file) << s;
+        X->file << s;
     }
     void out_string(int s) const {
         std::cout << s;
-        *(X->file) << s;
+        X->file << s;
     }
     void out_string(char s) const {
         std::cout << s;
-        *(X->file) << s;
+        X->file << s;
     }
 };

@@ -38,8 +38,8 @@ namespace tralics_ns {
     auto get_short_jobname() -> std::string;
     auto is_leap_year(long y) -> bool;
     auto only_digits(const std::string &s) -> bool;
-    auto open_file(const std::string &name, bool f) -> std::fstream *;
-    auto open_file(String name, bool fatal) -> std::fstream *;
+    auto open_file(const std::string &name, bool f) -> std::fstream;
+    auto open_file(String name, bool fatal) -> std::fstream;
     auto titlepage_is_valid() -> bool;
 
     void bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db);

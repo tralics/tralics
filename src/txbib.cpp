@@ -625,7 +625,7 @@ void Parser::T_cititem() {
 // This flushes the buffer.
 void Bbl::newline() {
     B.push_back("\n");
-    *file << B.convert_to_log_encoding();
+    file << B.convert_to_log_encoding();
     lines.insert(B.to_string(), true);
     B.reset();
 }
