@@ -630,10 +630,9 @@ auto Mactab::new_macro(Macro *s) -> subtypes {
 void Mactab::rc_mac_realloc() {
     auto          k         = cur_rc_mac_len;
     auto          ns        = k + 400;
-    static Macro *empty_mac = nullptr;
-    if (empty_mac == nullptr) empty_mac = new Macro;
-    auto *T1 = new Macro *[ns];
-    auto *T2 = new long[ns];
+    static Macro *empty_mac = new Macro;
+    auto *        T1        = new Macro *[ns];
+    auto *        T2        = new long[ns];
     for (size_t i = 0; i < k; i++) {
         T1[i] = table[i];
         T2[i] = rc_table[i];

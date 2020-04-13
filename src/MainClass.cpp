@@ -465,13 +465,10 @@ void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, tru
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
-    String s = nullptr;
     if (argc == 1) end_with_help(0);
     if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
-        s = argv[i];
-        if (s == nullptr) continue;
-        if (s[0] == 0) continue;
+        auto s = argv[i];
         if (s[0] == '-')
             parse_option(i, argc, argv);
         else
@@ -558,8 +555,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_external_prog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
-        case pa_leftquote: leftquote_val = strtoul(a, nullptr, 16); return;
-        case pa_rightquote: rightquote_val = strtoul(a, nullptr, 16); return;
+        case pa_leftquote: leftquote_val = std::stoul(a, nullptr, 16); return;
+        case pa_rightquote: rightquote_val = std::stoul(a, nullptr, 16); return;
         case pa_defaultclass: default_class = a; return;
         case pa_infile: see_name(a); return;
         case pa_indata:
@@ -718,7 +715,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
 }
 
-void MainClass::set_tpa_status(String s) {
+void MainClass::set_tpa_status(String s) {   // \todo Erk this is not good
     if ((s == nullptr) || s[0] == 0) return; //
     if (s[0] == 'a' || s[0] == 'A')
         tpa_mode = 1; // case 'all'

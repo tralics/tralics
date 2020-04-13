@@ -834,8 +834,8 @@ auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
 // This finds a citation whose lowercase equivalent is S.
 // Puts in N the number of citations found.
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
-    n             = 0;
-    BibEntry *res = nullptr;
+    n = 0;
+    BibEntry *res{nullptr};
     if (old_ra) {
         for (auto &all_entrie : all_entries)
             if (all_entrie->cite_key.is_same_lower_old(s)) {
@@ -858,8 +858,8 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
 // Returns 2  if we have \cite{KNUTH}, \footcite{knuth} or other mismatch
 // Returns 0 if nothing was found.
 auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
-    n             = 0;
-    BibEntry *res = nullptr;
+    n = 0;
+    BibEntry *res{nullptr};
     for (auto &all_entrie : all_entries)
         if (all_entrie->cite_key.is_similar(s)) {
             res = all_entrie;
@@ -1740,11 +1740,8 @@ void BibEntry::call_type() {
     bbl.push_back_braced(cite_key.full_key);
     bbl.push_back_braced(unique_id.c_str());
     bbl.push_back_braced(from_to_string());
-    String my_name = nullptr;
-    if (is_extension > 0)
-        my_name = the_main->bibtex_extensions[is_extension - 1].c_str();
-    else
-        my_name = the_names[type_to_string(type_int)].c_str();
+    String my_name =
+        (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1].c_str() : the_names[type_to_string(type_int)].c_str();
     bbl.push_back_braced(my_name);
     bbl.push_back(aux_label);
     bbl.newline();

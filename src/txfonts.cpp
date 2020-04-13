@@ -110,8 +110,7 @@ auto FontInfo::series_name() const -> String {
 
 // This prints everything.
 auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
-    String s = nullptr;
-    s        = L.size_name();
+    String s = L.size_name();
     if (s != nullptr) fp << s;
     s = L.shape_name();
     if (s != nullptr) fp << s;
@@ -245,19 +244,8 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const std::string &n, long a, long s) -> size_t {
     for (unsigned i = 0; i < size(); i++)
-        if (at(i).its_me(n, a, s)) return i;
+        if (at(i) == TexFont{n, a, s}) return i;
     return define_a_new_font(n, a, s);
-}
-
-// Ctor(name, at_value, scaled).
-// In TeX, only one of at_value and scaled can be given. Unused in Tralics.
-TexFont::TexFont(const std::string &n, int a, int s) {
-    make_null();
-    name       = n;
-    at_val     = a;
-    scaled_val = s;
-    if (n.empty()) return; // case of null font
-    load();
 }
 
 // This allocates a new slot in the font list.
@@ -268,40 +256,6 @@ auto TexFonts::define_a_new_font(const std::string &n, long a, long s) -> size_t
     }
     emplace_back(n, a, s);
     return size() - 1;
-}
-
-// not yet done.
-void TexFont::load() {}
-
-// This compares two fonts
-auto TexFont::its_me(const std::string &n, long a, long s) const -> bool { return name == n && at_val == a && scaled_val == s; }
-
-// This kills all tables.
-void TexFont::make_null() {
-    smallest_char = 0;
-    largest_char  = 0;
-    width_len     = 0;
-    height_len    = 0;
-    depth_len     = 0;
-    italic_len    = 0;
-    ligkern_len   = 0;
-    kern_len      = 0;
-    exten_len     = 0;
-    param_len     = 0;
-    char_table    = nullptr;
-    width_table   = nullptr;
-    height_table  = nullptr;
-    depth_table   = nullptr;
-    italic_table  = nullptr;
-    ligkern_table = nullptr;
-    kern_table    = nullptr;
-    exten_table   = nullptr;
-    param_table   = nullptr;
-    hyphen_char   = 0;
-    skew_char     = 0;
-    name          = "";
-    scaled_val    = 0;
-    at_val        = 0;
 }
 
 /// True if k is a valid font ID

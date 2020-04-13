@@ -308,15 +308,14 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
 void config_ns::check_RC(Buffer &B, Xml *res) {
     std::string tmp      = the_names[np_rcval].c_str();
     bool        need_elt = tmp[0] == '+'; // Hack
-    String      S        = nullptr;
+    String      S{nullptr};
     if (need_elt) S = tmp.c_str() + 1;
     Buffer      temp2;
     std::string sname, lname;
     temp2.reset();
     std::vector<int> vals;
-    size_t           nb      = 0;
-    Xml *            new_elt = nullptr;
-    B.ptr                    = 0;
+    size_t           nb = 0;
+    B.ptr               = 0;
     for (;;) {
         auto j = next_RC_in_buffer(B, sname, lname);
         if (j == -1) break;
@@ -324,6 +323,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             nb = 0;
             break;
         }
+        Xml *new_elt{nullptr};
         if (need_elt)
             new_elt = new Xml(Istring(std::string(S + sname)), nullptr);
         else {

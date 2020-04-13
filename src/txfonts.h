@@ -70,39 +70,37 @@ public:
     short int remainder;  // the remainder field
 };
 
-class TexFont {
-public:
-    int         smallest_char{};
-    int         largest_char{};
-    int         width_len{};
-    int         height_len{};
-    int         depth_len{};
-    int         italic_len{};
-    int         ligkern_len{};
-    int         kern_len{};
-    int         exten_len{};
-    size_t      param_len{};
-    TeXChar *   char_table{};
-    int *       width_table{};
-    int *       height_table{};
-    int *       depth_table{};
-    int *       italic_table{};
-    int *       ligkern_table{};
-    int *       kern_table{};
-    int *       exten_table{};
-    ScaledInt * param_table{};
-    long        hyphen_char{};
-    long        skew_char{};
+struct TexFont {
     std::string name;
-    int         scaled_val;
-    int         at_val;
+    long        at_val{0};
+    long        scaled_val{0};
+    long        hyphen_char{0};
+    long        skew_char{0};
+    int         smallest_char{0};
+    int         largest_char{0};
+    int         width_len{0};
+    int         height_len{0};
+    int         depth_len{0};
+    int         italic_len{0};
+    int         ligkern_len{0};
+    int         kern_len{0};
+    int         exten_len{0};
+    size_t      param_len{0};
+    TeXChar *   char_table{nullptr};
+    int *       width_table{nullptr};
+    int *       height_table{nullptr};
+    int *       depth_table{nullptr};
+    int *       italic_table{nullptr};
+    int *       ligkern_table{nullptr};
+    int *       kern_table{nullptr};
+    int *       exten_table{nullptr};
+    ScaledInt * param_table{nullptr};
 
-    TexFont(const std::string &n, int a, int s);
+    /// In TeX, only one of at_value and scaled can be given. Unused in Tralics.
+    TexFont(const std::string &n, long a, long s) : name(n), at_val(a), scaled_val(s){};
 
     void               realloc_param(size_t p);
-    [[nodiscard]] auto its_me(const std::string &n, long a, long s) const -> bool;
-    void               make_null();
-    void               load();
+    [[nodiscard]] auto operator==(const TexFont &o) const { return name == o.name && at_val == o.at_val && scaled_val == o.scaled_val; };
 };
 
 struct TexFonts : public std::vector<TexFont> {
