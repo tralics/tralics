@@ -70,7 +70,7 @@ public:
     short int remainder;  // the remainder field
 };
 
-struct TexFont {
+struct TexFont : std::vector<ScaledInt> {
     std::string name;
     long        at_val{0};
     long        scaled_val{0};
@@ -85,7 +85,6 @@ struct TexFont {
     int         ligkern_len{0};
     int         kern_len{0};
     int         exten_len{0};
-    size_t      param_len{0};
     TeXChar *   char_table{nullptr};
     int *       width_table{nullptr};
     int *       height_table{nullptr};
@@ -94,12 +93,10 @@ struct TexFont {
     int *       ligkern_table{nullptr};
     int *       kern_table{nullptr};
     int *       exten_table{nullptr};
-    ScaledInt * param_table{nullptr};
 
     /// In TeX, only one of at_value and scaled can be given. Unused in Tralics.
     TexFont(const std::string &n, long a, long s) : name(n), at_val(a), scaled_val(s){};
 
-    void               realloc_param(size_t p);
     [[nodiscard]] auto operator==(const TexFont &o) const { return name == o.name && at_val == o.at_val && scaled_val == o.scaled_val; };
 };
 

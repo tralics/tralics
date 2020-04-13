@@ -289,8 +289,8 @@ auto TexFonts::get_int_param(long ft, int pos) -> long {
 // Returns a dimension parameter for a font
 auto TexFonts::get_dimen_param(long ft, long pos) -> ScaledInt {
     if (!is_valid(ft)) return 0;
-    if (pos < 0 || to_unsigned(pos) >= at(to_unsigned(ft)).param_len) return 0;
-    return at(to_unsigned(ft)).param_table[pos];
+    if (pos < 0 || to_unsigned(pos) >= at(to_unsigned(ft)).size()) return 0;
+    return at(to_unsigned(ft))[to_unsigned(pos)];
 }
 
 // Sets an integer parameter for a font
@@ -311,18 +311,8 @@ void TexFonts::set_dimen_param(long ft, long p, ScaledInt v) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;
     }
-    if (to_unsigned(p) > at(to_unsigned(ft)).param_len) at(to_unsigned(ft)).realloc_param(to_unsigned(p));
-    at(to_unsigned(ft)).param_table[p] = v;
-}
-
-// All fonts can be resized...
-void TexFont::realloc_param(size_t p) { // \todo making param_table a vector would be easier
-    size_t k = 1;
-    while (p >= k) k *= 2;
-    auto *T = new ScaledInt[k];
-    for (size_t i = 0; i < k; i++) T[i].set_value(0);
-    for (size_t i = 0; i < param_len; i++) T[i] = param_table[i];
-    delete[] param_table;
-    param_table = T;
-    param_len   = k;
+    auto up  = to_unsigned(p);
+    auto uft = to_unsigned(ft);
+    if (up >= at(uft).size()) at(uft).resize(up + 1);
+    at(uft)[up] = v;
 }
