@@ -2271,7 +2271,7 @@ auto Parser::get_mac_value(Token t) -> TokenList {
 
 // c is the number of arguments, c=0 is the same as 1, 5 is 12of3
 void Parser::E_all_of_one(Token T, int c) {
-    String s  = nullptr;
+    String s{nullptr};
     int    n  = 0;
     bool   vb = tracing_macros();
     switch (c) {
@@ -3183,7 +3183,7 @@ void Parser::M_newcommand(rd_flag redef) {
     symcodes what    = is_star ? user_cmd : userl_cmd;
     Token    name    = get_r_token(true);
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
-    Macro *X = nullptr;
+    Macro *X{nullptr};
     {
         auto guard = SaveErrTok(name);
         X          = read_latex_macro();
@@ -3212,7 +3212,7 @@ void Parser::M_new_env(rd_flag redef) {
     std::string name    = group_to_string();
     if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
     Token  T = find_env_token(name, true); // this is \foo
-    Macro *X = nullptr;
+    Macro *X{nullptr};
     {
         auto guard = SaveErrTok(T);
         X          = read_latex_macro();
@@ -3390,7 +3390,7 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
     Token    T = hash_table.locate(sh);
     auto     p = T.eqtb_loc(); // return value
     symcodes ncmd{};
-    String   name = nullptr;
+    String   name{nullptr};
     switch (cmd) {
     case char_def_code:
         name = "chardef";
@@ -4106,9 +4106,9 @@ void Parser::box_end(Xml *res, size_t pos) {
 // Otherwise we push a continuation on the stack.
 
 void Parser::begin_box(size_t src, subtypes c) {
-    Token  T       = cur_tok;
-    size_t res     = 0;
-    Xml *  cur_box = nullptr;
+    Token  T   = cur_tok;
+    size_t res = 0;
+    Xml *  cur_box{nullptr};
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();

@@ -23,7 +23,7 @@ namespace {
     Buffer Tbuf;
     Buffer Abuf;
     Buffer tpa_buffer;
-    Xml *  unfinished_par = nullptr;
+    Xml *  unfinished_par{nullptr};
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 
 #ifdef _MSC_VER
@@ -503,7 +503,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
         else
             the_stack.add_new_anchor();
     }
-    Xml *opt = nullptr;
+    Xml *opt{nullptr};
     if (module)
         create_label("mod:" + Y, the_stack.get_cur_id()); // should be the id above
     else
@@ -1218,7 +1218,8 @@ void Parser::T_cap_or_note(bool cap) {
     push_level(bt_local);
     word_define(incentering_code, 0, false);
     the_stack.push1(name);
-    Xml *opt = nullptr, *note = nullptr;
+    Xml *opt{nullptr};
+    Xml *note{nullptr};
     if (cap) { // case of Caption
         opt  = xT_optarg_nopar();
         note = the_stack.top_stack();
@@ -1495,7 +1496,8 @@ void Parser::T_hanl(subtypes c) {
     leave_v_mode();
     the_stack.push(the_names[cst_hanl], nullptr);
     the_stack.hack_for_hanl();
-    Xml *B = nullptr, *val = nullptr;
+    Xml *B{nullptr};
+    Xml *val{nullptr};
     if (c == 2) {
         B   = T_hanl_url();
         val = T_hanl_text();

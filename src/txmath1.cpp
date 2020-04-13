@@ -517,7 +517,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
 }
 
 void MathF::pop_last(Xml *xval) {
-    Xml *p = nullptr;
+    Xml *p{nullptr};
     if (!in_mrow() && !res.empty()) {
         p = res.back().remove_prefix();
         res.pop_back();
@@ -1699,11 +1699,11 @@ auto Buffer::special_exponent() const -> String {
 // This is the main function.
 auto Math::special1() const -> Xml * {
     bool ok = false;
-    Xml *U  = nullptr;
+    Xml *U{nullptr};
     special2(ok, U);
     if (!ok) return U;
-    const MathElt &W    = value.back();
-    Xml *          xval = nullptr;
+    const MathElt &W = value.back();
+    Xml *          xval{nullptr};
     if (W.get_cmd() == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);
     else if (W.get_cmd() == letter_catcode && W.get_char() == 'e')
@@ -1839,10 +1839,10 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 // Converts a character sequence; first char W already removed from
 // the list
 auto Math::convert_char_seq(MathElt W) -> MathElt {
-    subtypes f   = W.get_font();
-    auto     w   = the_parser.eqtb_int_table[mathprop_ctr_code].val;
-    Xml *    res = nullptr;
-    Buffer & B   = aux_buffer;
+    subtypes f = W.get_font();
+    auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+    Xml *    res{nullptr};
+    Buffer & B = aux_buffer;
     B.reset();
     if (f == 1) B.push_back(' ');
     bool     spec = (f == 1) || ((w & (1 << f)) != 0);

@@ -41,7 +41,7 @@ namespace post_ns {
 namespace all_words_ns {
     int                         nb_words = 0;
     std::array<WordList *, 100> WL0;
-    std::fstream *              fp = nullptr;
+    std::fstream *              fp{nullptr}; // \todo just fstream
     void                        add_a_word(String s, size_t h);
     void                        dump_and_list(WordList *WL, int i);
     void                        dump_words(const std::string &name);
@@ -647,7 +647,7 @@ auto Xml::is_empty() const -> bool {
 // If there is one non-empty son returns it.
 auto Xml::single_non_empty() const -> Xml * {
     auto len = size();
-    Xml *res = nullptr;
+    Xml *res{nullptr};
     for (size_t k = 0; k < len; k++) {
         Xml *y = tree[k];
         if (y == nullptr) continue;
@@ -676,7 +676,7 @@ auto Xml::only_text() const -> bool {
 // Returns the only son, or 0 if more than one sons.
 auto Xml::single_son() const -> Xml * {
     auto len = size();
-    Xml *res = nullptr;
+    Xml *res{nullptr};
     for (size_t k = 0; k < len; k++) {
         Xml *y = tree[k];
         if (y == nullptr) continue;
@@ -776,7 +776,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
 
 // Post processor of figure.
 void post_ns::postprocess_figure(Xml *to, Xml *from) {
-    Xml *     X = nullptr;
+    Xml *     X{nullptr};
     XmlAction X1(the_names[np_table], rc_contains);
     XmlAction X2(the_names[np_subfigure], rc_contains);
     XmlAction X3(the_names[np_figure], rc_how_many);

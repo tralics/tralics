@@ -55,7 +55,7 @@ void lg_start_io(Logger &L) {
 // and no file attached to them
 
 TexOutStream::TexOutStream() {
-    for (auto &i : write_file) i = nullptr;
+    for (auto &i : write_file) i = nullptr; // \todo useless?
     for (bool &i : write_open) i = false;
 }
 
@@ -63,10 +63,8 @@ TexOutStream::TexOutStream() {
 void TexOutStream::close(size_t chan) {
     if (chan < 0 || chan > max_openout) return; // this cannot happen
     if (write_open[chan]) {
-        std::fstream *F = write_file[chan];
-        F->close();
-        delete F;
-        write_file[chan] = nullptr;
+        delete write_file[chan];
+        write_file[chan] = nullptr; // \todo Remove this if possible
         write_open[chan] = false;
     }
 }

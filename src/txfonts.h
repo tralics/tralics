@@ -9,6 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include <utility>
+
 #include "txstring.h"
 
 // This is how Tralics interprets a font
@@ -95,7 +97,7 @@ struct TexFont : std::vector<ScaledInt> {
     int *       exten_table{nullptr};
 
     /// In TeX, only one of at_value and scaled can be given. Unused in Tralics.
-    TexFont(const std::string &n, long a, long s) : name(n), at_val(a), scaled_val(s){};
+    TexFont(std::string n, long a, long s) : name(std::move(n)), at_val(a), scaled_val(s){};
 
     [[nodiscard]] auto operator==(const TexFont &o) const { return name == o.name && at_val == o.at_val && scaled_val == o.scaled_val; };
 };

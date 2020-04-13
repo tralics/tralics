@@ -1529,8 +1529,8 @@ void MathDataP::boot2() {
 
 void MathDataP::boot() {
     no_ent_names = the_main->no_entnames;
-    for (auto &i : built_in_table) i = nullptr;
-    for (auto &i : built_in_table_alt) i = nullptr;
+    for (auto &i : built_in_table) i = nullptr;     // \todo useless?
+    for (auto &i : built_in_table_alt) i = nullptr; // \todo useless?
     boot_table();
     fill_single_char();
     fill_math_char_slots();

@@ -375,7 +375,7 @@ void TitlePageAux::exec(size_t v, bool vb) {
         Titlepage[idx]->add_last_nl(convert(2));
         return;
     }
-    Xml *R = nullptr;
+    Xml *R{nullptr};
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
         R = convert(3, Istring(T2));
     else { // we have to read the argument.

@@ -551,8 +551,8 @@ auto date_ns::month_length(long y, size_t m) -> long {
 
 // Return true if valid, signals error otherwise
 auto date_ns::check_date(long y, size_t m, long d) -> bool {
-    String Bad = nullptr;
-    long   ml  = 0;
+    std::string Bad;
+    long        ml = 0;
     if (y <= 0)
         Bad = "year<1";
     else if (m <= 0)
@@ -568,7 +568,7 @@ auto date_ns::check_date(long y, size_t m, long d) -> bool {
         else if (y == 1582 && m == 10 && d > 4 && d < 15)
             Bad = "inexistant day";
     }
-    if (Bad == nullptr) return true;
+    if (Bad.empty()) return true;
     local_buf << bf_reset << "Date error: ";
     if (Bad[0] == '.')
         local_buf << fmt::format("day>{}", ml);

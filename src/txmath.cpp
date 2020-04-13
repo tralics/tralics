@@ -821,7 +821,7 @@ void Parser::T_math(subtypes type) {
             return;
         }
     }
-    Xml *       alter   = nullptr;
+    Xml *       alter{nullptr};
     std::string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
         Math &w   = math_data.get_list(loc_of_cp);
@@ -831,7 +831,7 @@ void Parser::T_math(subtypes type) {
     loc_of_cp = math_data.get_list(0).duplicate(false);
     Math &u   = math_data.get_list(loc_of_cp);
     // Translate the formula into res
-    Xml *res = nullptr;
+    Xml *res{nullptr};
     if ((math_env_props(type) & 8) == 0) u.set_type(math_open_cd);
     if (u.has_type(math_env_cd)) {
         res = u.M_array(cmi.get_eqnum_status() == 2, is_inline ? ms_T : ms_D);
@@ -2121,7 +2121,7 @@ auto Math::trivial_math(long action) -> Xml * {
         if (L != value.end()) len = 3;
     }
     symcodes cmd = front().get_cmd();
-    Xml *    res = nullptr;
+    Xml *    res{nullptr};
     if (((action & 4) != 0) && len == 2 && (cmd == underscore_catcode || cmd == hat_catcode)) res = trivial_math_index(cmd);
     if (res != nullptr) return res;
     if ((action & 1) != 0) res = special1();
@@ -2299,11 +2299,11 @@ auto Math::check_align() -> int {
 
 // Create <mi>...</mi> and friends
 auto MathElt::cv_mi(math_style cms) const -> MathElt {
-    Math &   L   = get_list();
-    subtypes c   = get_fml_subtype();
-    auto     X   = L.begin();
-    auto     Y   = L.end();
-    Xml *    res = nullptr;
+    Math &   L = get_list();
+    subtypes c = get_fml_subtype();
+    auto     X = L.begin();
+    auto     Y = L.end();
+    Xml *    res{nullptr};
     if (c == mathbox_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value;    // OK
         res     = new Xml(Istring(L.get_sname()), xs); // OK
@@ -2508,7 +2508,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
     if (c == sqrt_code) return MathElt(new Xml(cst_msqrt, A1), mt_flag_big);
-    Xml *          A2          = nullptr;
+    Xml *          A2{nullptr};
     name_positions ns          = cv_special_string(c);
     Istring        s           = the_names[ns];
     bool           is_fraction = ns == cst_mfrac;
@@ -2834,7 +2834,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     }
     Xml *tmp = new Xml(cst_temporary, nullptr);
     res1.concat(tmp);
-    Xml *res22 = nullptr;
+    Xml *res22{nullptr};
     if (need_row != 0)
         res22 = new Xml(cst_mrow, tmp);
     else
@@ -2957,7 +2957,7 @@ void Math::handle_mbox(Math &res) {
         if (ok == 4) { // This is a \ref
             res.push_back_small(M_ref());
         } else if (ok == 3 || ok == 5 || ok == 6 || ok == 7 || ok == 8 || ok == 9 || ok == 10 || ok == 11) {
-            Xml *b = nullptr;
+            Xml *b{nullptr};
             if (ok == 5)
                 b = math_data.get_mc_table(7);
             else if (ok == 6)
