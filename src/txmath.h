@@ -318,8 +318,7 @@ class MathDataP {
     static const int                 m_offset = 10000;
     std::array<Xml *, last_math_loc> built_in_table{};     // the static math table
     std::array<Xml *, last_math_loc> built_in_table_alt{}; // the static math table
-    Xml **                           xml_math_table{};     // the dynamic math table
-    size_t                           xmath_size{};         // size of the dynamic table
+    std::vector<Xml *>               xml_math_table;       // the dynamic math table
     size_t                           xmath_pos{};          // number of slots used in the dynamic table
 
     Math *                               math_table{};       // the table of math lists
@@ -357,7 +356,6 @@ public:
     void        boot();
     void        realloc_list0();
     void        realloc_list();
-    void        realloc_xml();
     auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
     auto        find_xml_location() -> subtypes;
     auto        find_xml_location(Xml *y) -> subtypes;

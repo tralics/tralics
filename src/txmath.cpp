@@ -493,18 +493,6 @@ void MathDataP::realloc_list0() {
     if (n + n + n > lmath_size) realloc_list();
 }
 
-// This reallocates the xml_math_table
-void MathDataP::realloc_xml() {
-    auto  k = 2 * xmath_size;
-    Xml **T = new Xml *[k];
-    for (size_t i = 0; i < k; i++) T[i] = nullptr;
-    for (size_t i = 0; i < xmath_size; i++) T[i] = xml_math_table[i];
-    delete[] xml_math_table;
-    xml_math_table = T;
-    xmath_size     = k;
-    the_log << "Realloc xml math table to " << k << "\n";
-}
-
 // Appends the list X at the end, and destroys X.
 void Math::push_front(Math &X) { value.splice(value.begin(), X.value); }
 
@@ -588,11 +576,9 @@ auto math_ns::style_level(subtypes tt) -> math_style {
 
 // This creates the two tables math_table and xml_math_table
 void MathDataP::boot_table() {
-    lmath_size     = 10;
-    math_table     = new Math[lmath_size];
-    xmath_size     = 10;
-    xml_math_table = new Xml *[xmath_size];
-    for (size_t i = 0; i < xmath_size; i++) xml_math_table[i] = nullptr;
+    lmath_size = 10;
+    math_table = new Math[lmath_size];
+    xml_math_table.resize(10, nullptr);
     xmath_pos = 0;
     lmath_pos = 0;
 }
@@ -645,7 +631,7 @@ auto MathDataP::find_math_location(math_list_type c, subtypes n) -> subtypes {
 // Note that there is a free position in case of overflow (see next function)
 auto MathDataP::find_xml_location() -> subtypes {
     xmath_pos++;
-    if (xmath_pos >= xmath_size) realloc_xml();
+    if (xmath_pos >= xml_math_table.size()) xml_math_table.resize(xmath_pos + 1, nullptr);
     return subtypes(m_offset + xmath_pos - 1);
 }
 

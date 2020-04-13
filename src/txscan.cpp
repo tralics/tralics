@@ -971,7 +971,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
         }
     }
     // common ending
-    if (ch < 16) tex_input_files[to_unsigned(ch)].get_line_no() = get_cur_line();
+    if (ch < 16) tex_input_files[to_unsigned(ch)].line_no = get_cur_line();
     pop_input_stack(false);
     cur_in_chan = main_in_chan;
     return L;
