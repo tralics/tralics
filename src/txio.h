@@ -144,21 +144,14 @@ struct InputStack {
 };
 
 // data structure associated to \input3=some_file.
-class FileForInput {
-    bool    open_flag{false}; // is this file active ?
-    LinePtr the_lines;        // the lines that not yet read by TeX
-    Buffer  cur_line;         // this holds the current line
-    int     line_no{0};       // this holds the current line number
-public:
+struct FileForInput {
+    bool    is_open{false}; ///< is this file active ?
+    LinePtr lines;          ///< the lines that are not yet read by TeX
+    Buffer  cur_line;       ///< the current line
+    int     line_no{0};     ///< the current line number
+
     void open(const std::string &file, bool action);
     void close();
-    FileForInput() = default;
-
-    [[nodiscard]] [[nodiscard]] auto is_open() const -> bool { return open_flag; }
-    auto                             get_lines() -> LinePtr & { return the_lines; }
-    void                             set_lines(LinePtr X) { the_lines = std::move(X); }
-    auto                             get_buffer() -> Buffer & { return cur_line; }
-    auto                             get_line_no() -> int & { return line_no; }
 };
 
 // From TeX:

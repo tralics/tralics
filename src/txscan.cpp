@@ -143,17 +143,17 @@ void Parser::M_extension(int cc) {
 
 // This closes a file opened by \openin
 void FileForInput::close() {
-    if (is_open()) {
-        open_flag = false;
-        the_lines.before_close(false);
-        the_lines.clear();
+    if (is_open) {
+        is_open = false;
+        lines.before_close(false);
+        lines.clear();
     }
 }
 
 // This implements \ifeof
 auto Parser::is_input_open() -> bool {
     auto ch = scan_int(cur_tok, max_openin, "input channel number");
-    return !tex_input_files[ch].is_open();
+    return !tex_input_files[ch].is_open;
 }
 
 // Open a file for \openin. if action is false, the file does not exist
@@ -162,11 +162,11 @@ void FileForInput::open(const std::string &file, bool action) {
     if (!action) {
         the_log << lg_start_io << "Cannot open file " << file << " for input\n";
     } else {
-        tralics_ns::read_a_file(the_lines, main_ns::path_buffer.to_string(), 1);
-        open_flag = true;
+        tralics_ns::read_a_file(lines, main_ns::path_buffer.to_string(), 1);
+        is_open = true;
         cur_line.reset();
         line_no = 0;
-        the_lines.after_open();
+        lines.after_open();
     }
 }
 
@@ -859,7 +859,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         n = tty_line_no;
         scratch.push_back(m_ligne.data()); // \todo push_back(std::array<char>)
     } else
-        n = tex_input_files[cur_in_chan].get_lines().get_next(scratch);
+        n = tex_input_files[cur_in_chan].lines.get_next(scratch);
     if (n < 0) {
         tex_input_files[cur_in_chan].close();
         if (!spec) return true;
@@ -926,11 +926,11 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
     std::string file_name = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
-    else if (!tex_input_files[to_unsigned(ch)].is_open())
+    else if (!tex_input_files[to_unsigned(ch)].is_open)
         cur_in_chan = tty_in_chan;
     else {
         cur_in_chan = to_unsigned(ch);
-        file_name   = tex_input_files[to_unsigned(ch)].get_lines().file_name;
+        file_name   = tex_input_files[to_unsigned(ch)].lines.file_name;
     }
     push_input_stack(file_name, false, true);
     TokenList L;
