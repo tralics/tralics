@@ -1013,8 +1013,7 @@ void Image::check() const {
 
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
-    for (size_t i = 0; i < the_images.size(); i++) {
-        Image &X = the_images[i];
+    for (auto &X : the_images) {
         if (X.name == nm) {
             if (ok) X.occ++;
             return;
@@ -1071,21 +1070,21 @@ void operator<<(std::fstream &X, const Image &Y) { // \todo ofstream
 
 // finish handling the images,
 void Parser::finish_images() {
-    if (the_images.size() == 0) return;
+    if (the_images.empty()) return;
     std::string  name = tralics_ns::get_short_jobname() + ".img";
     String       wn   = tralics_ns::get_out_dir(name);
     std::fstream fp(wn, std::ios::out);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
     check_image2.reset();
-    for (size_t i = 0; i < the_images.size(); i++) {
-        if (the_images[i].occ != 0) {
-            the_images[i].check_existence();
-            the_images[i].check();
-            fp << the_images[i];
+    for (auto &the_image : the_images) {
+        if (the_image.occ != 0) {
+            the_image.check_existence();
+            the_image.check();
+            fp << the_image;
         }
     }
-    if (the_images.size() == 0)
+    if (the_images.empty())
         main_ns::log_or_tty << "There was no image.\n";
     else
         main_ns::log_or_tty << fmt::format("There were {} images.\n", the_images.size());
