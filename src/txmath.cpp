@@ -377,13 +377,13 @@ void MathElt::print() const {
 // Basic code generator
 
 // General fence around val.
-auto MathDataP::make_mfenced(size_t open, size_t close, Xml *val) -> Xml * {
+auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> Xml * {
     Xml *res = new Xml(cst_mfenced, nullptr);
     res->add_att(the_names[np_close], xml_lr_ptable[close]);
     res->add_att(the_names[np_open], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names[np_separator] == the_names[cst_mrow]) {
-        if (!single_elt) val = new Xml(cst_mrow, val);
+        if (!single_elt) val = gsl::not_null{new Xml(cst_mrow, val)};
     } else if (the_names[np_separator].empty() && single_elt) {
     } else
         res->add_att(cst_separators, np_separator);
@@ -446,9 +446,9 @@ void Parser::add_math_label(Xml *res) {
 // Generates <elt>first_arg second_arg</elt>
 auto math_ns::xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml * {
     Xml *tmp = new Xml(elt, nullptr);
-    tmp->add_tmp(first_arg);
+    tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(second_arg);
+    tmp->add_tmp(gsl::not_null{second_arg});
     return tmp;
 }
 
@@ -456,9 +456,9 @@ auto math_ns::xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml * {
 auto Stack::xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_arg) -> Xml * {
     Xml *tmp = new Xml(elt, nullptr);
     if (!b1.null()) tmp->add_att(b1, b2);
-    tmp->add_tmp(f_arg);
+    tmp->add_tmp(gsl::not_null{f_arg});
     tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(s_arg);
+    tmp->add_tmp(gsl::not_null{s_arg});
     return tmp;
 }
 
@@ -466,9 +466,9 @@ auto Stack::xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_a
 auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> Xml * {
     Xml *tmp = new Xml(elt, nullptr);
     if (!b1.null()) tmp->add_att(b1, the_names[np_true]);
-    tmp->add_tmp(first_arg);
+    tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(second_arg);
+    tmp->add_tmp(gsl::not_null{second_arg});
     return tmp;
 }
 
@@ -773,7 +773,7 @@ void Parser::finish_trivial_math(Xml *res) {
     if (the_main->interactive_math) std::cout << res << "\n";
     leave_v_mode();
     cmi.finish_math_mem();
-    the_stack.top_stack()->add_tmp(res);
+    the_stack.top_stack()->add_tmp(gsl::not_null{res});
 }
 
 // Needed for implementation of \ifinner
@@ -848,7 +848,7 @@ void Parser::T_math(subtypes type) {
     Xml *x = new Xml(cst_math, nullptr);
     x->id  = cmi.get_mid();
     x->add_att(cst_xmlns, cst_mathml);
-    x->add_tmp(res);
+    x->add_tmp(gsl::not_null{res});
     if (!is_inline) x->add_att(cst_mode, cst_display);
     Xml *res1 = new Xml(np_formula, x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
@@ -1915,7 +1915,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
     else if (tbl_align == 3)
         id.add_attribute(np_columnalign, np_center);
     Xml *tmp = args.convert_math(W);
-    res->add_tmp(tmp);
+    res->add_tmp(gsl::not_null{tmp});
     return res;
 }
 
@@ -2251,7 +2251,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
-        Xml *      res2 = math_data.make_mfenced(a, b, res.value);
+        Xml *      res2 = math_data.make_mfenced(a, b, gsl::not_null{res.value});
         return MathElt(res2, mt_flag_big);
     }
     if (get_lcmd() == math_env_cd) // case \begin{array}...
@@ -2524,11 +2524,11 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
             s  = the_names[cst_munder];
         } else {
             Xml *tmp2 = new Xml(the_names[cst_munderover], nullptr);
-            tmp2->add_tmp(A3);
+            tmp2->add_tmp(gsl::not_null{A3});
             tmp2->push_back_unless_nullptr(xmlspace);
-            tmp2->add_tmp(A1);
+            tmp2->add_tmp(gsl::not_null{A1});
             tmp2->push_back_unless_nullptr(xmlspace);
-            tmp2->add_tmp(A2);
+            tmp2->add_tmp(gsl::not_null{A2});
             return MathElt(tmp2, mt_flag_big);
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
@@ -2722,7 +2722,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml 
         if (denalign == 2) R->add_att(cst_denalign, np_right);
     }
     if (style >= 0) R = math_data.add_style(style, R);
-    if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, R);
+    if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, gsl::not_null{R});
     return R;
 }
 
@@ -3182,14 +3182,14 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
 
     // case {\sum}_1
-    tmp->add_tmp(p);
+    tmp->add_tmp(gsl::not_null{p});
     tmp->push_back_unless_nullptr(xmlspace);
     if (index != nullptr) {
-        tmp->add_tmp(index);
+        tmp->add_tmp(gsl::not_null{index});
         tmp->push_back_unless_nullptr(xmlspace);
     }
     if (exponent != nullptr) {
-        tmp->add_tmp(exponent);
+        tmp->add_tmp(gsl::not_null{exponent});
         tmp->push_back_unless_nullptr(xmlspace);
     }
     p = tmp;
@@ -3262,10 +3262,10 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     res0.concat_space(res1);
     if (bad) {
         Xml *res = new Xml(cst_mrow, nullptr);
-        res->add_tmp(res1);
+        res->add_tmp(gsl::not_null{res1});
         return res;
     }
-    return math_data.make_mfenced(open, close, res1);
+    return math_data.make_mfenced(open, close, gsl::not_null{res1});
 }
 
 // This piece of code tries to add some <mfenced> commands

@@ -54,24 +54,15 @@ auto Xml::value_at(long n) -> Xml * {
     return at(to_unsigned(n));
 }
 
-auto Xml::put_at(long n, Xml *x) -> bool {
+auto Xml::put_at(long n, gsl::not_null<Xml *> x) -> bool {
     if (is_xmlc() || n < 0 || n >= to_signed(size())) return false;
-    at(to_unsigned(n)) = gsl::not_null{x};
+    at(to_unsigned(n)) = x;
     return true;
 }
 
 auto Xml::remove_at(long n) -> bool {
     if (is_xmlc() || n < 0 || n >= to_signed(size())) return false;
     erase(begin() + n);
-    return true;
-}
-
-auto Xml::insert_at_ck(int n, Xml *v) -> bool {
-    if (is_xmlc() || n < 0 || n > to_signed(size())) return false;
-    if (n < to_signed(size()))
-        insert_at(to_unsigned(n), v);
-    else
-        push_back(gsl::not_null{v});
     return true;
 }
 
@@ -92,9 +83,9 @@ void Parser::user_XML_swap(subtypes c) {
     }
 }
 
-auto Xml::deep_copy() -> Xml * {
-    if (is_xmlc()) return this;
-    Xml *res = new Xml(name, nullptr);
+auto Xml::deep_copy() -> gsl::not_null<Xml *> {
+    if (is_xmlc()) return gsl::not_null{this};
+    gsl::not_null res{new Xml(name, nullptr)};
     res->id.add_attribute(id);
     for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr(at(i)->deep_copy()); }
     return res;
@@ -125,7 +116,7 @@ void Parser::user_XML_modify(subtypes c) {
     case xml_get_code: the_xmlB = the_xmlA != nullptr ? the_xmlA->value_at(n) : nullptr; return;
     case xml_ins_code:
         if ((the_xmlA == nullptr) || n < 0) return;
-        the_xmlA->insert_at(to_unsigned(n), the_xmlB != nullptr ? the_xmlB->deep_copy() : nullptr);
+        if (the_xmlB != nullptr) the_xmlA->insert_at(to_unsigned(n), the_xmlB->deep_copy());
         return;
     case xml_del_code:
         if ((the_xmlA == nullptr) || n < 0) return;
@@ -133,7 +124,7 @@ void Parser::user_XML_modify(subtypes c) {
         return;
     case xml_set_code: // how to tell the user that it failed ?
         if ((the_xmlA == nullptr) || n < 0) return;
-        the_xmlA->put_at(n, the_xmlB != nullptr ? the_xmlB->deep_copy() : nullptr);
+        if (the_xmlB != nullptr) the_xmlA->put_at(n, the_xmlB->deep_copy());
         return;
     default: return;
     }
@@ -389,12 +380,11 @@ void Xml::push_back_list(Xml *x) {
 }
 
 // Insert X at the end; but the value if it is a temporary.
-void Xml::add_tmp(Xml *x) {
-    if (x == nullptr) return; // trivial case
+void Xml::add_tmp(gsl::not_null<Xml *> x) {
     if (!x->is_xmlc() && x->has_name(cst_temporary))
         push_back_list(x);
     else
-        push_back(gsl::not_null{x});
+        push_back(x);
 }
 
 // Inserts x at position pos.
@@ -420,7 +410,7 @@ auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
 void Xml::insert_bib(Xml *bib, Xml *match) {
     Xml **ptr = new Xml *(this);
     if (match != nullptr) find_on_tree(match, ptr);
-    ptr[0]->add_tmp(bib);
+    ptr[0]->add_tmp(gsl::not_null{bib});
 }
 
 // Puts element T with its attribute list in the buffer.

@@ -356,7 +356,7 @@ public:
     auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
     auto        find_xml_location() -> subtypes;
     auto        find_xml_location(Xml *y) -> subtypes;
-    auto        make_mfenced(size_t open, size_t close, Xml *val) -> Xml *;
+    auto        make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> Xml *;
     static auto add_style(int lvl, Xml *res) -> Xml *;
     void        TM_mk(String a, String b, math_types c);
     void        finish_math_mem();

@@ -39,20 +39,19 @@ public:
     auto contains_env(Istring name) -> bool;
     auto convert_to_string() -> std::string;
     auto delete_one_env0(Istring name) -> Xid;
-    auto deep_copy() -> Xml *;
+    auto deep_copy() -> gsl::not_null<Xml *>;
     auto father(Xml *X, int &) -> Xml *;
     auto figline(int &ctr, Xml *junk) -> Xml *;
     auto find_on_tree(Xml *check, Xml **res) const -> bool;
     auto first_lower(Istring src) -> Xml *;
     auto get_first_env(name_positions name) -> Xml *;
     auto how_many_env(Istring match) -> long;
-    auto insert_at_ck(int n, Xml *v) -> bool;
 
     void add_att(Istring a, Istring b) const { id.add_attribute(a, b); }
     void add_att(name_positions a, name_positions b) const { id.add_attribute(a, b); }
     void add_first(Xml *x);
     void add_ref(std::string s);
-    void add_tmp(Xml *x);
+    void add_tmp(gsl::not_null<Xml *> x);
     void add_last_nl(Xml *x);
     void add_last_string(const Buffer &B);
     void add_nl();
@@ -71,7 +70,7 @@ public:
     auto par_is_empty() -> bool;
     void postprocess_fig_table(bool is_fig);
     auto prev_sibling(Xml *x) -> Xml *;
-    auto put_at(long n, Xml *x) -> bool;
+    auto put_at(long n, gsl::not_null<Xml *> x) -> bool;
     void put_in_buffer(Buffer &b);
     using std::vector<gsl::not_null<Xml *>>::push_back;
     void push_back(Buffer &B) { push_back_unless_nullptr(new Xml(B)); }

@@ -107,12 +107,12 @@ void Stack::add_att_to_cur(Istring A, Istring B, bool force) { cur_xid().get_att
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(Istring N, Xml *z) : name(N) {
     id = the_main->the_stack->next_xid(this);
-    if (z != nullptr) add_tmp(z);
+    if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
 Xml::Xml(name_positions N, Xml *z) : name(the_names[N]) {
     id = the_main->the_stack->next_xid(this);
-    if (z != nullptr) add_tmp(z);
+    if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
 void Stack::hack_for_hanl() {

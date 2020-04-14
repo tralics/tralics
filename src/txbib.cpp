@@ -260,7 +260,7 @@ void Parser::T_cite_one() {
     auto      xtype = Istring(fetch_name1(L));
     L               = get_mac_value(hash_table.cite_prenote_token);
     auto prenote    = Istring(fetch_name1(L));
-    res->add_tmp(arg);
+    if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
     the_stack.add_last(new Xml(np_cit, res));
     if (!type.empty()) the_stack.add_att_to_last(the_names[np_rend], type);
     if (!xtype.empty()) the_stack.add_att_to_last(the_names[np_cite_type], xtype);
