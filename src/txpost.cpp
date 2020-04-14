@@ -457,7 +457,7 @@ void Xml::to_buffer(Buffer &b) const {
         return;
     }
     if (name.id > 1) {
-        if (size() != 0)
+        if (!empty())
             b.push_back_elt(name, id, 1);
         else {
             b.push_back_elt(name, id, 0); // case of <foo/>
@@ -558,20 +558,7 @@ auto Xml::all_xmlc() const -> bool {
     return std::all_of(begin(), end(), [](Xml *t) { return t->is_xmlc(); });
 }
 
-// Returns the only son, or 0 if more than one sons.
-auto Xml::single_son() const -> Xml * {
-    auto len = size();
-    Xml *res{nullptr};
-    for (size_t k = 0; k < len; k++) {
-        Xml *y = at(k);
-        if (y == nullptr) continue;
-        if (res == nullptr)
-            res = y;
-        else
-            return nullptr;
-    }
-    return res;
-}
+auto Xml::single_son() const -> Xml * { return size() == 1 ? at(0).get() : nullptr; }
 
 // Removes empty <p> elements
 void Xml::remove_empty_par() {
@@ -857,10 +844,8 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
 
 // Adds all non-empty elements to res
 void Xml::add_non_empty_to(Xml *res) {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
+    for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
-        if (T == nullptr) continue;
         if (T->is_xmlc() && only_space(T->name.c_str())) continue;
         res->push_back_unless_nullptr(T);
     }
@@ -909,9 +894,7 @@ void Xml::convert_to_string(Buffer &buf) {
 // Puts *this in the buffer B. Uses Internal Encoding
 // Used to print the title of a section.
 void Xml::put_in_buffer(Buffer &b) {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        if (at(k) == nullptr) continue;
+    for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
             b << at(k)->name.c_str();
         else if (at(k)->has_name(cst_hi))
@@ -923,8 +906,7 @@ void Xml::put_in_buffer(Buffer &b) {
 
 // Removes and returns the last element
 auto Xml::remove_last() -> Xml * {
-    auto len = size();
-    if (len == 0) return nullptr;
+    if (empty()) return nullptr;
     Xml *res = back();
     pop_back();
     return res;
@@ -932,10 +914,8 @@ auto Xml::remove_last() -> Xml * {
 
 // True if this is empty, or contains only a <hi> element which is empty
 auto Xml::par_is_empty() -> bool {
-    auto len = size();
-    if (len > 1) return false;
-    if (len == 0) return true;
-    if (at(0) == nullptr) return true;
+    if (empty()) return true;
+    if (size() > 1) return false;
     if (at(0)->is_xmlc()) return false;
     if (at(0)->is_xmlc() || !at(0)->id.is_font_change()) return false;
     return at(0)->par_is_empty();
@@ -1078,9 +1058,7 @@ void Xml::word_stats_i() {
         }
     } else {
         if (name == the_names[np_formula]) return;
-        auto len = size();
-        for (size_t i = 0; i < len; i++)
-            if (at(i) != nullptr) at(i)->word_stats_i();
+        for (size_t i = 0; i < size(); i++) at(i)->word_stats_i();
     }
 }
 
