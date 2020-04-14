@@ -150,7 +150,5 @@ public:
     void               trace_pop(bool sw);
     void               trace_stack();
     void               unbox(Xml *x);
-    auto               xml2_space(Istring a, Xml *c, Xml *d) -> Xml *;
-    static auto        xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_arg) -> Xml *;
-    static auto        xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> Xml *;
+    static auto        xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *>;
 };

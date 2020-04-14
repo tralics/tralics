@@ -356,12 +356,12 @@ public:
     auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
     auto        find_xml_location() -> subtypes;
     auto        find_xml_location(Xml *y) -> subtypes;
-    auto        make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> Xml *;
-    static auto add_style(int lvl, Xml *res) -> Xml *;
+    auto        make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *>;
+    static auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *>;
     void        TM_mk(String a, String b, math_types c);
     void        finish_math_mem();
-    auto        get_mc_table(size_t i) -> Xml * { return mc_table[i]; }
-    auto        get_builtin(size_t p) -> Xml * { return built_in_table[p]; }
+    auto        get_mc_table(size_t i) { return gsl::not_null{mc_table[i]}; }
+    auto        get_builtin(size_t p) { return gsl::not_null{built_in_table[p]}; }
     auto        get_builtin_alt(size_t p) -> Xml * { return built_in_table_alt[p]; }
     void        init_builtin(size_t i, Xml *X) { built_in_table[i] = X; }
     void        init_builtin(size_t i, size_t j) { built_in_table[i] = built_in_table[j]; }
@@ -375,7 +375,7 @@ public:
     auto        get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
     auto        get_fence(size_t k) -> Istring { return xml_lr_ptable[k]; }
     auto        get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
-    static auto mk_mo(String a) -> Xml *;
+    static auto mk_mo(String a) -> gsl::not_null<Xml *>;
     void        set_type(int k, math_list_type c) { math_table[k].set_type(c); }
 };
 
@@ -433,7 +433,7 @@ namespace math_ns {
     auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar c, size_t n) -> Xml *;
-    auto xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml *;
+    auto xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml *;
 } // namespace math_ns
 
 //---------------------------------------------------------------------

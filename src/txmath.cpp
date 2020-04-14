@@ -377,8 +377,8 @@ void MathElt::print() const {
 // Basic code generator
 
 // General fence around val.
-auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> Xml * {
-    Xml *res = new Xml(cst_mfenced, nullptr);
+auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
+    auto res = gsl::not_null{new Xml(cst_mfenced, nullptr)};
     res->add_att(the_names[np_close], xml_lr_ptable[close]);
     res->add_att(the_names[np_open], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
@@ -392,9 +392,9 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
 }
 
 // This adds a style element above res.
-auto MathDataP::add_style(int lvl, Xml *res) -> Xml * {
+auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
     if (lvl < 0) return res; // special case
-    res = new Xml(cst_mstyle, res);
+    res = gsl::not_null{new Xml(cst_mstyle, res)};
     if (lvl == 0) {
         res->add_att(cst_displaystyle, np_true);
         res->add_att(cst_scriptlevel, cst_dig0);
@@ -444,27 +444,17 @@ void Parser::add_math_label(Xml *res) {
 }
 
 // Generates <elt>first_arg second_arg</elt>
-auto math_ns::xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml * {
+auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml * {
     Xml *tmp = new Xml(elt, nullptr);
-    tmp->add_tmp(gsl::not_null{first_arg});
+    tmp->add_tmp(first_arg);
     tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(gsl::not_null{second_arg});
-    return tmp;
-}
-
-// As above, but if B1 is not empty, adds b1 as attribute with value b2.
-auto Stack::xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_arg) -> Xml * {
-    Xml *tmp = new Xml(elt, nullptr);
-    if (!b1.null()) tmp->add_att(b1, b2);
-    tmp->add_tmp(gsl::not_null{f_arg});
-    tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(gsl::not_null{s_arg});
+    tmp->add_tmp(second_arg);
     return tmp;
 }
 
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
-auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> Xml * {
-    Xml *tmp = new Xml(elt, nullptr);
+auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
+    auto tmp = gsl::not_null{new Xml(elt, nullptr)};
     if (!b1.null()) tmp->add_att(b1, the_names[np_true]);
     tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
@@ -2713,7 +2703,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml 
                                 size_t open, size_t close) -> Xml * {
     Istring Pos;
     if (pos != 0) Pos = the_names[pos];
-    Xml *R = the_main->the_stack->xml2_space(s, Pos, a, b);
+    auto R = the_main->the_stack->xml2_space(s, Pos, a, b);
     if (!sz.null()) R->add_att(the_names[np_linethickness], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(cst_numalign, np_left);
@@ -2722,7 +2712,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml 
         if (denalign == 2) R->add_att(cst_denalign, np_right);
     }
     if (style >= 0) R = math_data.add_style(style, R);
-    if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, gsl::not_null{R});
+    if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, R);
     return R;
 }
 
@@ -2825,7 +2815,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         if (need_row == 2) W = new Xml(cst_mrow, W);
         if (!seen_style) return {W, res_type};
 
-        Xml *res2 = math_data.add_style(cms, W);
+        Xml *res2 = math_data.add_style(cms, gsl::not_null{W});
         return {res2, res_type};
     }
     Xml *tmp = new Xml(cst_temporary, nullptr);
@@ -2835,7 +2825,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         res22 = new Xml(cst_mrow, tmp);
     else
         res22 = tmp;
-    if (seen_style) res22 = math_data.add_style(cms, res22);
+    if (seen_style) res22 = math_data.add_style(cms, gsl::not_null{res22});
     return {res22, res_type};
 }
 

@@ -1014,9 +1014,9 @@ auto math_ns::mk_space(String a) -> Xml * {
     return b;
 }
 
-auto MathDataP::mk_mo(String a) -> Xml * {
+auto MathDataP::mk_mo(String a) -> gsl::not_null<Xml *> {
     Xml *x = new Xml(Istring(a));
-    return new Xml(cst_mo, x);
+    return gsl::not_null{new Xml(cst_mo, x)};
 }
 
 // Case of math env. Converts an integer into a string,
@@ -1469,7 +1469,7 @@ void MathDataP::boot2() {
     init_builtin("colon", colon_code, colon, mathord_cmd);
     // Constructs varlim etc
 
-    Xml *lim_op = mk_mo("lim");
+    auto lim_op = mk_mo("lim");
     lim_op->add_att(np_movablelimits, np_false);
     Xml *x = xml2sons(the_names[cst_mover], lim_op, get_mc_table(1));
     init_builtin("varlimsup", varlimsup_code, x, mathop_cmd);
