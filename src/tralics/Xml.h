@@ -21,7 +21,7 @@ public:
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }
-    [[nodiscard]] auto is_empty() const -> bool;
+    [[nodiscard]] auto is_whitespace() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
     [[nodiscard]] auto is_xmlc() const -> bool { return id.value <= 0; }
     [[nodiscard]] auto last_addr() const -> Xml *;
@@ -29,7 +29,7 @@ public:
     [[nodiscard]] auto last_is_string() const -> bool;
     [[nodiscard]] auto only_hi() const -> bool;
     [[nodiscard]] auto only_recur_hi() const -> bool;
-    [[nodiscard]] auto only_text() const -> bool;
+    [[nodiscard]] auto all_xmlc() const -> bool;
     [[nodiscard]] auto real_size() const -> long;
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;

@@ -254,8 +254,8 @@ void post_ns::remove_label(String s, Istring n) {
 
 // This removes X from the list of all heads.
 void post_ns::remove_me_from_heads(Xml *X) {
-    for (size_t i = 0; i < the_parser.all_heads.size(); i++)
-        if (the_parser.all_heads[i] == X) the_parser.all_heads[i] = nullptr;
+    for (auto &all_head : the_parser.all_heads)
+        if (all_head == X) all_head = nullptr;
 }
 
 // This finds a sub element named match, and does some action X
@@ -298,7 +298,7 @@ void Xml::recurse(XmlAction &X) {
                 --k;
                 continue;
             case rc_delete_empty:
-                if (T->is_empty()) {
+                if (T->is_whitespace()) {
                     erase(begin() + to_signed(k));
                     --k;
                     continue;
@@ -345,7 +345,7 @@ auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1).get() : 
 // Returns a pointer to the last element
 // and removes it if it is a Box
 auto Xml::last_box() -> Xml * {
-    if (size() == 0) return nullptr;
+    if (empty()) return nullptr;
     auto res = back();
     if (!res->is_xmlc()) {
         pop_back();
@@ -356,7 +356,7 @@ auto Xml::last_box() -> Xml * {
 
 // Remove last item if its an empty <hi>
 void Xml::remove_last_empty_hi() {
-    if (size() == 0) return;
+    if (empty()) return;
     auto T = back();
     if (T->is_xmlc()) return;
     if (!T->only_recur_hi()) return;
@@ -405,16 +405,15 @@ void Xml::add_first(Xml *x) { insert(begin(), gsl::not_null{x}); }
 
 // This find an element with a single son, the son should be res.
 auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
-    auto n = size();
-    for (size_t i = 0; i < n; i++) {
-        Xml *T = at(i);
-        if ((T != nullptr) && !T->is_xmlc() && T->size() == 1 && T->at(0) == check) {
+    for (size_t i = 0; i < size(); i++) {
+        auto T = at(i);
+        if (!T->is_xmlc() && T->size() == 1 && T->at(0) == check) {
             *res = T;
             return true;
         }
     }
-    for (size_t i = 0; i < n; i++)
-        if ((at(i) != nullptr) && !at(i)->is_xmlc() && at(i)->find_on_tree(check, res)) return true;
+    for (size_t i = 0; i < size(); i++)
+        if (!at(i)->is_xmlc() && at(i)->find_on_tree(check, res)) return true;
     return false;
 }
 
@@ -449,34 +448,23 @@ void Xml::to_buffer(Buffer &b) const {
         else if (id.value == -1)
             b << "<!--" << name << "-->";
         else if (id.value == -2) {
-            auto len = size();
             b << "<!" << name;
-            for (size_t i = 0; i < len; i++) {
-                if (at(i) != nullptr) at(i)->to_buffer(b);
-            }
+            for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
             b << ">";
             b.finish_xml_print();
         } else if (id.value == -3)
             b << "<?" << name << "?>";
         return;
     }
-    auto len  = size();
-    int  rlen = 0;
-    for (size_t i = 0; i < len; i++)
-        if (at(i) != nullptr) rlen++;
     if (name.id > 1) {
-        if (rlen != 0)
+        if (size() != 0)
             b.push_back_elt(name, id, 1);
         else {
             b.push_back_elt(name, id, 0); // case of <foo/>
             return;
         }
     }
-    //  www ++; if (www <0) b << "...loop ... "; else
-    for (size_t i = 0; i < len; i++) {
-        if (at(i) != nullptr) at(i)->to_buffer(b);
-    }
-    //  www --;
+    for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
     if (name.id > 1) b.push_back_elt(name, id, 2);
     b.finish_xml_print();
 }
@@ -535,12 +523,7 @@ auto Xml::prev_sibling(Xml *x) -> Xml * {
 // This returns true if it is possible to remove the p
 auto Xml::is_empty_p() const -> bool {
     if (!has_name(cst_p)) return false;
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        Xml *T = at(k);
-        if (T == nullptr) continue;
-        return false;
-    }
+    if (!empty()) return false;
     AttList &X = id.get_att();
     if (X.empty()) return true;
     if (X.val.size() != 1) return false;
@@ -548,35 +531,18 @@ auto Xml::is_empty_p() const -> bool {
     return false;
 }
 
-// Returns true if empty
-auto Xml::all_empty() const -> bool {
-    if (!name.empty()) return false;
-    auto len = size();
-    for (size_t k = 0; k < len; k++) { // \todo std::any_of
-        if (at(k) != nullptr) return false;
-    }
-    return true;
-}
+auto Xml::all_empty() const -> bool { return empty() && name.empty(); }
 
 // Returns true if empty (white space only)
-auto Xml::is_empty() const -> bool {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        Xml *T = at(k);
-        if (T == nullptr) continue;
-        if (!T->is_xmlc()) return false;
-        if (!only_space(T->name.c_str())) return false;
-    }
-    return true;
+auto Xml::is_whitespace() const -> bool {
+    return std::all_of(begin(), end(), [](Xml *T) { return T->is_xmlc() && only_space(T->name.c_str()); });
 }
 
 // If there is one non-empty son returns it.
 auto Xml::single_non_empty() const -> Xml * {
-    auto len = size();
     Xml *res{nullptr};
-    for (size_t k = 0; k < len; k++) {
-        Xml *y = at(k);
-        if (y == nullptr) continue;
+    for (size_t k = 0; k < size(); k++) {
+        auto y = at(k);
         if (!y->is_xmlc()) {
             if (res == nullptr)
                 res = y;
@@ -588,15 +554,8 @@ auto Xml::single_non_empty() const -> Xml * {
     return res;
 }
 
-// Returns true if text only.
-auto Xml::only_text() const -> bool {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        Xml *y = at(k);
-        if (y == nullptr) continue;
-        if (!y->is_xmlc()) return false;
-    }
-    return true;
+auto Xml::all_xmlc() const -> bool {
+    return std::all_of(begin(), end(), [](Xml *t) { return t->is_xmlc(); });
 }
 
 // Returns the only son, or 0 if more than one sons.
@@ -682,7 +641,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
     // test for junk in T
     T->remove_empty_par();
     T->remove_par_bal_if_ok();
-    if (T->is_empty()) return;
+    if (T->is_whitespace()) return;
     log_and_tty << lg_start << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
     {
         int         n = the_parser.get_cur_line();

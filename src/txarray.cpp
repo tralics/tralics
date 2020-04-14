@@ -728,7 +728,7 @@ auto Xml::try_cline_again(bool action) -> bool {
         if (at(k)->get_cell_span() != 1) return false;
         if (!at(k)->id.has_attribute(the_names[np_topborder]).null()) return false;
         if (seen_cell) return false;
-        if (!at(k)->is_empty()) return false;
+        if (!at(k)->is_whitespace()) return false;
         seen_cell = true;
     }
     return seen_cell;
