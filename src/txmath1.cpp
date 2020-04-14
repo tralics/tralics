@@ -553,11 +553,11 @@ void MathF::handle_t() {
 
 void MathF::push_in_t(Xml *x) {
     if (t == nullptr) t = new Xml(cst_temporary, nullptr);
-    t->push_back(x);
+    t->push_back_unless_nullptr(x);
 }
 
 void MathF::finish(MathList &value) {
-    if ((t != nullptr) && !t->empty()) the_parser.signal_error("internal bug in finish_translate");
+    if ((t != nullptr) && !t->all_empty()) the_parser.signal_error("internal bug in finish_translate");
     value.swap(res);
 }
 
@@ -1584,7 +1584,7 @@ auto Math::remove_req_arg_noerr() const -> std::string {
 // This realises the \textsuperscript, given the translation of the argument
 auto math_ns::make_sup(Xml *xval) -> Xml * {
     Xml *tmp = Stack::fonts1(np_s_sup);
-    tmp->push_back(xval);
+    tmp->push_back_unless_nullptr(xval);
     return tmp;
 }
 
@@ -1715,8 +1715,8 @@ auto Math::special1() const -> Xml * {
     xval = math_ns::make_sup(xval);
     if (U == nullptr) return xval;
     Xml *res = new Xml(cst_temporary, nullptr);
-    res->push_back(U);
-    res->push_back(xval);
+    res->push_back_unless_nullptr(U);
+    res->push_back_unless_nullptr(xval);
     return res;
 }
 

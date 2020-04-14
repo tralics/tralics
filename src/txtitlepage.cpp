@@ -758,7 +758,7 @@ auto TitlePageAux::convert(int i) -> Xml * {
 auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
     std::string s   = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
     Xml *       res = local_buf.xml_and_attrib(s);
-    res->push_back(r);
+    res->push_back_unless_nullptr(r);
     return res;
 }
 

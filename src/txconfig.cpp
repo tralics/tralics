@@ -330,7 +330,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             new_elt = new Xml(np_rcval, nullptr);
             new_elt->id.add_attribute(Istring("name"), Istring(sname));
         }
-        res->push_back(new_elt);
+        res->push_back_unless_nullptr(new_elt);
         temp2 << sname << " ";
         the_default_rc = sname;
         nb++;

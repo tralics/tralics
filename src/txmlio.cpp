@@ -273,7 +273,7 @@ void XmlIO::parse_tag() {
     reread_list.push_back(cur_char);
     scan_name();
     Xml *res = new Xml(Istring(B), nullptr);
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
     parse_attributes();
@@ -382,7 +382,7 @@ void XmlIO::parse_pi() {
         }
     Xml *res = new Xml(aux);
     res->id  = -3; // mark this as a pi
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
     if (is_tralics) std::cout << "Unrecognised PI " << B << "\n";
 }
 
@@ -439,7 +439,7 @@ void XmlIO::parse_dec_comment() {
     B.remove_last(3);
     Xml *res = new Xml(B);
     res->id  = -1; // mark this as a comment
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
 }
 
 // CDATA section; is inserted in the tree as is
@@ -491,7 +491,7 @@ void XmlIO::parse_dec_conditional() {
         B << "[IGNORE[";
     Xml *res = new Xml(Istring(B));
     res->id  = -2; // mark this as a declaration
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
     ++nb_cond;
@@ -558,7 +558,7 @@ void XmlIO::parse_dec_entity() {
         skip_char();
     Xml *res = new Xml(aux);
     res->id  = -2; // mark this as a declaration
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
 }
 
 // We might have <!ELEMENT %foo; %bar;>
@@ -609,7 +609,7 @@ void XmlIO::parse_dec_element() {
     tmp << " " << aux;
     Xml *res = new Xml(tmp);
     res->id  = -2; // mark this as a declaration
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
 }
 
 void XmlIO::parse_dec_attlist() {
@@ -663,14 +663,14 @@ void XmlIO::parse_dec_attlist() {
     tmp << " " << aux;
     Xml *res = new Xml(tmp);
     res->id  = -2; // mark this as a declaration
-    cur_xml->push_back(res);
+    cur_xml->push_back_unless_nullptr(res);
 }
 
 void XmlIO::parse_dec_doctype() {
     expect("DOCTYPE");
     Xml *res = new Xml(Istring("DOCTYPE"), nullptr);
-    res->id  = -2;           // mark this as a declaration
-    cur_xml->push_back(res); // Insert this in the tree
+    res->id  = -2;                          // mark this as a declaration
+    cur_xml->push_back_unless_nullptr(res); // Insert this in the tree
     skip_space();
     scan_name(0);
     aux.reset();

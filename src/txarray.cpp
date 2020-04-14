@@ -772,11 +772,11 @@ void Parser::T_cline() {
             if (0 <= tot_span) {
                 if (tot_span != 0) {
                     Xml *x = new Xml(np_cell, nullptr);
-                    R->push_back(x);
+                    R->push_back_unless_nullptr(x);
                     x->id.add_span(tot_span);
                 }
                 Xml *x = new Xml(np_cell, nullptr);
-                R->push_back(x);
+                R->push_back_unless_nullptr(x);
                 x->id.add_span(cl_span);
                 x->id.add_bottom_rule();
                 return;

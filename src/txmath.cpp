@@ -447,7 +447,7 @@ void Parser::add_math_label(Xml *res) {
 auto math_ns::xml2sons(Istring elt, Xml *first_arg, Xml *second_arg) -> Xml * {
     Xml *tmp = new Xml(elt, nullptr);
     tmp->add_tmp(first_arg);
-    tmp->push_back(xmlspace);
+    tmp->push_back_unless_nullptr(xmlspace);
     tmp->add_tmp(second_arg);
     return tmp;
 }
@@ -457,7 +457,7 @@ auto Stack::xml2_space(Istring elt, Istring b1, Istring b2, Xml *f_arg, Xml *s_a
     Xml *tmp = new Xml(elt, nullptr);
     if (!b1.null()) tmp->add_att(b1, b2);
     tmp->add_tmp(f_arg);
-    tmp->push_back(xmlspace);
+    tmp->push_back_unless_nullptr(xmlspace);
     tmp->add_tmp(s_arg);
     return tmp;
 }
@@ -467,7 +467,7 @@ auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg)
     Xml *tmp = new Xml(elt, nullptr);
     if (!b1.null()) tmp->add_att(b1, the_names[np_true]);
     tmp->add_tmp(first_arg);
-    tmp->push_back(xmlspace);
+    tmp->push_back_unless_nullptr(xmlspace);
     tmp->add_tmp(second_arg);
     return tmp;
 }
@@ -760,7 +760,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     res->id  = id;
     if (the_main->interactive_math) std::cout << res << "\n";
     after_math(is_inline);
-    the_stack.top_stack()->push_back(res);
+    the_stack.top_stack()->push_back_unless_nullptr(res);
     if (cmi.has_label()) add_math_label(res);
     if (!is_inline) the_stack.add_nl();
 }
@@ -851,7 +851,7 @@ void Parser::T_math(subtypes type) {
     x->add_tmp(res);
     if (!is_inline) x->add_att(cst_mode, cst_display);
     Xml *res1 = new Xml(np_formula, x);
-    if (alter != nullptr) res1->push_back(alter);
+    if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
     res1->id = cmi.get_fid();
     res1->add_att(np_type, cmi.get_pos_att());
@@ -1935,21 +1935,21 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     cmi.set_taid(res->id);
     cmi.set_rid(row->id);
     if (needs_dp) W = ms_D;
-    res->push_back(row);
+    res->push_back_unless_nullptr(row);
     bool first_cell = is_multline;
     if (numbered) cmi.reset_last_ml_pos();
     while (!empty()) {
         symcodes cmd = front().get_cmd();
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
-            row->push_back(cell.convert_cell(n, table, W));
+            row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
             cmi.set_cid(cid);
             cell.clear();
             first_cell = false;
         } else if (cmd == backslash_cmd) { // finish row and cell
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
-            row->push_back(cell.convert_cell(n, table, W));
+            row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
             if (first_cell) cmi.get_cid().add_attribute(np_columnalign, np_left);
             cmi.set_cid(cid);
             cell.clear();
@@ -1959,7 +1959,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             n   = 0;
             row = new Xml(cst_mtr, nullptr);
             cmi.set_rid(row->id);
-            res->push_back(row);
+            res->push_back_unless_nullptr(row);
         } else if (cmd == space_catcode && cell.empty()) {
             pop_front();
         } else {
@@ -1968,7 +1968,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         }
     }
     if (!cell.empty()) {
-        row->push_back(cell.convert_cell(n, table, W));
+        row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
         if (is_multline) cmi.get_cid().add_attribute(np_columnalign, np_right);
         cmi.set_cid(cid);
     }
@@ -2023,7 +2023,7 @@ void Xml::bordermatrix() {
         F->insert_at(1, aux);
         aux = new Xml(cst_mtd, MathDataP::mk_mo(")"));
         aux->add_att(att, attval);
-        F->push_back(aux);
+        F->push_back_unless_nullptr(aux);
     }
 }
 
@@ -2082,10 +2082,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     Xml *xval = new Xml(Istring(B));
     if (have_font) {
         Xml *tmp2 = Stack::fonts1(font_pos);
-        tmp2->push_back(xval);
+        tmp2->push_back_unless_nullptr(xval);
         xval = tmp2;
     }
-    tmp->push_back(xval);
+    tmp->push_back_unless_nullptr(xval);
     return tmp;
 }
 
@@ -2525,9 +2525,9 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         } else {
             Xml *tmp2 = new Xml(the_names[cst_munderover], nullptr);
             tmp2->add_tmp(A3);
-            tmp2->push_back(xmlspace);
+            tmp2->push_back_unless_nullptr(xmlspace);
             tmp2->add_tmp(A1);
-            tmp2->push_back(xmlspace);
+            tmp2->push_back_unless_nullptr(xmlspace);
             tmp2->add_tmp(A2);
             return MathElt(tmp2, mt_flag_big);
         }
@@ -3183,14 +3183,14 @@ void Cv3Helper::add_kernel(math_style cms) {
 
     // case {\sum}_1
     tmp->add_tmp(p);
-    tmp->push_back(xmlspace);
+    tmp->push_back_unless_nullptr(xmlspace);
     if (index != nullptr) {
         tmp->add_tmp(index);
-        tmp->push_back(xmlspace);
+        tmp->push_back_unless_nullptr(xmlspace);
     }
     if (exponent != nullptr) {
         tmp->add_tmp(exponent);
-        tmp->push_back(xmlspace);
+        tmp->push_back_unless_nullptr(xmlspace);
     }
     p = tmp;
     res.push_back(p, -1, mt_flag_big);
@@ -3221,23 +3221,23 @@ auto Xml::spec_copy() const -> Xml * {
     AttList &X = id.get_att();
     auto     i = X.has_value(the_names[np_movablelimits]);
     if (i < 0) return nullptr;
-    Xml *                    res     = new Xml(name, nullptr);
-    res->std::vector<Xml *>::operator=(*this);
+    Xml *res                                = new Xml(name, nullptr);
+    static_cast<std::vector<Xml *> &>(*res) = *this;
     res->id.add_attribute(X, true);
     return res;
 }
 
 void Math::concat_space(Xml *res) {
     while (!empty()) {
-        res->push_back(front().get_xml_val());
+        res->push_back_unless_nullptr(front().get_xml_val());
         pop_front();
-        if (!empty()) res->push_back(xmlspace);
+        if (!empty()) res->push_back_unless_nullptr(xmlspace);
     }
 }
 
 void Math::concat(Xml *res) {
     while (!empty()) {
-        res->push_back(front().get_xml_val());
+        res->push_back_unless_nullptr(front().get_xml_val());
         pop_front();
     }
 }

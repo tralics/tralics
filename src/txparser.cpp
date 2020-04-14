@@ -2973,7 +2973,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
         auto n = scan_reg_num();
         Xml *x = box_table[n].val;
         if (x == nullptr) return true;
-        return x->empty();
+        return x->all_empty();
     }
     case if_hbox_code:
     case if_vbox_code: scan_reg_num(); return false; // pretend it's neither H nor V

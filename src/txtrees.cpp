@@ -227,7 +227,7 @@ void Parser::finish_index() {
         CI->do_sort();
         for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
-            res->push_back(A);
+            res->push_back_unless_nullptr(A);
             res->add_nl();
         }
         the_stack.document_element()->insert_bib(res, CI->get_position());

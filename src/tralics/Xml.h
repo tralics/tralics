@@ -14,7 +14,7 @@ public:
     Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}
 
-    [[nodiscard]] auto empty() const -> bool;
+    [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto get_cell_span() const -> long;
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
@@ -34,7 +34,7 @@ public:
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    auto back() -> Xml * { return std::vector<Xml *>::empty() ? nullptr : std::vector<Xml *>::back(); }
+    auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
     auto contains_env(Istring name) -> bool;
     auto convert_to_string() -> std::string;
     auto delete_one_env0(Istring name) -> Xid;
@@ -72,8 +72,9 @@ public:
     auto prev_sibling(Xml *x) -> Xml *;
     auto put_at(long n, Xml *x) -> bool;
     void put_in_buffer(Buffer &b);
-    void push_back(Buffer &B) { push_back(new Xml(B)); }
-    void push_back(Xml *x);
+    using std::vector<Xml *>::push_back;
+    void push_back(Buffer &B) { push_back_unless_nullptr(new Xml(B)); }
+    void push_back_unless_nullptr(Xml *x);
     void push_back_list(Xml *x);
     void recurse(XmlAction &X);
     void recurse0(XmlAction &X);
@@ -84,9 +85,6 @@ public:
     void remove_last_space();
     void remove_par_bal_if_ok();
     void rename(Istring old_name, Istring new_name);
-    void reset();
-    void sans_titre();
-    auto sans_titre(Xml *) -> String;
     void set_id(long i) { id = i; }
     void subst_env0(Istring match, Xml *vl);
     void swap_x(Xml *x);
@@ -99,7 +97,7 @@ public:
     void word_stats(const std::string &match);
     void word_stats_i();
     void replace_first(Xml *x) {
-        if (!std::vector<Xml *>::empty()) at(0) = x;
+        if (!empty()) at(0) = x;
     }
     void bordermatrix();
 };

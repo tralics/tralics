@@ -153,7 +153,7 @@ void Parser::leave_h_mode() {
         unfinished_par = nullptr;
         flush_buffer0();
         the_stack.pop(cst_p);
-        Xml *p = the_stack.top_stack()->back();
+        Xml *p = the_stack.top_stack()->back_or_nullptr();
         if ((p != nullptr) && p->is_empty_p()) the_stack.top_stack()->pop_back();
         the_stack.add_nl();
     }
@@ -388,7 +388,7 @@ void Parser::T_par1() {
             unfinished_par = cp;
             the_stack.pop(cst_p);
             Xml *tp = the_stack.top_stack();
-            if (tp->back() == cp)
+            if (tp->back_or_nullptr() == cp)
                 tp->pop_back();
             else
                 cp->name = Istring();
@@ -1046,7 +1046,7 @@ void Parser::finish_color() {
     Xml *res = new Xml(Istring("colorpool"), nullptr);
     for (size_t i = 0; i < n; i++)
         if (all_colors[i]->is_used()) {
-            res->push_back(all_colors[i]->get_val());
+            res->push_back_unless_nullptr(all_colors[i]->get_val());
             res->add_nl();
         }
     the_stack.document_element()->replace_first(res);

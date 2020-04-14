@@ -124,31 +124,29 @@ void Stack::hack_for_hanl() {
 // Creates an empty element named x, and adds it to the stack.
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(name_positions x) -> AttList & {
-    top_stack()->push_back(new Xml(x, nullptr));
+    top_stack()->push_back_unless_nullptr(new Xml(x, nullptr));
     return Xid(last_xid).get_att();
 }
 
 // Adds x to the tail of the current list.
-void Stack::add_last(Xml *x) { top_stack()->push_back(x); }
+void Stack::add_last(Xml *x) { top_stack()->push_back_unless_nullptr(x); }
 
 // This adds x at the end the element
-void Xml::push_back(Xml *x) { // \todo just use std::vector::push_back
-    if (x != nullptr) std::vector<Xml *>::push_back(x);
+void Xml::push_back_unless_nullptr(Xml *x) {
+    if (x != nullptr) push_back(x);
 }
 
 // Adds B to the tail of the current list.
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool {
-    return !std::vector<Xml *>::empty() && (at(size() - 1) != nullptr) && at(size() - 1)->id.value == 0;
-}
+auto Xml::last_is_string() const -> bool { return !empty() && (at(size() - 1) != nullptr) && at(size() - 1)->id.value == 0; }
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
 void Xml::last_to_SH() {
     shbuf.reset();
-    shbuf.push_back(back()->name.c_str());
+    shbuf.push_back(back_or_nullptr()->name.c_str());
 }
 
 // This adds B at the end the element, via concatenation, if possible.
@@ -161,14 +159,14 @@ void Xml::add_last_string(const Buffer &B) {
         the_parser.my_stats.one_more_merge();
     }
     shbuf.push_back(B.c_str());
-    push_back(new Xml(shbuf));
+    push_back_unless_nullptr(new Xml(shbuf));
 }
 
 // This adds x and a \n at the end of this.
 void Xml::add_last_nl(Xml *x) {
     if (x != nullptr) {
-        push_back(x);
-        push_back(the_main->the_stack->newline_xml);
+        push_back_unless_nullptr(x);
+        push_back_unless_nullptr(the_main->the_stack->newline_xml);
     }
 }
 
@@ -186,7 +184,7 @@ void Xml::remove_last_space() {
     shbuf.remove_space_at_end();
     if (k != shbuf.size()) {
         pop_back();
-        if (!shbuf.empty()) push_back(new Xml(shbuf.to_string()));
+        if (!shbuf.empty()) push_back_unless_nullptr(new Xml(shbuf.to_string()));
     }
 }
 
@@ -195,8 +193,8 @@ void Stack::add_nl() { top_stack()->add_nl(); }
 
 // This adds a NL to the end of the element
 void Xml::add_nl() {
-    if (!empty() && back() == the_main->the_stack->newline_xml) return;
-    push_back(the_main->the_stack->newline_xml);
+    if (!all_empty() && back_or_nullptr() == the_main->the_stack->newline_xml) return;
+    push_back_unless_nullptr(the_main->the_stack->newline_xml);
 }
 
 // Returns the slot of the first non-empty frame
@@ -278,7 +276,7 @@ void Stack::ipush(Istring fr, Xml *V) { Table.push_back(StackSlot(V, the_parser.
 
 // Pushes code with frame.
 void Stack::push(Istring fr, Xml *V) {
-    top_stack()->push_back(V);
+    top_stack()->push_back_unless_nullptr(V);
     ipush(fr, V);
     push_trace();
 }
@@ -309,7 +307,7 @@ void Stack::init_all(const std::string &a) {
     cur_mode = mode_v;
     cur_lid  = Istring("uid1");
     Xml *V   = new Xml(Istring(a), nullptr);
-    V->push_back(nullptr); // Make a hole for the color pool
+    V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
     V->id = 1;
     ipush(the_names[cst_document], V);
     newline_xml = new Xml(Istring("\n"));
@@ -662,7 +660,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
     return id;
 }
 
-auto Xml::tail_is_anchor() const -> bool { return !empty() && (at(size() - 1) != nullptr) && at(size() - 1)->is_anchor(); }
+auto Xml::tail_is_anchor() const -> bool { return !all_empty() && (at(size() - 1) != nullptr) && at(size() - 1)->is_anchor(); }
 
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {

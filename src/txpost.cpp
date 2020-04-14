@@ -111,7 +111,7 @@ auto Xml::insert_at_ck(int n, Xml *v) -> bool {
         if (at(i) != nullptr) n--;
     }
     if (n == 1) {
-        std::vector<Xml *>::push_back(v);
+        push_back(v);
         return true;
     }
     return false;
@@ -142,7 +142,7 @@ auto Xml::deep_copy() -> Xml * {
     res->id.add_attribute(id);
     auto n = size();
     for (size_t i = 0; i < n; i++) {
-        if (at(i) != nullptr) res->push_back(at(i)->deep_copy());
+        if (at(i) != nullptr) res->push_back_unless_nullptr(at(i)->deep_copy());
     }
     return res;
 }
@@ -353,7 +353,7 @@ void Xml::recurse(XmlAction &X) {
             case rc_how_many: X.incr_int_val(); break;
             case rc_subst: at(k) = X.get_xml_val(); continue;
             case rc_move:
-                X.get_xml_val()->push_back(T);
+                X.get_xml_val()->push_back_unless_nullptr(T);
                 at(k) = nullptr;
                 continue;
             case rc_composition: // a module in the comp section
@@ -432,11 +432,7 @@ auto Xml::only_hi() const -> bool {
 // Adds the content of x to this. Attributes are lost
 // Assumes that x is not a string.
 void Xml::push_back_list(Xml *x) {
-    auto n = x->size();
-    for (size_t i = 0; i < n; i++) {
-        Xml *y = x->at(i);
-        if (y != nullptr) std::vector<Xml *>::push_back(y);
-    }
+    for (size_t i = 0; i < x->size(); i++) push_back_unless_nullptr(x->at(i));
 }
 
 // Insert X at the end; but the value if it is a temporary.
@@ -445,7 +441,7 @@ void Xml::add_tmp(Xml *x) {
     if (!x->is_xmlc() && x->has_name(cst_temporary))
         push_back_list(x);
     else
-        std::vector<Xml *>::push_back(x);
+        push_back(x);
 }
 
 // Inserts x at position pos.
@@ -600,10 +596,10 @@ auto Xml::is_empty_p() const -> bool {
 }
 
 // Returns true if empty
-auto Xml::empty() const -> bool {
+auto Xml::all_empty() const -> bool {
     if (!name.empty()) return false;
     auto len = size();
-    for (size_t k = 0; k < len; k++) {
+    for (size_t k = 0; k < len; k++) { // \todo std::any_of
         if (at(k) != nullptr) return false;
     }
     return true;
@@ -715,14 +711,14 @@ void Xml::postprocess_fig_table(bool is_fig) {
     // move the caption from T to this
     Xml *C = T->get_first_env(np_caption);
     if (C != nullptr) {
-        std::vector<Xml *>::push_back(C); // copy caption
+        push_back(C); // copy caption
         C->change_name(np_captions);
-        std::vector<Xml *>::push_back(the_main->the_stack->newline_xml);
+        push_back(the_main->the_stack->newline_xml);
     }
     C = T->get_first_env(np_alt_caption);
     if (C != nullptr) {
-        std::vector<Xml *>::push_back(C);
-        std::vector<Xml *>::push_back(the_main->the_stack->newline_xml);
+        push_back(C);
+        push_back(the_main->the_stack->newline_xml);
     }
 
     // Move all data from T to this
@@ -743,7 +739,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
         log_and_tty << ".\n";
     }
     Xml *U = new Xml(Istring("unexpected"), nullptr);
-    push_back(U);
+    push_back_unless_nullptr(U);
     T->add_non_empty_to(U);
 }
 
@@ -776,13 +772,13 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         return;
     case 1: // a table in the figure, move all tables
         X = new Xml(cst_p, nullptr);
-        to->push_back(X);
+        to->push_back_unless_nullptr(X);
         from->move(the_names[np_table], X);
         to->id.add_attribute(np_rend, np_array);
         return;
     case 3: // verbatim material in the figure; move all lines
         X = new Xml(cst_empty, nullptr);
-        to->push_back(X);
+        to->push_back_unless_nullptr(X);
         from->move(the_names[np_pre], X);
         to->id.add_attribute(np_rend, np_pre);
         return;
@@ -819,7 +815,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
     // We move in to all tabular
     if (X1.get_int_val() > 1) {
         Xml *X = new Xml(cst_p, nullptr);
-        to->push_back(X);
+        to->push_back_unless_nullptr(X);
         from->move(the_names[np_table], X);
         to->id.add_attribute(np_rend, np_array);
         return;
@@ -831,18 +827,18 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
     Xml *C = from->single_non_empty();
     if ((C != nullptr) && !C->is_xmlc()) {
         if (C->has_name(np_figure)) {
-            to->push_back(C);
-            from->reset();
+            to->push_back_unless_nullptr(C);
+            from->clear();
         } else if (C->has_name(np_formula)) {
-            to->push_back(C);
-            from->reset();
+            to->push_back_unless_nullptr(C);
+            from->clear();
         } else if (C->has_name(np_table)) {
-            if (!C->empty())
+            if (!C->all_empty())
                 to->push_back_list(C);
             else
-                to->push_back(C); // This is strange...
+                to->push_back_unless_nullptr(C); // This is strange...
             to->id.add_attribute_but_rend(C->id);
-            from->reset();
+            from->clear();
             to->change_name(np_table);
         }
     }
@@ -855,10 +851,10 @@ void post_ns::table_subfigure(Xml *from, Xml *to, Xml *junk) {
         Xml *sf = from->get_first_env(cst_p);
         if (sf == nullptr) break;
         if (sf->is_xmlc())
-            junk->push_back(sf);
+            junk->push_back_unless_nullptr(sf);
         else {
             Xml *res1 = figline(sf, ctr, junk);
-            if (res1 != nullptr) to->push_back(res1);
+            if (res1 != nullptr) to->push_back_unless_nullptr(res1);
         }
     }
 }
@@ -874,7 +870,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
         if (sf == nullptr) break;
         nrows++;
         if (sf->is_xmlc()) {
-            junk->push_back(sf);
+            junk->push_back_unless_nullptr(sf);
             continue;
         }
         Xml *leg   = sf->get_first_env(np_leg);
@@ -883,7 +879,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
         sf->add_non_empty_to(junk);
         if (texte != nullptr) {
             texte->change_name(np_cell);
-            row1->push_back(texte);
+            row1->push_back_unless_nullptr(texte);
             texte->id.add_attribute(sf->id);
         }
         if (leg != nullptr) {
@@ -891,7 +887,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
             Buffer B;
             B << '(' << uchar(ctr) << ')' << ' ';
             leg->add_first(new Xml(B));
-            row2->push_back(leg);
+            row2->push_back_unless_nullptr(leg);
         }
         ctr++;
     }
@@ -899,8 +895,8 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     if (nrows == 0) return nullptr;
     Xml *res = new Xml(np_table, nullptr);
     res->id.add_attribute(np_rend, np_inline);
-    res->push_back(row1);
-    res->push_back(row2);
+    res->push_back_unless_nullptr(row1);
+    res->push_back_unless_nullptr(row2);
     return new Xml(cst_p, res);
 }
 
@@ -912,7 +908,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
         Xml *P = from->get_first_env(cst_p);
         if (P == nullptr) break;
         if (P->is_xmlc()) {
-            junk->push_back(P);
+            junk->push_back_unless_nullptr(P);
             continue;
         }
         scbuf << bf_reset << fmt::format("{}", n);
@@ -925,7 +921,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
                 break;
             }
             if (sf->is_xmlc()) {
-                junk->push_back(sf);
+                junk->push_back_unless_nullptr(sf);
                 continue;
             }
             sf->id.add_attribute(parid_name, par_id);
@@ -934,15 +930,15 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
             sf->add_non_empty_to(junk);
             if (leg != nullptr) {
                 leg->change_name(np_head);
-                sf->push_back(leg);
+                sf->push_back_unless_nullptr(leg);
             }
             if (texte != nullptr) {
                 Xml *xx = texte->get_first_env(np_figure);
                 if (xx != nullptr) { sf->id.add_attribute_but_rend(xx->id); }
                 texte->add_non_empty_to(junk);
             }
-            to->push_back(sf);
-            to->push_back(the_main->the_stack->newline_xml);
+            to->push_back_unless_nullptr(sf);
+            to->push_back_unless_nullptr(the_main->the_stack->newline_xml);
         }
     }
 }
@@ -954,12 +950,9 @@ void Xml::add_non_empty_to(Xml *res) {
         Xml *T = at(k);
         if (T == nullptr) continue;
         if (T->is_xmlc() && only_space(T->name.c_str())) continue;
-        res->push_back(T);
+        res->push_back_unless_nullptr(T);
     }
 }
-
-// Kills the tree.
-void Xml::reset() { clear(); } // \todo just use clear()
 
 // Postprocessor for <composition>
 void Xml::compo_special() {
@@ -1020,7 +1013,7 @@ void Xml::put_in_buffer(Buffer &b) {
 auto Xml::remove_last() -> Xml * {
     auto len = size();
     if (len == 0) return nullptr;
-    Xml *res = std::vector<Xml *>::back();
+    Xml *res = back();
     pop_back();
     return res;
 }

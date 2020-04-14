@@ -306,7 +306,7 @@ void Parser::T_cst2(int c) {
             s = "e";
         else if (c == iemes_code)
             s = "es";
-        res->push_back(new Xml(Istring(s)));
+        res->push_back_unless_nullptr(new Xml(Istring(s)));
         the_stack.add_last(res);
     }
     E_xspace();
