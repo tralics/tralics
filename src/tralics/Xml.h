@@ -67,7 +67,6 @@ public:
     void kill_name() { name = Istring(); }
     auto last_box() -> Xml *;
     void last_to_SH();
-    void make_hole(size_t pos);
     void move(Istring match, Xml *res);
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;

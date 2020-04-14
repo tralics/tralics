@@ -390,13 +390,6 @@ void Xml::recurse(XmlAction &X) {
     }
 }
 
-// Should we use insert here ?
-void Xml::make_hole(size_t pos) {
-    auto l = size();
-    tree.push_back(nullptr);
-    for (size_t i = l; i > pos; i--) tree[i] = tree[i - 1];
-}
-
 // Returns a pointer to the last son.
 auto Xml::last_addr() const -> Xml * {
     auto len = size();
@@ -465,16 +458,10 @@ void Xml::add_tmp(Xml *x) {
 }
 
 // Inserts x at position pos.
-void Xml::insert_at(size_t pos, Xml *x) {
-    make_hole(pos);
-    tree[pos] = x;
-}
+void Xml::insert_at(size_t pos, Xml *x) { tree.insert(tree.begin() + to_signed(pos), x); }
 
 // Inserts x at position 0.
-void Xml::add_first(Xml *x) {
-    make_hole(0);
-    tree[0] = x;
-}
+void Xml::add_first(Xml *x) { tree.insert(tree.begin(), x); }
 
 // This find an element with a single son, the son should be res.
 auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
