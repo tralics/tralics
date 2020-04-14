@@ -73,9 +73,9 @@ auto Xml::value_at(long n) -> Xml * {
 auto Xml::put_at(long n, Xml *x) -> bool {
     if (is_xmlc()) return false;
     for (size_t i = 0; i < size(); i++) {
-        if (at(i) != nullptr) {
+        if (at(i) != nullptr) { // \todo always true (and others on this file)
             if (n == 0) {
-                at(i) = x;
+                at(i) = gsl::not_null{x};
                 return true;
             }
             n--;
@@ -111,7 +111,7 @@ auto Xml::insert_at_ck(int n, Xml *v) -> bool {
         if (at(i) != nullptr) n--;
     }
     if (n == 1) {
-        push_back(v);
+        push_back(gsl::not_null{v});
         return true;
     }
     return false;
@@ -354,7 +354,7 @@ void Xml::recurse(XmlAction &X) {
                 }
                 break;
             case rc_how_many: X.incr_int_val(); break;
-            case rc_subst: at(k) = X.get_xml_val(); continue;
+            case rc_subst: at(k) = gsl::not_null{X.get_xml_val()}; continue;
             case rc_move:
                 X.get_xml_val()->push_back_unless_nullptr(T);
                 erase(begin() + to_signed(k));
@@ -389,7 +389,7 @@ void Xml::recurse(XmlAction &X) {
 }
 
 // Returns a pointer to the last son.
-auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1) : nullptr; }
+auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1).get() : nullptr; }
 
 // Returns a pointer to the last element
 // and removes it if it is a Box
@@ -445,14 +445,14 @@ void Xml::add_tmp(Xml *x) {
     if (!x->is_xmlc() && x->has_name(cst_temporary))
         push_back_list(x);
     else
-        push_back(x);
+        push_back(gsl::not_null{x});
 }
 
 // Inserts x at position pos.
-void Xml::insert_at(size_t pos, Xml *x) { insert(begin() + to_signed(pos), x); }
+void Xml::insert_at(size_t pos, Xml *x) { insert(begin() + to_signed(pos), gsl::not_null{x}); }
 
 // Inserts x at position 0.
-void Xml::add_first(Xml *x) { insert(begin(), x); }
+void Xml::add_first(Xml *x) { insert(begin(), gsl::not_null{x}); }
 
 // This find an element with a single son, the son should be res.
 auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
@@ -672,7 +672,7 @@ void Xml::remove_empty_par() {
 }
 
 // This swaps the trees of this and x
-void Xml::swap_x(Xml *x) { std::vector<Xml *>::swap(*x); }
+void Xml::swap_x(Xml *x) { std::vector<gsl::not_null<Xml *>>::swap(*x); }
 
 // Moves to res every son named match.
 void Xml::move(Istring match, Xml *res) {
@@ -702,7 +702,7 @@ void Xml::unbox(Xml *x) {
 void Xml::remove_par_bal_if_ok() {
     Xml *res = single_non_empty();
     if ((res != nullptr) && !res->is_xmlc() && res->has_name(cst_p)) {
-        std::vector<Xml *>::operator=(*res);
+        std::vector<gsl::not_null<Xml *>>::operator=(*res);
         res->clear();
     }
 }
@@ -715,14 +715,14 @@ void Xml::postprocess_fig_table(bool is_fig) {
     // move the caption from T to this
     Xml *C = T->get_first_env(np_caption);
     if (C != nullptr) {
-        push_back(C); // copy caption
+        push_back(gsl::not_null{C}); // copy caption
         C->change_name(np_captions);
-        push_back(the_main->the_stack->newline_xml);
+        push_back(gsl::not_null{the_main->the_stack->newline_xml});
     }
     C = T->get_first_env(np_alt_caption);
     if (C != nullptr) {
-        push_back(C);
-        push_back(the_main->the_stack->newline_xml);
+        push_back(gsl::not_null{C});
+        push_back(gsl::not_null{the_main->the_stack->newline_xml});
     }
 
     // Move all data from T to this

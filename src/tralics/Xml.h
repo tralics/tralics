@@ -1,9 +1,10 @@
 #pragma once
 #include "../txstring.h"
+#include <gsl/gsl>
 
 class XmlAction;
 
-class Xml : public std::vector<Xml *> { // \todo value semantics
+class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
 public:
     Xid     id{0}; ///< id of the objet
     Istring name;  ///< name of the element
@@ -34,7 +35,7 @@ public:
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
+    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
     auto               contains_env(Istring name) -> bool;
     auto               convert_to_string() -> std::string;
     auto               delete_one_env0(Istring name) -> Xid;
@@ -72,7 +73,7 @@ public:
     auto prev_sibling(Xml *x) -> Xml *;
     auto put_at(long n, Xml *x) -> bool;
     void put_in_buffer(Buffer &b);
-    using std::vector<Xml *>::push_back;
+    using std::vector<gsl::not_null<Xml *>>::push_back;
     void push_back(Buffer &B) { push_back_unless_nullptr(new Xml(B)); }
     void push_back_unless_nullptr(Xml *x);
     void push_back_list(Xml *x);
@@ -97,7 +98,7 @@ public:
     void word_stats(const std::string &match);
     void word_stats_i();
     void replace_first(Xml *x) {
-        if (!empty()) at(0) = x;
+        if (!empty()) at(0) = gsl::not_null{x};
     }
     void bordermatrix();
 };

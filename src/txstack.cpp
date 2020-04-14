@@ -133,7 +133,7 @@ void Stack::add_last(Xml *x) { top_stack()->push_back_unless_nullptr(x); }
 
 // This adds x at the end the element
 void Xml::push_back_unless_nullptr(Xml *x) {
-    if (x != nullptr) push_back(x);
+    if (x != nullptr) push_back(gsl::not_null{x});
 }
 
 // Adds B to the tail of the current list.
