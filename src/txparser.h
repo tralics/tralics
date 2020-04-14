@@ -523,7 +523,6 @@ private:
     void        lost_if(Token T, int L);
     void        mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what);
     void        make_catcodes();
-    static auto make_cit_ref(Istring type, Istring ref) -> Xml *;
     void        make_constants();
     void        makelabel();
     void        make_token(String s);

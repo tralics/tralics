@@ -34,6 +34,18 @@ namespace {
     int          similar_entries;
     bool         old_ra      = false;
     bool         start_comma = true; // should we scan for an initial comma ?
+
+    // This creates a <ref target='bidN'/> element. This is the REF that needs
+    // to be solved later. In the case of \footcite[p.25]{Knuth},
+    // the arguments of the function are foot and Knuth; the `p.25' will be
+    // considered elsewhere.
+    auto make_cit_ref(Istring type, Istring ref) -> Xml {
+        auto    n  = *the_bibliography.find_citation_item(type, ref, true);
+        Istring id = the_bibliography.citation_table[n].get_bid();
+        Xml     res(np_ref, nullptr);
+        res.id.add_attribute(np_target, id);
+        return res;
+    }
 } // namespace
 
 namespace bib_ns {
@@ -83,18 +95,6 @@ auto Bibliography::unique_bid() -> Istring {
 auto CitationItem::get_bid() -> Istring {
     if (bid.empty()) bid = the_bibliography.unique_bid();
     return bid;
-}
-
-// This creates a <ref target='bidN'/> element. This is the REF that needs
-// to be solved later. In the case of \footcite[p.25]{Knuth},
-// the arguments of the function are foot and Knuth; the `p.25' will be
-// considered elsewhere.
-auto Parser::make_cit_ref(Istring type, Istring ref) -> Xml * {
-    auto    n   = *the_bibliography.find_citation_item(type, ref, true);
-    Istring id  = the_bibliography.citation_table[n].get_bid();
-    Xml *   res = new Xml(np_ref, nullptr);
-    res->id.add_attribute(np_target, id);
-    return res;
 }
 
 // \cite[year][]{foo}is the same as \cite{foo}
@@ -249,7 +249,7 @@ void Parser::T_cite_one() {
         parse_error("Citation after loading biblio?");
         return;
     }
-    Xml *res = make_cit_ref(type, ref);
+    auto res = new Xml(make_cit_ref(type, ref));
     if (is_simple) {
         flush_buffer();
         the_stack.add_last(res);
