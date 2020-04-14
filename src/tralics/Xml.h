@@ -16,6 +16,7 @@ public:
     Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}
 
     [[nodiscard]] auto all_empty() const -> bool;
+    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
     [[nodiscard]] auto get_cell_span() const -> long;
     [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
@@ -29,24 +30,23 @@ public:
     [[nodiscard]] auto only_hi() const -> bool;
     [[nodiscard]] auto only_recur_hi() const -> bool;
     [[nodiscard]] auto only_text() const -> bool;
-    [[nodiscard]] auto real_size() const -> int;
+    [[nodiscard]] auto real_size() const -> long;
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
-    auto               contains_env(Istring name) -> bool;
-    auto               convert_to_string() -> std::string;
-    auto               delete_one_env0(Istring name) -> Xid;
-    auto               deep_copy() -> Xml *;
-    auto               father(Xml *X, int &) -> Xml *;
-    auto               figline(int &ctr, Xml *junk) -> Xml *;
-    auto               find_on_tree(Xml *check, Xml **res) const -> bool;
-    auto               first_lower(Istring src) -> Xml *;
-    auto               get_first_env(name_positions name) -> Xml *;
-    auto               how_many_env(Istring match) -> long;
-    auto               insert_at_ck(int n, Xml *v) -> bool;
+    auto contains_env(Istring name) -> bool;
+    auto convert_to_string() -> std::string;
+    auto delete_one_env0(Istring name) -> Xid;
+    auto deep_copy() -> Xml *;
+    auto father(Xml *X, int &) -> Xml *;
+    auto figline(int &ctr, Xml *junk) -> Xml *;
+    auto find_on_tree(Xml *check, Xml **res) const -> bool;
+    auto first_lower(Istring src) -> Xml *;
+    auto get_first_env(name_positions name) -> Xml *;
+    auto how_many_env(Istring match) -> long;
+    auto insert_at_ck(int n, Xml *v) -> bool;
 
     void add_att(Istring a, Istring b) const { id.add_attribute(a, b); }
     void add_att(name_positions a, name_positions b) const { id.add_attribute(a, b); }

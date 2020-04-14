@@ -47,81 +47,37 @@ namespace all_words_ns {
     void                        dump_words(const std::string &name);
 } // namespace all_words_ns
 
-//  --- Manipulating the XML tree
+auto Xml::real_size() const -> long { return is_xmlc() ? -2 : to_signed(size()); }
 
-// return the true size, excluding null elements
-auto Xml::real_size() const -> int {
-    if (is_xmlc()) return -2;
-    int n = 0;
-    for (size_t i = 0; i < size(); i++) // \todo std::count_if
-        if (at(i) != nullptr) n++;
-    return n;
-}
-
-// returns the value at n, excluding null elements
 auto Xml::value_at(long n) -> Xml * {
-    if (is_xmlc() || n < 0) return nullptr;
-    for (size_t i = 0; i < size(); i++) {
-        if (at(i) != nullptr) {
-            if (n == 0) return at(i);
-            n--;
-        }
-    }
-    return nullptr;
+    if (is_xmlc() || n < 0 || n >= to_signed(size())) return nullptr;
+    return at(to_unsigned(n));
 }
 
 auto Xml::put_at(long n, Xml *x) -> bool {
-    if (is_xmlc()) return false;
-    for (size_t i = 0; i < size(); i++) {
-        if (at(i) != nullptr) { // \todo always true (and others on this file)
-            if (n == 0) {
-                at(i) = gsl::not_null{x};
-                return true;
-            }
-            n--;
-        }
-    }
-    return false;
+    if (is_xmlc() || n < 0 || n >= to_signed(size())) return false;
+    at(to_unsigned(n)) = gsl::not_null{x};
+    return true;
 }
 
-// returns the value at n, excluding null elements, returns true if OK
 auto Xml::remove_at(long n) -> bool {
-    if (is_xmlc()) return false;
-    for (size_t i = 0; i < size(); i++) {
-        if (at(i) != nullptr) {
-            if (n == 0) {
-                erase(begin() + to_signed(i));
-                return true;
-            }
-            n--;
-        }
-    }
-    return false;
+    if (is_xmlc() || n < 0 || n >= to_signed(size())) return false;
+    erase(begin() + n);
+    return true;
 }
 
-// inserts a position n, excluding spaces
-// returns true if OK
 auto Xml::insert_at_ck(int n, Xml *v) -> bool {
-    if (is_xmlc()) return false;
-    for (size_t i = 0; i < size(); i++) { // \todo size_t real_index
-        if (n == 0) {
-            insert_at(i, v);
-            return true;
-        }
-        if (at(i) != nullptr) n--;
-    }
-    if (n == 1) {
+    if (is_xmlc() || n < 0 || n > to_signed(size())) return false;
+    if (n < to_signed(size()))
+        insert_at(to_unsigned(n), v);
+    else
         push_back(gsl::not_null{v});
-        return true;
-    }
-    return false;
+    return true;
 }
 
 auto Xml::is_child(Xml *x) const -> bool {
     if (is_xmlc()) return false;
-    for (size_t i = 0; i < size(); i++)
-        if (at(i) == x) return true;
-    return false;
+    return std::any_of(begin(), end(), [x](Xml *y) { return x == y; });
 }
 
 void Parser::user_XML_swap(subtypes c) {
@@ -140,10 +96,7 @@ auto Xml::deep_copy() -> Xml * {
     if (is_xmlc()) return this;
     Xml *res = new Xml(name, nullptr);
     res->id.add_attribute(id);
-    auto n = size();
-    for (size_t i = 0; i < n; i++) {
-        if (at(i) != nullptr) res->push_back_unless_nullptr(at(i)->deep_copy());
-    }
+    for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr(at(i)->deep_copy()); }
     return res;
 }
 
@@ -301,18 +254,16 @@ void post_ns::remove_label(String s, Istring n) {
 
 // This removes X from the list of all heads.
 void post_ns::remove_me_from_heads(Xml *X) {
-    auto j = the_parser.all_heads.size();
-    for (size_t i = 0; i < j; i++)
+    for (size_t i = 0; i < the_parser.all_heads.size(); i++)
         if (the_parser.all_heads[i] == X) the_parser.all_heads[i] = nullptr;
 }
 
 // This finds a sub element named match, and does some action X
 // Recursion stops when found.
 void Xml::recurse0(XmlAction &X) {
-    auto tl = size();
-    for (size_t k = 0; k < tl; k++) {
+    for (size_t k = 0; k < size(); k++) {
         Xml *y = at(k);
-        if ((y == nullptr) || y->is_xmlc()) continue;
+        if (y->is_xmlc()) continue;
         if (y->has_name(X.get_match())) switch (X.get_what()) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
@@ -339,7 +290,7 @@ void Xml::recurse0(XmlAction &X) {
 void Xml::recurse(XmlAction &X) {
     for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
-        if ((T == nullptr) || T->is_xmlc()) continue;
+        if (T->is_xmlc()) continue;
         if (T->has_name(X.get_match())) {
             switch (X.get_what()) {
             case rc_delete:
@@ -394,10 +345,9 @@ auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1).get() : 
 // Returns a pointer to the last element
 // and removes it if it is a Box
 auto Xml::last_box() -> Xml * {
-    auto len = size();
-    if (len == 0) return nullptr;
-    Xml *res = at(size() - 1);
-    if ((res != nullptr) && !res->is_xmlc()) {
+    if (size() == 0) return nullptr;
+    auto res = back();
+    if (!res->is_xmlc()) {
         pop_back();
         return res;
     }
@@ -406,10 +356,9 @@ auto Xml::last_box() -> Xml * {
 
 // Remove last item if its an empty <hi>
 void Xml::remove_last_empty_hi() {
-    auto len = size();
-    if (len == 0) return;
-    Xml *T = at(len - 1);
-    if ((T == nullptr) || T->is_xmlc()) return;
+    if (size() == 0) return;
+    auto T = back();
+    if (T->is_xmlc()) return;
     if (!T->only_recur_hi()) return;
     pop_back();
 }
