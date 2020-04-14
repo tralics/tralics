@@ -90,7 +90,7 @@ auto Xml::remove_at(long n) -> bool {
     for (size_t i = 0; i < size(); i++) {
         if (at(i) != nullptr) {
             if (n == 0) {
-                at(i) = nullptr;
+                erase(begin() + to_signed(i));
                 return true;
             }
             n--;
@@ -317,7 +317,7 @@ void Xml::recurse0(XmlAction &X) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
                 X.set_int_val(y->id.value);
-                at(k) = nullptr;
+                erase(begin() + to_signed(k));
                 return;
             case rc_return_first:
                 X.set_xml_val(y);
@@ -325,7 +325,7 @@ void Xml::recurse0(XmlAction &X) {
                 return;
             case rc_return_first_and_kill:
                 X.set_xml_val(y);
-                at(k) = nullptr;
+                erase(begin() + to_signed(k));
                 X.mark_found();
                 return;
             default: log_and_tty << "illegal value in recurse0\n" << lg_fatal; abort();
@@ -337,16 +337,19 @@ void Xml::recurse0(XmlAction &X) {
 
 // This does some action for every element named X.
 void Xml::recurse(XmlAction &X) {
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
+    for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
         if ((T == nullptr) || T->is_xmlc()) continue;
         if (T->has_name(X.get_match())) {
             switch (X.get_what()) {
-            case rc_delete: at(k) = nullptr; continue;
+            case rc_delete:
+                erase(begin() + to_signed(k));
+                --k;
+                continue;
             case rc_delete_empty:
                 if (T->is_empty()) {
-                    at(k) = nullptr;
+                    erase(begin() + to_signed(k));
+                    --k;
                     continue;
                 }
                 break;
@@ -354,13 +357,14 @@ void Xml::recurse(XmlAction &X) {
             case rc_subst: at(k) = X.get_xml_val(); continue;
             case rc_move:
                 X.get_xml_val()->push_back_unless_nullptr(T);
-                at(k) = nullptr;
+                erase(begin() + to_signed(k));
+                --k;
                 continue;
             case rc_composition: // a module in the comp section
             {
                 Istring an = T->id.has_attribute(the_names[np_id]);
                 if (!an.null()) post_ns::remove_label("module in composition", an);
-                at(k) = nullptr;
+                erase(begin() + to_signed(k));
                 k--;
                 auto Len = T->size();
                 for (size_t j = 0; j < Len; j++) {
