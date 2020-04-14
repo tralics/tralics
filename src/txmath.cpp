@@ -444,11 +444,11 @@ void Parser::add_math_label(Xml *res) {
 }
 
 // Generates <elt>first_arg second_arg</elt>
-auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml * {
-    Xml *tmp = new Xml(elt, nullptr);
-    tmp->add_tmp(first_arg);
-    tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(second_arg);
+auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
+    Xml tmp(elt, nullptr);
+    tmp.add_tmp(first_arg);
+    tmp.push_back_unless_nullptr(xmlspace);
+    tmp.add_tmp(second_arg);
     return tmp;
 }
 

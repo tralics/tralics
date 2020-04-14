@@ -1471,17 +1471,15 @@ void MathDataP::boot2() {
 
     auto lim_op = mk_mo("lim");
     lim_op->add_att(np_movablelimits, np_false);
-    Xml *x = xml2sons(the_names[cst_mover], lim_op, get_mc_table(1));
-    init_builtin("varlimsup", varlimsup_code, x, mathop_cmd);
 
-    x = xml2sons(the_names[cst_munder], lim_op, get_mc_table(3));
-    init_builtin("varliminf", varliminf_code, x, mathop_cmd);
+    init_builtin("varlimsup", varlimsup_code, new Xml(xml2sons(the_names[cst_mover], lim_op, get_mc_table(1))), mathop_cmd);
+    init_builtin("varliminf", varliminf_code, new Xml(xml2sons(the_names[cst_munder], lim_op, get_mc_table(3))), mathop_cmd);
 
-    x = xml2sons(the_names[cst_munder], lim_op, get_builtin(underrightarrow_code));
+    auto x = new Xml(xml2sons(the_names[cst_munder], lim_op, get_builtin(underrightarrow_code)));
     x->add_att(cst_accentunder, np_true);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 
-    x = xml2sons(the_names[cst_munder], lim_op, get_builtin(underleftarrow_code));
+    x = new Xml(xml2sons(the_names[cst_munder], lim_op, get_builtin(underleftarrow_code)));
     x->add_att(cst_accentunder, np_true);
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
