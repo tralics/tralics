@@ -226,7 +226,6 @@ private:
 // This is a global object for math handling
 // but math handling is not recursive. reset() is called on every formula.
 class MathHelper {
-    MathElt *                free_list{};    // free list
     bool                     current_mode{}; // display or not, needed for \label
     name_positions           pos_att;        // position attribute, inline or display
     bool                     seen_label{};   // do we see already have a label
@@ -272,8 +271,6 @@ public:
     void               stats();
     [[nodiscard]] auto get_pos_att() const -> name_positions { return pos_att; }
     void               reset(bool dual);
-    [[nodiscard]] auto get_free_list() const -> MathElt * { return free_list; }
-    void               set_free_list(MathElt *x) { free_list = x; }
     [[nodiscard]] auto is_inline() const -> bool { return current_mode; }
     [[nodiscard]] auto has_tag() const -> bool { return !tag_list.empty(); }
     void               reset_tags() { tag_list = TokenList(); }

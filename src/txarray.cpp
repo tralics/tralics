@@ -715,9 +715,9 @@ auto Xml::try_cline_again(bool action) -> bool {
     bool seen_cell = false;
     auto len       = size();
     for (size_t k = 0; k < len; k++) {
-        if (tree[k] == nullptr) continue;
         if (action) {
-            tree[k] = nullptr; // \todo memory leak, this is really bad
+            tree.erase(tree.begin() + to_signed(k));
+            --k;
             continue;
         }
         if (tree[k]->is_xmlc() && k == len - 1) {

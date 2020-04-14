@@ -5,9 +5,9 @@ class XmlAction;
 
 class Xml { // \todo : public std::vector<Xml>
 public:
-    Xid                id{0}; // id of the objet
-    Istring            name;  // name of the element
-    std::vector<Xml *> tree;  // the aux field
+    Xid                id{0}; ///< id of the objet
+    Istring            name;  ///< name of the element
+    std::vector<Xml *> tree;  ///< the aux field, note all pointers inside are non-null
 
     Xml(Istring n = {}) : name(n) {}
     Xml(const Buffer &n) : name(Istring(n.c_str())) {}

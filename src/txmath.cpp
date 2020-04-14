@@ -589,7 +589,6 @@ inline auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val
 
 // This is called before every math formula.
 void MathHelper::reset(bool dual) {
-    free_list      = nullptr;
     current_mode   = false;
     pos_att        = cst_dig0;
     seen_label     = false;
@@ -648,10 +647,7 @@ MathElt::MathElt(Xml *x, math_types y) : val(CmdChr(math_xml_cmd, zero_code)) {
 
 // Destroys all math lists, and resets pointers,
 // for use with another math object
-void MathHelper::finish_math_mem() {
-    math_data.finish_math_mem();
-    free_list = nullptr;
-}
+void MathHelper::finish_math_mem() { math_data.finish_math_mem(); }
 
 // This kills the math elements
 void MathDataP::finish_math_mem() {
