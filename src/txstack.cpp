@@ -144,7 +144,7 @@ auto Xml::last_is_string() const -> bool { return !empty() && (at(size() - 1) !=
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
-void Xml::last_to_SH() {
+void Xml::last_to_SH() const {
     shbuf.reset();
     shbuf.push_back(back_or_nullptr()->name.c_str());
 }

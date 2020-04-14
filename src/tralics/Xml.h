@@ -34,18 +34,18 @@ public:
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
-    auto contains_env(Istring name) -> bool;
-    auto convert_to_string() -> std::string;
-    auto delete_one_env0(Istring name) -> Xid;
-    auto deep_copy() -> Xml *;
-    auto father(Xml *X, int &) -> Xml *;
-    auto figline(int &ctr, Xml *junk) -> Xml *;
-    auto find_on_tree(Xml *check, Xml **res) const -> bool;
-    auto first_lower(Istring src) -> Xml *;
-    auto get_first_env(name_positions name) -> Xml *;
-    auto how_many_env(Istring match) -> long;
-    auto insert_at_ck(int n, Xml *v) -> bool;
+    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
+    auto               contains_env(Istring name) -> bool;
+    auto               convert_to_string() -> std::string;
+    auto               delete_one_env0(Istring name) -> Xid;
+    auto               deep_copy() -> Xml *;
+    auto               father(Xml *X, int &) -> Xml *;
+    auto               figline(int &ctr, Xml *junk) -> Xml *;
+    auto               find_on_tree(Xml *check, Xml **res) const -> bool;
+    auto               first_lower(Istring src) -> Xml *;
+    auto               get_first_env(name_positions name) -> Xml *;
+    auto               how_many_env(Istring match) -> long;
+    auto               insert_at_ck(int n, Xml *v) -> bool;
 
     void add_att(Istring a, Istring b) const { id.add_attribute(a, b); }
     void add_att(name_positions a, name_positions b) const { id.add_attribute(a, b); }
@@ -64,7 +64,7 @@ public:
     auto is_child(Xml *x) const -> bool;
     void kill_name() { name = Istring(); }
     auto last_box() -> Xml *;
-    void last_to_SH();
+    void last_to_SH() const;
     void move(Istring match, Xml *res);
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;

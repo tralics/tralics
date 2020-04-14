@@ -263,7 +263,7 @@ public:
         multi_labels_type.push_back(t);
     }
     auto               get_multi_labels() -> std::vector<std::string> & { return multi_labels; }
-    void               finish_math_mem();
+    static void        finish_math_mem();
     void               set_type(bool b);
     [[nodiscard]] auto get_eqnum_status() const -> int { return eqnum_status; }
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }

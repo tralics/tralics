@@ -385,7 +385,7 @@ void Xml::recurse(XmlAction &X) {
 }
 
 // Returns a pointer to the last son.
-auto Xml::last_addr() const -> Xml * { return size() > 0 ? at(size() - 1) : nullptr; }
+auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1) : nullptr; }
 
 // Returns a pointer to the last element
 // and removes it if it is a Box
@@ -413,7 +413,7 @@ void Xml::remove_last_empty_hi() {
 // Return true if this is an empty <hi> (recursion allowed)
 auto Xml::only_recur_hi() const -> bool {
     if (!id.is_font_change()) return false;
-    if (size() == 0) return true;
+    if (empty()) return true;
     Xml *x = single_son();
     if (x == nullptr) return false;
     if (x->is_xmlc()) return false;

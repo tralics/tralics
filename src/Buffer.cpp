@@ -1013,8 +1013,7 @@ void Image::check() const {
 
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
-    auto s = the_images.size();
-    for (size_t i = 0; i < s; i++) {
+    for (size_t i = 0; i < the_images.size(); i++) {
         Image &X = the_images[i];
         if (X.name == nm) {
             if (ok) X.occ++;
@@ -1072,25 +1071,24 @@ void operator<<(std::fstream &X, const Image &Y) { // \todo ofstream
 
 // finish handling the images,
 void Parser::finish_images() {
-    auto s = the_images.size();
-    if (s == 0) return;
+    if (the_images.size() == 0) return;
     std::string  name = tralics_ns::get_short_jobname() + ".img";
     String       wn   = tralics_ns::get_out_dir(name);
     std::fstream fp(wn, std::ios::out);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
     check_image2.reset();
-    for (size_t i = 0; i < s; i++) {
+    for (size_t i = 0; i < the_images.size(); i++) {
         if (the_images[i].occ != 0) {
             the_images[i].check_existence();
             the_images[i].check();
             fp << the_images[i];
         }
     }
-    if (s == 0)
+    if (the_images.size() == 0)
         main_ns::log_or_tty << "There was no image.\n";
     else
-        main_ns::log_or_tty << fmt::format("There were {} images.\n", s);
+        main_ns::log_or_tty << fmt::format("There were {} images.\n", the_images.size());
     if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << Istring(check_image1) << ".\n";
     if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << Istring(check_image2) << ".\n";
 }

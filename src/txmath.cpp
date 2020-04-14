@@ -1972,7 +1972,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         if (is_multline) cmi.get_cid().add_attribute(np_columnalign, np_right);
         cmi.set_cid(cid);
     }
-    if (row->size() == 0) // kill the last empty row \todo NOLINT size() and empty() don't interact the way clang-tidy expects
+    if (row->empty()) // kill the last empty row
         res->pop_back();
     else {
         if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
