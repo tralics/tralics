@@ -673,16 +673,16 @@ auto Xml::try_cline(bool action) -> bool {
             a    = (cline_last - cline_first) + 1;
             a_ok = true;
         }
-        if (tree[k] == nullptr) continue;
-        if (tree[k]->is_xmlc()) {
-            Istring N = tree[k]->name;
+        if (at(k) == nullptr) continue;
+        if (at(k)->is_xmlc()) {
+            Istring N = at(k)->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
-        auto c = tree[k]->get_cell_span();
+        auto c = at(k)->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) tree[k]->id.add_bottom_rule();
+        if (a_ok && action) at(k)->id.add_bottom_rule();
         a = a - c;
         if (a < 0) return false;
     }
@@ -694,13 +694,13 @@ auto Xml::total_span(long &res) const -> bool {
     int  r   = 0;
     auto len = size();
     for (size_t k = 0; k < len; k++) {
-        if (tree[k] == nullptr) continue;
-        if (tree[k]->is_xmlc()) {
-            Istring N = tree[k]->name;
+        if (at(k) == nullptr) continue;
+        if (at(k)->is_xmlc()) {
+            Istring N = at(k)->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
             return false;
         }
-        auto c = tree[k]->get_cell_span();
+        auto c = at(k)->get_cell_span();
         if (c == -1) return false;
         r += c;
     }
@@ -716,19 +716,19 @@ auto Xml::try_cline_again(bool action) -> bool {
     auto len       = size();
     for (size_t k = 0; k < len; k++) {
         if (action) {
-            tree.erase(tree.begin() + to_signed(k));
+            erase(begin() + to_signed(k));
             --k;
             continue;
         }
-        if (tree[k]->is_xmlc() && k == len - 1) {
-            Istring N = tree[k]->name;
+        if (at(k)->is_xmlc() && k == len - 1) {
+            Istring N = at(k)->name;
             if (strcmp(N.c_str(), "\n") == 0) continue;
             return false;
         }
-        if (tree[k]->get_cell_span() != 1) return false;
-        if (!tree[k]->id.has_attribute(the_names[np_topborder]).null()) return false;
+        if (at(k)->get_cell_span() != 1) return false;
+        if (!at(k)->id.has_attribute(the_names[np_topborder]).null()) return false;
         if (seen_cell) return false;
-        if (!tree[k]->is_empty()) return false;
+        if (!at(k)->is_empty()) return false;
         seen_cell = true;
     }
     return seen_cell;

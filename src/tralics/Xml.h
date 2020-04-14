@@ -3,11 +3,10 @@
 
 class XmlAction;
 
-class Xml { // \todo : public std::vector<Xml>
+class Xml : public std::vector<Xml *> { // \todo value semantics
 public:
-    Xid                id{0}; ///< id of the objet
-    Istring            name;  ///< name of the element
-    std::vector<Xml *> tree;  ///< the aux field, note all pointers inside are non-null
+    Xid     id{0}; ///< id of the objet
+    Istring name;  ///< name of the element
 
     Xml(Istring n = {}) : name(n) {}
     Xml(const Buffer &n) : name(Istring(n.c_str())) {}
@@ -32,11 +31,10 @@ public:
     [[nodiscard]] auto real_size() const -> int;
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
-    [[nodiscard]] auto size() const { return tree.size(); }
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    auto back() -> Xml * { return tree.empty() ? nullptr : tree.back(); }
+    auto back() -> Xml * { return std::vector<Xml *>::empty() ? nullptr : std::vector<Xml *>::back(); }
     auto contains_env(Istring name) -> bool;
     auto convert_to_string() -> std::string;
     auto delete_one_env0(Istring name) -> Xid;
@@ -70,7 +68,6 @@ public:
     void move(Istring match, Xml *res);
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;
-    void pop_back() { tree.pop_back(); }
     void postprocess_fig_table(bool is_fig);
     auto prev_sibling(Xml *x) -> Xml *;
     auto put_at(long n, Xml *x) -> bool;
@@ -102,7 +99,7 @@ public:
     void word_stats(const std::string &match);
     void word_stats_i();
     void replace_first(Xml *x) {
-        if (!tree.empty()) tree[0] = x;
+        if (!std::vector<Xml *>::empty()) at(0) = x;
     }
     void bordermatrix();
 };

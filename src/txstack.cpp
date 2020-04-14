@@ -132,21 +132,23 @@ auto Stack::add_newid0(name_positions x) -> AttList & {
 void Stack::add_last(Xml *x) { top_stack()->push_back(x); }
 
 // This adds x at the end the element
-void Xml::push_back(Xml *x) {
-    if (x != nullptr) tree.push_back(x);
+void Xml::push_back(Xml *x) { // \todo just use std::vector::push_back
+    if (x != nullptr) std::vector<Xml *>::push_back(x);
 }
 
 // Adds B to the tail of the current list.
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->id.value == 0; }
+auto Xml::last_is_string() const -> bool {
+    return !std::vector<Xml *>::empty() && (at(size() - 1) != nullptr) && at(size() - 1)->id.value == 0;
+}
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
 void Xml::last_to_SH() {
     shbuf.reset();
-    shbuf.push_back(tree.back()->name.c_str());
+    shbuf.push_back(back()->name.c_str());
 }
 
 // This adds B at the end the element, via concatenation, if possible.
@@ -155,18 +157,18 @@ void Xml::add_last_string(const Buffer &B) {
     shbuf.reset();
     if (last_is_string()) {
         last_to_SH();
-        tree.pop_back();
+        pop_back();
         the_parser.my_stats.one_more_merge();
     }
     shbuf.push_back(B.c_str());
-    tree.push_back(new Xml(shbuf));
+    push_back(new Xml(shbuf));
 }
 
 // This adds x and a \n at the end of this.
 void Xml::add_last_nl(Xml *x) {
     if (x != nullptr) {
-        tree.push_back(x);
-        tree.push_back(the_main->the_stack->newline_xml);
+        push_back(x);
+        push_back(the_main->the_stack->newline_xml);
     }
 }
 
@@ -183,8 +185,8 @@ void Xml::remove_last_space() {
     auto k = shbuf.size();
     shbuf.remove_space_at_end();
     if (k != shbuf.size()) {
-        tree.pop_back();
-        if (!shbuf.empty()) tree.push_back(new Xml(shbuf.to_string()));
+        pop_back();
+        if (!shbuf.empty()) push_back(new Xml(shbuf.to_string()));
     }
 }
 
@@ -193,8 +195,8 @@ void Stack::add_nl() { top_stack()->add_nl(); }
 
 // This adds a NL to the end of the element
 void Xml::add_nl() {
-    if (!tree.empty() && tree.back() == the_main->the_stack->newline_xml) return;
-    tree.push_back(the_main->the_stack->newline_xml);
+    if (!empty() && back() == the_main->the_stack->newline_xml) return;
+    push_back(the_main->the_stack->newline_xml);
 }
 
 // Returns the slot of the first non-empty frame
@@ -660,7 +662,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
     return id;
 }
 
-auto Xml::tail_is_anchor() const -> bool { return !tree.empty() && (tree.back() != nullptr) && tree.back()->is_anchor(); }
+auto Xml::tail_is_anchor() const -> bool { return !empty() && (at(size() - 1) != nullptr) && at(size() - 1)->is_anchor(); }
 
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {

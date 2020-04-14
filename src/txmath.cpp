@@ -2007,17 +2007,17 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
 }
 
 void Xml::bordermatrix() {
-    if (tree.size() <= 1) return;
-    auto n = tree.size() - 1;
-    Xml *F = tree[0];
-    if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
+    if (size() <= 1) return;
+    auto n = size() - 1;
+    auto F = front();
+    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
     auto    att = Istring("rowspan");
     Buffer &B   = math_buffer;
     B.reset();
     B << std::to_string(n);
     auto attval = Istring(B);
-    F           = tree[1];
-    if ((F != nullptr) && !F->is_xmlc() && F->tree.size() > 1) {
+    F           = at(1);
+    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) {
         Xml *aux = new Xml(cst_mtd, MathDataP::mk_mo("("));
         aux->add_att(att, attval);
         F->insert_at(1, aux);
@@ -3221,8 +3221,8 @@ auto Xml::spec_copy() const -> Xml * {
     AttList &X = id.get_att();
     auto     i = X.has_value(the_names[np_movablelimits]);
     if (i < 0) return nullptr;
-    Xml *res  = new Xml(name, nullptr);
-    res->tree = tree;
+    Xml *                    res     = new Xml(name, nullptr);
+    res->std::vector<Xml *>::operator=(*this);
     res->id.add_attribute(X, true);
     return res;
 }
