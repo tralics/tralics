@@ -331,7 +331,7 @@ void Xml::recurse(XmlAction &X) {
 }
 
 // Returns a pointer to the last son.
-auto Xml::last_addr() const -> Xml * { return !empty() ? at(size() - 1).get() : nullptr; }
+auto Xml::last_addr() const -> Xml * { return !empty() ? back().get() : nullptr; }
 
 // Returns a pointer to the last element
 // and removes it if it is a Box
@@ -531,8 +531,7 @@ auto Xml::is_whitespace() const -> bool {
 // If there is one non-empty son returns it.
 auto Xml::single_non_empty() const -> Xml * {
     Xml *res{nullptr};
-    for (size_t k = 0; k < size(); k++) {
-        auto y = at(k);
+    for (auto y : *this) {
         if (!y->is_xmlc()) {
             if (res == nullptr)
                 res = y;

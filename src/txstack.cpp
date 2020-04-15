@@ -140,13 +140,13 @@ void Xml::push_back_unless_nullptr(Xml *x) {
 void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return !empty() && (at(size() - 1) != nullptr) && at(size() - 1)->id.value == 0; }
+auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value == 0; }
 
 // Assume that last element is a string. This string is put in the
 // internal buffer of SH.
 void Xml::last_to_SH() const {
     shbuf.reset();
-    shbuf.push_back(back_or_nullptr()->name.c_str());
+    shbuf.push_back(back()->name.c_str());
 }
 
 // This adds B at the end the element, via concatenation, if possible.
@@ -660,7 +660,7 @@ auto Stack::add_new_anchor_spec() -> Istring {
     return id;
 }
 
-auto Xml::tail_is_anchor() const -> bool { return !all_empty() && (at(size() - 1) != nullptr) && at(size() - 1)->is_anchor(); }
+auto Xml::tail_is_anchor() const -> bool { return !empty() && back()->is_anchor(); }
 
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {

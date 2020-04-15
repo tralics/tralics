@@ -189,7 +189,7 @@ private:
     auto               add_fence(bool final, MathF &M) -> bool;
     void               concat(Xml *res);
     void               concat_space(Xml *res);
-    auto               convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml *;
+    auto               convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml;
     auto               convert_char_seq(MathElt W) -> MathElt;
     auto               convert_char_iseq(MathElt W, bool multiple) -> MathElt;
     void               fetch_rlc(std::vector<AttList> &table);

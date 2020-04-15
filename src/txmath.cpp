@@ -1863,13 +1863,13 @@ void Math::fetch_rlc(std::vector<AttList> &table) {
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
-auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml * {
-    Xml *res = new Xml(cst_mtd, nullptr);
+auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml {
+    Xml res(cst_mtd, nullptr);
     if (empty()) {
         n++; // empty cell, no atts needed.
         return res;
     }
-    Xid id        = res->id;
+    Xid id        = res.id;
     int tbl_align = 0;
     cmi.set_cid(id);
     Math args = *this;
@@ -1904,8 +1904,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         id.add_attribute(np_columnalign, np_right);
     else if (tbl_align == 3)
         id.add_attribute(np_columnalign, np_center);
-    Xml *tmp = args.convert_math(W);
-    res->add_tmp(gsl::not_null{tmp});
+    res.add_tmp(gsl::not_null{args.convert_math(W)});
     return res;
 }
 
@@ -1932,14 +1931,14 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         symcodes cmd = front().get_cmd();
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
-            row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
+            row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
             cmi.set_cid(cid);
             cell.clear();
             first_cell = false;
         } else if (cmd == backslash_cmd) { // finish row and cell
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
-            row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
+            row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
             if (first_cell) cmi.get_cid().add_attribute(np_columnalign, np_left);
             cmi.set_cid(cid);
             cell.clear();
@@ -1958,7 +1957,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         }
     }
     if (!cell.empty()) {
-        row->push_back_unless_nullptr(cell.convert_cell(n, table, W));
+        row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
         if (is_multline) cmi.get_cid().add_attribute(np_columnalign, np_right);
         cmi.set_cid(cid);
     }

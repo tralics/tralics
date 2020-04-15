@@ -25,7 +25,6 @@ public:
     [[nodiscard]] auto is_empty_p() const -> bool;
     [[nodiscard]] auto is_xmlc() const -> bool { return id.value <= 0; }
     [[nodiscard]] auto last_addr() const -> Xml *;
-    [[nodiscard]] auto last_is(name_positions) const -> bool;
     [[nodiscard]] auto last_is_string() const -> bool;
     [[nodiscard]] auto only_hi() const -> bool;
     [[nodiscard]] auto only_recur_hi() const -> bool;
@@ -36,14 +35,9 @@ public:
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
-    auto contains_env(Istring name) -> bool;
     auto convert_to_string() -> std::string;
-    auto delete_one_env0(Istring name) -> Xid;
     auto deep_copy() -> gsl::not_null<Xml *>;
-    auto father(Xml *X, int &) -> Xml *;
-    auto figline(int &ctr, Xml *junk) -> Xml *;
     auto find_on_tree(Xml *check, Xml **res) const -> bool;
-    auto first_lower(Istring src) -> Xml *;
     auto get_first_env(name_positions name) -> Xml *;
     auto how_many_env(Istring match) -> long;
 
@@ -72,8 +66,6 @@ public:
     auto prev_sibling(Xml *x) -> Xml *;
     auto put_at(long n, gsl::not_null<Xml *> x) -> bool;
     void put_in_buffer(Buffer &b);
-    using std::vector<gsl::not_null<Xml *>>::push_back;
-    void push_back(Buffer &B) { push_back_unless_nullptr(new Xml(B)); }
     void push_back_unless_nullptr(Xml *x);
     void push_back_list(Xml *x);
     void recurse(XmlAction &X);

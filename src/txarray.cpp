@@ -673,7 +673,6 @@ auto Xml::try_cline(bool action) -> bool {
             a    = (cline_last - cline_first) + 1;
             a_ok = true;
         }
-        if (at(k) == nullptr) continue;
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
@@ -694,7 +693,6 @@ auto Xml::total_span(long &res) const -> bool {
     int  r   = 0;
     auto len = size();
     for (size_t k = 0; k < len; k++) {
-        if (at(k) == nullptr) continue;
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
             if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
