@@ -161,15 +161,6 @@ private:
     void out_gathered_math();
     void out_sep();
     void out_xml(); ///< Ouput the XML and compute the word list
-    void print_job();
-    void print_mods_end_xml();
-    void print_mods_end(std::fstream *);
-    void print_mods_start_xml();
-    void print_mods_start();
-    void print_mods();
-    void print_nb_error(int n);
-    void read_one_file();
-    void run_not_ra();
     void run_ra();
     void run_simple_ra();
     void see_aux_info(int k);

@@ -508,9 +508,8 @@ void LinePtr::insert(const LinePtr &aux) {
 void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.reset(x);
     if (use_pool(L)) return;
-    auto *fp = new std::fstream(x.c_str(), std::ios::in);
-    if (fp == nullptr) return;
-    std::string old_name        = the_converter.cur_file_name;
+    std::ifstream fp(x.c_str());
+    std::string   old_name      = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;
     auto   wc        = the_main->input_encoding;
@@ -518,17 +517,16 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.set_encoding(the_main->input_encoding);
     int co_try = spec == 3 ? 0 : 20;
     for (;;) {
-        int  c    = fp->get();
+        int  c    = fp.get();
         bool emit = false;
         if (c == '\r') { // pc or mac ?
             emit = true;
-            c    = fp->peek();
-            if (c == '\n') fp->ignore();
+            c    = fp.peek();
+            if (c == '\n') fp.ignore();
         } else if (c == '\n')
             emit = true;
         else if (c == EOF) {
             if (!B.empty()) emit = true;
-            delete fp;
             the_converter.cur_file_name = old_name;
         } else
             B.push_back(static_cast<char>(c));
@@ -866,7 +864,7 @@ void FullLogger::finish(int n) {
 
 void FullLogger::init(std::string name, bool status) {
     L.set_file_name(std::move(name));
-    L.fp = new std::fstream(tralics_ns::open_file(L.get_filename(), true)); // \todo fix
+    L.fp = new std::ofstream(tralics_ns::open_file(L.get_filename(), true));
     L.set_finished();
     verbose     = status;
     log_is_open = true;
@@ -881,8 +879,8 @@ auto tralics_ns::file_exists(const std::string &name) -> bool {
 }
 
 // This exits if the file cannot be opened and argument is true
-auto tralics_ns::open_file(String name, bool fatal) -> std::fstream {
-    auto fp = std::fstream(name, std::ios::out);
+auto tralics_ns::open_file(String name, bool fatal) -> std::ofstream {
+    std::ofstream fp(name);
     if (log_is_open && !fp) the_log << "Cannot open file " << name << " for output \n";
     if (fatal && !fp) {
         std::cout << "Cannot open file " << name << " for output \n";
@@ -892,7 +890,7 @@ auto tralics_ns::open_file(String name, bool fatal) -> std::fstream {
 }
 
 // This takes a string as argument
-auto tralics_ns::open_file(const std::string &name, bool f) -> std::fstream { return tralics_ns::open_file(name.c_str(), f); }
+auto tralics_ns::open_file(const std::string &name, bool f) -> std::ofstream { return tralics_ns::open_file(name.c_str(), f); }
 
 void LinePtr::reset(std::string x) {
     cur_line    = 0;
@@ -1120,8 +1118,8 @@ void LinePtr::split_string(String x, int l) {
     splice_first(L);
 }
 
-void LinePtr::print(std::fstream *outfile) {
-    for (auto &C : *this) *outfile << C.chars;
+void LinePtr::print(std::ostream &outfile) {
+    for (auto &C : *this) outfile << C.chars;
 }
 
 // This implements the filecontent environment.
@@ -1134,9 +1132,9 @@ void Parser::T_filecontents(int spec) {
         auto guard = InLoadHandler();
         filename   = sT_arg_nopar();
     }
-    int          action = 0;
-    std::fstream outfile;
-    bool         is_encoded = true;
+    int           action = 0;
+    std::ofstream outfile;
+    bool          is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;
         LinePtr res;

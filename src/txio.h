@@ -100,8 +100,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void parse_and_extract_clean(String s);
     void parse_conf_toplevel() const;
     auto parse_and_extract(String s) const -> LinePtr;
-    void print(std::fstream *outfile);
-    void print1(std::fstream *);
+    void print(std::ostream &outfile);
     void reset(std::string x);
     auto read_from_tty(Buffer &b) -> int;
     void set_cur_line(int x) { cur_line = x; }
@@ -162,7 +161,7 @@ struct FileForInput {
 // and both of these variables are always |false|.
 // Since \write18 is special, we added another slot in write_open
 class TexOutStream {
-    std::array<std::fstream *, nb_input_channels> write_file{}; // \todo array<ofstream>
+    std::array<std::ofstream, nb_output_channels> write_file{}; // \todo array<ofstream>
     std::array<bool, nb_output_channels>          write_open{};
 
 public:
@@ -170,5 +169,5 @@ public:
     void               close(size_t chan);
     void               open(size_t chan, const std::string &file_name);
     [[nodiscard]] auto is_open(size_t i) const -> bool { return write_open[i]; }
-    void               write(size_t chan, const std::string &s) { *(write_file[chan]) << s; }
+    void               write(size_t chan, const std::string &s) { write_file[chan] << s; }
 };

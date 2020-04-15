@@ -55,16 +55,13 @@ void lg_start_io(Logger &L) {
 // and no file attached to them
 
 TexOutStream::TexOutStream() {
-    for (auto &i : write_file) i = nullptr; // \todo useless?
     for (bool &i : write_open) i = false;
 }
 
 // This closes an output channel.
 void TexOutStream::close(size_t chan) {
-    if (chan < 0 || chan > max_openout) return; // this cannot happen
-    if (write_open[chan]) {
-        delete write_file[chan];
-        write_file[chan] = nullptr; // \todo Remove this if possible
+    if ((chan <= max_openout) && write_open[chan]) {
+        write_file[chan].close();
         write_open[chan] = false;
     }
 }
@@ -73,12 +70,7 @@ void TexOutStream::close(size_t chan) {
 // What if the file cannot be opened ?
 void TexOutStream::open(size_t chan, const std::string &file_name) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
-    close(chan);
-    String fn = tralics_ns::get_out_dir(file_name);
-    auto * fp = new std::fstream(fn, std::ios::out);
-    if (fp == nullptr) return; // no error ?
-    if (!*fp) return;          // no error ?
-    write_file[chan] = fp;
+    write_file[chan] = std::ofstream(tralics_ns::get_out_dir(file_name));
     write_open[chan] = true;
 }
 

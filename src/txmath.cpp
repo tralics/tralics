@@ -2022,9 +2022,8 @@ void Xml::bordermatrix() {
 // or caret, code in cmd. In the case of $_x$ or $_{x}$ or $^{y}$
 // return a non-mathml expression in case the argument is OK.
 auto Math::trivial_math_index(symcodes cmd) -> Xml * {
-    Buffer &B = math_buffer;
-    B.reset();
-    auto L = value.begin();
+    Buffer B;
+    auto   L = value.begin();
     ++L;
     name_positions loc       = cmd == underscore_catcode ? np_s_sub : np_s_sup;
     CmdChr         w         = L->get_cmd_chr();

@@ -1074,8 +1074,8 @@ void MainClass::out_xml() {
     std::string u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
     X.put_at_end(".xml");
-    std::string  name = X.to_string();
-    std::fstream fp   = tralics_ns::open_file(name, true);
+    std::string name = X.to_string();
+    auto        fp   = tralics_ns::open_file(name, true);
     X.reset();
     int aux = 4;
     if (output_encoding == en_utf8 || output_encoding == en_ascii8)

@@ -371,10 +371,10 @@ public:
 
 class Bbl {
 private:
-    Buffer       B;
-    std::fstream file;
-    std::string  name;
-    bool         too_late{false};
+    Buffer        B;
+    std::ofstream file;
+    std::string   name;
+    bool          too_late{false};
 
 public:
     friend class BibEntry;

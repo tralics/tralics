@@ -41,7 +41,7 @@ namespace post_ns {
 namespace all_words_ns {
     int                         nb_words = 0;
     std::array<WordList *, 100> WL0;
-    std::fstream *              fp{nullptr}; // \todo just fstream
+    std::ofstream               fp;
     void                        add_a_word(String s, size_t h);
     void                        dump_and_list(WordList *WL, int i);
     void                        dump_words(const std::string &name);
@@ -957,7 +957,7 @@ void all_words_ns::dump_words(const std::string &name) {
     if (WL->get_next() == nullptr) return;
     String wf = tralics_ns::get_out_dir("words");
 
-    auto f = std::fstream(wf, std::ios::out);
+    auto f = std::ofstream(wf);
     if (!name.empty()) f << "Team " << name << "\n";
     scbuf.reset();
     int i = 0;

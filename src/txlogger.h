@@ -41,7 +41,7 @@ class Logger {
                           // a newline is required
     std::string filename; // the name of the log file
 public:
-    std::fstream *     fp{nullptr}; // the stream to which we print
+    std::ofstream *    fp; // the stream to which we print
     void               finish_seq();
     void               out_single_char(codepoint c);
     void               dump(String s);
@@ -54,53 +54,9 @@ public:
         f(*this);
         return *this;
     }
-    // some trivial functions \todo those should be a single template
-    auto operator<<(String s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(const Buffer &s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(int s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(long s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(size_t s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(Istring s) -> Logger & {
-        (*fp) << s;
-        return *this;
-    }
-    auto operator<<(char c) -> Logger & {
-        *(fp) << c;
-        return *this;
-    }
-    auto operator<<(unsigned char c) -> Logger & {
-        *(fp) << c;
-        return *this;
-    }
-    auto operator<<(const std::string &s) -> Logger & {
-        *(fp) << s;
-        return *this;
-    }
-    auto operator<<(const TokenList &s) -> Logger & {
-        *(fp) << s;
-        return *this;
-    }
-    auto operator<<(const boundary_type &s) -> Logger & {
-        *(fp) << s;
-        return *this;
-    }
-    auto operator<<(const Xml *s) -> Logger & {
-        *(fp) << s;
+
+    template <typename T> auto operator<<(const T &s) -> Logger & {
+        *fp << s;
         return *this;
     }
 };

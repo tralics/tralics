@@ -81,9 +81,9 @@ public:
     void               incr_freq() { freq++; }
     [[nodiscard]] auto get_freq() const -> int { return freq; }
     [[nodiscard]] auto get_next() const -> WordList * { return next; }
-    auto               dump(std::fstream *X, int i) -> bool {
+    auto               dump(std::ostream &X, int i) -> bool {
         if (freq == i) {
-            (*X) << freq << " " << name << "\n";
+            X << freq << " " << name << "\n";
             return true;
         }
         return false;

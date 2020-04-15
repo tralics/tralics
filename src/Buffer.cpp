@@ -1022,7 +1022,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
     the_images.emplace_back(nm, ok ? 1 : 0);
 }
 
-void operator<<(std::fstream &X, const Image &Y) { // \todo ofstream
+auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     X << "see_image(\"" << Y.name << "\",";
     int k = Y.flags;
     if (k == 0)
@@ -1066,14 +1066,15 @@ void operator<<(std::fstream &X, const Image &Y) { // \todo ofstream
         }
     }
     X << "," << Y.occ << ");\n";
+    return X;
 }
 
 // finish handling the images,
 void Parser::finish_images() {
     if (the_images.empty()) return;
-    std::string  name = tralics_ns::get_short_jobname() + ".img";
-    String       wn   = tralics_ns::get_out_dir(name);
-    std::fstream fp(wn, std::ios::out);
+    std::string   name = tralics_ns::get_short_jobname() + ".img";
+    String        wn   = tralics_ns::get_out_dir(name);
+    std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     check_image1.reset();
     check_image2.reset();
