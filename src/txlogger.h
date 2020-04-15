@@ -41,7 +41,7 @@ class Logger {
                           // a newline is required
     std::string filename; // the name of the log file
 public:
-    std::ofstream *    fp; // the stream to which we print
+    std::ofstream *    fp{}; // the stream to which we print
     void               finish_seq();
     void               out_single_char(codepoint c);
     void               dump(String s);

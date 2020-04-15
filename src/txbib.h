@@ -396,7 +396,6 @@ public:
     void               reset_lines() { lines.clear(); }
     [[nodiscard]] auto is_too_late() const -> bool { return too_late; }
     void               finish() { // \todo should this be called ~Bbl ?
-        file.close();
         too_late = true;
     }
     void open() {

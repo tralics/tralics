@@ -28,8 +28,7 @@ void Logger::abort() const {
     std::cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
     if (!!*fp) {
         *fp << "Fatal_error for " << the_parser.get_job_name() << "\n";
-        fp->flush();
-        fp->close(); // \todo useless?
+        fp->close();
     }
 }
 
