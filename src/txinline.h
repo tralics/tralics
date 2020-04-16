@@ -88,4 +88,4 @@ inline Istring::Istring(const std::string &s) : id(the_main->SH.find(s)) {}
 
 inline auto Istring::c_str() const -> String { return the_main->SH[id]; }
 
-inline auto Istring::p_str() const -> String { return the_main->SH.p_str(id); }
+inline auto Istring::p_str() const -> std::string { return the_main->SH.p_str(id); }

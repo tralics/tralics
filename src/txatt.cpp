@@ -134,21 +134,18 @@ void Buffer::push_back(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    String B = b.p_str();
-    String A = a.p_str();
-    if (A == nullptr) A = "_bug_";
-    if (B == nullptr) B = "_bug_";
+    auto B = b.p_str();
+    auto A = a.p_str();
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
     push_back('=');
     push_back('\'');
-    while (*A != 0) {
-        if (*A == '\'')
+    for (char c : A) {
+        if (c == '\'')
             push_back("&apos;");
         else
-            push_back(*A);
-        A++;
+            push_back(c);
     }
     push_back('\'');
 }
@@ -159,21 +156,18 @@ void Buffer::push_back_alt(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    String B = b.p_str();
-    String A = a.p_str();
-    if (A == nullptr) A = "_bug_";
-    if (B == nullptr) B = "_bug_";
+    auto B = b.p_str();
+    auto A = a.p_str();
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
     push_back('=');
     push_back('\"');
-    while (*A != 0) {
-        if (*A == '\"')
+    for (char c : A) {
+        if (c == '\"')
             push_back("&quot;");
         else
-            push_back(*A);
-        A++;
+            push_back(c);
     }
     push_back('\"');
 }

@@ -28,7 +28,7 @@ public:
         at(2) = {" ", " ", nullptr, 0};
     }
 
-    [[nodiscard]] auto p_str(size_t k) const -> String { return at(k).value.c_str(); } // \todo remove c_str
+    [[nodiscard]] auto p_str(size_t k) -> std::string { return at(k).value; }
 
     auto        hash_find(const std::string &s) -> size_t;
     auto        find(String s) -> size_t;
