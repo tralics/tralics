@@ -12,7 +12,3 @@ Istring::Istring(const ScaledInt &i) {
     B.push_back(i, glue_spec_pt);
     id = SH.find_or_insert(B.to_string());
 }
-
-auto Istring::c_str() const -> String { return SH[id]; }
-
-auto Istring::p_str() const -> std::string { return SH.at(id).value; }

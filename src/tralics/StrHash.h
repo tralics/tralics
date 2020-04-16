@@ -1,5 +1,7 @@
 #pragma once
-#include "../txscaled.h"
+#include "consts.h"
+#include "types.h"
+#include <string>
 #include <vector>
 
 class LabelInfo;
@@ -22,16 +24,9 @@ struct StrHash_record {
 class StrHash : public std::vector<StrHash_record> {
     size_t hash_last{hash_prime + 1}; // last slot used
 public:
-    StrHash() : std::vector<StrHash_record>(hash_size) {
-        at(0) = {"", "", nullptr, 0};
-        at(1) = {"", "", nullptr, 0};
-        at(2) = {" ", " ", nullptr, 0};
-    }
+    StrHash();
 
     auto find_or_insert(const std::string &s) -> size_t;
     auto operator[](size_t k) const -> String { return at(k).name; }
-    auto lab_val(size_t k) -> LabelInfo * { return at(k).labinfo; };
-    auto lab_val_check(size_t k) -> LabelInfo *;
+    auto labinfo(size_t k) -> LabelInfo *;
 };
-
-inline StrHash SH; // \todo This would fit better elsewhere

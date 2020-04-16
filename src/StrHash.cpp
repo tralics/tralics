@@ -3,7 +3,13 @@
 #include "txparser.h"
 #include <fmt/format.h>
 
-auto StrHash::lab_val_check(size_t k) -> LabelInfo * {
+StrHash::StrHash() : std::vector<StrHash_record>(hash_size) {
+    at(0) = {"", "", nullptr, 0};
+    at(1) = {"", "", nullptr, 0};
+    at(2) = {" ", " ", nullptr, 0};
+}
+
+auto StrHash::labinfo(size_t k) -> LabelInfo * {
     if (at(k).labinfo == nullptr) at(k).labinfo = new LabelInfo(Istring(k));
     return at(k).labinfo;
 }
