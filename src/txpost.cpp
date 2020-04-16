@@ -151,7 +151,7 @@ auto StrHash::lab_val_check(Istring k) -> LabelInfo * {
 
 void Parser::create_label(const std::string &X, Istring S) {
     auto       m = Istring(X);
-    LabelInfo *V = the_main->SH.lab_val_check(m);
+    LabelInfo *V = SH.lab_val_check(m);
     if (V->set_defined()) {
         multiple_label(m.c_str(), V->lineno, V->filename);
     } else {
@@ -174,7 +174,7 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
         refindex_list.emplace_back(v, B);
     else
         ref_list.emplace_back(v, B);
-    LabelInfo *V = the_main->SH.lab_val_check(B);
+    LabelInfo *V = SH.lab_val_check(B);
     if (!V->set_used()) the_parser.my_stats.one_more_used_ref();
     if (V->lineno == 0) V->lineno = the_parser.get_cur_line();
     if (V->filename.empty()) V->filename = the_parser.get_cur_filename();
@@ -188,7 +188,7 @@ void Parser::check_all_ids() {
     for (auto &i : ref_list) {
         int        E = i.first;
         Istring    V = i.second;
-        LabelInfo *L = the_main->SH.lab_val(V);
+        LabelInfo *L = SH.lab_val(V);
         if (!L->defined) {
             log_and_tty << lg_start << "Error signaled in postprocessor\n"
                         << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
@@ -211,7 +211,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
         auto       E = to_unsigned(i.first);
         Istring    V = i.second;
-        LabelInfo *L = the_main->SH.lab_val(V);
+        LabelInfo *L = SH.lab_val(V);
         if (!L->defined) continue; // should not happen
         Istring B = L->id;
         scbuf.reset();
@@ -226,7 +226,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
 void post_ns::remove_label(String s, Istring n) {
     for (auto &i : ref_list) {
         Istring    V  = i.second;
-        LabelInfo *li = the_main->SH.lab_val(V);
+        LabelInfo *li = SH.lab_val(V);
         if (li->id != n) continue;
         if (!li->used) continue;
         log_and_tty << "Error signaled by postprocessor\n"

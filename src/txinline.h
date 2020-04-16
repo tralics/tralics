@@ -80,12 +80,12 @@ inline auto operator==(Token a, Token b) -> bool { return a.val == b.val; }
 
 inline auto operator!=(Token a, Token b) -> bool { return a.val != b.val; }
 
-inline Istring::Istring(const Buffer &X) : id(the_main->SH.find(X.c_str())) {}
+inline Istring::Istring(const Buffer &X) : id(SH.find(X.c_str())) {}
 
-inline Istring::Istring(String s) : id(the_main->SH.find(s)) {}
+inline Istring::Istring(String s) : id(SH.find(s)) {}
 
-inline Istring::Istring(const std::string &s) : id(the_main->SH.find(s)) {}
+inline Istring::Istring(const std::string &s) : id(SH.find(s)) {}
 
-inline auto Istring::c_str() const -> String { return the_main->SH[id]; }
+inline auto Istring::c_str() const -> String { return SH[id]; }
 
-inline auto Istring::p_str() const -> std::string { return the_main->SH.p_str(id); }
+inline auto Istring::p_str() const -> std::string { return SH.p_str(id); }

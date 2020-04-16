@@ -279,7 +279,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
-        const std::string &s = the_main->SH[x.id];
+        const std::string &s = x.c_str();
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble
@@ -567,7 +567,7 @@ void Parser::T_start_tabular(subtypes c) {
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) id.add_attribute(the_names[np_tab_width], the_main->SH.find_scaled(tab_width));
+        if (!tab_width.null()) id.add_attribute(the_names[np_tab_width], SH.find_scaled(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
@@ -642,7 +642,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_above   = true;
-            hlinee_above = the_main->SH.find_scaled(tab_width);
+            hlinee_above = SH.find_scaled(tab_width);
         }
     }
     L = read_arg();
@@ -650,13 +650,13 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_below   = true;
-            hlinee_below = the_main->SH.find_scaled(tab_width);
+            hlinee_below = SH.find_scaled(tab_width);
         }
     }
     L                   = read_arg();
     ScaledInt tab_width = dimen_from_list(T, L);
     in_hlinee           = true;
-    hlinee_width        = the_main->SH.find_scaled(tab_width);
+    hlinee_width        = SH.find_scaled(tab_width);
     return rt;
 }
 

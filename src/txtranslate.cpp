@@ -975,8 +975,8 @@ void Parser::T_epsfbox() {
     AttList &res = the_stack.add_newid0(np_figure);
     no_extension(res, y);
     res.push_back(np_rend, np_inline);
-    if (!xdim.null()) res.push_back(np_width, the_main->SH.find_scaled(xdim));
-    if (!ydim.null()) res.push_back(np_height, the_main->SH.find_scaled(ydim));
+    if (!xdim.null()) res.push_back(np_width, SH.find_scaled(xdim));
+    if (!ydim.null()) res.push_back(np_height, SH.find_scaled(ydim));
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -1168,7 +1168,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }
-    Istring k = the_main->SH.find_scaled(dimen);
+    Istring k = SH.find_scaled(dimen);
     x.add_attribute(the_names[np_spacebefore], k, true);
 }
 

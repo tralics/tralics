@@ -40,3 +40,5 @@ public:
     static auto next_label_id() -> Istring; // \todo Move outside
     auto        find_scaled(ScaledInt s) -> Istring;
 };
+
+inline StrHash SH; // \todo This would fit better elsewhere

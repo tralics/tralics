@@ -605,7 +605,7 @@ void Parser::T_minipage() {
     Istring ipos = the_names[get_ctb_opt()];
     ignore_optarg(); // really needed ?
     scan_glue(it_dimen, T, false);
-    Istring w = the_main->SH.find_scaled(cur_val.get_dim_val());
+    Istring w = SH.find_scaled(cur_val.get_dim_val());
     if (the_stack.in_v_mode()) leave_v_mode();
     the_stack.push1(np_minipage);
     the_stack.set_v_mode();

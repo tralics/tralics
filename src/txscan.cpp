@@ -1788,7 +1788,7 @@ void Parser::scan_glue(internal_type level, Token t, bool opt) {
 auto Parser::get_opt_dim(Token t) -> Istring {
     scan_glue(it_glue, t, true);
     if (!scan_glue_opt) return Istring();
-    return the_main->SH.find_scaled(ScaledInt(cur_val.get_glue_width()));
+    return SH.find_scaled(ScaledInt(cur_val.get_glue_width()));
 }
 
 void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
@@ -2395,9 +2395,9 @@ void             TexRule::reset() {
 }
 
 void TexRule::convert(AttList &res) const {
-    if (rule_h.get_value() != default_rule_dimen) res.push_back(np_height, the_main->SH.find_scaled(rule_h));
-    if (rule_d.get_value() != default_rule_dimen) res.push_back(np_depth, the_main->SH.find_scaled(rule_d));
-    if (rule_w.get_value() != default_rule_dimen) res.push_back(np_width, the_main->SH.find_scaled(rule_w));
+    if (rule_h.get_value() != default_rule_dimen) res.push_back(np_height, SH.find_scaled(rule_h));
+    if (rule_d.get_value() != default_rule_dimen) res.push_back(np_depth, SH.find_scaled(rule_d));
+    if (rule_w.get_value() != default_rule_dimen) res.push_back(np_width, SH.find_scaled(rule_w));
 }
 
 void Parser::scan_rule(int c) {
