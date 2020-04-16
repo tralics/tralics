@@ -30,8 +30,6 @@ public:
 
     [[nodiscard]] auto p_str(size_t k) -> std::string { return at(k).value; }
 
-    auto        hash_find(const std::string &s) -> size_t;
-    auto        find(String s) -> size_t;
     auto        find(const std::string &s) -> size_t;
     auto        find(int s) -> size_t;
     auto        operator[](size_t k) const -> String { return at(k).name; }

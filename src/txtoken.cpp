@@ -681,7 +681,7 @@ auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
 
 // Find something in the StrHash table. The buffer mybuf holds the string
 // to search. result is never zero
-auto StrHash::hash_find(const std::string &s) -> size_t {
+auto StrHash::find(const std::string &s) -> size_t {
     the_parser.my_stats.one_more_sh_find();
     if (s.empty()) return 1;
     auto p = Buffer(s).hashcode(hash_prime) + 3; // skip the special values 0, 1 and 2
@@ -708,16 +708,7 @@ auto StrHash::hash_find(const std::string &s) -> size_t {
     return k;
 }
 
-auto StrHash::find(String s) -> size_t { return hash_find(s); }
-auto StrHash::find(const std::string &s) -> size_t { return hash_find(s); }
-auto StrHash::find(int s) -> size_t { return hash_find(fmt::format("{}", s)); }
-
-// if s is the integer associated to 15pt, returns its hash location.
-auto StrHash::find_scaled(ScaledInt s) -> Istring {
-    Buffer B;
-    B.push_back(s, glue_spec_pt);
-    return Istring(hash_find(B.to_string()));
-}
+auto StrHash::find(int s) -> size_t { return find(std::to_string(s)); }
 
 void Buffer::push_back(const Istring &X) {
     auto v = X.id;

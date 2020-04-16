@@ -567,7 +567,7 @@ void Parser::T_start_tabular(subtypes c) {
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) id.add_attribute(the_names[np_tab_width], SH.find_scaled(tab_width));
+        if (!tab_width.null()) id.add_attribute(the_names[np_tab_width], Istring(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
@@ -642,7 +642,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_above   = true;
-            hlinee_above = SH.find_scaled(tab_width);
+            hlinee_above = Istring(tab_width);
         }
     }
     L = read_arg();
@@ -650,13 +650,13 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_below   = true;
-            hlinee_below = SH.find_scaled(tab_width);
+            hlinee_below = Istring(tab_width);
         }
     }
     L                   = read_arg();
     ScaledInt tab_width = dimen_from_list(T, L);
     in_hlinee           = true;
-    hlinee_width        = SH.find_scaled(tab_width);
+    hlinee_width        = Istring(tab_width);
     return rt;
 }
 
