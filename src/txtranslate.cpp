@@ -1168,7 +1168,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }
-    Istring k = Istring(dimen);
+    auto k = Istring(dimen);
     x.add_attribute(the_names[np_spacebefore], k, true);
 }
 
