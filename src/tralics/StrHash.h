@@ -10,7 +10,6 @@ struct StrHash_record {
     String      name{nullptr};
     std::string value;
     LabelInfo * labinfo{nullptr};
-    size_t      next{0};
 };
 
 /// The string_hash table. It is like the hashtable below (Text and Next)
@@ -22,7 +21,8 @@ struct StrHash_record {
 /// which can be ascii, utf8 or latin1 (XML syntax)
 
 class StrHash : public std::vector<StrHash_record> {
-    size_t hash_last{hash_prime + 1}; // last slot used
+    std::vector<size_t> next;
+    size_t              hash_last{hash_prime + 1}; // last slot used
 public:
     StrHash();
 
