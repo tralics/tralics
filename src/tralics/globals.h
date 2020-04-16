@@ -1,4 +1,5 @@
 #pragma once
+#include "Istring.h"
 #include "codepoint.h"
 #include "enums.h"
 #include <array>
@@ -32,6 +33,7 @@ extern bool seen_enddocument;
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
 auto assign(Buffer &a, Buffer &b) -> bool;
+auto next_label_id() -> Istring;
 
 namespace main_ns {
     void register_file(LinePtr &&x);                                                      ///< Push a file onto the pool

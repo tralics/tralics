@@ -1,6 +1,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
+#include <fmt/format.h>
 
 std::vector<std::filesystem::path> conf_path;
 std::vector<std::string>           input_path;
@@ -41,3 +42,8 @@ auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d
 }
 
 auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
+
+auto next_label_id() -> Istring {
+    static size_t last_label_id = 0;
+    return Istring(fmt::format("uid{}", ++last_label_id));
+}

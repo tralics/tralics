@@ -128,7 +128,7 @@ public:
 class LabelInfo {
 public:
     Istring     id;             // value of the ID
-    Istring     name;           // name of the ID (pointer into SH)
+    Istring     name;           // name of the ID
     std::string filename;       // file of definition
     int         lineno{0};      // line of definition
     bool        used{false};    // is this ID used ?

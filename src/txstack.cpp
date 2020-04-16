@@ -10,6 +10,7 @@
 
 // This file implements the XML stack for Tralics
 
+#include "tralics/globals.h"
 #include "txinline.h"
 #include "txparser.h"
 #include <spdlog/spdlog.h>
@@ -142,8 +143,8 @@ void Stack::add_last_string(const Buffer &B) { top_stack()->add_last_string(B); 
 // True if last element on the tree is a string.
 auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value == 0; }
 
-// Assume that last element is a string. This string is put in the
-// internal buffer of SH.
+// Assume that last element is a string. This string is put in the internal
+// buffer
 void Xml::last_to_SH() const {
     shbuf.reset();
     shbuf.push_back(back()->name.c_str());
@@ -646,7 +647,7 @@ void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext) {
 
 // mark current element as target for a label.
 auto Stack::add_new_anchor() -> Istring {
-    Istring id = StrHash::next_label_id();
+    Istring id = next_label_id();
     set_cur_id(id);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
@@ -665,7 +666,7 @@ auto Xml::tail_is_anchor() const -> bool { return !empty() && back()->is_anchor(
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {
     if (!spec && (top_stack()->tail_is_anchor())) return get_cur_id();
-    Istring id = StrHash::next_label_id();
+    Istring id = next_label_id();
     set_cur_id(id);
     if (!spec) {
         add_newid0(np_anchor);

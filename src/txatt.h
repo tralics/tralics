@@ -17,8 +17,8 @@ struct AttPair {
 };
 
 class AttList {
-    // vector of attribute, like colspan=4, width=3.4cm
-    // name (first) and val (second) are pointers into the SH table
+    // vector of attribute, like colspan=4, width=3.4cm name (first) and val
+    // (second) are pointers into the main hash table
 public:
     std::vector<AttPair> val; // the value
 

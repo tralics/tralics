@@ -679,37 +679,6 @@ auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
     return fp << B.c_str();
 }
 
-// Find something in the StrHash table. The buffer mybuf holds the string
-// to search. result is never zero
-auto StrHash::find(const std::string &s) -> size_t {
-    the_parser.my_stats.one_more_sh_find();
-    if (s.empty()) return 1;
-    auto p = Buffer(s).hashcode(hash_prime) + 3; // skip the special values 0, 1 and 2
-    for (;;) {
-        if ((at(p).name != nullptr) && s == at(p).name) return p;
-        if (at(p).next == 0) break;
-        p = at(p).next;
-    }
-    String name  = (new std::string(s))->c_str();
-    auto   value = Buffer(s).convert_to_out_encoding();
-    if (at(p).name == nullptr) {
-        the_parser.my_stats.one_more_sh_used();
-        at(p).name  = name;
-        at(p).value = value;
-        return p;
-    }
-    if (hash_last >= size()) resize(size() + 10'000); // \todo simplify using push_back
-    auto k = hash_last;
-    hash_last++;
-    the_parser.my_stats.one_more_sh_used();
-    at(k).name  = name;
-    at(k).value = value;
-    at(p).next  = k;
-    return k;
-}
-
-auto StrHash::find(int s) -> size_t { return find(std::to_string(s)); }
-
 void Buffer::push_back(const Istring &X) {
     auto v = X.id;
     if (v == 0) return;

@@ -7,7 +7,7 @@ class LabelInfo;
 struct StrHash_record {
     String      name{nullptr};
     std::string value;
-    LabelInfo * Labinfo{nullptr};
+    LabelInfo * labinfo{nullptr};
     size_t      next{0};
 };
 
@@ -28,15 +28,10 @@ public:
         at(2) = {" ", " ", nullptr, 0};
     }
 
-    [[nodiscard]] auto p_str(size_t k) -> std::string { return at(k).value; }
-
-    auto        find(const std::string &s) -> size_t;
-    auto        find(int s) -> size_t;
-    auto        operator[](size_t k) const -> String { return at(k).name; }
-    auto        lab_val(Istring k) -> LabelInfo * { return at(k.id).Labinfo; };
-    auto        lab_val_check(Istring k) -> LabelInfo *;
-    static auto next_label_id() -> Istring; // \todo Move outside
-    auto        find_scaled(ScaledInt s) -> Istring;
+    auto find_or_insert(const std::string &s) -> size_t;
+    auto operator[](size_t k) const -> String { return at(k).name; }
+    auto lab_val(size_t k) -> LabelInfo * { return at(k).labinfo; };
+    auto lab_val_check(size_t k) -> LabelInfo *;
 };
 
 inline StrHash SH; // \todo This would fit better elsewhere

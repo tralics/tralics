@@ -431,7 +431,7 @@ void Parser::add_math_label(Xml *res) {
         cmi.ml_last_pass(tracing_math());
         if (the_tag.empty()) return;
     }
-    Istring my_id = StrHash::next_label_id();
+    Istring my_id = next_label_id();
     if (the_tag.empty()) {
         static int mid = 0;
         mid++;
@@ -1298,7 +1298,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
         if (stag) the_log << "tag on row " << N << " " << tag << ".\n";
     }
     if (stag) {
-        Istring id = StrHash::next_label_id();
+        Istring id = next_label_id();
         the_parser.the_stack.create_new_anchor(row->id, id, Istring(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
@@ -2390,7 +2390,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
         Xml *       x   = new Xml(cst_mrow, nullptr);
-        Istring     id  = StrHash::next_label_id();
+        Istring     id  = next_label_id();
         Xid         xid = x->id;
         the_parser.the_stack.create_new_anchor(xid, id, Istring(s1));
         the_parser.create_label(s2, id);
