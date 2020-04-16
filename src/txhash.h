@@ -1,4 +1,5 @@
 #pragma once
+#include "tralics/Buffer.h"
 #include "txeqtb.h"
 
 // -*- C++ -*-

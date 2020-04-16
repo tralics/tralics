@@ -1,5 +1,6 @@
 #pragma once
-#include "../txstring.h"
+#include "Buffer.h"
+#include "StrHash.h"
 #include <gsl/gsl>
 
 class XmlAction;

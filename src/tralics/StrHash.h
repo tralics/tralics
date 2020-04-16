@@ -1,26 +1,8 @@
 #pragma once
-// -*- C++ -*-
-// TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2004, 2007,2008
+#include "../txscaled.h"
+#include <vector>
 
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-#include "tralics/Buffer.h"
-
-// This file holds the hash table, and XML.
 class LabelInfo;
-
-// The string_hash table. It is like the hashtable below (Text and Next)
-// but it is extensible (maybe, we should make the hashtable extensible)
-// Each item has a pointer to a LabelInfo element. If the pointer is not null
-// we consider the slot of `foo', that has a \label{foo} or \ref{foo}
-// At bootstrap, we fill the table with true, false, spacebefore, center,...
-// This uses utf8 encoding. The token can be dumped via its Value
-// which can be ascii, utf8 or latin1 (XML syntax)
 
 struct StrHash_record {
     String      name{nullptr};
@@ -28,6 +10,14 @@ struct StrHash_record {
     LabelInfo * Labinfo{nullptr};
     size_t      next{0};
 };
+
+/// The string_hash table. It is like the hashtable below (Text and Next)
+/// but it is extensible (maybe, we should make the hashtable extensible)
+/// Each item has a pointer to a LabelInfo element. If the pointer is not null
+/// we consider the slot of `foo`, that has a `\label{foo}` or `\ref{foo}`
+/// At bootstrap, we fill the table with true, false, spacebefore, center,...
+/// This uses utf8 encoding. The token can be dumped via its Value
+/// which can be ascii, utf8 or latin1 (XML syntax)
 
 class StrHash : public std::vector<StrHash_record> {
     size_t hash_last{hash_prime + 1}; // last slot used

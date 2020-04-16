@@ -11,7 +11,7 @@
 
 #include <utility>
 
-#include "txstring.h"
+#include "tralics/StrHash.h"
 
 // This is how Tralics interprets a font
 class FontInfo {

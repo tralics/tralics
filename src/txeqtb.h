@@ -9,7 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txstring.h"
+#include "tralics/StrHash.h"
 
 class Parser;
 
