@@ -295,28 +295,6 @@ void Splitter::extract_keyval(std::string &key, std::string &val) {
     key = without_end_spaces(T);
 }
 
-// Return the value associated to the key x, or empty string if not found.
-auto SpecialHash::find(String x) const -> std::string {
-    for (size_t i = 0; i < size; i++)
-        if (key[i] == x) return value[i];
-    return "";
-}
-
-// This splits the string S, then creates a hash table.
-void SpecialHash::create(String s) {
-    Splitter S(s);
-    auto     n = S.count();
-    key.reserve(n);
-    value.reserve(n);
-    size = n;
-    for (size_t j = 0; j < size; j++) {
-        std::string a, b;
-        S.extract_keyval(a, b);
-        key.push_back(a);
-        value.push_back(b);
-    }
-}
-
 void Buffer::remove_last(size_t n) {
     if (wptr >= n) {
         wptr -= n;

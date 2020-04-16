@@ -579,37 +579,6 @@ auto tralics_ns::only_digits(const std::string &s) -> bool {
     }
 }
 
-// Returns: 0 if false, 1 if true, 2 if empty, 3 otherwise
-auto SpecialHash::find_true_false(String s) const -> int {
-    std::string res = find(s);
-    if (res.empty()) return 2;
-    if (res == "true") return 1;
-    if (res == "false") return 0;
-    return 3;
-}
-
-// returns true if this is a valid register index.
-auto SpecialHash::counter_val(int k) -> int {
-    if (k >= 0 && unsigned(k) < nb_registers) return k;
-    return -1;
-}
-
-// Hack. Returns -1 in case no counter was given
-// counter=12345 was given, this is out_of_range,  counter=foo is given
-// but \c@foo is not a counter.
-// Otherwise, returns the register number of the counter
-auto SpecialHash::find_counter() const -> int {
-    std::string s = find("counter");
-    if (s.empty()) return -1;
-    if (tralics_ns::only_digits(s)) return counter_val(std::stoi(s));
-    Buffer &B = the_parser.hash_table.my_buffer();
-    B << bf_reset << "c@" << s;
-    Token t  = the_parser.hash_table.locate(B);
-    auto  cs = t.eqtb_loc();
-    if (the_parser.hash_table.eqtb[cs].cmd != assign_int_cmd) return -1;
-    return counter_val(the_parser.hash_table.eqtb[cs].chr - count_reg_offset);
-}
-
 // finds a slot for the macro
 // Note: the reference count is 0. This is strange: the macro has to
 // be killed or its reference count increased.

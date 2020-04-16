@@ -99,31 +99,6 @@ public:
     auto is_defined(const Buffer &b) -> bool;
 };
 
-// This is an association table. We could use a standard C++ class here
-class SpecialHash {
-    std::vector<std::string> key;   // the keys
-    std::vector<std::string> value; // the values
-public:
-    size_t size{0}; // number of terms
-
-    SpecialHash(const std::string &s) { create(s.c_str()); }
-
-    void create(String s);
-    auto find(String x) const -> std::string;
-    void get_pair(size_t k, std::string &a, std::string &b) { // \todo return a pair!
-        if (k < size) {
-            a = key[k];
-            b = value[k];
-        } else {
-            a = "";
-            b = "";
-        }
-    }
-    auto               find_true_false(String s) const -> int;
-    static auto        counter_val(int k) -> int;
-    [[nodiscard]] auto find_counter() const -> int;
-};
-
 // Data structure for label and references.
 class LabelInfo {
 public:

@@ -12,6 +12,7 @@
 
 #include "txparser.h"
 #include "tralics/Saver.h"
+#include "tralics/SpecialHash.h"
 #include "txinline.h"
 #include <fmt/format.h>
 

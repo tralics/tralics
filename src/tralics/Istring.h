@@ -10,8 +10,7 @@ class ScaledInt;
 struct Istring {
     size_t id{0};
 
-    Istring() = default;
-    explicit Istring(size_t N) : id(N) {}
+    Istring(size_t N = 0) : id(N) {}
     explicit Istring(String s);
     explicit Istring(const Buffer &X);
     explicit Istring(const std::string &s);
