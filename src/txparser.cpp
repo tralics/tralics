@@ -728,16 +728,16 @@ void Parser::T_verbatim() {
     bool        want_number = false;
     SpecialHash S(args);
     //  Check if numbering wanted
-    if (!S.find("numbers").empty()) want_number = true;
+    if (!S.get("numbers").empty()) want_number = true;
     if (!extended && numbered_verbatim) want_number = true;
     bool reset = true;
     if (!extended) reset = false;
     // Check if a register number is given
-    int reg_number = find_counter(S.find("counter"));
+    int reg_number = find_counter(S.get("counter"));
     if (reg_number >= 0) reset = false;
     // Check if a start number is given
     int         n = 0;
-    std::string w = S.find("firstnumber");
+    std::string w = S.get("firstnumber");
     if (w.empty())
         n = 1;
     else if (w == "last") {
@@ -756,8 +756,8 @@ void Parser::T_verbatim() {
     Token       t2 = hash_table.relax_token;
     Token       t3 = hash_table.relax_token;
     Token       t4 = hash_table.relax_token;
-    std::string w2 = S.find("style");
-    std::string w3 = S.find("pre");
+    std::string w2 = S.get("style");
+    std::string w3 = S.get("pre");
     if (!w2.empty()) t2 = hash_table.locate("FV@style@" + w2);
     if (!w3.empty()) t3 = hash_table.locate("FV@pre@" + w3);
     if (!w3.empty()) t4 = hash_table.locate("FV@post@" + w3);
@@ -771,7 +771,7 @@ void Parser::special_fvset() {
     {
         static const unsigned loc = uchar(' ');
         SpecialHash           S(args);
-        std::string           s = S.find("showspaces");
+        std::string           s = S.get("showspaces");
         if (s.empty()) return;
         if (s == "true")
             verbatim_chars[loc] = hash_table.textvisiblespace_token;
