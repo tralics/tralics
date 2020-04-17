@@ -5,12 +5,11 @@ namespace {
     Buffer thebuffer;
 
     /// Remove initial and final spaces.
-    auto without_end_spaces(String T) -> std::string {
-        while (is_space(T[0])) T++;
-        Buffer tmp;
-        tmp.push_back(T);
-        tmp.remove_space_at_end();
-        return tmp.to_string();
+    auto without_end_spaces(std::string s) -> std::string {
+        size_t k = 0, l = s.size() - 1;
+        while (is_space(s[k])) ++k;
+        while (l > k && is_space(s[l])) --l;
+        return s.substr(k, l - k + 1);
     }
 } // namespace
 

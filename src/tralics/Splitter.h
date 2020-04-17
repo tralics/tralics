@@ -2,7 +2,9 @@
 #include "types.h"
 #include <string>
 
-// This class returns foo then bar then gee from `foo,bar,gee'
+// This class returns foo then bar then gee from `foo,bar,gee' \todo free
+// standing function returning a vector of strings would be simpler?
+
 class Splitter {
     std::string S;   // the string to split
     size_t      pos; // current position
