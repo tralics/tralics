@@ -781,19 +781,12 @@ void Parser::T_verbatim() {
 // Still incomplete
 void Parser::special_fvset() {
     flush_buffer();
-    std::string args = sT_arg_nopar();
-    {
-        static const unsigned loc = uchar(' ');
-        SpecialHash           S(args);
-        std::string           s = S.get("showspaces");
-        if (s.empty()) return;
-        if (s == "true")
-            verbatim_chars[loc] = hash_table.textvisiblespace_token;
-        else if (s == "false")
-            verbatim_chars[loc] = hash_table.tilda_token;
-        else
-            return;
-    }
+    auto s = SpecialHash(sT_arg_nopar()).get("showspaces");
+    if (s.empty()) return;
+    if (s == "true")
+        verbatim_chars[uchar(' ')] = hash_table.textvisiblespace_token;
+    else if (s == "false")
+        verbatim_chars[uchar(' ')] = hash_table.tilda_token;
 }
 
 // In the case of \verb+foo+, reads and returns the + character.
