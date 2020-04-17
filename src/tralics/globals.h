@@ -1,11 +1,7 @@
 #pragma once
 #include "Istring.h"
 #include "codepoint.h"
-#include "enums.h"
-#include <array>
 #include <filesystem>
-#include <string>
-#include <vector>
 
 // \todo move from extern to inline
 

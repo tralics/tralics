@@ -1,6 +1,5 @@
 #pragma once
 #include "Buffer.h"
-#include "StrHash.h"
 #include <gsl/gsl>
 
 class XmlAction;

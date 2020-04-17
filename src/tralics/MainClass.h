@@ -1,6 +1,5 @@
 #pragma once
 #include "../txio.h"
-#include "StrHash.h"
 
 class Stack;
 

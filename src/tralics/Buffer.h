@@ -2,7 +2,6 @@
 #include "../txid.h"
 #include "../txscaled.h"
 #include <cstring>
-#include <vector>
 
 struct AttPair;
 struct LinePtr;
