@@ -1,5 +1,12 @@
 #include "tralics/util.h"
+#include "tralics/Buffer.h"
 #include "tralics/codepoint.h"
+#include "tralics/consts.h"
+#include "txparser.h"
+
+namespace {
+    auto counter_val(int k) -> int { return (0 <= k && k < to_signed(nb_registers)) ? k : -1; }
+} // namespace
 
 auto only_space(const std::string &s) -> bool {
     for (size_t i = 0; i < s.length(); ++i) {
@@ -39,3 +46,20 @@ auto split_assign(std::string s) -> std::pair<std::string, std::string> {
     std::string val = (s[i] == '=') ? without_end_spaces(std::string(s).substr(i + 1)) : "";
     return {key, val};
 }
+
+// Hack. Returns -1 in case no counter was given
+// counter=12345 was given, this is out_of_range,  counter=foo is given
+// but \c@foo is not a counter.
+// Otherwise, returns the register number of the counter
+auto find_counter(const std::string &s) -> int {
+    if (s.empty()) return -1;
+    if (only_digits(s)) return counter_val(std::stoi(s));
+    static Buffer B;
+    B << bf_reset << "c@" << s;
+    Token t  = the_parser.hash_table.locate(B);
+    auto  cs = t.eqtb_loc();
+    if (the_parser.hash_table.eqtb[cs].cmd != assign_int_cmd) return -1;
+    return counter_val(the_parser.hash_table.eqtb[cs].chr - count_reg_offset);
+}
+
+auto only_digits(const std::string &s) -> bool { return std::all_of(s.begin(), s.end(), is_digit); }

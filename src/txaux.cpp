@@ -569,16 +569,6 @@ void RealNumber::convert_decimal_part(size_t k, const long *table) {
     fpart = (f + 1) / 2;
 }
 
-// Return true if the string contains only integers.
-auto tralics_ns::only_digits(const std::string &s) -> bool {
-    String S = s.c_str();
-    for (int i = 0;; i++) {
-        char c = S[i];
-        if (c == 0) return true;
-        if (!is_digit(c)) return false;
-    }
-}
-
 // finds a slot for the macro
 // Note: the reference count is 0. This is strange: the macro has to
 // be killed or its reference count increased.

@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+auto find_counter(const std::string &s) -> int;
+auto only_digits(const std::string &s) -> bool;
 auto only_space(const std::string &s) -> bool;
 auto split_commas(const std::string &S) -> std::vector<std::string>;
 auto split_assign(std::string s) -> std::pair<std::string, std::string>;

@@ -11,5 +11,4 @@ public:
     SpecialHash(const std::string &S);
 
     [[nodiscard]] auto find(const std::string &x) const -> std::string;
-    [[nodiscard]] auto find_counter() const -> int;
 };

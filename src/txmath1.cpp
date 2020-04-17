@@ -1346,17 +1346,12 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
 
 // True if the list contains only digits, that are put in the buffer.
 auto Math::only_digits(Buffer &B) const -> bool {
-    auto L = value.begin();
-    auto E = value.end();
-    if (L == E) return false;
-    for (;;) {
-        if (L == E) return true;
-        if (L->is_digit()) {
-            B.push_back(L->get_char());
-            ++L;
-        } else
-            return false;
+    if (value.empty()) return false;
+    for (const auto &L : value) {
+        if (!L.is_digit()) { return false; }
+        B.push_back(L.get_char());
     }
+    return true;
 }
 
 // Put as many characters as possible in the buffer.

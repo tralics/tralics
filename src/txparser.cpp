@@ -733,7 +733,7 @@ void Parser::T_verbatim() {
     bool reset = true;
     if (!extended) reset = false;
     // Check if a register number is given
-    int reg_number = S.find_counter();
+    int reg_number = find_counter(S.find("counter"));
     if (reg_number >= 0) reset = false;
     // Check if a start number is given
     int         n = 0;
@@ -743,7 +743,7 @@ void Parser::T_verbatim() {
     else if (w == "last") {
         reset       = false;
         want_number = true;
-    } else if (tralics_ns::only_digits(w)) {
+    } else if (only_digits(w)) {
         reset       = true;
         n           = atoi(w.c_str());
         want_number = true;

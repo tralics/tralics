@@ -37,7 +37,6 @@ namespace tralics_ns {
     auto get_out_dir(const std::string &name) -> String;            /// Returns output_dir+name
     auto get_short_jobname() -> std::string;
     auto is_leap_year(long y) -> bool;
-    auto only_digits(const std::string &s) -> bool;
     auto open_file(const std::string &name, bool f) -> std::ofstream;
     auto open_file(String name, bool fatal) -> std::ofstream;
     auto titlepage_is_valid() -> bool;
