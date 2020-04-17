@@ -13,6 +13,7 @@
 
 #include "txparser2.h"
 #include "tralics/Saver.h"
+#include "tralics/Splitter.h"
 #include <fmt/format.h>
 
 namespace {

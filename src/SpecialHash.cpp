@@ -1,4 +1,5 @@
 #include "tralics/SpecialHash.h"
+#include "tralics/Splitter.h"
 #include "txhash.h"
 #include "txinline.h"
 #include "txparser.h"
