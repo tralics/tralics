@@ -9,23 +9,14 @@ namespace {
 } // namespace
 
 SpecialHash::SpecialHash(const std::string &str) {
-    auto     s = str.c_str();
-    Splitter S(s);
-    auto     n = S.count();
-    key.reserve(n);
-    value.reserve(n);
-    size = n;
-    for (size_t j = 0; j < size; j++) {
-        auto [a, b] = S.extract_keyval();
-        key.push_back(a);
-        value.push_back(b);
-    }
+    Splitter S(str);
+    while (!S.at_end()) kv.push_back(Splitter::split(S.get_next()));
 }
 
 // Return the value associated to the key x, or empty string if not found.
-auto SpecialHash::find(String x) const -> std::string {
-    for (size_t i = 0; i < size; i++)
-        if (key[i] == x) return value[i];
+auto SpecialHash::find(const std::string &x) const -> std::string {
+    for (const auto &i : kv)
+        if (i.first == x) return i.second;
     return "";
 }
 

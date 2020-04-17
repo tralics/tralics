@@ -1,10 +1,7 @@
 #include "tralics/Splitter.h"
-#include "tralics/Buffer.h"
-#include <sstream>
+#include "tralics/codepoint.h"
 
 namespace {
-    Buffer buf;
-
     auto without_end_spaces(std::string s) -> std::string {
         size_t k = 0, l = s.size();
         while (is_space(s[k])) ++k;
@@ -13,30 +10,16 @@ namespace {
     }
 } // namespace
 
-// This returns the number of keywords in the list.
-auto Splitter::count() const -> size_t {
-    return to_unsigned(std::count_if(S.begin(), S.end(), [](char c) { return c == ','; })) + 1;
-}
-
 // This returns the next keyword
-auto Splitter::get_next_raw() -> std::string {
+auto Splitter::get_next() -> std::string {
     auto p = pos;
-    while (pos < size && S[pos] != ',') pos++;
+    while (pos < S.size() && S[pos] != ',') pos++;
     auto n = pos - p;
-    if (pos < size && S[pos] == ',') pos++;
-    if (n == 0) return "";
-    buf.reset();
-    buf.push_back(S.substr(p, n));
-    return buf.c_str();
+    if (pos < S.size() && S[pos] == ',') pos++;
+    return without_end_spaces(S.substr(p, n));
 }
 
-auto Splitter::get_next() -> std::string { return without_end_spaces(get_next_raw()); }
-
-// Constructs the next pair. We first call next_for_splitter,
-// Assume that this puts Key=Val in the buffer. We set key and val.
-// If no equals sign is given, the string is the key, the value is empty.
-auto Splitter::extract_keyval() -> std::pair<std::string, std::string> {
-    auto   T = get_next_raw();
+auto Splitter::split(std::string T) -> std::pair<std::string, std::string> {
     size_t i = 0;
     while ((T[i] != 0) && (T[i] != '=')) i++;
     std::string key = without_end_spaces(std::string(T).substr(0, i));
