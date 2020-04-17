@@ -256,11 +256,8 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
 void Parser::L3_new_conditional_aux(TokenList &arg_spec, subtypes s) {
     std::string spec = sE_arg_nopar();
     TokenList   body = read_arg();
-    Splitter    S(spec);
-    for (;;) {
-        if (S.at_end()) return;
-        std::string p = S.get_next();
-        subtypes    c = l3_ns::conditional_aux(p);
+    for (const auto &p : split_commas(spec)) {
+        subtypes c = l3_ns::conditional_aux(p);
         if (c == l3_bad_code) continue;
         L3_generate_form(c, arg_spec, body, s);
     }
@@ -327,12 +324,9 @@ void Parser::L3_eq_conditional(subtypes s) {
     bool        bad       = L3_split_next_name();
     std::string spec      = sE_arg_nopar();
     if (bad) return;
-    Buffer & B = local_buffer;
-    Splitter S(spec);
-    for (;;) {
-        if (S.at_end()) return;
-        std::string p = S.get_next();
-        subtypes    c = l3_ns::conditional_aux(p);
+    Buffer &B = local_buffer;
+    for (const auto &p : split_commas(spec)) {
+        subtypes c = l3_ns::conditional_aux(p);
         if (c == l3_bad_code) continue;
         B.l3_fabricate_cond(tok_base, tok_sig, c);
         if (!hash_table.is_defined(B)) {
@@ -1029,12 +1023,7 @@ void Parser::l3_generate_variant() {
     std::string spec = sE_arg_nopar();
     if (nok) return; // an error has already been generated
     if (tracing_commands()) the_log << lg_startbrace << "Generating variants for " << orig << " with " << spec << lg_endbrace;
-    Splitter S(spec);
-    for (;;) {
-        if (S.at_end()) return;
-        std::string p = S.get_next();
-        l3_generate_variant(p, prot, orig);
-    }
+    for (const auto &p : split_commas(spec)) l3_generate_variant(p, prot, orig);
 }
 
 // This one is used by the bootstrap code.

@@ -604,11 +604,8 @@ void Parser::T_usepackage() {
     std::string name = sE_arg_nopar(); // can be a list of names
     std::string date = sE_optarg_nopar();
     cur_opt_list     = make_options(Loptions);
-    Splitter S(name);
-    for (;;) {
-        if (S.at_end()) return;
-        std::string pack = S.get_next();
-        bool        b    = check_builtin_pack(pack);
+    for (const auto &pack : split_commas(name)) {
+        bool b = check_builtin_pack(pack);
         use_a_package(pack, false, date, b);
     }
 }

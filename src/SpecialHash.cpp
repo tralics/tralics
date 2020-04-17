@@ -9,8 +9,7 @@ namespace {
 } // namespace
 
 SpecialHash::SpecialHash(const std::string &str) {
-    Splitter S(str);
-    while (!S.at_end()) kv.push_back(Splitter::split(S.get_next()));
+    for (const auto &s : split_commas(str)) kv.push_back(split_assign(s));
 }
 
 // Return the value associated to the key x, or empty string if not found.

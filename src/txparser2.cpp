@@ -771,10 +771,7 @@ void Parser::define_cmd_key(subtypes c) {
     bool        has_dft = read_optarg(dft); // \par ok here
     // construct the key or key list
     std::string Keys = list_to_string_c(keytoks, "problem scanning key");
-    Splitter    S(Keys);
-    for (;;) {
-        if (S.at_end()) return;
-        std::string Key = S.get_next();
+    for (const auto &Key : split_commas(Keys)) {
         if (Key.empty()) continue;
         B << bf_reset << mp << Key;
         Token cmd = hash_table.locate(B);
@@ -917,10 +914,7 @@ void Parser::define_bool_key(subtypes c) {
     bool        has_dft = read_optarg_nopar(dft);
     // construct the key or key list
     std::string Keys = list_to_string_c(keytoks, "Problem scanning key");
-    Splitter    S(Keys);
-    for (;;) {
-        if (S.at_end()) break;
-        std::string Key = S.get_next();
+    for (const auto &Key : split_commas(Keys)) {
         if (Key.empty()) continue;
         B << bf_reset << mp << Key;
         TokenList u = B.str_toks11(false);
@@ -983,10 +977,8 @@ void Parser::key_ifundefined() {
     std::string Key       = list_to_string_c(key, "problem scanning key");
     std::string Fams      = list_to_string_c(fams, "Problem with the families");
     std::string fam;
-    Splitter    S(Fams);
-    for (;;) {
-        if (S.at_end()) break;
-        fam = S.get_next();
+    for (const auto &f : split_commas(Fams)) {
+        fam = f;
         B.reset();
         B << xkv_prefix << fam;
         if (!fam.empty()) B.push_back('@');
@@ -1006,10 +998,7 @@ void Parser::disable_keys() {
     xkv_fetch_prefix_family(); // read prefix and family
     TokenList   keys = read_arg();
     std::string Keys = list_to_string_c(keys, "problem scanning keys");
-    Splitter    S(Keys);
-    for (;;) {
-        if (S.at_end()) break;
-        std::string Key = S.get_next();
+    for (const auto &Key : split_commas(Keys)) {
         B << bf_reset << xkv_header << Key;
         if (hash_table.is_defined(B)) {
             Token T = hash_table.last_tok;

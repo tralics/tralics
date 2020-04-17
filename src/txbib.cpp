@@ -193,13 +193,10 @@ void Parser::T_cite(subtypes sw) {
     Token sep = sw == footcite_code ? hash_table.footcite_sep_token
                                     : sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
     cur_tok       = T;
-    String   List = fetch_name0_nopar();
-    Splitter S(List);
-    int      n      = 0;
-    Token    my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
-    for (;;) {
-        if (S.at_end()) break;
-        auto cur = S.get_next();
+    String List   = fetch_name0_nopar();
+    int    n      = 0;
+    Token  my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
+    for (const auto &cur : split_commas(List)) {
         if (cur.empty()) continue;
         if (sw == nocite_code) {
             if (cur == "*")
@@ -302,9 +299,7 @@ void Parser::T_biblio() {
     flush_buffer();
     String list = fetch_name0_nopar();
     add_bib_marker(false);
-    Splitter S(list);
-    while (!S.at_end()) {
-        auto w = S.get_next();
+    for (const auto &w : split_commas(list)) {
         if (w.empty()) continue;
         the_bibliography.push_back_src(w);
     }
