@@ -16,7 +16,7 @@
 #include <unistd.h>
 
 namespace {
-    Buffer thebuffer; // a scratch buffer
+    Buffer buf; // a scratch buffer
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
@@ -106,20 +106,6 @@ void Buffer::alloc(size_t n) {
 void Buffer::push_back(const std::string &s) {
     alloc(s.size());
     for (auto c : s) at(wptr++) = c;
-    at(wptr) = 0;
-}
-
-void Buffer::push_back_substring(String S, size_t n) {
-    alloc(n);
-    strncpy(data() + wptr, S, n);
-    wptr += n;
-    at(wptr) = 0;
-}
-
-void Buffer::push_back_substring(const std::string &S, size_t p, size_t n) {
-    alloc(n);
-    for (size_t i = 0; i < n; i++) at(wptr + i) = S[p + i];
-    wptr += n;
     at(wptr) = 0;
 }
 
@@ -536,9 +522,9 @@ auto operator<<(Logger &fp, Token t) -> Logger & { return fp << t.tok_to_str(); 
 auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 
 auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
-    thebuffer.reset();
-    thebuffer.push_back(x, glue_spec_pt);
-    return fp << thebuffer.c_str();
+    buf.reset();
+    buf.push_back(x, glue_spec_pt);
+    return fp << buf.c_str();
 }
 
 auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
@@ -547,9 +533,9 @@ auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
 }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
-    thebuffer.reset();
-    thebuffer.push_back(x);
-    fp << thebuffer.c_str();
+    buf.reset();
+    buf.push_back(x);
+    fp << buf.c_str();
     return fp;
 }
 
@@ -559,16 +545,16 @@ auto operator<<(Logger &X, const Glue &x) -> Logger & {
 }
 
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
-    thebuffer.reset();
-    thebuffer.push_back(x);
-    fp << thebuffer.c_str();
+    buf.reset();
+    buf.push_back(x);
+    fp << buf.c_str();
     return fp;
 }
 
 auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
-    thebuffer.reset();
-    thebuffer.push_back(x);
-    X << thebuffer.c_str();
+    buf.reset();
+    buf.push_back(x);
+    X << buf.c_str();
     return X;
 }
 
@@ -577,9 +563,9 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
-        thebuffer.reset();
-        thebuffer.push_back(x);
-        fp << thebuffer.c_str();
+        buf.reset();
+        buf.push_back(x);
+        fp << buf.c_str();
     }
     return fp;
 }
@@ -588,9 +574,9 @@ auto operator<<(FullLogger &fp, const codepoint &x) -> FullLogger & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
-        thebuffer.reset();
-        thebuffer.push_back(x);
-        fp << thebuffer.c_str();
+        buf.reset();
+        buf.push_back(x);
+        fp << buf.c_str();
     }
     return fp;
 }
@@ -600,9 +586,9 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
     else {
-        thebuffer.reset();
-        thebuffer.out_log(x, the_main->log_encoding);
-        fp << thebuffer.c_str();
+        buf.reset();
+        buf.out_log(x, the_main->log_encoding);
+        fp << buf.c_str();
     }
     return fp;
 }

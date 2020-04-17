@@ -20,7 +20,7 @@
 #include <sstream>
 
 namespace {
-    Buffer                thebuffer;
+    Buffer                buf;
     bool                  log_is_open = false; // says if stranscript file is open for I/O tracing
     Buffer                utf8_out;            // Holds utf8 outbuffer
     Converter             the_converter;
@@ -36,10 +36,9 @@ namespace {
 
     void utf8_ovf(size_t n) {
         Converter &T = the_converter;
-        thebuffer.reset();
-        thebuffer.push_back16(n, true);
-        log_and_tty << "UTF-8 parsing overflow (char " << thebuffer << ", line " << T.cur_file_line << ", file " << T.cur_file_name
-                    << ")\n";
+        buf.reset();
+        buf.push_back16(n, true);
+        log_and_tty << "UTF-8 parsing overflow (char " << buf << ", line " << T.cur_file_line << ", file " << T.cur_file_name << ")\n";
         T.bad_chars++;
         T.new_error();
     }
@@ -162,9 +161,9 @@ auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger & {
 
 // Prints an att list on a buffer, then a stream.
 void AttList::print(std::ostream &fp) const {
-    thebuffer.reset();
-    thebuffer.push_back(*this);
-    fp << thebuffer;
+    buf.reset();
+    buf.push_back(*this);
+    fp << buf;
 }
 
 // Prints an att list on a stream.
@@ -408,14 +407,14 @@ void Clines::convert_line(size_t wc) {
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
-        thebuffer << bf_reset << fmt::format("Illegal encoding {}", enc);
-        the_parser.parse_error(thebuffer.c_str());
+        buf << bf_reset << fmt::format("Illegal encoding {}", enc);
+        the_parser.parse_error(buf.c_str());
         return;
     }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
-        thebuffer << bf_reset << fmt::format("Illegal encoding position {}", pos);
-        the_parser.parse_error(thebuffer.c_str());
+        buf << bf_reset << fmt::format("Illegal encoding position {}", pos);
+        the_parser.parse_error(buf.c_str());
         return;
     }
     if (0 < v && v < int(nb_characters))
@@ -939,9 +938,9 @@ void LinePtr::clear_and_copy(LinePtr &X) {
 
 auto LinePtr::dump_name() const -> String {
     if (file_name.empty()) return "virtual file";
-    thebuffer.reset();
-    thebuffer << "file " << file_name;
-    return thebuffer.c_str();
+    buf.reset();
+    buf << "file " << file_name;
+    return buf.c_str();
 }
 
 // Whenever a TeX file is opened for reading, we print this in the log
@@ -1028,7 +1027,7 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     while (C != E) {
         B.reset();
         B.push_back(C->chars);
-        Buffer &aux = thebuffer;
+        Buffer &aux = buf;
         bool    s   = B.find_documentclass(aux);
         if (s) {
             the_main->doc_class_pos = C;
@@ -1059,7 +1058,7 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
     while (C != E) {
         B.reset();
         B.push_back(C->chars);
-        Buffer &aux = thebuffer;
+        Buffer &aux = buf;
         bool    s   = B.find_configuration(aux);
         if (s) return aux.to_string();
         ++C;
@@ -1093,7 +1092,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
 // line number.
 // This is used by \scantokens and \reevaluate, assumes UTF8
 void LinePtr::split_string(String x, int l) {
-    Buffer &B = thebuffer;
+    Buffer &B = buf;
     LinePtr L;
     L.set_cur_line(l);
     int i = 0;

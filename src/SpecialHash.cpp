@@ -16,8 +16,7 @@ SpecialHash::SpecialHash(const std::string &str) {
     value.reserve(n);
     size = n;
     for (size_t j = 0; j < size; j++) {
-        std::string a, b;
-        S.extract_keyval(a, b);
+        auto [a, b] = S.extract_keyval();
         key.push_back(a);
         value.push_back(b);
     }

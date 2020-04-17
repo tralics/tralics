@@ -148,8 +148,6 @@ public:
     void push_back_special_string(String s);
     void push_back_real_utf8(codepoint c);
     void push_back_xml_char(uchar c);
-    void push_back_substring(String S, size_t n);
-    void push_back_substring(const std::string &S, size_t p, size_t n);
     void push_back_unless_punct(char c);
     void put_at_end(String s);
     auto remove_digits(const std::string &s) -> std::string;

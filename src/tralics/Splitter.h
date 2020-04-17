@@ -11,10 +11,10 @@ class Splitter {
     size_t      size;
 
 public:
-    Splitter(std::string w) : S(std::move(w)), pos(0) { size = S.size(); }
+    Splitter(std::string w) : S(std::move(w)), pos(0), size(S.size()) {}
     [[nodiscard]] auto at_end() const -> bool { return pos == size; }
     [[nodiscard]] auto count() const -> size_t;
-    auto               get_next_raw() -> String;
+    auto               get_next_raw() -> std::string;
     auto               get_next() -> std::string;
-    void               extract_keyval(std::string &key, std::string &val);
+    auto               extract_keyval() -> std::pair<std::string, std::string>;
 };
