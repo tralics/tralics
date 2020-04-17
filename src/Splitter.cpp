@@ -10,13 +10,15 @@ namespace {
     }
 } // namespace
 
-// This returns the next keyword
-auto Splitter::get_next() -> std::string {
-    auto p = pos;
-    while (pos < S.size() && S[pos] != ',') pos++;
-    auto n = pos - p;
-    if (pos < S.size() && S[pos] == ',') pos++;
-    return without_end_spaces(S.substr(p, n));
+Splitter::Splitter(const std::string &S) {
+    size_t pos = 0;
+    while (pos != S.size()) {
+        auto p = pos;
+        while (pos != S.size() && S[pos] != ',') ++pos;
+        auto n = pos - p;
+        if (S[pos] == ',') ++pos;
+        push_back(without_end_spaces(S.substr(p, n)));
+    }
 }
 
 auto Splitter::split(std::string T) -> std::pair<std::string, std::string> {
