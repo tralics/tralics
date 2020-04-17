@@ -68,9 +68,9 @@ void TexOutStream::close(size_t chan) {
 
 // This opens an output channel.
 // What if the file cannot be opened ?
-void TexOutStream::open(size_t chan, const std::string &file_name) {
+void TexOutStream::open(size_t chan, const std::string &fn) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
-    write_file[chan] = std::ofstream(tralics_ns::get_out_dir(file_name));
+    write_file[chan] = std::ofstream(tralics_ns::get_out_dir(fn));
     write_open[chan] = true;
 }
 
@@ -112,8 +112,7 @@ void Parser::M_extension(int cc) {
     auto uchan = to_unsigned(chan);
     if (cc == openout_code) {
         scan_optional_equals();
-        std::string file_name = scan_file_name();
-        tex_out_stream.open(uchan, file_name);
+        tex_out_stream.open(uchan, scan_file_name());
     } else if (cc == closeout_code)
         tex_out_stream.close(uchan);
     else { // write to uchan
@@ -913,16 +912,16 @@ auto Parser::get_a_new_line() -> bool {
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
 auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should ch be unsigned?
-    std::string file_name = "tty";
+    std::string fn = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
     else if (!tex_input_files[to_unsigned(ch)].is_open)
         cur_in_chan = tty_in_chan;
     else {
         cur_in_chan = to_unsigned(ch);
-        file_name   = tex_input_files[to_unsigned(ch)].lines.file_name;
+        fn          = tex_input_files[to_unsigned(ch)].lines.file_name;
     }
-    push_input_stack(file_name, false, true);
+    push_input_stack(fn, false, true);
     TokenList L;
     new_line_for_read(true);
     int b = 0;

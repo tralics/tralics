@@ -1,8 +1,6 @@
 #pragma once
 #include "../txparser.h"
-
-inline bool global_in_load = false; // \todo move to globals.h?
-inline bool global_in_url  = false; // \todo move to globals.h?
+#include "globals.h"
 
 template <typename T> class Saver {
     T &target;

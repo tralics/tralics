@@ -29,6 +29,8 @@ extern bool nofloat_hack;
 extern bool only_input_data;
 extern bool raw_bib;
 extern bool seen_enddocument;
+inline bool global_in_load = false;
+inline bool global_in_url  = false;
 
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 

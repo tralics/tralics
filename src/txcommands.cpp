@@ -8,7 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txbib.h"
 #include "txclasses.h"
