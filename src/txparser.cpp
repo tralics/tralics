@@ -12,11 +12,25 @@
 
 #include "txparser.h"
 #include "tralics/Saver.h"
-#include "tralics/SpecialHash.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <unordered_map>
 
 namespace {
+    struct SpecialHash : public std::unordered_map<std::string, std::string> {
+        SpecialHash(const std::string &str) {
+            for (const auto &s : split_commas(str)) {
+                auto [a, b] = split_assign(s);
+                try_emplace(a, b);
+            }
+        }
+
+        [[nodiscard]] auto get(const std::string &x) const -> std::string {
+            if (auto i = find(x); i != end()) return i->second;
+            return {};
+        }
+    };
+
     Buffer trace_buffer, Thbuf1, Thbuf2;
 } // namespace
 
