@@ -172,7 +172,7 @@ auto Parser::L3_split_next_name() -> bool {
     Buffer &B = local_buffer;
     B.reset();
     token_to_split = cur_tok;
-    B << *hash_table[cur_tok.hash_loc()];
+    B << hash_table[cur_tok.hash_loc()];
     bool ok = B.split_at_colon(tok_base, tok_sig);
     if (!ok) {
         err_buf << bf_reset << "Missing colon in macro name " << cur_tok << " by " << err_tok;
@@ -188,7 +188,7 @@ void Parser::L3_user_split_next_name(bool base) {
     if (l3_get_name(T)) return;
     Buffer &B = local_buffer;
     B.reset();
-    B << *hash_table[cur_tok.hash_loc()];
+    B << hash_table[cur_tok.hash_loc()];
     B.split_at_colon(tok_base, tok_sig);
     std::string res = base ? tok_base : tok_sig;
     if (tracing_macros()) the_log << lg_start << T << cur_tok << lg_arrow << res << lg_end;

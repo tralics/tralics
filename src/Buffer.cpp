@@ -280,7 +280,7 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) const {
         auto x = T.val;
         if (esc && x >= single_offset) B.insert_escape_char_raw();
         if (x >= hash_offset)
-            B.push_back(*hash_table[T.hash_loc()]);
+            B.push_back(hash_table[T.hash_loc()]);
         else if (x < first_multitok_val)
             B.push_back(T.char_val());
         else
@@ -343,7 +343,7 @@ auto Buffer::push_back(Token T) -> bool {
     }
     if (T.is_in_hash()) {
         Tmp.reset();
-        Tmp.push_back(*the_parser.hash_table[T.hash_loc()]);
+        Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
         push_back(Tmp.convert_to_log_encoding());
         return true;
     }
@@ -395,7 +395,7 @@ void Buffer::insert_token(Token T, bool sw) {
         bool need_space = sw ? c.is_letter() : the_parser.has_letter_catcode(c.value);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
-        push_back(*the_parser.hash_table[T.hash_loc()]);
+        push_back(the_parser.hash_table[T.hash_loc()]);
         push_back(' ');
     } else { // empty or bad
         if (sw)
@@ -427,7 +427,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
             else
                 push_back_real_utf8(c);
         } else if (T.is_in_hash()) {
-            auto s = *the_parser.hash_table[T.hash_loc()];
+            auto s = the_parser.hash_table[T.hash_loc()];
             if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; }))
                 push_back(s);
             else

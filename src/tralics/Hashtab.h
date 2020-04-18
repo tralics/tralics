@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 // This is the main hash table.
-class Hashtab : public std::vector<std::optional<std::string>> {
+class Hashtab : public std::vector<std::string> {
 private:
     std::unordered_map<std::string, size_t> map;
 
