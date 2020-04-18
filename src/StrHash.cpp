@@ -1,7 +1,5 @@
 #include "tralics/StrHash.h"
 #include "txhash.h"
-#include "txparser.h"
-#include <fmt/format.h>
 
 auto StrHash::labinfo(size_t k) -> LabelInfo * {
     if (at(k).labinfo == nullptr) at(k).labinfo = new LabelInfo(Istring(k));
