@@ -1,8 +1,6 @@
 #pragma once
 #include "../txeqtb.h"
 #include "Buffer.h"
-#include "Token.h"
-#include <array>
 
 // This is the main hash table. If a token like \foo has hashcode p,
 // then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...
