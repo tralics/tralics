@@ -12,6 +12,6 @@ auto StrHash::labinfo(size_t k) -> LabelInfo * {
 auto StrHash::find_or_insert(const std::string &s) -> size_t {
     if (auto tmp = s_to_i.find(s); tmp != s_to_i.end()) return tmp->second;
     s_to_i.emplace(s, size());
-    push_back({(new std::string(s))->c_str(), Buffer(s).convert_to_out_encoding()});
+    push_back({s, Buffer(s).convert_to_out_encoding()});
     return size() - 1;
 }
