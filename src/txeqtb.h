@@ -9,8 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/StrHash.h"
-
 class Parser;
 
 // Defined EQTB, the table of equivalents

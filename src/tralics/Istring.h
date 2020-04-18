@@ -19,8 +19,8 @@ struct Istring {
     [[nodiscard]] auto null() const -> bool { return id == 0; }       // null string
     [[nodiscard]] auto empty() const -> bool { return id == 1; }      // ""
     [[nodiscard]] auto spec_empty() const -> bool { return id == 2; } // ""
-    [[nodiscard]] auto c_str() const -> String { return SH[id]; }
-    [[nodiscard]] auto p_str() const -> std::string { return SH.at(id).value; }
+    [[nodiscard]] auto c_str() const -> String { return SH[id].name; }
+    [[nodiscard]] auto p_str() const -> std::string & { return SH[id].value; }
     [[nodiscard]] auto labinfo() const { return SH.labinfo(id); }
 
     auto operator==(Istring X) const -> bool { return id == X.id; }

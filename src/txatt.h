@@ -9,8 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/StrHash.h"
-
 // This is an attribute list.
 struct AttPair {
     Istring name, value;

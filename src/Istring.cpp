@@ -1,5 +1,5 @@
+#include "tralics/Istring.h"
 #include "tralics/Buffer.h"
-#include "tralics/StrHash.h"
 
 Istring::Istring(String s) : id(SH.find_or_insert(s)) {}
 
