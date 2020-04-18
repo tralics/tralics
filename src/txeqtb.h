@@ -1,4 +1,8 @@
 #pragma once
+#include "tralics/CmdChr.h"
+#include "tralics/Token.h"
+#include "txscaled.h"
+
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
 
@@ -10,6 +14,7 @@
 // (See the file COPYING in the main directory for details)
 
 class Parser;
+class Xml;
 
 // Defined EQTB, the table of equivalents
 // EQTB for commands. No Ctor(?) but reset() is called for every object.

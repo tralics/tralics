@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/EQTB.h"
+#include "tralics/Hashtab.h"
 #include "txcond.h"
 #include "txfonts.h"
 #include "txhash.h"

@@ -2605,20 +2605,5 @@ void Parser::boot() {
     make_constants();
 }
 
-// This is done only if fancy_hdr is loaded (via \usepackage).
-void Hashtab::boot_fancyhdr() {
-    primitive("lhead", fancy_cmd, fancy_lhead_code);
-    primitive("chead", fancy_cmd, fancy_chead_code);
-    primitive("rhead", fancy_cmd, fancy_rhead_code);
-    primitive("lfoot", fancy_cmd, fancy_lfoot_code);
-    primitive("cfoot", fancy_cmd, fancy_cfoot_code);
-    primitive("rfoot", fancy_cmd, fancy_rfoot_code);
-    primitive("fancyhead", fancy_cmd, fancy_head_code);
-    primitive("fancyfoot", fancy_cmd, fancy_foot_code);
-    primitive("fancyhf", fancy_cmd, fancy_hf_code);
-    primitive("fancyinternal", xfancy_cmd);
-    primitive("inert@thepage", xthepage_cmd);
-}
-
 // Todo Bouche
 // \def\Q{\mathbb{Q}} $\bar \Q$
