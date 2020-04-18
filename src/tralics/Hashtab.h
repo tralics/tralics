@@ -3,25 +3,17 @@
 #include "Buffer.h"
 #include <unordered_map>
 
-// This is the main hash table. If a token like \foo has hashcode p,
-// then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...
-// The data structure holds the location of tokens like \par
-// that are known only after bootstrap
-class Hashtab : public std::array<std::optional<std::string>, hash_size> // the strings \todo should use std::unordered_map
-{
+// This is the main hash table.
+class Hashtab : public std::vector<std::optional<std::string>> {
 private:
-    std::array<size_t, hash_size>           Next{};               // points to next
-    size_t                                  hash_used{hash_size}; // all places above this one are used
     std::unordered_map<std::string, size_t> map;
-    size_t                                  next_entry{0};
 
 public:
     std::array<Token, 15>             my_mathfont_table;
     std::array<Token, 5>              genfrac_mode;
     std::array<Equivalent, eqtb_size> eqtb;
 
-    int hash_bad{0};   // number of items not at hash position
-    int hash_usage{0}; // number of commands in the table
+    int usage_normal{0}, usage_unhashed{0};
 
     Hashtab();
 

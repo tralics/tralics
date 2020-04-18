@@ -18,42 +18,18 @@ auto Hashtab::locate(const Buffer &b) -> Token {
 // If a new slot has to be created, uses the string name, if not empty.
 auto Hashtab::hash_find(const std::string &s) -> size_t {
     if (auto i = map.find(s); i != map.end()) return i->second;
-    auto p = Buffer(s).hashcode(hash_prime);
-    while (Next[p] != 0) p = Next[p];
-
-    if (at(p)) {
-        for (;;) {
-            hash_used--;
-            if (hash_used <= 0) {
-                log_and_tty << "Size of hash table is " << hash_size << "\n";
-                log_and_tty << "Value of hash_prime is " << hash_prime << "\n";
-                log_and_tty << "hash table full\n" << lg_fatal;
-                abort();
-            }
-            if (!at(hash_used)) break;
-        }
-        at(hash_used) = s;
-        hash_bad++;
-        Next[p] = hash_used;
-        map.try_emplace(s, hash_used);
-        return hash_used;
-    }
-    hash_usage++;
-    at(p) = s;
-    map.try_emplace(s, p);
-    return p;
+    usage_normal++;
+    push_back(s);
+    map.try_emplace(s, size() - 1);
+    return size() - 1;
 }
 
 // Defines the command named a, but hash_find will not find it.
 // This must be used at bootstrap code.
 auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
-    hash_used--;
-    auto p = hash_used;
-    assert(!at(p));
-    assert(p >= hash_prime);
-    hash_bad++;
-    at(p)  = a;
-    auto t = p + hash_offset;
+    usage_unhashed++;
+    push_back(a);
+    auto t = size() - 1 + hash_offset;
     eqtb[t - eqtb_offset].special_prim(b); // allows to define an undefined command
     return Token(t);
 }
@@ -68,14 +44,11 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
     size_t T = 0;
     if (b.empty())
         T = null_tok_val;
-    else {
-        codepoint c = b.single_character();
-        if (c.non_null())
-            T = c.value + single_offset;
-        else {
-            T = i->second + hash_offset;
-        }
-    }
+    else if (codepoint c = b.single_character(); c.non_null())
+        T = c.value + single_offset;
+    else
+        T = i->second + hash_offset;
+
     last_tok = Token(T);
     return !eqtb[T - eqtb_offset].is_undef();
 }
@@ -113,8 +86,6 @@ void Hashtab::eval_let_local(String a, String b) {
     the_parser.eq_define(A, eqtb[Bval], false);
 }
 
-// This is the BIG function.
-// It enters all primitives in the hash table.
 Hashtab::Hashtab() {
     for (auto &k : eqtb) k.reset();
     boot_base();

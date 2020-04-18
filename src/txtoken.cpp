@@ -33,7 +33,7 @@ void Stats::token_stats() const {
     main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << static_cast<int>(str_length)
                         << ", merge " << m_merge << "\n"
                         << "Macros created " << nb_macros << ", deleted " << nb_macros_del << "; hash size "
-                        << the_parser.hash_table.hash_usage << " + " << the_parser.hash_table.hash_bad << "; foonotes " << footnotes
+                        << the_parser.hash_table.usage_normal << " + " << the_parser.hash_table.usage_unhashed << "; foonotes " << footnotes
                         << ".\n"
                         << "Save stack +" << level_up << " -" << level_down << ".\n"
                         << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
