@@ -63,8 +63,7 @@ void Parser::T_newcolumn_type() {
             c = 0;
         }
     }
-    Buffer &B = hash_table.my_buffer();
-    B.reset();
+    Buffer B;
     B.push_back("newcolumtype@");
     B.push_back(static_cast<char>(c)); // special hack if c=0 !
     cur_tok = hash_table.locate(B);

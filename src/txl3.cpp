@@ -1574,7 +1574,7 @@ void Parser::L3_load(bool preload) {
     //  double_at_list.push_back(Token(letter_t_offset,'@'));
     //  double_at_no_list = double_at_list;
     //  double_at_no_list.push_back(hash_table.locate("noexpand"));
-    hash_table.load_latex3();
+    hash_table.boot_latex3();
     shorthand_gdefine(char_def_code, "c_sixteen", 16);
     Tc_zero = shorthand_gdefine(char_def_code, "c_zero", 0);
     shorthand_gdefine(char_def_code, "c_six", 6);

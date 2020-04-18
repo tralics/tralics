@@ -1,48 +1,45 @@
 #pragma once
 #include "../txeqtb.h"
 #include "Buffer.h"
+#include <unordered_map>
 
 // This is the main hash table. If a token like \foo has hashcode p,
 // then foo is in Text[p], or in Text[Next[p]] or in Text[Next[Next[p]]] ...
 // The data structure holds the location of tokens like \par
 // that are known only after bootstrap
-class Hashtab {
+class Hashtab : public std::array<std::optional<std::string>, hash_size> // the strings \todo should use std::unordered_map
+{
 private:
-    std::array<std::optional<std::string>, hash_size> Text;      // the strings \todo well this should be a standard hash table instead
-    std::array<size_t, hash_size>                     Next{};    // points to next
-    Buffer                                            B;         // internal buffer
-    size_t                                            hash_used; // all places above this one are used
+    std::array<size_t, hash_size>           Next{};               // points to next
+    size_t                                  hash_used{hash_size}; // all places above this one are used
+    std::unordered_map<std::string, size_t> map;
+    size_t                                  next_entry{0};
 
 public:
     std::array<Token, 15>             my_mathfont_table;
     std::array<Token, 5>              genfrac_mode;
     std::array<Equivalent, eqtb_size> eqtb;
 
-    int hash_bad{}; // number of items not at hash position
-    int hash_usage; // number of commands in the table
+    int hash_bad{0};   // number of items not at hash position
+    int hash_usage{0}; // number of commands in the table
 
     Hashtab();
 
-    auto my_buffer() -> Buffer & { return B; }
-    auto locate(String s) -> Token;             // used by primitive, etc
     auto locate(const std::string &s) -> Token; // used by primitive, etc
     auto locate(const Buffer &b) -> Token;      // used by primitive, etc
-    auto hash_find(const Buffer &b, String name) -> size_t;
-    auto hash_find() -> size_t;
+    auto hash_find(const std::string &s) -> size_t;
     auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     void eval_let(String a, String b);
     auto eval_letv(String a, String b) -> Token;
     void eval_let_local(String a, String b);
-    auto find_empty(const std::string &s) -> size_t; // find an empty slot
-    auto find_aux(size_t p, const std::string &name) -> size_t;
-    auto operator[](size_t k) const { return Text[k]; }
-    void dump();
+    auto is_defined(const Buffer &b) -> bool;
+
+    void boot_base();
     void boot_fancyhdr();
     void boot_etex();
-    void load_latex3();
+    void boot_latex3();
     void boot_keyval();
-    auto is_defined(const Buffer &b) -> bool;
 
     Token par_token, OB_token, CB_token, dollar_token;
     Token verb_token, noindent_token, small_token, textvisiblespace_token;

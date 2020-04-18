@@ -21,7 +21,7 @@ class Xml;
 // The values is a (symcodes, subtype) pair
 
 struct Equivalent : public CmdChr {
-    int level{}; ///< level at which this is defined
+    int level{0}; ///< level at which this is defined
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
