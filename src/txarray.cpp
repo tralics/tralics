@@ -279,7 +279,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
-        const std::string &s = x.c_str();
+        const std::string &s = x.name();
         if (s != "1") id.add_attribute(the_names[np_cols], x);
     }
     preamble = P->read_arg(); // read the preamble
@@ -675,7 +675,7 @@ auto Xml::try_cline(bool action) -> bool {
         }
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
-            if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
+            if (N.name() == "\n") continue; // allow newline separator
             return false;
         }
         auto c = at(k)->get_cell_span();
@@ -695,7 +695,7 @@ auto Xml::total_span(long &res) const -> bool {
     for (size_t k = 0; k < len; k++) {
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
-            if (strcmp(N.c_str(), "\n") == 0) continue; // allow newline separator
+            if (N.name() == "\n") continue; // allow newline separator
             return false;
         }
         auto c = at(k)->get_cell_span();
@@ -720,7 +720,7 @@ auto Xml::try_cline_again(bool action) -> bool {
         }
         if (at(k)->is_xmlc() && k == len - 1) {
             Istring N = at(k)->name;
-            if (strcmp(N.c_str(), "\n") == 0) continue;
+            if (N.name() == "\n") continue;
             return false;
         }
         if (at(k)->get_cell_span() != 1) return false;

@@ -101,10 +101,10 @@ auto CitationItem::get_bid() -> Istring {
 // \cite[year][]{foo}is the same as \cite{foo}
 // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
 auto bib_ns::normalise_for_bib(Istring w) -> Istring {
-    String S = w.c_str();
-    if (strcmp(S, "year") == 0) return the_names[cst_empty];
+    auto S = w.name();
+    if (S == "year") return the_names[cst_empty];
     if (!distinguish_refer)
-        if (strcmp(S, "refer") == 0) return the_names[cst_empty];
+        if (S == "refer") return the_names[cst_empty];
     return w;
 }
 
@@ -208,7 +208,7 @@ void Parser::T_cite(subtypes sw) {
             TokenList tmp;
             res.push_back(my_cmd);
             if (!is_natbib) {
-                tmp = token_ns::string_to_list(type.c_str(), true);
+                tmp = token_ns::string_to_list(type.name(), true);
                 res.splice(res.end(), tmp);
             }
             tmp = token_ns::string_to_list(cur, true);
@@ -309,7 +309,7 @@ void Parser::T_biblio() {
 // the aux file.
 void CitationItem::dump(Buffer &b) {
     if (is_solved()) return;
-    b << "\\citation{" << key.c_str() << "}\n";
+    b << "\\citation{" << key.name() << "}\n";
 }
 
 // Ctor via "foot" and "Knuth"
@@ -354,7 +354,7 @@ void CitationKey::make_key(String s) {
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from.c_str(), key.c_str());
+    CitationKey ref(from.name().c_str(), key.name().c_str());
     BibEntry *  X = the_bibtex->find_entry(ref);
     if (X != nullptr) {
         err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
@@ -962,7 +962,7 @@ void Parser::solve_cite(bool user) {
         nn = *B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[nn];
     if (CI.is_solved()) {
-        err_buf << bf_reset << "Bibliography entry already defined " << key.c_str();
+        err_buf << bf_reset << "Bibliography entry already defined " << key.name();
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
@@ -972,7 +972,7 @@ void Parser::solve_cite(bool user) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(*my_id));
         else {
-            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.c_str();
+            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.name();
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }
@@ -1732,10 +1732,9 @@ void BibEntry::call_type() {
     bbl.push_back_cmd("citation");
     bbl.push_back_braced(label);
     bbl.push_back_braced(cite_key.full_key);
-    bbl.push_back_braced(unique_id.c_str());
+    bbl.push_back_braced(unique_id.name());
     bbl.push_back_braced(from_to_string());
-    String my_name =
-        (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1].c_str() : the_names[type_to_string(type_int)].c_str();
+    auto &my_name = (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1].name() : the_names[type_to_string(type_int)].name();
     bbl.push_back_braced(my_name);
     bbl.push_back(aux_label);
     bbl.newline();
@@ -1764,7 +1763,7 @@ void BibEntry::call_type() {
         auto ss = user_fields[i];
         if (!ss.empty()) {
             bbl.push_back_cmd("cititem");
-            bbl.push_back_braced(Bib[i].c_str());
+            bbl.push_back_braced(Bib[i].name());
             bbl.push_back_braced(ss);
             bbl.newline();
         }

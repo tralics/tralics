@@ -138,7 +138,7 @@ void Parser::create_label(const std::string &X, Istring S) {
     auto       m = Istring(X);
     LabelInfo *V = m.labinfo();
     if (V->set_defined()) {
-        multiple_label(m.c_str(), V->lineno, V->filename);
+        multiple_label(m.name().c_str(), V->lineno, V->filename);
     } else {
         my_stats.one_more_label();
         V->id       = S;
@@ -405,7 +405,7 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 void Buffer::push_back_elt(Istring name, Xid id, int w) {
     push_back('<');
     if (w == 2) push_back('/');
-    push_back(name.p_str());
+    push_back(name.value());
     if (w != 2) push_back(id.get_att());
     if (w == 0) push_back('/');
     push_back('>');
@@ -510,7 +510,7 @@ auto Xml::all_empty() const -> bool { return empty() && name.empty(); }
 
 // Returns true if empty (white space only)
 auto Xml::is_whitespace() const -> bool {
-    return std::all_of(begin(), end(), [](Xml *T) { return T->is_xmlc() && only_space(T->name.c_str()); });
+    return std::all_of(begin(), end(), [](Xml *T) { return T->is_xmlc() && only_space(T->name.name()); });
 }
 
 // If there is one non-empty son returns it.
@@ -522,7 +522,7 @@ auto Xml::single_non_empty() const -> Xml * {
                 res = y;
             else
                 return nullptr;
-        } else if (!only_space(y->name.c_str()))
+        } else if (!only_space(y->name.name()))
             return nullptr;
     }
     return res;
@@ -820,7 +820,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
 void Xml::add_non_empty_to(Xml *res) {
     for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
-        if (T->is_xmlc() && only_space(T->name.c_str())) continue;
+        if (T->is_xmlc() && only_space(T->name.name())) continue;
         res->push_back_unless_nullptr(T);
     }
 }
@@ -843,7 +843,7 @@ auto Xml::convert_to_string() -> std::string {
 // This converts the content to a string. May be recursive
 void Xml::convert_to_string(Buffer &buf) {
     if (is_xmlc()) {
-        buf << name.c_str();
+        buf << name.name();
         return;
     }
     if (name.empty() || name == the_names[cst_temporary]) {
@@ -870,7 +870,7 @@ void Xml::convert_to_string(Buffer &buf) {
 void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
-            b << at(k)->name.c_str();
+            b << at(k)->name.name();
         else if (at(k)->has_name(cst_hi))
             at(k)->put_in_buffer(b);
         else
@@ -1001,7 +1001,7 @@ auto post_ns::is_entity(String s) -> size_t {
 // The scanner for all_the_words
 void Xml::word_stats_i() {
     if (is_xmlc()) {
-        String s = name.c_str();
+        String s = name.name().c_str();
         if (s == nullptr) return;
         for (int i = 0;; i++) {
             char c = s[i];

@@ -7,8 +7,7 @@
 class LabelInfo;
 
 struct StrHash_record {
-    String      name{nullptr};
-    std::string value;
+    std::string name, value;
     LabelInfo * labinfo{nullptr};
 };
 

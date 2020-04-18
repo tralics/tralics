@@ -1261,7 +1261,7 @@ void MathElt::cv_noMLt() {
         if (c < 0 || c >= 15) c = 0;
         auto w = the_names[name_positions(np_mml_normal + c)];
         if (w.empty()) return;
-        mathml_buffer << "<font name='" << w.p_str() << "'/>";
+        mathml_buffer << "<font name='" << w.value() << "'/>";
         return;
     }
     case left_cmd: // left or right

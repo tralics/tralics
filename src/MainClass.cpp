@@ -1085,7 +1085,7 @@ void MainClass::out_xml() {
     Istring sl = the_names[np_stylesheet];
     if (!sl.empty()) {
         aux++;
-        X << "<?xml-stylesheet href=\"" << sl.p_str() << "\" type=\"" << the_names[np_stylesheet_type].p_str() << "\"?>\n";
+        X << "<?xml-stylesheet href=\"" << sl.value() << "\" type=\"" << the_names[np_stylesheet_type].value() << "\"?>\n";
     }
     X << "<!DOCTYPE " << dtd << " SYSTEM '" << dtdfile << "'>\n";
     X << "<!-- Translated from latex by tralics " << version << ", date: " << short_date << "-->\n";

@@ -111,7 +111,7 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
     auto     k = L.has_value(m);
     if (!k) return false;
     reset();
-    push_back(L.get_val(*k).c_str());
+    push_back(L.get_val(*k).name());
     return true;
 }
 
@@ -134,8 +134,8 @@ void Buffer::push_back(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    auto B = b.p_str();
-    auto A = a.p_str();
+    auto B = b.value();
+    auto A = a.value();
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
@@ -156,8 +156,8 @@ void Buffer::push_back_alt(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    auto B = b.p_str();
-    auto A = a.p_str();
+    auto B = b.value();
+    auto A = a.value();
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
