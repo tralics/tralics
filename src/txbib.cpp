@@ -17,8 +17,6 @@
 #include <fmt/format.h>
 #include <utility>
 
-Bibtex *the_bibtex;
-
 namespace {
     class Error {};
 

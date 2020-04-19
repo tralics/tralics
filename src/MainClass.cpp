@@ -468,7 +468,7 @@ void MainClass::parse_args(int argc, char **argv) {
     if (argc == 1) end_with_help(0);
     if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
-        auto s = argv[i];
+        auto *s = argv[i];
         if (s[0] == '-')
             parse_option(i, argc, argv);
         else

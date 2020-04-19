@@ -730,8 +730,6 @@ void Parser::T_enddocument(subtypes c) {
     }
 }
 
-extern Bibtex *the_bibtex;
-
 // case \begin{document}
 void Parser::T_begindocument() {
     if (seen_document) {

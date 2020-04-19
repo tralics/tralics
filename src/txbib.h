@@ -370,6 +370,8 @@ public:
     static auto wrong_class(int y, const std::string &Y, bib_from from) -> bool;
 };
 
+inline Bibtex *the_bibtex;
+
 class Bbl {
 private:
     Buffer        B;
