@@ -42,7 +42,7 @@ public:
     auto get_first_env(name_positions name) -> Xml *;
     auto how_many_env(Istring match) -> long;
 
-    void add_att(Istring a, Istring b) const { id.add_attribute(std::move(a), std::move(b)); }
+    void add_att(const Istring& a, const Istring& b) const { id.add_attribute(a, b); }
     void add_att(name_positions a, name_positions b) const { id.add_attribute(a, b); }
     void add_first(Xml *x);
     void add_ref(std::string s);

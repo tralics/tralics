@@ -96,7 +96,7 @@ void Stack::add_att_to_last(name_positions A, const Istring& B) { get_att_list(t
 void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
-void Stack::add_att_to_cur(Istring A, Istring B) { cur_xid().add_attribute(std::move(A), std::move(B)); }
+void Stack::add_att_to_cur(const Istring& A, const Istring& B) { cur_xid().add_attribute(A, B); }
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).

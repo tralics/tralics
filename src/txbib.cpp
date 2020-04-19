@@ -910,9 +910,9 @@ void Parser::T_bpers() {
     the_stack.add_att_to_last(np_prenom, a);
 }
 
-void Stack::implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c) {
+void Stack::implement_cit(const std::string &b1, const Istring& b2, const std::string &a, const std::string &c) {
     add_att_to_last(np_userid, Istring(b1));
-    add_att_to_last(np_id, std::move(b2));
+    add_att_to_last(np_id, b2);
     add_att_to_last(np_key, Istring(a));
     add_att_to_last(np_from, Istring(c));
 }

@@ -66,7 +66,7 @@ public:
     void               add_att_to_last(const Istring& A, const Istring& B);
     void               add_att_to_last(name_positions A, name_positions B);
     void               add_att_to_last(name_positions A, const Istring& B);
-    void               add_att_to_cur(Istring A, Istring B);
+    void               add_att_to_cur(const Istring& A, const Istring& B);
     void               add_att_to_cur(const Istring& A, const Istring& B, bool force);
     void               add_border(long a, long b);
     void               add_borders(int a, int b);
@@ -106,7 +106,7 @@ public:
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     [[nodiscard]] auto get_xid() const -> Xid { return last_xid; }
     void               hack_for_hanl();
-    void               implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c);
+    void               implement_cit(const std::string &b1, const Istring& b2, const std::string &a, const std::string &c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
