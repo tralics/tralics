@@ -66,7 +66,7 @@ void AttList::push_back(name_positions N, name_positions V) { push_back(the_name
 void AttList::push_back(name_positions N, const Istring& v) { push_back(the_names[N], v, true); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B) const { get_att().push_back(std::move(A), std::move(B)); }
+void Xid::add_attribute(const Istring& A, const Istring& B) const { get_att().push_back(A, B); }
 
 // Add attribute named A value B to this id.
 void Xid::add_attribute(const Istring& A, const Istring& B, bool f) const { get_att().push_back(A, B, f); }
@@ -75,7 +75,7 @@ void Xid::add_attribute(const Istring& A, const Istring& B, bool f) const { get_
 void Xid::add_attribute(name_positions A, name_positions B) const { get_att().push_back(A, B); }
 void Xid::add_attribute(name_positions A, name_positions B, bool c) const { get_att().push_back(A, B, c); }
 
-void Xid::add_attribute(name_positions n, Istring v) const { get_att().push_back(n, std::move(v)); }
+void Xid::add_attribute(name_positions n, const Istring& v) const { get_att().push_back(n, v); }
 
 // Adds the list L to the attribute list of this id.
 

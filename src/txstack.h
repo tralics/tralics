@@ -63,9 +63,9 @@ public:
 
     auto               add_anchor(const std::string &s, bool spec) -> Istring;
     void               add_att_to_last(const Istring& A, const Istring& B, bool force);
-    void               add_att_to_last(Istring A, Istring B);
+    void               add_att_to_last(const Istring& A, const Istring& B);
     void               add_att_to_last(name_positions A, name_positions B);
-    void               add_att_to_last(name_positions A, Istring B);
+    void               add_att_to_last(name_positions A, const Istring& B);
     void               add_att_to_cur(Istring A, Istring B);
     void               add_att_to_cur(const Istring& A, const Istring& B, bool force);
     void               add_border(long a, long b);
@@ -79,7 +79,7 @@ public:
     auto               add_newid0(name_positions x) -> AttList &;
     void               add_sp_to_p(int pid, int vid);
     void               check_font();
-    void               create_new_anchor(Xid xid, Istring id, Istring idtext);
+    void               create_new_anchor(Xid xid, const Istring& id, const Istring& idtext);
     auto               cur_xid() -> Xid { return top_stack()->id; }
     auto               get_top_id() -> Xid { return top_stack()->id; }
     void               delete_table_atts();
