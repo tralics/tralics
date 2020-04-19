@@ -127,7 +127,7 @@ public:
     void push_back_braced(const std::string &s);
     void push_back_braced(String s);
     void push_back_def(String, std::string);
-    void push_back_elt(Istring name, Xid id, int w);
+    void push_back_elt(const Istring &name, Xid id, int w);
     void push_back16(size_t n, bool uni);
     void push_back16l(bool hat, unsigned n);
     void push_back_ent(codepoint ch);

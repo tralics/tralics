@@ -16,6 +16,7 @@
 #include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <utility>
 
 namespace {
     Buffer             math_buffer;
@@ -62,7 +63,7 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
+    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign, int style,
                            size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
@@ -420,10 +421,10 @@ void MathHelper::add_attribute(Istring a, Istring b, subtypes c) {
         w = cur_formula_id;
     else
         return;
-    w.add_attribute(a, b, true);
+    w.add_attribute(std::move(a), std::move(b), true);
 }
 
-void math_ns::add_attribute_spec(Istring a, Istring b) { cmi.get_tid().add_attribute(a, b, true); }
+void math_ns::add_attribute_spec(Istring a, Istring b) { cmi.get_tid().add_attribute(std::move(a), std::move(b), true); }
 
 // Adds a label to the formula X
 void Parser::add_math_label(Xml *res) {
@@ -445,7 +446,7 @@ void Parser::add_math_label(Xml *res) {
 
 // Generates <elt>first_arg second_arg</elt>
 auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
-    Xml tmp(elt, nullptr);
+    Xml tmp(std::move(elt), nullptr);
     tmp.add_tmp(first_arg);
     tmp.push_back_unless_nullptr(xmlspace);
     tmp.add_tmp(second_arg);
@@ -453,8 +454,8 @@ auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_nul
 }
 
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
-auto Stack::xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
-    auto tmp = gsl::not_null{new Xml(elt, nullptr)};
+auto Stack::xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
+    auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
     if (!b1.null()) tmp->add_att(b1, the_names[np_true]);
     tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
@@ -2694,11 +2695,11 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     return {res, mt_flag_big};
 }
 
-auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, Istring sz, int numalign, int denalign, int style,
-                                size_t open, size_t close) -> Xml * {
+auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
+                                int style, size_t open, size_t close) -> Xml * {
     Istring Pos;
     if (pos != 0) Pos = the_names[pos];
-    auto R = the_main->the_stack->xml2_space(s, Pos, a, b);
+    auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
     if (!sz.null()) R->add_att(the_names[np_linethickness], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(cst_numalign, np_left);

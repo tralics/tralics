@@ -2,6 +2,7 @@
 #include "tralics/CmdChr.h"
 #include "tralics/Token.h"
 #include "txscaled.h"
+#include <utility>
 
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008
@@ -197,7 +198,7 @@ class SaveAuxFont : public SaveAux {
     long    value; // the value to be restored
     Istring color; // the color to restore
 public:
-    SaveAuxFont(int l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(c) {}
+    SaveAuxFont(int l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(std::move(c)) {}
 
     void unsave(bool trace, Parser &P) override;
 };

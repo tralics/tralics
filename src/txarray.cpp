@@ -534,7 +534,7 @@ void Parser::start_a_cell(bool started) {
     }
 }
 
-void Parser::finish_a_cell(Token T, Istring a) {
+void Parser::finish_a_cell(Token T, const Istring &a) {
     flush_buffer();
     the_stack.remove_last_space();
     if (!a.null()) {

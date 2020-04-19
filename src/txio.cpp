@@ -68,7 +68,7 @@ auto operator<<(FullLogger &X, String s) -> FullLogger & {
     return X;
 }
 
-auto operator<<(FullLogger &X, Istring s) -> FullLogger & {
+auto operator<<(FullLogger &X, const Istring &s) -> FullLogger & {
     if (X.verbose) std::cout << s;
     X.L << s;
     return X;
@@ -142,7 +142,7 @@ auto operator<<(HalfLogger &X, String s) -> HalfLogger & {
     return X;
 }
 
-auto operator<<(HalfLogger &X, Istring s) -> HalfLogger & {
+auto operator<<(HalfLogger &X, const Istring &s) -> HalfLogger & {
     if (X.verbose) std::cout << s;
     X.L << s;
     return X;

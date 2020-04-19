@@ -15,6 +15,7 @@
 #include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <utility>
 
 Bibtex *the_bibtex;
 
@@ -41,7 +42,7 @@ namespace {
     // the arguments of the function are foot and Knuth; the `p.25' will be
     // considered elsewhere.
     auto make_cit_ref(Istring type, Istring ref) -> Xml {
-        auto    n  = *the_bibliography.find_citation_item(type, ref, true);
+        auto    n  = *the_bibliography.find_citation_item(std::move(type), std::move(ref), true);
         Istring id = the_bibliography.citation_table[n].get_bid();
         Xml     res(np_ref, nullptr);
         res.id.add_attribute(np_target, id);
@@ -302,7 +303,7 @@ void Parser::T_biblio() {
 
 // This prints an unsolved reference in a buffer, we will put it in
 // the aux file.
-void CitationItem::dump(Buffer &b) {
+void CitationItem::dump(Buffer &b) const {
     if (is_solved()) return;
     b << "\\citation{" << key.name << "}\n";
 }
@@ -554,17 +555,17 @@ void Parser::T_start_the_biblio() {
 
 // Returns true if this is the same object.
 // returns false for \cite{Knuth} and \footcite{Knuth}
-auto CitationItem::match(Istring A, Istring B) -> bool { return key == A && from == B; }
+auto CitationItem::match(Istring A, Istring B) -> bool { return key == std::move(A) && from == std::move(B); }
 
 // Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the
 // from field, but only if the entry is unsolved.
-auto CitationItem::match_star(Istring A) -> bool { return key == A && !is_solved(); }
+auto CitationItem::match_star(Istring A) -> bool { return key == std::move(A) && !is_solved(); }
 
 // This finds a citation in the table. In the case \footcite{Kunth},
 // the first two arguments are the Istrings associated to foot and Knuth.
 // If not found, we may insert a new item (normal case),
 // or return -1 (in case of failure)
-auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) -> std::optional<size_t> {
+auto Bibliography::find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t> {
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
         if (citation_table[i].match(key, from)) return i;
@@ -578,7 +579,7 @@ auto Bibliography::find_citation_item(Istring from, Istring key, bool insert) ->
 // If not found, we try \cite[?]{Kunth}, using any possibility for the first
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.
-auto Bibliography::find_citation_star(Istring from, Istring key) -> size_t {
+auto Bibliography::find_citation_star(const Istring &from, const Istring &key) -> size_t {
     if (auto n = find_citation_item(from, key, false)) return *n;
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
@@ -876,7 +877,7 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
 auto Bibtex::make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry * { return make_entry(a, b, the_bibliography.unique_bid()); }
 
 // Copy from the biblio
-void Bibtex::make_entry(const CitationKey &a, Istring myid) { make_entry(a, because_cite, myid); }
+void Bibtex::make_entry(const CitationKey &a, Istring myid) { make_entry(a, because_cite, std::move(myid)); }
 
 // Generic code
 auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry * {
@@ -884,7 +885,7 @@ auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid) -> Bi
     X->cite_key  = a;
     X->why_me    = b;
     X->id        = all_entries.size();
-    X->unique_id = myid;
+    X->unique_id = std::move(myid);
     all_entries.push_back(X);
     return X;
 }
@@ -911,7 +912,7 @@ void Parser::T_bpers() {
 
 void Stack::implement_cit(const std::string &b1, Istring b2, const std::string &a, const std::string &c) {
     add_att_to_last(np_userid, Istring(b1));
-    add_att_to_last(np_id, b2);
+    add_att_to_last(np_id, std::move(b2));
     add_att_to_last(np_key, Istring(a));
     add_att_to_last(np_from, Istring(c));
 }

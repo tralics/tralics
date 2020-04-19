@@ -23,9 +23,9 @@ class ModChecker {
     bool    has_info{false}; // does this have some infos ?
 public:
     ModChecker() : id(0UL) {}
-    ModChecker(Istring I, bool mod) : id(I), is_mod(mod) {}
+    ModChecker(Istring I, bool mod) : id(std::move(I)), is_mod(mod) {}
     void set(Istring I) {
-        if (id == I) has_info = true;
+        if (id == std::move(I)) has_info = true;
     }
     void check(int *T) const {
         if (is_mod) {
@@ -50,9 +50,9 @@ class XmlAction {
     Xml *      xml_val;    // input or output xml value
     Istring    string_val; // name of element ot work on
 public:
-    XmlAction(Istring M, recur_type w) : match(M), what(w), int_val(0), xml_val(nullptr) {}
-    XmlAction(Istring M, recur_type w, Xml *X) : match(M), what(w), int_val(0), xml_val(X) {}
-    XmlAction(Istring M, recur_type w, Istring X) : match(M), what(w), int_val(0), xml_val(nullptr), string_val(X) {}
+    XmlAction(Istring M, recur_type w) : match(std::move(M)), what(w), int_val(0), xml_val(nullptr) {}
+    XmlAction(Istring M, recur_type w, Xml *X) : match(std::move(M)), what(w), int_val(0), xml_val(X) {}
+    XmlAction(Istring M, recur_type w, Istring X) : match(std::move(M)), what(w), int_val(0), xml_val(nullptr), string_val(std::move(X)) {}
     [[nodiscard]] auto get_what() const -> recur_type { return what; }
     void               incr_int_val() { int_val++; }
     void               mark_found() { int_val = 1; }
@@ -60,7 +60,7 @@ public:
     [[nodiscard]] auto get_xml_val() const -> Xml * { return xml_val; }
     [[nodiscard]] auto get_int_val() const -> long { return int_val; }
     [[nodiscard]] auto get_string_val() const -> Istring { return string_val; }
-    void               set_string_val(Istring s) { string_val = s; }
+    void               set_string_val(Istring s) { string_val = std::move(s); }
     void               set_xml_val(Xml *s) { xml_val = s; }
     void               set_int_val(long s) { int_val = s; }
     [[nodiscard]] auto get_match() const -> Istring { return match; }

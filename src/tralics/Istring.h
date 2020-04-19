@@ -21,8 +21,8 @@ struct Istring {
     [[nodiscard]] auto value() const -> std::string & { return SH[id].value; }
     [[nodiscard]] auto labinfo() const { return SH.labinfo(id); }
 
-    auto operator==(Istring X) const -> bool { return id == X.id; }
-    auto operator!=(Istring X) const -> bool { return id != X.id; }
+    auto operator==(const Istring &X) const -> bool { return id == X.id; }
+    auto operator!=(const Istring &X) const -> bool { return id != X.id; }
 
     static inline StrHash SH;
 };

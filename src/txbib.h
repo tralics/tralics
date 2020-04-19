@@ -11,6 +11,7 @@
 
 #include "tralics/Xml.h"
 #include "txinline.h"
+#include <utility>
 
 // This is the unique identifier of a bibliography element
 // from the bibtex point of view. If used, a unique id (an integer will be
@@ -46,15 +47,15 @@ class CitationItem {
 
 public:
     auto               get_bid() -> Istring;
-    void               set_id(Istring x) { bid = x; }
+    void               set_id(Istring x) { bid = std::move(x); }
     auto               has_empty_id() -> bool { return bid.empty(); }
     void               set_solved(Xid N) { solved = N; }
-    void               dump(Buffer &b);
+    void               dump(Buffer &b) const;
     void               dump_bibtex();
     auto               match(Istring A, Istring B) -> bool;
     auto               match_star(Istring A) -> bool;
     [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
-    CitationItem(Istring A, Istring B) : key(A), from(B), bid("") {}
+    CitationItem(Istring A, Istring B) : key(std::move(A)), from(std::move(B)), bid("") {}
 };
 
 class Bibliography {
@@ -75,8 +76,8 @@ public:
     void               dump_bibtex();
     void               dump_data(Buffer &b);
     auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
-    auto               find_citation_item(Istring from, Istring key, bool insert) -> std::optional<size_t>;
-    auto               find_citation_star(Istring from, Istring key) -> size_t;
+    auto               find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t>;
+    auto               find_citation_star(const Istring &from, const Istring &key) -> size_t;
     [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() { return biblio_src.size(); }

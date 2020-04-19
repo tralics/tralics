@@ -1,6 +1,7 @@
 #pragma once
 #include "tralics/Buffer.h"
 #include "txeqtb.h"
+#include <utility>
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2003, 2004, 2007,2008
@@ -22,7 +23,7 @@ public:
     bool        used{false};    // is this ID used ?
     bool        defined{false}; // is this ID defined ?
 
-    LabelInfo(Istring k = {}) : name(k) {}
+    LabelInfo(Istring k = {}) : name(std::move(k)) {}
 
     auto set_used() -> bool { return std::exchange(used, true); }
     auto set_defined() -> bool { return std::exchange(defined, true); }

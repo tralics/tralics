@@ -140,7 +140,7 @@ auto operator<<(FullLogger &fp, Token t) -> FullLogger &;
 auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger &;
 auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger &;
 auto operator<<(FullLogger &X, String s) -> FullLogger &;
-auto operator<<(FullLogger &X, Istring s) -> FullLogger &;
+auto operator<<(FullLogger &X, const Istring &s) -> FullLogger &;
 auto operator<<(FullLogger &X, int s) -> FullLogger &;
 auto operator<<(FullLogger &X, long s) -> FullLogger &;
 auto operator<<(FullLogger &X, size_t s) -> FullLogger &;
@@ -151,7 +151,7 @@ auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger &;
 auto operator<<(FullLogger &X, const TokenList &s) -> FullLogger &;
 auto operator<<(FullLogger &X, const Xml *s) -> FullLogger &;
 auto operator<<(HalfLogger &X, String s) -> HalfLogger &;
-auto operator<<(HalfLogger &X, Istring s) -> HalfLogger &;
+auto operator<<(HalfLogger &X, const Istring &s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, int s) -> HalfLogger &;
 auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger &;
 

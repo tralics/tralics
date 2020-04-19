@@ -36,7 +36,7 @@ public:
     void               add_span(long n) const;
     void               add_top_rule() const;
     void               add_bottom_rule() const;
-    [[nodiscard]] auto has_attribute(Istring n) const -> Istring;
+    [[nodiscard]] auto has_attribute(const Istring &n) const -> Istring;
     void               add_special_att(const std::string &S);
 
     auto operator==(const Xid &X) const -> bool { return value == X.value; }

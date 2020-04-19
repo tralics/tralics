@@ -58,7 +58,7 @@ public:
     void               set_level(int k) { level = k; }
     void               set_packed(long k) { packed = k; }
     void               set_old_from_packed() { old = packed; }
-    void               set_color(Istring c) { color = c; }
+    void               set_color(Istring c) { color = std::move(c); }
     void               ltfont(const std::string &s, subtypes c);
 };
 

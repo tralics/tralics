@@ -1,6 +1,7 @@
 #pragma once
 #include "Buffer.h"
 #include <gsl/gsl>
+#include <utility>
 
 class XmlAction;
 
@@ -9,7 +10,7 @@ public:
     Xid     id{0}; ///< id of the objet
     Istring name;  ///< name of the element
 
-    Xml(Istring n = {}) : name(n) {}
+    Xml(Istring n = {}) : name(std::move(n)) {}
     Xml(const Buffer &n) : name(Istring(n.c_str())) {}
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
@@ -18,7 +19,7 @@ public:
     [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
     [[nodiscard]] auto get_cell_span() const -> long;
-    [[nodiscard]] auto has_name(Istring s) const -> bool { return name == s; }
+    [[nodiscard]] auto has_name(const Istring &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name(name_positions s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names[np_anchor]; }
     [[nodiscard]] auto is_whitespace() const -> bool;
@@ -41,7 +42,7 @@ public:
     auto get_first_env(name_positions name) -> Xml *;
     auto how_many_env(Istring match) -> long;
 
-    void add_att(Istring a, Istring b) const { id.add_attribute(a, b); }
+    void add_att(Istring a, Istring b) const { id.add_attribute(std::move(a), std::move(b)); }
     void add_att(name_positions a, name_positions b) const { id.add_attribute(a, b); }
     void add_first(Xml *x);
     void add_ref(std::string s);

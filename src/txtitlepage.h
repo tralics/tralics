@@ -1,5 +1,6 @@
 #pragma once
 #include "tralics/Xml.h"
+#include <utility>
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008
@@ -34,7 +35,7 @@ public:
     auto classify(tpi_vals w, int &state) -> bool;
     auto convert(int i) -> Xml *;
     auto convert(int i, Xml *r) -> Xml *;
-    auto convert(int i, Istring s) -> Xml * { return convert(i, new Xml(s)); }
+    auto convert(int i, Istring s) -> Xml * { return convert(i, new Xml(std::move(s))); }
     void dump(size_t k);
     void exec_start(size_t k);
     void exec_post();

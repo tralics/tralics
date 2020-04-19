@@ -14,6 +14,7 @@
 #include "txinline.h"
 #include "txparser.h"
 #include <spdlog/spdlog.h>
+#include <utility>
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;
@@ -86,27 +87,29 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(Istring A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(Istring A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(std::move(A), std::move(B)); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(name_positions A, Istring B) { get_att_list(to_unsigned(last_xid)).push_back(A, std::move(B)); }
 
 // Add A=B as attribute list to last_xid.
 void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
-void Stack::add_att_to_cur(Istring A, Istring B) { cur_xid().add_attribute(A, B); }
+void Stack::add_att_to_cur(Istring A, Istring B) { cur_xid().add_attribute(std::move(A), std::move(B)); }
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(Istring A, Istring B, bool force) { get_att_list(to_unsigned(last_xid)).push_back(A, B, force); }
+void Stack::add_att_to_last(Istring A, Istring B, bool force) {
+    get_att_list(to_unsigned(last_xid)).push_back(std::move(A), std::move(B), force);
+}
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_cur(Istring A, Istring B, bool force) { cur_xid().get_att().push_back(A, B, force); }
+void Stack::add_att_to_cur(Istring A, Istring B, bool force) { cur_xid().get_att().push_back(std::move(A), std::move(B), force); }
 
 // Returns a new element named N, initialised with z (if not empty...)
-Xml::Xml(Istring N, Xml *z) : name(N) {
+Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {
     id = the_main->the_stack->next_xid(this);
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
@@ -273,18 +276,18 @@ void Stack::push_trace() {
 }
 
 // Internal code of push
-void Stack::ipush(Istring fr, Xml *V) { Table.push_back(StackSlot(V, the_parser.get_cur_line(), fr, cur_mode, cur_lid)); }
+void Stack::ipush(Istring fr, Xml *V) { Table.push_back(StackSlot(V, the_parser.get_cur_line(), std::move(fr), cur_mode, cur_lid)); }
 
 // Pushes code with frame.
 void Stack::push(Istring fr, Xml *V) {
     top_stack()->push_back_unless_nullptr(V);
-    ipush(fr, V);
+    ipush(std::move(fr), V);
     push_trace();
 }
 
 // Pushes a new empty object, for \hbox, etc
 auto Stack::push_hbox(Istring name) -> Xml * {
-    Xml *code = new Xml(name, nullptr);
+    Xml *code = new Xml(std::move(name), nullptr);
     ipush(the_names[cst_hbox], code);
     push_trace();
     return code;
@@ -365,7 +368,7 @@ void Stack::trace_stack() {
 void Stack::pop(name_positions a) { pop(the_names[a]); }
 
 // This pops an element, top-stack should be a.
-void Stack::pop(Istring a) {
+void Stack::pop(const Istring &a) {
     trace_pop(false);
     while (Table.back().frame.spec_empty()) { // ignore dummy frames
         the_parser.cur_font.not_on_stack();
@@ -476,7 +479,7 @@ void Stack::check_font() {
 }
 
 // Push a new XML element
-void Stack::push1(Istring name, name_positions x) { push(name, new Xml(x, nullptr)); }
+void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xml(x, nullptr)); }
 
 // Push a new XML element
 void Stack::push1(name_positions x) { push(the_names[x], new Xml(x, nullptr)); }
@@ -496,7 +499,7 @@ void Stack::end_module() {
 }
 
 // Conditional pop
-void Stack::pop_if_frame(Istring x) {
+void Stack::pop_if_frame(const Istring &x) {
     if (first_frame() == x) pop(x);
 }
 
@@ -641,8 +644,8 @@ inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_t
 
 void Stack::create_new_anchor(Xid xid, Istring id, Istring idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));
-    AL.push_back(the_names[np_id], id);
-    AL.push_back(the_names[np_idtext], idtext);
+    AL.push_back(the_names[np_id], std::move(id));
+    AL.push_back(the_names[np_idtext], std::move(idtext));
 }
 
 // mark current element as target for a label.

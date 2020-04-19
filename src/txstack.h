@@ -13,6 +13,7 @@
 
 #include "tralics/Xml.h"
 #include "txatt.h"
+#include <utility>
 
 // Array management
 class ArrayInfo {
@@ -41,7 +42,8 @@ class Stack {
         bool    omit_cell;
         void    dump();
         void    fulldump(size_t i);
-        StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(c), md(M), uid(u), omit_cell(false) {}
+        StackSlot(Xml *a, int b, Istring c, mode M, Istring u)
+            : obj(a), line(b), frame(std::move(c)), md(M), uid(std::move(u)), omit_cell(false) {}
         friend class Stack;
     };
     std::vector<StackSlot> Table;
@@ -121,9 +123,9 @@ public:
     auto               new_array_info(Xid i) -> ArrayInfo &;
     auto               next_xid(Xml *elt) -> Xid;
     void               para_aux(int x);
-    void               pop(Istring a);
+    void               pop(const Istring &a);
     void               pop(name_positions a);
-    void               pop_if_frame(Istring x);
+    void               pop_if_frame(const Istring &x);
     void               push(Istring fr, Xml *V);
     void               push1(Istring name, name_positions x);
     void               push1(name_positions x);
@@ -136,7 +138,7 @@ public:
     void               set_arg_mode() { cur_mode = mode_argument; }
     void               set_array_mode() { cur_mode = mode_array; }
     void               set_bib_mode() { cur_mode = mode_bib; }
-    void               set_cur_id(Istring k) { cur_lid = k; }
+    void               set_cur_id(Istring k) { cur_lid = std::move(k); }
     void               set_h_mode() { cur_mode = mode_h; }
     void               set_m_mode() { cur_mode = mode_math; }
     void               set_mode(mode x) { cur_mode = x; }
@@ -150,5 +152,5 @@ public:
     void               trace_pop(bool sw);
     void               trace_stack();
     void               unbox(Xml *x);
-    static auto        xml2_space(Istring elt, Istring b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *>;
+    static auto        xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *>;
 };

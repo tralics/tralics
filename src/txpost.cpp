@@ -15,6 +15,7 @@
 #include "txparser.h"
 #include "txtrees.h"
 #include <fmt/format.h>
+#include <utility>
 
 namespace {
     Buffer                                       scbuf;          // scratch buffer for printing XML, and other things
@@ -26,7 +27,7 @@ namespace {
 } // namespace
 
 namespace post_ns {
-    void remove_label(String s, Istring n);
+    void remove_label(String s, const Istring &n);
     void remove_me_from_heads(Xml *X);
     void print_no_title(int i, String s);
     auto is_entity(String s) -> size_t;
@@ -134,7 +135,7 @@ void Parser::user_XML_modify(subtypes c) {
 // We enter foo in the hashtab, and look at the LabelInfo value.
 // If the label is undefined, we define it,
 
-void Parser::create_label(const std::string &X, Istring S) {
+void Parser::create_label(const std::string &X, const Istring &S) {
     auto       m = Istring(X);
     LabelInfo *V = m.labinfo();
     if (V->set_defined()) {
@@ -208,7 +209,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
 }
 
 // This removes the object S, together with the label n
-void post_ns::remove_label(String s, Istring n) {
+void post_ns::remove_label(String s, const Istring &n) {
     for (auto &i : ref_list) {
         Istring    V  = i.second;
         LabelInfo *li = V.labinfo();
@@ -402,7 +403,7 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 // If w=0, we print <foo att-list/>
 // If w=1, we print <foo att-list>
 // if w=2, we print </foo>
-void Buffer::push_back_elt(Istring name, Xid id, int w) {
+void Buffer::push_back_elt(const Istring &name, Xid id, int w) {
     push_back('<');
     if (w == 2) push_back('/');
     push_back(name.value());
@@ -470,13 +471,13 @@ void Buffer::finish_xml_print() {
 
 // Replace <name/> by vl.
 void Xml::subst_env0(Istring match, Xml *vl) {
-    XmlAction X(match, rc_subst, vl);
+    XmlAction X(std::move(match), rc_subst, vl);
     recurse(X);
 }
 
 // Returns number of sons named <match>.
 auto Xml::how_many_env(Istring match) -> long {
-    XmlAction X(match, rc_how_many);
+    XmlAction X(std::move(match), rc_how_many);
     recurse(X);
     return X.get_int_val();
 }
@@ -545,13 +546,13 @@ void Xml::swap_x(Xml *x) { std::vector<gsl::not_null<Xml *>>::swap(*x); }
 
 // Moves to res every son named match.
 void Xml::move(Istring match, Xml *res) {
-    XmlAction X(match, rc_move, res);
+    XmlAction X(std::move(match), rc_move, res);
     recurse(X);
 }
 
 // Renames all elements called old_name to new_name
 void Xml::rename(Istring old_name, Istring new_name) {
-    XmlAction X(old_name, rc_rename, new_name);
+    XmlAction X(std::move(old_name), rc_rename, std::move(new_name));
     recurse(X);
 }
 

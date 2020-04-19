@@ -451,7 +451,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
 
 // Converts a istring to a token list.
 // Special hack, because we insert the number, not the value
-auto token_ns::string_to_list(Istring s) -> TokenList {
+auto token_ns::string_to_list(const Istring &s) -> TokenList {
     Buffer &B = buffer_for_log;
     B << bf_reset << std::to_string(s.id);
     return B.str_toks(nlt_space);

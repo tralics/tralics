@@ -243,7 +243,7 @@ public:
     void               mu_error(String s, int i);
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
-    void               create_label(const std::string &X, Istring S);
+    void               create_label(const std::string &X, const Istring &S);
 
     // private functions, alphabetic order
 private:
@@ -389,7 +389,7 @@ private:
     auto        fetch_name_opt() -> String;
     auto        find_env_token(const std::string &name, bool beg) -> Token;
     void        E_get_config(int c);
-    void        finish_a_cell(Token T, Istring a);
+    void        finish_a_cell(Token T, const Istring &a);
     void        finish_counter_cmd(Token first, TokenList &L);
     void        finish_csname(const Buffer &b, String s);
     void        finish_csname(const Buffer &b);
@@ -399,7 +399,7 @@ private:
     void        finish_pers();
     void        finish_kvo_bool(Token T, const std::string &fam, const std::string &arg);
     void        finish_iwhile(TokenList &A, Token D);
-    void        finish_par_cmd(bool noindent, Istring xs);
+    void        finish_par_cmd(bool noindent, const Istring &xs);
     void        finish_trivial_math(Xml *res);
     void        finish_no_mathml(bool is_inline, int vp);
     static auto first_boundary() -> boundary_type;

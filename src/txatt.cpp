@@ -11,13 +11,14 @@
 
 #include "txinline.h"
 #include "txstack.h"
+#include <utility>
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.
 auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(to_unsigned(value)); }
 
 // Returns a pointer to the pair x=... if it exists, -1 otherwise
-auto AttList::has_value(Istring x) const -> std::optional<size_t> {
+auto AttList::has_value(const Istring &x) const -> std::optional<size_t> {
     for (size_t i = 0; i < val.size(); ++i)
         if (val[i].name == x) return i;
     return {};
@@ -25,9 +26,9 @@ auto AttList::has_value(Istring x) const -> std::optional<size_t> {
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
-auto Xid::has_attribute(Istring n) const -> Istring {
+auto Xid::has_attribute(const Istring &n) const -> Istring {
     AttList &X = get_att();
-    auto     i = X.has_value(n);
+    auto     i = X.has_value(std::move(n));
     if (i) return X.get_val(*i);
     return Istring();
 }
@@ -43,7 +44,7 @@ auto Xid::is_font_change() const -> bool {
 // In this case, if force is true, removes the old value,
 // otherwise does nothing
 // Does nothing if b is null (ok if b is empty).
-void AttList::push_back(Istring a, Istring b, bool force) {
+void AttList::push_back(const Istring &a, const Istring &b, bool force) {
     if (b.null()) return;
     auto T = has_value(a);
     if (T) {
@@ -58,23 +59,23 @@ void AttList::push_back(Istring a, Istring b, bool force) {
 void AttList::push_back(name_positions a, name_positions b, bool force) { push_back(the_names[a], the_names[b], force); }
 
 // Same functions, without a third argument (default is force).
-void AttList::push_back(Istring n, Istring v) { push_back(n, v, true); }
+void AttList::push_back(Istring n, Istring v) { push_back(std::move(n), std::move(v), true); }
 
 void AttList::push_back(name_positions N, name_positions V) { push_back(the_names[N], the_names[V], true); }
 
-void AttList::push_back(name_positions N, Istring v) { push_back(the_names[N], v, true); }
+void AttList::push_back(name_positions N, Istring v) { push_back(the_names[N], std::move(v), true); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B) const { get_att().push_back(A, B); }
+void Xid::add_attribute(Istring A, Istring B) const { get_att().push_back(std::move(A), std::move(B)); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B, bool f) const { get_att().push_back(A, B, f); }
+void Xid::add_attribute(Istring A, Istring B, bool f) const { get_att().push_back(std::move(A), std::move(B), f); }
 
 // Add attribute named A value B to this id.
 void Xid::add_attribute(name_positions A, name_positions B) const { get_att().push_back(A, B); }
 void Xid::add_attribute(name_positions A, name_positions B, bool c) const { get_att().push_back(A, B, c); }
 
-void Xid::add_attribute(name_positions n, Istring v) const { get_att().push_back(n, v); }
+void Xid::add_attribute(name_positions n, Istring v) const { get_att().push_back(n, std::move(v)); }
 
 // Adds the list L to the attribute list of this id.
 
@@ -108,7 +109,7 @@ void AttList::delete_att(name_positions a) {
 // returns false if there is no such value.
 auto Buffer::install_att(Xid idx, Istring m) -> bool {
     AttList &L = idx.get_att();
-    auto     k = L.has_value(m);
+    auto     k = L.has_value(std::move(m));
     if (!k) return false;
     reset();
     push_back(L.get_val(*k).name);
