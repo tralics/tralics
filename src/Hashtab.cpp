@@ -1,5 +1,5 @@
+#include "tralics/Parser.h"
 #include "txlogger.h"
-#include "txparser.h"
 
 auto Hashtab::locate(const std::string &s) -> Token {
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);

@@ -11,9 +11,9 @@
 // This file contains ltclass.dtx
 
 #include "txclasses.h"
+#include "tralics/Parser.h"
 #include "tralics/util.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 using namespace std::string_literals;
@@ -23,7 +23,7 @@ Buffer file_list;
 namespace {
     Buffer      local_buf;
     ClassesData the_class_data;
-    // global variable so that txparser.h does not need to know OptionList
+    // global variable so that tralics/Parser.h does not need to know OptionList
     OptionList cur_opt_list;
 } // namespace
 

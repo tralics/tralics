@@ -10,9 +10,9 @@
 
 // This file contains stuff for latex3
 
+#include "tralics/Parser.h"
 #include "tralics/util.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 namespace {

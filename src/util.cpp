@@ -1,8 +1,8 @@
 #include "tralics/util.h"
 #include "tralics/Buffer.h"
+#include "tralics/Parser.h"
 #include "tralics/codepoint.h"
 #include "tralics/consts.h"
-#include "txparser.h"
 
 namespace {
     auto counter_val(int k) -> int { return (0 <= k && k < to_signed(nb_registers)) ? k : -1; }

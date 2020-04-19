@@ -10,9 +10,9 @@
 
 // This file implements the XML stack for Tralics
 
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <spdlog/spdlog.h>
 #include <utility>
 

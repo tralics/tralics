@@ -1,6 +1,6 @@
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <filesystem>
 #include <spdlog/spdlog.h>
 

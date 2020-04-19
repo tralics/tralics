@@ -10,8 +10,8 @@
 
 // This file contains a lot of stuff dealing with buffers.
 
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 #include <unistd.h>
 
@@ -22,23 +22,23 @@ namespace {
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
 
     void dump_identification(String s) { main_ns::log_or_tty << "Configuration file identification: " << s; }
-
-    /// Returns a temporary string, corresponding to the command with
-    /// an empty name, without initial escape char.
-    auto null_cs_name() -> String {
-        auto c = current_escape_char();
-        if (c == '\\') return "csname\\endcsname";
-        if (c > 0 && c < int(nb_characters)) {
-            Buffer B;
-            B << "csname";
-            B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
-            B << "endcsname";
-            return B.c_str();
-        }
-        if (c == 0) return "csname^^@endcsname";
-        return "csnameendcsname";
-    }
 } // namespace
+
+/// Returns a temporary string, corresponding to the command with
+/// an empty name, without initial escape char.
+auto null_cs_name() -> String {
+    auto c = current_escape_char();
+    if (c == '\\') return "csname\\endcsname";
+    if (c > 0 && c < int(nb_characters)) {
+        Buffer B;
+        B << "csname";
+        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
+        B << "endcsname";
+        return B.c_str();
+    }
+    if (c == 0) return "csname^^@endcsname";
+    return "csnameendcsname";
+}
 
 void Buffer::reset(size_t k) {
     wptr     = k;
@@ -108,10 +108,6 @@ void Buffer::push_back(const std::string &s) {
     for (auto c : s) at(wptr++) = c;
     at(wptr) = 0;
 }
-
-// In case of error, we add the current line number as attribute
-// via this function
-auto Parser::cur_line_to_istring() const -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
 
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
@@ -270,22 +266,6 @@ void Buffer::insert_escape_char_raw() {
         push_back(codepoint(char32_t(to_unsigned(c))));
     else if (c == 0)
         push_back("^^@");
-}
-
-// This is the TeX command \string ; if esc is false, no escape char is inserted
-void Parser::tex_string(Buffer &B, Token T, bool esc) const {
-    if (T.not_a_cmd())
-        B.push_back(T.char_val());
-    else {
-        auto x = T.val;
-        if (esc && x >= single_offset) B.insert_escape_char_raw();
-        if (x >= hash_offset)
-            B.push_back(hash_table[T.hash_loc()]);
-        else if (x < first_multitok_val)
-            B.push_back(T.char_val());
-        else
-            B.push_back(null_cs_name());
-    }
 }
 
 // Returns a temporary string: the name of the token
@@ -898,8 +878,6 @@ void Image::check_existence() {
     if (file_exists("gif")) flags |= 64;
 }
 
-Buffer check_image1;
-Buffer check_image2;
 // This checks that there is a unique source for the image
 void Image::check() const {
     int a = (flags & 1) != 0 ? 1 : 0;
@@ -915,17 +893,6 @@ void Image::check() const {
         if (!check_image2.empty()) check_image2 << ", ";
         check_image2 << name;
     }
-}
-
-// Enter a new image file, if ok is false, do not increase the occ count
-void Parser::enter_file_in_table(const std::string &nm, bool ok) {
-    for (auto &X : the_images) {
-        if (X.name == nm) {
-            if (ok) X.occ++;
-            return;
-        }
-    }
-    the_images.emplace_back(nm, ok ? 1 : 0);
 }
 
 auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
@@ -973,30 +940,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     }
     X << "," << Y.occ << ");\n";
     return X;
-}
-
-// finish handling the images,
-void Parser::finish_images() {
-    if (the_images.empty()) return;
-    std::string   name = tralics_ns::get_short_jobname() + ".img";
-    String        wn   = tralics_ns::get_out_dir(name);
-    std::ofstream fp(wn);
-    fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
-    check_image1.reset();
-    check_image2.reset();
-    for (auto &the_image : the_images) {
-        if (the_image.occ != 0) {
-            the_image.check_existence();
-            the_image.check();
-            fp << the_image;
-        }
-    }
-    if (the_images.empty())
-        main_ns::log_or_tty << "There was no image.\n";
-    else
-        main_ns::log_or_tty << fmt::format("There were {} images.\n", the_images.size());
-    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << check_image1.c_str() << ".\n";
-    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2.c_str() << ".\n";
 }
 
 auto Buffer::get_machine_name() -> std::string {

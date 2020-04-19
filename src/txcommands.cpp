@@ -8,10 +8,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txbib.h"
 #include "txclasses.h"
-#include "txparser.h"
 
 // This file contains the big switch that interprets (most) commands
 

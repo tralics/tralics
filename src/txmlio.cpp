@@ -11,8 +11,8 @@
 // This file contains the XML parser of tralics
 
 #include "txmlio.h"
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 
 std::string xxx;
 

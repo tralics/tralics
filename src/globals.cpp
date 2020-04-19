@@ -1,6 +1,6 @@
 #include "tralics/globals.h"
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 std::vector<std::filesystem::path> conf_path;

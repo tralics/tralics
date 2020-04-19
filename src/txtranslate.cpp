@@ -10,10 +10,10 @@
 
 // This file contains a big part of the Tralics translator
 
+#include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 void readline_newprompt(std::string s); // in readline.cpp, but only used here

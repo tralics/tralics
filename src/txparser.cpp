@@ -10,8 +10,8 @@
 
 // This file contains the TeX parser of tralics
 
-#include "txparser.h"
 #include "tralics/Hashtab.h"
+#include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "txinline.h"
 #include <fmt/format.h>

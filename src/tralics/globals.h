@@ -32,6 +32,7 @@ extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_tabl
 
 auto assign(Buffer &a, Buffer &b) -> bool;
 auto next_label_id() -> Istring;
+auto null_cs_name() -> String;
 
 namespace main_ns {
     void register_file(LinePtr &&x);                                                      ///< Push a file onto the pool

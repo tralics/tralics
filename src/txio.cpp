@@ -11,10 +11,10 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
+#include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <filesystem>
 #include <fmt/format.h>
 #include <sstream>

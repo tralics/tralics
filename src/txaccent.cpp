@@ -15,9 +15,9 @@
 /// \todo The first 256 characters of Unicode are identical to Latin-1. So in
 /// fact internal encoding is always unicode, latin1 is a red herring here.
 
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 
 namespace accent_ns {
     auto fetch_accent(size_t chr, int accent_code) -> Token;

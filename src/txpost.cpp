@@ -11,8 +11,8 @@
 // Post processing for tralics
 
 #include "txpost.h"
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 #include "txtrees.h"
 #include <fmt/format.h>
 #include <utility>

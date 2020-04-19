@@ -10,9 +10,9 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbib.h"
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
 #include <utility>

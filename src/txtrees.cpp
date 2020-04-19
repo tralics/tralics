@@ -12,8 +12,8 @@
 // It contains also some eTeX extensions.
 
 #include "txtrees.h"
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 namespace trees_ns {

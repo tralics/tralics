@@ -10,10 +10,10 @@
 
 // Tralics math; boot part. This constructs all data structures.
 
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include "txmath.h"
-#include "txparser.h"
 
 extern MathDataP math_data;
 using namespace math_ns;

@@ -1,7 +1,7 @@
 #pragma once
+#include "tralics/Parser.h"
 #include "txclasses.h"
 #include "txinline.h"
-#include "txparser.h"
 
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2008

@@ -11,9 +11,9 @@
 // Tralics, math part I
 
 #include "txmath.h"
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <algorithm>
 #include <fmt/format.h>
 #include <utility>

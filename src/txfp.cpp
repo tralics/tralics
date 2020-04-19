@@ -9,8 +9,8 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txfp.h"
+#include "tralics/Parser.h"
 #include "txinline.h"
-#include "txparser.h"
 #include <fmt/format.h>
 
 namespace {

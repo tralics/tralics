@@ -9,9 +9,9 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txtitlepage.h"
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include "txparser.h"
 
 namespace {
     int               init_file_pos = 0; // position in init file
