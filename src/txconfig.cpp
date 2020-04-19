@@ -306,7 +306,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
 // Research Centers of the team;
 // May return  <URRocquencourt/><URSophia/>
 void config_ns::check_RC(Buffer &B, Xml *res) {
-    std::string tmp      = the_names[np_rcval].name();
+    std::string tmp      = the_names[np_rcval].name;
     bool        need_elt = tmp[0] == '+'; // Hack
     String      S{nullptr};
     if (need_elt) S = tmp.c_str() + 1;

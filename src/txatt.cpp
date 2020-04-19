@@ -111,7 +111,7 @@ auto Buffer::install_att(Xid idx, Istring m) -> bool {
     auto     k = L.has_value(m);
     if (!k) return false;
     reset();
-    push_back(L.get_val(*k).name());
+    push_back(L.get_val(*k).name);
     return true;
 }
 

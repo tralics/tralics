@@ -472,7 +472,7 @@ auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
 }
 
 // Prints a token list.
-auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.name(); }
+auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.name; }
 
 // Puts a macro into a buffer.
 void Buffer::push_back(const Macro &x) {

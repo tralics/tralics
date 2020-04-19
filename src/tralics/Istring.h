@@ -8,10 +8,10 @@ class Buffer;
 class ScaledInt;
 
 struct Istring {
-    size_t id{0};
+    std::string name;
+    size_t      id{0};
 
-    Istring(size_t N = 0) : id(N) {}
-    explicit Istring(String s);
+    Istring(size_t N = 0) : name(SH[N].name), id(N) {}
     explicit Istring(const Buffer &X);
     explicit Istring(const std::string &s);
     explicit Istring(const ScaledInt &i);
@@ -19,7 +19,6 @@ struct Istring {
     [[nodiscard]] auto null() const -> bool { return id == 0; }       // null string
     [[nodiscard]] auto empty() const -> bool { return id == 1; }      // ""
     [[nodiscard]] auto spec_empty() const -> bool { return id == 2; } // "" \todo investigate because 2 is `" "`
-    [[nodiscard]] auto name() const -> std::string & { return SH[id].name; }
     [[nodiscard]] auto value() const -> std::string & { return SH[id].value; }
     [[nodiscard]] auto labinfo() const { return SH.labinfo(id); }
 

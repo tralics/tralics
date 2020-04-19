@@ -147,7 +147,7 @@ auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value =
 // buffer
 void Xml::last_to_SH() const {
     shbuf.reset();
-    shbuf.push_back(back()->name.name());
+    shbuf.push_back(back()->name.name);
 }
 
 // This adds B at the end the element, via concatenation, if possible.
@@ -341,7 +341,7 @@ void Stack::trace_pop(bool sw) {
 
 // Dumps a stack slot
 void Stack::StackSlot::fulldump(size_t i) {
-    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.name() : "()") << ", mode"
+    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.name : "()") << ", mode"
             << stack_ns::mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
 }
@@ -353,7 +353,7 @@ void Stack::dump() {
 }
 
 // This prints a simplified version of the stack.
-void Stack::StackSlot::dump() { the_log << " " << (!frame.spec_empty() ? frame.name() : "()") << stack_ns::mode_to_string(md); }
+void Stack::StackSlot::dump() { the_log << " " << (!frame.spec_empty() ? frame.name : "()") << stack_ns::mode_to_string(md); }
 
 // Like Stack::dump, less verbose.
 void Stack::trace_stack() {
@@ -425,25 +425,25 @@ void Stack::check_font() {
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
         if (s != 0U) {
-            aux << the_names[s].name();
+            aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != 0U) {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name();
+            aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != 0U) {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name();
+            aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != 0U) {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name();
+            aux << the_names[s].name;
             nonempty = true;
         }
         if (nonempty) {
