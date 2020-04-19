@@ -323,11 +323,11 @@ void TitlePageAux::exec_start(size_t k) {
         return;
     }
     if (type == tpi_rt_alias) { // \let\this\that
-        the_parser.hash_table.eval_let(T1.c_str(), T2.c_str());
+        the_parser.hash_table.eval_let(T1, T2);
         return;
     }
     // in all other cases define this as (titlepage,k)
-    the_parser.hash_table.primitive(T1.c_str(), titlepage_cmd, subtypes(k));
+    the_parser.hash_table.primitive(T1, titlepage_cmd, subtypes(k));
     if (type == tpi_rt_list) { // initialise the list
         Titlepage[idx] = convert(2, convert(3, Istring(T4)));
         return;
