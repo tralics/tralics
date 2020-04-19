@@ -400,7 +400,7 @@ void Parser::T_par1() {
 }
 
 // Translation of \\[dim], u is the att_val of the dimension
-void Parser::T_par1(const Istring& u) {
+void Parser::T_par1(const Istring &u) {
     flush_buffer();
     finish_par_cmd(true, u);
 }

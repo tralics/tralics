@@ -87,26 +87,24 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(const Istring& A, const Istring& B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(const Istring &A, const Istring &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, const Istring& B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(name_positions A, const Istring &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to last_xid.
 void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
-void Stack::add_att_to_cur(const Istring& A, const Istring& B) { cur_xid().add_attribute(A, B); }
+void Stack::add_att_to_cur(const Istring &A, const Istring &B) { cur_xid().add_attribute(A, B); }
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(const Istring& A, const Istring& B, bool force) {
-    get_att_list(to_unsigned(last_xid)).push_back(A, B, force);
-}
+void Stack::add_att_to_last(const Istring &A, const Istring &B, bool force) { get_att_list(to_unsigned(last_xid)).push_back(A, B, force); }
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_cur(const Istring& A, const Istring& B, bool force) { cur_xid().get_att().push_back(A, B, force); }
+void Stack::add_att_to_cur(const Istring &A, const Istring &B, bool force) { cur_xid().get_att().push_back(A, B, force); }
 
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {
@@ -642,7 +640,7 @@ auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
 inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].val); }
 
-void Stack::create_new_anchor(Xid xid, const Istring& id, const Istring& idtext) {
+void Stack::create_new_anchor(Xid xid, const Istring &id, const Istring &idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));
     AL.push_back(the_names[np_id], id);
     AL.push_back(the_names[np_idtext], idtext);

@@ -407,7 +407,7 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
 }
 
 // Implements \cellattribute
-void MathHelper::add_attribute(const Istring& a, const Istring& b, subtypes c) {
+void MathHelper::add_attribute(const Istring &a, const Istring &b, subtypes c) {
     Xid w;
     if (c == cell_attribute_code)
         w = cur_cell_id;
@@ -424,7 +424,7 @@ void MathHelper::add_attribute(const Istring& a, const Istring& b, subtypes c) {
     w.add_attribute(a, b, true);
 }
 
-void math_ns::add_attribute_spec(const Istring& a, const Istring& b) { cmi.get_tid().add_attribute(a, b, true); }
+void math_ns::add_attribute_spec(const Istring &a, const Istring &b) { cmi.get_tid().add_attribute(a, b, true); }
 
 // Adds a label to the formula X
 void Parser::add_math_label(Xml *res) {

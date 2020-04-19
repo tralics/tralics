@@ -41,7 +41,7 @@ namespace {
     // to be solved later. In the case of \footcite[p.25]{Knuth},
     // the arguments of the function are foot and Knuth; the `p.25' will be
     // considered elsewhere.
-    auto make_cit_ref(const Istring& type, const Istring& ref) -> Xml {
+    auto make_cit_ref(const Istring &type, const Istring &ref) -> Xml {
         auto    n  = *the_bibliography.find_citation_item(type, ref, true);
         Istring id = the_bibliography.citation_table[n].get_bid();
         Xml     res(np_ref, nullptr);
@@ -555,11 +555,11 @@ void Parser::T_start_the_biblio() {
 
 // Returns true if this is the same object.
 // returns false for \cite{Knuth} and \footcite{Knuth}
-auto CitationItem::match(const Istring& A, const Istring& B) -> bool { return key == A && from == B; }
+auto CitationItem::match(const Istring &A, const Istring &B) -> bool { return key == A && from == B; }
 
 // Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the
 // from field, but only if the entry is unsolved.
-auto CitationItem::match_star(const Istring& A) -> bool { return key == A && !is_solved(); }
+auto CitationItem::match_star(const Istring &A) -> bool { return key == A && !is_solved(); }
 
 // This finds a citation in the table. In the case \footcite{Kunth},
 // the first two arguments are the Istrings associated to foot and Knuth.
@@ -910,7 +910,7 @@ void Parser::T_bpers() {
     the_stack.add_att_to_last(np_prenom, a);
 }
 
-void Stack::implement_cit(const std::string &b1, const Istring& b2, const std::string &a, const std::string &c) {
+void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
     add_att_to_last(np_userid, Istring(b1));
     add_att_to_last(np_id, b2);
     add_att_to_last(np_key, Istring(a));

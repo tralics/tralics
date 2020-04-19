@@ -290,7 +290,7 @@ public:
     }
     [[nodiscard]] auto get_math_env_ctr() const -> int { return math_env_ctr; }
     [[nodiscard]] auto get_all_env_ctr() const -> int { return all_env_ctr; }
-    void               add_attribute(const Istring& a, const Istring& b, subtypes c);
+    void               add_attribute(const Istring &a, const Istring &b, subtypes c);
     [[nodiscard]] auto get_cid() const -> Xid { return cur_cell_id; }
     [[nodiscard]] auto get_rid() const -> Xid { return cur_row_id; }
     [[nodiscard]] auto get_mid() const -> Xid { return cur_math_id; }
@@ -407,7 +407,7 @@ public:
 };
 
 namespace math_ns {
-    void add_attribute_spec(const Istring& a, const Istring& b);
+    void add_attribute_spec(const Istring &a, const Istring &b);
     auto cv_special_string(int c) -> name_positions;
     auto get_builtin(size_t p) -> Xml *;
     auto get_builtin_alt(size_t p) -> Xml *;

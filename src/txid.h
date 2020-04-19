@@ -24,11 +24,11 @@ public:
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;
 
-    void               add_attribute(const Istring& A, const Istring& B) const;
-    void               add_attribute(const Istring& A, const Istring& B, bool f) const;
+    void               add_attribute(const Istring &A, const Istring &B) const;
+    void               add_attribute(const Istring &A, const Istring &B, bool f) const;
     void               add_attribute(name_positions A, name_positions B) const;
     void               add_attribute(name_positions A, name_positions B, bool c) const;
-    void               add_attribute(name_positions n, const Istring& v) const;
+    void               add_attribute(name_positions n, const Istring &v) const;
     void               add_attribute(const AttList &L, bool f) const;
     void               add_attribute_but_rend(Xid b) const;
     void               add_attribute(Xid b) const;

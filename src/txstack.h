@@ -62,12 +62,12 @@ public:
     Xml *newline_xml{};
 
     auto               add_anchor(const std::string &s, bool spec) -> Istring;
-    void               add_att_to_last(const Istring& A, const Istring& B, bool force);
-    void               add_att_to_last(const Istring& A, const Istring& B);
+    void               add_att_to_last(const Istring &A, const Istring &B, bool force);
+    void               add_att_to_last(const Istring &A, const Istring &B);
     void               add_att_to_last(name_positions A, name_positions B);
-    void               add_att_to_last(name_positions A, const Istring& B);
-    void               add_att_to_cur(const Istring& A, const Istring& B);
-    void               add_att_to_cur(const Istring& A, const Istring& B, bool force);
+    void               add_att_to_last(name_positions A, const Istring &B);
+    void               add_att_to_cur(const Istring &A, const Istring &B);
+    void               add_att_to_cur(const Istring &A, const Istring &B, bool force);
     void               add_border(long a, long b);
     void               add_borders(int a, int b);
     void               add_center_to_p() const;
@@ -79,7 +79,7 @@ public:
     auto               add_newid0(name_positions x) -> AttList &;
     void               add_sp_to_p(int pid, int vid);
     void               check_font();
-    void               create_new_anchor(Xid xid, const Istring& id, const Istring& idtext);
+    void               create_new_anchor(Xid xid, const Istring &id, const Istring &idtext);
     auto               cur_xid() -> Xid { return top_stack()->id; }
     auto               get_top_id() -> Xid { return top_stack()->id; }
     void               delete_table_atts();
@@ -106,7 +106,7 @@ public:
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     [[nodiscard]] auto get_xid() const -> Xid { return last_xid; }
     void               hack_for_hanl();
-    void               implement_cit(const std::string &b1, const Istring& b2, const std::string &a, const std::string &c);
+    void               implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c);
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
