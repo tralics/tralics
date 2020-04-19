@@ -1,5 +1,6 @@
 #pragma once
 #include "CmdChr.h"
+#include <array>
 #include <list>
 
 struct Token {
@@ -69,12 +70,13 @@ struct Token {
     void               testpach();
 };
 
-inline Token q_nil, q_stop, q_recursion_stop;
-inline Token T_roman, T_use1, T_use2, T_usen, T_use_nonen;
-inline Token T_exp_notN, T_exp_notn, T_empty;
-inline Token gen_from_sig_tok, expargsnc_tok, T3col_tok;
-inline Token Tc_zero, Tc_true_bool, Tc_false_bool, cmd_name;
-inline Token token_to_split;
+inline Token                 q_nil, q_stop, q_recursion_stop;
+inline Token                 T_roman, T_use1, T_use2, T_usen, T_use_nonen;
+inline Token                 T_exp_notN, T_exp_notn, T_empty;
+inline Token                 gen_from_sig_tok, expargsnc_tok, T3col_tok;
+inline Token                 Tc_zero, Tc_true_bool, Tc_false_bool, cmd_name;
+inline Token                 token_to_split;
+inline std::array<Token, 20> special_double;
 
 inline auto make_char_token(unsigned char c, unsigned cat) -> Token { return Token(nb_characters * cat + c); }
 
