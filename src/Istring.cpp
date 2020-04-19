@@ -1,7 +1,5 @@
 #include "tralics/Buffer.h"
 
-Istring::Istring(const Buffer &X) : name(X.to_string()), id(SH.find_or_insert(name)) {}
-
 Istring::Istring(const std::string &s) : name(s), id(SH.find_or_insert(s)) {}
 
 Istring::Istring(const ScaledInt &i) {

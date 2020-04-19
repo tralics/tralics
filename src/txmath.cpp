@@ -1686,7 +1686,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
         Trace.push_back(ScaledInt(dmres), glue_spec_pt);
         Buffer B;
         B.push_back(ScaledInt(dmres), glue_spec_pt);
-        dmres = to_signed(Istring(B).id);
+        dmres = to_signed(Istring(B.to_string()).id);
     }
     Token m = scan_style();
     add_to_trace(m);
@@ -2000,11 +2000,8 @@ void Xml::bordermatrix() {
     auto n = size() - 1;
     auto F = front();
     if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
-    auto    att = Istring("rowspan");
-    Buffer &B   = math_buffer;
-    B.reset();
-    B << std::to_string(n);
-    auto attval = Istring(B);
+    auto att    = Istring("rowspan");
+    auto attval = Istring(std::to_string(n));
     F           = at(1);
     if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) {
         Xml *aux = new Xml(cst_mtd, MathDataP::mk_mo("("));
@@ -2067,7 +2064,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     } else
         return nullptr;
     Xml *tmp  = Stack::fonts1(loc);
-    Xml *xval = new Xml(Istring(B));
+    Xml *xval = new Xml(Istring(B.to_string()));
     if (have_font) {
         Xml *tmp2 = Stack::fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
@@ -2191,7 +2188,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (X.empty()) return nullptr;
     if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
-    Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer)));
+    Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer.to_string())));
     s->add_att(np_form, np_prefix);
     return s;
 }

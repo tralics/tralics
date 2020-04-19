@@ -781,7 +781,7 @@ void MainClass::open_config_file() {
     }
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
     config_file.normalise_final_cr();
-    main_ns::log_or_tty << "Read configuration file " << Istring(B) << ".\n";
+    main_ns::log_or_tty << "Read configuration file " << B.c_str() << ".\n";
     if (!B.is_at_end(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;

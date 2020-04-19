@@ -784,8 +784,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
             junk->push_back_unless_nullptr(P);
             continue;
         }
-        scbuf << bf_reset << fmt::format("{}", n);
-        auto par_id = Istring(scbuf);
+        auto par_id = Istring(std::to_string(n));
         ++n;
         for (;;) {
             Xml *sf = P->get_first_env(np_subfigure);

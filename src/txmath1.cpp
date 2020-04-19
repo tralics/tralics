@@ -1337,7 +1337,7 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
         convert_math_noMLt0();
     else
         convert_math_noML0();
-    return new Xml(np_texmath, new Xml(Istring(mathml_buffer)));
+    return new Xml(np_texmath, new Xml(Istring(mathml_buffer.to_string())));
 }
 
 // --------------------------------------------------
@@ -1590,16 +1590,14 @@ auto math_ns::make_sup(Xml *xval) -> Xml * {
 // of digits, OK is true, res the value of X.
 
 void Math::special2(bool &ok, Xml *&res) const {
-    auto    L = value.begin();
-    auto    E = value.end();
     Buffer &B = aux_buffer;
     B.reset();
-    while (L != E) {
+    for (auto L = value.begin(); L != value.end(); ++L) {
         if (L->get_cmd() == hat_catcode) {
-            ++L;                // skip over hat
-            if (L == E) return; // a final hat should not appear
+            ++L;                          // skip over hat
+            if (L == value.end()) return; // a final hat should not appear
             ++L;
-            if (L != E) return; // hack only in case single object after hat
+            if (L != value.end()) return; // hack only in case single object after hat
             ok = true;
             break;
         }
@@ -1609,9 +1607,8 @@ void Math::special2(bool &ok, Xml *&res) const {
             if (!L->get_list().only_digits(B)) return;
         } else
             return;
-        ++L;
     }
-    if (!B.empty()) res = new Xml(Istring(B));
+    if (!B.empty()) res = new Xml(Istring(B.to_string()));
 }
 
 // This handles the exponent. The case 10^e and 10^o is handled
@@ -1785,7 +1782,7 @@ void Parser::TM_fonts() {
 auto math_ns::mk_mi(codepoint c) -> Xml * {
     aux_buffer.reset();
     aux_buffer.push_back_real_utf8(c);
-    Xml *x = new Xml(Istring(aux_buffer));
+    Xml *x = new Xml(Istring(aux_buffer.to_string()));
     return new Xml(cst_mi, x);
 }
 
@@ -1857,7 +1854,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
         pop_front();
     }
     if (f == 1) B.push_back(' ');
-    res = new Xml(Istring(B));
+    res = new Xml(Istring(B.to_string()));
     res = new Xml(cst_mi, res);
     if (f > 1 && spec) res->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(f)));
     return MathElt(res, mt_flag_small);
@@ -1880,7 +1877,7 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
             B.push_back(char(uchar(c)));
             pop_front();
         }
-    Xml *res = new Xml(Istring(B));
+    Xml *res = new Xml(Istring(B.to_string()));
     res      = new Xml(cst_mn, res);
     if (f > 1) res->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(f)));
     return MathElt(res, mt_flag_small);

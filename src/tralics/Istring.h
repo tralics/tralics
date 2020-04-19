@@ -12,7 +12,6 @@ struct Istring {
     size_t      id{0};
 
     Istring(size_t N = 0) : name(SH[N].name), id(N) {}
-    explicit Istring(const Buffer &X);
     explicit Istring(const std::string &s);
     explicit Istring(const ScaledInt &i);
 
@@ -28,4 +27,4 @@ struct Istring {
     static inline StrHash SH;
 };
 
-extern std::array<Istring, np_last> the_names;
+inline std::array<Istring, np_last> the_names; // \todo static in Istring and make is a map from std::string

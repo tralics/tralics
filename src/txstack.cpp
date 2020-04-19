@@ -447,7 +447,7 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = Istring(aux);
+            auto     a   = Istring(aux.to_string());
             Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names[np_rend], a);

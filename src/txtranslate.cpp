@@ -869,7 +869,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         Tbuf.at(to_unsigned(k)) = 0;
     }
     enter_file_in_table(Tbuf.to_string(ii), ok);
-    AL.push_back(np_file, Istring(Tbuf));
+    AL.push_back(np_file, Istring(Tbuf.to_string()));
 }
 
 void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
@@ -940,10 +940,10 @@ void Parser::includegraphics(subtypes C) {
             name_positions N = skey == "height" ? np_height : skey == "width" ? np_width : np_totalwidth;
             ScaledInt      s = dimen_from_list(T, val);
             B.push_back(s, glue_spec_pt);
-            AL.push_back(the_names[N], Istring(B), true);
+            AL.push_back(the_names[N], Istring(B.to_string()), true);
         } else if (skey == "natwidth" || skey == "natheight" || skey == "bbllx" || skey == "bblly" || skey == "bburx" || skey == "bbury") {
             default_bp(B, T, val);
-            AL.push_back(Istring(skey), Istring(B), true);
+            AL.push_back(Istring(skey), Istring(B.to_string()), true);
         } else if (skey == "bb" || skey == "viewport" || skey == "trim") {
             TokenList aux;
             auto      SP = Token(space_token_val);
@@ -954,7 +954,7 @@ void Parser::includegraphics(subtypes C) {
                 default_bp(B, T, aux);
                 if (i < 3) B.push_back(' ');
             }
-            AL.push_back(Istring(skey), Istring(B), true);
+            AL.push_back(Istring(skey), Istring(B.to_string()), true);
         } else
             invalid_key(T, skey, val);
     }
@@ -1028,12 +1028,8 @@ ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a
     if (!name.empty()) xval->id.add_attribute(Istring("name"), Istring(name));
     xval->id.add_attribute(Istring("model"), Istring(model));
     xval->id.add_attribute(Istring("value"), Istring(value));
-    Buffer &B = tpa_buffer;
-    B.reset();
     static int n = 0;
-    ++n;
-    B << fmt::format("colid{}", n);
-    id = Istring(B); // This is a unique id
+    id           = Istring(fmt::format("colid{}", ++n)); // This is a unique id
     xval->id.add_attribute(np_id, id);
 }
 

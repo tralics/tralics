@@ -85,12 +85,7 @@ std::array<String, 30> bib_xml_name{
 // and the result is translated.
 
 // This creates a unique ID, named bid1, bid2, etc.
-auto Bibliography::unique_bid() -> Istring {
-    last_bid++;
-    Buffer &B = biblio_buf4;
-    B << bf_reset << fmt::format("bid{}", last_bid);
-    return Istring(B);
-}
+auto Bibliography::unique_bid() -> Istring { return Istring(fmt::format("bid{}", ++last_bid)); }
 
 // This returns a bid. It may create one.
 auto CitationItem::get_bid() -> Istring {

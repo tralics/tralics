@@ -736,7 +736,7 @@ void Xid::add_span(long n) const {
     if (n == 1) return;
     errbuf.reset();
     errbuf << std::to_string(n);
-    add_attribute(the_names[np_cols], Istring(errbuf));
+    add_attribute(the_names[np_cols], Istring(errbuf.to_string()));
 }
 
 // If the previous fails, we add a row of empty cells,

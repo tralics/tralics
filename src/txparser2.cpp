@@ -1754,15 +1754,9 @@ void Parser::formatdate() {
     Xml *X = new Xml(Istring("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
-    Buffer & B  = local_buf;
-    B << bf_reset << fmt::format("{}", FP.year);
-    AL.push_back(Istring("year"), Istring(B));
-    int k = FP.month;
-    if (k < 0) k = -k;
-    B << bf_reset << fmt::format("{}", k);
-    AL.push_back(Istring("month"), Istring(B)); // \todo do it without B
-    B << bf_reset << fmt::format("{}", FP.day);
-    AL.push_back(Istring("day"), Istring(B));
+    AL.push_back(Istring("year"), Istring(std::to_string(FP.year)));
+    AL.push_back(Istring("month"), Istring(std::to_string(abs(FP.month))));
+    AL.push_back(Istring("day"), Istring(std::to_string(FP.day)));
 }
 
 // True if ok, parse_error otherwise

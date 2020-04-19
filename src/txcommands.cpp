@@ -1220,12 +1220,9 @@ void Parser::translate03() {
         if (c == 0) {
             static bool inserted = false;
             if (!inserted) the_stack.top_stack()->id = 4;
-            inserted  = true;
-            auto    k = eqtb_int_table[42 + count_reg_offset].val;
-            Buffer &b = mac_buffer;
-            b.reset();
-            b << std::to_string(k);
-            the_stack.add_att_to_cur(Istring("depth"), Istring(b));
+            inserted = true;
+            auto k   = eqtb_int_table[42 + count_reg_offset].val;
+            the_stack.add_att_to_cur(Istring("depth"), Istring(std::to_string(k)));
         }
         the_stack.pop(np);
         return;

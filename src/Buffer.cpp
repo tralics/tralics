@@ -435,7 +435,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
         } else
             push_back("csname\\endcsname");
     }
-    return Istring(*this);
+    return Istring(to_string());
 }
 
 // Print the scaled int V as a floating point in the buffer.
@@ -995,8 +995,8 @@ void Parser::finish_images() {
         main_ns::log_or_tty << "There was no image.\n";
     else
         main_ns::log_or_tty << fmt::format("There were {} images.\n", the_images.size());
-    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << Istring(check_image1) << ".\n";
-    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << Istring(check_image2) << ".\n";
+    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << check_image1.c_str() << ".\n";
+    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2.c_str() << ".\n";
 }
 
 auto Buffer::get_machine_name() -> std::string {

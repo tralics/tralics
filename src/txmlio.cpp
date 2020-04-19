@@ -245,7 +245,7 @@ void XmlIO::parse_lt() {
 void XmlIO::parse_end() {
     scan_name();
     skip_space();
-    auto ref = Istring(B);
+    auto ref = Istring(B.to_string());
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
         std::cout << "Got " << ref << ", Expected " << cur_xml->name << "\n";
@@ -272,7 +272,7 @@ void XmlIO::pop_this() {
 void XmlIO::parse_tag() {
     reread_list.push_back(cur_char);
     scan_name();
-    Xml *res = new Xml(Istring(B), nullptr);
+    Xml *res = new Xml(Istring(B.to_string()), nullptr);
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -327,9 +327,9 @@ void XmlIO::parse_attributes() {
         }
         // Now we have an attribute pair
         scan_name();
-        auto att_name = Istring(B);
+        auto att_name = Istring(B.to_string());
         parse_att_val();
-        auto att_val = Istring(B);
+        auto att_val = Istring(B.to_string());
         cur_xml->id.add_attribute(att_name, att_val);
     }
 }
@@ -489,7 +489,7 @@ void XmlIO::parse_dec_conditional() {
         B << "[INCLUDE[";
     else
         B << "[IGNORE[";
-    Xml *res = new Xml(Istring(B));
+    Xml *res = new Xml(Istring(B.to_string()));
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;

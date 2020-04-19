@@ -933,7 +933,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = np_Warning;
     if (!the_names[np_warning].empty()) {
         flush_buffer();
-        Xml *res = new Xml(np_warning, new Xml(Istring(B)));
+        Xml *res = new Xml(np_warning, new Xml(Istring(B.to_string())));
         res->id.add_attribute(np_letter_c, w);
         res->id.add_attribute(np_letter_l, cur_line_to_istring());
         the_stack.add_last(res);
