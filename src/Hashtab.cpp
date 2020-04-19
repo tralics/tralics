@@ -54,23 +54,14 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
 }
 
 // Creates a primitive.
-// The string s must be a permanent string
-auto Hashtab::primitive(String s, symcodes c, subtypes v) -> Token {
+auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
     Token res = locate(s);
-    auto  w   = res.eqtb_loc();
-    eqtb[w].primitive(CmdChr(c, v));
+    eqtb[res.eqtb_loc()].primitive(CmdChr(c, v));
     return res;
 }
 
 // \global\let\firststring = \secondstring
-// Both strings must be permanent strings
-void Hashtab::eval_let(String a, String b) {
-    auto A    = locate(a).eqtb_loc();
-    auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval], true);
-}
-
-auto Hashtab::eval_letv(String a, String b) -> Token {
+auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
     Token Av   = locate(a);
     auto  A    = Av.eqtb_loc();
     auto  Bval = locate(b).eqtb_loc();
@@ -80,7 +71,7 @@ auto Hashtab::eval_letv(String a, String b) -> Token {
 
 // \let\firststring = \secondstring
 // Both strings must be permanent strings
-void Hashtab::eval_let_local(String a, String b) {
+void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
     the_parser.eq_define(A, eqtb[Bval], false);

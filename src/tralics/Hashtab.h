@@ -20,11 +20,10 @@ public:
     auto locate(const std::string &s) -> Token; // used by primitive, etc
     auto locate(const Buffer &b) -> Token;      // used by primitive, etc
     auto hash_find(const std::string &s) -> size_t;
-    auto primitive(String s, symcodes c, subtypes v = zero_code) -> Token;
+    auto primitive(const std::string &s, symcodes c, subtypes v = zero_code) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
-    void eval_let(String a, String b);
-    auto eval_letv(String a, String b) -> Token;
-    void eval_let_local(String a, String b);
+    auto eval_let(const std::string &a, const std::string &b) -> Token;
+    void eval_let_local(const std::string &a, const std::string &b);
     auto is_defined(const Buffer &b) -> bool;
 
     void boot_base();
