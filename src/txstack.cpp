@@ -100,13 +100,13 @@ void Stack::add_att_to_cur(Istring A, Istring B) { cur_xid().add_attribute(std::
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(Istring A, Istring B, bool force) {
-    get_att_list(to_unsigned(last_xid)).push_back(std::move(A), std::move(B), force);
+void Stack::add_att_to_last(const Istring& A, const Istring& B, bool force) {
+    get_att_list(to_unsigned(last_xid)).push_back(A, B, force);
 }
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_cur(Istring A, Istring B, bool force) { cur_xid().get_att().push_back(std::move(A), std::move(B), force); }
+void Stack::add_att_to_cur(const Istring& A, const Istring& B, bool force) { cur_xid().get_att().push_back(A, B, force); }
 
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {

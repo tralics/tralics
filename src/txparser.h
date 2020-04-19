@@ -883,7 +883,7 @@ private:
     void        T_barnodeconnect(name_positions W);
     void        T_omitcite();
     void        T_option_not_used();
-    void        T_par1(Istring u);
+    void        T_par1(const Istring& u);
     void        T_par1();
     void        T_paras(subtypes x);
     void        E_parse_encoding(bool vb, subtypes what);

@@ -93,7 +93,7 @@ public:
     // Those are still unsorted as refactoring proceeds
 
     auto insert_break(const std::string &x) -> std::string;
-    auto install_att(Xid idx, Istring match) -> bool;
+    auto install_att(Xid idx, const Istring& match) -> bool;
     void interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();

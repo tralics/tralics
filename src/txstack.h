@@ -62,12 +62,12 @@ public:
     Xml *newline_xml{};
 
     auto               add_anchor(const std::string &s, bool spec) -> Istring;
-    void               add_att_to_last(Istring A, Istring B, bool force);
+    void               add_att_to_last(const Istring& A, const Istring& B, bool force);
     void               add_att_to_last(Istring A, Istring B);
     void               add_att_to_last(name_positions A, name_positions B);
     void               add_att_to_last(name_positions A, Istring B);
     void               add_att_to_cur(Istring A, Istring B);
-    void               add_att_to_cur(Istring A, Istring B, bool force);
+    void               add_att_to_cur(const Istring& A, const Istring& B, bool force);
     void               add_border(long a, long b);
     void               add_borders(int a, int b);
     void               add_center_to_p() const;

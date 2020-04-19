@@ -25,7 +25,7 @@ public:
     [[nodiscard]] auto is_font_change() const -> bool;
 
     void               add_attribute(Istring A, Istring B) const;
-    void               add_attribute(Istring A, Istring B, bool f) const;
+    void               add_attribute(const Istring& A, const Istring& B, bool f) const;
     void               add_attribute(name_positions A, name_positions B) const;
     void               add_attribute(name_positions A, name_positions B, bool c) const;
     void               add_attribute(name_positions n, Istring v) const;

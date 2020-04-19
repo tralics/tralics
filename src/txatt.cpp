@@ -28,7 +28,7 @@ auto AttList::has_value(const Istring &x) const -> std::optional<size_t> {
 // Returns null string otherwise
 auto Xid::has_attribute(const Istring &n) const -> Istring {
     AttList &X = get_att();
-    auto     i = X.has_value(std::move(n));
+    auto     i = X.has_value(n);
     if (i) return X.get_val(*i);
     return Istring();
 }
@@ -59,17 +59,17 @@ void AttList::push_back(const Istring &a, const Istring &b, bool force) {
 void AttList::push_back(name_positions a, name_positions b, bool force) { push_back(the_names[a], the_names[b], force); }
 
 // Same functions, without a third argument (default is force).
-void AttList::push_back(Istring n, Istring v) { push_back(std::move(n), std::move(v), true); }
+void AttList::push_back(const Istring& n, const Istring& v) { push_back(n, v, true); }
 
 void AttList::push_back(name_positions N, name_positions V) { push_back(the_names[N], the_names[V], true); }
 
-void AttList::push_back(name_positions N, Istring v) { push_back(the_names[N], std::move(v), true); }
+void AttList::push_back(name_positions N, const Istring& v) { push_back(the_names[N], v, true); }
 
 // Add attribute named A value B to this id.
 void Xid::add_attribute(Istring A, Istring B) const { get_att().push_back(std::move(A), std::move(B)); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(Istring A, Istring B, bool f) const { get_att().push_back(std::move(A), std::move(B), f); }
+void Xid::add_attribute(const Istring& A, const Istring& B, bool f) const { get_att().push_back(A, B, f); }
 
 // Add attribute named A value B to this id.
 void Xid::add_attribute(name_positions A, name_positions B) const { get_att().push_back(A, B); }
@@ -107,9 +107,9 @@ void AttList::delete_att(name_positions a) {
 
 // Puts in the buffer the value of the attribute M of element idx
 // returns false if there is no such value.
-auto Buffer::install_att(Xid idx, Istring m) -> bool {
+auto Buffer::install_att(Xid idx, const Istring& m) -> bool {
     AttList &L = idx.get_att();
-    auto     k = L.has_value(std::move(m));
+    auto     k = L.has_value(m);
     if (!k) return false;
     reset();
     push_back(L.get_val(*k).name);

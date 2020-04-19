@@ -52,8 +52,8 @@ public:
     void               set_solved(Xid N) { solved = N; }
     void               dump(Buffer &b) const;
     void               dump_bibtex();
-    auto               match(Istring A, Istring B) -> bool;
-    auto               match_star(Istring A) -> bool;
+    auto               match(const Istring& A, const Istring& B) -> bool;
+    auto               match_star(const Istring& A) -> bool;
     [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
     CitationItem(Istring A, Istring B) : key(std::move(A)), from(std::move(B)), bid("") {}
 };

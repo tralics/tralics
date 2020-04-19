@@ -24,8 +24,8 @@ class ModChecker {
 public:
     ModChecker() : id(0UL) {}
     ModChecker(Istring I, bool mod) : id(std::move(I)), is_mod(mod) {}
-    void set(Istring I) {
-        if (id == std::move(I)) has_info = true;
+    void set(const Istring& I) {
+        if (id == I) has_info = true;
     }
     void check(int *T) const {
         if (is_mod) {
