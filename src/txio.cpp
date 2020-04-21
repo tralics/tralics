@@ -138,29 +138,6 @@ auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger & {
 
 auto operator<<(FullLogger &fp, Token t) -> FullLogger & { return fp << t.tok_to_str(); }
 
-auto operator<<(HalfLogger &X, String s) -> HalfLogger & {
-    if (X.verbose) std::cout << s;
-    X.L << s;
-    return X;
-}
-
-auto operator<<(HalfLogger &X, const Istring &s) -> HalfLogger & {
-    if (X.verbose) std::cout << s;
-    X.L << s;
-    return X;
-}
-
-auto operator<<(HalfLogger &X, int s) -> HalfLogger & {
-    if (X.verbose) std::cout << s;
-    X.L << s;
-    return X;
-}
-auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger & {
-    if (X.verbose) std::cout << s;
-    X.L << s;
-    return X;
-}
-
 // Prints an att list on a buffer, then a stream.
 void AttList::print(std::ostream &fp) const {
     buf.reset();

@@ -79,16 +79,6 @@ public:
     void unexpected_char(String s, int k);
 };
 
-class HalfLogger {
-public:
-    Logger L;
-    bool   verbose{true};
-    auto   operator<<(logger_fn f) -> HalfLogger & {
-        f(L);
-        return *this;
-    }
-};
-
 // if X is of type logger, then X << lg_start; is the same as
 // lg_start(X); and hence as  X.finish_seq();
 // if Y is of type FullLogger, Y<< lg_start; is the same as
@@ -150,10 +140,6 @@ auto operator<<(FullLogger &X, unsigned char s) -> FullLogger &;
 auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger &;
 auto operator<<(FullLogger &X, const TokenList &s) -> FullLogger &;
 auto operator<<(FullLogger &X, const Xml *s) -> FullLogger &;
-auto operator<<(HalfLogger &X, String s) -> HalfLogger &;
-auto operator<<(HalfLogger &X, const Istring &s) -> HalfLogger &;
-auto operator<<(HalfLogger &X, int s) -> HalfLogger &;
-auto operator<<(HalfLogger &X, const std::string &s) -> HalfLogger &;
 
 extern Logger &   the_log;
 extern FullLogger log_and_tty;
