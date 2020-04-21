@@ -219,7 +219,7 @@ void Parser::E_xspace() {
     if (get_token()) return;
     back_input();
     bool val = cur_cmd_chr.is_ok_for_xspace();
-    if (tracing_commands()) the_log << lg_start << "\\xspace after " << cur_tok << (val ? " did nothing " : " added space") << lg_end;
+    if (tracing_commands()) the_log << lg_start << "\\xspace after " << cur_tok << (val ? " did nothing " : " added space") << "\n";
     if (val) return;
     back_input(hash_table.space_token);
 }
@@ -238,7 +238,7 @@ auto Parser::T_xmllatex() -> std::string {
             mac_buffer.push_back(hash_table[x.hash_loc()]);
         // else token is bad or null
     }
-    if (tracing_commands()) the_log << lg_startbrace << "Rawxml: " << mac_buffer << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "Rawxml: " << mac_buffer << "}\n";
     return mac_buffer.to_string();
 }
 
@@ -259,7 +259,7 @@ void Parser::E_get_config(int c) {
     if (tracing_macros()) {
         the_log << lg_start << T << " #1=" << resource;
         if (c != 0) the_log << " #2=" << key;
-        the_log << " -> " << L << lg_end;
+        the_log << " -> " << L << "\n";
     }
     back_input(L);
 }
@@ -358,10 +358,10 @@ void Parser::E_car(bool first) {
     TokenList L = read_arg();
     TokenList M = read_until_nopar(hash_table.nil_token);
     if (tracing_macros()) {
-        the_log << lg_start << T << "#1#2\\@nil ->#" << (first ? "1" : "2") << lg_end;
-        the_log << "#1 <-" << L << lg_end;
-        the_log << "#2 <-" << M << lg_end;
-        the_log << lg_start << T << "<- " << (first ? L : M) << lg_end;
+        the_log << lg_start << T << "#1#2\\@nil ->#" << (first ? "1" : "2") << "\n";
+        the_log << "#1 <-" << L << "\n";
+        the_log << "#2 <-" << M << "\n";
+        the_log << lg_start << T << "<- " << (first ? L : M) << "\n";
     }
     if (first)
         back_input(L);
@@ -584,7 +584,7 @@ void Parser::T_xkv_for(subtypes c) {
         //
     default:;
     }
-    if (tracing_commands()) the_log << lg_start << T << "<- " << res << lg_end;
+    if (tracing_commands()) the_log << lg_start << T << "<- " << res << "\n";
     back_input(res);
 }
 
@@ -593,7 +593,7 @@ void Parser::T_xkv_for(subtypes c) {
 void Parser::M_cons() {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
-    if (tracing_commands()) the_log << lg_startbrace << "\\@cons " << cmd << " + " << L << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "\\@cons " << cmd << " + " << L << "}\n";
     M_cons(cmd, L);
 }
 
@@ -893,7 +893,7 @@ void Parser::internal_choice_key() {
         back_input(bad_code);
     else {
         parse_error(err_tok, "XKV: value is not allowed");
-        (Logger &)log_and_tty << " " << input << lg_end;
+        (Logger &)log_and_tty << " " << input << "\n";
     }
 }
 
@@ -1301,7 +1301,7 @@ void Parser::xkv_execute_options() {
     data.finish();
 }
 
-void XkvSetkeys::dump_keys() { the_log << lg_startbrace << "Options to execute->" << keyvals << lg_endbrace; }
+void XkvSetkeys::dump_keys() { the_log << lg_startbrace << "Options to execute->" << keyvals << "}\n"; }
 
 // Implements ProcessOptionsX
 void Parser::xkv_process_options() {
@@ -1420,7 +1420,7 @@ void XkvSetkeys::fetch_keys(bool c) {
         keyvals = P->get_mac_value(rm_token); // case of \setrmkeys
     else
         keyvals = P->read_arg();
-    if (the_parser.tracing_commands()) the_log << lg_start << "setkeys -> " << keyvals << lg_end;
+    if (the_parser.tracing_commands()) the_log << lg_start << "setkeys -> " << keyvals << "\n";
     extract_keys(keyvals, Keys);
 }
 
@@ -1430,7 +1430,7 @@ void XkvSetkeys::finish() {
     P->new_macro(fams, fams_token);
     P->new_macro(na, na_token);
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
-    if (the_parser.tracing_commands()) the_log << lg_start << "setkeys <- " << action << lg_end;
+    if (the_parser.tracing_commands()) the_log << lg_start << "setkeys <- " << action << "\n";
     P->new_macro(delayed, rm_token);
     P->back_input(action);
 }
@@ -2616,7 +2616,8 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         B.reset();
         B.push_back("-> \\char\"");
         B.push_back16(to_unsigned(r), false);
-        the_log << lg_start << T << c << B << "." << lg_end;
+        the_log << lg_start << T << c << B << "."
+                << "\n";
     }
     if (r == 0) {
         Buffer &B = err_buf;

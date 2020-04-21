@@ -180,7 +180,9 @@ auto Parser::edef_aux(TokenList &L) -> bool {
         else {
             Token     T = cur_tok;
             TokenList q = E_the(cur_cmd_chr.chr);
-            if (tracing_commands()) the_log << lg_start << T << "->" << q << "." << lg_end;
+            if (tracing_commands())
+                the_log << lg_start << T << "->" << q << "."
+                        << "\n";
             L.splice(L.end(), q);
         }
     }
@@ -698,7 +700,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
         res.push_back(par);
         res.push_back(noindent);
     }
-    if (tracing_commands()) the_log << lg_startbrace << "Verbatim tokens: " << res << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "Verbatim tokens: " << res << "}\n";
     back_input(res);
 }
 
@@ -1186,7 +1188,7 @@ void Parser::M_def(bool edef, bool gbl, symcodes what, rd_flag fl) {
 void Parser::M_declare_math_operator() {
     bool  see_star = remove_initial_star();
     Token name     = get_r_token(true);
-    if (tracing_commands()) the_log << lg_startbracebs << "DeclareMathOperator " << name << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "DeclareMathOperator " << name << "}\n";
     auto *     X = new Macro;
     TokenList &L = X->body;
     read_mac_body(L, false, 0);
@@ -1203,7 +1205,7 @@ void Parser::M_declare_math_operator() {
 void Parser::M_new_thm() {
     bool        star = remove_initial_star();
     std::string name = group_to_string();
-    if (tracing_commands()) the_log << lg_startbracebs << "newtheorem " << name << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "newtheorem " << name << "}\n";
     TokenList ctr;
     int       which_case = star ? 4 : 2;
     if (which_case == 2 && read_optarg_nopar(ctr)) which_case = 3;
@@ -1407,7 +1409,7 @@ auto Parser::grab_env_comma(TokenList &v) -> bool {
 // This is macro_call in TeX
 // Assumes that cur_tok holds the macro name, the argument the value.
 void Parser::expand_mac(Macro &X) {
-    if (tracing_macros()) the_log << lg_start << " " << X << lg_end;
+    if (tracing_macros()) the_log << lg_start << " " << X << "\n";
     def_type spec = X.type;
     if (spec == dt_empty) return;
     if (skip_prefix(X[0])) return;
@@ -1439,7 +1441,7 @@ void Parser::expand_mac(Macro &X) {
                     arguments[1] = X[1];
             }
         }
-        if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << lg_end;
+        if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << "\n";
     }
     TokenList res = expand_mac_inner(X.body, arguments.data()); // \todo pass the array instead
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
@@ -1536,7 +1538,7 @@ void Parser::list_to_string_c(TokenList &x, String s1, String s2, String msg, Bu
 // This is like \csname s1 L s2 \endcsname
 // It returns true and signals in case of error.
 auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
-    if (tracing_commands()) the_log << lg_startbrace << s << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << s << "}\n";
     Buffer b;
     b.push_back(s1);
     bool r = list_to_string(L, b);
@@ -1571,7 +1573,7 @@ void Parser::finish_csname(const Buffer &b) {
 // Same as above, but the token is to be read again
 void Parser::finish_csname(const Buffer &b, String s) {
     finish_csname(b);
-    if (tracing_commands()) the_log << lg_startbrace << s << "->\\" << b.convert_to_log_encoding() << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << s << "->\\" << b.convert_to_log_encoding() << "}\n";
     back_input();
 }
 
@@ -1597,23 +1599,23 @@ void Parser::csname_arg() {
 // Latex3 variants of \csname .. \endcsname
 void Parser::E_usename(int c, bool vb) {
     Token t = cur_tok;
-    if (vb) the_log << lg_startbrace << t << lg_endbrace;
+    if (vb) the_log << lg_startbrace << t << "}\n";
     if (c == 0) { //  \use:c
         csname_arg();
-        if (vb) the_log << t << " -> " << cur_tok << lg_end;
+        if (vb) the_log << t << " -> " << cur_tok << "\n";
     } else if (c == 1) { // \exp_args:Nc
         get_token();
         Token T = cur_tok;
         csname_arg();
         back_input(T);
-        if (vb) the_log << t << " -> " << T << cur_tok << lg_end;
+        if (vb) the_log << t << " -> " << T << cur_tok << "\n";
     } else { // \exp_args:cc
         csname_arg();
         get_token();
         Token T = cur_tok;
         csname_arg();
         back_input(T);
-        if (vb) the_log << t << " -> " << T << cur_tok << lg_end;
+        if (vb) the_log << t << " -> " << T << cur_tok << "\n";
     }
 }
 
@@ -1676,7 +1678,7 @@ void Parser::E_ifundefined(bool c) {
         get_token();
         undef = cur_cmd_chr.is_relax();
     }
-    if (tracing_macros()) the_log << lg_startbrace << T << boolean(undef) << lg_endbrace;
+    if (tracing_macros()) the_log << lg_startbrace << T << boolean(undef) << "}\n";
     one_of_two(undef);
 }
 
@@ -1689,7 +1691,7 @@ void Parser::E_ifempty() {
     TokenList b = read_arg();
     if (c != 0U) token_ns::remove_first_last_space(L);
     bool ok = L.empty();
-    if (tracing_commands()) the_log << lg_startbrace << T << " " << boolean(ok) << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << T << " " << boolean(ok) << "}\n";
     one_of_two(a, b, ok);
 }
 
@@ -1698,7 +1700,7 @@ void Parser::T_ifstar() {
     TokenList a  = read_arg();
     TokenList b  = read_arg();
     bool      ok = remove_initial_star();
-    if (tracing_commands()) the_log << lg_startbracebs << "@ifstar " << boolean(ok) << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "@ifstar " << boolean(ok) << "}\n";
     one_of_two(a, b, ok);
 }
 
@@ -1714,7 +1716,7 @@ void Parser::T_ifnextchar(bool c) {
     if (cur_tok.is_valid()) back_input();
     bool ok = cur_tok == d;
     if (!c && cur_tok.char_or_active() && d.char_or_active() && cur_tok.chr_val() == d.chr_val()) ok = true;
-    if (tracing_commands()) the_log << lg_startbrace << T << boolean(ok) << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << T << boolean(ok) << "}\n";
     one_of_two(a, b, ok);
 }
 
@@ -1743,7 +1745,7 @@ void Parser::E_while(subtypes cc) {
         res.splice(res.begin(), A);
         res.push_front(cc == 1 ? hash_table.ifdim_token : hash_table.ifnum_token);
     }
-    if (tracing_commands()) the_log << lg_start << T << "<- " << res << lg_end;
+    if (tracing_commands()) the_log << lg_start << T << "<- " << res << "\n";
     back_input(res);
 }
 
@@ -1773,7 +1775,7 @@ void Parser::E_iwhile(subtypes cc) {
         w.splice(w.begin(), A);
         w.push_front(cc == 1 ? hash_table.ifdim_token : hash_table.ifnum_token);
     }
-    if (tracing_commands()) the_log << lg_start << T << "<- " << w << lg_end;
+    if (tracing_commands()) the_log << lg_start << T << "<- " << w << "\n";
     back_input(w);
 }
 
@@ -1948,7 +1950,7 @@ void Parser::new_constant(String name, int max_val, subtypes alloc_pos, symcodes
     if (c == assign_mu_glue_cmd) k += muskip_reg_offset;
     CmdChr R(c, subtypes(k));
     eq_define(cur_tok.eqtb_loc(), R, true);
-    the_log << lg_startbracebs << name << " " << cur_tok << "=\\" << R.name() << lg_endbrace;
+    the_log << lg_startbracebs << name << " " << cur_tok << "=\\" << R.name() << "}\n";
 }
 
 // c is the code of \value, \stepcounter, \addtocounter, \setcounter, or
@@ -1994,7 +1996,7 @@ void Parser::E_counter(int c) {
 
 // Backinputs the token list, plus some tracing info.
 void Parser::finish_counter_cmd(Token first, TokenList &L) {
-    if (tracing_commands()) the_log << lg_start << first << "->" << L << lg_end;
+    if (tracing_commands()) the_log << lg_start << first << "->" << L << "\n";
     back_input(L);
 }
 
@@ -2029,7 +2031,7 @@ void Parser::E_setlength(int c) {
 // Implements \newif. Check that the command starts with the letters if
 void Parser::M_newif() {
     Token T = get_r_token();
-    if (tracing_commands()) the_log << lg_startbracebs << "newif " << T << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "newif " << T << "}\n";
     if (T.active_or_single()) {
         parse_error(err_tok, "Illegal argument of \\newif: ", T, "", "bad newif");
         return;
@@ -2302,22 +2304,22 @@ void Parser::E_all_of_one(Token T, int c) {
         break;
     default: s = " #1->#1 "; n = 1;
     }
-    if (vb) the_log << lg_start << T << s << lg_end;
+    if (vb) the_log << lg_start << T << s << "\n";
     TokenList L = read_arg();
-    if (vb) the_log << "#1<-" << L << lg_end;
+    if (vb) the_log << "#1<-" << L << "\n";
     if (n == 1) {
         back_input(L);
         return;
     }
     TokenList L2 = read_arg();
-    if (vb) the_log << "#2<-" << L2 << lg_end;
+    if (vb) the_log << "#2<-" << L2 << "\n";
     if (n == 2) {
         back_input(L2);
         back_input(L);
         return;
     }
     TokenList L3 = read_arg();
-    if (vb) the_log << "#3<-" << L3 << lg_end;
+    if (vb) the_log << "#3<-" << L3 << "\n";
     if (c == 5) {
         back_input(L2);
         back_input(L);
@@ -2330,7 +2332,7 @@ void Parser::E_all_of_one(Token T, int c) {
         return;
     }
     TokenList L4 = read_arg();
-    if (vb) the_log << "#4<-" << L4 << lg_end;
+    if (vb) the_log << "#4<-" << L4 << "\n";
     back_input(L4);
     back_input(L3);
     back_input(L2);
@@ -2369,7 +2371,7 @@ void Parser::E_scan_up_down() {
     TokenList df_down = read_arg();
     TokenList w       = read_arg();
     E_scan_up_down(df_up, df_down, w, cmd);
-    if (tracing_commands()) the_log << lg_start << "\\scanupdown ->" << cmd << lg_end;
+    if (tracing_commands()) the_log << lg_start << "\\scanupdown ->" << cmd << "\n";
     back_input(cmd);
 }
 
@@ -2431,7 +2433,7 @@ void Parser::E_sideset() {
     brace_me(C);
     C.push_front(hash_table.mathop_token);
     C.push_back(hash_table.limits_token);
-    if (tracing_commands()) the_log << lg_start << "\\sideset ->" << C << lg_end;
+    if (tracing_commands()) the_log << lg_start << "\\sideset ->" << C << "\n";
     back_input(C);
 }
 
@@ -2442,7 +2444,7 @@ void Parser::E_expandafter() {
     get_token();
     if (tracing_macros()) {
         the_log << lg_startbracebs << "expandafter ";
-        the_log << T << " " << cur_tok << lg_endbrace;
+        the_log << T << " " << cur_tok << "}\n";
     }
     if (cur_cmd_chr.is_expandable())
         expand();
@@ -2481,7 +2483,7 @@ void Parser::E_ensuremath() {
         L.push_front(hash_table.dollar_token);
         L.push_back(hash_table.dollar_token);
     }
-    if (tracing_macros()) the_log << lg_start << "\\ensuremath-> " << L << lg_end;
+    if (tracing_macros()) the_log << lg_start << "\\ensuremath-> " << L << "\n";
     back_input(L);
 }
 
@@ -2494,7 +2496,7 @@ void Parser::E_random() {
     Buffer B;
     B.push_back(fmt::format("{}", u));
     TokenList L = B.str_toks11(false);
-    if (tracing_macros()) the_log << lg_start << T << t << "->" << L << lg_end;
+    if (tracing_macros()) the_log << lg_start << T << t << "->" << L << "\n";
     back_input(L);
 }
 
@@ -2507,25 +2509,25 @@ void Parser::E_user(bool vb, subtypes c, symcodes C) {
 }
 
 void Parser::E_first_of_two(bool vb, subtypes c) {
-    if (vb) the_log << lg_start << cur_tok << "#1#2->#" << (c == 1 ? "1" : "2") << lg_end;
+    if (vb) the_log << lg_start << cur_tok << "#1#2->#" << (c == 1 ? "1" : "2") << "\n";
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << lg_end;
-        the_log << "#2<-" << L2 << lg_end;
+        the_log << "#1<-" << L1 << "\n";
+        the_log << "#2<-" << L2 << "\n";
     }
     one_of_two(L1, L2, c == 1);
 }
 
 void Parser::E_first_of_three(bool vb, subtypes c) {
-    if (vb) the_log << lg_start << cur_tok << "#1#2#3->#" << (c == 1 ? "1" : (c == 2 ? "2" : "3")) << lg_end;
+    if (vb) the_log << lg_start << cur_tok << "#1#2#3->#" << (c == 1 ? "1" : (c == 2 ? "2" : "3")) << "\n";
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     TokenList L3 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << lg_end;
-        the_log << "#2<-" << L2 << lg_end;
-        the_log << "#3<-" << L3 << lg_end;
+        the_log << "#1<-" << L1 << "\n";
+        the_log << "#2<-" << L2 << "\n";
+        the_log << "#3<-" << L3 << "\n";
     }
     if (c == 1)
         back_input(L1);
@@ -2536,16 +2538,16 @@ void Parser::E_first_of_three(bool vb, subtypes c) {
 }
 
 void Parser::E_first_of_four(bool vb, subtypes c) {
-    if (vb) the_log << lg_start << cur_tok << "#1#2#3#4->#" << (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))) << lg_end;
+    if (vb) the_log << lg_start << cur_tok << "#1#2#3#4->#" << (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))) << "\n";
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     TokenList L3 = read_arg();
     TokenList L4 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << lg_end;
-        the_log << "#2<-" << L2 << lg_end;
-        the_log << "#3<-" << L3 << lg_end;
-        the_log << "#4<-" << L4 << lg_end;
+        the_log << "#1<-" << L1 << "\n";
+        the_log << "#2<-" << L2 << "\n";
+        the_log << "#3<-" << L3 << "\n";
+        the_log << "#4<-" << L4 << "\n";
     }
     if (c == 1)
         back_input(L1);
@@ -2560,10 +2562,12 @@ void Parser::E_first_of_four(bool vb, subtypes c) {
 void Parser::E_ignore_n_args(bool vb, subtypes c) {
     int n = (c < 1 ? 1 : (c > 9 ? 9 : c));
     int i = 1;
-    if (vb) the_log << lg_start << cur_tok << " ...#" << n << "->" << lg_end;
+    if (vb)
+        the_log << lg_start << cur_tok << " ...#" << n << "->"
+                << "\n";
     while (n > 0) {
         TokenList L = read_arg();
-        if (vb) the_log << "#" << i << "<-" << L << lg_end;
+        if (vb) the_log << "#" << i << "<-" << L << "\n";
         ++i;
         --n;
     }
@@ -2691,24 +2695,32 @@ void Parser::iexpand() {
         Token     TT = cur_tok;
         TokenList L  = E_the(the_code);
         token_ns::strip_pt(L);
-        if (vb) the_log << lg_start << TT << lg_arrow << L << "." << lg_end;
+        if (vb)
+            the_log << lg_start << TT << "->" << L << "."
+                    << "\n";
         back_input(L);
         return;
     }
     case obracket_cmd:
-        if (vb) the_log << lg_start << cur_tok << lg_arrow << "$$" << lg_end;
+        if (vb)
+            the_log << lg_start << cur_tok << "->"
+                    << "$$"
+                    << "\n";
         back_input(hash_table.dollar_token);
         back_input(hash_table.dollar_token);
         return;
     case oparen_cmd:
-        if (vb) the_log << lg_start << cur_tok << lg_arrow << "$" << lg_end;
+        if (vb)
+            the_log << lg_start << cur_tok << "->"
+                    << "$"
+                    << "\n";
         back_input(hash_table.dollar_token);
         return;
     case noexpand_cmd: { // see comments in txscan
         auto guard = SaveScannerStatus(ss_normal);
         if (get_token()) return;
         Token t = cur_tok;
-        if (vb) the_log << lg_startbracebs << "noexpand " << t << lg_endbrace;
+        if (vb) the_log << lg_startbracebs << "noexpand " << t << "}\n";
         back_input(t);
         if (!cur_tok.not_a_cmd()) back_input(hash_table.frozen_dont_expand);
         return;
@@ -2747,7 +2759,7 @@ void CondAux::dump(long i) const {
     the_log << "\\" << tmp.name();
     if (if_limit == fi_code) the_log << "\\else";
     the_log << " entered on line " << if_line;
-    the_log << lg_end;
+    the_log << "\n";
 }
 
 // for \currentifbranch
@@ -2776,17 +2788,17 @@ void Parser::trace_if(int k) {
         if (k == -1) the_log << "\\unless";
         the_log << cur_tok << conditions.top_serial();
         if (k > 0) the_log << "(+" << k << ")";
-        the_log << lg_end;
+        the_log << "\n";
     }
 }
 
 void Parser::trace_if(String a, int k, String b) const {
-    if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << lg_end;
+    if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << "\n";
 }
 
 // same code
 void Parser::trace_if(String a, int k, long b) const {
-    if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << lg_end;
+    if (tracing_commands()) the_log << lg_startcond << a << k << " " << b << "\n";
 }
 
 // Find \fi, \else , \or at level zero.
@@ -3021,8 +3033,9 @@ void Parser::E_afterfi() {
     Token     T = hash_table.fi_token;
     TokenList L = read_until(T);
     if (tracing_macros()) {
-        the_log << lg_start << cur_tok << "#1\\fi->\\fi#1" << lg_end;
-        the_log << "#1<-" << L << lg_end;
+        the_log << lg_start << cur_tok << "#1\\fi->\\fi#1"
+                << "\n";
+        the_log << "#1<-" << L << "\n";
     }
     back_input(L);
     back_input(T);
@@ -3034,7 +3047,8 @@ void Parser::E_afterelsefi() {
     TokenList L1 = read_until(T1);
     TokenList L2 = read_until(T2);
     if (tracing_macros()) {
-        the_log << lg_start << cur_tok << R"(#1\else#2\fi->\fi#1)" << lg_end;
+        the_log << lg_start << cur_tok << R"(#1\else#2\fi->\fi#1)"
+                << "\n";
         the_log << "#1<-" << L1;
         the_log << "#2<-" << L2;
     }
@@ -3080,7 +3094,7 @@ auto Parser::get_r_token(bool br) -> Token {
 void Parser::M_let(Token A, bool global, bool redef) {
     if (tracing_commands()) {
         the_log << lg_startbracebs << "let " << A << " ";
-        the_log << cur_tok << lg_endbrace;
+        the_log << cur_tok << "}\n";
     }
     if (redef && !ok_to_define(A, rd_if_undef)) return;
     auto pos = A.eqtb_loc();
@@ -3090,7 +3104,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
         token_for_show(hash_table.eqtb[pos]);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     eq_define(pos, cur_cmd_chr, global);
 }
@@ -3140,8 +3154,10 @@ void Parser::M_let(int chr, bool gbl) {
             T = hash_table.locate(fetch_name_res);
         } else
             T = get_r_token(true); // \cs_undefine:N
-        if (tracing_commands()) the_log << lg_startbracebs << "let " << T << "=\\undef" << lg_endbrace;
-        if (tracing_assigns()) the_log << lg_startbrace << "globally killing " << T << lg_endbrace;
+        if (tracing_commands())
+            the_log << lg_startbracebs << "let " << T << "=\\undef"
+                    << "}\n";
+        if (tracing_assigns()) the_log << lg_startbrace << "globally killing " << T << "}\n";
         eq_define(T.eqtb_loc(), CmdChr(undef_cmd, zero_code), true);
     } else {               // cs_set_eq:NN and variants
         gbl       = false; // ignore \globaldefs
@@ -3179,7 +3195,7 @@ void Parser::M_future_let(bool gbl) {
     if (tracing_commands()) {
         the_log << lg_startbracebs << "futurelet " << A << " ";
         the_log << B << " ";
-        the_log << cur_tok << lg_endbrace;
+        the_log << cur_tok << "}\n";
     }
     eq_define(p, cur_cmd_chr, gbl); // \let\A\C
     back_input();
@@ -3191,7 +3207,7 @@ void Parser::M_newcommand(rd_flag redef) {
     bool     is_star = remove_initial_star(); // false means long
     symcodes what    = is_star ? user_cmd : userl_cmd;
     Token    name    = get_r_token(true);
-    if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << "}\n";
     Macro *X{nullptr};
     {
         auto guard = SaveErrTok(name);
@@ -3219,7 +3235,7 @@ void Parser::M_new_env(rd_flag redef) {
     bool        is_star = remove_initial_star(); // false means long
     symcodes    what    = is_star ? user_cmd : userl_cmd;
     std::string name    = group_to_string();
-    if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << err_tok << (is_star ? "* " : " ") << name << "}\n";
     Token  T = find_env_token(name, true); // this is \foo
     Macro *X{nullptr};
     {
@@ -3391,7 +3407,7 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(pos, R, gbl);
-    the_log << lg_startbracebs << name << " " << tbd << "=\\" << R.name() << lg_endbrace;
+    the_log << lg_startbracebs << name << " " << tbd << "=\\" << R.name() << "}\n";
 }
 
 // For bootstrap; always traced
@@ -3436,7 +3452,7 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(p, R, true);
-    the_log << lg_startbracebs << name << " \\" << sh << "=\\" << R.name() << lg_endbrace;
+    the_log << lg_startbracebs << name << " \\" << sh << "=\\" << R.name() << "}\n";
     return T;
 }
 
@@ -3597,7 +3613,7 @@ void Parser::E_latex_ctr() {
         else
             E_latex_ctr_fnsymbol(n, res);
     }
-    if (tracing_commands()) the_log << lg_start << T << "->" << res << lg_end;
+    if (tracing_commands()) the_log << lg_start << T << "->" << res << "\n";
     back_input(res);
 }
 
@@ -3704,7 +3720,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
         if (get_token()) break; // seen the end
         Token x = cur_tok;
         if (x.is_space_token() || cur_cmd_chr.is_relax()) continue;
-        if (tracing_commands()) the_log << lg_startif << x << lg_endbrace;
+        if (tracing_commands()) the_log << lg_startif << x << "}\n";
         if (x == hash_table.not_token || x == hash_table.NOT_token) {
             must_negate = !must_negate;
             continue;
@@ -3749,7 +3765,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             cur_tok = t;
             read_toks_edef(L2);
             res = L1 == L2;
-            if (tracing_commands()) the_log << lg_startif << "equal " << boolean(res) << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startif << "equal " << boolean(res) << "}\n";
         } else {
             back_input();
             cur_tok = t;
@@ -3767,18 +3783,18 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             break;
         }
         if (x == hash_table.or_token || x == hash_table.OR_token) {
-            if (tracing_commands()) the_log << lg_startif << "\\or " << skip_or_continue(res) << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startif << "\\or " << skip_or_continue(res) << "}\n";
             if (res) break;
             return T_ifthenelse_inner(t);
         }
         if (x == hash_table.and_token || x == hash_table.AND_token) {
-            if (tracing_commands()) the_log << lg_startif << "\\and " << skip_or_continue(!res) << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startif << "\\and " << skip_or_continue(!res) << "}\n";
             if (!res) return false;
             return T_ifthenelse_inner(t);
         }
         break;
     }
-    if (tracing_commands()) the_log << lg_startif << "-> " << boolean(res) << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startif << "-> " << boolean(res) << "}\n";
     return res;
 }
 
@@ -3899,7 +3915,7 @@ void Parser::calc_primitive(SthInternal &A) {
             A.set_int_val(cur_val.get_int_val());
         }
     }
-    if (tracing_commands()) the_log << lg_startbrace << "calc primitive =" << A << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "calc primitive =" << A << "}\n";
 }
 
 // This is the big function
@@ -3912,7 +3928,9 @@ void Parser::calc_aux(SthInternal &A) {
         if (T.is_exclam_token()) return; // special end marker.
         if (T.is_close_paren()) return;
         if (T.is_plus_token() || T.is_minus_token()) {
-            if (tracing_commands()) the_log << lg_startcalc << "+-" << lg_endbrace;
+            if (tracing_commands())
+                the_log << lg_startcalc << "+-"
+                        << "}\n";
             SthInternal B;
             B.initialise(A.get_type());
             calc_primitive(B);
@@ -3920,7 +3938,9 @@ void Parser::calc_aux(SthInternal &A) {
             A.add(B);
             continue;
         }
-        if (tracing_commands()) the_log << lg_startcalc << "*/" << lg_endbrace;
+        if (tracing_commands())
+            the_log << lg_startcalc << "*/"
+                    << "}\n";
         if (!(T.is_star_token() || T.is_slash_token())) {
             parse_error(hash_table.calc_token, "unexpected token in calc\n", T.tok_to_str(), "unexpected in calc");
             return;
@@ -3982,18 +4002,18 @@ void Parser::ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res) {
     else
         calc_main(it_dimen, num, A);
     calc_main(it_dimen, den, B);
-    if (tracing_commands()) the_log << lg_startcalc << "\\ratio " << num << "/" << den << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startcalc << "\\ratio " << num << "/" << den << "}\n";
     calc_ratio_eval(num.get_int_val(), den.get_int_val(), res);
 }
 
 void Parser::calc_main(internal_type type, SthInternal &res, TokenList &B) {
     SthInternal A;
     A.initialise(type);
-    if (tracing_commands()) the_log << lg_startcalc << "argument: " << B << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startcalc << "argument: " << B << "}\n";
     back_input(Token(other_t_offset, '!'));
     back_input(B);
     calc_aux(A);
-    if (tracing_commands()) { the_log << lg_startcalc << "res " << A << lg_endbrace; }
+    if (tracing_commands()) { the_log << lg_startcalc << "res " << A << "}\n"; }
     res.set_type(type);
     res.copy(A);
 }
@@ -4024,7 +4044,7 @@ void Parser::exec_calc() {
         p = it_glue; // ok ? should add a test here....
     if (tracing_commands()) {
         String s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
-        the_log << lg_startcalc << "modifying " << s << " at position " << to_signed(l) << lg_endbrace;
+        the_log << lg_startcalc << "modifying " << s << " at position " << to_signed(l) << "}\n";
     }
     SthInternal res;
     calc_main(p, res, b);
@@ -4183,9 +4203,10 @@ void Parser::begin_box(size_t src, subtypes c) {
     if (tracing_commands()) {
         the_log << lg_startbrace;
         if (box_name.empty())
-            the_log << "Constructing an anonymous box" << lg_endbrace;
+            the_log << "Constructing an anonymous box"
+                    << "}\n";
         else
-            the_log << "Constructing a box named " << box_name << lg_endbrace;
+            the_log << "Constructing a box named " << box_name << "}\n";
     }
     scan_left_brace();
     push_level(bt_brace);
@@ -4205,7 +4226,7 @@ void Parser::begin_box(size_t src, subtypes c) {
                 name = "<everyxbox> ";
             else if (c == hbox_code)
                 name = "<everyhbox> ";
-            the_log << lg_startbrace << name << L << lg_endbrace;
+            the_log << lg_startbrace << name << L << "}\n";
         }
         back_input(L);
     }
@@ -4311,7 +4332,7 @@ void Parser::M_prefixed() {
         the_log << lg_startbrace;
         trace_buffer.reset();
         trace_buffer.dump_prefix(true, b_global, K);
-        the_log << trace_buffer << cur_tok << lg_endbrace;
+        the_log << trace_buffer << cur_tok << "}\n";
     }
     if (C == let_cmd)
         M_let(cur_cmd_chr.chr, b_global);
@@ -4322,6 +4343,6 @@ void Parser::M_prefixed() {
     Token aat = get_after_ass_tok();
     if (!aat.is_null()) {
         back_input(aat);
-        if (tracing_commands()) the_log << lg_startbrace << "after assignment: " << aat << lg_endbrace;
+        if (tracing_commands()) the_log << lg_startbrace << "after assignment: " << aat << "}\n";
     }
 }

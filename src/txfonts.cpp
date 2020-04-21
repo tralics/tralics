@@ -197,7 +197,7 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
             family = fi_tt_family;
         else {
             family = 0;
-            (Logger &)log_and_tty << lg_start << "Unknown font family " << s << lg_end;
+            (Logger &)log_and_tty << lg_start << "Unknown font family " << s << "\n";
         }
         return;
     case fontseries_code: // md bf
@@ -213,7 +213,7 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
             series = fi_c_series;
         else {
             series = 0;
-            (Logger &)log_and_tty << lg_start << "Unknown font series " << s << lg_end;
+            (Logger &)log_and_tty << lg_start << "Unknown font series " << s << "\n";
         }
         return;
     case fontshape_code: // it sl sc
@@ -227,7 +227,7 @@ void FontInfo::ltfont(const std::string &s, subtypes c) {
             shape = fi_sc_shape;
         else {
             shape = 0;
-            (Logger &)log_and_tty << lg_start << "Unknown font shape " << s << lg_end;
+            (Logger &)log_and_tty << lg_start << "Unknown font shape " << s << "\n";
         }
         return;
     default: return; // impossible case

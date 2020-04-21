@@ -80,7 +80,7 @@ auto Parser::string_to_write(long chan) -> std::string {
     B << bf_reset << L;
     if (chan < write18_slot) B << "\n";
     auto res = B.convert_to_log_encoding();
-    if (chan == write18_slot) the_log << lg_start << "\\write18=" << res << lg_end;
+    if (chan == write18_slot) the_log << lg_start << "\\write18=" << res << "\n";
     return res;
 }
 
@@ -160,7 +160,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     auto n = cur_input_stack.size();
-    if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->name << lg_end;
+    if (tracing_io()) the_log << lg_start_io << "Input stack ++ " << n << " " << W->name << "\n";
     W->set_line_ptr(lines);
     W->line_pos = input_line_pos;
     W->line     = input_line;
@@ -196,7 +196,7 @@ void Parser::pop_input_stack(bool vb) {
     auto at     = W->at_val;
     if (at >= 0) {
         eqtb_int_table[uchar('@')].val = at;
-        if (tracing_io()) the_log << lg_start_io << "Catcode of @ restored to " << at << lg_end;
+        if (tracing_io()) the_log << lg_start_io << "Catcode of @ restored to " << at << "\n";
     }
     input_line.clear();
     input_line.insert(input_line.end(), W->line.begin(), W->line.end());
@@ -205,9 +205,9 @@ void Parser::pop_input_stack(bool vb) {
     if (cur_file_pos != 0) insert_hook(cur_file_pos);
     cur_file_pos = W->file_pos;
     every_eof    = W->every_eof;
-    the_log << lg_start_io << "cur_file_pos restored to " << cur_file_pos << lg_end;
+    the_log << lg_start_io << "cur_file_pos restored to " << cur_file_pos << "\n";
     cur_input_stack.pop_back();
-    if (tracing_io()) the_log << lg_start_io << "Input stack -- " << n << " " << W->name << lg_end;
+    if (tracing_io()) the_log << lg_start_io << "Input stack -- " << n << " " << W->name << "\n";
     delete W;
 }
 
@@ -279,7 +279,9 @@ void Parser::E_input(int q) {
     }
     if (name_in_progress) {
         insert_relax();
-        if (tracing_commands()) the_log << lg_start << "{insert \\relax for \\input}" << lg_end;
+        if (tracing_commands())
+            the_log << lg_start << "{insert \\relax for \\input}"
+                    << "\n";
         return;
     }
     if (tracing_commands()) the_log.dump("input");
@@ -312,7 +314,7 @@ auto Parser::latex_input(int q) -> std::string {
         }
     } else
         file = scan_file_name();
-    if (tracing_commands()) the_log << lg_startbracebs << "input " << file << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "input " << file << "}\n";
     return file;
 }
 
@@ -1002,7 +1004,7 @@ auto Parser::scan_int(Token T) -> long {
     err_tok       = et;
     if (negative) val = -val;
     cur_val.set_int(val);
-    if (tracing_commands()) the_log << lg_startcond << "scanint for " << T << "->" << cur_val << lg_end;
+    if (tracing_commands()) the_log << lg_startcond << "scanint for " << T << "->" << cur_val << "\n";
     return val;
 }
 
@@ -1056,7 +1058,7 @@ auto Parser::scan_special_int_d(Token T, long d) -> long {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) {
-        if (tracing_commands()) the_log << lg_startcond << "scanint for " << T << "->" << d << lg_end;
+        if (tracing_commands()) the_log << lg_startcond << "scanint for " << T << "->" << d << "\n";
         return d;
     }
     back_input(hash_table.space_token);
@@ -1440,7 +1442,9 @@ void Parser::parshape_aux(subtypes m) {
 
 void Parser::E_the_traced(Token T, subtypes c) {
     TokenList L = E_the(c);
-    if (tracing_commands()) the_log << lg_start << T << "->" << L << "." << lg_end;
+    if (tracing_commands())
+        the_log << lg_start << T << "->" << L << "."
+                << "\n";
     back_input(L);
 }
 
@@ -1459,7 +1463,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
     }
     if (tracing_commands()) the_log.dump("the");
     get_x_token();
-    if (tracing_commands()) the_log << lg_startbracebs << "the " << cur_tok << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << "the " << cur_tok << "}\n";
     scan_something_internal(it_tok, false);
     B.reset();
     switch (cur_val.get_type()) {
@@ -1504,7 +1508,7 @@ void Parser::scan_double(RealNumber &res) {
             if (cur_tok.is_singlequote() || cur_tok.is_doublequote()) is_decimal = false;
             val = scan_int_digs();
         }
-        if (tracing_commands()) the_log << lg_startcond << "scanint for " << err_tok << "->" << val << lg_end;
+        if (tracing_commands()) the_log << lg_startcond << "scanint for " << err_tok << "->" << val << "\n";
         res.set_ipart(val); // this sets the integer part
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
@@ -1759,7 +1763,7 @@ void Parser::scan_glue(internal_type level) {
     }
     cur_val.set_glue_val(q);
     cur_val.set_type(level);
-    if (tracing_commands()) the_log << lg_startbrace << "scanglue " << cur_val << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "scanglue " << cur_val << "}\n";
 }
 
 // interface to scan_glue. If opt is true reads an optional argument
@@ -2174,7 +2178,7 @@ void Parser::E_convert() {
     case rayear_code: B.push_back(fmt::format("{}", the_parser.get_ra_year())); break;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
-    if (tracing_commands()) the_log << lg_start << T << "->" << L << lg_end;
+    if (tracing_commands()) the_log << lg_start << T << "->" << L << "\n";
     if (c == sanitize_code) {
         new_macro(L, cur_tok);
         return;
@@ -2209,7 +2213,7 @@ void Parser::scan_expr(subtypes m) {
         parse_error(T, "Arithmetic overflow");
         cur_val.kill();
     }
-    if (the_parser.tracing_commands()) the_log << lg_startcond << "scan for " << T << "= " << cur_val << lg_end;
+    if (the_parser.tracing_commands()) the_log << lg_startcond << "scan for " << T << "= " << cur_val << "\n";
 }
 
 // This finds the operator, or reads a terminating \relax
@@ -2300,7 +2304,7 @@ void ScanSlot::add_or_sub(scan_expr_t &next_state, char &C) {
 }
 
 void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-    if (the_parser.tracing_commands() && t != ' ') the_log << lg_startcond << s << " so far for " << T << t << ' ' << v << lg_end;
+    if (the_parser.tracing_commands() && t != ' ') the_log << lg_startcond << s << " so far for " << T << t << ' ' << v << "\n";
 }
 
 auto Parser::scan_expr(Token T, internal_type et) -> bool {

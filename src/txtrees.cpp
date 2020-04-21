@@ -421,7 +421,7 @@ void Parser::T_gloss(bool c) {
     res.splice(res.end(), second_line);
     res.splice(res.end(), third_line);
     token_ns::add_env(res, "tabular");
-    if (tracing_commands()) the_log << lg_startbrace << "Gloss: " << res << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "Gloss: " << res << "}\n";
     back_input(res);
 }
 
@@ -695,7 +695,9 @@ void Parser::month_day(subtypes c) {
     Token T  = cur_tok;
     auto  n0 = scan_braced_int(cur_tok);
     if (n0 <= 0 || n0 > ((int(c) & 1) != 0 ? 7 : 12)) {
-        if (tracing_macros()) the_log << T << "<-" << lg_end;
+        if (tracing_macros())
+            the_log << T << "<-"
+                    << "\n";
         return;
     }
     auto                          n  = to_unsigned(n0);
@@ -727,6 +729,6 @@ void Parser::month_day(subtypes c) {
     }
     TokenList L;
     tokenize_buffer(local_buf, L, "(month and day)");
-    if (tracing_macros()) the_log << T << "<-" << L << lg_end;
+    if (tracing_macros()) the_log << T << "<-" << L << "\n";
     back_input(L);
 }

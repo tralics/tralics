@@ -157,10 +157,10 @@ void Buffer::utf8_error(bool first) {
     T.bad_chars++;
     (Logger &)log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
                           << (first ? ", first byte" : ", continuation byte") << ")\n";
-    (Logger &)log_and_tty << "Position in line is " << ptr << lg_end;
+    (Logger &)log_and_tty << "Position in line is " << ptr << "\n";
     if (T.new_error()) return; // signal only one error per line
     for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.log_file), at(i));
-    the_log << lg_end;
+    the_log << "\n";
 }
 
 // This reads the next byte.
@@ -333,7 +333,7 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
 void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
-        the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << lg_end;
+        the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << "\n";
     }
 }
 
@@ -442,7 +442,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     L.set_encoding(wc);
                     co_try = 0;
                     the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x
-                            << lg_end;
+                            << "\n";
                 }
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);
@@ -777,7 +777,7 @@ void FullLogger::init(std::string name, bool status) {
 // transcript file is not yet open.
 auto tralics_ns::file_exists(const std::string &name) -> bool {
     auto e = std::filesystem::exists(name);
-    if (log_is_open) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << lg_endsentence;
+    if (log_is_open) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << ".\n";
     return e;
 }
 
@@ -870,7 +870,7 @@ void LinePtr::after_open() {
 void LinePtr::before_close(bool sigforce) {
     the_log << lg_start_io << "End of " << dump_name();
     if (sigforce && !empty()) the_log << " (forced by \\endinput)";
-    the_log << lg_end;
+    the_log << "\n";
 }
 
 // Puts in b the next line of input.

@@ -754,7 +754,9 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
 // Case of a trivial math formula that translates to res
 // Always inline
 void Parser::finish_trivial_math(Xml *res) {
-    if (tracing_math()) the_log << lg_start << "formula was math" << lg_end;
+    if (tracing_math())
+        the_log << lg_start << "formula was math"
+                << "\n";
     the_parser.my_stats.one_more_trivial();
     if (the_main->interactive_math) std::cout << res << "\n";
     leave_v_mode();
@@ -780,18 +782,17 @@ void Parser::T_math(subtypes type) {
         size_t    position  = is_inline ? everymath_code : everydisplay_code;
         TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
-            if (tracing_commands())
-                the_log << lg_startbrace << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startbrace << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
             back_input(everymath);
         }
     }
     select_math_font();
     scan_math3(0, math_data.get_list(0).get_type(), 0);
     if (tracing_math()) {
-        the_log << lg_start << "Math: " << Trace << lg_end << lg_flush;
+        the_log << lg_start << "Math: " << Trace << "\n";
         Trace.reset();
         math_data.get_list(0).print();
-        the_log << lg_start << Trace << lg_flush;
+        the_log << lg_start << Trace;
     }
     // Test for the no-mathml mode
     math_data.realloc_list0();
@@ -1165,7 +1166,7 @@ auto Parser::scan_math_endcell(Token t) -> bool {
     if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
-            if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << "}\n";
             back_input(t);
             back_input(L);
             the_stack.mark_omit_cell();
@@ -1351,7 +1352,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
-                if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << lg_endbrace;
+                if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << "}\n";
                 back_input(cur_tok);
                 back_input(L);
                 the_stack.mark_omit_cell();
@@ -1449,7 +1450,7 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
         // it's a math formula inside a formula
         TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
-            if (tracing_commands()) the_log << lg_startbrace << "<everymath> " << everymath << lg_endbrace;
+            if (tracing_commands()) the_log << lg_startbrace << "<everymath> " << everymath << "}\n";
             back_input(everymath);
         }
         select_math_font();
@@ -1600,7 +1601,7 @@ void Parser::scan_math_hbox(int res, subtypes c) {
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
-        if (tracing_commands()) the_log << lg_startbrace << "<everyhbox> " << L << lg_endbrace;
+        if (tracing_commands()) the_log << lg_startbrace << "<everyhbox> " << L << "}\n";
         back_input(L);
         back_input(hash_table.OB_token);
     }
@@ -2587,9 +2588,7 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
     }
 }
 
-void MathElt::dump_for_err() const {
-    the_log << lg_start << int(get_cmd()) << " - " << int(get_chr()) << " - " << int(get_font()) << lg_end;
-}
+void MathElt::dump_for_err() const { the_log << lg_start << int(get_cmd()) << " - " << int(get_chr()) << " - " << int(get_font()) << "\n"; }
 
 void MathElt::cv1_err() {
     dump_for_err();

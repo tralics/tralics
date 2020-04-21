@@ -39,8 +39,6 @@ void Parser::signal_error() {
     (Logger &)log_and_tty << ":\n";
     (Logger &)log_and_tty << err_buf;
     (Logger &)log_and_tty << ".\n";
-    the_log << lg_flush;
-    std::cout.flush();
     if (main_ns::nb_errs >= 5000) {
         (Logger &)log_and_tty << "Translation aborted: Too many errors.\n";
         log_and_tty.finish(main_ns::nb_errs);

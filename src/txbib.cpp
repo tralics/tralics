@@ -119,7 +119,7 @@ void Parser::T_omitcite() {
     std::string s = sT_arg_nopar();
     omitcite_list.push_back(s);
     the_log << lg_startbrace << "\\omitcite(" << int(omitcite_list.size());
-    the_log << ") = " << s << lg_endbrace;
+    the_log << ") = " << s << "}\n";
 }
 
 // We start with a function that fetches optional arguments
@@ -223,7 +223,9 @@ void Parser::T_cite(subtypes sw) {
         res.push_back(hash_table.locate("NAT@close"));
         res.push_back(hash_table.end_natcite_token);
     }
-    if (tracing_commands()) the_log << lg_start << T << "->" << res << "." << lg_end;
+    if (tracing_commands())
+        the_log << lg_start << T << "->" << res << "."
+                << "\n";
     back_input(res);
 }
 
@@ -1015,7 +1017,7 @@ void Parser::T_citation() {
 void Parser::insert_every_bib() {
     TokenList everybib = toks_registers[everybibitem_code].val;
     if (everybib.empty()) return;
-    if (tracing_commands()) the_log << lg_startbrace << "<everybibitem> " << everybib << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "<everybibitem> " << everybib << "}\n";
     back_input(everybib);
 }
 
@@ -1382,7 +1384,7 @@ auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
     for (const auto &i : omitcite_list)
         if (i == cur_entry_name) {
-            the_log << lg_start << "bib: Omitting " << cur_entry_name << lg_end;
+            the_log << lg_start << "bib: Omitting " << cur_entry_name << "\n";
             return nullptr;
         }
     BibEntry *X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
@@ -2260,7 +2262,7 @@ void Buffer::fill_table(bchar_type *table) {
             at(ptr + 1) = c;
             at(ptr)     = '\\';
             at(ptr - 1) = '{';
-            the_log << lg_start << "+bibchanged " << data() << lg_end;
+            the_log << lg_start << "+bibchanged " << data() << "\n";
         }
         int  bl  = 1;
         auto j   = i;

@@ -531,8 +531,8 @@ void Parser::T_execute_options() {
 
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
-    the_log << lg_startbrace << "Options to execute->" << local_buf << lg_endbrace;
-    if (tracing_commands()) the_log << lg_startbrace << "Options code to execute->" << action << lg_endbrace;
+    the_log << lg_startbrace << "Options to execute->" << local_buf << "}\n";
+    if (tracing_commands()) the_log << lg_startbrace << "Options code to execute->" << action << "}\n";
     back_input(action);
 }
 
@@ -550,7 +550,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     } else
         C->check_local_options(action, true);
     C->check_all_options(action, spec, normal ? 1 : 2);
-    the_log << lg_startbrace << "Options to execute->" << local_buf << lg_endbrace;
+    the_log << lg_startbrace << "Options to execute->" << local_buf << "}\n";
     return action;
 }
 
@@ -647,7 +647,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     }
     if (!res) {
         if (builtin) cur->date = "2006/01/01";
-        the_log << lg_start << T << " " << name << (builtin ? " builtin"s : " unknown"s) << lg_end;
+        the_log << lg_start << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
         return;
     }
     cur->date = "0000/00/00";
@@ -959,7 +959,7 @@ void Parser::T_change_element_name() {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else
         res = config_ns::assign_name(name.c_str(), value.c_str());
-    if (res) the_log << lg_start << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << lg_end;
+    if (res) the_log << lg_start << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
 }
 
 // -------------------------------------------------------------------

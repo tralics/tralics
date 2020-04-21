@@ -43,7 +43,6 @@ inline auto operator<<(FullLogger &L, logger_fn f) -> FullLogger & {
     return L;
 }
 
-inline void lg_flush(Logger &L) { (*(L.log_file)).flush(); }
 inline void lg_start(Logger &L) { L.finish_seq(); }
 inline void lg_start_io(Logger &L) {
     L.finish_seq();
@@ -73,11 +72,6 @@ inline void lg_startbracebs(Logger &L) {
     L.finish_seq();
     *(L.log_file) << "{\\";
 }
-inline void lg_end(Logger &L) { *(L.log_file) << "\n"; }
-inline void lg_endsentence(Logger &L) { *(L.log_file) << ".\n"; }
-inline void lg_endbrace(Logger &L) { *(L.log_file) << "}\n"; }
-inline void lg_arrow(Logger &L) { *(L.log_file) << "->"; }
-
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 
 extern Logger &   the_log;

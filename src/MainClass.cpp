@@ -299,7 +299,7 @@ namespace {
 
     void show_encoding(size_t wc, const std::string &name) {
         const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
-        the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << lg_end;
+        the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << "\n";
     }
 } // namespace
 
@@ -402,8 +402,7 @@ void MainClass::open_log() { // \todo spdlog etc
     the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"
             << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n"
             << "Tralics is licensed under the CeCILL Free Software Licensing Agreement\n"
-            << start_date << "OS: " << print_os(cur_os) << ", machine " << machine << "\n"
-            << lg_flush;
+            << start_date << "OS: " << print_os(cur_os) << ", machine " << machine << "\n";
     if (special)
         (Logger &)log_and_tty << "Starting translation of command line argument.\n";
     else
@@ -988,7 +987,6 @@ void MainClass::see_name1() {
 
 void MainClass::trans0() {
     the_log << "Starting translation\n";
-    the_log << lg_flush;
     the_parser.init_all(dtd);
     if (multi_math_label) the_parser.word_define(multimlabel_code, 1, false);
     if (nomathml) the_parser.word_define(nomath_code, -1, false);
@@ -1062,7 +1060,6 @@ void MainClass::run(int argc, char **argv) {
         log_and_tty.finish(main_ns::nb_errs);
     } else
         (Logger &)log_and_tty << "Nothing written to " << out_name << ".xml.\n";
-    std::cout.flush();
 }
 
 void MainClass::out_xml() {
@@ -1151,6 +1148,6 @@ void MainClass::check_section_use() const {
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
         input_encoding = wc;
-        the_log << lg_start_io << "Default input encoding changed to " << wc << lg_end;
+        the_log << lg_start_io << "Default input encoding changed to " << wc << "\n";
     }
 }

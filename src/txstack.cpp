@@ -269,7 +269,7 @@ void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
         auto    ptr = Table.size() - 1;
         Istring fr  = Table[ptr].frame;
-        if (!fr.spec_empty()) the_log << lg_startbrace << "Push " << fr << " " << ptr << lg_endbrace;
+        if (!fr.spec_empty()) the_log << lg_startbrace << "Push " << fr << " " << ptr << "}\n";
     }
 }
 
@@ -336,7 +336,7 @@ void Stack::trace_pop(bool sw) {
         if (sw) the_log << "(module) ";
         the_log << int(Table.size() - 1) << ":";
         trace_stack();
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
 }
 

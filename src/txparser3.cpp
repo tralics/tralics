@@ -132,12 +132,12 @@ void Parser::push_level(boundary_type v) {
     push_save_stack(new SaveAuxBoundary(v));
     cur_level++;
     if (tracing_stack())
-        the_log << lg_startstack << "level + " << cur_level << " for " << v << " entered on line " << get_cur_line() << lg_end;
+        the_log << lg_startstack << "level + " << cur_level << " for " << v << " entered on line " << get_cur_line() << "\n";
 }
 
 void Parser::push_tpa() {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
-    if (tracing_stack()) the_log << lg_startstack << "level = " << cur_level << " for " << bt_tpa << lg_end;
+    if (tracing_stack()) the_log << lg_startstack << "level = " << cur_level << " for " << bt_tpa << "\n";
 }
 
 // Defines something at position A, with type and subtype B and C.
@@ -169,7 +169,7 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
             token_for_show(hash_table.eqtb[a.eqtb_loc()]);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
-            the_log << lg_endbrace;
+            the_log << "}\n";
         }
         eq_define(a.eqtb_loc(), nv, gbl);
     } else
@@ -205,7 +205,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
         CmdChr tmp(assign_int_cmd, subtypes(a));
         the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -223,7 +223,7 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     if (tracing_assigns()) {
         the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << parser_ns::save_string_name(a) << "=" << W.val;
         if (!reassign) the_log << " into " << parser_ns::save_string_name(a) << "=" << c;
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -243,7 +243,7 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
         CmdChr tmp(assign_dimen_cmd, subtypes(a));
         the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -274,7 +274,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
             if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
             the_log << " into \\" << tmp.name() << "=" << Thbuf1;
         }
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -291,7 +291,7 @@ void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
         the_log << lg_startbrace << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.val;
-        the_log << " into \\box" << a << "=" << c << lg_endbrace;
+        the_log << " into \\box" << a << "=" << c << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -309,7 +309,7 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
         CmdChr tmp(assign_toks_cmd, subtypes(p));
         the_log << lg_startbrace << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << lg_endbrace;
+        the_log << "}\n";
     }
     if (gbl)
         W = {c, 1};
@@ -324,7 +324,7 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
 // This is called whenever a font has changed.
 // It pushes the value on the save stack if needed.
 void Parser::save_font() {
-    if (tracing_commands()) the_log << lg_startbrace << "font change " << cur_font << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbrace << "font change " << cur_font << "}\n";
     if (cur_font.level == cur_level) return;
     push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
     cur_font.set_level(cur_level);
@@ -338,7 +338,7 @@ void SaveAuxFont::unsave(bool trace, Parser &P) {
     P.cur_font.set_packed(value);
     P.cur_font.set_color(color);
     P.cur_font.unpack();
-    if (trace) the_log << lg_startstack << "restoring current font " << P.cur_font << lg_endsentence;
+    if (trace) the_log << lg_startstack << "restoring current font " << P.cur_font << ".\n";
     P.font_has_changed1();
     P.cur_font.update_old();
 }
@@ -354,7 +354,7 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_int_cmd, subtypes(pos));
-        the_log << tmp.name() << "=" << val << lg_endsentence;
+        the_log << tmp.name() << "=" << val << ".\n";
     }
     if (rt) P.eqtb_int_table[pos] = {val, level};
 }
@@ -363,7 +363,7 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 //
 void SaveAuxString::unsave(bool trace, Parser &P) {
     bool rt = P.eqtb_string_table[pos].level != 1;
-    if (trace) { the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos) << "=" << val << lg_endsentence; }
+    if (trace) { the_log << lg_startstack << "restoring " << parser_ns::save_string_name(pos) << "=" << val << ".\n"; }
     if (rt) P.eqtb_string_table[pos] = {val, level};
 }
 
@@ -373,7 +373,7 @@ void SaveAuxDim::unsave(bool trace, Parser &P) {
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_dimen_cmd, subtypes(pos));
-        the_log << tmp.name() << "=" << val << lg_endsentence;
+        the_log << tmp.name() << "=" << val << ".\n";
     }
     if (rt) P.eqtb_dim_table[pos] = {val, level};
 }
@@ -386,7 +386,7 @@ void SaveAuxGlue::unsave(bool trace, Parser &P) {
         if (pos >= thinmuskip_code) Thbuf1.pt_to_mu();
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_glue_cmd, subtypes(pos));
-        the_log << tmp.name() << "=" << Thbuf1 << lg_endsentence;
+        the_log << tmp.name() << "=" << Thbuf1 << ".\n";
     }
     if (rt) P.glue_table[pos] = {val, level};
 }
@@ -404,7 +404,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
             else
                 Parser::print_cmd_chr(val);
         }
-        the_log << lg_endsentence;
+        the_log << ".\n";
     }
     if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
@@ -421,7 +421,7 @@ void SaveAuxToken::unsave(bool trace, Parser &P) {
     if (trace) {
         restore_or_retain(rt, "\\");
         CmdChr tmp(assign_toks_cmd, subtypes(pos));
-        the_log << tmp.name() << "=" << val << lg_endsentence;
+        the_log << tmp.name() << "=" << val << ".\n";
     }
     if (rt) P.toks_registers[pos] = {val, level};
 }
@@ -432,7 +432,7 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
     bool rt = P.box_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\box");
-        the_log << pos << lg_endsentence;
+        the_log << pos << ".\n";
     }
     if (rt) P.box_table[pos] = {val, level};
 }
@@ -441,7 +441,7 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
 // when we see the first closing brace. The box just created will be put in
 // box0.
 void SaveAuxBoxend::unsave(bool trace, Parser &P) {
-    if (trace) the_log << lg_startstack << "finish a box of type " << pos << lg_end;
+    if (trace) the_log << lg_startstack << "finish a box of type " << pos << "\n";
     P.flush_buffer();
     P.the_stack.pop(the_names[cst_hbox]);
     the_box_to_end   = val;
@@ -451,7 +451,7 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
 // \aftergroup\foo{}: When the group is finished, the token \foo is
 // pushed back into the input stream.
 void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
-    if (trace) the_log << lg_startstack << "after group " << value << lg_end;
+    if (trace) the_log << lg_startstack << "after group " << value << "\n";
     P.back_input(value);
 }
 
@@ -461,7 +461,7 @@ void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
 // But this function cannot call box_end (because we are still in the {...}
 // group. Hence box_end must be called after cur_level is decremented.
 void SaveAuxBoundary::unsave(bool trace, Parser &P) {
-    if (trace) the_log << lg_startstack << "level - " << P.get_cur_level() << " for " << val << " from line " << line << lg_end;
+    if (trace) the_log << lg_startstack << "level - " << P.get_cur_level() << " for " << val << " from line " << line << "\n";
     P.decr_cur_level();
     if (the_box_position >= 0) {
         if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();

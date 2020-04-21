@@ -744,7 +744,9 @@ void Parser::T_begindocument() {
     pop_level(bt_env);
     cur_level = 1; // this is the outer level...
     if (the_main->dverbose) M_tracingall();
-    if (tracing_commands()) the_log << lg_startstack << "level set to 1" << lg_end;
+    if (tracing_commands())
+        the_log << lg_startstack << "level set to 1"
+                << "\n";
     the_bibtex->bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
     {
@@ -766,7 +768,7 @@ void Parser::T_beginend(symcodes x) {
     flush_buffer();
     bool        begin = x == begin_cmd;
     std::string S     = fetch_name0();
-    if (tracing_commands()) the_log << lg_startbracebs << (begin ? "begin " : "end ") << S << lg_endbrace;
+    if (tracing_commands()) the_log << lg_startbracebs << (begin ? "begin " : "end ") << S << "}\n";
     if (begin)
         T_begin(S);
     else
@@ -1017,7 +1019,7 @@ void Parser::translate03() {
     case after_assignment_cmd:
         get_token();
         set_after_ass_tok(cur_tok);
-        if (tracing_commands()) the_log << lg_startbracebs << "afterassignment: " << cur_tok << lg_endbrace;
+        if (tracing_commands()) the_log << lg_startbracebs << "afterassignment: " << cur_tok << "}\n";
         return;
     case last_item_cmd: parse_error(cur_tok, "Read only variable ", cur_tok, "", "readonly"); return;
     case XML_swap_cmd: user_XML_swap(c); return;
