@@ -7,7 +7,6 @@
 struct Logger {
     std::string                    filename; // the name of the log file
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
-    bool                           verbose{false};
     bool                           log_is_open{false};
 
     void dump(String s) const;

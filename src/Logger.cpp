@@ -50,7 +50,6 @@ void Logger::log_finish(int n) {
 void Logger::log_init(const std::string &name, bool status) {
     filename    = name;
     log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
-    verbose     = status;
     log_is_open = true;
 
     spdlog::set_level(spdlog::level::trace);
