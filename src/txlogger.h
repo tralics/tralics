@@ -16,9 +16,6 @@
 #include <iostream>
 #include <memory>
 
-class FontInfo;
-class Xml;
-
 // This include file holds some declarations for printing objects
 // and the classes that allow us to print either on the tty, the log file
 // or both.
@@ -27,7 +24,6 @@ auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
 auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;
 auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream &;
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
-auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream &;
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream &;
 auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
 auto operator<<(std::ostream &fp, Xid X) -> std::ostream &;
@@ -42,8 +38,6 @@ class Logger;
 using logger_fn = void(Logger &);
 
 class Logger {
-    bool finished{true};  // if false, we are printing a character sequence and
-                          // a newline is required
     std::string filename; // the name of the log file
 public:
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
@@ -51,7 +45,6 @@ public:
     void                           out_single_char(codepoint c);
     void                           dump(String s);
     void                           dump0(String s);
-    void                           set_finished() { finished = true; }
     void                           set_file_name(std::string x) { filename = std::move(x); }
     static void                    abort();
     [[nodiscard]] auto             get_filename() const -> std::string { return filename; }
@@ -84,10 +77,12 @@ public:
 // if Y is of type FullLogger, Y<< lg_start; is the same as
 // lg_start(Y.L), hence Y.L.finish_seq();
 
-void lg_start_io(Logger &L);
-
 inline void lg_flush(Logger &L) { (*(L.log_file)).flush(); }
 inline void lg_start(Logger &L) { L.finish_seq(); }
+inline void lg_start_io(Logger &L) {
+    L.finish_seq();
+    *(L.log_file) << "++ ";
+}
 inline void lg_startstack(Logger &L) {
     L.finish_seq();
     *(L.log_file) << "+stack: ";
@@ -121,7 +116,6 @@ auto operator<<(Logger &X, const ScaledInt &x) -> Logger &;
 auto operator<<(Logger &X, const Glue &x) -> Logger &;
 auto operator<<(Logger &X, const Macro &x) -> Logger &;
 auto operator<<(Logger &X, const SthInternal &x) -> Logger &;
-auto operator<<(Logger &X, const FontInfo &x) -> Logger &;
 auto operator<<(Logger &fp, Token t) -> Logger &;
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 auto operator<<(FullLogger &fp, const codepoint &x) -> FullLogger &;

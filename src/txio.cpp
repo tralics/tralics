@@ -836,8 +836,7 @@ void FullLogger::finish(int n) {
 
 void FullLogger::init(std::string name, bool status) {
     L.set_file_name(std::move(name));
-    L.log_file = std::make_shared<std::ofstream>(tralics_ns::open_file(L.get_filename(), true));
-    L.set_finished();
+    L.log_file  = std::make_shared<std::ofstream>(tralics_ns::open_file(L.get_filename(), true));
     verbose     = status;
     log_is_open = true;
 

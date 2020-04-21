@@ -9,10 +9,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include <utility>
-
 #include "tralics/Istring.h"
 #include "tralics/StrHash.h"
+#include "txlogger.h"
+#include <utility>
 
 // This is how Tralics interprets a font
 class FontInfo {
@@ -62,6 +62,9 @@ public:
     void               set_color(Istring c) { color = std::move(c); }
     void               ltfont(const std::string &s, subtypes c);
 };
+
+auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream &;
+auto operator<<(Logger &X, const FontInfo &x) -> Logger &;
 
 class TeXChar {
 public:

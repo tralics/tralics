@@ -43,11 +43,6 @@ namespace io_ns {
     auto get_enc_param(long enc, long pos) -> long;
 } // namespace io_ns
 
-void lg_start_io(Logger &L) {
-    L.finish_seq();
-    *(L.log_file) << "++ ";
-}
-
 // Section 1: output streams.
 
 // max_openin=max_openout=15 is nb_input_channels -1
