@@ -18,7 +18,7 @@ class FullLogger : public Logger {
 public:
     bool verbose{false};
     void finish(int n);
-    void init(std::string name, bool status);
+    void init(const std::string &name, bool status);
     void unexpected_char(String s, int k);
 };
 

@@ -761,7 +761,7 @@ void FullLogger::finish(int n) {
     (Logger &)(*this) << "(For more information, see transcript file " << filename << ")\n";
 }
 
-void FullLogger::init(std::string name, bool status) {
+void FullLogger::init(const std::string &name, bool status) {
     filename    = name;
     log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
     verbose     = status;
