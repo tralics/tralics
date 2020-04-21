@@ -28,6 +28,7 @@ extern bool seen_enddocument;
 extern bool ra_ok;
 inline bool global_in_load = false;
 inline bool global_in_url  = false;
+inline bool log_is_open    = false; // says if stranscript file is open for I/O tracing
 
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 

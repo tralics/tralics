@@ -74,5 +74,5 @@ inline void lg_startbracebs(Logger &L) {
 }
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 
-extern Logger &   the_log;
-extern FullLogger log_and_tty;
+inline FullLogger log_and_tty;
+inline Logger &   the_log = log_and_tty;

@@ -30,10 +30,8 @@ namespace main_ns {
     bool   bib_allow_break = true;  // <allowbreak> in bibliography
 } // namespace main_ns
 
-FullLogger log_and_tty;           // the logger
-Logger &   the_log = log_and_tty; // the log file part of the logger. \todo this always log_and_tty
-MainClass *the_main;              // the main class data structure
-bool       ra_ok = true;          // inhibits  redefinitions
+MainClass *the_main;     // the main class data structure
+bool       ra_ok = true; // inhibits  redefinitions
 
 // This is the main function. It does the following:
 // print a banner, boot the parser and the math part,

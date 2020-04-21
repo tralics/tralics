@@ -17,14 +17,12 @@
 #include "txinline.h"
 #include <filesystem>
 #include <fmt/format.h>
-#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 
 namespace {
     Buffer                buf;
-    bool                  log_is_open = false; // says if stranscript file is open for I/O tracing
-    Buffer                utf8_out;            // Holds utf8 outbuffer
+    Buffer                utf8_out; // Holds utf8 outbuffer
     Converter             the_converter;
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
@@ -749,29 +747,6 @@ void Buffer::extract_chars(vector<codepoint> &V) {
 }
 
 // --------------------------------------------
-
-void FullLogger::finish(int n) {
-    log_is_open = false;
-    if (n == 0)
-        (Logger &)(*this) << "No error found.\n";
-    else if (n == 1)
-        (Logger &)(*this) << "There was one error.\n";
-    else
-        (Logger &)(*this) << "There were " << n << " errors.\n";
-    (Logger &)(*this) << "(For more information, see transcript file " << filename << ")\n";
-}
-
-void FullLogger::init(const std::string &name, bool status) {
-    filename    = name;
-    log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
-    verbose     = status;
-    log_is_open = true;
-
-    spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
-    spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose
-}
 
 // This can be used to check if the main file exists. In this case the
 // transcript file is not yet open.
