@@ -18,6 +18,8 @@
   [patch](https://github.com/softcover/tralics/commit/5164df1cdf978da0e8eb28d38b6e8fd2baf8f47b)
   from the SoftCover fork which includes missing refs in links for reference
   (only changes the output if there is an error)
+- [2020-04-21] switch to `spdlog` for logging, this changes the format and the
+  repartition of the contents, hopefully in a reasonable direction
 
 ## 2015-11-25, Version 2.15.4
 

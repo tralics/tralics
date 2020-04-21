@@ -35,11 +35,10 @@ void Stats::token_stats() const {
     spdlog::trace("Macros created {}, deleted {}; hash size {} + {}; footnotes {}.", nb_macros, nb_macros_del,
                   the_parser.hash_table.usage_normal, the_parser.hash_table.usage_unhashed, footnotes);
     spdlog::trace("Save stack +{} -{}.", level_up, level_down);
-    main_ns::log_or_tty << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
-                        << static_cast<int>(the_main->the_stack->get_xid().value) << " elements (" << static_cast<int>(nb_xboot)
-                        << " at boot).\n"
-                        << "Number of ref " << nb_ref << ", of used labels " << nb_used_ref << ", of defined labels " << nb_label_defined
-                        << ", of ext. ref. " << nb_href << ".\n";
+    spdlog::trace("Attribute list search {}({}) found {} in {} elements ({} at boot).", sh_find, sh_boot, sh_used,
+                  the_main->the_stack->get_xid().value, nb_xboot);
+    spdlog::trace("Number of ref {}, of used labels {}, of defined labels {}, of ext. ref. {}.", nb_ref, nb_used_ref, nb_label_defined,
+                  nb_href);
     if (the_parser.get_list_files()) {
         log_and_tty << " *File List*\n";
         log_and_tty << file_list;
