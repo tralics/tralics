@@ -15,7 +15,6 @@
 // We also declare some global variables here
 
 #include "tralics/MainClass.h"
-#include "txlogger.h"
 #include "txparam.h"
 
 // See comments in tralics.cpp where these variables are defined

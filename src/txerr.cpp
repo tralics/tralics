@@ -25,9 +25,6 @@ void err_ns::fatal_error(String s) {
     abort();
 }
 
-// This is executed when there is a critical error. \todo not really useful anymore
-void Logger::abort() { spdlog::critical("Fatal_error for {}", the_parser.get_job_name()); }
-
 // The error mechanism is as follows: we put the error message in a buffer
 // then use the following function to signal it.
 

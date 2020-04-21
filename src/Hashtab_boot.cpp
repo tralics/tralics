@@ -1,5 +1,4 @@
 #include "tralics/Parser.h"
-#include "txlogger.h"
 
 void Hashtab::boot_base() {
     frozen_undef_token = nohash_primitive("undefined", CmdChr(undef_cmd, zero_code));

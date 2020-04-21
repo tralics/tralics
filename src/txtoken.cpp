@@ -536,37 +536,9 @@ void token_ns::remove_first_last_space(TokenList &L) {
     while (!L.empty() && L.back().is_space_token()) L.pop_back();
 }
 
-namespace {
-    Buffer buffer_for_log2; // Only used in the following 2 functions
-} // namespace
-
-// finishes a sequence of characters.
-void Logger::finish_seq() const {
-    if (!buffer_for_log2.empty()) {
-        *log_file << buffer_for_log2.convert_to_log_encoding() << ".\n";
-        buffer_for_log2.reset();
-    }
-}
-
-// starts a sequence of characters if needed, adds character c
-void Logger::out_single_char(codepoint c) {
-    if (buffer_for_log2.empty()) buffer_for_log2 << "Character sequence: ";
-    buffer_for_log2 << c;
-}
-
 auto operator<<(Logger &X, const Macro &x) -> Logger & {
     *(X.log_file) << x;
     return X;
-}
-
-void Logger::dump(String s) const {
-    finish_seq();
-    *log_file << "{\\" << s << "}\n";
-}
-
-void Logger::dump0(String s) const {
-    finish_seq();
-    *log_file << "{" << s << "}\n";
 }
 
 // This prints a control sequence value on the log file.
