@@ -15,6 +15,7 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"

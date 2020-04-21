@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txarray.h"
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "txinline.h"

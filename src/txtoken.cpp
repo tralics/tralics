@@ -830,3 +830,5 @@ auto token_ns::is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped
     is_in_skipped = found ? skipped : -1;
     return found;
 }
+
+auto operator<<(Logger &fp, Token t) -> Logger & { return fp << t.tok_to_str(); }

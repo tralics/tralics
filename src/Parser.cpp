@@ -1,4 +1,5 @@
 #include "tralics/Parser.h"
+#include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "txinline.h"
 #include <fmt/format.h>

@@ -1,3 +1,4 @@
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
@@ -31,7 +32,7 @@ namespace {
     }
 
     void bad_conf(String s) {
-        (Logger &)log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
+        (Logger &)log_and_tty << fmt::format("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year())
                               << "It must define a value for the parameter " << s << "\n"
                               << "See transcript file " << the_log.filename << " for details\n"
                               << "No xml file generated\n";
@@ -432,7 +433,7 @@ void MainClass::open_log() { // \todo spdlog etc
     b << " right quote is ";
     b.out_log(codepoint(char32_t(rightquote_val)), log_encoding);
     the_log << b << "\n";
-    if (trivial_math != 0) the_log << "\\notrivialmath=" << trivial_math << "\n";
+    if (trivial_math != 0) the_log << fmt::format("\\notrivialmath={}\n", trivial_math);
     check_for_encoding();
     if (!default_class.empty()) the_log << "Default class is " << default_class << "\n";
     auto n = input_path.size();
@@ -877,7 +878,7 @@ void MainClass::find_dtd() {
         }
     }
     if (handling_ra)
-        the_log << "dtd is " << dtd << " from " << dtdfile << " (mode RAWEB" << year << ")\n";
+        the_log << fmt::format("dtd is {} from {} (mode RAWEB{})\n", dtd, dtdfile, year);
     else
         the_log << "dtd is " << dtd << " from " << dtdfile << " (standard mode)\n";
 }
@@ -1014,7 +1015,7 @@ void MainClass::show_input_size() {
     if (n == 1)
         the_log << "There is a single line\n";
     else
-        the_log << "There are " << n << " lines\n";
+        the_log << fmt::format("There are {} lines\n", n);
 }
 
 void MainClass::more_boot() const {

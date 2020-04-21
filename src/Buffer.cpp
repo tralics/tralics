@@ -10,6 +10,7 @@
 
 // This file contains a lot of stuff dealing with buffers.
 
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
@@ -498,8 +499,6 @@ void Buffer::push_back(const SthInternal &x) {
     default: push_back("??");
     }
 }
-
-auto operator<<(Logger &fp, Token t) -> Logger & { return fp << t.tok_to_str(); }
 
 auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 

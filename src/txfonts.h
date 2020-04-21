@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Istring.h"
+#include "tralics/Logger.h"
 #include "tralics/StrHash.h"
 #include "txlogger.h"
 #include <utility>
