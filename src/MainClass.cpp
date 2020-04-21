@@ -34,8 +34,8 @@ namespace {
         log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
                     << "It must define a value for the parameter " << s << "\n"
                     << "See transcript file " << the_log.get_filename() << " for details\n"
-                    << "No xml file generated\n"
-                    << lg_fatal;
+                    << "No xml file generated\n";
+        Logger::abort();
         exit(1);
     }
 
@@ -70,7 +70,7 @@ namespace {
         if (Y.empty()) return;
         if (Y == C.to_string()) return;
         log_and_tty << "Option -year=" << Y << " incompatible with year in source file \n";
-        log_and_tty << lg_fatal;
+        Logger::abort();
         exit(1);
     }
 
@@ -928,7 +928,7 @@ void MainClass::read_config_and_other() {
 
 void MainClass::bad_year() {
     std::cout << "Fatal error: Input file name must be team name followed by " << year << "\n";
-    log_and_tty << lg_fatal;
+    Logger::abort();
     end_with_help(1);
 }
 

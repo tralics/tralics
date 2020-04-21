@@ -70,7 +70,7 @@ class FullLogger { // \todo public Logger
 public:
     Logger L;
     bool   verbose{false};
-    void   abort() const { L.abort(); }
+    void   abort() const { Logger::abort(); }
     auto   operator<<(logger_fn f) -> FullLogger & {
         f(L);
         return *this;
@@ -117,7 +117,6 @@ inline void lg_end(Logger &L) { *(L.log_file) << "\n"; }
 inline void lg_endsentence(Logger &L) { *(L.log_file) << ".\n"; }
 inline void lg_endbrace(Logger &L) { *(L.log_file) << "}\n"; }
 inline void lg_arrow(Logger &L) { *(L.log_file) << "->"; }
-inline void lg_fatal(Logger &L) { L.abort(); }
 
 auto operator<<(Logger &X, const ScaledInt &x) -> Logger &;
 auto operator<<(Logger &X, const Glue &x) -> Logger &;

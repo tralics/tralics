@@ -459,7 +459,8 @@ void Parser::T_titlepage(size_t v) const {
         return; // why ?
     }
     if (v >= Titlepage.bigtable.size()) {
-        log_and_tty << "T_titlepage strange\n" << lg_fatal;
+        log_and_tty << "T_titlepage strange\n";
+        Logger::abort();
         abort();
     }
     Titlepage.bigtable[v].exec(v, tracing_commands());

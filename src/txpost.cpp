@@ -256,7 +256,10 @@ void Xml::recurse0(XmlAction &X) {
                 erase(begin() + to_signed(k));
                 X.mark_found();
                 return;
-            default: log_and_tty << "illegal value in recurse0\n" << lg_fatal; abort();
+            default:
+                log_and_tty << "illegal value in recurse0\n";
+                Logger::abort();
+                abort();
             }
         y->recurse0(X);
         if (X.is_ok()) return;
@@ -309,7 +312,10 @@ void Xml::recurse(XmlAction &X) {
                 return;     // nothing more to do.
             }
             case rc_rename: T->name = X.get_string_val(); break;
-            default: log_and_tty << "illegal value in recurse\n" << lg_fatal; abort();
+            default:
+                log_and_tty << "illegal value in recurse\n";
+                Logger::abort();
+                abort();
             }
         }
         T->recurse(X);
