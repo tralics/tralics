@@ -14,6 +14,7 @@
 #include "txscaled.h"
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 class FontInfo;
 class Xml;
