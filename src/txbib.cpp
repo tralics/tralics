@@ -1577,7 +1577,7 @@ void Bibtex::work() {
     for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
     for (size_t i = 0; i < n; i++) all_entries[i]->work(to_signed(i));
     auto nb_entries = all_entries_table.size();
-    main_ns::log_or_tty << fmt::format("Seen {} bibliographic entries.\n", nb_entries);
+    spdlog::trace("Seen {} bibliographic entries.", nb_entries);
     // Sort the entries
     std::sort(all_entries_table.begin(), all_entries_table.end(), xless);
     std::string previous_label;

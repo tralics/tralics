@@ -217,20 +217,14 @@ auto Buffer::is_good_ascii() const -> bool {
 
 Converter::Converter() { cur_file_name = "tty"; }
 
-auto io_ns::plural(int n) -> String {
-    if (n > 1) return "s";
-    return "";
-}
+auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
 
 void Stats::io_convert_stats() {
     int bl = the_converter.bad_lines;
     int bc = the_converter.bad_chars;
     int lc = the_converter.lines_converted;
-    if (bl != 0) {
-        main_ns::log_or_tty << "Input conversion errors: " << bl << " line" << io_ns::plural(bl) << ", " << bc << " char"
-                            << io_ns::plural(bc) << ".\n";
-    }
-    if (lc != 0) main_ns::log_or_tty << "Input conversion: " << lc << " line" << io_ns::plural(lc) << " converted.\n";
+    if (bl != 0) spdlog::trace("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
+    if (lc != 0) spdlog::trace("Input conversion: {} line{} converted.", lc, io_ns::plural(lc));
 }
 
 // If an error is signaled on current line, we do not signal again

@@ -11,6 +11,7 @@
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 extern Buffer file_list;
 
@@ -25,18 +26,16 @@ namespace token_ns {
     auto length_normalise(TokenList &L) -> int;
 } // namespace token_ns
 
-// Prints some statistics at enfd of run.
+// Prints some statistics at end of run.
 void Stats::token_stats() const {
-    main_ns::log_or_tty << "Math stats: formulas " << m_cv << ", kernels " << m_k << ", trivial " << m_trivial << ", \\mbox " << m_spec_box
-                        << ", large " << m_large << ", small " << m_small << ".\n";
-    if (nb_hdr != 0) main_ns::log_or_tty << "Number of HdR: " << nb_hdr << ".\n";
-    main_ns::log_or_tty << "Buffer realloc " << stb_alloc << ", string " << st_nb_string << ", size " << static_cast<int>(str_length)
-                        << ", merge " << m_merge << "\n"
-                        << "Macros created " << nb_macros << ", deleted " << nb_macros_del << "; hash size "
-                        << the_parser.hash_table.usage_normal << " + " << the_parser.hash_table.usage_unhashed << "; foonotes " << footnotes
-                        << ".\n"
-                        << "Save stack +" << level_up << " -" << level_down << ".\n"
-                        << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
+    spdlog::trace("Math stats: {} formulas, {} kernels, {} trivial, {} \\mbox, {} large, {} small.", m_cv, m_k, m_trivial, m_spec_box,
+                  m_large, m_small);
+    if (nb_hdr != 0) spdlog::trace("Number of HdR: {}.", nb_hdr);
+    spdlog::trace("Buffer realloc {}, string {}, size {}, merge {}.", stb_alloc, st_nb_string, str_length, m_merge);
+    spdlog::trace("Macros created {}, deleted {}; hash size {} + {}; footnotes {}.", nb_macros, nb_macros_del,
+                  the_parser.hash_table.usage_normal, the_parser.hash_table.usage_unhashed, footnotes);
+    spdlog::trace("Save stack +{} -{}.", level_up, level_down);
+    main_ns::log_or_tty << "Attribute list search " << sh_find << "(" << sh_boot << ") found " << sh_used << " in "
                         << static_cast<int>(the_main->the_stack->get_xid().value) << " elements (" << static_cast<int>(nb_xboot)
                         << " at boot).\n"
                         << "Number of ref " << nb_ref << ", of used labels " << nb_used_ref << ", of defined labels " << nb_label_defined

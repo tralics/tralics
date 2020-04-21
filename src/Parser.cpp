@@ -1286,7 +1286,7 @@ void Parser::finish_images() {
     else
         spdlog::trace("There were {} images.", the_images.size());
     if (!check_image1.empty()) spdlog::trace("Following images have multiple PS source: {}.", check_image1.c_str());
-    if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2.c_str() << ".\n";
+    if (!check_image2.empty()) spdlog::trace("Following images not defined: {}.", check_image2.c_str());
 }
 
 // In verbatim mode, all chars are of catcode 12, with these exceptions.
