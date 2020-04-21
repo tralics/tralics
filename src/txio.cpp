@@ -17,6 +17,7 @@
 #include "txinline.h"
 #include <filesystem>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 
@@ -38,8 +39,7 @@ namespace {
         Converter &T = the_converter;
         buf.reset();
         buf.push_back16(n, true);
-        (Logger &)log_and_tty << "UTF-8 parsing overflow (char " << buf << ", line " << T.cur_file_line << ", file " << T.cur_file_name
-                              << ")\n";
+        spdlog::error("UTF-8 parsing overflow (char {}, line {}, file {})", buf, T.cur_file_line, T.cur_file_name);
         T.bad_chars++;
         T.new_error();
     }

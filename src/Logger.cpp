@@ -39,15 +39,15 @@ void Logger::dump0(String s) const {
 void Logger::log_finish(int n) {
     log_is_open = false;
     if (n == 0)
-        (Logger &)(*this) << "No error found.\n";
+        spdlog::info("No error found.");
     else if (n == 1)
-        (Logger &)(*this) << "There was one error.\n";
+        spdlog::warn("There was one error.");
     else
-        (Logger &)(*this) << "There were " << n << " errors.\n";
-    (Logger &)(*this) << "(For more information, see transcript file " << filename << ")\n";
+        spdlog::warn("There were {} errors.", n);
+    spdlog::info("(For more information, see transcript file {})", filename);
 }
 
-void Logger::log_init(const std::string &name, bool status) {
+void Logger::log_init(const std::string &name, bool /*status*/) {
     filename    = name;
     log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
     log_is_open = true;

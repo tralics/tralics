@@ -13,6 +13,7 @@
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 namespace err_ns {
@@ -33,14 +34,11 @@ void Parser::signal_error() {
     std::string file = get_cur_filename();
     main_ns::nb_errs++;
     flush_buffer();
-    the_log << lg_start;
-    (Logger &)log_and_tty << "Error signaled at line " << line;
-    if (!file.empty()) (Logger &)log_and_tty << " of file " << file;
-    (Logger &)log_and_tty << ":\n";
-    (Logger &)log_and_tty << err_buf;
-    (Logger &)log_and_tty << ".\n";
+    the_log.finish_seq();
+    spdlog::info("Error signaled at line {}{}:", line, !file.empty() ? fmt::format(" of file {}", file) : "");
+    spdlog::error("{}.", err_buf);
     if (main_ns::nb_errs >= 5000) {
-        (Logger &)log_and_tty << "Translation aborted: Too many errors.\n";
+        spdlog::critical("Translation aborted: Too many errors, aborting.");
         log_and_tty.log_finish(main_ns::nb_errs);
         exit(1);
     }
@@ -198,7 +196,7 @@ void Parser::math_only() {
     parse_error(cur_tok, "Math only command ", cur_tok, "", "Mathonly command");
     static bool first_time = true;
     if (first_time) {
-        (Logger &)log_and_tty << "(Contrarily to TeX, Tralics does not switch to math mode in such a case.)\n";
+        spdlog::warn("(Contrarily to TeX, Tralics does not switch to math mode in such a case.)");
         first_time = false;
     }
 }
