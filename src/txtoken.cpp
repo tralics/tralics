@@ -536,11 +536,6 @@ void token_ns::remove_first_last_space(TokenList &L) {
     while (!L.empty() && L.back().is_space_token()) L.pop_back();
 }
 
-auto operator<<(Logger &X, const Macro &x) -> Logger & {
-    *(X.log_file) << x;
-    return X;
-}
-
 // This prints a control sequence value on the log file.
 // Used when tracing a command (catcode not 11 nor 12)
 // used in the case {\let\x\y}, after the closing brace.
@@ -802,5 +797,3 @@ auto token_ns::is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped
     is_in_skipped = found ? skipped : -1;
     return found;
 }
-
-auto operator<<(Logger &fp, Token t) -> Logger & { return fp << t.tok_to_str(); }

@@ -770,7 +770,7 @@ void FullLogger::init(std::string name, bool status) {
     spdlog::set_level(spdlog::level::trace);
     auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
     spdlog::default_logger()->sinks().push_back(sink);
-    if (!verbose) spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info);
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose
 }
 
 // This can be used to check if the main file exists. In this case the

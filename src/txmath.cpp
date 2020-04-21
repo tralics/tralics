@@ -301,11 +301,6 @@ auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
     return X;
 }
 
-auto operator<<(Logger &X, math_list_type y) -> Logger & {
-    *(X.log_file) << y;
-    return X;
-}
-
 auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
     switch (y) {
     case invalid_cd: X << "Invalid list"; break;

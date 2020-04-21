@@ -92,12 +92,6 @@ auto operator<<(std::ostream &fp, const FpNum &X) -> std::ostream & {
     return fp;
 }
 
-// This prints a FpNum on the logger.
-auto operator<<(Logger &fp, const FpNum &X) -> Logger & {
-    fp << X.to_string();
-    return fp;
-}
-
 // Returns the opposite of X
 auto operator-(FpNum X) -> FpNum {
     FpNum res;

@@ -122,11 +122,6 @@ auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
     return fp;
 }
 
-auto operator<<(Logger &X, const FontInfo &x) -> Logger & {
-    *(X.log_file) << x;
-    return X;
-}
-
 // This unpacks the font.
 void FontInfo::unpack() {
     size   = packed & fi_size_mask;

@@ -508,11 +508,6 @@ auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
     return fp << buf.c_str();
 }
 
-auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
-    *(X.log_file) << x;
-    return X;
-}
-
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     buf.reset();
     buf.push_back(x);
@@ -520,23 +515,11 @@ auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     return fp;
 }
 
-auto operator<<(Logger &X, const Glue &x) -> Logger & {
-    *(X.log_file) << x;
-    return X;
-}
-
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
     buf.reset();
     buf.push_back(x);
     fp << buf.c_str();
     return fp;
-}
-
-auto operator<<(Logger &X, const SthInternal &x) -> Logger & {
-    buf.reset();
-    buf.push_back(x);
-    X << buf.c_str();
-    return X;
 }
 
 // We use internal encoding here.
@@ -551,7 +534,7 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
     return fp;
 }
 
-// We use log encoding here.
+// We use log encoding here. \todo always UTF8?
 auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
     if (x.is_ascii())
         fp << static_cast<uchar>(x.value);
