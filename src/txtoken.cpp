@@ -548,7 +548,7 @@ namespace {
 } // namespace
 
 // finishes a sequence of characters.
-void Logger::finish_seq() {
+void Logger::finish_seq() const {
     if (!buffer_for_log2.empty()) {
         *log_file << buffer_for_log2.convert_to_log_encoding() << ".\n";
         buffer_for_log2.reset();

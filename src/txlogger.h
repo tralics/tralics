@@ -41,8 +41,8 @@ class Logger {
     std::string filename; // the name of the log file
 public:
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
-    void                           finish_seq();
-    void                           out_single_char(codepoint c);
+    void                           finish_seq() const;
+    static void                    out_single_char(codepoint c);
     void                           dump(String s);
     void                           dump0(String s);
     void                           set_file_name(std::string x) { filename = std::move(x); }
