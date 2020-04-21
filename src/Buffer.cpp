@@ -194,7 +194,8 @@ auto Buffer::push_back_newline_spec() -> bool {
     push_back('\n');
     if (wptr == 1) return true; // keep empty lines
     if (at(0) == '#') {
-        const String match = "## tralics ident rc=";
+        const String match = "## tralics ident rc="; // \todo is this really useful?
+        std::string  line;
         if (strncmp(data(), match, 20) == 0) {
             size_t k = 20;
             while (k + 1 < wptr && at(k) != '$') k++;
@@ -202,11 +203,12 @@ auto Buffer::push_back_newline_spec() -> bool {
                 char c          = at(k + 1);
                 at(k + 1)       = 0;
                 std::string tmp = data() + 20;
-                // dump_identification(data() + 20);
-                at(k + 1) = c;
-                dump_identification(tmp + " " + (data() + k + 1)); // \todo substr
+                at(k + 1)       = c;
+                line            = tmp + " " + (data() + k + 1); // \todo substr
             } else
-                dump_identification(data() + 20);
+                line = data() + 20;
+            if (line.back() == '\n') line.pop_back();
+            dump_identification(line);
         }
         return false;
     }
