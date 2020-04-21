@@ -70,7 +70,6 @@ class FullLogger { // \todo public Logger
 public:
     Logger L;
     bool   verbose{false};
-    void   abort() const { Logger::abort(); }
     auto   operator<<(logger_fn f) -> FullLogger & {
         f(L);
         return *this;
