@@ -41,7 +41,7 @@ void Parser::signal_error() {
     (Logger &)log_and_tty << ".\n";
     if (main_ns::nb_errs >= 5000) {
         (Logger &)log_and_tty << "Translation aborted: Too many errors.\n";
-        log_and_tty.finish(main_ns::nb_errs);
+        log_and_tty.log_finish(main_ns::nb_errs);
         exit(1);
     }
 }

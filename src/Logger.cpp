@@ -36,7 +36,7 @@ void Logger::dump0(String s) const {
     *log_file << "{" << s << "}\n";
 }
 
-void FullLogger::finish(int n) {
+void Logger::log_finish(int n) {
     log_is_open = false;
     if (n == 0)
         (Logger &)(*this) << "No error found.\n";
@@ -47,7 +47,7 @@ void FullLogger::finish(int n) {
     (Logger &)(*this) << "(For more information, see transcript file " << filename << ")\n";
 }
 
-void FullLogger::init(const std::string &name, bool status) {
+void Logger::log_init(const std::string &name, bool status) {
     filename    = name;
     log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
     verbose     = status;
@@ -56,5 +56,5 @@ void FullLogger::init(const std::string &name, bool status) {
     spdlog::set_level(spdlog::level::trace);
     auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
     spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 }

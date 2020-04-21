@@ -396,7 +396,7 @@ void MainClass::open_log() { // \todo spdlog etc
     Buffer &B       = b_after;
     B << bf_reset << out_dir << bf_optslash << log_name;
     B.put_at_end(".log");
-    log_and_tty.init(B.to_string(), !special);
+    log_and_tty.log_init(B.to_string(), !special);
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
     the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"
@@ -997,7 +997,7 @@ void MainClass::trans0() {
     if (load_l3) the_parser.L3_load(true);
     tralics_ns::Titlepage_start(verbose);
     if (only_input_data) {
-        log_and_tty.finish(main_ns::nb_errs);
+        log_and_tty.log_finish(main_ns::nb_errs);
         exit(0);
     }
 }
@@ -1047,7 +1047,7 @@ void MainClass::run(int argc, char **argv) {
         }
         the_parser.init(input_content);
         the_parser.translate_all();
-    } catch (...) {}
+    } catch (...) {} // \todo probably this is wrong
     check_section_use();
     the_parser.after_main_text();
     if (seen_enddocument) the_parser.the_stack.add_nl();
@@ -1057,7 +1057,7 @@ void MainClass::run(int argc, char **argv) {
         the_parser.my_stats.token_stats();
         the_parser.finish_images();
         out_xml();
-        log_and_tty.finish(main_ns::nb_errs);
+        log_and_tty.log_finish(main_ns::nb_errs);
     } else
         (Logger &)log_and_tty << "Nothing written to " << out_name << ".xml.\n";
 }

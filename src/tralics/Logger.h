@@ -7,24 +7,23 @@
 struct Logger {
     std::string                    filename; // the name of the log file
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
-    void                           finish_seq() const;
-    static void                    out_single_char(codepoint c);
-    void                           dump(String s) const;
-    void                           dump0(String s) const;
-    static void                    abort();
-};
+    bool                           verbose{false};
+    bool                           log_is_open{false};
 
-class FullLogger : public Logger {
-public:
-    bool verbose{false};
-    void finish(int n);
-    void init(const std::string &name, bool status);
+    void dump(String s) const;
+    void dump0(String s) const;
+    void log_finish(int n);
+    void finish_seq() const;
+    void log_init(const std::string &name, bool status);
     void unexpected_char(String s, int k);
+
+    [[deprecated]] static void abort();
+    static void                out_single_char(codepoint c);
 };
 
 using logger_fn = void(Logger &);
 
-// By default, send things to the log file. In FullLogger, this defaulted to
+// By default, send things to the log file. In Logger, this defaulted to
 // both console and file, those are all (Logger &)log_and_tty in the code for
 // now. \todo So replace `the_log <<` with spdlog::trace, and `log_and_tty <<`
 // with spdlog::info.
@@ -34,11 +33,6 @@ template <typename T> auto operator<<(Logger &L, const T &s) -> Logger & {
 }
 
 inline auto operator<<(Logger &L, logger_fn f) -> Logger & {
-    f(L);
-    return L;
-}
-
-inline auto operator<<(FullLogger &L, logger_fn f) -> FullLogger & {
     f(L);
     return L;
 }
@@ -74,5 +68,5 @@ inline void lg_startbracebs(Logger &L) {
 }
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 
-inline FullLogger log_and_tty;
-inline Logger &   the_log = log_and_tty;
+inline Logger  log_and_tty;
+inline Logger &the_log = log_and_tty;
