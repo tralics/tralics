@@ -25,7 +25,7 @@ void err_ns::fatal_error(String s) {
 }
 
 // This is executed if we say the_log << lg_fatal.
-void Logger::abort() const { spdlog::critical("Fatal_error for {}", the_parser.get_job_name()); }
+void Logger::abort() { spdlog::critical("Fatal_error for {}", the_parser.get_job_name()); }
 
 // The error mechanism is as follows: we put the error message in a buffer
 // then use the following function to signal it.

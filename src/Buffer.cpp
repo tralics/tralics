@@ -21,8 +21,6 @@ namespace {
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
-
-    void dump_identification(std::string s) { spdlog::trace("Configuration file identification: {}", s); }
 } // namespace
 
 /// Returns a temporary string, corresponding to the command with
@@ -208,7 +206,7 @@ auto Buffer::push_back_newline_spec() -> bool {
             } else
                 line = data() + 20;
             if (line.back() == '\n') line.pop_back();
-            dump_identification(line);
+            spdlog::trace("Configuration file identification: {}", line);
         }
         return false;
     }
