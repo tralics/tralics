@@ -62,3 +62,5 @@ inline auto operator==(const codepoint &a, const codepoint &b) -> bool { return 
 inline auto operator!=(const codepoint &a, const codepoint &b) -> bool { return a.value != b.value; }
 inline auto operator==(const codepoint &a, const unsigned char &b) -> bool { return a.value == unsigned(b); }
 inline auto operator!=(const codepoint &a, const unsigned char &b) -> bool { return a.value != unsigned(b); }
+
+auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;

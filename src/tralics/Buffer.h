@@ -2,6 +2,7 @@
 #include "../txid.h"
 #include "../txscaled.h"
 #include <cstring>
+#include <iostream>
 
 struct AttPair;
 struct LinePtr;
@@ -204,6 +205,8 @@ public:
     void push_back(const TokenList &L);
     // \todo push_back(char*,...) to do fmt::format
 };
+
+inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.c_str(); }
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     B.push_back(t);

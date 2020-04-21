@@ -101,3 +101,5 @@ struct XmlAndType {
 };
 
 auto read_xml(const std::string &s) -> Xml *;
+
+auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;

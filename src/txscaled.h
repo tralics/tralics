@@ -47,6 +47,8 @@ public:
 
 inline auto operator==(const ScaledInt &a, const ScaledInt &b) -> bool { return a.get_value() == b.get_value(); }
 
+auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
+
 // a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
 // the three ints should be ScaledInt.
 class Glue {
@@ -82,6 +84,8 @@ public:
 
     static void zdv();
 };
+
+auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
 
 // The value of the number is sign*(i+f/2^16);
 class RealNumber {
@@ -188,6 +192,8 @@ public:
     void expr_mul(long n);
     void add_ovf(const SthInternal &r);
 };
+
+auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream &;
 
 class ScanSlot {
 public:

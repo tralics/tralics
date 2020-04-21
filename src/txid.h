@@ -41,3 +41,5 @@ public:
 
     auto operator==(const Xid &X) const -> bool { return value == X.value; }
 };
+
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream &;

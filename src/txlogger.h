@@ -19,17 +19,3 @@
 // This include file holds some declarations for printing objects
 // and the classes that allow us to print either on the tty, the log file
 // or both.
-
-auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;
-auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
-auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
-auto operator<<(std::ostream &fp, Xid X) -> std::ostream &;
-auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;
-auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
-auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
-
-inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.c_str(); }

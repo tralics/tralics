@@ -27,4 +27,6 @@ struct Istring {
     static inline StrHash SH;
 };
 
+auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;
+
 inline std::array<Istring, np_last> the_names; // \todo static in Istring and make is a map from std::string

@@ -70,6 +70,8 @@ struct Token {
     void               testpach();
 };
 
+auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
+
 inline Token                 q_nil, q_stop, q_recursion_stop;
 inline Token                 T_roman, T_use1, T_use2, T_usen, T_use_nonen;
 inline Token                 T_exp_notN, T_exp_notn, T_empty;
@@ -81,3 +83,4 @@ inline std::array<Token, 20> special_double;
 inline auto make_char_token(unsigned char c, unsigned cat) -> Token { return Token(nb_characters * cat + c); }
 
 using TokenList = std::list<Token>;
+auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

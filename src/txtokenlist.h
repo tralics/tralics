@@ -119,6 +119,8 @@ public:
     void               correct_type();
 };
 
+auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream &;
+
 // The table of macros. it contains the reference counts
 // Consider: \def\mac{\def\mac{a} b}. When mac is expanded, its body is copied
 // when the inner \def is executed, then \mac is destroyed (if nobody else
