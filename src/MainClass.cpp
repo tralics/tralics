@@ -3,6 +3,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include <filesystem>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -50,13 +51,12 @@ namespace {
     void check_lowercase(Buffer &B) {
         auto n = B.size();
         if (n == 0) {
-            std::cout << "Illegal file name of the form safir/2002.tex\n";
+            spdlog::critical("Illegal file name of the form safir/2002.tex");
             the_main->bad_year(); // never returns
         }
         for (size_t i = 0; i < n; i++)
             if (B[i] < 32 || B[i] > 127 || is_upper_case(B[i])) {
-                std::cout << "Fatal error\n";
-                std::cout << "Only lowercase letters allowed: " << B.c_str() << " \n";
+                spdlog::critical("Fatal: only lowercase letters allowed, {}", B);
                 exit(1);
             }
     }
@@ -65,7 +65,7 @@ namespace {
         if (y < 2000 || y >= 2100) the_main->bad_year();
         std::string raclass = std::string("ra") + C.to_string();
         if (dclass != raclass) {
-            std::cout << "Illegal document class " << dclass << " should be " << raclass << "\n";
+            spdlog::critical("Illegal document class {} should be {}", dclass, raclass);
             exit(1);
         }
         if (Y.empty()) return;
@@ -354,7 +354,7 @@ void MainClass::check_for_input() {
         return;
     }
     if (!tralics_ns::find_in_path(s)) {
-        std::cout << "Fatal error: Cannot open input file " << infile << "\n";
+        spdlog::critical("Fatal error: Cannot open input file {}", infile);
         exit(1);
     }
     s = main_ns::path_buffer.to_string();
@@ -362,7 +362,7 @@ void MainClass::check_for_input() {
     main_ns::path_buffer.push_back("ult");
     ult_name = main_ns::path_buffer.to_string();
     if (!std::filesystem::exists(s)) {
-        std::cout << "Empty input file " << s << "\n";
+        spdlog::critical("Empty input file {}", s);
         exit(1);
     }
     open_log();
@@ -385,10 +385,9 @@ void MainClass::banner() const {
     static bool banner_printed = false;
     if (banner_printed) return;
     banner_printed = true;
-    std::cout << "This is tralics " << version << ", a LaTeX to XML translator"
-              << ", running on " << machine << "\n";
-    std::cout << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n";
-    std::cout << "Licensed under the CeCILL Free Software Licensing Agreement\n";
+    spdlog::info("This is tralics {}, a LaTeX to XML translator", version);
+    spdlog::info("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
+    spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
 }
 
 void MainClass::open_log() { // \todo spdlog etc
