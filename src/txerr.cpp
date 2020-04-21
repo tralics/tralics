@@ -12,6 +12,7 @@
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 namespace err_ns {
     void convert_to_string(const TokenList &L);
@@ -24,13 +25,7 @@ void err_ns::fatal_error(String s) {
 }
 
 // This is executed if we say the_log << lg_fatal.
-void Logger::abort() const {
-    std::cout << "Fatal_error for " << the_parser.get_job_name() << "\n";
-    if (!!*fp) {
-        *fp << "Fatal_error for " << the_parser.get_job_name() << "\n";
-        fp->close();
-    }
-}
+void Logger::abort() const { spdlog::critical("Fatal_error for {}", the_parser.get_job_name()); }
 
 // The error mechanism is as follows: we put the error message in a buffer
 // then use the following function to signal it.
@@ -51,7 +46,6 @@ void Parser::signal_error() {
     if (main_ns::nb_errs >= 5000) {
         log_and_tty << "Translation aborted: Too many errors.\n";
         log_and_tty.finish(main_ns::nb_errs);
-        delete log_and_tty.L.fp;
         exit(1);
     }
 }

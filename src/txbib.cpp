@@ -15,6 +15,7 @@
 #include "tralics/util.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 #include <utility>
 
 namespace {
@@ -451,15 +452,8 @@ void Bibliography::dump_bibtex() {
 }
 
 void Bibliography::stats() {
-    int    solved = 0, total = 0;
-    size_t n = citation_table.size();
-    for (size_t i = 0; i < n; i++) {
-        total++;
-        if (citation_table[i].is_solved()) solved++;
-    }
-    main_ns::log_or_tty << "Bib stats: seen " << total;
-    if (solved != 0) main_ns::log_or_tty << "(" << solved << ")";
-    main_ns::log_or_tty << " entries.\n";
+    auto solved = std::count_if(citation_table.begin(), citation_table.end(), [](auto &c) { return c.is_solved(); });
+    spdlog::trace("Bib stats: seen {}{} entries.", citation_table.size(), solved > 0 ? fmt::format("({})", solved) : "");
 }
 
 // This dumps the whole biblio for use by bibtex.

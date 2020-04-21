@@ -13,6 +13,7 @@
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 #include <unistd.h>
 
 namespace {
@@ -21,7 +22,7 @@ namespace {
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
 
-    void dump_identification(String s) { main_ns::log_or_tty << "Configuration file identification: " << s; }
+    void dump_identification(std::string s) { spdlog::trace("Configuration file identification: {}", s); }
 } // namespace
 
 /// Returns a temporary string, corresponding to the command with
@@ -198,11 +199,12 @@ auto Buffer::push_back_newline_spec() -> bool {
             size_t k = 20;
             while (k + 1 < wptr && at(k) != '$') k++;
             if (at(k) == '$') {
-                char c    = at(k + 1);
-                at(k + 1) = 0;
-                dump_identification(data() + 20);
+                char c          = at(k + 1);
+                at(k + 1)       = 0;
+                std::string tmp = data() + 20;
+                // dump_identification(data() + 20);
                 at(k + 1) = c;
-                main_ns::log_or_tty << " " << data() + k + 1;
+                dump_identification(tmp + " " + (data() + k + 1)); // \todo substr
             } else
                 dump_identification(data() + 20);
         }
@@ -508,7 +510,7 @@ auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
 }
 
 auto operator<<(Logger &X, const ScaledInt &x) -> Logger & {
-    *(X.fp) << x;
+    *(X.log_file) << x;
     return X;
 }
 
@@ -520,7 +522,7 @@ auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
 }
 
 auto operator<<(Logger &X, const Glue &x) -> Logger & {
-    *(X.fp) << x;
+    *(X.log_file) << x;
     return X;
 }
 

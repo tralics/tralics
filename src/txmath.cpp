@@ -302,7 +302,7 @@ auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
 }
 
 auto operator<<(Logger &X, math_list_type y) -> Logger & {
-    *(X.fp) << y;
+    *(X.log_file) << y;
     return X;
 }
 

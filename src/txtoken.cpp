@@ -549,8 +549,8 @@ void token_ns::remove_first_last_space(TokenList &L) {
 // finishes a sequence of characters.
 void Logger::finish_seq() {
     if (!finished) {
-        *fp << buffer_for_log2.convert_to_log_encoding();
-        *fp << ".\n";
+        *log_file << buffer_for_log2.convert_to_log_encoding();
+        *log_file << ".\n";
         finished = true;
     }
 }
@@ -566,18 +566,18 @@ void Logger::out_single_char(codepoint c) {
 }
 
 auto operator<<(Logger &X, const Macro &x) -> Logger & {
-    *(X.fp) << x;
+    *(X.log_file) << x;
     return X;
 }
 
 void Logger::dump(String s) {
     finish_seq();
-    *fp << "{\\" << s << "}\n";
+    *log_file << "{\\" << s << "}\n";
 }
 
 void Logger::dump0(String s) {
     finish_seq();
-    *fp << "{" << s << "}\n";
+    *log_file << "{" << s << "}\n";
 }
 
 // This prints a control sequence value on the log file.

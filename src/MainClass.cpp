@@ -390,7 +390,7 @@ void MainClass::banner() const {
     std::cout << "Licensed under the CeCILL Free Software Licensing Agreement\n";
 }
 
-void MainClass::open_log() {
+void MainClass::open_log() { // \todo spdlog etc
     bool    special = only_input_data;
     Buffer &B       = b_after;
     B << bf_reset << out_dir << bf_optslash << log_name;
@@ -781,7 +781,7 @@ void MainClass::open_config_file() {
     }
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
     config_file.normalise_final_cr();
-    main_ns::log_or_tty << "Read configuration file " << B.c_str() << ".\n";
+    spdlog::trace("Read configuration file {}", B.c_str());
     if (!B.is_at_end(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;
@@ -891,7 +891,7 @@ void MainClass::read_config_and_other() {
     if (find_config_file())
         open_config_file();
     else
-        main_ns::log_or_tty << "No configuration file.\n";
+        spdlog::trace("No configuration file.");
     if (!use_tcf) {
         bool found_type = find_document_type();
         if (dtype.empty()) found_type = false;
@@ -1002,7 +1002,6 @@ void MainClass::trans0() {
     tralics_ns::Titlepage_start(verbose);
     if (only_input_data) {
         log_and_tty.finish(main_ns::nb_errs);
-        delete log_and_tty.L.fp; // \todo make this a value instead of a pointer
         exit(0);
     }
 }
@@ -1066,7 +1065,6 @@ void MainClass::run(int argc, char **argv) {
     } else
         log_and_tty << "Nothing written to " << out_name << ".xml.\n";
     std::cout.flush();
-    delete log_and_tty.L.fp;
 }
 
 void MainClass::out_xml() {

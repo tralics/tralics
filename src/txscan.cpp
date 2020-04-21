@@ -45,7 +45,7 @@ namespace io_ns {
 
 void lg_start_io(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "++ ";
+    *(L.log_file) << "++ ";
 }
 
 // Section 1: output streams.

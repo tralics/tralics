@@ -45,22 +45,22 @@ class Logger {
                           // a newline is required
     std::string filename; // the name of the log file
 public:
-    std::ofstream *    fp{}; // the stream to which we print
-    void               finish_seq();
-    void               out_single_char(codepoint c);
-    void               dump(String s);
-    void               dump0(String s);
-    void               set_finished() { finished = true; }
-    void               set_file_name(std::string x) { filename = std::move(x); }
-    void               abort() const;
-    [[nodiscard]] auto get_filename() const -> std::string { return filename; }
-    auto               operator<<(logger_fn f) -> Logger & {
+    std::shared_ptr<std::ofstream> log_file; // the stream to which we print
+    void                           finish_seq();
+    void                           out_single_char(codepoint c);
+    void                           dump(String s);
+    void                           dump0(String s);
+    void                           set_finished() { finished = true; }
+    void                           set_file_name(std::string x) { filename = std::move(x); }
+    void                           abort() const;
+    [[nodiscard]] auto             get_filename() const -> std::string { return filename; }
+    auto                           operator<<(logger_fn f) -> Logger & {
         f(*this);
         return *this;
     }
 
     template <typename T> auto operator<<(const T &s) -> Logger & {
-        *fp << s;
+        *log_file << s;
         return *this;
     }
 };
@@ -96,36 +96,36 @@ public:
 
 void lg_start_io(Logger &L);
 
-inline void lg_flush(Logger &L) { (*(L.fp)).flush(); }
+inline void lg_flush(Logger &L) { (*(L.log_file)).flush(); }
 inline void lg_start(Logger &L) { L.finish_seq(); }
 inline void lg_startstack(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "+stack: ";
+    *(L.log_file) << "+stack: ";
 }
 inline void lg_startbrace(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "{";
+    *(L.log_file) << "{";
 }
 inline void lg_startcond(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "+";
+    *(L.log_file) << "+";
 }
 inline void lg_startif(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "{ifthenelse ";
+    *(L.log_file) << "{ifthenelse ";
 }
 inline void lg_startcalc(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "{calc ";
+    *(L.log_file) << "{calc ";
 }
 inline void lg_startbracebs(Logger &L) {
     L.finish_seq();
-    *(L.fp) << "{\\";
+    *(L.log_file) << "{\\";
 }
-inline void lg_end(Logger &L) { *(L.fp) << "\n"; }
-inline void lg_endsentence(Logger &L) { *(L.fp) << ".\n"; }
-inline void lg_endbrace(Logger &L) { *(L.fp) << "}\n"; }
-inline void lg_arrow(Logger &L) { *(L.fp) << "->"; }
+inline void lg_end(Logger &L) { *(L.log_file) << "\n"; }
+inline void lg_endsentence(Logger &L) { *(L.log_file) << ".\n"; }
+inline void lg_endbrace(Logger &L) { *(L.log_file) << "}\n"; }
+inline void lg_arrow(Logger &L) { *(L.log_file) << "->"; }
 inline void lg_fatal(Logger &L) { L.abort(); }
 
 auto operator<<(Logger &X, const ScaledInt &x) -> Logger &;

@@ -122,7 +122,7 @@ auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
 }
 
 auto operator<<(Logger &X, const FontInfo &x) -> Logger & {
-    *(X.fp) << x;
+    *(X.log_file) << x;
     return X;
 }
 

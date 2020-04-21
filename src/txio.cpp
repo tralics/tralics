@@ -17,6 +17,8 @@
 #include "txinline.h"
 #include <filesystem>
 #include <fmt/format.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 
 namespace {
@@ -259,7 +261,7 @@ void Buffer::utf8_error(bool first) {
                 << (first ? ", first byte" : ", continuation byte") << ")\n";
     log_and_tty.L << "Position in line is " << ptr << lg_end;
     if (T.new_error()) return; // signal only one error per line
-    for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.fp), at(i));
+    for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.log_file), at(i));
     the_log << lg_end;
 }
 
@@ -863,10 +865,15 @@ void FullLogger::finish(int n) {
 
 void FullLogger::init(std::string name, bool status) {
     L.set_file_name(std::move(name));
-    L.fp = new std::ofstream(tralics_ns::open_file(L.get_filename(), true));
+    L.log_file = std::make_shared<std::ofstream>(tralics_ns::open_file(L.get_filename(), true));
     L.set_finished();
     verbose     = status;
     log_is_open = true;
+
+    spdlog::set_level(spdlog::level::trace);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(L.get_filename() + ".spdlog", true);
+    spdlog::default_logger()->sinks().push_back(sink);
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info);
 }
 
 // This can be used to check if the main file exists. In this case the

@@ -2129,10 +2129,7 @@ void Parser::T_specimp(int c) {
     case mark_code:
     case marks_code: T_mark(subtypes(c)); return;
     case penalty_code: scan_int(cur_tok); return;
-    case abort_code:
-        close_all();
-        delete log_and_tty.L.fp;
-        exit(0);
+    case abort_code: close_all(); exit(0);
     case sleep_code: txsleep(static_cast<unsigned>(scan_int(cur_tok))); return;
     case prompt_code: {
         auto S = string_to_write(write18_slot + 1);

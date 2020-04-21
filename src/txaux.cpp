@@ -11,6 +11,7 @@
 #include "tralics/Parser.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 namespace arith_ns {
     void start_err(String s);
@@ -612,6 +613,7 @@ void Mactab::rc_mac_realloc() {
 // Decrements the reference count. If it is zero, we kill the macro.
 void Mactab::delete_macro_ref(int i) {
     if (rc_table[i] <= 0) {
+        spdlog::critical("FATAL: macro reference count negative");
         log_and_tty << "FATAL: macro reference count negative\n" << lg_fatal;
         abort();
     }

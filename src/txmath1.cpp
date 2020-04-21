@@ -331,9 +331,9 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
     MathP aux;
     find_paren0(aux);
     if (aux.empty()) return true;
-    if (verbose) *(the_log.fp) << "MF: After find paren0 " << aux << "\n";
+    if (verbose) *(the_log.log_file) << "MF: After find paren0 " << aux << "\n";
     if (aux.find_paren_rec(res)) {
-        if (verbose) *(the_log.fp) << "MF: rec " << res << "\n";
+        if (verbose) *(the_log.log_file) << "MF: rec " << res << "\n";
         return false;
     }
     res.clear();
@@ -350,13 +350,13 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
         } else {
             content.remove_binrel();                       // remove useless bin/rel in content
             content.push_back(MathPAux(end, mt_flag_rel)); // add end marker
-            if (verbose) *(the_log.fp) << "MF: sublist start=" << start << ' ' << content << "\n";
+            if (verbose) *(the_log.log_file) << "MF: sublist start=" << start << ' ' << content << "\n";
             content.find_paren2(start, res, verbose);
         }
         start       = end;
         int seen_d1 = 0, seen_d2 = 0;
         if (aux.is_lbr2(seen_d1, seen_d2)) {
-            if (verbose) *(the_log.fp) << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
+            if (verbose) *(the_log.log_file) << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
             res.push_back(MathQ(seen_d1, seen_d2));
             return true;
         }
@@ -391,7 +391,7 @@ void MathP::find_paren2(int start, MathQList &res, bool verbose) {
     while (!empty()) {
         int   k   = 0;
         MathP cur = find_relbin(k);
-        if (verbose) *(the_log.fp) << "MF: Find paren2 k=" << k << " " << cur << "\n";
+        if (verbose) *(the_log.log_file) << "MF: Find paren2 k=" << k << " " << cur << "\n";
         if (cur.has_small()) cur.find_paren1(start + 1, k - 1, res, verbose);
         start = k;
     }
@@ -411,7 +411,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     bool      state     = false;
     bool      failed    = false;
     int       start_pos = -1;
-    if (verbose) *(the_log.fp) << "MF: Find paren1 (" << start1 << ", " << end1 << ") " << *this << "\n";
+    if (verbose) *(the_log.log_file) << "MF: Find paren1 (" << start1 << ", " << end1 << ") " << *this << "\n";
     while (!empty()) {
         int        i = 0;
         math_types k{};
@@ -435,7 +435,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
             if (k == mt_flag_small_r) {
                 state = false;
                 t.push_back(MathQ(start_pos, i));
-                if (verbose) *(the_log.fp) << "MF: OK " << start_pos << ' ' << i << ' ' << '\n';
+                if (verbose) *(the_log.log_file) << "MF: OK " << start_pos << ' ' << i << ' ' << '\n';
             }
         }
     }
@@ -443,7 +443,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     if (failed || state) {
         t.clear();
         t.push_back(MathQ(start1, end1));
-        if (verbose) *(the_log.fp) << "MF: BB " << start1 << ' ' << end1 << '\n';
+        if (verbose) *(the_log.log_file) << "MF: BB " << start1 << ' ' << end1 << '\n';
     }
     res.splice(res.end(), t);
 }

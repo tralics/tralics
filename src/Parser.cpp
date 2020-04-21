@@ -2,6 +2,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 namespace accent_ns {
     auto fetch_accent(size_t chr, int accent_code) -> Token;
@@ -1281,10 +1282,10 @@ void Parser::finish_images() {
         }
     }
     if (the_images.empty())
-        main_ns::log_or_tty << "There was no image.\n";
+        spdlog::trace("There was no image.");
     else
-        main_ns::log_or_tty << fmt::format("There were {} images.\n", the_images.size());
-    if (!check_image1.empty()) main_ns::log_or_tty << "Following images have multiple PS source: " << check_image1.c_str() << ".\n";
+        spdlog::trace("There were {} images.", the_images.size());
+    if (!check_image1.empty()) spdlog::trace("Following images have multiple PS source: {}.", check_image1.c_str());
     if (!check_image2.empty()) main_ns::log_or_tty << "Following images not defined: " << check_image2.c_str() << ".\n";
 }
 
