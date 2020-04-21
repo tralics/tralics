@@ -566,12 +566,12 @@ auto operator<<(Logger &X, const Macro &x) -> Logger & {
     return X;
 }
 
-void Logger::dump(String s) {
+void Logger::dump(String s) const {
     finish_seq();
     *log_file << "{\\" << s << "}\n";
 }
 
-void Logger::dump0(String s) {
+void Logger::dump0(String s) const {
     finish_seq();
     *log_file << "{" << s << "}\n";
 }

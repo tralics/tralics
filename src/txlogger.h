@@ -43,8 +43,8 @@ public:
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
     void                           finish_seq() const;
     static void                    out_single_char(codepoint c);
-    void                           dump(String s);
-    void                           dump0(String s);
+    void                           dump(String s) const;
+    void                           dump0(String s) const;
     void                           set_file_name(std::string x) { filename = std::move(x); }
     static void                    abort();
     [[nodiscard]] auto             get_filename() const -> std::string { return filename; }
