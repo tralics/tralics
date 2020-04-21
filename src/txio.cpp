@@ -66,73 +66,73 @@ namespace io_ns {
 
 auto operator<<(FullLogger &X, String s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const Istring &s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, int s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, long s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, size_t s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, char s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, unsigned char s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const Buffer &s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const std::string &s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const TokenList &s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const Xml *s) -> FullLogger & {
     if (X.verbose) std::cout << s;
-    X.L << s;
+    (Logger &)X << s;
     return X;
 }
 
 auto operator<<(FullLogger &X, const ScaledInt &x) -> FullLogger & {
     if (X.verbose) std::cout << x;
-    X.L << x;
+    (Logger &)X << x;
     return X;
 }
 
@@ -230,7 +230,7 @@ void Buffer::utf8_error(bool first) {
     T.bad_chars++;
     log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
                 << (first ? ", first byte" : ", continuation byte") << ")\n";
-    log_and_tty.L << "Position in line is " << ptr << lg_end;
+    log_and_tty << "Position in line is " << ptr << lg_end;
     if (T.new_error()) return; // signal only one error per line
     for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(*(the_log.log_file), at(i));
     the_log << lg_end;
@@ -831,19 +831,19 @@ void FullLogger::finish(int n) {
         *this << "There was one error.\n";
     else
         *this << "There were " << n << " errors.\n";
-    *this << "(For more information, see transcript file " << L.get_filename() << ")\n";
+    *this << "(For more information, see transcript file " << filename << ")\n";
 }
 
 void FullLogger::init(std::string name, bool status) {
-    L.set_file_name(std::move(name));
-    L.log_file  = std::make_shared<std::ofstream>(tralics_ns::open_file(L.get_filename(), true));
+    filename    = name;
+    log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
     verbose     = status;
     log_is_open = true;
 
     spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(L.get_filename() + ".spdlog", true);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
     spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info);
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo unless verbose
 }
 
 // This can be used to check if the main file exists. In this case the

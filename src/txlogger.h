@@ -34,20 +34,17 @@ auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
 
 inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.c_str(); }
 
-class Logger;
+struct Logger;
 using logger_fn = void(Logger &);
 
-class Logger {
-    std::string filename; // the name of the log file
-public:
+struct Logger {
+    std::string                    filename; // the name of the log file
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
     void                           finish_seq() const;
     static void                    out_single_char(codepoint c);
     void                           dump(String s) const;
     void                           dump0(String s) const;
-    void                           set_file_name(std::string x) { filename = std::move(x); }
     static void                    abort();
-    [[nodiscard]] auto             get_filename() const -> std::string { return filename; }
     auto                           operator<<(logger_fn f) -> Logger & {
         f(*this);
         return *this;
@@ -59,12 +56,11 @@ public:
     }
 };
 
-class FullLogger { // \todo public Logger
+class FullLogger : public Logger {
 public:
-    Logger L;
-    bool   verbose{false};
-    auto   operator<<(logger_fn f) -> FullLogger & {
-        f(L);
+    bool verbose{false};
+    auto operator<<(logger_fn f) -> FullLogger & {
+        f(*this);
         return *this;
     }
     void finish(int n);

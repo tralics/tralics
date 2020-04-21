@@ -33,7 +33,7 @@ namespace {
     void bad_conf(String s) {
         log_and_tty << "The configuration file for the RA is ra" << the_parser.get_ra_year() << ".tcf or ra.tcf\n"
                     << "It must define a value for the parameter " << s << "\n"
-                    << "See transcript file " << the_log.get_filename() << " for details\n"
+                    << "See transcript file " << the_log.filename << " for details\n"
                     << "No xml file generated\n";
         Logger::abort();
         exit(1);
