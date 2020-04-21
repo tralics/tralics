@@ -20,13 +20,12 @@
 
 // See comments in tralics.cpp where these variables are defined
 namespace main_ns {
-    extern HalfLogger log_or_tty;
-    extern Buffer     path_buffer;
-    extern int        nb_errs;
-    extern bool       file_ended;
-    extern bool       no_xml_error;
-    extern bool       use_quotes;
-    extern bool       bib_allow_break;
+    extern Buffer path_buffer;
+    extern int    nb_errs;
+    extern bool   file_ended;
+    extern bool   no_xml_error;
+    extern bool   use_quotes;
+    extern bool   bib_allow_break;
 } // namespace main_ns
 
 namespace tralics_ns {

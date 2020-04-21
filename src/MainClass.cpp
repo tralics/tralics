@@ -396,9 +396,6 @@ void MainClass::open_log() { // \todo spdlog etc
     B << bf_reset << out_dir << bf_optslash << log_name;
     B.put_at_end(".log");
     log_and_tty.init(B.to_string(), !special);
-    main_ns::log_or_tty.L       = log_and_tty.L;
-    main_ns::log_or_tty.verbose = !silent;
-    if (special) main_ns::log_or_tty.verbose = false;
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
     the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"

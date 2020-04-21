@@ -22,12 +22,11 @@
 #include <fmt/format.h>
 
 namespace main_ns {
-    HalfLogger log_or_tty;              // the logger
-    int        nb_errs = 0;             // number of errors seen so far
-    Buffer     path_buffer;             // Result of search_in_path is here
-    bool       no_xml_error    = false; // should an error produce an XML element ?
-    bool       use_quotes      = false; // How to translate quotes
-    bool       bib_allow_break = true;  // <allowbreak> in bibliography
+    int    nb_errs = 0;             // number of errors seen so far
+    Buffer path_buffer;             // Result of search_in_path is here
+    bool   no_xml_error    = false; // should an error produce an XML element ?
+    bool   use_quotes      = false; // How to translate quotes
+    bool   bib_allow_break = true;  // <allowbreak> in bibliography
 } // namespace main_ns
 
 FullLogger log_and_tty;             // the logger
