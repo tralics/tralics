@@ -551,17 +551,6 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
     }
     return fp;
 }
-// Duplicate code...
-auto operator<<(FullLogger &fp, const codepoint &x) -> FullLogger & {
-    if (x.is_ascii())
-        fp << static_cast<uchar>(x.value);
-    else {
-        buf.reset();
-        buf.push_back(x);
-        fp << buf.c_str();
-    }
-    return fp;
-}
 
 // We use log encoding here.
 auto operator<<(Logger &fp, const codepoint &x) -> Logger & {

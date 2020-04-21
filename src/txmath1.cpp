@@ -1387,7 +1387,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
             if (!L->get_list().chars_to_mb(B, true)) return false;
         } else {
-            log_and_tty << lg_start << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << lg_end;
+            (Logger &)log_and_tty << lg_start << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << lg_end;
             std::cout << "\n";
             return false;
         }
@@ -1500,9 +1500,9 @@ auto Math::chars_to_mb3() -> Istring {
 void Buffer::show_uncomplete(String m) {
     the_parser.signal_error(m);
     if (empty())
-        log_and_tty << "No character found\n";
+        (Logger &)log_and_tty << "No character found\n";
     else
-        log_and_tty << "So far, got " << c_str() << "\n";
+        (Logger &)log_and_tty << "So far, got " << c_str() << "\n";
     reset();
     push_back("error");
 }

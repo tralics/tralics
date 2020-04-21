@@ -1126,7 +1126,7 @@ void Parser::T_color(subtypes c) {
         std::string value = sT_arg_nopar();
         B << bf_reset << "\\color@" << name;
         Token C = hash_table.locate(B);
-        if (!hash_table.eqtb[C.eqtb_loc()].is_undef()) log_and_tty << "Redefining color " << name << "\n";
+        if (!hash_table.eqtb[C.eqtb_loc()].is_undef()) (Logger &)log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
@@ -1509,8 +1509,8 @@ void Parser::T_hanl(subtypes c) {
     std::string b      = B->convert_to_string();
     bool        failed = e != main_ns::nb_errs;
     if (unexpected_seen_hi && failed)
-        log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
-                    << "  instead of \\Href{y}{\\url{x}}\n";
+        (Logger &)log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
+                              << "  instead of \\Href{y}{\\url{x}}\n";
     new_xref(val, b, !failed);
 }
 
@@ -2025,7 +2025,7 @@ void Parser::LC() {
     if (the_stack.in_no_mode() || the_stack.in_bib_mode()) {
         signal_error("Text found in a mode where no text is allowed");
         if (the_stack.is_frame(np_gloss)) {
-            log_and_tty << "Maybe \\glo is missing?\nHope for the best\n";
+            (Logger &)log_and_tty << "Maybe \\glo is missing?\nHope for the best\n";
             the_stack.set_arg_mode();
             return;
         }
@@ -2137,7 +2137,7 @@ void Parser::T_specimp(int c) {
         return;
     }
     case atatend_code:
-        log_and_tty << "Terminated with " << cur_tok << " at line  " << get_cur_line() << "\n";
+        (Logger &)log_and_tty << "Terminated with " << cur_tok << " at line  " << get_cur_line() << "\n";
         close_all();
         return;
     case message_code: std::cout << string_to_write(0); return;

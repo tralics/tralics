@@ -2821,7 +2821,7 @@ auto Condition::push(int chr) -> size_t {
 // Pops a conditional
 void Condition::pop() {
     if (D.empty())
-        log_and_tty << "Error: attempt to pop empty conditional stack\n";
+        (Logger &)log_and_tty << "Error: attempt to pop empty conditional stack\n";
     else
         D.pop_back();
 }
@@ -2832,7 +2832,7 @@ void Condition::terminate() {
     while (n > 0) {
         n--;
         main_ns::nb_errs++;
-        log_and_tty << "Unterminated \\if " << top_serial() << ", started at line " << top_line() << "\n";
+        (Logger &)log_and_tty << "Unterminated \\if " << top_serial() << ", started at line " << top_line() << "\n";
         pop();
     }
 }
@@ -4224,16 +4224,16 @@ void Parser::M_xray(subtypes c) {
         return;
     case showbox_code: {
         auto k = scan_reg_num();
-        log_and_tty << "Box " << k << ": ";
+        (Logger &)log_and_tty << "Box " << k << ": ";
         show_box(box_table[k].val);
         return;
     }
     case show_xmlA_code:
-        log_and_tty << "xmlA: ";
+        (Logger &)log_and_tty << "xmlA: ";
         show_box(the_xmlA);
         return;
     case show_xmlB_code:
-        log_and_tty << "xmlB: ";
+        (Logger &)log_and_tty << "xmlB: ";
         show_box(the_xmlB);
         return;
     case register_show_code:
@@ -4248,12 +4248,12 @@ void Parser::M_xray(subtypes c) {
         }
         back_input();
         TokenList L = E_the(the_code);
-        log_and_tty << "\\show: " << T << " = " << L << "\n";
+        (Logger &)log_and_tty << "\\show: " << T << " = " << L << "\n";
         return;
     }
     case showthe_code: {
         TokenList L = E_the(the_code);
-        log_and_tty << "\\show: " << L << "\n";
+        (Logger &)log_and_tty << "\\show: " << L << "\n";
         return;
     }
     case showgroups_code: dump_save_stack(); return;
@@ -4261,7 +4261,7 @@ void Parser::M_xray(subtypes c) {
     case showlists_code: the_stack.dump(); return;
     case showtokens_code: {
         TokenList L = scan_general_text();
-        log_and_tty << "\\show: " << L << "\n";
+        (Logger &)log_and_tty << "\\show: " << L << "\n";
         return;
     }
     default: return;
@@ -4270,9 +4270,9 @@ void Parser::M_xray(subtypes c) {
 
 void Parser::show_box(Xml *X) {
     if (X != nullptr)
-        log_and_tty << X << "\n";
+        (Logger &)log_and_tty << X << "\n";
     else
-        log_and_tty << "empty.\n";
+        (Logger &)log_and_tty << "empty.\n";
 }
 
 void Parser::E_useverb() {

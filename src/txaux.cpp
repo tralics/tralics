@@ -614,7 +614,6 @@ void Mactab::rc_mac_realloc() {
 void Mactab::delete_macro_ref(int i) {
     if (rc_table[i] <= 0) {
         spdlog::critical("FATAL: macro reference count negative");
-        log_and_tty << "FATAL: macro reference count negative\n";
         Logger::abort();
         abort();
     }

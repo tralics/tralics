@@ -38,9 +38,9 @@ void Stats::token_stats() const {
     spdlog::trace("Number of ref {}, of used labels {}, of defined labels {}, of ext. ref. {}.", nb_ref, nb_used_ref, nb_label_defined,
                   nb_href);
     if (the_parser.get_list_files()) {
-        log_and_tty << " *File List*\n";
-        log_and_tty << file_list;
-        log_and_tty << " ***********\n";
+        (Logger &)log_and_tty << " *File List*\n";
+        (Logger &)log_and_tty << file_list;
+        (Logger &)log_and_tty << " ***********\n";
     }
     io_convert_stats();
 }
@@ -498,13 +498,6 @@ void Buffer::push_back(const Macro &x, bool sw) {
 
 // Puts a macro definition in a file.
 auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
-    Buffer &B = buffer_for_log;
-    B << bf_reset;
-    B.push_back(x, true);
-    return fp << B.c_str();
-}
-
-auto operator<<(FullLogger &fp, const Macro &x) -> FullLogger & {
     Buffer &B = buffer_for_log;
     B << bf_reset;
     B.push_back(x, true);

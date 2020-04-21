@@ -39,7 +39,7 @@ auto tralics_ns::titlepage_is_valid() -> bool { return Titlepage.is_valid(); }
 void tralics_ns::Titlepage_start(bool verbose) { Titlepage.start_thing(verbose); }
 
 // This is called in case of trouble.
-void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " << init_file_pos << ")\n"; }
+void tpage_ns::init_error() { (Logger &)log_and_tty << "Syntax error in init file (line " << init_file_pos << ")\n"; }
 
 // return tl_end if seen End, tl_empty if empty (or comment),
 // tl_normal otherwise
@@ -50,8 +50,8 @@ auto Buffer::tp_fetch_something() -> tpa_line {
     if (is_special_end()) return tl_empty;
     if (ptr == 0) {
         tpage_ns::init_error();
-        log_and_tty << data();
-        log_and_tty << "Wanted End, or line starting with space\n";
+        (Logger &)log_and_tty << data();
+        (Logger &)log_and_tty << "Wanted End, or line starting with space\n";
         return tl_empty;
     }
     return tl_normal;
@@ -121,7 +121,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     while (in.head() != del) {
         if (in.head() == 0) {
             tpage_ns::init_error();
-            log_and_tty << "could not find end delimiter\n";
+            (Logger &)log_and_tty << "could not find end delimiter\n";
             out << bf_reset << "notfound";
             return false;
         }
@@ -447,7 +447,7 @@ void Parser::T_titlepage_finish(size_t v) {
         tralics_ns::bibtex_insert_jobname();
     }
     if (finished) {
-        log_and_tty << "Translation terminated after title page\n";
+        (Logger &)log_and_tty << "Translation terminated after title page\n";
         E_input(end_all_input_code);
     }
 }
@@ -455,11 +455,11 @@ void Parser::T_titlepage_finish(size_t v) {
 void Parser::T_titlepage(size_t v) const {
     if (tracing_commands()) the_log << lg_startbrace << "\\titlepage " << v << lg_endbrace;
     if (!Titlepage.is_valid()) {
-        log_and_tty << "No title page info, bug?\n";
+        (Logger &)log_and_tty << "No title page info, bug?\n";
         return; // why ?
     }
     if (v >= Titlepage.bigtable.size()) {
-        log_and_tty << "T_titlepage strange\n";
+        (Logger &)log_and_tty << "T_titlepage strange\n";
         Logger::abort();
         abort();
     }

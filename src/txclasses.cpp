@@ -100,7 +100,7 @@ void classes_ns::dump_options(const OptionList &A, String x) {
         if (i > 0) B << ",";
         A[i].dump(B);
     }
-    log_and_tty << x << B << ".\n";
+    (Logger &)log_and_tty << x << B << ".\n";
 }
 
 // Adds a copy of L to the option list of the package.
@@ -243,12 +243,12 @@ void Parser::insert_hook(long n) {
     if (n <= 0 || n >= to_signed(k)) return;
     LatexPackage *C = the_class_data.packages[to_unsigned(n)];
     if (!C->seen_process && !C->Uoptions.empty())
-        log_and_tty << "Warning: " << C->pack_or_class() << C->real_name() << " has no \\ProcessOptions\n";
+        (Logger &)log_and_tty << "Warning: " << C->pack_or_class() << C->real_name() << " has no \\ProcessOptions\n";
     back_input(C->hook);
     if (parse_version(C->date) < parse_version(C->req_date)) {
-        log_and_tty << "Warning: You have requested, on line " << get_cur_line() << ", version\n`" << C->req_date << "' of "
-                    << C->pack_or_class() << C->real_name() << ",\n"
-                    << "but only version\n`" << C->date << "' is available\n";
+        (Logger &)log_and_tty << "Warning: You have requested, on line " << get_cur_line() << ", version\n`" << C->req_date << "' of "
+                              << C->pack_or_class() << C->real_name() << ",\n"
+                              << "but only version\n`" << C->date << "' is available\n";
     }
 }
 
@@ -283,12 +283,12 @@ void Parser::T_provides_package(bool c) // True for a file
     if (!date.empty()) cur->date = date;
     String S = cur->real_name();
     if (name != S && !the_class_data.using_default_class) {
-        log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
+        (Logger &)log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
     }
     Buffer &b = local_buf;
     b << bf_reset << (cur->is_class() ? "Document class: " : "Package: ") << name << " " << date << "\n";
     if (cur->is_class())
-        log_and_tty << b;
+        (Logger &)log_and_tty << b;
     else
         the_log << b;
 }
@@ -429,7 +429,7 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
     if (!C->has_a_default) {
         if (C->is_class()) {
         } else
-            log_and_tty << "Unknown option `" << name << "' for package `" << C->real_name() << "'\n";
+            (Logger &)log_and_tty << "Unknown option `" << name << "' for package `" << C->real_name() << "'\n";
     } else {
         TokenList u = cur.to_list();
         if (X == 1) {
@@ -614,7 +614,7 @@ void Parser::T_usepackage() {
 void LatexPackage::reload() const {
     if (compare_options(Uoptions, cur_opt_list)) // true if A contains opt
         return;
-    log_and_tty << "Option clash in \\usepackage " << real_name() << "\n";
+    (Logger &)log_and_tty << "Option clash in \\usepackage " << real_name() << "\n";
     dump_options(Uoptions, "Old options: ");
     dump_options(cur_opt_list, "New options: ");
 }
@@ -639,7 +639,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
         if (type && !D.empty()) {
             res = tralics_ns::find_in_confdir(D + ".clt", true);
             if (res) {
-                log_and_tty << "Using default class " << D << "\n";
+                (Logger &)log_and_tty << "Using default class " << D << "\n";
                 the_class_data.using_default_class = true;
             }
         }
@@ -766,7 +766,7 @@ void ClassesData::show_unused() {
         GO[i].dump(B);
     }
     if (k == 0) return;
-    log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
+    (Logger &)log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
 }
 
 // Implements \AtEndOfPackage \AtEndOfClass
@@ -943,7 +943,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
     if (what == mt_error)
         parse_error(err_tok, res, "uerror");
     else if (what == mt_warning)
-        log_and_tty << lg_start << res;
+        (Logger &)log_and_tty << lg_start << res;
     else
         the_log << res;
 }
@@ -1034,7 +1034,7 @@ void Parser::kvo_bool_key() {
         Buffer &B = local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
         parse_error(err_tok, B.c_str(), "bad bool");
-        log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << (A.c_str() + 1) << ".\n";
+        (Logger &)log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << (A.c_str() + 1) << ".\n";
         return;
     }
     local_buf << bf_reset << C << '@' << D << d;
@@ -1132,7 +1132,9 @@ void Parser::kvo_bool_opt() {
     std::string df  = sE_optarg_nopar();
     std::string arg = sE_arg_nopar();
     // Optional argument must be true or false
-    if (!(df.empty() || df == "false" || df == "true")) { log_and_tty << "Bad option " << df << " of " << arg << " replaced by false\n"; }
+    if (!(df.empty() || df == "false" || df == "true")) {
+        (Logger &)log_and_tty << "Bad option " << df << " of " << arg << " replaced by false\n";
+    }
     subtypes    v   = df == "true" ? if_true_code : if_false_code;
     std::string fam = kvo_getfam();
     std::string s   = fam + '@' + arg;

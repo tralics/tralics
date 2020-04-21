@@ -405,7 +405,7 @@ void Bibtex::read1(const std::string &cur) {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
-    log_and_tty << "Bibtex Info: no biblio file " << Tbuf << "\n";
+    (Logger &)(Logger &) log_and_tty << "Bibtex Info: no biblio file " << Tbuf << "\n";
 }
 
 // Handles one bib file for the raweb. Returns true if the file exists.
@@ -472,7 +472,7 @@ void Bibliography::dump_data(Buffer &b) {
 // This creates the bbl file by running an external program.
 void Parser::create_aux_file_and_run_pgm() {
     if (!the_main->shell_escape_allowed) {
-        log_and_tty << "Cannot call external program unless using option -shell-escape\n";
+        (Logger &)log_and_tty << "Cannot call external program unless using option -shell-escape\n";
         return;
     }
     Buffer &B = biblio_buf4;
@@ -486,8 +486,8 @@ void Parser::create_aux_file_and_run_pgm() {
     try {
         std::ofstream(auxname.c_str()) << B.c_str();
     } catch (...) {
-        log_and_tty << "Cannot open file " << auxname << " for output \n"
-                    << "Bibliography will be missing\n";
+        (Logger &)log_and_tty << "Cannot open file " << auxname << " for output \n"
+                              << "Bibliography will be missing\n";
         return;
     }
     the_log << "++ executing " << T.cmd << ".\n";
@@ -892,7 +892,7 @@ void Parser::T_bpers() {
     Istring b          = nT_arg_nopar();
     Istring c          = nT_arg_nopar();
     Istring d          = nT_arg_nopar();
-    if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    if (unexpected_seen_hi && e != main_ns::nb_errs) (Logger &)log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0(np_bpers);
     if (!(A.null() || A.empty())) the_stack.add_att_to_last(np_full_first, A);
@@ -1028,23 +1028,24 @@ void Parser::insert_every_bib() {
 // We do not use parse_error here
 void Bibtex::err_in_file(String s, bool last) const {
     main_ns::nb_errs++;
-    log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
-    if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
-    log_and_tty << s;
-    if (last) log_and_tty << ".\n";
+    (Logger &)log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name
+                          << "\n";
+    if (!cur_entry_name.empty()) (Logger &)log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
+    (Logger &)log_and_tty << s;
+    if (last) (Logger &)log_and_tty << ".\n";
 }
 
 void Bibtex::err_in_entry(String a) {
     main_ns::nb_errs++;
-    log_and_tty << "Error signaled while handling entry " << cur_entry_name;
-    if (cur_entry_line >= 0) log_and_tty << " (line " << cur_entry_line << ")";
-    log_and_tty << "\n" << a;
+    (Logger &)log_and_tty << "Error signaled while handling entry " << cur_entry_name;
+    if (cur_entry_line >= 0) (Logger &)log_and_tty << " (line " << cur_entry_line << ")";
+    (Logger &)log_and_tty << "\n" << a;
 }
 
 void Bibtex::err_in_name(String a, long i) {
     err_in_entry(a);
-    log_and_tty << "\nbad syntax in author or editor name\n";
-    log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer.c_str() << ".\n";
+    (Logger &)log_and_tty << "\nbad syntax in author or editor name\n";
+    (Logger &)log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer.c_str() << ".\n";
 }
 
 // Returns next line of the .bib file. Error if EOF and what.
@@ -1112,7 +1113,7 @@ static const std::array<String, 9> scan_msgs{
 // in case we are at EOF.
 auto Bibtex::scan_identifier(size_t what) -> bool {
     int ret = scan_identifier0(what);
-    if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
+    if (ret != 0) (Logger &)log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
@@ -1151,10 +1152,10 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
 auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
     if (c.is_digit())
-        log_and_tty << "\nit cannot start with a digit";
+        (Logger &)log_and_tty << "\nit cannot start with a digit";
     else
-        log_and_tty << "\nit cannot start with `" << c << "'";
-    if (c == '%') log_and_tty << "\n(A percent sign is not a comment character in bibtex)";
+        (Logger &)log_and_tty << "\nit cannot start with `" << c << "'";
+    if (c == '%') (Logger &)log_and_tty << "\n(A percent sign is not a comment character in bibtex)";
     if (what == 1 || what == 2) return 5;
     if (what == 0) {
         if (c == '}') { // this brace might be the end of the entry
@@ -1173,7 +1174,7 @@ auto Bibtex::check_entry_end() -> int {
     codepoint c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
-    log_and_tty << "\nexpected `('  or `{'";
+    (Logger &)log_and_tty << "\nexpected `('  or `{'";
     for (;;) {
         c = cur_char();
         if (c == '(' || c == '{') return check_entry_end(-7);
@@ -1201,7 +1202,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
         return 0;
     }
     err_in_file(scan_msgs[what], false);
-    log_and_tty << "\nexpected `=' sign";
+    (Logger &)log_and_tty << "\nexpected `=' sign";
     for (;;) {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
@@ -1222,8 +1223,8 @@ auto Bibtex::check_val_end() -> int {
     codepoint c = cur_char();
     if (c.is_space() || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
-    log_and_tty << "\nit cannot end with `" << c << "'\n"
-                << "expecting `,', `#' or `" << right_outer_delim << "'";
+    (Logger &)log_and_tty << "\nit cannot end with `" << c << "'\n"
+                          << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
 }
 
@@ -1316,7 +1317,7 @@ void Bibtex::read_one_field(bool store) {
             auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
             if (!macro) {
                 err_in_file("", false);
-                log_and_tty << "undefined macro " << token_buf << ".\n";
+                (Logger &)log_and_tty << "undefined macro " << token_buf << ".\n";
             } else
                 field_buf << all_macros[*macro].value;
         }
@@ -1427,7 +1428,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
     bool ok = X->store_field(where);
     if (!ok) {
         err_in_file("", false);
-        log_and_tty << "duplicate field `" << cur_field_name << "' ignored.\n";
+        (Logger &)log_and_tty << "duplicate field `" << cur_field_name << "' ignored.\n";
         return;
     }
     if (where != fp_crossref) return;
@@ -1531,7 +1532,7 @@ void BibEntry::copy_from(BibEntry *Y) {
 
 void BibEntry::copy_from(BibEntry *Y, size_t k) {
     if (Y->type_int == type_unknown) {
-        log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
+        (Logger &)log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
         return; // Should signal an error
     }
     for (size_t i = k; i < fp_unknown; i++) {
@@ -1598,7 +1599,8 @@ void BibEntry::work(long serial) {
     cur_entry_name = cite_key.full_key;
     if (type_int == type_unknown) {
         the_bibtex->err_in_entry("undefined reference.\n");
-        if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
+        if (crossref_from != nullptr)
+            (Logger &)log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
         return;
     }
     if (explicit_cit) return;
@@ -1998,16 +2000,16 @@ auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     int ry = the_parser.get_ra_year();
     if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
         the_bibtex->err_in_entry("");
-        log_and_tty << "entry moved from refer to year because\n";
+        (Logger &)log_and_tty << "entry moved from refer to year because\n";
         if (y == 0)
-            log_and_tty << "the year field of this entry is missing.\n";
+            (Logger &)log_and_tty << "the year field of this entry is missing.\n";
         else if (y < 0)
-            log_and_tty << "the year field of this entry is invalid";
+            (Logger &)log_and_tty << "the year field of this entry is invalid";
         else if (y == ry)
-            log_and_tty << "it is from this year";
+            (Logger &)log_and_tty << "it is from this year";
         else
-            log_and_tty << "it is unpublished";
-        if (!Y.empty()) log_and_tty << " (year field is `" << Y << "').\n";
+            (Logger &)log_and_tty << "it is unpublished";
+        if (!Y.empty()) (Logger &)log_and_tty << " (year field is `" << Y << "').\n";
         return true;
     }
     return false;
@@ -2019,7 +2021,7 @@ void BibEntry::add_warning(int dy) {
     if (y <= dy) return;
     if (!all_fields[fp_note].empty()) return;
     all_fields[fp_note] = "To appear";
-    log_and_tty << "Warning signaled while handling entry " << cur_entry_name << "\nTo appear added in note field\n";
+    (Logger &)log_and_tty << "Warning signaled while handling entry " << cur_entry_name << "\nTo appear added in note field\n";
 }
 
 // Converts cite:foo into foo, with some heuristic tests.
@@ -2033,11 +2035,11 @@ auto bib_ns::skip_dp(const std::string &str) -> std::string {
 
 void Bibtex::bad_year(const std::string &given, String wanted) {
     the_bibtex->err_in_entry("");
-    log_and_tty << "the year field of this entry should be " << wanted << ", ";
+    (Logger &)log_and_tty << "the year field of this entry should be " << wanted << ", ";
     if (given.empty())
-        log_and_tty << "it is missing.\n";
+        (Logger &)log_and_tty << "it is missing.\n";
     else
-        log_and_tty << "it is `" << given << "'.\n";
+        (Logger &)log_and_tty << "it is `" << given << "'.\n";
 }
 
 void BibEntry::presort(long serial) {
@@ -2350,7 +2352,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
         first_name.init(lc + 1, L);
         if (hm > 2) {
             the_bibtex->err_in_entry("");
-            log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer.c_str() << ".\n";
+            (Logger &)log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer.c_str() << ".\n";
         }
     } else if (hm == 1) {
         first_name.init(fc + 1, L);
@@ -2376,7 +2378,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     jr_name.remove_junk();
     if (first_name.empty() && last_name.empty() && jr_name.empty()) {
         the_bibtex->err_in_entry("empty name in\n");
-        log_and_tty << name_buffer.c_str() << ".\n";
+        (Logger &)log_and_tty << name_buffer.c_str() << ".\n";
         return;
     }
     bool handle_key = want_handle_key(serial, iln);
@@ -2457,7 +2459,7 @@ auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
-        log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer.c_str() << ".\n";
+        (Logger &)log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer.c_str() << ".\n";
     }
     if (b == bct_space || b == bct_tilde || b == bct_dash || b == bct_comma) return true;
     if (b == bct_bad || b == bct_continuation) return true;

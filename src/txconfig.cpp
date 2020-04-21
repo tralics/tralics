@@ -283,8 +283,8 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     if (strncmp(B.c_str(B.ptr), "\\UR", 3) == 0) {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
-            log_and_tty << "You should use Lille instead of \\URLille,\n";
-            log_and_tty << "Nancy instead of \\URNancy, etc.\n";
+            (Logger &)log_and_tty << "You should use Lille instead of \\URLille,\n";
+            (Logger &)log_and_tty << "Nancy instead of \\URNancy, etc.\n";
             warned = true;
         }
         B.advance(3);
