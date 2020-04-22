@@ -9,11 +9,11 @@ struct Logger {
     std::ofstream log_file; // the stream to which we print
     bool          log_is_open{false};
 
-    void log_dump(const std::string &s) const;
     void log_finish(); // \todo This belongs in the destructor but spdlog could die first
-    void finish_seq() const;
     void log_init(const std::string &name);
 
+    static void finish_seq();
+    static void log_dump(const std::string &s);
     static void out_single_char(codepoint c);
 };
 
@@ -33,33 +33,33 @@ inline auto operator<<(Logger &L, logger_fn f) -> Logger & {
     return L;
 }
 
-inline void lg_start(Logger &L) { L.finish_seq(); }
+inline void lg_start(Logger &L) { Logger::finish_seq(); }
 inline void lg_start_io(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "++ ";
 }
 inline void lg_startstack(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "+stack: ";
 }
 inline void lg_startbrace(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "{";
 }
 inline void lg_startcond(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "+";
 }
 inline void lg_startif(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "{ifthenelse ";
 }
 inline void lg_startcalc(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "{calc ";
 }
 inline void lg_startbracebs(Logger &L) {
-    L.finish_seq();
+    Logger::finish_seq();
     L.log_file << "{\\";
 }
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;

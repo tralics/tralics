@@ -33,7 +33,7 @@ void Parser::signal_error() {
     std::string file = get_cur_filename();
     main_ns::nb_errs++;
     flush_buffer();
-    the_log.finish_seq();
+    Logger::finish_seq();
     if (file.empty())
         spdlog::error("on line {}: {}", line, err_buf);
     else

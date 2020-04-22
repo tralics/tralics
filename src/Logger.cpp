@@ -10,7 +10,7 @@ namespace {
 } // namespace
 
 // finishes a sequence of characters.
-void Logger::finish_seq() const {
+void Logger::finish_seq() {
     if (!buffer_for_log2.empty()) {
         spdlog::trace("{}.", buffer_for_log2.convert_to_log_encoding());
         buffer_for_log2.reset();
@@ -23,7 +23,7 @@ void Logger::out_single_char(codepoint c) {
     buffer_for_log2 << c;
 }
 
-void Logger::log_dump(const std::string &s) const {
+void Logger::log_dump(const std::string &s) {
     finish_seq();
     spdlog::trace("{{\\{}}}", s);
 }
