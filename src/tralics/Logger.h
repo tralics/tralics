@@ -6,13 +6,13 @@
 
 struct Logger {
     std::string                    filename; // the name of the log file
-    std::shared_ptr<std::ofstream> log_file; // the stream to which we print
+    std::shared_ptr<std::ofstream> log_file; // the stream to which we print \todo just ofstream?
     bool                           log_is_open{false};
 
     void log_dump(const std::string &s) const;
     void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     void finish_seq() const;
-    void log_init(const std::string &name, bool status);
+    void log_init(const std::string &name);
     void unexpected_char(String s, int k);
 
     static void out_single_char(codepoint c);

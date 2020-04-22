@@ -39,7 +39,7 @@ void Logger::log_finish() {
     if (!filename.empty()) spdlog::info("For more information, see transcript file {}", filename);
 }
 
-void Logger::log_init(const std::string &name, bool /*status*/) {
+void Logger::log_init(const std::string &name) {
     filename    = name;
     log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
     log_is_open = true;
