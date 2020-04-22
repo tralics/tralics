@@ -16,8 +16,7 @@ struct Logger {
     void log_init(const std::string &name, bool status);
     void unexpected_char(String s, int k);
 
-    [[deprecated]] static void abort();
-    static void                out_single_char(codepoint c);
+    static void out_single_char(codepoint c);
 };
 
 using logger_fn = void(Logger &);

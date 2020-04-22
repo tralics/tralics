@@ -564,8 +564,7 @@ auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
     find_cid_rid_tid(cid, rid, tid);
     ArrayInfo *A = find_cell_props(tid);
     if (A == nullptr) {
-        log_and_tty << tid.value << "find_cell_prop_failure\n";
-        Logger::abort();
+        spdlog::critical("Fatal: {} find_cell_prop failure", tid.value);
         abort();
     }
     return A;

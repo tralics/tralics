@@ -12,6 +12,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
+#include <spdlog/spdlog.h>
 
 namespace {
     int               init_file_pos = 0; // position in init file
@@ -459,8 +460,7 @@ void Parser::T_titlepage(size_t v) const {
         return; // why ?
     }
     if (v >= Titlepage.bigtable.size()) {
-        (Logger &)log_and_tty << "T_titlepage strange\n";
-        Logger::abort();
+        spdlog::critical("T_titlepage strange");
         abort();
     }
     Titlepage.bigtable[v].exec(v, tracing_commands());

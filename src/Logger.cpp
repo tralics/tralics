@@ -9,9 +9,6 @@ namespace {
     Buffer buffer_for_log2; // Only used in the following 2 functions
 } // namespace
 
-// This is executed when there is a critical error. \todo not really useful anymore
-void Logger::abort() { spdlog::critical("Fatal_error for {}", the_parser.get_job_name()); }
-
 // finishes a sequence of characters.
 void Logger::finish_seq() const {
     if (!buffer_for_log2.empty()) {

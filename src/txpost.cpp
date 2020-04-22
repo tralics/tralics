@@ -15,6 +15,7 @@
 #include "txinline.h"
 #include "txtrees.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 #include <utility>
 
 namespace {
@@ -256,10 +257,7 @@ void Xml::recurse0(XmlAction &X) {
                 erase(begin() + to_signed(k));
                 X.mark_found();
                 return;
-            default:
-                (Logger &)log_and_tty << "illegal value in recurse0\n";
-                Logger::abort();
-                abort();
+            default: spdlog::critical("Fatal: illegal value in recurse0"); abort();
             }
         y->recurse0(X);
         if (X.is_ok()) return;
@@ -312,10 +310,7 @@ void Xml::recurse(XmlAction &X) {
                 return;     // nothing more to do.
             }
             case rc_rename: T->name = X.get_string_val(); break;
-            default:
-                (Logger &)log_and_tty << "illegal value in recurse\n";
-                Logger::abort();
-                abort();
+            default: spdlog::critical("Fatal: illegal value in recurse"); abort();
             }
         }
         T->recurse(X);

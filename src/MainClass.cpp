@@ -33,11 +33,10 @@ namespace {
     }
 
     void bad_conf(String s) {
-        (Logger &)log_and_tty << fmt::format("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year())
-                              << "It must define a value for the parameter " << s << "\n"
-                              << "See transcript file " << the_log.filename << " for details\n"
-                              << "No xml file generated\n";
-        Logger::abort();
+        spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year());
+        spdlog::critical("It must define a value for the parameter {}", s);
+        spdlog::critical("See transcript file {} for details", the_log.filename);
+        spdlog::critical("No xml file generated");
         exit(1);
     }
 
@@ -70,8 +69,7 @@ namespace {
         }
         if (Y.empty()) return;
         if (Y == C.to_string()) return;
-        (Logger &)log_and_tty << "Option -year=" << Y << " incompatible with year in source file \n";
-        Logger::abort();
+        spdlog::critical("Fatal: Option -year={} incompatible with year in source file", Y);
         exit(1);
     }
 
@@ -926,8 +924,7 @@ void MainClass::read_config_and_other() {
 }
 
 void MainClass::bad_year() {
-    std::cout << "Fatal error: Input file name must be team name followed by " << year << "\n";
-    Logger::abort();
+    spdlog::critical("Fatal: Input file name must be team name followed by {}", year);
     end_with_help(1);
 }
 
