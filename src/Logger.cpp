@@ -41,7 +41,7 @@ void Logger::log_finish() {
 
 void Logger::log_init(const std::string &name) {
     filename    = name;
-    log_file    = std::make_shared<std::ofstream>(tralics_ns::open_file(name, true));
+    log_file    = tralics_ns::open_file(name, true);
     log_is_open = true;
 
     spdlog::set_level(spdlog::level::trace);
