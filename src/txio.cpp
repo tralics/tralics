@@ -752,14 +752,14 @@ void Buffer::extract_chars(vector<codepoint> &V) {
 // transcript file is not yet open.
 auto tralics_ns::file_exists(const std::string &name) -> bool {
     auto e = std::filesystem::exists(name);
-    if (the_log.log_is_open) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << ".\n";
+    if (!the_log.filename.empty()) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << ".\n";
     return e;
 }
 
 // This exits if the file cannot be opened and argument is true
 auto tralics_ns::open_file(String name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
-    if (the_log.log_is_open && !fp) the_log << "Cannot open file " << name << " for output \n";
+    if (!the_log.filename.empty() && !fp) the_log << "Cannot open file " << name << " for output \n";
     if (fatal && !fp) {
         std::cout << "Cannot open file " << name << " for output \n";
         exit(1);

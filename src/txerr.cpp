@@ -35,11 +35,13 @@ void Parser::signal_error() {
     main_ns::nb_errs++;
     flush_buffer();
     the_log.finish_seq();
-    spdlog::info("Error signaled at line {}{}:", line, !file.empty() ? fmt::format(" of file {}", file) : "");
-    spdlog::error("{}.", err_buf);
+    if (file.empty())
+        spdlog::error("on line {}: {}", line, err_buf);
+    else
+        spdlog::error("{}:{} {}", file, line, err_buf);
     if (main_ns::nb_errs >= 5000) {
         spdlog::critical("Translation aborted: Too many errors, aborting.");
-        log_and_tty.log_finish(main_ns::nb_errs);
+        log_and_tty.log_finish();
         exit(1);
     }
 }

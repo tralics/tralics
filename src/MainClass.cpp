@@ -996,7 +996,7 @@ void MainClass::trans0() {
     if (load_l3) the_parser.L3_load(true);
     tralics_ns::Titlepage_start(verbose);
     if (only_input_data) {
-        log_and_tty.log_finish(main_ns::nb_errs);
+        log_and_tty.log_finish();
         exit(0);
     }
 }
@@ -1056,7 +1056,7 @@ void MainClass::run(int argc, char **argv) {
         the_parser.my_stats.token_stats();
         the_parser.finish_images();
         out_xml();
-        log_and_tty.log_finish(main_ns::nb_errs);
+        log_and_tty.log_finish();
     } else
         (Logger &)log_and_tty << "Nothing written to " << out_name << ".xml.\n";
 }

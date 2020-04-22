@@ -11,7 +11,7 @@ struct Logger {
 
     void dump(String s) const;
     void dump0(String s) const;
-    void log_finish(int n);
+    void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     void finish_seq() const;
     void log_init(const std::string &name, bool status);
     void unexpected_char(String s, int k);

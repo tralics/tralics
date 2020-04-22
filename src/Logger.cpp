@@ -36,15 +36,15 @@ void Logger::dump0(String s) const {
     *log_file << "{" << s << "}\n";
 }
 
-void Logger::log_finish(int n) {
+void Logger::log_finish() {
     log_is_open = false;
-    if (n == 0)
+    if (main_ns::nb_errs == 0)
         spdlog::info("No error found.");
-    else if (n == 1)
+    else if (main_ns::nb_errs == 1)
         spdlog::warn("There was one error.");
     else
-        spdlog::warn("There were {} errors.", n);
-    spdlog::info("(For more information, see transcript file {})", filename);
+        spdlog::warn("There were {} errors.", main_ns::nb_errs);
+    if (!filename.empty()) spdlog::info("For more information, see transcript file {}", filename);
 }
 
 void Logger::log_init(const std::string &name, bool /*status*/) {
