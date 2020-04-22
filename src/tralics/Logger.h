@@ -33,7 +33,7 @@ inline auto operator<<(Logger &L, logger_fn f) -> Logger & {
     return L;
 }
 
-inline void lg_start(Logger &L) { Logger::finish_seq(); }
+inline void lg_start(Logger & /*L*/) { Logger::finish_seq(); }
 inline void lg_start_io(Logger &L) {
     Logger::finish_seq();
     L.log_file << "++ ";

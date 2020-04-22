@@ -1580,7 +1580,7 @@ void Parser::finish_csname(const Buffer &b, String s) {
 // This interprets \csname ... \endcsname; token is to be read again
 void Parser::E_csname() {
     Buffer b;
-    if (tracing_commands()) the_log.log_dump("csname");
+    if (tracing_commands()) Logger::log_dump("csname");
     if (list_to_string0(b)) {
         if (cur_tok.is_valid()) back_input();
         bad_csname(true);
@@ -1783,7 +1783,7 @@ void Parser::E_iwhile(subtypes cc) {
 // We define \iterate as: \def\iterate{...\relax\expandafter\iterate\fi}
 // then execute \iterate\let\iterate\relax
 void Parser::E_loop() {
-    if (tracing_commands()) the_log.log_dump("loop");
+    if (tracing_commands()) Logger::log_dump("loop");
     TokenList R = read_until(hash_table.repeat_token);
     R.push_back(hash_table.relax_token);
     R.push_back(hash_table.expandafter_token);
