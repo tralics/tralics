@@ -13,7 +13,6 @@ struct Logger {
     void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     void finish_seq() const;
     void log_init(const std::string &name);
-    void unexpected_char(String s, int k);
 
     static void out_single_char(codepoint c);
 };

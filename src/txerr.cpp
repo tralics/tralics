@@ -18,7 +18,6 @@
 
 namespace err_ns {
     void convert_to_string(const TokenList &L);
-    void unexpected_char(String s, int k);
 } // namespace err_ns
 
 void err_ns::fatal_error(String s) {
