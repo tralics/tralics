@@ -1086,7 +1086,7 @@ void MainClass::out_xml() {
     fp << X;
     fp << the_parser.the_stack.document_element();
     fp << "\n";
-    (Logger &)log_and_tty << "Output written on " << name << " (" << fp_len << " bytes).\n";
+    spdlog::info("Output written on {} ({} bytes).", name, fp_len);
     if (the_main->find_words) {
         u = tralics_ns::get_out_dir(out_name);
         X << bf_reset << u;

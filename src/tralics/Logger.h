@@ -9,8 +9,7 @@ struct Logger {
     std::shared_ptr<std::ofstream> log_file; // the stream to which we print
     bool                           log_is_open{false};
 
-    void dump(String s) const;
-    void dump0(String s) const;
+    void log_dump(const std::string &s) const;
     void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     void finish_seq() const;
     void log_init(const std::string &name, bool status);

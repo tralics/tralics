@@ -12,7 +12,7 @@ namespace {
 // finishes a sequence of characters.
 void Logger::finish_seq() const {
     if (!buffer_for_log2.empty()) {
-        *log_file << buffer_for_log2.convert_to_log_encoding() << ".\n";
+        spdlog::trace("{}.", buffer_for_log2.convert_to_log_encoding());
         buffer_for_log2.reset();
     }
 }
@@ -23,14 +23,9 @@ void Logger::out_single_char(codepoint c) {
     buffer_for_log2 << c;
 }
 
-void Logger::dump(String s) const {
+void Logger::log_dump(const std::string &s) const {
     finish_seq();
-    *log_file << "{\\" << s << "}\n";
-}
-
-void Logger::dump0(String s) const {
-    finish_seq();
-    *log_file << "{" << s << "}\n";
+    spdlog::trace("{{\\{}}}", s);
 }
 
 void Logger::log_finish() {

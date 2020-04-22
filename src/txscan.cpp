@@ -261,18 +261,18 @@ auto Parser::scan_file_name() -> std::string {
 // file. The real code of input is in T_input().
 void Parser::E_input(int q) {
     if (q == endinput_code) {
-        if (tracing_commands()) the_log.dump("endinput");
+        if (tracing_commands()) the_log.log_dump("endinput");
         force_eof = true;
         return;
     }
     if (q == end_all_input_code) {
-        if (tracing_commands()) the_log.dump("endallinput");
+        if (tracing_commands()) the_log.log_dump("endallinput");
         for (auto &i : cur_input_stack) i->destroy();
         force_eof = true;
         return;
     }
     if (q == scantokens_code) {
-        if (tracing_commands()) the_log.dump("scantokens");
+        if (tracing_commands()) the_log.log_dump("scantokens");
         TokenList L = scan_general_text();
         T_scantokens(L);
         return;
@@ -284,7 +284,7 @@ void Parser::E_input(int q) {
                     << "\n";
         return;
     }
-    if (tracing_commands()) the_log.dump("input");
+    if (tracing_commands()) the_log.log_dump("input");
     T_input(q);
 }
 
@@ -1461,7 +1461,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
         B << L;
         return B.str_toks(nlt_nl); // \n gives ^^J
     }
-    if (tracing_commands()) the_log.dump("the");
+    if (tracing_commands()) the_log.log_dump("the");
     get_x_token();
     if (tracing_commands()) the_log << lg_startbracebs << "the " << cur_tok << "}\n";
     scan_something_internal(it_tok, false);
