@@ -7,7 +7,6 @@
 struct Logger {
     std::string   filename; // the name of the log file
     std::ofstream log_file; // the stream to which we print
-    bool          log_is_open{false};
 
     void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     void log_init(const std::string &name);

@@ -29,7 +29,6 @@ void Logger::log_dump(const std::string &s) {
 }
 
 void Logger::log_finish() {
-    log_is_open = false;
     if (main_ns::nb_errs == 0)
         spdlog::info("No error found.");
     else if (main_ns::nb_errs == 1)
@@ -40,9 +39,8 @@ void Logger::log_finish() {
 }
 
 void Logger::log_init(const std::string &name) {
-    filename    = name;
-    log_file    = tralics_ns::open_file(name, true);
-    log_is_open = true;
+    filename = name;
+    log_file = tralics_ns::open_file(name, true);
 
     spdlog::set_level(spdlog::level::trace);
     auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
