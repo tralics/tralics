@@ -153,9 +153,9 @@ void Converter::start_convert(int l) {
 void Buffer::utf8_error(bool first) {
     Converter &T = the_converter;
     T.bad_chars++;
-    (Logger &)log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
-                          << (first ? ", first byte" : ", continuation byte") << ")\n";
-    (Logger &)log_and_tty << "Position in line is " << ptr << "\n";
+    log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
+                << (first ? ", first byte" : ", continuation byte") << ")\n";
+    log_and_tty << "Position in line is " << ptr << "\n";
     if (T.new_error()) return; // signal only one error per line
     for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(the_log.log_file, at(i));
     the_log << "\n";
@@ -1026,12 +1026,12 @@ void Parser::T_filecontents(int spec) {
         main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
     } else if (tralics_ns::find_in_path(filename)) {
-        Logger::finish_seq(), (Logger &)log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
-                                                    << "Not generating it from this source\n";
+        Logger::finish_seq(), log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
+                                          << "Not generating it from this source\n";
     } else {
         String fn = tralics_ns::get_out_dir(filename);
         outfile   = tralics_ns::open_file(fn, false);
-        Logger::finish_seq(), (Logger &)log_and_tty << "Writing file `" << fn << "'\n";
+        Logger::finish_seq(), log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)
             parse_error("unable to open file for writing");
         else {

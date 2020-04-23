@@ -8,7 +8,7 @@ struct Logger {
     std::string   filename; // the name of the log file
     std::ofstream log_file; // the stream to which we print
 
-    void log_finish(); // \todo This belongs in the destructor but spdlog could die first
+    void log_finish() const; // \todo This belongs in the destructor but spdlog could die first
     void log_init(const std::string &name);
 
     static void finish_seq();
@@ -17,7 +17,7 @@ struct Logger {
 };
 
 // By default, send things to the log file. In Logger, this defaulted to
-// both console and file, those are all (Logger &)log_and_tty in the code for
+// both console and file, those are all log_and_tty in the code for
 // now. \todo So replace `the_log <<` with spdlog::trace, and `log_and_tty <<`
 // with spdlog::info.
 template <typename T> auto operator<<(Logger &L, const T &s) -> Logger & {

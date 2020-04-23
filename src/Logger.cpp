@@ -28,7 +28,7 @@ void Logger::log_dump(const std::string &s) {
     spdlog::trace("{{\\{}}}", s);
 }
 
-void Logger::log_finish() {
+void Logger::log_finish() const {
     if (main_ns::nb_errs == 0)
         spdlog::info("No error found.");
     else if (main_ns::nb_errs == 1)

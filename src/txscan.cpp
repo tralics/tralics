@@ -119,7 +119,7 @@ void Parser::M_extension(int cc) {
         else if (uchan == negative_out_slot)
             the_log << s;
         else
-            (Logger &)log_and_tty << s;
+            log_and_tty << s;
     }
 }
 
@@ -2062,7 +2062,7 @@ void Parser::token_show(int what, Buffer &B) {
     bool lg = what == 0;
     if (lg) {
         Logger::finish_seq();
-        if (!cur_tok.not_a_cmd()) (Logger &)log_and_tty << cur_tok << "=";
+        if (!cur_tok.not_a_cmd()) log_and_tty << cur_tok << "=";
     }
     token_for_show(lg, cur_cmd_chr, B);
     if (what == 2) { // find and strip the prefix
@@ -2072,7 +2072,7 @@ void Parser::token_show(int what, Buffer &B) {
         B.reset();
         B.push_back(s);
     }
-    if (lg) (Logger &)log_and_tty << B.convert_to_log_encoding() << ".\n";
+    if (lg) log_and_tty << B.convert_to_log_encoding() << ".\n";
 }
 
 // This is for tracingassigns

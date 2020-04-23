@@ -415,7 +415,7 @@ void Parser::T_typein() {
         cmd     = get_r_token();
         has_opt = true;
     }
-    (Logger &)log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
+    log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
     auto cc                              = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].val = -1;
     TokenList L                          = read_from_file(0, false);
@@ -898,7 +898,7 @@ void Parser::internal_choice_key() {
         back_input(bad_code);
     else {
         parse_error(err_tok, "XKV: value is not allowed");
-        (Logger &)log_and_tty << " " << input << "\n";
+        log_and_tty << " " << input << "\n";
     }
 }
 

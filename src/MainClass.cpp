@@ -367,7 +367,7 @@ void MainClass::check_for_input() {
     open_log();
     tralics_ns::read_a_file(input_content, s, 4);
     if (input_content.empty()) {
-        (Logger &)log_and_tty << "Empty input file " << s << "\n";
+        log_and_tty << "Empty input file " << s << "\n";
         exit(1);
     }
     {
@@ -402,9 +402,9 @@ void MainClass::open_log() { // \todo spdlog etc
             << "Tralics is licensed under the CeCILL Free Software Licensing Agreement\n"
             << start_date << "OS: " << print_os(cur_os) << ", machine " << machine << "\n";
     if (special)
-        (Logger &)log_and_tty << "Starting translation of command line argument.\n";
+        log_and_tty << "Starting translation of command line argument.\n";
     else
-        (Logger &)log_and_tty << "Starting translation of file " << infile << ".\n";
+        log_and_tty << "Starting translation of file " << infile << ".\n";
     the_log << "Output encoding: ";
     if (output_encoding == en_utf8)
         the_log << "UTF8 ";
@@ -771,7 +771,7 @@ void MainClass::open_config_file() {
     Buffer &B = main_ns::path_buffer;
     if (B.empty()) {
         config_file.insert("#comment", true);
-        (Logger &)log_and_tty << "Dummy default configuration file used.\n";
+        log_and_tty << "Dummy default configuration file used.\n";
         return;
     }
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
@@ -839,7 +839,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (use_tcf) {
         tralics_ns::read_a_file(config_file, tcf_file, 0);
         config_file.normalise_final_cr();
-        (Logger &)log_and_tty << "Read tcf file " << tcf_file << "\n";
+        log_and_tty << "Read tcf file " << tcf_file << "\n";
     }
     return true;
 }
@@ -1056,7 +1056,7 @@ void MainClass::run(int argc, char **argv) {
         out_xml();
         log_and_tty.log_finish();
     } else
-        (Logger &)log_and_tty << "Nothing written to " << out_name << ".xml.\n";
+        log_and_tty << "Nothing written to " << out_name << ".xml.\n";
 }
 
 void MainClass::out_xml() {

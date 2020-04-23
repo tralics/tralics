@@ -38,9 +38,9 @@ void Stats::token_stats() const {
     spdlog::trace("Number of ref {}, of used labels {}, of defined labels {}, of ext. ref. {}.", nb_ref, nb_used_ref, nb_label_defined,
                   nb_href);
     if (the_parser.get_list_files()) {
-        (Logger &)log_and_tty << " *File List*\n";
-        (Logger &)log_and_tty << file_list;
-        (Logger &)log_and_tty << " ***********\n";
+        log_and_tty << " *File List*\n";
+        log_and_tty << file_list;
+        log_and_tty << " ***********\n";
     }
     io_convert_stats();
 }
