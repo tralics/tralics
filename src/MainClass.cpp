@@ -21,16 +21,13 @@ namespace {
     std::vector<std::string> other_options;
 
     void after_conf_assign(std::vector<std::string> &V) {
-        size_t n = V.size(), i = 0;
-        for (;;) {
-            if (i >= n) return;
+        for (size_t i = 0; i < V.size(); ++i) {
             ssa2 << bf_reset << V[i];
             i++;
             Buffer local_buf;
-            local_buf << bf_reset << V[i];
-            i++;
+            local_buf << V[i];
             bool res = assign(ssa2, local_buf);
-            if (res) the_log << ssa2.c_str() << "=" << local_buf.c_str() << "\n";
+            if (res) spdlog::trace("{}={}", ssa2, local_buf);
         }
     }
 

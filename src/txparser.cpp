@@ -3427,7 +3427,8 @@ void Parser::M_shorthand_define(int cmd, bool gbl) {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(pos, R, gbl);
-    Logger::finish_seq(), the_log << "{\\" << name << " " << tbd << "=\\" << R.name() << "}\n";
+    Logger::finish_seq();
+    the_log << "{\\" << name << " " << tbd << "=\\" << R.name() << "}\n";
 }
 
 // For bootstrap; always traced
@@ -3472,7 +3473,8 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(p, R, true);
-    Logger::finish_seq(), the_log << "{\\" << name << " \\" << sh << "=\\" << R.name() << "}\n";
+    Logger::finish_seq();
+    the_log << "{\\" << name << " \\" << sh << "=\\" << R.name() << "}\n";
     return T;
 }
 
