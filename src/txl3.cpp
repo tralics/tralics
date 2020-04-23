@@ -955,7 +955,7 @@ void Parser::Tl3_gen_from_ac(int c) {
     auto n = scan_int(caller);
     read_until(hash_table.relax_token); // read all unused tokens
     TokenList parms = l3_parms_from_ac(n, fun, false);
-    if (tracing_commands()) the_log << lg_startbrace << caller << "-> " << creator << fun << parms << "}\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << "{" << caller << "-> " << creator << fun << parms << "}\n";
     back_input(parms);
     back_input(fun);
     back_input(creator);
@@ -1018,7 +1018,9 @@ void Parser::l3_generate_variant() {
     }
     std::string spec = sE_arg_nopar();
     if (nok) return; // an error has already been generated
-    if (tracing_commands()) the_log << lg_startbrace << "Generating variants for " << orig << " with " << spec << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "Generating variants for " << orig << " with " << spec << "}\n";
     for (const auto &p : split_commas(spec)) l3_generate_variant(p, prot, orig);
 }
 

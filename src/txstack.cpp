@@ -269,7 +269,9 @@ void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
         auto    ptr = Table.size() - 1;
         Istring fr  = Table[ptr].frame;
-        if (!fr.spec_empty()) the_log << lg_startbrace << "Push " << fr << " " << ptr << "}\n";
+        if (!fr.spec_empty())
+            Logger::finish_seq(), the_log << "{"
+                                          << "Push " << fr << " " << ptr << "}\n";
     }
 }
 
@@ -332,7 +334,8 @@ auto stack_ns::mode_to_string(mode x) -> String {
 // Tracing of stack when popping
 void Stack::trace_pop(bool sw) {
     if (the_parser.tracing_stack()) {
-        the_log << lg_startbrace << "Pop ";
+        Logger::finish_seq(), the_log << "{"
+                                      << "Pop ";
         if (sw) the_log << "(module) ";
         the_log << int(Table.size() - 1) << ":";
         trace_stack();

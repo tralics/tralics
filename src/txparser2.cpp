@@ -239,7 +239,9 @@ auto Parser::T_xmllatex() -> std::string {
             mac_buffer.push_back(hash_table[x.hash_loc()]);
         // else token is bad or null
     }
-    if (tracing_commands()) the_log << lg_startbrace << "Rawxml: " << mac_buffer << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "Rawxml: " << mac_buffer << "}\n";
     return mac_buffer.to_string();
 }
 
@@ -594,7 +596,9 @@ void Parser::T_xkv_for(subtypes c) {
 void Parser::M_cons() {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
-    if (tracing_commands()) the_log << lg_startbrace << "\\@cons " << cmd << " + " << L << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "\\@cons " << cmd << " + " << L << "}\n";
     M_cons(cmd, L);
 }
 
@@ -1302,7 +1306,10 @@ void Parser::xkv_execute_options() {
     data.finish();
 }
 
-void XkvSetkeys::dump_keys() { the_log << lg_startbrace << "Options to execute->" << keyvals << "}\n"; }
+void XkvSetkeys::dump_keys() {
+    Logger::finish_seq(), the_log << "{"
+                                  << "Options to execute->" << keyvals << "}\n";
+}
 
 // Implements ProcessOptionsX
 void Parser::xkv_process_options() {

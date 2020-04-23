@@ -782,7 +782,8 @@ void Parser::T_math(subtypes type) {
         size_t    position  = is_inline ? everymath_code : everydisplay_code;
         TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
-            if (tracing_commands()) the_log << lg_startbrace << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
+            if (tracing_commands())
+                Logger::finish_seq(), the_log << "{" << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
             back_input(everymath);
         }
     }
@@ -1166,7 +1167,9 @@ auto Parser::scan_math_endcell(Token t) -> bool {
     if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
-            if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << "}\n";
+            if (tracing_commands())
+                Logger::finish_seq(), the_log << "{"
+                                              << "template v-part " << L << "}\n";
             back_input(t);
             back_input(L);
             the_stack.mark_omit_cell();
@@ -1352,7 +1355,9 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
-                if (tracing_commands()) the_log << lg_startbrace << "template v-part " << L << "}\n";
+                if (tracing_commands())
+                    Logger::finish_seq(), the_log << "{"
+                                                  << "template v-part " << L << "}\n";
                 back_input(cur_tok);
                 back_input(L);
                 the_stack.mark_omit_cell();
@@ -1450,7 +1455,9 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
         // it's a math formula inside a formula
         TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
-            if (tracing_commands()) the_log << lg_startbrace << "<everymath> " << everymath << "}\n";
+            if (tracing_commands())
+                Logger::finish_seq(), the_log << "{"
+                                              << "<everymath> " << everymath << "}\n";
             back_input(everymath);
         }
         select_math_font();
@@ -1601,7 +1608,9 @@ void Parser::scan_math_hbox(int res, subtypes c) {
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
-        if (tracing_commands()) the_log << lg_startbrace << "<everyhbox> " << L << "}\n";
+        if (tracing_commands())
+            Logger::finish_seq(), the_log << "{"
+                                          << "<everyhbox> " << L << "}\n";
         back_input(L);
         back_input(hash_table.OB_token);
     }

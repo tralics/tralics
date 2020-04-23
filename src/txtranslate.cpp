@@ -107,7 +107,7 @@ void Parser::translate02() {
         return;
     }
     if (cur_cmd_chr.is_letter_other()) return;
-    the_log << lg_startbrace;
+    Logger::finish_seq(), the_log << "{";
     print_cmd_chr(cur_cmd_chr);
     the_log << "}\n";
 }
@@ -115,7 +115,9 @@ void Parser::translate02() {
 // Flushes the buffer, creating a new xml element that will be added
 // to the main tree.
 void Parser::flush_buffer1() {
-    if (tracing_commands()) the_log << lg_startbrace << "Text:" << unprocessed_xml.convert_to_log_encoding() << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "Text:" << unprocessed_xml.convert_to_log_encoding() << "}\n";
     the_stack.add_last_string(unprocessed_xml);
     unprocessed_xml.reset();
 }
@@ -1142,7 +1144,9 @@ void Parser::T_color(subtypes c) {
         all_colors.push_back(new ColSpec(name, model, value));
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
-        if (tracing_assigns()) the_log << lg_startbrace << "Globally changing " << C << " into color number " << n << "}\n";
+        if (tracing_assigns())
+            Logger::finish_seq(), the_log << "{"
+                                          << "Globally changing " << C << " into color number " << n << "}\n";
         return;
     }
     if (c >= color_offset) {
@@ -1563,8 +1567,9 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     if (special_case) {
         cur_level++;
         if (tracing_stack())
-            the_log << lg_startstack << "level + " << cur_level << " (spec)"
-                    << "\n";
+            Logger::finish_seq(), the_log << "+stack:  "
+                                          << "level + " << cur_level << " (spec)"
+                                          << "\n";
     }
     try {
         translate_all();
@@ -1572,8 +1577,9 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     flush_buffer();
     if (special_case) {
         if (tracing_stack())
-            the_log << lg_startstack << "level - " << cur_level << " (spec)"
-                    << "\n";
+            Logger::finish_seq(), the_log << "+stack:  "
+                                          << "level - " << cur_level << " (spec)"
+                                          << "\n";
         cur_level--;
     }
     if (par) the_stack.pop(cst_p);
@@ -1633,7 +1639,9 @@ void Parser::T_reevaluate() {
     Tbuf.reset();
     T_reevaluate0(L1, in_env);
     T_reevaluate0(L2, in_env);
-    if (tracing_commands()) the_log << lg_startbrace << "Reeval: " << Tbuf << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "Reeval: " << Tbuf << "}\n";
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Clines(-1));
     lines.split_string(Tbuf.c_str(), 0);
@@ -1680,7 +1688,7 @@ void Parser::T_case_shift(int c) {
         read_toks_edef(L);
         pop_level(bt_brace);
     }
-    if (tracing_commands()) the_log << lg_startbrace << T << "(a)->" << L << "}\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << "{" << T << "(a)->" << L << "}\n";
     auto      P = L.begin();
     auto      E = L.end();
     TokenList res;
@@ -1729,7 +1737,7 @@ void Parser::T_case_shift(int c) {
         }
         res.push_back(a);
     }
-    if (tracing_commands()) the_log << lg_startbrace << T << "->" << res << "}\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << "{" << T << "->" << res << "}\n";
     back_input(res);
 }
 

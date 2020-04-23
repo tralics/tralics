@@ -297,7 +297,8 @@ namespace {
 
     void show_encoding(size_t wc, const std::string &name) {
         const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
-        the_log << lg_start_io << "Input encoding is " << wc << wa << " for " << name << "\n";
+        Logger::finish_seq(), the_log << "++ "
+                                      << "Input encoding is " << wc << wa << " for " << name << "\n";
     }
 } // namespace
 
@@ -1144,6 +1145,7 @@ void MainClass::check_section_use() const {
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
         input_encoding = wc;
-        the_log << lg_start_io << "Default input encoding changed to " << wc << "\n";
+        Logger::finish_seq(), the_log << "++ "
+                                      << "Default input encoding changed to " << wc << "\n";
     }
 }

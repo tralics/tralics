@@ -118,7 +118,8 @@ void Parser::T_omitcite() {
     flush_buffer();
     std::string s = sT_arg_nopar();
     omitcite_list.push_back(s);
-    the_log << lg_startbrace << "\\omitcite(" << int(omitcite_list.size());
+    Logger::finish_seq(), the_log << "{"
+                                  << "\\omitcite(" << int(omitcite_list.size());
     the_log << ") = " << s << "}\n";
 }
 
@@ -1017,7 +1018,9 @@ void Parser::T_citation() {
 void Parser::insert_every_bib() {
     TokenList everybib = toks_registers[everybibitem_code].val;
     if (everybib.empty()) return;
-    if (tracing_commands()) the_log << lg_startbrace << "<everybibitem> " << everybib << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "<everybibitem> " << everybib << "}\n";
     back_input(everybib);
 }
 

@@ -2031,7 +2031,7 @@ void Parser::boot() {
 // This implements \a', or \a{'}, expansion is \', empty in case of an error
 // cur_tok is \a, in case of error
 void Parser::E_accent_a() {
-    if (tracing_macros()) the_log << lg_startbrace << cur_tok << "}\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << "{" << cur_tok << "}\n";
     TokenList y = read_arg();
     if (!token_ns::has_a_single_token(y)) {
         parse_error("wanted a single token as argument to \\a");
@@ -2055,12 +2055,15 @@ void Parser::E_accent_a() {
 // or \'{\= u}, a double accent
 // cur_tok, cur_cmd_chr explain what to do.
 void Parser::E_accent() {
-    if (tracing_macros()) the_log << lg_startbrace << "accent " << cur_tok << "}\n";
+    if (tracing_macros())
+        Logger::finish_seq(), the_log << "{"
+                                      << "accent " << cur_tok << "}\n";
     int acc_code = cur_cmd_chr.chr;
     if (global_in_url && acc_code == '~') {
         if (tracing_macros()) {
-            the_log << lg_startbrace << "\\~ gives ~ "
-                    << "}\n";
+            Logger::finish_seq(), the_log << "{"
+                                          << "\\~ gives ~ "
+                                          << "}\n";
         }
         back_input(Token(other_t_offset, '~'));
         return;
@@ -2185,6 +2188,9 @@ void Parser::E_accent() {
         expansion.push_front(hash_table.composite_token);
     }
 
-    if (tracing_macros()) { the_log << lg_startbrace << "accent on " << uchar(achar) << " -> " << expansion << "}\n"; }
+    if (tracing_macros()) {
+        Logger::finish_seq(), the_log << "{"
+                                      << "accent on " << uchar(achar) << " -> " << expansion << "}\n";
+    }
     back_input(expansion);
 }

@@ -367,7 +367,9 @@ void TitlePageAux::exec_post() {
 
 // This is executed when the user asks for a titlepage command.
 void TitlePageAux::exec(size_t v, bool vb) {
-    if (vb) the_log << lg_startbrace << "\\titlepage " << v << "=\\" << T1 << "}\n";
+    if (vb)
+        Logger::finish_seq(), the_log << "{"
+                                      << "\\titlepage " << v << "=\\" << T1 << "}\n";
     if (type == tpi_rt_tp) {
         the_parser.T_titlepage_finish(v);
         return;
@@ -454,7 +456,9 @@ void Parser::T_titlepage_finish(size_t v) {
 }
 
 void Parser::T_titlepage(size_t v) const {
-    if (tracing_commands()) the_log << lg_startbrace << "\\titlepage " << v << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "\\titlepage " << v << "}\n";
     if (!Titlepage.is_valid()) {
         (Logger &)log_and_tty << "No title page info, bug?\n";
         return; // why ?

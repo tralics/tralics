@@ -331,7 +331,8 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
 void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
-        the_log << lg_start_io << "Input encoding changed to " << wc << " for " << file_name << "\n";
+        Logger::finish_seq(), the_log << "++ "
+                                      << "Input encoding changed to " << wc << " for " << file_name << "\n";
     }
 }
 
@@ -439,8 +440,9 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     wc = to_unsigned(k);
                     L.set_encoding(wc);
                     co_try = 0;
-                    the_log << lg_start_io << "Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x
-                            << "\n";
+                    Logger::finish_seq(), the_log << "++ "
+                                                  << "Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file "
+                                                  << x << "\n";
                 }
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);
@@ -752,7 +754,9 @@ void Buffer::extract_chars(vector<codepoint> &V) {
 // transcript file is not yet open.
 auto tralics_ns::file_exists(const std::string &name) -> bool {
     auto e = std::filesystem::exists(name);
-    if (!the_log.filename.empty()) the_log << lg_start_io << "file " << name << (e ? " exists" : " does not exist") << ".\n";
+    if (!the_log.filename.empty())
+        Logger::finish_seq(), the_log << "++ "
+                                      << "file " << name << (e ? " exists" : " does not exist") << ".\n";
     return e;
 }
 
@@ -824,7 +828,8 @@ auto LinePtr::dump_name() const -> String {
 
 // Whenever a TeX file is opened for reading, we print this in the log
 void LinePtr::after_open() {
-    the_log << lg_start_io << "Opened " << dump_name();
+    Logger::finish_seq(), the_log << "++ "
+                                  << "Opened " << dump_name();
     if (empty())
         the_log << "; it is empty\n";
     else {
@@ -843,7 +848,8 @@ void LinePtr::after_open() {
 // Whenever a TeX file is closed, we call this. If sigforce is true
 // we say if this was closed by a \endinput command.
 void LinePtr::before_close(bool sigforce) {
-    the_log << lg_start_io << "End of " << dump_name();
+    Logger::finish_seq(), the_log << "++ "
+                                  << "End of " << dump_name();
     if (sigforce && !empty()) the_log << " (forced by \\endinput)";
     the_log << "\n";
 }

@@ -16,8 +16,6 @@ struct Logger {
     static void out_single_char(codepoint c);
 };
 
-using logger_fn = void(Logger &);
-
 // By default, send things to the log file. In Logger, this defaulted to
 // both console and file, those are all (Logger &)log_and_tty in the code for
 // now. \todo So replace `the_log <<` with spdlog::trace, and `log_and_tty <<`
@@ -27,39 +25,8 @@ template <typename T> auto operator<<(Logger &L, const T &s) -> Logger & {
     return L;
 }
 
-inline auto operator<<(Logger &L, logger_fn f) -> Logger & {
-    f(L);
-    return L;
-}
-
-inline void lg_start_io(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "++ ";
-}
-inline void lg_startstack(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "+stack: ";
-}
-inline void lg_startbrace(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "{";
-}
-inline void lg_startcond(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "+";
-}
-inline void lg_startif(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "{ifthenelse ";
-}
-inline void lg_startcalc(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "{calc ";
-}
-inline void lg_startbracebs(Logger &L) {
-    Logger::finish_seq();
-    L.log_file << "{\\";
-}
+// This one uses log encoding, vs utf8 for the ostream version \todo this is not
+// really useful, we can decide that logs are in utf8
 auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 
 inline Logger  log_and_tty;

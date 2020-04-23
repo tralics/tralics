@@ -530,7 +530,9 @@ void Parser::start_a_cell(bool started) {
         new_array_object.run(cid, false);
     } else {
         TokenList L = the_stack.get_u_or_v(true);
-        if (tracing_commands() && !L.empty()) the_log << lg_startbrace << "template u-part " << L << "}\n";
+        if (tracing_commands() && !L.empty())
+            Logger::finish_seq(), the_log << "{"
+                                          << "template u-part " << L << "}\n";
         back_input(L);
     }
 }
@@ -547,7 +549,9 @@ void Parser::finish_a_cell(Token T, const Istring &a) {
     back_input(T);
     if (the_stack.is_omit_cell()) return;
     TokenList L = the_stack.get_u_or_v(false);
-    if (tracing_commands() && !L.empty()) the_log << lg_startbrace << "template v-part " << L << "}\n";
+    if (tracing_commands() && !L.empty())
+        Logger::finish_seq(), the_log << "{"
+                                      << "template v-part " << L << "}\n";
     back_input(L);
 }
 

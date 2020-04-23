@@ -531,8 +531,11 @@ void Parser::T_execute_options() {
 
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
-    the_log << lg_startbrace << "Options to execute->" << local_buf << "}\n";
-    if (tracing_commands()) the_log << lg_startbrace << "Options code to execute->" << action << "}\n";
+    Logger::finish_seq(), the_log << "{"
+                                  << "Options to execute->" << local_buf << "}\n";
+    if (tracing_commands())
+        Logger::finish_seq(), the_log << "{"
+                                      << "Options code to execute->" << action << "}\n";
     back_input(action);
 }
 
@@ -550,7 +553,8 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     } else
         C->check_local_options(action, true);
     C->check_all_options(action, spec, normal ? 1 : 2);
-    the_log << lg_startbrace << "Options to execute->" << local_buf << "}\n";
+    Logger::finish_seq(), the_log << "{"
+                                  << "Options to execute->" << local_buf << "}\n";
     return action;
 }
 
