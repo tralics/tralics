@@ -1020,12 +1020,12 @@ void Parser::T_filecontents(int spec) {
         main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
     } else if (tralics_ns::find_in_path(filename)) {
-        (Logger &)log_and_tty << lg_start << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
-                              << "Not generating it from this source\n";
+        Logger::finish_seq(), (Logger &)log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
+                                                    << "Not generating it from this source\n";
     } else {
         String fn = tralics_ns::get_out_dir(filename);
         outfile   = tralics_ns::open_file(fn, false);
-        (Logger &)log_and_tty << lg_start << "Writing file `" << fn << "'\n";
+        Logger::finish_seq(), (Logger &)log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)
             parse_error("unable to open file for writing");
         else {

@@ -39,7 +39,7 @@ void Parser::E_pdfstrcmp() {
     std::string s2 = sE_arg();
     int         cp = strcmp(s1.c_str(), s2.c_str());
     TokenList   L  = token_ns::string_to_list(cp == 0 ? "0" : (cp < 0 ? "-1" : "1"), false);
-    if (tracing_macros()) the_log << lg_start << T << s1 << "==" << s2 << "->" << L << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << T << s1 << "==" << s2 << "->" << L << "\n";
     back_input(L);
 }
 
@@ -135,7 +135,7 @@ void Parser::E_prg_return(int c) {
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     if (tracing_macros()) {
-        the_log << lg_start << T << "#1#2->#" << (c == 0 ? "1" : "2") << "\n";
+        Logger::finish_seq(), the_log << T << "#1#2->#" << (c == 0 ? "1" : "2") << "\n";
         the_log << "#1<-" << L1 << "\n";
         the_log << "#2<-" << L2 << "\n";
     }
@@ -191,7 +191,7 @@ void Parser::L3_user_split_next_name(bool base) {
     B << hash_table[cur_tok.hash_loc()];
     B.split_at_colon(tok_base, tok_sig);
     std::string res = base ? tok_base : tok_sig;
-    if (tracing_macros()) the_log << lg_start << T << cur_tok << "->" << res << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << T << cur_tok << "->" << res << "\n";
     B << res;
     TokenList L = B.str_toks(nlt_cr); // is this needed?
     back_input(L);
@@ -369,7 +369,7 @@ void Parser::l3_after_cond(Token T, bool test, subtypes c) {
     }
     default: return; // should not happen
     }
-    if (tracing_macros()) the_log << lg_start << T << "->" << res << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << T << "->" << res << "\n";
     back_input(res);
 }
 
@@ -465,7 +465,7 @@ void Parser::E_l3str_case(subtypes c) {
     bool        match = false;
     std::string s1    = l3_to_string(exp, as1);
     if (exp == l3expo_code) exp = l3expn_code;
-    if (tracing_macros()) the_log << lg_start << caller << " compares " << s1 << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << caller << " compares " << s1 << "\n";
     for (;;) {
         token_ns::remove_initial_spaces(clauses);
         if (clauses.empty()) break;
@@ -483,7 +483,7 @@ void Parser::E_l3str_case(subtypes c) {
         res.splice(res.end(), true_res);
     else
         res.splice(res.end(), false_res);
-    if (tracing_macros()) the_log << lg_start << caller << "->" << res << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << caller << "->" << res << "\n";
     back_input(res);
 }
 
@@ -791,8 +791,8 @@ void Parser::L3_set_num_code(int c) {
     else {
         Buffer &B = local_buffer;
         if (tracing_commands())
-            the_log << lg_start << T << "->" << m << "."
-                    << "\n";
+            Logger::finish_seq(), the_log << T << "->" << m << "."
+                                          << "\n";
         B.reset();
         B.push_back(std::to_string(v));
         TokenList res = B.str_toks(nlt_space);
@@ -1104,8 +1104,8 @@ void Parser::E_l3expand_aux(subtypes c) {
     Token     T = cur_tok;
     TokenList L1, L2, L3, res;
     if (tracing_macros())
-        the_log << lg_start << T << " is expanded "
-                << "\n";
+        Logger::finish_seq(), the_log << T << " is expanded "
+                                      << "\n";
     L1 = read_until(T3col_tok);
     L2 = read_arg();
     switch (c) { // read and start handling the argument
@@ -1155,7 +1155,7 @@ void Parser::E_l3expand_aux(subtypes c) {
         brace_me(L2);
     }
     res.splice(res.end(), L2);
-    if (tracing_macros()) the_log << lg_start << T << "->" << res << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << T << "->" << res << "\n";
     back_input(res);
 }
 
@@ -1167,13 +1167,13 @@ void Parser::E_l3noexpand(subtypes c) {
     bool      b = tracing_macros();
     TokenList L3, res;
     if (b)
-        the_log << lg_start << T << " is expanded "
-                << "\n";
+        Logger::finish_seq(), the_log << T << " is expanded "
+                                      << "\n";
     switch (c) {
     case l3expc_code:
         csname_arg(); // optimise, there is a single token
         back_input(T_exp_notN);
-        if (b) the_log << lg_start << T << "->\\noexpand " << cur_tok << "\n";
+        if (b) Logger::finish_seq(), the_log << T << "->\\noexpand " << cur_tok << "\n";
         return;
     case l3expv_code:
         csname_arg();
@@ -1197,7 +1197,7 @@ void Parser::E_l3noexpand(subtypes c) {
     brace_me(L3);
     res.push_back(T_exp_notn);
     res.splice(res.end(), L3);
-    if (b) the_log << lg_start << T << "->" << res << "\n";
+    if (b) Logger::finish_seq(), the_log << T << "->" << res << "\n";
     back_input(res);
 }
 
@@ -1313,8 +1313,8 @@ void Parser::E_l3expand_base(subtypes c) {
     TokenList L, res;
     Token     T = cur_tok;
     if (tracing_macros())
-        the_log << lg_start << T << " is expanded "
-                << "\n";
+        Logger::finish_seq(), the_log << T << " is expanded "
+                                      << "\n";
     EXPAND_N; // macro to call
     switch (c) {
     case l3exp_No_code: EXPAND_o; break;
@@ -1559,7 +1559,7 @@ void Parser::E_l3expand_base(subtypes c) {
         break;
     default:;
     }
-    if (tracing_macros()) the_log << lg_start << T << "->" << res << "\n";
+    if (tracing_macros()) Logger::finish_seq(), the_log << T << "->" << res << "\n";
     back_input(res);
 }
 

@@ -529,7 +529,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
         first_print_level = y;
         std::cout << "Translating section command " << Y << ": " << YY << ".\n";
     }
-    the_log << lg_start << "Translating " << Y << ": " << YY << ".\n";
+    Logger::finish_seq(), the_log << "Translating " << Y << ": " << YY << ".\n";
 }
 
 // An error is signaled if the title of the module is empty

@@ -92,7 +92,7 @@ auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
 // If for some reason, the character is invalid, we remove it from the table.
 void Parser::expand_nct(TokenList &L) {
     bool action = true;
-    if (tracing_commands()) the_log << lg_start << "array preamble at start: " << L << "\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << "array preamble at start: " << L << "\n";
     if (!new_array_object.has_a_nct()) return;
     int max_iter = max_newcolumn_loops;
     while (action) {

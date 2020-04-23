@@ -716,18 +716,18 @@ void TitlePageAux::decode_flags() const {
 void TitlePageAux::dump(size_t k) {
     tpi_vals t = get_type();
     if (t == tpi_rt_alias) {
-        the_log << lg_start << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
+        Logger::finish_seq(), the_log << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
         return;
     }
     if (t == tpi_rt_constant) {
-        the_log << lg_start << "Inserting the string " << get_T1() << "\n";
+        Logger::finish_seq(), the_log << "Inserting the string " << get_T1() << "\n";
         return;
     }
     if (t == tpi_rt_exec) {
-        the_log << lg_start << "Inserting the command \\" << get_T2() << "\n";
+        Logger::finish_seq(), the_log << "Inserting the command \\" << get_T2() << "\n";
         return;
     }
-    the_log << lg_start << "Defining \\" << get_T1() << " as \\TitlePageCmd " << k << "\n";
+    Logger::finish_seq(), the_log << "Defining \\" << get_T1() << " as \\TitlePageCmd " << k << "\n";
     if (t == tpi_rt_normal)
         the_log << "   usual <" << T3 << "/>";
     else if (t == tpi_rt_normal_def)

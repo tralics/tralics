@@ -80,7 +80,7 @@ auto Parser::string_to_write(long chan) -> std::string {
     B << bf_reset << L;
     if (chan < write18_slot) B << "\n";
     auto res = B.convert_to_log_encoding();
-    if (chan == write18_slot) the_log << lg_start << "\\write18=" << res << "\n";
+    if (chan == write18_slot) Logger::finish_seq(), the_log << "\\write18=" << res << "\n";
     return res;
 }
 
@@ -280,8 +280,8 @@ void Parser::E_input(int q) {
     if (name_in_progress) {
         insert_relax();
         if (tracing_commands())
-            the_log << lg_start << "{insert \\relax for \\input}"
-                    << "\n";
+            Logger::finish_seq(), the_log << "{insert \\relax for \\input}"
+                                          << "\n";
         return;
     }
     if (tracing_commands()) Logger::log_dump("input");
@@ -817,7 +817,7 @@ void Parser::store_new_line(int n, bool vb) {
     input_buffer.insert_string(scratch);
     input_buffer.extract_chars(input_line);
     input_buffer.ptr = 0;
-    if (vb) the_log << lg_start << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
+    if (vb) Logger::finish_seq(), the_log << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
 }
 
 void Parser::insert_endline_char() {
@@ -1443,8 +1443,8 @@ void Parser::parshape_aux(subtypes m) {
 void Parser::E_the_traced(Token T, subtypes c) {
     TokenList L = E_the(c);
     if (tracing_commands())
-        the_log << lg_start << T << "->" << L << "."
-                << "\n";
+        Logger::finish_seq(), the_log << T << "->" << L << "."
+                                      << "\n";
     back_input(L);
 }
 
@@ -1694,7 +1694,7 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
     bool skip = scan_dimen1(mu, inf, co, shortcut);
     if (skip) read_one_space();
     cur_val.set_type(it_dimen);
-    if (tracing_commands()) the_log << lg_start << local_buf.trace_scan_dimen(err_tok, cur_val.get_dim_val(), mu);
+    if (tracing_commands()) Logger::finish_seq(), the_log << local_buf.trace_scan_dimen(err_tok, cur_val.get_dim_val(), mu);
 }
 
 // Multiplies a dimension by an integer
@@ -2032,7 +2032,7 @@ void Parser::token_show(int what, Buffer &B) {
     if (get_token_o()) { return; }
     bool lg = what == 0;
     if (lg) {
-        (Logger &)log_and_tty << lg_start;
+        Logger::finish_seq();
         if (!cur_tok.not_a_cmd()) (Logger &)log_and_tty << cur_tok << "=";
     }
     token_for_show(lg, cur_cmd_chr, B);
@@ -2178,7 +2178,7 @@ void Parser::E_convert() {
     case rayear_code: B.push_back(fmt::format("{}", the_parser.get_ra_year())); break;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
-    if (tracing_commands()) the_log << lg_start << T << "->" << L << "\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << T << "->" << L << "\n";
     if (c == sanitize_code) {
         new_macro(L, cur_tok);
         return;

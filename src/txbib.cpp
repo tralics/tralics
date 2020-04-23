@@ -224,8 +224,8 @@ void Parser::T_cite(subtypes sw) {
         res.push_back(hash_table.end_natcite_token);
     }
     if (tracing_commands())
-        the_log << lg_start << T << "->" << res << "."
-                << "\n";
+        Logger::finish_seq(), the_log << T << "->" << res << "."
+                                      << "\n";
     back_input(res);
 }
 
@@ -1031,8 +1031,8 @@ void Parser::insert_every_bib() {
 // We do not use parse_error here
 void Bibtex::err_in_file(String s, bool last) const {
     main_ns::nb_errs++;
-    (Logger &)log_and_tty << lg_start << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name
-                          << "\n";
+    Logger::finish_seq(),
+        (Logger &)log_and_tty << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
     if (!cur_entry_name.empty()) (Logger &)log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
     (Logger &)log_and_tty << s;
     if (last) (Logger &)log_and_tty << ".\n";
@@ -1384,7 +1384,7 @@ auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
     for (const auto &i : omitcite_list)
         if (i == cur_entry_name) {
-            the_log << lg_start << "bib: Omitting " << cur_entry_name << "\n";
+            Logger::finish_seq(), the_log << "bib: Omitting " << cur_entry_name << "\n";
             return nullptr;
         }
     BibEntry *X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
@@ -2262,7 +2262,7 @@ void Buffer::fill_table(bchar_type *table) {
             at(ptr + 1) = c;
             at(ptr)     = '\\';
             at(ptr - 1) = '{';
-            the_log << lg_start << "+bibchanged " << data() << "\n";
+            Logger::finish_seq(), the_log << "+bibchanged " << data() << "\n";
         }
         int  bl  = 1;
         auto j   = i;

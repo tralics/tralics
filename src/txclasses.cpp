@@ -275,7 +275,7 @@ void Parser::T_provides_package(bool c) // True for a file
     std::string name = sE_arg_nopar();
     std::string date = sE_optarg_nopar();
     add_to_filelist(get_cur_filename(), date);
-    the_log << lg_start;
+    Logger::finish_seq();
     if (c) {
         the_log << "File: " << name << " " << date << "\n";
         return;
@@ -647,7 +647,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     }
     if (!res) {
         if (builtin) cur->date = "2006/01/01";
-        the_log << lg_start << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
+        Logger::finish_seq(), the_log << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
         return;
     }
     cur->date = "0000/00/00";
@@ -944,7 +944,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
     if (what == mt_error)
         parse_error(err_tok, res, "uerror");
     else if (what == mt_warning)
-        (Logger &)log_and_tty << lg_start << res;
+        Logger::finish_seq(), (Logger &)log_and_tty << res;
     else
         the_log << res;
 }
@@ -959,7 +959,7 @@ void Parser::T_change_element_name() {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else
         res = config_ns::assign_name(name.c_str(), value.c_str());
-    if (res) the_log << lg_start << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
+    if (res) Logger::finish_seq(), the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
 }
 
 // -------------------------------------------------------------------
@@ -1000,7 +1000,7 @@ void Parser::call_define_key(TokenList &L, Token cmd, const std::string &arg, co
     aux = string_to_list(fam, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("define@key"));
-    if (tracing_commands()) the_log << lg_start << cmd << "->" << L << "\n";
+    if (tracing_commands()) Logger::finish_seq(), the_log << cmd << "->" << L << "\n";
     back_input(L);
 }
 
