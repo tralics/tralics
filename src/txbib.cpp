@@ -16,6 +16,7 @@
 #include "tralics/util.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 #include <utility>
 
@@ -1160,7 +1161,7 @@ auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
     if (c.is_digit())
         log_and_tty << "\nit cannot start with a digit";
     else
-        log_and_tty << "\nit cannot start with `" << c << "'";
+        log_and_tty << fmt::format("\nit cannot start with `{}'", c);
     if (c == '%') log_and_tty << "\n(A percent sign is not a comment character in bibtex)";
     if (what == 1 || what == 2) return 5;
     if (what == 0) {
@@ -1229,8 +1230,7 @@ auto Bibtex::check_val_end() -> int {
     codepoint c = cur_char();
     if (c.is_space() || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
-    log_and_tty << "\nit cannot end with `" << c << "'\n"
-                << "expecting `,', `#' or `" << right_outer_delim << "'";
+    log_and_tty << fmt::format("\nit cannot end with `{}'\n", c) << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
 }
 

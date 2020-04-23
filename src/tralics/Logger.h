@@ -24,9 +24,5 @@ template <typename T> auto operator<<(Logger &L, const T &s) -> Logger & {
     return L;
 }
 
-// This one uses log encoding, vs utf8 for the ostream version \todo this is not
-// really useful, we can decide that logs are in utf8
-[[deprecated]] auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
-
 inline Logger  log_and_tty;
 inline Logger &the_log = log_and_tty;
