@@ -49,8 +49,7 @@ public:
     Stack *the_stack{}; ///< pointer to the stack
 
     std::string default_class;     ///< The default class
-    std::string short_date;        ///< Date of start of run (short format) \todo short_date and start_date seem to be identical
-    std::string start_date;        ///< Date of start of run.
+    std::string short_date;        ///< Date of start of run (short format)
     std::string version{"2.15.4"}; ///< Version of tralics \todo set at a more reasonable place
     std::string year_string;       // is 2003
 

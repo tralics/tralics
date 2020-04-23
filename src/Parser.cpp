@@ -1354,7 +1354,6 @@ void Parser::boot_time() {
     b << long_date;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
-    the_main->start_date = fmt::format("Start compilation: {}\n", long_date);
     the_main->short_date = short_date;
     // Default year for the raweb. Until April its last year \todo remove RA stuff
     if (month <= 4) year--;

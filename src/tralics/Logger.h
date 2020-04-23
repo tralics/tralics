@@ -5,7 +5,6 @@
 #include <string>
 
 struct Logger {
-    std::string   filename; // the name of the log file
     std::ofstream log_file; // the stream to which we print
 
     void log_finish() const; // \todo This belongs in the destructor but spdlog could die first
@@ -27,7 +26,7 @@ template <typename T> auto operator<<(Logger &L, const T &s) -> Logger & {
 
 // This one uses log encoding, vs utf8 for the ostream version \todo this is not
 // really useful, we can decide that logs are in utf8
-auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
+[[deprecated]] auto operator<<(Logger &fp, const codepoint &x) -> Logger &;
 
 inline Logger  log_and_tty;
 inline Logger &the_log = log_and_tty;

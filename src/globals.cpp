@@ -4,7 +4,6 @@
 #include <fmt/format.h>
 
 std::vector<std::filesystem::path> conf_path;
-std::vector<std::string>           input_path;
 
 std::string file_name;
 std::string all_themes;

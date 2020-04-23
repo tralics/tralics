@@ -2,7 +2,6 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
-#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -35,15 +34,6 @@ void Logger::log_finish() const {
         spdlog::warn("There was one error.");
     else
         spdlog::warn("There were {} errors.", main_ns::nb_errs);
-    if (!filename.empty()) spdlog::info("For more information, see transcript file {}", filename);
 }
 
-void Logger::log_init(const std::string &name) {
-    filename = name;
-    log_file = tralics_ns::open_file(name, true);
-
-    spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(name + ".spdlog", true);
-    spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
-}
+void Logger::log_init(const std::string &name) { log_file = tralics_ns::open_file(name, true); }

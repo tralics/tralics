@@ -481,7 +481,7 @@ void LinePtr::normalise_final_cr() {
 
 // ------------------------------------------------------
 
-// This puts x into the buffer in utf8 form
+// This puts x into the buffer in utf8 form \todo codepoint::to_utf8()
 void Buffer::push_back(codepoint c) {
     unsigned x = c.value;
     if (x < 128) {
@@ -754,25 +754,21 @@ void Buffer::extract_chars(vector<codepoint> &V) {
 // transcript file is not yet open.
 auto tralics_ns::file_exists(const std::string &name) -> bool {
     auto e = std::filesystem::exists(name);
-    if (!the_log.filename.empty())
-        Logger::finish_seq(), the_log << "++ "
-                                      << "file " << name << (e ? " exists" : " does not exist") << ".\n";
+    Logger::finish_seq();
+    spdlog::trace("++ file {} {}.", name, e ? "exists" : "does not exist");
     return e;
 }
 
 // This exits if the file cannot be opened and argument is true
-auto tralics_ns::open_file(String name, bool fatal) -> std::ofstream {
+auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
-    if (!the_log.filename.empty() && !fp) the_log << "Cannot open file " << name << " for output \n";
-    if (fatal && !fp) {
-        std::cout << "Cannot open file " << name << " for output \n";
+    if (!fp && fatal) {
+        spdlog::critical("Fatal: Cannot open file {} for output.", name);
         exit(1);
     }
+    if (!fp) spdlog::error("Cannot open file {} for output.", name);
     return fp;
 }
-
-// This takes a string as argument
-auto tralics_ns::open_file(const std::string &name, bool f) -> std::ofstream { return tralics_ns::open_file(name.c_str(), f); }
 
 void LinePtr::reset(std::string x) {
     cur_line    = 0;

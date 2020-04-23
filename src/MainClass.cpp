@@ -4,6 +4,7 @@
 #include "txinline.h"
 #include <filesystem>
 #include <fmt/ostream.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -35,7 +36,6 @@ namespace {
     void bad_conf(String s) {
         spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year());
         spdlog::critical("It must define a value for the parameter {}", s);
-        spdlog::critical("See transcript file {} for details", the_log.filename);
         spdlog::critical("No xml file generated");
         exit(1);
     }
@@ -295,6 +295,16 @@ namespace {
         }
     }
 
+    auto print_enc(output_encoding_type enc) -> std::string {
+        switch (enc) {
+        case en_utf8: return "UTF-8";
+        case en_latin: return "ISO-8859-1";
+        case en_ascii7: return "ISO-8859-1 on 7 bits";
+        case en_ascii8: return "UTF-8 on 7 bits"; // whatever that means
+        default: return "Unknown";
+        }
+    }
+
     void show_encoding(size_t wc, const std::string &name) {
         const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
         Logger::finish_seq(), the_log << "++ "
@@ -361,13 +371,13 @@ void MainClass::check_for_input() {
     main_ns::path_buffer.push_back("ult");
     ult_name = main_ns::path_buffer.to_string();
     if (!std::filesystem::exists(s)) {
-        spdlog::critical("Empty input file {}", s);
+        spdlog::critical("Fatal: Nonexistent input file {}", s);
         exit(1);
     }
     open_log();
     tralics_ns::read_a_file(input_content, s, 4);
     if (input_content.empty()) {
-        log_and_tty << "Empty input file " << s << "\n";
+        spdlog::critical("Fatal: Empty input file {}", s);
         exit(1);
     }
     {
@@ -394,55 +404,35 @@ void MainClass::open_log() { // \todo spdlog etc
     Buffer &B       = b_after;
     B << bf_reset << out_dir << bf_optslash << log_name;
     B.put_at_end(".log");
-    log_and_tty.log_init(B.to_string());
+    auto f = B.to_string();
+
+    log_and_tty.log_init(f);
+    spdlog::info("Transcript written to file {}", f);
+    spdlog::set_level(spdlog::level::trace);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f + ".spdlog", true);
+    spdlog::default_logger()->sinks().push_back(sink);
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
+
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
-    the_log << "Transcript file of tralics " << version << " for file " << infile << "\n"
-            << "Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm\n"
-            << "Tralics is licensed under the CeCILL Free Software Licensing Agreement\n"
-            << start_date << "OS: " << print_os(cur_os) << ", machine " << machine << "\n";
+
+    spdlog::trace("Transcript file of tralics {} for file {}", version, infile);
+    spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
+    spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
+    spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
+    spdlog::trace("Output encoding: {}", print_enc(output_encoding));
+    spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
+    spdlog::trace("Left quote is '{}', right quote is '{}'", codepoint(leftquote_val), codepoint(rightquote_val));
+    if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
+    if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
+    if (input_path.size() > 1) spdlog::trace("Input path: ({})", fmt::join(input_path, ","));
+
     if (special)
-        log_and_tty << "Starting translation of command line argument.\n";
+        spdlog::info("Starting translation of command line argument");
     else
-        log_and_tty << "Starting translation of file " << infile << ".\n";
-    the_log << "Output encoding: ";
-    if (output_encoding == en_utf8)
-        the_log << "UTF8 ";
-    else if (output_encoding == en_latin)
-        the_log << "iso-8859-1";
-    else if (output_encoding == en_ascii7)
-        the_log << "iso-8859-1 (on 7bits)";
-    else if (output_encoding == en_ascii8)
-        the_log << "UTF8 (on 7bits)";
-    else
-        the_log << "random";
-    if (log_encoding == output_encoding)
-        the_log << " (idem transcript).\n";
-    else if (log_encoding == en_utf8 || log_encoding == en_ascii8)
-        the_log << ", and UTF8 for transcript.\n";
-    else if (log_encoding == en_latin || log_encoding == en_ascii7)
-        the_log << ", and iso-8859-1 for transcript.\n";
-    else
-        the_log << ", and random for transcript.\n";
-    Buffer b;
-    b << "Left quote is ";
-    b.out_log(codepoint(char32_t(leftquote_val)), log_encoding);
-    b << " right quote is ";
-    b.out_log(codepoint(char32_t(rightquote_val)), log_encoding);
-    the_log << b << "\n";
-    if (trivial_math != 0) the_log << fmt::format("\\notrivialmath={}\n", trivial_math);
-    check_for_encoding();
-    if (!default_class.empty()) the_log << "Default class is " << default_class << "\n";
-    auto n = input_path.size();
-    if (n > 1) {
-        b.reset();
-        b << "Input path (";
-        for (size_t i = 0; i < n; i++) {
-            if (i != 0) b << ":";
-            b << input_path[i];
-        }
-        the_log << b << ")\n";
-    }
+        spdlog::info("Starting translation of file {}", infile);
+
+    check_for_encoding(); // \todo this does not feel like it belongs here
 }
 
 void MainClass::set_ent_names(String s) { // \todo bool is_yes(String)
