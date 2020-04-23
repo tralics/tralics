@@ -10,11 +10,12 @@
 namespace {
     Buffer b_after;
 
+    std::filesystem::path out_dir;
+
     std::string log_name;
     std::string machine;
     std::string no_ext;
     std::string opt_doctype;
-    std::string out_dir;
     std::string user_config_file;
 
     std::vector<std::string> other_options;
@@ -118,29 +119,17 @@ namespace {
     }
 
     /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
-    auto hack_for_input(const std::string &s) -> std::string {
-        Buffer B;
-        B << s;
-        auto k = B.last_slash();
+    auto hack_for_input(const std::filesystem::path &s) -> std::string {
+        std::filesystem::path path = s.parent_path();
         the_parser.set_job_name(no_ext);
-        std::string path;
-        std::string fn = s;
-        if (k && (*k > 0)) {
-            B.at(*k) = 0;
-            path     = B.to_string();
-            if (out_dir.empty()) out_dir = path;
-            fn = B.to_string(*k + 1);
-        }
-        B << bf_reset << fn;
-        B.remove_last(4);
-        file_name = B.to_string();
+        file_name = s.stem();
+        if (out_dir.empty()) out_dir = path;
         if (log_name.empty()) log_name = file_name;
-        if (k > 0 && input_path.size() == 1) {
+        if (input_path.size() == 1) {
             input_path[0] = path;
-            input_path.emplace_back("");
-            return fn;
+            if (!path.empty()) input_path.emplace_back("");
         }
-        return s;
+        return s.filename();
     }
 
     /// Create an empty TeX file
@@ -304,12 +293,6 @@ namespace {
         default: return "Unknown";
         }
     }
-
-    void show_encoding(size_t wc, const std::string &name) {
-        const std::string &wa = (wc == 0 ? " (UTF8)" : (wc == 1 ? " (iso-8859-1)" : " (custom)"));
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Input encoding is " << wc << wa << " for " << name << "\n";
-    }
 } // namespace
 
 auto tralics_ns::get_out_dir(const std::string &name) -> String {
@@ -380,14 +363,15 @@ void MainClass::check_for_input() {
         spdlog::critical("Fatal: Empty input file {}", s);
         exit(1);
     }
-    {
-        auto wc = input_content.encoding;
-        if (wc < 0) {
-            wc = the_main->input_encoding;
-            input_content.set_encoding(wc);
-        }
-        show_encoding(wc, "the main file");
+
+    auto wc = input_content.encoding;
+    if (wc < 0) {
+        wc = the_main->input_encoding;
+        input_content.set_encoding(wc);
     }
+    Logger::finish_seq();
+    const std::string &wa = (wc == 0 ? "UTF-8" : wc == 1 ? "ISO-8859-1" : "custom");
+    spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
 }
 
 void MainClass::banner() const {
@@ -400,21 +384,16 @@ void MainClass::banner() const {
 }
 
 void MainClass::open_log() { // \todo spdlog etc
-    bool    special = only_input_data;
-    Buffer &B       = b_after;
-    B << bf_reset << out_dir << bf_optslash << log_name;
-    B.put_at_end(".log");
-    auto f = B.to_string();
-
+    auto f = (std::filesystem::path(out_dir) / log_name).replace_extension("log");
     log_and_tty.log_init(f);
-    spdlog::info("Transcript written to file {}", f);
-    spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f + ".spdlog", true);
-    spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
-
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
+
+    spdlog::info("Transcript written to {}", f);
+    spdlog::set_level(spdlog::level::trace);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.replace_extension("spdlog"), true);
+    spdlog::default_logger()->sinks().push_back(sink);
+    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 
     spdlog::trace("Transcript file of tralics {} for file {}", version, infile);
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
@@ -427,7 +406,7 @@ void MainClass::open_log() { // \todo spdlog etc
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (input_path.size() > 1) spdlog::trace("Input path: ({})", fmt::join(input_path, ","));
 
-    if (special)
+    if (only_input_data)
         spdlog::info("Starting translation of command line argument");
     else
         spdlog::info("Starting translation of file {}", infile);
