@@ -40,7 +40,7 @@ void Parser::signal_error() {
         spdlog::error("{}:{} {}", file, line, err_buf);
     if (main_ns::nb_errs >= 5000) {
         spdlog::critical("Translation aborted: Too many errors, aborting.");
-        log_and_tty.log_finish();
+        Logger::log_finish();
         exit(1);
     }
 }

@@ -7,11 +7,11 @@
 struct Logger {
     std::ofstream log_file; // the stream to which we print
 
-    void log_finish() const; // \todo This belongs in the destructor but spdlog could die first
     void log_init(const std::string &name);
 
     static void finish_seq();
     static void log_dump(const std::string &s);
+    static void log_finish(); // \todo This belongs in the destructor but spdlog could die first
     static void out_single_char(codepoint c);
 };
 
