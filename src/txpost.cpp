@@ -936,7 +936,7 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
 void all_words_ns::dump_words(const std::string &name) {
     auto *    WL = new WordList(nullptr, 0, nullptr);
     WordList *W  = WL;
-    for (auto L : WL0) {
+    for (auto *L : WL0) {
         if (L == nullptr) continue;
         while (W->get_next() != nullptr) W = W->get_next();
         W->set_next(L);

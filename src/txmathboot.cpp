@@ -1475,7 +1475,7 @@ void MathDataP::boot2() {
     init_builtin("varlimsup", varlimsup_code, new Xml(xml2sons(the_names[cst_mover], lim_op, get_mc_table(1))), mathop_cmd);
     init_builtin("varliminf", varliminf_code, new Xml(xml2sons(the_names[cst_munder], lim_op, get_mc_table(3))), mathop_cmd);
 
-    auto x = new Xml(xml2sons(the_names[cst_munder], lim_op, get_builtin(underrightarrow_code)));
+    auto *x = new Xml(xml2sons(the_names[cst_munder], lim_op, get_builtin(underrightarrow_code)));
     x->add_att(cst_accentunder, np_true);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 

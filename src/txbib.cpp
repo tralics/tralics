@@ -247,7 +247,7 @@ void Parser::T_cite_one() {
         parse_error("Citation after loading biblio?");
         return;
     }
-    auto res = new Xml(make_cit_ref(type, ref));
+    auto *res = new Xml(make_cit_ref(type, ref));
     if (is_simple) {
         flush_buffer();
         the_stack.add_last(res);

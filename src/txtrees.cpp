@@ -204,9 +204,9 @@ void Parser::finish_index() {
     int  idx_nb   = 0;
     auto q        = the_index.size();
     for (size_t jj = 1; jj <= q; jj++) {
-        auto j  = jj == q ? 0 : jj;
-        auto CI = the_index.at(j);
-        auto n  = CI->size();
+        auto  j  = jj == q ? 0 : jj;
+        auto *CI = the_index.at(j);
+        auto  n  = CI->size();
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
