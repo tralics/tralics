@@ -1587,7 +1587,7 @@ void Parser::finish_csname(const Buffer &b) {
 }
 
 // Same as above, but the token is to be read again
-void Parser::finish_csname(const Buffer &b, String s) {
+void Parser::finish_csname(Buffer &b, String s) {
     finish_csname(b);
     if (tracing_commands()) {
         Logger::finish_seq();

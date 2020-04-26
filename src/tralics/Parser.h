@@ -381,7 +381,7 @@ private:
     void        E_get_config(int c);
     void        finish_a_cell(Token T, const Istring &a);
     void        finish_counter_cmd(Token first, TokenList &L);
-    void        finish_csname(const Buffer &b, String s);
+    void        finish_csname(Buffer &b, String s);
     void        finish_csname(const Buffer &b);
     void        E_fi_or_else();
     void        finish_index();

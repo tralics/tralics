@@ -715,24 +715,24 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     return O.to_string();
 }
 
-auto Buffer::convert_to_log_encoding() const -> std::string {
+auto Buffer::convert_to_log_encoding() -> std::string {
     output_encoding_type T = the_main->log_encoding;
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();
-    Buffer B; // \todo do it without temporary buffer
-    B.push_back(data());
+    auto old_ptr               = ptr;
+    ptr                        = 0;
     the_converter.global_error = false;
-    B.ptr                      = 0;
     utf8_out.reset();
     for (;;) {
-        codepoint c = B.next_utf8_char();
+        codepoint c = next_utf8_char();
         if (c == 0) {
-            if (B.at_eol()) break;
+            if (at_eol()) break;
             utf8_out << "<null>";
         } else if (c == '\r')
             utf8_out << "^^M";
         else
             utf8_out.out_log(c, T);
     }
+    ptr = old_ptr;
     return utf8_out.c_str();
 }
 

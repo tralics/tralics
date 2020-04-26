@@ -27,7 +27,6 @@ public:
     [[nodiscard]] auto c_str(size_t k = 0) const -> String;                   ///< Buffer contents as a char*
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
-    [[nodiscard]] auto convert_to_log_encoding() const -> std::string;        ///< Convert to logging encoding
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }          ///< Is the write pointer at 0?
     [[nodiscard]] auto find_configuration(Buffer &aux) const -> bool;         ///< Extract config value \todo std::optional<std::string>
@@ -54,6 +53,7 @@ public:
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
+    auto convert_to_log_encoding() -> std::string;    ///< Convert to logging encoding \todo should be const
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
     void remove_last(size_t n = 1);                   ///< Drop `n` chars, provided size is large enough

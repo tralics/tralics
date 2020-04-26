@@ -1,18 +1,28 @@
 #pragma once
+#include "Buffer.h"
 #include "codepoint.h"
 #include <fstream>
 #include <memory>
+#include <spdlog/spdlog.h>
 #include <string>
+
+inline Buffer buffer_for_log2; // Only used out_single_char and finish_seq
 
 struct Logger {
     std::ofstream log_file; // the stream to which we print
 
-    void log_init(const std::string &name);
-
-    static void finish_seq();
+    void        log_init(const std::string &name);
     static void log_dump(const std::string &s);
     static void log_finish(); // \todo This belongs in the destructor but spdlog could die first
-    static void out_single_char(codepoint c);
+
+    static void out_single_char(codepoint c) { buffer_for_log2 << c; }
+
+    static void finish_seq() {
+        if (!buffer_for_log2.empty()) {
+            spdlog::trace("Character sequence: {}.", buffer_for_log2.convert_to_log_encoding());
+            buffer_for_log2.reset();
+        }
+    }
 };
 
 // By default, send things to the log file. In Logger, this defaulted to

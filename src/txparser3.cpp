@@ -492,9 +492,10 @@ void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
 // But this function cannot call box_end (because we are still in the {...}
 // group. Hence box_end must be called after cur_level is decremented.
 void SaveAuxBoundary::unsave(bool trace, Parser &P) {
-    if (trace)
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "level - " << P.get_cur_level() << " for " << val << " from line " << line << "\n";
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: level - " << P.get_cur_level() << " for " << val << " from line " << line << "\n";
+    }
     P.decr_cur_level();
     if (the_box_position >= 0) {
         if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();

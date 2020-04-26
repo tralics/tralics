@@ -80,7 +80,10 @@ auto Parser::string_to_write(long chan) -> std::string {
     B << bf_reset << L;
     if (chan < write18_slot) B << "\n";
     auto res = B.convert_to_log_encoding();
-    if (chan == write18_slot) Logger::finish_seq(), the_log << "\\write18=" << res << "\n";
+    if (chan == write18_slot) {
+        Logger::finish_seq();
+        the_log << "\\write18=" << res << "\n";
+    }
     return res;
 }
 
@@ -144,8 +147,8 @@ auto Parser::is_input_open() -> bool {
 // No on-the fly conversion here
 void FileForInput::open(const std::string &file, bool action) {
     if (!action) {
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Cannot open file " << file << " for input\n";
+        Logger::finish_seq();
+        the_log << "++ Cannot open file " << file << " for input\n";
     } else {
         tralics_ns::read_a_file(lines, main_ns::path_buffer.to_string(), 1);
         is_open = true;
@@ -161,9 +164,10 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     auto n = cur_input_stack.size();
-    if (tracing_io())
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Input stack ++ " << n << " " << W->name << "\n";
+    if (tracing_io()) {
+        Logger::finish_seq();
+        the_log << "++ Input stack ++ " << n << " " << W->name << "\n";
+    }
     W->set_line_ptr(lines);
     W->line_pos = input_line_pos;
     W->line     = input_line;
@@ -171,8 +175,8 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     if (restore_at) {
         W->at_val                      = eqtb_int_table[uchar('@')].val;
         eqtb_int_table[uchar('@')].val = 11;
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Made @ a letter\n";
+        Logger::finish_seq();
+        the_log << "++ Made @ a letter\n";
     }
     every_eof   = false; // might be set to true
     require_eof = re;
@@ -188,9 +192,10 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
 void Parser::pop_input_stack(bool vb) {
     auto n = cur_input_stack.size();
     if (n == 0) {
-        if (tracing_io())
-            Logger::finish_seq(), the_log << "++ "
-                                          << "Input stack empty\n";
+        if (tracing_io()) {
+            Logger::finish_seq();
+            the_log << "++ Input stack empty\n";
+        }
         return;
     }
     InputStack *W = cur_input_stack.back();
@@ -202,9 +207,10 @@ void Parser::pop_input_stack(bool vb) {
     auto at     = W->at_val;
     if (at >= 0) {
         eqtb_int_table[uchar('@')].val = at;
-        if (tracing_io())
-            Logger::finish_seq(), the_log << "++ "
-                                          << "Catcode of @ restored to " << at << "\n";
+        if (tracing_io()) {
+            Logger::finish_seq();
+            the_log << "++ Catcode of @ restored to " << at << "\n";
+        }
     }
     input_line.clear();
     input_line.insert(input_line.end(), W->line.begin(), W->line.end());
@@ -213,12 +219,13 @@ void Parser::pop_input_stack(bool vb) {
     if (cur_file_pos != 0) insert_hook(cur_file_pos);
     cur_file_pos = W->file_pos;
     every_eof    = W->every_eof;
-    Logger::finish_seq(), the_log << "++ "
-                                  << "cur_file_pos restored to " << cur_file_pos << "\n";
+    Logger::finish_seq();
+    the_log << "++ cur_file_pos restored to " << cur_file_pos << "\n";
     cur_input_stack.pop_back();
-    if (tracing_io())
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Input stack -- " << n << " " << W->name << "\n";
+    if (tracing_io()) {
+        Logger::finish_seq();
+        the_log << "++ Input stack -- " << n << " " << W->name << "\n";
+    }
     delete W;
 }
 
@@ -231,9 +238,10 @@ void InputStack::destroy() {
 
 // This kills all pending input
 void Parser::close_all() {
-    if (tracing_io())
-        Logger::finish_seq(), the_log << "++ "
-                                      << "close all files\n";
+    if (tracing_io()) {
+        Logger::finish_seq();
+        the_log << "++ close all files\n";
+    }
     while (!cur_input_stack.empty()) pop_input_stack(true);
     TL.clear();
     input_line.clear();
@@ -292,9 +300,10 @@ void Parser::E_input(int q) {
     }
     if (name_in_progress) {
         insert_relax();
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "{insert \\relax for \\input}"
-                                          << "\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{insert \\relax for \\input}\n";
+        }
         return;
     }
     if (tracing_commands()) Logger::log_dump("input");
@@ -327,9 +336,10 @@ auto Parser::latex_input(int q) -> std::string {
         }
     } else
         file = scan_file_name();
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{\\"
-                                      << "input " << file << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{\\input " << file << "}\n";
+    }
     return file;
 }
 
@@ -391,7 +401,10 @@ void Parser::T_input(int q) {
         TokenList B = read_arg();
         if (res) open_tex_file(seen_star);
         if (A.empty() && B.empty()) return; // optimise
-        if (tracing_commands()) Logger::finish_seq(), the_log << "++ " << (res ? "iftrue" : "iffalse") << "{" << A << "}{" << B << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "++ " << (res ? "iftrue" : "iffalse") << "{" << A << "}{" << B << "}\n";
+        }
         one_of_two(A, B, res);
         return;
     }

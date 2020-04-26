@@ -177,9 +177,9 @@ void Parser::check_all_ids() {
         Istring    V = i.second;
         LabelInfo *L = V.labinfo();
         if (!L->defined) {
-            Logger::finish_seq(), log_and_tty << "Error signaled in postprocessor\n"
-                                              << "undefined label `" << V << "' (first use at line " << L->lineno << " in file "
-                                              << L->filename << ")";
+            Logger::finish_seq();
+            log_and_tty << "Error signaled in postprocessor\n"
+                        << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
             Xid(E).add_attribute(the_names[np_target], V);
             Istring B = L->id;
             for (auto &removed_label : removed_labels) {
@@ -606,7 +606,8 @@ void Xml::postprocess_fig_table(bool is_fig) {
     T->remove_empty_par();
     T->remove_par_bal_if_ok();
     if (T->is_whitespace()) return;
-    Logger::finish_seq(), log_and_tty << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
+    Logger::finish_seq();
+    log_and_tty << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
     {
         int         n = the_parser.get_cur_line();
         std::string f = the_parser.get_cur_filename();

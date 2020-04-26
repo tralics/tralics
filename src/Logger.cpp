@@ -4,21 +4,6 @@
 #include "txinline.h"
 #include <spdlog/spdlog.h>
 
-namespace {
-    Buffer buffer_for_log2; // Only used in the following 2 functions
-} // namespace
-
-// finishes a sequence of characters. \todo possibly remove that altogether
-void Logger::finish_seq() {
-    if (!buffer_for_log2.empty()) {
-        spdlog::trace("Character sequence: {}.", buffer_for_log2.convert_to_log_encoding());
-        buffer_for_log2.reset();
-    }
-}
-
-// starts a sequence of characters if needed, adds character c
-void Logger::out_single_char(codepoint c) { buffer_for_log2 << c; }
-
 void Logger::log_dump(const std::string &s) {
     finish_seq();
     spdlog::trace("{{\\{}}}", s);
