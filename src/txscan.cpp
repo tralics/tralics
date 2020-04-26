@@ -845,7 +845,10 @@ void Parser::store_new_line(int n, bool vb) {
     input_buffer.insert_string(scratch);
     input_buffer.extract_chars(input_line);
     input_buffer.ptr = 0;
-    if (vb) Logger::finish_seq(), the_log << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
+    if (vb) {
+        Logger::finish_seq();
+        the_log << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
+    }
 }
 
 void Parser::insert_endline_char() {
@@ -907,9 +910,10 @@ auto Parser::get_a_new_line() -> bool {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;
             if (!L.empty()) {
-                if (tracing_io())
-                    Logger::finish_seq(), the_log << "++ "
-                                                  << "everyeof=" << L << ".\n";
+                if (tracing_io()) {
+                    Logger::finish_seq();
+                    the_log << "++ everyeof=" << L << ".\n";
+                }
                 back_input(L);
                 return false;
             }
@@ -923,9 +927,10 @@ auto Parser::get_a_new_line() -> bool {
             retval = false;
         }
         if (cur_input_stack.empty()) {
-            if (tracing_io())
-                Logger::finish_seq(), the_log << "++ "
-                                              << "Input stack empty at end of file\n";
+            if (tracing_io()) {
+                Logger::finish_seq();
+                the_log << "++ Input stack empty at end of file\n";
+            }
             return retval;
         }
         pop_input_stack(true);
@@ -1036,9 +1041,10 @@ auto Parser::scan_int(Token T) -> long {
     err_tok       = et;
     if (negative) val = -val;
     cur_val.set_int(val);
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "+"
-                                      << "scanint for " << T << "->" << cur_val << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "+scanint for " << T << "->" << cur_val << "\n";
+    }
     return val;
 }
 
@@ -1092,9 +1098,10 @@ auto Parser::scan_special_int_d(Token T, long d) -> long {
     TokenList L;
     read_optarg_nopar(L);
     if (L.empty()) {
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "+"
-                                          << "scanint for " << T << "->" << d << "\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "+scanint for " << T << "->" << d << "\n";
+        }
         return d;
     }
     back_input(hash_table.space_token);
@@ -1478,9 +1485,10 @@ void Parser::parshape_aux(subtypes m) {
 
 void Parser::E_the_traced(Token T, subtypes c) {
     TokenList L = E_the(c);
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << T << "->" << L << "."
-                                      << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << T << "->" << L << ".\n";
+    }
     back_input(L);
 }
 
@@ -1499,9 +1507,10 @@ auto Parser::E_the(subtypes c) -> TokenList {
     }
     if (tracing_commands()) Logger::log_dump("the");
     get_x_token();
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{\\"
-                                      << "the " << cur_tok << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{\\the " << cur_tok << "}\n";
+    }
     scan_something_internal(it_tok, false);
     B.reset();
     switch (cur_val.get_type()) {
@@ -1546,9 +1555,10 @@ void Parser::scan_double(RealNumber &res) {
             if (cur_tok.is_singlequote() || cur_tok.is_doublequote()) is_decimal = false;
             val = scan_int_digs();
         }
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "+"
-                                          << "scanint for " << err_tok << "->" << val << "\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "+scanint for " << err_tok << "->" << val << "\n";
+        }
         res.set_ipart(val); // this sets the integer part
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
@@ -1734,7 +1744,10 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
     bool skip = scan_dimen1(mu, inf, co, shortcut);
     if (skip) read_one_space();
     cur_val.set_type(it_dimen);
-    if (tracing_commands()) Logger::finish_seq(), the_log << local_buf.trace_scan_dimen(err_tok, cur_val.get_dim_val(), mu);
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << local_buf.trace_scan_dimen(err_tok, cur_val.get_dim_val(), mu);
+    }
 }
 
 // Multiplies a dimension by an integer
@@ -1803,9 +1816,10 @@ void Parser::scan_glue(internal_type level) {
     }
     cur_val.set_glue_val(q);
     cur_val.set_type(level);
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "scanglue " << cur_val << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{scanglue " << cur_val << "}\n";
+    }
 }
 
 // interface to scan_glue. If opt is true reads an optional argument
@@ -2220,7 +2234,10 @@ void Parser::E_convert() {
     case rayear_code: B.push_back(fmt::format("{}", the_parser.get_ra_year())); break;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
-    if (tracing_commands()) Logger::finish_seq(), the_log << T << "->" << L << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << T << "->" << L << "\n";
+    }
     if (c == sanitize_code) {
         new_macro(L, cur_tok);
         return;
@@ -2255,9 +2272,10 @@ void Parser::scan_expr(subtypes m) {
         parse_error(T, "Arithmetic overflow");
         cur_val.kill();
     }
-    if (the_parser.tracing_commands())
-        Logger::finish_seq(), the_log << "+"
-                                      << "scan for " << T << "= " << cur_val << "\n";
+    if (the_parser.tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "+scan for " << T << "= " << cur_val << "\n";
+    }
 }
 
 // This finds the operator, or reads a terminating \relax
@@ -2348,8 +2366,10 @@ void ScanSlot::add_or_sub(scan_expr_t &next_state, char &C) {
 }
 
 void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-    if (the_parser.tracing_commands() && t != ' ')
-        Logger::finish_seq(), the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
+    if (the_parser.tracing_commands() && t != ' ') {
+        Logger::finish_seq();
+        the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
+    }
 }
 
 auto Parser::scan_expr(Token T, internal_type et) -> bool {

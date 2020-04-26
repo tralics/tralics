@@ -367,9 +367,10 @@ void TitlePageAux::exec_post() {
 
 // This is executed when the user asks for a titlepage command.
 void TitlePageAux::exec(size_t v, bool vb) {
-    if (vb)
-        Logger::finish_seq(), the_log << "{"
-                                      << "\\titlepage " << v << "=\\" << T1 << "}\n";
+    if (vb) {
+        Logger::finish_seq();
+        the_log << "{\\titlepage " << v << "=\\" << T1 << "}\n";
+    }
     if (type == tpi_rt_tp) {
         the_parser.T_titlepage_finish(v);
         return;
@@ -456,9 +457,10 @@ void Parser::T_titlepage_finish(size_t v) {
 }
 
 void Parser::T_titlepage(size_t v) const {
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "\\titlepage " << v << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{\\titlepage " << v << "}\n";
+    }
     if (!Titlepage.is_valid()) {
         log_and_tty << "No title page info, bug?\n";
         return; // why ?
@@ -720,18 +722,22 @@ void TitlePageAux::decode_flags() const {
 void TitlePageAux::dump(size_t k) {
     tpi_vals t = get_type();
     if (t == tpi_rt_alias) {
-        Logger::finish_seq(), the_log << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
+        Logger::finish_seq();
+        the_log << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
         return;
     }
     if (t == tpi_rt_constant) {
-        Logger::finish_seq(), the_log << "Inserting the string " << get_T1() << "\n";
+        Logger::finish_seq();
+        the_log << "Inserting the string " << get_T1() << "\n";
         return;
     }
     if (t == tpi_rt_exec) {
-        Logger::finish_seq(), the_log << "Inserting the command \\" << get_T2() << "\n";
+        Logger::finish_seq();
+        the_log << "Inserting the command \\" << get_T2() << "\n";
         return;
     }
-    Logger::finish_seq(), the_log << "Defining \\" << get_T1() << " as \\TitlePageCmd " << k << "\n";
+    Logger::finish_seq();
+    the_log << "Defining \\" << get_T1() << " as \\TitlePageCmd " << k << "\n";
     if (t == tpi_rt_normal)
         the_log << "   usual <" << T3 << "/>";
     else if (t == tpi_rt_normal_def)

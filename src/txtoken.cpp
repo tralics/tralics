@@ -735,7 +735,10 @@ void Parser::E_split() {
         R.splice(R.end(), key);
         if (seen_val) R.splice(R.end(), val);
     }
-    if (tracing_macros()) Logger::finish_seq(), the_log << T << "->" << R << "\n";
+    if (tracing_macros()) {
+        Logger::finish_seq();
+        the_log << T << "->" << R << "\n";
+    }
     back_input(R);
 }
 

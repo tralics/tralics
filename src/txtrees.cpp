@@ -421,9 +421,10 @@ void Parser::T_gloss(bool c) {
     res.splice(res.end(), second_line);
     res.splice(res.end(), third_line);
     token_ns::add_env(res, "tabular");
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "Gloss: " << res << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{Gloss: " << res << "}\n";
+    }
     back_input(res);
 }
 
