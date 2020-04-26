@@ -531,11 +531,12 @@ void Parser::T_execute_options() {
 
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
-    Logger::finish_seq(), the_log << "{"
-                                  << "Options to execute->" << local_buf << "}\n";
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "Options code to execute->" << action << "}\n";
+    Logger::finish_seq();
+    the_log << "{Options to execute->" << local_buf << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{Options code to execute->" << action << "}\n";
+    }
     back_input(action);
 }
 
@@ -553,8 +554,8 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     } else
         C->check_local_options(action, true);
     C->check_all_options(action, spec, normal ? 1 : 2);
-    Logger::finish_seq(), the_log << "{"
-                                  << "Options to execute->" << local_buf << "}\n";
+    Logger::finish_seq();
+    the_log << "{Options to execute->" << local_buf << "}\n";
     return action;
 }
 
@@ -651,7 +652,8 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     }
     if (!res) {
         if (builtin) cur->date = "2006/01/01";
-        Logger::finish_seq(), the_log << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
+        Logger::finish_seq();
+        the_log << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
         return;
     }
     cur->date = "0000/00/00";
@@ -947,9 +949,10 @@ void Parser::out_warning(Buffer &B, msg_type what) {
     auto res = B.convert_to_log_encoding();
     if (what == mt_error)
         parse_error(err_tok, res, "uerror");
-    else if (what == mt_warning)
-        Logger::finish_seq(), log_and_tty << res;
-    else
+    else if (what == mt_warning) {
+        Logger::finish_seq();
+        log_and_tty << res;
+    } else
         the_log << res;
 }
 
@@ -963,7 +966,10 @@ void Parser::T_change_element_name() {
         res = config_ns::assign_att(name.c_str(), value.c_str());
     } else
         res = config_ns::assign_name(name.c_str(), value.c_str());
-    if (res) Logger::finish_seq(), the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
+    if (res) {
+        Logger::finish_seq();
+        the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
+    }
 }
 
 // -------------------------------------------------------------------
@@ -1004,7 +1010,10 @@ void Parser::call_define_key(TokenList &L, Token cmd, const std::string &arg, co
     aux = string_to_list(fam, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("define@key"));
-    if (tracing_commands()) Logger::finish_seq(), the_log << cmd << "->" << L << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << cmd << "->" << L << "\n";
+    }
     back_input(L);
 }
 

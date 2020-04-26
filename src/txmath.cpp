@@ -754,9 +754,10 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
 // Case of a trivial math formula that translates to res
 // Always inline
 void Parser::finish_trivial_math(Xml *res) {
-    if (tracing_math())
-        Logger::finish_seq(), the_log << "formula was math"
-                                      << "\n";
+    if (tracing_math()) {
+        Logger::finish_seq();
+        the_log << "formula was math\n";
+    }
     the_parser.my_stats.one_more_trivial();
     if (the_main->interactive_math) std::cout << res << "\n";
     leave_v_mode();
@@ -782,18 +783,22 @@ void Parser::T_math(subtypes type) {
         size_t    position  = is_inline ? everymath_code : everydisplay_code;
         TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{" << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{" << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
+            }
             back_input(everymath);
         }
     }
     select_math_font();
     scan_math3(0, math_data.get_list(0).get_type(), 0);
     if (tracing_math()) {
-        Logger::finish_seq(), the_log << "Math: " << Trace << "\n";
+        Logger::finish_seq();
+        the_log << "Math: " << Trace << "\n";
         Trace.reset();
         math_data.get_list(0).print();
-        Logger::finish_seq(), the_log << Trace;
+        Logger::finish_seq();
+        the_log << Trace;
     }
     // Test for the no-mathml mode
     math_data.realloc_list0();
@@ -1167,9 +1172,10 @@ auto Parser::scan_math_endcell(Token t) -> bool {
     if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{"
-                                              << "template v-part " << L << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{template v-part " << L << "}\n";
+            }
             back_input(t);
             back_input(L);
             the_stack.mark_omit_cell();
@@ -1355,9 +1361,10 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
-                if (tracing_commands())
-                    Logger::finish_seq(), the_log << "{"
-                                                  << "template v-part " << L << "}\n";
+                if (tracing_commands()) {
+                    Logger::finish_seq();
+                    the_log << "{template v-part " << L << "}\n";
+                }
                 back_input(cur_tok);
                 back_input(L);
                 the_stack.mark_omit_cell();
@@ -1455,9 +1462,10 @@ auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
         // it's a math formula inside a formula
         TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{"
-                                              << "<everymath> " << everymath << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{<everymath> " << everymath << "}\n";
+            }
             back_input(everymath);
         }
         select_math_font();
@@ -1608,9 +1616,10 @@ void Parser::scan_math_hbox(int res, subtypes c) {
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "{"
-                                          << "<everyhbox> " << L << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{<everyhbox> " << L << "}\n";
+        }
         back_input(L);
         back_input(hash_table.OB_token);
     }
@@ -2598,12 +2607,14 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
 }
 
 void MathElt::dump_for_err() const {
-    Logger::finish_seq(), the_log << int(get_cmd()) << " - " << int(get_chr()) << " - " << int(get_font()) << "\n";
+    Logger::finish_seq();
+    the_log << int(get_cmd()) << " - " << int(get_chr()) << " - " << int(get_font()) << "\n";
 }
 
 void MathElt::cv1_err() {
     dump_for_err();
-    Logger::finish_seq(), log_and_tty << "--- " << Token(get_font()) << "\n";
+    Logger::finish_seq();
+    log_and_tty << "--- " << Token(get_font()) << "\n";
     the_parser.signal_error("Bad math expression");
 }
 
@@ -2849,7 +2860,8 @@ auto Math::M_ref() -> Xml * {
 static ScaledInt cur_math_space;
 
 void math_ns::bad_math_warn(Buffer &B) {
-    Logger::finish_seq(), the_log << "Bad token in argument of \\text-like command\n";
+    Logger::finish_seq();
+    the_log << "Bad token in argument of \\text-like command\n";
     if (B.empty())
         the_log << "Error occured at start of list.\n";
     else

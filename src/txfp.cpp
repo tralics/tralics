@@ -1623,9 +1623,10 @@ auto Parser::fp_read_value() -> FpNum {
     }
     FpNum res;
     if (res.create(fp_in_buf)) parse_error("overflow in FPread");
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "FPread for " << name << "=" << res << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{FPread for " << name << "=" << res << "}\n";
+    }
     return res;
 }
 
@@ -2037,9 +2038,10 @@ void Parser::fp_e_eval() {
     TokenList B = read_arg();
     FpGenList evaluator(B);
     evaluator.to_postfix();
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "FPpostfix " << evaluator.value << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{FPpostfix " << evaluator.value << "}\n";
+    }
     back_input(hash_table.CB_token);
     back_input(evaluator.value);
     back_input(hash_table.OB_token);
@@ -2186,9 +2188,10 @@ void Parser::upn_eval(TokenList &l) {
     String    str = tkbuf.c_str();
     TokenList a1, a2;
     FpNum     x1, x2, x3, x4;
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "FPupcmd " << (n == 0 ? "??" : str) << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{FPupcmd " << (n == 0 ? "??" : str) << "}\n";
+    }
 
     if (n == 4 && strcmp(str, "copy") == 0) {
         L.remove_first_n(n);

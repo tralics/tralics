@@ -331,8 +331,8 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
 void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Input encoding changed to " << wc << " for " << file_name << "\n";
+        Logger::finish_seq();
+        the_log << "++ Input encoding changed to " << wc << " for " << file_name << "\n";
     }
 }
 
@@ -440,9 +440,8 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     wc = to_unsigned(k);
                     L.set_encoding(wc);
                     co_try = 0;
-                    Logger::finish_seq(), the_log << "++ "
-                                                  << "Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file "
-                                                  << x << "\n";
+                    Logger::finish_seq();
+                    the_log << "++ Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x << "\n";
                 }
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);
@@ -824,8 +823,8 @@ auto LinePtr::dump_name() const -> String {
 
 // Whenever a TeX file is opened for reading, we print this in the log
 void LinePtr::after_open() {
-    Logger::finish_seq(), the_log << "++ "
-                                  << "Opened " << dump_name();
+    Logger::finish_seq();
+    the_log << "++ Opened " << dump_name();
     if (empty())
         the_log << "; it is empty\n";
     else {
@@ -844,8 +843,8 @@ void LinePtr::after_open() {
 // Whenever a TeX file is closed, we call this. If sigforce is true
 // we say if this was closed by a \endinput command.
 void LinePtr::before_close(bool sigforce) {
-    Logger::finish_seq(), the_log << "++ "
-                                  << "End of " << dump_name();
+    Logger::finish_seq();
+    the_log << "++ End of " << dump_name();
     if (sigforce && !empty()) the_log << " (forced by \\endinput)";
     the_log << "\n";
 }
@@ -1022,12 +1021,14 @@ void Parser::T_filecontents(int spec) {
         main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
     } else if (tralics_ns::find_in_path(filename)) {
-        Logger::finish_seq(), log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
-                                          << "Not generating it from this source\n";
+        Logger::finish_seq();
+        log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
+                    << "Not generating it from this source\n";
     } else {
         String fn = tralics_ns::get_out_dir(filename);
         outfile   = tralics_ns::open_file(fn, false);
-        Logger::finish_seq(), log_and_tty << "Writing file `" << fn << "'\n";
+        Logger::finish_seq();
+        log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)
             parse_error("unable to open file for writing");
         else {

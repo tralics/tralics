@@ -676,8 +676,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
 }
 
-void MainClass::set_tpa_status(String s) {   // \todo Erk this is not good
-    if ((s == nullptr) || s[0] == 0) return; //
+void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not good
+    if (s.empty()) return;
     if (s[0] == 'a' || s[0] == 'A')
         tpa_mode = 1; // case 'all'
     else if (s[0] == 't' || s[0] == 'T')
@@ -1111,7 +1111,7 @@ void MainClass::check_section_use() const {
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
         input_encoding = wc;
-        Logger::finish_seq(), the_log << "++ "
-                                      << "Default input encoding changed to " << wc << "\n";
+        Logger::finish_seq();
+        the_log << "++ Default input encoding changed to " << wc << "\n";
     }
 }

@@ -92,7 +92,10 @@ auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
 // If for some reason, the character is invalid, we remove it from the table.
 void Parser::expand_nct(TokenList &L) {
     bool action = true;
-    if (tracing_commands()) Logger::finish_seq(), the_log << "array preamble at start: " << L << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "array preamble at start: " << L << "\n";
+    }
     if (!new_array_object.has_a_nct()) return;
     int max_iter = max_newcolumn_loops;
     while (action) {
@@ -530,9 +533,10 @@ void Parser::start_a_cell(bool started) {
         new_array_object.run(cid, false);
     } else {
         TokenList L = the_stack.get_u_or_v(true);
-        if (tracing_commands() && !L.empty())
-            Logger::finish_seq(), the_log << "{"
-                                          << "template u-part " << L << "}\n";
+        if (tracing_commands() && !L.empty()) {
+            Logger::finish_seq();
+            the_log << "{template u-part " << L << "}\n";
+        }
         back_input(L);
     }
 }
@@ -549,9 +553,10 @@ void Parser::finish_a_cell(Token T, const Istring &a) {
     back_input(T);
     if (the_stack.is_omit_cell()) return;
     TokenList L = the_stack.get_u_or_v(false);
-    if (tracing_commands() && !L.empty())
-        Logger::finish_seq(), the_log << "{"
-                                      << "template v-part " << L << "}\n";
+    if (tracing_commands() && !L.empty()) {
+        Logger::finish_seq();
+        the_log << "{template v-part " << L << "}\n";
+    }
     back_input(L);
 }
 

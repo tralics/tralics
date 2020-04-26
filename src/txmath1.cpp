@@ -1387,7 +1387,8 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
             if (!L->get_list().chars_to_mb(B, true)) return false;
         } else {
-            Logger::finish_seq(), log_and_tty << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << "\n";
+            Logger::finish_seq();
+            log_and_tty << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << "\n";
             std::cout << "\n";
             return false;
         }

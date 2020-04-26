@@ -104,7 +104,7 @@ private:
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
     void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
     void read_config_and_other();                     ///< Read the config file and extract all relevant information
-    void set_tpa_status(String s);                    ///< Handles argument of -tpa_status switch
+    void set_tpa_status(const std::string &s);        ///< Handles argument of -tpa_status switch
 
     auto append_nonempty_line() -> int;
     auto check_for_alias_type(bool vb) -> bool;
