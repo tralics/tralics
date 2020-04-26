@@ -157,7 +157,7 @@ void Buffer::utf8_error(bool first) {
                 << (first ? ", first byte" : ", continuation byte") << ")\n";
     log_and_tty << "Position in line is " << ptr << "\n";
     if (T.new_error()) return; // signal only one error per line
-    for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(the_log.log_file, at(i));
+    for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(log_file, at(i));
     the_log << "\n";
 }
 

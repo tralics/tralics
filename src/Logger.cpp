@@ -17,5 +17,3 @@ void Logger::log_finish() {
     else
         spdlog::warn("There were {} errors.", main_ns::nb_errs);
 }
-
-void Logger::log_init(const std::string &name) { log_file = tralics_ns::open_file(name, true); }

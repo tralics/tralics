@@ -381,8 +381,8 @@ void MainClass::banner() const {
 }
 
 void MainClass::open_log() { // \todo spdlog etc
-    auto f = (std::filesystem::path(out_dir) / log_name).replace_extension("log");
-    log_and_tty.log_init(f);
+    auto f   = (std::filesystem::path(out_dir) / log_name).replace_extension("log");
+    log_file = tralics_ns::open_file(f, true);
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
 
