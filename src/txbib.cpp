@@ -411,7 +411,7 @@ void Bibtex::read1(const std::string &cur) {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
-    log_and_tty << "Bibtex Info: no biblio file " << Tbuf << "\n";
+    spdlog::warn("Bibtex Info: no biblio file {}", Tbuf);
 }
 
 // Handles one bib file for the raweb. Returns true if the file exists.
@@ -478,7 +478,7 @@ void Bibliography::dump_data(Buffer &b) {
 // This creates the bbl file by running an external program.
 void Parser::create_aux_file_and_run_pgm() {
     if (!the_main->shell_escape_allowed) {
-        log_and_tty << "Cannot call external program unless using option -shell-escape\n";
+        spdlog::warn("Cannot call external program unless using option -shell-escape");
         return;
     }
     Buffer &B = biblio_buf4;
@@ -492,8 +492,7 @@ void Parser::create_aux_file_and_run_pgm() {
     try {
         std::ofstream(auxname.c_str()) << B.c_str();
     } catch (...) {
-        log_and_tty << "Cannot open file " << auxname << " for output \n"
-                    << "Bibliography will be missing\n";
+        spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
         return;
     }
     the_log << "++ executing " << T.cmd << ".\n";

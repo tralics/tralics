@@ -32,7 +32,6 @@ public:
     [[nodiscard]] auto has_name(const std::string &x) const -> bool { return name == x; }
     [[nodiscard]] auto has_full_name(const std::string &x) const -> bool { return full_name == x; }
     auto               has_name(String x) const -> bool { return name == x; }
-    void               dump(Buffer &B) const { B << full_name; };
     void               use(TokenList &A) const;
     void               kill() {
         val  = TokenList();
@@ -44,6 +43,8 @@ public:
     void               mark_used() { used = true; }
     void               mark_un_used() { used = false; }
 };
+
+inline std::ostream &operator<<(std::ostream &os, const KeyAndVal &kv) { return os << kv.full_name; }
 
 using OptionList = std::vector<KeyAndVal>;
 

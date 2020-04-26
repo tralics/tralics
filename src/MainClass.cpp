@@ -737,7 +737,7 @@ void MainClass::open_config_file() {
     Buffer &B = main_ns::path_buffer;
     if (B.empty()) {
         config_file.insert("#comment", true);
-        log_and_tty << "Dummy default configuration file used.\n";
+        spdlog::warn("Dummy default configuration file used.");
         return;
     }
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
@@ -805,7 +805,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (use_tcf) {
         tralics_ns::read_a_file(config_file, tcf_file, 0);
         config_file.normalise_final_cr();
-        log_and_tty << "Read tcf file " << tcf_file << "\n";
+        spdlog::info("Read tcf file {}", tcf_file);
     }
     return true;
 }
@@ -1022,14 +1022,14 @@ void MainClass::run(int argc, char **argv) {
         out_xml();
         Logger::log_finish();
     } else
-        log_and_tty << "Nothing written to " << out_name << ".xml.\n";
+        spdlog::warn("Nothing written to {}.xml.", out_name);
 }
 
 void MainClass::out_xml() {
     Buffer      X;
     std::string u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
-    X.put_at_end(".xml");
+    X.put_at_end(".xml"); // \todo std::filesystem
     std::string name = X.to_string();
     auto        fp   = tralics_ns::open_file(name, true);
     X.reset();

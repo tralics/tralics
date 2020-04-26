@@ -16,6 +16,7 @@
 #include "tralics/util.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 using namespace std::string_literals;
 
@@ -99,9 +100,9 @@ void classes_ns::dump_options(const OptionList &A, String x) {
     auto n = A.size();
     for (size_t i = 0; i < n; i++) {
         if (i > 0) B << ",";
-        A[i].dump(B);
+        B << A[i].full_name;
     }
-    log_and_tty << x << B << ".\n";
+    spdlog::info("{} {}", x, B);
 }
 
 // Adds a copy of L to the option list of the package.
@@ -770,7 +771,7 @@ void ClassesData::show_unused() {
         if (GO[i].has_name("useallsizes")) continue;
         k++;
         if (!B.empty()) B << ',';
-        GO[i].dump(B);
+        B << GO[i].full_name;
     }
     if (k == 0) return;
     log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
