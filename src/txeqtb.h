@@ -74,7 +74,6 @@ public:
     virtual ~SaveAux() = default;
 
     virtual void unsave(bool, Parser &) = 0;
-    void         unsave_trace_aux(String s, int pos, bool rt);
     static void  restore_or_retain(bool rt, String s);
 };
 
@@ -194,11 +193,11 @@ public:
 
 // data structure for a font change
 class SaveAuxFont : public SaveAux {
-    int     level; // the level that was active when this was pushed
+    long    level; // the level that was active when this was pushed
     long    value; // the value to be restored
     Istring color; // the color to restore
 public:
-    SaveAuxFont(int l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(std::move(c)) {}
+    SaveAuxFont(long l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(std::move(c)) {}
 
     void unsave(bool trace, Parser &P) override;
 };

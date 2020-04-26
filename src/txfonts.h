@@ -16,13 +16,13 @@
 
 // This is how Tralics interprets a font
 class FontInfo {
-    int  tsize{0};       // is fi_normal_size, etc
-    int  shape{0};       // it, sl, sc, or normal
-    int  family{0};      // tt, sf, or normal
-    int  series{0};      // bf or normal
+    long tsize{0};       // is fi_normal_size, etc
+    long shape{0};       // it, sl, sc, or normal
+    long family{0};      // tt, sf, or normal
+    long series{0};      // bf or normal
     bool stackval{true}; // is the value on the stack ok ?
 public:
-    int     level{0};  // the level, as for any EQTB object
+    long    level{0};  // the level, as for any EQTB object
     long    old{-1};   // previous value
     long    packed{0}; // packed value of the font
     long    size;      // size, between 1 and 11 times 2048
@@ -56,7 +56,7 @@ public:
     void               see_font_change(subtypes c);
     auto               show_font() -> String;
     [[nodiscard]] auto get_size() const -> long { return size / 2048; }
-    void               set_level(int k) { level = k; }
+    void               set_level(long k) { level = k; }
     void               set_packed(long k) { packed = k; }
     void               set_old_from_packed() { old = packed; }
     void               set_color(Istring c) { color = std::move(c); }
