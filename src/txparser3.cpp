@@ -131,16 +131,18 @@ void Parser::push_save_stack(SaveAux *v) {
 void Parser::push_level(boundary_type v) {
     push_save_stack(new SaveAuxBoundary(v));
     cur_level++;
-    if (tracing_stack())
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "level + " << cur_level << " for " << v << " entered on line " << get_cur_line() << "\n";
+    if (tracing_stack()) {
+        Logger::finish_seq();
+        the_log << "+stack: level + " << cur_level << " for " << v << " entered on line " << get_cur_line() << "\n";
+    }
 }
 
 void Parser::push_tpa() {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
-    if (tracing_stack())
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "level = " << cur_level << " for " << bt_tpa << "\n";
+    if (tracing_stack()) {
+        Logger::finish_seq();
+        the_log << "+stack: level = " << cur_level << " for " << bt_tpa << "\n";
+    }
 }
 
 // Defines something at position A, with type and subtype B and C.
@@ -168,7 +170,8 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
     if (ok_to_define(a, redef)) {
         CmdChr nv = CmdChr(what, mac_table.new_macro(b));
         if (tracing_assigns()) {
-            Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, false) << a << "=";
+            Logger::finish_seq();
+            the_log << "{" << gbl_or_assign(gbl, false) << a << "=";
             token_for_show(hash_table.eqtb[a.eqtb_loc()]);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
@@ -206,7 +209,8 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_int_cmd, subtypes(a));
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << "}\n";
     }
@@ -224,7 +228,8 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
     bool        reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, reassign) << parser_ns::save_string_name(a) << "=" << W.val;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, reassign) << parser_ns::save_string_name(a) << "=" << W.val;
         if (!reassign) the_log << " into " << parser_ns::save_string_name(a) << "=" << c;
         the_log << "}\n";
     }
@@ -244,7 +249,8 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_dimen_cmd, subtypes(a));
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << "}\n";
     }
@@ -271,7 +277,8 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
         CmdChr tmp(assign_glue_cmd, subtypes(a));
         Thbuf1 << bf_reset << W.val;
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << Thbuf1;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << Thbuf1;
         if (!reassign) {
             Thbuf1 << bf_reset << c;
             if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
@@ -293,7 +300,8 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
 void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.val;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.val;
         the_log << " into \\box" << a << "=" << c << "}\n";
     }
     if (gbl)
@@ -310,7 +318,8 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_toks_cmd, subtypes(p));
-        Logger::finish_seq(), the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
+        Logger::finish_seq();
+        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
         if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
         the_log << "}\n";
     }
@@ -327,9 +336,10 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
 // This is called whenever a font has changed.
 // It pushes the value on the save stack if needed.
 void Parser::save_font() {
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "font change " << cur_font << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{font change " << cur_font << "}\n";
+    }
     if (cur_font.level == cur_level) return;
     push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
     cur_font.set_level(cur_level);
@@ -343,9 +353,10 @@ void SaveAuxFont::unsave(bool trace, Parser &P) {
     P.cur_font.set_packed(value);
     P.cur_font.set_color(color);
     P.cur_font.unpack();
-    if (trace)
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "restoring current font " << P.cur_font << ".\n";
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: restoring current font " << P.cur_font << ".\n";
+    }
     P.font_has_changed1();
     P.cur_font.update_old();
 }
@@ -354,7 +365,8 @@ void SaveAuxFont::unsave(bool trace, Parser &P) {
 // the first \let saves the old value on the stack. The \global makes this
 // irrelevant.
 void SaveAux::restore_or_retain(bool rt, String s) {
-    Logger::finish_seq(), the_log << "+stack:  " << (rt ? "restoring " : "retaining ") << s;
+    Logger::finish_seq();
+    the_log << "+stack: " << (rt ? "restoring " : "retaining ") << s;
 }
 
 // This done when we restore an integer value
@@ -373,8 +385,8 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 void SaveAuxString::unsave(bool trace, Parser &P) {
     bool rt = P.eqtb_string_table[pos].level != 1;
     if (trace) {
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "restoring " << parser_ns::save_string_name(pos) << "=" << val << ".\n";
+        Logger::finish_seq();
+        the_log << "+stack: restoring " << parser_ns::save_string_name(pos) << "=" << val << ".\n";
     }
     if (rt) P.eqtb_string_table[pos] = {val, level};
 }
@@ -408,7 +420,8 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
     int lvl = P.hash_table.eqtb[cs].level;
     if (trace) {
         String S = lvl == 1 ? "retaining " : (val.is_undef() ? "killing " : "restoring ");
-        Logger::finish_seq(), the_log << "+stack:  " << S << Token(cs + eqtb_offset);
+        Logger::finish_seq();
+        the_log << "+stack: " << S << Token(cs + eqtb_offset);
         if (lvl > 1 && !val.is_undef()) {
             the_log << "=";
             if (val.is_user())
@@ -453,9 +466,10 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
 // when we see the first closing brace. The box just created will be put in
 // box0.
 void SaveAuxBoxend::unsave(bool trace, Parser &P) {
-    if (trace)
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "finish a box of type " << pos << "\n";
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: finish a box of type " << pos << "\n";
+    }
     P.flush_buffer();
     P.the_stack.pop(the_names[cst_hbox]);
     the_box_to_end   = val;
@@ -465,9 +479,10 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
 // \aftergroup\foo{}: When the group is finished, the token \foo is
 // pushed back into the input stream.
 void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
-    if (trace)
-        Logger::finish_seq(), the_log << "+stack:  "
-                                      << "after group " << value << "\n";
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: after group " << value << "\n";
+    }
     P.back_input(value);
 }
 

@@ -219,8 +219,10 @@ void Parser::E_xspace() {
     if (get_token()) return;
     back_input();
     bool val = cur_cmd_chr.is_ok_for_xspace();
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "\\xspace after " << cur_tok << (val ? " did nothing " : " added space") << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "\\xspace after " << cur_tok << (val ? " did nothing " : " added space") << "\n";
+    }
     if (val) return;
     back_input(hash_table.space_token);
 }
@@ -239,9 +241,10 @@ auto Parser::T_xmllatex() -> std::string {
             mac_buffer.push_back(hash_table[x.hash_loc()]);
         // else token is bad or null
     }
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "Rawxml: " << mac_buffer << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{Rawxml: " << mac_buffer << "}\n";
+    }
     return mac_buffer.to_string();
 }
 
@@ -260,7 +263,8 @@ void Parser::E_get_config(int c) {
     mac_buf << bf_reset << res;
     TokenList L = mac_buf.str_toks11(false);
     if (tracing_macros()) {
-        Logger::finish_seq(), the_log << T << " #1=" << resource;
+        Logger::finish_seq();
+        the_log << T << " #1=" << resource;
         if (c != 0) the_log << " #2=" << key;
         the_log << " -> " << L << "\n";
     }
@@ -361,10 +365,12 @@ void Parser::E_car(bool first) {
     TokenList L = read_arg();
     TokenList M = read_until_nopar(hash_table.nil_token);
     if (tracing_macros()) {
-        Logger::finish_seq(), the_log << T << "#1#2\\@nil ->#" << (first ? "1" : "2") << "\n";
+        Logger::finish_seq();
+        the_log << T << "#1#2\\@nil ->#" << (first ? "1" : "2") << "\n";
         the_log << "#1 <-" << L << "\n";
         the_log << "#2 <-" << M << "\n";
-        Logger::finish_seq(), the_log << T << "<- " << (first ? L : M) << "\n";
+        Logger::finish_seq();
+        the_log << T << "<- " << (first ? L : M) << "\n";
     }
     if (first)
         back_input(L);
@@ -587,7 +593,10 @@ void Parser::T_xkv_for(subtypes c) {
         //
     default:;
     }
-    if (tracing_commands()) Logger::finish_seq(), the_log << T << "<- " << res << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << T << "<- " << res << "\n";
+    }
     back_input(res);
 }
 
@@ -596,9 +605,10 @@ void Parser::T_xkv_for(subtypes c) {
 void Parser::M_cons() {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "\\@cons " << cmd << " + " << L << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{\\@cons " << cmd << " + " << L << "}\n";
+    }
     M_cons(cmd, L);
 }
 
@@ -1307,8 +1317,8 @@ void Parser::xkv_execute_options() {
 }
 
 void XkvSetkeys::dump_keys() {
-    Logger::finish_seq(), the_log << "{"
-                                  << "Options to execute->" << keyvals << "}\n";
+    Logger::finish_seq();
+    the_log << "{Options to execute->" << keyvals << "}\n";
 }
 
 // Implements ProcessOptionsX
@@ -1428,7 +1438,10 @@ void XkvSetkeys::fetch_keys(bool c) {
         keyvals = P->get_mac_value(rm_token); // case of \setrmkeys
     else
         keyvals = P->read_arg();
-    if (the_parser.tracing_commands()) Logger::finish_seq(), the_log << "setkeys -> " << keyvals << "\n";
+    if (the_parser.tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "setkeys -> " << keyvals << "\n";
+    }
     extract_keys(keyvals, Keys);
 }
 
@@ -1438,7 +1451,10 @@ void XkvSetkeys::finish() {
     P->new_macro(fams, fams_token);
     P->new_macro(na, na_token);
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
-    if (the_parser.tracing_commands()) Logger::finish_seq(), the_log << "setkeys <- " << action << "\n";
+    if (the_parser.tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "setkeys <- " << action << "\n";
+    }
     P->new_macro(delayed, rm_token);
     P->back_input(action);
 }
@@ -2624,8 +2640,8 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         B.reset();
         B.push_back("-> \\char\"");
         B.push_back16(to_unsigned(r), false);
-        Logger::finish_seq(), the_log << T << c << B << "."
-                                      << "\n";
+        Logger::finish_seq();
+        the_log << T << c << B << ".\n";
     }
     if (r == 0) {
         Buffer &B = err_buf;

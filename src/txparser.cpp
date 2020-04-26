@@ -3123,9 +3123,8 @@ void Parser::E_afterfi() {
     Token     T = hash_table.fi_token;
     TokenList L = read_until(T);
     if (tracing_macros()) {
-        Logger::finish_seq(), the_log << cur_tok << "#1\\fi->\\fi#1"
-                                      << "\n";
-        the_log << "#1<-" << L << "\n";
+        Logger::finish_seq();
+        the_log << cur_tok << "#1\\fi->\\fi#1\n#1<-" << L << "\n";
     }
     back_input(L);
     back_input(T);
@@ -3137,10 +3136,8 @@ void Parser::E_afterelsefi() {
     TokenList L1 = read_until(T1);
     TokenList L2 = read_until(T2);
     if (tracing_macros()) {
-        Logger::finish_seq(), the_log << cur_tok << R"(#1\else#2\fi->\fi#1)"
-                                      << "\n";
-        the_log << "#1<-" << L1;
-        the_log << "#2<-" << L2;
+        Logger::finish_seq();
+        the_log << cur_tok << R"(#1\else#2\fi->\fi#1\n#1<-)" << L1 << "#2<-" << L2;
     }
     back_input(L1);
     back_input(T2);
@@ -3183,15 +3180,15 @@ auto Parser::get_r_token(bool br) -> Token {
 
 void Parser::M_let(Token A, bool global, bool redef) {
     if (tracing_commands()) {
-        Logger::finish_seq(), the_log << "{\\"
-                                      << "let " << A << " ";
-        the_log << cur_tok << "}\n";
+        Logger::finish_seq();
+        the_log << "{\\let " << A << " " << cur_tok << "}\n";
     }
     if (redef && !ok_to_define(A, rd_if_undef)) return;
     auto pos = A.eqtb_loc();
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
-        Logger::finish_seq(), the_log << "{" << action << "changing " << A << "=";
+        Logger::finish_seq();
+        the_log << "{" << action << "changing " << A << "=";
         token_for_show(hash_table.eqtb[pos]);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
@@ -3245,13 +3242,14 @@ void Parser::M_let(int chr, bool gbl) {
             T = hash_table.locate(fetch_name_res);
         } else
             T = get_r_token(true); // \cs_undefine:N
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "{\\"
-                                          << "let " << T << "=\\undef"
-                                          << "}\n";
-        if (tracing_assigns())
-            Logger::finish_seq(), the_log << "{"
-                                          << "globally killing " << T << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{\\let " << T << "=\\undef}\n";
+        }
+        if (tracing_assigns()) {
+            Logger::finish_seq();
+            the_log << "{globally killing " << T << "}\n";
+        }
         eq_define(T.eqtb_loc(), CmdChr(undef_cmd, zero_code), true);
     } else {               // cs_set_eq:NN and variants
         gbl       = false; // ignore \globaldefs
@@ -3287,8 +3285,8 @@ void Parser::M_future_let(bool gbl) {
     Token B = cur_tok;
     get_token();
     if (tracing_commands()) {
-        Logger::finish_seq(), the_log << "{\\"
-                                      << "futurelet " << A << " ";
+        Logger::finish_seq();
+        the_log << "{\\futurelet " << A << " ";
         the_log << B << " ";
         the_log << cur_tok << "}\n";
     }
@@ -3302,7 +3300,10 @@ void Parser::M_newcommand(rd_flag redef) {
     bool     is_star = remove_initial_star(); // false means long
     symcodes what    = is_star ? user_cmd : userl_cmd;
     Token    name    = get_r_token(true);
-    if (tracing_commands()) Logger::finish_seq(), the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
+    }
     Macro *X{nullptr};
     {
         auto guard = SaveErrTok(name);
@@ -3330,7 +3331,10 @@ void Parser::M_new_env(rd_flag redef) {
     bool        is_star = remove_initial_star(); // false means long
     symcodes    what    = is_star ? user_cmd : userl_cmd;
     std::string name    = group_to_string();
-    if (tracing_commands()) Logger::finish_seq(), the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
+    }
     Token  T = find_env_token(name, true); // this is \foo
     Macro *X{nullptr};
     {
@@ -3710,7 +3714,10 @@ void Parser::E_latex_ctr() {
         else
             E_latex_ctr_fnsymbol(n, res);
     }
-    if (tracing_commands()) Logger::finish_seq(), the_log << T << "->" << res << "\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << T << "->" << res << "\n";
+    }
     back_input(res);
 }
 
@@ -3817,7 +3824,10 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
         if (get_token()) break; // seen the end
         Token x = cur_tok;
         if (x.is_space_token() || cur_cmd_chr.is_relax()) continue;
-        if (tracing_commands()) Logger::finish_seq(), the_log << "{ifthenelse " << x << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{ifthenelse " << x << "}\n";
+        }
         if (x == hash_table.not_token || x == hash_table.NOT_token) {
             must_negate = !must_negate;
             continue;
@@ -3862,9 +3872,10 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             cur_tok = t;
             read_toks_edef(L2);
             res = L1 == L2;
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{ifthenelse "
-                                              << "equal " << boolean(res) << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{ifthenelse equal " << boolean(res) << "}\n";
+            }
         } else {
             back_input();
             cur_tok = t;
@@ -3882,24 +3893,27 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             break;
         }
         if (x == hash_table.or_token || x == hash_table.OR_token) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{ifthenelse "
-                                              << "\\or " << skip_or_continue(res) << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{ifthenelse \\or " << skip_or_continue(res) << "}\n";
+            }
             if (res) break;
             return T_ifthenelse_inner(t);
         }
         if (x == hash_table.and_token || x == hash_table.AND_token) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{ifthenelse "
-                                              << "\\and " << skip_or_continue(!res) << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{ifthenelse \\and " << skip_or_continue(!res) << "}\n";
+            }
             if (!res) return false;
             return T_ifthenelse_inner(t);
         }
         break;
     }
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{ifthenelse "
-                                      << "-> " << boolean(res) << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{ifthenelse -> " << boolean(res) << "}\n";
+    }
     return res;
 }
 
@@ -4020,9 +4034,10 @@ void Parser::calc_primitive(SthInternal &A) {
             A.set_int_val(cur_val.get_int_val());
         }
     }
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{"
-                                      << "calc primitive =" << A << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{calc primitive =" << A << "}\n";
+    }
 }
 
 // This is the big function
@@ -4035,10 +4050,10 @@ void Parser::calc_aux(SthInternal &A) {
         if (T.is_exclam_token()) return; // special end marker.
         if (T.is_close_paren()) return;
         if (T.is_plus_token() || T.is_minus_token()) {
-            if (tracing_commands())
-                Logger::finish_seq(), the_log << "{calc "
-                                              << "+-"
-                                              << "}\n";
+            if (tracing_commands()) {
+                Logger::finish_seq();
+                the_log << "{calc +-}\n";
+            }
             SthInternal B;
             B.initialise(A.get_type());
             calc_primitive(B);
@@ -4046,10 +4061,10 @@ void Parser::calc_aux(SthInternal &A) {
             A.add(B);
             continue;
         }
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "{calc "
-                                          << "*/"
-                                          << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{calc */}\n";
+        }
         if (!(T.is_star_token() || T.is_slash_token())) {
             parse_error(hash_table.calc_token, "unexpected token in calc\n", T.tok_to_str(), "unexpected in calc");
             return;
@@ -4111,24 +4126,26 @@ void Parser::ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res) {
     else
         calc_main(it_dimen, num, A);
     calc_main(it_dimen, den, B);
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{calc "
-                                      << "\\ratio " << num << "/" << den << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{calc \\ratio " << num << "/" << den << "}\n";
+    }
     calc_ratio_eval(num.get_int_val(), den.get_int_val(), res);
 }
 
 void Parser::calc_main(internal_type type, SthInternal &res, TokenList &B) {
     SthInternal A;
     A.initialise(type);
-    if (tracing_commands())
-        Logger::finish_seq(), the_log << "{calc "
-                                      << "argument: " << B << "}\n";
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{calc argument: " << B << "}\n";
+    }
     back_input(Token(other_t_offset, '!'));
     back_input(B);
     calc_aux(A);
     if (tracing_commands()) {
-        Logger::finish_seq(), the_log << "{calc "
-                                      << "res " << A << "}\n";
+        Logger::finish_seq();
+        the_log << "{calc res " << A << "}\n";
     }
     res.set_type(type);
     res.copy(A);
@@ -4160,8 +4177,8 @@ void Parser::exec_calc() {
         p = it_glue; // ok ? should add a test here....
     if (tracing_commands()) {
         String s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
-        Logger::finish_seq(), the_log << "{calc "
-                                      << "modifying " << s << " at position " << to_signed(l) << "}\n";
+        Logger::finish_seq();
+        the_log << "{calc modifying " << s << " at position " << to_signed(l) << "}\n";
     }
     SthInternal res;
     calc_main(p, res, b);
@@ -4318,7 +4335,8 @@ void Parser::begin_box(size_t src, subtypes c) {
     } else if (scan_keyword("to") || scan_keyword("spread"))
         scan_dimen(false, T);
     if (tracing_commands()) {
-        Logger::finish_seq(), the_log << "{";
+        Logger::finish_seq();
+        the_log << "{";
         if (box_name.empty())
             the_log << "Constructing an anonymous box"
                     << "}\n";
@@ -4343,7 +4361,8 @@ void Parser::begin_box(size_t src, subtypes c) {
                 name = "<everyxbox> ";
             else if (c == hbox_code)
                 name = "<everyhbox> ";
-            Logger::finish_seq(), the_log << "{" << name << L << "}\n";
+            Logger::finish_seq();
+            the_log << "{" << name << L << "}\n";
         }
         back_input(L);
     }
@@ -4446,7 +4465,8 @@ void Parser::M_prefixed() {
     if (gd > 0) b_global = true;
     if (gd < 0) b_global = false;
     if (tracing_commands() && (b_global || (flags != 0))) {
-        Logger::finish_seq(), the_log << "{";
+        Logger::finish_seq();
+        the_log << "{";
         trace_buffer.reset();
         trace_buffer.dump_prefix(true, b_global, K);
         the_log << trace_buffer << cur_tok << "}\n";
@@ -4460,8 +4480,9 @@ void Parser::M_prefixed() {
     Token aat = get_after_ass_tok();
     if (!aat.is_null()) {
         back_input(aat);
-        if (tracing_commands())
-            Logger::finish_seq(), the_log << "{"
-                                          << "after assignment: " << aat << "}\n";
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{after assignment: " << aat << "}\n";
+        }
     }
 }
