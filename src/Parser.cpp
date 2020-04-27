@@ -776,7 +776,7 @@ namespace {
         the_names[cst_denalign]       = Istring("denomalign");
         // math fonts
         the_names[cstf_normal]                = Istring("normal"); // no attrib
-        the_names[cstf_upright]               = Istring(0UL);
+        the_names[cstf_upright]               = Istring();
         the_names[cstf_bold]                  = Istring("bold");
         the_names[cstf_italic]                = Istring("italic");
         the_names[cstf_bold_italic]           = Istring("bold-italic");
@@ -982,7 +982,7 @@ namespace {
 
         the_names[np_label_glo]      = Istring("label");
         the_names[np_label_item]     = Istring("label");
-        the_names[np_language]       = Istring(0UL);
+        the_names[np_language]       = Istring();
         the_names[np_leaders]        = Istring("leaders");
         the_names[np_left]           = Istring("left");
         the_names[np_leftborder]     = Istring("left-border");

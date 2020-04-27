@@ -467,14 +467,14 @@ auto Parser::T_item_label(int c) -> Istring {
         if (!cur_cmd_chr.is_relax())
             L.push_back(t);
         else
-            return Istring(0UL);
+            return Istring();
     }
     brace_me(L); // \item[\bf x] puts only x in \bf
     the_stack.push1(np_label_item);
     the_stack.set_arg_mode();
     T_translate(L);
     the_stack.pop(np_label_item);
-    if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring(0UL);
+    if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring();
     Xml *res      = the_stack.remove_last();
     res->name     = Istring(1);
     std::string w = res->convert_to_string();
@@ -1087,7 +1087,7 @@ void Parser::T_color(subtypes c) {
     Buffer &B = tpa_buffer;
     flush_buffer();
     if (c == normalcolor_code) {
-        cur_font.set_color(Istring(0UL));
+        cur_font.set_color(Istring());
         font_has_changed();
         return;
     }

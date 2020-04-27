@@ -792,7 +792,7 @@ void Parser::T_cline() {
         if (!R->is_xmlc() && R->has_name(the_names[np_row])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
-                R->name = Istring(0UL);
+                R->name = Istring();
                 the_stack.add_border(cline_first, cl_span);
                 the_log << "\\cline killed a cell \n";
                 return;

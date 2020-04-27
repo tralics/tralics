@@ -22,7 +22,7 @@ class ModChecker {
     bool    is_mod{false};   // is this a module?
     bool    has_info{false}; // does this have some infos ?
 public:
-    ModChecker() : id(0UL) {}
+    ModChecker() : id() {}
     ModChecker(Istring I, bool mod) : id(std::move(I)), is_mod(mod) {}
     void set(const Istring &I) {
         if (id == I) has_info = true;

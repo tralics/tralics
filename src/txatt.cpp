@@ -102,7 +102,7 @@ void Xid::add_attribute(Xid b) const {
 // We should remove the slot....instead of replacing
 void AttList::delete_att(name_positions a) {
     auto i = has_value(the_names[a]);
-    if (i && (*i > 0)) val[*i].name = Istring(0UL);
+    if (i && (*i > 0)) val[*i].name = Istring();
 }
 
 // Puts in the buffer the value of the attribute M of element idx

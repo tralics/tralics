@@ -127,7 +127,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     }
     if (a == "mfenced_separator_val") {
         if (strcmp(B, "NONE") == 0)
-            the_names[np_separator] = Istring(0UL);
+            the_names[np_separator] = Istring();
         else
             the_names[np_separator] = Istring(B);
         return true;
