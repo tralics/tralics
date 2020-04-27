@@ -1,6 +1,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/LabelInfo.h"
 #include "tralics/consts.h"
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -35,7 +36,7 @@ Istring::Istring(const ScaledInt &i)
       }()) {}
 
 auto Istring::labinfo() const -> LabelInfo * {
-    static std::unordered_map<size_t, LabelInfo *> LI;
-    if (LI.find(id) == LI.end()) LI.emplace(id, new LabelInfo);
-    return LI[id];
+    static std::unordered_map<size_t, std::unique_ptr<LabelInfo>> LI;
+    if (LI.find(id) == LI.end()) LI.emplace(id, std::make_unique<LabelInfo>());
+    return LI[id].get();
 }

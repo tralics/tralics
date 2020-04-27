@@ -534,9 +534,10 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
     if (eqpos != 0) {
         banner();
-        std::cout << "Illegal equal sign in option " << argv[p] << "\n";
+        spdlog::error("Illegal equal sign in option {}", argv[p]);
         usage_and_quit(1);
-    } else if (strcmp(s, "verbose") == 0)
+    }
+    if (strcmp(s, "verbose") == 0)
         verbose = true;
     else if (strcmp(s, "verbose-doc") == 0)
         dverbose = true;
