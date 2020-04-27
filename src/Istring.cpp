@@ -5,17 +5,15 @@ namespace {
     StrHash SH;
 } // namespace
 
-Istring::Istring(size_t N) : name(SH[N].name), id(N) {}
+Istring::Istring(size_t N) : id(N), name(SH[N].name), value(Buffer(name).convert_to_out_encoding()) {}
 
-Istring::Istring(const std::string &s) : name(s), id(SH.find_or_insert(s)) {}
+Istring::Istring(const std::string &s) : id(SH.find_or_insert(s)), name(s), value(Buffer(name).convert_to_out_encoding()) {}
 
-Istring::Istring(const ScaledInt &i) {
-    Buffer B;
-    B.push_back(i, glue_spec_pt);
-    name = B.to_string();
-    id   = SH.find_or_insert(name);
-}
-
-auto Istring::value() const -> std::string { return SH[id].value; }
+Istring::Istring(const ScaledInt &i)
+    : Istring([&i] {
+          Buffer B;
+          B.push_back(i, glue_spec_pt);
+          return B.to_string();
+      }()) {}
 
 auto Istring::labinfo() const -> LabelInfo * { return SH.labinfo(id); }

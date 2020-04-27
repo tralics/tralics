@@ -467,9 +467,6 @@ auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
     return fp;
 }
 
-// Prints a token list.
-auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.name; }
-
 // Puts a macro into a buffer.
 void Buffer::push_back(const Macro &x) {
     *this << x[0];
@@ -505,10 +502,7 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
 }
 
 void Buffer::push_back(const Istring &X) {
-    auto v = X.id;
-    if (v == 0) return;
-    if (v == 1) return;
-    push_back(X.value());
+    if (X.id >= 2) push_back(X.value);
 }
 
 // True if L has a single token

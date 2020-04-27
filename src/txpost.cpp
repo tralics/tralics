@@ -409,7 +409,7 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 void Buffer::push_back_elt(const Istring &name, Xid id, int w) {
     push_back('<');
     if (w == 2) push_back('/');
-    push_back(name.value());
+    push_back(name.value);
     if (w != 2) push_back(id.get_att());
     if (w == 0) push_back('/');
     push_back('>');

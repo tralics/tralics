@@ -7,7 +7,7 @@
 class LabelInfo;
 
 struct StrHash_record {
-    std::string name, value;
+    std::string name;
     LabelInfo * labinfo{nullptr};
 };
 
@@ -15,7 +15,7 @@ class StrHash : public std::vector<StrHash_record> {
     std::unordered_map<std::string, size_t> s_to_i;
 
 public:
-    StrHash() : std::vector<StrHash_record>{{"", ""}, {"", ""}, {" ", " "}} {
+    StrHash() : std::vector<StrHash_record>{{""}, {""}, {" "}} {
         s_to_i.try_emplace("", 1);
         s_to_i.try_emplace(" ", 2);
     }
