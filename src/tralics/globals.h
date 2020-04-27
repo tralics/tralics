@@ -2,6 +2,7 @@
 #include "Istring.h"
 #include "codepoint.h"
 #include <filesystem>
+#include <vector>
 
 // \todo move from extern to inline
 

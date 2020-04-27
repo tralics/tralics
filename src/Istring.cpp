@@ -1,7 +1,8 @@
 #include "tralics/Buffer.h"
+#include "tralics/StrHash.h"
 
 namespace {
-    // StrHash SH;
+    StrHash SH;
 }
 
 Istring::Istring(size_t N) : name(SH[N].name), id(N) {}

@@ -13,6 +13,7 @@
 #include "tralics/Hashtab.h"
 #include "tralics/Parser.h"
 #include "tralics/Saver.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include <fmt/format.h>
 #include <unordered_map>

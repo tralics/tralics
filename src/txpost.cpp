@@ -12,6 +12,7 @@
 
 #include "txpost.h"
 #include "tralics/Parser.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include "txtrees.h"
 #include <fmt/format.h>

@@ -1,8 +1,10 @@
 #pragma once
 #include "../txid.h"
 #include "../txscaled.h"
+#include "Istring.h"
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 struct AttPair;
 struct LinePtr;

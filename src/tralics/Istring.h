@@ -1,17 +1,17 @@
 #pragma once
-#include "StrHash.h"
 #include "enums.h"
-#include "util.h"
 #include <array>
+#include <string>
 
-class Buffer;
 class ScaledInt;
+class LabelInfo;
 
 struct Istring {
     std::string name;
     size_t      id{0};
 
-    Istring(size_t N = 0);
+    Istring() = default;
+    Istring(size_t N);
     explicit Istring(const std::string &s);
     explicit Istring(const ScaledInt &i);
 
@@ -23,8 +23,6 @@ struct Istring {
 
     auto operator==(const Istring &X) const -> bool { return id == X.id; }
     auto operator!=(const Istring &X) const -> bool { return id != X.id; }
-
-    static inline StrHash SH; // \todo make static in Istring.cpp so that StrHash can depend on Istring
 };
 
 auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;
