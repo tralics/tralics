@@ -1,4 +1,6 @@
 #pragma once
+#include <cstddef>
+
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
 

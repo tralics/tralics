@@ -411,16 +411,7 @@ void MainClass::open_log() { // \todo spdlog etc
     check_for_encoding(); // \todo this does not feel like it belongs here
 }
 
-void MainClass::set_ent_names(String s) { // \todo bool is_yes(String)
-    if (strcmp(s, "true") == 0)
-        no_entnames = false;
-    else if (strcmp(s, "yes") == 0)
-        no_entnames = false;
-    else if (strcmp(s, "false") == 0)
-        no_entnames = true;
-    else if (strcmp(s, "no") == 0)
-        no_entnames = true;
-}
+void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false") || (s == "no"); }
 
 void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
 

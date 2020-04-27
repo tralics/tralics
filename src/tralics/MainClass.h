@@ -93,7 +93,7 @@ public:
     void add_to_from_config(int n, Buffer &b); ///< Add contents to `from_config`
     void bad_year();                           ///< If the year is wrong, fail \todo this seems to be RA specific
     void run(int argc, char **argv);           ///< Do everything
-    void set_ent_names(String s);              ///< Set no_entnames from a string saying yes or no
+    void set_ent_names(const std::string &s);  ///< Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);        ///< Set default input file encoding and log the action \todo remove?
 
     static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?

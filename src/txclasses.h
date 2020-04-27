@@ -44,7 +44,7 @@ public:
     void               mark_un_used() { used = false; }
 };
 
-inline std::ostream &operator<<(std::ostream &os, const KeyAndVal &kv) { return os << kv.full_name; }
+inline auto operator<<(std::ostream &os, const KeyAndVal &kv) -> std::ostream & { return os << kv.full_name; }
 
 using OptionList = std::vector<KeyAndVal>;
 
