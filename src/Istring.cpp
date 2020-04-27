@@ -3,7 +3,7 @@
 
 namespace {
     StrHash SH;
-}
+} // namespace
 
 Istring::Istring(size_t N) : name(SH[N].name), id(N) {}
 

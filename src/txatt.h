@@ -1,5 +1,7 @@
 #pragma once
 #include "tralics/Istring.h"
+#include <optional>
+#include <vector>
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008

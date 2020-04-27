@@ -254,7 +254,7 @@ namespace {
         }
     }
 
-    void obsolete(const std::string &s) { spdlog::info("Obsolete option `-{}' ignored\n", s); }
+    void obsolete(const std::string &s) { spdlog::warn("Obsolete option `-{}' ignored\n", s); }
 
     auto param_hack(String a) -> bool {
         Buffer B;

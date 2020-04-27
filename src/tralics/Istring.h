@@ -11,7 +11,7 @@ struct Istring {
     size_t      id{0};
 
     Istring() = default;
-    Istring(size_t N);
+    explicit Istring(size_t N);
     explicit Istring(const std::string &s);
     explicit Istring(const ScaledInt &i);
 
