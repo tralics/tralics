@@ -11,20 +11,20 @@ struct Istring {
     std::string name;
     size_t      id{0};
 
-    Istring(size_t N = 0) : name(SH[N].name), id(N) {}
+    Istring(size_t N = 0);
     explicit Istring(const std::string &s);
     explicit Istring(const ScaledInt &i);
 
     [[nodiscard]] auto null() const -> bool { return id == 0; }       // null string
     [[nodiscard]] auto empty() const -> bool { return id == 1; }      // ""
     [[nodiscard]] auto spec_empty() const -> bool { return id == 2; } // "" \todo investigate because 2 is `" "`
-    [[nodiscard]] auto value() const -> std::string & { return SH[id].value; }
-    [[nodiscard]] auto labinfo() const { return SH.labinfo(id); }
+    [[nodiscard]] auto value() const -> std::string;
+    [[nodiscard]] auto labinfo() const -> LabelInfo *;
 
     auto operator==(const Istring &X) const -> bool { return id == X.id; }
     auto operator!=(const Istring &X) const -> bool { return id != X.id; }
 
-    static inline StrHash SH;
+    static inline StrHash SH; // \todo make static in Istring.cpp so that StrHash can depend on Istring
 };
 
 auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream &;

@@ -1,5 +1,11 @@
 #include "tralics/Buffer.h"
 
+namespace {
+    // StrHash SH;
+}
+
+Istring::Istring(size_t N) : name(SH[N].name), id(N) {}
+
 Istring::Istring(const std::string &s) : name(s), id(SH.find_or_insert(s)) {}
 
 Istring::Istring(const ScaledInt &i) {
@@ -8,3 +14,7 @@ Istring::Istring(const ScaledInt &i) {
     name = B.to_string();
     id   = SH.find_or_insert(name);
 }
+
+auto Istring::value() const -> std::string { return SH[id].value; }
+
+auto Istring::labinfo() const -> LabelInfo * { return SH.labinfo(id); }

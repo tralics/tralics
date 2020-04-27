@@ -11,7 +11,6 @@
 
 #include "tralics/Istring.h"
 #include "tralics/Logger.h"
-#include "tralics/StrHash.h"
 #include <utility>
 
 // This is how Tralics interprets a font
