@@ -6,19 +6,11 @@
 #include <vector>
 
 namespace {
-    struct StrHash_record {
-        std::string name;
-        LabelInfo * labinfo{nullptr};
-    };
-
-    class StrHash : public std::vector<StrHash_record> {
+    class StrHash : public std::vector<std::string> {
         std::unordered_map<std::string, size_t> s_to_i;
 
     public:
-        StrHash() : std::vector<StrHash_record>{{""}, {""}, {" "}} {
-            s_to_i.try_emplace("", 1);
-            s_to_i.try_emplace(" ", 2);
-        }
+        StrHash() : std::vector<std::string>{"", "", " "}, s_to_i{{"", 1}, {" ", 2}} {}
 
         auto find_or_insert(const std::string &s) -> size_t {
             if (auto tmp = s_to_i.find(s); tmp != s_to_i.end()) return tmp->second;
@@ -31,7 +23,7 @@ namespace {
     StrHash SH;
 } // namespace
 
-Istring::Istring(size_t N) : id(N), name(SH[N].name), value(Buffer(name).convert_to_out_encoding()) {}
+Istring::Istring(size_t N) : id(N), name(SH[N]), value(Buffer(name).convert_to_out_encoding()) {}
 
 Istring::Istring(const std::string &s) : id(SH.find_or_insert(s)), name(s), value(Buffer(name).convert_to_out_encoding()) {}
 
@@ -43,6 +35,7 @@ Istring::Istring(const ScaledInt &i)
       }()) {}
 
 auto Istring::labinfo() const -> LabelInfo * {
-    if (SH[id].labinfo == nullptr) SH[id].labinfo = new LabelInfo;
-    return SH[id].labinfo;
+    static std::unordered_map<size_t, LabelInfo *> LI;
+    if (LI.find(id) == LI.end()) LI.emplace(id, new LabelInfo);
+    return LI[id];
 }
