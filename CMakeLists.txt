@@ -12,9 +12,10 @@ endif()
 
 include(${PROJECT_SOURCE_DIR}/cmake/conan.cmake)
 conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
+set(CONAN_SYSTEM_INCLUDES ON)
 conan_cmake_run(REQUIRES
-                fmt/6.1.2
-                ms-gsl/2.0.0
+                fmt/6.2.0
+                ms-gsl/2.1.0
                 spdlog/1.5.0
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
@@ -24,7 +25,7 @@ add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message("-- Debug mode")
-  add_compile_options(-g)
+	add_compile_options(-g -O0)
 else()
   message("-- Release mode")
   add_compile_options(-O3 -DNDEBUG)
