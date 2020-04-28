@@ -37,7 +37,7 @@ inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_
 
 class MathElt { // \todo make it inherit from CmdChr
     CmdChr   val;
-    subtypes Font;
+    subtypes Font{};
 
 public:
     MathElt(CmdChr X, subtypes c) : val(X), Font(c) {}

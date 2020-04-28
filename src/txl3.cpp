@@ -927,17 +927,8 @@ void Parser::l3_token_check(subtypes c) {
         break;
     case tok_if_primitive_code:
         if (read_token_arg(caller)) break;
-        {
-            symcodes K = cur_cmd_chr.cmd;
-            if (K == undef_cmd)
-                res = false; // undefined
-            else if (K >= user_cmd)
-                res = false; // macro
-            else if (K < 16)
-                res = false; // character
-            else
-                res = true;
-        }
+        auto K = cur_cmd_chr.cmd;
+        res    = !((K == undef_cmd) || (K >= user_cmd) || (K < 16));
     }
 
     l3_after_cond(caller, res, subtypes(c % 4));

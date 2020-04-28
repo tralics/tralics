@@ -228,39 +228,39 @@ auto tralics_ns::math_env_name(subtypes chr) -> String {
 
 auto tralics_ns::math_env_props(subtypes chr) -> int {
     switch (chr) {
-    case eqnarray_code: return 1 + 4 + 8;
-    case eqnarray_star_code: return 1 + 8;
-    case Beqnarray_code: return 1 + 4 + 8;
-    case Beqnarray_star_code: return 1 + 8;
-    case multline_code: return 1 + 2 + 8;
-    case multline_star_code: return 1 + 8;
-    case gather_code: return 1 + 4 + 8;
-    case gather_star_code: return 1 + 8;
-    case equation_code: return 1 + 2;
-    case equation_star_code: return 1;
-    case align_code: return 1 + 4 + 8;
-    case align_star_code: return 1 + 8;
+    case eqnarray_code:
+    case Beqnarray_code:
+    case gather_code:
+    case align_code:
     case flalign_code: return 1 + 4 + 8;
+    case eqnarray_star_code:
+    case Beqnarray_star_code:
+    case multline_star_code:
+    case gather_star_code:
+    case align_star_code:
     case flalign_star_code: return 1 + 8;
-    case alignat_code: return 1 + 4 + 8 + 32;
-    case alignat_star_code: return 1 + 8 + 32;
-    case xalignat_code: return 1 + 4 + 8 + 32;
-    case xalignat_star_code: return 1 + 8 + 32;
+    case multline_code: return 1 + 2 + 8;
+    case equation_code: return 1 + 2;
+    case alignat_code:
+    case xalignat_code:
     case xxalignat_code: return 1 + 4 + 8 + 32;
+    case alignat_star_code:
+    case xalignat_star_code:
     case xxalignat_star_code: return 1 + 8 + 32;
-    case math_code: return 1;
-    case displaymath_code: return 1;
-    case array_code: return 8;
-    case split_code: return 8;
-    case aligned_code: return 8 + 16;
-    case gathered_code: return 8 + 16;
-    case matrix_code: return 8;
-    case bordermatrix_code: return 8;
+    case math_code:
+    case displaymath_code:
+    case equation_star_code: return 1;
+    case array_code:
+    case split_code:
+    case matrix_code:
+    case bordermatrix_code:
+    case matrixB_code:
+    case matrixp_code:
+    case matrixV_code:
+    case matrixv_code:
     case matrixb_code: return 8;
-    case matrixB_code: return 8;
-    case matrixp_code: return 8;
-    case matrixV_code: return 8;
-    case matrixv_code: return 8;
+    case aligned_code:
+    case gathered_code: return 8 + 16;
     default: return 0;
     }
 }

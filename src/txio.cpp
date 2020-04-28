@@ -482,15 +482,15 @@ void LinePtr::normalise_final_cr() {
 
 // This puts x into the buffer in utf8 form \todo codepoint::to_utf8()
 void Buffer::push_back(codepoint c) {
-    unsigned x = c.value;
+    auto x = c.value;
     if (x < 128) {
         push_back(static_cast<char>(x));
         return;
     }
-    int x1 = x >> 18;
-    int x2 = (x >> 12) & 63;
-    int x3 = (x >> 6) & 63;
-    int x4 = x & 63;
+    auto x1 = x >> 18;
+    auto x2 = (x >> 12) & 63;
+    auto x3 = (x >> 6) & 63;
+    auto x4 = x & 63;
     if (x1 > 0 || x2 >= 16) {
         push_back(static_cast<char>(x1 + 128 + 64 + 32 + 16));
         push_back(static_cast<char>(x2 + 128));
@@ -884,7 +884,7 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
 // same as get_next, without conversion
 auto LinePtr::get_next_raw(Buffer &b) -> int {
     if (empty()) return -1;
-    bool unused = 0;
+    bool unused = false;
     int  n      = front().to_buffer(b, unused);
     pop_front();
     return n;

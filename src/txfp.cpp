@@ -975,24 +975,18 @@ void FpNum::cos0() {
 // sin(x-pi/2) = -sin(pi/2-x) etc...
 void FpNum::sin1(int k) {
     switch (k) {
-    case 0: sin0(); return;
-    case 1: cos0(); return;
-    case 2: cos0(); return;
+    case 0:
     case 3: sin0(); return;
+    case 1:
+    case 2: cos0(); return;
     case 4:
+    case 7:
         sin0();
         neg();
         return;
     case 5:
-        cos0();
-        neg();
-        return;
     case 6:
         cos0();
-        neg();
-        return;
-    case 7:
-        sin0();
         neg();
         return;
     }
@@ -1000,26 +994,20 @@ void FpNum::sin1(int k) {
 
 void FpNum::cos1(int k) {
     switch (k) {
-    case 0: cos0(); return;
-    case 1: sin0(); return;
+    case 0:
+    case 7: cos0(); return;
+    case 1:
+    case 6: sin0(); return;
     case 2:
-        sin0();
-        neg();
-        return;
-    case 3:
-        cos0();
-        neg();
-        return;
-    case 4:
-        cos0();
-        neg();
-        return;
     case 5:
         sin0();
         neg();
         return;
-    case 6: sin0(); return;
-    case 7: cos0(); return;
+    case 3:
+    case 4:
+        cos0();
+        neg();
+        return;
     }
 }
 
@@ -1131,7 +1119,7 @@ auto FpNum::sincos_transform() -> bool {
         oldval.data[2] = r.data[2];
         oldval.data[3] = r.data[3];
         rs.mul(r, r);
-        bool cmp = 0;
+        bool cmp = false;
         if (rs.data[2] < y.data[2])
             cmp = true;
         else if (rs.data[2] > y.data[2])

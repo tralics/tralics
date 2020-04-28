@@ -132,7 +132,7 @@ class Slined {
 public:
     Slined(size_t sz, String P) {
         for (char &i : m_buffer) i = ' ';
-        if (sz != 0) m_inbuf = new char[sz];
+        if (sz != 0) m_inbuf = new char[sz]; // NOLINT
         if (P != nullptr) {
             m_history.emplace_back(P);
             m_history_size = 1; // first line is a comment
