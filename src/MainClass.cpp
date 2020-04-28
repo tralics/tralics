@@ -8,6 +8,61 @@
 #include <spdlog/spdlog.h>
 
 namespace {
+    constexpr auto usage = R"(
+Syntax:
+   tralics [options] source
+source is the name of the source file,
+   (with or without a extension .tex), does not start with a hyphen
+
+All options start with a single or double hyphen, they are:
+  -verbose: Prints much more things in the log file
+  -silent: Prints less information on the terminal
+  -input_file FILE: translates file FILE
+  -log_file LOG: uses LOG as transcript file
+  -input_path PATH: uses PATH as dir list for input
+  -output_dir DIR: pute result files in directory DIR
+  -type FOO: Uses FOO instead of the \documentclass value
+  -config FILE: use FILE instead of default configuration file
+  -confdir : indicates where the configuration files are located
+  -noconfig: no configuration file is used
+  -interactivemath: reads from the terminal, 
+      and prints math formulas on the terminal
+  -utf8: says that the source is encoded in utf8 instead of latin1
+  -latin1: overrides -utf8
+  -utf8output: same as -oe8
+  -oe8, -oe1, -oe8a -oe1a: specifies output encoding
+  -te8, -te1, -te8a -te1a: terminal and transcript encoding
+  -(no)trivialmath: special math hacking
+  -(no)etex; enable or disable e-TeX extensions
+  -nozerowidthelt: Use  &#x200B; rather than <zws/>
+  -nozerowidthspace: no special &#x200B; or <zws/> inserted
+  -noentnames: result contains &#A0; rather than &nbsp;
+  -entnames=true/false: says whether or not you want &nbsp;
+  -nomathml: this disables mathml mode
+  -dualmath: gives mathML and nomathML mode
+  -(no)math_variant: for <mi mathvariant='script'>X</mi>
+  -(no)multi_math_label: allows multiple labels in a formula 
+  -noundefmac: alternate XML output for undefined commands
+  -noxmlerror: no XML element is generated in case of error
+  -no_float_hack: Removes hacks for figures and tables
+  -nostraightquotes: same as right_quote=B4
+  -left_quote=2018: sets translation of ` to char U+2018
+  -right_quote=2019: sets translation of ' to char U+2019
+  -param foo bar: adds foo="bar" to the configuratin file
+  -doctype=A-B; specifies the XML DOCTYPE
+  -usequotes: double quote gives two single quotes
+  -shell-escape: enable \write18{SHELL COMMAND}
+  -tpa_status = title/all: translate all document or title only
+  -default_class=xx: use xx.clt if current class is unknown
+  -raw_bib: uses all bibtex fields
+  -distinguish_refer_in_rabib= true/false: special raweb hack 
+  (the list of all options is avalaible at
+    http://www-sop.inria.fr/marelle/tralics/options.html )
+
+Tralics homepage: http://www-sop.inria.fr/marelle/tralics
+This software is governed by the CeCILL license that can be
+found at http://www.cecill.info.)";
+
     Buffer b_after;
 
     std::filesystem::path out_dir;
@@ -111,59 +166,7 @@ namespace {
 
     /// Display usage message, then exit the program \todo Manage this centrally
     void usage_and_quit(int v) {
-        std::cout << "Syntax:\n";
-        std::cout << "   tralics [options] source\n";
-        std::cout << "source is the name of the source file,\n";
-        std::cout << "   (with or without a extension .tex), does not start with a hyphen\n";
-        std::cout << "\n";
-        std::cout << "All options start with a single or double hyphen, they are:\n";
-        std::cout << "  -verbose: Prints much more things in the log file\n";
-        std::cout << "  -silent: Prints less information on the terminal\n";
-        std::cout << "  -input_file FILE: translates file FILE\n";
-        std::cout << "  -log_file LOG: uses LOG as transcript file\n";
-        std::cout << "  -input_path PATH: uses PATH as dir list for input\n";
-        std::cout << "  -output_dir DIR: pute result files in directory DIR\n";
-        std::cout << "  -type FOO: Uses FOO instead of the \\documentclass value\n";
-        std::cout << "  -config FILE: use FILE instead of default configuration file\n";
-        std::cout << "  -confdir : indicates where the configuration files are located\n";
-        std::cout << "  -noconfig: no configuration file is used\n";
-        std::cout << "  -interactivemath: reads from the terminal, \n";
-        std::cout << "      and prints math formulas on the terminal\n";
-        std::cout << "  -utf8: says that the source is encoded in utf8 instead of latin1\n";
-        std::cout << "  -latin1: overrides -utf8\n";
-        std::cout << "  -utf8output: same as -oe8\n";
-        std::cout << "  -oe8, -oe1, -oe8a -oe1a: specifies output encoding\n";
-        std::cout << "  -te8, -te1, -te8a -te1a: terminal and transcript encoding\n";
-        std::cout << "  -(no)trivialmath: special math hacking\n";
-        std::cout << "  -(no)etex; enable or disable e-TeX extensions\n";
-        std::cout << "  -nozerowidthelt: Use  &#x200B; rather than <zws/>\n";
-        std::cout << "  -nozerowidthspace: no special &#x200B; or <zws/> inserted\n";
-        std::cout << "  -noentnames: result contains &#A0; rather than &nbsp;\n";
-        std::cout << "  -entnames=true/false: says whether or not you want &nbsp;\n";
-        std::cout << "  -nomathml: this disables mathml mode\n";
-        std::cout << "  -dualmath: gives mathML and nomathML mode\n";
-        std::cout << "  -(no)math_variant: for <mi mathvariant='script'>X</mi>\n";
-        std::cout << "  -(no)multi_math_label: allows multiple labels in a formula \n";
-        std::cout << "  -noundefmac: alternate XML output for undefined commands\n";
-        std::cout << "  -noxmlerror: no XML element is generated in case of error\n";
-        std::cout << "  -no_float_hack: Removes hacks for figures and tables\n";
-        std::cout << "  -nostraightquotes: same as right_quote=B4\n";
-        std::cout << "  -left_quote=2018: sets translation of ` to char U+2018\n";
-        std::cout << "  -right_quote=2019: sets translation of ' to char U+2019\n";
-        std::cout << "  -param foo bar: adds foo=\"bar\" to the configuratin file\n";
-        std::cout << "  -doctype=A-B; specifies the XML DOCTYPE\n";
-        std::cout << "  -usequotes: double quote gives two single quotes\n";
-        std::cout << "  -shell-escape: enable \\write18{SHELL COMMAND}\n";
-        std::cout << "  -tpa_status = title/all: translate all document or title only\n";
-        std::cout << "  -default_class=xx: use xx.clt if current class is unknown\n";
-        std::cout << "  -raw_bib: uses all bibtex fields\n";
-        std::cout << "  -distinguish_refer_in_rabib= true/false: special raweb hack \n";
-        std::cout << "  (the list of all options is avalaible at\n"
-                  << "    http://www-sop.inria.fr/marelle/tralics/options.html )\n";
-        std::cout << "\n";
-        std::cout << "Tralics homepage: http://www-sop.inria.fr/marelle/tralics\n";
-        std::cout << "This software is governed by the CeCILL license that can be\n";
-        std::cout << "found at http://www.cecill.info.\n";
+        std::cout << usage;
         exit(v);
     }
 
