@@ -98,8 +98,9 @@ public:
 
     static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
 
+    void banner() const; ///< Prints the banner on the tty
+
 private:
-    void banner() const;                              ///< Prints the banner on the tty
     void check_section_use() const;                   ///< Not sure what this does, RA related
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
     void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
@@ -115,7 +116,6 @@ private:
     auto find_document_type() -> bool; ///< Massage the output of get_doc_type
     auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
-    auto split_one_arg(String a, int &p) -> String; ///< This considers the case of tralics conf_dir=foo
     void after_main_text();
     void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);

@@ -3526,31 +3526,5 @@ enum array_class_type {
     chc_pre_cell
 };
 
-// Parameters to the program that have arguments
-enum param_args {
-    pa_none,
-    pa_entnames,
-    pa_tpastatus,
-    pa_dir,
-    pa_year,
-    pa_type,
-    pa_config,
-    pa_refer,
-    pa_confdir,
-    pa_external_prog,
-    pa_trivialmath,
-    pa_leftquote,
-    pa_rightquote,
-    pa_defaultclass,
-    pa_infile,
-    pa_outfile,
-    pa_indir,
-    pa_outdir,
-    pa_logfile,
-    pa_dtd,
-    pa_param,
-    pa_indata
-};
-
 inline constexpr unsigned space_token_val   = space_t_offset + ' ';
 inline constexpr unsigned newline_token_val = space_t_offset + '\n';

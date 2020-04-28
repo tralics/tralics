@@ -87,34 +87,6 @@ namespace {
         return y;
     }
 
-    auto find_param_type(String s) -> param_args {
-        if (strcmp(s, "entnames") == 0) return pa_entnames;
-        if (strcmp(s, "tpastatus") == 0) return pa_tpastatus;
-        if (strcmp(s, "dir") == 0) return pa_dir;
-        if (strcmp(s, "year") == 0) return pa_year;
-        if (strcmp(s, "type") == 0) return pa_type;
-        if (strcmp(s, "configfile") == 0) return pa_config;
-        if (strcmp(s, "config") == 0) return pa_config;
-        if (strcmp(s, "distinguishreferinrabib") == 0) return pa_refer;
-        if (strcmp(s, "confdir") == 0) return pa_confdir;
-        if (strcmp(s, "externalprog") == 0) return pa_external_prog;
-        if (strcmp(s, "trivialmath") == 0) return pa_trivialmath;
-        if (strcmp(s, "leftquote") == 0) return pa_leftquote;
-        if (strcmp(s, "rightquote") == 0) return pa_rightquote;
-        if (strcmp(s, "defaultclass") == 0) return pa_defaultclass;
-        if (strcmp(s, "inputfile") == 0) return pa_infile;
-        if (strcmp(s, "inputdata") == 0) return pa_indata;
-        if (strcmp(s, "outputfile") == 0) return pa_outfile;
-        if (strcmp(s, "o") == 0) return pa_outfile;
-        if (strcmp(s, "inputdir") == 0) return pa_indir;
-        if (strcmp(s, "inputpath") == 0) return pa_indir;
-        if (strcmp(s, "outputdir") == 0) return pa_outdir;
-        if (strcmp(s, "logfile") == 0) return pa_logfile;
-        if (strcmp(s, "doctype") == 0) return pa_dtd;
-        if (strcmp(s, "param") == 0) return pa_param;
-        return pa_none;
-    }
-
     /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
@@ -290,6 +262,32 @@ namespace {
         default: return "Unknown";
         }
     }
+
+    auto split_one_arg(String a, int &p) -> std::string {
+        static Buffer B;
+        B.reset();
+        p     = 0;
+        int i = 0;
+        for (;;) {
+            char c = a[i];
+            if (c == 0) break;
+            ++i;
+            if (c == '=') {
+                while (a[i] == ' ') ++i;
+                p = i;
+                break;
+            }
+            if (c == '-' || c == '_') continue;
+            B.push_back(c);
+        }
+        B.remove_space_at_end();
+        if (B.empty()) {
+            the_main->banner();
+            std::cout << "bad option " << a << "\n";
+            usage_and_quit(1);
+        }
+        return B.c_str();
+    }
 } // namespace
 
 auto tralics_ns::get_out_dir(const std::string &name) -> String {
@@ -435,32 +433,6 @@ void MainClass::parse_args(int argc, char **argv) {
     if (rightquote_val == 0 || rightquote_val >= (1 << 16)) rightquote_val = '\'';
 }
 
-auto MainClass::split_one_arg(String a, int &p) -> String {
-    static Buffer B;
-    B.reset();
-    p     = 0;
-    int i = 0;
-    for (;;) {
-        char c = a[i];
-        if (c == 0) break;
-        ++i;
-        if (c == '=') {
-            while (a[i] == ' ') ++i;
-            p = i;
-            break;
-        }
-        if (c == '-' || c == '_') continue;
-        B.push_back(c);
-    }
-    B.remove_space_at_end();
-    if (B.empty()) {
-        banner();
-        std::cout << "bad option " << a << "\n";
-        usage_and_quit(1);
-    }
-    return B.c_str();
-}
-
 auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     if (p >= argc - 1) {
         banner();
@@ -482,10 +454,63 @@ auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     return a;
 }
 
+enum param_args {
+    pa_none,
+    pa_entnames,
+    pa_tpastatus,
+    pa_dir,
+    pa_year,
+    pa_type,
+    pa_config,
+    pa_refer,
+    pa_confdir,
+    pa_externalprog,
+    pa_trivialmath,
+    pa_leftquote,
+    pa_rightquote,
+    pa_defaultclass,
+    pa_infile,
+    pa_outfile,
+    pa_indir,
+    pa_outdir,
+    pa_logfile,
+    pa_dtd,
+    pa_param,
+    pa_indata
+};
+
 void MainClass::parse_option(int &p, int argc, char **argv) {
-    int        eqpos   = 0;
-    String     s       = split_one_arg(argv[p], eqpos);
-    param_args special = find_param_type(s);
+    int  eqpos = 0;
+    auto s     = split_one_arg(argv[p], eqpos);
+
+    auto special = [](const std::string &s) -> param_args {
+        if (s == "confdir") return pa_confdir;
+        if (s == "config") return pa_config;
+        if (s == "configfile") return pa_config;
+        if (s == "defaultclass") return pa_defaultclass;
+        if (s == "dir") return pa_dir;
+        if (s == "distinguishreferinrabib") return pa_refer;
+        if (s == "doctype") return pa_dtd;
+        if (s == "entnames") return pa_entnames;
+        if (s == "externalprog") return pa_externalprog;
+        if (s == "inputdata") return pa_indata;
+        if (s == "inputdir") return pa_indir;
+        if (s == "inputfile") return pa_infile;
+        if (s == "inputpath") return pa_indir;
+        if (s == "leftquote") return pa_leftquote;
+        if (s == "logfile") return pa_logfile;
+        if (s == "o") return pa_outfile;
+        if (s == "outputdir") return pa_outdir;
+        if (s == "outputfile") return pa_outfile;
+        if (s == "param") return pa_param;
+        if (s == "rightquote") return pa_rightquote;
+        if (s == "tpastatus") return pa_tpastatus;
+        if (s == "trivialmath") return pa_trivialmath;
+        if (s == "type") return pa_type;
+        if (s == "year") return pa_year;
+        return pa_none;
+    }(s);
+
     if (special != pa_none) {
         String a = argv[p] + eqpos;
         if (eqpos == 0) a = check_for_arg(p, argc, argv);
@@ -505,7 +530,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             if (a[0] == '/' && a[1] == '0') return; // ignore root
             conf_path.emplace_back(a);
             return;
-        case pa_external_prog: obsolete(s); return;
+        case pa_externalprog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
         case pa_leftquote: leftquote_val = std::stoul(a, nullptr, 16); return;
         case pa_rightquote: rightquote_val = std::stoul(a, nullptr, 16); return;
@@ -537,135 +562,204 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         spdlog::error("Illegal equal sign in option {}", argv[p]);
         usage_and_quit(1);
     }
-    if (strcmp(s, "verbose") == 0)
+    if ((s == "v") || (s == "verbose")) {
         verbose = true;
-    else if (strcmp(s, "verbose-doc") == 0)
+        return;
+    }
+    if ((s == "V") || (s == "verbose-doc")) {
         dverbose = true;
-    else if (strcmp(s, "v") == 0)
-        verbose = true;
-    else if (strcmp(s, "V") == 0)
-        dverbose = true;
-    else if (strcmp(s, "silent") == 0)
+        return;
+    }
+    if (s == "silent") {
         silent = true;
-    else if (strcmp(s, "version") == 0) {
+        return;
+    }
+    if (s == "version") {
         banner();
         exit(0);
-    } else if (strcmp(s, "rawbib") == 0)
+    }
+    if (s == "rawbib") {
         raw_bib = true;
-    else if (strcmp(s, "radebug") == 0)
-        obsolete(s);
-    else if (strcmp(s, "check") == 0)
-        obsolete(s);
-    else if (strcmp(s, "ps") == 0)
-        obsolete(s);
-    else if (strcmp(s, "utf8") == 0)
+        return;
+    }
+    if (s == "utf8") {
         input_encoding = 0;
-    else if (strcmp(s, "utf8output") == 0)
+        return;
+    }
+    if (s == "utf8output") {
         log_encoding = output_encoding = en_utf8;
-    else if (strcmp(s, "oe8") == 0)
+        return;
+    }
+    if (s == "oe8") {
         output_encoding = en_utf8;
-    else if (strcmp(s, "oe8a") == 0)
+        return;
+    }
+    if (s == "oe8a") {
         output_encoding = en_ascii8;
-    else if (strcmp(s, "oe1") == 0)
+        return;
+    }
+    if (s == "oe1") {
         output_encoding = en_latin;
-    else if (strcmp(s, "oe1a") == 0)
+        return;
+    }
+    if (s == "oe1a") {
         output_encoding = en_ascii7;
-    else if (strcmp(s, "te8") == 0)
+        return;
+    }
+    if (s == "te8") {
         log_encoding = en_utf8;
-    else if (strcmp(s, "te8a") == 0)
+        return;
+    }
+    if (s == "te8a") {
         log_encoding = en_ascii8;
-    else if (strcmp(s, "te1") == 0)
+        return;
+    }
+    if (s == "te1") {
         log_encoding = en_latin;
-    else if (strcmp(s, "te1a") == 0)
+        return;
+    }
+    if (s == "te1a") {
         log_encoding = en_ascii7;
-    else if (strcmp(s, "latin1") == 0)
+        return;
+    }
+    if (s == "latin1") {
         input_encoding = 1;
-    else if (strcmp(s, "noentnames") == 0)
+        return;
+    }
+    if (s == "noentnames") {
         no_entnames = true;
-    else if (strcmp(s, "nomultimathlabel") == 0)
+        return;
+    }
+    if (s == "nomultimathlabel") {
         multi_math_label = false;
-    else if (strcmp(s, "multimathlabel") == 0)
+        return;
+    }
+    if (s == "multimathlabel") {
         multi_math_label = true;
-    else if (strcmp(s, "nofloathack") == 0)
+        return;
+    }
+    if (s == "nofloathack") {
         nofloat_hack = true;
-    else if (strcmp(s, "noprimehack") == 0)
+        return;
+    }
+    if (s == "noprimehack") {
         prime_hack = false;
-    else if (strcmp(s, "primehack") == 0)
+        return;
+    }
+    if (s == "primehack") {
         prime_hack = true;
-    else if (strcmp(s, "doublequoteatt") == 0)
+        return;
+    }
+    if (s == "doublequoteatt") {
         double_quote_att = true;
-    else if (strcmp(s, "notrivialmath") == 0)
+        return;
+    }
+    if (s == "notrivialmath") {
         trivial_math = 0;
-    else if (strcmp(s, "nozerowidthspace") == 0)
+        return;
+    }
+    if (s == "nozerowidthspace") {
         no_zerowidthspace = true;
-    else if (strcmp(s, "nozerowidthelt") == 0)
+        return;
+    }
+    if (s == "nozerowidthelt") {
         no_zerowidthelt = true;
-    else if (strcmp(s, "shellescape") == 0)
+        return;
+    }
+    if (s == "shellescape") {
         shell_escape_allowed = true;
-    else if (strcmp(s, "xml") == 0)
+        return;
+    }
+    if (s == "xml") {
         no_xml = false;
-    else if (strcmp(s, "allowbreak") == 0)
+        return;
+    }
+    if (s == "allowbreak") {
         main_ns::bib_allow_break = true;
-    else if (strcmp(s, "noallowbreak") == 0)
+        return;
+    }
+    if (s == "noallowbreak") {
         main_ns::bib_allow_break = false;
-    else if (strcmp(s, "etex") == 0)
+        return;
+    }
+    if (s == "etex") {
         etex_enabled = true;
-    else if (strcmp(s, "noetex") == 0)
+        return;
+    }
+    if (s == "noetex") {
         etex_enabled = false;
-    else if (strcmp(s, "noxmlerror") == 0)
+        return;
+    }
+    if (s == "noxmlerror") {
         main_ns::no_xml_error = true;
-    else if (strcmp(s, "l3") == 0)
+        return;
+    }
+    if (s == "l3") {
         load_l3 = true;
-    else if (strcmp(s, "xmlfo") == 0)
-        obsolete(s);
-    else if (strcmp(s, "xmlhtml") == 0)
-        obsolete(s);
-    else if (strcmp(s, "xmltex") == 0)
-        obsolete(s);
-    else if (strcmp(s, "xmllint") == 0)
-        obsolete(s);
-    else if (strcmp(s, "interactivemath") == 0 || strcmp(s, "i") == 0 || strcmp(s, "adventure") == 0) {
+        return;
+    }
+    if ((s == "interactivemath") || (s == "i") || (s == "adventure")) {
         interactive_math = true;
         input_encoding   = 0;
         see_name("texput");
-        if (s[0] == 'a') everyjob_string = "\\usepackage{dunnet}\\run";
-    } else if (strcmp(s, "xmlall") == 0 || strcmp(s, "all") == 0)
-        obsolete(s);
-    else if (strcmp(s, "nobibyearerror") == 0)
-        obsolete(s);
-    else if (strcmp(s, "nobibyearmodify") == 0)
-        obsolete(s);
-    else if (strcmp(s, "noundefmac") == 0)
-        no_undef_mac = true;
-    else if (strcmp(s, "noconfig") == 0)
-        noconfig = true;
-    else if (strcmp(s, "compatibility") == 0)
-        compatibility = true;
-    else if (strcmp(s, "oldphi") == 0)
-        old_phi = true;
-    else if (strcmp(s, "badminus") == 0)
-        bad_minus = true;
-    else if (strcmp(s, "nostraightquotes") == 0)
-        rightquote_val = 0xB4;
-    else if (strcmp(s, "usequotes") == 0)
-        main_ns::use_quotes = true;
-    else if (strcmp(s, "mathvariant") == 0)
-        math_variant = true;
-    else if (strcmp(s, "nomathvariant") == 0)
-        math_variant = false;
-    else if (strcmp(s, "nomathml") == 0)
-        nomathml = true;
-    else if (strcmp(s, "dualmath") == 0)
-        dualmath = true;
-    else if (strcmp(s, "findwords") == 0)
-        find_words = true;
-    else if (strcmp(s, "help") == 0) {
-        usage_and_quit(0);
-    } else {
-        banner();
-        std::cout << "bad option " << argv[p] << "\n";
-        usage_and_quit(1);
     }
+    if (s == "noundefmac") {
+        no_undef_mac = true;
+        return;
+    }
+    if (s == "noconfig") {
+        noconfig = true;
+        return;
+    }
+    if (s == "compatibility") {
+        compatibility = true;
+        return;
+    }
+    if (s == "oldphi") {
+        old_phi = true;
+        return;
+    }
+    if (s == "badminus") {
+        bad_minus = true;
+        return;
+    }
+    if (s == "nostraightquotes") {
+        rightquote_val = 0xB4;
+        return;
+    }
+    if (s == "usequotes") {
+        main_ns::use_quotes = true;
+        return;
+    }
+    if (s == "mathvariant") {
+        math_variant = true;
+        return;
+    }
+    if (s == "nomathvariant") {
+        math_variant = false;
+        return;
+    }
+    if (s == "nomathml") {
+        nomathml = true;
+        return;
+    }
+    if (s == "dualmath") {
+        dualmath = true;
+        return;
+    }
+    if (s == "findwords") {
+        find_words = true;
+        return;
+    }
+    if ((s == "radebug") || (s == "check") || (s == "ps") || (s == "xmlfo") || (s == "xmlhtml") || (s == "xmltex") || (s == "xmllint") ||
+        (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify")) {
+        obsolete(s);
+        return;
+    }
+    if (s == "help") usage_and_quit(0);
+    banner();
+    spdlog::error("bad option {}", argv[p]);
+    usage_and_quit(1);
 }
 
 void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not good
