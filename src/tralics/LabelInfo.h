@@ -1,6 +1,5 @@
 #pragma once
 #include "Istring.h"
-#include <string>
 #include <utility>
 
 // Data structure for label and references.

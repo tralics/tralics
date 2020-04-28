@@ -2,7 +2,6 @@
 #include "../txcond.h"
 #include "../txfonts.h"
 #include "../tximage.h"
-#include "../txio.h"
 #include "../txstack.h"
 #include "../txstats.h"
 #include "EQTB.h"

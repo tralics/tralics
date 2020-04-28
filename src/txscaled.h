@@ -43,6 +43,8 @@ public:
     void times_10_18();
     void ovf30();
     void ovf31();
+
+    operator std::string() const;
 };
 
 inline auto operator==(const ScaledInt &a, const ScaledInt &b) -> bool { return a.get_value() == b.get_value(); }

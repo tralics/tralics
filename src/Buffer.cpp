@@ -502,11 +502,13 @@ void Buffer::push_back(const SthInternal &x) {
 
 auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 
-auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
-    buf.reset();
-    buf.push_back(x, glue_spec_pt);
-    return fp << buf.c_str();
+ScaledInt::operator std::string() const {
+    Buffer B;
+    B.push_back(*this, glue_spec_pt);
+    return B.to_string();
 }
+
+auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & { return fp << static_cast<std::string>(x); }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     buf.reset();

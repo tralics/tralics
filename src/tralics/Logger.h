@@ -1,11 +1,7 @@
 #pragma once
 #include "../txinline.h"
-#include "Buffer.h"
-#include "codepoint.h"
-#include <fstream>
 #include <memory>
 #include <spdlog/spdlog.h>
-#include <string>
 
 inline Buffer        buffer_for_log2; // Only used out_single_char and finish_seq
 inline std::ofstream log_file;        // the stream to which we print

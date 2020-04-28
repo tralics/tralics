@@ -3,7 +3,6 @@
 #include <array>
 #include <string>
 
-class ScaledInt;
 class LabelInfo;
 
 struct Istring {
@@ -14,7 +13,6 @@ struct Istring {
     Istring() = default;
     explicit Istring(size_t N);
     explicit Istring(const std::string &s);
-    explicit Istring(const ScaledInt &i);
 
     [[nodiscard]] auto null() const -> bool { return id == 0; }       // null string
     [[nodiscard]] auto empty() const -> bool { return id == 1; }      // ""
