@@ -20,8 +20,6 @@ namespace {
     bool      seen_document = false; // did we see \begin{document} ?
     bool      quote_started = false;
     TokenList onlypreamble; // token-list allowed only in preamble
-    Xml *     open_paren_xml;
-    Xml *     close_paren_xml;
     Xml *     the_page_xml;
     Xml *     glo_xml;
 } // namespace
@@ -34,8 +32,6 @@ namespace tcommands {
 // Initialises the translator. The argument is the name of
 // the document element.
 void Parser::init_all(const std::string &doc_elt) {
-    open_paren_xml                   = new Xml(Istring("("));
-    close_paren_xml                  = new Xml(Istring(")"));
     the_page_xml                     = new Xml(Istring("thepage"), nullptr);
     glo_xml                          = new Xml(the_names[np_glo_name]);
     eqtb_int_table[endlinechar_code] = {'\r', 1};
