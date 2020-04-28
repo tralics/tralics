@@ -433,7 +433,7 @@ void MainClass::parse_args(int argc, char **argv) {
     if (rightquote_val == 0 || rightquote_val >= (1 << 16)) rightquote_val = '\'';
 }
 
-auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
+auto MainClass::check_for_arg(int &p, int argc, char **argv) const -> String {
     if (p >= argc - 1) {
         banner();
         std::cout << "Argument missing for option " << argv[p] << "\n";
@@ -462,46 +462,46 @@ enum param_args {
     pa_year,
     pa_type,
     pa_config,
-    pa_refer,
+    pa_distinguishreferinrabib,
     pa_confdir,
     pa_externalprog,
     pa_trivialmath,
     pa_leftquote,
     pa_rightquote,
     pa_defaultclass,
-    pa_infile,
-    pa_outfile,
-    pa_indir,
-    pa_outdir,
+    pa_inputfile,
+    pa_outputfile,
+    pa_inputpath,
+    pa_outputdir,
     pa_logfile,
-    pa_dtd,
+    pa_doctype,
     pa_param,
-    pa_indata
+    pa_inputdata
 };
 
 void MainClass::parse_option(int &p, int argc, char **argv) {
     int  eqpos = 0;
     auto s     = split_one_arg(argv[p], eqpos);
 
+    if (s == "configfile") s = "config";
+    if (s == "o") s = "outputfile";
     auto special = [](const std::string &s) -> param_args {
         if (s == "confdir") return pa_confdir;
         if (s == "config") return pa_config;
-        if (s == "configfile") return pa_config;
         if (s == "defaultclass") return pa_defaultclass;
         if (s == "dir") return pa_dir;
-        if (s == "distinguishreferinrabib") return pa_refer;
-        if (s == "doctype") return pa_dtd;
+        if (s == "distinguishreferinrabib") return pa_distinguishreferinrabib;
+        if (s == "doctype") return pa_doctype;
         if (s == "entnames") return pa_entnames;
         if (s == "externalprog") return pa_externalprog;
-        if (s == "inputdata") return pa_indata;
-        if (s == "inputdir") return pa_indir;
-        if (s == "inputfile") return pa_infile;
-        if (s == "inputpath") return pa_indir;
+        if (s == "inputdata") return pa_inputdata;
+        if (s == "inputdir") return pa_inputpath;
+        if (s == "inputfile") return pa_inputfile;
+        if (s == "inputpath") return pa_inputpath;
         if (s == "leftquote") return pa_leftquote;
         if (s == "logfile") return pa_logfile;
-        if (s == "o") return pa_outfile;
-        if (s == "outputdir") return pa_outdir;
-        if (s == "outputfile") return pa_outfile;
+        if (s == "outputdir") return pa_outputdir;
+        if (s == "outputfile") return pa_outputfile;
         if (s == "param") return pa_param;
         if (s == "rightquote") return pa_rightquote;
         if (s == "tpastatus") return pa_tpastatus;
@@ -521,7 +521,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_year: year_string = a; return;
         case pa_type: type_option = a; return;
         case pa_config: user_config_file = a; return;
-        case pa_refer:
+        case pa_distinguishreferinrabib:
             after_conf.emplace_back("distinguish_refer_in_rabib");
             after_conf.emplace_back(a);
             return;
@@ -535,18 +535,18 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_leftquote: leftquote_val = std::stoul(a, nullptr, 16); return;
         case pa_rightquote: rightquote_val = std::stoul(a, nullptr, 16); return;
         case pa_defaultclass: default_class = a; return;
-        case pa_infile: see_name(a); return;
-        case pa_indata:
+        case pa_inputfile: see_name(a); return;
+        case pa_inputdata:
             interactive_math = true;
             only_input_data  = true;
             see_name("texput");
             everyjob_string = "\\usepackage{amsmath}" + std::string(a) + "\\stop";
             return;
-        case pa_outfile: out_name = a; return;
-        case pa_indir: new_in_dir(a); return;
-        case pa_outdir: out_dir = a; return;
+        case pa_outputfile: out_name = a; return;
+        case pa_inputpath: new_in_dir(a); return;
+        case pa_outputdir: out_dir = a; return;
         case pa_logfile: log_name = a; return;
-        case pa_dtd: opt_doctype = a; return;
+        case pa_doctype: opt_doctype = a; return;
         case pa_param:
             if (param_hack(a)) return;
             if (p >= argc - 1) { return; }
@@ -774,7 +774,7 @@ void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not 
         tpa_mode = 0; // default
 }
 
-void MainClass::end_with_help(int v) {
+void MainClass::end_with_help(int v) const {
     banner();
     std::cout << "Say tralics --help to get some help\n";
     exit(v);
@@ -859,26 +859,20 @@ void MainClass::get_type_from_config() {
 void MainClass::get_doc_type() {
     get_type_from_config();
     if (dclass.empty())
-        the_log << "No \\documentclass in source file\n";
+        spdlog::trace("No \\documentclass in source file");
     else
-        the_log << "Seen \\documentclass " << dclass << "\n";
+        spdlog::trace("Seen \\documentclass {}", dclass);
     if (!type_option.empty())
         dtype = type_option;
     else if (dtype.empty()) {
         dtype = dclass;
-        if (dtype == "book")
-            dft = 0;
-        else if (dtype == "article")
-            dft = 0;
-        else if (dtype == "report")
-            dft = 0;
-        else if (dtype == "minimal")
+        if ((dtype == "book") || (dtype == "article") || (dtype == "report") || (dtype == "minimal"))
             dft = 0;
         else if (dtype.empty())
             return; // dft is 3
     }
     if (dtype.empty()) dtype = "unknown";
-    the_log << "Potential type is " << dtype << "\n";
+    spdlog::trace("Potential type is {}", dtype);
 }
 
 auto MainClass::check_for_alias_type(bool vb) -> bool {

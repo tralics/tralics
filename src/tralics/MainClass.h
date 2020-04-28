@@ -109,7 +109,7 @@ private:
 
     auto append_nonempty_line() -> int;
     auto check_for_alias_type(bool vb) -> bool;
-    auto check_for_arg(int &p, int argc, char **argv) -> String; ///< This gets foo, unless we are in the case tralics type=foo
+    auto check_for_arg(int &p, int argc, char **argv) const -> String; ///< This gets foo, unless we are in the case tralics type=foo
     auto check_line_aux(Buffer &) -> bool;
     auto check_section() -> int;
     auto find_config_file() -> bool;   ///< Puts in main_ns::path_buffer the name of the config file
@@ -136,7 +136,7 @@ private:
     void end_document();
     void end_env(std::string);
     void end_mod();
-    void end_with_help(int v);
+    void end_with_help(int v) const;
     void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
     void finish_init() const; ///< RA related stuff
