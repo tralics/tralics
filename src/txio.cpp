@@ -20,6 +20,7 @@
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
+#include <utf8.h>
 
 namespace {
     Buffer                buf;
@@ -54,7 +55,6 @@ namespace {
 namespace io_ns {
     void print_ascii(std::ostream &fp, char c);
     auto how_many_bytes(char C) -> size_t;
-    auto make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint;
     auto plural(int n) -> String;
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
@@ -161,72 +161,23 @@ void Buffer::utf8_error(bool first) {
     the_log << "\n";
 }
 
-// This reads the next byte.
-// We assume buf[wptr]=0. We leave ptr unchanged in case it is >= wptr
-// As a consequence, at(ptr) is valid after the call
-auto Buffer::next_utf8_byte() -> uchar {
-    auto x = static_cast<uchar>(at(ptr));
-    if ((x >> 6) == 2) {
-        ++ptr;
-        return x & 63;
-    }
-    utf8_error(false);
-    if (ptr < wptr) ++ptr;
-    return 0;
-}
-
 // This returns the number of bytes in a UTF8 character
 // given the first byte. Returns 0 in case of error
-// Note: max Unicode value is 10FFFF. this is represented by F48FBFBF
-// if the first 3 bits are set, y is 0, 1, 2 3 or 4 plus 16.
-auto io_ns::how_many_bytes(char c) -> size_t {
-    auto C = static_cast<uchar>(c);
-    if (C < 128) return 1;       // ascii
-    if ((C >> 5) == 6) return 2; // 2 bytes
-    if ((C >> 5) != 7) return 0; // cannot start with 10
-    unsigned y = C & 31;
-    if ((y & 16) == 0) return 3;
-    if (y == 16 || y == 17 || y == 18 || y == 19 || y == 20) return 4;
-    return 0; // overflow
-}
-
-// Creates a Unicode character from the bytes A, B, C and D.
-// Return 0 if invalid. Return 0 if overflow
-auto io_ns::make_utf8char(uchar A, uchar B, uchar C, uchar D) -> codepoint {
-    auto n = io_ns::how_many_bytes(static_cast<char>(A));
-    if (n == 0) return codepoint(0U);
-    if (n == 1) return codepoint(A);
-    if (n == 2) return codepoint(to_unsigned(((A & 31) << 6) + (B & 63)));
-    if (n == 3) return codepoint(to_unsigned((C & 63) + ((B & 63) << 6) + ((A & 15) << 12)));
-    return codepoint(to_unsigned((D & 63) + ((C & 63) << 6) + ((B & 63) << 12) + ((A & 7) << 18)));
-}
+auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
 
 // Returns 0 at end of line or error
-// may set local_error
 auto Buffer::next_utf8_char_aux() -> codepoint {
-    auto c = next_char();
-    if (c == 0) return codepoint();
-    auto n = io_ns::how_many_bytes(c);
-    if (n == 0) {
-        utf8_error(true);
-        the_converter.line_is_ascii = false;
+    if (at(ptr) == 0) {
+        ++ptr;
         return codepoint();
     }
-    if (n == 1) return codepoint(c);
-    the_converter.line_is_ascii = false;
-    if (n == 2) {
-        unsigned x = next_utf8_byte();
-        return codepoint(((static_cast<uchar>(c) & 31U) << 6U) + x);
-    }
-    if (n == 3) {
-        unsigned z = next_utf8_byte();
-        unsigned x = next_utf8_byte();
-        return codepoint(x + (z << 6U) + ((static_cast<uchar>(c) & 15U) << 12U));
-    }
-    unsigned z = next_utf8_byte();
-    unsigned y = next_utf8_byte();
-    unsigned x = next_utf8_byte();
-    return codepoint((x) + (y << 6U) + (z << 12U) + ((static_cast<uchar>(c) & 7U) << 18U));
+
+    auto it = begin() + ptr;
+    auto cp = utf8::next(it, end());
+    auto nn = it - (begin() + ptr);
+    if (nn != 1) the_converter.line_is_ascii = false;
+    ptr += nn;
+    return codepoint(cp);
 }
 
 // Returns 0 at end of line or error
@@ -245,17 +196,9 @@ auto Buffer::next_utf8_char() -> codepoint {
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
 auto Buffer::single_character() const -> codepoint {
-    auto c = at(0);
-    auto n = io_ns::how_many_bytes(c);
-    if (n == 0) return codepoint();
-    if (n != size()) return codepoint();
-    if (n == 1) return codepoint(c);
-    if (n == 2) return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), 0, 0);
-    if (n == 3) return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), static_cast<uchar>(at(2)), 0);
-    if (n == 4)
-        return io_ns::make_utf8char(static_cast<uchar>(at(0)), static_cast<uchar>(at(1)), static_cast<uchar>(at(2)),
-                                    static_cast<uchar>(at(3)));
-    return codepoint();
+    auto it = begin();
+    auto cp = utf8::next(it, end());
+    return it == begin() + to_signed(size()) ? codepoint(cp) : codepoint(); // \todo the test should be it != end(), size() is wrong
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed

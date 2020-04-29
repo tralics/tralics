@@ -17,6 +17,7 @@ conan_cmake_run(REQUIRES
                 fmt/6.2.0
                 ms-gsl/2.1.0
                 spdlog/1.5.0
+                utfcpp/3.1
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow

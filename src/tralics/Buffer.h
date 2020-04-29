@@ -112,7 +112,6 @@ public:
     auto next_env_spec() -> bool;
     auto next_macro() -> bool;
     auto next_macro_spec() -> bool;
-    auto next_utf8_byte() -> uchar;
     auto next_utf8_char() -> codepoint;
     auto next_utf8_char_aux() -> codepoint;
     void no_newline();
