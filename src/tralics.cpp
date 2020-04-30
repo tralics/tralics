@@ -52,12 +52,12 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     std::string         aa = a.to_string(), bb = b.to_string();
     auto                n = a.size();
 
-    if (a[0] == 'e' && a[1] == 'l' && a[2] == 't' && a[3] == '_') return config_ns::assign_name(A + 4, B);
+    if (a[0] == 'e' && a[1] == 'l' && a[2] == 't' && a[3] == '_') return config_ns::assign_name(a.to_string(4), B);
     if (a[0] == 'x' && a[1] == 'm' && a[2] == 'l' && a[3] == '_') {
         if (a[n - 1] == 'e' && a[n - 2] == 'm' && a[n - 3] == 'a' && a[n - 4] == 'n' && a[n - 5] == '_') { a.at(n - 5) = 0; }
-        return config_ns::assign_name(A + 4, B);
+        return config_ns::assign_name(a.to_string(4), B);
     }
-    if (a[0] == 'a' && a[1] == 't' && a[2] == 't' && a[3] == '_') return config_ns::assign_att(A + 4, B);
+    if (a[0] == 'a' && a[1] == 't' && a[2] == 't' && a[3] == '_') return config_ns::assign_att(a.to_string(4), B);
     if (aa == "lang_fr") {
         the_names[np_french] = Istring(bb);
         return true;
@@ -203,1111 +203,1017 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     return false;
 }
 
-// Handles names starting with xml_
-auto config_ns::assign_name(String A, String B) -> bool {
-    switch (A[0]) {
-    case 'a':
-        if (strcmp(A, "accueil") == 0) {
-            the_names[np_accueil] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "arc") == 0) {
-            the_names[np_arc] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "allowbreak") == 0) {
-            the_names[np_allowbreak] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "anchor") == 0) {
-            the_names[np_anchor] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "anodeconnect") == 0) {
-            the_names[np_anodeconnect] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "abarnodeconnect") == 0) {
-            the_names[np_abarnodeconnect] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "anodecurve") == 0) {
-            the_names[np_anodecurve] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "alt_caption") == 0) {
-            the_names[np_alt_caption] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "alt_section") == 0) {
-            the_names[np_alt_section] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "alternatives") == 0) {
-            the_names[np_alternatives] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'b':
-        if (strcmp(A, "box") == 0) {
-            the_names[np_box] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bezier") == 0) {
-            the_names[np_bezier] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bigcircle") == 0) {
-            the_names[np_bigcircle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "backmatter") == 0) {
-            the_names[np_backmatter] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "biblio") == 0) {
-            the_names[np_biblio] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bpers") == 0) {
-            the_names[np_bpers] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "barnodeconnect") == 0) {
-            the_names[np_barnodeconnect] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bibitem") == 0) {
-            the_names[np_bibitem] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bibkey") == 0) {
-            the_names[np_bibkey] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'c':
-        if (strcmp(A, "cell") == 0) {
-            the_names[np_cell] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "caption") == 0) {
-            the_names[np_captions] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "circle") == 0) {
-            the_names[np_circle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "closecurve") == 0) {
-            the_names[np_closecurve] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "curve") == 0) {
-            the_names[np_curve] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "catperso") == 0) {
-            the_names[np_catperso] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "composition_ra") == 0) {
-            the_names[cst_composition] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cleaders") == 0) {
-            the_names[np_cleaders] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "caps") == 0) {
-            the_names[np_s_caps] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cit") == 0) {
-            the_names[np_cit] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "citation") == 0) {
-            the_names[np_citation] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "citetype") == 0) {
-            the_names[np_cite_type] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'd':
-        if (strcmp(A, "dashline") == 0) {
-            the_names[np_dashline] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div0") == 0) {
-            the_names[np_div0] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div1") == 0) {
-            the_names[np_div1] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div2") == 0) {
-            the_names[np_div2] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div3") == 0) {
-            the_names[np_div3] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div4") == 0) {
-            the_names[np_div4] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div5") == 0) {
-            the_names[np_div5] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "div6") == 0) {
-            the_names[np_div6] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "drawline") == 0) {
-            the_names[np_drawline] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "dottedline") == 0) {
-            the_names[np_dottedline] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'e':
-        if (strcmp(A, "eqnpos") == 0) {
-            the_names[np_eqnpos] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'f':
-        if (strcmp(A, "footnote") == 0) {
-            the_names[np_footnote] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "formula") == 0) {
-            the_names[np_formula] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "fbox") == 0) {
-            the_names[np_fbox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "figure") == 0) {
-            the_names[np_figure] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "figure_env") == 0) {
-            the_names[np_float_figure] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "frontmatter") == 0) {
-            the_names[np_frontmatter] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small") == 0) {
-            the_names[np_font_small] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small1") == 0) {
-            the_names[np_font_small1] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small2") == 0) {
-            the_names[np_font_small2] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small3") == 0) {
-            the_names[np_font_small3] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small4") == 0) {
-            the_names[np_font_small4] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small5") == 0) {
-            the_names[np_font_small5] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_small6") == 0) {
-            the_names[np_font_small6] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large") == 0) {
-            the_names[np_font_large] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large1") == 0) {
-            the_names[np_font_large1] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large2") == 0) {
-            the_names[np_font_large2] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large3") == 0) {
-            the_names[np_font_large3] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large4") == 0) {
-            the_names[np_font_large4] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large5") == 0) {
-            the_names[np_font_large5] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_large6") == 0) {
-            the_names[np_font_large6] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_normalsize") == 0) {
-            the_names[np_font_normalsize] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_upright") == 0) {
-            the_names[np_font_upright] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_medium") == 0) {
-            the_names[np_font_medium] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_roman") == 0) {
-            the_names[np_font_roman] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_it") == 0) {
-            the_names[np_font_it] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_slanted") == 0) {
-            the_names[np_font_slanted] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_sc") == 0) {
-            the_names[np_font_sc] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_tt") == 0) {
-            the_names[np_font_tt] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_sansserif") == 0) {
-            the_names[np_font_sansserif] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_bold") == 0) {
-            the_names[np_font_bold] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_boldextended") == 0) {
-            the_names[np_font_boldextended] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_semibold") == 0) {
-            the_names[np_font_semibold] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "font_condensed") == 0) {
-            the_names[np_font_condensed] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'g':
-        if (strcmp(A, "gloitem") == 0) {
-            the_names[np_label_glo] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "graphics") == 0) {
-            the_names[np_graphics] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "glo") == 0) {
-            the_names[np_glo_name] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "glossary") == 0) {
-            the_names[np_glossary] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'h':
-        if (strcmp(A, "head") == 0) {
-            the_names[np_head] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "hl") == 0) {
-            the_names[np_s_hl] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'i':
-        if (strcmp(A, "item") == 0) {
-            the_names[np_item] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "index") == 0) {
-            the_names[np_index] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'k':
-        if (strcmp(A, "keywords") == 0) {
-            the_names[np_keywords] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'l':
-        if (strcmp(A, "labelitem") == 0) {
-            the_names[np_label_item] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "lineC") == 0) {
-            the_names[np_lineC] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "line") == 0) {
-            the_names[np_line] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "listoffigures") == 0) {
-            the_names[np_toc2] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "listoftables") == 0) {
-            the_names[np_toc1] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "llap") == 0) {
-            the_names[np_llap] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "linethickness") == 0) {
-            the_names[np_line_thickness] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "list") == 0) {
-            the_names[np_list] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "leaders") == 0) {
-            the_names[np_leaders] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "leg") == 0) {
-            the_names[np_leg] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'm':
-        if (strcmp(A, "mbox") == 0) {
-            the_names[np_mbox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "math") == 0) {
-            the_names[cst_math] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "multiput") == 0) {
-            the_names[np_multiput] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "mainmatter") == 0) {
-            the_names[np_mainmatter] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'n':
-        if (strcmp(A, "node") == 0) {
-            the_names[np_node] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodeconnect") == 0) {
-            the_names[np_nodeconnect] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodecurve") == 0) {
-            the_names[np_nodecurve] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodetriangle") == 0) {
-            the_names[np_nodetriangle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodecircle") == 0) {
-            the_names[np_nodecircle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodebox") == 0) {
-            the_names[np_nodebox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nodeoval") == 0) {
-            the_names[np_nodeoval] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "natcit") == 0) {
-            the_names[np_natcit] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'o':
-        if (strcmp(A, "oval") == 0) {
-            the_names[np_oval] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "oldstyle") == 0) {
-            the_names[np_s_old] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "overline") == 0) {
-            the_names[np_overline] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'p':
-        if (strcmp(A, "picture") == 0) {
-            the_names[np_picture] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "put") == 0) {
-            the_names[np_put] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "project") == 0) {
-            the_names[np_projet] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "pers") == 0) {
-            the_names[np_pers] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "prenote") == 0) {
-            the_names[np_prenote] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "pack_font_att") == 0) {
-            if (strcmp(B, "true") == 0) the_main->pack_font_elt = true;
-            if (strcmp(B, "false") == 0) the_main->pack_font_elt = false;
-            return true;
-        }
-        return false;
-    case 'r':
-        if (strcmp(A, "row") == 0) {
-            the_names[np_row] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "raisebox") == 0) {
-            the_names[np_raisebox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rlap") == 0) {
-            the_names[np_rlap] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rotatebox") == 0) {
-            the_names[np_rotatebox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "ref") == 0) {
-            the_names[np_ref] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rclist") == 0 && ra_ok) {
-            the_names[np_rclist] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rcval") == 0 && ra_ok) {
-            the_names[np_rcval] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rasection") == 0 && ra_ok) {
-            the_names[np_rasection] = Istring(B);
-            return true;
-        }
-        return false;
-    case 's':
-        if (strcmp(A, "subfigure") == 0) {
-            the_names[np_subfigure] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "scaleput") == 0) {
-            the_names[np_scaleput] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "scalebox") == 0) {
-            the_names[np_sbox] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "scaption") == 0) {
-            the_names[np_caption] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "sup") == 0) {
-            the_names[np_s_sup] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "sub") == 0) {
-            the_names[np_s_sub] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "so") == 0) {
-            the_names[np_s_so] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "st") == 0) {
-            the_names[np_s_st] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "stylesheet") == 0) {
-            the_names[np_stylesheet] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "stylesheettype") == 0) {
-            the_names[np_stylesheet_type] = Istring(B);
-            return true;
-        }
-        return false;
-    case 't':
-        if (strcmp(A, "term") == 0) {
-            the_names[np_term] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "texmath") == 0) {
-            the_names[np_texmath] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "table") == 0) {
-            the_names[np_table] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "table_env") == 0) {
-            the_names[np_float_table] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "Table") == 0) {
-            the_names[np_Table] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "tagcurve") == 0) {
-            the_names[np_tagcurve] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "thicklines") == 0) {
-            the_names[np_thick_lines] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "thinlines") == 0) {
-            the_names[np_thin_lines] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "theorem_head") == 0) {
-            the_names[np_alt_head] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "theorem") == 0) {
-            if (B[0] == 0) { // reverst to old behavior
-                the_names[np_theorem] = Istring(B);
-                the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
-            } else if (B[0] == ' ') { // special case
-                the_names[np_theorem] = Istring(B + 1);
-                the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
-            } else {
-                the_names[np_theorem] = Istring(B);
-                the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
-            }
-            return true;
-        }
-        if (strcmp(A, "theindex") == 0) {
-            the_names[np_theindex] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "theglossary") == 0) {
-            the_names[np_theglossary] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "tableofcontents") == 0) {
-            the_names[np_toc] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "texte") == 0) {
-            the_names[np_texte] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'u':
-        if (strcmp(A, "ul") == 0) {
-            the_names[np_s_ul] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "underline") == 0) {
-            the_names[np_underline] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "use_font_elt") == 0) {
-            if (strcmp(B, "true") == 0) the_main->use_font_elt = true;
-            if (strcmp(B, "false") == 0) the_main->use_font_elt = false;
-            return true;
-        }
-        return false;
-    case 'v':
-        if (strcmp(A, "vector") == 0) {
-            the_names[np_vector] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'w':
-        if (strcmp(A, "warning") == 0) {
-            the_names[np_warning] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'x':
-        if (strcmp(A, "xref") == 0) {
-            the_names[np_xref] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "xtheorem") == 0) {
-            the_names[np_theorem] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "xleaders") == 0) {
-            the_names[np_xleaders] = Istring(B);
-            return true;
-        }
-        return false;
-    default: return false;
+// Handles names starting with xml_ \todo move away from this file
+auto config_ns::assign_name(std::string A, String B) -> bool {
+    if (A == "accueil") {
+        the_names[np_accueil] = Istring(B);
+        return true;
     }
+    if (A == "arc") {
+        the_names[np_arc] = Istring(B);
+        return true;
+    }
+    if (A == "allowbreak") {
+        the_names[np_allowbreak] = Istring(B);
+        return true;
+    }
+    if (A == "anchor") {
+        the_names[np_anchor] = Istring(B);
+        return true;
+    }
+    if (A == "anodeconnect") {
+        the_names[np_anodeconnect] = Istring(B);
+        return true;
+    }
+    if (A == "abarnodeconnect") {
+        the_names[np_abarnodeconnect] = Istring(B);
+        return true;
+    }
+    if (A == "anodecurve") {
+        the_names[np_anodecurve] = Istring(B);
+        return true;
+    }
+    if (A == "alt_caption") {
+        the_names[np_alt_caption] = Istring(B);
+        return true;
+    }
+    if (A == "alt_section") {
+        the_names[np_alt_section] = Istring(B);
+        return true;
+    }
+    if (A == "alternatives") {
+        the_names[np_alternatives] = Istring(B);
+        return true;
+    }
+    if (A == "box") {
+        the_names[np_box] = Istring(B);
+        return true;
+    }
+    if (A == "bezier") {
+        the_names[np_bezier] = Istring(B);
+        return true;
+    }
+    if (A == "bigcircle") {
+        the_names[np_bigcircle] = Istring(B);
+        return true;
+    }
+    if (A == "backmatter") {
+        the_names[np_backmatter] = Istring(B);
+        return true;
+    }
+    if (A == "biblio") {
+        the_names[np_biblio] = Istring(B);
+        return true;
+    }
+    if (A == "bpers") {
+        the_names[np_bpers] = Istring(B);
+        return true;
+    }
+    if (A == "barnodeconnect") {
+        the_names[np_barnodeconnect] = Istring(B);
+        return true;
+    }
+    if (A == "bibitem") {
+        the_names[np_bibitem] = Istring(B);
+        return true;
+    }
+    if (A == "bibkey") {
+        the_names[np_bibkey] = Istring(B);
+        return true;
+    }
+    if (A == "cell") {
+        the_names[np_cell] = Istring(B);
+        return true;
+    }
+    if (A == "caption") {
+        the_names[np_captions] = Istring(B);
+        return true;
+    }
+    if (A == "circle") {
+        the_names[np_circle] = Istring(B);
+        return true;
+    }
+    if (A == "closecurve") {
+        the_names[np_closecurve] = Istring(B);
+        return true;
+    }
+    if (A == "curve") {
+        the_names[np_curve] = Istring(B);
+        return true;
+    }
+    if (A == "catperso") {
+        the_names[np_catperso] = Istring(B);
+        return true;
+    }
+    if (A == "composition_ra") {
+        the_names[cst_composition] = Istring(B);
+        return true;
+    }
+    if (A == "cleaders") {
+        the_names[np_cleaders] = Istring(B);
+        return true;
+    }
+    if (A == "caps") {
+        the_names[np_s_caps] = Istring(B);
+        return true;
+    }
+    if (A == "cit") {
+        the_names[np_cit] = Istring(B);
+        return true;
+    }
+    if (A == "citation") {
+        the_names[np_citation] = Istring(B);
+        return true;
+    }
+    if (A == "citetype") {
+        the_names[np_cite_type] = Istring(B);
+        return true;
+    }
+    if (A == "dashline") {
+        the_names[np_dashline] = Istring(B);
+        return true;
+    }
+    if (A == "div0") {
+        the_names[np_div0] = Istring(B);
+        return true;
+    }
+    if (A == "div1") {
+        the_names[np_div1] = Istring(B);
+        return true;
+    }
+    if (A == "div2") {
+        the_names[np_div2] = Istring(B);
+        return true;
+    }
+    if (A == "div3") {
+        the_names[np_div3] = Istring(B);
+        return true;
+    }
+    if (A == "div4") {
+        the_names[np_div4] = Istring(B);
+        return true;
+    }
+    if (A == "div5") {
+        the_names[np_div5] = Istring(B);
+        return true;
+    }
+    if (A == "div6") {
+        the_names[np_div6] = Istring(B);
+        return true;
+    }
+    if (A == "drawline") {
+        the_names[np_drawline] = Istring(B);
+        return true;
+    }
+    if (A == "dottedline") {
+        the_names[np_dottedline] = Istring(B);
+        return true;
+    }
+    if (A == "eqnpos") {
+        the_names[np_eqnpos] = Istring(B);
+        return true;
+    }
+    if (A == "footnote") {
+        the_names[np_footnote] = Istring(B);
+        return true;
+    }
+    if (A == "formula") {
+        the_names[np_formula] = Istring(B);
+        return true;
+    }
+    if (A == "fbox") {
+        the_names[np_fbox] = Istring(B);
+        return true;
+    }
+    if (A == "figure") {
+        the_names[np_figure] = Istring(B);
+        return true;
+    }
+    if (A == "figure_env") {
+        the_names[np_float_figure] = Istring(B);
+        return true;
+    }
+    if (A == "frontmatter") {
+        the_names[np_frontmatter] = Istring(B);
+        return true;
+    }
+    if (A == "font_small") {
+        the_names[np_font_small] = Istring(B);
+        return true;
+    }
+    if (A == "font_small1") {
+        the_names[np_font_small1] = Istring(B);
+        return true;
+    }
+    if (A == "font_small2") {
+        the_names[np_font_small2] = Istring(B);
+        return true;
+    }
+    if (A == "font_small3") {
+        the_names[np_font_small3] = Istring(B);
+        return true;
+    }
+    if (A == "font_small4") {
+        the_names[np_font_small4] = Istring(B);
+        return true;
+    }
+    if (A == "font_small5") {
+        the_names[np_font_small5] = Istring(B);
+        return true;
+    }
+    if (A == "font_small6") {
+        the_names[np_font_small6] = Istring(B);
+        return true;
+    }
+    if (A == "font_large") {
+        the_names[np_font_large] = Istring(B);
+        return true;
+    }
+    if (A == "font_large1") {
+        the_names[np_font_large1] = Istring(B);
+        return true;
+    }
+    if (A == "font_large2") {
+        the_names[np_font_large2] = Istring(B);
+        return true;
+    }
+    if (A == "font_large3") {
+        the_names[np_font_large3] = Istring(B);
+        return true;
+    }
+    if (A == "font_large4") {
+        the_names[np_font_large4] = Istring(B);
+        return true;
+    }
+    if (A == "font_large5") {
+        the_names[np_font_large5] = Istring(B);
+        return true;
+    }
+    if (A == "font_large6") {
+        the_names[np_font_large6] = Istring(B);
+        return true;
+    }
+    if (A == "font_normalsize") {
+        the_names[np_font_normalsize] = Istring(B);
+        return true;
+    }
+    if (A == "font_upright") {
+        the_names[np_font_upright] = Istring(B);
+        return true;
+    }
+    if (A == "font_medium") {
+        the_names[np_font_medium] = Istring(B);
+        return true;
+    }
+    if (A == "font_roman") {
+        the_names[np_font_roman] = Istring(B);
+        return true;
+    }
+    if (A == "font_it") {
+        the_names[np_font_it] = Istring(B);
+        return true;
+    }
+    if (A == "font_slanted") {
+        the_names[np_font_slanted] = Istring(B);
+        return true;
+    }
+    if (A == "font_sc") {
+        the_names[np_font_sc] = Istring(B);
+        return true;
+    }
+    if (A == "font_tt") {
+        the_names[np_font_tt] = Istring(B);
+        return true;
+    }
+    if (A == "font_sansserif") {
+        the_names[np_font_sansserif] = Istring(B);
+        return true;
+    }
+    if (A == "font_bold") {
+        the_names[np_font_bold] = Istring(B);
+        return true;
+    }
+    if (A == "font_boldextended") {
+        the_names[np_font_boldextended] = Istring(B);
+        return true;
+    }
+    if (A == "font_semibold") {
+        the_names[np_font_semibold] = Istring(B);
+        return true;
+    }
+    if (A == "font_condensed") {
+        the_names[np_font_condensed] = Istring(B);
+        return true;
+    }
+    if (A == "gloitem") {
+        the_names[np_label_glo] = Istring(B);
+        return true;
+    }
+    if (A == "graphics") {
+        the_names[np_graphics] = Istring(B);
+        return true;
+    }
+    if (A == "glo") {
+        the_names[np_glo_name] = Istring(B);
+        return true;
+    }
+    if (A == "glossary") {
+        the_names[np_glossary] = Istring(B);
+        return true;
+    }
+    if (A == "head") {
+        the_names[np_head] = Istring(B);
+        return true;
+    }
+    if (A == "hl") {
+        the_names[np_s_hl] = Istring(B);
+        return true;
+    }
+    if (A == "item") {
+        the_names[np_item] = Istring(B);
+        return true;
+    }
+    if (A == "index") {
+        the_names[np_index] = Istring(B);
+        return true;
+    }
+    if (A == "keywords") {
+        the_names[np_keywords] = Istring(B);
+        return true;
+    }
+    if (A == "labelitem") {
+        the_names[np_label_item] = Istring(B);
+        return true;
+    }
+    if (A == "lineC") {
+        the_names[np_lineC] = Istring(B);
+        return true;
+    }
+    if (A == "line") {
+        the_names[np_line] = Istring(B);
+        return true;
+    }
+    if (A == "listoffigures") {
+        the_names[np_toc2] = Istring(B);
+        return true;
+    }
+    if (A == "listoftables") {
+        the_names[np_toc1] = Istring(B);
+        return true;
+    }
+    if (A == "llap") {
+        the_names[np_llap] = Istring(B);
+        return true;
+    }
+    if (A == "linethickness") {
+        the_names[np_line_thickness] = Istring(B);
+        return true;
+    }
+    if (A == "list") {
+        the_names[np_list] = Istring(B);
+        return true;
+    }
+    if (A == "leaders") {
+        the_names[np_leaders] = Istring(B);
+        return true;
+    }
+    if (A == "leg") {
+        the_names[np_leg] = Istring(B);
+        return true;
+    }
+    if (A == "mbox") {
+        the_names[np_mbox] = Istring(B);
+        return true;
+    }
+    if (A == "math") {
+        the_names[cst_math] = Istring(B);
+        return true;
+    }
+    if (A == "multiput") {
+        the_names[np_multiput] = Istring(B);
+        return true;
+    }
+    if (A == "mainmatter") {
+        the_names[np_mainmatter] = Istring(B);
+        return true;
+    }
+    if (A == "node") {
+        the_names[np_node] = Istring(B);
+        return true;
+    }
+    if (A == "nodeconnect") {
+        the_names[np_nodeconnect] = Istring(B);
+        return true;
+    }
+    if (A == "nodecurve") {
+        the_names[np_nodecurve] = Istring(B);
+        return true;
+    }
+    if (A == "nodetriangle") {
+        the_names[np_nodetriangle] = Istring(B);
+        return true;
+    }
+    if (A == "nodecircle") {
+        the_names[np_nodecircle] = Istring(B);
+        return true;
+    }
+    if (A == "nodebox") {
+        the_names[np_nodebox] = Istring(B);
+        return true;
+    }
+    if (A == "nodeoval") {
+        the_names[np_nodeoval] = Istring(B);
+        return true;
+    }
+    if (A == "natcit") {
+        the_names[np_natcit] = Istring(B);
+        return true;
+    }
+    if (A == "oval") {
+        the_names[np_oval] = Istring(B);
+        return true;
+    }
+    if (A == "oldstyle") {
+        the_names[np_s_old] = Istring(B);
+        return true;
+    }
+    if (A == "overline") {
+        the_names[np_overline] = Istring(B);
+        return true;
+    }
+    if (A == "picture") {
+        the_names[np_picture] = Istring(B);
+        return true;
+    }
+    if (A == "put") {
+        the_names[np_put] = Istring(B);
+        return true;
+    }
+    if (A == "project") {
+        the_names[np_projet] = Istring(B);
+        return true;
+    }
+    if (A == "pers") {
+        the_names[np_pers] = Istring(B);
+        return true;
+    }
+    if (A == "prenote") {
+        the_names[np_prenote] = Istring(B);
+        return true;
+    }
+    if (A == "pack_font_att") {
+        if (strcmp(B, "true") == 0) the_main->pack_font_elt = true;
+        if (strcmp(B, "false") == 0) the_main->pack_font_elt = false;
+        return true;
+    }
+    if (A == "row") {
+        the_names[np_row] = Istring(B);
+        return true;
+    }
+    if (A == "raisebox") {
+        the_names[np_raisebox] = Istring(B);
+        return true;
+    }
+    if (A == "rlap") {
+        the_names[np_rlap] = Istring(B);
+        return true;
+    }
+    if (A == "rotatebox") {
+        the_names[np_rotatebox] = Istring(B);
+        return true;
+    }
+    if (A == "ref") {
+        the_names[np_ref] = Istring(B);
+        return true;
+    }
+    if ((A == "rclist") && ra_ok) {
+        the_names[np_rclist] = Istring(B);
+        return true;
+    }
+    if ((A == "rcval") && ra_ok) {
+        the_names[np_rcval] = Istring(B);
+        return true;
+    }
+    if ((A == "rasection") && ra_ok) {
+        the_names[np_rasection] = Istring(B);
+        return true;
+    }
+    if (A == "subfigure") {
+        the_names[np_subfigure] = Istring(B);
+        return true;
+    }
+    if (A == "scaleput") {
+        the_names[np_scaleput] = Istring(B);
+        return true;
+    }
+    if (A == "scalebox") {
+        the_names[np_sbox] = Istring(B);
+        return true;
+    }
+    if (A == "scaption") {
+        the_names[np_caption] = Istring(B);
+        return true;
+    }
+    if (A == "sup") {
+        the_names[np_s_sup] = Istring(B);
+        return true;
+    }
+    if (A == "sub") {
+        the_names[np_s_sub] = Istring(B);
+        return true;
+    }
+    if (A == "so") {
+        the_names[np_s_so] = Istring(B);
+        return true;
+    }
+    if (A == "st") {
+        the_names[np_s_st] = Istring(B);
+        return true;
+    }
+    if (A == "stylesheet") {
+        the_names[np_stylesheet] = Istring(B);
+        return true;
+    }
+    if (A == "stylesheettype") {
+        the_names[np_stylesheet_type] = Istring(B);
+        return true;
+    }
+    if (A == "term") {
+        the_names[np_term] = Istring(B);
+        return true;
+    }
+    if (A == "texmath") {
+        the_names[np_texmath] = Istring(B);
+        return true;
+    }
+    if (A == "table") {
+        the_names[np_table] = Istring(B);
+        return true;
+    }
+    if (A == "table_env") {
+        the_names[np_float_table] = Istring(B);
+        return true;
+    }
+    if (A == "Table") {
+        the_names[np_Table] = Istring(B);
+        return true;
+    }
+    if (A == "tagcurve") {
+        the_names[np_tagcurve] = Istring(B);
+        return true;
+    }
+    if (A == "thicklines") {
+        the_names[np_thick_lines] = Istring(B);
+        return true;
+    }
+    if (A == "thinlines") {
+        the_names[np_thin_lines] = Istring(B);
+        return true;
+    }
+    if (A == "theorem_head") {
+        the_names[np_alt_head] = Istring(B);
+        return true;
+    }
+    if (A == "theorem") {
+        if (B[0] == 0) { // reverst to old behavior
+            the_names[np_theorem] = Istring(B);
+            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+        } else if (B[0] == ' ') { // special case
+            the_names[np_theorem] = Istring(B + 1);
+            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+        } else {
+            the_names[np_theorem] = Istring(B);
+            the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
+        }
+        return true;
+    }
+    if (A == "theindex") {
+        the_names[np_theindex] = Istring(B);
+        return true;
+    }
+    if (A == "theglossary") {
+        the_names[np_theglossary] = Istring(B);
+        return true;
+    }
+    if (A == "tableofcontents") {
+        the_names[np_toc] = Istring(B);
+        return true;
+    }
+    if (A == "texte") {
+        the_names[np_texte] = Istring(B);
+        return true;
+    }
+    if (A == "ul") {
+        the_names[np_s_ul] = Istring(B);
+        return true;
+    }
+    if (A == "underline") {
+        the_names[np_underline] = Istring(B);
+        return true;
+    }
+    if (A == "use_font_elt") {
+        if (strcmp(B, "true") == 0) the_main->use_font_elt = true;
+        if (strcmp(B, "false") == 0) the_main->use_font_elt = false;
+        return true;
+    }
+    if (A == "vector") {
+        the_names[np_vector] = Istring(B);
+        return true;
+    }
+    if (A == "warning") {
+        the_names[np_warning] = Istring(B);
+        return true;
+    }
+    if (A == "xref") {
+        the_names[np_xref] = Istring(B);
+        return true;
+    }
+    if (A == "xtheorem") {
+        the_names[np_theorem] = Istring(B);
+        return true;
+    }
+    if (A == "xleaders") {
+        the_names[np_xleaders] = Istring(B);
+        return true;
+    }
+    return false;
 }
 
 // Handles names starting with att_
-auto config_ns::assign_att(String A, String B) -> bool {
-    switch (A[0]) {
-    case 'a':
-        if (strcmp(A, "angle") == 0) {
-            the_names[np_angle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "affiliation") == 0) {
-            the_names[np_affiliation] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'b':
-        if (strcmp(A, "box_pos") == 0) {
-            the_names[np_box_pos] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "box_scale") == 0) {
-            the_names[np_s_scale] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "box_width") == 0) {
-            the_names[np_box_width] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "boxed") == 0) {
-            the_names[np_boxed] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "bibkey") == 0) {
-            the_names[np_bibkey] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "border_bottom_width") == 0) {
-            the_names[np_border_bottomw] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "border_top_width") == 0) {
-            the_names[np_border_topw] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "border_left_width") == 0) {
-            the_names[np_border_leftw] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "border_right_width") == 0) {
-            the_names[np_border_rightw] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'c':
-        if (strcmp(A, "centering") == 0) {
-            the_names[np_center_etc1] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "clip") == 0) {
-            the_names[np_clip] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cols") == 0) {
-            the_names[np_cols] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_left") == 0) {
-            the_names[np_c_left] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_right") == 0) {
-            the_names[np_c_right] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_center") == 0) {
-            the_names[np_c_center] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_leftborder") == 0) {
-            the_names[np_leftborder] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_rightborder") == 0) {
-            the_names[np_rightborder] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_topborder") == 0) {
-            the_names[np_topborder] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "cell_bottomborder") == 0) {
-            the_names[np_bottomborder] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "curve_nbpts") == 0) {
-            the_names[np_curve_nbpts] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'd':
-        if (strcmp(A, "display") == 0) {
-            the_names[np_display] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "dx") == 0) {
-            the_names[np_dx] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "dy") == 0) {
-            the_names[np_dy] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "depthA") == 0) {
-            the_names[np_depthA] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "depthB") == 0) {
-            the_names[np_depthB] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "depth") == 0) {
-            the_names[np_depth] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'e':
-        if (strcmp(A, "encap") == 0) {
-            the_names[np_encap] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'f':
-        if (strcmp(A, "framed") == 0) {
-            the_names[np_framed] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "full") == 0) {
-            the_names[np_full] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "file") == 0) {
-            the_names[np_file] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "file_extension") == 0) {
-            the_names[np_fileextension] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "fbox_rend") == 0) {
-            the_names[np_b_rend] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "flush_left") == 0) {
-            the_names[np_center_etc4] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "flush_right") == 0) {
-            the_names[np_center_etc5] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "foot_position") == 0) {
-            the_names[np_foot] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "full_first") == 0) {
-            the_names[np_full_first] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'g':
-        if (strcmp(A, "gloss_type") == 0) {
-            the_names[np_gloss] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'h':
-        if (strcmp(A, "height") == 0) {
-            the_names[np_height] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "halign") == 0) {
-            the_names[np_halign] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "hdr") == 0) {
-            the_names[np_hdr] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'i':
-        if (strcmp(A, "inner_pos") == 0) {
-            the_names[np_posi] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "inline") == 0) {
-            the_names[np_inline] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'j':
-        if (strcmp(A, "junior") == 0) {
-            the_names[np_junior] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'l':
-        if (strcmp(A, "language") == 0) {
-            the_names[np_language] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "level") == 0) {
-            the_names[np_level] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'm':
-        if (strcmp(A, "minipage_width") == 0) {
-            the_names[np_minipage_width] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "marginpar") == 0) {
-            the_names[np_marginpar] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "mathmlns") == 0) {
-            the_names[cst_mathml] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "marginpar") == 0) {
-            the_names[np_marginpar] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "mode") == 0) {
-            the_names[cst_mode] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'n':
-        if (strcmp(A, "noindent") == 0) {
-            the_names[np_noindent] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nonumber") == 0) {
-            the_names[np_nonumber] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nom") == 0) {
-            the_names[np_nom] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "name") == 0) {
-            the_names[np_name] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nameA") == 0) {
-            the_names[np_nameA] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "nameB") == 0) {
-            the_names[np_nameB] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'p':
-        if (strcmp(A, "place") == 0) {
-            the_names[np_place] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "prenom") == 0) {
-            the_names[np_prenom] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "pre") == 0) {
-            the_names[np_pre] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "particule") == 0) {
-            the_names[np_particle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "page") == 0) {
-            the_names[np_page] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "profession") == 0) {
-            the_names[np_profession] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "posA") == 0) {
-            the_names[np_posA] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "posB") == 0) {
-            the_names[np_posB] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "pos") == 0) {
-            the_names[np_pos] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'q':
-        if (strcmp(A, "quote") == 0) {
-            the_names[np_center_etc2] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "quotation") == 0) {
-            the_names[np_center_etc3] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'r':
-        if (strcmp(A, "rotate_angle") == 0) {
-            the_names[np_r_angle] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "rend") == 0) {
-            the_names[np_rend] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "row_spaceafter") == 0) {
-            the_names[np_spaceafter] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "repeat") == 0) {
-            the_names[np_repeat] = Istring(B);
-            return true;
-        }
-        return false;
-    case 's':
-        if (strcmp(A, "scale") == 0) {
-            the_names[np_scale] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "space_before") == 0) {
-            the_names[np_spacebefore] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "size") == 0) {
-            the_names[np_size] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "starred") == 0) {
-            the_names[np_starred] = Istring(B);
-            return true;
-        }
-        return false;
-    case 't':
-        if (strcmp(A, "table_width") == 0) {
-            the_names[np_tab_width] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "type") == 0) {
-            the_names[np_type] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "textype") == 0) {
-            the_names[np_textype] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'u':
-        if (strcmp(A, "unit_length") == 0) {
-            the_names[np_unit_length] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "user_list") == 0) {
-            the_names[np_user_list] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'v':
-        if (strcmp(A, "vpos") == 0) {
-            the_names[np_vpos] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "verse") == 0) {
-            the_names[np_center_etc6] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'w':
-        if (strcmp(A, "width") == 0) {
-            the_names[np_width] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'x':
-        if (strcmp(A, "xscale") == 0) {
-            the_names[np_xscale] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "xscaley") == 0) {
-            the_names[np_xscaley] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "xpos") == 0) {
-            the_names[np_xpos] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "xdir") == 0) {
-            the_names[np_xdir] = Istring(B);
-            return true;
-        }
-        return false;
-    case 'y':
-        if (strcmp(A, "yscale") == 0) {
-            the_names[np_yscale] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "yscalex") == 0) {
-            the_names[np_yscalex] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "ydir") == 0) {
-            the_names[np_ydir] = Istring(B);
-            return true;
-        }
-        if (strcmp(A, "ypos") == 0) {
-            the_names[np_ypos] = Istring(B);
-            return true;
-        }
-        return false;
-    default: return false;
+auto config_ns::assign_att(std::string A, String B) -> bool {
+    if (A == "angle") {
+        the_names[np_angle] = Istring(B);
+        return true;
     }
+    if (A == "affiliation") {
+        the_names[np_affiliation] = Istring(B);
+        return true;
+    }
+    if (A == "box_pos") {
+        the_names[np_box_pos] = Istring(B);
+        return true;
+    }
+    if (A == "box_scale") {
+        the_names[np_s_scale] = Istring(B);
+        return true;
+    }
+    if (A == "box_width") {
+        the_names[np_box_width] = Istring(B);
+        return true;
+    }
+    if (A == "boxed") {
+        the_names[np_boxed] = Istring(B);
+        return true;
+    }
+    if (A == "bibkey") {
+        the_names[np_bibkey] = Istring(B);
+        return true;
+    }
+    if (A == "border_bottom_width") {
+        the_names[np_border_bottomw] = Istring(B);
+        return true;
+    }
+    if (A == "border_top_width") {
+        the_names[np_border_topw] = Istring(B);
+        return true;
+    }
+    if (A == "border_left_width") {
+        the_names[np_border_leftw] = Istring(B);
+        return true;
+    }
+    if (A == "border_right_width") {
+        the_names[np_border_rightw] = Istring(B);
+        return true;
+    }
+    if (A == "centering") {
+        the_names[np_center_etc1] = Istring(B);
+        return true;
+    }
+    if (A == "clip") {
+        the_names[np_clip] = Istring(B);
+        return true;
+    }
+    if (A == "cols") {
+        the_names[np_cols] = Istring(B);
+        return true;
+    }
+    if (A == "cell_left") {
+        the_names[np_c_left] = Istring(B);
+        return true;
+    }
+    if (A == "cell_right") {
+        the_names[np_c_right] = Istring(B);
+        return true;
+    }
+    if (A == "cell_center") {
+        the_names[np_c_center] = Istring(B);
+        return true;
+    }
+    if (A == "cell_leftborder") {
+        the_names[np_leftborder] = Istring(B);
+        return true;
+    }
+    if (A == "cell_rightborder") {
+        the_names[np_rightborder] = Istring(B);
+        return true;
+    }
+    if (A == "cell_topborder") {
+        the_names[np_topborder] = Istring(B);
+        return true;
+    }
+    if (A == "cell_bottomborder") {
+        the_names[np_bottomborder] = Istring(B);
+        return true;
+    }
+    if (A == "curve_nbpts") {
+        the_names[np_curve_nbpts] = Istring(B);
+        return true;
+    }
+    if (A == "display") {
+        the_names[np_display] = Istring(B);
+        return true;
+    }
+    if (A == "dx") {
+        the_names[np_dx] = Istring(B);
+        return true;
+    }
+    if (A == "dy") {
+        the_names[np_dy] = Istring(B);
+        return true;
+    }
+    if (A == "depthA") {
+        the_names[np_depthA] = Istring(B);
+        return true;
+    }
+    if (A == "depthB") {
+        the_names[np_depthB] = Istring(B);
+        return true;
+    }
+    if (A == "depth") {
+        the_names[np_depth] = Istring(B);
+        return true;
+    }
+    if (A == "encap") {
+        the_names[np_encap] = Istring(B);
+        return true;
+    }
+    if (A == "framed") {
+        the_names[np_framed] = Istring(B);
+        return true;
+    }
+    if (A == "full") {
+        the_names[np_full] = Istring(B);
+        return true;
+    }
+    if (A == "file") {
+        the_names[np_file] = Istring(B);
+        return true;
+    }
+    if (A == "file_extension") {
+        the_names[np_fileextension] = Istring(B);
+        return true;
+    }
+    if (A == "fbox_rend") {
+        the_names[np_b_rend] = Istring(B);
+        return true;
+    }
+    if (A == "flush_left") {
+        the_names[np_center_etc4] = Istring(B);
+        return true;
+    }
+    if (A == "flush_right") {
+        the_names[np_center_etc5] = Istring(B);
+        return true;
+    }
+    if (A == "foot_position") {
+        the_names[np_foot] = Istring(B);
+        return true;
+    }
+    if (A == "full_first") {
+        the_names[np_full_first] = Istring(B);
+        return true;
+    }
+    if (A == "gloss_type") {
+        the_names[np_gloss] = Istring(B);
+        return true;
+    }
+    if (A == "height") {
+        the_names[np_height] = Istring(B);
+        return true;
+    }
+    if (A == "halign") {
+        the_names[np_halign] = Istring(B);
+        return true;
+    }
+    if (A == "hdr") {
+        the_names[np_hdr] = Istring(B);
+        return true;
+    }
+    if (A == "inner_pos") {
+        the_names[np_posi] = Istring(B);
+        return true;
+    }
+    if (A == "inline") {
+        the_names[np_inline] = Istring(B);
+        return true;
+    }
+    if (A == "junior") {
+        the_names[np_junior] = Istring(B);
+        return true;
+    }
+    if (A == "language") {
+        the_names[np_language] = Istring(B);
+        return true;
+    }
+    if (A == "level") {
+        the_names[np_level] = Istring(B);
+        return true;
+    }
+    if (A == "minipage_width") {
+        the_names[np_minipage_width] = Istring(B);
+        return true;
+    }
+    if (A == "marginpar") {
+        the_names[np_marginpar] = Istring(B);
+        return true;
+    }
+    if (A == "mathmlns") {
+        the_names[cst_mathml] = Istring(B);
+        return true;
+    }
+    if (A == "marginpar") {
+        the_names[np_marginpar] = Istring(B);
+        return true;
+    }
+    if (A == "mode") {
+        the_names[cst_mode] = Istring(B);
+        return true;
+    }
+    if (A == "noindent") {
+        the_names[np_noindent] = Istring(B);
+        return true;
+    }
+    if (A == "nonumber") {
+        the_names[np_nonumber] = Istring(B);
+        return true;
+    }
+    if (A == "nom") {
+        the_names[np_nom] = Istring(B);
+        return true;
+    }
+    if (A == "name") {
+        the_names[np_name] = Istring(B);
+        return true;
+    }
+    if (A == "nameA") {
+        the_names[np_nameA] = Istring(B);
+        return true;
+    }
+    if (A == "nameB") {
+        the_names[np_nameB] = Istring(B);
+        return true;
+    }
+    if (A == "place") {
+        the_names[np_place] = Istring(B);
+        return true;
+    }
+    if (A == "prenom") {
+        the_names[np_prenom] = Istring(B);
+        return true;
+    }
+    if (A == "pre") {
+        the_names[np_pre] = Istring(B);
+        return true;
+    }
+    if (A == "particule") {
+        the_names[np_particle] = Istring(B);
+        return true;
+    }
+    if (A == "page") {
+        the_names[np_page] = Istring(B);
+        return true;
+    }
+    if (A == "profession") {
+        the_names[np_profession] = Istring(B);
+        return true;
+    }
+    if (A == "posA") {
+        the_names[np_posA] = Istring(B);
+        return true;
+    }
+    if (A == "posB") {
+        the_names[np_posB] = Istring(B);
+        return true;
+    }
+    if (A == "pos") {
+        the_names[np_pos] = Istring(B);
+        return true;
+    }
+    if (A == "quote") {
+        the_names[np_center_etc2] = Istring(B);
+        return true;
+    }
+    if (A == "quotation") {
+        the_names[np_center_etc3] = Istring(B);
+        return true;
+    }
+    if (A == "rotate_angle") {
+        the_names[np_r_angle] = Istring(B);
+        return true;
+    }
+    if (A == "rend") {
+        the_names[np_rend] = Istring(B);
+        return true;
+    }
+    if (A == "row_spaceafter") {
+        the_names[np_spaceafter] = Istring(B);
+        return true;
+    }
+    if (A == "repeat") {
+        the_names[np_repeat] = Istring(B);
+        return true;
+    }
+    if (A == "scale") {
+        the_names[np_scale] = Istring(B);
+        return true;
+    }
+    if (A == "space_before") {
+        the_names[np_spacebefore] = Istring(B);
+        return true;
+    }
+    if (A == "size") {
+        the_names[np_size] = Istring(B);
+        return true;
+    }
+    if (A == "starred") {
+        the_names[np_starred] = Istring(B);
+        return true;
+    }
+    if (A == "table_width") {
+        the_names[np_tab_width] = Istring(B);
+        return true;
+    }
+    if (A == "type") {
+        the_names[np_type] = Istring(B);
+        return true;
+    }
+    if (A == "textype") {
+        the_names[np_textype] = Istring(B);
+        return true;
+    }
+    if (A == "unit_length") {
+        the_names[np_unit_length] = Istring(B);
+        return true;
+    }
+    if (A == "user_list") {
+        the_names[np_user_list] = Istring(B);
+        return true;
+    }
+    if (A == "vpos") {
+        the_names[np_vpos] = Istring(B);
+        return true;
+    }
+    if (A == "verse") {
+        the_names[np_center_etc6] = Istring(B);
+        return true;
+    }
+    if (A == "width") {
+        the_names[np_width] = Istring(B);
+        return true;
+    }
+    if (A == "xscale") {
+        the_names[np_xscale] = Istring(B);
+        return true;
+    }
+    if (A == "xscaley") {
+        the_names[np_xscaley] = Istring(B);
+        return true;
+    }
+    if (A == "xpos") {
+        the_names[np_xpos] = Istring(B);
+        return true;
+    }
+    if (A == "xdir") {
+        the_names[np_xdir] = Istring(B);
+        return true;
+    }
+    if (A == "yscale") {
+        the_names[np_yscale] = Istring(B);
+        return true;
+    }
+    if (A == "yscalex") {
+        the_names[np_yscalex] = Istring(B);
+        return true;
+    }
+    if (A == "ydir") {
+        the_names[np_ydir] = Istring(B);
+        return true;
+    }
+    if (A == "ypos") {
+        the_names[np_ypos] = Istring(B);
+        return true;
+    }
+    return false;
 }
 
 // Todo Bouche

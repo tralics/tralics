@@ -59,8 +59,8 @@ namespace config_ns {
     auto find_keys(const std::string &name) -> std::string;
     auto start_interpret(Buffer &B, String s) -> bool;
     void interpret_list(const std::string &a, Buffer &B);
-    auto assign_name(String A, String B) -> bool;
-    auto assign_att(String A, String B) -> bool;
+    auto assign_name(std::string A, String B) -> bool;
+    auto assign_att(std::string A, String B) -> bool;
 } // namespace config_ns
 
 [[deprecated]] inline auto operator==(const Buffer &B, String s) -> bool { return B.to_string() == s; }
