@@ -47,17 +47,18 @@ auto main(int argc, char **argv) -> int {
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised
 auto assign(Buffer &a, Buffer &b) -> bool {
-    [[deprecated]] auto A  = a.c_str();
-    [[deprecated]] auto B  = b.c_str();
-    std::string         aa = a.to_string(), bb = b.to_string();
-    auto                n = a.size();
+    std::string aa = a.to_string(), bb = b.to_string();
+    auto        n = a.size();
 
-    if (a[0] == 'e' && a[1] == 'l' && a[2] == 't' && a[3] == '_') return config_ns::assign_name(a.to_string(4), B);
+    if (a[0] == 'e' && a[1] == 'l' && a[2] == 't' && a[3] == '_') return config_ns::assign_name(aa.substr(4), bb);
     if (a[0] == 'x' && a[1] == 'm' && a[2] == 'l' && a[3] == '_') {
-        if (a[n - 1] == 'e' && a[n - 2] == 'm' && a[n - 3] == 'a' && a[n - 4] == 'n' && a[n - 5] == '_') { a.at(n - 5) = 0; }
-        return config_ns::assign_name(a.to_string(4), B);
+        if (a[n - 1] == 'e' && a[n - 2] == 'm' && a[n - 3] == 'a' && a[n - 4] == 'n' && a[n - 5] == '_') {
+            a.at(n - 5) = 0;
+            aa          = a.to_string();
+        }
+        return config_ns::assign_name(aa.substr(4), bb);
     }
-    if (a[0] == 'a' && a[1] == 't' && a[2] == 't' && a[3] == '_') return config_ns::assign_att(a.to_string(4), B);
+    if (a[0] == 'a' && a[1] == 't' && a[2] == 't' && a[3] == '_') return config_ns::assign_att(a.to_string(4), bb);
     if (aa == "lang_fr") {
         the_names[np_french] = Istring(bb);
         return true;
@@ -134,77 +135,77 @@ auto assign(Buffer &a, Buffer &b) -> bool {
             the_names[np_separator] = Istring(bb);
         return true;
     }
-    if (n > 5 && A[n - 5] == '_' && A[n - 4] == 'v' && A[n - 3] == 'a' && A[n - 2] == 'l' && A[n - 1] == 's') {
+    if (n > 5 && a[n - 5] == '_' && a[n - 4] == 'v' && a[n - 3] == 'a' && a[n - 2] == 'l' && a[n - 1] == 's') {
         a.at(n - 5) = 0;
         config_ns::interpret_list(a.to_string(), b);
         a.reset();
         return true;
     }
     if (aa == "mml_font_normal") {
-        the_names[np_mml_normal] = Istring(B);
+        the_names[np_mml_normal] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_upright") {
-        the_names[np_mml_upright] = Istring(B);
+        the_names[np_mml_upright] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_bold") {
-        the_names[np_mml_bold] = Istring(B);
+        the_names[np_mml_bold] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_italic") {
-        the_names[np_mml_italic] = Istring(B);
+        the_names[np_mml_italic] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_bold_italic") {
-        the_names[np_mml_bold_italic] = Istring(B);
+        the_names[np_mml_bold_italic] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_script") {
-        the_names[np_mml_script] = Istring(B);
+        the_names[np_mml_script] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_bold_script") {
-        the_names[np_mml_bold_script] = Istring(B);
+        the_names[np_mml_bold_script] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_fraktur") {
-        the_names[np_mml_fraktur] = Istring(B);
+        the_names[np_mml_fraktur] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_doublestruck") {
-        the_names[np_mml_doublestruck] = Istring(B);
+        the_names[np_mml_doublestruck] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_bold_fraktur") {
-        the_names[np_mml_bold_fraktur] = Istring(B);
+        the_names[np_mml_bold_fraktur] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_sansserif") {
-        the_names[np_mml_sansserif] = Istring(B);
+        the_names[np_mml_sansserif] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_bold_sansserif") {
-        the_names[np_mml_bold_sansserif] = Istring(B);
+        the_names[np_mml_bold_sansserif] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_sansserif_italic") {
-        the_names[np_mml_sansserif_italic] = Istring(B);
+        the_names[np_mml_sansserif_italic] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_sansserif_bold_italic") {
-        the_names[np_mml_sansserif_bold_italic] = Istring(B);
+        the_names[np_mml_sansserif_bold_italic] = Istring(bb);
         return true;
     }
     if (aa == "mml_font_monospace") {
-        the_names[np_mml_monospace] = Istring(B);
+        the_names[np_mml_monospace] = Istring(bb);
         return true;
     }
     return false;
 }
 
 // Handles names starting with xml_ \todo move away from this file
-auto config_ns::assign_name(std::string A, String B) -> bool {
+auto config_ns::assign_name(std::string A, std::string B) -> bool {
     if (A == "accueil") {
         the_names[np_accueil] = Istring(B);
         return true;
@@ -662,8 +663,8 @@ auto config_ns::assign_name(std::string A, String B) -> bool {
         return true;
     }
     if (A == "pack_font_att") {
-        if (strcmp(B, "true") == 0) the_main->pack_font_elt = true;
-        if (strcmp(B, "false") == 0) the_main->pack_font_elt = false;
+        if (B == "true") the_main->pack_font_elt = true;
+        if (B == "false") the_main->pack_font_elt = false;
         return true;
     }
     if (A == "row") {
@@ -779,7 +780,7 @@ auto config_ns::assign_name(std::string A, String B) -> bool {
             the_names[np_theorem] = Istring(B);
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else if (B[0] == ' ') { // special case
-            the_names[np_theorem] = Istring(B + 1);
+            the_names[np_theorem] = Istring(B.substr(1));
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else {
             the_names[np_theorem] = Istring(B);
@@ -812,8 +813,8 @@ auto config_ns::assign_name(std::string A, String B) -> bool {
         return true;
     }
     if (A == "use_font_elt") {
-        if (strcmp(B, "true") == 0) the_main->use_font_elt = true;
-        if (strcmp(B, "false") == 0) the_main->use_font_elt = false;
+        if (B == "true") the_main->use_font_elt = true;
+        if (B == "false") the_main->use_font_elt = false;
         return true;
     }
     if (A == "vector") {
@@ -840,7 +841,7 @@ auto config_ns::assign_name(std::string A, String B) -> bool {
 }
 
 // Handles names starting with att_
-auto config_ns::assign_att(std::string A, String B) -> bool {
+auto config_ns::assign_att(std::string A, std::string B) -> bool {
     if (A == "angle") {
         the_names[np_angle] = Istring(B);
         return true;

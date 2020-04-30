@@ -51,7 +51,7 @@ public:
     [[nodiscard]] auto size() const -> size_t { return wptr; }                ///< Size of the contents \todo match vector::size()
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptr1,ptr)
-    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string
+    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
