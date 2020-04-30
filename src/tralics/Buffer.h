@@ -126,7 +126,6 @@ public:
     void insert_token(Token T, bool sw);
     void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &s);
-    void push_back_braced(String s);
     void push_back_def(String, std::string);
     void push_back_elt(const Istring &name, Xid id, int w);
     void push_back16(size_t n, bool uni);
@@ -140,8 +139,6 @@ public:
     void push_back_math_aux(String s);
     void push_back_newline();
     auto push_back_newline_spec() -> bool;
-    void push_back_open_brace() { push_back('{'); };
-    void push_back_close_brace() { push_back('}'); };
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(Xid id);

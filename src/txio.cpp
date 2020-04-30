@@ -172,9 +172,9 @@ auto Buffer::next_utf8_char_aux() -> codepoint {
         return codepoint();
     }
 
-    auto it = begin() + ptr;
+    auto it = begin() + to_signed(ptr), it0 = it;
     auto cp = utf8::next(it, end());
-    auto nn = it - (begin() + ptr);
+    auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptr += nn;
     return codepoint(cp);

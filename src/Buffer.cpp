@@ -26,7 +26,7 @@ namespace {
 
 /// Returns a temporary string, corresponding to the command with
 /// an empty name, without initial escape char.
-auto null_cs_name() -> String {
+auto null_cs_name() -> std::string {
     auto c = current_escape_char();
     if (c == '\\') return "csname\\endcsname";
     if (c > 0 && c < int(nb_characters)) {
@@ -57,16 +57,10 @@ auto Buffer::to_string(size_t k) const -> std::string {
     return std::string(data() + k);
 }
 
-void Buffer::push_back_braced(String s) {
-    push_back_open_brace();
-    push_back(s);
-    push_back_close_brace();
-}
-
 void Buffer::push_back_braced(const std::string &s) {
-    push_back_open_brace();
+    push_back('{');
     push_back(s);
-    push_back_close_brace();
+    push_back('}');
 }
 
 // Inserts a character in the buffer. Always adds a null after it.

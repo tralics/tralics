@@ -33,7 +33,7 @@ struct CitationKey {
     [[nodiscard]] auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
     [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto is_same_lower_old(const CitationKey &w) const -> bool;
-    [[nodiscard]] auto from_to_string() const -> String;
+    [[nodiscard]] auto from_to_string() const -> std::string;
 
     void move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
     void move_to_refer() { cite_prefix = from_refer; }
@@ -221,7 +221,7 @@ public:
     BibEntry();
 
 private:
-    [[nodiscard]] auto from_to_string() const -> String { return cite_key.from_to_string(); };
+    [[nodiscard]] auto from_to_string() const -> std::string { return cite_key.from_to_string(); };
     [[nodiscard]] auto ra_prefix() const -> String;
     [[nodiscard]] auto get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
 
@@ -388,9 +388,8 @@ public:
     void newline();
     void push_back(String s) { B.push_back(s); }
     void push_back(const std::string &s) { B.push_back(s); }
-    void push_back_braced(String s) { B.push_back_braced(s); }
     void push_back_braced(const std::string &s) { B.push_back_braced(s); }
-    void push_back_cmd(String s) {
+    void push_back_cmd(const std::string &s) {
         B.push_back('\\');
         B.push_back(s);
     }

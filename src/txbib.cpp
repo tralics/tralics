@@ -68,7 +68,7 @@ namespace io_ns {
     auto how_many_bytes(char) -> size_t;
 } // namespace io_ns
 
-std::array<String, 30> bib_xml_name{
+std::array<std::string, 30> bib_xml_name{
     "bcrossref", "bkey",   "baddress", "bauthors", "bbooktitle",    "bchapter", "bedition",   "beditors", "bhowpublished", "binstitution",
     "bjournal",  "bmonth", "bnote",    "bnumber",  "borganization", "bpages",   "bpublisher", "bschool",  "bseries",       "btitle",
     "btype",     "burl",   "bvolume",  "byear",    "bdoi",          "bsubtype", "bunite",     "bequipe",  "bidentifiant",  "bunknown"};
@@ -1715,7 +1715,7 @@ void BibEntry::format_author(bool au) {
     bbl.newline();
 }
 
-auto CitationKey::from_to_string() const -> String {
+auto CitationKey::from_to_string() const -> std::string {
     if (cite_prefix == from_year) return "year";
     if (cite_prefix == from_refer) return "refer";
     return "foot";
