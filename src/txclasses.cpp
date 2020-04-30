@@ -964,9 +964,9 @@ void Parser::T_change_element_name() {
     std::string value = sE_arg_nopar();
     bool        res{};
     if (star) {
-        res = config_ns::assign_att(name.c_str(), value.c_str());
+        res = config_ns::assign_att(name, value);
     } else
-        res = config_ns::assign_name(name.c_str(), value.c_str());
+        res = config_ns::assign_name(name, value);
     if (res) {
         Logger::finish_seq();
         the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";

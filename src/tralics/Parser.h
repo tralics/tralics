@@ -203,7 +203,7 @@ public:
     void                parse_error(Token T, const std::string &s, TokenList &L);
     void                parse_error(Token T, const std::string &s);
     [[deprecated]] void parse_error(Token T, String s);
-    void                parse_error(std::string s);
+    void                parse_error(const std::string &s);
     void                parse_error(Token T, const std::string &s1, const std::string &s2);
     void                parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
     void                parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
@@ -216,8 +216,8 @@ public:
     void                list_to_glue(internal_type level, Token t, TokenList &L);
     void                set_default_language(int v);
     void                signal_error();
-    void                signal_error(std::string s);
-    void                signal_error(Token T, std::string s);
+    void                signal_error(const std::string &s);
+    void                signal_error(Token T, const std::string &s);
     void                signal_ovf(Token T, String h, long cur, long max);
     auto                special_expand(TokenList *args) -> TokenList;
     auto                special_tpa_arg(String n, String y, bool par, bool env, bool has_q) -> Xml *;

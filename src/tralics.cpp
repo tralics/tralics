@@ -205,7 +205,7 @@ auto assign(Buffer &a, Buffer &b) -> bool {
 }
 
 // Handles names starting with xml_ \todo move away from this file
-auto config_ns::assign_name(std::string A, std::string B) -> bool {
+auto config_ns::assign_name(const std::string &A, std::string B) -> bool {
     if (A == "accueil") {
         the_names[np_accueil] = Istring(B);
         return true;
@@ -841,7 +841,7 @@ auto config_ns::assign_name(std::string A, std::string B) -> bool {
 }
 
 // Handles names starting with att_
-auto config_ns::assign_att(std::string A, std::string B) -> bool {
+auto config_ns::assign_att(const std::string &A, const std::string &B) -> bool {
     if (A == "angle") {
         the_names[np_angle] = Istring(B);
         return true;

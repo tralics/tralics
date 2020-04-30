@@ -102,7 +102,7 @@ private:
 public:
     std::string value; // the value of the macro (e.g. bar)
 
-    auto is_same(size_t hash, std::string s) -> bool { return hash == h && name == s; } // \todo operator==
+    auto is_same(size_t hash, const std::string &s) -> bool { return hash == h && name == s; } // \todo operator==
     void set_value(std::string v) { value = std::move(v); }
     void set_default_value() { value = name; }
     BibMacro() = default;
@@ -322,7 +322,7 @@ private:
     void               handle_multiple_entries(BibEntry *Y);
     void               kill_the_lists();
     auto               look_for_macro(const Buffer &name) -> std::optional<size_t>;
-    auto               look_for_macro(size_t h, std::string name) -> std::optional<size_t>;
+    auto               look_for_macro(size_t h, const std::string &name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].set_default_value(); }
     void               mac_set_val(size_t X, std::string s) { all_macros[X].set_value(std::move(s)); }
     auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;
@@ -353,7 +353,7 @@ public:
     auto        implement_cit(String x, std::string w) -> int;
     auto        is_year_string(const std::string &y, bib_from from) -> String;
     void        work();
-    void        read(std::string src, bib_from ct);
+    void        read(const std::string &src, bib_from ct);
     auto        read0(Buffer &B, bib_from ct) -> bool;
     void        read1(const std::string &cur);
     void        read_ra();
@@ -365,8 +365,8 @@ public:
 
     static void bad_year(const std::string &given, String wanted);
     static void err_in_entry(String a);
-    static auto find_field_pos(std::string s) -> field_pos;
-    static auto find_type(std::string s) -> entry_type;
+    static auto find_field_pos(const std::string &s) -> field_pos;
+    static auto find_type(const std::string &s) -> entry_type;
     static auto wrong_class(int y, const std::string &Y, bib_from from) -> bool;
 };
 
@@ -400,7 +400,7 @@ public:
         if (!file.is_open()) file = tralics_ns::open_file(name, true);
     }
 
-    void install_file(std::string b) { name = b; } // \todo set_name
+    void install_file(std::string b) { name = std::move(b); } // \todo set_name
 };
 
 class BblAndTty {

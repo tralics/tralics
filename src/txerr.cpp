@@ -48,7 +48,7 @@ void Parser::signal_error() {
 // If T is non-null and the option -noxmlerror is not given,
 // then an error element with value s name T is inserted in the XML result
 
-void Parser::signal_error(Token T, std::string s) {
+void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
     if (main_ns::no_xml_error) return;
     if (T.is_null()) return;
@@ -75,7 +75,7 @@ void err_ns::convert_to_string(const TokenList &L) {
 }
 
 // The simpliest error function (adds nothing to the XML)
-void Parser::signal_error(std::string s) {
+void Parser::signal_error(const std::string &s) {
     err_buf << bf_reset << s;
     signal_error(Token(), s);
 }
@@ -91,31 +91,31 @@ void Parser::parse_error(Token T, String s) {
     signal_error(T, s);
 }
 
-void Parser::parse_error(std::string s) {
+void Parser::parse_error(const std::string &s) {
     err_buf << bf_reset << s;
     signal_error(err_tok, s);
 }
 
 void Parser::parse_error(Token T, const std::string &s1, const std::string &s2) {
     err_buf << bf_reset << s1;
-    signal_error(T, s2.c_str());
+    signal_error(T, s2);
 }
 
 void Parser::parse_error(Token T, const std::string &s, TokenList &L) {
     err_buf << bf_reset << s;
     err_ns::convert_to_string(L);
-    signal_error(T, s.c_str());
+    signal_error(T, s);
 }
 
 void Parser::parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3) {
     err_buf << bf_reset << s1 << s2;
-    signal_error(T, s3.c_str());
+    signal_error(T, s3);
 }
 
 /// Useful error. Here s2 is a token.
 void Parser::parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4) {
     err_buf << bf_reset << s1 << s2.tok_to_str() << s3;
-    signal_error(T, s4.c_str());
+    signal_error(T, s4);
 }
 
 // --------------------------------------------------

@@ -616,7 +616,7 @@ void FpNum::round0() {
 void FpNum::round(long n) {
     if (n >= 18) return;
     if (n < 0) {
-        the_parser.parse_error(fmt::format("Negative number {} in round", n).c_str());
+        the_parser.parse_error(fmt::format("Negative number {} in round", n));
         return;
     }
     if (n == 0) {

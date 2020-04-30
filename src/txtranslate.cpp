@@ -2068,7 +2068,7 @@ void Parser::T_error() {
     flush_buffer();
     std::string b = sT_arg_nopar(); // msg
     err_buf << bf_reset << "Error: " << b;
-    signal_error(err_tok, b.c_str());
+    signal_error(err_tok, b);
 }
 
 // scans an element id, in brackets, default is cur_id

@@ -623,7 +623,7 @@ auto Bibtex::look_for_macro(const Buffer &name) -> std::optional<size_t> {
     return look_for_macro(name.hashcode(bib_hash_mod), name.to_string());
 }
 
-auto Bibtex::look_for_macro(size_t h, std::string name) -> std::optional<size_t> {
+auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
         if (all_macros[i].is_same(h, name)) return i;
     return {};
@@ -651,7 +651,7 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
 void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf1, true, name, value); }
 
 // Return an integer associated to a field position.
-auto Bibtex::find_field_pos(std::string s) -> field_pos {
+auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
     auto S = Istring(s);
     // Check is this has to be ignored
     std::vector<Istring> &Bib_s        = the_main->bibtex_fields_s;
@@ -699,8 +699,8 @@ auto Bibtex::find_field_pos(std::string s) -> field_pos {
 }
 
 // Finds the type of an entry (or comment, string, preamble).
-auto Bibtex::find_type(std::string s) -> entry_type {
-    if (s == "") return type_comment; // in case of error.
+auto Bibtex::find_type(const std::string &s) -> entry_type {
+    if (s.empty()) return type_comment; // in case of error.
     auto S = Istring(s);
 
     std::vector<Istring> &Bib2        = the_main->bibtex_extensions_s;
@@ -2903,7 +2903,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
 // le rajouter a la fin, et virer le extrabib
 // Plus le parser propement
 
-void Bibtex::read(std::string src, bib_from ct) {
+void Bibtex::read(const std::string &src, bib_from ct) {
     bbl.push_back("% reading source ");
     bbl.push_back(src);
     bbl.newline();
@@ -2936,7 +2936,7 @@ void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
 
 void tralics_ns::bibtex_boot(std::string b, String dy, std::string no_year, bool inra, bool db) {
     distinguish_refer = db;
-    bbl.install_file(b);
+    bbl.install_file(std::move(b));
     the_bibtex = new Bibtex(dy);
     the_bibtex->boot(std::move(no_year), inra);
 }
