@@ -1151,7 +1151,7 @@ void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
         token_ns::split_at(comma, tmp, key);
         std::string key_name = xkv_ns::find_key_of(key, type);
         aux << bf_reset << "," << key_name << ",";
-        if (!B.contains(aux.c_str())) {
+        if (!B.contains(aux.to_string())) {
             if (!W.empty()) W.push_back(comma);
             W.splice(W.end(), key);
         }
@@ -1252,14 +1252,14 @@ void Parser::xkv_makehd(TokenList &L) {
         B.reset(k);
     }
     if (B.size() != k) B.push_back('@');
-    xkv_header = B.c_str();
+    xkv_header = B.to_string();
 }
 
 void xkv_ns::makehd(const std::string &fam) {
     Buffer &B = local_buf;
     B << bf_reset << xkv_prefix << fam;
     if (!fam.empty()) B.push_back('@');
-    xkv_header = B.c_str();
+    xkv_header = B.to_string();
 }
 
 void Parser::xkv_fetch_prefix_family() {
@@ -1710,7 +1710,7 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
             L.splice(L.begin(), w);
         } else {
             B << bf_reset << "No value recorded for key `" << Key << "'; ignored";
-            P->parse_error(P->err_tok, B.c_str(), "no val recorded");
+            P->parse_error(P->err_tok, B.to_string(), "no val recorded");
         }
     }
     L.swap(res);
@@ -1722,7 +1722,7 @@ void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
     B << bf_reset << xkv_header << Key << "@default";
     if (!P->hash_table.is_defined(B)) {
         B << bf_reset << "No value specified for key `" << Key << "'";
-        P->parse_error(P->err_tok, B.c_str());
+        P->parse_error(P->err_tok, B.to_string());
         return;
     }
     Token     T = P->hash_table.locate(B);
@@ -2139,13 +2139,13 @@ void Parser::numberwithin() {
         return;
     }
     if (counter_check(b, false)) return;
-    std::string fooname = b.c_str(2);
+    auto fooname = b.to_string(2);
     if (csname_ctr(bar_list, b)) {
         bad_counter0();
         return;
     }
     if (counter_check(b, false)) return;
-    std::string barname = b.c_str(2);
+    auto barname = b.to_string(2);
     b << bf_reset << "cl@" << barname;
     Token clbar_token = hash_table.locate(b);
     brace_me(A);

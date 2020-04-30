@@ -914,15 +914,13 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
 // Splits a string at \n, creates a list of lines with l as first
 // line number.
 // This is used by \scantokens and \reevaluate, assumes UTF8
-void LinePtr::split_string(String x, int l) {
+void LinePtr::split_string(std::string x, int l) {
     Buffer &B = buf;
     LinePtr L;
     L.set_cur_line(l);
-    int i = 0;
     B.reset();
-    for (;;) {
-        char c = x[i];
-        i++;
+    for (size_t i = 0;; ++i) {
+        char c    = x[i];
         bool emit = false;
         if (c == '\n')
             emit = true;

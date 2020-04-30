@@ -1263,7 +1263,7 @@ void Parser::M_new_thm() {
             return;
         }
         if (counter_check(Thbuf1, false)) return; // checks the counter
-        Thbuf2 << bf_reset << "the" << (Thbuf1.c_str() + 2);
+        Thbuf2 << bf_reset << "the" << Thbuf1.to_string(2);
         cur_tok = hash_table.locate(Thbuf2);
         TokenList R;
         R.push_back(cur_tok);
@@ -1643,16 +1643,16 @@ void Parser::E_usename(int c, bool vb) {
 }
 
 // Converts a token list into a string, like csname_arg
-auto Parser::fetch_name0() -> String {
+auto Parser::fetch_name0() -> std::string {
     TokenList L = read_arg();
     return fetch_name1(L);
 }
-auto Parser::fetch_name0_nopar() -> String {
+auto Parser::fetch_name0_nopar() -> std::string {
     TokenList L = read_arg_nopar();
     return fetch_name1(L);
 }
 
-auto Parser::fetch_name1(TokenList &L) -> String {
+auto Parser::fetch_name1(TokenList &L) -> std::string {
     if (L.empty()) return "";
     SaveState st_state;
     save_the_state(st_state);
@@ -1661,7 +1661,7 @@ auto Parser::fetch_name1(TokenList &L) -> String {
     TL.swap(L);
     fetch_name2();
     restore_the_state(st_state);
-    return fetch_name_res.c_str();
+    return fetch_name_res.to_string();
 }
 
 // if exp is true, this is \csname ... \endcsname, otherwise get_r_token
@@ -1675,7 +1675,7 @@ auto Parser::fetch_csname(bool exp) -> Token {
 }
 
 // Use a non-long method
-auto Parser::fetch_name_opt() -> String {
+auto Parser::fetch_name_opt() -> std::string {
     TokenList L;
     bool      res = read_optarg_nopar(L);
     if (!res || L.empty()) return "";

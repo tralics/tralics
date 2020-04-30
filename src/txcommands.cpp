@@ -763,8 +763,8 @@ void Parser::T_begindocument() {
 // case \begin \end
 void Parser::T_beginend(symcodes x) {
     flush_buffer();
-    bool        begin = x == begin_cmd;
-    std::string S     = fetch_name0();
+    bool begin = x == begin_cmd;
+    auto S     = fetch_name0();
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{\\" << (begin ? "begin " : "end ") << S << "}\n";

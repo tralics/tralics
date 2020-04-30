@@ -653,8 +653,7 @@ void math_ns::insert_delimiter_t(del_pos k) {
 void Buffer::push_back_math_token(const CmdChr &x, bool space) {
     if (x.cmd > 16) {
         push_back('\\');
-        String s = x.name();
-        if (s == nullptr) s = "unknown.";
+        auto s = x.name();
         push_back_math_aux(s);
         if (!space) return;
         if (s[0] == 0) return;
@@ -670,8 +669,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
 
 void Buffer::push_back_math_tag(const CmdChr &x, int type) {
     if (x.cmd > 16) {
-        String s = x.name();
-        if (s == nullptr) s = "unknown.";
+        auto s = x.name();
         push_back_math_tag(s, type);
     } else { // Let's hope no tag needed here
         if (type == pbm_end) return;
@@ -681,13 +679,13 @@ void Buffer::push_back_math_tag(const CmdChr &x, int type) {
 
 // We must consider the case where the command is \& or the like
 // We produce <elt name='&amp;'> otherwise
-void Buffer::push_back_math_tag(String s, int type) {
-    auto n  = strlen(s);
+void Buffer::push_back_math_tag(std::string s, int type) {
+    auto n  = s.size();
     bool ok = true; // true if letter
     for (size_t i = 0; i < n; i++) {
         auto c = s[i];
         if (!is_letter(c)) {
-            if (strcmp(s, "@root") == 0) {
+            if (s == "@root") {
                 s = "root";
                 break;
             }
@@ -713,8 +711,8 @@ void Buffer::push_back_math_tag(String s, int type) {
 }
 
 // Case of a string, we check if the string can be inserted directly.
-void Buffer::push_back_math_aux(String s) {
-    auto n  = strlen(s);
+void Buffer::push_back_math_aux(std::string s) {
+    auto n  = s.size();
     bool ok = true;
     for (size_t i = 0; i < n; i++) {
         auto c = s[i];
@@ -1490,7 +1488,7 @@ auto Math::chars_to_mb3() -> Istring {
         Buffer tmp;
         tmp.reset();
         tmp << "Error scanning width, so far got '" << B.to_string() << "'";
-        the_parser.parse_error(the_parser.err_tok, tmp.c_str(), "bad dimension");
+        the_parser.parse_error(the_parser.err_tok, tmp.to_string(), "bad dimension");
         B.reset();
         B.push_back("0pt");
     }
@@ -1503,7 +1501,7 @@ void Buffer::show_uncomplete(String m) {
     if (empty())
         log_and_tty << "No character found\n";
     else
-        log_and_tty << "So far, got " << c_str() << "\n";
+        log_and_tty << "So far, got " << *this << "\n";
     reset();
     push_back("error");
 }

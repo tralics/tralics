@@ -13,6 +13,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txinline.h"
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 #include <utility>
 
@@ -160,7 +161,7 @@ void Xml::add_last_string(const Buffer &B) {
         pop_back();
         the_parser.my_stats.one_more_merge();
     }
-    shbuf.push_back(B.c_str());
+    shbuf.push_back(B);
     push_back_unless_nullptr(new Xml(shbuf));
 }
 
@@ -613,10 +614,11 @@ void Stack::finish_cell(int w) {
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
     int        n       = 0;
-    if (!shbuf.install_att(cid, the_names[np_cols]))
-        n = 0;
-    else
-        n = atoi(shbuf.c_str());
+    if (shbuf.install_att(cid, the_names[np_cols])) {
+        try {
+            n = std::stoi(shbuf.to_string());
+        } catch (...) { spdlog::warn("Could not parse `{}' as an integer", shbuf); }
+    }
     if (n != 0) {
         cell_no += to_unsigned(n);
     } else {

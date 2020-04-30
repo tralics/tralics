@@ -370,11 +370,11 @@ private:
     void        fast_new_macro(TokenList &L, Token name);
     void        fetch_box_id(Xml *X);
     auto        fetch_csname(bool exp) -> Token;
-    auto        fetch_name0() -> String;
-    auto        fetch_name0_nopar() -> String;
-    auto        fetch_name1(TokenList &L) -> String;
+    auto        fetch_name0() -> std::string;
+    auto        fetch_name0_nopar() -> std::string;
+    auto        fetch_name1(TokenList &L) -> std::string;
     void        fetch_name2();
-    auto        fetch_name_opt() -> String;
+    auto        fetch_name_opt() -> std::string;
     auto        find_env_token(const std::string &name, bool beg) -> Token;
     void        E_get_config(int c);
     void        finish_a_cell(Token T, const Istring &a);

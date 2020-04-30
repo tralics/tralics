@@ -136,8 +136,8 @@ public:
     void push_back_Hex(unsigned c);
     void push_back_math_token(const CmdChr &x, bool space);
     void push_back_math_tag(const CmdChr &x, int type);
-    void push_back_math_tag(String s, int type);
-    void push_back_math_aux(String s);
+    void push_back_math_tag(std::string s, int type);
+    void push_back_math_aux(std::string s);
     void push_back_newline();
     auto push_back_newline_spec() -> bool;
     void push_back_roman(long n);

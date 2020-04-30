@@ -291,11 +291,7 @@ auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
     case math_argument_cd: X << "Argument"; break;
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
-        String w = x.name();
-        if (w != nullptr)
-            X << "Argument list for \\" << w;
-        else
-            X << "impossible " << int(y);
+        X << "Argument list for \\" << x.name();
         break;
     }
     }
@@ -314,11 +310,7 @@ auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
     case math_argument_cd: X << "Argument"; break;
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
-        String w = x.name();
-        if (w != nullptr)
-            X << "Argument list for \\" << w;
-        else
-            X << fmt::format("cimpossible {}", y);
+        X << "Argument list for \\" << x.name();
         break;
     }
     }
@@ -1374,7 +1366,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         }
     }
     cmi.update_all_env_ctr(at_start);
-    std::string s = fetch_name0();
+    auto s = fetch_name0();
     add_to_trace(s);
     Token  eenv    = find_env_token(s, false); // \endfoo
     CmdChr end_val = cur_cmd_chr;              // value of \endfoo

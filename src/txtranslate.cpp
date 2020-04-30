@@ -1649,7 +1649,7 @@ void Parser::T_reevaluate() {
     }
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Clines(-1));
-    lines.split_string(Tbuf.c_str(), 0);
+    lines.split_string(Tbuf.to_string(), 0);
 }
 
 void Parser::T_reevaluate0(TokenList &L1, bool in_env) {

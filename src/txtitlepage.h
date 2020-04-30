@@ -55,7 +55,7 @@ public:
     [[nodiscard]] auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
     TitlePageAux() = default;
     TitlePageAux(TitlePageFullLine &X);
-    auto               find_UR(String s, size_t n) const -> size_t;
+    auto               find_UR(std::string s, size_t n) const -> size_t;
     auto               get_T1() -> std::string { return T1; }
     auto               get_T2() -> std::string { return T2; }
     auto               get_T3() -> std::string { return T3; }

@@ -492,10 +492,9 @@ void TpiOneItem::reset() {
 
 // For the case CEE, \Paris ?<UR flags> <Rocq>
 // s is the string without attribs, and n is the length
-auto TitlePageAux::find_UR(String s, size_t n) const -> size_t {
+auto TitlePageAux::find_UR(std::string s, size_t n) const -> size_t {
     if (type != tpi_rt_urlist) return 0;
-    String w = T2.c_str();
-    if (strncmp(w, s, n) == 0) return idx;
+    if (T2.substr(0, n) == s.substr(0, n)) return idx;
     return 0;
 }
 
@@ -508,7 +507,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
     B.at(j)         = 0;
-    String match    = B.c_str();
+    auto   match    = B.to_string();
     size_t res      = 0;
     for (const auto &k : bigtable) {
         res = k.find_UR(match, j);
@@ -965,17 +964,15 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
 // Find all aliases in the config file.
 auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
     Buffer &B        = local_buf;
-    auto    C        = cbegin();
-    auto    E        = cend();
     bool    in_alias = false;
-    while (C != E) {
+    for (auto C = cbegin(); C != cend();) {
         B << bf_reset << C->chars;
         if (in_alias) {
             if (B.find_alias(SL, res)) return true;
         }
-        if (strncmp("End", B.c_str(), 3) == 0)
+        if (B.to_string().substr(0, 3) == "End")
             in_alias = false;
-        else if (strncmp("BeginAlias", B.c_str(), 10) == 0) {
+        else if (B.to_string().substr(0, 10) == "BeginAlias") {
             in_alias = true;
             ++C;
             continue;

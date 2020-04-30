@@ -461,7 +461,7 @@ auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
     while (C != E) {
         buffer_for_log.reset();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
-        fp << buffer_for_log.c_str();
+        fp << buffer_for_log;
         ++C;
     }
     return fp;
@@ -498,7 +498,7 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
     Buffer &B = buffer_for_log;
     B << bf_reset;
     B.push_back(x, true);
-    return fp << B.c_str();
+    return fp << B;
 }
 
 void Buffer::push_back(const Istring &X) {
@@ -536,8 +536,8 @@ void token_ns::remove_first_last_space(TokenList &L) {
 // It it's not a char, it's a command, with a plain ASCII name.
 void Parser::print_cmd_chr(CmdChr X) {
     String a = X.special_name();
-    String b = X.name();
-    if ((a != nullptr) && (b != nullptr)) { // print both values
+    auto   b = X.name();
+    if (a != nullptr) { // print both values
         the_log << "\\" << b << " " << a;
         return;
     }
@@ -549,10 +549,7 @@ void Parser::print_cmd_chr(CmdChr X) {
         B.out_log(y, the_main->log_encoding);
         return;
     }
-    if (b != nullptr)
-        the_log << "\\" << b;
-    else
-        the_log << "(Unknown " << X.cmd << "," << X.chr << ")";
+    the_log << "\\" << b;
 }
 
 // ------------------------ token lists ----------------------------

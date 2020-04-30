@@ -50,7 +50,7 @@ public:
         return cmd == mathbetween_cmd || cmd == mathopen_cmd || cmd == mathclose_cmd;
     }
     [[nodiscard]] auto special_name() const -> String;
-    [[nodiscard]] auto name() const -> String;
+    [[nodiscard]] auto name() const -> std::string;
     [[nodiscard]] auto is_single_quote() const -> bool { return cmd == other_catcode && chr == '\''; }
     [[nodiscard]] auto token_fiorelse_name() const -> String;
 
@@ -66,18 +66,18 @@ private:
     [[nodiscard]] auto l3_tl_basic_name() const -> String;
     [[nodiscard]] auto l3str_case_name() const -> String;
     [[nodiscard]] auto l3str_ifeq_name() const -> String;
-    [[nodiscard]] auto specchar_cmd_name() const -> String;
+    [[nodiscard]] auto specchar_cmd_name() const -> std::string;
     [[nodiscard]] auto tipa_name() const -> String;
     [[nodiscard]] auto tl_concat_name() const -> String;
     [[nodiscard]] auto tl_put_left_name() const -> String;
     [[nodiscard]] auto tl_set_name() const -> String;
     [[nodiscard]] auto token_accent_name() const -> String;
     [[nodiscard]] auto token_argfont_name() const -> String;
-    [[nodiscard]] auto token_assigndimen_name() const -> String;
-    [[nodiscard]] auto token_assignglue_name() const -> String;
-    [[nodiscard]] auto token_assignint_name() const -> String;
-    [[nodiscard]] auto token_assignmuglue_name() const -> String;
-    [[nodiscard]] auto token_assigntoks_name() const -> String;
+    [[nodiscard]] auto token_assigndimen_name() const -> std::string;
+    [[nodiscard]] auto token_assignglue_name() const -> std::string;
+    [[nodiscard]] auto token_assignint_name() const -> std::string;
+    [[nodiscard]] auto token_assignmuglue_name() const -> std::string;
+    [[nodiscard]] auto token_assigntoks_name() const -> std::string;
     [[nodiscard]] auto token_big_name() const -> String;
     [[nodiscard]] auto token_box_name() const -> String;
     [[nodiscard]] auto token_caseshift_name() const -> String;
@@ -86,7 +86,7 @@ private:
     [[nodiscard]] auto token_color_name() const -> String;
     [[nodiscard]] auto token_convert_name() const -> String;
     [[nodiscard]] auto token_counter_name() const -> String;
-    [[nodiscard]] auto token_cst_name() const -> String;
+    [[nodiscard]] auto token_cst_name() const -> std::string;
     [[nodiscard]] auto token_dashline_name() const -> String;
     [[nodiscard]] auto token_def_name() const -> String;
     [[nodiscard]] auto token_defcode_name() const -> String;

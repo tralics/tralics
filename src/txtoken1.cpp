@@ -10,14 +10,15 @@
 
 #include "tralics/Buffer.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 // We define functions that return the name of a token;
 
 static Buffer make_name_buffer; // used for token names
 
 namespace tralics_ns {
-    auto make_name(String x, int y) -> String;
-    auto make_name16(String x, size_t y) -> String;
+    auto make_name(std::string x, int y) -> std::string;
+    auto make_name16(String x, size_t y) -> std::string;
     auto strip_end(String s) -> String;
     auto math_env_name(subtypes c) -> String;
 } // namespace tralics_ns
@@ -34,21 +35,21 @@ auto tralics_ns::strip_end(String s) -> String {
 
 // This returns a temporary associated to \skip24
 // (given the name skip and the integer 24)
-auto tralics_ns::make_name(String x, int y) -> String {
+auto tralics_ns::make_name(std::string x, int y) -> std::string {
     make_name_buffer << bf_reset << fmt::format("{}{}", x, y);
-    return make_name_buffer.c_str();
+    return make_name_buffer.to_string();
 }
 
-auto tralics_ns::make_name16(String x, size_t y) -> String {
+auto tralics_ns::make_name16(String x, size_t y) -> std::string {
     make_name_buffer << bf_reset << x << '"';
     make_name_buffer.push_back16(y, false);
-    return make_name_buffer.c_str();
+    return make_name_buffer.to_string();
 }
 
-auto CmdChr::specchar_cmd_name() const -> String {
+auto CmdChr::specchar_cmd_name() const -> std::string {
     make_name_buffer << bf_reset << "Character ";
     make_name_buffer.push_back16(chr, true);
-    return make_name_buffer.c_str();
+    return make_name_buffer.to_string();
 }
 
 auto CmdChr::token_error_name() const -> String {
@@ -1374,9 +1375,9 @@ auto CmdChr::token_setpagedimen_name() const -> String {
     }
 }
 
-auto CmdChr::token_assignmuglue_name() const -> String { return token_assignglue_name(); }
+auto CmdChr::token_assignmuglue_name() const -> std::string { return token_assignglue_name(); }
 
-auto CmdChr::token_assignglue_name() const -> String {
+auto CmdChr::token_assignglue_name() const -> std::string {
     switch (chr) {
     case lineskip_code: return "lineskip";
     case baselineskip_code: return "baselineskip";
@@ -1406,7 +1407,7 @@ auto CmdChr::token_assignglue_name() const -> String {
     }
 }
 
-auto CmdChr::token_assigndimen_name() const -> String {
+auto CmdChr::token_assigndimen_name() const -> std::string {
     switch (chr) {
     case parindent_code: return "parindent";
     case mathsurround_code: return "mathsurround";
@@ -1438,7 +1439,7 @@ auto CmdChr::token_assigndimen_name() const -> String {
     }
 }
 
-auto CmdChr::token_assignint_name() const -> String {
+auto CmdChr::token_assignint_name() const -> std::string {
     switch (chr) {
     case pretolerance_code: return "pretolerance";
     case tolerance_code: return "tolerance";
@@ -1529,7 +1530,7 @@ auto CmdChr::token_assignint_name() const -> String {
     }
 }
 
-auto CmdChr::token_assigntoks_name() const -> String {
+auto CmdChr::token_assigntoks_name() const -> std::string {
     switch (chr) {
     case output_code: return "output";
     case everypar_code: return "everypar";
@@ -1745,7 +1746,7 @@ auto CmdChr::token_ignore_name() const -> String {
     case normalmarginpar_code: return "normalmarginpar";
     case normalbaselines_code: return "normalbaselines";
     case removelastskip_code: return "removelastskip";
-    default: return nullptr;
+    default: spdlog::warn("CmdChr::token_ignore_name(): unknown value {}, returning an empty string", chr); return "";
     }
 }
 
@@ -1923,7 +1924,7 @@ auto CmdChr::token_unimp_name() const -> String {
     }
 }
 
-auto CmdChr::token_cst_name() const -> String {
+auto CmdChr::token_cst_name() const -> std::string {
     switch (chr) {
     case textasciicircum_code: return "textasciicircum";
     case guillemet_og_code: return "og";
@@ -2465,7 +2466,7 @@ auto CmdChr::special_name() const -> String {
 
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
-auto CmdChr::name() const -> String {
+auto CmdChr::name() const -> std::string {
     switch (cmd) {
     case mathbin_cmd:
     case mathrel_cmd:
@@ -3061,6 +3062,6 @@ auto CmdChr::name() const -> String {
     case ifdefinable_cmd: return "@ifdefinable";
     case dblarg_cmd: return "@dblarg";
     case makelabel_cmd: return "tralics@makelabel";
-    default: return nullptr;
+    default: spdlog::warn("CmdChr::name(): unknown value {}, returning empty string", cmd); return "";
     }
 }

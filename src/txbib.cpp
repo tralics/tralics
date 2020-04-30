@@ -190,10 +190,10 @@ void Parser::T_cite(subtypes sw) {
     if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
     Token sep = sw == footcite_code ? hash_table.footcite_sep_token
                                     : sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
-    cur_tok       = T;
-    String List   = fetch_name0_nopar();
-    int    n      = 0;
-    Token  my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
+    cur_tok      = T;
+    auto  List   = fetch_name0_nopar();
+    int   n      = 0;
+    Token my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
     for (const auto &cur : split_commas(List)) {
         if (cur.empty()) continue;
         if (sw == nocite_code) {
@@ -282,15 +282,15 @@ void Parser::add_bib_marker(bool force) {
 // We remember the style; we could also have a command, bibtex:something
 // or program:something
 void Parser::T_bibliostyle() {
-    String        Val = fetch_name0_nopar();
+    auto          Val = fetch_name0_nopar();
     Bibliography &T   = the_bibliography;
-    if (strncmp(Val, "bibtex:", 7) == 0) {
-        if (Val[7] != 0) T.set_style(std::string(Val + 7));
+    if (Val.substr(0, 7) == "bibtex:") {
+        if (Val[7] != 0) T.set_style(Val.substr(7));
         T.set_cmd("bibtex " + get_job_name());
-    } else if (strncmp(Val, "program:", 8) == 0)
-        T.set_cmd(std::string(Val + 8) + " " + get_job_name() + ".aux");
+    } else if (Val.substr(0, 8) == "program:")
+        T.set_cmd(Val.substr(8) + " " + get_job_name() + ".aux");
     else
-        T.set_style(std::string(Val));
+        T.set_style(Val);
 }
 
 // Translation of \bibliography{filename}. We add a marker.
@@ -298,7 +298,7 @@ void Parser::T_bibliostyle() {
 // bibliography data structure
 void Parser::T_biblio() {
     flush_buffer();
-    String list = fetch_name0_nopar();
+    auto list = fetch_name0_nopar();
     add_bib_marker(false);
     for (const auto &w : split_commas(list)) {
         if (w.empty()) continue;
@@ -542,7 +542,7 @@ void Parser::T_start_the_biblio() {
     ignore_optarg();
     TokenList L1;
     L1.push_back(hash_table.refname_token);
-    String a = fetch_name1(L1);
+    auto a = fetch_name1(L1);
     the_stack.set_arg_mode();
     auto name = Istring(a);
     the_stack.set_v_mode();
@@ -589,7 +589,7 @@ auto Bibliography::find_citation_star(const Istring &from, const Istring &key) -
 // <foo>bar</foo>
 // Command has to be in Bib mode, argument translated in Arg mode.
 void Parser::T_cititem() {
-    String  a = fetch_name0_nopar();
+    auto    a = fetch_name0_nopar();
     Buffer &B = biblio_buf4;
     B << bf_reset << "cititem-" << a;
     finish_csname(B);

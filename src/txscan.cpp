@@ -315,7 +315,7 @@ void Parser::T_scantokens(TokenList &L) {
     B.reset();
     B << L;
     push_input_stack("(scantokens)", false, true);
-    lines.split_string(B.c_str(), 0);
+    lines.split_string(B.to_string(), 0);
     lines.after_open();
     every_eof = true;
 }
@@ -2127,8 +2127,7 @@ void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
         else
             tfonts.full_name(B, val.chr);
     } else if (K > 16) {
-        String s = val.name();
-        if (s == nullptr) s = "unknown.";
+        auto s = val.name();
         B.insert_escape_char_raw();
         B << s;
     } else {

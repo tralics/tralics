@@ -110,7 +110,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void splice_end(LinePtr &X);   // \todo inline
     void splice_first(LinePtr &X); // \todo inline
-    void split_string(String x, int l);
+    void split_string(std::string x, int l);
 };
 
 // This allows us to temporarily read from elsewhere
