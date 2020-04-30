@@ -620,10 +620,10 @@ void Bbl::newline() {
 
 // Returns the index of the macro named name if it exists,  not_found otherwise.
 auto Bibtex::look_for_macro(const Buffer &name) -> std::optional<size_t> {
-    return look_for_macro(name.hashcode(bib_hash_mod), name.c_str());
+    return look_for_macro(name.hashcode(bib_hash_mod), name.to_string());
 }
 
-auto Bibtex::look_for_macro(size_t h, String name) -> std::optional<size_t> {
+auto Bibtex::look_for_macro(size_t h, std::string name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
         if (all_macros[i].is_same(h, name)) return i;
     return {};
@@ -637,7 +637,7 @@ auto Bibtex::look_for_macro(size_t h, String name) -> std::optional<size_t> {
 auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
     if (xname != nullptr) name << bf_reset << xname;
     auto h   = name.hashcode(bib_hash_mod);
-    auto lfm = look_for_macro(h, name.c_str());
+    auto lfm = look_for_macro(h, name.to_string());
     if (lfm || !insert) return lfm;
     auto res = all_macros.size();
     if (xname != nullptr)
@@ -651,8 +651,7 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
 void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf1, true, name, value); }
 
 // Return an integer associated to a field position.
-auto Bibtex::find_field_pos(String s) -> field_pos {
-    if (s == nullptr) return fp_unknown;
+auto Bibtex::find_field_pos(std::string s) -> field_pos {
     auto S = Istring(s);
     // Check is this has to be ignored
     std::vector<Istring> &Bib_s        = the_main->bibtex_fields_s;
@@ -700,8 +699,8 @@ auto Bibtex::find_field_pos(String s) -> field_pos {
 }
 
 // Finds the type of an entry (or comment, string, preamble).
-auto Bibtex::find_type(String s) -> entry_type {
-    if (s[0] == 0) return type_comment; // in case of error.
+auto Bibtex::find_type(std::string s) -> entry_type {
+    if (s == "") return type_comment; // in case of error.
     auto S = Istring(s);
 
     std::vector<Istring> &Bib2        = the_main->bibtex_extensions_s;
@@ -1052,7 +1051,7 @@ void Bibtex::err_in_entry(String a) {
 void Bibtex::err_in_name(String a, long i) {
     err_in_entry(a);
     log_and_tty << "\nbad syntax in author or editor name\n";
-    log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer.c_str() << ".\n";
+    log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
 }
 
 // Returns next line of the .bib file. Error if EOF and what.
@@ -1427,7 +1426,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
     bool      store = false;
     if (X != nullptr) { // if X null, we just read, but store nothing
         cur_field_name = token_buf.to_string();
-        where          = find_field_pos(token_buf.c_str());
+        where          = find_field_pos(token_buf.to_string());
         if (where != fp_unknown) store = true;
     }
     read_field(store);
@@ -1469,7 +1468,7 @@ void Bibtex::parse_one_item() {
     skip_space();
     bool k = scan_identifier(1);
     if (k) return;
-    entry_type cn = find_type(token_buf.c_str());
+    entry_type cn = find_type(token_buf.to_string());
     if (cn == type_comment) return;
     if (cn == type_preamble) {
         read_field(true);
@@ -2359,7 +2358,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
         first_name.init(lc + 1, L);
         if (hm > 2) {
             the_bibtex->err_in_entry("");
-            log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer.c_str() << ".\n";
+            log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer << ".\n";
         }
     } else if (hm == 1) {
         first_name.init(fc + 1, L);
@@ -2385,7 +2384,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     jr_name.remove_junk();
     if (first_name.empty() && last_name.empty() && jr_name.empty()) {
         the_bibtex->err_in_entry("empty name in\n");
-        log_and_tty << name_buffer.c_str() << ".\n";
+        log_and_tty << name_buffer << ".\n";
         return;
     }
     bool handle_key = want_handle_key(serial, iln);
@@ -2466,7 +2465,7 @@ auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
-        log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer.c_str() << ".\n";
+        log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer << ".\n";
     }
     if (b == bct_space || b == bct_tilde || b == bct_dash || b == bct_comma) return true;
     if (b == bct_bad || b == bct_continuation) return true;
@@ -2503,7 +2502,7 @@ auto NameSplitter::is_this_other() -> bool {
     if (!jr_name.empty()) return false;
     auto a = last_name.first;
     auto b = last_name.last;
-    return b - a == 6 && strncmp(name_buffer.c_str() + a, "others", 6) == 0;
+    return b - a == 6 && name_buffer.to_string().substr(a, 6) == "others";
 }
 
 // We use the fact that first cannot be zero
