@@ -48,7 +48,7 @@ void Parser::signal_error() {
 // If T is non-null and the option -noxmlerror is not given,
 // then an error element with value s name T is inserted in the XML result
 
-void Parser::signal_error(Token T, String s) {
+void Parser::signal_error(Token T, std::string s) {
     signal_error();
     if (main_ns::no_xml_error) return;
     if (T.is_null()) return;
@@ -69,13 +69,13 @@ void err_ns::convert_to_string(const TokenList &L) {
     while (C != E) {
         buffer_for_log.reset();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
-        B << buffer_for_log.c_str();
+        B << buffer_for_log;
         ++C;
     }
 }
 
 // The simpliest error function (adds nothing to the XML)
-void Parser::signal_error(String s) {
+void Parser::signal_error(std::string s) {
     err_buf << bf_reset << s;
     signal_error(Token(), s);
 }
@@ -83,7 +83,7 @@ void Parser::signal_error(String s) {
 // Some generic errors (may add s to the XML)
 void Parser::parse_error(Token T, const std::string &s) {
     err_buf << bf_reset << s;
-    signal_error(T, s.c_str());
+    signal_error(T, s);
 }
 
 void Parser::parse_error(Token T, String s) {
@@ -91,7 +91,7 @@ void Parser::parse_error(Token T, String s) {
     signal_error(T, s);
 }
 
-void Parser::parse_error(String s) {
+void Parser::parse_error(std::string s) {
     err_buf << bf_reset << s;
     signal_error(err_tok, s);
 }
@@ -243,7 +243,7 @@ void Parser::bad_counter0() {
 }
 
 void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
-    err_buf << bf_reset << (E.is_undef() ? "Unknown counter `" : "Invalid counter `") << B.c_str(2) << "'";
+    err_buf << bf_reset << (E.is_undef() ? "Unknown counter `" : "Invalid counter `") << B.to_string(2) << "'";
     signal_error(err_tok, "bad counter");
 }
 

@@ -367,7 +367,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     default: {
         errbuf.reset();
         errbuf << "Array preamble: argument missing for " << char_for_error;
-        P->parse_error(errbuf.c_str());
+        P->parse_error(errbuf.to_string());
     }
     }
     if (P->tracing_commands()) the_log << "\n";
@@ -624,7 +624,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     if (c == one_code) { // cline
         TokenList arg = read_arg();
         if (scan_pair_ints(T, arg)) {
-            parse_error(errbuf.c_str());
+            parse_error(errbuf.to_string());
             return 0;
         }
         return 2;
@@ -635,7 +635,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     if (!cols.empty()) {
         rt = 2;
         if (scan_pair_ints(T, cols)) {
-            parse_error(errbuf.c_str());
+            parse_error(errbuf.to_string());
             ignore_arg();
             ignore_arg();
             ignore_arg();

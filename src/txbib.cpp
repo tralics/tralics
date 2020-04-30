@@ -375,8 +375,8 @@ void Bibliography::dump(Buffer &b) {
 // This reads conditionally a file. Returns true if the file exists.
 auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
     B.push_back(".bib");
-    if (tralics_ns::find_in_path(B.c_str())) {
-        read(main_ns::path_buffer.c_str(), ct);
+    if (tralics_ns::find_in_path(B.to_string())) {
+        read(main_ns::path_buffer.to_string(), ct);
         return true;
     }
     return false;
@@ -390,24 +390,23 @@ void Bibtex::read1(const std::string &cur) {
     Tbuf.push_back(cur);
     auto n = Tbuf.size();
     if (read0(Tbuf, from_year)) return;
-    String Str = Tbuf.c_str();
-    if (n > 5 && strcmp(Str + n - 5, "+foot.bib") == 0) {
+    if (n > 5 && Tbuf.to_string(n - 5) == "+foot.bib") {
         Tbuf.reset(n - 5);
         if (read0(Tbuf, from_foot)) return;
     }
-    if (n > 5 && strcmp(Str + n - 5, "+year.bib") == 0) {
+    if (n > 5 && Tbuf.to_string(n - 5) == "+year.bib") {
         Tbuf.reset(n - 5);
         if (read0(Tbuf, from_year)) return;
     }
-    if (n > 4 && strcmp(Str + n - 4, "+all.bib") == 0) {
+    if (n > 4 && Tbuf.to_string(n - 4) == "+all.bib") {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_any)) return;
     }
-    if (n > 6 && strcmp(Str + n - 6, "+refer.bib") == 0) {
+    if (n > 6 && Tbuf.to_string(n - 6) == "+refer.bib") {
         Tbuf.reset(n - 6);
         if (read0(Tbuf, from_refer)) return;
     }
-    if (n > 4 && strcmp(Str + n - 4, ".bib.bib") == 0) {
+    if (n > 4 && Tbuf.to_string(n - 4) == ".bib.bib") {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
@@ -490,7 +489,7 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump_data(B);
     std::string auxname = tralics_ns::get_short_jobname() + ".aux";
     try {
-        std::ofstream(auxname.c_str()) << B.c_str();
+        std::ofstream(auxname.c_str()) << B;
     } catch (...) {
         spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
         return;
@@ -499,8 +498,8 @@ void Parser::create_aux_file_and_run_pgm() {
     system(T.cmd.c_str());
     B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
     // NOTE: can we use on-the-fly encoding ?
-    the_log << "++ reading " << B.c_str() << ".\n";
-    tralics_ns::read_a_file(bbl.lines, B.c_str(), 1);
+    the_log << "++ reading " << B << ".\n";
+    tralics_ns::read_a_file(bbl.lines, B.to_string(), 1);
 }
 
 void Parser::after_main_text() {
@@ -2905,7 +2904,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
 // le rajouter a la fin, et virer le extrabib
 // Plus le parser propement
 
-void Bibtex::read(String src, bib_from ct) {
+void Bibtex::read(std::string src, bib_from ct) {
     bbl.push_back("% reading source ");
     bbl.push_back(src);
     bbl.newline();
