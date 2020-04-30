@@ -871,7 +871,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(np_fileextension, Istring(Tbuf.c_str(to_unsigned(k) + 1)));
+        AL.push_back(np_fileextension, Istring(Tbuf.to_string(to_unsigned(k) + 1)));
         Tbuf.at(to_unsigned(k)) = 0;
     }
     enter_file_in_table(Tbuf.to_string(ii), ok);
@@ -1539,7 +1539,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     if (!has_atts)
         Y = Istring(y);
     else
-        Y = Istring(tpa_buffer.c_str());
+        Y = Istring(tpa_buffer.to_string());
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();

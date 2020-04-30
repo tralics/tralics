@@ -24,8 +24,6 @@ public:
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
-    [[deprecated]] [[nodiscard]] auto c_str(size_t k = 0) const -> String { return data() + k; } ///< Buffer contents as a char*
-
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }         ///< Is the read pointer at the end?
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
