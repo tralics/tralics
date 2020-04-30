@@ -281,7 +281,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
-    if (strncmp(B.c_str(B.ptr), "\\UR", 3) == 0) {
+    if (B.to_string().substr(B.ptr, 3) == "\\UR") {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
             log_and_tty << "You should use Lille instead of \\URLille,\n";
@@ -347,7 +347,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     if (B.empty())
         err_buf << "Empty localisation value\n";
     else
-        err_buf << "Illegal localisation value: " << B.c_str() << "\n";
+        err_buf << "Illegal localisation value: " << B << "\n";
     err_buf << "Use one or more of:";
     config_data.data[0]->keys_to_buffer(err_buf);
     the_parser.signal_error();

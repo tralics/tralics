@@ -68,7 +68,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     std::string file_name;                  // file name associated to the lines
     size_t      encoding{1};                // current file encoding
 
-    [[nodiscard]] auto dump_name() const -> String;
+    [[nodiscard]] auto dump_name() const -> std::string;
 
     void add(int n, Buffer &b, bool cv);
     void add_buffer(Buffer &B, line_iterator C);

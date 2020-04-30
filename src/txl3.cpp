@@ -331,7 +331,7 @@ void Parser::L3_eq_conditional(subtypes s) {
         if (c == l3_bad_code) continue;
         B.l3_fabricate_cond(tok_base, tok_sig, c);
         if (!hash_table.is_defined(B)) {
-            parse_error(err_tok, "Undefined token", B.c_str());
+            parse_error(err_tok, "Undefined token", B.to_string());
             continue;
         }
         Token old = hash_table.last_tok;

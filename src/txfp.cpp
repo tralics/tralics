@@ -545,7 +545,7 @@ void Parser::fp_e_pascal() {
     auto j = scan_braced_int(fp_name);
     if (j < 0 || j >= 64) {
         tkbuf << bf_reset << fmt::format("out of bound {} max value is 63", j);
-        parse_error(tkbuf.c_str());
+        parse_error(tkbuf.to_string());
         return;
     }
     auto      jj = to_unsigned(j);
@@ -583,7 +583,7 @@ void FpNum::truncate(long n) {
     if (n >= 18) return;
     if (n < 0) {
         tkbuf << bf_reset << fmt::format("Negative number {} in truncate", n);
-        the_parser.parse_error(tkbuf.c_str());
+        the_parser.parse_error(tkbuf.to_string());
         return;
     }
     if (n == 0) { data[2] = data[3] = 0; }
@@ -1703,15 +1703,12 @@ void FpGenList::fp_gen_app() {
     int   n = 0;
     Token x = find_str(n);
     if (!x.is_space_token()) return;
-    String S = tkbuf.c_str();
-    if (strcmp(S, "add") == 0 || strcmp(S, "sub") == 0 || strcmp(S, "mul") == 0 || strcmp(S, "div") == 0 || strcmp(S, "abs") == 0 ||
-        strcmp(S, "neg") == 0 || strcmp(S, "sgn") == 0 || strcmp(S, "min") == 0 || strcmp(S, "max") == 0 || strcmp(S, "round") == 0 ||
-        strcmp(S, "trunc") == 0 || strcmp(S, "clip") == 0 || strcmp(S, "exp") == 0 || strcmp(S, "ln") == 0 || strcmp(S, "pow") == 0 ||
-        strcmp(S, "root") == 0 || strcmp(S, "seed") == 0 || strcmp(S, "random") == 0 || strcmp(S, "sin") == 0 || strcmp(S, "cos") == 0 ||
-        strcmp(S, "sincos") == 0 || strcmp(S, "tan") == 0 || strcmp(S, "cot") == 0 || strcmp(S, "tancot") == 0 ||
-        strcmp(S, "arcsin") == 0 || strcmp(S, "arccos") == 0 || strcmp(S, "arcsincos") == 0 || strcmp(S, "arctan") == 0 ||
-        strcmp(S, "arccot") == 0 || strcmp(S, "arctancot") == 0 || strcmp(S, "pop") == 0 || strcmp(S, "swap") == 0 ||
-        strcmp(S, "copy") == 0) {
+    auto S = tkbuf.to_string();
+    if ((S == "add") || (S == "sub") || (S == "mul") || (S == "div") || (S == "abs") || (S == "neg") || (S == "sgn") || (S == "min") ||
+        (S == "max") || (S == "round") || (S == "trunc") || (S == "clip") || (S == "exp") || (S == "ln") || (S == "pow") || (S == "root") ||
+        (S == "seed") || (S == "random") || (S == "sin") || (S == "cos") || (S == "sincos") || (S == "tan") || (S == "cot") ||
+        (S == "tancot") || (S == "arcsin") || (S == "arccos") || (S == "arcsincos") || (S == "arctan") || (S == "arccot") ||
+        (S == "arctancot") || (S == "pop") || (S == "swap") || (S == "copy")) {
         push_back(the_parser.hash_table.space_token);
         TokenList z;
         split_after(n, z);
@@ -2173,7 +2170,7 @@ void Parser::upn_eval(TokenList &l) {
     }
     int       n   = 0;
     Token     x   = L.find_str(n);
-    String    str = tkbuf.c_str();
+    auto      str = tkbuf.to_string();
     TokenList a1, a2;
     FpNum     x1, x2, x3, x4;
     if (tracing_commands()) {
@@ -2181,7 +2178,7 @@ void Parser::upn_eval(TokenList &l) {
         the_log << "{FPupcmd " << (n == 0 ? "??" : str) << "}\n";
     }
 
-    if (n == 4 && strcmp(str, "copy") == 0) {
+    if (n == 4 && (str == "copy")) {
         L.remove_first_n(n);
         S.pop_upn(a1);
         auto aa2 = a1;
@@ -2189,7 +2186,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(a1);
         return;
     }
-    if (n == 4 && strcmp(str, "swap") == 0) {
+    if (n == 4 && (str == "swap")) {
         L.remove_first_n(n);
         S.pop_upn(a1);
         S.pop_upn(a2);
@@ -2197,12 +2194,12 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(a2);
         return;
     }
-    if (n == 3 && strcmp(str, "pop") == 0) {
+    if (n == 3 && (str == "pop")) {
         L.remove_first_n(n);
         S.pop_upn(a1);
         return;
     }
-    if (n == 9 && strcmp(str, "arctancot") == 0) {
+    if (n == 9 && (str == "arctancot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arctancot_code);
@@ -2210,21 +2207,21 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "arccot") == 0) {
+    if (n == 6 && (str == "arccot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arccot_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "arctan") == 0) {
+    if (n == 6 && (str == "arctan")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arctan_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 9 && strcmp(str, "arcsincos") == 0) {
+    if (n == 9 && (str == "arcsincos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arcsincos_code);
@@ -2232,21 +2229,21 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "arcsin") == 0) {
+    if (n == 6 && (str == "arcsin")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arcsin_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "arccos") == 0) {
+    if (n == 6 && (str == "arccos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arccos_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "tancot") == 0) {
+    if (n == 6 && (str == "tancot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_tancot_code);
@@ -2254,21 +2251,21 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "cot") == 0) {
+    if (n == 3 && (str == "cot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_cot_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "tan") == 0) {
+    if (n == 3 && (str == "tan")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_tan_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 6 && strcmp(str, "sincos") == 0) {
+    if (n == 6 && (str == "sincos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_sincos_code);
@@ -2276,38 +2273,38 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "sin") == 0) {
+    if (n == 3 && (str == "sin")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_sin_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "cos") == 0) {
+    if (n == 3 && (str == "cos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_cos_code);
         S.push_upn(x3);
         return;
     }
-    if (n == 2 && strcmp(str, "pi") == 0) {
+    if (n == 2 && (str == "pi")) {
         L.remove_first_n(n);
         S.push_upn(pi_table[4]);
         return;
     }
-    if (n == 6 && strcmp(str, "random") == 0) {
+    if (n == 6 && (str == "random")) {
         L.remove_first_n(n);
         x1.random();
         S.push_upn(x1);
         return;
     }
-    if (n == 4 && strcmp(str, "seed") == 0) {
+    if (n == 4 && (str == "seed")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         eqtb_int_table[fpseed_code].val = to_signed(x1.data[1]);
         return;
     }
-    if (n == 4 && strcmp(str, "root") == 0) {
+    if (n == 4 && (str == "root")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.pop_upn(x2);
@@ -2315,7 +2312,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "pow") == 0) {
+    if (n == 3 && (str == "pow")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.pop_upn(x2);
@@ -2323,33 +2320,33 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x3);
         return;
     }
-    if (n == 3 && strcmp(str, "exp") == 0) {
+    if (n == 3 && (str == "exp")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.exec_exp();
         S.push_upn(x1);
         return;
     }
-    if (n == 2 && strcmp(str, "ln") == 0) {
+    if (n == 2 && (str == "ln")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.exec_ln();
         S.push_upn(x1);
         return;
     }
-    if (n == 1 && strcmp(str, "e") == 0) {
+    if (n == 1 && (str == "e")) {
         L.remove_first_n(n);
         x1 = e_powers[1];
         S.push_upn(x1);
         return;
     }
-    if (n == 4 && strcmp(str, "clip") == 0) {
+    if (n == 4 && (str == "clip")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.push_upn(x1);
         return;
     }
-    if (n == 5 && strcmp(str, "round") == 0) {
+    if (n == 5 && (str == "round")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
@@ -2358,7 +2355,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x1);
         return;
     }
-    if (n == 5 && strcmp(str, "trunc") == 0) {
+    if (n == 5 && (str == "trunc")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
@@ -2366,7 +2363,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "min") == 0) {
+    if (n == 3 && (str == "min")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
@@ -2374,7 +2371,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(res > 0 ? x1 : x2);
         return;
     }
-    if (n == 3 && strcmp(str, "max") == 0) {
+    if (n == 3 && (str == "max")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
@@ -2382,28 +2379,28 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(res > 0 ? x1 : x2);
         return;
     }
-    if (n == 3 && strcmp(str, "sgn") == 0) {
+    if (n == 3 && (str == "sgn")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.sgn();
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "neg") == 0) {
+    if (n == 3 && (str == "neg")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.neg();
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "abs") == 0) {
+    if (n == 3 && (str == "abs")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.sign = true;
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "add") == 0) {
+    if (n == 3 && (str == "add")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.pop_upn(x2);
@@ -2419,7 +2416,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "sub") == 0) {
+    if (n == 3 && (str == "sub")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);
@@ -2437,7 +2434,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "mul") == 0) {
+    if (n == 3 && (str == "mul")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.pop_upn(x2);
@@ -2453,7 +2450,7 @@ void Parser::upn_eval(TokenList &l) {
         S.push_upn(x1);
         return;
     }
-    if (n == 3 && strcmp(str, "div") == 0) {
+    if (n == 3 && (str == "div")) {
         L.remove_first_n(n);
         S.pop_upn(x2);
         S.pop_upn(x1);

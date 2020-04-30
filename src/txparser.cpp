@@ -894,7 +894,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
             break;
         }
         if (want_result) {
-            mac_buffer.push_back(input_buffer.c_str());
+            mac_buffer.push_back(input_buffer);
             mac_buffer.push_back('\n');
         }
         kill_line();

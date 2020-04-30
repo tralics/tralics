@@ -249,13 +249,13 @@ void Clines::convert_line(size_t wc) {
 void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
         buf << bf_reset << fmt::format("Illegal encoding {}", enc);
-        the_parser.parse_error(buf.c_str());
+        the_parser.parse_error(buf.to_string());
         return;
     }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
         buf << bf_reset << fmt::format("Illegal encoding position {}", pos);
-        the_parser.parse_error(buf.c_str());
+        the_parser.parse_error(buf.to_string());
         return;
     }
     if (0 < v && v < int(nb_characters))
@@ -660,7 +660,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
 
 auto Buffer::convert_to_log_encoding() -> std::string {
     output_encoding_type T = the_main->log_encoding;
-    if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return c_str();
+    if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return to_string();
     auto old_ptr               = ptr;
     ptr                        = 0;
     the_converter.global_error = false;
@@ -676,7 +676,7 @@ auto Buffer::convert_to_log_encoding() -> std::string {
             utf8_out.out_log(c, T);
     }
     ptr = old_ptr;
-    return utf8_out.c_str();
+    return utf8_out.to_string();
 }
 
 void Buffer::extract_chars(vector<codepoint> &V) {
@@ -757,11 +757,11 @@ void LinePtr::clear_and_copy(LinePtr &X) {
     set_file_name(X.file_name);
 }
 
-auto LinePtr::dump_name() const -> String {
+auto LinePtr::dump_name() const -> std::string {
     if (file_name.empty()) return "virtual file";
     buf.reset();
     buf << "file " << file_name;
-    return buf.c_str();
+    return buf.to_string();
 }
 
 // Whenever a TeX file is opened for reading, we print this in the log
@@ -993,7 +993,7 @@ void Parser::T_filecontents(int spec) {
         if (action == 1) outfile << input_buffer;
         if (action == 2) {
             int n = get_cur_line();
-            file_pool.back().insert(n, input_buffer.c_str(), is_encoded);
+            file_pool.back().insert(n, input_buffer.to_string(), is_encoded);
         }
         kill_line();
     }

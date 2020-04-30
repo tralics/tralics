@@ -1048,7 +1048,7 @@ void Parser::kvo_bool_key() {
     if (!(d == "true" || d == "false")) {
         Buffer &B = local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
-        parse_error(err_tok, B.c_str(), "bad bool");
+        parse_error(err_tok, B.to_string(), "bad bool");
         log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << (A.c_str() + 1) << ".\n";
         return;
     }
@@ -1171,7 +1171,7 @@ void Parser::kvo_comp_opt() {
     Token T = hash_table.locate(B);
     if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
         B << bf_reset << "Cannot generate code for `" << arg << "', no parent " << comp;
-        parse_error(err_tok, B.c_str(), "bad redef");
+        parse_error(err_tok, B.to_string(), "bad redef");
         return;
     }
     // make boolean old inverse of foo

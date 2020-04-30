@@ -16,6 +16,7 @@
 #include "txinline.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <utility>
 
 namespace {
@@ -694,7 +695,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
     if ((math_env_props(type) & 1) == 0) {
         math_buffer << bf_reset;
         math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
-        parse_error(math_buffer.c_str());
+        parse_error(math_buffer.to_string());
     }
     if ((math_env_props(type) & 16) != 0) ignore_optarg();
     if ((math_env_props(type) & 32) != 0) read_arg();
@@ -1232,7 +1233,7 @@ void MathHelper::ml_check_labels() {
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
-            the_parser.parse_error(the_parser.err_tok, B.c_str(), "duplicate label");
+            the_parser.parse_error(the_parser.err_tok, B.to_string(), "duplicate label");
         }
         if (v == -2 || v == -3) {
             B << bf_reset << "Multiple \\tag " << multi_labels[i];
@@ -1243,7 +1244,7 @@ void MathHelper::ml_check_labels() {
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
-            the_parser.parse_error(the_parser.err_tok, B.c_str(), "duplicate tag");
+            the_parser.parse_error(the_parser.err_tok, B.to_string(), "duplicate tag");
         }
     }
 }
@@ -1403,7 +1404,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         if (et == nomathenv_code || ((math_env_props(et) & 1) != 0)) {
             Buffer &B = math_buffer;
             B << bf_reset << "Illegal \\begin{" << s << "} found in math mode";
-            parse_error(err_tok, B.c_str(), "bad env");
+            parse_error(err_tok, B.to_string(), "bad env");
         }
         if ((math_env_props(et) & 16) != 0) ignore_optarg();
         new_math_list(res, math_env_cd, et);
@@ -1898,7 +1899,10 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         skip_initial_space();
         if (!empty()) the_parser.parse_error(the_parser.err_tok, "Cell contains garbage after \\multicolumn", "multicol garbage");
         L.get_arg1().convert_this_to_string(math_buffer); // get the span
-        int k = atoi(math_buffer.c_str());
+        int k = 0;
+        try {
+            k = std::stoi(math_buffer.to_string());
+        } catch (...) { spdlog::warn("Could not parse `{}' as an integer", math_buffer); }
         if (k <= 0)
             n++;
         else {
@@ -2760,7 +2764,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             B.reset();
             int n = cur.get_font();
             B.push_back(ScaledInt(n), glue_spec_pt);
-            Xml *v = mk_space(B.c_str());
+            Xml *v = mk_space(B.to_string());
             res.push_back(MathElt(v, mt_flag_space));
             continue;
         }
@@ -2945,8 +2949,8 @@ void Math::handle_mbox(Math &res) {
             return;
         }
         if (!math_buffer.empty()) {
-            String s    = math_buffer.c_str();
-            Xml *  Text = new Xml(cst_mtext, new Xml(Istring(s)));
+            auto s    = math_buffer.to_string();
+            Xml *Text = new Xml(cst_mtext, new Xml(Istring(s)));
             if (int(font) > 1) Text->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(font)));
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
@@ -2973,7 +2977,7 @@ void Math::handle_mbox(Math &res) {
                 Buffer &B = Trace;
                 B.reset();
                 B.push_back(cur_math_space, glue_spec_pt);
-                b = mk_space(B.c_str());
+                b = mk_space(B.to_string());
             } else {
                 b = new Xml(cst_mspace, nullptr);
                 b->add_att(np_cst_width, np_halfem);

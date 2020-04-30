@@ -86,11 +86,6 @@ void Parser::parse_error(Token T, const std::string &s) {
     signal_error(T, s);
 }
 
-void Parser::parse_error(Token T, String s) {
-    err_buf << bf_reset << s;
-    signal_error(T, s);
-}
-
 void Parser::parse_error(const std::string &s) {
     err_buf << bf_reset << s;
     signal_error(err_tok, s);
