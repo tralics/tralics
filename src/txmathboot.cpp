@@ -1008,7 +1008,7 @@ void math_ns::fill_math_char_slots() {
 }
 
 // Converts foo into <mspace width='foo'/>
-auto math_ns::mk_space(std::string a) -> Xml * {
+auto math_ns::mk_space(const std::string &a) -> Xml * {
     Xml *b = new Xml(cst_mspace, nullptr);
     b->add_att(the_names[np_cst_width], Istring(a));
     return b;
@@ -1338,7 +1338,7 @@ void MathDataP::TM_mk(String a, String b, math_types c) {
 auto mk_cmd(String name, subtypes pos) -> Token { return the_parser.hash_table.primitive(name, special_math_cmd, pos); }
 
 // For a command like \enspace.
-void mk_space(std::string name, int b) { the_parser.hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
+void mk_space(const std::string &name, int b) { the_parser.hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
 void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = Istring(no_ent_names ? c : b); }
 inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = Istring(b); }

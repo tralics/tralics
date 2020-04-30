@@ -492,7 +492,7 @@ void TpiOneItem::reset() {
 
 // For the case CEE, \Paris ?<UR flags> <Rocq>
 // s is the string without attribs, and n is the length
-auto TitlePageAux::find_UR(std::string s, size_t n) const -> size_t {
+auto TitlePageAux::find_UR(const std::string &s, size_t n) const -> size_t {
     if (type != tpi_rt_urlist) return 0;
     if (T2.substr(0, n) == s.substr(0, n)) return idx;
     return 0;

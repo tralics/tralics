@@ -1279,7 +1279,7 @@ void MathElt::cv_noMLt() {
         auto T = Token(get_font());
         auto x = T.hash_loc();
         auto s = the_parser.hash_table[x];
-        mathml_buffer.push_back_math_tag(s.c_str(), pbm_empty);
+        mathml_buffer.push_back_math_tag(s, pbm_empty);
         return;
     }
     case hspace_cmd: {

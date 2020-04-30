@@ -17,7 +17,7 @@
 static Buffer make_name_buffer; // used for token names
 
 namespace tralics_ns {
-    auto make_name(std::string x, int y) -> std::string;
+    auto make_name(const std::string &x, int y) -> std::string;
     auto make_name16(String x, size_t y) -> std::string;
     auto strip_end(String s) -> String;
     auto math_env_name(subtypes c) -> String;
@@ -35,7 +35,7 @@ auto tralics_ns::strip_end(String s) -> String {
 
 // This returns a temporary associated to \skip24
 // (given the name skip and the integer 24)
-auto tralics_ns::make_name(std::string x, int y) -> std::string {
+auto tralics_ns::make_name(const std::string &x, int y) -> std::string {
     make_name_buffer << bf_reset << fmt::format("{}{}", x, y);
     return make_name_buffer.to_string();
 }
