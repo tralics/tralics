@@ -944,7 +944,7 @@ void all_words_ns::dump_words(const std::string &name) {
         W->set_next(L);
     }
     if (WL->get_next() == nullptr) return;
-    String wf = tralics_ns::get_out_dir("words");
+    auto wf = tralics_ns::get_out_dir("words");
 
     auto f = std::ofstream(wf);
     if (!name.empty()) f << "Team " << name << "\n";

@@ -34,7 +34,7 @@ auto null_cs_name() -> std::string {
         B << "csname";
         B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
         B << "endcsname";
-        return B.c_str();
+        return B.to_string();
     }
     if (c == 0) return "csname^^@endcsname";
     return "csnameendcsname";
@@ -174,8 +174,6 @@ void Buffer::no_newline() {
 // Returns the part of the buffer between ptr1 (included) and ptr (excluded).
 auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptr1), begin() + to_signed(ptr)); }
 
-auto Buffer::c_str(size_t k) const -> String { return data() + k; }
-
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
     if (wptr >= 1 && at(wptr - 1) == '\r') // for windows
@@ -212,7 +210,7 @@ auto Buffer::push_back_newline_spec() -> bool {
     B.push_back(data());
     reset();
     push_back(' ');
-    push_back(B.c_str());
+    push_back(B);
     return true;
 }
 
@@ -272,7 +270,7 @@ auto Token::tok_to_str() const -> std::string {
     Buffer B;
     if (!is_a_char() || cmd_val() == eol_catcode) {
         B.push_back(*this);
-        return B.c_str();
+        return B.to_string();
     }
     int       cat      = cmd_val();
     codepoint c        = char_val();
@@ -286,7 +284,7 @@ auto Token::tok_to_str() const -> std::string {
         B.out_log(c, the_main->log_encoding);
         B.push_back(fmt::format(" of catcode {}}}", cat));
     }
-    return B.c_str();
+    return B.to_string();
 }
 
 // This puts the name of the token in the buffer.
@@ -507,14 +505,14 @@ auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & { return
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     buf.reset();
     buf.push_back(x);
-    fp << buf.c_str();
+    fp << buf;
     return fp;
 }
 
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
     buf.reset();
     buf.push_back(x);
-    fp << buf.c_str();
+    fp << buf;
     return fp;
 }
 
@@ -525,7 +523,7 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
     else {
         buf.reset();
         buf.push_back(x);
-        fp << buf.c_str();
+        fp << buf;
     }
     return fp;
 }
@@ -537,7 +535,7 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
     else {
         buf.reset();
         buf.out_log(x, the_main->log_encoding);
-        fp << buf.c_str();
+        fp << buf;
     }
     return fp;
 }

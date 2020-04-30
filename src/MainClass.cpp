@@ -289,14 +289,14 @@ found at http://www.cecill.info.)";
             std::cout << "bad option " << a << "\n";
             usage_and_quit(1);
         }
-        return B.c_str();
+        return B.to_string();
     }
 } // namespace
 
-auto tralics_ns::get_out_dir(const std::string &name) -> String {
+auto tralics_ns::get_out_dir(const std::string &name) -> std::string {
     Buffer &B = main_ns::path_buffer;
     B << bf_reset << out_dir << bf_optslash << name;
-    return B.c_str();
+    return B.to_string();
 }
 
 MainClass::MainClass() {
@@ -1050,7 +1050,7 @@ void MainClass::trans0() {
 
 void MainClass::boot_bibtex(bool inra) {
     std::string mybbl = out_name + "_.bbl";
-    String      fn    = tralics_ns::get_out_dir(mybbl);
+    auto        fn    = tralics_ns::get_out_dir(mybbl);
     tralics_ns::bibtex_boot(fn, year_string.c_str(), out_name, inra, distinguish_refer);
 }
 
@@ -1109,8 +1109,8 @@ void MainClass::run(int argc, char **argv) {
 }
 
 void MainClass::out_xml() {
-    Buffer      X;
-    std::string u = tralics_ns::get_out_dir(out_name);
+    Buffer X;
+    auto   u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
     X.put_at_end(".xml"); // \todo std::filesystem
     std::string name = X.to_string();

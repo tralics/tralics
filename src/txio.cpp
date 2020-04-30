@@ -968,8 +968,8 @@ void Parser::T_filecontents(int spec) {
         log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
                     << "Not generating it from this source\n";
     } else {
-        String fn = tralics_ns::get_out_dir(filename);
-        outfile   = tralics_ns::open_file(fn, false);
+        auto fn = tralics_ns::get_out_dir(filename);
+        outfile = tralics_ns::open_file(fn, false);
         Logger::finish_seq();
         log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)

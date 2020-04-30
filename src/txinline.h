@@ -32,13 +32,13 @@ namespace tralics_ns {
     auto file_exists(const std::string &name) -> bool;
     auto find_in_confdir(const std::string &s, bool retry) -> bool; ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> bool;                ///< Tries to open a TeX file
-    auto get_out_dir(const std::string &name) -> String;            /// Returns output_dir+name
+    auto get_out_dir(const std::string &name) -> std::string;       /// Returns output_dir+name \todo filesystem
     auto get_short_jobname() -> std::string;
     auto is_leap_year(long y) -> bool;
     auto open_file(const std::string &name, bool f) -> std::ofstream;
     auto titlepage_is_valid() -> bool;
 
-    void bibtex_boot(String b, String dy, std::string no_year, bool inra, bool db);
+    void bibtex_boot(std::string b, String dy, std::string no_year, bool inra, bool db);
     void bibtex_insert_jobname();
     void bibtex_set_nocite();
     void boot_math(bool mv);

@@ -24,8 +24,9 @@ public:
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
+    [[deprecated]] auto c_str(size_t k = 0) const -> String { return data() + k; } ///< Buffer contents as a char*
+
     [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }         ///< Is the read pointer at the end?
-    [[nodiscard]] auto c_str(size_t k = 0) const -> String;                   ///< Buffer contents as a char*
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
@@ -203,7 +204,7 @@ public:
     // \todo push_back(char*,...) to do fmt::format
 };
 
-inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.c_str(); }
+inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.to_string(); }
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     B.push_back(t);

@@ -404,7 +404,7 @@ public:
         if (!file.is_open()) file = tralics_ns::open_file(name, true);
     }
 
-    void install_file(String b) { name = b; }
+    void install_file(std::string b) { name = b; } // \todo set_name
 };
 
 class BblAndTty {
