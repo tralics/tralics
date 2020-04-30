@@ -822,7 +822,7 @@ auto MainClass::find_config_file() -> bool {
     return true;
 }
 
-void MainClass::open_config_file() {
+void MainClass::open_config_file() { // \todo filesystem
     Buffer &B = main_ns::path_buffer;
     if (B.empty()) {
         config_file.insert("#comment", true);
@@ -831,7 +831,7 @@ void MainClass::open_config_file() {
     }
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
     config_file.normalise_final_cr();
-    spdlog::trace("Read configuration file {}", B.c_str());
+    spdlog::trace("Read configuration file {}", B);
     if (!B.is_at_end(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;

@@ -63,7 +63,7 @@ namespace config_ns {
     auto assign_att(String A, String B) -> bool;
 } // namespace config_ns
 
-inline auto operator==(const Buffer &B, String s) -> bool { return strcmp(B.c_str(), s) == 0; }
+[[deprecated]] inline auto operator==(const Buffer &B, String s) -> bool { return B.to_string() == s; }
 
 inline auto is_vowel(char c) -> bool { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
 

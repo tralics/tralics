@@ -3,6 +3,7 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 namespace accent_ns {
@@ -1286,8 +1287,8 @@ void Parser::finish_images() {
         spdlog::trace("There was no image.");
     else
         spdlog::trace("There were {} images.", the_images.size());
-    if (!check_image1.empty()) spdlog::trace("Following images have multiple PS source: {}.", check_image1.c_str());
-    if (!check_image2.empty()) spdlog::trace("Following images not defined: {}.", check_image2.c_str());
+    if (!check_image1.empty()) spdlog::trace("Following images have multiple PS source: {}.", check_image1);
+    if (!check_image2.empty()) spdlog::trace("Following images not defined: {}.", check_image2);
 }
 
 // In verbatim mode, all chars are of catcode 12, with these exceptions.

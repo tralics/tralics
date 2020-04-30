@@ -385,14 +385,10 @@ public:
 
     LinePtr lines;
 
-    void newline();
-    void push_back(String s) { B.push_back(s); }
-    void push_back(const std::string &s) { B.push_back(s); }
-    void push_back_braced(const std::string &s) { B.push_back_braced(s); }
-    void push_back_cmd(const std::string &s) {
-        B.push_back('\\');
-        B.push_back(s);
-    }
+    void               newline();
+    void               push_back(String s) { B.push_back(s); }
+    void               push_back(const std::string &s) { B.push_back(s); }
+    void               push_back_braced(const std::string &s) { B.push_back_braced(s); }
     auto               non_empty_buf() -> bool { return !B.empty(); }
     void               reset() { B.reset(); }
     void               reset_lines() { lines.clear(); }

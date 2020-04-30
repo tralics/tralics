@@ -10,7 +10,7 @@ public:
     Istring name;  ///< name of the element
 
     Xml(Istring n = {}) : name(std::move(n)) {}
-    Xml(const Buffer &n) : name(Istring(n.c_str())) {}
+    Xml(const Buffer &n) : name(Istring(n.to_string())) {}
     Xml(Istring N, Xml *z);
     Xml(name_positions N, Xml *z);
     Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}

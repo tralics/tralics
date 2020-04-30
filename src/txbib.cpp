@@ -1674,7 +1674,7 @@ BibEntry::BibEntry() {
 // printing the bbl.
 
 void BibEntry::out_something(field_pos p, const std::string &s) {
-    bbl.push_back_cmd("cititem");
+    bbl.push_back("\\cititem");
     bbl.push_back_braced(bib_xml_name[p]);
     bbl.push_back_braced(s);
     bbl.newline();
@@ -1710,7 +1710,7 @@ void BibEntry::format_author(bool au) {
     field_pos p = au ? fp_author : fp_editor;
     if (all_fields[p].empty()) return;
     std::string data = au ? author_data.value : editor_data.value;
-    bbl.push_back_cmd(bib_xml_name[p]);
+    bbl.push_back("\\" + bib_xml_name[p]);
     bbl.push_back_braced(data);
     bbl.newline();
 }
@@ -1726,7 +1726,7 @@ void BibEntry::call_type() {
     bbl.push_back("%");
     bbl.newline();
     //  bbl.push_back("%%%");bbl.push_back(sort_label); bbl.newline();
-    bbl.push_back_cmd("citation");
+    bbl.push_back("\\citation");
     bbl.push_back_braced(label);
     bbl.push_back_braced(cite_key.full_key);
     bbl.push_back_braced(unique_id.name);
@@ -1759,14 +1759,14 @@ void BibEntry::call_type() {
     for (size_t i = 0; i < additional; i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {
-            bbl.push_back_cmd("cititem");
+            bbl.push_back("\\cititem");
             bbl.push_back_braced(Bib[i].name);
             bbl.push_back_braced(ss);
             bbl.newline();
         }
     }
     out_something(fp_note);
-    bbl.push_back_cmd("endcitation");
+    bbl.push_back("\\endcitation");
     bbl.newline();
 }
 
