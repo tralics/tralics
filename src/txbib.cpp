@@ -311,14 +311,14 @@ void CitationItem::dump(Buffer &b) const {
 }
 
 // Ctor via "foot" and "Knuth"
-CitationKey::CitationKey(const std::string &a, std::string b) {
+CitationKey::CitationKey(const std::string &a, const std::string &b) {
     if (a == "foot")
         cite_prefix = from_foot;
     else if (a == "refer")
         cite_prefix = from_refer;
     else
         cite_prefix = from_year;
-    make_key(std::move(b));
+    make_key(b);
 }
 
 // Ctor via from_foot and "Knuth".

@@ -23,7 +23,7 @@ struct CitationKey {
     void        make_key(const std::string &s); // creates the key.
 
     CitationKey() = default;
-    CitationKey(const std::string &a, std::string b);
+    CitationKey(const std::string &a, const std::string &b);
     CitationKey(bib_from a, String b);
 
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
