@@ -112,7 +112,6 @@ public:
     auto next_macro() -> bool;
     auto next_macro_spec() -> bool;
     auto next_utf8_char() -> codepoint;
-    auto next_utf8_char_aux() -> codepoint;
     void no_newline();
     void no_double_dot();
     void normalise_for_bibtex(String s);

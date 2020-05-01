@@ -127,7 +127,6 @@ void Stats::io_convert_stats() {
 // If an error is signaled on current line, we do not signal again
 // We mark current char as invalid
 auto Converter::new_error() -> bool {
-    local_error = true;
     if (global_error) return true;
     bad_lines++;
     global_error = true;
@@ -161,31 +160,23 @@ void Buffer::utf8_error(bool first) {
 auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
 
 // Returns 0 at end of line or error
-auto Buffer::next_utf8_char_aux() -> codepoint {
+// This complains if the character is greater than 1FFFF
+auto Buffer::next_utf8_char() -> codepoint {
     if (at(ptr) == 0) {
         ++ptr;
         return codepoint();
     }
 
     auto it = begin() + to_signed(ptr), it0 = it;
-    auto cp = utf8::next(it, end());
+    auto cp = codepoint(utf8::next(it, end()));
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptr += nn;
-    return codepoint(cp);
-}
-
-// Returns 0 at end of line or error
-// This complains if the character is greater than 1FFFF
-auto Buffer::next_utf8_char() -> codepoint {
-    the_converter.local_error = false;
-    codepoint res             = next_utf8_char_aux();
-    if (the_converter.local_error) return codepoint();
-    if (res.is_verybig()) {
-        utf8_ovf(res.value);
+    if (cp.is_verybig()) {
+        utf8_ovf(cp.value);
         return codepoint();
     }
-    return res;
+    return cp;
 }
 
 // If the buffer contains a unique character, return it
