@@ -17,7 +17,6 @@
 #include <algorithm>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
-#include <utility>
 
 namespace {
     Buffer             math_buffer;

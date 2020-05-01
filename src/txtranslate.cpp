@@ -10,11 +10,14 @@
 
 // This file contains a big part of the Tralics translator
 
-#include "tralics/Parser.h"
 #include "tralics/Saver.h"
-#include "tralics/globals.h"
-#include "txinline.h"
 #include <fmt/format.h>
+
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
 
 void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
@@ -27,11 +30,8 @@ namespace {
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 
 #ifdef _MSC_VER
-#include <windows.h> // 'Sleep()'
     inline void txsleep(unsigned i) { Sleep(1000 * i); }
 #else
-#include <unistd.h>
-#include <utility>
     inline void txsleep(unsigned i) { sleep(i); }
 #endif
 

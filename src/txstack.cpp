@@ -12,10 +12,7 @@
 
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include <fmt/ostream.h>
-#include <spdlog/spdlog.h>
-#include <utility>
 
 namespace stack_ns {
     auto mode_to_string(mode x) -> String;

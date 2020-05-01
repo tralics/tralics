@@ -10,15 +10,12 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbib.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
-#include <spdlog/spdlog.h>
-#include <utility>
 
 namespace {
     class Error {};

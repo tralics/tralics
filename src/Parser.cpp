@@ -1,10 +1,7 @@
 #include "tralics/Parser.h"
-#include "tralics/Logger.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
-#include <spdlog/spdlog.h>
 
 namespace accent_ns {
     auto fetch_accent(size_t chr, int accent_code) -> Token;

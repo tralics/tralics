@@ -12,10 +12,13 @@
 
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
-#include "txinline.h"
 #include <fmt/format.h>
-#include <spdlog/spdlog.h>
+
+#ifdef _MSC_VER
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 
 namespace {
     Buffer buf; // a scratch buffer

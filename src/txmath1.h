@@ -1,6 +1,5 @@
 #pragma once
 #include "txmath.h"
-#include <iostream>
 
 // -*- C++ -*-
 // TRALICS, copyright (C)INRIA/apics (Jose' Grimm) 2006, 2007,2008

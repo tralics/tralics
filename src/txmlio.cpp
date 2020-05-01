@@ -12,7 +12,6 @@
 
 #include "txmlio.h"
 #include "tralics/Parser.h"
-#include "txinline.h"
 
 std::string xxx;
 

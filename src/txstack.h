@@ -13,7 +13,6 @@
 
 #include "tralics/Xml.h"
 #include "txatt.h"
-#include <utility>
 
 // Array management
 class ArrayInfo {

@@ -9,9 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Parser.h"
-#include "txinline.h"
 #include <fmt/format.h>
-#include <spdlog/spdlog.h>
 
 extern Buffer file_list;
 

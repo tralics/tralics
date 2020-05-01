@@ -1,11 +1,7 @@
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
-#include <filesystem>
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/spdlog.h>
 
 namespace {
     constexpr auto usage = R"(

@@ -1,6 +1,5 @@
 #pragma once
 #include "tralics/Xml.h"
-#include <utility>
 
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002-2004, 2007,2008

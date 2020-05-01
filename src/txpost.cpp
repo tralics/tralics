@@ -13,11 +13,8 @@
 #include "txpost.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
-#include "txinline.h"
 #include "txtrees.h"
 #include <fmt/format.h>
-#include <spdlog/spdlog.h>
-#include <utility>
 
 namespace {
     Buffer                                       scbuf;          // scratch buffer for printing XML, and other things

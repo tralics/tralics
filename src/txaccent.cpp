@@ -17,7 +17,6 @@
 
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 
 namespace accent_ns {
     auto fetch_accent(size_t chr, int accent_code) -> Token;

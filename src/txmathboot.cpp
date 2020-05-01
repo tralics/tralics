@@ -12,7 +12,6 @@
 
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include "txmath.h"
 
 extern MathDataP math_data;

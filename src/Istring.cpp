@@ -1,10 +1,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/LabelInfo.h"
-#include "tralics/consts.h"
 #include <memory>
-#include <string>
 #include <unordered_map>
-#include <vector>
 
 namespace {
     std::vector<std::string> SH{"", "", " "};

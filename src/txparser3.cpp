@@ -11,7 +11,6 @@
 // This file contains a part of the TeX parser of tralics
 
 #include "tralics/Parser.h"
-#include "txinline.h"
 #include <fmt/format.h>
 
 namespace parser_ns {

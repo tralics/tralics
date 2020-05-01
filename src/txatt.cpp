@@ -11,7 +11,6 @@
 
 #include "txinline.h"
 #include "txstack.h"
-#include <utility>
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.

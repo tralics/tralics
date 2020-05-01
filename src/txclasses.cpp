@@ -11,7 +11,6 @@
 // This file contains ltclass.dtx
 
 #include "txclasses.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include "txinline.h"

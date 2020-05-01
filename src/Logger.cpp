@@ -1,7 +1,6 @@
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include <spdlog/spdlog.h>
 
 void Logger::log_dump(const std::string &s) {

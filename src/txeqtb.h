@@ -1,8 +1,5 @@
 #pragma once
-#include "tralics/CmdChr.h"
-#include "tralics/Token.h"
 #include "txscaled.h"
-#include <utility>
 
 // -*- C++ -*-
 // Copyright INRIA/apics (Jose' Grimm) 2002-2004, 2006, 2007,2008

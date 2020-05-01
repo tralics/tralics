@@ -10,13 +10,9 @@
 
 // This file contains the TeX parser of tralics
 
-#include "tralics/Hashtab.h"
-#include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
-#include "txinline.h"
 #include <fmt/format.h>
-#include <unordered_map>
 
 namespace {
     struct SpecialHash : public std::unordered_map<std::string, std::string> {

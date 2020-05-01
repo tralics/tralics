@@ -10,10 +10,8 @@
 
 // The file contains code for configurating the Raweb
 
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 
 ParamDataVector config_data;
 

@@ -12,7 +12,6 @@
 
 #include "tralics/Parser.h"
 #include "tralics/util.h"
-#include "txinline.h"
 #include <fmt/format.h>
 
 namespace {
