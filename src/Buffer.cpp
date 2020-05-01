@@ -185,35 +185,22 @@ void Buffer::push_back_newline() {
 }
 
 auto Buffer::push_back_newline_spec() -> bool {
+    if (empty()) return true;
     push_back('\n');
-    if (wptr == 1) return true; // keep empty lines
+    auto s = to_string();
     if (at(0) == '#') {
-        const String match = "## tralics ident rc="; // \todo is this really useful?
-        std::string  line;
-        if (strncmp(data(), match, 20) == 0) {
-            size_t k = 20;
-            while (k + 1 < wptr && at(k) != '$') k++;
-            if (at(k) == '$') {
-                char c          = at(k + 1);
-                at(k + 1)       = 0;
-                std::string tmp = data() + 20;
-                at(k + 1)       = c;
-                line            = tmp + " " + (data() + k + 1); // \todo substr
-            } else
-                line = data() + 20;
-            if (line.back() == '\n') line.pop_back();
+        if (s.substr(0, 20) == "## tralics ident rc=") { // \todo not very useful
+            auto line = s.substr(20, size() - 21);
             spdlog::trace("Configuration file identification: {}", line);
         }
         return false;
     }
     if (at(0) == '%' || is_space(at(0))) return true;
-    if (strncmp(data(), "Begin", 5) == 0) return true;
-    if (strncmp(data(), "End", 3) == 0) return true;
-    Buffer B;
-    B.push_back(data());
+    if (s.substr(0, 5) == "Begin") return true;
+    if (s.substr(0, 3) == "End") return true;
     reset();
     push_back(' ');
-    push_back(B);
+    push_back(s);
     return true;
 }
 

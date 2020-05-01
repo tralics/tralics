@@ -1746,7 +1746,7 @@ auto CmdChr::token_ignore_name() const -> String {
     case normalmarginpar_code: return "normalmarginpar";
     case normalbaselines_code: return "normalbaselines";
     case removelastskip_code: return "removelastskip";
-    default: spdlog::warn("CmdChr::token_ignore_name(): unknown value {}, returning an empty string", chr); return "";
+    default: return "";
     }
 }
 
@@ -3062,6 +3062,6 @@ auto CmdChr::name() const -> std::string {
     case ifdefinable_cmd: return "@ifdefinable";
     case dblarg_cmd: return "@dblarg";
     case makelabel_cmd: return "tralics@makelabel";
-    default: spdlog::warn("CmdChr::name(): unknown value {}, returning empty string", cmd); return "";
+    default: return "";
     }
 }

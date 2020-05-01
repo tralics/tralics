@@ -162,11 +162,6 @@ auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
 auto Buffer::next_utf8_char() -> codepoint {
-    if (at(ptr) == 0) {
-        ++ptr;
-        return codepoint();
-    }
-
     auto it = begin() + to_signed(ptr), it0 = it;
     auto cp = codepoint(utf8::next(it, end()));
     auto nn = to_unsigned(it - it0);
@@ -370,6 +365,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     L.set_encoding(wc);
                     co_try = 0;
                     Logger::finish_seq();
+                    spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", k, L.cur_line + 1, x);
                     the_log << "++ Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x << "\n";
                 }
             }
