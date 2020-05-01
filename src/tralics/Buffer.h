@@ -100,8 +100,8 @@ public:
     void interpret_bibtex_extension_list();
     auto is_begin_something(String s) -> int;
     auto is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
-    auto is_at_end(String s) const -> bool;
-    auto is_here(String s) -> bool;
+    auto ends_with(const std::string &s) const -> bool;
+    auto is_here(std::string s) -> bool;
     auto is_here_case(String s) -> bool;
     auto look_at_space(const std::string &s) -> bool;
     void lowercase();
@@ -144,7 +144,7 @@ public:
     void push_back_real_utf8(codepoint c);
     void push_back_xml_char(uchar c);
     void push_back_unless_punct(char c);
-    void put_at_end(String s);
+    void append_unless_ends_with(const std::string &s);
     auto remove_digits(const std::string &s) -> std::string;
     auto remove_space(const std::string &x) -> std::string;
     void remove_last_space();

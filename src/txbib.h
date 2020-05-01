@@ -16,14 +16,14 @@
 // from the bibtex point of view. If used, a unique id (an integer will be
 // computed). For the moment being it has a cite key, and a prefix.
 struct CitationKey {
-    std::string cite_key;           // cite key, say Foo
-    std::string lower_cite_key;     // cite key, lower case, say foo
-    bib_from    cite_prefix{};      // symbolic prefix, say from_foot
-    std::string full_key;           // something like footcite:Foo
-    void        make_key(String s); // creates the key.
+    std::string cite_key;                // cite key, say Foo
+    std::string lower_cite_key;          // cite key, lower case, say foo
+    bib_from    cite_prefix{};           // symbolic prefix, say from_foot
+    std::string full_key;                // something like footcite:Foo
+    void        make_key(std::string s); // creates the key.
 
     CitationKey() = default;
-    CitationKey(String a, String b);
+    CitationKey(std::string a, std::string b);
     CitationKey(bib_from a, String b);
 
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }

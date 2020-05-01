@@ -293,7 +293,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     static bool                   prev_line = false; // was previous line non-blank ?
     static std::array<char, 4096> m_ligne;
     readline(m_ligne.data(), 78);
-    if (strcmp(m_ligne.data(), "\\stop") == 0) return -1;
+    if (std::string(m_ligne.data()) == "\\stop") return -1;
     cur_line++;
     B.wptr = 0;
     B << m_ligne.data() << "\n";

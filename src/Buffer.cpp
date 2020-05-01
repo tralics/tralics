@@ -595,9 +595,9 @@ void Buffer::push_back_Roman(long n) {
 }
 
 // True is s is at ptr. If so, updates ptr
-auto Buffer::is_here(String s) -> bool {
-    auto n = strlen(s);
-    if (strncmp(data() + ptr, s, n) != 0) return false;
+auto Buffer::is_here(std::string s) -> bool {
+    auto n = s.size();
+    if (to_string(ptr).substr(0, n) != s) return false;
     ptr += n;
     return true;
 }
@@ -931,16 +931,14 @@ auto Buffer::last_slash() const -> std::optional<size_t> {
 }
 
 // True if the string s is at the end of the buffer
-auto Buffer::is_at_end(String s) const -> bool {
-    size_t n = strlen(s);
-    return wptr > n && strcmp(data() + wptr - n, s) == 0;
+auto Buffer::ends_with(const std::string &s) const -> bool {
+    auto n = s.size();
+    return (wptr > n) && (to_string(wptr - n) == s);
 }
 
 // Inserts the string s is at the end of the buffer unless there
-void Buffer::put_at_end(String s) {
-    size_t n = strlen(s);
-    if (wptr > n && strcmp(data() + wptr - n, s) == 0) return;
-    push_back(s);
+void Buffer::append_unless_ends_with(const std::string &s) {
+    if (!ends_with(s)) push_back(s);
 }
 
 auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }

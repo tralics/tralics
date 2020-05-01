@@ -415,7 +415,7 @@ void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, tru
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
     if (argc == 1) end_with_help(0);
-    if (argc == 2 && strcmp(argv[1], "-?") == 0) usage_and_quit(0);
+    if ((argc == 2) && (std::string(argv[1]) == "-?")) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
         auto *s = argv[i];
         if (s[0] == '-')
@@ -425,7 +425,7 @@ void MainClass::parse_args(int argc, char **argv) {
     }
     if (infile.empty()) {
         banner();
-        std::cout << "Fatal: no source file given\n";
+        spdlog::critical("Fatal: no source file given");
         end_with_help(1);
     }
     if (leftquote_val == 0 || leftquote_val >= (1 << 16)) leftquote_val = '`';
@@ -435,13 +435,13 @@ void MainClass::parse_args(int argc, char **argv) {
 auto MainClass::check_for_arg(int &p, int argc, char **argv) const -> String {
     if (p >= argc - 1) {
         banner();
-        std::cout << "Argument missing for option " << argv[p] << "\n";
+        spdlog::critical("Argument missing for option {}", argv[p]);
         usage_and_quit(1);
     }
-    if (strcmp(argv[p + 1], "=") == 0) {
+    if (std::string(argv[p + 1]) == "=") { // \todo this allows weird syntax
         if (p >= argc - 2) {
             banner();
-            std::cout << "Argument missing for option " << argv[p] << "\n";
+            spdlog::critical("Argument missing for option {}", argv[p]);
             usage_and_quit(1);
         }
         p += 2;
@@ -796,7 +796,7 @@ auto MainClass::find_config_file() -> bool {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
         if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B.to_string());
-        if (!B.is_at_end(".tcf")) return static_cast<bool>(main_ns::search_in_confdir(user_config_file + ".tcf"));
+        if (!B.ends_with(".tcf")) return static_cast<bool>(main_ns::search_in_confdir(user_config_file + ".tcf"));
         return static_cast<bool>(main_ns::search_in_confdir(user_config_file));
     }
     // If interactive, read config only if given as parameter
@@ -828,7 +828,7 @@ void MainClass::open_config_file() { // \todo filesystem
     tralics_ns::read_a_file(config_file, B.to_string(), 0);
     config_file.normalise_final_cr();
     spdlog::trace("Read configuration file {}", B);
-    if (!B.is_at_end(".tcf")) return;
+    if (!B.ends_with(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;
     B.remove_last(4);
@@ -981,8 +981,8 @@ void MainClass::see_name(String s) {
         exit(1);
     }
     B << bf_reset << s;
-    if (B.is_at_end(".xml")) B.remove_last(4);
-    B.put_at_end(".tex");
+    if (B.ends_with(".xml")) B.remove_last(4);
+    B.append_unless_ends_with(".tex");
     infile = B.to_string();
     B.remove_last(4);
     no_ext = B.to_string();
@@ -1108,7 +1108,7 @@ void MainClass::out_xml() {
     Buffer X;
     auto   u = tralics_ns::get_out_dir(out_name);
     X << bf_reset << u;
-    X.put_at_end(".xml"); // \todo std::filesystem
+    X.append_unless_ends_with(".xml"); // \todo std::filesystem
     std::string name = X.to_string();
     auto        fp   = tralics_ns::open_file(name, true);
     X.reset();

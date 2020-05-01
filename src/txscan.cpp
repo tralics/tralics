@@ -380,7 +380,7 @@ void Parser::T_input(int q) {
         if (!res) {
             Buffer &B = local_buf;
             B << bf_reset << file;
-            if (!B.is_at_end(".tex")) {
+            if (!B.ends_with(".tex")) {
                 B.push_back(".tex");
                 std::string F = B.to_string();
                 res           = tralics_ns::find_in_path(F);

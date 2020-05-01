@@ -13,6 +13,7 @@
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 namespace {
     const TokenList empty_list;
@@ -33,14 +34,12 @@ namespace l3_ns {
 // Compares two strings; l3 functions below
 
 void Parser::E_pdfstrcmp() {
-    Token       T  = cur_tok;
-    std::string s1 = sE_arg();
-    std::string s2 = sE_arg();
-    int         cp = strcmp(s1.c_str(), s2.c_str());
-    TokenList   L  = token_ns::string_to_list(cp == 0 ? "0" : (cp < 0 ? "-1" : "1"), false);
+    auto      s1 = sE_arg(), s2 = sE_arg();
+    auto      cmp = s1.compare(s2);
+    TokenList L   = token_ns::string_to_list(cmp == 0 ? "0" : (cmp < 0 ? "-1" : "1"), false);
     if (tracing_macros()) {
         Logger::finish_seq();
-        the_log << T << s1 << "==" << s2 << "->" << L << "\n";
+        spdlog::trace("{}{}=={}->{}", cur_tok, s1, s2, L);
     }
     back_input(L);
 }

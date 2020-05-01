@@ -311,10 +311,10 @@ void CitationItem::dump(Buffer &b) const {
 }
 
 // Ctor via "foot" and "Knuth"
-CitationKey::CitationKey(String a, String b) {
-    if (strcmp(a, "foot") == 0)
+CitationKey::CitationKey(std::string a, std::string b) {
+    if (a == "foot")
         cite_prefix = from_foot;
-    else if (strcmp(a, "refer") == 0)
+    else if (a == "refer")
         cite_prefix = from_refer;
     else
         cite_prefix = from_year;
@@ -331,7 +331,7 @@ CitationKey::CitationKey(bib_from a, String b) {
 }
 
 // Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
-void CitationKey::make_key(String s) {
+void CitationKey::make_key(std::string s) {
     if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
     Buffer &B = biblio_buf2;
     B.reset();
