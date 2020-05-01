@@ -366,7 +366,6 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                     co_try = 0;
                     Logger::finish_seq();
                     spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", k, L.cur_line + 1, x);
-                    the_log << "++ Input encoding number " << k << " detected  at line " << L.cur_line + 1 << " of file " << x << "\n";
                 }
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);
