@@ -595,7 +595,7 @@ void Buffer::push_back_Roman(long n) {
 }
 
 // True is s is at ptr. If so, updates ptr
-auto Buffer::is_here(std::string s) -> bool {
+auto Buffer::is_here(const std::string &s) -> bool {
     auto n = s.size();
     if (to_string(ptr).substr(0, n) != s) return false;
     ptr += n;

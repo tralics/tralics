@@ -311,14 +311,14 @@ void CitationItem::dump(Buffer &b) const {
 }
 
 // Ctor via "foot" and "Knuth"
-CitationKey::CitationKey(std::string a, std::string b) {
+CitationKey::CitationKey(const std::string &a, std::string b) {
     if (a == "foot")
         cite_prefix = from_foot;
     else if (a == "refer")
         cite_prefix = from_refer;
     else
         cite_prefix = from_year;
-    make_key(b);
+    make_key(std::move(b));
 }
 
 // Ctor via from_foot and "Knuth".
@@ -331,7 +331,7 @@ CitationKey::CitationKey(bib_from a, String b) {
 }
 
 // Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
-void CitationKey::make_key(std::string s) {
+void CitationKey::make_key(const std::string &s) {
     if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
     Buffer &B = biblio_buf2;
     B.reset();
@@ -352,7 +352,7 @@ void CitationKey::make_key(std::string s) {
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from.name.c_str(), key.name.c_str()); // \todo get rid of c_str()
+    CitationKey ref(from.name, key.name); // \todo get rid of c_str()
     BibEntry *  X = the_bibtex->find_entry(ref);
     if (X != nullptr) {
         err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
@@ -1336,7 +1336,7 @@ auto Bibtex::auto_cite() const -> bool {
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
 auto Bibtex::find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry * {
-    CitationKey key(prefix.c_str(), s);
+    CitationKey key(prefix, s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
     int n = 0;

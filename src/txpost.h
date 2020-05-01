@@ -77,7 +77,7 @@ public:
     void               set_next(WordList *n) { next = n; }
     [[nodiscard]] auto next_empty() const -> bool { return next == nullptr; }
     WordList(std::string s, size_t h, WordList *N) : next(N), name(std::move(s)), hash(h), freq(1) {}
-    auto               is_here(std::string s, size_t h) const -> bool { return (hash == h) && (name == s); }
+    [[nodiscard]] auto is_here(const std::string &s, size_t h) const -> bool { return (hash == h) && (name == s); }
     void               incr_freq() { freq++; }
     [[nodiscard]] auto get_freq() const -> int { return freq; }
     [[nodiscard]] auto get_next() const -> WordList * { return next; }
