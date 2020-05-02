@@ -17,9 +17,9 @@ class Xml;
 
 class Buffer : public std::vector<char> {
 public:
-    size_t wptr{0}; ///< the write pointer
-    size_t ptr{0};  ///< the read pointer
-    size_t ptr1{0}; ///< a second read pointer
+    [[deprecated]] size_t wptr{0}; ///< the write pointer
+    size_t                ptr{0};  ///< the read pointer
+    size_t                ptr1{0}; ///< a second read pointer
 
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
@@ -39,7 +39,6 @@ public:
     [[nodiscard]] auto is_good_ascii() const -> bool;                         ///< Is there no control or CRLF? (>128 ok, for UTF8)
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                     ///< It the char at `j` a space?
     [[nodiscard]] auto is_special_end() const -> bool;                        ///< Is the current char `\\n`, `#` or `%`?
-    [[nodiscard]] auto last_char() const -> char;                             ///< Last char if any, 0 if empty
     [[nodiscard]] auto last_slash() const -> std::optional<size_t>;           ///< Locate the last `/`, if any
     [[nodiscard]] auto next_non_space(size_t j) const -> size_t;              ///< Locate next non-space char after `j`
     [[nodiscard]] auto see_config_env() const -> int;                         ///< Do we start with `Begin` or `End`?
@@ -50,13 +49,15 @@ public:
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
+    [[nodiscard]] auto back() const -> char { return empty() ? 0 : at(wptr - 1); }
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }
     [[nodiscard]] auto size() const -> size_t { return wptr; }
-    [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
     [[nodiscard]] auto substr(size_t k = 0, size_t l = std::string::npos) const -> std::string { return to_string().substr(k, l); }
+    [[nodiscard]] auto ends_with(const std::string &s) const -> bool { return to_string().ends_with(s); }
+    [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
-    void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
+    void bufalloc(size_t n);                          ///< Ensure that there is space for n+1 slots beyond wptr
     auto convert_to_log_encoding() -> std::string;    ///< Convert to logging encoding \todo should be const
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
@@ -97,94 +98,93 @@ public:
 
     // Those are still unsorted as refactoring proceeds
 
-    auto               insert_break(const std::string &x) -> std::string;
-    auto               install_att(Xid idx, const Istring &match) -> bool;
-    void               interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
-    void               interpret_bibtex_list();
-    void               interpret_bibtex_extension_list();
-    auto               is_begin_something(String s) -> int;
-    auto               operator==(const std::string &s) const -> bool { return to_string() == s; }
-    [[nodiscard]] auto ends_with(const std::string &s) const -> bool;
-    auto               is_here(const std::string &s) -> bool;
-    auto               is_here_case(String s) -> bool;
-    auto               look_at_space(const std::string &s) -> bool;
-    void               lowercase();
-    void               new_word();
-    void               next_bibtex_char();
-    auto               next_char() { return at(ptr++); }
-    auto               next_env_spec() -> bool;
-    auto               next_macro() -> bool;
-    auto               next_macro_spec() -> bool;
-    auto               next_utf8_char() -> codepoint;
-    void               no_newline();
-    void               no_double_dot();
-    void               normalise_for_bibtex(String s);
-    void               optslash();
-    void               out_four_hats(codepoint ch);
-    void               out_log(codepoint ch, output_encoding_type T);
-    auto               pack_or_class(Buffer &aux) -> int;
-    void               pt_to_mu();
-    void               process_big_char(size_t n);
-    void               insert_token(Token T, bool sw);
-    void               push_back_alt(const AttPair &X);
-    void               push_back_braced(const std::string &s);
-    void               push_back_def(String, std::string);
-    void               push_back_elt(const Istring &name, Xid id, int w);
-    void               push_back16(size_t n, bool uni);
-    void               push_back16l(bool hat, unsigned n);
-    void               push_back_ent(codepoint ch);
-    void               push_back_hex(unsigned c);
-    void               push_back_Hex(unsigned c);
-    void               push_back_math_token(const CmdChr &x, bool space);
-    void               push_back_math_tag(const CmdChr &x, int type);
-    void               push_back_math_tag(std::string s, int type);
-    void               push_back_math_aux(std::string s);
-    void               push_back_newline();
-    auto               push_back_newline_spec() -> bool;
-    void               push_back_roman(long n);
-    void               push_back_Roman(long n);
-    void               push_back_special_att(Xid id);
-    void               push_back_special_string(String s);
-    void               push_back_real_utf8(codepoint c);
-    void               push_back_xml_char(uchar c);
-    void               push_back_unless_punct(char c);
-    void               append_unless_ends_with(const std::string &s);
-    auto               remove_digits(const std::string &s) -> std::string;
-    auto               remove_space(const std::string &x) -> std::string;
-    void               remove_last_space();
-    void               remove_space_at_end();
-    void               remove_spec_chars(bool url, Buffer &B);
-    auto               reverse_horner() -> unsigned;
-    auto               see_config_kw(String s, bool c) -> String;
-    auto               see_equals(String s) -> bool;
-    void               show_uncomplete(String m);
-    void               skip_over_brace();
-    void               skip_letter();
-    void               skip_sp_tab(); // \todo skip(const std::string&)
-    void               skip_sp_tab_nl();
-    void               skip_sp_tab_comma();
-    void               skip_letter_dig();
-    void               skip_letter_dig_dot();
-    void               skip_letter_dig_dot_slash();
-    auto               slash_separated(std::string &a) -> bool;
-    auto               split_at_colon(std::string &before, std::string &after) -> bool;
-    auto               svn_id(std::string &name, std::string &date, std::string &version) -> bool;
-    auto               special_convert(bool init) -> std::string;
-    void               special_title(std::string s);
-    auto               str_toks(nl_to_tok nl) -> TokenList;
-    auto               str_toks11(bool nl) -> TokenList;
-    auto               string_delims() -> bool;
-    auto               convert_for_xml_err(Token t) -> Istring;
-    auto               tp_next_char(char &res) -> bool;
-    auto               tp_fetch_something() -> tpa_line;
-    auto               trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
-    void               undo() { ptr--; }
-    void               uppercase();
-    void               utf8_error(bool first);
-    auto               xml_and_attrib(const std::string &s) -> Xml;
-    auto               find_char(char c) -> bool;
-    void               l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
-    auto               after_slash() -> bool;
+    auto insert_break(const std::string &x) -> std::string;
+    auto install_att(Xid idx, const Istring &match) -> bool;
+    void interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
+    void interpret_bibtex_list();
+    void interpret_bibtex_extension_list();
+    auto is_begin_something(String s) -> int;
+    auto operator==(const std::string &s) const -> bool { return to_string() == s; }
+    auto is_here(const std::string &s) -> bool;
+    auto is_here_case(String s) -> bool;
+    auto look_at_space(const std::string &s) -> bool;
+    void lowercase();
+    void new_word();
+    void next_bibtex_char();
+    auto next_char() { return at(ptr++); }
+    auto next_env_spec() -> bool;
+    auto next_macro() -> bool;
+    auto next_macro_spec() -> bool;
+    auto next_utf8_char() -> codepoint;
+    void no_newline();
+    void no_double_dot();
+    void normalise_for_bibtex(String s);
+    void optslash();
+    void out_four_hats(codepoint ch);
+    void out_log(codepoint ch, output_encoding_type T);
+    auto pack_or_class(Buffer &aux) -> int;
+    void pt_to_mu();
+    void process_big_char(size_t n);
+    void insert_token(Token T, bool sw);
+    void push_back_alt(const AttPair &X);
+    void push_back_braced(const std::string &s);
+    void push_back_def(String, std::string);
+    void push_back_elt(const Istring &name, Xid id, int w);
+    void push_back16(size_t n, bool uni);
+    void push_back16l(bool hat, unsigned n);
+    void push_back_ent(codepoint ch);
+    void push_back_hex(unsigned c);
+    void push_back_Hex(unsigned c);
+    void push_back_math_token(const CmdChr &x, bool space);
+    void push_back_math_tag(const CmdChr &x, int type);
+    void push_back_math_tag(std::string s, int type);
+    void push_back_math_aux(std::string s);
+    void push_back_newline();
+    auto push_back_newline_spec() -> bool;
+    void push_back_roman(long n);
+    void push_back_Roman(long n);
+    void push_back_special_att(Xid id);
+    void push_back_special_string(String s);
+    void push_back_real_utf8(codepoint c);
+    void push_back_xml_char(uchar c);
+    void push_back_unless_punct(char c);
+    void append_unless_ends_with(const std::string &s);
+    auto remove_digits(const std::string &s) -> std::string;
+    auto remove_space(const std::string &x) -> std::string;
+    void remove_last_space();
+    void remove_space_at_end();
+    void remove_spec_chars(bool url, Buffer &B);
+    auto reverse_horner() -> unsigned;
+    auto see_config_kw(String s, bool c) -> String;
+    auto see_equals(String s) -> bool;
+    void show_uncomplete(String m);
+    void skip_over_brace();
+    void skip_letter();
+    void skip_sp_tab(); // \todo skip(const std::string&)
+    void skip_sp_tab_nl();
+    void skip_sp_tab_comma();
+    void skip_letter_dig();
+    void skip_letter_dig_dot();
+    void skip_letter_dig_dot_slash();
+    auto slash_separated(std::string &a) -> bool;
+    auto split_at_colon(std::string &before, std::string &after) -> bool;
+    auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
+    auto special_convert(bool init) -> std::string;
+    void special_title(std::string s);
+    auto str_toks(nl_to_tok nl) -> TokenList;
+    auto str_toks11(bool nl) -> TokenList;
+    auto string_delims() -> bool;
+    auto convert_for_xml_err(Token t) -> Istring;
+    auto tp_next_char(char &res) -> bool;
+    auto tp_fetch_something() -> tpa_line;
+    auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
+    void undo() { ptr--; }
+    void uppercase();
+    void utf8_error(bool first);
+    auto xml_and_attrib(const std::string &s) -> Xml;
+    auto find_char(char c) -> bool;
+    void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
+    auto after_slash() -> bool;
 
     auto push_back(Token T) -> bool;
 

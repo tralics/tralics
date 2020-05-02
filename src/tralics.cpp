@@ -43,7 +43,7 @@ auto main(int argc, char **argv) -> int {
 }
 
 // Function called when A=B is seen in the configuration file.
-// Returns true if A is recognised
+// Returns true if A is recognised \todo should take strings
 auto assign(Buffer &a, Buffer &b) -> bool {
     std::string aa = a.to_string(), bb = b.to_string();
     auto        n = a.size();
@@ -82,8 +82,6 @@ auto assign(Buffer &a, Buffer &b) -> bool {
             the_parser.hash_table.eval_let("item", "@@item");
         else if (bb == "true")
             the_parser.hash_table.eval_let("item", "@item");
-        else
-            a.reset();
         return true;
     }
     if (aa == "url_font") {

@@ -215,7 +215,7 @@ found at http://www.cecill.info.)";
         for (int i = 0;; i++) {
             char c = s[i];
             if (c == 0 || c == ':') {
-                if (b.last_char() == '/') b.remove_last();
+                if (b.back() == '/') b.remove_last();
                 if (b.size() == 1 && b[0] == '.') b.remove_last();
                 input_path.push_back(b.to_string());
                 b.reset();

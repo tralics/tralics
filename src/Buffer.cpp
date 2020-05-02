@@ -44,8 +44,10 @@ auto null_cs_name() -> std::string {
 }
 
 void Buffer::reset(size_t k) {
-    wptr     = k;
-    at(wptr) = 0;
+    resize(k + 1);
+    std::vector<char>::back() = 0;
+    wptr                      = std::vector<char>::size() - 1;
+    assert(wptr == std::vector<char>::size() - 1);
 }
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
@@ -68,10 +70,11 @@ void Buffer::push_back_braced(const std::string &s) {
 
 // Inserts a character in the buffer. Always adds a null after it.
 void Buffer::push_back(char c) {
-    alloc(1);
+    bufalloc(1);
     at(wptr) = c;
     wptr++;
     at(wptr) = 0;
+    assert(wptr == std::vector<char>::size() - 1);
 }
 
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
@@ -95,15 +98,13 @@ void Buffer::push_back_xml_char(uchar c) {
         push_back(static_cast<char>(c));
 }
 
-void Buffer::alloc(size_t n) {
+void Buffer::bufalloc(size_t n) {
     resize(wptr + n + 1);
     at(wptr) = 0;
 }
 
 void Buffer::push_back(const std::string &s) {
-    alloc(s.size());
-    for (auto c : s) at(wptr++) = c;
-    at(wptr) = 0;
+    for (auto c : s) push_back(c);
 }
 
 // Sets ptr1 to ptr, advances ptr to after a command, returns false in case
@@ -212,7 +213,7 @@ void Buffer::remove_last(size_t n) {
 }
 
 void Buffer::remove_last_quote() {
-    if (last_char() == '\'') remove_last();
+    if (back() == '\'') remove_last();
 }
 
 // FIXME: utf8 space ok  here ?
@@ -900,7 +901,7 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
 
 auto Buffer::get_machine_name() -> std::string {
     reset();
-    alloc(200);
+    bufalloc(200);
     if (gethostname(data(), 199) != 0) push_back("unknown");
     at(200) = 0;
     wptr    = strlen(data());
@@ -929,12 +930,6 @@ auto Buffer::last_slash() const -> std::optional<size_t> {
     return {};
 }
 
-// True if the string s is at the end of the buffer
-auto Buffer::ends_with(const std::string &s) const -> bool {
-    auto n = s.size();
-    return (wptr >= n) && (to_string(wptr - n) == s);
-}
-
 // Inserts the string s is at the end of the buffer unless there
 void Buffer::append_unless_ends_with(const std::string &s) {
     if (!ends_with(s)) push_back(s);
@@ -943,8 +938,6 @@ void Buffer::append_unless_ends_with(const std::string &s) {
 auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }
 
 auto Buffer::is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
-
-auto Buffer::last_char() const -> char { return (wptr == 0) ? char(0) : at(wptr - 1); }
 
 void Buffer::push_back(const TokenList &L) {
     for (const auto &C : L) { insert_token(C, false); }

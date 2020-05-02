@@ -831,7 +831,7 @@ void Buffer::insert_string(const Buffer &s) {
         char c = s[j];
         if (c != '\n' && c != '\r') push_back(c);
     }
-    while (last_char() == ' ') remove_last();
+    while (back() == ' ') remove_last();
     ptr = 0;
 }
 

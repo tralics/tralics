@@ -372,15 +372,14 @@ void KeyAndVal::use_and_kill(TokenList &L, KeyAndVal &U, bool X) {
 void LatexPackage::check_global_options(TokenList &action, bool X) {
     OptionList &GO = the_class_data.global_options; // options of the class
     OptionList &DO = Poptions;                      // Known options
-    auto        n  = GO.size();
-    for (size_t i = 0; i < n; i++) {
-        std::string nname = X ? GO[i].name : GO[i].full_name;
+    for (auto &i : GO) {
+        std::string nname = X ? i.name : i.full_name;
         auto        j     = find_option(nname);
         if (j <= 0) continue;
         if (DO[to_unsigned(j)].is_used()) continue; // should not happen
-        GO[i].mark_used();
+        i.mark_used();
         local_buf << bf_comma << nname;
-        DO[to_unsigned(j)].use_and_kill(action, GO[i], X);
+        DO[to_unsigned(j)].use_and_kill(action, i, X);
     }
 }
 
@@ -390,20 +389,19 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
     OptionList &DO = Poptions;                      // Known options
     OptionList &GO = the_class_data.global_options; // options of the class
     OptionList &CO = Uoptions;                      // arg of \usepackage
-    auto        n  = DO.size();
-    for (size_t i = 0; i < n; i++) {
-        const std::string &nname = DO[i].name;
-        if (DO[i].is_used()) continue; // should to happen
+    for (auto &i : DO) {
+        const std::string &nname = i.name;
+        if (i.is_used()) continue; // should to happen
         auto j = is_in_vector(CO, nname, false);
         if (j) {
             ClassesData::remove_from_unused(nname);
-            DO[i].use_and_kill(res, CO[*j], X);
+            i.use_and_kill(res, CO[*j], X);
         } else if (is_class())
             continue;
         else {
             j = is_in_vector(GO, nname, X);
             if (j) {
-                DO[i].use_and_kill(res, GO[*j], X);
+                i.use_and_kill(res, GO[*j], X);
                 GO[*j].mark_used();
             } else
                 continue;
@@ -473,22 +471,19 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
 void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) {
     OptionList &CO = Uoptions; // arg of \usepackage
     OptionList &DO = Poptions; // Known options
-    auto        n  = CO.size();
-    for (size_t i = 0; i < n; i++) {
-        std::string nname = CO[i].name;
-        auto        j     = find_option(X != 0 ? nname : CO[i].full_name);
+    for (auto &i : CO) {
+        std::string nname = i.name;
+        auto        j     = find_option(X != 0 ? nname : i.full_name);
         if (j == -1) {
-            unknown_option(CO[i], action, spec, X);
+            unknown_option(i, action, spec, X);
         } else {
             ClassesData::remove_from_unused(nname);
             if (DO[to_unsigned(j)].is_used()) continue;
             local_buf << bf_comma << DO[to_unsigned(j)].name;
-            DO[to_unsigned(j)].use_and_kill(action, CO[i], X != 0);
+            DO[to_unsigned(j)].use_and_kill(action, i, X != 0);
         }
     }
-    // clear memory
-    n = DO.size();
-    for (size_t i = 0; i < n; i++) DO[i].kill();
+    for (auto &i : DO) i.kill();
 }
 
 // This implements \ProcessOptions, \ProcessOptions*
