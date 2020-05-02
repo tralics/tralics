@@ -960,9 +960,9 @@ auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res)
         if (in_alias) {
             if (B.find_alias(SL, res)) return true;
         }
-        if (B.to_string().substr(0, 3) == "End")
+        if (B.starts_with("End"))
             in_alias = false;
-        else if (B.to_string().substr(0, 10) == "BeginAlias") {
+        else if (B.starts_with("BeginAlias")) {
             in_alias = true;
             ++C;
             continue;

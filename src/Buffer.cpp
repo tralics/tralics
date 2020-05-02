@@ -189,7 +189,7 @@ auto Buffer::push_back_newline_spec() -> bool {
     push_back('\n');
     auto s = to_string();
     if (at(0) == '#') {
-        if (s.substr(0, 20) == "## tralics ident rc=") { // \todo not very useful
+        if (s.starts_with("## tralics ident rc=")) { // \todo not very useful
             auto line = s.substr(20, size() - 21);
             spdlog::trace("Configuration file identification: {}", line);
         }
@@ -596,9 +596,8 @@ void Buffer::push_back_Roman(long n) {
 
 // True is s is at ptr. If so, updates ptr
 auto Buffer::is_here(const std::string &s) -> bool {
-    auto n = s.size();
-    if (to_string(ptr).substr(0, n) != s) return false;
-    ptr += n;
+    if (!to_string(ptr).starts_with(s)) return false;
+    ptr += s.size();
     return true;
 }
 

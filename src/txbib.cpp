@@ -281,10 +281,10 @@ void Parser::add_bib_marker(bool force) {
 void Parser::T_bibliostyle() {
     auto          Val = fetch_name0_nopar();
     Bibliography &T   = the_bibliography;
-    if (Val.substr(0, 7) == "bibtex:") {
+    if (Val.starts_with("bibtex:")) {
         if (Val[7] != 0) T.set_style(Val.substr(7));
         T.set_cmd("bibtex " + get_job_name());
-    } else if (Val.substr(0, 8) == "program:")
+    } else if (Val.starts_with("program:"))
         T.set_cmd(Val.substr(8) + " " + get_job_name() + ".aux");
     else
         T.set_style(Val);

@@ -224,9 +224,8 @@ void Buffer::push_back_special_att(Xid id) {
 auto Buffer::see_equals(String s) -> bool {
     ptr = 0;
     skip_sp_tab();
-    auto k = strlen(s);
-    if (to_string(ptr).substr(0, k) != s) return false;
-    ptr += k;
+    if (!to_string(ptr).starts_with(s)) return false;
+    ptr += strlen(s);
     skip_sp_tab();
     if (next_char() != '=') return false;
     skip_sp_tab();
