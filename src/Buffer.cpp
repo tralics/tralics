@@ -40,7 +40,6 @@ auto null_cs_name() -> std::string {
 void Buffer::reset(size_t k) {
     resize(k + 1);
     std::vector<char>::back() = 0;
-    wptr                      = size();
 }
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
@@ -65,7 +64,6 @@ void Buffer::push_back_braced(const std::string &s) {
 void Buffer::push_back(char c) {
     std::vector<char>::back() = c;
     std::vector<char>::push_back(0);
-    wptr = size();
 }
 
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
@@ -194,7 +192,6 @@ void Buffer::remove_last(size_t n) {
     if (size() >= n) {
         resize(std::vector<char>::size() - n);
         at(size()) = 0;
-        wptr       = size();
     }
 }
 

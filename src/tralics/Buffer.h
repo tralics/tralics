@@ -11,15 +11,13 @@ class Xml;
 
 /// a big structure \todo This is kind of a messy class, would be better off
 /// using `std::string` as much as possible but we can't because of all the
-/// zero-char manipulations. Or at least, replace wptr and vector::size() by
-/// just size() and capacity() from the vector. Many methods do not belong in a
-/// general class like that because they are specific to TeX.
+/// zero-char manipulations. Many methods do not belong in a general class like
+/// that because they are specific to TeX.
 
 class Buffer : public std::vector<char> {
 public:
-    [[deprecated]] size_t wptr{0}; ///< the write pointer
-    size_t                ptr{0};  ///< the read pointer
-    size_t                ptr1{0}; ///< a second read pointer
+    size_t ptr{0};  ///< the read pointer
+    size_t ptr1{0}; ///< a second read pointer
 
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }

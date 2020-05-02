@@ -462,7 +462,7 @@ void Buffer::finish_xml_print() {
     the_main->fp_len += size();
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     int k = 0;
-    for (int i = 0; i < wptr; i++)
+    for (int i = 0; i < size(); i++)
         if (at(i) == '\n') k++;
     the_main->fp_len += k;
 #endif
