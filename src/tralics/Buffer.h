@@ -24,7 +24,7 @@ public:
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
-    [[nodiscard]] auto at_eol() const -> bool { return wptr <= ptr; }         ///< Is the read pointer at the end?
+    [[nodiscard]] auto at_eol() const -> bool { return ptr >= size(); }       ///< Is the read pointer at the end?
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
@@ -49,9 +49,9 @@ public:
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
-    [[nodiscard]] auto back() const -> char { return empty() ? 0 : at(wptr - 1); }
+    [[nodiscard]] auto back() const -> char { return empty() ? 0 : at(size() - 1); }
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }
-    [[nodiscard]] auto size() const -> size_t { return wptr; }
+    [[nodiscard]] auto size() const -> size_t { return std::vector<char>::size() - 1; }
     [[nodiscard]] auto substr(size_t k = 0, size_t l = std::string::npos) const -> std::string { return to_string().substr(k, l); }
     [[nodiscard]] auto ends_with(const std::string &s) const -> bool { return to_string().ends_with(s); }
     [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
@@ -215,10 +215,7 @@ inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
     return B;
 }
 
-inline void bf_reset(Buffer &B) {
-    B.resize(1);
-    B.wptr = 0;
-}
+inline void bf_reset(Buffer &B) { B.reset(); }
 inline void bf_optslash(Buffer &B) { B.optslash(); }
 inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');

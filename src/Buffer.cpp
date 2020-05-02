@@ -40,7 +40,7 @@ auto null_cs_name() -> std::string {
 void Buffer::reset(size_t k) {
     resize(k + 1);
     std::vector<char>::back() = 0;
-    wptr                      = std::vector<char>::size() - 1;
+    wptr                      = size();
 }
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
@@ -65,7 +65,7 @@ void Buffer::push_back_braced(const std::string &s) {
 void Buffer::push_back(char c) {
     std::vector<char>::back() = c;
     std::vector<char>::push_back(0);
-    ++wptr;
+    wptr = size();
 }
 
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
@@ -145,19 +145,19 @@ auto Buffer::next_env_spec() -> bool {
 
 // Converts the entire Buffer to lower case
 void Buffer::lowercase() {
-    for (size_t j = 0; j < wptr; j++)
+    for (size_t j = 0; j < size(); j++)
         if (is_upper_case(at(j))) at(j) += 'a' - 'A';
 }
 
 // Converts the entire buffer to upper case
 void Buffer::uppercase() {
-    for (auto j = wptr; j > 0; j--)
+    for (auto j = size(); j > 0; j--)
         if (is_lower_case(at(j - 1))) at(j - 1) += 'A' - 'a';
 }
 
 // Replaces newline by space
 void Buffer::no_newline() {
-    for (size_t j = 0; j < wptr; j++)
+    for (size_t j = 0; j < size(); j++)
         if (at(j) == '\n') at(j) = ' ';
 }
 
@@ -166,11 +166,7 @@ auto Buffer::substring() const -> std::string { return std::string(begin() + to_
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
-    if (wptr >= 1 && at(wptr - 1) == '\r') // for windows
-    {
-        wptr--;
-        resize(wptr + 1);
-    }
+    if (back() == '\r') remove_last();
     push_back('\n');
 }
 
@@ -195,10 +191,10 @@ auto Buffer::push_back_newline_spec() -> bool {
 }
 
 void Buffer::remove_last(size_t n) {
-    if (wptr >= n) {
-        wptr -= n;
-        at(wptr) = 0;
-        resize(wptr + 1);
+    if (size() >= n) {
+        resize(std::vector<char>::size() - n);
+        at(size()) = 0;
+        wptr       = size();
     }
 }
 
@@ -210,22 +206,18 @@ void Buffer::remove_last_quote() {
 // This removes one space or an &nbspace;
 // \todo call substring or add tail method to Buffer
 void Buffer::remove_last_space() {
-    if (wptr > 0 && is_spaceh(wptr - 1))
-        wptr--;
+    if (is_space(back()))
+        remove_last();
     else if (ends_with("&nbsp;"))
-        wptr -= 6;
+        remove_last(6);
     else if (ends_with("&#xA;"))
-        wptr -= 5;
-    at(wptr) = 0;
-    resize(wptr + 1);
+        remove_last(5);
 }
 
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
-    at(wptr) = 0;
-    resize(wptr + 1);
+    while (is_space(back())) remove_last();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -424,10 +416,7 @@ auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
     reset();
     push_back("+scandimen for ");
     push_back(T);
-    if (is_spaceh(wptr - 1)) {
-        wptr--;
-        resize(wptr + 1);
-    }
+    if (is_space(back())) remove_last();
     push_back("->");
     push_back(v, glue_spec_pt);
     if (mu) pt_to_mu();
@@ -528,9 +517,9 @@ auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
 void Buffer::push_back_roman(long n) {
-    auto k = wptr;
+    auto k = size();
     push_back_Roman(n);
-    for (auto i = k; i < wptr; i++) at(i) += 'a' - 'A';
+    for (auto i = k; i < size(); i++) at(i) += 'a' - 'A';
 }
 
 // Adds n as roman upper case.
@@ -770,11 +759,8 @@ auto Buffer::slash_separated(std::string &a) -> bool {
 
 void Buffer::push_back_unless_punct(char c) {
     if (ends_with("&nbsp;")) return;
-    if (wptr > 0 && is_spaceh(wptr - 1)) return;
-    if (wptr > 0) {
-        char test = at(wptr - 1);
-        if (test == '(') return;
-    }
+    if (is_space(back())) return;
+    if (back() == '(') return;
     push_back(c);
 }
 
@@ -895,12 +881,11 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
 }
 
 // Adds a slash at the end unless there is already one.
-//
 void Buffer::optslash() {
-    if (wptr == 0) return;
-    if (wptr == 1 && at(0) == '/')
+    if (empty()) return;
+    if (size() == 1 && at(0) == '/')
         reset();
-    else if (at(wptr - 1) == '/')
+    else if (back() == '/')
         return;
     else
         push_back('/');
@@ -908,7 +893,7 @@ void Buffer::optslash() {
 
 // returns location of last slash in the buffer
 auto Buffer::last_slash() const -> std::optional<size_t> {
-    for (size_t i = wptr; i > 0; --i)
+    for (size_t i = size(); i > 0; --i)
         if (at(i - 1) == '/') { return i - 1; }
     return {};
 }
@@ -930,7 +915,7 @@ void Buffer::skip_letter() {
     while (is_letter(head())) ptr++;
 }
 void Buffer::skip_sp_tab() {
-    while (ptr < wptr && (at(ptr) == ' ' || at(ptr) == '\t')) ptr++;
+    while (ptr < size() && (at(ptr) == ' ' || at(ptr) == '\t')) ptr++;
 }
 void Buffer::skip_sp_tab_nl() {
     while (is_space(at(ptr))) ptr++;

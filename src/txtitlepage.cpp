@@ -771,8 +771,7 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
     if (c) {
         auto k = ptr;
         while ((at(k) != 0) && at(k) != '%' && at(k) != '#') k++;
-        wptr  = k;
-        at(k) = 0;
+        reset(k);
     }
     remove_space_at_end();
     return data() + ptr;
@@ -824,7 +823,7 @@ void Buffer::find_top_atts() {
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();
-    if (at(ptr) == '\"' && at(wptr - 1) == '\"' && ptr < wptr - 1) at(wptr - 1) = 0;
+    if (at(ptr) == '\"' && back() == '\"' && ptr < size() - 1) remove_last();
     if (at(ptr) == '\"') {
         auto    as = Istring(a);
         Istring bs = Istring(to_string(ptr + 1));
@@ -976,10 +975,10 @@ auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res)
 auto Buffer::remove_digits(const std::string &s) -> std::string {
     reset();
     push_back(s);
-    size_t k = wptr;
+    size_t k = size();
     while (k > 0 && is_digit(at(k - 1))) k--;
-    if (k != wptr) {
-        at(k) = 0;
+    if (k != size()) {
+        reset(k);
         return to_string();
     }
     return "";

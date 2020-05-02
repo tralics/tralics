@@ -91,7 +91,7 @@ void io_ns::print_ascii(std::ostream &fp, char c) {
 
 // returns true if only ascii 7 bits in the buffer
 auto Buffer::is_all_ascii() const -> bool {
-    for (size_t i = 0; i < wptr; i++) {
+    for (size_t i = 0; i < size(); i++) {
         auto c = at(i);
         if (static_cast<uchar>(c) >= 128) return false;
         if (c < 32 && c != '\t' && c != '\n') return false;
@@ -102,7 +102,7 @@ auto Buffer::is_all_ascii() const -> bool {
 // returns false if some unprintable characters appear
 // Non-ascii chars are printable (assumes buffer is valid UTF8).
 auto Buffer::is_good_ascii() const -> bool {
-    for (size_t i = 0; i < wptr; i++) {
+    for (size_t i = 0; i < size(); i++) {
         auto c = at(i);
         if (c < 32 && c != '\t' && c != '\n') return false;
     }
@@ -151,7 +151,7 @@ void Buffer::utf8_error(bool first) {
                 << (first ? ", first byte" : ", continuation byte") << ")\n";
     log_and_tty << "Position in line is " << ptr << "\n";
     if (T.new_error()) return; // signal only one error per line
-    for (size_t i = 0; i < wptr; i++) io_ns::print_ascii(log_file, at(i));
+    for (size_t i = 0; i < size(); i++) io_ns::print_ascii(log_file, at(i));
     the_log << "\n";
 }
 
@@ -295,8 +295,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     readline(m_ligne.data(), 78);
     if (std::string(m_ligne.data()) == "\\stop") return -1;
     cur_line++;
-    B.resize(1);
-    B.wptr = 0;
+    B.reset();
     B << m_ligne.data() << "\n";
     if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";

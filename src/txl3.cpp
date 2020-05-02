@@ -80,7 +80,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
     version = data() + ptr1;
     advance();
     ptr1 = ptr;
-    if (wptr < ptr + 10) return true;
+    if (size() < ptr + 10) return true;
     if (at(ptr + 4) == '-') at(ptr + 4) = '/';
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';

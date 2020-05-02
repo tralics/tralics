@@ -459,7 +459,7 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
 
 void Buffer::finish_xml_print() {
     *cur_fp << data();
-    the_main->fp_len += wptr;
+    the_main->fp_len += size();
 #if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
     int k = 0;
     for (int i = 0; i < wptr; i++)
@@ -961,10 +961,10 @@ void all_words_ns::dump_words(const std::string &name) {
 inline auto dig_char(char c) -> bool { return c == '-' || is_digit(c); }
 
 void Buffer::new_word() {
-    if (wptr == 0) return;
-    if (wptr == 1) at(0) = 'x';
+    if (empty()) return;
+    if (size() == 1) at(0) = 'x';
     bool ok = true;
-    for (unsigned i = 0; i < wptr; i++) {
+    for (unsigned i = 0; i < size(); i++) {
         if (!dig_char(at(i))) {
             ok = false;
             break;
@@ -977,7 +977,7 @@ void Buffer::new_word() {
     all_words_ns::nb_words++;
     ok = true;
     if (is_upper_case(at(0))) {
-        for (size_t i = 1; i < wptr; i++) {
+        for (size_t i = 1; i < size(); i++) {
             if (!is_lower_case(at(i))) ok = false;
         }
         if (ok) at(0) += 'a' - 'A';

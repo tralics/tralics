@@ -1919,13 +1919,13 @@ void Buffer::next_bibtex_char() {
         c = head();
         if (c == 0) return;
         ptr += io_ns::how_many_bytes(c);
-        if (ptr > wptr) ptr = wptr;
+        if (ptr > size()) ptr = size();
         return;
     }
     auto n = io_ns::how_many_bytes(c);
     if (n > 1) {
         ptr += n;
-        if (ptr > wptr) ptr = wptr;
+        if (ptr > size()) ptr = size();
         return;
     }
     if (c != '{')
@@ -2167,27 +2167,22 @@ void Buffer::normalise_for_bibtex(String s) {
         s++;
         if (c != '\\') continue;
         if (std::string(s).starts_with("c{c}")) {
-            wptr--;
-            resize(wptr + 1);
+            remove_last();
             push_back(codepoint(0347U));
             s += 4;
         } else if (std::string(s).starts_with("c{C}")) {
-            wptr--;
-            resize(wptr + 1);
+            remove_last();
             push_back(codepoint(0307U));
             s += 4;
         } else if (std::string(s).starts_with("v{c}")) {
-            s += 4;
-            wptr--;
-            resize(wptr + 1);
+            remove_last();
             push_back("{\\v c}");
+            s += 4;
             continue;
         } else if (*s == 'a' && is_accent_char(s[1])) {
             s++;
         } else if (*s == ' ') {
-            wptr--;
-            resize(wptr + 1);
-            at(wptr) = 0;
+            remove_last();
         } // replace \space by space
     }
 }
@@ -2274,9 +2269,8 @@ void Buffer::fill_table(bchar_type *table) {
         for (;;) {
             if (head() == 0) {
                 the_bibtex->err_in_name("this cannot happen!", to_signed(j));
-                at(j)    = 0;
+                reset(j);
                 table[j] = bct_end;
-                wptr     = j;
                 return;
             }
             c          = head();
@@ -2591,14 +2585,7 @@ auto Bchar::special_print(Buffer &X, bool sw) -> size_t {
 }
 
 void Buffer::no_double_dot() {
-    if (wptr > 1 && at(wptr - 2) == '.' && at(wptr - 1) == '.') {
-        remove_last();
-        return;
-    }
-    if (wptr > 2 && at(wptr - 2) == '}' && at(wptr - 3) == '.' && at(wptr - 1) == '.') {
-        remove_last();
-        return;
-    }
+    if (ends_with("..") || ends_with(".}.")) remove_last();
 }
 
 void Bchar::print_first_name(Buffer &B1, Buffer &B2, Buffer &B3) {
