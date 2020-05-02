@@ -57,7 +57,6 @@ public:
     [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
-    void bufalloc(size_t n);                          ///< Ensure that there is space for n+1 slots beyond wptr
     auto convert_to_log_encoding() -> std::string;    ///< Convert to logging encoding \todo should be const
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
@@ -93,7 +92,6 @@ public:
     [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                           ///< True iff we do not contain 'and'
     [[nodiscard]] auto find_documentclass(Buffer &aux) -> bool; ///< Extract the document class \todo optional tring
     [[nodiscard]] auto find_equals() -> bool;                   ///< Locate a `sth=` pattern into ptr and ptr1
-    [[nodiscard]] auto get_machine_name() -> std::string;       ///< As name says \todo does not belong in Buffer
     [[nodiscard]] auto horner(size_t p) -> Digit;               ///< Read an integer at `ptr`, advance
 
     // Those are still unsorted as refactoring proceeds
@@ -217,7 +215,10 @@ inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
     return B;
 }
 
-inline void bf_reset(Buffer &B) { B.wptr = 0; }
+inline void bf_reset(Buffer &B) {
+    B.resize(1);
+    B.wptr = 0;
+}
 inline void bf_optslash(Buffer &B) { B.optslash(); }
 inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');

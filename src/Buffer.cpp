@@ -14,12 +14,6 @@
 #include "tralics/Parser.h"
 #include <fmt/format.h>
 
-#ifdef _MSC_VER
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
-
 namespace {
     Buffer buf; // a scratch buffer
 
@@ -47,7 +41,6 @@ void Buffer::reset(size_t k) {
     resize(k + 1);
     std::vector<char>::back() = 0;
     wptr                      = std::vector<char>::size() - 1;
-    assert(wptr == std::vector<char>::size() - 1);
 }
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
@@ -70,11 +63,9 @@ void Buffer::push_back_braced(const std::string &s) {
 
 // Inserts a character in the buffer. Always adds a null after it.
 void Buffer::push_back(char c) {
-    bufalloc(1);
-    at(wptr) = c;
-    wptr++;
-    at(wptr) = 0;
-    assert(wptr == std::vector<char>::size() - 1);
+    std::vector<char>::back() = c;
+    std::vector<char>::push_back(0);
+    ++wptr;
 }
 
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
@@ -96,11 +87,6 @@ void Buffer::push_back_xml_char(uchar c) {
         push_back_ent(codepoint(static_cast<char>(c)));
     else
         push_back(static_cast<char>(c));
-}
-
-void Buffer::bufalloc(size_t n) {
-    resize(wptr + n + 1);
-    at(wptr) = 0;
 }
 
 void Buffer::push_back(const std::string &s) {
@@ -181,7 +167,10 @@ auto Buffer::substring() const -> std::string { return std::string(begin() + to_
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
     if (wptr >= 1 && at(wptr - 1) == '\r') // for windows
+    {
         wptr--;
+        resize(wptr + 1);
+    }
     push_back('\n');
 }
 
@@ -209,6 +198,7 @@ void Buffer::remove_last(size_t n) {
     if (wptr >= n) {
         wptr -= n;
         at(wptr) = 0;
+        resize(wptr + 1);
     }
 }
 
@@ -227,6 +217,7 @@ void Buffer::remove_last_space() {
     else if (ends_with("&#xA;"))
         wptr -= 5;
     at(wptr) = 0;
+    resize(wptr + 1);
 }
 
 // FIXME: utf8 space ok  here ?
@@ -234,6 +225,7 @@ void Buffer::remove_last_space() {
 void Buffer::remove_space_at_end() {
     while (wptr > 0 && is_spaceh(wptr - 1)) wptr--;
     at(wptr) = 0;
+    resize(wptr + 1);
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -432,7 +424,10 @@ auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
     reset();
     push_back("+scandimen for ");
     push_back(T);
-    if (is_spaceh(wptr - 1)) wptr--;
+    if (is_spaceh(wptr - 1)) {
+        wptr--;
+        resize(wptr + 1);
+    }
     push_back("->");
     push_back(v, glue_spec_pt);
     if (mu) pt_to_mu();
@@ -899,18 +894,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-auto Buffer::get_machine_name() -> std::string {
-    reset();
-    bufalloc(200);
-    if (gethostname(data(), 199) != 0) push_back("unknown");
-    at(200) = 0;
-    wptr    = strlen(data());
-    auto n  = wptr;
-    for (size_t i = 1; i < n; i++)
-        if (at(i) == '.') at(i) = 0;
-    return to_string();
-}
-
 // Adds a slash at the end unless there is already one.
 //
 void Buffer::optslash() {
@@ -947,7 +930,7 @@ void Buffer::skip_letter() {
     while (is_letter(head())) ptr++;
 }
 void Buffer::skip_sp_tab() {
-    while (at(ptr) == ' ' || at(ptr) == '\t') ptr++;
+    while (ptr < wptr && (at(ptr) == ' ' || at(ptr) == '\t')) ptr++;
 }
 void Buffer::skip_sp_tab_nl() {
     while (is_space(at(ptr))) ptr++;

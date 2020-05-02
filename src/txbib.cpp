@@ -2168,21 +2168,25 @@ void Buffer::normalise_for_bibtex(String s) {
         if (c != '\\') continue;
         if (std::string(s).starts_with("c{c}")) {
             wptr--;
+            resize(wptr + 1);
             push_back(codepoint(0347U));
             s += 4;
         } else if (std::string(s).starts_with("c{C}")) {
             wptr--;
+            resize(wptr + 1);
             push_back(codepoint(0307U));
             s += 4;
         } else if (std::string(s).starts_with("v{c}")) {
             s += 4;
             wptr--;
+            resize(wptr + 1);
             push_back("{\\v c}");
             continue;
         } else if (*s == 'a' && is_accent_char(s[1])) {
             s++;
         } else if (*s == ' ') {
             wptr--;
+            resize(wptr + 1);
             at(wptr) = 0;
         } // replace \space by space
     }

@@ -141,8 +141,7 @@ private:
     void find_field(String a);
     void finish_init() const; ///< RA related stuff
     void finish_xml();
-    void get_doc_type(); ///< Determine document type from various sources
-    void get_machine_name();
+    void get_doc_type();         ///< Determine document type from various sources
     void get_os();               ///< Sets cur_os to the current OS as a symbolic string
     void get_type_from_config(); ///< Extracts a type from the configuration file
     void handle_latex2init(String file_name);

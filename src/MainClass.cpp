@@ -3,6 +3,12 @@
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 namespace {
     constexpr auto usage = R"(
 Syntax:
@@ -325,7 +331,16 @@ void MainClass::get_os() {
 #else
     cur_os = st_unknown;
 #endif
-    machine = Buffer().get_machine_name();
+
+    std::array<char, 200> tmp;
+    auto                  res = gethostname(tmp.data(), 199);
+    if (res != 0)
+        machine = "unknown";
+    else {
+        for (auto &c : tmp)
+            if (c == '.') c = 0;
+        machine = std::string(tmp.data());
+    }
 }
 
 void MainClass::check_for_input() {
@@ -344,7 +359,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
     s = main_ns::path_buffer.to_string();
-    main_ns::path_buffer.wptr -= 3;
+    main_ns::path_buffer.remove_last(3);
     main_ns::path_buffer.push_back("ult");
     ult_name = main_ns::path_buffer.to_string();
     if (!std::filesystem::exists(s)) {

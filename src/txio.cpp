@@ -295,6 +295,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     readline(m_ligne.data(), 78);
     if (std::string(m_ligne.data()) == "\\stop") return -1;
     cur_line++;
+    B.resize(1);
     B.wptr = 0;
     B << m_ligne.data() << "\n";
     if (B.size() == 1) {
