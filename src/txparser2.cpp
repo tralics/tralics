@@ -1231,7 +1231,7 @@ void Parser::xkv_fetch_prefix() {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV prefix (more errors may follow)", "bad kv prefix");
         B.reset();
     }
-    if (B.is_equal("XKV")) {
+    if (B == "XKV") {
         parse_error(err_tok, "xkeyval: `XKV' prefix is not allowed");
         B.reset();
     }

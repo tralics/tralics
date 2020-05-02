@@ -99,7 +99,7 @@ public:
     void               interpret_bibtex_list();
     void               interpret_bibtex_extension_list();
     auto               is_begin_something(String s) -> int;
-    auto               is_equal(String x) const -> bool { return strcmp(data(), x) == 0; }
+    auto               operator==(const std::string &s) const -> bool { return to_string() == s; }
     [[nodiscard]] auto ends_with(const std::string &s) const -> bool;
     auto               is_here(const std::string &s) -> bool;
     auto               is_here_case(String s) -> bool;

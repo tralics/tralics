@@ -24,7 +24,7 @@ namespace {
 
 namespace tpage_ns {
     void init_error();
-    auto begins_with(const std::string &A, String B) -> bool;
+    auto begins_with(const std::string &A, const std::string &B) -> bool;
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
@@ -545,11 +545,7 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
 }
 
 // True if B is an initial substring of A
-auto tpage_ns::begins_with(const std::string &A, String B) -> bool {
-    auto n = strlen(B);
-    if (A.length() < n) return false;
-    return strncmp(A.c_str(), B, n) == 0;
-}
+auto tpage_ns::begins_with(const std::string &A, const std::string &B) -> bool { return A.substr(0, B.size()) == B; }
 
 // True if current line starts with x.
 auto Clines::starts_with(String x) const -> bool { return tpage_ns::begins_with(chars, x); }
@@ -568,7 +564,7 @@ auto Buffer::is_begin_something(String s) -> int {
         if (ptr == ptr1) return 2;  // bad
         at(ptr) = 0;                // what follows the type is a comment
         if (s == nullptr) return 5; // s=0 for type lookup
-        if (strcmp(data() + ptr1, s) == 0) return 3;
+        if (to_string(ptr1) == s) return 3;
         return 1;
     }
     if (s == nullptr) return 0;
@@ -577,7 +573,7 @@ auto Buffer::is_begin_something(String s) -> int {
     skip_letter();
     if (ptr == ptr1) return 2;
     at(ptr) = 0;
-    if (strcmp(data() + ptr1, s) == 0) return 4;
+    if (to_string(ptr1) == s) return 4;
     return 2;
 }
 
@@ -837,11 +833,11 @@ void Buffer::find_top_atts() {
         auto    as = Istring(a);
         Istring bs = Istring(to_string(ptr + 1));
         Xid(1).add_attribute(as, bs);
-    } else if (strcmp(data() + ptr, "\\specialyear") == 0) {
+    } else if (to_string(ptr) == "\\specialyear") {
         auto as = Istring(a);
         auto bs = Istring(the_main->year_string);
         Xid(1).add_attribute(as, bs);
-    } else if (strcmp(data() + ptr, "\\tralics") == 0) {
+    } else if (to_string(ptr) == "\\tralics") {
         auto as = Istring(a);
         reset();
         push_back("Tralics version ");

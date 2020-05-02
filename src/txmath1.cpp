@@ -1223,7 +1223,7 @@ void MathElt::cv_noML() {
         static Buffer rb;
         rb.reset();
         rb.push_back(Token(get_font()));
-        if (rb.is_equal("\\relax")) return;
+        if (rb == "\\relax") return;
         mathml_buffer.push_back(rb.to_string());
         mathml_buffer.push_back(' ');
     }

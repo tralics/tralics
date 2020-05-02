@@ -337,8 +337,8 @@ void XmlIO::parse_attributes() {
 // The PI is ignored
 void XmlIO::parse_pi() {
     scan_name('?');
-    bool is_tralics = B.is_equal("tralics");
-    bool is_xml     = B.is_equal("xml");
+    bool is_tralics = B == "tralics";
+    bool is_xml     = B == "xml";
     aux.reset();
     aux << B;
     if (is_xml) {
@@ -354,14 +354,14 @@ void XmlIO::parse_pi() {
                 break;
             }
             scan_name('=');
-            bool is_encoding = B.is_equal("encoding");
+            bool is_encoding = B == "encoding";
             aux << " " << B << "='";
             parse_att_val();
             aux << B << "'";
             if (is_encoding) {
-                if (B.is_equal("iso-8859-1"))
+                if (B == "iso-8859-1")
                     enc = 1;
-                else if (B.is_equal("UTF-8"))
+                else if (B == "UTF-8")
                     enc = 0;
                 else
                     error("Unrecognised encoding");
@@ -599,11 +599,9 @@ void XmlIO::parse_dec_element() {
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
     if (prev_is_space) aux.remove_last();
     tmp << " " << elt_name;
-    if (aux.is_equal("EMPTY"))
-        ;
-    else if (aux.is_equal("ANY"))
-        ;
-    else /* check syntax */
+    if (aux == "EMPTY") {
+    } else if (aux == "ANY") {
+    } else
         tmp << " ";
     tmp << " " << aux;
     Xml *res = new Xml(tmp);
