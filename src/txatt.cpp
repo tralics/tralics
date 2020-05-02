@@ -225,7 +225,7 @@ auto Buffer::see_equals(String s) -> bool {
     ptr = 0;
     skip_sp_tab();
     auto k = strlen(s);
-    if (strncmp(data() + ptr, s, k) != 0) return false;
+    if (to_string(ptr).substr(0, k) != s) return false;
     ptr += k;
     skip_sp_tab();
     if (next_char() != '=') return false;

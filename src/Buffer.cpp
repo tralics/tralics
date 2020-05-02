@@ -196,8 +196,8 @@ auto Buffer::push_back_newline_spec() -> bool {
         return false;
     }
     if (at(0) == '%' || is_space(at(0))) return true;
-    if (s.substr(0, 5) == "Begin") return true;
-    if (s.substr(0, 3) == "End") return true;
+    if (s.starts_with("Begin")) return true;
+    if (s.starts_with("End")) return true;
     reset();
     push_back(' ');
     push_back(s);
@@ -221,9 +221,9 @@ void Buffer::remove_last_quote() {
 void Buffer::remove_last_space() {
     if (wptr > 0 && is_spaceh(wptr - 1))
         wptr--;
-    else if (wptr >= 6 && strncmp(data() + wptr - 6, "&nbsp;", 6) == 0)
+    else if (ends_with("&nbsp;"))
         wptr -= 6;
-    else if (wptr >= 5 && strncmp(data() + wptr - 5, "&#xA;", 5) == 0)
+    else if (ends_with("&#xA;"))
         wptr -= 5;
     at(wptr) = 0;
 }
@@ -774,7 +774,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
 }
 
 void Buffer::push_back_unless_punct(char c) {
-    if (wptr >= 6 && strncmp(data() + wptr - 6, "&nbsp;", 6) == 0) return;
+    if (ends_with("&nbsp;")) return;
     if (wptr > 0 && is_spaceh(wptr - 1)) return;
     if (wptr > 0) {
         char test = at(wptr - 1);
@@ -933,7 +933,7 @@ auto Buffer::last_slash() const -> std::optional<size_t> {
 // True if the string s is at the end of the buffer
 auto Buffer::ends_with(const std::string &s) const -> bool {
     auto n = s.size();
-    return (wptr > n) && (to_string(wptr - n) == s);
+    return (wptr >= n) && (to_string(wptr - n) == s);
 }
 
 // Inserts the string s is at the end of the buffer unless there

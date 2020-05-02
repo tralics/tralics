@@ -1739,7 +1739,7 @@ void BibEntry::call_type() {
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
         Buffer &B = biblio_buf1;
-        if (strncmp(s.c_str(), "\\rrrt", 5) == 0)
+        if (s.starts_with("\\rrrt"))
             bbl.push_back(s);
         else {
             bbl.push_back("\\csname @href\\endcsname");
@@ -2166,15 +2166,15 @@ void Buffer::normalise_for_bibtex(String s) {
         push_back(c);
         s++;
         if (c != '\\') continue;
-        if (strncmp(s, "c{c}", 4) == 0) {
+        if (std::string(s).starts_with("c{c}")) {
             wptr--;
             push_back(codepoint(0347U));
             s += 4;
-        } else if (strncmp(s, "c{C}", 4) == 0) {
+        } else if (std::string(s).starts_with("c{C}")) {
             wptr--;
             push_back(codepoint(0307U));
             s += 4;
-        } else if (strncmp(s, "v{c}", 4) == 0) {
+        } else if (std::string(s).starts_with("v{c}")) {
             s += 4;
             wptr--;
             push_back("{\\v c}");

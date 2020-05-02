@@ -28,7 +28,6 @@ public:
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
-    [[nodiscard]] auto empty() const -> bool { return size() == 0; }          ///< Is the write pointer at 0?
     [[nodiscard]] auto find_configuration(Buffer &aux) const -> bool;         ///< Extract config value \todo std::optional<std::string>
     [[nodiscard]] auto find_doctype() const -> size_t;                        ///< Figure out the doctype of the Buffer contents
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
@@ -46,10 +45,14 @@ public:
     [[nodiscard]] auto see_config_env() const -> int;                         ///< Do we start with `Begin` or `End`?
     [[nodiscard]] auto single_char() const -> char;                           ///< If only one (non-space) char, return it
     [[nodiscard]] auto single_character() const -> codepoint;                 ///< If only one (UTF8) character, return it
-    [[nodiscard]] auto size() const -> size_t { return wptr; }                ///< Size of the contents \todo match vector::size()
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptr1,ptr)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
+
+    // Those match the std::string API
+    [[nodiscard]] auto empty() const -> bool { return size() == 0; }
+    [[nodiscard]] auto size() const -> size_t { return wptr; }
+    [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr

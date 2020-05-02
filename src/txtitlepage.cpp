@@ -24,7 +24,6 @@ namespace {
 
 namespace tpage_ns {
     void init_error();
-    auto begins_with(const std::string &A, const std::string &B) -> bool;
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
@@ -44,7 +43,7 @@ void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " 
 // tl_normal otherwise
 auto Buffer::tp_fetch_something() -> tpa_line {
     ptr = 0;
-    if (strncmp(data(), "End", 3) == 0) return tl_end;
+    if (starts_with("End")) return tl_end;
     skip_sp_tab();
     if (is_special_end()) return tl_empty;
     if (ptr == 0) {
@@ -544,18 +543,15 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
     xflags = X.get_flags();
 }
 
-// True if B is an initial substring of A
-auto tpage_ns::begins_with(const std::string &A, const std::string &B) -> bool { return A.substr(0, B.size()) == B; }
-
 // True if current line starts with x.
-auto Clines::starts_with(String x) const -> bool { return tpage_ns::begins_with(chars, x); }
+auto Clines::starts_with(String x) const -> bool { return chars.starts_with(x); }
 
 // This compares a Begin line with the string s.
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type
 auto Buffer::is_begin_something(String s) -> int {
-    if (strncmp("Begin", data(), 5) != 0) return 0;
-    if (strncmp("Type", data() + 5, 4) == 0) {
+    if (!starts_with("Begin")) return 0;
+    if (to_string(5).starts_with("Type")) {
         ptr = 9;
         skip_sp_tab();
         if (ptr == 9) return 2; // bad
@@ -852,8 +848,8 @@ void Buffer::find_top_atts() {
 
 // Returns +1 if begin, -1 if end, 0 otherwise.
 auto Buffer::see_config_env() const -> int {
-    if (strncmp(data(), "Begin", 5) == 0) return 1;
-    if (strncmp(data(), "End", 3) == 0) return -1;
+    if (starts_with("Begin")) return 1;
+    if (starts_with("End")) return -1;
     return 0;
 }
 
@@ -922,7 +918,7 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
 
 auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) -> bool {
     ptr = 0;
-    if (strncmp(data(), "End", 3) == 0) return false;
+    if (starts_with("End")) return false;
     skip_sp_tab();
     if (is_special_end()) return false;
     if (ptr == 0) return false;

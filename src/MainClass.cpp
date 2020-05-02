@@ -852,7 +852,7 @@ void MainClass::get_type_from_config() {
         the_log << "No type in configuration file\n";
     else
         the_log << "Configuration file has type " << dtype << "\n";
-    if (strncmp(dtype.c_str(), "\\documentclass", 14) == 0) dtype = "";
+    if (dtype.starts_with("\\documentclass")) dtype = "";
 }
 
 void MainClass::get_doc_type() {

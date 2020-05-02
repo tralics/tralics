@@ -995,7 +995,7 @@ auto post_ns::is_entity(String s) -> size_t {
         String w = entities[k];
         if (w == nullptr) return 0;
         auto n = strlen(w);
-        if (strncmp(s, w, n) == 0) return n;
+        if (std::string(s).starts_with(w)) return n;
     }
 }
 
@@ -1009,12 +1009,12 @@ void Xml::word_stats_i() {
             char c = s[i];
             if (c == 0) return;
             if (c == '&') {
-                if (strncmp(s + i, "&oelig;", 7) == 0) {
+                if (std::string(s + i).starts_with("&oelig;")) {
                     i += 6;
                     scbuf << "oe";
                     continue;
                 }
-                if (strncmp(s + i, "&amp;", 5) == 0) {
+                if (std::string(s + i).starts_with("&amp;")) {
                     i += 4;
                     scbuf << "&";
                     continue;
