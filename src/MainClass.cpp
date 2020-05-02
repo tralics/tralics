@@ -332,7 +332,7 @@ void MainClass::get_os() {
     cur_os = st_unknown;
 #endif
 
-    std::array<char, 200> tmp;
+    std::array<char, 200> tmp{};
     auto                  res = gethostname(tmp.data(), 199);
     if (res != 0)
         machine = "unknown";
