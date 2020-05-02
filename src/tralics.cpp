@@ -48,15 +48,10 @@ auto assign(Buffer &a, Buffer &b) -> bool {
     std::string aa = a.to_string(), bb = b.to_string();
     auto        n = a.size();
 
-    if (a[0] == 'e' && a[1] == 'l' && a[2] == 't' && a[3] == '_') return config_ns::assign_name(aa.substr(4), bb);
-    if (a[0] == 'x' && a[1] == 'm' && a[2] == 'l' && a[3] == '_') {
-        if (a[n - 1] == 'e' && a[n - 2] == 'm' && a[n - 3] == 'a' && a[n - 4] == 'n' && a[n - 5] == '_') {
-            a.at(n - 5) = 0;
-            aa          = a.to_string();
-        }
-        return config_ns::assign_name(aa.substr(4), bb);
-    }
-    if (a[0] == 'a' && a[1] == 't' && a[2] == 't' && a[3] == '_') return config_ns::assign_att(a.to_string(4), bb);
+    if (aa.starts_with("elt_")) return config_ns::assign_name(aa.substr(4), bb);
+    if (aa.starts_with("xml_")) return config_ns::assign_name(aa.substr(4, aa.ends_with("_name") ? n - 9 : n - 4), bb);
+    if (aa.starts_with("att_")) return config_ns::assign_att(a.to_string(4), bb);
+
     if (aa == "lang_fr") {
         the_names[np_french] = Istring(bb);
         return true;
@@ -133,10 +128,8 @@ auto assign(Buffer &a, Buffer &b) -> bool {
             the_names[np_separator] = Istring(bb);
         return true;
     }
-    if (n > 5 && a[n - 5] == '_' && a[n - 4] == 'v' && a[n - 3] == 'a' && a[n - 2] == 'l' && a[n - 1] == 's') {
-        a.at(n - 5) = 0;
-        config_ns::interpret_list(a.to_string(), b);
-        a.reset();
+    if (aa.ends_with("_vals")) {
+        config_ns::interpret_list(a.substr(0, n - 5), b);
         return true;
     }
     if (aa == "mml_font_normal") {

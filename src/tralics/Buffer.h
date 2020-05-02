@@ -53,6 +53,7 @@ public:
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }
     [[nodiscard]] auto size() const -> size_t { return wptr; }
     [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
+    [[nodiscard]] auto substr(size_t k = 0, size_t l = std::string::npos) const -> std::string { return to_string().substr(k, l); }
 
     void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
     void alloc(size_t n);                             ///< Ensure that there is space for n+1 slots beyond wptr
