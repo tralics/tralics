@@ -842,7 +842,7 @@ void Buffer::insert_string(const Buffer &s) {
 void Parser::store_new_line(int n, bool vb) {
     set_cur_line(n);
     input_buffer.insert_string(scratch);
-    input_buffer.extract_chars(input_line);
+    input_line          = input_buffer.codepoints();
     input_buffer.ptrs.b = 0;
     if (vb) {
         Logger::finish_seq();

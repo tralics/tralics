@@ -195,10 +195,6 @@ void Buffer::remove_last(size_t n) {
     }
 }
 
-void Buffer::remove_last_quote() {
-    if (back() == '\'') remove_last();
-}
-
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
 // \todo call substring or add tail method to Buffer
@@ -912,25 +908,25 @@ void Buffer::skip_letter() {
     while (is_letter(head())) ptrs.b++;
 }
 void Buffer::skip_sp_tab() {
-    while (ptrs.b < size() && (at(ptrs.b) == ' ' || at(ptrs.b) == '\t')) ptrs.b++;
+    while (ptrs.b < size() && (head() == ' ' || head() == '\t')) ptrs.b++;
 }
 void Buffer::skip_sp_tab_nl() {
-    while (is_space(at(ptrs.b))) ptrs.b++;
+    while (is_space(head())) ptrs.b++;
 }
 void Buffer::skip_sp_tab_comma() {
-    while (at(ptrs.b) == ' ' || at(ptrs.b) == '\t' || at(ptrs.b) == ',') ptrs.b++;
+    while (head() == ' ' || head() == '\t' || head() == ',') ptrs.b++;
 }
 
 void Buffer::skip_letter_dig() {
-    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b))) ptrs.b++;
+    while (is_letter(head()) || is_digit(head())) ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot() {
-    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b)) || at(ptrs.b) == '.') ptrs.b++;
+    while (is_letter(head()) || is_digit(head()) || head() == '.') ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot_slash() {
-    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b)) || at(ptrs.b) == '.' || at(ptrs.b) == '/') ptrs.b++;
+    while (is_letter(head()) || is_digit(head()) || head() == '.' || head() == '/') ptrs.b++;
 }
 
-auto Buffer::is_special_end() const -> bool { return at(ptrs.b) == '\n' || at(ptrs.b) == '#' || at(ptrs.b) == '%'; }
+auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
 Buffer Txbuf, err_buf, ssa2;

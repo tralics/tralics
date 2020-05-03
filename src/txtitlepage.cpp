@@ -550,6 +550,7 @@ auto Clines::starts_with(String x) const -> bool { return chars.starts_with(x); 
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type
 auto Buffer::is_begin_something(String s) -> int {
+    assert(s != nullptr);
     if (!starts_with("Begin")) return 0;
     if (to_string(5).starts_with("Type")) {
         ptrs.b = 9;
@@ -868,11 +869,19 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
 }
 
 void Buffer::find_one_type(std::vector<std::string> &S) {
-    if (is_begin_something(nullptr) == 5) {
-        std::string s = to_string(ptrs.a);
-        S.push_back(s);
-        the_log << "Defined type: " << s << "\n";
-    }
+    if (!starts_with("Begin")) return;
+    if (!to_string(5).starts_with("Type")) return;
+
+    ptrs.b = 9;
+    while (ptrs.b < size() && (at(ptrs.b) == ' ' || at(ptrs.b) == '\t')) ptrs.b++;
+    if (ptrs.b == 9) return; // bad
+    ptrs.a = ptrs.b;
+    while (is_letter(head())) ptrs.b++;
+    if (ptrs.b == ptrs.a) return; // bad
+
+    auto str = substr(ptrs.a, ptrs.b - ptrs.a);
+    S.push_back(str);
+    spdlog::trace("Defined type: {}", str);
 }
 
 // This is called for all lines, outside groups.
@@ -982,24 +991,4 @@ auto Buffer::remove_digits(const std::string &s) -> std::string {
         return to_string();
     }
     return "";
-}
-
-// This gets the DTD.
-void Buffer::extract_dtd(const std::string &a, std::string &b, std::string &c) {
-    reset();
-    push_back(a);
-    ptrs.b = 0;
-    skip_letter_dig_dot();
-    if (ptrs.b == 0) return;
-    ptrs.a = 0;
-    b      = substring();
-    skip_sp_tab();
-    if (head() == '-' || head() == '+' || head() == ',') {
-        advance();
-        skip_sp_tab();
-    }
-    ptrs.a = ptrs.b;
-    skip_letter_dig_dot_slash();
-    if (ptrs.a == ptrs.b) return;
-    c = substring();
 }

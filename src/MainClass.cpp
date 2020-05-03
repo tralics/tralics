@@ -924,7 +924,22 @@ auto MainClass::find_document_type() -> bool {
 void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (handling_ra || res.empty()) res = config_file.find_top_val("DocType", false);
-    b_after.extract_dtd(res, dtd, dtdfile);
+
+    Buffer B(res); // \todo refactor this to avoid using a Buffer
+    B.skip_letter_dig_dot();
+    if (B.ptrs.b != 0) {
+        B.ptrs.a = 0;
+        dtd      = B.substring();
+        B.skip_sp_tab();
+        if (B.head() == '-' || B.head() == '+' || B.head() == ',') {
+            B.advance();
+            B.skip_sp_tab();
+        }
+        B.ptrs.a = B.ptrs.b;
+        B.skip_letter_dig_dot_slash();
+        if (B.ptrs.a != B.ptrs.b) dtdfile = B.substring();
+    }
+
     if (dtdfile.empty()) {
         if (dft == 3) {
             dtd     = "unknown";
@@ -935,9 +950,9 @@ void MainClass::find_dtd() {
         }
     }
     if (handling_ra)
-        the_log << fmt::format("dtd is {} from {} (mode RAWEB{})\n", dtd, dtdfile, year);
+        spdlog::trace("dtd is {} from {} (mode RAWEB{})", dtd, dtdfile, year);
     else
-        the_log << "dtd is " << dtd << " from " << dtdfile << " (standard mode)\n";
+        spdlog::trace("dtd is {} from {} (standard mode)", dtd, dtdfile);
 }
 
 void MainClass::read_config_and_other() {

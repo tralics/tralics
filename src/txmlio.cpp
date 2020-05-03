@@ -137,8 +137,8 @@ void XmlIO::next_line() {
             error("Unexpected EOF");
         throw EndOfData();
     }
-    cur_line = n;
-    line_buffer.extract_chars(input_line);
+    cur_line       = n;
+    input_line     = line_buffer.codepoints();
     input_line_pos = 0;
     cur_line_len   = input_line.size();
 }

@@ -25,6 +25,7 @@ public:
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
+    // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
@@ -57,23 +58,27 @@ public:
     [[nodiscard]] auto ends_with(const std::string &s) const -> bool { return to_string().ends_with(s); }
     [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
 
-    void advance(size_t k = 1) { ptrs.b += k; }       ///< Move the read pointer forward
-    auto convert_to_log_encoding() -> std::string;    ///< Convert to logging encoding \todo should be const
+    // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
-    void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
     void remove_last(size_t n = 1);                   ///< Drop `n` chars, provided size is large enough
-    void remove_last_quote();                         ///< Drop last char if it is a `'`
     void reset(size_t k = 0);                         ///< Truncate buffer at `k` chars
 
-    // Those have void return type but return parameters
+    // Mutating methods, affecting ptrs but not the data, as intended
+    void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward
+    void find_one_type(vector<std::string> &S); ///< Finds one type \todo [vb] what does that mean?
 
-    void extract_dtd(const std::string &a, std::string &b, std::string &c); ///< Get DTD name and file
-    void extract_chars(vector<codepoint> &V);                               ///< Translate contents into codepoints
-    void fill_table(bchar_type *table);                                     ///< Not sure what this does?
-    void find_one_type(vector<std::string> &S);                             ///< Finds one type \todo [vb] what does that mean?
+    // Mutating methods, affecting ptrs but not the data, but morally const
+    // \todo all those should be const
+    auto convert_to_log_encoding() -> std::string; ///< Convert to logging encoding
+    auto codepoints() -> std::vector<codepoint>;   ///< Translate contents into codepoints
+
+    // Mutating methods, affecting both the data and ptrs
+    void insert_string(const Buffer &s); ///< Reset, insert s minus CRLF, remove trailing spaces
+
+    // Those have void return type but return parameters
+    void fill_table(bchar_type *table); ///< Not sure what this does?
 
     // Those have void return type but involve global variables
-
     void convert_line(int l, size_t wc); ///< Convert a line to UTF8
     void find_top_atts();                ///< This does something with DocAttribs \todo [vb] sic
     void finish_xml_print();             ///< Flush the buffer, increment fp_len
@@ -82,7 +87,6 @@ public:
 
     // Those are not const and have a return value, mostly they leave some
     // crucial info in ptrs.b and ptrs.a or just reset. \todo refactor all that
-
     [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
     [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
     [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptrs.b after `}`)

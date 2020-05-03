@@ -660,13 +660,13 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     return utf8_out.to_string();
 }
 
-void Buffer::extract_chars(vector<codepoint> &V) {
+auto Buffer::codepoints() -> std::vector<codepoint> {
+    std::vector<codepoint> V;
     the_converter.start_convert(the_parser.get_cur_line());
-    V.clear();
     ptrs.b = 0;
     for (;;) {
         codepoint c = next_utf8_char();
-        if (c == 0 && at_eol()) return;
+        if (c == 0 && at_eol()) return V;
         V.push_back(c);
     }
 }
