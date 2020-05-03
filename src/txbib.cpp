@@ -1235,7 +1235,7 @@ auto Bibtex::check_val_end() -> int {
 // are replaced by single ones.
 // We can safely assume that buffer is ASCII
 auto Buffer::special_convert(bool init) -> std::string {
-    ptr = 0;
+    ptrs.b = 0;
     if (init) skip_sp_tab_nl();
     biblio_buf1.reset();
     bool space = true;
@@ -1915,21 +1915,21 @@ void Buffer::next_bibtex_char() {
     auto c = head();
     if (c == 0) return;
     if (c == '\\') {
-        ptr++;
+        ptrs.b++;
         c = head();
         if (c == 0) return;
-        ptr += io_ns::how_many_bytes(c);
-        if (ptr > size()) ptr = size();
+        ptrs.b += io_ns::how_many_bytes(c);
+        if (ptrs.b > size()) ptrs.b = size();
         return;
     }
     auto n = io_ns::how_many_bytes(c);
     if (n > 1) {
-        ptr += n;
-        if (ptr > size()) ptr = size();
+        ptrs.b += n;
+        if (ptrs.b > size()) ptrs.b = size();
         return;
     }
     if (c != '{')
-        ptr++;
+        ptrs.b++;
     else
         skip_over_brace();
 }
@@ -1942,10 +1942,10 @@ void Buffer::skip_over_brace() {
     for (;;) {
         auto c = head();
         if (c == 0) return;
-        ptr++;
+        ptrs.b++;
         if (c == '\\') {
             if (head() == 0) return;
-            ptr++;
+            ptrs.b++;
             continue;
         }
         if (c == '{')
@@ -1962,7 +1962,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     Buffer &B = biblio_buf1;
     B.reset();
     B.push_back(s);
-    B.ptr = 0;
+    B.ptrs.b = 0;
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == '\\') return s;
@@ -1970,7 +1970,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == 0) return s;
-    B.reset(B.ptr);
+    B.reset(B.ptrs.b);
     return B.to_string();
 }
 
@@ -1980,19 +1980,19 @@ auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
     Buffer B;
     B.reset();
     B.push_back(s);
-    B.ptr = 0;
-    int n = -k;
+    B.ptrs.b = 0;
+    int n    = -k;
     while (B.head() != 0) {
         n++;
         B.next_bibtex_char();
     }
     if (n <= 0) return s;
-    B.ptr = 0;
+    B.ptrs.b = 0;
     while (n > 0) {
         n--;
         B.next_bibtex_char();
     }
-    return B.to_string(B.ptr);
+    return B.to_string(B.ptrs.b);
 }
 
 // Signals an error if the year is invalid in the case of refer.
@@ -2160,7 +2160,7 @@ void Buffer::normalise_for_bibtex(String s) {
     for (;;) {
         auto c = *s;
         if (c == 0) {
-            ptr = 0;
+            ptrs.b = 0;
             return;
         }
         push_back(c);
@@ -2189,15 +2189,15 @@ void Buffer::normalise_for_bibtex(String s) {
 
 // For each character, we have its type in the table.
 void Buffer::fill_table(bchar_type *table) {
-    ptr = 0;
+    ptrs.b = 0;
     for (;;) {
-        auto i = ptr;
+        auto i = ptrs.b;
         auto c = head();
         if (c == 0U) {
             table[i] = bct_end;
             return;
         }
-        ptr++;
+        ptrs.b++;
         if (static_cast<uchar>(c) >= 128 + 64) {
             table[i] = bct_extended;
             continue;
@@ -2243,23 +2243,23 @@ void Buffer::fill_table(bchar_type *table) {
                 the_bibtex->err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
-            if (is_letter(at(ptr + 1))) {
+            if (is_letter(at(ptrs.b + 1))) {
                 table[i]     = bct_cmd;
                 table[i + 1] = bct_continuation;
                 table[i + 2] = bct_continuation;
-                ptr += 2;
+                ptrs.b += 2;
                 continue;
             }
-            if (at(ptr + 1) != '{') {
+            if (at(ptrs.b + 1) != '{') {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
-                ptr++;
+                ptrs.b++;
                 the_bibtex->err_in_name("bad accent construct", to_signed(i));
                 continue;
             }
-            at(ptr + 1) = c;
-            at(ptr)     = '\\';
-            at(ptr - 1) = '{';
+            at(ptrs.b + 1) = c;
+            at(ptrs.b)     = '\\';
+            at(ptrs.b - 1) = '{';
             Logger::finish_seq();
             the_log << "+bibchanged " << data() << "\n";
         }
@@ -2273,9 +2273,9 @@ void Buffer::fill_table(bchar_type *table) {
                 table[j] = bct_end;
                 return;
             }
-            c          = head();
-            table[ptr] = bct_continuation;
-            ptr++;
+            c             = head();
+            table[ptrs.b] = bct_continuation;
+            ptrs.b++;
             if (c == '{') bl++;
             if (c == '}') {
                 bl--;
@@ -2292,9 +2292,9 @@ void NameSplitter::handle_the_names() {
     size_t pos           = 1; // there is a space at position 0
     main_data.init(table);
     for (;;) {
-        name_buffer.ptr   = pos;
-        bool is_last_name = name_buffer.find_and(table);
-        auto k            = name_buffer.ptr;
+        name_buffer.ptrs.b = pos;
+        bool is_last_name  = name_buffer.find_and(table);
+        auto k             = name_buffer.ptrs.b;
         main_data.init(pos, k);
         handle_one_name(is_first_name, is_last_name, serial);
         if (is_last_name) return;
@@ -2308,8 +2308,8 @@ auto Buffer::find_and(const bchar_type *table) -> bool {
     for (;;) {
         char c = head();
         if (c == 0) return true;
-        ptr++;
-        if (table[ptr - 1] == bct_space && is_and(ptr)) return false;
+        ptrs.b++;
+        if (table[ptrs.b - 1] == bct_space && is_and(ptrs.b)) return false;
     }
 }
 
@@ -2636,7 +2636,7 @@ void BibEntry::normalise() {
 }
 
 void Buffer::remove_spec_chars(bool url, Buffer &B) {
-    ptr = 0;
+    ptrs.b = 0;
     B.reset();
     for (;;) {
         auto c = head();
@@ -2670,12 +2670,12 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             B.push_back("\\vbar ");
             continue;
         } // bar is special
-        if (c == 's' && head() == 'p' && !is_letter(at(ptr + 1))) {
+        if (c == 's' && head() == 'p' && !is_letter(at(ptrs.b + 1))) {
             advance();
             B.push_back('^');
             continue;
         }
-        if (c == 's' && head() == 'b' && !is_letter(at(ptr + 1))) {
+        if (c == 's' && head() == 'b' && !is_letter(at(ptrs.b + 1))) {
             advance();
             B.push_back('_');
             continue;

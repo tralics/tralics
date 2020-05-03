@@ -360,7 +360,7 @@ auto Buffer::reverse_horner() -> Digit {
 // Assume that the buffer holds : sign digits dot digits
 // Creates a number with it. Returns true if overflow
 auto FpNum::create(Buffer &B) -> bool {
-    B.ptr       = 0;
+    B.ptrs.b    = 0;
     char c      = B.next_char();
     bool retval = false;
     sign        = c != '-';
@@ -370,15 +370,15 @@ auto FpNum::create(Buffer &B) -> bool {
         else
             break;
     }
-    auto k = B.ptr; // index of first non-zero digit.
+    auto k = B.ptrs.b; // index of first non-zero digit.
     for (;;) {
         if (B.head() != '.')
             B.advance();
         else
             break;
     }
-    auto n = B.ptr - k; // number of chars before dot
-    B.ptr  = k;
+    auto n   = B.ptrs.b - k; // number of chars before dot
+    B.ptrs.b = k;
     if (n > 18) retval = true;
     data[0] = n >= 9 ? B.horner(n - 9) : 0;
     data[1] = B.horner(n);

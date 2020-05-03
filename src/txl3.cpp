@@ -46,7 +46,7 @@ void Parser::E_pdfstrcmp() {
 
 // Parses svn info. returns false in case of bad syntax
 auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) -> bool {
-    ptr     = 0;
+    ptrs.b  = 0;
     date    = "0000/00/00";
     version = "-1";
     name    = "";
@@ -54,26 +54,26 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
         advance(4);
     else
         return false;
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     while ((head() != 0) && head() != '.') advance();
-    name = std::string(data() + ptr1, ptr - ptr1);
+    name = std::string(data() + ptrs.a, ptrs.b - ptrs.a);
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
-    version = std::string(data() + ptr1, ptr - ptr1);
+    version = std::string(data() + ptrs.a, ptrs.b - ptrs.a);
     advance();
-    ptr1 = ptr;
-    if (size() < ptr + 10) return true;
-    if (at(ptr + 4) == '-') at(ptr + 4) = '/';
-    if (at(ptr + 7) == '-') at(ptr + 7) = '/';
-    if (at(ptr + 10) == ' ')
-        reset(ptr + 10);
+    ptrs.a = ptrs.b;
+    if (size() < ptrs.b + 10) return true;
+    if (at(ptrs.b + 4) == '-') at(ptrs.b + 4) = '/';
+    if (at(ptrs.b + 7) == '-') at(ptrs.b + 7) = '/';
+    if (at(ptrs.b + 10) == ' ')
+        reset(ptrs.b + 10);
     else
         return true;
-    date = data() + ptr1;
+    date = data() + ptrs.a;
     return true;
 }
 

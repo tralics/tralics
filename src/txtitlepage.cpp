@@ -42,11 +42,11 @@ void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " 
 // return tl_end if seen End, tl_empty if empty (or comment),
 // tl_normal otherwise
 auto Buffer::tp_fetch_something() -> tpa_line {
-    ptr = 0;
+    ptrs.b = 0;
     if (starts_with("End")) return tl_end;
     skip_sp_tab();
     if (is_special_end()) return tl_empty;
-    if (ptr == 0) {
+    if (ptrs.b == 0) {
         tpage_ns::init_error();
         log_and_tty << data();
         log_and_tty << "Wanted End, or line starting with space\n";
@@ -410,7 +410,7 @@ void Xid::add_special_att(const std::string &S) {
     Buffer &B = local_buf;
     B.reset();
     B.push_back(S);
-    B.ptr = 0;
+    B.ptrs.b = 0;
     B.push_back_special_att(*this);
 }
 
@@ -552,24 +552,24 @@ auto Clines::starts_with(String x) const -> bool { return chars.starts_with(x); 
 auto Buffer::is_begin_something(String s) -> int {
     if (!starts_with("Begin")) return 0;
     if (to_string(5).starts_with("Type")) {
-        ptr = 9;
+        ptrs.b = 9;
         skip_sp_tab();
-        if (ptr == 9) return 2; // bad
-        ptr1 = ptr;
+        if (ptrs.b == 9) return 2; // bad
+        ptrs.a = ptrs.b;
         skip_letter();
-        if (ptr == ptr1) return 2;  // bad
-        reset(ptr);                 // what follows the type is a comment
-        if (s == nullptr) return 5; // s=0 for type lookup
-        if (to_string(ptr1) == s) return 3;
+        if (ptrs.b == ptrs.a) return 2; // bad
+        reset(ptrs.b);                  // what follows the type is a comment
+        if (s == nullptr) return 5;     // s=0 for type lookup
+        if (to_string(ptrs.a) == s) return 3;
         return 1;
     }
     if (s == nullptr) return 0;
-    ptr  = 5;
-    ptr1 = ptr;
+    ptrs.b = 5;
+    ptrs.a = ptrs.b;
     skip_letter();
-    if (ptr == ptr1) return 2;
-    reset(ptr);
-    if (to_string(ptr1) == s) return 4;
+    if (ptrs.b == ptrs.a) return 2;
+    reset(ptrs.b);
+    if (to_string(ptrs.a) == s) return 4;
     return 2;
 }
 
@@ -769,12 +769,12 @@ auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
 auto Buffer::see_config_kw(String s, bool c) -> String {
     if (!see_equals(s)) return nullptr;
     if (c) {
-        auto k = ptr;
+        auto k = ptrs.b;
         while ((at(k) != 0) && at(k) != '%' && at(k) != '#') k++;
         reset(k);
     }
     remove_space_at_end();
-    return data() + ptr;
+    return data() + ptrs.b;
 }
 
 // This find a toplevel attributes. Real job done by next function.
@@ -817,22 +817,22 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
 
 void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     skip_letter();
     std::string a = substring();
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();
-    if (at(ptr) == '\"' && back() == '\"' && ptr < size() - 1) remove_last();
-    if (at(ptr) == '\"') {
+    if (at(ptrs.b) == '\"' && back() == '\"' && ptrs.b < size() - 1) remove_last();
+    if (at(ptrs.b) == '\"') {
         auto    as = Istring(a);
-        Istring bs = Istring(to_string(ptr + 1));
+        Istring bs = Istring(to_string(ptrs.b + 1));
         Xid(1).add_attribute(as, bs);
-    } else if (to_string(ptr) == "\\specialyear") {
+    } else if (to_string(ptrs.b) == "\\specialyear") {
         auto as = Istring(a);
         auto bs = Istring(the_main->year_string);
         Xid(1).add_attribute(as, bs);
-    } else if (to_string(ptr) == "\\tralics") {
+    } else if (to_string(ptrs.b) == "\\tralics") {
         auto as = Istring(a);
         reset();
         push_back("Tralics version ");
@@ -840,7 +840,7 @@ void Buffer::find_top_atts() {
         Istring bs = Istring(to_string());
         Xid(1).add_attribute(as, bs);
     } else {
-        docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (data() + ptr) << "}";
+        docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (data() + ptrs.b) << "}";
         the_main->add_to_from_config(init_file_pos, docspecial);
     }
 }
@@ -869,7 +869,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
 
 void Buffer::find_one_type(std::vector<std::string> &S) {
     if (is_begin_something(nullptr) == 5) {
-        std::string s = to_string(ptr1);
+        std::string s = to_string(ptrs.a);
         S.push_back(s);
         the_log << "Defined type: " << s << "\n";
     }
@@ -906,7 +906,7 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
     if (in.head() != '\"') return 0;
     in.advance();
     tpage_ns::scan_item(in, val, '\"');
-    key.ptr = 0;
+    key.ptrs.b = 0;
     key.remove_space_at_end();
     for (;;) {
         if (key.head() == 0) return 1;
@@ -916,23 +916,23 @@ auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
 }
 
 auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) -> bool {
-    ptr = 0;
+    ptrs.b = 0;
     if (starts_with("End")) return false;
     skip_sp_tab();
     if (is_special_end()) return false;
-    if (ptr == 0) return false;
-    ptr1 = ptr;
+    if (ptrs.b == 0) return false;
+    ptrs.a = ptrs.b;
     skip_letter_dig();
-    if (ptr1 == ptr) return true; // this is bad
+    if (ptrs.a == ptrs.b) return true; // this is bad
     std::string pot_res      = substring();
     bool        local_potres = false;
     if (tralics_ns::exists(SL, pot_res)) local_potres = true;
     for (;;) {
         skip_sp_tab();
         if (is_special_end()) break;
-        ptr1 = ptr;
+        ptrs.a = ptrs.b;
         skip_letter_dig();
-        if (ptr1 == ptr) break;
+        if (ptrs.a == ptrs.b) break;
         std::string a  = substring();
         bool        ok = a == res;
         if (ok) {
@@ -988,18 +988,18 @@ auto Buffer::remove_digits(const std::string &s) -> std::string {
 void Buffer::extract_dtd(const std::string &a, std::string &b, std::string &c) {
     reset();
     push_back(a);
-    ptr = 0;
+    ptrs.b = 0;
     skip_letter_dig_dot();
-    if (ptr == 0) return;
-    ptr1 = 0;
-    b    = substring();
+    if (ptrs.b == 0) return;
+    ptrs.a = 0;
+    b      = substring();
     skip_sp_tab();
     if (head() == '-' || head() == '+' || head() == ',') {
         advance();
         skip_sp_tab();
     }
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     skip_letter_dig_dot_slash();
-    if (ptr1 == ptr) return;
+    if (ptrs.a == ptrs.b) return;
     c = substring();
 }

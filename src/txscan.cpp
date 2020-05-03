@@ -832,7 +832,7 @@ void Buffer::insert_string(const Buffer &s) {
         if (c != '\n' && c != '\r') push_back(c);
     }
     while (back() == ' ') remove_last();
-    ptr = 0;
+    ptrs.b = 0;
 }
 
 // This piece of code is executed when a new line, numbered N, is in
@@ -843,7 +843,7 @@ void Parser::store_new_line(int n, bool vb) {
     set_cur_line(n);
     input_buffer.insert_string(scratch);
     input_buffer.extract_chars(input_line);
-    input_buffer.ptr = 0;
+    input_buffer.ptrs.b = 0;
     if (vb) {
         Logger::finish_seq();
         the_log << "[" << n << "] " << input_buffer.convert_to_log_encoding() << "\n";
@@ -2093,7 +2093,7 @@ void Parser::token_show(int what, Buffer &B) {
     token_for_show(lg, cur_cmd_chr, B);
     if (what == 2) { // find and strip the prefix
         if (!B.find_char('>')) return;
-        auto        k = B.ptr;
+        auto        k = B.ptrs.b;
         std::string s = B.to_string(k + 1);
         B.reset();
         B.push_back(s);

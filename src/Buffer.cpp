@@ -72,7 +72,7 @@ void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 // It could also be a part of a utf8 characater. Is left unchanged then.
 void Buffer::push_back_xml_char(uchar c) {
     if (c == 0)
-        reset(ptr); // may be required
+        reset(ptrs.b); // may be required
     else if (c == 13)
         push_back('\n');
     else if (c == '<')
@@ -91,11 +91,11 @@ void Buffer::push_back(const std::string &s) {
     for (auto c : s) push_back(c);
 }
 
-// Sets ptr1 to ptr, advances ptr to after a command, returns false in case
+// Sets ptrs.a to ptrs.b, advances ptrs.b to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
 auto Buffer::after_slash() -> bool {
     if (head() != '\\') return false;
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     advance();
     if (head() == 0) return false;
     if (!is_letter(head()))
@@ -105,14 +105,14 @@ auto Buffer::after_slash() -> bool {
     return true;
 }
 
-// Sets (ptr1,ptr) to the next macro. In case of failure, returns false.
+// Sets (ptrs.a,ptrs.b) to the next macro. In case of failure, returns false.
 auto Buffer::next_macro() -> bool {
     if (at_eol()) return false;
     while ((head() != 0) && head() != '\\') advance();
     return after_slash();
 }
 
-// Sets ptr to the start of the next macro. Ignores non-letter macros
+// Sets ptrs.b to the start of the next macro. Ignores non-letter macros
 // Handles comments and newlines. Returns false in case of failure.
 auto Buffer::next_macro_spec() -> bool {
     for (;;) {
@@ -122,19 +122,19 @@ auto Buffer::next_macro_spec() -> bool {
             if (at_eol()) return false;
         } else if (head() != '\\')
             advance();
-        else if (!is_letter(at(ptr + 1)))
+        else if (!is_letter(at(ptrs.b + 1)))
             advance(2);
         else
             return true;
     }
 }
 
-// Sets (ptr1,ptr) to the next macro, if it is \begin or \end.
+// Sets (ptrs.a,ptrs.b) to the next macro, if it is \begin or \end.
 // Returns false in case of failure.
 auto Buffer::next_env_spec() -> bool {
     for (;;) {
         if (!next_macro_spec()) return false;
-        ptr1 = ptr;
+        ptrs.a = ptrs.b;
         advance();
         skip_letter();
         if ((substring() == "\\begin") || (substring() == "\\end")) return true;
@@ -159,8 +159,8 @@ void Buffer::no_newline() {
         if (at(j) == '\n') at(j) = ' ';
 }
 
-// Returns the part of the buffer between ptr1 (included) and ptr (excluded).
-auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptr1), begin() + to_signed(ptr)); }
+// Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).
+auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptrs.a), begin() + to_signed(ptrs.b)); }
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
@@ -576,10 +576,10 @@ void Buffer::push_back_Roman(long n) {
     }
 }
 
-// True is s is at ptr. If so, updates ptr
+// True is s is at ptrs.b. If so, updates ptrs.b
 auto Buffer::is_here(const std::string &s) -> bool {
-    if (!to_string(ptr).starts_with(s)) return false;
-    ptr += s.size();
+    if (!to_string(ptrs.b).starts_with(s)) return false;
+    ptrs.b += s.size();
     return true;
 }
 
@@ -671,7 +671,7 @@ auto Buffer::int_val() const -> std::optional<size_t> {
 }
 
 auto Buffer::find_char(char c) -> bool {
-    ptr = 0;
+    ptrs.b = 0;
     while ((head() != 0) && head() != c) advance();
     return head() == c;
 }
@@ -679,8 +679,8 @@ auto Buffer::find_char(char c) -> bool {
 // splits foo:bar into foo and bar
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
-        reset(ptr);
-        after  = to_string(ptr + 1);
+        reset(ptrs.b);
+        after  = to_string(ptrs.b + 1);
         before = to_string();
         return true;
     }
@@ -689,28 +689,28 @@ auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     return false;
 }
 
-// Sets ptr1 to the first non-space
-// sets ptr to the next equals sign. Returns false if no such sign exists
+// Sets ptrs.a to the first non-space
+// sets ptrs.b to the next equals sign. Returns false if no such sign exists
 auto Buffer::find_equals() -> bool {
     skip_sp_tab_nl();
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     while ((head() != 0) && head() != '=') advance();
     return head() == '=';
 }
 
-// Ignores character at ptr, and following ones.
+// Ignores character at ptrs.b, and following ones.
 // removes the spaces just before.
 // puts a null char there.
 // returns false in case of trouble (only spaces).
 auto Buffer::backup_space() -> bool {
-    size_t j = ptr;
-    while (j > ptr1 && is_spaceh(j - 1)) j--;
-    if (j == ptr1) return false;
+    size_t j = ptrs.b;
+    while (j > ptrs.a && is_spaceh(j - 1)) j--;
+    if (j == ptrs.a) return false;
     at(j) = 0; // \todo Not replaceable by reset(j) ?
     return true;
 }
 
-// If there is 'foobar' at ptr, then puts ptr1 to the char after
+// If there is 'foobar' at ptrs.b, then puts ptrs.a to the char after
 // the quote, replaces the second quote by a null.
 // returns false in  case of trouble.
 auto Buffer::string_delims() -> bool {
@@ -718,10 +718,10 @@ auto Buffer::string_delims() -> bool {
     char c = head();
     if (c == 0) return false;
     advance();
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     while ((head() != 0) && head() != c) advance();
     if (head() == 0) return false;
-    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
+    at(ptrs.b) = 0; // \todo Not replaceable by reset(j) ?
     return true;
 }
 
@@ -761,13 +761,13 @@ void Buffer::push_back_unless_punct(char c) {
     push_back(c);
 }
 
-// Tries to read an argument. Sets ptr1 to after the opening brace
-// ptr to the closing brace.
+// Tries to read an argument. Sets ptrs.a to after the opening brace
+// ptrs.b to the closing brace.
 auto Buffer::fetch_spec_arg() -> bool {
     skip_sp_tab_nl();
     if (head() != '{') return false;
     advance();
-    ptr1 = ptr;
+    ptrs.a = ptrs.b;
     for (;;) {
         auto c = head();
         if (c == 0 || c == '{' || c == '%') return false;
@@ -777,10 +777,10 @@ auto Buffer::fetch_spec_arg() -> bool {
 }
 
 auto Buffer::contains_braced(const std::string &s) -> bool {
-    auto k = ptr1;
+    auto k = ptrs.a;
     if (!fetch_spec_arg()) return false;
     if (substring() != s) return false;
-    ptr1 = k;
+    ptrs.a = k;
     advance();
     return true;
 }
@@ -789,8 +789,8 @@ auto Buffer::contains_braced(const std::string &s) -> bool {
 // (used for detecting the end of a verbatim environment).
 auto Buffer::contains_env(const std::string &env) -> bool {
     skip_sp_tab_nl();
-    ptr1 = ptr;
-    ptr  = ptr1 + 4;
+    ptrs.a = ptrs.b;
+    ptrs.b = ptrs.a + 4;
     if (substring() != "\\end") return false;
     skip_sp_tab_nl();
     if (!(contains_braced(env))) return false;
@@ -909,28 +909,28 @@ void Buffer::push_back(const TokenList &L) {
 }
 
 void Buffer::skip_letter() {
-    while (is_letter(head())) ptr++;
+    while (is_letter(head())) ptrs.b++;
 }
 void Buffer::skip_sp_tab() {
-    while (ptr < size() && (at(ptr) == ' ' || at(ptr) == '\t')) ptr++;
+    while (ptrs.b < size() && (at(ptrs.b) == ' ' || at(ptrs.b) == '\t')) ptrs.b++;
 }
 void Buffer::skip_sp_tab_nl() {
-    while (is_space(at(ptr))) ptr++;
+    while (is_space(at(ptrs.b))) ptrs.b++;
 }
 void Buffer::skip_sp_tab_comma() {
-    while (at(ptr) == ' ' || at(ptr) == '\t' || at(ptr) == ',') ptr++;
+    while (at(ptrs.b) == ' ' || at(ptrs.b) == '\t' || at(ptrs.b) == ',') ptrs.b++;
 }
 
 void Buffer::skip_letter_dig() {
-    while (is_letter(at(ptr)) || is_digit(at(ptr))) ptr++;
+    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b))) ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot() {
-    while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.') ptr++;
+    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b)) || at(ptrs.b) == '.') ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot_slash() {
-    while (is_letter(at(ptr)) || is_digit(at(ptr)) || at(ptr) == '.' || at(ptr) == '/') ptr++;
+    while (is_letter(at(ptrs.b)) || is_digit(at(ptrs.b)) || at(ptrs.b) == '.' || at(ptrs.b) == '/') ptrs.b++;
 }
 
-auto Buffer::is_special_end() const -> bool { return at(ptr) == '\n' || at(ptr) == '#' || at(ptr) == '%'; }
+auto Buffer::is_special_end() const -> bool { return at(ptrs.b) == '\n' || at(ptrs.b) == '#' || at(ptrs.b) == '%'; }
 
 Buffer Txbuf, err_buf, ssa2;

@@ -388,7 +388,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     auto      SP = Token(space_token_val);
     auto      CR = Token(space_t_offset + '\n'); // behaves as space
     auto      NL = Token(other_t_offset + '\n'); // is ^^J
-    ptr          = 0;
+    ptrs.b       = 0;
     for (;;) {
         if (at_eol()) return L;
         codepoint c = next_utf8_char();
@@ -408,7 +408,7 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
     auto      SP = Token(space_token_val);
     Token     NL = the_parser.hash_table.newline_token;
     TokenList L;
-    ptr = 0;
+    ptrs.b = 0;
     for (;;) {
         if (at_eol()) return L;
         codepoint c = next_utf8_char();

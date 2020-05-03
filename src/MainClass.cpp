@@ -235,14 +235,14 @@ found at http://www.cecill.info.)";
 
     auto param_hack(String a) -> bool {
         Buffer B;
-        B.ptr = 0;
+        B.ptrs.b = 0;
         B.push_back(a);
         if (!B.find_equals()) return false;
         if (!B.backup_space()) return false;
         B.advance();
         B.skip_sp_tab();
-        other_options.push_back(B.to_string(B.ptr1));
-        other_options.push_back(B.to_string(B.ptr));
+        other_options.push_back(B.to_string(B.ptrs.a));
+        other_options.push_back(B.to_string(B.ptrs.b));
         return true;
     }
 

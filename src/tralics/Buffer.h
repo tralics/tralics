@@ -16,20 +16,23 @@ class Xml;
 
 class Buffer : public std::vector<char> {
 public:
-    size_t ptr{0};  ///< the read pointer
-    size_t ptr1{0}; ///< a second read pointer
+    struct span {
+        size_t a{0}, b{0};
+    };
+
+    span ptrs;
 
     Buffer() : std::vector<char>(1, 0) {}
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
-    [[nodiscard]] auto at_eol() const -> bool { return ptr >= size(); }       ///< Is the read pointer at the end?
+    [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
     [[nodiscard]] auto find_configuration(Buffer &aux) const -> bool;         ///< Extract config value \todo std::optional<std::string>
     [[nodiscard]] auto find_doctype() const -> size_t;                        ///< Figure out the doctype of the Buffer contents
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
-    [[nodiscard]] auto head() const -> char { return at(ptr); }               ///< The character under the read pointer
+    [[nodiscard]] auto head() const -> char { return at(ptrs.b); }            ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;             ///< For typography
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;              ///< Try to parse the contents as an integer
     [[nodiscard]] auto is_all_ascii() const -> bool;                          ///< Is everything ASCII and not CRLF?
@@ -43,7 +46,7 @@ public:
     [[nodiscard]] auto single_char() const -> char;                           ///< If only one (non-space) char, return it
     [[nodiscard]] auto single_character() const -> codepoint;                 ///< If only one (UTF8) character, return it
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
-    [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptr1,ptr)
+    [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
@@ -54,7 +57,7 @@ public:
     [[nodiscard]] auto ends_with(const std::string &s) const -> bool { return to_string().ends_with(s); }
     [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
 
-    void advance(size_t k = 1) { ptr += k; }          ///< Move the read pointer forward
+    void advance(size_t k = 1) { ptrs.b += k; }       ///< Move the read pointer forward
     auto convert_to_log_encoding() -> std::string;    ///< Convert to logging encoding \todo should be const
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void insert_string(const Buffer &s);              ///< Reset, insert s minus CRLF, remove trailing spaces
@@ -78,19 +81,19 @@ public:
     void insert_escape_char_raw();       ///< This one is for `\meaning`
 
     // Those are not const and have a return value, mostly they leave some
-    // crucial info in ptr and ptr1 or just reset. \todo refactor all that
+    // crucial info in ptrs.b and ptrs.a or just reset. \todo refactor all that
 
     [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
     [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
-    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptr after `}`)
+    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptrs.b after `}`)
     [[nodiscard]] auto contains_env(const std::string &env) -> bool;        ///< Do we contain `\end{env}`?
     [[nodiscard]] auto convert_line0(size_t wc) -> bool;                    ///< Convert to UTF8 into utf8_out
     [[nodiscard]] auto fetch_spec_arg() -> bool;                            ///< Try to read a braced argument
     [[nodiscard]] auto find_alias(const vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
     [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                           ///< True iff we do not contain 'and'
     [[nodiscard]] auto find_documentclass(Buffer &aux) -> bool; ///< Extract the document class \todo optional tring
-    [[nodiscard]] auto find_equals() -> bool;                   ///< Locate a `sth=` pattern into ptr and ptr1
-    [[nodiscard]] auto horner(size_t p) -> Digit;               ///< Read an integer at `ptr`, advance
+    [[nodiscard]] auto find_equals() -> bool;                   ///< Locate a `sth=` pattern into ptrs.b and ptrs.a
+    [[nodiscard]] auto horner(size_t p) -> Digit;               ///< Read an integer at `ptrs.b`, advance
 
     // Those are still unsorted as refactoring proceeds
 
@@ -107,7 +110,7 @@ public:
     void lowercase();
     void new_word();
     void next_bibtex_char();
-    auto next_char() { return at(ptr++); }
+    auto next_char() { return at(ptrs.b++); }
     auto next_env_spec() -> bool;
     auto next_macro() -> bool;
     auto next_macro_spec() -> bool;
@@ -174,7 +177,7 @@ public:
     auto tp_next_char(char &res) -> bool;
     auto tp_fetch_something() -> tpa_line;
     auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
-    void undo() { ptr--; }
+    void undo() { ptrs.b--; }
     void uppercase();
     void utf8_error(bool first);
     auto xml_and_attrib(const std::string &s) -> Xml;

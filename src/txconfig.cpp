@@ -243,7 +243,7 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
 auto config_ns::start_interpret(Buffer &B, String s) -> bool {
     bool ret_val = false;
     B.push_back(s);
-    B.ptr = 0;
+    B.ptrs.b = 0;
     if (B.head() == '+') {
         B.advance();
         the_log << "+";
@@ -279,7 +279,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
-    if (B.to_string().substr(B.ptr, 3) == "\\UR") {
+    if (B.to_string().substr(B.ptrs.b, 3) == "\\UR") {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
             log_and_tty << "You should use Lille instead of \\URLille,\n";
@@ -288,7 +288,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
         }
         B.advance(3);
     }
-    B.ptr1 = B.ptr;
+    B.ptrs.a = B.ptrs.b;
     B.skip_letter();
     auto k = ur_list.size();
     for (size_t j = 0; j < k; j++)
@@ -314,7 +314,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     temp2.reset();
     std::vector<int> vals;
     size_t           nb = 0;
-    B.ptr               = 0;
+    B.ptrs.b            = 0;
     for (;;) {
         auto j = next_RC_in_buffer(B, sname, lname);
         if (j == -1) break;
@@ -427,7 +427,7 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
         bool keep = true;
         skip_sp_tab();
         if (head() == 0) break;
-        auto a = ptr;
+        auto a = ptrs.b;
         if (head() == '-') {
             keep = false;
             advance();
@@ -436,7 +436,7 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
             the_log << "--";
         }
         while ((head() != 0) && !is_space(head())) advance();
-        ptr1          = a;
+        ptrs.a        = a;
         std::string k = substring();
         if (keep)
             bib.emplace_back(k);

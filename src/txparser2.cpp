@@ -1821,13 +1821,13 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
 auto Buffer::is_here_case(String s) -> bool {
     auto n = strlen(s);
     for (size_t i = 0; i < n; i++) {
-        char c = at(ptr + i);
+        char c = at(ptrs.b + i);
         if (is_upper_case(c)) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
-    char c = at(ptr + n);
+    char c = at(ptrs.b + n);
     if (is_letter(c)) return false;
-    ptr += n;
+    ptrs.b += n;
     return true;
 }
 
@@ -2095,7 +2095,7 @@ auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     err_tok   = T;
     Buffer &B = local_buf;
     B.reset();
-    B.ptr = 0;
+    B.ptrs.b = 0;
     B << s;
     bool res = parse(B);
     if (!res) {

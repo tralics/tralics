@@ -177,12 +177,12 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
     reset();
     push_back(s);
     bool has_space = false;
-    ptr            = 0;
+    ptrs.b         = 0;
     for (int i = 0;; i++) {
         if (head() == 0) break;
         if (is_space(head())) {
-            has_space = true;
-            at(ptr)   = 0;
+            has_space  = true;
+            at(ptrs.b) = 0;
             advance();
             break;
         }
@@ -208,24 +208,24 @@ auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
 void Buffer::push_back_special_att(Xid id) {
     for (;;) {
         if (!find_equals()) return;
-        auto J = ptr1;
+        auto J = ptrs.a;
         if (!backup_space()) return;
         advance();
         if (!string_delims()) return;
         Istring a = Istring(to_string(J));
-        Istring b = Istring(to_string(ptr1));
+        Istring b = Istring(to_string(ptrs.a));
         id.add_attribute(a, b);
         advance();
     }
 }
 
 // Returns true if we see space, then s then space then equals then space.
-// sets ptr to the char after this space
+// sets ptrs.b to the char after this space
 auto Buffer::see_equals(String s) -> bool {
-    ptr = 0;
+    ptrs.b = 0;
     skip_sp_tab();
-    if (!to_string(ptr).starts_with(s)) return false;
-    ptr += strlen(s);
+    if (!to_string(ptrs.b).starts_with(s)) return false;
+    ptrs.b += strlen(s);
     skip_sp_tab();
     if (next_char() != '=') return false;
     skip_sp_tab();

@@ -142,14 +142,14 @@ void Converter::start_convert(int l) {
 
 // This is called in case of error in the utf8 parser
 // In case of error, we print characters as \230
-// If first is false, we look at the second byte; ptr is not yet incremented
+// If first is false, we look at the second byte; ptrs.b is not yet incremented
 // for the case second char is missing.
 void Buffer::utf8_error(bool first) {
     Converter &T = the_converter;
     T.bad_chars++;
     log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
                 << (first ? ", first byte" : ", continuation byte") << ")\n";
-    log_and_tty << "Position in line is " << ptr << "\n";
+    log_and_tty << "Position in line is " << ptrs.b << "\n";
     if (T.new_error()) return; // signal only one error per line
     for (size_t i = 0; i < size(); i++) io_ns::print_ascii(log_file, at(i));
     the_log << "\n";
@@ -162,11 +162,11 @@ auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
 auto Buffer::next_utf8_char() -> codepoint {
-    auto it = begin() + to_signed(ptr), it0 = it;
+    auto it = begin() + to_signed(ptrs.b), it0 = it;
     auto cp = codepoint(utf8::next(it, end()));
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
-    ptr += nn;
+    ptrs.b += nn;
     if (cp.is_verybig()) {
         utf8_ovf(cp.value);
         return codepoint();
@@ -186,7 +186,7 @@ auto Buffer::single_character() const -> codepoint {
 // Otherwise, the result is in utf8_out.
 auto Buffer::convert_line0(size_t wc) -> bool {
     utf8_out.reset();
-    ptr = 0;
+    ptrs.b = 0;
     codepoint c;
     for (;;) {
         if (wc == 0)
@@ -642,8 +642,8 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
 auto Buffer::convert_to_log_encoding() -> std::string {
     output_encoding_type T = the_main->log_encoding;
     if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return to_string();
-    auto old_ptr               = ptr;
-    ptr                        = 0;
+    auto old_ptr               = ptrs.b;
+    ptrs.b                     = 0;
     the_converter.global_error = false;
     utf8_out.reset();
     for (;;) {
@@ -656,14 +656,14 @@ auto Buffer::convert_to_log_encoding() -> std::string {
         else
             utf8_out.out_log(c, T);
     }
-    ptr = old_ptr;
+    ptrs.b = old_ptr;
     return utf8_out.to_string();
 }
 
 void Buffer::extract_chars(vector<codepoint> &V) {
     the_converter.start_convert(the_parser.get_cur_line());
     V.clear();
-    ptr = 0;
+    ptrs.b = 0;
     for (;;) {
         codepoint c = next_utf8_char();
         if (c == 0 && at_eol()) return;
