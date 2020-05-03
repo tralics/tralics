@@ -50,39 +50,24 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
     date    = "0000/00/00";
     version = "-1";
     name    = "";
-    if (head() == 'I')
-        advance();
-    else
-        return false;
-    if (head() == 'd')
-        advance();
-    else
-        return false;
-    if (head() == ':')
-        advance();
-    else
-        return false;
-    if (head() == ' ')
-        advance();
+    if (starts_with("Id: "))
+        advance(4);
     else
         return false;
     ptr1 = ptr;
     while ((head() != 0) && head() != '.') advance();
-    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
-    name    = data() + ptr1;
+    name = std::string(data() + ptr1, ptr - ptr1);
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
     advance();
     ptr1 = ptr;
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
-    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
-    version = data() + ptr1;
+    version = std::string(data() + ptr1, ptr - ptr1);
     advance();
     ptr1 = ptr;
     if (size() < ptr + 10) return true;
     if (at(ptr + 4) == '-') at(ptr + 4) = '/';
-    if (at(ptr + 7) == '-') at(ptr + 7) = '/';
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';
     if (at(ptr + 10) == ' ')
         reset(ptr + 10);
