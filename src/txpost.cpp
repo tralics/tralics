@@ -986,17 +986,15 @@ void Buffer::new_word() {
     reset();
 }
 
-const std::array<String, 7> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;", nullptr}; // \todo nullptr?
+const std::array<String, 7> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
 
 // This is static. If s is &foo;bar, returns the length
 // of the &foo; part. Returns 0 if this is not an entity.
 auto post_ns::is_entity(String s) -> size_t {
-    for (size_t k = 0;; k++) {
-        String w = entities[k];
-        if (w == nullptr) return 0;
-        auto n = strlen(w);
-        if (std::string(s).starts_with(w)) return n;
+    for (auto w : entities) {
+        if (std::string(s).starts_with(w)) return strlen(w);
     }
+    return 0;
 }
 
 // The scanner for all_the_words

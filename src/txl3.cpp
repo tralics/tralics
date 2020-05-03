@@ -68,7 +68,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
         return false;
     ptr1 = ptr;
     while ((head() != 0) && head() != '.') advance();
-    at(ptr) = 0;
+    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
     name    = data() + ptr1;
     advance();
     while ((head() != 0) && head() != ' ') advance(); // ignore file name extension
@@ -76,7 +76,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
     ptr1 = ptr;
     if (head() == '-') return true;
     while ((head() != 0) && head() != ' ') advance();
-    at(ptr) = 0;
+    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
     version = data() + ptr1;
     advance();
     ptr1 = ptr;
@@ -85,7 +85,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';
     if (at(ptr + 7) == '-') at(ptr + 7) = '/';
     if (at(ptr + 10) == ' ')
-        at(ptr + 10) = 0;
+        reset(ptr + 10);
     else
         return true;
     date = data() + ptr1;
@@ -1077,8 +1077,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
         }
         changes << nc;
     }
-    changes.at(last_ok) = 0;
-    bool need_prot      = false; // Protect result and aux function
+    changes.reset(last_ok);
+    bool need_prot = false; // Protect result and aux function
     for (size_t i = 0; i < last_ok; i++)
         if (changes[i] == 'x') need_prot = true;
     if (need_prot) prot = true;

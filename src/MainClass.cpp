@@ -853,7 +853,7 @@ void MainClass::open_config_file() { // \todo filesystem
     for (size_t i = n - 1;; i--) {
         if (i <= kk) break;
         if (!is_digit(B[i])) {
-            B.at(i + 1) = 0;
+            B.reset(i + 1);
             break;
         }
     }

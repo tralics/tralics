@@ -49,7 +49,7 @@ auto Buffer::next_non_space(size_t j) const -> size_t {
 
 // Returns a copy, starting at k.
 auto Buffer::to_string(size_t k) const -> std::string {
-    auto n = strlen(data() + k);
+    auto n = strnlen(data() + k, size() - k);
     the_parser.my_stats.one_more_string(n + 1);
     return std::string(data() + k);
 }
@@ -72,7 +72,7 @@ void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 // It could also be a part of a utf8 characater. Is left unchanged then.
 void Buffer::push_back_xml_char(uchar c) {
     if (c == 0)
-        at(ptr) = 0; // may be required
+        reset(ptr); // may be required
     else if (c == 13)
         push_back('\n');
     else if (c == '<')
@@ -191,7 +191,7 @@ auto Buffer::push_back_newline_spec() -> bool {
 void Buffer::remove_last(size_t n) {
     if (size() >= n) {
         resize(std::vector<char>::size() - n);
-        at(size()) = 0;
+        std::vector<char>::back() = 0;
     }
 }
 
@@ -609,7 +609,7 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     if (len == 0) return false;
     aux.reset();
     aux.push_back(data() + k + 1);
-    aux[len] = 0;
+    aux.reset(len);
     for (size_t i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
         if (!is_letter(aux[i]) && !is_digit(aux[i])) return false;
     return true;
@@ -631,7 +631,7 @@ auto Buffer::find_configuration(Buffer &aux) const -> bool {
         len++;
         k++;
     }
-    aux[len] = 0;
+    aux.reset(len);
     return len != 0;
 }
 
@@ -679,9 +679,9 @@ auto Buffer::find_char(char c) -> bool {
 // splits foo:bar into foo and bar
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
-        at(ptr) = 0;
-        after   = to_string(ptr + 1);
-        before  = to_string();
+        reset(ptr);
+        after  = to_string(ptr + 1);
+        before = to_string();
         return true;
     }
     before = to_string();
@@ -706,7 +706,7 @@ auto Buffer::backup_space() -> bool {
     size_t j = ptr;
     while (j > ptr1 && is_spaceh(j - 1)) j--;
     if (j == ptr1) return false;
-    at(j) = 0;
+    at(j) = 0; // \todo Not replaceable by reset(j) ?
     return true;
 }
 
@@ -721,7 +721,7 @@ auto Buffer::string_delims() -> bool {
     ptr1 = ptr;
     while ((head() != 0) && head() != c) advance();
     if (head() == 0) return false;
-    at(ptr) = 0;
+    at(ptr) = 0; // \todo Not replaceable by reset(j) ?
     return true;
 }
 
@@ -749,8 +749,8 @@ auto Buffer::slash_separated(std::string &a) -> bool {
     }
     auto b = tmp.size();
     while (b > p && is_space(tmp[b - 1])) b--;
-    tmp.at(b) = 0;
-    a         = tmp.to_string();
+    tmp.reset(b);
+    a = tmp.to_string();
     return true;
 }
 

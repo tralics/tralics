@@ -872,7 +872,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     }
     if (ok && k > 0) {
         AL.push_back(np_fileextension, Istring(Tbuf.to_string(to_unsigned(k) + 1)));
-        Tbuf.at(to_unsigned(k)) = 0;
+        Tbuf.reset(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.to_string(ii), ok);
     AL.push_back(np_file, Istring(Tbuf.to_string()));

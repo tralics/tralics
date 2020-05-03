@@ -558,7 +558,7 @@ auto Buffer::is_begin_something(String s) -> int {
         ptr1 = ptr;
         skip_letter();
         if (ptr == ptr1) return 2;  // bad
-        at(ptr) = 0;                // what follows the type is a comment
+        reset(ptr);                 // what follows the type is a comment
         if (s == nullptr) return 5; // s=0 for type lookup
         if (to_string(ptr1) == s) return 3;
         return 1;
@@ -568,7 +568,7 @@ auto Buffer::is_begin_something(String s) -> int {
     ptr1 = ptr;
     skip_letter();
     if (ptr == ptr1) return 2;
-    at(ptr) = 0;
+    reset(ptr);
     if (to_string(ptr1) == s) return 4;
     return 2;
 }
