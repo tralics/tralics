@@ -549,8 +549,7 @@ auto Clines::starts_with(String x) const -> bool { return chars.starts_with(x); 
 // This compares a Begin line with the string s.
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type
-auto Buffer::is_begin_something(String s) -> int {
-    assert(s != nullptr);
+auto Buffer::is_begin_something(const std::string &s) -> int {
     if (!starts_with("Begin")) return 0;
     if (to_string(5).starts_with("Type")) {
         ptrs.b = 9;
@@ -560,17 +559,15 @@ auto Buffer::is_begin_something(String s) -> int {
         skip_letter();
         if (ptrs.b == ptrs.a) return 2; // bad
         reset(ptrs.b);                  // what follows the type is a comment
-        if (s == nullptr) return 5;     // s=0 for type lookup
         if (to_string(ptrs.a) == s) return 3;
         return 1;
     }
-    if (s == nullptr) return 0;
     ptrs.b = 5;
     ptrs.a = ptrs.b;
     skip_letter();
     if (ptrs.b == ptrs.a) return 2;
     reset(ptrs.b);
-    if (to_string(ptrs.a) == s) return 4;
+    if (substring() == s) return 4;
     return 2;
 }
 

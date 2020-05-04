@@ -106,7 +106,7 @@ public:
     void interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();
-    auto is_begin_something(String s) -> int;
+    auto is_begin_something(const std::string &s) -> int;
     auto operator==(const std::string &s) const -> bool { return to_string() == s; }
     auto is_here(const std::string &s) -> bool;
     auto is_here_case(String s) -> bool;
