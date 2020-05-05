@@ -839,14 +839,5 @@ An example that shows how ``\morecmidrules`` works.
         </row>
       </table>
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2005, 2006 Last modified $Date: 2015/11/23 17:24:40 $
-
 .. |some table| image:: img_73.png
 .. |four tables| image:: img_74.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

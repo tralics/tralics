@@ -107,13 +107,3 @@ of these letters is the following
    here is that the pdftex function that compares two string fully
    expands them; and you have to use ``\unexpanded`` in order to avoid
    this expansion.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA 2015
-Last modified $Date: 2015/11/24 17:08:44 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

@@ -54,13 +54,3 @@ The ``\yscalex`` command is defined by the curves package. The value is
 
 Internal commands used for equation numbering, see
 ```\tag`` <doc-t.html#cmd-tag>`__.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2007 Last modified $Date: 2015/08/03 16:12:51 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

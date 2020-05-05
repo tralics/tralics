@@ -1294,12 +1294,6 @@ defined in the file raweb-cfg.sty.
       \XMLelement{hrule} {} {\par\hrule\par} {}
       \XMLelement{vfill} {} {\vfill} {}
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to the raweb
-documentation <raweb.html#racfg>`__ © INRIA 2004, 2006 Last modified
-$Date: 2015/08/31 12:28:12 $
-
 .. |Logo Ra2003| image:: LogoRA2003.png
 .. |Logo Ra2002| image:: LogoRA2002.png
 .. |mathimage 1| image:: math_image_1.png
@@ -1312,7 +1306,3 @@ $Date: 2015/08/31 12:28:12 $
    :class: vc
 .. |mathimage 5| image:: math_image_5.png
    :class: vc
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

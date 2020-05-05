@@ -2643,11 +2643,6 @@ Preview: |$\mu$|. (see also `here <doc-ex.xhtml#align>`__).
 This command reads math glue and converts it to normal glue. See
 `\\gluestretchorder <doc-g.html#cmd-gluestretchorder>`__ for details.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2007 Last modified $Date: 2015/12/01 17:24:42 $
-
 .. |See...| image:: AR.png
 .. |case change| image:: img_84.png
 .. |some math formulas| image:: img_105.png
@@ -2659,7 +2654,3 @@ This command reads math glue and converts it to normal glue. See
 .. |math fonts| image:: img_111.png
 .. |$\mu$| image:: img_135.png
    :class: vc
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

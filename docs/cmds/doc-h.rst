@@ -796,15 +796,6 @@ for a line break that occurs at discretionary break where the pre-break
 text is not empty (for instance ``\-``). Unused by *Tralics*. (See
 `scanint <doc-s.html#fct-scanint>`__ for details of argument scanning).
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/11/27 17:06:16 $
-
 .. |hook accent| image:: img_120.png
 .. |Horn accent| image:: img_94.png
 .. |example of URLs| image:: img_54.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

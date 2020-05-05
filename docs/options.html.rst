@@ -317,13 +317,3 @@ removed in version 2.13.
    This asks for the conversion, via an external program, of the xsl-fo
    file to a Pdf file. Implies -xml and -xmlfo. Is meaningful only in
    Raweb mode, where an external program is launched.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2004, 2006 Last modified $Date: 2015/12/15 09:13:31 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

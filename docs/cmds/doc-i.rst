@@ -2413,14 +2413,5 @@ Private commands used by ```\@whiledim`` <doc-w.html#cmd-whiledim>`__,
 
 The expansion of the ``\@ixpt`` is 9.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/11/27 17:06:16 $
-
 .. |french abbrevs| image:: img_66.png
 .. |itemize, description, enumerate, \\item| image:: img_41.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

@@ -399,14 +399,5 @@ options to packages. Moreover an optional star is ignored.
        %\DeclareOptionX[my]<foo.bar>{landscape}{\landscapetrue}
        %\usepackage[opA,opB=C,opC=\foo,opE]{testkeyval}
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/08/04 15:54:02 $
-
 .. |ogonek accent| image:: img_24.png
    :class: vc
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

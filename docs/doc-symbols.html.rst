@@ -1281,11 +1281,6 @@ The description of ``\@makeactive`` is found near that of
 ``\makeatletter``; there are som exceptions to this rule: ``\@ne`` is
 described as if it were ``\one``.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2005, 2006 Last modified $Date: 2015/09/18 16:23:00 $
-
 .. |some chars| image:: img_13.png
 .. |^^^^ example| image:: img_80.png
 .. |example of ShortVerb| image:: img_19.png
@@ -1301,7 +1296,3 @@ described as if it were ``\one``.
 .. |dot accent| image:: img_17.png
 .. |circonflex accent| image:: img_21.png
 .. |grave accent| image:: img_22.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

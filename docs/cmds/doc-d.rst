@@ -1453,16 +1453,7 @@ The ``\dump`` command outputs a format file that can be loaded at
 comparatively high speed to restore the current status. Not yet
 implemented in *Tralics*.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003, 2004, 2006 Last modified $Date: 2015/11/27 17:06:16 $
-
 .. |dot below accent| image:: img_95.png
 .. |daggers| image:: img_124.png
 .. |See...| image:: AR.png
 .. |math style| image:: img_60.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

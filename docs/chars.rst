@@ -1249,11 +1249,6 @@ Not all characters are available. In particular cyrillic letters are
 missing. Some characters, like ``\'\AE`` are recognized, but not shown
 in the tables.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2004, 2006 Last modified $Date: 2015/12/02 13:02:27 $
-
 .. |Ascii Table| image:: img_69.png
 .. |latin 1, non ascii| image:: img_70.png
 .. |latin extended A| image:: img_68.png
@@ -1267,7 +1262,3 @@ in the tables.
 .. |Unicode Mathematical alphanumeric symbols| image:: img_130.png
 .. |Unicode Mathematical alphanumeric symbols| image:: img_131.png
 .. |Unicode Mathematical alphanumeric symbols| image:: img_132.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

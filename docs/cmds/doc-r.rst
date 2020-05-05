@@ -1240,11 +1240,6 @@ The ``\rVert`` command is valid in math mode only; it is a right
 delimiter associated to ```\Vert`` <doc-v.html#cmd-Vert>`__. it produces
 the symbol ``<mo>&parallel;</mo>`` (Unicode U+2225, ∥).
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/12/01 17:24:43 $
-
 .. |See...| image:: AR.png
 .. |$\rangle$| image:: img_t_rangle.png
 .. |font sizes (case of 3 sizes)| image:: img_36.png
@@ -1252,7 +1247,3 @@ the symbol ``<mo>&parallel;</mo>`` (Unicode U+2225, ∥).
 .. |Commands like \\rm| image:: img_39.png
 .. |all font variants| image:: img_122.png
 .. |font changes| image:: img_123.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

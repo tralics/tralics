@@ -3259,11 +3259,6 @@ that the expansion of ``\symbol{48}`` is ``\char 48\relax``.
 The effect of this command is to inhibit dumping the XML tree at the end
 of the job.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/12/01 17:24:43 $
-
 .. |See...| image:: AR.png
 .. |random operators| image:: img_51.png
 .. |example of vertical space| image:: img_34.png
@@ -3271,7 +3266,3 @@ of the job.
 .. |a figure with four \\subfigure| image:: img_43.png
 .. |big operators from Table 8.8| image:: img_52.png
 .. |$\surd$| image:: img_t_surd.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

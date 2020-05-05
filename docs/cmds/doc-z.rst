@@ -58,13 +58,3 @@ what *Tralics* shows.
 
 The ``\zeta`` command is valid only in math mode. It generates a Greek
 letter: ``<mi>&zeta;</mi>`` (Unicode U+3B6, ζ).
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/07/21 14:38:08 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

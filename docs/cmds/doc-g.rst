@@ -646,13 +646,4 @@ package.
 These commands are provided by the `xkeyval <doc-k.html#cmd-keyval>`__
 package.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/11/27 17:06:16 $
-
 .. |\\genfrac| image:: img_58.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

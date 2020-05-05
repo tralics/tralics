@@ -1938,11 +1938,6 @@ The ``\curvearrowleft`` command is valid only in math mode. It generates
 The ``\curvearrowright`` command is valid only in math mode. It
 generates ``<mo>&#x293B;</mo>``. (Unicode U+293B, ⤻).
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2008 Last modified $Date: 2015/12/02 13:02:27 $
-
 .. |cedilla accents| image:: img_23.png
 .. |double grave accents| image:: img_90.png
 .. |$\cal ...$| image:: img_110.png
@@ -1957,7 +1952,3 @@ generates ``<mo>&#x293B;</mo>``. (Unicode U+293B, ⤻).
    :class: vc
 .. |$\coprod$| image:: img_t_coprod.png
 .. |$\cup$| image:: img_other_cup.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

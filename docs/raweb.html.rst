@@ -1734,13 +1734,3 @@ DTD (whatever this means). Another XML processor converts the result
 into XSL/FO format, which is interpreted by TeX via the tools of S.
 Rahtz and D. Carlisle. Some patches to these files are required, they
 are described `here <raweb6.html>`__.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2004, 2006 Last modified $Date: 2015/08/31 14:50:52 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

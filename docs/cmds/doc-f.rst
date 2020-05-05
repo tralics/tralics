@@ -2418,16 +2418,7 @@ not affect the behavior of the ``\verb`` command).
 
 |verbatim|
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2008 Last modified $Date: 2015/12/02 13:02:27 $
-
 .. |\\f accent| image:: img_89.png
 .. |\\frac\dfrac\tfrac| image:: img_57.png
 .. |fraction and \\mathchoice| image:: img_81.png
 .. |verbatim| image:: img_29.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

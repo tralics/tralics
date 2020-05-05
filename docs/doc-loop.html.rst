@@ -833,13 +833,3 @@ a newline character in the XML tree after the ``<p>`` element. In this
 example, there is a space before the comment line 28, the EOL characters
 on lines 28 and 29 are commented out, and this one is visible if the
 paragraph is ended without a ``\par`` command.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003, 2006 Last modified $Date: 2015/12/15 09:13:31 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

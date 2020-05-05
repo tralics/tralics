@@ -1083,14 +1083,5 @@ This is now the translation
       <p>Hello, world!
       </p><p><mi att-name='att-val1'/></p></unknown>
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2007 Last modified $Date: 2015/12/01 17:24:43 $
-
 .. |See...| image:: AR.png
 .. |example of \\xmllatex| image:: img_64.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

@@ -1103,13 +1103,3 @@ one that follows has to be used.
       \bibliography{tralics}
 
       \end{document}
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2005, 2006 Last modified $Date: 2015/08/31 15:10:58 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

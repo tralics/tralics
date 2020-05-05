@@ -1160,13 +1160,3 @@ xkeyval `DL <confdir/xkeyval.plt>`__
 ------------------------------------
 
 Dummy package.
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA 2007
-Last modified $Date: 2015/09/03 16:43:54 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

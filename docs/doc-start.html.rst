@@ -706,13 +706,4 @@ Compile with tralics tralics-ex2 -type unused -trivialmath=2, you get
       <figure file='y' extension='ps' id-text='1' id='uid7' rend='Xfigure'/>
       </Xdiv4></Xdiv3></Xdiv2></Xdiv1></Xdiv0></unknown>
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003, 2006 Last modified $Date: 2015/08/31 15:14:41 $
-
 .. |preview example| image:: img_5.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

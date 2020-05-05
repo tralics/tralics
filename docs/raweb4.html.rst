@@ -596,14 +596,3 @@ does not conflict with the names miaou2003.ps and miaou.ps. Running
 *Tralics* ten times in a row give the following size for the Pdf file:
 152499 152499 152500 152500 152500 152500 152497 152497 152497 152497.
 Strange, isn't it?
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to the raweb
-documentation <raweb.html#run0>`__ © INRIA 2004, 2006 Last modified
-$Date: 2015/08/31 14:43:35 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

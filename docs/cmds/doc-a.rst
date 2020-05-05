@@ -2236,14 +2236,6 @@ used. Instead of \`\ ``aa \atopwithdelims()bb``' you should use
 ``\def\choose{\atopwithdelims()}``, and you can say ``a\choose b``. In
 *Tralics*, you would use ``\binom ab``.
 
-.. container::
-
-   --------------
-
-   |Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-   2003, 2004, 2005,2007, 2008 Last modified $Date: 2015/11/27 17:06:15
-   $
-
 .. |math accent| image:: img_106.png
 .. |accents| image:: img_86.png
 .. |accents| image:: img_87.png
@@ -2270,7 +2262,3 @@ used. Instead of \`\ ``aa \atopwithdelims()bb``' you should use
 .. |array in eqnarray| image:: img_133.png
 .. |ast & star| image:: img_t_aststar.png
 .. |$\asymp$| image:: img_t_asymp.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

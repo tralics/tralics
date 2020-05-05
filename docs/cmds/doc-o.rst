@@ -677,18 +677,9 @@ The ``\owns`` command is equivalent to ``\ni``. It gives a normal symbol
 ``<mo>&ni;</mo>`` (Unicode U+220B, ∋). See also description of the
 ```\smallint`` <doc-s.html#cmd-smallint>`__ command.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2017/05/29 06:22:57 $
-
 .. |oldstylenums{...}| image:: img_38.png
 .. |See...| image:: AR.png
 .. |\\over etc| image:: img_59.png
 .. |overbrace ex.| image:: img_t_overbrace.png
 .. |overleftarrow ex.| image:: img_t_overleftarrow.png
 .. |overrightarrow| image:: img_t_overrightarrow.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

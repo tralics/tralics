@@ -2045,16 +2045,7 @@ be used in math mode only. Translation is a ``<mo>`` containing a
 | |See...| See description of the
   `\\leftarrow <doc-l.html#cmd-leftarrow>`__ command.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/12/02 13:04:59 $
-
 .. |See...| image:: AR.png
 .. |theorems| image:: img_78.png
 .. |example of \\noindent, \\flushleft, \\flushright, \\center| image:: img_28.png
 .. |\\nonscript| image:: img_83.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

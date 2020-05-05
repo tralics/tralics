@@ -50,13 +50,3 @@ description of the ```\le`` <doc-l.html#cmd-le>`__ command.
 --------------------
 
 This is 3pt in LaTeX, a little bit over one millimeter
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/08/03 16:12:51 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

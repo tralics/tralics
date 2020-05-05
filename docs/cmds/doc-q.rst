@@ -353,11 +353,6 @@ quote (environment)
   ```\centering`` <doc-c.html#cmd-centering>`__. By default, there is no
   difference between ``quote`` and ``quotation``.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/12/01 17:24:43 $
-
 .. |diagram p295| image:: img_62.png
 .. |diagram p295| image:: img_63.png
 .. |diagram Lamport p220| image:: img_65.png
@@ -365,7 +360,3 @@ quote (environment)
 .. |Special symbols valid in text and math| image:: img_45.png
 .. |exampel of math spacing| image:: img_44.png
 .. |See...| image:: AR.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

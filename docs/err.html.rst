@@ -1825,13 +1825,3 @@ signaled. You may notice that there is a problem by examining the line
 not empty.
 
 There may be errors while parsing incorrect XML files
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA 2011
-Last modified $Date: 2015/08/06 15:21:39 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

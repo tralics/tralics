@@ -306,13 +306,3 @@ In *Tralics*, there is no conversion from an horizontal list into a
 vertical list, so that this command provokes an error. Note that second
 error may occur while scanning the brace. (see
 `scantoks <doc-s.html#fct-scantoks>`__ for the syntax).
-
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA 204,
-2006 Last modified $Date: 2015/08/04 15:57:41 $
-
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

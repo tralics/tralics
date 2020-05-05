@@ -767,16 +767,7 @@ sequence of letters), and reads the verbatim material. This material is
 saved, and can be used by the ``\UseVerb`` command. For an example, see
 `catcode section <doc-symbols.html#cat16>`__.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2008 Last modified $Date: 2015/08/04 15:54:02 $
-
 .. |See...| image:: AR.png
 .. |\\underbrace{...}| image:: img_t_underbrace.png
 .. |underline ex.| image:: img_t_underline.png
 .. |underrightarrow| image:: img_t_underrightarrow.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

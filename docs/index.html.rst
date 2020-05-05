@@ -338,16 +338,7 @@ http://www-sop.inria.fr/marelle/tralics. Author:
   `inria-0069870 <http://hal.inria.fr/inria-00069870>`__. It is unlikely
   that these files are up to date.
 
---------------
-
-|Valid XHTML 1.0 Strict| © INRIA 2003-2008 Last modified $Date:
-2017/05/29 07:04:24 $
-
 .. |APICS| image:: apics.gif
    :target: http://team.inria.fr/apics
 .. |MARELLE| image:: logoMarelle_v2.png
    :target: https://team.inria.fr/marelle
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

@@ -1331,11 +1331,6 @@ description of the ```\pm`` <doc-p.html#cmd-pm>`__ command.
 This is defined in PlainTeX as : ``\par \vfill \supereject \end``. In
 *Tralics*, we make it equivalent to ``\endinput``.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006, 2008 Last modified $Date: 2015/11/27 17:06:15 $
-
 .. |ring below accent| image:: img_97.png
    :class: vc
 .. |$\beta$| image:: img_beta.png
@@ -1357,7 +1352,3 @@ This is defined in PlainTeX as : ``\par \vfill \supereject \end``. In
 .. |$\bottom$| image:: img_other_bottom.png
 .. |$\bowtie$| image:: img_t_bowtie.png
 .. |$x\Box$| image:: img_119.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer

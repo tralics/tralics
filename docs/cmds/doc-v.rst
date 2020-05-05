@@ -1191,17 +1191,8 @@ This is the same as ```\vbox`` <doc-v.html#cmd-vbox>`__.
 The ``\Vvdash`` command is like ```\vdash`` <doc-v.html#cmd-vdash>`__,
 it produces character U+22AA, ⊪; there is a triple vertical bar.
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003-2005, 2006 Last modified $Date: 2015/12/01 17:24:43 $
-
 .. |See...| image:: AR.png
 .. |example of \\verb| image:: img_116.png
 .. |verbatim commands| image:: img_108.png
 .. |Verbatim example| image:: img_109.png
 .. |delimiters| image:: img_50.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer
