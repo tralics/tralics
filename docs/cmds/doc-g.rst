@@ -85,7 +85,7 @@ if *Tralics* is called with option -multi_math_label then an anchor is
 added to every row, its ``id-text`` is obtained by incrementing the
 equation counter. In the example shown, the anchor is attached to the
 formula and no counter is incremented. (See also
-`here <doc-ex.xhtml#gather>`__)
+`here <mml_ex.html#gather>`__)
 
 .. container:: ltx-source
 

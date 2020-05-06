@@ -2291,7 +2291,7 @@ Translation is
       </formula>
 
 Preview |fraction and \\mathchoice| (See also
-`here <doc-ex.xhtml#fraction>`__)
+`here <mml_ex.html#fraction>`__)
 
 .. _cmd-frame:
 

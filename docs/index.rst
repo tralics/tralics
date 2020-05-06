@@ -9,6 +9,7 @@ Welcome to the Tralics documentation
 
    index.orig
    options
+   titlepage
    packages
    array
    chars
@@ -25,6 +26,7 @@ Welcome to the Tralics documentation
    raweb_cfg
    auxdoc
    cmds/index
+   titlepage_conf
    Changelog <changelog>
 
 .. toctree::

@@ -367,7 +367,7 @@ Same as ``\ddagger``, in text mode. The translation of
       </formula>
       &ndash; &#x2020; &ndash; &#x2021;
 
-Preview: |daggers| (see also `here <doc-ex.xhtml#counters>`__).
+Preview: |daggers| (see also `here <mml_ex.html#counters>`__).
 
 .. _cmd-ddagger:
 
@@ -1082,7 +1082,7 @@ Translation
        </math>
       </formula>
 
-|math style| (see also `here <doc-ex.xhtml#style>`__).
+|math style| (see also `here <mml_ex.html#style>`__).
 
 .. _cmd-displaywidth:
 

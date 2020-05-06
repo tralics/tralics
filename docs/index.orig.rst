@@ -24,27 +24,14 @@ Send questions, comments, bug reports, etc, to tralics@inria.fr.
 Printed Documentation and Examples
 ----------------------------------
 
--  The `paper <tralics-euro2003.pdf>`__ presented at Eurotex2003 and
+-  The :download:`paper </pdf/tralics-euro2003.pdf>` presented at Eurotex2003 and
    `published in
    TUGboat <http://www.tug.org/TUGboat/Contents/contents24-3.html>`__.
 -  The following two reports describe some features of the software.
-   These versions are updated for *Tralics* 2.12:
-
-   -  Part I `Pdf <tralics-rr1.pdf>`__ version,
-      `HTML <auxdir/tralics-rr.html>`__ version, `XML
-      (unsplit) <htralics-rr.xml>`__.
-   -  Part II `Pdf <tralics-rr2.pdf>`__ version,
-      `HTML <auxdir/tralics-rr2.html>`__ version, translated by Tralics
-
--  Example of a thesis `Thesis of C. Roméro <these/these.html>`__ and
-   `English version <thesis/thesis.html>`__
--  Example of a math paper by Fabiańska and Quadrat `Applications of the
-   Quillen-Suslin theorem to multidimensional systems
-   theory <quadrat/main.xml>`__
--  Example of math formulas `XML version <quadrat/testmath.xml>`__ and
-   `Pdf version <quadrat/testmath.pdf>`__. This document was created in
-   2007, and is not up-to-date. Other example can be found in
-   `here <doc-ex.xhtml>`__.
+   These versions are updated for *Tralics* 2.12: :download:`Part I </pdf/tralics-rr1.pdf>`,
+   :download:`Part II </pdf/tralics-rr2.pdf>`.
+-  Example of math formulas :download:`here </pdf/testmath.pdf>` and
+   `here <mml_ex.html>`__.
 -  The algorithms used by Tralics for the maths `XML
    version <quadrat/tralics-math.xml>`__ or `Pdf
    version <http://hal.inria.fr/inria-00192610/en/>`__
@@ -96,7 +83,7 @@ some changes in the handling of the Ra2007, updated for
 
 `Computing pi (tex file) <comp_pi.tex>`__
 
-See also: `EuroTeX slides <tr.pdf>`__ (pdf)
+See also: :download:`EuroTeX slides </pdf/tr.pdf>` (pdf)
 
 Status of the Software
 ----------------------

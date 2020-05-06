@@ -957,7 +957,7 @@ The delimiters recognized are
       \lbrack\rbrack
       $
 
-Preview |delimiters| (see also `here <doc-ex.xhtml#delimiters>`__).
+Preview |delimiters| (see also `here <mml_ex.html#delimiters>`__).
 
 Example showing all delimiters
 

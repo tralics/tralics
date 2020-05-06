@@ -1206,7 +1206,7 @@ The ``\nointerlineskip`` command is ignored. In TeX, it sets
   that the kernel in ``<mover>`` can have a \`movablelimits' attribute,
   case where the effect is the same as ``\displaylimits``; this may
   confuse *Tralics*, in the case where the attribute is implicit.
-| |See...| (see also `here <doc-ex.xhtml#limits>`__) For details see
+| |See...| (see also `here <mml_ex.html#limits>`__) For details see
   ```\mathord`` <doc-m.html#cmd-mathord>`__.
 
 .. container:: ltx-source

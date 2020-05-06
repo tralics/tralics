@@ -142,7 +142,7 @@ converted to calligraphic style. Example
        </math>
       </formula>
 
-Preview |$\cal ...$|. (See also `here <doc-ex.xhtml#math-font>`__)
+Preview |$\cal ...$|. (See also `here <mml_ex.html#math-font>`__)
 
 .. _cmd-calc:
 

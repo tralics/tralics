@@ -90,8 +90,7 @@ Here is an example of code
         \arabic{ca}.}
       \printgcd{144}{272}
 
-If you are interested, the transcript file (for the original definition)
-is `here <gcd-log.html>`__. The translation is the following. |gcd|
+The translation is the following. |gcd|
 
 This is another way for the same command. The first time we enter
 ``\@whilesw``, the test is true. Here we print the value at the start of

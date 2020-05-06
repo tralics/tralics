@@ -589,7 +589,7 @@ such are discouraged. Example:
         <mfenced open='(' close=')'><mfrac linethickness='0.0pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced>
       </mrow></math></formula>
 
-Preview |\\over etc| (see also `here <doc-ex.xhtml#binom>`__)
+Preview |\\over etc| (see also `here <mml_ex.html#binom>`__)
 
 .. _cmd-overbrace:
 

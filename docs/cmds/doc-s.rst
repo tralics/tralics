@@ -1850,7 +1850,7 @@ superscript (remember that a prime sign is the same as ``^{\prime}``).
 The result is a sum sign, with the letter i below it, and a prime accent
 on the upper right. In the second example, we have a superscript and a
 subscript in L, R and S. (for the translatation, see
-`here <doc-ex.xhtml#sideset>`__.
+`here <mml_ex.html#sideset>`__.
 
 .. container:: ltx-source
 
@@ -2124,7 +2124,7 @@ you get
         </mrow></math>
       </formula>
 
-Preview |random operators| (see also `here <doc-ex.xhtml#math1>`__).
+Preview |random operators| (see also `here <mml_ex.html#math1>`__).
 
 .. _cmd-smallsetminus:
 
@@ -2424,7 +2424,7 @@ Translation
        </math>
       </formula>
 
-Preview: |split environment|. (see also `here <doc-ex.xhtml#split>`__).
+Preview: |split environment|. (see also `here <mml_ex.html#split>`__).
 
 .. _cmd-splitbotmark:
 
@@ -3159,7 +3159,7 @@ you get
 
 All commands are listed in Table 8.8 of the `Latex
 Companion <index.html#companion>`__. |big operators from Table 8.8|.
-(see also `here <doc-ex.xhtml#math1>`__).
+(see also `here <mml_ex.html#math1>`__).
 
 .. _cmd-sup:
 

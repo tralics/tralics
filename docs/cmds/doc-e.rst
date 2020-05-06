@@ -727,7 +727,7 @@ Translation
        </math>
       </formula>
 
-Preview |example of eqnarray\*| (see also `here <doc-ex.xhtml#align>`__)
+Preview |example of eqnarray\*| (see also `here <mml_ex.html#align>`__)
 
 .. _cmd-eqcirc:
 

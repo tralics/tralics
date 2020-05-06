@@ -318,7 +318,7 @@ MathML Recommendation.
 | The preview shows that there is little difference between thick and
   thin space, this explains why MathML ranges from very-very-thick to
   very-very-thin.
-| |exampel of math spacing| (see also `here <doc-ex.xhtml#spacing>`__).
+| |exampel of math spacing| (see also `here <mml_ex.html#spacing>`__).
 
 .. _cmd-quad:
 

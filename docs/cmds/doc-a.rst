@@ -235,7 +235,7 @@ You can say
 ``$\hat{a} \acute{a} \bar{a} \dot{a} \breve{a} \check{a} \grave{a} \vec{a} \ddot{a} \tilde{a}$``,
 but these commands work only in math mode, they produce characters like
 this image |math accent| (for the MathML variant, see
-`here <doc-ex.xhtml#accent1>`__).
+`here <mml_ex.html#accent1>`__).
 
 You can say ``éîÀ``, but this works only if the character exists in the
 current input encoding.
@@ -453,7 +453,7 @@ ā́ à̄ à́̀ á̀́
 Like ``\underaccent``, but the accent is above. This is valid in math
 mode only, translation of ``\accentset xy`` is
 ``<mover accent='true'><mi>y</mi>   <mi>x</mi></mover>`` (for an
-example, see `here <doc-ex.xhtml#accentset>`__).
+example, see `here <mml_ex.html#accentset>`__).
 
 .. _cmd-active:
 
@@ -513,7 +513,7 @@ The XML result is
 
 All these commands are listed in Table 8.12 of the `Latex Companion
 2 <index.html#TLC2>`__. Preview: |math accents| (see also
-`here <doc-ex.xhtml#acute>`__). Note that ``\widehat`` and
+`here <mml_ex.html#acute>`__). Note that ``\widehat`` and
 ``\widetilde`` are not wide in the current implementation.
 
 Other constructs look like accents, but use large or extensible symbols.
@@ -1181,7 +1181,7 @@ Translation
        </math>
       </formula>
 
-Preview: |align environment|. (see also `here <doc-ex.xhtml#align>`__).
+Preview: |align environment|. (see also `here <mml_ex.html#align>`__).
 
 .. _env-aligned:
 
@@ -1235,7 +1235,7 @@ Translation
        </math>
       </formula>
 
-Preview: |align environment|. (see also `here <doc-ex.xhtml#align>`__).
+Preview: |align environment|. (see also `here <mml_ex.html#align>`__).
 
 .. _cmd-allowbreak:
 
@@ -1294,7 +1294,7 @@ documentation says: “may be used only in math mode” but the code says
       \stepcounter{ctr}\showcounter{ctr}
       \stepcounter{ctr}\showcounter{ctr}
 
-Preview: |counters| (see also `here <doc-ex.xhtml#counters>`__)
+Preview: |counters| (see also `here <mml_ex.html#counters>`__)
 
 .. _cmd-alpha:
 
@@ -2029,7 +2029,7 @@ Translation
 
 We give here two versions, the old one and the new one; in January 2005,
 we modified the xmt file, the result is much better. |array in eqnarray|
-|array in eqnarray| (see also `here <doc-ex.xhtml#align>`__).
+|array in eqnarray| (see also `here <mml_ex.html#align>`__).
 
 We give here another example. It shows that you can put tables into
 tables.

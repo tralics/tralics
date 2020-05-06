@@ -1428,7 +1428,7 @@ content of these is defined by the current bibliography style, the value
 of the argument of the ``\bibliographystyle`` command.
 
 The default behavior of *Tralics* is not to call bibtex, but to compute
-and translate an intermediate file, say miaou2003_.bbl (note the
+and translate an intermediate file, say ``miaou2003_.bbl`` (note the
 underscore), that is equivalent to the miaou2003.bbl file produced by
 bibtex. It contains no ``thebibliography`` environment, but a lot of
 ``\citation`` commands (that are in reality environments, since they are
@@ -1614,12 +1614,11 @@ file is loaded (if possible) and executed. It is assumed that
 translating this file will solve all entries, but no further checks are
 done.
 
-If no external program is given, *Tralics* will read the database files,
-and construct a bbl file (named testb_.bbl) and executes it. Given the
-following command
-``\newcommand \usebib[2] {\bibliography{#1#2, #1_foot#2+foot,   #1_refer#2+refer}}``,
-you can say ``\usebib{miaou}{2003}``, if you want to mimic what
-*Tralics* does for the RA2003. (note: only suffixes year, foot and refer
+If no external program is given, *Tralics* will read the database files, and
+construct a bbl file (named ``testb_.bbl``) and executes it. Given the following
+command ``\newcommand \usebib[2] {\bibliography{#1#2, #1_foot#2+foot,
+#1_refer#2+refer}}``, you can say ``\usebib{miaou}{2003}``, if you want to mimic
+what *Tralics* does for the RA2003. (note: only suffixes year, foot and refer
 are considered; this could be generalized).
 
 .. _rabib5:
@@ -1823,21 +1822,20 @@ message.
       <tex.pro><special.pro>. [1] [2] [3] [4] [5] [6] [7] [8] [9<xml-route.ps>] 
       [10] [11] [12] [13] [14] [15]
 
-The result is the following `miaou2003.ps <miaou2003.ps>`__ . There are
-two sections \`New results' (section 6 and 8), because there is a module
-in section \`new results' after a module in section \`Contracts'. This
-explains why LaTeX sees multiply-defined labels. There is an: Overfull
-\\hbox (22.7474pt too wide) in paragraph at lines 19--19. Line 19
-contains the ``\maketitle`` command. The overfull box contains the long
-name of the Team. It is hard to remove it. Note: this is a draft
-version. You should not try to add commands that remove overfull and
-underfull boxes, this is completely useless.
+The result is the following :download:`miaou2003.ps </pdf/miaou2003.ps>`. There
+are two sections \`New results' (section 6 and 8), because there is a module in
+section \`new results' after a module in section \`Contracts'. This explains why
+LaTeX sees multiply-defined labels. There is an: Overfull \\hbox (22.7474pt too
+wide) in paragraph at lines 19--19. Line 19 contains the ``\maketitle`` command.
+The overfull box contains the long name of the Team. It is hard to remove it.
+Note: this is a draft version. You should not try to add commands that remove
+overfull and underfull boxes, this is completely useless.
 
 3.3 Running Tralics
 -------------------
 
 When you run *Tralics*, whatever the arguments, it will print the
-following lines. The third line (`Starting XX processing for YYY' may
+following lines. The third line (``Starting XX processing for YYY`` may
 change).
 
 .. container:: tty_out
@@ -2041,7 +2039,7 @@ This is now what you see on the screen.
       (Transcript written on miaou.rh.log)
       done
 
-The result is the following `miaou.ps <miaou.ps>`__ .
+The result is the following :download:`miaou.ps </pdf/miaou.ps>`.
 
 There is one warning: Underfull \\vbox (badness 10000) has occurred
 while \\output is active. Tracing TeX shows the following. The selected
@@ -2259,11 +2257,11 @@ via XML 24s.
       (Transcript written on miaou.rh.log)
       done
 
-The pdf is `here <wmiaou.pdf>`__. It is named wmiaou.pdf, a name that
-does not conflict with the names miaou2003.ps and miaou.ps. Running
-*Tralics* ten times in a row give the following size for the Pdf file:
-152499 152499 152500 152500 152500 152500 152497 152497 152497 152497.
-Strange, isn't it?
+The pdf is :download:`here </pdf/wmiaou.pdf>`. It is named wmiaou.pdf, a name
+that does not conflict with the names miaou2003.ps and miaou.ps. Running
+*Tralics* ten times in a row give the following size for the Pdf file: 152499
+152499 152500 152500 152500 152500 152497 152497 152497 152497. Strange, isn't
+it?
 
 .. _script0:
 
@@ -4046,8 +4044,6 @@ been loaded. Some other symbols are defined, or redefined.
 
       \def\L@fr{\selectlanguage{french}}
       \def\L@FR{\selectlanguage{french}}
-
-.. _fotex:
 
 5.10 The fotex.cfg file
 -----------------------

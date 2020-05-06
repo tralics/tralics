@@ -589,7 +589,7 @@ Translation
       </formula>
 
 If your browser supports MathML, you can see the translation
-`here <doc-ex.xhtml#math2>`__
+`here <mml_ex.html#math2>`__
 
 There are five other commands, that add an attribute pair to the current
 formula, the current math element, the current table, the current row,
@@ -2606,7 +2606,7 @@ left or the right. Example
        </math>
       </formula>
 
-Preview: |$mu$|. (see also `here <doc-ex.xhtml#align>`__).
+Preview: |$mu$|. (see also `here <mml_ex.html#align>`__).
 
 .. _cmd-muskip:
 

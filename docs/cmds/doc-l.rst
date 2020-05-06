@@ -467,7 +467,7 @@ following miscellaneous symbols.
   operators are from Table 8.7 of the `Latex
   Companion <index.html#companion>`__. The ``\Box`` command is not yet
   implemented (but ``\square`` produces the same effect). |operators of
-  table 8.7| (see also `here <doc-ex.xhtml#math1>`__).
+  table 8.7| (see also `here <mml_ex.html#math1>`__).
 | |See...| The ``\ldots`` command is also valid outside math mode, see
   the ```\qquad`` <doc-q.html#cmd-qquad>`__ command.
 
@@ -492,7 +492,7 @@ symbol: ``<mo>&le;</mo>``. *Tralics* recognizes the following relations:
 The XML result is `shown here <doc-laux.html#cmd-le>`__. All these
 operators are from Table 8.5 of the `Latex
 Companion <index.html#companion>`__. |relations operators from table
-8.5| (see also `here <doc-ex.xhtml#math1>`__).
+8.5| (see also `here <mml_ex.html#math1>`__).
 
 .. _cmd-leaders:
 
@@ -639,7 +639,7 @@ The translatiton is
        </math>
       </formula>
 
-Preview: |\\left ...\right| (see also `here <doc-ex.xhtml#math1>`__)
+Preview: |\\left ...\right| (see also `here <mml_ex.html#math1>`__)
 
 .. _cmd-leftarrow:
 
@@ -666,7 +666,7 @@ arrow pointing to the left: ``<mo>&leftarrow;</mo>``. (Unicode U+2190,
 The XML result is `shown here <doc-laux.html#cmd-leftarrow>`__. All
 these operators are from Table 8.6 of the `Latex
 Companion <index.html#companion>`__. |arrows from table 8.6| (see also
-`here <doc-ex.xhtml#math1>`__)
+`here <mml_ex.html#math1>`__)
 
 .. _cmd-cleftarrow:
 
@@ -1405,7 +1405,7 @@ the list of all log-like operators:
       $$
 
 | The XML result is `shown here <doc-laux.html#cmd-log>`__. (see also
-  `here <doc-ex.xhtml#math1>`__). All commands are listed in Table 8.9
+  `here <mml_ex.html#math1>`__). All commands are listed in Table 8.9
   of the `Latex Companion <index.html#companion>`__.
 | |log-like operators| |log-like operators| |log-like operators|
   |log-like operators|
