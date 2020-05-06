@@ -115,16 +115,15 @@ encoding also used when *Tralics* prints something on the terminal. For
 instance, this is the output of ``\show``, with the option te1a:
 ``\f^^e9e=macro: ->fairy.``
 
-You can use one of -utf8, -latin1 for indicating the default input
-encoding. In LaTeX, you can use the inputenc package for specifying
-alternate encodings, this is not yet implemented. All files are
-converted into UTF-8 while they are read; there is an exception: the
-main file is converted only after the configuration file has been read
-(this means that the configuration file could contain the definition of
-the encoding). You can declare the encoding of the current file, by
-putting near the head of the file a line that contains -*- followed by
-coding: iso-8859-1 or coding: utf8. This works whatever the type of the
-file: configuration file, bibliography data base, or TeX file.
+You can use one of -utf8, -latin1 for indicating the default input encoding. In
+LaTeX, you can use the inputenc package for specifying alternate encodings, this
+is not yet implemented. All files are converted into UTF-8 while they are read;
+there is an exception: the main file is converted only after the configuration
+file has been read (this means that the configuration file could contain the
+definition of the encoding). You can declare the encoding of the current file,
+by putting near the head of the file a line that contains ``-*-`` followed by
+coding: iso-8859-1 or coding: utf8. This works whatever the type of the file:
+configuration file, bibliography data base, or TeX file.
 
 A given character can appear in one of three modes: typesetting text,
 typesetting maths, and other cases (in general, when creating the name
@@ -356,7 +355,7 @@ software, there was a possibility to obtain entity names.
 
 |latin extended A|
 
- Latin extended additional characters
+Latin extended additional characters
 ------------------------------------
 
 We explain here how to obtain all characters between U+1E00 and U+1EFF.
@@ -465,7 +464,7 @@ Translation
        &#7920; &#7921; &#7922; &#7923; &#7924; &#7925; &#7926; &#7927; 
        &#7928; &#7929;</p>
 
-|latin extended additional|
+|latin extended additional 2|
 
 = = = = = = = = = = == = = = = =
 Ẁ ẁ Ẃ ẃ Ẅ ẅ Ẇ ẇ Ẉ ẉ Ẋ  ẋ Ẍ ẍ Ẏ ẏ
@@ -478,7 +477,7 @@ Translation
 Ự ự Ỳ ỳ Ỵ ỵ Ỷ ỷ Ỹ ỹ            
 = = = = = = = = = = == = = = = =
 
- Dingbats characters
+Dingbats characters
 -------------------
 
 You can use the ``\ding`` command in order to access one character of
@@ -1253,7 +1252,7 @@ in the tables.
 .. |latin 1, non ascii| image:: /img/img_70.png
 .. |latin extended A| image:: /img/img_68.png
 .. |latin extended additional| image:: /img/img_92.png
-.. |latin extended additional| image:: /img/img_93.png
+.. |latin extended additional 2| image:: /img/img_93.png
 .. |Zapf Dingbats characters| image:: /img/img_71.png
 .. |Unicode Arrows| image:: /img/img_126.png
 .. |Unicode Mathematical operators| image:: /img/img_127.png

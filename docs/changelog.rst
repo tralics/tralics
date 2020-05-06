@@ -218,7 +218,7 @@ Changes affecting the output
    Hack the case where a theorem starts with a display formula.
    Implemented ``\hdotsfor`` as a line of dots.
    Change which equations are numbered.
-   Allow :literal:`\\char`\\\` in text in math.
+   Allow ``\char\``` in text in math.
    Changed ``\stepcounter`` and ``\@killcounter``.
    Fixed a bug in ``\XMLlastid``.
    Added ``\everybibitem``.
@@ -265,7 +265,7 @@ Changes affecting the output
    Allow expansion of arguments of ``\begin``, ``\end``.
    Improved error handling of ``\def\xx#1{}\begin{\xx}``.
    Changed ``\hspace{2.cm}`` in math mode, result always a dimension in
-   pt, works even after :literal:`\\mathcode`\.="8000`.
+   pt, works even after ``\mathcode\`.="8000``.
    Implemented package esdiff.
    Implemented full graphics package.
    Implemented optional arg of ``\rotatebox``.
@@ -487,7 +487,7 @@ Changes affecting the output
 -  [2008-04-04, version 2.11.7]
    Change chapter ids from uidXXX to cidXXX.
    Removed ``stop_on_error`` flag for parse_error.
-   No message of the form “image foo not found” if foo.png exists.
+   No message of the form ``image foo not found`` if foo.png exists.
    Fixed a bug in ``\@reevaluate\foo\bar\gee``.
    Created a virtual file named .tex.
    You can say ``\input{}``.
@@ -511,7 +511,7 @@ Changes affecting the output
    No directory search for ult file.
    Optional plus in ``\IfFileExists`` and ``\InputIfFileExists``.
    Option param takes one or two arguments.
-   No creation of foo_.bbl if useless.
+   No creation of ``foo_.bbl`` if useless.
    Ignore check option in RA2008.
    Removed the fatal error if more than one of check/ps/xml are given.
    Shell variables TRALICSDIR and RAWEBDIR no more looked at.
@@ -1827,7 +1827,7 @@ Version 1.6
    Bug correction: the second ``\par`` in ``\par toto \par titi`` was
    ignored (synchronisation problem).
    Added ``\let\debugfalse\relax``.
-   Instead of putting the biblio in toto.bbl, I put it in toto_.bbl.
+   Instead of putting the biblio in ``toto.bbl``, I put it in ``toto_.bbl``.
    Bug of ``\{`` and ``\}`` in math mode, not completely handled.
    Bug of ``\item[{\bf x}]``; braces disappear.
    Bug of ``\begin{Verbatim} [numbers=true]``; the test of optional
