@@ -604,7 +604,7 @@ Version in which the font is not an attribute.
 
 Preview |all font variants|
 
-New version. Preview |all font variants|
+New version. Preview |all font variants 2|
 
 Configuration source file. This file gives longert names than the
 example above; but our XSLT processor handles the long names and the
@@ -637,14 +637,5 @@ short names identically.
         xml_font_sansserif = "font-sansserif-family"
         xml_font_bold = "font-bold-series"
 
---------------
-
-|Valid XHTML 1.0 Strict| `back to home page <index.html>`__ © INRIA
-2003, 2006 Last modified $Date: 2015/12/15 09:13:31 $
-
-.. |all font variants| image:: img_40.png
-.. |all font variants| image:: img_122.png
-.. |Valid XHTML 1.0 Strict| image:: http://www.w3.org/Icons/valid-xhtml10
-   :width: 88px
-   :height: 31px
-   :target: http://validator.w3.org/check?uri=referer
+.. |all font variants| image:: /img/img_40.png
+.. |all font variants 2| image:: /img/img_122.png

@@ -17,7 +17,12 @@ Welcome to the Tralics documentation
    loop
    start
    step
+   mml_ex
+   fp
+   laux
    raweb
+   raweb_examples
+   raweb_cfg
    auxdoc
    cmds/index
    Changelog <changelog>
