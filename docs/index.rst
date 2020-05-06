@@ -26,8 +26,17 @@ Welcome to the Tralics documentation
    raweb_cfg
    auxdoc
    cmds/index
-   titlepage_conf
    Changelog <changelog>
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Examples
+   :hidden:
+
+   titlepage-conf
+   titlepage-ex1
+   titlepage-ex2
+   titlepage-ex3
 
 .. toctree::
    :maxdepth: 1

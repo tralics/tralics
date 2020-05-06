@@ -496,9 +496,7 @@ The ``\bibliography`` command takes as argument a list of file-names
 from which bibtex takes the bibliographical entries. In *Tralics*, this
 command has as side-effect to load the bibliography, i.e. the bbl file.
 In the current version, this file is created by *Tralics* and not by an
-external program. Example: here is the `bib file <example_bib.html>`__.
-After saying ``\nocite{*}``, *Tralics* generated this `bbl
-file <example_bbl.html>`__.
+external program.
 
 .. _cmd-bibliographystyle:
 

@@ -15,8 +15,6 @@ run *Tralics* on a file myfile.tex via the command tralics myfile. You
 can provide some options, before or after the file name. This may
 produce *errors* or other *messages*.
 
-.. _ex1:
-
 Standard example
 ----------------
 
@@ -79,8 +77,6 @@ is produced, it looks like the following
       <p>Hello, world!
       </p>
       </std>
-
-.. _ex2:
 
 Small example
 -------------

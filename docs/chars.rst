@@ -1007,7 +1007,7 @@ are marked by a plus sign.
        \unimp{1d5fc}&\unimp{1d5fd}&\unimp{1d5fe}&\unimp{1d5ff}\\
       \end{array}$
 
-|Unicode Mathematical alphanumeric symbols|
+|Unicode Mathematical alphanumeric symbols 2|
 
 .. container:: ltx-source
 
@@ -1084,7 +1084,7 @@ are marked by a plus sign.
        \unimp{1d6fc}&\unimp{1d6fd}&\unimp{1d6fe}&\unimp{1d6ff}\\
       \end{array}$
 
-|Unicode Mathematical alphanumeric symbols|
+|Unicode Mathematical alphanumeric symbols 3|
 
 .. container:: ltx-source
 
@@ -1135,7 +1135,7 @@ are marked by a plus sign.
       \end{array}$
 
 Some characters are missing: sans serif bold greek lower case sans serif
-bold greek italic |Unicode Mathematical alphanumeric symbols|
+bold greek italic |Unicode Mathematical alphanumeric symbols 4|
 
 The T1 encoding
 ---------------
@@ -1258,6 +1258,6 @@ in the tables.
 .. |Unicode Mathematical operators| image:: /img/img_127.png
 .. |Unicode Miscellaneous symbols| image:: /img/img_128.png
 .. |Unicode Mathematical alphanumeric symbols| image:: /img/img_129.png
-.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_130.png
-.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_131.png
-.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_132.png
+.. |Unicode Mathematical alphanumeric symbols 2| image:: /img/img_130.png
+.. |Unicode Mathematical alphanumeric symbols 3| image:: /img/img_131.png
+.. |Unicode Mathematical alphanumeric symbols 4| image:: /img/img_132.png
