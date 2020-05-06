@@ -142,7 +142,7 @@ converted to calligraphic style. Example
        </math>
       </formula>
 
-Preview |$\cal ...$|. (See also `here <mml_ex.html#math-font>`__)
+Preview |$cal ...$|. (See also `here <mml_ex.html#math-font>`__)
 
 .. _cmd-calc:
 
@@ -246,7 +246,7 @@ numbers.
 
 The ``\cap`` command is valid only in math mode. It generates a binary
 operator (looks like a cap, used for set intersection):
-``<mo>&cap;</mo>`` (Unicode U+2229, ∩) that renders like |$\cap$|. See
+``<mo>&cap;</mo>`` (Unicode U+2229, ∩) that renders like |$cap$|. See
 description of the ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-Ccap:
@@ -806,7 +806,7 @@ in math mode (in text mode, you should use the
 
 The ``\chi`` command is valid only in math mode. It generates a Greek
 letter: ``<mi>&chi;</mi>`` (Unicode U+3C7, χ) that renders like
-|$\chi$|. See description of the ```\alpha`` <doc-a.html#cmd-alpha>`__
+|$chi$|. See description of the ```\alpha`` <doc-a.html#cmd-alpha>`__
 command.
 
 .. _cmd-choose:
@@ -827,7 +827,7 @@ of ``a\choose b``, you should use the LaTeX construction
 
 The ``\circ`` command is valid only in math mode. It generates a binary
 operator (small circle): ``<mo>&SmallCircle;</mo>`` (Unicode U+2218, ∘)
-that renders like |$\circ$|. See description of the
+that renders like |$circ$|. See description of the
 ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-circeq:
@@ -1009,7 +1009,7 @@ This is the resulting XML.
       <cit><ref target='bid0'>text</ref></cit><cit><ref target='bid1'/></cit>
       <cit><ref target='bid2'/></cit><cit><ref target='bid2'>foo</ref></cit>
 
-The resulting preview could be: |\\cite example|. Here the value of the
+The resulting preview could be: |cite example|. Here the value of the
 optional argument has disappeared, the red color means that you can
 click on it (of course, you cannot click on the image).
 
@@ -1183,7 +1183,7 @@ for details of argument scanning).
 
 The ``\clubsuit`` command is valid only in math mode. It generates a
 miscellaneous symbol (looks like a club suit): ``<mo>&clubsuit;</mo>``
-(Unicode U+2663, ♣) that renders like |$\clubsuit$|. See description of
+(Unicode U+2663, ♣) that renders like |$clubsuit$|. See description of
 the ```\ldots`` <doc-l.html#cmd-ldots>`__ command.
 
 .. _cmd-colon:
@@ -1345,7 +1345,7 @@ The ``\complement`` command is valid only in math mode. It generates
 
 The ``\cong`` command is valid only in math mode. It generates a
 relation symbol (``\sim`` over ``=``): ``<mo>&cong;</mo>`` (Unicode
-U+2245, ≅) that renders like |$\cong$|. See description of the
+U+2245, ≅) that renders like |$cong$|. See description of the
 ```\le`` <doc-l.html#cmd-le>`__ command.
 
 .. _cmd-coprod:
@@ -1355,7 +1355,7 @@ U+2245, ≅) that renders like |$\cong$|. See description of the
 
 The ``\coprod`` command is valid only in math mode. Its translation is a
 variable-sized symbol (is an inverted ``\prod``): ``<mo>&coprod;</mo>``
-(Unicode U+2210, ∐) that renders like |$\coprod$|. For an example see
+(Unicode U+2210, ∐) that renders like |$coprod$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-copy:
@@ -1801,7 +1801,7 @@ the log file for this example.
 
 The ``\cup`` command is valid only in math mode. It generates a binary
 operator (used for set union) ``<mo>&cup;</mo>`` (Unicode U+222A, ∪).
-that renders like |$\cup$|. See description of the
+that renders like |$cup$|. See description of the
 ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-Ccup:
@@ -1940,15 +1940,15 @@ generates ``<mo>&#x293B;</mo>``. (Unicode U+293B, ⤻).
 
 .. |cedilla accents| image:: /img/img_23.png
 .. |double grave accents| image:: /img/img_90.png
-.. |$\cal ...$| image:: /img/img_110.png
-.. |$\cap$| image:: /img/img_other_cap.png
+.. |$cal ...$| image:: /img/img_110.png
+.. |$cap$| image:: /img/img_other_cap.png
 .. |the sign function| image:: /img/img_117.png
-.. |$\chi$| image:: /img/img_chi.png
+.. |$chi$| image:: /img/img_chi.png
    :class: vc
-.. |$\circ$| image:: /img/img_t_circ.png
-.. |\\cite example| image:: img30.png
-.. |$\clubsuit$| image:: /img/img_t_clubsuit.png
-.. |$\cong$| image:: /img/img_other_cong.png
+.. |$circ$| image:: /img/img_t_circ.png
+.. |cite example| image:: /img/img30.png
+.. |$clubsuit$| image:: /img/img_t_clubsuit.png
+.. |$cong$| image:: /img/img_other_cong.png
    :class: vc
-.. |$\coprod$| image:: /img/img_t_coprod.png
-.. |$\cup$| image:: /img/img_other_cup.png
+.. |$coprod$| image:: /img/img_t_coprod.png
+.. |$cup$| image:: /img/img_other_cup.png

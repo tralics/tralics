@@ -69,8 +69,8 @@ All commands, alphabetic order; letter D
   `\\delimiterfactor <#cmd-delimiterfactor>`__,
   `\\delimitershortfall <#cmd-delimitershortfall>`__,
   `\\delta <#cmd-delta>`__, `\\Delta <#cmd-Cdelta>`__,
-  `\\delpresetkeys <#cmd-savekeys>`__,
-  `\\delsavekeys <#cmd-savekeys>`__, `\\@depth <#cmd-depth>`__,
+  `\\delpresetkeys <#cmd-delsavekeys>`__,
+  `\\delsavekeys <#cmd-delsavekeys>`__, `\\@depth <#cmd-depth>`__,
   `\\depthof <#cmd-depthof>`__, `\\det <#cmd-det>`__,
   `\\detokenize <#cmd-detokenize>`__, `\\dfrac <#cmd-dfrac>`__,
   `\\dh <#cmd-dh>`__, `\\DH <#cmd-dh>`__, `\\diagup <#cmd-diagup>`__,
@@ -725,7 +725,7 @@ depth 100pt, delimiters will be at least 95pt tall (see also
 ignored by *Tralics*. (See `scandimen <doc-s.html#fct-scandimen>`__ for
 details of argument scanning).
 
-.. _cmd-savekeys:
+.. _cmd-delsavekeys:
 
 \\delsavekeys, \\delpresetkeys
 ------------------------------

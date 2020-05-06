@@ -683,7 +683,7 @@ The resulting XML is the following.
       <p>Hàn Th&#x1ebf; Thành designed pdf<TeX/>. &#x142; and &lstrok;.</p>
       <p noindent='true'>In Tralics version 2, you can say Th&#x1EBF;</p>
 
-Preview: |example of \\xmllatex|
+Preview: |example of xmllatex|
 
 .. _cmd-xmlparent:
 
@@ -1084,4 +1084,4 @@ This is now the translation
       </p><p><mi att-name='att-val1'/></p></unknown>
 
 .. |See...| image:: /img/AR.png
-.. |example of \\xmllatex| image:: /img/img_64.png
+.. |example of xmllatex| image:: /img/img_64.png

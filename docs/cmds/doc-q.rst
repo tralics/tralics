@@ -98,7 +98,7 @@ and the translation
       <multiput xpos='0' ypos='100' repeat='5' dx='30' dy='-20'><circle size='2'/></multiput>
       </picture>
 
-Preview |diagram p295|
+Preview |diagram p295 2|
 
 Yet another picture. This is from the book of Lamport, page 220. The
 only difference is that we used ``\multiput*``. Without the star, the
@@ -354,7 +354,7 @@ quote (environment)
   difference between ``quote`` and ``quotation``.
 
 .. |diagram p295| image:: /img/img_62.png
-.. |diagram p295| image:: /img/img_63.png
+.. |diagram p295 2| image:: /img/img_63.png
 .. |diagram Lamport p220| image:: /img/img_65.png
 .. |pictures| image:: /img/img_114.png
 .. |Special symbols valid in text and math| image:: /img/img_45.png

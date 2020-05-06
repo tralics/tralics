@@ -94,7 +94,7 @@ The translation is
       &#514; &#515; &#518; &#519; &#522; &#523; 
       &#526; &#527; &#530; &#531; &#534; &#535;
 
-Preview |\\f accent|, HTML characters: Ȃ ȃ Ȇ ȇ Ȋ ȋ Ȏ ȏ Ȓ ȓ Ȗ ȗ.
+Preview |f accent|, HTML characters: Ȃ ȃ Ȇ ȇ Ȋ ȋ Ȏ ȏ Ȓ ȓ Ȗ ȗ.
 
 .. _cmd-fallingdotseq:
 
@@ -2233,7 +2233,7 @@ scriptscript style.
        </math>
       </formula>
 
-preview |\\frac\dfrac\tfrac|
+preview |frac dfrac tfrac|
 
 The following works in Tralics 2.0:
 
@@ -2290,7 +2290,7 @@ Translation is
        </math>
       </formula>
 
-Preview |fraction and \\mathchoice| (See also
+Preview |fraction and mathchoice| (See also
 `here <mml_ex.html#fraction>`__)
 
 .. _cmd-frame:
@@ -2418,7 +2418,7 @@ not affect the behavior of the ``\verb`` command).
 
 |verbatim|
 
-.. |\\f accent| image:: /img/img_89.png
-.. |\\frac\dfrac\tfrac| image:: /img/img_57.png
-.. |fraction and \\mathchoice| image:: /img/img_81.png
+.. |f accent| image:: /img/img_89.png
+.. |frac dfrac tfrac| image:: /img/img_57.png
+.. |fraction and mathchoice| image:: /img/img_81.png
 .. |verbatim| image:: /img/img_29.png

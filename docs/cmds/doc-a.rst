@@ -243,7 +243,7 @@ current input encoding.
 You can say :literal:`\\`e \'e \^e \"e \~a \.e \=e` (this gives
 |accents|), or
 ``\c c, \H o, \C o, \"o, \k a, \b b, \d a, \u a, \f a, \v a, \T e, \r a, \D a, \h a, \V e.``
-(this gives |accents|). ``\k`` is not in Lamport, but is defined in
+(this gives |accents 2|). ``\k`` is not in Lamport, but is defined in
 t1enc.def. The same is true for ``\r``. The ``\f`` and ``\C`` commands
 are defined by the t2aenc.def file. The ``\T`` command (tilde below),
 ``\V`` (circonflex below), ``\D`` (circle below), ``\h`` (hook) are
@@ -1121,7 +1121,7 @@ the log file for the second example, with some comments added.
 
 The ``\aleph`` command is valid only in math mode. It generates a
 miscellaneous symbol (Hebrew letter aleph): ``<mo>&aleph;</mo>``
-(Unicode U+2135, ℵ), that renders like |$\aleph$|. See description of
+(Unicode U+2135, ℵ), that renders like |$aleph$|. See description of
 the ```\ldots`` <doc-l.html#cmd-ldots>`__ command.
 
 .. _env-align:
@@ -1235,7 +1235,7 @@ Translation
        </math>
       </formula>
 
-Preview: |align environment|. (see also `here <mml_ex.html#align>`__).
+Preview: |align environment 2|. (see also `here <mml_ex.html#align>`__).
 
 .. _cmd-allowbreak:
 
@@ -1303,7 +1303,7 @@ Preview: |counters| (see also `here <mml_ex.html#counters>`__)
 
 The ``\alpha`` command is valid only in math mode. It generates a Greek
 letter: ``<mi>&alpha;</mi>`` (Unicode U+3B1, α) that renders like
-|$\alpha$|. The TeXbook mentions ``\Alpha``, ``\Beta``, which could be
+|$alpha$|. The TeXbook mentions ``\Alpha``, ``\Beta``, which could be
 defined as ``{\rm A}{\rm B}``; in *Tralics*, the preferred way is to use
 ``ΑΒ`` (UTF8 encoding) or ``^^^^0391^^^^0392`` (ASCII encoding).
 *Tralics* recognizes the following letters:
@@ -1375,7 +1375,7 @@ The browser show these characters as α β γ δ ϵ ε ζ η θ ι κ λ μ ν �
 
 The ``\amalg`` command is valid only in math mode. It generates a binary
 operator (looks like reverse ``\Pi``): ``<mo>&amalg;</mo>`` (Unicode
-U+2A3F, ⨿) that renders like |$\amalg$|. See description of the
+U+2A3F, ⨿) that renders like |$amalg$|. See description of the
 ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-amp:
@@ -1575,7 +1575,7 @@ The command ``\AND`` can be used as boolean connector (equivalent to
 
 The ``\angle`` command is valid only in math mode. It generates a
 miscellaneous symbol: ``<mo>&ang;</mo>`` (Unicode U+2220, ∠) that
-renders like |$\angle$|. See description of the
+renders like |$angle$|. See description of the
 ```\ldots`` <doc-l.html#cmd-ldots>`__ command.
 
 .. _cmd-anodeconnect:
@@ -1622,7 +1622,7 @@ character by something else.
 
 The ``\approx`` command is valid only in math mode. It generates a
 relation symbol (like a double ``\sim``): ``<mo>&approx;</mo>`` (Unicode
-U+2248, ≈) that renders like |$\approx$|. See description of the
+U+2248, ≈) that renders like |$approx$|. See description of the
 ```\le`` <doc-l.html#cmd-le>`__ command.
 
 .. _cmd-approxeq:
@@ -2029,7 +2029,7 @@ Translation
 
 We give here two versions, the old one and the new one; in January 2005,
 we modified the xmt file, the result is much better. |array in eqnarray|
-|array in eqnarray| (see also `here <mml_ex.html#align>`__).
+|array in eqnarray 2| (see also `here <mml_ex.html#align>`__).
 
 We give here another example. It shows that you can put tables into
 tables.
@@ -2056,7 +2056,7 @@ tables.
       \end{array}
       \right|\]
 
-|array in eqnarray|
+|array in eqnarray 3|
 
 .. _cmd-arraycolsep:
 
@@ -2142,7 +2142,7 @@ that renders like |ast & star|. See description of the
 The ``\asymp`` command is valid only in math mode. It generates a
 relation symbol that looks like the superposition of ``\smile`` and
 ``\frown``: ``<mo>&asymp;</mo>`` (Unicode U+224D, ≍) that renders like
-|$\asymp$|. See description of the ```\le`` <doc-l.html#cmd-le>`__
+|$asymp$|. See description of the ```\le`` <doc-l.html#cmd-le>`__
 command.
 
 .. _cmd-atbegindocument:
@@ -2238,7 +2238,7 @@ used. Instead of \`\ ``aa \atopwithdelims()bb``' you should use
 
 .. |math accent| image:: /img/img_106.png
 .. |accents| image:: /img/img_86.png
-.. |accents| image:: /img/img_87.png
+.. |accents 2| image:: /img/img_87.png
    :class: vc
 .. |double accents| image:: /img/img_88.png
    :class: vc
@@ -2246,19 +2246,19 @@ used. Instead of \`\ ``aa \atopwithdelims()bb``' you should use
 .. |math accents| image:: /img/img_1.png
 .. |wide math accents| image:: /img/img_2.png
 .. |special math operators| image:: /img/img_3.png
-.. |$\aleph$| image:: /img/img_t_aleph.png
+.. |$aleph$| image:: /img/img_t_aleph.png
 .. |align environment| image:: /img/img_103.png
-.. |align environment| image:: /img/img_136.png
+.. |align environment 2| image:: /img/img_136.png
 .. |counters| image:: /img/img_113.png
-.. |$\alpha$| image:: /img/img_alpha.png
-.. |$\amalg$| image:: /img/img_other_amalg.png
-.. |$\angle$| image:: /img/img_other_angle.png
-.. |$\approx$| image:: /img/img_t_approx.png
+.. |$alpha$| image:: /img/img_alpha.png
+.. |$amalg$| image:: /img/img_other_amalg.png
+.. |$angle$| image:: /img/img_other_angle.png
+.. |$approx$| image:: /img/img_t_approx.png
 .. |curves example, companion p291 1| image:: /img/img_76.png
 .. |RAF6E airfoil| image:: /img/img_77.png
 .. |square washer| image:: /img/img_75.png
 .. |array in eqnarray| image:: /img/img_118.png
-.. |array in eqnarray| image:: /img/img_134.png
-.. |array in eqnarray| image:: /img/img_133.png
+.. |array in eqnarray 2| image:: /img/img_134.png
+.. |array in eqnarray 3| image:: /img/img_133.png
 .. |ast & star| image:: /img/img_t_aststar.png
-.. |$\asymp$| image:: /img/img_t_asymp.png
+.. |$asymp$| image:: /img/img_t_asymp.png

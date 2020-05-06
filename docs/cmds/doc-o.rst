@@ -589,7 +589,7 @@ such are discouraged. Example:
         <mfenced open='(' close=')'><mfrac linethickness='0.0pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced>
       </mrow></math></formula>
 
-Preview |\\over etc| (see also `here <mml_ex.html#binom>`__)
+Preview |over etc| (see also `here <mml_ex.html#binom>`__)
 
 .. _cmd-overbrace:
 
@@ -679,7 +679,7 @@ The ``\owns`` command is equivalent to ``\ni``. It gives a normal symbol
 
 .. |oldstylenums{...}| image:: /img/img_38.png
 .. |See...| image:: /img/AR.png
-.. |\\over etc| image:: /img/img_59.png
+.. |over etc| image:: /img/img_59.png
 .. |overbrace ex.| image:: /img/img_t_overbrace.png
 .. |overleftarrow ex.| image:: /img/img_t_overleftarrow.png
 .. |overrightarrow| image:: /img/img_t_overrightarrow.png

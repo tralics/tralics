@@ -639,7 +639,7 @@ The translatiton is
        </math>
       </formula>
 
-Preview: |\\left ...\right| (see also `here <mml_ex.html#math1>`__)
+Preview: |left ... right| (see also `here <mml_ex.html#math1>`__)
 
 .. _cmd-leftarrow:
 
@@ -1407,8 +1407,8 @@ the list of all log-like operators:
 | The XML result is `shown here <doc-laux.html#cmd-log>`__. (see also
   `here <mml_ex.html#math1>`__). All commands are listed in Table 8.9
   of the `Latex Companion <index.html#companion>`__.
-| |log-like operators| |log-like operators| |log-like operators|
-  |log-like operators|
+| |log-like operators| |log-like operators 2| |log-like operators 3|
+  |log-like operators 4|
 
 .. _cmd-loggingoutput:
 
@@ -1694,8 +1694,7 @@ symbol ``<mo>&lozenge;</mo>`` (Unicode U+25CA, ◊).
 ----
 
 The ``\lq`` command expands to a left quote (back-quote). You can say
-:literal:`\`\lq\foo\rq'` or :literal:`\``\foo''`, the result is the
-same.
+``{\lq\foo\rq}`` or ``{`\foo'}``, the result is the same.
 
 .. _cmd-lsc:
 
@@ -1742,9 +1741,9 @@ the symbol ``<mo>&parallel;</mo>`` (Unicode U+2225, ∥).
 .. |See...| image:: /img/AR.png
 .. |operators of table 8.7| image:: /img/img_7.png
 .. |relations operators from table 8.5| image:: /img/img_8.png
-.. |\\left ...\right| image:: /img/img_112.png
+.. |left ... right| image:: /img/img_112.png
 .. |arrows from table 8.6| image:: /img/img_9.png
 .. |log-like operators| image:: /img/img_10.png
-.. |log-like operators| image:: /img/img_11.png
-.. |log-like operators| image:: /img/img_56.png
-.. |log-like operators| image:: /img/img_12.png
+.. |log-like operators 2| image:: /img/img_11.png
+.. |log-like operators 3| image:: /img/img_56.png
+.. |log-like operators 4| image:: /img/img_12.png

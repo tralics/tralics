@@ -110,7 +110,7 @@ Translation is the following sequence of characters Ḓ ḓ Ḙ ḙ Ḽ ḽ Ṋ 
 \\vadjust
 ---------
 
-Unimplemented; see `here <doc-un.html#cmd-vadjust>`__ for details.
+Unimplemented; see `here <doc-un.html#cmd-vadjust2>`__ for details.
 
 .. _cmd-valign:
 

@@ -2863,7 +2863,7 @@ This is the XML output.
       </figure>
 
 | Preview
-| |a figure with four \\subfigure|
+| |a figure with four subfigure|
 
 Since version 2.11.3, you can change this behavior. It suffices to set
 the internal counter ``\tralics@use@subfigure`` to a non-zero value.
@@ -3229,7 +3229,7 @@ relation symbol: ``<mo>&supsetneqq;</mo>`` (Unicode U+2ACC, ⫌).
 
 | The ``\surd`` command is valid only in math mode. It generates a
   miscellaneous symbol: ``<mi>&radic;</mi>`` (Unicode U+221A, √) that
-  looks like |$\surd$|.
+  looks like |$surd$|.
 | |See...| See description of the ```\ldots`` <doc-l.html#cmd-ldots>`__
   command.
 
@@ -3263,6 +3263,6 @@ of the job.
 .. |random operators| image:: /img/img_51.png
 .. |example of vertical space| image:: /img/img_34.png
 .. |split environment| image:: /img/img_104.png
-.. |a figure with four \\subfigure| image:: /img/img_43.png
+.. |a figure with four subfigure| image:: /img/img_43.png
 .. |big operators from Table 8.8| image:: /img/img_52.png
-.. |$\surd$| image:: /img/img_t_surd.png
+.. |$surd$| image:: /img/img_t_surd.png

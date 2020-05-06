@@ -411,7 +411,7 @@ rows, omitted here.
 
 The ``\beta`` command is valid only in math mode. It generates a Greek
 letter: ``<mi>&beta;</mi>`` (Unicode U+3B2, β) that renders like
-|$\beta$|. See description of the ```\alpha`` <doc-a.html#cmd-alpha>`__
+|$beta$|. See description of the ```\alpha`` <doc-a.html#cmd-alpha>`__
 command.
 
 .. _cmd-beth:
@@ -572,7 +572,7 @@ implemented in *Tralics*.
 
 The ``\bigcap`` command is valid only in math mode. Its translation is a
 variable-sized symbol (used for set intersection): ``<mo>&bigcap;</mo>``
-(Unicode U+22C2, ⋂) that renders like |$\bigcap$|. For an example see
+(Unicode U+22C2, ⋂) that renders like |$bigcap$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigcirc:
@@ -582,7 +582,7 @@ the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 The ``\bigcirc`` command is valid only in math mode. It generates a
 binary operator (big circle): ``<mo>&bigcirc;</mo>`` (Unicode U+25EF, ◯)
-that renders like |$\bigcirc$|. See description of the
+that renders like |$bigcirc$|. See description of the
 ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-bigcircle:
@@ -600,7 +600,7 @@ The ``\bigcircle`` command is defined by the curves package. See
 
 The ``\bigcup`` command is valid only in math mode. Its translation is a
 variable-sized symbol (used for set union): ``<mo>&bigcup;</mo>``
-(Unicode U+22C3, ⋃) that renders like |$\bigcup$|. For an example see
+(Unicode U+22C3, ⋃) that renders like |$bigcup$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigcurlyvee:
@@ -643,7 +643,7 @@ alias to ```\interleave`` <doc-i.html#cmd-interleave>`__.
 
 The ``\bigodot`` command is valid only in math mode. Its translation is
 a variable-sized symbol (dot in a circle): ``<mo>&bigodot;</mo>``
-(Unicode U+2A00, ⨀) that renders like |$\bigodot$|. For an example see
+(Unicode U+2A00, ⨀) that renders like |$bigodot$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigoplus:
@@ -653,7 +653,7 @@ the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 The ``\bigoplus`` command is valid only in math mode. Its translation is
 a variable-sized symbol (plus in a circle): ``<mo>&bigoplus;</mo>``
-(Unicode U+2A01, ⨁) that renders like |$\bigoplus$|. For an example see
+(Unicode U+2A01, ⨁) that renders like |$bigoplus$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigotimes:
@@ -663,7 +663,7 @@ the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 The ``\bigotimes`` command is valid only in math mode. Its translation
 is a variable-sized symbol (times in a circle): ``<mo>&bigotimes;</mo>``
-(Unicode U+2A02, ⨂) that renders like |$\bigotimes$|. For an example see
+(Unicode U+2A02, ⨂) that renders like |$bigotimes$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigparallel:
@@ -727,7 +727,7 @@ The ``\bigstar`` command is valid only in math mode. Its translation is
 The ``\bigtriangledown`` command is valid only in math mode. It
 generates a binary operator. Looks like a reversed ``\Delta``:
 ``<mo>&bigtriangledown;</mo>`` (Unicode U+25BD, ▽) that renders like
-|$\bigtriangledown$|. See description of the
+|$bigtriangledown$|. See description of the
 ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-bigtriangleup:
@@ -737,7 +737,7 @@ generates a binary operator. Looks like a reversed ``\Delta``:
 
 The ``\bigtriangleup`` command is valid only in math mode. It generates
 a binary operator. Looks like a ``\Delta``: ``<mo>&bigtriangleup;</mo>``
-(Unicode U+25B3, △) that renders like |$\bigtriangleup$|. See
+(Unicode U+25B3, △) that renders like |$bigtriangleup$|. See
 description of the ```\pm`` <doc-p.html#cmd-pm>`__ command.
 
 .. _cmd-biguplus:
@@ -748,7 +748,7 @@ description of the ```\pm`` <doc-p.html#cmd-pm>`__ command.
 The ``\biguplus`` command is valid only in math mode. Its translation is
 a variable-sized symbol. It is like a plus in a cup:
 ``<mo>&biguplus;</mo>`` (Unicode U+228E, ⊎) that renders like
-|$\biguplus$|. For an example see the ```\sum`` <doc-s.html#cmd-sum>`__
+|$biguplus$|. For an example see the ```\sum`` <doc-s.html#cmd-sum>`__
 command.
 
 .. _cmd-bigvee:
@@ -758,7 +758,7 @@ command.
 
 The ``\bigvee`` command is valid only in math mode. Its translation is a
 variable-sized symbol. It looks like a big V: ``<mo>&bigvee;</mo>``
-(Unicode U+22C1, ⋁) that renders like |$\bigvee$|. For an example see
+(Unicode U+22C1, ⋁) that renders like |$bigvee$|. For an example see
 the ```\sum`` <doc-s.html#cmd-sum>`__ command.
 
 .. _cmd-bigwedge:
@@ -1007,7 +1007,7 @@ This is the translation
        </math>
       </formula>
 
-Preview |\\bmod example|. (See also `here <mml_ex.html#binom>`__).
+Preview |bmod example|. (See also `here <mml_ex.html#binom>`__).
 
 .. _env-body:
 
@@ -1034,7 +1034,7 @@ use it with the ``\boolean{some-name}`` command.
 
 The ``\bot`` command is valid only in math mode. It generates a
 miscellaneous symbol. It is like ``\perp``: ``<mo>&bottom;</mo>``
-(Unicode U+22A5, ⊥) that renders like |$\bot$|. See description of the
+(Unicode U+22A5, ⊥) that renders like |$bot$|. See description of the
 ```\ldots`` <doc-l.html#cmd-ldots>`__ command.
 
 .. _cmd-botfigrule:
@@ -1067,7 +1067,7 @@ is empty. See ```\splitbotmark`` <doc-s.html#cmd-splitbotmark>`__.
 \\bottom (math symbol)
 ----------------------
 
-The ``\bottom`` command is an alias for ``\bot`` |$\bottom$|.
+The ``\bottom`` command is an alias for ``\bot`` |$bottom$|.
 
 .. _cmd-bottomfraction:
 
@@ -1093,7 +1093,7 @@ See ```\intextsep`` <doc-i.html#cmd-intextsep>`__.
 The ``\bowtie`` command is valid only in math mode. It generates a
 relation symbol: ``<mo>&bowtie;</mo>`` (Unicode U+22C8,⋈) that renders
 like See description of the ```\le`` <doc-l.html#cmd-le>`__ command.
-|$\bowtie$|
+|$bowtie$|
 
 .. _cmd-Cbox:
 
@@ -1101,7 +1101,7 @@ like See description of the ```\le`` <doc-l.html#cmd-le>`__ command.
 -------------------
 
 The ``\Box`` command is valid only in math mode. It generates a square
-box ``<mo>&25A1;</mo>``. There is the image of ``x\Box`` |$x\Box$|.
+box ``<mo>&25A1;</mo>``. There is the image of ``x\Box`` |$xBox$|.
 
 .. _cmd-box:
 
@@ -1331,22 +1331,22 @@ This is defined in PlainTeX as : ``\par \vfill \supereject \end``. In
 
 .. |ring below accent| image:: /img/img_97.png
    :class: vc
-.. |$\beta$| image:: /img/img_beta.png
+.. |$beta$| image:: /img/img_beta.png
    :class: vc
-.. |$\bigcap$| image:: /img/img_t_bigcap.png
-.. |$\bigcirc$| image:: /img/img_t_bigcirc.png
-.. |$\bigcup$| image:: /img/img_t_bigcup.png
-.. |$\bigodot$| image:: /img/img_t_bigodot.png
-.. |$\bigoplus$| image:: /img/img_t_bigoplus.png
-.. |$\bigotimes$| image:: /img/img_t_bigotimes.png
-.. |$\bigtriangledown$| image:: /img/img_t_bigtriangledown.png
-.. |$\bigtriangleup$| image:: /img/img_t_bigtriangleup.png
-.. |$\biguplus$| image:: /img/img_t_biguplus.png
-.. |$\bigvee$| image:: /img/img_t_bigvee.png
+.. |$bigcap$| image:: /img/img_t_bigcap.png
+.. |$bigcirc$| image:: /img/img_t_bigcirc.png
+.. |$bigcup$| image:: /img/img_t_bigcup.png
+.. |$bigodot$| image:: /img/img_t_bigodot.png
+.. |$bigoplus$| image:: /img/img_t_bigoplus.png
+.. |$bigotimes$| image:: /img/img_t_bigotimes.png
+.. |$bigtriangledown$| image:: /img/img_t_bigtriangledown.png
+.. |$bigtriangleup$| image:: /img/img_t_bigtriangleup.png
+.. |$biguplus$| image:: /img/img_t_biguplus.png
+.. |$bigvee$| image:: /img/img_t_bigvee.png
 .. |bigwedge| image:: /img/img_t_bigwedge.png
 .. |three variants of binom| image:: /img/img_55.png
-.. |\\bmod example| image:: /img/img_121.png
-.. |$\bot$| image:: /img/img_other_bottom.png
-.. |$\bottom$| image:: /img/img_other_bottom.png
-.. |$\bowtie$| image:: /img/img_t_bowtie.png
-.. |$x\Box$| image:: /img/img_119.png
+.. |bmod example| image:: /img/img_121.png
+.. |$bot$| image:: /img/img_other_bottom.png
+.. |$bottom$| image:: /img/img_other_bottom.png
+.. |$bowtie$| image:: /img/img_t_bowtie.png
+.. |$xBox$| image:: /img/img_119.png

@@ -165,7 +165,7 @@ with it.
 
 | The ``\rangle`` command is valid only in math mode. It generates a
   delimiter (right angle): ``<mo>&rangle;</mo>`` (Unicode U+232A, 〉)
-  that renders like |$\rangle$|.
+  that renders like |$rangle$|.
 | |See...| See description of the ```\vert`` <doc-v.html#cmd-vert>`__
   command.
 
@@ -921,7 +921,7 @@ This is the resulting XML
       Some text <hi rend='sansserif'>Some text</hi> <hi rend='tt'>Some text</hi>
       <hi rend='bold'>Some text</hi> <hi rend='it'>Some text</hi> <hi rend='sc'>Some text</hi> <hi rend='it'>Some text</hi>
 
-Preview |Commands like \\rm|
+Preview |Commands like rm|
 
 There are commands that change only one parameter. For instance
 ``\rmfamily`` and ``\textrm``. The first command is a declaration, the
@@ -1143,8 +1143,7 @@ example of use, see
 ----
 
 The ``\rq`` command expands to a right quote (single-quote). You can say
-:literal:`\`\lq\foo\rq'` or :literal:`\``\foo''`, the result is the
-same.
+``{\lq\foo\rq}`` or ``{`\foo'}`` the result is the same.
 
 .. _cmd-rrbracket:
 
@@ -1241,9 +1240,9 @@ delimiter associated to ```\Vert`` <doc-v.html#cmd-Vert>`__. it produces
 the symbol ``<mo>&parallel;</mo>`` (Unicode U+2225, ∥).
 
 .. |See...| image:: /img/AR.png
-.. |$\rangle$| image:: /img/img_t_rangle.png
+.. |$rangle$| image:: /img/img_t_rangle.png
 .. |font sizes (case of 3 sizes)| image:: /img/img_36.png
 .. |font sizes (case of 10 sizes)| image:: /img/img_37.png
-.. |Commands like \\rm| image:: /img/img_39.png
+.. |Commands like rm| image:: /img/img_39.png
 .. |all font variants| image:: /img/img_122.png
 .. |font changes| image:: /img/img_123.png

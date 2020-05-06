@@ -454,7 +454,7 @@ lower-case Y. The definition of ``\bad`` is wrong: the expansion of
       \test and $\test Z$
       \edef\bad{$\ensuremath{xx}$}
 
-Preview: |\\ensuremath{...}|
+Preview: |ensuremath{...}|
 
 .. _env-enumerate:
 
@@ -727,7 +727,7 @@ Translation
        </math>
       </formula>
 
-Preview |example of eqnarray\*| (see also `here <mml_ex.html#align>`__)
+Preview |example of eqnarray*| (see also `here <mml_ex.html#align>`__)
 
 .. _cmd-eqcirc:
 
@@ -1487,7 +1487,7 @@ The ``\ExponentialE`` command is valid only in math mode. It generates
 
 The expression ``\externalcite[x]{y}`` is handled as ``\nocite{y}``.
 
-.. |\\ensuremath{...}| image:: /img/img_49.png
+.. |ensuremath{...}| image:: /img/img_49.png
 .. |example of eqnarray| image:: /img/img_100.png
-.. |example of eqnarray\*| image:: /img/img_101.png
+.. |example of eqnarray*| image:: /img/img_101.png
 .. |See...| image:: /img/AR.png

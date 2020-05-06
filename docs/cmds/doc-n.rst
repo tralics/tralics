@@ -1178,7 +1178,7 @@ added. Example
       <p rend='flushed-right'>This is some text explaining and showing how text is centered,
       flushed left or flushed right or indented or not indented. Mode is right</p>
 
-|example of \\noindent, \\flushleft, \\flushright, \\center|
+|example of noindent, flushleft, flushright, center|
 
 .. _cmd-nointerlineskip:
 
@@ -1505,7 +1505,7 @@ style. Example
       \def\XX{\nonscript\,}
       $a\XX b_{c\XX d} a\XX b_{\textstyle c\XX d} $
 
-|\\nonscript|
+|nonscript|
 
 .. _cmd-nonstopmode:
 
@@ -2047,5 +2047,5 @@ be used in math mode only. Translation is a ``<mo>`` containing a
 
 .. |See...| image:: /img/AR.png
 .. |theorems| image:: /img/img_78.png
-.. |example of \\noindent, \\flushleft, \\flushright, \\center| image:: /img/img_28.png
-.. |\\nonscript| image:: /img/img_83.png
+.. |example of noindent, flushleft, flushright, center| image:: /img/img_28.png
+.. |nonscript| image:: /img/img_83.png

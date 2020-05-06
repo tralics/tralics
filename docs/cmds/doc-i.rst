@@ -1986,7 +1986,7 @@ line number.
 
 You can say something like ``\insert200 \relax{\bf a}``. What happens is
 explained at the end of Chapter 15 of the
-`TeXbook <index.html#texbook>`__, see `here <doc-un.html#cmd-insert>`__
+`TeXbook <index.html#texbook>`__, see `here <doc-un.html#cmd-insert2>`__
 for details). Essentially, this is used to implement footnotes, hence
 depends on how TeX makes pages from lines of input. Thus, this command
 is not implemented in *Tralics*. However, if you say
@@ -2244,7 +2244,7 @@ enumeration are flushed right, except if too big).
 | The following image was produced in 2003. You may notice that the
   labels of the enumeration are unrelated to the label attributes of the
   XML
-| |itemize, description, enumerate, \\item|
+| |itemize, description, enumerate, item|
 
 .. _cmd-at-item:
 
@@ -2414,4 +2414,4 @@ Private commands used by ```\@whiledim`` <doc-w.html#cmd-whiledim>`__,
 The expansion of the ``\@ixpt`` is 9.
 
 .. |french abbrevs| image:: /img/img_66.png
-.. |itemize, description, enumerate, \\item| image:: /img/img_41.png
+.. |itemize, description, enumerate, item| image:: /img/img_41.png

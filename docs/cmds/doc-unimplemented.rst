@@ -225,7 +225,7 @@ space on the left). In this case, parentheses around tags are correct.
 This macro is explained in the TeXbook, appendix D; it is provided by
 the booktabs package.
 
-.. _cmd-insert:
+.. _cmd-insert2:
 
 \\insert
 --------
@@ -289,7 +289,7 @@ In plain TeX, ``\displaylines`` and similar commands start with
 ``\openup1\jot``. This puts some extra space between the formula and the
 text that precedes.
 
-.. _cmd-vadjust:
+.. _cmd-vadjust2:
 
 \\vadjust
 ---------

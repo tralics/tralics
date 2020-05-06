@@ -5,8 +5,8 @@ All commands, alphabetic order; letter G
   `\\g@addto@macro <#cmd-g-addto-macro>`__, `\\Game <#cmd-Game>`__,
   `\\gamma <#cmd-gamma>`__, `\\Gamma <#cmd-cgamma>`__,
   `\\gcd <#cmd-gcd>`__, `\\gdef <#cmd-gdef>`__,
-  `\\gdelpresetkeys <#cmd-presetkeys>`__,
-  `\\gdelsavekeys <#cmd-savekeys>`__, `\\ge <#cmd-ge>`__,
+  `\\gdelpresetkeys <#cmd-gpresetkeys>`__,
+  `\\gdelsavekeys <#cmd-gsavekeys>`__, `\\ge <#cmd-ge>`__,
   `\\genfrac <#cmd-genfrac>`__, `\\geq <#cmd-ge>`__,
   `\\geqq <#cmd-geqq>`__, `\\geqslant <#cmd-geqslant>`__,
   `\\gets <#cmd-gets>`__, `\\gg <#cmd-gg>`__, `\\ggg <#cmd-ggg>`__,
@@ -22,15 +22,15 @@ All commands, alphabetic order; letter G
   `\\gneq <#cmd-gneq>`__, `\\gneqq <#cmd-gneqq>`__,
   `\\gnsim <#cmd-gnsim>`__, `\\@gobble <#cmd-gobble>`__,
   `\\@gobblefour <#cmd-gobble>`__, `\\@gobbletwo <#cmd-gobble>`__,
-  `\\goodbreak <#cmd-goodbreak>`__, `\\gpresetkeys <#cmd-presetkeys>`__,
+  `\\goodbreak <#cmd-goodbreak>`__, `\\gpresetkeys <#cmd-gpresetkeys>`__,
   `\\grabenv <#cmd-grabenv>`__, `\\grave <#cmd-grave>`__,
-  `\\gsavekeys <#cmd-savekeys>`__, `\\gtrapprox <#cmd-gtrapprox>`__,
+  `\\gsavekeys <#cmd-gsavekeys>`__, `\\gtrapprox <#cmd-gtrapprox>`__,
   `\\gtrdot <#cmd-gtrdot>`__, `\\gtreqless <#cmd-gtreqless>`__,
   `\\gtreqqless <#cmd-gtreqqless>`__, `\\gtrless <#cmd-gtrless>`__,
   `\\gtrsim <#cmd-gtrsim>`__, `\\guillemotleft <#cmd-guillemotleft>`__,
   `\\guillemotright <#cmd-guillemotright>`__,
-  `\\gunpresetkeys <#cmd-presetkeys>`__,
-  `\\gunsavekeys <#cmd-savekeys>`__,
+  `\\gunpresetkeys <#cmd-gpresetkeys>`__,
+  `\\gunsavekeys <#cmd-gsavekeys>`__,
 | and environments `gather <#env-gather>`__,
   `glossaire <#env-glossaire>`__, `guillemets <#cmd-guillemets>`__.
 
@@ -188,7 +188,7 @@ the style, it is a number between 0 and 3, interpreted as
        </math>
       </formula>
 
-Preview |\\genfrac|
+Preview |genfrac|
 
 .. _cmd-geqq:
 
@@ -630,7 +630,7 @@ The ``\guillemotright`` command translates into ``»`` or ``&#xBB;``. For
 more info see the `latin supplement
 characters <doc-chars.html#latin>`__.
 
-.. _cmd-savekeys:
+.. _cmd-gsavekeys:
 
 \\gsavekeys, \\gdelsavekeys, \\gunsavekeys
 ------------------------------------------
@@ -638,7 +638,7 @@ characters <doc-chars.html#latin>`__.
 These commands are provided by the `xkeyval <doc-k.html#cmd-keyval>`__
 package.
 
-.. _cmd-presetkeys:
+.. _cmd-gpresetkeys:
 
 \\gpresetkeys, \\gdelpresetkeys, \\gunpresetkeys
 ------------------------------------------------
@@ -646,4 +646,4 @@ package.
 These commands are provided by the `xkeyval <doc-k.html#cmd-keyval>`__
 package.
 
-.. |\\genfrac| image:: /img/img_58.png
+.. |genfrac| image:: /img/img_58.png

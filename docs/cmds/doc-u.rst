@@ -181,7 +181,7 @@ the ``underaccent`` property.
 ------------
 
 | The ``\underbrace`` command puts an horizontal brace under a kernel.
-  It works only in math mode. Example |\\underbrace{...}|.
+  It works only in math mode. Example |underbrace{...}|.
 | |See...| See also the ```\acute`` <doc-a.html#cmd-acute>`__ command or
   ```\underaccent`` <#cmd-underaccent>`__.
 
@@ -768,6 +768,6 @@ saved, and can be used by the ``\UseVerb`` command. For an example, see
 `catcode section <doc-symbols.html#cat16>`__.
 
 .. |See...| image:: /img/AR.png
-.. |\\underbrace{...}| image:: /img/img_t_underbrace.png
+.. |underbrace{...}| image:: /img/img_t_underbrace.png
 .. |underline ex.| image:: /img/img_t_underline.png
 .. |underrightarrow| image:: /img/img_t_underrightarrow.png
