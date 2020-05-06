@@ -2418,7 +2418,7 @@ not affect the behavior of the ``\verb`` command).
 
 |verbatim|
 
-.. |\\f accent| image:: img_89.png
-.. |\\frac\dfrac\tfrac| image:: img_57.png
-.. |fraction and \\mathchoice| image:: img_81.png
-.. |verbatim| image:: img_29.png
+.. |\\f accent| image:: /img/img_89.png
+.. |\\frac\dfrac\tfrac| image:: /img/img_57.png
+.. |fraction and \\mathchoice| image:: /img/img_81.png
+.. |verbatim| image:: /img/img_29.png

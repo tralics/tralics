@@ -367,4 +367,4 @@ argument). The effect is to write the second argument in the file
 specified by the first argument. See
 ```\openout`` <doc-o.html#cmd-openout>`__ for further information).
 
-.. |gcd| image:: img_79.png
+.. |gcd| image:: /img/img_79.png

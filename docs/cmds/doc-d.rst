@@ -1453,7 +1453,7 @@ The ``\dump`` command outputs a format file that can be loaded at
 comparatively high speed to restore the current status. Not yet
 implemented in *Tralics*.
 
-.. |dot below accent| image:: img_95.png
-.. |daggers| image:: img_124.png
-.. |See...| image:: AR.png
-.. |math style| image:: img_60.png
+.. |dot below accent| image:: /img/img_95.png
+.. |daggers| image:: /img/img_124.png
+.. |See...| image:: /img/AR.png
+.. |math style| image:: /img/img_60.png

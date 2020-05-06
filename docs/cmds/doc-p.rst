@@ -1383,5 +1383,5 @@ position into a picture. See description of the
 ```picture`` <doc-p.html#env-picture>`__ environment for the syntax of
 the ``(x,y)`` part, and some examples.
 
-.. |See...| image:: AR.png
-.. |binary operators from Table 8.4| image:: img_6.png
+.. |See...| image:: /img/AR.png
+.. |binary operators from Table 8.4| image:: /img/img_6.png

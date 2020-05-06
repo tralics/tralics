@@ -646,4 +646,4 @@ package.
 These commands are provided by the `xkeyval <doc-k.html#cmd-keyval>`__
 package.
 
-.. |\\genfrac| image:: img_58.png
+.. |\\genfrac| image:: /img/img_58.png

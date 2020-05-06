@@ -1331,24 +1331,24 @@ description of the ```\pm`` <doc-p.html#cmd-pm>`__ command.
 This is defined in PlainTeX as : ``\par \vfill \supereject \end``. In
 *Tralics*, we make it equivalent to ``\endinput``.
 
-.. |ring below accent| image:: img_97.png
+.. |ring below accent| image:: /img/img_97.png
    :class: vc
-.. |$\beta$| image:: img_beta.png
+.. |$\beta$| image:: /img/img_beta.png
    :class: vc
-.. |$\bigcap$| image:: img_t_bigcap.png
-.. |$\bigcirc$| image:: img_t_bigcirc.png
-.. |$\bigcup$| image:: img_t_bigcup.png
-.. |$\bigodot$| image:: img_t_bigodot.png
-.. |$\bigoplus$| image:: img_t_bigoplus.png
-.. |$\bigotimes$| image:: img_t_bigotimes.png
-.. |$\bigtriangledown$| image:: img_t_bigtriangledown.png
-.. |$\bigtriangleup$| image:: img_t_bigtriangleup.png
-.. |$\biguplus$| image:: img_t_biguplus.png
-.. |$\bigvee$| image:: img_t_bigvee.png
-.. |bigwedge| image:: img_t_bigwedge.png
-.. |three variants of binom| image:: img_55.png
-.. |\\bmod example| image:: img_121.png
-.. |$\bot$| image:: img_other_bottom.png
-.. |$\bottom$| image:: img_other_bottom.png
-.. |$\bowtie$| image:: img_t_bowtie.png
-.. |$x\Box$| image:: img_119.png
+.. |$\bigcap$| image:: /img/img_t_bigcap.png
+.. |$\bigcirc$| image:: /img/img_t_bigcirc.png
+.. |$\bigcup$| image:: /img/img_t_bigcup.png
+.. |$\bigodot$| image:: /img/img_t_bigodot.png
+.. |$\bigoplus$| image:: /img/img_t_bigoplus.png
+.. |$\bigotimes$| image:: /img/img_t_bigotimes.png
+.. |$\bigtriangledown$| image:: /img/img_t_bigtriangledown.png
+.. |$\bigtriangleup$| image:: /img/img_t_bigtriangleup.png
+.. |$\biguplus$| image:: /img/img_t_biguplus.png
+.. |$\bigvee$| image:: /img/img_t_bigvee.png
+.. |bigwedge| image:: /img/img_t_bigwedge.png
+.. |three variants of binom| image:: /img/img_55.png
+.. |\\bmod example| image:: /img/img_121.png
+.. |$\bot$| image:: /img/img_other_bottom.png
+.. |$\bottom$| image:: /img/img_other_bottom.png
+.. |$\bowtie$| image:: /img/img_t_bowtie.png
+.. |$x\Box$| image:: /img/img_119.png

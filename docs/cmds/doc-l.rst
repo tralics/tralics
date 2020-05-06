@@ -1739,12 +1739,12 @@ The ``\lVert`` command is valid in math mode only; it is a left
 delimiter associated to ```\Vert`` <doc-v.html#cmd-Vert>`__; it produces
 the symbol ``<mo>&parallel;</mo>`` (Unicode U+2225, ∥).
 
-.. |See...| image:: AR.png
-.. |operators of table 8.7| image:: img_7.png
-.. |relations operators from table 8.5| image:: img_8.png
-.. |\\left ...\right| image:: img_112.png
-.. |arrows from table 8.6| image:: img_9.png
-.. |log-like operators| image:: img_10.png
-.. |log-like operators| image:: img_11.png
-.. |log-like operators| image:: img_56.png
-.. |log-like operators| image:: img_12.png
+.. |See...| image:: /img/AR.png
+.. |operators of table 8.7| image:: /img/img_7.png
+.. |relations operators from table 8.5| image:: /img/img_8.png
+.. |\\left ...\right| image:: /img/img_112.png
+.. |arrows from table 8.6| image:: /img/img_9.png
+.. |log-like operators| image:: /img/img_10.png
+.. |log-like operators| image:: /img/img_11.png
+.. |log-like operators| image:: /img/img_56.png
+.. |log-like operators| image:: /img/img_12.png

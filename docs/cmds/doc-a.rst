@@ -2236,29 +2236,29 @@ used. Instead of \`\ ``aa \atopwithdelims()bb``' you should use
 ``\def\choose{\atopwithdelims()}``, and you can say ``a\choose b``. In
 *Tralics*, you would use ``\binom ab``.
 
-.. |math accent| image:: img_106.png
-.. |accents| image:: img_86.png
-.. |accents| image:: img_87.png
+.. |math accent| image:: /img/img_106.png
+.. |accents| image:: /img/img_86.png
+.. |accents| image:: /img/img_87.png
    :class: vc
-.. |double accents| image:: img_88.png
+.. |double accents| image:: /img/img_88.png
    :class: vc
-.. |strange accentees| image:: img_107.png
-.. |math accents| image:: img_1.png
-.. |wide math accents| image:: img_2.png
-.. |special math operators| image:: img_3.png
-.. |$\aleph$| image:: img_t_aleph.png
-.. |align environment| image:: img_103.png
-.. |align environment| image:: img_136.png
-.. |counters| image:: img_113.png
-.. |$\alpha$| image:: img_alpha.png
-.. |$\amalg$| image:: img_other_amalg.png
-.. |$\angle$| image:: img_other_angle.png
-.. |$\approx$| image:: img_t_approx.png
-.. |curves example, companion p291 1| image:: img_76.png
-.. |RAF6E airfoil| image:: img_77.png
-.. |square washer| image:: img_75.png
-.. |array in eqnarray| image:: img_118.png
-.. |array in eqnarray| image:: img_134.png
-.. |array in eqnarray| image:: img_133.png
-.. |ast & star| image:: img_t_aststar.png
-.. |$\asymp$| image:: img_t_asymp.png
+.. |strange accentees| image:: /img/img_107.png
+.. |math accents| image:: /img/img_1.png
+.. |wide math accents| image:: /img/img_2.png
+.. |special math operators| image:: /img/img_3.png
+.. |$\aleph$| image:: /img/img_t_aleph.png
+.. |align environment| image:: /img/img_103.png
+.. |align environment| image:: /img/img_136.png
+.. |counters| image:: /img/img_113.png
+.. |$\alpha$| image:: /img/img_alpha.png
+.. |$\amalg$| image:: /img/img_other_amalg.png
+.. |$\angle$| image:: /img/img_other_angle.png
+.. |$\approx$| image:: /img/img_t_approx.png
+.. |curves example, companion p291 1| image:: /img/img_76.png
+.. |RAF6E airfoil| image:: /img/img_77.png
+.. |square washer| image:: /img/img_75.png
+.. |array in eqnarray| image:: /img/img_118.png
+.. |array in eqnarray| image:: /img/img_134.png
+.. |array in eqnarray| image:: /img/img_133.png
+.. |ast & star| image:: /img/img_t_aststar.png
+.. |$\asymp$| image:: /img/img_t_asymp.png

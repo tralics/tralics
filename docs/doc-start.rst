@@ -706,4 +706,4 @@ Compile with tralics tralics-ex2 -type unused -trivialmath=2, you get
       <figure file='y' extension='ps' id-text='1' id='uid7' rend='Xfigure'/>
       </Xdiv4></Xdiv3></Xdiv2></Xdiv1></Xdiv0></unknown>
 
-.. |preview example| image:: img_5.png
+.. |preview example| image:: /img/img_5.png

@@ -1083,5 +1083,5 @@ This is now the translation
       <p>Hello, world!
       </p><p><mi att-name='att-val1'/></p></unknown>
 
-.. |See...| image:: AR.png
-.. |example of \\xmllatex| image:: img_64.png
+.. |See...| image:: /img/AR.png
+.. |example of \\xmllatex| image:: /img/img_64.png

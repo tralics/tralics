@@ -1249,16 +1249,16 @@ Not all characters are available. In particular cyrillic letters are
 missing. Some characters, like ``\'\AE`` are recognized, but not shown
 in the tables.
 
-.. |Ascii Table| image:: img_69.png
-.. |latin 1, non ascii| image:: img_70.png
-.. |latin extended A| image:: img_68.png
-.. |latin extended additional| image:: img_92.png
-.. |latin extended additional| image:: img_93.png
-.. |Zapf Dingbats characters| image:: img_71.png
-.. |Unicode Arrows| image:: img_126.png
-.. |Unicode Mathematical operators| image:: img_127.png
-.. |Unicode Miscellaneous symbols| image:: img_128.png
-.. |Unicode Mathematical alphanumeric symbols| image:: img_129.png
-.. |Unicode Mathematical alphanumeric symbols| image:: img_130.png
-.. |Unicode Mathematical alphanumeric symbols| image:: img_131.png
-.. |Unicode Mathematical alphanumeric symbols| image:: img_132.png
+.. |Ascii Table| image:: /img/img_69.png
+.. |latin 1, non ascii| image:: /img/img_70.png
+.. |latin extended A| image:: /img/img_68.png
+.. |latin extended additional| image:: /img/img_92.png
+.. |latin extended additional| image:: /img/img_93.png
+.. |Zapf Dingbats characters| image:: /img/img_71.png
+.. |Unicode Arrows| image:: /img/img_126.png
+.. |Unicode Mathematical operators| image:: /img/img_127.png
+.. |Unicode Miscellaneous symbols| image:: /img/img_128.png
+.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_129.png
+.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_130.png
+.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_131.png
+.. |Unicode Mathematical alphanumeric symbols| image:: /img/img_132.png

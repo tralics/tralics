@@ -1281,18 +1281,18 @@ The description of ``\@makeactive`` is found near that of
 ``\makeatletter``; there are som exceptions to this rule: ``\@ne`` is
 described as if it were ``\one``.
 
-.. |some chars| image:: img_13.png
-.. |^^^^ example| image:: img_80.png
-.. |example of ShortVerb| image:: img_19.png
-.. |tilde accent| image:: img_20.png
+.. |some chars| image:: /img/img_13.png
+.. |^^^^ example| image:: /img/img_80.png
+.. |example of ShortVerb| image:: /img/img_19.png
+.. |tilde accent| image:: /img/img_20.png
 .. |dashes| image:: img-85.png
-.. |example of \\\\ in text| image:: img_32.png
-.. |example of \\\\ in a math table| image:: img_31.png
-.. |example of \\\\ in a normal table| image:: img_33.png
-.. |primes in math mode| image:: img_14.png
-.. |acute accent| image:: img_91.png
-.. |dieresis accent| image:: img_16.png
-.. |macro accent| image:: img_18.png
-.. |dot accent| image:: img_17.png
-.. |circonflex accent| image:: img_21.png
-.. |grave accent| image:: img_22.png
+.. |example of \\\\ in text| image:: /img/img_32.png
+.. |example of \\\\ in a math table| image:: /img/img_31.png
+.. |example of \\\\ in a normal table| image:: /img/img_33.png
+.. |primes in math mode| image:: /img/img_14.png
+.. |acute accent| image:: /img/img_91.png
+.. |dieresis accent| image:: /img/img_16.png
+.. |macro accent| image:: /img/img_18.png
+.. |dot accent| image:: /img/img_17.png
+.. |circonflex accent| image:: /img/img_21.png
+.. |grave accent| image:: /img/img_22.png

@@ -353,10 +353,10 @@ quote (environment)
   ```\centering`` <doc-c.html#cmd-centering>`__. By default, there is no
   difference between ``quote`` and ``quotation``.
 
-.. |diagram p295| image:: img_62.png
-.. |diagram p295| image:: img_63.png
-.. |diagram Lamport p220| image:: img_65.png
-.. |pictures| image:: img_114.png
-.. |Special symbols valid in text and math| image:: img_45.png
-.. |exampel of math spacing| image:: img_44.png
-.. |See...| image:: AR.png
+.. |diagram p295| image:: /img/img_62.png
+.. |diagram p295| image:: /img/img_63.png
+.. |diagram Lamport p220| image:: /img/img_65.png
+.. |pictures| image:: /img/img_114.png
+.. |Special symbols valid in text and math| image:: /img/img_45.png
+.. |exampel of math spacing| image:: /img/img_44.png
+.. |See...| image:: /img/AR.png

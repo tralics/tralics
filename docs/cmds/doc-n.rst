@@ -2045,7 +2045,7 @@ be used in math mode only. Translation is a ``<mo>`` containing a
 | |See...| See description of the
   `\\leftarrow <doc-l.html#cmd-leftarrow>`__ command.
 
-.. |See...| image:: AR.png
-.. |theorems| image:: img_78.png
-.. |example of \\noindent, \\flushleft, \\flushright, \\center| image:: img_28.png
-.. |\\nonscript| image:: img_83.png
+.. |See...| image:: /img/AR.png
+.. |theorems| image:: /img/img_78.png
+.. |example of \\noindent, \\flushleft, \\flushright, \\center| image:: /img/img_28.png
+.. |\\nonscript| image:: /img/img_83.png

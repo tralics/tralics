@@ -2643,14 +2643,14 @@ Preview: |$\mu$|. (see also `here <doc-ex.xhtml#align>`__).
 This command reads math glue and converts it to normal glue. See
 `\\gluestretchorder <doc-g.html#cmd-gluestretchorder>`__ for details.
 
-.. |See...| image:: AR.png
-.. |case change| image:: img_84.png
-.. |some math formulas| image:: img_105.png
-.. |\\matchchoice| image:: img_82.png
+.. |See...| image:: /img/AR.png
+.. |case change| image:: /img/img_84.png
+.. |some math formulas| image:: /img/img_105.png
+.. |\\matchchoice| image:: /img/img_82.png
 .. |mathmo| image:: img125.png
-.. |\\sin(x) + \\cos^2(x)| image:: img_48.png
-.. |int f(a+b)=c+d\\\ \\int f\mathopen)a+b\mathclose(=c+d| image:: img_46.png
-.. |\\big \\left and normal| image:: img_47.png
-.. |math fonts| image:: img_111.png
-.. |$\mu$| image:: img_135.png
+.. |\\sin(x) + \\cos^2(x)| image:: /img/img_48.png
+.. |int f(a+b)=c+d\\\ \\int f\mathopen)a+b\mathclose(=c+d| image:: /img/img_46.png
+.. |\\big \\left and normal| image:: /img/img_47.png
+.. |math fonts| image:: /img/img_111.png
+.. |$\mu$| image:: /img/img_135.png
    :class: vc

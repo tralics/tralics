@@ -76,7 +76,7 @@ C++
 sldkjf and the :cpp:func:`length` function of classes :cpp:struct:`bla` and
 :cpp:struct:`bla`.
 
-.. cpp:function:: size_t length (const std::string &s, bla alt)
+.. cpp:function:: int length (const std::string &s, bla alt)
 
    Computes the length of the string.
 

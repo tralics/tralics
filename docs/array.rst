@@ -839,5 +839,5 @@ An example that shows how ``\morecmidrules`` works.
         </row>
       </table>
 
-.. |some table| image:: img_73.png
-.. |four tables| image:: img_74.png
+.. |some table| image:: /img/img_73.png
+.. |four tables| image:: /img/img_74.png

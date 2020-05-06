@@ -796,6 +796,6 @@ for a line break that occurs at discretionary break where the pre-break
 text is not empty (for instance ``\-``). Unused by *Tralics*. (See
 `scanint <doc-s.html#fct-scanint>`__ for details of argument scanning).
 
-.. |hook accent| image:: img_120.png
-.. |Horn accent| image:: img_94.png
-.. |example of URLs| image:: img_54.png
+.. |hook accent| image:: /img/img_120.png
+.. |Horn accent| image:: /img/img_94.png
+.. |example of URLs| image:: /img/img_54.png

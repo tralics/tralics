@@ -767,7 +767,7 @@ sequence of letters), and reads the verbatim material. This material is
 saved, and can be used by the ``\UseVerb`` command. For an example, see
 `catcode section <doc-symbols.html#cat16>`__.
 
-.. |See...| image:: AR.png
-.. |\\underbrace{...}| image:: img_t_underbrace.png
-.. |underline ex.| image:: img_t_underline.png
-.. |underrightarrow| image:: img_t_underrightarrow.png
+.. |See...| image:: /img/AR.png
+.. |\\underbrace{...}| image:: /img/img_t_underbrace.png
+.. |underline ex.| image:: /img/img_t_underline.png
+.. |underrightarrow| image:: /img/img_t_underrightarrow.png

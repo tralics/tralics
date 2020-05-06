@@ -399,5 +399,5 @@ options to packages. Moreover an optional star is ignored.
        %\DeclareOptionX[my]<foo.bar>{landscape}{\landscapetrue}
        %\usepackage[opA,opB=C,opC=\foo,opE]{testkeyval}
 
-.. |ogonek accent| image:: img_24.png
+.. |ogonek accent| image:: /img/img_24.png
    :class: vc

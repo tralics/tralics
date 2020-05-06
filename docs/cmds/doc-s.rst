@@ -3259,10 +3259,10 @@ that the expansion of ``\symbol{48}`` is ``\char 48\relax``.
 The effect of this command is to inhibit dumping the XML tree at the end
 of the job.
 
-.. |See...| image:: AR.png
-.. |random operators| image:: img_51.png
-.. |example of vertical space| image:: img_34.png
-.. |split environment| image:: img_104.png
-.. |a figure with four \\subfigure| image:: img_43.png
-.. |big operators from Table 8.8| image:: img_52.png
-.. |$\surd$| image:: img_t_surd.png
+.. |See...| image:: /img/AR.png
+.. |random operators| image:: /img/img_51.png
+.. |example of vertical space| image:: /img/img_34.png
+.. |split environment| image:: /img/img_104.png
+.. |a figure with four \\subfigure| image:: /img/img_43.png
+.. |big operators from Table 8.8| image:: /img/img_52.png
+.. |$\surd$| image:: /img/img_t_surd.png

@@ -1938,17 +1938,17 @@ The ``\curvearrowleft`` command is valid only in math mode. It generates
 The ``\curvearrowright`` command is valid only in math mode. It
 generates ``<mo>&#x293B;</mo>``. (Unicode U+293B, ⤻).
 
-.. |cedilla accents| image:: img_23.png
-.. |double grave accents| image:: img_90.png
-.. |$\cal ...$| image:: img_110.png
-.. |$\cap$| image:: img_other_cap.png
-.. |the sign function| image:: img_117.png
-.. |$\chi$| image:: img_chi.png
+.. |cedilla accents| image:: /img/img_23.png
+.. |double grave accents| image:: /img/img_90.png
+.. |$\cal ...$| image:: /img/img_110.png
+.. |$\cap$| image:: /img/img_other_cap.png
+.. |the sign function| image:: /img/img_117.png
+.. |$\chi$| image:: /img/img_chi.png
    :class: vc
-.. |$\circ$| image:: img_t_circ.png
+.. |$\circ$| image:: /img/img_t_circ.png
 .. |\\cite example| image:: img30.png
-.. |$\clubsuit$| image:: img_t_clubsuit.png
-.. |$\cong$| image:: img_other_cong.png
+.. |$\clubsuit$| image:: /img/img_t_clubsuit.png
+.. |$\cong$| image:: /img/img_other_cong.png
    :class: vc
-.. |$\coprod$| image:: img_t_coprod.png
-.. |$\cup$| image:: img_other_cup.png
+.. |$\coprod$| image:: /img/img_t_coprod.png
+.. |$\cup$| image:: /img/img_other_cup.png

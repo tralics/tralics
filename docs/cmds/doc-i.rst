@@ -2413,5 +2413,5 @@ Private commands used by ```\@whiledim`` <doc-w.html#cmd-whiledim>`__,
 
 The expansion of the ``\@ixpt`` is 9.
 
-.. |french abbrevs| image:: img_66.png
-.. |itemize, description, enumerate, \\item| image:: img_41.png
+.. |french abbrevs| image:: /img/img_66.png
+.. |itemize, description, enumerate, \\item| image:: /img/img_41.png

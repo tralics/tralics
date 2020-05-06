@@ -3165,6 +3165,6 @@ and the terminal.
 The ``\@typeset@protect``\ command is ``\relax``; this is the value of
 ``\protect`` when typesetting text.
 
-.. |See...| image:: AR.png
-.. |text super/subscript| image:: img_61.png
-.. |tilde accent| image:: img_53.png
+.. |See...| image:: /img/AR.png
+.. |text super/subscript| image:: /img/img_61.png
+.. |tilde accent| image:: /img/img_53.png

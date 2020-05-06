@@ -1487,7 +1487,7 @@ The ``\ExponentialE`` command is valid only in math mode. It generates
 
 The expression ``\externalcite[x]{y}`` is handled as ``\nocite{y}``.
 
-.. |\\ensuremath{...}| image:: img_49.png
-.. |example of eqnarray| image:: img_100.png
-.. |example of eqnarray\*| image:: img_101.png
-.. |See...| image:: AR.png
+.. |\\ensuremath{...}| image:: /img/img_49.png
+.. |example of eqnarray| image:: /img/img_100.png
+.. |example of eqnarray\*| image:: /img/img_101.png
+.. |See...| image:: /img/AR.png

@@ -19,7 +19,7 @@ breathe_default_members = ('members', 'undoc-members')
 
 # -- Options for HTML output -------------------------------------------------
 
-# html_static_path = ['_static']
 html_show_sourcelink = False
+# html_static_path = ['_static']
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {'prev_next_buttons_location': None}
