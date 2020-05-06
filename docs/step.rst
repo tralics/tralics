@@ -1,16 +1,12 @@
 Getting started with Tralics
 ============================
 
-Contents
-~~~~~~~~
-
-| 
-|    `The first document <#first-doc>`__
-|    `Our second document <#second-doc>`__
-|    `Our third document <#third-doc>`__
-|    `Our fourth document <#fourth-doc>`__
-|    `Statistics <#stats>`__
-|    `A complete example <#last-doc>`__
+| `The first document <#first-doc>`__
+| `Our second document <#second-doc>`__
+| `Our third document <#third-doc>`__
+| `Our fourth document <#fourth-doc>`__
+| `Statistics <#stats>`__
+| `A complete example <#last-doc>`__
 
 This file is a primer for Tralics, a LaTeX to XML translator. We explain
 how to use it. First, we consider a `trivial <#first-doc>`__ example,
@@ -198,7 +194,7 @@ instance, that the chapter counter is the counter number 45.
       ** Bootstrap info
       ** Statistics
 
- Our second document
+Our second document
 -------------------
 
 The second example looks a bit more like a LaTeX document. The file is
@@ -363,7 +359,7 @@ options (optional argument of ``\documentclass``, empty in this example,
 line 172). Lines 177 to 186, omitted here, are similar to those shown
 above.
 
- Our third document
+Our third document
 ------------------
 
 Assume that we have a file, named hello.tcf that contains the following
@@ -568,7 +564,7 @@ Note: when line 1106 is printed the job is not complete, as *Tralics*
 the bibliography is not yet handled. Our example file has no
 bibliography, so nothing special happens.
 
- Our fourth document
+Our fourth document
 -------------------
 
 We assume now that we have a configuration file hello3.tcf containing

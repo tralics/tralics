@@ -653,7 +653,7 @@ The translation is
       <hi rend='tt'>\verb+&#x2423;{&#x2423;}&#x2423;$$</hi>.
       <hi rend='it'>+x+</hi>!</p>
 
-Preview:|example of \\verb|
+Preview:|example of verb|
 
 Look carefully at the last example. The character that follows the
 ``\verb`` command is a space, and this space plays the role of the
@@ -1192,7 +1192,7 @@ The ``\Vvdash`` command is like ```\vdash`` <doc-v.html#cmd-vdash>`__,
 it produces character U+22AA, ⊪; there is a triple vertical bar.
 
 .. |See...| image:: /img/AR.png
-.. |example of \\verb| image:: /img/img_116.png
+.. |example of verb| image:: /img/img_116.png
 .. |verbatim commands| image:: /img/img_108.png
 .. |Verbatim example| image:: /img/img_109.png
 .. |delimiters| image:: /img/img_50.png

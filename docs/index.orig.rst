@@ -32,11 +32,6 @@ Printed Documentation and Examples
    :download:`Part II </pdf/tralics-rr2.pdf>`.
 -  Example of math formulas :download:`here </pdf/testmath.pdf>` and
    `here <mml_ex.html>`__.
--  The algorithms used by Tralics for the maths `XML
-   version <quadrat/tralics-math.xml>`__ or `Pdf
-   version <http://hal.inria.fr/inria-00192610/en/>`__
--  The amsmath sample paper, `translated <auxdir/testams.xml>`__ and
-   converted to `HTML <auxdir/beau2.xml>`__.
 
 Online Documentation
 --------------------

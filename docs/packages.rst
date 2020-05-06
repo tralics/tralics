@@ -45,8 +45,8 @@ All packages known by Tralics, alphabetic order
 
 .. _p12many:
 
-12many `DL <confdir/12many.plt>`__
-----------------------------------
+12many
+------
 
 This package by Ulrich Schwarz, allows to type set intervals like 1..n
 in different ways. The funny style ``laue`` is only partially
@@ -57,8 +57,8 @@ it as ``$\nto{12}{233}$``. Translation is
 
 .. _abstract:
 
-abstract `DL <confdir/abstract.plt>`__
---------------------------------------
+abstract
+--------
 
 This package defines the ``abstract`` and ``onecolabstract``
 environments, that translate into an XML element whose name is stored in
@@ -67,24 +67,24 @@ environments, that translate into an XML element whose name is stored in
 
 .. _ae:
 
-ae `DL <confdir/ae.plt>`__
---------------------------
+ae
+--
 
 Dummy package, with one option ``slides``, that selects the Almost
 European Computer Modern font in LaTeX.
 
 .. _aecompl:
 
-aecompl `DL <confdir/aecompl.plt>`__
-------------------------------------
+aecompl
+-------
 
 This package provides some additional character from the cmr font to the
 ae font. Does nothing in Tralics.
 
 .. _aeguill:
 
-aeguill `DL <confdir/aeguill.plt>`__
-------------------------------------
+aeguill
+-------
 
 Dummy package, with options ``ec, cm, cyr, pl, lm``, whose purpose is to
 add French guillements to the AE fonts, taken from the font given as
@@ -92,8 +92,8 @@ option.
 
 .. _alltt:
 
-alltt `DL <confdir/alltt.plt>`__
---------------------------------
+alltt
+-----
 
 This package defines the environment shown in the example below. It is
 like verbatim, but braces an backslashes have their default meaning.
@@ -109,8 +109,8 @@ like verbatim, but braces an backslashes have their default meaning.
 
 .. _amsbsy:
 
-amsbsy `DL <confdir/amsbsy.plt>`__
-----------------------------------
+amsbsy
+------
 
 The package provides two commands\ ``\boldsymbol`` and ``\pmb``, that
 typeset their argument normally. Maybe, one day, a bold version will be
@@ -118,8 +118,8 @@ used.
 
 .. _amscd:
 
-amscd `DL <confdir/amscd.plt>`__
---------------------------------
+amscd
+-----
 
 The package defines the CD environment, see example below. The
 environment makes the atsign character active, it reads three identical
@@ -154,15 +154,15 @@ vertical arrows, or a single one (vertical bar, equals sign, dot, or
 
 .. _amsfonts:
 
-amsfonts `DL <confdir/amsfonts.plt>`__
---------------------------------------
+amsfonts
+--------
 
 This package has an option psamsfonts, but does nothing.
 
 .. _amsgen:
 
-amsgen `DL <confdir/amsgen.plt>`__
-----------------------------------
+amsgen
+------
 
 This package is included in a lot of other ams packages. It defines some
 short cuts ``\@xp``, ``\DN@``, ``\FN@`` ``\nx@``, and a command
@@ -170,8 +170,8 @@ short cuts ``\@xp``, ``\DN@``, ``\FN@`` ``\nx@``, and a command
 
 .. _amsmath:
 
-amsmath `DL <confdir/amsgen.plt>`__
------------------------------------
+amsmath
+-------
 
 This package provides the following options: leqno, reqno, fleqn,
 centertags, tbtags, intlimits, nointlimits, sumlimits, nosumlimits,
@@ -186,8 +186,8 @@ not in the kernel are given by this file.
 
 .. _amsopn:
 
-amsopn `DL <confdir/amsopn.plt>`__
-----------------------------------
+amsopn
+------
 
 This package provides the following options: namelimits and
 nonamelimits. All commands defined by the LateX style file are in the
@@ -195,29 +195,29 @@ nonamelimits. All commands defined by the LateX style file are in the
 
 .. _amssymb:
 
-amssymb `DL <confdir/amssymb.plt>`__
-------------------------------------
+amssymb
+-------
 
 This package has an option amsfonts, but does nothing.
 
 .. _amstext:
 
-amstext `DL <confdir/amstext.plt>`__
-------------------------------------
+amstext
+-------
 
 This package does nothing.
 
 .. _amsthm:
 
-amsthm `DL <confdir/amsthm.plt>`__
-----------------------------------
+amsthm
+------
 
 This package does nothing.
 
 .. _amsxtra:
 
-amsxtra `DL <confdir/amsxtra.plt>`__
-------------------------------------
+amsxtra
+-------
 
 This package provides ``\sphat``, ``\spcheck``, ``\sptilde``,
 ``\spdot``, ``\spddot``, ``\spdddot``, ``\spbreve``, ``\spbreve``, as
@@ -245,15 +245,15 @@ of the box.
 
 .. _article:
 
-article `DL <confdir/article.clt>`__
-------------------------------------
+article
+-------
 
 Standard article class.
 
 .. _bbding:
 
-bbding `DL <confdir/bbding.plt>`__
-----------------------------------
+bbding
+------
 
 This package defines some names for some Ding characters. For instance
 ``\PhoneHandset`` for ✆, ``\FiveStarCenterOpen`` for ✫,
@@ -261,15 +261,15 @@ This package defines some names for some Ding characters. For instance
 
 .. _book:
 
-book `DL <confdir/book.clt>`__
-------------------------------
+book
+----
 
 Standard article class.
 
 .. _braket:
 
-braket `DL <confdir/braket.plt>`__
-----------------------------------
+braket
+------
 
 This package provides ``\bra``, ``\ket``, ``\braket``, ``\set``, and a
 large version (with capital initial letters). In the example that
@@ -311,15 +311,15 @@ equals signs are the same.
 
 .. _cgloss4e:
 
-cgloss4e `DL <confdir/cgloss4e.plt>`__
---------------------------------------
+cgloss4e
+--------
 
 Experimental package. All the code is in reality in the kernel
 
 .. _checkend:
 
-checkend `DL <confdir/checkend.plt>`__
---------------------------------------
+checkend
+--------
 
 If some closing braces and the like are missing, *Tralics* will print a
 line of the form *Save stack +40 -23* at the end of the job. A new item
@@ -342,8 +342,8 @@ like this.
 
 .. _color:
 
-color `DL <confdir/color.plt>`__
---------------------------------
+color
+-----
 
 Support for colors in Tralics. Options debugshow, usenames, monochrome
 are ignored. There are some driver options (dvips, xdvi, etc), all
@@ -352,8 +352,8 @@ Red are defined. Default depends on the driver.
 
 .. _comma:
 
-comma `DL <confdir/comma.plt>`__
---------------------------------
+comma
+-----
 
 This package provides a command ``\commaform`` that typesetsthe content
 of a counter with a comma very three digits; in fact it uses the content
@@ -388,19 +388,19 @@ Translation
 
 .. _comment:
 
-comment `DL <confdir/comment.plt>`__
-------------------------------------
+comment
+-------
 
 Implements ``\includecomment`` and ``\excludecomment`` as provided by
 the html package.
 
 .. _cool:
 
-coollist `DL <confdir/coolist.plt>`__
--------------------------------------
+coollist
+--------
 
-coolstr `DL <confdir/coolstr.plt>`__
-------------------------------------
+coolstr
+-------
 
 These packages provide some functionalities for strings and lists
 
@@ -427,15 +427,15 @@ These packages provide some functionalities for strings and lists
 
 .. _curves:
 
-curves `DL <confdir/curves.plt>`__
-----------------------------------
+curves
+------
 
 The package defines commands like ``\curve``, ``\tagcurve`` etc.
 
 .. _datenumber:
 
-datenumber `DL <confdir/datenumber.plt>`__
-------------------------------------------
+datenumber
+----------
 
 Provides functionalities on dates. You can set a date, for instance the
 first of March 2008 by ``\setdatenumber{2008}{3}{1}``, manipulate it, so
@@ -446,8 +446,8 @@ instance ``\dateselectlanguage {USenglish} \datedate`` gives February
 
 .. _decimal:
 
-decimal `DL <confdir/decimal.plt>`__
-------------------------------------
+decimal
+-------
 
 This package makes a dot active in math mode, transted as ``\cdot``. Use
 ``\.`` as a normal dot. Example
@@ -455,8 +455,8 @@ This package makes a dot active in math mode, transted as ``\cdot``. Use
 
 .. _delarray:
 
-delarray `DL <confdir/delarray.plt>`__
---------------------------------------
+delarray
+--------
 
 The package defines the environment used in the example below. In LaTeX,
 it redefines the array environment, but this is currently impossible in
@@ -474,8 +474,8 @@ Tralics.
 
 .. _epigraph:
 
-epigraph `DL <confdir/epigraph.plt>`__
---------------------------------------
+epigraph
+--------
 
 This package implements the ``\epigraph`` command and the ``epigraphs``
 environment.
@@ -516,16 +516,16 @@ Translation
 
 .. _esdiff:
 
-esdiff `DL <confdir/esdiff.plt>`__
-----------------------------------
+esdiff
+------
 
 This package lets you say ``$\diff{f}{x}$``, ``$\diff*[2]{g}{y}{0}}$``
 and ``$\diffp{f}{{x}{y^2}}$``.
 
 .. _etex:
 
-etex `DL <confdir/etex.plt>`__
-------------------------------
+etex
+----
 
 The etex package is a basic interface to some primitives provided by
 eTeX. It provides some commands like ``\globcount``, ``\loccount``,
@@ -563,24 +563,24 @@ produce an error message, because *Tralics* handles all boxes alike.
 
 .. _eucal:
 
-eucal `DL <confdir/eucal.plt>`__
---------------------------------
+eucal
+-----
 
 This package defines options psamsfonts, mathcal and mathsrc. It defines
 ``\EuScript`` as a synonym to ``\mathcal``.
 
 .. _eufrak:
 
-eufrak `DL <confdir/eufrak.plt>`__
-----------------------------------
+eufrak
+------
 
 This package defines option psamsfonts. It defines ``\EuFrak`` as a
 synonym to ``\mathfrak``.
 
 .. _fancyvrb:
 
-fancyvrb `DL <confdir/fancyvrb.plt>`__
---------------------------------------
+fancyvrb
+--------
 
 This package provides ``\DefineVerbatimEnvironment`` and some keywords
 used for the *Tralics* documentation. The real code is defined in the
@@ -588,50 +588,50 @@ kernel.
 
 .. _fix-cm:
 
-fix-cm `DL <confdir/fixcm.plt>`__
----------------------------------
+fix-cm
+------
 
 Dummy package.
 
 .. _fixfoot:
 
-fixfoot `DL <confdir/fixfoot.plt>`__
-------------------------------------
+fixfoot
+-------
 
 Provides command ``\DeclareFixedFootnote``.
 
 .. _fixme:
 
-fixme `DL <confdir/fixme.plt>`__
---------------------------------
+fixme
+-----
 
 Provides commands like ``\fixme``.
 
 .. _fixltx2e:
 
-fixltx2e `DL <confdir/fixltxe.plt>`__
--------------------------------------
+fixltx2e
+--------
 
 Dummy package.
 
 .. _flafter:
 
-flafter `DL <confdir/flafter.plt>`__
-------------------------------------
+flafter
+-------
 
 Dummy package.
 
 .. _float:
 
-float `DL <confdir/float.plt>`__
---------------------------------
+float
+-----
 
 This package provides the ``\newfloat`` command.
 
 .. _fp:
 
-fp `DL <confdir/fp.plt>`__
---------------------------
+fp
+--
 
 All operations defined by the fp package are implemented in C++. The two
 options ``nomessages`` and ``debug`` do nothing. In the example below
@@ -652,29 +652,29 @@ and ``\yfoo`` has the value indicated.
 
 .. _fontenc:
 
-fontenc `DL <confdir/fontenc.plt>`__
-------------------------------------
+fontenc
+-------
 
 Dummy package.
 
 .. _forloop:
 
-forloop `DL <confdir/forloop.plt>`__
-------------------------------------
+forloop
+-------
 
 Provides ``\forloop``.
 
 .. _gb4e:
 
-gb4e `DL <confdir/gb4e.plt>`__
-------------------------------
+gb4e
+----
 
 Experimental package. Loads cgloss4e
 
 .. _graphicx:
 
-graphics `DL <confdir/graphics.plt>`__, graphicx `DL <confdir/graphicx.plt>`__
-------------------------------------------------------------------------------
+graphics
+--------
 
 The ``\includegraphics`` command is built-in in *Tralics* with the
 semantics of the graphicx package. A few related commands
@@ -687,15 +687,15 @@ keyval if needed, it defines ``\rotatebox`` and allows declarations as
 
 .. _graphpap:
 
-graphpap `DL <confdir/graphpap.plt>`__
---------------------------------------
+graphpap
+--------
 
 Dummy package.
 
 .. _html:
 
-html `DL <confdir/html.plt>`__
-------------------------------
+html
+----
 
 This package provides some commands like ``\htmladdfnormallink`` that
 are variants of ``\href``, environments like ``htmlonly`` that behave as
@@ -703,15 +703,15 @@ comments, and a lot of other functions that do nothing.
 
 .. _ifpdf:
 
-ifpdf `DL <confdir/ifpdf.plt>`__
---------------------------------
+ifpdf
+-----
 
 Provides a boolean ``\iffpdf`` whose value is false.
 
 .. _ifthen:
 
-ifthen `DL <confdir/ifthen.plt>`__
-----------------------------------
+ifthen
+------
 
 The ``\ifthenelse`` command is builtin. This package provides a variant
 ``\Ifthenelse`` that redefines ``\value`` in a strange way (the same as
@@ -732,8 +732,8 @@ the LaTeX code).
 
 .. _index:
 
-index `DL <confdir/index.plt>`__
---------------------------------
+index
+-----
 
 This package provides a multiple index mechanism. You can declare a new
 index via ``\newindex``, add an attribute to the index via
@@ -752,8 +752,8 @@ index via ``\newindex``, add an attribute to the index via
 
 .. _inputenv:
 
-inputenc `DL <confdir/inputenc.plt>`__
---------------------------------------
+inputenc
+--------
 
 This package recognises options utf8, latin1, ascii, ansinew, applemac,
 cp1250, cp1252, cp1257, cp437, cp437de, cp865, cp850, cp852, cp858,
@@ -764,8 +764,8 @@ as enconding for the current file.
 
 .. _keyval:
 
-keyval `DL <confdir/keyval.plt>`__
-----------------------------------
+keyval
+------
 
 This package implements a system of defining and using sets of
 parameters, which are set using the syntax ``key=value``. It requires at
@@ -802,8 +802,8 @@ Translation
 
 .. _kvoptions:
 
-kvoptions `DL <confdir/kvoptions.plt>`__
-----------------------------------------
+kvoptions
+---------
 
 This package defines ``\DeclareBoolOption``,
 ``\DeclareComplementaryOption``, ``\DeclareStringOption``,
@@ -812,15 +812,15 @@ command ``\DisableKeyvalOption`` that allows you to disable an option.
 
 .. _latexsym:
 
-latexsym `DL <confdir/latexsym.plt>`__
---------------------------------------
+latexsym
+--------
 
 Dummy package.
 
 .. _lipsum:
 
-lipsum `DL <confdir/lipsum.plt>`__
-----------------------------------
+lipsum
+------
 
 This package provides a command that can be used as ``\lipsum``,
 ``\lipsum[10-14]``, or ``\lipsum[12]``, and produces some paragraphs
@@ -830,8 +830,8 @@ the range if no argument is given (default is 1-7), valid range is 1 to
 
 .. _makeidx:
 
-makeidx `DL <confdir/makeidx.plt>`__
-------------------------------------
+makeidx
+-------
 
 This package defines ``\see``, ``\seealso``, ``\seename``, and
 ``\alsoname``.
@@ -846,15 +846,15 @@ generated by maple
 
 .. _minimal:
 
-minimal `DL <confdir/minimal.clt>`__
-------------------------------------
+minimal
+-------
 
 This is a dummy class.
 
 .. _mml:
 
-mml `DL <confdir/mml.plt>`__
-----------------------------
+mml
+---
 
 This package provides a lot of commands, for instance ``\mmlIntegers``
 that produces <integers> it can be used in math mode, for content markup
@@ -862,8 +862,8 @@ MathML.
 
 .. _natbib:
 
-natbib `DL <confdir/natbib.plt>`__
-----------------------------------
+natbib
+------
 
 Provides features of natbib.sty
 
@@ -876,30 +876,30 @@ Provides features of natbib.sty
 
 .. _newlfont:
 
-newlfont `DL <confdir/newlfont.plt>`__
---------------------------------------
+newlfont
+--------
 
 Provides redefinition of commands like ``\rm``.
 
 .. _nopageno:
 
-nopageno `DL <confdir/nopageno.plt>`__
---------------------------------------
+nopageno
+--------
 
 This adds the attribute pair ``page-numbering='false'`` to the root
 element.
 
 .. _oldlfont:
 
-oldlfont `DL <confdir/oldlfont.plt>`__
---------------------------------------
+oldlfont
+--------
 
 Dummy package.
 
 .. _overword:
 
-overword `DL <confdir/overword.plt>`__
---------------------------------------
+overword
+--------
 
 This package provides two macros which can be used as building blocks
 for the parsing of text. It forms part of the Calendar package, but is
@@ -908,8 +908,8 @@ An example of use is given at the end of the package.
 
 .. _ra:
 
-ra `DL <confdir/ra.plt>`__ ra2007 `DL <confdir/ra2007.clt>`__ ra2008 `DL <confdir/ra2008.clt>`__
-------------------------------------------------------------------------------------------------
+ra
+--
 
 Files needed for typeseting Inria's Activity Report. Since 2007, there
 is a class file for each year, named ``ra2007``, etc. It has no option.
@@ -925,15 +925,15 @@ name of the XML element is the name of the environment.
 
 .. _report:
 
-report `DL <confdir/report.clt>`__
-----------------------------------
+report
+------
 
 Standard article class.
 
 .. _remreset:
 
-remreset `DL <confdir/remreset.plt>`__
---------------------------------------
+remreset
+--------
 
 If you say ``\newcounter{C}[A]`` then counter C is reset whenever
 counter A is stepped. The package provides the construction
@@ -943,23 +943,23 @@ implemented by default.
 
 .. _RR:
 
-RR `DL <confdir/RR.plt>`__
---------------------------
+RR
+--
 
 The package needed for typeseting Inria's Research Reports
 
 .. _shortvrb:
 
-shortvrb `DL <confdir/shortvrb.plt>`__
---------------------------------------
+shortvrb
+--------
 
 Defines ``\MakeShortVerb`` and ``\DeleteShortVerb\`` in terms of
 primitives ``\DefineShortVerb`` and ``\UndefineShortVerb``.
 
 .. _showidx:
 
-showidx `DL <confdir/showidx.plt>`__
-------------------------------------
+showidx
+-------
 
 Dummy package.
 
@@ -970,15 +970,15 @@ Some commands from this package are built-in.
 
 .. _std:
 
-std `DL <confdir/std.clt>`__
-----------------------------
+std
+---
 
 This is not a class/package, but a file shared between different classes
 
 .. _suffix:
 
-suffix `DL <confdir/syntonly.plt>`__
-------------------------------------
+suffix
+------
 
 Package by D. Kastrup. It allows to construct macros with suffixes; in
 the example that follows, we have a ``\snarf`` command, and extend it
@@ -1013,15 +1013,15 @@ This is what *Tralics* prints on the terminal. Note the funny names.
 
 .. _syntonly:
 
-syntonly `DL <confdir/syntonly.plt>`__
---------------------------------------
+syntonly
+--------
 
 Dummy package.
 
 .. _textcase:
 
-textcase `DL <confdir/textcase.plt>`__
---------------------------------------
+textcase
+--------
 
 This package implements ``\MakeTextUppercase`` and
 ``\MakeTexLowercase``, as well as ``\NoCaseChange``. In the example that
@@ -1039,8 +1039,8 @@ second math formula is in uppercase, with it, it is lowercase.
 
 .. _textcomp:
 
-textcomp `DL <confdir/textcomp.plt>`__
---------------------------------------
+textcomp
+--------
 
 This package declares options: full, almostfull, euro, safe, force, and
 warn. It does defines some commans like ``\textsevenoldstyle`` to
@@ -1049,8 +1049,8 @@ characters for these TeX characters.
 
 .. _tipa:
 
-tipa `DL <confdir/tipa.plt>`__ tpix `DL <confdir/tipx.plt>`__
--------------------------------------------------------------
+tipa
+----
 
 The tipa package provides some characters and accents used for IPA
 (International Phonetic Alphabet). The tipx package contains additional
@@ -1063,8 +1063,8 @@ default. If you want unsafe mode, use the command ``\tipaunsafemode``.
 
 .. _tloop:
 
-tloop `DL <confdir/tloop.plt>`__
---------------------------------
+tloop
+-----
 
 This package provides the function ``\tloop`` with two arguments, range
 and code. The range is fully expanded, should be of the form a-b; The
@@ -1099,8 +1099,8 @@ ij at row i column j.
 
 .. _theorem:
 
-theorem `DL <confdir/theorem.plt>`__
-------------------------------------
+theorem
+-------
 
 This is a virtual package. The example that follows requires no package
 at all.
@@ -1123,24 +1123,24 @@ at all.
 
 .. _titlepage:
 
-titlepage `DL <confdir/titlepage.plt>`__
-----------------------------------------
+titlepage
+---------
 
 This package implements some commands that can be used for a thesis
 title page.
 
 .. _tracefnt:
 
-tracefnt `DL <confdir/tracefnt.plt>`__
---------------------------------------
+tracefnt
+--------
 
 This package declares options: errorshow, warningshow, infoshow,
 debugshow, loading, infoshow, and pausing. It does nothing.
 
 .. _tralics-iso:
 
-tralics-iso `DL <confdir/tralics-iso.plt>`__
---------------------------------------------
+tralics-iso
+-----------
 
 This package defines a lot of commands like ``\mathslarr`` that should
 be used in math mode; translation is something like &#x2190; This
@@ -1150,14 +1150,14 @@ browser may show the character as ←.
 
 .. _upref:
 
-upref `DL <confdir/upref.plt>`__
---------------------------------
+upref
+-----
 
 Dummy package.
 
 .. _xkeyval:
 
-xkeyval `DL <confdir/xkeyval.plt>`__
-------------------------------------
+xkeyval
+-------
 
 Dummy package.
