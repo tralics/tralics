@@ -31,3 +31,5 @@ All commands, alphabetic order
    doc-x
    doc-y
    doc-z
+   doc-symbols
+   doc-unimplemented

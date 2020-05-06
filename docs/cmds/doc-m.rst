@@ -756,7 +756,7 @@ command is used to define some integer constants less than 255, and
   sub-indices in mode 3. The major mode is 0 (display style) or 1
   (non-display style). The mode that follows 0 is 2 (except for
   fractions).
-| |\\matchchoice|
+| |matchchoice|
 
 .. _cmd-mathci:
 
@@ -1180,7 +1180,7 @@ is translated into
        </math>
       </formula>
 
-Preview: |\\sin(x) + \\cos^2(x)|
+Preview: |sin(x) + cos^2(x)|
 
 If you say ``A\mathbin x B``, then x is considered as a binary operator.
 If x is the first element in the list or is preceded by an atom of type
@@ -1206,8 +1206,7 @@ follows f is an opening atom (a left parenthesis, or an object declared
 as such). If an operator is declared Open or Close, *Tralics* should
 perhaps add a attribute, either ``form="prefix"`` or ``form="postfix"``
 if this is not the default, and maybe also ``fence=true``. In any case,
-the example gives this |int f(a+b)=c+d\\\ \\int
-f\mathopen)a+b\mathclose(=c+d|
+the example gives this |intfabc|
 
 If you say ``a\mathpunct b c``, then b behaves like a punctuation in
 math mode, this means that there is space after it, but not before. A
@@ -1271,7 +1270,7 @@ been used. This does not always work. A good example is the following.
       <mrow><mrow><mo>[</mo></mrow><mfrac><mn>1</mn> <msup><mi>x</mi> <mn>2</mn> 
       </msup></mfrac><mrow><mo>[</mo></mrow></mrow></math></formula>
 
-Preview: |\\big \\left and normal|
+Preview: |big left and normal|
 
 .. _cmd-mathpalette:
 
@@ -2607,7 +2606,7 @@ left or the right. Example
        </math>
       </formula>
 
-Preview: |$\mu$|. (see also `here <doc-ex.xhtml#align>`__).
+Preview: |$mu$|. (see also `here <doc-ex.xhtml#align>`__).
 
 .. _cmd-muskip:
 
@@ -2646,11 +2645,11 @@ This command reads math glue and converts it to normal glue. See
 .. |See...| image:: /img/AR.png
 .. |case change| image:: /img/img_84.png
 .. |some math formulas| image:: /img/img_105.png
-.. |\\matchchoice| image:: /img/img_82.png
-.. |mathmo| image:: img125.png
-.. |\\sin(x) + \\cos^2(x)| image:: /img/img_48.png
-.. |int f(a+b)=c+d\\\ \\int f\mathopen)a+b\mathclose(=c+d| image:: /img/img_46.png
-.. |\\big \\left and normal| image:: /img/img_47.png
+.. |matchchoice| image:: /img/img_82.png
+.. |mathmo| image:: /img/img125.png
+.. |sin(x) + cos^2(x)| image:: /img/img_48.png
+.. |intfabc| image:: /img/img_46.png
+.. |big left and normal| image:: /img/img_47.png
 .. |math fonts| image:: /img/img_111.png
-.. |$\mu$| image:: /img/img_135.png
+.. |$mu$| image:: /img/img_135.png
    :class: vc

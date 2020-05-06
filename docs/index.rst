@@ -7,8 +7,18 @@ Welcome to the Tralics documentation
    :caption: Using tralics
    :hidden:
 
+   index.orig
+   options
+   packages
    array
    chars
+   err
+   latex3
+   loop
+   start
+   step
+   raweb
+   auxdoc
    cmds/index
    Changelog <changelog>
 

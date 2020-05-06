@@ -1,52 +1,17 @@
-.. _tralics:
-
+=====================
 Tralics and the Raweb
 =====================
 
-| Table of Contents
-| `1. Tralics and the Raweb <#tralics1>`__
-| `2. Overview of the system <#overview>`__
-|         `2.1 Requirements of the raweb <#requi>`__
-|         `2.2 Trivial examples <#triv-exp>`__
-|         `2.3 Main document <#main-doc>`__
-|         `2.4 Modules <#modules>`__
-|         `2.5 Module Interface <#modules-i>`__
-|         `2.6 First Module <#f-module>`__
-|             `2.6.1 Original syntax <#fmodule3>`__
-|             `2.6.2 The 2006 semantics <#fmodule6>`__
-|             `2.6.3 The 2007 changes <#fmodule7>`__
-|             `2.6.4 The 2008 changes <#fmodule8>`__
-|         `2.7 References <#references>`__
-|         `2.8 Bibliography <#rabib>`__
-|             `2.8.1 Raweb Case <#rabib1>`__
-|             `2.8.2 General Case <#rabib2>`__
-|             `2.8.3 Extended Syntax <#rabib3>`__
-|             `2.8.4 More hacks <#rabib4>`__
-|             `2.8.5 Reducing entropy <#rabib5>`__
-| `3 Running the programs <#run0>`__
-|         `3.1 Options of the program <options.html>`__
-|         `3.2 Running Latex <raweb4.html#run1>`__
-|         `3.3 Running Tralics <raweb4.html#run2>`__
-|         `3.4 Running Tralics -ps <raweb4.html#run3>`__
-|         `3.5 Running Tralics -xml <raweb4.html#run4>`__
-| `4 The auxiliary perl script <raweb5.html#script0>`__
-|         `4.1 Postscript mode <raweb5.html#script1>`__
-|         `4.2 XML mode <raweb5.html#script2>`__
-|         `4.3 Evaluation of parameters <raweb5.html#percent>`__
-| `5 The fotex.cfg file <raweb6.html#fotex>`__
-| `6 The raweb-cfg.sty file <raweb6.html#racfg>`__
-|         `6.2 Ampersands in URL <raweb6.html#ra-amp>`__
-|         `6.3 MathML <raweb6.html#ra-mathml>`__
-|         `6.4 Tables in MathML <raweb6.html#mathml-table>`__
-|         `6.5 Pictures <raweb6.html#pictures>`__
-|         `6.6 Tables <raweb6.html#fo-table>`__
-|         `6.7 Getting labels right <raweb6.html#fo-label>`__
-|         `6.8 The title page <raweb6.html#fo-titlepage>`__
-|         `6.9 Math and images <raweb6.html#fo-emath>`__
+.. warning::
 
---------------
+   The contents of this page describe the use of *Tralics* to generate the
+   activity report of INRIA. As far as I am aware, it is not used for that
+   anymore, and the specific functionality involved should be considered to be
+   deprecated; it is likely to disappear in a future version of the program. The
+   page will remain here for historical reasons.
 
-.. _tralics1:
+Introduction
+============
 
 1.1 A short history
 -------------------
@@ -1709,22 +1674,1116 @@ description can be found `here <raweb4.html>`__, where we explain the
 different strategies that could be used to produce the Raweb before
 2008.
 
+You have the following choices:
+
+#. You are not interested in the raweb, and you just say tralics myfile.
+   This produces a beautiful XML document.
+#. You do not have tralics on your machine: you run latex (bibtex,
+   dvips, etc) on your TeX document. The gives a dvi or PS version of
+   your document (with \`draft' on each page in the case of the Raweb).
+#. You can say tralics -check. This will check the syntax, and produce a
+   transcript file, and nothing more.
+#. You can say tralics myfile -ps. This is more or less the combination
+   of the two previous options. However, the order of the modules might
+   be changed. This generates a PostScript file with the Inria Logo on
+   it.
+#. You can say tralics myfile -myoptions. This produces a beautiful XML
+   document, and more. For instance, if you tralics -xmltex, you will
+   get a pdf file, provided that all files and scripts are available on
+   your machine (normally, everything should be included in the raweb
+   package, contact maintainers of this package in case of problem).
+
+Since 2008, all these funny options have been removed, and *Tralics*
+just produces the XML file.
+
+3.1 Options of the program
+--------------------------
+
+Options of the program are available on a `separate
+page <options.html>`__.
+
+3.2 Running latex
+-----------------
+
+You can run latex on the file. This works provided that the raweb class
+file is available (until 2006). This is the first run
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ latex miaou2003
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou2003.tex
+      LaTeX2e <2003/12/01>
+      Babel <v3.8c> and hyphenation patterns for english, UKenglish, french, german, 
+      ngerman, italian, spanish, dumylang, nohyphenation, loaded.
+      (/usr/local/lib/texmf.local/tex/generic/inria/inputs/ra2003.cls
+      Document Class: ra2003 2003/06/12 v3,1 Copyright INRIA/MIAOU 2003 (E version)
+      (/usr/local/lib/texmf/tex/latex/base/article.cls
+      Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+      %%Stuff about packages omitted
+      No file miaou2003.aux.
+      No file miaou2003.fb.bbl.
+      No file miaou2003.fb.aux.
+      No file miaou2003.toc.
+      No file miaou2003.refer.bbl.
+      No file miaou2003.bbl.
+      %% Lots of warnings omitted
+      LaTeX Warning: There were undefined references.
+      LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.)
+      (see the transcript file for additional information)
+      Output written on miaou2003.dvi (11 pages, 22628 bytes).
+      Transcript written on miaou2003.log.
+
+The start of the run could also be, in 2006, something like
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ latex apics2006
+      This is pdfeTeX, Version 3.141592-1.30.3-2.2 (Web2C 7.5.5)
+      entering extended mode
+      (./apics2006.tex
+      LaTeX2e <2003/12/01>
+      Babel <v3.8d< and hyphenation patterns for american, french, german, ngerman, 
+      bahasa, basque, bulgarian, catalan, croatian, czech, danish, dutch, esperanto,
+      estonian, finnish, greek, icelandic, irish, italian, latin, magyar, norsk, 
+      polish, portuges, romanian, russian, serbian, slovak, slovene, spanish, 
+      swedish, turkish, ukrainian, nohyphenation, loaded.
+      (./ra2006.cls
+      Document Class: ra2006 2006/07/25 v3,2 
+         Copyright INRIA/MIAOU/APICS 2006 Raweb in DRAFT mode
+      (/usr/local/teTeX/share/texmf-dist/tex/latex/base/article.cls
+
+Run bibtex on each of the three files. **Note**: the arguments of bibtex
+are not completely obvious. The file miaou2003.fb.aux is created by the
+footbib package, and the use of the ``\footcite`` command, the file
+miaou2003.refer.aux is created by the ``\loadbiblio`` command.
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ bibtex miaou2003
+      This is BibTeX, Version 0.99c (Web2C 7.3.1)
+      The top-level auxiliary file: miaou2003.aux
+      The style file: raweb.bst
+      Database file #1: miaou2003.bib
+      Warning--empty booktitle in seyfertIMS2003
+      (There was 1 warning)
+      grimm@medee$ bibtex miaou2003.fb
+      This is BibTeX, Version 0.99c (Web2C 7.3.1)
+      The top-level auxiliary file: miaou2003.fb.aux
+      The style file: rawebalpha.bst
+      Database file #1: miaou_foot2003.bib
+      grimm@medee$ bibtex miaou2003.refer
+      This is BibTeX, Version 0.99c (Web2C 7.3.1)
+      The top-level auxiliary file: miaou2003.refer.aux
+      The style file: rawebnum.bst
+      Database file #1: miaou_refer2003.bib
+
+Run latex a second time
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ latex miaou2003
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou2003.tex
+      %% Lots of warnings/messages omitted
+      LaTeX Warning: There were undefined references.
+      LaTeX Warning: There were multiply-defined labels.)
+      (see the transcript file for additional information)
+      Output written on miaou2003.dvi (15 pages, 42256 bytes).
+      Transcript written on miaou2003.log.
+
+Run latex a third time. This will suppress the \`undefined references'
+message.
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ latex miaou2003
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou2003.tex
+      %% Lots of messages omitted
+      LaTeX Warning: Label `MIAOU@resultats@' multiply defined.
+      %% Lots of messages omitted
+      LaTeX Warning: There were multiply-defined labels. )
+      (see the transcript file for additional information)
+      Output written on miaou2003.dvi (15 pages, 42264 bytes).
+      Transcript written on miaou2003.log.
+      grimm@medee$ dvips  miaou2003 -o
+      This is dvips(k) 5.94a Copyright 2003 Radical Eye Software (www.radicaleye.com)
+      ' TeX output 2004.07.29:1056' -> miaou2003.ps
+      <tex.pro><special.pro>. [1] [2] [3] [4] [5] [6] [7] [8] [9<xml-route.ps>] 
+      [10] [11] [12] [13] [14] [15]
+
+The result is the following `miaou2003.ps <miaou2003.ps>`__ . There are
+two sections \`New results' (section 6 and 8), because there is a module
+in section \`new results' after a module in section \`Contracts'. This
+explains why LaTeX sees multiply-defined labels. There is an: Overfull
+\\hbox (22.7474pt too wide) in paragraph at lines 19--19. Line 19
+contains the ``\maketitle`` command. The overfull box contains the long
+name of the Team. It is hard to remove it. Note: this is a draft
+version. You should not try to add commands that remove overfull and
+underfull boxes, this is completely useless.
+
+3.3 Running Tralics
+-------------------
+
+When you run *Tralics*, whatever the arguments, it will print the
+following lines. The third line (`Starting XX processing for YYY' may
+change).
+
+.. container:: tty_out
+
+   ::
+
+      This is tralics 2.2, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2004, Jos\'e Grimm
+      Starting latex processing for miaou2003.
+      Configuration file identification: standard $Revision: 2.3 $
+      Read configuration file /net/home/grimm/cvs/tralics/.tralics_rc.
+      For the environment ending near line 191
+      please use `participant' or `participante' for the name,
+      as there is only one \pers in the list.
+      For the environment ending near line 253:
+      please use `participants' or `participantes' for the name,
+      as there are 2 \pers in the list.
+      There are 63 environments
+      Checked 5 keyword env with 19 keywords
+      Checked 5 catperso and 9 participant(es) envs with 34 \pers
+      There were 2 topics
+      Sections (and # of modules): 1(1) 2(1) 3(1) 4(6) 5(5) 6(4) 7(3) 8(4) 9(3).
+
+We already explained the messages about singular/plural in the
+``participant`` environment. The preprocessor has seen 63 environments
+(5 ``motscle``, 5 ``catperso``, 9 ``participant``, 28 ``module``, and
+some others, namely one ``moreinfo,`` one ``glossaire``, one ``array``,
+one ``figure``, two ``description``, two ``equation``, and 8
+``itemize``). The total number of keywords is 19, the number of
+``\pers`` commands is 34. They were two declared topics, and the last
+line indicates the number of modules per section.
+
+You can run tralics with option -check. In this case, the program checks
+the syntax, prints some information, and that's all.
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ tralics miaou2003 -check
+      This is tralics 2.2, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2004, Jos\'e Grimm
+      Starting check for miaou2003.
+      %% Common output as above omitted
+
+For the 2006 version, this changes a little bit. Note that there are no
+artificial topics in the Apics RA.
+
+.. container:: tty_out
+
+   ::
+
+      This is tralics 2.8, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2006, Jos\'e Grimm
+      Licensed under the CeCILL Free Software Licensing Agreement
+      Starting xml processing for apics2006.
+      Configuration file identification: standard $ Revision: 2.18 $
+      Read configuration file .tralics_rc.
+      Configuration file identification: standard-ra $ Revision: 2.2 $
+      Read tcf file for type: ../confdir/ra.tcf
+      There are 157 environments
+      You did not use any topic
+      Sections (and # of modules): 1(1) 2(1) 3(2) 4(6) 5(5) 6(15) 7(2) 8(6) 9(3).
+
+3.4 Running Tralics -ps
+-----------------------
+
+Let's try tralics -ps miaou2003. The effect of this command is to check
+the source file, re-arrange the modules in the right order, and call
+LaTeX. The ps option is not supported anymore in the 2008 version.
+
+From the input file miaou2003.tex another source file miaou.tex (whose
+content is given `here <raweb2.html>`__) is created. Essentially, it is
+the initial file, with the modules in the right order; commands like
+``\begin{module}`` are replaced by
+``\RAstartmodule{1} {MIAOU} {6} {tralics}{...}`` (the first number is
+the topics, the second number is the section). The document class is
+``raweb``.
+
+This file is compiled by an external program, launched directly by
+*Tralics* some years ago, a Perl script later on. On some systems the
+latex command does not recognize the -interaction switch, and you have
+to say something like /mypath/mylatex \\nonstopmode\input{thefile}. For
+these reasons, the names of the command to execute is not built-in, but
+in the configuration file. We assume that the relevant lines are:
+
+.. container:: ltx-source
+
+   ::
+
+        makefo="xsltproc --catalogs -o %A.fo %B %C";
+        makehtml = "xsltproc --catalogs  %B %C";
+        call_lint = "xmllint --catalogs --valid  --noout %C"
+        makepdf = "pdflatex -interaction=nonstopmode %w"
+        generatedvi = "latex -interaction=nonstopmode %t"
+        generateps = "dvips %t.dvi -o %t.ps"
+
+These lines are copied in the file user_param.pl and the Perl script
+rahandler.pl is called on it (there is a command line option that allows
+the use of another program). In the example that follows, there are
+lines of the form todo_something=x. They correspond to the options of
+tralics. Here ps is set to true, this explains that the script must call
+latex on the file apics.tex. Here html is set to false, true would mean
+that conversion from apics.xml to apics.html is required.
+
+.. container:: ltx-source
+   :name: user-param
+
+   ::
+
+      $::makefo='xsltproc --catalogs -o %A.fo %B %C';
+      $::makehtml='xsltproc --catalogs  %B %C';
+      $::checkxml='xmllint --catalogs --valid  --noout %C';
+      $::makepdf='pdflatex -interaction=nonstopmode %w';
+      $::makedvi='';
+      $::dvitops='';
+      $::generate_dvi='latex -interaction=nonstopmode %t';
+      $::generate_ps='dvips %t.dvi -o %t.ps';
+      $::tralics_dir='/user/grimm/home/cvs/tralics';
+      $::ra_year='2006';
+      $::no_year='apics';
+      $::tex_file='apics';
+      $::todo_fo=0;
+      $::todo_html=0;
+      $::todo_tex=0;
+      $::todo_lint=0;
+      $::todo_ps=1;
+      $::todo_xml=0;
+      1;
+
+This is now what you see on the screen.
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ tralics miaou2003 -ps
+      This is tralics 2.2, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2004, Jos\'e Grimm
+      Starting latex processing for miaou2003.
+      %% Common output as above omitted
+      /user/grimm/home/bin/rahandler.pl v2.5, (C) 2004 INRIA, José Grimm, projet APICS
+      copy-and-exec for miaou
+      latex -interaction=nonstopmode miaou
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou.tex
+      LaTeX2e <2003/12/01>
+      Babel <v3.8c> and hyphenation patterns for english, UKenglish, french, german, 
+      ngerman, italian, spanish, dumylang, nohyphenation, loaded.
+      (raweb.cls
+      Document Class: raweb 2001/06/14 v2,2 Copyright INRIA/MIAOU 2001
+      (/usr/local/lib/texmf/tex/latex/base/article.cls
+      Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+      %%more latex trace
+      No file miaou.aux.
+      No file miaou.fb.bbl.
+      No file miaou.fb.aux.
+      No file miaou.toc.
+      %%more latex trace
+      No file miaou.refer.bbl.
+      No file miaou.bbl.
+      [10] (miaou.fb.aux) (miaou.aux)
+
+      LaTeX Warning: There were undefined references.
+      LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.)
+      (see the transcript file for additional information)
+      Output written on miaou.dvi (11 pages, 19004 bytes).
+      Transcript written on miaou.log.
+      exit status of latex is 0
+      bibtex -min-crossrefs=1000 miaou
+      bibtex exit status 0
+      bibtex -min-crossrefs=1000 miaou.refer
+      bibtex exit status 0
+      bibtex -min-crossrefs=1000 miaou.fb
+      bibtex exit status 0
+      latex -interaction=nonstopmode miaou
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou.tex
+      %%more latex trace
+      LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+      (see the transcript file for additional information)
+      Output written on miaou.dvi (15 pages, 38616 bytes).
+      Transcript written on miaou.log.
+      exit status of latex is 0
+      latex -interaction=nonstopmode miaou
+      This is TeX, Version 3.14159 (Web2C 7.3.1)
+      (miaou.tex
+      %%more latex trace
+      (miaou.aux) )
+      (see the transcript file for additional information)
+      Output written on miaou.dvi (15 pages, 38624 bytes).
+      Transcript written on miaou.log.
+      exit status of latex is 0
+      dvips miaou.dvi -o miaou.ps
+      This is dvips(k) 5.94a Copyright 2003 Radical Eye Software (www.radicaleye.com)
+      ' TeX output 2004.07.29:1125' -> miaou.ps
+      <tex.pro><8r.enc><texps.pro><special.pro>. [1<LogoRA2003.eps>
+      <Logo-INRIA-couleur.ps>] [2] [1] [2] [3] [4] [5] [6] [7<xml-route.ps>] [8] 
+      [9] [10] [11] [12] [13] 
+      exit status of dvips is 0
+      (Transcript written on miaou.rh.log)
+      done
+
+The result is the following `miaou.ps <miaou.ps>`__ .
+
+There is one warning: Underfull \\vbox (badness 10000) has occurred
+while \\output is active. Tracing TeX shows the following. The selected
+breakpoint at end of page 7 has: t=151.71101 plus 4.88531, g=200.427
+(here g is the size of the page, minus the size of the image, and t the
+size of the text, the big difference between t and g explains the
+underfull box). There is no page break between the title of module 6.2
+and the first line of the text. There is possible page break between
+this line and the start of 6.3. Parameters are t=201.6997 plus 12.54138
+minus 0.94266 and g=200.427. This pagebreak is not chosen because it
+would overflow by 0.33pt! Adding a bit of shrinkability to the parskip,
+for instance ``\parskip =0pt plus 1pt minus 1pt``, is enough in this
+case. But, remember: this is not the final document.
+
+In case of errors, latex may complain, for instance as “Undefined
+control sequence”. In this case, you will see something like “exit
+status of latex is 256”. A zero status is OK, a non-zero one means an
+error. If your code contains ``\def\foobar{0\foobar}\foobar``, you will
+overflow TeX's memory. However, if you remove the 0, you will go in an
+endless loop. If you kill the process, normally, this will kill the Perl
+script, and the latex process. After that, you will have to debug (add
+``\tracingall`` somewhere, and look at the transcript file, its name is
+miaou.log)
+
+3.5 Running Tralics -xml
+------------------------
+
+Let's start with a call of *Tralics* without options. This is what you
+will see (you may notice that module statistics are no longer computed)
+
+.. container:: tty_out
+
+   ::
+
+      This is tralics 2.13.0, a LaTeX to XML translator, running on medee
+      Copyright INRIA/MIAOU/APICS 2002-2008, Jos\'e Grimm
+      Licensed under the CeCILL Free Software Licensing Agreement
+      Starting translation of file apics2007.tex.
+      Configuration file identification: standard $ Revision: 2.24 $
+      Read configuration file /user/grimm/home/cvs/tralics/confdir/.tralics_rc.
+      Configuration file identification: standard-ra $ Revision: 2.3 $
+      Read tcf file /user/grimm/home/cvs/tralics/confdir/ra2007.tcf
+      Document class: ra2007 2008/07/16 v1.1 Activity Report, Inria 2007
+      Translating section composition
+      Translating section presentation
+      Translating section fondements
+      Translating section domaine
+      Translating section logiciels
+      Translating section resultats
+      Translating section contrats
+      Translating section international
+      Translating section diffusion
+      Bib stats: seen 91 entries.
+      Seen 91 bibliographic entries.
+      Math stats: formulas 612, kernels 212, trivial 3, \mbox 6, large 0, small 65.
+      Buffer realloc 40, string 18431, size 669087, merge 13
+      Macros created 2013, deleted 1766; hash size 2493; foonotes 1.
+      Save stack +2635 -2635.
+      Attribute list search 11990(1484) found 3831 in 6638 elements (1117 at boot).
+      Number of ref 105, of used labels 47, of defined labels 109, of ext. ref. 24.
+      Input conversion: 137 lines converted.
+      There were 20 images.
+      Output written on apics.xml (289437 bytes).
+      No error found.
+      (For more information, see transcript file apics2007.log)
+
+Let's try apics2006 with version 2.8. We get
+
+.. container:: tty_out
+
+   ::
+
+      grimm@medee$ tralics apics2006     
+      This is tralics 2.8, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2006, Jos\'e Grimm
+      Licensed under the CeCILL Free Software Licensing Agreement
+      Starting xml processing for apics2006.
+      %% Common output as above omitted
+      Translating section composition
+      Translating section presentation
+      Translating section fondements
+      Translating section domaine
+      Translating section logiciels
+      Translating section resultats
+      Translating section contrats
+      Translating section international
+      Translating section diffusion
+      Bib stats: seen 71 entries
+      Seen 75 bibliographic entries
+      %% Memory usage
+      Used 1784 commands
+      Math stats: formulas 607, non trivial kernels 321,
+         special 7, trivial 141, \mbox 6, large 0, small 142.
+      Buffer realloc 32, string 18447, size 704375, merge 13
+      Macros created 85, deleted 0.
+      Save stack +1828 -1828.
+      Attribute list search 8640(1549) found 3514 in 6351 elements (1450 after boot).
+      Number of ref 96, of used labels 46, of defined labels 90, of ext. ref. 26.
+      Modules with 26, without 15, sections with 9, without 19
+      There were 16 images.
+      Output written on apics.xml (284415 bytes).
+      No error found. %% Very important information here
+      (For more information, see transcript file apics2006.log)
+      %% Raweb specific commands, via the Perl script
+      rahandler.pl v2.12, (C) 2004 2006 INRIA, Jos\'e Grimm, Team Apics
+      Postprocessor did nothing
+
+You can see that the Perl script has been called. It is configurated to
+call a XSLT processor twice (producing a file miaou.fo, or a bunch of
+HTML files), then calling pdflatex twice, then xmllint. In fact nothing
+is done.
+
+You could try tralics apics2006 -xmllint. No error is signaled: the file
+apics2006.tex that we use to check the tools produces correct output!
+You could try tralics miaou2003 -xmllint. The answer is that the
+document produced by *Tralics* does not conform the DTD, because the
+module starting at `line 201 <raweb1.html#201>`__ contains no text; in
+reality, xmllint says the following:
+
+.. container:: tty_out
+
+   ::
+
+      miaou.xml:152: element module: validity error : Element module content does 
+      not follow the DTD, expecting (head , (moreinfo | keywords | participant | 
+      participants | participante | participantes | anchor)* , ((div2 | div3 | 
+      div4)+ | ((cit | p | list | note | formula | table | figure)+ , (div2 | 
+      div3 | div4)*))), got (head keywords)
+      </keywords></module>
+                          ^
+
+If you say tralics miaou2003 -xmltex, you will see the following.
+**Note**: you ask TeX to interpret the XML code, this is much slower
+anything else. Timings for apics 2006: Tralics 0.1 s, Latex 0.5s, Pdf
+via XML 24s.
+
+.. container:: tty_out
+
+   ::
+
+      [2]grimm@medee$ tralics miaou2003 -xmltex
+      This is tralics 2.2, a LaTeX to XML translator
+      Copyright INRIA/MIAOU/APICS 2002-2004, Jos\'e Grimm
+      Starting xml processing for miaou2003.
+      %% as above
+      Output written on miaou.xml (38393 bytes).
+      No error found.
+      (For more information, see transcript file miaou2003.log)
+      /user/grimm/home/bin/rahandler.pl v2.4, (C) 2004 INRIA, José Grimm, projet APICS
+      exec-xml for miaou
+      %% This converts miaou.xml into miaou.fo
+      xsltproc --catalogs -o miaou.fo /net/home/grimm/cvs/raweb/src/rawebfo.xsl miaou.xml
+      exit status of makefo is 0
+      (not done) xsltproc --catalogs  /net/home/grimm/cvs/raweb/src/rawebhtml.xsl miaou.xml
+      %% Call pdflatex on wmiaou
+      pdflatex -interaction=nonstopmode wmiaou
+      This is pdfTeXk, Version 3.14159-1.10b (Web2C 7.4.5)
+       %&-line parsing enabled.
+      (./wmiaou.tex{/usr/local/lib/texmf/pdftex/config/pdftex.cfg}
+      LaTeX2e <2003/12/01>
+      Babel <v3.8c>  and hyphenation patterns for english, UKenglish, french, german, 
+      ngerman, italian, spanish, dumylang, nohyphenation, loaded.
+      (/usr/local/lib/texmf/tex/xmltex/base/xmltex.tex
+      xmltex version: 2002/06/25 v1.9 (Exp)
+
+      Encoding = utf-8 (/usr/local/lib/texmf/tex/xmltex/base/xmltex.cfg)
+      (./wmiaou.cfg
+      Loading mathml support and raweb extensions
+      ) (./miaou.fo (/usr/local/lib/texmf/tex/xmltex/passivetex/fotex.xmt)
+      (/usr/local/lib/texmf/tex/latex/base/article.cls
+      Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
+      %% More latex packages
+      (/usr/local/lib/texmf/tex/latex/hyperref/pd1enc.def) (./hyperref.cfg)
+      (/usr/local/lib/texmf/tex/latex/hyperref/hpdftex.def) (./fotex.cfg))
+      No file wmiaou.aux.
+      No file wmiaou.out.
+      No file wmiaou.out.
+      <Logo-INRIA-couleur.pdf, id=7, 411.5375pt x 106.3975pt>
+      <use Logo-INRIA-couleur.pdf> <LogoRA2003.pdf, id=8, 299.1175pt x 341.275pt>
+      <use LogoRA2003.pdf>
+      LaTeX Warning: Reference `uid1' on page 1 undefined on input line 3.
+      %% More latex warnings
+
+      LaTeX Warning: There were undefined references.
+      LaTeX Warning: Label(s) may have changed.Rerun to get cross-references right.
+       ) ) )
+      (see the transcript file for additional information)
+      Output written on wmiaou.pdf (14 pages, 137378 bytes).
+      Transcript written on wmiaou.log.
+
+      exit status of pdflatex is 0
+      %% Second run
+      pdflatex -interaction=nonstopmode wmiaou
+      This is pdfTeXk, Version 3.14159-1.10b (Web2C 7.4.5)
+       %&-line parsing enabled.
+      (./wmiaou.tex{/usr/local/lib/texmf/pdftex/config/pdftex.cfg}
+      %% some messages omitted
+      [2] [1] [2] [3]
+      [4 <./xml-route.pdf>] [5] [6] [7] [8] [9] (./wmiaou.aux) ) ) )
+      (see the transcript file for additional information)</usr/local/lib/texmf/fonts
+      /type1/bluesky/cm/cmtt10.pfb></usr/local/lib/texmf/fonts/type1/bluesky/cm/cmbx1
+      0.pfb></usr/local/lib/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/local/lib/te
+      xmf/fonts/type1/bluesky/cm/cmr5.pfb></usr/local/lib/texmf/fonts/type1/bluesky/c
+      m/cmex10.pfb></usr/local/lib/texmf/fonts/type1/bluesky/symbols/msbm7.pfb></usr/
+      local/lib/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/local/lib/texmf/fonts/typ
+      e1/bluesky/cm/cmmi5.pfb></usr/local/lib/texmf/fonts/type1/bluesky/symbols/msbm1
+      0.pfb></usr/local/lib/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/local/lib/te
+      xmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/local/lib/texmf/fonts/type1/bluesky/
+      cm/cmmi10.pfb></usr/local/lib/texmf/fonts/type1/bluesky/cm/cmsy10.pfb>{/usr/loc
+      al/lib/texmf/dvips/base/8r.enc}
+      Output written on wmiaou.pdf (14 pages, 152502 bytes).
+      Transcript written on wmiaou.log.
+      exit status of pdflatex is 0
+      (not done) xmllint --catalogs --valid  --noout miaou.xml
+      (Transcript written on miaou.rh.log)
+      done
+
+The pdf is `here <wmiaou.pdf>`__. It is named wmiaou.pdf, a name that
+does not conflict with the names miaou2003.ps and miaou.ps. Running
+*Tralics* ten times in a row give the following size for the Pdf file:
+152499 152499 152500 152500 152500 152500 152497 152497 152497 152497.
+Strange, isn't it?
+
 .. _script0:
 
 4. The auxiliary perl script
 ============================
 
-Before 2008, an auxiliary Perl script described `here <raweb5.html>`__
-was used for the Raweb.
+Before 2008, an auxiliary Perl script was used for the Raweb.The behavior of
+*Tralics* is not the same in Raweb mode or in normal mode. Raweb mode if entered
+if the document type (deduced from the options, the configuration file, and the
+document) is ``RA`` (or ``ra``). In the case, the file name should be
+apics2006.tex, and the document class should be ``ra2006`` (the year can be
+replaced by 2004, etc, provided that it is the same). If an XML file is created,
+it will be apics.xml and the year will be an attribute of the document element.
+If a TeX file is created, it will be named apics.tex, and it will use the
+``raweb`` documentclass.
+
+-  If you say tralics apics2006 -check, the software will read your
+   file, analyze it and, that's all (the transcript file is
+   apics2006.log).
+-  If you say tralics apics2006 -ps, the software will read your file,
+   analyze it, create a new TeX file, and use an external program to
+   compile it; communication is via a file named user_param.pl. The file
+   apics.rh.log will hold the logs of all the external programs
+   (apics2006.log is the transcript file of *Tralics*, apics.log the
+   transcript file of LaTeX).
+-  If you say tralics apics2006, the software will read your file,
+   analyze it, and translate it. It will call the external program, but
+   nothing will happen.
+-  If you say tralics apics2006 -xmlall (or some other options) the
+   software will read your file, analyze it, and translate it. It will
+   call the external program, that will convert the XML file. As above,
+   communication is via user_param.pl, transcript in apics.rh.log.
+
+The auxiliary script starts like this
+
+.. container:: ltx-source
+
+   ::
+
+      #!/usr/bin/perl
+      # additional header info here
+      print "(C) 2004 2006 INRIA, Jos\\'e Grimm, Team Apics\n";
+
+All variables used by the program can be redefined by the \`require' at
+the end of the file. If ``todo_ps`` is true (non-zero), then you want a
+preview (conversion from latex to dvi and Postscript). Otherwise, if
+``todo_xml`` is true, you want conversion from latex to XML; this is
+done by *Tralics*. The post-processor allows you to check the XML (if
+``todo_lint`` is true), convert it to HTML (if ``todo_html`` is true),
+to XMLFO (if ``todo_fo`` is true), and to Pdf or Postscript (if
+``todo_tex`` is true). The variables are initialized like this.
+
+.. container:: ltx-source
+
+   ::
+
+      $::todo_fo = 1;
+      $::todo_html = 1;
+      $::todo_tex = 1;
+      $::todo_lint = 1;
+      $::todo_ps = 0;
+      $::todo_xml = 1;
+
+If you run *Tralics* on the file apics2006.tex, the preview will be in
+the file apics.tex (from the variable ``tex_file``), while the XML file
+will be apics.xml (from the variable ``no_year``). And the year is 2006.
+Other variable contain a percent sign. Make sure that Perl does not
+interpret them as a hash reference, since we will modify them later.
+(`explanations here <#percent>`__).
+
+.. container:: ltx-source
+
+   ::
+
+      # Predeclare all variables here.
+      $::tralics_dir= "/user/grimm/home/cvs/tralics";
+      $::ra_year = "2006";
+      $::tex_file = "miaou";
+      $::no_year = "miaou";
+      $::generate_dvi = q/latex -interaction=nonstopmode %t/;
+      $::generate_ps = q/dvips %t.dvi -o %t.ps/;
+      $::makefo = 'xsltproc --catalogs -o %A.fo %B %C';
+      $::makehtml ='xsltproc --catalogs  %B %C';
+      $::makepdf = 'pdflatex -interaction=nonstopmode %w';
+      $::makedvi = 'latex -interaction=nonstopmode %w';
+      $::dvitops = 'dvips %w.dvi -o %w.ps';
+      $::checkxml = 'xmllint --catalogs --valid  --noout %C';
+
+      $::dtd_file = "raweb3.dtd"; # New in 2004.
+
+The variables shown above are overwritten by the content of the
+user_param.pl, an example is `given here <raweb4.html#user-param>`__. In
+particuler, the user-param file must give the name of the TeX file, and
+``tralics_dir``, the location where additional files are located.
+
+4.1 Postscript mode
+-------------------
+
+The objective is easy to understand: we have to call latex three times,
+then dvips; after the first call, we execute bibtex. Three auxiliary
+file are needed for bibtex: one is created by the footbib package, and
+one by the script. The last one is standard.
+
+.. container:: ltx-source
+
+   ::
+
+      sub copy_and_exec {
+        print "copy-and-exec for $::tex_file\n";
+        link_some_files();
+        open OUTFILE, ">$::no_year.refer.aux";
+        print OUTFILE "\\bibstyle{rawebnum}\n";
+        print OUTFILE "\\citation{*}\n";
+        print OUTFILE "\\bibdata{$::no_year" . "_refer" . $::ra_year . "}\n";
+        close OUTFILE;
+        open LOGFILE, ">$::no_year.rh.log";
+        call_latex();
+        call_bibtex ("","");
+        call_bibtex (".refer","_refer");
+        call_bibtex (".fb","_foot");
+        call_latex();
+        call_latex();
+        interpret_and_launch($::generate_ps,"junk",1,"dvips","");
+        close LOGFILE;
+        print "(Transcript written on $::no_year.rh.log)\n";
+        print "done\n";
+      }
+
+This is an auxiliary routine that takes 5 arguments. The first one is a
+string to be evaluated (as explained below), it comes from the
+configuration file; the second argument is either \`junk', or the name
+of a xslt file, it can be used by the evaluator of the argument. Then
+comes a boolean, if false nothing is done. Argument number four is a
+symbolic name of the command, and if the last argument is true, the
+command is executed twice.
+
+If you do not want to generate PS, just put the empty string in
+``$::generate_ps``, because here, nothing is done if ``$template`` is
+empty.
+
+.. container:: ltx-source
+
+   ::
+
+      sub interpret_and_launch {
+        my ($template,$aux,$tr,$name,$twice) = @_;
+        $_ = $template;
+        return unless $_;
+        interpret_str($aux);
+        launch_cmd($_,$tr,$name);
+        launch_cmd($_,$tr,$name) if $twice;
+      }
+
+This launches latex.
+
+.. container:: ltx-source
+
+   ::
+
+      sub call_latex {
+        interpret_and_launch($::generate_dvi,"junk",1,"latex",0);
+        copy_to_log("$::no_year.log");
+      }
+
+This launches bibtex. We do not use the ``interpret_str`` subroutine (if
+your executable is called BibTex, just edit the Perl script). There are
+three bibtex files, apics2006.bib, apics_foot2006.bib and
+apics_refer2006.bib. The procedure gets \`apics' from ``$::no_year``,
+the \`2006' from ``$::ra_year``, and what is between as second argument.
+The bibliography files are optional, so nothing is done in case the
+files do not exist. On the other hand, the auxiliary files have the same
+name as in section 3.1, without the year. For instance, it would be
+apics.fb.aux. The quantity between \`apics' and \`aux' is the first
+argument.
+
+.. container:: ltx-source
+
+   ::
+
+      sub call_bibtex {
+        my ($exta, $extb) = @_;
+        my ($bib);
+        $bib = "$::no_year$extb$::ra_year.bib";
+        return unless -f $bib;
+        $_ = $::no_year . $exta;
+        print "bibtex -min-crossrefs=1000 $_\n";
+        print LOGFILE "result of bibtex $_\n";
+        `bibtex -min-crossrefs=1000 $_`;
+        print "bibtex exit status $?\n";
+        print LOGFILE "bibtex exit status $?\n";
+        copy_to_log("$_.blg");
+      }
+
+This allows us to merge the transcript files of the different processes.
+
+.. container:: ltx-source
+
+   ::
+
+      sub copy_to_log  {
+        my($file) = @_;
+        open(INPUT,"<$file");
+        while (<INPUT>) {
+          print LOGFILE;
+        };
+        close INPUT;
+      }
+
+This executes the first argument if the second is true. Everything
+printed on the screen is also copied in the transcript file. Note: *this
+means that all messages of LaTeX are stored in a buffer and printed at
+end of job*. Said otherwise, in case of trouble, you will see the error
+messages only after you abort the job.
+
+.. container:: ltx-source
+
+   ::
+
+      sub launch_cmd {
+        my ($cmd,$test,$name) = @_;
+        if(! $test) {
+          print LOGFILE "(not done) $cmd\n";
+          print  "(not done) $cmd\n";
+          return;
+        }
+        print LOGFILE "$cmd\n";
+        print "$cmd\n";
+        print LOGFILE "-------------------------\nStart trace of $name\n";
+        my $value;
+        $value = `$cmd`;
+        print LOGFILE $value;
+        print $value;
+        print LOGFILE "End trace of $name\n-------------------------\n";
+        print LOGFILE "exit status of $name is $?\n";
+        print "exit status of $name is $?\n";
+      }
+
+The raweb directory of *Tralics* contains a lot of useful files. What we
+do here is to put a symbolic link for the following files: the three bst
+files, the class file, and the two logos (in PostScript and Pdf form).
+
+Todo. Some files depend on the year, and other do not. In particular,
+raweb.cls and raweb.bst depend on the year. The class file contains the
+current year for headings, name of logo, name of foot bibliography, the
+bst file output warnings in case of a bad year. The name \`raweb.bst'
+comes from the class file, this is easy to change, but the name of the
+document class is generated by Tralics.
+
+.. container:: ltx-source
+
+   ::
+
+      sub link_some_files {
+        link_src ("rawebalpha.bst");
+        link_src ("raweb.bst");
+        link_src ("rawebnum.bst");
+        link_src ("raweb.cls");
+        link_src ("Logo-INRIA-couleur.pdf");
+        link_src ("Logo-INRIA-couleur.ps");
+        link_src ("LogoRA" . $::ra_year . ".eps");
+        link_src ("LogoRA" . $::ra_year . ".pdf");
+      }
+
+This takes three arguments, A, B and C. The effect is to make a symbolic
+link from file A in the source directory, in the directory B, to file C.
+Nothing is done if the target exists, or if the source does not exists.
+
+.. container:: ltx-source
+
+   ::
+
+      sub link_file {
+         my($in,$out,$short_in);
+         $in = @_[0]; $out = @_[1]; $short_in = @_[2];
+         $in = "$::raweb_dir/$in";
+         `ln -s $in $out` if (-f $in && !-f "$out/$short_in");
+      }
+
+Same as above, but B (the directory in which is put the link) is the
+current directory.
+
+.. container:: ltx-source
+
+   ::
+
+      sub link_src {
+         my($in,$out,$short_in);
+         $short_in =@_[0];
+          $in = "$::tralics_dir/raweb/$short_in";
+         `ln -s $in` if (-f $in && !-f "$short_in");
+      }
+
+Some other files come from the xml directory of *Tralics*, and neeed a
+different function.
+
+.. container:: ltx-source
+
+   ::
+
+      sub link_xml {
+         my($in,$out,$short_in);
+         $short_in =@_[0];
+         $in = "$::tralics_dir/xml/$short_in";
+         `ln -s $in` if (-f $in && !-f "$short_in");
+      }
+
+4.2 XML mode
+------------
+
+This is done in XML mode. Note that *Tralics* creates a file named
+\_hyperref.cfg that contains useful information. On the other hand, the
+hyperref.cfg file is used by the hyperref package. For this reason, we
+are a bit careful, when copying.
+
+The script constructs also a TeX file, that reads the XML file (value of
+``\xmlfile``). This file loads the xmltex.tex package (by Carlisle)
+explicitly, and the fotex.xmt (by Rahtz) implicitly, according to some
+obscure rules. There are some scheduling problems; as a consequence, the
+file wapics.cfg loads the MathML stuff. The fotex.cfg file is loaded
+much too late (it is needed however, since it explains how to insert the
+Logo on the front page).
+
+After these files are created, all the shell scripts are run.
+
+.. container:: ltx-source
+
+   ::
+
+      sub exec_xml {
+        if(!($::todo_html || $::todo_fo || $::todo_tex || $::todo_lint) ) {
+          print "Postprocessor did nothing\n";
+          return;
+        }
+        print "exec-xml for $::tex_file\n";
+        link_xml_files();# links files, for instance fotex.cfg 
+        make_icons();# for HTML 
+        if(-f "_hyperref.cfg") { # keywords and such 
+          `rm hyperref.cfg`  if(-f "hyperref.cfg");
+          `mv _hyperref.cfg hyperref.cfg`;
+        }
+        my $name1 = "w" . $::no_year . ".cfg";
+        my $name2 = $::tralics_dir . "raweb-cfg.sty";
+        `rm $name1` if -f $name1;
+        `ln -s $name2 $name1` if -f $name2;
+        make_catalog();
+        open OUTFILE, ">w$::no_year.tex";
+        print OUTFILE "\\def\\xmlfile{$::no_year.fo}\n";
+        print OUTFILE "\\def\\LastDeclaredEncoding{T1}\n";
+        print OUTFILE "\\input{xmltex.tex}\n";
+        print OUTFILE "\\end{document}\n";
+        close OUTFILE;
+
+        open LOGFILE, ">$::no_year.rh.log";
+        if($::todo_html) {
+          `rm -rf $::no_year$::ra_year`;   # a bit aggressive? ;
+          `mkdir $::no_year$::ra_year`;
+        }
+        interpret_and_launch($::makefo,"raweb3fo", $::todo_fo,"makefo",0);
+        interpret_and_launch($::makehtml,"rawebhtml", $::todo_html,"makehtml",0);
+        interpret_and_launch($::makepdf,"junk", $::todo_tex,"pdflatex",1);
+        interpret_and_launch($::makedvi,"junk", $::todo_tex,"latex",1);
+        interpret_and_launch($::dvitops,"junk", $::todo_tex,"dvips",0);
+        interpret_and_launch($::checkxml,"junk", $::todo_lint,"lint",0);
+        close LOGFILE;
+        print "(Transcript written on $::no_year.rh.log)\n";
+        print "done\n";
+      }
+
+Obtaining the Pdf from the XML requires the same logos. It also needs a
+hook: this is fotex.cfg. We also make sure that the DTD is visible.
+Maybe, we should have a raweb2004.dtd ?
+
+.. container:: ltx-source
+
+   ::
+
+      sub link_xml_files {
+        link_xml ($::dtd_file);
+        link_xml ("fotex.cfg");
+        link_xml ("fotex.sty");
+        link_xml ("fotex.sty");
+        link_xml ("raweb-uni.sty");
+        link_xml ("fotex-add.sty");
+        link_src ("Logo-INRIA-couleur.pdf");
+        link_src ("Logo-INRIA-couleur.ps");
+        link_src ("LogoRA" . $::ra_year . ".eps");
+        link_src ("LogoRA" . $::ra_year . ".pdf");
+      }
+
+This routine creates a icons directory and links some files. The names
+of the icons that are needed can be found in the different styles
+sheets. Note that the HTML files are put in a directory below the
+current directory, so that it accesses them via ../icons/xx.png. As a
+result, if you call the script with different teams, the icons directory
+will be shared. This is only useful if you generate HTML.
+
+.. container:: ltx-source
+
+   ::
+
+      sub make_icons {
+        `mkdir icons` unless -d "icons";
+        link_file ("icons/contents_motif.png", "icons", "contents_motif.png");
+        # more lines omitted
+      }
+
+The ``make_catalog`` routine copies the file catalog.src (found in the
+source directory) into the file named catalog. However, it does not
+overwrite it. The string ``source_directory`` is replaced by the source
+directory (check for ``$ENV`` at the end of the script).
+
+.. container:: ltx-source
+
+   ::
+
+      sub make_catalog {
+        return if -f "catalog";
+        my $src_name = $::tralics_dir . "catalog.src";
+        open(INPUT,"<$src_name");
+        my(@file_string);
+        while (<INPUT>) {
+          push(@file_string, $_ );
+        };
+        $_ = join('',@file_string);
+        return unless $_;
+        s!source_directory/dtd/!$::tralics_dir/xml/!g;
+        s!source_directory/xml/!$::tralics_dir/xml/!g;
+        open OUTFILE, ">catalog";
+        print OUTFILE;
+        close OUTFILE;
+      }
+
+This is a very complicated procedure, whose purpose is to produce a file
+with the following two lines
+
+.. container:: ltx-source
+
+   ::
+
+      PUBLIC "mathml" /user/grimm/home/cvs/tralics/xml/mathml2/mathml2.dtd
+      PUBLIC "teixlite" "/user/grimm/home/cvs/tralics/xml/teixlite.dtd" 
+
+4.3 Evaluation of parameters
+----------------------------
+
+We have seen that the configuration file of *Tralics* contains lines
+like: ``makefo="xsltproc --catalogs -o %A.fo %B %C";``. These lines are
+copied verbatim in the user_param.pl file (with single quotes instead of
+double quotes). The lines are evaluated according to the following rules
+
+-  %A and %a are replaced by \`apics' (the name of the team),
+-  %B and %b are replaced by the value of the argument (in the source
+   directory), with, or without the ``.xsl`` extension.
+-  %C and %c are replaced by \`apics' (the name of the team), with and
+   without the ``.xml`` suffix,
+-  %W and %w are replaced by \`wapics' (team name, with an initial w),
+   with and without the ``.tex`` suffix,
+-  %T and %t are replaced by \`apics' (alternate team name) with and
+   without the ``.tex`` suffix.
+
+.. container:: ltx-source
+
+   ::
+
+      sub interpret_str {
+        my $B = @_[0];
+        my ($Y,$S,$P) = ($::no_year,$::raweb_dir_src,$::tex_file);
+        # hack here in case replacement contains %
+        s/%A/$Y/g;
+        s/%a/$Y/g;
+        s/%B/$S$B.xsl/g;
+        s/%b/$S$B/g;
+        s/%C/$Y.xml/g;
+        s/%c/$Y/g;
+        s/%W/w$Y.tex/g;
+        s/%w/w$Y/g;
+        s/%T/$P.tex/g;
+        s/%t/$P/g;
+      }
+
+4.4 End of rahandler.pl
+-----------------------
+
+The rahandler.pl file contains all variables and procedures shown above,
+maybe in a different order. The action of the script is given here. This
+read the user parameters (created by Tralics, possibly modified by the
+user). Since the file is read by \`require' it should terminate with
+something that does not evaluate to zero.
+
+.. container:: ltx-source
+
+   ::
+
+      require "user_param.pl";
+
+It is important to export the catalog. It is also important to export
+the ``TEXMFCNF`` variable. For security reasons, it is better not to put
+this in the current directory. On the other hand, you need a huge
+pdflatex when reading XML.
+
+.. container:: ltx-source
+
+   ::
+
+        $ENV{SGML_CATALOG_FILES}= "./catalog";   
+        $ENV{TEXMFCNF} = "$::tralics_dir" . "/xml:"
+           . ( defined($ENV{TEXMFCNF}) ? "$ENV{TEXMFCNF}" : "");
+
+Action.
+
+.. container:: ltx-source
+
+   ::
+
+      if($::todo_ps) { copy_and_exec(); }
+      elsif ($::todo_xml) { exec_xml(); }
 
 .. _fotex:
 
-5. The fotex.cfg file
-=====================
-
-.. _racfg:
-
-6. The raweb-cfg.sty file
+5. The raweb-cfg.sty file
 =========================
 
 The pdf files of the activity report are produced via a Makefile as
@@ -1732,5 +2791,1307 @@ follows. The TeX source is converted by *Tralics* into some XML file; an
 XML processor converts this into another XML file, conforming to the new
 DTD (whatever this means). Another XML processor converts the result
 into XSL/FO format, which is interpreted by TeX via the tools of S.
-Rahtz and D. Carlisle. Some patches to these files are required, they
-are described `here <raweb6.html>`__.
+Rahtz and D. Carlisle. 
+
+5.1 Details
+-----------
+
+Some patches to these files are required. We explain here the content of the
+file raweb-cfg.sty. It starts like this.
+
+.. container:: ltx-source
+
+   ::
+
+      \makeatletter
+      \immediate\write20{Loading mathml support and raweb extensions}
+      % patch of xmltex.tex
+
+There are some lines that try to solve the problem: how to put an &
+character in an URL, i.e. in an attribute. See
+`here <raweb3.html#ampersand>`__.
+
+The command ``\utfeight@protect@internal`` redefines, among other, the
+command ``\utfeightaz`` as
+``\def\utfeightaz {\noexpand \utfeightaz \noexpand}``. A more efficient
+code would be: ``\let \utfeightaz \utfeightaz@jg@int``. See
+`here <raweb3.html#added-cmds>`__ the definition of
+``\utfeightaz@jg@int`` and the like.
+
+We redefine ``\utfeight@protect@internal`` and
+``\utfeight@protect@chars``. Code is given
+`here <raweb3.html#modified-cmds>`__.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\utfeight@protect@chars{ source code shown here }
+      \begingroup
+      \catcode`<\active
+      \catcode`&\active
+      \gdef\utfeight@protect@internal{ source code shown here}
+
+5.2 Ampersands in URL
+---------------------
+
+The problem is that the fotex.fmt file has a declaration like this
+``\XMLnamespaceattributeX {fo} {external-destination} {\FOexternaldestination} {}``.
+As a result, the property list of the \`fo' namespace will contain
+(among others) the following tokens
+``\XML@attrib  0:external-destination\relax \FOexternaldestination {}\utfeight@chardef  \FOexternaldestination``.
+In some places, ``\XMLattributeX`` is called: this defines an attribute
+for a single element. In both cases, the X means: call
+``\utfeight@chardef``, and these are the only cases where the macro is
+used. The X is for \`expand'; the trouble is that entities cannot be
+expanded, and we need a way to inhibit this expansion.
+
+We redefine ``\utfeight@chardef`` with a little hack for the &
+character, as follows. Normally, ampersand is the same as
+``\XML@amp@markup``. We change its value locally. Thus, we change the
+behavior only inside some attributes.
+
+.. container:: ltx-source
+
+   ::
+
+      \gdef\utfeight@chardef#1{%
+        \begingroup
+        \utfeight@protect@chars
+        \let&\XML@amp@markup@jg  % line added
+        \xdef\x@temp{#1}%
+        \endgroup
+        \let#1\x@temp}
+
+Original code was complicated. What we do here is just test if the
+argument is \`amp;' and replace it with an ampersand. We test the value
+of the argument by adding \`amp;' and we look for the string.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\XML@amp@markup@jg#1;{%
+        \XML@amp@markup@jgw#1;amp;\@nil}
+      \def\XML@amp@markup@jgw#1amp;#2\@nil{%
+        \ifx b#2b \XML@amp@markup#1;\else\string&\fi}
+
+5.3 MathML
+----------
+
+Here we redefine a lot of MathML functions from mathml2.xmt, and add a
+great number of other procedures.
+
+.. container:: ltx-source
+
+   ::
+
+      % Is this needed ? we redefine everything here
+      %\inputonce{mathml2.xmt}
+      % We do not want mathml to be loaded after this file
+      \global\expandafter\let\csname xmt:mathml2.xmt\endcsname\@ne
+
+This declares the three namespaces that will be used later in this file.
+
+.. container:: ltx-source
+
+   ::
+
+      \DeclareNamespace{m}{http://www.w3.org/1998/Math/MathML}
+      \DeclareNamespace{fotex}{http://www.tug.org/fotex}
+      \DeclareNamespace{fo}{http://www.w3.org/1999/XSL/Format}
+
+We declare `here <raweb3.html#string-decls1>`__ and
+`here <raweb3.html#string-decls2>`__ some strings via commands of the
+form ``\XMLstring\att@true<>true</>``. After that, we can test that an
+attribute is true with a test like ``\ifx\foo\att@true``. Some strings
+are prefixed by \`jg' others by \`att'.
+
+.. container:: ltx-source
+
+   ::
+
+      \global\delcode`{"66308
+      \global\delcode`}"67309
+
+      % We have to redefine some operators...
+      \def\jg@tilde@acc{\mathaccent"707E }
+      \def\jg@check@acc{\mathaccent"7014 }
+      \def\jg@breve@acc{\mathaccent"7015 }
+      \def\jg@hat@acc{\mathaccent"705E }
+      \def\jg@dot@acc{\mathaccent"705F }
+      \def\jg@ddot@acc{\mathaccent"707F }
+      \def\jg@grave@acc{\mathaccent"7012 }
+      \def\jg@ring@acc{\protect \mathaccentV {mathring}017 }
+      \def\jg@overRarrow@acc{\let\rightarrow\JGG@orig@rarrow\mathpalette{\overarrow@\rightarrowfill@}}
+      \def\jg@overLarrow@acc{\let\leftarrow\JGG@orig@larrow\mathpalette{\overarrow@\leftarrowfill@}}
+      \def\jg@underRarrow@acc{\let\rightarrow\JGG@orig@rarrow\mathpalette{\underarrow@\rightarrowfill@}}
+      \def\jg@underLarrow@acc{\let\leftarrow\JGG@orig@larrow\mathpalette{\underarrow@\leftarrowfill@}}
+
+This makes the underscore character produce an underscore.
+
+.. container:: ltx-source
+
+   ::
+
+      \expandafter\def\csname 8:_\endcsname{%
+       \relax\ifmmode\hbox{\textunderscore}\else \textunderscore\fi}
+
+This defines the behavior of the ``<math>`` element. Note. Our style
+sheet puts display math elements into ``<fotex:displaymath>`` elements,
+whose translation is a ``displaymath`` environment. As a result,
+``\GATHER`` could be undefined...
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:math}
+        {\XMLattribute{display}{\XML@mathmlmode}{foo}}
+        {\def\GATHER{1}%
+           \ifx\XML@mathmlmode\att@BLOCK\[\else\(\fi
+         }
+        {
+           \ifx\XML@mathmlmode\att@BLOCK\]\else\)\fi
+        }
+
+This implements ``<mover>``, ``<munder>``, ``<munderover>`` and
+``<mfrac>``. Actual code is elsewhere. *Tralics* does not use
+``<munderover>``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mover}
+        {\XMLattribute{accent}{\XML@overaccent}{none}}
+        {\xmlgrab}
+        {\xmltextwochildren\xml@implement@over{}#1}
+
+      \XMLelement{m:munder}
+        {\XMLattribute{accentunder}{\XML@underaccent}{none}}
+        {\xmlgrab}
+        {\xmltextwochildren\xml@implement@under{}#1}
+
+      \XMLelement{m:munderover}
+        { }
+        {\xmlgrab}
+        {\xmltexthreechildren\@firstofone\sb\sp#1}
+
+      \XMLelement{m:mfrac}
+        {\XMLattribute{linethickness}{\XML@linethickness}{true}%
+         \XMLattribute{numalign}{\XML@numalign}{center}%
+         \XMLattribute{denomalign}{\XML@denomalign}{center}%
+        }
+        {\xmlgrab}
+        {\xmltextwochildren\xml@implement@frac{}#1}
+
+This implements the ``<mo>`` element. In the special case of
+``<mo form="prefix">ln</mo>`` or
+``<mo movablelimits="true" form="prefix">lim</mo>`` we use an upright
+font, and ``\limits`` or ``\nolimits``. General case is handled below.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mo}
+        {\XMLattribute{form}{\XML@mathmlform}{inline}%
+         \XMLattribute{movablelimits}{\XML@movablelimits}{false}}
+        {\xmlgrab}
+        {\ifx\XML@mathmlform\att@PREFIX
+           \ifx\XML@movablelimits\att@true
+             \mathop{\operator@font #1}\limits
+           \else
+             \mathop{\operator@font #1}\nolimits
+           \fi
+         \else\special@mo{#1}\fi
+         }
+
+When you say ``$\bar x$``, the MathML equivalent is
+``<mover accent="true"><mi>x</mi>  <mo>&#xAF;</mo></mover>``. When we
+see the ``<mo>`` element, we know that it is an accent because
+``\notinover`` is no ``\relax``. In this case, we have to do something
+special with the content. In some cases, we put the content in
+``\cur@mo@content``, in other cases, we set ``\jg@cur@acc``. For some
+strange reasons ``&lt;`` translates like ``\lbra``, we change this.
+
+.. container:: ltx-source
+
+   ::
+
+      \let\notinover\relax
+      \def\cur@mo@content{TOTO}
+
+      \def\special@mo#1{%
+           \def\jg@tck{#1} % save the argument
+           \ifx\notinover\over% we cannot typeset here
+              \ifx\jg@tck\jg@accgrave % strange 
+                \global\let\jg@cur@acc\jg@grave@acc
+                \global\let\cur@mo@content\relax
+              \else \ifx\jg@tck\jg@accdddot % strange 
+                \global\let\jg@cur@acc\dddot
+                \global\let\cur@mo@content\relax
+              \else \ifx\jg@tck\jg@accddddot % strange 
+                \global\let\jg@cur@acc\ddddot
+                \global\let\cur@mo@content\relax
+              \else\gdef\cur@mo@content{#1}\fi\fi\fi
+           \else % typeset the argument, handle < and > in the correct way
+           \ifx\jg@tck\jg@gt\string>\else
+           \ifx\jg@tck\jg@lt\string<\else
+           #1\fi\fi\fi
+      }
+
+We can avoid testing against every accent in the following way: If you
+want to put a tilde, the XML will contain ``<mo>&#x2DC;</mo>``. This is
+defined as ``\texttildelow`` in the file ucharacters.sty. We redefine
+this command, so as to define ``\jg@cur@acc``. We use two functions, one
+for over accents, another one for underaccents.
+
+.. container:: ltx-source
+
+   ::
+
+      \let\XXacute\acute
+      \def\jg@bindings{%
+        \def\texttildelow {\global\let\jg@cur@acc\jg@tilde@acc}%
+        (complete code here)
+        \def\ring{\global\let\jg@cur@acc\mathring}
+      }
+      \def\jg@ubindings{%
+         \let\JGG@orig@rarrow\rightarrow
+         \let\JGG@orig@larrow\leftarrow
+         \def\texttildelow {\global\let\jg@cur@acc\jg@tilde@acc}%
+          (complete code here)
+         \def\jgunderline{\global\let\jg@cur@acc\underline}
+      }
+
+Translation of ``<mover>xy</mover>`` uses ``\stackrel``, unless it is an
+accent. Otherwise, we call ``\jg@bindings``, evaluate the second
+argument in a context where ``\notinover`` is ``\over``. We assume that
+``\cur@mo@content\jg@cur@acc`` will typeset what is needed.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\xml@implement@over#1#2{%
+       \ifx\XML@overaccent\att@true {%
+         \jg@bindings
+         \let\notinover\over #2\let\notinover\relax \cur@mo@content\jg@cur@acc{#1}%
+       }\else\stackrel{#2}{#1}\fi
+      }
+
+      \def\xml@implement@under#1#2{%
+       \ifx\XML@underaccent\att@true {%
+         \jg@ubindings
+         \let\notinover\over #2\let\notinover\relax \cur@mo@content\jg@cur@acc{#1}%
+       }\else \underset{#2}{#1}\fi%
+      }
+
+The code of a fraction is trivial. However, there is an `alternate
+version <raweb3.html#unimp-frac>`__ that honors the ``scriptlevel``
+attribute (*Tralics* uses a ``<mstyle>`` element for ``\frac`` and
+such).
+
+.. container:: ltx-source
+
+   ::
+
+      \def\xml@implement@frac#1#2{%
+        \ifx\XML@linethickness\att@true\frac{#1}{#2}%
+        \else \genfrac{}{}\XML@linethickness{}{#1}{#2}\fi
+      }
+
+The ``\defaultunits`` command calls ``\afterassignment`` in order to
+skip all tokens up to ``\@nnil``. As a result, ``\XML@mspacewidth`` can
+contain a dimension (for instance 33mm) or a number (like 2.3) case
+where a \`pt' unit is inserted.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mspace}
+        {\XMLattribute{width}{\XML@mspacewidth}{0}}
+        {}
+        {\@defaultunits\dimen@\XML@mspacewidth pt\relax\@nnil
+         \ifnum\dimen@=\z@\else\kern\dimen@\fi}
+
+This implements the ``<mstyle>`` element.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mstyle}
+       {\XMLattribute{displaystyle}{\XML@att@displaystyle}{foo} %
+         \XMLattribute{scriptlevel}{\XML@scriptlevel}{none}%
+       }
+       {\xmlgrab}
+       {{\ifx\XML@att@displaystyle\att@true\displaystyle
+         \else\ifx\XML@att@displaystyle\att@false
+          \ifx\XML@scriptlevel\att@dzero\textstyle
+           \else\ifx\XML@scriptlevel\att@done\scriptstyle
+            \else \scriptscriptstyle\fi\fi
+         \fi %do nothing if neither true nor false
+         \fi#1}}
+
+We give here the code of some trivial functions.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mrow}
+        {}
+        {}
+        {}
+
+      \XMLelement{m:msub}
+        {}
+        {\xmlgrab}
+        {\xmltextwochildren\@firstofone\sb#1}
+
+      \XMLelement{m:msup}
+        {}
+        {\xmlgrab}
+        {\xmltextwochildren\@firstofone\sp#1}
+
+      \XMLelement{m:msubsup}
+        {}
+        {\xmlgrab}
+        {\xmltexthreechildren\@firstofone\sb\sp#1}
+
+      \XMLelement{m:mroot}
+        {}
+        {\xmlgrab}
+        {\xmltextwochildren\mathmlroot{}#1}
+      \def\mathmlroot#1#2{\root#2\of{#1}}
+
+      \XMLelement{m:msqrt}
+        {}
+        {\xmlgrab}
+        {\sqrt{#1}}
+
+      \XMLelement{m:mtext}
+        {}
+        {\xmlgrab}
+        {\hbox{#1}}
+
+This implements the ``<mn>`` element. Is ``\mathrm`` a good choice? We
+implement also the ``<mi>`` element. You can specify a font in the
+attribute. There is also the infamous test on the length. This means
+that you should not insert spaces. This means also that you cannot use
+entities.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mi}
+        {\XMLattribute{mathvariant}{\XML@mathmlvariant}{normal}}
+        {\xmlgrab}
+        {\mi@test#1\relax}
+
+      \gdef\mi@test#1#2\relax{
+       \ifx\XML@mathmlvariant\att@mathml@bold
+        \mathbf{#1#2}\else
+       \ifx\XML@mathmlvariant\att@mathml@sansserif
+        \mathsf{#1#2}\else
+       \ifx\XML@mathmlvariant\att@mathml@tt
+        \texttt{#1#2}\else
+        \ifx\mi@test#2\mi@test
+         \expandafter#1
+        \else
+         \mathrm{#1#2}
+        \fi\fi\fi\fi}
+
+      \XMLelement{m:mn}
+        {}
+        {\xmlgrab}
+        {\mathrm{#1}}
+
+This implements the ``<mfence>`` element. The trouble is that the
+``\left`` and ``\right`` commands expect (after expansion) a delimiter.
+What we have is a character string, that we must convert into a token.
+The code is trivial, but a bit longish.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mfenced}
+        { \XMLattribute{open}{\XML@fenceopen}{(}
+          \XMLattribute{close}{\XML@fenceclose}{)}  }
+        {\jg@hacko\left\XML@fenceopen}
+        {\jg@hackc\right\XML@fenceclose}
+
+      \def\jg@hacko{%
+        \ifx\XML@fenceopen\jg@lt\let\XML@fenceopen\langle\fi
+        (complete code shown here)
+      }
+
+      \def\jg@hackc{%
+        \ifx\XML@fenceclose\jg@gt\let\XML@fenceclose\rangle\fi}
+        (complete code shown here)
+      }
+
+5.4 Tables in MathML
+--------------------
+
+Original code tested attribute ``class=equation``. Called \`gathered' in
+this case. This uses three global variables: ``\GATHER``,
+``\StartTable`` and ``\StartRow``
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mtable}
+        {}
+        {
+        \def\StartTable{1}%
+        \def\GATHER{0}%
+           \begin{array}{*{99}{c}}
+        }
+        {
+          \end{array}
+        }
+
+A non trivial question: where the does group start of finish? We
+globally define a command ``\temp`` that is executed just after the
+current group. This command defines ``\StartRow`` to 1 (true), then
+executes the argument. Moreover, if ``\StartTable`` is 0 (first row of
+the table) it toggles it to 1; otherwise, it inserts a ``\\``, this
+creates a new row.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mtr}
+       {}
+       {\xmlgrab}
+       {\ifnum\StartTable=1
+          \gdef\temp{ \gdef\StartTable{0}\def\StartRow{1}#1}%
+        \else
+          \gdef\temp{\\\def\StartRow{1}#1}%
+        \fi
+        \aftergroup\temp}
+
+This piece of code is not complete. It does not handle the multicolumn
+case. We construct a ``\temp`` command as above. If ``StartRow`` is one,
+we toggle to 0, otherwise insert a ampersand (here ``\tabcellsep``). We
+test also alignments (left, right, center). What is the purpose of the
+space after ``\hfill``?
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{m:mtd}
+       {\XMLattribute{columnalign}{\XML@mtdalign}{center}
+        \XMLattribute{columnspan}{\XML@mtdspan}{1}}
+       {\xmlgrab}
+       {
+         %  \ifnum\XML@mtdspan=1 
+         \ifnum\StartRow=1
+           \ifx\XML@mtdalign\att@mtd@left
+              \gdef\temp{\gdef\StartRow{0}#1\hfill{ }}%
+              \else \ifx\XML@mtdalign\att@mtd@right
+                \gdef\temp{\gdef\StartRow{0}\hfill#1}%
+                \else \gdef\temp{\gdef\StartRow{0}#1}\fi\fi%
+         \else%
+           \ifx\XML@mtdalign\att@mtd@left
+              \gdef\temp{\tabcellsep#1\hfill{ }}%
+              \else \ifx\XML@mtdalign\att@mtd@right
+                \gdef\temp{\tabcellsep\hfill #1}%
+                \else \gdef\temp{\tabcellsep#1}\fi\fi%
+          \fi
+        \aftergroup\temp
+       }
+
+5.5 Pictures
+------------
+
+We show there the TeX command used to implement the picture environment.
+
+The translation of
+``<picture width='A' height='B' xpos='C' ypos='D'> etc </picture>`` is
+``\begin{picture}(A,B)(C,D) etc \end{picture}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{picture}
+        {\XMLattribute{width}{\XML@width}{1}
+         \XMLattribute{height}{\XML@height}{1}
+         \XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{ypos}{\XML@ypos}{0}
+        }
+        {\begin{picture}(\XML@width,\XML@height)(\XML@xpos,\XML@ypos)}
+        {\end{picture}}
+
+The translation of ``<pic-put xpos='A' ypos='B'> object </pic-put>`` is
+``\put(A,B){object}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-put}
+        {\XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{ypos}{\XML@ypos}{0}}
+        {\xmlgrab}
+        {\put(\XML@xpos,\XML@ypos){#1}}
+
+The translation of ``<pic-arc xpos='A' ypos='B' angle='C'/>`` is
+``\arc(A,B){C}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-arc}
+        {\XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{angle}{\XML@angle}{0}
+         \XMLattribute{ypos}{\XML@ypos}{0}}
+        {\xmlgrab}
+        {\arc(\XML@xpos,\XML@ypos){\XML@angle}}
+
+The translation of
+``<pic-scaleput xscale='A' yscale='B'  xscaley='C' yscalex='D' xpos='E' ypos='F'> argument </pic-scaleput>``
+is
+``\def\xscale{A} \def\yscale{B} \def\xscaley{C} \def\yscalex{D} \scaleput(E,F){argument}``.
+The ``\def``\ s are automatic.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-scaleput}
+        {\XMLattribute{xscale}{\xscale}{1.0}
+         \XMLattribute{yscale}{\yscale}{1.0}
+         \XMLattribute{xscaley}{\xscaley}{0.0}
+         \XMLattribute{yscalex}{\yscalex}{0.0}
+         \XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{ypos}{\XML@ypos}{0}}
+        {\xmlgrab}
+        {\scaleput(\XML@xpos,\XML@ypos){#1}}
+
+The translation of ``<pic-thicklines/>`` is ``\thicklines``; that of
+``<pic-thinlines/>`` is ``\thinlines``; and that of
+``<pic-linethickness size='A'>`` is ``\linethickness{A}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-thicklines}
+        {}{\xmlgrab}{\thicklines}
+
+      \XMLelement{pic-thinlines}
+        {}{}{\thinlines}
+
+      \XMLelement{pic-linethickness}
+        {\XMLattribute{size}{\XML@size}{1pt}}
+        {}
+        {\linethickness{\XML@size}}
+
+The previous code works only if the commands modify global variables.
+Thus we redefine these.
+
+.. container:: ltx-source
+
+   ::
+
+      \gdef\thinlines{\global\let\@linefnt\tenln \global\let\@circlefnt\tencirc
+        \global\@wholewidth\fontdimen8\tenln \global\@halfwidth .5\@wholewidth}
+
+      \gdef\thicklines{\global\let\@linefnt\tenlnw \global\let\@circlefnt\tencircw
+        \global\@wholewidth\fontdimen8\tenlnw \global\@halfwidth .5\@wholewidth}
+
+      \gdef\linethickness#1{%
+         \global\@wholewidth #1\relax \global\@halfwidth .5\@wholewidth}
+
+The translation of
+``<pic-multiput xpos='A' ypos='B' repeat='C' dx='D' dy='E'>  argument </pic-multiput>``
+is ``\multiput(A,B)(D,E){C}{argument}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-multiput}
+        {\XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{ypos}{\XML@ypos}{0}
+         \XMLattribute{repeat}{\XML@repeat}{1}
+         \XMLattribute{dx}{\XML@dx}{1}
+         \XMLattribute{dy}{\XML@dy}{1}}
+        {\xmlgrab}
+        {\multiput(\XML@xpos,\XML@ypos)(\XML@dx,\XML@dy){\XML@repeat}{#1}}
+
+The translation of
+``<pic-bezier a1='A' a2='B' b1='C' b2='D'  c1='E' d1='F' repeat ='G'/>``
+is ``\qbezier[G](A,B)(C,D)(E,F)``. The value of the optional argument
+\`repeat' is zero.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-bezier}
+        {\XMLattribute{a1}{\XML@ai}{0}
+         \XMLattribute{a2}{\XML@aii}{0}
+         \XMLattribute{b1}{\XML@bi}{0}
+         \XMLattribute{b2}{\XML@bii}{0}
+         \XMLattribute{c1}{\XML@ci}{0}
+         \XMLattribute{c2}{\XML@cii}{0}
+         \XMLattribute{repeat}{\XML@repeat}{0}}
+        {\xmlgrab}
+        {\qbezier[\XML@repeat](\XML@ai,\XML@aii)(\XML@bi,\XML@bii)(\XML@ci,\XML@cii)}
+
+Lines and vectors are handled in the same way. The translation of
+``<pic-line xdir='A' ydir='B' width='C'/>`` or
+``<pic-vector xdir='A' ydir='B' width='C'/>`` is ``\line(A,B){C}`` and
+``\vector[G](A,B){C}``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-line}
+        {\XMLattribute{xdir}{\XML@xdir}{0}
+         \XMLattribute{ydir}{\XML@ydir}{0}
+         \XMLattribute{width}{\XML@width}{0}}
+        {\xmlgrab}
+        {\line(\XML@xdir,\XML@ydir){\XML@width}}
+
+      \XMLelement{pic-vector}
+        {\XMLattribute{xdir}{\XML@xdir}{0}
+         \XMLattribute{ydir}{\XML@ydir}{0}
+         \XMLattribute{width}{\XML@width}{0}}
+        {\xmlgrab}
+        {\vector(\XML@xdir,\XML@ydir){\XML@width}}
+
+Three similar routines. The translation of
+``<pic-curve unit-length=unit-length="0.4">300,0, 340,100, 380,0</pic-curve>``
+is ``{\setlength\unitlength{0.4pt}\curve(300,0, 340,100, 380,0)}``.
+There is a big hack here. Spaces are defined to be space plus
+``\ignorespaces`` by xmltex.tex. When the package tries to convert the
+340 into a dimension, via ``\mylength=argument\unitlength``, the
+``\ignorespaces`` gives a *Missing number, treated as zero* error. For
+this reason, we redefine ``\ignorespaces``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-curve}
+        {\XMLattribute{unit-length}{\XML@ulength}{1}}
+        {\xmlgrab}
+        {{\def\ignorespaces{}\setlength\unitlength{\XML@ulength pt}\curve(#1)\global\unitlength=1pt }}
+
+      \XMLelement{pic-closecurve}
+        {\XMLattribute{unit-length}{\XML@ulength}{1}}
+        {\xmlgrab}
+        {{\def\ignorespaces{}\setlength\unitlength{\XML@ulength pt}\closecurve(#1)\global\unitlength=1pt}}
+
+      \XMLelement{pic-tagcurve}
+        {\XMLattribute{unit-length}{\XML@ulength}{1}}
+        {\xmlgrab}
+        {{\def\ignorespaces{}\setlength\unitlength{\XML@ulength pt}\tagcurve(#1)\global\unitlength=1pt }}
+
+The translation of ``<pic-frame> argument  </pic-frame>`` is
+``\frame{argument}``
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-frame}
+       {}
+       {\xmlgrab}
+       {\frame{#1}}
+
+The translation of ``<pic-circle size='A' full='false'/>`` or
+``<pic-circle size='A' full='notfalse'/>`` is ``\circle{A}`` or
+``\circle*{A}``. *Tralics* uses nothing or ``true`` as value of the
+``full`` attribute.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-circle}
+        {\XMLattribute{size}{\XML@size}{1}
+         \XMLattribute{full}{\XML@full}{false}}
+        {\xmlgrab}
+        {\ifx\XML@full\att@false\circle{\XML@size}\else \circle*{\XML@size}\fi}
+
+The translation of ``<pic-bigcircle size='A' unitlength='B'/>`` should
+be ``{\unitlength=Bpt \bigcircle{A}}``. For some reasons, the
+``\bigcircle`` command modifies globally ``\unitlength``, so that the
+piece of code given above modifies ``\unitlength``. For this reason, we
+use another variable, and use a global assignment.
+
+.. container:: ltx-source
+
+   ::
+
+      \newdimen\jgunitlength
+      \XMLelement{pic-bigcircle}
+        {\XMLattribute{size}{\XML@size}{1}
+         \XMLattribute{unit-length}{\XML@ulength}{1}}     
+        {\xmlgrab}
+        {\jgunitlength=\unitlength\setlength\unitlength{\XML@ulength pt}
+          \bigcircle{\XML@size}
+          \global\unitlength=\jgunitlength}
+
+This should be changed. This evaluates the command (first argument),
+with an argument (second argument), using an optional argument which is
+one of L, R, and one of T, B, computed from the global variable
+``\XML@pos``.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\@att@to@rtb#1#2{%
+        \ifx\XML@pos\att@l \def\foo{#1[l]{#2}}
+        \else\ifx\XML@pos\att@r \def\foo{#1[r]{#2}}%
+        \else\ifx\XML@pos\att@t \def\foo{#1[t]{#2}}%
+        \else\ifx\XML@pos\att@b \def\foo{#1[b]{#2}}%
+        \else\ifx\XML@pos\att@lt \def\foo{#1[lt]{#2}}%
+        \else\ifx\XML@pos\att@lb \def\foo{#1[lb]{#2}}%
+        \else\ifx\XML@pos\att@rt \def\foo{#1[rt]{#2}}%
+        \else\ifx\XML@pos\att@rb \def\foo{#1[rb]{#2}}%
+        \else\ifx\XML@pos\att@tl \def\foo{#1[lt]{#2}}%
+        \else\ifx\XML@pos\att@bl \def\foo{#1[lb]{#2}}%
+        \else\ifx\XML@pos\att@tr \def\foo{#1[rt]{#2}}%
+        \else\ifx\XML@pos\att@br \def\foo{#1[rb]{#2}}%
+        \else \def\foo{#1{#2}}
+       \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+      \foo
+      }
+
+The translation of
+``<pic-framebox width='A'  height='B' position='xx'> argument </pic-framebox>``
+is ``\makebox(A,B)[opt]{argument}``, where the optional argument is
+given by the procedure above. In case an non-false ``framed`` attribute
+is given, the ``\framebox`` command is used instead of ``\makebox``.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-framebox}
+        {\XMLattribute{width}{\XML@width}{0}
+         \XMLattribute{height}{\XML@height}{0}
+         \XMLattribute{position}{\XML@pos}{}
+         \XMLattribute{framed}{\XML@framed}{false}
+        }
+       {\xmlgrab}
+       {\let\cmd\framebox\ifx\XML@framed\att@false\let\cmd\makebox\fi
+        \@att@to@rtb{\cmd(\XML@width,\XML@height)}{#1}}
+
+The translation of
+``<pic-dashbox  width='A' height='B' dashdim='C' position='xx'> argument </pic-dashbox>``
+is ``\dashbox{C}(A,B)[opt]{argument}``, where the optional argument is
+given by the procedure above.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-dashbox}
+        {\XMLattribute{width}{\XML@width}{0}
+         \XMLattribute{height}{\XML@height}{0}
+         \XMLattribute{position}{\XML@pos}{w}
+         \XMLattribute{dashdim}{\XML@dashdim}{1pt}
+        }
+       {\xmlgrab}
+       {\@att@to@rtb{\dashbox{\XML@dashdim}(\XML@width,\XML@height)}{#1}}
+
+The translation of
+``<pic-oval  xpos='A' ypos='B' specs='xx'> argument </pic-oval>`` is
+``\oval(A,B)[opt]{argument}``, where the optional argument is given by
+the procedure above.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pic-oval}
+        {\XMLattribute{xpos}{\XML@xpos}{0}
+         \XMLattribute{specs}{\XML@pos}{}
+         \XMLattribute{ypos}{\XML@ypos}{0}}
+        {\xmlgrab}
+        {\@att@to@rtb{\oval(\XML@xpos,\XML@ypos)}{#1}}
+
+Useful for typesetting TeX and LaTeX logos.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{TeX}
+        {}{\TeX{}}{}
+      \XMLelement{LaTeX}
+        {}{\LaTeX{}}{}
+
+All images in examples of *Tralics* are obtained by putting the
+expression into ``<preview>`` element, whose translation is given here.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{preview}
+        {}
+        {\begin{preview}}
+        {\end{preview}}
+
+5.6 Tables
+----------
+
+In the file fotex.sty, tables are implemented via the \`NoTable'
+mechanism. We modify this a bit.
+
+In this piece of code, we do not set ``\TableWidth`` if the width is
+declared auto.
+
+.. container:: ltx-source
+
+   ::
+
+      \newif\ifnoheightcheck
+      \catcode`\:\active
+
+      \def\myNoTableSetup{%
+        \ifx\FOwidth\att@auto\else
+         \TableWidth\FOwidth
+         \advance\TableWidth by -\tabcolsep
+         \advance\TableWidth by -\FOmarginleft
+         \advance\TableWidth by -\FOmarginright
+       \fi
+        \global\advance\AbsoluteTableCount by 1 %
+        \DeclareArray{fotable\the\AbsoluteTableCount:}%
+        \global\CellCount0 %
+      }
+      \catcode`\:12
+
+5.7 Getting labels right
+------------------------
+
+The fotex.xmt file defines the behaviour of ``<fo:block>``. The action
+depends on the context. The action, when entering the block can be
+``\FOListBlock`` inside a list, ``\FOOutputBlock`` (inside output) or
+``\FOBoxedBlock`` in a table, or ``\FONormalBlock``. We modified the
+code of this command `(complete source
+here) <raweb3.html#hack-normalblock>`__.
+
+The essential modification is to move the ``\FOlabel`` after
+``\FOvspacebefore``. Thus, in case of page break, the label is near the
+text.
+
+.. container:: ltx-source
+
+   ::
+
+      \AtBeginDocument{%
+      \def\FONormalBlock{%
+        \let\@x\relax
+        \ifnum\FOTableNesting>0
+          ...
+        \else
+          \ifnum\FOinList>0
+            \FOlabel
+            ...
+          \else
+            ...
+            \par
+             %\FOlabel (deleted here) 
+            \Quadding
+            \ifFOBlockGrab
+              \FOBoxedBlock{\linewidth}%
+            \else
+              \FOBorderTop
+              \ifdim\FOpaddingbefore>\z@
+               \vskip\FOpaddingbefore
+              \fi
+              \FOvspacebefore
+              ...
+            \fi
+            ...
+          \fi
+          \FOlabel % added here 
+          \FOSetFont{normal}%
+        \fi
+      \@x
+      }
+      }
+
+The argument of ``\FOgeneratePage`` is the expansion of ``\FOformat``.
+If it is, say ``A.``, an A followed by a dot, the result will be
+``\@Alph{\c@page}.``, with a dot after the page number.
+
+The ``\thepage`` command is defined as
+``\csname @arabic\endcsname \c@page``, and this looks like the
+``\yFOlabel`` command.
+
+.. container:: ltx-source
+
+   ::
+
+      %\def\FOgeneratePage#1#2\@null{\csname Format-#1\endcsname{\c@page}#2}
+      \def\xFOgeneratePage#1#2\@null{\yFOlabel#1#2}
+      \def\yFOlabel#1{\csname Format-#1\endcsname{\c@page}}
+
+The macro ``\xFOlabel`` is the same as the original ``\FOlabel`` except
+that ``\yFOlabel`` is not expanded: The purpose of ``\protected@write``
+is to inhibit premature expansion of ``\thepage``. Since the code does
+not use ``\thepage``, lots of reference in the table of contents are
+wrong.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\xFOlabel{%
+       \ifx\@empty\FOid\else
+        \@bsphack
+        \protected@write\@mainaux{\let\yFOlabel\relax}%
+          {\string\newlabel{\FOid}{{}{\expandafter\xFOgeneratePage
+                  \FOformat\@null}{}{\FOid}{}}}%
+        \@esphack
+        \hyper@@anchor{\FOid}{\relax}%
+        \global\let\FOid\@empty
+       \fi
+      }
+
+5.8 The title page
+------------------
+
+If you say ``\ra@atxy(70mm,174mm){xx}``, then xx is typeset in a box,
+shifted by 70mm horizontally and 174mm vertically, and added to the box
+``\ra@atxybox``.
+
+.. container:: ltx-source
+
+   ::
+
+      \newbox\ra@atxybox
+      \def\ra@atxy(#1,#2)#3{\global\setbox\ra@atxybox=\hbox
+       {\unhbox\ra@atxybox
+        \vtop to 0pt{\kern #2\hbox to 0pt{\kern #1\relax #3\hss}\vss}}}
+
+The idea is to put the content of the ``\ra@atxybox`` box at the origin.
+We have to modify the ``\output`` routine, and the easiest way is to
+change ``\@texttop``, which does nothing (it could be used to implement
+``\raggedtop``). The expansion is some material that is put at upper
+left corner of the page, before headings are added. This means that we
+have to shift the material, inserting some kerns. Note that
+``\@themargin`` is correct only if the page is odd, or if left and right
+margins are the same. The logo appears on only one page, because we kill
+``\@texttop``. Note: The raweb.cls file inserts a logo on a given page
+by adding ``\setbox255=\vbox{\@usemyatxy \unvbox255}`` in front of the
+``\output`` routine. The ``\@usemyatxy`` command is similar to the
+command given here.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\ra@useatxy{{%
+        \let\@themargin\oddsidemargin
+        \vtop to 0pt{\kern-\headsep \kern-\topmargin \kern-\headheight
+                     \kern-1in \kern-\voffset
+          \hbox to 0pt{\kern-\@themargin \kern-1in \kern-\hoffset
+          \unhbox\ra@atxybox \hss}\vss}}%
+          \global\let\@texttop\relax}
+
+| We give here two similar functions. The first one is for the Raweb, it
+  is a reference to the English page, and the second is for Research
+  Reports. In the URL, en is replaced by fr, and THEME is spelled as
+  THÈME. The effect of this command is to insert, just above the logo,
+  the value of the theme, with a rule on each side. The ``\vfil`` is for
+  vertical centering of the title. The 8cm is obtained by trial and
+  error. The ``\firstchar`` command is now useless. We show show here
+  the two versions of the Logo: French and English. As you can see, they
+  are not exactly the same.
+| |Logo Ra2003|---|Logo Ra2002|
+
+.. container:: ltx-source
+
+   ::
+
+      \def\foratheme#1{\vskip8cm \vfil
+        \ra@atxy(74mm,175mm) {\hbox to 70mm{%
+             \hrulefill\hspace{8mm}
+               \def\firstchar##1##2\relax{##1##2} % ducon
+                 \href{http://www.inria.fr/recherche/equipes/listes/%
+            theme_\firstchar#1\relax.en.html}{THEME \uppercase{#1}}%
+                   \hspace{8mm}\hrulefill}}}
+      \def\forrtheme#1{...}
+
+This puts the logo at the right place in case of a Inria Research or
+Technical Report. Digits seem randomly chosen: you would expect both
+logos to be of the same size, inserted at the origin, with a width of
+210mm.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\forrinria{%
+       {\def\tmp{RR}%
+         \ifx\tmp\ra@type\ra@atxy(1.05cm,1.625cm){\includegraphics[width=23.1cm]%
+              {rap-rech}}%
+                    \else\ra@atxy(0.5cm,1.325cm){\includegraphics[width=19.2cm]%
+              {rap-tech}\fi}}}
+
+This command is used to put the Raweb logo (depending on the year) and
+the Inria logo on the front page. This code is awful: the text INRIA
+etc. has a width of 128mm, and is at 39mm from one border and 43 from
+the other one. The ``\vfil`` is for vertical alignment of the text that
+follows (name of the team etc).
+
+.. container:: ltx-source
+
+   ::
+
+      \def\foinria{%
+        \ra@atxy(7.8cm,2.5cm){\includegraphics[width=5.7cm]{Logo-INRIA-couleur}}%
+        \ra@atxy(55mm,173mm){\includegraphics{LogoRA\ra@year}}%
+       \setbox0\hbox to 14cm{%
+           \noindent\hskip3cm\hfill
+           {\fontencoding{T1}\fontfamily{ptm}\fontseries{m}%
+         \fontshape{n}\fontsize{10pt}{12pt}\selectfont
+           \href{http://www.inria.fr}{INSTITUT NATIONAL DE RECHERCHE EN INFORMATIQUE %
+              ET EN AUTOMATIQUE}}%
+            \hskip-5cm\hfill}%
+        \null\vskip0.7cm \leavevmode\hskip-3.5cm\box0\null\vskip2cm\vfil}
+
+We invented ``<cleardoublepage/>``. Its effect is to make the first page
+of text appear on a right page (the text starts on a odd page; in fact
+it starts on page one, because we use the adequate
+``<fo:page-sequence>`` element. Of course, the problem could be solved
+by putting the table of contents at the end of the document.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{cleardoublepage}
+       {} {\cleardoublepage} {}
+
+This is another element we have to add, because we do not know how to
+express this in xslt-fo: We want a rule just below the page headings.
+This produces a box of width zero, with a rule of the width of the page
+that will be below the text that follows.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{pagestylehrule}
+       {} {\hbox to0pt{\rule[-1ex]{\textwidth}{.03cm}\hss}} {}
+
+5.9 Math and images
+-------------------
+
+There is a PerlScript names extract-math.pl, that tries to convert
+MathML into images. The document to be converted is
+`here <raweb1.html#extract-math>`__. This converts to 5 images: image
+one=\ |mathimage 1|, image two=\ |mathimage 2|, image three=\ |mathimage
+3|, image four=\ |mathimage 4|, and image five=\ |mathimage 5|.
+
+The idea is to use some code from latex2html.
+
+.. container:: ltx-source
+
+   ::
+
+      \XMLelement{formula}
+       {\XMLattribute{id}{\XML@formid}{none}}
+       {\@inlinemathA{\XML@formid}}
+       {\@inlinemathZ}
+
+There is no need to redefine brackets, because in the current version,
+nothing is in display. The argument of this procedure is the number of
+the image (the \`id' attribute of the XML element). We open a box,
+containing a rule, and the content of the element.
+
+.. container:: ltx-source
+
+   ::
+
+      \newbox\sizebox
+      \def\@inlinemathA#1{%
+        \gdef\[{$\displaystyle}\gdef\]{$} % hack...
+        \xdef\@mathenv{#1}%
+        \adjustnormalsize \newpage\clearpage
+        \setbox\sizebox=\hbox\bgroup\kern.05em
+        \vrule height1.5ex width0pt }
+
+This is a hack defined by latex2html. Is everything needed?
+
+.. container:: ltx-source
+
+   ::
+
+      \AtBeginDocument{
+      \let\realnormalsize=\relax
+      \def\adjustnormalsize{%
+        \def\normalsize{\mathsurround=0pt \realnormalsize
+         \parindent=0pt\abovedisplayskip=0pt\belowdisplayskip=0pt}%
+        \def\phantompar{\csname par\endcsname}%
+        \normalsize}
+      }
+
+Vertical alignment is done as follows: the baseline is either the bottom
+or the center. That is, if the depth of the box is not zero, we add a
+vrule with the same height and depth.
+
+.. container:: ltx-source
+
+   ::
+
+      \def\@centerinlinemath{%
+        \dimen1=\ifdim\ht\sizebox<\dp\sizebox \dp\sizebox\else\ht\sizebox\fi
+        \advance\dimen1by.5pt \vrule width0pt height\dimen1 depth\dimen1 
+       \dp\sizebox=\dimen1\ht\sizebox=\dimen1\relax}
+
+This is done at the end of the math formula. The log file will contain
+lines of the form *l2hSize :1:8.0pt::8.0pt::94.54239pt*. The Perl script
+reads these data from the log file, and calls another Perl script:
+/usr/bin/perl /usr/local/latex2html/bin/pstoimg -type png -tmp tmpdir
+-discard -interlace -antialias -depth 1 -scale 1.4 -geometry 94x16
+-margins 62,41 -crop abls -transparent -out math_image_1.png
+tmpdir/images001
+
+.. container:: ltx-source
+
+   ::
+
+      \def\@inlinemathZ{%
+        \egroup\expandafter\ifdim\dp\sizebox>0pt %
+        \expandafter\@centerinlinemath\fi
+        \typeout{l2hSize %
+         :\@mathenv:\the\ht\sizebox::\the\dp\sizebox::\the\wd\sizebox.}
+        \hbox{\vrule width.1em\kern-.05em\vtop{\vbox{%
+        \kern.1em\kern0.6 pt\hbox{\hglue.17em\copy\sizebox\hglue0.6 pt}}\kern.3pt%
+        \ifdim\dp\sizebox>0pt\kern.1em\fi \kern0.6 pt%
+        \ifdim\hsize>\wd\sizebox \hrule depth1pt\fi}}%
+        \ifdim\ht\sizebox<\vsize 
+            \ifdim\wd\sizebox<\hsize\expandafter\hfill\fi \expandafter\vfill
+            \else\expandafter\vss\fi
+        \clearpage
+      }
+
+Now, sixty lines of hack. Complete code
+`here <raweb3.html#hack-item>`__. Translation of ``fo:list-item-label``
+calls ``\savebox{\ItemBox}{#1}`` just before ``\item[#1]``. This code is
+executed again here. I don't remember why (the ``\ItemBox`` is only used
+here).
+
+.. container:: ltx-source
+
+   ::
+
+      \def\jg@item[#1]{%
+        \if@noparitem
+          \@donoparitem
+        \else
+          \if@inlabel ...  \fi
+          \ifhmode ...     \fi
+          \if@newlist ...    \fi
+          \global\@inlabeltrue
+        \fi
+        \global\everypar{ ... }
+        \if@noitemarg ... \fi
+        \savebox{\ItemBox}{#1}% Added JG
+        \sbox\@tempboxa{\makelabel{#1}}%
+        \global\setbox\@labels\hbox{ use \@tempboxa here... }
+        \ignorespaces}
+
+Last minutes hacks. Some actions must be done after all packages have
+been loaded. Some other symbols are defined, or redefined.
+
+.. container:: ltx-source
+
+   ::
+
+      define characters
+      \AtBeginDocument{
+        \@namedef{Gin@rule@.eps}#1{{eps}{.eps}{#1}}
+        \global\let\FOlabel\xFOlabel
+        \let\NoTableSetup\myNoTableSetup
+
+        \let\downslopeellipsis\ddots
+        \mathchardef\Rightarrow="3229 
+         more characters here
+
+        \def\truestate{\models}
+        \let\@texttop\ra@useatxy
+        \let\XURL\relax
+        \errorcontextlines=1000
+        \selectlanguage{english}
+        \let\@item\jg@item
+        \expandafter\let\csname E/:\XMLNS@fo:basic-link\endcsname\patched@basiclink
+      }
+
+      \def\L@fr{\selectlanguage{french}}
+      \def\L@FR{\selectlanguage{french}}
+
+.. _fotex:
+
+5.10 The fotex.cfg file
+-----------------------
+
+The file looks like this. Some lines are commented: they define
+quantities unused by the Raweb. Elements hrule and vfill are obsolete?
+useless? (I don't remember). Switching to french is valid only for a
+French document. The two commands ``\foratheme`` and ``\foinria`` are
+defined in the file raweb-cfg.sty.
+
+.. container:: ltx-source
+
+   ::
+
+      \frenchspacing
+      \selectlanguage{french}
+
+      \DeclareNamespace{fo}{http://www.w3.org/1999/XSL/Format}
+
+      \XMLelement{fo:RATHEME}
+        {}
+        {\xmlgrab}
+        {\foratheme{#1}}
+
+      % \XMLelement{fo:RRTHEME} ...
+
+      \XMLelement{fo:INRIA}
+        {\XMLattribute{year}{\ra@@year}{2001}}
+        {}{\xdef\ra@year{\ra@@year}\foinria}
+
+      % \XMLelement{fo:RRINRIA} ...
+
+      \XMLelement{hrule} {} {\par\hrule\par} {}
+      \XMLelement{vfill} {} {\vfill} {}
+
+.. |Logo Ra2003| image:: /img/LogoRA2003.png
+.. |Logo Ra2002| image:: /img/LogoRA2002.png
+.. |mathimage 1| image:: /img/math_image_1.png
+   :class: vc
+.. |mathimage 2| image:: /img/math_image_2.png
+   :class: vc
+.. |mathimage 3| image:: /img/math_image_3.png
+   :class: vc
+.. |mathimage 4| image:: /img/math_image_4.png
+   :class: vc
+.. |mathimage 5| image:: /img/math_image_5.png
+   :class: vc

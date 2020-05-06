@@ -1,5 +1,10 @@
+==================================
 Tralics: a LaTeX to XML translator
 ==================================
+
+.. note::
+
+  This is the main documentation page from the previous website.
 
 |APICS| |MARELLE|
 
@@ -338,7 +343,7 @@ http://www-sop.inria.fr/marelle/tralics. Author:
   `inria-0069870 <http://hal.inria.fr/inria-00069870>`__. It is unlikely
   that these files are up to date.
 
-.. |APICS| image:: apics.gif
+.. |APICS| image:: /img/apics.gif
    :target: http://team.inria.fr/apics
-.. |MARELLE| image:: logoMarelle_v2.png
+.. |MARELLE| image:: /img/logoMarelle_v2.png
    :target: https://team.inria.fr/marelle

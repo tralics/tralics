@@ -867,6 +867,10 @@ URLs shown here are the ones to use. Starting with version 2.10.7, the
 line marked COMPATIBILITY PROBLEM finishes the verbatim environment; the
 one that follows has to be used.
 
+.. note::
+
+   This is file ``txtc.tex`` in the tests.
+
 .. container:: ltx-source
 
    ::

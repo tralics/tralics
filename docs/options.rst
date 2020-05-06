@@ -1,5 +1,6 @@
-Options of the Tralics program
-==============================
+====================
+Command-line options
+====================
 
 *Tralics* knows about many options, that start with a single or double
 hyphen. Some options take an argument, that is placed just after the

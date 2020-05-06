@@ -1,3 +1,4 @@
+==================================
 Tralics: All commands, non-letters
 ==================================
 
@@ -794,7 +795,7 @@ attribute only if it has no ``rend`` attribute.
       <p rend='center'>this is the second line</p>
       </div0>
 
-Preview. |example of \\\\ in text|
+Preview. |example of bbbb in text|
 
 This is an example of math table.
 
@@ -842,7 +843,7 @@ This is the XML translation.
       </formula>
 
 This is a preview. Note that the ``\multicolumn`` is ignored in the
-rendering. This has been corrected. |example of \\\\ in a math table|
+rendering. This has been corrected. |example of bbbb in a math table|
 
 Other example.
 
@@ -916,7 +917,7 @@ You should look at the `page on arrays <doc-array.html>`__. It contains
 an example similar to this one. You can see that we changed the
 algorithm: a ``\hline`` implies a ``bottom-border`` on the previous row.
 
-|example of \\\\ in a normal table|
+|example of bbbb in a normal table|
 
 .. _section-11:
 
@@ -1285,10 +1286,10 @@ described as if it were ``\one``.
 .. |^^^^ example| image:: /img/img_80.png
 .. |example of ShortVerb| image:: /img/img_19.png
 .. |tilde accent| image:: /img/img_20.png
-.. |dashes| image:: img-85.png
-.. |example of \\\\ in text| image:: /img/img_32.png
-.. |example of \\\\ in a math table| image:: /img/img_31.png
-.. |example of \\\\ in a normal table| image:: /img/img_33.png
+.. |dashes| image:: /img/img-85.png
+.. |example of bbbb in text| image:: /img/img_32.png
+.. |example of bbbb in a math table| image:: /img/img_31.png
+.. |example of bbbb in a normal table| image:: /img/img_33.png
 .. |primes in math mode| image:: /img/img_14.png
 .. |acute accent| image:: /img/img_91.png
 .. |dieresis accent| image:: /img/img_16.png
