@@ -6,9 +6,13 @@
 inline Buffer        buffer_for_log2; // Only used out_single_char and finish_seq
 inline std::ofstream log_file;        // the stream to which we print
 
+/** The remains of the Logger class from the previous tralics version.
+ * Now it only does bookkeeping of the ostreams previously used.
+ */
+
 struct Logger {
-    static void log_dump(const std::string &s);
-    static void log_finish(); // \todo This belongs in the destructor but spdlog could die first
+    static void log_dump(const std::string &s); ///< Log argument surrounded by braces
+    static void log_finish();                   // \todo This belongs in the destructor but spdlog could die first
 
     static void out_single_char(codepoint c) { buffer_for_log2 << c; }
 
