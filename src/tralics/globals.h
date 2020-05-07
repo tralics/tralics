@@ -32,7 +32,7 @@ inline bool global_in_url  = false;
 
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
-auto assign(const std::string &sa, std::string &sb) -> bool;
+auto assign(const std::string &sa, const std::string &sb) -> bool;
 auto next_label_id() -> Istring;
 auto null_cs_name() -> std::string;
 

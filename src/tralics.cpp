@@ -44,7 +44,7 @@ auto main(int argc, char **argv) -> int {
 
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised \todo should take strings
-auto assign(const std::string &sa, std::string &sb) -> bool {
+auto assign(const std::string &sa, const std::string &sb) -> bool {
     auto n = sa.size();
 
     if (sa.starts_with("elt_")) return config_ns::assign_name(sa.substr(4), sb);
@@ -65,7 +65,7 @@ auto assign(const std::string &sa, std::string &sb) -> bool {
         else if ((sb == "false") || (sb == "no"))
             the_main->distinguish_refer = false;
         else
-            sb = "ignored";
+            spdlog::warn("distinguish_refer_in_rabib = {} ignored");
         return true;
     }
     if (sa == "entity_names") {
@@ -185,7 +185,7 @@ auto assign(const std::string &sa, std::string &sb) -> bool {
         return true;
     }
     if (sa == "mml_font_monospace") {
-        the_names[np_mml_monospace] = Istring(sb);
+        the_names[np_mml_monospace] = Istring(sb); // \todo make the_names into a string-indexed hash table
         return true;
     }
     return false;
