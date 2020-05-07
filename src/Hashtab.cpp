@@ -19,7 +19,7 @@ auto Hashtab::hash_find(const std::string &s) -> size_t {
     if (auto i = map.find(s); i != map.end()) return i->second;
     usage_normal++;
     push_back(s);
-    map.try_emplace(s, size() - 1);
+    map.emplace(s, size() - 1);
     return size() - 1;
 }
 

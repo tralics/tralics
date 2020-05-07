@@ -1,12 +1,12 @@
 #pragma once
 #include "../txeqtb.h"
 #include "Buffer.h"
-#include <unordered_map>
+#include "robin_hood.h"
 
 // This is the main hash table.
 class Hashtab : public std::vector<std::string> {
 private:
-    std::unordered_map<std::string, size_t> map;
+    robin_hood::unordered_map<std::string, size_t> map;
 
 public:
     std::array<Token, 15>             my_mathfont_table;
