@@ -7,6 +7,7 @@
 #include "EQTB.h"
 #include "Hashtab.h"
 #include "LabelInfo.h"
+#include "Mactab.h"
 
 class FpNum;
 class Math;
