@@ -44,23 +44,23 @@ auto main(int argc, char **argv) -> int {
 
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised \todo should take strings
-auto assign(Buffer &a, Buffer &b) -> bool {
-    std::string aa = a.to_string(), bb = b.to_string();
-    auto        n = a.size();
+auto assign(const std::string &sa, Buffer &b) -> bool {
+    std::string bb = b.to_string();
+    auto        n  = sa.size();
 
-    if (aa.starts_with("elt_")) return config_ns::assign_name(aa.substr(4), bb);
-    if (aa.starts_with("xml_")) return config_ns::assign_name(aa.substr(4, aa.ends_with("_name") ? n - 9 : n - 4), bb);
-    if (aa.starts_with("att_")) return config_ns::assign_att(a.to_string(4), bb);
+    if (sa.starts_with("elt_")) return config_ns::assign_name(sa.substr(4), bb);
+    if (sa.starts_with("xml_")) return config_ns::assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), bb);
+    if (sa.starts_with("att_")) return config_ns::assign_att(sa.substr(4), bb);
 
-    if (aa == "lang_fr") {
+    if (sa == "lang_fr") {
         the_names[np_french] = Istring(bb);
         return true;
     }
-    if (aa == "lang_en") {
+    if (sa == "lang_en") {
         the_names[np_english] = Istring(bb);
         return true;
     }
-    if (aa == "distinguish_refer_in_rabib") {
+    if (sa == "distinguish_refer_in_rabib") {
         if ((bb == "true") || (bb == "yes"))
             the_main->distinguish_refer = true;
         else if ((bb == "false") || (bb == "no"))
@@ -69,124 +69,124 @@ auto assign(Buffer &a, Buffer &b) -> bool {
             b << bf_reset << "ignored";
         return true;
     }
-    if (aa == "entity_names") {
+    if (sa == "entity_names") {
         the_main->set_ent_names(bb);
         return true;
     }
-    if (aa == "default_class") {
+    if (sa == "default_class") {
         the_main->default_class = b.to_string();
         return true;
     }
-    if (aa == "alternate_item") {
+    if (sa == "alternate_item") {
         if (bb == "false")
             the_parser.hash_table.eval_let("item", "@@item");
         else if (bb == "true")
             the_parser.hash_table.eval_let("item", "@item");
         return true;
     }
-    if (aa == "url_font") {
+    if (sa == "url_font") {
         Buffer aux;
         aux << "\\def\\urlfont{" << b << "}";
         the_main->add_to_from_config(1, aux);
         return true;
     }
-    if (aa == "everyjob") {
+    if (sa == "everyjob") {
         Buffer aux;
         aux << "\\everyjob={" << b << "}";
         everyjob_string = aux.to_string();
         return true;
     }
-    if (aa == "no_footnote_hack") {
+    if (sa == "no_footnote_hack") {
         if (bb == "true") the_main->footnote_hack = false;
         if (bb == "false") the_main->footnote_hack = true;
         return true;
     }
-    if (aa == "use_font_elt") {
+    if (sa == "use_font_elt") {
         if (bb == "true") the_main->use_font_elt = true;
         if (bb == "false") the_main->use_font_elt = false;
         return true;
     }
-    if (aa == "use_all_sizes") {
+    if (sa == "use_all_sizes") {
         if (bb == "true") the_main->use_all_sizes = true;
         if (bb == "false") the_main->use_all_sizes = false;
         return true;
     }
-    if (aa == "bibtex_fields") {
+    if (sa == "bibtex_fields") {
         b.interpret_bibtex_list();
         return false;
     }
-    if (aa == "bibtex_extensions") {
+    if (sa == "bibtex_extensions") {
         b.interpret_bibtex_extension_list();
         return false;
     }
-    if (aa == "mfenced_separator_val") {
+    if (sa == "mfenced_separator_val") {
         if (bb == "NONE")
             the_names[np_separator] = Istring();
         else
             the_names[np_separator] = Istring(bb);
         return true;
     }
-    if (aa.ends_with("_vals")) {
-        config_ns::interpret_list(a.substr(0, n - 5), b);
+    if (sa.ends_with("_vals")) {
+        config_ns::interpret_list(sa.substr(0, n - 5), b);
         return true;
     }
-    if (aa == "mml_font_normal") {
+    if (sa == "mml_font_normal") {
         the_names[np_mml_normal] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_upright") {
+    if (sa == "mml_font_upright") {
         the_names[np_mml_upright] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_bold") {
+    if (sa == "mml_font_bold") {
         the_names[np_mml_bold] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_italic") {
+    if (sa == "mml_font_italic") {
         the_names[np_mml_italic] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_bold_italic") {
+    if (sa == "mml_font_bold_italic") {
         the_names[np_mml_bold_italic] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_script") {
+    if (sa == "mml_font_script") {
         the_names[np_mml_script] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_bold_script") {
+    if (sa == "mml_font_bold_script") {
         the_names[np_mml_bold_script] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_fraktur") {
+    if (sa == "mml_font_fraktur") {
         the_names[np_mml_fraktur] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_doublestruck") {
+    if (sa == "mml_font_doublestruck") {
         the_names[np_mml_doublestruck] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_bold_fraktur") {
+    if (sa == "mml_font_bold_fraktur") {
         the_names[np_mml_bold_fraktur] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_sansserif") {
+    if (sa == "mml_font_sansserif") {
         the_names[np_mml_sansserif] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_bold_sansserif") {
+    if (sa == "mml_font_bold_sansserif") {
         the_names[np_mml_bold_sansserif] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_sansserif_italic") {
+    if (sa == "mml_font_sansserif_italic") {
         the_names[np_mml_sansserif_italic] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_sansserif_bold_italic") {
+    if (sa == "mml_font_sansserif_bold_italic") {
         the_names[np_mml_sansserif_bold_italic] = Istring(bb);
         return true;
     }
-    if (aa == "mml_font_monospace") {
+    if (sa == "mml_font_monospace") {
         the_names[np_mml_monospace] = Istring(bb);
         return true;
     }
