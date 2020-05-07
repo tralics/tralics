@@ -83,8 +83,8 @@ found at http://www.cecill.info.)";
             i++;
             Buffer local_buf;
             local_buf << V[i];
-            bool res = assign(ssa2.to_string(), local_buf); // \todo assign(V[i],V[i+1]) eventually
-            if (res) spdlog::trace("{}={}", ssa2, local_buf);
+            bool res = assign(ssa2.to_string(), V[i]); // \todo assign(V[i],V[i+1]) eventually
+            if (res) spdlog::trace("{}={}", ssa2, V[i]);
         }
     }
 

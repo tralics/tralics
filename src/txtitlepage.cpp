@@ -888,7 +888,8 @@ auto tpage_ns::see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool {
     val.reset();
     int k = tpage_ns::see_an_assignment(in, key, val);
     if (k == 1) {
-        bool res = assign(key.to_string(), val);
+        auto str = val.to_string();
+        bool res = assign(key.to_string(), str);
         if (res) {
             if (!ssa2.empty()) the_log << key << "=" << val.convert_to_log_encoding() << "\n";
             return true;

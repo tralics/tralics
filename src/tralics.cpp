@@ -44,150 +44,148 @@ auto main(int argc, char **argv) -> int {
 
 // Function called when A=B is seen in the configuration file.
 // Returns true if A is recognised \todo should take strings
-auto assign(const std::string &sa, Buffer &b) -> bool {
-    std::string bb = b.to_string();
-    auto        n  = sa.size();
+auto assign(const std::string &sa, std::string &sb) -> bool {
+    auto n = sa.size();
 
-    if (sa.starts_with("elt_")) return config_ns::assign_name(sa.substr(4), bb);
-    if (sa.starts_with("xml_")) return config_ns::assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), bb);
-    if (sa.starts_with("att_")) return config_ns::assign_att(sa.substr(4), bb);
+    if (sa.starts_with("elt_")) return config_ns::assign_name(sa.substr(4), sb);
+    if (sa.starts_with("xml_")) return config_ns::assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), sb);
+    if (sa.starts_with("att_")) return config_ns::assign_att(sa.substr(4), sb);
 
     if (sa == "lang_fr") {
-        the_names[np_french] = Istring(bb);
+        the_names[np_french] = Istring(sb);
         return true;
     }
     if (sa == "lang_en") {
-        the_names[np_english] = Istring(bb);
+        the_names[np_english] = Istring(sb);
         return true;
     }
     if (sa == "distinguish_refer_in_rabib") {
-        if ((bb == "true") || (bb == "yes"))
+        if ((sb == "true") || (sb == "yes"))
             the_main->distinguish_refer = true;
-        else if ((bb == "false") || (bb == "no"))
+        else if ((sb == "false") || (sb == "no"))
             the_main->distinguish_refer = false;
         else
-            b << bf_reset << "ignored";
+            sb = "ignored";
         return true;
     }
     if (sa == "entity_names") {
-        the_main->set_ent_names(bb);
+        the_main->set_ent_names(sb); // \todo no Buffer
         return true;
     }
     if (sa == "default_class") {
-        the_main->default_class = b.to_string();
+        the_main->default_class = sb;
         return true;
     }
     if (sa == "alternate_item") {
-        if (bb == "false")
+        if (sb == "false")
             the_parser.hash_table.eval_let("item", "@@item");
-        else if (bb == "true")
+        else if (sb == "true")
             the_parser.hash_table.eval_let("item", "@item");
         return true;
     }
     if (sa == "url_font") {
         Buffer aux;
-        aux << "\\def\\urlfont{" << b << "}";
-        the_main->add_to_from_config(1, aux);
+        aux << "\\def\\urlfont{" << sb << "}";
+        the_main->add_to_from_config(1, aux); // \todo no Buffer
         return true;
     }
     if (sa == "everyjob") {
-        Buffer aux;
-        aux << "\\everyjob={" << b << "}";
-        everyjob_string = aux.to_string();
+        everyjob_string = fmt::format("\\everyjob={{{}}}", sb);
         return true;
     }
     if (sa == "no_footnote_hack") {
-        if (bb == "true") the_main->footnote_hack = false;
-        if (bb == "false") the_main->footnote_hack = true;
+        if (sb == "true") the_main->footnote_hack = false;
+        if (sb == "false") the_main->footnote_hack = true;
         return true;
     }
     if (sa == "use_font_elt") {
-        if (bb == "true") the_main->use_font_elt = true;
-        if (bb == "false") the_main->use_font_elt = false;
+        if (sb == "true") the_main->use_font_elt = true;
+        if (sb == "false") the_main->use_font_elt = false;
         return true;
     }
     if (sa == "use_all_sizes") {
-        if (bb == "true") the_main->use_all_sizes = true;
-        if (bb == "false") the_main->use_all_sizes = false;
+        if (sb == "true") the_main->use_all_sizes = true;
+        if (sb == "false") the_main->use_all_sizes = false;
         return true;
     }
     if (sa == "bibtex_fields") {
-        b.interpret_bibtex_list();
+        Buffer(sb).interpret_bibtex_list(); // \todo without Buffer
         return false;
     }
     if (sa == "bibtex_extensions") {
-        b.interpret_bibtex_extension_list();
+        Buffer(sb).interpret_bibtex_extension_list();
         return false;
     }
     if (sa == "mfenced_separator_val") {
-        if (bb == "NONE")
+        if (sb == "NONE")
             the_names[np_separator] = Istring();
         else
-            the_names[np_separator] = Istring(bb);
+            the_names[np_separator] = Istring(sb);
         return true;
     }
     if (sa.ends_with("_vals")) {
-        config_ns::interpret_list(sa.substr(0, n - 5), b);
+        Buffer B(sb);
+        config_ns::interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
         return true;
     }
     if (sa == "mml_font_normal") {
-        the_names[np_mml_normal] = Istring(bb);
+        the_names[np_mml_normal] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_upright") {
-        the_names[np_mml_upright] = Istring(bb);
+        the_names[np_mml_upright] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_bold") {
-        the_names[np_mml_bold] = Istring(bb);
+        the_names[np_mml_bold] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_italic") {
-        the_names[np_mml_italic] = Istring(bb);
+        the_names[np_mml_italic] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_bold_italic") {
-        the_names[np_mml_bold_italic] = Istring(bb);
+        the_names[np_mml_bold_italic] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_script") {
-        the_names[np_mml_script] = Istring(bb);
+        the_names[np_mml_script] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_bold_script") {
-        the_names[np_mml_bold_script] = Istring(bb);
+        the_names[np_mml_bold_script] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_fraktur") {
-        the_names[np_mml_fraktur] = Istring(bb);
+        the_names[np_mml_fraktur] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_doublestruck") {
-        the_names[np_mml_doublestruck] = Istring(bb);
+        the_names[np_mml_doublestruck] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_bold_fraktur") {
-        the_names[np_mml_bold_fraktur] = Istring(bb);
+        the_names[np_mml_bold_fraktur] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_sansserif") {
-        the_names[np_mml_sansserif] = Istring(bb);
+        the_names[np_mml_sansserif] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_bold_sansserif") {
-        the_names[np_mml_bold_sansserif] = Istring(bb);
+        the_names[np_mml_bold_sansserif] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_sansserif_italic") {
-        the_names[np_mml_sansserif_italic] = Istring(bb);
+        the_names[np_mml_sansserif_italic] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_sansserif_bold_italic") {
-        the_names[np_mml_sansserif_bold_italic] = Istring(bb);
+        the_names[np_mml_sansserif_bold_italic] = Istring(sb);
         return true;
     }
     if (sa == "mml_font_monospace") {
-        the_names[np_mml_monospace] = Istring(bb);
+        the_names[np_mml_monospace] = Istring(sb);
         return true;
     }
     return false;
