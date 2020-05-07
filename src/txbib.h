@@ -328,7 +328,6 @@ private:
     auto               next_char() -> codepoint { return input_line[input_line_pos++]; }
     void               next_line(bool what);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
-    void               parse_a_file();
     void               parse_one_item();
     void               parse_one_field(BibEntry *X);
     void               read_one_field(bool store);

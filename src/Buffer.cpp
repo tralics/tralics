@@ -702,7 +702,7 @@ auto Buffer::backup_space() -> bool {
     size_t j = ptrs.b;
     while (j > ptrs.a && is_spaceh(j - 1)) j--;
     if (j == ptrs.a) return false;
-    at(j) = 0; // \todo Not replaceable by reset(j) ?
+    at(j) = 0; // \todo Not replaceable by reset(j) ? Because the string after ptrs.b is still there
     return true;
 }
 

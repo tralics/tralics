@@ -1557,14 +1557,6 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
         }
 }
 
-void Bibtex::parse_a_file() {
-    last_ok_line = 0;
-    reset_input();
-    try {
-        for (;;) parse_one_item();
-    } catch (Berror x) {}
-}
-
 // ------------------------------------------------------------
 //
 // Working with the entries
@@ -2900,7 +2892,13 @@ void Bibtex::read(const std::string &src, bib_from ct) {
     refer_biblio  = ct == from_refer;
     tralics_ns::read_a_file(in_lines, src, 1);
     interactive = false;
-    parse_a_file();
+
+    last_ok_line = 0;
+    reset_input();
+    try {
+        for (;;) parse_one_item();
+    } catch (Berror x) {}
+
     if (bbl.non_empty_buf()) // the buffer contains a preamble
     {
         bbl.push_back("%");

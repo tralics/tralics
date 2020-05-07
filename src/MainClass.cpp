@@ -1110,16 +1110,14 @@ void MainClass::run(int argc, char **argv) {
     finish_init();
     the_log << "OK with the configuration file, dealing with the TeX file...\n";
     show_input_size();
-    try {
-        boot_bibtex(handling_ra);
-        trans0();
-        if (handling_ra) {
-            if (the_names[np_language].null()) the_names[np_language] = Istring("language");
-            the_parser.add_language_att();
-        }
-        the_parser.init(input_content);
-        the_parser.translate_all();
-    } catch (...) {} // \todo probably this is wrong
+    boot_bibtex(handling_ra);
+    trans0();
+    if (handling_ra) {
+        if (the_names[np_language].null()) the_names[np_language] = Istring("language");
+        the_parser.add_language_att();
+    }
+    the_parser.init(input_content);
+    the_parser.translate_all();
     check_section_use();
     the_parser.after_main_text();
     if (seen_enddocument) the_parser.the_stack.add_nl();
