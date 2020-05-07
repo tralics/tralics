@@ -1,9 +1,8 @@
 #pragma once
+#include "../txtokenlist.h"
 #include "enums.h"
 #include <cstddef>
 #include <vector>
-
-class Macro;
 
 // The table of macros. it contains the reference counts
 // Consider: \def\mac{\def\mac{a} b}. When mac is expanded, its body is copied
