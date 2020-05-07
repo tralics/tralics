@@ -1,6 +1,7 @@
 #pragma once
 #include "enums.h"
 #include <cstddef>
+#include <vector>
 
 class Macro;
 
@@ -10,18 +11,15 @@ class Macro;
 // points to it, i.e. if the reference count is zero)
 class Mactab {
 private:
-    Macro **table{nullptr};    // this contains the table
-    long *  rc_table{nullptr}; // this contains the reference counts
-    size_t  cur_rc_mac_len{0}; // size of the table.
-    long    ptr{-1};           // pointer to the first free position
+    std::vector<Macro *> table;    // this contains the table
+    std::vector<long>    rc_table; // this contains the reference counts
+    long                 ptr{-1};  // pointer to the first free position
 
     void rc_mac_realloc();
 
 public:
-    Mactab() = default;
-
-    void incr_macro_ref(int c) { rc_table[c]++; }
-    void delete_macro_ref(int i);
-    auto get_macro(int k) -> Macro & { return *table[k]; }
+    void incr_macro_ref(size_t c) { rc_table[c]++; }
+    void delete_macro_ref(size_t i);
+    auto get_macro(size_t k) -> Macro & { return *table[k]; }
     auto new_macro(Macro *s) -> subtypes;
 };
