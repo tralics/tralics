@@ -8,18 +8,19 @@
 auto Mactab::mc_new_macro(Macro *s) -> size_t {
     the_parser.my_stats.one_more_macro();
     if (next == size()) {
-        resize(next + 400);
-        for (size_t i = next; i < size(); i++) at(i).ref = i + 1;
+        push_back({s, 0});
+        return next++;
+    } else {
+        auto w = next;
+        next   = at(w).ref;
+        at(w)  = {s, 0};
+        return w;
     }
-    auto w = next;
-    next   = at(w).ref;
-    at(w)  = {s, 0};
-    return w;
 }
 
 // Decrements the reference count. If it is zero, we kill the macro.
 void Mactab::delete_macro_ref(size_t i) {
-    if (at(i).ref <= 0) {
+    if (at(i).ref == 0) {
         spdlog::critical("Fatal: macro reference count negative");
         abort();
     }
