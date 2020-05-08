@@ -2922,8 +2922,8 @@ void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
 
 void tralics_ns::bibtex_boot(std::string b, String dy, std::string no_year, bool inra, bool db) {
     distinguish_refer = db;
-    bbl.install_file(std::move(b));
-    the_bibtex = new Bibtex(dy);
+    bbl.name          = std::move(b);
+    the_bibtex        = new Bibtex(dy);
     the_bibtex->boot(std::move(no_year), inra);
 }
 

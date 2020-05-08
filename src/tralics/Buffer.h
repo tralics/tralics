@@ -81,7 +81,7 @@ public:
     // Those have void return type but involve global variables
     void convert_line(int l, size_t wc); ///< Convert a line to UTF8
     void find_top_atts();                ///< This does something with DocAttribs \todo [vb] sic
-    void finish_xml_print();             ///< Flush the buffer, increment fp_len
+    void finish_xml_print();             ///< Flush the buffer
     void insert_escape_char();           ///< Inserts the current escape char
     void insert_escape_char_raw();       ///< This one is for `\meaning`
 

@@ -58,7 +58,6 @@ public:
     std::vector<Istring> bibtex_extensions;
     std::vector<Istring> bibtex_extensions_s;
 
-    size_t               fp_len{0};                ///< number of bytes sent to XML file
     size_t               input_encoding{1};        ///< Encoding of the input file \todo one type to rule all encodings
     output_encoding_type log_encoding{en_boot};    ///< Encoding of the log file \todo this should always be UTF-8
     output_encoding_type output_encoding{en_boot}; ///< Encoding of the XML output \todo this should always be UTF-8

@@ -985,7 +985,7 @@ auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
     main_ns::path_buffer << bf_reset << s;
     pool_position = search_in_pool(s);
     if (pool_position) return true;
-    if (file_exists(main_ns::path_buffer.to_string())) return true;
+    if (file_exists(s)) return true;
     if (!retry) return false;
     if (s.empty() || s[0] == '.' || s[0] == '/') return false;
     return static_cast<bool>(main_ns::search_in_confdir(s));

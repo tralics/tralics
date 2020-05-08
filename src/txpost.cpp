@@ -459,13 +459,6 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
 
 void Buffer::finish_xml_print() {
     *cur_fp << data();
-    the_main->fp_len += size();
-#if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
-    int k = 0;
-    for (int i = 0; i < size(); i++)
-        if (at(i) == '\n') k++;
-    the_main->fp_len += k;
-#endif
     reset();
 }
 
@@ -933,7 +926,7 @@ void all_words_ns::dump_and_list(WordList *WL, int i) {
 
 // Finish dumping the words
 void all_words_ns::dump_words(const std::string &name) {
-    auto *    WL = new WordList(nullptr, 0, nullptr);
+    auto *    WL = new WordList("", 0, nullptr);
     WordList *W  = WL;
     for (auto *L : WL0) {
         if (L == nullptr) continue;
@@ -986,7 +979,7 @@ void Buffer::new_word() {
     reset();
 }
 
-const std::array<String, 7> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
+const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
 
 // This is static. If s is &foo;bar, returns the length
 // of the &foo; part. Returns 0 if this is not an entity.

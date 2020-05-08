@@ -10,7 +10,7 @@ class Buffer;
 struct LinePtr;
 
 extern std::vector<std::filesystem::path> conf_path;  //
-inline std::vector<std::string>           input_path; //
+inline std::vector<std::string>           input_path; // \todo vector of path, get rid of optslash
 
 extern std::string file_name;       // Job name, without directory
 extern std::string all_themes;      //

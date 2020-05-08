@@ -374,14 +374,14 @@ class Bbl {
 private:
     Buffer        B;
     std::ofstream file;
-    std::string   name;
     bool          too_late{false};
 
 public:
     friend class BibEntry;
     friend class BblAndTty;
 
-    LinePtr lines;
+    std::string name;
+    LinePtr     lines;
 
     void               newline();
     void               push_back(String s) { B.push_back(s); }
@@ -391,14 +391,10 @@ public:
     void               reset() { B.reset(); }
     void               reset_lines() { lines.clear(); }
     [[nodiscard]] auto is_too_late() const -> bool { return too_late; }
-    void               finish() { // \todo should this be called ~Bbl ?
-        too_late = true;
-    }
-    void open() {
+    void               finish() { too_late = true; } // \todo should this be called ~Bbl ?
+    void               open() {
         if (!file.is_open()) file = tralics_ns::open_file(name, true);
     }
-
-    void install_file(std::string b) { name = std::move(b); } // \todo set_name
 };
 
 class BblAndTty {

@@ -78,13 +78,9 @@ found at http://www.cecill.info.)";
     std::vector<std::string> other_options;
 
     void after_conf_assign(std::vector<std::string> &V) {
-        for (size_t i = 0; i < V.size(); ++i) {
-            ssa2 << bf_reset << V[i];
-            i++;
-            Buffer local_buf;
-            local_buf << V[i];
-            bool res = assign(ssa2.to_string(), V[i]); // \todo assign(V[i],V[i+1]) eventually
-            if (res) spdlog::trace("{}={}", ssa2, V[i]);
+        for (size_t i = 0; i < V.size(); i += 2) {
+            bool res = assign(V[i], V[i + 1]);
+            if (res) spdlog::trace("{}={}", V[i], V[i + 1]);
         }
     }
 
@@ -295,11 +291,7 @@ found at http://www.cecill.info.)";
     }
 } // namespace
 
-auto tralics_ns::get_out_dir(const std::string &name) -> std::string {
-    Buffer &B = main_ns::path_buffer;
-    B << bf_reset << out_dir << bf_optslash << name;
-    return B.to_string();
-}
+auto tralics_ns::get_out_dir(const std::string &name) -> std::filesystem::path { return out_dir / name; }
 
 MainClass::MainClass() {
 #ifdef CONFDIR
@@ -393,7 +385,7 @@ void MainClass::banner() const {
 }
 
 void MainClass::open_log() { // \todo spdlog etc
-    auto f   = (std::filesystem::path(out_dir) / log_name).replace_extension("log");
+    auto f   = std::filesystem::path(out_dir) / (log_name + ".log");
     log_file = tralics_ns::open_file(f, true);
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
@@ -1075,8 +1067,7 @@ void MainClass::trans0() {
 }
 
 void MainClass::boot_bibtex(bool inra) {
-    std::string mybbl = out_name + "_.bbl";
-    auto        fn    = tralics_ns::get_out_dir(mybbl);
+    auto fn = out_dir / (out_name + "_.bbl");
     tralics_ns::bibtex_boot(fn, year_string.c_str(), out_name, inra, distinguish_refer);
 }
 
@@ -1133,40 +1124,19 @@ void MainClass::run(int argc, char **argv) {
 }
 
 void MainClass::out_xml() {
-    Buffer X;
-    auto   u = tralics_ns::get_out_dir(out_name);
-    X << bf_reset << u;
-    X.append_unless_ends_with(".xml"); // \todo std::filesystem
-    std::string name = X.to_string();
-    auto        fp   = tralics_ns::open_file(name, true);
-    X.reset();
-    int aux = 4;
-    if (output_encoding == en_utf8 || output_encoding == en_ascii8)
-        X << "<?xml version='1.0' encoding='UTF-8'?>\n";
-    else
-        X << "<?xml version='1.0' encoding='iso-8859-1'?>\n";
-    Istring sl = the_names[np_stylesheet];
-    if (!sl.empty()) {
-        aux++;
-        X << "<?xml-stylesheet href=\"" << sl.value << "\" type=\"" << the_names[np_stylesheet_type].value << "\"?>\n";
-    }
-    X << "<!DOCTYPE " << dtd << " SYSTEM '" << dtdfile << "'>\n";
-    X << "<!-- Translated from latex by tralics " << version << ", date: " << short_date << "-->\n";
-    auto a = X.size();
-#if defined(WINNT) || defined(__CYGWIN__) || defined(_WIN32)
-    a += aux;
-#endif
-    fp_len = a + 1; // for the \n that follows
-    fp << X;
-    fp << the_parser.the_stack.document_element();
-    fp << "\n";
-    spdlog::info("Output written on {} ({} bytes).", name, fp_len);
-    if (the_main->find_words) {
-        u = tralics_ns::get_out_dir(out_name);
-        X << bf_reset << u;
-        name = X.to_string();
-        the_parser.the_stack.document_element()->word_stats(name);
-    }
+    auto p    = out_dir / (out_name + ".xml");
+    auto fp   = tralics_ns::open_file(p, true);
+    auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // \todo make this always true
+
+    fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
+    if (auto sl = the_names[np_stylesheet]; !sl.empty())
+        fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.value, the_names[np_stylesheet_type].value);
+    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtdfile);
+    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", version, short_date);
+    fp << the_parser.the_stack.document_element() << "\n";
+
+    spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
+    if (the_main->find_words) the_parser.the_stack.document_element()->word_stats(out_dir / out_name);
 }
 
 void MainClass::finish_init() const {
