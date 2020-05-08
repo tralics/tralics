@@ -167,7 +167,7 @@ void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
 // We either kill the macro, or increment its reference count.
 void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what) {
     if (ok_to_define(a, redef)) {
-        CmdChr nv = CmdChr(what, mac_table.new_macro(b));
+        auto nv = CmdChr(what, subtypes(mac_table.mc_new_macro(b)));
         if (tracing_assigns()) {
             Logger::finish_seq();
             the_log << "{" << gbl_or_assign(gbl, false) << a << "=";

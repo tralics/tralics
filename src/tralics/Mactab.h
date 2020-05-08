@@ -1,24 +1,24 @@
 #pragma once
 #include "../txtokenlist.h"
-#include "enums.h"
 #include <cstddef>
 #include <vector>
+
+struct rc_mac {
+    Macro *ptr{nullptr};
+    size_t ref{0};
+};
 
 // The table of macros. it contains the reference counts
 // Consider: \def\mac{\def\mac{a} b}. When mac is expanded, its body is copied
 // when the inner \def is executed, then \mac is destroyed (if nobody else
 // points to it, i.e. if the reference count is zero)
-class Mactab {
+class Mactab : std::vector<rc_mac> {
 private:
-    std::vector<Macro *> table;    // this contains the table
-    std::vector<long>    rc_table; // this contains the reference counts
-    long                 ptr{-1};  // pointer to the first free position
-
-    void rc_mac_realloc();
+    size_t next{0}; // pointer to the first free position
 
 public:
-    void incr_macro_ref(size_t c) { rc_table[c]++; }
+    void incr_macro_ref(size_t c) { at(c).ref++; }
     void delete_macro_ref(size_t i);
-    auto get_macro(size_t k) -> Macro & { return *table[k]; }
-    auto new_macro(Macro *s) -> subtypes;
+    auto get_macro(size_t k) -> Macro & { return *at(k).ptr; }
+    auto mc_new_macro(Macro *s) -> size_t;
 };

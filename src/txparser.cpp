@@ -2150,8 +2150,8 @@ void Parser::new_macro(const std::string &s, Token name) {
 // Nothing appears in the transcript file.
 
 void Parser::new_prim(Token name, TokenList &L) {
-    auto *   X = new Macro(L);
-    subtypes B = mac_table.new_macro(X);
+    auto *X = new Macro(L);
+    auto  B = subtypes(mac_table.mc_new_macro(X));
     eq_define(name.eqtb_loc(), CmdChr(user_cmd, B), true);
 }
 
