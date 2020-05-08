@@ -1,5 +1,6 @@
 #pragma once
 #include "../txio.h"
+#include "LinePtr.h"
 
 class Stack;
 

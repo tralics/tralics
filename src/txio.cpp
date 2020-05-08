@@ -252,17 +252,6 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
     return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)].value);
 }
 
-void LinePtr::change_encoding(long wc) {
-    if (wc >= 0 && wc < to_signed(max_encoding)) {
-        encoding = to_unsigned(wc);
-        Logger::finish_seq();
-        the_log << "++ Input encoding changed to " << wc << " for " << file_name << "\n";
-    }
-}
-
-// -----------------------------------------------------------------
-// Reading characters from files
-
 auto io_ns::find_encoding(const std::string &cl) -> int {
     if (cl.find("-*-") != std::string::npos) {
         if (cl.find("coding: utf-8") != std::string::npos) return 0;

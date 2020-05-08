@@ -6,7 +6,6 @@
 #include <vector>
 
 struct AttPair;
-struct LinePtr;
 class Xml;
 
 /// a big structure \todo This is kind of a messy class, would be better off

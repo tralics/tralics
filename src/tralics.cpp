@@ -43,7 +43,7 @@ auto main(int argc, char **argv) -> int {
 }
 
 // Function called when A=B is seen in the configuration file.
-// Returns true if A is recognised \todo should take strings
+// Returns true if A is recognised
 auto assign(const std::string &sa, const std::string &sb) -> bool {
     auto n = sa.size();
 
@@ -69,7 +69,7 @@ auto assign(const std::string &sa, const std::string &sb) -> bool {
         return true;
     }
     if (sa == "entity_names") {
-        the_main->set_ent_names(sb); // \todo no Buffer
+        the_main->set_ent_names(sb);
         return true;
     }
     if (sa == "default_class") {

@@ -1,3 +1,5 @@
+#include "tralics/Clines.h"
+#include "tralics/LinePtr.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <fmt/ostream.h>
