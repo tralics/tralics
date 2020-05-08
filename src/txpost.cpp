@@ -835,14 +835,14 @@ auto Xml::convert_to_string() -> std::string {
 }
 
 // This converts the content to a string. May be recursive
-void Xml::convert_to_string(Buffer &buf) {
+void Xml::convert_to_string(Buffer &b) {
     if (is_xmlc()) {
-        buf << name.name;
+        b << name.name;
         return;
     }
     if (name.empty() || name == the_names[cst_temporary]) {
         auto len = size();
-        for (size_t k = 0; k < len; k++) at(k)->convert_to_string(buf);
+        for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
         return;
     }
     err_buf.reset();

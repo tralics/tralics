@@ -226,4 +226,4 @@ inline void bf_comma(Buffer &B) {
 }
 
 extern Buffer Txbuf, err_buf, ssa2;
-inline Buffer check_image1, check_image2;
+inline Buffer check_image1, check_image2, buf;

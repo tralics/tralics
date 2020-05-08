@@ -15,7 +15,6 @@
 #include <fmt/format.h>
 
 namespace {
-    Buffer buf; // a scratch buffer
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }

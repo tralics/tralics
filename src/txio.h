@@ -36,6 +36,8 @@ public:
     void start_convert(int l);
 };
 
+inline Converter the_converter;
+
 // This allows us to temporarily read from elsewhere
 struct InputStack {
     std::vector<codepoint> line;

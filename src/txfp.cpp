@@ -405,12 +405,12 @@ auto FpNum::to_string() const -> std::string {
 // This puts the digits in a buffer, then constructs a token list
 // Leading and trailing zeroes are removed.
 auto FpNum::to_list() const -> TokenList {
-    auto      buf = to_string();
+    auto      buf2 = to_string();
     TokenList res;
     size_t    i = 0;
-    if (buf[0] == '+') i++;
-    while (buf[i] != 0) {
-        res.push_back(Token(to_unsigned(other_t_offset + buf[i])));
+    if (buf2[0] == '+') i++;
+    while (buf2[i] != 0) {
+        res.push_back(Token(to_unsigned(other_t_offset + buf2[i])));
         i++;
     }
     return res;

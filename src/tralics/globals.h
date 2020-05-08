@@ -20,6 +20,8 @@ extern std::vector<LinePtr> file_pool; // pool managed by filecontents
 
 extern size_t leftquote_val, rightquote_val;
 
+inline int init_file_pos = 0; // position in init file
+
 extern bool bad_minus;
 extern bool compatibility;
 extern bool nofloat_hack;

@@ -18,9 +18,7 @@
 #include <utf8.h>
 
 namespace {
-    Buffer                buf;
-    Buffer                utf8_out; // Holds utf8 outbuffer
-    Converter             the_converter;
+    Buffer                utf8_out;      // Holds utf8 outbuffer
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
     /// Use a file from the pool
@@ -53,7 +51,6 @@ namespace io_ns {
     auto plural(int n) -> String;
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
-    auto find_encoding(const std::string &cl) -> int;
 } // namespace io_ns
 
 // ---------------------------------------------------------
@@ -271,46 +268,6 @@ auto io_ns::find_encoding(const std::string &cl) -> int {
     return -1;
 }
 
-void LinePtr::set_interactive() {
-    interactive = true;
-    file_name   = "tty";
-    encoding    = the_main->input_encoding;
-}
-
-// interface with the line editor.
-auto LinePtr::read_from_tty(Buffer &B) -> int {
-    static bool                   prev_line = false; // was previous line non-blank ?
-    static std::array<char, 4096> m_ligne;
-    readline(m_ligne.data(), 78);
-    if (std::string(m_ligne.data()) == "\\stop") return -1;
-    cur_line++;
-    B.reset();
-    B << m_ligne.data() << "\n";
-    if (B.size() == 1) {
-        if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
-        prev_line = false;
-    } else
-        prev_line = true;
-    if (B[0] == '%') { // debug
-        int k = io_ns::find_encoding(B.to_string());
-        if (k >= 0) encoding = to_unsigned(k);
-    }
-    return cur_line;
-}
-
-// inserts a copy of aux
-void LinePtr::insert(const LinePtr &aux) {
-    encoding = 0;
-    auto C   = aux.begin();
-    auto E   = aux.end();
-    while (C != E) {
-        Clines L    = *C;
-        L.converted = false;
-        push_back(L);
-        ++C;
-    }
-}
-
 // This reads the file named x.
 // If spec is 0, we are reading the config file.
 // If 2 it's a tex file, and the file is converted later.
@@ -367,31 +324,6 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
         if (c == EOF) break;
     }
 }
-
-// If a line ends with \, we take the next line, and append it to this one
-void LinePtr::normalise_final_cr() {
-    line_iterator prev{end()};
-    for (auto C = begin(); C != end(); ++C) {
-        const std::string &s       = C->chars;
-        auto               n       = s.size();
-        bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
-        std::string        normal  = s;
-        if (special) normal = std::string(s, 0, n - 2);
-        if (prev != end()) {
-            prev->chars = prev->chars + normal;
-            C->chars    = "\n";
-        }
-        if (special) {
-            if (prev == end()) {
-                prev        = C;
-                prev->chars = normal;
-            }
-        } else
-            prev = end();
-    }
-}
-
-// ------------------------------------------------------
 
 // This puts x into the buffer in utf8 form \todo codepoint::to_utf8()
 void Buffer::push_back(codepoint c) {
@@ -680,236 +612,6 @@ auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream
     }
     if (!fp) spdlog::error("Cannot open file {} for output.", name);
     return fp;
-}
-
-void LinePtr::reset(std::string x) {
-    cur_line    = 0;
-    encoding    = 0;
-    interactive = false;
-    clear();
-    file_name = std::move(x);
-}
-
-// Insert a line at the end of the file
-void LinePtr::insert(int n, const std::string &c, bool cv) { emplace_back(n, c, cv); }
-
-// Insert a line at the end of the file, incrementing the line no
-void LinePtr::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
-
-// Insert a line at the end of the file, incrementing the line no
-// We assume that the const char* is ascii 7 bits
-void LinePtr::insert(String c) { emplace_back(++cur_line, c, true); }
-
-// Like insert, but we do not insert an empty line after an empty line.
-// Used by the raweb preprocessor, hence already converted
-void LinePtr::insert_spec(int n, std::string c) {
-    if (!empty() && back().chars[0] == '\n' && c[0] == '\n') return;
-    insert(n, c, true);
-}
-
-// Inserts the buffer, with a newline at the end.
-void LinePtr::add(int n, Buffer &b, bool cv) {
-    b.push_back("\n");
-    insert(n, b.to_string(), cv);
-}
-
-// insert a file at the start
-void LinePtr::splice_first(LinePtr &X) { splice(begin(), X); }
-
-// insert at the end
-void LinePtr::splice_end(LinePtr &X) { splice(end(), X); }
-
-// Copy X here,
-void LinePtr::clear_and_copy(LinePtr &X) {
-    clear();
-    splice(begin(), X);
-    encoding = X.encoding;
-    set_file_name(X.file_name);
-}
-
-auto LinePtr::dump_name() const -> std::string {
-    if (file_name.empty()) return "virtual file";
-    buf.reset();
-    buf << "file " << file_name;
-    return buf.to_string();
-}
-
-// Whenever a TeX file is opened for reading, we print this in the log
-void LinePtr::after_open() {
-    Logger::finish_seq();
-    the_log << "++ Opened " << dump_name();
-    if (empty())
-        the_log << "; it is empty\n";
-    else {
-        int n = front().number;
-        int m = back().number;
-        if (n == 1) {
-            if (m == 1)
-                the_log << "; it has 1 line\n";
-            else
-                the_log << "; it has " << m << " lines\n";
-        } else
-            the_log << "; line range is " << n << "-" << m << "\n";
-    }
-}
-
-// Whenever a TeX file is closed, we call this. If sigforce is true
-// we say if this was closed by a \endinput command.
-void LinePtr::before_close(bool sigforce) {
-    Logger::finish_seq();
-    the_log << "++ End of " << dump_name();
-    if (sigforce && !empty()) the_log << " (forced by \\endinput)";
-    the_log << "\n";
-}
-
-// Puts in b the next line of input.
-// return -1 at EOF, the line number otherwise.
-auto LinePtr::get_next(Buffer &b) -> int {
-    int  n         = -1;
-    bool converted = false;
-    if (interactive) {
-        n = read_from_tty(b);
-        if (n == -1) interactive = false;
-    } else {
-        if (empty()) return -1;
-        n = front().to_buffer(b, converted);
-        pop_front();
-    }
-    if (!converted) {
-        the_converter.cur_file_name = file_name;
-        b.convert_line(n, encoding);
-    }
-    return n;
-}
-
-auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
-    if (empty()) return -1;
-    bool converted = false; // \todo unused
-    int  n         = front().to_buffer(b, converted);
-    pop_front();
-    if (w != 0) {
-        the_converter.cur_file_name = file_name;
-        b.convert_line(n, to_unsigned(w));
-    }
-    return n;
-}
-
-// same as get_next, without conversion
-auto LinePtr::get_next_raw(Buffer &b) -> int {
-    if (empty()) return -1;
-    bool unused = false;
-    int  n      = front().to_buffer(b, unused);
-    pop_front();
-    return n;
-}
-
-// Puts the line in the string, instead of the buffer.
-auto LinePtr::get_next(std::string &b, bool &cv) -> int {
-    if (empty()) return -1;
-    int n = front().to_string(b, cv);
-    pop_front();
-    return n;
-}
-
-/// This finds a line with documentclass in it
-// uses B and the buffer.
-auto LinePtr::find_documentclass(Buffer &B) -> std::string {
-    auto C                  = begin();
-    auto E                  = end();
-    the_main->doc_class_pos = E;
-    while (C != E) {
-        B.reset();
-        B.push_back(C->chars);
-        Buffer &aux = buf;
-        bool    s   = B.find_documentclass(aux);
-        if (s) {
-            the_main->doc_class_pos = C;
-            return aux.to_string();
-        }
-        ++C;
-    }
-    return "";
-}
-
-// This inserts B into *this, before C
-// If C is the end pointer, B is inserted at the start.
-// The idea is to insert text from the config file to the main file
-// It is assumed that the inserted line is already converted.
-void LinePtr::add_buffer(Buffer &B, line_iterator C) {
-    if (C == end())
-        push_front(Clines(1, B.to_string(), true));
-    else
-        std::list<Clines>::insert(C, Clines(1, B.to_string(), true)); // \todo ew
-}
-
-// This finds a line with documentclass in it
-// uses B and the buffer.
-auto LinePtr::find_configuration(Buffer &B) -> std::string {
-    int  N = 0;
-    auto C = begin();
-    auto E = end();
-    while (C != E) {
-        B.reset();
-        B.push_back(C->chars);
-        Buffer &aux = buf;
-        bool    s   = B.find_configuration(aux);
-        if (s) return aux.to_string();
-        ++C;
-        N++;
-        if (N > 100) break;
-    }
-    return "";
-}
-// This finds a line with document type in it
-// uses B and the buffer.
-void LinePtr::find_doctype(Buffer &B, std::string &res) {
-    if (!res.empty()) return; // use command line option if given
-    int  N = 0;
-    auto C = begin();
-    auto E = end();
-    while (C != E) {
-        B.reset();
-        B.push_back(C->chars);
-        auto k = B.find_doctype();
-        if (k != 0) {
-            res = B.to_string(k);
-            return;
-        }
-        ++C;
-        N++;
-        if (N > 100) return;
-    }
-}
-
-// Splits a string at \n, creates a list of lines with l as first
-// line number.
-// This is used by \scantokens and \reevaluate, assumes UTF8
-void LinePtr::split_string(std::string x, int l) {
-    Buffer &B = buf;
-    LinePtr L;
-    L.set_cur_line(l);
-    B.reset();
-    for (size_t i = 0;; ++i) {
-        char c    = x[i];
-        bool emit = false;
-        if (c == '\n')
-            emit = true;
-        else if (c == 0) {
-            if (!B.empty()) emit = true;
-        } else
-            B.push_back(c);
-        if (emit) {
-            B.push_back_newline();
-            L.insert(B.to_string(), true);
-            B.reset();
-        }
-        if (c == 0) break;
-    }
-    splice_first(L);
-}
-
-void LinePtr::print(std::ostream &outfile) {
-    for (auto &C : *this) outfile << C.chars;
 }
 
 // This implements the filecontent environment.

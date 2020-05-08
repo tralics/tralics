@@ -13,8 +13,7 @@
 #include "tralics/globals.h"
 
 namespace {
-    int               init_file_pos = 0; // position in init file
-    Buffer            docspecial;        // Buffer for document special things
+    Buffer            docspecial; // Buffer for document special things
     Buffer            tp_main_buf;
     Buffer            local_buf; // some local buffer
     TitlePage         Titlepage; // title page info
@@ -571,96 +570,6 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
     return 2;
 }
 
-// We remove everything that is not of type S.
-void LinePtr::parse_and_extract_clean(String s) {
-    LinePtr res;
-    int     b    = 0;
-    Buffer &B    = local_buf;
-    bool    keep = true;
-    bool    cv   = true; // unused. We assume that the line is always converted
-    auto    C    = begin();
-    auto    E    = end();
-    auto    W    = begin();
-    while (C != E) {
-        B.reset();
-        int n = C->to_buffer(B, cv);
-        W     = C;
-        ++C;
-        int open = B.see_config_env();
-        b += open;
-        if (b < 0) {
-            b = 0;
-            continue;
-        }                           // ignore bogus lines
-        if (b == 0 && open == -1) { // cur env has closed
-            keep = true;
-            continue;
-        }
-        if (b == 1 && open == 1) { // something new started
-            int v = B.is_begin_something(s);
-            if (v == 1) {
-                keep = false;
-                continue;
-            }
-            if (v == 3) {
-                keep = true;
-                continue;
-            }
-        }
-        if (keep) res.insert(n, B.to_string(), cv); // res.value.push_back(*W);
-    }
-    clear();
-    splice_first(res);
-}
-
-// Returns all line in a begin/end block named s
-auto LinePtr::parse_and_extract(String s) const -> LinePtr {
-    LinePtr res;
-    int     b    = 0;
-    Buffer &B    = local_buf;
-    bool    keep = false;
-    bool    cv   = 0; // unused.
-    auto    C    = begin();
-    auto    E    = end();
-    auto    W    = begin();
-    while (C != E) {
-        B.reset();
-        C->to_buffer(B, cv);
-        W = C;
-        ++C;
-        int open = B.see_config_env();
-        b += open;
-        if (open != 0) keep = false; // status changed
-        if (b < 0) {
-            b = 0;
-            continue;
-        }                          // ignore bogus lines
-        if (b == 1 && open == 1) { // something new started
-            if (B.is_begin_something(s) == 4) keep = true;
-            continue;
-        }
-        if (keep) res.push_back(*W);
-    }
-    return res;
-}
-
-// Execute all lines that are not in an block via see_main_a
-void LinePtr::parse_conf_toplevel() const {
-    int    b  = 0;
-    bool   cv = 0; // unused. We assume that the line is always converted
-    Buffer B;
-    auto   C = begin();
-    auto   E = end();
-    while (C != E) {
-        B.reset();
-        init_file_pos = C->to_buffer(B, cv);
-        ++C;
-        int open = B.see_config_env();
-        b += open;
-        if (b == 0) tpage_ns::see_main_a(B, ssa2, local_buf);
-    }
-}
-
 // Converts two characters into a flag.
 auto TitlePageFullLine::encode_flags(char c1, char c2) -> bool {
     flags = 0;
@@ -775,44 +684,6 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
     return data() + ptrs.b;
 }
 
-// This find a toplevel attributes. Real job done by next function.
-void LinePtr::find_top_atts(Buffer &B) {
-    auto C = cbegin();
-    auto E = cend();
-    while (C != E) { // \todo this should be an STL algorithm
-        B << bf_reset << C->chars;
-        B.find_top_atts();
-        C = skip_env(C, B);
-    }
-}
-
-// A loop to find all types  and put them in res.
-void LinePtr::find_all_types(std::vector<std::string> &res) {
-    Buffer &B = local_buf;
-    auto    C = cbegin();
-    auto    E = cend();
-    while (C != E) {
-        init_file_pos = C->number;
-        B << bf_reset << C->chars;
-        B.find_one_type(res);
-        C = skip_env(C, B);
-    }
-}
-
-// This find a toplevel value.
-auto LinePtr::find_top_val(String s, bool c) -> std::string {
-    Buffer &B = local_buf;
-    auto    C = cbegin();
-    auto    E = cend();
-    while (C != E) {
-        B << bf_reset << C->chars;
-        String res = B.see_config_kw(s, c);
-        if (res != nullptr) return res;
-        C = skip_env(C, B);
-    }
-    return "";
-}
-
 void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
     ptrs.a = ptrs.b;
@@ -848,21 +719,6 @@ auto Buffer::see_config_env() const -> int {
     if (starts_with("Begin")) return 1;
     if (starts_with("End")) return -1;
     return 0;
-}
-
-// This skips over an environment.
-auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const {
-    ++C;
-    int b = B.see_config_env();
-    if (b != 1) return C;
-    auto E = end();
-    while (C != E) {
-        B << bf_reset << C->chars;
-        ++C;
-        b += B.see_config_env();
-        if (b == 0) return C;
-    }
-    return C;
 }
 
 void Buffer::find_one_type(std::vector<std::string> &S) {
@@ -953,27 +809,6 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         }
     }
     the_log << "Alias " << pot_res << " does not match " << res << "\n";
-    return false;
-}
-
-// Find all aliases in the config file.
-auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
-    Buffer &B        = local_buf;
-    bool    in_alias = false;
-    for (auto C = cbegin(); C != cend();) {
-        B << bf_reset << C->chars;
-        if (in_alias) {
-            if (B.find_alias(SL, res)) return true;
-        }
-        if (B.starts_with("End"))
-            in_alias = false;
-        else if (B.starts_with("BeginAlias")) {
-            in_alias = true;
-            ++C;
-            continue;
-        }
-        C = skip_env(C, B);
-    }
     return false;
 }
 
