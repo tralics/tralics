@@ -369,8 +369,8 @@ void MainClass::check_for_input() {
 
     auto wc = input_content.encoding;
     if (wc < 0) {
-        wc = the_main->input_encoding;
-        input_content.set_encoding(wc);
+        wc                     = the_main->input_encoding;
+        input_content.encoding = wc;
     }
     Logger::finish_seq();
     const std::string &wa = (wc == 0 ? "UTF-8" : wc == 1 ? "ISO-8859-1" : "custom");

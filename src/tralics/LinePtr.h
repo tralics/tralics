@@ -32,7 +32,6 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     auto get_next_cv(Buffer &b, int w) -> int;
     auto get_next(Buffer &b) -> int;
     auto get_next(std::string &b, bool &cv) -> int;
-    void incr_cur_line() { cur_line++; }
     void insert(const std::string &c, bool cv);
     void insert(String c);
     void insert_spec(int n, std::string c);
@@ -44,9 +43,6 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void print(std::ostream &outfile);
     void reset(std::string x);
     auto read_from_tty(Buffer &b) -> int;
-    void set_cur_line(int x) { cur_line = x; }
-    void set_encoding(size_t k) { encoding = k; }
-    void set_file_name(std::string s) { file_name = std::move(s); }
     void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void splice_end(LinePtr &X);   // \todo inline

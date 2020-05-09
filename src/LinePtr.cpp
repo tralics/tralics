@@ -109,8 +109,8 @@ void LinePtr::splice_end(LinePtr &X) { splice(end(), X); }
 void LinePtr::clear_and_copy(LinePtr &X) {
     clear();
     splice(begin(), X);
-    encoding = X.encoding;
-    set_file_name(X.file_name);
+    encoding  = X.encoding;
+    file_name = X.file_name;
 }
 
 auto LinePtr::dump_name() const -> std::string { return file_name.empty() ? "virtual file" : "file " + file_name; }
@@ -222,7 +222,7 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 // uses B and the buffer.
 auto LinePtr::find_configuration(Buffer &B) -> std::string {
     int N = 0;
-    for (auto & C : *this) {
+    for (auto &C : *this) {
         B.reset();
         B.push_back(C);
         if (B.find_configuration(buf)) return buf.to_string();
@@ -235,7 +235,7 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
 void LinePtr::find_doctype(Buffer &B, std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int N = 0;
-    for (auto & C : *this) {
+    for (auto &C : *this) {
         B.reset();
         B.push_back(C);
         auto k = B.find_doctype();
@@ -253,7 +253,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
 void LinePtr::split_string(std::string x, int l) {
     Buffer &B = buf;
     LinePtr L;
-    L.set_cur_line(l);
+    L.cur_line = l;
     B.reset();
     for (size_t i = 0;; ++i) {
         char c    = x[i];
@@ -314,7 +314,7 @@ void LinePtr::parse_and_extract_clean(String s) {
     Buffer &B    = local_buf;
     bool    keep = true;
     bool    cv   = true;
-    for (auto & C : *this) {
+    for (auto &C : *this) {
         B.reset();
         int n    = C.to_buffer(B, cv);
         int open = B.see_config_env();
@@ -376,7 +376,7 @@ void LinePtr::parse_conf_toplevel() const {
     int    b  = 0;
     bool   cv = 0; // unused. We assume that the line is always converted
     Buffer B;
-    for (const auto & C : *this) {
+    for (const auto &C : *this) {
         B.reset();
         init_file_pos = C.to_buffer(B, cv);
         b += B.see_config_env();

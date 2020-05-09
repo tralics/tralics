@@ -58,7 +58,7 @@ struct InputStack {
     void destroy();
     void set_line_ptr(LinePtr &X) {
         L.clear_and_copy(X);
-        X.set_file_name("");
+        X.file_name = "";
         L.set_interactive(X.interactive);
     }
     void get_line_ptr(LinePtr &X) {

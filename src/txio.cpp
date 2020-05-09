@@ -270,8 +270,8 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     Buffer B;
     auto   wc        = the_main->input_encoding;
     bool   converted = spec < 2;
-    L.set_encoding(the_main->input_encoding);
-    int co_try = spec == 3 ? 0 : 20;
+    L.encoding       = the_main->input_encoding;
+    int co_try       = spec == 3 ? 0 : 20;
     for (;;) {
         int  c    = fp.get();
         bool emit = false;
@@ -295,9 +295,9 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 co_try--;
                 int k = io_ns::find_encoding(B.to_string());
                 if (k >= 0) {
-                    wc = to_unsigned(k);
-                    L.set_encoding(wc);
-                    co_try = 0;
+                    wc         = to_unsigned(k);
+                    L.encoding = wc;
+                    co_try     = 0;
                     Logger::finish_seq();
                     spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", k, L.cur_line + 1, x);
                 }
@@ -306,7 +306,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
             if (emit)
                 L.insert(B.to_string(), converted);
             else
-                L.incr_cur_line();
+                ++L.cur_line;
             B.reset();
         }
         if (c == EOF) break;
