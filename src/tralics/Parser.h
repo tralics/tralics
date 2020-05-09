@@ -572,7 +572,7 @@ private:
     void        old_font();
     void        one_of_two(TokenList &A, TokenList &B, bool which);
     void        one_of_two(bool which);
-    void        open_tex_file(bool seen_star);
+    void        open_tex_file_reads_path_buffer(bool seen_star);
     void        opt_to_mandatory();
     auto        optional_enumerate(TokenList &L, String ctr) -> bool;
     void        out_warning(Buffer &B, msg_type what);
@@ -811,7 +811,7 @@ private:
     void        T_figure_table_end(bool is_fig);
     void        T_fancy(String s, TokenList &L);
     void        T_fancy();
-    void        T_filecontents(int spec);
+    void        T_filecontents_reads_path_buffer(int spec);
     void        T_fbox(subtypes cc);
     void        T_fbox_dash_box();
     void        T_fbox_rotate_box();

@@ -74,7 +74,7 @@ struct FileForInput {
     Buffer  cur_line;       ///< the current line
     int     line_no{0};     ///< the current line number
 
-    void open(const std::string &file, bool action);
+    void open_reads_path_buffer(const std::string &file, bool action);
     void close();
 };
 

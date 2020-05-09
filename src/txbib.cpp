@@ -370,7 +370,7 @@ void Bibliography::dump(Buffer &b) {
 }
 
 // This reads conditionally a file. Returns true if the file exists.
-auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
+auto Bibtex::read0_reads_path_buffer(Buffer &B, bib_from ct) -> bool {
     B.push_back(".bib");
     if (tralics_ns::find_in_path(B.to_string())) {
         read(main_ns::path_buffer.to_string(), ct);
@@ -386,26 +386,26 @@ void Bibtex::read1(const std::string &cur) {
     Tbuf.reset();
     Tbuf.push_back(cur);
     auto n = Tbuf.size();
-    if (read0(Tbuf, from_year)) return;
+    if (read0_reads_path_buffer(Tbuf, from_year)) return;
     if (n > 5 && Tbuf.to_string(n - 5) == "+foot.bib") {
         Tbuf.reset(n - 5);
-        if (read0(Tbuf, from_foot)) return;
+        if (read0_reads_path_buffer(Tbuf, from_foot)) return;
     }
     if (n > 5 && Tbuf.to_string(n - 5) == "+year.bib") {
         Tbuf.reset(n - 5);
-        if (read0(Tbuf, from_year)) return;
+        if (read0_reads_path_buffer(Tbuf, from_year)) return;
     }
     if (n > 4 && Tbuf.to_string(n - 4) == "+all.bib") {
         Tbuf.reset(n - 4);
-        if (read0(Tbuf, from_any)) return;
+        if (read0_reads_path_buffer(Tbuf, from_any)) return;
     }
     if (n > 6 && Tbuf.to_string(n - 6) == "+refer.bib") {
         Tbuf.reset(n - 6);
-        if (read0(Tbuf, from_refer)) return;
+        if (read0_reads_path_buffer(Tbuf, from_refer)) return;
     }
     if (n > 4 && Tbuf.to_string(n - 4) == ".bib.bib") {
         Tbuf.reset(n - 4);
-        if (read0(Tbuf, from_year)) return;
+        if (read0_reads_path_buffer(Tbuf, from_year)) return;
     }
     spdlog::warn("Bibtex Info: no biblio file {}", Tbuf);
 }
@@ -423,7 +423,7 @@ auto Bibtex::read2(bib_from pre) -> bool {
     else if (pre == from_any)
         B.push_back("_all");
     B.push_back(default_year);
-    return read0(B, pre);
+    return read0_reads_path_buffer(B, pre);
 }
 
 // This loads all three files, if we are compiling the raweb. Otherwise,

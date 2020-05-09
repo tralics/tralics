@@ -144,7 +144,7 @@ auto Parser::is_input_open() -> bool {
 
 // Open a file for \openin. if action is false, the file does not exist
 // No on-the fly conversion here
-void FileForInput::open(const std::string &file, bool action) {
+void FileForInput::open_reads_path_buffer(const std::string &file, bool action) {
     if (!action) {
         Logger::finish_seq();
         the_log << "++ Cannot open file " << file << " for input\n";
@@ -369,7 +369,7 @@ void Parser::T_input(int q) {
         file       = sT_arg_nopar();
     }
     if (q == readxml_code) {
-        the_xmlA = read_xml(file);
+        the_xmlA = read_xml_reads_path_buffer(file);
         return;
     }
     bool res = false;
@@ -388,7 +388,7 @@ void Parser::T_input(int q) {
         }
     }
     if (q == openin_code) {
-        tex_input_files[stream].open(file, res);
+        tex_input_files[stream].open_reads_path_buffer(file, res);
         return;
     }
     if (q == ifexists_code) {
@@ -398,7 +398,7 @@ void Parser::T_input(int q) {
     if (q == inputifexists_code) {
         TokenList A = read_arg();
         TokenList B = read_arg();
-        if (res) open_tex_file(seen_star);
+        if (res) open_tex_file_reads_path_buffer(seen_star);
         if (A.empty() && B.empty()) return; // optimise
         if (tracing_commands()) {
             Logger::finish_seq();
@@ -411,11 +411,11 @@ void Parser::T_input(int q) {
         parse_error(T, "Cannot open input file ", file, "cannot open input");
         return;
     }
-    open_tex_file(seen_star);
+    open_tex_file_reads_path_buffer(seen_star);
 }
 
 // On-the-fly conversion allowed
-void Parser::open_tex_file(bool seen_star) {
+void Parser::open_tex_file_reads_path_buffer(bool seen_star) {
     std::string file = main_ns::path_buffer.to_string();
     push_input_stack(file, seen_star, true);
     tralics_ns::read_a_file(lines, file, 2);

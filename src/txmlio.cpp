@@ -62,7 +62,7 @@ namespace {
 // where foo is element, X, Z is name4 choice or seq
 
 // The external function. Needs to be completed
-auto read_xml(const std::string &s) -> Xml * {
+auto read_xml_reads_path_buffer(const std::string &s) -> Xml * {
     if (!tralics_ns::find_in_path(s)) {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;

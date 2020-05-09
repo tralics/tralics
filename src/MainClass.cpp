@@ -337,7 +337,7 @@ void MainClass::get_os() {
     }
 }
 
-void MainClass::check_for_input() {
+void MainClass::check_for_input_reads_path_buffer() {
     if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
 
     std::string s = hack_for_input(infile);
@@ -788,7 +788,7 @@ void MainClass::end_with_help(int v) const {
     exit(v);
 }
 
-auto MainClass::check_for_tcf(const std::string &s) -> bool {
+auto MainClass::check_for_tcf_reads_path_buffer(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
     if (tralics_ns::find_in_confdir(tmp, true)) {
         tcf_file = main_ns::path_buffer.to_string(); // \todo without using path_buffer?
@@ -827,7 +827,7 @@ auto MainClass::find_config_file() -> bool {
     return true;
 }
 
-void MainClass::open_config_file() { // \todo filesystem
+void MainClass::open_config_file_reads_path_buffer() { // \todo filesystem
     Buffer &B = main_ns::path_buffer;
     if (B.empty()) {
         config_file.insert("#comment", true);
@@ -885,7 +885,7 @@ void MainClass::get_doc_type() {
 
 auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (dtype.empty()) return false;
-    if (!check_for_tcf(dtype)) {
+    if (!check_for_tcf_reads_path_buffer(dtype)) {
         if (vb) the_log << "Trying type " << dtype << "\n";
         if (tralics_ns::exists(all_config_types, dtype)) return true;
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
@@ -953,7 +953,7 @@ void MainClass::read_config_and_other() {
     year             = the_parser.get_ra_year();
     bool have_dclass = !dclass.empty();
     if (find_config_file())
-        open_config_file();
+        open_config_file_reads_path_buffer();
     else
         spdlog::trace("No configuration file.");
     if (!use_tcf) {
@@ -1092,11 +1092,11 @@ void MainClass::more_boot() const {
 
 void MainClass::run(int argc, char **argv) {
     get_os();
-    the_parser.boot();              // create the hash table and all that
-    parse_args(argc, argv);         // look at arguments
-    if (!only_input_data) banner(); // print banner
-    more_boot();                    // finish bootstrap
-    check_for_input();              // open the input file
+    the_parser.boot();                   // create the hash table and all that
+    parse_args(argc, argv);              // look at arguments
+    if (!only_input_data) banner();      // print banner
+    more_boot();                         // finish bootstrap
+    check_for_input_reads_path_buffer(); // open the input file
     dclass = input_content.find_documentclass(b_after);
     input_content.find_doctype(b_after, opt_doctype);
     read_config_and_other();

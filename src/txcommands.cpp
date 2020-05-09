@@ -1288,7 +1288,7 @@ void Parser::translate03() {
     case end_description_cmd: T_listenv_end(); return;
     case xmlelement_env_cmd: T_xmlenv(c); return;
     case end_xmlelement_env_cmd: T_xmlenv_end(c); return;
-    case filecontents_env_cmd: T_filecontents(c); return;
+    case filecontents_env_cmd: T_filecontents_reads_path_buffer(c); return;
     case addatt_cmd: T_xmladdatt(c); return;
     case ignore_env_cmd: return;
     case ignore_content_cmd: T_raw_env(false); return;

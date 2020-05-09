@@ -88,7 +88,8 @@ public:
 
     MainClass(); ///< This just adds `"../confdir"` to `conf_path` \todo should disappear
 
-    auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
+    auto check_for_tcf_reads_path_buffer(const std::string &s)
+        -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, Buffer &b); ///< Add contents to `from_config`
     void bad_year();                           ///< If the year is wrong, fail \todo this seems to be RA specific
@@ -123,7 +124,7 @@ private:
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
-    void check_for_input(); ///< Reads the input file named in `infile`
+    void check_for_input_reads_path_buffer(); ///< Reads the input file named in `infile`
     void check_kw(int, Buffer &);
     void check_line(Buffer &);
     void check_mod();
@@ -151,8 +152,8 @@ private:
     void mkcfg();
     void more_boot() const; ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
-    void open_config_file(); ///< Reads the config file b=named in `main_ns::path_buffer`
-    void open_log();         ///< Opens the log file, prints the banner ann all information
+    void open_config_file_reads_path_buffer(); ///< Reads the config file b=named in `main_ns::path_buffer`
+    void open_log();                           ///< Opens the log file, prints the banner ann all information
     void open_main_file();
     void out_gathered_math();
     void out_sep();

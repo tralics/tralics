@@ -605,7 +605,7 @@ auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream
 // This implements the filecontent environment.
 // \begin{filecontents}{name} some lines of code \end{filecontents}
 // spec=0 normal, =1 star, =2 plus
-void Parser::T_filecontents(int spec) {
+void Parser::T_filecontents_reads_path_buffer(int spec) {
     std::string filename;
     {
         flush_buffer();
