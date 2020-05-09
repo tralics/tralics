@@ -29,7 +29,7 @@ namespace main_ns {
 
 namespace io_ns {
     auto find_encoding(const std::string &cl) -> int;
-}
+} // namespace io_ns
 
 namespace tralics_ns {
     auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
@@ -69,7 +69,7 @@ namespace config_ns {
 
 namespace tpage_ns {
     auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
-}
+} // namespace tpage_ns
 
 inline auto operator==(const Buffer &B, String s) -> bool { return B.to_string() == s; }
 

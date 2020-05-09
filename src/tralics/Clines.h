@@ -8,7 +8,7 @@ struct Clines : public std::string { // \todo rename to Line or something
     int  number;                     // the number of the current line
     bool converted;                  // true if line is already converted
 
-    Clines(int n, std::string c = "", bool C = true) : std::string(c), number(n), converted(C) {}
+    Clines(int n, std::string c = "", bool C = true) : std::string(std::move(c)), number(n), converted(C) {}
 
     auto to_string(std::string &C, bool &cv) const -> int {
         C  = *this;

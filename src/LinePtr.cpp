@@ -5,7 +5,7 @@
 
 namespace {
     Buffer local_buf;
-}
+} // namespace
 
 void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
@@ -45,8 +45,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
 // inserts a copy of aux
 void LinePtr::insert(const LinePtr &aux) {
     encoding = 0;
-    for (auto C = aux.begin(); C != aux.end(); ++C) {
-        Clines L    = *C;
+    for (auto L : aux) {
         L.converted = false;
         push_back(L);
     }
