@@ -50,7 +50,7 @@ public:
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
-    [[nodiscard]] auto back() const -> char { return empty() ? 0 : at(size() - 1); }
+    [[nodiscard]] auto back() const -> char { return empty() ? char(0) : at(size() - 1); }
     [[nodiscard]] auto empty() const -> bool { return size() == 0; }
     [[nodiscard]] auto size() const -> size_t { return std::vector<char>::size() - 1; }
     [[nodiscard]] auto substr(size_t k = 0, size_t l = std::string::npos) const -> std::string { return to_string().substr(k, l); }

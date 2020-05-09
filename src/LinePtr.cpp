@@ -350,7 +350,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
     int     b    = 0;
     Buffer &B    = local_buf;
     bool    keep = false;
-    bool    cv   = 0; // unused.
+    bool    cv   = false;
     for (auto C = begin(); C != end(); ++C) {
         B.reset();
         C->to_buffer(B, cv);
@@ -374,7 +374,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
 // Execute all lines that are not in an block via see_main_a
 void LinePtr::parse_conf_toplevel() const {
     int    b  = 0;
-    bool   cv = 0; // unused. We assume that the line is always converted
+    bool   cv = false;
     Buffer B;
     for (const auto &C : *this) {
         B.reset();
