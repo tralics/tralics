@@ -26,7 +26,7 @@ namespace tpage_ns {
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
-    auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
+
 } // namespace tpage_ns
 
 // needed elsewhere, because we have to call add_language_add.
