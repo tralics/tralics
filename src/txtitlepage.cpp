@@ -542,9 +542,6 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
     xflags = X.get_flags();
 }
 
-// True if current line starts with x.
-auto Clines::starts_with(String x) const -> bool { return chars.starts_with(x); }
-
 // This compares a Begin line with the string s.
 // Returns : 0 not a begin; 1 not this type; 2 not this object
 // 3 this type; 4 this object; 5 this is a type

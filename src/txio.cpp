@@ -18,7 +18,6 @@
 #include <utf8.h>
 
 namespace {
-    Buffer                utf8_out;      // Holds utf8 outbuffer
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
     /// Use a file from the pool
@@ -210,17 +209,6 @@ void Buffer::convert_line(int l, size_t wc) {
     the_converter.lines_converted++;
     reset();
     push_back(utf8_out);
-}
-
-// This converts a line of a file
-void Clines::convert_line(size_t wc) {
-    Buffer B;
-    B.push_back(chars);
-    converted = true;
-    the_converter.start_convert(number);
-    if (B.convert_line0(wc)) return;
-    the_converter.lines_converted++;
-    chars = utf8_out.to_string();
 }
 
 // Why is v limited to 16bit chars?

@@ -11,7 +11,7 @@ void LinePtr::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
         Logger::finish_seq();
-        the_log << "++ Input encoding changed to " << wc << " for " << file_name << "\n";
+        spdlog::trace("++ Input encoding changed to {} for {}", wc, file_name);
     }
 }
 
@@ -45,13 +45,10 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
 // inserts a copy of aux
 void LinePtr::insert(const LinePtr &aux) {
     encoding = 0;
-    auto C   = aux.begin();
-    auto E   = aux.end();
-    while (C != E) {
+    for (auto C = aux.begin(); C != aux.end(); ++C) {
         Clines L    = *C;
         L.converted = false;
         push_back(L);
-        ++C;
     }
 }
 
@@ -59,19 +56,19 @@ void LinePtr::insert(const LinePtr &aux) {
 void LinePtr::normalise_final_cr() {
     line_iterator prev{end()};
     for (auto C = begin(); C != end(); ++C) {
-        const std::string &s       = C->chars;
-        auto               n       = s.size();
-        bool               special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
-        std::string        normal  = s;
+        std::string &s       = *C;
+        auto         n       = s.size();
+        bool         special = (n >= 2 && s[n - 2] == '\\' && s[n - 1] == '\n');
+        std::string  normal  = s;
         if (special) normal = std::string(s, 0, n - 2);
         if (prev != end()) {
-            prev->chars = prev->chars + normal;
-            C->chars    = "\n";
+            prev->append(normal);
+            s = "\n";
         }
         if (special) {
             if (prev == end()) {
-                prev        = C;
-                prev->chars = normal;
+                prev                       = C;
+                prev->std::string::operator=(normal);
             }
         } else
             prev = end();
@@ -99,7 +96,7 @@ void LinePtr::insert(String c) { emplace_back(++cur_line, c, true); }
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted
 void LinePtr::insert_spec(int n, std::string c) {
-    if (!empty() && back().chars[0] == '\n' && c[0] == '\n') return;
+    if (!empty() && back()[0] == '\n' && c[0] == '\n') return;
     insert(n, c, true);
 }
 
@@ -215,7 +212,7 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     the_main->doc_class_pos = E;
     while (C != E) {
         B.reset();
-        B.push_back(C->chars);
+        B.push_back(*C);
         Buffer &aux = buf;
         bool    s   = B.find_documentclass(aux);
         if (s) {
@@ -244,9 +241,9 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
     int  N = 0;
     auto C = begin();
     auto E = end();
-    while (C != E) {
+    while (C != E) { // \todo simpler loop
         B.reset();
-        B.push_back(C->chars);
+        B.push_back(*C);
         Buffer &aux = buf;
         bool    s   = B.find_configuration(aux);
         if (s) return aux.to_string();
@@ -263,9 +260,9 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
     int  N = 0;
     auto C = begin();
     auto E = end();
-    while (C != E) {
+    while (C != E) { // \todo simpler loop
         B.reset();
-        B.push_back(C->chars);
+        B.push_back(*C);
         auto k = B.find_doctype();
         if (k != 0) {
             res = B.to_string(k);
@@ -305,7 +302,7 @@ void LinePtr::split_string(std::string x, int l) {
 }
 
 void LinePtr::print(std::ostream &outfile) {
-    for (auto &C : *this) outfile << C.chars;
+    for (auto &C : *this) outfile << C;
 }
 
 // This find a toplevel attributes. Real job done by next function.
@@ -313,7 +310,7 @@ void LinePtr::find_top_atts(Buffer &B) {
     auto C = cbegin();
     auto E = cend();
     while (C != E) { // \todo this should be an STL algorithm
-        B << bf_reset << C->chars;
+        B << bf_reset << *C;
         B.find_top_atts();
         C = skip_env(C, B);
     }
@@ -326,7 +323,7 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
     auto    E = cend();
     while (C != E) {
         init_file_pos = C->number;
-        B << bf_reset << C->chars;
+        B << bf_reset << *C;
         B.find_one_type(res);
         C = skip_env(C, B);
     }
@@ -338,7 +335,7 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
     auto    C = cbegin();
     auto    E = cend();
     while (C != E) {
-        B << bf_reset << C->chars;
+        B << bf_reset << *C;
         String res = B.see_config_kw(s, c);
         if (res != nullptr) return res;
         C = skip_env(C, B);
@@ -443,7 +440,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     if (b != 1) return C;
     auto E = end();
     while (C != E) {
-        B << bf_reset << C->chars;
+        B << bf_reset << *C;
         ++C;
         b += B.see_config_env();
         if (b == 0) return C;
@@ -456,7 +453,7 @@ auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res)
     Buffer &B        = local_buf;
     bool    in_alias = false;
     for (auto C = cbegin(); C != cend();) {
-        B << bf_reset << C->chars;
+        B << bf_reset << *C;
         if (in_alias) {
             if (B.find_alias(SL, res)) return true;
         }
