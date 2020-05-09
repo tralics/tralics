@@ -928,4 +928,4 @@ void Buffer::skip_letter_dig_dot_slash() {
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
-Buffer Txbuf, err_buf, ssa2;
+Buffer err_buf, ssa2;

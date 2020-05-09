@@ -75,9 +75,9 @@ void config_ns::interpret_list(const std::string &a, Buffer &b) {
 
 // Function called when theme_vals is seen in the config file.
 void config_ns::interpret_theme_list(const Buffer &B) {
-    Txbuf << bf_reset << ' ' << B << ' ';
-    Txbuf.lowercase();
-    all_themes = Txbuf.to_string();
+    all_themes = " " + B.to_string() + " ";
+    for (char &c : all_themes)
+        if (is_upper_case(c)) c += 'a' - 'A';
 }
 
 // --------------------------------------------------
@@ -145,11 +145,11 @@ void ParamDataList::keys_to_buffer(Buffer &B) const {
 auto config_ns::find_keys(const std::string &name) -> std::string {
     ParamDataList *X = config_data.find_list(name, false);
     if (X == nullptr) return "";
-    Txbuf.reset();
-    auto n = X->size();
-    for (size_t i = 0; i < n; i++) X->data[i].to_buffer(Txbuf);
-    if (n > 0) Txbuf.remove_last();
-    return Txbuf.to_string();
+    Buffer B;
+    auto   n = X->size();
+    for (size_t i = 0; i < n; i++) X->data[i].to_buffer(B);
+    if (n > 0) B.remove_last();
+    return B.to_string();
 }
 
 // Return the value of the key in a list.
