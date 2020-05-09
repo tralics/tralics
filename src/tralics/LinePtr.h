@@ -33,7 +33,6 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     auto get_next(Buffer &b) -> int;
     auto get_next(std::string &b, bool &cv) -> int;
     void incr_cur_line() { cur_line++; }
-    void insert(int n, const std::string &c, bool cv); // \todo is emplace_back
     void insert(const std::string &c, bool cv);
     void insert(String c);
     void insert_spec(int n, std::string c);

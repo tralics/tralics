@@ -160,7 +160,7 @@ found at http://www.cecill.info.)";
     void mk_empty() {
         LinePtr res;
         res.reset(".tex");
-        res.insert(1, "\\message{File ignored^^J}\\endinput", false);
+        res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
         main_ns::register_file(std::move(res));
     }
 

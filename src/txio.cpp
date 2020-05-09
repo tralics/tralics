@@ -651,7 +651,7 @@ void Parser::T_filecontents(int spec) {
         if (action == 1) outfile << input_buffer;
         if (action == 2) {
             int n = get_cur_line();
-            file_pool.back().insert(n, input_buffer.to_string(), is_encoded);
+            file_pool.back().emplace_back(n, input_buffer.to_string(), is_encoded);
         }
         kill_line();
     }
