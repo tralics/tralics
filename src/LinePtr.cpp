@@ -222,9 +222,9 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 // uses B and the buffer.
 auto LinePtr::find_configuration(Buffer &B) -> std::string {
     int N = 0;
-    for (auto C = begin(); C != end(); ++C) {
+    for (auto & C : *this) {
         B.reset();
-        B.push_back(*C);
+        B.push_back(C);
         if (B.find_configuration(buf)) return buf.to_string();
         if (++N > 100) break;
     }
@@ -235,9 +235,9 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string {
 void LinePtr::find_doctype(Buffer &B, std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int N = 0;
-    for (auto C = begin(); C != end(); ++C) {
+    for (auto & C : *this) {
         B.reset();
-        B.push_back(*C);
+        B.push_back(C);
         auto k = B.find_doctype();
         if (k != 0) {
             res = B.to_string(k);
@@ -314,9 +314,9 @@ void LinePtr::parse_and_extract_clean(String s) {
     Buffer &B    = local_buf;
     bool    keep = true;
     bool    cv   = true;
-    for (auto C = begin(); C != end(); ++C) {
+    for (auto & C : *this) {
         B.reset();
-        int n    = C->to_buffer(B, cv);
+        int n    = C.to_buffer(B, cv);
         int open = B.see_config_env();
         b += open;
         if (b < 0) {
@@ -376,9 +376,9 @@ void LinePtr::parse_conf_toplevel() const {
     int    b  = 0;
     bool   cv = 0; // unused. We assume that the line is always converted
     Buffer B;
-    for (auto C = begin(); C != end(); ++C) {
+    for (const auto & C : *this) {
         B.reset();
-        init_file_pos = C->to_buffer(B, cv);
+        init_file_pos = C.to_buffer(B, cv);
         b += B.see_config_env();
         if (b == 0) tpage_ns::see_main_a(B, ssa2, local_buf);
     }
