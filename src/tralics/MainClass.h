@@ -112,8 +112,8 @@ private:
     auto check_for_arg(int &p, int argc, char **argv) const -> String; ///< This gets foo, unless we are in the case tralics type=foo
     auto check_line_aux(Buffer &) -> bool;
     auto check_section() -> int;
-    auto find_config_file() -> bool;   ///< Puts in main_ns::path_buffer the name of the config file
-    auto find_document_type() -> bool; ///< Massage the output of get_doc_type
+    auto find_config_file() -> std::optional<std::filesystem::path>; ///< Puts in main_ns::path_buffer the name of the config file
+    auto find_document_type() -> bool;                               ///< Massage the output of get_doc_type
     auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
     void after_main_text();

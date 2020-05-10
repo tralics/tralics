@@ -801,33 +801,38 @@ auto MainClass::check_for_tcf(const std::string &s) -> bool {
     return false;
 }
 
-auto MainClass::find_config_file() -> bool {
-    if (noconfig) return false;
+auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
+    if (noconfig) return {};
     Buffer &B = main_ns::path_buffer;
     if (!user_config_file.empty()) {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
-        if (B[0] == '.' || B[0] == '/') return tralics_ns::file_exists(B.to_string());
-        if (!B.ends_with(".tcf")) return static_cast<bool>(main_ns::search_in_confdir(user_config_file + ".tcf"));
-        return static_cast<bool>(main_ns::search_in_confdir(user_config_file));
+        if (B[0] == '.' || B[0] == '/') {
+            if (tralics_ns::file_exists(B.to_string()))
+                return B.to_string();
+            else
+                return {};
+        }
+        if (!B.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
+        return main_ns::search_in_confdir(user_config_file);
     }
     // If interactive, read config only if given as parameter
-    if (interactive_math) return false;
+    if (interactive_math) return {};
     std::string xclass = input_content.find_configuration(B);
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
-        if (tralics_ns::find_in_confdir(xclass, true)) return true;
+        if (tralics_ns::find_in_confdir(xclass, true)) return B.to_string();
     }
     B.reset();
     String rc = ".tralics_rc";
     if (cur_os == st_windows) rc = "tralics_rc";
     B << bf_reset << rc;
-    if (tralics_ns::file_exists(B.to_string())) return true;
+    if (tralics_ns::file_exists(B.to_string())) return B.to_string();
     // Lines commented out were used instead of these two lines
-    if (main_ns::search_in_confdir(rc)) return true;
+    if (auto of = main_ns::search_in_confdir(rc); of) return of;
     B.reset();
-    return true;
+    return "";
 }
 
 void MainClass::open_config_file(const std::string &f) { // \todo filesystem
@@ -955,8 +960,8 @@ void MainClass::find_dtd() {
 void MainClass::read_config_and_other() {
     year             = the_parser.get_ra_year();
     bool have_dclass = !dclass.empty();
-    if (find_config_file())
-        open_config_file(main_ns::path_buffer.to_string());
+    if (auto of = find_config_file(); of)
+        open_config_file(*of);
     else
         spdlog::trace("No configuration file.");
     if (!use_tcf) {
