@@ -1,6 +1,5 @@
 #pragma once
 #include "../txtokenlist.h"
-#include <cstddef>
 #include <vector>
 
 struct rc_mac {

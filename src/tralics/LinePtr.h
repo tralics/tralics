@@ -1,8 +1,5 @@
 #pragma once
-#include "Buffer.h"
 #include "Clines.h"
-#include <list>
-#include <string>
 
 struct LinePtr : public std::list<Clines> { // \todo rename to LineList or something \todo use a vector instead
     int         cur_line{0};                // current line number
