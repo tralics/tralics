@@ -352,7 +352,7 @@ public:
     auto        is_year_string(const std::string &y, bib_from from) -> String;
     void        work();
     void        read(const std::string &src, bib_from ct);
-    auto        read0_reads_path_buffer(Buffer &B, bib_from ct) -> bool;
+    auto        read0(Buffer &B, bib_from ct) -> bool;
     void        read1(const std::string &cur);
     void        read_ra();
     void        err_in_file(String s, bool last) const;
