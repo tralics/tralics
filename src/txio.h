@@ -11,6 +11,7 @@
 
 #include "tralics/Buffer.h"
 #include "tralics/LinePtr.h"
+#include <filesystem>
 #include <fstream>
 
 void readline(char *buffer, size_t screen_size); ///< Read a line from standart input (readline.cpp)
