@@ -369,8 +369,8 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
         err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
                 << "Use one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
-        for (size_t i = 0; i < V.size(); i++)
-            if (V[i].is_used) err_buf << " " << V[i].key;
+        for (auto &i : V)
+            if (i.is_used) err_buf << " " << i.key;
         the_parser.signal_error(the_parser.err_tok, "illegal data");
     }
     if (spec) {
