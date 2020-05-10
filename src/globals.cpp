@@ -28,7 +28,6 @@ void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {
         auto f = conf_path[i - 1] / s;
-        main_ns::path_buffer << bf_reset << f; // \todo remove this
         if (tralics_ns::file_exists(f)) return f;
     }
     return {};

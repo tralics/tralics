@@ -31,7 +31,6 @@ namespace {
     auto find_no_path(const std::string &s)
         -> std::optional<std::filesystem::path> { // \todo is that just file_exists, or is the side-effect necessary?
         if (s.empty()) return {};
-        main_ns::path_buffer << bf_reset << s;
         if (tralics_ns::file_exists(s)) return s;
         return {};
     }

@@ -112,8 +112,8 @@ private:
     auto check_for_arg(int &p, int argc, char **argv) const -> String; ///< This gets foo, unless we are in the case tralics type=foo
     auto check_line_aux(Buffer &) -> bool;
     auto check_section() -> int;
-    auto find_config_file() -> std::optional<std::filesystem::path>; ///< Puts in main_ns::path_buffer the name of the config file
-    auto find_document_type() -> bool;                               ///< Massage the output of get_doc_type
+    auto find_config_file() -> std::optional<std::filesystem::path>;
+    auto find_document_type() -> bool; ///< Massage the output of get_doc_type
     auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
     void after_main_text();
@@ -151,8 +151,8 @@ private:
     void mkcfg();
     void more_boot() const; ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
-    void open_config_file(const std::string &f); ///< Reads the config file b=named in `main_ns::path_buffer`
-    void open_log();                             ///< Opens the log file, prints the banner ann all information
+    void open_config_file(const std::string &f);
+    void open_log(); ///< Opens the log file, prints the banner ann all information
     void open_main_file();
     void out_gathered_math();
     void out_sep();

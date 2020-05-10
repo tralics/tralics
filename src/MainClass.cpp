@@ -356,9 +356,6 @@ void MainClass::check_for_input() {
     s        = *of;
     ult_name = of->replace_extension(".ult");
 
-    main_ns::path_buffer.remove_last(3);
-    main_ns::path_buffer.push_back("ult");
-
     if (!std::filesystem::exists(s)) {
         spdlog::critical("Fatal: Nonexistent input file {}", s);
         exit(1);
@@ -822,7 +819,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
-        if (tralics_ns::find_in_confdir(xclass, true)) return B.to_string();
+        if (auto of = tralics_ns::find_in_confdir(xclass, true); of) return of;
     }
     B.reset();
     String rc = ".tralics_rc";
