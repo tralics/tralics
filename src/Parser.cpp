@@ -1272,21 +1272,20 @@ void Parser::finish_images() {
     auto          wn   = tralics_ns::get_out_dir(name);
     std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
-    check_image1.reset();
-    check_image2.reset();
+    Buffer B1, B2;
     for (auto &the_image : the_images) {
         if (the_image.occ != 0) {
             the_image.check_existence();
-            the_image.check();
+            the_image.check(B1, B2);
             fp << the_image;
         }
     }
     if (the_images.empty())
-        spdlog::trace("There was no image.");
+        spdlog::info("There was no image.");
     else
-        spdlog::trace("There were {} images.", the_images.size());
-    if (!check_image1.empty()) spdlog::trace("Following images have multiple PS source: {}.", check_image1);
-    if (!check_image2.empty()) spdlog::trace("Following images not defined: {}.", check_image2);
+        spdlog::info("There were {} images.", the_images.size());
+    if (!B1.empty()) spdlog::warn("Following images have multiple PS source: {}.", B1);
+    if (!B2.empty()) spdlog::warn("Following images not defined: {}.", B2);
 }
 
 // In verbatim mode, all chars are of catcode 12, with these exceptions.

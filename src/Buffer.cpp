@@ -809,19 +809,19 @@ void Image::check_existence() {
 }
 
 // This checks that there is a unique source for the image
-void Image::check() const {
+void Image::check(Buffer &B1, Buffer &B2) const {
     int a = (flags & 1) != 0 ? 1 : 0;
     int b = (flags & 2) != 0 ? 1 : 0;
     int c = (flags & 4) != 0 ? 1 : 0;
     int d = (flags & 8) != 0 ? 1 : 0;
     int e = a + b + c + d;
     if (e > 1) {
-        if (!check_image1.empty()) check_image1 << ", ";
-        check_image1 << name;
+        if (!B1.empty()) B1 << ", ";
+        B1 << name;
     }
     if (flags == 0) {
-        if (!check_image2.empty()) check_image2 << ", ";
-        check_image2 << name;
+        if (!B2.empty()) B2 << ", ";
+        B2 << name;
     }
 }
 

@@ -134,11 +134,8 @@ auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDat
 
 inline void ParamDataSlot::to_buffer(Buffer &B) const { B << key << "=" << value << ","; }
 
-inline void ParamDataSlot::key_to_buffer(Buffer &B) const { B << " " << key; }
-
 void ParamDataList::keys_to_buffer(Buffer &B) const {
-    auto n = size();
-    for (size_t i = 0; i < n; i++) data[i].key_to_buffer(B);
+    for (const auto &i : data) B << " " << i.key;
 }
 
 // Converts the whole data struture as foo1=bar1,foo2=bar2,
@@ -372,9 +369,8 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
         err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
                 << "Use one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
-        auto                        n = V.size();
-        for (size_t i = 0; i < n; i++)
-            if (V[i].is_used) V[i].key_to_buffer(err_buf);
+        for (size_t i = 0; i < V.size(); i++)
+            if (V[i].is_used) err_buf << " " << V[i].key;
         the_parser.signal_error(the_parser.err_tok, "illegal data");
     }
     if (spec) {
