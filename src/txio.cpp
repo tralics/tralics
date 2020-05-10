@@ -679,11 +679,8 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
             return {};
     }
     for (const auto &p : input_path) {
-        if (p.empty())
-            main_ns::path_buffer << bf_reset << s;
-        else
-            main_ns::path_buffer << bf_reset << p << bf_optslash << s;
-        if (file_exists(main_ns::path_buffer.to_string())) return main_ns::path_buffer.to_string();
+        auto ss = p.empty() ? std::filesystem::path(s) : p / s;
+        if (file_exists(ss)) return ss;
     }
     return {};
 }

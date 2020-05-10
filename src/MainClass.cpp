@@ -214,15 +214,14 @@ found at http://www.cecill.info.)";
 
     /// Split a `:`-separated path list into paths
     void new_in_dir(String s) {
-        Buffer &b = main_ns::path_buffer;
-        b.reset();
+        std::string b;
         for (int i = 0;; i++) {
             char c = s[i];
             if (c == 0 || c == ':') {
-                if (b.back() == '/') b.remove_last();
-                if (b.size() == 1 && b[0] == '.') b.remove_last();
-                input_path.push_back(b.to_string());
-                b.reset();
+                if (b.back() == '/') b.pop_back();
+                if (b.size() == 1 && b[0] == '.') b.pop_back();
+                input_path.push_back(b);
+                b.clear();
                 if (c == 0) return;
             } else
                 b.push_back(c);
@@ -407,7 +406,11 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::trace("Left quote is '{}', right quote is '{}'", codepoint(leftquote_val), codepoint(rightquote_val));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
-    if (input_path.size() > 1) spdlog::trace("Input path: ({})", fmt::join(input_path, ","));
+    if (input_path.size() > 1) {
+        std::vector<std::string> tmp;
+        for (const auto &s : input_path) tmp.push_back(s);
+        spdlog::trace("Input path: ({})", fmt::join(tmp, ","));
+    }
 
     if (only_input_data)
         spdlog::info("Starting translation of command line argument");
@@ -800,7 +803,7 @@ auto MainClass::check_for_tcf(const std::string &s) -> bool {
 
 auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (noconfig) return {};
-    Buffer &B = main_ns::path_buffer;
+    Buffer B;
     if (!user_config_file.empty()) {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
