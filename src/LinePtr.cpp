@@ -225,7 +225,7 @@ auto LinePtr::find_configuration(Buffer &B) -> std::string { // \todo why the bu
     for (auto &C : *this) {
         B.reset();
         B.push_back(C);
-        if (B.find_configuration(buf)) return buf.to_string();
+        if (auto os = B.find_configuration(); os) return *os;
         if (++N > 100) break;
     }
     return "";

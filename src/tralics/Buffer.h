@@ -25,29 +25,29 @@ public:
     Buffer(const std::string &s) : Buffer() { push_back(s); }
 
     // Standard const methods
-    [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
-    [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
-    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
-    [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
-    [[nodiscard]] auto find_configuration(Buffer &aux) const -> bool;         ///< Extract config value \todo std::optional<std::string>
-    [[nodiscard]] auto find_doctype() const -> size_t;                        ///< Figure out the doctype of the Buffer contents
-    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
-    [[nodiscard]] auto head() const -> char { return at(ptrs.b); }            ///< The character under the read pointer
-    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;             ///< For typography
-    [[nodiscard]] auto int_val() const -> std::optional<size_t>;              ///< Try to parse the contents as an integer
-    [[nodiscard]] auto is_all_ascii() const -> bool;                          ///< Is everything ASCII and not CRLF?
-    [[nodiscard]] auto is_and(size_t k) const -> bool;                        ///< Is the word at `k` an `and`?
-    [[nodiscard]] auto is_good_ascii() const -> bool;                         ///< Is there no control or CRLF? (>128 ok, for UTF8)
-    [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                     ///< It the char at `j` a space?
-    [[nodiscard]] auto is_special_end() const -> bool;                        ///< Is the current char `\\n`, `#` or `%`?
-    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;           ///< Locate the last `/`, if any
-    [[nodiscard]] auto next_non_space(size_t j) const -> size_t;              ///< Locate next non-space char after `j`
-    [[nodiscard]] auto see_config_env() const -> int;                         ///< Do we start with `Begin` or `End`?
-    [[nodiscard]] auto single_char() const -> char;                           ///< If only one (non-space) char, return it
-    [[nodiscard]] auto single_character() const -> codepoint;                 ///< If only one (UTF8) character, return it
-    [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
-    [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
-    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
+    [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }       ///< Is the read pointer at the end?
+    [[nodiscard]] auto contains(const std::string &s) const -> bool;             ///< Does the buffer has s as a substring?
+    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string;    ///< Convert to latin 1 or ASCII
+    [[nodiscard]] auto convert_to_out_encoding() const -> std::string;           ///< Make a fresh copy with output encoding
+    [[nodiscard]] auto find_configuration() const -> std::optional<std::string>; ///< Extract config value \todo std::optional<std::string>
+    [[nodiscard]] auto find_doctype() const -> size_t;                           ///< Figure out the doctype of the Buffer contents
+    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                   ///< Hash code of the string in the buffer
+    [[nodiscard]] auto head() const -> char { return at(ptrs.b); }               ///< The character under the read pointer
+    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;                ///< For typography
+    [[nodiscard]] auto int_val() const -> std::optional<size_t>;                 ///< Try to parse the contents as an integer
+    [[nodiscard]] auto is_all_ascii() const -> bool;                             ///< Is everything ASCII and not CRLF?
+    [[nodiscard]] auto is_and(size_t k) const -> bool;                           ///< Is the word at `k` an `and`?
+    [[nodiscard]] auto is_good_ascii() const -> bool;                            ///< Is there no control or CRLF? (>128 ok, for UTF8)
+    [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                        ///< It the char at `j` a space?
+    [[nodiscard]] auto is_special_end() const -> bool;                           ///< Is the current char `\\n`, `#` or `%`?
+    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;              ///< Locate the last `/`, if any
+    [[nodiscard]] auto next_non_space(size_t j) const -> size_t;                 ///< Locate next non-space char after `j`
+    [[nodiscard]] auto see_config_env() const -> int;                            ///< Do we start with `Begin` or `End`?
+    [[nodiscard]] auto single_char() const -> char;                              ///< If only one (non-space) char, return it
+    [[nodiscard]] auto single_character() const -> codepoint;                    ///< If only one (UTF8) character, return it
+    [[nodiscard]] auto special_exponent() const -> String;                       ///< Normalize contents as exponent name (th,nd...)
+    [[nodiscard]] auto substring() const -> std::string;                         ///< Get the slice [ptrs.a,ptrs.b)
+    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;             ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
     [[nodiscard]] auto back() const -> char { return empty() ? char(0) : at(size() - 1); }
