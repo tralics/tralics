@@ -86,12 +86,12 @@ public:
 
     // Those are not const and have a return value, mostly they leave some
     // crucial info in ptrs.b and ptrs.a or just reset. \todo refactor all that
-    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
-    [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
-    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptrs.b after `}`)
-    [[nodiscard]] auto contains_env(const std::string &env) -> bool;        ///< Do we contain `\end{env}`?
-    [[nodiscard]] auto convert_line0(size_t wc) -> bool;                    ///< Convert to UTF8 into utf8_out
-    [[nodiscard]] auto fetch_spec_arg() -> bool;                            ///< Try to read a braced argument
+    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string;      ///< Weird RA stuff \todo remove
+    [[nodiscard]] auto backup_space() -> bool;                                   ///< Remove trailing spaces
+    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;            ///< Do we contain s with braces? (sets ptrs.b after `}`)
+    [[nodiscard]] auto contains_env(const std::string &env) -> bool;             ///< Do we contain `\end{env}`?
+    [[nodiscard]] auto convert_line0(size_t wc) -> std::pair<bool, std::string>; ///< Convert to UTF8
+    [[nodiscard]] auto fetch_spec_arg() -> bool;                                 ///< Try to read a braced argument
     [[nodiscard]] auto find_alias(const vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
     [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                           ///< True iff we do not contain 'and'
     [[nodiscard]] auto find_documentclass(Buffer &aux) -> bool; ///< Extract the document class \todo optional tring
@@ -223,4 +223,4 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-inline Buffer err_buf, check_image1, check_image2, buf, utf8_out;
+inline Buffer err_buf, check_image1, check_image2, buf;

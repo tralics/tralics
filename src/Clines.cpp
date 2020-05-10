@@ -7,7 +7,8 @@ void Clines::convert_line(size_t wc) {
     B.push_back(*this);
     converted = true;
     the_converter.start_convert(number);
-    if (B.convert_line0(wc)) return;
+    auto [o, s] = B.convert_line0(wc);
+    if (o) return;
     the_converter.lines_converted++;
-    std::string::operator=(utf8_out.to_string());
+    std::string::operator=(s);
 }

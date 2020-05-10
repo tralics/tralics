@@ -179,9 +179,8 @@ auto Buffer::single_character() const -> codepoint {
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
-// Otherwise, the result is in utf8_out.
-auto Buffer::convert_line0(size_t wc) -> bool {
-    utf8_out.reset();
+auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
+    Buffer utf8_out;
     ptrs.b = 0;
     codepoint c;
     for (;;) {
@@ -195,20 +194,21 @@ auto Buffer::convert_line0(size_t wc) -> bool {
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
         }
-        if (c.non_null()) utf8_out.push_back(c);
+        if (c.non_null()) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
         if (at_eol()) break;
     }
-    return the_converter.line_is_ascii;
+    return {the_converter.line_is_ascii, utf8_out.to_string()};
 }
 
 // This converts a line in UTF8 format
 // Result of conversion is pushed back in the buffer
 void Buffer::convert_line(int l, size_t wc) {
     the_converter.start_convert(l);
-    if (convert_line0(wc)) return;
+    auto [o, s] = convert_line0(wc);
+    if (o) return;
     the_converter.lines_converted++;
     reset();
-    push_back(utf8_out);
+    push_back(s);
 }
 
 // Why is v limited to 16bit chars?
@@ -554,7 +554,7 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     auto old_ptr               = ptrs.b;
     ptrs.b                     = 0;
     the_converter.global_error = false;
-    utf8_out.reset();
+    Buffer utf8_out;
     for (;;) {
         codepoint c = next_utf8_char();
         if (c == 0) {
