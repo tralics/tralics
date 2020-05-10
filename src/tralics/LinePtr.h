@@ -9,7 +9,6 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
 
     [[nodiscard]] auto dump_name() const -> std::string;
 
-    void add(int n, Buffer &b, bool cv);
     void add_buffer(Buffer &B, line_iterator C);
     void after_open();
     void before_close(bool sigforce);

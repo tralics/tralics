@@ -96,9 +96,6 @@ void LinePtr::insert_spec(int n, std::string c) {
     emplace_back(n, c, true);
 }
 
-// Inserts the buffer, with a newline at the end.
-void LinePtr::add(int n, Buffer &b, bool cv) { emplace_back(n, b.to_string() + "\n", cv); }
-
 // insert a file at the start
 void LinePtr::splice_first(LinePtr &X) { splice(begin(), X); }
 

@@ -424,7 +424,7 @@ void MainClass::open_log() { // \todo spdlog etc
 
 void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false") || (s == "no"); }
 
-void MainClass::add_to_from_config(int n, Buffer &b) { from_config.add(n, b, true); }
+void MainClass::add_to_from_config(int n, Buffer &b) { from_config.emplace_back(n, b.to_string() + "\n", true); }
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
