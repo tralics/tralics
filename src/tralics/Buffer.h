@@ -121,7 +121,6 @@ public:
     void no_newline();
     void no_double_dot();
     void normalise_for_bibtex(String s);
-    void optslash();
     void out_four_hats(codepoint ch);
     void out_log(codepoint ch, output_encoding_type T);
     auto pack_or_class(Buffer &aux) -> int;
@@ -220,7 +219,6 @@ inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
 }
 
 inline void bf_reset(Buffer &B) { B.reset(); }
-inline void bf_optslash(Buffer &B) { B.optslash(); }
 inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }

@@ -872,17 +872,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-// Adds a slash at the end unless there is already one.
-void Buffer::optslash() {
-    if (empty()) return;
-    if (size() == 1 && at(0) == '/')
-        reset();
-    else if (back() == '/')
-        return;
-    else
-        push_back('/');
-}
-
 // returns location of last slash in the buffer
 auto Buffer::last_slash() const -> std::optional<size_t> {
     for (size_t i = size(); i > 0; --i)
