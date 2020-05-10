@@ -337,7 +337,7 @@ void MainClass::get_os() {
     }
 }
 
-void MainClass::check_for_input_reads_path_buffer() {
+void MainClass::check_for_input() {
     if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
 
     std::string s = hack_for_input(infile);
@@ -348,14 +348,17 @@ void MainClass::check_for_input_reads_path_buffer() {
         open_log();
         return;
     }
-    if (!tralics_ns::find_in_path(s)) {
+    auto of = tralics_ns::find_in_path(s);
+    if (!of) {
         spdlog::critical("Fatal error: Cannot open input file {}", infile);
         exit(1);
     }
-    s = main_ns::path_buffer.to_string();
+    s        = *of;
+    ult_name = of->replace_extension(".ult");
+
     main_ns::path_buffer.remove_last(3);
     main_ns::path_buffer.push_back("ult");
-    ult_name = main_ns::path_buffer.to_string();
+
     if (!std::filesystem::exists(s)) {
         spdlog::critical("Fatal: Nonexistent input file {}", s);
         exit(1);
@@ -1092,11 +1095,11 @@ void MainClass::more_boot() const {
 
 void MainClass::run(int argc, char **argv) {
     get_os();
-    the_parser.boot();                   // create the hash table and all that
-    parse_args(argc, argv);              // look at arguments
-    if (!only_input_data) banner();      // print banner
-    more_boot();                         // finish bootstrap
-    check_for_input_reads_path_buffer(); // open the input file
+    the_parser.boot();              // create the hash table and all that
+    parse_args(argc, argv);         // look at arguments
+    if (!only_input_data) banner(); // print banner
+    more_boot();                    // finish bootstrap
+    check_for_input();              // open the input file
     dclass = input_content.find_documentclass(b_after);
     input_content.find_doctype(b_after, opt_doctype);
     read_config_and_other();

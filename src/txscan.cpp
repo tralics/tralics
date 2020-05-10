@@ -144,12 +144,12 @@ auto Parser::is_input_open() -> bool {
 
 // Open a file for \openin. if action is false, the file does not exist
 // No on-the fly conversion here
-void FileForInput::open_reads_path_buffer(const std::string &file, bool action) {
+void FileForInput::open(const std::string &file, const std::filesystem::path &fn, bool action) {
     if (!action) {
         Logger::finish_seq();
         the_log << "++ Cannot open file " << file << " for input\n";
     } else {
-        tralics_ns::read_a_file(lines, main_ns::path_buffer.to_string(), 1);
+        tralics_ns::read_a_file(lines, fn, 1);
         is_open = true;
         cur_line.reset();
         line_no = 0;
@@ -376,19 +376,19 @@ void Parser::T_input(int q) {
     if (seen_plus)
         res = find_no_path(file);
     else {
-        res = tralics_ns::find_in_path(file);
+        res = static_cast<bool>(tralics_ns::find_in_path(file));
         if (!res) {
             Buffer &B = local_buf;
             B << bf_reset << file;
             if (!B.ends_with(".tex")) {
                 B.push_back(".tex");
                 std::string F = B.to_string();
-                res           = tralics_ns::find_in_path(F);
+                res           = static_cast<bool>(tralics_ns::find_in_path(F));
             }
         }
     }
     if (q == openin_code) {
-        tex_input_files[stream].open_reads_path_buffer(file, res);
+        tex_input_files[stream].open(file, main_ns::path_buffer.to_string(), res);
         return;
     }
     if (q == ifexists_code) {

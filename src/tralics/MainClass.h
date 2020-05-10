@@ -124,7 +124,7 @@ private:
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
-    void check_for_input_reads_path_buffer(); ///< Reads the input file named in `infile`
+    void check_for_input(); ///< Reads the input file named in `infile`
     void check_kw(int, Buffer &);
     void check_line(Buffer &);
     void check_mod();
