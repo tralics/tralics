@@ -561,7 +561,7 @@ void Parser::T_inputclass() {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
         auto k = cur_file_pos;
-        open_tex_file_reads_path_buffer(true);
+        open_tex_file(main_ns::path_buffer.to_string(), true);
         if (k > 0) k = -k;
         set_cur_file_pos(k);
     }
@@ -652,7 +652,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
         return;
     }
     cur->date = "0000/00/00";
-    open_tex_file_reads_path_buffer(true);
+    open_tex_file(main_ns::path_buffer.to_string(), true);
     set_cur_file_pos(to_signed(p));
     Buffer &b = local_buf;
     b << bf_reset << name;

@@ -28,10 +28,12 @@ namespace {
     Buffer                                      local_buf;          // a local buffer
     bool                                        require_eof = true; // eof is an outer token
 
-    auto find_no_path(const std::string &s) -> bool { // \todo is that just file_exists, or is the side-effect necessary?
-        if (s.empty()) return false;
+    auto find_no_path(const std::string &s)
+        -> std::optional<std::filesystem::path> { // \todo is that just file_exists, or is the side-effect necessary?
+        if (s.empty()) return {};
         main_ns::path_buffer << bf_reset << s;
-        return tralics_ns::file_exists(s);
+        if (tralics_ns::file_exists(s)) return s;
+        return {};
     }
 
     void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
@@ -369,56 +371,55 @@ void Parser::T_input(int q) {
         file       = sT_arg_nopar();
     }
     if (q == readxml_code) {
-        the_xmlA = read_xml_reads_path_buffer(file);
+        the_xmlA = read_xml(file);
         return;
     }
-    bool res = false;
+    std::optional<std::filesystem::path> res;
     if (seen_plus)
         res = find_no_path(file);
     else {
-        res = static_cast<bool>(tralics_ns::find_in_path(file));
+        res = tralics_ns::find_in_path(file);
         if (!res) {
             Buffer &B = local_buf;
             B << bf_reset << file;
             if (!B.ends_with(".tex")) {
                 B.push_back(".tex");
                 std::string F = B.to_string();
-                res           = static_cast<bool>(tralics_ns::find_in_path(F));
+                res           = tralics_ns::find_in_path(F);
             }
         }
     }
     if (q == openin_code) {
-        tex_input_files[stream].open(file, main_ns::path_buffer.to_string(), res);
+        tex_input_files[stream].open(file, *res, static_cast<bool>(res));
         return;
     }
     if (q == ifexists_code) {
-        one_of_two(res);
+        one_of_two(static_cast<bool>(res));
         return;
     }
     if (q == inputifexists_code) {
         TokenList A = read_arg();
         TokenList B = read_arg();
-        if (res) open_tex_file_reads_path_buffer(seen_star);
+        if (res) open_tex_file(*res, seen_star);
         if (A.empty() && B.empty()) return; // optimise
         if (tracing_commands()) {
             Logger::finish_seq();
             the_log << "++ " << (res ? "iftrue" : "iffalse") << "{" << A << "}{" << B << "}\n";
         }
-        one_of_two(A, B, res);
+        one_of_two(A, B, static_cast<bool>(res));
         return;
     }
     if (!res) {
         parse_error(T, "Cannot open input file ", file, "cannot open input");
         return;
     }
-    open_tex_file_reads_path_buffer(seen_star);
+    open_tex_file(*res, seen_star);
 }
 
 // On-the-fly conversion allowed
-void Parser::open_tex_file_reads_path_buffer(bool seen_star) {
-    std::string file = main_ns::path_buffer.to_string();
-    push_input_stack(file, seen_star, true);
-    tralics_ns::read_a_file(lines, file, 2);
+void Parser::open_tex_file(const std::string &f, bool seen_star) {
+    push_input_stack(f, seen_star, true);
+    tralics_ns::read_a_file(lines, f, 2);
     lines.after_open();
     every_eof = true;
 }

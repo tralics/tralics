@@ -572,7 +572,7 @@ private:
     void        old_font();
     void        one_of_two(TokenList &A, TokenList &B, bool which);
     void        one_of_two(bool which);
-    void        open_tex_file_reads_path_buffer(bool seen_star);
+    void        open_tex_file(const std::string &f, bool seen_star);
     void        opt_to_mandatory();
     auto        optional_enumerate(TokenList &L, String ctr) -> bool;
     void        out_warning(Buffer &B, msg_type what);

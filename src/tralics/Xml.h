@@ -99,6 +99,6 @@ struct XmlAndType {
     math_types type;
 };
 
-auto read_xml_reads_path_buffer(const std::string &s) -> Xml *;
+auto read_xml(const std::string &s) -> Xml *;
 
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;
