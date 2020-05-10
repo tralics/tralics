@@ -4,7 +4,8 @@
 class Stack;
 
 class MainClass {
-    std::string infile;       ///< file argument given to the program
+    std::filesystem::path infile; ///< file argument given to the program
+
     std::string no_year;      // is miaou
     std::string raclass;      // is ra2003
     std::string dclass;       // documentclass of the file
