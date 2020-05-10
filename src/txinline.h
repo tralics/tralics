@@ -68,7 +68,7 @@ namespace config_ns {
 } // namespace config_ns
 
 namespace tpage_ns {
-    auto see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool;
+    auto see_main_a(Buffer &in, Buffer &val) -> bool;
 } // namespace tpage_ns
 
 inline auto operator==(const Buffer &B, String s) -> bool { return B.to_string() == s; }

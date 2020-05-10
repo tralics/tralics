@@ -380,7 +380,7 @@ void LinePtr::parse_conf_toplevel() const {
         B.reset();
         init_file_pos = C.to_buffer(B, cv);
         b += B.see_config_env();
-        if (b == 0) tpage_ns::see_main_a(B, ssa2, local_buf);
+        if (b == 0) tpage_ns::see_main_a(B, local_buf);
     }
 }
 

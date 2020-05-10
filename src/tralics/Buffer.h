@@ -223,5 +223,4 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-extern Buffer err_buf, ssa2;
-inline Buffer check_image1, check_image2, buf, utf8_out;
+inline Buffer err_buf, check_image1, check_image2, buf, utf8_out;

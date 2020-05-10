@@ -736,14 +736,14 @@ void Buffer::find_one_type(std::vector<std::string> &S) {
 
 // This is called for all lines, outside groups.
 // Either calls the_parser.shell_a.assign
-auto tpage_ns::see_main_a(Buffer &in, Buffer &key, Buffer &val) -> bool {
-    key.reset();
+auto tpage_ns::see_main_a(Buffer &in, Buffer &val) -> bool {
+    Buffer B;
     val.reset();
-    int k = tpage_ns::see_an_assignment(in, key, val);
+    int k = tpage_ns::see_an_assignment(in, B, val);
     if (k == 1) {
-        bool res = assign(key.to_string(), val.to_string());
+        bool res = assign(B.to_string(), val.to_string());
         if (res) {
-            if (!ssa2.empty()) the_log << key << "=" << val.convert_to_log_encoding() << "\n";
+            if (!B.empty()) the_log << B << "=" << val.convert_to_log_encoding() << "\n";
             return true;
         }
     }
