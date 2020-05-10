@@ -15,7 +15,7 @@ conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/
 set(CONAN_SYSTEM_INCLUDES ON)
 conan_cmake_run(REQUIRES
                 fmt/6.2.0
-                ms-gsl/2.1.0
+                ms-gsl/3.0.1
                 spdlog/1.5.0
                 utfcpp/3.1
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
