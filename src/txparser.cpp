@@ -15,7 +15,7 @@
 #include <fmt/format.h>
 
 namespace {
-    struct SpecialHash : public robin_hood::unordered_map<std::string, std::string> {
+    struct SpecialHash : public std::unordered_map<std::string, std::string> {
         SpecialHash(const std::string &str) {
             for (const auto &s : split_commas(str)) {
                 auto [a, b] = split_assign(s);

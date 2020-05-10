@@ -1,7 +1,5 @@
 #pragma once
 #include "Buffer.h"
-#include <list>
-#include <string>
 
 // Whenever Tralics reads a file, it puts the result in a structure like this
 struct Clines : public std::string { // \todo rename to Line or something
