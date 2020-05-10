@@ -556,7 +556,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
 
 void Parser::T_inputclass() {
     std::string name = sE_arg_nopar();
-    bool        res  = tralics_ns::find_in_confdir(name + ".clt", true);
+    auto        res  = static_cast<bool>(tralics_ns::find_in_confdir(name + ".clt", true));
     if (!res) {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
@@ -633,12 +633,12 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     cur->add_options(cur_opt_list);
     cur->req_date                      = date;
     String T                           = type ? "Class" : "Package";
-    bool   res                         = tralics_ns::find_in_confdir(name + (type ? ".clt"s : ".plt"s), true);
+    auto   res                         = static_cast<bool>(tralics_ns::find_in_confdir(name + (type ? ".clt"s : ".plt"s), true));
     the_class_data.using_default_class = false;
     if (!res) {
         std::string D = the_main->default_class;
         if (type && !D.empty()) {
-            res = tralics_ns::find_in_confdir(D + ".clt", true);
+            res = static_cast<bool>(tralics_ns::find_in_confdir(D + ".clt", true));
             if (res) {
                 log_and_tty << "Using default class " << D << "\n";
                 the_class_data.using_default_class = true;

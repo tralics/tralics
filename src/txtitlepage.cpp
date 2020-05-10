@@ -796,7 +796,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         bool        ok = a == res;
         if (ok) {
             the_log << "Potential type " << res << " aliased to " << pot_res << "\n";
-            if (!local_potres) local_potres = the_main->check_for_tcf_reads_path_buffer(pot_res);
+            if (!local_potres) local_potres = the_main->check_for_tcf(pot_res);
             if (local_potres) {
                 res = pot_res;
                 return true;

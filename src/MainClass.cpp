@@ -791,10 +791,10 @@ void MainClass::end_with_help(int v) const {
     exit(v);
 }
 
-auto MainClass::check_for_tcf_reads_path_buffer(const std::string &s) -> bool {
+auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
-    if (tralics_ns::find_in_confdir(tmp, true)) {
-        tcf_file = main_ns::path_buffer.to_string(); // \todo without using path_buffer?
+    if (auto of = tralics_ns::find_in_confdir(tmp, true); of) {
+        tcf_file = *of;
         use_tcf  = true;
         return true;
     }
@@ -888,7 +888,7 @@ void MainClass::get_doc_type() {
 
 auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (dtype.empty()) return false;
-    if (!check_for_tcf_reads_path_buffer(dtype)) {
+    if (!check_for_tcf(dtype)) {
         if (vb) the_log << "Trying type " << dtype << "\n";
         if (tralics_ns::exists(all_config_types, dtype)) return true;
         if (!config_file.find_aliases(all_config_types, dtype)) return false;

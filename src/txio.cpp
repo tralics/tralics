@@ -660,14 +660,14 @@ void Parser::T_filecontents_reads_path_buffer(int spec) {
     pop_level(bt_env);
 }
 
-auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> bool {
+auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> std::optional<std::filesystem::path> {
     main_ns::path_buffer << bf_reset << s;
     pool_position = search_in_pool(s);
-    if (pool_position) return true;
-    if (file_exists(s)) return true;
-    if (!retry) return false;
-    if (s.empty() || s[0] == '.' || s[0] == '/') return false;
-    return static_cast<bool>(main_ns::search_in_confdir(s));
+    if (pool_position) return s;
+    if (file_exists(s)) return s;
+    if (!retry) return {};
+    if (s.empty() || s[0] == '.' || s[0] == '/') return {};
+    return main_ns::search_in_confdir(s);
 }
 
 auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {

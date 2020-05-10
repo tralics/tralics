@@ -88,8 +88,7 @@ public:
 
     MainClass(); ///< This just adds `"../confdir"` to `conf_path` \todo should disappear
 
-    auto check_for_tcf_reads_path_buffer(const std::string &s)
-        -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
+    auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, Buffer &b); ///< Add contents to `from_config`
     void bad_year();                           ///< If the year is wrong, fail \todo this seems to be RA specific
