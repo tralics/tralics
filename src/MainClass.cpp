@@ -830,17 +830,17 @@ auto MainClass::find_config_file() -> bool {
     return true;
 }
 
-void MainClass::open_config_file_reads_path_buffer() { // \todo filesystem
-    Buffer &B = main_ns::path_buffer;
-    if (B.empty()) {
+void MainClass::open_config_file(const std::string &f) { // \todo filesystem
+    Buffer B(f);                                         // \todo without Buffer
+    if (f.empty()) {
         config_file.insert("#comment", true);
         spdlog::warn("Dummy default configuration file used.");
         return;
     }
-    tralics_ns::read_a_file(config_file, B.to_string(), 0);
+    tralics_ns::read_a_file(config_file, f, 0);
     config_file.normalise_final_cr();
     spdlog::trace("Read configuration file {}", B);
-    if (!B.ends_with(".tcf")) return;
+    if (!f.ends_with(".tcf")) return;
     // special case where the config file is a tcf file
     use_tcf = true;
     B.remove_last(4);
@@ -956,7 +956,7 @@ void MainClass::read_config_and_other() {
     year             = the_parser.get_ra_year();
     bool have_dclass = !dclass.empty();
     if (find_config_file())
-        open_config_file_reads_path_buffer();
+        open_config_file(main_ns::path_buffer.to_string());
     else
         spdlog::trace("No configuration file.");
     if (!use_tcf) {

@@ -151,8 +151,8 @@ private:
     void mkcfg();
     void more_boot() const; ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
-    void open_config_file_reads_path_buffer(); ///< Reads the config file b=named in `main_ns::path_buffer`
-    void open_log();                           ///< Opens the log file, prints the banner ann all information
+    void open_config_file(const std::string &f); ///< Reads the config file b=named in `main_ns::path_buffer`
+    void open_log();                             ///< Opens the log file, prints the banner ann all information
     void open_main_file();
     void out_gathered_math();
     void out_sep();
