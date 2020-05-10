@@ -220,7 +220,7 @@ found at http://www.cecill.info.)";
             if (c == 0 || c == ':') {
                 if (b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
-                input_path.push_back(b);
+                input_path.emplace_back(b);
                 b.clear();
                 if (c == 0) return;
             } else
@@ -408,6 +408,8 @@ void MainClass::open_log() { // \todo spdlog etc
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (input_path.size() > 1) {
         std::vector<std::string> tmp;
+        tmp.reserve(input_path.size());
+
         for (const auto &s : input_path) tmp.push_back(s);
         spdlog::trace("Input path: ({})", fmt::join(tmp, ","));
     }
@@ -808,10 +810,8 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
         B << bf_reset << user_config_file;
         the_log << "Trying config file from user specs: " << B << "\n";
         if (B[0] == '.' || B[0] == '/') {
-            if (tralics_ns::file_exists(B.to_string()))
-                return B.to_string();
-            else
-                return {};
+            if (tralics_ns::file_exists(B.to_string())) return B.to_string();
+            return {};
         }
         if (!B.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
         return main_ns::search_in_confdir(user_config_file);

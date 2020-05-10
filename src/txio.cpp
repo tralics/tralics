@@ -673,10 +673,8 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
     pool_position = search_in_pool(s);
     if (pool_position) return s;
     if (s[0] == '.' || s[0] == '/') {
-        if (file_exists(s))
-            return s;
-        else
-            return {};
+        if (file_exists(s)) return s;
+        return {};
     }
     for (const auto &p : input_path) {
         auto ss = p.empty() ? std::filesystem::path(s) : p / s;
