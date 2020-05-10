@@ -811,7 +811,7 @@ private:
     void        T_figure_table_end(bool is_fig);
     void        T_fancy(String s, TokenList &L);
     void        T_fancy();
-    void        T_filecontents_reads_path_buffer(int spec);
+    void        T_filecontents(int spec);
     void        T_fbox(subtypes cc);
     void        T_fbox_dash_box();
     void        T_fbox_rotate_box();

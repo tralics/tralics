@@ -605,7 +605,7 @@ auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream
 // This implements the filecontent environment.
 // \begin{filecontents}{name} some lines of code \end{filecontents}
 // spec=0 normal, =1 star, =2 plus
-void Parser::T_filecontents_reads_path_buffer(int spec) {
+void Parser::T_filecontents(int spec) {
     std::string filename;
     {
         flush_buffer();
@@ -621,10 +621,9 @@ void Parser::T_filecontents_reads_path_buffer(int spec) {
         res.reset(filename);
         main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
-    } else if (tralics_ns::find_in_path(filename)) {
+    } else if (auto of = tralics_ns::find_in_path(filename); of) {
         Logger::finish_seq();
-        log_and_tty << "File `" << main_ns::path_buffer << "' already exists on the system.\n"
-                    << "Not generating it from this source\n";
+        spdlog::warn("File {} already exists, not generating from source.", *of);
     } else {
         auto fn = tralics_ns::get_out_dir(filename);
         outfile = tralics_ns::open_file(fn, false);

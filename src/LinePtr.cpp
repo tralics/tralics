@@ -220,7 +220,7 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 
 // This finds a line with documentclass in it
 // uses B and the buffer.
-auto LinePtr::find_configuration(Buffer &B) -> std::string {
+auto LinePtr::find_configuration(Buffer &B) -> std::string { // \todo why the buffer?
     int N = 0;
     for (auto &C : *this) {
         B.reset();
