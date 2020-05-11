@@ -796,8 +796,7 @@ void MainClass::end_with_help(int v) const {
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
     if (auto of = tralics_ns::find_in_confdir(tmp, true); of) {
-        tcf_file = *of;
-        use_tcf  = true;
+        tcf_file = of;
         return true;
     }
     return false;
@@ -847,7 +846,7 @@ void MainClass::open_config_file(const std::string &f) { // \todo filesystem
     spdlog::trace("Read configuration file {}", B);
     if (!f.ends_with(".tcf")) return;
     // special case where the config file is a tcf file
-    use_tcf = true;
+    tcf_file = f;
     B.remove_last(4);
     auto n  = B.size();
     auto k  = B.last_slash();
@@ -898,10 +897,10 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
         if (tralics_ns::exists(all_config_types, dtype)) return true;
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
-    if (use_tcf) {
-        tralics_ns::read_a_file(config_file, tcf_file, 0);
+    if (tcf_file) {
+        tralics_ns::read_a_file(config_file, *tcf_file, 0);
         config_file.normalise_final_cr();
-        spdlog::info("Read tcf file {}", tcf_file);
+        spdlog::info("Read tcf file {}", *tcf_file);
     }
     return true;
 }
@@ -964,14 +963,14 @@ void MainClass::read_config_and_other() {
         open_config_file(*of);
     else
         spdlog::trace("No configuration file.");
-    if (!use_tcf) {
+    if (!tcf_file) {
         bool found_type = find_document_type();
         if (dtype.empty()) found_type = false;
         if (found_type)
             the_log << "Using type " << dtype << "\n";
         else
             the_log << "Using some default type\n";
-        if (use_tcf) {
+        if (tcf_file) {
         } // config says to use a tcf
         else if (found_type)
             config_file.parse_and_extract_clean(dtype.c_str());
@@ -1141,7 +1140,7 @@ void MainClass::out_xml() {
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
     if (auto sl = the_names[np_stylesheet]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.value, the_names[np_stylesheet_type].value);
-    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtdfile);
+    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", version, short_date);
     fp << the_parser.the_stack.document_element() << "\n";
 

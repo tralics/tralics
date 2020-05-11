@@ -4,18 +4,19 @@
 class Stack;
 
 class MainClass {
-    std::filesystem::path infile; ///< file argument given to the program
+    std::filesystem::path                dtdfile;  ///< the external location of the DTD
+    std::filesystem::path                infile;   ///< file argument given to the program
+    std::optional<std::filesystem::path> tcf_file; ///< File name of the `tcf` to use, if found
 
-    std::string no_year;      // is miaou
-    std::string raclass;      // is ra2003
-    std::string dclass;       // documentclass of the file
-    std::string type_option;  // the type option
-    std::string dtd, dtdfile; // the dtd, and its external location
-    std::string dtype;        // the doc type found in the configuration file
-    std::string out_name;     // Name of output file
-    std::string in_dir;       // Input directory
-    std::string ult_name;     // absolute name of input.ult
-    std::string tcf_file;     ///< File name of the `tcf` to use, if found \todo std::optional<std::string> instead of use_tcf?
+    std::string no_year;     // is miaou
+    std::string raclass;     // is ra2003
+    std::string dclass;      // documentclass of the file
+    std::string type_option; // the type option
+    std::string dtd;         // the DTD
+    std::string dtype;       // the doc type found in the configuration file
+    std::string out_name;    // Name of output file
+    std::string in_dir;      // Input directory
+    std::string ult_name;    // absolute name of input.ult
 
     int year{9876};      // current year
     int env_number{0};   // number of environments seen
@@ -40,7 +41,6 @@ class MainClass {
     bool nomathml{false};
     bool dualmath{false};
     bool silent{false}; // are we silent ?
-    bool use_tcf{false};
     bool etex_enabled{true};
     bool multi_math_label{false};
     bool load_l3{false};
