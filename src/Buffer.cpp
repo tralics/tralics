@@ -610,24 +610,6 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     return true;
 }
 
-auto Buffer::find_configuration() const -> std::optional<std::string> {
-    if (at(0) != '%') return {};
-    auto k = to_string().find("ralics configuration file");
-    if (k == std::string::npos) return {};
-    while ((at(k) != 0) && at(k) != '\'') k++;
-    if (at(k) == 0) return {};
-    k++;
-    std::string str;
-    for (;;) {
-        if (at(k) == 0) return {};
-        if (at(k) == '\'') break;
-        str.push_back(at(k));
-        k++;
-    }
-    if (!str.empty()) return str;
-    return {};
-}
-
 auto Buffer::find_doctype() const -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";

@@ -17,7 +17,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void find_tex_encoding();
     auto find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;
     void find_all_types(std::vector<std::string> &res);
-    auto find_configuration(Buffer &B) -> std::string;
+    auto find_configuration() -> std::string;
     void find_doctype(Buffer &B, std::string &res);
     auto find_documentclass(Buffer &B) -> std::string;
     void find_top_atts(Buffer &B);

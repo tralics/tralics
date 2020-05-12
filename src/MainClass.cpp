@@ -332,7 +332,7 @@ void MainClass::get_os() {
     else {
         for (auto &c : tmp)
             if (c == '.') c = 0;
-        machine = std::string(tmp.data());
+        machine = tmp.data();
     }
 }
 
@@ -804,34 +804,27 @@ auto MainClass::check_for_tcf(const std::string &s) -> bool {
 
 auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (noconfig) return {};
-    Buffer B;
     if (!user_config_file.empty()) {
-        B << bf_reset << user_config_file;
-        the_log << "Trying config file from user specs: " << B << "\n";
-        if (B[0] == '.' || B[0] == '/') {
-            if (tralics_ns::file_exists(B.to_string())) return B.to_string();
+        the_log << "Trying config file from user specs: " << user_config_file << "\n";
+        if (user_config_file[0] == '.' || user_config_file[0] == '/') {
+            if (tralics_ns::file_exists(user_config_file)) return user_config_file;
             return {};
         }
-        if (!B.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
+        if (!user_config_file.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
         return main_ns::search_in_confdir(user_config_file);
     }
     // If interactive, read config only if given as parameter
     if (interactive_math) return {};
-    std::string xclass = input_content.find_configuration(B);
+    Buffer      B;
+    std::string xclass = input_content.find_configuration();
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
         if (auto of = tralics_ns::find_in_confdir(xclass, true); of) return of;
     }
-    B.reset();
-    String rc = ".tralics_rc";
-    if (cur_os == st_windows) rc = "tralics_rc";
-    B << bf_reset << rc;
-    if (tralics_ns::file_exists(B.to_string())) return B.to_string();
-    // Lines commented out were used instead of these two lines
-    if (auto of = main_ns::search_in_confdir(rc); of) return of;
-    B.reset();
-    return "";
+    std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
+    if (tralics_ns::file_exists(rc)) return rc;
+    return main_ns::search_in_confdir(rc);
 }
 
 void MainClass::open_config_file(const std::string &f) { // \todo filesystem
