@@ -2,6 +2,7 @@
 #include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "txinline.h"
+#include <ctre.hpp>
 
 namespace {
     Buffer local_buf;
@@ -217,29 +218,12 @@ void LinePtr::add_buffer(Buffer &B, line_iterator C) {
 
 // This finds a line with documentclass in it
 auto LinePtr::find_configuration() -> std::string {
-    int N = 0;
+    static constexpr auto pattern = ctll::fixed_string{"^%.*ralics configuration file[^']*'([^']+)'.*$"};
+    int                   N       = 0;
+
     for (auto &C : *this) {
         if (++N > 100) break;
-
-        // Matches a line of the form "% [Tt]ralics configuration file ... 'toto.tcf'"
-        auto os1 = [&C]() -> std::optional<std::string> { // \todo refactor
-            if (C[0] != '%') return {};
-            auto k = C.find("ralics configuration file");
-            if (k == std::string::npos) return {};
-            while ((C[k] != 0) && C[k] != '\'') k++;
-            if (C[k] == 0) return {};
-            k++;
-            std::string str;
-            for (;;) {
-                if (C[k] == 0) return {};
-                if (C[k] == '\'') break;
-                str.push_back(C[k]);
-                k++;
-            }
-            if (!str.empty()) return str;
-            return {};
-        }();
-        if (os1) return *os1;
+        if (auto m = ctre::match<pattern>(C); m) return m.get<1>().to_string();
     }
     return "";
 }
