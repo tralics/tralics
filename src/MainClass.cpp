@@ -815,7 +815,6 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     }
     // If interactive, read config only if given as parameter
     if (interactive_math) return {};
-    Buffer      B;
     std::string xclass = input_content.find_configuration();
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
