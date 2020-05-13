@@ -26,11 +26,13 @@ Printed Documentation and Examples
 ----------------------------------
 
 -  The :download:`paper </pdf/tralics-euro2003.pdf>` presented at Eurotex2003 and
-   `published in
-   TUGboat <http://www.tug.org/TUGboat/Contents/contents24-3.html>`__.
+   `published in TUGboat
+   <http://www.tug.org/TUGboat/Contents/contents24-3.html>`__.
+   :cite:`Grimm2003a`
 -  The following two reports describe some features of the software.
-   These versions are updated for *Tralics* 2.12: :download:`Part I </pdf/tralics-rr1.pdf>`,
-   :download:`Part II </pdf/tralics-rr2.pdf>`.
+   These versions are updated for *Tralics* 2.12: :download:`Part I
+   </pdf/tralics-rr1.pdf>`,
+   :download:`Part II </pdf/tralics-rr2.pdf>` :cite:`Grimm2005,Grimm2005a`.
 -  Example of math formulas :download:`here </pdf/testmath.pdf>` and
    `here <mml_ex.html>`__.
 
@@ -371,3 +373,8 @@ http://www-sop.inria.fr/marelle/tralics. Author:
    :maxdepth: 1
    :caption: Code documentation
    
+References
+----------
+
+.. bibliography:: tralics.bib
+   :style: unsrtalpha
