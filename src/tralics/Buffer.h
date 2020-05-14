@@ -183,7 +183,6 @@ public:
     auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
     void undo() { ptrs.b--; }
     void uppercase();
-    void utf8_error(bool first);
     auto xml_and_attrib(const std::string &s) -> Xml;
     auto find_char(char c) -> bool;
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
