@@ -45,10 +45,6 @@ public:
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
 
-    [[nodiscard, deprecated]] auto to_string(size_t k) const -> std::string; ///< Buffer contents as a std::string \todo call it substr
-
-    [[nodiscard, deprecated]] auto to_string() const -> std::string { return std::string(data()); };
-
     // Those match the std::string API
     [[nodiscard]] auto back() const -> char { return empty() ? char(0) : std::string::back(); }
 

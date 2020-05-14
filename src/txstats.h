@@ -16,7 +16,6 @@ class Stats {
     int st_inc{0};                      // number of times it was increased
     int st_alloc{0};                    // total number of totals in a list
     int stb_alloc{0};                   // number of buffer realloc
-    int st_nb_string{0};                // number of strings created
     int nb_macros{0}, nb_macros_del{0}; // number of macross added end deleted
     int level_up{0}, level_down{0};     // number of push and pop nest.
     int sh_boot{0}, sh_find{0}, sh_used{0};
@@ -30,8 +29,7 @@ class Stats {
     int m_allocated{0}, m_destroyed{0}, m_merge{0};
     int footnotes{0};
 
-    size_t nb_xboot{0};   ///< number of elements created at boot tme.
-    size_t str_length{0}; ///< total size of strings created
+    size_t nb_xboot{0}; ///< number of elements created at boot tme.
 
 public:
     void one_more_mbox() { m_spec_box++; }
@@ -39,10 +37,6 @@ public:
     void one_more_increase_list() { st_inc++; }
     void one_more_alloc_list() { st_alloc++; }
     void one_more_buffer_realloc() { stb_alloc++; }
-    void one_more_string(size_t n) {
-        st_nb_string++;
-        str_length += n;
-    }
     void one_more_macro() { nb_macros++; }
     void one_less_macro() { nb_macros_del++; }
     void one_more_up() { level_up++; }
@@ -66,7 +60,6 @@ public:
     void one_more_allocated() { m_allocated++; }
     void more_math_destroy(int k) { m_destroyed += k; }
     void one_more_merge() { m_merge++; }
-    Stats() = default;
 
     void        token_stats() const;
     static void io_convert_stats();

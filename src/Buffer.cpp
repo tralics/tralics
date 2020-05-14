@@ -41,13 +41,6 @@ auto Buffer::next_non_space(size_t j) const -> size_t {
     return j;
 }
 
-// Returns a copy, starting at k.
-auto Buffer::to_string(size_t k) const -> std::string {
-    auto n = strnlen(data() + k, size() - k);
-    the_parser.my_stats.one_more_string(n + 1);
-    return std::string(data() + k);
-}
-
 void Buffer::push_back_braced(const std::string &s) {
     push_back('{');
     push_back(s);
