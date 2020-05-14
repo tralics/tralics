@@ -502,7 +502,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     size_t j = 0;
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
-    B.at(j)         = 0;
+    B[j]            = 0;
     auto   match    = B.to_string();
     size_t res      = 0;
     for (const auto &k : bigtable) {
@@ -674,7 +674,7 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
     if (!see_equals(s)) return nullptr;
     if (c) {
         auto k = ptrs.b;
-        while ((at(k) != 0) && at(k) != '%' && at(k) != '#') k++;
+        while ((*this)[k] != 0 && at(k) != '%' && at(k) != '#') k++;
         reset(k);
     }
     remove_space_at_end();

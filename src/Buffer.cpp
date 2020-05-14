@@ -36,11 +36,6 @@ auto null_cs_name() -> std::string {
     return "csnameendcsname";
 }
 
-void Buffer::reset(size_t k) {
-    resize(k + 1);
-    std::vector<char>::back() = 0;
-}
-
 auto Buffer::next_non_space(size_t j) const -> size_t {
     while (is_spaceh(j)) j++;
     return j;
@@ -60,10 +55,7 @@ void Buffer::push_back_braced(const std::string &s) {
 }
 
 // Inserts a character in the buffer. Always adds a null after it.
-void Buffer::push_back(char c) {
-    std::vector<char>::back() = c;
-    std::vector<char>::push_back(0);
-}
+void Buffer::push_back(char c) { std::string::push_back(c); }
 
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
@@ -188,10 +180,7 @@ auto Buffer::push_back_newline_spec() -> bool {
 }
 
 void Buffer::remove_last(size_t n) {
-    if (size() >= n) {
-        resize(std::vector<char>::size() - n);
-        std::vector<char>::back() = 0;
-    }
+    if (size() >= n) resize(size() - n);
 }
 
 // FIXME: utf8 space ok  here ?
@@ -432,7 +421,7 @@ void Buffer::push_back(const Glue &x) {
 // Replaces all `pt' by `mu'
 void Buffer::pt_to_mu() {
     for (size_t i = 0;; i++) {
-        if (at(i) == 0) return;
+        if ((*this)[i] == 0) return;
         if (at(i) != 'p') continue;
         if (at(i + 1) == 't') {
             at(i)     = 'm';
@@ -628,7 +617,7 @@ auto Buffer::single_char() const -> char {
     if (at(j) == 0) return 0;
     char c = at(j);
     j      = next_non_space(j + 1);
-    if (at(j) != 0) return 0;
+    if ((*this)[j] != 0) return 0;
     return c;
 }
 
@@ -637,7 +626,7 @@ auto Buffer::single_char() const -> char {
 auto Buffer::int_val() const -> std::optional<size_t> {
     size_t n = 0;
     for (size_t p = 0;; p++) {
-        auto c = at(p);
+        auto c = (*this)[p];
         if (c == 0) return n;
         if (!is_digit(c)) return {};
         n = 10 * n + to_unsigned(c - '0');
@@ -866,7 +855,7 @@ void Buffer::append_unless_ends_with(const std::string &s) {
 
 auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }
 
-auto Buffer::is_spaceh(size_t j) const -> bool { return is_space(at(j)); }
+auto Buffer::is_spaceh(size_t j) const -> bool { return is_space((*this)[j]); }
 
 void Buffer::push_back(const TokenList &L) {
     for (const auto &C : L) { insert_token(C, false); }

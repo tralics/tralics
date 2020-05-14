@@ -8,12 +8,10 @@
 struct AttPair;
 class Xml;
 
-/// a big structure \todo This is kind of a messy class, would be better off
-/// using `std::string` as much as possible but we can't because of all the
-/// zero-char manipulations. Many methods do not belong in a general class like
+/// a big structure. Many methods do not belong in a general class like
 /// that because they are specific to TeX.
 
-class Buffer : public std::vector<char> {
+class Buffer : public std::string {
 public:
     struct span {
         size_t a{0}, b{0};
@@ -21,8 +19,8 @@ public:
 
     span ptrs;
 
-    Buffer() : std::vector<char>(1, 0) {}
-    Buffer(const std::string &s) : Buffer() { push_back(s); }
+    Buffer() : std::string() {}
+    Buffer(const std::string &s) : std::string(s) {}
 
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
@@ -31,7 +29,7 @@ public:
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
     [[nodiscard]] auto find_doctype() const -> size_t;                        ///< Figure out the doctype of the Buffer contents
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
-    [[nodiscard]] auto head() const -> char { return at(ptrs.b); }            ///< The character under the read pointer
+    [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }       ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;             ///< For typography
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;              ///< Try to parse the contents as an integer
     [[nodiscard]] auto is_all_ascii() const -> bool;                          ///< Is everything ASCII and not CRLF?
@@ -49,21 +47,16 @@ public:
     [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
 
     // Those match the std::string API
-    [[nodiscard]] auto back() const -> char { return empty() ? char(0) : at(size() - 1); }
-    [[nodiscard]] auto empty() const -> bool { return size() == 0; }
-    [[nodiscard]] auto size() const -> size_t { return std::vector<char>::size() - 1; }
-    [[nodiscard]] auto substr(size_t k = 0, size_t l = std::string::npos) const -> std::string { return to_string().substr(k, l); }
-    [[nodiscard]] auto ends_with(const std::string &s) const -> bool { return to_string().ends_with(s); }
-    [[nodiscard]] auto starts_with(const std::string &s) const -> bool { return to_string().starts_with(s); }
+    [[nodiscard]] auto back() const -> char { return empty() ? char(0) : std::string::back(); }
 
     // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void remove_last(size_t n = 1);                   ///< Drop `n` chars, provided size is large enough
-    void reset(size_t k = 0);                         ///< Truncate buffer at `k` chars
+    void reset(size_t k = 0) { resize(k); }           ///< Truncate buffer at `k` chars
 
     // Mutating methods, affecting ptrs but not the data, as intended
-    void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward
-    void find_one_type(vector<std::string> &S); ///< Finds one type \todo [vb] what does that mean?
+    void advance(size_t k = 1) { ptrs.b += k; }      ///< Move the read pointer forward
+    void find_one_type(std::vector<std::string> &S); ///< Finds one type \todo [vb] what does that mean?
 
     // Mutating methods, affecting ptrs but not the data, but morally const
     // \todo all those should be const
@@ -91,8 +84,8 @@ public:
     [[nodiscard]] auto contains_env(const std::string &env) -> bool;             ///< Do we contain `\end{env}`?
     [[nodiscard]] auto convert_line0(size_t wc) -> std::pair<bool, std::string>; ///< Convert to UTF8
     [[nodiscard]] auto fetch_spec_arg() -> bool;                                 ///< Try to read a braced argument
-    [[nodiscard]] auto find_alias(const vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
-    [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                           ///< True iff we do not contain 'and'
+    [[nodiscard]] auto find_alias(const std::vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
+    [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                                ///< True iff we do not contain 'and'
     [[nodiscard]] auto find_documentclass(Buffer &aux) -> bool; ///< Extract the document class \todo optional tring
     [[nodiscard]] auto find_equals() -> bool;                   ///< Locate a `sth=` pattern into ptrs.b and ptrs.a
     [[nodiscard]] auto horner(size_t p) -> Digit;               ///< Read an integer at `ptrs.b`, advance
@@ -101,7 +94,7 @@ public:
 
     auto insert_break(const std::string &x) -> std::string;
     auto install_att(Xid idx, const Istring &match) -> bool;
-    void interpret_aux(vector<Istring> &bib, vector<Istring> &bib2);
+    void interpret_aux(std::vector<Istring> &bib, std::vector<Istring> &bib2);
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();
     auto is_begin_something(const std::string &s) -> int;
@@ -112,7 +105,7 @@ public:
     void lowercase();
     void new_word();
     void next_bibtex_char();
-    auto next_char() { return at(ptrs.b++); }
+    auto next_char() { return (*this)[ptrs.b++]; }
     auto next_env_spec() -> bool;
     auto next_macro() -> bool;
     auto next_macro_spec() -> bool;

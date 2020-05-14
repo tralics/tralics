@@ -414,7 +414,7 @@ auto Buffer::add_with_space(const std::string &s) -> std::string {
 // In the case of "foo bar gee", puts foo, bar and gee in the vector.
 // Initial + means append, otherwise replace.
 
-void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
+void Buffer::interpret_aux(std::vector<Istring> &bib, std::vector<Istring> &bib2) {
     if (config_ns::start_interpret(*this, "")) {
         bib.resize(0);
         bib2.resize(0);
@@ -445,14 +445,14 @@ void Buffer::interpret_aux(vector<Istring> &bib, vector<Istring> &bib2) {
 
 void Buffer::interpret_bibtex_list() {
     the_log << "bibtex_fields: ";
-    vector<Istring> &bib  = the_main->bibtex_fields;
-    vector<Istring> &bib1 = the_main->bibtex_fields_s;
+    std::vector<Istring> &bib  = the_main->bibtex_fields;
+    std::vector<Istring> &bib1 = the_main->bibtex_fields_s;
     interpret_aux(bib, bib1);
 }
 
 void Buffer::interpret_bibtex_extension_list() {
     the_log << "bibtex_extensions: ";
-    vector<Istring> &bib  = the_main->bibtex_extensions;
-    vector<Istring> &bib2 = the_main->bibtex_extensions_s;
+    std::vector<Istring> &bib  = the_main->bibtex_extensions;
+    std::vector<Istring> &bib2 = the_main->bibtex_extensions_s;
     interpret_aux(bib, bib2);
 }

@@ -144,7 +144,7 @@ auto Buffer::next_utf8_char() -> codepoint {
     auto      it = begin() + to_signed(ptrs.b), it0 = it;
     codepoint cp;
     try {
-        cp = codepoint(utf8::next(it, end()));
+        cp = it == end() ? codepoint(0U) : codepoint(utf8::next(it, end()));
     } catch (utf8::invalid_utf8) {
         Converter &T = the_converter;
         T.bad_chars++;
@@ -177,6 +177,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
     ptrs.b = 0;
     codepoint c;
     for (;;) {
+        if (at_eol()) break;
         if (wc == 0)
             c = next_utf8_char();
         else {
@@ -188,7 +189,6 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
         }
         if (c.non_null()) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
-        if (at_eol()) break;
     }
     return {the_converter.line_is_ascii, utf8_out.to_string()};
 }

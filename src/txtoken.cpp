@@ -170,7 +170,7 @@ auto Buffer::hashcode(size_t prime) const -> size_t {
     size_t h = static_cast<uchar>(at(0));
     if (h == 0) return 0;
     for (;;) {
-        size_t c = static_cast<uchar>(at(j));
+        size_t c = static_cast<uchar>((*this)[j]);
         if (c == 0) return h;
         h = (h + h + c) % prime;
         j++;
