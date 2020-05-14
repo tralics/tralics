@@ -36,7 +36,6 @@ public:
     void one_more_shorten_list() { st_short++; }
     void one_more_increase_list() { st_inc++; }
     void one_more_alloc_list() { st_alloc++; }
-    void one_more_buffer_realloc() { stb_alloc++; }
     void one_more_macro() { nb_macros++; }
     void one_less_macro() { nb_macros_del++; }
     void one_more_up() { level_up++; }

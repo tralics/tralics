@@ -19,7 +19,7 @@ public:
 
     span ptrs;
 
-    Buffer() : std::string() {}
+    Buffer() = default;
     Buffer(const std::string &s) : std::string(s) {}
 
     // Standard const methods
