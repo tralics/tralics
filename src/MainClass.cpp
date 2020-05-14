@@ -1045,7 +1045,7 @@ void MainClass::see_name1() {
         C << fmt::format("{}", year);
         year_string = C.to_string();
     } else {
-        year = atoi(year_string.c_str());
+        year = std::stoi(year_string);
         the_parser.set_ra_year(year);
     }
 }
@@ -1069,7 +1069,7 @@ void MainClass::trans0() {
 
 void MainClass::boot_bibtex(bool inra) {
     auto fn = out_dir / (out_name + "_.bbl");
-    tralics_ns::bibtex_boot(fn, year_string.c_str(), out_name, inra, distinguish_refer);
+    tralics_ns::bibtex_boot(fn, year_string, out_name, inra, distinguish_refer);
 }
 
 void MainClass::show_input_size() {

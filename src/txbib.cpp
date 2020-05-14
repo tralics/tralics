@@ -2920,7 +2920,7 @@ void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
 // ----------------------------------------
 // Boot strapping the system
 
-void tralics_ns::bibtex_boot(std::string b, String dy, std::string no_year, bool inra, bool db) {
+void tralics_ns::bibtex_boot(std::string b, const std::string &dy, std::string no_year, bool inra, bool db) {
     distinguish_refer = db;
     bbl.name          = std::move(b);
     the_bibtex        = new Bibtex(dy);

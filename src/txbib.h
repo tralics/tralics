@@ -286,7 +286,7 @@ private:
     bool                     normal_biblio{true};
     bool                     refer_biblio{};
     bool                     in_ra{};
-    String                   default_year;
+    std::string              default_year;
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
@@ -295,7 +295,7 @@ private:
     std::array<id_type, 128> id_class{};
 
 public:
-    Bibtex(String dy) : default_year(dy) {}
+    Bibtex(const std::string &dy) : default_year(dy) {}
     auto               find_entry(const CitationKey &s) -> BibEntry *;
     auto               find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry *;
     auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;

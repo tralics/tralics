@@ -42,7 +42,7 @@ namespace tralics_ns {
     auto open_file(const std::string &name, bool f) -> std::ofstream;
     auto titlepage_is_valid() -> bool;
 
-    void bibtex_boot(std::string b, String dy, std::string no_year, bool inra, bool db);
+    void bibtex_boot(std::string b, const std::string &dy, std::string no_year, bool inra, bool db);
     void bibtex_insert_jobname();
     void bibtex_set_nocite();
     void boot_math(bool mv);
