@@ -568,7 +568,7 @@ void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) { t
 
 // Evaluates now a token string. First action is to put chars in a buffer
 // (because we add a '\n' at the end of the string).
-void Parser::titlepage_evaluate(String s, const std::string &cmd) {
+void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
     mac_buffer << bf_reset << s;
     TokenList L;
     tokenize_buffer(mac_buffer, L, "(tpa post " + cmd + ")");
@@ -1584,7 +1584,7 @@ void Parser::finish_csname(const Buffer &b) {
 }
 
 // Same as above, but the token is to be read again
-void Parser::finish_csname(Buffer &b, String s) {
+void Parser::finish_csname(Buffer &b, const std::string &s) {
     finish_csname(b);
     if (tracing_commands()) {
         Logger::finish_seq();

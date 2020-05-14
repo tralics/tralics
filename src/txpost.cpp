@@ -29,7 +29,7 @@ namespace post_ns {
     void remove_label(String s, const Istring &n);
     void remove_me_from_heads(Xml *X);
     void print_no_title(int i, String s);
-    auto is_entity(String s) -> size_t;
+    auto is_entity(const std::string &s) -> size_t;
     void raw_subfigure(Xml *from, Xml *to, Xml *junk);
     void table_subfigure(Xml *from, Xml *to, Xml *junk);
     auto figline(Xml *from, int &ctr, Xml *junk) -> Xml *;
@@ -138,7 +138,7 @@ void Parser::create_label(const std::string &X, const Istring &S) {
     auto       m = Istring(X);
     LabelInfo *V = m.labinfo();
     if (V->set_defined()) {
-        multiple_label(m.name.c_str(), V->lineno, V->filename); // \todo get rid of c_str()
+        multiple_label(m.name, V->lineno, V->filename);
     } else {
         my_stats.one_more_label();
         V->id       = S;
@@ -983,9 +983,9 @@ const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;"
 
 // This is static. If s is &foo;bar, returns the length
 // of the &foo; part. Returns 0 if this is not an entity.
-auto post_ns::is_entity(String s) -> size_t {
+auto post_ns::is_entity(const std::string &s) -> size_t {
     for (auto w : entities) {
-        if (std::string(s).starts_with(w)) return strlen(w);
+        if (s.starts_with(w)) return strlen(w);
     }
     return 0;
 }
@@ -993,24 +993,22 @@ auto post_ns::is_entity(String s) -> size_t {
 // The scanner for all_the_words
 void Xml::word_stats_i() {
     if (is_xmlc()) {
-        auto   str = name.name;
-        String s   = str.c_str(); // \todo use str instead
-        if (s == nullptr) return;
-        for (int i = 0;; i++) {
-            char c = s[i];
+        auto str = name.name;
+        for (size_t i = 0;; i++) {
+            char c = str[i];
             if (c == 0) return;
             if (c == '&') {
-                if (std::string(s + i).starts_with("&oelig;")) {
+                if (str.substr(i).starts_with("&oelig;")) {
                     i += 6;
                     scbuf << "oe";
                     continue;
                 }
-                if (std::string(s + i).starts_with("&amp;")) {
+                if (str.substr(i).starts_with("&amp;")) {
                     i += 4;
                     scbuf << "&";
                     continue;
                 }
-                auto w = post_ns::is_entity(s + i);
+                auto w = post_ns::is_entity(str.substr(i));
                 if (w != 0) {
                     i += w - 1;
                     scbuf.new_word();

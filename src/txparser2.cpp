@@ -2190,7 +2190,7 @@ void Parser::refstepcounter_inner(TokenList &L, bool star) {
 }
 
 // takes a string as argument and translates the thing
-void Parser::refstepcounter(String S, bool star) {
+void Parser::refstepcounter(const std::string &S, bool star) {
     Buffer &b = local_buf;
     b.reset();
     b.push_back(S);
@@ -2270,7 +2270,7 @@ void Parser::T_ifdefinable() {
 // and ctr the counter, for instance enumiv
 // executes \def\@itemlabel{(\theenumiv)}
 // redefines \def\theenumiv{\roman{enumiv}}
-auto Parser::optional_enumerate(TokenList &L, String ctr) -> bool {
+auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
     Hashtab & H = hash_table;
     TokenList res;
     int       b = 0;
@@ -2359,7 +2359,7 @@ void Parser::T_listenv(symcodes x) {
     if (x == enumerate_cmd) {
         read_optarg_nopar(L);
         // Token cmd = hash_table.relax_token;  unused (why ?)
-        if (!optional_enumerate(L, list_ctr.c_str())) {
+        if (!optional_enumerate(L, list_ctr)) {
             b << bf_reset << "labelenum";
             token_ns::int_to_roman(b, n);
             M_let_fast(t, hash_table.locate(b), false);

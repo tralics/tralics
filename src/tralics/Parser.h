@@ -185,7 +185,7 @@ public:
     auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
     void               eq_define(size_t a, CmdChr bc, bool gbl);
-    void               titlepage_evaluate(String s, const std::string &cmd);
+    void               titlepage_evaluate(const std::string &s, const std::string &cmd);
     void               final_checks();
     void               finish_images();
     void               flush_buffer();
@@ -220,9 +220,9 @@ public:
     void               signal_error(Token T, const std::string &s);
     void               signal_ovf(Token T, String h, long cur, long max);
     auto               special_expand(TokenList *args) -> TokenList;
-    auto               special_tpa_arg(String n, String y, bool par, bool env, bool has_q) -> Xml *;
+    auto               special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
     void               T_titlepage_finish(size_t v);
-    auto               tpa_exec(String cmd) -> Xml *;
+    auto               tpa_exec(const std::string &cmd) -> Xml *;
     void               M_tracingall();
     void               translate0();
     void               translate_all();
@@ -380,7 +380,7 @@ private:
     void        E_get_config(int c);
     void        finish_a_cell(Token T, const Istring &a);
     void        finish_counter_cmd(Token first, TokenList &L);
-    void        finish_csname(Buffer &b, String s);
+    void        finish_csname(Buffer &b, const std::string &s);
     void        finish_csname(const Buffer &b);
     void        E_fi_or_else();
     void        finish_index();
@@ -533,7 +533,7 @@ private:
     static void mk_hi(String X, char c);
     void        month_day(subtypes c);
     void        more_bootstrap();
-    void        multiple_label(String name, int L, const std::string &f);
+    void        multiple_label(const std::string &name, int L, const std::string &f);
     void        multiply_dim(RealNumber val, long v);
     void        E_multispan();
     auto        my_csname(String s1, String s2, TokenList &L, String s) -> bool;
@@ -574,7 +574,7 @@ private:
     void        one_of_two(bool which);
     void        open_tex_file(const std::string &f, bool seen_star);
     void        opt_to_mandatory();
-    auto        optional_enumerate(TokenList &L, String ctr) -> bool;
+    auto        optional_enumerate(TokenList &L, const std::string &ctr) -> bool;
     void        out_warning(Buffer &B, msg_type what);
     void        parshape_aux(subtypes m);
     void        pass_text(Token Tfe);
@@ -614,7 +614,7 @@ private:
     auto        read_unit() -> int;
     auto        make_label_inner(const std::string &name) -> std::string;
     void        refstepcounter();
-    void        refstepcounter(String s, bool star);
+    void        refstepcounter(const std::string &s, bool star);
     void        refstepcounter(TokenList &L, bool star);
     void        refstepcounter_inner(TokenList &L, bool star);
     void        remove_element(TokenList &A, TokenList &B, Token C);

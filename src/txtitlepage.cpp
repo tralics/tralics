@@ -353,9 +353,9 @@ void TitlePageAux::exec_start(size_t k) {
 // This is executed when we see the \Titlepage cmd
 void TitlePageAux::exec_post() {
     if (type == tpi_rt_constant) Titlepage[idx] = new Xml(Istring(T1));
-    if (type == tpi_rt_exec) Titlepage[idx] = the_parser.tpa_exec(T2.c_str());
+    if (type == tpi_rt_exec) Titlepage[idx] = the_parser.tpa_exec(T2);
     if (type != tpi_rt_normal) return;
-    if (get_flags2() == tp_C_flag) the_parser.titlepage_evaluate(T4.c_str(), T1);
+    if (get_flags2() == tp_C_flag) the_parser.titlepage_evaluate(T4, T1);
     if (!has_plus_flags()) return;
     if (has_u_flags()) return;
     the_parser.parse_error(the_parser.err_tok, "No value given for command \\", T1, "");
@@ -379,7 +379,7 @@ void TitlePageAux::exec(size_t v, bool vb) {
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
         R = convert(3, Istring(T2));
     else { // we have to read the argument.
-        R = the_parser.special_tpa_arg(T1.c_str(), T3.c_str(), has_p_flags(), has_e_flags(), has_q_flags());
+        R = the_parser.special_tpa_arg(T1, T3, has_p_flags(), has_e_flags(), has_q_flags());
     }
     bool replace = (type == tpi_rt_normal || type == tpi_rt_normal_def);
     if (increment_flag()) {

@@ -460,7 +460,7 @@ auto Parser::T_item_label(int c) -> Istring {
     bool      opt = cur_tok.is_open_bracket();
     if (opt) read_optarg_nopar(L);
     std::string list_ctr = the_parser.eqtb_string_table[1].val;
-    if (!list_ctr.empty()) refstepcounter(list_ctr.c_str(), false);
+    if (!list_ctr.empty()) refstepcounter(list_ctr, false);
     if (!opt) {
         Token t = hash_table.itemlabel_token;
         token_from_list(t);
@@ -717,7 +717,7 @@ void Parser::T_float(subtypes c) {
         expand_no_arg(B.to_string());
         opt = nT_arg_nopar();
         the_stack.add_att_to_last(np_name, opt);
-        refstepcounter(sarg.c_str(), true);
+        refstepcounter(sarg, true);
         B << bf_reset << "@float@every@" << sarg;
         back_input(hash_table.locate(B));
         back_input(hash_table.locate("the"));
@@ -1525,8 +1525,8 @@ void Parser::T_hanl(subtypes c) {
 // This should work, whatever the mode...
 // If env is true, we grab the content of the env.
 
-auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has_q) -> Xml * {
-    if ((y == nullptr) || y[0] == 0) {
+auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml * {
+    if (y.empty()) {
         TokenList L = read_arg();
         back_input(hash_table.par_token);
         back_input(L);
@@ -1592,7 +1592,7 @@ auto Parser::special_tpa_arg(String name, String y, bool par, bool env, bool has
     return the_stack.remove_last();
 }
 
-auto Parser::tpa_exec(String cmd) -> Xml * {
+auto Parser::tpa_exec(const std::string &cmd) -> Xml * {
     mode m = the_stack.get_mode();
     the_stack.set_arg_mode();
     auto Y = Istring(cmd);

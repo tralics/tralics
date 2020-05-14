@@ -352,7 +352,7 @@ void Parser::bad_redefinition(int rd, Token T) {
     signal_error(err_tok, "bad definition");
 }
 
-void Parser::multiple_label(String name, int l, const std::string &f) {
+void Parser::multiple_label(const std::string &name, int l, const std::string &f) {
     err_buf << bf_reset << fmt::format("Label '{}' multiply defined (first use line {} file {})", name, l, f);
     signal_error(hash_table.label_token, "already defined label");
 }
