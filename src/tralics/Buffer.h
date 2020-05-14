@@ -44,7 +44,10 @@ public:
     [[nodiscard]] auto single_character() const -> codepoint;                 ///< If only one (UTF8) character, return it
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
-    [[nodiscard]] auto to_string(size_t k = 0) const -> std::string;          ///< Buffer contents as a std::string \todo call it substr
+
+    [[nodiscard, deprecated]] auto to_string(size_t k) const -> std::string; ///< Buffer contents as a std::string \todo call it substr
+
+    [[nodiscard, deprecated]] auto to_string() const -> std::string { return std::string(data()); };
 
     // Those match the std::string API
     [[nodiscard]] auto back() const -> char { return empty() ? char(0) : std::string::back(); }
@@ -98,7 +101,6 @@ public:
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();
     auto is_begin_something(const std::string &s) -> int;
-    auto operator==(const std::string &s) const -> bool { return to_string() == s; }
     auto is_here(const std::string &s) -> bool;
     auto is_here_case(String s) -> bool;
     auto look_at_space(const std::string &s) -> bool;
