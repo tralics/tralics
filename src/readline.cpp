@@ -725,7 +725,7 @@ void Slined::backword(bool sw, size_t n) {
 void Slined::replace_string() {
     maybe_store_line();
     cur_line_modified = false;
-    std::string s     = m_hpos < m_history_size ? m_history[to_unsigned(m_hpos)].c_str() : "";
+    std::string s     = m_hpos < m_history_size ? m_history[to_unsigned(m_hpos)] : "";
     auto        l     = s.size();
     strncpy(m_inbuf, s.c_str(), l);
     m_inmax = to_signed(l);

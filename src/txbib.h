@@ -24,7 +24,7 @@ struct CitationKey {
 
     CitationKey() = default;
     CitationKey(const std::string &a, const std::string &b);
-    CitationKey(bib_from a, String b);
+    CitationKey(bib_from a, const std::string &b);
 
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
@@ -298,8 +298,8 @@ public:
     Bibtex(std::string dy) : default_year(std::move(dy)) {}
 
     auto               find_entry(const CitationKey &s) -> BibEntry *;
-    auto               find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry *;
-    auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;
+    auto               find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
+    auto               find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
     auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
     void               make_entry(const CitationKey &a, Istring myid);
     [[nodiscard]] auto auto_cite() const -> bool;

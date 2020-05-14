@@ -257,7 +257,7 @@ auto io_ns::find_encoding(const std::string &cl) -> int {
 void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.reset(x);
     if (use_pool(L)) return;
-    std::ifstream fp(x.c_str());
+    std::ifstream fp(x);
     std::string   old_name      = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
     Buffer B;

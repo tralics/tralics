@@ -763,7 +763,7 @@ void Parser::T_verbatim() {
         want_number = true;
     } else if (only_digits(w)) {
         reset       = true;
-        n           = atoi(w.c_str());
+        n           = std::stoi(w);
         want_number = true;
     } else {
         reset = true;
@@ -1536,7 +1536,7 @@ auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
 
 // Converts the token list X into a string, adding s1 and s2
 // May signal an error, use bad instead
-void Parser::list_to_string_c(TokenList &x, String s1, String s2, String msg, Buffer &B) {
+void Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg, Buffer &B) {
     B << bf_reset << s1;
     if (list_to_string(x, B)) {
         parse_error(err_tok, msg, x);

@@ -258,14 +258,14 @@ void classes_ns::add_to_filelist(const std::string &s, const std::string &date) 
     auto n = s.size();
     long k = -1;
     for (size_t i = 0; i < n; i++)
-        if (s[i] == '/') k = to_signed(i);
-    String S  = s.c_str() + k + 1;
-    auto   nn = 12 - to_signed(strlen(S));
+        if (s[i] == '/') k = to_signed(i); // last slash
+    auto S  = s.substr(to_unsigned(k + 1));
+    auto nn = 12 - to_signed(S.size());
     while (nn > 0) {
         file_list << ' ';
         --nn;
     }
-    file_list << S << "   " << date << "\n";
+    file_list << S << "   " << date << "\n"; // \todo fmt would work well here (padding at width 12)
 }
 
 // This implements \ProvidesPackage, \ProvidesClass (synonym)
@@ -282,7 +282,7 @@ void Parser::T_provides_package(bool c) // True for a file
     }
     LatexPackage *cur = the_class_data.cur_pack();
     if (!date.empty()) cur->date = date;
-    String S = cur->real_name();
+    auto S = cur->real_name();
     if (name != S && !the_class_data.using_default_class) {
         log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
     }
@@ -1043,7 +1043,7 @@ void Parser::kvo_bool_key() {
         Buffer &B = local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
         parse_error(err_tok, B.to_string(), "bad bool");
-        log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << (A.c_str() + 1) << ".\n";
+        log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << A.substr(1) << ".\n";
         return;
     }
     local_buf << bf_reset << C << '@' << D << d;
@@ -1199,7 +1199,7 @@ void Parser::kvo_family_etc(subtypes k) {
         TokenList L = read_arg();
         new_macro(L, T);
     } else if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
-        B << bf_reset << s.c_str() + 1;
+        B << bf_reset << s.substr(1);
         if (k == kvo_pre_get_code) B << "@";
         TokenList res = B.str_toks11(false);
         back_input(res);

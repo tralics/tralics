@@ -3171,11 +3171,7 @@ void Cv3Helper::add_kernel(math_style cms) {
         p = new Xml(cst_mrow, p);
     if (ptype == mt_flag_small_l || ptype == mt_flag_small_r || ptype == mt_flag_small_m) {
         res.push_back(p, ploc, ptype);
-        //      static int dmc =0;
-        //     std::cout<< "Dmc=== " <<  ++dmc << "\n";
         Xml *q = p;
-        //      special_buffer << bf_reset << "<mn>DMC " << dmc << "</mn>";
-        //      q = new Xml (Istring(special_buffer.c_str()));
         res.push_back(q, -1, mt_flag_dummy);
     }
 

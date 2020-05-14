@@ -67,7 +67,7 @@ public:
     void               add_options(const OptionList &L);
     auto               find_option(const std::string &name) -> long;
     [[nodiscard]] auto is_class() const -> bool { return name[0] == 'C'; }
-    [[nodiscard]] auto real_name() const -> String { return name.c_str() + 1; }
+    [[nodiscard]] auto real_name() const -> std::string { return name.substr(1); }
     [[nodiscard]] auto full_name() const -> std::string { return name; }
     [[nodiscard]] auto pack_or_class() const -> String { return is_class() ? "class " : "package "; }
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }

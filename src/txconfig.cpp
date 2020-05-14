@@ -304,8 +304,8 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
 void config_ns::check_RC(Buffer &B, Xml *res) {
     std::string tmp      = the_names[np_rcval].name;
     bool        need_elt = tmp[0] == '+'; // Hack
-    String      S{nullptr};
-    if (need_elt) S = tmp.c_str() + 1;
+    std::string str;
+    if (need_elt) str = tmp.substr(1);
     Buffer      temp2;
     std::string sname, lname;
     temp2.reset();
@@ -321,7 +321,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         }
         Xml *new_elt{nullptr};
         if (need_elt)
-            new_elt = new Xml(Istring(std::string(S + sname)), nullptr);
+            new_elt = new Xml(Istring(str + sname), nullptr);
         else {
             new_elt = new Xml(np_rcval, nullptr);
             new_elt->id.add_attribute(Istring("name"), Istring(sname));
@@ -348,7 +348,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     the_parser.signal_error();
 }
 
-// Interprets the RC argument of a pers command
+// Interprets the RC argument of a pers command \todo RA
 // This returns the short name, said otherwise, the argument.
 // Notice the space case when argument is empty, or +foo or =foo.
 auto config_ns::pers_rc(const std::string &rc) -> std::string {
@@ -362,9 +362,9 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
         have_default_ur = true;
         return the_default_rc;
     }
-    if (rc[0] == '+') { return rc.c_str() + 1; }
-    bool        spec = (rc.size() >= 2 && rc[0] == '=');
-    std::string RC   = spec ? rc.c_str() + 1 : rc;
+    if (rc[0] == '+') { return rc.substr(1); }
+    bool spec = (rc.size() >= 2 && rc[0] == '=');
+    auto RC   = spec ? rc.substr(1) : rc;
     if (!is_good_ur(RC)) {
         err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
                 << "Use one of:";
@@ -394,7 +394,7 @@ auto config_ns::is_good_ur(const std::string &x) -> bool {
 
 // --------------------------------------------------
 
-// If S is, say `Cog A', this puts ` cog ' in the buffer, returns `cog'.
+// If str is, say `Cog A', this puts ` cog ' in the buffer, returns `cog'.
 auto Buffer::add_with_space(const std::string &s) -> std::string {
     size_t i = 0;
     while (s[i] == ' ') ++i;

@@ -178,7 +178,7 @@ public:
     auto               list_to_string0(Buffer &b) -> bool;
     auto               list_to_string(TokenList &L, Buffer &b) -> bool;
     auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
-    void               list_to_string_c(TokenList &x, String s1, String s2, String msg, Buffer &B);
+    void               list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg, Buffer &B);
     auto               list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
     auto               list_to_string_c(TokenList &x, String msg) -> std::string;
     auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;

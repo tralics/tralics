@@ -763,7 +763,7 @@ void Parser::T_define_key(bool xkv) {
         xkv_header = B.to_string();
     }
     TokenList key = read_arg();
-    list_to_string_c(key, xkv_header.c_str(), "", "bad key name", B);
+    list_to_string_c(key, xkv_header, "", "bad key name", B);
     Token     T = hash_table.locate(B);
     TokenList opt;
     if (read_optarg(opt)) internal_define_key_default(T, opt);
@@ -824,7 +824,7 @@ void Parser::define_choice_key() {
     bool if_plus = remove_initial_plus(true);
     xkv_fetch_prefix_family();
     TokenList keytoks = read_arg();
-    list_to_string_c(keytoks, xkv_header.c_str(), "", "bad key name", local_buf);
+    list_to_string_c(keytoks, xkv_header, "", "bad key name", local_buf);
     Token     T = hash_table.locate(local_buf);
     TokenList storage_bin;
     read_optarg_nopar(storage_bin);
@@ -1297,7 +1297,7 @@ void Parser::xkv_declare_option() {
     TokenList   xkey = key;
     std::string Key  = list_to_string_c(xkey, "Invalid option");
     classes_ns::register_key(Key);
-    list_to_string_c(key, xkv_header.c_str(), "", "bad option name", local_buf);
+    list_to_string_c(key, xkv_header, "", "bad option name", local_buf);
     Token     T = hash_table.locate(local_buf);
     TokenList opt;
     read_optarg(opt);

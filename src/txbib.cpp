@@ -322,7 +322,7 @@ CitationKey::CitationKey(const std::string &a, const std::string &b) {
 }
 
 // Ctor via from_foot and "Knuth".
-CitationKey::CitationKey(bib_from a, String b) {
+CitationKey::CitationKey(bib_from a, const std::string &b) {
     if (a == from_foot || a == from_refer)
         cite_prefix = a;
     else
@@ -352,7 +352,7 @@ void CitationKey::make_key(const std::string &s) {
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from.name, key.name); // \todo get rid of c_str()
+    CitationKey ref(from.name, key.name);
     BibEntry *  X = the_bibtex->find_entry(ref);
     if (X != nullptr) {
         err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
@@ -461,7 +461,7 @@ void Bibliography::stats() {
 // This dumps the whole biblio for use by bibtex.
 void Bibliography::dump_data(Buffer &b) {
     auto n = biblio_src.size();
-    b << "\\bibstyle{" << bib_style.c_str() << "}\n";
+    b << "\\bibstyle{" << bib_style << "}\n";
     b << "\\bibdata{";
     if (n == 0) b << tralics_ns::get_short_jobname();
     for (size_t i = 0; i < n; i++) {
@@ -486,7 +486,7 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump_data(B);
     std::string auxname = tralics_ns::get_short_jobname() + ".aux";
     try {
-        std::ofstream(auxname.c_str()) << B;
+        std::ofstream(auxname) << B;
     } catch (...) {
         spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
         return;
@@ -984,7 +984,7 @@ void Parser::T_empty_bibitem() {
 }
 
 auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> Istring {
-    BibEntry *X = find_entry(b.c_str(), w, because_all);
+    BibEntry *X = find_entry(b, w, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
         return Istring("");
@@ -1335,7 +1335,7 @@ auto Bibtex::auto_cite() const -> bool {
 
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
-auto Bibtex::find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry * {
+auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry * {
     CitationKey key(prefix, s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
@@ -1354,7 +1354,7 @@ auto Bibtex::find_entry(String s, const std::string &prefix, bib_creator bc) -> 
 // or from_refer, or bug; if prefix is from_any, we use from_year instead.
 //
 
-auto Bibtex::find_entry(String s, bool create, bib_creator bc) -> BibEntry * {
+auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
     bib_from prefix = default_prefix();
     if (create && prefix == from_any) prefix = from_year;
     CitationKey key(prefix, s);
@@ -1387,7 +1387,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             the_log << "bib: Omitting " << cur_entry_name << "\n";
             return nullptr;
         }
-    BibEntry *X = find_entry(cur_entry_name.c_str(), auto_cite(), because_all);
+    BibEntry *X = find_entry(cur_entry_name, auto_cite(), because_all);
     if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
@@ -1505,7 +1505,7 @@ void Bibtex::parse_one_item() {
 // We make Y to be cited, and link X to Y and Y to X.
 
 void BibEntry::parse_crossref() {
-    String name = all_fields[fp_crossref].c_str();
+    const auto &name = all_fields[fp_crossref];
     if (name[0] == 0) return;
     bib_creator bc = the_bibtex->auto_cite() ? because_all : because_crossref;
     BibEntry *  Y  = the_bibtex->find_entry(name, true, bc);
@@ -2020,10 +2020,9 @@ void BibEntry::add_warning(int dy) {
 
 // Converts cite:foo into foo, with some heuristic tests.
 auto bib_ns::skip_dp(const std::string &str) -> std::string {
-    String s = str.c_str();
-    int    i = 0;
-    while ((s[i] != 0) && s[i] != ':') i++;
-    if ((s[i] != 0) && (s[i + 1] != 0)) return s + i + 1;
+    size_t i = 0;
+    while (i < str.size() && str[i] != ':') ++i;
+    if (i + 1 < str.size()) return str.substr(i + 1);
     return str;
 }
 
