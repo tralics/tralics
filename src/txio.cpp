@@ -136,21 +136,6 @@ void Converter::start_convert(int l) {
     line_is_ascii = true;
 }
 
-// This is called in case of error in the utf8 parser
-// In case of error, we print characters as \230
-// If first is false, we look at the second byte; ptrs.b is not yet incremented
-// for the case second char is missing.
-void Buffer::utf8_error(bool first) {
-    Converter &T = the_converter;
-    T.bad_chars++;
-    log_and_tty << "UTF-8 parsing error (line " << T.cur_file_line << ", file " << T.cur_file_name
-                << (first ? ", first byte" : ", continuation byte") << ")\n";
-    log_and_tty << "Position in line is " << ptrs.b << "\n";
-    if (T.new_error()) return; // signal only one error per line
-    for (size_t i = 0; i < size(); i++) io_ns::print_ascii(log_file, at(i));
-    the_log << "\n";
-}
-
 // This returns the number of bytes in a UTF8 character
 // given the first byte. Returns 0 in case of error
 auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
@@ -158,8 +143,18 @@ auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
 auto Buffer::next_utf8_char() -> codepoint {
-    auto it = begin() + to_signed(ptrs.b), it0 = it;
-    auto cp = codepoint(utf8::next(it, end()));
+    auto      it = begin() + to_signed(ptrs.b), it0 = it;
+    codepoint cp;
+    try {
+        cp = codepoint(utf8::next(it, end()));
+    } catch (utf8::invalid_utf8) {
+        Converter &T = the_converter;
+        T.bad_chars++;
+        T.new_error();
+        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b);
+        ++ptrs.b;
+        return codepoint();
+    }
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptrs.b += nn;
