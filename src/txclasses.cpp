@@ -64,7 +64,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     if (have_equals) {
         Buffer &B = local_buf;
         B << bf_reset << key_name << key_val;
-        key_full = B.to_string();
+        key_full = B;
     }
     return KeyAndVal(key_name, key_val, key_full);
 }
@@ -886,7 +886,7 @@ void Parser::T_class_error(subtypes c) {
             --n;
             B << ' ';
         }
-        prefix = B.to_string();
+        prefix = B;
         B.reset();
         B << prea;
         if (!simple) B << " " << name;
@@ -935,7 +935,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = np_Warning;
     if (!the_names[np_warning].empty()) {
         flush_buffer();
-        Xml *res = new Xml(np_warning, new Xml(Istring(B.to_string())));
+        Xml *res = new Xml(np_warning, new Xml(Istring(B)));
         res->id.add_attribute(np_letter_c, w);
         res->id.add_attribute(np_letter_l, cur_line_to_istring());
         the_stack.add_last(res);
@@ -1042,7 +1042,7 @@ void Parser::kvo_bool_key() {
     if (!(d == "true" || d == "false")) {
         Buffer &B = local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
-        parse_error(err_tok, B.to_string(), "bad bool");
+        parse_error(err_tok, B, "bad bool");
         log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << A.substr(1) << ".\n";
         return;
     }
@@ -1165,7 +1165,7 @@ void Parser::kvo_comp_opt() {
     Token T = hash_table.locate(B);
     if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
         B << bf_reset << "Cannot generate code for `" << arg << "', no parent " << comp;
-        parse_error(err_tok, B.to_string(), "bad redef");
+        parse_error(err_tok, B, "bad redef");
         return;
     }
     // make boolean old inverse of foo

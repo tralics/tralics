@@ -424,7 +424,7 @@ void Parser::add_math_label(Xml *res) {
         static int mid = 0;
         mid++;
         math_buffer << bf_reset << fmt::format("mid{}", mid);
-        the_tag = math_buffer.to_string();
+        the_tag = math_buffer;
     }
     the_stack.create_new_anchor(res->id, my_id, Istring(the_tag));
     const std::string &label = cmi.get_label_val();
@@ -686,7 +686,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
     if ((math_env_props(type) & 1) == 0) {
         math_buffer << bf_reset;
         math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
-        parse_error(math_buffer.to_string());
+        parse_error(math_buffer);
     }
     if ((math_env_props(type) & 16) != 0) ignore_optarg();
     if ((math_env_props(type) & 32) != 0) read_arg();
@@ -1224,7 +1224,7 @@ void MathHelper::ml_check_labels() {
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
-            the_parser.parse_error(the_parser.err_tok, B.to_string(), "duplicate label");
+            the_parser.parse_error(the_parser.err_tok, B, "duplicate label");
         }
         if (v == -2 || v == -3) {
             B << bf_reset << "Multiple \\tag " << multi_labels[i];
@@ -1235,7 +1235,7 @@ void MathHelper::ml_check_labels() {
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
-            the_parser.parse_error(the_parser.err_tok, B.to_string(), "duplicate tag");
+            the_parser.parse_error(the_parser.err_tok, B, "duplicate tag");
         }
     }
 }
@@ -1395,7 +1395,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
         if (et == nomathenv_code || ((math_env_props(et) & 1) != 0)) {
             Buffer &B = math_buffer;
             B << bf_reset << "Illegal \\begin{" << s << "} found in math mode";
-            parse_error(err_tok, B.to_string(), "bad env");
+            parse_error(err_tok, B, "bad env");
         }
         if ((math_env_props(et) & 16) != 0) ignore_optarg();
         new_math_list(res, math_env_cd, et);
@@ -1429,7 +1429,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
             B << "\\right";
         else
             B << "}";
-        parse_error(err_tok, B.to_string(), "bad end");
+        parse_error(err_tok, B, "bad end");
     }
     return true;
 }
@@ -1693,7 +1693,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
         Trace.push_back(ScaledInt(dmres), glue_spec_pt);
         Buffer B;
         B.push_back(ScaledInt(dmres), glue_spec_pt);
-        dmres = to_signed(Istring(B.to_string()).id);
+        dmres = to_signed(Istring(B).id);
     }
     Token m = scan_style();
     add_to_trace(m);
@@ -1892,7 +1892,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         L.get_arg1().convert_this_to_string(math_buffer); // get the span
         int k = 0;
         try {
-            k = std::stoi(math_buffer.to_string());
+            k = std::stoi(math_buffer);
         } catch (...) { spdlog::warn("Could not parse `{}' as an integer", math_buffer); }
         if (k <= 0)
             n++;
@@ -2074,7 +2074,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     } else
         return nullptr;
     Xml *tmp  = Stack::fonts1(loc);
-    Xml *xval = new Xml(Istring(B.to_string()));
+    Xml *xval = new Xml(Istring(B));
     if (have_font) {
         Xml *tmp2 = Stack::fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
@@ -2198,7 +2198,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (X.empty()) return nullptr;
     if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
-    Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer.to_string())));
+    Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer)));
     s->add_att(np_form, np_prefix);
     return s;
 }
@@ -2755,7 +2755,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             B.reset();
             int n = cur.get_font();
             B.push_back(ScaledInt(n), glue_spec_pt);
-            Xml *v = mk_space(B.to_string());
+            Xml *v = mk_space(B);
             res.push_back(MathElt(v, mt_flag_space));
             continue;
         }
@@ -2940,7 +2940,7 @@ void Math::handle_mbox(Math &res) {
             return;
         }
         if (!math_buffer.empty()) {
-            auto s    = math_buffer.to_string();
+            auto s    = math_buffer;
             Xml *Text = new Xml(cst_mtext, new Xml(Istring(s)));
             if (int(font) > 1) Text->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(font)));
             res.push_back_small(Text);
@@ -2968,7 +2968,7 @@ void Math::handle_mbox(Math &res) {
                 Buffer &B = Trace;
                 B.reset();
                 B.push_back(cur_math_space, glue_spec_pt);
-                b = mk_space(B.to_string());
+                b = mk_space(B);
             } else {
                 b = new Xml(cst_mspace, nullptr);
                 b->add_att(np_cst_width, np_halfem);

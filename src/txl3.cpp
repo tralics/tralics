@@ -314,7 +314,7 @@ void Parser::L3_eq_conditional(subtypes s) {
         if (c == l3_bad_code) continue;
         B.l3_fabricate_cond(tok_base, tok_sig, c);
         if (!hash_table.is_defined(B)) {
-            parse_error(err_tok, "Undefined token", B.to_string());
+            parse_error(err_tok, "Undefined token", B);
             continue;
         }
         Token old = hash_table.last_tok;
@@ -402,7 +402,7 @@ auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::string {
     }
     group_buffer.reset();
     group_buffer << L;
-    return group_buffer.to_string();
+    return group_buffer;
 }
 
 void Parser::E_l3str_ifeq(subtypes c) {

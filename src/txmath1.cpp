@@ -1224,7 +1224,7 @@ void MathElt::cv_noML() {
         rb.reset();
         rb.push_back(Token(get_font()));
         if (rb == "\\relax") return;
-        mathml_buffer.push_back(rb.to_string());
+        mathml_buffer.push_back(rb);
         mathml_buffer.push_back(' ');
     }
         return;
@@ -1334,7 +1334,7 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
         convert_math_noMLt0();
     else
         convert_math_noML0();
-    return new Xml(np_texmath, new Xml(Istring(mathml_buffer.to_string())));
+    return new Xml(np_texmath, new Xml(Istring(mathml_buffer)));
 }
 
 // --------------------------------------------------
@@ -1486,12 +1486,12 @@ auto Math::chars_to_mb3() -> Istring {
     if (sz == 0 || bc != 2) {
         Buffer tmp;
         tmp.reset();
-        tmp << "Error scanning width, so far got '" << B.to_string() << "'";
-        the_parser.parse_error(the_parser.err_tok, tmp.to_string(), "bad dimension");
+        tmp << "Error scanning width, so far got '" << B << "'";
+        the_parser.parse_error(the_parser.err_tok, tmp, "bad dimension");
         B.reset();
         B.push_back("0pt");
     }
-    return Istring(B.to_string());
+    return Istring(B);
 }
 
 // Procedure called in case of errors
@@ -1510,14 +1510,14 @@ void Buffer::show_uncomplete(String m) {
 auto Math::convert_this_to_string(Buffer &B) const -> std::string {
     B.reset();
     if (!chars_to_mb(B, true)) B.show_uncomplete("Bad character in conversion to string");
-    return B.to_string();
+    return B;
 }
 
 // Use of the alternate command
 auto Math::convert_opname() const -> std::string {
     Buffer &B = aux_buffer;
     if (!chars_to_mb1(B)) B.show_uncomplete("Bad character in conversion to string");
-    return B.to_string();
+    return B;
 }
 
 // Case of \begin{foo}[bar]{gee}ETC, spaces are not yet removed
@@ -1566,7 +1566,7 @@ auto Math::remove_req_arg_noerr() const -> std::string {
     Math &L = C->get_list(); // the sublist containing the argument
     aux_buffer.reset();
     if (!L.chars_to_mb(aux_buffer, true)) return "bad";
-    return aux_buffer.to_string();
+    return aux_buffer;
 }
 
 // --------------------------------------------------
@@ -1606,7 +1606,7 @@ void Math::special2(bool &ok, Xml *&res) const {
         } else
             return;
     }
-    if (!B.empty()) res = new Xml(Istring(B.to_string()));
+    if (!B.empty()) res = new Xml(Istring(B));
 }
 
 // This handles the exponent. The case 10^e and 10^o is handled
@@ -1673,15 +1673,14 @@ auto MathElt::is_e_grave() const -> bool {
 
 // This is the list of valid exponents and the conversions.
 auto Buffer::special_exponent() const -> String {
-    if (to_string() == "th") return "th";
-    if (to_string() == "st") return "st";
-    if (to_string() == "rd") return "rd";
-    if (to_string() == "nd") return "nd";
-    if (to_string() == "e" || to_string() == "ieme" || to_string() == "eme" || to_string() == "i\303\250me" || to_string() == "\303\250me")
-        return "e";
-    if (to_string() == "ier" || to_string() == "er") return "er";
-    if (to_string() == "iemes" || to_string() == "i\303\250mes" || to_string() == "es") return "es";
-    if (to_string() == "\303\250re" || to_string() == "re") return "re";
+    if (*this == "th") return "th";
+    if (*this == "st") return "st";
+    if (*this == "rd") return "rd";
+    if (*this == "nd") return "nd";
+    if (*this == "e" || *this == "ieme" || *this == "eme" || *this == "i\303\250me" || *this == "\303\250me") return "e";
+    if (*this == "ier" || *this == "er") return "er";
+    if (*this == "iemes" || *this == "i\303\250mes" || *this == "es") return "es";
+    if (*this == "\303\250re" || *this == "re") return "re";
     return nullptr;
 }
 
@@ -1779,7 +1778,7 @@ void Parser::TM_fonts() {
 auto math_ns::mk_mi(codepoint c) -> Xml * {
     aux_buffer.reset();
     aux_buffer.push_back_real_utf8(c);
-    Xml *x = new Xml(Istring(aux_buffer.to_string()));
+    Xml *x = new Xml(Istring(aux_buffer));
     return new Xml(cst_mi, x);
 }
 
@@ -1851,7 +1850,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
         pop_front();
     }
     if (f == 1) B.push_back(' ');
-    res = new Xml(Istring(B.to_string()));
+    res = new Xml(Istring(B));
     res = new Xml(cst_mi, res);
     if (f > 1 && spec) res->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(f)));
     return MathElt(res, mt_flag_small);
@@ -1874,7 +1873,7 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
             B.push_back(char(uchar(c)));
             pop_front();
         }
-    Xml *res = new Xml(Istring(B.to_string()));
+    Xml *res = new Xml(Istring(B));
     res      = new Xml(cst_mn, res);
     if (f > 1) res->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(f)));
     return MathElt(res, mt_flag_small);

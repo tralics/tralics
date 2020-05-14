@@ -190,7 +190,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
         }
         if (c.non_null()) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
     }
-    return {the_converter.line_is_ascii, utf8_out.to_string()};
+    return {the_converter.line_is_ascii, utf8_out};
 }
 
 // This converts a line in UTF8 format
@@ -208,13 +208,13 @@ void Buffer::convert_line(int l, size_t wc) {
 void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
         buf << bf_reset << fmt::format("Illegal encoding {}", enc);
-        the_parser.parse_error(buf.to_string());
+        the_parser.parse_error(buf);
         return;
     }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
         buf << bf_reset << fmt::format("Illegal encoding position {}", pos);
-        the_parser.parse_error(buf.to_string());
+        the_parser.parse_error(buf);
         return;
     }
     if (0 < v && v < int(nb_characters))
@@ -286,7 +286,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 B.push_back_newline();
             if (co_try != 0) {
                 co_try--;
-                int k = io_ns::find_encoding(B.to_string());
+                int k = io_ns::find_encoding(B);
                 if (k >= 0) {
                     wc         = to_unsigned(k);
                     L.encoding = wc;
@@ -297,7 +297,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);
             if (emit)
-                L.insert(B.to_string(), converted);
+                L.insert(B, converted);
             else
                 ++L.cur_line;
             B.reset();
@@ -517,7 +517,7 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
 // Converts the buffer to the output encoding
 auto Buffer::convert_to_out_encoding() const -> std::string {
     auto T = the_main->output_encoding;
-    if (T == en_boot || T == en_utf8 || is_all_ascii()) return to_string(); // \todo use std::string
+    if (T == en_boot || T == en_utf8 || is_all_ascii()) return data();
     return convert_to_latin1(T == en_latin);
 }
 
@@ -538,12 +538,12 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
         else
             O.push_back_ent(c);
     }
-    return O.to_string();
+    return std::move(O);
 }
 
 auto Buffer::convert_to_log_encoding() -> std::string {
     output_encoding_type T = the_main->log_encoding;
-    if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return to_string();
+    if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return data();
     auto old_ptr               = ptrs.b;
     ptrs.b                     = 0;
     the_converter.global_error = false;
@@ -559,7 +559,7 @@ auto Buffer::convert_to_log_encoding() -> std::string {
             utf8_out.out_log(c, T);
     }
     ptrs.b = old_ptr;
-    return utf8_out.to_string();
+    return std::move(utf8_out);
 }
 
 auto Buffer::codepoints() -> std::vector<codepoint> { // \todo use at more places, and exploit utfcpp
@@ -643,7 +643,7 @@ void Parser::T_filecontents(int spec) {
         if (action == 1) outfile << input_buffer;
         if (action == 2) {
             int n = get_cur_line();
-            file_pool.back().emplace_back(n, input_buffer.to_string(), is_encoded);
+            file_pool.back().emplace_back(n, input_buffer, is_encoded);
         }
         kill_line();
     }

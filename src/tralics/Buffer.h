@@ -8,8 +8,8 @@
 struct AttPair;
 class Xml;
 
-/// a big structure. Many methods do not belong in a general class like
-/// that because they are specific to TeX.
+/// A utility structure which is basically a std::string with a marked range,
+/// and many methods specific to TeX.
 
 class Buffer : public std::string {
 public:

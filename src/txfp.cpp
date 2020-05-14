@@ -544,7 +544,7 @@ void Parser::fp_e_pascal() {
     auto j = scan_braced_int(fp_name);
     if (j < 0 || j >= 64) {
         tkbuf << bf_reset << fmt::format("out of bound {} max value is 63", j);
-        parse_error(tkbuf.to_string());
+        parse_error(tkbuf);
         return;
     }
     auto      jj = to_unsigned(j);
@@ -582,7 +582,7 @@ void FpNum::truncate(long n) {
     if (n >= 18) return;
     if (n < 0) {
         tkbuf << bf_reset << fmt::format("Negative number {} in truncate", n);
-        the_parser.parse_error(tkbuf.to_string());
+        the_parser.parse_error(tkbuf);
         return;
     }
     if (n == 0) { data[2] = data[3] = 0; }
@@ -1702,7 +1702,7 @@ void FpGenList::fp_gen_app() {
     int   n = 0;
     Token x = find_str(n);
     if (!x.is_space_token()) return;
-    auto S = tkbuf.to_string();
+    auto &S = tkbuf;
     if ((S == "add") || (S == "sub") || (S == "mul") || (S == "div") || (S == "abs") || (S == "neg") || (S == "sgn") || (S == "min") ||
         (S == "max") || (S == "round") || (S == "trunc") || (S == "clip") || (S == "exp") || (S == "ln") || (S == "pow") || (S == "root") ||
         (S == "seed") || (S == "random") || (S == "sin") || (S == "cos") || (S == "sincos") || (S == "tan") || (S == "cot") ||
@@ -2167,11 +2167,11 @@ void Parser::upn_eval(TokenList &l) {
         upn_eval(L.value);
         return;
     }
-    int       n   = 0;
-    Token     x   = L.find_str(n);
-    auto      str = tkbuf.to_string();
-    TokenList a1, a2;
-    FpNum     x1, x2, x3, x4;
+    int                n   = 0;
+    Token              x   = L.find_str(n);
+    const std::string &str = tkbuf;
+    TokenList          a1, a2;
+    FpNum              x1, x2, x3, x4;
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{FPupcmd " << (n == 0 ? "??" : str) << "}\n";

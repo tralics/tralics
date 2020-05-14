@@ -75,7 +75,7 @@ void config_ns::interpret_list(const std::string &a, Buffer &b) {
 
 // Function called when theme_vals is seen in the config file.
 void config_ns::interpret_theme_list(const Buffer &B) {
-    all_themes = " " + B.to_string() + " ";
+    all_themes = " " + B + " ";
     for (char &c : all_themes)
         if (is_upper_case(c)) c += 'a' - 'A';
 }
@@ -146,7 +146,7 @@ auto config_ns::find_keys(const std::string &name) -> std::string {
     auto   n = X->size();
     for (size_t i = 0; i < n; i++) X->data[i].to_buffer(B);
     if (n > 0) B.remove_last();
-    return B.to_string();
+    return std::move(B);
 }
 
 // Return the value of the key in a list.
@@ -276,7 +276,7 @@ auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &ln
     std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
     B.skip_sp_tab_comma();
     if (B.head() == 0) return -1;
-    if (B.to_string().substr(B.ptrs.b, 3) == "\\UR") {
+    if (B.substr(B.ptrs.b, 3) == "\\UR") {
         static bool warned = false;
         if (!warned && the_parser.get_ra_year() > 2006) {
             log_and_tty << "You should use Lille instead of \\URLille,\n";
@@ -402,7 +402,7 @@ auto Buffer::add_with_space(const std::string &s) -> std::string {
     push_back(' ');
     while ((s[i] != 0) && (s[i] != ' ')) push_back(s[i++]);
     lowercase();
-    std::string res = to_string(1);
+    std::string res = substr(1);
     push_back(' ');
     return res;
 }

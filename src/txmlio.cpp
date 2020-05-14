@@ -244,7 +244,7 @@ void XmlIO::parse_lt() {
 void XmlIO::parse_end() {
     scan_name();
     skip_space();
-    auto ref = Istring(B.to_string());
+    auto ref = Istring(B);
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
         std::cout << "Got " << ref << ", Expected " << cur_xml->name << "\n";
@@ -271,7 +271,7 @@ void XmlIO::pop_this() {
 void XmlIO::parse_tag() {
     reread_list.push_back(cur_char);
     scan_name();
-    Xml *res = new Xml(Istring(B.to_string()), nullptr);
+    Xml *res = new Xml(Istring(B), nullptr);
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -326,9 +326,9 @@ void XmlIO::parse_attributes() {
         }
         // Now we have an attribute pair
         scan_name();
-        auto att_name = Istring(B.to_string());
+        auto att_name = Istring(B);
         parse_att_val();
-        auto att_val = Istring(B.to_string());
+        auto att_val = Istring(B);
         cur_xml->id.add_attribute(att_name, att_val);
     }
 }
@@ -417,7 +417,7 @@ void XmlIO::expect(String s) {
             static Buffer aux;
             aux.reset();
             aux << "Expected " << s[i] << " got " << cur_char;
-            error(aux.to_string());
+            error(aux);
         }
     }
 }
@@ -488,7 +488,7 @@ void XmlIO::parse_dec_conditional() {
         B << "[INCLUDE[";
     else
         B << "[IGNORE[";
-    Xml *res = new Xml(Istring(B.to_string()));
+    Xml *res = new Xml(Istring(B));
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
@@ -534,14 +534,14 @@ void XmlIO::parse_dec_entity() {
         parameter = true;
     }
     scan_name(0);
-    std::string name = B.to_string(); // This is the entity name
+    std::string name = B;
     aux.push_back(name);
     skip_space();
     // entity value is defined by a name (system or public) or value
     if (!parse_sys_pub()) {
         parse_quoted();
         aux << " '" << B << "'";
-        if (parameter) entities.emplace_back(name, B.to_string());
+        if (parameter) entities.emplace_back(name, B);
     }
     skip_space();
     // We might have NDATA here, if parameter==false
@@ -582,7 +582,7 @@ void XmlIO::parse_dec_element() {
         if (is_spacer(c)) {
             if (is_first || prev_is_space) continue;
             if (first_space) {
-                elt_name = aux.to_string();
+                elt_name = aux;
                 aux.reset();
                 first_space = false;
                 is_first    = true;
@@ -630,7 +630,7 @@ void XmlIO::parse_dec_attlist() {
         if (is_spacer(c)) {
             if (is_first || prev_is_space) continue;
             if (first_space) {
-                elt_name = aux.to_string();
+                elt_name = aux;
                 aux.reset();
                 first_space = false;
                 is_first    = true;
@@ -734,7 +734,7 @@ auto XmlIO::expand_PEReference() -> bool {
         if (c == ';') break;
         B.push_back(c);
     }
-    std::string s  = B.to_string();
+    std::string s  = B;
     bool        ok = false;
     auto        n  = entities.size();
     for (size_t i = 0; i < n; i++) {

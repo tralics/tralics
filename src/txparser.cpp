@@ -897,7 +897,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
     }
     cur_tok.kill();
     pop_level(bt_env);
-    return want_result ? mac_buffer.to_string() : "";
+    return want_result ? static_cast<std::string>(mac_buffer) : "";
 }
 
 // --------------------------------------------------
@@ -1033,7 +1033,7 @@ auto Parser::group_to_string() -> std::string {
     for (;;) {
         get_token();
         symcodes S = cur_cmd_chr.cmd;
-        if (S == close_catcode) return group_buffer.to_string();
+        if (S == close_catcode) return group_buffer;
         if (S == space_catcode)
             group_buffer.push_back(' ');
         else if (S > 2 && S < 16)
@@ -1074,7 +1074,7 @@ auto Parser::to_stringE(TokenList &L) -> std::string {
     Buffer &B = group_buffer;
     B.reset();
     B << L;
-    return B.to_string();
+    return B;
 }
 
 // Scan_general_text is like scan_toks(false,false).
@@ -1259,7 +1259,7 @@ void Parser::M_new_thm() {
             return;
         }
         if (counter_check(Thbuf1, false)) return; // checks the counter
-        Thbuf2 << bf_reset << "the" << Thbuf1.to_string(2);
+        Thbuf2 << bf_reset << "the" << Thbuf1.substr(2);
         cur_tok = hash_table.locate(Thbuf2);
         TokenList R;
         R.push_back(cur_tok);
@@ -1531,7 +1531,7 @@ auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
         parse_error(err_tok, msg, x);
         B << bf_reset << "bad";
     }
-    return B.to_string();
+    return B;
 }
 
 // Converts the token list X into a string, adding s1 and s2
@@ -1657,7 +1657,7 @@ auto Parser::fetch_name1(TokenList &L) -> std::string {
     TL.swap(L);
     fetch_name2();
     restore_the_state(st_state);
-    return fetch_name_res.to_string();
+    return fetch_name_res;
 }
 
 // if exp is true, this is \csname ... \endcsname, otherwise get_r_token
@@ -1849,7 +1849,7 @@ auto Parser::M_counter(bool def) -> bool {
     if (counter_check(b, def)) return true;
     back_input();
     if (!def) return false;
-    return counter_aux(b.to_string(2), nullptr, T);
+    return counter_aux(b.substr(2), nullptr, T);
 }
 
 // Used by the bootstrap phase to define a dependent counter
@@ -2520,7 +2520,7 @@ void Parser::E_mathversion() {
         return;
     }
     TokenList L;
-    Token     T = Token(other_t_offset, B.to_string() == "bold" ? '1' : '0');
+    Token     T = Token(other_t_offset, B == "bold" ? '1' : '0');
     L.push_back(hash_table.mathversion_token);
     L.push_back(T);
     L.push_back(hash_table.relax_token);
@@ -3768,7 +3768,7 @@ void Parser::set_boolean() {
     else if (b == "false")
         s = "false";
     else {
-        parse_error(T, "boolean value neither true nor false: " + b.to_string());
+        parse_error(T, "boolean value neither true nor false: " + b);
         return;
     }
     if (my_csname("", s, A, "setboolean")) return;

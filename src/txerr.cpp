@@ -235,7 +235,7 @@ void Parser::bad_counter0() {
 }
 
 void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
-    err_buf << bf_reset << (E.is_undef() ? "Unknown counter `" : "Invalid counter `") << B.to_string(2) << "'";
+    err_buf << bf_reset << (E.is_undef() ? "Unknown counter `" : "Invalid counter `") << B.substr(2) << "'";
     signal_error(err_tok, "bad counter");
 }
 
@@ -362,7 +362,7 @@ void Parser::missing_flush() {
     auto k = unprocessed_xml.size();
     while (k > 0 && unprocessed_xml.is_spaceh(k - 1)) k--;
     if (k == 0) return;
-    err_buf << bf_reset << "Internal error, non-empty buffer \n" << unprocessed_xml.to_string() << "\nSome text may be lost";
+    err_buf << bf_reset << "Internal error, non-empty buffer \n" << unprocessed_xml << "\nSome text may be lost";
     signal_error(Token(), "non-empty buffer");
 }
 

@@ -1350,7 +1350,7 @@ void MathDataP::boot_xml_lr_tables() {
         Buffer B;
         B.push_back(static_cast<char>(i));
         built_in_table[k] = new Xml(cst_mo, nullptr);
-        built_in_table[k]->push_back_unless_nullptr(new Xml(B.to_string()));
+        built_in_table[k]->push_back_unless_nullptr(new Xml(B));
     }
 
     // fill_lr(del_Vert, "&Verbar;", "&#x02016;");
@@ -1430,7 +1430,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
         B.push_back(static_cast<char>(c));
     else
         B.push_back(math_chars[c][n]);
-    Xml *v   = new Xml(B.to_string());
+    Xml *v   = new Xml(B);
     Xml *res = new Xml(cst_mi, v);
     if (n == 1) res->add_att(cst_mathvariant, cstf_normal);
     return res;
@@ -1453,7 +1453,7 @@ void MathDataP::boot_chars() {
     for (uchar i = 0; i < nb_simplemath; i++) {
         Buffer B;
         B.push_back(static_cast<char>(i));
-        Xml *res = new Xml(np_simplemath, new Xml(B.to_string()));
+        Xml *res = new Xml(np_simplemath, new Xml(B));
         Xml *X   = new Xml(np_formula, res);
         X->add_att(np_type, np_inline);
         simplemath_table[i] = X;
