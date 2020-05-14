@@ -295,7 +295,8 @@ private:
     std::array<id_type, 128> id_class{};
 
 public:
-    Bibtex(const std::string &dy) : default_year(dy) {}
+    Bibtex(std::string dy) : default_year(std::move(dy)) {}
+
     auto               find_entry(const CitationKey &s) -> BibEntry *;
     auto               find_entry(String s, const std::string &prefix, bib_creator bc) -> BibEntry *;
     auto               find_entry(String s, bool create, bib_creator bc) -> BibEntry *;
