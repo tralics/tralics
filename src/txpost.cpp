@@ -204,7 +204,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         scbuf.push_back(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
         scbuf.push_back(B);
-        W[E] = scbuf.to_string();
+        W[E] = scbuf;
     }
 }
 
@@ -831,7 +831,7 @@ auto Xml::convert_to_string() -> std::string {
     scbuf.reset();
     convert_to_string(scbuf);
     clear();
-    return scbuf.to_string();
+    return scbuf;
 }
 
 // This converts the content to a string. May be recursive

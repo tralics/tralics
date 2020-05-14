@@ -269,7 +269,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         state = 2;
         type  = tpi_rt_ur;
         idx   = k;
-        T2    = local_buf.to_string();
+        T2    = local_buf;
         return true;
     }
     case tpi_S: // case "<foo/>"
@@ -347,7 +347,7 @@ void TitlePageAux::exec_start(size_t k) {
     else if (fl == tp_B_flag)
         the_parser.add_buffer_to_document_hook(B, "(tpa init)");
     else
-        T4 = B.to_string();
+        T4 = B;
 }
 
 // This is executed when we see the \Titlepage cmd
@@ -503,7 +503,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
     B[j]            = 0;
-    auto   match    = B.to_string();
+    auto   match    = B;
     size_t res      = 0;
     for (const auto &k : bigtable) {
         res = k.find_UR(match, j);
@@ -511,7 +511,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     }
     if (res == 0) return 0;
     if (!name.empty()) {
-        std::string w = B.to_string(j + 1);
+        std::string w = B.data() + j + 1;
         B << bf_reset << name;
         if (have_space) B << ' ' << w;
     }
@@ -547,7 +547,7 @@ TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
 // 3 this type; 4 this object; 5 this is a type
 auto Buffer::is_begin_something(const std::string &s) -> int {
     if (!starts_with("Begin")) return 0;
-    if (to_string(5).starts_with("Type")) {
+    if (substr(5).starts_with("Type")) {
         ptrs.b = 9;
         skip_sp_tab();
         if (ptrs.b == 9) return 2; // bad
@@ -555,7 +555,7 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
         skip_letter();
         if (ptrs.b == ptrs.a) return 2; // bad
         reset(ptrs.b);                  // what follows the type is a comment
-        if (to_string(ptrs.a) == s) return 3;
+        if (substr(ptrs.a) == s) return 3;
         return 1;
     }
     ptrs.b = 5;
@@ -692,18 +692,18 @@ void Buffer::find_top_atts() {
     if (at(ptrs.b) == '\"' && back() == '\"' && ptrs.b < size() - 1) remove_last();
     if (at(ptrs.b) == '\"') {
         auto    as = Istring(a);
-        Istring bs = Istring(to_string(ptrs.b + 1));
+        Istring bs = Istring(substr(ptrs.b + 1));
         Xid(1).add_attribute(as, bs);
-    } else if (to_string(ptrs.b) == "\\specialyear") {
+    } else if (substr(ptrs.b) == "\\specialyear") {
         auto as = Istring(a);
         auto bs = Istring(the_main->year_string);
         Xid(1).add_attribute(as, bs);
-    } else if (to_string(ptrs.b) == "\\tralics") {
+    } else if (substr(ptrs.b) == "\\tralics") {
         auto as = Istring(a);
         reset();
         push_back("Tralics version ");
         push_back(the_main->version);
-        Istring bs = Istring(to_string());
+        Istring bs = Istring(*this);
         Xid(1).add_attribute(as, bs);
     } else {
         docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (data() + ptrs.b) << "}";
@@ -720,7 +720,7 @@ auto Buffer::see_config_env() const -> int {
 
 void Buffer::find_one_type(std::vector<std::string> &S) {
     if (!starts_with("Begin")) return;
-    if (!to_string(5).starts_with("Type")) return;
+    if (!substr(5).starts_with("Type")) return;
 
     ptrs.b = 9;
     while (ptrs.b < size() && (at(ptrs.b) == ' ' || at(ptrs.b) == '\t')) ptrs.b++;
@@ -741,7 +741,7 @@ auto tpage_ns::see_main_a(Buffer &in, Buffer &val) -> bool {
     val.reset();
     int k = tpage_ns::see_an_assignment(in, B, val);
     if (k == 1) {
-        bool res = assign(B.to_string(), val.to_string());
+        bool res = assign(B, val);
         if (res) {
             if (!B.empty()) the_log << B << "=" << val.convert_to_log_encoding() << "\n";
             return true;
@@ -817,7 +817,7 @@ auto Buffer::remove_digits(const std::string &s) -> std::string {
     while (k > 0 && is_digit(at(k - 1))) k--;
     if (k != size()) {
         reset(k);
-        return to_string();
+        return *this;
     }
     return "";
 }

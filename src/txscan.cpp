@@ -273,7 +273,7 @@ auto Parser::scan_file_name() -> std::string {
         }
     }
     name_in_progress = false;
-    return file_name.to_string();
+    return file_name;
 }
 
 // This implements \endinput, \scantokens
@@ -315,7 +315,7 @@ void Parser::T_scantokens(TokenList &L) {
     B.reset();
     B << L;
     push_input_stack("(scantokens)", false, true);
-    lines.split_string(B.to_string(), 0);
+    lines.split_string(B, 0);
     lines.after_open();
     every_eof = true;
 }
@@ -383,7 +383,7 @@ void Parser::T_input(int q) {
             B << bf_reset << file;
             if (!B.ends_with(".tex")) {
                 B.push_back(".tex");
-                std::string F = B.to_string();
+                std::string F = B;
                 res           = tralics_ns::find_in_path(F);
             }
         }
@@ -1008,7 +1008,7 @@ void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
     restricted = false;
     b.push_back('\n');
     lines.push_front(Clines(-1));
-    lines.push_front(Clines(1, b.to_string(), true));
+    lines.push_front(Clines(1, b, true));
     file_ended = false;
     for (;;) {
         bool res = next_from_line0();
@@ -2094,7 +2094,7 @@ void Parser::token_show(int what, Buffer &B) {
     if (what == 2) { // find and strip the prefix
         if (!B.find_char('>')) return;
         auto        k = B.ptrs.b;
-        std::string s = B.to_string(k + 1);
+        std::string s = B.substr(k + 1);
         B.reset();
         B.push_back(s);
     }

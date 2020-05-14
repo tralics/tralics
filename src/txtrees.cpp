@@ -141,7 +141,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
     x->id.add_attribute(np_level, name_positions(cst_dig0 + level));
     auto iid = the_index.last_iid++;
-    IR.push_back(new Indexer(B.to_string(), aux, x, level, iid));
+    IR.push_back(new Indexer(B, aux, x, level, iid));
     return n;
 }
 
@@ -190,8 +190,8 @@ void Parser::T_index(subtypes c) {
     auto nid = ++the_index.last_index;
 
     local_buf << bf_reset << fmt::format("lid{}", nid);
-    std::string W  = local_buf.to_string();
-    Istring     id = the_stack.add_anchor(W, false);
+    const std::string &W  = local_buf;
+    Istring            id = the_stack.add_anchor(W, false);
     create_label(W, id);
     tralics_ns::add_ref(to_signed(iid), W, true);
 }
@@ -577,7 +577,7 @@ auto date_ns::check_date(long y, size_t m, long d) -> bool {
     else
         local_buf << Bad;
     local_buf << fmt::format(" {}/{}/{}", y, m, d);
-    the_parser.parse_error(the_parser.err_tok, local_buf.to_string());
+    the_parser.parse_error(the_parser.err_tok, local_buf);
     return false;
 }
 

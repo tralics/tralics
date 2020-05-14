@@ -94,7 +94,7 @@ public:
     void               set_p1(char c) { p1 = c; }
     //  void bad() { v = tpi_err; }
     void set_v(tpi_vals V) { v = V; }
-    void set_value(const Buffer &b) { value = b.to_string(); }
+    void set_value(const Buffer &b) { value = b; }
     void reset();
 };
 

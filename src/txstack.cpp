@@ -184,7 +184,7 @@ void Xml::remove_last_space() {
     shbuf.remove_space_at_end();
     if (k != shbuf.size()) {
         pop_back();
-        if (!shbuf.empty()) push_back_unless_nullptr(new Xml(shbuf.to_string()));
+        if (!shbuf.empty()) push_back_unless_nullptr(new Xml(shbuf));
     }
 }
 
@@ -450,7 +450,7 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = Istring(aux.to_string());
+            auto     a   = Istring(aux);
             Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names[np_rend], a);
@@ -613,7 +613,7 @@ void Stack::finish_cell(int w) {
     int        n       = 0;
     if (shbuf.install_att(cid, the_names[np_cols])) {
         try {
-            n = std::stoi(shbuf.to_string());
+            n = std::stoi(shbuf);
         } catch (...) { spdlog::warn("Could not parse `{}' as an integer", shbuf); }
     }
     if (n != 0) {

@@ -37,19 +37,19 @@ auto tralics_ns::strip_end(String s) -> String {
 // (given the name skip and the integer 24)
 auto tralics_ns::make_name(const std::string &x, int y) -> std::string {
     make_name_buffer << bf_reset << fmt::format("{}{}", x, y);
-    return make_name_buffer.to_string();
+    return make_name_buffer;
 }
 
 auto tralics_ns::make_name16(String x, size_t y) -> std::string {
     make_name_buffer << bf_reset << x << '"';
     make_name_buffer.push_back16(y, false);
-    return make_name_buffer.to_string();
+    return make_name_buffer;
 }
 
 auto CmdChr::specchar_cmd_name() const -> std::string {
     make_name_buffer << bf_reset << "Character ";
     make_name_buffer.push_back16(chr, true);
-    return make_name_buffer.to_string();
+    return make_name_buffer;
 }
 
 auto CmdChr::token_error_name() const -> String {

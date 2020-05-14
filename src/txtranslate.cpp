@@ -673,7 +673,7 @@ auto Parser::scan_anchor(bool &h) -> std::string {
     std::string s = sT_optarg_nopar();
     if (!s.empty()) return s;
     mac_buffer << bf_reset << fmt::format("{}", anchor_id);
-    return mac_buffer.to_string();
+    return mac_buffer;
 }
 
 // \label \anchor or \anchorlabel
@@ -704,7 +704,7 @@ void Parser::T_float(subtypes c) {
         Istring     opt  = nT_optarg_nopar();
         if (opt.null()) {
             B << bf_reset << "fps@" << sarg;
-            expand_no_arg(B.to_string());
+            expand_no_arg(B);
             opt = nT_arg_nopar();
         }
         word_define(incentering_code, 1, false);
@@ -714,7 +714,7 @@ void Parser::T_float(subtypes c) {
         if (c == 1) the_stack.add_att_to_last(np_starred, np_true);
         the_stack.add_att_to_last(np_type, arg);
         B << bf_reset << "fname@" << sarg;
-        expand_no_arg(B.to_string());
+        expand_no_arg(B);
         opt = nT_arg_nopar();
         the_stack.add_att_to_last(np_name, opt);
         refstepcounter(sarg, true);
@@ -871,11 +871,11 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(np_fileextension, Istring(Tbuf.to_string(to_unsigned(k) + 1)));
+        AL.push_back(np_fileextension, Istring(Tbuf.substr(to_unsigned(k) + 1)));
         Tbuf.reset(to_unsigned(k));
     }
-    enter_file_in_table(Tbuf.to_string(ii), ok);
-    AL.push_back(np_file, Istring(Tbuf.to_string()));
+    enter_file_in_table(Tbuf.substr(ii), ok);
+    AL.push_back(np_file, Istring(Tbuf));
 }
 
 void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
@@ -946,10 +946,10 @@ void Parser::includegraphics(subtypes C) {
             name_positions N = skey == "height" ? np_height : skey == "width" ? np_width : np_totalwidth;
             ScaledInt      s = dimen_from_list(T, val);
             B.push_back(s, glue_spec_pt);
-            AL.push_back(the_names[N], Istring(B.to_string()), true);
+            AL.push_back(the_names[N], Istring(B), true);
         } else if (skey == "natwidth" || skey == "natheight" || skey == "bbllx" || skey == "bblly" || skey == "bburx" || skey == "bbury") {
             default_bp(B, T, val);
-            AL.push_back(Istring(skey), Istring(B.to_string()), true);
+            AL.push_back(Istring(skey), Istring(B), true);
         } else if (skey == "bb" || skey == "viewport" || skey == "trim") {
             TokenList aux;
             auto      SP = Token(space_token_val);
@@ -960,7 +960,7 @@ void Parser::includegraphics(subtypes C) {
                 default_bp(B, T, aux);
                 if (i < 3) B.push_back(' ');
             }
-            AL.push_back(Istring(skey), Istring(B.to_string()), true);
+            AL.push_back(Istring(skey), Istring(B), true);
         } else
             invalid_key(T, skey, val);
     }
@@ -1539,7 +1539,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (!has_atts)
         Y = Istring(y);
     else
-        Y = Istring(tpa_buffer.to_string());
+        Y = Istring(tpa_buffer);
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();
@@ -1649,7 +1649,7 @@ void Parser::T_reevaluate() {
     }
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Clines(-1));
-    lines.split_string(Tbuf.to_string(), 0);
+    lines.split_string(Tbuf, 0);
 }
 
 void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
@@ -1771,7 +1771,7 @@ auto Parser::dimen_attrib(ScaledInt A) -> Istring {
         i--;
     }
     if (i > 0 && B[i - 1] == '.') B.remove_last();
-    return Istring(B.to_string());
+    return Istring(B);
 }
 
 void Parser::back_input_pt(bool spec) {
@@ -2207,7 +2207,7 @@ void Parser::T_unimp(subtypes c) {
 void Parser::need_bib_mode() {
     if (the_stack.in_bib_mode()) return;
     Tbuf << bf_reset << "Command " << err_tok << " should occur in bibliographic mode only";
-    parse_error(err_tok, Tbuf.to_string());
+    parse_error(err_tok, Tbuf);
 }
 void Parser::need_array_mode() {
     if (the_stack.in_array_mode()) return;
