@@ -306,7 +306,7 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
 }
 
 // We remove everything that is not of type S.
-void LinePtr::parse_and_extract_clean(String s) {
+void LinePtr::parse_and_extract_clean(const std::string &s) {
     LinePtr res;
     int     b    = 0;
     Buffer &B    = local_buf;

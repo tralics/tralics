@@ -965,7 +965,7 @@ void MainClass::read_config_and_other() {
         if (tcf_file) {
         } // config says to use a tcf
         else if (found_type)
-            config_file.parse_and_extract_clean(dtype.c_str());
+            config_file.parse_and_extract_clean(dtype);
         else
             config_file.clear();
     }

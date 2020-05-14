@@ -749,7 +749,7 @@ auto XmlIO::expand_PEReference() -> bool {
     std::vector<codepoint> V;
     V.clear();
     B.ptrs.b = 0;
-    for (;;) {
+    for (;;) { // \todo this is Buffer::codepoints()
         codepoint c = B.next_utf8_char();
         if (c == 0 && B.at_eol()) break;
         V.push_back(c);

@@ -28,7 +28,7 @@ namespace {
         return true;
     }
 
-    void utf8_ovf(size_t n) {
+    void utf8_ovf(size_t n) { // \todo inline
         Converter &T = the_converter;
         buf.reset();
         buf.push_back16(n, true);
@@ -108,16 +108,14 @@ auto Buffer::is_good_ascii() const -> bool {
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers
 
-Converter::Converter() { cur_file_name = "tty"; }
-
 auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
 
 void Stats::io_convert_stats() {
-    int bl = the_converter.bad_lines;
+    int bl = the_converter.bad_lines; // \todo why is this twice what it should be?
     int bc = the_converter.bad_chars;
     int lc = the_converter.lines_converted;
-    if (bl != 0) spdlog::trace("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
-    if (lc != 0) spdlog::trace("Input conversion: {} line{} converted.", lc, io_ns::plural(lc));
+    if (bl != 0) spdlog::warn("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
+    if (lc != 0) spdlog::info("Input conversion: {} line{} converted.", lc, io_ns::plural(lc));
 }
 
 // If an error is signaled on current line, we do not signal again
@@ -151,7 +149,7 @@ auto Buffer::next_utf8_char() -> codepoint {
         Converter &T = the_converter;
         T.bad_chars++;
         T.new_error();
-        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b);
+        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return codepoint();
     }
@@ -564,7 +562,7 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     return utf8_out.to_string();
 }
 
-auto Buffer::codepoints() -> std::vector<codepoint> {
+auto Buffer::codepoints() -> std::vector<codepoint> { // \todo use at more places, and exploit utfcpp
     std::vector<codepoint> V;
     the_converter.start_convert(the_parser.get_cur_line());
     ptrs.b = 0;

@@ -33,7 +33,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void insert_spec(int n, std::string c);
     void insert(const LinePtr &aux);
     void normalise_final_cr();
-    void parse_and_extract_clean(String s);
+    void parse_and_extract_clean(const std::string &s);
     void parse_conf_toplevel() const;
     auto parse_and_extract(String s) const -> LinePtr;
     void print(std::ostream &outfile);
