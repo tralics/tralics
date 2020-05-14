@@ -338,7 +338,7 @@ void CitationKey::make_key(const std::string &s) {
     B.push_back(s);
     B.lowercase();
     cite_key       = s;
-    lower_cite_key = B.to_string();
+    lower_cite_key = B;
     B.reset();
     if (cite_prefix == from_foot)
         B.push_back("foot");
@@ -346,7 +346,7 @@ void CitationKey::make_key(const std::string &s) {
         B.push_back("refer");
     B.push_back("cite:");
     B.push_back(s);
-    full_key = B.to_string();
+    full_key = B;
 }
 
 // This prints an unsolved reference for use by Tralics.
@@ -372,7 +372,7 @@ void Bibliography::dump(Buffer &b) {
 // This reads conditionally a file. Returns true if the file exists.
 auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
     B.push_back(".bib");
-    if (auto of = tralics_ns::find_in_path(B.to_string()); of) {
+    if (auto of = tralics_ns::find_in_path(B); of) {
         read(*of, ct);
         return true;
     }
@@ -387,23 +387,23 @@ void Bibtex::read1(const std::string &cur) {
     Tbuf.push_back(cur);
     auto n = Tbuf.size();
     if (read0(Tbuf, from_year)) return;
-    if (n > 5 && Tbuf.to_string(n - 5) == "+foot.bib") {
+    if (Tbuf.ends_with("+foot.bib")) {
         Tbuf.reset(n - 5);
         if (read0(Tbuf, from_foot)) return;
     }
-    if (n > 5 && Tbuf.to_string(n - 5) == "+year.bib") {
+    if (Tbuf.ends_with("+year.bib")) {
         Tbuf.reset(n - 5);
         if (read0(Tbuf, from_year)) return;
     }
-    if (n > 4 && Tbuf.to_string(n - 4) == "+all.bib") {
+    if (Tbuf.ends_with("+all.bib")) {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_any)) return;
     }
-    if (n > 6 && Tbuf.to_string(n - 6) == "+refer.bib") {
+    if (Tbuf.ends_with("+refer.bib")) {
         Tbuf.reset(n - 6);
         if (read0(Tbuf, from_refer)) return;
     }
-    if (n > 4 && Tbuf.to_string(n - 4) == ".bib.bib") {
+    if (Tbuf.ends_with(".bib")) {
         Tbuf.reset(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
@@ -496,7 +496,7 @@ void Parser::create_aux_file_and_run_pgm() {
     B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
     // NOTE: can we use on-the-fly encoding ?
     the_log << "++ reading " << B << ".\n";
-    tralics_ns::read_a_file(bbl.lines, B.to_string(), 1);
+    tralics_ns::read_a_file(bbl.lines, B, 1);
 }
 
 void Parser::after_main_text() {
@@ -611,14 +611,12 @@ void Parser::T_cititem() {
 void Bbl::newline() {
     B.push_back("\n");
     file << B.convert_to_log_encoding();
-    lines.insert(B.to_string(), true);
+    lines.insert(B, true);
     B.reset();
 }
 
 // Returns the index of the macro named name if it exists,  not_found otherwise.
-auto Bibtex::look_for_macro(const Buffer &name) -> std::optional<size_t> {
-    return look_for_macro(name.hashcode(bib_hash_mod), name.to_string());
-}
+auto Bibtex::look_for_macro(const Buffer &name) -> std::optional<size_t> { return look_for_macro(name.hashcode(bib_hash_mod), name); }
 
 auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
@@ -634,7 +632,7 @@ auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<
 auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
     if (xname != nullptr) name << bf_reset << xname;
     auto h   = name.hashcode(bib_hash_mod);
-    auto lfm = look_for_macro(h, name.to_string());
+    auto lfm = look_for_macro(h, name);
     if (lfm || !insert) return lfm;
     auto res = all_macros.size();
     if (xname != nullptr)
@@ -1253,7 +1251,7 @@ auto Buffer::special_convert(bool init) -> std::string {
         }
     }
     if (init && biblio_buf1.back() == ' ') biblio_buf1.remove_last();
-    return biblio_buf1.to_string();
+    return biblio_buf1;
 }
 
 // This reads a field into field_buf.
@@ -1422,8 +1420,8 @@ void Bibtex::parse_one_field(BibEntry *X) {
     field_pos where = fp_unknown;
     bool      store = false;
     if (X != nullptr) { // if X null, we just read, but store nothing
-        cur_field_name = token_buf.to_string();
-        where          = find_field_pos(token_buf.to_string());
+        cur_field_name = token_buf;
+        where          = find_field_pos(token_buf);
         if (where != fp_unknown) store = true;
     }
     read_field(store);
@@ -1465,11 +1463,11 @@ void Bibtex::parse_one_item() {
     skip_space();
     bool k = scan_identifier(1);
     if (k) return;
-    entry_type cn = find_type(token_buf.to_string());
+    entry_type cn = find_type(token_buf);
     if (cn == type_comment) return;
     if (cn == type_preamble) {
         read_field(true);
-        bbl.push_back(field_buf.to_string());
+        bbl.push_back(field_buf);
     } else if (cn == type_string) {
         k = scan_identifier(2);
         if (k) return;
@@ -1490,7 +1488,7 @@ void Bibtex::parse_one_item() {
             next_char();
         }
         skip_space();
-        cur_entry_name = A.to_string();
+        cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         int       m    = similar_entries;
         while (cur_char() != ')' && cur_char() != '}') parse_one_field(X);
@@ -1628,7 +1626,7 @@ void BibEntry::use_extra_num() {
         B << char('a' + extra_num);
     else
         B << fmt::format("{}", extra_num);
-    label = B.to_string();
+    label = B;
 }
 
 // This must be done after the forward pass. We know if an extra num of 0
@@ -1647,9 +1645,9 @@ void BibEntry::reverse_pass(int &next_extra) {
 void BibEntry::numeric_label(long i) {
     Buffer &B = biblio_buf1;
     B << bf_reset << '[' << label << ']';
-    aux_label = B.to_string();
+    aux_label = B;
     B << bf_reset << std::to_string(i);
-    label = B.to_string();
+    label = B;
 }
 
 BibEntry::BibEntry() {
@@ -1870,7 +1868,7 @@ auto Buffer::remove_space(const std::string &x) -> std::string {
     reset();
     for (size_t i = 0; i < n; i++)
         if (x[i] != ' ') push_back(x[i]);
-    return to_string();
+    return *this;
 }
 
 // We create here the second string
@@ -1883,7 +1881,7 @@ auto Buffer::insert_break(const std::string &x) -> std::string {
         push_back(x[i]);
     }
     push_back("}}");
-    return to_string();
+    return *this;
 }
 
 // Handle author or editor (depending on au), for sort key.
@@ -1963,7 +1961,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     B.next_bibtex_char();
     if (B.head() == 0) return s;
     B.reset(B.ptrs.b);
-    return B.to_string();
+    return B;
 }
 
 // In the case of `Lo{\"i}c', returns  `{\"i}c' for k=2.
@@ -1984,7 +1982,7 @@ auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
         n--;
         B.next_bibtex_char();
     }
-    return B.to_string(B.ptrs.b);
+    return B.substr(B.ptrs.b);
 }
 
 // Signals an error if the year is invalid in the case of refer.
@@ -2060,7 +2058,7 @@ void BibEntry::presort(long serial) {
     B.special_title(all_fields[fp_title]);
     B.lowercase();
     B << fmt::format("{:05d}", serial);
-    sort_label = B.to_string();
+    sort_label = B;
 }
 
 // True if \sortnoop, \SortNoop, \noopsort plus brace or space
@@ -2137,11 +2135,11 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     name_buffer.fill_table(table);
     W.handle_the_names();
     delete[] table;
-    X.value     = biblio_buf1.to_string();
-    X.long_key  = biblio_buf2.to_string();
-    X.name_key  = biblio_buf4.to_string();
-    X.short_key = biblio_buf3.to_string();
-    X.cnrs_key  = biblio_buf5.to_string();
+    X.value     = biblio_buf1;
+    X.long_key  = biblio_buf2;
+    X.name_key  = biblio_buf4;
+    X.short_key = biblio_buf3;
+    X.cnrs_key  = biblio_buf5;
 }
 
 // This replaces \c{c} by \char'347 in order to avoid some errors.
@@ -2488,7 +2486,7 @@ auto NameSplitter::is_this_other() -> bool {
     if (!jr_name.empty()) return false;
     auto a = last_name.first;
     auto b = last_name.last;
-    return b - a == 6 && name_buffer.to_string().substr(a, 6) == "others";
+    return b - a == 6 && name_buffer.substr(a, 6) == "others";
 }
 
 // We use the fact that first cannot be zero

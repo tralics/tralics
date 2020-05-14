@@ -10,7 +10,7 @@ auto Hashtab::locate(const Buffer &b) -> Token {
     if (b.empty()) return Token(null_tok_val);
     auto c = b.single_character();
     if (c.non_null()) return Token(c.value + single_offset);
-    return Token(hash_find(b.to_string()) + hash_offset);
+    return Token(hash_find(b) + hash_offset);
 }
 
 // Returns the hash location of the name in the buffer.
@@ -37,7 +37,7 @@ auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
 auto Hashtab::is_defined(const Buffer &b) -> bool {
-    auto i = map.find(b.to_string());
+    auto i = map.find(b);
     if (i == map.end()) return false;
 
     size_t T = 0;

@@ -212,8 +212,8 @@ void Buffer::push_back_special_att(Xid id) {
         if (!backup_space()) return;
         advance();
         if (!string_delims()) return;
-        Istring a = Istring(to_string(J));
-        Istring b = Istring(to_string(ptrs.a));
+        Istring a = Istring(substr(J));
+        Istring b = Istring(substr(ptrs.a));
         id.add_attribute(a, b);
         advance();
     }
@@ -224,7 +224,7 @@ void Buffer::push_back_special_att(Xid id) {
 auto Buffer::see_equals(String s) -> bool {
     ptrs.b = 0;
     skip_sp_tab();
-    if (!to_string(ptrs.b).starts_with(s)) return false;
+    if (!substr(ptrs.b).starts_with(s)) return false;
     ptrs.b += strlen(s);
     skip_sp_tab();
     if (next_char() != '=') return false;

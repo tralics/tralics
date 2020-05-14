@@ -199,8 +199,6 @@ public:
     // \todo push_back(char*,...) to do fmt::format
 };
 
-inline auto operator<<(std::ostream &fp, const Buffer &L) -> std::ostream & { return fp << L.to_string(); }
-
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     B.push_back(t);
     return B;

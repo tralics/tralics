@@ -30,7 +30,7 @@ auto null_cs_name() -> std::string {
         B << "csname";
         B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
         B << "endcsname";
-        return B.to_string();
+        return B.data();
     }
     if (c == 0) return "csname^^@endcsname";
     return "csnameendcsname";
@@ -78,9 +78,7 @@ void Buffer::push_back_xml_char(uchar c) {
         push_back(static_cast<char>(c));
 }
 
-void Buffer::push_back(const std::string &s) {
-    for (auto c : s) push_back(c);
-}
+void Buffer::push_back(const std::string &s) { append(s); }
 
 // Sets ptrs.a to ptrs.b, advances ptrs.b to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
@@ -162,20 +160,17 @@ void Buffer::push_back_newline() {
 auto Buffer::push_back_newline_spec() -> bool {
     if (empty()) return true;
     push_back('\n');
-    auto s = to_string();
     if (at(0) == '#') {
-        if (s.starts_with("## tralics ident rc=")) { // \todo not very useful
-            auto line = s.substr(20, size() - 21);
+        if (starts_with("## tralics ident rc=")) { // \todo not very useful
+            auto line = substr(20, size() - 21);
             spdlog::trace("Configuration file identification: {}", line);
         }
         return false;
     }
     if (at(0) == '%' || is_space(at(0))) return true;
-    if (s.starts_with("Begin")) return true;
-    if (s.starts_with("End")) return true;
-    reset();
-    push_back(' ');
-    push_back(s);
+    if (starts_with("Begin")) return true;
+    if (starts_with("End")) return true;
+    insert(begin(), ' ');
     return true;
 }
 
@@ -226,7 +221,7 @@ auto Token::tok_to_str() const -> std::string {
     Buffer B;
     if (!is_a_char() || cmd_val() == eol_catcode) {
         B.push_back(*this);
-        return B.to_string();
+        return std::move(B);
     }
     int       cat      = cmd_val();
     codepoint c        = char_val();
@@ -240,7 +235,7 @@ auto Token::tok_to_str() const -> std::string {
         B.out_log(c, the_main->log_encoding);
         B.push_back(fmt::format(" of catcode {}}}", cat));
     }
-    return B.to_string();
+    return std::move(B);
 }
 
 // This puts the name of the token in the buffer.
@@ -366,7 +361,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
         } else
             push_back("csname\\endcsname");
     }
-    return Istring(to_string());
+    return Istring(*this);
 }
 
 // Print the scaled int V as a floating point in the buffer.
@@ -453,7 +448,7 @@ auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.to
 ScaledInt::operator std::string() const {
     Buffer B;
     B.push_back(*this, glue_spec_pt);
-    return B.to_string();
+    return std::move(B);
 }
 
 auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & { return fp << static_cast<std::string>(x); }
@@ -562,7 +557,7 @@ void Buffer::push_back_Roman(long n) {
 
 // True is s is at ptrs.b. If so, updates ptrs.b
 auto Buffer::is_here(const std::string &s) -> bool {
-    if (!to_string(ptrs.b).starts_with(s)) return false;
+    if (!substr(ptrs.b).starts_with(s)) return false;
     ptrs.b += s.size();
     return true;
 }
@@ -570,7 +565,7 @@ auto Buffer::is_here(const std::string &s) -> bool {
 // returns the document class. value in aux
 auto Buffer::find_documentclass(Buffer &aux) -> bool {
     String cmd = "\\documentclass";
-    auto   k   = to_string().find(cmd);
+    auto   k   = find(cmd);
     if (k == std::string::npos) return false;
     for (size_t j = 0; j < k; j++)
         if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
@@ -602,7 +597,7 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
 auto Buffer::find_doctype() const -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";
-    auto   k = to_string().find(S);
+    auto   k = find(S);
     if (k == std::string::npos) return 0;
     k += strlen(S);
     while ((at(k) != 0) && (at(k) == ' ' || at(k) == '=')) k++;
@@ -643,12 +638,12 @@ auto Buffer::find_char(char c) -> bool {
 // splits foo:bar into foo and bar
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
+        after = substr(ptrs.b + 1);
         reset(ptrs.b);
-        after  = to_string(ptrs.b + 1);
-        before = to_string();
+        before = data();
         return true;
     }
-    before = to_string();
+    before = data();
     after  = "";
     return false;
 }
@@ -714,7 +709,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
     auto b = tmp.size();
     while (b > p && is_space(tmp[b - 1])) b--;
     tmp.reset(b);
-    a = tmp.to_string();
+    a = tmp.data();
     return true;
 }
 
@@ -853,7 +848,7 @@ void Buffer::append_unless_ends_with(const std::string &s) {
     if (!ends_with(s)) push_back(s);
 }
 
-auto Buffer::contains(const std::string &s) const -> bool { return to_string().find(s) != std::string::npos; }
+auto Buffer::contains(const std::string &s) const -> bool { return find(s) != std::string::npos; }
 
 auto Buffer::is_spaceh(size_t j) const -> bool { return is_space((*this)[j]); }
 

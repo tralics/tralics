@@ -71,8 +71,6 @@ namespace tpage_ns {
     auto see_main_a(Buffer &in, Buffer &val) -> bool;
 } // namespace tpage_ns
 
-inline auto operator==(const Buffer &B, String s) -> bool { return B.to_string() == s; }
-
 inline auto is_vowel(char c) -> bool { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
 
 // True if it is an accent character, like \^.

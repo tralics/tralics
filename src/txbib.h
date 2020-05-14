@@ -105,7 +105,7 @@ public:
     void set_value(std::string v) { value = std::move(v); }
     void set_default_value() { value = name; }
     BibMacro() = default;
-    BibMacro(size_t hash, Buffer &s1) : h(hash), name(s1.to_string()) {}
+    BibMacro(size_t hash, Buffer &s1) : h(hash), name(s1) {}
     BibMacro(size_t hash, String &s1, String s2) : h(hash), name(s1), value(s2) {}
 };
 

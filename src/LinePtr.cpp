@@ -37,7 +37,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     } else
         prev_line = true;
     if (B[0] == '%') { // debug
-        int k = io_ns::find_encoding(B.to_string());
+        int k = io_ns::find_encoding(B);
         if (k >= 0) encoding = to_unsigned(k);
     }
     return cur_line;
@@ -199,7 +199,7 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
         B.push_back(*C);
         if (B.find_documentclass(buf)) {
             the_main->doc_class_pos = C;
-            return buf.to_string();
+            return buf;
         }
     }
     return "";
@@ -211,9 +211,9 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
 // It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(Buffer &B, line_iterator C) {
     if (C == end())
-        push_front(Clines(1, B.to_string(), true));
+        push_front(Clines(1, B, true));
     else
-        std::list<Clines>::insert(C, Clines(1, B.to_string(), true)); // \todo ew
+        std::list<Clines>::insert(C, Clines(1, B, true)); // \todo ew
 }
 
 // This finds a line with documentclass in it
@@ -238,7 +238,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
         B.push_back(C);
         auto k = B.find_doctype();
         if (k != 0) {
-            res = B.to_string(k);
+            res = B.substr(k);
             return;
         }
         if (++N > 100) return;
@@ -264,7 +264,7 @@ void LinePtr::split_string(std::string x, int l) {
             B.push_back(c);
         if (emit) {
             B.push_back_newline();
-            L.insert(B.to_string(), true);
+            L.insert(B, true);
             B.reset();
         }
         if (c == 0) break;
@@ -336,7 +336,7 @@ void LinePtr::parse_and_extract_clean(const std::string &s) {
                 continue;
             }
         }
-        if (keep) res.emplace_back(n, B.to_string(), cv);
+        if (keep) res.emplace_back(n, B, cv);
     }
     clear();
     splice_first(res);

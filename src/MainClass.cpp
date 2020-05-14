@@ -115,13 +115,13 @@ found at http://www.cecill.info.)";
 
     void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
         if (y < 2000 || y >= 2100) the_main->bad_year();
-        std::string raclass = std::string("ra") + C.to_string();
+        std::string raclass = std::string("ra") + C;
         if (dclass != raclass) {
             spdlog::critical("Illegal document class {} should be {}", dclass, raclass);
             exit(1);
         }
         if (Y.empty()) return;
-        if (Y == C.to_string()) return;
+        if (Y == C) return;
         spdlog::critical("Fatal: Option -year={} incompatible with year in source file", Y);
         exit(1);
     }
@@ -238,8 +238,8 @@ found at http://www.cecill.info.)";
         if (!B.backup_space()) return false;
         B.advance();
         B.skip_sp_tab();
-        other_options.push_back(B.to_string(B.ptrs.a));
-        other_options.push_back(B.to_string(B.ptrs.b));
+        other_options.push_back(B.substr(B.ptrs.a));
+        other_options.push_back(B.substr(B.ptrs.b));
         return true;
     }
 
@@ -266,8 +266,7 @@ found at http://www.cecill.info.)";
     }
 
     auto split_one_arg(String a, int &p) -> std::string {
-        static Buffer B;
-        B.reset();
+        Buffer B;
         p     = 0;
         int i = 0;
         for (;;) {
@@ -288,7 +287,7 @@ found at http://www.cecill.info.)";
             std::cout << "bad option " << a << "\n";
             usage_and_quit(1);
         }
-        return B.to_string();
+        return std::move(B);
     }
 } // namespace
 
@@ -424,7 +423,7 @@ void MainClass::open_log() { // \todo spdlog etc
 
 void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false") || (s == "no"); }
 
-void MainClass::add_to_from_config(int n, Buffer &b) { from_config.emplace_back(n, b.to_string() + "\n", true); }
+void MainClass::add_to_from_config(int n, Buffer &b) { from_config.emplace_back(n, b + "\n", true); }
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
@@ -850,7 +849,7 @@ void MainClass::open_config_file(const std::string &f) { // \todo filesystem
             break;
         }
     }
-    dtype = B.to_string(kk);
+    dtype = B.substr(kk);
     the_log << "Using tcf type " << dtype << "\n";
 }
 
@@ -1006,9 +1005,9 @@ void MainClass::see_name(String s) {
     B << bf_reset << s;
     if (B.ends_with(".xml")) B.remove_last(4);
     B.append_unless_ends_with(".tex");
-    infile = B.to_string();
+    infile = static_cast<std::string>(B);
     B.remove_last(4);
-    no_ext = B.to_string();
+    no_ext = B;
 }
 
 void MainClass::see_name1() {
@@ -1021,15 +1020,12 @@ void MainClass::see_name1() {
         check_year(y, C, dclass, year_string);
     }
     auto k = B.last_slash(); // remove the directory part
-    if (k) {
-        std::string s = B.to_string(*k + 1);
-        B << bf_reset << s;
-    }
-    the_parser.set_projet_val(B.to_string()); // this is apics
-    if (handling_ra) {                        // \todo handling_ra should disappear from tralics alltogether
+    if (k) { B << bf_reset << B.substr(*k + 1); }
+    the_parser.set_projet_val(B); // this is apics
+    if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
         check_lowercase(B);
-        year_string = C.to_string();
-        out_name    = B.to_string(); // This is apics
+        year_string = C;
+        out_name    = B; // This is apics
         year        = y;
         the_parser.set_ra_year(y);
         return;
@@ -1038,12 +1034,12 @@ void MainClass::see_name1() {
         out_name = no_ext;
         B << bf_reset << no_ext; // remove the directory part
         auto kk = B.last_slash();
-        if (kk) out_name = B.to_string(*kk + 1); // This is apics2003
+        if (kk) out_name = B.substr(*kk + 1); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
         C << fmt::format("{}", year);
-        year_string = C.to_string();
+        year_string = C;
     } else {
         year = std::stoi(year_string);
         the_parser.set_ra_year(year);
@@ -1163,7 +1159,7 @@ void MainClass::finish_init() const {
 auto MainClass::check_theme(const std::string &s) -> std::string {
     static Buffer B;
     std::string   res = B.add_with_space(s);
-    if (all_themes.find(B.to_string()) == std::string::npos) {
+    if (all_themes.find(B) == std::string::npos) {
         err_buf.reset();
         if (s.empty())
             err_buf << "Empty or missing theme\n";
