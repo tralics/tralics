@@ -52,8 +52,7 @@ namespace tralics_ns {
 } // namespace tralics_ns
 
 namespace err_ns {
-    extern Buffer local_buf;
-    void          fatal_error(String s);
+    void fatal_error(String s);
 } // namespace err_ns
 
 namespace config_ns {
