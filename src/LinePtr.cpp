@@ -191,17 +191,16 @@ auto LinePtr::get_next(std::string &b, bool &cv) -> int {
 }
 
 /// This finds a line with documentclass in it
-// uses B and the buffer.
-auto LinePtr::find_documentclass(Buffer &B) -> std::string {
-    the_main->doc_class_pos = end();
+auto LinePtr::find_documentclass() -> std::string {
+    static constexpr auto pattern = ctll::fixed_string{R"(.*\\documentclass.*\{([a-zA-Z0-9]+)\}.*)"};
     for (auto C = begin(); C != end(); ++C) {
-        B.clear();
-        B.push_back(*C);
-        if (auto os = B.find_documentclass(); os) {
+        if (C->find("%%") != std::string::npos) continue;
+        if (auto match = ctre::match<pattern>(*C)) {
             the_main->doc_class_pos = C;
-            return *os;
+            return match.get<1>().to_string();
         }
     }
+    the_main->doc_class_pos = end();
     return "";
 }
 

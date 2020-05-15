@@ -19,7 +19,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     void find_all_types(std::vector<std::string> &res);
     auto find_configuration() -> std::string;
     void find_doctype(Buffer &B, std::string &res);
-    auto find_documentclass(Buffer &B) -> std::string;
+    auto find_documentclass() -> std::string;
     void find_top_atts();
     auto find_top_val(String s, bool c) -> std::string;
     void set_interactive(bool sw) { interactive = sw; }

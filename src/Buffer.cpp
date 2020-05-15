@@ -545,15 +545,6 @@ auto Buffer::is_here(const std::string &s) -> bool {
     return true;
 }
 
-// returns the document class. value in aux
-auto Buffer::find_documentclass() const -> std::optional<std::string> {
-    if (contains("%%")) return {};
-    static constexpr auto pattern = ctll::fixed_string{R"(.*\\documentclass.*\{([a-zA-Z0-9]+)\}.*)"};
-    auto                  match   = ctre::match<pattern>(*this);
-    if (!match) return {};
-    return match.get<1>().to_string();
-}
-
 auto Buffer::find_doctype() const -> size_t {
     if (at(0) != '%') return 0;
     String S = "ralics DOCTYPE ";

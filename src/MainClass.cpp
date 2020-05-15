@@ -1089,8 +1089,8 @@ void MainClass::run(int argc, char **argv) {
     more_boot();                    // finish bootstrap
     check_for_input();              // open the input file
 
+    dclass = input_content.find_documentclass();
     Buffer B; // \todo remove
-    dclass = input_content.find_documentclass(B);
     input_content.find_doctype(B, opt_doctype);
 
     read_config_and_other();
