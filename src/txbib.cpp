@@ -1250,7 +1250,7 @@ auto Buffer::special_convert(bool init) -> std::string {
             space = false;
         }
     }
-    if (init && biblio_buf1.back() == ' ') biblio_buf1.remove_last();
+    if (init && !biblio_buf1.empty() && biblio_buf1.back() == ' ') biblio_buf1.remove_last();
     return biblio_buf1;
 }
 

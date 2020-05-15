@@ -475,7 +475,7 @@ void Buffer::push_back(const Macro &x) {
         *this << x[1];
         for (size_t i = 1; i < K; i++) { *this << fmt::format("#{}", i + 1); }
     }
-    if (back() == '{') at(size() - 1) = '#';
+    if (!empty() && back() == '{') at(size() - 1) = '#'; // \todo back()='#'
     *this << "->" << x.body;
 }
 

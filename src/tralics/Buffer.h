@@ -45,9 +45,6 @@ public:
     [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
 
-    // Those match the std::string API
-    [[nodiscard]] auto back() const -> char { return empty() ? char(0) : std::string::back(); }
-
     // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void remove_last(size_t n = 1);                   ///< Drop `n` chars, provided size is large enough

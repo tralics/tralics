@@ -146,7 +146,7 @@ auto Buffer::substring() const -> std::string { return std::string(begin() + to_
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
-    if (back() == '\r') remove_last();
+    if (!empty() && back() == '\r') remove_last();
     push_back('\n');
 }
 
@@ -175,7 +175,7 @@ void Buffer::remove_last(size_t n) {
 // This removes one space or an &nbspace;
 // \todo call substring or add tail method to Buffer
 void Buffer::remove_last_space() {
-    if (is_space(back()))
+    if (!empty() && is_space(back()))
         remove_last();
     else if (ends_with("&nbsp;"))
         remove_last(6);
@@ -186,7 +186,7 @@ void Buffer::remove_last_space() {
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (is_space(back())) remove_last();
+    while (!empty() && is_space(back())) remove_last();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -698,8 +698,8 @@ auto Buffer::slash_separated(std::string &a) -> bool {
 
 void Buffer::push_back_unless_punct(char c) {
     if (ends_with("&nbsp;")) return;
-    if (is_space(back())) return;
-    if (back() == '(') return;
+    if (!empty() && is_space(back())) return;
+    if (!empty() && back() == '(') return;
     push_back(c);
 }
 
