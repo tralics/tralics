@@ -67,8 +67,6 @@ Tralics homepage: http://www-sop.inria.fr/marelle/tralics
 This software is governed by the CeCILL license that can be
 found at http://www.cecill.info.)";
 
-    Buffer b_after;
-
     std::filesystem::path out_dir;
 
     std::string log_name;
@@ -902,7 +900,7 @@ auto MainClass::find_document_type() -> bool {
     if (dtype.empty()) return false;
     config_file.find_all_types(all_config_types);
     if (check_for_alias_type(false)) return true;
-    dtype = b_after.remove_digits(dtype);
+    dtype = Buffer().remove_digits(dtype); // \todo without a Buffer
     if (check_for_alias_type(true)) return true;
     if (!all_config_types.empty()) {
         dtype = all_config_types.front();
@@ -971,7 +969,7 @@ void MainClass::read_config_and_other() {
     config_file.parse_conf_toplevel();
     after_conf_assign(other_options);
     after_conf_assign(after_conf);
-    std::string tmp = b_after.remove_digits(dtype);
+    std::string tmp = Buffer().remove_digits(dtype);
     if (!tmp.empty()) dtype = tmp;
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
@@ -983,7 +981,7 @@ void MainClass::read_config_and_other() {
     LinePtr cmds = config_file.parse_and_extract("Commands");
     from_config.splice_end(cmds);
     if (hr) from_config.insert("\\AtBeginDocument{\\rawebstartdocument}\n", true);
-    config_file.find_top_atts(b_after);
+    config_file.find_top_atts();
     LinePtr TP = config_file.parse_and_extract("TitlePage");
     tralics_ns::Titlepage_create(TP);
     if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
@@ -997,12 +995,11 @@ void MainClass::bad_year() {
 }
 
 void MainClass::see_name(String s) {
-    Buffer &B = b_after;
     if (!infile.empty()) {
-        std::cout << "Fatal error: Seen two source files " << infile << " and " << s << "\n";
+        spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, std::filesystem::path(s));
         exit(1);
     }
-    B << bf_reset << s;
+    Buffer B(s);
     if (B.ends_with(".xml")) B.remove_last(4);
     B.append_unless_ends_with(".tex");
     infile = static_cast<std::string>(B);
@@ -1011,15 +1008,14 @@ void MainClass::see_name(String s) {
 }
 
 void MainClass::see_name1() {
-    Buffer &B = b_after;
-    Buffer  C;
-    B << bf_reset << no_ext;
-    int y = 0;
+    Buffer C;
+    Buffer B(no_ext);
+    int    y = 0;
     if (handling_ra) { // find and check the year from the file name
         y = extract_year(B, C);
         check_year(y, C, dclass, year_string);
     }
-    auto k = B.last_slash(); // remove the directory part
+    auto k = B.last_slash(); // remove the directory part \todo std::filesyste,
     if (k) { B << bf_reset << B.substr(*k + 1); }
     the_parser.set_projet_val(B); // this is apics
     if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
@@ -1092,8 +1088,11 @@ void MainClass::run(int argc, char **argv) {
     if (!only_input_data) banner(); // print banner
     more_boot();                    // finish bootstrap
     check_for_input();              // open the input file
-    dclass = input_content.find_documentclass(b_after);
-    input_content.find_doctype(b_after, opt_doctype);
+
+    Buffer B; // \todo remove
+    dclass = input_content.find_documentclass(B);
+    input_content.find_doctype(B, opt_doctype);
+
     read_config_and_other();
     finish_init();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");

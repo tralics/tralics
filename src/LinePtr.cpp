@@ -277,7 +277,8 @@ void LinePtr::print(std::ostream &outfile) {
 }
 
 // This find a toplevel attributes. Real job done by next function.
-void LinePtr::find_top_atts(Buffer &B) {
+void LinePtr::find_top_atts() {
+    Buffer B;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         B << bf_reset << *C;
         B.find_top_atts();
