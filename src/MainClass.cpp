@@ -856,9 +856,9 @@ void MainClass::open_config_file(const std::string &f) { // \todo filesystem
 void MainClass::get_type_from_config() {
     dtype = config_file.find_top_val("Type", true);
     if (dtype.empty())
-        the_log << "No type in configuration file\n";
+        spdlog::trace("No type in configuration file");
     else
-        the_log << "Configuration file has type " << dtype << "\n";
+        spdlog::trace("Configuration file has type {}", dtype);
     if (dtype.starts_with("\\documentclass")) dtype = "";
 }
 
@@ -958,9 +958,9 @@ void MainClass::read_config_and_other() {
         bool found_type = find_document_type();
         if (dtype.empty()) found_type = false;
         if (found_type)
-            the_log << "Using type " << dtype << "\n";
+            spdlog::trace("Using type {}", dtype);
         else
-            the_log << "Using some default type\n";
+            spdlog::trace("Using some default type");
         if (tcf_file) {
         } // config says to use a tcf
         else if (found_type)
@@ -1047,7 +1047,7 @@ void MainClass::see_name1() {
 }
 
 void MainClass::trans0() {
-    the_log << "Starting translation\n";
+    spdlog::trace("Starting translation");
     the_parser.init_all(dtd);
     if (multi_math_label) the_parser.word_define(multimlabel_code, 1, false);
     if (nomathml) the_parser.word_define(nomath_code, -1, false);
@@ -1071,9 +1071,9 @@ void MainClass::boot_bibtex(bool inra) {
 void MainClass::show_input_size() {
     int n = input_content.get_last_line_no();
     if (n == 1)
-        the_log << "There is a single line\n";
+        spdlog::trace("There is a single line");
     else
-        the_log << fmt::format("There are {} lines\n", n);
+        spdlog::trace("There are {} lines", n);
 }
 
 void MainClass::more_boot() const {
@@ -1096,7 +1096,7 @@ void MainClass::run(int argc, char **argv) {
     input_content.find_doctype(b_after, opt_doctype);
     read_config_and_other();
     finish_init();
-    the_log << "OK with the configuration file, dealing with the TeX file...\n";
+    spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
     boot_bibtex(handling_ra);
     trans0();

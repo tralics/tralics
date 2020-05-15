@@ -77,6 +77,6 @@ void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
 }
 
 Hashtab::Hashtab() {
-    for (auto &k : eqtb) k.reset();
+    for (auto &k : eqtb) k.cmd = undef_cmd;
     boot_base();
 }

@@ -531,7 +531,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     auto YY = current_head.convert_to_log_encoding();
     if (y <= first_print_level) {
         first_print_level = y;
-        std::cout << "Translating section command " << Y << ": " << YY << ".\n";
+        spdlog::info("Translating section command {}: {}.", Y, YY);
     }
     Logger::finish_seq();
     the_log << "Translating " << Y << ": " << YY << ".\n";
