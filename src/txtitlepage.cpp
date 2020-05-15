@@ -60,7 +60,7 @@ void tralics_ns::Titlepage_create(LinePtr &lines) {
     if (lines.empty()) return;
     Titlepage.make_valid();
     for (;;) {
-        tp_main_buf.reset();
+        tp_main_buf.clear();
         int line = lines.get_next(tp_main_buf);
         if (line < 0) return;
         init_file_pos = line;
@@ -109,7 +109,7 @@ auto Buffer::tp_next_char(char &res) -> bool {
 // Returns an item that start with del
 // result is in local_buf, return value is true if OK.
 auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
-    out.reset();
+    out.clear();
     if (del == '\\') { // scan a command
         while (is_letter(in.head())) out.push_back(in.next_char());
         return true;
@@ -407,7 +407,7 @@ auto TitlePageAux::increment_flag() -> bool {
 void Xid::add_special_att(const std::string &S) {
     if (S.length() == 0) return;
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     B.push_back(S);
     B.ptrs.b = 0;
     B.push_back_special_att(*this);
@@ -554,7 +554,7 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
         ptrs.a = ptrs.b;
         skip_letter();
         if (ptrs.b == ptrs.a) return 2; // bad
-        reset(ptrs.b);                  // what follows the type is a comment
+        resize(ptrs.b);                 // what follows the type is a comment
         if (substr(ptrs.a) == s) return 3;
         return 1;
     }
@@ -562,7 +562,7 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
     ptrs.a = ptrs.b;
     skip_letter();
     if (ptrs.b == ptrs.a) return 2;
-    reset(ptrs.b);
+    resize(ptrs.b);
     if (substring() == s) return 4;
     return 2;
 }
@@ -675,7 +675,7 @@ auto Buffer::see_config_kw(String s, bool c) -> String {
     if (c) {
         auto k = ptrs.b;
         while ((*this)[k] != 0 && at(k) != '%' && at(k) != '#') k++;
-        reset(k);
+        resize(k);
     }
     remove_space_at_end();
     return data() + ptrs.b;
@@ -700,7 +700,7 @@ void Buffer::find_top_atts() {
         Xid(1).add_attribute(as, bs);
     } else if (substr(ptrs.b) == "\\tralics") {
         auto as = Istring(a);
-        reset();
+        clear();
         push_back("Tralics version ");
         push_back(the_main->version);
         Istring bs = Istring(*this);
@@ -738,7 +738,7 @@ void Buffer::find_one_type(std::vector<std::string> &S) {
 // Either calls the_parser.shell_a.assign
 auto tpage_ns::see_main_a(Buffer &in, Buffer &val) -> bool {
     Buffer B;
-    val.reset();
+    val.clear();
     int k = tpage_ns::see_an_assignment(in, B, val);
     if (k == 1) {
         bool res = assign(B, val);
@@ -811,12 +811,12 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
 
 // This converts ra2003 to ra.
 auto Buffer::remove_digits(const std::string &s) -> std::string {
-    reset();
+    clear();
     push_back(s);
     size_t k = size();
     while (k > 0 && is_digit(at(k - 1))) k--;
     if (k != size()) {
-        reset(k);
+        resize(k);
         return *this;
     }
     return "";

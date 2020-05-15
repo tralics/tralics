@@ -136,7 +136,7 @@ found at http://www.cecill.info.)";
             y = 10 * y + B[i] - '0';
             C.push_back(B[i]);
         }
-        B.reset(n);
+        B.resize(n);
         return y;
     }
 
@@ -843,7 +843,7 @@ void MainClass::open_config_file(const std::string &f) { // \todo filesystem
     for (size_t i = n - 1;; i--) {
         if (i <= kk) break;
         if (!is_digit(B[i])) {
-            B.reset(i + 1);
+            B.resize(i + 1);
             break;
         }
     }
@@ -1017,7 +1017,7 @@ void MainClass::see_name1() {
     }
     auto k = B.last_slash(); // remove the directory part \todo std::filesyste,
     if (k) { B << bf_reset << B.substr(*k + 1); }
-    the_parser.set_projet_val(B); // this is apics
+    the_parser.the_projetval = B; // this is apics
     if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
         check_lowercase(B);
         year_string = C;
@@ -1159,7 +1159,7 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
     static Buffer B;
     std::string   res = B.add_with_space(s);
     if (all_themes.find(B) == std::string::npos) {
-        err_buf.reset();
+        err_buf.clear();
         if (s.empty())
             err_buf << "Empty or missing theme\n";
         else

@@ -94,7 +94,7 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
     ParamDataList *V = config_data.data[1];
     if (start_interpret(B, "//")) {
         V->reset();
-        sec_buffer.reset();
+        sec_buffer.clear();
         composition_section = -1;
     }
     std::string s, r;
@@ -174,7 +174,7 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
 auto config_ns::check_section(const std::string &s) -> std::string {
     static long cur_section = -1;
     long        k           = -1;
-    err_buf.reset();
+    err_buf.clear();
     std::vector<ParamDataSlot> &X = config_data.data[1]->data;
     auto                        n = X.size(); // number of sections
     if (s.empty())
@@ -308,7 +308,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
     if (need_elt) str = tmp.substr(1);
     Buffer      temp2;
     std::string sname, lname;
-    temp2.reset();
+    temp2.clear();
     std::vector<int> vals;
     size_t           nb = 0;
     B.ptrs.b            = 0;
@@ -398,7 +398,7 @@ auto config_ns::is_good_ur(const std::string &x) -> bool {
 auto Buffer::add_with_space(const std::string &s) -> std::string {
     size_t i = 0;
     while (s[i] == ' ') ++i;
-    reset();
+    clear();
     push_back(' ');
     while ((s[i] != 0) && (s[i] != ' ')) push_back(s[i++]);
     lowercase();

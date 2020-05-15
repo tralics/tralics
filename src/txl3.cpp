@@ -70,7 +70,7 @@ auto Buffer::svn_id(std::string &name, std::string &date, std::string &version) 
     if (at(ptrs.b + 4) == '-') at(ptrs.b + 4) = '/';
     if (at(ptrs.b + 7) == '-') at(ptrs.b + 7) = '/';
     if (at(ptrs.b + 10) == ' ')
-        reset(ptrs.b + 10);
+        resize(ptrs.b + 10);
     else
         return true;
     date = data() + ptrs.a;
@@ -87,7 +87,7 @@ void Parser::L3_getid() {
     eqtb_int_table[uchar(' ')].val = spcat;
     read_toks_edef(l);
     Buffer &B = local_buffer;
-    B.reset();
+    B.clear();
     B << l;
     std::string name, date, version;
     B.svn_id(name, date, version);
@@ -101,7 +101,7 @@ void Parser::L3_getid() {
 // Prints current identification in the log file
 void Parser::L3_logid() {
     Buffer &B = local_buffer;
-    B.reset();
+    B.clear();
     B << get_mac_value(hash_table.ExplFileName_token) << " ";
     B << get_mac_value(hash_table.ExplFileDate_token) << " v";
     B << get_mac_value(hash_table.ExplFileVersion_token) << " ";
@@ -157,7 +157,7 @@ auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
 auto Parser::L3_split_next_name() -> bool {
     if (l3_get_name(err_tok)) return true;
     Buffer &B = local_buffer;
-    B.reset();
+    B.clear();
     token_to_split = cur_tok;
     B << hash_table[cur_tok.hash_loc()];
     bool ok = B.split_at_colon(tok_base, tok_sig);
@@ -174,7 +174,7 @@ void Parser::L3_user_split_next_name(bool base) {
     Token T = cur_tok;
     if (l3_get_name(T)) return;
     Buffer &B = local_buffer;
-    B.reset();
+    B.clear();
     B << hash_table[cur_tok.hash_loc()];
     B.split_at_colon(tok_base, tok_sig);
     std::string res = base ? tok_base : tok_sig;
@@ -208,7 +208,7 @@ void Parser::L3_new_conditional(subtypes s) {
 
 // creates the name of the variant. foo:N this gives foo_p:N  or foo:NTF
 void Buffer::l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w) {
-    reset();
+    clear();
     push_back(base);
     if (w == l3_p_code)
         push_back("_p:");
@@ -230,7 +230,7 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
     if (p == "F") return l3_F_code;
     if (p.empty()) return l3_bad_code;
 
-    err_buf.reset();
+    err_buf.clear();
     err_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
     the_parser.signal_error(the_parser.err_tok, "bad spec");
     return l3_bad_code;
@@ -266,7 +266,7 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
         body.push_back(Tc_true_bool);
         body.push_back(Tc_false_bool);
         if (pt) { // predicate, requires non-protected
-            err_buf.reset();
+            err_buf.clear();
             err_buf << cmd_name << " for \\" << tok_base << ":" << tok_sig << ": A predicate cannot be protected";
             signal_error(err_tok, "bad protected");
         }
@@ -400,7 +400,7 @@ auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::string {
     case l3expV_code: l3_expand_Vv(L, false); break;
     default:;
     }
-    group_buffer.reset();
+    group_buffer.clear();
     group_buffer << L;
     return group_buffer;
 }
@@ -793,7 +793,7 @@ void Parser::L3_set_num_code(int c) {
             Logger::finish_seq();
             the_log << T << "->" << m << ".\n";
         }
-        B.reset();
+        B.clear();
         B.push_back(std::to_string(v));
         TokenList res = B.str_toks(nlt_space);
         back_input(res);
@@ -1024,7 +1024,7 @@ void Parser::l3_generate_variant() {
 void Parser::l3_generate_variant(String orig, String var) {
     Token   T = hash_table.locate(orig);
     Buffer &B = local_buffer;
-    B.reset();
+    B.clear();
     B << orig;
     B.split_at_colon(tok_base, tok_sig);
     l3_generate_variant(var, false, T);
@@ -1035,7 +1035,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     auto n = var.size();
     if (n == 0) return; // ignore empty sepc
     if (n > tok_sig.size()) {
-        err_buf.reset();
+        err_buf.clear();
         err_buf << "New spec size '" << var << "' too big for " << orig;
         signal_error(err_tok, "spec too big");
         return;
@@ -1045,7 +1045,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     Buffer &changes = local_bufferC;
     osig << bf_reset << tok_sig;
     nsig << bf_reset << var;
-    changes.reset();
+    changes.clear();
     size_t last_ok = 0;
     for (size_t i = 0; i < n; i++) {
         char oc = osig[i], nc = nsig[i];
@@ -1055,14 +1055,14 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
             osig[i] = nc;
             last_ok = i + 1;
         } else {
-            err_buf.reset();
+            err_buf.clear();
             err_buf << fmt::format("Old spec at position {} should be n or N for ", i) << orig;
             signal_error(err_tok, "variant, bad orig");
             return;
         }
         changes << nc;
     }
-    changes.reset(last_ok);
+    changes.resize(last_ok);
     bool need_prot = false; // Protect result and aux function
     for (size_t i = 0; i < last_ok; i++)
         if (changes[i] == 'x') need_prot = true;

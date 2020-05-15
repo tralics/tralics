@@ -64,9 +64,8 @@ std::vector<ColSpec *> all_colors;
 
 // This code translates everything, until end of file.
 void Parser::translate_all() {
-    unprocessed_xml.reset();
-    for (;;) {
-        if (get_x_token()) break;
+    unprocessed_xml.clear();
+    while (!get_x_token()) {
         if (tracing_commands()) translate02();
         translate01();
     }
@@ -121,7 +120,7 @@ void Parser::flush_buffer1() {
         the_log << "{Text:" << unprocessed_xml.convert_to_log_encoding() << "}\n";
     }
     the_stack.add_last_string(unprocessed_xml);
-    unprocessed_xml.reset();
+    unprocessed_xml.clear();
 }
 
 // as above, does nothing if the buffer is empty,
@@ -520,7 +519,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     if (module) check_module_title(L);
     brace_me(L);
     T_translate(L);
-    current_head.reset();
+    current_head.clear();
     title->put_in_buffer(current_head);
     the_stack.pop(np_head);
     if (opt != nullptr) the_stack.add_last(new Xml(np_alt_section, opt));
@@ -833,7 +832,7 @@ void Parser::T_keywords() {
 void Parser::no_extension(AttList &AL, const std::string &s) {
     long k  = -1;
     bool ok = true;
-    Tbuf.reset();
+    Tbuf.clear();
     Tbuf.push_back(s);
     size_t i  = 0;
     size_t ii = 0;
@@ -872,7 +871,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     }
     if (ok && k > 0) {
         AL.push_back(np_fileextension, Istring(Tbuf.substr(to_unsigned(k) + 1)));
-        Tbuf.reset(to_unsigned(k));
+        Tbuf.resize(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.substr(ii), ok);
     AL.push_back(np_file, Istring(Tbuf));
@@ -923,7 +922,7 @@ void Parser::includegraphics(subtypes C) {
         if (key.empty()) continue;
         token_ns::remove_first_last_space(val);
         std::string skey = list_to_string_c(key, bkey);
-        B.reset();
+        B.clear();
         if (!ic && (skey == "file" || skey == "figure")) {
             std::string sval = list_to_string_c(val, bval);
             no_extension(AL, sval);
@@ -1628,7 +1627,7 @@ void Parser::T_reevaluate() {
     if (in_env) back_input(cur_tok);
     // Now the hard case
     Buffer &B = tpa_buffer;
-    B.reset();
+    B.clear();
     if (!scan_for_eval(B, in_env)) parse_error("reevaluate has problems with end of input");
     if (in_env) {    // unread tokens should be \end{cur}
         get_token(); // the \end token
@@ -1640,7 +1639,7 @@ void Parser::T_reevaluate() {
         cur_tok.kill();
         pop_level(bt_env); // closes current env
     }
-    Tbuf.reset();
+    Tbuf.clear();
     T_reevaluate0(L1, in_env);
     T_reevaluate0(L2, in_env);
     if (tracing_commands()) {
@@ -1653,7 +1652,7 @@ void Parser::T_reevaluate() {
 }
 
 void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
-    Abuf.reset();
+    Abuf.clear();
     while (!L1.empty()) {
         Abuf << L1.front();
         L1.pop_front();

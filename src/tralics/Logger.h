@@ -19,7 +19,7 @@ struct Logger {
     static void finish_seq() {
         if (!buffer_for_log2.empty()) {
             spdlog::trace("Character sequence: {}.", buffer_for_log2.convert_to_log_encoding());
-            buffer_for_log2.reset();
+            buffer_for_log2.clear();
         }
     }
 };

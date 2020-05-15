@@ -457,7 +457,7 @@ auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
     auto C = L.begin();
     auto E = L.end();
     while (C != E) {
-        buffer_for_log.reset();
+        buffer_for_log.clear();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
         fp << buffer_for_log;
         ++C;
@@ -543,7 +543,7 @@ void Parser::print_cmd_chr(CmdChr X) {
         the_log << a;
         codepoint y(char32_t(X.chr));
         Buffer &  B = buffer_for_log;
-        B.reset();
+        B.clear();
         B.out_log(y, the_main->log_encoding);
         return;
     }

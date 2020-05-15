@@ -748,7 +748,7 @@ void Parser::T_begindocument() {
     {
         Buffer &  b = mac_buffer;
         TokenList L;
-        b.reset();
+        b.clear();
         b.push_back("\\let\\do\\noexpand\\ignorespaces\n");
         tokenize_buffer(b, L, "(AtBeginDocument hook)");
         back_input(L);

@@ -135,7 +135,7 @@ void Parser::select_math_font() {
 
 void math_ns::remove_from_trace() {
     trace_needs_space = old_need;
-    Trace.reset(old_pos);
+    Trace.resize(old_pos);
 }
 
 // Three functions that add something to the trace.
@@ -765,7 +765,7 @@ auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 void Parser::T_math(subtypes type) {
     auto nm = eqtb_int_table[nomath_code].val;
     cmi.reset(nm == -3);
-    Trace.reset();
+    Trace.clear();
     trace_needs_space = false;
     Math &u1          = math_data.get_list(0);
     bool  is_inline   = start_scan_math(u1, type);
@@ -787,7 +787,7 @@ void Parser::T_math(subtypes type) {
     if (tracing_math()) {
         Logger::finish_seq();
         the_log << "Math: " << Trace << "\n";
-        Trace.reset();
+        Trace.clear();
         math_data.get_list(0).print();
         Logger::finish_seq();
         the_log << Trace;
@@ -2752,7 +2752,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         if (cmd == hspace_cmd) {
             if (chr == one_code || chr == three_code) continue;
             Buffer &B = Trace;
-            B.reset();
+            B.clear();
             int n = cur.get_font();
             B.push_back(ScaledInt(n), glue_spec_pt);
             Xml *v = mk_space(B);
@@ -2864,7 +2864,7 @@ void math_ns::bad_math_warn(Buffer &B) {
 }
 
 auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
-    B.reset();
+    B.clear();
     while (!empty()) {
         symcodes cmd = front().get_cmd();
         auto     chr = front().get_chr();
@@ -2966,7 +2966,7 @@ void Math::handle_mbox(Math &res) {
                 b = get_builtin(xml_thickmu_space_loc);
             else if (ok == 11) {
                 Buffer &B = Trace;
-                B.reset();
+                B.clear();
                 B.push_back(cur_math_space, glue_spec_pt);
                 b = mk_space(B);
             } else {

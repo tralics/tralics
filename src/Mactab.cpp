@@ -7,7 +7,7 @@
 
 auto Mactab::mc_new_macro(Macro *s) -> size_t {
     the_parser.my_stats.one_more_macro();
-    push_back({s, 0});
+    push_back({std::unique_ptr<Macro>(s), 0});
     return size() - 1;
 }
 
@@ -20,6 +20,6 @@ void Mactab::delete_macro_ref(size_t i) {
     at(i).ref--;
     if (at(i).ref == 0) {
         the_parser.my_stats.one_less_macro();
-        delete at(i).ptr;
+        at(i).ptr.reset();
     }
 }

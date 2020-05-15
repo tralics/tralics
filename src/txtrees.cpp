@@ -131,7 +131,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     for (size_t i = 0; i < n; i++)
         if (IR[i]->is_same(level, aux)) return i;
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     if (father) B << IR[*father]->key << "____";
     B << key;
     B.lowercase();
@@ -717,7 +717,7 @@ void Parser::month_day(subtypes c) {
     static std::array<String, 7> gd = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
     static std::array<String, 7> ed = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    local_buf.reset();
+    local_buf.clear();
     switch (c) {
     case md_frenchm_code: local_buf << fm[n - 1]; break;
     case md_frenchd_code: local_buf << fd[n - 1]; break;

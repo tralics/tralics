@@ -1,10 +1,11 @@
 #pragma once
 #include "../txtokenlist.h"
+#include <memory>
 #include <vector>
 
 struct rc_mac {
-    Macro *ptr{nullptr};
-    size_t ref{0};
+    std::unique_ptr<Macro> ptr;
+    size_t                 ref{0};
 };
 
 // The table of macros. it contains the reference counts

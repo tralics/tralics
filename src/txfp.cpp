@@ -1568,7 +1568,7 @@ auto Parser::fp_read_value() -> FpNum {
     TokenList A = read_until_nopar(hash_table.dot_token);
     TokenList B = read_until_nopar(hash_table.dot_token);
     read_until_nopar(hash_table.relax_token);
-    fp_in_buf.reset();
+    fp_in_buf.clear();
     read_toks_edef(A);
     bool negative = false;
     for (;;) {
@@ -1622,7 +1622,7 @@ auto Parser::fp_read_value() -> FpNum {
 // returns X and sets n to N. Return null token in case all tokens in the
 // list are characters.
 auto FpGenList::find_str(int &n) const -> Token {
-    tkbuf.reset();
+    tkbuf.clear();
     auto C = value.begin();
     auto E = value.end();
     n      = 0;

@@ -64,7 +64,7 @@ void err_ns::convert_to_string(const TokenList &L) {
     auto          C = L.begin();
     auto          E = L.end();
     while (C != E) {
-        buffer_for_log.reset();
+        buffer_for_log.clear();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
         B << buffer_for_log;
         ++C;

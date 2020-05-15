@@ -276,7 +276,7 @@ void MathP::find_paren_matched2(MathQList &res) const {
     auto B = value.begin();
     auto E = value.end();
     int  k = 0;
-    aux_buffer.reset();
+    aux_buffer.clear();
     while (B != E) {
         if (B->get_type() == mt_flag_small_l) k = B->get_pos();
         if (B->get_type() == mt_flag_small_r) {
@@ -946,7 +946,7 @@ void MathElt::cv_noMLt_special0() const {
         mathml_buffer.remove_last();
         auto k = del_pos(L.front().get_chr());
         if (k != del_dot) {
-            att_buffer.reset();
+            att_buffer.clear();
             math_ns::insert_delimiter_t(k);
             mathml_buffer << " left='" << att_buffer << "'";
         }
@@ -954,7 +954,7 @@ void MathElt::cv_noMLt_special0() const {
         if (!L.empty()) {
             k = del_pos(L.front().get_chr());
             if (k != del_dot) {
-                att_buffer.reset();
+                att_buffer.clear();
                 math_ns::insert_delimiter_t(k);
                 mathml_buffer << " right='" << att_buffer << "'";
             }
@@ -962,7 +962,7 @@ void MathElt::cv_noMLt_special0() const {
         }
         if (!L.empty()) {
             auto sz = Istring(L.front().get_chr());
-            att_buffer.reset();
+            att_buffer.clear();
             att_buffer << sz;
             if (!att_buffer.empty()) mathml_buffer << " size='" << att_buffer << "'";
             L.pop_front();
@@ -1221,7 +1221,7 @@ void MathElt::cv_noML() {
         return;
     case relax_cmd: {
         static Buffer rb;
-        rb.reset();
+        rb.clear();
         rb.push_back(Token(get_font()));
         if (rb == "\\relax") return;
         mathml_buffer.push_back(rb);
@@ -1329,7 +1329,7 @@ void Math::convert_math_noMLt0() {
 // Main function. Converts the buffer into XML, adds attributes.
 // If spec is true, we produce <in/> otherwise \in
 auto Math::convert_math_noML(bool spec) -> Xml * {
-    mathml_buffer.reset();
+    mathml_buffer.clear();
     if (spec)
         convert_math_noMLt0();
     else
@@ -1356,7 +1356,7 @@ auto Math::only_digits(Buffer &B) const -> bool {
 // If rec is true, the argument can contain groups; In the case the buffer
 // is not reset !!
 auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
-    if (!rec) B.reset();
+    if (!rec) B.clear();
     auto L = value.begin();
     auto E = value.end();
     for (;;) {
@@ -1395,7 +1395,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
 
 // Slightly modified procedure.
 auto Math::chars_to_mb1(Buffer &B) const -> bool {
-    B.reset();
+    B.clear();
     auto L = value.begin();
     auto E = value.end();
     for (;;) {
@@ -1419,7 +1419,7 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
 
 // Slightly modified procedure. First token is ignored
 auto Math::chars_to_mb2(Buffer &B) const -> bool {
-    B.reset();
+    B.clear();
     auto L = value.begin();
     auto E = value.end();
     if (L == E) return false;
@@ -1485,10 +1485,10 @@ auto Math::chars_to_mb3() -> Istring {
     }
     if (sz == 0 || bc != 2) {
         Buffer tmp;
-        tmp.reset();
+        tmp.clear();
         tmp << "Error scanning width, so far got '" << B << "'";
         the_parser.parse_error(the_parser.err_tok, tmp, "bad dimension");
-        B.reset();
+        B.clear();
         B.push_back("0pt");
     }
     return Istring(B);
@@ -1501,14 +1501,14 @@ void Buffer::show_uncomplete(String m) {
         log_and_tty << "No character found\n";
     else
         log_and_tty << "So far, got " << *this << "\n";
-    reset();
+    clear();
     push_back("error");
 }
 
 // Converts a whole math list into a string. May signal an error.
 // In this case, the result is `error'.
 auto Math::convert_this_to_string(Buffer &B) const -> std::string {
-    B.reset();
+    B.clear();
     if (!chars_to_mb(B, true)) B.show_uncomplete("Bad character in conversion to string");
     return B;
 }
@@ -1564,7 +1564,7 @@ auto Math::remove_req_arg_noerr() const -> std::string {
     if (C == E) return "empty";
     if (!C->is_list()) return "not-list";
     Math &L = C->get_list(); // the sublist containing the argument
-    aux_buffer.reset();
+    aux_buffer.clear();
     if (!L.chars_to_mb(aux_buffer, true)) return "bad";
     return aux_buffer;
 }
@@ -1589,7 +1589,7 @@ auto math_ns::make_sup(Xml *xval) -> Xml * {
 
 void Math::special2(bool &ok, Xml *&res) const {
     Buffer &B = aux_buffer;
-    B.reset();
+    B.clear();
     for (auto L = value.begin(); L != value.end(); ++L) {
         if (L->get_cmd() == hat_catcode) {
             ++L;                          // skip over hat
@@ -1646,7 +1646,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
     if (L == E) return nullptr;
     if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
     Buffer &B = aux_buffer;
-    B.reset();
+    B.clear();
     while (L != E) {
         if (L->is_char())
             B.push_back(L->get_char());
@@ -1776,7 +1776,7 @@ void Parser::TM_fonts() {
 
 // Convert the character c  into <mi>c</mi>
 auto math_ns::mk_mi(codepoint c) -> Xml * {
-    aux_buffer.reset();
+    aux_buffer.clear();
     aux_buffer.push_back_real_utf8(c);
     Xml *x = new Xml(Istring(aux_buffer));
     return new Xml(cst_mi, x);
@@ -1831,7 +1831,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res{nullptr};
     Buffer & B = aux_buffer;
-    B.reset();
+    B.clear();
     if (f == 1) B.push_back(' ');
     bool     spec = (f == 1) || ((w & (1 << f)) != 0);
     unsigned c    = W.get_chr();
@@ -1862,7 +1862,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
 auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
     Buffer & B = aux_buffer;
-    B.reset();
+    B.clear();
     unsigned c = W.get_chr();
     B.push_back(char(uchar(c)));
     if (multiple)

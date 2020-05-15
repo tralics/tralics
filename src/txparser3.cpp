@@ -621,7 +621,7 @@ void Parser::pop_all_levels() {
     bool        started = false;
     std::string ename;
     Buffer &    B = err_buf;
-    B.reset();
+    B.clear();
     for (;;) {
         if (the_save_stack.empty()) break;
         SaveAux *tmp = the_save_stack.back();
@@ -673,11 +673,11 @@ void Parser::final_checks() {
     if (n == 0) return;
     the_log << "Number of items on the save stack: " << n << "\n";
     Buffer &B = err_buf;
-    B.reset();
+    B.clear();
     Buffer &A = Thbuf1;
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1];
-        A.reset();
+        A.clear();
         A << fmt::format("{} at {}", to_string(p->type), p->line);
         if (B.empty()) {
             B << "  " << A;
@@ -685,7 +685,7 @@ void Parser::final_checks() {
             B << "; " << A;
         } else {
             the_log << B << "\n";
-            B.reset();
+            B.clear();
             B << "  " << A;
         }
     }

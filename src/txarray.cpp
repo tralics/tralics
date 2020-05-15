@@ -363,7 +363,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     case chc_start:
     case chc_inter: break;
     default: {
-        errbuf.reset();
+        errbuf.clear();
         errbuf << "Array preamble: argument missing for " << char_for_error;
         P->parse_error(errbuf);
     }
@@ -595,19 +595,19 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     back_input(L);
     cline_first = scan_int(T);
     if (get_token()) {
-        errbuf.reset();
+        errbuf.clear();
         errbuf << "Error in " << T << " after first integer";
         return true;
     }
     if (cur_tok == hash_table.relax_token) {
-        errbuf.reset();
+        errbuf.clear();
         errbuf << "Error in " << T << " after first integer";
         return true;
     }
     cline_last = scan_int(T);
     read_until(hash_table.relax_token);
     if (1 <= cline_first && cline_first <= cline_last) return false;
-    errbuf.reset();
+    errbuf.clear();
     errbuf << "Bad range in " << T << fmt::format(": {}-{}", cline_first, cline_last);
     return true;
 }
@@ -740,7 +740,7 @@ auto Xml::try_cline_again(bool action) -> bool {
 // adds a span value of n to the current cell
 void Xid::add_span(long n) const {
     if (n == 1) return;
-    errbuf.reset();
+    errbuf.clear();
     errbuf << std::to_string(n);
     add_attribute(the_names[np_cols], Istring(errbuf));
 }

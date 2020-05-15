@@ -231,7 +231,7 @@ void Parser::E_xspace() {
 auto Parser::T_xmllatex() -> std::string {
     TokenList L = read_arg();
     ignore_arg();
-    mac_buffer.reset();
+    mac_buffer.clear();
     while (!L.empty()) {
         Token x = L.front();
         L.pop_front();
@@ -994,7 +994,7 @@ void Parser::key_ifundefined() {
     std::string fam;
     for (const auto &f : split_commas(Fams)) {
         fam = f;
-        B.reset();
+        B.clear();
         B << xkv_prefix << fam;
         if (!fam.empty()) B.push_back('@');
         B.push_back(Key);
@@ -1224,16 +1224,16 @@ void Parser::xkv_fetch_prefix() {
         return;
     }
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     token_ns::remove_first_last_space(L);
     bool t = list_to_string(L, B);
     if (t) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV prefix (more errors may follow)", "bad kv prefix");
-        B.reset();
+        B.clear();
     }
     if (B == "XKV") {
         parse_error(err_tok, "xkeyval: `XKV' prefix is not allowed");
-        B.reset();
+        B.clear();
     }
     if (!B.empty()) B.push_back('@');
     xkv_prefix = B;
@@ -1244,12 +1244,12 @@ void Parser::xkv_fetch_prefix() {
 void Parser::xkv_makehd(TokenList &L) {
     token_ns::remove_first_last_space(L);
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     B << xkv_prefix;
     auto k = B.size();
     if (list_to_string(L, B)) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV family (more errors may follow)", "bad kv family");
-        B.reset(k);
+        B.resize(k);
     }
     if (B.size() != k) B.push_back('@');
     xkv_header = B;
@@ -2094,7 +2094,7 @@ auto FormatDate::parse(Buffer &B) -> bool {
 auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     err_tok   = T;
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     B.ptrs.b = 0;
     B << s;
     bool res = parse(B);
@@ -2169,7 +2169,7 @@ auto Parser::make_label_inner(const std::string &name) -> std::string {
     b << bf_reset << "p@" << name;
     if (hash_table.is_defined(b)) // ignore \p@foo if undefined
         res.push_front(hash_table.last_tok);
-    b.reset();
+    b.clear();
     if (list_to_string(res, b)) { // evaluate the label
         parse_error(err_tok, "Illegal tokens in \\makelabel");
         return "";
@@ -2192,7 +2192,7 @@ void Parser::refstepcounter_inner(TokenList &L, bool star) {
 // takes a string as argument and translates the thing
 void Parser::refstepcounter(const std::string &S, bool star) {
     Buffer &b = local_buf;
-    b.reset();
+    b.clear();
     b.push_back(S);
     TokenList L = b.str_toks11(true);
     refstepcounter(L, star);
@@ -2209,7 +2209,7 @@ void Parser::refstepcounter() {
 // Case where the nale of the label is in L
 void Parser::refstepcounter(TokenList &L, bool star) {
     Buffer &b = local_buf;
-    b.reset();
+    b.clear();
     TokenList L1 = L;
     if (list_to_string(L1, b)) {
         bad_counter0();
@@ -2637,7 +2637,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
     }
     if (vb) {
         Buffer &B = mac_buffer;
-        B.reset();
+        B.clear();
         B.push_back("-> \\char\"");
         B.push_back16(to_unsigned(r), false);
         Logger::finish_seq();

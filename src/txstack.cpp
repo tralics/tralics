@@ -145,14 +145,14 @@ auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value =
 // Assume that last element is a string. This string is put in the internal
 // buffer
 void Xml::last_to_SH() const {
-    shbuf.reset();
+    shbuf.clear();
     shbuf.push_back(back()->name.name);
 }
 
 // This adds B at the end the element, via concatenation, if possible.
 void Xml::add_last_string(const Buffer &B) {
     if (B.empty()) return;
-    shbuf.reset();
+    shbuf.clear();
     if (last_is_string()) {
         last_to_SH();
         pop_back();

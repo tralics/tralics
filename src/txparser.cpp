@@ -60,7 +60,7 @@ inline auto boolean(bool x) -> String { return x ? "true" : "false"; }
 
 void Parser::check_outer_validity() {
     Buffer &B = err_buf;
-    B.reset();
+    B.clear();
     switch (scanner_status) {
     case ss_skipping:
         B << "Incomplete \\if? missing \\fi inserted\n";
@@ -881,7 +881,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
         pop_level(bt_env);
         return "";
     }
-    mac_buffer.reset();
+    mac_buffer.clear();
     int cl = get_cur_line();
     for (;;) {
         if (is_verbatim_end()) break;
@@ -1029,7 +1029,7 @@ auto Parser::group_to_string() -> std::string {
         missing_open_brace();
         return "";
     }
-    group_buffer.reset();
+    group_buffer.clear();
     for (;;) {
         get_token();
         symcodes S = cur_cmd_chr.cmd;
@@ -1072,7 +1072,7 @@ auto Parser::sE_optarg_nopar() -> std::string {
 auto Parser::to_stringE(TokenList &L) -> std::string {
     read_toks_edef(L);
     Buffer &B = group_buffer;
-    B.reset();
+    B.clear();
     B << L;
     return B;
 }
@@ -1276,7 +1276,7 @@ void Parser::M_new_thm() {
         TokenList ccopy = ctr;
         back_input(ccopy);
         back_input(Token(other_t_offset, '['));
-        Thbuf2.reset();
+        Thbuf2.clear();
         Thbuf2 << "the";
         if (list_to_string(ctr, Thbuf2)) parse_error(err_tok, "bad counter");
         Token x = hash_table.locate(Thbuf2);
@@ -1518,7 +1518,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
 
 // Special case of a counter
 auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
-    b.reset();
+    b.clear();
     b.push_back("c@");
     return list_to_string(L, b);
 }
@@ -1526,7 +1526,7 @@ auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
 // Signals an error; returns the string or bad
 auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
     Buffer &B = Thbuf1;
-    B.reset();
+    B.clear();
     if (list_to_string(x, B)) {
         parse_error(err_tok, msg, x);
         B << bf_reset << "bad";
@@ -1571,7 +1571,7 @@ void Parser::fetch_name2() {
         if (cur_tok.is_valid()) back_input();
         bad_csname(false);
     }
-    fetch_name_res.reset();
+    fetch_name_res.clear();
     fetch_name_res.push_back(b);
 }
 
@@ -2121,7 +2121,7 @@ void Parser::M_newboolean(subtypes c) {
 // Used for bootstrap
 void Parser::make_token(String s) {
     Buffer &b = Thbuf1;
-    b.reset();
+    b.clear();
     b.push_back(s);
     back_input(hash_table.locate(b));
 }
@@ -2208,7 +2208,7 @@ void Parser::M_shortverb(int x) {
 
 // Returns the token \foo or \endfoo.
 auto Parser::find_env_token(const std::string &name, bool beg) -> Token {
-    mac_buffer.reset();
+    mac_buffer.clear();
     if (!beg) mac_buffer << "end";
     mac_buffer << name;
     see_cs_token(hash_table.locate(mac_buffer));
@@ -2514,7 +2514,7 @@ void Parser::E_expandafter() {
 void Parser::E_mathversion() {
     TokenList arg = read_arg();
     Buffer &  B   = Thbuf1;
-    B.reset();
+    B.clear();
     if (list_to_string(arg, B)) {
         parse_error(err_tok, "bad \\mathversion");
         return;
@@ -4373,7 +4373,7 @@ void Parser::begin_box(size_t src, subtypes c) {
 void Parser::M_xray(subtypes c) {
     switch (c) {
     case show_code:
-        trace_buffer.reset();
+        trace_buffer.clear();
         token_show(0, trace_buffer);
         return;
     case showbox_code: {
@@ -4464,7 +4464,7 @@ void Parser::M_prefixed() {
     if (tracing_commands() && (b_global || (flags != 0))) {
         Logger::finish_seq();
         the_log << "{";
-        trace_buffer.reset();
+        trace_buffer.clear();
         trace_buffer.dump_prefix(true, b_global, K);
         the_log << trace_buffer << cur_tok << "}\n";
     }

@@ -95,7 +95,7 @@ auto classes_ns::make_options(TokenList &L) -> OptionList {
 // Prints the options list on log and tty
 void classes_ns::dump_options(const OptionList &A, String x) {
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     auto n = A.size();
     for (size_t i = 0; i < n; i++) {
         if (i > 0) B << ",";
@@ -493,7 +493,7 @@ void Parser::T_process_options() {
     bool          in_class = C->is_class();
     C->seen_process        = true;
     Buffer &b              = local_buf;
-    b.reset();
+    b.clear();
     TokenList action; // token list to evaluate
     if (star) {
         if (!in_class) C->check_global_options(action, false);
@@ -510,7 +510,7 @@ void Parser::T_execute_options() {
     OptionList &  pack = C->Poptions;
     TokenList     action;
     Buffer &      b = local_buf;
-    b.reset();
+    b.clear();
     OptionList L = make_options(opt);
     auto       n = L.size();
     for (size_t i = 0; i < n; i++) {
@@ -542,7 +542,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     bool          in_class = C->is_class();
     C->seen_process        = true;
     Buffer &b              = local_buf;
-    b.reset();
+    b.clear();
     TokenList action; // token list to evaluate
     if (star) {
         if (!in_class) C->check_global_options(action, true);
@@ -758,7 +758,7 @@ void ClassesData::show_unused() {
     OptionList &GO = the_class_data.global_options;
     auto        n  = GO.size();
     Buffer &    B  = local_buf;
-    B.reset();
+    B.clear();
     int k = 0;
     for (size_t i = 0; i < n; i++) {
         if (GO[i].is_used()) continue;
@@ -878,7 +878,7 @@ void Parser::T_class_error(subtypes c) {
     }
     if (!simple) prefix = string_to_write(write18_slot + 1);
     Buffer &B = local_buf;
-    B.reset();
+    B.clear();
     if (std) {
         std::string name = prefix;
         if (!simple) B << "(" << prefix << ")";
@@ -887,7 +887,7 @@ void Parser::T_class_error(subtypes c) {
             B << ' ';
         }
         prefix = B;
-        B.reset();
+        B.clear();
         B << prea;
         if (!simple) B << " " << name;
         name_positions posta = np_Info;

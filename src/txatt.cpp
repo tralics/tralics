@@ -110,7 +110,7 @@ auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
     AttList &L = idx.get_att();
     auto     k = L.has_value(m);
     if (!k) return false;
-    reset();
+    clear();
     push_back(L.get_val(*k).name);
     return true;
 }
@@ -174,7 +174,7 @@ void Buffer::push_back_alt(const AttPair &X) {
 
 // Returns true if there is a space. Kills at the space. Advance
 auto Buffer::look_at_space(const std::string &s) -> bool {
-    reset();
+    clear();
     push_back(s);
     bool has_space = false;
     ptrs.b         = 0;

@@ -200,7 +200,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         LabelInfo *L = V.labinfo();
         if (!L->defined) continue; // should not happen
         Istring B = L->id;
-        scbuf.reset();
+        scbuf.clear();
         scbuf.push_back(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
         scbuf.push_back(B);
@@ -447,7 +447,7 @@ void Xml::to_buffer(Buffer &b) const {
 
 // This prints T on the file fp, using scbuf.
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
-    scbuf.reset();
+    scbuf.clear();
     cur_fp = &fp;
     if (T != nullptr)
         T->to_buffer(scbuf);
@@ -459,7 +459,7 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
 
 void Buffer::finish_xml_print() {
     *cur_fp << data();
-    reset();
+    clear();
 }
 
 // Replace <name/> by vl.
@@ -554,7 +554,7 @@ void Xml::unbox(Xml *x) {
     if (x == nullptr) return;
     if (x->is_xmlc()) {
         Buffer &b = scbuf;
-        b.reset();
+        b.clear();
         b.push_back(x->name);
         add_last_string(b);
     } else
@@ -828,7 +828,7 @@ void Xml::compo_special() {
 // This is used by sT_translate. It converts an XML element
 // to a string, using scbuf as temporary. clears the object
 auto Xml::convert_to_string() -> std::string {
-    scbuf.reset();
+    scbuf.clear();
     convert_to_string(scbuf);
     clear();
     return scbuf;
@@ -845,7 +845,7 @@ void Xml::convert_to_string(Buffer &b) {
         for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
         return;
     }
-    err_buf.reset();
+    err_buf.clear();
     if (id.is_font_change()) {
         Istring w = id.has_attribute(the_names[np_rend]);
         if (!w.null()) {
@@ -938,7 +938,7 @@ void all_words_ns::dump_words(const std::string &name) {
 
     auto f = std::ofstream(wf);
     if (!name.empty()) f << "Team " << name << "\n";
-    scbuf.reset();
+    scbuf.clear();
     int i = 0;
     while (WL->get_next() != nullptr) {
         i++;
@@ -964,7 +964,7 @@ void Buffer::new_word() {
         }
     }
     if (ok) {
-        reset();
+        clear();
         return;
     }
     all_words_ns::nb_words++;
@@ -976,7 +976,7 @@ void Buffer::new_word() {
         if (ok) at(0) += 'a' - 'A';
     }
     all_words_ns::add_a_word(data(), hashcode(6397));
-    reset();
+    clear();
 }
 
 const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
@@ -1028,7 +1028,7 @@ void Xml::word_stats_i() {
 }
 
 void Xml::word_stats(const std::string &match) {
-    scbuf.reset();
+    scbuf.clear();
     word_stats_i();
     scbuf.new_word();
     all_words_ns::dump_words(match);

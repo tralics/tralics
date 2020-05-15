@@ -152,7 +152,7 @@ void FileForInput::open(const std::string &file, const std::filesystem::path &fn
     } else {
         tralics_ns::read_a_file(lines, fn, 1);
         is_open = true;
-        cur_line.reset();
+        cur_line.clear();
         line_no = 0;
         lines.after_open();
     }
@@ -258,7 +258,7 @@ auto Parser::scan_file_name() -> std::string {
     if (name_in_progress) return "sabotage!"; // recursion killer.
     name_in_progress = true;
     remove_initial_space_and_back_input();
-    file_name.reset();
+    file_name.clear();
     for (;;) {
         if (get_x_token()) break;
         if (cur_cmd_chr.is_letter_other())
@@ -312,7 +312,7 @@ void Parser::E_input(int q) {
 
 void Parser::T_scantokens(TokenList &L) {
     static Buffer B;
-    B.reset();
+    B.clear();
     B << L;
     push_input_stack("(scantokens)", false, true);
     lines.split_string(B, 0);
@@ -498,7 +498,7 @@ auto Parser::cs_from_input() -> Token {
     }
     int C = get_catcode(c.value);
     if (C == letter_catcode) {
-        mac_buffer.reset();
+        mac_buffer.clear();
         mac_buffer.push_back(c);
         for (;;) {
             if (at_eol()) break;
@@ -539,7 +539,7 @@ auto Parser::next_from_line0() -> bool {
     codepoint c = get_next_char();
     if (c.is_big()) { // convert to \char"ABCD
         Buffer &B = local_buf;
-        B.reset();
+        B.clear();
         B.push_back('"');
         B.push_back16(c.value, false);
         auto k = B.size();
@@ -826,7 +826,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
 }
 
 void Buffer::insert_string(const Buffer &s) {
-    reset();
+    clear();
     for (size_t j = 0; j < s.size(); j++) {
         char c = s[j];
         if (c != '\n' && c != '\r') push_back(c);
@@ -867,7 +867,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
     static std::array<char, 4096> m_ligne;
     static int                    tty_line_no = 0;
     int                           n           = 0;
-    scratch.reset();
+    scratch.clear();
     input_line.clear();
     if (cur_in_chan == nb_input_channels) {
         readline(m_ligne.data(), 78); // \todo pass the array instead
@@ -897,7 +897,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
 auto Parser::get_a_new_line() -> bool {
     state = state_N;
     input_line.clear();
-    scratch.reset();
+    scratch.clear();
     int n = -2;
     if (cur_in_chan <= nb_input_channels) return true; // this is the wrong function to call
     if (force_eof) {
@@ -1500,7 +1500,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
     }
     if (c == detokenize_code) {
         TokenList L = scan_general_text();
-        B.reset();
+        B.clear();
         B << L;
         return B.str_toks(nlt_nl); // \n gives ^^J
     }
@@ -1511,7 +1511,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
         the_log << "{\\the " << cur_tok << "}\n";
     }
     scan_something_internal(it_tok, false);
-    B.reset();
+    B.clear();
     switch (cur_val.get_type()) {
     case it_ident: // case of a font name
     case it_tok:   // case of a token list
@@ -2095,7 +2095,7 @@ void Parser::token_show(int what, Buffer &B) {
         if (!B.find_char('>')) return;
         auto        k = B.ptrs.b;
         std::string s = B.substr(k + 1);
-        B.reset();
+        B.clear();
         B.push_back(s);
     }
     if (lg) log_and_tty << B.convert_to_log_encoding() << ".\n";
@@ -2104,7 +2104,7 @@ void Parser::token_show(int what, Buffer &B) {
 // This is for tracingassigns
 void Parser::token_for_show(const CmdChr &val) {
     static Buffer B;
-    B.reset();
+    B.clear();
     token_for_show(false, val, B);
     the_log << B.convert_to_log_encoding();
 }
@@ -2171,7 +2171,7 @@ void Parser::initialise_font() {
 // puts in cur_val the name of x
 void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
-    B.reset();
+    B.clear();
     if (x != nullptr) B.push_back(x->name);
     if (level != it_tok) {
         bad_number1(B);
@@ -2185,7 +2185,7 @@ void Parser::E_convert() {
     long   n = 0;
     Token  T = cur_tok;
     Buffer B;
-    B.reset();
+    B.clear();
     int c = cur_cmd_chr.chr;
     switch (c) {
     case number_code:

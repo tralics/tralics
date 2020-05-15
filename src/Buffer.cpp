@@ -56,7 +56,7 @@ void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 // It could also be a part of a utf8 characater. Is left unchanged then.
 void Buffer::push_back_xml_char(uchar c) {
     if (c == 0)
-        reset(ptrs.b); // may be required
+        resize(ptrs.b); // may be required
     else if (c == 13)
         push_back('\n');
     else if (c == '<')
@@ -261,7 +261,7 @@ auto Buffer::push_back(Token T) -> bool {
         return the_parser.has_letter_catcode(T.char_val().value);
     }
     if (T.is_in_hash()) {
-        Tmp.reset();
+        Tmp.clear();
         Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
         push_back(Tmp.convert_to_log_encoding());
         return true;
@@ -327,7 +327,7 @@ void Buffer::insert_token(Token T, bool sw) {
 
 // In case of error, this puts a token in the XML tree
 auto Buffer::convert_for_xml_err(Token T) -> Istring {
-    reset();
+    clear();
     if (T.is_null())
         push_back("\\invalid.");
     else if (T.char_or_active()) {
@@ -382,7 +382,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
 
 // Useful function for scan_dimen.
 auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
-    reset();
+    clear();
     push_back("+scandimen for ");
     push_back(T);
     if (is_space(back())) remove_last();
@@ -569,9 +569,9 @@ auto Buffer::find_documentclass(Buffer &aux) -> bool {
     while (at(p) != '}') p++;
     auto len = p - k - 1;
     if (len == 0) return false;
-    aux.reset();
+    aux.clear();
     aux.push_back(data() + k + 1);
-    aux.reset(len);
+    aux.resize(len);
     for (size_t i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
         if (!is_letter(aux[i]) && !is_digit(aux[i])) return false;
     return true;
@@ -622,7 +622,7 @@ auto Buffer::find_char(char c) -> bool {
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
     if (find_char(':')) {
         after = substr(ptrs.b + 1);
-        reset(ptrs.b);
+        resize(ptrs.b);
         before = data();
         return true;
     }
@@ -672,7 +672,7 @@ auto Buffer::string_delims() -> bool {
 
 auto Buffer::slash_separated(std::string &a) -> bool {
     static Buffer tmp;
-    tmp.reset();
+    tmp.clear();
     size_t p = 0;
     skip_sp_tab();
     if (head() == 0) return false;
@@ -691,7 +691,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
     }
     auto b = tmp.size();
     while (b > p && is_space(tmp[b - 1])) b--;
-    tmp.reset(b);
+    tmp.resize(b);
     a = tmp.data();
     return true;
 }

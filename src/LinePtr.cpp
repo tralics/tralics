@@ -29,7 +29,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     readline(m_ligne.data(), 78);
     if (std::string(m_ligne.data()) == "\\stop") return -1;
     cur_line++;
-    B.reset();
+    B.clear();
     B << m_ligne.data() << "\n";
     if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
@@ -195,7 +195,7 @@ auto LinePtr::get_next(std::string &b, bool &cv) -> int {
 auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     the_main->doc_class_pos = end();
     for (auto C = begin(); C != end(); ++C) {
-        B.reset();
+        B.clear();
         B.push_back(*C);
         if (Buffer tmp; B.find_documentclass(tmp)) {
             the_main->doc_class_pos = C;
@@ -209,7 +209,7 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
 // If C is the end pointer, B is inserted at the start.
 // The idea is to insert text from the config file to the main file
 // It is assumed that the inserted line is already converted.
-void LinePtr::add_buffer(Buffer &B, line_iterator C) {
+void LinePtr::add_buffer(const std::string &B, line_iterator C) {
     if (C == end())
         push_front(Clines(1, B, true));
     else
@@ -234,7 +234,7 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int N = 0;
     for (auto &C : *this) {
-        B.reset();
+        B.clear();
         B.push_back(C);
         auto k = B.find_doctype();
         if (k != 0) {
@@ -264,7 +264,7 @@ void LinePtr::split_string(std::string x, int l) {
         if (emit) {
             B.push_back_newline();
             L.insert(B, true);
-            B.reset();
+            B.clear();
         }
         if (c == 0) break;
     }
@@ -313,7 +313,7 @@ void LinePtr::parse_and_extract_clean(const std::string &s) {
     bool    keep = true;
     bool    cv   = true;
     for (auto &C : *this) {
-        B.reset();
+        B.clear();
         int n    = C.to_buffer(B, cv);
         int open = B.see_config_env();
         b += open;
@@ -350,7 +350,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
     bool    keep = false;
     bool    cv   = false;
     for (auto C = begin(); C != end(); ++C) {
-        B.reset();
+        B.clear();
         C->to_buffer(B, cv);
         auto W    = C;
         int  open = B.see_config_env();
@@ -375,7 +375,7 @@ void LinePtr::parse_conf_toplevel() const {
     bool   cv = false;
     Buffer B;
     for (const auto &C : *this) {
-        B.reset();
+        B.clear();
         init_file_pos = C.to_buffer(B, cv);
         b += B.see_config_env();
         if (b == 0) tpage_ns::see_main_a(B, local_buf);

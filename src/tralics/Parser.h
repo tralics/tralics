@@ -64,17 +64,17 @@ private:
     CmdChr cur_cmd_chr;             // current command code and modifier
     int    sectionning_offset;      // what is the main section, part, chapter ?
 public:
-    l_state   long_state;     // Error recovery handling (\long)
-    scan_stat scanner_status; // Error recovery handling (\outer)
+    l_state     long_state;     // Error recovery handling (\long)
+    scan_stat   scanner_status; // Error recovery handling (\outer)
+    std::string the_projetval;  // this could be miaou
 private:
     size_t cur_in_chan;     // if get_token call get_a_new_line
     long   cur_file_pos{0}; // pos of file in the package list (0= none)
 
-    std::string cur_env_name;  // name of current environment
-    std::string the_url_val;   // this may be <URSophia>, raweb only
-    std::string the_projetval; // this could be miaou
-    std::string year_string;   // the year (effective number)
-    std::string job_name;      // the name, without extensions
+    std::string cur_env_name; // name of current environment
+    std::string the_url_val;  // this may be <URSophia>, raweb only
+    std::string year_string;  // the year (effective number)
+    std::string job_name;     // the name, without extensions
 
     Buffer                 input_buffer;                          // input buffer
     Buffer                 mac_buffer;                            // buffer the current macro
@@ -157,7 +157,6 @@ public:
     }
     void               set_ra_year(int x) { ra_year = x; }
     void               set_job_name(std::string s) { job_name = std::move(s); }
-    void               set_projet_val(std::string s) { the_projetval = std::move(s); }
     void               set_year_string(std::string s) { year_string = std::move(s); }
     [[nodiscard]] auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
     [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }

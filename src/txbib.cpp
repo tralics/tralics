@@ -334,12 +334,12 @@ CitationKey::CitationKey(bib_from a, const std::string &b) {
 void CitationKey::make_key(const std::string &s) {
     if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
     Buffer &B = biblio_buf2;
-    B.reset();
+    B.clear();
     B.push_back(s);
     B.lowercase();
     cite_key       = s;
     lower_cite_key = B;
-    B.reset();
+    B.clear();
     if (cite_prefix == from_foot)
         B.push_back("foot");
     else if (cite_prefix == from_refer && !old_ra)
@@ -383,28 +383,28 @@ auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
 // like miaou+foot. Prints a warning if this is a bad name.
 void Bibtex::read1(const std::string &cur) {
     Buffer &Tbuf = biblio_buf4;
-    Tbuf.reset();
+    Tbuf.clear();
     Tbuf.push_back(cur);
     auto n = Tbuf.size();
     if (read0(Tbuf, from_year)) return;
     if (Tbuf.ends_with("+foot.bib")) {
-        Tbuf.reset(n - 5);
+        Tbuf.resize(n - 5);
         if (read0(Tbuf, from_foot)) return;
     }
     if (Tbuf.ends_with("+year.bib")) {
-        Tbuf.reset(n - 5);
+        Tbuf.resize(n - 5);
         if (read0(Tbuf, from_year)) return;
     }
     if (Tbuf.ends_with("+all.bib")) {
-        Tbuf.reset(n - 4);
+        Tbuf.resize(n - 4);
         if (read0(Tbuf, from_any)) return;
     }
     if (Tbuf.ends_with("+refer.bib")) {
-        Tbuf.reset(n - 6);
+        Tbuf.resize(n - 6);
         if (read0(Tbuf, from_refer)) return;
     }
     if (Tbuf.ends_with(".bib")) {
-        Tbuf.reset(n - 4);
+        Tbuf.resize(n - 4);
         if (read0(Tbuf, from_year)) return;
     }
     spdlog::warn("Bibtex Info: no biblio file {}", Tbuf);
@@ -414,7 +414,7 @@ void Bibtex::read1(const std::string &cur) {
 // Extension can be foot, year or refer. New in Tralics 2.9.3 it can be any
 auto Bibtex::read2(bib_from pre) -> bool {
     Buffer &B = biblio_buf4;
-    B.reset();
+    B.clear();
     B.push_back(no_year);
     if (pre == from_foot)
         B.push_back("_foot");
@@ -478,7 +478,7 @@ void Parser::create_aux_file_and_run_pgm() {
         return;
     }
     Buffer &B = biblio_buf4;
-    B.reset();
+    B.clear();
     bbl.reset_lines();
     Bibliography &T = the_bibliography;
     T.dump(B);
@@ -612,7 +612,7 @@ void Bbl::newline() {
     B.push_back("\n");
     file << B.convert_to_log_encoding();
     lines.insert(B, true);
-    B.reset();
+    B.clear();
 }
 
 // Returns the index of the macro named name if it exists,  not_found otherwise.
@@ -1053,7 +1053,7 @@ void Bibtex::err_in_name(String a, long i) {
 // Throws if EOF.
 void Bibtex::next_line(bool what) {
     static Buffer scratch;
-    scratch.reset();
+    scratch.clear();
     int n = in_lines.get_next(scratch);
     if (n > 0)
         cur_bib_line = n;
@@ -1128,7 +1128,7 @@ auto Bibtex::scan_identifier(size_t what) -> bool {
 // it is also false on exit
 auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
-    B.reset();
+    B.clear();
     codepoint c = cur_char();
     if (!c.is_ascii() || c.is_digit() || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
@@ -1235,7 +1235,7 @@ auto Bibtex::check_val_end() -> int {
 auto Buffer::special_convert(bool init) -> std::string {
     ptrs.b = 0;
     if (init) skip_sp_tab_nl();
-    biblio_buf1.reset();
+    biblio_buf1.clear();
     bool space = true;
     for (;;) {
         auto c = next_char();
@@ -1258,7 +1258,7 @@ auto Buffer::special_convert(bool init) -> std::string {
 // This can be "foo" # {bar} # 1234 # macro.
 // If store is false, we do not look at the value of a macro
 void Bibtex::read_field(bool store) {
-    field_buf.reset();
+    field_buf.clear();
     for (;;) {
         read_one_field(store);
         skip_space();
@@ -1478,7 +1478,7 @@ void Bibtex::parse_one_item() {
     } else {
         cur_entry_line = cur_bib_line;
         Buffer &A      = biblio_buf1;
-        A.reset();
+        A.clear();
         skip_space();
         for (;;) {
             if (at_eol()) break;
@@ -1865,7 +1865,7 @@ void BibEntry::call_type_special() {
 // We handle here the first string
 auto Buffer::remove_space(const std::string &x) -> std::string {
     auto n = x.size();
-    reset();
+    clear();
     for (size_t i = 0; i < n; i++)
         if (x[i] != ' ') push_back(x[i]);
     return *this;
@@ -1874,7 +1874,7 @@ auto Buffer::remove_space(const std::string &x) -> std::string {
 // We create here the second string
 auto Buffer::insert_break(const std::string &x) -> std::string {
     auto n = x.size();
-    reset();
+    clear();
     push_back("{\\url{");
     for (size_t i = 0; i < n; i++) {
         if (x[i] == ' ' && main_ns::bib_allow_break) push_back("\\allowbreak");
@@ -1950,7 +1950,7 @@ void Buffer::skip_over_brace() {
 // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
 auto bib_ns::first_three(const std::string &s) -> std::string {
     Buffer &B = biblio_buf1;
-    B.reset();
+    B.clear();
     B.push_back(s);
     B.ptrs.b = 0;
     if (B.head() == '\\') return s;
@@ -1960,7 +1960,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
     if (B.head() == '\\') return s;
     B.next_bibtex_char();
     if (B.head() == 0) return s;
-    B.reset(B.ptrs.b);
+    B.resize(B.ptrs.b);
     return B;
 }
 
@@ -1968,7 +1968,7 @@ auto bib_ns::first_three(const std::string &s) -> std::string {
 // In the case of `Lo\"i c', returns the whole string.
 auto bib_ns::last_chars(const std::string &s, int k) -> std::string {
     Buffer B;
-    B.reset();
+    B.clear();
     B.push_back(s);
     B.ptrs.b = 0;
     int n    = -k;
@@ -2052,7 +2052,7 @@ void BibEntry::presort(long serial) {
         }
         label = lab1 + s;
     }
-    B.reset();
+    B.clear();
     if (the_main->handling_ra) B << ra_prefix() << lab3;
     B << label << lab2 << "    " << y << "    ";
     B.special_title(all_fields[fp_title]);
@@ -2123,11 +2123,11 @@ void Buffer::special_title(std::string s) {
 
 void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     if (src.empty()) return;
-    biblio_buf1.reset();
-    biblio_buf2.reset();
-    biblio_buf3.reset();
-    biblio_buf4.reset();
-    biblio_buf5.reset();
+    biblio_buf1.clear();
+    biblio_buf2.clear();
+    biblio_buf3.clear();
+    biblio_buf4.clear();
+    biblio_buf5.clear();
     name_buffer.normalise_for_bibtex(src.c_str());
     auto         n     = name_buffer.size() + 1;
     auto *       table = new bchar_type[n];
@@ -2144,7 +2144,7 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
 
 // This replaces \c{c} by \char'347 in order to avoid some errors.
 void Buffer::normalise_for_bibtex(String s) {
-    reset();
+    clear();
     push_back(' '); // make sure we can always backup one char
     for (;;) {
         auto c = *s;
@@ -2258,7 +2258,7 @@ void Buffer::fill_table(bchar_type *table) {
         for (;;) {
             if (head() == 0) {
                 the_bibtex->err_in_name("this cannot happen!", to_signed(j));
-                reset(j);
+                resize(j);
                 table[j] = bct_end;
                 return;
             }
@@ -2626,7 +2626,7 @@ void BibEntry::normalise() {
 
 void Buffer::remove_spec_chars(bool url, Buffer &B) {
     ptrs.b = 0;
-    B.reset();
+    B.clear();
     for (;;) {
         auto c = head();
         if (c == 0U) return;
@@ -2907,7 +2907,7 @@ void Bibtex::read(const std::string &src, bib_from ct) {
 
 void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
     if (s.empty()) {
-        B.reset();
+        B.clear();
         return;
     }
     A << bf_reset << s;

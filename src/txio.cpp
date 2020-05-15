@@ -200,7 +200,7 @@ void Buffer::convert_line(int l, size_t wc) {
     auto [o, s] = convert_line0(wc);
     if (o) return;
     the_converter.lines_converted++;
-    reset();
+    clear();
     push_back(s);
 }
 
@@ -298,7 +298,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
                 L.insert(B, converted);
             else
                 ++L.cur_line;
-            B.reset();
+            B.clear();
         }
         if (c == EOF) break;
     }

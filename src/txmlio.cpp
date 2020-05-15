@@ -111,7 +111,7 @@ auto XmlIO::init(const std::string &name) -> bool {
 void XmlIO::run() {
     cur_xml = new Xml(Istring("root"), nullptr);
     cur_stack.push_back(cur_xml);
-    B.reset();
+    B.clear();
     eof_ok = true;
     for (;;) {
         codepoint c = next_char();
@@ -128,7 +128,7 @@ void XmlIO::run() {
 
 // This fetches a line from the file, true at eof
 void XmlIO::next_line() {
-    line_buffer.reset();
+    line_buffer.clear();
     int n = lines.get_next_cv(line_buffer, enc);
     if (n == -1) {
         if (eof_ok && cur_stack.size() == 1)
@@ -179,12 +179,12 @@ void XmlIO::skip_space() {
 void XmlIO::flush_buffer() {
     if (B.empty()) return;
     cur_xml->add_last_string(B);
-    B.reset();
+    B.clear();
 }
 
 // Scans a Name with a simplified syntax
 void XmlIO::scan_name() {
-    B.reset();
+    B.clear();
     codepoint x = XmlIO::peek_char();
     // x should be Letter underscore colon
     B.push_back(x);
@@ -203,7 +203,7 @@ void XmlIO::scan_name() {
 // Reads all characters, until finding either character c, or a space if c=0
 // Maybe we should change this into: parse a Nntoken or something like that
 void XmlIO::scan_name(uchar c) {
-    B.reset();
+    B.clear();
     for (;;) {
         codepoint x = XmlIO::peek_char();
         if (x == c || is_spacer(x)) return;
@@ -214,7 +214,7 @@ void XmlIO::scan_name(uchar c) {
 
 // Reads all characters, until finding either character c, or a space if c=0
 void XmlIO::scan_name(uchar c1, uchar c2) {
-    B.reset();
+    B.clear();
     for (;;) {
         codepoint x = XmlIO::peek_char();
         if (x == c1 || x == c2 || is_spacer(x)) return;
@@ -236,7 +236,7 @@ void XmlIO::parse_lt() {
         parse_pi();
     else
         parse_tag();
-    B.reset();
+    B.clear();
 }
 
 // Case of </foo>
@@ -300,7 +300,7 @@ void XmlIO::parse_quoted() {
         std::cout << " got " << cur_char << "\n";
     }
     skip_char();
-    B.reset();
+    B.clear();
     for (;;) {
         codepoint x = XmlIO::next_char();
         if (x == delim) break;
@@ -339,7 +339,7 @@ void XmlIO::parse_pi() {
     scan_name('?');
     bool is_tralics = B == "tralics";
     bool is_xml     = B == "xml";
-    aux.reset();
+    aux.clear();
     aux << B;
     if (is_xml) {
         for (;;) {
@@ -415,7 +415,7 @@ void XmlIO::expect(String s) {
         cur_char = next_char();
         if (cur_char != uchar(s[i])) {
             static Buffer aux;
-            aux.reset();
+            aux.clear();
             aux << "Expected " << s[i] << " got " << cur_char;
             error(aux);
         }
@@ -427,7 +427,7 @@ void XmlIO::expect(String s) {
 // Comments are ignored.
 void XmlIO::parse_dec_comment() {
     expect("--");
-    B.reset();
+    B.clear();
     for (;;) {
         codepoint c = next_char();
         B.push_back(c);
@@ -444,7 +444,7 @@ void XmlIO::parse_dec_comment() {
 // CDATA section; is inserted in the tree as is
 void XmlIO::parse_dec_cdata() {
     expect("[CDATA");
-    B.reset();
+    B.clear();
     B.push_back("<![CDATA ");
     skip_space();
     for (;;) {
@@ -460,7 +460,7 @@ void XmlIO::parse_dec_cdata() {
 
 // to be completed
 void XmlIO::parse_dec_conditional() {
-    B.reset();
+    B.clear();
     skip_char(); // skip
     B.push_back("<![");
     bool keep = false;
@@ -483,7 +483,7 @@ void XmlIO::parse_dec_conditional() {
     skip_space();
     if (cur_char != '[') error("expected [");
     skip_char();
-    B.reset();
+    B.clear();
     if (keep)
         B << "[INCLUDE[";
     else
@@ -494,7 +494,7 @@ void XmlIO::parse_dec_conditional() {
     cur_xml = res;
     cur_stack.push_back(cur_xml);
     ++nb_cond;
-    B.reset();
+    B.clear();
 }
 
 // Parses SYSTEM 'foo' or PUBLIC 'foo' 'bar'
@@ -522,7 +522,7 @@ auto XmlIO::parse_sys_pub() -> bool {
 // <!ENTITY foo SYSTEM 'system-part'>
 // We insert
 void XmlIO::parse_dec_entity() {
-    aux.reset();
+    aux.clear();
     aux.push_back("ENTITY ");
     expect("ENTITY");
     skip_space();
@@ -546,7 +546,7 @@ void XmlIO::parse_dec_entity() {
     skip_space();
     // We might have NDATA here, if parameter==false
     if (cur_char != '>') {
-        B.reset();
+        B.clear();
         for (;;) {
             codepoint c = next_char();
             if (c == '>') break;
@@ -563,8 +563,8 @@ void XmlIO::parse_dec_entity() {
 // We might have <!ELEMENT %foo; %bar;>
 void XmlIO::parse_dec_element() {
     Buffer tmp;
-    aux.reset();
-    aux.reset();
+    aux.clear();
+    aux.clear();
     tmp.push_back("ELEMENT");
     expect("ELEMENT");
     bool        ok            = true;
@@ -583,7 +583,7 @@ void XmlIO::parse_dec_element() {
             if (is_first || prev_is_space) continue;
             if (first_space) {
                 elt_name = aux;
-                aux.reset();
+                aux.clear();
                 first_space = false;
                 is_first    = true;
                 continue;
@@ -612,8 +612,8 @@ void XmlIO::parse_dec_element() {
 void XmlIO::parse_dec_attlist() {
     expect("ATTLIST");
     Buffer tmp;
-    aux.reset();
-    aux.reset();
+    aux.clear();
+    aux.clear();
     tmp.push_back("ATTLIST");
     bool        ok            = true;
     bool        is_first      = true;
@@ -631,7 +631,7 @@ void XmlIO::parse_dec_attlist() {
             if (is_first || prev_is_space) continue;
             if (first_space) {
                 elt_name = aux;
-                aux.reset();
+                aux.clear();
                 first_space = false;
                 is_first    = true;
                 continue;
@@ -670,7 +670,7 @@ void XmlIO::parse_dec_doctype() {
     cur_xml->push_back_unless_nullptr(res); // Insert this in the tree
     skip_space();
     scan_name(0);
-    aux.reset();
+    aux.clear();
     aux << " " << B;
     skip_space();
     parse_sys_pub();
@@ -685,7 +685,7 @@ void XmlIO::parse_dec_doctype() {
     cur_xml = res;
     cur_stack.push_back(cur_xml);
     // Read the local DTD
-    B.reset();
+    B.clear();
     B << " [";
     for (;;) {
         codepoint c = next_char();
@@ -715,7 +715,7 @@ void XmlIO::parse_dec_doctype() {
 
 void XmlIO::parse_dec_notation() {
     expect("NOTATION");
-    B.reset();
+    B.clear();
     B.push_back("<!NOTATION ");
     skip_space();
     for (;;) {
@@ -728,7 +728,7 @@ void XmlIO::parse_dec_notation() {
 
 // Replaces %foo by its value
 auto XmlIO::expand_PEReference() -> bool {
-    B.reset();
+    B.clear();
     for (;;) {
         codepoint c = next_char();
         if (c == ';') break;
@@ -739,7 +739,7 @@ auto XmlIO::expand_PEReference() -> bool {
     auto        n  = entities.size();
     for (size_t i = 0; i < n; i++) {
         if (entities[i].has_name(s)) {
-            B.reset();
+            B.clear();
             B.push_back(entities[i].get_val());
             ok = true;
             break;
