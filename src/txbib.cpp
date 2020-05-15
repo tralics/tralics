@@ -22,7 +22,7 @@ namespace {
 
     std::array<String, 3>    my_constant_table;
     Bbl                      bbl;
-    Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, aux_name_buffer, name_buffer, field_buf;
+    Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, name_buffer, field_buf;
     Buffer                   CB;
     bool                     distinguish_refer = false;
     std::string              cur_entry_name; // name of entry under construction.
@@ -55,7 +55,6 @@ namespace bib_ns {
     auto last_chars(const std::string &s, int k) -> std::string;
     auto skip_dp(const std::string &str) -> std::string;
     void bib_explain();
-    void handle_special_string(const std::string &s, Buffer &A, Buffer &B);
     auto type_to_string(entry_type x) -> name_positions;
     auto is_noopsort(const std::string &s, size_t i) -> bool;
 } // namespace bib_ns
@@ -2901,17 +2900,6 @@ void Bibtex::read(const std::string &src, bib_from ct) {
         bbl.push_back("%");
         bbl.newline();
     }
-}
-
-/// -------------------------   a virer
-
-void bib_ns::handle_special_string(const std::string &s, Buffer &A, Buffer &B) {
-    if (s.empty()) {
-        B.clear();
-        return;
-    }
-    A << bf_reset << s;
-    A.remove_spec_chars(false, B);
 }
 
 // ----------------------------------------

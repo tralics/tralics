@@ -197,9 +197,9 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     for (auto C = begin(); C != end(); ++C) {
         B.clear();
         B.push_back(*C);
-        if (Buffer tmp; B.find_documentclass(tmp)) {
+        if (auto os = B.find_documentclass(); os) {
             the_main->doc_class_pos = C;
-            return std::move(tmp);
+            return *os;
         }
     }
     return "";

@@ -12,6 +12,7 @@
 
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include <ctre.hpp>
 #include <fmt/format.h>
 
 namespace {
@@ -173,7 +174,6 @@ void Buffer::remove_last(size_t n) {
 
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
-// \todo call substring or add tail method to Buffer
 void Buffer::remove_last_space() {
     if (!empty() && is_space(back()))
         remove_last();
@@ -546,35 +546,12 @@ auto Buffer::is_here(const std::string &s) -> bool {
 }
 
 // returns the document class. value in aux
-auto Buffer::find_documentclass(Buffer &aux) -> bool {
-    String cmd = "\\documentclass";
-    auto   k   = find(cmd);
-    if (k == std::string::npos) return false;
-    for (size_t j = 0; j < k; j++)
-        if (at(j) == '%' && at(j + 1) == '%') return false; // double comment
-    push_back("{}");                                        //  make sure we have braces \todo [vb] at the end of the Buffer ??
-    k += strlen(cmd);                                       // skip command name
-    while (at(k) == ' ') ++k;                               // skip spaces
-    if (at(k) == '[') {
-        auto cur_len = size() - 2;
-        auto cur_k   = k;
-        while (k < cur_len && at(k) != ']') ++k;
-        if (at(k) == ']')
-            ++k;
-        else
-            k = cur_k;
-    }
-    while (at(k) != '{') k++;
-    auto p = k;
-    while (at(p) != '}') p++;
-    auto len = p - k - 1;
-    if (len == 0) return false;
-    aux.clear();
-    aux.push_back(data() + k + 1);
-    aux.resize(len);
-    for (size_t i = 0; i < len; i++) // \documentclass{Jos\351} is invalid
-        if (!is_letter(aux[i]) && !is_digit(aux[i])) return false;
-    return true;
+auto Buffer::find_documentclass() const -> std::optional<std::string> {
+    if (contains("%%")) return {};
+    static constexpr auto pattern = ctll::fixed_string{R"(.*\\documentclass.*\{([a-zA-Z0-9]+)\}.*)"};
+    auto                  match   = ctre::match<pattern>(*this);
+    if (!match) return {};
+    return match.get<1>().to_string();
 }
 
 auto Buffer::find_doctype() const -> size_t {
