@@ -863,3 +863,131 @@ void Buffer::skip_letter_dig_dot_slash() {
 }
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
+
+// Puts in the buffer the value of the attribute M of element idx
+// returns false if there is no such value.
+auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
+    AttList &L = idx.get_att();
+    auto     k = L.has_value(m);
+    if (!k) return false;
+    clear();
+    push_back(L.get_val(*k).name);
+    return true;
+}
+
+// Puts the attribute list in the buffer
+// We can have Foo="bar'", printed as Foo='bar&apos;'
+// The case Foo'bar="&gee" is not handled.
+// nothing is printed in case the name starts with an apostrophe.
+// Print in reverse order, because this was in the previous version
+
+void Buffer::push_back(const AttList &Y) {
+    auto n = Y.val.size();
+    if (the_main->double_quote_att)
+        for (auto i = n; i > 0; i--) push_back_alt(Y.val[i - 1]);
+    else
+        for (auto i = n; i > 0; i--) push_back(Y.val[i - 1]);
+}
+
+void Buffer::push_back(const AttPair &X) {
+    const Istring &b = X.name;
+    const Istring &a = X.value;
+    if (a.null()) return;
+    if (b.null()) return;
+    auto B = b.value;
+    auto A = a.value;
+    if (B[0] == '\'') return;
+    push_back(' ');
+    push_back(B);
+    push_back('=');
+    push_back('\'');
+    for (char c : A) {
+        if (c == '\'')
+            push_back("&apos;");
+        else
+            push_back(c);
+    }
+    push_back('\'');
+}
+
+// Use double quotes instead of single quotes
+void Buffer::push_back_alt(const AttPair &X) {
+    const Istring &b = X.name;
+    const Istring &a = X.value;
+    if (a.null()) return;
+    if (b.null()) return;
+    auto B = b.value;
+    auto A = a.value;
+    if (B[0] == '\'') return;
+    push_back(' ');
+    push_back(B);
+    push_back('=');
+    push_back('\"');
+    for (char c : A) {
+        if (c == '\"')
+            push_back("&quot;");
+        else
+            push_back(c);
+    }
+    push_back('\"');
+}
+
+// Returns true if there is a space. Kills at the space. Advance
+auto Buffer::look_at_space(const std::string &s) -> bool {
+    clear();
+    push_back(s);
+    bool has_space = false;
+    ptrs.b         = 0;
+    for (int i = 0;; i++) {
+        if (head() == 0) break;
+        if (is_space(head())) {
+            has_space  = true;
+            at(ptrs.b) = 0;
+            advance();
+            break;
+        }
+        advance();
+    }
+    return has_space;
+}
+
+// What follows is used for handling the configuration file.
+
+// In the case of "foo" (no space), returns <foo>
+// In the case of space, what follows the spaces is considered as
+// attribute list.
+auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
+    bool has_spaces = look_at_space(s);
+    if (!has_spaces) return {Istring(s), nullptr};
+    Xml res{Istring(data()), nullptr};
+    push_back_special_att(res.id);
+    return res;
+}
+
+// This converts the buffer in to an attribute list for id.
+void Buffer::push_back_special_att(Xid id) {
+    for (;;) {
+        if (!find_equals()) return;
+        auto J = ptrs.a;
+        if (!backup_space()) return;
+        advance();
+        if (!string_delims()) return;
+        Istring a = Istring(substr(J));
+        Istring b = Istring(substr(ptrs.a));
+        id.add_attribute(a, b);
+        advance();
+    }
+}
+
+// Returns true if we see space, then s then space then equals then space.
+// sets ptrs.b to the char after this space
+auto Buffer::see_equals(String s) -> bool {
+    ptrs.b = 0;
+    skip_sp_tab();
+    if (!substr(ptrs.b).starts_with(s)) return false;
+    ptrs.b += strlen(s);
+    skip_sp_tab();
+    if (next_char() != '=') return false;
+    skip_sp_tab();
+    return true;
+}
