@@ -545,17 +545,6 @@ auto Buffer::is_here(const std::string &s) -> bool {
     return true;
 }
 
-auto Buffer::find_doctype() const -> size_t {
-    if (at(0) != '%') return 0;
-    String S = "ralics DOCTYPE ";
-    auto   k = find(S);
-    if (k == std::string::npos) return 0;
-    k += strlen(S);
-    while ((at(k) != 0) && (at(k) == ' ' || at(k) == '=')) k++;
-    if (at(k) == 0) return 0;
-    return k;
-}
-
 // If the buffer holds a single char (plus space) returns it.
 // Note: this returns 0 in case of a non-7bit character
 auto Buffer::single_char() const -> char {

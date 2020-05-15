@@ -27,7 +27,6 @@ public:
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
-    [[nodiscard]] auto find_doctype() const -> size_t;                        ///< Figure out the doctype of the Buffer contents
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }       ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;             ///< For typography

@@ -1090,8 +1090,7 @@ void MainClass::run(int argc, char **argv) {
     check_for_input();              // open the input file
 
     dclass = input_content.find_documentclass();
-    Buffer B; // \todo remove
-    input_content.find_doctype(B, opt_doctype);
+    input_content.find_doctype(opt_doctype);
 
     read_config_and_other();
     finish_init();

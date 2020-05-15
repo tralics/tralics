@@ -228,19 +228,21 @@ auto LinePtr::find_configuration() -> std::string {
 }
 
 // This finds a line with document type in it
-// uses B and the buffer.
-void LinePtr::find_doctype(Buffer &B, std::string &res) {
+void LinePtr::find_doctype(std::string &res) {
     if (!res.empty()) return; // use command line option if given
     int N = 0;
     for (auto &C : *this) {
-        B.clear();
-        B.push_back(C);
-        auto k = B.find_doctype();
-        if (k != 0) {
-            res = B.substr(k);
-            return;
-        }
         if (++N > 100) return;
+        if (C[0] != '%') continue;
+
+        String S = "ralics DOCTYPE ";
+        auto   k = C.find(S);
+        if (k == std::string::npos) continue;
+        k += strlen(S);
+        while ((C[k] != 0) && (C[k] == ' ' || C[k] == '=')) k++;
+        if (C[k] == 0) continue;
+        res = C.substr(k);
+        return;
     }
 }
 
