@@ -560,15 +560,12 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     return std::move(utf8_out);
 }
 
-auto Buffer::codepoints() -> std::vector<codepoint> { // \todo use at more places, and exploit utfcpp
-    std::vector<codepoint> V;
+auto Buffer::codepoints() const -> std::vector<codepoint> { // \todo use at more places
     the_converter.start_convert(the_parser.get_cur_line());
-    ptrs.b = 0;
-    for (;;) {
-        codepoint c = next_utf8_char();
-        if (c == 0 && at_eol()) return V;
-        V.push_back(c);
-    }
+    std::vector<codepoint> V2;
+    V2.reserve(size());
+    for (auto it = begin(); *it != 0;) V2.emplace_back(utf8::next(it, end()));
+    return V2;
 }
 
 // --------------------------------------------
