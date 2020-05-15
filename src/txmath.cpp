@@ -1137,7 +1137,7 @@ void Parser::scan_math(int res, math_list_type type) {
         }
         default:
             if (T == 12 && c == '\'' && type != math_hbox_cd) {
-                if (Trace.back() == '\'') Trace.remove_last();
+                if (!Trace.empty() && Trace.back() == '\'') Trace.remove_last();
                 scan_prime();
                 continue;
             }

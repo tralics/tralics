@@ -216,7 +216,7 @@ found at http://www.cecill.info.)";
         for (int i = 0;; i++) {
             char c = s[i];
             if (c == 0 || c == ':') {
-                if (b.back() == '/') b.pop_back();
+                if (!b.empty() && b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
                 input_path.emplace_back(b);
                 b.clear();
