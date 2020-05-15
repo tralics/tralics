@@ -304,31 +304,8 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     }
 }
 
-// This puts x into the buffer in utf8 form \todo codepoint::to_utf8()
-void Buffer::push_back(codepoint c) {
-    auto x = c.value;
-    if (x < 128) {
-        push_back(static_cast<char>(x));
-        return;
-    }
-    auto x1 = x >> 18;
-    auto x2 = (x >> 12) & 63;
-    auto x3 = (x >> 6) & 63;
-    auto x4 = x & 63;
-    if (x1 > 0 || x2 >= 16) {
-        push_back(static_cast<char>(x1 + 128 + 64 + 32 + 16));
-        push_back(static_cast<char>(x2 + 128));
-        push_back(static_cast<char>(x3 + 128));
-        push_back(static_cast<char>(x4 + 128));
-    } else if (x2 > 0 || x3 >= 32) {
-        push_back(static_cast<char>(x2 + 128 + 64 + 32));
-        push_back(static_cast<char>(x3 + 128));
-        push_back(static_cast<char>(x4 + 128));
-    } else {
-        push_back(static_cast<char>(x3 + 128 + 64));
-        push_back(static_cast<char>(x4 + 128));
-    }
-}
+// This puts x into the buffer in utf8 form
+void Buffer::push_back(codepoint c) { utf8::append(c.value, std::back_inserter(*this)); }
 
 inline void Buffer::push_back_hex(unsigned c) {
     if (c < 10)
