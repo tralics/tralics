@@ -219,31 +219,22 @@ void LinePtr::add_buffer(const std::string &B, line_iterator C) {
 auto LinePtr::find_configuration() -> std::string {
     static constexpr auto pattern = ctll::fixed_string{"^%.*ralics configuration file[^']*'([^']+)'.*$"};
     int                   N       = 0;
-
     for (auto &C : *this) {
         if (++N > 100) break;
-        if (auto m = ctre::match<pattern>(C); m) return m.get<1>().to_string();
+        if (auto m = ctre::match<pattern>(C)) return m.get<1>().to_string();
     }
     return "";
 }
 
 // This finds a line with document type in it
-void LinePtr::find_doctype(std::string &res) {
-    if (!res.empty()) return; // use command line option if given
-    int N = 0;
+auto LinePtr::find_doctype() -> std::string {
+    static constexpr auto pattern = ctll::fixed_string{"%.*[Tt]ralics DOCTYPE [ =]*([^ =].*)$"};
+    int                   N       = 0;
     for (auto &C : *this) {
-        if (++N > 100) return;
-        if (C[0] != '%') continue;
-
-        String S = "ralics DOCTYPE ";
-        auto   k = C.find(S);
-        if (k == std::string::npos) continue;
-        k += strlen(S);
-        while ((C[k] != 0) && (C[k] == ' ' || C[k] == '=')) k++;
-        if (C[k] == 0) continue;
-        res = C.substr(k);
-        return;
+        if (++N > 100) break;
+        if (auto m = ctre::match<pattern>(C)) return m.get<1>().to_string();
     }
+    return "";
 }
 
 // Splits a string at \n, creates a list of lines with l as first

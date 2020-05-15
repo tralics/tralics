@@ -18,7 +18,7 @@ struct LinePtr : public std::list<Clines> { // \todo rename to LineList or somet
     auto find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;
     void find_all_types(std::vector<std::string> &res);
     auto find_configuration() -> std::string;
-    void find_doctype(std::string &res);
+    auto find_doctype() -> std::string;
     auto find_documentclass() -> std::string;
     void find_top_atts();
     auto find_top_val(String s, bool c) -> std::string;
