@@ -30,9 +30,9 @@ namespace {
 
     void utf8_ovf(size_t n) { // \todo inline
         Converter &T = the_converter;
-        buf.reset();
-        buf.push_back16(n, true);
-        spdlog::error("UTF-8 parsing overflow (char {}, line {}, file {})", buf, T.cur_file_line, T.cur_file_name);
+        Buffer     B;
+        B.push_back16(n, true);
+        spdlog::error("UTF-8 parsing overflow (char {}, line {}, file {})", B, T.cur_file_line, T.cur_file_name);
         T.bad_chars++;
         T.new_error();
     }
@@ -56,9 +56,9 @@ namespace io_ns {
 
 // Prints an att list on a buffer, then a stream.
 void AttList::print(std::ostream &fp) const {
-    buf.reset();
-    buf.push_back(*this);
-    fp << buf;
+    Buffer B;
+    B.push_back(*this);
+    fp << B;
 }
 
 // Prints an att list on a stream.
@@ -207,14 +207,12 @@ void Buffer::convert_line(int l, size_t wc) {
 // Why is v limited to 16bit chars?
 void io_ns::set_enc_param(long enc, long pos, long v) {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) {
-        buf << bf_reset << fmt::format("Illegal encoding {}", enc);
-        the_parser.parse_error(buf);
+        the_parser.parse_error(fmt::format("Illegal encoding {}", enc));
         return;
     }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
-        buf << bf_reset << fmt::format("Illegal encoding position {}", pos);
-        the_parser.parse_error(buf);
+        the_parser.parse_error(fmt::format("Illegal encoding position {}", pos));
         return;
     }
     if (0 < v && v < int(nb_characters))

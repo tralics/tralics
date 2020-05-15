@@ -210,4 +210,4 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-inline Buffer err_buf, buf;
+inline Buffer err_buf;

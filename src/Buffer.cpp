@@ -447,41 +447,31 @@ ScaledInt::operator std::string() const {
 auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & { return fp << static_cast<std::string>(x); }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
-    buf.reset();
-    buf.push_back(x);
-    fp << buf;
-    return fp;
+    Buffer B;
+    B.push_back(x);
+    return fp << B;
 }
 
 auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
-    buf.reset();
-    buf.push_back(x);
-    fp << buf;
-    return fp;
+    Buffer B;
+    B.push_back(x);
+    return fp << B;
 }
 
 // We use internal encoding here.
 auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
-    if (x.is_ascii())
-        fp << static_cast<uchar>(x.value);
-    else {
-        buf.reset();
-        buf.push_back(x);
-        fp << buf;
-    }
-    return fp;
+    if (x.is_ascii()) return fp << static_cast<uchar>(x.value);
+    Buffer B;
+    B.push_back(x);
+    return fp << B;
 }
 
 // We use log encoding here. \todo always UTF8?
 auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
-    if (x.is_ascii())
-        fp << static_cast<uchar>(x.value);
-    else {
-        buf.reset();
-        buf.out_log(x, the_main->log_encoding);
-        fp << buf;
-    }
-    return fp;
+    if (x.is_ascii()) return fp << static_cast<uchar>(x.value);
+    Buffer B;
+    B.push_back(x);
+    return fp << B;
 }
 
 // Puts n in roman (in upper case roman first, the loewrcasify)

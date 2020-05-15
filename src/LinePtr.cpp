@@ -197,9 +197,9 @@ auto LinePtr::find_documentclass(Buffer &B) -> std::string {
     for (auto C = begin(); C != end(); ++C) {
         B.reset();
         B.push_back(*C);
-        if (B.find_documentclass(buf)) {
+        if (Buffer tmp; B.find_documentclass(tmp)) {
             the_main->doc_class_pos = C;
-            return buf;
+            return std::move(tmp);
         }
     }
     return "";
@@ -249,10 +249,9 @@ void LinePtr::find_doctype(Buffer &B, std::string &res) {
 // line number.
 // This is used by \scantokens and \reevaluate, assumes UTF8
 void LinePtr::split_string(std::string x, int l) {
-    Buffer &B = buf;
+    Buffer  B;
     LinePtr L;
     L.cur_line = l;
-    B.reset();
     for (size_t i = 0;; ++i) {
         char c    = x[i];
         bool emit = false;
