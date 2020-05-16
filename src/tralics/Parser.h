@@ -1,11 +1,11 @@
 #pragma once
 #include "../txcond.h"
 #include "../txfonts.h"
-#include "../tximage.h"
 #include "../txstack.h"
 #include "../txstats.h"
 #include "EQTB.h"
 #include "Hashtab.h"
+#include "Image.h"
 #include "LabelInfo.h"
 #include "Mactab.h"
 
