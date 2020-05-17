@@ -1,5 +1,6 @@
 #include "tralics/Parser.h"
 #include "tralics/LinePtr.h"
+#include "tralics/NameMapper.h"
 #include "tralics/globals.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>

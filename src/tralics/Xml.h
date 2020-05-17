@@ -1,5 +1,6 @@
 #pragma once
 #include "Buffer.h"
+#include "NameMapper.h"
 #include <gsl/gsl>
 
 class XmlAction;

@@ -15,6 +15,7 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
+#include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <ctime>
@@ -184,7 +185,7 @@ auto assign(const std::string &sa, const std::string &sb) -> bool {
         return true;
     }
     if (sa == "mml_font_monospace") {
-        the_names[np_mml_monospace] = Istring(sb); // \todo make the_names into a string-indexed hash table
+        the_names[np_mml_monospace] = Istring(sb);
         return true;
     }
     return false;
