@@ -1178,12 +1178,12 @@ namespace {
         std::array<char, 2> foo{};
         foo[1] = 0;
         for (char x = 'a'; x <= 'z'; x++) {
-            foo[0]                                        = x;
-            the_names[to_unsigned(np_letter_a + x - 'a')] = Istring(foo.data());
+            foo[0] = x;
+            the_names.set(to_unsigned(np_letter_a + x - 'a'), Istring(foo.data()));
         }
         for (char x = 'A'; x <= 'Z'; x++) {
-            foo[0]                                        = x;
-            the_names[to_unsigned(np_letter_A + x - 'A')] = Istring(foo.data());
+            foo[0] = x;
+            the_names.set(to_unsigned(np_letter_A + x - 'A'), Istring(foo.data()));
         }
     }
 } // namespace
