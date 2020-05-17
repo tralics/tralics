@@ -17,7 +17,7 @@
 struct NameMapper {
     std::array<Istring, np_last> flat;
 
-    Istring &      operator[](name_positions i) { return flat[i]; }
+    const Istring &operator[](name_positions i) const { return flat[i]; }
     const Istring &operator[](size_t i) const { return flat[i]; }
 
     void set(name_positions i, const Istring &s) { flat[i] = s; }
