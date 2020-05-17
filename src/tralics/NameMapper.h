@@ -17,11 +17,11 @@
 struct NameMapper {
     std::array<Istring, np_last> flat;
 
-    Istring operator[](size_t i) const { return flat[i]; }
+    Istring &      operator[](name_positions i) { return flat[i]; }
+    const Istring &operator[](size_t i) const { return flat[i]; }
 
-    Istring &operator[](name_positions i) { return flat[i]; }
-
+    void set(name_positions i, const Istring &s) { flat[i] = s; }
     void set(size_t i, const Istring &s) { flat[i] = s; }
 };
 
-inline NameMapper the_names; // \todo static in Istring and make is a map from std::string
+inline NameMapper the_names;

@@ -1100,7 +1100,7 @@ void MainClass::run(int argc, char **argv) {
     boot_bibtex(handling_ra);
     trans0();
     if (handling_ra) {
-        if (the_names[np_language].null()) the_names[np_language] = Istring("language");
+        if (the_names[np_language].null()) the_names.set(np_language, Istring("language"));
         the_parser.add_language_att();
     }
     the_parser.init(input_content);
