@@ -15,6 +15,7 @@ inline std::vector<std::filesystem::path> input_path;
 extern std::string file_name;       // Job name, without directory
 extern std::string all_themes;      //
 extern std::string everyjob_string; //
+inline std::string tralics_version{"2.15.4"};
 
 extern std::vector<LinePtr> file_pool; // pool managed by filecontents
 

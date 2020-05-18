@@ -282,8 +282,7 @@ found at http://www.cecill.info.)";
         }
         B.remove_space_at_end();
         if (B.empty()) {
-            the_main->banner();
-            std::cout << "bad option " << a << "\n";
+            spdlog::critical("Fatal : bad option {}", a);
             usage_and_quit(1);
         }
         return std::move(B);
@@ -374,15 +373,6 @@ void MainClass::check_for_input() {
     spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
 }
 
-void MainClass::banner() const {
-    static bool banner_printed = false;
-    if (banner_printed) return;
-    banner_printed = true;
-    spdlog::info("This is tralics {}, a LaTeX to XML translator", version);
-    spdlog::info("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
-    spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
-}
-
 void MainClass::open_log() { // \todo spdlog etc
     auto f   = std::filesystem::path(out_dir) / (log_name + ".log");
     log_file = tralics_ns::open_file(f, true);
@@ -395,7 +385,7 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::default_logger()->sinks().push_back(sink);
     spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 
-    spdlog::trace("Transcript file of tralics {} for file {}", version, infile);
+    spdlog::trace("Transcript file of tralics {} for file {}", tralics_version, infile);
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
@@ -436,7 +426,6 @@ void MainClass::parse_args(int argc, char **argv) {
             see_name(s);
     }
     if (infile.empty()) {
-        banner();
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
     }
@@ -446,13 +435,11 @@ void MainClass::parse_args(int argc, char **argv) {
 
 auto MainClass::check_for_arg(int &p, int argc, char **argv) const -> String {
     if (p >= argc - 1) {
-        banner();
         spdlog::critical("Argument missing for option {}", argv[p]);
         usage_and_quit(1);
     }
     if (std::string(argv[p + 1]) == "=") { // \todo this allows weird syntax
         if (p >= argc - 2) {
-            banner();
             spdlog::critical("Argument missing for option {}", argv[p]);
             usage_and_quit(1);
         }
@@ -569,8 +556,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         }
     }
     if (eqpos != 0) {
-        banner();
-        spdlog::error("Illegal equal sign in option {}", argv[p]);
+        spdlog::critical("Illegal equal sign in option {}", argv[p]);
         usage_and_quit(1);
     }
     if ((s == "v") || (s == "verbose")) {
@@ -585,10 +571,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         silent = true;
         return;
     }
-    if (s == "version") {
-        banner();
-        exit(0);
-    }
+    if (s == "version") { exit(0); }
     if (s == "rawbib") {
         raw_bib = true;
         return;
@@ -768,8 +751,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "help") usage_and_quit(0);
-    banner();
-    spdlog::error("bad option {}", argv[p]);
+    spdlog::critical("bad option {}", argv[p]);
     usage_and_quit(1);
 }
 
@@ -786,8 +768,7 @@ void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not 
 }
 
 void MainClass::end_with_help(int v) const {
-    banner();
-    std::cout << "Say tralics --help to get some help\n";
+    spdlog::info("Say `tralics --help' to get some help");
     exit(v);
 }
 
@@ -1084,11 +1065,9 @@ void MainClass::more_boot() const {
 
 void MainClass::run(int argc, char **argv) {
     get_os();
-    the_parser.boot();              // create the hash table and all that
-    parse_args(argc, argv);         // look at arguments
-    if (!only_input_data) banner(); // print banner
-    more_boot();                    // finish bootstrap
-    check_for_input();              // open the input file
+    parse_args(argc, argv); // look at arguments
+    more_boot();            // finish bootstrap
+    check_for_input();      // open the input file
 
     dclass = input_content.find_documentclass();
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();
@@ -1128,7 +1107,7 @@ void MainClass::out_xml() {
     if (auto sl = the_names[np_stylesheet]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.value, the_names[np_stylesheet_type].value);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
-    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", version, short_date);
+    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
     fp << the_parser.the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());

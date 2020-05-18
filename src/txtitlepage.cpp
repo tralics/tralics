@@ -702,7 +702,7 @@ void Buffer::find_top_atts() {
         auto as = Istring(a);
         clear();
         push_back("Tralics version ");
-        push_back(the_main->version);
+        push_back(tralics_version);
         Istring bs = Istring(*this);
         Xid(1).add_attribute(as, bs);
     } else {

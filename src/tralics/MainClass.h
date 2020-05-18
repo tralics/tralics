@@ -49,10 +49,9 @@ class MainClass {
 public:
     Stack *the_stack{}; ///< pointer to the stack
 
-    std::string default_class;     ///< The default class
-    std::string short_date;        ///< Date of start of run (short format)
-    std::string version{"2.15.4"}; ///< Version of tralics \todo set at a more reasonable place
-    std::string year_string;       // is 2003
+    std::string default_class; ///< The default class
+    std::string short_date;    ///< Date of start of run (short format)
+    std::string year_string;   // is 2003
 
     std::vector<Istring> bibtex_fields_s;
     std::vector<Istring> bibtex_fields;
@@ -97,8 +96,6 @@ public:
     void set_input_encoding(size_t wc);        ///< Set default input file encoding and log the action \todo remove?
 
     static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
-
-    void banner() const; ///< Prints the banner on the tty
 
 private:
     void check_section_use() const;                   ///< Not sure what this does, RA related
@@ -152,7 +149,7 @@ private:
     void more_boot() const; ///< Finish bootstrapping
     void one_bib_file(bib_from pre, std::string bib);
     void open_config_file(const std::string &f);
-    void open_log(); ///< Opens the log file, prints the banner ann all information
+    void open_log(); ///< Opens the log file, prints some information
     void open_main_file();
     void out_gathered_math();
     void out_sep();
