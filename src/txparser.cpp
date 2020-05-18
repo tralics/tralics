@@ -1347,7 +1347,7 @@ void Parser::T_start_theorem(int c) {
         the_stack.add_att_to_cur(the_names[np_style], n);
         if (was_o) {
             back_input_braced(opt);
-            T_arg1(np_alt_head);
+            T_arg1(np_theorem_head);
             the_stack.add_nl();
         }
         the_stack.set_v_mode();

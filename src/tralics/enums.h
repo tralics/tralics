@@ -2129,7 +2129,7 @@ enum name_positions {
     np_a1,
     np_a2,
     np_accueil,
-    np_alt_head,
+    np_theorem_head,
     np_angle,
     np_arc,
     np_array,
