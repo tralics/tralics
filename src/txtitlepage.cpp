@@ -735,13 +735,12 @@ void Buffer::find_one_type(std::vector<std::string> &S) {
 }
 
 // This is called for all lines, outside groups.
-// Either calls the_parser.shell_a.assign
 auto tpage_ns::see_main_a(Buffer &in, Buffer &val) -> bool {
     Buffer B;
     val.clear();
     int k = tpage_ns::see_an_assignment(in, B, val);
     if (k == 1) {
-        bool res = assign(B, val);
+        bool res = the_names.assign(B, val);
         if (res) {
             if (!B.empty()) the_log << B << "=" << val.convert_to_log_encoding() << "\n";
             return true;

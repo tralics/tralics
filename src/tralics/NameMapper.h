@@ -24,6 +24,8 @@ struct NameMapper {
     void set(size_t i, const Istring &s) { flat[i] = s; }
 
     void boot();
+
+    auto assign(const std::string &sa, const std::string &sb) -> bool;
     auto assign_att(const std::string &A, const std::string &B) -> bool;
     auto assign_name(const std::string &A, const std::string &B) -> bool;
 };

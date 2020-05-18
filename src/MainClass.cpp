@@ -80,7 +80,7 @@ found at http://www.cecill.info.)";
 
     void after_conf_assign(std::vector<std::string> &V) {
         for (size_t i = 0; i < V.size(); i += 2) {
-            bool res = assign(V[i], V[i + 1]);
+            bool res = the_names.assign(V[i], V[i + 1]);
             if (res) spdlog::trace("{}={}", V[i], V[i + 1]);
         }
     }

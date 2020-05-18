@@ -63,7 +63,6 @@ void NameMapper::boot() {
     set(cst_temporary, Istring("temporary"));
     set(cst_theorem, Istring("theorem"));
     set(cst_xmlns, Istring("xmlns"));
-
     set(cst_dig0, Istring("0"));
     set(cst_dig1, Istring("1"));
     set(cst_dig2, Istring("2"));
@@ -74,7 +73,6 @@ void NameMapper::boot() {
     set(cst_dig7, Istring("7"));
     set(cst_dig8, Istring("8"));
     set(cst_dig9, Istring("9"));
-
     set(cstb_article, Istring("article"));
     set(cstb_book, Istring("book"));
     set(cstb_booklet, Istring("booklet"));
@@ -86,8 +84,8 @@ void NameMapper::boot() {
     set(cstb_incollection, Istring("incollection"));
     set(cstb_inproceedings, Istring("inproceedings"));
     set(cstb_manual, Istring("manual"));
-    set(cstb_masterthesis, Istring("mastersthesis")); // \todo why swap?
-    set(cstb_mastersthesis, Istring("masterthesis")); // \todo why swap?
+    set(cstb_masterthesis, Istring("mastersthesis"));
+    set(cstb_mastersthesis, Istring("masterthesis"));
     set(cstb_misc, Istring("misc"));
     set(cstb_phdthesis, Istring("phdthesis"));
     set(cstb_proceedings, Istring("proceedings"));
@@ -133,7 +131,6 @@ void NameMapper::boot() {
     set(cstb_section, Istring("section"));
     set(cst_numalign, Istring("numalign"));
     set(cst_denalign, Istring("denomalign"));
-
     set(cstf_normal, Istring("normal"));
     set(cstf_upright, Istring());
     set(cstf_bold, Istring("bold"));
@@ -149,7 +146,6 @@ void NameMapper::boot() {
     set(cstf_sansserif_italic, Istring("sans-serif-italic"));
     set(cstf_sansserif_bold_italic, Istring("sans-serif-bold-italic"));
     set(cstf_monospace, Istring("monospace"));
-
     set(np_a1, Istring("a1"));
     set(np_a2, Istring("a2"));
     set(np_abarnodeconnect, Istring("abarnodeconnect"));
@@ -169,7 +165,6 @@ void NameMapper::boot() {
     set(np_arg3, Istring("arg3"));
     set(np_array, Istring("array"));
     set(np_alternatives, Istring("alternatives"));
-
     set(np_b1, Istring("b1"));
     set(np_b2, Istring("b2"));
     set(np_b_rend, Istring("rend"));
@@ -185,7 +180,6 @@ void NameMapper::boot() {
     set(np_border_topw, Istring("border-top-width"));
     set(np_border_leftw, Istring("border-left-width"));
     set(np_border_rightw, Istring("border-right-width"));
-
     set(np_box, Istring("pic-framebox"));
     set(np_box_pos, Istring("position"));
     set(np_boxed, Istring("boxed"));
@@ -193,7 +187,6 @@ void NameMapper::boot() {
     set(np_box_width, Istring("width"));
     set(np_bibitem, Istring("bibitem"));
     set(np_bibkey, Istring("bib-key"));
-
     set(np_c1, Istring("c1"));
     set(np_c2, Istring("c2"));
     set(np_c_left, Istring("left"));
@@ -231,7 +224,6 @@ void NameMapper::boot() {
     set(np_cst_width, Istring("width"));
     set(np_curve, Istring("pic-curve"));
     set(np_curve_nbpts, Istring("nbsymb"));
-
     set(np_dashbox, Istring("pic-dashbox"));
     set(np_dashline, Istring("dashline"));
     set(np_dashdim, Istring("dashdim"));
@@ -258,7 +250,6 @@ void NameMapper::boot() {
     set(np_drawline, Istring("drawline"));
     set(np_dx, Istring("dx"));
     set(np_dy, Istring("dy"));
-
     set(np_encap, Istring("encap"));
     set(np_english, Istring("english"));
     set(np_eqnpos, Istring("eqnpos"));
@@ -268,7 +259,6 @@ void NameMapper::boot() {
     set(np_Warning, Istring("Warning"));
     set(np_Info, Istring("Info"));
     set(np_inline, Istring("inline"));
-
     set(np_false, Istring("false"));
     set(np_fbox, Istring("fbox"));
     set(np_figure, Istring("figure"));
@@ -315,12 +305,10 @@ void NameMapper::boot() {
     set(np_frontmatter, Istring("frontmatter"));
     set(np_full, Istring("full"));
     set(np_full_first, Istring("prenomcomplet"));
-
     set(np_german, Istring("german"));
     set(np_glo_name, Istring("Glossary"));
     set(np_gloss, Istring("gloss"));
     set(np_graphics, Istring("graphics"));
-
     set(np_halfem, Istring("4.pt"));
     set(np_halign, Istring("halign"));
     set(np_hdr, Istring("hdr"));
@@ -332,7 +320,6 @@ void NameMapper::boot() {
     set(np_hfilneg, Istring("hfilneg"));
     set(np_html, Istring("html"));
     set(np_hss, Istring("hss"));
-
     set(np_id, Istring("id"));
     set(np_idtext, Istring("id-text"));
     set(np_index, Istring("index"));
@@ -340,12 +327,9 @@ void NameMapper::boot() {
     set(np_inline, Istring("inline"));
     set(np_isproject, Istring("isproject"));
     set(np_item, Istring("item"));
-
     set(np_junior, Istring("junior"));
-
     set(np_key, Istring("key"));
     set(np_keywords, Istring("keywords"));
-
     set(np_label_glo, Istring("label"));
     set(np_label_item, Istring("label"));
     set(np_language, Istring());
@@ -362,7 +346,6 @@ void NameMapper::boot() {
     set(np_llap, Istring("llap"));
     set(np_rlap, Istring("rlap"));
     set(np_rasection, Istring(""));
-
     set(np_mainmatter, Istring("mainmatter"));
     set(np_mbox, Istring("mbox"));
     set(np_marginpar, Istring("marginpar"));
@@ -372,11 +355,9 @@ void NameMapper::boot() {
     set(np_moreinfo, Istring("moreinfo"));
     set(np_movablelimits, Istring("movablelimits"));
     set(np_multiput, Istring("pic-multiput"));
-
     set(np_name, Istring("name"));
     set(np_nameA, Istring("nameA"));
     set(np_nameB, Istring("nameB"));
-
     set(np_node, Istring("node"));
     set(np_nodebox, Istring("nodebox"));
     set(np_nodecircle, Istring("nodecircle"));
@@ -387,12 +368,10 @@ void NameMapper::boot() {
     set(np_noindent, Istring("noindent"));
     set(np_nom, Istring("nom"));
     set(np_nonumber, Istring("nonumber"));
-
     set(np_open, Istring("open"));
     set(np_ordered, Istring("ordered"));
     set(np_oval, Istring("pic-oval"));
     set(np_overline, Istring("overline"));
-
     set(np_page, Istring("page"));
     set(np_part, Istring("part"));
     set(np_part0, Istring("participant"));
@@ -417,9 +396,7 @@ void NameMapper::boot() {
     set(np_projet, Istring("projet"));
     set(np_projetdeveloppe, Istring("projetdeveloppe"));
     set(np_put, Istring("pic-put"));
-
     set(np_quoted, Istring("quoted"));
-
     set(np_r_angle, Istring("angle"));
     set(np_raisebox, Istring("raisebox"));
     set(np_ref, Istring("ref"));
@@ -436,7 +413,6 @@ void NameMapper::boot() {
     set(np_rule_bsb, Istring("bottom_rule_space_below"));
     set(np_rclist, Istring("UR"));
     set(np_rcval, Istring("+UR"));
-
     set(np_sbox, Istring("scalebox"));
     set(np_sc, Istring("sc"));
     set(np_scale, Istring("scale"));
@@ -462,7 +438,6 @@ void NameMapper::boot() {
     set(np_subfigure, Istring("subfigure"));
     set(np_stylesheet, Istring(""));
     set(np_stylesheet_type, Istring("text/css"));
-
     set(np_table, Istring("table"));
     set(np_Table, Istring("Table"));
     set(np_tabular, Istring("tabular"));
@@ -487,14 +462,12 @@ void NameMapper::boot() {
     set(np_true, Istring("true"));
     set(np_type, Istring("type"));
     set(np_textype, Istring("textype"));
-
     set(np_underline, Istring("underline"));
     set(np_unknown, Istring("unknown"));
     set(np_unit_length, Istring("unit-length"));
     set(np_url, Istring("url"));
     set(np_userid, Istring("userid"));
     set(np_user_list, Istring("description"));
-
     set(np_val, Istring("val"));
     set(np_vector, Istring("pic-vector"));
     set(np_vfil, Istring("vfil"));
@@ -502,21 +475,17 @@ void NameMapper::boot() {
     set(np_vfilneg, Istring("vfilneg"));
     set(np_vpos, Istring("vpos"));
     set(np_vss, Istring("vss"));
-
     set(np_width, Istring("width"));
-
     set(np_xscale, Istring("xscale"));
     set(np_xscaley, Istring("xscaley"));
     set(np_xdir, Istring("xdir"));
     set(np_xleaders, Istring("xleaders"));
     set(np_xpos, Istring("xpos"));
     set(np_xref, Istring("xref"));
-
     set(np_yscale, Istring("yscale"));
     set(np_yscalex, Istring("yscalex"));
     set(np_ydir, Istring("ydir"));
     set(np_ypos, Istring("ypos"));
-
     set(np_zerodim, Istring("0pt"));
     set(np_mml_normal, Istring("mml@font@normal"));
     set(np_mml_upright, Istring("mml@font@upright"));
@@ -533,7 +502,6 @@ void NameMapper::boot() {
     set(np_mml_sansserif_italic, Istring("mml@font@sansserifitalic"));
     set(np_mml_sansserif_bold_italic, Istring("mml@font@sansserifbolditalic"));
     set(np_mml_monospace, Istring("mml@font@monospace"));
-
     set(np_3pt, Istring("3pt"));
     set(np_6pt, Istring("6pt"));
     set(np_12pt, Istring("12pt"));
@@ -551,6 +519,153 @@ void NameMapper::boot() {
         foo[0] = x;
         set(to_unsigned(np_letter_A + x - 'A'), Istring(foo.data()));
     }
+}
+
+auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
+    auto n = sa.size();
+
+    if (sa.starts_with("elt_")) return the_names.assign_name(sa.substr(4), sb);
+    if (sa.starts_with("xml_")) return the_names.assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), sb);
+    if (sa.starts_with("att_")) return the_names.assign_att(sa.substr(4), sb);
+
+    if (sa == "lang_fr") {
+        set(np_french, Istring(sb));
+        return true;
+    }
+    if (sa == "lang_en") {
+        set(np_english, Istring(sb));
+        return true;
+    }
+    if (sa == "distinguish_refer_in_rabib") {
+        if ((sb == "true") || (sb == "yes"))
+            the_main->distinguish_refer = true;
+        else if ((sb == "false") || (sb == "no"))
+            the_main->distinguish_refer = false;
+        else
+            spdlog::warn("distinguish_refer_in_rabib = {} ignored");
+        return true;
+    }
+    if (sa == "entity_names") {
+        the_main->set_ent_names(sb);
+        return true;
+    }
+    if (sa == "default_class") {
+        the_main->default_class = sb;
+        return true;
+    }
+    if (sa == "alternate_item") {
+        if (sb == "false")
+            the_parser.hash_table.eval_let("item", "@@item");
+        else if (sb == "true")
+            the_parser.hash_table.eval_let("item", "@item");
+        return true;
+    }
+    if (sa == "url_font") {
+        Buffer aux;
+        aux << "\\def\\urlfont{" << sb << "}";
+        the_main->add_to_from_config(1, aux); // \todo no Buffer
+        return true;
+    }
+    if (sa == "everyjob") {
+        everyjob_string = fmt::format("\\everyjob={{{}}}", sb);
+        return true;
+    }
+    if (sa == "no_footnote_hack") {
+        if (sb == "true") the_main->footnote_hack = false;
+        if (sb == "false") the_main->footnote_hack = true;
+        return true;
+    }
+    if (sa == "use_font_elt") {
+        if (sb == "true") the_main->use_font_elt = true;
+        if (sb == "false") the_main->use_font_elt = false;
+        return true;
+    }
+    if (sa == "use_all_sizes") {
+        if (sb == "true") the_main->use_all_sizes = true;
+        if (sb == "false") the_main->use_all_sizes = false;
+        return true;
+    }
+    if (sa == "bibtex_fields") {
+        Buffer(sb).interpret_bibtex_list(); // \todo without Buffer
+        return false;
+    }
+    if (sa == "bibtex_extensions") {
+        Buffer(sb).interpret_bibtex_extension_list();
+        return false;
+    }
+    if (sa == "mfenced_separator_val") {
+        if (sb == "NONE")
+            set(np_separator, Istring());
+        else
+            set(np_separator, Istring(sb));
+        return true;
+    }
+    if (sa.ends_with("_vals")) {
+        Buffer B(sb);
+        config_ns::interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
+        return true;
+    }
+    if (sa == "mml_font_normal") {
+        set(np_mml_normal, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_upright") {
+        set(np_mml_upright, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_bold") {
+        set(np_mml_bold, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_italic") {
+        set(np_mml_italic, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_bold_italic") {
+        set(np_mml_bold_italic, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_script") {
+        set(np_mml_script, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_bold_script") {
+        set(np_mml_bold_script, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_fraktur") {
+        set(np_mml_fraktur, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_doublestruck") {
+        set(np_mml_doublestruck, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_bold_fraktur") {
+        set(np_mml_bold_fraktur, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_sansserif") {
+        set(np_mml_sansserif, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_bold_sansserif") {
+        set(np_mml_bold_sansserif, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_sansserif_italic") {
+        set(np_mml_sansserif_italic, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_sansserif_bold_italic") {
+        set(np_mml_sansserif_bold_italic, Istring(sb));
+        return true;
+    }
+    if (sa == "mml_font_monospace") {
+        set(np_mml_monospace, Istring(sb));
+        return true;
+    }
+    return false;
 }
 
 auto NameMapper::assign_name(const std::string &A, const std::string &B) -> bool {
