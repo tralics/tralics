@@ -20,9 +20,10 @@ struct NameMapper {
     const Istring &operator[](name_positions i) const { return flat[i]; }
     const Istring &operator[](size_t i) const { return flat[i]; }
 
-    void set(name_positions i, const Istring &s) { flat[i] = s; }
-    void set(size_t i, const Istring &s) { flat[i] = s; }
+    void set(name_positions i, const std::string &s) { flat[i] = Istring(s); }
+    void set(size_t i, const std::string &s) { flat[i] = Istring(s); }
 
+    void def(name_positions i, const std::string &s);
     void boot();
 
     auto assign(const std::string &sa, const std::string &sb) -> bool;

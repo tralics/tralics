@@ -736,7 +736,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = np_german;
     Xid doc_att(1);
-    if ((b != 0U) && !the_names[np_language].null()) doc_att.get_att().push_back(np_language, b);
+    if ((b != 0U) && !the_names[np_language].empty()) doc_att.get_att().push_back(np_language, b);
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {

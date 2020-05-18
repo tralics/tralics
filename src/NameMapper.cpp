@@ -3,521 +3,523 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
+void NameMapper::def(name_positions i, const std::string &s) { set(i, s); }
+
 void NameMapper::boot() {
-    set(cst_empty, Istring(""));
-    set(cst_accent, Istring("accent"));
-    set(cst_accentunder, Istring("accentunder"));
-    set(cst_argument, Istring("argument"));
-    set(cst_biblio, Istring("thebibliography"));
-    set(cst_composition, Istring("composition"));
-    set(cst_displaystyle, Istring("displaystyle"));
-    set(cst_document, Istring("document"));
-    set(cst_elt, Istring("ELT"));
-    set(cst_flaghi, Istring("'hi_flag"));
-    set(cst_fonts, Istring("fonts"));
-    set(cst_foot, Istring("foot"));
-    set(cst_hanl, Istring("hanl"));
-    set(cst_hbox, Istring("hbox"));
-    set(cst_hi, Istring("hi"));
-    set(cst_math, Istring("math"));
-    set(cst_mathml, Istring("http://www.w3.org/1998/Math/MathML"));
-    set(cst_mathvariant, Istring("mathvariant"));
-    set(cst_mfenced, Istring("mfenced"));
-    set(cst_mfrac, Istring("mfrac"));
-    set(cst_mpadded, Istring("mpadded"));
-    set(cst_mphantom, Istring("mphantom"));
-    set(cst_mi, Istring("mi"));
-    set(cst_mn, Istring("mn"));
-    set(cst_mo, Istring("mo"));
-    set(cst_ci, Istring("ci"));
-    set(cst_cn, Istring("cn"));
-    set(cst_csymbol, Istring("csymbol"));
-    set(cst_multiscripts, Istring("mmultiscripts"));
-    set(cst_nothing, Istring(""));
-    set(cst_mroot, Istring("mroot"));
-    set(cst_mover, Istring("mover"));
-    set(cst_mrow, Istring("mrow"));
-    set(cst_mrow_cst, Istring("<mrow></mrow>"));
-    set(cst_mspace, Istring("mspace"));
-    set(cst_msqrt, Istring("msqrt"));
-    set(cst_msub, Istring("msub"));
-    set(cst_mstyle, Istring("mstyle"));
-    set(cst_msubsup, Istring("msubsup"));
-    set(cst_msup, Istring("msup"));
-    set(cst_mtable, Istring("mtable"));
-    set(cst_mtd, Istring("mtd"));
-    set(cst_mtext, Istring("mtext"));
-    set(cst_mtr, Istring("mtr"));
-    set(cst_munder, Istring("munder"));
-    set(cst_mref, Istring("mref"));
-    set(cst_munderover, Istring("munderover"));
-    set(cst_mode, Istring("mode"));
-    set(cst_display, Istring("display"));
-    set(cst_nl, Istring("\n"));
-    set(cst_p, Istring("p"));
-    set(cst_particip, Istring("particip"));
-    set(cst_rasection, Istring("RAsection"));
-    set(cst_refer, Istring("refer"));
-    set(cst_scriptlevel, Istring("scriptlevel"));
-    set(cst_separators, Istring("separators"));
-    set(cst_temporary, Istring("temporary"));
-    set(cst_theorem, Istring("theorem"));
-    set(cst_xmlns, Istring("xmlns"));
-    set(cst_dig0, Istring("0"));
-    set(cst_dig1, Istring("1"));
-    set(cst_dig2, Istring("2"));
-    set(cst_dig3, Istring("3"));
-    set(cst_dig4, Istring("4"));
-    set(cst_dig5, Istring("5"));
-    set(cst_dig6, Istring("6"));
-    set(cst_dig7, Istring("7"));
-    set(cst_dig8, Istring("8"));
-    set(cst_dig9, Istring("9"));
-    set(cstb_article, Istring("article"));
-    set(cstb_book, Istring("book"));
-    set(cstb_booklet, Istring("booklet"));
-    set(cstb_conference, Istring("conference"));
-    set(cstb_coursenotes, Istring("coursenotes"));
-    set(cstb_comment, Istring("comment"));
-    set(cstb_extension, Istring("extension"));
-    set(cstb_inbook, Istring("inbook"));
-    set(cstb_incollection, Istring("incollection"));
-    set(cstb_inproceedings, Istring("inproceedings"));
-    set(cstb_manual, Istring("manual"));
-    set(cstb_masterthesis, Istring("mastersthesis"));
-    set(cstb_mastersthesis, Istring("masterthesis"));
-    set(cstb_misc, Istring("misc"));
-    set(cstb_phdthesis, Istring("phdthesis"));
-    set(cstb_proceedings, Istring("proceedings"));
-    set(cstb_preamble, Istring("preamble"));
-    set(cstb_techreport, Istring("techreport"));
-    set(cstb_string, Istring("string"));
-    set(cstb_unpublished, Istring("unpublished"));
-    set(cstb_unknown, Istring("unknown"));
-    set(cstb_address, Istring("address"));
-    set(cstb_author, Istring("author"));
-    set(cstb_booktitle, Istring("booktitle"));
-    set(cstb_chapter, Istring("chapter"));
-    set(cstb_crossref, Istring("crossref"));
-    set(cstb_doi, Istring("doi"));
-    set(cstb_edition, Istring("edition"));
-    set(cstb_editor, Istring("editor"));
-    set(cstb_howpublished, Istring("howpublished"));
-    set(cstb_institution, Istring("institution"));
-    set(cstb_isbn, Istring("isbn"));
-    set(cstb_issn, Istring("issn"));
-    set(cstb_isrn, Istring("isrn"));
-    set(cstb_journal, Istring("journal"));
-    set(cstb_key, Istring("key"));
-    set(cstb_month, Istring("month"));
-    set(cstb_language, Istring("language"));
-    set(cstb_langue, Istring("langue"));
-    set(cstb_note, Istring("note"));
-    set(cstb_number, Istring("number"));
-    set(cstb_organization, Istring("organization"));
-    set(cstb_pages, Istring("pages"));
-    set(cstb_publisher, Istring("publisher"));
-    set(cstb_school, Istring("school"));
-    set(cstb_series, Istring("series"));
-    set(cstb_title, Istring("title"));
-    set(cstb_type, Istring("type"));
-    set(cstb_url, Istring("url"));
-    set(cstb_volume, Istring("volume"));
-    set(cstb_year, Istring("year"));
-    set(cstb_equipe, Istring("equipe"));
-    set(cstb_subtype, Istring("subtype"));
-    set(cstb_unite, Istring("unite"));
-    set(cstb_statut, Istring("statut"));
-    set(cstb_section, Istring("section"));
-    set(cst_numalign, Istring("numalign"));
-    set(cst_denalign, Istring("denomalign"));
-    set(cstf_normal, Istring("normal"));
-    set(cstf_upright, Istring());
-    set(cstf_bold, Istring("bold"));
-    set(cstf_italic, Istring("italic"));
-    set(cstf_bold_italic, Istring("bold-italic"));
-    set(cstf_script, Istring("script"));
-    set(cstf_bold_script, Istring("bold-script"));
-    set(cstf_fraktur, Istring("fraktur"));
-    set(cstf_doublestruck, Istring("double-struck"));
-    set(cstf_bold_fraktur, Istring("bold-fraktur"));
-    set(cstf_sansserif, Istring("sans-serif"));
-    set(cstf_bold_sansserif, Istring("bold-sans-serif"));
-    set(cstf_sansserif_italic, Istring("sans-serif-italic"));
-    set(cstf_sansserif_bold_italic, Istring("sans-serif-bold-italic"));
-    set(cstf_monospace, Istring("monospace"));
-    set(np_a1, Istring("a1"));
-    set(np_a2, Istring("a2"));
-    set(np_abarnodeconnect, Istring("abarnodeconnect"));
-    set(np_accueil, Istring("accueil"));
-    set(np_affiliation, Istring("affiliation"));
-    set(np_allowbreak, Istring("allowbreak"));
-    set(np_alt_head, Istring("alt_head"));
-    set(np_alt_caption, Istring("alt_head"));
-    set(np_alt_section, Istring("alt_head"));
-    set(np_anchor, Istring("anchor"));
-    set(np_angle, Istring("angle"));
-    set(np_anodeconnect, Istring("anodeconnect"));
-    set(np_anodecurve, Istring("anodecurve"));
-    set(np_arc, Istring("pic-arc"));
-    set(np_arg1, Istring("arg1"));
-    set(np_arg2, Istring("arg2"));
-    set(np_arg3, Istring("arg3"));
-    set(np_array, Istring("array"));
-    set(np_alternatives, Istring("alternatives"));
-    set(np_b1, Istring("b1"));
-    set(np_b2, Istring("b2"));
-    set(np_b_rend, Istring("rend"));
-    set(np_backmatter, Istring("backmatter"));
-    set(np_bauteurs, Istring("bauteurs"));
-    set(np_barnodeconnect, Istring("barnodeconnect"));
-    set(np_bediteurs, Istring("bediteur"));
-    set(np_bezier, Istring("pic-bezier"));
-    set(np_biblio, Istring("biblio"));
-    set(np_bigcircle, Istring("pic-bigcircle"));
-    set(np_bottomborder, Istring("bottom-border"));
-    set(np_border_bottomw, Istring("border-bottom-width"));
-    set(np_border_topw, Istring("border-top-width"));
-    set(np_border_leftw, Istring("border-left-width"));
-    set(np_border_rightw, Istring("border-right-width"));
-    set(np_box, Istring("pic-framebox"));
-    set(np_box_pos, Istring("position"));
-    set(np_boxed, Istring("boxed"));
-    set(np_bpers, Istring("bpers"));
-    set(np_box_width, Istring("width"));
-    set(np_bibitem, Istring("bibitem"));
-    set(np_bibkey, Istring("bib-key"));
-    set(np_c1, Istring("c1"));
-    set(np_c2, Istring("c2"));
-    set(np_c_left, Istring("left"));
-    set(np_c_right, Istring("right"));
-    set(np_c_center, Istring("center"));
-    set(np_caption, Istring("caption"));
-    set(np_captions, Istring("head"));
-    set(np_catperso, Istring("catperso"));
-    set(np_cell, Istring("cell"));
-    set(np_center, Istring("center"));
-    set(np_center_etc, Istring("center"));
-    set(np_center_etc1, Istring("center"));
-    set(np_center_etc2, Istring("quoted"));
-    set(np_center_etc3, Istring("quoted"));
-    set(np_center_etc4, Istring("flushed-left"));
-    set(np_center_etc5, Istring("flushed-right"));
-    set(np_center_etc6, Istring("verse"));
-    set(np_centered, Istring("centered"));
-    set(np_chapters, Istring("chapters"));
-    set(np_circle, Istring("pic-circle"));
-    set(np_natcit, Istring("Cit"));
-    set(np_cit, Istring("cit"));
-    set(np_cite_type, Istring("type"));
-    set(np_citation, Istring("citation"));
-    set(np_cleaders, Istring("cleaders"));
-    set(np_clip, Istring("clip"));
-    set(np_close, Istring("close"));
-    set(np_closecurve, Istring("pic-closecurve"));
-    set(np_columnalign, Istring("columnalign"));
-    set(np_columnspan, Istring("columnspan"));
-    set(np_pagecolor, Istring("pagecolor"));
-    set(np_color, Istring("color"));
-    set(np_color2, Istring("color2"));
-    set(np_cols, Istring("cols"));
-    set(np_cst_width, Istring("width"));
-    set(np_curve, Istring("pic-curve"));
-    set(np_curve_nbpts, Istring("nbsymb"));
-    set(np_dashbox, Istring("pic-dashbox"));
-    set(np_dashline, Istring("dashline"));
-    set(np_dashdim, Istring("dashdim"));
-    set(np_depth, Istring("depth"));
-    set(np_depthA, Istring("depthA"));
-    set(np_depthB, Istring("depthB"));
-    set(np_description, Istring("description"));
-    set(np_display, Istring("display"));
-    set(cst_div0, Istring("div0"));
-    set(cst_div1, Istring("div1"));
-    set(cst_div2, Istring("div2"));
-    set(cst_div3, Istring("div3"));
-    set(cst_div4, Istring("div4"));
-    set(cst_div5, Istring("div5"));
-    set(cst_div6, Istring("div6"));
-    set(np_div0, Istring("div0"));
-    set(np_div1, Istring("div1"));
-    set(np_div2, Istring("div2"));
-    set(np_div3, Istring("div3"));
-    set(np_div4, Istring("div4"));
-    set(np_div5, Istring("div5"));
-    set(np_div6, Istring("div6"));
-    set(np_dottedline, Istring("dottedline"));
-    set(np_drawline, Istring("drawline"));
-    set(np_dx, Istring("dx"));
-    set(np_dy, Istring("dy"));
-    set(np_encap, Istring("encap"));
-    set(np_english, Istring("english"));
-    set(np_eqnpos, Istring("eqnpos"));
-    set(np_error, Istring("error"));
-    set(np_Error, Istring("Error"));
-    set(np_warning, Istring(""));
-    set(np_Warning, Istring("Warning"));
-    set(np_Info, Istring("Info"));
-    set(np_inline, Istring("inline"));
-    set(np_false, Istring("false"));
-    set(np_fbox, Istring("fbox"));
-    set(np_figure, Istring("figure"));
-    set(np_file, Istring("file"));
-    set(np_fileextension, Istring("extension"));
-    set(np_float, Istring("float"));
-    set(np_float_figure, Istring("figure"));
-    set(np_float_table, Istring("table"));
-    set(np_font_bold, Istring("bold"));
-    set(np_font_boldextended, Istring("boldextended"));
-    set(np_font_semibold, Istring("semibold"));
-    set(np_font_condensed, Istring("condensed"));
-    set(np_font_it, Istring("it"));
-    set(np_font_large, Istring("large"));
-    set(np_font_large1, Istring("large1"));
-    set(np_font_large2, Istring("large2"));
-    set(np_font_large3, Istring("large3"));
-    set(np_font_large4, Istring("large4"));
-    set(np_font_large5, Istring("large5"));
-    set(np_font_large6, Istring("large6"));
-    set(np_font_medium, Istring("medium"));
-    set(np_font_normalsize, Istring("normalsize"));
-    set(np_font_roman, Istring("roman"));
-    set(np_font_sansserif, Istring("sansserif"));
-    set(np_font_sc, Istring("sc"));
-    set(np_font_slanted, Istring("slanted"));
-    set(np_font_small, Istring("small"));
-    set(np_font_small1, Istring("small1"));
-    set(np_font_small2, Istring("small2"));
-    set(np_font_small3, Istring("small3"));
-    set(np_font_small4, Istring("small4"));
-    set(np_font_small5, Istring("small5"));
-    set(np_font_small6, Istring("small6"));
-    set(np_font_tt, Istring("tt"));
-    set(np_font_upright, Istring("upright"));
-    set(np_footnote, Istring("note"));
-    set(np_form, Istring("form"));
-    set(np_formula, Istring("formula"));
-    set(np_foot, Istring("foot"));
-    set(np_frame, Istring("pic-frame"));
-    set(np_framed, Istring("framed"));
-    set(np_french, Istring("french"));
-    set(np_from, Istring("from"));
-    set(np_frontmatter, Istring("frontmatter"));
-    set(np_full, Istring("full"));
-    set(np_full_first, Istring("prenomcomplet"));
-    set(np_german, Istring("german"));
-    set(np_glo_name, Istring("Glossary"));
-    set(np_gloss, Istring("gloss"));
-    set(np_graphics, Istring("graphics"));
-    set(np_halfem, Istring("4.pt"));
-    set(np_halign, Istring("halign"));
-    set(np_hdr, Istring("hdr"));
-    set(np_head, Istring("head"));
-    set(np_header, Istring("headings"));
-    set(np_height, Istring("height"));
-    set(np_hfil, Istring("hfil"));
-    set(np_hfill, Istring("hfill"));
-    set(np_hfilneg, Istring("hfilneg"));
-    set(np_html, Istring("html"));
-    set(np_hss, Istring("hss"));
-    set(np_id, Istring("id"));
-    set(np_idtext, Istring("id-text"));
-    set(np_index, Istring("index"));
-    set(np_glossary, Istring("glossary"));
-    set(np_inline, Istring("inline"));
-    set(np_isproject, Istring("isproject"));
-    set(np_item, Istring("item"));
-    set(np_junior, Istring("junior"));
-    set(np_key, Istring("key"));
-    set(np_keywords, Istring("keywords"));
-    set(np_label_glo, Istring("label"));
-    set(np_label_item, Istring("label"));
-    set(np_language, Istring());
-    set(np_leaders, Istring("leaders"));
-    set(np_left, Istring("left"));
-    set(np_leftborder, Istring("left-border"));
-    set(np_leg, Istring("leg"));
-    set(np_level, Istring("level"));
-    set(np_linethickness, Istring("linethickness"));
-    set(np_lineC, Istring("line"));
-    set(np_line, Istring("pic-line"));
-    set(np_line_thickness, Istring("pic-linethickness"));
-    set(np_list, Istring("list"));
-    set(np_llap, Istring("llap"));
-    set(np_rlap, Istring("rlap"));
-    set(np_rasection, Istring(""));
-    set(np_mainmatter, Istring("mainmatter"));
-    set(np_mbox, Istring("mbox"));
-    set(np_marginpar, Istring("marginpar"));
-    set(np_minipage, Istring("minipage"));
-    set(np_minipage_width, Istring("width"));
-    set(np_module, Istring("module"));
-    set(np_moreinfo, Istring("moreinfo"));
-    set(np_movablelimits, Istring("movablelimits"));
-    set(np_multiput, Istring("pic-multiput"));
-    set(np_name, Istring("name"));
-    set(np_nameA, Istring("nameA"));
-    set(np_nameB, Istring("nameB"));
-    set(np_node, Istring("node"));
-    set(np_nodebox, Istring("nodebox"));
-    set(np_nodecircle, Istring("nodecircle"));
-    set(np_nodeconnect, Istring("nodeconnect"));
-    set(np_nodecurve, Istring("nodecurve"));
-    set(np_nodeoval, Istring("nodeoval"));
-    set(np_nodetriangle, Istring("nodetriangle"));
-    set(np_noindent, Istring("noindent"));
-    set(np_nom, Istring("nom"));
-    set(np_nonumber, Istring("nonumber"));
-    set(np_open, Istring("open"));
-    set(np_ordered, Istring("ordered"));
-    set(np_oval, Istring("pic-oval"));
-    set(np_overline, Istring("overline"));
-    set(np_page, Istring("page"));
-    set(np_part, Istring("part"));
-    set(np_part0, Istring("participant"));
-    set(np_part1, Istring("participante"));
-    set(np_part2, Istring("participantes"));
-    set(np_part3, Istring("participants"));
-    set(np_particle, Istring("part"));
-    set(np_pers, Istring("pers"));
-    set(np_place, Istring("place"));
-    set(np_picture, Istring("picture"));
-    set(np_point, Istring("point"));
-    set(np_pos, Istring("pos"));
-    set(np_posA, Istring("posA"));
-    set(np_posB, Istring("posB"));
-    set(np_posi, Istring("inner-pos"));
-    set(np_pre, Istring("pre"));
-    set(np_prefix, Istring("prefix"));
-    set(np_prenom, Istring("prenom"));
-    set(np_prenote, Istring("prenote"));
-    set(np_profession, Istring("profession"));
-    set(np_research_centre, Istring("research-centre"));
-    set(np_projet, Istring("projet"));
-    set(np_projetdeveloppe, Istring("projetdeveloppe"));
-    set(np_put, Istring("pic-put"));
-    set(np_quoted, Istring("quoted"));
-    set(np_r_angle, Istring("angle"));
-    set(np_raisebox, Istring("raisebox"));
-    set(np_ref, Istring("ref"));
-    set(np_rend, Istring("rend"));
-    set(np_repeat, Istring("repeat"));
-    set(np_right, Istring("right"));
-    set(np_rightborder, Istring("right-border"));
-    set(np_rotatebox, Istring("pic-rotatebox"));
-    set(np_row, Istring("row"));
-    set(np_rule, Istring("rule"));
-    set(np_rule_tsa, Istring("top_rule_space_above"));
-    set(np_rule_tsb, Istring("top_rule_space_below"));
-    set(np_rule_bsa, Istring("bottom_rule_space_above"));
-    set(np_rule_bsb, Istring("bottom_rule_space_below"));
-    set(np_rclist, Istring("UR"));
-    set(np_rcval, Istring("+UR"));
-    set(np_sbox, Istring("scalebox"));
-    set(np_sc, Istring("sc"));
-    set(np_scale, Istring("scale"));
-    set(np_scaleput, Istring("pic-scaleput"));
-    set(np_s_caps, Istring("caps"));
-    set(np_s_hl, Istring("hl"));
-    set(np_s_old, Istring("oldstyle"));
-    set(np_s_scale, Istring("scale"));
-    set(np_s_so, Istring("so"));
-    set(np_s_st, Istring("st"));
-    set(np_s_sub, Istring("sub"));
-    set(np_s_sup, Istring("sup"));
-    set(np_s_ul, Istring("ul"));
-    set(np_separator, Istring(""));
-    set(np_simple, Istring("simple"));
-    set(np_simplemath, Istring("simplemath"));
-    set(np_size, Istring("size"));
-    set(np_spaceafter, Istring("spaceafter"));
-    set(np_spacebefore, Istring("spacebefore"));
-    set(np_specs, Istring("specs"));
-    set(np_style, Istring("style"));
-    set(np_starred, Istring("starred"));
-    set(np_subfigure, Istring("subfigure"));
-    set(np_stylesheet, Istring(""));
-    set(np_stylesheet_type, Istring("text/css"));
-    set(np_table, Istring("table"));
-    set(np_Table, Istring("Table"));
-    set(np_tabular, Istring("tabular"));
-    set(np_tabular_star, Istring("tabular*"));
-    set(np_tab_width, Istring("width"));
-    set(np_tagcurve, Istring("pic-tagcurve"));
-    set(np_target, Istring("target"));
-    set(np_term, Istring("term"));
-    set(np_texte, Istring("texte"));
-    set(np_texmath, Istring("texmath"));
-    set(np_theindex, Istring("theindex"));
-    set(np_theglossary, Istring("theglossary"));
-    set(np_theme, Istring("theme"));
-    set(np_theorem, Istring(""));
-    set(np_thick_lines, Istring("pic-thicklines"));
-    set(np_thin_lines, Istring("pic-thinlines"));
-    set(np_toc, Istring("tableofcontents"));
-    set(np_toc1, Istring("listoftables"));
-    set(np_toc2, Istring("listoffigures"));
-    set(np_topborder, Istring("top-border"));
-    set(np_totalwidth, Istring("totalwidth"));
-    set(np_true, Istring("true"));
-    set(np_type, Istring("type"));
-    set(np_textype, Istring("textype"));
-    set(np_underline, Istring("underline"));
-    set(np_unknown, Istring("unknown"));
-    set(np_unit_length, Istring("unit-length"));
-    set(np_url, Istring("url"));
-    set(np_userid, Istring("userid"));
-    set(np_user_list, Istring("description"));
-    set(np_val, Istring("val"));
-    set(np_vector, Istring("pic-vector"));
-    set(np_vfil, Istring("vfil"));
-    set(np_vfill, Istring("vfill"));
-    set(np_vfilneg, Istring("vfilneg"));
-    set(np_vpos, Istring("vpos"));
-    set(np_vss, Istring("vss"));
-    set(np_width, Istring("width"));
-    set(np_xscale, Istring("xscale"));
-    set(np_xscaley, Istring("xscaley"));
-    set(np_xdir, Istring("xdir"));
-    set(np_xleaders, Istring("xleaders"));
-    set(np_xpos, Istring("xpos"));
-    set(np_xref, Istring("xref"));
-    set(np_yscale, Istring("yscale"));
-    set(np_yscalex, Istring("yscalex"));
-    set(np_ydir, Istring("ydir"));
-    set(np_ypos, Istring("ypos"));
-    set(np_zerodim, Istring("0pt"));
-    set(np_mml_normal, Istring("mml@font@normal"));
-    set(np_mml_upright, Istring("mml@font@upright"));
-    set(np_mml_bold, Istring("mml@font@bold"));
-    set(np_mml_italic, Istring("mml@font@italic"));
-    set(np_mml_bold_italic, Istring("mml@font@bolditalic"));
-    set(np_mml_script, Istring("mml@font@script"));
-    set(np_mml_bold_script, Istring("mml@font@boldscript"));
-    set(np_mml_fraktur, Istring("mml@font@fraktur"));
-    set(np_mml_doublestruck, Istring("mml@font@doublestruck"));
-    set(np_mml_bold_fraktur, Istring("mml@font@boldfraktur"));
-    set(np_mml_sansserif, Istring("mml@font@sansserif"));
-    set(np_mml_bold_sansserif, Istring("mml@font@boldsansserif"));
-    set(np_mml_sansserif_italic, Istring("mml@font@sansserifitalic"));
-    set(np_mml_sansserif_bold_italic, Istring("mml@font@sansserifbolditalic"));
-    set(np_mml_monospace, Istring("mml@font@monospace"));
-    set(np_3pt, Istring("3pt"));
-    set(np_6pt, Istring("6pt"));
-    set(np_12pt, Istring("12pt"));
-    set(np_letters_tl, Istring("tl"));
-    set(np_letters_tr, Istring("tr"));
-    set(np_letters_bl, Istring("bl"));
-    set(np_letters_br, Istring("br"));
+    def(cst_empty, "");
+    def(cst_accent, "accent");
+    def(cst_accentunder, "accentunder");
+    def(cst_argument, "argument");
+    def(cst_biblio, "thebibliography");
+    def(cst_composition, "composition");
+    def(cst_displaystyle, "displaystyle");
+    def(cst_document, "document");
+    def(cst_elt, "ELT");
+    def(cst_flaghi, "'hi_flag");
+    def(cst_fonts, "fonts");
+    def(cst_foot, "foot");
+    def(cst_hanl, "hanl");
+    def(cst_hbox, "hbox");
+    def(cst_hi, "hi");
+    def(cst_math, "math");
+    def(cst_mathml, "http://www.w3.org/1998/Math/MathML");
+    def(cst_mathvariant, "mathvariant");
+    def(cst_mfenced, "mfenced");
+    def(cst_mfrac, "mfrac");
+    def(cst_mpadded, "mpadded");
+    def(cst_mphantom, "mphantom");
+    def(cst_mi, "mi");
+    def(cst_mn, "mn");
+    def(cst_mo, "mo");
+    def(cst_ci, "ci");
+    def(cst_cn, "cn");
+    def(cst_csymbol, "csymbol");
+    def(cst_multiscripts, "mmultiscripts");
+    def(cst_nothing, "");
+    def(cst_mroot, "mroot");
+    def(cst_mover, "mover");
+    def(cst_mrow, "mrow");
+    def(cst_mrow_cst, "<mrow></mrow>");
+    def(cst_mspace, "mspace");
+    def(cst_msqrt, "msqrt");
+    def(cst_msub, "msub");
+    def(cst_mstyle, "mstyle");
+    def(cst_msubsup, "msubsup");
+    def(cst_msup, "msup");
+    def(cst_mtable, "mtable");
+    def(cst_mtd, "mtd");
+    def(cst_mtext, "mtext");
+    def(cst_mtr, "mtr");
+    def(cst_munder, "munder");
+    def(cst_mref, "mref");
+    def(cst_munderover, "munderover");
+    def(cst_mode, "mode");
+    def(cst_display, "display");
+    def(cst_nl, "\n");
+    def(cst_p, "p");
+    def(cst_particip, "particip");
+    def(cst_rasection, "RAsection");
+    def(cst_refer, "refer");
+    def(cst_scriptlevel, "scriptlevel");
+    def(cst_separators, "separators");
+    def(cst_temporary, "temporary");
+    def(cst_theorem, "theorem");
+    def(cst_xmlns, "xmlns");
+    def(cst_dig0, "0");
+    def(cst_dig1, "1");
+    def(cst_dig2, "2");
+    def(cst_dig3, "3");
+    def(cst_dig4, "4");
+    def(cst_dig5, "5");
+    def(cst_dig6, "6");
+    def(cst_dig7, "7");
+    def(cst_dig8, "8");
+    def(cst_dig9, "9");
+    def(cstb_article, "article");
+    def(cstb_book, "book");
+    def(cstb_booklet, "booklet");
+    def(cstb_conference, "conference");
+    def(cstb_coursenotes, "coursenotes");
+    def(cstb_comment, "comment");
+    def(cstb_extension, "extension");
+    def(cstb_inbook, "inbook");
+    def(cstb_incollection, "incollection");
+    def(cstb_inproceedings, "inproceedings");
+    def(cstb_manual, "manual");
+    def(cstb_masterthesis, "mastersthesis");
+    def(cstb_mastersthesis, "masterthesis");
+    def(cstb_misc, "misc");
+    def(cstb_phdthesis, "phdthesis");
+    def(cstb_proceedings, "proceedings");
+    def(cstb_preamble, "preamble");
+    def(cstb_techreport, "techreport");
+    def(cstb_string, "string");
+    def(cstb_unpublished, "unpublished");
+    def(cstb_unknown, "unknown");
+    def(cstb_address, "address");
+    def(cstb_author, "author");
+    def(cstb_booktitle, "booktitle");
+    def(cstb_chapter, "chapter");
+    def(cstb_crossref, "crossref");
+    def(cstb_doi, "doi");
+    def(cstb_edition, "edition");
+    def(cstb_editor, "editor");
+    def(cstb_howpublished, "howpublished");
+    def(cstb_institution, "institution");
+    def(cstb_isbn, "isbn");
+    def(cstb_issn, "issn");
+    def(cstb_isrn, "isrn");
+    def(cstb_journal, "journal");
+    def(cstb_key, "key");
+    def(cstb_month, "month");
+    def(cstb_language, "language");
+    def(cstb_langue, "langue");
+    def(cstb_note, "note");
+    def(cstb_number, "number");
+    def(cstb_organization, "organization");
+    def(cstb_pages, "pages");
+    def(cstb_publisher, "publisher");
+    def(cstb_school, "school");
+    def(cstb_series, "series");
+    def(cstb_title, "title");
+    def(cstb_type, "type");
+    def(cstb_url, "url");
+    def(cstb_volume, "volume");
+    def(cstb_year, "year");
+    def(cstb_equipe, "equipe");
+    def(cstb_subtype, "subtype");
+    def(cstb_unite, "unite");
+    def(cstb_statut, "statut");
+    def(cstb_section, "section");
+    def(cst_numalign, "numalign");
+    def(cst_denalign, "denomalign");
+    def(cstf_normal, "normal");
+    def(cstf_upright, "");
+    def(cstf_bold, "bold");
+    def(cstf_italic, "italic");
+    def(cstf_bold_italic, "bold-italic");
+    def(cstf_script, "script");
+    def(cstf_bold_script, "bold-script");
+    def(cstf_fraktur, "fraktur");
+    def(cstf_doublestruck, "double-struck");
+    def(cstf_bold_fraktur, "bold-fraktur");
+    def(cstf_sansserif, "sans-serif");
+    def(cstf_bold_sansserif, "bold-sans-serif");
+    def(cstf_sansserif_italic, "sans-serif-italic");
+    def(cstf_sansserif_bold_italic, "sans-serif-bold-italic");
+    def(cstf_monospace, "monospace");
+    def(np_a1, "a1");
+    def(np_a2, "a2");
+    def(np_abarnodeconnect, "abarnodeconnect");
+    def(np_accueil, "accueil");
+    def(np_affiliation, "affiliation");
+    def(np_allowbreak, "allowbreak");
+    def(np_alt_head, "alt_head");
+    def(np_alt_caption, "alt_head");
+    def(np_alt_section, "alt_head");
+    def(np_anchor, "anchor");
+    def(np_angle, "angle");
+    def(np_anodeconnect, "anodeconnect");
+    def(np_anodecurve, "anodecurve");
+    def(np_arc, "pic-arc");
+    def(np_arg1, "arg1");
+    def(np_arg2, "arg2");
+    def(np_arg3, "arg3");
+    def(np_array, "array");
+    def(np_alternatives, "alternatives");
+    def(np_b1, "b1");
+    def(np_b2, "b2");
+    def(np_b_rend, "rend");
+    def(np_backmatter, "backmatter");
+    def(np_bauteurs, "bauteurs");
+    def(np_barnodeconnect, "barnodeconnect");
+    def(np_bediteurs, "bediteur");
+    def(np_bezier, "pic-bezier");
+    def(np_biblio, "biblio");
+    def(np_bigcircle, "pic-bigcircle");
+    def(np_bottomborder, "bottom-border");
+    def(np_border_bottomw, "border-bottom-width");
+    def(np_border_topw, "border-top-width");
+    def(np_border_leftw, "border-left-width");
+    def(np_border_rightw, "border-right-width");
+    def(np_box, "pic-framebox");
+    def(np_box_pos, "position");
+    def(np_boxed, "boxed");
+    def(np_bpers, "bpers");
+    def(np_box_width, "width");
+    def(np_bibitem, "bibitem");
+    def(np_bibkey, "bib-key");
+    def(np_c1, "c1");
+    def(np_c2, "c2");
+    def(np_c_left, "left");
+    def(np_c_right, "right");
+    def(np_c_center, "center");
+    def(np_caption, "caption");
+    def(np_captions, "head");
+    def(np_catperso, "catperso");
+    def(np_cell, "cell");
+    def(np_center, "center");
+    def(np_center_etc, "center");
+    def(np_center_etc1, "center");
+    def(np_center_etc2, "quoted");
+    def(np_center_etc3, "quoted");
+    def(np_center_etc4, "flushed-left");
+    def(np_center_etc5, "flushed-right");
+    def(np_center_etc6, "verse");
+    def(np_centered, "centered");
+    def(np_chapters, "chapters");
+    def(np_circle, "pic-circle");
+    def(np_natcit, "Cit");
+    def(np_cit, "cit");
+    def(np_cite_type, "type");
+    def(np_citation, "citation");
+    def(np_cleaders, "cleaders");
+    def(np_clip, "clip");
+    def(np_close, "close");
+    def(np_closecurve, "pic-closecurve");
+    def(np_columnalign, "columnalign");
+    def(np_columnspan, "columnspan");
+    def(np_pagecolor, "pagecolor");
+    def(np_color, "color");
+    def(np_color2, "color2");
+    def(np_cols, "cols");
+    def(np_cst_width, "width");
+    def(np_curve, "pic-curve");
+    def(np_curve_nbpts, "nbsymb");
+    def(np_dashbox, "pic-dashbox");
+    def(np_dashline, "dashline");
+    def(np_dashdim, "dashdim");
+    def(np_depth, "depth");
+    def(np_depthA, "depthA");
+    def(np_depthB, "depthB");
+    def(np_description, "description");
+    def(np_display, "display");
+    def(cst_div0, "div0");
+    def(cst_div1, "div1");
+    def(cst_div2, "div2");
+    def(cst_div3, "div3");
+    def(cst_div4, "div4");
+    def(cst_div5, "div5");
+    def(cst_div6, "div6");
+    def(np_div0, "div0");
+    def(np_div1, "div1");
+    def(np_div2, "div2");
+    def(np_div3, "div3");
+    def(np_div4, "div4");
+    def(np_div5, "div5");
+    def(np_div6, "div6");
+    def(np_dottedline, "dottedline");
+    def(np_drawline, "drawline");
+    def(np_dx, "dx");
+    def(np_dy, "dy");
+    def(np_encap, "encap");
+    def(np_english, "english");
+    def(np_eqnpos, "eqnpos");
+    def(np_error, "error");
+    def(np_Error, "Error");
+    def(np_warning, "");
+    def(np_Warning, "Warning");
+    def(np_Info, "Info");
+    def(np_inline, "inline");
+    def(np_false, "false");
+    def(np_fbox, "fbox");
+    def(np_figure, "figure");
+    def(np_file, "file");
+    def(np_fileextension, "extension");
+    def(np_float, "float");
+    def(np_float_figure, "figure");
+    def(np_float_table, "table");
+    def(np_font_bold, "bold");
+    def(np_font_boldextended, "boldextended");
+    def(np_font_semibold, "semibold");
+    def(np_font_condensed, "condensed");
+    def(np_font_it, "it");
+    def(np_font_large, "large");
+    def(np_font_large1, "large1");
+    def(np_font_large2, "large2");
+    def(np_font_large3, "large3");
+    def(np_font_large4, "large4");
+    def(np_font_large5, "large5");
+    def(np_font_large6, "large6");
+    def(np_font_medium, "medium");
+    def(np_font_normalsize, "normalsize");
+    def(np_font_roman, "roman");
+    def(np_font_sansserif, "sansserif");
+    def(np_font_sc, "sc");
+    def(np_font_slanted, "slanted");
+    def(np_font_small, "small");
+    def(np_font_small1, "small1");
+    def(np_font_small2, "small2");
+    def(np_font_small3, "small3");
+    def(np_font_small4, "small4");
+    def(np_font_small5, "small5");
+    def(np_font_small6, "small6");
+    def(np_font_tt, "tt");
+    def(np_font_upright, "upright");
+    def(np_footnote, "note");
+    def(np_form, "form");
+    def(np_formula, "formula");
+    def(np_foot, "foot");
+    def(np_frame, "pic-frame");
+    def(np_framed, "framed");
+    def(np_french, "french");
+    def(np_from, "from");
+    def(np_frontmatter, "frontmatter");
+    def(np_full, "full");
+    def(np_full_first, "prenomcomplet");
+    def(np_german, "german");
+    def(np_glo_name, "Glossary");
+    def(np_gloss, "gloss");
+    def(np_graphics, "graphics");
+    def(np_halfem, "4.pt");
+    def(np_halign, "halign");
+    def(np_hdr, "hdr");
+    def(np_head, "head");
+    def(np_header, "headings");
+    def(np_height, "height");
+    def(np_hfil, "hfil");
+    def(np_hfill, "hfill");
+    def(np_hfilneg, "hfilneg");
+    def(np_html, "html");
+    def(np_hss, "hss");
+    def(np_id, "id");
+    def(np_idtext, "id-text");
+    def(np_index, "index");
+    def(np_glossary, "glossary");
+    def(np_inline, "inline");
+    def(np_isproject, "isproject");
+    def(np_item, "item");
+    def(np_junior, "junior");
+    def(np_key, "key");
+    def(np_keywords, "keywords");
+    def(np_label_glo, "label");
+    def(np_label_item, "label");
+    def(np_language, "");
+    def(np_leaders, "leaders");
+    def(np_left, "left");
+    def(np_leftborder, "left-border");
+    def(np_leg, "leg");
+    def(np_level, "level");
+    def(np_linethickness, "linethickness");
+    def(np_lineC, "line");
+    def(np_line, "pic-line");
+    def(np_line_thickness, "pic-linethickness");
+    def(np_list, "list");
+    def(np_llap, "llap");
+    def(np_rlap, "rlap");
+    def(np_rasection, "");
+    def(np_mainmatter, "mainmatter");
+    def(np_mbox, "mbox");
+    def(np_marginpar, "marginpar");
+    def(np_minipage, "minipage");
+    def(np_minipage_width, "width");
+    def(np_module, "module");
+    def(np_moreinfo, "moreinfo");
+    def(np_movablelimits, "movablelimits");
+    def(np_multiput, "pic-multiput");
+    def(np_name, "name");
+    def(np_nameA, "nameA");
+    def(np_nameB, "nameB");
+    def(np_node, "node");
+    def(np_nodebox, "nodebox");
+    def(np_nodecircle, "nodecircle");
+    def(np_nodeconnect, "nodeconnect");
+    def(np_nodecurve, "nodecurve");
+    def(np_nodeoval, "nodeoval");
+    def(np_nodetriangle, "nodetriangle");
+    def(np_noindent, "noindent");
+    def(np_nom, "nom");
+    def(np_nonumber, "nonumber");
+    def(np_open, "open");
+    def(np_ordered, "ordered");
+    def(np_oval, "pic-oval");
+    def(np_overline, "overline");
+    def(np_page, "page");
+    def(np_part, "part");
+    def(np_part0, "participant");
+    def(np_part1, "participante");
+    def(np_part2, "participantes");
+    def(np_part3, "participants");
+    def(np_particle, "part");
+    def(np_pers, "pers");
+    def(np_place, "place");
+    def(np_picture, "picture");
+    def(np_point, "point");
+    def(np_pos, "pos");
+    def(np_posA, "posA");
+    def(np_posB, "posB");
+    def(np_posi, "inner-pos");
+    def(np_pre, "pre");
+    def(np_prefix, "prefix");
+    def(np_prenom, "prenom");
+    def(np_prenote, "prenote");
+    def(np_profession, "profession");
+    def(np_research_centre, "research-centre");
+    def(np_projet, "projet");
+    def(np_projetdeveloppe, "projetdeveloppe");
+    def(np_put, "pic-put");
+    def(np_quoted, "quoted");
+    def(np_r_angle, "angle");
+    def(np_raisebox, "raisebox");
+    def(np_ref, "ref");
+    def(np_rend, "rend");
+    def(np_repeat, "repeat");
+    def(np_right, "right");
+    def(np_rightborder, "right-border");
+    def(np_rotatebox, "pic-rotatebox");
+    def(np_row, "row");
+    def(np_rule, "rule");
+    def(np_rule_tsa, "top_rule_space_above");
+    def(np_rule_tsb, "top_rule_space_below");
+    def(np_rule_bsa, "bottom_rule_space_above");
+    def(np_rule_bsb, "bottom_rule_space_below");
+    def(np_rclist, "UR");
+    def(np_rcval, "+UR");
+    def(np_sbox, "scalebox");
+    def(np_sc, "sc");
+    def(np_scale, "scale");
+    def(np_scaleput, "pic-scaleput");
+    def(np_s_caps, "caps");
+    def(np_s_hl, "hl");
+    def(np_s_old, "oldstyle");
+    def(np_s_scale, "scale");
+    def(np_s_so, "so");
+    def(np_s_st, "st");
+    def(np_s_sub, "sub");
+    def(np_s_sup, "sup");
+    def(np_s_ul, "ul");
+    def(np_separator, "");
+    def(np_simple, "simple");
+    def(np_simplemath, "simplemath");
+    def(np_size, "size");
+    def(np_spaceafter, "spaceafter");
+    def(np_spacebefore, "spacebefore");
+    def(np_specs, "specs");
+    def(np_style, "style");
+    def(np_starred, "starred");
+    def(np_subfigure, "subfigure");
+    def(np_stylesheet, "");
+    def(np_stylesheet_type, "text/css");
+    def(np_table, "table");
+    def(np_Table, "Table");
+    def(np_tabular, "tabular");
+    def(np_tabular_star, "tabular*");
+    def(np_tab_width, "width");
+    def(np_tagcurve, "pic-tagcurve");
+    def(np_target, "target");
+    def(np_term, "term");
+    def(np_texte, "texte");
+    def(np_texmath, "texmath");
+    def(np_theindex, "theindex");
+    def(np_theglossary, "theglossary");
+    def(np_theme, "theme");
+    def(np_theorem, "");
+    def(np_thick_lines, "pic-thicklines");
+    def(np_thin_lines, "pic-thinlines");
+    def(np_toc, "tableofcontents");
+    def(np_toc1, "listoftables");
+    def(np_toc2, "listoffigures");
+    def(np_topborder, "top-border");
+    def(np_totalwidth, "totalwidth");
+    def(np_true, "true");
+    def(np_type, "type");
+    def(np_textype, "textype");
+    def(np_underline, "underline");
+    def(np_unknown, "unknown");
+    def(np_unit_length, "unit-length");
+    def(np_url, "url");
+    def(np_userid, "userid");
+    def(np_user_list, "description");
+    def(np_val, "val");
+    def(np_vector, "pic-vector");
+    def(np_vfil, "vfil");
+    def(np_vfill, "vfill");
+    def(np_vfilneg, "vfilneg");
+    def(np_vpos, "vpos");
+    def(np_vss, "vss");
+    def(np_width, "width");
+    def(np_xscale, "xscale");
+    def(np_xscaley, "xscaley");
+    def(np_xdir, "xdir");
+    def(np_xleaders, "xleaders");
+    def(np_xpos, "xpos");
+    def(np_xref, "xref");
+    def(np_yscale, "yscale");
+    def(np_yscalex, "yscalex");
+    def(np_ydir, "ydir");
+    def(np_ypos, "ypos");
+    def(np_zerodim, "0pt");
+    def(np_mml_normal, "mml@font@normal");
+    def(np_mml_upright, "mml@font@upright");
+    def(np_mml_bold, "mml@font@bold");
+    def(np_mml_italic, "mml@font@italic");
+    def(np_mml_bold_italic, "mml@font@bolditalic");
+    def(np_mml_script, "mml@font@script");
+    def(np_mml_bold_script, "mml@font@boldscript");
+    def(np_mml_fraktur, "mml@font@fraktur");
+    def(np_mml_doublestruck, "mml@font@doublestruck");
+    def(np_mml_bold_fraktur, "mml@font@boldfraktur");
+    def(np_mml_sansserif, "mml@font@sansserif");
+    def(np_mml_bold_sansserif, "mml@font@boldsansserif");
+    def(np_mml_sansserif_italic, "mml@font@sansserifitalic");
+    def(np_mml_sansserif_bold_italic, "mml@font@sansserifbolditalic");
+    def(np_mml_monospace, "mml@font@monospace");
+    def(np_3pt, "3pt");
+    def(np_6pt, "6pt");
+    def(np_12pt, "12pt");
+    def(np_letters_tl, "tl");
+    def(np_letters_tr, "tr");
+    def(np_letters_bl, "bl");
+    def(np_letters_br, "br");
     std::array<char, 2> foo{};
     foo[1] = 0;
     for (char x = 'a'; x <= 'z'; x++) {
         foo[0] = x;
-        set(to_unsigned(np_letter_a + x - 'a'), Istring(foo.data()));
+        def(name_positions(to_unsigned(np_letter_a + x - 'a')), foo.data());
     }
     for (char x = 'A'; x <= 'Z'; x++) {
         foo[0] = x;
-        set(to_unsigned(np_letter_A + x - 'A'), Istring(foo.data()));
+        def(name_positions(to_unsigned(np_letter_A + x - 'A')), foo.data());
     }
 }
 
@@ -529,11 +531,11 @@ auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
     if (sa.starts_with("att_")) return the_names.assign_att(sa.substr(4), sb);
 
     if (sa == "lang_fr") {
-        set(np_french, Istring(sb));
+        set(np_french, sb);
         return true;
     }
     if (sa == "lang_en") {
-        set(np_english, Istring(sb));
+        set(np_english, sb);
         return true;
     }
     if (sa == "distinguish_refer_in_rabib") {
@@ -595,9 +597,9 @@ auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
     }
     if (sa == "mfenced_separator_val") {
         if (sb == "NONE")
-            set(np_separator, Istring());
+            set(np_separator, "");
         else
-            set(np_separator, Istring(sb));
+            set(np_separator, sb);
         return true;
     }
     if (sa.ends_with("_vals")) {
@@ -606,63 +608,63 @@ auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
         return true;
     }
     if (sa == "mml_font_normal") {
-        set(np_mml_normal, Istring(sb));
+        set(np_mml_normal, sb);
         return true;
     }
     if (sa == "mml_font_upright") {
-        set(np_mml_upright, Istring(sb));
+        set(np_mml_upright, sb);
         return true;
     }
     if (sa == "mml_font_bold") {
-        set(np_mml_bold, Istring(sb));
+        set(np_mml_bold, sb);
         return true;
     }
     if (sa == "mml_font_italic") {
-        set(np_mml_italic, Istring(sb));
+        set(np_mml_italic, sb);
         return true;
     }
     if (sa == "mml_font_bold_italic") {
-        set(np_mml_bold_italic, Istring(sb));
+        set(np_mml_bold_italic, sb);
         return true;
     }
     if (sa == "mml_font_script") {
-        set(np_mml_script, Istring(sb));
+        set(np_mml_script, sb);
         return true;
     }
     if (sa == "mml_font_bold_script") {
-        set(np_mml_bold_script, Istring(sb));
+        set(np_mml_bold_script, sb);
         return true;
     }
     if (sa == "mml_font_fraktur") {
-        set(np_mml_fraktur, Istring(sb));
+        set(np_mml_fraktur, sb);
         return true;
     }
     if (sa == "mml_font_doublestruck") {
-        set(np_mml_doublestruck, Istring(sb));
+        set(np_mml_doublestruck, sb);
         return true;
     }
     if (sa == "mml_font_bold_fraktur") {
-        set(np_mml_bold_fraktur, Istring(sb));
+        set(np_mml_bold_fraktur, sb);
         return true;
     }
     if (sa == "mml_font_sansserif") {
-        set(np_mml_sansserif, Istring(sb));
+        set(np_mml_sansserif, sb);
         return true;
     }
     if (sa == "mml_font_bold_sansserif") {
-        set(np_mml_bold_sansserif, Istring(sb));
+        set(np_mml_bold_sansserif, sb);
         return true;
     }
     if (sa == "mml_font_sansserif_italic") {
-        set(np_mml_sansserif_italic, Istring(sb));
+        set(np_mml_sansserif_italic, sb);
         return true;
     }
     if (sa == "mml_font_sansserif_bold_italic") {
-        set(np_mml_sansserif_bold_italic, Istring(sb));
+        set(np_mml_sansserif_bold_italic, sb);
         return true;
     }
     if (sa == "mml_font_monospace") {
-        set(np_mml_monospace, Istring(sb));
+        set(np_mml_monospace, sb);
         return true;
     }
     return false;
@@ -670,459 +672,459 @@ auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
 
 auto NameMapper::assign_name(const std::string &A, const std::string &B) -> bool {
     if (A == "accueil") {
-        set(np_accueil, Istring(B));
+        set(np_accueil, B);
         return true;
     }
     if (A == "arc") {
-        set(np_arc, Istring(B));
+        set(np_arc, B);
         return true;
     }
     if (A == "allowbreak") {
-        set(np_allowbreak, Istring(B));
+        set(np_allowbreak, B);
         return true;
     }
     if (A == "anchor") {
-        set(np_anchor, Istring(B));
+        set(np_anchor, B);
         return true;
     }
     if (A == "anodeconnect") {
-        set(np_anodeconnect, Istring(B));
+        set(np_anodeconnect, B);
         return true;
     }
     if (A == "abarnodeconnect") {
-        set(np_abarnodeconnect, Istring(B));
+        set(np_abarnodeconnect, B);
         return true;
     }
     if (A == "anodecurve") {
-        set(np_anodecurve, Istring(B));
+        set(np_anodecurve, B);
         return true;
     }
     if (A == "alt_caption") {
-        set(np_alt_caption, Istring(B));
+        set(np_alt_caption, B);
         return true;
     }
     if (A == "alt_section") {
-        set(np_alt_section, Istring(B));
+        set(np_alt_section, B);
         return true;
     }
     if (A == "alternatives") {
-        set(np_alternatives, Istring(B));
+        set(np_alternatives, B);
         return true;
     }
     if (A == "box") {
-        set(np_box, Istring(B));
+        set(np_box, B);
         return true;
     }
     if (A == "bezier") {
-        set(np_bezier, Istring(B));
+        set(np_bezier, B);
         return true;
     }
     if (A == "bigcircle") {
-        set(np_bigcircle, Istring(B));
+        set(np_bigcircle, B);
         return true;
     }
     if (A == "backmatter") {
-        set(np_backmatter, Istring(B));
+        set(np_backmatter, B);
         return true;
     }
     if (A == "biblio") {
-        set(np_biblio, Istring(B));
+        set(np_biblio, B);
         return true;
     }
     if (A == "bpers") {
-        set(np_bpers, Istring(B));
+        set(np_bpers, B);
         return true;
     }
     if (A == "barnodeconnect") {
-        set(np_barnodeconnect, Istring(B));
+        set(np_barnodeconnect, B);
         return true;
     }
     if (A == "bibitem") {
-        set(np_bibitem, Istring(B));
+        set(np_bibitem, B);
         return true;
     }
     if (A == "bibkey") {
-        set(np_bibkey, Istring(B));
+        set(np_bibkey, B);
         return true;
     }
     if (A == "cell") {
-        set(np_cell, Istring(B));
+        set(np_cell, B);
         return true;
     }
     if (A == "caption") {
-        set(np_captions, Istring(B));
+        set(np_captions, B);
         return true;
     }
     if (A == "circle") {
-        set(np_circle, Istring(B));
+        set(np_circle, B);
         return true;
     }
     if (A == "closecurve") {
-        set(np_closecurve, Istring(B));
+        set(np_closecurve, B);
         return true;
     }
     if (A == "curve") {
-        set(np_curve, Istring(B));
+        set(np_curve, B);
         return true;
     }
     if (A == "catperso") {
-        set(np_catperso, Istring(B));
+        set(np_catperso, B);
         return true;
     }
     if (A == "composition_ra") {
-        set(cst_composition, Istring(B));
+        set(cst_composition, B);
         return true;
     }
     if (A == "cleaders") {
-        set(np_cleaders, Istring(B));
+        set(np_cleaders, B);
         return true;
     }
     if (A == "caps") {
-        set(np_s_caps, Istring(B));
+        set(np_s_caps, B);
         return true;
     }
     if (A == "cit") {
-        set(np_cit, Istring(B));
+        set(np_cit, B);
         return true;
     }
     if (A == "citation") {
-        set(np_citation, Istring(B));
+        set(np_citation, B);
         return true;
     }
     if (A == "citetype") {
-        set(np_cite_type, Istring(B));
+        set(np_cite_type, B);
         return true;
     }
     if (A == "dashline") {
-        set(np_dashline, Istring(B));
+        set(np_dashline, B);
         return true;
     }
     if (A == "div0") {
-        set(np_div0, Istring(B));
+        set(np_div0, B);
         return true;
     }
     if (A == "div1") {
-        set(np_div1, Istring(B));
+        set(np_div1, B);
         return true;
     }
     if (A == "div2") {
-        set(np_div2, Istring(B));
+        set(np_div2, B);
         return true;
     }
     if (A == "div3") {
-        set(np_div3, Istring(B));
+        set(np_div3, B);
         return true;
     }
     if (A == "div4") {
-        set(np_div4, Istring(B));
+        set(np_div4, B);
         return true;
     }
     if (A == "div5") {
-        set(np_div5, Istring(B));
+        set(np_div5, B);
         return true;
     }
     if (A == "div6") {
-        set(np_div6, Istring(B));
+        set(np_div6, B);
         return true;
     }
     if (A == "drawline") {
-        set(np_drawline, Istring(B));
+        set(np_drawline, B);
         return true;
     }
     if (A == "dottedline") {
-        set(np_dottedline, Istring(B));
+        set(np_dottedline, B);
         return true;
     }
     if (A == "eqnpos") {
-        set(np_eqnpos, Istring(B));
+        set(np_eqnpos, B);
         return true;
     }
     if (A == "footnote") {
-        set(np_footnote, Istring(B));
+        set(np_footnote, B);
         return true;
     }
     if (A == "formula") {
-        set(np_formula, Istring(B));
+        set(np_formula, B);
         return true;
     }
     if (A == "fbox") {
-        set(np_fbox, Istring(B));
+        set(np_fbox, B);
         return true;
     }
     if (A == "figure") {
-        set(np_figure, Istring(B));
+        set(np_figure, B);
         return true;
     }
     if (A == "figure_env") {
-        set(np_float_figure, Istring(B));
+        set(np_float_figure, B);
         return true;
     }
     if (A == "frontmatter") {
-        set(np_frontmatter, Istring(B));
+        set(np_frontmatter, B);
         return true;
     }
     if (A == "font_small") {
-        set(np_font_small, Istring(B));
+        set(np_font_small, B);
         return true;
     }
     if (A == "font_small1") {
-        set(np_font_small1, Istring(B));
+        set(np_font_small1, B);
         return true;
     }
     if (A == "font_small2") {
-        set(np_font_small2, Istring(B));
+        set(np_font_small2, B);
         return true;
     }
     if (A == "font_small3") {
-        set(np_font_small3, Istring(B));
+        set(np_font_small3, B);
         return true;
     }
     if (A == "font_small4") {
-        set(np_font_small4, Istring(B));
+        set(np_font_small4, B);
         return true;
     }
     if (A == "font_small5") {
-        set(np_font_small5, Istring(B));
+        set(np_font_small5, B);
         return true;
     }
     if (A == "font_small6") {
-        set(np_font_small6, Istring(B));
+        set(np_font_small6, B);
         return true;
     }
     if (A == "font_large") {
-        set(np_font_large, Istring(B));
+        set(np_font_large, B);
         return true;
     }
     if (A == "font_large1") {
-        set(np_font_large1, Istring(B));
+        set(np_font_large1, B);
         return true;
     }
     if (A == "font_large2") {
-        set(np_font_large2, Istring(B));
+        set(np_font_large2, B);
         return true;
     }
     if (A == "font_large3") {
-        set(np_font_large3, Istring(B));
+        set(np_font_large3, B);
         return true;
     }
     if (A == "font_large4") {
-        set(np_font_large4, Istring(B));
+        set(np_font_large4, B);
         return true;
     }
     if (A == "font_large5") {
-        set(np_font_large5, Istring(B));
+        set(np_font_large5, B);
         return true;
     }
     if (A == "font_large6") {
-        set(np_font_large6, Istring(B));
+        set(np_font_large6, B);
         return true;
     }
     if (A == "font_normalsize") {
-        set(np_font_normalsize, Istring(B));
+        set(np_font_normalsize, B);
         return true;
     }
     if (A == "font_upright") {
-        set(np_font_upright, Istring(B));
+        set(np_font_upright, B);
         return true;
     }
     if (A == "font_medium") {
-        set(np_font_medium, Istring(B));
+        set(np_font_medium, B);
         return true;
     }
     if (A == "font_roman") {
-        set(np_font_roman, Istring(B));
+        set(np_font_roman, B);
         return true;
     }
     if (A == "font_it") {
-        set(np_font_it, Istring(B));
+        set(np_font_it, B);
         return true;
     }
     if (A == "font_slanted") {
-        set(np_font_slanted, Istring(B));
+        set(np_font_slanted, B);
         return true;
     }
     if (A == "font_sc") {
-        set(np_font_sc, Istring(B));
+        set(np_font_sc, B);
         return true;
     }
     if (A == "font_tt") {
-        set(np_font_tt, Istring(B));
+        set(np_font_tt, B);
         return true;
     }
     if (A == "font_sansserif") {
-        set(np_font_sansserif, Istring(B));
+        set(np_font_sansserif, B);
         return true;
     }
     if (A == "font_bold") {
-        set(np_font_bold, Istring(B));
+        set(np_font_bold, B);
         return true;
     }
     if (A == "font_boldextended") {
-        set(np_font_boldextended, Istring(B));
+        set(np_font_boldextended, B);
         return true;
     }
     if (A == "font_semibold") {
-        set(np_font_semibold, Istring(B));
+        set(np_font_semibold, B);
         return true;
     }
     if (A == "font_condensed") {
-        set(np_font_condensed, Istring(B));
+        set(np_font_condensed, B);
         return true;
     }
     if (A == "gloitem") {
-        set(np_label_glo, Istring(B));
+        set(np_label_glo, B);
         return true;
     }
     if (A == "graphics") {
-        set(np_graphics, Istring(B));
+        set(np_graphics, B);
         return true;
     }
     if (A == "glo") {
-        set(np_glo_name, Istring(B));
+        set(np_glo_name, B);
         return true;
     }
     if (A == "glossary") {
-        set(np_glossary, Istring(B));
+        set(np_glossary, B);
         return true;
     }
     if (A == "head") {
-        set(np_head, Istring(B));
+        set(np_head, B);
         return true;
     }
     if (A == "hl") {
-        set(np_s_hl, Istring(B));
+        set(np_s_hl, B);
         return true;
     }
     if (A == "item") {
-        set(np_item, Istring(B));
+        set(np_item, B);
         return true;
     }
     if (A == "index") {
-        set(np_index, Istring(B));
+        set(np_index, B);
         return true;
     }
     if (A == "keywords") {
-        set(np_keywords, Istring(B));
+        set(np_keywords, B);
         return true;
     }
     if (A == "labelitem") {
-        set(np_label_item, Istring(B));
+        set(np_label_item, B);
         return true;
     }
     if (A == "lineC") {
-        set(np_lineC, Istring(B));
+        set(np_lineC, B);
         return true;
     }
     if (A == "line") {
-        set(np_line, Istring(B));
+        set(np_line, B);
         return true;
     }
     if (A == "listoffigures") {
-        set(np_toc2, Istring(B));
+        set(np_toc2, B);
         return true;
     }
     if (A == "listoftables") {
-        set(np_toc1, Istring(B));
+        set(np_toc1, B);
         return true;
     }
     if (A == "llap") {
-        set(np_llap, Istring(B));
+        set(np_llap, B);
         return true;
     }
     if (A == "linethickness") {
-        set(np_line_thickness, Istring(B));
+        set(np_line_thickness, B);
         return true;
     }
     if (A == "list") {
-        set(np_list, Istring(B));
+        set(np_list, B);
         return true;
     }
     if (A == "leaders") {
-        set(np_leaders, Istring(B));
+        set(np_leaders, B);
         return true;
     }
     if (A == "leg") {
-        set(np_leg, Istring(B));
+        set(np_leg, B);
         return true;
     }
     if (A == "mbox") {
-        set(np_mbox, Istring(B));
+        set(np_mbox, B);
         return true;
     }
     if (A == "math") {
-        set(cst_math, Istring(B));
+        set(cst_math, B);
         return true;
     }
     if (A == "multiput") {
-        set(np_multiput, Istring(B));
+        set(np_multiput, B);
         return true;
     }
     if (A == "mainmatter") {
-        set(np_mainmatter, Istring(B));
+        set(np_mainmatter, B);
         return true;
     }
     if (A == "node") {
-        set(np_node, Istring(B));
+        set(np_node, B);
         return true;
     }
     if (A == "nodeconnect") {
-        set(np_nodeconnect, Istring(B));
+        set(np_nodeconnect, B);
         return true;
     }
     if (A == "nodecurve") {
-        set(np_nodecurve, Istring(B));
+        set(np_nodecurve, B);
         return true;
     }
     if (A == "nodetriangle") {
-        set(np_nodetriangle, Istring(B));
+        set(np_nodetriangle, B);
         return true;
     }
     if (A == "nodecircle") {
-        set(np_nodecircle, Istring(B));
+        set(np_nodecircle, B);
         return true;
     }
     if (A == "nodebox") {
-        set(np_nodebox, Istring(B));
+        set(np_nodebox, B);
         return true;
     }
     if (A == "nodeoval") {
-        set(np_nodeoval, Istring(B));
+        set(np_nodeoval, B);
         return true;
     }
     if (A == "natcit") {
-        set(np_natcit, Istring(B));
+        set(np_natcit, B);
         return true;
     }
     if (A == "oval") {
-        set(np_oval, Istring(B));
+        set(np_oval, B);
         return true;
     }
     if (A == "oldstyle") {
-        set(np_s_old, Istring(B));
+        set(np_s_old, B);
         return true;
     }
     if (A == "overline") {
-        set(np_overline, Istring(B));
+        set(np_overline, B);
         return true;
     }
     if (A == "picture") {
-        set(np_picture, Istring(B));
+        set(np_picture, B);
         return true;
     }
     if (A == "put") {
-        set(np_put, Istring(B));
+        set(np_put, B);
         return true;
     }
     if (A == "project") {
-        set(np_projet, Istring(B));
+        set(np_projet, B);
         return true;
     }
     if (A == "pers") {
-        set(np_pers, Istring(B));
+        set(np_pers, B);
         return true;
     }
     if (A == "prenote") {
-        set(np_prenote, Istring(B));
+        set(np_prenote, B);
         return true;
     }
     if (A == "pack_font_att") {
@@ -1131,148 +1133,148 @@ auto NameMapper::assign_name(const std::string &A, const std::string &B) -> bool
         return true;
     }
     if (A == "row") {
-        set(np_row, Istring(B));
+        set(np_row, B);
         return true;
     }
     if (A == "raisebox") {
-        set(np_raisebox, Istring(B));
+        set(np_raisebox, B);
         return true;
     }
     if (A == "rlap") {
-        set(np_rlap, Istring(B));
+        set(np_rlap, B);
         return true;
     }
     if (A == "rotatebox") {
-        set(np_rotatebox, Istring(B));
+        set(np_rotatebox, B);
         return true;
     }
     if (A == "ref") {
-        set(np_ref, Istring(B));
+        set(np_ref, B);
         return true;
     }
     if ((A == "rclist") && ra_ok) {
-        set(np_rclist, Istring(B));
+        set(np_rclist, B);
         return true;
     }
     if ((A == "rcval") && ra_ok) {
-        set(np_rcval, Istring(B));
+        set(np_rcval, B);
         return true;
     }
     if ((A == "rasection") && ra_ok) {
-        set(np_rasection, Istring(B));
+        set(np_rasection, B);
         return true;
     }
     if (A == "subfigure") {
-        set(np_subfigure, Istring(B));
+        set(np_subfigure, B);
         return true;
     }
     if (A == "scaleput") {
-        set(np_scaleput, Istring(B));
+        set(np_scaleput, B);
         return true;
     }
     if (A == "scalebox") {
-        set(np_sbox, Istring(B));
+        set(np_sbox, B);
         return true;
     }
     if (A == "scaption") {
-        set(np_caption, Istring(B));
+        set(np_caption, B);
         return true;
     }
     if (A == "sup") {
-        set(np_s_sup, Istring(B));
+        set(np_s_sup, B);
         return true;
     }
     if (A == "sub") {
-        set(np_s_sub, Istring(B));
+        set(np_s_sub, B);
         return true;
     }
     if (A == "so") {
-        set(np_s_so, Istring(B));
+        set(np_s_so, B);
         return true;
     }
     if (A == "st") {
-        set(np_s_st, Istring(B));
+        set(np_s_st, B);
         return true;
     }
     if (A == "stylesheet") {
-        set(np_stylesheet, Istring(B));
+        set(np_stylesheet, B);
         return true;
     }
     if (A == "stylesheettype") {
-        set(np_stylesheet_type, Istring(B));
+        set(np_stylesheet_type, B);
         return true;
     }
     if (A == "term") {
-        set(np_term, Istring(B));
+        set(np_term, B);
         return true;
     }
     if (A == "texmath") {
-        set(np_texmath, Istring(B));
+        set(np_texmath, B);
         return true;
     }
     if (A == "table") {
-        set(np_table, Istring(B));
+        set(np_table, B);
         return true;
     }
     if (A == "table_env") {
-        set(np_float_table, Istring(B));
+        set(np_float_table, B);
         return true;
     }
     if (A == "Table") {
-        set(np_Table, Istring(B));
+        set(np_Table, B);
         return true;
     }
     if (A == "tagcurve") {
-        set(np_tagcurve, Istring(B));
+        set(np_tagcurve, B);
         return true;
     }
     if (A == "thicklines") {
-        set(np_thick_lines, Istring(B));
+        set(np_thick_lines, B);
         return true;
     }
     if (A == "thinlines") {
-        set(np_thin_lines, Istring(B));
+        set(np_thin_lines, B);
         return true;
     }
     if (A == "theorem_head") {
-        set(np_alt_head, Istring(B));
+        set(np_alt_head, B);
         return true;
     }
     if (A == "theorem") {
         if (B[0] == 0) { // reverst to old behavior
-            set(np_theorem, Istring(B));
+            set(np_theorem, B);
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else if (B[0] == ' ') { // special case
-            set(np_theorem, Istring(B.substr(1)));
+            set(np_theorem, B.substr(1));
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else {
-            set(np_theorem, Istring(B));
+            set(np_theorem, B);
             the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
         }
         return true;
     }
     if (A == "theindex") {
-        set(np_theindex, Istring(B));
+        set(np_theindex, B);
         return true;
     }
     if (A == "theglossary") {
-        set(np_theglossary, Istring(B));
+        set(np_theglossary, B);
         return true;
     }
     if (A == "tableofcontents") {
-        set(np_toc, Istring(B));
+        set(np_toc, B);
         return true;
     }
     if (A == "texte") {
-        set(np_texte, Istring(B));
+        set(np_texte, B);
         return true;
     }
     if (A == "ul") {
-        set(np_s_ul, Istring(B));
+        set(np_s_ul, B);
         return true;
     }
     if (A == "underline") {
-        set(np_underline, Istring(B));
+        set(np_underline, B);
         return true;
     }
     if (A == "use_font_elt") {
@@ -1281,23 +1283,23 @@ auto NameMapper::assign_name(const std::string &A, const std::string &B) -> bool
         return true;
     }
     if (A == "vector") {
-        set(np_vector, Istring(B));
+        set(np_vector, B);
         return true;
     }
     if (A == "warning") {
-        set(np_warning, Istring(B));
+        set(np_warning, B);
         return true;
     }
     if (A == "xref") {
-        set(np_xref, Istring(B));
+        set(np_xref, B);
         return true;
     }
     if (A == "xtheorem") {
-        set(np_theorem, Istring(B));
+        set(np_theorem, B);
         return true;
     }
     if (A == "xleaders") {
-        set(np_xleaders, Istring(B));
+        set(np_xleaders, B);
         return true;
     }
     return false;
@@ -1305,375 +1307,375 @@ auto NameMapper::assign_name(const std::string &A, const std::string &B) -> bool
 
 auto NameMapper::assign_att(const std::string &A, const std::string &B) -> bool {
     if (A == "angle") {
-        set(np_angle, Istring(B));
+        set(np_angle, B);
         return true;
     }
     if (A == "affiliation") {
-        set(np_affiliation, Istring(B));
+        set(np_affiliation, B);
         return true;
     }
     if (A == "box_pos") {
-        set(np_box_pos, Istring(B));
+        set(np_box_pos, B);
         return true;
     }
     if (A == "box_scale") {
-        set(np_s_scale, Istring(B));
+        set(np_s_scale, B);
         return true;
     }
     if (A == "box_width") {
-        set(np_box_width, Istring(B));
+        set(np_box_width, B);
         return true;
     }
     if (A == "boxed") {
-        set(np_boxed, Istring(B));
+        set(np_boxed, B);
         return true;
     }
     if (A == "bibkey") {
-        set(np_bibkey, Istring(B));
+        set(np_bibkey, B);
         return true;
     }
     if (A == "border_bottom_width") {
-        set(np_border_bottomw, Istring(B));
+        set(np_border_bottomw, B);
         return true;
     }
     if (A == "border_top_width") {
-        set(np_border_topw, Istring(B));
+        set(np_border_topw, B);
         return true;
     }
     if (A == "border_left_width") {
-        set(np_border_leftw, Istring(B));
+        set(np_border_leftw, B);
         return true;
     }
     if (A == "border_right_width") {
-        set(np_border_rightw, Istring(B));
+        set(np_border_rightw, B);
         return true;
     }
     if (A == "centering") {
-        set(np_center_etc1, Istring(B));
+        set(np_center_etc1, B);
         return true;
     }
     if (A == "clip") {
-        set(np_clip, Istring(B));
+        set(np_clip, B);
         return true;
     }
     if (A == "cols") {
-        set(np_cols, Istring(B));
+        set(np_cols, B);
         return true;
     }
     if (A == "cell_left") {
-        set(np_c_left, Istring(B));
+        set(np_c_left, B);
         return true;
     }
     if (A == "cell_right") {
-        set(np_c_right, Istring(B));
+        set(np_c_right, B);
         return true;
     }
     if (A == "cell_center") {
-        set(np_c_center, Istring(B));
+        set(np_c_center, B);
         return true;
     }
     if (A == "cell_leftborder") {
-        set(np_leftborder, Istring(B));
+        set(np_leftborder, B);
         return true;
     }
     if (A == "cell_rightborder") {
-        set(np_rightborder, Istring(B));
+        set(np_rightborder, B);
         return true;
     }
     if (A == "cell_topborder") {
-        set(np_topborder, Istring(B));
+        set(np_topborder, B);
         return true;
     }
     if (A == "cell_bottomborder") {
-        set(np_bottomborder, Istring(B));
+        set(np_bottomborder, B);
         return true;
     }
     if (A == "curve_nbpts") {
-        set(np_curve_nbpts, Istring(B));
+        set(np_curve_nbpts, B);
         return true;
     }
     if (A == "display") {
-        set(np_display, Istring(B));
+        set(np_display, B);
         return true;
     }
     if (A == "dx") {
-        set(np_dx, Istring(B));
+        set(np_dx, B);
         return true;
     }
     if (A == "dy") {
-        set(np_dy, Istring(B));
+        set(np_dy, B);
         return true;
     }
     if (A == "depthA") {
-        set(np_depthA, Istring(B));
+        set(np_depthA, B);
         return true;
     }
     if (A == "depthB") {
-        set(np_depthB, Istring(B));
+        set(np_depthB, B);
         return true;
     }
     if (A == "depth") {
-        set(np_depth, Istring(B));
+        set(np_depth, B);
         return true;
     }
     if (A == "encap") {
-        set(np_encap, Istring(B));
+        set(np_encap, B);
         return true;
     }
     if (A == "framed") {
-        set(np_framed, Istring(B));
+        set(np_framed, B);
         return true;
     }
     if (A == "full") {
-        set(np_full, Istring(B));
+        set(np_full, B);
         return true;
     }
     if (A == "file") {
-        set(np_file, Istring(B));
+        set(np_file, B);
         return true;
     }
     if (A == "file_extension") {
-        set(np_fileextension, Istring(B));
+        set(np_fileextension, B);
         return true;
     }
     if (A == "fbox_rend") {
-        set(np_b_rend, Istring(B));
+        set(np_b_rend, B);
         return true;
     }
     if (A == "flush_left") {
-        set(np_center_etc4, Istring(B));
+        set(np_center_etc4, B);
         return true;
     }
     if (A == "flush_right") {
-        set(np_center_etc5, Istring(B));
+        set(np_center_etc5, B);
         return true;
     }
     if (A == "foot_position") {
-        set(np_foot, Istring(B));
+        set(np_foot, B);
         return true;
     }
     if (A == "full_first") {
-        set(np_full_first, Istring(B));
+        set(np_full_first, B);
         return true;
     }
     if (A == "gloss_type") {
-        set(np_gloss, Istring(B));
+        set(np_gloss, B);
         return true;
     }
     if (A == "height") {
-        set(np_height, Istring(B));
+        set(np_height, B);
         return true;
     }
     if (A == "halign") {
-        set(np_halign, Istring(B));
+        set(np_halign, B);
         return true;
     }
     if (A == "hdr") {
-        set(np_hdr, Istring(B));
+        set(np_hdr, B);
         return true;
     }
     if (A == "inner_pos") {
-        set(np_posi, Istring(B));
+        set(np_posi, B);
         return true;
     }
     if (A == "inline") {
-        set(np_inline, Istring(B));
+        set(np_inline, B);
         return true;
     }
     if (A == "junior") {
-        set(np_junior, Istring(B));
+        set(np_junior, B);
         return true;
     }
     if (A == "language") {
-        set(np_language, Istring(B));
+        set(np_language, B);
         return true;
     }
     if (A == "level") {
-        set(np_level, Istring(B));
+        set(np_level, B);
         return true;
     }
     if (A == "minipage_width") {
-        set(np_minipage_width, Istring(B));
+        set(np_minipage_width, B);
         return true;
     }
     if (A == "marginpar") {
-        set(np_marginpar, Istring(B));
+        set(np_marginpar, B);
         return true;
     }
     if (A == "mathmlns") {
-        set(cst_mathml, Istring(B));
+        set(cst_mathml, B);
         return true;
     }
     if (A == "marginpar") {
-        set(np_marginpar, Istring(B));
+        set(np_marginpar, B);
         return true;
     }
     if (A == "mode") {
-        set(cst_mode, Istring(B));
+        set(cst_mode, B);
         return true;
     }
     if (A == "noindent") {
-        set(np_noindent, Istring(B));
+        set(np_noindent, B);
         return true;
     }
     if (A == "nonumber") {
-        set(np_nonumber, Istring(B));
+        set(np_nonumber, B);
         return true;
     }
     if (A == "nom") {
-        set(np_nom, Istring(B));
+        set(np_nom, B);
         return true;
     }
     if (A == "name") {
-        set(np_name, Istring(B));
+        set(np_name, B);
         return true;
     }
     if (A == "nameA") {
-        set(np_nameA, Istring(B));
+        set(np_nameA, B);
         return true;
     }
     if (A == "nameB") {
-        set(np_nameB, Istring(B));
+        set(np_nameB, B);
         return true;
     }
     if (A == "place") {
-        set(np_place, Istring(B));
+        set(np_place, B);
         return true;
     }
     if (A == "prenom") {
-        set(np_prenom, Istring(B));
+        set(np_prenom, B);
         return true;
     }
     if (A == "pre") {
-        set(np_pre, Istring(B));
+        set(np_pre, B);
         return true;
     }
     if (A == "particule") {
-        set(np_particle, Istring(B));
+        set(np_particle, B);
         return true;
     }
     if (A == "page") {
-        set(np_page, Istring(B));
+        set(np_page, B);
         return true;
     }
     if (A == "profession") {
-        set(np_profession, Istring(B));
+        set(np_profession, B);
         return true;
     }
     if (A == "posA") {
-        set(np_posA, Istring(B));
+        set(np_posA, B);
         return true;
     }
     if (A == "posB") {
-        set(np_posB, Istring(B));
+        set(np_posB, B);
         return true;
     }
     if (A == "pos") {
-        set(np_pos, Istring(B));
+        set(np_pos, B);
         return true;
     }
     if (A == "quote") {
-        set(np_center_etc2, Istring(B));
+        set(np_center_etc2, B);
         return true;
     }
     if (A == "quotation") {
-        set(np_center_etc3, Istring(B));
+        set(np_center_etc3, B);
         return true;
     }
     if (A == "rotate_angle") {
-        set(np_r_angle, Istring(B));
+        set(np_r_angle, B);
         return true;
     }
     if (A == "rend") {
-        set(np_rend, Istring(B));
+        set(np_rend, B);
         return true;
     }
     if (A == "row_spaceafter") {
-        set(np_spaceafter, Istring(B));
+        set(np_spaceafter, B);
         return true;
     }
     if (A == "repeat") {
-        set(np_repeat, Istring(B));
+        set(np_repeat, B);
         return true;
     }
     if (A == "scale") {
-        set(np_scale, Istring(B));
+        set(np_scale, B);
         return true;
     }
     if (A == "space_before") {
-        set(np_spacebefore, Istring(B));
+        set(np_spacebefore, B);
         return true;
     }
     if (A == "size") {
-        set(np_size, Istring(B));
+        set(np_size, B);
         return true;
     }
     if (A == "starred") {
-        set(np_starred, Istring(B));
+        set(np_starred, B);
         return true;
     }
     if (A == "table_width") {
-        set(np_tab_width, Istring(B));
+        set(np_tab_width, B);
         return true;
     }
     if (A == "type") {
-        set(np_type, Istring(B));
+        set(np_type, B);
         return true;
     }
     if (A == "textype") {
-        set(np_textype, Istring(B));
+        set(np_textype, B);
         return true;
     }
     if (A == "unit_length") {
-        set(np_unit_length, Istring(B));
+        set(np_unit_length, B);
         return true;
     }
     if (A == "user_list") {
-        set(np_user_list, Istring(B));
+        set(np_user_list, B);
         return true;
     }
     if (A == "vpos") {
-        set(np_vpos, Istring(B));
+        set(np_vpos, B);
         return true;
     }
     if (A == "verse") {
-        set(np_center_etc6, Istring(B));
+        set(np_center_etc6, B);
         return true;
     }
     if (A == "width") {
-        set(np_width, Istring(B));
+        set(np_width, B);
         return true;
     }
     if (A == "xscale") {
-        set(np_xscale, Istring(B));
+        set(np_xscale, B);
         return true;
     }
     if (A == "xscaley") {
-        set(np_xscaley, Istring(B));
+        set(np_xscaley, B);
         return true;
     }
     if (A == "xpos") {
-        set(np_xpos, Istring(B));
+        set(np_xpos, B);
         return true;
     }
     if (A == "xdir") {
-        set(np_xdir, Istring(B));
+        set(np_xdir, B);
         return true;
     }
     if (A == "yscale") {
-        set(np_yscale, Istring(B));
+        set(np_yscale, B);
         return true;
     }
     if (A == "yscalex") {
-        set(np_yscalex, Istring(B));
+        set(np_yscalex, B);
         return true;
     }
     if (A == "ydir") {
-        set(np_ydir, Istring(B));
+        set(np_ydir, B);
         return true;
     }
     if (A == "ypos") {
-        set(np_ypos, Istring(B));
+        set(np_ypos, B);
         return true;
     }
     return false;
