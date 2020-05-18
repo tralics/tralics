@@ -960,7 +960,7 @@ void Parser::T_change_element_name() {
     if (star) {
         res = config_ns::assign_att(name, value);
     } else
-        res = config_ns::assign_name(name, value);
+        res = the_names.assign_name(name, value);
     if (res) {
         Logger::finish_seq();
         the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";

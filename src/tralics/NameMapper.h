@@ -22,6 +22,8 @@ struct NameMapper {
 
     void set(name_positions i, const Istring &s) { flat[i] = s; }
     void set(size_t i, const Istring &s) { flat[i] = s; }
+
+    auto assign_name(const std::string &A, std::string B) -> bool;
 };
 
 inline NameMapper the_names;
