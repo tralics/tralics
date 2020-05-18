@@ -3,10 +3,23 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
-void NameMapper::def(name_positions i, const std::string &s) { set(i, s); }
+void NameMapper::def(const std::string &name, name_positions pos, const std::string &value) {
+    set(pos, value);
+    if (s_to_id.contains(name)) {
+        spdlog::warn("Already present: {} {} {}", name, pos, value);
+        return;
+    }
+    if (name.empty()) {
+        spdlog::warn("Empty name");
+        return;
+    }
+    s_to_id.emplace(name, pos);
+}
+
+void NameMapper::def(name_positions i, const std::string &s) { def(s, i, s); }
 
 void NameMapper::boot() {
-    def(cst_empty, "");
+    def("cst_empty", cst_empty, "");
     def(cst_accent, "accent");
     def(cst_accentunder, "accentunder");
     def(cst_argument, "argument");
@@ -35,7 +48,7 @@ void NameMapper::boot() {
     def(cst_cn, "cn");
     def(cst_csymbol, "csymbol");
     def(cst_multiscripts, "mmultiscripts");
-    def(cst_nothing, "");
+    def("cst_nothing", cst_nothing, "");
     def(cst_mroot, "mroot");
     def(cst_mover, "mover");
     def(cst_mrow, "mrow");
@@ -134,7 +147,7 @@ void NameMapper::boot() {
     def(cst_numalign, "numalign");
     def(cst_denalign, "denomalign");
     def(cstf_normal, "normal");
-    def(cstf_upright, "");
+    def("cstf_upright", cstf_upright, "");
     def(cstf_bold, "bold");
     def(cstf_italic, "italic");
     def(cstf_bold_italic, "bold-italic");
@@ -257,7 +270,7 @@ void NameMapper::boot() {
     def(np_eqnpos, "eqnpos");
     def(np_error, "error");
     def(np_Error, "Error");
-    def(np_warning, "");
+    def("np_warning", np_warning, "");
     def(np_Warning, "Warning");
     def(np_Info, "Info");
     def(np_inline, "inline");
@@ -334,7 +347,7 @@ void NameMapper::boot() {
     def(np_keywords, "keywords");
     def(np_label_glo, "label");
     def(np_label_item, "label");
-    def(np_language, "");
+    def("np_language", np_language, "");
     def(np_leaders, "leaders");
     def(np_left, "left");
     def(np_leftborder, "left-border");
@@ -347,7 +360,7 @@ void NameMapper::boot() {
     def(np_list, "list");
     def(np_llap, "llap");
     def(np_rlap, "rlap");
-    def(np_rasection, "");
+    def("nb_rasection", np_rasection, "");
     def(np_mainmatter, "mainmatter");
     def(np_mbox, "mbox");
     def(np_marginpar, "marginpar");
@@ -428,7 +441,7 @@ void NameMapper::boot() {
     def(np_s_sub, "sub");
     def(np_s_sup, "sup");
     def(np_s_ul, "ul");
-    def(np_separator, "");
+    def("np_separator", np_separator, "");
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
@@ -438,7 +451,7 @@ void NameMapper::boot() {
     def(np_style, "style");
     def(np_starred, "starred");
     def(np_subfigure, "subfigure");
-    def(np_stylesheet, "");
+    def("np_stylesheet", np_stylesheet, "");
     def(np_stylesheet_type, "text/css");
     def(np_table, "table");
     def(np_Table, "Table");
@@ -453,7 +466,7 @@ void NameMapper::boot() {
     def(np_theindex, "theindex");
     def(np_theglossary, "theglossary");
     def(np_theme, "theme");
-    def(np_theorem, "");
+    def("np_theorem", np_theorem, "");
     def(np_thick_lines, "pic-thicklines");
     def(np_thin_lines, "pic-thinlines");
     def(np_toc, "tableofcontents");

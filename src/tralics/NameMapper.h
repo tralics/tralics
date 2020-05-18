@@ -1,6 +1,7 @@
 #pragma once
 #include "Istring.h"
 #include <array>
+#include <unordered_map>
 
 /*
  * TODO This is work in progress. We need to be able to change XML output and so
@@ -15,7 +16,8 @@
  */
 
 struct NameMapper {
-    std::array<Istring, np_last> flat;
+    std::array<Istring, np_last>                    flat;
+    std::unordered_map<std::string, name_positions> s_to_id;
 
     const Istring &operator[](name_positions i) const { return flat[i]; }
     const Istring &operator[](size_t i) const { return flat[i]; }
@@ -23,6 +25,7 @@ struct NameMapper {
     void set(name_positions i, const std::string &s) { flat[i] = Istring(s); }
     void set(size_t i, const std::string &s) { flat[i] = Istring(s); }
 
+    void def(const std::string &name, name_positions pos, const std::string &value);
     void def(name_positions i, const std::string &s);
     void boot();
 
