@@ -956,15 +956,10 @@ void Parser::T_change_element_name() {
     bool        star  = remove_initial_star();
     std::string name  = special_next_arg();
     std::string value = sE_arg_nopar();
-    bool        res{};
-    if (star) {
-        res = the_names.assign_att(name, value);
-    } else
-        res = the_names.assign_name(name, value);
-    if (res) {
-        Logger::finish_seq();
-        the_log << "Changed " << (star ? "att_"s : "xml_"s) << name << " to " << value << "\n";
-    }
+    if (star)
+        the_names.assign_att(name, value);
+    else
+        the_names.assign_name(name, value);
 }
 
 // -------------------------------------------------------------------

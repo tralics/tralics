@@ -20,20 +20,21 @@ class NameMapper {
     std::unordered_map<std::string, Istring> dict;
 
 public:
-    Istring operator[](name_positions i) const;
-    Istring operator[](size_t i) const;
-    Istring operator[](const std::string &name) const;
+    auto operator[](name_positions i) const -> Istring;
+    auto operator[](size_t i) const -> Istring;
+    auto operator[](const std::string &name) const -> Istring;
 
     void set(name_positions i, const std::string &s);
     void set(size_t i, const std::string &s);
+    void set(const std::string &name, const std::string &value);
 
     void def(const std::string &name, name_positions pos, const std::optional<std::string> &value = std::nullopt);
     void def(name_positions i, const std::string &s);
     void boot();
 
-    auto assign(const std::string &sa, const std::string &sb) -> bool;
-    auto assign_att(const std::string &A, const std::string &B) -> bool;
-    auto assign_name(const std::string &A, const std::string &B) -> bool;
+    void assign(const std::string &sa, const std::string &sb);
+    void assign_att(const std::string &A, const std::string &B);
+    void assign_name(const std::string &A, const std::string &B);
 };
 
 inline NameMapper the_names;

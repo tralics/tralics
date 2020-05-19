@@ -65,7 +65,7 @@ namespace config_ns {
 } // namespace config_ns
 
 namespace tpage_ns {
-    auto see_main_a(Buffer &in, Buffer &val) -> bool;
+    void see_main_a(Buffer &in, Buffer &val);
 } // namespace tpage_ns
 
 inline auto is_vowel(char c) -> bool { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }

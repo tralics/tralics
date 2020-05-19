@@ -79,10 +79,7 @@ found at http://www.cecill.info.)";
     std::vector<std::string> other_options;
 
     void after_conf_assign(std::vector<std::string> &V) {
-        for (size_t i = 0; i < V.size(); i += 2) {
-            bool res = the_names.assign(V[i], V[i + 1]);
-            if (res) spdlog::trace("{}={}", V[i], V[i + 1]);
-        }
+        for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
     }
 
     void bad_conf(String s) {
@@ -433,7 +430,7 @@ void MainClass::parse_args(int argc, char **argv) {
     if (rightquote_val == 0 || rightquote_val >= (1 << 16)) rightquote_val = '\'';
 }
 
-auto MainClass::check_for_arg(int &p, int argc, char **argv) const -> String {
+auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
     if (p >= argc - 1) {
         spdlog::critical("Argument missing for option {}", argv[p]);
         usage_and_quit(1);
@@ -768,7 +765,7 @@ void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not 
         tpa_mode = 0; // default
 }
 
-void MainClass::end_with_help(int v) const {
+void MainClass::end_with_help(int v) {
     spdlog::info("Say `tralics --help' to get some help");
     exit(v);
 }

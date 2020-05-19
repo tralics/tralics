@@ -735,18 +735,11 @@ void Buffer::find_one_type(std::vector<std::string> &S) {
 }
 
 // This is called for all lines, outside groups.
-auto tpage_ns::see_main_a(Buffer &in, Buffer &val) -> bool {
+void tpage_ns::see_main_a(Buffer &in, Buffer &val) {
     Buffer B;
     val.clear();
     int k = tpage_ns::see_an_assignment(in, B, val);
-    if (k == 1) {
-        bool res = the_names.assign(B, val);
-        if (res) {
-            if (!B.empty()) the_log << B << "=" << val.convert_to_log_encoding() << "\n";
-            return true;
-        }
-    }
-    return false;
+    if (k == 1) the_names.assign(B, val);
 }
 
 // Returns 0, unless we see A="B", fills the buffers A and B.
