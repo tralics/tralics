@@ -15,29 +15,23 @@ const Istring &NameMapper::operator[](name_positions i) const {
 
 const Istring &NameMapper::operator[](size_t i) const { return flat[i]; }
 
-void NameMapper::def(const std::string &name, name_positions pos, const std::string &value) {
-    flat[pos]       = Istring(value);
-    id_to_name[pos] = name;
+void NameMapper::set(name_positions i, const std::string &s) {
+    assert(!id_to_name.empty());
+    flat[i]             = Istring(s);
+    dict[id_to_name[i]] = Istring(s);
+}
+
+void NameMapper::def(const std::string &name, name_positions pos, const std::optional<std::string> &value) {
     assert(!dict.contains(name));
-    dict.emplace(name, value);
-    if (name_to_id.contains(name)) {
-        spdlog::warn("Already present: {} {} {}", name, pos, value);
-        return;
-    }
-    if (name.empty()) {
-        spdlog::warn("Empty name");
-        return;
-    }
+    assert(!name.empty());
+    id_to_name[pos] = name;
     name_to_id.emplace(name, pos);
+    flat[pos] = value ? Istring(*value) : Istring();
+    dict.emplace(name, value ? Istring(*value) : Istring());
 }
 
 void NameMapper::def(name_positions i, const std::string &s) { def(s, i, s); }
 
-void NameMapper::set(name_positions i, const std::string &s) {
-    flat[i] = Istring(s);
-    assert(!id_to_name.empty());
-    dict[id_to_name[i]] = Istring(s);
-}
 void NameMapper::set(size_t i, const std::string &s) {
     flat[i] = Istring(s);
     assert(!id_to_name.empty());
@@ -46,6 +40,7 @@ void NameMapper::set(size_t i, const std::string &s) {
 
 void NameMapper::boot() {
     def("cst_empty", cst_empty, "");
+    def("cst_invalid", cst_invalid);
     def(cst_accent, "accent");
     def(cst_accentunder, "accentunder");
     def(cst_argument, "argument");

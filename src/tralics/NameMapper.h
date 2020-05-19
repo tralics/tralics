@@ -29,7 +29,7 @@ public:
     void set(name_positions i, const std::string &s);
     void set(size_t i, const std::string &s);
 
-    void def(const std::string &name, name_positions pos, const std::string &value);
+    void def(const std::string &name, name_positions pos, const std::optional<std::string> &value = std::nullopt);
     void def(name_positions i, const std::string &s);
     void boot();
 
