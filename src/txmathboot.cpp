@@ -33,8 +33,8 @@ auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_
 inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
     for (auto &c : single_chars) c = nullptr;
-    for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(the_names[np_letter_a + x - 'a']); }
-    for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(the_names[np_letter_A + x - 'A']); }
+    for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
+    for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
 }
 
 // In the case of \Bbb A, we can use
