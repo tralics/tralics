@@ -16,15 +16,13 @@
  */
 
 class NameMapper {
-    std::array<Istring, np_last>                    flat;
-    std::unordered_map<std::string, name_positions> name_to_id;
-    std::array<std::string, np_last>                id_to_name;
-    std::unordered_map<std::string, Istring>        dict;
+    std::array<std::string, np_last>         id_to_name;
+    std::unordered_map<std::string, Istring> dict;
 
 public:
-    const Istring &operator[](name_positions i) const;
-    const Istring &operator[](size_t i) const;
-    Istring        operator[](const std::string &name) const;
+    Istring operator[](name_positions i) const;
+    Istring operator[](size_t i) const;
+    Istring operator[](const std::string &name) const;
 
     void set(name_positions i, const std::string &s);
     void set(size_t i, const std::string &s);

@@ -5,19 +5,12 @@
 
 Istring NameMapper::operator[](const std::string &name) const { return dict.contains(name) ? dict.at(name) : Istring(name); }
 
-const Istring &NameMapper::operator[](name_positions i) const {
-    auto name = id_to_name[i];
-    auto res1 = (*this)[name];
-    auto res2 = flat[i];
-    assert(res1 == res2);
-    return flat[i];
-}
+Istring NameMapper::operator[](name_positions i) const { return (*this)[id_to_name[i]]; }
 
-const Istring &NameMapper::operator[](size_t i) const { return flat[i]; }
+Istring NameMapper::operator[](size_t i) const { return (*this)[id_to_name[i]]; }
 
 void NameMapper::set(name_positions i, const std::string &s) {
     assert(!id_to_name.empty());
-    flat[i]             = Istring(s);
     dict[id_to_name[i]] = Istring(s);
 }
 
@@ -25,15 +18,12 @@ void NameMapper::def(const std::string &name, name_positions pos, const std::opt
     assert(!dict.contains(name));
     assert(!name.empty());
     id_to_name[pos] = name;
-    name_to_id.emplace(name, pos);
-    flat[pos] = value ? Istring(*value) : Istring();
-    dict.emplace(name, value ? Istring(*value) : Istring());
+    if (value != name) dict[name] = value ? Istring(*value) : Istring();
 }
 
 void NameMapper::def(name_positions i, const std::string &s) { def(s, i, s); }
 
 void NameMapper::set(size_t i, const std::string &s) {
-    flat[i] = Istring(s);
     assert(!id_to_name.empty());
     dict[id_to_name[i]] = Istring(s);
 }
