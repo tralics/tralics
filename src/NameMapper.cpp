@@ -529,16 +529,9 @@ void NameMapper::boot() {
     def(np_yscale, "yscale");
     def(np_yscalex, "yscalex");
     def(np_zerodim, "0pt");
-    std::array<char, 2> foo{};
-    foo[1] = 0;
-    for (char x = 'a'; x <= 'z'; x++) {
-        foo[0] = x;
-        def(name_positions(to_unsigned(np_letter_a + x - 'a')), foo.data());
-    }
-    for (char x = 'A'; x <= 'Z'; x++) {
-        foo[0] = x;
-        def(name_positions(to_unsigned(np_letter_A + x - 'A')), foo.data());
-    }
+
+    for (char x = 'a'; x <= 'z'; x++) def(name_positions(to_unsigned(np_letter_a + x - 'a')), std::string(1, x));
+    for (char x = 'A'; x <= 'Z'; x++) def(name_positions(to_unsigned(np_letter_A + x - 'A')), std::string(1, x));
 }
 
 auto NameMapper::assign(const std::string &sa, const std::string &sb) -> bool {
