@@ -9,24 +9,16 @@ Istring NameMapper::operator[](name_positions i) const { return (*this)[id_to_na
 
 Istring NameMapper::operator[](size_t i) const { return (*this)[id_to_name[i]]; }
 
-void NameMapper::set(name_positions i, const std::string &s) {
-    assert(!id_to_name.empty());
-    dict[id_to_name[i]] = Istring(s);
-}
+void NameMapper::set(size_t i, const std::string &s) { dict[id_to_name[i]] = Istring(s); }
+
+void NameMapper::set(name_positions i, const std::string &s) { dict[id_to_name[i]] = Istring(s); }
 
 void NameMapper::def(const std::string &name, name_positions pos, const std::optional<std::string> &value) {
-    assert(!dict.contains(name));
-    assert(!name.empty());
     id_to_name[pos] = name;
-    if (value != name) dict[name] = value ? Istring(*value) : Istring();
+    dict[name]      = value ? Istring(*value) : Istring();
 }
 
-void NameMapper::def(name_positions i, const std::string &s) { def(s, i, s); }
-
-void NameMapper::set(size_t i, const std::string &s) {
-    assert(!id_to_name.empty());
-    dict[id_to_name[i]] = Istring(s);
-}
+void NameMapper::def(name_positions i, const std::string &s) { id_to_name[i] = s; }
 
 void NameMapper::boot() {
     def("cst_empty", cst_empty, "");
