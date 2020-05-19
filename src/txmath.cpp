@@ -2540,7 +2540,6 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     } else if (c == underline_code) {
         A2  = math_data.get_mc_table(3);
         pos = 0;
-        // pos = cst_accentunder;
     } else if (c == undertilde_code) {
         A2  = math_data.get_mc_table(26);
         pos = cst_accentunder;

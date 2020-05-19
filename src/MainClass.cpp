@@ -696,6 +696,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         interactive_math = true;
         input_encoding   = 0;
         see_name("texput");
+        return;
     }
     if (s == "noundefmac") {
         no_undef_mac = true;

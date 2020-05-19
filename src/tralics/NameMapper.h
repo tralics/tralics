@@ -15,15 +15,19 @@
  * Problem is if two name_positions initially are mapped to the same string.
  */
 
-struct NameMapper {
+class NameMapper {
     std::array<Istring, np_last>                    flat;
-    std::unordered_map<std::string, name_positions> s_to_id;
+    std::unordered_map<std::string, name_positions> name_to_id;
+    std::array<std::string, np_last>                id_to_name;
+    std::unordered_map<std::string, Istring>        dict;
 
-    const Istring &operator[](name_positions i) const { return flat[i]; }
-    const Istring &operator[](size_t i) const { return flat[i]; }
+public:
+    const Istring &operator[](name_positions i) const;
+    const Istring &operator[](size_t i) const;
+    Istring        operator[](const std::string &name) const;
 
-    void set(name_positions i, const std::string &s) { flat[i] = Istring(s); }
-    void set(size_t i, const std::string &s) { flat[i] = Istring(s); }
+    void set(name_positions i, const std::string &s);
+    void set(size_t i, const std::string &s);
 
     void def(const std::string &name, name_positions pos, const std::string &value);
     void def(name_positions i, const std::string &s);

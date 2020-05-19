@@ -1203,7 +1203,7 @@ void Parser::T_mbox(subtypes c) {
         ipos   = the_names[get_ctb_opt()];
     }
     Xml *mbox = internal_makebox();
-    if (!ipos.null() || !iwidth.null()) {
+    if (!ipos.empty() || !iwidth.null()) {
         mbox->id.add_attribute(np_box_pos, ipos);
         mbox->id.add_attribute(np_box_width, iwidth);
         return;

@@ -3,9 +3,24 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
+Istring NameMapper::operator[](const std::string &name) const { return dict.contains(name) ? dict.at(name) : Istring(name); }
+
+const Istring &NameMapper::operator[](name_positions i) const {
+    auto name = id_to_name[i];
+    auto res1 = (*this)[name];
+    auto res2 = flat[i];
+    assert(res1 == res2);
+    return flat[i];
+}
+
+const Istring &NameMapper::operator[](size_t i) const { return flat[i]; }
+
 void NameMapper::def(const std::string &name, name_positions pos, const std::string &value) {
-    set(pos, value);
-    if (s_to_id.contains(name)) {
+    flat[pos]       = Istring(value);
+    id_to_name[pos] = name;
+    assert(!dict.contains(name));
+    dict.emplace(name, value);
+    if (name_to_id.contains(name)) {
         spdlog::warn("Already present: {} {} {}", name, pos, value);
         return;
     }
@@ -13,10 +28,21 @@ void NameMapper::def(const std::string &name, name_positions pos, const std::str
         spdlog::warn("Empty name");
         return;
     }
-    s_to_id.emplace(name, pos);
+    name_to_id.emplace(name, pos);
 }
 
 void NameMapper::def(name_positions i, const std::string &s) { def(s, i, s); }
+
+void NameMapper::set(name_positions i, const std::string &s) {
+    flat[i] = Istring(s);
+    assert(!id_to_name.empty());
+    dict[id_to_name[i]] = Istring(s);
+}
+void NameMapper::set(size_t i, const std::string &s) {
+    flat[i] = Istring(s);
+    assert(!id_to_name.empty());
+    dict[id_to_name[i]] = Istring(s);
+}
 
 void NameMapper::boot() {
     def("cst_empty", cst_empty, "");
