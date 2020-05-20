@@ -67,9 +67,9 @@ void NameMapper::boot() {
     def("np_cst_width", np_cst_width, "width");
     def("np_language", np_language, "");
     def("np_separator", np_separator, "");
-    def("np_stylesheet", np_stylesheet, "");
+    def("stylesheet", np_stylesheet, "");
     def("np_theorem", np_theorem, "");
-    def("np_warning", np_warning, "");
+    def("warning", np_warning, "");
     def("particule", np_particle, "part");
     def("quotation", np_center_etc3, "quoted");
     def("quote", np_center_etc2, "quoted");
@@ -79,6 +79,7 @@ void NameMapper::boot() {
     def("table_width", np_tab_width, "width");
     def("theorem_head", np_theorem_head, "alt_head");
     def("user_list", np_user_list, "description");
+    def("vector", np_vector, "pic-vector");
 
     // Below, this is a mapping id <-> name = default value
     def(cst_accent, "accent");
@@ -374,10 +375,10 @@ void NameMapper::boot() {
     def(np_letters_tl, "tl");
     def(np_letters_tr, "tr");
     def(np_level, "level");
-    def(np_line_thickness, "pic-linethickness");
+    def("linethickness", np_line_thickness, "pic-linethickness");
     def(np_line, "pic-line");
     def(np_lineC, "line");
-    def(np_linethickness, "linethickness");
+    def("np_linethickness", np_linethickness, "linethickness");
     def(np_list, "list");
     def(np_llap, "llap");
     def(np_mainmatter, "mainmatter");
@@ -402,11 +403,11 @@ void NameMapper::boot() {
     def(np_module, "module");
     def(np_moreinfo, "moreinfo");
     def(np_movablelimits, "movablelimits");
-    def(np_multiput, "pic-multiput");
+    def("multiput", np_multiput, "pic-multiput");
     def(np_name, "name");
     def(np_nameA, "nameA");
     def(np_nameB, "nameB");
-    def(np_natcit, "Cit");
+    def("natcit", np_natcit, "Cit");
     def(np_node, "node");
     def(np_nodebox, "nodebox");
     def(np_nodecircle, "nodecircle");
@@ -419,7 +420,7 @@ void NameMapper::boot() {
     def(np_nonumber, "nonumber");
     def(np_open, "open");
     def(np_ordered, "ordered");
-    def(np_oval, "pic-oval");
+    def("oval", np_oval, "pic-oval");
     def(np_overline, "overline");
     def(np_page, "page");
     def(np_pagecolor, "pagecolor");
@@ -441,13 +442,13 @@ void NameMapper::boot() {
     def(np_prenom, "prenom");
     def(np_prenote, "prenote");
     def(np_profession, "profession");
-    def(np_projet, "projet");
+    def("project", np_projet, "projet");
     def(np_projetdeveloppe, "projetdeveloppe");
-    def(np_put, "pic-put");
+    def("put", np_put, "pic-put");
     def(np_quoted, "quoted");
     def(np_raisebox, "raisebox");
-    def(np_rclist, "UR");
-    def(np_rcval, "+UR");
+    def("rclist", np_rclist, "UR");
+    def("rcval", np_rcval, "+UR");
     def(np_ref, "ref");
     def(np_rend, "rend");
     def(np_repeat, "repeat");
@@ -455,7 +456,7 @@ void NameMapper::boot() {
     def(np_right, "right");
     def(np_rightborder, "right-border");
     def(np_rlap, "rlap");
-    def(np_rotatebox, "pic-rotatebox");
+    def("rotatebox", np_rotatebox, "pic-rotatebox");
     def(np_row, "row");
     def(np_rule_bsa, "bottom_rule_space_above");
     def(np_rule_bsb, "bottom_rule_space_below");
@@ -473,7 +474,7 @@ void NameMapper::boot() {
     def(np_sbox, "scalebox");
     def(np_sc, "sc");
     def(np_scale, "scale");
-    def(np_scaleput, "pic-scaleput");
+    def("scaleput", np_scaleput, "pic-scaleput");
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
@@ -482,13 +483,13 @@ void NameMapper::boot() {
     def(np_specs, "specs");
     def(np_starred, "starred");
     def(np_style, "style");
-    def(np_stylesheet_type, "text/css");
+    def("stylesheettype", np_stylesheet_type, "text/css");
     def(np_subfigure, "subfigure");
     def(np_table, "table");
     def(np_Table, "Table");
     def(np_tabular_star, "tabular*");
     def(np_tabular, "tabular");
-    def(np_tagcurve, "pic-tagcurve");
+    def("tagcurve", np_tagcurve, "pic-tagcurve");
     def(np_target, "target");
     def(np_term, "term");
     def(np_texmath, "texmath");
@@ -497,8 +498,8 @@ void NameMapper::boot() {
     def(np_theglossary, "theglossary");
     def(np_theindex, "theindex");
     def(np_theme, "theme");
-    def(np_thick_lines, "pic-thicklines");
-    def(np_thin_lines, "pic-thinlines");
+    def("thicklines", np_thick_lines, "pic-thicklines");
+    def("thinlines", np_thin_lines, "pic-thinlines");
     def(np_toc, "tableofcontents");
     def(np_toc1, "listoftables");
     def(np_toc2, "listoffigures");
@@ -512,7 +513,6 @@ void NameMapper::boot() {
     def(np_url, "url");
     def(np_userid, "userid");
     def(np_val, "val");
-    def(np_vector, "pic-vector");
     def(np_vfil, "vfil");
     def(np_vfill, "vfill");
     def(np_vfilneg, "vfilneg");
@@ -613,150 +613,364 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
 void NameMapper::assign_name(const std::string &A, const std::string &B) {
     spdlog::warn("Setting {} to {}", A, B);
 
-    if (A == "arc") { set(np_arc, B); }
-    if (A == "allowbreak") { set(np_allowbreak, B); }
-    if (A == "anchor") { set(np_anchor, B); }
-    if (A == "anodeconnect") { set(np_anodeconnect, B); }
-    if (A == "abarnodeconnect") { set(np_abarnodeconnect, B); }
-    if (A == "anodecurve") { set(np_anodecurve, B); }
-    if (A == "alt_caption") { set(np_alt_caption, B); }
-    if (A == "alt_section") { set(np_alt_section, B); }
-    if (A == "alternatives") { set(np_alternatives, B); }
-    if (A == "box") { set(np_box, B); }
-    if (A == "bezier") { set(np_bezier, B); }
-    if (A == "bigcircle") { set(np_bigcircle, B); }
-    if (A == "backmatter") { set(np_backmatter, B); }
-    if (A == "biblio") { set(np_biblio, B); }
-    if (A == "bpers") { set(np_bpers, B); }
-    if (A == "barnodeconnect") { set(np_barnodeconnect, B); }
-    if (A == "bibitem") { set(np_bibitem, B); }
-    if (A == "bibkey") { set(np_bibkey, B); }
-    if (A == "cell") { set(np_cell, B); }
-    if (A == "caption") { set(np_captions, B); }
-    if (A == "circle") { set(np_circle, B); }
-    if (A == "closecurve") { set(np_closecurve, B); }
-    if (A == "curve") { set(np_curve, B); }
-    if (A == "catperso") { set(np_catperso, B); }
-    if (A == "composition_ra") { set(cst_composition, B); }
-    if (A == "cleaders") { set(np_cleaders, B); }
-    if (A == "caps") { set(np_s_caps, B); }
-    if (A == "cit") { set(np_cit, B); }
-    if (A == "citation") { set(np_citation, B); }
-    if (A == "citetype") { set(np_cite_type, B); }
-    if (A == "dashline") { set(np_dashline, B); }
-    if (A == "div0") { set(np_div0, B); }
-    if (A == "div1") { set(np_div1, B); }
-    if (A == "div2") { set(np_div2, B); }
-    if (A == "div3") { set(np_div3, B); }
-    if (A == "div4") { set(np_div4, B); }
-    if (A == "div5") { set(np_div5, B); }
-    if (A == "div6") { set(np_div6, B); }
-    if (A == "drawline") { set(np_drawline, B); }
-    if (A == "dottedline") { set(np_dottedline, B); }
-    if (A == "eqnpos") { set(np_eqnpos, B); }
-    if (A == "footnote") { set(np_footnote, B); }
-    if (A == "formula") { set(np_formula, B); }
-    if (A == "fbox") { set(np_fbox, B); }
-    if (A == "figure") { set(np_figure, B); }
-    if (A == "figure_env") { set(np_float_figure, B); }
-    if (A == "frontmatter") { set(np_frontmatter, B); }
-    if (A == "font_small") { set(np_font_small, B); }
-    if (A == "font_small1") { set(np_font_small1, B); }
-    if (A == "font_small2") { set(np_font_small2, B); }
-    if (A == "font_small3") { set(np_font_small3, B); }
-    if (A == "font_small4") { set(np_font_small4, B); }
-    if (A == "font_small5") { set(np_font_small5, B); }
-    if (A == "font_small6") { set(np_font_small6, B); }
-    if (A == "font_large") { set(np_font_large, B); }
-    if (A == "font_large1") { set(np_font_large1, B); }
-    if (A == "font_large2") { set(np_font_large2, B); }
-    if (A == "font_large3") { set(np_font_large3, B); }
-    if (A == "font_large4") { set(np_font_large4, B); }
-    if (A == "font_large5") { set(np_font_large5, B); }
-    if (A == "font_large6") { set(np_font_large6, B); }
-    if (A == "font_normalsize") { set(np_font_normalsize, B); }
-    if (A == "font_upright") { set(np_font_upright, B); }
-    if (A == "font_medium") { set(np_font_medium, B); }
-    if (A == "font_roman") { set(np_font_roman, B); }
-    if (A == "font_it") { set(np_font_it, B); }
-    if (A == "font_slanted") { set(np_font_slanted, B); }
-    if (A == "font_sc") { set(np_font_sc, B); }
-    if (A == "font_tt") { set(np_font_tt, B); }
-    if (A == "font_sansserif") { set(np_font_sansserif, B); }
-    if (A == "font_bold") { set(np_font_bold, B); }
-    if (A == "font_boldextended") { set(np_font_boldextended, B); }
-    if (A == "font_semibold") { set(np_font_semibold, B); }
-    if (A == "font_condensed") { set(np_font_condensed, B); }
-    if (A == "gloitem") { set(np_label_glo, B); }
-    if (A == "graphics") { set(np_graphics, B); }
-    if (A == "glo") { set(np_glo_name, B); }
-    if (A == "glossary") { set(np_glossary, B); }
-    if (A == "head") { set(np_head, B); }
-    if (A == "hl") { set(np_s_hl, B); }
-    if (A == "item") { set(np_item, B); }
-    if (A == "index") { set(np_index, B); }
-    if (A == "keywords") { set(np_keywords, B); }
-    if (A == "labelitem") { set(np_label_item, B); }
-    if (A == "lineC") { set(np_lineC, B); }
-    if (A == "line") { set(np_line, B); }
-    if (A == "listoffigures") { set(np_toc2, B); }
-    if (A == "listoftables") { set(np_toc1, B); }
-    if (A == "llap") { set(np_llap, B); }
-    if (A == "linethickness") { set(np_line_thickness, B); }
-    if (A == "list") { set(np_list, B); }
-    if (A == "leaders") { set(np_leaders, B); }
-    if (A == "leg") { set(np_leg, B); }
-    if (A == "mbox") { set(np_mbox, B); }
-    if (A == "math") { set(cst_math, B); }
-    if (A == "multiput") { set(np_multiput, B); }
-    if (A == "mainmatter") { set(np_mainmatter, B); }
-    if (A == "node") { set(np_node, B); }
-    if (A == "nodeconnect") { set(np_nodeconnect, B); }
-    if (A == "nodecurve") { set(np_nodecurve, B); }
-    if (A == "nodetriangle") { set(np_nodetriangle, B); }
-    if (A == "nodecircle") { set(np_nodecircle, B); }
-    if (A == "nodebox") { set(np_nodebox, B); }
-    if (A == "nodeoval") { set(np_nodeoval, B); }
-    if (A == "natcit") { set(np_natcit, B); }
-    if (A == "oval") { set(np_oval, B); }
-    if (A == "oldstyle") { set(np_s_old, B); }
-    if (A == "overline") { set(np_overline, B); }
-    if (A == "picture") { set(np_picture, B); }
-    if (A == "put") { set(np_put, B); }
-    if (A == "project") { set(np_projet, B); }
-    if (A == "pers") { set(np_pers, B); }
-    if (A == "prenote") { set(np_prenote, B); }
+    if (A == "arc") {
+        set(np_arc, B);
+        return;
+    }
+    if (A == "allowbreak") {
+        set(np_allowbreak, B);
+        return;
+    }
+    if (A == "anchor") {
+        set(np_anchor, B);
+        return;
+    }
+    if (A == "anodeconnect") {
+        set(np_anodeconnect, B);
+        return;
+    }
+    if (A == "abarnodeconnect") {
+        set(np_abarnodeconnect, B);
+        return;
+    }
+    if (A == "anodecurve") {
+        set(np_anodecurve, B);
+        return;
+    }
+    if (A == "alt_caption") {
+        set(np_alt_caption, B);
+        return;
+    }
+    if (A == "alt_section") {
+        set(np_alt_section, B);
+        return;
+    }
+    if (A == "alternatives") {
+        set(np_alternatives, B);
+        return;
+    }
+    if (A == "box") {
+        set(np_box, B);
+        return;
+    }
+    if (A == "bezier") {
+        set(np_bezier, B);
+        return;
+    }
+    if (A == "bigcircle") {
+        set(np_bigcircle, B);
+        return;
+    }
+    if (A == "backmatter") {
+        set(np_backmatter, B);
+        return;
+    }
+    if (A == "biblio") {
+        set(np_biblio, B);
+        return;
+    }
+    if (A == "bpers") {
+        set(np_bpers, B);
+        return;
+    }
+    if (A == "barnodeconnect") {
+        set(np_barnodeconnect, B);
+        return;
+    }
+    if (A == "bibitem") {
+        set(np_bibitem, B);
+        return;
+    }
+    if (A == "bibkey") {
+        set(np_bibkey, B);
+        return;
+    }
+    if (A == "cell") {
+        set(np_cell, B);
+        return;
+    }
+    if (A == "caption") {
+        set(np_captions, B);
+        return;
+    }
+    if (A == "circle") {
+        set(np_circle, B);
+        return;
+    }
+    if (A == "closecurve") {
+        set(np_closecurve, B);
+        return;
+    }
+    if (A == "curve") {
+        set(np_curve, B);
+        return;
+    }
+    if (A == "catperso") {
+        set(np_catperso, B);
+        return;
+    }
+    if (A == "composition_ra") {
+        set(cst_composition, B);
+        return;
+    }
+    if (A == "cleaders") {
+        set(np_cleaders, B);
+        return;
+    }
+    if (A == "caps") {
+        set(np_s_caps, B);
+        return;
+    }
+    if (A == "cit") {
+        set(np_cit, B);
+        return;
+    }
+    if (A == "citation") {
+        set(np_citation, B);
+        return;
+    }
+    if (A == "citetype") {
+        set(np_cite_type, B);
+        return;
+    }
+    if (A == "dashline") {
+        set(np_dashline, B);
+        return;
+    }
+    if (A == "div0") {
+        set(np_div0, B);
+        return;
+    }
+    if (A == "div1") {
+        set(np_div1, B);
+        return;
+    }
+    if (A == "div2") {
+        set(np_div2, B);
+        return;
+    }
+    if (A == "div3") {
+        set(np_div3, B);
+        return;
+    }
+    if (A == "div4") {
+        set(np_div4, B);
+        return;
+    }
+    if (A == "div5") {
+        set(np_div5, B);
+        return;
+    }
+    if (A == "div6") {
+        set(np_div6, B);
+        return;
+    }
+    if (A == "drawline") {
+        set(np_drawline, B);
+        return;
+    }
+    if (A == "dottedline") {
+        set(np_dottedline, B);
+        return;
+    }
+    if (A == "eqnpos") {
+        set(np_eqnpos, B);
+        return;
+    }
+    if (A == "footnote") {
+        set(np_footnote, B);
+        return;
+    }
+    if (A == "formula") {
+        set(np_formula, B);
+        return;
+    }
+    if (A == "fbox") {
+        set(np_fbox, B);
+        return;
+    }
+    if (A == "figure") {
+        set(np_figure, B);
+        return;
+    }
+    if (A == "figure_env") {
+        set(np_float_figure, B);
+        return;
+    }
+    if (A == "frontmatter") {
+        set(np_frontmatter, B);
+        return;
+    }
+    if (A == "font_small") {
+        set(np_font_small, B);
+        return;
+    }
+    if (A == "font_small1") {
+        set(np_font_small1, B);
+        return;
+    }
+    if (A == "font_small2") {
+        set(np_font_small2, B);
+        return;
+    }
+    if (A == "font_small3") {
+        set(np_font_small3, B);
+        return;
+    }
+    if (A == "font_small4") {
+        set(np_font_small4, B);
+        return;
+    }
+    if (A == "font_small5") {
+        set(np_font_small5, B);
+        return;
+    }
+    if (A == "font_small6") {
+        set(np_font_small6, B);
+        return;
+    }
+    if (A == "font_large") {
+        set(np_font_large, B);
+        return;
+    }
+    if (A == "font_large1") {
+        set(np_font_large1, B);
+        return;
+    }
+    if (A == "font_large2") {
+        set(np_font_large2, B);
+        return;
+    }
+    if (A == "font_large3") {
+        set(np_font_large3, B);
+        return;
+    }
+    if (A == "font_large4") {
+        set(np_font_large4, B);
+        return;
+    }
+    if (A == "font_large5") {
+        set(np_font_large5, B);
+        return;
+    }
+    if (A == "font_large6") {
+        set(np_font_large6, B);
+        return;
+    }
+    if (A == "font_normalsize") {
+        set(np_font_normalsize, B);
+        return;
+    }
+    if (A == "font_upright") {
+        set(np_font_upright, B);
+        return;
+    }
+    if (A == "font_medium") {
+        set(np_font_medium, B);
+        return;
+    }
+    if (A == "font_roman") {
+        set(np_font_roman, B);
+        return;
+    }
+    if (A == "font_it") {
+        set(np_font_it, B);
+        return;
+    }
+    if (A == "font_slanted") {
+        set(np_font_slanted, B);
+        return;
+    }
+    if (A == "font_sc") {
+        set(np_font_sc, B);
+        return;
+    }
+    if (A == "font_tt") {
+        set(np_font_tt, B);
+        return;
+    }
+    if (A == "font_sansserif") {
+        set(np_font_sansserif, B);
+        return;
+    }
+    if (A == "font_bold") {
+        set(np_font_bold, B);
+        return;
+    }
+    if (A == "font_boldextended") {
+        set(np_font_boldextended, B);
+        return;
+    }
+    if (A == "font_semibold") {
+        set(np_font_semibold, B);
+        return;
+    }
+    if (A == "font_condensed") {
+        set(np_font_condensed, B);
+        return;
+    }
+    if (A == "gloitem") {
+        set(np_label_glo, B);
+        return;
+    }
+    if (A == "graphics") {
+        set(np_graphics, B);
+        return;
+    }
+    if (A == "glo") {
+        set(np_glo_name, B);
+        return;
+    }
+    if (A == "glossary") {
+        set(np_glossary, B);
+        return;
+    }
+    if (A == "head") {
+        set(np_head, B);
+        return;
+    }
+    if (A == "hl") {
+        set(np_s_hl, B);
+        return;
+    }
+    if (A == "item") {
+        set(np_item, B);
+        return;
+    }
+    if (A == "index") {
+        set(np_index, B);
+        return;
+    }
+    if (A == "keywords") {
+        set(np_keywords, B);
+        return;
+    }
+    if (A == "labelitem") {
+        set(np_label_item, B);
+        return;
+    }
+    if (A == "lineC") {
+        set(np_lineC, B);
+        return;
+    }
+    if (A == "line") {
+        set(np_line, B);
+        return;
+    }
+    if (A == "listoffigures") {
+        set(np_toc2, B);
+        return;
+    }
+
     if (A == "pack_font_att") {
         if (B == "true") the_main->pack_font_elt = true;
         if (B == "false") the_main->pack_font_elt = false;
+        return;
     }
-    if (A == "row") { set(np_row, B); }
-    if (A == "raisebox") { set(np_raisebox, B); }
-    if (A == "rlap") { set(np_rlap, B); }
-    if (A == "rotatebox") { set(np_rotatebox, B); }
-    if (A == "ref") { set(np_ref, B); }
-    if ((A == "rclist") && ra_ok) { set(np_rclist, B); }
-    if ((A == "rcval") && ra_ok) { set(np_rcval, B); }
-    if ((A == "rasection") && ra_ok) { set(np_rasection, B); }
-    if (A == "subfigure") { set(np_subfigure, B); }
-    if (A == "scaleput") { set(np_scaleput, B); }
-    if (A == "scalebox") { set(np_sbox, B); }
-    if (A == "scaption") { set(np_caption, B); }
-    if (A == "sup") { set(np_s_sup, B); }
-    if (A == "sub") { set(np_s_sub, B); }
-    if (A == "so") { set(np_s_so, B); }
-    if (A == "st") { set(np_s_st, B); }
-    if (A == "stylesheet") { set(np_stylesheet, B); }
-    if (A == "stylesheettype") { set(np_stylesheet_type, B); }
-    if (A == "term") { set(np_term, B); }
-    if (A == "texmath") { set(np_texmath, B); }
-    if (A == "table") { set(np_table, B); }
-    if (A == "table_env") { set(np_float_table, B); }
-    if (A == "Table") { set(np_Table, B); }
-    if (A == "tagcurve") { set(np_tagcurve, B); }
-    if (A == "thicklines") { set(np_thick_lines, B); }
-    if (A == "thinlines") { set(np_thin_lines, B); }
-    if (A == "theorem_head") { set(np_theorem_head, B); }
+    if ((A == "rasection") && ra_ok) {
+        set(np_rasection, B);
+        return;
+    }
     if (A == "theorem") {
         if (B[0] == 0) { // reverst to old behavior
             set(np_theorem, B);
@@ -768,27 +982,20 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
             set(np_theorem, B);
             the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
         }
+        return;
     }
-    if (A == "theindex") { set(np_theindex, B); }
-    if (A == "theglossary") { set(np_theglossary, B); }
-    if (A == "tableofcontents") { set(np_toc, B); }
-    if (A == "texte") { set(np_texte, B); }
-    if (A == "ul") { set(np_s_ul, B); }
-    if (A == "underline") { set(np_underline, B); }
     if (A == "use_font_elt") {
         if (B == "true") the_main->use_font_elt = true;
         if (B == "false") the_main->use_font_elt = false;
+        return;
     }
-    if (A == "vector") { set(np_vector, B); }
-    if (A == "warning") { set(np_warning, B); }
-    if (A == "xref") { set(np_xref, B); }
-    if (A == "xtheorem") { set(np_theorem, B); }
-    if (A == "xleaders") { set(np_xleaders, B); }
+    if (A == "xtheorem") {
+        set(np_theorem, B);
+        return;
+    }
 
-    // if (names.contains(A)) {
-    //     spdlog::info("Setting {} to {} (generic method)", A, B);
-    //     set(A, B);
-    // }
+    spdlog::info("Setting {} to {} (generic method)", A, B);
+    set(A, B);
 }
 
 void NameMapper::assign_att(const std::string &A, const std::string &B) {
