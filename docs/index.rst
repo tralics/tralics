@@ -9,10 +9,6 @@ Tralics: a LaTeX to XML translator
 
 |APICS| |MARELLE|
 
-.. math::
-
-  \int_0^\infty e^{-x^2/2} \mathrm{d}x
-
 Introduction
 ------------
 
