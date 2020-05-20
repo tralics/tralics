@@ -162,7 +162,7 @@ void NameMapper::boot() {
     def(cst_hbox, "hbox");
     def(cst_hi, "hi");
     def(cst_math, "math");
-    def(cst_mathml, "http://www.w3.org/1998/Math/MathML");
+    def("mathmlns", cst_mathml, "http://www.w3.org/1998/Math/MathML");
     def(cst_mathvariant, "mathvariant");
     def(cst_mfenced, "mfenced");
     def(cst_mfrac, "mfrac");
@@ -482,8 +482,8 @@ void NameMapper::boot() {
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def(np_spaceafter, "spaceafter");
-    def(np_spacebefore, "spacebefore");
+    def("row_spaceafter", np_spaceafter, "spaceafter");
+    def("space_before", np_spacebefore, "spacebefore");
     def(np_specs, "specs");
     def(np_starred, "starred");
     def(np_style, "style");
@@ -508,7 +508,7 @@ void NameMapper::boot() {
     def(np_true, "true");
     def(np_type, "type");
     def(np_underline, "underline");
-    def(np_unit_length, "unit-length");
+    def("unit_length", np_unit_length, "unit-length");
     def(np_unknown, "unknown");
     def(np_url, "url");
     def(np_userid, "userid");
@@ -611,7 +611,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
 }
 
 void NameMapper::assign_name(const std::string &A, const std::string &B) {
-    spdlog::trace("Setting XML symbol `{}' to \"{}\" (assign_name)", A, B);
+    spdlog::trace("Setting XML element name `{}' to \"{}\" (assign_name)", A, B);
 
     if (A == "pack_font_att") {
         if (B == "true") the_main->pack_font_elt = true;
@@ -653,97 +653,194 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
 }
 
 void NameMapper::assign_att(const std::string &A, const std::string &B) {
-    if (A == "angle") { set(np_angle, B); }
-    if (A == "affiliation") { set(np_affiliation, B); }
-    if (A == "box_pos") { set(np_box_pos, B); }
-    if (A == "box_scale") { set(np_s_scale, B); }
-    if (A == "box_width") { set(np_box_width, B); }
-    if (A == "boxed") { set(np_boxed, B); }
-    if (A == "bibkey") { set(np_bibkey, B); }
-    if (A == "border_bottom_width") { set(np_border_bottomw, B); }
-    if (A == "border_top_width") { set(np_border_topw, B); }
-    if (A == "border_left_width") { set(np_border_leftw, B); }
-    if (A == "border_right_width") { set(np_border_rightw, B); }
-    if (A == "centering") { set(np_center_etc1, B); }
-    if (A == "clip") { set(np_clip, B); }
-    if (A == "cols") { set(np_cols, B); }
-    if (A == "cell_left") { set(np_c_left, B); }
-    if (A == "cell_right") { set(np_c_right, B); }
-    if (A == "cell_center") { set(np_c_center, B); }
-    if (A == "cell_leftborder") { set(np_leftborder, B); }
-    if (A == "cell_rightborder") { set(np_rightborder, B); }
-    if (A == "cell_topborder") { set(np_topborder, B); }
-    if (A == "cell_bottomborder") { set(np_bottomborder, B); }
-    if (A == "curve_nbpts") { set(np_curve_nbpts, B); }
-    if (A == "display") { set(np_display, B); }
-    if (A == "dx") { set(np_dx, B); }
-    if (A == "dy") { set(np_dy, B); }
-    if (A == "depthA") { set(np_depthA, B); }
-    if (A == "depthB") { set(np_depthB, B); }
-    if (A == "depth") { set(np_depth, B); }
-    if (A == "encap") { set(np_encap, B); }
-    if (A == "framed") { set(np_framed, B); }
-    if (A == "full") { set(np_full, B); }
-    if (A == "file") { set(np_file, B); }
-    if (A == "file_extension") { set(np_fileextension, B); }
-    if (A == "fbox_rend") { set(np_b_rend, B); }
-    if (A == "flush_left") { set(np_center_etc4, B); }
-    if (A == "flush_right") { set(np_center_etc5, B); }
-    if (A == "foot_position") { set(np_foot, B); }
-    if (A == "full_first") { set(np_full_first, B); }
-    if (A == "gloss_type") { set(np_gloss, B); }
-    if (A == "height") { set(np_height, B); }
-    if (A == "halign") { set(np_halign, B); }
-    if (A == "hdr") { set(np_hdr, B); }
-    if (A == "inner_pos") { set(np_posi, B); }
-    if (A == "inline") { set(np_inline, B); }
-    if (A == "junior") { set(np_junior, B); }
-    if (A == "language") { set(np_language, B); }
-    if (A == "level") { set(np_level, B); }
-    if (A == "minipage_width") { set(np_minipage_width, B); }
-    if (A == "marginpar") { set(np_marginpar, B); }
-    if (A == "mathmlns") { set(cst_mathml, B); }
-    if (A == "marginpar") { set(np_marginpar, B); }
-    if (A == "mode") { set(cst_mode, B); }
-    if (A == "noindent") { set(np_noindent, B); }
-    if (A == "nonumber") { set(np_nonumber, B); }
-    if (A == "nom") { set(np_nom, B); }
-    if (A == "name") { set(np_name, B); }
-    if (A == "nameA") { set(np_nameA, B); }
-    if (A == "nameB") { set(np_nameB, B); }
-    if (A == "place") { set(np_place, B); }
-    if (A == "prenom") { set(np_prenom, B); }
-    if (A == "pre") { set(np_pre, B); }
-    if (A == "particule") { set(np_particle, B); }
-    if (A == "page") { set(np_page, B); }
-    if (A == "profession") { set(np_profession, B); }
-    if (A == "posA") { set(np_posA, B); }
-    if (A == "posB") { set(np_posB, B); }
-    if (A == "pos") { set(np_pos, B); }
-    if (A == "quote") { set(np_center_etc2, B); }
-    if (A == "quotation") { set(np_center_etc3, B); }
-    if (A == "rotate_angle") { set(np_r_angle, B); }
-    if (A == "rend") { set(np_rend, B); }
-    if (A == "row_spaceafter") { set(np_spaceafter, B); }
-    if (A == "repeat") { set(np_repeat, B); }
-    if (A == "scale") { set(np_scale, B); }
-    if (A == "space_before") { set(np_spacebefore, B); }
-    if (A == "size") { set(np_size, B); }
-    if (A == "starred") { set(np_starred, B); }
-    if (A == "table_width") { set(np_tab_width, B); }
-    if (A == "type") { set(np_type, B); }
-    if (A == "textype") { set(np_textype, B); }
-    if (A == "unit_length") { set(np_unit_length, B); }
-    if (A == "user_list") { set(np_user_list, B); }
-    if (A == "vpos") { set(np_vpos, B); }
-    if (A == "verse") { set(np_center_etc6, B); }
-    if (A == "width") { set(np_width, B); }
-    if (A == "xscale") { set(np_xscale, B); }
-    if (A == "xscaley") { set(np_xscaley, B); }
-    if (A == "xpos") { set(np_xpos, B); }
-    if (A == "xdir") { set(np_xdir, B); }
-    if (A == "yscale") { set(np_yscale, B); }
-    if (A == "yscalex") { set(np_yscalex, B); }
-    if (A == "ydir") { set(np_ydir, B); }
-    if (A == "ypos") { set(np_ypos, B); }
+    spdlog::trace("Setting XML attribute name `{}' to \"{}\" (assign_att)", A, B);
+    if (A == "angle") {
+        set(np_angle, B);
+        return;
+    }
+    if (A == "affiliation") {
+        set(np_affiliation, B);
+        return;
+    }
+    if (A == "box_pos") {
+        set(np_box_pos, B);
+        return;
+    }
+    if (A == "box_scale") {
+        set(np_s_scale, B);
+        return;
+    }
+    if (A == "box_width") {
+        set(np_box_width, B);
+        return;
+    }
+    if (A == "boxed") {
+        set(np_boxed, B);
+        return;
+    }
+    if (A == "bibkey") {
+        set(np_bibkey, B);
+        return;
+    }
+    if (A == "border_bottom_width") {
+        set(np_border_bottomw, B);
+        return;
+    }
+    if (A == "border_top_width") {
+        set(np_border_topw, B);
+        return;
+    }
+    if (A == "border_left_width") {
+        set(np_border_leftw, B);
+        return;
+    }
+    if (A == "border_right_width") {
+        set(np_border_rightw, B);
+        return;
+    }
+    if (A == "centering") {
+        set(np_center_etc1, B);
+        return;
+    }
+    if (A == "clip") {
+        set(np_clip, B);
+        return;
+    }
+    if (A == "cols") {
+        set(np_cols, B);
+        return;
+    }
+    if (A == "cell_left") {
+        set(np_c_left, B);
+        return;
+    }
+    if (A == "cell_right") {
+        set(np_c_right, B);
+        return;
+    }
+    if (A == "cell_center") {
+        set(np_c_center, B);
+        return;
+    }
+    if (A == "cell_leftborder") {
+        set(np_leftborder, B);
+        return;
+    }
+    if (A == "cell_rightborder") {
+        set(np_rightborder, B);
+        return;
+    }
+    if (A == "cell_topborder") {
+        set(np_topborder, B);
+        return;
+    }
+    if (A == "cell_bottomborder") {
+        set(np_bottomborder, B);
+        return;
+    }
+    if (A == "curve_nbpts") {
+        set(np_curve_nbpts, B);
+        return;
+    }
+    if (A == "display") {
+        set(np_display, B);
+        return;
+    }
+    if (A == "dx") {
+        set(np_dx, B);
+        return;
+    }
+    if (A == "dy") {
+        set(np_dy, B);
+        return;
+    }
+    if (A == "depthA") {
+        set(np_depthA, B);
+        return;
+    }
+    if (A == "depthB") {
+        set(np_depthB, B);
+        return;
+    }
+    if (A == "depth") {
+        set(np_depth, B);
+        return;
+    }
+    if (A == "encap") {
+        set(np_encap, B);
+        return;
+    }
+    if (A == "framed") {
+        set(np_framed, B);
+        return;
+    }
+    if (A == "full") {
+        set(np_full, B);
+        return;
+    }
+    if (A == "file") {
+        set(np_file, B);
+        return;
+    }
+    if (A == "file_extension") {
+        set(np_fileextension, B);
+        return;
+    }
+    if (A == "fbox_rend") {
+        set(np_b_rend, B);
+        return;
+    }
+    if (A == "flush_left") {
+        set(np_center_etc4, B);
+        return;
+    }
+    if (A == "flush_right") {
+        set(np_center_etc5, B);
+        return;
+    }
+    if (A == "foot_position") {
+        set(np_foot, B);
+        return;
+    }
+    if (A == "full_first") {
+        set(np_full_first, B);
+        return;
+    }
+    if (A == "gloss_type") {
+        set(np_gloss, B);
+        return;
+    }
+    if (A == "height") {
+        set(np_height, B);
+        return;
+    }
+    if (A == "halign") {
+        set(np_halign, B);
+        return;
+    }
+    if (A == "hdr") {
+        set(np_hdr, B);
+        return;
+    }
+    if (A == "inner_pos") {
+        set(np_posi, B);
+        return;
+    }
+    if (A == "inline") {
+        set(np_inline, B);
+        return;
+    }
+    if (A == "junior") {
+        set(np_junior, B);
+        return;
+    }
+
+    // Special cases
+    if (A == "language") {
+        set(np_language, B);
+        return;
+    }
+
+    spdlog::trace("Setting XML attribute name `{}' to \"{}\" (assign_att) (generic method)", A, B);
+    set(A, B);
 }
