@@ -306,31 +306,31 @@ void NameMapper::boot() {
     def(np_figure, "figure");
     def(np_file, "file");
     def(np_float, "float");
-    def(np_font_boldextended, "boldextended");
-    def(np_font_condensed, "condensed");
-    def(np_font_it, "it");
-    def(np_font_large, "large");
-    def(np_font_large1, "large1");
-    def(np_font_large2, "large2");
-    def(np_font_large3, "large3");
-    def(np_font_large4, "large4");
-    def(np_font_large5, "large5");
-    def(np_font_large6, "large6");
-    def(np_font_medium, "medium");
-    def(np_font_normalsize, "normalsize");
-    def(np_font_roman, "roman");
-    def(np_font_sansserif, "sansserif");
-    def(np_font_semibold, "semibold");
-    def(np_font_slanted, "slanted");
-    def(np_font_small, "small");
-    def(np_font_small1, "small1");
-    def(np_font_small2, "small2");
-    def(np_font_small3, "small3");
-    def(np_font_small4, "small4");
-    def(np_font_small5, "small5");
-    def(np_font_small6, "small6");
-    def(np_font_tt, "tt");
-    def(np_font_upright, "upright");
+    def("font_boldextended", np_font_boldextended, "boldextended");
+    def("font_condensed", np_font_condensed, "condensed");
+    def("font_it", np_font_it, "it");
+    def("font_large", np_font_large, "large");
+    def("font_large1", np_font_large1, "large1");
+    def("font_large2", np_font_large2, "large2");
+    def("font_large3", np_font_large3, "large3");
+    def("font_large4", np_font_large4, "large4");
+    def("font_large5", np_font_large5, "large5");
+    def("font_large6", np_font_large6, "large6");
+    def("font_medium", np_font_medium, "medium");
+    def("font_normalsize", np_font_normalsize, "normalsize");
+    def("font_roman", np_font_roman, "roman");
+    def("font_sansserif", np_font_sansserif, "sansserif");
+    def("font_semibold", np_font_semibold, "semibold");
+    def("font_slanted", np_font_slanted, "slanted");
+    def("font_small", np_font_small, "small");
+    def("font_small1", np_font_small1, "small1");
+    def("font_small2", np_font_small2, "small2");
+    def("font_small3", np_font_small3, "small3");
+    def("font_small4", np_font_small4, "small4");
+    def("font_small5", np_font_small5, "small5");
+    def("font_small6", np_font_small6, "small6");
+    def("font_tt", np_font_tt, "tt");
+    def("font_upright", np_font_upright, "upright");
     def(np_form, "form");
     def(np_formula, "formula");
     def(np_frame, "pic-frame");
@@ -341,7 +341,7 @@ void NameMapper::boot() {
     def(np_full_first, "prenomcomplet");
     def(np_full, "full");
     def(np_german, "german");
-    def(np_glo_name, "Glossary");
+    def("glo", np_glo_name, "Glossary");
     def(np_gloss, "gloss");
     def(np_glossary, "glossary");
     def(np_graphics, "graphics");
@@ -376,8 +376,8 @@ void NameMapper::boot() {
     def(np_letters_tr, "tr");
     def(np_level, "level");
     def("linethickness", np_line_thickness, "pic-linethickness");
-    def(np_line, "pic-line");
-    def(np_lineC, "line");
+    def("line", np_line, "pic-line");
+    def("lineC", np_lineC, "line");
     def("np_linethickness", np_linethickness, "linethickness");
     def(np_list, "list");
     def(np_llap, "llap");
@@ -611,7 +611,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
 }
 
 void NameMapper::assign_name(const std::string &A, const std::string &B) {
-    spdlog::warn("Setting {} to {}", A, B);
+    spdlog::trace("Setting {} to {}", A, B);
 
     if (A == "arc") {
         set(np_arc, B);
@@ -801,173 +801,13 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
         set(np_frontmatter, B);
         return;
     }
-    if (A == "font_small") {
-        set(np_font_small, B);
-        return;
-    }
-    if (A == "font_small1") {
-        set(np_font_small1, B);
-        return;
-    }
-    if (A == "font_small2") {
-        set(np_font_small2, B);
-        return;
-    }
-    if (A == "font_small3") {
-        set(np_font_small3, B);
-        return;
-    }
-    if (A == "font_small4") {
-        set(np_font_small4, B);
-        return;
-    }
-    if (A == "font_small5") {
-        set(np_font_small5, B);
-        return;
-    }
-    if (A == "font_small6") {
-        set(np_font_small6, B);
-        return;
-    }
-    if (A == "font_large") {
-        set(np_font_large, B);
-        return;
-    }
-    if (A == "font_large1") {
-        set(np_font_large1, B);
-        return;
-    }
-    if (A == "font_large2") {
-        set(np_font_large2, B);
-        return;
-    }
-    if (A == "font_large3") {
-        set(np_font_large3, B);
-        return;
-    }
-    if (A == "font_large4") {
-        set(np_font_large4, B);
-        return;
-    }
-    if (A == "font_large5") {
-        set(np_font_large5, B);
-        return;
-    }
-    if (A == "font_large6") {
-        set(np_font_large6, B);
-        return;
-    }
-    if (A == "font_normalsize") {
-        set(np_font_normalsize, B);
-        return;
-    }
-    if (A == "font_upright") {
-        set(np_font_upright, B);
-        return;
-    }
-    if (A == "font_medium") {
-        set(np_font_medium, B);
-        return;
-    }
-    if (A == "font_roman") {
-        set(np_font_roman, B);
-        return;
-    }
-    if (A == "font_it") {
-        set(np_font_it, B);
-        return;
-    }
-    if (A == "font_slanted") {
-        set(np_font_slanted, B);
-        return;
-    }
-    if (A == "font_sc") {
-        set(np_font_sc, B);
-        return;
-    }
-    if (A == "font_tt") {
-        set(np_font_tt, B);
-        return;
-    }
-    if (A == "font_sansserif") {
-        set(np_font_sansserif, B);
-        return;
-    }
-    if (A == "font_bold") {
-        set(np_font_bold, B);
-        return;
-    }
-    if (A == "font_boldextended") {
-        set(np_font_boldextended, B);
-        return;
-    }
-    if (A == "font_semibold") {
-        set(np_font_semibold, B);
-        return;
-    }
-    if (A == "font_condensed") {
-        set(np_font_condensed, B);
-        return;
-    }
-    if (A == "gloitem") {
-        set(np_label_glo, B);
-        return;
-    }
-    if (A == "graphics") {
-        set(np_graphics, B);
-        return;
-    }
-    if (A == "glo") {
-        set(np_glo_name, B);
-        return;
-    }
-    if (A == "glossary") {
-        set(np_glossary, B);
-        return;
-    }
-    if (A == "head") {
-        set(np_head, B);
-        return;
-    }
-    if (A == "hl") {
-        set(np_s_hl, B);
-        return;
-    }
-    if (A == "item") {
-        set(np_item, B);
-        return;
-    }
-    if (A == "index") {
-        set(np_index, B);
-        return;
-    }
-    if (A == "keywords") {
-        set(np_keywords, B);
-        return;
-    }
-    if (A == "labelitem") {
-        set(np_label_item, B);
-        return;
-    }
-    if (A == "lineC") {
-        set(np_lineC, B);
-        return;
-    }
-    if (A == "line") {
-        set(np_line, B);
-        return;
-    }
-    if (A == "listoffigures") {
-        set(np_toc2, B);
-        return;
-    }
 
     if (A == "pack_font_att") {
         if (B == "true") the_main->pack_font_elt = true;
         if (B == "false") the_main->pack_font_elt = false;
         return;
     }
-    if ((A == "rasection") && ra_ok) {
+    if (A == "rasection" && ra_ok) {
         set(np_rasection, B);
         return;
     }
@@ -994,7 +834,7 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
         return;
     }
 
-    spdlog::info("Setting {} to {} (generic method)", A, B);
+    spdlog::trace("Setting XML symbol `{}' to \"{}\" (generic method)", A, B);
     set(A, B);
 }
 
