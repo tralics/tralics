@@ -30,13 +30,22 @@ void NameMapper::boot() {
     def("bezier", np_bezier, "pic-bezier");
     def("bibkey", np_bibkey, "bib-key");
     def("bigcircle", np_bigcircle, "pic-bigcircle");
+    def("border_bottom_width", np_border_bottomw, "border-bottom-width");
+    def("border_left_width", np_border_leftw, "border-left-width");
+    def("border_right_width", np_border_rightw, "border-right-width");
+    def("border_top_width", np_border_topw, "border-top-width");
+    def("box_pos", np_box_pos, "position");
     def("box_scale", np_s_scale, "scale");
     def("box_width", np_box_width, "width");
     def("box", np_box, "pic-framebox");
     def("caption", np_captions, "head");
+    def("cell_bottomborder", np_bottomborder, "bottom-border");
     def("cell_center", np_c_center, "center");
     def("cell_left", np_c_left, "left");
+    def("cell_leftborder", np_leftborder, "left-border");
     def("cell_right", np_c_right, "right");
+    def("cell_rightborder", np_rightborder, "right-border");
+    def("cell_topborder", np_topborder, "top-border");
     def("centering", np_center_etc1, "center");
     def("circle", np_circle, "pic-circle");
     def("citetype", np_cite_type, "type");
@@ -59,10 +68,13 @@ void NameMapper::boot() {
     def("cstb_unknown", cstb_unknown, "unknown");
     def("cstb_url", cstb_url, "url");
     def("cstf_upright", cstf_upright, "");
+    def("curve_nbpts", np_curve_nbpts, "nbsymb");
     def("curve", np_curve, "pic-curve");
     def("fbox_rend", np_b_rend, "rend");
     def("figure_env", np_float_figure, "figure");
     def("file_extension", np_fileextension, "extension");
+    def("flush_left", np_center_etc4, "flushed-left");
+    def("flush_right", np_center_etc5, "flushed-right");
     def("font_bold", np_font_bold, "bold");
     def("font_boldextended", np_font_boldextended, "boldextended");
     def("font_condensed", np_font_condensed, "condensed");
@@ -92,12 +104,16 @@ void NameMapper::boot() {
     def("font_upright", np_font_upright, "upright");
     def("foot_position", np_foot, "foot");
     def("footnote", np_footnote, "note");
+    def("full_first", np_full_first, "prenomcomplet");
     def("glo", np_glo_name, "Glossary");
     def("gloitem", np_label_glo, "label");
+    def("gloss_type", np_gloss, "gloss");
+    def("inner_pos", np_posi, "inner-pos");
     def("labelitem", np_label_item, "label");
     def("line", np_line, "pic-line");
     def("lineC", np_lineC, "line");
     def("linethickness", np_line_thickness, "pic-linethickness");
+    def("mathmlns", cst_mathml, "http://www.w3.org/1998/Math/MathML");
     def("minipage_width", np_minipage_width, "width");
     def("multiput", np_multiput, "pic-multiput");
     def("natcit", np_natcit, "Cit");
@@ -119,8 +135,10 @@ void NameMapper::boot() {
     def("rcval", np_rcval, "+UR");
     def("rotate_angle", np_r_angle, "angle");
     def("rotatebox", np_rotatebox, "pic-rotatebox");
+    def("row_spaceafter", np_spaceafter, "spaceafter");
     def("scaleput", np_scaleput, "pic-scaleput");
     def("scaption", np_caption, "caption");
+    def("space_before", np_spacebefore, "spacebefore");
     def("stylesheet", np_stylesheet, "");
     def("stylesheettype", np_stylesheet_type, "text/css");
     def("table_env", np_float_table, "table");
@@ -129,6 +147,7 @@ void NameMapper::boot() {
     def("theorem_head", np_theorem_head, "alt_head");
     def("thicklines", np_thick_lines, "pic-thicklines");
     def("thinlines", np_thin_lines, "pic-thinlines");
+    def("unit_length", np_unit_length, "unit-length");
     def("user_list", np_user_list, "description");
     def("vector", np_vector, "pic-vector");
     def("warning", np_warning, "");
@@ -162,7 +181,6 @@ void NameMapper::boot() {
     def(cst_hbox, "hbox");
     def(cst_hi, "hi");
     def(cst_math, "math");
-    def("mathmlns", cst_mathml, "http://www.w3.org/1998/Math/MathML");
     def(cst_mathvariant, "mathvariant");
     def(cst_mfenced, "mfenced");
     def(cst_mfrac, "mfrac");
@@ -292,20 +310,12 @@ void NameMapper::boot() {
     def(np_bediteurs, "bediteur");
     def(np_bibitem, "bibitem");
     def(np_biblio, "biblio");
-    def(np_border_bottomw, "border-bottom-width");
-    def(np_border_leftw, "border-left-width");
-    def(np_border_rightw, "border-right-width");
-    def(np_border_topw, "border-top-width");
-    def(np_bottomborder, "bottom-border");
-    def(np_box_pos, "position");
     def(np_boxed, "boxed");
     def(np_bpers, "bpers");
     def(np_c1, "c1");
     def(np_c2, "c2");
     def(np_catperso, "catperso");
     def(np_cell, "cell");
-    def(np_center_etc4, "flushed-left");
-    def(np_center_etc5, "flushed-right");
     def(np_center_etc6, "verse");
     def(np_centered, "centered");
     def(np_chapters, "chapters");
@@ -319,7 +329,6 @@ void NameMapper::boot() {
     def(np_cols, "cols");
     def(np_columnalign, "columnalign");
     def(np_columnspan, "columnspan");
-    def(np_curve_nbpts, "nbsymb");
     def(np_dashbox, "pic-dashbox");
     def(np_dashdim, "dashdim");
     def(np_dashline, "dashline");
@@ -356,10 +365,8 @@ void NameMapper::boot() {
     def(np_french, "french");
     def(np_from, "from");
     def(np_frontmatter, "frontmatter");
-    def(np_full_first, "prenomcomplet");
     def(np_full, "full");
     def(np_german, "german");
-    def(np_gloss, "gloss");
     def(np_glossary, "glossary");
     def(np_graphics, "graphics");
     def(np_halfem, "4.pt");
@@ -385,7 +392,6 @@ void NameMapper::boot() {
     def(np_keywords, "keywords");
     def(np_leaders, "leaders");
     def(np_left, "left");
-    def(np_leftborder, "left-border");
     def(np_leg, "leg");
     def(np_letters_bl, "bl");
     def(np_letters_br, "br");
@@ -446,7 +452,6 @@ void NameMapper::boot() {
     def(np_pos, "pos");
     def(np_posA, "posA");
     def(np_posB, "posB");
-    def(np_posi, "inner-pos");
     def(np_pre, "pre");
     def(np_prefix, "prefix");
     def(np_prenom, "prenom");
@@ -460,7 +465,6 @@ void NameMapper::boot() {
     def(np_repeat, "repeat");
     def(np_research_centre, "research-centre");
     def(np_right, "right");
-    def(np_rightborder, "right-border");
     def(np_rlap, "rlap");
     def(np_row, "row");
     def(np_rule_bsa, "bottom_rule_space_above");
@@ -482,8 +486,6 @@ void NameMapper::boot() {
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def("row_spaceafter", np_spaceafter, "spaceafter");
-    def("space_before", np_spacebefore, "spacebefore");
     def(np_specs, "specs");
     def(np_starred, "starred");
     def(np_style, "style");
@@ -503,12 +505,10 @@ void NameMapper::boot() {
     def(np_toc, "tableofcontents");
     def(np_toc1, "listoftables");
     def(np_toc2, "listoffigures");
-    def(np_topborder, "top-border");
     def(np_totalwidth, "totalwidth");
     def(np_true, "true");
     def(np_type, "type");
     def(np_underline, "underline");
-    def("unit_length", np_unit_length, "unit-length");
     def(np_unknown, "unknown");
     def(np_url, "url");
     def(np_userid, "userid");
@@ -654,186 +654,6 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
 
 void NameMapper::assign_att(const std::string &A, const std::string &B) {
     spdlog::trace("Setting XML attribute name `{}' to \"{}\" (assign_att)", A, B);
-    if (A == "angle") {
-        set(np_angle, B);
-        return;
-    }
-    if (A == "affiliation") {
-        set(np_affiliation, B);
-        return;
-    }
-    if (A == "box_pos") {
-        set(np_box_pos, B);
-        return;
-    }
-    if (A == "box_scale") {
-        set(np_s_scale, B);
-        return;
-    }
-    if (A == "box_width") {
-        set(np_box_width, B);
-        return;
-    }
-    if (A == "boxed") {
-        set(np_boxed, B);
-        return;
-    }
-    if (A == "bibkey") {
-        set(np_bibkey, B);
-        return;
-    }
-    if (A == "border_bottom_width") {
-        set(np_border_bottomw, B);
-        return;
-    }
-    if (A == "border_top_width") {
-        set(np_border_topw, B);
-        return;
-    }
-    if (A == "border_left_width") {
-        set(np_border_leftw, B);
-        return;
-    }
-    if (A == "border_right_width") {
-        set(np_border_rightw, B);
-        return;
-    }
-    if (A == "centering") {
-        set(np_center_etc1, B);
-        return;
-    }
-    if (A == "clip") {
-        set(np_clip, B);
-        return;
-    }
-    if (A == "cols") {
-        set(np_cols, B);
-        return;
-    }
-    if (A == "cell_left") {
-        set(np_c_left, B);
-        return;
-    }
-    if (A == "cell_right") {
-        set(np_c_right, B);
-        return;
-    }
-    if (A == "cell_center") {
-        set(np_c_center, B);
-        return;
-    }
-    if (A == "cell_leftborder") {
-        set(np_leftborder, B);
-        return;
-    }
-    if (A == "cell_rightborder") {
-        set(np_rightborder, B);
-        return;
-    }
-    if (A == "cell_topborder") {
-        set(np_topborder, B);
-        return;
-    }
-    if (A == "cell_bottomborder") {
-        set(np_bottomborder, B);
-        return;
-    }
-    if (A == "curve_nbpts") {
-        set(np_curve_nbpts, B);
-        return;
-    }
-    if (A == "display") {
-        set(np_display, B);
-        return;
-    }
-    if (A == "dx") {
-        set(np_dx, B);
-        return;
-    }
-    if (A == "dy") {
-        set(np_dy, B);
-        return;
-    }
-    if (A == "depthA") {
-        set(np_depthA, B);
-        return;
-    }
-    if (A == "depthB") {
-        set(np_depthB, B);
-        return;
-    }
-    if (A == "depth") {
-        set(np_depth, B);
-        return;
-    }
-    if (A == "encap") {
-        set(np_encap, B);
-        return;
-    }
-    if (A == "framed") {
-        set(np_framed, B);
-        return;
-    }
-    if (A == "full") {
-        set(np_full, B);
-        return;
-    }
-    if (A == "file") {
-        set(np_file, B);
-        return;
-    }
-    if (A == "file_extension") {
-        set(np_fileextension, B);
-        return;
-    }
-    if (A == "fbox_rend") {
-        set(np_b_rend, B);
-        return;
-    }
-    if (A == "flush_left") {
-        set(np_center_etc4, B);
-        return;
-    }
-    if (A == "flush_right") {
-        set(np_center_etc5, B);
-        return;
-    }
-    if (A == "foot_position") {
-        set(np_foot, B);
-        return;
-    }
-    if (A == "full_first") {
-        set(np_full_first, B);
-        return;
-    }
-    if (A == "gloss_type") {
-        set(np_gloss, B);
-        return;
-    }
-    if (A == "height") {
-        set(np_height, B);
-        return;
-    }
-    if (A == "halign") {
-        set(np_halign, B);
-        return;
-    }
-    if (A == "hdr") {
-        set(np_hdr, B);
-        return;
-    }
-    if (A == "inner_pos") {
-        set(np_posi, B);
-        return;
-    }
-    if (A == "inline") {
-        set(np_inline, B);
-        return;
-    }
-    if (A == "junior") {
-        set(np_junior, B);
-        return;
-    }
 
     // Special cases
     if (A == "language") {
@@ -841,6 +661,5 @@ void NameMapper::assign_att(const std::string &A, const std::string &B) {
         return;
     }
 
-    spdlog::trace("Setting XML attribute name `{}' to \"{}\" (assign_att) (generic method)", A, B);
     set(A, B);
 }
