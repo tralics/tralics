@@ -957,7 +957,7 @@ void Parser::T_change_element_name() {
     std::string name  = special_next_arg();
     std::string value = sE_arg_nopar();
     if (star)
-        the_names.assign_att(name, value);
+        the_names.set(name, value);
     else
         the_names.assign_name(name, value);
 }

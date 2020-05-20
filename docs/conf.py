@@ -7,7 +7,8 @@ release = '2.16.0pre'
 
 # -- General configuration ---------------------------------------------------
 
-extensions = ['sphinx_rtd_theme', 'breathe', 'sphinxcontrib.bibtex']
+extensions = ['sphinx_rtd_theme', 'breathe',
+              'sphinxcontrib.bibtex', 'sphinxcontrib.katex']
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 

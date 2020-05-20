@@ -33,7 +33,6 @@ public:
     void boot();
 
     void assign(const std::string &sa, const std::string &sb);
-    void assign_att(const std::string &A, const std::string &B);
     void assign_name(const std::string &A, const std::string &B);
 };
 

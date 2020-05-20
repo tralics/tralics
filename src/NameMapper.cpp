@@ -121,7 +121,7 @@ void NameMapper::boot() {
     def("np_center_etc", np_center_etc, "center");
     def("np_center", np_center, "center");
     def("np_cst_width", np_cst_width, "width");
-    def("np_language", np_language, "");
+    def("language", np_language, "");
     def("np_linethickness", np_linethickness, "linethickness");
     def("np_separator", np_separator, "");
     def("np_theorem", np_theorem, "");
@@ -243,7 +243,7 @@ void NameMapper::boot() {
     def(cstb_isrn, "isrn");
     def(cstb_issn, "issn");
     def(cstb_journal, "journal");
-    def(cstb_language, "language");
+    def("cstb_language", cstb_language, "language");
     def(cstb_langue, "langue");
     def(cstb_manual, "manual");
     def(cstb_mastersthesis, "masterthesis");
@@ -537,11 +537,12 @@ void NameMapper::boot() {
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
+    spdlog::trace("Assigning to `{}` the value \"{}\"", sa, sb);
     auto n = sa.size();
 
     if (sa.starts_with("elt_")) return the_names.assign_name(sa.substr(4), sb);
     if (sa.starts_with("xml_")) return the_names.assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), sb);
-    if (sa.starts_with("att_")) return the_names.assign_att(sa.substr(4), sb);
+    if (sa.starts_with("att_")) return set(sa.substr(4), sb);
 
     if (sa == "lang_fr") { set(np_french, sb); }
     if (sa == "lang_en") { set(np_english, sb); }
@@ -646,18 +647,6 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
 
     if (A == "xtheorem") {
         set(np_theorem, B);
-        return;
-    }
-
-    set(A, B);
-}
-
-void NameMapper::assign_att(const std::string &A, const std::string &B) {
-    spdlog::trace("Setting XML attribute name `{}' to \"{}\" (assign_att)", A, B);
-
-    // Special cases
-    if (A == "language") {
-        set(np_language, B);
         return;
     }
 
