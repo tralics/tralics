@@ -25,6 +25,14 @@ html_static_path = ['_static']
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {'prev_next_buttons_location': None}
 
+katex_options = r'''{
+    delimiters: [
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true },
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false }
+    ] }'''
+
 
 def setup(app):
     app.add_css_file('tweak.css')
