@@ -21,11 +21,9 @@ class NameMapper {
 
 public:
     auto operator[](name_positions i) const -> Istring;
-    auto operator[](size_t i) const -> Istring;
     auto operator[](const std::string &name) const -> Istring;
 
     void set(name_positions i, const std::string &s);
-    void set(size_t i, const std::string &s);
     void set(const std::string &name, const std::string &value);
 
     void def(const std::string &name, name_positions pos, const std::optional<std::string> &value = std::nullopt);

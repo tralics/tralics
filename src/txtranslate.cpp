@@ -584,7 +584,7 @@ void Parser::T_paras(subtypes x) {
     }
     if (y < 0) y = 0;
     if (y > 6) y = 6;
-    Istring Y = the_names[cst_div0 + to_unsigned(y)];
+    Istring Y = the_names[name_positions(cst_div0 + to_unsigned(y))];
     leave_h_mode();
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();

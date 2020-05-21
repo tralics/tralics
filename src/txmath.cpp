@@ -2120,7 +2120,7 @@ auto Math::trivial_math(long action) -> Xml * {
     if (len != 1) return nullptr;
     if ((action & 2) == 0) return nullptr;
     if (front().is_digit()) {
-        Istring sval = the_names[cst_dig0 + front().val_as_digit()];
+        Istring sval = the_names[name_positions(cst_dig0 + front().val_as_digit())];
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
@@ -2708,7 +2708,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
 auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
                                 int style, size_t open, size_t close) -> Xml * {
     Istring Pos;
-    if (pos != 0) Pos = the_names[pos];
+    if (pos != 0) Pos = the_names[name_positions(pos)];
     auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
     if (!sz.null()) R->add_att(the_names[np_linethickness], sz);
     if (isfrac) {

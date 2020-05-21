@@ -63,7 +63,7 @@ void LinePtr::normalise_final_cr() {
         if (special) normal = std::string(s, 0, n - 2);
         if (prev != end()) {
             prev->append(normal);
-            s = "\n"; // \todo could this create an empty line and cause a `\par`? should drop?
+            s = "\n";
         }
         if (special) {
             if (prev == end()) {

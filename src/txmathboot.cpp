@@ -1438,7 +1438,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
 
 void MathDataP::boot_chars() {
     for (unsigned i = 0; i <= 9; i++) {
-        Istring K = the_names[cst_dig0 + i];
+        Istring K = the_names[name_positions(cst_dig0 + i)];
         init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K)));
     }
 

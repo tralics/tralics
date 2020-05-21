@@ -7,11 +7,7 @@ auto NameMapper::operator[](const std::string &name) const -> Istring { return d
 
 auto NameMapper::operator[](name_positions i) const -> Istring { return (*this)[id_to_name[i]]; }
 
-auto NameMapper::operator[](size_t i) const -> Istring { return (*this)[id_to_name[i]]; }
-
 void NameMapper::set(name_positions i, const std::string &s) { dict[id_to_name[i]] = Istring(s); }
-
-void NameMapper::set(size_t i, const std::string &s) { dict[id_to_name[i]] = Istring(s); }
 
 void NameMapper::set(const std::string &name, const std::string &value) { dict[name] = Istring(value); };
 
