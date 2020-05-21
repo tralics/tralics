@@ -281,7 +281,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     if (!main_fct) { // read and set the column span
         Istring            x = P->nT_arg_nopar();
         const std::string &s = x.name;
-        if (s != "1") id.add_attribute(the_names[np_cols], x);
+        if (s != "1") id.add_attribute(the_names["cols"], x);
     }
     preamble = P->read_arg(); // read the preamble
     token_ns::expand_star(preamble);
@@ -477,7 +477,7 @@ void Parser::start_a_row(long a) {
         if (V != nullptr) prev_row = V->id;
     }
     bool initial_hline = false;
-    if (a > 0) prev_row.add_attribute(the_names[np_spaceafter], Istring(to_unsigned(a)));
+    if (a > 0) prev_row.add_attribute(the_names["row_spaceafter"], Istring(to_unsigned(a)));
     for (;;) {
         remove_initial_space_and_back_input(); // get first non-space xtoken
         symcodes S = cur_cmd_chr.cmd;
@@ -558,7 +558,7 @@ void Parser::finish_a_cell(Token T, const Istring &a) {
 
 // This is \begin{tabular}. Should be in an environment (not necessarily)
 void Parser::T_start_tabular(subtypes c) {
-    Istring x = the_names[c == zero_code ? np_tabular : np_tabular_star];
+    Istring x = the_names[c == zero_code ? "tabular" : "tabular*"];
     if (the_stack.is_float())
         leave_v_mode();
     else if (the_stack.is_frame(np_fbox)) {
@@ -572,13 +572,13 @@ void Parser::T_start_tabular(subtypes c) {
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) id.add_attribute(the_names[np_tab_width], Istring(tab_width));
+        if (!tab_width.null()) id.add_attribute(the_names["table_width"], Istring(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
     {
         auto pos = get_ctb_opt(); // Lamport does not mention c, who cares
-        if (pos != cst_invalid) id.add_attribute(the_names[np_vpos], the_names[pos]);
+        if (pos != cst_invalid) id.add_attribute(the_names["vpos"], the_names[pos]);
     }
     new_array_object.run(id, true);
     the_stack.set_array_mode(); // Is the mode ok ?
@@ -729,7 +729,7 @@ auto Xml::try_cline_again(bool action) -> bool {
             return false;
         }
         if (at(k)->get_cell_span() != 1) return false;
-        if (!at(k)->id.has_attribute(the_names[np_topborder]).null()) return false;
+        if (!at(k)->id.has_attribute(the_names["cell_topborder"]).null()) return false;
         if (seen_cell) return false;
         if (!at(k)->is_whitespace()) return false;
         seen_cell = true;
@@ -742,7 +742,7 @@ void Xid::add_span(long n) const {
     if (n == 1) return;
     errbuf.clear();
     errbuf << std::to_string(n);
-    add_attribute(the_names[np_cols], Istring(errbuf));
+    add_attribute(the_names["cols"], Istring(errbuf));
 }
 
 // If the previous fails, we add a row of empty cells,
@@ -785,7 +785,7 @@ void Parser::T_cline() {
                 return;
             }
         }
-        if (!R->is_xmlc() && R->has_name(the_names[np_row])) {
+        if (!R->is_xmlc() && R->has_name(the_names["row"])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
                 R->name = Istring();
@@ -802,7 +802,7 @@ void Parser::T_cline() {
 void Stack::T_hline() {
     Xid cid, rid, tid;
     find_cid_rid_tid(cid, rid, tid);
-    if (rid.has_attribute(the_names[np_topborder]).empty()) rid.add_top_rule();
+    if (rid.has_attribute(the_names["cell_topborder"]).empty()) rid.add_top_rule();
 }
 
 // Case when the command is found outside the tabular loop.

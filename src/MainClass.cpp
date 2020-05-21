@@ -1077,7 +1077,7 @@ void MainClass::run(int argc, char **argv) {
     boot_bibtex(handling_ra);
     trans0();
     if (handling_ra) {
-        if (the_names[np_language].empty()) the_names.set(np_language, "language");
+        if (the_names["language"].empty()) the_names.set("language", "language");
         the_parser.add_language_att();
     }
     the_parser.init(input_content);
@@ -1102,8 +1102,8 @@ void MainClass::out_xml() {
     auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // \todo make this always true
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
-    if (auto sl = the_names[np_stylesheet]; !sl.empty())
-        fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.value, the_names[np_stylesheet_type].value);
+    if (auto sl = the_names["stylesheet"]; !sl.empty())
+        fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.value, the_names["stylesheettype"].value);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
     fp << the_parser.the_stack.document_element() << "\n";
