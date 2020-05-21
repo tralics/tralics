@@ -430,7 +430,7 @@ void Parser::T_titlepage_finish(size_t v) {
     res->id.add_special_att(tpa.get_T3());
     kmax = Titlepage.get_len2();
     for (size_t k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
-    the_stack.pop_if_frame(the_names[cst_p]);
+    the_stack.pop_if_frame(the_names["cst_p"]);
     the_stack.add_nl();
     the_stack.add_last(res);
     the_stack.add_nl();

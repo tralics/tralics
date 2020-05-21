@@ -254,21 +254,21 @@ auto Parser::nT_optarg_nopar() -> Istring {
 // Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
 // returns cst_invalid in case of failure, a position otherwise
 
-auto Parser::get_ctb_opt() -> name_positions {
+auto Parser::get_ctb_opt() -> std::string {
     TokenList L;
     read_optarg_nopar(L);
-    if (L.empty()) return cst_invalid;
+    if (L.empty()) return "cst_invalid";
     Token t = token_ns::get_unique(L);
-    if (t.is_null()) return cst_invalid;
-    if (t.cmd_val() != letter_catcode) return cst_invalid;
+    if (t.is_null()) return "cst_invalid";
+    if (t.cmd_val() != letter_catcode) return "cst_invalid";
     auto c = t.val_as_letter();
-    if (c == 'c') return np_letter_c;
-    if (c == 's') return np_letter_s;
-    if (c == 't') return np_letter_t;
-    if (c == 'b') return np_letter_b;
-    if (c == 'l') return np_letter_l;
-    if (c == 'r') return np_letter_r;
-    return cst_invalid;
+    if (c == 'c') return "c";
+    if (c == 's') return "s";
+    if (c == 't') return "t";
+    if (c == 'b') return "b";
+    if (c == 'l') return "l";
+    if (c == 'r') return "r";
+    return "cst_invalid";
 }
 
 // Nodes: tblr, or 2 letters
@@ -441,7 +441,7 @@ void Parser::T_arg1(name_positions y) {
 void Parser::T_item(int c) {
     leave_h_mode();
     unfinished_par = nullptr;
-    the_stack.pop_if_frame(the_names[np_item]);
+    the_stack.pop_if_frame(the_names["item"]);
     skip_initial_space_and_back_input();
     Istring att = T_item_label(c);
     the_stack.add_nl();

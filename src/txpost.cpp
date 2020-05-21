@@ -530,7 +530,7 @@ auto Xml::single_son() const -> Xml * { return size() == 1 ? at(0).get() : nullp
 
 // Removes empty <p> elements
 void Xml::remove_empty_par() {
-    XmlAction X(the_names[cst_p], rc_delete_empty);
+    XmlAction X(the_names["cst_p"], rc_delete_empty);
     recurse(X);
 }
 
@@ -665,7 +665,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         Xml *nbsp = new Xml(Istring(" &#xA0;"));
         from->subst_env0(the_names[np_hfill], nbsp);
         from->subst_env0(the_names[np_hfil], nbsp);
-        from->move(the_names[cst_p], to);
+        from->move(the_names["cst_p"], to);
         XmlAction X5(the_names[np_figure], rc_return_first);
         from->recurse0(X5);
         if (X5.get_xml_val() != nullptr) // dommage

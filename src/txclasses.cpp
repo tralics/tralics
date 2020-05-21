@@ -736,7 +736,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = np_german;
     Xid doc_att(1);
-    if ((b != 0U) && !the_names[np_language].empty()) doc_att.get_att().push_back(np_language, b);
+    if ((b != 0U) && !the_names["language"].empty()) doc_att.get_att().push_back(np_language, b);
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {
@@ -890,11 +890,11 @@ void Parser::T_class_error(subtypes c) {
         B.clear();
         B << prea;
         if (!simple) B << " " << name;
-        name_positions posta = np_Info;
+        auto posta = "Info";
         if (what == mt_error)
-            posta = np_Error;
+            posta = "Error";
         else if (what == mt_warning)
-            posta = np_Warning;
+            posta = "Warning";
         B << " " << the_names[posta] << ": ";
     }
     TokenList L = scan_general_text();
@@ -933,7 +933,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = np_Error;
     else if (what == mt_warning)
         w = np_Warning;
-    if (!the_names[np_warning].empty()) {
+    if (!the_names["warning"].empty()) {
         flush_buffer();
         Xml *res = new Xml(np_warning, new Xml(Istring(B)));
         res->id.add_attribute(np_letter_c, w);

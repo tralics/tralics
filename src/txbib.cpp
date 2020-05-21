@@ -55,7 +55,7 @@ namespace bib_ns {
     auto last_chars(const std::string &s, int k) -> std::string;
     auto skip_dp(const std::string &str) -> std::string;
     void bib_explain();
-    auto type_to_string(entry_type x) -> name_positions;
+    auto type_to_string(entry_type x) -> std::string;
     auto is_noopsort(const std::string &s, size_t i) -> bool;
 } // namespace bib_ns
 using namespace bib_ns;
@@ -692,7 +692,7 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
     return fp_unknown;
 }
 
-// Finds the type of an entry (or comment, string, preamble).
+// Finds the type of an entry (or comment, string, preamble). \todo without the_names?
 auto Bibtex::find_type(const std::string &s) -> entry_type {
     if (s.empty()) return type_comment; // in case of error.
     auto S = Istring(s);
@@ -729,24 +729,24 @@ auto Bibtex::find_type(const std::string &s) -> entry_type {
 }
 
 // Dual function. Returns the name of the thing.
-auto bib_ns::type_to_string(entry_type x) -> name_positions {
+auto bib_ns::type_to_string(entry_type x) -> std::string {
     switch (x) {
-    case type_article: return cstb_article;
-    case type_book: return cstb_book;
-    case type_booklet: return cstb_booklet;
-    case type_conference: return cstb_conference;
-    case type_coursenotes: return cstb_coursenotes;
-    case type_inbook: return cstb_inbook;
-    case type_incollection: return cstb_incollection;
-    case type_inproceedings: return cstb_inproceedings;
-    case type_manual: return cstb_manual;
-    case type_masterthesis: return cstb_masterthesis;
-    case type_misc: return cstb_misc;
-    case type_phdthesis: return cstb_phdthesis;
-    case type_proceedings: return cstb_proceedings;
-    case type_techreport: return cstb_techreport;
-    case type_unpublished: return cstb_unpublished;
-    default: return cstb_unknown;
+    case type_article: return "article";
+    case type_book: return "book";
+    case type_booklet: return "booklet";
+    case type_conference: return "conference";
+    case type_coursenotes: return "coursenotes";
+    case type_inbook: return "inbook";
+    case type_incollection: return "incollection";
+    case type_inproceedings: return "inproceedings";
+    case type_manual: return "manual";
+    case type_masterthesis: return "mastersthesis";
+    case type_misc: return "misc";
+    case type_phdthesis: return "phdthesis";
+    case type_proceedings: return "proceedings";
+    case type_techreport: return "techreport";
+    case type_unpublished: return "unpublished";
+    default: return "cstb_unknown";
     }
 }
 

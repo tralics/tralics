@@ -32,7 +32,7 @@ namespace tcommands {
 // the document element.
 void Parser::init_all(const std::string &doc_elt) {
     the_page_xml                     = new Xml(Istring("thepage"), nullptr);
-    glo_xml                          = new Xml(the_names[np_glo_name]);
+    glo_xml                          = new Xml(the_names["glo"]);
     eqtb_int_table[endlinechar_code] = {'\r', 1};
     eqtb_int_table[newlinechar_code] = {'\n', 1};
     TL.clear();
@@ -594,10 +594,10 @@ void Parser::T_ding() {
 
 // \begin{minipage}
 void Parser::T_minipage() {
-    Token   T   = cur_tok;
-    Istring pos = the_names[get_ctb_opt()];
+    Token T   = cur_tok;
+    auto  pos = the_names[get_ctb_opt()];
     ignore_optarg();
-    Istring ipos = the_names[get_ctb_opt()];
+    auto ipos = the_names[get_ctb_opt()];
     ignore_optarg(); // really needed ?
     scan_glue(it_dimen, T, false);
     Istring w = Istring(cur_val.get_dim_val());
@@ -605,9 +605,9 @@ void Parser::T_minipage() {
     the_stack.push1(np_minipage);
     the_stack.set_v_mode();
     state = state_S;
-    the_stack.add_att_to_last(the_names[np_minipage_width], w);
-    the_stack.add_att_to_last(the_names[np_pos], pos);
-    the_stack.add_att_to_last(the_names[np_posi], ipos);
+    the_stack.add_att_to_last(the_names["minipage_width"], w);
+    the_stack.add_att_to_last(the_names["pos"], pos);
+    the_stack.add_att_to_last(the_names["inner_pos"], ipos);
     word_define(incentering_code, 0, false);
 }
 
@@ -622,7 +622,7 @@ void Parser::T_xmlenv(subtypes c) {
     else if (c == 2) {
         if (the_stack.in_v_mode()) leave_v_mode();
     }
-    the_stack.push(the_names[cst_elt], new Xml(Istring(a), nullptr));
+    the_stack.push(the_names["ELT"], new Xml(Istring(a), nullptr));
     if (c == 2) the_stack.set_v_mode();
     remove_initial_space_and_back_input();
 }
@@ -634,14 +634,14 @@ void Parser::T_xmlenv_end(subtypes c) {
         leave_h_mode();
     else if (c == 2) {
     }
-    the_stack.pop_if_frame(the_names[cst_p]);
+    the_stack.pop_if_frame(the_names["cst_p"]);
     the_stack.pop(cst_elt);
 }
 
 // \end{itemize},  \end{description}, \end{enumerate},
 void Parser::T_listenv_end() {
     leave_h_mode();
-    the_stack.pop_if_frame(the_names[np_item]);
+    the_stack.pop_if_frame(the_names["item"]);
     the_stack.pop(np_list);
     the_stack.add_nl();
 }
@@ -657,7 +657,7 @@ void Parser::T_atdocument(subtypes c) {
 /// Translates `\begin{glossaire}`
 void Parser::T_glossaire() {
     leave_h_mode();
-    the_stack.push1(the_names[np_gloss], np_list);
+    the_stack.push1(the_names["gloss_type"], np_list);
     the_stack.add_att_to_last(np_type, np_gloss);
     the_stack.add_last(new Xml(np_head, glo_xml));
     the_stack.set_no_mode();
@@ -699,7 +699,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
 
 // Translates \enf{figure} or \end{table}
 void Parser::T_figure_table_end(bool is_fig) {
-    Istring name = the_names[is_fig ? np_float_figure : np_float_table];
+    Istring name = the_names[is_fig ? "figure_env" : "table_env"];
     leave_h_mode();
     Xml *aux = the_stack.top_stack();
     if (!aux->has_name(name))
@@ -1313,8 +1313,8 @@ void Parser::translate03() {
     case minipage_cmd: T_minipage(); return;
     case end_minipage_cmd:
         flush_buffer();
-        the_stack.pop_if_frame(the_names[cst_p]);
-        the_stack.pop_if_frame(the_names[np_item]);
+        the_stack.pop_if_frame(the_names["cst_p"]);
+        the_stack.pop_if_frame(the_names["item"]);
         the_stack.pop(np_minipage);
         return;
     case end_ignore_content_cmd:

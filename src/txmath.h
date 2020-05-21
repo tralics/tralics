@@ -408,7 +408,7 @@ public:
 
 namespace math_ns {
     void add_attribute_spec(const Istring &a, const Istring &b);
-    auto cv_special_string(int c) -> name_positions;
+    auto cv_special_string(int c) -> std::string;
     auto get_builtin(size_t p) -> Xml *;
     auto get_builtin_alt(size_t p) -> Xml *;
     auto get_delimiter(CmdChr X) -> del_pos;

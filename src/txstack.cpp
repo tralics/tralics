@@ -215,7 +215,7 @@ auto Stack::first_frame() const -> Istring {
 // Too bad that the frame AND the element have to be called p.
 auto Stack::get_cur_par() const -> Xml * {
     const StackSlot &X     = first_non_empty();
-    Istring          pname = the_names[cst_p];
+    Istring          pname = the_names["cst_p"];
     if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname)) return X.obj;
     return nullptr;
 }
@@ -256,8 +256,8 @@ auto Stack::is_float() -> bool {
     auto k = Table.size();
     for (size_t i = 0; i < k; i++) {
         if (Table[i].frame.spec_empty()) continue;
-        if (Table[i].frame == the_names[np_float_figure]) return true;
-        if (Table[i].frame == the_names[np_float_table]) return true;
+        if (Table[i].frame == the_names["figure_env"]) return true;
+        if (Table[i].frame == the_names["table_env"]) return true;
     }
     return false;
 }
@@ -396,7 +396,7 @@ void Stack::pop(const Istring &a) {
 auto Stack::push_par(long k) -> Xid {
     Xml *res = new Xml(cst_p, nullptr);
     Xid  id  = res->id;
-    push(the_names[cst_p], res);
+    push(the_names["cst_p"], res);
     cur_mode = mode_h; // we are in horizontal mode now
     check_font();
     if (k > 0) id.add_attribute(np_rend, name_positions(np_center_etc + k));

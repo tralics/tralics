@@ -425,7 +425,7 @@ private:
     void        french_punctuation(CmdChr X);
     auto        get_a_new_line() -> bool;
     auto        get_attval() -> std::string;
-    auto        get_ctb_opt() -> name_positions;
+    auto        get_ctb_opt() -> std::string;
     auto        get_trees_opt() -> name_positions;
     auto        get_c_val(Token X) -> Istring;
     auto        get_counter(Token T) -> long;

@@ -367,12 +367,12 @@ void MathElt::print() const {
 // General fence around val.
 auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
     auto res = gsl::not_null{new Xml(cst_mfenced, nullptr)};
-    res->add_att(the_names[np_close], xml_lr_ptable[close]);
-    res->add_att(the_names[np_open], xml_lr_ptable[open]);
+    res->add_att(the_names["close"], xml_lr_ptable[close]);
+    res->add_att(the_names["open"], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
-    if (the_names[np_separator] == the_names[cst_mrow]) {
+    if (the_names["np_separator"] == the_names["mrow"]) {
         if (!single_elt) val = gsl::not_null{new Xml(cst_mrow, val)};
-    } else if (the_names[np_separator].empty() && single_elt) {
+    } else if (the_names["np_separator"].empty() && single_elt) {
     } else
         res->add_att(cst_separators, np_separator);
     res->add_tmp(val);
@@ -443,7 +443,7 @@ auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_nul
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
 auto Stack::xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
     auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
-    if (!b1.null()) tmp->add_att(b1, the_names[np_true]);
+    if (!b1.null()) tmp->add_att(b1, the_names["true"]);
     tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
     tmp->add_tmp(gsl::not_null{second_arg});
@@ -731,7 +731,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     Xid         id = cmi.get_mid();
     std::string S  = u.get_name();
     auto        s  = Istring(S);
-    if (S.empty()) s = the_names[is_inline ? np_inline : np_display];
+    if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
     id.add_attribute(np_type, cmi.get_pos_att());
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
@@ -840,7 +840,7 @@ void Parser::T_math(subtypes type) {
 
     res1->id = cmi.get_fid();
     res1->add_att(np_type, cmi.get_pos_att());
-    if (!textype.empty()) res1->add_att(the_names[np_textype], Istring(textype));
+    if (!textype.empty()) res1->add_att(the_names["textype"], Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->interactive_math) {
         if (only_input_data)
@@ -1998,9 +1998,9 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
     size_t open = 0, close = 0;
     bool   nf = special_fence(sname, open, close);
     if (nf) {
-        res = new Xml(the_names[cst_mfenced], res);
-        res->add_att(the_names[np_close], math_data.get_fence(close));
-        res->add_att(the_names[np_open], math_data.get_fence(open));
+        res = new Xml(the_names["mfenced"], res);
+        res->add_att(the_names["close"], math_data.get_fence(close));
+        res->add_att(the_names["open"], math_data.get_fence(open));
     }
     return res;
 }
@@ -2120,7 +2120,7 @@ auto Math::trivial_math(long action) -> Xml * {
     if (len != 1) return nullptr;
     if ((action & 2) == 0) return nullptr;
     if (front().is_digit()) {
-        Istring sval = the_names[name_positions(cst_dig0 + front().val_as_digit())];
+        Istring sval = the_names[std::to_string(cst_dig0 + front().val_as_digit())];
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
@@ -2256,16 +2256,15 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
 }
 
 // Return the name of the element associated to the command c.
-auto math_ns::cv_special_string(int c) -> name_positions {
-    if (c >= first_maccent_code && c <= last_maccent_code) return c >= first_under_accent_code ? cst_munder : cst_mover;
-    if (c == overline_code || c == overbrace_code || c == stackrel_code || c == overset_code || c == accentset_code) return cst_mover;
-    if (c == underline_code || c == underbrace_code || c == underset_code || c == undertilde_code || c == underaccent_code)
-        return cst_munder;
-    if (c == root_code) return cst_mroot;
+auto math_ns::cv_special_string(int c) -> std::string {
+    if (c >= first_maccent_code && c <= last_maccent_code) return c >= first_under_accent_code ? "munder" : "mover";
+    if (c == overline_code || c == overbrace_code || c == stackrel_code || c == overset_code || c == accentset_code) return "mover";
+    if (c == underline_code || c == underbrace_code || c == underset_code || c == undertilde_code || c == underaccent_code) return "munder";
+    if (c == root_code) return "mroot";
     if (c == frac_code || c == dfrac_code || c == tfrac_code || c == genfrac_code || c == cfrac_code || c == binom_code ||
         c == dbinom_code || c == tbinom_code)
-        return cst_mfrac;
-    return np_unknown;
+        return "mfrac";
+    return "unknown";
 }
 
 // Return 1 if the list is left aligned, 2 if right aligned, 0 if centered
@@ -2488,7 +2487,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (c == dbinom_code || c == tbinom_code || c == binom_code) {
         open  = del_open_par;
         close = del_close_par;
-        sz    = the_names[np_zerodim];
+        sz    = the_names["0pt"];
     }
     if (c == frac_code || c == binom_code || c == genfrac_code || c == dfrac_code || c == dbinom_code) {
         cms = next_frac_style(cms);
@@ -2500,11 +2499,11 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     Xml *A1 = tmp.convert_math(cms);
     if (c == sqrt_code) return MathElt(new Xml(cst_msqrt, A1), mt_flag_big);
     Xml *          A2{nullptr};
-    name_positions ns          = cv_special_string(c);
+    auto           ns          = cv_special_string(c);
     Istring        s           = the_names[ns];
-    bool           is_fraction = ns == cst_mfrac;
+    bool           is_fraction = ns == "mfrac";
     bool           is_mathop   = false;
-    size_t         pos         = 0;
+    name_positions pos         = cst_empty;
     if (c == xleftarrow_code || c == xrightarrow_code) {
         tmp = L.get_arg2();
         tmp.check_align();
@@ -2512,13 +2511,13 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         Xml *A3 = get_builtin(c);
         if (L.get_arg1().empty()) {
             A1 = A3;
-            s  = the_names[cst_mover];
+            s  = the_names["mover"];
         } else if (L.get_arg2().empty()) {
             A2 = A1;
             A1 = A3;
-            s  = the_names[cst_munder];
+            s  = the_names["munder"];
         } else {
-            Xml *tmp2 = new Xml(the_names[cst_munderover], nullptr);
+            Xml *tmp2 = new Xml(the_names["munderover"], nullptr);
             tmp2->add_tmp(gsl::not_null{A3});
             tmp2->push_back_unless_nullptr(xmlspace);
             tmp2->add_tmp(gsl::not_null{A1});
@@ -2531,7 +2530,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         pos = c >= first_under_accent_code ? cst_accentunder : cst_accent;
     } else if (c == overline_code) {
         A2  = math_data.get_mc_table(1);
-        pos = 0;
+        pos = cst_empty;
         //    pos = cst_accent;
     } else if (c == overbrace_code) {
         A2        = math_data.get_mc_table(2);
@@ -2539,7 +2538,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         is_mathop = true;
     } else if (c == underline_code) {
         A2  = math_data.get_mc_table(3);
-        pos = 0;
+        pos = cst_empty;
     } else if (c == undertilde_code) {
         A2  = math_data.get_mc_table(26);
         pos = cst_accentunder;
@@ -2696,12 +2695,12 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
         if (empty()) the_parser.parse_error(the_parser.err_tok, "Invalid width", "bad delims");
         sz = chars_to_mb3();
     }
-    if (c == atop_code || c == atopwithdelims_code) sz = the_names[np_zerodim];
+    if (c == atop_code || c == atopwithdelims_code) sz = the_names["0pt"];
     numalign = A.check_align();
     denalign = check_align();
     Xml *a   = A.M_cv(cms, 1).value;
     Xml *b   = M_cv(cms, 1).value;
-    Xml *res = finish_cv_special(true, the_names[cst_mfrac], 0, a, b, sz, numalign, denalign, -1, open, close);
+    Xml *res = finish_cv_special(true, the_names["mfrac"], cst_empty, a, b, sz, numalign, denalign, -1, open, close);
     return {res, mt_flag_big};
 }
 
@@ -2710,7 +2709,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml 
     Istring Pos;
     if (pos != 0) Pos = the_names[name_positions(pos)];
     auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
-    if (!sz.null()) R->add_att(the_names[np_linethickness], sz);
+    if (!sz.null()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(cst_numalign, np_left);
         if (numalign == 2) R->add_att(cst_numalign, np_right);
@@ -3015,7 +3014,7 @@ void Cv3Helper::find_kernel() {
     }
     symcodes C = get_cmd();
     if (C == hat_catcode || C == underscore_catcode) {
-        p     = new Xml(the_names[cst_mrow], nullptr); // Insert <mrow/> before
+        p     = new Xml(the_names["mrow"], nullptr); // Insert <mrow/> before
         state = 1;
         return;
     }
@@ -3166,7 +3165,7 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
     Xml *tmp = new Xml(bl, nullptr);
     // case a_b_c. If we do nothing, the mathml interpreter will barf
-    if ((p != nullptr) && !p->is_xmlc() && (p->has_name(cst_msup) || p->has_name(cst_msub) || p->has_name(cst_msubsup)))
+    if ((p != nullptr) && !p->is_xmlc() && (p->has_name_of("msup") || p->has_name_of("msub") || p->has_name_of("msubsup")))
         p = new Xml(cst_mrow, p);
     if (ptype == mt_flag_small_l || ptype == mt_flag_small_r || ptype == mt_flag_small_m) {
         res.push_back(p, ploc, ptype);
@@ -3210,9 +3209,9 @@ auto Math::M_cv3(math_style cms) -> Math {
 // returns the element with a new id, if it's a <mo> and has a np_movablelimits
 // attributes; return null otherwise.
 auto Xml::spec_copy() const -> Xml * {
-    if (name != the_names[cst_mo]) return nullptr;
+    if (name != the_names["mo"]) return nullptr;
     AttList &X = id.get_att();
-    auto     i = X.has_value(the_names[np_movablelimits]);
+    auto     i = X.has_value(the_names["movablelimits"]);
     if (i < 0) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
