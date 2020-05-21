@@ -414,7 +414,7 @@ auto Stack::fonts1(name_positions x) -> Xml * {
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(name_positions x) {
     Xml *res = fonts1(x);
-    res->id.get_att().push_back(the_names[cst_flaghi], Istring(1));
+    res->id.get_att().push_back(the_names["'hi_flag"], Istring(1));
     push(Istring(2), res);
 }
 
@@ -453,8 +453,8 @@ void Stack::check_font() {
             auto     a   = Istring(aux);
             Xml *    res = new Xml(cst_hi, nullptr);
             AttList &W   = res->id.get_att();
-            W.push_back(the_names[np_rend], a);
-            W.push_back(the_names[cst_flaghi], Istring(1));
+            W.push_back(the_names["rend"], a);
+            W.push_back(the_names["'hi_flag"], Istring(1));
             push(Istring(2), res);
         }
     } else {
@@ -472,7 +472,7 @@ void Stack::check_font() {
         Xml *    res = new Xml(cst_hi, nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(np_color, c);
-        W.push_back(the_names[cst_flaghi], Istring(1));
+        W.push_back(the_names["'hi_flag"], Istring(1));
         push(Istring(2), res);
     }
     the_parser.cur_font.is_on_stack();
@@ -645,7 +645,7 @@ inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_t
 
 void Stack::create_new_anchor(Xid xid, const Istring &id, const Istring &idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));
-    AL.push_back(the_names[np_id], id);
+    AL.push_back(the_names["id"], id);
     AL.push_back(the_names[np_idtext], idtext);
 }
 

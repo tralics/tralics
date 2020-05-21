@@ -290,7 +290,7 @@ void Xml::recurse(XmlAction &X) {
                 continue;
             case rc_composition: // a module in the comp section
             {
-                Istring an = T->id.has_attribute(the_names[np_id]);
+                Istring an = T->id.has_attribute(the_names["id"]);
                 if (!an.null()) post_ns::remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
@@ -847,7 +847,7 @@ void Xml::convert_to_string(Buffer &b) {
     }
     err_buf.clear();
     if (id.is_font_change()) {
-        Istring w = id.has_attribute(the_names[np_rend]);
+        Istring w = id.has_attribute(the_names["rend"]);
         if (!w.null()) {
             err_buf << "unexpected font change " << w;
             the_parser.unexpected_font();

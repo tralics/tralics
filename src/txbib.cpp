@@ -95,9 +95,9 @@ auto CitationItem::get_bid() -> Istring {
 // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
 auto bib_ns::normalise_for_bib(Istring w) -> Istring {
     auto S = w.name;
-    if (S == "year") return the_names[cst_empty];
+    if (S == "year") return the_names["cst_empty"];
     if (!distinguish_refer)
-        if (S == "refer") return the_names[cst_empty];
+        if (S == "refer") return the_names["cst_empty"];
     return w;
 }
 
@@ -126,13 +126,13 @@ void Parser::T_omitcite() {
 void Parser::T_cite(subtypes sw, TokenList &prenote, Istring &type) {
     if (sw == footcite_code) {
         read_optarg_nopar(prenote);
-        type = the_names[cst_foot];
+        type = the_names["foot"];
     } else if (sw == yearcite_code) {
         read_optarg_nopar(prenote);
-        type = the_names[cst_empty]; // should be year here
+        type = the_names["cst_empty"]; // should be year here
     } else if (sw == refercite_code) {
         read_optarg_nopar(prenote);
-        type = the_names[cst_refer];
+        type = the_names["refer"];
     } else if (sw == nocite_code) {
         type = Istring(fetch_name_opt());
     } else if (sw == natcite_code) {
@@ -175,7 +175,7 @@ void Parser::T_cite(subtypes sw) {
     auto      type = Istring("");
     if (is_natbib) {
         Istring x = nT_optarg_nopar();
-        if (!x.empty()) the_stack.add_att_to_last(the_names[np_cite_type], x);
+        if (!x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
         read_optarg(res);
         if (!res.empty()) res.push_back(hash_table.space_token);
         res.push_front(hash_table.locate("NAT@open"));
@@ -257,9 +257,9 @@ void Parser::T_cite_one() {
     auto prenote    = Istring(fetch_name1(L));
     if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
     the_stack.add_last(new Xml(np_cit, res));
-    if (!type.empty()) the_stack.add_att_to_last(the_names[np_rend], type);
-    if (!xtype.empty()) the_stack.add_att_to_last(the_names[np_cite_type], xtype);
-    if (!prenote.empty()) the_stack.add_att_to_last(the_names[np_prenote], prenote);
+    if (!type.empty()) the_stack.add_att_to_last(the_names["rend"], type);
+    if (!xtype.empty()) the_stack.add_att_to_last(the_names["citetype"], xtype);
+    if (!prenote.empty()) the_stack.add_att_to_last(the_names["prenote"], prenote);
 }
 
 // This adds a marker, a location where to insert the bibliography
@@ -542,7 +542,7 @@ void Parser::T_start_the_biblio() {
     the_stack.set_arg_mode();
     auto name = Istring(a);
     the_stack.set_v_mode();
-    the_stack.push(the_names[cst_biblio], new Xml(name, nullptr));
+    the_stack.push(the_names["thebibliography"], new Xml(name, nullptr));
 }
 
 // Returns true if this is the same object.
@@ -654,36 +654,36 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
         if (Bib_s[i] == S) return fp_unknown;
 
     // Check is this is standard
-    if (S == the_names[cstb_address]) return fp_address;
-    if (S == the_names[cstb_author]) return fp_author;
-    if (S == the_names[cstb_booktitle]) return fp_booktitle;
-    if (S == the_names[cstb_chapter]) return fp_chapter;
-    if (S == the_names[cstb_doi]) return fp_doi;
-    if (S == the_names[cstb_edition]) return fp_edition;
-    if (S == the_names[cstb_editor]) return fp_editor;
-    if (S == the_names[cstb_howpublished]) return fp_howpublished;
-    if (S == the_names[cstb_institution]) return fp_institution;
-    if (S == the_names[cstb_isbn]) return fp_isbn;
-    if (S == the_names[cstb_issn]) return fp_issn;
-    if (S == the_names[cstb_isrn]) return fp_isrn;
-    if (S == the_names[cstb_journal]) return fp_journal;
-    if (S == the_names[cstb_key]) return fp_key;
-    if (S == the_names[cstb_month]) return fp_month;
-    if (S == the_names[cstb_langue]) return fp_langue;
-    if (S == the_names[cstb_language]) return fp_langue;
-    if (S == the_names[cstb_note]) return fp_note;
-    if (S == the_names[cstb_number]) return fp_number;
-    if (S == the_names[cstb_organization]) return fp_organization;
-    if (S == the_names[cstb_pages]) return fp_pages;
-    if (S == the_names[cstb_publisher]) return fp_publisher;
-    if (S == the_names[cstb_school]) return fp_school;
-    if (S == the_names[cstb_series]) return fp_series;
-    if (S == the_names[cstb_title]) return fp_title;
-    if (S == the_names[cstb_type]) return fp_type;
-    if (S == the_names[cstb_url]) return fp_url;
-    if (S == the_names[cstb_volume]) return fp_volume;
-    if (S == the_names[cstb_year]) return fp_year;
-    if (S == the_names[cstb_crossref]) return fp_crossref;
+    if (S == the_names["address"]) return fp_address;
+    if (S == the_names["author"]) return fp_author;
+    if (S == the_names["booktitle"]) return fp_booktitle;
+    if (S == the_names["chapter"]) return fp_chapter;
+    if (S == the_names["doi"]) return fp_doi;
+    if (S == the_names["edition"]) return fp_edition;
+    if (S == the_names["editor"]) return fp_editor;
+    if (S == the_names["howpublished"]) return fp_howpublished;
+    if (S == the_names["institution"]) return fp_institution;
+    if (S == the_names["isbn"]) return fp_isbn;
+    if (S == the_names["issn"]) return fp_issn;
+    if (S == the_names["isrn"]) return fp_isrn;
+    if (S == the_names["journal"]) return fp_journal;
+    if (S == the_names["cstb_key"]) return fp_key;
+    if (S == the_names["month"]) return fp_month;
+    if (S == the_names["langue"]) return fp_langue;
+    if (S == the_names["cstb_language"]) return fp_langue;
+    if (S == the_names["note"]) return fp_note;
+    if (S == the_names["number"]) return fp_number;
+    if (S == the_names["organization"]) return fp_organization;
+    if (S == the_names["pages"]) return fp_pages;
+    if (S == the_names["publisher"]) return fp_publisher;
+    if (S == the_names["school"]) return fp_school;
+    if (S == the_names["series"]) return fp_series;
+    if (S == the_names["title"]) return fp_title;
+    if (S == the_names["cstb_type"]) return fp_type;
+    if (S == the_names["cstb_url"]) return fp_url;
+    if (S == the_names["volume"]) return fp_volume;
+    if (S == the_names["year"]) return fp_year;
+    if (S == the_names["crossref"]) return fp_crossref;
     // Check is this is additional
     std::vector<Istring> &Bib        = the_main->bibtex_fields;
     size_t                additional = Bib.size();
@@ -701,25 +701,25 @@ auto Bibtex::find_type(const std::string &s) -> entry_type {
     size_t                additional2 = Bib2.size();
     for (size_t i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
-    if (S == the_names[cstb_article]) return type_article;
-    if (S == the_names[cstb_book]) return type_book;
-    if (S == the_names[cstb_booklet]) return type_booklet;
-    if (S == the_names[cstb_conference]) return type_conference;
-    if (S == the_names[cstb_coursenotes]) return type_coursenotes;
-    if (S == the_names[cstb_comment]) return type_comment;
-    if (S == the_names[cstb_inbook]) return type_inbook;
-    if (S == the_names[cstb_incollection]) return type_incollection;
-    if (S == the_names[cstb_inproceedings]) return type_inproceedings;
-    if (S == the_names[cstb_manual]) return type_manual;
-    if (S == the_names[cstb_masterthesis]) return type_masterthesis;
-    if (S == the_names[cstb_mastersthesis]) return type_masterthesis;
-    if (S == the_names[cstb_misc]) return type_misc;
-    if (S == the_names[cstb_phdthesis]) return type_phdthesis;
-    if (S == the_names[cstb_proceedings]) return type_proceedings;
-    if (S == the_names[cstb_preamble]) return type_preamble;
-    if (S == the_names[cstb_techreport]) return type_techreport;
-    if (S == the_names[cstb_string]) return type_string;
-    if (S == the_names[cstb_unpublished]) return type_unpublished;
+    if (S == the_names["article"]) return type_article;
+    if (S == the_names["book"]) return type_book;
+    if (S == the_names["booklet"]) return type_booklet;
+    if (S == the_names["conference"]) return type_conference;
+    if (S == the_names["coursenotes"]) return type_coursenotes;
+    if (S == the_names["comment"]) return type_comment;
+    if (S == the_names["inbook"]) return type_inbook;
+    if (S == the_names["incollection"]) return type_incollection;
+    if (S == the_names["inproceedings"]) return type_inproceedings;
+    if (S == the_names["manual"]) return type_manual;
+    if (S == the_names["masterthesis"]) return type_masterthesis;
+    if (S == the_names["mastersthesis"]) return type_masterthesis;
+    if (S == the_names["misc"]) return type_misc;
+    if (S == the_names["phdthesis"]) return type_phdthesis;
+    if (S == the_names["proceedings"]) return type_proceedings;
+    if (S == the_names["preamble"]) return type_preamble;
+    if (S == the_names["techreport"]) return type_techreport;
+    if (S == the_names["string"]) return type_string;
+    if (S == the_names["unpublished"]) return type_unpublished;
 
     std::vector<Istring> &Bib        = the_main->bibtex_extensions;
     size_t                additional = Bib.size();
@@ -952,7 +952,7 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto     my_id = AL.has_value(the_names[np_id]);
+    auto     my_id = AL.has_value(the_names["id"]);
     if (my_id) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(*my_id));
@@ -962,7 +962,7 @@ void Parser::solve_cite(bool user) {
             return;
         }
     } else
-        AL.push_back(the_names[np_id], CI.get_bid());
+        AL.push_back(the_names["id"], CI.get_bid());
     CI.set_solved(N);
 }
 
