@@ -63,8 +63,8 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign, int style,
-                           size_t open, size_t close) -> Xml *;
+    auto finish_cv_special(bool isfrac, Istring s, std::string pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
+                           int style, size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
 namespace tralics_ns {
@@ -2498,12 +2498,12 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
     if (c == sqrt_code) return MathElt(new Xml(cst_msqrt, A1), mt_flag_big);
-    Xml *          A2{nullptr};
-    auto           ns          = cv_special_string(c);
-    Istring        s           = the_names[ns];
-    bool           is_fraction = ns == "mfrac";
-    bool           is_mathop   = false;
-    name_positions pos         = cst_empty;
+    Xml *       A2{nullptr};
+    auto        ns          = cv_special_string(c);
+    Istring     s           = the_names[ns];
+    bool        is_fraction = ns == "mfrac";
+    bool        is_mathop   = false;
+    std::string pos         = "cst_empty";
     if (c == xleftarrow_code || c == xrightarrow_code) {
         tmp = L.get_arg2();
         tmp.check_align();
@@ -2527,31 +2527,31 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
         A2  = get_builtin(c);
-        pos = c >= first_under_accent_code ? cst_accentunder : cst_accent;
+        pos = c >= first_under_accent_code ? "accentunder" : "accent";
     } else if (c == overline_code) {
         A2  = math_data.get_mc_table(1);
-        pos = cst_empty;
-        //    pos = cst_accent;
+        pos = "cst_empty";
+        //    pos = "accent";
     } else if (c == overbrace_code) {
         A2        = math_data.get_mc_table(2);
-        pos       = cst_accent;
+        pos       = "accent";
         is_mathop = true;
     } else if (c == underline_code) {
         A2  = math_data.get_mc_table(3);
-        pos = cst_empty;
+        pos = "cst_empty";
     } else if (c == undertilde_code) {
         A2  = math_data.get_mc_table(26);
-        pos = cst_accentunder;
+        pos = "accentunder";
     } else if (c == underbrace_code) {
         A2        = math_data.get_mc_table(4);
-        pos       = cst_accentunder;
+        pos       = "accentunder";
         is_mathop = true;
     } else {
         tmp      = L.get_arg2();
         denalign = tmp.check_align();
         A2       = tmp.convert_math(cms);
-        if (c == accentset_code) pos = cst_accent;
-        if (c == underaccent_code) pos = cst_accentunder;
+        if (c == accentset_code) pos = "accent";
+        if (c == underaccent_code) pos = "accentunder";
         if (c == stackrel_code || c == underset_code || c == overset_code || c == root_code || c == accentset_code ||
             c == underaccent_code) {
             Xml *X   = A1;
@@ -2700,14 +2700,14 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     denalign = check_align();
     Xml *a   = A.M_cv(cms, 1).value;
     Xml *b   = M_cv(cms, 1).value;
-    Xml *res = finish_cv_special(true, the_names["mfrac"], cst_empty, a, b, sz, numalign, denalign, -1, open, close);
+    Xml *res = finish_cv_special(true, the_names["mfrac"], "cst_empty", a, b, sz, numalign, denalign, -1, open, close);
     return {res, mt_flag_big};
 }
 
-auto math_ns::finish_cv_special(bool isfrac, Istring s, size_t pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
+auto math_ns::finish_cv_special(bool isfrac, Istring s, std::string pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
                                 int style, size_t open, size_t close) -> Xml * {
     Istring Pos;
-    if (pos != 0) Pos = the_names[name_positions(pos)];
+    if (pos != "cst_empty") Pos = the_names[pos];
     auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
     if (!sz.null()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
