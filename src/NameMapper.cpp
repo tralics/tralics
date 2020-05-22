@@ -6,7 +6,7 @@
 auto NameMapper::operator[](const std::string &name) const -> Istring { return dict.contains(name) ? dict.at(name) : Istring(name); }
 
 auto NameMapper::operator[](name_positions i) const -> Istring {
-    spdlog::warn("deprecated : id {} is key {}", i, id_to_name[i]);
+    // spdlog::warn("deprecated : id {} is key {}", i, id_to_name[i]);
     return (*this)[id_to_name[i]];
 }
 

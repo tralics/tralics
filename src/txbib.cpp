@@ -952,7 +952,7 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto     my_id = AL.has_value(the_names["id"]);
+    auto     my_id = AL.lookup(the_names["id"]);
     if (my_id) {
         if (CI.has_empty_id())
             CI.set_id(AL.get_val(*my_id));

@@ -1165,7 +1165,7 @@ void Parser::T_color(subtypes c) {
 // Add the given dimension as spacebefore value to the paragraph x.
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
-    auto     K = L.has_value(the_names[np_spacebefore]);
+    auto     K = L.lookup(the_names[np_spacebefore]);
     if (K) {
         Istring   k  = L.get_val(*K);
         TokenList La = token_ns::string_to_list(k.name, false);

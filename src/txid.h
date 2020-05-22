@@ -11,7 +11,7 @@
 
 #include "tralics/Istring.h"
 
-class AttList;
+struct AttList;
 
 // Adress of attribute list of an xml object
 // is a wrapper around an int

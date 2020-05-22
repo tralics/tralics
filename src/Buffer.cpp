@@ -793,7 +793,7 @@ auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() ==
 // returns false if there is no such value.
 auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
     AttList &L = idx.get_att();
-    auto     k = L.has_value(m);
+    auto     k = L.lookup(m);
     if (!k) return false;
     clear();
     push_back(L.get_val(*k).name);

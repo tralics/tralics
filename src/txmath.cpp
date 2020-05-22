@@ -3211,7 +3211,7 @@ auto Math::M_cv3(math_style cms) -> Math {
 auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;
     AttList &X = id.get_att();
-    auto     i = X.has_value(the_names["movablelimits"]);
+    auto     i = X.lookup(the_names["movablelimits"]);
     if (i < 0) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;

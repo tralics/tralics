@@ -20,7 +20,7 @@ auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_lis
 // Returns null string otherwise
 auto Xid::has_attribute(const Istring &n) const -> Istring {
     AttList &X = get_att();
-    auto     i = X.has_value(n);
+    auto     i = X.lookup(n);
     if (i) return X.get_val(*i);
     return Istring();
 }
@@ -29,7 +29,7 @@ auto Xid::has_attribute(const Istring &n) const -> Istring {
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
     Istring n(the_names["'hi_flag"]);
-    return static_cast<bool>(get_att().has_value(n));
+    return static_cast<bool>(get_att().lookup(n));
 }
 
 // Add attribute named A value B to this id.

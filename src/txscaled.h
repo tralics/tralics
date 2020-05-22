@@ -14,7 +14,7 @@
 
 #include "txtokenlist.h"
 
-class AttList;
+struct AttList;
 
 // this is a wrapper around an int
 class ScaledInt {
