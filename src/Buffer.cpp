@@ -807,11 +807,11 @@ auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
 // Print in reverse order, because this was in the previous version
 
 void Buffer::push_back(const AttList &Y) {
-    auto n = Y.val.size();
+    auto n = Y.size();
     if (the_main->double_quote_att)
-        for (auto i = n; i > 0; i--) push_back_alt(Y.val[i - 1]);
+        for (auto i = n; i > 0; i--) push_back_alt(Y[i - 1]);
     else
-        for (auto i = n; i > 0; i--) push_back(Y.val[i - 1]);
+        for (auto i = n; i > 0; i--) push_back(Y[i - 1]);
 }
 
 void Buffer::push_back(const AttPair &X) {

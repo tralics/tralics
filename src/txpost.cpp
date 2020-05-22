@@ -495,8 +495,8 @@ auto Xml::is_empty_p() const -> bool {
     if (!empty()) return false;
     AttList &X = id.get_att();
     if (X.empty()) return true;
-    if (X.val.size() != 1) return false;
-    if (X.val.front().name == the_names[np_noindent]) return true;
+    if (X.size() != 1) return false;
+    if (X.front().name == the_names[np_noindent]) return true;
     return false;
 }
 

@@ -376,7 +376,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     ac_maybe_finish_multi(seen);
     // Case of \multicolumn,
     id.add_attribute(attribs, true);
-    attribs.reset();
+    attribs.clear();
     TokenList cell = P->read_arg();
     cell.splice(cell.begin(), u_list);
     cell.splice(cell.end(), v_list);
@@ -398,7 +398,7 @@ void NewArray::ac_maybe_finish() {
     }
     if (last_ch_class == chc_cell || last_ch_class == chc_v || last_ch_class == chc_bar) {
         AI->add_uv(u_list, v_list, attribs);
-        attribs.reset();
+        attribs.clear();
         u_list.clear();
         v_list.clear();
         ac_cell_no++;
