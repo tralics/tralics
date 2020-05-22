@@ -11,8 +11,8 @@
 
 // This file holds the stack and related stuff
 
+#include "tralics/AttList.h"
 #include "tralics/Xml.h"
-#include "txatt.h"
 
 // Array management
 class ArrayInfo {

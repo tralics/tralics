@@ -54,13 +54,6 @@ namespace io_ns {
 
 // ---------------------------------------------------------
 
-// Prints an att list on a buffer, then a stream.
-void AttList::print(std::ostream &fp) const {
-    Buffer B;
-    B.push_back(*this);
-    fp << B;
-}
-
 // Prints an att list on a stream.
 auto operator<<(std::ostream &fp, Xid X) -> std::ostream & {
     X.get_att().print(fp);
