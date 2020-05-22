@@ -840,7 +840,7 @@ void Xml::convert_to_string(Buffer &b) {
         b << name.name;
         return;
     }
-    if (name.empty() || name == the_names[cst_temporary]) {
+    if (name.empty() || name == the_names["temporary"]) {
         auto len = size();
         for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
         return;
