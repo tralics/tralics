@@ -345,7 +345,7 @@ void Parser::T_raisebox() {
     AttList &cur = last_att_list();
     cur.push_back(the_names[np_val], A);
     cur.push_back(the_names["height"], B);
-    cur.push_back(the_names[np_depth], C);
+    cur.push_back(the_names["depth"], C);
     T_arg_local();
     the_stack.pop(the_names[np_raisebox]);
 }

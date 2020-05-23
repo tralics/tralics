@@ -322,7 +322,7 @@ void Parser::T_barnodeconnect(name_positions W) {
     Istring C = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    cur.push_back(the_names[np_depth], A);
+    cur.push_back(the_names["depth"], A);
     cur.push_back(the_names["nameB"], C);
     cur.push_back(the_names["nameA"], B);
     the_stack.pop(W);
@@ -375,7 +375,7 @@ void Parser::T_nodecircle(name_positions W) {
     Istring A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    cur.push_back(the_names[np_depth], B);
+    cur.push_back(the_names["depth"], B);
     cur.push_back(the_names["nameA"], A);
     the_stack.pop(W);
 }

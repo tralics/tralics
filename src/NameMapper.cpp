@@ -287,7 +287,6 @@ void NameMapper::boot() {
     def(np_cols, "cols");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");
-    def(np_depth, "depth");
     def(np_description, "description");
     def(np_display, "display");
     def(np_div0, "div0");

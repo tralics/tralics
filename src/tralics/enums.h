@@ -2153,7 +2153,6 @@ enum name_positions {
     np_curve,
     np_curve_nbpts,
     np_dashline,
-    np_depth,
     np_description,
     np_display,
     np_div0,

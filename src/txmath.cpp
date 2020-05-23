@@ -2418,7 +2418,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
             A = new Xml(the_names["mpadded"], A);
             if (c == vphantom_code) A->add_att(the_names["width"], the_names["0pt"]);
             if (c == hphantom_code) A->add_att(the_names["height"], the_names["0pt"]);
-            if (c == hphantom_code) A->add_att(the_names[np_depth], the_names["0pt"]);
+            if (c == hphantom_code) A->add_att(the_names["depth"], the_names["0pt"]);
         }
         Xml *R = new Xml(the_names["mphantom"], A);
         return MathElt(R, mt_flag_small);
@@ -2429,7 +2429,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         L.get_arg1().convert_this_to_string(math_buffer);
         char w = math_buffer[0];
         if (w != 'b' && w != 't' && w != 'w') w = 'c';
-        if (w == 'b' || w == 'c') R->add_att(the_names[np_depth], the_names["0pt"]);
+        if (w == 'b' || w == 'c') R->add_att(the_names["depth"], the_names["0pt"]);
         if (w == 't' || w == 'c') R->add_att(the_names["height"], the_names["0pt"]);
         if (w == 'w') R->add_att(the_names["width"], the_names["0pt"]);
         return MathElt(R, mt_flag_small);
