@@ -1447,15 +1447,15 @@ void MathDataP::boot_chars() {
     for (uchar i = 'A'; i <= 'Z'; i++) init_builtin(i + math_char_upright_loc, make_math_char(i, 1));
     for (uchar i = 'a'; i <= 'z'; i++) init_builtin(i + math_char_upright_loc, make_math_char(i, 1));
 
-    init_builtin(xml_e_loc, new Xml(the_names[np_letter_e]));
-    init_builtin(xml_o_loc, new Xml(the_names[np_letter_o]));
+    init_builtin(xml_e_loc, new Xml(the_names["e"]));
+    init_builtin(xml_o_loc, new Xml(the_names["o"]));
     // nb_simplemath should be 128
     for (uchar i = 0; i < nb_simplemath; i++) {
         Buffer B;
         B.push_back(static_cast<char>(i));
         Xml *res = new Xml(np_simplemath, new Xml(B));
         Xml *X   = new Xml(np_formula, res);
-        X->add_att(np_type, np_inline);
+        X->add_att(the_names["type"], the_names[np_inline]);
         simplemath_table[i] = X;
     }
 }

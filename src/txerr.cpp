@@ -52,9 +52,9 @@ void Parser::signal_error(Token T, const std::string &s) {
     auto str = Istring(s);
     the_stack.add_newid0(np_error);
     Istring cmd = err_buf.convert_for_xml_err(T);
-    the_stack.add_att_to_last(np_letter_c, str);
-    the_stack.add_att_to_last(np_letter_l, cur_line_to_istring());
-    the_stack.add_att_to_last(np_letter_n, cmd);
+    the_stack.add_att_to_last(the_names["c"], str);
+    the_stack.add_att_to_last(the_names["l"], cur_line_to_istring());
+    the_stack.add_att_to_last(the_names["n"], cmd);
 }
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)

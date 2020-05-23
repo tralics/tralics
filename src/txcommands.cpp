@@ -658,7 +658,7 @@ void Parser::T_atdocument(subtypes c) {
 void Parser::T_glossaire() {
     leave_h_mode();
     the_stack.push1(the_names["gloss_type"], np_list);
-    the_stack.add_att_to_last(np_type, np_gloss);
+    the_stack.add_att_to_last(the_names["type"], the_names["gloss_type"]);
     the_stack.add_last(new Xml(np_head, glo_xml));
     the_stack.set_no_mode();
 }
@@ -666,7 +666,7 @@ void Parser::T_glossaire() {
 /// Translates `\end{glossaire}`
 void Parser::T_glossaire_end() {
     auto n = the_stack.top_stack()->size();
-    the_stack.pop(np_gloss);
+    the_stack.pop(the_names["gloss_type"]);
     if (n == 1) parse_error("empty glossaire");
 }
 

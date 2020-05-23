@@ -1341,7 +1341,7 @@ void Parser::T_start_theorem(int c) {
         the_stack.add_nl();
         back_input_braced(me);
         Istring n = nT_arg_nopar();
-        the_stack.add_att_to_cur(the_names[np_type], n);
+        the_stack.add_att_to_cur(the_names["type"], n);
         back_input_braced(style);
         n = nT_arg_nopar();
         the_stack.add_att_to_cur(the_names[np_style], n);

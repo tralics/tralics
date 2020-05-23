@@ -100,7 +100,6 @@ void NameMapper::boot() {
     def("full_first", np_full_first, "prenomcomplet");
     def("glo", np_glo_name, "Glossary");
     def("gloitem", np_label_glo, "label");
-    def("gloss_type", np_gloss, "gloss");
     def("inner_pos", np_posi, "inner-pos");
     def("labelitem", np_label_item, "label");
     def("line", np_line, "pic-line");
@@ -309,8 +308,6 @@ void NameMapper::boot() {
     def(np_dashdim, "dashdim");
     def(np_dashline, "dashline");
     def(np_depth, "depth");
-    def(np_depthA, "depthA");
-    def(np_depthB, "depthB");
     def(np_description, "description");
     def(np_display, "display");
     def(np_div0, "div0");
@@ -362,10 +359,6 @@ void NameMapper::boot() {
     def(np_keywords, "keywords");
     def(np_leaders, "leaders");
     def(np_leg, "leg");
-    def(np_letters_bl, "bl");
-    def(np_letters_br, "br");
-    def(np_letters_tl, "tl");
-    def(np_letters_tr, "tr");
     def(np_level, "level");
     def(np_list, "list");
     def(np_mainmatter, "mainmatter");
@@ -391,8 +384,6 @@ void NameMapper::boot() {
     def(np_moreinfo, "moreinfo");
     def(np_movablelimits, "movablelimits");
     def(np_name, "name");
-    def(np_nameA, "nameA");
-    def(np_nameB, "nameB");
     def(np_node, "node");
     def(np_nodebox, "nodebox");
     def(np_nodecircle, "nodecircle");
@@ -418,8 +409,6 @@ void NameMapper::boot() {
     def(np_place, "place");
     def(np_point, "point");
     def(np_pos, "pos");
-    def(np_posA, "posA");
-    def(np_posB, "posB");
     def(np_pre, "pre");
     def(np_prefix, "prefix");
     def(np_prenom, "prenom");
@@ -473,7 +462,6 @@ void NameMapper::boot() {
     def(np_toc2, "listoffigures");
     def(np_totalwidth, "totalwidth");
     def(np_true, "true");
-    def(np_type, "type");
     def(np_underline, "underline");
     def(np_unknown, "unknown");
     def(np_url, "url");
@@ -498,9 +486,6 @@ void NameMapper::boot() {
     def(np_yscalex, "yscalex");
     def(np_zerodim, "0pt");
 
-    for (char x = 'a'; x <= 'z'; x++) def(name_positions(to_unsigned(np_letter_a + x - 'a')), std::string(1, x));
-    for (char x = 'A'; x <= 'Z'; x++) def(name_positions(to_unsigned(np_letter_A + x - 'A')), std::string(1, x));
-
     // Cases without name_position where default value is not the key name
     set("bibkey", "bib-key");
     set("cell_leftborder", "left-border");
@@ -508,6 +493,7 @@ void NameMapper::boot() {
     set("cell_center", "center");
     set("cell_left", "left");
     set("cell_right", "right");
+    set("gloss_type", "gloss");
     set("language", "");
     set("np_center", "center");
     set("np_cst_width", "width");

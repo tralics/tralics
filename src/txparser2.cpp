@@ -65,7 +65,7 @@ void Parser::E_zapspace() {
 void Parser::T_xfancy() {
     Istring s = nT_arg_nopar();
     the_stack.push1(np_header);
-    the_stack.add_att_to_last(the_names[np_type], s);
+    the_stack.add_att_to_last(the_names["type"], s);
     the_stack.set_arg_mode();
     T_arg();
     flush_buffer();
@@ -2382,7 +2382,7 @@ void Parser::T_listenv(symcodes x) {
     }
     Xml *res = new Xml(np_list, nullptr);
     the_stack.push(the_names[np_list], res);
-    res->id.add_attribute(np_type, np);
+    res->id.add_attribute(the_names["type"], the_names[np]);
 }
 
 // converts T1/ OT2 into a Unicode character (expandable command)

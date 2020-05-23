@@ -732,7 +732,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     std::string S  = u.get_name();
     auto        s  = Istring(S);
     if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
-    id.add_attribute(the_names[np_type], the_names[cmi.get_pos_att()]);
+    id.add_attribute(the_names["type"], the_names[cmi.get_pos_att()]);
     id.add_attribute(np_textype, s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->id  = id;
@@ -839,7 +839,7 @@ void Parser::T_math(subtypes type) {
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
     res1->id = cmi.get_fid();
-    res1->add_att(the_names[np_type], the_names[cmi.get_pos_att()]);
+    res1->add_att(the_names["type"], the_names[cmi.get_pos_att()]);
     if (!textype.empty()) res1->add_att(the_names["textype"], Istring(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->interactive_math) {

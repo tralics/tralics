@@ -1001,7 +1001,7 @@ void Parser::T_citation() {
     Istring     d  = nT_arg_nopar();
     the_stack.add_nl();
     the_stack.push1(np_citation);
-    the_stack.add_att_to_last(np_type, d);
+    the_stack.add_att_to_last(the_names["type"], d);
     the_stack.implement_cit(b1, Istring(b2), a, c);
     the_stack.set_bib_mode();
     ignore_optarg();

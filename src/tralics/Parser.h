@@ -426,7 +426,7 @@ private:
     auto        get_a_new_line() -> bool;
     auto        get_attval() -> std::string;
     auto        get_ctb_opt() -> std::string;
-    auto        get_trees_opt() -> name_positions;
+    auto        get_trees_opt() -> std::string;
     auto        get_c_val(Token X) -> Istring;
     auto        get_counter(Token T) -> long;
     auto        get_index_value() -> size_t;

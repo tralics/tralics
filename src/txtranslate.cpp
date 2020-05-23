@@ -272,28 +272,28 @@ auto Parser::get_ctb_opt() -> std::string {
 }
 
 // Nodes: tblr, or 2 letters
-auto Parser::get_trees_opt() -> name_positions {
+auto Parser::get_trees_opt() -> std::string {
     TokenList L;
     read_optarg_nopar(L);
-    if (L.empty()) return cst_invalid;
+    if (L.empty()) return "cst_invalid";
     Token t1, t2;
     token_ns::get_unique(L, t1, t2);
-    if (t1.is_null()) return cst_invalid;
-    if (t1.cmd_val() != letter_catcode) return cst_invalid;
+    if (t1.is_null()) return "cst_invalid";
+    if (t1.cmd_val() != letter_catcode) return "cst_invalid";
     auto c = t1.val_as_letter();
     if (t2.is_null()) {
-        if (c == 'l') return np_letter_l;
-        if (c == 'r') return np_letter_r;
-        if (c == 't') return np_letter_t;
-        if (c == 'b') return np_letter_b;
-        return cst_invalid;
+        if (c == 'l') return "l";
+        if (c == 'r') return "r";
+        if (c == 't') return "t";
+        if (c == 'b') return "b";
+        return "cst_invalid";
     }
-    if (t2.cmd_val() != letter_catcode) return cst_invalid;
+    if (t2.cmd_val() != letter_catcode) return "cst_invalid";
     auto c2 = t2.val_as_letter();
-    if (c != 't' && c != 'b') return cst_invalid;
-    if (c2 != 'l' && c2 != 'r') return cst_invalid;
-    if (c == 't') return c2 == 'l' ? np_letters_tl : np_letters_tr;
-    return c2 == 'l' ? np_letters_bl : np_letters_br;
+    if (c != 't' && c != 'b') return "cst_invalid";
+    if (c2 != 'l' && c2 != 'r') return "cst_invalid";
+    if (c == 't') return c2 == 'l' ? "tl" : "tr";
+    return c2 == 'l' ? "bl" : "br";
 }
 
 // In the case where the font has changed and we are in text mode, we call
@@ -711,7 +711,7 @@ void Parser::T_float(subtypes c) {
         the_stack.push1(np_float);
         the_stack.add_att_to_last(np_place, opt);
         if (c == 1) the_stack.add_att_to_last(np_starred, np_true);
-        the_stack.add_att_to_last(np_type, arg);
+        the_stack.add_att_to_last(the_names["type"], arg);
         B << bf_reset << "fname@" << sarg;
         expand_no_arg(B);
         opt = nT_arg_nopar();
@@ -2046,7 +2046,7 @@ void Parser::LC() {
     if (the_stack.in_v_mode()) ileave_v_mode();
     if (the_stack.in_no_mode() || the_stack.in_bib_mode()) {
         signal_error("Text found in a mode where no text is allowed");
-        if (the_stack.is_frame(np_gloss)) {
+        if (the_stack.first_frame() == the_names["gloss_type"]) {
             log_and_tty << "Maybe \\glo is missing?\nHope for the best\n";
             the_stack.set_arg_mode();
             return;
