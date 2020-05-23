@@ -2416,7 +2416,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xml *A = L.get_arg1().M_cv(cms, 0).value;
         if (c == hphantom_code || c == vphantom_code) {
             A = new Xml(the_names["mpadded"], A);
-            if (c == vphantom_code) A->add_att(the_names[np_width], the_names["0pt"]);
+            if (c == vphantom_code) A->add_att(the_names["width"], the_names["0pt"]);
             if (c == hphantom_code) A->add_att(the_names[np_height], the_names["0pt"]);
             if (c == hphantom_code) A->add_att(the_names[np_depth], the_names["0pt"]);
         }
@@ -2431,7 +2431,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         if (w != 'b' && w != 't' && w != 'w') w = 'c';
         if (w == 'b' || w == 'c') R->add_att(the_names[np_depth], the_names["0pt"]);
         if (w == 't' || w == 'c') R->add_att(the_names[np_height], the_names["0pt"]);
-        if (w == 'w') R->add_att(the_names[np_width], the_names["0pt"]);
+        if (w == 'w') R->add_att(the_names["width"], the_names["0pt"]);
         return MathElt(R, mt_flag_small);
     }
     default: return cv_special1(cms);

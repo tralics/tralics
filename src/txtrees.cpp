@@ -278,9 +278,9 @@ void Parser::T_node() {
     leave_v_mode();
     the_stack.push1(np_node);
     AttList &cur = last_att_list();
-    cur.push_back(np_name, A);
+    cur.push_back(the_names["name"], A);
     T_arg();
-    the_stack.pop(np_node);
+    the_stack.pop(the_names[np_node]);
 }
 
 // A node of 0pt width and height
@@ -292,10 +292,10 @@ void Parser::T_nodepoint() {
     Istring C = nT_optarg_nopar();
     the_stack.push1(np_node);
     AttList &cur = last_att_list();
-    cur.push_back(np_name, A);
-    cur.push_back(np_xpos, B); // default value is zero
-    cur.push_back(np_ypos, C); // default value is zero
-    the_stack.pop(np_node);
+    cur.push_back(the_names["name"], A);
+    cur.push_back(the_names["xpos"], B); // default value is zero
+    cur.push_back(the_names["ypos"], C); // default value is zero
+    the_stack.pop(the_names[np_node]);
 }
 
 // \nodeconnect[fromloc]{fromnode}[toloc]{tonode}

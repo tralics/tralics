@@ -84,7 +84,7 @@ void Parser::T_rasection() {
     leave_h_mode();
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
-    if (!elt_name.empty()) cur->id.add_attribute(np_name, iname);
+    if (!elt_name.empty()) cur->id.add_attribute(the_names["name"], iname);
     if (iname == the_names[cst_composition]) compo_id = cur->id;
     the_stack.push(the_names[cst_rasection], cur);
     string_define(0, name, false);

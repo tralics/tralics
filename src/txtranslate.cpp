@@ -715,7 +715,7 @@ void Parser::T_float(subtypes c) {
         B << bf_reset << "fname@" << sarg;
         expand_no_arg(B);
         opt = nT_arg_nopar();
-        the_stack.add_att_to_last(np_name, opt);
+        the_stack.add_att_to_last(the_names["name"], opt);
         refstepcounter(sarg, true);
         B << bf_reset << "@float@every@" << sarg;
         back_input(hash_table.locate(B));
@@ -942,8 +942,8 @@ void Parser::includegraphics(subtypes C) {
             Istring p = skey == "scale" ? the_names[np_scale] : skey == "angle" ? the_names[np_angle] : Istring(skey);
             AL.push_back(p, Istring(sval), true);
         } else if (skey == "width" || skey == "height" || skey == "totalheight") {
-            name_positions N = skey == "height" ? np_height : skey == "width" ? np_width : np_totalwidth;
-            ScaledInt      s = dimen_from_list(T, val);
+            std::string N = skey == "height" ? "height" : skey == "width" ? "width" : "totalwidth";
+            ScaledInt   s = dimen_from_list(T, val);
             B.push_back(s, glue_spec_pt);
             AL.push_back(the_names[N], Istring(B), true);
         } else if (skey == "natwidth" || skey == "natheight" || skey == "bbllx" || skey == "bblly" || skey == "bburx" || skey == "bbury") {
@@ -980,8 +980,8 @@ void Parser::T_epsfbox() {
     AttList &res = the_stack.add_newid0(np_figure);
     no_extension(res, y);
     res.push_back(the_names["rend"], the_names["inline"]);
-    if (!xdim.null()) res.push_back(np_width, Istring(xdim));
-    if (!ydim.null()) res.push_back(np_height, Istring(ydim));
+    if (!xdim.null()) res.push_back(the_names["width"], Istring(xdim));
+    if (!ydim.null()) res.push_back(the_names[np_height], Istring(ydim));
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -1262,10 +1262,10 @@ void Parser::T_makebox(bool framed, Token C) {
     AttList &cur = last_att_list();
     if (framed) cur.push_back(np_framed, np_true);
     if (!oarg.empty()) cur.push_back(np_box_pos, Istring(oarg));
-    cur.push_back(np_height, B);
-    cur.push_back(np_width, A);
+    cur.push_back(the_names[np_height], B);
+    cur.push_back(the_names["width"], A);
     T_arg_local();
-    the_stack.pop(np_box);
+    the_stack.pop(the_names[np_box]);
 }
 
 // Implements \sbox and \savebox
@@ -1310,13 +1310,13 @@ void Parser::T_picture() {
     Istring A, B;
     Token   C = cur_tok;
     T_twodims(A, B, C);
-    cur.push_back(np_height, B);
-    cur.push_back(np_width, A);
+    cur.push_back(the_names[np_height], B);
+    cur.push_back(the_names["width"], A);
     skip_initial_space_and_back_input();
     if (cur_tok.is_open_paren()) {
         T_twodims(A, B, C);
-        cur.push_back(np_ypos, B);
-        cur.push_back(np_xpos, A);
+        cur.push_back(the_names["ypos"], B);
+        cur.push_back(the_names["xpos"], A);
     }
 }
 
@@ -1331,9 +1331,9 @@ void Parser::T_fbox_dash_box() {
     the_stack.push1(np_dashbox);
     Xid cur_id = the_stack.get_top_id();
     if (!oarg.empty()) cur_id.add_attribute(np_box_pos, Istring(oarg));
-    cur_id.add_attribute(np_height, C);
-    cur_id.add_attribute(np_width, B);
-    cur_id.add_attribute(np_dashdim, A);
+    cur_id.add_attribute(the_names[np_height], C);
+    cur_id.add_attribute(the_names["width"], B);
+    cur_id.add_attribute(the_names[np_dashdim], A);
     T_arg_local();
     the_stack.pop(np_dashbox);
 }
@@ -1881,18 +1881,18 @@ void Parser::T_put(subtypes c) {
     if (c == oval_code) {
         Istring  specs = nT_optarg_nopar();
         AttList &val   = the_stack.add_newid0(x0);
-        val.push_back(np_specs, specs);
-        val.push_back(np_ypos, B);
-        val.push_back(np_xpos, A);
+        val.push_back(the_names["specs"], specs);
+        val.push_back(the_names["ypos"], B);
+        val.push_back(the_names["xpos"], A);
         return;
     }
     if (c != put_code && c != multiput_code && c != scaleput_code) { // line vector
         TokenList L = read_arg();
         D           = token_list_to_att(L, C, false);
         AttList &AL = the_stack.add_newid0(x0);
-        AL.push_back(np_width, D);
-        AL.push_back(np_ydir, B);
-        AL.push_back(np_xdir, A);
+        AL.push_back(the_names["width"], D);
+        AL.push_back(the_names[np_ydir], B);
+        AL.push_back(the_names[np_xdir], A);
         return;
     }
     // Case of \put or \multiput \scaleput
@@ -1901,22 +1901,22 @@ void Parser::T_put(subtypes c) {
     Xid cur_id = the_stack.get_top_id();
     if (c == scaleput_code) {
         AttList &AL = cur_id.get_att();
-        AL.push_back(np_yscalex, get_c_val(hash_table.yscalex_token));
-        AL.push_back(np_xscaley, get_c_val(hash_table.xscaley_token));
-        AL.push_back(np_yscale, get_c_val(hash_table.yscale_token));
-        AL.push_back(np_xscale, get_c_val(hash_table.xscale_token));
+        AL.push_back(the_names[np_yscalex], get_c_val(hash_table.yscalex_token));
+        AL.push_back(the_names[np_xscaley], get_c_val(hash_table.xscaley_token));
+        AL.push_back(the_names[np_yscale], get_c_val(hash_table.yscale_token));
+        AL.push_back(the_names[np_xscale], get_c_val(hash_table.xscale_token));
     }
     if (c == multiput_code) {
         Istring aa, bb;
         T_twodims(aa, bb, C);
-        cur_id.add_attribute(np_dy, bb);
-        cur_id.add_attribute(np_dx, aa);
+        cur_id.add_attribute(the_names[np_dy], bb);
+        cur_id.add_attribute(the_names[np_dx], aa);
         TokenList L = read_arg();
         D           = token_list_to_att(L, C, true); // integer....
         cur_id.add_attribute(np_repeat, D);
     }
-    cur_id.add_attribute(np_ypos, B);
-    cur_id.add_attribute(np_xpos, A);
+    cur_id.add_attribute(the_names["ypos"], B);
+    cur_id.add_attribute(the_names["xpos"], A);
     T_arg();
     the_stack.pop(x0);
     if (c == put_code || c == multiput_code) remove_initial_space_and_back_input();
@@ -1946,18 +1946,18 @@ void Parser::T_curves(int c) {
     the_stack.set_arg_mode();
     Xid     cur_id = the_stack.get_top_id();
     Istring specs  = nT_optarg_nopar();
-    if (!specs.null()) cur_id.add_attribute(np_curve_nbpts, specs);
+    if (!specs.null()) cur_id.add_attribute(the_names[np_curve_nbpts], specs);
     TokenList emptyl;
     cur_id.add_attribute(np_unit_length, token_list_to_att(emptyl, C, false));
     if (c == arc_code) {
         Istring aa, bb;
         T_twodims(aa, bb, C);
-        cur_id.add_attribute(np_ypos, bb);
-        cur_id.add_attribute(np_xpos, aa);
+        cur_id.add_attribute(the_names["ypos"], bb);
+        cur_id.add_attribute(the_names["xpos"], aa);
         specs = nT_arg_nopar();
-        cur_id.add_attribute(np_angle, specs);
+        cur_id.add_attribute(the_names[np_angle], specs);
     } else if (c == bigcircle_code) {
-        cur_id.add_attribute(np_size, nT_arg_nopar());
+        cur_id.add_attribute(the_names[np_size], nT_arg_nopar());
     } else {
         Token match(other_t_offset, '(');
         skip_initial_space();
@@ -1990,10 +1990,10 @@ void Parser::T_multiput() {
         the_stack.push1(np_put);
         the_stack.set_arg_mode();
         AttList &AL = last_att_list();
-        AL.push_back(np_ypos, dimen_attrib(Y));
-        AL.push_back(np_xpos, dimen_attrib(X));
+        AL.push_back(the_names["ypos"], dimen_attrib(Y));
+        AL.push_back(the_names["xpos"], dimen_attrib(X));
         T_arg();
-        the_stack.pop(np_put);
+        the_stack.pop(the_names[np_put]);
         the_stack.add_nl();
         r--;
         X += Dx;
@@ -2025,9 +2025,9 @@ void Parser::T_dashline(subtypes c) {
     the_stack.push1(x0);
     the_stack.set_arg_mode();
     AttList &AL = last_att_list();
-    AL.push_back(np_arg1, A);
-    AL.push_back(np_arg2, B);
-    AL.push_back(np_arg3, C);
+    AL.push_back(the_names[np_arg1], A);
+    AL.push_back(the_names[np_arg2], B);
+    AL.push_back(the_names[np_arg3], C);
     for (;;) {
         Istring xpos, ypos;
         skip_initial_space();
@@ -2035,8 +2035,8 @@ void Parser::T_dashline(subtypes c) {
         if (!cur_tok.is_open_paren()) break;
         T_twodims(xpos, ypos, T);
         AttList &res = the_stack.add_newid0(np_point);
-        res.push_back(np_ypos, ypos);
-        res.push_back(np_xpos, xpos);
+        res.push_back(the_names["ypos"], ypos);
+        res.push_back(the_names["xpos"], xpos);
     }
     the_stack.pop(x0);
 }

@@ -372,7 +372,6 @@ void NameMapper::boot() {
     def(np_module, "module");
     def(np_moreinfo, "moreinfo");
     def(np_movablelimits, "movablelimits");
-    def(np_name, "name");
     def(np_node, "node");
     def(np_nodebox, "nodebox");
     def(np_nodecircle, "nodecircle");
@@ -429,7 +428,6 @@ void NameMapper::boot() {
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def(np_specs, "specs");
     def(np_starred, "starred");
     def(np_style, "style");
     def(np_subfigure, "subfigure");
@@ -459,15 +457,12 @@ void NameMapper::boot() {
     def(np_vfilneg, "vfilneg");
     def(np_vpos, "vpos");
     def(np_vss, "vss");
-    def(np_width, "width");
     def(np_xdir, "xdir");
     def(np_xleaders, "xleaders");
-    def(np_xpos, "xpos");
     def(np_xref, "xref");
     def(np_xscale, "xscale");
     def(np_xscaley, "xscaley");
     def(np_ydir, "ydir");
-    def(np_ypos, "ypos");
     def(np_yscale, "yscale");
     def(np_yscalex, "yscalex");
 

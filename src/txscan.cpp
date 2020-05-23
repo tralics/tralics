@@ -2456,9 +2456,9 @@ void             TexRule::reset() {
 }
 
 void TexRule::convert(AttList &res) const {
-    if (rule_h.get_value() != default_rule_dimen) res.push_back(np_height, Istring(rule_h));
-    if (rule_d.get_value() != default_rule_dimen) res.push_back(np_depth, Istring(rule_d));
-    if (rule_w.get_value() != default_rule_dimen) res.push_back(np_width, Istring(rule_w));
+    if (rule_h.get_value() != default_rule_dimen) res.push_back(the_names[np_height], Istring(rule_h));
+    if (rule_d.get_value() != default_rule_dimen) res.push_back(the_names[np_depth], Istring(rule_d));
+    if (rule_w.get_value() != default_rule_dimen) res.push_back(the_names["width"], Istring(rule_w));
 }
 
 void Parser::scan_rule(int c) {
