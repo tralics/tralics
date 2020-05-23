@@ -227,7 +227,7 @@ void Stack::add_center_to_p() const {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
     auto w = the_parser.cur_centering();
-    x->id.get_att().push_back(np_rend, name_positions(np_center_etc + w), false);
+    x->id.get_att().push_back(the_names["rend"], the_names[name_positions(np_center_etc + w)], false);
 }
 
 auto Stack::is_frame(name_positions s) const -> bool { return first_frame() == the_names[s]; }
@@ -399,7 +399,7 @@ auto Stack::push_par(long k) -> Xid {
     push(the_names["cst_p"], res);
     cur_mode = mode_h; // we are in horizontal mode now
     check_font();
-    if (k > 0) id.add_attribute(np_rend, name_positions(np_center_etc + k));
+    if (k > 0) id.add_attribute(the_names["rend"], the_names[name_positions(np_center_etc + k)]);
     return id;
 }
 
@@ -407,7 +407,7 @@ auto Stack::fonts1(name_positions x) -> Xml * {
     bool     w   = the_main->use_font_elt;
     Xml *    res = new Xml(w ? x : cst_hi, nullptr);
     AttList &W   = res->id.get_att();
-    if (!w) W.push_back(np_rend, x);
+    if (!w) W.push_back(the_names["rend"], the_names[x]);
     return res;
 }
 

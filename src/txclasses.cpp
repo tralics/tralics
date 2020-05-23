@@ -928,11 +928,11 @@ void Parser::T_class_error(subtypes c) {
 }
 
 void Parser::out_warning(Buffer &B, msg_type what) {
-    name_positions w = np_Info;
+    std::string w = "Info";
     if (what == mt_error)
-        w = np_Error;
+        w = "Error";
     else if (what == mt_warning)
-        w = np_Warning;
+        w = "Warning";
     if (!the_names["warning"].empty()) {
         flush_buffer();
         Xml *res = new Xml(np_warning, new Xml(Istring(B)));

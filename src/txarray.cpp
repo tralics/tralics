@@ -566,7 +566,7 @@ void Parser::T_start_tabular(subtypes c) {
         leave_h_mode();
     M_let_fast(hash_table.par_token, hash_table.empty_token, false);
     the_stack.push1(x, np_table);
-    the_stack.add_att_to_last(np_rend, np_inline);
+    the_stack.add_att_to_last(the_names["rend"], the_names["inline"]);
     Xid id = the_stack.get_xid();
     if (c != 0) { // case of tabular*
         Token     T         = cur_tok;

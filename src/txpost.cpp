@@ -642,13 +642,13 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         X = new Xml(cst_p, nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names[np_table], X);
-        to->id.add_attribute(np_rend, np_array);
+        to->id.add_attribute(the_names["rend"], the_names[np_array]);
         return;
     case 3: // verbatim material in the figure; move all lines
         X = new Xml(cst_empty, nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names[np_pre], X);
-        to->id.add_attribute(np_rend, np_pre);
+        to->id.add_attribute(the_names["rend"], the_names[np_pre]);
         return;
     case 2: // a subfigure
         //    T->remove_empty_par();
@@ -685,13 +685,13 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
         Xml *X = new Xml(cst_p, nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names[np_table], X);
-        to->id.add_attribute(np_rend, np_array);
+        to->id.add_attribute(the_names["rend"], the_names[np_array]);
         return;
     }
     // Normal case
     from->remove_empty_par();
     from->remove_par_bal_if_ok();
-    to->id.add_attribute(np_rend, np_display);
+    to->id.add_attribute(the_names["rend"], the_names[np_display]);
     Xml *C = from->single_non_empty();
     if ((C != nullptr) && !C->is_xmlc()) {
         if (C->has_name(np_figure)) {
@@ -713,7 +713,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
 }
 
 void post_ns::table_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->id.add_attribute(np_rend, np_array);
+    to->id.add_attribute(the_names["rend"], the_names[np_array]);
     int ctr = 'a';
     for (;;) {
         Xml *sf = from->get_first_env(cst_p);
@@ -762,14 +762,14 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     from->add_non_empty_to(junk);
     if (nrows == 0) return nullptr;
     Xml *res = new Xml(np_table, nullptr);
-    res->id.add_attribute(np_rend, np_inline);
+    res->id.add_attribute(the_names["rend"], the_names["inline"]);
     res->push_back_unless_nullptr(row1);
     res->push_back_unless_nullptr(row2);
     return new Xml(cst_p, res);
 }
 
 void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->id.add_attribute(np_rend, np_subfigure);
+    to->id.add_attribute(the_names["rend"], the_names[np_subfigure]);
     int         n          = 0;
     static auto parid_name = Istring("parid");
     for (;;) {

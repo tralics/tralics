@@ -323,7 +323,6 @@ void NameMapper::boot() {
     def(np_dy, "dy");
     def(np_encap, "encap");
     def(np_error, "error");
-    def(np_Error, "Error");
     def(np_false, "false");
     def(np_fbox, "fbox");
     def(np_figure, "figure");
@@ -350,8 +349,6 @@ void NameMapper::boot() {
     def(np_id, "id");
     def(np_idtext, "id-text");
     def(np_index, "index");
-    def(np_Info, "Info");
-    def(np_inline, "inline");
     def(np_isproject, "isproject");
     def(np_item, "item");
     def(np_junior, "junior");
@@ -418,7 +415,6 @@ void NameMapper::boot() {
     def(np_quoted, "quoted");
     def(np_raisebox, "raisebox");
     def(np_ref, "ref");
-    def(np_rend, "rend");
     def(np_repeat, "repeat");
     def(np_research_centre, "research-centre");
     def(np_row, "row");
@@ -472,7 +468,6 @@ void NameMapper::boot() {
     def(np_vfilneg, "vfilneg");
     def(np_vpos, "vpos");
     def(np_vss, "vss");
-    def(np_Warning, "Warning");
     def(np_width, "width");
     def(np_xdir, "xdir");
     def(np_xleaders, "xleaders");

@@ -593,7 +593,7 @@ void Parser::T_paras(subtypes x) {
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
-        last_att_list().push_back(np_rend, np_nonumber);
+        last_att_list().push_back(the_names["rend"], the_names[np_nonumber]);
     else {
         if (x == part_code)
             refstepcounter("part", false);
@@ -621,7 +621,7 @@ void Parser::T_ref(bool is_ref) {
     the_stack.add_newid0(np_ref);
     Xid X = the_stack.get_xid();
     X.add_ref(a);
-    if (!is_ref) X.add_attribute(np_rend, np_page);
+    if (!is_ref) X.add_attribute(the_names["rend"], the_names[np_page]);
 }
 
 // \begin or \end of subequations
@@ -963,7 +963,7 @@ void Parser::includegraphics(subtypes C) {
         } else
             invalid_key(T, skey, val);
     }
-    AL.push_back(np_rend, np_inline);
+    AL.push_back(the_names["rend"], the_names["inline"]);
 }
 
 void Parser::T_epsfbox() {
@@ -979,7 +979,7 @@ void Parser::T_epsfbox() {
     }
     AttList &res = the_stack.add_newid0(np_figure);
     no_extension(res, y);
-    res.push_back(np_rend, np_inline);
+    res.push_back(the_names["rend"], the_names["inline"]);
     if (!xdim.null()) res.push_back(np_width, Istring(xdim));
     if (!ydim.null()) res.push_back(np_height, Istring(ydim));
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
