@@ -479,6 +479,9 @@ void Stack::check_font() {
 }
 
 // Push a new XML element
+void Stack::push1(Istring name, Istring x) { push(std::move(name), new Xml(x, nullptr)); }
+
+// Push a new XML element
 void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xml(x, nullptr)); }
 
 // Push a new XML element

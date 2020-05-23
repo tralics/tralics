@@ -105,7 +105,6 @@ void NameMapper::boot() {
     def("nb_rasection", np_rasection, "");
     def("np_center_etc", np_center_etc, "center");
     def("np_linethickness", np_linethickness, "linethickness");
-    def("np_theorem", np_theorem, "");
     def("oval", np_oval, "pic-oval");
     def("particule", np_particle, "part");
     def("project", np_projet, "projet");
@@ -135,7 +134,6 @@ void NameMapper::boot() {
 
     // Below, this is a mapping id <-> name = default value
     def(cst_accent, "accent");
-    def(cst_accentunder, "accentunder");
     def(cst_argument, "argument");
     def(cst_biblio, "thebibliography");
     def(cst_ci, "ci");
@@ -458,6 +456,7 @@ void NameMapper::boot() {
     set("cell_bottomborder", "bottom-border");
     set("border_bottom_width", "border-bottom-width");
     set("mathmlns", "http://www.w3.org/1998/Math/MathML");
+    set("np_theorem", "");
     set("box_pos", "position");
 }
 
@@ -552,13 +551,13 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
 
     if (A == "theorem") {
         if (B[0] == 0) { // reverst to old behavior
-            set(np_theorem, B);
+            set("np_theorem", B);
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else if (B[0] == ' ') { // special case
-            set(np_theorem, B.substr(1));
+            set("np_theorem", B.substr(1));
             the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else {
-            set(np_theorem, B);
+            set("np_theorem", B);
             the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
         }
         return;
@@ -571,7 +570,7 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     }
 
     if (A == "xtheorem") {
-        set(np_theorem, B);
+        set("np_theorem", B);
         return;
     }
 

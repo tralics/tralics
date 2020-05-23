@@ -1475,11 +1475,11 @@ void MathDataP::boot2() {
     init_builtin("varliminf", varliminf_code, new Xml(xml2sons(the_names["munder"], lim_op, get_mc_table(3))), mathop_cmd);
 
     auto *x = new Xml(xml2sons(the_names["munder"], lim_op, get_builtin(underrightarrow_code)));
-    x->add_att(the_names[cst_accentunder], the_names["true"]);
+    x->add_att(the_names["accentunder"], the_names["true"]);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 
     x = new Xml(xml2sons(the_names["munder"], lim_op, get_builtin(underleftarrow_code)));
-    x->add_att(the_names[cst_accentunder], the_names["true"]);
+    x->add_att(the_names["accentunder"], the_names["true"]);
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
     x = mk_mo("(");

@@ -1303,7 +1303,7 @@ void Parser::T_start_theorem(int c) {
     TokenList opt;
     bool      was_o = read_optarg(opt);
     leave_h_mode();
-    the_stack.push1(the_names["theorem"], np_theorem);
+    the_stack.push1(the_names["theorem"], the_names["np_theorem"]);
     the_stack.set_v_mode();
     bool noref = ctr.empty();
     if (!noref) {
@@ -1314,7 +1314,7 @@ void Parser::T_start_theorem(int c) {
         Xid id1 = the_stack.get_xid();
         leave_v_mode();
         Xid id2 = the_stack.get_xid();
-        if (!(id1 == id2) && the_names[np_theorem].empty()) id2.add_attribute(id1);
+        if (!(id1 == id2) && the_names["np_theorem"].empty()) id2.add_attribute(id1);
     }
     if (c == 0) {
         if (!noref) name.push_back(hash_table.space_token);

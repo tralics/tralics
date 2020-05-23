@@ -126,6 +126,7 @@ public:
     void               pop(name_positions a);
     void               pop_if_frame(const Istring &x);
     void               push(Istring fr, Xml *V);
+    void               push1(Istring name, Istring x);
     void               push1(Istring name, name_positions x);
     void               push1(name_positions x);
     auto               push_hbox(Istring name) -> Xml *;
