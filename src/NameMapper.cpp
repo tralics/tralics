@@ -27,7 +27,6 @@ void NameMapper::boot() {
     def("alt_section", np_alt_section, "alt_head");
     def("arc", np_arc, "pic-arc");
     def("bezier", np_bezier, "pic-bezier");
-    def("bibkey", np_bibkey, "bib-key");
     def("bigcircle", np_bigcircle, "pic-bigcircle");
     def("border_bottom_width", np_border_bottomw, "border-bottom-width");
     def("border_left_width", np_border_leftw, "border-left-width");
@@ -115,7 +114,6 @@ void NameMapper::boot() {
     def("np_center_etc", np_center_etc, "center");
     def("np_center", np_center, "center");
     def("np_cst_width", np_cst_width, "width");
-    def("language", np_language, "");
     def("np_linethickness", np_linethickness, "linethickness");
     def("np_separator", np_separator, "");
     def("np_theorem", np_theorem, "");
@@ -343,7 +341,6 @@ void NameMapper::boot() {
     def(np_dx, "dx");
     def(np_dy, "dy");
     def(np_encap, "encap");
-    def(np_english, "english");
     def(np_eqnpos, "eqnpos");
     def(np_error, "error");
     def(np_Error, "Error");
@@ -356,11 +353,9 @@ void NameMapper::boot() {
     def(np_formula, "formula");
     def(np_frame, "pic-frame");
     def(np_framed, "framed");
-    def(np_french, "french");
     def(np_from, "from");
     def(np_frontmatter, "frontmatter");
     def(np_full, "full");
-    def(np_german, "german");
     def(np_glossary, "glossary");
     def(np_graphics, "graphics");
     def(np_halfem, "4.pt");
@@ -529,11 +524,13 @@ void NameMapper::boot() {
     for (char x = 'A'; x <= 'Z'; x++) def(name_positions(to_unsigned(np_letter_A + x - 'A')), std::string(1, x));
 
     // Cases without name_position where default value is not the key name
+    set("bibkey", "bib-key");
     set("cell_leftborder", "left-border");
     set("cell_rightborder", "right-border");
     set("cell_center", "center");
     set("cell_left", "left");
     set("cell_right", "right");
+    set("language", "");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
@@ -544,8 +541,8 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa.starts_with("xml_")) return the_names.assign_name(sa.substr(4, sa.ends_with("_name") ? n - 9 : n - 4), sb);
     if (sa.starts_with("att_")) return set(sa.substr(4), sb);
 
-    if (sa == "lang_fr") { set(np_french, sb); }
-    if (sa == "lang_en") { set(np_english, sb); }
+    if (sa == "lang_fr") { set("french", sb); }
+    if (sa == "lang_en") { set("english", sb); }
     if (sa == "distinguish_refer_in_rabib") {
         if ((sb == "true") || (sb == "yes"))
             the_main->distinguish_refer = true;

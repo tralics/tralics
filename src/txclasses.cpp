@@ -727,16 +727,16 @@ void Parser::check_language() {
 
 // This adds the language attribute to the main XML element
 void Parser::add_language_att() {
-    auto b = cst_empty;
-    int  D = get_def_language_num();
+    std::string b = "cst_empty";
+    int         D = get_def_language_num();
     if (D == 0)
-        b = np_english;
+        b = "english";
     else if (D == 1)
-        b = np_french;
+        b = "french";
     else if (D == 2)
-        b = np_german;
+        b = "german";
     Xid doc_att(1);
-    if ((b != cst_empty) && !the_names["language"].empty()) doc_att.get_att().push_back(np_language, b);
+    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att().push_back(the_names["language"], the_names[b]);
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {

@@ -926,7 +926,7 @@ void Parser::solve_cite(bool user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(np_bibitem, nullptr));
         Istring ukey = nT_optarg_nopar();
-        the_stack.get_xid().get_att().push_back(np_bibkey, ukey);
+        the_stack.get_xid().get_att().push_back(the_names["bibkey"], ukey);
         n = the_stack.get_xid().value;
     } else {
         F    = remove_initial_star();
