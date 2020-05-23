@@ -28,17 +28,13 @@ void NameMapper::boot() {
     def("arc", np_arc, "pic-arc");
     def("bezier", np_bezier, "pic-bezier");
     def("bigcircle", np_bigcircle, "pic-bigcircle");
-    def("border_bottom_width", np_border_bottomw, "border-bottom-width");
     def("border_left_width", np_border_leftw, "border-left-width");
     def("border_right_width", np_border_rightw, "border-right-width");
-    def("border_top_width", np_border_topw, "border-top-width");
     def("box_pos", np_box_pos, "position");
     def("box_scale", np_s_scale, "scale");
     def("box_width", np_box_width, "width");
     def("box", np_box, "pic-framebox");
     def("caption", np_captions, "head");
-    def("cell_bottomborder", np_bottomborder, "bottom-border");
-    def("cell_topborder", np_topborder, "top-border");
     def("centering", np_center_etc1, "center");
     def("circle", np_circle, "pic-circle");
     def("citetype", np_cite_type, "type");
@@ -409,10 +405,6 @@ void NameMapper::boot() {
     def(np_repeat, "repeat");
     def(np_research_centre, "research-centre");
     def(np_row, "row");
-    def(np_rule_bsa, "bottom_rule_space_above");
-    def(np_rule_bsb, "bottom_rule_space_below");
-    def(np_rule_tsa, "top_rule_space_above");
-    def(np_rule_tsb, "top_rule_space_below");
     def(np_rule, "rule");
     def(np_s_caps, "caps");
     def(np_s_hl, "hl");
@@ -478,6 +470,10 @@ void NameMapper::boot() {
     set("language", "");
     set("np_center", "center");
     set("np_cst_width", "width");
+    set("cell_topborder", "top-border");
+    set("border_top_width", "border-top-width");
+    set("cell_bottomborder", "bottom-border");
+    set("border_bottom_width", "border-bottom-width");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {

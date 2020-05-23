@@ -452,19 +452,19 @@ void Stack::push_pop_cell(int dir) {
 }
 
 void Xid::add_top_rule() const {
-    add_attribute(np_topborder, np_true);
+    add_attribute(the_names["cell_topborder"], the_names[np_true]);
     if (in_hlinee) {
-        add_attribute(np_border_topw, hlinee_width);
-        if (have_above) add_attribute(np_rule_tsa, hlinee_above);
-        if (have_below) add_attribute(np_rule_tsb, hlinee_below);
+        add_attribute(the_names["border_top_width"], hlinee_width);
+        if (have_above) add_attribute(the_names["top_rule_space_above"], hlinee_above);
+        if (have_below) add_attribute(the_names["top_rule_space_below"], hlinee_below);
     }
 }
 void Xid::add_bottom_rule() const {
-    add_attribute(np_bottomborder, np_true);
+    add_attribute(the_names["cell_bottomborder"], the_names[np_true]);
     if (in_hlinee) {
-        add_attribute(np_border_bottomw, hlinee_width);
-        if (have_above) add_attribute(np_rule_bsa, hlinee_above);
-        if (have_below) add_attribute(np_rule_bsb, hlinee_below);
+        add_attribute(the_names["border_bottom_width"], hlinee_width);
+        if (have_above) add_attribute(the_names["bottom_rule_space_above"], hlinee_above);
+        if (have_below) add_attribute(the_names["bottom_rule_space_below"], hlinee_below);
     }
 }
 

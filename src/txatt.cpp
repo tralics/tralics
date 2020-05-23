@@ -33,14 +33,10 @@ auto Xid::is_font_change() const -> bool {
 }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(const Istring &A, const Istring &B) const { get_att().push_back(A, B); }
+void Xid::add_attribute(const Istring &A, const Istring &B, bool force) const { get_att().push_back(A, B, force); }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(const Istring &A, const Istring &B, bool f) const { get_att().push_back(A, B, f); }
-
-// Add attribute named A value B to this id.
-void Xid::add_attribute(name_positions A, name_positions B) const { get_att().push_back(the_names[A], the_names[B]); }
-void Xid::add_attribute(name_positions A, name_positions B, bool c) const { get_att().push_back(the_names[A], the_names[B], c); }
+void Xid::add_attribute(name_positions A, name_positions B, bool force) const { get_att().push_back(the_names[A], the_names[B], force); }
 
 void Xid::add_attribute(name_positions n, const Istring &v) const { get_att().push_back(the_names[n], v); }
 
