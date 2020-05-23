@@ -43,7 +43,7 @@ namespace {
         auto    n  = *the_bibliography.find_citation_item(type, ref, true);
         Istring id = the_bibliography.citation_table[n].get_bid();
         Xml     res(np_ref, nullptr);
-        res.id.add_attribute(np_target, id);
+        res.id.add_attribute(the_names["target"], id);
         return res;
     }
 } // namespace

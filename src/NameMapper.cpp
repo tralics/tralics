@@ -44,7 +44,6 @@ void NameMapper::boot() {
     def("citetype", np_cite_type, "type");
     def("closecurve", np_closecurve, "pic-closecurve");
     def("composition_ra", cst_composition, "composition");
-    def("cst_display", cst_display, "display");
     def("cst_div0", cst_div0, "div0");
     def("cst_div1", cst_div1, "div1");
     def("cst_div2", cst_div2, "div2");
@@ -159,16 +158,10 @@ void NameMapper::boot() {
     def(cst_hbox, "hbox");
     def(cst_hi, "hi");
     def(cst_math, "math");
-    def(cst_mathvariant, "mathvariant");
-    def(cst_mfenced, "mfenced");
-    def(cst_mfrac, "mfrac");
     def(cst_mi, "mi");
     def(cst_mn, "mn");
     def(cst_mo, "mo");
-    def(cst_mode, "mode");
     def(cst_mover, "mover");
-    def(cst_mpadded, "mpadded");
-    def(cst_mphantom, "mphantom");
     def(cst_mref, "mref");
     def(cst_mroot, "mroot");
     def(cst_mrow_cst, "<mrow></mrow>");
@@ -192,7 +185,6 @@ void NameMapper::boot() {
     def(cst_refer, "refer");
     def(cst_separators, "separators");
     def(cst_temporary, "temporary");
-    def(cst_theorem, "theorem");
     def(cst_xmlns, "xmlns");
     def(cstb_address, "address");
     def(cstb_article, "article");
@@ -445,7 +437,6 @@ void NameMapper::boot() {
     def(np_Table, "Table");
     def(np_tabular_star, "tabular*");
     def(np_tabular, "tabular");
-    def(np_target, "target");
     def(np_term, "term");
     def(np_texmath, "texmath");
     def(np_texte, "texte");
@@ -479,7 +470,6 @@ void NameMapper::boot() {
     def(np_ypos, "ypos");
     def(np_yscale, "yscale");
     def(np_yscalex, "yscalex");
-    def(np_zerodim, "0pt");
 
     // Cases without name_position where default value is not the key name
     set("bibkey", "bib-key");
@@ -488,6 +478,7 @@ void NameMapper::boot() {
     set("cell_center", "center");
     set("cell_left", "left");
     set("cell_right", "right");
+    set("cst_display", "display");
     set("gloss_type", "gloss");
     set("language", "");
     set("np_center", "center");

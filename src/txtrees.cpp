@@ -221,7 +221,7 @@ void Parser::finish_index() {
         }
         for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
-            A->id.add_attribute(np_target, Istring(labels[CI->get_iid(i)]));
+            A->id.add_attribute(the_names["target"], Istring(labels[CI->get_iid(i)]));
         }
         CI->do_sort();
         for (size_t i = 0; i < n; i++) {

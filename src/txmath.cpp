@@ -366,7 +366,7 @@ void MathElt::print() const {
 
 // General fence around val.
 auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
-    auto res = gsl::not_null{new Xml(cst_mfenced, nullptr)};
+    auto res = gsl::not_null{new Xml(the_names["mfenced"], nullptr)};
     res->add_att(the_names["close"], xml_lr_ptable[close]);
     res->add_att(the_names["open"], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
@@ -834,7 +834,7 @@ void Parser::T_math(subtypes type) {
     x->id  = cmi.get_mid();
     x->add_att(cst_xmlns, cst_mathml);
     x->add_tmp(gsl::not_null{res});
-    if (!is_inline) x->add_att(cst_mode, cst_display);
+    if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
     Xml *res1 = new Xml(np_formula, x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
@@ -2415,23 +2415,23 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case vphantom_code: {
         Xml *A = L.get_arg1().M_cv(cms, 0).value;
         if (c == hphantom_code || c == vphantom_code) {
-            A = new Xml(cst_mpadded, A);
-            if (c == vphantom_code) A->add_att(np_width, np_zerodim);
-            if (c == hphantom_code) A->add_att(np_height, np_zerodim);
-            if (c == hphantom_code) A->add_att(np_depth, np_zerodim);
+            A = new Xml(the_names["mpadded"], A);
+            if (c == vphantom_code) A->add_att(the_names[np_width], the_names["0pt"]);
+            if (c == hphantom_code) A->add_att(the_names[np_height], the_names["0pt"]);
+            if (c == hphantom_code) A->add_att(the_names[np_depth], the_names["0pt"]);
         }
-        Xml *R = new Xml(cst_mphantom, A);
+        Xml *R = new Xml(the_names["mphantom"], A);
         return MathElt(R, mt_flag_small);
     }
     case smash_code: {
         Xml *A = L.get_arg2().M_cv(cms, 0).value;
-        Xml *R = new Xml(cst_mpadded, A);
+        Xml *R = new Xml(the_names["mpadded"], A);
         L.get_arg1().convert_this_to_string(math_buffer);
         char w = math_buffer[0];
         if (w != 'b' && w != 't' && w != 'w') w = 'c';
-        if (w == 'b' || w == 'c') R->add_att(np_depth, np_zerodim);
-        if (w == 't' || w == 'c') R->add_att(np_height, np_zerodim);
-        if (w == 'w') R->add_att(np_width, np_zerodim);
+        if (w == 'b' || w == 'c') R->add_att(the_names[np_depth], the_names["0pt"]);
+        if (w == 't' || w == 'c') R->add_att(the_names[np_height], the_names["0pt"]);
+        if (w == 'w') R->add_att(the_names[np_width], the_names["0pt"]);
         return MathElt(R, mt_flag_small);
     }
     default: return cv_special1(cms);
@@ -2940,7 +2940,7 @@ void Math::handle_mbox(Math &res) {
         if (!math_buffer.empty()) {
             auto s    = math_buffer;
             Xml *Text = new Xml(cst_mtext, new Xml(Istring(s)));
-            if (int(font) > 1) Text->add_att(cst_mathvariant, name_positions(long(cstf_normal) + long(font)));
+            if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names[name_positions(long(cstf_normal) + long(font))]);
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
         }

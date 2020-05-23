@@ -500,15 +500,15 @@ void Parser::T_glo() {
 // We have opened the current XML element,
 // we have to allow for a label and read the title.
 void Parser::start_paras(int y, const std::string &Y, bool star) {
-    bool module = y == 7 || y == 8;
-    if (!star || module) {
+    bool module_p = y == 7 || y == 8;
+    if (!star || module_p) {
         if (y == 0)
             the_stack.add_new_anchor_spec();
         else
             the_stack.add_new_anchor();
     }
     Xml *opt{nullptr};
-    if (module)
+    if (module_p)
         create_label("mod:" + Y, the_stack.get_cur_id()); // should be the id above
     else
         opt = xT_optarg_nopar();
@@ -516,7 +516,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     the_stack.push1(np_head);
     Xml *     title = the_stack.top_stack();
     TokenList L     = read_arg();
-    if (module) check_module_title(L);
+    if (module_p) check_module_title(L);
     brace_me(L);
     T_translate(L);
     current_head.clear();
@@ -526,7 +526,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     the_stack.add_nl();
     the_stack.set_v_mode();
     static int first_print_level = 10;
-    if (module) first_print_level = 0;
+    if (module_p) first_print_level = 0;
     auto YY = current_head.convert_to_log_encoding();
     if (y <= first_print_level) {
         first_print_level = y;
@@ -1210,7 +1210,7 @@ void Parser::T_mbox(subtypes c) {
     }
     // Hack the box
     Xml *u = mbox->single_non_empty();
-    if ((u != nullptr) && u->has_name(the_names[np_figure])) mbox->kill_name();
+    if ((u != nullptr) && u->has_name_of("figure")) mbox->kill_name();
     if (mbox->all_xmlc()) mbox->kill_name();
     if (mbox->only_hi()) mbox->kill_name();
 }
@@ -1383,7 +1383,7 @@ void Parser::T_fbox(subtypes cc) {
     Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->id.get_att();
     if (cc == scalebox_code) {
-        if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
+        if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
             aux->id.add_attribute(the_names[np_scale], iscale, true);
             aux->id.add_attribute(Istring("vscale"), iwidth);
             cur->kill_name();
@@ -1393,7 +1393,7 @@ void Parser::T_fbox(subtypes cc) {
         }
         return;
     }
-    if ((aux != nullptr) && aux->has_name(the_names[np_figure])) {
+    if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
         aux->id.add_attribute(np_framed, np_true);
         cur->kill_name();
     } else {

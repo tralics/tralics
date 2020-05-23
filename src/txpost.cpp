@@ -178,7 +178,7 @@ void Parser::check_all_ids() {
             Logger::finish_seq();
             log_and_tty << "Error signaled in postprocessor\n"
                         << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
-            Xid(E).add_attribute(the_names[np_target], V);
+            Xid(E).add_attribute(the_names["target"], V);
             Istring B = L->id;
             for (auto &removed_label : removed_labels) {
                 if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
@@ -188,7 +188,7 @@ void Parser::check_all_ids() {
             main_ns::nb_errs++;
         }
         Istring B = L->id;
-        Xid(E).add_attribute(the_names[np_target], B);
+        Xid(E).add_attribute(the_names["target"], B);
     }
 }
 
@@ -616,7 +616,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
     Xml *     X{nullptr};
     XmlAction X1(the_names[np_table], rc_contains);
     XmlAction X2(the_names[np_subfigure], rc_contains);
-    XmlAction X3(the_names[np_figure], rc_how_many);
+    XmlAction X3(the_names["figure"], rc_how_many);
     XmlAction X4(the_names[np_pre], rc_contains);
     from->recurse0(X1);
     from->recurse0(X2);
@@ -666,7 +666,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         from->subst_env0(the_names[np_hfill], nbsp);
         from->subst_env0(the_names[np_hfil], nbsp);
         from->move(the_names["cst_p"], to);
-        XmlAction X5(the_names[np_figure], rc_return_first);
+        XmlAction X5(the_names["figure"], rc_return_first);
         from->recurse0(X5);
         if (X5.get_xml_val() != nullptr) // dommage
             from->add_non_empty_to(to);
@@ -694,7 +694,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
     to->id.add_attribute(the_names["rend"], the_names[np_display]);
     Xml *C = from->single_non_empty();
     if ((C != nullptr) && !C->is_xmlc()) {
-        if (C->has_name(np_figure)) {
+        if (C->has_name_of("figure")) {
             to->push_back_unless_nullptr(C);
             from->clear();
         } else if (C->has_name(np_formula)) {

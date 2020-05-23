@@ -1272,7 +1272,7 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
     Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     Xml *bold = new Xml(bl, x);
-    bold->add_att(cst_mathvariant, cstf_bold);
+    bold->add_att(the_names["mathvariant"], the_names["bold"]);
     init_builtin(pos2, bold);
     x = new Xml(bl, x);
     return init_builtin(name, pos, x, t);
@@ -1432,7 +1432,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
         B.push_back(math_chars[c][n]);
     Xml *v   = new Xml(B);
     Xml *res = new Xml(cst_mi, v);
-    if (n == 1) res->add_att(cst_mathvariant, cstf_normal);
+    if (n == 1) res->add_att(the_names["mathvariant"], the_names["normal"]);
     return res;
 }
 
@@ -1483,13 +1483,13 @@ void MathDataP::boot2() {
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
     x = mk_mo("(");
-    x = new Xml(the_names[cst_mpadded], x);
-    x->add_att(the_names["np_cst_width"], the_names[np_zerodim]);
-    x = new Xml(the_names[cst_mphantom], x);
+    x = new Xml(the_names["mpadded"], x);
+    x->add_att(the_names["np_cst_width"], the_names["0pt"]);
+    x = new Xml(the_names["mphantom"], x);
     init_builtin("strut", strut_code, x, mathord_cmd);
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
-    Xml *y = new Xml(the_names[cst_mpadded], get_builtin(int_code));
+    Xml *y = new Xml(the_names["mpadded"], get_builtin(int_code));
     y->add_att(the_names["np_cst_width"], Istring("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(cst_mrow, nullptr);

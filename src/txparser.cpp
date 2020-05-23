@@ -1289,7 +1289,7 @@ void Parser::M_new_thm() {
 
 void Parser::T_end_theorem() {
     leave_h_mode();
-    the_stack.pop(cst_theorem);
+    the_stack.pop(the_names["theorem"]);
     the_stack.add_nl();
 }
 
@@ -1303,7 +1303,7 @@ void Parser::T_start_theorem(int c) {
     TokenList opt;
     bool      was_o = read_optarg(opt);
     leave_h_mode();
-    the_stack.push1(the_names[cst_theorem], np_theorem);
+    the_stack.push1(the_names["theorem"], np_theorem);
     the_stack.set_v_mode();
     bool noref = ctr.empty();
     if (!noref) {
