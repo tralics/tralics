@@ -1282,11 +1282,11 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
 // the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
 void MathDataP::mk_moo(String name, String ent, math_loc pos) {
     Xml *x = mk_mo(ent);
-    x->add_att(np_form, np_prefix);
+    x->add_att(the_names["form"], the_names["prefix"]);
     symcodes T = mathopn_cmd;
     if (first_w_limit_code <= pos && pos <= last_w_limit_code) {
         T = mathop_cmd;
-        x->add_att(the_names[np_movablelimits], the_names["true"]);
+        x->add_att(the_names["movablelimits"], the_names["true"]);
     }
     init_builtin(name, pos, x, T);
 }
@@ -1469,7 +1469,7 @@ void MathDataP::boot2() {
     // Constructs varlim etc
 
     auto lim_op = mk_mo("lim");
-    lim_op->add_att(the_names[np_movablelimits], the_names["false"]);
+    lim_op->add_att(the_names["movablelimits"], the_names["false"]);
 
     init_builtin("varlimsup", varlimsup_code, new Xml(xml2sons(the_names["mover"], lim_op, get_mc_table(1))), mathop_cmd);
     init_builtin("varliminf", varliminf_code, new Xml(xml2sons(the_names["munder"], lim_op, get_mc_table(3))), mathop_cmd);

@@ -691,7 +691,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
     } else {
         the_stack.add_att_to_last(the_names["rend"], the_names[x == figure_cmd ? "figure" : "table"]);
         if (!opt.empty()) the_stack.add_att_to_last(the_names["place"], opt);
-        if (c == 1) the_stack.add_att_to_last(the_names[np_starred], the_names["true"]);
+        if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
     }
     refstepcounter(x == figure_cmd ? "figure" : "table", true);
     the_stack.set_v_mode();

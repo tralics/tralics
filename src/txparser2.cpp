@@ -343,11 +343,11 @@ void Parser::T_raisebox() {
     leave_v_mode();
     the_stack.push1(np_raisebox);
     AttList &cur = last_att_list();
-    cur.push_back(np_val, A);
-    cur.push_back(np_height, B);
-    cur.push_back(np_depth, C);
+    cur.push_back(the_names[np_val], A);
+    cur.push_back(the_names["height"], B);
+    cur.push_back(the_names[np_depth], C);
     T_arg_local();
-    the_stack.pop(np_raisebox);
+    the_stack.pop(the_names[np_raisebox]);
 }
 
 // Implements \in@ , evaluates \in@false or \in@true

@@ -710,7 +710,7 @@ void Parser::T_float(subtypes c) {
         leave_h_mode();
         the_stack.push1(np_float);
         the_stack.add_att_to_last(the_names["place"], opt);
-        if (c == 1) the_stack.add_att_to_last(the_names[np_starred], the_names["true"]);
+        if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
         B << bf_reset << "fname@" << sarg;
         expand_no_arg(B);
@@ -981,7 +981,7 @@ void Parser::T_epsfbox() {
     no_extension(res, y);
     res.push_back(the_names["rend"], the_names["inline"]);
     if (!xdim.null()) res.push_back(the_names["width"], Istring(xdim));
-    if (!ydim.null()) res.push_back(the_names[np_height], Istring(ydim));
+    if (!ydim.null()) res.push_back(the_names["height"], Istring(ydim));
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -1204,8 +1204,8 @@ void Parser::T_mbox(subtypes c) {
     }
     Xml *mbox = internal_makebox();
     if (!ipos.null() || !iwidth.null()) {
-        mbox->id.add_attribute(np_box_pos, ipos);
-        mbox->id.add_attribute(np_box_width, iwidth);
+        mbox->id.add_attribute(the_names["box_pos"], ipos);
+        mbox->id.add_attribute(the_names[np_box_width], iwidth);
         return;
     }
     // Hack the box
@@ -1261,8 +1261,8 @@ void Parser::T_makebox(bool framed, Token C) {
     the_stack.push1(np_box);
     AttList &cur = last_att_list();
     if (framed) cur.push_back(the_names[np_framed], the_names["true"]);
-    if (!oarg.empty()) cur.push_back(the_names[np_box_pos], Istring(oarg));
-    cur.push_back(the_names[np_height], B);
+    if (!oarg.empty()) cur.push_back(the_names["box_pos"], Istring(oarg));
+    cur.push_back(the_names["height"], B);
     cur.push_back(the_names["width"], A);
     T_arg_local();
     the_stack.pop(the_names[np_box]);
@@ -1295,8 +1295,8 @@ void Parser::T_save_box(bool simple) {
         brace_me(d);
         T_translate(d);
         the_stack.pop(np_mbox);
-        mbox->id.add_attribute(np_box_pos, ipos);
-        mbox->id.add_attribute(np_box_width, iwidth);
+        mbox->id.add_attribute(the_names["box_pos"], ipos);
+        mbox->id.add_attribute(the_names[np_box_width], iwidth);
     }
     box_end(the_stack.remove_last(), i);
 }
@@ -1310,7 +1310,7 @@ void Parser::T_picture() {
     Istring A, B;
     Token   C = cur_tok;
     T_twodims(A, B, C);
-    cur.push_back(the_names[np_height], B);
+    cur.push_back(the_names["height"], B);
     cur.push_back(the_names["width"], A);
     skip_initial_space_and_back_input();
     if (cur_tok.is_open_paren()) {
@@ -1330,10 +1330,10 @@ void Parser::T_fbox_dash_box() {
     std::string oarg = sT_optarg_nopar();
     the_stack.push1(np_dashbox);
     Xid cur_id = the_stack.get_top_id();
-    if (!oarg.empty()) cur_id.add_attribute(np_box_pos, Istring(oarg));
-    cur_id.add_attribute(the_names[np_height], C);
+    if (!oarg.empty()) cur_id.add_attribute(the_names["box_pos"], Istring(oarg));
+    cur_id.add_attribute(the_names["height"], C);
     cur_id.add_attribute(the_names["width"], B);
-    cur_id.add_attribute(the_names[np_dashdim], A);
+    cur_id.add_attribute(the_names["dashdim"], A);
     T_arg_local();
     the_stack.pop(np_dashbox);
 }
@@ -1398,7 +1398,7 @@ void Parser::T_fbox(subtypes cc) {
         cur->kill_name();
     } else {
         AL.push_back(the_names[np_b_rend], the_names[np_boxed]);
-        AL.push_back(the_names[np_box_pos], ipos);
+        AL.push_back(the_names["box_pos"], ipos);
         AL.push_back(the_names[np_box_width], iwidth);
     }
 }

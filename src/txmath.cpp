@@ -374,7 +374,7 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
         if (!single_elt) val = gsl::not_null{new Xml(cst_mrow, val)};
     } else if (the_names["np_separator"].empty() && single_elt) {
     } else
-        res->add_att(cst_separators, np_separator);
+        res->add_att(the_names["separators"], the_names["np_separator"]);
     res->add_tmp(val);
     return res;
 }
@@ -384,10 +384,10 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
     if (lvl < 0) return res; // special case
     res = gsl::not_null{new Xml(cst_mstyle, res)};
     if (lvl == 0) {
-        res->add_att(the_names[cst_displaystyle], the_names["true"]);
+        res->add_att(the_names["displaystyle"], the_names["true"]);
         res->add_att(the_names["scriptlevel"], the_names["0"]);
     } else {
-        res->add_att(the_names[cst_displaystyle], the_names["false"]);
+        res->add_att(the_names["displaystyle"], the_names["false"]);
         res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
     }
     return res;
@@ -733,7 +733,7 @@ void Parser::finish_no_mathml(bool is_inline, int vp) {
     auto        s  = Istring(S);
     if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
     id.add_attribute(the_names["type"], the_names[cmi.get_pos_att()]);
-    id.add_attribute(np_textype, s);
+    id.add_attribute(the_names["textype"], s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->id  = id;
     if (the_main->interactive_math) std::cout << res << "\n";
@@ -832,7 +832,7 @@ void Parser::T_math(subtypes type) {
     // Insert the result in the tree.
     Xml *x = new Xml(cst_math, nullptr);
     x->id  = cmi.get_mid();
-    x->add_att(cst_xmlns, cst_mathml);
+    x->add_att(the_names["xmlns"], the_names["mathmlns"]);
     x->add_tmp(gsl::not_null{res});
     if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
     Xml *res1 = new Xml(np_formula, x);
@@ -1897,7 +1897,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         if (k <= 0)
             n++;
         else {
-            id.add_attribute(np_columnspan, Istring(std::to_string(k)));
+            id.add_attribute(the_names["columnspan"], Istring(std::to_string(k)));
             n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
@@ -1982,7 +1982,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     cmi.set_rid(rid);
     cmi.set_taid(taid);
     res->id = w;
-    if (needs_dp) res->add_att(the_names[cst_displaystyle], the_names["true"]);
+    if (needs_dp) res->add_att(the_names["displaystyle"], the_names["true"]);
     return res;
 }
 
@@ -2199,7 +2199,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
     Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer)));
-    s->add_att(np_form, np_prefix);
+    s->add_att(the_names["form"], the_names["prefix"]);
     return s;
 }
 
@@ -2355,7 +2355,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s   = L.get_arg1().convert_opname();
         Xml *       xs  = new Xml(Istring(s));
         Xml *       res = new Xml(cst_mo, xs);
-        res->add_att(np_form, np_prefix);
+        res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN);
     }
     case qopname_code: {
@@ -2364,7 +2364,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string o   = L.get_arg2().convert_opname();
         Xml *       xs  = new Xml(Istring(s));
         Xml *       res = new Xml(cst_mo, xs);
-        res->add_att(np_form, np_prefix);
+        res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, (o == "o") ? mt_flag_opN : mt_flag_opD);
     }
     case mathmi_code:
@@ -2417,7 +2417,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         if (c == hphantom_code || c == vphantom_code) {
             A = new Xml(the_names["mpadded"], A);
             if (c == vphantom_code) A->add_att(the_names["width"], the_names["0pt"]);
-            if (c == hphantom_code) A->add_att(the_names[np_height], the_names["0pt"]);
+            if (c == hphantom_code) A->add_att(the_names["height"], the_names["0pt"]);
             if (c == hphantom_code) A->add_att(the_names[np_depth], the_names["0pt"]);
         }
         Xml *R = new Xml(the_names["mphantom"], A);
@@ -2430,7 +2430,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         char w = math_buffer[0];
         if (w != 'b' && w != 't' && w != 'w') w = 'c';
         if (w == 'b' || w == 'c') R->add_att(the_names[np_depth], the_names["0pt"]);
-        if (w == 't' || w == 'c') R->add_att(the_names[np_height], the_names["0pt"]);
+        if (w == 't' || w == 'c') R->add_att(the_names["height"], the_names["0pt"]);
         if (w == 'w') R->add_att(the_names["width"], the_names["0pt"]);
         return MathElt(R, mt_flag_small);
     }
@@ -3140,7 +3140,7 @@ auto Cv3Helper::find_operator(math_style cms) -> name_positions {
         Xml *q = p->spec_copy();
         if (q != nullptr) {
             p = q;
-            p->add_att(the_names[np_movablelimits], the_names["false"]);
+            p->add_att(the_names["movablelimits"], the_names["false"]);
         }
     }
     if (what == 3)
@@ -3206,7 +3206,7 @@ auto Math::M_cv3(math_style cms) -> Math {
     }
 }
 
-// returns the element with a new id, if it's a <mo> and has a np_movablelimits
+// returns the element with a new id, if it's a <mo> and has a movablelimits
 // attributes; return null otherwise.
 auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;

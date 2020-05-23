@@ -30,7 +30,6 @@ void NameMapper::boot() {
     def("bigcircle", np_bigcircle, "pic-bigcircle");
     def("border_left_width", np_border_leftw, "border-left-width");
     def("border_right_width", np_border_rightw, "border-right-width");
-    def("box_pos", np_box_pos, "position");
     def("box_scale", np_s_scale, "scale");
     def("box_width", np_box_width, "width");
     def("box", np_box, "pic-framebox");
@@ -100,14 +99,12 @@ void NameMapper::boot() {
     def("line", np_line, "pic-line");
     def("lineC", np_lineC, "line");
     def("linethickness", np_line_thickness, "pic-linethickness");
-    def("mathmlns", cst_mathml, "http://www.w3.org/1998/Math/MathML");
     def("minipage_width", np_minipage_width, "width");
     def("multiput", np_multiput, "pic-multiput");
     def("natcit", np_natcit, "Cit");
     def("nb_rasection", np_rasection, "");
     def("np_center_etc", np_center_etc, "center");
     def("np_linethickness", np_linethickness, "linethickness");
-    def("np_separator", np_separator, "");
     def("np_theorem", np_theorem, "");
     def("oval", np_oval, "pic-oval");
     def("particule", np_particle, "part");
@@ -144,7 +141,6 @@ void NameMapper::boot() {
     def(cst_ci, "ci");
     def(cst_cn, "cn");
     def(cst_csymbol, "csymbol");
-    def(cst_displaystyle, "displaystyle");
     def(cst_document, "document");
     def(cst_elt, "ELT");
     def(cst_flaghi, "'hi_flag");
@@ -179,9 +175,7 @@ void NameMapper::boot() {
     def(cst_particip, "particip");
     def(cst_rasection, "RAsection");
     def(cst_refer, "refer");
-    def(cst_separators, "separators");
     def(cst_temporary, "temporary");
-    def(cst_xmlns, "xmlns");
     def(cstb_address, "address");
     def(cstb_article, "article");
     def(cstb_author, "author");
@@ -291,9 +285,7 @@ void NameMapper::boot() {
     def(np_color, "color");
     def(np_color2, "color2");
     def(np_cols, "cols");
-    def(np_columnspan, "columnspan");
     def(np_dashbox, "pic-dashbox");
-    def(np_dashdim, "dashdim");
     def(np_dashline, "dashline");
     def(np_depth, "depth");
     def(np_description, "description");
@@ -315,7 +307,6 @@ void NameMapper::boot() {
     def(np_figure, "figure");
     def(np_file, "file");
     def(np_float, "float");
-    def(np_form, "form");
     def(np_formula, "formula");
     def(np_frame, "pic-frame");
     def(np_framed, "framed");
@@ -327,7 +318,6 @@ void NameMapper::boot() {
     def(np_hdr, "hdr");
     def(np_head, "head");
     def(np_header, "headings");
-    def(np_height, "height");
     def(np_hfil, "hfil");
     def(np_hfill, "hfill");
     def(np_hfilneg, "hfilneg");
@@ -366,7 +356,6 @@ void NameMapper::boot() {
     def(np_mml_upright, "mml@font@upright");
     def(np_module, "module");
     def(np_moreinfo, "moreinfo");
-    def(np_movablelimits, "movablelimits");
     def(np_node, "node");
     def(np_nodebox, "nodebox");
     def(np_nodecircle, "nodecircle");
@@ -392,7 +381,6 @@ void NameMapper::boot() {
     def(np_point, "point");
     def(np_pos, "pos");
     def(np_pre, "pre");
-    def(np_prefix, "prefix");
     def(np_prenom, "prenom");
     def(np_prenote, "prenote");
     def(np_profession, "profession");
@@ -418,7 +406,6 @@ void NameMapper::boot() {
     def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def(np_starred, "starred");
     def(np_style, "style");
     def(np_subfigure, "subfigure");
     def(np_table, "table");
@@ -428,7 +415,6 @@ void NameMapper::boot() {
     def(np_term, "term");
     def(np_texmath, "texmath");
     def(np_texte, "texte");
-    def(np_textype, "textype");
     def(np_theglossary, "theglossary");
     def(np_theindex, "theindex");
     def(np_theme, "theme");
@@ -467,10 +453,13 @@ void NameMapper::boot() {
     set("language", "");
     set("np_center", "center");
     set("np_cst_width", "width");
+    set("np_separator", "");
     set("cell_topborder", "top-border");
     set("border_top_width", "border-top-width");
     set("cell_bottomborder", "bottom-border");
     set("border_bottom_width", "border-bottom-width");
+    set("mathmlns", "http://www.w3.org/1998/Math/MathML");
+    set("box_pos", "position");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
@@ -523,9 +512,9 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa == "bibtex_extensions") { Buffer(sb).interpret_bibtex_extension_list(); }
     if (sa == "mfenced_separator_val") {
         if (sb == "NONE")
-            set(np_separator, "");
+            set("np_separator", "");
         else
-            set(np_separator, sb);
+            set("np_separator", sb);
     }
     if (sa.ends_with("_vals")) {
         Buffer B(sb);
