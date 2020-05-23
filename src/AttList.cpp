@@ -21,13 +21,8 @@ void AttList::push_back(name_positions name, name_positions value, bool force) {
 
 void AttList::push_back(name_positions N, const Istring &v) { push_back(the_names[N], v, true); }
 
-void AttList::delete_att(name_positions a) {
-    if (auto i = lookup(the_names[a])) at(*i).name = Istring(); // \todo delete entry instead
-}
-
-// Prints an att list on a buffer, then a stream.
-void AttList::print(std::ostream &fp) const {
+auto operator<<(std::ostream &o, const AttList &a) -> std::ostream & {
     Buffer B;
-    B.push_back(*this);
-    fp << B;
+    B.push_back(a);
+    return o << B;
 }

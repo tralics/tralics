@@ -12,11 +12,10 @@ struct AttList : public std::vector<AttPair> {
     [[nodiscard]] auto lookup(const Istring &x) const -> std::optional<size_t>;
 
     using std::vector<AttPair>::push_back;
-    void                push_back(const Istring &name, const Istring &value, bool force = true);
-    [[deprecated]] void push_back(name_positions name, name_positions value, bool force = true);
+    void push_back(const Istring &name, const Istring &value, bool force = true);
 
-    void push_back_empty(Istring n);
-    void push_back(name_positions n, const Istring &v);
-    void delete_att(name_positions a);
-    void print(std::ostream &fp) const;
+    [[deprecated]] void push_back(name_positions name, name_positions value, bool force = true);
+    [[deprecated]] void push_back(name_positions n, const Istring &v);
 };
+
+auto operator<<(std::ostream &o, const AttList &a) -> std::ostream &;

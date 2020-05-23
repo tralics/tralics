@@ -54,11 +54,7 @@ namespace io_ns {
 
 // ---------------------------------------------------------
 
-// Prints an att list on a stream.
-auto operator<<(std::ostream &fp, Xid X) -> std::ostream & {
-    X.get_att().print(fp);
-    return fp;
-}
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_att(); }
 
 // ---------------------------------------------------------
 // Output methods for characters
