@@ -43,7 +43,7 @@ class NewArray {
     AttList                         attribs;
     int                             ac_cell_no{};
     bool                            first_bar{};
-    name_positions                  cur_h_pos{};
+    std::string                     cur_h_pos;
 
 public:
     auto               dump_slot() -> String;

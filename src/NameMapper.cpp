@@ -39,9 +39,6 @@ void NameMapper::boot() {
     def("box", np_box, "pic-framebox");
     def("caption", np_captions, "head");
     def("cell_bottomborder", np_bottomborder, "bottom-border");
-    def("cell_center", np_c_center, "center");
-    def("cell_left", np_c_left, "left");
-    def("cell_right", np_c_right, "right");
     def("cell_topborder", np_topborder, "top-border");
     def("centering", np_center_etc1, "center");
     def("circle", np_circle, "pic-circle");
@@ -534,6 +531,9 @@ void NameMapper::boot() {
     // Cases without name_position where default value is not the key name
     set("cell_leftborder", "left-border");
     set("cell_rightborder", "right-border");
+    set("cell_center", "center");
+    set("cell_left", "left");
+    set("cell_right", "right");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {

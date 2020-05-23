@@ -215,17 +215,17 @@ void NewArray::test_pach() {
     unsigned c = 0;
     if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13) c = current_token.char_val().value;
     if (c == 'c') {
-        cur_h_pos = np_c_center;
+        cur_h_pos = "cell_center";
         ch_num    = chn_c;
         return;
     }
     if (c == 'l') {
-        cur_h_pos = np_c_left;
+        cur_h_pos = "cell_left";
         ch_num    = chn_l;
         return;
     }
     if (c == 'r') {
-        cur_h_pos = np_c_right;
+        cur_h_pos = "cell_right";
         ch_num    = chn_r;
         return;
     }
@@ -293,7 +293,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     last_ch_class = chc_start;
     first_bar     = true;
     bool seen     = false;
-    cur_h_pos     = np_c_center;
+    cur_h_pos     = "cell_center";
     if (P->tracing_commands()) the_log << "array preamble parse: ";
     for (;;) {
         if (preamble.empty()) break;
@@ -307,7 +307,7 @@ void NewArray::run(Xid ID, bool main_fct) {
             else
                 ac_maybe_finish_multi(seen);
             attribs.push_back(the_names["halign"], the_names[cur_h_pos], false); // set attributes
-            cur_h_pos = np_c_center;                                             // add a default
+            cur_h_pos = "cell_center";                                           // add a default
             current_list.clear();
             break;
         case chc_bar:
