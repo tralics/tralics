@@ -311,7 +311,6 @@ void NameMapper::boot() {
     def(np_dy, "dy");
     def(np_encap, "encap");
     def(np_error, "error");
-    def(np_false, "false");
     def(np_fbox, "fbox");
     def(np_figure, "figure");
     def(np_file, "file");
@@ -390,7 +389,6 @@ void NameMapper::boot() {
     def(np_part3, "participants");
     def(np_pers, "pers");
     def(np_picture, "picture");
-    def(np_place, "place");
     def(np_point, "point");
     def(np_pos, "pos");
     def(np_pre, "pre");
@@ -438,7 +436,6 @@ void NameMapper::boot() {
     def(np_toc1, "listoftables");
     def(np_toc2, "listoffigures");
     def(np_totalwidth, "totalwidth");
-    def(np_true, "true");
     def(np_underline, "underline");
     def(np_unknown, "unknown");
     def(np_url, "url");

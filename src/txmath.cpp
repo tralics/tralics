@@ -384,10 +384,10 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
     if (lvl < 0) return res; // special case
     res = gsl::not_null{new Xml(cst_mstyle, res)};
     if (lvl == 0) {
-        res->add_att(cst_displaystyle, np_true);
+        res->add_att(the_names[cst_displaystyle], the_names["true"]);
         res->add_att(the_names["scriptlevel"], the_names["0"]);
     } else {
-        res->add_att(cst_displaystyle, np_false);
+        res->add_att(the_names[cst_displaystyle], the_names["false"]);
         res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
     }
     return res;
@@ -1982,7 +1982,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     cmi.set_rid(rid);
     cmi.set_taid(taid);
     res->id = w;
-    if (needs_dp) res->add_att(cst_displaystyle, np_true);
+    if (needs_dp) res->add_att(the_names[cst_displaystyle], the_names["true"]);
     return res;
 }
 
@@ -3140,7 +3140,7 @@ auto Cv3Helper::find_operator(math_style cms) -> name_positions {
         Xml *q = p->spec_copy();
         if (q != nullptr) {
             p = q;
-            p->add_att(np_movablelimits, np_false);
+            p->add_att(the_names[np_movablelimits], the_names["false"]);
         }
     }
     if (what == 3)

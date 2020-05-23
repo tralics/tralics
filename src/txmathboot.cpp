@@ -1286,7 +1286,7 @@ void MathDataP::mk_moo(String name, String ent, math_loc pos) {
     symcodes T = mathopn_cmd;
     if (first_w_limit_code <= pos && pos <= last_w_limit_code) {
         T = mathop_cmd;
-        x->add_att(np_movablelimits, np_true);
+        x->add_att(the_names[np_movablelimits], the_names["true"]);
     }
     init_builtin(name, pos, x, T);
 }
@@ -1469,17 +1469,17 @@ void MathDataP::boot2() {
     // Constructs varlim etc
 
     auto lim_op = mk_mo("lim");
-    lim_op->add_att(np_movablelimits, np_false);
+    lim_op->add_att(the_names[np_movablelimits], the_names["false"]);
 
     init_builtin("varlimsup", varlimsup_code, new Xml(xml2sons(the_names["mover"], lim_op, get_mc_table(1))), mathop_cmd);
     init_builtin("varliminf", varliminf_code, new Xml(xml2sons(the_names["munder"], lim_op, get_mc_table(3))), mathop_cmd);
 
     auto *x = new Xml(xml2sons(the_names["munder"], lim_op, get_builtin(underrightarrow_code)));
-    x->add_att(cst_accentunder, np_true);
+    x->add_att(the_names[cst_accentunder], the_names["true"]);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 
     x = new Xml(xml2sons(the_names["munder"], lim_op, get_builtin(underleftarrow_code)));
-    x->add_att(cst_accentunder, np_true);
+    x->add_att(the_names[cst_accentunder], the_names["true"]);
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
     x = mk_mo("(");

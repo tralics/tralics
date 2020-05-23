@@ -35,7 +35,7 @@ namespace {
     inline void txsleep(unsigned i) { sleep(i); }
 #endif
 
-    auto st_bool(bool x) -> name_positions { return x ? np_true : np_false; };
+    auto st_bool(bool x) -> Istring { return x ? the_names["true"] : the_names["false"]; };
 } // namespace
 
 namespace translate_ns {
@@ -362,7 +362,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->id.add_attribute(np_noindent, st_bool(noindent), false);
+            cp->id.add_attribute(the_names[np_noindent], st_bool(noindent), false);
             return;
         }
     }
@@ -374,7 +374,7 @@ void Parser::finish_par_cmd(bool noindent, const Istring &xs) {
     auto k  = cur_centering();
     Xid  id = ileave_v_mode();
     if (!xs.null()) id.add_attribute(the_names[np_spacebefore], xs);
-    if (k != 1) id.add_attribute(np_noindent, st_bool(noindent));
+    if (k != 1) id.add_attribute(the_names[np_noindent], st_bool(noindent));
 }
 
 // Translation of \par
@@ -568,8 +568,8 @@ void Parser::T_paras(subtypes x) {
             token_from_list(L.front());
             sectionning_offset = section_code;
             if (cur_cmd_chr.cmd == section_cmd) sectionning_offset = cur_cmd_chr.chr;
-            if (sectionning_offset == chapter_code) Xid(1).add_attribute(np_chapters, np_true);
-            if (sectionning_offset == part_code) Xid(1).add_attribute(np_part, np_true);
+            if (sectionning_offset == chapter_code) Xid(1).add_attribute(the_names[np_chapters], the_names["true"]);
+            if (sectionning_offset == part_code) Xid(1).add_attribute(the_names[np_part], the_names["true"]);
         }
         return;
     }
@@ -709,8 +709,8 @@ void Parser::T_float(subtypes c) {
         word_define(incentering_code, 1, false);
         leave_h_mode();
         the_stack.push1(np_float);
-        the_stack.add_att_to_last(np_place, opt);
-        if (c == 1) the_stack.add_att_to_last(np_starred, np_true);
+        the_stack.add_att_to_last(the_names["place"], opt);
+        if (c == 1) the_stack.add_att_to_last(the_names[np_starred], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
         B << bf_reset << "fname@" << sarg;
         expand_no_arg(B);
@@ -928,11 +928,11 @@ void Parser::includegraphics(subtypes C) {
             no_extension(AL, sval);
             ic = true;
         } else if (skey == "keepaspectratio" || skey == "clip" || skey == "draft" || skey == "hiresbb") {
-            name_positions V    = np_true;
-            std::string    sval = list_to_string_c(val, bval);
-            if (sval == "false") V = np_false;
+            std::string V    = "true";
+            std::string sval = list_to_string_c(val, bval);
+            if (sval == "false") V = "false";
             if (skey == "clip")
-                AL.push_back(np_clip, V, true);
+                AL.push_back(the_names[np_clip], the_names[V], true);
             else
                 AL.push_back(Istring(skey), the_names[V], true);
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
@@ -1232,7 +1232,7 @@ void Parser::T_cap_or_note(bool cap) {
         leave_h_mode();
     } else {             // case of footnote, locally redefines fonts
         ignore_optarg(); // is this OK ?
-        the_stack.add_att_to_last(the_names[np_place], the_names[np_foot]);
+        the_stack.add_att_to_last(the_names["place"], the_names[np_foot]);
         my_stats.one_more_footnote();
         refstepcounter("footnote", true);
         note        = the_stack.top_stack();
@@ -1260,8 +1260,8 @@ void Parser::T_makebox(bool framed, Token C) {
     leave_v_mode();
     the_stack.push1(np_box);
     AttList &cur = last_att_list();
-    if (framed) cur.push_back(np_framed, np_true);
-    if (!oarg.empty()) cur.push_back(np_box_pos, Istring(oarg));
+    if (framed) cur.push_back(the_names[np_framed], the_names["true"]);
+    if (!oarg.empty()) cur.push_back(the_names[np_box_pos], Istring(oarg));
     cur.push_back(the_names[np_height], B);
     cur.push_back(the_names["width"], A);
     T_arg_local();
@@ -1394,12 +1394,12 @@ void Parser::T_fbox(subtypes cc) {
         return;
     }
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
-        aux->id.add_attribute(np_framed, np_true);
+        aux->id.add_attribute(the_names[np_framed], the_names["true"]);
         cur->kill_name();
     } else {
-        AL.push_back(np_b_rend, np_boxed);
-        AL.push_back(np_box_pos, ipos);
-        AL.push_back(np_box_width, iwidth);
+        AL.push_back(the_names[np_b_rend], the_names[np_boxed]);
+        AL.push_back(the_names[np_box_pos], ipos);
+        AL.push_back(the_names[np_box_width], iwidth);
     }
 }
 
@@ -2014,8 +2014,8 @@ void Parser::T_dashline(subtypes c) {
         TokenList L        = read_arg();
         Istring   aa       = token_list_to_att(L, T, false);
         AttList & AL       = the_stack.add_newid0(x0);
-        AL.push_back(np_size, aa);
-        if (has_star) AL.push_back(np_full, np_true);
+        AL.push_back(the_names[np_size], aa);
+        if (has_star) AL.push_back(the_names[np_full], the_names["true"]);
         return;
     }
     Istring A = nT_optarg_nopar();

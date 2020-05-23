@@ -452,7 +452,7 @@ void Stack::push_pop_cell(int dir) {
 }
 
 void Xid::add_top_rule() const {
-    add_attribute(the_names["cell_topborder"], the_names[np_true]);
+    add_attribute(the_names["cell_topborder"], the_names["true"]);
     if (in_hlinee) {
         add_attribute(the_names["border_top_width"], hlinee_width);
         if (have_above) add_attribute(the_names["top_rule_space_above"], hlinee_above);
@@ -460,7 +460,7 @@ void Xid::add_top_rule() const {
     }
 }
 void Xid::add_bottom_rule() const {
-    add_attribute(the_names["cell_bottomborder"], the_names[np_true]);
+    add_attribute(the_names["cell_bottomborder"], the_names["true"]);
     if (in_hlinee) {
         add_attribute(the_names["border_bottom_width"], hlinee_width);
         if (have_above) add_attribute(the_names["bottom_rule_space_above"], hlinee_above);
