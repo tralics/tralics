@@ -2038,17 +2038,6 @@ enum name_positions {
     cst_temporary,
     cst_theorem,
     cst_xmlns,
-    // keep these in order
-    cst_dig0,
-    cst_dig1,
-    cst_dig2,
-    cst_dig3,
-    cst_dig4,
-    cst_dig5,
-    cst_dig6,
-    cst_dig7,
-    cst_dig8,
-    cst_dig9,
     // For the biblio
     cstb_article,
     cstb_book,

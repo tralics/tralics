@@ -227,7 +227,7 @@ private:
 // but math handling is not recursive. reset() is called on every formula.
 class MathHelper {
     bool                     current_mode{}; // display or not, needed for \label
-    name_positions           pos_att;        // position attribute, inline or display
+    std::string              pos_att;        // position attribute, inline or display
     bool                     seen_label{};   // do we see already have a label
     bool                     warned_label{}; // was the used warned for labels on this formula ?
     std::string              label_val;      // name of the label
@@ -269,7 +269,7 @@ public:
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
     [[nodiscard]] auto get_label_val() const -> std::string { return label_val; }
     void               stats();
-    [[nodiscard]] auto get_pos_att() const -> name_positions { return pos_att; }
+    [[nodiscard]] auto get_pos_att() const -> std::string { return pos_att; }
     void               reset(bool dual);
     [[nodiscard]] auto is_inline() const -> bool { return current_mode; }
     [[nodiscard]] auto has_tag() const -> bool { return !tag_list.empty(); }

@@ -150,16 +150,6 @@ void NameMapper::boot() {
     def(cst_ci, "ci");
     def(cst_cn, "cn");
     def(cst_csymbol, "csymbol");
-    def(cst_dig0, "0");
-    def(cst_dig1, "1");
-    def(cst_dig2, "2");
-    def(cst_dig3, "3");
-    def(cst_dig4, "4");
-    def(cst_dig5, "5");
-    def(cst_dig6, "6");
-    def(cst_dig7, "7");
-    def(cst_dig8, "8");
-    def(cst_dig9, "9");
     def(cst_displaystyle, "displaystyle");
     def(cst_document, "document");
     def(cst_elt, "ELT");
