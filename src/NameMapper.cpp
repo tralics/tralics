@@ -41,9 +41,7 @@ void NameMapper::boot() {
     def("cell_bottomborder", np_bottomborder, "bottom-border");
     def("cell_center", np_c_center, "center");
     def("cell_left", np_c_left, "left");
-    def("cell_leftborder", np_leftborder, "left-border");
     def("cell_right", np_c_right, "right");
-    def("cell_rightborder", np_rightborder, "right-border");
     def("cell_topborder", np_topborder, "top-border");
     def("centering", np_center_etc1, "center");
     def("circle", np_circle, "pic-circle");
@@ -369,7 +367,6 @@ void NameMapper::boot() {
     def(np_glossary, "glossary");
     def(np_graphics, "graphics");
     def(np_halfem, "4.pt");
-    def(np_halign, "halign");
     def(np_hdr, "hdr");
     def(np_head, "head");
     def(np_header, "headings");
@@ -533,6 +530,10 @@ void NameMapper::boot() {
 
     for (char x = 'a'; x <= 'z'; x++) def(name_positions(to_unsigned(np_letter_a + x - 'a')), std::string(1, x));
     for (char x = 'A'; x <= 'Z'; x++) def(name_positions(to_unsigned(np_letter_A + x - 'A')), std::string(1, x));
+
+    // Cases without name_position where default value is not the key name
+    set("cell_leftborder", "left-border");
+    set("cell_rightborder", "right-border");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
