@@ -45,9 +45,9 @@ namespace {
             if (c != 'r' && c != 'l' && c != 'c') continue;
             AttList L;
             if (c == 'l')
-                L.push_back(np_columnalign, np_left);
+                L.push_back(the_names["columnalign"], the_names["left"]);
             else if (c == 'r')
-                L.push_back(np_columnalign, np_right);
+                L.push_back(the_names["columnalign"], the_names["right"]);
             res.push_back(L);
         }
         return res;
@@ -385,10 +385,10 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
     res = gsl::not_null{new Xml(cst_mstyle, res)};
     if (lvl == 0) {
         res->add_att(cst_displaystyle, np_true);
-        res->add_att(cst_scriptlevel, cst_dig0);
+        res->add_att(the_names["scriptlevel"], the_names["0"]);
     } else {
         res->add_att(cst_displaystyle, np_false);
-        res->add_att(cst_scriptlevel, name_positions(cst_dig0 + lvl - 1));
+        res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
     }
     return res;
 }
@@ -1522,8 +1522,8 @@ void Parser::scan_eqno(math_list_type type) {
         parse_error(err_tok, "Command \\eqno allowed only in display math", "bad \\eqno");
         return;
     }
-    name_positions w = cur_cmd_chr.chr == leqno_code ? np_left : np_right;
-    cmi.get_fid().add_attribute(np_eqnpos, w, true);
+    std::string w = cur_cmd_chr.chr == leqno_code ? "left" : "right";
+    cmi.get_fid().add_attribute(the_names["eqnpos"], the_names[w], true);
     TokenList L;
     int       balance = 0;
     for (;;) {
@@ -1909,11 +1909,11 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
     int k = args.check_align();
     if (k != 0) tbl_align = k;
     if (tbl_align == 1)
-        id.add_attribute(np_columnalign, np_left);
+        id.add_attribute(the_names["columnalign"], the_names["left"]);
     else if (tbl_align == 2)
-        id.add_attribute(np_columnalign, np_right);
+        id.add_attribute(the_names["columnalign"], the_names["right"]);
     else if (tbl_align == 3)
-        id.add_attribute(np_columnalign, np_center);
+        id.add_attribute(the_names["columnalign"], the_names["np_center"]);
     res.add_tmp(gsl::not_null{args.convert_math(W)});
     return res;
 }
@@ -1949,7 +1949,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
             row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
-            if (first_cell) cmi.get_cid().add_attribute(np_columnalign, np_left);
+            if (first_cell) cmi.get_cid().add_attribute(the_names["columnalign"], the_names["left"]);
             cmi.set_cid(cid);
             cell.clear();
             first_cell = false;
@@ -1968,7 +1968,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     }
     if (!cell.empty()) {
         row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
-        if (is_multline) cmi.get_cid().add_attribute(np_columnalign, np_right);
+        if (is_multline) cmi.get_cid().add_attribute(the_names["columnalign"], the_names["right"]);
         cmi.set_cid(cid);
     }
     if (row->empty()) // kill the last empty row
@@ -2120,7 +2120,7 @@ auto Math::trivial_math(long action) -> Xml * {
     if (len != 1) return nullptr;
     if ((action & 2) == 0) return nullptr;
     if (front().is_digit()) {
-        Istring sval = the_names[std::to_string(cst_dig0 + front().val_as_digit())];
+        Istring sval = the_names[std::to_string(front().val_as_digit())];
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
@@ -2711,10 +2711,10 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, std::string pos, Xml *a,
     auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
     if (!sz.null()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
-        if (numalign == 1) R->add_att(cst_numalign, np_left);
-        if (numalign == 2) R->add_att(cst_numalign, np_right);
-        if (denalign == 1) R->add_att(cst_denalign, np_left);
-        if (denalign == 2) R->add_att(cst_denalign, np_right);
+        if (numalign == 1) R->add_att(the_names["numalign"], the_names["left"]);
+        if (numalign == 2) R->add_att(the_names["numalign"], the_names["right"]);
+        if (denalign == 1) R->add_att(the_names["denomalign"], the_names["left"]);
+        if (denalign == 2) R->add_att(the_names["denomalign"], the_names["right"]);
     }
     if (style >= 0) R = math_data.add_style(style, R);
     if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, R);
@@ -2969,7 +2969,7 @@ void Math::handle_mbox(Math &res) {
                 b = mk_space(B);
             } else {
                 b = new Xml(cst_mspace, nullptr);
-                b->add_att(np_cst_width, np_halfem);
+                b->add_att(the_names["np_cst_width"], the_names["4.pt"]);
             }
             res.push_back_small(b);
         } else {

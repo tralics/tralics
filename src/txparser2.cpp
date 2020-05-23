@@ -390,12 +390,12 @@ void Parser::T_ignoreA() {
 }
 
 void Parser::T_line(subtypes c) {
-    name_positions k = np_center;
+    std::string k = "np_center";
     switch (c) {
-    case leftline_code: k = np_left; break;
-    case rightline_code: k = np_right; break;
-    case llap_code: k = np_llap; break;
-    case rlap_code: k = np_rlap; break;
+    case leftline_code: k = "left"; break;
+    case rightline_code: k = "right"; break;
+    case llap_code: k = "llap"; break;
+    case rlap_code: k = "rlap"; break;
     default:;
     }
     if (c == leftline_code || c == centerline_code || c == rightline_code) {
@@ -404,7 +404,7 @@ void Parser::T_line(subtypes c) {
     }
     the_stack.push1(np_lineC);
     AttList &cur = last_att_list();
-    cur.push_back(np_rend, k);
+    cur.push_back(the_names["rend"], the_names[k]);
     T_arg_local();
     the_stack.pop(np_lineC);
 }

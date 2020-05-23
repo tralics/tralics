@@ -139,7 +139,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     Xml *res = translate_list(L);
     Xml *x   = new Xml(np_index, res);
     if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
-    x->id.add_attribute(np_level, name_positions(cst_dig0 + level));
+    x->id.add_attribute(the_names[np_level], the_names[std::to_string(level)]);
     auto iid = the_index.last_iid++;
     IR.push_back(new Indexer(B, aux, x, level, iid));
     return n;

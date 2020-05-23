@@ -112,8 +112,6 @@ void NameMapper::boot() {
     def("natcit", np_natcit, "Cit");
     def("nb_rasection", np_rasection, "");
     def("np_center_etc", np_center_etc, "center");
-    def("np_center", np_center, "center");
-    def("np_cst_width", np_cst_width, "width");
     def("np_linethickness", np_linethickness, "linethickness");
     def("np_separator", np_separator, "");
     def("np_theorem", np_theorem, "");
@@ -152,7 +150,6 @@ void NameMapper::boot() {
     def(cst_ci, "ci");
     def(cst_cn, "cn");
     def(cst_csymbol, "csymbol");
-    def(cst_denalign, "denomalign");
     def(cst_dig0, "0");
     def(cst_dig1, "1");
     def(cst_dig2, "2");
@@ -201,11 +198,9 @@ void NameMapper::boot() {
     def(cst_munder, "munder");
     def(cst_munderover, "munderover");
     def(cst_nl, "\n");
-    def(cst_numalign, "numalign");
     def(cst_particip, "particip");
     def(cst_rasection, "RAsection");
     def(cst_refer, "refer");
-    def(cst_scriptlevel, "scriptlevel");
     def(cst_separators, "separators");
     def(cst_temporary, "temporary");
     def(cst_theorem, "theorem");
@@ -319,7 +314,6 @@ void NameMapper::boot() {
     def(np_color, "color");
     def(np_color2, "color2");
     def(np_cols, "cols");
-    def(np_columnalign, "columnalign");
     def(np_columnspan, "columnspan");
     def(np_dashbox, "pic-dashbox");
     def(np_dashdim, "dashdim");
@@ -341,7 +335,6 @@ void NameMapper::boot() {
     def(np_dx, "dx");
     def(np_dy, "dy");
     def(np_encap, "encap");
-    def(np_eqnpos, "eqnpos");
     def(np_error, "error");
     def(np_Error, "Error");
     def(np_false, "false");
@@ -358,7 +351,6 @@ void NameMapper::boot() {
     def(np_full, "full");
     def(np_glossary, "glossary");
     def(np_graphics, "graphics");
-    def(np_halfem, "4.pt");
     def(np_hdr, "hdr");
     def(np_head, "head");
     def(np_header, "headings");
@@ -379,7 +371,6 @@ void NameMapper::boot() {
     def(np_key, "key");
     def(np_keywords, "keywords");
     def(np_leaders, "leaders");
-    def(np_left, "left");
     def(np_leg, "leg");
     def(np_letters_bl, "bl");
     def(np_letters_br, "br");
@@ -387,7 +378,6 @@ void NameMapper::boot() {
     def(np_letters_tr, "tr");
     def(np_level, "level");
     def(np_list, "list");
-    def(np_llap, "llap");
     def(np_mainmatter, "mainmatter");
     def(np_marginpar, "marginpar");
     def(np_mbox, "mbox");
@@ -452,8 +442,6 @@ void NameMapper::boot() {
     def(np_rend, "rend");
     def(np_repeat, "repeat");
     def(np_research_centre, "research-centre");
-    def(np_right, "right");
-    def(np_rlap, "rlap");
     def(np_row, "row");
     def(np_rule_bsa, "bottom_rule_space_above");
     def(np_rule_bsb, "bottom_rule_space_below");
@@ -531,6 +519,8 @@ void NameMapper::boot() {
     set("cell_left", "left");
     set("cell_right", "right");
     set("language", "");
+    set("np_center", "center");
+    set("np_cst_width", "width");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {

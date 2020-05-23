@@ -1009,7 +1009,7 @@ void math_ns::fill_math_char_slots() {
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(const std::string &a) -> Xml * {
     Xml *b = new Xml(cst_mspace, nullptr);
-    b->add_att(the_names[np_cst_width], Istring(a));
+    b->add_att(the_names["np_cst_width"], Istring(a));
     return b;
 }
 
@@ -1438,8 +1438,8 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
 
 void MathDataP::boot_chars() {
     for (unsigned i = 0; i <= 9; i++) {
-        Istring K = the_names[name_positions(cst_dig0 + i)];
-        init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K)));
+        Istring K = the_names[std::to_string(i)];
+        init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K))); // \todo useless?
     }
 
     for (uchar i = 'A'; i <= 'Z'; i++) init_builtin(i + math_char_normal_loc, make_math_char(i, 0));
@@ -1484,13 +1484,13 @@ void MathDataP::boot2() {
 
     x = mk_mo("(");
     x = new Xml(the_names[cst_mpadded], x);
-    x->add_att(np_cst_width, np_zerodim);
+    x->add_att(the_names["np_cst_width"], the_names[np_zerodim]);
     x = new Xml(the_names[cst_mphantom], x);
     init_builtin("strut", strut_code, x, mathord_cmd);
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
     Xml *y = new Xml(the_names[cst_mpadded], get_builtin(int_code));
-    y->add_att(the_names[np_cst_width], Istring("-3pt"));
+    y->add_att(the_names["np_cst_width"], Istring("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(cst_mrow, nullptr);
     x->push_back_unless_nullptr(z);

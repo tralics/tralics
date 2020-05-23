@@ -481,7 +481,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
             after_dummy = false;
             Xml *xval   = front().remove_prefix();
             if ((xval != nullptr) && !xval->is_xmlc() &&
-                (xval->has_name(cst_msup) || xval->has_name(cst_msub) || xval->has_name(cst_msubsup))) {
+                (xval->has_name_of("msup") || xval->has_name_of("msub") || xval->has_name_of("msubsup"))) {
                 M.pop_last(xval);
             }
         }
