@@ -1987,7 +1987,6 @@ enum name_positions {
     cst_document,
     cst_composition,
     cst_elt,
-    cst_hbox,
     cst_fonts,
     cst_foot,
     cst_hanl,

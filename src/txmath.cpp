@@ -714,7 +714,7 @@ void Parser::after_math(bool is_inline) {
     cmi.finish_math_mem();
     if (is_inline)
         leave_v_mode();
-    else if (the_stack.is_frame(np_fbox))
+    else if (the_stack.is_frame("fbox"))
         return;
     else {
         bool w = the_stack.in_h_mode() || the_stack.in_v_mode();
@@ -1161,7 +1161,7 @@ void Parser::scan_math(int res, math_list_type type) {
 
 // We have seen & or \\. Possibly inserts v-part
 auto Parser::scan_math_endcell(Token t) -> bool {
-    if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
+    if (the_stack.is_frame("cell") && !the_stack.is_omit_cell()) {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
             if (tracing_commands()) {
@@ -1350,7 +1350,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
     bool     at_start = T == begin_cmd;
     // Check if v-part of template has to be inserted here
     if (!at_start && stack_math_in_cell()) {
-        if (the_stack.is_frame(np_cell) && !the_stack.is_omit_cell()) {
+        if (the_stack.is_frame("cell") && !the_stack.is_omit_cell()) {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
                 if (tracing_commands()) {

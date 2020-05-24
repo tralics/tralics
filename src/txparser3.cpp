@@ -470,7 +470,7 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
         the_log << "+stack: finish a box of type " << pos << "\n";
     }
     P.flush_buffer();
-    P.the_stack.pop(the_names[cst_hbox]);
+    P.the_stack.pop(the_names["hbox"]);
     the_box_to_end   = val;
     the_box_position = to_signed(pos);
 }

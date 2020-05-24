@@ -114,7 +114,7 @@ public:
     void               init_all(const std::string &a);
     void               ipush(Istring fr, Xml *V);
     auto               is_float() -> bool;
-    [[nodiscard]] auto is_frame(name_positions s) const -> bool;
+    [[nodiscard]] auto is_frame(const std::string &s) const -> bool;
     [[nodiscard]] auto is_frame2(name_positions S) const -> bool;
     auto               is_omit_cell() -> bool { return Table.back().omit_cell; }
     [[nodiscard]] auto last_att_list() const -> AttList & { return get_xid().get_att(); }

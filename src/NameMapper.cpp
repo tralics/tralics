@@ -144,7 +144,6 @@ void NameMapper::boot() {
     def(cst_fonts, "fonts");
     def(cst_foot, "foot");
     def(cst_hanl, "hanl");
-    def(cst_hbox, "hbox");
     def(cst_hi, "hi");
     def(cst_math, "math");
     def(cst_mi, "mi");

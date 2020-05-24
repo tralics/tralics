@@ -561,7 +561,7 @@ void Parser::T_start_tabular(subtypes c) {
     Istring x = the_names[c == zero_code ? "tabular" : "tabular*"];
     if (the_stack.is_float())
         leave_v_mode();
-    else if (the_stack.is_frame(np_fbox)) {
+    else if (the_stack.is_frame("fbox")) {
     } else
         leave_h_mode();
     M_let_fast(hash_table.par_token, hash_table.empty_token, false);
@@ -810,7 +810,7 @@ void Stack::T_hline() {
 void Parser::T_hline(subtypes c) {
     Token T   = cur_tok;
     int   res = T_hline_parse(c);
-    if (the_stack.in_array_mode() && the_stack.is_frame(np_array)) {
+    if (the_stack.in_array_mode() && the_stack.is_frame("array")) {
         if (res == 1)
             the_stack.T_hline();
         else if (res == 2)
@@ -823,7 +823,7 @@ void Parser::T_hline(subtypes c) {
 // If true, the \end{tabular} is not executed.
 // and we have to push back the `\end{tabular}' tokens
 auto Parser::false_end_tabular(const std::string &s) -> bool {
-    if (the_stack.is_frame(np_cell)) {
+    if (the_stack.is_frame("cell")) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
         back_input(hash_table.end_token);
@@ -842,7 +842,7 @@ void Parser::T_end_tabular(subtypes c) {
 
 //
 void Parser::T_endv() {
-    if (the_stack.is_frame(np_cell)) {
+    if (the_stack.is_frame("cell")) {
         flush_buffer();
         the_stack.finish_cell(-1);
         the_stack.push_pop_cell(pop_only);
@@ -857,7 +857,7 @@ void Parser::T_cr() {
     flush_buffer();
     long a = 0;
     if (cur_cmd_chr.chr == crwithargs_code) a = scan_int(cur_tok);
-    if (!the_stack.is_frame(np_cell)) {
+    if (!the_stack.is_frame("cell")) {
         parse_error("bad \\cr");
         return;
     }

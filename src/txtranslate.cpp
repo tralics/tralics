@@ -382,7 +382,7 @@ void Parser::T_par1() {
     if (the_stack.in_v_mode()) return;
     if (the_stack.in_no_mode()) return;
     Istring frame = the_stack.first_frame();
-    if (frame == the_names[cst_hbox]) return;
+    if (frame == the_names["hbox"]) return;
     flush_buffer();
     if (the_stack.in_h_mode()) {
         Xml *cp = the_stack.get_cur_par();
@@ -521,7 +521,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     T_translate(L);
     current_head.clear();
     title->put_in_buffer(current_head);
-    the_stack.pop(np_head);
+    the_stack.pop(the_names["head"]);
     if (opt != nullptr) the_stack.add_last(new Xml(np_alt_section, opt));
     the_stack.add_nl();
     the_stack.set_v_mode();
@@ -754,7 +754,7 @@ void Parser::T_subfigure() {
 
 // Case of &. Works only inside a table (math code is elsewhere).
 void Parser::T_ampersand() {
-    if (the_stack.is_frame(np_cell))
+    if (the_stack.is_frame("cell"))
         finish_a_cell(hash_table.endv_token, Istring());
     else if (the_stack.is_frame2(cst_hanl)) {
         LC();
@@ -766,7 +766,7 @@ void Parser::T_ampersand() {
 
 // This interprets \newline.
 void Parser::T_newline() {
-    if (the_stack.is_frame(cst_p))
+    if (the_stack.is_frame("cst_p"))
         T_par1(Istring());
     else if (the_stack.in_v_mode())
         return;
@@ -780,12 +780,12 @@ void Parser::T_backslash() {
     flush_buffer();
     remove_initial_star();
     Istring a = get_opt_dim(T);
-    if (the_stack.is_frame(np_head))
+    if (the_stack.is_frame("head"))
         back_input(hash_table.headercr_token);
-    else if (the_stack.is_frame(cst_p)) {
+    else if (the_stack.is_frame("cst_p")) {
         T_par1(a);
         remove_initial_space_and_back_input(); // Needed because we are in hmode
-    } else if (the_stack.is_frame(np_cell))
+    } else if (the_stack.is_frame("cell"))
         finish_a_cell(hash_table.cr_token, a);
     else if (the_stack.in_v_mode())
         return;

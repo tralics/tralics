@@ -298,7 +298,7 @@ void Xml::recurse(XmlAction &X) {
                 for (size_t j = 0; j < Len; j++) {
                     Xml *W = T->at(j);
                     if (W == nullptr) continue;
-                    if (!W->is_xmlc() && W->has_name(np_head)) {
+                    if (!W->is_xmlc() && W->has_name_of("head")) {
                         post_ns::remove_me_from_heads(W);
                         continue;
                     }
@@ -796,7 +796,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
             Xml *texte = sf->get_first_env(np_texte);
             sf->add_non_empty_to(junk);
             if (leg != nullptr) {
-                leg->change_name(np_head);
+                leg->change_name("head");
                 sf->push_back_unless_nullptr(leg);
             }
             if (texte != nullptr) {

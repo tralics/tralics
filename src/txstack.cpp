@@ -230,7 +230,7 @@ void Stack::add_center_to_p() const {
     x->id.get_att().push_back(the_names["rend"], the_names[name_positions(np_center_etc + w)], false);
 }
 
-auto Stack::is_frame(name_positions s) const -> bool { return first_frame() == the_names[s]; }
+auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() == the_names[s]; }
 
 // Returns true if frame is s, or argument, and next frame is s.
 // ignores a font change
@@ -287,7 +287,7 @@ void Stack::push(Istring fr, Xml *V) {
 // Pushes a new empty object, for \hbox, etc
 auto Stack::push_hbox(Istring name) -> Xml * {
     Xml *code = new Xml(std::move(name), nullptr);
-    ipush(the_names[cst_hbox], code);
+    ipush(the_names["hbox"], code);
     push_trace();
     return code;
 }
