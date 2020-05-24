@@ -63,6 +63,11 @@ auto NameMapper::mml(size_t i) -> Istring {
     return (*this)[fonts[i]];
 }
 
+auto NameMapper::mi(size_t i) -> Istring {
+    static std::array<std::string, 8> list = {"mi", "mn", "mo", "ci", "cn", "csymbol", "cst_nothing", "mmultiscripts"};
+    return (*this)[list[i]];
+}
+
 void NameMapper::boot() {
     // Special cases where name != default value
     def("arc", np_arc, "pic-arc");

@@ -2299,13 +2299,13 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
         res     = new Xml(Istring(L.get_sname()), xs); // OK
     } else if (c == multiscripts_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value;
-        auto w  = name_positions(c - mathmi_code + cst_mi); // \todo compute that from a table of strings
-        res     = new Xml(the_names[w], xs);
+        auto w  = the_names.mi(c - mathmi_code);
+        res     = new Xml(w, xs);
     } else {
         std::string s  = X->get_list().convert_this_to_string(math_buffer);
         Xml *       xs = new Xml(Istring(s));
-        auto        w  = name_positions(c - mathmi_code + cst_mi);
-        res            = new Xml(the_names[w], xs);
+        auto        w  = the_names.mi(c - mathmi_code);
+        res            = new Xml(w, xs);
     }
     ++X;
     for (;;) {
