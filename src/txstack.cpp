@@ -296,7 +296,7 @@ auto Stack::push_hbox(Istring name) -> Xml * {
 // The number of the element is 2. No other element has 2 as number
 // (see Stack::Stack).
 auto Stack::temporary() -> Xml * {
-    Xml *res = new Xml(cst_temporary, Xid(2));
+    Xml *res = new Xml("temporary", Xid(2));
     ipush(the_names[cst_argument], res);
     cur_mode = mode_argument;
     push_trace();

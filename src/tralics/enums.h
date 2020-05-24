@@ -2023,7 +2023,6 @@ enum name_positions {
     cst_particip,
     cst_rasection,
     cst_refer,
-    cst_temporary,
     // For the biblio
     cstb_article,
     cstb_book,

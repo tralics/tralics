@@ -551,7 +551,7 @@ void MathF::handle_t() {
 }
 
 void MathF::push_in_t(Xml *x) {
-    if (t == nullptr) t = new Xml(cst_temporary, nullptr);
+    if (t == nullptr) t = new Xml(the_names["temporary"], nullptr);
     t->push_back_unless_nullptr(x);
 }
 
@@ -1199,8 +1199,8 @@ void MathElt::cv_noML() {
         mathml_buffer.push_back_math_token(val, true);
         return;
     case mathfont_cmd: {
-        int c = get_chr();
-        if (c < 0 || c >= 15) c = 0;
+        size_t c = get_chr();
+        if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
         mathml_buffer.push_back("\\");
@@ -1254,11 +1254,11 @@ void MathElt::cv_noMLt() {
         mathml_buffer.push_back_math_tag(val, pbm_empty);
         return;
     case mathfont_cmd: {
-        int c = get_chr();
-        if (c < 0 || c >= 15) c = 0;
+        size_t c = get_chr();
+        if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer << "<font name='" << w.value << "'/>";
+        mathml_buffer << "<font name='" << w.value << "'/>"; // \todo why not go through all the machinery here?
         return;
     }
     case left_cmd: // left or right
@@ -1702,7 +1702,7 @@ auto Math::special1() const -> Xml * {
     }
     xval = math_ns::make_sup(xval);
     if (U == nullptr) return xval;
-    Xml *res = new Xml(cst_temporary, nullptr);
+    Xml *res = new Xml(the_names["temporary"], nullptr);
     res->push_back_unless_nullptr(U);
     res->push_back_unless_nullptr(xval);
     return res;

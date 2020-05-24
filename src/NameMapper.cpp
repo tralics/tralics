@@ -212,7 +212,6 @@ void NameMapper::boot() {
     def(cst_particip, "particip");
     def(cst_rasection, "RAsection");
     def(cst_refer, "refer");
-    def(cst_temporary, "temporary");
     def(cstb_address, "address");
     def(cstb_article, "article");
     def(cstb_author, "author");

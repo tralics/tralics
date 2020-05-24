@@ -2823,7 +2823,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         Xml *res2 = math_data.add_style(cms, gsl::not_null{W});
         return {res2, res_type};
     }
-    Xml *tmp = new Xml(cst_temporary, nullptr);
+    Xml *tmp = new Xml(the_names["temporary"], nullptr);
     res1.concat(tmp);
     Xml *res22{nullptr};
     if (need_row != 0)
@@ -3250,7 +3250,7 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
         pop_front();
     Math res0 = M_cv3(cms);
     res0.finish_translate1(the_parser.tracing_math());
-    Xml *res1 = new Xml(cst_temporary, nullptr);
+    Xml *res1 = new Xml(the_names["temporary"], nullptr);
     res0.concat_space(res1);
     if (bad) {
         Xml *res = new Xml(cst_mrow, nullptr);

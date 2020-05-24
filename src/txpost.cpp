@@ -367,7 +367,7 @@ void Xml::push_back_list(Xml *x) {
 
 // Insert X at the end; but the value if it is a temporary.
 void Xml::add_tmp(gsl::not_null<Xml *> x) {
-    if (!x->is_xmlc() && x->has_name(cst_temporary))
+    if (!x->is_xmlc() && x->has_name_of("temporary"))
         push_back_list(x);
     else
         push_back(x);
@@ -573,7 +573,7 @@ void Xml::remove_par_bal_if_ok() {
 // Post processor of figure or table.
 void Xml::postprocess_fig_table(bool is_fig) {
     // First copy this into a temporarry
-    Xml *T = new Xml(cst_temporary, nullptr);
+    Xml *T = new Xml(the_names["temporary"], nullptr);
     swap_x(T);
     // move the caption from T to this
     Xml *C = T->get_first_env(np_caption);
