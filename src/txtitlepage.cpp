@@ -316,7 +316,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
 // Evaluates at start of translation
 void TitlePageAux::exec_start(size_t k) {
     if (type == tpi_rt_urlist) { // no command here
-        Titlepage[idx] = convert(2, new Xml(the_names[cst_nl]));
+        Titlepage[idx] = convert(2, new Xml(the_names["\n"]));
         return;
     }
     if (type == tpi_rt_alias) { // \let\this\that

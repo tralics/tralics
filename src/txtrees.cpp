@@ -138,8 +138,8 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     B.no_newline();
     Xml *res = translate_list(L);
     Xml *x   = new Xml(the_names["index"], res);
-    if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
-    x->id.add_attribute(the_names[np_level], the_names[std::to_string(level)]);
+    if (!encap.empty()) x->id.add_attribute(the_names["encap"], Istring(encap));
+    x->id.add_attribute(the_names["level"], the_names[std::to_string(level)]);
     auto iid = the_index.last_iid++;
     IR.push_back(new Indexer(B, aux, x, level, iid));
     return n;
@@ -213,7 +213,7 @@ void Parser::finish_index() {
         Xid  id  = res->id;
         {
             const std::string &t = CI->get_title();
-            if (!t.empty()) id.add_attribute(the_names[cstb_title], Istring(t));
+            if (!t.empty()) id.add_attribute(the_names["title"], Istring(t));
         }
         {
             AttList &L = the_stack.get_att_list(CI->get_AL());

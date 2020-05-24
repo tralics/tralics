@@ -537,7 +537,7 @@ void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
         k--;
     }
     while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names[np_row]) {
+    if (Table[k].frame == the_names["row"]) {
         rid = Table[k].obj->id;
         k--;
     }
@@ -554,7 +554,7 @@ auto Stack::find_ctrid(subtypes m) -> long {
         if (obj == nullptr) continue;
         Istring frame = Table[k].frame;
         if (frame.spec_empty()) continue;
-        if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->id.value;
+        if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id.value;
         if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
         if (m == xmlcurarray_code && (frame == the_names["tabular"] || frame == the_names["tabular*"])) return obj->id.value;
     }
@@ -647,7 +647,7 @@ inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_t
 void Stack::create_new_anchor(Xid xid, const Istring &id, const Istring &idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));
     AL.push_back(the_names["id"], id);
-    AL.push_back(the_names[np_idtext], idtext);
+    AL.push_back(the_names["id-text"], idtext);
 }
 
 // mark current element as target for a label.

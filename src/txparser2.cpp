@@ -64,12 +64,12 @@ void Parser::E_zapspace() {
 // \fancyinternal
 void Parser::T_xfancy() {
     Istring s = nT_arg_nopar();
-    the_stack.push1(np_header);
+    the_stack.push1(the_names["headings"]);
     the_stack.add_att_to_last(the_names["type"], s);
     the_stack.set_arg_mode();
     T_arg();
     flush_buffer();
-    the_stack.pop(np_header);
+    the_stack.pop(the_names["headings"]);
 }
 
 // Stuff for fancyheadings

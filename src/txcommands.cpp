@@ -635,7 +635,7 @@ void Parser::T_xmlenv_end(subtypes c) {
     else if (c == 2) {
     }
     the_stack.pop_if_frame(the_names["cst_p"]);
-    the_stack.pop(cst_elt);
+    the_stack.pop(the_names["ELT"]);
 }
 
 // \end{itemize},  \end{description}, \end{enumerate},

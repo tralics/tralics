@@ -568,8 +568,8 @@ void Parser::T_paras(subtypes x) {
             token_from_list(L.front());
             sectionning_offset = section_code;
             if (cur_cmd_chr.cmd == section_cmd) sectionning_offset = cur_cmd_chr.chr;
-            if (sectionning_offset == chapter_code) Xid(1).add_attribute(the_names[np_chapters], the_names["true"]);
-            if (sectionning_offset == part_code) Xid(1).add_attribute(the_names[np_part], the_names["true"]);
+            if (sectionning_offset == chapter_code) Xid(1).add_attribute(the_names["chapters"], the_names["true"]);
+            if (sectionning_offset == part_code) Xid(1).add_attribute(the_names["part"], the_names["true"]);
         }
         return;
     }
@@ -593,7 +593,7 @@ void Parser::T_paras(subtypes x) {
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
-        last_att_list().push_back(the_names["rend"], the_names[np_nonumber]);
+        last_att_list().push_back(the_names["rend"], the_names["nonumber"]);
     else {
         if (x == part_code)
             refstepcounter("part", false);
@@ -621,7 +621,7 @@ void Parser::T_ref(bool is_ref) {
     the_stack.add_newid0(np_ref);
     Xid X = the_stack.get_xid();
     X.add_ref(a);
-    if (!is_ref) X.add_attribute(the_names["rend"], the_names[np_page]);
+    if (!is_ref) X.add_attribute(the_names["rend"], the_names["page"]);
 }
 
 // \begin or \end of subequations
@@ -742,9 +742,9 @@ void Parser::T_subfigure() {
     the_stack.push1(the_names["subfigure"]);
     refstepcounter("subfigure", true);
     the_stack.set_arg_mode();
-    the_stack.push1(np_leg);
+    the_stack.push1(the_names["leg"]);
     T_optarg();
-    the_stack.pop(np_leg);
+    the_stack.pop(the_names["leg"]);
     {
         auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
         T_arg1(np_texte);
@@ -874,7 +874,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         Tbuf.resize(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.substr(ii), ok);
-    AL.push_back(np_file, Istring(Tbuf));
+    AL.push_back(the_names["file"], Istring(Tbuf));
 }
 
 void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
@@ -932,14 +932,14 @@ void Parser::includegraphics(subtypes C) {
             std::string sval = list_to_string_c(val, bval);
             if (sval == "false") V = "false";
             if (skey == "clip")
-                AL.push_back(the_names[np_clip], the_names[V], true);
+                AL.push_back(the_names["clip"], the_names[V], true);
             else
                 AL.push_back(Istring(skey), the_names[V], true);
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
             if (skey == "angle" && sval == "0") continue;
-            Istring p = skey == "scale" ? the_names[np_scale] : skey == "angle" ? the_names[np_angle] : Istring(skey);
+            Istring p = skey == "scale" ? the_names[np_scale] : skey == "angle" ? the_names["angle"] : Istring(skey);
             AL.push_back(p, Istring(sval), true);
         } else if (skey == "width" || skey == "height" || skey == "totalheight") {
             std::string N = skey == "height" ? "height" : skey == "width" ? "width" : "totalwidth";
@@ -1260,7 +1260,7 @@ void Parser::T_makebox(bool framed, Token C) {
     leave_v_mode();
     the_stack.push1(np_box);
     AttList &cur = last_att_list();
-    if (framed) cur.push_back(the_names[np_framed], the_names["true"]);
+    if (framed) cur.push_back(the_names["framed"], the_names["true"]);
     if (!oarg.empty()) cur.push_back(the_names["box_pos"], Istring(oarg));
     cur.push_back(the_names["height"], B);
     cur.push_back(the_names["width"], A);
@@ -1394,10 +1394,10 @@ void Parser::T_fbox(subtypes cc) {
         return;
     }
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
-        aux->id.add_attribute(the_names[np_framed], the_names["true"]);
+        aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
-        AL.push_back(the_names[np_b_rend], the_names[np_boxed]);
+        AL.push_back(the_names[np_b_rend], the_names["boxed"]);
         AL.push_back(the_names["box_pos"], ipos);
         AL.push_back(the_names[np_box_width], iwidth);
     }
@@ -1836,13 +1836,13 @@ void Parser::T_bezier(int c) {
     T_twodims(b1, b2, C);
     T_twodims(c1, c2, C);
     AttList &res = the_stack.add_newid0(np_bezier);
-    res.push_back(np_repeat, w);
-    res.push_back(np_c2, c2);
-    res.push_back(np_c1, c1);
-    res.push_back(np_b2, b2);
-    res.push_back(np_b1, b1);
-    res.push_back(np_a2, a2);
-    res.push_back(np_a1, a1);
+    res.push_back(the_names["repeat"], w);
+    res.push_back(the_names["c2"], c2);
+    res.push_back(the_names["c1"], c1);
+    res.push_back(the_names["b2"], b2);
+    res.push_back(the_names["b1"], b1);
+    res.push_back(the_names["a2"], a2);
+    res.push_back(the_names["a1"], a1);
 }
 
 // put \line \vector \oval
@@ -1909,11 +1909,11 @@ void Parser::T_put(subtypes c) {
     if (c == multiput_code) {
         Istring aa, bb;
         T_twodims(aa, bb, C);
-        cur_id.add_attribute(the_names[np_dy], bb);
-        cur_id.add_attribute(the_names[np_dx], aa);
+        cur_id.add_attribute(the_names["dy"], bb);
+        cur_id.add_attribute(the_names["dx"], aa);
         TokenList L = read_arg();
         D           = token_list_to_att(L, C, true); // integer....
-        cur_id.add_attribute(np_repeat, D);
+        cur_id.add_attribute(the_names["repeat"], D);
     }
     cur_id.add_attribute(the_names["ypos"], B);
     cur_id.add_attribute(the_names["xpos"], A);
@@ -1955,7 +1955,7 @@ void Parser::T_curves(int c) {
         cur_id.add_attribute(the_names["ypos"], bb);
         cur_id.add_attribute(the_names["xpos"], aa);
         specs = nT_arg_nopar();
-        cur_id.add_attribute(the_names[np_angle], specs);
+        cur_id.add_attribute(the_names["angle"], specs);
     } else if (c == bigcircle_code) {
         cur_id.add_attribute(the_names[np_size], nT_arg_nopar());
     } else {
@@ -2015,7 +2015,7 @@ void Parser::T_dashline(subtypes c) {
         Istring   aa       = token_list_to_att(L, T, false);
         AttList & AL       = the_stack.add_newid0(x0);
         AL.push_back(the_names[np_size], aa);
-        if (has_star) AL.push_back(the_names[np_full], the_names["true"]);
+        if (has_star) AL.push_back(the_names["full"], the_names["true"]);
         return;
     }
     Istring A = nT_optarg_nopar();
@@ -2025,9 +2025,9 @@ void Parser::T_dashline(subtypes c) {
     the_stack.push1(x0);
     the_stack.set_arg_mode();
     AttList &AL = last_att_list();
-    AL.push_back(the_names[np_arg1], A);
-    AL.push_back(the_names[np_arg2], B);
-    AL.push_back(the_names[np_arg3], C);
+    AL.push_back(the_names["arg1"], A);
+    AL.push_back(the_names["arg2"], B);
+    AL.push_back(the_names["arg3"], C);
     for (;;) {
         Istring xpos, ypos;
         skip_initial_space();

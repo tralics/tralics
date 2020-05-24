@@ -525,7 +525,7 @@ void Parser::after_main_text() {
 // Translation of \end{thebibliography}
 void Parser::T_end_the_biblio() {
     leave_h_mode();
-    the_stack.pop(cst_biblio);
+    the_stack.pop(the_names["thebibliography"]);
 }
 
 // Translation of \begin{thebibliography}
