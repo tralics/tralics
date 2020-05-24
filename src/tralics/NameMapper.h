@@ -34,6 +34,7 @@ public:
     void assign_name(const std::string &A, const std::string &B);
 
     auto cstf(size_t i) -> Istring;
+    auto mml(size_t i) -> Istring;
 };
 
 inline NameMapper the_names;

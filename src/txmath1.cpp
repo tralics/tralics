@@ -1201,7 +1201,7 @@ void MathElt::cv_noML() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        auto w = the_names[name_positions(np_mml_normal + c)];
+        auto w = the_names.mml(c);
         if (w.empty()) return;
         mathml_buffer.push_back("\\");
         mathml_buffer.push_back(w);
@@ -1256,7 +1256,7 @@ void MathElt::cv_noMLt() {
     case mathfont_cmd: {
         int c = get_chr();
         if (c < 0 || c >= 15) c = 0;
-        auto w = the_names[name_positions(np_mml_normal + c)];
+        auto w = the_names.mml(c);
         if (w.empty()) return;
         mathml_buffer << "<font name='" << w.value << "'/>";
         return;
@@ -1784,7 +1784,7 @@ auto math_ns::mk_mi(codepoint c) -> Xml * {
 
 // Converts a letter with a into into <mi mathvariant='foo'>X</mi>
 // Assumes 2<=font<=14 and 'a'<=c<='z' || 'A'<=c<='Z'
-auto math_ns::mk_mi(uchar c, int font) -> Xml * {
+auto math_ns::mk_mi(uchar c, size_t font) -> Xml * {
     Xml *x = single_chars[c];
     Xml *y = new Xml(cst_mi, x);
     y->add_att(the_names["mathvariant"], the_names.cstf(font));

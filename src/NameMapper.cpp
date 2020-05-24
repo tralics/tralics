@@ -42,6 +42,27 @@ auto NameMapper::cstf(size_t i) -> Istring {
     return (*this)[fonts[i]];
 }
 
+auto NameMapper::mml(size_t i) -> Istring {
+    static std::array<std::string, 15> fonts = {"mml@font@normal",
+                                                "mml@font@upright",
+                                                "mml@font@bold",
+                                                "mml@font@italic",
+                                                "mml@font@bolditalic",
+                                                "mml@font@script",
+                                                "mml@font@boldscript",
+                                                "mml@font@fraktur",
+                                                "mml@font@doublestruck",
+                                                "mml@font@boldfraktur",
+                                                "mml@font@sansserif",
+                                                "mml@font@boldsansserif",
+                                                "mml@font@sansserifitalic",
+                                                "mml@font@sansserifbolditalic",
+                                                "mml@font@monospace"
+
+    };
+    return (*this)[fonts[i]];
+}
+
 void NameMapper::boot() {
     // Special cases where name != default value
     def("alt_caption", np_alt_caption, "alt_head");
@@ -337,21 +358,6 @@ void NameMapper::boot() {
     def(np_mainmatter, "mainmatter");
     def(np_mbox, "mbox");
     def(np_minipage, "minipage");
-    def(np_mml_bold_fraktur, "mml@font@boldfraktur");
-    def(np_mml_bold_italic, "mml@font@bolditalic");
-    def(np_mml_bold_sansserif, "mml@font@boldsansserif");
-    def(np_mml_bold_script, "mml@font@boldscript");
-    def(np_mml_bold, "mml@font@bold");
-    def(np_mml_doublestruck, "mml@font@doublestruck");
-    def(np_mml_fraktur, "mml@font@fraktur");
-    def(np_mml_italic, "mml@font@italic");
-    def(np_mml_monospace, "mml@font@monospace");
-    def(np_mml_normal, "mml@font@normal");
-    def(np_mml_sansserif_bold_italic, "mml@font@sansserifbolditalic");
-    def(np_mml_sansserif_italic, "mml@font@sansserifitalic");
-    def(np_mml_sansserif, "mml@font@sansserif");
-    def(np_mml_script, "mml@font@script");
-    def(np_mml_upright, "mml@font@upright");
     def(np_module, "module");
     def(np_moreinfo, "moreinfo");
     def(np_node, "node");
@@ -516,21 +522,21 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         Buffer B(sb);
         config_ns::interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
     }
-    if (sa == "mml_font_normal") { set(np_mml_normal, sb); }
-    if (sa == "mml_font_upright") { set(np_mml_upright, sb); }
-    if (sa == "mml_font_bold") { set(np_mml_bold, sb); }
-    if (sa == "mml_font_italic") { set(np_mml_italic, sb); }
-    if (sa == "mml_font_bold_italic") { set(np_mml_bold_italic, sb); }
-    if (sa == "mml_font_script") { set(np_mml_script, sb); }
-    if (sa == "mml_font_bold_script") { set(np_mml_bold_script, sb); }
-    if (sa == "mml_font_fraktur") { set(np_mml_fraktur, sb); }
-    if (sa == "mml_font_doublestruck") { set(np_mml_doublestruck, sb); }
-    if (sa == "mml_font_bold_fraktur") { set(np_mml_bold_fraktur, sb); }
-    if (sa == "mml_font_sansserif") { set(np_mml_sansserif, sb); }
-    if (sa == "mml_font_bold_sansserif") { set(np_mml_bold_sansserif, sb); }
-    if (sa == "mml_font_sansserif_italic") { set(np_mml_sansserif_italic, sb); }
-    if (sa == "mml_font_sansserif_bold_italic") { set(np_mml_sansserif_bold_italic, sb); }
-    if (sa == "mml_font_monospace") { set(np_mml_monospace, sb); }
+    if (sa == "mml_font_normal") { set("mml@font@normal", sb); }
+    if (sa == "mml_font_upright") { set("mml@font@upright", sb); }
+    if (sa == "mml_font_bold") { set("mml@font@bold", sb); }
+    if (sa == "mml_font_italic") { set("mml@font@italic", sb); }
+    if (sa == "mml_font_bold_italic") { set("mml@font@bolditalic", sb); }
+    if (sa == "mml_font_script") { set("mml@font@script", sb); }
+    if (sa == "mml_font_bold_script") { set("mml@font@boldscript", sb); }
+    if (sa == "mml_font_fraktur") { set("mml@font@fraktur", sb); }
+    if (sa == "mml_font_doublestruck") { set("mml@font@doublestruck", sb); }
+    if (sa == "mml_font_bold_fraktur") { set("mml@font@boldfraktur", sb); }
+    if (sa == "mml_font_sansserif") { set("mml@font@sansserif", sb); }
+    if (sa == "mml_font_bold_sansserif") { set("mml@font@boldsansserif", sb); }
+    if (sa == "mml_font_sansserif_italic") { set("mml@font@sansserifitalic", sb); }
+    if (sa == "mml_font_sansserif_bold_italic") { set("mml@font@sansserifbolditalic", sb); }
+    if (sa == "mml_font_monospace") { set("mml@font@monospace", sb); }
 }
 
 void NameMapper::assign_name(const std::string &A, const std::string &B) {

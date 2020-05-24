@@ -421,7 +421,7 @@ namespace math_ns {
     auto math_space_code(int c) -> bool;
     auto make_sup(Xml *xval) -> Xml *;
     auto mk_mi(codepoint c) -> Xml *;
-    auto mk_mi(uchar c, int font) -> Xml *;
+    auto mk_mi(uchar c, size_t font) -> Xml *;
     auto mk_space(const std::string &a) -> Xml *;
     auto nb_args_for_cmd(int c) -> int;
     void fill_math_char_slots();
