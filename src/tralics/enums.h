@@ -1983,7 +1983,6 @@ enum name_positions {
     cst_div4,
     cst_div5,
     cst_div6,
-    cst_document,
     cst_elt,
     cst_foot,
     cst_hanl,
@@ -2321,8 +2320,6 @@ enum name_positions {
     np_rclist,
     np_rcval,
     np_pagecolor,
-    np_color,
-    np_color2,
     // keep these in order
     np_s_sup,
     np_s_sub,

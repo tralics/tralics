@@ -312,7 +312,7 @@ void Stack::init_all(const std::string &a) {
     Xml *V   = new Xml(Istring(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
     V->id = 1;
-    ipush(the_names[cst_document], V);
+    ipush(the_names["document"], V);
     newline_xml = new Xml(Istring("\n"));
 }
 
@@ -385,7 +385,7 @@ void Stack::pop(const Istring &a) {
     if (Table.empty()) {
         err_buf << bf_reset << "Error in pop; stack empty; trying to pop " << a;
         the_parser.signal_error();
-        Istring S = the_names[cst_document];
+        Istring S = the_names["document"];
         ipush(S, new Xml(S, nullptr)); // stack should never be empty
     }
 }
@@ -471,7 +471,7 @@ void Stack::check_font() {
     if (!(c.empty() || c.null())) {
         Xml *    res = new Xml(cst_hi, nullptr);
         AttList &W   = res->id.get_att();
-        W.push_back(np_color, c);
+        W.push_back(the_names["color"], c);
         W.push_back(the_names["'hi_flag"], Istring(1));
         push(Istring(2), res);
     }
@@ -495,7 +495,7 @@ void Stack::end_module() {
     trace_pop(true);
     for (;;) {
         if (Table.empty()) err_ns::fatal_error("unexpected empty stack");
-        if (Table.back().frame == the_names[cst_document]) return;
+        if (Table.back().frame == the_names["document"]) return;
         if (Table.back().frame == the_names["module"]) {
             pop(the_names["module"]);
             return;

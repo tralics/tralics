@@ -175,7 +175,6 @@ void NameMapper::boot() {
     def(cst_ci, "ci");
     def(cst_cn, "cn");
     def(cst_csymbol, "csymbol");
-    def(cst_document, "document");
     def(cst_elt, "ELT");
     def(cst_flaghi, "'hi_flag");
     def(cst_foot, "foot");
@@ -297,8 +296,6 @@ void NameMapper::boot() {
     def(np_cleaders, "cleaders");
     def(np_clip, "clip");
     def(np_close, "close");
-    def(np_color, "color");
-    def(np_color2, "color2");
     def(np_cols, "cols");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");

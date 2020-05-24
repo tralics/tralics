@@ -1029,7 +1029,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 // This creates a new color item, to be pushed on the color stack
 // Note that used is false, set to true by get_id.
 ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
-    xval = new Xml(np_color, nullptr);
+    xval = new Xml(the_names["color"], nullptr);
     if (!name.empty()) xval->id.add_attribute(Istring("name"), Istring(name));
     xval->id.add_attribute(Istring("model"), Istring(model));
     xval->id.add_attribute(Istring("value"), Istring(value));
@@ -1103,14 +1103,14 @@ void Parser::T_color(subtypes c) {
         std::string name = sT_arg_nopar();
         Istring     C    = scan_color(opt, name);
         AttList &   res  = the_stack.add_newid0(np_pagecolor);
-        res.push_back(np_color, C);
+        res.push_back(the_names["color"], C);
     }
     if (c == colorbox_code) {
         std::string opt  = sT_optarg_nopar();
         std::string name = sT_arg_nopar();
         Istring     C    = scan_color(opt, name);
         Xml *       mbox = internal_makebox();
-        mbox->id.add_attribute(np_color, C);
+        mbox->id.add_attribute(the_names["color"], C);
         return;
     }
     if (c == fcolorbox_code) {
@@ -1120,8 +1120,8 @@ void Parser::T_color(subtypes c) {
         Istring     C1    = scan_color(opt, name1);
         Istring     C2    = scan_color(opt, name2);
         Xml *       mbox  = internal_makebox();
-        mbox->id.add_attribute(np_color, C1);
-        mbox->id.add_attribute(np_color2, C2);
+        mbox->id.add_attribute(the_names["color"], C1);
+        mbox->id.add_attribute(the_names["color2"], C2);
         return;
     }
     if (c == definecolor_code) {
