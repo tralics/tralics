@@ -128,7 +128,6 @@ void NameMapper::boot() {
     def("thicklines", np_thick_lines, "pic-thicklines");
     def("thinlines", np_thin_lines, "pic-thinlines");
     def("unit_length", np_unit_length, "unit-length");
-    def("user_list", np_user_list, "description");
     def("vector", np_vector, "pic-vector");
     def("warning", np_warning, "");
 
@@ -285,7 +284,6 @@ void NameMapper::boot() {
     def(np_cols, "cols");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");
-    def(np_description, "description");
     def(np_display, "display");
     def(np_div0, "div0");
     def(np_div1, "div1");
@@ -331,9 +329,7 @@ void NameMapper::boot() {
     def(np_leaders, "leaders");
     def(np_leg, "leg");
     def(np_level, "level");
-    def(np_list, "list");
     def(np_mainmatter, "mainmatter");
-    def(np_marginpar, "marginpar");
     def(np_mbox, "mbox");
     def(np_minipage, "minipage");
     def(np_mml_bold_fraktur, "mml@font@boldfraktur");
@@ -364,7 +360,6 @@ void NameMapper::boot() {
     def(np_nom, "nom");
     def(np_nonumber, "nonumber");
     def(np_open, "open");
-    def(np_ordered, "ordered");
     def(np_overline, "overline");
     def(np_page, "page");
     def(np_pagecolor, "pagecolor");
@@ -383,7 +378,6 @@ void NameMapper::boot() {
     def(np_profession, "profession");
     def(np_projetdeveloppe, "projetdeveloppe");
     def(np_quoted, "quoted");
-    def(np_raisebox, "raisebox");
     def(np_ref, "ref");
     def(np_repeat, "repeat");
     def(np_research_centre, "research-centre");
@@ -400,10 +394,8 @@ void NameMapper::boot() {
     def(np_sbox, "scalebox");
     def(np_sc, "sc");
     def(np_scale, "scale");
-    def(np_simple, "simple");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def(np_style, "style");
     def(np_subfigure, "subfigure");
     def(np_table, "table");
     def(np_Table, "Table");
@@ -423,7 +415,6 @@ void NameMapper::boot() {
     def(np_unknown, "unknown");
     def(np_url, "url");
     def(np_userid, "userid");
-    def(np_val, "val");
     def(np_vfil, "vfil");
     def(np_vfill, "vfill");
     def(np_vfilneg, "vfilneg");
@@ -458,6 +449,7 @@ void NameMapper::boot() {
     set("mathmlns", "http://www.w3.org/1998/Math/MathML");
     set("np_theorem", "");
     set("box_pos", "position");
+    set("user_list", "description");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {

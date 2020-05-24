@@ -341,13 +341,13 @@ void Parser::T_raisebox() {
     Istring B = nT_optarg_nopar();
     Istring C = nT_optarg_nopar();
     leave_v_mode();
-    the_stack.push1(np_raisebox);
+    the_stack.push1(the_names["raisebox"]);
     AttList &cur = last_att_list();
-    cur.push_back(the_names[np_val], A);
+    cur.push_back(the_names["val"], A);
     cur.push_back(the_names["height"], B);
     cur.push_back(the_names["depth"], C);
     T_arg_local();
-    the_stack.pop(the_names[np_raisebox]);
+    the_stack.pop(the_names["raisebox"]);
 }
 
 // Implements \in@ , evaluates \in@false or \in@true
@@ -2350,9 +2350,9 @@ void Parser::T_listenv(symcodes x) {
     Buffer &b = local_buf;
     b << bf_reset << (is_enum ? "enum" : "Enum");
     token_ns::int_to_roman(b, n);
-    std::string    list_ctr = b;
-    name_positions np = x == list_cmd ? np_user_list : x == itemize_cmd ? np_simple : x == enumerate_cmd ? np_ordered : np_description;
-    Token          t  = hash_table.itemlabel_token;
+    std::string list_ctr = b;
+    auto        np       = x == list_cmd ? "user_list" : x == itemize_cmd ? "simple" : x == enumerate_cmd ? "ordered" : "description";
+    Token       t        = hash_table.itemlabel_token;
     M_let_fast(t, hash_table.relax_token, false);
     T_use_counter(list_ctr);
     TokenList L;
@@ -2380,8 +2380,8 @@ void Parser::T_listenv(symcodes x) {
         auto  pos = T.eqtb_loc();
         if (!hash_table.eqtb[pos].is_undef()) back_input(T);
     }
-    Xml *res = new Xml(np_list, nullptr);
-    the_stack.push(the_names[np_list], res);
+    Xml *res = new Xml(the_names["list"], nullptr);
+    the_stack.push(the_names["list"], res);
     res->id.add_attribute(the_names["type"], the_names[np]);
 }
 

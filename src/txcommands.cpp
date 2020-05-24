@@ -642,7 +642,7 @@ void Parser::T_xmlenv_end(subtypes c) {
 void Parser::T_listenv_end() {
     leave_h_mode();
     the_stack.pop_if_frame(the_names["item"]);
-    the_stack.pop(np_list);
+    the_stack.pop(the_names["list"]);
     the_stack.add_nl();
 }
 
@@ -657,7 +657,7 @@ void Parser::T_atdocument(subtypes c) {
 /// Translates `\begin{glossaire}`
 void Parser::T_glossaire() {
     leave_h_mode();
-    the_stack.push1(the_names["gloss_type"], np_list);
+    the_stack.push1(the_names["gloss_type"], the_names["list"]);
     the_stack.add_att_to_last(the_names["type"], the_names["gloss_type"]);
     the_stack.add_last(new Xml(np_head, glo_xml));
     the_stack.set_no_mode();
