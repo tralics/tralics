@@ -514,7 +514,7 @@ void Parser::after_main_text() {
         the_stack.cur_xid().add_attribute(L, true);
         translate0();
         the_stack.pop(np_biblio);
-        the_stack.pop(cst_argument);
+        the_stack.pop(the_names["argument"]);
         the_stack.document_element()->insert_bib(res, the_bibliography.location);
     }
     finish_color();

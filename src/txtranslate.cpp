@@ -193,7 +193,7 @@ void Parser::T_optarg() {
 auto Parser::translate_list(TokenList &L) -> Xml * {
     Xml *res = the_stack.temporary();
     T_translate(L);
-    the_stack.pop(cst_argument);
+    the_stack.pop(the_names["argument"]);
     return res;
 }
 
@@ -343,9 +343,9 @@ void Parser::arg_font(subtypes c) {
 void Parser::T_fonts(name_positions x) {
     leave_v_mode();
     Xml *res = Stack::fonts1(x);
-    the_stack.push(the_names[cst_fonts], res);
+    the_stack.push(the_names["fonts"], res);
     T_arg();
-    the_stack.pop(cst_fonts);
+    the_stack.pop(the_names["fonts"]);
 }
 
 // \indent or \noindent. If we are in a <p>,  and the <p> is empty, then we
@@ -362,7 +362,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->id.add_attribute(the_names[np_noindent], st_bool(noindent), false);
+            cp->id.add_attribute(the_names["noindent"], st_bool(noindent), false);
             return;
         }
     }
@@ -373,8 +373,8 @@ void Parser::finish_par_cmd(bool noindent, const Istring &xs) {
     leave_h_mode();
     auto k  = cur_centering();
     Xid  id = ileave_v_mode();
-    if (!xs.null()) id.add_attribute(the_names[np_spacebefore], xs);
-    if (k != 1) id.add_attribute(the_names[np_noindent], st_bool(noindent));
+    if (!xs.null()) id.add_attribute(the_names["space_before"], xs);
+    if (k != 1) id.add_attribute(the_names["noindent"], st_bool(noindent));
 }
 
 // Translation of \par
@@ -556,7 +556,7 @@ void Parser::T_matter(subtypes c) {
         t = np_frontmatter;
     else if (c == backmatter_code)
         t = np_backmatter;
-    the_stack.push1(the_names[np_module], t);
+    the_stack.push1(the_names["module"], t);
     chapter_has_star = (c == frontmatter_code || c == backmatter_code);
 }
 
@@ -739,7 +739,7 @@ void Parser::T_float(subtypes c) {
 // Subfigure. Should appear only in a figure env.
 void Parser::T_subfigure() {
     leave_v_mode();
-    the_stack.push1(np_subfigure);
+    the_stack.push1(the_names["subfigure"]);
     refstepcounter("subfigure", true);
     the_stack.set_arg_mode();
     the_stack.push1(np_leg);
@@ -749,7 +749,7 @@ void Parser::T_subfigure() {
         auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
         T_arg1(np_texte);
     }
-    the_stack.pop(np_subfigure);
+    the_stack.pop(the_names["subfigure"]);
 }
 
 // Case of &. Works only inside a table (math code is elsewhere).
@@ -1165,7 +1165,7 @@ void Parser::T_color(subtypes c) {
 // Add the given dimension as spacebefore value to the paragraph x.
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
-    auto     K = L.lookup(the_names[np_spacebefore]);
+    auto     K = L.lookup(the_names["space_before"]);
     if (K) {
         Istring   k  = L.get_val(*K);
         TokenList La = token_ns::string_to_list(k.name, false);
@@ -1173,7 +1173,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
         dimen += ScaledInt(cur_val.get_glue_width());
     }
     auto k = Istring(dimen);
-    x.add_attribute(the_names[np_spacebefore], k, true);
+    x.add_attribute(the_names["space_before"], k, true);
 }
 
 auto Parser::internal_makebox() -> Xml * {

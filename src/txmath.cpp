@@ -835,7 +835,7 @@ void Parser::T_math(subtypes type) {
     x->add_att(the_names["xmlns"], the_names["mathmlns"]);
     x->add_tmp(gsl::not_null{res});
     if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
-    Xml *res1 = new Xml(np_formula, x);
+    Xml *res1 = new Xml(the_names["formula"], x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
     res1->id = cmi.get_fid();

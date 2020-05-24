@@ -80,7 +80,6 @@ void NameMapper::boot() {
     def("circle", np_circle, "pic-circle");
     def("citetype", np_cite_type, "type");
     def("closecurve", np_closecurve, "pic-closecurve");
-    def("composition_ra", cst_composition, "composition");
     def("cst_div0", cst_div0, "div0");
     def("cst_div1", cst_div1, "div1");
     def("cst_div2", cst_div2, "div2");
@@ -143,7 +142,6 @@ void NameMapper::boot() {
     def("minipage_width", np_minipage_width, "width");
     def("multiput", np_multiput, "pic-multiput");
     def("natcit", np_natcit, "Cit");
-    def("nb_rasection", np_rasection, "");
     def("np_center_etc", np_center_etc, "center");
     def("np_linethickness", np_linethickness, "linethickness");
     def("oval", np_oval, "pic-oval");
@@ -159,7 +157,6 @@ void NameMapper::boot() {
     def("row_spaceafter", np_spaceafter, "spaceafter");
     def("scaleput", np_scaleput, "pic-scaleput");
     def("scaption", np_caption, "caption");
-    def("space_before", np_spacebefore, "spacebefore");
     def("stylesheet", np_stylesheet, "");
     def("stylesheettype", np_stylesheet_type, "text/css");
     def("table_env", np_float_table, "table");
@@ -174,7 +171,6 @@ void NameMapper::boot() {
 
     // Below, this is a mapping id <-> name = default value
     def(cst_accent, "accent");
-    def(cst_argument, "argument");
     def(cst_biblio, "thebibliography");
     def(cst_ci, "ci");
     def(cst_cn, "cn");
@@ -182,7 +178,6 @@ void NameMapper::boot() {
     def(cst_document, "document");
     def(cst_elt, "ELT");
     def(cst_flaghi, "'hi_flag");
-    def(cst_fonts, "fonts");
     def(cst_foot, "foot");
     def(cst_hanl, "hanl");
     def(cst_hi, "hi");
@@ -210,7 +205,6 @@ void NameMapper::boot() {
     def(cst_munderover, "munderover");
     def(cst_nl, "\n");
     def(cst_particip, "particip");
-    def(cst_rasection, "RAsection");
     def(cst_refer, "refer");
     def(cstb_address, "address");
     def(cstb_article, "article");
@@ -281,7 +275,6 @@ void NameMapper::boot() {
     def(np_arg1, "arg1");
     def(np_arg2, "arg2");
     def(np_arg3, "arg3");
-    def(np_array, "array");
     def(np_b1, "b1");
     def(np_b2, "b2");
     def(np_backmatter, "backmatter");
@@ -309,7 +302,6 @@ void NameMapper::boot() {
     def(np_cols, "cols");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");
-    def(np_display, "display");
     def(np_div0, "div0");
     def(np_div1, "div1");
     def(np_div2, "div2");
@@ -327,7 +319,6 @@ void NameMapper::boot() {
     def(np_figure, "figure");
     def(np_file, "file");
     def(np_float, "float");
-    def(np_formula, "formula");
     def(np_frame, "pic-frame");
     def(np_framed, "framed");
     def(np_from, "from");
@@ -357,7 +348,6 @@ void NameMapper::boot() {
     def(np_mainmatter, "mainmatter");
     def(np_mbox, "mbox");
     def(np_minipage, "minipage");
-    def(np_module, "module");
     def(np_moreinfo, "moreinfo");
     def(np_node, "node");
     def(np_nodebox, "nodebox");
@@ -366,7 +356,6 @@ void NameMapper::boot() {
     def(np_nodecurve, "nodecurve");
     def(np_nodeoval, "nodeoval");
     def(np_nodetriangle, "nodetriangle");
-    def(np_noindent, "noindent");
     def(np_nom, "nom");
     def(np_nonumber, "nonumber");
     def(np_open, "open");
@@ -382,7 +371,6 @@ void NameMapper::boot() {
     def(np_picture, "picture");
     def(np_point, "point");
     def(np_pos, "pos");
-    def(np_pre, "pre");
     def(np_prenom, "prenom");
     def(np_prenote, "prenote");
     def(np_profession, "profession");
@@ -406,8 +394,6 @@ void NameMapper::boot() {
     def(np_scale, "scale");
     def(np_simplemath, "simplemath");
     def(np_size, "size");
-    def(np_subfigure, "subfigure");
-    def(np_table, "table");
     def(np_Table, "Table");
     def(np_tabular_star, "tabular*");
     def(np_tabular, "tabular");
@@ -461,6 +447,9 @@ void NameMapper::boot() {
     set("box_pos", "position");
     set("user_list", "description");
     set("cstf_upright", "");
+    set("space_before", "spacebefore");
+    set("nb_rasection", "");
+    set("composition_ra", "composition");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
@@ -548,7 +537,7 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     }
 
     if (A == "rasection" && ra_ok) {
-        set(np_rasection, B);
+        set("nb_rasection", B);
         return;
     }
 

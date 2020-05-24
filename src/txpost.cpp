@@ -476,7 +476,7 @@ auto Xml::how_many_env(Istring match) -> long {
 }
 
 // Removes and returns first element named N.
-auto Xml::get_first_env(name_positions N) -> Xml * {
+auto Xml::get_first_env(const std::string &N) -> Xml * {
     XmlAction X(the_names[N], rc_return_first_and_kill);
     recurse0(X);
     return X.get_xml_val();
@@ -491,12 +491,12 @@ auto Xml::prev_sibling(Xml *x) -> Xml * {
 
 // This returns true if it is possible to remove the p
 auto Xml::is_empty_p() const -> bool {
-    if (!has_name(cst_p)) return false;
+    if (!has_name_of("cst_p")) return false;
     if (!empty()) return false;
     AttList &X = id.get_att();
     if (X.empty()) return true;
     if (X.size() != 1) return false;
-    if (X.front().name == the_names[np_noindent]) return true;
+    if (X.front().name == the_names["noindent"]) return true;
     return false;
 }
 
@@ -564,7 +564,7 @@ void Xml::unbox(Xml *x) {
 // Replaces <foo><p>a b c</p></foo> by <foo> a b c </foo>
 void Xml::remove_par_bal_if_ok() {
     Xml *res = single_non_empty();
-    if ((res != nullptr) && !res->is_xmlc() && res->has_name(cst_p)) {
+    if ((res != nullptr) && !res->is_xmlc() && res->has_name_of("cst_p")) {
         std::vector<gsl::not_null<Xml *>>::operator=(*res);
         res->clear();
     }
@@ -576,13 +576,13 @@ void Xml::postprocess_fig_table(bool is_fig) {
     Xml *T = new Xml(the_names["temporary"], nullptr);
     swap_x(T);
     // move the caption from T to this
-    Xml *C = T->get_first_env(np_caption);
+    Xml *C = T->get_first_env("scaption");
     if (C != nullptr) {
         push_back(gsl::not_null{C}); // copy caption
-        C->change_name(np_captions);
+        C->change_name("caption");
         push_back(gsl::not_null{the_main->the_stack->newline_xml});
     }
-    C = T->get_first_env(np_alt_caption);
+    C = T->get_first_env("alt_caption");
     if (C != nullptr) {
         push_back(gsl::not_null{C});
         push_back(gsl::not_null{the_main->the_stack->newline_xml});
@@ -614,10 +614,10 @@ void Xml::postprocess_fig_table(bool is_fig) {
 // Post processor of figure.
 void post_ns::postprocess_figure(Xml *to, Xml *from) {
     Xml *     X{nullptr};
-    XmlAction X1(the_names[np_table], rc_contains);
-    XmlAction X2(the_names[np_subfigure], rc_contains);
+    XmlAction X1(the_names["table"], rc_contains);
+    XmlAction X2(the_names["subfigure"], rc_contains);
     XmlAction X3(the_names["figure"], rc_how_many);
-    XmlAction X4(the_names[np_pre], rc_contains);
+    XmlAction X4(the_names["pre"], rc_contains);
     from->recurse0(X1);
     from->recurse0(X2);
     from->recurse(X3);
@@ -633,7 +633,7 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         w = 0;
     switch (w) {
     case 0: // a single figure
-        X = from->get_first_env(np_figure);
+        X = from->get_first_env("figure");
         if (X != nullptr) { // copy all atributes of X but rend in this
             to->id.add_attribute_but_rend(X->id);
         }
@@ -641,14 +641,14 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
     case 1: // a table in the figure, move all tables
         X = new Xml(cst_p, nullptr);
         to->push_back_unless_nullptr(X);
-        from->move(the_names[np_table], X);
-        to->id.add_attribute(the_names["rend"], the_names[np_array]);
+        from->move(the_names["table"], X);
+        to->id.add_attribute(the_names["rend"], the_names["array"]);
         return;
     case 3: // verbatim material in the figure; move all lines
         X = new Xml(cst_empty, nullptr);
         to->push_back_unless_nullptr(X);
-        from->move(the_names[np_pre], X);
-        to->id.add_attribute(the_names["rend"], the_names[np_pre]);
+        from->move(the_names["pre"], X);
+        to->id.add_attribute(the_names["rend"], the_names["pre"]);
         return;
     case 2: // a subfigure
         //    T->remove_empty_par();
@@ -663,8 +663,8 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
     default: { // other cases
         from->remove_empty_par();
         Xml *nbsp = new Xml(Istring(" &#xA0;"));
-        from->subst_env0(the_names[np_hfill], nbsp);
-        from->subst_env0(the_names[np_hfil], nbsp);
+        from->subst_env0(the_names["hfill"], nbsp);
+        from->subst_env0(the_names["hfil"], nbsp);
         from->move(the_names["cst_p"], to);
         XmlAction X5(the_names["figure"], rc_return_first);
         from->recurse0(X5);
@@ -677,46 +677,46 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
 // Post processor table.
 
 void post_ns::postprocess_table(Xml *to, Xml *from) {
-    XmlAction X1(the_names[np_table], rc_how_many);
+    XmlAction X1(the_names["table"], rc_how_many);
     from->recurse(X1);
     // Special case: more than one tabular in the table
     // We move in to all tabular
     if (X1.get_int_val() > 1) {
         Xml *X = new Xml(cst_p, nullptr);
         to->push_back_unless_nullptr(X);
-        from->move(the_names[np_table], X);
-        to->id.add_attribute(the_names["rend"], the_names[np_array]);
+        from->move(the_names["table"], X);
+        to->id.add_attribute(the_names["rend"], the_names["array"]);
         return;
     }
     // Normal case
     from->remove_empty_par();
     from->remove_par_bal_if_ok();
-    to->id.add_attribute(the_names["rend"], the_names[np_display]);
+    to->id.add_attribute(the_names["rend"], the_names["display"]);
     Xml *C = from->single_non_empty();
     if ((C != nullptr) && !C->is_xmlc()) {
         if (C->has_name_of("figure")) {
             to->push_back_unless_nullptr(C);
             from->clear();
-        } else if (C->has_name(np_formula)) {
+        } else if (C->has_name_of("formula")) {
             to->push_back_unless_nullptr(C);
             from->clear();
-        } else if (C->has_name(np_table)) {
+        } else if (C->has_name_of("table")) {
             if (!C->all_empty())
                 to->push_back_list(C);
             else
                 to->push_back_unless_nullptr(C); // This is strange...
             to->id.add_attribute_but_rend(C->id);
             from->clear();
-            to->change_name(np_table);
+            to->change_name("table");
         }
     }
 }
 
 void post_ns::table_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->id.add_attribute(the_names["rend"], the_names[np_array]);
+    to->id.add_attribute(the_names["rend"], the_names["array"]);
     int ctr = 'a';
     for (;;) {
-        Xml *sf = from->get_first_env(cst_p);
+        Xml *sf = from->get_first_env("cst_p");
         if (sf == nullptr) break;
         if (sf->is_xmlc())
             junk->push_back_unless_nullptr(sf);
@@ -734,24 +734,24 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     Xml *row2  = new Xml(np_row, nullptr);
     int  nrows = 0;
     for (;;) {
-        Xml *sf = from->get_first_env(np_subfigure);
+        Xml *sf = from->get_first_env("subfigure");
         if (sf == nullptr) break;
         nrows++;
         if (sf->is_xmlc()) {
             junk->push_back_unless_nullptr(sf);
             continue;
         }
-        Xml *leg   = sf->get_first_env(np_leg);
-        Xml *texte = sf->get_first_env(np_texte);
+        Xml *leg   = sf->get_first_env("leg");
+        Xml *texte = sf->get_first_env("texte");
 
         sf->add_non_empty_to(junk);
         if (texte != nullptr) {
-            texte->change_name(np_cell);
+            texte->change_name("cell");
             row1->push_back_unless_nullptr(texte);
             texte->id.add_attribute(sf->id);
         }
         if (leg != nullptr) {
-            leg->change_name(np_cell);
+            leg->change_name("cell");
             Buffer B;
             B << '(' << uchar(ctr) << ')' << ' ';
             leg->add_first(new Xml(B));
@@ -761,7 +761,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     }
     from->add_non_empty_to(junk);
     if (nrows == 0) return nullptr;
-    Xml *res = new Xml(np_table, nullptr);
+    Xml *res = new Xml(the_names["table"], nullptr);
     res->id.add_attribute(the_names["rend"], the_names["inline"]);
     res->push_back_unless_nullptr(row1);
     res->push_back_unless_nullptr(row2);
@@ -769,11 +769,11 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
 }
 
 void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
-    to->id.add_attribute(the_names["rend"], the_names[np_subfigure]);
+    to->id.add_attribute(the_names["rend"], the_names["subfigure"]);
     int         n          = 0;
     static auto parid_name = Istring("parid");
     for (;;) {
-        Xml *P = from->get_first_env(cst_p);
+        Xml *P = from->get_first_env("cst_p");
         if (P == nullptr) break;
         if (P->is_xmlc()) {
             junk->push_back_unless_nullptr(P);
@@ -782,7 +782,7 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
         auto par_id = Istring(std::to_string(n));
         ++n;
         for (;;) {
-            Xml *sf = P->get_first_env(np_subfigure);
+            Xml *sf = P->get_first_env("subfigure");
             if (sf == nullptr) {
                 P->add_non_empty_to(junk);
                 break;
@@ -792,15 +792,15 @@ void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {
                 continue;
             }
             sf->id.add_attribute(parid_name, par_id);
-            Xml *leg   = sf->get_first_env(np_leg);
-            Xml *texte = sf->get_first_env(np_texte);
+            Xml *leg   = sf->get_first_env("leg");
+            Xml *texte = sf->get_first_env("texte");
             sf->add_non_empty_to(junk);
             if (leg != nullptr) {
                 leg->change_name("head");
                 sf->push_back_unless_nullptr(leg);
             }
             if (texte != nullptr) {
-                Xml *xx = texte->get_first_env(np_figure);
+                Xml *xx = texte->get_first_env("figure");
                 if (xx != nullptr) { sf->id.add_attribute_but_rend(xx->id); }
                 texte->add_non_empty_to(junk);
             }
@@ -821,7 +821,7 @@ void Xml::add_non_empty_to(Xml *res) {
 
 // Postprocessor for <composition>
 void Xml::compo_special() {
-    XmlAction X(the_names[np_module], rc_composition);
+    XmlAction X(the_names["module"], rc_composition);
     recurse(X);
 }
 
@@ -865,7 +865,7 @@ void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
             b << at(k)->name.name;
-        else if (at(k)->has_name(cst_hi))
+        else if (at(k)->has_name_of("hi"))
             at(k)->put_in_buffer(b);
         else
             b << '<' << at(k)->name << "/>";
@@ -1022,7 +1022,7 @@ void Xml::word_stats_i() {
                 scbuf << c;
         }
     } else {
-        if (name == the_names[np_formula]) return;
+        if (name == the_names["formula"]) return;
         for (size_t i = 0; i < size(); i++) at(i)->word_stats_i();
     }
 }

@@ -239,12 +239,12 @@ auto Stack::is_frame2(name_positions S) const -> bool {
     auto    k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
     if (Table[k].frame == s) return true;
-    if (Table[k].frame == the_names[cst_fonts]) {
+    if (Table[k].frame == the_names["fonts"]) {
         if (k < 1) return false;
         k--;
     }
     if (Table[k].frame == s) return true;
-    if (Table[k].frame != the_names[cst_argument]) return false;
+    if (Table[k].frame != the_names["argument"]) return false;
     if (k < 1) return false;
     k--;
     while (Table[k].frame.spec_empty()) k--;
@@ -297,7 +297,7 @@ auto Stack::push_hbox(Istring name) -> Xml * {
 // (see Stack::Stack).
 auto Stack::temporary() -> Xml * {
     Xml *res = new Xml("temporary", Xid(2));
-    ipush(the_names[cst_argument], res);
+    ipush(the_names["argument"], res);
     cur_mode = mode_argument;
     push_trace();
     return res;
@@ -496,8 +496,8 @@ void Stack::end_module() {
     for (;;) {
         if (Table.empty()) err_ns::fatal_error("unexpected empty stack");
         if (Table.back().frame == the_names[cst_document]) return;
-        if (Table.back().frame == the_names[np_module]) {
-            pop(the_names[np_module]);
+        if (Table.back().frame == the_names["module"]) {
+            pop(the_names["module"]);
             return;
         }
         Table.pop_back();

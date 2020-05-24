@@ -1454,7 +1454,7 @@ void MathDataP::boot_chars() {
         Buffer B;
         B.push_back(static_cast<char>(i));
         Xml *res = new Xml(np_simplemath, new Xml(B));
-        Xml *X   = new Xml(np_formula, res);
+        Xml *X   = new Xml(the_names["formula"], res);
         X->add_att(the_names["type"], the_names["inline"]);
         simplemath_table[i] = X;
     }

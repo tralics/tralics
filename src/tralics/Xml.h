@@ -41,7 +41,7 @@ public:
     auto convert_to_string() -> std::string;
     auto deep_copy() -> gsl::not_null<Xml *>;
     auto find_on_tree(Xml *check, Xml **res) const -> bool;
-    auto get_first_env(name_positions name) -> Xml *;
+    auto get_first_env(const std::string &name) -> Xml *;
     auto how_many_env(Istring match) -> long;
 
     void                add_att(const Istring &a, const Istring &b) const { id.add_attribute(a, b); }
