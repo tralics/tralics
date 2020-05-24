@@ -2940,7 +2940,7 @@ void Math::handle_mbox(Math &res) {
         if (!math_buffer.empty()) {
             auto s    = math_buffer;
             Xml *Text = new Xml(cst_mtext, new Xml(Istring(s)));
-            if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names[name_positions(long(cstf_normal) + long(font))]);
+            if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names.cstf(font));
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
         }

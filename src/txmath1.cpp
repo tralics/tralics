@@ -1787,7 +1787,7 @@ auto math_ns::mk_mi(codepoint c) -> Xml * {
 auto math_ns::mk_mi(uchar c, int font) -> Xml * {
     Xml *x = single_chars[c];
     Xml *y = new Xml(cst_mi, x);
-    y->add_att(the_names["mathvariant"], the_names[name_positions(cstf_normal + font)]);
+    y->add_att(the_names["mathvariant"], the_names.cstf(font));
     return y;
 }
 
@@ -1852,7 +1852,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     if (f == 1) B.push_back(' ');
     res = new Xml(Istring(B));
     res = new Xml(cst_mi, res);
-    if (f > 1 && spec) res->add_att(the_names["mathvariant"], the_names[name_positions(long(cstf_normal) + long(f))]);
+    if (f > 1 && spec) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);
 }
 
@@ -1875,6 +1875,6 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
         }
     Xml *res = new Xml(Istring(B));
     res      = new Xml(cst_mn, res);
-    if (f > 1) res->add_att(the_names["mathvariant"], the_names[name_positions(long(cstf_normal) + long(f))]);
+    if (f > 1) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);
 }

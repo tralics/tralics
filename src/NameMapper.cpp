@@ -21,6 +21,27 @@ void NameMapper::def(const std::string &name, name_positions pos, const std::opt
 
 void NameMapper::def(name_positions i, const std::string &s) { id_to_name[i] = s; }
 
+auto NameMapper::cstf(size_t i) -> Istring {
+    static const std::array<std::string, 15> fonts = {"normal",
+                                                      "cstf_upright",
+                                                      "bold",
+                                                      "italic",
+                                                      "bold-italic",
+                                                      "script",
+                                                      "bold-script",
+                                                      "fraktur",
+                                                      "double-struck",
+                                                      "bold-fraktur",
+                                                      "sans-serif",
+                                                      "bold-sans-serif",
+                                                      "sans-serif-italic",
+                                                      "sans-serif-bold-italic",
+                                                      "monospace"
+
+    };
+    return (*this)[fonts[i]];
+}
+
 void NameMapper::boot() {
     // Special cases where name != default value
     def("alt_caption", np_alt_caption, "alt_head");
@@ -54,7 +75,6 @@ void NameMapper::boot() {
     def("cstb_type", cstb_type, "type");
     def("cstb_unknown", cstb_unknown, "unknown");
     def("cstb_url", cstb_url, "url");
-    def("cstf_upright", cstf_upright, "");
     def("curve_nbpts", np_curve_nbpts, "nbsymb");
     def("curve", np_curve, "pic-curve");
     def("fbox_rend", np_b_rend, "rend");
@@ -224,20 +244,6 @@ void NameMapper::boot() {
     def(cstb_unpublished, "unpublished");
     def(cstb_volume, "volume");
     def(cstb_year, "year");
-    def(cstf_bold_fraktur, "bold-fraktur");
-    def(cstf_bold_italic, "bold-italic");
-    def(cstf_bold_sansserif, "bold-sans-serif");
-    def(cstf_bold_script, "bold-script");
-    def(cstf_bold, "bold");
-    def(cstf_doublestruck, "double-struck");
-    def(cstf_fraktur, "fraktur");
-    def(cstf_italic, "italic");
-    def(cstf_monospace, "monospace");
-    def(cstf_normal, "normal");
-    def(cstf_sansserif_bold_italic, "sans-serif-bold-italic");
-    def(cstf_sansserif_italic, "sans-serif-italic");
-    def(cstf_sansserif, "sans-serif");
-    def(cstf_script, "script");
     def(np_12pt, "12pt");
     def(np_3pt, "3pt");
     def(np_6pt, "6pt");
@@ -449,6 +455,7 @@ void NameMapper::boot() {
     set("np_theorem", "");
     set("box_pos", "position");
     set("user_list", "description");
+    set("cstf_upright", "");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
