@@ -175,16 +175,9 @@ void NameMapper::boot() {
     def(cst_mi, "mi");
     def(cst_mn, "mn");
     def(cst_mo, "mo");
-    def(cst_mover, "mover");
     def(cst_mroot, "mroot");
     def(cst_mrow_cst, "<mrow></mrow>");
-    def(cst_mrow, "mrow");
-    def(cst_msub, "msub");
-    def(cst_msubsup, "msubsup");
-    def(cst_msup, "msup");
     def(cst_multiscripts, "mmultiscripts");
-    def(cst_munder, "munder");
-    def(cst_munderover, "munderover");
     def(cst_nl, "\n");
     def(cst_particip, "particip");
     def(cst_refer, "refer");

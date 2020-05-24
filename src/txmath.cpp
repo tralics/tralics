@@ -2299,7 +2299,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
         res     = new Xml(Istring(L.get_sname()), xs); // OK
     } else if (c == multiscripts_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value;
-        auto w  = name_positions(c - mathmi_code + cst_mi);
+        auto w  = name_positions(c - mathmi_code + cst_mi); // \todo compute that from a table of strings
         res     = new Xml(the_names[w], xs);
     } else {
         std::string s  = X->get_list().convert_this_to_string(math_buffer);
@@ -3118,15 +3118,15 @@ void Cv3Helper::find_index(math_style cms) {
 // This is a bit complicated
 // Special is A+B, A=8(limits) or 16(nolimits)
 // B=0 (not a big op), B=1 (\sum, \lim, \mathop), B=2(\int, \sin)
-auto Cv3Helper::find_operator(math_style cms) -> name_positions {
+auto Cv3Helper::find_operator(math_style cms) -> std::string {
     int what = 0;
     if (index != nullptr) what++;
     if (exponent != nullptr) what += 2;
-    name_positions bl = cst_msub;
+    std::string bl = "msub";
     if (what == 3)
-        bl = cst_msubsup;
+        bl = "msubsup";
     else if (what == 2)
-        bl = cst_msup;
+        bl = "msup";
 
     if (special > 16)
         special = 0; //  explicit \nolimits
@@ -3144,11 +3144,11 @@ auto Cv3Helper::find_operator(math_style cms) -> name_positions {
         }
     }
     if (what == 3)
-        bl = cst_munderover;
+        bl = "munderover";
     else if (what == 2)
-        bl = cst_mover;
+        bl = "mover";
     else
-        bl = cst_munder;
+        bl = "munder";
     return bl;
 }
 
@@ -3158,9 +3158,9 @@ void Cv3Helper::add_kernel(math_style cms) {
         return;
     }
     the_parser.my_stats.one_more_kernel();
-    name_positions bl = find_operator(cms);
-    if (the_main->prime_hack && exponent == math_data.get_mc_table(27) && bl == cst_msup) {
-        bl       = cst_mrow;
+    auto bl = find_operator(cms);
+    if (the_main->prime_hack && exponent == math_data.get_mc_table(27) && bl == "msup") {
+        bl       = "mrow";
         exponent = get_builtin(varprime_code);
     }
     Xml *tmp = new Xml(the_names[bl], nullptr);

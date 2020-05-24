@@ -402,7 +402,7 @@ public:
     void find_kernel();
     void find_index(math_style cms);
     void add_kernel(math_style cms);
-    auto find_operator(math_style cms) -> name_positions;
+    auto find_operator(math_style cms) -> std::string;
     auto finish() -> Math { return res; }
 };
 
