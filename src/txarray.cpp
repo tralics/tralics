@@ -445,10 +445,10 @@ auto NewArray::ac_next() -> bool {
 // This starts or ends a cell, or does both
 void Stack::push_pop_cell(int dir) {
     if (dir != push_only) {
-        pop(np_cell);
+        pop(the_names["cell"]);
         add_nl();
     }
-    if (dir != pop_only) { push1(np_cell); }
+    if (dir != pop_only) { push1(the_names["cell"]); }
 }
 
 void Xid::add_top_rule() const {
@@ -774,11 +774,11 @@ void Parser::T_cline() {
             tot_span = cline_first - 1 - tot_span;
             if (0 <= tot_span) {
                 if (tot_span != 0) {
-                    Xml *x = new Xml(np_cell, nullptr);
+                    Xml *x = new Xml(the_names["cell"], nullptr);
                     R->push_back_unless_nullptr(x);
                     x->id.add_span(tot_span);
                 }
-                Xml *x = new Xml(np_cell, nullptr);
+                Xml *x = new Xml(the_names["cell"], nullptr);
                 R->push_back_unless_nullptr(x);
                 x->id.add_span(cl_span);
                 x->id.add_bottom_rule();
@@ -835,7 +835,7 @@ auto Parser::false_end_tabular(const std::string &s) -> bool {
 
 // This is the code of \end{tabular}
 void Parser::T_end_tabular(subtypes c) {
-    the_stack.pop(c == 0 ? np_tabular : np_tabular_star);
+    the_stack.pop(the_names[c == 0 ? "tabular" : "tabular*"]);
     the_stack.delete_table_atts();
     if (!the_stack.is_float()) leave_v_mode();
 }

@@ -137,7 +137,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     B.lowercase();
     B.no_newline();
     Xml *res = translate_list(L);
-    Xml *x   = new Xml(np_index, res);
+    Xml *x   = new Xml(the_names["index"], res);
     if (!encap.empty()) x->id.add_attribute(np_encap, Istring(encap));
     x->id.add_attribute(the_names[np_level], the_names[std::to_string(level)]);
     auto iid = the_index.last_iid++;
@@ -209,7 +209,7 @@ void Parser::finish_index() {
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
-        Xml *res = new Xml(j == 0 ? np_theglossary : np_theindex, nullptr); // OK?
+        Xml *res = new Xml(the_names[j == 0 ? np_theglossary : np_theindex], nullptr); // OK?
         Xid  id  = res->id;
         {
             const std::string &t = CI->get_title();

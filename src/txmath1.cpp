@@ -544,7 +544,7 @@ void MathF::change_state() {
 // This emits a mrow if needed
 void MathF::handle_t() {
     if (state) {
-        res.push_back(MathElt(new Xml(cst_mrow, t), -1, t_big ? mt_flag_big : mt_flag_small));
+        res.push_back(MathElt(new Xml(the_names["mrow"], t), -1, t_big ? mt_flag_big : mt_flag_small));
         t = nullptr;
         the_parser.my_stats.one_more_small();
     }
@@ -1334,7 +1334,7 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
         convert_math_noMLt0();
     else
         convert_math_noML0();
-    return new Xml(np_texmath, new Xml(Istring(mathml_buffer)));
+    return new Xml(the_names["texmath"], new Xml(Istring(mathml_buffer)));
 }
 
 // --------------------------------------------------
@@ -1779,14 +1779,14 @@ auto math_ns::mk_mi(codepoint c) -> Xml * {
     aux_buffer.clear();
     aux_buffer.push_back_real_utf8(c);
     Xml *x = new Xml(Istring(aux_buffer));
-    return new Xml(cst_mi, x);
+    return new Xml(the_names["mi"], x);
 }
 
 // Converts a letter with a into into <mi mathvariant='foo'>X</mi>
 // Assumes 2<=font<=14 and 'a'<=c<='z' || 'A'<=c<='Z'
 auto math_ns::mk_mi(uchar c, size_t font) -> Xml * {
     Xml *x = single_chars[c];
-    Xml *y = new Xml(cst_mi, x);
+    Xml *y = new Xml(the_names["mi"], x);
     y->add_att(the_names["mathvariant"], the_names.cstf(font));
     return y;
 }
@@ -1851,7 +1851,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
     }
     if (f == 1) B.push_back(' ');
     res = new Xml(Istring(B));
-    res = new Xml(cst_mi, res);
+    res = new Xml(the_names["mi"], res);
     if (f > 1 && spec) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);
 }
@@ -1874,7 +1874,7 @@ auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
             pop_front();
         }
     Xml *res = new Xml(Istring(B));
-    res      = new Xml(cst_mn, res);
+    res      = new Xml(the_names["mn"], res);
     if (f > 1) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);
 }

@@ -371,7 +371,7 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
     res->add_att(the_names["open"], xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names["np_separator"] == the_names["mrow"]) {
-        if (!single_elt) val = gsl::not_null{new Xml(cst_mrow, val)};
+        if (!single_elt) val = gsl::not_null{new Xml(the_names["mrow"], val)};
     } else if (the_names["np_separator"].empty() && single_elt) {
     } else
         res->add_att(the_names["separators"], the_names["np_separator"]);
@@ -382,7 +382,7 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
 // This adds a style element above res.
 auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
     if (lvl < 0) return res; // special case
-    res = gsl::not_null{new Xml(cst_mstyle, res)};
+    res = gsl::not_null{new Xml(the_names["mstyle"], res)};
     if (lvl == 0) {
         res->add_att(the_names["displaystyle"], the_names["true"]);
         res->add_att(the_names["scriptlevel"], the_names["0"]);
@@ -830,7 +830,7 @@ void Parser::T_math(subtypes type) {
     }
     after_math(is_inline);
     // Insert the result in the tree.
-    Xml *x = new Xml(cst_math, nullptr);
+    Xml *x = new Xml(the_names["math"], nullptr);
     x->id  = cmi.get_mid();
     x->add_att(the_names["xmlns"], the_names["mathmlns"]);
     x->add_tmp(gsl::not_null{res});
@@ -1871,7 +1871,7 @@ void Math::fetch_rlc(std::vector<AttList> &table) {
 
 // Converts a cell. Updates n, the index of the cell in the row.
 auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml {
-    Xml res(cst_mtd, nullptr);
+    Xml res(the_names["mtd"], nullptr);
     if (empty()) {
         n++; // empty cell, no atts needed.
         return res;
@@ -1926,8 +1926,8 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     if (sname == aligned_code) needs_dp = true; // OK FIXME
     if (sname == split_code) needs_dp = true;   // OK FIXME
     size_t n    = 0;                            // index of cell in row.
-    Xml *  res  = new Xml(cst_mtable, nullptr);
-    Xml *  row  = new Xml(cst_mtr, nullptr);
+    Xml *  res  = new Xml(the_names["mtable"], nullptr);
+    Xml *  row  = new Xml(the_names["mtr"], nullptr);
     Xid    rid  = cmi.get_rid(); // old rid, to be restored at the end
     Xid    cid  = cmi.get_cid();
     Xid    taid = cmi.get_taid();
@@ -1956,7 +1956,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
 
             n   = 0;
-            row = new Xml(cst_mtr, nullptr);
+            row = new Xml(the_names["mtr"], nullptr);
             cmi.set_rid(row->id);
             res->push_back_unless_nullptr(row);
         } else if (cmd == space_catcode && cell.empty()) {
@@ -2009,15 +2009,15 @@ void Xml::bordermatrix() {
     if (size() <= 1) return;
     auto n = size() - 1;
     auto F = front();
-    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(cst_mtd, nullptr)); }
+    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(the_names["mtd"], nullptr)); }
     auto att    = Istring("rowspan");
     auto attval = Istring(std::to_string(n));
     F           = at(1);
     if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) {
-        Xml *aux = new Xml(cst_mtd, MathDataP::mk_mo("("));
+        Xml *aux = new Xml(the_names["mtd"], MathDataP::mk_mo("("));
         aux->add_att(att, attval);
         F->insert_at(1, aux);
-        aux = new Xml(cst_mtd, MathDataP::mk_mo(")"));
+        aux = new Xml(the_names["mtd"], MathDataP::mk_mo(")"));
         aux->add_att(att, attval);
         F->push_back_unless_nullptr(aux);
     }
@@ -2198,7 +2198,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (X.empty()) return nullptr;
     if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
-    Xml *s = new Xml(cst_mo, new Xml(Istring(math_buffer)));
+    Xml *s = new Xml(the_names["mo"], new Xml(Istring(math_buffer)));
     s->add_att(the_names["form"], the_names["prefix"]);
     return s;
 }
@@ -2300,12 +2300,12 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
     } else if (c == multiscripts_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value;
         auto w  = name_positions(c - mathmi_code + cst_mi);
-        res     = new Xml(w, xs);
+        res     = new Xml(the_names[w], xs);
     } else {
         std::string s  = X->get_list().convert_this_to_string(math_buffer);
         Xml *       xs = new Xml(Istring(s));
         auto        w  = name_positions(c - mathmi_code + cst_mi);
-        res            = new Xml(w, xs);
+        res            = new Xml(the_names[w], xs);
     }
     ++X;
     for (;;) {
@@ -2354,7 +2354,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case operatornamestar_code: {
         std::string s   = L.get_arg1().convert_opname();
         Xml *       xs  = new Xml(Istring(s));
-        Xml *       res = new Xml(cst_mo, xs);
+        Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN);
     }
@@ -2363,7 +2363,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s   = L.get_arg3().convert_opname();
         std::string o   = L.get_arg2().convert_opname();
         Xml *       xs  = new Xml(Istring(s));
-        Xml *       res = new Xml(cst_mo, xs);
+        Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, (o == "o") ? mt_flag_opN : mt_flag_opD);
     }
@@ -2395,7 +2395,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case mathlabel_code: {
         std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
-        Xml *       x   = new Xml(cst_mrow, nullptr);
+        Xml *       x   = new Xml(the_names["mrow"], nullptr);
         Istring     id  = next_label_id();
         Xid         xid = x->id;
         the_parser.the_stack.create_new_anchor(xid, id, Istring(s1));
@@ -2404,9 +2404,9 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     }
     case boxed_code: {
         Xml *x = L.get_arg1().M_cv(cms, 0).value;
-        x      = new Xml(cst_mtd, x);
-        x      = new Xml(cst_mtr, x);
-        x      = new Xml(cst_mtable, x);
+        x      = new Xml(the_names["mtd"], x);
+        x      = new Xml(the_names["mtr"], x);
+        x      = new Xml(the_names["mtable"], x);
         x->add_att(Istring("frame"), Istring("solid"));
         return MathElt(x, mt_flag_small);
     }
@@ -2497,7 +2497,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     int  k   = tmp.check_align();
     if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
-    if (c == sqrt_code) return MathElt(new Xml(cst_msqrt, A1), mt_flag_big);
+    if (c == sqrt_code) return MathElt(new Xml(the_names["msqrt"], A1), mt_flag_big);
     Xml *       A2{nullptr};
     auto        ns          = cv_special_string(c);
     Istring     s           = the_names[ns];
@@ -2817,7 +2817,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     if (res1.finish_translate1(the_parser.tracing_math())) res_type = mt_flag_big;
     if (res1.length_one()) {
         Xml *W = res1.front().get_xml_val();
-        if (need_row == 2) W = new Xml(cst_mrow, W);
+        if (need_row == 2) W = new Xml(the_names["mrow"], W);
         if (!seen_style) return {W, res_type};
 
         Xml *res2 = math_data.add_style(cms, gsl::not_null{W});
@@ -2827,7 +2827,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     res1.concat(tmp);
     Xml *res22{nullptr};
     if (need_row != 0)
-        res22 = new Xml(cst_mrow, tmp);
+        res22 = new Xml(the_names["mrow"], tmp);
     else
         res22 = tmp;
     if (seen_style) res22 = math_data.add_style(cms, gsl::not_null{res22});
@@ -2839,7 +2839,7 @@ auto Math::M_ref() -> Xml * {
     Math w = front().get_list();
     pop_front();
     std::string label = w.convert_opname();
-    Xml *       X     = new Xml(cst_mref, nullptr);
+    Xml *       X     = new Xml(the_names["mref"], nullptr);
     X->id.add_ref(label);
     return X;
 }
@@ -2933,13 +2933,13 @@ void Math::handle_mbox(Math &res) {
         int      ok   = M_mbox1(math_buffer, font);
         if (ok == 0) {
             the_parser.signal_error("bad hbox (see transcript file for details)");
-            Xml *Text = new Xml(cst_mtext, new Xml(Istring("bad hbox")));
+            Xml *Text = new Xml(the_names["mtext"], new Xml(Istring("bad hbox")));
             res.push_back_small(new Xml(Istring("merror"), Text));
             return;
         }
         if (!math_buffer.empty()) {
             auto s    = math_buffer;
-            Xml *Text = new Xml(cst_mtext, new Xml(Istring(s)));
+            Xml *Text = new Xml(the_names["mtext"], new Xml(Istring(s)));
             if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names.cstf(font));
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
@@ -2968,7 +2968,7 @@ void Math::handle_mbox(Math &res) {
                 B.push_back(cur_math_space, glue_spec_pt);
                 b = mk_space(B);
             } else {
-                b = new Xml(cst_mspace, nullptr);
+                b = new Xml(the_names["mspace"], nullptr);
                 b->add_att(the_names["np_cst_width"], the_names["4.pt"]);
             }
             res.push_back_small(b);
@@ -3163,10 +3163,10 @@ void Cv3Helper::add_kernel(math_style cms) {
         bl       = cst_mrow;
         exponent = get_builtin(varprime_code);
     }
-    Xml *tmp = new Xml(bl, nullptr);
+    Xml *tmp = new Xml(the_names[bl], nullptr);
     // case a_b_c. If we do nothing, the mathml interpreter will barf
     if ((p != nullptr) && !p->is_xmlc() && (p->has_name_of("msup") || p->has_name_of("msub") || p->has_name_of("msubsup")))
-        p = new Xml(cst_mrow, p);
+        p = new Xml(the_names["mrow"], p);
     if (ptype == mt_flag_small_l || ptype == mt_flag_small_r || ptype == mt_flag_small_m) {
         res.push_back(p, ploc, ptype);
         Xml *q = p;
@@ -3253,7 +3253,7 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     Xml *res1 = new Xml(the_names["temporary"], nullptr);
     res0.concat_space(res1);
     if (bad) {
-        Xml *res = new Xml(cst_mrow, nullptr);
+        Xml *res = new Xml(the_names["mrow"], nullptr);
         res->add_tmp(gsl::not_null{res1});
         return res;
     }

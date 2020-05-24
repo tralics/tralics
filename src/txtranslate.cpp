@@ -446,7 +446,7 @@ void Parser::T_item(int c) {
     Istring att = T_item_label(c);
     the_stack.add_nl();
     the_stack.push1(np_item);
-    if (!att.null()) the_stack.add_att_to_last(np_label_item, att);
+    if (!att.null()) the_stack.add_att_to_last(the_names["labelitem"], att);
     the_stack.add_new_anchor();
     the_stack.set_v_mode();
     skip_initial_space_and_back_input();
@@ -469,10 +469,10 @@ auto Parser::T_item_label(int c) -> Istring {
             return Istring();
     }
     brace_me(L); // \item[\bf x] puts only x in \bf
-    the_stack.push1(np_label_item);
+    the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
     T_translate(L);
-    the_stack.pop(np_label_item);
+    the_stack.pop(the_names["labelitem"]);
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring();
     Xml *res      = the_stack.remove_last();
     res->name     = Istring(1);
@@ -522,7 +522,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     current_head.clear();
     title->put_in_buffer(current_head);
     the_stack.pop(the_names["head"]);
-    if (opt != nullptr) the_stack.add_last(new Xml(np_alt_section, opt));
+    if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_section"], opt));
     the_stack.add_nl();
     the_stack.set_v_mode();
     static int first_print_level = 10;
@@ -1035,7 +1035,7 @@ ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a
     xval->id.add_attribute(Istring("value"), Istring(value));
     static int n = 0;
     id           = Istring(fmt::format("colid{}", ++n)); // This is a unique id
-    xval->id.add_attribute(np_id, id);
+    xval->id.add_attribute(the_names["id"], id);
 }
 
 void Parser::finish_color() {
@@ -1248,7 +1248,7 @@ void Parser::T_cap_or_note(bool cap) {
         font_has_changed();
     }
     the_stack.pop(name);
-    if (opt != nullptr) the_stack.add_last(new Xml(np_alt_caption, opt));
+    if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
     pop_level(bt_local);
     if (the_main->footnote_hack) note->remove_par_bal_if_ok();
 }

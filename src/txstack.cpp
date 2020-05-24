@@ -110,11 +110,6 @@ Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
-Xml::Xml(name_positions N, Xml *z) : name(the_names[N]) {
-    id = the_main->the_stack->next_xid(this);
-    if (z != nullptr) add_tmp(gsl::not_null{z});
-}
-
 void Stack::hack_for_hanl() {
     auto ptr = Table.size() - 1;
     if (ptr > 0) { Table[ptr].obj = Table[ptr - 1].obj; }
@@ -124,7 +119,7 @@ void Stack::hack_for_hanl() {
 // Creates an empty element named x, and adds it to the stack.
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(name_positions x) -> AttList & {
-    top_stack()->push_back_unless_nullptr(new Xml(x, nullptr));
+    top_stack()->push_back_unless_nullptr(new Xml(the_names[x], nullptr));
     return Xid(last_xid).get_att();
 }
 
@@ -394,7 +389,7 @@ void Stack::pop(const Istring &a) {
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
 auto Stack::push_par(long k) -> Xid {
-    Xml *res = new Xml(cst_p, nullptr);
+    Xml *res = new Xml(the_names["cst_p"], nullptr);
     Xid  id  = res->id;
     push(the_names["cst_p"], res);
     cur_mode = mode_h; // we are in horizontal mode now
@@ -405,7 +400,7 @@ auto Stack::push_par(long k) -> Xid {
 
 auto Stack::fonts1(name_positions x) -> Xml * {
     bool     w   = the_main->use_font_elt;
-    Xml *    res = new Xml(w ? x : cst_hi, nullptr);
+    Xml *    res = new Xml(the_names[w ? x : cst_hi], nullptr);
     AttList &W   = res->id.get_att();
     if (!w) W.push_back(the_names["rend"], the_names[x]);
     return res;
@@ -451,7 +446,7 @@ void Stack::check_font() {
         }
         if (nonempty) {
             auto     a   = Istring(aux);
-            Xml *    res = new Xml(cst_hi, nullptr);
+            Xml *    res = new Xml(the_names["hi"], nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names["rend"], a);
             W.push_back(the_names["'hi_flag"], Istring(1));
@@ -469,7 +464,7 @@ void Stack::check_font() {
     }
     auto c = the_parser.cur_font.color;
     if (!(c.empty() || c.null())) {
-        Xml *    res = new Xml(cst_hi, nullptr);
+        Xml *    res = new Xml(the_names["hi"], nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(the_names["color"], c);
         W.push_back(the_names["'hi_flag"], Istring(1));
@@ -482,13 +477,13 @@ void Stack::check_font() {
 void Stack::push1(Istring name, Istring x) { push(std::move(name), new Xml(x, nullptr)); }
 
 // Push a new XML element
-void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xml(x, nullptr)); }
+void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xml(the_names[x], nullptr)); }
 
 // Push a new XML element
 void Stack::push1(Istring x) { push(x, new Xml(x, nullptr)); }
 
 // Push a new XML element
-void Stack::push1(name_positions x) { push(the_names[x], new Xml(x, nullptr)); }
+void Stack::push1(name_positions x) { push(the_names[x], new Xml(the_names[x], nullptr)); }
 
 // Code done when a module ends. pop until stack (nearly) empty
 void Stack::end_module() {
@@ -537,7 +532,7 @@ auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
 void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
     auto k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names[np_cell]) {
+    if (Table[k].frame == the_names["cell"]) {
         cid = Table[k].obj->id;
         k--;
     }
@@ -547,7 +542,7 @@ void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
         k--;
     }
     while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names[np_tabular] || Table[k].frame == the_names[np_tabular_star]) {
+    if (Table[k].frame == the_names["tabular"] || Table[k].frame == the_names["tabular*"]) {
         tid = Table[k].obj->id;
         k--;
     }
@@ -560,8 +555,8 @@ auto Stack::find_ctrid(subtypes m) -> long {
         Istring frame = Table[k].frame;
         if (frame.spec_empty()) continue;
         if (m == xmlcurrow_code && frame == the_names[np_row]) return obj->id.value;
-        if (m == xmlcurcell_code && frame == the_names[np_cell]) return obj->id.value;
-        if (m == xmlcurarray_code && (frame == the_names[np_tabular] || frame == the_names[np_tabular_star])) return obj->id.value;
+        if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
+        if (m == xmlcurarray_code && (frame == the_names["tabular"] || frame == the_names["tabular*"])) return obj->id.value;
     }
     return 0;
 }
@@ -617,7 +612,7 @@ void Stack::finish_cell(int w) {
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
     int        n       = 0;
-    if (shbuf.install_att(cid, the_names[np_cols])) {
+    if (shbuf.install_att(cid, the_names["cols"])) {
         try {
             n = std::stoi(shbuf);
         } catch (...) { spdlog::warn("Could not parse `{}' as an integer", shbuf); }
@@ -635,8 +630,8 @@ void Stack::finish_cell(int w) {
 // the default value is 1
 auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
     if (is_xmlc()) return 0;
-    if (!has_name(the_names[np_cell])) return -1;             // not a cell
-    if (!shbuf.install_att(id, the_names[np_cols])) return 1; // no property, default is 1
+    if (!has_name(the_names["cell"])) return -1;             // not a cell
+    if (!shbuf.install_att(id, the_names["cols"])) return 1; // no property, default is 1
     auto o = shbuf.int_val();
     return o ? to_signed(*o) : -1;
 }

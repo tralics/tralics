@@ -323,7 +323,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         if (need_elt)
             new_elt = new Xml(Istring(str + sname), nullptr);
         else {
-            new_elt = new Xml(np_rcval, nullptr);
+            new_elt = new Xml(the_names["rcval"], nullptr);
             new_elt->id.add_attribute(Istring("name"), Istring(sname));
         }
         res->push_back_unless_nullptr(new_elt);

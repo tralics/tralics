@@ -1008,14 +1008,14 @@ void math_ns::fill_math_char_slots() {
 
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(const std::string &a) -> Xml * {
-    Xml *b = new Xml(cst_mspace, nullptr);
+    Xml *b = new Xml(the_names["mspace"], nullptr);
     b->add_att(the_names["np_cst_width"], Istring(a));
     return b;
 }
 
 auto MathDataP::mk_mo(String a) -> gsl::not_null<Xml *> {
     Xml *x = new Xml(Istring(a));
-    return gsl::not_null{new Xml(cst_mo, x)};
+    return gsl::not_null{new Xml(the_names["mo"], x)};
 }
 
 // Case of math env. Converts an integer into a string,
@@ -1262,7 +1262,7 @@ auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> T
 auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, name_positions bl, symcodes t, bool hack) -> Token {
     Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
-    x = new Xml(bl, x);
+    x = new Xml(the_names[bl], x);
     return init_builtin(name, pos, x, t);
 }
 
@@ -1271,10 +1271,10 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
     -> Token {
     Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
-    Xml *bold = new Xml(bl, x);
+    Xml *bold = new Xml(the_names[bl], x);
     bold->add_att(the_names["mathvariant"], the_names["bold"]);
     init_builtin(pos2, bold);
-    x = new Xml(bl, x);
+    x = new Xml(the_names[bl], x);
     return init_builtin(name, pos, x, t);
 }
 
@@ -1349,7 +1349,7 @@ void MathDataP::boot_xml_lr_tables() {
         if (built_in_table[k] != nullptr) continue;
         Buffer B;
         B.push_back(static_cast<char>(i));
-        built_in_table[k] = new Xml(cst_mo, nullptr);
+        built_in_table[k] = new Xml(the_names["mo"], nullptr);
         built_in_table[k]->push_back_unless_nullptr(new Xml(B));
     }
 
@@ -1396,7 +1396,7 @@ void MathDataP::boot_xml_lr_tables() {
     fill_lr(del_bracevert, "");
 
     mc_table[0]  = mk_mo("error unknown control sequence");
-    mc_table[1]  = mk_mo(no_ent_names ? "&#xAF;" : "&OverBar;");
+    mc_table[1]  = mk_mo(no_ent_names ? "&#xAF;" : "&OverBar;"); // \todo big table of entities and codepoints
     mc_table[2]  = mk_mo(no_ent_names ? "&#x0FE37;" : "&OverBrace;");
     mc_table[3]  = mk_mo(no_ent_names ? "&#x332;" : "&UnderBar;");
     mc_table[4]  = mk_mo(no_ent_names ? "&#x0FE38;" : "&UnderBrace;");
@@ -1405,7 +1405,7 @@ void MathDataP::boot_xml_lr_tables() {
     mc_table[7]  = mk_space("1.em");
     mc_table[8]  = mk_space("2.em");
     mc_table[9]  = mk_space("4pt");
-    mc_table[10] = new Xml(cst_mi, new Xml(Istring("$")));
+    mc_table[10] = new Xml(the_names["mi"], new Xml(Istring("$")));
     mc_table[11] = mk_mo("%");
     mc_table[12] = mk_mo("&amp;");
     mc_table[13] = mk_space("-0.166667em");
@@ -1431,7 +1431,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
     else
         B.push_back(math_chars[c][n]);
     Xml *v   = new Xml(B);
-    Xml *res = new Xml(cst_mi, v);
+    Xml *res = new Xml(the_names["mi"], v);
     if (n == 1) res->add_att(the_names["mathvariant"], the_names["normal"]);
     return res;
 }
@@ -1439,7 +1439,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
 void MathDataP::boot_chars() {
     for (unsigned i = 0; i <= 9; i++) {
         Istring K = the_names[std::to_string(i)];
-        init_builtin(i + math_dig_loc, new Xml(cst_mn, new Xml(K))); // \todo useless?
+        init_builtin(i + math_dig_loc, new Xml(the_names["mn"], new Xml(K))); // \todo useless?
     }
 
     for (uchar i = 'A'; i <= 'Z'; i++) init_builtin(i + math_char_normal_loc, make_math_char(i, 0));
@@ -1453,7 +1453,7 @@ void MathDataP::boot_chars() {
     for (uchar i = 0; i < nb_simplemath; i++) {
         Buffer B;
         B.push_back(static_cast<char>(i));
-        Xml *res = new Xml(np_simplemath, new Xml(B));
+        Xml *res = new Xml(the_names["simplemath"], new Xml(B));
         Xml *X   = new Xml(the_names["formula"], res);
         X->add_att(the_names["type"], the_names["inline"]);
         simplemath_table[i] = X;
@@ -1492,20 +1492,20 @@ void MathDataP::boot2() {
     Xml *y = new Xml(the_names["mpadded"], get_builtin(int_code));
     y->add_att(the_names["np_cst_width"], Istring("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
-    x      = new Xml(cst_mrow, nullptr);
+    x      = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(z);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(z);
     init_builtin("iint", iint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, nullptr);
+    x = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(z);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(z);
     init_builtin("iiint", iiint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, nullptr);
+    x = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(z);
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(y);
@@ -1513,7 +1513,7 @@ void MathDataP::boot2() {
     x->push_back_unless_nullptr(y);
     x->push_back_unless_nullptr(z);
     init_builtin("iiiint", iiiint_code, x, mathop_cmd);
-    x = new Xml(cst_mrow, nullptr);
+    x = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(get_builtin(int_code));
     x->push_back_unless_nullptr(math_data.get_mc_table(6));
     x->push_back_unless_nullptr(get_builtin(int_code));

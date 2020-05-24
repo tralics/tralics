@@ -42,7 +42,7 @@ namespace {
     auto make_cit_ref(const Istring &type, const Istring &ref) -> Xml {
         auto    n  = *the_bibliography.find_citation_item(type, ref, true);
         Istring id = the_bibliography.citation_table[n].get_bid();
-        Xml     res(np_ref, nullptr);
+        Xml     res(the_names["ref"], nullptr);
         res.id.add_attribute(the_names["target"], id);
         return res;
     }
@@ -256,7 +256,7 @@ void Parser::T_cite_one() {
     L               = get_mac_value(hash_table.cite_prenote_token);
     auto prenote    = Istring(fetch_name1(L));
     if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
-    the_stack.add_last(new Xml(np_cit, res));
+    the_stack.add_last(new Xml(the_names["cit"], res));
     if (!type.empty()) the_stack.add_att_to_last(the_names["rend"], type);
     if (!xtype.empty()) the_stack.add_att_to_last(the_names["citetype"], xtype);
     if (!prenote.empty()) the_stack.add_att_to_last(the_names["prenote"], prenote);
@@ -892,18 +892,18 @@ void Parser::T_bpers() {
     if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0(np_bpers);
-    if (!(A.null() || A.empty())) the_stack.add_att_to_last(np_full_first, A);
-    if (!d.empty()) the_stack.add_att_to_last(np_junior, d);
-    the_stack.add_att_to_last(np_nom, c);
-    if (!b.empty()) the_stack.add_att_to_last(np_particle, b);
-    the_stack.add_att_to_last(np_prenom, a);
+    if (!(A.null() || A.empty())) the_stack.add_att_to_last(the_names["full_first"], A);
+    if (!d.empty()) the_stack.add_att_to_last(the_names["junior"], d);
+    the_stack.add_att_to_last(the_names["nom"], c);
+    if (!b.empty()) the_stack.add_att_to_last(the_names["particule"], b);
+    the_stack.add_att_to_last(the_names["prenom"], a);
 }
 
 void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
-    add_att_to_last(np_userid, Istring(b1));
-    add_att_to_last(np_id, b2);
-    add_att_to_last(np_key, Istring(a));
-    add_att_to_last(np_from, Istring(c));
+    add_att_to_last(the_names["userid"], Istring(b1));
+    add_att_to_last(the_names["id"], b2);
+    add_att_to_last(the_names["key"], Istring(a));
+    add_att_to_last(the_names["from"], Istring(c));
 }
 
 // case \bibitem
@@ -924,7 +924,7 @@ void Parser::solve_cite(bool user) {
     long  n    = 0;
     if (user) {
         implicit_par(zero_code);
-        the_stack.add_last(new Xml(np_bibitem, nullptr));
+        the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
         Istring ukey = nT_optarg_nopar();
         the_stack.get_xid().get_att().push_back(the_names["bibkey"], ukey);
         n = the_stack.get_xid().value;

@@ -639,20 +639,20 @@ void post_ns::postprocess_figure(Xml *to, Xml *from) {
         }
         return;
     case 1: // a table in the figure, move all tables
-        X = new Xml(cst_p, nullptr);
+        X = new Xml(the_names["cst_p"], nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names["table"], X);
         to->id.add_attribute(the_names["rend"], the_names["array"]);
         return;
     case 3: // verbatim material in the figure; move all lines
-        X = new Xml(cst_empty, nullptr);
+        X = new Xml(the_names["cst_empty"], nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names["pre"], X);
         to->id.add_attribute(the_names["rend"], the_names["pre"]);
         return;
     case 2: // a subfigure
         //    T->remove_empty_par();
-        X = new Xml(cst_p, nullptr); // will contain junk
+        X = new Xml(the_names["cst_p"], nullptr); // will contain junk
         if (the_parser.eqtb_int_table[use_subfigure_code].val != 0)
             post_ns::raw_subfigure(from, to, X);
         else
@@ -682,7 +682,7 @@ void post_ns::postprocess_table(Xml *to, Xml *from) {
     // Special case: more than one tabular in the table
     // We move in to all tabular
     if (X1.get_int_val() > 1) {
-        Xml *X = new Xml(cst_p, nullptr);
+        Xml *X = new Xml(the_names["cst_p"], nullptr);
         to->push_back_unless_nullptr(X);
         from->move(the_names["table"], X);
         to->id.add_attribute(the_names["rend"], the_names["array"]);
@@ -730,8 +730,8 @@ void post_ns::table_subfigure(Xml *from, Xml *to, Xml *junk) {
 // Figure with subfigure. We construct a table with two rows
 // for a par. ctr holds the value of the counter for the caption.
 auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
-    Xml *row1  = new Xml(np_row, nullptr);
-    Xml *row2  = new Xml(np_row, nullptr);
+    Xml *row1  = new Xml(the_names["row"], nullptr);
+    Xml *row2  = new Xml(the_names["row"], nullptr);
     int  nrows = 0;
     for (;;) {
         Xml *sf = from->get_first_env("subfigure");
@@ -765,7 +765,7 @@ auto post_ns::figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
     res->id.add_attribute(the_names["rend"], the_names["inline"]);
     res->push_back_unless_nullptr(row1);
     res->push_back_unless_nullptr(row2);
-    return new Xml(cst_p, res);
+    return new Xml(the_names["cst_p"], res);
 }
 
 void post_ns::raw_subfigure(Xml *from, Xml *to, Xml *junk) {

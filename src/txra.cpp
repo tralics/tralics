@@ -62,7 +62,7 @@ void Parser::fnhack() {
 void Parser::interpret_rc() {
     TokenList L = read_arg();
     Tbuf << bf_reset << L;
-    Xml *res = new Xml(np_rclist, nullptr);
+    Xml *res = new Xml(the_names["rclist"], nullptr);
     the_stack.add_last(res);
     config_ns::check_RC(Tbuf, res);
 }

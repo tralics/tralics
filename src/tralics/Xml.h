@@ -12,10 +12,9 @@ public:
 
     Xml(Istring n = {}) : name(std::move(n)) {}
     Xml(const std::string &n) : name(Istring(n)) {}
-    Xml(Istring N, Xml *z);
-    Xml(name_positions N, Xml *z);
-    [[deprecated]] Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}
     Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
+    Xml(Istring N, Xml *z);
+    [[deprecated]] Xml(name_positions x, Xid n) : id(n), name(the_names[x]) {}
 
     [[nodiscard]] auto             all_empty() const -> bool;
     [[nodiscard]] auto             back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
