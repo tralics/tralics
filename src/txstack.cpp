@@ -479,9 +479,6 @@ void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xm
 // Push a new XML element
 void Stack::push1(Istring x) { push(x, new Xml(x, nullptr)); }
 
-// Push a new XML element
-void Stack::push1(name_positions x) { push(the_names[x], new Xml(the_names[x], nullptr)); }
-
 // Code done when a module ends. pop until stack (nearly) empty
 void Stack::end_module() {
     trace_pop(true);

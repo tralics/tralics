@@ -501,7 +501,7 @@ void Parser::start_a_row(long a) {
             continue;
         }
         if (S == end_cmd) return;
-        the_stack.push1(np_row);
+        the_stack.push1(the_names["row"]);
         if (initial_hline) the_stack.cur_xid().add_top_rule();
         start_a_cell(false);
         return;
@@ -748,7 +748,7 @@ void Xid::add_span(long n) const {
 // If the previous fails, we add a row of empty cells,
 // This adds a-1 empty cells, then b cells with a bottom_border
 void Stack::add_border(long a, long b) {
-    push1(np_row);
+    push1(the_names["row"]);
     push_pop_cell(push_only);
     if (a != 1) {
         get_xid().add_span(a - 1);

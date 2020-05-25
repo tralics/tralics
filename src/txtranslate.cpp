@@ -430,7 +430,7 @@ void Parser::T_xmlelt(subtypes w) {
 // Special case where the XML name and the frame name are the same
 // Note the additional braces
 void Parser::T_arg1(name_positions y) {
-    the_stack.push1(y);
+    the_stack.push1(the_names[y]);
     TokenList L = read_arg();
     brace_me(L);
     T_translate(L);
@@ -445,7 +445,7 @@ void Parser::T_item(int c) {
     skip_initial_space_and_back_input();
     Istring att = T_item_label(c);
     the_stack.add_nl();
-    the_stack.push1(np_item);
+    the_stack.push1(the_names["item"]);
     if (!att.null()) the_stack.add_att_to_last(the_names["labelitem"], att);
     the_stack.add_new_anchor();
     the_stack.set_v_mode();
@@ -486,7 +486,7 @@ void Parser::T_glo() {
     mode w = the_stack.get_mode();
     the_stack.set_arg_mode();
     T_arg1(np_label_glo);
-    the_stack.push1(np_item);
+    the_stack.push1(the_names["item"]);
     the_stack.set_v_mode();
     T_arg();
     leave_h_mode();
@@ -513,7 +513,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     else
         opt = xT_optarg_nopar();
     the_stack.set_arg_mode();
-    the_stack.push1(np_head);
+    the_stack.push1(the_names["head"]);
     Xml *     title = the_stack.top_stack();
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
@@ -708,7 +708,7 @@ void Parser::T_float(subtypes c) {
         }
         word_define(incentering_code, 1, false);
         leave_h_mode();
-        the_stack.push1(np_float);
+        the_stack.push1(the_names["float"]);
         the_stack.add_att_to_last(the_names["place"], opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
@@ -809,7 +809,7 @@ void Parser::T_grabenv() {
 // This is the code of \begin{motscle}
 void Parser::T_keywords() {
     leave_h_mode();
-    the_stack.push1(np_keywords);
+    the_stack.push1(the_names["keywords"]);
     the_stack.add_nl();
     the_stack.set_no_mode();
     bool seen_end = false;
@@ -818,7 +818,7 @@ void Parser::T_keywords() {
         seen_end = grab_env_comma(v);
         token_ns::remove_first_last_space(v);
         if (!v.empty() && v.back().is_dot()) v.pop_back();
-        the_stack.push1(np_term);
+        the_stack.push1(the_names["term"]);
         the_stack.set_arg_mode();
         T_translate(v);
         the_stack.pop(the_names["term"]);
@@ -1178,7 +1178,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
 
 auto Parser::internal_makebox() -> Xml * {
     leave_v_mode();
-    the_stack.push1(np_mbox);
+    the_stack.push1(the_names["mbox"]);
     Xml *     mbox = the_stack.top_stack();
     TokenList d    = read_arg();
     brace_me(d);
@@ -1218,10 +1218,10 @@ void Parser::T_mbox(subtypes c) {
 // This translates \caption or \footnote
 void Parser::T_cap_or_note(bool cap) {
     leave_v_mode();
-    name_positions name = cap ? np_caption : np_footnote;
+    std::string name = cap ? "scaption" : "footnote";
     push_level(bt_local);
     word_define(incentering_code, 0, false);
-    the_stack.push1(name);
+    the_stack.push1(the_names[name]);
     Xml *opt{nullptr};
     Xml *note{nullptr};
     if (cap) { // case of Caption
@@ -1258,14 +1258,14 @@ void Parser::T_makebox(bool framed, Token C) {
     T_twodims(A, B, C);
     std::string oarg = sT_optarg_nopar();
     leave_v_mode();
-    the_stack.push1(np_box);
+    the_stack.push1(the_names["box"]);
     AttList &cur = last_att_list();
     if (framed) cur.push_back(the_names["framed"], the_names["true"]);
     if (!oarg.empty()) cur.push_back(the_names["box_pos"], Istring(oarg));
     cur.push_back(the_names["height"], B);
     cur.push_back(the_names["width"], A);
     T_arg_local();
-    the_stack.pop(the_names[np_box]);
+    the_stack.pop(the_names["box"]);
 }
 
 // Implements \sbox and \savebox
@@ -1288,7 +1288,7 @@ void Parser::T_save_box(bool simple) {
             iwidth = get_opt_dim(T);
             ipos   = the_names[get_ctb_opt()];
         }
-        the_stack.push1(np_mbox);
+        the_stack.push1(the_names["mbox"]);
         the_stack.set_arg_mode();
         Xml *     mbox = the_stack.top_stack();
         TokenList d    = read_arg();
@@ -1296,14 +1296,14 @@ void Parser::T_save_box(bool simple) {
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
         mbox->id.add_attribute(the_names["box_pos"], ipos);
-        mbox->id.add_attribute(the_names[np_box_width], iwidth);
+        mbox->id.add_attribute(the_names["box_width"], iwidth);
     }
     box_end(the_stack.remove_last(), i);
 }
 
 void Parser::T_picture() {
     flush_buffer();
-    the_stack.push1(np_picture);
+    the_stack.push1(the_names["picture"]);
 
     AttList &cur = last_att_list();
     the_stack.set_arg_mode();
@@ -1328,7 +1328,7 @@ void Parser::T_fbox_dash_box() {
     Istring   B, C;
     T_twodims(B, C, T);
     std::string oarg = sT_optarg_nopar();
-    the_stack.push1(np_dashbox);
+    the_stack.push1(the_names["pic-dashbox"]);
     Xid cur_id = the_stack.get_top_id();
     if (!oarg.empty()) cur_id.add_attribute(the_names["box_pos"], Istring(oarg));
     cur_id.add_attribute(the_names["height"], C);
@@ -1342,7 +1342,7 @@ void Parser::T_fbox_rotate_box() {
     flush_buffer();
     Istring val = nT_arg_nopar();
     leave_v_mode();
-    the_stack.push1(np_rotatebox);
+    the_stack.push1(the_names["rotatebox"]);
     the_stack.get_top_id().add_attribute(np_r_angle, val);
     T_arg_local();
     the_stack.pop(the_names["rotatebox"]);
@@ -1376,7 +1376,7 @@ void Parser::T_fbox(subtypes cc) {
         iwidth = nT_optarg_nopar();
     }
     leave_v_mode();
-    the_stack.push1(cc == scalebox_code ? np_sbox : np_fbox);
+    the_stack.push1(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *cur = the_stack.top_stack(); // will contain the argument.
     T_arg_local();
     the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
@@ -1397,9 +1397,9 @@ void Parser::T_fbox(subtypes cc) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
-        AL.push_back(the_names[np_b_rend], the_names["boxed"]);
+        AL.push_back(the_names["fbox_rend"], the_names["boxed"]);
         AL.push_back(the_names["box_pos"], ipos);
-        AL.push_back(the_names[np_box_width], iwidth);
+        AL.push_back(the_names["box_width"], iwidth);
     }
 }
 
@@ -1942,7 +1942,7 @@ void Parser::T_curves(int c) {
     case curve_code: x0 = np_curve; break;
     case tagcurve_code: x0 = np_tagcurve; break;
     }
-    the_stack.push1(x0);
+    the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
     Xid     cur_id = the_stack.get_top_id();
     Istring specs  = nT_optarg_nopar();
@@ -1987,13 +1987,13 @@ void Parser::T_multiput() {
     while (r > 0) {
         TokenList Lc = L;
         back_input(Lc);
-        the_stack.push1(np_put);
+        the_stack.push1(the_names["put"]);
         the_stack.set_arg_mode();
         AttList &AL = last_att_list();
         AL.push_back(the_names["ypos"], dimen_attrib(Y));
         AL.push_back(the_names["xpos"], dimen_attrib(X));
         T_arg();
-        the_stack.pop(the_names[np_put]);
+        the_stack.pop(the_names["put"]);
         the_stack.add_nl();
         r--;
         X += Dx;

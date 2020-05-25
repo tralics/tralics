@@ -276,11 +276,11 @@ void Parser::T_trees(int c) {
 void Parser::T_node() {
     Istring A = nT_arg_nopar();
     leave_v_mode();
-    the_stack.push1(np_node);
+    the_stack.push1(the_names["node"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["name"], A);
     T_arg();
-    the_stack.pop(the_names[np_node]);
+    the_stack.pop(the_names["node"]);
 }
 
 // A node of 0pt width and height
@@ -290,12 +290,12 @@ void Parser::T_nodepoint() {
     Istring A = nT_arg_nopar();
     Istring B = nT_optarg_nopar();
     Istring C = nT_optarg_nopar();
-    the_stack.push1(np_node);
+    the_stack.push1(the_names["node"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["name"], A);
     cur.push_back(the_names["xpos"], B); // default value is zero
     cur.push_back(the_names["ypos"], C); // default value is zero
-    the_stack.pop(the_names[np_node]);
+    the_stack.pop(the_names["node"]);
 }
 
 // \nodeconnect[fromloc]{fromnode}[toloc]{tonode}
@@ -306,7 +306,7 @@ void Parser::T_nodeconnect(name_positions W) {
     auto D = nT_arg_nopar();
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["posB"], the_names[C]);
     cur.push_back(the_names["posA"], the_names[A]);
@@ -320,7 +320,7 @@ void Parser::T_barnodeconnect(name_positions W) {
     Istring A = nT_optarg_nopar();
     Istring B = nT_arg_nopar();
     Istring C = nT_arg_nopar();
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depth"], A);
     cur.push_back(the_names["nameB"], C);
@@ -340,7 +340,7 @@ void Parser::T_nodecurve(name_positions W) {
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
     if (F.null() || F.empty()) F = E;
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depthA"], E);
     cur.push_back(the_names["depthB"], F);
@@ -353,7 +353,7 @@ void Parser::T_nodecurve(name_positions W) {
 
 void Parser::T_nodebox(name_positions W) {
     Istring A = nT_arg_nopar();
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
     the_stack.pop(the_names[W]);
@@ -362,7 +362,7 @@ void Parser::T_nodebox(name_positions W) {
 void Parser::T_nodetriangle(name_positions W) {
     Istring A = nT_arg_nopar();
     Istring B = nT_arg_nopar();
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
     cur.push_back(the_names["nameB"], B);
@@ -373,7 +373,7 @@ void Parser::T_nodetriangle(name_positions W) {
 void Parser::T_nodecircle(name_positions W) {
     Istring B = nT_optarg_nopar();
     Istring A = nT_arg_nopar();
-    the_stack.push1(W);
+    the_stack.push1(the_names[W]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depth"], B);
     cur.push_back(the_names["nameA"], A);

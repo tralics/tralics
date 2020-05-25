@@ -168,7 +168,7 @@ void Parser::T_cite(subtypes sw) {
     }
     if (is_natbib) {
         leave_v_mode();
-        the_stack.push1(np_natcit);
+        the_stack.push1(the_names["natcit"]);
     }
     TokenList res;
     TokenList prenote;
@@ -509,7 +509,7 @@ void Parser::after_main_text() {
     init(bbl.lines);
     if (!lines.empty()) {
         Xml *res = the_stack.temporary();
-        the_stack.push1(np_biblio);
+        the_stack.push1(the_names["biblio"]);
         AttList &L = the_stack.get_att_list(3);
         the_stack.cur_xid().add_attribute(L, true);
         translate0();
@@ -975,7 +975,7 @@ void Parser::T_empty_bibitem() {
     Istring     id = the_bibtex->exec_bibitem(w, b);
     if (id.empty()) return;
     leave_v_mode();
-    the_stack.push1(np_citation);
+    the_stack.push1(the_names["citation"]);
     the_stack.implement_cit(b, id, a, w);
     the_stack.pop(the_names["citation"]);
 }
@@ -1000,7 +1000,7 @@ void Parser::T_citation() {
     std::string c  = sT_arg_nopar();
     Istring     d  = nT_arg_nopar();
     the_stack.add_nl();
-    the_stack.push1(np_citation);
+    the_stack.push1(the_names["citation"]);
     the_stack.add_att_to_last(the_names["type"], d);
     the_stack.implement_cit(b1, Istring(b2), a, c);
     the_stack.set_bib_mode();

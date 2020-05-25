@@ -602,7 +602,7 @@ void Parser::T_minipage() {
     scan_glue(it_dimen, T, false);
     Istring w = Istring(cur_val.get_dim_val());
     if (the_stack.in_v_mode()) leave_v_mode();
-    the_stack.push1(np_minipage);
+    the_stack.push1(the_names["minipage"]);
     the_stack.set_v_mode();
     state = state_S;
     the_stack.add_att_to_last(the_names["minipage_width"], w);
@@ -682,7 +682,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
     }
     word_define(incentering_code, 1, false);
     leave_h_mode();
-    the_stack.push1(x == figure_cmd ? np_float_figure : np_float_table);
+    the_stack.push1(the_names[x == figure_cmd ? "figure_env" : "table_env"]);
     if (c == 2) {
         if (!opt.empty()) the_stack.add_att_to_last(Istring("narrow"), opt);
         the_stack.add_att_to_last(the_names["place"], place);
@@ -1218,12 +1218,12 @@ void Parser::translate03() {
     case tl_set_cmd: l3_tl_set(c); return;
     case l3_rescan_cmd: tl_set_rescan(c); return;
     case toc_cmd: { // insert <tableofcontents/>
-        name_positions np = np_toc;
-        if (c == 1) np = np_toc1;
-        if (c == 2) np = np_toc2;
+        std::string np = "tableofcontents";
+        if (c == 1) np = "listoftables";
+        if (c == 2) np = "listoffigures";
         remove_initial_star();
         leave_h_mode();
-        the_stack.push1(np);
+        the_stack.push1(the_names[np]);
         if (c == 0) {
             static bool inserted = false;
             if (!inserted) the_stack.top_stack()->id = 4;

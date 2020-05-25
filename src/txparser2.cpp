@@ -402,7 +402,7 @@ void Parser::T_line(subtypes c) {
         if (the_stack.is_float()) return;
         leave_v_mode();
     }
-    the_stack.push1(np_lineC);
+    the_stack.push1(the_names["lineC"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["rend"], the_names[k]);
     T_arg_local();
