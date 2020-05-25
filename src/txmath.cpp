@@ -63,7 +63,7 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, std::string pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
+    auto finish_cv_special(bool isfrac, Istring s, const std::string &pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
                            int style, size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
@@ -2047,15 +2047,15 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
             have_font  = true;
             subtypes s = C->get_chr();
             if (s == math_f_italic)
-                font_pos = np_font_it;
+                font_pos = std::to_string(np_font_it);
             else if (s == math_f_upright)
                 have_font = false;
             else if (s == math_f_sansserif)
-                font_pos = np_font_sansserif;
+                font_pos = std::to_string(np_font_sansserif);
             else if (s == math_f_monospace)
-                font_pos = np_font_tt;
+                font_pos = std::to_string(np_font_tt);
             else if (s == math_f_bold)
-                font_pos = np_font_bold;
+                font_pos = std::to_string(np_font_bold);
             else
                 return nullptr;
             ++C;
@@ -2704,8 +2704,8 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     return {res, mt_flag_big};
 }
 
-auto math_ns::finish_cv_special(bool isfrac, Istring s, std::string pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
-                                int style, size_t open, size_t close) -> Xml * {
+auto math_ns::finish_cv_special(bool isfrac, Istring s, const std::string &pos, Xml *a, Xml *b, const Istring &sz, int numalign,
+                                int denalign, int style, size_t open, size_t close) -> Xml * {
     Istring Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
     auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);

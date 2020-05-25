@@ -127,7 +127,7 @@ public:
     void                push(Istring fr, Xml *V);
     void                push1(Istring name, Istring x);
     void                push1(Istring name, name_positions x);
-    void                push1(Istring x);
+    void                push1(const Istring &x);
     auto                push_hbox(Istring name) -> Xml *;
     void                push_pop_cell(int dir);
     void                push_trace();

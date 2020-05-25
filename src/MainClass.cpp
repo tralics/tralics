@@ -969,7 +969,7 @@ void MainClass::read_config_and_other() {
     config_file.clear();
 }
 
-void MainClass::bad_year() {
+void MainClass::bad_year() const {
     spdlog::critical("Fatal: Input file name must be team name followed by {}", year);
     end_with_help(1);
 }

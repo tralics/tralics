@@ -90,7 +90,7 @@ public:
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, Buffer &b); ///< Add contents to `from_config`
-    void bad_year();                           ///< If the year is wrong, fail \todo this seems to be RA specific
+    void bad_year() const;                     ///< If the year is wrong, fail \todo this seems to be RA specific
     void run(int argc, char **argv);           ///< Do everything
     void set_ent_names(const std::string &s);  ///< Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);        ///< Set default input file encoding and log the action \todo remove?
@@ -104,66 +104,66 @@ private:
     void read_config_and_other();                     ///< Read the config file and extract all relevant information
     void set_tpa_status(const std::string &s);        ///< Handles argument of -tpa_status switch
 
-    auto append_nonempty_line() -> int;
-    auto check_for_alias_type(bool vb) -> bool;
+    auto        append_nonempty_line() -> int;
+    auto        check_for_alias_type(bool vb) -> bool;
     static auto check_for_arg(int &p, int argc, char **argv) -> String; ///< This gets foo, unless we are in the case tralics type=foo
-    auto check_line_aux(Buffer &) -> bool;
-    auto check_section() -> int;
-    auto find_config_file() -> std::optional<std::filesystem::path>;
-    auto find_document_type() -> bool; ///< Massage the output of get_doc_type
-    auto find_opt_field(String info) -> bool;
-    auto get_a_new_line() -> bool;
-    void after_main_text();
-    void append_non_eof_line(String, int);
-    void bad_mod(int a, std::string b, Buffer &c);
-    void boot_bibtex(bool inra);
-    void call_dvips(std::string);
-    void check_all();
-    void check_before_begin(int k);
-    void check_for_input(); ///< Reads the input file named in `infile`
-    void check_kw(int, Buffer &);
-    void check_line(Buffer &);
-    void check_mod();
-    void check_options();
-    void check_presentation();
-    void check_project(Buffer &a);
-    void check_ra_dir();
-    void check_year_string(int, bool);
-    void dubious_command(int k, bool where);
-    void end_document();
-    void end_env(std::string);
-    void end_mod();
-    static void end_with_help(int v) ;
-    void find_dtd(); ///< Finds the DTD, create default if nothing given
-    void find_field(String a);
-    void finish_init() const; ///< RA related stuff
-    void finish_xml();
-    void get_doc_type();         ///< Determine document type from various sources
-    void get_os();               ///< Sets cur_os to the current OS as a symbolic string
-    void get_type_from_config(); ///< Extracts a type from the configuration file
-    void handle_latex2init(String file_name);
-    void ignore_text();
-    void make_perl_script();
-    void merge_bib();
-    void mkcfg();
-    void more_boot() const; ///< Finish bootstrapping
-    void one_bib_file(bib_from pre, std::string bib);
-    void open_config_file(const std::string &f);
-    void open_log(); ///< Opens the log file, prints some information
-    void open_main_file();
-    void out_gathered_math();
-    void out_sep();
-    void out_xml(); ///< Ouput the XML and compute the word list
-    void run_ra();
-    void run_simple_ra();
-    void see_aux_info(int k);
-    void see_name(String s); ///< Extract versions of a filename with and without ext
-    void see_name1();        ///< Post-process file names
-    void show_input_size();
-    void start_document(Buffer &a);
-    void start_env(std::string);
-    void start_error();
-    void trans0(); ///< Start the latex to XML translation
+    auto        check_line_aux(Buffer &) -> bool;
+    auto        check_section() -> int;
+    auto        find_config_file() -> std::optional<std::filesystem::path>;
+    auto        find_document_type() -> bool; ///< Massage the output of get_doc_type
+    auto        find_opt_field(String info) -> bool;
+    auto        get_a_new_line() -> bool;
+    void        after_main_text();
+    void        append_non_eof_line(String, int);
+    void        bad_mod(int a, std::string b, Buffer &c);
+    void        boot_bibtex(bool inra);
+    void        call_dvips(std::string);
+    void        check_all();
+    void        check_before_begin(int k);
+    void        check_for_input(); ///< Reads the input file named in `infile`
+    void        check_kw(int, Buffer &);
+    void        check_line(Buffer &);
+    void        check_mod();
+    void        check_options();
+    void        check_presentation();
+    void        check_project(Buffer &a);
+    void        check_ra_dir();
+    void        check_year_string(int, bool);
+    void        dubious_command(int k, bool where);
+    void        end_document();
+    void        end_env(std::string);
+    void        end_mod();
+    static void end_with_help(int v);
+    void        find_dtd(); ///< Finds the DTD, create default if nothing given
+    void        find_field(String a);
+    void        finish_init() const; ///< RA related stuff
+    void        finish_xml();
+    void        get_doc_type();         ///< Determine document type from various sources
+    void        get_os();               ///< Sets cur_os to the current OS as a symbolic string
+    void        get_type_from_config(); ///< Extracts a type from the configuration file
+    void        handle_latex2init(String file_name);
+    void        ignore_text();
+    void        make_perl_script();
+    void        merge_bib();
+    void        mkcfg();
+    void        more_boot() const; ///< Finish bootstrapping
+    void        one_bib_file(bib_from pre, std::string bib);
+    void        open_config_file(const std::string &f);
+    void        open_log(); ///< Opens the log file, prints some information
+    void        open_main_file();
+    void        out_gathered_math();
+    void        out_sep();
+    void        out_xml(); ///< Ouput the XML and compute the word list
+    void        run_ra();
+    void        run_simple_ra();
+    void        see_aux_info(int k);
+    void        see_name(String s); ///< Extract versions of a filename with and without ext
+    void        see_name1();        ///< Post-process file names
+    void        show_input_size();
+    void        start_document(Buffer &a);
+    void        start_env(std::string);
+    void        start_error();
+    void        trans0(); ///< Start the latex to XML translation
 };
 
 extern MainClass *the_main;
