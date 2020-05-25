@@ -432,7 +432,6 @@ private:
     auto        get_index_value() -> size_t;
     void        get_date_ctrs(long &year, size_t &month, long &day);
     void        get_def_nbargs(Macro *X, Token name);
-    auto        get_lrcs_opt() -> name_positions;
     auto        cs_from_input() -> Token;
     auto        get_mac_value(Token T) -> TokenList;
     auto        get_mac_value(const std::string &s) -> TokenList;

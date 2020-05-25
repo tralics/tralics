@@ -22,12 +22,12 @@ class NameMapper {
 public:
     auto operator[](const std::string &name) const -> Istring;
 
-    void set(name_positions i, const std::string &s);
-    void set(const std::string &name, const std::string &value);
+    [[deprecated]] void set(name_positions i, const std::string &s);
+    void                set(const std::string &name, const std::optional<std::string> &value = std::nullopt);
 
-    void def(const std::string &name, name_positions pos, const std::optional<std::string> &value = std::nullopt);
-    void def(name_positions i, const std::string &s);
-    void boot();
+    [[deprecated]] void def(const std::string &name, name_positions pos, const std::optional<std::string> &value = std::nullopt);
+    [[deprecated]] void def(name_positions i, const std::string &s);
+    void                boot();
 
     void assign(const std::string &sa, const std::string &sb);
     void assign_name(const std::string &A, const std::string &B);
