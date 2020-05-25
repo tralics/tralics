@@ -755,7 +755,7 @@ private:
     void        E_afterfi();
     void        E_afterelsefi();
     void        T_ampersand();
-    void        T_arg1(name_positions y);
+    void        T_arg1(Istring y);
     void        T_atdocument(subtypes c);
     void        T_at_end_of_class();
     void        T_backslash();

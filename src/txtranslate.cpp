@@ -429,12 +429,12 @@ void Parser::T_xmlelt(subtypes w) {
 
 // Special case where the XML name and the frame name are the same
 // Note the additional braces
-void Parser::T_arg1(name_positions y) {
-    the_stack.push1(the_names[y]);
+void Parser::T_arg1(Istring y) {
+    the_stack.push1(y);
     TokenList L = read_arg();
     brace_me(L);
     T_translate(L);
-    the_stack.pop(the_names[y]);
+    the_stack.pop(y);
 }
 
 // Case of an item in a list...
@@ -485,7 +485,7 @@ void Parser::T_glo() {
     leave_h_mode(); // mode should be no_mode now.
     mode w = the_stack.get_mode();
     the_stack.set_arg_mode();
-    T_arg1(np_label_glo);
+    T_arg1(the_names["gloitem"]);
     the_stack.push1(the_names["item"]);
     the_stack.set_v_mode();
     T_arg();
@@ -551,11 +551,11 @@ void Parser::T_matter(subtypes c) {
     leave_h_mode();
     the_stack.end_module();
     the_stack.add_nl();
-    name_positions t = np_mainmatter;
+    std::string t = "mainmatter";
     if (c == frontmatter_code)
-        t = np_frontmatter;
+        t = "frontmatter";
     else if (c == backmatter_code)
-        t = np_backmatter;
+        t = "backmatter";
     the_stack.push1(the_names["module"], the_names[t]);
     chapter_has_star = (c == frontmatter_code || c == backmatter_code);
 }
@@ -589,7 +589,7 @@ void Parser::T_paras(subtypes x) {
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();
     if (x == endsec_code) return;
-    the_stack.push1(Y, the_names.npdiv(y));
+    the_stack.push1(Y, the_names.npdiv(to_unsigned(y)));
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
@@ -728,7 +728,7 @@ void Parser::T_float(subtypes c) {
     case 2: // float@end
     case 3: // float@dblend
         leave_h_mode();
-        if (!the_stack.top_stack()->has_name(np_float)) parse_error("no float on stack");
+        if (!the_stack.top_stack()->has_name_of("float")) parse_error("no float on stack");
         the_stack.pop(the_names["float"]);
         the_stack.add_nl();
         return;
@@ -747,7 +747,7 @@ void Parser::T_subfigure() {
     the_stack.pop(the_names["leg"]);
     {
         auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
-        T_arg1(np_texte);
+        T_arg1(the_names["texte"]);
     }
     the_stack.pop(the_names["subfigure"]);
 }
@@ -870,7 +870,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(np_fileextension, Istring(Tbuf.substr(to_unsigned(k) + 1)));
+        AL.push_back(the_names["file_extension"], Istring(Tbuf.substr(to_unsigned(k) + 1)));
         Tbuf.resize(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.substr(ii), ok);
@@ -939,7 +939,7 @@ void Parser::includegraphics(subtypes C) {
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
             if (skey == "angle" && sval == "0") continue;
-            Istring p = skey == "scale" ? the_names[np_scale] : skey == "angle" ? the_names["angle"] : Istring(skey);
+            Istring p = skey == "scale" ? the_names["scale"] : skey == "angle" ? the_names["angle"] : Istring(skey);
             AL.push_back(p, Istring(sval), true);
         } else if (skey == "width" || skey == "height" || skey == "totalheight") {
             std::string N = skey == "height" ? "height" : skey == "width" ? "width" : "totalwidth";
@@ -1205,7 +1205,7 @@ void Parser::T_mbox(subtypes c) {
     Xml *mbox = internal_makebox();
     if (!ipos.null() || !iwidth.null()) {
         mbox->id.add_attribute(the_names["box_pos"], ipos);
-        mbox->id.add_attribute(the_names[np_box_width], iwidth);
+        mbox->id.add_attribute(the_names["box_width"], iwidth);
         return;
     }
     // Hack the box
@@ -1232,7 +1232,7 @@ void Parser::T_cap_or_note(bool cap) {
         leave_h_mode();
     } else {             // case of footnote, locally redefines fonts
         ignore_optarg(); // is this OK ?
-        the_stack.add_att_to_last(the_names["place"], the_names[np_foot]);
+        the_stack.add_att_to_last(the_names["place"], the_names["foot_position"]);
         my_stats.one_more_footnote();
         refstepcounter("footnote", true);
         note        = the_stack.top_stack();
@@ -1343,7 +1343,7 @@ void Parser::T_fbox_rotate_box() {
     Istring val = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["rotatebox"]);
-    the_stack.get_top_id().add_attribute(np_r_angle, val);
+    the_stack.get_top_id().add_attribute(the_names["rotate_angle"], val);
     T_arg_local();
     the_stack.pop(the_names["rotatebox"]);
 }
@@ -1406,8 +1406,8 @@ void Parser::T_fbox(subtypes cc) {
 // Returns <xref url='v'>val</xref>
 void Parser::new_xref(Xml *val, std::string v, bool err) {
     my_stats.one_more_href();
-    the_stack.add_last(new Xml(the_names[np_xref], val));
-    the_stack.add_att_to_last(the_names[np_url], Istring(v));
+    the_stack.add_last(new Xml(the_names["xref"], val));
+    the_stack.add_att_to_last(the_names["url"], Istring(v));
     if (err && (v.empty() || v[0] == '(')) parse_error("Invalid URL value");
 }
 
@@ -1901,10 +1901,10 @@ void Parser::T_put(subtypes c) {
     Xid cur_id = the_stack.get_top_id();
     if (c == scaleput_code) {
         AttList &AL = cur_id.get_att();
-        AL.push_back(the_names[np_yscalex], get_c_val(hash_table.yscalex_token));
-        AL.push_back(the_names[np_xscaley], get_c_val(hash_table.xscaley_token));
-        AL.push_back(the_names[np_yscale], get_c_val(hash_table.yscale_token));
-        AL.push_back(the_names[np_xscale], get_c_val(hash_table.xscale_token));
+        AL.push_back(the_names["yscalex"], get_c_val(hash_table.yscalex_token));
+        AL.push_back(the_names["xscaley"], get_c_val(hash_table.xscaley_token));
+        AL.push_back(the_names["yscale"], get_c_val(hash_table.yscale_token));
+        AL.push_back(the_names["xscale"], get_c_val(hash_table.xscale_token));
     }
     if (c == multiput_code) {
         Istring aa, bb;
@@ -1928,27 +1928,27 @@ void Parser::T_linethickness(int c) {
     if (c == thicklines_code) C = "thicklines";
     if (c == thinlines_code) C = "thinlines";
     AttList &res = the_stack.add_newid0(C);
-    if (c == linethickness_code) res.push_back(np_size, nT_arg_nopar());
+    if (c == linethickness_code) res.push_back(the_names["size"], nT_arg_nopar());
 }
 
 void Parser::T_curves(int c) {
     Token C = cur_tok;
     flush_buffer();
-    name_positions x0 = cst_empty;
+    std::string x0 = "cst_empty";
     switch (c) {
-    case arc_code: x0 = np_arc; break;
-    case bigcircle_code: x0 = np_bigcircle; break;
-    case closecurve_code: x0 = np_closecurve; break;
-    case curve_code: x0 = np_curve; break;
-    case tagcurve_code: x0 = np_tagcurve; break;
+    case arc_code: x0 = "arc"; break;
+    case bigcircle_code: x0 = "bigcircle"; break;
+    case closecurve_code: x0 = "closecurve"; break;
+    case curve_code: x0 = "curve"; break;
+    case tagcurve_code: x0 = "tagcurve"; break;
     }
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
     Xid     cur_id = the_stack.get_top_id();
     Istring specs  = nT_optarg_nopar();
-    if (!specs.null()) cur_id.add_attribute(the_names[np_curve_nbpts], specs);
+    if (!specs.null()) cur_id.add_attribute(the_names["curve_nbpts"], specs);
     TokenList emptyl;
-    cur_id.add_attribute(np_unit_length, token_list_to_att(emptyl, C, false));
+    cur_id.add_attribute(the_names["unit_length"], token_list_to_att(emptyl, C, false));
     if (c == arc_code) {
         Istring aa, bb;
         T_twodims(aa, bb, C);
@@ -1957,7 +1957,7 @@ void Parser::T_curves(int c) {
         specs = nT_arg_nopar();
         cur_id.add_attribute(the_names["angle"], specs);
     } else if (c == bigcircle_code) {
-        cur_id.add_attribute(the_names[np_size], nT_arg_nopar());
+        cur_id.add_attribute(the_names["size"], nT_arg_nopar());
     } else {
         Token match(other_t_offset, '(');
         skip_initial_space();

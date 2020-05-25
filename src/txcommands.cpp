@@ -807,7 +807,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
     mode m = the_stack.get_mode();
     need_bib_mode();
     flush_buffer();
-    T_arg1(c == 0 ? np_bauteurs : np_bediteurs);
+    T_arg1(the_names[c == 0 ? "bauteurs" : "bediteur"]);
     the_stack.set_mode(m);
     the_stack.add_nl();
 }
