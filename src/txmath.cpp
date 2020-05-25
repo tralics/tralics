@@ -2032,10 +2032,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     Buffer B;
     auto   L = value.begin();
     ++L;
-    name_positions loc       = cmd == underscore_catcode ? np_s_sub : np_s_sup;
-    CmdChr         w         = L->get_cmd_chr();
-    bool           have_font = false;
-    name_positions font_pos  = cst_empty;
+    std::string loc       = cmd == underscore_catcode ? "sub" : "sup";
+    CmdChr      w         = L->get_cmd_chr();
+    bool        have_font = false;
+    std::string font_pos  = "cst_empty";
     if (w.is_letter() || w.is_other())
         B.push_back(w.char_val());
     else if (L->is_list()) {

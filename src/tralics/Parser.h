@@ -815,7 +815,7 @@ private:
     void        T_fbox_dash_box();
     void        T_fbox_rotate_box();
     void        T_float(subtypes c);
-    void        T_fonts(name_positions x);
+    void        T_fonts(const std::string &x);
     void        T_glo();
     void        T_glossaire();
     void        T_gloss(bool c);

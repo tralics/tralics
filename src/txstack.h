@@ -95,8 +95,8 @@ public:
     void                finish_cell(int w);
     [[nodiscard]] auto  first_frame() const -> Istring;
     [[nodiscard]] auto  first_non_empty() const -> const StackSlot &;
-    void                fonts0(name_positions x);
-    static auto         fonts1(name_positions x) -> Xml *;
+    void                fonts0(const std::string &x);
+    static auto         fonts1(const std::string &x) -> Xml *;
     auto                get_att_list(size_t k) -> AttList & { return attributes[k]; }
     [[nodiscard]] auto  get_cur_id() const -> Istring { return cur_lid; }
     [[nodiscard]] auto  get_cur_par() const -> Xml *;

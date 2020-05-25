@@ -17,50 +17,50 @@
 // This returns the position of the name of a font attribute
 // for use as an XML attribute.
 // This function deals with the size.
-auto FontInfo::size_change() const -> name_positions {
-    if (tsize == fi_small_size) return np_font_small;
-    if (tsize == fi_big_size) return np_font_large;
-    if (tsize == 0) return cst_empty;
-    if (tsize == fi_small_size1) return np_font_small1;
-    if (tsize == fi_small_size2) return np_font_small2;
-    if (tsize == fi_small_size3) return np_font_small3;
-    if (tsize == fi_small_size4) return np_font_small4;
-    if (tsize == fi_small_size5) return np_font_small5;
-    if (tsize == fi_small_size6) return np_font_small6;
-    if (tsize == fi_big_size1) return np_font_large1;
-    if (tsize == fi_big_size2) return np_font_large2;
-    if (tsize == fi_big_size3) return np_font_large3;
-    if (tsize == fi_big_size4) return np_font_large4;
-    if (tsize == fi_big_size5) return np_font_large5;
-    if (tsize == fi_big_size6) return np_font_large6;
-    return cst_empty;
+auto FontInfo::size_change() const -> std::string {
+    if (tsize == fi_small_size) return "font_small";
+    if (tsize == fi_big_size) return "font_large";
+    if (tsize == 0) return "cst_empty";
+    if (tsize == fi_small_size1) return "font_small1";
+    if (tsize == fi_small_size2) return "font_small2";
+    if (tsize == fi_small_size3) return "font_small3";
+    if (tsize == fi_small_size4) return "font_small4";
+    if (tsize == fi_small_size5) return "font_small5";
+    if (tsize == fi_small_size6) return "font_small6";
+    if (tsize == fi_big_size1) return "font_large1";
+    if (tsize == fi_big_size2) return "font_large2";
+    if (tsize == fi_big_size3) return "font_large3";
+    if (tsize == fi_big_size4) return "font_large4";
+    if (tsize == fi_big_size5) return "font_large5";
+    if (tsize == fi_big_size6) return "font_large6";
+    return "cst_empty";
     // maybe np_font_normalsize
 }
 
 // Idem. This function deals with the shape.
-auto FontInfo::shape_change() const -> name_positions {
-    if (shape == fi_it_shape) return np_font_it;
-    if (shape == fi_sl_shape) return np_font_slanted;
-    if (shape == fi_sc_shape) return np_font_sc;
-    return cst_empty;
+auto FontInfo::shape_change() const -> std::string {
+    if (shape == fi_it_shape) return "font_it";
+    if (shape == fi_sl_shape) return "font_slanted";
+    if (shape == fi_sc_shape) return "font_sc";
+    return "cst_empty";
     // could be np_font_upright
 }
 
 // Idem. This function deals with the family.
-auto FontInfo::family_change() const -> name_positions {
-    if (family == fi_sf_family) return np_font_sansserif;
-    if (family == fi_tt_family) return np_font_tt;
-    return cst_empty;
+auto FontInfo::family_change() const -> std::string {
+    if (family == fi_sf_family) return "font_sansserif";
+    if (family == fi_tt_family) return "font_tt";
+    return "cst_empty";
     // could be np_font_roman
 }
 
 // Idem. This function deals with the series.
-auto FontInfo::series_change() const -> name_positions {
-    if (series == fi_bf_series) return np_font_bold;
-    if (series == fi_bx_series) return np_font_boldextended;
-    if (series == fi_sb_series) return np_font_semibold;
-    if (series == fi_c_series) return np_font_condensed;
-    return cst_empty; // could be np_font_medium
+auto FontInfo::series_change() const -> std::string {
+    if (series == fi_bf_series) return "font_bold";
+    if (series == fi_bx_series) return "font_boldextended";
+    if (series == fi_sb_series) return "font_semibold";
+    if (series == fi_c_series) return "font_condensed";
+    return "cst_empty"; // could be np_font_medium
 }
 
 // This function returns a font attribute, as a LaTeX command.

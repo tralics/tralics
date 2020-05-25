@@ -398,16 +398,16 @@ auto Stack::push_par(long k) -> Xid {
     return id;
 }
 
-auto Stack::fonts1(name_positions x) -> Xml * {
+auto Stack::fonts1(const std::string &x) -> Xml * {
     bool     w   = the_main->use_font_elt;
-    Xml *    res = new Xml(the_names[w ? x : cst_hi], nullptr);
+    Xml *    res = new Xml(the_names[w ? x : "hi"], nullptr);
     AttList &W   = res->id.get_att();
     if (!w) W.push_back(the_names["rend"], the_names[x]);
     return res;
 }
 
 // Fonts without argument like \it, (still ok ?)
-void Stack::fonts0(name_positions x) {
+void Stack::fonts0(const std::string &x) {
     Xml *res = fonts1(x);
     res->id.get_att().push_back(the_names["'hi_flag"], Istring(1));
     push(Istring(2), res);
@@ -416,30 +416,30 @@ void Stack::fonts0(name_positions x) {
 // Adds font info when required
 void Stack::check_font() {
     while (Table.back().frame.spec_empty()) Table.pop_back();
-    bool           w = the_main->pack_font_elt;
-    name_positions s{};
+    bool        w = the_main->pack_font_elt;
+    std::string s;
     if (w) {
         Buffer aux;
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
-        if (s != 0U) {
+        if (s != "cst_empty") { // \todo empty string or something
             aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
-        if (s != 0U) {
+        if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
-        if (s != 0U) {
+        if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].name;
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
-        if (s != 0U) {
+        if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
             aux << the_names[s].name;
             nonempty = true;
@@ -454,13 +454,13 @@ void Stack::check_font() {
         }
     } else {
         s = the_parser.cur_font.size_change();
-        if (s != 0U) fonts0(s);
+        if (s != "cst_empty") fonts0(s);
         s = the_parser.cur_font.shape_change();
-        if (s != 0U) fonts0(s);
+        if (s != "cst_empty") fonts0(s);
         s = the_parser.cur_font.family_change();
-        if (s != 0U) fonts0(s);
+        if (s != "cst_empty") fonts0(s);
         s = the_parser.cur_font.series_change();
-        if (s != 0U) fonts0(s);
+        if (s != "cst_empty") fonts0(s);
     }
     auto c = the_parser.cur_font.color;
     if (!(c.empty() || c.null())) {

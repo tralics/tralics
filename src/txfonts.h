@@ -27,13 +27,13 @@ public:
     Istring old_color; // previous color
 
     FontInfo() : size(6 * 2048) {}
-    [[nodiscard]] auto shape_change() const -> name_positions;
+    [[nodiscard]] auto shape_change() const -> std::string;
     [[nodiscard]] auto shape_name() const -> String;
-    [[nodiscard]] auto size_change() const -> name_positions;
+    [[nodiscard]] auto size_change() const -> std::string;
     [[nodiscard]] auto size_name() const -> String;
-    [[nodiscard]] auto family_change() const -> name_positions;
+    [[nodiscard]] auto family_change() const -> std::string;
     [[nodiscard]] auto family_name() const -> String;
-    [[nodiscard]] auto series_change() const -> name_positions;
+    [[nodiscard]] auto series_change() const -> std::string;
     [[nodiscard]] auto series_name() const -> String;
     void               not_on_stack() { stackval = false; }
     void               is_on_stack() { stackval = true; }

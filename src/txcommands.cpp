@@ -287,7 +287,7 @@ void Parser::T_cst2(int c) {
     if (c == Numero_code) process_string("N");
     flush_buffer();
     {
-        Xml *  res = Stack::fonts1(np_s_sup);
+        Xml *  res = Stack::fonts1("sup");
         String s   = "o";
         if (c == ier_code)
             s = "er";
@@ -946,13 +946,17 @@ void Parser::translate03() {
         the_stack.add_newid0(tcommands::vfill_to_np(c));
         return;
     case sub_cmd:
-    case soul_cmd: T_fonts(name_positions(long(np_s_sup) + long(c))); return; // \todo Ugly casting around
+    case soul_cmd: {
+        static const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"}; // \todo somewhere else
+        T_fonts(list[c]);
+        return;
+    }
     case trees_cmd: T_trees(c); return;
     case matter_cmd: T_matter(c); return;
-    case arg_font_cmd: T_fonts(np_font_sc); return;
+    case arg_font_cmd: T_fonts("font_sc"); return;
     case special_math_cmd:
         if (c == overline_code || c == underline_code)
-            T_fonts(c == overline_code ? np_overline : np_underline);
+            T_fonts(c == overline_code ? "overline" : "underline");
         else
             math_only();
         return;
