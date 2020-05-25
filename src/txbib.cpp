@@ -163,7 +163,7 @@ void Parser::T_cite(subtypes sw) {
     bool  is_natbib = sw == natcite_code;
     if (sw == natcite_e_code) {
         flush_buffer();
-        the_stack.pop(np_natcit);
+        the_stack.pop(the_names["natcit"]);
         return;
     }
     if (is_natbib) {
@@ -513,7 +513,7 @@ void Parser::after_main_text() {
         AttList &L = the_stack.get_att_list(3);
         the_stack.cur_xid().add_attribute(L, true);
         translate0();
-        the_stack.pop(np_biblio);
+        the_stack.pop(the_names["biblio"]);
         the_stack.pop(the_names["argument"]);
         the_stack.document_element()->insert_bib(res, the_bibliography.location);
     }
@@ -977,7 +977,7 @@ void Parser::T_empty_bibitem() {
     leave_v_mode();
     the_stack.push1(np_citation);
     the_stack.implement_cit(b, id, a, w);
-    the_stack.pop(np_citation);
+    the_stack.pop(the_names["citation"]);
 }
 
 auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> Istring {

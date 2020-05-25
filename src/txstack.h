@@ -115,7 +115,7 @@ public:
     void                ipush(Istring fr, Xml *V);
     auto                is_float() -> bool;
     [[nodiscard]] auto  is_frame(const std::string &s) const -> bool;
-    [[nodiscard]] auto  is_frame2(name_positions S) const -> bool;
+    [[nodiscard]] auto  is_frame2(const std::string &S) const -> bool;
     auto                is_omit_cell() -> bool { return Table.back().omit_cell; }
     [[nodiscard]] auto  last_att_list() const -> AttList & { return get_xid().get_att(); }
     void                mark_omit_cell();
@@ -123,7 +123,6 @@ public:
     auto                next_xid(Xml *elt) -> Xid;
     void                para_aux(int x);
     void                pop(const Istring &a);
-    void                pop(name_positions a);
     void                pop_if_frame(const Istring &x);
     void                push(Istring fr, Xml *V);
     void                push1(Istring name, Istring x);

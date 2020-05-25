@@ -156,7 +156,7 @@ void Parser::leave_h_mode() {
     if (the_stack.in_h_mode()) {
         unfinished_par = nullptr;
         flush_buffer0();
-        the_stack.pop(cst_p);
+        the_stack.pop(the_names["cst_p"]);
         Xml *p = the_stack.top_stack()->back_or_nullptr();
         if ((p != nullptr) && p->is_empty_p()) the_stack.top_stack()->pop_back();
         the_stack.add_nl();
@@ -390,7 +390,7 @@ void Parser::T_par1() {
             parse_error("Invalid \\par command: paragraph not started");
         } else if (cp->par_is_empty()) {
             unfinished_par = cp;
-            the_stack.pop(cst_p);
+            the_stack.pop(the_names["cst_p"]);
             Xml *tp = the_stack.top_stack();
             if (tp->back_or_nullptr() == cp)
                 tp->pop_back();
@@ -434,7 +434,7 @@ void Parser::T_arg1(name_positions y) {
     TokenList L = read_arg();
     brace_me(L);
     T_translate(L);
-    the_stack.pop(y);
+    the_stack.pop(the_names[y]);
 }
 
 // Case of an item in a list...
@@ -490,7 +490,7 @@ void Parser::T_glo() {
     the_stack.set_v_mode();
     T_arg();
     leave_h_mode();
-    the_stack.pop(np_item);
+    the_stack.pop(the_names["item"]);
     the_stack.set_mode(w);
 }
 
@@ -729,7 +729,7 @@ void Parser::T_float(subtypes c) {
     case 3: // float@dblend
         leave_h_mode();
         if (!the_stack.top_stack()->has_name(np_float)) parse_error("no float on stack");
-        the_stack.pop(np_float);
+        the_stack.pop(the_names["float"]);
         the_stack.add_nl();
         return;
     default: return;
@@ -756,7 +756,7 @@ void Parser::T_subfigure() {
 void Parser::T_ampersand() {
     if (the_stack.is_frame("cell"))
         finish_a_cell(hash_table.endv_token, Istring());
-    else if (the_stack.is_frame2(cst_hanl)) {
+    else if (the_stack.is_frame2("hanl")) {
         LC();
         unprocessed_xml << "&amp;"; // hack...
         return;
@@ -821,7 +821,7 @@ void Parser::T_keywords() {
         the_stack.push1(np_term);
         the_stack.set_arg_mode();
         T_translate(v);
-        the_stack.pop(np_term);
+        the_stack.pop(the_names["term"]);
         the_stack.add_nl();
         if (seen_end) break;
     }
@@ -1183,7 +1183,7 @@ auto Parser::internal_makebox() -> Xml * {
     TokenList d    = read_arg();
     brace_me(d);
     T_translate(d);
-    the_stack.pop(np_mbox);
+    the_stack.pop(the_names["mbox"]);
     return mbox;
 }
 
@@ -1247,7 +1247,7 @@ void Parser::T_cap_or_note(bool cap) {
         cur_font = sv;
         font_has_changed();
     }
-    the_stack.pop(name);
+    the_stack.pop(the_names[name]);
     if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
     pop_level(bt_local);
     if (the_main->footnote_hack) note->remove_par_bal_if_ok();
@@ -1294,7 +1294,7 @@ void Parser::T_save_box(bool simple) {
         TokenList d    = read_arg();
         brace_me(d);
         T_translate(d);
-        the_stack.pop(np_mbox);
+        the_stack.pop(the_names["mbox"]);
         mbox->id.add_attribute(the_names["box_pos"], ipos);
         mbox->id.add_attribute(the_names[np_box_width], iwidth);
     }
@@ -1335,7 +1335,7 @@ void Parser::T_fbox_dash_box() {
     cur_id.add_attribute(the_names["width"], B);
     cur_id.add_attribute(the_names["dashdim"], A);
     T_arg_local();
-    the_stack.pop(np_dashbox);
+    the_stack.pop(the_names["pic-dashbox"]);
 }
 
 void Parser::T_fbox_rotate_box() {
@@ -1345,7 +1345,7 @@ void Parser::T_fbox_rotate_box() {
     the_stack.push1(np_rotatebox);
     the_stack.get_top_id().add_attribute(np_r_angle, val);
     T_arg_local();
-    the_stack.pop(np_rotatebox);
+    the_stack.pop(the_names["rotatebox"]);
 }
 
 // \fbox{\includegraphics{...}} is special.
@@ -1379,16 +1379,16 @@ void Parser::T_fbox(subtypes cc) {
     the_stack.push1(cc == scalebox_code ? np_sbox : np_fbox);
     Xml *cur = the_stack.top_stack(); // will contain the argument.
     T_arg_local();
-    the_stack.pop(cc == scalebox_code ? np_sbox : np_fbox);
+    the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->id.get_att();
     if (cc == scalebox_code) {
         if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
-            aux->id.add_attribute(the_names[np_scale], iscale, true);
+            aux->id.add_attribute(the_names["scale"], iscale, true);
             aux->id.add_attribute(Istring("vscale"), iwidth);
             cur->kill_name();
         } else {
-            AL.push_back(np_s_scale, iscale);
+            AL.push_back(the_names["box_scale"], iscale);
             AL.push_back(Istring("vscale"), iwidth);
         }
         return;
@@ -1458,7 +1458,7 @@ void Parser::T_url(subtypes c) {
         X.splice(X.end(), tmp);
     }
     TokenList Y;
-    bool      in_href = the_stack.is_frame2(cst_hanl);
+    bool      in_href = the_stack.is_frame2("hanl"); // \todo what is hanl?
     if (!in_href) {
         Y = X;
         brace_me(Y);
@@ -1498,7 +1498,7 @@ auto Parser::T_hanl_url() -> Xml * {
 // c is 0 for \htmladdnormallink, 2 for \href
 void Parser::T_hanl(subtypes c) {
     leave_v_mode();
-    the_stack.push(the_names[cst_hanl], nullptr);
+    the_stack.push(the_names["hanl"], nullptr);
     the_stack.hack_for_hanl();
     Xml *B{nullptr};
     Xml *val{nullptr};
@@ -1510,7 +1510,7 @@ void Parser::T_hanl(subtypes c) {
         val = T_hanl_text();
         B   = T_hanl_url();
     }
-    the_stack.pop(cst_hanl);
+    the_stack.pop(the_names["hanl"]);
     int e              = main_ns::nb_errs;
     unexpected_seen_hi = false;
     std::string b      = B->convert_to_string();
@@ -1585,7 +1585,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
         }
         cur_level--;
     }
-    if (par) the_stack.pop(cst_p);
+    if (par) the_stack.pop(the_names["cst_p"]);
     the_stack.pop(Y);
     the_stack.set_mode(m);
     return the_stack.remove_last();
@@ -1965,7 +1965,7 @@ void Parser::T_curves(int c) {
         TokenList L = read_until_nopar(Token(other_t_offset, ')'));
         T_translate(L);
     }
-    the_stack.pop(x0);
+    the_stack.pop(the_names[x0]);
 }
 
 void Parser::T_multiput() {

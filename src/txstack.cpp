@@ -229,7 +229,7 @@ auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() 
 
 // Returns true if frame is s, or argument, and next frame is s.
 // ignores a font change
-auto Stack::is_frame2(name_positions S) const -> bool {
+auto Stack::is_frame2(const std::string &S) const -> bool {
     Istring s = the_names[S];
     auto    k = Table.size() - 1;
     while (Table[k].frame.spec_empty()) k--;
@@ -358,9 +358,6 @@ void Stack::trace_stack() {
     auto l = Table.size();
     for (size_t i = 0; i < l; i++) Table[i].dump();
 }
-
-// Pop an element, top-stack should be a.
-void Stack::pop(name_positions a) { pop(the_names[a]); }
 
 // This pops an element, top-stack should be a.
 void Stack::pop(const Istring &a) {

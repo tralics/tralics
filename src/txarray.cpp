@@ -757,7 +757,7 @@ void Stack::add_border(long a, long b) {
     get_xid().add_span(b);
     get_xid().add_bottom_rule();
     push_pop_cell(pop_only);
-    pop(np_row);
+    pop(the_names["row"]);
 }
 
 // This is now cline
@@ -864,7 +864,7 @@ void Parser::T_cr() {
     the_stack.finish_cell(0);
     the_stack.push_pop_cell(pop_only);
     pop_level(bt_cell);
-    the_stack.pop(np_row);
+    the_stack.pop(the_names["row"]);
     start_a_row(a);
 }
 

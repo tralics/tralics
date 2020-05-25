@@ -312,7 +312,7 @@ void Parser::T_nodeconnect(name_positions W) {
     cur.push_back(the_names["posA"], the_names[A]);
     cur.push_back(the_names["nameB"], D);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 // \barnodeconnect[depth]{fromnode}{tonode}
@@ -325,7 +325,7 @@ void Parser::T_barnodeconnect(name_positions W) {
     cur.push_back(the_names["depth"], A);
     cur.push_back(the_names["nameB"], C);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 // \nodecurve[fromloc]{fromnode}[toloc]{tonode}{depthfrom}[depthto]
@@ -348,7 +348,7 @@ void Parser::T_nodecurve(name_positions W) {
     cur.push_back(the_names["posA"], the_names[A]);
     cur.push_back(the_names["nameB"], D);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 void Parser::T_nodebox(name_positions W) {
@@ -356,7 +356,7 @@ void Parser::T_nodebox(name_positions W) {
     the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 void Parser::T_nodetriangle(name_positions W) {
@@ -366,7 +366,7 @@ void Parser::T_nodetriangle(name_positions W) {
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
     cur.push_back(the_names["nameB"], B);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 // \nodecircle[depth]{nodename}
@@ -377,7 +377,7 @@ void Parser::T_nodecircle(name_positions W) {
     AttList &cur = last_att_list();
     cur.push_back(the_names["depth"], B);
     cur.push_back(the_names["nameA"], A);
-    the_stack.pop(W);
+    the_stack.pop(the_names[W]);
 }
 
 //  gloss -----------------------------------------------------------------

@@ -406,7 +406,7 @@ void Parser::T_line(subtypes c) {
     AttList &cur = last_att_list();
     cur.push_back(the_names["rend"], the_names[k]);
     T_arg_local();
-    the_stack.pop(np_lineC);
+    the_stack.pop(the_names["lineC"]);
 }
 
 // Implements \typein[\foo]{bar},  or \typein{bar}. In the first case

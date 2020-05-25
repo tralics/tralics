@@ -984,7 +984,7 @@ void Parser::translate03() {
     case bpers_cmd: T_bpers(); return;
     case cititem_cmd: T_cititem(); return;
     case bibitem_cmd: c == 1 ? T_empty_bibitem() : T_bibitem(); return;
-    case end_citation_cmd: the_stack.pop(np_citation); return;
+    case end_citation_cmd: the_stack.pop(the_names["citation"]); return;
     case ignoreA_cmd:
         T_ignoreA();
         return;
@@ -1231,7 +1231,7 @@ void Parser::translate03() {
             auto k   = eqtb_int_table[42 + count_reg_offset].val;
             the_stack.add_att_to_cur(Istring("depth"), Istring(std::to_string(k)));
         }
-        the_stack.pop(np);
+        the_stack.pop(the_names[np]);
         return;
     }
     case begin_cmd:
@@ -1240,7 +1240,7 @@ void Parser::translate03() {
     case document_cmd: T_begindocument(); return;
     case end_document_cmd: T_enddocument(c); return;
     case keywords_cmd: T_keywords(); return;
-    case end_keywords_cmd: the_stack.pop(np_keywords); return;
+    case end_keywords_cmd: the_stack.pop(the_names["keywords"]); return;
     case center_cmd:
         leave_h_mode();     // finish the possibly not-centered paragraph
         the_stack.add_nl(); // needed ?
@@ -1310,7 +1310,7 @@ void Parser::translate03() {
     case end_tabular_env_cmd: T_end_tabular(c); return;
     case verbatim_env_cmd: T_verbatim(); return;
     case picture_env_cmd: T_picture(); return;
-    case end_picture_env_cmd: the_stack.pop(np_picture); return;
+    case end_picture_env_cmd: the_stack.pop(the_names["picture"]); return;
     case end_ignore_env_cmd: return;
     case subequations_cmd: T_subequations(true); return;
     case end_subequations_cmd: T_subequations(false); return;
@@ -1319,7 +1319,7 @@ void Parser::translate03() {
         flush_buffer();
         the_stack.pop_if_frame(the_names["cst_p"]);
         the_stack.pop_if_frame(the_names["item"]);
-        the_stack.pop(np_minipage);
+        the_stack.pop(the_names["minipage"]);
         return;
     case end_ignore_content_cmd:
     case end_raw_env_cmd:
