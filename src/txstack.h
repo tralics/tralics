@@ -75,7 +75,7 @@ public:
     auto                add_new_anchor() -> Istring;
     auto                add_new_anchor_spec() -> Istring;
     void                add_nl();
-    auto                add_newid0(name_positions x) -> AttList &;
+    auto                add_newid0(const std::string &x) -> AttList &;
     void                add_sp_to_p(int pid, int vid);
     void                check_font();
     void                create_new_anchor(Xid xid, const Istring &id, const Istring &idtext);

@@ -227,14 +227,6 @@ void NameMapper::boot() {
     def(np_ref, "ref");
     def(np_row, "row");
     def(np_rule, "rule");
-    def(np_s_caps, "caps");
-    def(np_s_hl, "hl");
-    def(np_s_old, "oldstyle");
-    def(np_s_so, "so");
-    def(np_s_st, "st");
-    def(np_s_sub, "sub");
-    def(np_s_sup, "sup");
-    def(np_s_ul, "ul");
     def(np_sbox, "scalebox");
     def(np_sc, "sc");
     def(np_scale, "scale");

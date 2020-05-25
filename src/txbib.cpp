@@ -891,7 +891,7 @@ void Parser::T_bpers() {
     Istring d          = nT_arg_nopar();
     if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
-    the_stack.add_newid0(np_bpers);
+    the_stack.add_newid0("bpers");
     if (!(A.null() || A.empty())) the_stack.add_att_to_last(the_names["full_first"], A);
     if (!d.empty()) the_stack.add_att_to_last(the_names["junior"], d);
     the_stack.add_att_to_last(the_names["nom"], c);

@@ -2500,7 +2500,7 @@ void Parser::scan_rule(int c) {
             break;
         }
     }
-    AttList &res = the_stack.add_newid0(np_rule);
+    AttList &res = the_stack.add_newid0("rule");
     R.convert(res);
 }
 

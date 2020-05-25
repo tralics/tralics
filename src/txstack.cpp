@@ -118,7 +118,7 @@ void Stack::hack_for_hanl() {
 
 // Creates an empty element named x, and adds it to the stack.
 // returns a reference to the attribute list of the object.
-auto Stack::add_newid0(name_positions x) -> AttList & {
+auto Stack::add_newid0(const std::string &x) -> AttList & {
     top_stack()->push_back_unless_nullptr(new Xml(the_names[x], nullptr));
     return Xid(last_xid).get_att();
 }
@@ -674,7 +674,7 @@ auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {
     Istring id = next_label_id();
     set_cur_id(id);
     if (!spec) {
-        add_newid0(np_anchor);
+        add_newid0("anchor");
         create_new_anchor(last_xid, id, Istring(s));
     } else {
         create_new_anchor(cur_xid(), id, Istring(s));

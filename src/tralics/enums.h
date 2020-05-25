@@ -2166,16 +2166,6 @@ enum name_positions {
     np_allowbreak,
     np_pagecolor,
 
-    // keep these in order
-    np_s_sup,
-    np_s_sub,
-    np_s_old,
-    np_s_caps,
-    np_s_hl,
-    np_s_so,
-    np_s_st,
-    np_s_ul,
-
     np_last,
 };
 

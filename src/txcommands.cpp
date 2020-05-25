@@ -24,8 +24,8 @@ namespace {
 } // namespace
 
 namespace tcommands {
-    auto hfill_to_np(subtypes c) -> name_positions;
-    auto vfill_to_np(subtypes c) -> name_positions;
+    auto hfill_to_np(subtypes c) -> std::string;
+    auto vfill_to_np(subtypes c) -> std::string;
 } // namespace tcommands
 
 // Initialises the translator. The argument is the name of
@@ -821,18 +821,18 @@ void Parser::T_un_box(subtypes c) {
     if (c == unhbox_code || c == unvbox_code) box_table[i].val = nullptr;
 }
 
-auto tcommands::hfill_to_np(subtypes c) -> name_positions {
-    if (c == hfill_code) return np_hfill;
-    if (c == hfilneg_code) return np_hfilneg;
-    if (c == hss_code) return np_hss;
-    return np_hfil;
+auto tcommands::hfill_to_np(subtypes c) -> std::string {
+    if (c == hfill_code) return "hfill";
+    if (c == hfilneg_code) return "hfilneg";
+    if (c == hss_code) return "hss";
+    return "hfil";
 }
 
-auto tcommands::vfill_to_np(subtypes c) -> name_positions {
-    if (c == vfill_code) return np_vfill;
-    if (c == vfilneg_code) return np_vfilneg;
-    if (c == vss_code) return np_vss;
-    return np_vfil;
+auto tcommands::vfill_to_np(subtypes c) -> std::string {
+    if (c == vfill_code) return "vfill";
+    if (c == vfilneg_code) return "vfilneg";
+    if (c == vss_code) return "vss";
+    return "vfil";
 }
 
 // Translates a command.
