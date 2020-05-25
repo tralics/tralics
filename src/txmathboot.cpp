@@ -1259,7 +1259,7 @@ auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> T
 // $\alpha$ translates to &alpha;) If no entity names are desired
 // then ent2 is used instead of ent, so that \alpha gives &#x3B1;
 
-auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, name_positions bl, symcodes t, bool hack) -> Token {
+auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token {
     Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     x = new Xml(the_names[bl], x);
@@ -1267,7 +1267,7 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, name_
 }
 
 // Special case where a bold variant exists
-auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, name_positions bl, symcodes t, bool hack)
+auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack)
     -> Token {
     Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
@@ -1294,35 +1294,35 @@ void MathDataP::mk_moo(String name, String ent, math_loc pos) {
 // This associates to the command name, a <mi> element with value ent/ent2
 // with internal code pos. It is an Ordinary object.
 // hack true
-void MathDataP::mk_ic(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mi, mathord_cmd, true); }
+void MathDataP::mk_ic(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mi", mathord_cmd, true); }
 
 // Case where the symbol has a bold variant
 void MathDataP::mk_icb(String name, String ent, String ent2, math_loc pos) {
     auto pos2 = math_loc(pos - alpha_code + alpha_bcode);
-    mk_gen(name, ent, ent2, pos, pos2, cst_mi, mathord_cmd, true);
+    mk_gen(name, ent, ent2, pos, pos2, "mi", mathord_cmd, true);
 }
 
 // This associates to the command named name, a <mo> element with value ent
 // with internal code pos. It is an Ordinary object.
 // these are hacked
-void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mo, mathord_cmd, true); }
+void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathord_cmd, true); }
 // Op no limits
-void MathDataP::mk_oco(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mo, mathopn_cmd, true); }
+void MathDataP::mk_oco(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathopn_cmd, true); }
 // Op display limits
-void MathDataP::mk_ocol(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mo, mathop_cmd, true); }
-void MathDataP::mk_ocb(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mo, mathbin_cmd, true); }
-void MathDataP::mk_ocr(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, cst_mo, mathrel_cmd, true); }
+void MathDataP::mk_ocol(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathop_cmd, true); }
+void MathDataP::mk_ocb(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathbin_cmd, true); }
+void MathDataP::mk_ocr(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathrel_cmd, true); }
 
 // This associates to the command named A, a <mo> element with value B
 // with internal code pos. It is of type T.
 void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack) {
-    mk_gen(name, ent, ent2, pos, cst_mo, t, hack);
+    mk_gen(name, ent, ent2, pos, "mo", t, hack);
 }
 
 // This associates to the command named A, a <mo> element with value B
 // with internal code pos. It is something like an accent.
 void MathDataP::mk_accent(String name, String ent, String ent2, subtypes pos) {
-    mk_gen(name, ent, ent2, math_loc(pos), cst_mo, special_math_cmd, false);
+    mk_gen(name, ent, ent2, math_loc(pos), "mo", special_math_cmd, false);
 }
 
 // This is for a character: the single character in A
@@ -2069,8 +2069,8 @@ void MathDataP::boot() {
     eval_let("neg", "lnot");
 
     mk_ocb("in", "&Element;", "&#x02208;", in_code);
-    the_parser.hash_table.math_OB_token = mk_gen("math{", "{", "{", open_brace_code, cst_mo, mathopen_cmd, true);
-    the_parser.hash_table.math_CB_token = mk_gen("math}", "}", "}", close_brace_code, cst_mo, mathclose_cmd, true);
+    the_parser.hash_table.math_OB_token = mk_gen("math{", "{", "{", open_brace_code, "mo", mathopen_cmd, true);
+    the_parser.hash_table.math_CB_token = mk_gen("math}", "}", "}", close_brace_code, "mo", mathclose_cmd, true);
     // mk_oc("varprime", "&prime;","&#x02032;", prime_code);
     mk_oc("prime", "&apos;", "&#x27;", prime_code);
     mc_table[27] = built_in_table[prime_code];

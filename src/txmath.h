@@ -333,8 +333,8 @@ private:
     void boot2();
     void boot_chars();
     void boot_xml_lr_tables();
-    auto mk_gen(String name, String ent, String ent2, math_loc pos, name_positions bl, symcodes t, bool hack) -> Token;
-    auto mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, name_positions bl, symcodes t, bool hack) -> Token;
+    auto mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
+    auto mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack) -> Token;
     void mk_ic(String name, String ent, String ent2, math_loc pos);
     void mk_icb(String name, String ent, String ent2, math_loc pos);
     void mk_oc(String name, String ent, String ent2, math_loc pos);
