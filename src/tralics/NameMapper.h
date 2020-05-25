@@ -36,6 +36,7 @@ public:
     auto cstf(size_t i) -> Istring;
     auto mml(size_t i) -> Istring;
     auto mi(size_t i) -> Istring;
+    auto center(size_t i) -> Istring;
 };
 
 inline NameMapper the_names;

@@ -68,6 +68,11 @@ auto NameMapper::mi(size_t i) -> Istring {
     return (*this)[list[i]];
 }
 
+auto NameMapper::center(size_t i) -> Istring {
+    static std::array<std::string, 7> list = {"np_center_etc", "centering", "quote", "quotation", "flush_left", "flush_right", "verse"};
+    return (*this)[list[i]];
+}
+
 void NameMapper::boot() {
     // Special cases where name != default value
     def("arc", np_arc, "pic-arc");
@@ -79,7 +84,6 @@ void NameMapper::boot() {
     def("box_width", np_box_width, "width");
     def("box", np_box, "pic-framebox");
     def("caption", np_captions, "head");
-    def("centering", np_center_etc1, "center");
     def("circle", np_circle, "pic-circle");
     def("citetype", np_cite_type, "type");
     def("closecurve", np_closecurve, "pic-closecurve");
@@ -99,8 +103,6 @@ void NameMapper::boot() {
     def("fbox_rend", np_b_rend, "rend");
     def("figure_env", np_float_figure, "figure");
     def("file_extension", np_fileextension, "extension");
-    def("flush_left", np_center_etc4, "flushed-left");
-    def("flush_right", np_center_etc5, "flushed-right");
     def("font_bold", np_font_bold, "bold");
     def("font_boldextended", np_font_boldextended, "boldextended");
     def("font_condensed", np_font_condensed, "condensed");
@@ -139,13 +141,10 @@ void NameMapper::boot() {
     def("minipage_width", np_minipage_width, "width");
     def("multiput", np_multiput, "pic-multiput");
     def("natcit", np_natcit, "Cit");
-    def("np_center_etc", np_center_etc, "center");
     def("np_linethickness", np_linethickness, "linethickness");
     def("oval", np_oval, "pic-oval");
     def("project", np_projet, "projet");
     def("put", np_put, "pic-put");
-    def("quotation", np_center_etc3, "quoted");
-    def("quote", np_center_etc2, "quoted");
     def("rotate_angle", np_r_angle, "angle");
     def("rotatebox", np_rotatebox, "pic-rotatebox");
     def("row_spaceafter", np_spaceafter, "spaceafter");
@@ -184,7 +183,6 @@ void NameMapper::boot() {
     def(np_bediteurs, "bediteur");
     def(np_biblio, "biblio");
     def(np_bpers, "bpers");
-    def(np_center_etc6, "verse");
     def(np_citation, "citation");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");
@@ -295,6 +293,12 @@ void NameMapper::boot() {
     set("cstb_type", "type");
     set("cstb_unknown", "unknown");
     set("cstb_url", "url");
+    set("flush_left", "flushed-left");
+    set("flush_right", "flushed-right");
+    set("np_center_etc", "center");
+    set("quotation", "quoted");
+    set("quote", "quoted");
+    set("centering", "center");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {
