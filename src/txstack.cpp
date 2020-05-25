@@ -87,12 +87,6 @@ auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_at
 // Add A=B as attribute list to last_xid.
 void Stack::add_att_to_last(const Istring &A, const Istring &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
-// Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, const Istring &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
-
-// Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(name_positions A, name_positions B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
-
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(const Istring &A, const Istring &B) { cur_xid().add_attribute(A, B); }
 

@@ -17,10 +17,6 @@ void AttList::push_back(const Istring &name, const Istring &value, bool force) {
     push_back({name, value});
 }
 
-void AttList::push_back(name_positions name, name_positions value, bool force) { push_back(the_names[name], the_names[value], force); }
-
-void AttList::push_back(name_positions N, const Istring &v) { push_back(the_names[N], v, true); }
-
 auto operator<<(std::ostream &o, const AttList &a) -> std::ostream & {
     Buffer B;
     B.push_back(a);

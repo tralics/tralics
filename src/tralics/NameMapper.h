@@ -20,8 +20,7 @@ class NameMapper {
     std::unordered_map<std::string, Istring> dict;
 
 public:
-    [[deprecated]] auto operator[](name_positions i) const -> Istring;
-    auto                operator[](const std::string &name) const -> Istring;
+    auto operator[](const std::string &name) const -> Istring;
 
     void set(name_positions i, const std::string &s);
     void set(const std::string &name, const std::string &value);
