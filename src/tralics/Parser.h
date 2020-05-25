@@ -129,7 +129,7 @@ public:
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
     void               brace_me(TokenList &L) const;
-    [[nodiscard]] auto cur_centering() const -> long { return eqtb_int_table[incentering_code].val; }
+    [[nodiscard]] auto cur_centering() const -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
     [[nodiscard]] auto cur_line_to_istring() const -> Istring;
