@@ -2047,15 +2047,15 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
             have_font  = true;
             subtypes s = C->get_chr();
             if (s == math_f_italic)
-                font_pos = std::to_string(np_font_it);
+                font_pos = "it";
             else if (s == math_f_upright)
                 have_font = false;
             else if (s == math_f_sansserif)
-                font_pos = std::to_string(np_font_sansserif);
+                font_pos = "sansserif";
             else if (s == math_f_monospace)
-                font_pos = std::to_string(np_font_tt);
+                font_pos = "tt";
             else if (s == math_f_bold)
-                font_pos = std::to_string(np_font_bold);
+                font_pos = "bold";
             else
                 return nullptr;
             ++C;
