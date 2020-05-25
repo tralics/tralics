@@ -556,7 +556,7 @@ void Parser::T_matter(subtypes c) {
         t = np_frontmatter;
     else if (c == backmatter_code)
         t = np_backmatter;
-    the_stack.push1(the_names["module"], t);
+    the_stack.push1(the_names["module"], the_names[t]);
     chapter_has_star = (c == frontmatter_code || c == backmatter_code);
 }
 
@@ -589,7 +589,7 @@ void Parser::T_paras(subtypes x) {
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();
     if (x == endsec_code) return;
-    the_stack.push1(Y, name_positions(np_div0 + y));
+    the_stack.push1(Y, the_names[name_positions(np_div0 + y)]); // \todo Y twice ???
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)

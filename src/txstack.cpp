@@ -474,9 +474,6 @@ void Stack::check_font() {
 void Stack::push1(Istring name, Istring x) { push(std::move(name), new Xml(std::move(x), nullptr)); }
 
 // Push a new XML element
-void Stack::push1(Istring name, name_positions x) { push(std::move(name), new Xml(the_names[x], nullptr)); }
-
-// Push a new XML element
 void Stack::push1(const Istring &x) { push(x, new Xml(x, nullptr)); }
 
 // Code done when a module ends. pop until stack (nearly) empty
