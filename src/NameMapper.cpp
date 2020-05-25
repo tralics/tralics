@@ -5,37 +5,26 @@
 
 auto NameMapper::operator[](const std::string &name) const -> Istring { return dict.contains(name) ? dict.at(name) : Istring(name); }
 
-void NameMapper::set(name_positions i, const std::string &s) { dict[id_to_name[i]] = Istring(s); }
-
 void NameMapper::set(const std::string &name, const std::optional<std::string> &value) {
     dict[name] = value ? Istring(*value) : Istring();
 };
 
-void NameMapper::def(const std::string &name, name_positions pos, const std::optional<std::string> &value) {
-    id_to_name[pos] = name;
-    dict[name]      = value ? Istring(*value) : Istring();
-}
-
-void NameMapper::def(name_positions i, const std::string &s) { id_to_name[i] = s; }
-
 auto NameMapper::cstf(size_t i) -> Istring {
-    static const std::array<std::string, 15> fonts = {"normal",
-                                                      "cstf_upright",
-                                                      "bold",
-                                                      "italic",
-                                                      "bold-italic",
-                                                      "script",
-                                                      "bold-script",
-                                                      "fraktur",
-                                                      "double-struck",
-                                                      "bold-fraktur",
-                                                      "sans-serif",
-                                                      "bold-sans-serif",
-                                                      "sans-serif-italic",
-                                                      "sans-serif-bold-italic",
-                                                      "monospace"
-
-    };
+    static std::array<std::string, 15> fonts = {"normal",
+                                                "cstf_upright",
+                                                "bold",
+                                                "italic",
+                                                "bold-italic",
+                                                "script",
+                                                "bold-script",
+                                                "fraktur",
+                                                "double-struck",
+                                                "bold-fraktur",
+                                                "sans-serif",
+                                                "bold-sans-serif",
+                                                "sans-serif-italic",
+                                                "sans-serif-bold-italic",
+                                                "monospace"};
     return (*this)[fonts[i]];
 }
 
@@ -54,9 +43,7 @@ auto NameMapper::mml(size_t i) -> Istring {
                                                 "mml@font@boldsansserif",
                                                 "mml@font@sansserifitalic",
                                                 "mml@font@sansserifbolditalic",
-                                                "mml@font@monospace"
-
-    };
+                                                "mml@font@monospace"};
     return (*this)[fonts[i]];
 }
 
