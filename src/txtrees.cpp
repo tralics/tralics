@@ -299,7 +299,7 @@ void Parser::T_nodepoint() {
 }
 
 // \nodeconnect[fromloc]{fromnode}[toloc]{tonode}
-void Parser::T_nodeconnect(Istring W) {
+void Parser::T_nodeconnect(const Istring &W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
@@ -316,7 +316,7 @@ void Parser::T_nodeconnect(Istring W) {
 }
 
 // \barnodeconnect[depth]{fromnode}{tonode}
-void Parser::T_barnodeconnect(Istring W) {
+void Parser::T_barnodeconnect(const Istring &W) {
     Istring A = nT_optarg_nopar();
     Istring B = nT_arg_nopar();
     Istring C = nT_arg_nopar();
@@ -330,7 +330,7 @@ void Parser::T_barnodeconnect(Istring W) {
 
 // \nodecurve[fromloc]{fromnode}[toloc]{tonode}{depthfrom}[depthto]
 // \anodecurve[fromloc]{fromnode}[toloc]{tonode}{depth}
-void Parser::T_nodecurve(Istring W) {
+void Parser::T_nodecurve(const Istring &W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
@@ -351,7 +351,7 @@ void Parser::T_nodecurve(Istring W) {
     the_stack.pop(W);
 }
 
-void Parser::T_nodebox(Istring W) {
+void Parser::T_nodebox(const Istring &W) {
     Istring A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
@@ -359,7 +359,7 @@ void Parser::T_nodebox(Istring W) {
     the_stack.pop(W);
 }
 
-void Parser::T_nodetriangle(Istring W) {
+void Parser::T_nodetriangle(const Istring &W) {
     Istring A = nT_arg_nopar();
     Istring B = nT_arg_nopar();
     the_stack.push1(W);
@@ -370,7 +370,7 @@ void Parser::T_nodetriangle(Istring W) {
 }
 
 // \nodecircle[depth]{nodename}
-void Parser::T_nodecircle(Istring W) {
+void Parser::T_nodecircle(const Istring &W) {
     Istring B = nT_optarg_nopar();
     Istring A = nT_arg_nopar();
     the_stack.push1(W);

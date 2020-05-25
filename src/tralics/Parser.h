@@ -754,7 +754,7 @@ private:
     void        E_afterfi();
     void        E_afterelsefi();
     void        T_ampersand();
-    void        T_arg1(Istring y);
+    void        T_arg1(const Istring &y);
     void        T_atdocument(subtypes c);
     void        T_at_end_of_class();
     void        T_backslash();
@@ -862,12 +862,12 @@ private:
     void        T_newthheorem();
     void        T_node();
     void        T_nodepoint();
-    void        T_nodeconnect(Istring W);
-    void        T_nodecurve(Istring W);
-    void        T_nodebox(Istring W);
-    void        T_nodetriangle(Istring W);
-    void        T_nodecircle(Istring W);
-    void        T_barnodeconnect(Istring W);
+    void        T_nodeconnect(const Istring &W);
+    void        T_nodecurve(const Istring &W);
+    void        T_nodebox(const Istring &W);
+    void        T_nodetriangle(const Istring &W);
+    void        T_nodecircle(const Istring &W);
+    void        T_barnodeconnect(const Istring &W);
     void        T_omitcite();
     void        T_option_not_used();
     void        T_par1(const Istring &u);

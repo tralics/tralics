@@ -429,7 +429,7 @@ void Parser::T_xmlelt(subtypes w) {
 
 // Special case where the XML name and the frame name are the same
 // Note the additional braces
-void Parser::T_arg1(Istring y) {
+void Parser::T_arg1(const Istring &y) {
     the_stack.push1(y);
     TokenList L = read_arg();
     brace_me(L);
