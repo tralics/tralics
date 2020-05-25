@@ -863,12 +863,12 @@ private:
     void        T_newthheorem();
     void        T_node();
     void        T_nodepoint();
-    void        T_nodeconnect(name_positions W);
-    void        T_nodecurve(name_positions W);
-    void        T_nodebox(name_positions W);
-    void        T_nodetriangle(name_positions W);
-    void        T_nodecircle(name_positions W);
-    void        T_barnodeconnect(name_positions W);
+    void        T_nodeconnect(Istring W);
+    void        T_nodecurve(Istring W);
+    void        T_nodebox(Istring W);
+    void        T_nodetriangle(Istring W);
+    void        T_nodecircle(Istring W);
+    void        T_barnodeconnect(Istring W);
     void        T_omitcite();
     void        T_option_not_used();
     void        T_par1(const Istring &u);

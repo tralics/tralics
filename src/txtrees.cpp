@@ -209,7 +209,7 @@ void Parser::finish_index() {
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
-        Xml *res = new Xml(the_names[j == 0 ? np_theglossary : np_theindex], nullptr); // OK?
+        Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
         Xid  id  = res->id;
         {
             const std::string &t = CI->get_title();
@@ -246,25 +246,25 @@ void Parser::T_trees(int c) {
     else if (c == nodepoint_code)
         T_nodepoint();
     else if (c == nodeconnect_code)
-        T_nodeconnect(np_nodeconnect);
+        T_nodeconnect(the_names["nodeconnect"]);
     else if (c == anodeconnect_code)
-        T_nodeconnect(np_anodeconnect);
+        T_nodeconnect(the_names["anodeconnect"]);
     else if (c == barnodeconnect_code)
-        T_barnodeconnect(np_barnodeconnect);
+        T_barnodeconnect(the_names["barnodeconnect"]);
     else if (c == abarnodeconnect_code)
-        T_barnodeconnect(np_abarnodeconnect);
+        T_barnodeconnect(the_names["abarnodeconnect"]);
     else if (c == nodecurve_code)
-        T_nodecurve(np_nodecurve);
+        T_nodecurve(the_names["nodecurve"]);
     else if (c == anodecurve_code)
-        T_nodecurve(np_anodecurve);
+        T_nodecurve(the_names["anodecurve"]);
     else if (c == nodebox_code)
-        T_nodebox(np_nodebox);
+        T_nodebox(the_names["nodebox"]);
     else if (c == nodeoval_code)
-        T_nodebox(np_nodeoval);
+        T_nodebox(the_names["nodeoval"]);
     else if (c == nodetriangle_code)
-        T_nodetriangle(np_nodetriangle);
+        T_nodetriangle(the_names["nodetriangle"]);
     else if (c == nodecircle_code)
-        T_nodecircle(np_nodecircle);
+        T_nodecircle(the_names["nodecircle"]);
 }
 
 // Something like
@@ -299,38 +299,38 @@ void Parser::T_nodepoint() {
 }
 
 // \nodeconnect[fromloc]{fromnode}[toloc]{tonode}
-void Parser::T_nodeconnect(name_positions W) {
+void Parser::T_nodeconnect(Istring W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
     auto D = nT_arg_nopar();
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["posB"], the_names[C]);
     cur.push_back(the_names["posA"], the_names[A]);
     cur.push_back(the_names["nameB"], D);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
 // \barnodeconnect[depth]{fromnode}{tonode}
-void Parser::T_barnodeconnect(name_positions W) {
+void Parser::T_barnodeconnect(Istring W) {
     Istring A = nT_optarg_nopar();
     Istring B = nT_arg_nopar();
     Istring C = nT_arg_nopar();
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depth"], A);
     cur.push_back(the_names["nameB"], C);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
 // \nodecurve[fromloc]{fromnode}[toloc]{tonode}{depthfrom}[depthto]
 // \anodecurve[fromloc]{fromnode}[toloc]{tonode}{depth}
-void Parser::T_nodecurve(name_positions W) {
+void Parser::T_nodecurve(Istring W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
@@ -340,7 +340,7 @@ void Parser::T_nodecurve(name_positions W) {
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
     if (F.null() || F.empty()) F = E;
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depthA"], E);
     cur.push_back(the_names["depthB"], F);
@@ -348,36 +348,36 @@ void Parser::T_nodecurve(name_positions W) {
     cur.push_back(the_names["posA"], the_names[A]);
     cur.push_back(the_names["nameB"], D);
     cur.push_back(the_names["nameA"], B);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
-void Parser::T_nodebox(name_positions W) {
+void Parser::T_nodebox(Istring W) {
     Istring A = nT_arg_nopar();
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
-void Parser::T_nodetriangle(name_positions W) {
+void Parser::T_nodetriangle(Istring W) {
     Istring A = nT_arg_nopar();
     Istring B = nT_arg_nopar();
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
     cur.push_back(the_names["nameB"], B);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
 // \nodecircle[depth]{nodename}
-void Parser::T_nodecircle(name_positions W) {
+void Parser::T_nodecircle(Istring W) {
     Istring B = nT_optarg_nopar();
     Istring A = nT_arg_nopar();
-    the_stack.push1(the_names[W]);
+    the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depth"], B);
     cur.push_back(the_names["nameA"], A);
-    the_stack.pop(the_names[W]);
+    the_stack.pop(W);
 }
 
 //  gloss -----------------------------------------------------------------
