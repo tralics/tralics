@@ -584,12 +584,12 @@ void Parser::T_paras(subtypes x) {
     }
     if (y < 0) y = 0;
     if (y > 6) y = 6;
-    Istring Y = the_names[name_positions(cst_div0 + to_unsigned(y))];
+    Istring Y = the_names.cstdiv(to_unsigned(y));
     leave_h_mode();
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();
     if (x == endsec_code) return;
-    the_stack.push1(Y, the_names[name_positions(np_div0 + y)]); // \todo Y twice ???
+    the_stack.push1(Y, the_names.npdiv(y));
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)

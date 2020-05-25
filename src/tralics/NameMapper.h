@@ -37,6 +37,8 @@ public:
     auto mml(size_t i) -> Istring;
     auto mi(size_t i) -> Istring;
     auto center(size_t i) -> Istring;
+    auto cstdiv(size_t i) -> Istring;
+    auto npdiv(size_t i) -> Istring;
 };
 
 inline NameMapper the_names;

@@ -73,6 +73,16 @@ auto NameMapper::center(size_t i) -> Istring {
     return (*this)[list[i]];
 }
 
+auto NameMapper::cstdiv(size_t i) -> Istring {
+    static std::array<std::string, 7> list = {"cst_div0", "cst_div1", "cst_div2", "cst_div3", "cst_div4", "cst_div5", "cst_div6"};
+    return (*this)[list[i]];
+}
+
+auto NameMapper::npdiv(size_t i) -> Istring {
+    static std::array<std::string, 7> list = {"div0", "div1", "div2", "div3", "div4", "div5", "div6"};
+    return (*this)[list[i]];
+}
+
 void NameMapper::boot() {
     // Special cases where name != default value
     def("arc", np_arc, "pic-arc");
@@ -87,13 +97,6 @@ void NameMapper::boot() {
     def("circle", np_circle, "pic-circle");
     def("citetype", np_cite_type, "type");
     def("closecurve", np_closecurve, "pic-closecurve");
-    def("cst_div0", cst_div0, "div0");
-    def("cst_div1", cst_div1, "div1");
-    def("cst_div2", cst_div2, "div2");
-    def("cst_div3", cst_div3, "div3");
-    def("cst_div4", cst_div4, "div4");
-    def("cst_div5", cst_div5, "div5");
-    def("cst_div6", cst_div6, "div6");
     def("cst_empty", cst_empty, "");
     def("cst_invalid", cst_invalid);
     def("cst_nothing", cst_nothing, "");
@@ -186,13 +189,6 @@ void NameMapper::boot() {
     def(np_citation, "citation");
     def(np_dashbox, "pic-dashbox");
     def(np_dashline, "dashline");
-    def(np_div0, "div0");
-    def(np_div1, "div1");
-    def(np_div2, "div2");
-    def(np_div3, "div3");
-    def(np_div4, "div4");
-    def(np_div5, "div5");
-    def(np_div6, "div6");
     def(np_dottedline, "dottedline");
     def(np_drawline, "drawline");
     def(np_error, "error");
@@ -299,6 +295,13 @@ void NameMapper::boot() {
     set("quotation", "quoted");
     set("quote", "quoted");
     set("centering", "center");
+    set("cst_div0", "div0");
+    set("cst_div1", "div1");
+    set("cst_div2", "div2");
+    set("cst_div3", "div3");
+    set("cst_div4", "div4");
+    set("cst_div5", "div5");
+    set("cst_div6", "div6");
 }
 
 void NameMapper::assign(const std::string &sa, const std::string &sb) {

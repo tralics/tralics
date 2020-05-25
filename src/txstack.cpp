@@ -497,13 +497,13 @@ void Stack::pop_if_frame(const Istring &x) {
 
 // Code done when a section ends. Pops all that is required
 void Stack::para_aux(int x) {
-    if (x <= 6) pop_if_frame(the_names[cst_div6]);
-    if (x <= 5) pop_if_frame(the_names[cst_div5]);
-    if (x <= 4) pop_if_frame(the_names[cst_div4]);
-    if (x <= 3) pop_if_frame(the_names[cst_div3]);
-    if (x <= 2) pop_if_frame(the_names[cst_div2]);
-    if (x <= 1) pop_if_frame(the_names[cst_div1]);
-    if (x <= 0) pop_if_frame(the_names[cst_div0]);
+    if (x <= 6) pop_if_frame(the_names["cst_div6"]);
+    if (x <= 5) pop_if_frame(the_names["cst_div5"]);
+    if (x <= 4) pop_if_frame(the_names["cst_div4"]);
+    if (x <= 3) pop_if_frame(the_names["cst_div3"]);
+    if (x <= 2) pop_if_frame(the_names["cst_div2"]);
+    if (x <= 1) pop_if_frame(the_names["cst_div1"]);
+    if (x <= 0) pop_if_frame(the_names["cst_div0"]);
 }
 
 // This allocates a slot for a new table.
