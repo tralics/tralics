@@ -1,22 +1,7 @@
 #pragma once
-// -*- C++ -*-
-// TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2002, 2007,2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-#include "tralics/BibEntry.h"
-#include "tralics/BibMacro.h"
-#include "tralics/CitationItem.h"
-#include "tralics/CitationKey.h"
-#include "tralics/Xml.h"
-#include "txinline.h"
-
-class Berror {};
+#include "../txinline.h"
+#include "LinePtr.h"
+#include <fstream>
 
 class Bbl {
 private:

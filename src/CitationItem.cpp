@@ -3,7 +3,6 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
-#include "txbib.h"
 
 // This returns a bid. It may create one.
 auto CitationItem::get_id() -> Istring {

@@ -11,13 +11,13 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Bbl.h"
 #include "tralics/BibEntry.h"
 #include "tralics/Bibliography.h"
 #include "tralics/CitationKey.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txbib.h"
 #include <algorithm>
 #include <fmt/format.h>
 #include <fmt/ostream.h>

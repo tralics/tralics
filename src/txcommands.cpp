@@ -11,7 +11,6 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txbib.h"
 #include "txclasses.h"
 
 // This file contains the big switch that interprets (most) commands

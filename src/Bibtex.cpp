@@ -1,8 +1,8 @@
 #include "tralics/Bibtex.h"
+#include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txbib.h"
 #include "txinline.h"
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
@@ -11,6 +11,8 @@ namespace {
     int similar_entries;
 
     bool start_comma = true; // should we scan for an initial comma ?
+
+    class Berror {};
 
     static const std::array<String, 9> scan_msgs{
         "bad syntax for a field type",

@@ -1,5 +1,4 @@
 #pragma once
-#include "../txbib.h"
 #include "Bchar.h"
 
 class NameSplitter { // \todo local to BibEntry.cpp

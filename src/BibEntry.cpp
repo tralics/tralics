@@ -1,9 +1,10 @@
 #include "tralics/BibEntry.h"
+#include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
+#include "tralics/NameMapper.h"
 #include "tralics/NameSplitter.h"
 #include "tralics/globals.h"
-#include "txbib.h"
 
 namespace {
     std::array<std::string, 30> bib_xml_name{"bcrossref", "bkey",     "baddress",      "bauthors",     "bbooktitle",   "bchapter",

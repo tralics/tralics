@@ -1,7 +1,6 @@
 #include "tralics/Bchar.h"
 #include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
-#include "txbib.h"
 
 auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
     auto i = Y.first;
