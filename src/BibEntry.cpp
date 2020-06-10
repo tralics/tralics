@@ -1,4 +1,5 @@
 #include "tralics/BibEntry.h"
+#include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 #include "tralics/NameSplitter.h"
 #include "tralics/globals.h"

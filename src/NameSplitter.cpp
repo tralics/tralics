@@ -1,4 +1,5 @@
 #include "tralics/NameSplitter.h"
+#include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 
 // This handles all the names in the list.

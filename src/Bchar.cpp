@@ -1,4 +1,5 @@
 #include "tralics/Bchar.h"
+#include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 #include "txbib.h"
 

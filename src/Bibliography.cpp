@@ -1,4 +1,5 @@
 #include "tralics/Bibliography.h"
+#include "tralics/Bibtex.h"
 #include "txbib.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
