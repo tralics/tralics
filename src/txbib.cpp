@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbib.h"
+#include "tralics/Bibliography.h"
 #include "tralics/CitationKey.h"
 #include "tralics/NameSplitter.h"
 #include "tralics/Parser.h"
@@ -23,7 +24,6 @@ namespace {
     class Error {};
 
     std::array<String, 3>    my_constant_table;
-    Bbl                      bbl;
     Buffer                   field_buf;
     Buffer                   CB;
     std::string              cur_entry_name; // name of entry under construction.
@@ -79,9 +79,6 @@ std::array<std::string, 30> bib_xml_name{
 // we read some bibliography data bases, this fills the bibentry objects
 // (maybe others are added). They are sorted, converted to TeX code
 // and the result is translated.
-
-// This creates a unique ID, named bid1, bid2, etc.
-auto Bibliography::unique_bid() -> Istring { return Istring(fmt::format("bid{}", ++last_bid)); }
 
 // \cite[year][]{foo}is the same as \cite{foo}
 // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
@@ -294,13 +291,6 @@ void Parser::T_biblio() {
     }
 }
 
-// This creates the full aux file, for use with bibtex.
-void Bibliography::dump(Buffer &b) {
-    if (seen_nocite()) b << "\\citation{*}\n";
-    size_t n = citation_table.size();
-    for (size_t i = 0; i < n; i++) citation_table[i].dump(b);
-}
-
 // This reads conditionally a file. Returns true if the file exists.
 auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
     B.push_back(".bib");
@@ -369,38 +359,6 @@ void Bibtex::read_ra() {
         read2(from_foot);
         read2(from_refer);
     }
-}
-
-// This dumps the whole biblio for use by Tralics.
-void Bibliography::dump_bibtex() {
-    if (seen_nocite()) the_bibtex->nocitestar_true();
-    size_t n = citation_table.size();
-    if (n != 0) bbl.open();
-    for (size_t i = 0; i < n; i++) citation_table[i].dump_bibtex();
-    n = biblio_src.size();
-    if (n > 0) {
-        bbl.open();
-        for (size_t i = 0; i < n; i++) the_bibtex->read1(biblio_src[i]);
-    } else
-        the_bibtex->read_ra();
-}
-
-void Bibliography::stats() {
-    auto solved = std::count_if(citation_table.begin(), citation_table.end(), [](auto &c) { return c.is_solved(); });
-    spdlog::trace("Bib stats: seen {}{} entries.", citation_table.size(), solved > 0 ? fmt::format("({})", solved) : "");
-}
-
-// This dumps the whole biblio for use by bibtex.
-void Bibliography::dump_data(Buffer &b) {
-    auto n = biblio_src.size();
-    b << "\\bibstyle{" << bib_style << "}\n";
-    b << "\\bibdata{";
-    if (n == 0) b << tralics_ns::get_short_jobname();
-    for (size_t i = 0; i < n; i++) {
-        if (i > 0) b.push_back(",");
-        b.push_back(biblio_src[i]);
-    }
-    b << "}\n";
 }
 
 // This creates the bbl file by running an external program.
@@ -476,33 +434,6 @@ void Parser::T_start_the_biblio() {
     auto name = Istring(a);
     the_stack.set_v_mode();
     the_stack.push(the_names["thebibliography"], new Xml(name, nullptr));
-}
-
-// This finds a citation in the table. In the case \footcite{Kunth},
-// the first two arguments are the Istrings associated to foot and Knuth.
-// If not found, we may insert a new item (normal case),
-// or return -1 (in case of failure)
-auto Bibliography::find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t> {
-    auto n = citation_table.size();
-    for (size_t i = 0; i < n; i++)
-        if (citation_table[i].match(key, from)) return i;
-    if (!insert) return {};
-    citation_table.emplace_back(key, from);
-    return n;
-}
-
-// This is like the function above. In the case \footcite{Kunth},
-// the two arguments are the Istrings associated to foot and Knuth.
-// If not found, we try \cite[?]{Kunth}, using any possibility for the first
-// argument (this matches only unsolved references). In case of failure
-// a new entry is added, of type FROM.
-auto Bibliography::find_citation_star(const Istring &from, const Istring &key) -> size_t {
-    if (auto n = find_citation_item(from, key, false)) return *n;
-    auto n = citation_table.size();
-    for (size_t i = 0; i < n; i++)
-        if (citation_table[i].match_star(key)) return i;
-    citation_table.emplace_back(key, from);
-    return n;
 }
 
 // \cititem{foo}{bar} translates \cititem-foo{bar}
