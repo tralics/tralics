@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbib.h"
+#include "tralics/CitationKey.h"
 #include "tralics/NameSplitter.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
@@ -25,14 +26,12 @@ namespace {
     Bbl                      bbl;
     Buffer                   field_buf;
     Buffer                   CB;
-    bool                     distinguish_refer = false;
     std::string              cur_entry_name; // name of entry under construction.
     int                      cur_entry_line; // position of entry in source file
     std::vector<std::string> omitcite_list;
 
     Bibliography the_bibliography;
     int          similar_entries;
-    bool         old_ra      = false;
     bool         start_comma = true; // should we scan for an initial comma ?
 
     // This creates a <ref target='bidN'/> element. This is the REF that needs
@@ -307,45 +306,6 @@ void Parser::T_biblio() {
 void CitationItem::dump(Buffer &b) const {
     if (is_solved()) return;
     b << "\\citation{" << key.name << "}\n";
-}
-
-// Ctor via "foot" and "Knuth"
-CitationKey::CitationKey(const std::string &a, const std::string &b) {
-    if (a == "foot")
-        cite_prefix = from_foot;
-    else if (a == "refer")
-        cite_prefix = from_refer;
-    else
-        cite_prefix = from_year;
-    make_key(b);
-}
-
-// Ctor via from_foot and "Knuth".
-CitationKey::CitationKey(bib_from a, const std::string &b) {
-    if (a == from_foot || a == from_refer)
-        cite_prefix = a;
-    else
-        cite_prefix = from_year;
-    make_key(b);
-}
-
-// Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
-void CitationKey::make_key(const std::string &s) {
-    if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
-    Buffer &B = biblio_buf2;
-    B.clear();
-    B.push_back(s);
-    B.lowercase();
-    cite_key       = s;
-    lower_cite_key = B;
-    B.clear();
-    if (cite_prefix == from_foot)
-        B.push_back("foot");
-    else if (cite_prefix == from_refer && !old_ra)
-        B.push_back("refer");
-    B.push_back("cite:");
-    B.push_back(s);
-    full_key = B;
 }
 
 // This prints an unsolved reference for use by Tralics.
@@ -801,13 +761,6 @@ auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
             if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
     }
     return nullptr;
-}
-
-auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
-    if (!is_similar_lower(w)) return false;
-    if (cite_prefix == w.cite_prefix) return true;
-    if (cite_prefix == from_foot || w.cite_prefix == from_foot) return false;
-    return true;
 }
 
 // This finds a citation whose lowercase equivalent is S.
@@ -1697,12 +1650,6 @@ void BibEntry::format_author(bool au) {
     bbl.push_back("\\" + bib_xml_name[p]);
     bbl.push_back_braced(data);
     bbl.newline();
-}
-
-auto CitationKey::from_to_string() const -> std::string {
-    if (cite_prefix == from_year) return "year";
-    if (cite_prefix == from_refer) return "refer";
-    return "foot";
 }
 
 void BibEntry::call_type() {

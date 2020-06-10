@@ -30,8 +30,10 @@ extern bool only_input_data;
 extern bool raw_bib;
 extern bool seen_enddocument;
 extern bool ra_ok;
-inline bool global_in_load = false;
-inline bool global_in_url  = false;
+inline bool distinguish_refer = false;
+inline bool global_in_load    = false;
+inline bool global_in_url     = false;
+inline bool old_ra            = false;
 
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
 
