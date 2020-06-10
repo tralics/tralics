@@ -69,13 +69,14 @@ public:
 };
 
 // One item if a titlepage
-class TpiOneItem {
+struct TpiOneItem {
     char        p1{};  // first character modifier
     char        p2{};  // second character modifier
     std::string value; // the value
     tpi_vals    v;     // the type (none, string, command, or XML element)
-public:
+
     TpiOneItem() { reset(); }
+
     [[nodiscard]] auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
     [[nodiscard]] auto noval() const -> bool { return v == tpi_noval; }
     [[nodiscard]] auto is_elt() const -> bool { return v == tpi_elt; }
@@ -94,7 +95,6 @@ public:
     void               set_p1(char c) { p1 = c; }
     //  void bad() { v = tpi_err; }
     void set_v(tpi_vals V) { v = V; }
-    void set_value(const Buffer &b) { value = b; }
     void reset();
 };
 

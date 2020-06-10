@@ -1,4 +1,5 @@
 #include "tralics/CitationItem.h"
+#include "tralics/BibEntry.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Parser.h"
 #include "txbib.h"

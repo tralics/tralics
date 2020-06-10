@@ -147,7 +147,7 @@ auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
         }
     }
     if (!tpage_ns::scan_item(in, out, c)) return tpi_err;
-    Toi.set_value(out);
+    Toi.value = out;
     if (c == '<') return tpi_elt;
     if (c == '\\') return tpi_cmd;
     return tpi_str;

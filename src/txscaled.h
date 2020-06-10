@@ -31,7 +31,6 @@ public:
     [[nodiscard]] auto get_value() const -> long { return value; }
     [[nodiscard]] auto null() const -> bool { return value == 0; }
 
-    void set_value(long i) { value = i; }
     void add_dim(ScaledInt Y);
     void neg() { value = -value; }
     void divide(long n);

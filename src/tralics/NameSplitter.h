@@ -2,7 +2,7 @@
 #include "../txbib.h"
 #include "Bchar.h"
 
-class NameSplitter {
+class NameSplitter { // \todo local to BibEntry.cpp
     bchar_type *table;
     Bchar       first_name{};
     Bchar       last_name{};

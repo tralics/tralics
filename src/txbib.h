@@ -9,115 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/BibEntry.h"
+#include "tralics/BibMacro.h"
 #include "tralics/CitationItem.h"
 #include "tralics/CitationKey.h"
 #include "tralics/Xml.h"
 #include "txinline.h"
-
-// A bibtex macro, like @string(foo="bar")
-class BibMacro {
-private:
-    size_t      h{};  // hash code of the name
-    std::string name; // the name of the name (e.g. foo)
-public:
-    std::string value; // the value of the macro (e.g. bar)
-
-    auto is_same(size_t hash, const std::string &s) -> bool { return hash == h && name == s; } // \todo operator==
-    void set_value(std::string v) { value = std::move(v); }
-    void set_default_value() { value = name; }
-    BibMacro() = default;
-    BibMacro(size_t hash, Buffer &s1) : h(hash), name(s1) {}
-    BibMacro(size_t hash, String &s1, String s2) : h(hash), name(s1), value(s2) {}
-};
-
-// Consider for instance the name list :
-// Carrasco, J. and MahEEvas, S. and Rubino, G. and Su\~nEE, V.
-// (where EE stands for \'e on 8 bits)
-// value will be \bpers{}\bpers{}\bpers{}\bpers (concatenation of 4 value)
-// long_key will be the concatenation of 4?
-// short_key will be CMRS
-class BibtexName {
-public:
-    std::string value;
-    std::string long_key;
-    std::string short_key;
-    std::string name_key;
-};
-
-// A bibliographic entry \todo derive from CitationKey?
-class BibEntry {
-    friend class Bibtex;
-
-    BibEntry *                          crossref{nullptr};      // In case of a crossref
-    BibEntry *                          crossref_from{nullptr}; // reverse crossref
-    entry_type                          type_int{type_unknown}; // the type of the entry
-    CitationKey                         cite_key;               // the cite_key structure
-    bib_creator                         why_me{};               // reason why this entry is considered
-    std::array<std::string, fp_unknown> all_fields;             // all the fields
-    BibtexName                          author_data;            // already processed author data
-    BibtexName                          editor_data;            // already processed editor data
-
-    int                      extra_num{0};     // extra char added to the label
-    int                      cur_year{0};      // current year, if year field can be parsed
-    std::string              lab1, lab2, lab3; // two temporaries.
-    size_t                   id{0};
-    bool                     explicit_cit{false};
-    c_primaire               main_c_type{};
-    c_secondaire             second_c_type{};
-    int                      first_line{-1};
-    std::vector<std::string> user_fields;
-    size_t                   is_extension{};
-
-public:
-    std::string label, sort_label, aux_label; // cite label and sort label
-    Istring     unique_id{""};
-
-    BibEntry();
-
-private:
-    [[nodiscard]] auto from_to_string() const -> std::string { return cite_key.from_to_string(); };
-    [[nodiscard]] auto ra_prefix() const -> String;
-    [[nodiscard]] auto get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
-
-    void find_cnrs_type(Buffer &);
-    void output_bibitem();
-    void out_something(field_pos p);
-    void out_something(field_pos p, size_t w);
-    void set_explicit_cit() { explicit_cit = true; }
-    auto is_empty(String s) -> bool;
-    void move_to_year() { cite_key.move_to_year(); }
-    void use_extra_num();
-    void numeric_label(long i);
-    void call_type();
-    void call_type_all();
-    void call_type_special();
-    void format_series_etc(bool pa);
-    void sort_author(bool au);
-    void sort_editor();
-    void sort_organization();
-    void sort_check(String);
-    void presort(long serial);
-    void sort_key();
-    void format_author(bool au);
-    void forward_pass(std::string &previous_label, int &last_num);
-    void reverse_pass(int &next_extra);
-    auto find_all_names(String) -> BibtexName *;
-    auto format_lab_names(String s) -> String;
-    auto sort_format_names(String s) -> String;
-    void normalise();
-    void un_crossref();
-    void copy_from(BibEntry *Y);
-    void copy_from(BibEntry *Y, size_t k);
-    void normalise_statut(Buffer &);
-    void one_cnrs_aux(Buffer &A, bool &nf, field_pos p, String aux);
-    void add_warning(int dy);
-    auto store_field(field_pos where) -> bool;
-    void parse_crossref();
-    void work(long serial);
-
-    static void handle_one_namelist(std::string &s, BibtexName &X);
-    static void out_something(field_pos p, const std::string &s);
-};
 
 class Berror {};
 
@@ -178,8 +75,8 @@ private:
     void               kill_the_lists();
     auto               look_for_macro(const Buffer &name) -> std::optional<size_t>;
     auto               look_for_macro(size_t h, const std::string &name) -> std::optional<size_t>;
-    void               mac_def_val(size_t X) { all_macros[X].set_default_value(); }
-    void               mac_set_val(size_t X, std::string s) { all_macros[X].set_value(std::move(s)); }
+    void               mac_def_val(size_t X) { all_macros[X].value = all_macros[X].name; }
+    void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
     auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;
     auto               next_char() -> codepoint { return input_line[input_line_pos++]; }
     void               next_line(bool what);
