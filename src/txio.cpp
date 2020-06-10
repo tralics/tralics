@@ -46,7 +46,6 @@ namespace {
 
 namespace io_ns {
     void print_ascii(std::ostream &fp, char c);
-    auto how_many_bytes(char C) -> size_t;
     auto plural(int n) -> String;
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
@@ -122,10 +121,6 @@ void Converter::start_convert(int l) {
     global_error  = false;
     line_is_ascii = true;
 }
-
-// This returns the number of bytes in a UTF8 character
-// given the first byte. Returns 0 in case of error
-auto io_ns::how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
 
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF

@@ -3,6 +3,19 @@
 #include "BibMacro.h"
 #include "LinePtr.h"
 
+// Main idea. The TeX file has commands like \cite , \nocite, which produce
+// a CitationItem (new or old). There are stored in citation_table. They have
+// a unique id, a Bid, and \cite creates a REF element with a reference to this
+// the element having this bid as id.
+// Such an element can be produced in the TeX source; we call it a solver
+// of this bid.
+// At the end we must construct a solver for each unsolved one. We use
+// a function like dump_bibtex, this creates all_entries, a table of
+// bibentry objects, one for each unsolved entry.
+// we read some bibliography data bases, this fills the bibentry objects
+// (maybe others are added). They are sorted, converted to TeX code
+// and the result is translated.
+
 class Bibtex {
 private:
     Buffer                   inbuf;             // contains a line of the bib file

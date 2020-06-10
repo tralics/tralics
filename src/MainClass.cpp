@@ -1,3 +1,5 @@
+#include "tralics/Bbl.h"
+#include "tralics/Bibtex.h"
 #include "tralics/Clines.h"
 #include "tralics/LinePtr.h"
 #include "tralics/NameMapper.h"
@@ -1040,8 +1042,11 @@ void MainClass::trans0() {
 }
 
 void MainClass::boot_bibtex(bool inra) {
-    auto fn = out_dir / (out_name + "_.bbl");
-    tralics_ns::bibtex_boot(fn, year_string, out_name, inra, distinguish_refer);
+    auto fn             = out_dir / (out_name + "_.bbl");
+    ::distinguish_refer = distinguish_refer;
+    bbl.name            = fn;
+    the_bibtex          = new Bibtex(year_string);
+    the_bibtex->boot(out_name, inra);
 }
 
 void MainClass::show_input_size() {

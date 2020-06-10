@@ -10,12 +10,33 @@
 
 // This file contains a lot of stuff dealing with buffers.
 
+#include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include <ctre.hpp>
 #include <fmt/format.h>
+#include <utf8.h>
 
 namespace {
+    // This returns the number of bytes in a UTF8 character
+    // given the first byte. Returns 0 in case of error
+    auto how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
+
+    // True if \sortnoop, \SortNoop, \noopsort plus brace or space
+    // First char to test is at i+1
+    auto is_noopsort(const std::string &s, size_t i) -> bool {
+        auto n = s.size();
+        if (i + 10 >= n) return false;
+        if (s[i + 10] != '{' && !is_space(s[i + 10])) return false;
+        if (s[i + 1] != '\\') return false;
+        if (s[i + 3] != 'o') return false;
+        if (s[i + 7] != 'o') return false;
+        if (s[i + 2] == 'n' && s[i + 4] == 'o' && s[i + 5] == 'p' && s[i + 6] == 's' && s[i + 8] == 'r' && s[i + 9] == 't') return true;
+        if ((s[i + 2] == 's' || s[i + 2] == 'S') && s[i + 4] == 'r' && s[i + 5] == 't' && (s[i + 6] == 'n' || s[i + 6] == 'N') &&
+            s[i + 8] == 'o' && s[i + 9] == 'p')
+            return true;
+        return false;
+    }
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
@@ -915,4 +936,560 @@ auto Buffer::see_equals(String s) -> bool {
     if (next_char() != '=') return false;
     skip_sp_tab();
     return true;
+}
+
+// Returns the buffer without initial and final space, if init is true.
+// In any case, a tab is converted into a space, multiple space chars
+// are replaced by single ones.
+// We can safely assume that buffer is ASCII
+auto Buffer::special_convert(bool init) -> std::string {
+    ptrs.b = 0;
+    if (init) skip_sp_tab_nl();
+    biblio_buf1.clear();
+    bool space = true;
+    for (;;) {
+        auto c = next_char();
+        if (c == 0) break;
+        if (is_space(c)) {
+            if (!space) {
+                biblio_buf1.push_back(' ');
+                space = true;
+            }
+        } else {
+            biblio_buf1.push_back(c);
+            space = false;
+        }
+    }
+    if (init && !biblio_buf1.empty() && biblio_buf1.back() == ' ') biblio_buf1.remove_last();
+    return biblio_buf1;
+}
+
+// In the bibliobraphy \url="foo bar"
+// gives \href{foobar}{\url{foo\allowbreak bar}}
+// We handle here the first string
+auto Buffer::remove_space(const std::string &x) -> std::string {
+    auto n = x.size();
+    clear();
+    for (size_t i = 0; i < n; i++)
+        if (x[i] != ' ') push_back(x[i]);
+    return *this;
+}
+
+// We create here the second string
+auto Buffer::insert_break(const std::string &x) -> std::string {
+    auto n = x.size();
+    clear();
+    push_back("{\\url{");
+    for (size_t i = 0; i < n; i++) {
+        if (x[i] == ' ' && main_ns::bib_allow_break) push_back("\\allowbreak");
+        push_back(x[i]);
+    }
+    push_back("}}");
+    return *this;
+}
+
+// In case of Lo{\"i}c, repeated calls will set head() to L, o, { and c.
+// It works also in the case of non-ascii characters
+void Buffer::next_bibtex_char() {
+    auto c = head();
+    if (c == 0) return;
+    if (c == '\\') {
+        ptrs.b++;
+        c = head();
+        if (c == 0) return;
+        ptrs.b += how_many_bytes(c);
+        if (ptrs.b > size()) ptrs.b = size();
+        return;
+    }
+    auto n = how_many_bytes(c);
+    if (n > 1) {
+        ptrs.b += n;
+        if (ptrs.b > size()) ptrs.b = size();
+        return;
+    }
+    if (c != '{')
+        ptrs.b++;
+    else
+        skip_over_brace();
+}
+
+// We assume that current char is an open brace.
+// We can forget about utf8 here.
+// Just want {\{\}\}\\} to be interpret correctly
+void Buffer::skip_over_brace() {
+    int bl = 0;
+    for (;;) {
+        auto c = head();
+        if (c == 0) return;
+        ptrs.b++;
+        if (c == '\\') {
+            if (head() == 0) return;
+            ptrs.b++;
+            continue;
+        }
+        if (c == '{')
+            bl++;
+        else if (c == '}') {
+            bl--;
+            if (bl == 0) return;
+        }
+    }
+}
+
+// removes braces in the case title="study of {$H^p}, part {I}"
+// Brace followed by Uppercase or dollar
+// Also, handles {\noopsort foo} removes the braces and the command.
+void Buffer::special_title(std::string s) {
+    int  level  = 0;
+    int  blevel = 0;
+    auto n      = s.size();
+    for (size_t i = 0; i < n; i++) {
+        char c = s[i];
+        if (c == '\\') {
+            push_back(c);
+            i++;
+            if (i < n) push_back(s[i]);
+            continue;
+        }
+        if (c == '}') {
+            if (level != blevel)
+                push_back(c);
+            else
+                blevel = 0;
+            if (level > 0) level--;
+            continue;
+        }
+        if (c == '{') level++;
+        if (c != '{' || i == n - 1 || (blevel != 0) || level != 1) {
+            push_back(c);
+            continue;
+        }
+        // c= is a brace at bottom level
+        char cc = s[i + 1];
+        if (is_upper_case(cc) || cc == '$') {
+            blevel = level;
+            continue;
+        }
+        if (is_noopsort(s, i)) {
+            i += 10;
+            while (i < n && is_space(s[i])) i++;
+            i--;
+            blevel = level;
+        } else
+            push_back(c);
+    }
+}
+
+// This replaces \c{c} by \char'347 in order to avoid some errors.
+void Buffer::normalise_for_bibtex(String s) {
+    clear();
+    push_back(' '); // make sure we can always backup one char
+    for (;;) {
+        auto c = *s;
+        if (c == 0) {
+            ptrs.b = 0;
+            return;
+        }
+        push_back(c);
+        s++;
+        if (c != '\\') continue;
+        if (std::string(s).starts_with("c{c}")) {
+            remove_last();
+            push_back(codepoint(0347U));
+            s += 4;
+        } else if (std::string(s).starts_with("c{C}")) {
+            remove_last();
+            push_back(codepoint(0307U));
+            s += 4;
+        } else if (std::string(s).starts_with("v{c}")) {
+            remove_last();
+            push_back("{\\v c}");
+            s += 4;
+            continue;
+        } else if (*s == 'a' && is_accent_char(s[1])) {
+            s++;
+        } else if (*s == ' ') {
+            remove_last();
+        } // replace \space by space
+    }
+}
+
+// For each character, we have its type in the table.
+void Buffer::fill_table(bchar_type *table) {
+    ptrs.b = 0;
+    for (;;) {
+        auto i = ptrs.b;
+        auto c = head();
+        if (c == 0U) {
+            table[i] = bct_end;
+            return;
+        }
+        ptrs.b++;
+        if (static_cast<uchar>(c) >= 128 + 64) {
+            table[i] = bct_extended;
+            continue;
+        }
+        if (static_cast<uchar>(c) >= 128) {
+            table[i] = bct_continuation;
+            continue;
+        }
+        if (c == ' ') {
+            table[i] = bct_space;
+            continue;
+        }
+        if (c == '~') {
+            table[i] = bct_tilde;
+            continue;
+        }
+        if (c == '-') {
+            table[i] = bct_dash;
+            continue;
+        }
+        if (c == ',') {
+            table[i] = bct_comma;
+            continue;
+        }
+        if (c == '&') {
+            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
+            table[i] = bct_bad;
+            continue;
+        }
+        if (c == '}') {
+            the_bibtex->err_in_name("too many closing braces", to_signed(i));
+            table[i] = bct_bad;
+            continue;
+        }
+        if (c != '\\' && c != '{') {
+            table[i] = bct_normal;
+            continue;
+        }
+        if (c == '\\') {
+            c = head();
+            if (!is_accent_char(c)) {
+                table[i] = bct_bad;
+                the_bibtex->err_in_name("commands allowed only within braces", to_signed(i));
+                continue;
+            }
+            if (is_letter(at(ptrs.b + 1))) {
+                table[i]     = bct_cmd;
+                table[i + 1] = bct_continuation;
+                table[i + 2] = bct_continuation;
+                ptrs.b += 2;
+                continue;
+            }
+            if (at(ptrs.b + 1) != '{') {
+                table[i]     = bct_bad;
+                table[i + 1] = bct_bad;
+                ptrs.b++;
+                the_bibtex->err_in_name("bad accent construct", to_signed(i));
+                continue;
+            }
+            at(ptrs.b + 1) = c;
+            at(ptrs.b)     = '\\';
+            at(ptrs.b - 1) = '{';
+            Logger::finish_seq();
+            the_log << "+bibchanged " << data() << "\n";
+        }
+        int  bl  = 1;
+        auto j   = i;
+        table[i] = bct_brace;
+        for (;;) {
+            if (head() == 0) {
+                the_bibtex->err_in_name("this cannot happen!", to_signed(j));
+                resize(j);
+                table[j] = bct_end;
+                return;
+            }
+            c             = head();
+            table[ptrs.b] = bct_continuation;
+            ptrs.b++;
+            if (c == '{') bl++;
+            if (c == '}') {
+                bl--;
+                if (bl == 0) break;
+            }
+        }
+    }
+}
+
+auto Buffer::find_and(const bchar_type *table) -> bool {
+    for (;;) {
+        char c = head();
+        if (c == 0) return true;
+        ptrs.b++;
+        if (table[ptrs.b - 1] == bct_space && is_and(ptrs.b)) return false;
+    }
+}
+
+// True if this is an `and'
+auto Buffer::is_and(size_t k) const -> bool {
+    char c = at(k);
+    if (c != 'a' && c != 'A') return false;
+    c = at(k + 1);
+    if (c != 'n' && c != 'N') return false;
+    c = at(k + 2);
+    if (c != 'd' && c != 'D') return false;
+    c = at(k + 3);
+    return (c == ' ') || (c == '\t') || (c == '\n');
+}
+
+// In J.G. Grimm,only the first dot matches.
+auto Buffer::insert_space_here(size_t k) const -> bool {
+    if (k == 0) return false;
+    if (at(k) != '.') return false;
+    if (!is_upper_case(at(k + 1))) return false;
+    if (!is_upper_case(at(k - 1))) return false;
+    return true;
+}
+
+void Buffer::remove_spec_chars(bool url, Buffer &B) {
+    ptrs.b = 0;
+    B.clear();
+    for (;;) {
+        auto c = head();
+        if (c == 0U) return;
+        advance();
+        if (c == '|') {
+            B.push_back("\\vbar ");
+            continue;
+        } // bar is special
+        if (c == '{' || c == '}') continue;
+        if (c == '~') {
+            B.push_back(url ? '~' : ' ');
+            continue;
+        }
+        if (c == ' ' || c == '\n' || c == '\t' || c == '\r') {
+            B.push_back(' ');
+            continue;
+        }
+        if (c == '-' && head() == '-') continue; // -- gives -
+        if (c != '\\') {
+            B.push_back(c);
+            continue;
+        }
+        c = head();
+        advance();
+        if (c == '{' || c == '}') {
+            B.push_back(c);
+            continue;
+        }
+        if (c == '|') {
+            B.push_back("\\vbar ");
+            continue;
+        } // bar is special
+        if (c == 's' && head() == 'p' && !is_letter(at(ptrs.b + 1))) {
+            advance();
+            B.push_back('^');
+            continue;
+        }
+        if (c == 's' && head() == 'b' && !is_letter(at(ptrs.b + 1))) {
+            advance();
+            B.push_back('_');
+            continue;
+        }
+        if (is_accent_char(c)) {
+            auto C = head();
+            if (C == '{') {
+                advance();
+                C = head();
+            }
+            advance();
+            if (c == '\'') {
+                if (C == 'a') {
+                    B.push_back(codepoint('\341'));
+                    continue;
+                }
+                if (C == 'e') {
+                    B.push_back(codepoint('\351'));
+                    continue;
+                }
+                if (C == 'i') {
+                    B.push_back(codepoint('\355'));
+                    continue;
+                }
+                if (C == 'o') {
+                    B.push_back(codepoint('\363'));
+                    continue;
+                }
+                if (C == 'u') {
+                    B.push_back(codepoint('\372'));
+                    continue;
+                }
+                if (C == 'y') {
+                    B.push_back(codepoint('\375'));
+                    continue;
+                }
+                if (C == 'A') {
+                    B.push_back(codepoint('\301'));
+                    continue;
+                }
+                if (C == 'E') {
+                    B.push_back(codepoint('\311'));
+                    continue;
+                }
+                if (C == 'I') {
+                    B.push_back(codepoint('\315'));
+                    continue;
+                }
+                if (C == 'O') {
+                    B.push_back(codepoint('\323'));
+                    continue;
+                }
+                if (C == 'U') {
+                    B.push_back(codepoint('\332'));
+                    continue;
+                }
+                if (C == 'Y') {
+                    B.push_back(codepoint('\335'));
+                    continue;
+                }
+            }
+            if (c == '`') {
+                if (C == 'a') {
+                    B.push_back(codepoint('\340'));
+                    continue;
+                }
+                if (C == 'e') {
+                    B.push_back(codepoint('\350'));
+                    continue;
+                }
+                if (C == 'i') {
+                    B.push_back(codepoint('\354'));
+                    continue;
+                }
+                if (C == 'o') {
+                    B.push_back(codepoint('\362'));
+                    continue;
+                }
+                if (C == 'u') {
+                    B.push_back(codepoint('\371'));
+                    continue;
+                }
+                if (C == 'A') {
+                    B.push_back(codepoint('\300'));
+                    continue;
+                }
+                if (C == 'E') {
+                    B.push_back(codepoint('\310'));
+                    continue;
+                }
+                if (C == 'I') {
+                    B.push_back(codepoint('\314'));
+                    continue;
+                }
+                if (C == 'O') {
+                    B.push_back(codepoint('\322'));
+                    continue;
+                }
+                if (C == 'U') {
+                    B.push_back(codepoint('\331'));
+                    continue;
+                }
+            }
+            if (c == '^') {
+                if (C == 'a') {
+                    B.push_back(codepoint('\342'));
+                    continue;
+                }
+                if (C == 'e') {
+                    B.push_back(codepoint('\352'));
+                    continue;
+                }
+                if (C == 'i') {
+                    B.push_back(codepoint('\356'));
+                    continue;
+                }
+                if (C == 'o') {
+                    B.push_back(codepoint('\364'));
+                    continue;
+                }
+                if (C == 'u') {
+                    B.push_back(codepoint('\373'));
+                    continue;
+                }
+                if (C == 'A') {
+                    B.push_back(codepoint('\302'));
+                    continue;
+                }
+                if (C == 'E') {
+                    B.push_back(codepoint('\312'));
+                    continue;
+                }
+                if (C == 'I') {
+                    B.push_back(codepoint('\316'));
+                    continue;
+                }
+                if (C == 'O') {
+                    B.push_back(codepoint('\324'));
+                    continue;
+                }
+                if (C == 'U') {
+                    B.push_back(codepoint('\333'));
+                    continue;
+                }
+            }
+            if (c == '\"') {
+                if (C == 'a') {
+                    B.push_back(codepoint('\344'));
+                    continue;
+                }
+                if (C == 'e') {
+                    B.push_back(codepoint('\353'));
+                    continue;
+                }
+                if (C == 'i') {
+                    B.push_back(codepoint('\357'));
+                    continue;
+                }
+                if (C == 'o') {
+                    B.push_back(codepoint('\366'));
+                    continue;
+                }
+                if (C == 'u') {
+                    B.push_back(codepoint('\374'));
+                    continue;
+                }
+                if (C == 'y') {
+                    B.push_back(codepoint('\377'));
+                    continue;
+                }
+                if (C == 'A') {
+                    B.push_back(codepoint('\304'));
+                    continue;
+                }
+                if (C == 'E') {
+                    B.push_back(codepoint('\313'));
+                    continue;
+                }
+                if (C == 'I') {
+                    B.push_back(codepoint('\317'));
+                    continue;
+                }
+                if (C == 'O') {
+                    B.push_back(codepoint('\326'));
+                    continue;
+                }
+                if (C == 'U') {
+                    B.push_back(codepoint('\334'));
+                    continue;
+                }
+            }
+            if (c == '~') {
+                if (C == 'n') {
+                    B.push_back(codepoint('\361'));
+                    continue;
+                }
+                if (C == 'N') {
+                    B.push_back(codepoint('\321'));
+                    continue;
+                }
+            }
+            B.push_back('\\');
+            B.push_back(c);
+            B.push_back(C);
+            continue;
+        }
+        B.push_back('\\');
+        B.push_back(c);
+    }
 }

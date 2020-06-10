@@ -1,7 +1,11 @@
 #include "tralics/Parser.h"
+#include "tralics/Bbl.h"
+#include "tralics/Bibliography.h"
+#include "tralics/Bibtex.h"
 #include "tralics/LinePtr.h"
 #include "tralics/NameMapper.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
@@ -19,6 +23,28 @@ namespace accent_ns {
 } // namespace accent_ns
 
 namespace {
+    // This creates a <ref target='bidN'/> element. This is the REF that needs
+    // to be solved later. In the case of \footcite[p.25]{Knuth},
+    // the arguments of the function are foot and Knuth; the `p.25' will be
+    // considered elsewhere.
+    auto make_cit_ref(const Istring &type, const Istring &ref) -> Xml {
+        auto    n  = *the_bibliography.find_citation_item(type, ref, true);
+        Istring id = the_bibliography.citation_table[n].get_id();
+        Xml     res(the_names["ref"], nullptr);
+        res.id.add_attribute(the_names["target"], id);
+        return res;
+    }
+
+    // \cite[year][]{foo}is the same as \cite{foo}
+    // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
+    auto normalise_for_bib(Istring w) -> Istring {
+        auto S = w.name;
+        if (S == "year") return the_names["cst_empty"];
+        if (!distinguish_refer)
+            if (S == "refer") return the_names["cst_empty"];
+        return w;
+    }
+
     // Accent tables. Holds the result of the expansion
     std::array<Token, nb_accents>           accent_cir;        // \^
     std::array<Token, nb_accents>           accent_acute;      // \'
@@ -1653,4 +1679,418 @@ void Parser::E_accent() {
         the_log << "{accent on " << uchar(achar) << " -> " << expansion << "}\n";
     }
     back_input(expansion);
+}
+
+// \cite@one{foot}{Knuth}{p25}.
+// Translates to <cit><ref target="xx">p25</ref></cit>
+// and \cite@simple{Knuth} gives <ref target="xx"/>
+void Parser::T_cite_one() {
+    bool  is_simple = cur_cmd_chr.chr != 0;
+    Token T         = cur_tok;
+    flush_buffer();
+    Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
+    cur_tok      = T;
+    auto ref     = Istring(fetch_name0_nopar());
+    Xml *arg     = is_simple ? nullptr : xT_arg_nopar();
+    // signal error after argument parsing
+    if (bbl.is_too_late()) {
+        parse_error("Citation after loading biblio?");
+        return;
+    }
+    auto *res = new Xml(make_cit_ref(type, ref));
+    if (is_simple) {
+        flush_buffer();
+        the_stack.add_last(res);
+        return;
+    }
+    leave_v_mode();
+    TokenList L     = get_mac_value(hash_table.cite_type_token);
+    auto      xtype = Istring(fetch_name1(L));
+    L               = get_mac_value(hash_table.cite_prenote_token);
+    auto prenote    = Istring(fetch_name1(L));
+    if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
+    the_stack.add_last(new Xml(the_names["cit"], res));
+    if (!type.empty()) the_stack.add_att_to_last(the_names["rend"], type);
+    if (!xtype.empty()) the_stack.add_att_to_last(the_names["citetype"], xtype);
+    if (!prenote.empty()) the_stack.add_att_to_last(the_names["prenote"], prenote);
+}
+
+// This adds a marker, a location where to insert the bibliography
+// The marker can be forcing or not. If it is not forcing, and a forcing
+// marker has already been inserted, nothing happens.
+void Parser::add_bib_marker(bool force) {
+    Bibliography &T = the_bibliography;
+    if (!force && T.location_exists()) return;
+    Xml *mark = new Xml(Istring(""), nullptr);
+    Xml *Foo  = new Xml(Istring(""), mark);
+    the_stack.add_last(Foo);
+    T.set_location(mark, force);
+}
+
+// Translation of \bibliographystyle{foo}
+// We remember the style; we could also have a command, bibtex:something
+// or program:something
+void Parser::T_bibliostyle() {
+    auto          Val = fetch_name0_nopar();
+    Bibliography &T   = the_bibliography;
+    if (Val.starts_with("bibtex:")) {
+        if (Val[7] != 0) T.set_style(Val.substr(7));
+        T.set_cmd("bibtex " + get_job_name());
+    } else if (Val.starts_with("program:"))
+        T.set_cmd(Val.substr(8) + " " + get_job_name() + ".aux");
+    else
+        T.set_style(Val);
+}
+
+// Translation of \bibliography{filename}. We add a marker.
+// We have a list of file names, they are stored in the
+// bibliography data structure
+void Parser::T_biblio() {
+    flush_buffer();
+    auto list = fetch_name0_nopar();
+    add_bib_marker(false);
+    for (const auto &w : split_commas(list)) {
+        if (w.empty()) continue;
+        the_bibliography.push_back_src(w);
+    }
+}
+
+// This creates the bbl file by running an external program.
+void Parser::create_aux_file_and_run_pgm() {
+    if (!the_main->shell_escape_allowed) {
+        spdlog::warn("Cannot call external program unless using option -shell-escape");
+        return;
+    }
+    Buffer &B = biblio_buf4;
+    B.clear();
+    bbl.reset_lines();
+    Bibliography &T = the_bibliography;
+    T.dump(B);
+    if (B.empty()) return;
+    T.dump_data(B);
+    std::string auxname = tralics_ns::get_short_jobname() + ".aux";
+    try {
+        std::ofstream(auxname) << B;
+    } catch (...) {
+        spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
+        return;
+    }
+    the_log << "++ executing " << T.cmd << ".\n";
+    system(T.cmd.c_str());
+    B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
+    // NOTE: can we use on-the-fly encoding ?
+    the_log << "++ reading " << B << ".\n";
+    tralics_ns::read_a_file(bbl.lines, B, 1);
+}
+
+void Parser::after_main_text() {
+    the_bibliography.stats();
+    if (the_bibliography.has_cmd())
+        create_aux_file_and_run_pgm();
+    else {
+        the_bibliography.dump_bibtex();
+        the_bibtex->work();
+    }
+    init(bbl.lines);
+    if (!lines.empty()) {
+        Xml *res = the_stack.temporary();
+        the_stack.push1(the_names["biblio"]);
+        AttList &L = the_stack.get_att_list(3);
+        the_stack.cur_xid().add_attribute(L, true);
+        translate0();
+        the_stack.pop(the_names["biblio"]);
+        the_stack.pop(the_names["argument"]);
+        the_stack.document_element()->insert_bib(res, the_bibliography.location);
+    }
+    finish_color();
+    finish_index();
+    check_all_ids();
+}
+
+// Translation of \end{thebibliography}
+void Parser::T_end_the_biblio() {
+    leave_h_mode();
+    the_stack.pop(the_names["thebibliography"]);
+}
+
+// Translation of \begin{thebibliography}
+// The bibliography contains \bibitem commands.
+// Thus we can safely remove two optional arguments
+// before and after the mandatory one.
+void Parser::T_start_the_biblio() {
+    ignore_optarg();
+    ignore_arg(); // longest label, ignored
+    ignore_optarg();
+    TokenList L1;
+    L1.push_back(hash_table.refname_token);
+    auto a = fetch_name1(L1);
+    the_stack.set_arg_mode();
+    auto name = Istring(a);
+    the_stack.set_v_mode();
+    the_stack.push(the_names["thebibliography"], new Xml(name, nullptr));
+}
+
+// \cititem{foo}{bar} translates \cititem-foo{bar}
+// If the command with the funny name is undefined then translation is
+// <foo>bar</foo>
+// Command has to be in Bib mode, argument translated in Arg mode.
+void Parser::T_cititem() {
+    auto    a = fetch_name0_nopar();
+    Buffer &B = biblio_buf4;
+    B << bf_reset << "cititem-" << a;
+    finish_csname(B);
+    see_cs_token();
+    if (cur_cmd_chr.cmd != relax_cmd) {
+        back_input();
+        return;
+    }
+    mode m = the_stack.get_mode();
+    need_bib_mode();
+    the_stack.set_arg_mode();
+    auto name = Istring(a);
+    the_stack.push(name, new Xml(name, nullptr));
+    T_arg();
+    the_stack.pop(name);
+    the_stack.set_mode(m);
+    the_stack.add_nl();
+}
+
+// case of \omitcite{foo}. reads an argument, puts it in the omit mist
+// and logs it
+void Parser::T_omitcite() {
+    flush_buffer();
+    std::string s = sT_arg_nopar();
+    omitcite_list.push_back(s);
+    Logger::finish_seq();
+    the_log << "{\\omitcite(" << int(omitcite_list.size());
+    the_log << ") = " << s << "}\n";
+}
+
+// We start with a function that fetches optional arguments
+// In prenote we put `p. 25' or nothing, in type one of year, foot, refer, bar
+// as an istring, it will be normalised later.
+void Parser::T_cite(subtypes sw, TokenList &prenote, Istring &type) {
+    if (sw == footcite_code) {
+        read_optarg_nopar(prenote);
+        type = the_names["foot"];
+    } else if (sw == yearcite_code) {
+        read_optarg_nopar(prenote);
+        type = the_names["cst_empty"]; // should be year here
+    } else if (sw == refercite_code) {
+        read_optarg_nopar(prenote);
+        type = the_names["refer"];
+    } else if (sw == nocite_code) {
+        type = Istring(fetch_name_opt());
+    } else if (sw == natcite_code) {
+        read_optarg_nopar(prenote); // is really the post note
+    } else {
+        // we can have two optional arguments, prenote is last
+        TokenList L1;
+        if (read_optarg_nopar(L1)) {
+            if (read_optarg_nopar(prenote))
+                type = Istring(fetch_name1(L1));
+            else
+                prenote = L1;
+        }
+    }
+}
+
+// You can say \cite{foo,bar}. This is the same as
+// \cite@one{}{foo}{}\cite@one{}{foo}{}, empty lists are replaced by the
+// optional arguments.  The `prenote' applies only to the first entry,
+// and the `type' to all entries. If you do not like like, do not use commas.
+// The natbib package proposes a postnote, that applies only to the last.
+// We construct here a token list, and push it back.
+
+// The command is fully handled in the \nocite case. The `prenote' is ignored.
+// For the special entry `*', the type is ignored too.
+void Parser::T_cite(subtypes sw) {
+    Token T         = cur_tok;
+    bool  is_natbib = sw == natcite_code;
+    if (sw == natcite_e_code) {
+        flush_buffer();
+        the_stack.pop(the_names["natcit"]);
+        return;
+    }
+    if (is_natbib) {
+        leave_v_mode();
+        the_stack.push1(the_names["natcit"]);
+    }
+    TokenList res;
+    TokenList prenote;
+    auto      type = Istring("");
+    if (is_natbib) {
+        Istring x = nT_optarg_nopar();
+        if (!x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
+        read_optarg(res);
+        if (!res.empty()) res.push_back(hash_table.space_token);
+        res.push_front(hash_table.locate("NAT@open"));
+    }
+    cur_tok = T;
+    T_cite(sw, prenote, type); // reads optional arguments
+    type = normalise_for_bib(type);
+    if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
+    Token sep = sw == footcite_code ? hash_table.footcite_sep_token
+                                    : sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
+    cur_tok      = T;
+    auto  List   = fetch_name0_nopar();
+    int   n      = 0;
+    Token my_cmd = is_natbib ? hash_table.citesimple_token : hash_table.citeone_token;
+    for (const auto &cur : split_commas(List)) {
+        if (cur.empty()) continue;
+        if (sw == nocite_code) {
+            if (cur == "*")
+                the_bibliography.set_nocite();
+            else
+                the_bibliography.find_citation_item(type, Istring(cur), true);
+        } else {
+            if (n > 0) res.push_back(sep);
+            TokenList tmp;
+            res.push_back(my_cmd);
+            if (!is_natbib) {
+                tmp = token_ns::string_to_list(type.name, true);
+                res.splice(res.end(), tmp);
+            }
+            tmp = token_ns::string_to_list(cur, true);
+            res.splice(res.end(), tmp);
+            if (!is_natbib) {
+                res.push_back(hash_table.OB_token);
+                if (n == 0) res.splice(res.end(), prenote);
+                res.push_back(hash_table.CB_token);
+            }
+            n++;
+        }
+    }
+    if (is_natbib) {
+        if (!prenote.empty()) res.push_back(hash_table.locate("NAT@cmt"));
+        res.splice(res.end(), prenote);
+        res.push_back(hash_table.locate("NAT@close"));
+        res.push_back(hash_table.end_natcite_token);
+    }
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << T << "->" << res << ".\n";
+    }
+    back_input(res);
+}
+
+// Flag true for bibitem, \bibitem[opt]{key}
+// false in the case of \XMLsolvecite[id][from]{key}
+void Parser::solve_cite(bool user) {
+    Token T    = cur_tok;
+    bool  F    = true;
+    auto  from = Istring("");
+    long  n    = 0;
+    if (user) {
+        implicit_par(zero_code);
+        the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
+        Istring ukey = nT_optarg_nopar();
+        the_stack.get_xid().get_att().push_back(the_names["bibkey"], ukey);
+        n = the_stack.get_xid().value;
+    } else {
+        F    = remove_initial_star();
+        n    = to_signed(read_elt_id(T));
+        from = Istring(fetch_name_opt());
+    }
+    from     = normalise_for_bib(from);
+    cur_tok  = T;
+    auto key = Istring(fetch_name0_nopar());
+    if (user) insert_every_bib();
+    if (n == 0) return;
+    Xid           N  = Xid(n);
+    Bibliography &B  = the_bibliography;
+    size_t        nn = 0;
+    if (F)
+        nn = B.find_citation_star(from, key);
+    else
+        nn = *B.find_citation_item(from, key, true);
+    CitationItem &CI = B.citation_table[nn];
+    if (CI.is_solved()) {
+        err_buf << bf_reset << "Bibliography entry already defined " << key.name;
+        the_parser.signal_error(the_parser.err_tok, "bad solve");
+        return;
+    }
+    AttList &AL    = N.get_att();
+    auto     my_id = AL.lookup(the_names["id"]);
+    if (my_id) {
+        if (CI.id.empty())
+            CI.id = AL.get_val(*my_id);
+        else {
+            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.name;
+            the_parser.signal_error(the_parser.err_tok, "bad solve");
+            return;
+        }
+    } else
+        AL.push_back(the_names["id"], CI.get_id());
+    CI.solved = N;
+}
+
+// \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}
+// note that Tralics generates an empty von-part
+void Parser::T_bpers() {
+    int e              = main_ns::nb_errs;
+    unexpected_seen_hi = false;
+    Istring A          = nT_optarg_nopar();
+    Istring a          = nT_arg_nopar();
+    Istring b          = nT_arg_nopar();
+    Istring c          = nT_arg_nopar();
+    Istring d          = nT_arg_nopar();
+    if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    need_bib_mode();
+    the_stack.add_newid0("bpers");
+    if (!(A.null() || A.empty())) the_stack.add_att_to_last(the_names["full_first"], A);
+    if (!d.empty()) the_stack.add_att_to_last(the_names["junior"], d);
+    the_stack.add_att_to_last(the_names["nom"], c);
+    if (!b.empty()) the_stack.add_att_to_last(the_names["particule"], b);
+    the_stack.add_att_to_last(the_names["prenom"], a);
+}
+
+// case \bibitem
+void Parser::T_bibitem() {
+    flush_buffer();
+    leave_h_mode();
+    leave_v_mode();
+    solve_cite(true);
+    skip_initial_space_and_back_input();
+}
+
+// this is the same as \bibitem[]{foo}{}
+void Parser::T_empty_bibitem() {
+    flush_buffer();
+    std::string w;
+    std::string a;
+    std::string b  = sT_arg_nopar();
+    Istring     id = the_bibtex->exec_bibitem(w, b);
+    if (id.empty()) return;
+    leave_v_mode();
+    the_stack.push1(the_names["citation"]);
+    the_stack.implement_cit(b, id, a, w);
+    the_stack.pop(the_names["citation"]);
+}
+
+// Translation of \citation{key}{userid}{id}{from}{type}[alpha-key]
+void Parser::T_citation() {
+    flush_buffer();
+    std::string a  = sT_arg_nopar();
+    std::string b1 = special_next_arg();
+    std::string b2 = sT_arg_nopar();
+    std::string c  = sT_arg_nopar();
+    Istring     d  = nT_arg_nopar();
+    the_stack.add_nl();
+    the_stack.push1(the_names["citation"]);
+    the_stack.add_att_to_last(the_names["type"], d);
+    the_stack.implement_cit(b1, Istring(b2), a, c);
+    the_stack.set_bib_mode();
+    ignore_optarg();
+    insert_every_bib();
+}
+
+void Parser::insert_every_bib() {
+    TokenList everybib = toks_registers[everybibitem_code].val;
+    if (everybib.empty()) return;
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "{<everybibitem> " << everybib << "}\n";
+    }
+    back_input(everybib);
 }

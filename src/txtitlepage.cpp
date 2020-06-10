@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txtitlepage.h"
+#include "tralics/Bibliography.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
@@ -443,8 +444,8 @@ void Parser::T_titlepage_finish(size_t v) {
         if (main_ns::nb_errs > 0) finished = true;
     }
     if (finished && also_bib) {
-        tralics_ns::bibtex_set_nocite();
-        tralics_ns::bibtex_insert_jobname();
+        the_bibliography.set_nocite();
+        if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(tralics_ns::get_short_jobname()); }
     }
     if (finished) {
         log_and_tty << "Translation terminated after title page\n";
