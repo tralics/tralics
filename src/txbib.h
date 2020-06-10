@@ -121,7 +121,6 @@ public:
     std::string long_key;
     std::string short_key;
     std::string name_key;
-    std::string cnrs_key;
 };
 
 class Bchar {
@@ -140,7 +139,7 @@ public:
         table = T;
     }
     [[nodiscard]] auto empty() const -> bool { return first >= last; }
-    void               print_first_name(Buffer &B1, Buffer &B2, Buffer &B3);
+    void               print_first_name(Buffer &B1, Buffer &B2);
     void               make_key(bool sw, Buffer &B);
     void               remove_junk();
     [[nodiscard]] auto find_a_lower() const -> size_t;

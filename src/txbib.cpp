@@ -2127,7 +2127,6 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     biblio_buf2.clear();
     biblio_buf3.clear();
     biblio_buf4.clear();
-    biblio_buf5.clear();
     name_buffer.normalise_for_bibtex(src.c_str());
     auto         n     = name_buffer.size() + 1;
     auto *       table = new bchar_type[n];
@@ -2139,7 +2138,6 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     X.long_key  = biblio_buf2;
     X.name_key  = biblio_buf4;
     X.short_key = biblio_buf3;
-    X.cnrs_key  = biblio_buf5;
 }
 
 // This replaces \c{c} by \char'347 in order to avoid some errors.
@@ -2462,20 +2460,18 @@ void Buffer::no_double_dot() {
     if (ends_with("..") || ends_with(".}.")) remove_last();
 }
 
-void Bchar::print_first_name(Buffer &B1, Buffer &B2, Buffer &B3) {
+void Bchar::print_first_name(Buffer &B1, Buffer &B2) {
     bool print_next = true;
     while (first < last) {
         bchar_type c = table[first];
         if (c == bct_space || c == bct_tilde || c == bct_dash || c == bct_dot) {
             auto i = special_print(B1, false);
             special_print(B2, false);
-            special_print(B3, false);
             print_next = true;
             first      = i;
         } else if (print_next) {
             auto i = special_print(B1, true);
             special_print(B2, true);
-            special_print(B3, true);
             print_next = false;
             first      = i;
         } else

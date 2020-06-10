@@ -204,4 +204,4 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-inline Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, err_buf, name_buffer;
+inline Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, err_buf, name_buffer;

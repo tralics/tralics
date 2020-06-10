@@ -71,19 +71,16 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     }
     bool handle_key = want_handle_key(serial, iln);
     bool is_other   = is_this_other();
-    if (!ifn) biblio_buf5.push_back("; ");
     if (is_other) {
         if (iln && !ifn) {
             biblio_buf1.push_back("\\cititem{etal}{}");
             biblio_buf2.push_back("etal");
             biblio_buf4.push_back("etal");
-            biblio_buf5.push_back("etal");
             if (handle_key) biblio_buf3.push_back("+");
         } else {
             biblio_buf1.push_back("\\bpers{}{}{others}{}");
             biblio_buf2.push_back("others");
             biblio_buf4.push_back("others");
-            biblio_buf5.push_back("others");
             if (handle_key) biblio_buf3.push_back(iln ? "oth" : "o");
         }
         return;
@@ -93,8 +90,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     biblio_buf1 << first_name;
     biblio_buf1.push_back("]{");
     biblio_buf2.push_back(" ");
-    biblio_buf5 << last_name << " " << jr_name << " ";
-    first_name.print_first_name(biblio_buf1, biblio_buf2, biblio_buf5);
+    first_name.print_first_name(biblio_buf1, biblio_buf2);
     biblio_buf1 << "}{}{" << last_name << "}{" << jr_name << "}";
     biblio_buf2 << " " << last_name << " " << jr_name << " ";
     biblio_buf4 << last_name << " " << jr_name << " ";
