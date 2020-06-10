@@ -22,12 +22,6 @@ namespace tralics_ns {
 
 } // namespace tralics_ns
 
-class Indexer;
-namespace trees_ns {
-    auto xless(Indexer *A, Indexer *B) -> bool;
-} // namespace trees_ns
-
-//
 class Indexer {
 public:
     std::string        key; // sort key
@@ -60,7 +54,9 @@ public:
 
     void set_position(Xml *x) { position = x; }
     auto get_data() -> std::vector<Indexer *> & { return value; }
-    void do_sort() { std::sort(value.begin(), value.end(), trees_ns::xless); }
+    void do_sort() {
+        std::sort(value.begin(), value.end(), [](auto A, auto B) { return A->key < B->key; });
+    }
 };
 
 struct AllIndex : public std::vector<OneIndex *> {

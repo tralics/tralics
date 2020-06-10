@@ -96,8 +96,6 @@ void trees_ns::normalise_space(TokenList &L) {
     L.swap(res);
 }
 
-auto trees_ns::xless(Indexer *A, Indexer *B) -> bool { return A->key < B->key; }
-
 auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t {
     static const Token escape_t(other_t_offset, '"');
     static const Token actual_t(other_t_offset, '@');

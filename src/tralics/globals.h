@@ -18,7 +18,8 @@ extern std::string everyjob_string; //
 inline std::string tralics_version{"2.15.4"};
 inline std::string cur_entry_name; // name of entry under construction.
 
-extern std::vector<LinePtr> file_pool; // pool managed by filecontents
+extern std::vector<LinePtr>     file_pool; // pool managed by filecontents
+inline std::vector<std::string> omitcite_list;
 
 extern size_t leftquote_val, rightquote_val;
 
