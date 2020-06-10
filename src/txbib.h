@@ -313,7 +313,6 @@ private:
 
 public:
     friend class BibEntry;
-    friend class BblAndTty;
 
     std::string name;
     LinePtr     lines;
@@ -329,45 +328,5 @@ public:
     void               finish() { too_late = true; } // \todo should this be called ~Bbl ?
     void               open() {
         if (!file.is_open()) file = tralics_ns::open_file(name, true);
-    }
-};
-
-class BblAndTty {
-public:
-    Bbl *  X{};
-    Buffer lb;
-    void   init() { lb.clear(); }
-    void   out_bar() const {
-        std::cout << "|";
-        X->file << "|";
-    }
-    void out_buffer(Buffer &B) const {
-        std::cout << B;
-        X->file << B;
-    }
-    void out_field(Buffer &B) const {
-        out_buffer(B);
-        out_bar();
-    }
-    void out_field(String B) const {
-        std::cout << B;
-        X->file << B;
-        out_bar();
-    }
-    void out_nl() const {
-        std::cout << "\n";
-        X->file << "\n";
-    }
-    void out_string(const std::string &s) const {
-        std::cout << s;
-        X->file << s;
-    }
-    void out_string(int s) const {
-        std::cout << s;
-        X->file << s;
-    }
-    void out_string(char s) const {
-        std::cout << s;
-        X->file << s;
     }
 };

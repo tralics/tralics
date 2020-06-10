@@ -30,7 +30,6 @@ namespace {
     int                      cur_entry_line; // position of entry in source file
     std::vector<std::string> omitcite_list;
 
-    BblAndTty    BAT;
     Bibliography the_bibliography;
     int          similar_entries;
     bool         old_ra      = false;
