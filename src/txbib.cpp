@@ -30,9 +30,8 @@ namespace {
     int                      cur_entry_line; // position of entry in source file
     std::vector<std::string> omitcite_list;
 
-    Bibliography the_bibliography;
-    int          similar_entries;
-    bool         start_comma = true; // should we scan for an initial comma ?
+    int  similar_entries;
+    bool start_comma = true; // should we scan for an initial comma ?
 
     // This creates a <ref target='bidN'/> element. This is the REF that needs
     // to be solved later. In the case of \footcite[p.25]{Knuth},
@@ -40,7 +39,7 @@ namespace {
     // considered elsewhere.
     auto make_cit_ref(const Istring &type, const Istring &ref) -> Xml {
         auto    n  = *the_bibliography.find_citation_item(type, ref, true);
-        Istring id = the_bibliography.citation_table[n].get_bid();
+        Istring id = the_bibliography.citation_table[n].get_id();
         Xml     res(the_names["ref"], nullptr);
         res.id.add_attribute(the_names["target"], id);
         return res;
@@ -83,12 +82,6 @@ std::array<std::string, 30> bib_xml_name{
 
 // This creates a unique ID, named bid1, bid2, etc.
 auto Bibliography::unique_bid() -> Istring { return Istring(fmt::format("bid{}", ++last_bid)); }
-
-// This returns a bid. It may create one.
-auto CitationItem::get_bid() -> Istring {
-    if (bid.empty()) bid = the_bibliography.unique_bid();
-    return bid;
-}
 
 // \cite[year][]{foo}is the same as \cite{foo}
 // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
@@ -301,26 +294,6 @@ void Parser::T_biblio() {
     }
 }
 
-// This prints an unsolved reference in a buffer, we will put it in
-// the aux file.
-void CitationItem::dump(Buffer &b) const {
-    if (is_solved()) return;
-    b << "\\citation{" << key.name << "}\n";
-}
-
-// This prints an unsolved reference for use by Tralics.
-void CitationItem::dump_bibtex() {
-    if (is_solved()) return;
-    CitationKey ref(from.name, key.name);
-    BibEntry *  X = the_bibtex->find_entry(ref);
-    if (X != nullptr) {
-        err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
-        the_parser.signal_error(the_parser.err_tok, "bib");
-        return;
-    }
-    the_bibtex->make_entry(ref, get_bid());
-}
-
 // This creates the full aux file, for use with bibtex.
 void Bibliography::dump(Buffer &b) {
     if (seen_nocite()) b << "\\citation{*}\n";
@@ -504,14 +477,6 @@ void Parser::T_start_the_biblio() {
     the_stack.set_v_mode();
     the_stack.push(the_names["thebibliography"], new Xml(name, nullptr));
 }
-
-// Returns true if this is the same object.
-// returns false for \cite{Knuth} and \footcite{Knuth}
-auto CitationItem::match(const Istring &A, const Istring &B) -> bool { return key == A && from == B; }
-
-// Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the
-// from field, but only if the entry is unsolved.
-auto CitationItem::match_star(const Istring &A) -> bool { return key == A && !is_solved(); }
 
 // This finds a citation in the table. In the case \footcite{Kunth},
 // the first two arguments are the Istrings associated to foot and Knuth.
@@ -907,16 +872,16 @@ void Parser::solve_cite(bool user) {
     AttList &AL    = N.get_att();
     auto     my_id = AL.lookup(the_names["id"]);
     if (my_id) {
-        if (CI.has_empty_id())
-            CI.set_id(AL.get_val(*my_id));
+        if (CI.id.empty())
+            CI.id = AL.get_val(*my_id);
         else {
             err_buf << bf_reset << "Cannot solve (element has an Id) " << key.name;
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }
     } else
-        AL.push_back(the_names["id"], CI.get_bid());
-    CI.set_solved(N);
+        AL.push_back(the_names["id"], CI.get_id());
+    CI.solved = N;
 }
 
 // this is the same as \bibitem[]{foo}{}

@@ -415,7 +415,7 @@ void Parser::T_xmlelt(subtypes w) {
     std::string s   = sT_arg_nopar();
     Xml *       res = new Xml(Istring(s), nullptr);
     if (w != 0U) {
-        if (w == two_code) res->set_id(-1); // XML comment
+        if (w == two_code) res->id = -1; // XML comment
         flush_buffer();
         the_stack.add_last(res);
         return;

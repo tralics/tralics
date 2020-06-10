@@ -76,7 +76,6 @@ public:
     void remove_last_space();
     void remove_par_bal_if_ok();
     void rename(Istring old_name, Istring new_name);
-    void set_id(long i) { id = i; }
     void subst_env0(Istring match, Xml *vl);
     void swap_x(Xml *x);
     void to_buffer(Buffer &b) const;

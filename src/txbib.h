@@ -9,28 +9,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/CitationItem.h"
 #include "tralics/CitationKey.h"
 #include "tralics/Xml.h"
 #include "txinline.h"
-
-class CitationItem {
-    Istring key;
-    Istring from;
-    Istring bid;
-    Xid     solved;
-
-public:
-    auto               get_bid() -> Istring;
-    void               set_id(Istring x) { bid = std::move(x); }
-    auto               has_empty_id() -> bool { return bid.empty(); }
-    void               set_solved(Xid N) { solved = N; }
-    void               dump(Buffer &b) const;
-    void               dump_bibtex();
-    auto               match(const Istring &A, const Istring &B) -> bool;
-    auto               match_star(const Istring &A) -> bool;
-    [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
-    CitationItem(Istring A, Istring B) : key(std::move(A)), from(std::move(B)), bid("") {}
-};
 
 class Bibliography {
 public:
@@ -49,7 +31,7 @@ public:
     void               dump(Buffer &b);
     void               dump_bibtex();
     void               dump_data(Buffer &b);
-    auto               get_bid(size_t n) { return citation_table[n].get_bid(); }
+    auto               get_bid(size_t n) { return citation_table[n].get_id(); }
     auto               find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t>;
     auto               find_citation_star(const Istring &from, const Istring &key) -> size_t;
     [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
@@ -67,6 +49,8 @@ public:
     void stats();
     auto unique_bid() -> Istring;
 };
+
+inline Bibliography the_bibliography;
 
 // A bibtex macro, like @string(foo="bar")
 class BibMacro {
