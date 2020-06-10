@@ -3,7 +3,10 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
-auto NameMapper::operator[](const std::string &name) const -> Istring { return dict.contains(name) ? dict.at(name) : Istring(name); }
+auto NameMapper::operator[](const std::string &name) const -> Istring {
+    if (auto i = dict.find(name); i != dict.end()) return i->second;
+    return Istring(name);
+}
 
 void NameMapper::set(const std::string &name, const std::optional<std::string> &value) {
     dict[name] = value ? Istring(*value) : Istring();

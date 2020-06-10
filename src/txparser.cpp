@@ -19,7 +19,7 @@ namespace {
         SpecialHash(const std::string &str) {
             for (const auto &s : split_commas(str)) {
                 auto [a, b] = split_assign(s);
-                if (!contains(a)) emplace(a, b);
+                if (find(a) == end()) emplace(a, b);
             }
         }
 
