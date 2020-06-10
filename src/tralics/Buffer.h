@@ -103,7 +103,6 @@ public:
     auto next_macro_spec() -> bool;
     auto next_utf8_char() -> codepoint;
     void no_newline();
-    void no_double_dot();
     void normalise_for_bibtex(String s);
     void out_four_hats(codepoint ch);
     void out_log(codepoint ch, output_encoding_type T);

@@ -1,5 +1,6 @@
 #pragma once
 #include "../txbib.h"
+#include "Bchar.h"
 
 class NameSplitter {
     bchar_type *table;
