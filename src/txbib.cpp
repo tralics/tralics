@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "txbib.h"
+#include "tralics/NameSplitter.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -22,7 +23,7 @@ namespace {
 
     std::array<String, 3>    my_constant_table;
     Bbl                      bbl;
-    Buffer                   biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, biblio_buf5, name_buffer, field_buf;
+    Buffer                   field_buf;
     Buffer                   CB;
     bool                     distinguish_refer = false;
     std::string              cur_entry_name; // name of entry under construction.
@@ -1438,14 +1439,14 @@ void Bibtex::parse_one_field(BibEntry *X) {
 // This is non trivial, because we have a fixed-sized array and a varying size
 // return true if the field is not already filled.
 auto BibEntry::store_field(field_pos where) -> bool {
-    if (int(where) < fp_unknown) {
+    if (where < fp_unknown) {
         if (all_fields[where].empty()) {
             all_fields[where] = field_buf.special_convert(true);
             return true;
         }
         return false;
     }
-    int k = int(where) - fp_unknown - 1;
+    auto k = size_t(where - fp_unknown - 1);
     if (user_fields[k].empty()) {
         user_fields[k] = field_buf.special_convert(true);
         return true;
@@ -1651,7 +1652,7 @@ void BibEntry::numeric_label(long i) {
 
 BibEntry::BibEntry() {
     std::vector<Istring> &Bib = the_main->bibtex_fields;
-    if (auto n = Bib.size(); n != 0) { user_fields = new std::string[n]; }
+    if (auto n = Bib.size(); n != 0) { user_fields.resize(n); }
 }
 
 // -----------------------------------------------------------------------
@@ -2273,25 +2274,6 @@ void Buffer::fill_table(bchar_type *table) {
     }
 }
 
-// This handles all the names in the list.
-void NameSplitter::handle_the_names() {
-    bool   is_first_name = true;
-    int    serial        = 1;
-    size_t pos           = 1; // there is a space at position 0
-    main_data.init(table);
-    for (;;) {
-        name_buffer.ptrs.b = pos;
-        bool is_last_name  = name_buffer.find_and(table);
-        auto k             = name_buffer.ptrs.b;
-        main_data.init(pos, k);
-        handle_one_name(is_first_name, is_last_name, serial);
-        if (is_last_name) return;
-        is_first_name = false;
-        serial++;
-        pos = k + 3;
-    }
-}
-
 auto Buffer::find_and(const bchar_type *table) -> bool {
     for (;;) {
         char c = head();
@@ -2319,86 +2301,6 @@ auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
     for (auto k = i; k < j; k++)
         if (Y.table[k] != bct_bad) X.push_back(name_buffer[k]);
     return X;
-}
-
-// Very complicated function. Assume that the names are Alpha,
-// Bravo, Charlie, Delta, usw. The key will be
-// Alp, AB, ABC, ABCD, ABC+, if there are 1,2,3,4,... authors.
-// The name `others' is handled specially if last, not first.
-
-void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
-    first_name.init(table);
-    last_name.init(table);
-    jr_name.init(table);
-    main_data.remove_junk();
-    auto   F  = main_data.first;
-    auto   L  = main_data.last;
-    size_t fc = 0, lc = 0, hm = 0;
-    main_data.find_a_comma(fc, lc, hm);
-    if (hm >= 2) {
-        last_name.init(F, fc);
-        jr_name.init(fc + 1, lc);
-        first_name.init(lc + 1, L);
-        if (hm > 2) {
-            the_bibtex->err_in_entry("");
-            log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer << ".\n";
-        }
-    } else if (hm == 1) {
-        first_name.init(fc + 1, L);
-        last_name.init(F, fc);
-    } else { // no comma
-        auto k = main_data.find_a_lower();
-        if (k == L) {
-            k = main_data.find_a_space();
-            if (k == L) {
-                main_data.invent_spaces();
-                k = main_data.find_a_space();
-            }
-        }
-        if (k == L)
-            last_name.init(F, L);
-        else {
-            first_name.init(F, k);
-            last_name.init(k + 1, L);
-        }
-    }
-    first_name.remove_junk();
-    last_name.remove_junk();
-    jr_name.remove_junk();
-    if (first_name.empty() && last_name.empty() && jr_name.empty()) {
-        the_bibtex->err_in_entry("empty name in\n");
-        log_and_tty << name_buffer << ".\n";
-        return;
-    }
-    bool handle_key = want_handle_key(serial, iln);
-    bool is_other   = is_this_other();
-    if (!ifn) biblio_buf5.push_back("; ");
-    if (is_other) {
-        if (iln && !ifn) {
-            biblio_buf1.push_back("\\cititem{etal}{}");
-            biblio_buf2.push_back("etal");
-            biblio_buf4.push_back("etal");
-            biblio_buf5.push_back("etal");
-            if (handle_key) biblio_buf3.push_back("+");
-        } else {
-            biblio_buf1.push_back("\\bpers{}{}{others}{}");
-            biblio_buf2.push_back("others");
-            biblio_buf4.push_back("others");
-            biblio_buf5.push_back("others");
-            if (handle_key) biblio_buf3.push_back(iln ? "oth" : "o");
-        }
-        return;
-    }
-    if (handle_key) last_name.make_key(!(ifn && iln), biblio_buf3);
-    biblio_buf1.push_back("\\bpers[");
-    biblio_buf1 << first_name;
-    biblio_buf1.push_back("]{");
-    biblio_buf2.push_back(" ");
-    biblio_buf5 << last_name << " " << jr_name << " ";
-    first_name.print_first_name(biblio_buf1, biblio_buf2, biblio_buf5);
-    biblio_buf1 << "}{}{" << last_name << "}{" << jr_name << "}";
-    biblio_buf2 << " " << last_name << " " << jr_name << " ";
-    biblio_buf4 << last_name << " " << jr_name << " ";
 }
 
 void Bchar::find_a_comma(size_t &first_c, size_t &second_c, size_t &howmany) const {
@@ -2470,22 +2372,6 @@ void Bchar::remove_junk() {
         else
             break;
     }
-}
-
-auto NameSplitter::want_handle_key(int s, bool last) -> bool {
-    if (s < 4) return true;
-    if (s > 4) return false;
-    if (last) return true;
-    biblio_buf3.push_back("+");
-    return false;
-}
-
-auto NameSplitter::is_this_other() -> bool {
-    if (!first_name.empty()) return false;
-    if (!jr_name.empty()) return false;
-    auto a = last_name.first;
-    auto b = last_name.last;
-    return b - a == 6 && name_buffer.substr(a, 6) == "others";
 }
 
 // We use the fact that first cannot be zero

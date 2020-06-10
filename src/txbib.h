@@ -169,25 +169,7 @@ private:
     auto               print(Buffer &X) const -> size_t;
 };
 
-// In the case of a name like  `Carrasco, J.', num_tokens will be 2,
-// num_commas will be 1. von_start, etc are token numbers.
-// Here first_start is comma1, and is one (it's the second token).
-class NameSplitter {
-    bchar_type *table;
-    Bchar       first_name{};
-    Bchar       last_name{};
-    Bchar       jr_name{};
-    Bchar       main_data{};
-
-public:
-    NameSplitter(bchar_type *T) : table(T) {}
-
-    void handle_the_names();
-    void handle_one_name(bool ifn, bool iln, int serial);
-    auto is_this_other() -> bool;
-
-    static auto want_handle_key(int s, bool last) -> bool;
-};
+auto operator<<(Buffer &X, const Bchar &Y) -> Buffer &;
 
 // A bibliographic entry \todo derive from CitationKey?
 class BibEntry {
@@ -202,16 +184,16 @@ class BibEntry {
     BibtexName                          author_data;            // already processed author data
     BibtexName                          editor_data;            // already processed editor data
 
-    int          extra_num{0};     // extra char added to the label
-    int          cur_year{0};      // current year, if year field can be parsed
-    std::string  lab1, lab2, lab3; // two temporaries.
-    size_t       id{0};
-    bool         explicit_cit{false};
-    c_primaire   main_c_type{};
-    c_secondaire second_c_type{};
-    int          first_line{-1};
-    std::string *user_fields{nullptr};
-    size_t       is_extension{};
+    int                      extra_num{0};     // extra char added to the label
+    int                      cur_year{0};      // current year, if year field can be parsed
+    std::string              lab1, lab2, lab3; // two temporaries.
+    size_t                   id{0};
+    bool                     explicit_cit{false};
+    c_primaire               main_c_type{};
+    c_secondaire             second_c_type{};
+    int                      first_line{-1};
+    std::vector<std::string> user_fields;
+    size_t                   is_extension{};
 
 public:
     std::string label, sort_label, aux_label; // cite label and sort label
