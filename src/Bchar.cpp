@@ -46,7 +46,7 @@ void Bchar::invent_spaces() const {
 auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
-        the_bibtex->err_in_entry("misplaced comma in bibtex name\n");
+        Bibtex::err_in_entry("misplaced comma in bibtex name\n");
         log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer << ".\n";
     }
     if (b == bct_space || b == bct_tilde || b == bct_dash || b == bct_comma) return true;

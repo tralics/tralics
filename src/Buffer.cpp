@@ -1150,12 +1150,12 @@ void Buffer::fill_table(bchar_type *table) {
             continue;
         }
         if (c == '&') {
-            the_bibtex->err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
+            Bibtex::err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
         if (c == '}') {
-            the_bibtex->err_in_name("too many closing braces", to_signed(i));
+            Bibtex::err_in_name("too many closing braces", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
@@ -1167,7 +1167,7 @@ void Buffer::fill_table(bchar_type *table) {
             c = head();
             if (!is_accent_char(c)) {
                 table[i] = bct_bad;
-                the_bibtex->err_in_name("commands allowed only within braces", to_signed(i));
+                Bibtex::err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
             if (is_letter(at(ptrs.b + 1))) {
@@ -1181,7 +1181,7 @@ void Buffer::fill_table(bchar_type *table) {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptrs.b++;
-                the_bibtex->err_in_name("bad accent construct", to_signed(i));
+                Bibtex::err_in_name("bad accent construct", to_signed(i));
                 continue;
             }
             at(ptrs.b + 1) = c;
@@ -1195,7 +1195,7 @@ void Buffer::fill_table(bchar_type *table) {
         table[i] = bct_brace;
         for (;;) {
             if (head() == 0) {
-                the_bibtex->err_in_name("this cannot happen!", to_signed(j));
+                Bibtex::err_in_name("this cannot happen!", to_signed(j));
                 resize(j);
                 table[j] = bct_end;
                 return;

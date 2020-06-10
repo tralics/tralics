@@ -14,7 +14,7 @@ namespace {
 
     class Berror {};
 
-    static const std::array<String, 9> scan_msgs{
+    const std::array<String, 9> scan_msgs{
         "bad syntax for a field type",
         "bad syntax for an entry type",
         "bad syntax for a string name",
@@ -53,32 +53,31 @@ auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
 void Bibtex::read1(const std::string &cur) {
-    Buffer &Tbuf = biblio_buf4;
-    Tbuf.clear();
-    Tbuf.push_back(cur);
-    auto n = Tbuf.size();
-    if (read0(Tbuf, from_year)) return;
-    if (Tbuf.ends_with("+foot.bib")) {
-        Tbuf.resize(n - 5);
-        if (read0(Tbuf, from_foot)) return;
+    biblio_buf4.clear();
+    biblio_buf4.push_back(cur);
+    auto n = biblio_buf4.size();
+    if (read0(biblio_buf4, from_year)) return;
+    if (biblio_buf4.ends_with("+foot.bib")) {
+        biblio_buf4.resize(n - 5);
+        if (read0(biblio_buf4, from_foot)) return;
     }
-    if (Tbuf.ends_with("+year.bib")) {
-        Tbuf.resize(n - 5);
-        if (read0(Tbuf, from_year)) return;
+    if (biblio_buf4.ends_with("+year.bib")) {
+        biblio_buf4.resize(n - 5);
+        if (read0(biblio_buf4, from_year)) return;
     }
-    if (Tbuf.ends_with("+all.bib")) {
-        Tbuf.resize(n - 4);
-        if (read0(Tbuf, from_any)) return;
+    if (biblio_buf4.ends_with("+all.bib")) {
+        biblio_buf4.resize(n - 4);
+        if (read0(biblio_buf4, from_any)) return;
     }
-    if (Tbuf.ends_with("+refer.bib")) {
-        Tbuf.resize(n - 6);
-        if (read0(Tbuf, from_refer)) return;
+    if (biblio_buf4.ends_with("+refer.bib")) {
+        biblio_buf4.resize(n - 6);
+        if (read0(biblio_buf4, from_refer)) return;
     }
-    if (Tbuf.ends_with(".bib")) {
-        Tbuf.resize(n - 4);
-        if (read0(Tbuf, from_year)) return;
+    if (biblio_buf4.ends_with(".bib")) {
+        biblio_buf4.resize(n - 4);
+        if (read0(biblio_buf4, from_year)) return;
     }
-    spdlog::warn("Bibtex Info: no biblio file {}", Tbuf);
+    spdlog::warn("Bibtex Info: no biblio file {}", biblio_buf4);
 }
 
 // Handles one bib file for the raweb. Returns true if the file exists.

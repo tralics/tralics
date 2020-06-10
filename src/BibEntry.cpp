@@ -175,7 +175,7 @@ void BibEntry::work(long serial) {
     cur_entry_line = -1;
     cur_entry_name = cite_key.full_key;
     if (type_int == type_unknown) {
-        the_bibtex->err_in_entry("undefined reference.\n");
+        Bibtex::err_in_entry("undefined reference.\n");
         if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
         return;
     }

@@ -1,4 +1,6 @@
 #pragma once
+#include <utility>
+
 #include "Buffer.h"
 
 // A bibtex macro, like @string(foo="bar")
@@ -8,7 +10,7 @@ struct BibMacro {
 
     BibMacro() = default;
     BibMacro(size_t hash, const Buffer &s1) : h(hash), name(s1) {}
-    BibMacro(size_t hash, const std::string &s1, const std::string s2) : h(hash), name(s1), value(s2) {}
+    BibMacro(size_t hash, std::string s1, std::string s2) : h(hash), name(std::move(s1)), value(std::move(s2)) {}
 
-    auto is_same(size_t hash, const std::string &s) -> bool { return hash == h && name == s; } // \todo operator==
+    [[nodiscard]] auto is_same(size_t hash, const std::string &s) const -> bool { return hash == h && name == s; } // \todo operator==
 };

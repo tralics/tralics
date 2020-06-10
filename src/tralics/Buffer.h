@@ -174,7 +174,6 @@ public:
     void push_back(codepoint c);
     void push_back(char c);
     void push_back(uchar c);
-    void push_back(const Buffer &b) { push_back(b.data()); }
     void push_back(const std::string &s);
     void push_back(const Istring &X);
     void push_back(ScaledInt v, glue_spec unit);

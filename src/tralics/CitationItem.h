@@ -12,9 +12,9 @@ struct CitationItem {
     void dump(Buffer &b) const;
 
     [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
+    [[nodiscard]] auto match(const Istring &A, const Istring &B) const -> bool;
+    [[nodiscard]] auto match_star(const Istring &A) const -> bool;
 
     auto get_id() -> Istring;
     void dump_bibtex();
-    auto match(const Istring &A, const Istring &B) -> bool;
-    auto match_star(const Istring &A) -> bool;
 };

@@ -40,7 +40,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
         jr_name.init(fc + 1, lc);
         first_name.init(lc + 1, L);
         if (hm > 2) {
-            the_bibtex->err_in_entry("");
+            Bibtex::err_in_entry("");
             log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer << ".\n";
         }
     } else if (hm == 1) {
@@ -66,7 +66,7 @@ void NameSplitter::handle_one_name(bool ifn, bool iln, int serial) {
     last_name.remove_junk();
     jr_name.remove_junk();
     if (first_name.empty() && last_name.empty() && jr_name.empty()) {
-        the_bibtex->err_in_entry("empty name in\n");
+        Bibtex::err_in_entry("empty name in\n");
         log_and_tty << name_buffer << ".\n";
         return;
     }
