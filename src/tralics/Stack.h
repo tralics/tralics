@@ -17,16 +17,13 @@ struct StackSlot {
 
     StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(std::move(c)), md(M), uid(std::move(u)) {}
 
-    void dump();
-    void fulldump(size_t i);
+    void dump() const;
+    void fulldump(size_t i) const;
 };
 
-class Stack {
-    std::vector<StackSlot> Table;
-
-private:
-    long                   last_xid; // id of the last
-    long                   xid_boot;
+class Stack : public std::vector<StackSlot> {
+    long                   last_xid{-1}; // id of the last
+    long                   xid_boot{0};
     Istring                cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes
     std::vector<Xml *>     enames;     // the main table of element names
@@ -72,7 +69,7 @@ public:
     auto get_top_id() -> Xid { return top_stack()->id; }
     void delete_table_atts();
     void dump();
-    auto document_element() -> Xml * { return Table[0].obj; }
+    auto document_element() -> Xml * { return at(0).obj; }
     auto elt_from_id(size_t n) { return enames[n]; }
     void end_module();
     auto fetch_by_id(size_t n) -> Xml *;
@@ -90,7 +87,7 @@ public:
     void init_all(const std::string &a);
     void ipush(Istring fr, Xml *V);
     auto is_float() -> bool;
-    auto is_omit_cell() -> bool { return Table.back().omit_cell; }
+    auto is_omit_cell() -> bool { return back().omit_cell; }
     void mark_omit_cell();
     auto new_array_info(Xid i) -> ArrayInfo &;
     auto next_xid(Xml *elt) -> Xid;
@@ -119,7 +116,7 @@ public:
     void T_ampersand();
     void T_hline();
     auto temporary() -> Xml *;
-    auto top_stack() -> Xml * { return Table.back().obj; }
+    auto top_stack() -> Xml * { return back().obj; }
     void trace_pop(bool sw);
     void trace_stack();
     void unbox(Xml *x);

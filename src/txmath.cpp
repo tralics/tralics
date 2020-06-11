@@ -2697,7 +2697,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, const std::string &pos, 
                                 int denalign, int style, size_t open, size_t close) -> Xml * {
     Istring Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
-    auto R = the_main->the_stack->xml2_space(std::move(s), Pos, a, b);
+    auto R = Stack::xml2_space(std::move(s), Pos, a, b);
     if (!sz.null()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(the_names["numalign"], the_names["left"]);

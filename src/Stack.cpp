@@ -21,14 +21,14 @@ namespace {
 } // namespace
 
 // Dumps a stack slot
-void StackSlot::fulldump(size_t i) {
+void StackSlot::fulldump(size_t i) const {
     the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.name : "()") << ", mode"
             << mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
 }
 
 // This prints a simplified version of the stack.
-void StackSlot::dump() { the_log << " " << (!frame.spec_empty() ? frame.name : "()") << mode_to_string(md); }
+void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? frame.name : "()") << mode_to_string(md); }
 
 void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
     add_att_to_last(the_names["userid"], Istring(b1));
@@ -87,10 +87,6 @@ auto Stack::next_xid(Xml *elt) -> Xid {
 }
 
 Stack::Stack() {
-    attributes.reserve(2048);
-    enames.reserve(2048);
-    last_xid = -1;
-    xid_boot = 0;
     next_xid(nullptr); // 0
     next_xid(nullptr); // 1 <document>
     next_xid(nullptr); // 2 dummy, see Stack::temporary
@@ -143,8 +139,8 @@ void Stack::add_att_to_last(const Istring &A, const Istring &B, bool force) { ge
 void Stack::add_att_to_cur(const Istring &A, const Istring &B, bool force) { cur_xid().get_att().push_back(A, B, force); }
 
 void Stack::hack_for_hanl() {
-    auto ptr = Table.size() - 1;
-    if (ptr > 0) { Table[ptr].obj = Table[ptr - 1].obj; }
+    auto ptr = size() - 1;
+    if (ptr > 0) { at(ptr).obj = at(ptr - 1).obj; }
     // else ?
 }
 
@@ -173,9 +169,9 @@ void Stack::add_nl() { top_stack()->add_nl(); }
 // Returns the slot of the first non-empty frame
 // It is assumed that the first frame is "document", hence never empty.
 auto Stack::first_non_empty() const -> const StackSlot & {
-    auto k = Table.size() - 1;
-    while (Table[k].frame.spec_empty()) k--;
-    return Table[k];
+    auto k = size() - 1;
+    while (at(k).frame.spec_empty()) k--;
+    return at(k);
 }
 
 // Returns the name of the first non-empty frame.
@@ -209,28 +205,28 @@ auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() 
 // ignores a font change
 auto Stack::is_frame2(const std::string &S) const -> bool {
     Istring s = the_names[S];
-    auto    k = Table.size() - 1;
-    while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == s) return true;
-    if (Table[k].frame == the_names["fonts"]) {
+    auto    k = size() - 1;
+    while (at(k).frame.spec_empty()) k--;
+    if (at(k).frame == s) return true;
+    if (at(k).frame == the_names["fonts"]) {
         if (k < 1) return false;
         k--;
     }
-    if (Table[k].frame == s) return true;
-    if (Table[k].frame != the_names["argument"]) return false;
+    if (at(k).frame == s) return true;
+    if (at(k).frame != the_names["argument"]) return false;
     if (k < 1) return false;
     k--;
-    while (Table[k].frame.spec_empty()) k--;
-    return Table[k].frame == s;
+    while (at(k).frame.spec_empty()) k--;
+    return at(k).frame == s;
 }
 
 // Returns true inside a float (table or figure)
 auto Stack::is_float() -> bool {
-    auto k = Table.size();
+    auto k = size();
     for (size_t i = 0; i < k; i++) {
-        if (Table[i].frame.spec_empty()) continue;
-        if (Table[i].frame == the_names["figure_env"]) return true;
-        if (Table[i].frame == the_names["table_env"]) return true;
+        if (at(i).frame.spec_empty()) continue;
+        if (at(i).frame == the_names["figure_env"]) return true;
+        if (at(i).frame == the_names["table_env"]) return true;
     }
     return false;
 }
@@ -238,8 +234,8 @@ auto Stack::is_float() -> bool {
 // Prints something in trace mode when we push a non-empty frame.
 void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
-        auto    ptr = Table.size() - 1;
-        Istring fr  = Table[ptr].frame;
+        auto    ptr = size() - 1;
+        Istring fr  = at(ptr).frame;
         if (!fr.spec_empty()) {
             Logger::finish_seq();
             the_log << "{Push " << fr << " " << ptr << "}\n";
@@ -248,7 +244,7 @@ void Stack::push_trace() {
 }
 
 // Internal code of push
-void Stack::ipush(Istring fr, Xml *V) { Table.push_back(StackSlot(V, the_parser.get_cur_line(), std::move(fr), cur_mode, cur_lid)); }
+void Stack::ipush(Istring fr, Xml *V) { push_back(StackSlot(V, the_parser.get_cur_line(), std::move(fr), cur_mode, cur_lid)); }
 
 // Pushes code with frame.
 void Stack::push(Istring fr, Xml *V) {
@@ -295,7 +291,7 @@ void Stack::trace_pop(bool sw) {
         Logger::finish_seq();
         the_log << "{Pop ";
         if (sw) the_log << "(module) ";
-        the_log << int(Table.size() - 1) << ":";
+        the_log << int(size() - 1) << ":";
         trace_stack();
         the_log << "}\n";
     }
@@ -303,32 +299,32 @@ void Stack::trace_pop(bool sw) {
 
 // This prints the whole stack.
 void Stack::dump() {
-    auto l = Table.size();
-    for (size_t i = 0; i < l; i++) Table[i].fulldump(i);
+    auto l = size();
+    for (size_t i = 0; i < l; i++) at(i).fulldump(i);
 }
 
 // Like Stack::dump, less verbose.
 void Stack::trace_stack() {
-    auto l = Table.size();
-    for (size_t i = 0; i < l; i++) Table[i].dump();
+    auto l = size();
+    for (size_t i = 0; i < l; i++) at(i).dump();
 }
 
 // This pops an element, top-stack should be a.
 void Stack::pop(const Istring &a) {
     trace_pop(false);
-    while (Table.back().frame.spec_empty()) { // ignore dummy frames
+    while (back().frame.spec_empty()) { // ignore dummy frames
         the_parser.cur_font.not_on_stack();
-        Table.pop_back();
+        pop_back();
     }
-    if (a != Table.back().frame) {
-        err_buf << bf_reset << "Error in pop; stack holds " << Table.back().frame << "; trying to pop " << a;
+    if (a != back().frame) {
+        err_buf << bf_reset << "Error in pop; stack holds " << back().frame << "; trying to pop " << a;
         the_parser.signal_error();
         return;
     }
-    cur_mode = Table.back().md;
-    cur_lid  = Table.back().uid;
-    Table.pop_back();
-    if (Table.empty()) {
+    cur_mode = back().md;
+    cur_lid  = back().uid;
+    pop_back();
+    if (empty()) {
         err_buf << bf_reset << "Error in pop; stack empty; trying to pop " << a;
         the_parser.signal_error();
         Istring S = the_names["document"];
@@ -366,7 +362,7 @@ void Stack::fonts0(const std::string &x) {
 
 // Adds font info when required
 void Stack::check_font() {
-    while (Table.back().frame.spec_empty()) Table.pop_back();
+    while (back().frame.spec_empty()) pop_back();
     bool        w = the_main->pack_font_elt;
     std::string s;
     if (w) {
@@ -434,13 +430,13 @@ void Stack::push1(const Istring &x) { push(x, new Xml(x, nullptr)); }
 void Stack::end_module() {
     trace_pop(true);
     for (;;) {
-        if (Table.empty()) err_ns::fatal_error("unexpected empty stack");
-        if (Table.back().frame == the_names["document"]) return;
-        if (Table.back().frame == the_names["module"]) {
+        if (empty()) err_ns::fatal_error("unexpected empty stack");
+        if (back().frame == the_names["document"]) return;
+        if (back().frame == the_names["module"]) {
             pop(the_names["module"]);
             return;
         }
-        Table.pop_back();
+        pop_back();
     }
 }
 
@@ -475,29 +471,29 @@ auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
 
 // This finds the cell row and table ID currently on the  stack.
 void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
-    auto k = Table.size() - 1;
-    while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names["cell"]) {
-        cid = Table[k].obj->id;
+    auto k = size() - 1;
+    while (at(k).frame.spec_empty()) k--;
+    if (at(k).frame == the_names["cell"]) {
+        cid = at(k).obj->id;
         k--;
     }
-    while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names["row"]) {
-        rid = Table[k].obj->id;
+    while (at(k).frame.spec_empty()) k--;
+    if (at(k).frame == the_names["row"]) {
+        rid = at(k).obj->id;
         k--;
     }
-    while (Table[k].frame.spec_empty()) k--;
-    if (Table[k].frame == the_names["tabular"] || Table[k].frame == the_names["tabular*"]) {
-        tid = Table[k].obj->id;
+    while (at(k).frame.spec_empty()) k--;
+    if (at(k).frame == the_names["tabular"] || at(k).frame == the_names["tabular*"]) {
+        tid = at(k).obj->id;
         k--;
     }
 }
 
 auto Stack::find_ctrid(subtypes m) -> long {
-    for (auto k = Table.size(); k-- >= 1;) {
-        Xml *obj = Table[k].obj;
+    for (auto k = size(); k-- >= 1;) {
+        Xml *obj = at(k).obj;
         if (obj == nullptr) continue;
-        Istring frame = Table[k].frame;
+        Istring frame = at(k).frame;
         if (frame.spec_empty()) continue;
         if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id.value;
         if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
@@ -554,7 +550,7 @@ void Stack::finish_cell(int w) {
 }
 
 // hack...
-void Stack::mark_omit_cell() { Table.back().omit_cell = true; }
+void Stack::mark_omit_cell() { back().omit_cell = true; }
 
 // This removes the last element of the top-stack
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }

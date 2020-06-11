@@ -27,7 +27,7 @@ namespace {
     };
 
     void boot_ra_prefix(String s) {
-        std::array<char, 3 * 8> tmp;
+        std::array<char, 3 * 8> tmp{};
         for (unsigned i = 0; i < 8; i++) {
             size_t j   = i * 3;
             tmp[j]     = s[1];

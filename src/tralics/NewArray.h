@@ -1,13 +1,8 @@
 #pragma once
-// -*- C++ -*-
-// TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
+#include "../txid.h"
+#include "AttList.h"
+#include "Token.h"
+#include <array>
 
 // Token classes and numbers for preamble tokens.
 // c     0   0    ---    Start 4  -
@@ -21,9 +16,8 @@
 // <-arg 2   -           b    10 5
 // >-arg 3   -
 
-#include "txstack.h"
-
 class Parser;
+class ArrayInfo;
 
 // Class used to implement array.sty
 class NewArray {
@@ -46,19 +40,17 @@ class NewArray {
     std::string                     cur_h_pos;
 
 public:
-    auto               dump_slot() -> String;
-    void               boot(Parser *Q);
-    void               add_a_type(uchar c, Token t);
-    void               remove_a_type(uchar c);
-    auto               nct_exists(uchar c) -> bool { return nct_bool[c]; }
-    auto               nct_token(uchar c) -> Token { return nct_tok[c]; }
     [[nodiscard]] auto has_a_nct() const -> bool { return nct_size > 0; }
-    void               test_pach();
-    void               ac_maybe_finish();
-    void               ac_maybe_finish_multi(bool &seen);
-    void               ac_pre_cell();
-    void               ac_pre_inter();
-    void               ac_inter();
-    void               run(Xid /*ID*/, bool main_fct);
-    auto               ac_next() -> bool;
+
+    auto dump_slot() -> String;
+    void boot(Parser *Q);
+    void add_a_type(uchar c, Token t);
+    void remove_a_type(uchar c);
+    auto nct_exists(uchar c) -> bool { return nct_bool[c]; }
+    auto nct_token(uchar c) -> Token { return nct_tok[c]; }
+    void test_pach();
+    void ac_maybe_finish();
+    void ac_maybe_finish_multi(bool &seen);
+    void run(Xid /*ID*/, bool main_fct);
+    auto ac_next() -> bool;
 };
