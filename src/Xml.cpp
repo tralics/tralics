@@ -10,6 +10,66 @@
 #include <spdlog/spdlog.h>
 
 namespace {
+    std::ofstream decoy_fp;
+
+    // Prints all words with frequency i. Removes them from the list
+    void dump_and_list(WordList *WL, int i) {
+        WordList *L       = WL->get_next();
+        WordList *first   = WL;
+        int       printed = 0;
+        while (L != nullptr) {
+            WordList *N = L->get_next();
+            if (L->dump(decoy_fp, i)) {
+                printed++;
+                delete L;
+            } else {
+                first->set_next(L);
+                first = L;
+            }
+            L = N;
+        }
+        first->set_next(nullptr);
+        if (printed != 0) { scbuf << fmt::format("{}={}, ", i, printed); }
+    }
+
+    // Finish dumping the words
+    void dump_words(const std::string &name) {
+        auto *    WL = new WordList("", 0, nullptr);
+        WordList *W  = WL;
+        for (auto *L : WL0) {
+            if (L == nullptr) continue;
+            while (W->get_next() != nullptr) W = W->get_next();
+            W->set_next(L);
+        }
+        if (WL->get_next() == nullptr) return;
+        auto wf = tralics_ns::get_out_dir("words");
+
+        auto f = std::ofstream(wf);
+        if (!name.empty()) f << "Team " << name << "\n";
+        scbuf.clear();
+        int i = 0;
+        while (WL->get_next() != nullptr) {
+            i++;
+            dump_and_list(WL, i);
+        }
+        f << "Total " << nb_words << "  ";
+        scbuf.remove_last(); // space
+        scbuf.remove_last(); // comma
+        scbuf.push_back(".\n");
+        f << scbuf;
+    }
+
+    // This is static. If s is &foo;bar, returns the length
+    // of the &foo; part. Returns 0 if this is not an entity.
+    auto is_entity(const std::string &s) -> size_t {
+        static const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
+
+        for (auto w : entities) {
+            if (s.starts_with(w)) return strlen(w);
+        }
+        return 0;
+    }
+
     // Figure with subfigure. We construct a table with two rows
     // for a par. ctr holds the value of the counter for the caption.
     auto figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
@@ -235,6 +295,12 @@ namespace {
         }
     }
 } // namespace
+
+// Returns a new element named N, initialised with z (if not empty...)
+Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {
+    id = the_main->the_stack->next_xid(this);
+    if (z != nullptr) add_tmp(gsl::not_null{z});
+}
 
 // Case of cline, placed after a row. If action is false, we check whether the
 // row, including the spans of the cells, is adapted to the pattern.
@@ -725,3 +791,192 @@ void Xml::postprocess_fig_table(bool is_fig) {
     push_back_unless_nullptr(U);
     T->add_non_empty_to(U);
 }
+
+// Adds all non-empty elements to res
+void Xml::add_non_empty_to(Xml *res) {
+    for (size_t k = 0; k < size(); k++) {
+        Xml *T = at(k);
+        if (T->is_xmlc() && only_space(T->name.name)) continue;
+        res->push_back_unless_nullptr(T);
+    }
+}
+
+// Postprocessor for <composition>
+void Xml::compo_special() {
+    XmlAction X(the_names["module"], rc_composition);
+    recurse(X);
+}
+
+// This is used by sT_translate. It converts an XML element
+// to a string, using scbuf as temporary. clears the object
+auto Xml::convert_to_string() -> std::string {
+    scbuf.clear();
+    convert_to_string(scbuf);
+    clear();
+    return scbuf;
+}
+
+// This converts the content to a string. May be recursive
+void Xml::convert_to_string(Buffer &b) {
+    if (is_xmlc()) {
+        b << name.name;
+        return;
+    }
+    if (name.empty() || name == the_names["temporary"]) {
+        auto len = size();
+        for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
+        return;
+    }
+    err_buf.clear();
+    if (id.is_font_change()) {
+        Istring w = id.has_attribute(the_names["rend"]);
+        if (!w.null()) {
+            err_buf << "unexpected font change " << w;
+            the_parser.unexpected_font();
+            the_parser.signal_error();
+            return;
+        }
+    }
+    err_buf << "unexpected element " << name;
+    the_parser.signal_error();
+}
+
+// Puts *this in the buffer B. Uses Internal Encoding
+// Used to print the title of a section.
+void Xml::put_in_buffer(Buffer &b) {
+    for (size_t k = 0; k < size(); k++) {
+        if (at(k)->is_xmlc())
+            b << at(k)->name.name;
+        else if (at(k)->has_name_of("hi"))
+            at(k)->put_in_buffer(b);
+        else
+            b << '<' << at(k)->name << "/>";
+    }
+}
+
+// Removes and returns the last element
+auto Xml::remove_last() -> Xml * {
+    if (empty()) return nullptr;
+    Xml *res = back();
+    pop_back();
+    return res;
+}
+
+// True if this is empty, or contains only a <hi> element which is empty
+auto Xml::par_is_empty() -> bool {
+    if (empty()) return true;
+    if (size() > 1) return false;
+    if (at(0)->is_xmlc()) return false;
+    if (at(0)->is_xmlc() || !at(0)->id.is_font_change()) return false;
+    return at(0)->par_is_empty();
+}
+
+// The scanner for all_the_words
+void Xml::word_stats_i() {
+    if (is_xmlc()) {
+        auto str = name.name;
+        for (size_t i = 0;; i++) {
+            char c = str[i];
+            if (c == 0) return;
+            if (c == '&') {
+                if (str.substr(i).starts_with("&oelig;")) {
+                    i += 6;
+                    scbuf << "oe";
+                    continue;
+                }
+                if (str.substr(i).starts_with("&amp;")) {
+                    i += 4;
+                    scbuf << "&";
+                    continue;
+                }
+                auto w = is_entity(str.substr(i));
+                if (w != 0) {
+                    i += w - 1;
+                    scbuf.new_word();
+                    continue;
+                }
+            }
+            if (c == ' ' || c == '`' || c == '\n' || c == ',' || c == '.' || c == '(' || c == ')' || c == ':' || c == ';' || c == '\253' ||
+                c == '\273' || c == '\'' || c == '\"')
+                scbuf.new_word();
+            else
+                scbuf << c;
+        }
+    } else {
+        if (name == the_names["formula"]) return;
+        for (size_t i = 0; i < size(); i++) at(i)->word_stats_i();
+    }
+}
+
+void Xml::word_stats(const std::string &match) {
+    scbuf.clear();
+    word_stats_i();
+    scbuf.new_word();
+    dump_words(match);
+}
+
+// This adds x at the end the element
+void Xml::push_back_unless_nullptr(Xml *x) {
+    if (x != nullptr) push_back(gsl::not_null{x});
+}
+
+// True if last element on the tree is a string.
+auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value == 0; }
+
+// Assume that last element is a string. This string is put in the internal
+// buffer
+void Xml::last_to_SH() const {
+    shbuf.clear();
+    shbuf.push_back(back()->name.name);
+}
+
+// This adds B at the end the element, via concatenation, if possible.
+void Xml::add_last_string(const Buffer &B) {
+    if (B.empty()) return;
+    shbuf.clear();
+    if (last_is_string()) {
+        last_to_SH();
+        pop_back();
+        the_parser.my_stats.one_more_merge();
+    }
+    shbuf.push_back(B);
+    push_back_unless_nullptr(new Xml(shbuf));
+}
+
+// This adds x and a \n at the end of this.
+void Xml::add_last_nl(Xml *x) {
+    if (x != nullptr) {
+        push_back_unless_nullptr(x);
+        push_back_unless_nullptr(the_main->the_stack->newline_xml);
+    }
+}
+
+// Removes a trailing space on the tree.
+void Xml::remove_last_space() {
+    if (!last_is_string()) return;
+    last_to_SH();
+    auto k = shbuf.size();
+    shbuf.remove_space_at_end();
+    if (k != shbuf.size()) {
+        pop_back();
+        if (!shbuf.empty()) push_back_unless_nullptr(new Xml(shbuf));
+    }
+}
+
+// This adds a NL to the end of the element
+void Xml::add_nl() {
+    if (!all_empty() && back_or_nullptr() == the_main->the_stack->newline_xml) return;
+    push_back_unless_nullptr(the_main->the_stack->newline_xml);
+}
+
+// This returns the span of the current cell; -1 in case of trouble
+// the default value is 1
+auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
+    if (is_xmlc()) return 0;
+    if (!has_name(the_names["cell"])) return -1;             // not a cell
+    if (!shbuf.install_att(id, the_names["cols"])) return 1; // no property, default is 1
+    auto o = shbuf.int_val();
+    return o ? to_signed(*o) : -1;
+}
+
+auto Xml::tail_is_anchor() const -> bool { return !empty() && back()->is_anchor(); }

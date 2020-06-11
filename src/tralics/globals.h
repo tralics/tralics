@@ -7,6 +7,7 @@
 // \todo move from extern to inline
 
 struct LinePtr;
+class WordList;
 
 extern bool                                                          bad_minus;
 extern bool                                                          compatibility;
@@ -28,9 +29,11 @@ inline bool                                                          global_in_u
 inline bool                                                          old_ra            = false;
 inline int                                                           cur_entry_line;    // position of entry in source file
 inline int                                                           init_file_pos = 0; // position in init file
+inline int                                                           nb_words      = 0;
 inline long                                                          cline_first, cline_last;
 inline std::array<std::string, 8>                                    ra_pretable;
 inline std::array<String, 3>                                         my_constant_table;
+inline std::array<WordList *, 100>                                   WL0;
 inline std::ostream *                                                cur_fp;         // the XML file
 inline std::string                                                   cur_entry_name; // name of entry under construction.
 inline std::string                                                   tralics_version{"2.15.4"};
