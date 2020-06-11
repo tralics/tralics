@@ -36,7 +36,6 @@ private:
     bool                     normal_biblio{true};
     bool                     refer_biblio{};
     bool                     in_ra{};
-    std::string              default_year;
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
@@ -45,7 +44,7 @@ private:
     std::array<id_type, 128> id_class{};
 
 public:
-    Bibtex(std::string dy) : default_year(std::move(dy)) {}
+    std::string default_year;
 
     auto               find_entry(const CitationKey &s) -> BibEntry *;
     auto               find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
@@ -119,4 +118,4 @@ public:
     static auto wrong_class(int y, const std::string &Y, bib_from from) -> bool;
 };
 
-inline Bibtex *the_bibtex;
+inline Bibtex the_bibtex;

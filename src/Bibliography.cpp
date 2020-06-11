@@ -16,16 +16,16 @@ void Bibliography::dump(Buffer &b) {
 
 // This dumps the whole biblio for use by Tralics.
 void Bibliography::dump_bibtex() {
-    if (seen_nocite()) the_bibtex->nocitestar_true();
+    if (seen_nocite()) the_bibtex.nocitestar_true();
     size_t n = citation_table.size();
     if (n != 0) bbl.open();
     for (size_t i = 0; i < n; i++) citation_table[i].dump_bibtex();
     n = biblio_src.size();
     if (n > 0) {
         bbl.open();
-        for (size_t i = 0; i < n; i++) the_bibtex->read1(biblio_src[i]);
+        for (size_t i = 0; i < n; i++) the_bibtex.read1(biblio_src[i]);
     } else
-        the_bibtex->read_ra();
+        the_bibtex.read_ra();
 }
 
 void Bibliography::stats() {

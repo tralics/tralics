@@ -775,7 +775,7 @@ auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     if (old_ra) return false;
     int ry = the_parser.get_ra_year();
     if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
-        the_bibtex->err_in_entry("");
+        the_bibtex.err_in_entry("");
         log_and_tty << "entry moved from refer to year because\n";
         if (y == 0)
             log_and_tty << "the year field of this entry is missing.\n";
@@ -792,7 +792,7 @@ auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
 }
 
 void Bibtex::bad_year(const std::string &given, String wanted) {
-    the_bibtex->err_in_entry("");
+    the_bibtex.err_in_entry("");
     log_and_tty << "the year field of this entry should be " << wanted << ", ";
     if (given.empty())
         log_and_tty << "it is missing.\n";

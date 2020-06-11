@@ -1042,11 +1042,11 @@ void MainClass::trans0() {
 }
 
 void MainClass::boot_bibtex(bool inra) {
-    auto fn             = out_dir / (out_name + "_.bbl");
-    ::distinguish_refer = distinguish_refer;
-    bbl.name            = fn;
-    the_bibtex          = new Bibtex(year_string);
-    the_bibtex->boot(out_name, inra);
+    auto fn                 = out_dir / (out_name + "_.bbl");
+    ::distinguish_refer     = distinguish_refer;
+    bbl.name                = fn;
+    the_bibtex.default_year = year_string;
+    the_bibtex.boot(out_name, inra);
 }
 
 void MainClass::show_input_size() {

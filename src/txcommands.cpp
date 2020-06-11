@@ -743,7 +743,7 @@ void Parser::T_begindocument() {
         Logger::finish_seq();
         the_log << "+stack: level set to 1\n";
     }
-    the_bibtex->bootagain();
+    the_bibtex.bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
     {
         Buffer &  b = mac_buffer;

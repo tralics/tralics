@@ -130,8 +130,8 @@ auto BibEntry::store_field(field_pos where) -> bool {
 void BibEntry::parse_crossref() {
     const auto &name = all_fields[fp_crossref];
     if (name[0] == 0) return;
-    bib_creator bc = the_bibtex->auto_cite() ? because_all : because_crossref;
-    BibEntry *  Y  = the_bibtex->find_entry(name, true, bc);
+    bib_creator bc = the_bibtex.auto_cite() ? because_all : because_crossref;
+    BibEntry *  Y  = the_bibtex.find_entry(name, true, bc);
     if (this == Y) return; /// should not happen
     crossref = Y;
     if (Y->crossref_from == nullptr) Y->crossref_from = this;
@@ -146,7 +146,7 @@ void BibEntry::un_crossref() {
 
 void BibEntry::copy_from(BibEntry *Y) {
     if (type_int != type_unknown) {
-        the_bibtex->err_in_file("duplicate entry ignored", true);
+        the_bibtex.err_in_file("duplicate entry ignored", true);
         return;
     }
     the_log << "Copy Entry " << Y->cite_key.full_key << " into " << cite_key.full_key << "\n";
@@ -181,7 +181,7 @@ void BibEntry::work(long serial) {
     }
     if (explicit_cit) return;
     if (why_me == because_crossref) return;
-    the_bibtex->enter_in_table(this);
+    the_bibtex.enter_in_table(this);
     cur_entry_line = first_line;
     normalise();
     presort(serial);

@@ -21,13 +21,13 @@ void CitationItem::dump(Buffer &b) const {
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
     CitationKey ref(from.name, key.name);
-    BibEntry *  X = the_bibtex->find_entry(ref);
+    BibEntry *  X = the_bibtex.find_entry(ref);
     if (X != nullptr) {
         err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
         the_parser.signal_error(the_parser.err_tok, "bib");
         return;
     }
-    the_bibtex->make_entry(ref, get_id());
+    the_bibtex.make_entry(ref, get_id());
 }
 
 // Returns true if this is the same object.

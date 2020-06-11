@@ -1789,7 +1789,7 @@ void Parser::after_main_text() {
         create_aux_file_and_run_pgm();
     else {
         the_bibliography.dump_bibtex();
-        the_bibtex->work();
+        the_bibtex.work();
     }
     init(bbl.lines);
     if (!lines.empty()) {
@@ -2060,7 +2060,7 @@ void Parser::T_empty_bibitem() {
     std::string w;
     std::string a;
     std::string b  = sT_arg_nopar();
-    Istring     id = the_bibtex->exec_bibitem(w, b);
+    Istring     id = the_bibtex.exec_bibitem(w, b);
     if (id.empty()) return;
     leave_v_mode();
     the_stack.push1(the_names["citation"]);
