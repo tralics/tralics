@@ -27,7 +27,6 @@ namespace {
     MathHelper         cmi;               // Data structure holding some global values
     bool               trace_needs_space; // bool  for: \frac\pi y
     bool               old_need = false;  // prev value of trace_needs_space
-    Xml *              xmlspace;          // Const, xml element containing a space
     Token              fct_caller;
     std::string        the_tag;
     std::vector<Xml *> all_maths;
@@ -437,16 +436,6 @@ auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_nul
     tmp.add_tmp(first_arg);
     tmp.push_back_unless_nullptr(xmlspace);
     tmp.add_tmp(second_arg);
-    return tmp;
-}
-
-// As above, but if B1 is not empty, adds b1 as attribute with value true.
-auto Stack::xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
-    auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
-    if (!b1.null()) tmp->add_att(b1, the_names["true"]);
-    tmp->add_tmp(gsl::not_null{first_arg});
-    tmp->push_back_unless_nullptr(xmlspace);
-    tmp->add_tmp(gsl::not_null{second_arg});
     return tmp;
 }
 

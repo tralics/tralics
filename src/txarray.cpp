@@ -442,15 +442,6 @@ auto NewArray::ac_next() -> bool {
     return false;
 }
 
-// This starts or ends a cell, or does both
-void Stack::push_pop_cell(int dir) {
-    if (dir != push_only) {
-        pop(the_names["cell"]);
-        add_nl();
-    }
-    if (dir != pop_only) { push1(the_names["cell"]); }
-}
-
 void Xid::add_top_rule() const {
     add_attribute(the_names["cell_topborder"], the_names["true"]);
     if (in_hlinee) {
@@ -745,21 +736,6 @@ void Xid::add_span(long n) const {
     add_attribute(the_names["cols"], Istring(errbuf));
 }
 
-// If the previous fails, we add a row of empty cells,
-// This adds a-1 empty cells, then b cells with a bottom_border
-void Stack::add_border(long a, long b) {
-    push1(the_names["row"]);
-    push_pop_cell(push_only);
-    if (a != 1) {
-        get_xid().add_span(a - 1);
-        push_pop_cell(push_and_pop);
-    }
-    get_xid().add_span(b);
-    get_xid().add_bottom_rule();
-    push_pop_cell(pop_only);
-    pop(the_names["row"]);
-}
-
 // This is now cline
 void Parser::T_cline() {
     Xml *R       = the_stack.top_stack()->last_addr();
@@ -796,13 +772,6 @@ void Parser::T_cline() {
         }
     }
     the_stack.add_border(cline_first, cl_span);
-}
-
-// This implements \hline, its adds a top attribute to a row
-void Stack::T_hline() {
-    Xid cid, rid, tid;
-    find_cid_rid_tid(cid, rid, tid);
-    if (rid.has_attribute(the_names["cell_topborder"]).empty()) rid.add_top_rule();
 }
 
 // Case when the command is found outside the tabular loop.

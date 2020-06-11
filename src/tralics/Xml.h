@@ -92,6 +92,8 @@ public:
     void bordermatrix();
 };
 
+inline Xml *xmlspace; // Const, xml element containing a space \todo remove
+
 struct XmlAndType {
     Xml *      value;
     math_types type;

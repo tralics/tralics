@@ -8,6 +8,7 @@
 #include "Image.h"
 #include "LabelInfo.h"
 #include "Mactab.h"
+#include "Stack.h"
 
 class FpNum;
 class Math;

@@ -1063,7 +1063,6 @@ void MainClass::more_boot() const {
     mk_empty();
     the_parser.my_stats.after_boot();
     the_parser.the_stack.set_xid_boot();
-    //  the_parser.the_stack.dump_xml_table();
 }
 
 void MainClass::run(int argc, char **argv) {
@@ -1091,7 +1090,6 @@ void MainClass::run(int argc, char **argv) {
     the_parser.after_main_text();
     if (seen_enddocument) the_parser.the_stack.add_nl();
     the_parser.final_checks();
-    //    the_parser.the_stack.dump_xml_table();
     if (!no_xml) {
         the_parser.my_stats.token_stats();
         the_parser.finish_images();
