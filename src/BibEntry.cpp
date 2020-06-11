@@ -83,7 +83,7 @@ namespace {
 } // namespace
 
 // This returns a prefix from ra_pretable, according to from and type_int.
-auto BibEntry::ra_prefix() const -> String {
+auto BibEntry::ra_prefix() const -> std::string {
     if (get_cite_prefix() == from_refer) return ra_pretable[0];
     if (get_cite_prefix() == from_foot) return ra_pretable[1];
     switch (type_int) {
@@ -483,12 +483,11 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     biblio_buf3.clear();
     biblio_buf4.clear();
     name_buffer.normalise_for_bibtex(src.c_str());
-    auto         n     = name_buffer.size() + 1;
-    auto *       table = new bchar_type[n];
-    NameSplitter W(table);
-    name_buffer.fill_table(table);
+    auto                    n = name_buffer.size() + 1;
+    std::vector<bchar_type> table(n);
+    NameSplitter            W(table.data());
+    name_buffer.fill_table(table.data());
     W.handle_the_names();
-    delete[] table;
     X.value     = biblio_buf1;
     X.long_key  = biblio_buf2;
     X.name_key  = biblio_buf4;

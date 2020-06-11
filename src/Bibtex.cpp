@@ -27,16 +27,16 @@ namespace {
     };
 
     void boot_ra_prefix(String s) {
-        char *tmp = new char[3 * 8];
+        std::array<char, 3 * 8> tmp;
         for (unsigned i = 0; i < 8; i++) {
-            size_t j       = i * 3;
-            ra_pretable[i] = tmp + j;
-            tmp[j]         = s[1];
-            tmp[j + 1]     = static_cast<char>('A' + to_signed(i));
-            tmp[j + 2]     = 0;
+            size_t j   = i * 3;
+            tmp[j]     = s[1];
+            tmp[j + 1] = static_cast<char>('A' + to_signed(i));
+            tmp[j + 2] = 0;
         }
         tmp[0] = s[0];
         tmp[3] = s[2];
+        for (unsigned i = 0; i < 8; i++) { ra_pretable[i] = tmp.data() + i * 3; }
     }
 } // namespace
 

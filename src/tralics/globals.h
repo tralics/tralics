@@ -39,7 +39,7 @@ inline bool global_in_url     = false;
 inline bool old_ra            = false;
 
 extern std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
-inline std::array<String, 8>                                         ra_pretable;
+inline std::array<std::string, 8>                                    ra_pretable;
 inline std::array<String, 3>                                         my_constant_table;
 
 auto next_label_id() -> Istring;
