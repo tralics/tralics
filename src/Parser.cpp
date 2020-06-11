@@ -2094,3 +2094,5 @@ void Parser::insert_every_bib() {
     }
     back_input(everybib);
 }
+
+auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
