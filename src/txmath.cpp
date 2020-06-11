@@ -1994,24 +1994,6 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
     return res;
 }
 
-void Xml::bordermatrix() {
-    if (size() <= 1) return;
-    auto n = size() - 1;
-    auto F = front();
-    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(the_names["mtd"], nullptr)); }
-    auto att    = Istring("rowspan");
-    auto attval = Istring(std::to_string(n));
-    F           = at(1);
-    if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) {
-        Xml *aux = new Xml(the_names["mtd"], MathDataP::mk_mo("("));
-        aux->add_att(att, attval);
-        F->insert_at(1, aux);
-        aux = new Xml(the_names["mtd"], MathDataP::mk_mo(")"));
-        aux->add_att(att, attval);
-        F->push_back_unless_nullptr(aux);
-    }
-}
-
 // -----------------------------------------------------------
 
 // We assume here that the formula has two tokens. The first is underscore
@@ -3193,19 +3175,6 @@ auto Math::M_cv3(math_style cms) -> Math {
         }
         W.add_kernel(cms);
     }
-}
-
-// returns the element with a new id, if it's a <mo> and has a movablelimits
-// attributes; return null otherwise.
-auto Xml::spec_copy() const -> Xml * {
-    if (name != the_names["mo"]) return nullptr;
-    AttList &X = id.get_att();
-    auto     i = X.lookup(the_names["movablelimits"]);
-    if (i < 0) return nullptr;
-    Xml *res                                               = new Xml(name, nullptr);
-    static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
-    res->id.add_attribute(X, true);
-    return res;
 }
 
 void Math::concat_space(Xml *res) {

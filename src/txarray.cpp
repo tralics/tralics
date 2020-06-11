@@ -19,7 +19,6 @@ namespace {
     char     char_for_error = 'c';
     bool     in_hlinee, have_above, have_below;
     Istring  hlinee_width, hlinee_above, hlinee_below;
-    long     cline_first, cline_last;
     Buffer   errbuf;
 } // namespace
 
@@ -654,78 +653,6 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     in_hlinee           = true;
     hlinee_width        = Istring(tab_width);
     return rt;
-}
-
-// Case of cline, placed after a row. If action is false, we check whether the
-// row, including the spans of the cells, is adapted to the pattern.
-// If action is true, we do something
-auto Xml::try_cline(bool action) -> bool {
-    auto a    = cline_first - 1;
-    bool a_ok = false; // true after skip
-    auto len  = size();
-    for (size_t k = 0; k < len; k++) {
-        if (a == 0) {
-            if (a_ok) return true;
-            a    = (cline_last - cline_first) + 1;
-            a_ok = true;
-        }
-        if (at(k)->is_xmlc()) {
-            Istring N = at(k)->name;
-            if (N.name == "\n") continue; // allow newline separator
-            return false;
-        }
-        auto c = at(k)->get_cell_span();
-        if (c == -1) return false;
-        if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) at(k)->id.add_bottom_rule();
-        a = a - c;
-        if (a < 0) return false;
-    }
-    return false; // list too small
-}
-
-// Puts the total span in res, return false in case of trouble
-auto Xml::total_span(long &res) const -> bool {
-    int  r   = 0;
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        if (at(k)->is_xmlc()) {
-            Istring N = at(k)->name;
-            if (N.name == "\n") continue; // allow newline separator
-            return false;
-        }
-        auto c = at(k)->get_cell_span();
-        if (c == -1) return false;
-        r += c;
-    }
-    res = r;
-    return true;
-}
-
-// Special case when \\ started a row; we may have an empty cell followed by
-// newline. Returns false if the cell is non-empty, has a span or a top border
-// If action is true, we kill the cell/newline
-auto Xml::try_cline_again(bool action) -> bool {
-    bool seen_cell = false;
-    auto len       = size();
-    for (size_t k = 0; k < len; k++) {
-        if (action) {
-            erase(begin() + to_signed(k));
-            --k;
-            continue;
-        }
-        if (at(k)->is_xmlc() && k == len - 1) {
-            Istring N = at(k)->name;
-            if (N.name == "\n") continue;
-            return false;
-        }
-        if (at(k)->get_cell_span() != 1) return false;
-        if (!at(k)->id.has_attribute(the_names["cell_topborder"]).null()) return false;
-        if (seen_cell) return false;
-        if (!at(k)->is_whitespace()) return false;
-        seen_cell = true;
-    }
-    return seen_cell;
 }
 
 // adds a span value of n to the current cell
