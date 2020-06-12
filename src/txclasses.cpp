@@ -10,7 +10,8 @@
 
 // This file contains ltclass.dtx
 
-#include "txclasses.h"
+#include "tralics/KeyAndVal.h"
+#include "tralics/LatexPackage.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include "txinline.h"
@@ -18,6 +19,25 @@
 #include <fmt/ostream.h>
 
 using namespace std::string_literals;
+
+namespace {
+    class ClassesData {
+    public:
+        std::vector<LatexPackage *> packages;
+        OptionList                  unused_options;             // is \@unusedoptionlist in latex
+        OptionList                  global_options;             // is \@classoptionslist is latex
+        TokenList                   documentclass_hook;         // single hook for all classes
+        bool                        seen_document_class{false}; // have we seen a \documentclass command
+        bool                        using_default_class{false}; // inhibits warning
+
+        ClassesData();
+        auto        cur_pack() -> LatexPackage *;
+        auto        find_package(const std::string &name, bool type, bool creat) -> size_t;
+        void        new_unused_global_option(const KeyAndVal &s) { unused_options.push_back(s); }
+        static void remove_from_unused(const std::string &name);
+        static void show_unused();
+    };
+} // namespace
 
 Buffer file_list;
 
@@ -69,15 +89,6 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     return KeyAndVal(key_name, key_val, key_full);
 }
 
-// Reverse function
-auto KeyAndVal::to_list() const -> TokenList {
-    TokenList u = string_to_list(name, false);
-    if (val.empty()) return u;
-    TokenList aux = val;
-    u.splice(u.end(), aux);
-    return u;
-}
-
 // Constructs an option list from a comma separated string.
 auto classes_ns::make_options(TokenList &L) -> OptionList {
     OptionList res;
@@ -112,9 +123,8 @@ void LatexPackage::add_options(const OptionList &L) {
 
 // Returns true if S is in the option list (for check_builtin_class)
 auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
-    auto n = V.size();
-    for (size_t i = 0; i < n; i++)
-        if (V[i].has_name(s)) return true;
+    for (size_t i = 0; i < V.size(); i++)
+        if (V[i].name == s) return true;
     return false;
 }
 
@@ -123,7 +133,7 @@ auto classes_ns::is_in_option(const OptionList &V, const KeyAndVal &slot) -> boo
     const std::string &s = slot.name;
     auto               n = V.size();
     for (size_t i = 0; i < n; i++)
-        if (V[i].has_name(s)) return compare(slot.val, V[i].val);
+        if (V[i].name == s) return compare(slot.val, V[i].val);
     return false;
 }
 
@@ -139,7 +149,7 @@ auto classes_ns::compare_options(const OptionList &A, const OptionList &B) -> bo
 // If X true, checks the keyname
 auto classes_ns::is_in_vector(const OptionList &V, const std::string &s, bool X) -> std::optional<size_t> {
     for (size_t i = 0; i < V.size(); i++)
-        if (X ? V[i].has_name(s) : V[i].has_full_name(s)) return i;
+        if (X ? (V[i].name == s) : (V[i].full_name == s)) return i;
     return {};
 }
 
@@ -199,8 +209,6 @@ void Parser::T_if_package_with(bool c) // true for class
 // Class data ctor
 ClassesData::ClassesData() { packages.push_back(new LatexPackage("Fdummy file")); }
 
-LatexPackage::LatexPackage(std::string A) : name(std::move(A)), has_a_default(false), seen_process(false), checked(false) {}
-
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
 auto ClassesData::cur_pack() -> LatexPackage * {
@@ -224,14 +232,6 @@ auto classes_ns::parse_version(const std::string &s) -> int {
         }
     }
     return r;
-}
-
-// Use the option, meaning execute the code associated to it.
-// We put a copy of the value at the end of A, rather than putting it directly
-// in the input stream
-void KeyAndVal::use(TokenList &A) const {
-    TokenList val_copy = val;
-    A.splice(A.end(), val_copy);
 }
 
 // ------------------------------------------------------------
@@ -349,22 +349,7 @@ void Parser::T_option_not_used() {
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
     auto      j = is_in_vector(GO, s.full_name, true);
-    if (j) GO[*j].mark_un_used();
-}
-
-// We execute key=val (from U), with code in this
-// If X is false, val is unused, we insert code in L
-// Otherwise, we insert key=val
-// We mark this as used.
-void KeyAndVal::use_and_kill(TokenList &L, KeyAndVal &U, bool X) {
-    used = true;
-    if (!X) {
-        L.splice(L.end(), val); // insert action code
-        return;
-    }
-    TokenList W = U.to_list();
-    if (!L.empty()) L.push_back(Token(other_t_offset, ','));
-    L.splice(L.end(), W); // insert key=val
+    if (j) GO[*j].used = false;
 }
 
 // Case \ProcessOptions* or  \ProcessOptionsX*
@@ -376,8 +361,8 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
         std::string nname = X ? i.name : i.full_name;
         auto        j     = find_option(nname);
         if (j <= 0) continue;
-        if (DO[to_unsigned(j)].is_used()) continue; // should not happen
-        i.mark_used();
+        if (DO[to_unsigned(j)].used) continue; // should not happen
+        i.used = true;
         local_buf << bf_comma << nname;
         DO[to_unsigned(j)].use_and_kill(action, i, X);
     }
@@ -391,7 +376,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
     OptionList &CO = Uoptions;                      // arg of \usepackage
     for (auto &i : DO) {
         const std::string &nname = i.name;
-        if (i.is_used()) continue; // should to happen
+        if (i.used) continue; // should to happen
         auto j = is_in_vector(CO, nname, false);
         if (j) {
             ClassesData::remove_from_unused(nname);
@@ -402,7 +387,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
             j = is_in_vector(GO, nname, X);
             if (j) {
                 i.use_and_kill(res, GO[*j], X);
-                GO[*j].mark_used();
+                GO[*j].used = true;
             } else
                 continue;
         }
@@ -478,12 +463,15 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
             unknown_option(i, action, spec, X);
         } else {
             ClassesData::remove_from_unused(nname);
-            if (DO[to_unsigned(j)].is_used()) continue;
+            if (DO[to_unsigned(j)].used) continue;
             local_buf << bf_comma << DO[to_unsigned(j)].name;
             DO[to_unsigned(j)].use_and_kill(action, i, X != 0);
         }
     }
-    for (auto &i : DO) i.kill();
+    for (auto &i : DO) {
+        i.val.clear();
+        i.used = true;
+    }
 }
 
 // This implements \ProcessOptions, \ProcessOptions*
@@ -742,27 +730,26 @@ void Parser::add_language_att() {
 auto LatexPackage::find_option(const std::string &nname) -> long {
     auto n = Poptions.size();
     for (size_t i = 0; i < n; i++)
-        if (Poptions[i].has_name(nname)) return to_signed(i);
+        if (Poptions[i].name == nname) return to_signed(i);
     return -1;
 }
 
 void ClassesData::remove_from_unused(const std::string &name) {
     OptionList &GO = the_class_data.global_options;
     auto        j  = is_in_vector(GO, name, true);
-    if (j) GO[*j].mark_used();
+    if (j) GO[*j].used = true;
 }
 
 void show_unused_options() { ClassesData::show_unused(); }
 
 void ClassesData::show_unused() {
     OptionList &GO = the_class_data.global_options;
-    auto        n  = GO.size();
     Buffer &    B  = local_buf;
     B.clear();
     int k = 0;
-    for (size_t i = 0; i < n; i++) {
-        if (GO[i].is_used()) continue;
-        if (GO[i].has_name("useallsizes")) continue;
+    for (size_t i = 0; i < GO.size(); i++) {
+        if (GO[i].used) continue;
+        if (GO[i].name == "useallsizes") continue;
         k++;
         if (!B.empty()) B << ',';
         B << GO[i].full_name;

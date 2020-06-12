@@ -11,7 +11,8 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txclasses.h"
+
+void show_unused_options();
 
 // This file contains the big switch that interprets (most) commands
 

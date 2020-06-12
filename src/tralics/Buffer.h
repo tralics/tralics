@@ -106,7 +106,6 @@ public:
     void normalise_for_bibtex(String s);
     void out_four_hats(codepoint ch);
     void out_log(codepoint ch, output_encoding_type T);
-    auto pack_or_class(Buffer &aux) -> int;
     void pt_to_mu();
     void process_big_char(size_t n);
     void insert_token(Token T, bool sw);

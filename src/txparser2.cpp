@@ -17,6 +17,23 @@
 #include <fmt/format.h>
 
 namespace {
+    // The  date parser
+    class FormatDate { // \todo c++ standard class for date?
+        Token       err_tok;
+        auto        scan_a_field(Buffer &B, int &res) -> bool;
+        static auto scan_a_month(Buffer &B, int &res) -> bool;
+        auto        scan_next(Buffer &B, int &res) -> bool;
+        auto        sort() -> bool;
+        static auto next_format_char(Buffer &B) -> int;
+        auto        parse_format(Buffer &B) -> bool;
+        auto        parse(Buffer &B) -> bool;
+
+    public:
+        int month{0}, day{0}, year{0};
+
+        auto interpret(const std::string &s, Token T) -> bool;
+    };
+
     Buffer      local_buf, mac_buf, buf_for_del;
     TokenList   KV_list;
     bool        xkv_is_global;
