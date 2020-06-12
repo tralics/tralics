@@ -1,8 +1,8 @@
 #pragma once
-#include "../txcond.h"
 #include "../txfonts.h"
 #include "../txstack.h"
 #include "../txstats.h"
+#include "Condition.h"
 #include "EQTB.h"
 #include "Hashtab.h"
 #include "Image.h"

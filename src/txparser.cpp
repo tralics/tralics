@@ -2819,46 +2819,6 @@ void Parser::insert_relax() {
     back_input();
 }
 
-// -------------------------------------
-// Conditional code
-
-void Condition::dump() const {
-    auto n = D.size();
-    for (size_t i = n; i > 0; i--) D[i - 1].dump(to_signed(i - 1));
-}
-
-void CondAux::dump(long i) const {
-    Logger::finish_seq();
-    the_log << "### level " << i << " serial " << serial << ": ";
-    int T = cur_if;
-    if (T >= unless_code) {
-        T -= unless_code;
-        the_log << "\\unless";
-    }
-    CmdChr tmp(if_test_cmd, subtypes(T));
-    the_log << "\\" << tmp.name();
-    if (if_limit == fi_code) the_log << "\\else";
-    the_log << " entered on line " << if_line;
-    the_log << "\n";
-}
-
-// for \currentifbranch
-auto Condition::top_branch() const -> int {
-    int k = top_limit();
-    if (k == or_code || k == else_code) return 1;
-    if (k == fi_code) return -1;
-    return 0;
-}
-
-// for \currentiftype
-auto Condition::top_type() const -> int {
-    if (D.empty()) return 0;
-    int n = D.back().cur_if;
-    if (n < unless_code) return n + 1;
-
-    return -(n - unless_code + 1);
-}
-
 // Prints trace for \if in pass_text
 // If k=-1, this is \if, must print \unless,
 // If k=-2, this is \if, must not print \unless,
@@ -2907,32 +2867,6 @@ void Parser::pass_text(Token Tfe) {
             l++;
             trace_if(l);
         }
-    }
-}
-
-// Pushes a new conditional
-auto Condition::push(int chr) -> size_t {
-    if_serial++;
-    D.push_back({if_code, chr, the_parser.get_cur_line(), if_serial});
-    return D.size();
-}
-
-// Pops a conditional
-void Condition::pop() {
-    if (D.empty())
-        log_and_tty << "Error: attempt to pop empty conditional stack\n";
-    else
-        D.pop_back();
-}
-
-// This pops all conditions, signaling errors.
-void Condition::terminate() {
-    auto n = D.size();
-    while (n > 0) {
-        n--;
-        main_ns::nb_errs++;
-        log_and_tty << "Unterminated \\if " << top_serial() << ", started at line " << top_line() << "\n";
-        pop();
     }
 }
 
