@@ -71,7 +71,7 @@ inline void INIT_TERMIO() {
     rl_termio = orig_termio;
     rl_termio.c_iflag &= ~to_unsigned((BRKINT | PARMRK | INPCK | IXOFF | IMAXBEL));
     rl_termio.c_iflag |= (IGNBRK | IGNPAR);
-    rl_termio.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH);
+    rl_termio.c_lflag &= ~unsigned(ICANON | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH);
     rl_termio.c_lflag |= (ISIG);
     rl_termio.c_cc[VMIN]   = 1;
     rl_termio.c_cc[VTIME]  = 0;
