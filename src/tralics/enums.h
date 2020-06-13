@@ -2051,7 +2051,7 @@ enum id_type { illegal_id_char, legal_id_char };
 enum bib_from { from_foot, from_refer, from_year, from_any };
 
 // the type of something like @ARTICLE
-enum entry_type {
+enum entry_type : unsigned {
     type_article,
     type_book,
     type_booklet,

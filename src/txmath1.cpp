@@ -786,9 +786,9 @@ void MathElt::cv_noML_special() const {
     CmdChr   Val(special_math_cmd, c);
     Math &   L = get_list();
     if (c == formula_attribute_code || c == thismath_attribute_code) {
-        static Buffer att_buffer;
-        std::string   s1 = L.get_arg1().convert_this_to_string(att_buffer);
-        std::string   s2 = L.get_arg2().convert_this_to_string(att_buffer);
+        static Buffer atb;
+        std::string   s1 = L.get_arg1().convert_this_to_string(atb);
+        std::string   s2 = L.get_arg2().convert_this_to_string(atb);
         auto          A  = Istring(s1);
         auto          B  = Istring(s2);
         math_ns::add_attribute_spec(A, B);

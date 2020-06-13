@@ -8,9 +8,7 @@ auto NameMapper::operator[](const std::string &name) const -> Istring {
     return Istring(name);
 }
 
-void NameMapper::set(const std::string &name, const std::optional<std::string> &value) {
-    dict[name] = value ? Istring(*value) : Istring();
-};
+void NameMapper::set(const std::string &name, const std::optional<std::string> &value) { dict[name] = value ? Istring(*value) : Istring(); }
 
 auto NameMapper::cstf(size_t i) -> Istring {
     static std::array<std::string, 15> fonts = {"normal",

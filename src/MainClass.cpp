@@ -105,7 +105,7 @@ found at http://www.cecill.info.)";
             the_main->bad_year(); // never returns
         }
         for (size_t i = 0; i < n; i++)
-            if (B[i] < 32 || B[i] > 127 || is_upper_case(B[i])) {
+            if (B[i] < 32 || uchar(B[i]) > 127 || is_upper_case(B[i])) {
                 spdlog::critical("Fatal: only lowercase letters allowed, {}", B);
                 exit(1);
             }
@@ -363,10 +363,6 @@ void MainClass::check_for_input() {
     }
 
     auto wc = input_content.encoding;
-    if (wc < 0) {
-        wc                     = the_main->input_encoding;
-        input_content.encoding = wc;
-    }
     Logger::finish_seq();
     const std::string &wa = (wc == 0 ? "UTF-8" : wc == 1 ? "ISO-8859-1" : "custom");
     spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
@@ -482,29 +478,29 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
 
     if (s == "configfile") s = "config";
     if (s == "o") s = "outputfile";
-    auto special = [](const std::string &s) -> param_args {
-        if (s == "confdir") return pa_confdir;
-        if (s == "config") return pa_config;
-        if (s == "defaultclass") return pa_defaultclass;
-        if (s == "dir") return pa_dir;
-        if (s == "distinguishreferinrabib") return pa_distinguishreferinrabib;
-        if (s == "doctype") return pa_doctype;
-        if (s == "entnames") return pa_entnames;
-        if (s == "externalprog") return pa_externalprog;
-        if (s == "inputdata") return pa_inputdata;
-        if (s == "inputdir") return pa_inputpath;
-        if (s == "inputfile") return pa_inputfile;
-        if (s == "inputpath") return pa_inputpath;
-        if (s == "leftquote") return pa_leftquote;
-        if (s == "logfile") return pa_logfile;
-        if (s == "outputdir") return pa_outputdir;
-        if (s == "outputfile") return pa_outputfile;
-        if (s == "param") return pa_param;
-        if (s == "rightquote") return pa_rightquote;
-        if (s == "tpastatus") return pa_tpastatus;
-        if (s == "trivialmath") return pa_trivialmath;
-        if (s == "type") return pa_type;
-        if (s == "year") return pa_year;
+    auto special = [](const std::string &ss) -> param_args {
+        if (ss == "confdir") return pa_confdir;
+        if (ss == "config") return pa_config;
+        if (ss == "defaultclass") return pa_defaultclass;
+        if (ss == "dir") return pa_dir;
+        if (ss == "distinguishreferinrabib") return pa_distinguishreferinrabib;
+        if (ss == "doctype") return pa_doctype;
+        if (ss == "entnames") return pa_entnames;
+        if (ss == "externalprog") return pa_externalprog;
+        if (ss == "inputdata") return pa_inputdata;
+        if (ss == "inputdir") return pa_inputpath;
+        if (ss == "inputfile") return pa_inputfile;
+        if (ss == "inputpath") return pa_inputpath;
+        if (ss == "leftquote") return pa_leftquote;
+        if (ss == "logfile") return pa_logfile;
+        if (ss == "outputdir") return pa_outputdir;
+        if (ss == "outputfile") return pa_outputfile;
+        if (ss == "param") return pa_param;
+        if (ss == "rightquote") return pa_rightquote;
+        if (ss == "tpastatus") return pa_tpastatus;
+        if (ss == "trivialmath") return pa_trivialmath;
+        if (ss == "type") return pa_type;
+        if (ss == "year") return pa_year;
         return pa_none;
     }(s);
 
