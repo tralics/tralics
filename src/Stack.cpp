@@ -22,13 +22,13 @@ namespace {
 
 // Dumps a stack slot
 void StackSlot::fulldump(size_t i) const {
-    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.name : "()") << ", mode"
+    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.istring_name : "()") << ", mode"
             << mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
 }
 
 // This prints a simplified version of the stack.
-void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? frame.name : "()") << mode_to_string(md); }
+void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? frame.istring_name : "()") << mode_to_string(md); }
 
 void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
     add_att_to_last(the_names["userid"], Istring(b1));
@@ -370,25 +370,25 @@ void Stack::check_font() {
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
         if (s != "cst_empty") { // \todo empty string or something
-            aux << the_names[s].name;
+            aux << the_names[s].istring_name;
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name;
+            aux << the_names[s].istring_name;
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name;
+            aux << the_names[s].istring_name;
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].name;
+            aux << the_names[s].istring_name;
             nonempty = true;
         }
         if (nonempty) {

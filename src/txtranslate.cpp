@@ -612,7 +612,7 @@ void Parser::T_paras(subtypes x) {
         else
             star = true;
     }
-    start_paras(y, Y.name, star);
+    start_paras(y, Y.istring_name, star);
 }
 
 // Translates \ref or \pageref
@@ -1168,7 +1168,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     auto     K = L.lookup(the_names["space_before"]);
     if (K) {
         Istring   k  = L.get_val(*K);
-        TokenList La = token_ns::string_to_list(k.name, false);
+        TokenList La = token_ns::string_to_list(k.istring_name, false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }
@@ -2122,10 +2122,10 @@ auto Parser::get_attval() -> std::string {
     if (key.empty()) {
         Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return "";
-        return e->name.name;
+        return e->name.istring_name;
     }
     Istring res = Xid(to_signed(n)).has_attribute(key);
-    return res.name;
+    return res.istring_name;
 }
 
 void Parser::T_define_verbatim_env() {

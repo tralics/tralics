@@ -817,7 +817,7 @@ auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
     auto     k = L.lookup(m);
     if (!k) return false;
     clear();
-    push_back(L.get_val(*k).name);
+    push_back(L.get_val(*k).istring_name);
     return true;
 }
 
@@ -840,8 +840,8 @@ void Buffer::push_back(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    auto A = Buffer(a.name).convert_to_out_encoding(); // \todo this might be too much work?
-    auto B = b.name.c_str();                           // \todo c_str because there might be a 0 char
+    auto A = Buffer(a.istring_name).convert_to_out_encoding(); // \todo this might be too much work?
+    auto B = b.istring_name.c_str();                           // \todo c_str because there might be a 0 char
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);
@@ -862,8 +862,8 @@ void Buffer::push_back_alt(const AttPair &X) {
     const Istring &a = X.value;
     if (a.null()) return;
     if (b.null()) return;
-    auto A = Buffer(a.name).convert_to_out_encoding(); // \todo this might be too much work?
-    auto B = b.name.c_str();                           // \todo c_str because there might be a 0 char
+    auto A = Buffer(a.istring_name).convert_to_out_encoding(); // \todo this might be too much work?
+    auto B = b.istring_name.c_str();                           // \todo c_str because there might be a 0 char
     if (B[0] == '\'') return;
     push_back(' ');
     push_back(B);

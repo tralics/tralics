@@ -7,7 +7,7 @@ class LabelInfo;
 
 struct Istring {
     size_t      id{0};
-    std::string name;
+    std::string istring_name;
 
     Istring() = default;
     explicit Istring(size_t N);
@@ -22,4 +22,4 @@ struct Istring {
     auto operator!=(const Istring &X) const -> bool { return id != X.id; }
 };
 
-inline auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.name; }
+inline auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.istring_name; }

@@ -15,9 +15,9 @@ namespace {
     }
 } // namespace
 
-Istring::Istring(size_t N) : id(N), name(SH[N]) {}
+Istring::Istring(size_t N) : id(N), istring_name(SH[N]) {}
 
-Istring::Istring(const std::string &s) : id(find_or_insert(s)), name(s) {}
+Istring::Istring(const std::string &s) : id(find_or_insert(s)), istring_name(s) {}
 
 auto Istring::labinfo() const -> LabelInfo * {
     static std::vector<LabelInfo> LL;

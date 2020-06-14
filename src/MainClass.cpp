@@ -1102,7 +1102,7 @@ void MainClass::out_xml() {
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
     if (auto sl = the_names["stylesheet"]; !sl.empty())
-        fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.name, the_names["stylesheettype"].name);
+        fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl.istring_name, the_names["stylesheettype"].istring_name);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
     fp << the_parser.the_stack.document_element() << "\n";

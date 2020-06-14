@@ -38,7 +38,7 @@ namespace {
     // \cite[year][]{foo}is the same as \cite{foo}
     // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
     auto normalise_for_bib(Istring w) -> Istring {
-        auto S = w.name;
+        auto S = w.istring_name;
         if (S == "year") return the_names["cst_empty"];
         if (!distinguish_refer)
             if (S == "refer") return the_names["cst_empty"];
@@ -1948,7 +1948,7 @@ void Parser::T_cite(subtypes sw) {
             TokenList tmp;
             res.push_back(my_cmd);
             if (!is_natbib) {
-                tmp = token_ns::string_to_list(type.name, true);
+                tmp = token_ns::string_to_list(type.istring_name, true);
                 res.splice(res.end(), tmp);
             }
             tmp = token_ns::string_to_list(cur, true);
@@ -2006,7 +2006,7 @@ void Parser::solve_cite(bool user) {
         nn = *B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[nn];
     if (CI.is_solved()) {
-        err_buf << bf_reset << "Bibliography entry already defined " << key.name;
+        err_buf << bf_reset << "Bibliography entry already defined " << key.istring_name;
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
@@ -2016,7 +2016,7 @@ void Parser::solve_cite(bool user) {
         if (CI.id.empty())
             CI.id = AL.get_val(*my_id);
         else {
-            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.name;
+            err_buf << bf_reset << "Cannot solve (element has an Id) " << key.istring_name;
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }

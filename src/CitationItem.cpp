@@ -14,13 +14,13 @@ auto CitationItem::get_id() -> Istring {
 // the aux file.
 void CitationItem::dump(Buffer &b) const {
     if (is_solved()) return;
-    b << "\\citation{" << key.name << "}\n";
+    b << "\\citation{" << key.istring_name << "}\n";
 }
 
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from.name, key.name);
+    CitationKey ref(from.istring_name, key.istring_name);
     BibEntry *  X = the_bibtex.find_entry(ref);
     if (X != nullptr) {
         err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
