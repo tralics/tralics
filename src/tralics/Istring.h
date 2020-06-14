@@ -8,7 +8,6 @@ class LabelInfo;
 struct Istring {
     size_t      id{0};
     std::string name;
-    std::string value;
 
     Istring() = default;
     explicit Istring(size_t N);

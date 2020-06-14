@@ -123,8 +123,8 @@ void LatexPackage::add_options(const OptionList &L) {
 
 // Returns true if S is in the option list (for check_builtin_class)
 auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
-    for (size_t i = 0; i < V.size(); i++)
-        if (V[i].name == s) return true;
+    for (const auto &i : V)
+        if (i.name == s) return true;
     return false;
 }
 
@@ -747,12 +747,12 @@ void ClassesData::show_unused() {
     Buffer &    B  = local_buf;
     B.clear();
     int k = 0;
-    for (size_t i = 0; i < GO.size(); i++) {
-        if (GO[i].used) continue;
-        if (GO[i].name == "useallsizes") continue;
+    for (auto &i : GO) {
+        if (i.used) continue;
+        if (i.name == "useallsizes") continue;
         k++;
         if (!B.empty()) B << ',';
-        B << GO[i].full_name;
+        B << i.full_name;
     }
     if (k == 0) return;
     log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
