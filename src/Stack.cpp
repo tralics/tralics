@@ -22,13 +22,13 @@ namespace {
 
 // Dumps a stack slot
 void StackSlot::fulldump(size_t i) const {
-    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? frame.istring_name : "()") << ", mode"
+    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? std::string(frame) : "()") << ", mode"
             << mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
 }
 
 // This prints a simplified version of the stack.
-void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? frame.istring_name : "()") << mode_to_string(md); }
+void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? std::string(frame) : "()") << mode_to_string(md); }
 
 void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
     add_att_to_last(the_names["userid"], Istring(b1));
@@ -356,8 +356,8 @@ auto Stack::fonts1(const std::string &x) -> Xml * {
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
     Xml *res = fonts1(x);
-    res->id.get_att().push_back(the_names["'hi_flag"], Istring(1));
-    push(Istring(2), res);
+    res->id.get_att().push_back(the_names["'hi_flag"], Istring(""));
+    push(Istring(" "), res);
 }
 
 // Adds font info when required
@@ -370,25 +370,25 @@ void Stack::check_font() {
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
         if (s != "cst_empty") { // \todo empty string or something
-            aux << the_names[s].istring_name;
+            aux << the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].istring_name;
+            aux << the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].istring_name;
+            aux << the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
             if (nonempty) aux.push_back(",");
-            aux << the_names[s].istring_name;
+            aux << the_names[s];
             nonempty = true;
         }
         if (nonempty) {
@@ -396,8 +396,8 @@ void Stack::check_font() {
             Xml *    res = new Xml(the_names["hi"], nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names["rend"], a);
-            W.push_back(the_names["'hi_flag"], Istring(1));
-            push(Istring(2), res);
+            W.push_back(the_names["'hi_flag"], Istring(""));
+            push(Istring(" "), res);
         }
     } else {
         s = the_parser.cur_font.size_change();
@@ -414,8 +414,8 @@ void Stack::check_font() {
         Xml *    res = new Xml(the_names["hi"], nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(the_names["color"], c);
-        W.push_back(the_names["'hi_flag"], Istring(1));
-        push(Istring(2), res);
+        W.push_back(the_names["'hi_flag"], Istring(""));
+        push(Istring(" "), res);
     }
     the_parser.cur_font.is_on_stack();
 }

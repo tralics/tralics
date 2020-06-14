@@ -20,6 +20,8 @@ struct Istring {
 
     auto operator==(const Istring &X) const -> bool { return id == X.id; }
     auto operator!=(const Istring &X) const -> bool { return id != X.id; }
+
+    operator std::string() const { return istring_name; }
 };
 
 inline auto operator<<(std::ostream &fp, const Istring &L) -> std::ostream & { return fp << L.istring_name; }

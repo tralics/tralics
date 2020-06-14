@@ -475,7 +475,7 @@ auto Parser::T_item_label(int c) -> Istring {
     the_stack.pop(the_names["labelitem"]);
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return Istring();
     Xml *res      = the_stack.remove_last();
-    res->name     = Istring(1);
+    res->name     = Istring("");
     std::string w = res->convert_to_string();
     return Istring(w);
 }
@@ -612,7 +612,7 @@ void Parser::T_paras(subtypes x) {
         else
             star = true;
     }
-    start_paras(y, Y.istring_name, star);
+    start_paras(y, Y, star);
 }
 
 // Translates \ref or \pageref
@@ -1168,7 +1168,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     auto     K = L.lookup(the_names["space_before"]);
     if (K) {
         Istring   k  = L.get_val(*K);
-        TokenList La = token_ns::string_to_list(k.istring_name, false);
+        TokenList La = token_ns::string_to_list(k, false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }
@@ -2122,10 +2122,9 @@ auto Parser::get_attval() -> std::string {
     if (key.empty()) {
         Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return "";
-        return e->name.istring_name;
+        return e->name;
     }
-    Istring res = Xid(to_signed(n)).has_attribute(key);
-    return res.istring_name;
+    return Xid(to_signed(n)).has_attribute(key);
 }
 
 void Parser::T_define_verbatim_env() {

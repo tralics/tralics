@@ -1258,7 +1258,7 @@ void MathElt::cv_noMLt() {
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer << "<font name='" << w.istring_name << "'/>"; // \todo why not go through all the machinery here?
+        mathml_buffer << "<font name='" << w << "'/>"; // \todo why not go through all the machinery here?
         return;
     }
     case left_cmd: // left or right

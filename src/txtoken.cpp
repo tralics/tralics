@@ -500,7 +500,7 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
 }
 
 void Buffer::push_back(const Istring &X) {
-    if (X.id >= 2) push_back(Buffer(X.istring_name).convert_to_out_encoding());
+    if (X.id >= 2) push_back(Buffer(X).convert_to_out_encoding());
 }
 
 // True if L has a single token

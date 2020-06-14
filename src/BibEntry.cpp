@@ -287,10 +287,9 @@ void BibEntry::call_type() {
     bbl.push_back("\\citation");
     bbl.push_back_braced(label);
     bbl.push_back_braced(cite_key.full_key);
-    bbl.push_back_braced(unique_id.istring_name);
+    bbl.push_back_braced(unique_id);
     bbl.push_back_braced(from_to_string());
-    auto my_name =
-        (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1].istring_name : the_names[type_to_string(type_int)].istring_name;
+    const auto &my_name = (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
     bbl.push_back_braced(my_name);
     bbl.push_back(aux_label);
     bbl.newline();
@@ -319,7 +318,7 @@ void BibEntry::call_type() {
         auto ss = user_fields[i];
         if (!ss.empty()) {
             bbl.push_back("\\cititem");
-            bbl.push_back_braced(Bib[i].istring_name);
+            bbl.push_back_braced(Bib[i]);
             bbl.push_back_braced(ss);
             bbl.newline();
         }

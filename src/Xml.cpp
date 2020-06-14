@@ -317,7 +317,7 @@ auto Xml::try_cline(bool action) -> bool {
         }
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
-            if (N.istring_name == "\n") continue; // allow newline separator
+            if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
         auto c = at(k)->get_cell_span();
@@ -337,7 +337,7 @@ auto Xml::total_span(long &res) const -> bool {
     for (size_t k = 0; k < len; k++) {
         if (at(k)->is_xmlc()) {
             Istring N = at(k)->name;
-            if (N.istring_name == "\n") continue; // allow newline separator
+            if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
         auto c = at(k)->get_cell_span();
@@ -362,7 +362,7 @@ auto Xml::try_cline_again(bool action) -> bool {
         }
         if (at(k)->is_xmlc() && k == len - 1) {
             Istring N = at(k)->name;
-            if (N.istring_name == "\n") continue;
+            if (std::string(N) == "\n") continue;
             return false;
         }
         if (at(k)->get_cell_span() != 1) return false;
@@ -685,7 +685,7 @@ auto Xml::all_empty() const -> bool { return empty() && name.empty(); }
 
 // Returns true if empty (white space only)
 auto Xml::is_whitespace() const -> bool {
-    return std::all_of(begin(), end(), [](Xml *T) { return T->is_xmlc() && only_space(T->name.istring_name); });
+    return std::all_of(begin(), end(), [](Xml *T) { return T->is_xmlc() && only_space(T->name); });
 }
 
 // If there is one non-empty son returns it.
@@ -697,7 +697,7 @@ auto Xml::single_non_empty() const -> Xml * {
                 res = y;
             else
                 return nullptr;
-        } else if (!only_space(y->name.istring_name))
+        } else if (!only_space(y->name))
             return nullptr;
     }
     return res;
@@ -796,7 +796,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
 void Xml::add_non_empty_to(Xml *res) {
     for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
-        if (T->is_xmlc() && only_space(T->name.istring_name)) continue;
+        if (T->is_xmlc() && only_space(T->name)) continue;
         res->push_back_unless_nullptr(T);
     }
 }
@@ -819,7 +819,7 @@ auto Xml::convert_to_string() -> std::string {
 // This converts the content to a string. May be recursive
 void Xml::convert_to_string(Buffer &b) {
     if (is_xmlc()) {
-        b << name.istring_name;
+        b << std::string(name);
         return;
     }
     if (name.empty() || name == the_names["temporary"]) {
@@ -846,7 +846,7 @@ void Xml::convert_to_string(Buffer &b) {
 void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
-            b << at(k)->name.istring_name;
+            b << at(k)->name;
         else if (at(k)->has_name_of("hi"))
             at(k)->put_in_buffer(b);
         else
@@ -874,7 +874,7 @@ auto Xml::par_is_empty() -> bool {
 // The scanner for all_the_words
 void Xml::word_stats_i() {
     if (is_xmlc()) {
-        auto str = name.istring_name;
+        const std::string &str = name;
         for (size_t i = 0;; i++) {
             char c = str[i];
             if (c == 0) return;
@@ -927,7 +927,7 @@ auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value =
 // buffer
 void Xml::last_to_SH() const {
     shbuf.clear();
-    shbuf.push_back(back()->name.istring_name);
+    shbuf.push_back(std::string(back()->name));
 }
 
 // This adds B at the end the element, via concatenation, if possible.
