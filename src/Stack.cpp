@@ -22,13 +22,13 @@ namespace {
 
 // Dumps a stack slot
 void StackSlot::fulldump(size_t i) const {
-    the_log << "level " << i << " entered at line " << line << ", type " << (!frame.spec_empty() ? std::string(frame) : "()") << ", mode"
+    the_log << "level " << i << " entered at line " << line << ", type " << (frame == " " ? "()" : std::string(frame)) << ", mode"
             << mode_to_string(md) << ":\n";
     if (obj != nullptr) the_log << obj << "\n";
 }
 
 // This prints a simplified version of the stack.
-void StackSlot::dump() const { the_log << " " << (!frame.spec_empty() ? std::string(frame) : "()") << mode_to_string(md); }
+void StackSlot::dump() const { the_log << " " << (frame == " " ? "()" : std::string(frame)) << mode_to_string(md); }
 
 void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
     add_att_to_last(the_names["userid"], Istring(b1));
@@ -170,7 +170,7 @@ void Stack::add_nl() { top_stack()->add_nl(); }
 // It is assumed that the first frame is "document", hence never empty.
 auto Stack::first_non_empty() const -> const StackSlot & {
     auto k = size() - 1;
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     return at(k);
 }
 
@@ -206,7 +206,7 @@ auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() 
 auto Stack::is_frame2(const std::string &S) const -> bool {
     Istring s = the_names[S];
     auto    k = size() - 1;
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     if (at(k).frame == s) return true;
     if (at(k).frame == the_names["fonts"]) {
         if (k < 1) return false;
@@ -216,7 +216,7 @@ auto Stack::is_frame2(const std::string &S) const -> bool {
     if (at(k).frame != the_names["argument"]) return false;
     if (k < 1) return false;
     k--;
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     return at(k).frame == s;
 }
 
@@ -224,7 +224,7 @@ auto Stack::is_frame2(const std::string &S) const -> bool {
 auto Stack::is_float() -> bool {
     auto k = size();
     for (size_t i = 0; i < k; i++) {
-        if (at(i).frame.spec_empty()) continue;
+        if (at(i).frame == " ") continue;
         if (at(i).frame == the_names["figure_env"]) return true;
         if (at(i).frame == the_names["table_env"]) return true;
     }
@@ -236,7 +236,7 @@ void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
         auto    ptr = size() - 1;
         Istring fr  = at(ptr).frame;
-        if (!fr.spec_empty()) {
+        if (fr != " ") {
             Logger::finish_seq();
             the_log << "{Push " << fr << " " << ptr << "}\n";
         }
@@ -312,7 +312,7 @@ void Stack::trace_stack() {
 // This pops an element, top-stack should be a.
 void Stack::pop(const Istring &a) {
     trace_pop(false);
-    while (back().frame.spec_empty()) { // ignore dummy frames
+    while (back().frame == " ") { // ignore dummy frames
         the_parser.cur_font.not_on_stack();
         pop_back();
     }
@@ -362,7 +362,7 @@ void Stack::fonts0(const std::string &x) {
 
 // Adds font info when required
 void Stack::check_font() {
-    while (back().frame.spec_empty()) pop_back();
+    while (back().frame == " ") pop_back();
     bool        w = the_main->pack_font_elt;
     std::string s;
     if (w) {
@@ -472,17 +472,17 @@ auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
 // This finds the cell row and table ID currently on the  stack.
 void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
     auto k = size() - 1;
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["cell"]) {
         cid = at(k).obj->id;
         k--;
     }
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["row"]) {
         rid = at(k).obj->id;
         k--;
     }
-    while (at(k).frame.spec_empty()) k--;
+    while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["tabular"] || at(k).frame == the_names["tabular*"]) {
         tid = at(k).obj->id;
         k--;
@@ -494,7 +494,7 @@ auto Stack::find_ctrid(subtypes m) -> long {
         Xml *obj = at(k).obj;
         if (obj == nullptr) continue;
         Istring frame = at(k).frame;
-        if (frame.spec_empty()) continue;
+        if (frame == " ") continue;
         if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id.value;
         if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
         if (m == xmlcurarray_code && (frame == the_names["tabular"] || frame == the_names["tabular*"])) return obj->id.value;
