@@ -26,7 +26,7 @@ class Stack : public std::vector<StackSlot> {
     std::vector<Xml *>     enames;     // the main table of element names
     Buffer                 mybuffer;   // a buffer
     std::vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
-    mode                   cur_mode;   // the mode to be pushed on modes[]
+    mode                   cur_mode{}; // the mode to be pushed on modes[]
 public:
     Xml *newline_xml{};
 
