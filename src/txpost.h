@@ -1,5 +1,6 @@
 #pragma once
 #include "tralics/Istring.h"
+#include "tralics/enums.h"
 #include <cstring>
 #include <fstream>
 #include <utility>

@@ -9,7 +9,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/Buffer.h"
 #include "tralics/LinePtr.h"
 #include <filesystem>
 #include <fstream>

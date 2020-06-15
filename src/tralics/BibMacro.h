@@ -1,6 +1,4 @@
 #pragma once
-#include <utility>
-
 #include "Buffer.h"
 
 // A bibtex macro, like @string(foo="bar")

@@ -1,7 +1,5 @@
 #pragma once
-#include "../txid.h"
 #include "Buffer.h"
-#include "Istring.h"
 
 struct CitationItem {
     Istring key, from, id;

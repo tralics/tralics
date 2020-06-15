@@ -1,7 +1,5 @@
 #pragma once
 #include "../txinline.h"
-#include "LinePtr.h"
-#include <fstream>
 
 class Bbl {
 private:

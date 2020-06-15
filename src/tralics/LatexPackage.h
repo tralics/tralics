@@ -1,6 +1,5 @@
 #pragma once
 #include "KeyAndVal.h"
-#include <string>
 #include <vector>
 
 using OptionList = std::vector<KeyAndVal>;

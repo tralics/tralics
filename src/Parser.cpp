@@ -1688,7 +1688,7 @@ void Parser::T_cite_one() {
     bool  is_simple = cur_cmd_chr.chr != 0;
     Token T         = cur_tok;
     flush_buffer();
-    Istring type = is_simple ? Istring("") : Istring(fetch_name0_nopar());
+    Istring type = is_simple ? "" : fetch_name0_nopar();
     cur_tok      = T;
     auto ref     = Istring(fetch_name0_nopar());
     Xml *arg     = is_simple ? nullptr : xT_arg_nopar();

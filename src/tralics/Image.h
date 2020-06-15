@@ -1,6 +1,5 @@
 #pragma once
 #include "Buffer.h"
-#include <string>
 
 struct Image {
     std::string name;     // name

@@ -1,6 +1,4 @@
 #pragma once
-#include "enums.h"
-#include <array>
 #include <string>
 
 class LabelInfo;
@@ -9,8 +7,8 @@ struct Istring : public std::string {
     size_t id{0};
 
     Istring() = default;
+    Istring(const std::string &s);
     explicit Istring(size_t N);
-    explicit Istring(const std::string &s);
 
     operator bool() const { return id != 0; }
 

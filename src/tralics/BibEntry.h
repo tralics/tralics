@@ -1,8 +1,6 @@
 #pragma once
 #include "CitationKey.h"
-#include "Istring.h"
 #include "MainClass.h"
-#include <vector>
 
 // Consider for instance the name list :
 // Carrasco, J. and MahEEvas, S. and Rubino, G. and Su\~nEE, V.

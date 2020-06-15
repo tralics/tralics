@@ -2,7 +2,6 @@
 #include "../txid.h"
 #include "AttList.h"
 #include "Token.h"
-#include <vector>
 
 // Array management
 class ArrayInfo {

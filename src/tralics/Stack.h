@@ -1,10 +1,6 @@
 #pragma once
 #include "../txstack.h"
 #include "ArrayInfo.h"
-#include "AttList.h"
-#include "Buffer.h"
-#include "Istring.h"
-#include <vector>
 
 class Xml;
 

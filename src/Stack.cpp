@@ -282,7 +282,7 @@ void Stack::init_all(const std::string &a) {
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
     V->id = 1;
     ipush(the_names["document"], V);
-    newline_xml = new Xml(Istring("\n"));
+    newline_xml = new Xml("\n");
 }
 
 // Tracing of stack when popping

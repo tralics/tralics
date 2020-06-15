@@ -1,6 +1,5 @@
 #pragma once
 #include "../txfonts.h"
-#include "../txstack.h"
 #include "../txstats.h"
 #include "Condition.h"
 #include "EQTB.h"

@@ -1,6 +1,5 @@
 #pragma once
 #include "Buffer.h"
-#include "enums.h"
 
 class Bchar {
 public:

@@ -1,6 +1,8 @@
 #pragma once
 #include "Istring.h"
 #include "codepoint.h"
+#include "enums.h"
+#include <array>
 #include <filesystem>
 #include <vector>
 
