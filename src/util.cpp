@@ -60,3 +60,18 @@ auto find_counter(const std::string &s) -> int {
 }
 
 auto only_digits(const std::string &s) -> bool { return std::all_of(s.begin(), s.end(), is_digit); }
+
+// This converts a boundary_type to a String for printing
+auto bt_to_string(boundary_type v) -> String {
+    switch (v) {
+    case bt_brace: return "brace";
+    case bt_cell: return "cell";
+    case bt_local: return "local";
+    case bt_semisimple: return "\\begingroup";
+    case bt_esemisimple: return "\\endgroup";
+    case bt_env: return "environment";
+    case bt_tpa: return "titlepage argument";
+    case bt_math: return "math";
+    default: return "impossible";
+    }
+}

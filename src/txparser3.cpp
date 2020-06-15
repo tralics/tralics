@@ -11,6 +11,9 @@
 // This file contains a part of the TeX parser of tralics
 
 #include "tralics/Parser.h"
+#include "tralics/SaveAux.h"
+#include "tralics/globals.h"
+#include "tralics/util.h"
 #include <fmt/format.h>
 
 namespace parser_ns {
@@ -20,8 +23,6 @@ namespace parser_ns {
 
 namespace {
     std::vector<SaveAux *> the_save_stack;
-    Xml *                  the_box_to_end;
-    long                   the_box_position = -1; // \todo std::optional<size_t>
     Buffer                 Thbuf1;
 } // namespace
 
@@ -81,21 +82,6 @@ Parser::Parser() : cur_env_name("document") {
 
 // saving and restoring things
 
-// This converts a boundary_type to a String for printing
-auto parser_ns::to_string(boundary_type v) -> String {
-    switch (v) {
-    case bt_brace: return "brace";
-    case bt_cell: return "cell";
-    case bt_local: return "local";
-    case bt_semisimple: return "\\begingroup";
-    case bt_esemisimple: return "\\endgroup";
-    case bt_env: return "environment";
-    case bt_tpa: return "titlepage argument";
-    case bt_math: return "math";
-    default: return "impossible";
-    }
-}
-
 // Implements \currentgrouptype.
 // (see online doc for the meaning of the numbers).
 auto Parser::cur_group_type() -> int {
@@ -115,7 +101,7 @@ auto Parser::cur_group_type() -> int {
 }
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & {
-    fp << parser_ns::to_string(x);
+    fp << bt_to_string(x);
     return fp;
 }
 
@@ -360,14 +346,6 @@ void SaveAuxFont::unsave(bool trace, Parser &P) {
     P.cur_font.update_old();
 }
 
-// If you say: \let\foo=1 \global\let\foo=2
-// the first \let saves the old value on the stack. The \global makes this
-// irrelevant.
-void SaveAux::restore_or_retain(bool rt, String s) {
-    Logger::finish_seq();
-    the_log << "+stack: " << (rt ? "restoring " : "retaining ") << s;
-}
-
 // This done when we restore an integer value
 void SaveAuxInt::unsave(bool trace, Parser &P) {
     bool rt = P.eqtb_int_table[pos].level != 1;
@@ -461,20 +439,6 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
     if (rt) P.box_table[pos] = {val, level};
 }
 
-// Restore box. Called in the case {\setbox0=\hbox{...}}
-// when we see the first closing brace. The box just created will be put in
-// box0.
-void SaveAuxBoxend::unsave(bool trace, Parser &P) {
-    if (trace) {
-        Logger::finish_seq();
-        the_log << "+stack: finish a box of type " << pos << "\n";
-    }
-    P.flush_buffer();
-    P.the_stack.pop(the_names["hbox"]);
-    the_box_to_end   = val;
-    the_box_position = to_signed(pos);
-}
-
 // \aftergroup\foo{}: When the group is finished, the token \foo is
 // pushed back into the input stream.
 void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
@@ -483,24 +447,6 @@ void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
         the_log << "+stack: after group " << value << "\n";
     }
     P.back_input(value);
-}
-
-// Consider the case of {\setbox0=\hbox{...}}
-// We must call box_end, the function that fills box0 with the current box.
-// The number of the box is set by SaveAuxBoxend into the_box_position
-// But this function cannot call box_end (because we are still in the {...}
-// group. Hence box_end must be called after cur_level is decremented.
-void SaveAuxBoundary::unsave(bool trace, Parser &P) {
-    if (trace) {
-        Logger::finish_seq();
-        the_log << "+stack: level - " << P.get_cur_level() << " for " << val << " from line " << line << "\n";
-    }
-    P.decr_cur_level();
-    if (the_box_position >= 0) {
-        if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();
-        P.box_end(the_box_to_end, to_unsigned(the_box_position));
-        the_box_position = -1;
-    }
 }
 
 // returns the type of the first boundary
@@ -549,10 +495,6 @@ void Parser::dump_save_stack() const {
     }
     the_log << "### bottom level\n";
 }
-void SaveAuxBoundary::dump(int n) {
-    String s = val == bt_semisimple ? "semi simple" : parser_ns::to_string(val);
-    the_log << "### " << s << " group (level " << n << ") entered at line " << line << "\n";
-}
 
 // The function called when we see a closing brace or \endgroup.
 // \end{foo} expands to \endfoo\endenv\endfoo, the last \endfoo is in cur_tok
@@ -575,13 +517,13 @@ void Parser::pop_level(boundary_type v) {
             must_throw = true;
         else if (w == bt_env) {
             if (v == bt_semisimple) v = bt_esemisimple;
-            err_buf << bf_reset << "Extra " << parser_ns::to_string(v) << " found in unclosed environment " << cur_env_name;
+            err_buf << bf_reset << "Extra " << bt_to_string(v) << " found in unclosed environment " << cur_env_name;
             signal_error(err_tok, "extra brace");
             return;
         } else {
             if (w == bt_semisimple) w = bt_esemisimple;
             if (v == bt_semisimple) v = bt_esemisimple;
-            wrong_pop(err_tok, parser_ns::to_string(v), parser_ns::to_string(w));
+            wrong_pop(err_tok, bt_to_string(v), bt_to_string(w));
         }
     }
     if (v == bt_env && cur_tok.is_valid()) {
@@ -638,7 +580,7 @@ void Parser::pop_all_levels() {
                 main_ns::nb_errs++;
             }
             started = true;
-            B << "Non-closed " << parser_ns::to_string(w);
+            B << "Non-closed " << bt_to_string(w);
             if (w == bt_env) B << " `" << ename << "'";
             B << fmt::format(" started at line {}", l);
         }

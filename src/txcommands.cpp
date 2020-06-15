@@ -10,6 +10,7 @@
 
 #include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
+#include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 
 void show_unused_options();

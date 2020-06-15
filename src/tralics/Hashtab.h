@@ -1,6 +1,7 @@
 #pragma once
 #include "../txeqtb.h"
 #include "Buffer.h"
+#include "Equivalent.h"
 #include <unordered_map>
 
 // This is the main hash table.

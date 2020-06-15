@@ -33,6 +33,7 @@ inline int                                                           cur_entry_l
 inline int                                                           init_file_pos = 0; // position in init file
 inline int                                                           nb_words      = 0;
 inline long                                                          cline_first, cline_last;
+inline long                                                          the_box_position = -1; // \todo std::optional<size_t>
 inline std::array<std::string, 8>                                    ra_pretable;
 inline std::array<String, 3>                                         my_constant_table;
 inline std::array<WordList *, 100>                                   WL0;
