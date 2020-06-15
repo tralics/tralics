@@ -14,7 +14,6 @@ struct Istring : public std::string {
 
     operator bool() const { return id != 0; }
 
-    [[nodiscard]] auto empty() const -> bool { return id == 1; } // ""
     [[nodiscard]] auto labinfo() const -> LabelInfo *;
 
     auto operator==(const Istring &X) const -> bool { return id == X.id; }

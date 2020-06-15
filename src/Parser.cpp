@@ -1920,8 +1920,7 @@ void Parser::T_cite(subtypes sw) {
     TokenList prenote;
     auto      type = Istring("");
     if (is_natbib) {
-        Istring x = nT_optarg_nopar();
-        if (!x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
+        if (auto x = nT_optarg_nopar(); !x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
         read_optarg(res);
         if (!res.empty()) res.push_back(hash_table.space_token);
         res.push_front(hash_table.locate("NAT@open"));
