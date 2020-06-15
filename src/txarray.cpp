@@ -530,7 +530,7 @@ void Parser::start_a_cell(bool started) {
 void Parser::finish_a_cell(Token T, const Istring &a) {
     flush_buffer();
     the_stack.remove_last_space();
-    if (!a.null()) {
+    if (a) {
         back_input(hash_table.space_token);
         TokenList L = token_ns::string_to_list(a);
         back_input(L);

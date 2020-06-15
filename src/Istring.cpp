@@ -1,6 +1,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/LabelInfo.h"
 #include <memory>
+#include <spdlog/spdlog.h>
 #include <unordered_map>
 
 namespace {
@@ -15,7 +16,7 @@ namespace {
     }
 } // namespace
 
-Istring::Istring(size_t N) : std::string(SH[N]), id(N) {}
+Istring::Istring(size_t N) : std::string(SH[N]), id(N) { spdlog::warn("poiu: {} -> {}", id, *this); }
 
 Istring::Istring(const std::string &s) : std::string(s), id(find_or_insert(s)) {}
 

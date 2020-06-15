@@ -366,7 +366,7 @@ auto Xml::try_cline_again(bool action) -> bool {
             return false;
         }
         if (at(k)->get_cell_span() != 1) return false;
-        if (!at(k)->id.has_attribute(the_names["cell_topborder"]).null()) return false;
+        if (at(k)->id.has_attribute(the_names["cell_topborder"])) return false;
         if (seen_cell) return false;
         if (!at(k)->is_whitespace()) return false;
         seen_cell = true;
@@ -493,7 +493,7 @@ void Xml::recurse(XmlAction &X) {
             case rc_composition: // a module in the comp section
             {
                 Istring an = T->id.has_attribute(the_names["id"]);
-                if (!an.null()) remove_label("module in composition", an);
+                if (an) remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
                 auto Len = T->size();
@@ -830,7 +830,7 @@ void Xml::convert_to_string(Buffer &b) {
     err_buf.clear();
     if (id.is_font_change()) {
         Istring w = id.has_attribute(the_names["rend"]);
-        if (!w.null()) {
+        if (w) {
             err_buf << "unexpected font change " << w;
             the_parser.unexpected_font();
             the_parser.signal_error();

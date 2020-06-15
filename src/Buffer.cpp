@@ -838,8 +838,7 @@ void Buffer::push_back(const AttList &Y) {
 void Buffer::push_back(const AttPair &X) {
     const Istring &b = X.name;
     const Istring &a = X.value;
-    if (a.null()) return;
-    if (b.null()) return;
+    if (!(a && b)) return;
     auto A = Buffer(a).convert_to_out_encoding(); // \todo this might be too much work?
     auto B = b.c_str();                           // \todo c_str because there might be a 0 char
     if (B[0] == '\'') return;
@@ -860,8 +859,7 @@ void Buffer::push_back(const AttPair &X) {
 void Buffer::push_back_alt(const AttPair &X) {
     const Istring &b = X.name;
     const Istring &a = X.value;
-    if (a.null()) return;
-    if (b.null()) return;
+    if (!(a && b)) return;
     auto A = Buffer(a).convert_to_out_encoding(); // \todo this might be too much work?
     auto B = b.c_str();                           // \todo c_str because there might be a 0 char
     if (B[0] == '\'') return;

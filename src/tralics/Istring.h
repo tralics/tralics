@@ -12,7 +12,8 @@ struct Istring : public std::string {
     explicit Istring(size_t N);
     explicit Istring(const std::string &s);
 
-    [[nodiscard]] auto null() const -> bool { return id == 0; }  // null string \todo operator bool
+    operator bool() const { return id != 0; }
+
     [[nodiscard]] auto empty() const -> bool { return id == 1; } // ""
     [[nodiscard]] auto labinfo() const -> LabelInfo *;
 

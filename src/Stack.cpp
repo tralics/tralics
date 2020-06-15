@@ -71,7 +71,7 @@ void Stack::T_hline() {
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
 auto Stack::xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
     auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
-    if (!b1.null()) tmp->add_att(b1, the_names["true"]);
+    if (b1) tmp->add_att(b1, the_names["true"]);
     tmp->add_tmp(gsl::not_null{first_arg});
     tmp->push_back_unless_nullptr(xmlspace);
     tmp->add_tmp(gsl::not_null{second_arg});
@@ -410,7 +410,7 @@ void Stack::check_font() {
         if (s != "cst_empty") fonts0(s);
     }
     auto c = the_parser.cur_font.color;
-    if (!(c.empty() || c.null())) {
+    if (c && !c.empty()) {
         Xml *    res = new Xml(the_names["hi"], nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(the_names["color"], c);

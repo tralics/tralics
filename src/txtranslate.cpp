@@ -373,7 +373,7 @@ void Parser::finish_par_cmd(bool noindent, const Istring &xs) {
     leave_h_mode();
     auto k  = cur_centering();
     Xid  id = ileave_v_mode();
-    if (!xs.null()) id.add_attribute(the_names["space_before"], xs);
+    if (xs) id.add_attribute(the_names["space_before"], xs);
     if (k != 1) id.add_attribute(the_names["noindent"], st_bool(noindent));
 }
 
@@ -446,7 +446,7 @@ void Parser::T_item(int c) {
     Istring att = T_item_label(c);
     the_stack.add_nl();
     the_stack.push1(the_names["item"]);
-    if (!att.null()) the_stack.add_att_to_last(the_names["labelitem"], att);
+    if (att) the_stack.add_att_to_last(the_names["labelitem"], att);
     the_stack.add_new_anchor();
     the_stack.set_v_mode();
     skip_initial_space_and_back_input();
@@ -701,7 +701,7 @@ void Parser::T_float(subtypes c) {
         std::string sarg = sT_arg_nopar();
         auto        arg  = Istring(sarg);
         Istring     opt  = nT_optarg_nopar();
-        if (opt.null()) {
+        if (!opt) {
             B << bf_reset << "fps@" << sarg;
             expand_no_arg(B);
             opt = nT_arg_nopar();
@@ -1203,7 +1203,7 @@ void Parser::T_mbox(subtypes c) {
         ipos   = the_names[get_ctb_opt()];
     }
     Xml *mbox = internal_makebox();
-    if (!ipos.null() || !iwidth.null()) {
+    if (ipos || iwidth) {
         mbox->id.add_attribute(the_names["box_pos"], ipos);
         mbox->id.add_attribute(the_names["box_width"], iwidth);
         return;
@@ -1946,7 +1946,7 @@ void Parser::T_curves(int c) {
     the_stack.set_arg_mode();
     Xid     cur_id = the_stack.get_top_id();
     Istring specs  = nT_optarg_nopar();
-    if (!specs.null()) cur_id.add_attribute(the_names["curve_nbpts"], specs);
+    if (specs) cur_id.add_attribute(the_names["curve_nbpts"], specs);
     TokenList emptyl;
     cur_id.add_attribute(the_names["unit_length"], token_list_to_att(emptyl, C, false));
     if (c == arc_code) {

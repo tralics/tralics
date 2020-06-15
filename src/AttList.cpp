@@ -9,7 +9,7 @@ auto AttList::lookup(const Istring &x) const -> std::optional<size_t> {
 }
 
 void AttList::push_back(const Istring &name, const Istring &value, bool force) {
-    if (value.null()) return;
+    if (!value) return;
     if (auto T = lookup(name)) {
         if (force) at(*T).value = value;
         return;
