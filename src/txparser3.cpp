@@ -21,7 +21,7 @@ namespace parser_ns {
 } // namespace parser_ns
 
 namespace {
-    std::vector<SaveAux *> the_save_stack;
+    std::vector<std::unique_ptr<SaveAux>> the_save_stack;
 } // namespace
 
 // --------------------------------------------------
@@ -101,7 +101,7 @@ auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & {
 void Parser::push_save_stack(SaveAux *v) {
     my_stats.one_more_up();
     v->line = get_cur_line();
-    the_save_stack.push_back(v);
+    the_save_stack.emplace_back(v);
 }
 
 // This is done when we evaluate { or \begingroup.
@@ -329,7 +329,7 @@ static int first_boundary_loc = 0;
 auto       Parser::first_boundary() -> boundary_type {
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         if (p->type != st_boundary) continue;
         first_boundary_loc = p->line;
         return dynamic_cast<SaveAuxBoundary *>(p)->val;
@@ -343,7 +343,7 @@ auto Parser::stack_math_in_cell() -> bool {
     auto n     = the_save_stack.size();
     bool first = true;
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         if (p->type != st_boundary) continue;
         boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
         if (cur == bt_brace || cur == bt_semisimple) continue;
@@ -361,7 +361,7 @@ void Parser::dump_save_stack() const {
     int  L = cur_level - 1;
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         if (p->type != st_boundary) continue;
         dynamic_cast<SaveAuxBoundary *>(p)->dump(L);
         --L;
@@ -412,11 +412,9 @@ void Parser::pop_level(boundary_type v) {
             parse_error(err_tok, "Internal error: empty save stack");
             return;
         }
-        SaveAux *tmp = the_save_stack.back();
-        bool     ok  = tmp->type == st_boundary;
-        the_save_stack.pop_back();
+        bool ok = the_save_stack.back()->type == st_boundary;
         my_stats.one_more_down();
-        delete tmp;
+        the_save_stack.pop_back();
         if (ok) {
             if (must_throw) {
                 cur_level++;
@@ -437,7 +435,7 @@ void Parser::pop_all_levels() {
     B.clear();
     for (;;) {
         if (the_save_stack.empty()) break;
-        SaveAux *tmp = the_save_stack.back();
+        SaveAux *tmp = the_save_stack.back().get();
         std::cout << to_string(tmp->type) << " at " << tmp->line << "\n";
         if (tmp->type == st_env) {
             auto *q = dynamic_cast<SaveAuxEnv *>(tmp);
@@ -455,9 +453,8 @@ void Parser::pop_all_levels() {
             if (w == bt_env) B << " `" << ename << "'";
             B << fmt::format(" started at line {}", l);
         }
-        the_save_stack.pop_back();
         my_stats.one_more_down();
-        delete tmp;
+        the_save_stack.pop_back();
     }
     if (started) {
         signal_error(Token(), "");
@@ -473,11 +470,9 @@ void Parser::final_checks() {
     conditions.terminate();
     auto n = the_save_stack.size();
     if (n == 1) {
-        SaveAux *tmp = the_save_stack.back();
-        if (tmp->type == st_font) {
-            the_save_stack.pop_back();
+        if (the_save_stack.back()->type == st_font) {
             my_stats.one_more_down();
-            delete tmp;
+            the_save_stack.pop_back();
             n = the_save_stack.size();
         }
     }
@@ -487,7 +482,7 @@ void Parser::final_checks() {
     B.clear();
     Buffer &A = Thbuf1;
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         A.clear();
         A << fmt::format("{} at {}", to_string(p->type), p->line);
         if (B.empty()) {
@@ -507,7 +502,7 @@ void Parser::final_checks() {
 auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p);
         if (q->name == s) return q;
@@ -520,7 +515,7 @@ auto Parser::nb_env_on_stack() -> int {
     auto n = the_save_stack.size();
     int  k = 0;
     for (size_t i = n; i > 0; i--) {
-        SaveAux *p = the_save_stack[i - 1];
+        SaveAux *p = the_save_stack[i - 1].get();
         if (p->type == st_env) ++k;
     }
     return k;
