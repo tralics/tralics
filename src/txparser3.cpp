@@ -416,7 +416,6 @@ void Parser::pop_level(boundary_type v) {
         bool     ok  = tmp->type == st_boundary;
         the_save_stack.pop_back();
         my_stats.one_more_down();
-        tmp->unsave();
         delete tmp;
         if (ok) {
             if (must_throw) {
@@ -458,7 +457,6 @@ void Parser::pop_all_levels() {
         }
         the_save_stack.pop_back();
         my_stats.one_more_down();
-        tmp->unsave();
         delete tmp;
     }
     if (started) {
@@ -479,7 +477,6 @@ void Parser::final_checks() {
         if (tmp->type == st_font) {
             the_save_stack.pop_back();
             my_stats.one_more_down();
-            tmp->unsave();
             delete tmp;
             n = the_save_stack.size();
         }
