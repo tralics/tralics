@@ -106,7 +106,7 @@ void Parser::push_save_stack(SaveAux *v) {
 
 // This is done when we evaluate { or \begingroup.
 void Parser::push_level(boundary_type v) {
-    push_save_stack(new SaveAuxBoundary(v));
+    push_save_stack(new SaveAuxBoundary(*this, v));
     cur_level++;
     if (tracing_stack()) {
         Logger::finish_seq();
@@ -115,7 +115,7 @@ void Parser::push_level(boundary_type v) {
 }
 
 void Parser::push_tpa() {
-    push_save_stack(new SaveAuxBoundary(bt_tpa));
+    push_save_stack(new SaveAuxBoundary(*this, bt_tpa));
     if (tracing_stack()) {
         Logger::finish_seq();
         the_log << "+stack: level = " << cur_level << " for " << bt_tpa << "\n";
@@ -130,7 +130,7 @@ void Parser::push_tpa() {
 void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
     if (bc.is_user()) mac_table.incr_macro_ref(bc.chr);
     if (!gbl && hash_table.eqtb[a].must_push(cur_level))
-        push_save_stack(new SaveAuxCmd(a, hash_table.eqtb[a]));
+        push_save_stack(new SaveAuxCmd(*this, a, hash_table.eqtb[a]));
     else if (hash_table.eqtb[a].is_user())
         mac_table.delete_macro_ref(hash_table.eqtb[a].chr);
     if (gbl)
@@ -196,7 +196,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(W.level, a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxInt(*this, W.level, a, W.val));
         W = {c, cur_level};
     }
 }
@@ -215,7 +215,7 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxString(W.level, a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxString(*this, W.level, a, W.val));
         W = {c, cur_level};
     }
 }
@@ -236,7 +236,7 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxDim(W.level, a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxDim(*this, W.level, a, W.val));
         W = {c, cur_level};
     }
 }
@@ -268,7 +268,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxGlue(W.level, a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxGlue(*this, W.level, a, W.val));
         W = {c, cur_level};
     }
 }
@@ -284,7 +284,7 @@ void Parser::box_define(size_t a, Xml *c, bool gbl) {
     if (gbl)
         W = {c, 1};
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(W.level, a, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxBox(*this, W.level, a, W.val));
         W = {c, cur_level};
     }
 }
@@ -305,7 +305,7 @@ void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
     else if (reassign)
         return;
     else {
-        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(W.level, p, W.val));
+        if (W.must_push(cur_level)) push_save_stack(new SaveAuxToken(*this, W.level, p, W.val));
         W = {c, cur_level};
     }
 }
@@ -318,7 +318,7 @@ void Parser::save_font() {
         the_log << "{font change " << cur_font << "}\n";
     }
     if (cur_font.level == cur_level) return;
-    push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
+    push_save_stack(new SaveAuxFont(*this, cur_font.level, cur_font.old, cur_font.old_color));
     cur_font.set_level(cur_level);
 }
 

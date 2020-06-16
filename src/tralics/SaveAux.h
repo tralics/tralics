@@ -8,10 +8,11 @@
 // \todo this needs some overhaul...
 class SaveAux {
 public:
+    Parser &  P;
     save_type type;    // the type of the real thing
     int       line{0}; // current line number at start
 
-    SaveAux(save_type t) : type(t) {}
+    SaveAux(Parser &p, save_type t) : P(p), type(t) {}
     virtual ~SaveAux() = default;
 
     virtual void unsave(bool, Parser &) = 0;
@@ -24,7 +25,7 @@ class SaveAuxBoundary : public SaveAux {
 public:
     boundary_type val; // explains why we opened a new group
 
-    SaveAuxBoundary(boundary_type v) : SaveAux(st_boundary), val(v) {}
+    SaveAuxBoundary(Parser &p, boundary_type v) : SaveAux(p, st_boundary), val(v) {}
 
     void unsave(bool trace, Parser &P) override;
     void dump(int n);
@@ -36,7 +37,7 @@ class SaveAuxInt : public SaveAux {
     size_t pos;   // the position in eqbt_int_table
     long   val;   // the value to be restored
 public:
-    SaveAuxInt(int l, size_t a, long b) : SaveAux(st_int), level(l), pos(a), val(b) {}
+    SaveAuxInt(Parser &p, int l, size_t a, long b) : SaveAux(p, st_int), level(l), pos(a), val(b) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -47,7 +48,7 @@ class SaveAuxDim : public SaveAux {
     size_t    pos;   // the position in eqbt_dim_table
     ScaledInt val;   // the value to be restored
 public:
-    SaveAuxDim(int l, size_t a, ScaledInt b) : SaveAux(st_int), level(l), pos(a), val(b) {}
+    SaveAuxDim(Parser &p, int l, size_t a, ScaledInt b) : SaveAux(p, st_int), level(l), pos(a), val(b) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -58,7 +59,7 @@ class SaveAuxCmd : public SaveAux {
     size_t cs;    // ths position in eqtb to be restored
     CmdChr val;   // the CmdChr to be restored
 public:
-    SaveAuxCmd(size_t a, const Equivalent &X) : SaveAux(st_cmd), level(X.level), cs(a), val({X.cmd, X.chr}) {}
+    SaveAuxCmd(Parser &p, size_t a, const Equivalent &X) : SaveAux(p, st_cmd), level(X.level), cs(a), val({X.cmd, X.chr}) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -69,7 +70,7 @@ class SaveAuxBox : public SaveAux {
     size_t pos;   // the position in box_table to be restored
     Xml *  val;   // the value to be restored
 public:
-    SaveAuxBox(int l, size_t a, Xml *b) : SaveAux(st_box), level(l), pos(a), val(b) {}
+    SaveAuxBox(Parser &p, int l, size_t a, Xml *b) : SaveAux(p, st_box), level(l), pos(a), val(b) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -79,7 +80,7 @@ class SaveAuxBoxend : public SaveAux {
     size_t pos; // the box number
     Xml *  val; // the value of the box
 public:
-    SaveAuxBoxend(size_t a, Xml *b) : SaveAux(st_box_end), pos(a), val(b) {}
+    SaveAuxBoxend(Parser &p, size_t a, Xml *b) : SaveAux(p, st_box_end), pos(a), val(b) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -90,7 +91,7 @@ class SaveAuxToken : public SaveAux {
     size_t    pos;   // pthe position in toks_registers
     TokenList val;   // the value to be restored
 public:
-    SaveAuxToken(int l, size_t p, TokenList v) : SaveAux(st_token), level(l), pos(p), val(std::move(v)) {}
+    SaveAuxToken(Parser &P, int l, size_t p, TokenList v) : SaveAux(P, st_token), level(l), pos(p), val(std::move(v)) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -101,7 +102,7 @@ class SaveAuxGlue : public SaveAux {
     size_t pos;   // the position in glue_table
     Glue   val;   // the value to be restored
 public:
-    SaveAuxGlue(int l, size_t p, Glue g) : SaveAux(st_glue), level(l), pos(p), val(g) {}
+    SaveAuxGlue(Parser &P, int l, size_t p, Glue g) : SaveAux(P, st_glue), level(l), pos(p), val(g) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -112,7 +113,7 @@ class SaveAuxString : public SaveAux {
     size_t      pos; // the position in glue_table
     std::string val; // the value to be restored
 public:
-    SaveAuxString(int l, size_t p, std::string s) : SaveAux(st_string), level(l), pos(p), val(std::move(s)) {}
+    SaveAuxString(Parser &P, int l, size_t p, std::string s) : SaveAux(P, st_string), level(l), pos(p), val(std::move(s)) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -126,8 +127,8 @@ public:
     Token       token;
     CmdChr      cc;
 
-    SaveAuxEnv(std::string a, std::string aa, int ll, Token b, CmdChr c)
-        : SaveAux(st_env), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
+    SaveAuxEnv(Parser &p, std::string a, std::string aa, int ll, Token b, CmdChr c)
+        : SaveAux(p, st_env), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -138,7 +139,7 @@ class SaveAuxFont : public SaveAux {
     long    value; // the value to be restored
     Istring color; // the color to restore
 public:
-    SaveAuxFont(long l, long v, Istring c) : SaveAux(st_font), level(l), value(v), color(std::move(c)) {}
+    SaveAuxFont(Parser &p, long l, long v, Istring c) : SaveAux(p, st_font), level(l), value(v), color(std::move(c)) {}
 
     void unsave(bool trace, Parser &P) override;
 };
@@ -147,7 +148,7 @@ public:
 class SaveAuxAftergroup : public SaveAux {
     Token value; // the token to pop
 public:
-    SaveAuxAftergroup(Token v) : SaveAux(st_save), value(v) {}
+    SaveAuxAftergroup(Parser &p, Token v) : SaveAux(p, st_save), value(v) {}
 
     void unsave(bool trace, Parser &P) override;
 };
