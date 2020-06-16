@@ -373,7 +373,6 @@ void Parser::dump_save_stack() const {
 // \end{foo} expands to \endfoo\endenv\endfoo, the last \endfoo is in cur_tok
 // there should be an \endfoo token in cur_tok
 void Parser::pop_level(boundary_type v) {
-    bool          trace      = tracing_stack();
     bool          must_throw = false;
     boundary_type w          = first_boundary();
     if (w == bt_impossible) {
@@ -416,8 +415,8 @@ void Parser::pop_level(boundary_type v) {
         SaveAux *tmp = the_save_stack.back();
         bool     ok  = tmp->type == st_boundary;
         the_save_stack.pop_back();
-        tmp->unsave(trace);
         my_stats.one_more_down();
+        tmp->unsave();
         delete tmp;
         if (ok) {
             if (must_throw) {
@@ -458,8 +457,8 @@ void Parser::pop_all_levels() {
             B << fmt::format(" started at line {}", l);
         }
         the_save_stack.pop_back();
-        tmp->unsave(false);
         my_stats.one_more_down();
+        tmp->unsave();
         delete tmp;
     }
     if (started) {
@@ -479,8 +478,8 @@ void Parser::final_checks() {
         SaveAux *tmp = the_save_stack.back();
         if (tmp->type == st_font) {
             the_save_stack.pop_back();
-            tmp->unsave(false);
             my_stats.one_more_down();
+            tmp->unsave();
             delete tmp;
             n = the_save_stack.size();
         }
