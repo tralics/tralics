@@ -1,6 +1,7 @@
 #pragma once
 #include "Parser.h"
 #include "enums.h"
+#include "util.h"
 
 // This is a virtual class for saving an object that is in an EQTB table
 // In general we have a level field, a position field and a value field

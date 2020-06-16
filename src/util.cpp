@@ -75,3 +75,9 @@ auto bt_to_string(boundary_type v) -> String {
     default: return "impossible";
     }
 }
+
+auto save_string_name(size_t n) -> String {
+    if (n == 0) return "current label";
+    if (n == 1) return "current counter";
+    return "unknown";
+}

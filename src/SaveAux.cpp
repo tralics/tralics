@@ -51,3 +51,131 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
     the_box_to_end   = val;
     the_box_position = to_signed(pos);
 }
+
+// This done when we restore an integer value
+void SaveAuxInt::unsave(bool trace, Parser &P) {
+    bool rt = P.eqtb_int_table[pos].level != 1;
+    if (trace) {
+        restore_or_retain(rt, "\\");
+        CmdChr tmp(assign_int_cmd, subtypes(pos));
+        the_log << tmp.name() << "=" << val << ".\n";
+    }
+    if (rt) P.eqtb_int_table[pos] = {val, level};
+}
+
+// This done when we restore a string value
+//
+void SaveAuxString::unsave(bool trace, Parser &P) {
+    bool rt = P.eqtb_string_table[pos].level != 1;
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: restoring " << save_string_name(pos) << "=" << val << ".\n";
+    }
+    if (rt) P.eqtb_string_table[pos] = {val, level};
+}
+
+// This done when we restore a dimension value
+void SaveAuxDim::unsave(bool trace, Parser &P) {
+    bool rt = P.eqtb_dim_table[pos].level != 1;
+    if (trace) {
+        restore_or_retain(rt, "\\");
+        CmdChr tmp(assign_dimen_cmd, subtypes(pos));
+        the_log << tmp.name() << "=" << val << ".\n";
+    }
+    if (rt) P.eqtb_dim_table[pos] = {val, level};
+}
+
+// Restore glue
+void SaveAuxGlue::unsave(bool trace, Parser &P) {
+    bool rt = P.glue_table[pos].level != 1;
+    if (trace) {
+        Thbuf1 << bf_reset << val;
+        if (pos >= thinmuskip_code) Thbuf1.pt_to_mu();
+        restore_or_retain(rt, "\\");
+        CmdChr tmp(assign_glue_cmd, subtypes(pos));
+        the_log << tmp.name() << "=" << Thbuf1 << ".\n";
+    }
+    if (rt) P.glue_table[pos] = {val, level};
+}
+
+// Restore command. We have to take care to free memory for user commands.
+void SaveAuxCmd::unsave(bool trace, Parser &P) {
+    int lvl = P.hash_table.eqtb[cs].level;
+    if (trace) {
+        String S = lvl == 1 ? "retaining " : (val.is_undef() ? "killing " : "restoring ");
+        Logger::finish_seq();
+        the_log << "+stack: " << S << Token(cs + eqtb_offset);
+        if (lvl > 1 && !val.is_undef()) {
+            the_log << "=";
+            if (val.is_user())
+                P.token_for_show(val);
+            else
+                Parser::print_cmd_chr(val);
+        }
+        the_log << ".\n";
+    }
+    if (lvl == 1) { // retain old value, so kill val
+        if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
+    } else {
+        if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
+            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].chr);
+        P.hash_table.eqtb[cs].set(val, level);
+    }
+}
+
+// Restore token list.
+void SaveAuxToken::unsave(bool trace, Parser &P) {
+    bool rt = P.toks_registers[pos].level != 1;
+    if (trace) {
+        restore_or_retain(rt, "\\");
+        CmdChr tmp(assign_toks_cmd, subtypes(pos));
+        the_log << tmp.name() << "=" << val << ".\n";
+    }
+    if (rt) P.toks_registers[pos] = {val, level};
+}
+
+// Restore box. Called in the case {\setbox0=\hbox{...}}
+// when we see the last closing brace. This may restore box0.
+void SaveAuxBox::unsave(bool trace, Parser &P) {
+    bool rt = P.box_table[pos].level != 1;
+    if (trace) {
+        restore_or_retain(rt, "\\box");
+        the_log << pos << ".\n";
+    }
+    if (rt) P.box_table[pos] = {val, level};
+}
+
+// \aftergroup\foo{}: When the group is finished, the token \foo is
+// pushed back into the input stream.
+void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: after group " << value << "\n";
+    }
+    P.back_input(value);
+}
+
+// This is executed when we pop a slot containing restore-foo-env
+void SaveAuxEnv::unsave(bool trace, Parser &P) {
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: ending environment " << name << "; resuming " << oldname << ".\n";
+    }
+    P.set_cur_env_name(oldname, line);
+}
+
+// When we pop a level, the current font may change.
+void SaveAuxFont::unsave(bool trace, Parser &P) {
+    P.flush_buffer();
+    P.cur_font.set_old_from_packed();
+    P.cur_font.set_level(level);
+    P.cur_font.set_packed(value);
+    P.cur_font.set_color(color);
+    P.cur_font.unpack();
+    if (trace) {
+        Logger::finish_seq();
+        the_log << "+stack: restoring current font " << P.cur_font << ".\n";
+    }
+    P.font_has_changed1();
+    P.cur_font.update_old();
+}

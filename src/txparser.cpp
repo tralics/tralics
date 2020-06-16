@@ -30,7 +30,7 @@ namespace {
         }
     };
 
-    Buffer trace_buffer, Thbuf1, Thbuf2;
+    Buffer trace_buffer, Thbuf2;
 } // namespace
 
 namespace token_ns {
@@ -2237,15 +2237,6 @@ void Parser::T_begin(const std::string &s) {
     push_level(bt_env);
     push_save_stack(X);
     set_cur_env_name(s);
-}
-
-// This is executed when we pop a slot containing restore-foo-env
-void SaveAuxEnv::unsave(bool trace, Parser &P) {
-    if (trace) {
-        Logger::finish_seq();
-        the_log << "+stack: ending environment " << name << "; resuming " << oldname << ".\n";
-    }
-    P.set_cur_env_name(oldname, line);
 }
 
 // This is the code of \end{foo}.
