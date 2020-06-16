@@ -8,8 +8,8 @@ class Xml;
 // the current level is different fron the old one, and is greater than one.
 // These objects are defined at 1
 template <typename T> struct EQTB {
-    T   val{};
-    int level{1};
+    T    val{};
+    long level{1};
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };

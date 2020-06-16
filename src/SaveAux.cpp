@@ -63,7 +63,7 @@ SaveAuxGlue::~SaveAuxGlue() {
 
 // Restore command. We have to take care to free memory for user commands.
 SaveAuxCmd::~SaveAuxCmd() {
-    int lvl = P.hash_table.eqtb[cs].level;
+    auto lvl = P.hash_table.eqtb[cs].level;
     if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
@@ -88,17 +88,14 @@ SaveAuxBox::~SaveAuxBox() {
 
 // \aftergroup\foo{}: When the group is finished, the token \foo is
 // pushed back into the input stream.
-SaveAuxAftergroup::~SaveAuxAftergroup() { P.back_input(value); }
-
-// This is executed when we pop a slot containing restore-foo-env
-SaveAuxEnv::~SaveAuxEnv() { P.set_cur_env_name(oldname, line); }
+SaveAuxAftergroup::~SaveAuxAftergroup() { P.back_input(val); }
 
 // When we pop a level, the current font may change.
 SaveAuxFont::~SaveAuxFont() {
     P.flush_buffer();
     P.cur_font.set_old_from_packed();
     P.cur_font.set_level(level);
-    P.cur_font.set_packed(value);
+    P.cur_font.set_packed(val);
     P.cur_font.set_color(color);
     P.cur_font.unpack();
     P.font_has_changed1();

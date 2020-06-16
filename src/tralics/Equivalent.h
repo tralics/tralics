@@ -2,7 +2,7 @@
 #include "CmdChr.h"
 
 struct Equivalent : public CmdChr {
-    int level{0}; ///< level at which this is defined
+    long level{0}; ///< level at which this is defined
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
     void               reset() {
@@ -17,7 +17,7 @@ struct Equivalent : public CmdChr {
         if (!is_undef()) level = 1;
     }
 
-    void set(CmdChr c, int lvl) {
+    void set(CmdChr c, long lvl) {
         setnl(c);
         level = lvl;
     }
