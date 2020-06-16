@@ -15,7 +15,7 @@ public:
     SaveAux(Parser &p, save_type t) : P(p), type(t) {}
     virtual ~SaveAux() = default;
 
-    virtual void unsave(bool, Parser &) = 0;
+    virtual void unsave(bool) = 0;
     static void  restore_or_retain(bool rt, String s); // \todo this is pure logging, does nothing
 };
 
@@ -27,7 +27,7 @@ public:
 
     SaveAuxBoundary(Parser &p, boundary_type v) : SaveAux(p, st_boundary), val(v) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
     void dump(int n);
 };
 
@@ -39,7 +39,7 @@ class SaveAuxInt : public SaveAux {
 public:
     SaveAuxInt(Parser &p, int l, size_t a, long b) : SaveAux(p, st_int), level(l), pos(a), val(b) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // This restores a dimension
@@ -50,7 +50,7 @@ class SaveAuxDim : public SaveAux {
 public:
     SaveAuxDim(Parser &p, int l, size_t a, ScaledInt b) : SaveAux(p, st_int), level(l), pos(a), val(b) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for restoring a command
@@ -61,7 +61,7 @@ class SaveAuxCmd : public SaveAux {
 public:
     SaveAuxCmd(Parser &p, size_t a, const Equivalent &X) : SaveAux(p, st_cmd), level(X.level), cs(a), val({X.cmd, X.chr}) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure fopr restoring a box
@@ -72,7 +72,7 @@ class SaveAuxBox : public SaveAux {
 public:
     SaveAuxBox(Parser &p, int l, size_t a, Xml *b) : SaveAux(p, st_box), level(l), pos(a), val(b) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // case of \setbox0=\hbox{...} , remember the number and the box
@@ -82,7 +82,7 @@ class SaveAuxBoxend : public SaveAux {
 public:
     SaveAuxBoxend(Parser &p, size_t a, Xml *b) : SaveAux(p, st_box_end), pos(a), val(b) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for restoring a token list
@@ -93,7 +93,7 @@ class SaveAuxToken : public SaveAux {
 public:
     SaveAuxToken(Parser &P, int l, size_t p, TokenList v) : SaveAux(P, st_token), level(l), pos(p), val(std::move(v)) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for restoring glue
@@ -104,7 +104,7 @@ class SaveAuxGlue : public SaveAux {
 public:
     SaveAuxGlue(Parser &P, int l, size_t p, Glue g) : SaveAux(P, st_glue), level(l), pos(p), val(g) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for restoring glue
@@ -115,7 +115,7 @@ class SaveAuxString : public SaveAux {
 public:
     SaveAuxString(Parser &P, int l, size_t p, std::string s) : SaveAux(P, st_string), level(l), pos(p), val(std::move(s)) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for a \begin{something}
@@ -130,7 +130,7 @@ public:
     SaveAuxEnv(Parser &p, std::string a, std::string aa, int ll, Token b, CmdChr c)
         : SaveAux(p, st_env), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // data structure for a font change
@@ -141,7 +141,7 @@ class SaveAuxFont : public SaveAux {
 public:
     SaveAuxFont(Parser &p, long l, long v, Istring c) : SaveAux(p, st_font), level(l), value(v), color(std::move(c)) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };
 
 // This pops a token at the end of the group. Does not depend on a level
@@ -150,5 +150,5 @@ class SaveAuxAftergroup : public SaveAux {
 public:
     SaveAuxAftergroup(Parser &p, Token v) : SaveAux(p, st_save), value(v) {}
 
-    void unsave(bool trace, Parser &P) override;
+    void unsave(bool trace) override;
 };

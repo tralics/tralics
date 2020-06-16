@@ -416,7 +416,7 @@ void Parser::pop_level(boundary_type v) {
         SaveAux *tmp = the_save_stack.back();
         bool     ok  = tmp->type == st_boundary;
         the_save_stack.pop_back();
-        tmp->unsave(trace, *this);
+        tmp->unsave(trace);
         my_stats.one_more_down();
         delete tmp;
         if (ok) {
@@ -458,7 +458,7 @@ void Parser::pop_all_levels() {
             B << fmt::format(" started at line {}", l);
         }
         the_save_stack.pop_back();
-        tmp->unsave(false, *this);
+        tmp->unsave(false);
         my_stats.one_more_down();
         delete tmp;
     }
@@ -479,7 +479,7 @@ void Parser::final_checks() {
         SaveAux *tmp = the_save_stack.back();
         if (tmp->type == st_font) {
             the_save_stack.pop_back();
-            tmp->unsave(false, *this);
+            tmp->unsave(false);
             my_stats.one_more_down();
             delete tmp;
             n = the_save_stack.size();

@@ -20,7 +20,7 @@ void SaveAux::restore_or_retain(bool rt, String s) {
 // The number of the box is set by SaveAuxBoxend into the_box_position
 // But this function cannot call box_end (because we are still in the {...}
 // group. Hence box_end must be called after cur_level is decremented.
-void SaveAuxBoundary::unsave(bool trace, Parser &P) {
+void SaveAuxBoundary::unsave(bool trace) {
     if (trace) {
         Logger::finish_seq();
         the_log << "+stack: level - " << P.get_cur_level() << " for " << val << " from line " << line << "\n";
@@ -41,7 +41,7 @@ void SaveAuxBoundary::dump(int n) {
 // Restore box. Called in the case {\setbox0=\hbox{...}}
 // when we see the first closing brace. The box just created will be put in
 // box0.
-void SaveAuxBoxend::unsave(bool trace, Parser &P) {
+void SaveAuxBoxend::unsave(bool trace) {
     if (trace) {
         Logger::finish_seq();
         the_log << "+stack: finish a box of type " << pos << "\n";
@@ -53,7 +53,7 @@ void SaveAuxBoxend::unsave(bool trace, Parser &P) {
 }
 
 // This done when we restore an integer value
-void SaveAuxInt::unsave(bool trace, Parser &P) {
+void SaveAuxInt::unsave(bool trace) {
     bool rt = P.eqtb_int_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
@@ -65,7 +65,7 @@ void SaveAuxInt::unsave(bool trace, Parser &P) {
 
 // This done when we restore a string value
 //
-void SaveAuxString::unsave(bool trace, Parser &P) {
+void SaveAuxString::unsave(bool trace) {
     bool rt = P.eqtb_string_table[pos].level != 1;
     if (trace) {
         Logger::finish_seq();
@@ -75,7 +75,7 @@ void SaveAuxString::unsave(bool trace, Parser &P) {
 }
 
 // This done when we restore a dimension value
-void SaveAuxDim::unsave(bool trace, Parser &P) {
+void SaveAuxDim::unsave(bool trace) {
     bool rt = P.eqtb_dim_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
@@ -86,7 +86,7 @@ void SaveAuxDim::unsave(bool trace, Parser &P) {
 }
 
 // Restore glue
-void SaveAuxGlue::unsave(bool trace, Parser &P) {
+void SaveAuxGlue::unsave(bool trace) {
     bool rt = P.glue_table[pos].level != 1;
     if (trace) {
         Thbuf1 << bf_reset << val;
@@ -99,7 +99,7 @@ void SaveAuxGlue::unsave(bool trace, Parser &P) {
 }
 
 // Restore command. We have to take care to free memory for user commands.
-void SaveAuxCmd::unsave(bool trace, Parser &P) {
+void SaveAuxCmd::unsave(bool trace) {
     int lvl = P.hash_table.eqtb[cs].level;
     if (trace) {
         String S = lvl == 1 ? "retaining " : (val.is_undef() ? "killing " : "restoring ");
@@ -124,7 +124,7 @@ void SaveAuxCmd::unsave(bool trace, Parser &P) {
 }
 
 // Restore token list.
-void SaveAuxToken::unsave(bool trace, Parser &P) {
+void SaveAuxToken::unsave(bool trace) {
     bool rt = P.toks_registers[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\");
@@ -136,7 +136,7 @@ void SaveAuxToken::unsave(bool trace, Parser &P) {
 
 // Restore box. Called in the case {\setbox0=\hbox{...}}
 // when we see the last closing brace. This may restore box0.
-void SaveAuxBox::unsave(bool trace, Parser &P) {
+void SaveAuxBox::unsave(bool trace) {
     bool rt = P.box_table[pos].level != 1;
     if (trace) {
         restore_or_retain(rt, "\\box");
@@ -147,7 +147,7 @@ void SaveAuxBox::unsave(bool trace, Parser &P) {
 
 // \aftergroup\foo{}: When the group is finished, the token \foo is
 // pushed back into the input stream.
-void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
+void SaveAuxAftergroup::unsave(bool trace) {
     if (trace) {
         Logger::finish_seq();
         the_log << "+stack: after group " << value << "\n";
@@ -156,7 +156,7 @@ void SaveAuxAftergroup::unsave(bool trace, Parser &P) {
 }
 
 // This is executed when we pop a slot containing restore-foo-env
-void SaveAuxEnv::unsave(bool trace, Parser &P) {
+void SaveAuxEnv::unsave(bool trace) {
     if (trace) {
         Logger::finish_seq();
         the_log << "+stack: ending environment " << name << "; resuming " << oldname << ".\n";
@@ -165,7 +165,7 @@ void SaveAuxEnv::unsave(bool trace, Parser &P) {
 }
 
 // When we pop a level, the current font may change.
-void SaveAuxFont::unsave(bool trace, Parser &P) {
+void SaveAuxFont::unsave(bool trace) {
     P.flush_buffer();
     P.cur_font.set_old_from_packed();
     P.cur_font.set_level(level);
