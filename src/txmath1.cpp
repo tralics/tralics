@@ -1101,7 +1101,7 @@ void Math::handle_mbox_no() {
         else if (ok == 10)
             mathml_buffer.push_back("\\hspace{0pt}");
         else {
-            Math u = get_list(-ok); // was math_table[-ok];
+            Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
             u.convert_math_noML0();
         }
     }
@@ -1143,7 +1143,7 @@ void Math::handle_mbox_not() {
         else if (ok == 11)
             mathml_buffer.push_back("<mspace cmd='hspace'/>");
         else {
-            Math u = get_list(-ok); // was math_table[-ok];
+            Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
             u.convert_math_noML0();
         }
     }

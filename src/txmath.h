@@ -150,7 +150,7 @@ public:
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
     [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
     [[nodiscard]] auto        get_name() const -> String;
-    [[nodiscard]] static auto get_list(int w) -> Math &;
+    [[nodiscard]] static auto get_list(size_t w) -> Math &;
     void                      hack_type(int);
     [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
     [[nodiscard]] auto        has_one_element() const -> bool;
@@ -312,18 +312,16 @@ private:
 
 // This is a global object for math handling
 class MathDataP {
-    static const int                 m_offset = 10000;
-    std::array<Xml *, last_math_loc> built_in_table{};     // the static math table
-    std::array<Xml *, last_math_loc> built_in_table_alt{}; // the static math table
-    std::vector<Xml *>               xml_math_table;       // the dynamic math table
-    size_t                           xmath_pos{};          // number of slots used in the dynamic table
-
-    Math *                               math_table{};       // the table of math lists
-    size_t                               lmath_size{};       // the size of the math table
-    size_t                               lmath_pos{};        // number of slots used in the math table
-    std::array<Istring, del_tablesize>   xml_lr_ptable;      // table of fence attributes
-    std::array<math_types, nb_mathchars> math_char_type{};   // the math type for +, = etc
-    std::array<Xml *, nb_simplemath>     simplemath_table{}; // translation of $x$ etc
+    static const int                     m_offset = 10000;
+    std::array<Xml *, last_math_loc>     built_in_table{};     // the static math table
+    std::array<Xml *, last_math_loc>     built_in_table_alt{}; // the static math table
+    std::vector<Xml *>                   xml_math_table;       // the dynamic math table
+    size_t                               xmath_pos{};          // number of slots used in the dynamic table
+    std::vector<Math>                    math_table;           // the table of math lists
+    size_t                               lmath_pos{};          // number of slots used in the math table
+    std::array<Istring, del_tablesize>   xml_lr_ptable;        // table of fence attributes
+    std::array<math_types, nb_mathchars> math_char_type{};     // the math type for +, = etc
+    std::array<Xml *, nb_simplemath>     simplemath_table{};   // translation of $x$ etc
     std::array<Xml *, 29>                mc_table{};
     bool                                 no_ent_names{};
     Token                                nomathsw0; // says next token is for nomathml only
@@ -370,13 +368,13 @@ public:
         if (i < m_offset) return built_in_table[i];
         return xml_math_table[i - m_offset];
     }
-    auto        get_list(int k) -> Math & { return math_table[k]; }
-    void        push_back(int k, CmdChr X, subtypes c);
+    auto        get_list(size_t k) -> Math & { return math_table[k]; }
+    void        push_back(size_t k, CmdChr X, subtypes c);
     auto        get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
     auto        get_fence(size_t k) -> Istring { return xml_lr_ptable[k]; }
     auto        get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
     static auto mk_mo(String a) -> gsl::not_null<Xml *>;
-    void        set_type(int k, math_list_type c) { math_table[k].set_type(c); }
+    void        set_type(size_t k, math_list_type c) { math_table[k].set_type(c); }
 };
 
 class Cv3Helper {

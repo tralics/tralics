@@ -442,22 +442,17 @@ auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_nul
 // -----------------------------------------------------------------------
 // Some trivial functions on lists
 
-// This reallocates the math_table
 void MathDataP::realloc_list() {
-    auto  k = 2 * lmath_size;
-    Math *T = new Math[k];
-    for (size_t i = 0; i < lmath_size; i++) T[i] = math_table[i];
-    delete[] math_table;
-    math_table = T;
-    lmath_size = k;
+    auto k = 2 * math_table.size();
+    math_table.resize(k);
     the_log << "Realloc math table to " << k << "\n";
 }
 
 // Makes sure there is enough place for two copies
 void MathDataP::realloc_list0() {
     auto n = lmath_pos + 1;
-    if (n + n + n > lmath_size) realloc_list();
-    if (n + n + n > lmath_size) realloc_list();
+    if (n + n + n > math_table.size()) realloc_list();
+    if (n + n + n > math_table.size()) realloc_list();
 }
 
 // Appends the list X at the end, and destroys X.
@@ -470,7 +465,7 @@ void Math::push_back(Math &X) { value.splice(value.end(), X.value); }
 
 auto MathElt::get_list() const -> Math & { return math_data.get_list(get_chr()); }
 
-auto Math::get_list(int w) -> Math & { return math_data.get_list(w); }
+auto Math::get_list(size_t w) -> Math & { return math_data.get_list(w); }
 
 // Adds a token to the list
 void Math::push_back(CmdChr X, subtypes c) { push_back(MathElt(X, c)); }
@@ -480,7 +475,7 @@ void Math::push_back_list(subtypes X, math_list_type c) { push_back(MathElt(CmdC
 void Math::push_back_font(subtypes X, subtypes c) { push_back(MathElt(CmdChr(math_font_cmd, X), c)); }
 
 // Adds a token to the list at position k
-void MathDataP::push_back(int k, CmdChr X, subtypes c) { get_list(k).push_back(MathElt(X, c)); }
+void MathDataP::push_back(size_t k, CmdChr X, subtypes c) { get_list(k).push_back(MathElt(X, c)); }
 
 // Adds a token to the list
 void Math::push_front(CmdChr X, subtypes c) { value.push_front(MathElt(X, c)); }
@@ -543,8 +538,7 @@ auto math_ns::style_level(subtypes tt) -> math_style {
 
 // This creates the two tables math_table and xml_math_table
 void MathDataP::boot_table() {
-    lmath_size = 10;
-    math_table = new Math[lmath_size];
+    math_table.resize(10);
     xml_math_table.resize(10, nullptr);
     xmath_pos = 0;
     lmath_pos = 0;
@@ -587,7 +581,7 @@ void MathHelper::set_type(bool b) {
 auto MathDataP::find_math_location(math_list_type c, subtypes n) -> subtypes {
     lmath_pos++;
     auto res = lmath_pos;
-    if (res >= lmath_size) realloc_list();
+    if (res >= math_table.size()) math_table.resize(res + 1);
     math_table[res].set_type(c);
     math_table[res].set_name(n);
     return subtypes(res);
@@ -630,7 +624,7 @@ auto MathElt::is_digit() const -> bool { return get_cmd() == 12 && val.is_digit(
 // we open a group, create a new mathlist res, add it to cur_math.
 // Note that the type c appears both as type of res, and a field of cur_math
 
-auto Parser::new_math_list(int cur_math, math_list_type c, subtypes s) -> subtypes {
+auto Parser::new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes {
     subtypes k = math_data.find_math_location(c, s);
     math_data.get_list(cur_math).push_back_list(k, c);
     scan_math3(k, c, 1);
@@ -715,7 +709,7 @@ void Parser::after_math(bool is_inline) {
 }
 
 // This is called if no MathML should be generated.
-void Parser::finish_no_mathml(bool is_inline, int vp) {
+void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     Math &      u  = math_data.get_list(vp);
     Xid         id = cmi.get_mid();
     std::string S  = u.get_name();
@@ -783,7 +777,7 @@ void Parser::T_math(subtypes type) {
     }
     // Test for the no-mathml mode
     math_data.realloc_list0();
-    int loc_of_cp = 0;
+    size_t loc_of_cp = 0;
     if (nm < 0) {
         loc_of_cp = math_data.get_list(0).duplicate(true);
         if (nm != -3) {
@@ -846,7 +840,7 @@ void Parser::T_math(subtypes type) {
 
 // x is index of result, t is type of math list,
 // m is 0 for outer math, 1 normally, 2 in \hbox
-void Parser::scan_math3(int x, math_list_type t, int m) {
+void Parser::scan_math3(size_t x, math_list_type t, int m) {
     Token xfct_caller = fct_caller;
     fct_caller        = hash_table.relax_token;
     mode om           = the_stack.get_mode();
@@ -898,7 +892,7 @@ void MathHelper::handle_tags() {
 
 // Reads a new token.
 // Return  0 if end-of data, 1 if token should be ignored, 2 otherwise
-auto Parser::scan_math1(int res) -> int {
+auto Parser::scan_math1(size_t res) -> int {
     get_x_token();
     if (cur_tok.is_invalid()) {
         parse_error("End of input reached");
@@ -955,7 +949,7 @@ auto Parser::scan_math1(int res) -> int {
 
 // The function that reads a math formula. Read tokens until the end
 // of the current group is seen. Fills the list number res, of type type
-void Parser::scan_math(int res, math_list_type type) {
+void Parser::scan_math(size_t res, math_list_type type) {
     for (;;) {
         int w = scan_math1(res);
         if (w == 0) return;
@@ -1034,7 +1028,7 @@ void Parser::scan_math(int res, math_list_type type) {
             continue;
         case left_cmd: {
             del_pos k   = math_lr_value();
-            int     tmp = new_math_list(res, math_LR_cd, nomathenv_code);
+            auto    tmp = new_math_list(res, math_LR_cd, nomathenv_code);
             Math &  ww  = math_data.get_list(tmp);
             ww.push_front(CmdChr(T, subtypes(k)), zero_code);
             if (ww.back().get_cmd() != right_cmd) {
@@ -1319,7 +1313,7 @@ void MathHelper::ml_last_pass(bool vb) {
 }
 
 // We have seen & or \\. Must interpret it
-void Parser::scan_math_endcell_ok(int res) {
+void Parser::scan_math_endcell_ok(size_t res) {
     math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
     if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.get_eqnum_status() == 2) {
         bool w = cmi.end_of_row();
@@ -1334,7 +1328,7 @@ void Parser::scan_math_endcell_ok(int res) {
 
 // We have seen \begin or \end
 // return false if parsing continues, true otherwise (case of \end)
-auto Parser::scan_math_env(int res, math_list_type type) -> bool {
+auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     symcodes T        = cur_cmd_chr.cmd;
     bool     at_start = T == begin_cmd;
     // Check if v-part of template has to be inserted here
@@ -1425,7 +1419,7 @@ auto Parser::scan_math_env(int res, math_list_type type) -> bool {
 
 // We have seen a dollar sign, expected closing delimiter type
 // Returns  true if Ok, false if parsing continues
-auto Parser::scan_math_dollar(int res, math_list_type type) -> bool {
+auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
     switch (type) {
     case math_dollar_cd: return true;
     case math_ddollar_cd: // We want $$ or equivalent
@@ -1568,7 +1562,7 @@ auto Parser::scan_math_kern(symcodes T, subtypes &c) -> ScaledInt {
 
 // Case of a \not\in read as \notin, \not= read as \ne
 // What should we do in other cases?
-void Parser::scan_math_rel(subtypes c, int res) {
+void Parser::scan_math_rel(subtypes c, size_t res) {
     auto w = subtypes(cur_tok.val);
     if (c == subtypes(not_code)) {
         Token not_token = cur_tok;
@@ -1592,7 +1586,7 @@ void Parser::scan_math_rel(subtypes c, int res) {
 }
 
 // Case of a \hbox; like \mbox, but inserts \everyhbox tokens
-void Parser::scan_math_hbox(int res, subtypes c) {
+void Parser::scan_math_hbox(size_t res, subtypes c) {
     TokenList L = toks_registers[everyhbox_code].val;
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
@@ -1608,7 +1602,7 @@ void Parser::scan_math_hbox(int res, subtypes c) {
 }
 
 // Scans a mbox or a hbox
-void Parser::scan_hbox(int ptr, subtypes c) {
+void Parser::scan_hbox(size_t ptr, subtypes c) {
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
     subtypes k = math_data.find_math_location(math_hbox_cd, nomathenv_code);
@@ -1656,7 +1650,7 @@ auto Parser::scan_style() -> Token {
 
 // This parses something like
 // \genfrac (){0pt}3{foo}{bar}
-void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
+void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
     Token     ct = cur_tok;
     del_pos   k1{}, k2{};
     TokenList L1 = read_arg();
@@ -1702,7 +1696,7 @@ void Parser::interpret_genfrac_cmd(int res, subtypes k, CmdChr W) {
 }
 
 // Handles \mathmi[foo][bar][a][b]{etc} and friends
-void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
+void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
     Token       ct = cur_tok;
     std::string s;
     if (c == mathbox_code) {
@@ -1735,7 +1729,7 @@ void Parser::scan_math_mi(int res, subtypes c, subtypes k, CmdChr W) {
 }
 
 // Case of \mathchoice{}{}{}{}
-void Parser::interpret_mathchoice_cmd(int res, subtypes k, CmdChr W) {
+void Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) {
     Token    ct = cur_tok;
     subtypes r1 = math_argument(1, ct);
     subtypes r2 = math_argument(1, ct);
@@ -1758,7 +1752,7 @@ void Parser::opt_to_mandatory() {
 }
 
 // Scans a command with some arguments.
-void Parser::interpret_math_cmd(int res, subtypes c) {
+void Parser::interpret_math_cmd(size_t res, subtypes c) {
     Token    ct = cur_tok;
     subtypes k  = math_data.find_math_location(sub_to_math(c), nomathenv_code);
     CmdChr   W  = CmdChr(special_math_cmd, k);
@@ -2944,7 +2938,7 @@ void Math::handle_mbox(Math &res) {
             }
             res.push_back_small(b);
         } else {
-            Math u = math_data.get_list(-ok);
+            Math u = math_data.get_list(to_unsigned(-ok));
             res.push_back_small(u.convert_math(ms_T));
         }
     }
