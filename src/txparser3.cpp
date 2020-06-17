@@ -329,6 +329,7 @@ auto       Parser::first_boundary() -> boundary_type {
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1].get();
+        if (!p) continue;
         if (p->type != st_boundary) continue;
         first_boundary_loc = p->line;
         return dynamic_cast<SaveAuxBoundary *>(p)->val;
@@ -411,7 +412,8 @@ void Parser::pop_level(boundary_type v) {
             parse_error(err_tok, "Internal error: empty save stack");
             return;
         }
-        bool ok = the_save_stack.back()->type == st_boundary;
+        auto p  = the_save_stack.back().get();
+        bool ok = p && p->type == st_boundary;
         my_stats.one_more_down();
         the_save_stack.pop_back();
         if (ok) {
@@ -502,6 +504,7 @@ auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
     auto n = the_save_stack.size();
     for (size_t i = n; i > 0; i--) {
         SaveAux *p = the_save_stack[i - 1].get();
+        if (!p) continue; // \todo this should never happen but it does on linux+clang9
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p);
         if (q->name == s) return q;
