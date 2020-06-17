@@ -172,7 +172,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
         }
-        if (c.non_null()) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
+        if (c) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
     }
     return {the_converter.line_is_ascii, utf8_out};
 }
@@ -404,7 +404,7 @@ void Buffer::process_big_char(size_t n) {
 // or control characters.
 
 void Parser::process_char(codepoint c) {
-    if (c.is_null())
+    if (!c)
         unprocessed_xml.push_back(""); // may be required
     else if (c == '\n')
         unprocessed_xml.push_back('\n');
@@ -425,7 +425,7 @@ void Parser::process_char(codepoint c) {
 }
 
 void Buffer::push_back_real_utf8(codepoint c) {
-    if (c.is_null())
+    if (!c)
         push_back(""); // may be required
     else if (c == '\n')
         push_back('\n');
@@ -488,8 +488,8 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     the_converter.global_error = false;
     for (;;) {
         codepoint c = B.next_utf8_char();
-        if (c.is_null() && B.at_eol()) break;
-        if (c.is_null()) continue;
+        if (!c && B.at_eol()) break;
+        if (!c) continue;
         if (c.is_ascii())
             O.push_back(static_cast<char>(c.value));
         else if (c.is_small() && nonascii)

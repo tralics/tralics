@@ -26,6 +26,8 @@ struct codepoint {
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
+    explicit operator bool() const { return value != 0; }
+
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
     [[nodiscard]] auto is_control() const -> bool { return value < 32; }
@@ -36,12 +38,10 @@ struct codepoint {
     [[nodiscard]] auto is_invalid() const -> bool { return value == 0xFFFF; }
     [[nodiscard]] auto is_letter() const -> bool { return is_ascii() && ::is_letter(static_cast<char>(value)); }
     [[nodiscard]] auto is_lower_case() const -> bool { return 'a' <= value && value <= 'z'; }
-    [[nodiscard]] auto is_null() const -> bool { return value == 0; }
     [[nodiscard]] auto is_small() const -> bool { return value < 256; }
     [[nodiscard]] auto is_space() const -> bool { return value == ' ' || value == '\t' || value == '\n'; }
     [[nodiscard]] auto is_upper_case() const -> bool { return 'A' <= value && value <= 'Z'; }
     [[nodiscard]] auto is_verybig() const -> bool { return value > 0x1FFFF; }
-    [[nodiscard]] auto non_null() const -> bool { return value != 0; }
     [[nodiscard]] auto val_as_digit() const -> unsigned { return value - '0'; }
     [[nodiscard]] auto val_as_Hex() const -> unsigned { return value - 'A' + 10; }
     [[nodiscard]] auto val_as_hex() const -> unsigned { return value - 'a' + 10; }
