@@ -53,3 +53,5 @@ public:
     void run(Xid /*ID*/, bool main_fct);
     auto ac_next() -> bool;
 };
+
+inline NewArray new_array_object;

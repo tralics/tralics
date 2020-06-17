@@ -14,3 +14,5 @@ struct Istring : public std::string {
 
     [[nodiscard]] auto labinfo() const -> LabelInfo *;
 };
+
+inline Istring hlinee_above, hlinee_width, hlinee_below;

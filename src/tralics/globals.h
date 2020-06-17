@@ -29,6 +29,7 @@ inline bool                                                          distinguish
 inline bool                                                          global_in_load    = false;
 inline bool                                                          global_in_url     = false;
 inline bool                                                          old_ra            = false;
+inline bool                                                          in_hlinee, have_above, have_below;
 inline int                                                           cur_entry_line;    // position of entry in source file
 inline int                                                           init_file_pos = 0; // position in init file
 inline int                                                           nb_words      = 0;

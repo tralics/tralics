@@ -277,7 +277,6 @@ private:
     void        bad_redefinition(int rd, Token T);
     auto        before_mac_arg() -> bool;
     void        begin_box(size_t src, subtypes c);
-    void        boot_NAO();
     void        boot_fp();
     void        boot_time();
     void        boot_uclc();
