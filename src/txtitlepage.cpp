@@ -404,16 +404,6 @@ auto TitlePageAux::increment_flag() -> bool {
     return false;
 }
 
-// Thew string S, a sequence of a='b', is converted to attributes of this.
-void Xid::add_special_att(const std::string &S) {
-    if (S.length() == 0) return;
-    Buffer &B = local_buf;
-    B.clear();
-    B.push_back(S);
-    B.ptrs.b = 0;
-    B.push_back_special_att(*this);
-}
-
 // This is executed when we see the \titlepage command,
 // After that, no more titlepage ...
 void Parser::T_titlepage_finish(size_t v) {

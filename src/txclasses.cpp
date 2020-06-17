@@ -42,7 +42,6 @@ namespace {
 Buffer file_list;
 
 namespace {
-    Buffer      local_buf;
     ClassesData the_class_data;
     // global variable so that tralics/Parser.h does not need to know OptionList
     OptionList cur_opt_list;
@@ -82,7 +81,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     std::string key_name = the_parser.list_to_string_c(key, "Invalid option");
     std::string key_full = key_name;
     if (have_equals) {
-        Buffer &B = local_buf;
+        Buffer &B = txclasses_local_buf;
         B << bf_reset << key_name << key_val;
         key_full = B;
     }
@@ -105,7 +104,7 @@ auto classes_ns::make_options(TokenList &L) -> OptionList {
 
 // Prints the options list on log and tty
 void classes_ns::dump_options(const OptionList &A, String x) {
-    Buffer &B = local_buf;
+    Buffer &B = txclasses_local_buf;
     B.clear();
     auto n = A.size();
     for (size_t i = 0; i < n; i++) {
@@ -286,7 +285,7 @@ void Parser::T_provides_package(bool c) // True for a file
     if (name != S && !the_class_data.using_default_class) {
         log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
     }
-    Buffer &b = local_buf;
+    Buffer &b = txclasses_local_buf;
     b << bf_reset << (cur->is_class() ? "Document class: " : "Package: ") << name << " " << date << "\n";
     if (cur->is_class())
         log_and_tty << b;
@@ -363,7 +362,7 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
         if (j <= 0) continue;
         if (DO[to_unsigned(j)].used) continue; // should not happen
         i.used = true;
-        local_buf << bf_comma << nname;
+        txclasses_local_buf << bf_comma << nname;
         DO[to_unsigned(j)].use_and_kill(action, i, X);
     }
 }
@@ -391,7 +390,7 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
             } else
                 continue;
         }
-        local_buf << bf_comma << nname;
+        txclasses_local_buf << bf_comma << nname;
     }
 }
 
@@ -464,7 +463,7 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
         } else {
             ClassesData::remove_from_unused(nname);
             if (DO[to_unsigned(j)].used) continue;
-            local_buf << bf_comma << DO[to_unsigned(j)].name;
+            txclasses_local_buf << bf_comma << DO[to_unsigned(j)].name;
             DO[to_unsigned(j)].use_and_kill(action, i, X != 0);
         }
     }
@@ -480,7 +479,7 @@ void Parser::T_process_options() {
     LatexPackage *C        = the_class_data.cur_pack();
     bool          in_class = C->is_class();
     C->seen_process        = true;
-    Buffer &b              = local_buf;
+    Buffer &b              = txclasses_local_buf;
     b.clear();
     TokenList action; // token list to evaluate
     if (star) {
@@ -497,7 +496,7 @@ void Parser::T_execute_options() {
     LatexPackage *C    = the_class_data.cur_pack();
     OptionList &  pack = C->Poptions;
     TokenList     action;
-    Buffer &      b = local_buf;
+    Buffer &      b = txclasses_local_buf;
     b.clear();
     OptionList L = make_options(opt);
     auto       n = L.size();
@@ -515,7 +514,7 @@ void Parser::T_execute_options() {
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
     Logger::finish_seq();
-    the_log << "{Options to execute->" << local_buf << "}\n";
+    the_log << "{Options to execute->" << txclasses_local_buf << "}\n";
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{Options code to execute->" << action << "}\n";
@@ -529,7 +528,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     LatexPackage *C        = the_class_data.cur_pack();
     bool          in_class = C->is_class();
     C->seen_process        = true;
-    Buffer &b              = local_buf;
+    Buffer &b              = txclasses_local_buf;
     b.clear();
     TokenList action; // token list to evaluate
     if (star) {
@@ -538,7 +537,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
         C->check_local_options(action, true);
     C->check_all_options(action, spec, normal ? 1 : 2);
     Logger::finish_seq();
-    the_log << "{Options to execute->" << local_buf << "}\n";
+    the_log << "{Options to execute->" << txclasses_local_buf << "}\n";
     return action;
 }
 
@@ -642,7 +641,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     cur->date = "0000/00/00";
     open_tex_file(*res, true);
     set_cur_file_pos(to_signed(p));
-    Buffer &b = local_buf;
+    Buffer &b = txclasses_local_buf;
     b << bf_reset << name;
     TokenList cc    = b.str_toks11(false);
     Token     cctok = hash_table.locate("CurrentClass");
@@ -744,7 +743,7 @@ void show_unused_options() { ClassesData::show_unused(); }
 
 void ClassesData::show_unused() {
     OptionList &GO = the_class_data.global_options;
-    Buffer &    B  = local_buf;
+    Buffer &    B  = txclasses_local_buf;
     B.clear();
     int k = 0;
     for (auto &i : GO) {
@@ -864,7 +863,7 @@ void Parser::T_class_error(subtypes c) {
     default:;
     }
     if (!simple) prefix = string_to_write(write18_slot + 1);
-    Buffer &B = local_buf;
+    Buffer &B = txclasses_local_buf;
     B.clear();
     if (std) {
         std::string name = prefix;
@@ -1022,14 +1021,14 @@ void Parser::kvo_bool_key() {
     std::string D = sE_arg_nopar(); // key
     std::string d = sE_arg_nopar(); // val
     if (!(d == "true" || d == "false")) {
-        Buffer &B = local_buf;
+        Buffer &B = txclasses_local_buf;
         B << bf_reset << "Illegal boolean value " << d << " ignored";
         parse_error(err_tok, B, "bad bool");
         log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << A.substr(1) << ".\n";
         return;
     }
-    local_buf << bf_reset << C << '@' << D << d;
-    back_input(hash_table.locate(local_buf));
+    txclasses_local_buf << bf_reset << C << '@' << D << d;
+    back_input(hash_table.locate(txclasses_local_buf));
 }
 
 // \DeclareStringOption[a]{b}[c]
@@ -1043,7 +1042,7 @@ void Parser::kvo_string_opt() {
     bool        has_default = read_optarg(defval);
     classes_ns::register_key(arg);
     std::string fam = kvo_getfam();
-    Buffer &    B   = local_buf;
+    Buffer &    B   = txclasses_local_buf;
     B << bf_reset << fam << "@" << arg;
     Token T = hash_table.locate(B);
     if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
@@ -1091,7 +1090,7 @@ void Parser::kvo_void_opt() {
     Token       cmd = cur_tok;
     std::string arg = sE_arg_nopar();
     std::string fam = kvo_getfam();
-    Buffer &    B   = local_buf;
+    Buffer &    B   = txclasses_local_buf;
     classes_ns::register_key(arg);
     B << bf_reset << fam << "@" << arg;
     Token T = hash_table.locate(B);
@@ -1142,7 +1141,7 @@ void Parser::kvo_comp_opt() {
     std::string arg  = sE_arg_nopar();
     std::string comp = sE_arg_nopar();
     std::string fam  = kvo_getfam();
-    Buffer &    B    = local_buf;
+    Buffer &    B    = txclasses_local_buf;
     B << bf_reset << "if" << fam << '@' << comp;
     Token T = hash_table.locate(B);
     if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
@@ -1169,7 +1168,7 @@ void Parser::kvo_comp_opt() {
 // Get/set for family and prefix
 void Parser::kvo_family_etc(subtypes k) {
     std::string s = the_class_data.cur_pack()->full_name();
-    Buffer &    B = local_buf;
+    Buffer &    B = txclasses_local_buf;
     B << bf_reset << "KVO@";
     if (k == kvo_fam_set_code || k == kvo_fam_get_code)
         B << "family@";
@@ -1202,7 +1201,7 @@ auto Parser::kvo_getfam() -> std::string {
 // If arg is foo checks that \iffoo \footrue \foofalse
 // are undefined . Puts \iffo in cur_tok
 auto Parser::check_if_redef(const std::string &s) -> bool {
-    Buffer &B = local_buf;
+    Buffer &B = txclasses_local_buf;
     B << bf_reset << s << "true";
     Token T2 = hash_table.locate(B);
     if (!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) {
@@ -1237,7 +1236,7 @@ auto Parser::XKV_parse_filename() -> TokenList {
         return read_until_nopar(Token(other_t_offset, '>'));
     }
     LatexPackage *C = the_class_data.cur_pack();
-    local_buf << bf_reset << C->real_name();
-    local_buf << (C->is_class() ? ".cls" : ".sty");
-    return local_buf.str_toks11(false);
+    txclasses_local_buf << bf_reset << C->real_name();
+    txclasses_local_buf << (C->is_class() ? ".cls" : ".sty");
+    return txclasses_local_buf.str_toks11(false);
 }

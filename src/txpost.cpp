@@ -99,10 +99,6 @@ void Parser::create_label(const std::string &X, const Istring &S) {
     }
 }
 
-// Implementation of \ref{foo}. We enter foo in the hashtab.
-// and create/update the LabelInfo. We remember the ref in the ref_list.
-void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(value, s, false); }
-
 void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
     auto B = Istring(s);
