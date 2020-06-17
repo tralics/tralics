@@ -1383,7 +1383,7 @@ void Parser::more_bootstrap() {
     L.push_back(T);
     new_prim("@spaces", L);
     {
-        auto A    = uchar(' '); // eqtb loc of active space
+        auto A    = uchar(' ');
         auto Bval = T.eqtb_loc();
         eq_define(A, hash_table.eqtb[Bval], true);
         A    = '#';

@@ -26,7 +26,6 @@ public:
     void eval_let_local(const std::string &a, const std::string &b);
     auto is_defined(const Buffer &b) -> bool;
 
-    void boot_base();
     void boot_fancyhdr();
     void boot_etex();
     void boot_latex3();

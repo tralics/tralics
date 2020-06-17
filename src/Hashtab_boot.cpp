@@ -1,6 +1,6 @@
 #include "tralics/Parser.h"
 
-void Hashtab::boot_base() {
+Hashtab::Hashtab() {
     frozen_undef_token = nohash_primitive("undefined", CmdChr(undef_cmd, zero_code));
     temp_token         = nohash_primitive("temp", CmdChr(undef_cmd, zero_code));
     endv_token         = nohash_primitive("endv", CmdChr(endv_cmd, zero_code));

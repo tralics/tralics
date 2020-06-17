@@ -78,8 +78,3 @@ void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
     auto Bval = locate(b).eqtb_loc();
     the_parser.eq_define(A, eqtb[Bval], false);
 }
-
-Hashtab::Hashtab() {
-    for (auto &k : eqtb) k.cmd = undef_cmd;
-    boot_base();
-}

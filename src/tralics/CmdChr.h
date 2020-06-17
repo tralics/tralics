@@ -5,7 +5,7 @@
 // cmd, chr pair; The subtype can have 16bits
 class CmdChr {
 public:
-    symcodes cmd{invalid_cmd};
+    symcodes cmd{undef_cmd};
     subtypes chr{zero_code};
 
     CmdChr(symcodes a, subtypes b) : cmd(a), chr(b) {}
