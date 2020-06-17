@@ -18,8 +18,7 @@ public:
 
     Hashtab();
 
-    auto locate(const std::string &s) -> Token; // used by primitive, etc
-    auto locate(const Buffer &b) -> Token;      // used by primitive, etc
+    auto locate(const std::string &s) -> Token;
     auto hash_find(const std::string &s) -> size_t;
     auto primitive(const std::string &s, symcodes c, subtypes v = zero_code) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;

@@ -9,11 +9,6 @@ template <typename T> class Saver {
 public:
     Saver(T &t, T nt) : target(t), saved(t) { t = nt; }
     ~Saver() { target = saved; }
-
-    Saver(const Saver &S) = delete;
-    Saver(Saver &&S)      = delete;
-    auto operator=(const Saver &S) = delete;
-    auto operator=(Saver &&S) = delete;
 };
 
 inline auto InLoadHandler() { return Saver(global_in_load, true); }

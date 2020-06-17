@@ -1,16 +1,19 @@
 #include "tralics/Parser.h"
+#include <utf8.h>
+
+namespace {
+    auto single_char(const std::string &s) -> codepoint {
+        auto it = s.begin();
+        auto cp = utf8::next(it, s.end());
+        return it == s.end() ? codepoint(cp) : codepoint(); // \todo the test should be it != end(), size() is wrong
+    }
+} // namespace
 
 auto Hashtab::locate(const std::string &s) -> Token {
+    if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
-    return locate(Buffer(s));
-}
-
-// This returns the token associated to the string in the buffer.
-auto Hashtab::locate(const Buffer &b) -> Token {
-    if (b.empty()) return Token(null_tok_val);
-    auto c = b.single_character();
-    if (c.non_null()) return Token(c.value + single_offset);
-    return Token(hash_find(b) + hash_offset);
+    if (auto c = single_char(s); c.non_null()) return Token(c.value + single_offset);
+    return Token(hash_find(s) + hash_offset);
 }
 
 // Returns the hash location of the name in the buffer.
