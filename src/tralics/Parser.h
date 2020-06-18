@@ -160,7 +160,10 @@ public:
     void               set_ra_year(int x) { ra_year = x; }
     void               set_job_name(std::string s) { job_name = std::move(s); }
     void               set_year_string(std::string s) { year_string = std::move(s); }
-    [[nodiscard]] auto tracing_commands() const -> bool { return is_pos_par(tracingcommands_code); }
+    [[nodiscard]] auto tracing_commands() const -> bool { // \todo remove eventually
+        static const auto ans = is_pos_par(tracingcommands_code);
+        return ans;
+    }
     [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
     [[nodiscard]] auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
     [[nodiscard]] auto tracing_stack() const -> bool { return is_pos_par(tracingrestores_code); }
