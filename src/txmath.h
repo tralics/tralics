@@ -124,10 +124,10 @@ class Math {
     friend class MathElt;
     MathList       value;
     math_list_type type{invalid_cd};
-    subtypes       sname{nomathenv_code};
 
 public:
-    std::string saved{};
+    subtypes    sname{nomathenv_code};
+    std::string saved;
 
     [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
     auto                      back() -> MathElt & { return value.back(); }
@@ -179,18 +179,12 @@ public:
     [[nodiscard]] auto        second_element() const -> const MathElt &;
     void                      set_display_type() { type = math_ddollar_cd; }
     void                      set_env_name(int);
-    [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
-    void                      set_name(subtypes X) { sname = X; }
-    void                      set_name_2(size_t i, std::string s) {
-        sname = subtypes(i);
-        saved = s;
-    }
-    void               set_nondisplay_type() { type = math_dollar_cd; }
-    void               set_type(math_list_type c) { type = c; }
-    [[nodiscard]] auto third_element() const -> const MathElt &;
-    auto               trivial_math(long action) -> Xml *;
-    auto               trivial_math_index(symcodes cmd) -> Xml *;
-    auto               check_align() -> int;
+    void                      set_nondisplay_type() { type = math_dollar_cd; }
+    void                      set_type(math_list_type c) { type = c; }
+    [[nodiscard]] auto        third_element() const -> const MathElt &;
+    auto                      trivial_math(long action) -> Xml *;
+    auto                      trivial_math_index(symcodes cmd) -> Xml *;
+    auto                      check_align() -> int;
 
 private:
     void               add_cur_cont();

@@ -267,7 +267,7 @@ auto tralics_ns::math_env_props(subtypes chr) -> int {
 // Name of a math object. In a previous version, the name was a character string.
 // Now it is a subtype. The name has the form "endmath" and we remove the prefix
 auto Math::get_name() const -> String {
-    subtypes w = get_sname();
+    subtypes w = sname;
     if (w == nomathenv_code) return "";
     String S = tralics_ns::math_env_name(w);
     if (S != nullptr) return S + 3;
@@ -583,10 +583,8 @@ auto MathDataP::find_math_location(math_list_type c, subtypes n, std::string s) 
     auto res = lmath_pos;
     if (res >= math_table.size()) math_table.resize(res + 1);
     math_table[res].set_type(c);
-    if (n == nomathenv_code || tralics_ns::math_env_name(n))
-        math_table[res].set_name(n);
-    else
-        math_table[res].set_name_2(n, s);
+    math_table[res].sname = n;
+    math_table[res].saved = s;
     return subtypes(res);
 }
 
@@ -654,7 +652,7 @@ auto Parser::math_lr_value() -> del_pos {
 // Sets and returns the inline/non-inline flag
 
 auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
-    u.set_name(type);
+    u.sname = type;
     if (type == nomathenv_code) { // case of $...
         add_to_trace(cur_tok);
         get_token(); // no expansion
@@ -856,7 +854,7 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
     boundary_type aux = bt_math;
     {
         Math &u = math_data.get_list(x);
-        if ((math_env_props(u.get_sname()) & 8) != 0)
+        if ((math_env_props(u.sname) & 8) != 0)
             aux = bt_cell;
         else if (t == math_open_cd)
             aux = bt_brace;
@@ -1396,7 +1394,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
         cmi.handle_tags();
         return false;
     }
-    if (type == math_env_cd && et == math_data.get_list(res).get_sname()) {
+    if (type == math_env_cd && et == math_data.get_list(res).sname) {
         if (res == 0) { // end of main formula
             if (cmi.get_eqnum_status() > 1) the_tag = the_parser.eqtb_string_table[0].val;
         }
@@ -1608,8 +1606,8 @@ void Parser::scan_math_hbox(size_t res, subtypes c) {
 void Parser::scan_hbox(size_t ptr, subtypes c) {
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
-    subtypes k = math_data.find_math_location(math_hbox_cd, nomathenv_code, "");
-    math_data.get_list(k).set_name(c);
+    subtypes k                  = math_data.find_math_location(math_hbox_cd, nomathenv_code, "");
+    math_data.get_list(k).sname = c;
     scan_math3(k, math_hbox_cd, 2);
     math_data.push_back(ptr, CmdChr(math_list_cmd, k), subtypes(math_hbox_cd));
 }
@@ -1722,10 +1720,8 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
     n           = n + n; // Ignore last if odd
     subtypes r1 = math_argument(0, ct);
     Math &   u  = math_data.get_list(k);
-    if (c == mathbox_code) {
-        auto ss = Istring(s);
-        u.set_name_2(ss.id, s);
-    }
+    // \todo this is weird, store a string instead of a type
+    if (c == mathbox_code) u.saved = s;
     u.push_back_list(r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);
     math_data.push_back(res, W, subtypes(u.get_type()));
