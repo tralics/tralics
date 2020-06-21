@@ -673,19 +673,17 @@ void Parser::token_from_list(Token t) {
 // Returns the next element of TL, assumed non-empty
 // executes token_from_list  with a hack explained below
 void Parser::next_from_list() {
-    Token t = TL.front();
+    cur_tok = TL.front();
     TL.pop_front();
-    cur_tok = t;
-    if (t.not_a_cmd())
-        see_char_token(t);
+    if (cur_tok.not_a_cmd())
+        see_char_token(cur_tok);
     else {
         see_cs_token();
         if (cur_cmd_chr.cmd == dont_expand_cmd) { // see comment below
             if (TL.empty()) return;
-            t = TL.front();
+            cur_tok = TL.front();
             TL.pop_front();
-            cur_tok = t;
-            if (t.not_a_cmd()) return;
+            if (cur_tok.not_a_cmd()) return;
             see_cs_token();
             if (cur_cmd_chr.is_expandable()) { cur_cmd_chr = CmdChr(relax_cmd, subtypes(special_relax)); }
         }
