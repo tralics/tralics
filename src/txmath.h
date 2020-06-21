@@ -10,6 +10,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Xml.h"
+#include <spdlog/spdlog.h>
 
 class Math;
 class MathQ;
@@ -113,6 +114,10 @@ using MathList            = std::list<MathElt>;
 using const_math_iterator = std::list<MathElt>::const_iterator;
 using math_iterator       = std::list<MathElt>::iterator;
 
+namespace tralics_ns {
+    auto math_env_name(subtypes c) -> String;
+} // namespace tralics_ns
+
 class Math {
     friend class MathHelper;
     friend class MathDataP;
@@ -122,7 +127,7 @@ class Math {
     subtypes       sname{nomathenv_code};
 
 public:
-    Math() = default;
+    std::string saved{};
 
     [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
     auto                      back() -> MathElt & { return value.back(); }
@@ -148,7 +153,6 @@ public:
     [[nodiscard]] auto        get_arg2() const -> Math { return second_element().get_list(); }
     [[nodiscard]] auto        get_arg3() const -> Math { return third_element().get_list(); }
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
-    [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
     [[nodiscard]] auto        get_name() const -> String;
     [[nodiscard]] static auto get_list(size_t w) -> Math &;
     void                      hack_type(int);
@@ -175,13 +179,18 @@ public:
     [[nodiscard]] auto        second_element() const -> const MathElt &;
     void                      set_display_type() { type = math_ddollar_cd; }
     void                      set_env_name(int);
+    [[nodiscard]] auto        get_sname() const -> subtypes { return sname; }
     void                      set_name(subtypes X) { sname = X; }
-    void                      set_nondisplay_type() { type = math_dollar_cd; }
-    void                      set_type(math_list_type c) { type = c; }
-    [[nodiscard]] auto        third_element() const -> const MathElt &;
-    auto                      trivial_math(long action) -> Xml *;
-    auto                      trivial_math_index(symcodes cmd) -> Xml *;
-    auto                      check_align() -> int;
+    void                      set_name_2(size_t i, std::string s) {
+        sname = subtypes(i);
+        saved = s;
+    }
+    void               set_nondisplay_type() { type = math_dollar_cd; }
+    void               set_type(math_list_type c) { type = c; }
+    [[nodiscard]] auto third_element() const -> const MathElt &;
+    auto               trivial_math(long action) -> Xml *;
+    auto               trivial_math_index(symcodes cmd) -> Xml *;
+    auto               check_align() -> int;
 
 private:
     void               add_cur_cont();
@@ -351,7 +360,7 @@ public:
     void        boot();
     void        realloc_list0();
     void        realloc_list();
-    auto        find_math_location(math_list_type c, subtypes n) -> subtypes;
+    auto        find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes;
     auto        find_xml_location() -> subtypes;
     auto        find_xml_location(Xml *y) -> subtypes;
     auto        make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *>;

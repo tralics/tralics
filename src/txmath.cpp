@@ -77,7 +77,7 @@ using tralics_ns::math_env_props;
 // It removes tokens preceeded by the special marker.
 
 auto Math::duplicate(bool nomath) const -> subtypes {
-    subtypes k  = math_data.find_math_location(type, sname);
+    subtypes k  = math_data.find_math_location(type, sname, saved);
     Math &   cp = math_data.get_list(k);
     int      sp = 0, sm = 0;
     bool     skipping  = false;
@@ -578,12 +578,15 @@ void MathHelper::set_type(bool b) {
 
 // This finds a free position in the table of math lists.
 // Note: the return value is never zero.
-auto MathDataP::find_math_location(math_list_type c, subtypes n) -> subtypes {
+auto MathDataP::find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes {
     lmath_pos++;
     auto res = lmath_pos;
     if (res >= math_table.size()) math_table.resize(res + 1);
     math_table[res].set_type(c);
-    math_table[res].set_name(n);
+    if (n == nomathenv_code || tralics_ns::math_env_name(n))
+        math_table[res].set_name(n);
+    else
+        math_table[res].set_name_2(n, s);
     return subtypes(res);
 }
 
@@ -625,7 +628,7 @@ auto MathElt::is_digit() const -> bool { return get_cmd() == 12 && val.is_digit(
 // Note that the type c appears both as type of res, and a field of cur_math
 
 auto Parser::new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes {
-    subtypes k = math_data.find_math_location(c, s);
+    subtypes k = math_data.find_math_location(c, s, "");
     math_data.get_list(cur_math).push_back_list(k, c);
     scan_math3(k, c, 1);
     return k;
@@ -995,7 +998,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
                     back_input(L1);
                     math_list_type cc = sub_to_math(c);
                     Token          ct = cur_tok;
-                    subtypes       k  = math_data.find_math_location(cc, nomathenv_code);
+                    subtypes       k  = math_data.find_math_location(cc, nomathenv_code, "");
                     CmdChr         W  = CmdChr(special_math_cmd, k);
                     math_data.set_type(k, cc);
                     subtypes r1 = math_argument(0, ct); // should be s
@@ -1605,7 +1608,7 @@ void Parser::scan_math_hbox(size_t res, subtypes c) {
 void Parser::scan_hbox(size_t ptr, subtypes c) {
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
-    subtypes k = math_data.find_math_location(math_hbox_cd, nomathenv_code);
+    subtypes k = math_data.find_math_location(math_hbox_cd, nomathenv_code, "");
     math_data.get_list(k).set_name(c);
     scan_math3(k, math_hbox_cd, 2);
     math_data.push_back(ptr, CmdChr(math_list_cmd, k), subtypes(math_hbox_cd));
@@ -1625,7 +1628,7 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
     }
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
-    subtypes      k   = math_data.find_math_location(math_argument_cd, nomathenv_code);
+    subtypes      k   = math_data.find_math_location(math_argument_cd, nomathenv_code, "");
     boundary_type aux = bt_brace;
     push_level(aux);
     scan_math(k, math_argument_cd);
@@ -1721,7 +1724,7 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
     Math &   u  = math_data.get_list(k);
     if (c == mathbox_code) {
         auto ss = Istring(s);
-        u.set_name(subtypes(ss.id));
+        u.set_name_2(ss.id, s);
     }
     u.push_back_list(r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);
@@ -1754,7 +1757,7 @@ void Parser::opt_to_mandatory() {
 // Scans a command with some arguments.
 void Parser::interpret_math_cmd(size_t res, subtypes c) {
     Token    ct = cur_tok;
-    subtypes k  = math_data.find_math_location(sub_to_math(c), nomathenv_code);
+    subtypes k  = math_data.find_math_location(sub_to_math(c), nomathenv_code, "");
     CmdChr   W  = CmdChr(special_math_cmd, k);
     switch (c) {
     case genfrac_code: interpret_genfrac_cmd(res, k, W); return;
@@ -2260,8 +2263,8 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
     auto     Y = L.end();
     Xml *    res{nullptr};
     if (c == mathbox_code) {
-        Xml *xs = X->get_list().M_cv(cms, 0).value;    // OK
-        res     = new Xml(Istring(L.get_sname()), xs); // OK
+        Xml *xs = X->get_list().M_cv(cms, 0).value; // OK
+        res     = new Xml(L.saved, xs);             // OK
     } else if (c == multiscripts_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value;
         auto w  = the_names.mi(c - mathmi_code);

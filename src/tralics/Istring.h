@@ -8,7 +8,7 @@ struct Istring : public std::string {
 
     Istring() = default;
     Istring(const std::string &s);
-    explicit Istring(size_t N);
+    [[deprecated]] explicit Istring(size_t N);
 
     operator bool() const { return id != 0; }
 

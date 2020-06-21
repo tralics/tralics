@@ -799,7 +799,7 @@ void MathElt::cv_noML_special() const {
     if (n == -1) mathml_buffer.push_back("unknown");
     if (c == mathbox_code) {
         mathml_buffer.push_back("{");
-        mathml_buffer.push_back(Istring(L.get_sname()));
+        mathml_buffer.push_back(L.saved);
         mathml_buffer.push_back("}");
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
@@ -900,7 +900,7 @@ void MathElt::cv_noMLt_special0() const {
     if (n == -1) mathml_buffer.push_back("unknown");
     if (c == mathbox_code) {
         mathml_buffer.push_back("<name>");
-        mathml_buffer.push_back(Istring(L.get_sname()));
+        mathml_buffer.push_back(L.saved);
         mathml_buffer.push_back("</name>");
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
