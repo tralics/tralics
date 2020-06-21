@@ -37,11 +37,12 @@ inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_
 //    table of XML elements.
 
 class MathElt { // \todo make it inherit from CmdChr
-    CmdChr   val;
-    subtypes Font{};
+    CmdChr      val;
+    subtypes    Font{};
+    std::string payload;
 
 public:
-    MathElt(CmdChr X, subtypes c) : val(X), Font(c) {}
+    MathElt(CmdChr X, subtypes c, std::string s = "") : val(X), Font(c), payload(s) {}
     MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
     MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
@@ -166,7 +167,7 @@ public:
     void                      pop_back() { value.pop_back(); }
     void                      pop_front() { value.pop_front(); }
     void                      print() const;
-    void                      push_back(CmdChr X, subtypes c);
+    void                      push_back(CmdChr X, subtypes c, std::string s = "");
     void                      push_back_list(subtypes X, math_list_type c);
     void                      push_back_font(subtypes X, subtypes c);
     void                      push_back(CmdChr X);

@@ -853,7 +853,7 @@ void MathElt::cv_noML_special() const {
         else
             math_ns::insert_delimiter(k);
         L.pop_front();
-        auto sz = Istring(L.front().get_chr());
+        auto sz = L.front().payload;
         mathml_buffer << '{' << sz << '}';
         L.pop_front();
         if (L.front().get_cmd() == style_cmd)
@@ -961,9 +961,7 @@ void MathElt::cv_noMLt_special0() const {
             L.pop_front();
         }
         if (!L.empty()) {
-            auto sz = Istring(L.front().get_chr());
-            att_buffer.clear();
-            att_buffer << sz;
+            att_buffer = L.front().payload;
             if (!att_buffer.empty()) mathml_buffer << " size='" << att_buffer << "'";
             L.pop_front();
         }

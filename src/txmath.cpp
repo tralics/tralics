@@ -468,7 +468,7 @@ auto MathElt::get_list() const -> Math & { return math_data.get_list(get_chr());
 auto Math::get_list(size_t w) -> Math & { return math_data.get_list(w); }
 
 // Adds a token to the list
-void Math::push_back(CmdChr X, subtypes c) { push_back(MathElt(X, c)); }
+void Math::push_back(CmdChr X, subtypes c, std::string s) { push_back(MathElt(X, c, s)); }
 
 void Math::push_back_list(subtypes X, math_list_type c) { push_back(MathElt(CmdChr(math_list_cmd, X), subtypes(c))); }
 
@@ -1668,16 +1668,15 @@ void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
         back_input(L2);
         k2 = math_lr_value();
     }
-    TokenList L3    = read_arg();
-    long      dmres = 0;
+    TokenList   L3 = read_arg();
+    std::string payload;
     if (!L3.empty()) {
         back_input(L3);
         scan_dimen(false, ct);
-        dmres = cur_val.get_int_val();
-        Trace.push_back(ScaledInt(dmres), glue_spec_pt);
         Buffer B;
-        B.push_back(ScaledInt(dmres), glue_spec_pt);
-        dmres = to_signed(Istring(B).id);
+        B.push_back(ScaledInt(cur_val.get_int_val()), glue_spec_pt);
+        Trace.push_back(B);
+        payload = B;
     }
     Token m = scan_style();
     add_to_trace(m);
@@ -1686,7 +1685,7 @@ void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
     Math &   u  = math_data.get_list(k);
     u.push_back(CmdChr(left_cmd, subtypes(k1)), zero_code);
     u.push_back(CmdChr(right_cmd, subtypes(k2)), zero_code);
-    u.push_back(CmdChr(right_cmd, subtypes(dmres)), zero_code);
+    u.push_back(CmdChr(right_cmd, subtypes()), zero_code, payload);
 
     token_from_list(m);
     cur_tok = m;
@@ -2423,7 +2422,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         L.pop_front();
         close = L.front().get_chr();
         L.pop_front();
-        sz = Istring(L.front().get_chr());
+        sz = L.front().payload;
         L.pop_front();
         if (L.front().get_cmd() == style_cmd) {
             cms   = style_level(L.front().get_chr());
@@ -2673,7 +2672,7 @@ auto math_ns::finish_cv_special(bool isfrac, Istring s, const std::string &pos, 
     Istring Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
     auto R = Stack::xml2_space(std::move(s), Pos, a, b);
-    if (sz) R->add_att(the_names["np_linethickness"], sz);
+    if (!sz.empty()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(the_names["numalign"], the_names["left"]);
         if (numalign == 2) R->add_att(the_names["numalign"], the_names["right"]);
