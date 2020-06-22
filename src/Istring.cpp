@@ -19,7 +19,6 @@ namespace {
 Istring::Istring(const std::string &s) : std::string(s), id(find_or_insert(s)) {}
 
 auto Istring::labinfo() const -> LabelInfo * {
-    static std::vector<LabelInfo> LL;
-    if (LL.size() <= id) { LL.resize(id + 1); }
-    return &LL[id];
+    static std::unordered_map<std::string, LabelInfo> LM;
+    return &LM[*this];
 }
