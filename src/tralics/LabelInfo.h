@@ -14,3 +14,5 @@ public:
     auto set_used() -> bool { return std::exchange(used, true); }
     auto set_defined() -> bool { return std::exchange(defined, true); }
 };
+
+[[nodiscard]] auto labinfo(const std::string &s) -> LabelInfo *;

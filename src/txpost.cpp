@@ -86,8 +86,8 @@ void Parser::user_XML_modify(subtypes c) {
 // If the label is undefined, we define it,
 
 void Parser::create_label(const std::string &X, const Istring &S) {
-    auto       m = Istring(X);
-    LabelInfo *V = m.labinfo();
+    auto  m = Istring(X);
+    auto *V = labinfo(m);
     if (V->set_defined()) {
         multiple_label(m, V->lineno, V->filename);
     } else {
@@ -106,7 +106,7 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
         refindex_list.emplace_back(v, B);
     else
         ref_list.emplace_back(v, B);
-    LabelInfo *V = B.labinfo();
+    auto *V = labinfo(B);
     if (!V->set_used()) the_parser.my_stats.one_more_used_ref();
     if (V->lineno == 0) V->lineno = the_parser.get_cur_line();
     if (V->filename.empty()) V->filename = the_parser.get_cur_filename();
@@ -118,9 +118,9 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
 // we know the value of the label, and can add the attribute target=xxx.
 void Parser::check_all_ids() {
     for (auto &i : ref_list) {
-        int        E = i.first;
-        Istring    V = i.second;
-        LabelInfo *L = V.labinfo();
+        int     E = i.first;
+        Istring V = i.second;
+        auto *  L = labinfo(V);
         if (!L->defined) {
             Logger::finish_seq();
             log_and_tty << "Error signaled in postprocessor\n"
@@ -142,9 +142,9 @@ void Parser::check_all_ids() {
 //
 void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
-        auto       E = to_unsigned(i.first);
-        Istring    V = i.second;
-        LabelInfo *L = V.labinfo();
+        auto    E = to_unsigned(i.first);
+        Istring V = i.second;
+        auto *  L = labinfo(V);
         if (!L->defined) continue; // should not happen
         Istring B = L->id;
         scbuf.clear();

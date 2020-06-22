@@ -234,8 +234,8 @@ namespace {
     // This removes the object S, together with the label n
     void remove_label(String s, const Istring &n) {
         for (auto &i : ref_list) {
-            Istring    V  = i.second;
-            LabelInfo *li = V.labinfo();
+            Istring V  = i.second;
+            auto *  li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
             log_and_tty << "Error signaled by postprocessor\n"
