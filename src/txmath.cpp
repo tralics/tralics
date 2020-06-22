@@ -67,7 +67,7 @@ namespace math_ns {
 } // namespace math_ns
 
 namespace tralics_ns {
-    auto math_env_name(subtypes c) -> String;
+
     auto math_env_props(subtypes c) -> int;
 } // namespace tralics_ns
 
@@ -468,7 +468,7 @@ auto MathElt::get_list() const -> Math & { return math_data.get_list(get_chr());
 auto Math::get_list(size_t w) -> Math & { return math_data.get_list(w); }
 
 // Adds a token to the list
-void Math::push_back(CmdChr X, subtypes c, std::string s) { push_back(MathElt(X, c, s)); }
+void Math::push_back(CmdChr X, subtypes c, std::string s) { push_back(MathElt(X, c, std::move(s))); }
 
 void Math::push_back_list(subtypes X, math_list_type c) { push_back(MathElt(CmdChr(math_list_cmd, X), subtypes(c))); }
 
@@ -584,7 +584,7 @@ auto MathDataP::find_math_location(math_list_type c, subtypes n, std::string s) 
     if (res >= math_table.size()) math_table.resize(res + 1);
     math_table[res].set_type(c);
     math_table[res].sname = n;
-    math_table[res].saved = s;
+    math_table[res].saved = std::move(s);
     return subtypes(res);
 }
 

@@ -42,7 +42,7 @@ class MathElt { // \todo make it inherit from CmdChr
     std::string payload;
 
 public:
-    MathElt(CmdChr X, subtypes c, std::string s = "") : val(X), Font(c), payload(s) {}
+    MathElt(CmdChr X, subtypes c, std::string s = "") : val(X), Font(c), payload(std::move(s)) {}
     MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
     MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
@@ -171,7 +171,7 @@ public:
     void                      push_back_list(subtypes X, math_list_type c);
     void                      push_back_font(subtypes X, subtypes c);
     void                      push_back(CmdChr X);
-    void                      push_back(MathElt x) { value.push_back(x); }
+    void                      push_back(const MathElt &x) { value.push_back(x); }
     void                      push_back(Xml *A, int b, math_types c);
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
@@ -194,8 +194,8 @@ private:
     void               concat(Xml *res);
     void               concat_space(Xml *res);
     auto               convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml;
-    auto               convert_char_seq(MathElt W) -> MathElt;
-    auto               convert_char_iseq(MathElt W, bool multiple) -> MathElt;
+    auto               convert_char_seq(const MathElt &W) -> MathElt;
+    auto               convert_char_iseq(const MathElt &W, bool multiple) -> MathElt;
     void               fetch_rlc(std::vector<AttList> &table);
     void               find_paren0(MathP &aux) const;
     auto               finish_translate1(bool vb) -> bool;

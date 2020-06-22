@@ -2174,7 +2174,7 @@ void Parser::expand_nct(TokenList &L) {
 }
 
 // Start a row. If a=-1, it is the first row
-void Parser::start_a_row(long a, std::string s) {
+void Parser::start_a_row(long a, const std::string& s) {
     Xid prev_row(2); // dummy id as default value
     {
         Xml *V = the_stack.top_stack()->last_addr();

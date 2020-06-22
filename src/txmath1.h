@@ -89,7 +89,7 @@ public:
     void               make_t_big() { t_big = true; }
     void               handle_t();
     void               push_in_t(Xml *x);
-    void               push_in_res(MathElt x) { res.push_back(x); }
+    void               push_in_res(const MathElt& x) { res.push_back(x); }
     void               push_in_res(Xml *x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
     void               reset() {
         t     = nullptr;

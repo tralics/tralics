@@ -741,7 +741,7 @@ private:
     void        T_verbatim();
     void        T_subequations(bool start);
     void        start_a_cell(bool started);
-    void        start_a_row(long a, std::string s = "");
+    void        start_a_row(long a, const std::string& s = "");
     auto        start_scan_math(Math &u, subtypes type) -> bool;
     void        start_paras(int y, const std::string &Y, bool star);
     void        store_new_line(int n, bool vb);

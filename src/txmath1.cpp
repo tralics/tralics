@@ -1824,7 +1824,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 
 // Converts a character sequence; first char W already removed from
 // the list
-auto Math::convert_char_seq(MathElt W) -> MathElt {
+auto Math::convert_char_seq(const MathElt& W) -> MathElt {
     subtypes f = W.get_font();
     auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res{nullptr};
@@ -1857,7 +1857,7 @@ auto Math::convert_char_seq(MathElt W) -> MathElt {
 // Converts a character sequence; first char W already removed from
 // the list; if bool true reads some chars, otherwise,
 // reads only a single one.
-auto Math::convert_char_iseq(MathElt W, bool multiple) -> MathElt {
+auto Math::convert_char_iseq(const MathElt& W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
     Buffer & B = aux_buffer;
     B.clear();
