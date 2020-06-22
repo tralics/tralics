@@ -618,7 +618,7 @@ void Xml::to_buffer(Buffer &b) const {
             b << "<?" << name << "?>";
         return;
     }
-    if (name.id > 1) {
+    if (!name.empty()) {
         if (!empty())
             b.push_back_elt(name, id, 1);
         else {
@@ -627,7 +627,7 @@ void Xml::to_buffer(Buffer &b) const {
         }
     }
     for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
-    if (name.id > 1) b.push_back_elt(name, id, 2);
+    if (!name.empty()) b.push_back_elt(name, id, 2);
     b.finish_xml_print();
 }
 

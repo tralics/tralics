@@ -443,14 +443,6 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
     return L;
 }
 
-// Converts a istring to a token list.
-// Special hack, because we insert the number, not the value
-auto token_ns::string_to_list(const Istring &s) -> TokenList { // \todo that is a huge hack, should vanish
-    Buffer &B = buffer_for_log;
-    B << bf_reset << std::to_string(s.id);
-    return B.str_toks(nlt_space);
-}
-
 // Prints a token list.
 // Note: conversion to log_encoding
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream & {
@@ -500,7 +492,7 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
 }
 
 void Buffer::push_back(const Istring &X) {
-    if (X.id >= 2) push_back(Buffer(X).convert_to_out_encoding());
+    if (!X.empty()) push_back(Buffer(X).convert_to_out_encoding());
 }
 
 // True if L has a single token

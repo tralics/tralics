@@ -44,7 +44,6 @@ namespace token_ns {
     auto replace_space(TokenList &A, Token x2, Token x3) -> int;
     void show(const TokenList &);
     auto split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z, bool s) -> bool;
-    auto string_to_list(const Istring &s) -> TokenList;
     auto string_to_list(String s, bool b) -> TokenList;
     auto string_to_list(const std::string &s, bool b) -> TokenList;
     void double_hack(TokenList &key);
