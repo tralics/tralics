@@ -2174,7 +2174,6 @@ void Parser::expand_nct(TokenList &L) {
 }
 
 // Start a row. If a=-1, it is the first row
-// If a>0 it is a dimension to put between rows.
 void Parser::start_a_row(long a, std::string s) {
     Xid prev_row(2); // dummy id as default value
     {
@@ -2182,7 +2181,7 @@ void Parser::start_a_row(long a, std::string s) {
         if (V != nullptr) prev_row = V->id;
     }
     bool initial_hline = false;
-    if (a > 0) prev_row.add_attribute(the_names["row_spaceafter"], s);
+    if (!s.empty()) prev_row.add_attribute(the_names["row_spaceafter"], s);
     for (;;) {
         remove_initial_space_and_back_input(); // get first non-space xtoken
         symcodes S = cur_cmd_chr.cmd;
@@ -2247,11 +2246,7 @@ void Parser::finish_a_cell(Token T, const Istring &a) {
     the_stack.remove_last_space();
     if (a) {
         saved_dim = a;
-        spdlog::warn("poiu 2: {}", a);
-        back_input(hash_table.space_token);
-        TokenList L = token_ns::string_to_list(a);
-        back_input(L);
-        T = hash_table.crwithargs_token;
+        T         = hash_table.crwithargs_token;
     }
     back_input(T);
     if (the_stack.is_omit_cell()) return;
@@ -2460,12 +2455,8 @@ void Parser::T_endv() {
 // This is done when we see a \\.
 void Parser::T_cr() {
     flush_buffer();
-    long        a = 0;
     std::string s;
-    if (cur_cmd_chr.chr == crwithargs_code) {
-        a = scan_int(cur_tok);
-        s = saved_dim;
-    }
+    if (cur_cmd_chr.chr == crwithargs_code) s = saved_dim;
     if (!the_stack.is_frame("cell")) {
         parse_error("bad \\cr");
         return;
@@ -2474,7 +2465,7 @@ void Parser::T_cr() {
     the_stack.push_pop_cell(pop_only);
     pop_level(bt_cell);
     the_stack.pop(the_names["row"]);
-    start_a_row(a, s);
+    start_a_row(0, s);
 }
 
 // Case of \multispan; fully expandable
