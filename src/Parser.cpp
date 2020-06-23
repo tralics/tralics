@@ -2008,7 +2008,7 @@ void Parser::solve_cite(bool user) {
         nn = *B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[nn];
     if (CI.is_solved()) {
-        err_buf << bf_reset << "Bibliography entry already defined " << key;
+        err_buf << bf_reset << "Bibliography entry already defined " << encode(key);
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
@@ -2018,7 +2018,7 @@ void Parser::solve_cite(bool user) {
         if (CI.id.empty())
             CI.id = AL.get_val(*my_id);
         else {
-            err_buf << bf_reset << "Cannot solve (element has an Id) " << key;
+            err_buf << bf_reset << "Cannot solve (element has an Id) " << encode(key);
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }

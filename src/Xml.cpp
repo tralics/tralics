@@ -606,16 +606,16 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 void Xml::to_buffer(Buffer &b) const {
     if (is_xmlc()) {
         if (id.value == 0)
-            b << name;
+            b << encode(name);
         else if (id.value == -1)
-            b << "<!--" << name << "-->";
+            b << "<!--" << encode(name) << "-->";
         else if (id.value == -2) {
-            b << "<!" << name;
+            b << "<!" << encode(name);
             for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
             b << ">";
             b.finish_xml_print();
         } else if (id.value == -3)
-            b << "<?" << name << "?>";
+            b << "<?" << encode(name) << "?>";
         return;
     }
     if (!name.empty()) {
@@ -736,7 +736,7 @@ void Xml::unbox(Xml *x) {
     if (x->is_xmlc()) {
         Buffer &b = scbuf;
         b.clear();
-        b.push_back(x->name);
+        b.push_back(encode(x->name));
         add_last_string(b);
     } else
         push_back_list(x);
@@ -831,13 +831,13 @@ void Xml::convert_to_string(Buffer &b) {
     if (id.is_font_change()) {
         Istring w = id.has_attribute(the_names["rend"]);
         if (!w.empty()) {
-            err_buf << "unexpected font change " << w;
+            err_buf << "unexpected font change " << encode(w);
             the_parser.unexpected_font();
             the_parser.signal_error();
             return;
         }
     }
-    err_buf << "unexpected element " << name;
+    err_buf << "unexpected element " << encode(name);
     the_parser.signal_error();
 }
 
@@ -846,11 +846,11 @@ void Xml::convert_to_string(Buffer &b) {
 void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
-            b << at(k)->name;
+            b << encode(at(k)->name);
         else if (at(k)->has_name_of("hi"))
             at(k)->put_in_buffer(b);
         else
-            b << '<' << at(k)->name << "/>";
+            b << '<' << encode(at(k)->name) << "/>";
     }
 }
 

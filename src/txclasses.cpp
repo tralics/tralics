@@ -881,7 +881,7 @@ void Parser::T_class_error(subtypes c) {
             posta = "Error";
         else if (what == mt_warning)
             posta = "Warning";
-        B << " " << the_names[posta] << ": ";
+        B << " " << encode(the_names[posta]) << ": ";
     }
     TokenList L = scan_general_text();
     L.push_back(hash_table.relax_token);

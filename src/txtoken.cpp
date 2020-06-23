@@ -492,7 +492,7 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
 }
 
 void Buffer::push_back(const Istring &X) {
-    if (!X.empty()) push_back(Buffer(X).convert_to_out_encoding());
+    if (!X.empty()) push_back(encode(X));
 }
 
 // True if L has a single token

@@ -817,7 +817,7 @@ auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
     auto     k = L.lookup(m);
     if (!k) return false;
     clear();
-    push_back(L.get_val(*k));
+    push_back(encode(L.get_val(*k)));
     return true;
 }
 

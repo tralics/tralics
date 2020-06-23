@@ -1202,7 +1202,7 @@ void MathElt::cv_noML() {
         auto w = the_names.mml(c);
         if (w.empty()) return;
         mathml_buffer.push_back("\\");
-        mathml_buffer.push_back(w);
+        mathml_buffer.push_back(encode(w));
         mathml_buffer.push_back(' ');
         return;
     }
@@ -1256,7 +1256,7 @@ void MathElt::cv_noMLt() {
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer << "<font name='" << w << "'/>"; // \todo why not go through all the machinery here?
+        mathml_buffer << "<font name='" << encode(w) << "'/>"; // \todo why not go through all the machinery here?
         return;
     }
     case left_cmd: // left or right
@@ -1824,7 +1824,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 
 // Converts a character sequence; first char W already removed from
 // the list
-auto Math::convert_char_seq(const MathElt& W) -> MathElt {
+auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     subtypes f = W.get_font();
     auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res{nullptr};
@@ -1857,7 +1857,7 @@ auto Math::convert_char_seq(const MathElt& W) -> MathElt {
 // Converts a character sequence; first char W already removed from
 // the list; if bool true reads some chars, otherwise,
 // reads only a single one.
-auto Math::convert_char_iseq(const MathElt& W, bool multiple) -> MathElt {
+auto Math::convert_char_iseq(const MathElt &W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
     Buffer & B = aux_buffer;
     B.clear();

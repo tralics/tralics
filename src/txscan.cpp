@@ -2170,7 +2170,7 @@ void Parser::initialise_font() {
 void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
     B.clear();
-    if (x != nullptr) B.push_back(x->name);
+    if (x != nullptr) B.push_back(encode(x->name));
     if (level != it_tok) {
         bad_number1(B);
         return;

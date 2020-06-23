@@ -150,7 +150,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         scbuf.clear();
         scbuf.push_back(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
-        scbuf.push_back(B);
+        scbuf.push_back(encode(B));
         W[E] = scbuf;
     }
 }

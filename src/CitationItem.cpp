@@ -14,7 +14,7 @@ auto CitationItem::get_id() -> Istring {
 // the aux file.
 void CitationItem::dump(Buffer &b) const {
     if (is_solved()) return;
-    b << "\\citation{" << key << "}\n";
+    b << "\\citation{" << encode(key) << "}\n";
 }
 
 // This prints an unsolved reference for use by Tralics.
