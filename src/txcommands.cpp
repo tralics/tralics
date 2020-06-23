@@ -596,10 +596,14 @@ void Parser::T_ding() {
 
 // \begin{minipage}
 void Parser::T_minipage() {
-    Token T   = cur_tok;
-    auto  pos = the_names[get_ctb_opt()];
+    Token                  T = cur_tok;
+    auto                   x = get_ctb_opt();
+    std::optional<Istring> pos;
+    if (x) pos = the_names[*x];
     ignore_optarg();
-    auto ipos = the_names[get_ctb_opt()];
+    auto                   y = get_ctb_opt();
+    std::optional<Istring> ipos;
+    if (y) ipos = the_names[*y];
     ignore_optarg(); // really needed ?
     scan_glue(it_dimen, T, false);
     Istring w = Istring(cur_val.get_dim_val());
@@ -608,8 +612,8 @@ void Parser::T_minipage() {
     the_stack.set_v_mode();
     state = state_S;
     the_stack.add_att_to_last(the_names["minipage_width"], w);
-    if (pos) the_stack.add_att_to_last(the_names["pos"], pos);
-    if (ipos) the_stack.add_att_to_last(the_names["inner_pos"], ipos);
+    if (pos) the_stack.add_att_to_last(the_names["pos"], *pos);
+    if (ipos) the_stack.add_att_to_last(the_names["inner_pos"], *ipos);
     word_define(incentering_code, 0, false);
 }
 

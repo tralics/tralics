@@ -254,13 +254,13 @@ auto Parser::nT_optarg_nopar() -> std::optional<Istring> {
 // Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
 // returns cst_invalid in case of failure, a position otherwise
 
-auto Parser::get_ctb_opt() -> std::string {
+auto Parser::get_ctb_opt() -> std::optional<std::string> {
     TokenList L;
     read_optarg_nopar(L);
-    if (L.empty()) return "cst_invalid";
+    if (L.empty()) return {};
     Token t = token_ns::get_unique(L);
-    if (t.is_null()) return "cst_invalid";
-    if (t.cmd_val() != letter_catcode) return "cst_invalid";
+    if (t.is_null()) return {};
+    if (t.cmd_val() != letter_catcode) return {};
     auto c = t.val_as_letter();
     if (c == 'c') return "c";
     if (c == 's') return "s";
@@ -268,7 +268,7 @@ auto Parser::get_ctb_opt() -> std::string {
     if (c == 'b') return "b";
     if (c == 'l') return "l";
     if (c == 'r') return "r";
-    return "cst_invalid";
+    return {};
 }
 
 // Nodes: tblr, or 2 letters
@@ -1200,7 +1200,8 @@ void Parser::T_mbox(subtypes c) {
             return;
         }
         iwidth = get_opt_dim(T);
-        ipos   = the_names[get_ctb_opt()];
+        auto x = get_ctb_opt();
+        if (x) ipos = the_names[*x];
     }
     Xml *mbox = internal_makebox();
     if (!(ipos.empty() && iwidth.empty())) {
@@ -1286,7 +1287,8 @@ void Parser::T_save_box(bool simple) {
         std::optional<Istring> iwidth;
         if (!simple) {
             iwidth = get_opt_dim(T);
-            ipos   = the_names[get_ctb_opt()];
+            auto x = get_ctb_opt();
+            if (x) ipos = the_names[*x];
         }
         the_stack.push1(the_names["mbox"]);
         the_stack.set_arg_mode();
@@ -1370,7 +1372,8 @@ void Parser::T_fbox(subtypes cc) {
             return;
         }
         iwidth = get_opt_dim(T);
-        ipos   = the_names[get_ctb_opt()];
+        auto x = get_ctb_opt();
+        if (x) ipos = the_names[*x];
     }
     if (cc == scalebox_code) {
         flush_buffer();

@@ -2279,7 +2279,7 @@ void Parser::T_start_tabular(subtypes c) {
     }
     {
         auto pos = get_ctb_opt(); // Lamport does not mention c, who cares
-        if (pos != "cst_invalid") id.add_attribute(the_names["vpos"], the_names[pos]);
+        if (pos) id.add_attribute(the_names["vpos"], the_names[*pos]);
     }
     new_array_object.run(id, true);
     the_stack.set_array_mode(); // Is the mode ok ?
