@@ -4,7 +4,6 @@
 #include "tralics/globals.h"
 
 auto NameMapper::operator[](const std::string &name) const -> Istring {
-    if (name == "cst_invalid") return Istring(); // Only non-defined entry \todo get rid of it
     if (auto i = dict.find(name); i != dict.end()) return i->second;
     return Istring(name);
 }

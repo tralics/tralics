@@ -252,7 +252,6 @@ auto Parser::nT_optarg_nopar() -> std::optional<Istring> {
 // First argument of minipage should be [c] [t] or [b]
 // Third arg allows [s]
 // Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
-// returns cst_invalid in case of failure, a position otherwise
 
 auto Parser::get_ctb_opt() -> std::optional<std::string> {
     TokenList L;
@@ -272,26 +271,26 @@ auto Parser::get_ctb_opt() -> std::optional<std::string> {
 }
 
 // Nodes: tblr, or 2 letters
-auto Parser::get_trees_opt() -> std::string {
+auto Parser::get_trees_opt() -> std::optional<std::string> {
     TokenList L;
     read_optarg_nopar(L);
-    if (L.empty()) return "cst_invalid";
+    if (L.empty()) return {};
     Token t1, t2;
     token_ns::get_unique(L, t1, t2);
-    if (t1.is_null()) return "cst_invalid";
-    if (t1.cmd_val() != letter_catcode) return "cst_invalid";
+    if (t1.is_null()) return {};
+    if (t1.cmd_val() != letter_catcode) return {};
     auto c = t1.val_as_letter();
     if (t2.is_null()) {
         if (c == 'l') return "l";
         if (c == 'r') return "r";
         if (c == 't') return "t";
         if (c == 'b') return "b";
-        return "cst_invalid";
+        return {};
     }
-    if (t2.cmd_val() != letter_catcode) return "cst_invalid";
+    if (t2.cmd_val() != letter_catcode) return {};
     auto c2 = t2.val_as_letter();
-    if (c != 't' && c != 'b') return "cst_invalid";
-    if (c2 != 'l' && c2 != 'r') return "cst_invalid";
+    if (c != 't' && c != 'b') return {};
+    if (c2 != 'l' && c2 != 'r') return {};
     if (c == 't') return c2 == 'l' ? "tl" : "tr";
     return c2 == 'l' ? "bl" : "br";
 }
