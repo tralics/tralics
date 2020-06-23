@@ -1923,7 +1923,7 @@ void Parser::T_cite(subtypes sw) {
     TokenList res;
     TokenList prenote;
     if (is_natbib) {
-        if (auto x = nT_optarg_nopar(); !x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
+        if (auto x = nT_optarg_nopar(); x && !x->empty()) the_stack.add_att_to_last(the_names["citetype"], *x);
         read_optarg(res);
         if (!res.empty()) res.push_back(hash_table.space_token);
         res.push_front(hash_table.locate("NAT@open"));
@@ -1987,8 +1987,7 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        Istring ukey = nT_optarg_nopar();
-        the_stack.get_xid().get_att().push_back(the_names["bibkey"], ukey);
+        if (auto ukey = nT_optarg_nopar()) the_stack.get_xid().get_att().push_back(the_names["bibkey"], *ukey);
         n = the_stack.get_xid().value;
     } else {
         F    = remove_initial_star();
@@ -2033,7 +2032,7 @@ void Parser::solve_cite(bool user) {
 void Parser::T_bpers() {
     int e              = main_ns::nb_errs;
     unexpected_seen_hi = false;
-    Istring A          = nT_optarg_nopar();
+    auto    A          = nT_optarg_nopar();
     Istring a          = nT_arg_nopar();
     Istring b          = nT_arg_nopar();
     Istring c          = nT_arg_nopar();
@@ -2041,7 +2040,7 @@ void Parser::T_bpers() {
     if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
-    if (!A.empty()) the_stack.add_att_to_last(the_names["full_first"], A);
+    if (A && !A->empty()) the_stack.add_att_to_last(the_names["full_first"], *A);
     if (!d.empty()) the_stack.add_att_to_last(the_names["junior"], d);
     the_stack.add_att_to_last(the_names["nom"], c);
     if (!b.empty()) the_stack.add_att_to_last(the_names["particule"], b);

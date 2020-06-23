@@ -355,14 +355,14 @@ void Parser::T_unimplemented_font(subtypes c) {
 
 void Parser::T_raisebox() {
     Istring A = nT_arg_nopar();
-    Istring B = nT_optarg_nopar();
-    Istring C = nT_optarg_nopar();
+    auto    B = nT_optarg_nopar();
+    auto    C = nT_optarg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["raisebox"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["val"], A);
-    cur.push_back(the_names["height"], B);
-    cur.push_back(the_names["depth"], C);
+    if (B) cur.push_back(the_names["height"], *B);
+    if (C) cur.push_back(the_names["depth"], *C);
     T_arg_local();
     the_stack.pop(the_names["raisebox"]);
 }

@@ -240,10 +240,10 @@ auto Parser::sT_optarg_nopar() -> std::string {
 
 // Returns next optional argument as an attribute value.
 // return 0 if the argument is empty or does not exist.
-auto Parser::nT_optarg_nopar() -> Istring {
+auto Parser::nT_optarg_nopar() -> std::optional<Istring> {
     TokenList L;
     read_optarg_nopar(L);
-    if (L.empty()) return Istring();
+    if (L.empty()) return {};
     Xml *       x = translate_list(L);
     std::string y = x->convert_to_string();
     return Istring(y);
@@ -700,8 +700,8 @@ void Parser::T_float(subtypes c) {
         Buffer &    B    = Tbuf;
         std::string sarg = sT_arg_nopar();
         auto        arg  = Istring(sarg);
-        Istring     opt  = nT_optarg_nopar();
-        if (opt.empty()) {
+        auto        opt  = nT_optarg_nopar();
+        if (!opt) {
             B << bf_reset << "fps@" << sarg;
             expand_no_arg(B);
             opt = nT_arg_nopar();
@@ -709,13 +709,13 @@ void Parser::T_float(subtypes c) {
         word_define(incentering_code, 1, false);
         leave_h_mode();
         the_stack.push1(the_names["float"]);
-        the_stack.add_att_to_last(the_names["place"], opt);
+        the_stack.add_att_to_last(the_names["place"], *opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
         B << bf_reset << "fname@" << sarg;
         expand_no_arg(B);
         opt = nT_arg_nopar();
-        the_stack.add_att_to_last(the_names["name"], opt);
+        the_stack.add_att_to_last(the_names["name"], *opt);
         refstepcounter(sarg, true);
         B << bf_reset << "@float@every@" << sarg;
         back_input(hash_table.locate(B));
@@ -1204,7 +1204,7 @@ void Parser::T_mbox(subtypes c) {
     }
     Xml *mbox = internal_makebox();
     if (!(ipos.empty() && iwidth.empty())) {
-        mbox->id.add_attribute(the_names["box_pos"], ipos);
+        if (ipos) mbox->id.add_attribute(the_names["box_pos"], ipos);
         mbox->id.add_attribute(the_names["box_width"], iwidth);
         return;
     }
@@ -1295,8 +1295,8 @@ void Parser::T_save_box(bool simple) {
         brace_me(d);
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
-        mbox->id.add_attribute(the_names["box_pos"], ipos);
-        mbox->id.add_attribute(the_names["box_width"], iwidth);
+        if (ipos) mbox->id.add_attribute(the_names["box_pos"], ipos);
+        if (iwidth) mbox->id.add_attribute(the_names["box_width"], iwidth);
     }
     box_end(the_stack.remove_last(), i);
 }
@@ -1357,9 +1357,9 @@ void Parser::T_fbox(subtypes cc) {
         T_raisebox();
         return;
     }
-    Istring iscale;
-    Istring ipos;
-    Istring iwidth;
+    Istring                iscale;
+    Istring                ipos;
+    std::optional<Istring> iwidth;
 
     if (cc == framebox_code) { // case of \framebox
         skip_initial_space_and_back_input();
@@ -1385,11 +1385,11 @@ void Parser::T_fbox(subtypes cc) {
     if (cc == scalebox_code) {
         if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
             aux->id.add_attribute(the_names["scale"], iscale, true);
-            aux->id.add_attribute(Istring("vscale"), iwidth);
+            if (iwidth) aux->id.add_attribute(Istring("vscale"), *iwidth);
             cur->kill_name();
         } else {
             AL.push_back(the_names["box_scale"], iscale);
-            AL.push_back(Istring("vscale"), iwidth);
+            if (iwidth) AL.push_back(Istring("vscale"), *iwidth);
         }
         return;
     }
@@ -1398,8 +1398,8 @@ void Parser::T_fbox(subtypes cc) {
         cur->kill_name();
     } else {
         AL.push_back(the_names["fbox_rend"], the_names["boxed"]);
-        AL.push_back(the_names["box_pos"], ipos);
-        AL.push_back(the_names["box_width"], iwidth);
+        if (ipos) AL.push_back(the_names["box_pos"], ipos);
+        if (iwidth) AL.push_back(the_names["box_width"], *iwidth);
     }
 }
 
@@ -1836,7 +1836,7 @@ void Parser::T_bezier(int c) {
     T_twodims(b1, b2, C);
     T_twodims(c1, c2, C);
     AttList &res = the_stack.add_newid0("bezier");
-    res.push_back(the_names["repeat"], w);
+    if (w) res.push_back(the_names["repeat"], w);
     res.push_back(the_names["c2"], c2);
     res.push_back(the_names["c1"], c1);
     res.push_back(the_names["b2"], b2);
@@ -1879,9 +1879,9 @@ void Parser::T_put(subtypes c) {
     else
         T_twoints(A, B, C);
     if (c == oval_code) {
-        Istring  specs = nT_optarg_nopar();
+        auto     specs = nT_optarg_nopar();
         AttList &val   = the_stack.add_newid0(x0);
-        val.push_back(the_names["specs"], specs);
+        if (specs) val.push_back(the_names["specs"], *specs);
         val.push_back(the_names["ypos"], B);
         val.push_back(the_names["xpos"], A);
         return;
@@ -1944,9 +1944,9 @@ void Parser::T_curves(int c) {
     }
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
-    Xid     cur_id = the_stack.get_top_id();
-    Istring specs  = nT_optarg_nopar();
-    if (!specs.empty()) cur_id.add_attribute(the_names["curve_nbpts"], specs);
+    Xid  cur_id = the_stack.get_top_id();
+    auto specs  = nT_optarg_nopar();
+    if (specs && !specs->empty()) cur_id.add_attribute(the_names["curve_nbpts"], *specs);
     TokenList emptyl;
     cur_id.add_attribute(the_names["unit_length"], token_list_to_att(emptyl, C, false));
     if (c == arc_code) {
@@ -1955,7 +1955,7 @@ void Parser::T_curves(int c) {
         cur_id.add_attribute(the_names["ypos"], bb);
         cur_id.add_attribute(the_names["xpos"], aa);
         specs = nT_arg_nopar();
-        cur_id.add_attribute(the_names["angle"], specs);
+        cur_id.add_attribute(the_names["angle"], *specs);
     } else if (c == bigcircle_code) {
         cur_id.add_attribute(the_names["size"], nT_arg_nopar());
     } else {
@@ -2018,16 +2018,16 @@ void Parser::T_dashline(subtypes c) {
         if (has_star) AL.push_back(the_names["full"], the_names["true"]);
         return;
     }
-    Istring A = nT_optarg_nopar();
-    Istring B;
+    auto                   A = nT_optarg_nopar();
+    std::optional<Istring> B;
     if (c == dashline_code || c == dottedline_code) B = nT_arg_nopar();
-    Istring C = nT_optarg_nopar();
+    auto C = nT_optarg_nopar();
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
     AttList &AL = last_att_list();
-    AL.push_back(the_names["arg1"], A);
-    AL.push_back(the_names["arg2"], B);
-    AL.push_back(the_names["arg3"], C);
+    if (A) AL.push_back(the_names["arg1"], *A);
+    if (B) AL.push_back(the_names["arg2"], *B);
+    if (C) AL.push_back(the_names["arg3"], *C);
     for (;;) {
         Istring xpos, ypos;
         skip_initial_space();

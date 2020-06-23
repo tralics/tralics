@@ -286,13 +286,13 @@ void Parser::T_node() {
 
 void Parser::T_nodepoint() {
     Istring A = nT_arg_nopar();
-    Istring B = nT_optarg_nopar();
-    Istring C = nT_optarg_nopar();
+    auto    B = nT_optarg_nopar();
+    auto    C = nT_optarg_nopar();
     the_stack.push1(the_names["node"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["name"], A);
-    cur.push_back(the_names["xpos"], B); // default value is zero
-    cur.push_back(the_names["ypos"], C); // default value is zero
+    if (B) cur.push_back(the_names["xpos"], *B); // default value is zero
+    if (C) cur.push_back(the_names["ypos"], *C); // default value is zero
     the_stack.pop(the_names["node"]);
 }
 
@@ -315,12 +315,12 @@ void Parser::T_nodeconnect(const Istring &W) {
 
 // \barnodeconnect[depth]{fromnode}{tonode}
 void Parser::T_barnodeconnect(const Istring &W) {
-    Istring A = nT_optarg_nopar();
+    auto    A = nT_optarg_nopar();
     Istring B = nT_arg_nopar();
     Istring C = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    cur.push_back(the_names["depth"], A);
+    if (A) cur.push_back(the_names["depth"], *A);
     cur.push_back(the_names["nameB"], C);
     cur.push_back(the_names["nameA"], B);
     the_stack.pop(W);
@@ -337,11 +337,11 @@ void Parser::T_nodecurve(const Istring &W) {
     auto F = nT_optarg_nopar();
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
-    if (F.empty()) F = E;
+    if (!F || F->empty()) F = E;
     the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depthA"], E);
-    cur.push_back(the_names["depthB"], F);
+    cur.push_back(the_names["depthB"], *F);
     cur.push_back(the_names["posB"], the_names[C]);
     cur.push_back(the_names["posA"], the_names[A]);
     cur.push_back(the_names["nameB"], D);
@@ -369,11 +369,11 @@ void Parser::T_nodetriangle(const Istring &W) {
 
 // \nodecircle[depth]{nodename}
 void Parser::T_nodecircle(const Istring &W) {
-    Istring B = nT_optarg_nopar();
+    auto    B = nT_optarg_nopar();
     Istring A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    cur.push_back(the_names["depth"], B);
+    if (B) cur.push_back(the_names["depth"], *B);
     cur.push_back(the_names["nameA"], A);
     the_stack.pop(W);
 }

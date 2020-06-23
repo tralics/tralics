@@ -204,7 +204,7 @@ public:
     auto               nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
     auto               nE_arg_nopar() -> Istring;
     auto               nT_arg_nopar() -> Istring;
-    auto               nT_optarg_nopar() -> Istring;
+    auto               nT_optarg_nopar() -> std::optional<Istring>;
     void               parse_error(Token T, const std::string &s, TokenList &L);
     void               parse_error(Token T, const std::string &s);
     void               parse_error(const std::string &s);
@@ -741,7 +741,7 @@ private:
     void        T_verbatim();
     void        T_subequations(bool start);
     void        start_a_cell(bool started);
-    void        start_a_row(long a, const std::string& s = "");
+    void        start_a_row(long a, const std::string &s = "");
     auto        start_scan_math(Math &u, subtypes type) -> bool;
     void        start_paras(int y, const std::string &Y, bool star);
     void        store_new_line(int n, bool vb);

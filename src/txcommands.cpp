@@ -608,8 +608,8 @@ void Parser::T_minipage() {
     the_stack.set_v_mode();
     state = state_S;
     the_stack.add_att_to_last(the_names["minipage_width"], w);
-    the_stack.add_att_to_last(the_names["pos"], pos);
-    the_stack.add_att_to_last(the_names["inner_pos"], ipos);
+    if (pos) the_stack.add_att_to_last(the_names["pos"], pos);
+    if (ipos) the_stack.add_att_to_last(the_names["inner_pos"], ipos);
     word_define(incentering_code, 0, false);
 }
 
@@ -675,8 +675,9 @@ void Parser::T_glossaire_end() {
 // case \begin{figure}\begin{table}
 // c=2 is wrapfigure
 void Parser::T_figure_table(symcodes x, subtypes c) {
-    Istring opt = nT_optarg_nopar();
-    Istring place, overhang, width;
+    auto                   opt = nT_optarg_nopar();
+    std::optional<Istring> overhang;
+    Istring                place, width;
     if (c == 2) {
         place    = nT_arg_nopar();
         overhang = nT_optarg_nopar();
@@ -686,13 +687,13 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
     leave_h_mode();
     the_stack.push1(the_names[x == figure_cmd ? "figure_env" : "table_env"]);
     if (c == 2) {
-        if (!opt.empty()) the_stack.add_att_to_last(Istring("narrow"), opt);
+        if (opt && !opt->empty()) the_stack.add_att_to_last(Istring("narrow"), *opt);
         the_stack.add_att_to_last(the_names["place"], place);
-        if (!overhang.empty()) the_stack.add_att_to_last(Istring("overhang"), overhang);
+        if (overhang && !overhang->empty()) the_stack.add_att_to_last(Istring("overhang"), *overhang);
         the_stack.add_att_to_last(the_names["width"], width);
     } else {
         the_stack.add_att_to_last(the_names["rend"], the_names[x == figure_cmd ? "figure" : "table"]);
-        if (!opt.empty()) the_stack.add_att_to_last(the_names["place"], opt);
+        if (opt && !opt->empty()) the_stack.add_att_to_last(the_names["place"], *opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
     }
     refstepcounter(x == figure_cmd ? "figure" : "table", true);
