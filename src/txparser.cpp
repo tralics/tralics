@@ -4226,7 +4226,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         if (cur_box != nullptr)
             cur_box = cur_box->deep_copy();
         else
-            cur_box = new Xml(Istring(""), nullptr);
+            cur_box = new Xml(Istring(), nullptr);
         box_end(cur_box, src);
         return;
     }
@@ -4243,7 +4243,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         return;
     }
     flush_buffer();
-    auto box_name = Istring("");
+    Istring box_name;
     if (c == parbox_code) {
         // same arguments as minipage
         ignore_optarg();              // position

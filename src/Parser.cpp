@@ -1725,8 +1725,8 @@ void Parser::T_cite_one() {
 void Parser::add_bib_marker(bool force) {
     Bibliography &T = the_bibliography;
     if (!force && T.location_exists()) return;
-    Xml *mark = new Xml(Istring(""), nullptr);
-    Xml *Foo  = new Xml(Istring(""), mark);
+    Xml *mark = new Xml(Istring(), nullptr);
+    Xml *Foo  = new Xml(Istring(), mark);
     the_stack.add_last(Foo);
     T.set_location(mark, force);
 }
@@ -1922,7 +1922,6 @@ void Parser::T_cite(subtypes sw) {
     }
     TokenList res;
     TokenList prenote;
-    auto      type = Istring("");
     if (is_natbib) {
         if (auto x = nT_optarg_nopar(); !x.empty()) the_stack.add_att_to_last(the_names["citetype"], x);
         read_optarg(res);
@@ -1930,6 +1929,7 @@ void Parser::T_cite(subtypes sw) {
         res.push_front(hash_table.locate("NAT@open"));
     }
     cur_tok = T;
+    Istring type;
     T_cite(sw, prenote, type); // reads optional arguments
     type = normalise_for_bib(type);
     if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
@@ -1980,10 +1980,10 @@ void Parser::T_cite(subtypes sw) {
 // Flag true for bibitem, \bibitem[opt]{key}
 // false in the case of \XMLsolvecite[id][from]{key}
 void Parser::solve_cite(bool user) {
-    Token T    = cur_tok;
-    bool  F    = true;
-    auto  from = Istring("");
-    long  n    = 0;
+    Token   T = cur_tok;
+    bool    F = true;
+    long    n = 0;
+    Istring from;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));

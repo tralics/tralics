@@ -396,7 +396,6 @@ void Stack::check_font() {
             Xml *    res = new Xml(the_names["hi"], nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names["rend"], a);
-            W.push_back(the_names["'hi_flag"], Istring(""));
             push(Istring(" "), res);
         }
     } else {
@@ -413,7 +412,6 @@ void Stack::check_font() {
         Xml *    res = new Xml(the_names["hi"], nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(the_names["color"], c);
-        W.push_back(the_names["'hi_flag"], Istring(""));
         push(Istring(" "), res);
     }
     the_parser.cur_font.is_on_stack();

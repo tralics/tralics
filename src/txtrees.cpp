@@ -67,8 +67,8 @@ auto Parser::get_index_value() -> size_t {
 // Case \printglossary or \printindex[foo].
 // Marks the place where to insert the index
 void AllIndex::mark_print(size_t g) {
-    Xml *mark = new Xml(Istring(""), nullptr);
-    Xml *Foo  = new Xml(Istring(""), mark);
+    Xml *mark = new Xml(Istring(), nullptr);
+    Xml *Foo  = new Xml(Istring(), mark);
     the_main->the_stack->add_last(Foo);
     at(g)->set_position(mark);
 }
