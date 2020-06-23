@@ -312,8 +312,8 @@ void BibEntry::call_type() {
         }
         bbl.newline();
     }
-    std::vector<Istring> &Bib        = the_main->bibtex_fields;
-    auto                  additional = Bib.size();
+    std::vector<std::string> &Bib        = the_main->bibtex_fields;
+    auto                      additional = Bib.size();
     for (size_t i = 0; i < additional; i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {

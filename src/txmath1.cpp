@@ -789,8 +789,8 @@ void MathElt::cv_noML_special() const {
         static Buffer atb;
         std::string   s1 = L.get_arg1().convert_this_to_string(atb);
         std::string   s2 = L.get_arg2().convert_this_to_string(atb);
-        auto          A  = Istring(s1);
-        auto          B  = Istring(s2);
+        auto          A  = std::string(s1);
+        auto          B  = std::string(s2);
         math_ns::add_attribute_spec(A, B);
         return;
     }
@@ -1332,7 +1332,7 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
         convert_math_noMLt0();
     else
         convert_math_noML0();
-    return new Xml(the_names["texmath"], new Xml(Istring(mathml_buffer)));
+    return new Xml(the_names["texmath"], new Xml(std::string(mathml_buffer)));
 }
 
 // --------------------------------------------------
@@ -1433,7 +1433,7 @@ auto Math::chars_to_mb2(Buffer &B) const -> bool {
 
 // Yet another procedure. Reads the dimension in a command like \above
 // Something like -1,2cm  is OK
-auto Math::chars_to_mb3() -> Istring {
+auto Math::chars_to_mb3() -> std::string {
     Buffer B;
     int    bc   = 0; // unit size
     int    sz   = 0; // current size
@@ -1489,7 +1489,7 @@ auto Math::chars_to_mb3() -> Istring {
         B.clear();
         B.push_back("0pt");
     }
-    return Istring(B);
+    return std::string(B);
 }
 
 // Procedure called in case of errors
@@ -1604,7 +1604,7 @@ void Math::special2(bool &ok, Xml *&res) const {
         } else
             return;
     }
-    if (!B.empty()) res = new Xml(Istring(B));
+    if (!B.empty()) res = new Xml(std::string(B));
 }
 
 // This handles the exponent. The case 10^e and 10^o is handled
@@ -1656,7 +1656,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
     }
     String expo = B.special_exponent();
     if (expo == nullptr) return nullptr;
-    return new Xml(Istring(expo));
+    return new Xml(std::string(expo));
 }
 
 // True if it is a group containing \grave{e}
@@ -1776,7 +1776,7 @@ void Parser::TM_fonts() {
 auto math_ns::mk_mi(codepoint c) -> Xml * {
     aux_buffer.clear();
     aux_buffer.push_back_real_utf8(c);
-    Xml *x = new Xml(Istring(aux_buffer));
+    Xml *x = new Xml(std::string(aux_buffer));
     return new Xml(the_names["mi"], x);
 }
 
@@ -1848,7 +1848,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
         pop_front();
     }
     if (f == 1) B.push_back(' ');
-    res = new Xml(Istring(B));
+    res = new Xml(std::string(B));
     res = new Xml(the_names["mi"], res);
     if (f > 1 && spec) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);
@@ -1871,7 +1871,7 @@ auto Math::convert_char_iseq(const MathElt &W, bool multiple) -> MathElt {
             B.push_back(char(uchar(c)));
             pop_front();
         }
-    Xml *res = new Xml(Istring(B));
+    Xml *res = new Xml(std::string(B));
     res      = new Xml(the_names["mn"], res);
     if (f > 1) res->add_att(the_names["mathvariant"], the_names.cstf(f));
     return MathElt(res, mt_flag_small);

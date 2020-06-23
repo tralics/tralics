@@ -79,8 +79,8 @@ void Parser::T_rasection_end() {
 // \begin{RAsection} or \tralics@push@section
 void Parser::T_rasection() {
     std::string name     = sT_arg_nopar();
-    Istring     elt_name = the_names["nb_rasection"];
-    auto        iname    = Istring(name);
+    std::string elt_name = the_names["nb_rasection"];
+    auto        iname    = std::string(name);
     leave_h_mode();
     the_stack.add_nl();
     Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
@@ -88,7 +88,7 @@ void Parser::T_rasection() {
     if (iname == the_names["composition_ra"]) compo_id = cur->id;
     the_stack.push(the_names["RAsection"], cur);
     string_define(0, name, false);
-    Istring id = the_stack.add_new_anchor();
+    std::string id = the_stack.add_new_anchor();
     create_label("section:" + name, id);
 }
 

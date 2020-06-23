@@ -155,7 +155,7 @@ void NewArray::test_pach() {
 void NewArray::run(Xid ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
-        Istring            x = P->nT_arg_nopar();
+        std::string        x = P->nT_arg_nopar();
         const std::string &s = x;
         if (s != "1") id.add_attribute(the_names["cols"], x);
     }

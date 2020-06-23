@@ -18,7 +18,7 @@
 #include <fmt/format.h>
 
 namespace {
-    std::vector<std::pair<int, Istring>> refindex_list; // list of all \ref to \index
+    std::vector<std::pair<int, std::string>> refindex_list; // list of all \ref to \index
 } // namespace
 
 namespace post_ns {
@@ -85,8 +85,8 @@ void Parser::user_XML_modify(subtypes c) {
 // We enter foo in the hashtab, and look at the LabelInfo value.
 // If the label is undefined, we define it,
 
-void Parser::create_label(const std::string &X, const Istring &S) {
-    auto  m = Istring(X);
+void Parser::create_label(const std::string &X, const std::string &S) {
+    auto  m = std::string(X);
     auto *V = labinfo(m);
     if (V->set_defined()) {
         multiple_label(m, V->lineno, V->filename);
@@ -101,7 +101,7 @@ void Parser::create_label(const std::string &X, const Istring &S) {
 
 void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     the_parser.my_stats.one_more_ref();
-    auto B = Istring(s);
+    auto B = std::string(s);
     if (idx)
         refindex_list.emplace_back(v, B);
     else
@@ -118,15 +118,15 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
 // we know the value of the label, and can add the attribute target=xxx.
 void Parser::check_all_ids() {
     for (auto &i : ref_list) {
-        int     E = i.first;
-        Istring V = i.second;
-        auto *  L = labinfo(V);
+        int         E = i.first;
+        std::string V = i.second;
+        auto *      L = labinfo(V);
         if (!L->defined) {
             Logger::finish_seq();
             log_and_tty << "Error signaled in postprocessor\n"
                         << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
             Xid(E).add_attribute(the_names["target"], V);
-            Istring B = L->id;
+            std::string B = L->id;
             for (auto &removed_label : removed_labels) {
                 if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                 break;
@@ -134,7 +134,7 @@ void Parser::check_all_ids() {
             log_and_tty << "\n";
             main_ns::nb_errs++;
         }
-        Istring B = L->id;
+        std::string B = L->id;
         if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
     }
 }
@@ -142,11 +142,11 @@ void Parser::check_all_ids() {
 //
 void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
-        auto    E = to_unsigned(i.first);
-        Istring V = i.second;
-        auto *  L = labinfo(V);
+        auto        E = to_unsigned(i.first);
+        std::string V = i.second;
+        auto *      L = labinfo(V);
         if (!L->defined) continue; // should not happen
-        Istring B = L->id;
+        std::string B = L->id;
         scbuf.clear();
         scbuf.push_back(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
@@ -159,7 +159,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
 // If w=0, we print <foo att-list/>
 // If w=1, we print <foo att-list>
 // if w=2, we print </foo>
-void Buffer::push_back_elt(const Istring &name, Xid id, int w) {
+void Buffer::push_back_elt(const std::string &name, Xid id, int w) {
     push_back('<');
     if (w == 2) push_back('/');
     push_back(name.c_str()); // c_str because there might be a 0 char in name, \todo fix that

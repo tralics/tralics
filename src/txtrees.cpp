@@ -67,8 +67,8 @@ auto Parser::get_index_value() -> size_t {
 // Case \printglossary or \printindex[foo].
 // Marks the place where to insert the index
 void AllIndex::mark_print(size_t g) {
-    Xml *mark = new Xml(Istring(), nullptr);
-    Xml *Foo  = new Xml(Istring(), mark);
+    Xml *mark = new Xml(std::string(), nullptr);
+    Xml *Foo  = new Xml(std::string(), mark);
     the_main->the_stack->add_last(Foo);
     at(g)->set_position(mark);
 }
@@ -136,7 +136,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     B.no_newline();
     Xml *res = translate_list(L);
     Xml *x   = new Xml(the_names["index"], res);
-    if (!encap.empty()) x->id.add_attribute(the_names["encap"], Istring(encap));
+    if (!encap.empty()) x->id.add_attribute(the_names["encap"], std::string(encap));
     x->id.add_attribute(the_names["level"], the_names[std::to_string(level)]);
     auto iid = the_index.last_iid++;
     IR.push_back(new Indexer(B, aux, x, level, iid));
@@ -189,7 +189,7 @@ void Parser::T_index(subtypes c) {
 
     local_buf << bf_reset << fmt::format("lid{}", nid);
     const std::string &W  = local_buf;
-    Istring            id = the_stack.add_anchor(W, false);
+    std::string        id = the_stack.add_anchor(W, false);
     create_label(W, id);
     tralics_ns::add_ref(to_signed(iid), W, true);
 }
@@ -211,7 +211,7 @@ void Parser::finish_index() {
         Xid  id  = res->id;
         {
             const std::string &t = CI->get_title();
-            if (!t.empty()) id.add_attribute(the_names["title"], Istring(t));
+            if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
         }
         {
             AttList &L = the_stack.get_att_list(CI->get_AL());
@@ -219,7 +219,7 @@ void Parser::finish_index() {
         }
         for (size_t i = 0; i < n; i++) {
             Xml *A = CI->get_translation(i);
-            A->id.add_attribute(the_names["target"], Istring(labels[CI->get_iid(i)]));
+            A->id.add_attribute(the_names["target"], std::string(labels[CI->get_iid(i)]));
         }
         CI->do_sort();
         for (size_t i = 0; i < n; i++) {
@@ -272,7 +272,7 @@ void Parser::T_trees(int c) {
 // Initial code uses nodemargin=2pt (value from \nodemargin)
 // and nodemargin=2pt for nodepoint below
 void Parser::T_node() {
-    Istring A = nT_arg_nopar();
+    std::string A = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["node"]);
     AttList &cur = last_att_list();
@@ -285,9 +285,9 @@ void Parser::T_node() {
 // \nodepoint{nodename}[horizontal displacement][vertical displacement]
 
 void Parser::T_nodepoint() {
-    Istring A = nT_arg_nopar();
-    auto    B = nT_optarg_nopar();
-    auto    C = nT_optarg_nopar();
+    std::string A = nT_arg_nopar();
+    auto        B = nT_optarg_nopar();
+    auto        C = nT_optarg_nopar();
     the_stack.push1(the_names["node"]);
     AttList &cur = last_att_list();
     cur.push_back(the_names["name"], A);
@@ -297,7 +297,7 @@ void Parser::T_nodepoint() {
 }
 
 // \nodeconnect[fromloc]{fromnode}[toloc]{tonode}
-void Parser::T_nodeconnect(const Istring &W) {
+void Parser::T_nodeconnect(const std::string &W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
@@ -314,10 +314,10 @@ void Parser::T_nodeconnect(const Istring &W) {
 }
 
 // \barnodeconnect[depth]{fromnode}{tonode}
-void Parser::T_barnodeconnect(const Istring &W) {
-    auto    A = nT_optarg_nopar();
-    Istring B = nT_arg_nopar();
-    Istring C = nT_arg_nopar();
+void Parser::T_barnodeconnect(const std::string &W) {
+    auto        A = nT_optarg_nopar();
+    std::string B = nT_arg_nopar();
+    std::string C = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
     if (A) cur.push_back(the_names["depth"], *A);
@@ -328,7 +328,7 @@ void Parser::T_barnodeconnect(const Istring &W) {
 
 // \nodecurve[fromloc]{fromnode}[toloc]{tonode}{depthfrom}[depthto]
 // \anodecurve[fromloc]{fromnode}[toloc]{tonode}{depth}
-void Parser::T_nodecurve(const Istring &W) {
+void Parser::T_nodecurve(const std::string &W) {
     auto A = get_trees_opt();
     auto B = nT_arg_nopar();
     auto C = get_trees_opt();
@@ -349,17 +349,17 @@ void Parser::T_nodecurve(const Istring &W) {
     the_stack.pop(W);
 }
 
-void Parser::T_nodebox(const Istring &W) {
-    Istring A = nT_arg_nopar();
+void Parser::T_nodebox(const std::string &W) {
+    std::string A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
     the_stack.pop(W);
 }
 
-void Parser::T_nodetriangle(const Istring &W) {
-    Istring A = nT_arg_nopar();
-    Istring B = nT_arg_nopar();
+void Parser::T_nodetriangle(const std::string &W) {
+    std::string A = nT_arg_nopar();
+    std::string B = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["nameA"], A);
@@ -368,9 +368,9 @@ void Parser::T_nodetriangle(const Istring &W) {
 }
 
 // \nodecircle[depth]{nodename}
-void Parser::T_nodecircle(const Istring &W) {
-    auto    B = nT_optarg_nopar();
-    Istring A = nT_arg_nopar();
+void Parser::T_nodecircle(const std::string &W) {
+    auto        B = nT_optarg_nopar();
+    std::string A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
     if (B) cur.push_back(the_names["depth"], *B);

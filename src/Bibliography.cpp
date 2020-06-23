@@ -5,7 +5,7 @@
 #include <spdlog/spdlog.h>
 
 // This creates a unique ID, named bid1, bid2, etc.
-auto Bibliography::unique_bid() -> Istring { return Istring(fmt::format("bid{}", ++last_bid)); }
+auto Bibliography::unique_bid() -> std::string { return std::string(fmt::format("bid{}", ++last_bid)); }
 
 // This creates the full aux file, for use with bibtex.
 void Bibliography::dump(Buffer &b) {
@@ -50,7 +50,7 @@ void Bibliography::dump_data(Buffer &b) {
 // the first two arguments are the Istrings associated to foot and Knuth.
 // If not found, we may insert a new item (normal case),
 // or return -1 (in case of failure)
-auto Bibliography::find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t> {
+auto Bibliography::find_citation_item(const std::string &from, const std::string &key, bool insert) -> std::optional<size_t> {
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)
         if (citation_table[i].match(key, from)) return i;
@@ -64,7 +64,7 @@ auto Bibliography::find_citation_item(const Istring &from, const Istring &key, b
 // If not found, we try \cite[?]{Kunth}, using any possibility for the first
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.
-auto Bibliography::find_citation_star(const Istring &from, const Istring &key) -> size_t {
+auto Bibliography::find_citation_star(const std::string &from, const std::string &key) -> size_t {
     if (auto n = find_citation_item(from, key, false)) return *n;
     auto n = citation_table.size();
     for (size_t i = 0; i < n; i++)

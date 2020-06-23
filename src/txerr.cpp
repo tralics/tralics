@@ -49,9 +49,9 @@ void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
     if (main_ns::no_xml_error) return;
     if (T.is_null()) return;
-    auto str = Istring(s);
+    auto str = std::string(s);
     the_stack.add_newid0("error");
-    Istring cmd = err_buf.convert_for_xml_err(T);
+    std::string cmd = err_buf.convert_for_xml_err(T);
     the_stack.add_att_to_last(the_names["c"], str);
     the_stack.add_att_to_last(the_names["l"], cur_line_to_istring());
     the_stack.add_att_to_last(the_names["n"], cmd);

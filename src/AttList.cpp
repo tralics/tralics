@@ -2,13 +2,13 @@
 #include "tralics/Buffer.h"
 #include "tralics/NameMapper.h"
 
-auto AttList::lookup(const Istring &x) const -> std::optional<size_t> {
+auto AttList::lookup(const std::string &x) const -> std::optional<size_t> {
     for (size_t i = 0; i < size(); ++i)
         if (at(i).name == x) return i;
     return {};
 }
 
-void AttList::push_back(const Istring &name, const Istring &value, bool force) {
+void AttList::push_back(const std::string &name, const std::string &value, bool force) {
     if (auto T = lookup(name)) {
         if (force) at(*T).value = value;
         return;

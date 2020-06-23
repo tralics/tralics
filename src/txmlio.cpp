@@ -109,7 +109,7 @@ auto XmlIO::init(const std::string &name) -> bool {
 
 // This parses the whole XML file
 void XmlIO::run() {
-    cur_xml = new Xml(Istring("root"), nullptr);
+    cur_xml = new Xml(std::string("root"), nullptr);
     cur_stack.push_back(cur_xml);
     B.clear();
     eof_ok = true;
@@ -244,7 +244,7 @@ void XmlIO::parse_lt() {
 void XmlIO::parse_end() {
     scan_name();
     skip_space();
-    auto ref = Istring(B);
+    auto ref = std::string(B);
     if (!cur_xml->has_name(ref)) {
         error("Bad end tag");
         std::cout << "Got " << ref << ", Expected " << cur_xml->name << "\n";
@@ -271,7 +271,7 @@ void XmlIO::pop_this() {
 void XmlIO::parse_tag() {
     reread_list.push_back(cur_char);
     scan_name();
-    Xml *res = new Xml(Istring(B), nullptr);
+    Xml *res = new Xml(std::string(B), nullptr);
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -326,9 +326,9 @@ void XmlIO::parse_attributes() {
         }
         // Now we have an attribute pair
         scan_name();
-        auto att_name = Istring(B);
+        auto att_name = std::string(B);
         parse_att_val();
-        auto att_val = Istring(B);
+        auto att_val = std::string(B);
         cur_xml->id.add_attribute(att_name, att_val);
     }
 }
@@ -488,7 +488,7 @@ void XmlIO::parse_dec_conditional() {
         B << "[INCLUDE[";
     else
         B << "[IGNORE[";
-    Xml *res = new Xml(Istring(B));
+    Xml *res = new Xml(std::string(B));
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
@@ -665,7 +665,7 @@ void XmlIO::parse_dec_attlist() {
 
 void XmlIO::parse_dec_doctype() {
     expect("DOCTYPE");
-    Xml *res = new Xml(Istring("DOCTYPE"), nullptr);
+    Xml *res = new Xml(std::string("DOCTYPE"), nullptr);
     res->id  = -2;                          // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res); // Insert this in the tree
     skip_space();

@@ -347,7 +347,7 @@ void Buffer::insert_token(Token T, bool sw) {
 }
 
 // In case of error, this puts a token in the XML tree
-auto Buffer::convert_for_xml_err(Token T) -> Istring {
+auto Buffer::convert_for_xml_err(Token T) -> std::string {
     clear();
     if (T.is_null())
         push_back("\\invalid.");
@@ -375,7 +375,7 @@ auto Buffer::convert_for_xml_err(Token T) -> Istring {
         } else
             push_back("csname\\endcsname");
     }
-    return Istring(*this);
+    return std::string(*this);
 }
 
 // Print the scaled int V as a floating point in the buffer.
@@ -812,7 +812,7 @@ auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() ==
 
 // Puts in the buffer the value of the attribute M of element idx
 // returns false if there is no such value.
-auto Buffer::install_att(Xid idx, const Istring &m) -> bool {
+auto Buffer::install_att(Xid idx, const std::string &m) -> bool {
     AttList &L = idx.get_att();
     auto     k = L.lookup(m);
     if (!k) return false;
@@ -837,8 +837,8 @@ void Buffer::push_back(const AttList &Y) {
 }
 
 void Buffer::push_back(const AttPair &X) {
-    const Istring &b = X.name;
-    const Istring &a = X.value;
+    const std::string &b = X.name;
+    const std::string &a = X.value;
     if (b[0] == '\'') return;
     push_back(' ');
     push_back(b.c_str());
@@ -855,8 +855,8 @@ void Buffer::push_back(const AttPair &X) {
 
 // Use double quotes instead of single quotes
 void Buffer::push_back_alt(const AttPair &X) {
-    const Istring &b = X.name;
-    const Istring &a = X.value;
+    const std::string &b = X.name;
+    const std::string &a = X.value;
     if (b[0] == '\'') return;
     push_back(' ');
     push_back(b.c_str());
@@ -897,8 +897,8 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
 // attribute list.
 auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
     bool has_spaces = look_at_space(s);
-    if (!has_spaces) return {Istring(s), nullptr};
-    Xml res{Istring(data()), nullptr};
+    if (!has_spaces) return {std::string(s), nullptr};
+    Xml res{std::string(data()), nullptr};
     push_back_special_att(res.id);
     return res;
 }
@@ -911,8 +911,8 @@ void Buffer::push_back_special_att(Xid id) {
         if (!backup_space()) return;
         advance();
         if (!string_delims()) return;
-        Istring a = Istring(substr(J));
-        Istring b = Istring(substr(ptrs.a));
+        std::string a = std::string(substr(J));
+        std::string b = std::string(substr(ptrs.a));
         id.add_attribute(a, b);
         advance();
     }

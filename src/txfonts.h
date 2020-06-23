@@ -19,12 +19,12 @@ class FontInfo {
     long series{0};      // bf or normal
     bool stackval{true}; // is the value on the stack ok ?
 public:
-    long    level{0};  // the level, as for any EQTB object
-    long    old{-1};   // previous value
-    long    packed{0}; // packed value of the font
-    long    size;      // size, between 1 and 11 times 2048
-    Istring color;     // current color
-    Istring old_color; // previous color
+    long        level{0};  // the level, as for any EQTB object
+    long        old{-1};   // previous value
+    long        packed{0}; // packed value of the font
+    long        size;      // size, between 1 and 11 times 2048
+    std::string color;     // current color
+    std::string old_color; // previous color
 
     FontInfo() : size(6 * 2048) {}
     [[nodiscard]] auto shape_change() const -> std::string;
@@ -56,7 +56,7 @@ public:
     void               set_level(long k) { level = k; }
     void               set_packed(long k) { packed = k; }
     void               set_old_from_packed() { old = packed; }
-    void               set_color(Istring c) { color = std::move(c); }
+    void               set_color(std::string c) { color = std::move(c); }
     void               ltfont(const std::string &s, subtypes c);
 };
 

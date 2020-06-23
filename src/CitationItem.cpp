@@ -5,7 +5,7 @@
 #include "tralics/Parser.h"
 
 // This returns a bid. It may create one.
-auto CitationItem::get_id() -> Istring {
+auto CitationItem::get_id() -> std::string {
     if (id.empty()) id = the_bibliography.unique_bid();
     return id;
 }
@@ -32,8 +32,8 @@ void CitationItem::dump_bibtex() {
 
 // Returns true if this is the same object.
 // returns false for \cite{Knuth} and \footcite{Knuth}
-auto CitationItem::match(const Istring &A, const Istring &B) const -> bool { return key == A && from == B; }
+auto CitationItem::match(const std::string &A, const std::string &B) const -> bool { return key == A && from == B; }
 
 // Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the
 // from field, but only if the entry is unsolved.
-auto CitationItem::match_star(const Istring &A) const -> bool { return key == A && !is_solved(); }
+auto CitationItem::match_star(const std::string &A) const -> bool { return key == A && !is_solved(); }

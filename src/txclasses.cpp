@@ -921,7 +921,7 @@ void Parser::out_warning(Buffer &B, msg_type what) {
         w = "Warning";
     if (!the_names["warning"].empty()) {
         flush_buffer();
-        Xml *res = new Xml(the_names["warning"], new Xml(Istring(B)));
+        Xml *res = new Xml(the_names["warning"], new Xml(std::string(B)));
         res->id.add_attribute(the_names["c"], the_names[w]);
         res->id.add_attribute(the_names["l"], cur_line_to_istring());
         the_stack.add_last(res);

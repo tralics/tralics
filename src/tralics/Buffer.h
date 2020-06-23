@@ -86,8 +86,8 @@ public:
     // Those are still unsorted as refactoring proceeds
 
     auto insert_break(const std::string &x) -> std::string;
-    auto install_att(Xid idx, const Istring &match) -> bool;
-    void interpret_aux(std::vector<Istring> &bib, std::vector<Istring> &bib2);
+    auto install_att(Xid idx, const std::string &match) -> bool;
+    void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();
     auto is_begin_something(const std::string &s) -> int;
@@ -112,7 +112,7 @@ public:
     void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &s);
     void push_back_def(String, std::string);
-    void push_back_elt(const Istring &name, Xid id, int w);
+    void push_back_elt(const std::string &name, Xid id, int w);
     void push_back16(size_t n, bool uni);
     void push_back16l(bool hat, unsigned n);
     void push_back_ent(codepoint ch);
@@ -157,7 +157,7 @@ public:
     auto str_toks(nl_to_tok nl) -> TokenList;
     auto str_toks11(bool nl) -> TokenList;
     auto string_delims() -> bool;
-    auto convert_for_xml_err(Token t) -> Istring;
+    auto convert_for_xml_err(Token t) -> std::string;
     auto tp_next_char(char &res) -> bool;
     auto tp_fetch_something() -> tpa_line;
     auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
@@ -200,7 +200,7 @@ inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }
 
-inline auto encode(const Istring &s) -> std::string { return Buffer(s).convert_to_out_encoding(); }
+inline auto encode(const std::string &s) -> std::string { return Buffer(s).convert_to_out_encoding(); }
 
 inline Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf,
     txclasses_local_buf;

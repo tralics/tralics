@@ -49,7 +49,7 @@ public:
     auto               find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
     auto               find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
     auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
-    void               make_entry(const CitationKey &a, Istring myid);
+    void               make_entry(const CitationKey &a, std::string myid);
     [[nodiscard]] auto auto_cite() const -> bool;
     [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
 
@@ -73,7 +73,7 @@ private:
     auto               look_for_macro(size_t h, const std::string &name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].value = all_macros[X].name; }
     void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
-    auto               make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry *;
+    auto               make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry *;
     auto               next_char() -> codepoint { return input_line[input_line_pos++]; }
     void               next_line(bool what);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
@@ -95,7 +95,7 @@ public:
     [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
 
     auto        get_an_entry(size_t i) { return all_entries[i]; }
-    auto        exec_bibitem(const std::string &w, const std::string &b) -> Istring;
+    auto        exec_bibitem(const std::string &w, const std::string &b) -> std::string;
     void        nocitestar_true() { nocitestar = true; }
     auto        implement_cit(String x, std::string w) -> int;
     auto        is_year_string(const std::string &y, bib_from from) -> String;

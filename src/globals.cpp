@@ -41,9 +41,9 @@ auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d
 
 auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
 
-auto next_label_id() -> Istring {
+auto next_label_id() -> std::string {
     static size_t last_label_id = 0;
-    return Istring(fmt::format("uid{}", ++last_label_id));
+    return std::string(fmt::format("uid{}", ++last_label_id));
 }
 
 // Here we have to find the character c.

@@ -31,17 +31,17 @@ namespace {
     // to be solved later. In the case of \footcite[p.25]{Knuth},
     // the arguments of the function are foot and Knuth; the `p.25' will be
     // considered elsewhere.
-    auto make_cit_ref(const Istring &type, const Istring &ref) -> Xml {
-        auto    n  = *the_bibliography.find_citation_item(type, ref, true);
-        Istring id = the_bibliography.citation_table[n].get_id();
-        Xml     res(the_names["ref"], nullptr);
+    auto make_cit_ref(const std::string &type, const std::string &ref) -> Xml {
+        auto        n  = *the_bibliography.find_citation_item(type, ref, true);
+        std::string id = the_bibliography.citation_table[n].get_id();
+        Xml         res(the_names["ref"], nullptr);
         res.id.add_attribute(the_names["target"], id);
         return res;
     }
 
     // \cite[year][]{foo}is the same as \cite{foo}
     // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
-    auto normalise_for_bib(Istring w) -> Istring {
+    auto normalise_for_bib(std::string w) -> std::string {
         std::string S = w;
         if (S == "year") return the_names["cst_empty"];
         if (!distinguish_refer)
@@ -726,7 +726,7 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &; // \todo els
 
 // In case of error, we add the current line number as attribute
 // via this function
-auto Parser::cur_line_to_istring() const -> Istring { return Istring(fmt::format("{}", get_cur_line())); }
+auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt::format("{}", get_cur_line())); }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
 void Parser::tex_string(Buffer &B, Token T, bool esc) const {
@@ -1692,10 +1692,10 @@ void Parser::T_cite_one() {
     bool  is_simple = cur_cmd_chr.chr != 0;
     Token T         = cur_tok;
     flush_buffer();
-    Istring type = is_simple ? "" : fetch_name0_nopar();
-    cur_tok      = T;
-    auto ref     = Istring(fetch_name0_nopar());
-    Xml *arg     = is_simple ? nullptr : xT_arg_nopar();
+    std::string type = is_simple ? "" : fetch_name0_nopar();
+    cur_tok          = T;
+    auto ref         = std::string(fetch_name0_nopar());
+    Xml *arg         = is_simple ? nullptr : xT_arg_nopar();
     // signal error after argument parsing
     if (bbl.is_too_late()) {
         parse_error("Citation after loading biblio?");
@@ -1709,9 +1709,9 @@ void Parser::T_cite_one() {
     }
     leave_v_mode();
     TokenList L     = get_mac_value(hash_table.cite_type_token);
-    auto      xtype = Istring(fetch_name1(L));
+    auto      xtype = std::string(fetch_name1(L));
     L               = get_mac_value(hash_table.cite_prenote_token);
-    auto prenote    = Istring(fetch_name1(L));
+    auto prenote    = std::string(fetch_name1(L));
     if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
     the_stack.add_last(new Xml(the_names["cit"], res));
     if (!type.empty()) the_stack.add_att_to_last(the_names["rend"], type);
@@ -1725,8 +1725,8 @@ void Parser::T_cite_one() {
 void Parser::add_bib_marker(bool force) {
     Bibliography &T = the_bibliography;
     if (!force && T.location_exists()) return;
-    Xml *mark = new Xml(Istring(), nullptr);
-    Xml *Foo  = new Xml(Istring(), mark);
+    Xml *mark = new Xml(std::string(), nullptr);
+    Xml *Foo  = new Xml(std::string(), mark);
     the_stack.add_last(Foo);
     T.set_location(mark, force);
 }
@@ -1829,7 +1829,7 @@ void Parser::T_start_the_biblio() {
     L1.push_back(hash_table.refname_token);
     auto a = fetch_name1(L1);
     the_stack.set_arg_mode();
-    auto name = Istring(a);
+    auto name = std::string(a);
     the_stack.set_v_mode();
     the_stack.push(the_names["thebibliography"], new Xml(name, nullptr));
 }
@@ -1851,7 +1851,7 @@ void Parser::T_cititem() {
     mode m = the_stack.get_mode();
     need_bib_mode();
     the_stack.set_arg_mode();
-    auto name = Istring(a);
+    auto name = std::string(a);
     the_stack.push(name, new Xml(name, nullptr));
     T_arg();
     the_stack.pop(name);
@@ -1873,7 +1873,7 @@ void Parser::T_omitcite() {
 // We start with a function that fetches optional arguments
 // In prenote we put `p. 25' or nothing, in type one of year, foot, refer, bar
 // as an istring, it will be normalised later.
-void Parser::T_cite(subtypes sw, TokenList &prenote, Istring &type) {
+void Parser::T_cite(subtypes sw, TokenList &prenote, std::string &type) {
     if (sw == footcite_code) {
         read_optarg_nopar(prenote);
         type = the_names["foot"];
@@ -1884,7 +1884,7 @@ void Parser::T_cite(subtypes sw, TokenList &prenote, Istring &type) {
         read_optarg_nopar(prenote);
         type = the_names["refer"];
     } else if (sw == nocite_code) {
-        type = Istring(fetch_name_opt());
+        type = std::string(fetch_name_opt());
     } else if (sw == natcite_code) {
         read_optarg_nopar(prenote); // is really the post note
     } else {
@@ -1892,7 +1892,7 @@ void Parser::T_cite(subtypes sw, TokenList &prenote, Istring &type) {
         TokenList L1;
         if (read_optarg_nopar(L1)) {
             if (read_optarg_nopar(prenote))
-                type = Istring(fetch_name1(L1));
+                type = std::string(fetch_name1(L1));
             else
                 prenote = L1;
         }
@@ -1929,7 +1929,7 @@ void Parser::T_cite(subtypes sw) {
         res.push_front(hash_table.locate("NAT@open"));
     }
     cur_tok = T;
-    Istring type;
+    std::string type;
     T_cite(sw, prenote, type); // reads optional arguments
     type = normalise_for_bib(type);
     if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
@@ -1945,7 +1945,7 @@ void Parser::T_cite(subtypes sw) {
             if (cur == "*")
                 the_bibliography.set_nocite();
             else
-                the_bibliography.find_citation_item(type, Istring(cur), true);
+                the_bibliography.find_citation_item(type, std::string(cur), true);
         } else {
             if (n > 0) res.push_back(sep);
             TokenList tmp;
@@ -1980,10 +1980,10 @@ void Parser::T_cite(subtypes sw) {
 // Flag true for bibitem, \bibitem[opt]{key}
 // false in the case of \XMLsolvecite[id][from]{key}
 void Parser::solve_cite(bool user) {
-    Token   T = cur_tok;
-    bool    F = true;
-    long    n = 0;
-    Istring from;
+    Token       T = cur_tok;
+    bool        F = true;
+    long        n = 0;
+    std::string from;
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
@@ -1992,11 +1992,11 @@ void Parser::solve_cite(bool user) {
     } else {
         F    = remove_initial_star();
         n    = to_signed(read_elt_id(T));
-        from = Istring(fetch_name_opt());
+        from = std::string(fetch_name_opt());
     }
     from     = normalise_for_bib(from);
     cur_tok  = T;
-    auto key = Istring(fetch_name0_nopar());
+    auto key = std::string(fetch_name0_nopar());
     if (user) insert_every_bib();
     if (n == 0) return;
     Xid           N  = Xid(n);
@@ -2032,11 +2032,11 @@ void Parser::solve_cite(bool user) {
 void Parser::T_bpers() {
     int e              = main_ns::nb_errs;
     unexpected_seen_hi = false;
-    auto    A          = nT_optarg_nopar();
-    Istring a          = nT_arg_nopar();
-    Istring b          = nT_arg_nopar();
-    Istring c          = nT_arg_nopar();
-    Istring d          = nT_arg_nopar();
+    auto        A      = nT_optarg_nopar();
+    std::string a      = nT_arg_nopar();
+    std::string b      = nT_arg_nopar();
+    std::string c      = nT_arg_nopar();
+    std::string d      = nT_arg_nopar();
     if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
@@ -2062,7 +2062,7 @@ void Parser::T_empty_bibitem() {
     std::string w;
     std::string a;
     std::string b  = sT_arg_nopar();
-    Istring     id = the_bibtex.exec_bibitem(w, b);
+    std::string id = the_bibtex.exec_bibitem(w, b);
     if (id.empty()) return;
     leave_v_mode();
     the_stack.push1(the_names["citation"]);
@@ -2077,11 +2077,11 @@ void Parser::T_citation() {
     std::string b1 = special_next_arg();
     std::string b2 = sT_arg_nopar();
     std::string c  = sT_arg_nopar();
-    Istring     d  = nT_arg_nopar();
+    std::string d  = nT_arg_nopar();
     the_stack.add_nl();
     the_stack.push1(the_names["citation"]);
     the_stack.add_att_to_last(the_names["type"], d);
-    the_stack.implement_cit(b1, Istring(b2), a, c);
+    the_stack.implement_cit(b1, std::string(b2), a, c);
     the_stack.set_bib_mode();
     ignore_optarg();
     insert_every_bib();
@@ -2240,7 +2240,7 @@ void Parser::start_a_cell(bool started) {
     }
 }
 
-void Parser::finish_a_cell(Token T, const Istring &a) {
+void Parser::finish_a_cell(Token T, const std::string &a) {
     flush_buffer();
     the_stack.remove_last_space();
     if (!a.empty()) {
@@ -2259,7 +2259,7 @@ void Parser::finish_a_cell(Token T, const Istring &a) {
 
 // This is \begin{tabular}. Should be in an environment (not necessarily)
 void Parser::T_start_tabular(subtypes c) {
-    Istring x = the_names[c == zero_code ? "tabular" : "tabular*"];
+    std::string x = the_names[c == zero_code ? "tabular" : "tabular*"];
     if (the_stack.is_float())
         leave_v_mode();
     else if (the_stack.is_frame("fbox")) {
@@ -2273,7 +2273,7 @@ void Parser::T_start_tabular(subtypes c) {
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) id.add_attribute(the_names["table_width"], Istring(tab_width));
+        if (!tab_width.null()) id.add_attribute(the_names["table_width"], std::string(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
@@ -2348,7 +2348,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_above   = true;
-            hlinee_above = Istring(tab_width);
+            hlinee_above = std::string(tab_width);
         }
     }
     L = read_arg();
@@ -2356,13 +2356,13 @@ auto Parser::T_hline_parse(subtypes c) -> int {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!tab_width.null()) {
             have_below   = true;
-            hlinee_below = Istring(tab_width);
+            hlinee_below = std::string(tab_width);
         }
     }
     L                   = read_arg();
     ScaledInt tab_width = dimen_from_list(T, L);
     in_hlinee           = true;
-    hlinee_width        = Istring(tab_width);
+    hlinee_width        = std::string(tab_width);
     return rt;
 }
 
@@ -2394,7 +2394,7 @@ void Parser::T_cline() {
         if (!R->is_xmlc() && R->has_name(the_names["row"])) {
             if (R->try_cline_again(false)) {
                 R->try_cline_again(true);
-                R->name = Istring();
+                R->name = std::string();
                 the_stack.add_border(cline_first, cl_span);
                 the_log << "\\cline killed a cell \n";
                 return;
@@ -2426,7 +2426,7 @@ auto Parser::false_end_tabular(const std::string &s) -> bool {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
         back_input(hash_table.end_token);
-        finish_a_cell(hash_table.cr_token, Istring());
+        finish_a_cell(hash_table.cr_token, std::string());
         return true;
     }
     return false;

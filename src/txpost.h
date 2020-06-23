@@ -1,8 +1,8 @@
 #pragma once
-#include "tralics/Istring.h"
 #include "tralics/enums.h"
 #include <cstring>
 #include <fstream>
+#include <string>
 #include <utility>
 
 class Xml;
@@ -19,13 +19,13 @@ class Xml;
 
 // for modules
 class ModChecker {
-    Istring id;              // the id of the module or section
-    bool    is_mod{false};   // is this a module?
-    bool    has_info{false}; // does this have some infos ?
+    std::string id;              // the id of the module or section
+    bool        is_mod{false};   // is this a module?
+    bool        has_info{false}; // does this have some infos ?
 public:
     ModChecker() = default;
-    ModChecker(Istring I, bool mod) : id(std::move(I)), is_mod(mod) {}
-    void set(const Istring &I) {
+    ModChecker(std::string I, bool mod) : id(std::move(I)), is_mod(mod) {}
+    void set(const std::string &I) {
         if (id == I) has_info = true;
     }
     void check(int *T) const {
@@ -45,26 +45,27 @@ public:
 
 // temporary for recursion.
 class XmlAction {
-    Istring    match;      // the name of the object to match
-    recur_type what;       // the type of the action to perform
-    long       int_val;    // number of results, or xid
-    Xml *      xml_val;    // input or output xml value
-    Istring    string_val; // name of element ot work on
+    std::string match;      // the name of the object to match
+    recur_type  what;       // the type of the action to perform
+    long        int_val;    // number of results, or xid
+    Xml *       xml_val;    // input or output xml value
+    std::string string_val; // name of element ot work on
 public:
-    XmlAction(Istring M, recur_type w) : match(std::move(M)), what(w), int_val(0), xml_val(nullptr) {}
-    XmlAction(Istring M, recur_type w, Xml *X) : match(std::move(M)), what(w), int_val(0), xml_val(X) {}
-    XmlAction(Istring M, recur_type w, Istring X) : match(std::move(M)), what(w), int_val(0), xml_val(nullptr), string_val(std::move(X)) {}
+    XmlAction(std::string M, recur_type w) : match(std::move(M)), what(w), int_val(0), xml_val(nullptr) {}
+    XmlAction(std::string M, recur_type w, Xml *X) : match(std::move(M)), what(w), int_val(0), xml_val(X) {}
+    XmlAction(std::string M, recur_type w, std::string X)
+        : match(std::move(M)), what(w), int_val(0), xml_val(nullptr), string_val(std::move(X)) {}
     [[nodiscard]] auto get_what() const -> recur_type { return what; }
     void               incr_int_val() { int_val++; }
     void               mark_found() { int_val = 1; }
     [[nodiscard]] auto is_ok() const -> bool { return int_val != 0; }
     [[nodiscard]] auto get_xml_val() const -> Xml * { return xml_val; }
     [[nodiscard]] auto get_int_val() const -> long { return int_val; }
-    [[nodiscard]] auto get_string_val() const -> Istring { return string_val; }
-    void               set_string_val(Istring s) { string_val = std::move(s); }
+    [[nodiscard]] auto get_string_val() const -> std::string { return string_val; }
+    void               set_string_val(std::string s) { string_val = std::move(s); }
     void               set_xml_val(Xml *s) { xml_val = s; }
     void               set_int_val(long s) { int_val = s; }
-    [[nodiscard]] auto get_match() const -> Istring { return match; }
+    [[nodiscard]] auto get_match() const -> std::string { return match; }
 };
 
 // A class to count words... \todo where is that used? \todo chained list???

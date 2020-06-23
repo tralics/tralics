@@ -141,10 +141,10 @@ void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf
 
 // Return an integer associated to a field position.
 auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
-    auto S = Istring(s);
+    auto S = std::string(s);
     // Check is this has to be ignored
-    std::vector<Istring> &Bib_s        = the_main->bibtex_fields_s;
-    size_t                additional_s = Bib_s.size();
+    std::vector<std::string> &Bib_s        = the_main->bibtex_fields_s;
+    size_t                    additional_s = Bib_s.size();
     for (size_t i = 0; i < additional_s; i++)
         if (Bib_s[i] == S) return fp_unknown;
 
@@ -180,8 +180,8 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
     if (S == the_names["year"]) return fp_year;
     if (S == the_names["crossref"]) return fp_crossref;
     // Check is this is additional
-    std::vector<Istring> &Bib        = the_main->bibtex_fields;
-    size_t                additional = Bib.size();
+    std::vector<std::string> &Bib        = the_main->bibtex_fields;
+    size_t                    additional = Bib.size();
     for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
     return fp_unknown;
@@ -190,10 +190,10 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
 // Finds the type of an entry (or comment, string, preamble). \todo without the_names?
 auto Bibtex::find_type(const std::string &s) -> entry_type {
     if (s.empty()) return type_comment; // in case of error.
-    auto S = Istring(s);
+    auto S = std::string(s);
 
-    std::vector<Istring> &Bib2        = the_main->bibtex_extensions_s;
-    size_t                additional2 = Bib2.size();
+    std::vector<std::string> &Bib2        = the_main->bibtex_extensions_s;
+    size_t                    additional2 = Bib2.size();
     for (size_t i = 0; i < additional2; i++)
         if (Bib2[i] == S) return type_comment;
     if (S == the_names["article"]) return type_article;
@@ -216,8 +216,8 @@ auto Bibtex::find_type(const std::string &s) -> entry_type {
     if (S == the_names["string"]) return type_string;
     if (S == the_names["unpublished"]) return type_unpublished;
 
-    std::vector<Istring> &Bib        = the_main->bibtex_extensions;
-    size_t                additional = Bib.size();
+    std::vector<std::string> &Bib        = the_main->bibtex_extensions;
+    size_t                    additional = Bib.size();
     for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return entry_type(type_extension + i + 1);
     return type_unknown;
@@ -292,10 +292,10 @@ auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
 auto Bibtex::make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry * { return make_entry(a, b, the_bibliography.unique_bid()); }
 
 // Copy from the biblio
-void Bibtex::make_entry(const CitationKey &a, Istring myid) { make_entry(a, because_cite, std::move(myid)); }
+void Bibtex::make_entry(const CitationKey &a, std::string myid) { make_entry(a, because_cite, std::move(myid)); }
 
 // Generic code
-auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid) -> BibEntry * {
+auto Bibtex::make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry * {
     auto *X      = new BibEntry;
     X->cite_key  = a;
     X->why_me    = b;
@@ -305,11 +305,11 @@ auto Bibtex::make_entry(const CitationKey &a, bib_creator b, Istring myid) -> Bi
     return X;
 }
 
-auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> Istring {
+auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> std::string {
     BibEntry *X = find_entry(b, w, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
-        return Istring();
+        return std::string();
     }
     X->type_int = type_article;
     X->set_explicit_cit();

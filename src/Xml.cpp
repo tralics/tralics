@@ -129,7 +129,7 @@ namespace {
     void raw_subfigure(Xml *from, Xml *to, Xml *junk) {
         to->id.add_attribute(the_names["rend"], the_names["subfigure"]);
         int         n          = 0;
-        static auto parid_name = Istring("parid");
+        static auto parid_name = std::string("parid");
         for (;;) {
             Xml *P = from->get_first_env("cst_p");
             if (P == nullptr) break;
@@ -137,7 +137,7 @@ namespace {
                 junk->push_back_unless_nullptr(P);
                 continue;
             }
-            auto par_id = Istring(std::to_string(n));
+            auto par_id = std::string(std::to_string(n));
             ++n;
             for (;;) {
                 Xml *sf = P->get_first_env("subfigure");
@@ -219,7 +219,7 @@ namespace {
             return;
         default: { // other cases
             from->remove_empty_par();
-            Xml *nbsp = new Xml(Istring(" &#xA0;"));
+            Xml *nbsp = new Xml(std::string(" &#xA0;"));
             from->subst_env0(the_names["hfill"], nbsp);
             from->subst_env0(the_names["hfil"], nbsp);
             from->move(the_names["cst_p"], to);
@@ -232,10 +232,10 @@ namespace {
     }
 
     // This removes the object S, together with the label n
-    void remove_label(String s, const Istring &n) {
+    void remove_label(String s, const std::string &n) {
         for (auto &i : ref_list) {
-            Istring V  = i.second;
-            auto *  li = labinfo(V);
+            std::string V  = i.second;
+            auto *      li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
             log_and_tty << "Error signaled by postprocessor\n"
@@ -243,8 +243,8 @@ namespace {
             main_ns::nb_errs++;
         }
         for (auto &defined_label : defined_labels) {
-            Istring    j = defined_label.first;
-            LabelInfo *V = defined_label.second;
+            std::string j = defined_label.first;
+            LabelInfo * V = defined_label.second;
             if (j == n && V->defined && !V->used) {
                 removed_labels.emplace_back(s, n);
                 V->defined = false;
@@ -297,7 +297,7 @@ namespace {
 } // namespace
 
 // Returns a new element named N, initialised with z (if not empty...)
-Xml::Xml(Istring N, Xml *z) : name(std::move(N)) {
+Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
     id = the_main->the_stack->next_xid(this);
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
@@ -316,7 +316,7 @@ auto Xml::try_cline(bool action) -> bool {
             a_ok = true;
         }
         if (at(k)->is_xmlc()) {
-            Istring N = at(k)->name;
+            std::string N = at(k)->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
@@ -336,7 +336,7 @@ auto Xml::total_span(long &res) const -> bool {
     auto len = size();
     for (size_t k = 0; k < len; k++) {
         if (at(k)->is_xmlc()) {
-            Istring N = at(k)->name;
+            std::string N = at(k)->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
@@ -361,7 +361,7 @@ auto Xml::try_cline_again(bool action) -> bool {
             continue;
         }
         if (at(k)->is_xmlc() && k == len - 1) {
-            Istring N = at(k)->name;
+            std::string N = at(k)->name;
             if (std::string(N) == "\n") continue;
             return false;
         }
@@ -379,8 +379,8 @@ void Xml::bordermatrix() {
     auto n = size() - 1;
     auto F = front();
     if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) { F->insert_at(1, new Xml(the_names["mtd"], nullptr)); }
-    auto att    = Istring("rowspan");
-    auto attval = Istring(std::to_string(n));
+    auto att    = std::string("rowspan");
+    auto attval = std::string(std::to_string(n));
     F           = at(1);
     if ((F != nullptr) && !F->is_xmlc() && F->size() > 1) {
         Xml *aux = new Xml(the_names["mtd"], MathDataP::mk_mo("("));
@@ -492,7 +492,7 @@ void Xml::recurse(XmlAction &X) {
                 continue;
             case rc_composition: // a module in the comp section
             {
-                Istring an = T->id.has_attribute(the_names["id"]);
+                std::string an = T->id.has_attribute(the_names["id"]);
                 if (!an.empty()) remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
@@ -644,13 +644,13 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
 }
 
 // Replace <name/> by vl.
-void Xml::subst_env0(Istring match, Xml *vl) {
+void Xml::subst_env0(std::string match, Xml *vl) {
     XmlAction X(std::move(match), rc_subst, vl);
     recurse(X);
 }
 
 // Returns number of sons named <match>.
-auto Xml::how_many_env(Istring match) -> long {
+auto Xml::how_many_env(std::string match) -> long {
     XmlAction X(std::move(match), rc_how_many);
     recurse(X);
     return X.get_int_val();
@@ -719,13 +719,13 @@ void Xml::remove_empty_par() {
 void Xml::swap_x(Xml *x) { std::vector<gsl::not_null<Xml *>>::swap(*x); }
 
 // Moves to res every son named match.
-void Xml::move(Istring match, Xml *res) {
+void Xml::move(std::string match, Xml *res) {
     XmlAction X(std::move(match), rc_move, res);
     recurse(X);
 }
 
 // Renames all elements called old_name to new_name
-void Xml::rename(Istring old_name, Istring new_name) {
+void Xml::rename(std::string old_name, std::string new_name) {
     XmlAction X(std::move(old_name), rc_rename, std::move(new_name));
     recurse(X);
 }
@@ -787,7 +787,7 @@ void Xml::postprocess_fig_table(bool is_fig) {
         if (!f.empty()) log_and_tty << " of file " << f;
         log_and_tty << ".\n";
     }
-    Xml *U = new Xml(Istring("unexpected"), nullptr);
+    Xml *U = new Xml(std::string("unexpected"), nullptr);
     push_back_unless_nullptr(U);
     T->add_non_empty_to(U);
 }
@@ -829,7 +829,7 @@ void Xml::convert_to_string(Buffer &b) {
     }
     err_buf.clear();
     if (id.is_font_change()) {
-        Istring w = id.has_attribute(the_names["rend"]);
+        std::string w = id.has_attribute(the_names["rend"]);
         if (!w.empty()) {
             err_buf << "unexpected font change " << encode(w);
             the_parser.unexpected_font();

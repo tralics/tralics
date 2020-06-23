@@ -53,10 +53,10 @@ public:
     std::string short_date;    ///< Date of start of run (short format)
     std::string year_string;   // is 2003
 
-    std::vector<Istring> bibtex_fields_s;
-    std::vector<Istring> bibtex_fields;
-    std::vector<Istring> bibtex_extensions;
-    std::vector<Istring> bibtex_extensions_s;
+    std::vector<std::string> bibtex_fields_s;
+    std::vector<std::string> bibtex_fields;
+    std::vector<std::string> bibtex_extensions;
+    std::vector<std::string> bibtex_extensions_s;
 
     size_t               input_encoding{1};        ///< Encoding of the input file \todo one type to rule all encodings
     output_encoding_type log_encoding{en_boot};    ///< Encoding of the log file \todo this should always be UTF-8

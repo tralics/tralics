@@ -3,14 +3,16 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
-auto NameMapper::operator[](const std::string &name) const -> Istring {
+auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
-    return Istring(name);
+    return std::string(name);
 }
 
-void NameMapper::set(const std::string &name, const std::optional<std::string> &value) { dict[name] = value ? Istring(*value) : Istring(); }
+void NameMapper::set(const std::string &name, const std::optional<std::string> &value) {
+    dict[name] = value ? std::string(*value) : std::string();
+}
 
-auto NameMapper::cstf(size_t i) -> Istring {
+auto NameMapper::cstf(size_t i) -> std::string {
     static std::array<std::string, 15> fonts = {"normal",
                                                 "cstf_upright",
                                                 "bold",
@@ -29,7 +31,7 @@ auto NameMapper::cstf(size_t i) -> Istring {
     return (*this)[fonts[i]];
 }
 
-auto NameMapper::mml(size_t i) -> Istring {
+auto NameMapper::mml(size_t i) -> std::string {
     static std::array<std::string, 15> fonts = {"mml@font@normal",
                                                 "mml@font@upright",
                                                 "mml@font@bold",
@@ -48,22 +50,22 @@ auto NameMapper::mml(size_t i) -> Istring {
     return (*this)[fonts[i]];
 }
 
-auto NameMapper::mi(size_t i) -> Istring {
+auto NameMapper::mi(size_t i) -> std::string {
     static std::array<std::string, 8> list = {"mi", "mn", "mo", "ci", "cn", "csymbol", "cst_nothing", "mmultiscripts"};
     return (*this)[list[i]];
 }
 
-auto NameMapper::center(size_t i) -> Istring {
+auto NameMapper::center(size_t i) -> std::string {
     static std::array<std::string, 7> list = {"np_center_etc", "centering", "quote", "quotation", "flush_left", "flush_right", "verse"};
     return (*this)[list[i]];
 }
 
-auto NameMapper::cstdiv(size_t i) -> Istring {
+auto NameMapper::cstdiv(size_t i) -> std::string {
     static std::array<std::string, 7> list = {"cst_div0", "cst_div1", "cst_div2", "cst_div3", "cst_div4", "cst_div5", "cst_div6"};
     return (*this)[list[i]];
 }
 
-auto NameMapper::npdiv(size_t i) -> Istring {
+auto NameMapper::npdiv(size_t i) -> std::string {
     static std::array<std::string, 7> list = {"div0", "div1", "div2", "div3", "div4", "div5", "div6"};
     return (*this)[list[i]];
 }

@@ -136,7 +136,7 @@ public:
     auto                      chars_to_mb(Buffer &B, bool rec) const -> bool;
     auto                      chars_to_mb1(Buffer &B) const -> bool;
     auto                      chars_to_mb2(Buffer &B) const -> bool;
-    auto                      chars_to_mb3() -> Istring;
+    auto                      chars_to_mb3() -> std::string;
     void                      clear() { value.clear(); }
     auto                      convert_math(math_style k) -> Xml *;
     auto                      convert_math_noML(bool spec) -> Xml *;
@@ -294,7 +294,7 @@ public:
     }
     [[nodiscard]] auto get_math_env_ctr() const -> int { return math_env_ctr; }
     [[nodiscard]] auto get_all_env_ctr() const -> int { return all_env_ctr; }
-    void               add_attribute(const Istring &a, const Istring &b, subtypes c);
+    void               add_attribute(const std::string &a, const std::string &b, subtypes c);
     [[nodiscard]] auto get_cid() const -> Xid { return cur_cell_id; }
     [[nodiscard]] auto get_rid() const -> Xid { return cur_row_id; }
     [[nodiscard]] auto get_mid() const -> Xid { return cur_math_id; }
@@ -316,20 +316,20 @@ private:
 
 // This is a global object for math handling
 class MathDataP {
-    static const int                                  m_offset = 10000;
-    std::array<Xml *, last_math_loc>                  built_in_table{};     // the static math table
-    std::array<Xml *, last_math_loc>                  built_in_table_alt{}; // the static math table
-    std::vector<Xml *>                                xml_math_table;       // the dynamic math table
-    size_t                                            xmath_pos{};          // number of slots used in the dynamic table
-    std::vector<Math>                                 math_table;           // the table of math lists
-    size_t                                            lmath_pos{};          // number of slots used in the math table
-    std::array<std::optional<Istring>, del_tablesize> xml_lr_ptable;        // table of fence attributes
-    std::array<math_types, nb_mathchars>              math_char_type{};     // the math type for +, = etc
-    std::array<Xml *, nb_simplemath>                  simplemath_table{};   // translation of $x$ etc
-    std::array<Xml *, 29>                             mc_table{};
-    bool                                              no_ent_names{};
-    Token                                             nomathsw0; // says next token is for nomathml only
-    Token                                             nomathsw1; // says next token is for normal mode only
+    static const int                                      m_offset = 10000;
+    std::array<Xml *, last_math_loc>                      built_in_table{};     // the static math table
+    std::array<Xml *, last_math_loc>                      built_in_table_alt{}; // the static math table
+    std::vector<Xml *>                                    xml_math_table;       // the dynamic math table
+    size_t                                                xmath_pos{};          // number of slots used in the dynamic table
+    std::vector<Math>                                     math_table;           // the table of math lists
+    size_t                                                lmath_pos{};          // number of slots used in the math table
+    std::array<std::optional<std::string>, del_tablesize> xml_lr_ptable;        // table of fence attributes
+    std::array<math_types, nb_mathchars>                  math_char_type{};     // the math type for +, = etc
+    std::array<Xml *, nb_simplemath>                      simplemath_table{};   // translation of $x$ etc
+    std::array<Xml *, 29>                                 mc_table{};
+    bool                                                  no_ent_names{};
+    Token                                                 nomathsw0; // says next token is for nomathml only
+    Token                                                 nomathsw1; // says next token is for normal mode only
 private:
     void boot_table();
     void boot2();
@@ -375,7 +375,7 @@ public:
     auto        get_list(size_t k) -> Math & { return math_table[k]; }
     void        push_back(size_t k, CmdChr X, subtypes c);
     auto        get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
-    auto        get_fence(size_t k) -> std::optional<Istring> { return xml_lr_ptable[k]; }
+    auto        get_fence(size_t k) -> std::optional<std::string> { return xml_lr_ptable[k]; }
     auto        get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
     static auto mk_mo(String a) -> gsl::not_null<Xml *>;
     void        set_type(size_t k, math_list_type c) { math_table[k].set_type(c); }
@@ -409,7 +409,7 @@ public:
 };
 
 namespace math_ns {
-    void add_attribute_spec(const Istring &a, const Istring &b);
+    void add_attribute_spec(const std::string &a, const std::string &b);
     auto cv_special_string(int c) -> std::string;
     auto get_builtin(size_t p) -> Xml *;
     auto get_builtin_alt(size_t p) -> Xml *;
@@ -435,7 +435,7 @@ namespace math_ns {
     auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar c, size_t n) -> Xml *;
-    auto xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml;
+    auto xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml;
 } // namespace math_ns
 
 //---------------------------------------------------------------------

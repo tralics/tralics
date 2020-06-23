@@ -117,10 +117,10 @@ public:
 
 // data structure for a font change
 class SaveAuxFont : public SaveAux {
-    long    val;   // the value to be restored
-    Istring color; // the color to restore
+    long        val;   // the value to be restored
+    std::string color; // the color to restore
 public:
-    SaveAuxFont(Parser &p, long l, long v, Istring c) : SaveAux(p, st_font, l), val(v), color(std::move(c)) {}
+    SaveAuxFont(Parser &p, long l, long v, std::string c) : SaveAux(p, st_font, l), val(v), color(std::move(c)) {}
     ~SaveAuxFont() override;
 };
 

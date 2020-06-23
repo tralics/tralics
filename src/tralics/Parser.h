@@ -134,7 +134,7 @@ public:
     [[nodiscard]] auto cur_centering() const -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
-    [[nodiscard]] auto cur_line_to_istring() const -> Istring;
+    [[nodiscard]] auto cur_line_to_istring() const -> std::string;
     void               decr_cur_level() { cur_level--; }
     [[nodiscard]] auto get_cur_filename() const -> std::string { return lines.file_name; }
     [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
@@ -202,9 +202,9 @@ public:
     auto               read_arg() -> TokenList;
     auto               read_arg_nopar() -> TokenList;
     auto               nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
-    auto               nE_arg_nopar() -> Istring;
-    auto               nT_arg_nopar() -> Istring;
-    auto               nT_optarg_nopar() -> std::optional<Istring>;
+    auto               nE_arg_nopar() -> std::string;
+    auto               nT_arg_nopar() -> std::string;
+    auto               nT_optarg_nopar() -> std::optional<std::string>;
     void               parse_error(Token T, const std::string &s, TokenList &L);
     void               parse_error(Token T, const std::string &s);
     void               parse_error(const std::string &s);
@@ -236,7 +236,7 @@ public:
     void               mu_error(String s, int i);
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
-    void               create_label(const std::string &X, const Istring &S);
+    void               create_label(const std::string &X, const std::string &S);
 
     // private functions, alphabetic order
 private:
@@ -329,7 +329,7 @@ private:
     void        define_something(int chr, bool gbl, symcodes w);
     auto        delimiter_for_verb(bool &special_space) -> codepoint;
     auto        delimiter_for_saveverb() -> codepoint;
-    static auto dimen_attrib(ScaledInt A) -> Istring;
+    static auto dimen_attrib(ScaledInt A) -> std::string;
     auto        dimen_from_list(Token T, TokenList &L) -> ScaledInt;
     void        dimen_from_list0(Token T, TokenList &L);
     void        dim_define(size_t a, ScaledInt c, bool gbl);
@@ -381,7 +381,7 @@ private:
     auto        fetch_name_opt() -> std::string;
     auto        find_env_token(const std::string &name, bool beg) -> Token;
     void        E_get_config(int c);
-    void        finish_a_cell(Token T, const Istring &a);
+    void        finish_a_cell(Token T, const std::string &a);
     void        finish_counter_cmd(Token first, TokenList &L);
     void        finish_csname(Buffer &b, const std::string &s);
     void        finish_csname(const Buffer &b);
@@ -391,7 +391,7 @@ private:
     void        finish_pers();
     void        finish_kvo_bool(Token T, const std::string &fam, const std::string &arg);
     void        finish_iwhile(TokenList &A, Token D);
-    void        finish_par_cmd(bool noindent, const Istring &xs);
+    void        finish_par_cmd(bool noindent, const std::string &xs);
     void        finish_trivial_math(Xml *res);
     void        finish_no_mathml(bool is_inline, size_t vp);
     static auto first_boundary() -> boundary_type;
@@ -431,7 +431,7 @@ private:
     auto        get_attval() -> std::string;
     auto        get_ctb_opt() -> std::optional<std::string>;
     auto        get_trees_opt() -> std::optional<std::string>;
-    auto        get_c_val(Token X) -> Istring;
+    auto        get_c_val(Token X) -> std::string;
     auto        get_counter(Token T) -> long;
     auto        get_index_value() -> size_t;
     void        get_date_ctrs(long &year, size_t &month, long &day);
@@ -444,7 +444,7 @@ private:
     void        get_new_command_aux(const TokenList &a);
     void        M_new_env(rd_flag redef);
     auto        read_latex_macro() -> Macro *;
-    auto        get_opt_dim(Token T) -> Istring;
+    auto        get_opt_dim(Token T) -> std::string;
     auto        get_token() -> bool;
     auto        get_itoken() -> bool;
     auto        get_token_o() -> bool;
@@ -568,7 +568,7 @@ private:
     void        new_xref(Xml *val, std::string v, bool err);
     void        no_arg_font();
     void        no_extension(AttList &AL, const std::string &s);
-    auto        T_optarg_nopar() -> Istring;
+    auto        T_optarg_nopar() -> std::string;
     void        numberwithin();
     auto        ok_to_define(Token a, rd_flag redef) -> bool;
     void        old_font();
@@ -638,7 +638,7 @@ private:
     void        scan_box(size_t bc);
     auto        scan_braced_int(Token T) -> long;
     auto        scan_char_num() -> size_t;
-    auto        scan_color(const std::string &opt, const std::string &name) -> Istring;
+    auto        scan_color(const std::string &opt, const std::string &name) -> std::string;
     auto        scan_date_ctrs() -> bool;
     auto        scan_dim_helper(bool mu, bool allow_int) -> bool;
     auto        scan_dim2(RealNumber &R, bool mu) -> bool;
@@ -758,7 +758,7 @@ private:
     void        E_afterfi();
     void        E_afterelsefi();
     void        T_ampersand();
-    void        T_arg1(const Istring &y);
+    void        T_arg1(const std::string &y);
     void        T_atdocument(subtypes c);
     void        T_at_end_of_class();
     void        T_backslash();
@@ -776,7 +776,7 @@ private:
     void        T_catperso();
     void        T_citation();
     void        T_cite(subtypes sw);
-    void        T_cite(subtypes sw, TokenList &prenote, Istring &type);
+    void        T_cite(subtypes sw, TokenList &prenote, std::string &type);
     void        T_cite_one();
     void        T_cite_type();
     void        T_cititem();
@@ -840,7 +840,7 @@ private:
     void        T_ipa(subtypes c);
     void        T_isin();
     void        T_item(int c);
-    auto        T_item_label(int c) -> Istring;
+    auto        T_item_label(int c) -> std::string;
     void        T_keywords();
     void        T_label(int c);
     void        T_line(subtypes c);
@@ -866,15 +866,15 @@ private:
     void        T_newthheorem();
     void        T_node();
     void        T_nodepoint();
-    void        T_nodeconnect(const Istring &W);
-    void        T_nodecurve(const Istring &W);
-    void        T_nodebox(const Istring &W);
-    void        T_nodetriangle(const Istring &W);
-    void        T_nodecircle(const Istring &W);
-    void        T_barnodeconnect(const Istring &W);
+    void        T_nodeconnect(const std::string &W);
+    void        T_nodecurve(const std::string &W);
+    void        T_nodebox(const std::string &W);
+    void        T_nodetriangle(const std::string &W);
+    void        T_nodecircle(const std::string &W);
+    void        T_barnodeconnect(const std::string &W);
     void        T_omitcite();
     void        T_option_not_used();
-    void        T_par1(const Istring &u);
+    void        T_par1(const std::string &u);
     void        T_par1();
     void        T_paras(subtypes x);
     void        E_parse_encoding(bool vb, subtypes what);
@@ -913,8 +913,8 @@ private:
     void        T_trees(int c);
     void        T_translate(TokenList &X);
     void        T_typein();
-    void        T_twodims(Istring &A, Istring &B, Token C);
-    void        T_twoints(Istring &A, Istring &B, Token C);
+    void        T_twodims(std::string &A, std::string &B, Token C);
+    void        T_twoints(std::string &A, std::string &B, Token C);
     void        T_twoints(TokenList &A, TokenList &B);
     void        T_un_box(subtypes c);
     void        T_unimp(subtypes c);
@@ -959,7 +959,7 @@ private:
     void        token_from_list(Token t);
     void        token_list_define(size_t p, TokenList &c, bool gbl);
     auto        token_list_to_dim(TokenList &a, Token C, bool spec) -> ScaledInt;
-    auto        token_list_to_att(TokenList &a, Token C, bool spec) -> Istring;
+    auto        token_list_to_att(TokenList &a, Token C, bool spec) -> std::string;
     void        token_show(int what, Buffer &B);
     void        token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void        trace_if(int k);

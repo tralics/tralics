@@ -1,9 +1,9 @@
 #pragma once
-#include "Istring.h"
 #include "codepoint.h"
 #include "enums.h"
 #include <array>
 #include <filesystem>
+#include <string>
 #include <vector>
 
 // \todo move from extern to inline
@@ -43,12 +43,13 @@ inline std::ostream *                                                cur_fp;    
 inline std::string                                                   cur_entry_name; // name of entry under construction.
 inline std::string                                                   tralics_version{"2.15.4"};
 inline std::vector<std::filesystem::path>                            input_path;
-inline std::vector<std::pair<Istring, LabelInfo *>>                  defined_labels; // list of all \label
-inline std::vector<std::pair<int, Istring>>                          ref_list;       // list of all \ref
-inline std::vector<std::pair<String, Istring>>                       removed_labels; // list of all \label removed
+inline std::vector<std::pair<std::string, LabelInfo *>>              defined_labels; // list of all \label
+inline std::vector<std::pair<int, std::string>>                      ref_list;       // list of all \ref
+inline std::vector<std::pair<String, std::string>>                   removed_labels; // list of all \label removed
 inline std::vector<std::string>                                      omitcite_list;
+inline std::string                                                   hlinee_above, hlinee_width, hlinee_below;
 
-auto next_label_id() -> Istring;
+auto next_label_id() -> std::string;
 auto null_cs_name() -> std::string;
 
 namespace main_ns {

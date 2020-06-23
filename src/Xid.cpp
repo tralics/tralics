@@ -28,7 +28,7 @@ void Xid::add_span(long n) const {
     if (n == 1) return;
     errbuf.clear();
     errbuf << std::to_string(n);
-    add_attribute(the_names["cols"], Istring(errbuf));
+    add_attribute(the_names["cols"], std::string(errbuf));
 }
 
 // This returns the attribute list of this id.
@@ -37,22 +37,22 @@ auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_lis
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
-auto Xid::has_attribute(const Istring &n) const -> Istring {
+auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
     auto     i = X.lookup(n);
     if (i) return X.get_val(*i);
-    return Istring();
+    return std::string();
 }
 
 // Return true if this id has special attribute pair.
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
-    Istring n(the_names["'hi_flag"]);
+    std::string n(the_names["'hi_flag"]);
     return static_cast<bool>(get_att().lookup(n));
 }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(const Istring &A, const Istring &B, bool force) const { get_att().push_back(A, B, force); }
+void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const { get_att().push_back(A, B, force); }
 
 // Adds the list L to the attribute list of this id.
 void Xid::add_attribute(const AttList &L, bool force) const {

@@ -30,11 +30,11 @@ void StackSlot::fulldump(size_t i) const {
 // This prints a simplified version of the stack.
 void StackSlot::dump() const { the_log << " " << (frame == " " ? "()" : std::string(frame)) << mode_to_string(md); }
 
-void Stack::implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c) {
-    add_att_to_last(the_names["userid"], Istring(b1));
+void Stack::implement_cit(const std::string &b1, const std::string &b2, const std::string &a, const std::string &c) {
+    add_att_to_last(the_names["userid"], std::string(b1));
     add_att_to_last(the_names["id"], b2);
-    add_att_to_last(the_names["key"], Istring(a));
-    add_att_to_last(the_names["from"], Istring(c));
+    add_att_to_last(the_names["key"], std::string(a));
+    add_att_to_last(the_names["from"], std::string(c));
 }
 
 // This starts or ends a cell, or does both
@@ -69,7 +69,7 @@ void Stack::T_hline() {
 }
 
 // As above, but if B1 is not empty, adds b1 as attribute with value true.
-auto Stack::xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
+auto Stack::xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
     auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
     if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
     tmp->add_tmp(gsl::not_null{first_arg});
@@ -125,18 +125,20 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(const Istring &A, const Istring &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
-void Stack::add_att_to_cur(const Istring &A, const Istring &B) { cur_xid().add_attribute(A, B); }
+void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
 
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(const Istring &A, const Istring &B, bool force) { get_att_list(to_unsigned(last_xid)).push_back(A, B, force); }
+void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) {
+    get_att_list(to_unsigned(last_xid)).push_back(A, B, force);
+}
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_cur(const Istring &A, const Istring &B, bool force) { cur_xid().get_att().push_back(A, B, force); }
+void Stack::add_att_to_cur(const std::string &A, const std::string &B, bool force) { cur_xid().get_att().push_back(A, B, force); }
 
 void Stack::hack_for_hanl() {
     auto ptr = size() - 1;
@@ -175,7 +177,7 @@ auto Stack::first_non_empty() const -> const StackSlot & {
 }
 
 // Returns the name of the first non-empty frame.
-auto Stack::first_frame() const -> Istring {
+auto Stack::first_frame() const -> std::string {
     const StackSlot &X = first_non_empty();
     return X.frame;
 }
@@ -184,7 +186,7 @@ auto Stack::first_frame() const -> Istring {
 // Too bad that the frame AND the element have to be called p.
 auto Stack::get_cur_par() const -> Xml * {
     const StackSlot &X     = first_non_empty();
-    Istring          pname = the_names["cst_p"];
+    std::string      pname = the_names["cst_p"];
     if (X.frame == pname && !X.obj->is_xmlc() && X.obj->has_name(pname)) return X.obj;
     return nullptr;
 }
@@ -204,8 +206,8 @@ auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() 
 // Returns true if frame is s, or argument, and next frame is s.
 // ignores a font change
 auto Stack::is_frame2(const std::string &S) const -> bool {
-    Istring s = the_names[S];
-    auto    k = size() - 1;
+    std::string s = the_names[S];
+    auto        k = size() - 1;
     while (at(k).frame == " ") k--;
     if (at(k).frame == s) return true;
     if (at(k).frame == the_names["fonts"]) {
@@ -234,8 +236,8 @@ auto Stack::is_float() -> bool {
 // Prints something in trace mode when we push a non-empty frame.
 void Stack::push_trace() {
     if (the_parser.tracing_stack()) {
-        auto    ptr = size() - 1;
-        Istring fr  = at(ptr).frame;
+        auto        ptr = size() - 1;
+        std::string fr  = at(ptr).frame;
         if (fr != " ") {
             Logger::finish_seq();
             the_log << "{Push " << fr << " " << ptr << "}\n";
@@ -244,17 +246,17 @@ void Stack::push_trace() {
 }
 
 // Internal code of push
-void Stack::ipush(Istring fr, Xml *V) { push_back(StackSlot(V, the_parser.get_cur_line(), std::move(fr), cur_mode, cur_lid)); }
+void Stack::ipush(std::string fr, Xml *V) { push_back(StackSlot(V, the_parser.get_cur_line(), std::move(fr), cur_mode, cur_lid)); }
 
 // Pushes code with frame.
-void Stack::push(Istring fr, Xml *V) {
+void Stack::push(std::string fr, Xml *V) {
     top_stack()->push_back_unless_nullptr(V);
     ipush(std::move(fr), V);
     push_trace();
 }
 
 // Pushes a new empty object, for \hbox, etc
-auto Stack::push_hbox(Istring name) -> Xml * {
+auto Stack::push_hbox(std::string name) -> Xml * {
     Xml *code = new Xml(std::move(name), nullptr);
     ipush(the_names["hbox"], code);
     push_trace();
@@ -277,8 +279,8 @@ auto Stack::temporary() -> Xml * {
 // Called after all math elements are created
 void Stack::init_all(const std::string &a) {
     cur_mode = mode_v;
-    cur_lid  = Istring("uid1");
-    Xml *V   = new Xml(Istring(a), nullptr);
+    cur_lid  = std::string("uid1");
+    Xml *V   = new Xml(std::string(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
     V->id = 1;
     ipush(the_names["document"], V);
@@ -310,7 +312,7 @@ void Stack::trace_stack() {
 }
 
 // This pops an element, top-stack should be a.
-void Stack::pop(const Istring &a) {
+void Stack::pop(const std::string &a) {
     trace_pop(false);
     while (back().frame == " ") { // ignore dummy frames
         the_parser.cur_font.not_on_stack();
@@ -327,7 +329,7 @@ void Stack::pop(const Istring &a) {
     if (empty()) {
         err_buf << bf_reset << "Error in pop; stack empty; trying to pop " << encode(a);
         the_parser.signal_error();
-        Istring S = the_names["document"];
+        std::string S = the_names["document"];
         ipush(S, new Xml(S, nullptr)); // stack should never be empty
     }
 }
@@ -356,8 +358,8 @@ auto Stack::fonts1(const std::string &x) -> Xml * {
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
     Xml *res = fonts1(x);
-    res->id.get_att().push_back(the_names["'hi_flag"], Istring(""));
-    push(Istring(" "), res);
+    res->id.get_att().push_back(the_names["'hi_flag"], std::string(""));
+    push(std::string(" "), res);
 }
 
 // Adds font info when required
@@ -392,11 +394,11 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = Istring(aux);
+            auto     a   = std::string(aux);
             Xml *    res = new Xml(the_names["hi"], nullptr);
             AttList &W   = res->id.get_att();
             W.push_back(the_names["rend"], a);
-            push(Istring(" "), res);
+            push(std::string(" "), res);
         }
     } else {
         s = the_parser.cur_font.size_change();
@@ -412,16 +414,16 @@ void Stack::check_font() {
         Xml *    res = new Xml(the_names["hi"], nullptr);
         AttList &W   = res->id.get_att();
         W.push_back(the_names["color"], c);
-        push(Istring(" "), res);
+        push(std::string(" "), res);
     }
     the_parser.cur_font.is_on_stack();
 }
 
 // Push a new XML element
-void Stack::push1(Istring name, Istring x) { push(std::move(name), new Xml(std::move(x), nullptr)); }
+void Stack::push1(std::string name, std::string x) { push(std::move(name), new Xml(std::move(x), nullptr)); }
 
 // Push a new XML element
-void Stack::push1(const Istring &x) { push(x, new Xml(x, nullptr)); }
+void Stack::push1(const std::string &x) { push(x, new Xml(x, nullptr)); }
 
 // Code done when a module ends. pop until stack (nearly) empty
 void Stack::end_module() {
@@ -438,7 +440,7 @@ void Stack::end_module() {
 }
 
 // Conditional pop
-void Stack::pop_if_frame(const Istring &x) {
+void Stack::pop_if_frame(const std::string &x) {
     if (first_frame() == x) pop(x);
 }
 
@@ -490,7 +492,7 @@ auto Stack::find_ctrid(subtypes m) -> long {
     for (auto k = size(); k-- >= 1;) {
         Xml *obj = at(k).obj;
         if (obj == nullptr) continue;
-        Istring frame = at(k).frame;
+        std::string frame = at(k).frame;
         if (frame == " ") continue;
         if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id.value;
         if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
@@ -552,40 +554,40 @@ void Stack::mark_omit_cell() { back().omit_cell = true; }
 // This removes the last element of the top-stack
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
-inline auto get_cur_label() -> Istring { return Istring(the_parser.eqtb_string_table[0].val); }
+inline auto get_cur_label() -> std::string { return std::string(the_parser.eqtb_string_table[0].val); }
 
-void Stack::create_new_anchor(Xid xid, const Istring &id, const Istring &idtext) {
+void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
     AttList &AL = get_att_list(to_unsigned(xid.value));
     AL.push_back(the_names["id"], id);
     AL.push_back(the_names["id-text"], idtext);
 }
 
 // mark current element as target for a label.
-auto Stack::add_new_anchor() -> Istring {
-    Istring id = next_label_id();
+auto Stack::add_new_anchor() -> std::string {
+    std::string id = next_label_id();
     set_cur_id(id);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
 }
 
-auto Stack::add_new_anchor_spec() -> Istring {
+auto Stack::add_new_anchor_spec() -> std::string {
     static size_t last_top_label_id = 0;
-    auto          id                = Istring(fmt::format("cid{}", ++last_top_label_id));
+    auto          id                = std::string(fmt::format("cid{}", ++last_top_label_id));
     set_cur_id(id);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
 }
 
 // Add an anchor if needed.
-auto Stack::add_anchor(const std::string &s, bool spec) -> Istring {
+auto Stack::add_anchor(const std::string &s, bool spec) -> std::string {
     if (!spec && (top_stack()->tail_is_anchor())) return get_cur_id();
-    Istring id = next_label_id();
+    std::string id = next_label_id();
     set_cur_id(id);
     if (!spec) {
         add_newid0("anchor");
-        create_new_anchor(last_xid, id, Istring(s));
+        create_new_anchor(last_xid, id, std::string(s));
     } else {
-        create_new_anchor(cur_xid(), id, Istring(s));
+        create_new_anchor(cur_xid(), id, std::string(s));
     }
     return id;
 }

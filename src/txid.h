@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 // -*- C++ -*-
 // TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
 
@@ -8,8 +10,6 @@
 // license as circulated by CEA, CNRS and INRIA at the following URL
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
-
-#include "tralics/Istring.h"
 
 struct AttList;
 
@@ -24,7 +24,7 @@ public:
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;
 
-    void               add_attribute(const Istring &A, const Istring &B, bool force = true) const;
+    void               add_attribute(const std::string &A, const std::string &B, bool force = true) const;
     void               add_attribute(const AttList &L, bool f) const;
     void               add_attribute_but_rend(Xid b) const;
     void               add_attribute(Xid b) const;
@@ -32,7 +32,7 @@ public:
     void               add_span(long n) const;
     void               add_top_rule() const;
     void               add_bottom_rule() const;
-    [[nodiscard]] auto has_attribute(const Istring &n) const -> Istring;
+    [[nodiscard]] auto has_attribute(const std::string &n) const -> std::string;
     void               add_special_att(const std::string &S);
 
     auto operator==(const Xid &X) const -> bool { return value == X.value; }

@@ -327,20 +327,20 @@ void TitlePageAux::exec_start(size_t k) {
     // in all other cases define this as (titlepage,k)
     the_parser.hash_table.primitive(T1, titlepage_cmd, subtypes(k));
     if (type == tpi_rt_list) { // initialise the list
-        Titlepage[idx] = convert(2, convert(3, Istring(T4)));
+        Titlepage[idx] = convert(2, convert(3, std::string(T4)));
         return;
     }
     // remaining types are:  tp, ur, normal_def, list_def, and normal
     if (type != tpi_rt_normal) return;
     auto fl = get_flags2(); // this is 0,1, 2 or 3
     if (fl == 0) {
-        Titlepage[idx] = convert(2, Istring(T4));
+        Titlepage[idx] = convert(2, std::string(T4));
         return;
     }
     Buffer &B = local_buf;
     B << bf_reset << "\\" << T1;
     B.push_back_braced(T4);
-    Titlepage[idx] = new Xml(Istring("empty"));
+    Titlepage[idx] = new Xml(std::string("empty"));
     B.push_back("%\n");
     if (fl == tp_A_flag) {
     } // already done
@@ -353,7 +353,7 @@ void TitlePageAux::exec_start(size_t k) {
 
 // This is executed when we see the \Titlepage cmd
 void TitlePageAux::exec_post() {
-    if (type == tpi_rt_constant) Titlepage[idx] = new Xml(Istring(T1));
+    if (type == tpi_rt_constant) Titlepage[idx] = new Xml(std::string(T1));
     if (type == tpi_rt_exec) Titlepage[idx] = the_parser.tpa_exec(T2);
     if (type != tpi_rt_normal) return;
     if (get_flags2() == tp_C_flag) the_parser.titlepage_evaluate(T4, T1);
@@ -378,7 +378,7 @@ void TitlePageAux::exec(size_t v, bool vb) {
     }
     Xml *R{nullptr};
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
-        R = convert(3, Istring(T2));
+        R = convert(3, std::string(T2));
     else { // we have to read the argument.
         R = the_parser.special_tpa_arg(T1, T3, has_p_flags(), has_e_flags(), has_q_flags());
     }
@@ -682,19 +682,19 @@ void Buffer::find_top_atts() {
     remove_space_at_end();
     if (at(ptrs.b) == '\"' && ptrs.b < size() - 1 && back() == '\"') remove_last();
     if (at(ptrs.b) == '\"') {
-        auto    as = Istring(a);
-        Istring bs = Istring(substr(ptrs.b + 1));
+        auto        as = std::string(a);
+        std::string bs = std::string(substr(ptrs.b + 1));
         Xid(1).add_attribute(as, bs);
     } else if (substr(ptrs.b) == "\\specialyear") {
-        auto as = Istring(a);
-        auto bs = Istring(the_main->year_string);
+        auto as = std::string(a);
+        auto bs = std::string(the_main->year_string);
         Xid(1).add_attribute(as, bs);
     } else if (substr(ptrs.b) == "\\tralics") {
-        auto as = Istring(a);
+        auto as = std::string(a);
         clear();
         push_back("Tralics version ");
         push_back(tralics_version);
-        Istring bs = Istring(*this);
+        std::string bs = std::string(*this);
         Xid(1).add_attribute(as, bs);
     } else {
         docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (data() + ptrs.b) << "}";

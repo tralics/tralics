@@ -38,7 +38,7 @@ class BibEntry {
 
 public:
     std::string label, sort_label, aux_label; // cite label and sort label
-    Istring     unique_id{""};
+    std::string unique_id{""};
 
     BibEntry() : user_fields(the_main->bibtex_fields.size()) {}
 

@@ -1836,10 +1836,10 @@ void Parser::scan_glue(internal_type level, Token t, bool opt) {
 }
 
 // Calls scan_glue; returns 0 if no argument given.
-auto Parser::get_opt_dim(Token t) -> Istring {
+auto Parser::get_opt_dim(Token t) -> std::string {
     scan_glue(it_glue, t, true);
-    if (!scan_glue_opt) return Istring();
-    return Istring(ScaledInt(cur_val.get_glue_width()));
+    if (!scan_glue_opt) return std::string();
+    return std::string(ScaledInt(cur_val.get_glue_width()));
 }
 
 void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
@@ -2454,9 +2454,9 @@ void             TexRule::reset() {
 }
 
 void TexRule::convert(AttList &res) const {
-    if (rule_h.get_value() != default_rule_dimen) res.push_back(the_names["height"], Istring(rule_h));
-    if (rule_d.get_value() != default_rule_dimen) res.push_back(the_names["depth"], Istring(rule_d));
-    if (rule_w.get_value() != default_rule_dimen) res.push_back(the_names["width"], Istring(rule_w));
+    if (rule_h.get_value() != default_rule_dimen) res.push_back(the_names["height"], std::string(rule_h));
+    if (rule_d.get_value() != default_rule_dimen) res.push_back(the_names["depth"], std::string(rule_d));
+    if (rule_w.get_value() != default_rule_dimen) res.push_back(the_names["width"], std::string(rule_w));
 }
 
 void Parser::scan_rule(int c) {

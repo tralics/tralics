@@ -2,17 +2,17 @@
 #include "Buffer.h"
 
 struct CitationItem {
-    Istring key, from, id;
-    Xid     solved;
+    std::string key, from, id;
+    Xid         solved;
 
-    CitationItem(Istring A, Istring B) : key(std::move(A)), from(std::move(B)), id("") {}
+    CitationItem(std::string A, std::string B) : key(std::move(A)), from(std::move(B)), id("") {}
 
     void dump(Buffer &b) const;
 
     [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
-    [[nodiscard]] auto match(const Istring &A, const Istring &B) const -> bool;
-    [[nodiscard]] auto match_star(const Istring &A) const -> bool;
+    [[nodiscard]] auto match(const std::string &A, const std::string &B) const -> bool;
+    [[nodiscard]] auto match_star(const std::string &A) const -> bool;
 
-    auto get_id() -> Istring;
+    auto get_id() -> std::string;
     void dump_bibtex();
 };

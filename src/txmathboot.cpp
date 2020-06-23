@@ -1009,12 +1009,12 @@ void math_ns::fill_math_char_slots() {
 // Converts foo into <mspace width='foo'/>
 auto math_ns::mk_space(const std::string &a) -> Xml * {
     Xml *b = new Xml(the_names["mspace"], nullptr);
-    b->add_att(the_names["np_cst_width"], Istring(a));
+    b->add_att(the_names["np_cst_width"], std::string(a));
     return b;
 }
 
 auto MathDataP::mk_mo(String a) -> gsl::not_null<Xml *> {
-    Xml *x = new Xml(Istring(a));
+    Xml *x = new Xml(std::string(a));
     return gsl::not_null{new Xml(the_names["mo"], x)};
 }
 
@@ -1260,7 +1260,7 @@ auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> T
 // then ent2 is used instead of ent, so that \alpha gives &#x3B1;
 
 auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token {
-    Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
+    Xml *x = new Xml(std::string(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     x = new Xml(the_names[bl], x);
     return init_builtin(name, pos, x, t);
@@ -1269,7 +1269,7 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, const
 // Special case where a bold variant exists
 auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack)
     -> Token {
-    Xml *x = new Xml(Istring(no_ent_names ? ent2 : ent));
+    Xml *x = new Xml(std::string(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     Xml *bold = new Xml(the_names[bl], x);
     bold->add_att(the_names["mathvariant"], the_names["bold"]);
@@ -1339,8 +1339,8 @@ auto mk_cmd(String name, subtypes pos) -> Token { return the_parser.hash_table.p
 // For a command like \enspace.
 void mk_space(const std::string &name, int b) { the_parser.hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
-void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = Istring(no_ent_names ? c : b); }
-inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = Istring(b); }
+void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = std::string(no_ent_names ? c : b); }
+inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = std::string(b); }
 
 // This assumes that nb_mathchars is 128
 void MathDataP::boot_xml_lr_tables() {
@@ -1405,7 +1405,7 @@ void MathDataP::boot_xml_lr_tables() {
     mc_table[7]  = mk_space("1.em");
     mc_table[8]  = mk_space("2.em");
     mc_table[9]  = mk_space("4pt");
-    mc_table[10] = new Xml(the_names["mi"], new Xml(Istring("$")));
+    mc_table[10] = new Xml(the_names["mi"], new Xml(std::string("$")));
     mc_table[11] = mk_mo("%");
     mc_table[12] = mk_mo("&amp;");
     mc_table[13] = mk_space("-0.166667em");
@@ -1438,7 +1438,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
 
 void MathDataP::boot_chars() {
     for (unsigned i = 0; i <= 9; i++) {
-        Istring K = the_names[std::to_string(i)];
+        std::string K = the_names[std::to_string(i)];
         init_builtin(i + math_dig_loc, new Xml(the_names["mn"], new Xml(K))); // \todo useless?
     }
 
@@ -1464,7 +1464,7 @@ void MathDataP::boot_chars() {
 void MathDataP::boot2() {
     // Define \colon
     Xml *colon = mk_mo(":");
-    colon->add_att(Istring("lspace"), Istring("0pt"));
+    colon->add_att(std::string("lspace"), std::string("0pt"));
     init_builtin("colon", colon_code, colon, mathord_cmd);
     // Constructs varlim etc
 
@@ -1490,7 +1490,7 @@ void MathDataP::boot2() {
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
     Xml *y = new Xml(the_names["mpadded"], get_builtin(int_code));
-    y->add_att(the_names["np_cst_width"], Istring("-3pt"));
+    y->add_att(the_names["np_cst_width"], std::string("-3pt"));
     Xml *z = get_builtin(xml_thickmu_space_loc);
     x      = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(z);
@@ -1518,9 +1518,9 @@ void MathDataP::boot2() {
     x->push_back_unless_nullptr(math_data.get_mc_table(6));
     x->push_back_unless_nullptr(get_builtin(int_code));
     init_builtin("idotsint", idotsint_code, x, mathop_cmd);
-    x                                         = new Xml(Istring("none"), nullptr);
+    x                                         = new Xml(std::string("none"), nullptr);
     the_parser.hash_table.mmlnone_token       = init_builtin("mmlnone", mml_none_code, x, mathord_cmd);
-    x                                         = new Xml(Istring("mprescripts"), nullptr);
+    x                                         = new Xml(std::string("mprescripts"), nullptr);
     the_parser.hash_table.mmlprescripts_token = init_builtin("mmlprescripts", mml_prescripts_code, x, mathord_cmd);
 }
 

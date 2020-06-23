@@ -9,8 +9,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/Istring.h"
 #include "tralics/Token.h"
+#include <string>
 #include <utility>
 
 class FpNum;

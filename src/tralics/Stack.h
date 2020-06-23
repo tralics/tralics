@@ -5,14 +5,14 @@
 class Xml;
 
 struct StackSlot {
-    Xml *   obj;
-    int     line;
-    Istring frame;
-    mode    md;
-    Istring uid;
-    bool    omit_cell{false};
+    Xml *       obj;
+    int         line;
+    std::string frame;
+    mode        md;
+    std::string uid;
+    bool        omit_cell{false};
 
-    StackSlot(Xml *a, int b, Istring c, mode M, Istring u) : obj(a), line(b), frame(std::move(c)), md(M), uid(std::move(u)) {}
+    StackSlot(Xml *a, int b, std::string c, mode M, std::string u) : obj(a), line(b), frame(std::move(c)), md(M), uid(std::move(u)) {}
 
     void dump() const;
     void fulldump(size_t i) const;
@@ -21,7 +21,7 @@ struct StackSlot {
 class Stack : public std::vector<StackSlot> {
     long                   last_xid{-1}; // id of the last
     long                   xid_boot{0};
-    Istring                cur_lid;    // the id to be pushed on uids[]
+    std::string            cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes
     std::vector<Xml *>     enames;     // the main table of element names
     Buffer                 mybuffer;   // a buffer
@@ -32,9 +32,9 @@ public:
 
     Stack();
 
-    [[nodiscard]] auto first_frame() const -> Istring;
+    [[nodiscard]] auto first_frame() const -> std::string;
     [[nodiscard]] auto first_non_empty() const -> const StackSlot &;
-    [[nodiscard]] auto get_cur_id() const -> Istring { return cur_lid; }
+    [[nodiscard]] auto get_cur_id() const -> std::string { return cur_lid; }
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     [[nodiscard]] auto get_xid() const -> Xid { return last_xid; }
@@ -47,21 +47,21 @@ public:
     [[nodiscard]] auto is_frame2(const std::string &S) const -> bool;
     [[nodiscard]] auto last_att_list() const -> AttList & { return get_xid().get_att(); }
 
-    auto add_anchor(const std::string &s, bool spec) -> Istring;
-    void add_att_to_last(const Istring &A, const Istring &B, bool force);
-    void add_att_to_last(const Istring &A, const Istring &B);
-    void add_att_to_cur(const Istring &A, const Istring &B);
-    void add_att_to_cur(const Istring &A, const Istring &B, bool force);
+    auto add_anchor(const std::string &s, bool spec) -> std::string;
+    void add_att_to_last(const std::string &A, const std::string &B, bool force);
+    void add_att_to_last(const std::string &A, const std::string &B);
+    void add_att_to_cur(const std::string &A, const std::string &B);
+    void add_att_to_cur(const std::string &A, const std::string &B, bool force);
     void add_border(long a, long b);
     void add_center_to_p() const;
     void add_last(Xml *x);
     void add_last_string(const Buffer &B);
-    auto add_new_anchor() -> Istring;
-    auto add_new_anchor_spec() -> Istring;
+    auto add_new_anchor() -> std::string;
+    auto add_new_anchor_spec() -> std::string;
     void add_nl();
     auto add_newid0(const std::string &x) -> AttList &;
     void check_font();
-    void create_new_anchor(Xid xid, const Istring &id, const Istring &idtext);
+    void create_new_anchor(Xid xid, const std::string &id, const std::string &idtext);
     auto cur_xid() -> Xid { return top_stack()->id; }
     auto get_top_id() -> Xid { return top_stack()->id; }
     void delete_table_atts();
@@ -80,21 +80,21 @@ public:
     auto get_my_table(Xid &cid) -> ArrayInfo *;
     auto get_u_or_v(bool u_or_v) -> TokenList;
     void hack_for_hanl();
-    void implement_cit(const std::string &b1, const Istring &b2, const std::string &a, const std::string &c);
+    void implement_cit(const std::string &b1, const std::string &b2, const std::string &a, const std::string &c);
     void init_all(const std::string &a);
-    void ipush(Istring fr, Xml *V);
+    void ipush(std::string fr, Xml *V);
     auto is_float() -> bool;
     auto is_omit_cell() -> bool { return back().omit_cell; }
     void mark_omit_cell();
     auto new_array_info(Xid i) -> ArrayInfo &;
     auto next_xid(Xml *elt) -> Xid;
     void para_aux(int x);
-    void pop(const Istring &a);
-    void pop_if_frame(const Istring &x);
-    void push(Istring fr, Xml *V);
-    void push1(Istring name, Istring x);
-    void push1(const Istring &x);
-    auto push_hbox(Istring name) -> Xml *;
+    void pop(const std::string &a);
+    void pop_if_frame(const std::string &x);
+    void push(std::string fr, Xml *V);
+    void push1(std::string name, std::string x);
+    void push1(const std::string &x);
+    auto push_hbox(std::string name) -> Xml *;
     void push_pop_cell(int dir);
     void push_trace();
     auto push_par(size_t k) -> Xid;
@@ -103,7 +103,7 @@ public:
     void set_arg_mode() { cur_mode = mode_argument; }
     void set_array_mode() { cur_mode = mode_array; }
     void set_bib_mode() { cur_mode = mode_bib; }
-    void set_cur_id(Istring k) { cur_lid = std::move(k); }
+    void set_cur_id(std::string k) { cur_lid = std::move(k); }
     void set_h_mode() { cur_mode = mode_h; }
     void set_m_mode() { cur_mode = mode_math; }
     void set_mode(mode x) { cur_mode = x; }
@@ -119,5 +119,5 @@ public:
     void unbox(Xml *x);
 
     static auto fonts1(const std::string &x) -> Xml *;
-    static auto xml2_space(Istring elt, const Istring &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *>;
+    static auto xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *>;
 };

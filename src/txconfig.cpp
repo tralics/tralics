@@ -321,10 +321,10 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         }
         Xml *new_elt{nullptr};
         if (need_elt)
-            new_elt = new Xml(Istring(str + sname), nullptr);
+            new_elt = new Xml(std::string(str + sname), nullptr);
         else {
             new_elt = new Xml(the_names["rcval"], nullptr);
-            new_elt->id.add_attribute(Istring("name"), Istring(sname));
+            new_elt->id.add_attribute(std::string("name"), std::string(sname));
         }
         res->push_back_unless_nullptr(new_elt);
         temp2 << sname << " ";
@@ -414,7 +414,7 @@ auto Buffer::add_with_space(const std::string &s) -> std::string {
 // In the case of "foo bar gee", puts foo, bar and gee in the vector.
 // Initial + means append, otherwise replace.
 
-void Buffer::interpret_aux(std::vector<Istring> &bib, std::vector<Istring> &bib2) {
+void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2) {
     if (config_ns::start_interpret(*this, "")) {
         bib.resize(0);
         bib2.resize(0);
@@ -445,14 +445,14 @@ void Buffer::interpret_aux(std::vector<Istring> &bib, std::vector<Istring> &bib2
 
 void Buffer::interpret_bibtex_list() {
     the_log << "bibtex_fields: ";
-    std::vector<Istring> &bib  = the_main->bibtex_fields;
-    std::vector<Istring> &bib1 = the_main->bibtex_fields_s;
+    std::vector<std::string> &bib  = the_main->bibtex_fields;
+    std::vector<std::string> &bib1 = the_main->bibtex_fields_s;
     interpret_aux(bib, bib1);
 }
 
 void Buffer::interpret_bibtex_extension_list() {
     the_log << "bibtex_extensions: ";
-    std::vector<Istring> &bib  = the_main->bibtex_extensions;
-    std::vector<Istring> &bib2 = the_main->bibtex_extensions_s;
+    std::vector<std::string> &bib  = the_main->bibtex_extensions;
+    std::vector<std::string> &bib2 = the_main->bibtex_extensions_s;
     interpret_aux(bib, bib2);
 }

@@ -1341,7 +1341,7 @@ void Parser::T_start_theorem(int c) {
         T_arg1(the_names["head"]);
         the_stack.add_nl();
         back_input_braced(me);
-        Istring n = nT_arg_nopar();
+        std::string n = nT_arg_nopar();
         the_stack.add_att_to_cur(the_names["type"], n);
         back_input_braced(style);
         n = nT_arg_nopar();
@@ -1353,7 +1353,7 @@ void Parser::T_start_theorem(int c) {
         }
         the_stack.set_v_mode();
         Xid res = ileave_v_mode();
-        res.add_attribute(Istring(), Istring(""));
+        res.add_attribute(std::string(), std::string(""));
         remove_initial_space_and_back_input();
     }
 }
@@ -4226,7 +4226,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         if (cur_box != nullptr)
             cur_box = cur_box->deep_copy();
         else
-            cur_box = new Xml(Istring(), nullptr);
+            cur_box = new Xml(std::string(), nullptr);
         box_end(cur_box, src);
         return;
     }
@@ -4243,7 +4243,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         return;
     }
     flush_buffer();
-    Istring box_name;
+    std::string box_name;
     if (c == parbox_code) {
         // same arguments as minipage
         ignore_optarg();              // position

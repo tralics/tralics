@@ -33,7 +33,7 @@ namespace tcommands {
 // Initialises the translator. The argument is the name of
 // the document element.
 void Parser::init_all(const std::string &doc_elt) {
-    the_page_xml                     = new Xml(Istring("thepage"), nullptr);
+    the_page_xml                     = new Xml(std::string("thepage"), nullptr);
     glo_xml                          = new Xml(the_names["glo"]);
     eqtb_int_table[endlinechar_code] = {'\r', 1};
     eqtb_int_table[newlinechar_code] = {'\n', 1};
@@ -303,7 +303,7 @@ void Parser::T_cst2(int c) {
             s = "e";
         else if (c == iemes_code)
             s = "es";
-        res->push_back_unless_nullptr(new Xml(Istring(s)));
+        res->push_back_unless_nullptr(new Xml(std::string(s)));
         the_stack.add_last(res);
     }
     E_xspace();
@@ -596,17 +596,17 @@ void Parser::T_ding() {
 
 // \begin{minipage}
 void Parser::T_minipage() {
-    Token                  T = cur_tok;
-    auto                   x = get_ctb_opt();
-    std::optional<Istring> pos;
+    Token                      T = cur_tok;
+    auto                       x = get_ctb_opt();
+    std::optional<std::string> pos;
     if (x) pos = the_names[*x];
     ignore_optarg();
-    auto                   y = get_ctb_opt();
-    std::optional<Istring> ipos;
+    auto                       y = get_ctb_opt();
+    std::optional<std::string> ipos;
     if (y) ipos = the_names[*y];
     ignore_optarg(); // really needed ?
     scan_glue(it_dimen, T, false);
-    Istring w = Istring(cur_val.get_dim_val());
+    std::string w = std::string(cur_val.get_dim_val());
     if (the_stack.in_v_mode()) leave_v_mode();
     the_stack.push1(the_names["minipage"]);
     the_stack.set_v_mode();
@@ -628,7 +628,7 @@ void Parser::T_xmlenv(subtypes c) {
     else if (c == 2) {
         if (the_stack.in_v_mode()) leave_v_mode();
     }
-    the_stack.push(the_names["ELT"], new Xml(Istring(a), nullptr));
+    the_stack.push(the_names["ELT"], new Xml(std::string(a), nullptr));
     if (c == 2) the_stack.set_v_mode();
     remove_initial_space_and_back_input();
 }
@@ -679,9 +679,9 @@ void Parser::T_glossaire_end() {
 // case \begin{figure}\begin{table}
 // c=2 is wrapfigure
 void Parser::T_figure_table(symcodes x, subtypes c) {
-    auto                   opt = nT_optarg_nopar();
-    std::optional<Istring> overhang;
-    Istring                place, width;
+    auto                       opt = nT_optarg_nopar();
+    std::optional<std::string> overhang;
+    std::string                place, width;
     if (c == 2) {
         place    = nT_arg_nopar();
         overhang = nT_optarg_nopar();
@@ -691,9 +691,9 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
     leave_h_mode();
     the_stack.push1(the_names[x == figure_cmd ? "figure_env" : "table_env"]);
     if (c == 2) {
-        if (opt && !opt->empty()) the_stack.add_att_to_last(Istring("narrow"), *opt);
+        if (opt && !opt->empty()) the_stack.add_att_to_last(std::string("narrow"), *opt);
         the_stack.add_att_to_last(the_names["place"], place);
-        if (overhang && !overhang->empty()) the_stack.add_att_to_last(Istring("overhang"), *overhang);
+        if (overhang && !overhang->empty()) the_stack.add_att_to_last(std::string("overhang"), *overhang);
         the_stack.add_att_to_last(the_names["width"], width);
     } else {
         the_stack.add_att_to_last(the_names["rend"], the_names[x == figure_cmd ? "figure" : "table"]);
@@ -706,7 +706,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
 
 // Translates \enf{figure} or \end{table}
 void Parser::T_figure_table_end(bool is_fig) {
-    Istring name = the_names[is_fig ? "figure_env" : "table_env"];
+    std::string name = the_names[is_fig ? "figure_env" : "table_env"];
     leave_h_mode();
     Xml *aux = the_stack.top_stack();
     if (!aux->has_name(name))
@@ -1236,7 +1236,7 @@ void Parser::translate03() {
             if (!inserted) the_stack.top_stack()->id = 4;
             inserted = true;
             auto k   = eqtb_int_table[42 + count_reg_offset].val;
-            the_stack.add_att_to_cur(Istring("depth"), Istring(std::to_string(k)));
+            the_stack.add_att_to_cur(std::string("depth"), std::string(std::to_string(k)));
         }
         the_stack.pop(the_names[np]);
         return;
@@ -1303,7 +1303,7 @@ void Parser::translate03() {
     case addatt_cmd: T_xmladdatt(c); return;
     case ignore_env_cmd: return;
     case ignore_content_cmd: T_raw_env(false); return;
-    case raw_env_cmd: the_stack.add_last(new Xml(Istring(T_raw_env(true)))); return;
+    case raw_env_cmd: the_stack.add_last(new Xml(std::string(T_raw_env(true)))); return;
     case math_env_cmd:
         cur_tok.kill();
         pop_level(bt_env); // IS THIS OK ?

@@ -62,8 +62,8 @@ namespace math_ns {
     void add_to_trace(const std::string &x);
     void remove_from_trace();
     void bad_math_warn(Buffer &B);
-    auto finish_cv_special(bool isfrac, Istring s, const std::string &pos, Xml *a, Xml *b, const Istring &sz, int numalign, int denalign,
-                           int style, size_t open, size_t close) -> Xml *;
+    auto finish_cv_special(bool isfrac, std::string s, const std::string &pos, Xml *a, Xml *b, const std::string &sz, int numalign,
+                           int denalign, int style, size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
 namespace tralics_ns {
@@ -393,7 +393,7 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
 }
 
 // Implements \cellattribute
-void MathHelper::add_attribute(const Istring &a, const Istring &b, subtypes c) {
+void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) {
     Xid w;
     if (c == cell_attribute_code)
         w = cur_cell_id;
@@ -410,7 +410,7 @@ void MathHelper::add_attribute(const Istring &a, const Istring &b, subtypes c) {
     w.add_attribute(a, b, true);
 }
 
-void math_ns::add_attribute_spec(const Istring &a, const Istring &b) { cmi.get_tid().add_attribute(a, b, true); }
+void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.get_tid().add_attribute(a, b, true); }
 
 // Adds a label to the formula X
 void Parser::add_math_label(Xml *res) {
@@ -418,20 +418,20 @@ void Parser::add_math_label(Xml *res) {
         cmi.ml_last_pass(tracing_math());
         if (the_tag.empty()) return;
     }
-    Istring my_id = next_label_id();
+    std::string my_id = next_label_id();
     if (the_tag.empty()) {
         static int mid = 0;
         mid++;
         math_buffer << bf_reset << fmt::format("mid{}", mid);
         the_tag = math_buffer;
     }
-    the_stack.create_new_anchor(res->id, my_id, Istring(the_tag));
+    the_stack.create_new_anchor(res->id, my_id, std::string(the_tag));
     const std::string &label = cmi.get_label_val();
     if (!label.empty()) create_label(label, my_id);
 }
 
 // Generates <elt>first_arg second_arg</elt>
-auto math_ns::xml2sons(Istring elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
+auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
     Xml tmp(std::move(elt), nullptr);
     tmp.add_tmp(first_arg);
     tmp.push_back_unless_nullptr(xmlspace);
@@ -714,7 +714,7 @@ void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     Math &      u  = math_data.get_list(vp);
     Xid         id = cmi.get_mid();
     std::string S  = u.get_name();
-    auto        s  = Istring(S);
+    auto        s  = std::string(S);
     if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
     id.add_attribute(the_names["type"], the_names[cmi.get_pos_att()]);
     id.add_attribute(the_names["textype"], s);
@@ -824,7 +824,7 @@ void Parser::T_math(subtypes type) {
 
     res1->id = cmi.get_fid();
     res1->add_att(the_names["type"], the_names[cmi.get_pos_att()]);
-    if (!textype.empty()) res1->add_att(the_names["textype"], Istring(textype));
+    if (!textype.empty()) res1->add_att(the_names["textype"], std::string(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->interactive_math) {
         if (only_input_data)
@@ -1280,8 +1280,8 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
         if (stag) the_log << "tag on row " << N << " " << tag << ".\n";
     }
     if (stag) {
-        Istring id = next_label_id();
-        the_parser.the_stack.create_new_anchor(row->id, id, Istring(tag));
+        std::string id = next_label_id();
+        the_parser.the_stack.create_new_anchor(row->id, id, std::string(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
         the_parser.parse_error("Internal error");
@@ -1878,7 +1878,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         if (k <= 0)
             n++;
         else {
-            id.add_attribute(the_names["columnspan"], Istring(std::to_string(k)));
+            id.add_attribute(the_names["columnspan"], std::string(std::to_string(k)));
             n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
@@ -2037,7 +2037,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     } else
         return nullptr;
     Xml *tmp  = Stack::fonts1(loc);
-    Xml *xval = new Xml(Istring(B));
+    Xml *xval = new Xml(std::string(B));
     if (have_font) {
         Xml *tmp2 = Stack::fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
@@ -2083,14 +2083,14 @@ auto Math::trivial_math(long action) -> Xml * {
     if (len != 1) return nullptr;
     if ((action & 2) == 0) return nullptr;
     if (front().is_digit()) {
-        Istring sval = the_names[std::to_string(front().val_as_digit())];
+        std::string sval = the_names[std::to_string(front().val_as_digit())];
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
         auto c = front().get_char().value;
         if (c < nb_simplemath) return math_data.get_simplemath_val(c);
     }
-    if (front().is_other_token() && front().get_char() == '-') return new Xml(Istring("&#x2013;"));
+    if (front().is_other_token() && front().get_char() == '-') return new Xml(std::string("&#x2013;"));
     if (front().get_cmd() == mathord_cmd || front().get_cmd() == mathordb_cmd || front().get_cmd() == mathbin_cmd ||
         front().get_cmd() == mathop_cmd || front().get_cmd() == mathopn_cmd || front().get_cmd() == mathrel_cmd ||
         front().get_cmd() == mathinner_cmd || front().get_cmd() == mathbetween_cmd || front().get_cmd() == mathopen_cmd ||
@@ -2161,7 +2161,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (X.empty()) return nullptr;
     if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
-    Xml *s = new Xml(the_names["mo"], new Xml(Istring(math_buffer)));
+    Xml *s = new Xml(the_names["mo"], new Xml(std::string(math_buffer)));
     s->add_att(the_names["form"], the_names["prefix"]);
     return s;
 }
@@ -2266,7 +2266,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
         res     = new Xml(w, xs);
     } else {
         std::string s  = X->get_list().convert_this_to_string(math_buffer);
-        Xml *       xs = new Xml(Istring(s));
+        Xml *       xs = new Xml(std::string(s));
         auto        w  = the_names.mi(c - mathmi_code);
         res            = new Xml(w, xs);
     }
@@ -2282,7 +2282,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
             s2 = X->get_list().convert_this_to_string(math_buffer);
             ++X;
         }
-        res->add_att(Istring(s1), Istring(s2));
+        res->add_att(std::string(s1), std::string(s2));
     }
     return MathElt(res, mt_flag_small);
 }
@@ -2316,7 +2316,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case operatorname_code:
     case operatornamestar_code: {
         std::string s   = L.get_arg1().convert_opname();
-        Xml *       xs  = new Xml(Istring(s));
+        Xml *       xs  = new Xml(std::string(s));
         Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN);
@@ -2325,7 +2325,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         // arg 1 is currently ignored
         std::string s   = L.get_arg3().convert_opname();
         std::string o   = L.get_arg2().convert_opname();
-        Xml *       xs  = new Xml(Istring(s));
+        Xml *       xs  = new Xml(std::string(s));
         Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return MathElt(res, (o == "o") ? mt_flag_opN : mt_flag_opD);
@@ -2347,8 +2347,8 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case thismath_attribute_code: {
         std::string s1 = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2 = L.get_arg2().convert_this_to_string(math_buffer);
-        auto        A  = Istring(s1);
-        auto        B  = Istring(s2);
+        auto        A  = std::string(s1);
+        auto        B  = std::string(s2);
         if (c == math_attribute_code)
             the_main->the_stack->add_att_to_last(A, B, true);
         else
@@ -2359,9 +2359,9 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
         Xml *       x   = new Xml(the_names["mrow"], nullptr);
-        Istring     id  = next_label_id();
+        std::string id  = next_label_id();
         Xid         xid = x->id;
-        the_parser.the_stack.create_new_anchor(xid, id, Istring(s1));
+        the_parser.the_stack.create_new_anchor(xid, id, std::string(s1));
         the_parser.create_label(s2, id);
         return MathElt(x, mt_flag_small);
     }
@@ -2370,7 +2370,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         x      = new Xml(the_names["mtd"], x);
         x      = new Xml(the_names["mtr"], x);
         x      = new Xml(the_names["mtable"], x);
-        x->add_att(Istring("frame"), Istring("solid"));
+        x->add_att(std::string("frame"), std::string("solid"));
         return MathElt(x, mt_flag_small);
     }
     case phantom_code:
@@ -2414,9 +2414,9 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         if (w == 'r') numalign = 2;
         c = frac_code;
     }
-    int     style = -1;                      // style to add to XML
-    size_t  open = del_dot, close = del_dot; // delimiters, in case
-    Istring sz;                              // fraction rule width
+    int         style = -1;                      // style to add to XML
+    size_t      open = del_dot, close = del_dot; // delimiters, in case
+    std::string sz;                              // fraction rule width
     if (c == genfrac_code) {
         open = L.front().get_chr();
         L.pop_front();
@@ -2463,7 +2463,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (c == sqrt_code) return MathElt(new Xml(the_names["msqrt"], A1), mt_flag_big);
     Xml *       A2{nullptr};
     auto        ns          = cv_special_string(c);
-    Istring     s           = the_names[ns];
+    std::string s           = the_names[ns];
     bool        is_fraction = ns == "mfrac";
     bool        is_mathop   = false;
     std::string pos         = "cst_empty";
@@ -2653,7 +2653,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
             pop_front();
         }
     }
-    Istring sz;
+    std::string sz;
     if (c == above_code || c == abovewithdelims_code) {
         if (empty()) the_parser.parse_error(the_parser.err_tok, "Invalid width", "bad delims");
         sz = chars_to_mb3();
@@ -2667,9 +2667,9 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     return {res, mt_flag_big};
 }
 
-auto math_ns::finish_cv_special(bool isfrac, Istring s, const std::string &pos, Xml *a, Xml *b, const Istring &sz, int numalign,
+auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &pos, Xml *a, Xml *b, const std::string &sz, int numalign,
                                 int denalign, int style, size_t open, size_t close) -> Xml * {
-    Istring Pos;
+    std::string Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
     auto R = Stack::xml2_space(std::move(s), Pos, a, b);
     if (!sz.empty()) R->add_att(the_names["np_linethickness"], sz);
@@ -2896,13 +2896,13 @@ void Math::handle_mbox(Math &res) {
         int      ok   = M_mbox1(math_buffer, font);
         if (ok == 0) {
             the_parser.signal_error("bad hbox (see transcript file for details)");
-            Xml *Text = new Xml(the_names["mtext"], new Xml(Istring("bad hbox")));
-            res.push_back_small(new Xml(Istring("merror"), Text));
+            Xml *Text = new Xml(the_names["mtext"], new Xml(std::string("bad hbox")));
+            res.push_back_small(new Xml(std::string("merror"), Text));
             return;
         }
         if (!math_buffer.empty()) {
             auto s    = math_buffer;
-            Xml *Text = new Xml(the_names["mtext"], new Xml(Istring(s)));
+            Xml *Text = new Xml(the_names["mtext"], new Xml(std::string(s)));
             if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names.cstf(font));
             res.push_back_small(Text);
             the_parser.my_stats.one_more_mbox();
@@ -2946,7 +2946,7 @@ auto MathElt::remove_prefix() const -> Xml * {
     if (get_cmd() == math_xml_cmd) return get_xml_val();
     dump_for_err();
     log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) << "\n";
-    return new Xml(Istring("BAD"));
+    return new Xml(std::string("BAD"));
 }
 
 void Cv3Helper::reinit() {
@@ -3279,7 +3279,7 @@ void Math::remove_initial_group() {
 }
 
 void tralics_ns::boot_math(bool mv) {
-    xmlspace = new Xml(Istring(" "));
+    xmlspace = new Xml(std::string(" "));
     math_data.boot();
     if (mv) {
         int w = (2 << 15) - 1;

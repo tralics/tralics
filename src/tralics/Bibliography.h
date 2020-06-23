@@ -19,8 +19,8 @@ public:
     void               dump_bibtex();
     void               dump_data(Buffer &b);
     auto               get_bid(size_t n) { return citation_table[n].get_id(); }
-    auto               find_citation_item(const Istring &from, const Istring &key, bool insert) -> std::optional<size_t>;
-    auto               find_citation_star(const Istring &from, const Istring &key) -> size_t;
+    auto               find_citation_item(const std::string &from, const std::string &key, bool insert) -> std::optional<size_t>;
+    auto               find_citation_star(const std::string &from, const std::string &key) -> size_t;
     [[nodiscard]] auto has_cmd() const -> bool { return !cmd.empty(); }
     [[nodiscard]] auto location_exists() const -> bool { return biblio_loc_force; }
     auto               number_of_data_bases() { return biblio_src.size(); }
@@ -34,7 +34,7 @@ public:
     void set_nocite() { nocite = true; }
     void set_style(std::string x) { bib_style = std::move(x); }
     void stats();
-    auto unique_bid() -> Istring;
+    auto unique_bid() -> std::string;
 };
 
 inline Bibliography the_bibliography;

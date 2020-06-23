@@ -80,7 +80,7 @@ void Parser::E_zapspace() {
 
 // \fancyinternal
 void Parser::T_xfancy() {
-    Istring s = nT_arg_nopar();
+    std::string s = nT_arg_nopar();
     the_stack.push1(the_names["headings"]);
     the_stack.add_att_to_last(the_names["type"], s);
     the_stack.set_arg_mode();
@@ -354,9 +354,9 @@ void Parser::T_unimplemented_font(subtypes c) {
 // raisebox{1cm}[2cm][3cm]{a box}
 
 void Parser::T_raisebox() {
-    Istring A = nT_arg_nopar();
-    auto    B = nT_optarg_nopar();
-    auto    C = nT_optarg_nopar();
+    std::string A = nT_arg_nopar();
+    auto        B = nT_optarg_nopar();
+    auto        C = nT_optarg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["raisebox"]);
     AttList &cur = last_att_list();
@@ -1792,12 +1792,12 @@ void Parser::formatdate() {
     std::string s = sT_arg_nopar();
     FormatDate  FP;
     if (!FP.interpret(s, err_tok)) { the_log << "Date to scan was " << s << "\n"; }
-    Xml *X = new Xml(Istring("date"), nullptr);
+    Xml *X = new Xml(std::string("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
-    AL.push_back(Istring("year"), Istring(std::to_string(FP.year)));
-    AL.push_back(Istring("month"), Istring(std::to_string(abs(FP.month))));
-    AL.push_back(Istring("day"), Istring(std::to_string(FP.day)));
+    AL.push_back(std::string("year"), std::string(std::to_string(FP.year)));
+    AL.push_back(std::string("month"), std::string(std::to_string(abs(FP.month))));
+    AL.push_back(std::string("day"), std::string(std::to_string(FP.day)));
 }
 
 // True if ok, parse_error otherwise

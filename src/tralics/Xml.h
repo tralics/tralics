@@ -7,17 +7,17 @@ class XmlAction;
 
 class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
 public:
-    Xid     id{0}; ///< id of the objet
-    Istring name;  ///< name of the element
+    Xid         id{0}; ///< id of the objet
+    std::string name;  ///< name of the element
 
-    Xml(const std::string &n) : name(Istring(n)) {}
+    Xml(const std::string &n) : name(std::string(n)) {}
     Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
-    Xml(Istring N, Xml *z);
+    Xml(std::string N, Xml *z);
 
     [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
     [[nodiscard]] auto get_cell_span() const -> long;
-    [[nodiscard]] auto has_name(const Istring &s) const -> bool { return name == s; }
+    [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names["anchor"]; }
     [[nodiscard]] auto is_whitespace() const -> bool;
@@ -38,9 +38,9 @@ public:
     auto deep_copy() -> gsl::not_null<Xml *>;
     auto find_on_tree(Xml *check, Xml **res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
-    auto how_many_env(Istring match) -> long;
+    auto how_many_env(std::string match) -> long;
 
-    void add_att(const Istring &a, const Istring &b) const { id.add_attribute(a, b); }
+    void add_att(const std::string &a, const std::string &b) const { id.add_attribute(a, b); }
     void add_first(Xml *x);
     void add_ref(std::string s);
     void add_tmp(gsl::not_null<Xml *> x);
@@ -54,10 +54,10 @@ public:
     void insert_at(size_t pos, Xml *x);
     void insert_bib(Xml *bib, Xml *match);
     auto is_child(Xml *x) const -> bool;
-    void kill_name() { name = Istring(); }
+    void kill_name() { name = std::string(); }
     auto last_box() -> Xml *;
     void last_to_SH() const;
-    void move(Istring match, Xml *res);
+    void move(std::string match, Xml *res);
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;
     void postprocess_fig_table(bool is_fig);
@@ -74,8 +74,8 @@ public:
     void remove_last_empty_hi();
     void remove_last_space();
     void remove_par_bal_if_ok();
-    void rename(Istring old_name, Istring new_name);
-    void subst_env0(Istring match, Xml *vl);
+    void rename(std::string old_name, std::string new_name);
+    void subst_env0(std::string match, Xml *vl);
     void swap_x(Xml *x);
     void to_buffer(Buffer &b) const;
     auto total_span(long &res) const -> bool;
