@@ -2041,7 +2041,7 @@ void Parser::T_bpers() {
     if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
-    if (A && !A.empty()) the_stack.add_att_to_last(the_names["full_first"], A);
+    if (!A.empty()) the_stack.add_att_to_last(the_names["full_first"], A);
     if (!d.empty()) the_stack.add_att_to_last(the_names["junior"], d);
     the_stack.add_att_to_last(the_names["nom"], c);
     if (!b.empty()) the_stack.add_att_to_last(the_names["particule"], b);
@@ -2174,7 +2174,7 @@ void Parser::expand_nct(TokenList &L) {
 }
 
 // Start a row. If a=-1, it is the first row
-void Parser::start_a_row(long a, const std::string& s) {
+void Parser::start_a_row(long a, const std::string &s) {
     Xid prev_row(2); // dummy id as default value
     {
         Xml *V = the_stack.top_stack()->last_addr();
@@ -2244,7 +2244,7 @@ void Parser::start_a_cell(bool started) {
 void Parser::finish_a_cell(Token T, const Istring &a) {
     flush_buffer();
     the_stack.remove_last_space();
-    if (a) {
+    if (!a.empty()) {
         saved_dim = a;
         T         = hash_table.crwithargs_token;
     }

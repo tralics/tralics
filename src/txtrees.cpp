@@ -337,7 +337,7 @@ void Parser::T_nodecurve(const Istring &W) {
     auto F = nT_optarg_nopar();
     if (A == "cst_invalid") A = "b";
     if (C == "cst_invalid") C = "t";
-    if ((!F) || F.empty()) F = E;
+    if (F.empty()) F = E;
     the_stack.push1(W);
     AttList &cur = last_att_list();
     cur.push_back(the_names["depthA"], E);

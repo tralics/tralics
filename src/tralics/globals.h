@@ -10,6 +10,7 @@
 
 struct LinePtr;
 class WordList;
+class LabelInfo;
 
 extern bool                                                          bad_minus;
 extern bool                                                          compatibility;
