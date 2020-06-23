@@ -1204,7 +1204,7 @@ void Parser::T_mbox(subtypes c) {
     }
     Xml *mbox = internal_makebox();
     if (!(ipos.empty() && iwidth.empty())) {
-        if (ipos) mbox->id.add_attribute(the_names["box_pos"], ipos);
+        if (!ipos.empty()) mbox->id.add_attribute(the_names["box_pos"], ipos);
         mbox->id.add_attribute(the_names["box_width"], iwidth);
         return;
     }
@@ -1296,8 +1296,8 @@ void Parser::T_save_box(bool simple) {
         brace_me(d);
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
-        if (ipos && !(*ipos)) ipos.reset();       // \todo this is ugly
-        if (iwidth && !(*iwidth)) iwidth.reset(); // \todo this is ugly
+        if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
+        if (iwidth && iwidth->empty()) iwidth.reset(); // \todo this is ugly
         if (ipos) mbox->id.add_attribute(the_names["box_pos"], *ipos);
         if (iwidth) mbox->id.add_attribute(the_names["box_width"], *iwidth);
     }
@@ -1397,8 +1397,8 @@ void Parser::T_fbox(subtypes cc) {
         }
         return;
     }
-    if (iwidth && !(*iwidth)) iwidth = {}; // \todo That is ugly
-    if (ipos && !(*ipos)) ipos = {};       // \todo That is ugly
+    if (iwidth && iwidth->empty()) iwidth.reset(); // \todo That is ugly
+    if (ipos && ipos->empty()) ipos.reset();       // \todo That is ugly
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();

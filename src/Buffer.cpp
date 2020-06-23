@@ -833,7 +833,7 @@ void Buffer::push_back(const AttList &Y) {
         for (auto i = n; i > 0; i--) push_back_alt(Y[i - 1]);
     else
         for (auto i = n; i > 0; i--)
-            if (Y[i - 1].name) push_back(Y[i - 1]);
+            if (!Y[i - 1].name.empty()) push_back(Y[i - 1]); // \todo this should never happen
 }
 
 void Buffer::push_back(const AttPair &X) {

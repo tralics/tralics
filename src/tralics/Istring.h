@@ -1,14 +1,11 @@
 #pragma once
 #include <string>
 
-class Istring : public std::string {
-    bool defined{false};
-
-public:
+struct Istring : public std::string {
     Istring() = default;
-    Istring(const std::string &s) : std::string(s), defined(true) {} // \todo remove special values
+    Istring(const std::string &s) : std::string(s) {} // \todo remove special values
 
-    [[deprecated]] operator bool() const { return defined; }
+    [[deprecated]] operator bool() const { return !empty(); }
 };
 
 inline Istring hlinee_above, hlinee_width, hlinee_below;
