@@ -9,7 +9,6 @@ auto AttList::lookup(const Istring &x) const -> std::optional<size_t> {
 }
 
 void AttList::push_back(const Istring &name, const Istring &value, bool force) {
-    if (!value) return; // \todo value.empty() is wrong here
     if (auto T = lookup(name)) {
         if (force) at(*T).value = value;
         return;

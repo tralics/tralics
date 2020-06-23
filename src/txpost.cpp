@@ -135,7 +135,7 @@ void Parser::check_all_ids() {
             main_ns::nb_errs++;
         }
         Istring B = L->id;
-        Xid(E).add_attribute(the_names["target"], B);
+        if (B) Xid(E).add_attribute(the_names["target"], B);
     }
 }
 

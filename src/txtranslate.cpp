@@ -1393,6 +1393,7 @@ void Parser::T_fbox(subtypes cc) {
         }
         return;
     }
+    if (iwidth && !(*iwidth)) iwidth = {}; // \todo That is ugly
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
