@@ -21,7 +21,7 @@ class NameMapper {
 public:
     auto operator[](const std::string &name) const -> Istring;
 
-    void set(const std::string &name, const std::optional<std::string> &value = std::nullopt);
+    void set(const std::string &name, const std::optional<std::string> &value);
 
     void boot();
 
