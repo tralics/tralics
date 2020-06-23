@@ -1282,8 +1282,8 @@ void Parser::T_save_box(bool simple) {
     if (!simple && cur_tok.is_open_paren()) {
         T_makebox(false, T);
     } else {
-        Istring ipos;
-        Istring iwidth;
+        std::optional<Istring> ipos;
+        std::optional<Istring> iwidth;
         if (!simple) {
             iwidth = get_opt_dim(T);
             ipos   = the_names[get_ctb_opt()];
@@ -1295,8 +1295,10 @@ void Parser::T_save_box(bool simple) {
         brace_me(d);
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
-        if (ipos) mbox->id.add_attribute(the_names["box_pos"], ipos);
-        if (iwidth) mbox->id.add_attribute(the_names["box_width"], iwidth);
+        if (ipos && !(*ipos)) ipos.reset();       // \todo this is ugly
+        if (iwidth && !(*iwidth)) iwidth.reset(); // \todo this is ugly
+        if (ipos) mbox->id.add_attribute(the_names["box_pos"], *ipos);
+        if (iwidth) mbox->id.add_attribute(the_names["box_width"], *iwidth);
     }
     box_end(the_stack.remove_last(), i);
 }
@@ -1358,7 +1360,7 @@ void Parser::T_fbox(subtypes cc) {
         return;
     }
     Istring                iscale;
-    Istring                ipos;
+    std::optional<Istring> ipos;
     std::optional<Istring> iwidth;
 
     if (cc == framebox_code) { // case of \framebox
@@ -1394,12 +1396,13 @@ void Parser::T_fbox(subtypes cc) {
         return;
     }
     if (iwidth && !(*iwidth)) iwidth = {}; // \todo That is ugly
+    if (ipos && !(*ipos)) ipos = {};       // \todo That is ugly
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
         AL.push_back(the_names["fbox_rend"], the_names["boxed"]);
-        if (ipos) AL.push_back(the_names["box_pos"], ipos);
+        if (ipos) AL.push_back(the_names["box_pos"], *ipos);
         if (iwidth) AL.push_back(the_names["box_width"], *iwidth);
     }
 }
@@ -1823,21 +1826,21 @@ auto Parser::get_c_val(Token x) -> Istring {
 void Parser::T_bezier(int c) {
     Token C = cur_tok;
     flush_buffer();
-    Istring a1, a2, b1, b2, c1, c2;
-    Istring w;
+    Istring                a1, a2, b1, b2, c1, c2;
+    std::optional<Istring> w;
     {
         TokenList L;
         if (c != 0)
             read_optarg(L);
         else
             L = read_arg();
-        if (!L.empty()) w = token_list_to_att(L, C, true); // integer....
+        if (!L.empty()) w = token_list_to_att(L, C, true);
     }
     T_twodims(a1, a2, C);
     T_twodims(b1, b2, C);
     T_twodims(c1, c2, C);
     AttList &res = the_stack.add_newid0("bezier");
-    if (w) res.push_back(the_names["repeat"], w);
+    if (w) res.push_back(the_names["repeat"], *w);
     res.push_back(the_names["c2"], c2);
     res.push_back(the_names["c1"], c1);
     res.push_back(the_names["b2"], b2);
