@@ -832,21 +832,19 @@ void Buffer::push_back(const AttList &Y) {
     if (the_main->double_quote_att)
         for (auto i = n; i > 0; i--) push_back_alt(Y[i - 1]);
     else
-        for (auto i = n; i > 0; i--) push_back(Y[i - 1]);
+        for (auto i = n; i > 0; i--)
+            if (Y[i - 1].name) push_back(Y[i - 1]);
 }
 
 void Buffer::push_back(const AttPair &X) {
     const Istring &b = X.name;
     const Istring &a = X.value;
-    if (!(a && b)) return;                               // \todo std::string::empty() is wrong here
-    auto        A = Buffer(a).convert_to_out_encoding(); // \todo this might be too much work?
-    const auto *B = b.c_str();                           // \todo c_str because there might be a 0 char
-    if (B[0] == '\'') return;
+    if (b[0] == '\'') return;
     push_back(' ');
-    push_back(B);
+    push_back(b.c_str());
     push_back('=');
     push_back('\'');
-    for (char c : A) {
+    for (char c : Buffer(a).convert_to_out_encoding()) {
         if (c == '\'')
             push_back("&apos;");
         else
@@ -859,15 +857,12 @@ void Buffer::push_back(const AttPair &X) {
 void Buffer::push_back_alt(const AttPair &X) {
     const Istring &b = X.name;
     const Istring &a = X.value;
-    if (a.empty() || b.empty()) return;
-    auto        A = Buffer(a).convert_to_out_encoding(); // \todo this might be too much work?
-    const auto *B = b.c_str();                           // \todo c_str because there might be a 0 char
-    if (B[0] == '\'') return;
+    if (b[0] == '\'') return;
     push_back(' ');
-    push_back(B);
+    push_back(b.c_str());
     push_back('=');
     push_back('\"');
-    for (char c : A) {
+    for (char c : Buffer(a).convert_to_out_encoding()) {
         if (c == '\"')
             push_back("&quot;");
         else

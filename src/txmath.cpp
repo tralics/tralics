@@ -366,8 +366,8 @@ void MathElt::print() const {
 // General fence around val.
 auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
     auto res = gsl::not_null{new Xml(the_names["mfenced"], nullptr)};
-    if (xml_lr_ptable[close]) res->add_att(the_names["close"], xml_lr_ptable[close]);
-    if (xml_lr_ptable[open]) res->add_att(the_names["open"], xml_lr_ptable[open]);
+    if (xml_lr_ptable[close]) res->add_att(the_names["close"], *xml_lr_ptable[close]);
+    if (xml_lr_ptable[open]) res->add_att(the_names["open"], *xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names["np_separator"] == the_names["mrow"]) {
         if (!single_elt) val = gsl::not_null{new Xml(the_names["mrow"], val)};
@@ -1980,8 +1980,8 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
     bool   nf = special_fence(sname, open, close);
     if (nf) {
         res = new Xml(the_names["mfenced"], res);
-        res->add_att(the_names["close"], math_data.get_fence(close));
-        res->add_att(the_names["open"], math_data.get_fence(open));
+        if (auto o = math_data.get_fence(close)) res->add_att(the_names["close"], *o);
+        if (auto o = math_data.get_fence(open)) res->add_att(the_names["open"], *o);
     }
     return res;
 }
