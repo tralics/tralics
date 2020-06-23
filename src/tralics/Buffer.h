@@ -170,19 +170,18 @@ public:
 
     auto push_back(Token T) -> bool;
 
-    void                push_back(codepoint c);
-    void                push_back(char c);
-    void                push_back(uchar c);
-    void                push_back(const std::string &s);
-    [[deprecated]] void push_back(const Istring &X);
-    void                push_back(ScaledInt v, glue_spec unit);
-    void                push_back(const SthInternal &x);
-    void                push_back(const Glue &x);
-    void                push_back(const AttList &Y);
-    void                push_back(const AttPair &X);
-    void                push_back(const Macro &x);
-    void                push_back(const Macro &x, bool sw);
-    void                push_back(const TokenList &L);
+    void push_back(codepoint c);
+    void push_back(char c);
+    void push_back(uchar c);
+    void push_back(const std::string &s);
+    void push_back(ScaledInt v, glue_spec unit);
+    void push_back(const SthInternal &x);
+    void push_back(const Glue &x);
+    void push_back(const AttList &Y);
+    void push_back(const AttPair &X);
+    void push_back(const Macro &x);
+    void push_back(const Macro &x, bool sw);
+    void push_back(const TokenList &L);
     // \todo push_back(char*,...) to do fmt::format
 };
 

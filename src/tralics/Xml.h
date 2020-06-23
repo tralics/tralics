@@ -10,7 +10,6 @@ public:
     Xid     id{0}; ///< id of the objet
     Istring name;  ///< name of the element
 
-    Xml(Istring n = {}) : name(std::move(n)) {}
     Xml(const std::string &n) : name(Istring(n)) {}
     Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
     Xml(Istring N, Xml *z);

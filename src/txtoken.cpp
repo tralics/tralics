@@ -491,10 +491,6 @@ auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
     return fp << B;
 }
 
-void Buffer::push_back(const Istring &X) {
-    if (!X.empty()) push_back(encode(X));
-}
-
 // True if L has a single token
 auto token_ns::has_a_single_token(const TokenList &L) -> bool {
     auto C = L.begin();
