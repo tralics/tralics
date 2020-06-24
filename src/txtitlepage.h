@@ -34,7 +34,7 @@ public:
     auto classify(tpi_vals w, int &state) -> bool;
     auto convert(int i) -> Xml *;
     auto convert(int i, Xml *r) -> Xml *;
-    auto convert(int i, std::string s) -> Xml * { return convert(i, new Xml(std::move(s))); }
+    auto convert(int i, const std::string &s) -> Xml * { return convert(i, new Xml(s)); }
     void dump(size_t k);
     void exec_start(size_t k);
     void exec_post();
