@@ -190,36 +190,33 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
 // Finds the type of an entry (or comment, string, preamble). \todo without the_names?
 auto Bibtex::find_type(const std::string &s) -> entry_type {
     if (s.empty()) return type_comment; // in case of error.
-    auto S = std::string(s);
 
-    std::vector<std::string> &Bib2        = the_main->bibtex_extensions_s;
-    size_t                    additional2 = Bib2.size();
-    for (size_t i = 0; i < additional2; i++)
-        if (Bib2[i] == S) return type_comment;
-    if (S == the_names["article"]) return type_article;
-    if (S == the_names["book"]) return type_book;
-    if (S == the_names["booklet"]) return type_booklet;
-    if (S == the_names["conference"]) return type_conference;
-    if (S == the_names["coursenotes"]) return type_coursenotes;
-    if (S == the_names["comment"]) return type_comment;
-    if (S == the_names["inbook"]) return type_inbook;
-    if (S == the_names["incollection"]) return type_incollection;
-    if (S == the_names["inproceedings"]) return type_inproceedings;
-    if (S == the_names["manual"]) return type_manual;
-    if (S == the_names["masterthesis"]) return type_masterthesis;
-    if (S == the_names["mastersthesis"]) return type_masterthesis;
-    if (S == the_names["misc"]) return type_misc;
-    if (S == the_names["phdthesis"]) return type_phdthesis;
-    if (S == the_names["proceedings"]) return type_proceedings;
-    if (S == the_names["preamble"]) return type_preamble;
-    if (S == the_names["techreport"]) return type_techreport;
-    if (S == the_names["string"]) return type_string;
-    if (S == the_names["unpublished"]) return type_unpublished;
+    std::vector<std::string> &Bib2 = the_main->bibtex_extensions_s;
+    for (auto &i : Bib2)
+        if (i == s) return type_comment;
+    if (s == the_names["article"]) return type_article;
+    if (s == the_names["book"]) return type_book;
+    if (s == the_names["booklet"]) return type_booklet;
+    if (s == the_names["conference"]) return type_conference;
+    if (s == the_names["coursenotes"]) return type_coursenotes;
+    if (s == the_names["comment"]) return type_comment;
+    if (s == the_names["inbook"]) return type_inbook;
+    if (s == the_names["incollection"]) return type_incollection;
+    if (s == the_names["inproceedings"]) return type_inproceedings;
+    if (s == the_names["manual"]) return type_manual;
+    if (s == the_names["masterthesis"]) return type_masterthesis;
+    if (s == the_names["mastersthesis"]) return type_masterthesis;
+    if (s == the_names["misc"]) return type_misc;
+    if (s == the_names["phdthesis"]) return type_phdthesis;
+    if (s == the_names["proceedings"]) return type_proceedings;
+    if (s == the_names["preamble"]) return type_preamble;
+    if (s == the_names["techreport"]) return type_techreport;
+    if (s == the_names["string"]) return type_string;
+    if (s == the_names["unpublished"]) return type_unpublished;
 
-    std::vector<std::string> &Bib        = the_main->bibtex_extensions;
-    size_t                    additional = Bib.size();
-    for (size_t i = 0; i < additional; i++)
-        if (Bib[i] == S) return entry_type(type_extension + i + 1);
+    std::vector<std::string> &Bib = the_main->bibtex_extensions;
+    for (size_t i = 0; i < Bib.size(); i++)
+        if (Bib[i] == s) return entry_type(type_extension + i + 1);
     return type_unknown;
 }
 
