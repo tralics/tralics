@@ -841,7 +841,7 @@ void Buffer::push_back(const AttPair &X) {
     const std::string &a = X.value;
     if (b[0] == '\'') return;
     push_back(' ');
-    push_back(b.c_str());
+    push_back(b.c_str()); // NOLINT there could be a 0 there \todo fix
     push_back('=');
     push_back('\'');
     for (char c : Buffer(a).convert_to_out_encoding()) {
@@ -859,7 +859,7 @@ void Buffer::push_back_alt(const AttPair &X) {
     const std::string &a = X.value;
     if (b[0] == '\'') return;
     push_back(' ');
-    push_back(b.c_str());
+    push_back(b.c_str()); // NOLINT there could be a 0 there \todo fix
     push_back('=');
     push_back('\"');
     for (char c : Buffer(a).convert_to_out_encoding()) {
