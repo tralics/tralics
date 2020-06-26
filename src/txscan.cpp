@@ -2090,9 +2090,9 @@ void Parser::token_show(int what, Buffer &B) {
     }
     token_for_show(lg, cur_cmd_chr, B);
     if (what == 2) { // find and strip the prefix
-        if (!B.find_char('>')) return;
-        auto        k = B.ptrs.b;
-        std::string s = B.substr(k + 1);
+        auto i = B.find('>');
+        if (i == std::string::npos) return;
+        std::string s = B.substr(i + 1);
         B.clear();
         B.push_back(s);
     }

@@ -434,7 +434,7 @@ void Parser::add_math_label(Xml *res) {
 auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
     Xml tmp(std::move(elt), nullptr);
     tmp.add_tmp(first_arg);
-    tmp.push_back_unless_nullptr(xmlspace);
+    tmp.push_back_unless_nullptr(new Xml(std::string(" ")));
     tmp.add_tmp(second_arg);
     return tmp;
 }
@@ -2482,9 +2482,9 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         } else {
             Xml *tmp2 = new Xml(the_names["munderover"], nullptr);
             tmp2->add_tmp(gsl::not_null{A3});
-            tmp2->push_back_unless_nullptr(xmlspace);
+            tmp2->push_back_unless_nullptr(new Xml(std::string(" ")));
             tmp2->add_tmp(gsl::not_null{A1});
-            tmp2->push_back_unless_nullptr(xmlspace);
+            tmp2->push_back_unless_nullptr(new Xml(std::string(" ")));
             tmp2->add_tmp(gsl::not_null{A2});
             return MathElt(tmp2, mt_flag_big);
         }
@@ -3138,14 +3138,14 @@ void Cv3Helper::add_kernel(math_style cms) {
 
     // case {\sum}_1
     tmp->add_tmp(gsl::not_null{p});
-    tmp->push_back_unless_nullptr(xmlspace);
+    tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     if (index != nullptr) {
         tmp->add_tmp(gsl::not_null{index});
-        tmp->push_back_unless_nullptr(xmlspace);
+        tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     }
     if (exponent != nullptr) {
         tmp->add_tmp(gsl::not_null{exponent});
-        tmp->push_back_unless_nullptr(xmlspace);
+        tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     }
     p = tmp;
     res.push_back(p, -1, mt_flag_big);
@@ -3173,7 +3173,7 @@ void Math::concat_space(Xml *res) {
     while (!empty()) {
         res->push_back_unless_nullptr(front().get_xml_val());
         pop_front();
-        if (!empty()) res->push_back_unless_nullptr(xmlspace);
+        if (!empty()) res->push_back_unless_nullptr(new Xml(std::string(" ")));
     }
 }
 
@@ -3279,7 +3279,6 @@ void Math::remove_initial_group() {
 }
 
 void tralics_ns::boot_math(bool mv) {
-    xmlspace = new Xml(std::string(" "));
     math_data.boot();
     if (mv) {
         int w = (2 << 15) - 1;

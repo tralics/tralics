@@ -50,7 +50,7 @@ auto null_cs_name() -> std::string {
     if (c > 0 && c < int(nb_characters)) {
         Buffer B;
         B << "csname";
-        B.out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
+        B.out_log(codepoint(char32_t(c)), the_main->log_encoding);
         B << "endcsname";
         return B.data();
     }
@@ -147,20 +147,20 @@ auto Buffer::next_env_spec() -> bool {
 
 // Converts the entire Buffer to lower case
 void Buffer::lowercase() {
-    for (size_t j = 0; j < size(); j++)
-        if (is_upper_case(at(j))) at(j) += 'a' - 'A';
+    for (auto &c : *this)
+        if (is_upper_case(c)) c += 'a' - 'A';
 }
 
 // Converts the entire buffer to upper case
 void Buffer::uppercase() {
-    for (auto j = size(); j > 0; j--)
-        if (is_lower_case(at(j - 1))) at(j - 1) += 'A' - 'a';
+    for (auto &c : *this)
+        if (is_lower_case(c)) c -= 'a' - 'A';
 }
 
 // Replaces newline by space
 void Buffer::no_newline() {
-    for (size_t j = 0; j < size(); j++)
-        if (at(j) == '\n') at(j) = ' ';
+    for (auto &c : *this)
+        if (c == '\n') c = ' ';
 }
 
 // Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).
@@ -215,7 +215,7 @@ void Buffer::remove_space_at_end() {
 void Buffer::insert_escape_char() {
     auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(char32_t(to_unsigned(c))), the_main->log_encoding);
+        out_log(codepoint(char32_t(c)), the_main->log_encoding);
     else if (c == 0)
         push_back("^^@");
 }
@@ -223,7 +223,7 @@ void Buffer::insert_escape_char() {
 void Buffer::insert_escape_char_raw() {
     auto c = current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(codepoint(char32_t(to_unsigned(c))));
+        push_back(codepoint(char32_t(c)));
     else if (c == 0)
         push_back("^^@");
 }
@@ -590,17 +590,11 @@ auto Buffer::int_val() const -> std::optional<size_t> {
     }
 }
 
-auto Buffer::find_char(char c) -> bool {
-    ptrs.b = 0;
-    while ((head() != 0) && head() != c) advance();
-    return head() == c;
-}
-
 // splits foo:bar into foo and bar
 auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
-    if (find_char(':')) {
-        after = substr(ptrs.b + 1);
-        resize(ptrs.b);
+    if (auto i = find(':'); i != npos) {
+        after = substr(i + 1);
+        resize(i);
         before = data();
         return true;
     }

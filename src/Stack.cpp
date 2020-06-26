@@ -73,7 +73,7 @@ auto Stack::xml2_space(std::string elt, const std::string &b1, Xml *first_arg, X
     auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
     if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
     tmp->add_tmp(gsl::not_null{first_arg});
-    tmp->push_back_unless_nullptr(xmlspace);
+    tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     tmp->add_tmp(gsl::not_null{second_arg});
     return tmp;
 }
