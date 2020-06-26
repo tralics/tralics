@@ -4,7 +4,8 @@
 #include "tralics/util.h"
 
 namespace {
-    Xml *the_box_to_end;
+    Xml *                 the_box_to_end;
+    std::optional<size_t> the_box_position;
 } // namespace
 
 // Consider the case of {\setbox0=\hbox{...}}
@@ -14,10 +15,10 @@ namespace {
 // group. Hence box_end must be called after cur_level is decremented.
 SaveAuxBoundary::~SaveAuxBoundary() {
     P.decr_cur_level();
-    if (the_box_position >= 0) {
+    if (the_box_position) {
         if (the_box_to_end != nullptr) the_box_to_end->remove_last_empty_hi();
-        P.box_end(the_box_to_end, to_unsigned(the_box_position));
-        the_box_position = -1;
+        P.box_end(the_box_to_end, *the_box_position);
+        the_box_position.reset();
     }
 }
 
@@ -33,7 +34,7 @@ SaveAuxBoxend::~SaveAuxBoxend() {
     P.flush_buffer();
     P.the_stack.pop(the_names["hbox"]);
     the_box_to_end   = val;
-    the_box_position = to_signed(pos);
+    the_box_position = pos;
 }
 
 // This done when we restore an integer value
