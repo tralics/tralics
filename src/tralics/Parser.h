@@ -434,7 +434,7 @@ private:
     auto        get_c_val(Token X) -> std::string;
     auto        get_counter(Token T) -> long;
     auto        get_index_value() -> size_t;
-    void        get_date_ctrs(long &year, size_t &month, long &day);
+    void        get_date_ctrs(long &year, size_t &month, size_t &day);
     void        get_def_nbargs(Macro *X, Token name);
     auto        cs_from_input() -> Token;
     auto        get_mac_value(Token T) -> TokenList;
@@ -722,7 +722,7 @@ private:
     void        E_setlength(int c);
     void        set_boolean();
     void        set_counter(Token T, long c);
-    void        set_date_ctrs(long year, size_t month, long day); // \todo day should be unsigned, not year
+    void        set_date_ctrs(long year, size_t month, size_t day);
     void        setkeys(bool c);
     void        M_shorthand_define(int cmd, bool gbl);
     auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;

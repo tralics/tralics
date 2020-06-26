@@ -21,18 +21,18 @@ namespace trees_ns {
 } // namespace trees_ns
 
 namespace date_ns {
-    auto check_date(long y, size_t m, long d) -> bool; // \todo there has to be a system library for that
-    auto year_length(long y) -> long;
-    auto month_length(long y, size_t m) -> long;
-    void prev_date(long &year, size_t &month, long &day);
-    void next_date(long &year, size_t &month, long &day);
+    auto check_date(long y, size_t m, size_t d) -> bool; // \todo there has to be a system library for that
+    auto year_length(long y) -> size_t;
+    auto month_length(long y, size_t m) -> size_t;
+    void prev_date(long &year, size_t &month, size_t &day);
+    void next_date(long &year, size_t &month, size_t &day);
 } // namespace date_ns
 
 namespace {
-    Buffer              local_buf;
-    std::array<int, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    AllIndex            the_index;
-    Token               day_ctr, year_ctr, month_ctr;
+    Buffer                 local_buf;
+    std::array<size_t, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    AllIndex               the_index;
+    Token                  day_ctr, year_ctr, month_ctr;
 } // namespace
 
 // By default, this is a glossary and a main index
@@ -513,17 +513,17 @@ auto Parser::scan_date_ctrs() -> bool {
 }
 
 // This sets the three counters
-void Parser::set_date_ctrs(long year, size_t month, long day) {
+void Parser::set_date_ctrs(long year, size_t month, size_t day) {
     set_counter(year_ctr, year);
     set_counter(month_ctr, to_signed(month));
-    set_counter(day_ctr, day);
+    set_counter(day_ctr, to_signed(day));
 }
 
 // This sets the three counters
-void Parser::get_date_ctrs(long &year, size_t &month, long &day) {
+void Parser::get_date_ctrs(long &year, size_t &month, size_t &day) {
     year  = get_counter(year_ctr);
     month = to_unsigned(get_counter(month_ctr));
-    day   = get_counter(day_ctr);
+    day   = to_unsigned(get_counter(day_ctr));
 }
 
 // True if year Y is a leap year
@@ -536,23 +536,23 @@ auto tralics_ns::is_leap_year(long y) -> bool {
 }
 
 // Returns number of days in the year
-auto date_ns::year_length(long y) -> long {
+auto date_ns::year_length(long y) -> size_t {
     if (y == 1582) return 355;
     if (is_leap_year(y)) return 366;
     return 365;
 }
 
 // Returns number of days in the month
-auto date_ns::month_length(long y, size_t m) -> long {
+auto date_ns::month_length(long y, size_t m) -> size_t {
     if (m != 2) return month_length_table[m];
     if (is_leap_year(y)) return 29;
     return 28;
 }
 
 // Return true if valid, signals error otherwise
-auto date_ns::check_date(long y, size_t m, long d) -> bool {
+auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
     std::string Bad;
-    long        ml = 0;
+    size_t      ml = 0;
     if (y <= 0)
         Bad = "year<1";
     else if (m <= 0)
@@ -602,13 +602,11 @@ void Parser::count_days() {
 
 void Parser::datebynumber() {
     Token T     = cur_tok;
-    auto  start = scan_braced_int(T); // start date
-    auto  val   = scan_braced_int(T); // value to convert
-    scan_date_ctrs();                 // fetch the counters
-    size_t month = 1;
-    int    day   = 1;
-    auto   year  = start;
-    int    c     = 1;
+    auto  start = scan_braced_int(T);              // start date
+    auto  val   = to_unsigned(scan_braced_int(T)); // value to convert
+    scan_date_ctrs();                              // fetch the counters
+    auto   year = start;
+    size_t c    = 1;
     for (;;) {
         auto n = date_ns::year_length(year);
         if (c + n <= val) {
@@ -617,8 +615,7 @@ void Parser::datebynumber() {
         } else
             break;
     }
-    month = 1;
-    day   = 1;
+    size_t month = 1;
     for (int i = 1; i <= 12; i++) {
         auto n = date_ns::month_length(year, month);
         if (c + n <= val) {
@@ -627,15 +624,12 @@ void Parser::datebynumber() {
         } else
             break;
     }
-    while (c < val) {
-        ++c;
-        ++day;
-    }
+    size_t day = 1 + val - c;
     set_date_ctrs(year, month, day);
 }
 
 // gives date of yesterday
-void date_ns::prev_date(long &year, size_t &month, long &day) {
+void date_ns::prev_date(long &year, size_t &month, size_t &day) {
     --day;
     if (year == 1582 && month == 10 && day == 14) day = 4;
     if (day > 0) return;
@@ -648,7 +642,7 @@ void date_ns::prev_date(long &year, size_t &month, long &day) {
 }
 
 // gives date of tomorrow
-void date_ns::next_date(long &year, size_t &month, long &day) {
+void date_ns::next_date(long &year, size_t &month, size_t &day) {
     ++day;
     if (year == 1582 && month == 10 && day == 5) day = 15;
     auto ml = date_ns::month_length(year, month);
@@ -664,7 +658,7 @@ void Parser::next_date() {
     scan_date_ctrs(); // fetch the counters
     long   year  = 0;
     size_t month = 0;
-    long   day   = 0;
+    size_t day   = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::next_date(year, month, day);
@@ -675,7 +669,7 @@ void Parser::prev_date() {
     scan_date_ctrs(); // fetch the counters
     long   year  = 0;
     size_t month = 0;
-    long   day   = 0;
+    size_t day   = 0;
     get_date_ctrs(year, month, day);
     date_ns::check_date(year, month, day);
     date_ns::prev_date(year, month, day);
@@ -686,7 +680,7 @@ void Parser::is_date_valid() {
     Token T = cur_tok;
     auto  y = scan_braced_int(T);
     auto  m = to_unsigned(scan_braced_int(T));
-    auto  d = scan_braced_int(T);
+    auto  d = to_unsigned(scan_braced_int(T));
     date_ns::check_date(y, m, d);
 }
 
