@@ -4289,8 +4289,8 @@ void Parser::begin_box(size_t src, subtypes c) {
         }
         back_input(L);
     }
-    Xml *    cur_boxa = the_stack.push_hbox(box_name);
-    SaveAux *x        = new SaveAuxBoxend(*this, src, cur_boxa);
+    Xml *        cur_boxa = the_stack.push_hbox(box_name);
+    SaveAuxBase *x        = new SaveAuxBoxend(*this, src, cur_boxa);
     push_save_stack(x);
     the_stack.set_arg_mode();
 }

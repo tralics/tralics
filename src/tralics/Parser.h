@@ -11,7 +11,7 @@
 
 class FpNum;
 class Math;
-class SaveAux;
+class SaveAuxBase;
 class SaveAuxEnv;
 
 // This file holds the definition of the Parser class, which is the main
@@ -598,7 +598,7 @@ private:
     void        push_module();
     void        push_module(const std::string &aux);
     auto        push_par() -> Xid;
-    void        push_save_stack(SaveAux *v);
+    void        push_save_stack(SaveAuxBase *v);
     void        push_tpa();
     void        ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     auto        read_delimited(const TokenList &L) -> TokenList;
