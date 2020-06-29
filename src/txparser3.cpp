@@ -16,10 +16,6 @@
 #include "tralics/util.h"
 #include <fmt/format.h>
 
-namespace parser_ns {
-    auto to_string(boundary_type v) -> String;
-} // namespace parser_ns
-
 namespace {
     std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
 } // namespace
@@ -77,7 +73,7 @@ Parser::Parser() : cur_env_name("document") {
 // Implements \currentgrouptype.
 // (see online doc for the meaning of the numbers).
 auto Parser::cur_group_type() -> int {
-    boundary_type V = first_boundary();
+    auto V = first_boundary();
     switch (V) {
     case bt_impossible: return 0;
     case bt_brace: return 1;
@@ -92,10 +88,7 @@ auto Parser::cur_group_type() -> int {
     }
 }
 
-auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & {
-    fp << bt_to_string(x);
-    return fp;
-}
+auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
 // This adds a new element to the save stack.
 void Parser::push_save_stack(SaveAuxBase *v) {
@@ -345,7 +338,7 @@ auto Parser::stack_math_in_cell() -> bool {
     for (size_t i = n; i > 0; i--) {
         SaveAuxBase *p = the_save_stack[i - 1].get();
         if (p->type != st_boundary) continue;
-        boundary_type cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
+        auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
         if (cur == bt_brace || cur == bt_semisimple) continue;
         if (first) {
             if (cur != bt_math) return false;
@@ -373,8 +366,8 @@ void Parser::dump_save_stack() const {
 // \end{foo} expands to \endfoo\endenv\endfoo, the last \endfoo is in cur_tok
 // there should be an \endfoo token in cur_tok
 void Parser::pop_level(boundary_type v) {
-    bool          must_throw = false;
-    boundary_type w          = first_boundary();
+    bool must_throw = false;
+    auto w          = first_boundary();
     if (w == bt_impossible) {
         if (v == bt_brace)
             parse_error(err_tok, "Extra }");
@@ -443,8 +436,8 @@ void Parser::pop_all_levels() {
             ename   = q->name;
         }
         if (tmp->type == st_boundary) {
-            boundary_type w = dynamic_cast<SaveAuxBoundary *>(tmp)->val;
-            int           l = tmp->line;
+            auto w = dynamic_cast<SaveAuxBoundary *>(tmp)->val;
+            int  l = tmp->line;
             if (started) {
                 B << ".\n"; // finish prev line
                 main_ns::nb_errs++;

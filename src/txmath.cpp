@@ -851,7 +851,7 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
         the_stack.set_h_mode();
     else
         the_stack.set_m_mode();
-    boundary_type aux = bt_math;
+    auto aux = bt_math;
     {
         Math &u = math_data.get_list(x);
         if ((math_env_props(u.sname) & 8) != 0)
@@ -1626,8 +1626,8 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
     }
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
-    subtypes      k   = math_data.find_math_location(math_argument_cd, nomathenv_code, "");
-    boundary_type aux = bt_brace;
+    subtypes k   = math_data.find_math_location(math_argument_cd, nomathenv_code, "");
+    auto     aux = bt_brace;
     push_level(aux);
     scan_math(k, math_argument_cd);
     pop_level(aux);
