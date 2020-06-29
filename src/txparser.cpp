@@ -2545,7 +2545,7 @@ void Parser::E_random() {
     int   u = std::rand();
     if (t > 0) u = u % t;
     Buffer B;
-    B.push_back(fmt::format("{}", u));
+    B.format("{}", u);
     TokenList L = B.str_toks11(false);
     if (tracing_macros()) {
         Logger::finish_seq();

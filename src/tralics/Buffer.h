@@ -2,6 +2,7 @@
 #include "../txid.h"
 #include "../txscaled.h"
 #include <cstring>
+#include <fmt/format.h>
 #include <iostream>
 #include <vector>
 
@@ -181,7 +182,8 @@ public:
     void push_back(const Macro &x);
     void push_back(const Macro &x, bool sw);
     void push_back(const TokenList &L);
-    // \todo push_back(char*,...) to do fmt::format
+
+    template <typename... Args> void format(const char *f, Args &&... args) { append(fmt::format(f, args...)); }
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {

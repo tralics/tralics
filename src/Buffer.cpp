@@ -247,7 +247,7 @@ auto Token::tok_to_str() const -> std::string {
     else {
         B.push_back("{Character ");
         B.out_log(c, the_main->log_encoding);
-        B.push_back(fmt::format(" of catcode {}}}", cat));
+        B.format(" of catcode {}}}", cat);
     }
     return std::move(B);
 }
@@ -387,7 +387,7 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
         push_back('-');
         s = -s;
     }
-    push_back(fmt::format("{}.", s / unity));
+    format("{}.", s / unity);
     s         = 10 * (s % unity) + 5;
     int delta = 10;
     for (;;) {
@@ -442,7 +442,7 @@ void Buffer::pt_to_mu() {
 // The \relax is a bit strange.
 void Buffer::push_back(const SthInternal &x) {
     switch (x.get_type()) {
-    case it_int: push_back(fmt::format("{}", x.get_int_val())); break;
+    case it_int: format("{}", x.get_int_val()); break;
     case it_dimen: push_back(ScaledInt(x.get_int_val()), glue_spec_pt); break;
     case it_glue:
         push_back(x.get_glue_val());
@@ -834,10 +834,7 @@ void Buffer::push_back(const AttPair &X) {
     const std::string &b = X.name;
     const std::string &a = X.value;
     if (b[0] == '\'') return;
-    push_back(' ');
-    push_back(b.c_str()); // NOLINT there could be a 0 there \todo fix
-    push_back('=');
-    push_back('\'');
+    format(" {}=\'", b);
     for (char c : Buffer(a).convert_to_out_encoding()) {
         if (c == '\'')
             push_back("&apos;");
@@ -905,8 +902,8 @@ void Buffer::push_back_special_att(Xid id) {
         if (!backup_space()) return;
         advance();
         if (!string_delims()) return;
-        std::string a = std::string(substr(J));
-        std::string b = std::string(substr(ptrs.a));
+        std::string a = substr(J).c_str(); // NOLINT \todo this cuts at first null char, fix
+        std::string b = substr(ptrs.a);
         id.add_attribute(a, b);
         advance();
     }

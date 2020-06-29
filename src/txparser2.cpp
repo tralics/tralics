@@ -2664,7 +2664,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
         Buffer &B = err_buf;
         B << bf_reset << "Invalid chararacter specification ";
         B.push_back(T);
-        B.push_back(fmt::format("{{{}}}", c));
+        B.format("{{{}}}", c);
         signal_error(T, "bad char spec");
         return;
     }
