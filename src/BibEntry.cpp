@@ -83,23 +83,23 @@ namespace {
             bool is_other   = is_this_other();
             if (is_other) {
                 if (iln && !ifn) {
-                    biblio_buf1.push_back("\\cititem{etal}{}");
-                    biblio_buf2.push_back("etal");
-                    biblio_buf4.push_back("etal");
-                    if (handle_key) biblio_buf3.push_back("+");
+                    biblio_buf1.append("\\cititem{etal}{}");
+                    biblio_buf2.append("etal");
+                    biblio_buf4.append("etal");
+                    if (handle_key) biblio_buf3.append("+");
                 } else {
-                    biblio_buf1.push_back("\\bpers{}{}{others}{}");
-                    biblio_buf2.push_back("others");
-                    biblio_buf4.push_back("others");
-                    if (handle_key) biblio_buf3.push_back(iln ? "oth" : "o");
+                    biblio_buf1.append("\\bpers{}{}{others}{}");
+                    biblio_buf2.append("others");
+                    biblio_buf4.append("others");
+                    if (handle_key) biblio_buf3.append(iln ? "oth" : "o");
                 }
                 return;
             }
             if (handle_key) last_name.make_key(!(ifn && iln), biblio_buf3);
-            biblio_buf1.push_back("\\bpers[");
+            biblio_buf1.append("\\bpers[");
             biblio_buf1 << first_name;
-            biblio_buf1.push_back("]{");
-            biblio_buf2.push_back(" ");
+            biblio_buf1.append("]{");
+            biblio_buf2.append(" ");
             first_name.print_first_name(biblio_buf1, biblio_buf2);
             biblio_buf1 << "}{}{" << last_name << "}{" << jr_name << "}";
             biblio_buf2 << " " << last_name << " " << jr_name << " ";
@@ -118,7 +118,7 @@ namespace {
             if (s < 4) return true;
             if (s > 4) return false;
             if (last) return true;
-            biblio_buf3.push_back("+");
+            biblio_buf3.append("+");
             return false;
         };
     };
@@ -133,7 +133,7 @@ namespace {
     auto first_three(const std::string &s) -> std::string {
         Buffer &B = biblio_buf1;
         B.clear();
-        B.push_back(s);
+        B.append(s);
         B.ptrs.b = 0;
         if (B.head() == '\\') return s;
         B.next_bibtex_char();
@@ -151,7 +151,7 @@ namespace {
     auto last_chars(const std::string &s, int k) -> std::string {
         Buffer B;
         B.clear();
-        B.push_back(s);
+        B.append(s);
         B.ptrs.b = 0;
         int n    = -k;
         while (B.head() != 0) {

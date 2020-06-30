@@ -42,7 +42,7 @@ namespace {
 
 // This reads conditionally a file. Returns true if the file exists.
 auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
-    B.push_back(".bib");
+    B.append(".bib");
     if (auto of = tralics_ns::find_in_path(B); of) {
         read(*of, ct);
         return true;
@@ -54,7 +54,7 @@ auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
 // like miaou+foot. Prints a warning if this is a bad name.
 void Bibtex::read1(const std::string &cur) {
     biblio_buf4.clear();
-    biblio_buf4.push_back(cur);
+    biblio_buf4.append(cur);
     auto n = biblio_buf4.size();
     if (read0(biblio_buf4, from_year)) return;
     if (biblio_buf4.ends_with("+foot.bib")) {
@@ -85,14 +85,14 @@ void Bibtex::read1(const std::string &cur) {
 auto Bibtex::read2(bib_from pre) -> bool {
     Buffer &B = biblio_buf4;
     B.clear();
-    B.push_back(no_year);
+    B.append(no_year);
     if (pre == from_foot)
-        B.push_back("_foot");
+        B.append("_foot");
     else if (pre == from_refer)
-        B.push_back("_refer");
+        B.append("_refer");
     else if (pre == from_any)
-        B.push_back("_all");
-    B.push_back(default_year);
+        B.append("_all");
+    B.append(default_year);
     return read0(B, pre);
 }
 

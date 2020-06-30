@@ -239,7 +239,7 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
 
 auto config_ns::start_interpret(Buffer &B, String s) -> bool {
     bool ret_val = false;
-    B.push_back(s);
+    B.append(s);
     B.ptrs.b = 0;
     if (B.head() == '+') {
         B.advance();

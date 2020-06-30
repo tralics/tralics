@@ -891,7 +891,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
             break;
         }
         if (want_result) {
-            mac_buffer.push_back(input_buffer);
+            mac_buffer.append(input_buffer);
             mac_buffer.push_back('\n');
         }
         kill_line();
@@ -1520,7 +1520,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
 // Special case of a counter
 auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
     b.clear();
-    b.push_back("c@");
+    b.append("c@");
     return list_to_string(L, b);
 }
 
@@ -1554,9 +1554,9 @@ auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
         the_log << "{" << s << "}\n";
     }
     Buffer b;
-    b.push_back(s1);
+    b.append(s1);
     bool r = list_to_string(L, b);
-    b.push_back(s2);
+    b.append(s2);
     if (r) {
         bad_csname(s != nullptr);
         return true;
@@ -1573,7 +1573,7 @@ void Parser::fetch_name2() {
         bad_csname(false);
     }
     fetch_name_res.clear();
-    fetch_name_res.push_back(b);
+    fetch_name_res.append(b);
 }
 
 // Converts the buffer into a command; locally defines it to \relax if undef
@@ -2123,7 +2123,7 @@ void Parser::M_newboolean(subtypes c) {
 void Parser::make_token(String s) {
     Buffer &b = Thbuf1;
     b.clear();
-    b.push_back(s);
+    b.append(s);
     back_input(hash_table.locate(b));
 }
 

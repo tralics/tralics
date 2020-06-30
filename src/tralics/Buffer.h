@@ -173,7 +173,6 @@ public:
     void push_back(codepoint c);
     void push_back(char c);
     void push_back(uchar c);
-    void push_back(const std::string &s);
     void push_back(ScaledInt v, glue_spec unit);
     void push_back(const SthInternal &x);
     void push_back(const Glue &x);
@@ -184,6 +183,8 @@ public:
     void push_back(const TokenList &L);
 
     template <typename... Args> void format(const char *f, Args &&... args) { append(fmt::format(f, args...)); }
+
+    [[deprecated]] void push_back(const std::string &s) { append(s); };
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {

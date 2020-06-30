@@ -231,7 +231,7 @@ found at http://www.cecill.info.)";
     auto param_hack(String a) -> bool {
         Buffer B;
         B.ptrs.b = 0;
-        B.push_back(a);
+        B.append(a);
         if (!B.find_equals()) return false;
         if (!B.backup_space()) return false;
         B.advance();

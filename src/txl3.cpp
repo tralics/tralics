@@ -209,18 +209,18 @@ void Parser::L3_new_conditional(subtypes s) {
 // creates the name of the variant. foo:N this gives foo_p:N  or foo:NTF
 void Buffer::l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w) {
     clear();
-    push_back(base);
+    append(base);
     if (w == l3_p_code)
-        push_back("_p:");
+        append("_p:");
     else
         push_back(':');
-    push_back(sig);
+    append(sig);
     if (w == l3_T_code)
         push_back('T');
     else if (w == l3_F_code)
         push_back('F');
     else if (w == l3_TF_code)
-        push_back("TF");
+        append("TF");
 }
 
 auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
@@ -794,7 +794,7 @@ void Parser::L3_set_num_code(int c) {
             the_log << T << "->" << m << ".\n";
         }
         B.clear();
-        B.push_back(std::to_string(v));
+        B.append(std::to_string(v));
         TokenList res = B.str_toks(nlt_space);
         back_input(res);
     }

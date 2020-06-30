@@ -382,7 +382,7 @@ void Parser::T_input(int q) {
             Buffer &B = local_buf;
             B << bf_reset << file;
             if (!B.ends_with(".tex")) {
-                B.push_back(".tex");
+                B.append(".tex");
                 std::string F = B;
                 res           = tralics_ns::find_in_path(F);
             }
@@ -871,7 +871,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         readline(m_ligne.data(), 78); // \todo pass the array instead
         tty_line_no++;
         n = tty_line_no;
-        scratch.push_back(m_ligne.data()); // \todo push_back(std::array<char>)
+        scratch.append(m_ligne.data()); // \todo push_back(std::array<char>)
     } else
         n = tex_input_files[cur_in_chan].lines.get_next(scratch);
     if (n < 0) {
@@ -1514,7 +1514,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
     case it_ident: // case of a font name
     case it_tok:   // case of a token list
         return cur_val.get_token_val();
-    case it_int: B.push_back(std::to_string(cur_val.get_int_val())); break;
+    case it_int: B.append(std::to_string(cur_val.get_int_val())); break;
     case it_dimen: B.push_back(ScaledInt(cur_val.get_int_val()), glue_spec_pt); break;
     case it_glue: B.push_back(cur_val.get_glue_val()); break;
     case it_mu:
@@ -2094,7 +2094,7 @@ void Parser::token_show(int what, Buffer &B) {
         if (i == std::string::npos) return;
         std::string s = B.substr(i + 1);
         B.clear();
-        B.push_back(s);
+        B.append(s);
     }
     if (lg) log_and_tty << B.convert_to_log_encoding() << ".\n";
 }
@@ -2170,7 +2170,7 @@ void Parser::initialise_font() {
 void Parser::xml_name(Xml *x, internal_type level) {
     static Buffer B;
     B.clear();
-    if (x != nullptr) B.push_back(encode(x->name));
+    if (x != nullptr) B.append(encode(x->name));
     if (level != it_tok) {
         bad_number1(B);
         return;
@@ -2189,7 +2189,7 @@ void Parser::E_convert() {
     case number_code:
     case at_arabic_code:
         n = scan_int(T);
-        B.push_back(std::to_string(n));
+        B.append(std::to_string(n));
         break;
     case twodigits_code: {
         TokenList L = read_arg();
@@ -2197,7 +2197,7 @@ void Parser::E_convert() {
     } // shit
         n = scan_int(T);
         if (n < 10) B.push_back('0');
-        B.push_back(std::to_string(n));
+        B.append(std::to_string(n));
         break;
     case romannumeral_code:
         n = scan_int(T);
@@ -2222,11 +2222,11 @@ void Parser::E_convert() {
         tfonts.full_name(B, k);
         break;
     }
-    case jobname_code: B.push_back(get_job_name()); break;
-    case ra_jobname_code: B.push_back(get_projet_val()); break;
-    case attributeval_code: B.push_back(get_attval()); break;
-    case tralicsversion_code: B.push_back(tralics_version); break;
-    case etexrevision_code: B.push_back(".0"); break;
+    case jobname_code: B.append(get_job_name()); break;
+    case ra_jobname_code: B.append(get_projet_val()); break;
+    case attributeval_code: B.append(get_attval()); break;
+    case tralicsversion_code: B.append(tralics_version); break;
+    case etexrevision_code: B.append(".0"); break;
     case rayear_code: B.format("{}", the_parser.get_ra_year()); break;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE

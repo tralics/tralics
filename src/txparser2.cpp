@@ -255,7 +255,7 @@ auto Parser::T_xmllatex() -> std::string {
         if (x.active_or_single())
             mac_buffer.push_back(x.char_val());
         else if (x.is_in_hash())
-            mac_buffer.push_back(hash_table[x.hash_loc()]);
+            mac_buffer.append(hash_table[x.hash_loc()]);
         // else token is bad or null
     }
     if (tracing_commands()) {
@@ -1014,7 +1014,7 @@ void Parser::key_ifundefined() {
         B.clear();
         B << xkv_prefix << fam;
         if (!fam.empty()) B.push_back('@');
-        B.push_back(Key);
+        B.append(Key);
         if (hash_table.is_defined(B)) {
             undefined = false;
             break;
@@ -1034,7 +1034,7 @@ void Parser::disable_keys() {
         B << bf_reset << xkv_header << Key;
         if (hash_table.is_defined(B)) {
             Token T = hash_table.last_tok;
-            B.push_back("@default");
+            B.append("@default");
             if (hash_table.is_defined(B)) {
                 TokenList L;
                 brace_me(L);
@@ -1208,7 +1208,7 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
 void Parser::internal_define_key_default(Token T, TokenList &L) {
     brace_me(L);
     L.push_front(T);
-    local_buf.push_back("@default");
+    local_buf.append("@default");
     cur_tok = hash_table.locate(local_buf);
     new_macro(L, cur_tok);
 }
@@ -2210,7 +2210,7 @@ void Parser::refstepcounter_inner(TokenList &L, bool star) {
 void Parser::refstepcounter(const std::string &S, bool star) {
     Buffer &b = local_buf;
     b.clear();
-    b.push_back(S);
+    b.append(S);
     TokenList L = b.str_toks11(true);
     refstepcounter(L, star);
 }
@@ -2655,7 +2655,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
     if (vb) {
         Buffer &B = mac_buffer;
         B.clear();
-        B.push_back("-> \\char\"");
+        B.append("-> \\char\"");
         B.push_back16(to_unsigned(r), false);
         Logger::finish_seq();
         the_log << T << c << B << ".\n";

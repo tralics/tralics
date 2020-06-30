@@ -1429,7 +1429,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
     if (n <= 1)
         B.push_back(static_cast<char>(c));
     else
-        B.push_back(math_chars[c][n]);
+        B.append(math_chars[c][n]);
     Xml *v   = new Xml(B);
     Xml *res = new Xml(the_names["mi"], v);
     if (n == 1) res->add_att(the_names["mathvariant"], the_names["normal"]);

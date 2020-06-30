@@ -40,8 +40,8 @@ void Bibliography::dump_data(Buffer &b) {
     b << "\\bibdata{";
     if (n == 0) b << tralics_ns::get_short_jobname();
     for (size_t i = 0; i < n; i++) {
-        if (i > 0) b.push_back(",");
-        b.push_back(biblio_src[i]);
+        if (i > 0) b.append(",");
+        b.append(biblio_src[i]);
     }
     b << "}\n";
 }

@@ -55,7 +55,7 @@ namespace {
         f << "Total " << nb_words << "  ";
         scbuf.remove_last(); // space
         scbuf.remove_last(); // comma
-        scbuf.push_back(".\n");
+        scbuf.append(".\n");
         f << scbuf;
     }
 
@@ -736,7 +736,7 @@ void Xml::unbox(Xml *x) {
     if (x->is_xmlc()) {
         Buffer &b = scbuf;
         b.clear();
-        b.push_back(encode(x->name));
+        b.append(encode(x->name));
         add_last_string(b);
     } else
         push_back_list(x);
@@ -927,7 +927,7 @@ auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value =
 // buffer
 void Xml::last_to_SH() const {
     shbuf.clear();
-    shbuf.push_back(std::string(back()->name));
+    shbuf.append(std::string(back()->name));
 }
 
 // This adds B at the end the element, via concatenation, if possible.
@@ -939,7 +939,7 @@ void Xml::add_last_string(const Buffer &B) {
         pop_back();
         the_parser.my_stats.one_more_merge();
     }
-    shbuf.push_back(B);
+    shbuf.append(B);
     push_back_unless_nullptr(new Xml(shbuf));
 }
 

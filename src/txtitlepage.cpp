@@ -248,7 +248,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
             Buffer &B = local_buf;
             B << bf_reset << "\\" << T1;
             B.push_back_braced(T4);
-            B.push_back("%\n");
+            B.append("%\n");
             the_main->add_to_from_config(1, B);
         }
         return true;
@@ -341,7 +341,7 @@ void TitlePageAux::exec_start(size_t k) {
     B << bf_reset << "\\" << T1;
     B.push_back_braced(T4);
     Titlepage[idx] = new Xml(std::string("empty"));
-    B.push_back("%\n");
+    B.append("%\n");
     if (fl == tp_A_flag) {
     } // already done
     //    the_main->add_to_from_config(1,B);
@@ -692,8 +692,8 @@ void Buffer::find_top_atts() {
     } else if (substr(ptrs.b) == "\\tralics") {
         auto as = std::string(a);
         clear();
-        push_back("Tralics version ");
-        push_back(tralics_version);
+        append("Tralics version ");
+        append(tralics_version);
         std::string bs = std::string(*this);
         Xid(1).add_attribute(as, bs);
     } else {
@@ -795,7 +795,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
 // This converts ra2003 to ra.
 auto Buffer::remove_digits(const std::string &s) -> std::string {
     clear();
-    push_back(s);
+    append(s);
     size_t k = size();
     while (k > 0 && is_digit(at(k - 1))) k--;
     if (k != size()) {

@@ -377,19 +377,19 @@ void Stack::check_font() {
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.push_back(",");
+            if (nonempty) aux.append(",");
             aux << encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.push_back(",");
+            if (nonempty) aux.append(",");
             aux << encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.push_back(",");
+            if (nonempty) aux.append(",");
             aux << encode(the_names[s]);
             nonempty = true;
         }

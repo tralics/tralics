@@ -736,11 +736,11 @@ void Parser::tex_string(Buffer &B, Token T, bool esc) const {
         auto x = T.val;
         if (esc && x >= single_offset) B.insert_escape_char_raw();
         if (x >= hash_offset)
-            B.push_back(hash_table[T.hash_loc()]);
+            B.append(hash_table[T.hash_loc()]);
         else if (x < first_multitok_val)
             B.push_back(T.char_val());
         else
-            B.push_back(null_cs_name());
+            B.append(null_cs_name());
     }
 }
 
@@ -2114,7 +2114,7 @@ void Parser::T_newcolumn_type() {
         }
     }
     Buffer B;
-    B.push_back("newcolumtype@");
+    B.append("newcolumtype@");
     B.push_back(static_cast<char>(c)); // special hack if c=0 !
     cur_tok = hash_table.locate(B);
     new_array_object.add_a_type(static_cast<uchar>(c), cur_tok);

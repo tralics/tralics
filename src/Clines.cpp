@@ -4,7 +4,7 @@
 // This converts a line of a file
 void Clines::convert_line(size_t wc) {
     Buffer B;
-    B.push_back(*this);
+    B.append(*this);
     converted = true;
     the_converter.start_convert(number);
     auto [o, s] = B.convert_line0(wc);

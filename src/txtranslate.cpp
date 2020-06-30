@@ -832,7 +832,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     long k  = -1;
     bool ok = true;
     Tbuf.clear();
-    Tbuf.push_back(s);
+    Tbuf.append(s);
     size_t i  = 0;
     size_t ii = 0;
     for (;;) {

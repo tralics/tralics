@@ -48,7 +48,7 @@ void Parser::init_all(const std::string &doc_elt) {
 
 // This assumes that the string is plain ASCII, no special XML characters
 // Note: never use process_char('&'),
-inline void Parser::process_string(String s) { unprocessed_xml.push_back(s); }
+inline void Parser::process_string(String s) { unprocessed_xml.append(s); }
 
 inline void Parser::process_char(int s) { process_char(codepoint(unsigned(s))); }
 
@@ -756,7 +756,7 @@ void Parser::T_begindocument() {
         Buffer &  b = mac_buffer;
         TokenList L;
         b.clear();
-        b.push_back("\\let\\do\\noexpand\\ignorespaces\n");
+        b.append("\\let\\do\\noexpand\\ignorespaces\n");
         tokenize_buffer(b, L, "(AtBeginDocument hook)");
         back_input(L);
     }

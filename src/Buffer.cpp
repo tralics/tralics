@@ -65,7 +65,7 @@ auto Buffer::next_non_space(size_t j) const -> size_t {
 
 void Buffer::push_back_braced(const std::string &s) {
     push_back('{');
-    push_back(s);
+    append(s);
     push_back('}');
 }
 
@@ -82,18 +82,16 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c == 13)
         push_back('\n');
     else if (c == '<')
-        push_back("&lt;");
+        append("&lt;");
     else if (c == '>')
-        push_back("&gt;");
+        append("&gt;");
     else if (c == '&')
-        push_back("&amp;");
+        append("&amp;");
     else if (c < 32)
         push_back_ent(codepoint(static_cast<char>(c)));
     else
         push_back(static_cast<char>(c));
 }
-
-void Buffer::push_back(const std::string &s) { append(s); }
 
 // Sets ptrs.a to ptrs.b, advances ptrs.b to after a command, returns false in case
 // of failure, either because cur char is not a \, or last char is \.
@@ -217,7 +215,7 @@ void Buffer::insert_escape_char() {
     if (c >= 0 && c < int(nb_characters))
         out_log(codepoint(char32_t(c)), the_main->log_encoding);
     else if (c == 0)
-        push_back("^^@");
+        append("^^@");
 }
 
 void Buffer::insert_escape_char_raw() {
@@ -225,7 +223,7 @@ void Buffer::insert_escape_char_raw() {
     if (c > 0 && c < int(nb_characters))
         push_back(codepoint(char32_t(c)));
     else if (c == 0)
-        push_back("^^@");
+        append("^^@");
 }
 
 // Returns a temporary string: the name of the token
@@ -245,7 +243,7 @@ auto Token::tok_to_str() const -> std::string {
     if (good_cat)
         B.out_log(c, the_main->log_encoding);
     else {
-        B.push_back("{Character ");
+        B.append("{Character ");
         B.out_log(c, the_main->log_encoding);
         B.format(" of catcode {}}}", cat);
     }
@@ -260,7 +258,7 @@ auto Buffer::push_back(Token T) -> bool {
     static Buffer        Tmp;
     output_encoding_type enc = the_main->log_encoding;
     if (T.is_null()) {
-        push_back("\\invalid.");
+        append("\\invalid.");
         return false;
     }
     if (T.is_a_char()) {
@@ -283,11 +281,11 @@ auto Buffer::push_back(Token T) -> bool {
     }
     if (T.is_in_hash()) {
         Tmp.clear();
-        Tmp.push_back(the_parser.hash_table[T.hash_loc()]);
-        push_back(Tmp.convert_to_log_encoding());
+        Tmp.append(the_parser.hash_table[T.hash_loc()]);
+        append(Tmp.convert_to_log_encoding());
         return true;
     }
-    push_back(null_cs_name());
+    append(null_cs_name());
     return true;
 }
 
@@ -295,7 +293,7 @@ auto Buffer::push_back(Token T) -> bool {
 // otherwise use current escape char and catcodes.
 void Buffer::insert_token(Token T, bool sw) {
     if (T.is_null()) {
-        push_back("\\invalid.");
+        append("\\invalid.");
         return;
     }
     if (T.char_or_active()) {
@@ -308,7 +306,7 @@ void Buffer::insert_token(Token T, bool sw) {
             } else if (T.is_space_token())
                 push_back(' '); // space or newline
             else if (!c)
-                push_back("^^@"); // if cmd==parameter_catcode ??
+                append("^^@"); // if cmd==parameter_catcode ??
             else if (cmd == parameter_catcode) {
                 push_back(c);
                 push_back(c);
@@ -316,7 +314,7 @@ void Buffer::insert_token(Token T, bool sw) {
                 push_back(c);
         } else {
             if (!c)
-                push_back("^^@");
+                append("^^@");
             else
                 push_back(c); // active character
         }
@@ -329,19 +327,19 @@ void Buffer::insert_token(Token T, bool sw) {
     if (T.active_or_single()) {
         codepoint c = T.char_val();
         if (!c)
-            push_back("^^@");
+            append("^^@");
         else
             push_back(c);
         bool need_space = sw ? c.is_letter() : the_parser.has_letter_catcode(c.value);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
-        push_back(the_parser.hash_table[T.hash_loc()]);
+        append(the_parser.hash_table[T.hash_loc()]);
         push_back(' ');
     } else { // empty or bad
         if (sw)
-            push_back("csname\\endcsname");
+            append("csname\\endcsname");
         else
-            push_back(null_cs_name());
+            append(null_cs_name());
         push_back(' ');
     }
 }
@@ -350,12 +348,12 @@ void Buffer::insert_token(Token T, bool sw) {
 auto Buffer::convert_for_xml_err(Token T) -> std::string {
     clear();
     if (T.is_null())
-        push_back("\\invalid.");
+        append("\\invalid.");
     else if (T.char_or_active()) {
         // We simplify the algorithm by printing the character as is
         codepoint c = T.char_val();
         if (!c)
-            push_back("^^@");
+            append("^^@");
         else
             push_back_real_utf8(c);
     } else {
@@ -363,17 +361,17 @@ auto Buffer::convert_for_xml_err(Token T) -> std::string {
         if (T.active_or_single()) {
             codepoint c = T.char_val();
             if (!c)
-                push_back("^^@");
+                append("^^@");
             else
                 push_back_real_utf8(c);
         } else if (T.is_in_hash()) {
             auto s = the_parser.hash_table[T.hash_loc()];
             if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; }))
-                push_back(s);
+                append(s);
             else
                 for (auto c : s) push_back_xml_char(uchar(c));
         } else
-            push_back("csname\\endcsname");
+            append("csname\\endcsname");
     }
     return std::string(*this);
 }
@@ -398,16 +396,16 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
         if (s <= delta) break;
     }
     constexpr std::array<String, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
-    push_back(gptable[unit]);
+    append(gptable[unit]);
 }
 
 // Useful function for scan_dimen.
 auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
     clear();
-    push_back("+scandimen for ");
+    append("+scandimen for ");
     push_back(T);
     if (is_space(back())) remove_last();
-    push_back("->");
+    append("->");
     push_back(v, glue_spec_pt);
     if (mu) pt_to_mu();
     push_back('\n');
@@ -418,11 +416,11 @@ auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
 void Buffer::push_back(const Glue &x) {
     push_back(x.get_width(), glue_spec_pt);
     if (!x.get_stretch().null()) {
-        push_back(" plus ");
+        append(" plus ");
         push_back(x.get_stretch(), x.get_stretch_order());
     }
     if (!x.get_shrink().null()) {
-        push_back(" minus ");
+        append(" minus ");
         push_back(x.get_shrink(), x.get_shrink_order());
     }
 }
@@ -446,14 +444,14 @@ void Buffer::push_back(const SthInternal &x) {
     case it_dimen: push_back(ScaledInt(x.get_int_val()), glue_spec_pt); break;
     case it_glue:
         push_back(x.get_glue_val());
-        push_back("\\relax ");
+        append("\\relax ");
         break;
     case it_mu:
         push_back(x.get_glue_val());
         pt_to_mu();
-        push_back("\\relax ");
+        append("\\relax ");
         break;
-    default: push_back("??");
+    default: append("??");
     }
 }
 
@@ -510,7 +508,7 @@ void Buffer::push_back_Roman(long n) {
     }
     if (n <= 0) return;
     if (n >= 900) {
-        push_back("CM");
+        append("CM");
         n -= 900;
     }
     if (n >= 500) {
@@ -518,7 +516,7 @@ void Buffer::push_back_Roman(long n) {
         n -= 500;
     }
     if (n >= 400) {
-        push_back("CD");
+        append("CD");
         n -= 400;
     }
     while (n >= 100) {
@@ -526,7 +524,7 @@ void Buffer::push_back_Roman(long n) {
         n -= 100;
     }
     if (n >= 90) {
-        push_back("XC");
+        append("XC");
         n -= 90;
     }
     if (n >= 50) {
@@ -534,7 +532,7 @@ void Buffer::push_back_Roman(long n) {
         n -= 50;
     }
     if (n >= 40) {
-        push_back("XL");
+        append("XL");
         n -= 40;
     }
     while (n >= 10) {
@@ -542,7 +540,7 @@ void Buffer::push_back_Roman(long n) {
         n -= 10;
     }
     if (n >= 9) {
-        push_back("IX");
+        append("IX");
         n -= 9;
     }
     if (n >= 5) {
@@ -550,7 +548,7 @@ void Buffer::push_back_Roman(long n) {
         n -= 5;
     }
     if (n >= 4) {
-        push_back("IV");
+        append("IV");
         n -= 4;
     }
     while (n > 0) {
@@ -768,7 +766,7 @@ auto Buffer::last_slash() const -> std::optional<size_t> {
 
 // Inserts the string s is at the end of the buffer unless there
 void Buffer::append_unless_ends_with(const std::string &s) {
-    if (!ends_with(s)) push_back(s);
+    if (!ends_with(s)) append(s);
 }
 
 auto Buffer::contains(const std::string &s) const -> bool { return find(s) != std::string::npos; }
@@ -811,7 +809,7 @@ auto Buffer::install_att(Xid idx, const std::string &m) -> bool {
     auto     k = L.lookup(m);
     if (!k) return false;
     clear();
-    push_back(encode(L.get_val(*k)));
+    append(encode(L.get_val(*k)));
     return true;
 }
 
@@ -837,7 +835,7 @@ void Buffer::push_back(const AttPair &X) {
     format(" {}=\'", b);
     for (char c : Buffer(a).convert_to_out_encoding()) {
         if (c == '\'')
-            push_back("&apos;");
+            append("&apos;");
         else
             push_back(c);
     }
@@ -850,12 +848,12 @@ void Buffer::push_back_alt(const AttPair &X) {
     const std::string &a = X.value;
     if (b[0] == '\'') return;
     push_back(' ');
-    push_back(b.c_str()); // NOLINT there could be a 0 there \todo fix
+    append(b.c_str()); // NOLINT there could be a 0 there \todo fix
     push_back('=');
     push_back('\"');
     for (char c : Buffer(a).convert_to_out_encoding()) {
         if (c == '\"')
-            push_back("&quot;");
+            append("&quot;");
         else
             push_back(c);
     }
@@ -865,7 +863,7 @@ void Buffer::push_back_alt(const AttPair &X) {
 // Returns true if there is a space. Kills at the space. Advance
 auto Buffer::look_at_space(const std::string &s) -> bool {
     clear();
-    push_back(s);
+    append(s);
     bool has_space = false;
     ptrs.b         = 0;
     for (int i = 0;; i++) {
@@ -963,12 +961,12 @@ auto Buffer::remove_space(const std::string &x) -> std::string {
 auto Buffer::insert_break(const std::string &x) -> std::string {
     auto n = x.size();
     clear();
-    push_back("{\\url{");
+    append("{\\url{");
     for (size_t i = 0; i < n; i++) {
-        if (x[i] == ' ' && main_ns::bib_allow_break) push_back("\\allowbreak");
+        if (x[i] == ' ' && main_ns::bib_allow_break) append("\\allowbreak");
         push_back(x[i]);
     }
-    push_back("}}");
+    append("}}");
     return *this;
 }
 
@@ -1087,7 +1085,7 @@ void Buffer::normalise_for_bibtex(String s) {
             s += 4;
         } else if (std::string(s).starts_with("v{c}")) {
             remove_last();
-            push_back("{\\v c}");
+            append("{\\v c}");
             s += 4;
             continue;
         } else if (*s == 'a' && is_accent_char(s[1])) {
@@ -1234,7 +1232,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
         if (c == 0U) return;
         advance();
         if (c == '|') {
-            B.push_back("\\vbar ");
+            B.append("\\vbar ");
             continue;
         } // bar is special
         if (c == '{' || c == '}') continue;
@@ -1258,7 +1256,7 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             continue;
         }
         if (c == '|') {
-            B.push_back("\\vbar ");
+            B.append("\\vbar ");
             continue;
         } // bar is special
         if (c == 's' && head() == 'p' && !is_letter(at(ptrs.b + 1))) {

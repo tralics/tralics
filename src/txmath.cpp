@@ -146,7 +146,7 @@ void math_ns::add_to_trace(Token T) {
     auto x   = T.val;
     if (trace_needs_space && T.cmd_val() == letter_catcode) Trace.push_back(' ');
     if (T.is_a_char() && T.char_val() == '\n')
-        Trace.push_back("^^J");
+        Trace.append("^^J");
     else
         Trace.push_back(T);
     trace_needs_space = false;
@@ -1675,7 +1675,7 @@ void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
         scan_dimen(false, ct);
         Buffer B;
         B.push_back(ScaledInt(cur_val.get_int_val()), glue_spec_pt);
-        Trace.push_back(B);
+        Trace.append(B);
         payload = B;
     }
     Token m = scan_style();

@@ -479,7 +479,7 @@ void Buffer::push_back(const Macro &x, bool sw) {
     else {
         Buffer B;
         B.push_back(x);
-        push_back(B.convert_to_log_encoding());
+        append(B.convert_to_log_encoding());
     }
 }
 
@@ -583,28 +583,28 @@ void token_ns::add_env(TokenList &L, String name) {
 }
 
 void Buffer::dump_prefix(bool err, bool gbl, symcodes K) {
-    if (gbl) push_back("\\global");
+    if (gbl) append("\\global");
     if (K == user_cmd) return;
     if (K == userp_cmd || K == userlp_cmd || K == userpo_cmd || K == userlpo_cmd) {
         if (err)
-            push_back("\\");
+            append("\\");
         else
             insert_escape_char_raw();
-        push_back("protected");
+        append("protected");
     }
     if (K == userl_cmd || K == userlo_cmd || K == userlp_cmd || K == userlpo_cmd) {
         if (err)
-            push_back("\\");
+            append("\\");
         else
             insert_escape_char_raw();
-        push_back("long");
+        append("long");
     }
     if (K == usero_cmd || K == userlo_cmd || K == userpo_cmd || K == userlpo_cmd) {
         if (err)
-            push_back("\\");
+            append("\\");
         else
             insert_escape_char_raw();
-        push_back("outer");
+        append("outer");
     }
     push_back(' ');
 }

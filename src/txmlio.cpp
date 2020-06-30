@@ -445,7 +445,7 @@ void XmlIO::parse_dec_comment() {
 void XmlIO::parse_dec_cdata() {
     expect("[CDATA");
     B.clear();
-    B.push_back("<![CDATA ");
+    B.append("<![CDATA ");
     skip_space();
     for (;;) {
         codepoint c = next_char();
@@ -462,7 +462,7 @@ void XmlIO::parse_dec_cdata() {
 void XmlIO::parse_dec_conditional() {
     B.clear();
     skip_char(); // skip
-    B.push_back("<![");
+    B.append("<![");
     bool keep = false;
     skip_space();
     codepoint c = peek_char();
@@ -501,7 +501,7 @@ void XmlIO::parse_dec_conditional() {
 auto XmlIO::parse_sys_pub() -> bool {
     if (cur_char == 'P') {
         expect("PUBLIC");
-        aux.push_back(" PUBLIC '");
+        aux.append(" PUBLIC '");
         parse_quoted();
         aux << B << "' '";
         parse_quoted();
@@ -523,19 +523,19 @@ auto XmlIO::parse_sys_pub() -> bool {
 // We insert
 void XmlIO::parse_dec_entity() {
     aux.clear();
-    aux.push_back("ENTITY ");
+    aux.append("ENTITY ");
     expect("ENTITY");
     skip_space();
     bool parameter = false;
     if (cur_char == '%') {
         skip_char();
         skip_space();
-        aux.push_back("% ");
+        aux.append("% ");
         parameter = true;
     }
     scan_name(0);
     std::string name = B;
-    aux.push_back(name);
+    aux.append(name);
     skip_space();
     // entity value is defined by a name (system or public) or value
     if (!parse_sys_pub()) {
@@ -565,7 +565,7 @@ void XmlIO::parse_dec_element() {
     Buffer tmp;
     aux.clear();
     aux.clear();
-    tmp.push_back("ELEMENT");
+    tmp.append("ELEMENT");
     expect("ELEMENT");
     bool        ok            = true;
     bool        is_first      = true;
@@ -614,7 +614,7 @@ void XmlIO::parse_dec_attlist() {
     Buffer tmp;
     aux.clear();
     aux.clear();
-    tmp.push_back("ATTLIST");
+    tmp.append("ATTLIST");
     bool        ok            = true;
     bool        is_first      = true;
     bool        prev_is_space = false;
@@ -697,7 +697,7 @@ void XmlIO::parse_dec_doctype() {
                 if (nb_cond != 0) {
                     c = next_char();
                     if (c != ']') error("Expected ]]>");
-                    B.push_back("]");
+                    B.append("]");
                     flush_buffer();
                     cur_char = peek_char();
                     pop_this();
@@ -716,7 +716,7 @@ void XmlIO::parse_dec_doctype() {
 void XmlIO::parse_dec_notation() {
     expect("NOTATION");
     B.clear();
-    B.push_back("<!NOTATION ");
+    B.append("<!NOTATION ");
     skip_space();
     for (;;) {
         codepoint c = next_char();
@@ -740,7 +740,7 @@ auto XmlIO::expand_PEReference() -> bool {
     for (size_t i = 0; i < n; i++) {
         if (entities[i].has_name(s)) {
             B.clear();
-            B.push_back(entities[i].get_val());
+            B.append(entities[i].get_val());
             ok = true;
             break;
         }

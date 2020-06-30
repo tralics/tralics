@@ -185,7 +185,7 @@ void Buffer::convert_line(int l, size_t wc) {
     if (o) return;
     the_converter.lines_converted++;
     clear();
-    push_back(s);
+    append(s);
 }
 
 // Why is v limited to 16bit chars?
@@ -316,7 +316,7 @@ void Buffer::push_back16(size_t n, bool uni) { // \todo fmt
         if (n == 0) break;
     }
     if (uni) {
-        push_back("U+");
+        append("U+");
         if (k < 4) push_back('0'); // print at least 4 digit
         if (k < 3) push_back('0');
         if (k < 2) push_back('0');
@@ -368,10 +368,10 @@ void Buffer::out_four_hats(codepoint ch) {
     }
     unsigned c = ch.value;
     if (ch.is_control()) {
-        push_back("^^");
+        append("^^");
         push_back(static_cast<char>(c + 64));
     } else if (ch.is_delete())
-        push_back("^^?");
+        append("^^?");
     else if (ch.is_ascii())
         push_back(static_cast<char>(c));
     else
@@ -405,7 +405,7 @@ void Buffer::process_big_char(size_t n) {
 
 void Parser::process_char(codepoint c) {
     if (!c)
-        unprocessed_xml.push_back(""); // may be required
+        unprocessed_xml.append(""); // may be required
     else if (c == '\n')
         unprocessed_xml.push_back('\n');
     else if (c == '\r')
@@ -413,11 +413,11 @@ void Parser::process_char(codepoint c) {
     else if (c == '\t')
         unprocessed_xml.push_back('\t');
     else if (c == '<')
-        unprocessed_xml.push_back("&lt;");
+        unprocessed_xml.append("&lt;");
     else if (c == '>')
-        unprocessed_xml.push_back("&gt;");
+        unprocessed_xml.append("&gt;");
     else if (c == '&')
-        unprocessed_xml.push_back("&amp;");
+        unprocessed_xml.append("&amp;");
     else if (c.is_control() || c.is_big())
         unprocessed_xml.push_back_ent(c);
     else
@@ -426,7 +426,7 @@ void Parser::process_char(codepoint c) {
 
 void Buffer::push_back_real_utf8(codepoint c) {
     if (!c)
-        push_back(""); // may be required
+        append(""); // may be required
     else if (c == '\n')
         push_back('\n');
     else if (c == '\r')
@@ -434,11 +434,11 @@ void Buffer::push_back_real_utf8(codepoint c) {
     else if (c == '\t')
         push_back('\t');
     else if (c == '<')
-        push_back("&lt;");
+        append("&lt;");
     else if (c == '>')
-        push_back("&gt;");
+        append("&gt;");
     else if (c == '&')
-        push_back("&amp;");
+        append("&amp;");
     else if (c.is_control() || c.is_big())
         push_back_ent(c);
     else
@@ -458,7 +458,7 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
     if (ch == '\n')
         push_back('\n');
     else if (ch == '\r')
-        push_back("^^M");
+        append("^^M");
     else if (ch == '\t')
         push_back('\t');
     else if (ch.is_control())
@@ -483,7 +483,7 @@ auto Buffer::convert_to_out_encoding() const -> std::string {
 // Convert to latin 1 or ASCII
 auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     Buffer B; // \todo do it without temporary buffer
-    B.push_back(data());
+    B.append(data());
     Buffer O;
     the_converter.global_error = false;
     for (;;) {

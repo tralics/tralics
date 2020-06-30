@@ -582,68 +582,68 @@ void MathF::dump_aux() {
 void math_ns::insert_delimiter(del_pos k) {
     Buffer &B = mathml_buffer;
     switch (k) {
-    case del_open_ket: B.push_back("&lt;"); return;
-    case del_close_ket: B.push_back("&gt;"); return;
-    case del_dot: B.push_back("."); return;
-    case del_open_par: B.push_back("("); return;
-    case del_close_par: B.push_back(")"); return;
-    case del_close_bra: B.push_back("]"); return;
-    case del_open_bra: B.push_back("["); return;
-    case del_vert: B.push_back("|"); return;
-    case del_Vert: B.push_back("\\Vert "); return;
-    case del_rangle: B.push_back("\\rangle "); return;
-    case del_langle: B.push_back("\\langle "); return;
-    case del_rbrace: B.push_back("\\rbrace "); return;
-    case del_lbrace: B.push_back("\\lbrace "); return;
-    case del_rceil: B.push_back("\\rceil "); return;
-    case del_lceil: B.push_back("\\lceil "); return;
-    case del_rfloor: B.push_back("\\rfloor "); return;
-    case del_lfloor: B.push_back("\\lfloor "); return;
-    case del_rgroup: B.push_back("\\rgroup "); return;
-    case del_lgroup: B.push_back("\\lgroup "); return;
-    case del_rmoustache: B.push_back("\\moustache "); return;
-    case del_lmoustache: B.push_back("\\moustache "); return;
-    case del_uparrow: B.push_back("\\uparrow "); return;
-    case del_downarrow: B.push_back("\\downarrow "); return;
-    case del_updownarrow: B.push_back("\\updownarrow "); return;
-    case del_Uparrow: B.push_back("\\Uparrow "); return;
-    case del_Downarrow: B.push_back("\\Downarrow "); return;
-    case del_Updownarrow: B.push_back("\\Updownarrow "); return;
-    default: B.push_back("\\bad.");
+    case del_open_ket: B.append("&lt;"); return;
+    case del_close_ket: B.append("&gt;"); return;
+    case del_dot: B.append("."); return;
+    case del_open_par: B.append("("); return;
+    case del_close_par: B.append(")"); return;
+    case del_close_bra: B.append("]"); return;
+    case del_open_bra: B.append("["); return;
+    case del_vert: B.append("|"); return;
+    case del_Vert: B.append("\\Vert "); return;
+    case del_rangle: B.append("\\rangle "); return;
+    case del_langle: B.append("\\langle "); return;
+    case del_rbrace: B.append("\\rbrace "); return;
+    case del_lbrace: B.append("\\lbrace "); return;
+    case del_rceil: B.append("\\rceil "); return;
+    case del_lceil: B.append("\\lceil "); return;
+    case del_rfloor: B.append("\\rfloor "); return;
+    case del_lfloor: B.append("\\lfloor "); return;
+    case del_rgroup: B.append("\\rgroup "); return;
+    case del_lgroup: B.append("\\lgroup "); return;
+    case del_rmoustache: B.append("\\moustache "); return;
+    case del_lmoustache: B.append("\\moustache "); return;
+    case del_uparrow: B.append("\\uparrow "); return;
+    case del_downarrow: B.append("\\downarrow "); return;
+    case del_updownarrow: B.append("\\updownarrow "); return;
+    case del_Uparrow: B.append("\\Uparrow "); return;
+    case del_Downarrow: B.append("\\Downarrow "); return;
+    case del_Updownarrow: B.append("\\Updownarrow "); return;
+    default: B.append("\\bad.");
     }
 }
 
 void math_ns::insert_delimiter_t(del_pos k) {
     Buffer &B = att_buffer;
     switch (k) {
-    case del_open_ket: B.push_back("&lt;"); return;
-    case del_close_ket: B.push_back("&gt;"); return;
-    case del_dot: B.push_back("."); return;
-    case del_open_par: B.push_back("("); return;
-    case del_close_par: B.push_back(")"); return;
-    case del_close_bra: B.push_back("]"); return;
-    case del_open_bra: B.push_back("["); return;
-    case del_vert: B.push_back("|"); return;
-    case del_Vert: B.push_back("Vert"); return;
-    case del_rangle: B.push_back("rangle"); return;
-    case del_langle: B.push_back("langle"); return;
-    case del_rbrace: B.push_back("rbrace"); return;
-    case del_lbrace: B.push_back("lbrace"); return;
-    case del_rceil: B.push_back("rceil"); return;
-    case del_lceil: B.push_back("lceil"); return;
-    case del_rfloor: B.push_back("rfloor"); return;
-    case del_lfloor: B.push_back("lfloor"); return;
-    case del_rgroup: B.push_back("rgroup"); return;
-    case del_lgroup: B.push_back("lgroup"); return;
-    case del_rmoustache: B.push_back("moustache"); return;
-    case del_lmoustache: B.push_back("moustache"); return;
-    case del_uparrow: B.push_back("uparrow"); return;
-    case del_updownarrow: B.push_back("updownarrow"); return;
-    case del_downarrow: B.push_back("downarrow"); return;
-    case del_Uparrow: B.push_back("Uparrow"); return;
-    case del_Downarrow: B.push_back("Downarrow"); return;
-    case del_Updownarrow: B.push_back("Updownarrow"); return;
-    default: B.push_back("bad.");
+    case del_open_ket: B.append("&lt;"); return;
+    case del_close_ket: B.append("&gt;"); return;
+    case del_dot: B.append("."); return;
+    case del_open_par: B.append("("); return;
+    case del_close_par: B.append(")"); return;
+    case del_close_bra: B.append("]"); return;
+    case del_open_bra: B.append("["); return;
+    case del_vert: B.append("|"); return;
+    case del_Vert: B.append("Vert"); return;
+    case del_rangle: B.append("rangle"); return;
+    case del_langle: B.append("langle"); return;
+    case del_rbrace: B.append("rbrace"); return;
+    case del_lbrace: B.append("lbrace"); return;
+    case del_rceil: B.append("rceil"); return;
+    case del_lceil: B.append("lceil"); return;
+    case del_rfloor: B.append("rfloor"); return;
+    case del_lfloor: B.append("lfloor"); return;
+    case del_rgroup: B.append("rgroup"); return;
+    case del_lgroup: B.append("lgroup"); return;
+    case del_rmoustache: B.append("moustache"); return;
+    case del_lmoustache: B.append("moustache"); return;
+    case del_uparrow: B.append("uparrow"); return;
+    case del_updownarrow: B.append("updownarrow"); return;
+    case del_downarrow: B.append("downarrow"); return;
+    case del_Uparrow: B.append("Uparrow"); return;
+    case del_Downarrow: B.append("Downarrow"); return;
+    case del_Updownarrow: B.append("Updownarrow"); return;
+    default: B.append("bad.");
     }
 }
 
@@ -695,16 +695,16 @@ void Buffer::push_back_math_tag(std::string s, int type) {
     push_back('<');
     if (type == pbm_end) push_back('/');
     if (ok)
-        push_back(s);
+        append(s);
     else {
-        push_back("elt");
+        append("elt");
         if (type != pbm_end) {
-            push_back(" name='");
+            append(" name='");
             for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
-            push_back("'");
+            append("'");
         }
     }
-    if (type == pbm_att || type == pbm_att_empty) push_back(att_buffer);
+    if (type == pbm_att || type == pbm_att_empty) append(att_buffer);
     if (type == pbm_empty || type == pbm_att_empty) push_back('/');
     push_back('>');
 }
@@ -721,7 +721,7 @@ void Buffer::push_back_math_aux(std::string s) {
         }
     }
     if (ok)
-        push_back(s);
+        append(s);
     else
         for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
 }
@@ -796,11 +796,11 @@ void MathElt::cv_noML_special() const {
     }
     mathml_buffer.push_back_math_token(Val, false);
     int n = math_ns::nb_args_for_cmd(c);
-    if (n == -1) mathml_buffer.push_back("unknown");
+    if (n == -1) mathml_buffer.append("unknown");
     if (c == mathbox_code) {
-        mathml_buffer.push_back("{");
-        mathml_buffer.push_back(L.saved);
-        mathml_buffer.push_back("}");
+        mathml_buffer.append("{");
+        mathml_buffer.append(L.saved);
+        mathml_buffer.append("}");
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
         c == mathcsymbol_code || c == multiscripts_code || c == mathbox_code) {
@@ -809,17 +809,17 @@ void MathElt::cv_noML_special() const {
         ++X;
         for (;;) {
             if (X == Y) break;
-            mathml_buffer.push_back("[");
+            mathml_buffer.append("[");
             X->get_list().convert_math_noML0();
             ++X;
-            mathml_buffer.push_back("='");
+            mathml_buffer.append("='");
             if (X == Y) {
             } // Should we signal an error ?
             else {
                 X->get_list().convert_math_noML0();
                 ++X;
             }
-            mathml_buffer.push_back("']");
+            mathml_buffer.append("']");
         }
     }
     if ((c == smash_code || c == cfrac_code) && !L.empty()) {
@@ -831,25 +831,25 @@ void MathElt::cv_noML_special() const {
         L.pop_front();
     }
     if (c == root_code) {
-        mathml_buffer.push_back(" ");
+        mathml_buffer.append(" ");
         if (!L.empty()) {
             L.get_arg1().convert_math_noML0();
             L.pop_front();
-            mathml_buffer.push_back(" \\of ");
+            mathml_buffer.append(" \\of ");
         }
     }
     if (c == genfrac_code) {
         if (L.empty()) return;
         auto k = del_pos(L.front().get_chr());
         if (k == del_dot)
-            mathml_buffer.push_back("{}");
+            mathml_buffer.append("{}");
         else
             math_ns::insert_delimiter(k);
         L.pop_front();
         if (L.empty()) return;
         k = del_pos(L.front().get_chr());
         if (k == del_dot)
-            mathml_buffer.push_back("{}");
+            mathml_buffer.append("{}");
         else
             math_ns::insert_delimiter(k);
         L.pop_front();
@@ -859,7 +859,7 @@ void MathElt::cv_noML_special() const {
         if (L.front().get_cmd() == style_cmd)
             mathml_buffer << fmt::format("{}", math_ns::style_level(L.front().get_chr()));
         else
-            mathml_buffer.push_back("{}");
+            mathml_buffer.append("{}");
         L.pop_front();
     }
     if (c == xleftarrow_code || c == xrightarrow_code) {
@@ -897,11 +897,11 @@ void MathElt::cv_noMLt_special0() const {
     subtypes c = get_fml_subtype();
     int      n = math_ns::nb_args_for_cmd(c);
     Math &   L = get_list();
-    if (n == -1) mathml_buffer.push_back("unknown");
+    if (n == -1) mathml_buffer.append("unknown");
     if (c == mathbox_code) {
-        mathml_buffer.push_back("<name>");
-        mathml_buffer.push_back(L.saved);
-        mathml_buffer.push_back("</name>");
+        mathml_buffer.append("<name>");
+        mathml_buffer.append(L.saved);
+        mathml_buffer.append("</name>");
     }
     if (c == mathmi_code || c == mathmo_code || c == mathmn_code || c == mathnothing_code || c == mathci_code || c == mathcn_code ||
         c == mathcsymbol_code || c == multiscripts_code || c == mathbox_code) {
@@ -911,34 +911,34 @@ void MathElt::cv_noMLt_special0() const {
         mathml_buffer.remove_last();
         for (;;) {
             if (X == Y) break;
-            mathml_buffer.push_back(" ");
+            mathml_buffer.append(" ");
             X->get_list().convert_math_noMLt0();
             ++X;
-            mathml_buffer.push_back("='");
+            mathml_buffer.append("='");
             if (X == Y) {
             } // Should we signal an error ?
             else {
                 X->get_list().convert_math_noMLt0();
                 ++X;
             }
-            mathml_buffer.push_back("'");
+            mathml_buffer.append("'");
         }
         mathml_buffer.push_back('>'); // re-insert
     }
     if ((c == smash_code || c == cfrac_code) && !L.empty()) {
         if (!L.get_arg1().empty()) {
-            mathml_buffer.push_back("<oarg>");
+            mathml_buffer.append("<oarg>");
             L.get_arg1().convert_math_noMLt0();
-            mathml_buffer.push_back("</oarg>");
+            mathml_buffer.append("</oarg>");
         }
         L.pop_front();
     }
     if (c == root_code) {
         if (!L.empty()) {
-            mathml_buffer.push_back("<oarg>");
+            mathml_buffer.append("<oarg>");
             L.get_arg1().convert_math_noMLt0();
             L.pop_front();
-            mathml_buffer.push_back("</oarg>");
+            mathml_buffer.append("</oarg>");
         }
     }
     if (c == genfrac_code) {
@@ -975,10 +975,10 @@ void MathElt::cv_noMLt_special0() const {
         n = 1;
         if (!L.empty()) {
             if (!L.get_arg1().empty()) {
-                mathml_buffer.push_back("<oarg>");
+                mathml_buffer.append("<oarg>");
                 L.get_arg1().convert_math_noML0();
                 L.pop_front();
-                mathml_buffer.push_back("</oarg>");
+                mathml_buffer.append("</oarg>");
             }
         }
     }
@@ -990,12 +990,12 @@ void MathElt::cv_noMLt_special0() const {
     }
     while (n > 0) {
         n--;
-        mathml_buffer.push_back("<arg>");
+        mathml_buffer.append("<arg>");
         if (!L.empty()) {
             L.get_arg1().convert_math_noMLt0();
             L.pop_front();
         }
-        mathml_buffer.push_back("</arg>");
+        mathml_buffer.append("</arg>");
     }
 }
 
@@ -1035,14 +1035,14 @@ void MathElt::cv_noMLt_list() const {
     math_list_type T = get_lcmd();
     switch (T) {
     case math_open_cd:
-        mathml_buffer.push_back("<arg>");
+        mathml_buffer.append("<arg>");
         X.convert_math_noMLt0();
-        mathml_buffer.push_back("</arg>");
+        mathml_buffer.append("</arg>");
         return;
     case math_dollar_cd:
-        mathml_buffer.push_back("<math>");
+        mathml_buffer.append("<math>");
         X.convert_math_noMLt0();
-        mathml_buffer.push_back("</math>");
+        mathml_buffer.append("</math>");
         return;
 
     case math_LR_cd: X.convert_math_noMLt0(); return;
@@ -1056,7 +1056,7 @@ void MathElt::cv_noMLt_list() const {
         X.convert_math_noMLt0();
         mathml_buffer << "</" << X.get_name() << ">";
         return;
-    default: mathml_buffer.push_back("bad group");
+    default: mathml_buffer.append("bad group");
     }
 }
 
@@ -1065,7 +1065,7 @@ void Math::handle_mbox_no() {
         subtypes font = math_f_normal; // ignore font changes
         int      ok   = M_mbox1(aux_buffer, font);
         if (ok == 0) {
-            mathml_buffer.push_back("bad hbox");
+            mathml_buffer.append("bad hbox");
             return;
         }
         if (!aux_buffer.empty()) { mathml_buffer << "\\text{" << aux_buffer << "}"; }
@@ -1075,29 +1075,29 @@ void Math::handle_mbox_no() {
             Math w = front().get_list();
             pop_front();
             std::string label = w.convert_opname();
-            mathml_buffer.push_back("\\ref{");
-            mathml_buffer.push_back(label);
-            mathml_buffer.push_back("}");
+            mathml_buffer.append("\\ref{");
+            mathml_buffer.append(label);
+            mathml_buffer.append("}");
         } else if (ok == 3)
-            mathml_buffer.push_back(" ");
+            mathml_buffer.append(" ");
         else if (ok == 5)
-            mathml_buffer.push_back("\\quad ");
+            mathml_buffer.append("\\quad ");
         else if (ok == 6)
-            mathml_buffer.push_back("\\qquad ");
+            mathml_buffer.append("\\qquad ");
         else if (ok == 7)
-            mathml_buffer.push_back("\\!");
+            mathml_buffer.append("\\!");
         else if (ok == 8)
-            mathml_buffer.push_back("\\,");
+            mathml_buffer.append("\\,");
         else if (ok == 9)
-            mathml_buffer.push_back("\\:");
+            mathml_buffer.append("\\:");
         else if (ok == 10)
-            mathml_buffer.push_back("\\;");
+            mathml_buffer.append("\\;");
         else if (ok == 10)
-            mathml_buffer.push_back("\\;");
+            mathml_buffer.append("\\;");
         else if (ok == 10)
-            mathml_buffer.push_back("\\;");
+            mathml_buffer.append("\\;");
         else if (ok == 10)
-            mathml_buffer.push_back("\\hspace{0pt}");
+            mathml_buffer.append("\\hspace{0pt}");
         else {
             Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
             u.convert_math_noML0();
@@ -1111,7 +1111,7 @@ void Math::handle_mbox_not() {
         subtypes font = math_f_normal; // ignore font changes
         int      ok   = M_mbox1(aux_buffer, font);
         if (ok == 0) {
-            mathml_buffer.push_back("<error>bad hbox</error>");
+            mathml_buffer.append("<error>bad hbox</error>");
             return;
         }
         if (!aux_buffer.empty()) { mathml_buffer << "<text>" << aux_buffer << "</text>"; }
@@ -1121,25 +1121,25 @@ void Math::handle_mbox_not() {
             Math w = front().get_list();
             pop_front();
             std::string label = w.convert_opname();
-            mathml_buffer.push_back("<ref>");
-            mathml_buffer.push_back(label);
-            mathml_buffer.push_back("</ref>");
+            mathml_buffer.append("<ref>");
+            mathml_buffer.append(label);
+            mathml_buffer.append("</ref>");
         } else if (ok == 3)
-            mathml_buffer.push_back(" ");
+            mathml_buffer.append(" ");
         else if (ok == 5)
-            mathml_buffer.push_back("<quad/>");
+            mathml_buffer.append("<quad/>");
         else if (ok == 6)
-            mathml_buffer.push_back("<qquad/>");
+            mathml_buffer.append("<qquad/>");
         else if (ok == 7)
-            mathml_buffer.push_back("<mspace cmd='!'/>");
+            mathml_buffer.append("<mspace cmd='!'/>");
         else if (ok == 8)
-            mathml_buffer.push_back("<mspace cmd=','/>");
+            mathml_buffer.append("<mspace cmd=','/>");
         else if (ok == 9)
-            mathml_buffer.push_back("<mspace cmd=':'/>");
+            mathml_buffer.append("<mspace cmd=':'/>");
         else if (ok == 10)
-            mathml_buffer.push_back("<mspace cmd=';'/>");
+            mathml_buffer.append("<mspace cmd=';'/>");
         else if (ok == 11)
-            mathml_buffer.push_back("<mspace cmd='hspace'/>");
+            mathml_buffer.append("<mspace cmd='hspace'/>");
         else {
             Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
             u.convert_math_noML0();
@@ -1201,8 +1201,8 @@ void MathElt::cv_noML() {
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer.push_back("\\");
-        mathml_buffer.push_back(encode(w));
+        mathml_buffer.append("\\");
+        mathml_buffer.append(encode(w));
         mathml_buffer.push_back(' ');
         return;
     }
@@ -1222,7 +1222,7 @@ void MathElt::cv_noML() {
         rb.clear();
         rb.push_back(Token(get_font()));
         if (rb == "\\relax") return;
-        mathml_buffer.push_back(rb);
+        mathml_buffer.append(rb);
         mathml_buffer.push_back(' ');
     }
         return;
@@ -1364,17 +1364,17 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         if (w.is_space() || w.is_letter() || w.is_other()) {
             codepoint c = w.char_val();
             if (c == '<')
-                B.push_back("&lt;");
+                B.append("&lt;");
             else if (c == '>')
-                B.push_back("&gt;");
+                B.append("&gt;");
             else
                 B.push_back(c);
         } else if (w.cmd == cst1_cmd && w.chr == sharp_code)
-            B.push_back("#");
+            B.append("#");
         else if (w.cmd == cst1_cmd && w.chr == underscore_code)
-            B.push_back("_");
+            B.append("_");
         else if (w.cmd == cst1_cmd && w.chr == amp_code)
-            B.push_back("&amp;");
+            B.append("&amp;");
         else if (w.cmd == char_given_cmd)
             B.push_back_real_utf8(w.char_val());
         else if (w.cmd == relax_cmd)
@@ -1404,11 +1404,11 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
         else if (w.is_letter() || w.is_other())
             B.push_back(w.char_val());
         else if (w.cmd == cst1_cmd && w.chr == comma_code)
-            B.push_back(" ");
+            B.append(" ");
         else if (w.cmd == relax_cmd)
             continue;
         else if (w.cmd == mathspace_cmd)
-            B.push_back(" ");
+            B.append(" ");
         else
             return false;
         ++L;
@@ -1487,7 +1487,7 @@ auto Math::chars_to_mb3() -> std::string {
         tmp << "Error scanning width, so far got '" << B << "'";
         the_parser.parse_error(the_parser.err_tok, tmp, "bad dimension");
         B.clear();
-        B.push_back("0pt");
+        B.append("0pt");
     }
     return std::string(B);
 }
@@ -1500,7 +1500,7 @@ void Buffer::show_uncomplete(String m) {
     else
         log_and_tty << "So far, got " << *this << "\n";
     clear();
-    push_back("error");
+    append("error");
 }
 
 // Converts a whole math list into a string. May signal an error.
@@ -1836,7 +1836,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     if (spec)
         B.push_back(char(uchar(c)));
     else
-        B.push_back(get_math_char(uchar(c), f));
+        B.append(get_math_char(uchar(c), f));
     for (;;) {
         if (empty()) break;
         if (!front().maybe_seq(f)) break;
@@ -1844,7 +1844,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
         if (spec)
             B.push_back(char(uchar(c)));
         else
-            B.push_back(get_math_char(uchar(c), f));
+            B.append(get_math_char(uchar(c), f));
         pop_front();
     }
     if (f == 1) B.push_back(' ');

@@ -14,7 +14,7 @@ struct Clines : public std::string { // \todo rename to Line or something
         return number;
     }
     auto to_buffer(Buffer &b, bool &C) const -> int {
-        b.push_back(*this);
+        b.append(*this);
         C = converted;
         return number;
     }

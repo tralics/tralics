@@ -27,17 +27,17 @@ void CitationKey::make_key(const std::string &s) {
     if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
     Buffer &B = biblio_buf2;
     B.clear();
-    B.push_back(s);
+    B.append(s);
     B.lowercase();
     cite_key       = s;
     lower_cite_key = B;
     B.clear();
     if (cite_prefix == from_foot)
-        B.push_back("foot");
+        B.append("foot");
     else if (cite_prefix == from_refer && !old_ra)
-        B.push_back("refer");
-    B.push_back("cite:");
-    B.push_back(s);
+        B.append("refer");
+    B.append("cite:");
+    B.append(s);
     full_key = B;
 }
 

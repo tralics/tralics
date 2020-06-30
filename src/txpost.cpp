@@ -148,9 +148,9 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         if (!L->defined) continue; // should not happen
         std::string B = L->id;
         scbuf.clear();
-        scbuf.push_back(W[E]);
+        scbuf.append(W[E]);
         if (!scbuf.empty()) scbuf.push_back(' ');
-        scbuf.push_back(encode(B));
+        scbuf.append(encode(B));
         W[E] = scbuf;
     }
 }
@@ -162,7 +162,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
 void Buffer::push_back_elt(const std::string &name, Xid id, int w) {
     push_back('<');
     if (w == 2) push_back('/');
-    push_back(name.c_str()); // NOLINT c_str because there might be a 0 char in name, \todo fix that
+    append(name.c_str()); // NOLINT c_str because there might be a 0 char in name, \todo fix that
     if (w != 2) push_back(id.get_att());
     if (w == 0) push_back('/');
     push_back('>');
