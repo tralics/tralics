@@ -670,7 +670,7 @@ auto Parser::scan_anchor(bool &h) -> std::string {
     h             = remove_initial_star();
     std::string s = sT_optarg_nopar();
     if (!s.empty()) return s;
-    mac_buffer << bf_reset << fmt::format("{}", anchor_id);
+    mac_buffer = fmt::format("{}", anchor_id);
     return mac_buffer;
 }
 
@@ -2082,7 +2082,7 @@ auto Parser::read_elt_id(Token T) -> size_t {
     auto upper = the_stack.get_xid().value;
     auto n     = scan_special_int_d(T, cur);
     if (n > 0 && n <= upper) return to_unsigned(n);
-    err_buf << bf_reset << fmt::format("Bad xml id replaced by 0: {}", n);
+    err_buf = fmt::format("Bad xml id replaced by 0: {}", n);
     signal_error(err_tok, "number too big");
     return 0;
 }

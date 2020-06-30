@@ -88,7 +88,7 @@ void Parser::check_outer_validity() {
     else
         B << "Forbidden control sequence " << cur_tok.tok_to_str();
     if (scanner_status == ss_skipping)
-        B << fmt::format(" in conditional started at line {}", conditions.top_line());
+        B.format(" in conditional started at line {}", conditions.top_line());
     else {
         B << " found while scanning ";
         if (scanner_status == ss_defining)
@@ -1977,7 +1977,8 @@ void Parser::new_constant(String /*name*/, int max_val, subtypes alloc_pos, symc
     get_r_token(true);
     int k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_buf << bf_reset << "Overflow in " << T << fmt::format("; max value is {}", max_val);
+        err_buf << bf_reset << "Overflow in " << T;
+        err_buf.format("; max value is {}", max_val);
         signal_error(T, "allocation overflow");
         return;
     }

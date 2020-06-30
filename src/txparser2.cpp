@@ -915,7 +915,7 @@ void Parser::internal_choice_key() {
     int       k      = 0;
     bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
     if (B2 != relax) {
-        local_buf << bf_reset << fmt::format("{}", k);
+        local_buf   = fmt::format("{}", k);
         TokenList u = local_buf.str_toks(nlt_cr); // Should be irrelevant ?
         new_macro(u, B2);
     }

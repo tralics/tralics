@@ -32,7 +32,7 @@ void arith_ns::end_err() { the_parser.signal_error(the_parser.err_tok, "Arithmet
 void ScaledInt::ovf30() {
     if (value > max_dimension || -value > max_dimension) {
         start_err(nullptr);
-        err_buf << fmt::format(", threshold={}, cur val=", max_dimension, value);
+        err_buf.format(", threshold={}, cur val=", max_dimension, value);
         end_err();
         value = max_dimension;
     }
@@ -43,7 +43,7 @@ void ScaledInt::ovf30() {
 void ScaledInt::ovf31() {
     if (value > max_integer || value < -max_integer) {
         start_err(nullptr);
-        err_buf << fmt::format(", threshold={}, cur val={}", max_integer, value);
+        err_buf.format(", threshold={}, cur val={}", max_integer, value);
         end_err();
         value = 0;
     }
@@ -81,7 +81,7 @@ void ScaledInt::divide(long n) {
     if (n == 0) {
         // value = 0;
         start_err(nullptr);
-        err_buf << fmt::format(", division by 0\nin {}/0", x);
+        err_buf.format(", division by 0\nin {}/0", x);
         end_err();
         return;
     }
@@ -111,7 +111,7 @@ auto arith_ns::xn_over_d(long x, long n, long d, long &remainder) -> long {
     auto w = u / d;
     if (w >= two_fifteen) {
         start_err("2^{30}");
-        err_buf << fmt::format("\nin {}*{}/{}", x, n, d);
+        err_buf.format("\nin {}*{}/{}", x, n, d);
         end_err();
         u = 1;
     } else
@@ -127,7 +127,7 @@ void ScaledInt::scale(long n, long d, long max_answer) {
     bool negative = false;
     if (scale(x, n, d, max_answer, negative)) {
         start_err(nullptr);
-        err_buf << fmt::format("\nin {}*{}/{}", x, n, d);
+        err_buf.format("\nin {}*{}/{}", x, n, d);
         end_err();
     }
     if (negative) value = -value;
@@ -291,7 +291,7 @@ auto arith_ns::nx_plus_y(long n, long x, long y) -> long {
     if (n == 0) return y;
     if (x <= (max_dimension - y) / n && -x <= (max_dimension + y) / n) return n * x + y;
     start_err("2^{30}");
-    err_buf << fmt::format("\nin {}*{}+{}", n, x, y);
+    err_buf.format("\nin {}*{}+{}", n, x, y);
     end_err();
     return 0;
 }
@@ -309,7 +309,7 @@ void ScaledInt::mult_integer(long x) {
         value = n * x;
     else {
         start_err("2^{31}");
-        err_buf << fmt::format("\nin {}*{}", n, x);
+        err_buf.format("\nin {}*{}", n, x);
         end_err();
         value = 0;
     }
@@ -328,7 +328,7 @@ void ScaledInt::mult_scaled(long x) {
         value = n * x;
     else {
         start_err("2^{30}=16384pt");
-        err_buf << fmt::format("\nin {}*{}", n, x);
+        err_buf.format("\nin {}*{}", n, x);
         end_err();
         value = 0;
     }
@@ -371,7 +371,7 @@ void ScaledInt::add_dim(ScaledInt Y) {
     else {
         value = max_dimension;
         start_err("2^{30}");
-        err_buf << fmt::format("\nin {}+{}\n", x, y);
+        err_buf.format("\nin {}+{}\n", x, y);
         end_err();
     }
 }
@@ -412,7 +412,7 @@ void SthInternal::attach_fraction(RealNumber x) {
     long f  = x.get_fpart();
     if (int_val.get_value() >= (1 << 14)) {
         start_err("2^{14}");
-        err_buf << fmt::format("\nfor {}", int_val.get_value());
+        err_buf.format("\nfor {}", int_val.get_value());
         end_err();
         int_val = max_dimension;
     } else
@@ -486,7 +486,7 @@ void SthInternal::add(const SthInternal &r) {
         return;
     }
     start_err(static_cast<String>(type == it_int ? "2^{31}" : "2^{30}"));
-    err_buf << fmt::format("\nin {}+{}", x, y);
+    err_buf.format("\nin {}+{}", x, y);
     end_err();
     int_val = mx;
 }

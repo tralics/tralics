@@ -23,6 +23,8 @@ public:
     Buffer() = default;
     Buffer(const std::string &s) : std::string(s) {}
 
+    using std::string::operator=;
+
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
     [[nodiscard]] auto codepoints() const -> std::vector<codepoint>;          ///< Translate contents into codepoints

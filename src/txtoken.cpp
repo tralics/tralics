@@ -462,10 +462,13 @@ void Buffer::push_back(const Macro &x) {
     *this << x[0];
     auto K = x.nbargs;
     if (x.type != dt_optional) {
-        for (size_t i = 0; i < K; i++) { *this << fmt::format("#{}", i + 1) << x[i + 1]; }
+        for (size_t i = 0; i < K; i++) {
+            format("#{}", i + 1);
+            *this << x[i + 1];
+        }
     } else {
         *this << x[1];
-        for (size_t i = 1; i < K; i++) { *this << fmt::format("#{}", i + 1); }
+        for (size_t i = 1; i < K; i++) { format("#{}", i + 1); }
     }
     if (!empty() && back() == '{') back() = '#';
     *this << "->" << x.body;

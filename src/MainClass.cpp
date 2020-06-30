@@ -1012,7 +1012,7 @@ void MainClass::see_name1() {
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
-        C << fmt::format("{}", year);
+        C.format("{}", year);
         year_string = C;
     } else {
         year = std::stoi(year_string);

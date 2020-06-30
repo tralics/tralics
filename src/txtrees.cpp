@@ -187,7 +187,7 @@ void Parser::T_index(subtypes c) {
     auto iid = the_index.at(g)->get_data()[pposition]->iid;
     auto nid = ++the_index.last_index;
 
-    local_buf << bf_reset << fmt::format("lid{}", nid);
+    local_buf             = fmt::format("lid{}", nid);
     const std::string &W  = local_buf;
     std::string        id = the_stack.add_anchor(W, false);
     create_label(W, id);
@@ -571,10 +571,10 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
     if (Bad.empty()) return true;
     local_buf << bf_reset << "Date error: ";
     if (Bad[0] == '.')
-        local_buf << fmt::format("day>{}", ml);
+        local_buf.format("day>{}", ml);
     else
         local_buf << Bad;
-    local_buf << fmt::format(" {}/{}/{}", y, m, d);
+    local_buf.format(" {}/{}/{}", y, m, d);
     the_parser.parse_error(the_parser.err_tok, local_buf);
     return false;
 }

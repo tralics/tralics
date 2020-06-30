@@ -29,7 +29,7 @@ namespace {
             L = N;
         }
         first->set_next(nullptr);
-        if (printed != 0) { scbuf << fmt::format("{}={}, ", i, printed); }
+        if (printed != 0) { scbuf.format("{}={}, ", i, printed); }
     }
 
     // Finish dumping the words

@@ -330,7 +330,7 @@ void Math::print() const {
         auto E = value.end();
         while (C != E) {
             k++;
-            Trace << fmt::format("{} ", k);
+            Trace.format("{} ", k);
             C->print();
             ++C;
         }
@@ -346,17 +346,17 @@ void MathElt::print() const {
         Trace << "only for " << (chr == zero_code ? "math\n" : "nomath\n");
         return;
     }
-    Trace << fmt::format("ME {} - ", cmd);
+    Trace.format("ME {} - ", cmd);
     if (32 < chr && chr < 128)
-        Trace << fmt::format("char {}", uchar(chr));
+        Trace.format("char {}", uchar(chr));
     else
-        Trace << fmt::format("{}", chr);
+        Trace.format("{}", chr);
     // is this secure ???
     //  if(cmd>16) Trace << " - " <<  Token(get_font());
     if (cmd == mathfont_cmd || is_m_font(symcodes(cmd)))
         Trace << " - " << Token(get_font()) << "\n";
     else
-        Trace << fmt::format(" - {}\n", get_font());
+        Trace.format(" - {}\n", get_font());
     if (cmd == math_list_cmd || cmd == special_math_cmd) get_list().print(); // recurse
 }
 
@@ -422,8 +422,8 @@ void Parser::add_math_label(Xml *res) {
     if (the_tag.empty()) {
         static int mid = 0;
         mid++;
-        math_buffer << bf_reset << fmt::format("mid{}", mid);
-        the_tag = math_buffer;
+        math_buffer = fmt::format("mid{}", mid);
+        the_tag     = math_buffer;
     }
     the_stack.create_new_anchor(res->id, my_id, std::string(the_tag));
     const std::string &label = cmi.get_label_val();
@@ -1204,7 +1204,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B << " for the current the formula";
             else {
-                B << fmt::format(" on row {} of the formula", l);
+                B.format(" on row {} of the formula", l);
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
@@ -1215,7 +1215,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B << " for the current formula";
             else {
-                B << fmt::format(" on row {} of formula", l);
+                B.format(" on row {} of formula", l);
                 if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }

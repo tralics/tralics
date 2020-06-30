@@ -13,8 +13,7 @@ auto CitationItem::get_id() -> std::string {
 // This prints an unsolved reference in a buffer, we will put it in
 // the aux file.
 void CitationItem::dump(Buffer &b) const {
-    if (is_solved()) return;
-    b << "\\citation{" << encode(key) << "}\n";
+    if (!is_solved()) b.format("\\citation{{{}}}\n", encode(key));
 }
 
 // This prints an unsolved reference for use by Tralics.
@@ -23,7 +22,7 @@ void CitationItem::dump_bibtex() {
     CitationKey ref(from, key);
     BibEntry *  X = the_bibtex.find_entry(ref);
     if (X != nullptr) {
-        err_buf << bf_reset << "Conflicts with tralics bib" << ref.full_key;
+        err_buf = "Conflicts with tralics bib" + ref.full_key;
         the_parser.signal_error(the_parser.err_tok, "bib");
         return;
     }

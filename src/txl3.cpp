@@ -133,12 +133,14 @@ void Parser::E_prg_return(int c) {
 // s is true when n is given by specification, false when by value
 auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
     if (n < 0) {
-        err_buf << bf_reset << fmt::format("Negative number of arguments {} for ", n) << t;
+        err_buf = fmt::format("Negative number of arguments {} for ", n);
+        err_buf << t;
         signal_error(err_tok, "bad args");
         n = 0;
     }
     if (n > 9) {
-        err_buf << bf_reset << fmt::format("Too many arguments {} for ", n) << t;
+        err_buf = fmt::format("Too many arguments {} for ", n);
+        err_buf << t;
         if (s) err_buf << " (wrong argument specification)";
         signal_error(err_tok, "bad args");
         n = 0;
@@ -1056,7 +1058,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
             last_ok = i + 1;
         } else {
             err_buf.clear();
-            err_buf << fmt::format("Old spec at position {} should be n or N for ", i) << orig;
+            err_buf.format("Old spec at position {} should be n or N for ", i);
+            err_buf << orig;
             signal_error(err_tok, "variant, bad orig");
             return;
         }

@@ -36,7 +36,7 @@ auto tralics_ns::strip_end(String s) -> String {
 // This returns a temporary associated to \skip24
 // (given the name skip and the integer 24)
 auto tralics_ns::make_name(const std::string &x, int y) -> std::string {
-    make_name_buffer << bf_reset << fmt::format("{}{}", x, y);
+    make_name_buffer = fmt::format("{}{}", x, y);
     return make_name_buffer;
 }
 

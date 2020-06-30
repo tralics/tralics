@@ -2309,7 +2309,8 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     read_until(hash_table.relax_token);
     if (1 <= cline_first && cline_first <= cline_last) return false;
     errbuf.clear();
-    errbuf << "Bad range in " << T << fmt::format(": {}-{}", cline_first, cline_last);
+    errbuf << "Bad range in " << T; // \todo make Token formattable
+    errbuf.format(": {}-{}", cline_first, cline_last);
     return true;
 }
 

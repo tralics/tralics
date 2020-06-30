@@ -325,7 +325,7 @@ void BibEntry::use_extra_num() {
     if (extra_num <= 25)
         B << char('a' + extra_num);
     else
-        B << fmt::format("{}", extra_num);
+        B.format("{}", extra_num);
     label = B;
 }
 
@@ -588,7 +588,7 @@ void BibEntry::presort(long serial) {
     B << label << lab2 << "    " << y << "    ";
     B.special_title(all_fields[fp_title]);
     B.lowercase();
-    B << fmt::format("{:05d}", serial);
+    B.format("{:05d}", serial);
     sort_label = B;
 }
 

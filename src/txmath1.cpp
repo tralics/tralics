@@ -281,7 +281,7 @@ void MathP::find_paren_matched2(MathQList &res) const {
         if (B->get_type() == mt_flag_small_l) k = B->get_pos();
         if (B->get_type() == mt_flag_small_r) {
             res.push_back(MathQ(k, B->get_pos()));
-            aux_buffer << fmt::format("{}, {} ", k, B->get_pos());
+            aux_buffer.format("{}, {} ", k, B->get_pos());
         }
         ++B;
     }
@@ -857,7 +857,7 @@ void MathElt::cv_noML_special() const {
         mathml_buffer << '{' << sz << '}';
         L.pop_front();
         if (L.front().get_cmd() == style_cmd)
-            mathml_buffer << fmt::format("{}", math_ns::style_level(L.front().get_chr()));
+            mathml_buffer.format("{}", math_ns::style_level(L.front().get_chr()));
         else
             mathml_buffer.append("{}");
         L.pop_front();
@@ -966,7 +966,7 @@ void MathElt::cv_noMLt_special0() const {
             L.pop_front();
         }
         if (!L.empty()) {
-            if (L.front().get_cmd() == style_cmd) mathml_buffer << fmt::format(" style='{}'", math_ns::style_level(L.front().get_chr()));
+            if (L.front().get_cmd() == style_cmd) mathml_buffer.format(" style='{}'", math_ns::style_level(L.front().get_chr()));
             L.pop_front();
         }
         mathml_buffer.push_back('>');
@@ -1025,7 +1025,7 @@ void MathElt::cv_noML_list() const {
         X.convert_math_noML0();
         mathml_buffer << "}";
         return;
-    default: mathml_buffer << fmt::format("bad group{}", T);
+    default: mathml_buffer.format("bad group{}", T);
     }
 }
 
