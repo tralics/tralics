@@ -2,14 +2,6 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 
-auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
-    auto i = Y.first;
-    auto j = Y.last;
-    for (auto k = i; k < j; k++)
-        if (Y.table[k] != bct_bad) X.push_back(name_buffer[k]);
-    return X;
-}
-
 auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream & {
     for (auto k = Y.first; k < Y.last; ++k)
         if (Y.table[k] != bct_bad) X << name_buffer[k];

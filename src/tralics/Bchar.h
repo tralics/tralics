@@ -49,5 +49,4 @@ private:
     auto print(Buffer &X) const -> size_t;
 };
 
-[[deprecated]] auto operator<<(Buffer &X, const Bchar &Y) -> Buffer &;
-auto                operator<<(std::ostream &X, const Bchar &Y) -> std::ostream &;
+auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream &;
