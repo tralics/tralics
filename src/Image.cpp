@@ -24,7 +24,7 @@ void Image::check(Buffer &B1, Buffer &B2) const {
     int d = (flags & 8) != 0 ? 1 : 0;
     int e = a + b + c + d;
     if (e > 1) {
-        if (!B1.empty()) B1 << ", ";
+        if (!B1.empty()) B1.append(", ");
         B1 << name;
     }
     if (flags == 0) {

@@ -10,6 +10,12 @@ auto operator<<(Buffer &X, const Bchar &Y) -> Buffer & {
     return X;
 }
 
+auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream & {
+    for (auto k = Y.first; k < Y.last; ++k)
+        if (Y.table[k] != bct_bad) X << name_buffer[k];
+    return X;
+}
+
 void Bchar::find_a_comma(size_t &first_c, size_t &second_c, size_t &howmany) const {
     for (auto i = first; i < last; i++)
         if (table[i] == bct_comma) {

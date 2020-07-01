@@ -5,6 +5,7 @@
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/globals.h"
+#include <fmt/ostream.h>
 
 namespace {
     class NameSplitter {
@@ -96,14 +97,12 @@ namespace {
                 return;
             }
             if (handle_key) last_name.make_key(!(ifn && iln), biblio_buf3);
-            biblio_buf1.append("\\bpers[");
-            biblio_buf1 << first_name;
-            biblio_buf1.append("]{");
+            biblio_buf1.format("\\bpers[{}]{{", first_name);
             biblio_buf2.append(" ");
             first_name.print_first_name(biblio_buf1, biblio_buf2);
-            biblio_buf1 << "}{}{" << last_name << "}{" << jr_name << "}";
-            biblio_buf2 << " " << last_name << " " << jr_name << " ";
-            biblio_buf4 << last_name << " " << jr_name << " ";
+            biblio_buf1.format("}}{{}}{{{}}}{{{}}}", last_name, jr_name);
+            biblio_buf2.format(" {} {} ", last_name, jr_name);
+            biblio_buf4.format("{} {} ", last_name, jr_name);
         };
 
         auto is_this_other() -> bool {
@@ -321,7 +320,7 @@ void BibEntry::forward_pass(std::string &previous_label, int &last_num) {
 void BibEntry::use_extra_num() {
     if (extra_num == -1) return;
     Buffer &B = biblio_buf1;
-    B << bf_reset << label;
+    B         = label;
     if (extra_num <= 25)
         B << char('a' + extra_num);
     else
@@ -585,7 +584,7 @@ void BibEntry::presort(long serial) {
     }
     B.clear();
     if (the_main->handling_ra) B << ra_prefix() << lab3;
-    B << label << lab2 << "    " << y << "    ";
+    B.format("{}{}    {}    ", label, lab2, y);
     B.special_title(all_fields[fp_title]);
     B.lowercase();
     B.format("{:05d}", serial);
