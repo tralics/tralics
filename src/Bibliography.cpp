@@ -9,7 +9,7 @@ auto Bibliography::unique_bid() -> std::string { return std::string(fmt::format(
 
 // This creates the full aux file, for use with bibtex.
 void Bibliography::dump(Buffer &b) {
-    if (seen_nocite()) b << "\\citation{*}\n";
+    if (seen_nocite()) b.append("\\citation{*}\n");
     size_t n = citation_table.size();
     for (size_t i = 0; i < n; i++) citation_table[i].dump(b);
 }
@@ -36,14 +36,14 @@ void Bibliography::stats() {
 // This dumps the whole biblio for use by bibtex.
 void Bibliography::dump_data(Buffer &b) {
     auto n = biblio_src.size();
-    b << "\\bibstyle{" << bib_style << "}\n";
-    b << "\\bibdata{";
-    if (n == 0) b << tralics_ns::get_short_jobname();
+    b.format("\\bibstyle{{{}}}\n", bib_style);
+    b.append("\\bibdata{");
+    if (n == 0) b.append(tralics_ns::get_short_jobname());
     for (size_t i = 0; i < n; i++) {
         if (i > 0) b.append(",");
         b.append(biblio_src[i]);
     }
-    b << "}\n";
+    b.append("}\n");
 }
 
 // This finds a citation in the table. In the case \footcite{Kunth},

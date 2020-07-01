@@ -343,10 +343,9 @@ void BibEntry::reverse_pass(int &next_extra) {
 // Creates a numeric version of the label, and (optional) alpha one.
 void BibEntry::numeric_label(long i) {
     Buffer &B = biblio_buf1;
-    B << bf_reset << '[' << label << ']';
-    aux_label = B;
-    B << bf_reset << std::to_string(i);
-    label = B;
+    aux_label = fmt::format("[{}]", label);
+    B         = fmt::format("{}", i);
+    label     = B; // \todo without biblio_buf1
 }
 
 // -----------------------------------------------------------------------
@@ -583,7 +582,7 @@ void BibEntry::presort(long serial) {
         label = lab1 + s;
     }
     B.clear();
-    if (the_main->handling_ra) B << ra_prefix() << lab3;
+    if (the_main->handling_ra) B = ra_prefix() + lab3;
     B.format("{}{}    {}    ", label, lab2, y);
     B.special_title(all_fields[fp_title]);
     B.lowercase();
