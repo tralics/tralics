@@ -66,7 +66,7 @@ void err_ns::convert_to_string(const TokenList &L) {
     while (C != E) {
         buffer_for_log.clear();
         if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
-        B << buffer_for_log;
+        B += buffer_for_log;
         ++C;
     }
 }
@@ -129,13 +129,16 @@ void Parser::missing_close_brace(int cl) {
 void Parser::bad_delimited(int cl, Token x) {
     err_buf = fmt::format("End of data reached while scanning argument of {}\n", err_tok.tok_to_str());
     err_buf.format("scanning started at line {}", cl);
-    if (!x.is_null()) err_buf << "\nexpected " << x.tok_to_str();
+    if (!x.is_null()) err_buf += "\nexpected " + x.tok_to_str();
     signal_error(err_tok, "bad macro");
 }
 
 void Parser::err_one_arg(const TokenList &L) {
-    err_buf = fmt::format("The command {} takes one token as argument instead of ", err_tok.tok_to_str(), L.size());
-    if (!L.empty()) err_buf << "\nargument is: " << L;
+    err_buf = fmt::format("The command {} takes one token as argument instead of ", err_tok, L.size());
+    if (!L.empty()) {
+        err_buf += "\nargument is: ";
+        err_buf << L;
+    }
     signal_error(err_tok, "onearg");
 }
 
@@ -206,7 +209,7 @@ void Parser::extra_fi_or_else() {
 // Case of \def\foo#2{}
 void Parser::bad_definition(Token name, size_t nb) {
     err_buf = fmt::format("Error while scanning definition of {}\n", name.tok_to_str());
-    err_buf.format("got #{}, expected #{}", cur_tok.tok_to_str(), nb + 1);
+    err_buf.format("got #{}, expected #{}", cur_tok, nb + 1);
     signal_error(name, "bad char after #");
 }
 
@@ -263,7 +266,7 @@ void Parser::wrong_mode(const std::string &s) {
 void Parser::prefix_error(bool b_global, symcodes K) {
     err_buf = "You cannot use the prefix ";
     err_buf.dump_prefix(true, b_global, K);
-    err_buf << " before " << cur_tok.tok_to_str();
+    err_buf += " before " + cur_tok.tok_to_str();
     signal_error(err_tok, "bad prefix");
 }
 
@@ -282,8 +285,8 @@ void Parser::extra_close_brace(int cl) {
 
 void Parser::bad_macro_prefix(Token x, Token C) {
     err_buf = "Use of " + err_tok.tok_to_str();
-    err_buf << " doesn't match its definition;\ngot " << x.tok_to_str() << ", expected ";
-    err_buf << C.tok_to_str();
+    err_buf += " doesn't match its definition;\ngot " + x.tok_to_str() + ", expected ";
+    err_buf += C.tok_to_str();
     signal_error(err_tok, "bad prefix");
 }
 
@@ -313,35 +316,34 @@ void Parser::missing_equals(Token T) {
 void Parser::short_verb_error(Token Tfe, Token t, int x) {
     err_buf = Tfe.tok_to_str() + ':';
     if (x == 3)
-        err_buf << "Not a short verb " << t;
+        err_buf.format("Not a short verb {}", t);
     else if (x == 2)
-        err_buf << "Already a short verb " << t;
+        err_buf.format("Already a short verb {}", t);
     else if (t.is_null())
-        err_buf << "One argument required";
+        err_buf += "One argument required";
     else
-        err_buf << "A one-char control sequence is needed instead of " << t;
+        err_buf.format("A one-char control sequence is needed instead of {}", t);
     signal_error(Tfe, "Bad argument to Define/Undefine ShortVerb");
 }
 
 void Parser::fp_parse_error(Token a, Token b) {
     err_buf = "Non digit found " + a.tok_to_str();
-    err_buf << "\nwhile scanning argument of " << b.tok_to_str();
+    err_buf += "\nwhile scanning argument of " + b.tok_to_str();
     signal_error(b, "nondigit");
 }
 
 void Parser::counter_overflow(Token T, long n, int nmax) {
-    err_buf = fmt::format("Illegal counter value {} for {}\n", n, T.tok_to_str());
+    err_buf = fmt::format("Illegal counter value {} for {}\n", n, T);
     if (n <= 0)
-        err_buf << "Value must be positive";
+        err_buf += "Value must be positive";
     else
         err_buf.format("Value must be at most {}", nmax);
     signal_error(T, "counter overflow");
 }
 
 void Parser::bad_redefinition(int rd, Token T) {
-    err_buf = err_tok.tok_to_str();
-    err_buf << ": Cannot define " << T.tok_to_str() << "; token is "
-            << (rd == 1 ? "undefined" : rd == 0 ? "already defined" : "not a command");
+    err_buf = fmt::format("{}: Cannot define {}; token is {}", err_tok, T,
+                          (rd == 1 ? "undefined" : rd == 0 ? "already defined" : "not a command"));
     signal_error(err_tok, "bad definition");
 }
 
@@ -361,31 +363,27 @@ void Parser::missing_flush() {
 
 void Parser::signal_ovf(Token T, String h, long cur, long max) {
     if (h != nullptr) err_buf = h;
-    err_buf.format("{} wants 0<=N<={}, with N={}", T.tok_to_str(), max, cur);
+    err_buf.format("{} wants 0<=N<={}, with N={}", T, max, cur);
     signal_error(T, "number too big");
 }
 
 // Error signaled when a token list in seen a number expected
 void Parser::bad_number() {
-    err_buf = "Missing number, treated as zero\n";
-    err_buf << "found token list " << cur_tok.tok_to_str();
-    err_buf << " while scanning " << err_tok.tok_to_str();
+    err_buf = fmt::format("Missing number, treated as zero\nfound token list {} while scanning {}", cur_tok, err_tok);
     signal_error(err_tok, "Missing number");
     cur_val.set_dim(0);
 }
 
 void Parser::bad_number1(Buffer &B) {
-    err_buf = "Missing number, treated as zero\n";
-    err_buf << "found box name '" << B;
-    err_buf << "' while scanning " << err_tok.tok_to_str();
+    err_buf = fmt::format("Missing number, treated as zero\nfound box name '{}' while scanning {}", B, err_tok);
     signal_error(err_tok, "Missing number");
     cur_val.set_dim(0);
 }
 
 void Parser::missing_number() {
     err_buf = "Missing number, treated as zero\n";
-    if (cur_tok.is_valid()) err_buf << "found  " << cur_tok.tok_to_str() << " ";
-    err_buf << "while scanning " << err_tok.tok_to_str();
+    if (cur_tok.is_valid()) err_buf.format("found  {} ", cur_tok);
+    err_buf.format("while scanning {}", err_tok);
     signal_error(err_tok, "Missing number");
 }
 

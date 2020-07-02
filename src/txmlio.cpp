@@ -339,8 +339,7 @@ void XmlIO::parse_pi() {
     scan_name('?');
     bool is_tralics = B == "tralics";
     bool is_xml     = B == "xml";
-    aux.clear();
-    aux << B;
+    aux             = B;
     if (is_xml) {
         for (;;) {
             skip_space();
@@ -355,9 +354,9 @@ void XmlIO::parse_pi() {
             }
             scan_name('=');
             bool is_encoding = B == "encoding";
-            aux << " " << B << "='";
+            aux.format(" {}='", B);
             parse_att_val();
-            aux << B << "'";
+            aux.format("{}'", B);
             if (is_encoding) {
                 if (B == "iso-8859-1")
                     enc = 1;
@@ -414,10 +413,9 @@ void XmlIO::expect(String s) {
     for (size_t i = 0; i < n; i++) {
         cur_char = next_char();
         if (cur_char != uchar(s[i])) {
-            static Buffer aux;
-            aux.clear();
-            aux << "Expected " << s[i] << " got " << cur_char;
-            error(aux);
+            Buffer b = fmt::format("Expected {} got ", s[i]);
+            b << cur_char; // \todo make codepoint formattable
+            error(b);
         }
     }
 }
@@ -485,9 +483,9 @@ void XmlIO::parse_dec_conditional() {
     skip_char();
     B.clear();
     if (keep)
-        B << "[INCLUDE[";
+        B += "[INCLUDE[";
     else
-        B << "[IGNORE[";
+        B += "[IGNORE[";
     Xml *res = new Xml(std::string(B));
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
@@ -503,15 +501,15 @@ auto XmlIO::parse_sys_pub() -> bool {
         expect("PUBLIC");
         aux.append(" PUBLIC '");
         parse_quoted();
-        aux << B << "' '";
+        aux += B + "' '";
         parse_quoted();
-        aux << B << "'";
+        aux += B + "'";
         return true;
     }
     if (cur_char == 'S') {
         expect("SYSTEM");
         parse_quoted();
-        aux << " SYSTEM '" << B << "'";
+        aux += " SYSTEM '" + B + "'";
         return true;
     }
     return false;
@@ -540,7 +538,7 @@ void XmlIO::parse_dec_entity() {
     // entity value is defined by a name (system or public) or value
     if (!parse_sys_pub()) {
         parse_quoted();
-        aux << " '" << B << "'";
+        aux += " '" + B + "'";
         if (parameter) entities.emplace_back(name, B);
     }
     skip_space();
@@ -552,7 +550,7 @@ void XmlIO::parse_dec_entity() {
             if (c == '>') break;
             B.push_back(c);
         }
-        aux << " " << B;
+        aux += " " + B;
     } else
         skip_char();
     Xml *res = new Xml(aux);
@@ -598,12 +596,12 @@ void XmlIO::parse_dec_element() {
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
     if (prev_is_space) aux.remove_last();
-    tmp << " " << elt_name;
+    tmp += " " + elt_name;
     if (aux == "EMPTY") {
     } else if (aux == "ANY") {
     } else
-        tmp << " ";
-    tmp << " " << aux;
+        tmp += " ";
+    tmp += " " + aux;
     Xml *res = new Xml(tmp);
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
@@ -646,7 +644,7 @@ void XmlIO::parse_dec_attlist() {
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
     if (prev_is_space) aux.remove_last();
-    tmp << " " << elt_name;
+    tmp += " " + elt_name;
     // Syntax Attdef*
     // AttDef ::= A Name S AttType S DefaultDecl
     // AttType ::= StringType | TokenizedTtype | EnumeratedType
@@ -657,7 +655,7 @@ void XmlIO::parse_dec_attlist() {
     // Enumeration ::= ( Nmtoken-choice )
     // DefaultDecl = #REQUIRED | #IMPLIED | (#FIXED ? AttValue)
 
-    tmp << " " << aux;
+    tmp += " " + aux;
     Xml *res = new Xml(tmp);
     res->id  = -2; // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
@@ -670,8 +668,7 @@ void XmlIO::parse_dec_doctype() {
     cur_xml->push_back_unless_nullptr(res); // Insert this in the tree
     skip_space();
     scan_name(0);
-    aux.clear();
-    aux << " " << B;
+    aux = " " + B;
     skip_space();
     parse_sys_pub();
     res->add_last_string(aux);
@@ -685,8 +682,7 @@ void XmlIO::parse_dec_doctype() {
     cur_xml = res;
     cur_stack.push_back(cur_xml);
     // Read the local DTD
-    B.clear();
-    B << " [";
+    B = " [";
     for (;;) {
         codepoint c = next_char();
         if (c == '<')
@@ -745,7 +741,7 @@ auto XmlIO::expand_PEReference() -> bool {
             break;
         }
     }
-    if (!ok) B << ";";
+    if (!ok) B += ";";
     std::vector<codepoint> V;
     V.clear();
     B.ptrs.b = 0;

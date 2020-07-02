@@ -402,7 +402,7 @@ void Parser::T_ignoreA() {
     if (s[0] == '\\') s.erase(0, 1);
     if ((s == "newpage") || (s == "clearpage") || (s == "cleardoublepage")) leave_h_mode();
     flush_buffer();
-    unprocessed_xml << "<" << s << "/>";
+    unprocessed_xml += "<" + s + "/>";
     flush_buffer();
 }
 
@@ -1011,8 +1011,7 @@ void Parser::key_ifundefined() {
     std::string fam;
     for (const auto &f : split_commas(Fams)) {
         fam = f;
-        B.clear();
-        B << xkv_prefix << fam;
+        B   = xkv_prefix + fam;
         if (!fam.empty()) B.push_back('@');
         B.append(Key);
         if (hash_table.is_defined(B)) {
@@ -1113,7 +1112,7 @@ auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
 // here
 void xkv_ns::find_aux(int c) {
     local_buf = "XKV@" + xkv_header;
-    local_buf << (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
+    local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
 }
 
 // This merges L into W; both lists have the form \global{key}=value
@@ -1261,9 +1260,8 @@ void Parser::xkv_fetch_prefix() {
 void Parser::xkv_makehd(TokenList &L) {
     token_ns::remove_first_last_space(L);
     Buffer &B = local_buf;
-    B.clear();
-    B << xkv_prefix;
-    auto k = B.size();
+    B         = xkv_prefix;
+    auto k    = B.size();
     if (list_to_string(L, B)) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV family (more errors may follow)", "bad kv family");
         B.resize(k);
@@ -1648,7 +1646,7 @@ void XkvToken::prepare(const std::string &fam) {
 // Returns true if the key is defined
 auto XkvToken::is_defined(const std::string &fam) -> bool {
     xkv_ns::makehd(fam);
-    local_buf << keyname;
+    local_buf += keyname;
     return the_parser.hash_table.is_defined(local_buf);
 }
 
@@ -2107,10 +2105,9 @@ auto FormatDate::parse(Buffer &B) -> bool {
 auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     err_tok   = T;
     Buffer &B = local_buf;
-    B.clear();
-    B.ptrs.b = 0;
-    B << s;
-    bool res = parse(B);
+    B         = s;
+    B.ptrs.b  = 0;
+    bool res  = parse(B);
     if (!res) {
         month = 1;
         day   = 1;
@@ -2336,16 +2333,16 @@ auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
 
 void token_ns::int_to_roman(Buffer &b, long n) {
     switch (n) {
-    case 1: b << "i"; break;
-    case 2: b << "ii"; break;
-    case 3: b << "iii"; break;
-    case 4: b << "iv"; break;
-    case 5: b << "v"; break;
-    case 6: b << "vi"; break;
-    case 7: b << "vii"; break;
-    case 8: b << "viii"; break;
-    case 9: b << "ix"; break;
-    default: b << "x";
+    case 1: b += "i"; break;
+    case 2: b += "ii"; break;
+    case 3: b += "iii"; break;
+    case 4: b += "iv"; break;
+    case 5: b += "v"; break;
+    case 6: b += "vi"; break;
+    case 7: b += "vii"; break;
+    case 8: b += "viii"; break;
+    case 9: b += "ix"; break;
+    default: b += "x";
     }
 }
 
@@ -2388,7 +2385,7 @@ void Parser::T_listenv(symcodes x) {
     if (x == enumerate_cmd) {
         b = "enum";
         token_ns::int_to_roman(b, n);
-        b << "@hook";
+        b += "@hook";
         Token T   = hash_table.locate(b);
         auto  pos = T.eqtb_loc();
         if (!hash_table.eqtb[pos].is_undef()) back_input(T);

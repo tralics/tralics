@@ -886,7 +886,7 @@ void Parser::translate03() {
     case endcsname_cmd: parse_error("Extra \\endcsname"); return;
     case xmllatex_cmd:
         LC();
-        unprocessed_xml << T_xmllatex();
+        unprocessed_xml += T_xmllatex();
         return;
     case scan_glue_cmd: T_scan_glue(c); return;
     case kern_cmd:
