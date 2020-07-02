@@ -120,7 +120,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
         if (in.head() == 0) {
             tpage_ns::init_error();
             log_and_tty << "could not find end delimiter\n";
-            out << bf_reset << "notfound";
+            out = "notfound";
             return false;
         }
         out.push_back(in.next_char());
@@ -246,7 +246,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         idx   = Titlepage.increase_data();
         if (get_flags2() == tp_A_flag) {
             Buffer &B = local_buf;
-            B << bf_reset << "\\" << T1;
+            B         = "\\" + T1;
             B.push_back_braced(T4);
             B.append("%\n");
             the_main->add_to_from_config(1, B);
@@ -338,7 +338,7 @@ void TitlePageAux::exec_start(size_t k) {
         return;
     }
     Buffer &B = local_buf;
-    B << bf_reset << "\\" << T1;
+    B         = "\\" + T1;
     B.push_back_braced(T4);
     Titlepage[idx] = new Xml(std::string("empty"));
     B.append("%\n");
@@ -489,8 +489,8 @@ auto TitlePageAux::find_UR(const std::string &s, size_t n) const -> size_t {
 // We put `URsop myflags' in the buffer local_buf in case of success.
 auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> size_t {
     Buffer &B = local_buf;
-    B << bf_reset << s;
-    size_t j = 0;
+    B         = s;
+    size_t j  = 0;
     while ((B[j] != 0) && !is_space(B[j])) j++;
     bool have_space = B[j] != 0;
     B[j]            = 0;
@@ -503,7 +503,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     if (res == 0) return 0;
     if (!name.empty()) {
         std::string w = B.data() + j + 1;
-        B << bf_reset << name;
+        B             = name;
         if (have_space) B << ' ' << w;
     }
     return res;
@@ -697,7 +697,7 @@ void Buffer::find_top_atts() {
         std::string bs = std::string(*this);
         Xid(1).add_attribute(as, bs);
     } else {
-        docspecial << bf_reset << "\\addattributestodocument{" << a << "}{" << (data() + ptrs.b) << "}";
+        docspecial = fmt::format("\\addattributestodocument{{{}}}{{{}}}", a, data() + ptrs.b);
         the_main->add_to_from_config(init_file_pos, docspecial);
     }
 }

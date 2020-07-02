@@ -244,12 +244,14 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
     bool      reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_glue_cmd, subtypes(a));
-        Thbuf1 << bf_reset << W.val;
+        Thbuf1.clear();
+        Thbuf1 << W.val; // \todo make Glue formattable
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
         Logger::finish_seq();
         the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << Thbuf1;
         if (!reassign) {
-            Thbuf1 << bf_reset << c;
+            Thbuf1.clear();
+            Thbuf1 << c;
             if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
             the_log << " into \\" << tmp.name() << "=" << Thbuf1;
         }
@@ -382,7 +384,7 @@ void Parser::pop_level(boundary_type v) {
             must_throw = true;
         else if (w == bt_env) {
             if (v == bt_semisimple) v = bt_esemisimple;
-            err_buf << bf_reset << "Extra " << bt_to_string(v) << " found in unclosed environment " << cur_env_name;
+            err_buf = fmt::format("Extra {} found in unclosed environment {}", bt_to_string(v), cur_env_name);
             signal_error(err_tok, "extra brace");
             return;
         } else {

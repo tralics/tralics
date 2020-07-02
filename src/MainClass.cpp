@@ -994,7 +994,7 @@ void MainClass::see_name1() {
         check_year(y, C, dclass, year_string);
     }
     auto k = B.last_slash(); // remove the directory part \todo std::filesyste,
-    if (k) { B << bf_reset << B.substr(*k + 1); }
+    if (k) { B = B.substr(*k + 1); }
     the_parser.the_projetval = B; // this is apics
     if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
         check_lowercase(B);
@@ -1006,8 +1006,8 @@ void MainClass::see_name1() {
     }
     if (out_name.empty()) { // might be given as an option
         out_name = no_ext;
-        B << bf_reset << no_ext; // remove the directory part
-        auto kk = B.last_slash();
+        B        = no_ext; // remove the directory part
+        auto kk  = B.last_slash();
         if (kk) out_name = B.substr(*kk + 1); // This is apics2003
     }
     if (year_string.empty()) { // might be given as an option

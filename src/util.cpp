@@ -52,7 +52,7 @@ auto find_counter(const std::string &s) -> int {
     if (s.empty()) return -1;
     if (only_digits(s)) return counter_val(std::stoi(s));
     static Buffer B;
-    B << bf_reset << "c@" << s;
+    B        = "c@" + s;
     Token t  = the_parser.hash_table.locate(B);
     auto  cs = t.eqtb_loc();
     if (the_parser.hash_table.eqtb[cs].cmd != assign_int_cmd) return -1;

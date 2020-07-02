@@ -1564,7 +1564,7 @@ void Parser::E_accent() {
     // Fetch the accent
     TokenList y = read_arg();
     if (y.empty()) {
-        err_buf << bf_reset << msg1 << tfe.tok_to_str();
+        err_buf = msg1 + tfe.tok_to_str();
         err_buf << (acc_code == '~' ? "\n\\~{} is the wrong way to put a tilde in an URL" : "\nThings like {\\'{}} are a bit strange");
         signal_error(err_tok, msg2);
         return;
@@ -1628,7 +1628,7 @@ void Parser::E_accent() {
         achar = 'i';
     else if ((cur_cmd_chr.cmd == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
     } else {
-        err_buf << bf_reset << msg1;
+        err_buf = msg1;
         err_buf << tfe.tok_to_str();
         if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
         if (Y.is_invalid())
@@ -1662,7 +1662,7 @@ void Parser::E_accent() {
             achar >= 128
                 ? "a non 7-bit character"
                 : is_letter(static_cast<char>(achar)) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
-        err_buf << bf_reset << msg1;
+        err_buf = msg1;
         err_buf << tfe.tok_to_str();
         if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
         err_buf << "\nCannot put accent on " << s;
@@ -1781,7 +1781,7 @@ void Parser::create_aux_file_and_run_pgm() {
     }
     the_log << "++ executing " << T.cmd << ".\n";
     system(T.cmd.c_str());
-    B << bf_reset << tralics_ns::get_short_jobname() << ".bbl";
+    B = tralics_ns::get_short_jobname() + ".bbl";
     // NOTE: can we use on-the-fly encoding ?
     the_log << "++ reading " << B << ".\n";
     tralics_ns::read_a_file(bbl.lines, B, 1);
@@ -1841,7 +1841,7 @@ void Parser::T_start_the_biblio() {
 void Parser::T_cititem() {
     auto    a = fetch_name0_nopar();
     Buffer &B = biblio_buf4;
-    B << bf_reset << "cititem-" << a;
+    B         = "cititem-" + a;
     finish_csname(B);
     see_cs_token();
     if (cur_cmd_chr.cmd != relax_cmd) {
@@ -2008,7 +2008,7 @@ void Parser::solve_cite(bool user) {
         nn = *B.find_citation_item(from, key, true);
     CitationItem &CI = B.citation_table[nn];
     if (CI.is_solved()) {
-        err_buf << bf_reset << "Bibliography entry already defined " << encode(key);
+        err_buf = "Bibliography entry already defined " + encode(key);
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
@@ -2018,7 +2018,7 @@ void Parser::solve_cite(bool user) {
         if (CI.id.empty())
             CI.id = AL.get_val(*my_id);
         else {
-            err_buf << bf_reset << "Cannot solve (element has an Id) " << encode(key);
+            err_buf = "Cannot solve (element has an Id) " + encode(key);
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }

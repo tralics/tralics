@@ -12,6 +12,7 @@
 
 #include "tralics/Saver.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -701,7 +702,7 @@ void Parser::T_float(subtypes c) {
         auto        arg  = std::string(sarg);
         auto        opt  = nT_optarg_nopar();
         if (!opt) {
-            B << bf_reset << "fps@" << sarg;
+            B = "fps@" + sarg;
             expand_no_arg(B);
             opt = nT_arg_nopar();
         }
@@ -711,15 +712,15 @@ void Parser::T_float(subtypes c) {
         the_stack.add_att_to_last(the_names["place"], *opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
-        B << bf_reset << "fname@" << sarg;
+        B = "fname@" + sarg;
         expand_no_arg(B);
         opt = nT_arg_nopar();
         the_stack.add_att_to_last(the_names["name"], *opt);
         refstepcounter(sarg, true);
-        B << bf_reset << "@float@every@" << sarg;
+        B = "@float@every@" + sarg;
         back_input(hash_table.locate(B));
         back_input(hash_table.locate("the"));
-        B << bf_reset << "fst@" << sarg;
+        B = "fst@" + sarg;
         back_input(hash_table.locate(B));
         the_stack.set_v_mode();
         return;
@@ -1068,7 +1069,7 @@ auto translate_ns::find_color(const std::string &model, const std::string &value
 auto Parser::scan_color(const std::string &opt, const std::string &name) -> std::string {
     if (opt.empty() || opt == "named") { // case \color{red} or \color[named]{Red}
         Buffer &B = tpa_buffer;
-        B << bf_reset << "\\color@" << name;
+        B         = "\\color@" + name;
         token_from_list(hash_table.locate(B));
         if ((cur_cmd_chr.cmd == color_cmd) && (cur_cmd_chr.chr >= color_offset)) {
             auto k = to_unsigned(cur_cmd_chr.chr - color_offset);
@@ -1127,15 +1128,15 @@ void Parser::T_color(subtypes c) {
         std::string name  = sT_arg_nopar();
         std::string model = sT_arg_nopar();
         std::string value = sT_arg_nopar();
-        B << bf_reset << "\\color@" << name;
-        Token C = hash_table.locate(B);
+        B                 = "\\color@" + name;
+        Token C           = hash_table.locate(B);
         if (!hash_table.eqtb[C.eqtb_loc()].is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
             Buffer &BB = tpa_buffer;
-            BB << bf_reset << "\\color@" << value;
-            Token T = hash_table.locate(BB);
+            BB         = "\\color@" + value;
+            Token T    = hash_table.locate(BB);
             M_let_fast(C, T, true);
             return;
         }
@@ -1455,12 +1456,12 @@ void Parser::T_url(subtypes c) {
             is_rrrt = true;
         }
     }
-    if (is_rrrt) {
-        Tbuf << bf_reset << "http://www.inria.fr/rrrt/";
+    if (is_rrrt) { // \todo deprecate this case
+        Tbuf          = "http://www.inria.fr/rrrt/";
         TokenList tmp = Tbuf.str_toks(nlt_space); // what about new line here ?
         X.splice(X.begin(), tmp);
-        Tbuf << bf_reset << ".html";
-        tmp = Tbuf.str_toks(nlt_space);
+        Tbuf = ".html";
+        tmp  = Tbuf.str_toks(nlt_space);
         X.splice(X.end(), tmp);
     }
     TokenList Y;
@@ -1553,7 +1554,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (par) ileave_v_mode();
     Buffer &B = tpa_buffer;
     if (!env) {
-        B << bf_reset << name << "@hook";
+        B       = name + "@hook";
         cur_tok = hash_table.locate(B);
         if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undef()) {
             Token     T = cur_tok;
@@ -1567,7 +1568,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     bool special_case = false;
     if (!env) scan_left_brace();
     push_tpa();
-    B << bf_reset << name << "@helper";
+    B       = name + "@helper";
     cur_tok = hash_table.locate(B);
     if (!hash_table.eqtb[cur_tok.eqtb_loc()].is_undef()) {
         back_input(cur_tok);
@@ -1602,7 +1603,7 @@ auto Parser::tpa_exec(const std::string &cmd) -> Xml * {
     the_stack.set_arg_mode();
     auto Y = std::string(cmd);
     the_stack.push(Y, new Xml(std::string(), nullptr));
-    tpa_buffer << bf_reset << cmd;
+    tpa_buffer = cmd;
     finish_csname(tpa_buffer, cmd);
     get_token();
     TokenList L;
@@ -2072,7 +2073,7 @@ void Parser::T_error() {
     }
     flush_buffer();
     std::string b = sT_arg_nopar(); // msg
-    err_buf << bf_reset << "Error: " << b;
+    err_buf       = "Error: " + b;
     signal_error(err_tok, b);
 }
 
@@ -2144,7 +2145,7 @@ void Parser::T_define_verbatim_env() {
     M_let_fast(xt1, xt2, true);
     TokenList L = read_arg();
     Buffer &  B = Tbuf;
-    B << bf_reset << a << "@hook";
+    B           = a + "@hook";
     new_macro(L, hash_table.locate(b));
 }
 
@@ -2169,7 +2170,7 @@ void Parser::T_specimp(int c) {
         return;
     case message_code: std::cout << string_to_write(0); return;
     case errmessage_code:
-        err_buf << bf_reset << string_to_write(write18_slot + 1);
+        err_buf = string_to_write(write18_slot + 1);
         signal_error();
         return;
     case discretionary_code:
@@ -2210,7 +2211,7 @@ void Parser::T_unimp(subtypes c) {
 
 void Parser::need_bib_mode() {
     if (the_stack.in_bib_mode()) return;
-    Tbuf << bf_reset << "Command " << err_tok << " should occur in bibliographic mode only";
+    Tbuf = fmt::format("Command {} should occur in bibliographic mode only", err_tok);
     parse_error(err_tok, Tbuf);
 }
 void Parser::need_array_mode() {

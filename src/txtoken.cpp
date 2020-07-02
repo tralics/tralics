@@ -428,16 +428,16 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
 // Converts a string to a token list. If b is true, we add braces.
 // NOTE:  in every case converts newline to space
 auto token_ns::string_to_list(String s, bool b) -> TokenList {
-    Buffer &B = buffer_for_log;
-    B << bf_reset << s;
+    Buffer &B   = buffer_for_log;
+    B           = s;
     TokenList L = B.str_toks(nlt_space);
     if (b) the_parser.brace_me(L);
     return L;
 }
 
 auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
-    Buffer &B = buffer_for_log;
-    B << bf_reset << s;
+    Buffer &B   = buffer_for_log;
+    B           = s;
     TokenList L = B.str_toks(nlt_space);
     if (b) the_parser.brace_me(L);
     return L;
@@ -489,7 +489,7 @@ void Buffer::push_back(const Macro &x, bool sw) {
 // Puts a macro definition in a file.
 auto operator<<(std::ostream &fp, const Macro &x) -> std::ostream & {
     Buffer &B = buffer_for_log;
-    B << bf_reset;
+    B.clear();
     B.push_back(x, true);
     return fp << B;
 }

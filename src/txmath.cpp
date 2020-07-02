@@ -668,8 +668,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
     // case of \begin{...}
     u.set_type(math_env_cd);
     if ((math_env_props(type) & 1) == 0) {
-        math_buffer << bf_reset;
-        math_buffer << "Environment " << u.get_name() << " should only be used in math mode";
+        math_buffer = fmt::format("Environment {} should only be used in math mode", u.get_name());
         parse_error(math_buffer);
     }
     if ((math_env_props(type) & 16) != 0) ignore_optarg();
@@ -970,7 +969,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             if (scan_math_dollar(res, type)) return;
             continue;
         case par_cmd:
-            err_buf << bf_reset << "Unexpected \\par";
+            err_buf = "Unexpected \\par";
             if (type == math_argument_cd) err_buf << " while scanning argument of " << fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
             return;
@@ -1200,7 +1199,7 @@ void MathHelper::ml_check_labels() {
         if (v == 0)
             l++;
         else if (v == -1) {
-            B << bf_reset << "Multiple \\label " << multi_labels[i];
+            B = "Multiple \\label " + multi_labels[i];
             if (eqnum_status == 1)
                 B << " for the current the formula";
             else {
@@ -1211,7 +1210,7 @@ void MathHelper::ml_check_labels() {
             the_parser.parse_error(the_parser.err_tok, B, "duplicate label");
         }
         if (v == -2 || v == -3) {
-            B << bf_reset << "Multiple \\tag " << multi_labels[i];
+            B = "Multiple \\tag " + multi_labels[i];
             if (eqnum_status == 1)
                 B << " for the current formula";
             else {
@@ -1378,7 +1377,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     if (at_start) {
         if (et == nomathenv_code || ((math_env_props(et) & 1) != 0)) {
             Buffer &B = math_buffer;
-            B << bf_reset << "Illegal \\begin{" << s << "} found in math mode";
+            B         = "Illegal \\begin{" + s + "} found in math mode";
             parse_error(err_tok, B, "bad env");
         }
         if ((math_env_props(et) & 16) != 0) ignore_optarg();
@@ -1402,7 +1401,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     }
     {
         Buffer &B = math_buffer;
-        B << bf_reset << "Bad \\end{" << s << "}; expected ";
+        B         = "Bad \\end{" + s + "}; expected ";
         if (type == math_env_cd)
             B << "\\end{" << math_data.get_list(res).get_name() << "}";
         else if (type == math_dollar_cd)

@@ -308,7 +308,7 @@ private:
     auto        M_counter(bool def) -> bool;
     void        E_counter(int c);
     auto        counter_aux(const std::string &name, String opt, Token T) -> bool;
-    void        counter_boot(String s, String aux);
+    void        counter_boot(const std::string &s, String aux);
     auto        counter_check(Buffer &b, bool def) -> bool;
     auto        counter_read_opt(String s) -> int;
     void        counter_overflow(Token T, long n, int nmax);
@@ -991,7 +991,7 @@ private:
     void        verb_error(Token T, int msg);
     void        T_whiledo();
     void        E_while(subtypes cc);
-    void        wrong_mode(String s);
+    void        wrong_mode(const std::string &s);
     void        wrong_pop(Token T, String a, String b);
     void        E_input(int q);
     void        xgetfontsize();

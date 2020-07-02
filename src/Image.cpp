@@ -25,10 +25,10 @@ void Image::check(Buffer &B1, Buffer &B2) const {
     int e = a + b + c + d;
     if (e > 1) {
         if (!B1.empty()) B1.append(", ");
-        B1 << name;
+        B1.append(name);
     }
     if (flags == 0) {
-        if (!B2.empty()) B2 << ", ";
-        B2 << name;
+        if (!B2.empty()) B2.append(", ");
+        B2.append(name);
     }
 }

@@ -14,6 +14,7 @@
 #include "tralics/Saver.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 namespace {
     struct SpecialHash : public std::unordered_map<std::string, std::string> {
@@ -570,7 +571,7 @@ void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) { t
 // Evaluates now a token string. First action is to put chars in a buffer
 // (because we add a '\n' at the end of the string).
 void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
-    mac_buffer << bf_reset << s;
+    mac_buffer = s;
     TokenList L;
     tokenize_buffer(mac_buffer, L, "(tpa post " + cmd + ")");
     T_translate(L);
@@ -1232,7 +1233,7 @@ void Parser::M_new_thm() {
         text.push_back(hash_table.OB_token);
         text.push_back(hash_table.CB_token);
     } else {
-        Thbuf1 << bf_reset << "the" << name;
+        Thbuf1      = "the" + name;
         thename_cmd = hash_table.locate(Thbuf1);
         M_let_fast(thename_cmd, hash_table.relax_token, true); // in case of error
         text.push_back(thename_cmd);
@@ -1260,7 +1261,7 @@ void Parser::M_new_thm() {
             return;
         }
         if (counter_check(Thbuf1, false)) return; // checks the counter
-        Thbuf2 << bf_reset << "the" << Thbuf1.substr(2);
+        Thbuf2  = "the" + Thbuf1.substr(2);
         cur_tok = hash_table.locate(Thbuf2);
         TokenList R;
         R.push_back(cur_tok);
@@ -1530,7 +1531,7 @@ auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
     B.clear();
     if (list_to_string(x, B)) {
         parse_error(err_tok, msg, x);
-        B << bf_reset << "bad";
+        B = "bad";
     }
     return B;
 }
@@ -1538,10 +1539,10 @@ auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
 // Converts the token list X into a string, adding s1 and s2
 // May signal an error, use bad instead
 void Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg, Buffer &B) {
-    B << bf_reset << s1;
+    B = s1;
     if (list_to_string(x, B)) {
         parse_error(err_tok, msg, x);
-        B << bf_reset << s1 << "bad";
+        B = s1 + "bad";
     }
     B << s2;
 }
@@ -1854,10 +1855,10 @@ auto Parser::M_counter(bool def) -> bool {
 }
 
 // Used by the bootstrap phase to define a dependent counter
-void Parser::counter_boot(String s, String aux) {
+void Parser::counter_boot(const std::string &s, String aux) {
     Token   T = hash_table.relax_token;
     Buffer &b = Thbuf2;
-    b << bf_reset << "c@" << s;
+    b         = "c@" + s;
     if (counter_check(b, true)) return; // should not happen
     back_input();
     counter_aux(s, aux, T);
@@ -1892,7 +1893,7 @@ auto Parser::counter_read_opt(String s) -> int {
     if (s != nullptr) {
         if (s[0] == 0) return 0; // s empty says no opt arg
         Buffer &b = Thbuf2;
-        b << bf_reset << "cl@" << s;
+        b         = fmt::format("cl@{}", s);
         finish_csname(b, "newcounter");
         return 2;
     }
@@ -1915,11 +1916,11 @@ auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
     L.push_front(hash_table.number_token);
 
     // evaluate : \global\let\cl@foo\@empty
-    b << bf_reset << "cl@" << name; // b is now cl@foo
+    b = "cl@" + name; // b is now cl@foo
     M_let_fast(hash_table.locate(b), hash_table.empty_token, true);
 
     // thexx_cmd is the token associated to \thefoo
-    b << bf_reset << "the" << name; // B is now thefoo
+    b            = "the" + name; // B is now thefoo
     Token thecmd = hash_table.locate(b);
     cur_tok      = T;            // in case of overflow, this gives the correct message
     new_constant(newcount_code); // this will eat the \c@foo token
@@ -1977,7 +1978,8 @@ void Parser::new_constant(String /*name*/, int max_val, subtypes alloc_pos, symc
     get_r_token(true);
     int k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_buf << bf_reset << "Overflow in " << T;
+        err_buf = "Overflow in ";
+        err_buf << T;
         err_buf.format("; max value is {}", max_val);
         signal_error(T, "allocation overflow");
         return;
@@ -2019,8 +2021,8 @@ void Parser::E_counter(int c) {
         L.push_back(hash_table.let_token);
         L.push_back(hash_table.elt_token);
         L.push_back(hash_table.killcounter_token);
-        group_buffer << bf_reset << "cl@" << (hash_table[t.hash_loc()].substr(2));
-        t = hash_table.locate(group_buffer);
+        group_buffer = "cl@" + hash_table[t.hash_loc()].substr(2);
+        t            = hash_table.locate(group_buffer);
         //  L.push_back(hash_table.OB_token);
         L.push_back(t);
         //    L.push_back(hash_table.CB_token);
@@ -2101,8 +2103,8 @@ void Parser::M_newif_aux(Token T, const std::string &S, bool b) {
     L1.push_front(hash_table.let_token);
     L1.push_back(T);
     L1.push_back(b ? hash_table.iftrue_token : hash_table.iffalse_token);
-    mac_buffer << bf_reset << S << boolean(b);
-    Token res = hash_table.locate(mac_buffer);
+    mac_buffer = S + boolean(b);
+    Token res  = hash_table.locate(mac_buffer);
     new_macro(L1, res);
 }
 
@@ -2141,7 +2143,7 @@ void Parser::new_macro(TokenList &L, Token name) {
 }
 
 void Parser::new_macro(const std::string &s, Token name) {
-    Thbuf1 << bf_reset << s;
+    Thbuf1      = s;
     TokenList L = Thbuf1.str_toks11(false);
     auto *    X = new Macro(L);
     mac_define(name, X, false, rd_always, user_cmd);
@@ -3242,7 +3244,7 @@ void Parser::M_newcommand(rd_flag redef) {
                 is_same  = X->is_same(B);
             }
             if (!is_same) {
-                Thbuf1 << bf_reset << "Tralics Warning: Command " << name << " has changed\n";
+                Thbuf1 = fmt::format("Tralics Warning: Command {} has changed\n", name);
                 out_warning(Thbuf1, mt_warning);
             }
         }
@@ -4357,9 +4359,8 @@ void Parser::show_box(Xml *X) {
 }
 
 void Parser::E_useverb() {
-    std::string name = group_to_string();
-    mac_buffer << bf_reset << "savedverb@" << name;
-    Token t = hash_table.locate(mac_buffer);
+    mac_buffer = "savedverb@" + group_to_string();
+    Token t    = hash_table.locate(mac_buffer);
     back_input(t);
 }
 

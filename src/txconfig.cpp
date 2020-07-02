@@ -163,8 +163,7 @@ auto config_ns::find_one_key(const std::string &name, const std::string &key) ->
     auto n = X->size();
     for (size_t i = 0; i < n; i++)
         if (X->data[i].key == key) return X->data[i].value;
-    err_buf << bf_reset << "Illegal value '" << key << "' for " << name << "\n"
-            << "Use one of:";
+    err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
     X->keys_to_buffer(err_buf);
     the_parser.signal_error(the_parser.err_tok, "illegal data");
     return "";
@@ -338,11 +337,10 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         return;
     }
 
-    err_buf << bf_reset;
     if (B.empty())
-        err_buf << "Empty localisation value\n";
+        err_buf = "Empty localisation value\n";
     else
-        err_buf << "Illegal localisation value: " << B << "\n";
+        err_buf = "Illegal localisation value: " + B + "\n";
     err_buf << "Use one or more of:";
     config_data.data[0]->keys_to_buffer(err_buf);
     the_parser.signal_error();
@@ -366,8 +364,7 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
     bool spec = (rc.size() >= 2 && rc[0] == '=');
     auto RC   = spec ? rc.substr(1) : rc;
     if (!is_good_ur(RC)) {
-        err_buf << bf_reset << "Invalid Unit Centre " << rc << "\n"
-                << "Use one of:";
+        err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
         for (auto &i : V)
             if (i.is_used) err_buf << " " << i.key;

@@ -29,8 +29,8 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
     readline(m_ligne.data(), 78);
     if (std::string(m_ligne.data()) == "\\stop") return -1;
     cur_line++;
-    B.clear();
-    B << m_ligne.data() << "\n";
+    B = m_ligne.data();
+    B.append("\n");
     if (B.size() == 1) {
         if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
         prev_line = false;
@@ -271,7 +271,7 @@ void LinePtr::print(std::ostream &outfile) {
 void LinePtr::find_top_atts() {
     Buffer B;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
-        B << bf_reset << *C;
+        B = *C;
         B.find_top_atts();
     }
 }
@@ -281,7 +281,7 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         init_file_pos = C->number;
-        B << bf_reset << *C;
+        B             = *C;
         B.find_one_type(res);
     }
 }
@@ -290,7 +290,7 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
 auto LinePtr::find_top_val(String s, bool c) -> std::string {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
-        B << bf_reset << *C;
+        B          = *C;
         String res = B.see_config_kw(s, c);
         if (res != nullptr) return res;
     }
@@ -381,7 +381,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
     if (b != 1) return C;
     auto E = end();
     while (C != E) {
-        B << bf_reset << *C;
+        B = *C;
         ++C;
         b += B.see_config_env();
         if (b == 0) return C;
@@ -394,7 +394,7 @@ auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res)
     Buffer &B        = local_buf;
     bool    in_alias = false;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
-        B << bf_reset << *C;
+        B = *C;
         if (in_alias) {
             if (B.find_alias(SL, res)) return true;
         }

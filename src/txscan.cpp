@@ -14,6 +14,7 @@
 #include "txinline.h"
 #include "txmath.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 namespace {
     Buffer                                      scratch;                  // See insert_string
@@ -77,7 +78,8 @@ auto Parser::string_to_write(long chan) -> std::string {
     TokenList L = scan_general_text();
     read_toks_edef(L);
     Buffer &B = local_buf;
-    B << bf_reset << L;
+    B.clear();
+    B << L;
     if (chan < write18_slot) B << "\n";
     auto res = B.convert_to_log_encoding();
     if (chan == write18_slot) {
@@ -380,7 +382,7 @@ void Parser::T_input(int q) {
         res = tralics_ns::find_in_path(file);
         if (!res) {
             Buffer &B = local_buf;
-            B << bf_reset << file;
+            B         = file;
             if (!B.ends_with(".tex")) {
                 B.append(".tex");
                 std::string F = B;
@@ -1082,7 +1084,7 @@ auto Parser::scan_int(TokenList &L, Token T) -> long {
 auto Parser::scan_int(Token t, int n, String s) -> size_t {
     auto N = scan_int(t);
     if (N < 0 || N > n) {
-        err_buf << bf_reset << "Bad " << s << " replaced by 0\n";
+        err_buf = fmt::format("Bad {} replaced by 0\n", s);
         signal_ovf(t, nullptr, N, n);
         cur_val.set_int_val(0);
         return 0;
@@ -2049,7 +2051,7 @@ void Parser::assign_toks(Token T, size_t p, bool gbl) {
     else if (c == toks_register_cmd)
         q = scan_reg_num();
     else if (c != assign_toks_cmd) {
-        err_buf << bf_reset << "Missing { inserted for token register " << T << "; got " << cur_tok;
+        err_buf = fmt::format("Missing {{ inserted for token register {}; got {}", T, cur_tok);
         signal_error(T, "missing brace");
         back_input();
         have_reg = false;

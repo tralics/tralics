@@ -9,7 +9,7 @@ class Xml;
 // These objects are defined at 1
 template <typename T> struct EQTB {
     T    val{};
-    long level{1};
+    long level{};
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };

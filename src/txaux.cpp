@@ -21,7 +21,7 @@ using arith_ns::start_err;
 
 // This prepares for an arithmetic error.
 void arith_ns::start_err(String s) {
-    err_buf << bf_reset << "Arithmetic overflow";
+    err_buf = "Arithmetic overflow";
     if (s != nullptr) err_buf << ", threshold=" << s;
 }
 

@@ -164,7 +164,7 @@ auto Parser::L3_split_next_name() -> bool {
     B << hash_table[cur_tok.hash_loc()];
     bool ok = B.split_at_colon(tok_base, tok_sig);
     if (!ok) {
-        err_buf << bf_reset << "Missing colon in macro name " << cur_tok << " by " << err_tok;
+        err_buf = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
         signal_error(err_tok, "no colon in name");
         return true;
     }
@@ -960,11 +960,8 @@ void Parser::Tl3_gen_from_ac(int c) {
 // if args are set, Nn, Npn, this is
 //  \def\cs_set:Nn{\__cs_generate_from_signature:NNn \cs_set:Npn}
 void Parser::define_definer(String base, String nsig, String osig) {
-    Buffer &B = local_buffer;
-    B << bf_reset << "cs_" << base << ":" << nsig;
-    Token nt = hash_table.locate(B);
-    B << bf_reset << "cs_" << base << ":" << osig;
-    Token     ot = hash_table.locate(B);
+    Token     nt = hash_table.locate(fmt::format("cs_{}:{}", base, nsig));
+    Token     ot = hash_table.locate(fmt::format("cs_{}:{}", base, osig));
     TokenList L;
     L.push_back(gen_from_sig_tok);
     L.push_back(ot);
@@ -976,21 +973,16 @@ void Parser::define_definer(String base, String nsig, String osig) {
 //  \protected\def\cs_set:Nn{\exp_args:Nc \cs_set:Nn}
 //  \protected\def\cs_set:Nx{\exp_args:Nc \cs_set:Nx}
 void Parser::define_definer(String base) {
-    Buffer &B = local_buffer;
-    B << bf_reset << "cs_" << base << ":cn";
-    Token nt = hash_table.locate(B);
-    B << bf_reset << "cs_" << base << ":Nn";
-    Token     ot = hash_table.locate(B);
+    Token     nt = hash_table.locate(fmt::format("cs_{}:cn", base));
+    Token     ot = hash_table.locate(fmt::format("cs_{}:Nn", base));
     TokenList L;
     L.push_back(expargsnc_tok);
     L.push_back(ot);
     auto *X = new Macro(L);
     mac_define(nt, X, true, rd_always, userp_cmd);
     // gain
-    B << bf_reset << "cs_" << base << ":cx";
-    nt = hash_table.locate(B);
-    B << bf_reset << "cs_" << base << ":Nx";
-    ot = hash_table.locate(B);
+    nt = hash_table.locate(fmt::format("cs_{}:cx", base));
+    ot = hash_table.locate(fmt::format("cs_{}:Nx", base));
     TokenList L2;
     L2.push_back(expargsnc_tok);
     L2.push_back(ot);
@@ -1045,8 +1037,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     Buffer &osig    = local_buffer;
     Buffer &nsig    = local_bufferB;
     Buffer &changes = local_bufferC;
-    osig << bf_reset << tok_sig;
-    nsig << bf_reset << var;
+    osig            = tok_sig;
+    nsig            = var;
     changes.clear();
     size_t last_ok = 0;
     for (size_t i = 0; i < n; i++) {
@@ -1070,13 +1062,13 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     for (size_t i = 0; i < last_ok; i++)
         if (changes[i] == 'x') need_prot = true;
     if (need_prot) prot = true;
-    nsig << bf_reset << tok_base << ':' << osig;
+    nsig         = tok_base + ':' + osig;
     Token newfun = hash_table.locate(nsig);
     if (!hash_table.eqtb[newfun.eqtb_loc()].is_undef()) {
         the_log << "Variant " << newfun << " already defined, not changing it.\n";
         return;
     }
-    nsig << bf_reset << "exp_args:N" << changes;
+    nsig                = "exp_args:N" + changes;
     Token     converter = hash_table.locate(nsig);
     TokenList body;
     body.push_back(converter);
@@ -1088,7 +1080,8 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     for (size_t i = 0;; i++) {
         char c = changes[i];
         if (c == 0) c = ':';
-        nsig << bf_reset << "::" << c;
+        nsig = "::";
+        nsig.push_back(c);
         cb.push_back(hash_table.locate(nsig));
         if (c == ':') break; //
     }

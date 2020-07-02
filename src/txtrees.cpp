@@ -569,7 +569,7 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
             Bad = "inexistant day";
     }
     if (Bad.empty()) return true;
-    local_buf << bf_reset << "Date error: ";
+    local_buf = "Date error: ";
     if (Bad[0] == '.')
         local_buf.format("day>{}", ml);
     else

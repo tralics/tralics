@@ -319,7 +319,7 @@ void Stack::pop(const std::string &a) {
         pop_back();
     }
     if (a != back().frame) {
-        err_buf << bf_reset << "Error in pop; stack holds " << encode(back().frame) << "; trying to pop " << encode(a);
+        err_buf = fmt::format("Error in pop; stack holds {}; trying to pop ", encode(back().frame), encode(a));
         the_parser.signal_error();
         return;
     }
@@ -327,7 +327,7 @@ void Stack::pop(const std::string &a) {
     cur_lid  = back().uid;
     pop_back();
     if (empty()) {
-        err_buf << bf_reset << "Error in pop; stack empty; trying to pop " << encode(a);
+        err_buf = "Error in pop; stack empty; trying to pop " + encode(a);
         the_parser.signal_error();
         std::string S = the_names["document"];
         ipush(S, new Xml(S, nullptr)); // stack should never be empty

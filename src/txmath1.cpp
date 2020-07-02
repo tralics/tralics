@@ -1261,7 +1261,7 @@ void MathElt::cv_noMLt() {
     }
     case left_cmd: // left or right
     case right_cmd:
-        att_buffer << bf_reset << " del='";
+        att_buffer = " del='";
         math_ns::insert_delimiter_t(del_pos(get_chr()));
         att_buffer << "'";
         mathml_buffer.push_back_math_tag(val, pbm_att_empty);
@@ -1282,7 +1282,7 @@ void MathElt::cv_noMLt() {
     case hspace_cmd: {
         int    chr  = get_chr();
         String name = chr == 1 || chr == 3 ? "vspace" : "hspace";
-        if (chr >= 2) att_buffer << bf_reset << " star='true'";
+        if (chr >= 2) att_buffer = " star='true'";
         mathml_buffer.push_back_math_tag(name, chr < 2 ? pbm_start : pbm_att);
         mathml_buffer.push_back(ScaledInt(get_font()), glue_spec_pt);
         mathml_buffer.push_back_math_tag(name, pbm_end);

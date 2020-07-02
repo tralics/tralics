@@ -82,7 +82,8 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     std::string key_full = key_name;
     if (have_equals) {
         Buffer &B = txclasses_local_buf;
-        B << bf_reset << key_name << key_val;
+        B         = key_name;
+        B << key_val; // \todo make TokenList formattable
         key_full = B;
     }
     return KeyAndVal(key_name, key_val, key_full);
@@ -286,7 +287,7 @@ void Parser::T_provides_package(bool c) // True for a file
         log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
     }
     Buffer &b = txclasses_local_buf;
-    b << bf_reset << (cur->is_class() ? "Document class: " : "Package: ") << name << " " << date << "\n";
+    b         = fmt::format(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n", name, date);
     if (cur->is_class())
         log_and_tty << b;
     else
@@ -641,8 +642,8 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     cur->date = "0000/00/00";
     open_tex_file(*res, true);
     set_cur_file_pos(to_signed(p));
-    Buffer &b = txclasses_local_buf;
-    b << bf_reset << name;
+    Buffer &b       = txclasses_local_buf;
+    b               = name;
     TokenList cc    = b.str_toks11(false);
     Token     cctok = hash_table.locate("CurrentClass");
     new_macro(cc, cctok);
@@ -1022,12 +1023,12 @@ void Parser::kvo_bool_key() {
     std::string d = sE_arg_nopar(); // val
     if (!(d == "true" || d == "false")) {
         Buffer &B = txclasses_local_buf;
-        B << bf_reset << "Illegal boolean value " << d << " ignored";
+        B         = fmt::format("Illegal boolean value {} ignored", d);
         parse_error(err_tok, B, "bad bool");
         log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << A.substr(1) << ".\n";
         return;
     }
-    txclasses_local_buf << bf_reset << C << '@' << D << d;
+    txclasses_local_buf = C + '@' + D + d;
     back_input(hash_table.locate(txclasses_local_buf));
 }
 
@@ -1043,8 +1044,8 @@ void Parser::kvo_string_opt() {
     classes_ns::register_key(arg);
     std::string fam = kvo_getfam();
     Buffer &    B   = txclasses_local_buf;
-    B << bf_reset << fam << "@" << arg;
-    Token T = hash_table.locate(B);
+    B               = fam + "@" + arg;
+    Token T         = hash_table.locate(B);
     if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
         return;
@@ -1092,7 +1093,7 @@ void Parser::kvo_void_opt() {
     std::string fam = kvo_getfam();
     Buffer &    B   = txclasses_local_buf;
     classes_ns::register_key(arg);
-    B << bf_reset << fam << "@" << arg;
+    B       = fam + "@" + arg;
     Token T = hash_table.locate(B);
     if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
@@ -1142,22 +1143,19 @@ void Parser::kvo_comp_opt() {
     std::string comp = sE_arg_nopar();
     std::string fam  = kvo_getfam();
     Buffer &    B    = txclasses_local_buf;
-    B << bf_reset << "if" << fam << '@' << comp;
-    Token T = hash_table.locate(B);
+    B                = "if" + fam + '@' + comp;
+    Token T          = hash_table.locate(B);
     if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
-        B << bf_reset << "Cannot generate code for `" << arg << "', no parent " << comp;
+        B = "Cannot generate code for `" + arg + "', no parent " + comp;
         parse_error(err_tok, B, "bad redef");
         return;
     }
     // make boolean old inverse of foo
-    B << bf_reset << fam << '@' << comp << "true";
-    Token T1 = hash_table.locate(B);
-    B << bf_reset << fam << '@' << arg << "false";
-    Token T2 = hash_table.locate(B);
-    B << bf_reset << fam << '@' << comp << "false";
-    Token T3 = hash_table.locate(B);
-    B << bf_reset << fam << '@' << arg << "true";
-    Token T4 = hash_table.locate(B);
+    Token T1 = hash_table.locate(fam + '@' + comp + "true");
+    Token T2 = hash_table.locate(fam + '@' + arg + "false");
+    Token T3 = hash_table.locate(fam + '@' + comp + "false");
+    Token T4 = hash_table.locate(fam + '@' + arg + "true");
+    B        = fam + '@' + arg + "true"; // \todo useless?
     if (!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
     if (!hash_table.eqtb[T4.eqtb_loc()].is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
     M_let_fast(T2, T1, true);
@@ -1169,18 +1167,18 @@ void Parser::kvo_comp_opt() {
 void Parser::kvo_family_etc(subtypes k) {
     std::string s = the_class_data.cur_pack()->full_name();
     Buffer &    B = txclasses_local_buf;
-    B << bf_reset << "KVO@";
+    B             = "KVO@";
     if (k == kvo_fam_set_code || k == kvo_fam_get_code)
-        B << "family@";
+        B += "family@";
     else
-        B << "prefix@";
-    B << s;
+        B += "prefix@";
+    B += s;
     Token T = hash_table.locate(B);
     if (k == kvo_fam_set_code || k == kvo_pre_set_code) {
         TokenList L = read_arg();
         new_macro(L, T);
     } else if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
-        B << bf_reset << s.substr(1);
+        B = s.substr(1);
         if (k == kvo_pre_get_code) B << "@";
         TokenList res = B.str_toks11(false);
         back_input(res);
@@ -1202,19 +1200,19 @@ auto Parser::kvo_getfam() -> std::string {
 // are undefined . Puts \iffo in cur_tok
 auto Parser::check_if_redef(const std::string &s) -> bool {
     Buffer &B = txclasses_local_buf;
-    B << bf_reset << s << "true";
-    Token T2 = hash_table.locate(B);
+    B         = s + "true";
+    Token T2  = hash_table.locate(B);
     if (!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef");
         return false;
     }
-    B << bf_reset << s << "false";
+    B        = s + "false";
     Token T3 = hash_table.locate(B);
     if (!hash_table.eqtb[T3.eqtb_loc()].is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T3, "", "bad redef");
         return false;
     }
-    B << bf_reset << "if" << s;
+    B        = "if" + s;
     Token T1 = hash_table.locate(B);
     if (!hash_table.eqtb[T1.eqtb_loc()].is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T1, "", "bad redef");
@@ -1235,8 +1233,8 @@ auto Parser::XKV_parse_filename() -> TokenList {
         get_token();
         return read_until_nopar(Token(other_t_offset, '>'));
     }
-    LatexPackage *C = the_class_data.cur_pack();
-    txclasses_local_buf << bf_reset << C->real_name();
+    LatexPackage *C     = the_class_data.cur_pack();
+    txclasses_local_buf = C->real_name();
     txclasses_local_buf << (C->is_class() ? ".cls" : ".sty");
     return txclasses_local_buf.str_toks11(false);
 }

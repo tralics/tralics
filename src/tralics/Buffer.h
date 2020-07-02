@@ -23,6 +23,7 @@ public:
     Buffer() = default;
     Buffer(const std::string &s) : std::string(s) {}
 
+    using std::string::string;
     using std::string::operator=;
 
     // Standard const methods
@@ -199,7 +200,6 @@ inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
     return B;
 }
 
-inline void bf_reset(Buffer &B) { B.clear(); }
 inline void bf_comma(Buffer &B) {
     if (!B.empty()) B.push_back(',');
 }

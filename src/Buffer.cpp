@@ -48,10 +48,9 @@ auto null_cs_name() -> std::string {
     auto c = current_escape_char();
     if (c == '\\') return "csname\\endcsname";
     if (c > 0 && c < int(nb_characters)) {
-        Buffer B;
-        B << "csname";
+        Buffer B = "csname";
         B.out_log(codepoint(char32_t(c)), the_main->log_encoding);
-        B << "endcsname";
+        B.append("endcsname");
         return B.data();
     }
     if (c == 0) return "csname^^@endcsname";

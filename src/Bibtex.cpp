@@ -124,7 +124,7 @@ auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<
 // [ if xname true, we define a system macro,
 //   otherwise we define/redefine user one]
 auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
-    if (xname != nullptr) name << bf_reset << xname;
+    if (xname != nullptr) name = xname;
     auto h   = name.hashcode(bib_hash_mod);
     auto lfm = look_for_macro(h, name);
     if (lfm || !insert) return lfm;
