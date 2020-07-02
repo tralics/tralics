@@ -195,15 +195,6 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     return B;
 }
 
-inline auto operator<<(Buffer &B, void f(Buffer &)) -> Buffer & {
-    f(B);
-    return B;
-}
-
-inline void bf_comma(Buffer &B) {
-    if (!B.empty()) B.push_back(',');
-}
-
 inline auto encode(const std::string &s) -> std::string { return Buffer(s).convert_to_out_encoding(); }
 
 inline Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4, err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf,

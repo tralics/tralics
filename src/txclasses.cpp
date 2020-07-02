@@ -363,7 +363,8 @@ void LatexPackage::check_global_options(TokenList &action, bool X) {
         if (j <= 0) continue;
         if (DO[to_unsigned(j)].used) continue; // should not happen
         i.used = true;
-        txclasses_local_buf << bf_comma << nname;
+        if (!txclasses_local_buf.empty()) txclasses_local_buf.push_back(',');
+        txclasses_local_buf += nname;
         DO[to_unsigned(j)].use_and_kill(action, i, X);
     }
 }
@@ -391,7 +392,8 @@ void LatexPackage::check_local_options(TokenList &res, bool X) {
             } else
                 continue;
         }
-        txclasses_local_buf << bf_comma << nname;
+        if (!txclasses_local_buf.empty()) txclasses_local_buf.push_back(',');
+        txclasses_local_buf += nname;
     }
 }
 
@@ -464,7 +466,8 @@ void LatexPackage::check_all_options(TokenList &action, TokenList &spec, int X) 
         } else {
             ClassesData::remove_from_unused(nname);
             if (DO[to_unsigned(j)].used) continue;
-            txclasses_local_buf << bf_comma << DO[to_unsigned(j)].name;
+            if (!txclasses_local_buf.empty()) txclasses_local_buf.push_back(',');
+            txclasses_local_buf += DO[to_unsigned(j)].name;
             DO[to_unsigned(j)].use_and_kill(action, i, X != 0);
         }
     }
@@ -505,7 +508,8 @@ void Parser::T_execute_options() {
         const std::string &option = L[i].full_name;
         auto               k      = C->find_option(option);
         if (k >= 0) {
-            b << bf_comma << pack[to_unsigned(k)].name;
+            if (!b.empty()) b.push_back(',');
+            b += pack[to_unsigned(k)].name;
             pack[to_unsigned(k)].use(action);
         }
     }
