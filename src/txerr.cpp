@@ -121,13 +121,13 @@ void Parser::bad_end_env(int cl) {
 // Error signaled if no closing brace is found
 void Parser::missing_close_brace(int cl) {
     err_buf = "End of data reached while scanning a group;\n";
-    err_buf.format("scanning started line {}\nscanning argument of {}", cl, err_tok.tok_to_str());
+    err_buf.format("scanning started line {}\nscanning argument of {}", cl, err_tok);
     signal_error(err_tok, "Missing close brace");
 }
 
 // Error signaled if EOF found while scanning a delimited argument
 void Parser::bad_delimited(int cl, Token x) {
-    err_buf = fmt::format("End of data reached while scanning argument of {}\n", err_tok.tok_to_str());
+    err_buf = fmt::format("End of data reached while scanning argument of {}\n", err_tok);
     err_buf.format("scanning started at line {}", cl);
     if (!x.is_null()) err_buf += "\nexpected " + x.tok_to_str();
     signal_error(err_tok, "bad macro");
@@ -208,7 +208,7 @@ void Parser::extra_fi_or_else() {
 
 // Case of \def\foo#2{}
 void Parser::bad_definition(Token name, size_t nb) {
-    err_buf = fmt::format("Error while scanning definition of {}\n", name.tok_to_str());
+    err_buf = fmt::format("Error while scanning definition of {}\n", name);
     err_buf.format("got #{}, expected #{}", cur_tok, nb + 1);
     signal_error(name, "bad char after #");
 }
@@ -279,7 +279,7 @@ void Parser::wrong_pop(Token T, String a, String b) {
 
 void Parser::extra_close_brace(int cl) {
     err_buf = "Extra closing brace\n";
-    err_buf.format("scanning started at line {}\nfor argument to ", cl, err_tok.tok_to_str());
+    err_buf.format("scanning started at line {}\nfor argument to ", cl, err_tok);
     signal_error(err_tok, "extra close brace");
 }
 
