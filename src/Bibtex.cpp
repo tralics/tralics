@@ -717,7 +717,7 @@ void Bibtex::read_one_field(bool store) {
                 err_in_file("", false);
                 log_and_tty << "undefined macro " << token_buf << ".\n";
             } else
-                field_buf << all_macros[*macro].value;
+                field_buf += all_macros[*macro].value;
         }
     }
 }

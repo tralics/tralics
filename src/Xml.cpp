@@ -606,16 +606,16 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 void Xml::to_buffer(Buffer &b) const {
     if (is_xmlc()) {
         if (id.value == 0)
-            b << encode(name);
+            b += encode(name);
         else if (id.value == -1)
-            b << "<!--" << encode(name) << "-->";
+            b += "<!--" + encode(name) + "-->";
         else if (id.value == -2) {
-            b << "<!" << encode(name);
+            b += "<!" + encode(name);
             for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
-            b << ">";
+            b += ">";
             b.finish_xml_print();
         } else if (id.value == -3)
-            b << "<?" << encode(name) << "?>";
+            b += "<?" + encode(name) + "?>";
         return;
     }
     if (!name.empty()) {
@@ -638,7 +638,7 @@ auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
     if (T != nullptr)
         T->to_buffer(scbuf);
     else
-        scbuf << "</>";
+        scbuf += "</>";
     scbuf.finish_xml_print();
     return fp;
 }
@@ -819,7 +819,7 @@ auto Xml::convert_to_string() -> std::string {
 // This converts the content to a string. May be recursive
 void Xml::convert_to_string(Buffer &b) {
     if (is_xmlc()) {
-        b << std::string(name);
+        b += name;
         return;
     }
     if (name.empty() || name == the_names["temporary"]) {
@@ -831,13 +831,13 @@ void Xml::convert_to_string(Buffer &b) {
     if (id.is_font_change()) {
         std::string w = id.has_attribute(the_names["rend"]);
         if (!w.empty()) {
-            err_buf << "unexpected font change " << encode(w);
+            err_buf += "unexpected font change " + encode(w);
             the_parser.unexpected_font();
             the_parser.signal_error();
             return;
         }
     }
-    err_buf << "unexpected element " << encode(name);
+    err_buf += "unexpected element " + encode(name);
     the_parser.signal_error();
 }
 
@@ -846,11 +846,11 @@ void Xml::convert_to_string(Buffer &b) {
 void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (at(k)->is_xmlc())
-            b << encode(at(k)->name);
+            b += encode(at(k)->name);
         else if (at(k)->has_name_of("hi"))
             at(k)->put_in_buffer(b);
         else
-            b << '<' << encode(at(k)->name) << "/>";
+            b += "<" + encode(at(k)->name) + "/>";
     }
 }
 
@@ -881,12 +881,12 @@ void Xml::word_stats_i() {
             if (c == '&') {
                 if (str.substr(i).starts_with("&oelig;")) {
                     i += 6;
-                    scbuf << "oe";
+                    scbuf += "oe";
                     continue;
                 }
                 if (str.substr(i).starts_with("&amp;")) {
                     i += 4;
-                    scbuf << "&";
+                    scbuf += "&";
                     continue;
                 }
                 auto w = is_entity(str.substr(i));

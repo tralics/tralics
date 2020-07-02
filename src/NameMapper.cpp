@@ -5,7 +5,7 @@
 
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
-    return std::string(name);
+    return name;
 }
 
 void NameMapper::set(const std::string &name, const std::optional<std::string> &value) {
@@ -226,11 +226,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         else if (sb == "true")
             the_parser.hash_table.eval_let("item", "@item");
     }
-    if (sa == "url_font") {
-        Buffer aux;
-        aux << "\\def\\urlfont{" << sb << "}";
-        the_main->add_to_from_config(1, aux); // \todo no Buffer
-    }
+    if (sa == "url_font") { the_main->add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
     if (sa == "everyjob") { everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
     if (sa == "no_footnote_hack") {
         if (sb == "true") the_main->footnote_hack = false;

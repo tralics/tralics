@@ -26,9 +26,8 @@ void Xid::add_bottom_rule() const {
 // adds a span value of n to the current cell
 void Xid::add_span(long n) const {
     if (n == 1) return;
-    errbuf.clear();
-    errbuf << std::to_string(n);
-    add_attribute(the_names["cols"], std::string(errbuf));
+    errbuf = std::to_string(n);
+    add_attribute(the_names["cols"], errbuf);
 }
 
 // This returns the attribute list of this id.

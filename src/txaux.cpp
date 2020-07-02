@@ -22,7 +22,7 @@ using arith_ns::start_err;
 // This prepares for an arithmetic error.
 void arith_ns::start_err(String s) {
     err_buf = "Arithmetic overflow";
-    if (s != nullptr) err_buf << ", threshold=" << s;
+    if (s != nullptr) err_buf += fmt::format(", threshold={}", s);
 }
 
 // Signals the error in the buffer.
@@ -69,7 +69,7 @@ auto Token::tex_is_digit(unsigned radix) const -> long {
 // Divide by zero.
 void Glue::zdv() {
     start_err(nullptr);
-    err_buf << ", division by 0";
+    err_buf += ", division by 0";
     end_err();
 }
 

@@ -372,25 +372,25 @@ void Stack::check_font() {
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
         if (s != "cst_empty") { // \todo empty string or something
-            aux << encode(the_names[s]);
+            aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
             if (nonempty) aux.append(",");
-            aux << encode(the_names[s]);
+            aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
             if (nonempty) aux.append(",");
-            aux << encode(the_names[s]);
+            aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
             if (nonempty) aux.append(",");
-            aux << encode(the_names[s]);
+            aux += encode(the_names[s]);
             nonempty = true;
         }
         if (nonempty) {

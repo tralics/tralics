@@ -407,7 +407,7 @@ void MainClass::open_log() { // \todo spdlog etc
 
 void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false") || (s == "no"); }
 
-void MainClass::add_to_from_config(int n, Buffer &b) { from_config.emplace_back(n, b + "\n", true); }
+void MainClass::add_to_from_config(int n, const std::string &b) { from_config.emplace_back(n, b + "\n", true); }
 
 void MainClass::parse_args(int argc, char **argv) {
     find_conf_path();
@@ -1135,15 +1135,14 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
     static Buffer B;
     std::string   res = B.add_with_space(s);
     if (all_themes.find(B) == std::string::npos) {
-        err_buf.clear();
         if (s.empty())
-            err_buf << "Empty or missing theme\n";
+            err_buf = "Empty or missing theme\n";
         else
-            err_buf << "Invalid theme " << s << "\n";
+            err_buf = "Invalid theme " + s + "\n";
         if (all_themes.empty())
-            err_buf << "Configuration file defines nothing";
+            err_buf += "Configuration file defines nothing";
         else
-            err_buf << "Valid themes are" << all_themes;
+            err_buf += "Valid themes are" + all_themes;
         the_parser.signal_error(the_parser.err_tok, "Bad theme");
     }
     return res;

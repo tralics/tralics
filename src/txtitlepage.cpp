@@ -343,9 +343,7 @@ void TitlePageAux::exec_start(size_t k) {
     Titlepage[idx] = new Xml(std::string("empty"));
     B.append("%\n");
     if (fl == tp_A_flag) {
-    } // already done
-    //    the_main->add_to_from_config(1,B);
-    else if (fl == tp_B_flag)
+    } else if (fl == tp_B_flag)
         the_parser.add_buffer_to_document_hook(B, "(tpa init)");
     else
         T4 = B;
@@ -504,7 +502,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     if (!name.empty()) {
         std::string w = B.data() + j + 1;
         B             = name;
-        if (have_space) B << ' ' << w;
+        if (have_space) B += " " + w;
     }
     return res;
 }

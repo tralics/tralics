@@ -239,8 +239,8 @@ void NewArray::run(Xid ID, bool main_fct) {
     case chc_start:
     case chc_inter: break;
     default: {
-        errbuf.clear();
-        errbuf << "Array preamble: argument missing for " << char_for_error;
+        errbuf = "Array preamble: argument missing for ";
+        errbuf += char_for_error;
         P->parse_error(errbuf);
     }
     }

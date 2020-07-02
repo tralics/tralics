@@ -836,10 +836,9 @@ void Parser::boot_time() {
     eqtb_int_table[month_code].val = month;
     eqtb_int_table[year_code].val  = year;
     std::srand(to_unsigned(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
-    auto   short_date = fmt::format("{}/{:02d}/{:02d}", year, month, day);
-    auto   long_date  = fmt::format("{} {:02d}:{:02d}:{:02d}", short_date, hour, min, sec);
-    Buffer b;
-    b << long_date;
+    auto      short_date   = fmt::format("{}/{:02d}/{:02d}", year, month, day);
+    auto      long_date    = fmt::format("{} {:02d}:{:02d}:{:02d}", short_date, hour, min, sec);
+    Buffer    b            = long_date;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
     the_main->short_date = short_date;
@@ -1565,7 +1564,7 @@ void Parser::E_accent() {
     TokenList y = read_arg();
     if (y.empty()) {
         err_buf = msg1 + tfe.tok_to_str();
-        err_buf << (acc_code == '~' ? "\n\\~{} is the wrong way to put a tilde in an URL" : "\nThings like {\\'{}} are a bit strange");
+        err_buf += (acc_code == '~' ? "\n\\~{} is the wrong way to put a tilde in an URL" : "\nThings like {\\'{}} are a bit strange");
         signal_error(err_tok, msg2);
         return;
     }
@@ -1628,15 +1627,14 @@ void Parser::E_accent() {
         achar = 'i';
     else if ((cur_cmd_chr.cmd == specchar_cmd) || cur_cmd_chr.is_letter_other()) {
     } else {
-        err_buf = msg1;
-        err_buf << tfe.tok_to_str();
-        if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
+        err_buf = msg1 + tfe.tok_to_str();
+        if (acc_code2 != 0) err_buf += tfe2.tok_to_str();
         if (Y.is_invalid())
-            err_buf << "\nEnd of data reached while scanning argument";
+            err_buf += "\nEnd of data reached while scanning argument";
         else if (!cur_tok.not_a_cmd())
-            err_buf << "\nLetter needed instead of " << cur_tok.tok_to_str();
+            err_buf += "\nLetter needed instead of " + cur_tok.tok_to_str();
         else
-            err_buf << "\nLetter needed";
+            err_buf += "\nLetter needed";
         signal_error(err_tok, msg2);
         return;
     }
@@ -1658,15 +1656,17 @@ void Parser::E_accent() {
         }
     }
     if (res.is_null()) {
-        String s =
+        std::string s =
             achar >= 128
                 ? "a non 7-bit character"
                 : is_letter(static_cast<char>(achar)) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
-        err_buf = msg1;
-        err_buf << tfe.tok_to_str();
-        if (acc_code2 != 0) err_buf << tfe2.tok_to_str();
-        err_buf << "\nCannot put accent on " << s;
-        if (achar < 128) err_buf << " " << char(achar);
+        err_buf = msg1 + tfe.tok_to_str();
+        if (acc_code2 != 0) err_buf += tfe2.tok_to_str();
+        err_buf += "\nCannot put accent on " + s;
+        if (achar < 128) {
+            err_buf += " ";
+            err_buf += char(achar);
+        }
         signal_error(err_tok, msg2);
         return;
     }
@@ -2296,21 +2296,17 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     back_input(L);
     cline_first = scan_int(T);
     if (get_token()) {
-        errbuf.clear();
-        errbuf << "Error in " << T << " after first integer";
+        errbuf = fmt::format("Error in {} after first integer", T);
         return true;
     }
     if (cur_tok == hash_table.relax_token) {
-        errbuf.clear();
-        errbuf << "Error in " << T << " after first integer";
+        errbuf = fmt::format("Error in {} after first integer", T);
         return true;
     }
     cline_last = scan_int(T);
     read_until(hash_table.relax_token);
     if (1 <= cline_first && cline_first <= cline_last) return false;
-    errbuf.clear();
-    errbuf << "Bad range in " << T; // \todo make Token formattable
-    errbuf.format(": {}-{}", cline_first, cline_last);
+    errbuf = fmt::format("Bad range in {}: {}-{}", T, cline_first, cline_last);
     return true;
 }
 
