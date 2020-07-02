@@ -109,8 +109,8 @@ void classes_ns::dump_options(const OptionList &A, String x) {
     B.clear();
     auto n = A.size();
     for (size_t i = 0; i < n; i++) {
-        if (i > 0) B << ",";
-        B << A[i].full_name;
+        if (i > 0) B += ",";
+        B += A[i].full_name;
     }
     spdlog::info("{} {}", x, B);
 }
@@ -265,7 +265,7 @@ void classes_ns::add_to_filelist(const std::string &s, const std::string &date) 
         file_list << ' ';
         --nn;
     }
-    file_list << S << "   " << date << "\n"; // \todo fmt would work well here (padding at width 12)
+    file_list += S + "   " + date + "\n"; // \todo fmt would work well here (padding at width 12)
 }
 
 // This implements \ProvidesPackage, \ProvidesClass (synonym)
@@ -755,8 +755,8 @@ void ClassesData::show_unused() {
         if (i.used) continue;
         if (i.name == "useallsizes") continue;
         k++;
-        if (!B.empty()) B << ',';
-        B << i.full_name;
+        if (!B.empty()) B += ',';
+        B += i.full_name;
     }
     if (k == 0) return;
     log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
@@ -872,21 +872,20 @@ void Parser::T_class_error(subtypes c) {
     B.clear();
     if (std) {
         std::string name = prefix;
-        if (!simple) B << "(" << prefix << ")";
+        if (!simple) B += "(" + prefix + ")";
         while (n > 0) {
             --n;
             B << ' ';
         }
         prefix = B;
-        B.clear();
-        B << prea;
-        if (!simple) B << " " << name;
+        B      = prea;
+        if (!simple) B += " " + name;
         auto posta = "Info";
         if (what == mt_error)
             posta = "Error";
         else if (what == mt_warning)
             posta = "Warning";
-        B << " " << encode(the_names[posta]) << ": ";
+        B += " " + encode(the_names[posta]) + ": ";
     }
     TokenList L = scan_general_text();
     L.push_back(hash_table.relax_token);
@@ -901,7 +900,7 @@ void Parser::T_class_error(subtypes c) {
     auto E = L.end();
     while (C != E) {
         if (*C == message_break_token)
-            B << "\n" << prefix;
+            B += "\n" + prefix;
         else
             B.insert_token(*C, false);
         ++C;
@@ -909,9 +908,9 @@ void Parser::T_class_error(subtypes c) {
     if (on_line && what != mt_error) {
         B.format(" at line {}", get_cur_line());
         std::string f = get_cur_filename();
-        if (!f.empty()) B << " of file " << f;
+        if (!f.empty()) B += " of file " + f;
     }
-    if (what != mt_error) B << ".\n";
+    if (what != mt_error) B += ".\n";
     if (std && what == mt_error) skip = 1;
     if (skip != 0) ignore_arg();
     if (skip == 2) ignore_arg();
@@ -1183,7 +1182,7 @@ void Parser::kvo_family_etc(subtypes k) {
         new_macro(L, T);
     } else if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
         B = s.substr(1);
-        if (k == kvo_pre_get_code) B << "@";
+        if (k == kvo_pre_get_code) B += "@";
         TokenList res = B.str_toks11(false);
         back_input(res);
     } else {
@@ -1238,7 +1237,6 @@ auto Parser::XKV_parse_filename() -> TokenList {
         return read_until_nopar(Token(other_t_offset, '>'));
     }
     LatexPackage *C     = the_class_data.cur_pack();
-    txclasses_local_buf = C->real_name();
-    txclasses_local_buf << (C->is_class() ? ".cls" : ".sty");
+    txclasses_local_buf = C->real_name() + (C->is_class() ? ".cls" : ".sty");
     return txclasses_local_buf.str_toks11(false);
 }

@@ -758,7 +758,7 @@ void Parser::T_ampersand() {
         finish_a_cell(hash_table.endv_token, std::string());
     else if (the_stack.is_frame2("hanl")) {
         LC();
-        unprocessed_xml << "&amp;"; // hack...
+        unprocessed_xml += "&amp;"; // hack...
         return;
     } else
         parse_error(err_tok, "Unexpected &", "Unexpected ampersand");
@@ -1665,9 +1665,9 @@ void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
         L1.pop_front();
     }
     if (in_env)
-        Tbuf << "\\begin{" << Abuf << "}" << tpa_buffer << "\\end{" << Abuf << "}%\n";
+        Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
     else
-        Tbuf << Abuf << "{" << tpa_buffer << "}%\n";
+        Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
 }
 
 // Translates \uppercase, \MakeUpperCase, etc

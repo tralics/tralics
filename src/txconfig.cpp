@@ -114,7 +114,7 @@ void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
         if (r.empty()) r = s;
         the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
         if (s == "composition") composition_section = to_signed(V->size() + 1);
-        sec_buffer << " " << s;
+        sec_buffer += " " + s;
         V->push_back(ParamDataSlot(s, r, !star));
     }
 }
@@ -132,10 +132,10 @@ auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDat
     return res;
 }
 
-inline void ParamDataSlot::to_buffer(Buffer &B) const { B << key << "=" << value << ","; }
+inline void ParamDataSlot::to_buffer(Buffer &B) const { B.format("{}={},", key, value); }
 
 void ParamDataList::keys_to_buffer(Buffer &B) const {
-    for (const auto &i : data) B << " " << i.key;
+    for (const auto &i : data) B.format(" {}", i.key);
 }
 
 // Converts the whole data struture as foo1=bar1,foo2=bar2,
@@ -185,8 +185,7 @@ auto config_ns::check_section(const std::string &s) -> std::string {
                 break;
             }
     if (k > 0 && k < cur_section) {
-        err_buf << "Bad section " << s << " after " << X[to_unsigned(cur_section - 1)].key << "\n"
-                << "Order of sections is" << sec_buffer;
+        err_buf.format("Bad section {} after {}\nOrder of sections is{}", s, X[to_unsigned(cur_section - 1)].key, sec_buffer);
         the_parser.signal_error();
     } else if (k == -1) {
         if (n == 0) {
@@ -194,8 +193,7 @@ auto config_ns::check_section(const std::string &s) -> std::string {
             return "";
         }
         if (!s.empty()) {
-            err_buf << "Invalid section " << s << "\n"
-                    << "Valid sections are" << sec_buffer;
+            err_buf.format("Invalid section {}\nValid sections are{}", s, sec_buffer);
             the_parser.signal_error();
             if (cur_section < 0) cur_section = 1;
         }
@@ -326,7 +324,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
             new_elt->id.add_attribute(std::string("name"), std::string(sname));
         }
         res->push_back_unless_nullptr(new_elt);
-        temp2 << sname << " ";
+        temp2 += sname + " ";
         the_default_rc = sname;
         nb++;
     }
@@ -341,7 +339,7 @@ void config_ns::check_RC(Buffer &B, Xml *res) {
         err_buf = "Empty localisation value\n";
     else
         err_buf = "Illegal localisation value: " + B + "\n";
-    err_buf << "Use one or more of:";
+    err_buf += "Use one or more of:";
     config_data.data[0]->keys_to_buffer(err_buf);
     the_parser.signal_error();
 }
@@ -367,7 +365,7 @@ auto config_ns::pers_rc(const std::string &rc) -> std::string {
         err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
         std::vector<ParamDataSlot> &V = config_data.data[0]->data;
         for (auto &i : V)
-            if (i.is_used) err_buf << " " << i.key;
+            if (i.is_used) err_buf += " " + i.key;
         the_parser.signal_error(the_parser.err_tok, "illegal data");
     }
     if (spec) {

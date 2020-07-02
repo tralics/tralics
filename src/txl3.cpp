@@ -102,9 +102,12 @@ void Parser::L3_getid() {
 void Parser::L3_logid() {
     Buffer &B = local_buffer;
     B.clear();
-    B << get_mac_value(hash_table.ExplFileName_token) << " ";
-    B << get_mac_value(hash_table.ExplFileDate_token) << " v";
-    B << get_mac_value(hash_table.ExplFileVersion_token) << " ";
+    B << get_mac_value(hash_table.ExplFileName_token);
+    B += " ";
+    B << get_mac_value(hash_table.ExplFileDate_token);
+    B += " v";
+    B << get_mac_value(hash_table.ExplFileVersion_token);
+    B += " ";
     B << get_mac_value(hash_table.ExplFileDescription_token);
     the_log << "svn Id: " << B.convert_to_log_encoding() << "\n";
 }
@@ -139,9 +142,8 @@ auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
         n = 0;
     }
     if (n > 9) {
-        err_buf = fmt::format("Too many arguments {} for ", n);
-        err_buf << t;
-        if (s) err_buf << " (wrong argument specification)";
+        err_buf = fmt::format("Too many arguments {} for {}", n, t);
+        if (s) err_buf += " (wrong argument specification)";
         signal_error(err_tok, "bad args");
         n = 0;
     }
@@ -161,7 +163,7 @@ auto Parser::L3_split_next_name() -> bool {
     Buffer &B = local_buffer;
     B.clear();
     token_to_split = cur_tok;
-    B << hash_table[cur_tok.hash_loc()];
+    B += hash_table[cur_tok.hash_loc()];
     bool ok = B.split_at_colon(tok_base, tok_sig);
     if (!ok) {
         err_buf = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
@@ -176,15 +178,14 @@ void Parser::L3_user_split_next_name(bool base) {
     Token T = cur_tok;
     if (l3_get_name(T)) return;
     Buffer &B = local_buffer;
-    B.clear();
-    B << hash_table[cur_tok.hash_loc()];
+    B         = hash_table[cur_tok.hash_loc()];
     B.split_at_colon(tok_base, tok_sig);
     std::string res = base ? tok_base : tok_sig;
     if (tracing_macros()) {
         Logger::finish_seq();
         the_log << T << cur_tok << "->" << res << "\n";
     }
-    B << res;
+    B += res;
     TokenList L = B.str_toks(nlt_cr); // is this needed?
     back_input(L);
 }
@@ -232,8 +233,7 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
     if (p == "F") return l3_F_code;
     if (p.empty()) return l3_bad_code;
 
-    err_buf.clear();
-    err_buf << "Bad specification '" << p << "' for " << token_to_split << " by " << cmd_name;
+    err_buf = fmt::format("Bad specification '{}' for {} by {}", p, token_to_split, cmd_name);
     the_parser.signal_error(the_parser.err_tok, "bad spec");
     return l3_bad_code;
 }
@@ -268,8 +268,7 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
         body.push_back(Tc_true_bool);
         body.push_back(Tc_false_bool);
         if (pt) { // predicate, requires non-protected
-            err_buf.clear();
-            err_buf << cmd_name << " for \\" << tok_base << ":" << tok_sig << ": A predicate cannot be protected";
+            err_buf = fmt::format("{} for \\{}:{}: A predicate cannot be protected", cmd_name, tok_base, tok_sig);
             signal_error(err_tok, "bad protected");
         }
         break;
@@ -1018,8 +1017,7 @@ void Parser::l3_generate_variant() {
 void Parser::l3_generate_variant(String orig, String var) {
     Token   T = hash_table.locate(orig);
     Buffer &B = local_buffer;
-    B.clear();
-    B << orig;
+    B         = orig;
     B.split_at_colon(tok_base, tok_sig);
     l3_generate_variant(var, false, T);
 }
@@ -1029,8 +1027,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     auto n = var.size();
     if (n == 0) return; // ignore empty sepc
     if (n > tok_sig.size()) {
-        err_buf.clear();
-        err_buf << "New spec size '" << var << "' too big for " << orig;
+        err_buf = fmt::format("New spec size '{}' too big for {}", var, orig);
         signal_error(err_tok, "spec too big");
         return;
     }
