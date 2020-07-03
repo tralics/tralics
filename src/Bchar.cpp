@@ -149,7 +149,7 @@ auto Bchar::print(Buffer &X) const -> size_t {
 auto Bchar::special_print(Buffer &X, bool sw) -> size_t {
     auto i = print(X);
     if (sw) X.push_back('.');
-    if (X.ends_with("..") || X.ends_with(".}.")) X.remove_last();
+    if (X.ends_with("..") || X.ends_with(".}.")) X.pop_back();
     return i;
 }
 

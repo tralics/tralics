@@ -165,7 +165,7 @@ auto Buffer::substring() const -> std::string { return std::string(begin() + to_
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
-    if (!empty() && back() == '\r') remove_last();
+    if (!empty() && back() == '\r') pop_back();
     push_back('\n');
 }
 
@@ -194,7 +194,7 @@ void Buffer::remove_last(size_t n) {
 // This removes one space or an &nbspace;
 void Buffer::remove_last_space() {
     if (!empty() && is_space(back()))
-        remove_last();
+        pop_back();
     else if (ends_with("&nbsp;"))
         remove_last(6);
     else if (ends_with("&#xA;"))
@@ -204,7 +204,7 @@ void Buffer::remove_last_space() {
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (!empty() && is_space(back())) remove_last();
+    while (!empty() && is_space(back())) pop_back();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -403,7 +403,7 @@ auto Buffer::trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String {
     clear();
     append("+scandimen for ");
     push_back(T);
-    if (is_space(back())) remove_last();
+    if (is_space(back())) pop_back();
     append("->");
     push_back(v, glue_spec_pt);
     if (mu) pt_to_mu();
@@ -1075,22 +1075,22 @@ void Buffer::normalise_for_bibtex(String s) {
         s++;
         if (c != '\\') continue;
         if (std::string(s).starts_with("c{c}")) {
-            remove_last();
+            pop_back();
             push_back(codepoint(0347U));
             s += 4;
         } else if (std::string(s).starts_with("c{C}")) {
-            remove_last();
+            pop_back();
             push_back(codepoint(0307U));
             s += 4;
         } else if (std::string(s).starts_with("v{c}")) {
-            remove_last();
+            pop_back();
             append("{\\v c}");
             s += 4;
             continue;
         } else if (*s == 'a' && is_accent_char(s[1])) {
             s++;
         } else if (*s == ' ') {
-            remove_last();
+            pop_back();
         } // replace \space by space
     }
 }

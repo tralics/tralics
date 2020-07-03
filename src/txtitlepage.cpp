@@ -678,7 +678,7 @@ void Buffer::find_top_atts() {
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();
-    if (at(ptrs.b) == '\"' && ptrs.b < size() - 1 && back() == '\"') remove_last();
+    if (at(ptrs.b) == '\"' && ptrs.b < size() - 1 && back() == '\"') pop_back();
     if (at(ptrs.b) == '\"') {
         auto        as = std::string(a);
         std::string bs = std::string(substr(ptrs.b + 1));

@@ -787,7 +787,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
         if (c == '}') {
             b--;
             if (b == -1 && !in_env) {
-                B.remove_last();
+                B.pop_back();
                 return true;
             }
             if (b == -1) return false;
@@ -814,8 +814,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
                 elevel--;
                 if (elevel == -1) {
                     input_line_pos -= 2; // reread backshash e
-                    B.remove_last();     // remove these two chars from the buffer
-                    B.remove_last();
+                    B.remove_last(2);    // remove these two chars from the buffer
                     return true;
                 }
             }
@@ -829,7 +828,7 @@ void Buffer::insert_string(const Buffer &s) {
         char c = s[j];
         if (c != '\n' && c != '\r') push_back(c);
     }
-    while (!empty() && back() == ' ') remove_last();
+    while (!empty() && back() == ' ') pop_back();
     ptrs.b = 0;
 }
 

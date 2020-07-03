@@ -172,7 +172,6 @@ public:
     void                      push_back(Xml *A, int b, math_types c);
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
-    void                      remove_last();
     void                      remove_spaces();
     [[nodiscard]] auto        second_element() const -> const MathElt &;
     void                      set_display_type() { type = math_ddollar_cd; }

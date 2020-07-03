@@ -53,8 +53,7 @@ namespace {
             dump_and_list(WL, i);
         }
         f << "Total " << nb_words << "  ";
-        scbuf.remove_last(); // space
-        scbuf.remove_last(); // comma
+        scbuf.remove_last(2);
         scbuf.append(".\n");
         f << scbuf;
     }

@@ -595,7 +595,7 @@ void XmlIO::parse_dec_element() {
         prev_is_space = false;
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
-    if (prev_is_space) aux.remove_last();
+    if (prev_is_space) aux.pop_back();
     tmp += " " + elt_name;
     if (aux == "EMPTY") {
     } else if (aux == "ANY") {
@@ -643,7 +643,7 @@ void XmlIO::parse_dec_attlist() {
         prev_is_space = false;
     }
     if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
-    if (prev_is_space) aux.remove_last();
+    if (prev_is_space) aux.pop_back();
     tmp += " " + elt_name;
     // Syntax Attdef*
     // AttDef ::= A Name S AttType S DefaultDecl

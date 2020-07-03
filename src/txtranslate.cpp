@@ -1773,10 +1773,10 @@ auto Parser::dimen_attrib(ScaledInt A) -> std::string {
     B.push_back(A, glue_spec_empty);
     auto i = B.size();
     if (i > 0 && B[i - 1] == '0') {
-        B.remove_last();
+        B.pop_back();
         i--;
     }
-    if (i > 0 && B[i - 1] == '.') B.remove_last();
+    if (i > 0 && B[i - 1] == '.') B.pop_back();
     return std::string(B);
 }
 

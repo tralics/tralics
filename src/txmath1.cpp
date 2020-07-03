@@ -909,7 +909,7 @@ void MathElt::cv_noMLt_special0() const {
         auto X = L.begin();
         auto Y = L.end();
         ++X;
-        mathml_buffer.remove_last();
+        mathml_buffer.pop_back();
         for (;;) {
             if (X == Y) break;
             mathml_buffer.append(" ");
@@ -944,7 +944,7 @@ void MathElt::cv_noMLt_special0() const {
     }
     if (c == genfrac_code) {
         if (L.empty()) return;
-        mathml_buffer.remove_last();
+        mathml_buffer.pop_back();
         auto k = del_pos(L.front().get_chr());
         if (k != del_dot) {
             att_buffer.clear();

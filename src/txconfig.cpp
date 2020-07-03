@@ -145,7 +145,7 @@ auto config_ns::find_keys(const std::string &name) -> std::string {
     Buffer B;
     auto   n = X->size();
     for (size_t i = 0; i < n; i++) X->data[i].to_buffer(B);
-    if (n > 0) B.remove_last();
+    if (n > 0) B.pop_back();
     return std::move(B);
 }
 
