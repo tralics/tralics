@@ -52,7 +52,7 @@ private:
     void set_explicit_cit() { explicit_cit = true; }
     void move_to_year() { cite_key.move_to_year(); }
     void use_extra_num();
-    void numeric_label(long i);
+    void numeric_label(size_t i);
     void call_type();
     void call_type_all();
     void call_type_special();

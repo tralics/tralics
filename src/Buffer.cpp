@@ -926,23 +926,23 @@ auto Buffer::see_equals(String s) -> bool {
 auto Buffer::special_convert(bool init) -> std::string {
     ptrs.b = 0;
     if (init) skip_sp_tab_nl();
-    biblio_buf1.clear();
-    bool space = true;
+    std::string bb1;
+    bool        space = true;
     for (;;) {
         auto c = next_char();
         if (c == 0) break;
         if (is_space(c)) {
             if (!space) {
-                biblio_buf1.push_back(' ');
+                bb1.push_back(' ');
                 space = true;
             }
         } else {
-            biblio_buf1.push_back(c);
+            bb1.push_back(c);
             space = false;
         }
     }
-    if (init && !biblio_buf1.empty() && biblio_buf1.back() == ' ') biblio_buf1.remove_last();
-    return biblio_buf1;
+    if (init && !bb1.empty() && bb1.back() == ' ') bb1.pop_back();
+    return bb1;
 }
 
 // In the bibliobraphy \url="foo bar"

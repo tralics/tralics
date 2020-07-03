@@ -132,10 +132,7 @@ namespace {
 
     // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
     auto first_three(const std::string &s) -> std::string {
-        Buffer &B = biblio_buf1;
-        B.clear();
-        B.append(s);
-        B.ptrs.b = 0;
+        Buffer B = s;
         if (B.head() == '\\') return s;
         B.next_bibtex_char();
         if (B.head() == '\\') return s;
@@ -144,7 +141,7 @@ namespace {
         B.next_bibtex_char();
         if (B.head() == 0) return s;
         B.resize(B.ptrs.b);
-        return B;
+        return std::move(B);
     }
 
     // In the case of `Lo{\"i}c', returns  `{\"i}c' for k=2.
@@ -343,11 +340,9 @@ void BibEntry::reverse_pass(int &next_extra) {
 }
 
 // Creates a numeric version of the label, and (optional) alpha one.
-void BibEntry::numeric_label(long i) {
-    Buffer &B = biblio_buf1;
+void BibEntry::numeric_label(size_t i) {
     aux_label = fmt::format("[{}]", label);
-    B         = fmt::format("{}", i);
-    label     = B; // \todo without biblio_buf1
+    label     = fmt::format("{}", i);
 }
 
 // -----------------------------------------------------------------------

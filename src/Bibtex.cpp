@@ -761,7 +761,7 @@ void Bibtex::work() {
     int next_extra = 0;
     for (size_t i = nb_entries; i > 0; i--) all_entries_table[i - 1]->reverse_pass(next_extra);
     if (want_numeric)
-        for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(to_signed(i) + 1);
+        for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(i + 1);
     for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
     bbl.finish();
 }
