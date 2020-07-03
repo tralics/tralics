@@ -414,9 +414,9 @@ void Parser::T_titlepage_finish(size_t v) {
     bool          also_bib = false;
     if (tmp.find("'only title page'") != std::string::npos) finished = true;
     if (tmp.find("'translate also bibliography'") != std::string::npos) also_bib = true;
-    Xid(1).add_special_att(tmp);
+    Xid(1).add_special_att(tmp, txclasses_local_buf);
     Xml *res = tpa.convert(2);
-    res->id.add_special_att(tpa.get_T3());
+    res->id.add_special_att(tpa.get_T3(), txclasses_local_buf);
     kmax = Titlepage.get_len2();
     for (size_t k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
     the_stack.pop_if_frame(the_names["cst_p"]);

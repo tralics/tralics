@@ -12,6 +12,7 @@
 // (See the file COPYING in the main directory for details)
 
 struct AttList;
+class Buffer;
 
 // Adress of attribute list of an xml object
 // is a wrapper around an int
@@ -33,7 +34,7 @@ public:
     void               add_top_rule() const;
     void               add_bottom_rule() const;
     [[nodiscard]] auto has_attribute(const std::string &n) const -> std::string;
-    void               add_special_att(const std::string &S);
+    void               add_special_att(const std::string &S, Buffer &B);
 
     auto operator==(const Xid &X) const -> bool { return value == X.value; }
 };

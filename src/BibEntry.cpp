@@ -8,6 +8,8 @@
 #include <fmt/ostream.h>
 
 namespace {
+    Buffer biblio_buf3;
+
     class NameSplitter {
         bchar_type *table;
         Bchar       first_name{};
