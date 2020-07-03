@@ -98,8 +98,8 @@ void Math::find_paren0(MathP &aux) const {
     bool inner_big  = false;
     bool seen_small = false;
     int  i          = 0;
-    auto L          = value.begin();
-    auto E          = value.end();
+    auto L          = begin();
+    auto E          = end();
     int  nb_pairs   = 0;
     while (L != E) { // create the list of indices
         if (L->cmd == math_xml_cmd) {
@@ -512,7 +512,7 @@ auto Math::add_fence(bool final, MathF &M) -> bool {
         pop_front();
         ++i;
     }
-    M.finish(value);
+    M.finish(*this);
     return ret_val;
 }
 
@@ -1341,8 +1341,8 @@ auto Math::convert_math_noML(bool spec) -> Xml * {
 
 // True if the list contains only digits, that are put in the buffer.
 auto Math::only_digits(Buffer &B) const -> bool {
-    if (value.empty()) return false;
-    for (const auto &L : value) {
+    if (empty()) return false;
+    for (const auto &L : *this) {
         if (!L.is_digit()) { return false; }
         B.push_back(L.get_char());
     }
@@ -1355,8 +1355,8 @@ auto Math::only_digits(Buffer &B) const -> bool {
 // is not reset !!
 auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
     if (!rec) B.clear();
-    auto L = value.begin();
-    auto E = value.end();
+    auto L = begin();
+    auto E = end();
     for (;;) {
         if (L == E) return true;
         // DEBUG   std::cout<< "cmd:" << B << ".\n";
@@ -1394,8 +1394,8 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
 // Slightly modified procedure.
 auto Math::chars_to_mb1(Buffer &B) const -> bool {
     B.clear();
-    auto L = value.begin();
-    auto E = value.end();
+    auto L = begin();
+    auto E = end();
     for (;;) {
         if (L == E) return true;
         CmdChr w = *L;
@@ -1418,8 +1418,8 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
 // Slightly modified procedure. First token is ignored
 auto Math::chars_to_mb2(Buffer &B) const -> bool {
     B.clear();
-    auto L = value.begin();
-    auto E = value.end();
+    auto L = begin();
+    auto E = end();
     if (L == E) return false;
     ++L;
     if (L == E) return false;
@@ -1555,8 +1555,8 @@ auto Math::remove_req_arg() -> std::string {
 }
 
 auto Math::remove_req_arg_noerr() const -> std::string {
-    auto C = value.begin();
-    auto E = value.end();
+    auto C = begin();
+    auto E = end();
     while (C != E && C->is_space()) ++C;
     if (C == E) return "empty";
     if (!C->is_list()) return "not-list";
@@ -1587,12 +1587,12 @@ auto math_ns::make_sup(Xml *xval) -> Xml * {
 void Math::special2(bool &ok, Xml *&res) const {
     Buffer &B = aux_buffer;
     B.clear();
-    for (auto L = value.begin(); L != value.end(); ++L) {
+    for (auto L = begin(); L != end(); ++L) {
         if (L->cmd == hat_catcode) {
-            ++L;                          // skip over hat
-            if (L == value.end()) return; // a final hat should not appear
+            ++L;                    // skip over hat
+            if (L == end()) return; // a final hat should not appear
             ++L;
-            if (L != value.end()) return; // hack only in case single object after hat
+            if (L != end()) return; // hack only in case single object after hat
             ok = true;
             break;
         }
@@ -1620,18 +1620,18 @@ auto MathElt::special3() const -> Xml * {
 // Contructs iterators to begin/end of the list, unless the list is
 // a single \hbox, case where the sublist is used.
 void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
-    B = value.begin();
-    E = value.end();
+    B = begin();
+    E = end();
     if (B == E) return;
     ++B;
     bool ok = false;
     if (B != E) ok = true;
     --B;
     if (ok) return;
-    if (value.front().is_hbox()) {
-        Math &X = value.front().get_list();
-        B       = X.value.begin();
-        E       = X.value.end();
+    if (front().is_hbox()) {
+        Math &X = front().get_list();
+        B       = X.begin();
+        E       = X.end();
     }
 }
 
@@ -1687,7 +1687,7 @@ auto Math::special1() const -> Xml * {
     Xml *U{nullptr};
     special2(ok, U);
     if (!ok) return U;
-    const MathElt &W = value.back();
+    const MathElt &W = back();
     Xml *          xval{nullptr};
     if (W.cmd == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);

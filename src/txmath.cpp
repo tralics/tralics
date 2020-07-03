@@ -78,8 +78,8 @@ auto Math::duplicate(bool nomath) const -> subtypes {
     int      sp = 0, sm = 0;
     bool     skipping  = false;
     bool     skip_next = false;
-    auto     C         = value.begin();
-    auto     E         = value.end();
+    auto     C         = begin();
+    auto     E         = end();
     while (C != E) {
         skip_next = skipping;
         if (C->cmd == nomath_cmd) {
@@ -323,7 +323,7 @@ void Math::print() const {
         Trace += "empty";
     else {
         int k = 0;
-        for (const auto &C : value) {
+        for (const auto &C : *this) {
             k++;
             Trace.format("{} ", k);
             C.print();
@@ -428,12 +428,10 @@ void MathDataP::realloc_list0() {
 }
 
 // Appends the list X at the end, and destroys X.
-void Math::push_front(Math &X) { value.splice(value.begin(), X.value); }
-
-void Math::destroy() { value.clear(); }
+void Math::push_front(Math &X) { splice(begin(), X); }
 
 // Adds X to the end of *this, and kills X.
-void Math::push_back(Math &X) { value.splice(value.end(), X.value); }
+void Math::push_back(Math &X) { splice(end(), X); }
 
 auto MathElt::get_list() const -> Math & { return math_data.get_list(chr); }
 
@@ -450,12 +448,12 @@ void Math::push_back_font(subtypes X, subtypes c) { push_back(MathElt(CmdChr(mat
 void MathDataP::push_back(size_t k, CmdChr X, subtypes c) { get_list(k).push_back(MathElt(X, c)); }
 
 // Adds a token to the list
-void Math::push_front(CmdChr X, subtypes c) { value.push_front(MathElt(X, c)); }
+void Math::push_front(CmdChr X, subtypes c) { MathList::push_front(MathElt(X, c)); }
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
     auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].val);
-    push_back(MathElt(X, font));
+    MathList::push_back(MathElt(X, font));
 }
 
 // Add an xml element. If b>=0, this element is at position b in the table.
@@ -586,7 +584,7 @@ void MathHelper::finish_math_mem() { math_data.finish_math_mem(); }
 
 // This kills the math elements
 void MathDataP::finish_math_mem() {
-    for (size_t i = 0; i <= lmath_pos; i++) math_table[i].destroy();
+    for (size_t i = 0; i <= lmath_pos; i++) math_table[i].clear();
     lmath_pos = 0;
     xmath_pos = 0;
 }
@@ -1965,7 +1963,7 @@ auto Math::M_array(bool numbered, math_style cms) -> Xml * {
 // return a non-mathml expression in case the argument is OK.
 auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     Buffer B;
-    auto   L = value.begin();
+    auto   L = begin();
     ++L;
     std::string loc       = cmd == underscore_catcode ? "sub" : "sup";
     CmdChr      w         = *L;
@@ -1975,8 +1973,8 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         B.push_back(w.char_val());
     else if (L->is_list()) {
         const Math &A = L->get_list();
-        auto        C = A.value.begin();
-        auto        E = A.value.end();
+        auto        C = A.begin();
+        auto        E = A.end();
         if (C == E) return nullptr;
         if (C->cmd == mathfont_cmd) {
             have_font  = true;
@@ -2037,14 +2035,14 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
 auto Math::trivial_math(long action) -> Xml * {
     action = action % 8;
     if (action == 0) return nullptr;
-    auto L = value.begin();
-    if (L == value.end()) return nullptr; // empty formula is never trivial
+    auto L = begin();
+    if (L == end()) return nullptr; // empty formula is never trivial
     int len = 1;
     ++L;
-    if (L != value.end()) {
+    if (L != end()) {
         ++L;
         len = 2;
-        if (L != value.end()) len = 3;
+        if (L != end()) len = 3;
     }
     symcodes cmd = front().cmd;
     Xml *    res{nullptr};
@@ -2114,12 +2112,12 @@ void MathHelper::new_label(const std::string &s, bool anchor) {
 
 // This removes the spaces.
 void Math::remove_spaces() {
-    value.remove_if([](const MathElt &v) { return v.is_space(); });
+    remove_if([](const MathElt &v) { return v.is_space(); });
 }
 
 // Returns true if there is an \over or something like that in the list.
 auto Math::has_over() const -> bool {
-    auto ovr = std::count_if(value.begin(), value.end(), [](const MathElt &m) { return m.cmd == over_cmd; });
+    auto ovr = std::count_if(begin(), end(), [](const MathElt &m) { return m.cmd == over_cmd; });
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
 }
@@ -2749,7 +2747,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     Math       res1     = res.M_cv3(cms);
     math_types res_type = mt_flag_small;
     if (res1.finish_translate1(the_parser.tracing_math())) res_type = mt_flag_big;
-    if (res1.length_one()) {
+    if (res1.size() == 1) {
         Xml *W = res1.front().get_xml_val();
         if (need_row == 2) W = new Xml(the_names["mrow"], W);
         if (!seen_style) return {W, res_type};
@@ -3202,7 +3200,7 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
         if (cmd == math_xml_cmd && t == mt_flag_large_l) {
             if (state) {
                 try_again = true;
-                res.splice(res.end(), aux.value);
+                res.splice(res.end(), aux);
             }
             aux.push_back(front());
             state = true;
@@ -3223,8 +3221,8 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
             aux.push_back(front());
         pop_front();
     }
-    value.swap(res);
-    value.splice(value.end(), aux.value);
+    swap(res);
+    splice(end(), aux);
     return ok && try_again;
 }
 
@@ -3233,8 +3231,8 @@ auto Math::convert_math(math_style k) -> Xml * { return M_cv(k, 1).value; }
 // Removes an an initial group that is the consequence of \refstepcounter
 void Math::remove_initial_group() {
     bool initial_relax = false;
-    auto B             = value.begin();
-    auto E             = value.end();
+    auto B             = begin();
+    auto E             = end();
     if (B == E) return;
     if (B->cmd == relax_cmd) {
         initial_relax = true;
@@ -3244,9 +3242,9 @@ void Math::remove_initial_group() {
     if (B->cmd != math_list_cmd) return;
     if (B->get_lcmd() != math_open_cd) return;
     Math &X = B->get_list();
-    if (!X.value.empty()) return;
-    if (initial_relax) value.pop_front();
-    value.pop_front();
+    if (!X.empty()) return;
+    if (initial_relax) pop_front();
+    pop_front();
 }
 
 void tralics_ns::boot_math(bool mv) {

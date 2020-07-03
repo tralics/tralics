@@ -41,37 +41,30 @@ namespace tralics_ns {
     auto math_env_name(subtypes c) -> String;
 } // namespace tralics_ns
 
-class Math {
+class Math : public MathList {
     friend class MathHelper;
     friend class MathDataP;
     friend class MathElt;
-    MathList       value;
     math_list_type type{invalid_cd};
 
 public:
     subtypes    sname{nomathenv_code};
     std::string saved;
 
+    using MathList::push_back;
+
     [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
-    auto                      back() -> MathElt & { return value.back(); }
-    [[nodiscard]] auto        begin() const -> const_math_iterator { return value.begin(); }
     auto                      chars_to_mb(Buffer &B, bool rec) const -> bool;
     auto                      chars_to_mb1(Buffer &B) const -> bool;
     auto                      chars_to_mb2(Buffer &B) const -> bool;
     auto                      chars_to_mb3() -> std::string;
-    void                      clear() { value.clear(); }
     auto                      convert_math(math_style k) -> Xml *;
     auto                      convert_math_noML(bool spec) -> Xml *;
     void                      convert_math_noML0();
     void                      convert_math_noMLt0();
     [[nodiscard]] auto        convert_opname() const -> std::string;
     auto                      convert_this_to_string(Buffer &B) const -> std::string;
-    void                      destroy();
-    [[nodiscard]] auto        empty() const -> bool { return value.empty(); }
-    [[nodiscard]] auto        end() const -> const_math_iterator { return value.end(); }
     auto                      find_parens(MathQList &res, bool verbose) const -> bool;
-    auto                      front() -> MathElt & { return value.front(); }
-    [[nodiscard]] auto        front() const -> const MathElt & { return value.front(); }
     auto                      get_arg1() -> Math { return front().get_list(); }
     [[nodiscard]] auto        get_arg2() const -> Math { return second_element().get_list(); }
     [[nodiscard]] auto        get_arg3() const -> Math { return third_element().get_list(); }
@@ -83,17 +76,13 @@ public:
     [[nodiscard]] auto        has_one_element() const -> bool;
     [[nodiscard]] auto        has_two_elements() const -> bool;
     void                      is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
-    [[nodiscard]] auto        length_one() const -> bool { return value.size() == 1; }
     auto                      M_array(bool numbered, math_style cms) -> Xml *;
     auto                      M_cv(math_style cms, int need_row) -> XmlAndType;
-    void                      pop_back() { value.pop_back(); }
-    void                      pop_front() { value.pop_front(); }
     void                      print() const;
     void                      push_back(CmdChr X, subtypes c, std::string s = "");
     void                      push_back_list(subtypes X, math_list_type c);
     void                      push_back_font(subtypes X, subtypes c);
     void                      push_back(CmdChr X);
-    void                      push_back(const MathElt &x) { value.push_back(x); }
     void                      push_back(Xml *A, int b, math_types c);
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
@@ -363,27 +352,27 @@ namespace math_ns {
 //  Some inline functions
 
 inline auto Math::has_two_elements() const -> bool {
-    auto X = value.begin();
-    if (X == value.end()) return false;
+    auto X = begin();
+    if (X == end()) return false;
     ++X;
-    return X != value.end();
+    return X != end();
 }
 
 inline auto Math::has_one_element() const -> bool {
-    auto X = value.begin();
-    if (X == value.end()) return false;
+    auto X = begin();
+    if (X == end()) return false;
     ++X;
-    return X == value.end();
+    return X == end();
 }
 
 inline auto Math::second_element() const -> const MathElt & {
-    auto X = value.begin();
+    auto X = begin();
     ++X;
     return *X;
 }
 
 inline auto Math::third_element() const -> const MathElt & {
-    auto X = value.begin();
+    auto X = begin();
     ++X;
     ++X;
     return *X;
