@@ -7,40 +7,33 @@
 class Xml;
 class Math;
 
-class MathElt { // \todo make it inherit from CmdChr
-    CmdChr      val;
-    subtypes    Font{};
+class MathElt : public CmdChr {
+    subtypes    font{};
     std::string payload;
 
 public:
-    MathElt(CmdChr X, subtypes c, std::string s = "") : val(X), Font(c), payload(std::move(s)) {}
-    MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
+    MathElt(CmdChr X, subtypes c, std::string s = "") : CmdChr(X), font(c), payload(std::move(s)) {}
+    MathElt(subtypes a, math_types b) : CmdChr(math_xml_cmd, a), font(subtypes(b)) {}
     MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
 
-    [[nodiscard]] auto get_char() const -> codepoint { return val.char_val(); }
-    [[nodiscard]] auto get_chr() const -> subtypes { return val.chr; }
-    [[nodiscard]] auto get_cmd() const -> symcodes { return val.cmd; }
-    [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
+    [[nodiscard]] auto get_char() const -> codepoint { return char_val(); }
     [[nodiscard]] auto get_fml_subtype() const -> subtypes;
-    [[nodiscard]] auto get_font() const -> subtypes { return Font; }
-    [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
+    [[nodiscard]] auto get_font() const -> subtypes { return font; }
+    [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(font); }
     [[nodiscard]] auto get_list() const -> Math &;
     [[nodiscard]] auto get_xml_val() const -> Xml *;
-    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
+    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(font); }
 
-    void set_chr(subtypes c) { val.chr = c; }
-    void set_cmd(symcodes c) { val.cmd = c; }
-    void set_xmltype(math_types x) { Font = subtypes(x); }
+    void set_xmltype(math_types x) { font = subtypes(x); }
 
     // some tests on the elements
-    [[nodiscard]] auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }
-    [[nodiscard]] auto is_hbox() const -> bool { return val.is_math_list() && Font == subtypes(math_hbox_cd); }
-    [[nodiscard]] auto is_space() const -> bool { return val.is_space(); }
+    [[nodiscard]] auto is_list() const -> bool { return is_math_list() && font == subtypes(math_open_cd); }
+    [[nodiscard]] auto is_hbox() const -> bool { return is_math_list() && font == subtypes(math_hbox_cd); }
     [[nodiscard]] auto is_digit() const -> bool;
     [[nodiscard]] auto is_char() const -> bool { return is_space() || is_letter_token() || is_other_token(); }
-    [[nodiscard]] auto is_letter_token() const -> bool { return val.is_letter(); }
-    [[nodiscard]] auto is_other_token() const -> bool { return val.is_other(); }
+    [[nodiscard]] auto is_letter_token() const -> bool { return is_letter(); }
+    [[nodiscard]] auto is_other_token() const -> bool { return is_other(); }
     [[nodiscard]] auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }
     [[nodiscard]] auto is_bracket() const -> bool { return is_other_token() && get_char() == '['; }
     [[nodiscard]] auto maybe_seq() const -> bool;
@@ -63,12 +56,11 @@ public:
     [[nodiscard]] auto is_e_grave() const -> bool;
     [[nodiscard]] auto special3() const -> Xml *;
     void               print() const;
-    [[nodiscard]] auto val_as_digit() const -> unsigned { return val.val_as_digit(); }
 
 private:
     void set_xml_subtype(math_types x) {
         set_xmltype(x);
-        val.set_mathml();
+        set_mathml();
     }
     [[nodiscard]] auto cv_char() const -> MathElt;
     [[nodiscard]] auto cv_cst() const -> MathElt;
@@ -79,5 +71,5 @@ private:
     [[nodiscard]] auto cv_mi(math_style cms) const -> MathElt;
     void               cv1_err();
     void               dump_for_err() const;
-    [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
+    [[nodiscard]] auto is_accent() const -> bool { return is_mathml() && font == 0; }
 };

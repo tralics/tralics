@@ -6,8 +6,6 @@
 
 // This prints a math element
 void MathElt::print() const {
-    int cmd = get_cmd();
-    int chr = get_chr();
     if (cmd == nomath_cmd) {
         Trace.format("only for {}\n", chr == zero_code ? "math" : "nomath");
         return;

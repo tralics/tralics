@@ -102,7 +102,7 @@ void Math::find_paren0(MathP &aux) const {
     auto E          = value.end();
     int  nb_pairs   = 0;
     while (L != E) { // create the list of indices
-        if (L->get_cmd() == math_xml_cmd) {
+        if (L->cmd == math_xml_cmd) {
             math_types t    = L->get_xmltype();
             bool       keep = false;
             switch (t) {
@@ -841,14 +841,14 @@ void MathElt::cv_noML_special() const {
     }
     if (c == genfrac_code) {
         if (L.empty()) return;
-        auto k = del_pos(L.front().get_chr());
+        auto k = del_pos(L.front().chr);
         if (k == del_dot)
             mathml_buffer.append("{}");
         else
             math_ns::insert_delimiter(k);
         L.pop_front();
         if (L.empty()) return;
-        k = del_pos(L.front().get_chr());
+        k = del_pos(L.front().chr);
         if (k == del_dot)
             mathml_buffer.append("{}");
         else
@@ -857,8 +857,8 @@ void MathElt::cv_noML_special() const {
         auto sz = L.front().payload;
         mathml_buffer += '{' + sz + '}';
         L.pop_front();
-        if (L.front().get_cmd() == style_cmd)
-            mathml_buffer.format("{}", math_ns::style_level(L.front().get_chr()));
+        if (L.front().cmd == style_cmd)
+            mathml_buffer.format("{}", math_ns::style_level(L.front().chr));
         else
             mathml_buffer.append("{}");
         L.pop_front();
@@ -945,7 +945,7 @@ void MathElt::cv_noMLt_special0() const {
     if (c == genfrac_code) {
         if (L.empty()) return;
         mathml_buffer.pop_back();
-        auto k = del_pos(L.front().get_chr());
+        auto k = del_pos(L.front().chr);
         if (k != del_dot) {
             att_buffer.clear();
             math_ns::insert_delimiter_t(k);
@@ -953,7 +953,7 @@ void MathElt::cv_noMLt_special0() const {
         }
         L.pop_front();
         if (!L.empty()) {
-            k = del_pos(L.front().get_chr());
+            k = del_pos(L.front().chr);
             if (k != del_dot) {
                 att_buffer.clear();
                 math_ns::insert_delimiter_t(k);
@@ -967,7 +967,7 @@ void MathElt::cv_noMLt_special0() const {
             L.pop_front();
         }
         if (!L.empty()) {
-            if (L.front().get_cmd() == style_cmd) mathml_buffer.format(" style='{}'", math_ns::style_level(L.front().get_chr()));
+            if (L.front().cmd == style_cmd) mathml_buffer.format(" style='{}'", math_ns::style_level(L.front().chr));
             L.pop_front();
         }
         mathml_buffer.push_back('>');
@@ -1184,7 +1184,7 @@ void Math::handle_mbox_not() {
 
 // This inserts a general token.
 void MathElt::cv_noML() {
-    switch (get_cmd()) {
+    switch (cmd) {
     SELF_INSERT_CASES:
         mathml_buffer.push_back_real_utf8(get_char());
         return;
@@ -1195,10 +1195,10 @@ void MathElt::cv_noML() {
             mathml_buffer.push_back_real_utf8(get_char());
         return;
     NORMAL_CASES:
-        mathml_buffer.push_back_math_token(val, true);
+        mathml_buffer.push_back_math_token(*this, true);
         return;
     case mathfont_cmd: {
-        size_t c = get_chr();
+        size_t c = chr;
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
@@ -1209,8 +1209,8 @@ void MathElt::cv_noML() {
     }
     case left_cmd: // left or right
     case right_cmd:
-        mathml_buffer.push_back_math_token(val, false);
-        math_ns::insert_delimiter(del_pos(get_chr()));
+        mathml_buffer.push_back_math_token(*this, false);
+        math_ns::insert_delimiter(del_pos(chr));
         return;
     case special_math_cmd: // \frac{}{}
         cv_noML_special();
@@ -1228,18 +1228,18 @@ void MathElt::cv_noML() {
     }
         return;
     case hspace_cmd:
-        mathml_buffer.push_back_math_token(get_cmd_chr(), false);
+        mathml_buffer.push_back_math_token(*this, false);
         mathml_buffer.push_back('{');
         mathml_buffer.push_back(ScaledInt(get_font()), glue_spec_pt);
         mathml_buffer.push_back('}');
         return;
-    default: mathml_buffer.push_back_math_token(val, true); return;
+    default: mathml_buffer.push_back_math_token(*this, true); return;
     }
 }
 
 // This inserts a general token.
 void MathElt::cv_noMLt() {
-    switch (get_cmd()) {
+    switch (cmd) {
     SELF_INSERT_CASES:
         mathml_buffer.push_back_real_utf8(get_char());
         return;
@@ -1250,10 +1250,10 @@ void MathElt::cv_noMLt() {
             mathml_buffer.push_back_real_utf8(get_char());
         return;
     NORMAL_CASES:
-        mathml_buffer.push_back_math_tag(val, pbm_empty);
+        mathml_buffer.push_back_math_tag(*this, pbm_empty);
         return;
     case mathfont_cmd: {
-        size_t c = get_chr();
+        size_t c = chr;
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
@@ -1263,9 +1263,9 @@ void MathElt::cv_noMLt() {
     case left_cmd: // left or right
     case right_cmd:
         att_buffer = " del='";
-        math_ns::insert_delimiter_t(del_pos(get_chr()));
+        math_ns::insert_delimiter_t(del_pos(chr));
         att_buffer += "'";
-        mathml_buffer.push_back_math_tag(val, pbm_att_empty);
+        mathml_buffer.push_back_math_tag(*this, pbm_att_empty);
         return;
     case special_math_cmd: // \frac{}{}
         cv_noMLt_special();
@@ -1281,7 +1281,6 @@ void MathElt::cv_noMLt() {
         return;
     }
     case hspace_cmd: {
-        int    chr  = get_chr();
         String name = chr == 1 || chr == 3 ? "vspace" : "hspace";
         if (chr >= 2) att_buffer = " star='true'";
         mathml_buffer.push_back_math_tag(name, chr < 2 ? pbm_start : pbm_att);
@@ -1289,7 +1288,7 @@ void MathElt::cv_noMLt() {
         mathml_buffer.push_back_math_tag(name, pbm_end);
         return;
     }
-    default: mathml_buffer.push_back_math_tag(val, pbm_empty); return;
+    default: mathml_buffer.push_back_math_tag(*this, pbm_empty); return;
     }
 }
 
@@ -1298,8 +1297,8 @@ void Math::convert_math_noML0() {
     while (!empty()) {
         MathElt cur = front();
         pop_front();
-        int cmd = cur.get_cmd();
-        if (cmd == mathfont_cmd && (empty() || front().get_cmd() == mathfont_cmd)) continue;
+        int cmd = cur.cmd;
+        if (cmd == mathfont_cmd && (empty() || front().cmd == mathfont_cmd)) continue;
         cur.cv_noML();
     }
 }
@@ -1310,8 +1309,8 @@ void Math::convert_math_noMLt0() {
     while (!empty()) {
         MathElt cur = front();
         pop_front();
-        int cmd = cur.get_cmd();
-        if (cmd == mathfont_cmd && (empty() || front().get_cmd() == mathfont_cmd)) continue;
+        int cmd = cur.cmd;
+        if (cmd == mathfont_cmd && (empty() || front().cmd == mathfont_cmd)) continue;
         if (!empty() && (cmd == hat_catcode || cmd == underscore_catcode)) {
             cur = front();
             pop_front();
@@ -1361,7 +1360,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
     for (;;) {
         if (L == E) return true;
         // DEBUG   std::cout<< "cmd:" << B << ".\n";
-        CmdChr w = L->get_cmd_chr();
+        CmdChr w = *L;
         if (w.is_space() || w.is_letter() || w.is_other()) {
             codepoint c = w.char_val();
             if (c == '<')
@@ -1399,7 +1398,7 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
     auto E = value.end();
     for (;;) {
         if (L == E) return true;
-        CmdChr w = L->get_cmd_chr();
+        CmdChr w = *L;
         if (w.is_space()) {
         } // spaces are ignored
         else if (w.is_letter() || w.is_other())
@@ -1589,7 +1588,7 @@ void Math::special2(bool &ok, Xml *&res) const {
     Buffer &B = aux_buffer;
     B.clear();
     for (auto L = value.begin(); L != value.end(); ++L) {
-        if (L->get_cmd() == hat_catcode) {
+        if (L->cmd == hat_catcode) {
             ++L;                          // skip over hat
             if (L == value.end()) return; // a final hat should not appear
             ++L;
@@ -1640,9 +1639,9 @@ void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
 // looks at letters. If OK, return a valid XML exponent.
 auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> Xml * {
     if (L == E) return nullptr;
-    if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
+    if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
     if (L == E) return nullptr;
-    if (L->get_cmd() == mathfont_cmd || L->get_cmd() == fontsize_cmd) ++L;
+    if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
     Buffer &B = aux_buffer;
     B.clear();
     while (L != E) {
@@ -1661,7 +1660,7 @@ auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> 
 
 // True if it is a group containing \grave{e}
 auto MathElt::is_e_grave() const -> bool {
-    if (get_cmd() != special_math_cmd && get_font() != grave_code) return false;
+    if (cmd != special_math_cmd && get_font() != grave_code) return false;
     Math &  A = get_list();
     Buffer &B = mathml_buffer; // not aux_buffer !!
     if (!A.get_arg1().chars_to_mb(B, false)) return false;
@@ -1690,9 +1689,9 @@ auto Math::special1() const -> Xml * {
     if (!ok) return U;
     const MathElt &W = value.back();
     Xml *          xval{nullptr};
-    if (W.get_cmd() == letter_catcode && W.get_char() == 'o')
+    if (W.cmd == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);
-    else if (W.get_cmd() == letter_catcode && W.get_char() == 'e')
+    else if (W.cmd == letter_catcode && W.get_char() == 'e')
         xval = math_ns::get_builtin(xml_e_loc);
     else {
         xval = W.special3();
@@ -1791,34 +1790,34 @@ auto math_ns::mk_mi(uchar c, size_t font) -> Xml * {
 
 // True if this can form a sequence of characters to put in a <mi>
 auto MathElt::maybe_seq() const -> bool {
-    if (get_cmd() != letter_catcode) return false;
+    if (cmd != letter_catcode) return false;
     if (get_font() == 0) return false;
-    auto c = get_chr();
+    auto c = chr;
     return c < 128 && ::is_letter(char(uchar(c)));
 }
 
 // True is this can form a sequence of characters to put in a <mi>
 // with the same font as F
 auto MathElt::maybe_seq(subtypes f) const -> bool {
-    if (get_cmd() != letter_catcode) return false;
+    if (cmd != letter_catcode) return false;
     if (get_font() != f) return false;
-    auto c = get_chr();
+    auto c = chr;
     return c < 128 && ::is_letter(char(uchar(c)));
 }
 
 // True is this can form a sequence of digits to put in a <mn>
 auto MathElt::maybe_iseq() const -> bool {
-    if (get_cmd() != other_catcode) return false;
-    auto c = get_chr();
+    if (cmd != other_catcode) return false;
+    auto c = chr;
     return c < 128 && ::is_digit(char(uchar(c)));
 }
 
 // True is this can form a sequence of characters to put in a <mn>
 // with the same font as F
 auto MathElt::maybe_iseq(subtypes f) const -> bool {
-    if (get_cmd() != other_catcode) return false;
+    if (cmd != other_catcode) return false;
     if (get_font() != f) return false;
-    auto c = get_chr();
+    auto c = chr;
     return c < 128 && ::is_digit(char(uchar(c)));
 }
 
@@ -1832,7 +1831,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     B.clear();
     if (f == 1) B.push_back(' ');
     bool     spec = (f == 1) || ((w & (1 << f)) != 0);
-    unsigned c    = W.get_chr();
+    unsigned c    = W.chr;
     if (spec)
         B.push_back(char(uchar(c)));
     else
@@ -1840,7 +1839,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     for (;;) {
         if (empty()) break;
         if (!front().maybe_seq(f)) break;
-        c = front().get_chr();
+        c = front().chr;
         if (spec)
             B.push_back(char(uchar(c)));
         else
@@ -1861,13 +1860,13 @@ auto Math::convert_char_iseq(const MathElt &W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
     Buffer & B = aux_buffer;
     B.clear();
-    unsigned c = W.get_chr();
+    unsigned c = W.chr;
     B.push_back(char(uchar(c)));
     if (multiple)
         for (;;) {
             if (empty()) break;
             if (!front().maybe_iseq(f)) break;
-            c = front().get_chr();
+            c = front().chr;
             B.push_back(char(uchar(c)));
             pop_front();
         }

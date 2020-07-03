@@ -312,8 +312,8 @@ class Cv3Helper {
     Math               object;
     int                special; // Sum or product
     void               pop_front() { object.pop_front(); }
-    [[nodiscard]] auto get_cmd() const -> symcodes { return object.front().get_cmd(); }
-    [[nodiscard]] auto get_chr() const -> subtypes { return object.front().get_chr(); }
+    [[nodiscard]] auto get_cmd() const -> symcodes { return object.front().cmd; }
+    [[nodiscard]] auto get_chr() const -> subtypes { return object.front().chr; }
     auto               get_xmltype() -> math_types { return object.front().get_xmltype(); }
     auto               empty() -> bool { return object.empty(); }
 

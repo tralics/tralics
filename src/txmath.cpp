@@ -82,8 +82,8 @@ auto Math::duplicate(bool nomath) const -> subtypes {
     auto     E         = value.end();
     while (C != E) {
         skip_next = skipping;
-        if (C->get_cmd() == nomath_cmd) {
-            int s = C->get_chr();
+        if (C->cmd == nomath_cmd) {
+            int s = C->chr;
             ++C;
             if (C == E) break;
             if (s == 0)
@@ -108,11 +108,11 @@ auto Math::duplicate(bool nomath) const -> subtypes {
             }
         }
         if (skip_next) {
-        } else if (C->get_cmd() == math_list_cmd) {
+        } else if (C->cmd == math_list_cmd) {
             Math &   v  = C->get_list();
             subtypes k1 = v.duplicate(nomath);
             cp.push_back_list(k1, C->get_lcmd());
-        } else if (C->get_cmd() == special_math_cmd) {
+        } else if (C->cmd == special_math_cmd) {
             Math &   v  = C->get_list();
             subtypes k1 = v.duplicate(nomath);
             cp.push_back(CmdChr(special_math_cmd, k1), C->get_font());
@@ -435,7 +435,7 @@ void Math::destroy() { value.clear(); }
 // Adds X to the end of *this, and kills X.
 void Math::push_back(Math &X) { value.splice(value.end(), X.value); }
 
-auto MathElt::get_list() const -> Math & { return math_data.get_list(get_chr()); }
+auto MathElt::get_list() const -> Math & { return math_data.get_list(chr); }
 
 auto Math::get_list(size_t w) -> Math & { return math_data.get_list(w); }
 
@@ -467,7 +467,8 @@ MathElt::MathElt(Xml *A, int b, math_types c) {
         pos = subtypes(b);
     else
         pos = math_data.find_xml_location(A);
-    val = CmdChr(math_xml_cmd, pos);
+    cmd = math_xml_cmd;
+    chr = pos;
     set_xmltype(c);
 }
 
@@ -516,7 +517,7 @@ void MathDataP::boot_table() {
     lmath_pos = 0;
 }
 
-inline auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(get_chr()); }
+inline auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(chr); }
 
 // --------------------------------------------------------------------
 
@@ -574,9 +575,9 @@ auto MathDataP::find_xml_location(Xml *y) -> subtypes {
     return find_xml_location();
 }
 
-MathElt::MathElt(Xml *x, math_types y) : val(CmdChr(math_xml_cmd, zero_code)) {
+MathElt::MathElt(Xml *x, math_types y) : CmdChr(math_xml_cmd, zero_code) {
     set_xmltype(y);
-    set_chr(math_data.find_xml_location(x));
+    chr = math_data.find_xml_location(x);
 }
 
 // Destroys all math lists, and resets pointers,
@@ -591,7 +592,7 @@ void MathDataP::finish_math_mem() {
 }
 
 // True if this is a digit with category 12
-auto MathElt::is_digit() const -> bool { return get_cmd() == 12 && val.is_digit(); }
+auto MathElt::is_digit() const -> bool { return cmd == 12 && CmdChr::is_digit(); }
 
 // If we see something like {} in a math formula, say cur_math,
 // we open a group, create a new mathlist res, add it to cur_math.
@@ -1003,7 +1004,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             auto    tmp = new_math_list(res, math_LR_cd, nomathenv_code);
             Math &  ww  = math_data.get_list(tmp);
             ww.push_front(CmdChr(T, subtypes(k)), zero_code);
-            if (ww.back().get_cmd() != right_cmd) {
+            if (ww.back().cmd != right_cmd) {
                 parse_error("Missing \\right. inserted");
                 ww.push_back(CmdChr(right_cmd, subtypes(del_dot)), zero_code);
             }
@@ -1832,7 +1833,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
     int tbl_align = 0;
     cmi.set_cid(id);
     Math args = *this;
-    if (!(front().get_cmd() == special_math_cmd && front().get_lcmd() == sub_to_math(multicolumn_code))) {
+    if (!(front().cmd == special_math_cmd && front().get_lcmd() == sub_to_math(multicolumn_code))) {
         auto m = table.size();
         if (n < m) id.add_attribute(table[n], true);
         n++;
@@ -1890,7 +1891,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     bool first_cell = is_multline;
     if (numbered) cmi.reset_last_ml_pos();
     while (!empty()) {
-        symcodes cmd = front().get_cmd();
+        symcodes cmd = front().cmd;
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
             row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
@@ -1967,7 +1968,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     auto   L = value.begin();
     ++L;
     std::string loc       = cmd == underscore_catcode ? "sub" : "sup";
-    CmdChr      w         = L->get_cmd_chr();
+    CmdChr      w         = *L;
     bool        have_font = false;
     std::string font_pos  = "cst_empty";
     if (w.is_letter() || w.is_other())
@@ -1977,9 +1978,9 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         auto        C = A.value.begin();
         auto        E = A.value.end();
         if (C == E) return nullptr;
-        if (C->get_cmd() == mathfont_cmd) {
+        if (C->cmd == mathfont_cmd) {
             have_font  = true;
-            subtypes s = C->get_chr();
+            subtypes s = C->chr;
             if (s == math_f_italic)
                 font_pos = "it";
             else if (s == math_f_upright)
@@ -1997,7 +1998,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         while (C != E) {
             if (C->is_char())
                 B.push_back(C->get_char());
-            else if (C->get_cmd() == mathfont_cmd) {
+            else if (C->cmd == mathfont_cmd) {
                 ++C;
                 if (C == E) break;
                 return nullptr;
@@ -2045,7 +2046,7 @@ auto Math::trivial_math(long action) -> Xml * {
         len = 2;
         if (L != value.end()) len = 3;
     }
-    symcodes cmd = front().get_cmd();
+    symcodes cmd = front().cmd;
     Xml *    res{nullptr};
     if (((action & 4) != 0) && len == 2 && (cmd == underscore_catcode || cmd == hat_catcode)) res = trivial_math_index(cmd);
     if (res != nullptr) return res;
@@ -2062,11 +2063,10 @@ auto Math::trivial_math(long action) -> Xml * {
         if (c < nb_simplemath) return math_data.get_simplemath_val(c);
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(std::string("&#x2013;"));
-    if (front().get_cmd() == mathord_cmd || front().get_cmd() == mathordb_cmd || front().get_cmd() == mathbin_cmd ||
-        front().get_cmd() == mathop_cmd || front().get_cmd() == mathopn_cmd || front().get_cmd() == mathrel_cmd ||
-        front().get_cmd() == mathinner_cmd || front().get_cmd() == mathbetween_cmd || front().get_cmd() == mathopen_cmd ||
-        front().get_cmd() == mathclose_cmd) {
-        size_t c = front().get_chr();
+    if (front().cmd == mathord_cmd || front().cmd == mathordb_cmd || front().cmd == mathbin_cmd || front().cmd == mathop_cmd ||
+        front().cmd == mathopn_cmd || front().cmd == mathrel_cmd || front().cmd == mathinner_cmd || front().cmd == mathbetween_cmd ||
+        front().cmd == mathopen_cmd || front().cmd == mathclose_cmd) {
+        size_t c = front().chr;
         if (first_inline_hack <= c && c <= last_inline_hack) return math_ns::get_builtin_alt(c);
     }
     return nullptr;
@@ -2119,7 +2119,7 @@ void Math::remove_spaces() {
 
 // Returns true if there is an \over or something like that in the list.
 auto Math::has_over() const -> bool {
-    auto ovr = std::count_if(value.begin(), value.end(), [](const MathElt &m) { return m.get_cmd() == over_cmd; });
+    auto ovr = std::count_if(value.begin(), value.end(), [](const MathElt &m) { return m.cmd == over_cmd; });
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
 }
@@ -2130,7 +2130,7 @@ auto MathElt::try_math_op() const -> Xml * {
     if (!is_list()) return nullptr;
     Math &X = get_list();
     if (X.empty()) return nullptr;
-    if (!(X.front().get_cmd() == mathfont_cmd && X.front().get_chr() == math_f_upright)) return nullptr;
+    if (!(X.front().cmd == mathfont_cmd && X.front().chr == math_f_upright)) return nullptr;
     if (!X.chars_to_mb2(math_buffer)) return nullptr;
     Xml *s = new Xml(the_names["mo"], new Xml(std::string(math_buffer)));
     s->add_att(the_names["form"], the_names["prefix"]);
@@ -2139,7 +2139,7 @@ auto MathElt::try_math_op() const -> Xml * {
 
 // This converts a character into a MathML object
 auto MathElt::cv_char() const -> MathElt {
-    unsigned c  = get_chr();
+    unsigned c  = chr;
     int      a  = 0;
     auto     mt = mt_flag_small;
     auto     F  = get_font();
@@ -2161,7 +2161,7 @@ auto MathElt::cv_char() const -> MathElt {
 
 // This converts a constant.
 auto MathElt::cv_cst() const -> MathElt {
-    subtypes   c  = get_chr();
+    subtypes   c  = chr;
     Xml *      s  = math_constants(c);
     math_types mt = math_space_code(c) ? mt_flag_space : mt_flag_small;
     return MathElt(s, mt);
@@ -2175,8 +2175,8 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         return MathElt(res.value, res.type);
     }
     if (get_lcmd() == math_LR_cd) { // case \left(x+y\right)
-        auto a = X.front().get_chr();
-        auto b = X.back().get_chr();
+        auto a = X.front().chr;
+        auto b = X.back().chr;
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
@@ -2204,12 +2204,12 @@ auto math_ns::cv_special_string(int c) -> std::string {
 // Return 1 if the list is left aligned, 2 if right aligned, 0 if centered
 auto Math::check_align() -> int {
     int a = 0, b = 0;
-    if (!empty() && front().get_cmd() == hfill_cmd) {
-        a = front().get_chr();
+    if (!empty() && front().cmd == hfill_cmd) {
+        a = front().chr;
         pop_front();
     }
-    if (!empty() && back().get_cmd() == hfill_cmd) {
-        b = back().get_chr();
+    if (!empty() && back().cmd == hfill_cmd) {
+        b = back().chr;
         pop_back();
     }
     if (a == b && a == hfill_code) return 3; // clearly centered
@@ -2389,14 +2389,14 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     size_t      open = del_dot, close = del_dot; // delimiters, in case
     std::string sz;                              // fraction rule width
     if (c == genfrac_code) {
-        open = L.front().get_chr();
+        open = L.front().chr;
         L.pop_front();
-        close = L.front().get_chr();
+        close = L.front().chr;
         L.pop_front();
         sz = L.front().payload;
         L.pop_front();
-        if (L.front().get_cmd() == style_cmd) {
-            cms   = style_level(L.front().get_chr());
+        if (L.front().cmd == style_cmd) {
+            cms   = style_level(L.front().chr);
             style = cms;
         }
         L.pop_front();
@@ -2502,8 +2502,8 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
 
 // First pass: convert characters.
 auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
-    subtypes c = get_chr();
-    switch (get_cmd()) {
+    subtypes c = chr;
+    switch (cmd) {
     case space_catcode:
     case letter_catcode:
     case other_catcode:
@@ -2535,7 +2535,7 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
 
 void MathElt::dump_for_err() const {
     Logger::finish_seq();
-    the_log << int(get_cmd()) << " - " << int(get_chr()) << " - " << int(get_font()) << "\n";
+    the_log << int(cmd) << " - " << int(chr) << " - " << int(get_font()) << "\n";
 }
 
 void MathElt::cv1_err() {
@@ -2547,10 +2547,10 @@ void MathElt::cv1_err() {
 
 // Converts flags from small to large.
 void MathElt::change_type(int t) {
-    if (get_cmd() != math_xml_cmd) return;
+    if (cmd != math_xml_cmd) return;
     math_types T = get_xmltype();
     if (T == mt_flag_small) {
-        del_pos w = get_delimiter(get_chr());
+        del_pos w = get_delimiter(chr);
         if (w == del_invalid) return;
         if (t == 0) {
             if (w == del_open_ket)
@@ -2586,8 +2586,8 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     auto c = subtypes(atopwithdelims_code + 1);
     cms    = next_frac_style(cms);
     while (!empty()) {
-        if (front().get_cmd() == over_cmd) {
-            c = front().get_chr();
+        if (front().cmd == over_cmd) {
+            c = front().chr;
             break;
         }
         A.push_back(front());
@@ -2598,7 +2598,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
     int     numalign = 0, denalign = 0;
     if (c == atopwithdelims_code || c == overwithdelims_code || c == abovewithdelims_code) {
         while (!empty()) {
-            if (front().get_cmd() == relax_cmd)
+            if (front().cmd == relax_cmd)
                 pop_front();
             else
                 break;
@@ -2606,12 +2606,12 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
         if (empty())
             the_parser.parse_error("Problem finding opening delim");
         else {
-            open = get_delimiter(front().get_cmd_chr());
+            open = get_delimiter(front());
             if (open == del_invalid) the_parser.parse_error(the_parser.err_tok, "Invalid character in open", "bad delims");
             pop_front();
         }
         while (!empty()) {
-            if (front().get_cmd() == relax_cmd)
+            if (front().cmd == relax_cmd)
                 pop_front();
             else
                 break;
@@ -2619,7 +2619,7 @@ auto Math::M_cv0(math_style cms) -> XmlAndType {
         if (empty())
             the_parser.parse_error(the_parser.err_tok, "Problem finding closing delim");
         else {
-            close = get_delimiter(front().get_cmd_chr());
+            close = get_delimiter(front());
             if (close == del_invalid) the_parser.parse_error(the_parser.err_tok, "Invalid character in close", "bad delims");
             pop_front();
         }
@@ -2669,8 +2669,8 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         pop_front();
         if (cur.is_space()) continue; // ignore this
         prev_is_hat  = cur_is_hat;
-        symcodes cmd = cur.get_cmd();
-        subtypes chr = cur.get_chr();
+        symcodes cmd = cur.cmd;
+        subtypes chr = cur.chr;
         if (cmd == hat_catcode || cmd == underscore_catcode) {
             cur_is_hat = true;
             res.push_back(cur);
@@ -2731,7 +2731,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         bool next_is_hat = false;
         if (cmd == math_list_cmd) {
             while (!empty() && front().is_space()) pop_front();
-            if (!empty() && (front().get_cmd() == hat_catcode || front().get_cmd() == hat_catcode)) next_is_hat = true;
+            if (!empty() && (front().cmd == hat_catcode || front().cmd == hat_catcode)) next_is_hat = true;
         }
         math_style cmss = cms;
         if (prev_is_hat) cmss = next_math_style(cms);
@@ -2741,7 +2741,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             MathElt Cur = cur.maybe_iseq() ? convert_char_iseq(cur, !prev_is_hat) : cur.cv1(cmss, next_is_hat);
             if (next_action == 1) Cur.set_xmltype(new_type);
             if (next_action == 2) Cur.change_type(t);
-            if (Cur.get_cmd() == error_cmd) continue;
+            if (Cur.cmd == error_cmd) continue;
             res.push_back(Cur);
         }
     }
@@ -2798,8 +2798,8 @@ void math_ns::bad_math_warn(Buffer &B) {
 auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
     B.clear();
     while (!empty()) {
-        symcodes cmd = front().get_cmd();
-        auto     chr = front().get_chr();
+        symcodes cmd = front().cmd;
+        auto     chr = front().chr;
         subtypes fn  = front().get_font();
         MathElt  old = front();
         pop_front();
@@ -2823,7 +2823,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
         else if (is_m_font(cmd))
             continue;
         else if (cmd == ref_cmd) {
-            if (front().get_cmd() == math_list_cmd && front().get_list().type == math_open_cd) return 4;
+            if (front().cmd == math_list_cmd && front().get_list().type == math_open_cd) return 4;
             return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
             B.push_back_real_utf8(codepoint(char32_t(chr)));
@@ -2846,7 +2846,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             return 0;
         } else if (cmd != math_list_cmd) {
             math_ns::bad_math_warn(B);
-            the_log << "Offending command = \\" << old.get_cmd_chr().name() << "\n";
+            the_log << "Offending command = \\" << old.name() << "\n";
             return 0;
         } else if (old.get_list().type == math_dollar_cd)
             return -int(chr);
@@ -2914,7 +2914,7 @@ void Math::handle_mbox(Math &res) {
 }
 
 auto MathElt::remove_prefix() const -> Xml * {
-    if (get_cmd() == math_xml_cmd) return get_xml_val();
+    if (cmd == math_xml_cmd) return get_xml_val();
     dump_for_err();
     log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) << "\n";
     return new Xml(std::string("BAD"));
@@ -3155,7 +3155,7 @@ void Math::concat(Xml *res) {
     }
 }
 
-auto MathElt::large2() const -> del_pos { return get_delimiter(get_chr()); }
+auto MathElt::large2() const -> del_pos { return get_delimiter(chr); }
 
 // The list holds something like [a+b, et cl is ]
 // returns <mfenced open=[ close=]>a+b</mfenced>
@@ -3197,7 +3197,7 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
     bool     ok        = false; // true if we have added a fence
     bool     try_again = false; // true if formula has unused \big
     while (!empty()) {
-        int        cmd = front().get_cmd();
+        int        cmd = front().cmd;
         math_types t   = front().get_xmltype();
         if (cmd == math_xml_cmd && t == mt_flag_large_l) {
             if (state) {
@@ -3236,12 +3236,12 @@ void Math::remove_initial_group() {
     auto B             = value.begin();
     auto E             = value.end();
     if (B == E) return;
-    if (B->get_cmd() == relax_cmd) {
+    if (B->cmd == relax_cmd) {
         initial_relax = true;
         ++B;
     }
     if (B == E) return;
-    if (B->get_cmd() != math_list_cmd) return;
+    if (B->cmd != math_list_cmd) return;
     if (B->get_lcmd() != math_open_cd) return;
     Math &X = B->get_list();
     if (!X.value.empty()) return;
