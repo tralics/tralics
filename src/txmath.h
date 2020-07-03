@@ -9,6 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/MathElt.h"
 #include "tralics/Xml.h"
 #include <spdlog/spdlog.h>
 
@@ -33,84 +34,8 @@ inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_
 // it can be math_xml_cmd, pos, type, where pos is a position into a
 //    table of XML elements.
 
-class MathElt { // \todo make it inherit from CmdChr
-    CmdChr      val;
-    subtypes    Font{};
-    std::string payload;
-
-public:
-    MathElt(CmdChr X, subtypes c, std::string s = "") : val(X), Font(c), payload(std::move(s)) {}
-    MathElt(subtypes a, math_types b) : val(CmdChr(math_xml_cmd, a)), Font(subtypes(b)) {}
-    MathElt(Xml *x, math_types y);
-    MathElt(Xml *A, int b, math_types c);
-
-    [[nodiscard]] auto get_char() const -> codepoint { return val.char_val(); }
-    [[nodiscard]] auto get_chr() const -> subtypes { return val.chr; }
-    [[nodiscard]] auto get_cmd() const -> symcodes { return val.cmd; }
-    [[nodiscard]] auto get_cmd_chr() const -> const CmdChr & { return val; }
-    [[nodiscard]] auto get_fml_subtype() const -> subtypes;
-    [[nodiscard]] auto get_font() const -> subtypes { return Font; }
-    [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(Font); }
-    [[nodiscard]] auto get_list() const -> Math &;
-    [[nodiscard]] auto get_xml_val() const -> Xml *;
-    [[nodiscard]] auto get_xmltype() const -> math_types { return math_types(Font); }
-
-    void set_chr(subtypes c) { val.chr = c; }
-    void set_cmd(symcodes c) { val.cmd = c; }
-    void set_xmltype(math_types x) { Font = subtypes(x); }
-
-    // some tests on the elements
-    [[nodiscard]] auto is_list() const -> bool { return val.is_math_list() && Font == subtypes(math_open_cd); }
-    [[nodiscard]] auto is_hbox() const -> bool { return val.is_math_list() && Font == subtypes(math_hbox_cd); }
-    [[nodiscard]] auto is_space() const -> bool { return val.is_space(); }
-    [[nodiscard]] auto is_digit() const -> bool;
-    [[nodiscard]] auto is_char() const -> bool { return is_space() || is_letter_token() || is_other_token(); }
-    [[nodiscard]] auto is_letter_token() const -> bool { return val.is_letter(); }
-    [[nodiscard]] auto is_other_token() const -> bool { return val.is_other(); }
-    [[nodiscard]] auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }
-    [[nodiscard]] auto is_bracket() const -> bool { return is_other_token() && get_char() == '['; }
-    [[nodiscard]] auto maybe_seq() const -> bool;
-    [[nodiscard]] auto maybe_seq(subtypes f) const -> bool;
-    [[nodiscard]] auto maybe_iseq(subtypes f) const -> bool;
-    [[nodiscard]] auto maybe_iseq() const -> bool;
-    // other functions
-    [[nodiscard]] auto large2() const -> del_pos;
-    [[nodiscard]] auto remove_prefix() const -> Xml *;
-    void               cv_noMLt();
-    void               cv_noML();
-    void               cv_noMLt_special() const;
-    void               cv_noMLt_special0() const;
-    void               cv_noMLt_list() const;
-    void               cv_noML_special() const;
-    void               cv_noML_list() const;
-    auto               cv1(math_style cms, bool ph) -> MathElt;
-    void               change_type(int t);
-    [[nodiscard]] auto try_math_op() const -> Xml *;
-    [[nodiscard]] auto is_e_grave() const -> bool;
-    [[nodiscard]] auto special3() const -> Xml *;
-    void               print() const;
-    [[nodiscard]] auto val_as_digit() const -> unsigned { return val.val_as_digit(); }
-
-private:
-    void set_xml_subtype(math_types x) {
-        set_xmltype(x);
-        val.set_mathml();
-    }
-    [[nodiscard]] auto cv_char() const -> MathElt;
-    [[nodiscard]] auto cv_cst() const -> MathElt;
-    auto               cv_special(math_style cms) -> MathElt;
-    [[nodiscard]] auto cv_special1(math_style cms) const -> MathElt;
-    auto               cv_list(math_style cms, bool ph) -> MathElt;
-    auto               cv_list_no() -> MathElt;
-    [[nodiscard]] auto cv_mi(math_style cms) const -> MathElt;
-    void               cv1_err();
-    void               dump_for_err() const;
-    [[nodiscard]] auto is_accent() const -> bool { return val.is_mathml() && Font == 0; }
-};
-
 using MathList            = std::list<MathElt>;
 using const_math_iterator = std::list<MathElt>::const_iterator;
-using math_iterator       = std::list<MathElt>::iterator;
 
 namespace tralics_ns {
     auto math_env_name(subtypes c) -> String;

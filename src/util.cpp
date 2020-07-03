@@ -80,3 +80,5 @@ auto save_string_name(size_t n) -> String {
     if (n == 1) return "current counter";
     return "unknown";
 }
+
+auto is_m_font(symcodes cmd) -> bool { return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd; }

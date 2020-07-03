@@ -13,6 +13,7 @@
 #include "txmath.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include <algorithm>
 #include <fmt/format.h>
@@ -22,7 +23,6 @@ namespace {
     Buffer             math_buffer;
     Buffer             special_buffer;
     Buffer             math_buffer1;
-    Buffer             Trace;
     size_t             old_pos = 0;       // pointer into trace
     MathHelper         cmi;               // Data structure holding some global values
     bool               trace_needs_space; // bool  for: \frac\pi y
@@ -30,10 +30,6 @@ namespace {
     Token              fct_caller;
     std::string        the_tag;
     std::vector<Xml *> all_maths;
-
-    auto is_m_font(symcodes cmd) -> bool {
-        return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd;
-    }
 
     auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
 
@@ -334,28 +330,6 @@ void Math::print() const {
         }
     }
     Trace += "}\n";
-}
-
-// This prints a math element
-void MathElt::print() const {
-    int cmd = get_cmd();
-    int chr = get_chr();
-    if (cmd == nomath_cmd) {
-        Trace.format("only for {}\n", chr == zero_code ? "math" : "nomath");
-        return;
-    }
-    Trace.format("ME {} - ", cmd);
-    if (32 < chr && chr < 128)
-        Trace.format("char {}", uchar(chr));
-    else
-        Trace.format("{}", chr);
-    // is this secure ???
-    //  if(cmd>16) Trace << " - " <<  Token(get_font());
-    if (cmd == mathfont_cmd || is_m_font(symcodes(cmd)))
-        Trace.format(" - {}\n", Token(get_font()));
-    else
-        Trace.format(" - {}\n", get_font());
-    if (cmd == math_list_cmd || cmd == special_math_cmd) get_list().print(); // recurse
 }
 
 // -----------------------------------------------------------------------
