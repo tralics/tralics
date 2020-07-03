@@ -19,11 +19,10 @@
 
 // See comments in tralics.cpp where these variables are defined
 namespace main_ns {
-    extern int  nb_errs;
-    extern bool file_ended;
-    extern bool no_xml_error;
-    extern bool use_quotes;
-    extern bool bib_allow_break;
+    inline int  nb_errs{0};
+    inline bool no_xml_error{false};
+    inline bool use_quotes{false};
+    inline bool bib_allow_break{true};
 } // namespace main_ns
 
 namespace io_ns {

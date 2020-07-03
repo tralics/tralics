@@ -20,8 +20,7 @@ using namespace math_ns;
 // mathml variants: normal, bold, italic, bold-italic, double-struck,
 // bold-fraktur, script, bold-script, fraktur, sans-serif, bold-sans-serif,
 // sans-serif-italic, sans-serif-bold-italic, monospace
-std::array<std::array<std::string, 15>, 128> math_chars;
-std::array<Xml *, 128>                       single_chars;
+std::array<Xml *, 128> single_chars;
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"

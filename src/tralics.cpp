@@ -21,16 +21,6 @@
 #include <ctime>
 #include <fmt/format.h>
 
-namespace main_ns {
-    int  nb_errs         = 0;     // number of errors seen so far
-    bool no_xml_error    = false; // should an error produce an XML element ?
-    bool use_quotes      = false; // How to translate quotes
-    bool bib_allow_break = true;  // <allowbreak> in bibliography
-} // namespace main_ns
-
-MainClass *the_main;     // the main class data structure
-bool       ra_ok = true; // inhibits  redefinitions
-
 // This is the main function. It does the following: boot the parser and the
 // math part, and execute the main prog.
 auto main(int argc, char **argv) -> int {

@@ -19,9 +19,6 @@ class MathF;
 
 using MathQList = std::list<MathQ>;
 
-extern std::array<std::array<std::string, 15>, 128> math_chars;
-
-inline auto get_math_char(uchar c, size_t f) -> std::string { return math_chars[c][f]; }
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 
 // A math object is a strange thing:

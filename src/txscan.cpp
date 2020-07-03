@@ -35,8 +35,6 @@ namespace {
         if (tralics_ns::file_exists(s)) return s;
         return {};
     }
-
-    void set_math_char(uchar c, size_t f, std::string s) { math_chars[c][f] = std::move(s); }
 } // namespace
 
 namespace io_ns {
@@ -1377,7 +1375,7 @@ void Parser::scan_something_internal(internal_type level) {
             bad_number();
             return;
         }
-        std::string s = get_math_char(uchar(vv), k);
+        std::string s = math_chars[uchar(vv)][k];
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1928,8 +1926,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         auto v = scan_int(T, 127, "mathchar");
         scan_optional_equals();
         flush_buffer();
-        std::string value = sT_arg_nopar();
-        set_math_char(static_cast<uchar>(v), k, value);
+        math_chars[static_cast<uchar>(v)][k] = sT_arg_nopar();
         return;
     }
     case register_cmd:

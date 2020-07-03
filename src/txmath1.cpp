@@ -12,6 +12,7 @@
 
 #include "txmath1.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include <algorithm>
 #include <fmt/format.h>
 
@@ -1835,7 +1836,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     if (spec)
         B.push_back(char(uchar(c)));
     else
-        B.append(get_math_char(uchar(c), f));
+        B.append(math_chars[uchar(c)][f]);
     for (;;) {
         if (empty()) break;
         if (!front().maybe_seq(f)) break;
@@ -1843,7 +1844,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
         if (spec)
             B.push_back(char(uchar(c)));
         else
-            B.append(get_math_char(uchar(c), f));
+            B.append(math_chars[uchar(c)][f]);
         pop_front();
     }
     if (f == 1) B.push_back(' ');

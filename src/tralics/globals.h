@@ -12,11 +12,12 @@ struct LinePtr;
 class WordList;
 class LabelInfo;
 
+inline std::array<std::array<std::string, 15>, 128>                  math_chars;
 extern bool                                                          bad_minus;
 extern bool                                                          compatibility;
 extern bool                                                          nofloat_hack;
 extern bool                                                          only_input_data;
-extern bool                                                          ra_ok;
+inline bool                                                          ra_ok{true};
 extern bool                                                          raw_bib;
 extern bool                                                          seen_enddocument;
 extern size_t                                                        leftquote_val, rightquote_val;
