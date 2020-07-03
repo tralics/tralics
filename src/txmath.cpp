@@ -266,7 +266,7 @@ auto tralics_ns::math_env_props(subtypes chr) -> int {
 
 // Name of a math object. In a previous version, the name was a character string.
 // Now it is a subtype. The name has the form "endmath" and we remove the prefix
-auto Math::get_name() const -> String {
+auto Math::get_name() const -> std::string {
     subtypes w = sname;
     if (w == nomathenv_code) return "";
     String S = tralics_ns::math_env_name(w);
@@ -298,17 +298,17 @@ auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
 
 auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
     switch (y) {
-    case invalid_cd: X << "Invalid list"; break;
-    case math_open_cd: X << "Simple group"; break;
-    case math_dollar_cd: X << "Inline formula"; break;
-    case math_ddollar_cd: X << "Display formula"; break;
-    case math_env_cd: X << "Environment"; break;
-    case math_LR_cd: X << "Left/right pair"; break;
-    case math_hbox_cd: X << "Hbox"; break;
-    case math_argument_cd: X << "Argument"; break;
+    case invalid_cd: X += "Invalid list"; break;
+    case math_open_cd: X += "Simple group"; break;
+    case math_dollar_cd: X += "Inline formula"; break;
+    case math_ddollar_cd: X += "Display formula"; break;
+    case math_env_cd: X += "Environment"; break;
+    case math_LR_cd: X += "Left/right pair"; break;
+    case math_hbox_cd: X += "Hbox"; break;
+    case math_argument_cd: X += "Argument"; break;
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
-        X << "Argument list for \\" << x.name();
+        X += "Argument list for \\" + x.name();
         break;
     }
     }
@@ -317,25 +317,23 @@ auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
 
 // Prints a list into the Trace buffer
 void Math::print() const {
-    Trace << "{" << type;
+    Trace += "{";
+    Trace << type;
     if (sname == nomathenv_code)
-        Trace << "\n";
+        Trace += "\n";
     else
-        Trace << " name= " << get_name() << "\n";
+        Trace += " name= " + get_name() + "\n";
     if (empty())
-        Trace << "empty";
+        Trace += "empty";
     else {
-        int  k = 0;
-        auto C = value.begin();
-        auto E = value.end();
-        while (C != E) {
+        int k = 0;
+        for (const auto &C : value) {
             k++;
             Trace.format("{} ", k);
-            C->print();
-            ++C;
+            C.print();
         }
     }
-    Trace << "}\n";
+    Trace += "}\n";
 }
 
 // This prints a math element
@@ -343,7 +341,7 @@ void MathElt::print() const {
     int cmd = get_cmd();
     int chr = get_chr();
     if (cmd == nomath_cmd) {
-        Trace << "only for " << (chr == zero_code ? "math\n" : "nomath\n");
+        Trace.format("only for {}\n", chr == zero_code ? "math" : "nomath");
         return;
     }
     Trace.format("ME {} - ", cmd);
@@ -354,7 +352,7 @@ void MathElt::print() const {
     // is this secure ???
     //  if(cmd>16) Trace << " - " <<  Token(get_font());
     if (cmd == mathfont_cmd || is_m_font(symcodes(cmd)))
-        Trace << " - " << Token(get_font()) << "\n";
+        Trace.format(" - {}\n", Token(get_font()));
     else
         Trace.format(" - {}\n", get_font());
     if (cmd == math_list_cmd || cmd == special_math_cmd) get_list().print(); // recurse
@@ -970,7 +968,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             continue;
         case par_cmd:
             err_buf = "Unexpected \\par";
-            if (type == math_argument_cd) err_buf << " while scanning argument of " << fct_caller.tok_to_str();
+            if (type == math_argument_cd) err_buf += " while scanning argument of " + fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
             return;
         case eqno_cmd: scan_eqno(type); continue;
@@ -1201,10 +1199,10 @@ void MathHelper::ml_check_labels() {
         else if (v == -1) {
             B = "Multiple \\label " + multi_labels[i];
             if (eqnum_status == 1)
-                B << " for the current the formula";
+                B += " for the current the formula";
             else {
                 B.format(" on row {} of the formula", l);
-                if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
+                if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
             the_parser.parse_error(the_parser.err_tok, B, "duplicate label");
@@ -1212,10 +1210,10 @@ void MathHelper::ml_check_labels() {
         if (v == -2 || v == -3) {
             B = "Multiple \\tag " + multi_labels[i];
             if (eqnum_status == 1)
-                B << " for the current formula";
+                B += " for the current formula";
             else {
                 B.format(" on row {} of formula", l);
-                if (!warned) B << "\n(at most one \\label and at most one \\tag allowed per row)";
+                if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
             the_parser.parse_error(the_parser.err_tok, B, "duplicate tag");
@@ -1403,15 +1401,15 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
         Buffer &B = math_buffer;
         B         = "Bad \\end{" + s + "}; expected ";
         if (type == math_env_cd)
-            B << "\\end{" << math_data.get_list(res).get_name() << "}";
+            B += "\\end{" + math_data.get_list(res).get_name() + "}";
         else if (type == math_dollar_cd)
-            B << "$";
+            B += "$";
         else if (type == math_ddollar_cd)
-            B << "$$";
+            B += "$$";
         else if (type == math_LR_cd)
-            B << "\\right";
+            B += "\\right";
         else
-            B << "}";
+            B += "}";
         parse_error(err_tok, B, "bad end");
     }
     return true;

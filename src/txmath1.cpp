@@ -854,7 +854,7 @@ void MathElt::cv_noML_special() const {
             math_ns::insert_delimiter(k);
         L.pop_front();
         auto sz = L.front().payload;
-        mathml_buffer << '{' << sz << '}';
+        mathml_buffer += '{' + sz + '}';
         L.pop_front();
         if (L.front().get_cmd() == style_cmd)
             mathml_buffer.format("{}", math_ns::style_level(L.front().get_chr()));
@@ -948,7 +948,7 @@ void MathElt::cv_noMLt_special0() const {
         if (k != del_dot) {
             att_buffer.clear();
             math_ns::insert_delimiter_t(k);
-            mathml_buffer << " left='" << att_buffer << "'";
+            mathml_buffer += " left='" + att_buffer + "'";
         }
         L.pop_front();
         if (!L.empty()) {
@@ -956,13 +956,13 @@ void MathElt::cv_noMLt_special0() const {
             if (k != del_dot) {
                 att_buffer.clear();
                 math_ns::insert_delimiter_t(k);
-                mathml_buffer << " right='" << att_buffer << "'";
+                mathml_buffer += " right='" + att_buffer + "'";
             }
             L.pop_front();
         }
         if (!L.empty()) {
             att_buffer = L.front().payload;
-            if (!att_buffer.empty()) mathml_buffer << " size='" << att_buffer << "'";
+            if (!att_buffer.empty()) mathml_buffer += " size='" + att_buffer + "'";
             L.pop_front();
         }
         if (!L.empty()) {
@@ -1016,14 +1016,14 @@ void MathElt::cv_noML_list() const {
         return;
     case math_LR_cd: X.convert_math_noML0(); return;
     case math_env_cd:
-        mathml_buffer << "\\begin{" << X.get_name() << '}';
+        mathml_buffer += "\\begin{" + X.get_name() + "}";
         X.convert_math_noML0();
-        mathml_buffer << "\\end{" << X.get_name() << '}';
+        mathml_buffer += "\\end{" + X.get_name() + "}";
         return;
     case math_hbox_cd:
-        mathml_buffer << "\\" << X.get_name() << "{";
+        mathml_buffer += "\\" + X.get_name() + "{";
         X.convert_math_noML0();
-        mathml_buffer << "}";
+        mathml_buffer += "}";
         return;
     default: mathml_buffer.format("bad group{}", T);
     }
@@ -1047,14 +1047,14 @@ void MathElt::cv_noMLt_list() const {
 
     case math_LR_cd: X.convert_math_noMLt0(); return;
     case math_env_cd:
-        mathml_buffer << "<env name='" << X.get_name() << "'>";
+        mathml_buffer += "<env name='" + X.get_name() + "'>";
         X.convert_math_noMLt0();
-        mathml_buffer << "</env>";
+        mathml_buffer += "</env>";
         return;
     case math_hbox_cd:
-        mathml_buffer << "<" << X.get_name() << ">";
+        mathml_buffer += "<" + X.get_name() + ">";
         X.convert_math_noMLt0();
-        mathml_buffer << "</" << X.get_name() << ">";
+        mathml_buffer += "</" + X.get_name() + ">";
         return;
     default: mathml_buffer.append("bad group");
     }
@@ -1068,7 +1068,7 @@ void Math::handle_mbox_no() {
             mathml_buffer.append("bad hbox");
             return;
         }
-        if (!aux_buffer.empty()) { mathml_buffer << "\\text{" << aux_buffer << "}"; }
+        if (!aux_buffer.empty()) { mathml_buffer += "\\text{" + aux_buffer + "}"; }
         if (ok == 1) return;
         if (ok == 2) continue;
         if (ok == 4) {
@@ -1114,7 +1114,7 @@ void Math::handle_mbox_not() {
             mathml_buffer.append("<error>bad hbox</error>");
             return;
         }
-        if (!aux_buffer.empty()) { mathml_buffer << "<text>" << aux_buffer << "</text>"; }
+        if (!aux_buffer.empty()) { mathml_buffer += "<text>" + aux_buffer + "</text>"; }
         if (ok == 1) return;
         if (ok == 2) continue;
         if (ok == 4) {
@@ -1256,14 +1256,14 @@ void MathElt::cv_noMLt() {
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer << "<font name='" << encode(w) << "'/>"; // \todo why not go through all the machinery here?
+        mathml_buffer += "<font name='" + encode(w) + "'/>"; // \todo why not go through all the machinery here?
         return;
     }
     case left_cmd: // left or right
     case right_cmd:
         att_buffer = " del='";
         math_ns::insert_delimiter_t(del_pos(get_chr()));
-        att_buffer << "'";
+        att_buffer += "'";
         mathml_buffer.push_back_math_tag(val, pbm_att_empty);
         return;
     case special_math_cmd: // \frac{}{}
@@ -1315,9 +1315,9 @@ void Math::convert_math_noMLt0() {
             cur = front();
             pop_front();
             std::string s = cmd == hat_catcode ? "superscript" : "subscript";
-            mathml_buffer << "<" << s << ">";
+            mathml_buffer += "<" + s + ">";
             cur.cv_noMLt();
-            mathml_buffer << "</" << s << ">";
+            mathml_buffer += "</" + s + ">";
             continue;
         }
         cur.cv_noMLt();
@@ -1459,8 +1459,8 @@ auto Math::chars_to_mb3() -> std::string {
                 break;
             }
             if (sz == 0) {
-                if (sign) B << "-";
-                B << "0";
+                if (sign) B += "-";
+                B += "0";
             }
             B.push_back(C);
             dot = true;
@@ -1472,7 +1472,7 @@ auto Math::chars_to_mb3() -> std::string {
                 sz = 0;
                 break;
             }
-            if (sz == 0 && sign) B << "-";
+            if (sz == 0 && sign) B += "-";
             B.push_back(C);
             sz++;
         } else { // unit
@@ -1484,12 +1484,11 @@ auto Math::chars_to_mb3() -> std::string {
     if (sz == 0 || bc != 2) {
         Buffer tmp;
         tmp.clear();
-        tmp << "Error scanning width, so far got '" << B << "'";
+        tmp += "Error scanning width, so far got '" + B + "'";
         the_parser.parse_error(the_parser.err_tok, tmp, "bad dimension");
-        B.clear();
-        B.append("0pt");
+        B = "0pt";
     }
-    return std::string(B);
+    return std::move(B);
 }
 
 // Procedure called in case of errors

@@ -65,40 +65,40 @@ void Parser::check_outer_validity() {
     B.clear();
     switch (scanner_status) {
     case ss_skipping:
-        B << "Incomplete \\if? missing \\fi inserted\n";
+        B += "Incomplete \\if? missing \\fi inserted\n";
         back_input(hash_table.fi_token);
         break;
     case ss_defining:
-        B << "Runaway definition?\n";
+        B += "Runaway definition?\n";
         back_input(hash_table.CB_token);
         break;
     case ss_absorbing:
-        B << "Runaway text?\n";
+        B += "Runaway text?\n";
         back_input(hash_table.CB_token);
         break;
     case ss_macro:
-        B << "Runaway argument?\n";
+        B += "Runaway argument?\n";
         long_state = ls_bad;
         back_input(hash_table.par_token);
         break;
     default: // matching
-        B << "Runaway argument?\n";
+        B += "Runaway argument?\n";
     }
     if (cur_cmd_chr.cmd == eof_marker_cmd)
-        B << "End of file";
+        B += "End of file";
     else
-        B << "Forbidden control sequence " << cur_tok.tok_to_str();
+        B += "Forbidden control sequence " + cur_tok.tok_to_str();
     if (scanner_status == ss_skipping)
         B.format(" in conditional started at line {}", conditions.top_line());
     else {
-        B << " found while scanning ";
+        B += " found while scanning ";
         if (scanner_status == ss_defining)
-            B << "definition";
+            B += "definition";
         else if (scanner_status == ss_absorbing)
-            B << "text";
+            B += "text";
         else // ss_matching or ss_macro
-            B << "use";
-        B << " of " << err_tok.tok_to_str();
+            B += "use";
+        B += " of " + err_tok.tok_to_str();
     }
     signal_error(err_tok, "Runaway argument");
     if (cur_cmd_chr.cmd == eof_marker_cmd) return;
@@ -1278,8 +1278,7 @@ void Parser::M_new_thm() {
         TokenList ccopy = ctr;
         back_input(ccopy);
         back_input(Token(other_t_offset, '['));
-        Thbuf2.clear();
-        Thbuf2 << "the";
+        Thbuf2 = "the";
         if (list_to_string(ctr, Thbuf2)) parse_error(err_tok, "bad counter");
         Token x = hash_table.locate(Thbuf2);
         the_value.push_front(Token(other_t_offset, '.'));
@@ -1544,7 +1543,7 @@ void Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::st
         parse_error(err_tok, msg, x);
         B = s1 + "bad";
     }
-    B << s2;
+    B += s2;
 }
 
 // This is like \csname s1 L s2 \endcsname
@@ -2213,8 +2212,8 @@ void Parser::M_shortverb(int x) {
 // Returns the token \foo or \endfoo.
 auto Parser::find_env_token(const std::string &name, bool beg) -> Token {
     mac_buffer.clear();
-    if (!beg) mac_buffer << "end";
-    mac_buffer << name;
+    if (!beg) mac_buffer += "end";
+    mac_buffer += name;
     see_cs_token(hash_table.locate(mac_buffer));
     return cur_tok;
 }

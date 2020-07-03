@@ -511,9 +511,9 @@ auto Buffer::convert_to_log_encoding() -> std::string {
         codepoint c = next_utf8_char();
         if (c == 0) {
             if (at_eol()) break;
-            utf8_out << "<null>";
+            utf8_out += "<null>";
         } else if (c == '\r')
-            utf8_out << "^^M";
+            utf8_out += "^^M";
         else
             utf8_out.out_log(c, T);
     }

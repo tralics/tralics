@@ -154,7 +154,7 @@ public:
     [[nodiscard]] auto        get_arg2() const -> Math { return second_element().get_list(); }
     [[nodiscard]] auto        get_arg3() const -> Math { return third_element().get_list(); }
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
-    [[nodiscard]] auto        get_name() const -> String;
+    [[nodiscard]] auto        get_name() const -> std::string;
     [[nodiscard]] static auto get_list(size_t w) -> Math &;
     void                      hack_type(int);
     [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
