@@ -130,8 +130,8 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
         if (IR[i]->is_same(level, aux)) return i;
     Buffer &B = local_buf;
     B.clear();
-    if (father) B << IR[*father]->key << "____";
-    B << key;
+    if (father) B += IR[*father]->key + "____";
+    B += key;
     B.lowercase();
     B.no_newline();
     Xml *res = translate_list(L);
@@ -573,7 +573,7 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
     if (Bad[0] == '.')
         local_buf.format("day>{}", ml);
     else
-        local_buf << Bad;
+        local_buf += Bad;
     local_buf.format(" {}/{}/{}", y, m, d);
     the_parser.parse_error(the_parser.err_tok, local_buf);
     return false;
@@ -711,14 +711,14 @@ void Parser::month_day(subtypes c) {
 
     local_buf.clear();
     switch (c) {
-    case md_frenchm_code: local_buf << fm[n - 1]; break;
-    case md_frenchd_code: local_buf << fd[n - 1]; break;
-    case md_spanishm_code: local_buf << sm[n - 1]; break;
-    case md_spanishd_code: local_buf << sd[n - 1]; break;
-    case md_germanm_code: local_buf << gm[n - 1]; break;
-    case md_germand_code: local_buf << gd[n - 1]; break;
-    case md_englishm_code: local_buf << em[n - 1]; break;
-    case md_englishd_code: local_buf << ed[n - 1]; break;
+    case md_frenchm_code: local_buf += fm[n - 1]; break;
+    case md_frenchd_code: local_buf += fd[n - 1]; break;
+    case md_spanishm_code: local_buf += sm[n - 1]; break;
+    case md_spanishd_code: local_buf += sd[n - 1]; break;
+    case md_germanm_code: local_buf += gm[n - 1]; break;
+    case md_germand_code: local_buf += gd[n - 1]; break;
+    case md_englishm_code: local_buf += em[n - 1]; break;
+    case md_englishd_code: local_buf += ed[n - 1]; break;
     default: break;
     }
     TokenList L;

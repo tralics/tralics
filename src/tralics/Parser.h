@@ -992,7 +992,7 @@ private:
     void        T_whiledo();
     void        E_while(subtypes cc);
     void        wrong_mode(const std::string &s);
-    void        wrong_pop(Token T, String a, String b);
+    void        wrong_pop(Token T, const std::string &a, const std::string &b);
     void        E_input(int q);
     void        xgetfontsize();
     void        xkv_fetch_prefix_family();

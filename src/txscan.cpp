@@ -80,7 +80,7 @@ auto Parser::string_to_write(long chan) -> std::string {
     Buffer &B = local_buf;
     B.clear();
     B << L;
-    if (chan < write18_slot) B << "\n";
+    if (chan < write18_slot) B += "\n";
     auto res = B.convert_to_log_encoding();
     if (chan == write18_slot) {
         Logger::finish_seq();
@@ -2080,7 +2080,7 @@ void Parser::token_show(int what, Buffer &B) {
         if (tok_is_defined)
             back_input(hash_table.last_tok);
         else {
-            B << "undefined";
+            B += "undefined";
             return;
         }
     }
@@ -2113,27 +2113,30 @@ void Parser::token_for_show(const CmdChr &val) {
 void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
     symcodes K = val.cmd;
     if (K == undef_cmd)
-        B << "undefined";
+        B += "undefined";
     else if (K >= user_cmd) {
         Macro &X = mac_table.get_macro(val.chr);
-        if (X.type == dt_optional) B << "opt ";
+        if (X.type == dt_optional) B += "opt ";
         B.dump_prefix(false, false, K);
-        B << "macro:" << (lg ? " " : "") << X;
+        B.format("macro:{}", lg ? " " : "");
+        B << X;
     } else if (K == set_font_cmd) {
-        B << "select font ";
+        B += "select font ";
         if (val.chr == 0)
-            B << "nullfont";
+            B += "nullfont";
         else
             tfonts.full_name(B, val.chr);
     } else if (K > 16) {
         auto s = val.name();
         B.insert_escape_char_raw();
-        B << s;
+        B += s;
     } else {
         String s = val.special_name();
         if (s == nullptr) s = "[unknown command code!]";
-        B << s << " " << val.char_val();
-        if (val.char_val() == 0) B << "^^@";
+        B += s;
+        B += " ";
+        B << val.char_val();
+        if (val.char_val() == 0) B += "^^@";
     }
 }
 

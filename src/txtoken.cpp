@@ -471,7 +471,8 @@ void Buffer::push_back(const Macro &x) {
         for (size_t i = 1; i < K; i++) { format("#{}", i + 1); }
     }
     if (!empty() && back() == '{') back() = '#';
-    *this << "->" << x.body;
+    *this += "->";
+    *this << x.body;
 }
 
 // Puts a macro into a buffer.

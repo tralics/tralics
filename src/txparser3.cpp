@@ -441,12 +441,12 @@ void Parser::pop_all_levels() {
             auto w = dynamic_cast<SaveAuxBoundary *>(tmp)->val;
             int  l = tmp->line;
             if (started) {
-                B << ".\n"; // finish prev line
+                B += ".\n";
                 main_ns::nb_errs++;
             }
             started = true;
-            B << "Non-closed " << bt_to_string(w);
-            if (w == bt_env) B << " `" << ename << "'";
+            B += "Non-closed " + bt_to_string(w);
+            if (w == bt_env) B += " `" + ename + "'";
             B.format(" started at line {}", l);
         }
         my_stats.one_more_down();
@@ -454,7 +454,7 @@ void Parser::pop_all_levels() {
     }
     if (started) {
         signal_error(Token(), "");
-        B << ".\n";
+        B += ".\n";
         out_warning(B, mt_none); // insert a warning in the XML if desired
     }
     push_level(bt_env);
@@ -482,13 +482,13 @@ void Parser::final_checks() {
         A.clear();
         A.format("{} at {}", to_string(p->type), p->line);
         if (B.empty()) {
-            B << "  " << A;
+            B += "  " + A;
         } else if (B.size() + A.size() < 78) {
-            B << "; " << A;
+            B += "; " + A;
         } else {
             the_log << B << "\n";
             B.clear();
-            B << "  " << A;
+            B += "  " + A;
         }
     }
     the_log << B << ".\n";
@@ -530,7 +530,7 @@ void Parser::T_ipa(subtypes c) {
 
 void Parser::mk_hi(String x, char c) {
     the_parser.LC();
-    the_parser.unprocessed_xml << "<hi rend='" << x << "'>" << c << "</hi>";
+    the_parser.unprocessed_xml.format("<hi rend='{}'>{}</hi>", x, c);
 }
 
 void Parser::tipa_star() {

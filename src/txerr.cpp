@@ -272,7 +272,7 @@ void Parser::prefix_error(bool b_global, symcodes K) {
 
 void Parser::improper_alpha() { parse_error(err_tok, "Improper alphabetic constant ", cur_tok, "", "bad alpha"); }
 
-void Parser::wrong_pop(Token T, String a, String b) {
+void Parser::wrong_pop(Token T, const std::string &a, const std::string &b) {
     err_buf = fmt::format("Wrong group delimiter\ngot `{}', expected `{}'", a, b);
     signal_error(T, "wrong pop");
 }

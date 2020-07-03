@@ -23,7 +23,7 @@ SaveAuxBoundary::~SaveAuxBoundary() {
 }
 
 void SaveAuxBoundary::dump(int n) {
-    String s = val == bt_semisimple ? "semi simple" : bt_to_string(val);
+    std::string s = val == bt_semisimple ? "semi simple" : bt_to_string(val);
     the_log << "### " << s << " group (level " << n << ") entered at line " << line << "\n";
 }
 
