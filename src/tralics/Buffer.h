@@ -186,8 +186,6 @@ public:
     void push_back(const TokenList &L);
 
     template <typename... Args> void format(const char *f, Args &&... args) { append(fmt::format(f, args...)); }
-
-    [[deprecated]] void push_back(const std::string &s) { append(s); };
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
