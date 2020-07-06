@@ -154,14 +154,6 @@ found at http://www.cecill.info.)";
         return s.filename();
     }
 
-    /// Create an empty TeX file
-    void mk_empty() {
-        LinePtr res;
-        res.reset(".tex");
-        res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
-        main_ns::register_file(std::move(res));
-    }
-
     /// Display usage message, then exit the program \todo Manage this centrally
     void usage_and_quit(int v) {
         std::cout << usage;
@@ -1056,7 +1048,10 @@ void MainClass::show_input_size() {
 void MainClass::more_boot() const {
     tralics_ns::boot_math(math_variant);
     if (etex_enabled) the_parser.hash_table.boot_etex();
-    mk_empty();
+    LinePtr res;
+    res.reset(".tex");
+    res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
+    main_ns::register_file(std::move(res));
     the_parser.my_stats.after_boot();
     the_parser.the_stack.set_xid_boot();
 }

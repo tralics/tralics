@@ -1510,7 +1510,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
         if (cur_cmd_chr.cmd == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd()) {
             codepoint w = cur_cmd_chr.char_val();
-            if (w.is_upper_case()) w = codepoint(w.value + 'a' - 'A');
+            w           = w.to_lower();
             b.push_back(w);
         } else
             return true;

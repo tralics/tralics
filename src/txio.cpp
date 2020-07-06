@@ -133,7 +133,7 @@ auto Buffer::next_utf8_char() -> codepoint {
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptrs.b += nn;
-    if (cp.is_verybig()) {
+    if (cp.value > 0x1FFFF) {
         utf8_ovf(cp.value);
         return codepoint();
     }
@@ -360,7 +360,7 @@ void Buffer::out_four_hats(codepoint ch) {
     if (ch.is_control()) {
         append("^^");
         push_back(static_cast<char>(c + 64));
-    } else if (ch.is_delete())
+    } else if (ch.value == 127)
         append("^^?");
     else if (ch.is_ascii())
         push_back(static_cast<char>(c));
