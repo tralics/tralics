@@ -832,8 +832,8 @@ void Parser::T_verb(codepoint t) {
         return;
     }
     bool special_space = false;
-    if (!t) t = delimiter_for_verb(special_space);
-    if (!t) {
+    if (t == 0) t = delimiter_for_verb(special_space);
+    if (t == 0) {
         verb_error(T, 1);
         return;
     }

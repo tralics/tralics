@@ -27,8 +27,6 @@ struct codepoint {
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
-    explicit operator bool() const { return value != 0; }
-
     [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
     [[nodiscard]] auto is_control() const -> bool { return value < 32; }

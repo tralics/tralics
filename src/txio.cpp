@@ -149,10 +149,12 @@ auto Buffer::next_utf8_char() -> codepoint {
 
 // If the buffer contains a unique character, return it
 // Otherwise return 0. No error signaled
-auto Buffer::single_character() const -> codepoint {
+// \todo this is single_char in Hashtab.cpp
+auto Buffer::single_character() const -> std::optional<codepoint> {
     auto it = begin();
     auto cp = utf8::next(it, end());
-    return it == begin() + to_signed(size()) ? codepoint(cp) : codepoint(); // \todo the test should be it != end(), size() is wrong
+    if (it == end()) return codepoint(cp);
+    return {};
 }
 
 // This converts a line in UTF8 format. Returns true if no conversion needed
@@ -172,7 +174,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
                 c = custom_table[wc - 2][C];
             if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
         }
-        if (c) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
+        if (c != 0) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
     }
     return {the_converter.line_is_ascii, utf8_out};
 }
@@ -404,7 +406,7 @@ void Buffer::process_big_char(size_t n) {
 // or control characters.
 
 void Parser::process_char(codepoint c) {
-    if (!c)
+    if (c == 0)
         unprocessed_xml.append(""); // may be required
     else if (c == '\n')
         unprocessed_xml.push_back('\n');
@@ -425,7 +427,7 @@ void Parser::process_char(codepoint c) {
 }
 
 void Buffer::push_back_real_utf8(codepoint c) {
-    if (!c)
+    if (c == 0)
         append(""); // may be required
     else if (c == '\n')
         push_back('\n');
@@ -488,8 +490,8 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     the_converter.global_error = false;
     for (;;) {
         codepoint c = B.next_utf8_char();
-        if (!c && B.at_eol()) break;
-        if (!c) continue;
+        if ((c == 0) && B.at_eol()) break;
+        if (c == 0) continue;
         if (c.is_ascii())
             O.push_back(static_cast<char>(c.value));
         else if (c.is_small() && nonascii)

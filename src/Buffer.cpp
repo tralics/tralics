@@ -304,7 +304,7 @@ void Buffer::insert_token(Token T, bool sw) {
                 push_back(static_cast<char>(c.value + '0')); // parameter
             } else if (T.is_space_token())
                 push_back(' '); // space or newline
-            else if (!c)
+            else if (c == 0)
                 append("^^@"); // if cmd==parameter_catcode ??
             else if (cmd == parameter_catcode) {
                 push_back(c);
@@ -312,7 +312,7 @@ void Buffer::insert_token(Token T, bool sw) {
             } else
                 push_back(c);
         } else {
-            if (!c)
+            if (c == 0)
                 append("^^@");
             else
                 push_back(c); // active character
@@ -325,7 +325,7 @@ void Buffer::insert_token(Token T, bool sw) {
         insert_escape_char_raw();
     if (T.active_or_single()) {
         codepoint c = T.char_val();
-        if (!c)
+        if (c == 0)
             append("^^@");
         else
             push_back(c);
@@ -351,7 +351,7 @@ auto Buffer::convert_for_xml_err(Token T) -> std::string {
     else if (T.char_or_active()) {
         // We simplify the algorithm by printing the character as is
         codepoint c = T.char_val();
-        if (!c)
+        if (c == 0)
             append("^^@");
         else
             push_back_real_utf8(c);
@@ -359,7 +359,7 @@ auto Buffer::convert_for_xml_err(Token T) -> std::string {
         push_back('\\');
         if (T.active_or_single()) {
             codepoint c = T.char_val();
-            if (!c)
+            if (c == 0)
                 append("^^@");
             else
                 push_back_real_utf8(c);

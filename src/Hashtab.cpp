@@ -2,17 +2,18 @@
 #include <utf8.h>
 
 namespace {
-    auto single_char(const std::string &s) -> codepoint {
+    auto single_char(const std::string &s) -> std::optional<codepoint> {
         auto it = s.begin();
         auto cp = utf8::next(it, s.end());
-        return it == s.end() ? codepoint(cp) : codepoint();
+        if (it == s.end()) return codepoint(cp);
+        return {};
     }
 } // namespace
 
 auto Hashtab::locate(const std::string &s) -> Token {
     if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
-    if (auto c = single_char(s)) return Token(c.value + single_offset);
+    if (auto c = single_char(s)) return Token(c->value + single_offset);
     return Token(hash_find(s) + hash_offset);
 }
 
@@ -47,7 +48,7 @@ auto Hashtab::is_defined(const Buffer &b) -> bool {
     if (b.empty())
         T = null_tok_val;
     else if (auto c = b.single_character())
-        T = c.value + single_offset;
+        T = c->value + single_offset;
     else
         T = i->second + hash_offset;
 

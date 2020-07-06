@@ -163,7 +163,7 @@ void Parser::extended_chars(size_t c) {
 void Parser::translate_char(CmdChr X) {
     if (!the_stack.in_h_mode()) LC();
     codepoint c = X.char_val();
-    if (!c) return; // we do not want null chars in trace or Xml
+    if (c == 0) return; // we do not want null chars in trace or Xml
     if (tracing_commands()) Logger::out_single_char(c);
     if (!c.is_small()) {
         process_char(c);
