@@ -492,7 +492,7 @@ auto Parser::cs_from_input() -> Token {
     if (at_eol()) return Token(null_tok_val);
     codepoint c = get_next_char();
     state       = state_S;
-    if (c.is_big()) { // abort and return null_cs
+    if (is_big(c)) { // abort and return null_cs
         --input_line_pos;
         return Token(null_tok_val);
     }
@@ -503,7 +503,7 @@ auto Parser::cs_from_input() -> Token {
         for (;;) {
             if (at_eol()) break;
             c = get_next_char();
-            if (c.is_big()) {
+            if (is_big(c)) {
                 --input_line_pos;
                 break;
             } // abort
@@ -537,7 +537,7 @@ auto Parser::cs_from_input() -> Token {
 auto Parser::next_from_line0() -> bool {
     if (at_eol()) return true;
     codepoint c = get_next_char();
-    if (c.is_big()) { // convert to \char"ABCD
+    if (is_big(c)) { // convert to \char"ABCD
         Buffer &B = local_buf;
         B.clear();
         B.push_back('"');

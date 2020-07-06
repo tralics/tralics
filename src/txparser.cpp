@@ -813,7 +813,7 @@ auto Parser::delimiter_for_saveverb() -> codepoint {
         if (at_eol()) return codepoint();
         codepoint c = get_next_char();
         if (c == 0) return c;
-        if (c.is_big()) return codepoint();
+        if (is_big(c)) return codepoint();
         if (get_catcode(c.value) == space_catcode) continue;
         if (get_catcode(c.value) == special_catcode) return c;
         return codepoint();

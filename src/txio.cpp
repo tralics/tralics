@@ -408,7 +408,7 @@ void Parser::process_char(codepoint c) {
         unprocessed_xml.append("&gt;");
     else if (c == '&')
         unprocessed_xml.append("&amp;");
-    else if (c.is_control() || c.is_big())
+    else if (c.is_control() || is_big(c))
         unprocessed_xml.push_back_ent(c);
     else
         unprocessed_xml.push_back(c);
@@ -429,7 +429,7 @@ void Buffer::push_back_real_utf8(codepoint c) {
         append("&gt;");
     else if (c == '&')
         append("&amp;");
-    else if (c.is_control() || c.is_big())
+    else if (c.is_control() || is_big(c))
         push_back_ent(c);
     else
         push_back(c);
