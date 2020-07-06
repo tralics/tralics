@@ -1,6 +1,5 @@
 #pragma once
 #include "../txeqtb.h"
-#include "Buffer.h"
 #include "Equivalent.h"
 #include <unordered_map>
 
@@ -24,7 +23,7 @@ public:
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     auto eval_let(const std::string &a, const std::string &b) -> Token;
     void eval_let_local(const std::string &a, const std::string &b);
-    auto is_defined(const Buffer &b) -> bool;
+    auto is_defined(const std::string &b) -> bool;
 
     void boot_fancyhdr();
     void boot_etex();

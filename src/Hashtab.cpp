@@ -40,14 +40,14 @@ auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
 // This returns true if the token associated to the string in the buffer
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
-auto Hashtab::is_defined(const Buffer &b) -> bool {
+auto Hashtab::is_defined(const std::string &b) -> bool {
     auto i = map.find(b);
     if (i == map.end()) return false;
 
     size_t T = 0;
     if (b.empty())
         T = null_tok_val;
-    else if (auto c = b.single_character())
+    else if (auto c = single_char(b))
         T = c->value + single_offset;
     else
         T = i->second + hash_offset;

@@ -147,16 +147,6 @@ auto Buffer::next_utf8_char() -> codepoint {
     return cp;
 }
 
-// If the buffer contains a unique character, return it
-// Otherwise return 0. No error signaled
-// \todo this is single_char in Hashtab.cpp
-auto Buffer::single_character() const -> std::optional<codepoint> {
-    auto it = begin();
-    auto cp = utf8::next(it, end());
-    if (it == end()) return codepoint(cp);
-    return {};
-}
-
 // This converts a line in UTF8 format. Returns true if no conversion needed
 auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
     Buffer utf8_out;
