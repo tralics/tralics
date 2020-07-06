@@ -5,7 +5,7 @@ namespace {
     auto single_char(const std::string &s) -> codepoint {
         auto it = s.begin();
         auto cp = utf8::next(it, s.end());
-        return it == s.end() ? codepoint(cp) : codepoint(); // \todo the test should be it != end(), size() is wrong
+        return it == s.end() ? codepoint(cp) : codepoint();
     }
 } // namespace
 

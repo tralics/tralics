@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include <optional>
+#include <ostream>
 
 // \todo move these to util.h
 

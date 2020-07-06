@@ -1,6 +1,7 @@
 #pragma once
 #include "codepoint.h"
 #include "enums.h"
+#include <string>
 
 // cmd, chr pair; The subtype can have 16bits
 class CmdChr {
