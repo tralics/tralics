@@ -18,15 +18,8 @@
 #include <utf8.h>
 
 namespace {
+    std::vector<LinePtr>  file_pool;     // pool managed by filecontents
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
-
-    /// Use a file from the pool
-    auto use_pool(LinePtr &L) -> bool {
-        if (!pool_position) return false; // should not happen
-        L.insert(file_pool[*pool_position]);
-        pool_position = {};
-        return true;
-    }
 
     void utf8_ovf(size_t n) { // \todo inline
         Converter &T = the_converter;
@@ -230,7 +223,12 @@ auto io_ns::find_encoding(const std::string &cl) -> int {
 // If 4, its is the main file, log not yet open.
 void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
     L.reset(x);
-    if (use_pool(L)) return;
+    if (pool_position) {
+        L.insert(file_pool[*pool_position]);
+        pool_position.reset();
+        return;
+    }
+
     std::ifstream fp(x);
     std::string   old_name      = the_converter.cur_file_name;
     the_converter.cur_file_name = x;
@@ -623,3 +621,5 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
     }
     return {};
 }
+
+void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
