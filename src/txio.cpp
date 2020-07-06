@@ -155,7 +155,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
                 c = codepoint(C);
             else
                 c = custom_table[wc - 2][C];
-            if (!(c.is_ascii() && c == C)) the_converter.line_is_ascii = false;
+            if (!(is_ascii(c) && c == C)) the_converter.line_is_ascii = false;
         }
         if (c != 0) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
     }
@@ -362,7 +362,7 @@ void Buffer::out_four_hats(codepoint ch) {
         push_back(static_cast<char>(c + 64));
     } else if (ch.value == 127)
         append("^^?");
-    else if (ch.is_ascii())
+    else if (is_ascii(ch))
         push_back(static_cast<char>(c));
     else
         push_back16l(true, c);
@@ -453,7 +453,7 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
         push_back('\t');
     else if (ch.is_control())
         out_four_hats(ch);
-    else if (ch.is_ascii())
+    else if (is_ascii(ch))
         push_back(static_cast<char>(ch.value));
     else if (T == en_utf8)
         push_back(ch);
@@ -480,7 +480,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
         codepoint c = B.next_utf8_char();
         if ((c == 0) && B.at_eol()) break;
         if (c == 0) continue;
-        if (c.is_ascii())
+        if (is_ascii(c))
             O.push_back(static_cast<char>(c.value));
         else if (c.is_small() && nonascii)
             O.push_back(static_cast<char>(c.value));

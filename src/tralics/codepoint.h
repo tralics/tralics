@@ -23,11 +23,10 @@ struct codepoint {
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
-    [[nodiscard]] auto is_ascii() const -> bool { return value < 128; }
     [[nodiscard]] auto is_big() const -> bool { return value > 65535; }
     [[nodiscard]] auto is_control() const -> bool { return value < 32; }
     [[nodiscard]] auto is_digit() const -> bool { return '0' <= value && value <= '9'; }
-    [[nodiscard]] auto is_letter() const -> bool { return is_ascii() && ::is_letter(static_cast<char>(value)); }
+    [[nodiscard]] auto is_letter() const -> bool { return value < 128 && ::is_letter(static_cast<char>(value)); }
     [[nodiscard]] auto is_small() const -> bool { return value < 256; }
     [[nodiscard]] auto is_space() const -> bool { return value == ' ' || value == '\t' || value == '\n'; }
 
@@ -49,3 +48,5 @@ inline auto operator==(const codepoint &a, const unsigned char &b) -> bool { ret
 inline auto operator!=(const codepoint &a, const unsigned char &b) -> bool { return a.value != unsigned(b); }
 
 auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;
+
+inline auto is_ascii(codepoint c) -> bool { return c.value < 128; }

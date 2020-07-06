@@ -480,7 +480,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         }
     }
     codepoint C = input_line[p + 1];
-    if (!C.is_ascii()) return false;
+    if (!is_ascii(C)) return false;
     auto c1 = C.value;
     input_line_pos++;
     input_line[p + 1] = codepoint(c1 < 64 ? c1 + 64 : c1 - 64);

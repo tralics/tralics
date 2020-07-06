@@ -191,7 +191,7 @@ void XmlIO::scan_name() {
     skip_char();
     for (;;) {
         codepoint xx = XmlIO::peek_char();
-        if (xx.is_ascii()) {
+        if (is_ascii(xx)) {
             x_type w = Type[xx.value];
             if (w == xt_space || w == xt_invalid) return;
         }

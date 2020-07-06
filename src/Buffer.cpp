@@ -237,7 +237,7 @@ auto Token::tok_to_str() const -> std::string {
     int       cat      = cmd_val();
     codepoint c        = char_val();
     bool      good_cat = false;
-    if (!c.is_ascii() && cat == 12) good_cat = true;
+    if (!is_ascii(c) && cat == 12) good_cat = true;
     if (c.is_letter() && cat == 11) good_cat = true;
     if (good_cat)
         B.out_log(c, the_main->log_encoding);
@@ -478,7 +478,7 @@ auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
 
 // We use internal encoding here.
 auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
-    if (x.is_ascii()) return fp << static_cast<uchar>(x.value);
+    if (is_ascii(x)) return fp << static_cast<uchar>(x.value);
     Buffer B;
     B.push_back(x);
     return fp << B;
@@ -486,7 +486,7 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
 
 // We use log encoding here. \todo always UTF8?
 auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
-    if (x.is_ascii()) return fp << static_cast<uchar>(x.value);
+    if (is_ascii(x)) return fp << static_cast<uchar>(x.value);
     Buffer B;
     B.push_back(x);
     return fp << B;
