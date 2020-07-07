@@ -526,14 +526,14 @@ auto Parser::cs_from_input() -> Token {
         }
         return hash_table.locate(mac_buffer);
     }
-    if (C == space_catcode) return Token(c);
+    if (C == space_catcode) return Token(c.value + single_offset);
     if (C == hat_catcode) {
         if (scan_double_hat(c)) return cs_from_input();
         state = state_M;
-        return Token(c);
+        return Token(c.value + single_offset);
     }
     state = state_M;
-    return Token(c);
+    return Token(c.value + single_offset);
 }
 
 // This constructs a new token by reading characters from the buffer.

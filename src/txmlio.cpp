@@ -256,7 +256,7 @@ void XmlIO::parse_end() {
 void XmlIO::pop_this() {
     if (cur_char != '>') {
         error("Expected > at end of element");
-        std::cout << " got " << cur_char << "\n";
+        std::cout << " got " << to_utf8(cur_char) << "\n";
     }
     skip_char();
     if (cur_stack.size() < 2)
@@ -284,7 +284,7 @@ void XmlIO::parse_att_val() {
     if (cur_char != '=') {
         error("Equals sign expected");
         std::cout << " After " << xxx;
-        std::cout << " got " << cur_char << "\n";
+        std::cout << " got " << to_utf8(cur_char) << "\n";
     }
     skip_char();
     parse_quoted();
@@ -297,7 +297,7 @@ void XmlIO::parse_quoted() {
         delim = cur_char;
     else {
         error("Quote expected");
-        std::cout << " got " << cur_char << "\n";
+        std::cout << " got " << to_utf8(cur_char) << "\n";
     }
     skip_char();
     B.clear();
@@ -348,7 +348,7 @@ void XmlIO::parse_pi() {
                 cur_char = next_char();
                 if (cur_char != '>') {
                     error("Greater than sign expected");
-                    std::cout << " got " << cur_char << "\n";
+                    std::cout << " got " << to_utf8(cur_char) << "\n";
                 }
                 break;
             }

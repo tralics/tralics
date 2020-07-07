@@ -157,7 +157,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
                 c = custom_table[wc - 2][C];
             if (!(is_ascii(c) && c == C)) the_converter.line_is_ascii = false;
         }
-        if (c != 0) utf8_out.push_back(c); // \todo use codepoint::to_utf8 when it exists
+        if (c != 0) utf8_out.push_back(c);
     }
     return {the_converter.line_is_ascii, utf8_out};
 }

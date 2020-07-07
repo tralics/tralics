@@ -477,10 +477,7 @@ auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
 }
 
 // We use internal encoding here.
-auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
-    utf8::append(x.value, std::ostream_iterator<char>(fp));
-    return fp;
-}
+auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & { return fp << to_utf8(x); }
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
 void Buffer::push_back_roman(long n) {

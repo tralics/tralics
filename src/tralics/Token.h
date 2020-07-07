@@ -7,7 +7,6 @@ struct Token {
     size_t val{0};
 
     explicit Token(size_t x) : val(x) {}
-    explicit Token(codepoint c) : val(c.value + single_offset) {}
     Token(spec_offsets a, codepoint b) : val(a + b.value) {}
     Token(spec_offsets a, uchar b) : val(a + b) {}
     Token() = default;
