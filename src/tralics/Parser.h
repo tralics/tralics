@@ -78,25 +78,25 @@ private:
     std::string year_string;  // the year (effective number)
     std::string job_name;     // the name, without extensions
 
-    Buffer                 input_buffer;                          // input buffer
-    Buffer                 mac_buffer;                            // buffer the current macro
-    Buffer                 group_buffer;                          // buffer for arg of \begin{...} \end(...)
-    Buffer                 unprocessed_xml;                       // chars to be converted into an XML element
-    Buffer                 fetch_name_res;                        // used by fetch_name
-    LinePtr                lines;                                 // the lines to  be read
-    TokenList              TL;                                    // list of tokens to be read again
-    Condition              conditions;                            // condition stack for current \if
-    SthInternal            cur_val;                               // result of scan_something internal
-    TokenList              document_hook;                         // the document-hook
-    TokenList              end_document_hook;                     // the end-document-hook
-    codepoint              verb_saved_char;                       // Char to use for verb by ShortVewrb
-    std::vector<codepoint> input_line;                            // input line converted to chars
-    size_t                 input_line_pos{0};                     // position in input_line
-    Xml *                  the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    Buffer                input_buffer;                          // input buffer
+    Buffer                mac_buffer;                            // buffer the current macro
+    Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer                unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer                fetch_name_res;                        // used by fetch_name
+    LinePtr               lines;                                 // the lines to  be read
+    TokenList             TL;                                    // list of tokens to be read again
+    Condition             conditions;                            // condition stack for current \if
+    SthInternal           cur_val;                               // result of scan_something internal
+    TokenList             document_hook;                         // the document-hook
+    TokenList             end_document_hook;                     // the end-document-hook
+    char32_t              verb_saved_char;                       // Char to use for verb by ShortVewrb
+    std::vector<char32_t> input_line;                            // input line converted to chars
+    size_t                input_line_pos{0};                     // position in input_line
+    Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
 
     auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
-    auto               get_next_char() -> codepoint { return input_line[input_line_pos++]; }
+    auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }
     [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
     void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
     auto               get_after_ass_tok() -> Token {
@@ -327,8 +327,8 @@ private:
     void        define_choice_key();
     void        define_cmd_key(subtypes c);
     void        define_something(int chr, bool gbl, symcodes w);
-    auto        delimiter_for_verb(bool &special_space) -> codepoint;
-    auto        delimiter_for_saveverb() -> codepoint;
+    auto        delimiter_for_verb(bool &special_space) -> char32_t;
+    auto        delimiter_for_saveverb() -> char32_t;
     static auto dimen_attrib(ScaledInt A) -> std::string;
     auto        dimen_from_list(Token T, TokenList &L) -> ScaledInt;
     void        dimen_from_list0(Token T, TokenList &L);
@@ -360,7 +360,7 @@ private:
     void        expand_twoargs();
     void        T_verbatim(int my_number, Token style, Token pre, Token post);
     void        expand_verb(unsigned char t);
-    void        T_verb(codepoint t);
+    void        T_verb(char32_t t);
     void        expand_verb1(TokenList &);
     void        expand_when_ok(bool allow_undef);
     auto        to_stringE(TokenList &L) -> std::string;
@@ -401,7 +401,7 @@ private:
     void        fnhack();
     void        font_has_changed();
     void        formatdate();
-    auto        scan_double_hat(codepoint cc) -> bool;
+    auto        scan_double_hat(char32_t cc) -> bool;
     void        fp_boolean(bool res);
     void        fp_calla(Token);
     void        fp_callb(Token);
@@ -590,7 +590,7 @@ private:
     void        print_token(std::ostream &fp, Token x);
     void        process_char(uchar c);
     void        process_string(String s);
-    void        process_char(codepoint c);
+    void        process_char(char32_t c);
     void        process_char(size_t c);
     void        process_char(int s);
     void        push_input_stack(const std::string &name, bool restore_at, bool re);
@@ -987,7 +987,7 @@ private:
     void        user_XML_swap(subtypes c);
     void        user_XML_modify(subtypes c);
     void        user_XML_fetch();
-    auto        vb_tokens(codepoint test, TokenList &L, bool before) -> bool;
+    auto        vb_tokens(char32_t test, TokenList &L, bool before) -> bool;
     void        verb_error(Token T, int msg);
     void        T_whiledo();
     void        E_while(subtypes cc);

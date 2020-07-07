@@ -2,10 +2,10 @@
 #include <utf8.h>
 
 namespace {
-    auto single_char(const std::string &s) -> std::optional<codepoint> {
+    auto single_char(const std::string &s) -> std::optional<char32_t> {
         auto it = s.begin();
         auto cp = utf8::next(it, s.end());
-        if (it == s.end()) return codepoint(cp);
+        if (it == s.end()) return char32_t(cp);
         return {};
     }
 } // namespace

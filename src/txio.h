@@ -38,17 +38,17 @@ inline Converter the_converter;
 
 // This allows us to temporarily read from elsewhere
 struct InputStack {
-    std::vector<codepoint> line;
-    states                 state;     // copy of scanner state
-    LinePtr                L;         // the lines
-    int                    line_no;   // the current line number
-    TokenList              TL;        // saved token list
-    std::string            name;      // name of the current file
-    long                   at_val;    // catcode of @ to restore
-    long                   file_pos;  // file position to restore
-    size_t                 line_pos;  // position in B
-    bool                   every_eof; // True if every_eof_token can be inserted
-    bool                   eof_outer; // True if eof is outer
+    std::vector<char32_t> line;
+    states                state;     // copy of scanner state
+    LinePtr               L;         // the lines
+    int                   line_no;   // the current line number
+    TokenList             TL;        // saved token list
+    std::string           name;      // name of the current file
+    long                  at_val;    // catcode of @ to restore
+    long                  file_pos;  // file position to restore
+    size_t                line_pos;  // position in B
+    bool                  every_eof; // True if every_eof_token can be inserted
+    bool                  eof_outer; // True if eof is outer
 
     InputStack(std::string N, int l, states S, long cfp, bool eof, bool eof_o)
         : state(S), line_no(l), name(std::move(N)), at_val(-1), file_pos(cfp), line_pos(0), every_eof(eof), eof_outer(eof_o) {}

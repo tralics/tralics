@@ -50,9 +50,9 @@ void Parser::init_all(const std::string &doc_elt) {
 // Note: never use process_char('&'),
 inline void Parser::process_string(String s) { unprocessed_xml.append(s); }
 
-inline void Parser::process_char(int s) { process_char(codepoint(unsigned(s))); }
+inline void Parser::process_char(int s) { process_char(char32_t(unsigned(s))); }
 
-inline void Parser::process_char(size_t c) { process_char(codepoint(char32_t(c))); }
+inline void Parser::process_char(size_t c) { process_char(char32_t(char32_t(c))); }
 
 // This is useful for German unlaut. It translates two normal characters.
 void Parser::translate_char(uchar c1, uchar c2) {
@@ -154,7 +154,7 @@ void Parser::umlaut_bad() {
 void Parser::extended_chars(size_t c) {
     LC();
     if (c < 1 << 16)
-        process_char(codepoint(c));
+        process_char(char32_t(c));
     else
         unprocessed_xml.process_big_char(c);
 }
@@ -162,7 +162,7 @@ void Parser::extended_chars(size_t c) {
 // Translate current character.
 void Parser::translate_char(CmdChr X) {
     if (!the_stack.in_h_mode()) LC();
-    codepoint c = X.char_val();
+    char32_t c = X.char_val();
     if (c == 0) return; // we do not want null chars in trace or Xml
     if (tracing_commands()) Logger::out_single_char(c);
     if (!is_small(c)) {
@@ -207,7 +207,7 @@ void Parser::english_quotes(CmdChr X) {
     } else {
         if (X.is_other() && (c == '\'' || c == '`' || cur_lang_fr())) {
             get_x_token();
-            if (cur_cmd_chr.is_other() && cur_cmd_chr.char_val() == codepoint(c)) {
+            if (cur_cmd_chr.is_other() && cur_cmd_chr.char_val() == char32_t(c)) {
                 if (c == '\'')
                     process_char(0x201d);
                 else if (c == '`')
@@ -868,7 +868,7 @@ void Parser::translate03() {
     case leave_v_mode_cmd: leave_v_mode(); return;
     case space_catcode:
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return;
-        process_char(codepoint(char32_t(c)));
+        process_char(char32_t(char32_t(c)));
         return;
     case letter_catcode:
     case other_catcode: translate_char(cur_cmd_chr); return;
@@ -897,9 +897,9 @@ void Parser::translate03() {
         LC();
         // FIXME this is latex not xml
         if (eqtb_int_table[language_code].val == 1) {
-            process_char(codepoint(0xE0U));
+            process_char(char32_t(0xE0U));
             process_string(" para");
-            process_char(codepoint(0xEEU));
+            process_char(char32_t(0xEEU));
             process_string("tre");
         } else
             process_string("to appear");
@@ -1199,7 +1199,7 @@ void Parser::translate03() {
     case dashline_cmd: T_dashline(c); return;
     case bezier_cmd: T_bezier(c); return;
     case grabenv_cmd: T_grabenv(); return;
-    case verb_cmd: T_verb(c != 0U ? verb_saved_char : codepoint(0U)); return;
+    case verb_cmd: T_verb(c != 0U ? verb_saved_char : char32_t(0U)); return;
     case gloss_cmd: T_gloss(c == 0); return;
     case only_preamble_cmd:
         get_r_token(true);

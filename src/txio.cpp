@@ -117,25 +117,25 @@ void Converter::start_convert(int l) {
 
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
-auto Buffer::next_utf8_char() -> codepoint {
-    auto      it = begin() + to_signed(ptrs.b), it0 = it;
-    codepoint cp;
+auto Buffer::next_utf8_char() -> char32_t {
+    auto     it = begin() + to_signed(ptrs.b), it0 = it;
+    char32_t cp;
     try {
-        cp = it == end() ? codepoint(0U) : codepoint(utf8::next(it, end()));
+        cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end()));
     } catch (utf8::invalid_utf8) {
         Converter &T = the_converter;
         T.bad_chars++;
         T.new_error();
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
-        return codepoint();
+        return char32_t();
     }
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
         utf8_ovf(cp);
-        return codepoint(); // \todo nullopt
+        return char32_t(); // \todo nullopt
     }
     return cp;
 }
@@ -144,7 +144,7 @@ auto Buffer::next_utf8_char() -> codepoint {
 auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
     Buffer utf8_out;
     ptrs.b = 0;
-    codepoint c;
+    char32_t c;
     for (;;) {
         if (at_eol()) break;
         if (wc == 0)
@@ -152,7 +152,7 @@ auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
         else {
             auto C = static_cast<uchar>(next_char());
             if (wc == 1)
-                c = codepoint(C);
+                c = char32_t(C);
             else
                 c = custom_table[wc - 2][C];
             if (!(is_ascii(c) && c == C)) the_converter.line_is_ascii = false;
@@ -185,9 +185,9 @@ void io_ns::set_enc_param(long enc, long pos, long v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[to_unsigned(enc)][to_unsigned(pos)] = codepoint(to_unsigned(v));
+        custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(v));
     else
-        custom_table[to_unsigned(enc)][to_unsigned(pos)] = codepoint(to_unsigned(pos));
+        custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(pos));
 }
 
 auto io_ns::get_enc_param(long enc, long pos) -> long {
@@ -279,7 +279,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
 }
 
 // This puts x into the buffer in utf8 form
-void Buffer::push_back(codepoint c) { utf8::append(c, std::back_inserter(*this)); }
+void Buffer::push_back(char32_t c) { utf8::append(c, std::back_inserter(*this)); }
 
 inline void Buffer::push_back_hex(unsigned c) {
     if (c < 10)
@@ -343,7 +343,7 @@ void Buffer::push_back16l(bool hat, unsigned n) {
 
 // This puts a 16bit char in the form ^^^^abcd in the buffer.
 // Uses ^^ab notation if better
-void Buffer::out_four_hats(codepoint ch) {
+void Buffer::out_four_hats(char32_t ch) {
     if (ch == '\n') {
         push_back('\n');
         return;
@@ -369,7 +369,7 @@ void Buffer::out_four_hats(codepoint ch) {
 }
 
 // This inserts &#xabc;
-void Buffer::push_back_ent(codepoint ch) {
+void Buffer::push_back_ent(char32_t ch) {
     if (ch == 65534 || ch == 65535) return; // these chars are illegal
     push_back('&');
     push_back('#');
@@ -392,7 +392,7 @@ void Buffer::process_big_char(size_t n) {
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
-void Parser::process_char(codepoint c) {
+void Parser::process_char(char32_t c) {
     if (c == 0)
         unprocessed_xml.append(""); // may be required
     else if (c == '\n')
@@ -413,7 +413,7 @@ void Parser::process_char(codepoint c) {
         unprocessed_xml.push_back(c);
 }
 
-void Buffer::push_back_real_utf8(codepoint c) {
+void Buffer::push_back_real_utf8(char32_t c) {
     if (c == 0)
         append(""); // may be required
     else if (c == '\n')
@@ -439,11 +439,11 @@ void Parser::process_char(uchar c) {
     if (c < 128)
         unprocessed_xml.push_back(static_cast<char>(c));
     else
-        process_char(codepoint(c));
+        process_char(char32_t(c));
 }
 
 // This dumps a single character using log method
-void Buffer::out_log(codepoint ch, output_encoding_type T) {
+void Buffer::out_log(char32_t ch, output_encoding_type T) {
     if (ch == '\n')
         push_back('\n');
     else if (ch == '\r')
@@ -476,7 +476,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     Buffer O;
     the_converter.global_error = false;
     for (;;) {
-        codepoint c = B.next_utf8_char();
+        char32_t c = B.next_utf8_char();
         if ((c == 0) && B.at_eol()) break;
         if (c == 0) continue;
         if (is_ascii(c))
@@ -497,7 +497,7 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     the_converter.global_error = false;
     Buffer utf8_out;
     for (;;) {
-        codepoint c = next_utf8_char();
+        char32_t c = next_utf8_char();
         if (c == 0) {
             if (at_eol()) break;
             utf8_out += "<null>";
@@ -510,9 +510,9 @@ auto Buffer::convert_to_log_encoding() -> std::string {
     return std::move(utf8_out);
 }
 
-auto Buffer::codepoints() const -> std::vector<codepoint> { // \todo use at more places
+auto Buffer::codepoints() const -> std::vector<char32_t> { // \todo use at more places
     the_converter.start_convert(the_parser.get_cur_line());
-    std::vector<codepoint> V2;
+    std::vector<char32_t> V2;
     V2.reserve(size());
     for (auto it = begin(); *it != 0;) V2.emplace_back(utf8::next(it, end()));
     return V2;

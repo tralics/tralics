@@ -94,7 +94,7 @@ found at http://www.cecill.info.)";
     /// Initialises encoding tables
     void check_for_encoding() {
         for (auto &i : custom_table)
-            for (unsigned j = 0; j < lmaxchar; ++j) i[j] = codepoint(j);
+            for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
     /// Checks that name is non-empty and all lowercase
@@ -378,7 +378,7 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
     spdlog::trace("Output encoding: {}", print_enc(output_encoding));
     spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
-    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(codepoint(leftquote_val)), to_utf8(codepoint(rightquote_val)));
+    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(leftquote_val)), to_utf8(char32_t(rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (input_path.size() > 1) {

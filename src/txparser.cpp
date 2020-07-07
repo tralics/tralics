@@ -615,12 +615,12 @@ auto Parser::is_verbatim_end() -> bool {
 // pushed at the end of L (or with prefix  \verbprefix pushed at the start of L).
 // Returns true in case of problem
 
-auto Parser::vb_tokens(codepoint test, TokenList &L, bool before) -> bool {
+auto Parser::vb_tokens(char32_t test, TokenList &L, bool before) -> bool {
     TokenList res;
     state = state_M;
     for (;;) {
         if (at_eol()) return true;
-        codepoint c = get_next_char();
+        char32_t c = get_next_char();
         if (c == test) break;
         res.push_back(verbatim_chars[c]);
     }
@@ -682,7 +682,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
             word_define(to_unsigned(my_number), n, true);
             token_ns::add_verbatim_number(res, hash_table, n);
         }
-        if (vb_tokens(codepoint('\r'), res, false)) {
+        if (vb_tokens(char32_t('\r'), res, false)) {
             ok = false;
             break;
         }
@@ -798,30 +798,30 @@ void Parser::special_fvset() {
 // In the case of \verb+foo+, reads and returns the + character.
 // Sets special_space to true if spaces have to be treaded specially
 // Returns null in case of error
-auto Parser::delimiter_for_verb(bool &special_space) -> codepoint {
-    codepoint t = get_next_char();
+auto Parser::delimiter_for_verb(bool &special_space) -> char32_t {
+    char32_t t = get_next_char();
     if (!(t == '*')) return t;
-    if (at_eol()) return codepoint();
+    if (at_eol()) return char32_t();
     special_space = true;
     return get_next_char();
 }
 
 // In the case of \SaveVerb{ok}+foo+, reads and returns the + character,
 // which must have spacial_catcode. returns 0 in case of trouble
-auto Parser::delimiter_for_saveverb() -> codepoint {
+auto Parser::delimiter_for_saveverb() -> char32_t {
     for (;;) {
-        if (at_eol()) return codepoint();
-        codepoint c = get_next_char();
+        if (at_eol()) return char32_t();
+        char32_t c = get_next_char();
         if (c == 0) return c;
-        if (is_big(c)) return codepoint();
+        if (is_big(c)) return char32_t();
         if (get_catcode(c) == space_catcode) continue;
         if (get_catcode(c) == special_catcode) return c;
-        return codepoint();
+        return char32_t();
     }
 }
 
 // Case of the \verb command (t=0) or |foo|, where t is the char
-void Parser::T_verb(codepoint t) {
+void Parser::T_verb(char32_t t) {
     Token T = cur_tok;
     if (!TL.empty()) {
         verb_error(T, 0);
@@ -854,7 +854,7 @@ void Parser::T_saveverb() {
         verb_error(T, 0);
         return;
     }
-    codepoint c = delimiter_for_saveverb();
+    char32_t c = delimiter_for_saveverb();
     if (c == 0) {
         verb_error(T, 3);
         return;
@@ -2173,7 +2173,7 @@ void Parser::new_prim(String a, String b) {
         auto c = b[i];
         if (uchar(c) > 128) err_ns::fatal_error("internal error in new_prim");
         spec_offsets T = c == ' ' ? space_t_offset : is_letter(c) ? letter_t_offset : other_t_offset;
-        L.push_back(Token(T, codepoint(c)));
+        L.push_back(Token(T, char32_t(c)));
     }
     new_prim(hash_table.locate(a), L);
 }
@@ -2725,7 +2725,7 @@ void Parser::iexpand() {
     case l3str_case_cmd: E_l3str_case(c); return;
     case token_if_cmd: l3_token_check(c); return;
     case cat_ifeq_cmd: E_cat_ifeq(c); return;
-    case specchar_cmd: back_input(Token(other_t_offset, codepoint(char32_t(c)))); return;
+    case specchar_cmd: back_input(Token(other_t_offset, char32_t(char32_t(c)))); return;
     case splitfun_cmd: L3_user_split_next_name(c == 0); return;
     case user_cmd:
     case usero_cmd:

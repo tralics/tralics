@@ -16,7 +16,7 @@
 std::string xxx;
 
 namespace {
-    inline auto is_spacer(codepoint c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
+    inline auto is_spacer(char32_t c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
 } // namespace
 
 // Rule 1 defines Document
@@ -114,7 +114,7 @@ void XmlIO::run() {
     B.clear();
     eof_ok = true;
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         // We should handle &foo; as well, but we cannot change it
         if (c != '<')
             B.push_back(c);
@@ -145,7 +145,7 @@ void XmlIO::next_line() {
 
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
-auto XmlIO::peek_char() -> codepoint {
+auto XmlIO::peek_char() -> char32_t {
     if (!reread_list.empty()) return reread_list.back();
     if (at_eol()) next_line();
     return input_line[input_line_pos];
@@ -160,8 +160,8 @@ void XmlIO::skip_char() {
 }
 
 // This returns the next character
-auto XmlIO::next_char() -> codepoint {
-    codepoint res = peek_char();
+auto XmlIO::next_char() -> char32_t {
+    char32_t res = peek_char();
     skip_char();
     return res;
 }
@@ -185,12 +185,12 @@ void XmlIO::flush_buffer() {
 // Scans a Name with a simplified syntax
 void XmlIO::scan_name() {
     B.clear();
-    codepoint x = XmlIO::peek_char();
+    char32_t x = XmlIO::peek_char();
     // x should be Letter underscore colon
     B.push_back(x);
     skip_char();
     for (;;) {
-        codepoint xx = XmlIO::peek_char();
+        char32_t xx = XmlIO::peek_char();
         if (is_ascii(xx)) {
             x_type w = Type[xx];
             if (w == xt_space || w == xt_invalid) return;
@@ -205,7 +205,7 @@ void XmlIO::scan_name() {
 void XmlIO::scan_name(uchar c) {
     B.clear();
     for (;;) {
-        codepoint x = XmlIO::peek_char();
+        char32_t x = XmlIO::peek_char();
         if (x == c || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -216,7 +216,7 @@ void XmlIO::scan_name(uchar c) {
 void XmlIO::scan_name(uchar c1, uchar c2) {
     B.clear();
     for (;;) {
-        codepoint x = XmlIO::peek_char();
+        char32_t x = XmlIO::peek_char();
         if (x == c1 || x == c2 || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -292,7 +292,7 @@ void XmlIO::parse_att_val() {
 
 void XmlIO::parse_quoted() {
     skip_space();
-    codepoint delim{' '};
+    char32_t delim{' '};
     if (cur_char == '\'' || cur_char == '"')
         delim = cur_char;
     else {
@@ -302,7 +302,7 @@ void XmlIO::parse_quoted() {
     skip_char();
     B.clear();
     for (;;) {
-        codepoint x = XmlIO::next_char();
+        char32_t x = XmlIO::next_char();
         if (x == delim) break;
         B.push_back(x);
     }
@@ -368,7 +368,7 @@ void XmlIO::parse_pi() {
         }
     } else
         for (;;) {
-            codepoint c = next_char();
+            char32_t c = next_char();
             if (c == '?') {
                 cur_char = peek_char();
                 if (cur_char == '>') {
@@ -386,8 +386,8 @@ void XmlIO::parse_pi() {
 
 // Scans a declaration. We test the first or second letter
 void XmlIO::parse_dec() {
-    cur_char    = next_char();
-    codepoint c = peek_char();
+    cur_char   = next_char();
+    char32_t c = peek_char();
     reread_list.push_back(cur_char);
     if (c == '-')
         parse_dec_comment();
@@ -427,7 +427,7 @@ void XmlIO::parse_dec_comment() {
     expect("--");
     B.clear();
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         B.push_back(c);
         if (c != '>') continue;
         auto k = B.size(); // B[k-1] is >
@@ -446,7 +446,7 @@ void XmlIO::parse_dec_cdata() {
     B.append("<![CDATA ");
     skip_space();
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         B.push_back(c);
         if (c == '>') {
             auto k = B.size(); // B[k-1] is >
@@ -463,7 +463,7 @@ void XmlIO::parse_dec_conditional() {
     B.append("<![");
     bool keep = false;
     skip_space();
-    codepoint c = peek_char();
+    char32_t c = peek_char();
     if (c == '%') {
         skip_char();
         expand_PEReference();
@@ -546,7 +546,7 @@ void XmlIO::parse_dec_entity() {
     if (cur_char != '>') {
         B.clear();
         for (;;) {
-            codepoint c = next_char();
+            char32_t c = next_char();
             if (c == '>') break;
             B.push_back(c);
         }
@@ -571,7 +571,7 @@ void XmlIO::parse_dec_element() {
     bool        first_space   = true;
     std::string elt_name;
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         if (c == '>') break;
         if (c == '%') {
             if (expand_PEReference()) continue;
@@ -619,7 +619,7 @@ void XmlIO::parse_dec_attlist() {
     bool        first_space   = true;
     std::string elt_name;
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         if (c == '>') break;
         if (c == '%') {
             if (expand_PEReference()) continue;
@@ -684,7 +684,7 @@ void XmlIO::parse_dec_doctype() {
     // Read the local DTD
     B = " [";
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         if (c == '<')
             parse_lt();
         else {
@@ -715,7 +715,7 @@ void XmlIO::parse_dec_notation() {
     B.append("<!NOTATION ");
     skip_space();
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         B.push_back(c);
         if (c == '>') break;
     }
@@ -726,7 +726,7 @@ void XmlIO::parse_dec_notation() {
 auto XmlIO::expand_PEReference() -> bool {
     B.clear();
     for (;;) {
-        codepoint c = next_char();
+        char32_t c = next_char();
         if (c == ';') break;
         B.push_back(c);
     }
@@ -742,11 +742,11 @@ auto XmlIO::expand_PEReference() -> bool {
         }
     }
     if (!ok) B += ";";
-    std::vector<codepoint> V;
+    std::vector<char32_t> V;
     V.clear();
     B.ptrs.b = 0;
     for (;;) { // \todo this is Buffer::codepoints()
-        codepoint c = B.next_utf8_char();
+        char32_t c = B.next_utf8_char();
         if (c == 0 && B.at_eol()) break;
         V.push_back(c);
     }

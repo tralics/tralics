@@ -36,7 +36,7 @@ namespace {
         return {};
     }
 
-    auto hex_val(codepoint c) -> std::optional<unsigned> {
+    auto hex_val(char32_t c) -> std::optional<unsigned> {
         if (is_digit(c)) return c - '0';
         if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
@@ -447,7 +447,7 @@ void Parser::restore_the_state(SaveState &x) {
 // If this is the case, a new character is constructed and replaces the last
 // character read (i.e., will be returned by read_next_char)
 
-auto Parser::scan_double_hat(codepoint c) -> bool {
+auto Parser::scan_double_hat(char32_t c) -> bool {
     auto sz = input_line.size();
     auto p  = input_line_pos;
     auto w  = sz - p + 1; // number of unread chars aon the line
@@ -461,7 +461,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         auto hc4 = hex_val(input_line[p + 8]);
         if (hc0 && hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 8;
-            input_line[p + 8] = codepoint((*hc0 << 16) + (*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
+            input_line[p + 8] = char32_t((*hc0 << 16) + (*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
             return true;
         }
     }
@@ -472,7 +472,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         auto hc4 = hex_val(input_line[p + 6]);
         if (hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 6;
-            input_line[p + 6] = codepoint((*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
+            input_line[p + 6] = char32_t((*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
             return true;
         }
     }
@@ -481,23 +481,23 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         auto hc2 = hex_val(input_line[p + 2]);
         if (hc1 && hc2) {
             input_line_pos             = p + 2;
-            input_line[input_line_pos] = codepoint(*hc1 * 16 + *hc2);
+            input_line[input_line_pos] = char32_t(*hc1 * 16 + *hc2);
             return true;
         }
     }
-    codepoint C = input_line[p + 1];
+    char32_t C = input_line[p + 1];
     if (!is_ascii(C)) return false;
     auto c1 = C;
     input_line_pos++;
-    input_line[p + 1] = codepoint(c1 < 64 ? c1 + 64 : c1 - 64);
+    input_line[p + 1] = char32_t(c1 < 64 ? c1 + 64 : c1 - 64);
     return true;
 }
 
 // This constructs a command name from the current line
 auto Parser::cs_from_input() -> Token {
     if (at_eol()) return Token(null_tok_val);
-    codepoint c = get_next_char();
-    state       = state_S;
+    char32_t c = get_next_char();
+    state      = state_S;
     if (is_big(c)) { // abort and return null_cs
         --input_line_pos;
         return Token(null_tok_val);
@@ -542,7 +542,7 @@ auto Parser::cs_from_input() -> Token {
 // (space or invalid chars), or because of ^^
 auto Parser::next_from_line0() -> bool {
     if (at_eol()) return true;
-    codepoint c = get_next_char();
+    char32_t c = get_next_char();
     if (is_big(c)) { // convert to \char"ABCD
         Buffer &B = local_buf;
         B.clear();
@@ -768,7 +768,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             }
             // Check brace level
             if (t.char_or_active()) {
-                codepoint c = t.char_val();
+                char32_t c = t.char_val();
                 if (c == '{')
                     b++;
                 else if (c == '}') {
@@ -786,8 +786,8 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
                 return false;
             continue; // this may set TL
         }
-        codepoint c = get_next_char();
-        if (c == '\r') c = codepoint('\n');
+        char32_t c = get_next_char();
+        if (c == '\r') c = char32_t('\n');
         B.push_back(c);
         if (c == '{') b++;
         if (c == '}') {
@@ -964,7 +964,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
     if (rl_sw) { // case of readline, only one line is read
         for (;;) {
             if (at_eol()) break;
-            codepoint c = get_next_char();
+            char32_t c = get_next_char();
             if (c == ' ')
                 L.push_back(hash_table.space_token);
             else
@@ -1583,7 +1583,7 @@ void Parser::scan_double(RealNumber &res) {
 // it reads a unit, returns
 auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
-    codepoint c1, c2;
+    char32_t c1, c2;
     if (cur_tok.is_a_char()) {
         c1         = to_lower(cur_cmd_chr.char_val());
         Token save = cur_tok;

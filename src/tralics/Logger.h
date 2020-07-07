@@ -14,7 +14,7 @@ struct Logger {
     static void log_dump(const std::string &s); ///< Log argument surrounded by braces
     static void log_finish();                   // \todo This belongs in the destructor but spdlog could die first
 
-    static void out_single_char(codepoint c) { buffer_for_log2 << c; }
+    static void out_single_char(char32_t c) { buffer_for_log2 << c; }
 
     static void finish_seq() {
         if (!buffer_for_log2.empty()) {

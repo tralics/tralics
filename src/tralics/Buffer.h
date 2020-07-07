@@ -28,7 +28,7 @@ public:
 
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
-    [[nodiscard]] auto codepoints() const -> std::vector<codepoint>;          ///< Translate contents into codepoints
+    [[nodiscard]] auto codepoints() const -> std::vector<char32_t>;           ///< Translate contents into codepoints
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
@@ -104,11 +104,11 @@ public:
     auto next_env_spec() -> bool;
     auto next_macro() -> bool;
     auto next_macro_spec() -> bool;
-    auto next_utf8_char() -> codepoint;
+    auto next_utf8_char() -> char32_t;
     void no_newline();
     void normalise_for_bibtex(String s);
-    void out_four_hats(codepoint ch);
-    void out_log(codepoint ch, output_encoding_type T);
+    void out_four_hats(char32_t ch);
+    void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();
     void process_big_char(size_t n);
     void insert_token(Token T, bool sw);
@@ -118,7 +118,7 @@ public:
     void push_back_elt(const std::string &name, Xid id, int w);
     void push_back16(size_t n, bool uni);
     void push_back16l(bool hat, unsigned n);
-    void push_back_ent(codepoint ch);
+    void push_back_ent(char32_t ch);
     void push_back_hex(unsigned c);
     void push_back_Hex(unsigned c);
     void push_back_math_token(const CmdChr &x, bool space);
@@ -131,7 +131,7 @@ public:
     void push_back_Roman(long n);
     void push_back_special_att(Xid id);
     void push_back_special_string(String s);
-    void push_back_real_utf8(codepoint c);
+    void push_back_real_utf8(char32_t c);
     void push_back_xml_char(uchar c);
     void push_back_unless_punct(char c);
     void append_unless_ends_with(const std::string &s);
@@ -172,7 +172,7 @@ public:
 
     auto push_back(Token T) -> bool;
 
-    void push_back(codepoint c);
+    void push_back(char32_t c);
     void push_back(char c);
     void push_back(uchar c);
     void push_back(ScaledInt v, glue_spec unit);

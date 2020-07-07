@@ -391,7 +391,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     ptrs.b       = 0;
     for (;;) {
         if (at_eol()) return L;
-        codepoint c = next_utf8_char();
+        char32_t c = next_utf8_char();
         if (c == 0) {
         } // ignore bad chars
         else if (c == ' ')
@@ -411,7 +411,7 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
     ptrs.b = 0;
     for (;;) {
         if (at_eol()) return L;
-        codepoint c = next_utf8_char();
+        char32_t c = next_utf8_char();
         if (c == 0) {
         } // ignore bad chars
         else if (c == ' ')
@@ -533,8 +533,8 @@ void Parser::print_cmd_chr(CmdChr X) {
     }
     if (a != nullptr) { // chr
         the_log << a;
-        codepoint y(char32_t(X.chr));
-        Buffer &  B = buffer_for_log;
+        char32_t y(char32_t(X.chr));
+        Buffer & B = buffer_for_log;
         B.clear();
         B.out_log(y, the_main->log_encoding);
         return;
@@ -666,9 +666,9 @@ void token_ns::sanitize_one(TokenList &L, TokenList &s, long n) {
         Token x = *C;
         check_brace(x, bl);
         if (bl <= n && x.is_a_char()) {
-            codepoint c  = x.char_val();
-            auto      sC = s.begin();
-            auto      sE = s.end();
+            char32_t c  = x.char_val();
+            auto     sC = s.begin();
+            auto     sE = s.end();
             while (sC != sE) {
                 if (sC->char_val() == c) *C = *sC;
                 break;

@@ -19,7 +19,7 @@ bool only_input_data{false};
 bool raw_bib{false};
 bool seen_enddocument{false};
 
-std::array<std::array<codepoint, lmaxchar>, max_encoding - 2> custom_table;
+std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {

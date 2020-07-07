@@ -332,7 +332,7 @@ namespace math_ns {
     auto math_constants(int c) -> Xml *;
     auto math_space_code(int c) -> bool;
     auto make_sup(Xml *xval) -> Xml *;
-    auto mk_mi(codepoint c) -> Xml *;
+    auto mk_mi(char32_t c) -> Xml *;
     auto mk_mi(uchar c, size_t font) -> Xml *;
     auto mk_space(const std::string &a) -> Xml *;
     auto nb_args_for_cmd(int c) -> int;

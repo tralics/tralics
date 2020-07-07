@@ -7,7 +7,7 @@ struct Token {
     size_t val{0};
 
     explicit Token(size_t x) : val(x) {}
-    Token(spec_offsets a, codepoint b) : val(a + b) {}
+    Token(spec_offsets a, char32_t b) : val(a + b) {}
     Token() = default;
 
     void               kill() { val = 0; }
@@ -18,7 +18,7 @@ struct Token {
     [[nodiscard]] auto is_in_hash() const -> bool { return val >= hash_offset; }
     [[nodiscard]] auto cmd_val() const -> symcodes { return symcodes(val / nb_characters); }
     [[nodiscard]] auto chr_val() const -> subtypes { return subtypes(val % nb_characters); }
-    [[nodiscard]] auto char_val() const -> codepoint { return codepoint(val % nb_characters); }
+    [[nodiscard]] auto char_val() const -> char32_t { return char32_t(val % nb_characters); }
     [[nodiscard]] auto is_a_brace() const -> bool { return OB_t_offset <= val && val < RB_limit; }
     [[nodiscard]] auto is_a_left_brace() const -> bool { return OB_t_offset <= val && val < CB_t_offset; }
     [[nodiscard]] auto is_OB_token() const -> bool { return OB_t_offset <= val && val < CB_t_offset; }

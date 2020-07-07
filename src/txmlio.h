@@ -30,9 +30,9 @@ class XmlIO {
     LinePtr                 lines;       // input file
     int                     cur_line{};
     std::array<x_type, 128> Type{};
-    std::vector<codepoint>  input_line;  // current line
-    std::vector<codepoint>  reread_list; // current line
-    codepoint               cur_char;    // current character in some cases
+    std::vector<char32_t>   input_line;  // current line
+    std::vector<char32_t>   reread_list; // current line
+    char32_t                cur_char;    // current character in some cases
 
     Xml *                  cur_xml{};
     std::vector<Xml *>     cur_stack;
@@ -45,9 +45,9 @@ class XmlIO {
     bool                   eof_ok{};
 
 private:
-    auto               peek_char() -> codepoint;
+    auto               peek_char() -> char32_t;
     void               skip_char();
-    auto               next_char() -> codepoint;
+    auto               next_char() -> char32_t;
     void               skip_space();
     void               next_line();
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= cur_line_len; }

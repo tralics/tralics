@@ -17,7 +17,7 @@ public:
     MathElt(Xml *x, math_types y);
     MathElt(Xml *A, int b, math_types c);
 
-    [[nodiscard]] auto get_char() const -> codepoint { return char_val(); }
+    [[nodiscard]] auto get_char() const -> char32_t { return char_val(); }
     [[nodiscard]] auto get_fml_subtype() const -> subtypes;
     [[nodiscard]] auto get_font() const -> subtypes { return font; }
     [[nodiscard]] auto get_lcmd() const -> math_list_type { return math_list_type(font); }

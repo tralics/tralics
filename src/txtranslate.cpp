@@ -103,7 +103,7 @@ void Parser::translate01() {
 // Letters are printed elsewhere
 void Parser::translate02() {
     if (cur_cmd_chr.is_space()) {
-        if (!the_stack.in_v_mode()) Logger::out_single_char(codepoint(' '));
+        if (!the_stack.in_v_mode()) Logger::out_single_char(char32_t(' '));
         return;
     }
     if (cur_cmd_chr.is_letter_other()) return;
@@ -1002,7 +1002,7 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
         auto k = ((dim >> 16) + 2) / 4;
         while (k > 0) {
             k--;
-            process_char(codepoint(0xA0U));
+            process_char(char32_t(0xA0U));
         }
         return;
     }

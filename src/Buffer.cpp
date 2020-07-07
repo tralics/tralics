@@ -49,7 +49,7 @@ auto null_cs_name() -> std::string {
     if (c == '\\') return "csname\\endcsname";
     if (c > 0 && c < int(nb_characters)) {
         Buffer B = "csname";
-        B.out_log(codepoint(char32_t(c)), the_main->log_encoding);
+        B.out_log(char32_t(char32_t(c)), the_main->log_encoding);
         B.append("endcsname");
         return B.data();
     }
@@ -87,7 +87,7 @@ void Buffer::push_back_xml_char(uchar c) {
     else if (c == '&')
         append("&amp;");
     else if (c < 32)
-        push_back_ent(codepoint(static_cast<char>(c)));
+        push_back_ent(char32_t(static_cast<char>(c)));
     else
         push_back(static_cast<char>(c));
 }
@@ -212,7 +212,7 @@ void Buffer::remove_space_at_end() {
 void Buffer::insert_escape_char() {
     auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(codepoint(char32_t(c)), the_main->log_encoding);
+        out_log(char32_t(char32_t(c)), the_main->log_encoding);
     else if (c == 0)
         append("^^@");
 }
@@ -220,7 +220,7 @@ void Buffer::insert_escape_char() {
 void Buffer::insert_escape_char_raw() {
     auto c = current_escape_char();
     if (c > 0 && c < int(nb_characters))
-        push_back(codepoint(char32_t(c)));
+        push_back(char32_t(char32_t(c)));
     else if (c == 0)
         append("^^@");
 }
@@ -234,9 +234,9 @@ auto Token::tok_to_str() const -> std::string {
         B.push_back(*this);
         return std::move(B);
     }
-    int       cat      = cmd_val();
-    codepoint c        = char_val();
-    bool      good_cat = false;
+    int      cat      = cmd_val();
+    char32_t c        = char_val();
+    bool     good_cat = false;
     if (!is_ascii(c) && cat == 12) good_cat = true;
     if (::is_letter(c) && cat == 11) good_cat = true;
     if (good_cat)
@@ -261,8 +261,8 @@ auto Buffer::push_back(Token T) -> bool {
         return false;
     }
     if (T.is_a_char()) {
-        int       cmd = T.cmd_val();
-        codepoint c   = T.char_val();
+        int      cmd = T.cmd_val();
+        char32_t c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
             push_back(static_cast<char>(c + '0')); // parameter
@@ -296,7 +296,7 @@ void Buffer::insert_token(Token T, bool sw) {
         return;
     }
     if (T.char_or_active()) {
-        codepoint c = T.char_val();
+        char32_t c = T.char_val();
         if (T.is_a_char()) {
             int cmd = T.cmd_val();
             if (cmd == eol_catcode) {
@@ -324,7 +324,7 @@ void Buffer::insert_token(Token T, bool sw) {
     else
         insert_escape_char_raw();
     if (T.active_or_single()) {
-        codepoint c = T.char_val();
+        char32_t c = T.char_val();
         if (c == 0)
             append("^^@");
         else
@@ -350,7 +350,7 @@ auto Buffer::convert_for_xml_err(Token T) -> std::string {
         append("\\invalid.");
     else if (T.char_or_active()) {
         // We simplify the algorithm by printing the character as is
-        codepoint c = T.char_val();
+        char32_t c = T.char_val();
         if (c == 0)
             append("^^@");
         else
@@ -358,7 +358,7 @@ auto Buffer::convert_for_xml_err(Token T) -> std::string {
     } else {
         push_back('\\');
         if (T.active_or_single()) {
-            codepoint c = T.char_val();
+            char32_t c = T.char_val();
             if (c == 0)
                 append("^^@");
             else
@@ -477,7 +477,7 @@ auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
 }
 
 // We use internal encoding here.
-auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & { return fp << to_utf8(x); }
+auto operator<<(std::ostream &fp, const char32_t &x) -> std::ostream & { return fp << to_utf8(x); }
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
 void Buffer::push_back_roman(long n) {
@@ -1063,11 +1063,11 @@ void Buffer::normalise_for_bibtex(String s) {
         if (c != '\\') continue;
         if (std::string(s).starts_with("c{c}")) {
             pop_back();
-            push_back(codepoint(0347U));
+            push_back(char32_t(0347U));
             s += 4;
         } else if (std::string(s).starts_with("c{C}")) {
             pop_back();
-            push_back(codepoint(0307U));
+            push_back(char32_t(0307U));
             s += 4;
         } else if (std::string(s).starts_with("v{c}")) {
             pop_back();
@@ -1264,191 +1264,191 @@ void Buffer::remove_spec_chars(bool url, Buffer &B) {
             advance();
             if (c == '\'') {
                 if (C == 'a') {
-                    B.push_back(codepoint('\341'));
+                    B.push_back(char32_t('\341'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(codepoint('\351'));
+                    B.push_back(char32_t('\351'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(codepoint('\355'));
+                    B.push_back(char32_t('\355'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(codepoint('\363'));
+                    B.push_back(char32_t('\363'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(codepoint('\372'));
+                    B.push_back(char32_t('\372'));
                     continue;
                 }
                 if (C == 'y') {
-                    B.push_back(codepoint('\375'));
+                    B.push_back(char32_t('\375'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(codepoint('\301'));
+                    B.push_back(char32_t('\301'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(codepoint('\311'));
+                    B.push_back(char32_t('\311'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(codepoint('\315'));
+                    B.push_back(char32_t('\315'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(codepoint('\323'));
+                    B.push_back(char32_t('\323'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(codepoint('\332'));
+                    B.push_back(char32_t('\332'));
                     continue;
                 }
                 if (C == 'Y') {
-                    B.push_back(codepoint('\335'));
+                    B.push_back(char32_t('\335'));
                     continue;
                 }
             }
             if (c == '`') {
                 if (C == 'a') {
-                    B.push_back(codepoint('\340'));
+                    B.push_back(char32_t('\340'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(codepoint('\350'));
+                    B.push_back(char32_t('\350'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(codepoint('\354'));
+                    B.push_back(char32_t('\354'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(codepoint('\362'));
+                    B.push_back(char32_t('\362'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(codepoint('\371'));
+                    B.push_back(char32_t('\371'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(codepoint('\300'));
+                    B.push_back(char32_t('\300'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(codepoint('\310'));
+                    B.push_back(char32_t('\310'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(codepoint('\314'));
+                    B.push_back(char32_t('\314'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(codepoint('\322'));
+                    B.push_back(char32_t('\322'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(codepoint('\331'));
+                    B.push_back(char32_t('\331'));
                     continue;
                 }
             }
             if (c == '^') {
                 if (C == 'a') {
-                    B.push_back(codepoint('\342'));
+                    B.push_back(char32_t('\342'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(codepoint('\352'));
+                    B.push_back(char32_t('\352'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(codepoint('\356'));
+                    B.push_back(char32_t('\356'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(codepoint('\364'));
+                    B.push_back(char32_t('\364'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(codepoint('\373'));
+                    B.push_back(char32_t('\373'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(codepoint('\302'));
+                    B.push_back(char32_t('\302'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(codepoint('\312'));
+                    B.push_back(char32_t('\312'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(codepoint('\316'));
+                    B.push_back(char32_t('\316'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(codepoint('\324'));
+                    B.push_back(char32_t('\324'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(codepoint('\333'));
+                    B.push_back(char32_t('\333'));
                     continue;
                 }
             }
             if (c == '\"') {
                 if (C == 'a') {
-                    B.push_back(codepoint('\344'));
+                    B.push_back(char32_t('\344'));
                     continue;
                 }
                 if (C == 'e') {
-                    B.push_back(codepoint('\353'));
+                    B.push_back(char32_t('\353'));
                     continue;
                 }
                 if (C == 'i') {
-                    B.push_back(codepoint('\357'));
+                    B.push_back(char32_t('\357'));
                     continue;
                 }
                 if (C == 'o') {
-                    B.push_back(codepoint('\366'));
+                    B.push_back(char32_t('\366'));
                     continue;
                 }
                 if (C == 'u') {
-                    B.push_back(codepoint('\374'));
+                    B.push_back(char32_t('\374'));
                     continue;
                 }
                 if (C == 'y') {
-                    B.push_back(codepoint('\377'));
+                    B.push_back(char32_t('\377'));
                     continue;
                 }
                 if (C == 'A') {
-                    B.push_back(codepoint('\304'));
+                    B.push_back(char32_t('\304'));
                     continue;
                 }
                 if (C == 'E') {
-                    B.push_back(codepoint('\313'));
+                    B.push_back(char32_t('\313'));
                     continue;
                 }
                 if (C == 'I') {
-                    B.push_back(codepoint('\317'));
+                    B.push_back(char32_t('\317'));
                     continue;
                 }
                 if (C == 'O') {
-                    B.push_back(codepoint('\326'));
+                    B.push_back(char32_t('\326'));
                     continue;
                 }
                 if (C == 'U') {
-                    B.push_back(codepoint('\334'));
+                    B.push_back(char32_t('\334'));
                     continue;
                 }
             }
             if (c == '~') {
                 if (C == 'n') {
-                    B.push_back(codepoint('\361'));
+                    B.push_back(char32_t('\361'));
                     continue;
                 }
                 if (C == 'N') {
-                    B.push_back(codepoint('\321'));
+                    B.push_back(char32_t('\321'));
                     continue;
                 }
             }

@@ -77,7 +77,7 @@ namespace {
     void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
 
     // Simple case of \^a that gives \342.
-    auto mk_acc(unsigned s) -> Token { return Token(other_t_offset, codepoint(s)); }
+    auto mk_acc(unsigned s) -> Token { return Token(other_t_offset, char32_t(s)); }
 
     // Creates the table for accents.
     void boot_accents() {
@@ -782,7 +782,7 @@ void Parser::finish_images() {
 // that are of catcode 11.
 void Parser::boot_verbatim() {
     Token *T = verbatim_chars.data();
-    for (unsigned i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, codepoint(i));
+    for (unsigned i = 0; i < nb_characters; i++) T[i] = Token(other_t_offset, char32_t(i));
     T[unsigned(' ')] = hash_table.tilda_token;
     mk_letter(T, '\'');
     mk_letter(T, '`');
@@ -1283,7 +1283,7 @@ void Parser::load_latex() {
     new_prim("NAT@cmt", ", ");
     {
         TokenList L;
-        L.push_back(Token(letter_t_offset, codepoint('&')));
+        L.push_back(Token(letter_t_offset, char32_t('&')));
         new_prim("amp", L);
     }
     more_bootstrap();

@@ -377,7 +377,7 @@ void Bibtex::scan_for_at() {
         if (at_eol())
             next_line(false);
         else {
-            codepoint c = next_char();
+            char32_t c = next_char();
             if (c == '@') return;
         }
     }
@@ -405,7 +405,7 @@ auto Bibtex::scan_identifier(size_t what) -> bool {
 auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
     B.clear();
-    codepoint c = cur_char();
+    char32_t c = cur_char();
     if (!is_ascii(c) || is_digit(c) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
         if (at_eol()) break;
@@ -426,7 +426,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
 
 // A bunch of functions called when we see the end of an identifier.
 // We start with a function that complains if first character is wrong.
-auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
+auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
     if (is_digit(c))
         log_and_tty << "\nit cannot start with a digit";
@@ -448,7 +448,7 @@ auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
 // @comment(etc) is ignored
 auto Bibtex::check_entry_end() -> int {
     if (token_buf == "comment") return 0; // don't complain
-    codepoint c = cur_char();
+    char32_t c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
     log_and_tty << "\nexpected `('  or `{'";
@@ -497,8 +497,8 @@ auto Bibtex::check_field_end(size_t what) -> int {
 // Returns 0 ik OK, 4 otherwise.
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
-    codepoint c = cur_char();
-    if (is_space(c) || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
+    char32_t c = cur_char();
+    if (is_space(c) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << fmt::format("\nit cannot end with `{}'\n", to_utf8(c)) << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
@@ -517,7 +517,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
     }
     start_comma = true;
     skip_space();
-    if (cur_char() == codepoint(right_outer_delim)) return;
+    if (cur_char() == char32_t(right_outer_delim)) return;
     if (scan_identifier(3)) return;
     field_pos where = fp_unknown;
     bool      store = false;
@@ -566,7 +566,7 @@ void Bibtex::parse_one_item() {
         skip_space();
         for (;;) {
             if (at_eol()) break;
-            codepoint c = cur_char();
+            char32_t c = cur_char();
             if (c == ',' || is_space(c)) break;
             A << c;
             next_char();
@@ -578,9 +578,9 @@ void Bibtex::parse_one_item() {
         while (cur_char() != ')' && cur_char() != '}') parse_one_field(X);
         if (m > 1) handle_multiple_entries(X);
     }
-    codepoint c = cur_char();
+    char32_t c = cur_char();
     if (c == ')' || c == '}') advance();
-    if (c != codepoint(right_outer_delim)) err_in_file("bad end delimiter", true);
+    if (c != char32_t(right_outer_delim)) err_in_file("bad end delimiter", true);
 }
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {
@@ -668,7 +668,7 @@ void Bibtex::read_field(bool store) {
 
 // This reads a single field
 void Bibtex::read_one_field(bool store) {
-    codepoint c = cur_char();
+    char32_t c = cur_char();
     if (c == '{' || c == '\"') {
         uchar delimiter = c == '{' ? '}' : '\"';
         advance(); // reads left delimiter
