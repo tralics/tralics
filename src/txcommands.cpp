@@ -9,9 +9,11 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Bibtex.h"
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
 #include "tralics/globals.h"
+#include "txinline.h"
 
 void show_unused_options();
 

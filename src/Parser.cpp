@@ -3,6 +3,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
 #include "tralics/LinePtr.h"
+#include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/NewArray.h"
 #include "tralics/Saver.h"
@@ -10,6 +11,7 @@
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace accent_ns {
     auto fetch_accent(size_t chr, int accent_code) -> Token;

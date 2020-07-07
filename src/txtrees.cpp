@@ -12,6 +12,8 @@
 // It contains also some eTeX extensions.
 
 #include "txtrees.h"
+#include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include <fmt/format.h>
 

@@ -11,6 +11,7 @@
 // This file contains commands needed for the RA
 
 #include "tralics/Parser.h"
+#include "txinline.h"
 
 static Buffer            Tbuf;
 std::vector<std::string> module_list;

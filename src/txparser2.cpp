@@ -12,6 +12,7 @@
 // things, but not the XML generator.
 
 #include "txparser2.h"
+#include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
 #include <fmt/format.h>

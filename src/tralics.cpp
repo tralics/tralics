@@ -15,11 +15,14 @@
 
 // The file contains the main data structures, and code to fill the tables.
 
+#include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "txinline.h"
 #include <ctime>
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 // This is the main function. It does the following: boot the parser and the
 // math part, and execute the main prog.

@@ -1,6 +1,7 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"

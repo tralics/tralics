@@ -1,5 +1,6 @@
 #include "tralics/Mactab.h"
 #include "tralics/Parser.h"
+#include <spdlog/spdlog.h>
 
 // finds a slot for the macro
 // Note: the reference count is 0. This is strange: the macro has to

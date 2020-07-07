@@ -11,10 +11,14 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
+#include "txio.h"
+#include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
+#include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <utf8.h>
 

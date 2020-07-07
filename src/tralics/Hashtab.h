@@ -1,5 +1,4 @@
 #pragma once
-#include "../txeqtb.h"
 #include "Equivalent.h"
 #include <unordered_map>
 

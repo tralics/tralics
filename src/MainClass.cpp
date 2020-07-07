@@ -2,12 +2,14 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Clines.h"
 #include "tralics/LinePtr.h"
+#include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 
 #ifdef _MSC_VER
 #include <windows.h>

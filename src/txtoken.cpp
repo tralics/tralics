@@ -8,9 +8,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 extern Buffer file_list;
 

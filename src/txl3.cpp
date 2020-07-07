@@ -10,6 +10,7 @@
 
 // This file contains stuff for latex3
 
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include <fmt/format.h>

@@ -1,4 +1,5 @@
 #include "tralics/NewArray.h"
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 
 namespace {

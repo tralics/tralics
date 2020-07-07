@@ -2,6 +2,8 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "txinline.h"
+#include <spdlog/spdlog.h>
 
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;

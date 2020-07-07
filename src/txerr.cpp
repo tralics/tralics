@@ -9,7 +9,9 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 

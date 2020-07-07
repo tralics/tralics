@@ -11,6 +11,7 @@
 // Tralics, math part I
 
 #include "txmath.h"
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"

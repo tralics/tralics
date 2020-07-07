@@ -10,6 +10,7 @@
 
 // This file contains the TeX parser of tralics
 
+#include "tralics/Logger.h"
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"

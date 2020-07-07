@@ -1,12 +1,14 @@
 #pragma once
-#include "../txfonts.h"
 #include "../txstats.h"
 #include "Condition.h"
 #include "EQTB.h"
+#include "FontInfo.h"
 #include "Hashtab.h"
 #include "Image.h"
 #include "LabelInfo.h"
+#include "LinePtr.h"
 #include "Mactab.h"
+#include "SaveState.h"
 #include "Stack.h"
 
 class FpNum;
