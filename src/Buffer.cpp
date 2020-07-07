@@ -478,18 +478,8 @@ auto operator<<(std::ostream &fp, const SthInternal &x) -> std::ostream & {
 
 // We use internal encoding here.
 auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream & {
-    if (is_ascii(x)) return fp << static_cast<uchar>(x.value);
-    Buffer B;
-    B.push_back(x);
-    return fp << B;
-}
-
-// We use log encoding here. \todo always UTF8?
-auto operator<<(Logger &fp, const codepoint &x) -> Logger & {
-    if (is_ascii(x)) return fp << static_cast<uchar>(x.value);
-    Buffer B;
-    B.push_back(x);
-    return fp << B;
+    utf8::append(x.value, std::ostream_iterator<char>(fp));
+    return fp;
 }
 
 // Puts n in roman (in upper case roman first, the loewrcasify)
