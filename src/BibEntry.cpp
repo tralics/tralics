@@ -5,6 +5,7 @@
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <fmt/ostream.h>
 
 namespace {

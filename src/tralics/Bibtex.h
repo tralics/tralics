@@ -1,6 +1,7 @@
 #pragma once
 #include "BibEntry.h"
 #include "BibMacro.h"
+#include <optional>
 
 // Main idea. The TeX file has commands like \cite , \nocite, which produce
 // a CitationItem (new or old). There are stored in citation_table. They have

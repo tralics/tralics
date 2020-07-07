@@ -5,6 +5,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
 

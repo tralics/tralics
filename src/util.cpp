@@ -1,5 +1,7 @@
 #include "tralics/util.h"
 #include "tralics/Parser.h"
+#include <sstream>
+#include <utf8.h>
 
 namespace {
     auto counter_val(int k) -> int { return (0 <= k && k < to_signed(nb_registers)) ? k : -1; }
@@ -84,3 +86,9 @@ auto save_string_name(size_t n) -> String {
 }
 
 auto is_m_font(symcodes cmd) -> bool { return cmd == math_font_cmd || cmd == oldfont_cmd || cmd == argfont_cmd || cmd == noargfont_cmd; }
+
+auto to_utf8(char32_t c) -> std::string {
+    std::ostringstream o;
+    utf8::append(c, std::ostream_iterator<char>(o));
+    return o.str();
+}

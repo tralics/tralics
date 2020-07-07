@@ -12,6 +12,7 @@
 
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 
 ParamDataVector config_data;
 

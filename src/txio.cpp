@@ -12,6 +12,7 @@
 // Handle also utf8 input output
 
 #include "tralics/Saver.h"
+#include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <sstream>

@@ -8,13 +8,15 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/codepoint.h"
+#include "tralics/types.h"
+#include "tralics/util.h"
 #include <array>
 #include <cctype>
 #include <csignal>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <optional>
 #include <string>
 #include <sys/types.h>
 #include <utility>

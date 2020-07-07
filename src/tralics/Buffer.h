@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>
+#include <optional>
 #include <vector>
 
 struct AttPair;

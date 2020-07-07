@@ -12,6 +12,7 @@
 
 #include "txmlio.h"
 #include "tralics/Parser.h"
+#include "tralics/util.h"
 
 std::string xxx;
 

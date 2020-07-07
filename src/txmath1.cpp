@@ -13,6 +13,7 @@
 #include "txmath1.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <algorithm>
 #include <fmt/format.h>
 

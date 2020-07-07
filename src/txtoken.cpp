@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Parser.h"
+#include "tralics/util.h"
 #include <fmt/format.h>
 
 extern Buffer file_list;

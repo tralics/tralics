@@ -11,6 +11,7 @@
 // This file contains the TeX scanner of tralics
 
 #include "tralics/Saver.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include "txmath.h"
 #include <fmt/format.h>

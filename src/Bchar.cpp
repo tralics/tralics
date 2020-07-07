@@ -1,6 +1,7 @@
 #include "tralics/Bchar.h"
 #include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
+#include "tralics/util.h"
 
 auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream & {
     for (auto k = Y.first; k < Y.last; ++k)

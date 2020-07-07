@@ -3,6 +3,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>

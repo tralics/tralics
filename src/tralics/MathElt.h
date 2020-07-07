@@ -1,6 +1,5 @@
 #pragma once
 #include "CmdChr.h"
-#include "codepoint.h"
 #include <string>
 #include <utility>
 

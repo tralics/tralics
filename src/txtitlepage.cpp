@@ -12,6 +12,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 
 namespace {
     Buffer            docspecial; // Buffer for document special things
