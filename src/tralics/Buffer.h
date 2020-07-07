@@ -1,6 +1,6 @@
 #pragma once
-#include "../txid.h"
 #include "../txscaled.h"
+#include "Xid.h"
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>

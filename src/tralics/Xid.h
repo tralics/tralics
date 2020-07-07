@@ -1,21 +1,9 @@
 #pragma once
 #include <string>
 
-// -*- C++ -*-
-// TRALICS, copyright (C) INRIA/apics (Jose' Grimm) 2006,2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
 struct AttList;
 class Buffer;
 
-// Adress of attribute list of an xml object
-// is a wrapper around an int
 class Xid {
 public:
     long value; // value of the id \todo should this be size_t ?
@@ -35,8 +23,7 @@ public:
     void               add_bottom_rule() const;
     [[nodiscard]] auto has_attribute(const std::string &n) const -> std::string;
     void               add_special_att(const std::string &S, Buffer &B);
-
-    auto operator==(const Xid &X) const -> bool { return value == X.value; }
 };
 
-auto operator<<(std::ostream &fp, Xid X) -> std::ostream &;
+inline auto operator==(const Xid &a, const Xid &b) -> bool { return a.value == b.value; }
+auto        operator<<(std::ostream &fp, Xid X) -> std::ostream &;

@@ -1,7 +1,7 @@
 #pragma once
-#include "../txid.h"
 #include "AttList.h"
 #include "Token.h"
+#include "Xid.h"
 
 // Array management
 class ArrayInfo {

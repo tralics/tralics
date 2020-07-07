@@ -1,9 +1,9 @@
+#include "tralics/Xid.h"
 #include "tralics/Buffer.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
-#include "txid.h"
 #include "txtrees.h"
 
 void Xid::add_top_rule() const {

@@ -1,7 +1,7 @@
 #pragma once
-#include "../txid.h"
 #include "AttList.h"
 #include "Token.h"
+#include "Xid.h"
 
 // Token classes and numbers for preamble tokens.
 // c     0   0    ---    Start 4  -
