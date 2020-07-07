@@ -414,7 +414,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
             input_line_pos--; // c is to be read again
             break;
         }
-        c = c.to_lower();
+        c = to_lower(c);
         B.push_back(c);
     }
     // a field part.

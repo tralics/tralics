@@ -16,11 +16,6 @@ struct codepoint {
     explicit codepoint(size_t c) noexcept : value(static_cast<char32_t>(c)) {}
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
-
-    [[nodiscard]] auto to_lower() const -> codepoint {
-        if ('A' <= value && value <= 'Z') return codepoint(value + ('a' - 'A'));
-        return *this;
-    }
 };
 
 inline auto operator==(const codepoint &a, const codepoint &b) -> bool { return a.value == b.value; }
@@ -36,3 +31,8 @@ inline auto is_digit(codepoint c) -> bool { return '0' <= c.value && c.value <= 
 inline auto is_letter(codepoint c) -> bool { return is_ascii(c) && is_letter(static_cast<char>(c.value)); }
 inline auto is_small(codepoint c) -> bool { return c.value < 256; }
 inline auto is_space(codepoint c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }
+
+inline auto to_lower(codepoint c) -> codepoint {
+    if ('A' <= c.value && c.value <= 'Z') return codepoint(c.value + ('a' - 'A'));
+    return c;
+}
