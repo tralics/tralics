@@ -17,12 +17,6 @@ struct codepoint {
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
-    [[nodiscard]] auto hex_val() const -> std::optional<unsigned> {
-        if ('0' <= value && value <= '9') return value - '0';
-        if ('a' <= value && value <= 'f') return value - 'a' + 10;
-        return {};
-    }
-
     [[nodiscard]] auto to_lower() const -> codepoint {
         if ('A' <= value && value <= 'Z') return codepoint(value + ('a' - 'A'));
         return *this;

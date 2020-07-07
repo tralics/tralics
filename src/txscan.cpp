@@ -35,6 +35,12 @@ namespace {
         if (tralics_ns::file_exists(s)) return s;
         return {};
     }
+
+    auto hex_val(codepoint c) -> std::optional<unsigned> {
+        if (is_digit(c)) return c.value - '0';
+        if ('a' <= c.value && c.value <= 'f') return c.value - 'a' + 10;
+        return {};
+    }
 } // namespace
 
 namespace io_ns {
@@ -448,11 +454,11 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
     if (w < 3) return false;
     if (input_line[p] != c) return false;
     if (w >= 10 && input_line[p + 1] == c && input_line[p + 2] == c && input_line[p + 3] == c) {
-        auto hc0 = input_line[p + 4].hex_val();
-        auto hc1 = input_line[p + 5].hex_val();
-        auto hc2 = input_line[p + 6].hex_val();
-        auto hc3 = input_line[p + 7].hex_val();
-        auto hc4 = input_line[p + 8].hex_val();
+        auto hc0 = hex_val(input_line[p + 4]);
+        auto hc1 = hex_val(input_line[p + 5]);
+        auto hc2 = hex_val(input_line[p + 6]);
+        auto hc3 = hex_val(input_line[p + 7]);
+        auto hc4 = hex_val(input_line[p + 8]);
         if (hc0 && hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 8;
             input_line[p + 8] = codepoint((*hc0 << 16) + (*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
@@ -460,10 +466,10 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         }
     }
     if (w >= 8 && input_line[p + 1] == c && input_line[p + 2] == c) {
-        auto hc1 = input_line[p + 3].hex_val();
-        auto hc2 = input_line[p + 4].hex_val();
-        auto hc3 = input_line[p + 5].hex_val();
-        auto hc4 = input_line[p + 6].hex_val();
+        auto hc1 = hex_val(input_line[p + 3]);
+        auto hc2 = hex_val(input_line[p + 4]);
+        auto hc3 = hex_val(input_line[p + 5]);
+        auto hc4 = hex_val(input_line[p + 6]);
         if (hc1 && hc2 && hc3 && hc4) {
             input_line_pos    = p + 6;
             input_line[p + 6] = codepoint((*hc1 << 12) + (*hc2 << 8) + (*hc3 << 4) + *hc4);
@@ -471,8 +477,8 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
         }
     }
     if (w >= 4) {
-        auto hc1 = input_line[p + 1].hex_val();
-        auto hc2 = input_line[p + 2].hex_val();
+        auto hc1 = hex_val(input_line[p + 1]);
+        auto hc2 = hex_val(input_line[p + 2]);
         if (hc1 && hc2) {
             input_line_pos             = p + 2;
             input_line[input_line_pos] = codepoint(*hc1 * 16 + *hc2);
