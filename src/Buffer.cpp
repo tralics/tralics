@@ -265,7 +265,7 @@ auto Buffer::push_back(Token T) -> bool {
         codepoint c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
-            push_back(static_cast<char>(c.value + '0')); // parameter
+            push_back(static_cast<char>(c + '0')); // parameter
         } else if (cmd == parameter_catcode) {
             out_log(c, enc);
             out_log(c, enc);
@@ -276,7 +276,7 @@ auto Buffer::push_back(Token T) -> bool {
     if (!T.char_or_active()) insert_escape_char();
     if (T.active_or_single()) {
         out_log(T.char_val(), enc);
-        return the_parser.has_letter_catcode(T.char_val().value);
+        return the_parser.has_letter_catcode(T.char_val());
     }
     if (T.is_in_hash()) {
         Tmp.clear();
@@ -301,7 +301,7 @@ void Buffer::insert_token(Token T, bool sw) {
             int cmd = T.cmd_val();
             if (cmd == eol_catcode) {
                 push_back('#');
-                push_back(static_cast<char>(c.value + '0')); // parameter
+                push_back(static_cast<char>(c + '0')); // parameter
             } else if (T.is_space_token())
                 push_back(' '); // space or newline
             else if (c == 0)
@@ -329,7 +329,7 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? is_letter(c) : the_parser.has_letter_catcode(c.value);
+        bool need_space = sw ? is_letter(c) : the_parser.has_letter_catcode(c);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         append(the_parser.hash_table[T.hash_loc()]);

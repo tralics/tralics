@@ -133,9 +133,9 @@ auto Buffer::next_utf8_char() -> codepoint {
     auto nn = to_unsigned(it - it0);
     if (nn != 1) the_converter.line_is_ascii = false;
     ptrs.b += nn;
-    if (cp.value > 0x1FFFF) {
-        utf8_ovf(cp.value);
-        return codepoint();
+    if (cp > 0x1FFFF) {
+        utf8_ovf(cp);
+        return codepoint(); // \todo nullopt
     }
     return cp;
 }
@@ -194,7 +194,7 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)].value);
+    return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)]);
 }
 
 auto io_ns::find_encoding(const std::string &cl) -> int {
@@ -279,7 +279,7 @@ void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
 }
 
 // This puts x into the buffer in utf8 form
-void Buffer::push_back(codepoint c) { utf8::append(c.value, std::back_inserter(*this)); }
+void Buffer::push_back(codepoint c) { utf8::append(c, std::back_inserter(*this)); }
 
 inline void Buffer::push_back_hex(unsigned c) {
     if (c < 10)
@@ -356,11 +356,11 @@ void Buffer::out_four_hats(codepoint ch) {
         push_back('\t');
         return;
     }
-    unsigned c = ch.value;
-    if (ch.value < 32) {
+    unsigned c = ch;
+    if (ch < 32) {
         append("^^");
         push_back(static_cast<char>(c + 64));
-    } else if (ch.value == 127)
+    } else if (ch == 127)
         append("^^?");
     else if (is_ascii(ch))
         push_back(static_cast<char>(c));
@@ -370,12 +370,11 @@ void Buffer::out_four_hats(codepoint ch) {
 
 // This inserts &#xabc;
 void Buffer::push_back_ent(codepoint ch) {
-    auto c = ch.value;
-    if (c == 65534 || c == 65535) return; // these chars are illegal
+    if (ch == 65534 || ch == 65535) return; // these chars are illegal
     push_back('&');
     push_back('#');
     push_back('x');
-    push_back16(c, false);
+    push_back16(ch, false);
     push_back(';');
 }
 
@@ -408,7 +407,7 @@ void Parser::process_char(codepoint c) {
         unprocessed_xml.append("&gt;");
     else if (c == '&')
         unprocessed_xml.append("&amp;");
-    else if (c.value < 32 || is_big(c))
+    else if (c < 32 || is_big(c))
         unprocessed_xml.push_back_ent(c);
     else
         unprocessed_xml.push_back(c);
@@ -429,7 +428,7 @@ void Buffer::push_back_real_utf8(codepoint c) {
         append("&gt;");
     else if (c == '&')
         append("&amp;");
-    else if (c.value < 32 || is_big(c))
+    else if (c < 32 || is_big(c))
         push_back_ent(c);
     else
         push_back(c);
@@ -451,14 +450,14 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
         append("^^M");
     else if (ch == '\t')
         push_back('\t');
-    else if (ch.value < 32)
+    else if (ch < 32)
         out_four_hats(ch);
     else if (is_ascii(ch))
-        push_back(static_cast<char>(ch.value));
+        push_back(static_cast<char>(ch));
     else if (T == en_utf8)
         push_back(ch);
     else if (is_small(ch) && T == en_latin)
-        push_back(static_cast<char>(ch.value));
+        push_back(static_cast<char>(ch));
     else
         out_four_hats(ch);
 }
@@ -481,9 +480,9 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
         if ((c == 0) && B.at_eol()) break;
         if (c == 0) continue;
         if (is_ascii(c))
-            O.push_back(static_cast<char>(c.value));
+            O.push_back(static_cast<char>(c));
         else if (is_small(c) && nonascii)
-            O.push_back(static_cast<char>(c.value));
+            O.push_back(static_cast<char>(c));
         else
             O.push_back_ent(c);
     }

@@ -622,7 +622,7 @@ auto Parser::vb_tokens(codepoint test, TokenList &L, bool before) -> bool {
         if (at_eol()) return true;
         codepoint c = get_next_char();
         if (c == test) break;
-        res.push_back(verbatim_chars[c.value]);
+        res.push_back(verbatim_chars[c]);
     }
     if (res.empty() && !before) res.push_back(hash_table.tilda_token);
     res.push_front(hash_table.verbatim_font);
@@ -814,8 +814,8 @@ auto Parser::delimiter_for_saveverb() -> codepoint {
         codepoint c = get_next_char();
         if (c == 0) return c;
         if (is_big(c)) return codepoint();
-        if (get_catcode(c.value) == space_catcode) continue;
-        if (get_catcode(c.value) == special_catcode) return c;
+        if (get_catcode(c) == space_catcode) continue;
+        if (get_catcode(c) == special_catcode) return c;
         return codepoint();
     }
 }

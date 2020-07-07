@@ -37,8 +37,8 @@ namespace {
     }
 
     auto hex_val(codepoint c) -> std::optional<unsigned> {
-        if (is_digit(c)) return c.value - '0';
-        if ('a' <= c.value && c.value <= 'f') return c.value - 'a' + 10;
+        if (is_digit(c)) return c - '0';
+        if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
     }
 } // namespace
@@ -487,7 +487,7 @@ auto Parser::scan_double_hat(codepoint c) -> bool {
     }
     codepoint C = input_line[p + 1];
     if (!is_ascii(C)) return false;
-    auto c1 = C.value;
+    auto c1 = C;
     input_line_pos++;
     input_line[p + 1] = codepoint(c1 < 64 ? c1 + 64 : c1 - 64);
     return true;
@@ -502,7 +502,7 @@ auto Parser::cs_from_input() -> Token {
         --input_line_pos;
         return Token(null_tok_val);
     }
-    int C = get_catcode(c.value);
+    int C = get_catcode(c);
     if (C == letter_catcode) {
         mac_buffer.clear();
         mac_buffer.push_back(c);
@@ -513,7 +513,7 @@ auto Parser::cs_from_input() -> Token {
                 --input_line_pos;
                 break;
             } // abort
-            C = get_catcode(c.value);
+            C = get_catcode(c);
             if (C == letter_catcode) {
                 mac_buffer.push_back(c);
                 continue;
@@ -526,14 +526,14 @@ auto Parser::cs_from_input() -> Token {
         }
         return hash_table.locate(mac_buffer);
     }
-    if (C == space_catcode) return Token(c.value + single_offset);
+    if (C == space_catcode) return Token(c + single_offset);
     if (C == hat_catcode) {
         if (scan_double_hat(c)) return cs_from_input();
         state = state_M;
-        return Token(c.value + single_offset);
+        return Token(c + single_offset);
     }
     state = state_M;
-    return Token(c.value + single_offset);
+    return Token(c + single_offset);
 }
 
 // This constructs a new token by reading characters from the buffer.
@@ -547,7 +547,7 @@ auto Parser::next_from_line0() -> bool {
         Buffer &B = local_buf;
         B.clear();
         B.push_back('"');
-        B.push_back16(c.value, false);
+        B.push_back16(c, false);
         auto k = B.size();
         back_input(hash_table.space_token);
         while (k > 0) {
@@ -558,14 +558,14 @@ auto Parser::next_from_line0() -> bool {
         see_cs_token(hash_table.char_token);
         return false;
     }
-    cur_cmd_chr = CmdChr(get_catcode(c.value), subtypes(c.value));
+    cur_cmd_chr = CmdChr(get_catcode(c), subtypes(c));
     switch (cur_cmd_chr.cmd) {
     case escape_catcode:
         cur_tok = cs_from_input();
         see_cs_token();
         return false;
     case active_catcode:
-        cur_tok.active_char(c.value);
+        cur_tok.active_char(c);
         see_cs_token();
         state = state_M;
         return false;
@@ -965,7 +965,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
         for (;;) {
             if (at_eol()) break;
             codepoint c = get_next_char();
-            if (c.value == ' ')
+            if (c == ' ')
                 L.push_back(hash_table.space_token);
             else
                 L.push_back(Token(other_t_offset, c));

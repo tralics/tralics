@@ -2057,7 +2057,7 @@ auto Math::trivial_math(long action) -> Xml * {
         return new Xml(sval);
     }
     if (front().is_letter_token()) {
-        auto c = front().get_char().value;
+        auto c = front().get_char();
         if (c < nb_simplemath) return math_data.get_simplemath_val(c);
     }
     if (front().is_other_token() && front().get_char() == '-') return new Xml(std::string("&#x2013;"));

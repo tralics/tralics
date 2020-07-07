@@ -89,7 +89,7 @@ void NewArray::test_pach() {
             current_token = current_list.front();
     }
     unsigned c = 0;
-    if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13) c = current_token.char_val().value;
+    if (current_token.cmd_val() == 11 || current_token.cmd_val() == 12 || current_token.cmd_val() == 13) c = current_token.char_val();
     if (c == 'c') {
         cur_h_pos = "cell_center";
         ch_num    = chn_c;

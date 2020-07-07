@@ -13,7 +13,7 @@ namespace {
 auto Hashtab::locate(const std::string &s) -> Token {
     if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
-    if (auto c = single_char(s)) return Token(c->value + single_offset);
+    if (auto c = single_char(s)) return Token(*c + single_offset);
     return Token(hash_find(s) + hash_offset);
 }
 
@@ -48,7 +48,7 @@ auto Hashtab::is_defined(const std::string &b) -> bool {
     if (b.empty())
         T = null_tok_val;
     else if (auto c = single_char(b))
-        T = c->value + single_offset;
+        T = *c + single_offset;
     else
         T = i->second + hash_offset;
 

@@ -2107,7 +2107,7 @@ void Parser::T_newcolumn_type() {
     bool     bad = read_token_arg(cur_tok);
     if (!bad) {
         Token T = cur_tok;
-        if (T.is_a_char()) c = T.char_val().value;
+        if (T.is_a_char()) c = T.char_val();
         if (!(c > 0 && c < nb_newcolumn)) {
             parse_error("Argument to \\newcolumntype is not a 7bit character");
             c = 0;

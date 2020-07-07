@@ -66,7 +66,7 @@ private:
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
-    auto               get_class(codepoint c) -> id_type { return id_class[c.value]; }
+    auto               get_class(codepoint c) -> id_type { return id_class[c]; }
     void               handle_multiple_entries(BibEntry *Y);
     void               kill_the_lists();
     auto               look_for_macro(const Buffer &name) -> std::optional<size_t>;

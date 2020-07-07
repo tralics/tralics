@@ -7,12 +7,11 @@ struct Token {
     size_t val{0};
 
     explicit Token(size_t x) : val(x) {}
-    Token(spec_offsets a, codepoint b) : val(a + b.value) {}
-    Token(spec_offsets a, uchar b) : val(a + b) {}
+    Token(spec_offsets a, codepoint b) : val(a + b) {}
     Token() = default;
 
     void               kill() { val = 0; }
-    void               from_cmd_chr(CmdChr X) { val = nb_characters * X.cmd + X.char_val().value; }
+    void               from_cmd_chr(CmdChr X) { val = nb_characters * X.cmd + X.char_val(); }
     void               active_char(size_t cs) { val = cs + eqtb_offset; }
     [[nodiscard]] auto eqtb_loc() const -> size_t { return val - eqtb_offset; }
     [[nodiscard]] auto hash_loc() const -> size_t { return val - hash_offset; }
