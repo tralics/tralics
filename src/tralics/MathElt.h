@@ -1,6 +1,5 @@
 #pragma once
 #include "CmdChr.h"
-#include <string>
 #include <utility>
 
 class Xml;

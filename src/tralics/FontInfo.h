@@ -1,6 +1,5 @@
 #pragma once
 #include "enums.h"
-#include "types.h"
 #include <string>
 #include <utility>
 

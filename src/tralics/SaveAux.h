@@ -1,6 +1,5 @@
 #pragma once
 #include "Parser.h"
-#include "enums.h"
 #include "util.h"
 #include <variant>
 

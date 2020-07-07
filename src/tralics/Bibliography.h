@@ -1,6 +1,5 @@
 #pragma once
 #include "CitationItem.h"
-#include <optional>
 
 class Bibliography {
 public:
