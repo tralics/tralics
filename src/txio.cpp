@@ -357,7 +357,7 @@ void Buffer::out_four_hats(codepoint ch) {
         return;
     }
     unsigned c = ch.value;
-    if (ch.is_control()) {
+    if (ch.value < 32) {
         append("^^");
         push_back(static_cast<char>(c + 64));
     } else if (ch.value == 127)
@@ -408,7 +408,7 @@ void Parser::process_char(codepoint c) {
         unprocessed_xml.append("&gt;");
     else if (c == '&')
         unprocessed_xml.append("&amp;");
-    else if (c.is_control() || is_big(c))
+    else if (c.value < 32 || is_big(c))
         unprocessed_xml.push_back_ent(c);
     else
         unprocessed_xml.push_back(c);
@@ -429,7 +429,7 @@ void Buffer::push_back_real_utf8(codepoint c) {
         append("&gt;");
     else if (c == '&')
         append("&amp;");
-    else if (c.is_control() || is_big(c))
+    else if (c.value < 32 || is_big(c))
         push_back_ent(c);
     else
         push_back(c);
@@ -451,7 +451,7 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
         append("^^M");
     else if (ch == '\t')
         push_back('\t');
-    else if (ch.is_control())
+    else if (ch.value < 32)
         out_four_hats(ch);
     else if (is_ascii(ch))
         push_back(static_cast<char>(ch.value));

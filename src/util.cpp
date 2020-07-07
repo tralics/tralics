@@ -59,7 +59,9 @@ auto find_counter(const std::string &s) -> int {
     return counter_val(the_parser.hash_table.eqtb[cs].chr - count_reg_offset);
 }
 
-auto only_digits(const std::string &s) -> bool { return std::all_of(s.begin(), s.end(), is_digit); }
+auto only_digits(const std::string &s) -> bool {
+    return std::all_of(s.begin(), s.end(), [](char v) { return is_digit(v); });
+}
 
 auto bt_to_string(boundary_type v) -> std::string { // \todo std::optional<std::string>
     switch (v) {

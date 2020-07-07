@@ -1467,7 +1467,7 @@ auto Math::chars_to_mb3() -> std::string {
             sz++;
             continue;
         }
-        if (C.is_digit()) {
+        if (is_digit(C)) {
             if (bc != 0) {
                 sz = 0;
                 break;

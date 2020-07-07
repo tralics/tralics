@@ -406,7 +406,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
     B.clear();
     codepoint c = cur_char();
-    if (!is_ascii(c) || c.is_digit() || get_class(c) != legal_id_char) return wrong_first_char(c, what);
+    if (!is_ascii(c) || is_digit(c) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
         if (at_eol()) break;
         c = next_char();
@@ -428,7 +428,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
 // We start with a function that complains if first character is wrong.
 auto Bibtex::wrong_first_char(codepoint c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
-    if (c.is_digit())
+    if (is_digit(c))
         log_and_tty << "\nit cannot start with a digit";
     else
         log_and_tty << fmt::format("\nit cannot start with `{}'", c);
@@ -701,11 +701,11 @@ void Bibtex::read_one_field(bool store) {
             if (c == '}') bl--;
             if (c == '{') bl++;
         }
-    } else if (c.is_digit()) {
+    } else if (is_digit(c)) {
         for (;;) {
             if (at_eol()) return;
             c = cur_char();
-            if (!c.is_digit()) return;
+            if (!is_digit(c)) return;
             field_buf.push_back(c);
             advance();
         }
