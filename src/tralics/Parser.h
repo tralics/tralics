@@ -89,7 +89,7 @@ private:
     SthInternal           cur_val;                               // result of scan_something internal
     TokenList             document_hook;                         // the document-hook
     TokenList             end_document_hook;                     // the end-document-hook
-    char32_t              verb_saved_char;                       // Char to use for verb by ShortVewrb
+    char32_t              verb_saved_char{};                     // Char to use for verb by ShortVewrb
     std::vector<char32_t> input_line;                            // input line converted to chars
     size_t                input_line_pos{0};                     // position in input_line
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations

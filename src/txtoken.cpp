@@ -534,7 +534,7 @@ void Parser::print_cmd_chr(CmdChr X) {
     }
     if (a != nullptr) { // chr
         the_log << a;
-        char32_t y(char32_t(X.chr));
+        char32_t y = X.chr;
         Buffer & B = buffer_for_log;
         B.clear();
         B.out_log(y, the_main->log_encoding);

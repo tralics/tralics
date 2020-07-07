@@ -30,9 +30,9 @@ class XmlIO {
     LinePtr                 lines;       // input file
     int                     cur_line{};
     std::array<x_type, 128> Type{};
-    std::vector<char32_t>   input_line;  // current line
-    std::vector<char32_t>   reread_list; // current line
-    char32_t                cur_char;    // current character in some cases
+    std::vector<char32_t>   input_line;    // current line
+    std::vector<char32_t>   reread_list;   // current line
+    char32_t                cur_char{' '}; // current character in some cases
 
     Xml *                  cur_xml{};
     std::vector<Xml *>     cur_stack;
@@ -78,7 +78,6 @@ private:
     void               run();
 
 public:
-    XmlIO() : cur_char(' ') {}
     auto init(const std::string &name) -> bool;
     auto prun() -> Xml *;
 };

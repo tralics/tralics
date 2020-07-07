@@ -1584,7 +1584,7 @@ void Parser::scan_double(RealNumber &res) {
 // it reads a unit, returns
 auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
-    char32_t c1, c2;
+    char32_t c1 = 0, c2 = 0;
     if (cur_tok.is_a_char()) {
         c1         = to_lower(cur_cmd_chr.char_val());
         Token save = cur_tok;

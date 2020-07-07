@@ -120,9 +120,9 @@ void Converter::start_convert(int l) {
 // This complains if the character is greater than 1FFFF
 auto Buffer::next_utf8_char() -> char32_t {
     auto     it = begin() + to_signed(ptrs.b), it0 = it;
-    char32_t cp;
+    char32_t cp = 0;
     try {
-        cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end()));
+        cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
     } catch (utf8::invalid_utf8) {
         Converter &T = the_converter;
         T.bad_chars++;
@@ -144,8 +144,8 @@ auto Buffer::next_utf8_char() -> char32_t {
 // This converts a line in UTF8 format. Returns true if no conversion needed
 auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
     Buffer utf8_out;
-    ptrs.b = 0;
-    char32_t c;
+    ptrs.b     = 0;
+    char32_t c = 0;
     for (;;) {
         if (at_eol()) break;
         if (wc == 0)
