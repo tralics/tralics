@@ -165,7 +165,7 @@ void Parser::translate_char(CmdChr X) {
     codepoint c = X.char_val();
     if (c == 0) return; // we do not want null chars in trace or Xml
     if (tracing_commands()) Logger::out_single_char(c);
-    if (!c.is_small()) {
+    if (!is_small(c)) {
         process_char(c);
         return;
     }

@@ -457,7 +457,7 @@ void Buffer::out_log(codepoint ch, output_encoding_type T) {
         push_back(static_cast<char>(ch.value));
     else if (T == en_utf8)
         push_back(ch);
-    else if (ch.is_small() && T == en_latin)
+    else if (is_small(ch) && T == en_latin)
         push_back(static_cast<char>(ch.value));
     else
         out_four_hats(ch);
@@ -482,7 +482,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
         if (c == 0) continue;
         if (is_ascii(c))
             O.push_back(static_cast<char>(c.value));
-        else if (c.is_small() && nonascii)
+        else if (is_small(c) && nonascii)
             O.push_back(static_cast<char>(c.value));
         else
             O.push_back_ent(c);

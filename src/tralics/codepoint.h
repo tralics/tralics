@@ -3,17 +3,11 @@
 #include <optional>
 #include <ostream>
 
-// \todo move these to util.h
-
 inline auto is_digit(char c) -> bool { return ('0' <= c && c <= '9'); }
 inline auto is_space(char c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }
 inline auto is_lower_case(char c) -> bool { return 'a' <= c && c <= 'z'; }
 inline auto is_upper_case(char c) -> bool { return 'A' <= c && c <= 'Z'; }
 inline auto is_letter(char c) -> bool { return is_upper_case(c) || is_lower_case(c); }
-
-/// \todo This might better just vanish (and we would use `char32_t` everywhere
-/// in the code) if there is a reasonable path to do that while keeping all the
-/// helper functions.
 
 struct codepoint {
     char32_t value{};
@@ -22,9 +16,6 @@ struct codepoint {
     explicit codepoint(size_t c) noexcept : value(static_cast<char32_t>(c)) {}
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
-
-    [[nodiscard]] auto is_small() const -> bool { return value < 256; }
-    [[nodiscard]] auto is_space() const -> bool { return value == ' ' || value == '\t' || value == '\n'; }
 
     [[nodiscard]] auto hex_val() const -> std::optional<unsigned> {
         if ('0' <= value && value <= '9') return value - '0';
@@ -49,3 +40,5 @@ inline auto is_ascii(codepoint c) -> bool { return c.value < 128; }
 inline auto is_big(codepoint c) -> bool { return c.value > 65535; }
 inline auto is_digit(codepoint c) -> bool { return '0' <= c.value && c.value <= '9'; }
 inline auto is_letter(codepoint c) -> bool { return is_ascii(c) && is_letter(static_cast<char>(c.value)); }
+inline auto is_small(codepoint c) -> bool { return c.value < 256; }
+inline auto is_space(codepoint c) -> bool { return c == ' ' || c == '\t' || c == '\n'; }

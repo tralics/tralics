@@ -362,7 +362,7 @@ void Bibtex::skip_space() {
         if (at_eol())
             next_line(true);
         else {
-            if (cur_char().is_space())
+            if (is_space(cur_char()))
                 advance();
             else
                 return;
@@ -419,7 +419,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     }
     // a field part.
     if (what == 0) return check_val_end();
-    if (at_eol() || c.is_space()) skip_space();
+    if (at_eol() || is_space(c)) skip_space();
     if (what == 1) return check_entry_end(); // case of @foo
     return check_field_end(what);
 }
@@ -498,7 +498,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
     codepoint c = cur_char();
-    if (c.is_space() || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
+    if (is_space(c) || c == '#' || c == ',' || c == codepoint(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << fmt::format("\nit cannot end with `{}'\n", c) << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
@@ -567,7 +567,7 @@ void Bibtex::parse_one_item() {
         for (;;) {
             if (at_eol()) break;
             codepoint c = cur_char();
-            if (c == ',' || c.is_space()) break;
+            if (c == ',' || is_space(c)) break;
             A << c;
             next_char();
         }
