@@ -23,7 +23,6 @@ struct codepoint {
     explicit codepoint(uchar c) noexcept : value(c) {}
     explicit codepoint(char c) noexcept : value(static_cast<uchar>(c)) {}
 
-    [[nodiscard]] auto is_letter() const -> bool { return value < 128 && ::is_letter(static_cast<char>(value)); }
     [[nodiscard]] auto is_small() const -> bool { return value < 256; }
     [[nodiscard]] auto is_space() const -> bool { return value == ' ' || value == '\t' || value == '\n'; }
 
@@ -49,3 +48,4 @@ auto operator<<(std::ostream &fp, const codepoint &x) -> std::ostream &;
 inline auto is_ascii(codepoint c) -> bool { return c.value < 128; }
 inline auto is_big(codepoint c) -> bool { return c.value > 65535; }
 inline auto is_digit(codepoint c) -> bool { return '0' <= c.value && c.value <= '9'; }
+inline auto is_letter(codepoint c) -> bool { return is_ascii(c) && is_letter(static_cast<char>(c.value)); }
