@@ -9,11 +9,11 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/FpNum.h"
 #include "tralics/Token.h"
 #include <string>
 #include <utility>
 
-class FpNum;
 class Hashtab;
 
 using token_iterator = std::list<Token>::iterator;

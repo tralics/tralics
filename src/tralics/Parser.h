@@ -11,7 +11,7 @@
 #include "SaveState.h"
 #include "Stack.h"
 
-class FpNum;
+struct FpNum;
 class Math;
 class SaveAuxBase;
 class SaveAuxEnv;

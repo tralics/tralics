@@ -8,7 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txfp.h"
+#include "tralics/FpNum.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include <fmt/format.h>
