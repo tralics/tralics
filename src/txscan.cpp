@@ -1259,7 +1259,7 @@ void Parser::scan_something_internal(internal_type level) {
         case lastpenalty_code:
         case badness_code:
         case lastnodetype_code: cur_val.set_int(0); return;
-        case xmllastid_code: cur_val.set_int(the_stack.get_xid()); return;
+        case xmllastid_code: cur_val.set_int(to_signed(the_stack.get_xid())); return;
         case xmlAid_code: fetch_box_id(the_xmlA); return;
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {
@@ -1275,10 +1275,10 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlAname_code: xml_name(the_xmlA, level); return;
         case xmlBname_code: xml_name(the_xmlB, level); return;
         case xmlAsize_code: cur_val.set_int(the_xmlA != nullptr ? the_xmlA->real_size() : -1); return;
-        case xmlcurrentid_code: cur_val.set_int(the_stack.cur_xid().value); return;
+        case xmlcurrentid_code: cur_val.set_int(to_signed(the_stack.cur_xid().value)); return;
         case xmlcurrow_code:
         case xmlcurcell_code:
-        case xmlcurarray_code: cur_val.set_int(the_stack.find_ctrid(m)); return;
+        case xmlcurarray_code: cur_val.set_int(to_signed(the_stack.find_ctrid(m))); return;
         case currentgrouplevel_code: cur_val.set_int(cur_level - 1); return;
         case currentgrouptype_code: cur_val.set_int(cur_group_type()); return;
         case etexversion_code: cur_val.set_int(2); return;
@@ -1458,7 +1458,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
 }
 
-void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? x->id.value : -4); }
+void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? to_signed(x->id.value) : -4); }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {

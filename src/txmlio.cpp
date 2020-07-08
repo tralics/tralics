@@ -382,7 +382,7 @@ void XmlIO::parse_pi() {
             B << c;
         }
     Xml *res = new Xml(aux);
-    res->id  = -3; // mark this as a pi
+    res->id  = size_t(-3); // mark this as a pi
     cur_xml->push_back_unless_nullptr(res);
     if (is_tralics) std::cout << "Unrecognised PI " << B << "\n";
 }
@@ -438,7 +438,7 @@ void XmlIO::parse_dec_comment() {
     }
     B.remove_last(3);
     Xml *res = new Xml(B);
-    res->id  = -1; // mark this as a comment
+    res->id  = size_t(-1); // mark this as a comment
     cur_xml->push_back_unless_nullptr(res);
 }
 
@@ -490,7 +490,7 @@ void XmlIO::parse_dec_conditional() {
     else
         B += "[IGNORE[";
     Xml *res = new Xml(std::string(B));
-    res->id  = -2; // mark this as a declaration
+    res->id  = size_t(-2); // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
     cur_xml = res;
     cur_stack.push_back(cur_xml);
@@ -557,7 +557,7 @@ void XmlIO::parse_dec_entity() {
     } else
         skip_char();
     Xml *res = new Xml(aux);
-    res->id  = -2; // mark this as a declaration
+    res->id  = size_t(-2); // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
 }
 
@@ -606,7 +606,7 @@ void XmlIO::parse_dec_element() {
         tmp += " ";
     tmp += " " + aux;
     Xml *res = new Xml(tmp);
-    res->id  = -2; // mark this as a declaration
+    res->id  = size_t(-2); // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
 }
 
@@ -660,14 +660,14 @@ void XmlIO::parse_dec_attlist() {
 
     tmp += " " + aux;
     Xml *res = new Xml(tmp);
-    res->id  = -2; // mark this as a declaration
+    res->id  = size_t(-2); // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res);
 }
 
 void XmlIO::parse_dec_doctype() {
     expect("DOCTYPE");
     Xml *res = new Xml(std::string("DOCTYPE"), nullptr);
-    res->id  = -2;                          // mark this as a declaration
+    res->id  = size_t(-2);                  // mark this as a declaration
     cur_xml->push_back_unless_nullptr(res); // Insert this in the tree
     skip_space();
     scan_name(0);

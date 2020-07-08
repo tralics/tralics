@@ -20,7 +20,7 @@ struct StackSlot {
 
 class Stack : public std::vector<StackSlot> {
     [[deprecated]] long    last_xid{-1}; // id of the last
-    long                   xid_boot{0};
+    size_t                 xid_boot{0};
     std::string            cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes
     std::vector<Xml *>     enames;     // the main table of element names
@@ -72,7 +72,7 @@ public:
     auto fetch_by_id(size_t n) -> Xml *;
     auto find_cell_props(Xid id) -> ArrayInfo *;
     void find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
-    auto find_ctrid(subtypes m) -> long;
+    auto find_ctrid(subtypes m) -> size_t;
     auto find_parent(Xml *x) -> Xml *;
     void finish_cell(int w);
     void fonts0(const std::string &x);
@@ -109,10 +109,7 @@ public:
     void set_mode(mode x) { cur_mode = x; }
     void set_no_mode() { cur_mode = mode_none; }
     void set_v_mode() { cur_mode = mode_v; }
-    void set_xid_boot() {
-        assert(last_xid == enames.size() - 1);
-        xid_boot = last_xid;
-    }
+    void set_xid_boot() { xid_boot = get_xid(); }
     void T_ampersand();
     void T_hline();
     auto temporary() -> Xml *;

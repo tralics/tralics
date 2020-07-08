@@ -43,7 +43,7 @@ inline std::string                                                  cur_entry_na
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
 inline std::vector<std::filesystem::path>                           input_path;
-inline std::vector<std::pair<int, std::string>>                     ref_list;       // list of all \ref
+inline std::vector<std::pair<size_t, std::string>>                  ref_list;       // list of all \ref
 inline std::vector<std::pair<std::string, LabelInfo *>>             defined_labels; // list of all \label
 inline std::vector<std::pair<String, std::string>>                  removed_labels; // list of all \label removed
 inline std::vector<std::string>                                     omitcite_list;

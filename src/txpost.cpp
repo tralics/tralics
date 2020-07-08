@@ -119,7 +119,7 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
 // we know the value of the label, and can add the attribute target=xxx.
 void Parser::check_all_ids() {
     for (auto &i : ref_list) {
-        int         E = i.first;
+        auto        E = i.first;
         std::string V = i.second;
         auto *      L = labinfo(V);
         if (!L->defined) {

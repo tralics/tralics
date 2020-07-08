@@ -416,7 +416,7 @@ void Parser::T_xmlelt(subtypes w) {
     std::string s   = sT_arg_nopar();
     Xml *       res = new Xml(std::string(s), nullptr);
     if (w != 0U) {
-        if (w == two_code) res->id = -1; // XML comment
+        if (w == two_code) res->id = size_t(-1); // XML comment
         flush_buffer();
         the_stack.add_last(res);
         return;
@@ -2082,8 +2082,8 @@ void Parser::T_error() {
 auto Parser::read_elt_id(Token T) -> size_t {
     auto cur   = the_stack.cur_xid().value;
     auto upper = the_stack.get_xid();
-    auto n     = scan_special_int_d(T, cur);
-    if (n > 0 && n <= upper) return to_unsigned(n);
+    auto n     = scan_special_int_d(T, to_signed(cur));
+    if (n > 0 && n <= to_signed(upper)) return to_unsigned(n);
     err_buf = fmt::format("Bad xml id replaced by 0: {}", n);
     signal_error(err_tok, "number too big");
     return 0;
@@ -2094,8 +2094,8 @@ void Parser::T_xmladdatt(subtypes c) {
     Token T     = cur_tok;
     bool  force = remove_initial_star();
     flush_buffer();
-    long n     = 0;
-    auto guard = InLoadHandler();
+    size_t n     = 0;
+    auto   guard = InLoadHandler();
 
     if (c == addatt_to_cur_code)
         n = the_stack.cur_xid().value;
@@ -2104,16 +2104,16 @@ void Parser::T_xmladdatt(subtypes c) {
     else if (c == addatt_to_doc_code)
         n = 1;
     else if (c == addatt_to_index_code)
-        n = to_signed(get_index_value());
+        n = get_index_value();
     else
-        n = to_signed(read_elt_id(T));
+        n = read_elt_id(T);
     cur_tok         = T;
     std::string key = nT_arg_nopar();
     cur_tok         = T;
     std::string val = nT_arg_nopar();
     if (key.empty()) {
         if (!force) return;
-        Xml *e = the_stack.elt_from_id(to_unsigned(n));
+        Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return;
         e->name = val;
         return;
@@ -2132,7 +2132,7 @@ auto Parser::get_attval() -> std::string {
         if (e == nullptr) return "";
         return e->name;
     }
-    return Xid(to_signed(n)).has_attribute(key);
+    return Xid(n).has_attribute(key);
 }
 
 void Parser::T_define_verbatim_env() {
