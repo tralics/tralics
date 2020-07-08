@@ -5,9 +5,9 @@
 struct AttList;
 class Buffer;
 
-class Xid {
+class Xid { // \todo this is just a size_t with tagged methods
 public:
-    size_t value; // value of the id \todo should this be size_t ?
+    size_t value;
 
     Xid(size_t v = 0) : value(v) {}
 

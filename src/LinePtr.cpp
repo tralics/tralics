@@ -54,7 +54,7 @@ void LinePtr::insert(const LinePtr &aux) {
 
 // If a line ends with \, we take the next line, and append it to this one
 void LinePtr::normalise_final_cr() {
-    line_iterator prev{end()};
+    auto prev = end();
     for (auto C = begin(); C != end(); ++C) {
         std::string &s       = *C;
         auto         n       = s.size();

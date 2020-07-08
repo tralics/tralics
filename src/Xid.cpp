@@ -26,7 +26,7 @@ void Xid::add_bottom_rule() const {
 // adds a span value of n to the current cell
 void Xid::add_span(long n) const {
     if (n == 1) return;
-    errbuf = std::to_string(n);
+    errbuf = std::to_string(n); // \todo errbuf??
     add_attribute(the_names["cols"], errbuf);
 }
 
@@ -84,3 +84,5 @@ void Xid::add_special_att(const std::string &S, Buffer &B) {
     B.ptrs = {0, 0};
     B.push_back_special_att(*this);
 }
+
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_att(); }

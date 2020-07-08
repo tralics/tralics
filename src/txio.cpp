@@ -50,10 +50,6 @@ namespace io_ns {
 } // namespace io_ns
 
 // ---------------------------------------------------------
-
-auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_att(); }
-
-// ---------------------------------------------------------
 // Output methods for characters
 
 // This prints a character in the form \230 if not ascii
