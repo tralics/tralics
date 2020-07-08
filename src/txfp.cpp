@@ -2590,7 +2590,7 @@ void Parser::boot_fp() {
     fps[fp_qsolve_code]    = hash_table.primitive("FP@qsolve", fpi_cmd, fp_qsolve_code);
     fps[fp_csolve_code]    = hash_table.primitive("FP@csolve", fpi_cmd, fp_csolve_code);
     fps[fp_qqsolve_code]   = hash_table.primitive("FP@qqsolve", fpi_cmd, fp_qqsolve_code);
-    LinePtr L;
+    LineList L;
     L.insert("%% Begin bootstrap commands for FP");
     L.insert("\\def\\FPe{2.718281828459045235}");
     L.insert(R"(\let\ifFPtest\iftrue)");

@@ -9,13 +9,13 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/LinePtr.h"
+#include "tralics/LineList.h"
 #include <filesystem>
 #include <fstream>
 
 void readline(char *buffer, size_t screen_size); ///< Read a line from standart input (readline.cpp)
 
-// Implements:  FileForInput, LinePtr, TexOutStream
+// Implements:  FileForInput, LineList, TexOutStream
 // InputStack converter
 
 // Class used for conversion to and from UTF8
@@ -40,7 +40,7 @@ inline Converter the_converter;
 struct InputStack {
     std::vector<char32_t> line;
     states                state;     // copy of scanner state
-    LinePtr               L;         // the lines
+    LineList              L;         // the lines
     int                   line_no;   // the current line number
     TokenList             TL;        // saved token list
     std::string           name;      // name of the current file
@@ -54,12 +54,12 @@ struct InputStack {
         : state(S), line_no(l), name(std::move(N)), at_val(-1), file_pos(cfp), line_pos(0), every_eof(eof), eof_outer(eof_o) {}
 
     void destroy();
-    void set_line_ptr(LinePtr &X) {
+    void set_line_ptr(LineList &X) {
         L.clear_and_copy(X);
         X.file_name = "";
         L.set_interactive(X.interactive);
     }
-    void get_line_ptr(LinePtr &X) {
+    void get_line_ptr(LineList &X) {
         X.clear_and_copy(L);
         X.set_interactive(L.interactive);
     }
@@ -67,10 +67,10 @@ struct InputStack {
 
 // data structure associated to \input3=some_file.
 struct FileForInput {
-    bool    is_open{false}; ///< is this file active ?
-    LinePtr lines;          ///< the lines that are not yet read by TeX
-    Buffer  cur_line;       ///< the current line
-    int     line_no{0};     ///< the current line number
+    bool     is_open{false}; ///< is this file active ?
+    LineList lines;          ///< the lines that are not yet read by TeX
+    Buffer   cur_line;       ///< the current line
+    int      line_no{0};     ///< the current line number
 
     void open(const std::string &file, const std::filesystem::path &fn, bool action);
     void close();

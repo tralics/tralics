@@ -42,8 +42,8 @@ namespace tralics_ns {
     auto titlepage_is_valid() -> bool;
 
     void boot_math(bool mv);
-    void read_a_file(LinePtr &L, const std::string &x, int spec);
-    void Titlepage_create(LinePtr &lines);
+    void read_a_file(LineList &L, const std::string &x, int spec);
+    void Titlepage_create(LineList &lines);
     void Titlepage_start(bool verbose);
 } // namespace tralics_ns
 

@@ -1,18 +1,18 @@
 #pragma once
 #include "Line.h"
 
-struct LinePtr : public std::list<Line> { // \todo rename to LineList or something \todo use a vector instead
-    int         cur_line{0};              // current line number
-    bool        interactive{false};       // is this file or a tty ? \todo get rid of interactive mode
-    std::string file_name;                // file name associated to the lines
-    size_t      encoding{1};              // current file encoding
+struct LineList : public std::list<Line> { // \todo use a vector instead
+    int         cur_line{0};               // current line number
+    bool        interactive{false};        // is this file or a tty ? \todo get rid of interactive mode
+    std::string file_name;                 // file name associated to the lines
+    size_t      encoding{1};               // current file encoding
 
     [[nodiscard]] auto dump_name() const -> std::string;
 
     void add_buffer(const std::string &B, line_iterator C);
     void after_open();
     void before_close(bool sigforce);
-    void clear_and_copy(LinePtr &X);
+    void clear_and_copy(LineList &X);
     void change_encoding(long wc);
     void find_tex_encoding();
     auto find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;
@@ -31,17 +31,17 @@ struct LinePtr : public std::list<Line> { // \todo rename to LineList or somethi
     void insert(const std::string &c, bool cv);
     void insert(String c);
     void insert_spec(int n, std::string c);
-    void insert(const LinePtr &aux);
+    void insert(const LineList &aux);
     void normalise_final_cr();
     void parse_and_extract_clean(const std::string &s);
     void parse_conf_toplevel() const;
-    auto parse_and_extract(String s) const -> LinePtr;
+    auto parse_and_extract(String s) const -> LineList;
     void print(std::ostream &outfile);
     void reset(std::string x);
     auto read_from_tty(Buffer &b) -> int;
     void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
-    void splice_end(LinePtr &X);   // \todo inline
-    void splice_first(LinePtr &X); // \todo inline
+    void splice_end(LineList &X);   // \todo inline
+    void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
 };

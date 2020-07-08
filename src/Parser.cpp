@@ -2,7 +2,7 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
-#include "tralics/LinePtr.h"
+#include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/NewArray.h"
@@ -1289,7 +1289,7 @@ void Parser::load_latex() {
         new_prim("amp", L);
     }
     more_bootstrap();
-    LinePtr L;
+    LineList L;
     L.insert("%% Begin bootstrap commands for latex");
     eqtb_int_table[uchar('@')].val = 11; // this is \makeatletter
     // initialise counters, dimen etc

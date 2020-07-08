@@ -26,10 +26,10 @@ class MainClass {
     int dft{3}; // default dtd for standard classes
     int trivial_math{1};
 
-    LinePtr input_content; // content of the tex source
-    LinePtr tex_source;    // the data to be translated
-    LinePtr config_file;   // content of configuratrion file
-    LinePtr from_config;   // lines extracted from the configuration
+    LineList input_content; // content of the tex source
+    LineList tex_source;    // the data to be translated
+    LineList config_file;   // content of configuratrion file
+    LineList from_config;   // lines extracted from the configuration
 
     system_type cur_os{};
 

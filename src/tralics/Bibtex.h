@@ -21,7 +21,7 @@ private:
     std::vector<char32_t>    input_line;        // line as Utf8Chars
     size_t                   input_line_pos{0}; // position in input_line
     Buffer                   token_buf;
-    LinePtr                  in_lines;       // contains the bibfile
+    LineList                 in_lines;       // contains the bibfile
     String                   src_name{};     // name of the bibfile
     int                      cur_bib_line{}; // current line number
     int                      last_ok_line{}; // start of current entry

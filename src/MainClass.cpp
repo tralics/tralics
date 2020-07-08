@@ -1,7 +1,7 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
 #include "tralics/Line.h"
-#include "tralics/LinePtr.h"
+#include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
@@ -951,11 +951,11 @@ void MainClass::read_config_and_other() {
     find_dtd();
     see_name1(); // this sets year_string.
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
-    LinePtr cmds = config_file.parse_and_extract("Commands");
+    LineList cmds = config_file.parse_and_extract("Commands");
     from_config.splice_end(cmds);
     if (hr) from_config.insert("\\AtBeginDocument{\\rawebstartdocument}\n", true);
     config_file.find_top_atts();
-    LinePtr TP = config_file.parse_and_extract("TitlePage");
+    LineList TP = config_file.parse_and_extract("TitlePage");
     tralics_ns::Titlepage_create(TP);
     if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
     input_content.splice(doc_class_pos, from_config);
@@ -1051,7 +1051,7 @@ void MainClass::show_input_size() {
 void MainClass::more_boot() const {
     tralics_ns::boot_math(math_variant);
     if (etex_enabled) the_parser.hash_table.boot_etex();
-    LinePtr res;
+    LineList res;
     res.reset(".tex");
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
     main_ns::register_file(std::move(res));

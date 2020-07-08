@@ -11,7 +11,7 @@ public:
     friend class BibEntry;
 
     std::string name;
-    LinePtr     lines;
+    LineList    lines;
 
     void               newline();
     void               push_back(String s) { B.append(s); }

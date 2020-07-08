@@ -1,4 +1,4 @@
-#include "tralics/LinePtr.h"
+#include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -25,7 +25,7 @@ namespace {
     }
 } // namespace
 
-void LinePtr::change_encoding(long wc) {
+void LineList::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
         Logger::finish_seq();
@@ -33,14 +33,14 @@ void LinePtr::change_encoding(long wc) {
     }
 }
 
-void LinePtr::set_interactive() {
+void LineList::set_interactive() {
     interactive = true;
     file_name   = "tty";
     encoding    = the_main->input_encoding;
 }
 
 // interface with the line editor.
-auto LinePtr::read_from_tty(Buffer &B) -> int {
+auto LineList::read_from_tty(Buffer &B) -> int {
     static bool                   prev_line = false; // was previous line non-blank ?
     static std::array<char, 4096> m_ligne;
     readline(m_ligne.data(), 78);
@@ -61,7 +61,7 @@ auto LinePtr::read_from_tty(Buffer &B) -> int {
 }
 
 // inserts a copy of aux
-void LinePtr::insert(const LinePtr &aux) {
+void LineList::insert(const LineList &aux) {
     encoding = 0;
     for (auto L : aux) {
         L.converted = false;
@@ -70,7 +70,7 @@ void LinePtr::insert(const LinePtr &aux) {
 }
 
 // If a line ends with \, we take the next line, and append it to this one
-void LinePtr::normalise_final_cr() {
+void LineList::normalise_final_cr() {
     auto prev = end();
     for (auto C = begin(); C != end(); ++C) {
         std::string &s       = *C;
@@ -92,7 +92,7 @@ void LinePtr::normalise_final_cr() {
     }
 }
 
-void LinePtr::reset(std::string x) {
+void LineList::reset(std::string x) {
     cur_line    = 0;
     encoding    = 0;
     interactive = false;
@@ -101,37 +101,37 @@ void LinePtr::reset(std::string x) {
 }
 
 // Insert a line at the end of the file, incrementing the line no
-void LinePtr::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
+void LineList::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
 
 // Insert a line at the end of the file, incrementing the line no
 // We assume that the const char* is ascii 7 bits
-void LinePtr::insert(String c) { emplace_back(++cur_line, c, true); }
+void LineList::insert(String c) { emplace_back(++cur_line, c, true); }
 
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted
-void LinePtr::insert_spec(int n, std::string c) {
+void LineList::insert_spec(int n, std::string c) {
     if (!empty() && back()[0] == '\n' && c[0] == '\n') return;
     emplace_back(n, c, true);
 }
 
 // insert a file at the start
-void LinePtr::splice_first(LinePtr &X) { splice(begin(), X); }
+void LineList::splice_first(LineList &X) { splice(begin(), X); }
 
 // insert at the end
-void LinePtr::splice_end(LinePtr &X) { splice(end(), X); }
+void LineList::splice_end(LineList &X) { splice(end(), X); }
 
 // Copy X here,
-void LinePtr::clear_and_copy(LinePtr &X) {
+void LineList::clear_and_copy(LineList &X) {
     clear();
     splice(begin(), X);
     encoding  = X.encoding;
     file_name = X.file_name;
 }
 
-auto LinePtr::dump_name() const -> std::string { return file_name.empty() ? "virtual file" : "file " + file_name; }
+auto LineList::dump_name() const -> std::string { return file_name.empty() ? "virtual file" : "file " + file_name; }
 
 // Whenever a TeX file is opened for reading, we print this in the log
-void LinePtr::after_open() {
+void LineList::after_open() {
     Logger::finish_seq();
     the_log << "++ Opened " << dump_name();
     if (empty())
@@ -151,7 +151,7 @@ void LinePtr::after_open() {
 
 // Whenever a TeX file is closed, we call this. If sigforce is true
 // we say if this was closed by a \endinput command.
-void LinePtr::before_close(bool sigforce) {
+void LineList::before_close(bool sigforce) {
     Logger::finish_seq();
     the_log << "++ End of " << dump_name();
     if (sigforce && !empty()) the_log << " (forced by \\endinput)";
@@ -160,7 +160,7 @@ void LinePtr::before_close(bool sigforce) {
 
 // Puts in b the next line of input.
 // return -1 at EOF, the line number otherwise.
-auto LinePtr::get_next(Buffer &b) -> int {
+auto LineList::get_next(Buffer &b) -> int {
     int  n         = -1;
     bool converted = false;
     if (interactive) {
@@ -178,7 +178,7 @@ auto LinePtr::get_next(Buffer &b) -> int {
     return n;
 }
 
-auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
+auto LineList::get_next_cv(Buffer &b, int w) -> int {
     if (empty()) return -1;
     bool converted = false; // \todo unused
     int  n         = front().to_buffer(b, converted);
@@ -191,7 +191,7 @@ auto LinePtr::get_next_cv(Buffer &b, int w) -> int {
 }
 
 // same as get_next, without conversion
-auto LinePtr::get_next_raw(Buffer &b) -> int {
+auto LineList::get_next_raw(Buffer &b) -> int {
     if (empty()) return -1;
     bool unused = false;
     int  n      = front().to_buffer(b, unused);
@@ -200,7 +200,7 @@ auto LinePtr::get_next_raw(Buffer &b) -> int {
 }
 
 // Puts the line in the string, instead of the buffer.
-auto LinePtr::get_next(std::string &b, bool &cv) -> int {
+auto LineList::get_next(std::string &b, bool &cv) -> int {
     if (empty()) return -1;
     int n = front().to_string(b, cv);
     pop_front();
@@ -208,7 +208,7 @@ auto LinePtr::get_next(std::string &b, bool &cv) -> int {
 }
 
 /// This finds a line with documentclass in it
-auto LinePtr::find_documentclass() -> std::string {
+auto LineList::find_documentclass() -> std::string {
     static constexpr auto pattern = ctll::fixed_string{R"(.*\\documentclass.*\{([a-zA-Z0-9]+)\}.*)"};
     for (auto C = begin(); C != end(); ++C) {
         if (C->find("%%") != std::string::npos) continue;
@@ -225,7 +225,7 @@ auto LinePtr::find_documentclass() -> std::string {
 // If C is the end pointer, B is inserted at the start.
 // The idea is to insert text from the config file to the main file
 // It is assumed that the inserted line is already converted.
-void LinePtr::add_buffer(const std::string &B, line_iterator C) {
+void LineList::add_buffer(const std::string &B, line_iterator C) {
     if (C == end())
         push_front(Line(1, B, true));
     else
@@ -233,7 +233,7 @@ void LinePtr::add_buffer(const std::string &B, line_iterator C) {
 }
 
 // This finds a line with documentclass in it
-auto LinePtr::find_configuration() -> std::string {
+auto LineList::find_configuration() -> std::string {
     static constexpr auto pattern = ctll::fixed_string{"^%.*ralics configuration file[^']*'([^']+)'.*$"};
     int                   N       = 0;
     for (auto &C : *this) {
@@ -244,7 +244,7 @@ auto LinePtr::find_configuration() -> std::string {
 }
 
 // This finds a line with document type in it
-auto LinePtr::find_doctype() -> std::string {
+auto LineList::find_doctype() -> std::string {
     static constexpr auto pattern = ctll::fixed_string{"%.*[Tt]ralics DOCTYPE [ =]*([^ =].*)$"};
     int                   N       = 0;
     for (auto &C : *this) {
@@ -257,9 +257,9 @@ auto LinePtr::find_doctype() -> std::string {
 // Splits a string at \n, creates a list of lines with l as first
 // line number.
 // This is used by \scantokens and \reevaluate, assumes UTF8
-void LinePtr::split_string(std::string x, int l) {
-    Buffer  B;
-    LinePtr L;
+void LineList::split_string(std::string x, int l) {
+    Buffer   B;
+    LineList L;
     L.cur_line = l;
     for (size_t i = 0;; ++i) {
         char c    = x[i];
@@ -280,12 +280,12 @@ void LinePtr::split_string(std::string x, int l) {
     splice_first(L);
 }
 
-void LinePtr::print(std::ostream &outfile) {
+void LineList::print(std::ostream &outfile) {
     for (auto &C : *this) outfile << C;
 }
 
 // This find a toplevel attributes. Real job done by next function.
-void LinePtr::find_top_atts() {
+void LineList::find_top_atts() {
     Buffer B;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         B = *C;
@@ -294,7 +294,7 @@ void LinePtr::find_top_atts() {
 }
 
 // A loop to find all types  and put them in res.
-void LinePtr::find_all_types(std::vector<std::string> &res) {
+void LineList::find_all_types(std::vector<std::string> &res) {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         init_file_pos = C->number;
@@ -304,7 +304,7 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
 }
 
 // This find a toplevel value.
-auto LinePtr::find_top_val(String s, bool c) -> std::string {
+auto LineList::find_top_val(String s, bool c) -> std::string {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         B          = *C;
@@ -315,12 +315,12 @@ auto LinePtr::find_top_val(String s, bool c) -> std::string {
 }
 
 // We remove everything that is not of type S.
-void LinePtr::parse_and_extract_clean(const std::string &s) {
-    LinePtr res;
-    int     b    = 0;
-    Buffer &B    = local_buf;
-    bool    keep = true;
-    bool    cv   = true;
+void LineList::parse_and_extract_clean(const std::string &s) {
+    LineList res;
+    int      b    = 0;
+    Buffer & B    = local_buf;
+    bool     keep = true;
+    bool     cv   = true;
     for (auto &C : *this) {
         B.clear();
         int n    = C.to_buffer(B, cv);
@@ -352,12 +352,12 @@ void LinePtr::parse_and_extract_clean(const std::string &s) {
 }
 
 // Returns all line in a begin/end block named s
-auto LinePtr::parse_and_extract(String s) const -> LinePtr {
-    LinePtr res;
-    int     b    = 0;
-    Buffer &B    = local_buf;
-    bool    keep = false;
-    bool    cv   = false;
+auto LineList::parse_and_extract(String s) const -> LineList {
+    LineList res;
+    int      b    = 0;
+    Buffer & B    = local_buf;
+    bool     keep = false;
+    bool     cv   = false;
     for (auto C = begin(); C != end(); ++C) {
         B.clear();
         C->to_buffer(B, cv);
@@ -379,7 +379,7 @@ auto LinePtr::parse_and_extract(String s) const -> LinePtr {
 }
 
 // Execute all lines that are not in an block via see_main_a
-void LinePtr::parse_conf_toplevel() const {
+void LineList::parse_conf_toplevel() const {
     int    b  = 0;
     bool   cv = false;
     Buffer B;
@@ -392,7 +392,7 @@ void LinePtr::parse_conf_toplevel() const {
 }
 
 // This skips over an environment.
-auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const {
+auto LineList::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const {
     ++C;
     int b = B.see_config_env();
     if (b != 1) return C;
@@ -407,7 +407,7 @@ auto LinePtr::skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const 
 }
 
 // Find all aliases in the config file.
-auto LinePtr::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
+auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool {
     Buffer &B        = local_buf;
     bool    in_alias = false;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {

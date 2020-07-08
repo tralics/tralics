@@ -438,7 +438,7 @@ auto mk_ensure(const std::string &a, const std::string &b) -> std::string { retu
 
 // We should perhaps do something with this list ??
 void gb4eboot() {
-    LinePtr     L;
+    LineList    L;
     std::string matha1       = "{\\mathrm{#1}}";
     std::string open_bra     = "{[}";
     std::string close_bra    = "{]}";

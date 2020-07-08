@@ -1634,7 +1634,7 @@ void Parser::L3_load(bool preload) {
     define_definer("new_protected");
     define_definer("new_protected_nopar");
 
-    LinePtr L;
+    LineList L;
     L.insert("%% Begin bootstrap commands for latex3");
     L.insert("\\message{Bootstrapping latex3}");
     // Change catcode code for underscore and colon

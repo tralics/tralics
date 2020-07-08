@@ -6,7 +6,7 @@
 #include "Hashtab.h"
 #include "Image.h"
 #include "LabelInfo.h"
-#include "LinePtr.h"
+#include "LineList.h"
 #include "Mactab.h"
 #include "SaveState.h"
 #include "Stack.h"
@@ -85,7 +85,7 @@ private:
     Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
     Buffer                unprocessed_xml;                       // chars to be converted into an XML element
     Buffer                fetch_name_res;                        // used by fetch_name
-    LinePtr               lines;                                 // the lines to  be read
+    LineList              lines;                                 // the lines to  be read
     TokenList             TL;                                    // list of tokens to be read again
     Condition             conditions;                            // condition stack for current \if
     SthInternal           cur_val;                               // result of scan_something internal
@@ -147,7 +147,7 @@ public:
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
     [[nodiscard]] auto get_ra_year() const -> int { return ra_year; }
     [[nodiscard]] auto get_year_string() const -> std::string { return year_string; }
-    void               init(LinePtr x) { lines = std::move(x); }
+    void               init(LineList x) { lines = std::move(x); }
     void               remember_ur(std::string s) { the_url_val = std::move(s); }
     void               set_cur_line(int x) { cur_line = x; }
     void               set_cur_file_pos(long k) { cur_file_pos = k; }

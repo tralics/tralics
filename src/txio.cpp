@@ -23,7 +23,7 @@
 #include <utf8.h>
 
 namespace {
-    std::vector<LinePtr>  file_pool;     // pool managed by filecontents
+    std::vector<LineList> file_pool;     // pool managed by filecontents
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
     void utf8_ovf(size_t n) { // \todo inline
@@ -222,7 +222,7 @@ auto io_ns::find_encoding(const std::string &cl) -> int {
 // If 2 it's a tex file, and the file is converted later.
 // If 3, no conversion  done
 // If 4, its is the main file, log not yet open.
-void tralics_ns::read_a_file(LinePtr &L, const std::string &x, int spec) {
+void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
     L.reset(x);
     if (pool_position) {
         L.insert(file_pool[*pool_position]);
@@ -556,7 +556,7 @@ void Parser::T_filecontents(int spec) {
     bool          is_encoded = true;
     if (spec == 2 || spec == 3) {
         action = 2;
-        LinePtr res;
+        LineList res;
         res.reset(filename);
         main_ns::register_file(std::move(res));
         if (spec == 3) is_encoded = false;
@@ -622,4 +622,4 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
     return {};
 }
 
-void main_ns::register_file(LinePtr &&x) { file_pool.push_back(std::move(x)); }
+void main_ns::register_file(LineList &&x) { file_pool.push_back(std::move(x)); }

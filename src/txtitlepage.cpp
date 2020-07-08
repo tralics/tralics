@@ -60,7 +60,7 @@ auto Buffer::tp_fetch_something() -> tpa_line {
 
 // This is the function that creates the title page data
 // from a list of lines
-void tralics_ns::Titlepage_create(LinePtr &lines) {
+void tralics_ns::Titlepage_create(LineList &lines) {
     if (lines.empty()) return;
     Titlepage.make_valid();
     for (;;) {

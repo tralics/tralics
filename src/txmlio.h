@@ -27,7 +27,7 @@ class XmlIO {
     Buffer                  B; // holds current element
     Buffer                  aux;
     Buffer                  line_buffer; // holds current line
-    LinePtr                 lines;       // input file
+    LineList                lines;       // input file
     int                     cur_line{};
     std::array<x_type, 128> Type{};
     std::vector<char32_t>   input_line;    // current line
