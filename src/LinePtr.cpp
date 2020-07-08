@@ -1,11 +1,28 @@
 #include "tralics/LinePtr.h"
 #include "tralics/Logger.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include "txinline.h"
 #include <ctre.hpp>
 
 namespace {
     Buffer local_buf;
+
+    void find_one_type(const std::string &s, std::vector<std::string> &S) { // \todo regexp?
+        if (!s.starts_with("BeginType")) return;
+
+        size_t b = 9;
+        while (s[b] == ' ' || s[b] == '\t') b++;
+        if (b == 9) return; // bad
+
+        size_t a = b;
+        while (is_letter(s[b])) b++;
+        if (b == a) return; // bad
+
+        auto str = s.substr(a, b - a);
+        S.push_back(str);
+        spdlog::trace("Defined type: {}", str);
+    }
 } // namespace
 
 void LinePtr::change_encoding(long wc) {
@@ -282,7 +299,7 @@ void LinePtr::find_all_types(std::vector<std::string> &res) {
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         init_file_pos = C->number;
         B             = *C;
-        B.find_one_type(res);
+        find_one_type(B, res);
     }
 }
 

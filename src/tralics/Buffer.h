@@ -54,8 +54,7 @@ public:
     void remove_last(size_t n);                       ///< Drop `n` chars, provided size is large enough
 
     // Mutating methods, affecting ptrs but not the data, as intended
-    void advance(size_t k = 1) { ptrs.b += k; }      ///< Move the read pointer forward
-    void find_one_type(std::vector<std::string> &S); ///< Finds one type \todo [vb] what does that mean?
+    void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward
 
     // Mutating methods, affecting ptrs but not the data, but morally const
     // \todo all those should be const

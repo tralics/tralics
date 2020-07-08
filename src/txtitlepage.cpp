@@ -710,22 +710,6 @@ auto Buffer::see_config_env() const -> int {
     return 0;
 }
 
-void Buffer::find_one_type(std::vector<std::string> &S) {
-    if (!starts_with("Begin")) return;
-    if (!substr(5).starts_with("Type")) return;
-
-    ptrs.b = 9;
-    while (ptrs.b < size() && (at(ptrs.b) == ' ' || at(ptrs.b) == '\t')) ptrs.b++;
-    if (ptrs.b == 9) return; // bad
-    ptrs.a = ptrs.b;
-    while (is_letter(head())) ptrs.b++;
-    if (ptrs.b == ptrs.a) return; // bad
-
-    auto str = substr(ptrs.a, ptrs.b - ptrs.a);
-    S.push_back(str);
-    spdlog::trace("Defined type: {}", str);
-}
-
 // This is called for all lines, outside groups.
 void tpage_ns::see_main_a(Buffer &in, Buffer &val) {
     Buffer B;
