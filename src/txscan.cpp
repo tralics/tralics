@@ -1259,7 +1259,7 @@ void Parser::scan_something_internal(internal_type level) {
         case lastpenalty_code:
         case badness_code:
         case lastnodetype_code: cur_val.set_int(0); return;
-        case xmllastid_code: cur_val.set_int(the_stack.get_xid().value); return;
+        case xmllastid_code: cur_val.set_int(the_stack.get_xid()); return;
         case xmlAid_code: fetch_box_id(the_xmlA); return;
         case xmlBid_code: fetch_box_id(the_xmlB); return;
         case XMLboxid_code: {

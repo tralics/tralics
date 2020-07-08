@@ -36,7 +36,7 @@ void Stats::token_stats() const {
                   the_parser.hash_table.usage_normal, the_parser.hash_table.usage_unhashed, footnotes);
     spdlog::trace("Save stack +{} -{}.", level_up, level_down);
     spdlog::trace("Attribute list search {}({}) found {} in {} elements ({} at boot).", sh_find, sh_boot, sh_used,
-                  the_main->the_stack->get_xid().value, nb_xboot);
+                  the_main->the_stack->get_xid(), nb_xboot);
     spdlog::trace("Number of ref {}, of used labels {}, of defined labels {}, of ext. ref. {}.", nb_ref, nb_used_ref, nb_label_defined,
                   nb_href);
     if (the_parser.get_list_files()) {

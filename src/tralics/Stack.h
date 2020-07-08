@@ -19,7 +19,7 @@ struct StackSlot {
 };
 
 class Stack : public std::vector<StackSlot> {
-    long                   last_xid{-1}; // id of the last
+    [[deprecated]] long    last_xid{-1}; // id of the last
     long                   xid_boot{0};
     std::string            cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes
@@ -37,10 +37,7 @@ public:
     [[nodiscard]] auto get_cur_id() const -> std::string { return cur_lid; }
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
-    [[nodiscard]] auto get_xid() const -> Xid {
-        assert(last_xid == enames.size() - 1);
-        return last_xid;
-    }
+    [[nodiscard]] auto get_xid() const -> size_t { return enames.size() - 1; }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
@@ -48,7 +45,7 @@ public:
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
     [[nodiscard]] auto is_frame(const std::string &s) const -> bool;
     [[nodiscard]] auto is_frame2(const std::string &S) const -> bool;
-    [[nodiscard]] auto last_att_list() const -> AttList & { return get_xid().get_att(); }
+    [[nodiscard]] auto last_att_list() const -> AttList & { return Xid(get_xid()).get_att(); }
 
     auto add_anchor(const std::string &s, bool spec) -> std::string;
     void add_att_to_last(const std::string &A, const std::string &B, bool force);

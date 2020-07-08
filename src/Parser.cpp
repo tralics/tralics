@@ -1989,11 +1989,11 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        if (auto ukey = nT_optarg_nopar()) the_stack.get_xid().get_att().push_back(the_names["bibkey"], *ukey);
-        n = the_stack.get_xid().value;
+        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att().push_back(the_names["bibkey"], *ukey);
+        n = the_stack.get_xid();
     } else {
         F    = remove_initial_star();
-        n    = to_signed(read_elt_id(T));
+        n    = read_elt_id(T);
         from = std::string(fetch_name_opt());
     }
     from     = normalise_for_bib(from);

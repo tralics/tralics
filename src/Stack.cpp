@@ -52,11 +52,11 @@ void Stack::add_border(long a, long b) {
     push1(the_names["row"]);
     push_pop_cell(push_only);
     if (a != 1) {
-        get_xid().add_span(a - 1);
+        Xid(get_xid()).add_span(a - 1);
         push_pop_cell(push_and_pop);
     }
-    get_xid().add_span(b);
-    get_xid().add_bottom_rule();
+    Xid(get_xid()).add_span(b);
+    Xid(get_xid()).add_bottom_rule();
     push_pop_cell(pop_only);
     pop(the_names["row"]);
 }
@@ -83,8 +83,7 @@ auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
     enames.push_back(elt);
     last_xid++;
-    assert(last_xid == enames.size() - 1);
-    return last_xid;
+    return enames.size() - 1;
 }
 
 Stack::Stack() {
@@ -99,11 +98,12 @@ Stack::Stack() {
 
 // Returns the element in the table with id n
 // This should be at position N
+// \todo this looks wasteful
 auto Stack::fetch_by_id(size_t n) -> Xml * {
     if (enames.size() <= n) return nullptr;
     Xml *x = enames[n];
     if (x == nullptr) return nullptr;
-    if (x->id.value == to_signed(n)) return x;
+    if (x->id.value == n) return x;
     spdlog::error("This cannot happen: bug in table at position {}", n);
     return nullptr;
 }
@@ -128,7 +128,7 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 // Add A=B as attribute list to last_xid.
 void Stack::add_att_to_last(const std::string &A, const std::string &B) {
     assert(last_xid == enames.size() - 1);
-    get_att_list(to_unsigned(last_xid)).push_back(A, B);
+    get_att_list(get_xid()).push_back(A, B);
 }
 
 // Add A=B as attribute list to top stack

@@ -2081,7 +2081,7 @@ void Parser::T_error() {
 // scans an element id, in brackets, default is cur_id
 auto Parser::read_elt_id(Token T) -> size_t {
     auto cur   = the_stack.cur_xid().value;
-    auto upper = the_stack.get_xid().value;
+    auto upper = the_stack.get_xid();
     auto n     = scan_special_int_d(T, cur);
     if (n > 0 && n <= upper) return to_unsigned(n);
     err_buf = fmt::format("Bad xml id replaced by 0: {}", n);
@@ -2100,7 +2100,7 @@ void Parser::T_xmladdatt(subtypes c) {
     if (c == addatt_to_cur_code)
         n = the_stack.cur_xid().value;
     else if (c == addatt_to_last_code)
-        n = the_stack.get_xid().value;
+        n = the_stack.get_xid();
     else if (c == addatt_to_doc_code)
         n = 1;
     else if (c == addatt_to_index_code)
