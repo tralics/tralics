@@ -1013,8 +1013,8 @@ void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
     bool s     = restricted;
     restricted = false;
     b.push_back('\n');
-    lines.push_front(Clines(-1));
-    lines.push_front(Clines(1, b, true));
+    lines.push_front(Line(-1));
+    lines.push_front(Line(1, b, true));
     file_ended = false;
     for (;;) {
         bool res = next_from_line0();

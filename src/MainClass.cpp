@@ -1,6 +1,6 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
-#include "tralics/Clines.h"
+#include "tralics/Line.h"
 #include "tralics/LinePtr.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
@@ -333,8 +333,8 @@ void MainClass::check_for_input() {
     std::string s = hack_for_input(infile);
     if (interactive_math) {
         input_content.set_interactive();
-        input_content.push_front(Clines(1, "foo", true));
-        input_content.push_front(Clines(2, "foo", false));
+        input_content.push_front(Line(1, "foo", true));
+        input_content.push_front(Line(2, "foo", false));
         open_log();
         return;
     }

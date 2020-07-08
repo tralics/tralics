@@ -1,8 +1,8 @@
-#include "tralics/Clines.h"
+#include "tralics/Line.h"
 #include "txio.h"
 
 // This converts a line of a file
-void Clines::convert_line(size_t wc) {
+void Line::convert_line(size_t wc) {
     Buffer B;
     B.append(*this);
     converted = true;

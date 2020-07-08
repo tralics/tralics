@@ -1655,7 +1655,7 @@ void Parser::T_reevaluate() {
         the_log << "{Reeval: " << Tbuf << "}\n";
     }
     push_input_stack("(reevaluate)", false, false);
-    lines.push_front(Clines(-1));
+    lines.push_front(Line(-1));
     lines.split_string(Tbuf, 0);
 }
 

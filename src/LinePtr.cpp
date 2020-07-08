@@ -227,9 +227,9 @@ auto LinePtr::find_documentclass() -> std::string {
 // It is assumed that the inserted line is already converted.
 void LinePtr::add_buffer(const std::string &B, line_iterator C) {
     if (C == end())
-        push_front(Clines(1, B, true));
+        push_front(Line(1, B, true));
     else
-        std::list<Clines>::insert(C, Clines(1, B, true)); // \todo ew
+        std::list<Line>::insert(C, Line(1, B, true)); // \todo ew
 }
 
 // This finds a line with documentclass in it
