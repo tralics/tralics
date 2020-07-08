@@ -1198,7 +1198,7 @@ void Parser::load_latex() {
     counter_boot("figure", "");
     counter_boot("subfigure", "figure");
     counter_boot("equation", "");
-    equation_ctr_pos = to_unsigned(allocation_table[newcount_code] + count_reg_offset);
+    equation_ctr_pos = allocation_table[newcount_code] + count_reg_offset;
     counter_boot("parentequation", "");
 
     // \newcount
@@ -1984,7 +1984,7 @@ void Parser::T_cite(subtypes sw) {
 void Parser::solve_cite(bool user) {
     Token       T = cur_tok;
     bool        F = true;
-    long        n = 0;
+    size_t      n = 0;
     std::string from;
     if (user) {
         implicit_par(zero_code);

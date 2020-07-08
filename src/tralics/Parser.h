@@ -35,7 +35,7 @@ public:
     std::array<EqtbGlue, glue_table_size>     glue_table;         // EQTB, glue
     std::array<Token, nb_characters>          verbatim_chars;     // value of a character in verbatim mode
     std::array<long, nb_shortverb_values>     old_catcode{};      // catcodes for undefineshortverb
-    std::array<int, 9>                        allocation_table{}; // values for \newcount etc
+    std::array<size_t, 9>                     allocation_table{}; // values for \newcount etc
     std::array<bool, nb_xspace_values>        ok_for_xspace{};    // status of char w.r.t. \xspace
     std::array<Token, 22>                     uclc_list;          // upper, lowert case equivalent of \ij etc
     FontInfo                                  cur_font;           // info for the current font
@@ -553,7 +553,7 @@ private:
     auto        next_from_line0() -> bool;
     void        M_newboolean(subtypes c);
     void        new_constant(subtypes c);
-    void        new_constant(String name, int max_val, subtypes alloc_pos, symcodes c);
+    void        new_constant(String name, size_t max_val, subtypes alloc_pos, symcodes c);
     void        M_newif();
     void        M_newif_aux(Token T, const std::string &s, bool b);
     void        new_font();

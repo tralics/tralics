@@ -83,6 +83,7 @@ auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
     enames.push_back(elt);
     last_xid++;
+    assert(last_xid == enames.size() - 1);
     return last_xid;
 }
 
@@ -125,7 +126,10 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 }
 
 // Add A=B as attribute list to last_xid.
-void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(to_unsigned(last_xid)).push_back(A, B); }
+void Stack::add_att_to_last(const std::string &A, const std::string &B) {
+    assert(last_xid == enames.size() - 1);
+    get_att_list(to_unsigned(last_xid)).push_back(A, B);
+}
 
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
@@ -133,6 +137,7 @@ void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid
 // Add A=B as attribute list to last_xid
 // (if force is true, ignores old value otherwise new value).
 void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) {
+    assert(last_xid == enames.size() - 1);
     get_att_list(to_unsigned(last_xid)).push_back(A, B, force);
 }
 
@@ -150,6 +155,7 @@ void Stack::hack_for_hanl() {
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(const std::string &x) -> AttList & {
     top_stack()->push_back_unless_nullptr(new Xml(the_names[x], nullptr));
+    assert(last_xid == enames.size() - 1);
     return Xid(last_xid).get_att();
 }
 
@@ -557,7 +563,7 @@ auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 inline auto get_cur_label() -> std::string { return std::string(the_parser.eqtb_string_table[0].val); }
 
 void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
-    AttList &AL = get_att_list(to_unsigned(xid.value));
+    AttList &AL = get_att_list(xid.value);
     AL.push_back(the_names["id"], id);
     AL.push_back(the_names["id-text"], idtext);
 }
@@ -566,6 +572,7 @@ void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string 
 auto Stack::add_new_anchor() -> std::string {
     std::string id = next_label_id();
     set_cur_id(id);
+    assert(last_xid == enames.size() - 1);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
 }
@@ -574,6 +581,7 @@ auto Stack::add_new_anchor_spec() -> std::string {
     static size_t last_top_label_id = 0;
     auto          id                = std::string(fmt::format("cid{}", ++last_top_label_id));
     set_cur_id(id);
+    assert(last_xid == enames.size() - 1);
     create_new_anchor(last_xid, id, get_cur_label());
     return id;
 }
@@ -585,6 +593,7 @@ auto Stack::add_anchor(const std::string &s, bool spec) -> std::string {
     set_cur_id(id);
     if (!spec) {
         add_newid0("anchor");
+        assert(last_xid == enames.size() - 1);
         create_new_anchor(last_xid, id, std::string(s));
     } else {
         create_new_anchor(cur_xid(), id, std::string(s));

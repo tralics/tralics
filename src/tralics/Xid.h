@@ -1,4 +1,5 @@
 #pragma once
+#include "types.h"
 #include <string>
 
 struct AttList;
@@ -6,9 +7,9 @@ class Buffer;
 
 class Xid {
 public:
-    long value; // value of the id \todo should this be size_t ?
+    size_t value; // value of the id \todo should this be size_t ?
 
-    Xid(long v = 0) : value(v) {}
+    Xid(size_t v = 0) : value(v) {}
 
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;

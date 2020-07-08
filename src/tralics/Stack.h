@@ -37,7 +37,10 @@ public:
     [[nodiscard]] auto get_cur_id() const -> std::string { return cur_lid; }
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
-    [[nodiscard]] auto get_xid() const -> Xid { return last_xid; }
+    [[nodiscard]] auto get_xid() const -> Xid {
+        assert(last_xid == enames.size() - 1);
+        return last_xid;
+    }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
@@ -109,7 +112,10 @@ public:
     void set_mode(mode x) { cur_mode = x; }
     void set_no_mode() { cur_mode = mode_none; }
     void set_v_mode() { cur_mode = mode_v; }
-    void set_xid_boot() { xid_boot = last_xid; }
+    void set_xid_boot() {
+        assert(last_xid == enames.size() - 1);
+        xid_boot = last_xid;
+    }
     void T_ampersand();
     void T_hline();
     auto temporary() -> Xml *;

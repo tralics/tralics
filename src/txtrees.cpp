@@ -55,7 +55,7 @@ void AllIndex::new_index(const std::string &s, const std::string &title) {
     for (size_t i = 0; i < size(); i++)
         if (at(i)->has_name(s)) return;
     auto id = the_main->the_stack->next_xid(nullptr).value;
-    push_back(new OneIndex(s, title, to_unsigned(id)));
+    push_back(new OneIndex(s, title, id));
 }
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,

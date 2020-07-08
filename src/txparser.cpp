@@ -1971,14 +1971,12 @@ void Parser::new_constant(subtypes c) {
 // and a symcode like char_given_cmd
 // allocates registter number k whose value at the table at position alloc_pos
 // (plus an offset, maybe)
-void Parser::new_constant(String /*name*/, int max_val, subtypes alloc_pos, symcodes c) {
+void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, symcodes c) {
     Token T = cur_tok;
     get_r_token(true);
-    int k = allocation_table[alloc_pos];
+    auto k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_buf = "Overflow in ";
-        err_buf << T;
-        err_buf.format("; max value is {}", max_val);
+        err_buf = fmt::format("Overflow in {}; max value is {}", T, max_val);
         signal_error(T, "allocation overflow");
         return;
     }
@@ -1990,7 +1988,6 @@ void Parser::new_constant(String /*name*/, int max_val, subtypes alloc_pos, symc
     CmdChr R(c, subtypes(k));
     eq_define(cur_tok.eqtb_loc(), R, true);
     Logger::finish_seq();
-    // the_log << "{\\" << name << " " << cur_tok << "=\\" << R.name() << "}\n";
 }
 
 // c is the code of \value, \stepcounter, \addtocounter, \setcounter, or

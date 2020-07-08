@@ -717,9 +717,9 @@ void Parser::L3_set_cat_code(int c) {
 
 // \char_set_catcode:nn{110}{`A+1} and variants: \the or \showthe
 void Parser::L3_set_num_code(int c) {
-    int  offset = 0;
-    int  max    = 0;
-    bool show   = false;
+    size_t offset = 0;
+    int    max    = 0;
+    bool   show   = false;
     switch (c) {
     case setcat_code:
         offset = 0;
@@ -778,7 +778,7 @@ void Parser::L3_set_num_code(int c) {
         back_input(L1);
         cur_tok = T;
         auto m  = scan_char_num();
-        word_define(to_unsigned(to_signed(m) + offset), N, false); // \todo is offset always >=0?
+        word_define(m + offset, N, false); // \todo is offset always >=0?
         return;
     }
     auto m = l3_read_int(T);
@@ -786,7 +786,7 @@ void Parser::L3_set_num_code(int c) {
         signal_ovf(T, "Bad character code replaced by 0\n", m, scan_char_num_max);
         m = 0;
     }
-    auto v = eqtb_int_table[to_unsigned(m + offset)].val;
+    auto v = eqtb_int_table[to_unsigned(m) + offset].val;
     if (show)
         log_and_tty << T << "{" << m << "}=" << v << "\n";
     else {

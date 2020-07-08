@@ -32,7 +32,7 @@ void Xid::add_span(long n) const {
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.
-auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(to_unsigned(value)); }
+auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(value); }
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
