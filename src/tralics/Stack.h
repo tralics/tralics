@@ -19,7 +19,6 @@ struct StackSlot {
 };
 
 class Stack : public std::vector<StackSlot> {
-    [[deprecated]] long    last_xid{-1}; // id of the last
     size_t                 xid_boot{0};
     std::string            cur_lid;    // the id to be pushed on uids[]
     std::vector<AttList>   attributes; // the main table of attributes

@@ -445,7 +445,7 @@ void Xml::recurse0(XmlAction &X) {
         if (y->has_name(X.get_match())) switch (X.get_what()) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
-                X.set_int_val(y->id.value);
+                X.set_int_val(to_signed(y->id.value));
                 erase(begin() + to_signed(k));
                 return;
             case rc_return_first:
@@ -606,14 +606,14 @@ void Xml::to_buffer(Buffer &b) const {
     if (is_xmlc()) {
         if (id.value == 0)
             b += encode(name);
-        else if (id.value == -1)
+        else if (id.value == size_t(-1))
             b += "<!--" + encode(name) + "-->";
-        else if (id.value == -2) {
+        else if (id.value == size_t(-2)) {
             b += "<!" + encode(name);
             for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
             b += ">";
             b.finish_xml_print();
-        } else if (id.value == -3)
+        } else if (id.value == size_t(-3))
             b += "<?" + encode(name) + "?>";
         return;
     }

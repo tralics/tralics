@@ -82,7 +82,6 @@ auto Stack::xml2_space(std::string elt, const std::string &b1, Xml *first_arg, X
 auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
     enames.push_back(elt);
-    last_xid++;
     return enames.size() - 1;
 }
 
@@ -125,13 +124,13 @@ auto Stack::find_parent(Xml *x) -> Xml * {
     return nullptr;
 }
 
-// Add A=B as attribute list to last_xid.
+// Add A=B as attribute list to last xid.
 void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(get_xid()).push_back(A, B); }
 
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
 
-// Add A=B as attribute list to last_xid
+// Add A=B as attribute list to last xid
 // (if force is true, ignores old value otherwise new value).
 void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) { get_att_list(get_xid()).push_back(A, B, force); }
 

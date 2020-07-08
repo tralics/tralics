@@ -76,7 +76,7 @@ void Xid::add_attribute(Xid b) const {
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
 // and create/update the LabelInfo. We remember the ref in the ref_list.
-void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(value, s, false); }
+void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(to_signed(value), s, false); }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.
 void Xid::add_special_att(const std::string &S, Buffer &B) {
