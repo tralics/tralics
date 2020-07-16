@@ -54,8 +54,7 @@ auto LineList::read_from_tty(Buffer &B) -> int {
     } else
         prev_line = true;
     if (B[0] == '%') { // debug
-        int k = io_ns::find_encoding(B);
-        if (k >= 0) encoding = to_unsigned(k);
+        if (auto k = io_ns::find_encoding(B)) encoding = *k;
     }
     return cur_line;
 }

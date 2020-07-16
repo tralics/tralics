@@ -26,11 +26,11 @@ namespace main_ns {
 } // namespace main_ns
 
 namespace io_ns {
-    auto find_encoding(const std::string &cl) -> int;
+    auto find_encoding(const std::string &cl) -> std::optional<size_t>;
 } // namespace io_ns
 
 namespace tralics_ns {
-    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool;
+    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool; // \todo std::find
     auto file_exists(const std::string &name) -> bool;
     auto find_in_confdir(const std::string &s, bool retry)
         -> std::optional<std::filesystem::path>;                                     ///< Try to open the file, using alt location if needed
@@ -64,13 +64,7 @@ namespace tpage_ns {
     void see_main_a(Buffer &in, Buffer &val);
 } // namespace tpage_ns
 
-inline auto is_vowel(char c) -> bool { return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'; }
-
 // True if it is an accent character, like \^.
 inline auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c == '^' || c == '"' || c == '~' || c == '.' || c == '='; }
 
 inline auto is_tp_delim(char c) -> bool { return c == '<' || c == '\\' || c == '"'; }
-
-inline auto operator==(Token a, Token b) -> bool { return a.val == b.val; }
-
-inline auto operator!=(Token a, Token b) -> bool { return a.val != b.val; }

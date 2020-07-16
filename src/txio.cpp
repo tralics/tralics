@@ -198,7 +198,7 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
     return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)]);
 }
 
-auto io_ns::find_encoding(const std::string &cl) -> int {
+auto io_ns::find_encoding(const std::string &cl) -> std::optional<size_t> {
     if (cl.find("-*-") != std::string::npos) {
         if (cl.find("coding: utf-8") != std::string::npos) return 0;
         if (cl.find("coding: utf8") != std::string::npos) return 0;
@@ -209,12 +209,12 @@ auto io_ns::find_encoding(const std::string &cl) -> int {
     if (cl.find("utf8-encoded") != std::string::npos) return 0;
     if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
     auto kk = cl.find("tralics-encoding:");
-    if (kk == std::string::npos) return -1;
-    if (!is_digit(cl[kk + 17])) return -1;
+    if (kk == std::string::npos) return {};
+    if (!is_digit(cl[kk + 17])) return {};
     int k = cl[kk + 17] - '0';
     if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
     if (k < to_signed(max_encoding)) return k;
-    return -1;
+    return {};
 }
 
 // This reads the file named x.
@@ -259,13 +259,12 @@ void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
                 B.push_back_newline();
             if (co_try != 0) {
                 co_try--;
-                int k = io_ns::find_encoding(B);
-                if (k >= 0) {
-                    wc         = to_unsigned(k);
+                if (auto k = io_ns::find_encoding(B)) {
+                    wc         = *k;
                     L.encoding = wc;
                     co_try     = 0;
                     Logger::finish_seq();
-                    spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", k, L.cur_line + 1, x);
+                    spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, L.cur_line + 1, x);
                 }
             }
             if (converted) B.convert_line(L.cur_line + 1, wc);

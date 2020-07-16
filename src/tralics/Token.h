@@ -68,7 +68,9 @@ struct Token {
     void               testpach();
 };
 
-auto operator<<(std::ostream &fp, Token x) -> std::ostream &;
+auto        operator<<(std::ostream &fp, Token x) -> std::ostream &;
+inline auto operator==(Token a, Token b) -> bool { return a.val == b.val; }
+inline auto operator!=(Token a, Token b) -> bool { return a.val != b.val; }
 
 inline Token                 q_nil, q_stop, q_recursion_stop;
 inline Token                 T_roman, T_use1, T_use2, T_usen, T_use_nonen;
