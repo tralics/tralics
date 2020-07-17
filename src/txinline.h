@@ -30,7 +30,6 @@ namespace io_ns {
 } // namespace io_ns
 
 namespace tralics_ns {
-    auto exists(const std::vector<std::string> &ST, const std::string &d) -> bool; // \todo std::find
     auto file_exists(const std::string &name) -> bool;
     auto find_in_confdir(const std::string &s, bool retry)
         -> std::optional<std::filesystem::path>;                                     ///< Try to open the file, using alt location if needed

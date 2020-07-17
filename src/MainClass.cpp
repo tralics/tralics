@@ -856,7 +856,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (dtype.empty()) return false;
     if (!check_for_tcf(dtype)) {
         if (vb) the_log << "Trying type " << dtype << "\n";
-        if (tralics_ns::exists(all_config_types, dtype)) return true;
+        if (std::find(all_config_types.begin(), all_config_types.end(), dtype) != all_config_types.end()) return true;
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
     if (tcf_file) {

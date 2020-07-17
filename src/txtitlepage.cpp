@@ -753,7 +753,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     if (ptrs.a == ptrs.b) return true; // this is bad
     std::string pot_res      = substring();
     bool        local_potres = false;
-    if (tralics_ns::exists(SL, pot_res)) local_potres = true;
+    if (std::find(SL.begin(), SL.end(), pot_res) != SL.end()) local_potres = true;
     for (;;) {
         skip_sp_tab();
         if (is_special_end()) break;

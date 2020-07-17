@@ -29,12 +29,6 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     return {};
 }
 
-auto tralics_ns::exists(const std::vector<std::string> &ST, const std::string &d) -> bool {
-    for (const auto &j : ST)
-        if (j == d) return true;
-    return false;
-}
-
 auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
 
 auto next_label_id() -> std::string {
