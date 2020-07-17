@@ -9,12 +9,10 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
 
     [[nodiscard]] auto dump_name() const -> std::string;
 
-    void add_buffer(const std::string &B, line_iterator C);
     void after_open();
     void before_close(bool sigforce);
     void clear_and_copy(LineList &X);
     void change_encoding(long wc);
-    void find_tex_encoding();
     auto find_aliases(const std::vector<std::string> &SL, std::string &res) -> bool;
     void find_all_types(std::vector<std::string> &res);
     auto find_configuration() -> std::string;
@@ -23,7 +21,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     void find_top_atts();
     auto find_top_val(String s, bool c) -> std::string;
     void set_interactive(bool sw) { interactive = sw; }
-    auto get_last_line_no() -> int { return back().number; }
     auto get_next_raw(Buffer &b) -> int;
     auto get_next_cv(Buffer &b, int w) -> int;
     auto get_next(Buffer &b) -> int;
@@ -41,7 +38,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto read_from_tty(Buffer &b) -> int;
     void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
-    void splice_end(LineList &X);   // \todo inline
     void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
 };

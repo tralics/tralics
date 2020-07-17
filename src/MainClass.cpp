@@ -952,7 +952,7 @@ void MainClass::read_config_and_other() {
     see_name1(); // this sets year_string.
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
     LineList cmds = config_file.parse_and_extract("Commands");
-    from_config.splice_end(cmds);
+    from_config.splice(from_config.end(), cmds);
     if (hr) from_config.insert("\\AtBeginDocument{\\rawebstartdocument}\n", true);
     config_file.find_top_atts();
     LineList TP = config_file.parse_and_extract("TitlePage");
@@ -1041,7 +1041,7 @@ void MainClass::boot_bibtex(bool inra) {
 }
 
 void MainClass::show_input_size() {
-    int n = input_content.get_last_line_no();
+    int n = input_content.back().number;
     if (n == 1)
         spdlog::trace("There is a single line");
     else

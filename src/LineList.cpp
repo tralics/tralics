@@ -116,9 +116,6 @@ void LineList::insert_spec(int n, std::string c) {
 // insert a file at the start
 void LineList::splice_first(LineList &X) { splice(begin(), X); }
 
-// insert at the end
-void LineList::splice_end(LineList &X) { splice(end(), X); }
-
 // Copy X here,
 void LineList::clear_and_copy(LineList &X) {
     clear();
@@ -218,17 +215,6 @@ auto LineList::find_documentclass() -> std::string {
     }
     the_main->doc_class_pos = end();
     return "";
-}
-
-// This inserts B into *this, before C
-// If C is the end pointer, B is inserted at the start.
-// The idea is to insert text from the config file to the main file
-// It is assumed that the inserted line is already converted.
-void LineList::add_buffer(const std::string &B, line_iterator C) {
-    if (C == end())
-        push_front(Line(1, B, true));
-    else
-        std::list<Line>::insert(C, Line(1, B, true)); // \todo ew
 }
 
 // This finds a line with documentclass in it
