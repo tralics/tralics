@@ -843,7 +843,7 @@ auto CmdChr::token_counter_name() const -> String {
     }
 }
 
-auto CmdChr::token_accent_name() const -> String {
+auto CmdChr::token_accent_name() const -> std::string {
     switch (chr) {
     case '\'': return "'";
     case '`': return "`";
@@ -863,7 +863,7 @@ auto CmdChr::token_accent_name() const -> String {
     case 'd': return "d";
     case 'D': return "D";
     case 'h': return "H";
-    default: return nullptr;
+    default: return {};
     }
 }
 

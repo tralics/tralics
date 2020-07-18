@@ -55,7 +55,7 @@ public:
     [[nodiscard]] auto token_fiorelse_name() const -> String;
 
 private:
-    [[nodiscard]] auto cat_ifeq_name() const -> String;
+    [[nodiscard]] auto cat_ifeq_name() const -> String; // \todo return std::string everywhere below (or std::optional)
     [[nodiscard]] auto cmd_special_name() const -> String;
     [[nodiscard]] auto l3_expand_aux_name() const -> String;
     [[nodiscard]] auto l3_expand_base_name() const -> String;
@@ -71,7 +71,7 @@ private:
     [[nodiscard]] auto tl_concat_name() const -> String;
     [[nodiscard]] auto tl_put_left_name() const -> String;
     [[nodiscard]] auto tl_set_name() const -> String;
-    [[nodiscard]] auto token_accent_name() const -> String;
+    [[nodiscard]] auto token_accent_name() const -> std::string;
     [[nodiscard]] auto token_argfont_name() const -> String;
     [[nodiscard]] auto token_assigndimen_name() const -> std::string;
     [[nodiscard]] auto token_assignglue_name() const -> std::string;
