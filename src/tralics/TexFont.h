@@ -1,4 +1,7 @@
 #pragma once
+#include "../txscaled.h"
+#include <string>
+#include <vector>
 
 struct TexFont : std::vector<ScaledInt> {
     std::string name;

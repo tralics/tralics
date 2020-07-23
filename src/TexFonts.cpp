@@ -1,37 +1,12 @@
-// Tralics, a LaTeX to XML translator.
-// Copyright (C) INRIA/apics/marelle (Jose' Grimm) 2003-2011
-// Functions on fonts for Tralics.
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-#include "tralics/Parser.h"
 #include "tralics/TexFonts.h"
+#include "tralics/Parser.h"
 #include <fmt/format.h>
-
-// Font info stuff.
-
-// ------------------------------------------------------
-// tex fonts
 
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const std::string &n, long a, long s) -> size_t {
-    for (unsigned i = 0; i < size(); i++)
-        if (at(i) == TexFont{n, a, s}) return i;
-    return define_a_new_font(n, a, s);
-}
-
-// This allocates a new slot in the font list.
-auto TexFonts::define_a_new_font(const std::string &n, long a, long s) -> size_t {
-    if (size() >= 256) { /// \todo Perhaps remove this artificial limitation
-        the_parser.parse_error("fatal: font table overflow");
-        return 0;
-    }
-    emplace_back(n, a, s);
+    auto f = TexFont{n, a, s};
+    if (auto it = find(begin(), end(), f); it != end()) return to_unsigned(it - begin());
+    push_back(f);
     return size() - 1;
 }
 
