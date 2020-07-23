@@ -2162,7 +2162,7 @@ void Parser::new_font() {
         at_val = cur_val.get_int_val();
     } else if (scan_keyword("scaled"))
         scaled_val = scan_int(T);
-    auto res = tfonts.find_font(name, at_val, scaled_val);
+    auto res = tfonts.find_font({name, at_val, scaled_val});
     eq_define(u, CmdChr(set_font_cmd, subtypes(res)), false);
 }
 
@@ -2171,7 +2171,7 @@ void Parser::new_font() {
 void Parser::initialise_font() {
     Token cmd = hash_table.locate("tenrm");
     auto  u   = cmd.eqtb_loc();
-    auto  res = tfonts.find_font("cmr10", 10 << 16, 0);
+    auto  res = tfonts.find_font({"cmr10", 10 << 16, 0});
     eq_define(u, CmdChr(set_font_cmd, subtypes(res)), false);
     word_define(cur_font_loc, to_signed(res), false);
 }

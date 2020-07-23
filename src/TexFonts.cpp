@@ -3,8 +3,7 @@
 #include <fmt/format.h>
 
 // Finds a font given by name and size, or creates one if needed
-auto TexFonts::find_font(const std::string &n, long a, long s) -> size_t {
-    auto f = TexFont{n, a, s};
+auto TexFonts::find_font(const TexFont &f) -> size_t {
     if (auto it = find(begin(), end(), f); it != end()) return to_unsigned(it - begin());
     push_back(f);
     return size() - 1;
