@@ -959,17 +959,16 @@ void MainClass::bad_year() const {
     end_with_help(1);
 }
 
-void MainClass::see_name(String s) {
+void MainClass::see_name(std::string s) {
     if (!infile.empty()) {
         spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, std::filesystem::path(s));
         exit(1);
     }
-    Buffer B(s);
-    if (B.ends_with(".xml")) B.remove_last(4);
-    B.append_unless_ends_with(".tex");
-    infile = static_cast<std::string>(B);
-    B.remove_last(4);
-    no_ext = B;
+    if (s.ends_with(".xml")) s.resize(s.size() - 4);
+    if (!s.ends_with(".tex")) s.append(".tex");
+    infile = s;
+    s.resize(s.size() - 4);
+    no_ext = s;
 }
 
 void MainClass::see_name1() {

@@ -155,8 +155,8 @@ private:
     void        run_ra();
     void        run_simple_ra();
     void        see_aux_info(int k);
-    void        see_name(String s); ///< Extract versions of a filename with and without ext
-    void        see_name1();        ///< Post-process file names
+    void        see_name(std::string s); ///< Extract versions of a filename with and without ext
+    void        see_name1();             ///< Post-process file names
     void        show_input_size();
     void        start_document(Buffer &a);
     void        start_env(std::string);
