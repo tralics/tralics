@@ -22,8 +22,8 @@ extern size_t                                                       leftquote_va
 extern std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 extern std::string                                                  all_themes;      //
 extern std::string                                                  everyjob_string; //
-extern std::string                                                  file_name;       // Job name, without directory
-extern std::vector<std::filesystem::path>                           conf_path;
+inline std::string                                                  file_name;       // Job name, without directory
+inline std::vector<std::filesystem::path>                           conf_path{"../confdir"};
 inline bool                                                         distinguish_refer = false;
 inline bool                                                         global_in_load    = false;
 inline bool                                                         global_in_url     = false;

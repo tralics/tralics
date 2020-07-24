@@ -436,7 +436,7 @@ void Parser::T_titlepage_finish(size_t v) {
     }
     if (finished && also_bib) {
         the_bibliography.set_nocite();
-        if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(tralics_ns::get_short_jobname()); }
+        if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(file_name); }
     }
     if (finished) {
         log_and_tty << "Translation terminated after title page\n";

@@ -872,8 +872,8 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
 // attribute list.
 auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
     bool has_spaces = look_at_space(s);
-    if (!has_spaces) return {std::string(s), nullptr};
-    Xml res{std::string(data()), nullptr};
+    if (!has_spaces) return {s, nullptr};
+    Xml res{*this, nullptr};
     push_back_special_att(res.id);
     return res;
 }

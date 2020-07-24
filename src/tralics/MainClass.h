@@ -85,8 +85,6 @@ public:
     bool use_all_sizes{false};
     bool use_font_elt{false};
 
-    MainClass(); ///< This just adds `"../confdir"` to `conf_path` \todo should disappear
-
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, const std::string &b); ///< Add contents to `from_config`

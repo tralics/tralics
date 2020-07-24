@@ -54,7 +54,7 @@ auto FontInfo::series_change() const -> std::string {
 
 // This function returns a font attribute, as a LaTeX command.
 
-auto FontInfo::size_name() const -> String {
+auto FontInfo::size_name() const -> std::string {
     if (tsize == fi_small_size) return "\\small";
     if (tsize == fi_small_size1) return "\\small";
     if (tsize == fi_big_size) return "\\large";
@@ -69,44 +69,36 @@ auto FontInfo::size_name() const -> String {
     if (tsize == fi_big_size4) return "\\huge";
     if (tsize == fi_big_size5) return "\\Huge";
     if (tsize == fi_big_size6) return "\\HUGE";
-    return nullptr;
+    return "";
 }
 
 // Idem. This function deals with the shape.
-auto FontInfo::shape_name() const -> String {
+auto FontInfo::shape_name() const -> std::string {
     if (shape == fi_it_shape) return "\\itshape";
     if (shape == fi_sl_shape) return "\\slshape";
     if (shape == fi_sc_shape) return "\\scshape";
-    return nullptr;
+    return "";
 }
 
 // Idem. This function deals with the family.
-auto FontInfo::family_name() const -> String {
+auto FontInfo::family_name() const -> std::string {
     if (family == fi_sf_family) return "\\sffamily";
     if (family == fi_tt_family) return "\\ttfamily";
-    return nullptr;
+    return "";
 }
 
 // Idem. This function deals with the series. (the function is inline).
-auto FontInfo::series_name() const -> String {
+auto FontInfo::series_name() const -> std::string {
     if (series == fi_bf_series) return "\\bfseries";
     if (series == fi_bx_series) return "\\boldextendedseries";
     if (series == fi_sb_series) return "\\semiboldseries";
     if (series == fi_c_series) return "\\condensedseries";
-    return nullptr;
+    return "";
 }
 
 // This prints everything.
 auto operator<<(std::ostream &fp, const FontInfo &L) -> std::ostream & {
-    String s = L.size_name();
-    if (s != nullptr) fp << s;
-    s = L.shape_name();
-    if (s != nullptr) fp << s;
-    s = L.family_name();
-    if (s != nullptr) fp << s;
-    s = L.series_name();
-    if (s != nullptr) fp << s;
-    return fp;
+    return fp << L.size_name() << L.shape_name() << L.family_name() << L.series_name();
 }
 
 // This unpacks the font.

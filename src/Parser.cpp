@@ -760,7 +760,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
 // finish handling the images,
 void Parser::finish_images() {
     if (the_images.empty()) return;
-    std::string   name = tralics_ns::get_short_jobname() + ".img";
+    std::string   name = file_name + ".img";
     auto          wn   = tralics_ns::get_out_dir(name);
     std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
@@ -1774,7 +1774,7 @@ void Parser::create_aux_file_and_run_pgm() {
     T.dump(B);
     if (B.empty()) return;
     T.dump_data(B);
-    std::string auxname = tralics_ns::get_short_jobname() + ".aux";
+    std::string auxname = file_name + ".aux";
     try {
         std::ofstream(auxname) << B;
     } catch (...) {
@@ -1783,7 +1783,7 @@ void Parser::create_aux_file_and_run_pgm() {
     }
     the_log << "++ executing " << T.cmd << ".\n";
     system(T.cmd.c_str());
-    B = tralics_ns::get_short_jobname() + ".bbl";
+    B = file_name + ".bbl";
     // NOTE: can we use on-the-fly encoding ?
     the_log << "++ reading " << B << ".\n";
     tralics_ns::read_a_file(bbl.lines, B, 1);

@@ -285,14 +285,6 @@ found at http://www.cecill.info.)";
 
 auto tralics_ns::get_out_dir(const std::string &name) -> std::filesystem::path { return out_dir / name; }
 
-MainClass::MainClass() {
-#ifdef CONFDIR
-    conf_path.emplace_back(CONFDIR);
-#else
-    conf_path.emplace_back("../confdir");
-#endif
-}
-
 void MainClass::get_os() {
 #if defined(__alpha)
     cur_os = st_decalpha;

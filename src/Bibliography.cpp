@@ -1,6 +1,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
+#include "tralics/globals.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -38,7 +39,7 @@ void Bibliography::dump_data(Buffer &b) {
     auto n = biblio_src.size();
     b.format("\\bibstyle{{{}}}\n", bib_style);
     b.append("\\bibdata{");
-    if (n == 0) b.append(tralics_ns::get_short_jobname());
+    if (n == 0) b.append(file_name);
     for (size_t i = 0; i < n; i++) {
         if (i > 0) b.append(",");
         b.append(biblio_src[i]);

@@ -3,9 +3,6 @@
 #include "txinline.h"
 #include <fmt/format.h>
 
-std::vector<std::filesystem::path> conf_path;
-
-std::string file_name;
 std::string all_themes;
 std::string everyjob_string;
 
@@ -28,8 +25,6 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     }
     return {};
 }
-
-auto tralics_ns::get_short_jobname() -> std::string { return file_name; }
 
 auto next_label_id() -> std::string {
     static size_t last_label_id = 0;
