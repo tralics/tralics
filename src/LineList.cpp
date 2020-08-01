@@ -164,7 +164,9 @@ auto LineList::get_next(Buffer &b) -> int {
         if (n == -1) interactive = false;
     } else {
         if (empty()) return -1;
-        n = front().to_buffer(b, converted);
+        auto [nn, cv] = front().to_buffer(b);
+        n             = nn;
+        converted     = cv;
         pop_front();
     }
     if (!converted) {
@@ -176,8 +178,7 @@ auto LineList::get_next(Buffer &b) -> int {
 
 auto LineList::get_next_cv(Buffer &b, int w) -> int {
     if (empty()) return -1;
-    bool converted = false; // \todo unused
-    int  n         = front().to_buffer(b, converted);
+    auto [n, cv] = front().to_buffer(b);
     pop_front();
     if (w != 0) {
         the_converter.cur_file_name = file_name;
@@ -189,8 +190,7 @@ auto LineList::get_next_cv(Buffer &b, int w) -> int {
 // same as get_next, without conversion
 auto LineList::get_next_raw(Buffer &b) -> int {
     if (empty()) return -1;
-    bool unused = false;
-    int  n      = front().to_buffer(b, unused);
+    auto [n, cv] = front().to_buffer(b);
     pop_front();
     return n;
 }
@@ -305,11 +305,10 @@ void LineList::parse_and_extract_clean(const std::string &s) {
     int      b    = 0;
     Buffer & B    = local_buf;
     bool     keep = true;
-    bool     cv   = true;
     for (auto &C : *this) {
         B.clear();
-        int n    = C.to_buffer(B, cv);
-        int open = B.see_config_env();
+        auto [n, cv] = C.to_buffer(B);
+        int open     = B.see_config_env();
         b += open;
         if (b < 0) {
             b = 0;
@@ -342,12 +341,9 @@ auto LineList::parse_and_extract(String s) const -> LineList {
     int      b    = 0;
     Buffer & B    = local_buf;
     bool     keep = false;
-    bool     cv   = false;
     for (auto C = begin(); C != end(); ++C) {
-        B.clear();
-        C->to_buffer(B, cv);
-        auto W    = C;
-        int  open = B.see_config_env();
+        B        = *C;
+        int open = B.see_config_env();
         b += open;
         if (open != 0) keep = false; // status changed
         if (b < 0) {
@@ -358,19 +354,19 @@ auto LineList::parse_and_extract(String s) const -> LineList {
             if (B.is_begin_something(s) == 4) keep = true;
             continue;
         }
-        if (keep) res.push_back(*W);
+        if (keep) res.push_back(*C);
     }
     return res;
 }
 
 // Execute all lines that are not in an block via see_main_a
 void LineList::parse_conf_toplevel() const {
-    int    b  = 0;
-    bool   cv = false;
+    int    b = 0;
     Buffer B;
     for (const auto &C : *this) {
         B.clear();
-        init_file_pos = C.to_buffer(B, cv);
+        auto [n, cv]  = C.to_buffer(B);
+        init_file_pos = n;
         b += B.see_config_env();
         if (b == 0) tpage_ns::see_main_a(B, local_buf);
     }

@@ -113,7 +113,6 @@ public:
     static void bad_year(const std::string &given, String wanted);
     static void err_in_entry(String a);
     static auto find_field_pos(const std::string &s) -> field_pos;
-    static auto find_type(const std::string &s) -> entry_type;
     static auto wrong_class(int y, const std::string &Y, bib_from from) -> bool;
 };
 

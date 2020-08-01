@@ -13,11 +13,12 @@ struct Line : public std::string {
         cv = converted;
         return number;
     }
-    auto to_buffer(Buffer &b, bool &C) const -> int {
+
+    auto to_buffer(Buffer &b) const -> std::pair<int, bool> {
         b.append(*this);
-        C = converted;
-        return number;
+        return {number, converted};
     }
+
     void convert_line(size_t wc);
 };
 
