@@ -12,6 +12,7 @@
 // Handle also utf8 input output
 
 #include "txio.h"
+#include "tralics/Converter.h"
 #include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
@@ -98,22 +99,6 @@ void Stats::io_convert_stats() {
     int lc = the_converter.lines_converted;
     if (bl != 0) spdlog::warn("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
     if (lc != 0) spdlog::info("Input conversion: {} line{} converted.", lc, io_ns::plural(lc));
-}
-
-// If an error is signaled on current line, we do not signal again
-// We mark current char as invalid
-auto Converter::new_error() -> bool {
-    if (global_error) return true;
-    bad_lines++;
-    global_error = true;
-    return false;
-}
-
-// Action when starting conversion of line l of current file
-void Converter::start_convert(int l) {
-    cur_file_line = l;
-    global_error  = false;
-    line_is_ascii = true;
 }
 
 // Returns 0 at end of line or error

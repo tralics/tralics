@@ -1,4 +1,5 @@
 #include "tralics/Line.h"
+#include "tralics/Converter.h"
 #include "txio.h"
 
 // This converts a line of a file

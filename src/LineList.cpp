@@ -1,4 +1,5 @@
 #include "tralics/LineList.h"
+#include "tralics/Converter.h"
 #include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
