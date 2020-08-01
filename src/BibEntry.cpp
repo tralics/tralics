@@ -11,6 +11,14 @@
 namespace {
     Buffer biblio_buf3;
 
+    auto want_handle_key(int s, bool last) -> bool {
+        if (s < 4) return true;
+        if (s > 4) return false;
+        if (last) return true;
+        biblio_buf3.append("+");
+        return false;
+    };
+
     class NameSplitter {
         bchar_type *table;
         Bchar       first_name{};
@@ -114,14 +122,6 @@ namespace {
             auto a = last_name.first;
             auto b = last_name.last;
             return b - a == 6 && name_buffer.substr(a, 6) == "others";
-        };
-
-        static auto want_handle_key(int s, bool last) -> bool {
-            if (s < 4) return true;
-            if (s > 4) return false;
-            if (last) return true;
-            biblio_buf3.append("+");
-            return false;
         };
     };
 

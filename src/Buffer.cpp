@@ -69,9 +69,6 @@ void Buffer::push_back_braced(const std::string &s) {
     push_back('}');
 }
 
-// Inserts a character in the buffer. Always adds a null after it.
-void Buffer::push_back(char c) { std::string::push_back(c); }
-
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
 // Same code, but takes a 7 bit character as argument.
@@ -255,7 +252,6 @@ auto Token::tok_to_str() const -> std::string {
 
 // returns true if a space could be added after the token
 auto Buffer::push_back(Token T) -> bool {
-    static Buffer        Tmp;
     output_encoding_type enc = the_main->log_encoding;
     if (T.is_null()) {
         append("\\invalid.");
@@ -280,8 +276,7 @@ auto Buffer::push_back(Token T) -> bool {
         return the_parser.has_letter_catcode(T.char_val());
     }
     if (T.is_in_hash()) {
-        Tmp.clear();
-        Tmp.append(the_parser.hash_table[T.hash_loc()]);
+        Buffer Tmp = the_parser.hash_table[T.hash_loc()];
         append(Tmp.convert_to_log_encoding());
         return true;
     }
@@ -627,8 +622,7 @@ auto Buffer::string_delims() -> bool {
 // with a final slash; returns the next item; Retval false if no string found
 
 auto Buffer::slash_separated(std::string &a) -> bool {
-    static Buffer tmp;
-    tmp.clear();
+    Buffer tmp;
     size_t p = 0;
     skip_sp_tab();
     if (head() == 0) return false;

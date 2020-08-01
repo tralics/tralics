@@ -172,8 +172,8 @@ public:
 
     auto push_back(Token T) -> bool;
 
+    using std::string::push_back;
     void push_back(char32_t c);
-    void push_back(char c);
     void push_back(uchar c);
     void push_back(ScaledInt v, glue_spec unit);
     void push_back(const SthInternal &x);

@@ -342,9 +342,8 @@ void Bibtex::err_in_name(String a, long i) {
 // Returns next line of the .bib file. Error if EOF and what.
 // Throws if EOF.
 void Bibtex::next_line(bool what) {
-    static Buffer scratch;
-    scratch.clear();
-    int n = in_lines.get_next(scratch);
+    Buffer scratch;
+    int    n = in_lines.get_next(scratch);
     if (n > 0)
         cur_bib_line = n;
     else {
