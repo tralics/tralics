@@ -10,6 +10,7 @@
 
 // This file contains the TeX scanner of tralics
 
+#include "tralics/InputStack.h"
 #include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/TexFonts.h"
@@ -20,6 +21,41 @@
 #include <fmt/ostream.h>
 
 namespace {
+    // data structure associated to \input3=some_file.
+    struct FileForInput {
+        bool     is_open{false}; ///< is this file active ?
+        LineList lines;          ///< the lines that are not yet read by TeX
+        Buffer   cur_line;       ///< the current line
+        int      line_no{0};     ///< the current line number
+
+        void open(const std::string &file, const std::filesystem::path &fn, bool action);
+        void close();
+    };
+
+    // Open a file for \openin. if action is false, the file does not exist
+    // No on-the fly conversion here
+    void FileForInput::open(const std::string &file, const std::filesystem::path &fn, bool action) {
+        if (!action) {
+            Logger::finish_seq();
+            the_log << "++ Cannot open file " << file << " for input\n";
+        } else {
+            tralics_ns::read_a_file(lines, fn, 1);
+            is_open = true;
+            cur_line.clear();
+            line_no = 0;
+            lines.after_open();
+        }
+    }
+
+    // This closes a file opened by \openin
+    void FileForInput::close() {
+        if (is_open) {
+            is_open = false;
+            lines.before_close(false);
+            lines.clear();
+        }
+    }
+
     Buffer                                      scratch;                  // See insert_string
     TexFonts                                    tfonts;                   // the font table
     std::vector<InputStack *>                   cur_input_stack;          // the input streams
@@ -137,34 +173,10 @@ void Parser::M_extension(int cc) {
 
 // Section 2. input file handling
 
-// This closes a file opened by \openin
-void FileForInput::close() {
-    if (is_open) {
-        is_open = false;
-        lines.before_close(false);
-        lines.clear();
-    }
-}
-
 // This implements \ifeof
 auto Parser::is_input_open() -> bool {
     auto ch = scan_int(cur_tok, max_openin, "input channel number");
     return !tex_input_files[ch].is_open;
-}
-
-// Open a file for \openin. if action is false, the file does not exist
-// No on-the fly conversion here
-void FileForInput::open(const std::string &file, const std::filesystem::path &fn, bool action) {
-    if (!action) {
-        Logger::finish_seq();
-        the_log << "++ Cannot open file " << file << " for input\n";
-    } else {
-        tralics_ns::read_a_file(lines, fn, 1);
-        is_open = true;
-        cur_line.clear();
-        line_no = 0;
-        lines.after_open();
-    }
 }
 
 // This puts in cur_input_stack a new slot, containing the current state
@@ -207,7 +219,7 @@ void Parser::pop_input_stack(bool vb) {
         }
         return;
     }
-    InputStack *W = cur_input_stack.back();
+    auto *W = cur_input_stack.back();
     if (vb) lines.before_close(true);
     set_cur_line(W->line_no);
     state = W->state;
@@ -236,13 +248,6 @@ void Parser::pop_input_stack(bool vb) {
         the_log << "++ Input stack -- " << n << " " << W->name << "\n";
     }
     delete W;
-}
-
-// Make sure no character can be obtained from the stream
-void InputStack::destroy() {
-    TL.clear();
-    line.clear();
-    L.clear();
 }
 
 // This kills all pending input
