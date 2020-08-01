@@ -3,12 +3,12 @@
 
 // This closes an output channel.
 void TexOutStream::close(size_t chan) {
-    if ((chan <= max_openout) && write_file[chan].is_open()) { write_file[chan].close(); }
+    if ((chan <= max_openout) && at(chan).is_open()) { at(chan).close(); }
 }
 
 // This opens an output channel.
 // What if the file cannot be opened ?
 void TexOutStream::open(size_t chan, const std::string &fn) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
-    write_file[chan] = std::ofstream(tralics_ns::get_out_dir(fn));
+    at(chan) = std::ofstream(tralics_ns::get_out_dir(fn));
 }

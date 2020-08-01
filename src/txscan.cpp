@@ -143,7 +143,7 @@ void Parser::M_extension(int cc) {
         auto s = string_to_write(chan);
         if (uchan == write18_slot)
             system(s.c_str());
-        else if (tex_out_stream.write_file[uchan].is_open())
+        else if (tex_out_stream[uchan].is_open())
             tex_out_stream.write(uchan, s);
         else if (uchan == negative_out_slot)
             the_log << s;
