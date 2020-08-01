@@ -14,8 +14,10 @@
 
 // We also declare some global variables here
 
+#include "tralics/LineList.h"
 #include "tralics/MainClass.h"
 #include "txparam.h"
+#include <filesystem>
 
 // See comments in tralics.cpp where these variables are defined
 namespace main_ns {

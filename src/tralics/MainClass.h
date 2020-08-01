@@ -1,5 +1,7 @@
 #pragma once
-#include "../txio.h"
+#include "LineList.h"
+#include <filesystem>
+#include <optional>
 
 class Stack;
 

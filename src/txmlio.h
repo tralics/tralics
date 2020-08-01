@@ -1,5 +1,7 @@
 #pragma once
-#include "txio.h"
+#include "tralics/Buffer.h"
+#include "tralics/LineList.h"
+#include <string>
 
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008

@@ -11,8 +11,6 @@
 
 // This is one include  file for the tralics software
 
-#include "txio.h"
-
 // parameterised data
 class ParamDataSlot {
 public:

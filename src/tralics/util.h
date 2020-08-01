@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+void readline(char *buffer, size_t screen_size);
+
 auto bt_to_string(boundary_type v) -> std::string;
 auto find_counter(const std::string &s) -> int;
 auto is_m_font(symcodes cmd) -> bool;

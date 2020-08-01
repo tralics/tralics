@@ -1,5 +1,7 @@
 #pragma once
 #include "../txinline.h"
+#include "LineList.h"
+#include <fstream>
 
 class Bbl {
 private:

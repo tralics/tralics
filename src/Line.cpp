@@ -1,6 +1,5 @@
 #include "tralics/Line.h"
 #include "tralics/Converter.h"
-#include "txio.h"
 
 // This converts a line of a file
 void Line::convert_line(size_t wc) {

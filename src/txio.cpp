@@ -11,7 +11,6 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
-#include "txio.h"
 #include "tralics/Converter.h"
 #include "tralics/Logger.h"
 #include "tralics/Saver.h"
