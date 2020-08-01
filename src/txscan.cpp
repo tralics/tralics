@@ -14,6 +14,7 @@
 #include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/TexFonts.h"
+#include "tralics/TexOutStream.h"
 #include "tralics/util.h"
 #include "txinline.h"
 #include "txmath.h"
@@ -92,26 +93,6 @@ namespace io_ns {
 // max_openin=max_openout=15 is nb_input_channels -1
 // There are 3 pseudo output channels 16, 17, 18, always closed
 // and no file attached to them
-
-TexOutStream::TexOutStream() {
-    for (bool &i : write_open) i = false;
-}
-
-// This closes an output channel.
-void TexOutStream::close(size_t chan) {
-    if ((chan <= max_openout) && write_open[chan]) {
-        write_file[chan].close();
-        write_open[chan] = false;
-    }
-}
-
-// This opens an output channel.
-// What if the file cannot be opened ?
-void TexOutStream::open(size_t chan, const std::string &fn) {
-    if (chan < 0 || chan > max_openout) return; // This cannot happen
-    write_file[chan] = std::ofstream(tralics_ns::get_out_dir(fn));
-    write_open[chan] = true;
-}
 
 // This gets the object to \write in local_buf.
 // A new line is added, except if chan is 18 or 19
