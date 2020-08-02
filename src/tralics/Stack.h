@@ -1,6 +1,6 @@
 #pragma once
-#include "../txstack.h"
 #include "ArrayInfo.h"
+#include "Xml.h"
 
 class Xml;
 

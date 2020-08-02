@@ -13,6 +13,7 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/Xml.h"
 #include "tralics/util.h"
 #include <ctre.hpp>
 #include <fmt/format.h>
