@@ -1,31 +1,14 @@
 #pragma once
-#include "tralics/Buffer.h"
-#include "tralics/LineList.h"
-#include <string>
-
-// -*- C++ -*-
-// TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2006, 2007,2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-enum x_type { xt_letter, xt_space, xt_digit, xt_ok_first, xt_other, xt_invalid };
-
-class EntityDef {
-    std::string name;
-    std::string value;
-
-public:
-    EntityDef(std::string a, std::string b) : name(std::move(a)), value(std::move(b)) {}
-    [[nodiscard]] auto has_name(const std::string &x) const -> bool { return x == name; }
-    auto               get_val() -> std::string { return value; }
-};
+#include "Buffer.h"
+#include "LineList.h"
 
 class XmlIO {
+    enum x_type { xt_letter, xt_space, xt_digit, xt_ok_first, xt_other, xt_invalid };
+
+    struct EntityDef {
+        std::string name, value;
+    };
+
     Buffer                  B; // holds current element
     Buffer                  aux;
     Buffer                  line_buffer; // holds current line

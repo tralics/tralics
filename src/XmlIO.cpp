@@ -1,22 +1,8 @@
-// Tralics, a LaTeX to XML translator.
-// Copyright (C) INRIA/apics/marelle (Jose' Grimm) 2002-2011
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-// This file contains the XML parser of tralics
-
-#include "txmlio.h"
+#include "tralics/XmlIO.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
 #include "txinline.h"
-
-std::string xxx;
 
 namespace {
     inline auto is_spacer(char32_t c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
@@ -188,12 +174,12 @@ void XmlIO::flush_buffer() {
 // Scans a Name with a simplified syntax
 void XmlIO::scan_name() {
     B.clear();
-    char32_t x = XmlIO::peek_char();
+    char32_t x = peek_char();
     // x should be Letter underscore colon
     B.push_back(x);
     skip_char();
     for (;;) {
-        char32_t xx = XmlIO::peek_char();
+        char32_t xx = peek_char();
         if (is_ascii(xx)) {
             x_type w = Type[xx];
             if (w == xt_space || w == xt_invalid) return;
@@ -208,7 +194,7 @@ void XmlIO::scan_name() {
 void XmlIO::scan_name(uchar c) {
     B.clear();
     for (;;) {
-        char32_t x = XmlIO::peek_char();
+        char32_t x = peek_char();
         if (x == c || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -219,7 +205,7 @@ void XmlIO::scan_name(uchar c) {
 void XmlIO::scan_name(uchar c1, uchar c2) {
     B.clear();
     for (;;) {
-        char32_t x = XmlIO::peek_char();
+        char32_t x = peek_char();
         if (x == c1 || x == c2 || is_spacer(x)) return;
         skip_char();
         B.push_back(x);
@@ -286,7 +272,7 @@ void XmlIO::parse_att_val() {
     skip_space();
     if (cur_char != '=') {
         error("Equals sign expected");
-        std::cout << " After " << xxx;
+        std::cout << " After {}";
         std::cout << " got " << to_utf8(cur_char) << "\n";
     }
     skip_char();
@@ -305,7 +291,7 @@ void XmlIO::parse_quoted() {
     skip_char();
     B.clear();
     for (;;) {
-        char32_t x = XmlIO::next_char();
+        char32_t x = next_char();
         if (x == delim) break;
         B.push_back(x);
     }
@@ -542,7 +528,7 @@ void XmlIO::parse_dec_entity() {
     if (!parse_sys_pub()) {
         parse_quoted();
         aux += " '" + B + "'";
-        if (parameter) entities.emplace_back(name, B);
+        if (parameter) entities.push_back({name, B});
     }
     skip_space();
     // We might have NDATA here, if parameter==false
@@ -737,9 +723,9 @@ auto XmlIO::expand_PEReference() -> bool {
     bool        ok = false;
     auto        n  = entities.size();
     for (size_t i = 0; i < n; i++) {
-        if (entities[i].has_name(s)) {
+        if (entities[i].name == s) {
             B.clear();
-            B.append(entities[i].get_val());
+            B.append(entities[i].value);
             ok = true;
             break;
         }

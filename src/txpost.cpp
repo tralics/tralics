@@ -116,7 +116,7 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
 // In ref_list, we have  (e,v), (e,v), (e,v) etc
 // where E is the xid of a <ref> element, and V is an entry in the
 // hash table of the label. After the translation is complete,
-// we know the value of the label, and can add the attribute target=xxx.
+// we know the value of the label, and can add the attribute target=...
 void Parser::check_all_ids() {
     for (auto &i : ref_list) {
         auto        E = i.first;
