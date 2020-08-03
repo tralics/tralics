@@ -148,7 +148,7 @@ private:
     void        mkcfg();
     void        more_boot() const; ///< Finish bootstrapping
     void        one_bib_file(bib_from pre, std::string bib);
-    void        open_config_file(const std::string &f);
+    void        open_config_file(std::filesystem::path f);
     void        open_log(); ///< Opens the log file, prints some information
     void        open_main_file();
     void        out_gathered_math();

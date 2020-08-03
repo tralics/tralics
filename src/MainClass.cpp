@@ -789,8 +789,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     return main_ns::search_in_confdir(rc);
 }
 
-void MainClass::open_config_file(const std::string &f) { // \todo filesystem
-    Buffer B(f);                                         // \todo without Buffer
+void MainClass::open_config_file(std::filesystem::path f) {
     if (f.empty()) {
         config_file.insert("#comment", true);
         spdlog::warn("Dummy default configuration file used.");
@@ -798,23 +797,19 @@ void MainClass::open_config_file(const std::string &f) { // \todo filesystem
     }
     tralics_ns::read_a_file(config_file, f, 0);
     config_file.normalise_final_cr();
-    spdlog::trace("Read configuration file {}", B);
-    if (!f.ends_with(".tcf")) return;
-    // special case where the config file is a tcf file
+    spdlog::trace("Read configuration file {}", f);
+    if (f.extension() != ".tcf") return;
+
     tcf_file = f;
-    B.remove_last(4);
-    auto n  = B.size();
-    auto k  = B.last_slash();
-    auto kk = k ? *k + 1 : 0UL;
-    for (size_t i = n - 1;; i--) {
-        if (i <= kk) break;
-        if (!is_digit(B[i])) {
-            B.resize(i + 1);
+    f.replace_extension();
+    dtype = f.filename();
+    for (size_t i = dtype.size() - 1; i > 0; --i) {
+        if (!is_digit(dtype[i])) {
+            dtype.resize(i + 1);
             break;
         }
     }
-    dtype = B.substr(kk);
-    the_log << "Using tcf type " << dtype << "\n";
+    spdlog::trace("Using tcf type {}", dtype);
 }
 
 void MainClass::get_type_from_config() {
