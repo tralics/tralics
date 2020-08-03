@@ -8,6 +8,7 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <filesystem>
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
@@ -129,7 +130,8 @@ found at http://www.cecill.info.)";
     }
 
     /// If B holds apics2006, puts apics in B, 2006 in C, returns 2006
-    auto extract_year(Buffer &B, Buffer &C) -> int {
+    // \todo refactor or deprecate with RA
+    auto extract_year(std::string &B, std::string &C) -> int {
         size_t m = B.size(), n = m, k = 0;
         while (k < 4 && n > 0 && is_digit(B[n - 1])) {
             n--;
@@ -975,10 +977,9 @@ void MainClass::see_name1() {
         y = extract_year(B, C);
         check_year(y, C, dclass, year_string);
     }
-    auto k = B.last_slash(); // remove the directory part \todo std::filesyste,
-    if (k) { B = B.substr(*k + 1); }
-    the_parser.the_projetval = B; // this is apics
-    if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
+    B                        = std::filesystem::path(std::string(B)).filename(); // \todo without Buffer
+    the_parser.the_projetval = B;                                                // this is apics
+    if (handling_ra) { // \todo handling_ra should disappear from tralics alltogether
         check_lowercase(B);
         year_string = C;
         out_name    = B; // This is apics
@@ -986,11 +987,8 @@ void MainClass::see_name1() {
         the_parser.set_ra_year(y);
         return;
     }
-    if (out_name.empty()) { // might be given as an option
-        out_name = no_ext;
-        B        = no_ext; // remove the directory part
-        auto kk  = B.last_slash();
-        if (kk) out_name = B.substr(*kk + 1); // This is apics2003
+    if (out_name.empty()) {                                  // might be given as an option
+        out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();

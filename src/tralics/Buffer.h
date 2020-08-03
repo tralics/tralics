@@ -42,7 +42,6 @@ public:
     [[nodiscard]] auto is_good_ascii() const -> bool;                         ///< Is there no control or CRLF? (>128 ok, for UTF8)
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                     ///< It the char at `j` a space?
     [[nodiscard]] auto is_special_end() const -> bool;                        ///< Is the current char `\\n`, `#` or `%`?
-    [[nodiscard]] auto last_slash() const -> std::optional<size_t>;           ///< Locate the last `/`, if any \todo deprecated
     [[nodiscard]] auto next_non_space(size_t j) const -> size_t;              ///< Locate next non-space char after `j`
     [[nodiscard]] auto see_config_env() const -> int;                         ///< Do we start with `Begin` or `End`?
     [[nodiscard]] auto single_char() const -> char;                           ///< If only one (non-space) char, return it
@@ -134,7 +133,6 @@ public:
     void push_back_real_utf8(char32_t c);
     void push_back_xml_char(uchar c);
     void push_back_unless_punct(char c);
-    void append_unless_ends_with(const std::string &s);
     auto remove_digits(const std::string &s) -> std::string;
     auto remove_space(const std::string &x) -> std::string;
     void remove_last_space();

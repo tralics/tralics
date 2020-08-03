@@ -738,18 +738,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-// returns location of last slash in the buffer
-auto Buffer::last_slash() const -> std::optional<size_t> {
-    for (size_t i = size(); i > 0; --i)
-        if (at(i - 1) == '/') { return i - 1; }
-    return {};
-}
-
-// Inserts the string s is at the end of the buffer unless there
-void Buffer::append_unless_ends_with(const std::string &s) {
-    if (!ends_with(s)) append(s);
-}
-
 auto Buffer::contains(const std::string &s) const -> bool { return find(s) != std::string::npos; }
 
 auto Buffer::is_spaceh(size_t j) const -> bool { return is_space((*this)[j]); }
