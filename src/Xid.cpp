@@ -86,3 +86,9 @@ void Xid::add_special_att(const std::string &S, Buffer &B) {
 }
 
 auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_att(); }
+
+auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
+    AttList &L = idx.get_att();
+    if (auto k = L.lookup(m)) return encode(L.get_val(*k));
+    return {};
+}

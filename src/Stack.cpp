@@ -532,9 +532,9 @@ void Stack::finish_cell(int w) {
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
     int        n       = 0;
-    if (shbuf.install_att(cid, the_names["cols"])) {
+    if (auto a = fetch_att(cid, the_names["cols"])) {
         try {
-            n = std::stoi(shbuf);
+            n = std::stoi(*a);
         } catch (...) { spdlog::warn("Could not parse `{}' as an integer", shbuf); }
     }
     if (n != 0) {

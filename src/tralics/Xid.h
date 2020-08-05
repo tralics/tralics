@@ -1,5 +1,6 @@
 #pragma once
 #include "types.h"
+#include <optional>
 #include <string>
 
 struct AttList;
@@ -28,3 +29,5 @@ public:
 
 inline auto operator==(const Xid &a, const Xid &b) -> bool { return a.value == b.value; }
 auto        operator<<(std::ostream &fp, Xid X) -> std::ostream &;
+
+auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string>;

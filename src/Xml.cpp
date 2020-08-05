@@ -972,9 +972,10 @@ void Xml::add_nl() {
 // the default value is 1
 auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
     if (is_xmlc()) return 0;
-    if (!has_name(the_names["cell"])) return -1;             // not a cell
-    if (!shbuf.install_att(id, the_names["cols"])) return 1; // no property, default is 1
-    auto o = shbuf.int_val();
+    if (!has_name(the_names["cell"])) return -1; // not a cell
+    auto a = fetch_att(id, the_names["cols"]);
+    if (!a) return 1;              // no property, default is 1
+    auto o = Buffer(*a).int_val(); // \todo without Buffer
     return o ? to_signed(*o) : -1;
 }
 

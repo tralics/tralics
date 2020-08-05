@@ -430,7 +430,6 @@ void BibEntry::call_type() {
     out_something(fp_doi);
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
-        Buffer &B = biblio_buf1;
         if (s.starts_with("\\rrrt"))
             bbl.push_back(s);
         else {

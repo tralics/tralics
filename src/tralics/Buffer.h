@@ -86,7 +86,6 @@ public:
 
     // Those are still unsorted as refactoring proceeds
 
-    auto install_att(Xid idx, const std::string &match) -> bool;
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
     void interpret_bibtex_list();
     void interpret_bibtex_extension_list();

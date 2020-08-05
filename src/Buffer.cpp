@@ -771,17 +771,6 @@ void Buffer::skip_letter_dig_dot_slash() {
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
-// Puts in the buffer the value of the attribute M of element idx
-// returns false if there is no such value.
-auto Buffer::install_att(Xid idx, const std::string &m) -> bool {
-    AttList &L = idx.get_att();
-    auto     k = L.lookup(m);
-    if (!k) return false;
-    clear();
-    append(encode(L.get_val(*k)));
-    return true;
-}
-
 // Puts the attribute list in the buffer
 // We can have Foo="bar'", printed as Foo='bar&apos;'
 // The case Foo'bar="&gee" is not handled.
