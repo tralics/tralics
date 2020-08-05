@@ -39,7 +39,6 @@ public:
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;              ///< Try to parse the contents as an integer
     [[nodiscard]] auto is_all_ascii() const -> bool;                          ///< Is everything ASCII and not CRLF?
     [[nodiscard]] auto is_and(size_t k) const -> bool;                        ///< Is the word at `k` an `and`?
-    [[nodiscard]] auto is_good_ascii() const -> bool;                         ///< Is there no control or CRLF? (>128 ok, for UTF8)
     [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                     ///< It the char at `j` a space?
     [[nodiscard]] auto is_special_end() const -> bool;                        ///< Is the current char `\\n`, `#` or `%`?
     [[nodiscard]] auto next_non_space(size_t j) const -> size_t;              ///< Locate next non-space char after `j`
@@ -60,7 +59,7 @@ public:
     auto convert_to_log_encoding() -> std::string; ///< Convert to logging encoding
 
     // Mutating methods, affecting both the data and ptrs
-    void insert_string(const Buffer &s); ///< Reset, insert s minus CRLF, remove trailing spaces
+    void insert_without_crlf(const Buffer &s); ///< Reset, insert s minus CRLF, remove trailing spaces
 
     // Those have void return type but return parameters
     void fill_table(bchar_type *table); ///< Not sure what this does?
@@ -87,7 +86,6 @@ public:
 
     // Those are still unsorted as refactoring proceeds
 
-    auto insert_break(const std::string &x) -> std::string;
     auto install_att(Xid idx, const std::string &match) -> bool;
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
     void interpret_bibtex_list();
@@ -134,7 +132,6 @@ public:
     void push_back_xml_char(uchar c);
     void push_back_unless_punct(char c);
     auto remove_digits(const std::string &s) -> std::string;
-    auto remove_space(const std::string &x) -> std::string;
     void remove_last_space();
     void remove_space_at_end();
     void remove_spec_chars(bool url, Buffer &B);

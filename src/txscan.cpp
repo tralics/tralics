@@ -57,7 +57,7 @@ namespace {
         }
     }
 
-    Buffer                                      scratch;                  // See insert_string
+    Buffer                                      scratch;                  // See insert_without_crlf
     TexFonts                                    tfonts;                   // the font table
     std::vector<InputStack *>                   cur_input_stack;          // the input streams
     bool                                        name_in_progress = false; // see the source of TeX
@@ -817,12 +817,10 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
     }
 }
 
-void Buffer::insert_string(const Buffer &s) {
+void Buffer::insert_without_crlf(const Buffer &s) {
     clear();
-    for (size_t j = 0; j < s.size(); j++) {
-        char c = s[j];
+    for (auto c : s)
         if (c != '\n' && c != '\r') push_back(c);
-    }
     while (!empty() && back() == ' ') pop_back();
     ptrs.b = 0;
 }
@@ -833,7 +831,7 @@ void Buffer::insert_string(const Buffer &s) {
 // we print the line in the log file.
 void Parser::store_new_line(int n, bool vb) {
     set_cur_line(n);
-    input_buffer.insert_string(scratch);
+    input_buffer.insert_without_crlf(scratch);
     input_line          = input_buffer.codepoints();
     input_buffer.ptrs.b = 0;
     if (vb) {

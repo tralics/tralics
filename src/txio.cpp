@@ -77,16 +77,6 @@ auto Buffer::is_all_ascii() const -> bool {
     return true;
 }
 
-// returns false if some unprintable characters appear
-// Non-ascii chars are printable (assumes buffer is valid UTF8).
-auto Buffer::is_good_ascii() const -> bool {
-    for (size_t i = 0; i < size(); i++) {
-        auto c = at(i);
-        if (c < 32 && c != '\t' && c != '\n') return false;
-    }
-    return true;
-}
-
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers
 
@@ -475,7 +465,7 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
 
 auto Buffer::convert_to_log_encoding() -> std::string {
     output_encoding_type T = the_main->log_encoding;
-    if (is_all_ascii() || (T == en_utf8 && is_good_ascii())) return data();
+    if (T == en_utf8 || is_all_ascii()) return data();
     auto old_ptr               = ptrs.b;
     ptrs.b                     = 0;
     the_converter.global_error = false;

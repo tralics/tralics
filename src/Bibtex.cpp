@@ -352,7 +352,7 @@ void Bibtex::next_line(bool what) {
         throw Berror();
     }
     the_parser.set_cur_line(n);
-    inbuf.insert_string(scratch);
+    inbuf.insert_without_crlf(scratch);
     input_line     = inbuf.codepoints();
     input_line_pos = 0;
 }

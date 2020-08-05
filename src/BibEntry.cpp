@@ -195,6 +195,23 @@ namespace {
         default: return "cstb_unknown";
         }
     }
+
+    auto remove_space(const std::string &s) -> std::string {
+        std::string res;
+        for (auto c : s)
+            if (c != ' ') res.push_back(c);
+        return res;
+    }
+
+    auto insert_break(const std::string &x) -> std::string {
+        std::string res = "{\\url{";
+        for (auto c : x) {
+            if (c == ' ' && main_ns::bib_allow_break) res.append("\\allowbreak");
+            res.push_back(c);
+        }
+        res.append("}}");
+        return res;
+    }
 } // namespace
 
 // This returns a prefix from ra_pretable, according to from and type_int.
@@ -419,8 +436,8 @@ void BibEntry::call_type() {
         else {
             bbl.push_back("\\csname @href\\endcsname");
             //    string S = hack_bib_space(s);
-            bbl.push_back_braced(B.remove_space(s));
-            bbl.push_back(B.insert_break(s));
+            bbl.push_back_braced(remove_space(s));
+            bbl.push_back(insert_break(s));
         }
         bbl.newline();
     }

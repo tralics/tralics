@@ -912,30 +912,6 @@ auto Buffer::special_convert(bool init) -> std::string {
     return bb1;
 }
 
-// In the bibliobraphy \url="foo bar"
-// gives \href{foobar}{\url{foo\allowbreak bar}}
-// We handle here the first string
-auto Buffer::remove_space(const std::string &x) -> std::string {
-    auto n = x.size();
-    clear();
-    for (size_t i = 0; i < n; i++)
-        if (x[i] != ' ') push_back(x[i]);
-    return *this;
-}
-
-// We create here the second string
-auto Buffer::insert_break(const std::string &x) -> std::string {
-    auto n = x.size();
-    clear();
-    append("{\\url{");
-    for (size_t i = 0; i < n; i++) {
-        if (x[i] == ' ' && main_ns::bib_allow_break) append("\\allowbreak");
-        push_back(x[i]);
-    }
-    append("}}");
-    return *this;
-}
-
 // In case of Lo{\"i}c, repeated calls will set head() to L, o, { and c.
 // It works also in the case of non-ascii characters
 void Buffer::next_bibtex_char() {
