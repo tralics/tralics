@@ -1830,178 +1830,165 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
     }
 }
 
-auto Buffer::is_here_case(String s) -> bool {
-    auto n = strlen(s);
-    for (size_t i = 0; i < n; i++) {
-        char c = (*this)[ptrs.b + i];
-        if (is_upper_case(c)) c += 'a' - 'A';
-        if (c != s[i]) return false;
-    }
-    char c = (*this)[ptrs.b + n];
-    if (is_letter(c)) return false;
-    ptrs.b += n;
-    return true;
-}
-
 // True if ok. Assume cur char is non-space
 auto FormatDate::scan_a_month(Buffer &B, int &res) -> bool {
-    if (B.is_here_case("janvier")) {
+    if (B.skip_word_ci("janvier")) {
         res = -1;
         return true;
     }
-    if (B.is_here_case("januar")) {
+    if (B.skip_word_ci("januar")) {
         res = -1;
         return true;
     }
-    if (B.is_here_case("jan")) {
+    if (B.skip_word_ci("jan")) {
         res = -1;
         return true;
     }
-    if (B.is_here_case("fevrier")) {
+    if (B.skip_word_ci("fevrier")) {
         res = -2;
         return true;
     }
-    if (B.is_here_case("f\303\251vrier")) {
+    if (B.skip_word_ci("f\303\251vrier")) {
         res = -2;
         return true;
     }
-    if (B.is_here_case("februar")) {
+    if (B.skip_word_ci("februar")) {
         res = -2;
         return true;
     }
-    if (B.is_here_case("feb")) {
+    if (B.skip_word_ci("feb")) {
         res = -2;
         return true;
     }
-    if (B.is_here_case("fev")) {
+    if (B.skip_word_ci("fev")) {
         res = -2;
         return true;
     }
-    if (B.is_here_case("mars")) {
+    if (B.skip_word_ci("mars")) {
         res = -3;
         return true;
     }
-    if (B.is_here_case("march")) {
+    if (B.skip_word_ci("march")) {
         res = -3;
         return true;
     }
-    if (B.is_here_case("mar")) {
+    if (B.skip_word_ci("mar")) {
         res = -3;
         return true;
     }
-    if (B.is_here_case("avril")) {
+    if (B.skip_word_ci("avril")) {
         res = -4;
         return true;
     }
-    if (B.is_here_case("april")) {
+    if (B.skip_word_ci("april")) {
         res = -4;
         return true;
     }
-    if (B.is_here_case("apr")) {
+    if (B.skip_word_ci("apr")) {
         res = -4;
         return true;
     }
-    if (B.is_here_case("avr")) {
+    if (B.skip_word_ci("avr")) {
         res = -4;
         return true;
     }
-    if (B.is_here_case("mai")) {
+    if (B.skip_word_ci("mai")) {
         res = -5;
         return true;
     }
-    if (B.is_here_case("may")) {
+    if (B.skip_word_ci("may")) {
         res = -5;
         return true;
     }
-    if (B.is_here_case("juin")) {
+    if (B.skip_word_ci("juin")) {
         res = -6;
         return true;
     }
-    if (B.is_here_case("june")) {
+    if (B.skip_word_ci("june")) {
         res = -6;
         return true;
     }
-    if (B.is_here_case("jun")) {
+    if (B.skip_word_ci("jun")) {
         res = -6;
         return true;
     }
-    if (B.is_here_case("juillet")) {
+    if (B.skip_word_ci("juillet")) {
         res = -7;
         return true;
     }
-    if (B.is_here_case("july")) {
+    if (B.skip_word_ci("july")) {
         res = -7;
         return true;
     }
-    if (B.is_here_case("jul")) {
+    if (B.skip_word_ci("jul")) {
         res = -7;
         return true;
     }
-    if (B.is_here_case("aout")) {
+    if (B.skip_word_ci("aout")) {
         res = -8;
         return true;
     }
-    if (B.is_here_case("ao\303\273t")) {
+    if (B.skip_word_ci("ao\303\273t")) {
         res = -8;
         return true;
     }
-    if (B.is_here_case("august")) {
+    if (B.skip_word_ci("august")) {
         res = -8;
         return true;
     }
-    if (B.is_here_case("aug")) {
+    if (B.skip_word_ci("aug")) {
         res = -8;
         return true;
     }
-    if (B.is_here_case("septembre")) {
+    if (B.skip_word_ci("septembre")) {
         res = -9;
         return true;
     }
-    if (B.is_here_case("september")) {
+    if (B.skip_word_ci("september")) {
         res = -9;
         return true;
     }
-    if (B.is_here_case("sep")) {
+    if (B.skip_word_ci("sep")) {
         res = -9;
         return true;
     }
-    if (B.is_here_case("octobre")) {
+    if (B.skip_word_ci("octobre")) {
         res = -10;
         return true;
     }
-    if (B.is_here_case("october")) {
+    if (B.skip_word_ci("october")) {
         res = -10;
         return true;
     }
-    if (B.is_here_case("oct")) {
+    if (B.skip_word_ci("oct")) {
         res = -10;
         return true;
     }
-    if (B.is_here_case("novembre")) {
+    if (B.skip_word_ci("novembre")) {
         res = -11;
         return true;
     }
-    if (B.is_here_case("novembre")) {
+    if (B.skip_word_ci("novembre")) {
         res = -11;
         return true;
     }
-    if (B.is_here_case("nov")) {
+    if (B.skip_word_ci("nov")) {
         res = -11;
         return true;
     }
-    if (B.is_here_case("decembre")) {
+    if (B.skip_word_ci("decembre")) {
         res = -12;
         return true;
     }
-    if (B.is_here_case("december")) {
+    if (B.skip_word_ci("december")) {
         res = -12;
         return true;
     }
-    if (B.is_here_case("dec")) {
+    if (B.skip_word_ci("dec")) {
         res = -12;
         return true;
     }
-    if (B.is_here_case("d\303\251cembre")) {
+    if (B.skip_word_ci("d\303\251cembre")) {
         res = -12;
         return true;
     }

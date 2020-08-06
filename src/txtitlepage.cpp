@@ -138,9 +138,9 @@ auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
     Toi.reset();
     char c = 0;
     if (!in.tp_next_char(c)) return tpi_noval;
-    if (c == 'a' && in.is_here("lias")) return tpi_alias;
-    if (c == 'e' && in.is_here("xecute")) return tpi_execute;
-    if (c == 'a' && in.is_here("ction")) return tpi_execute;
+    if (c == 'a' && in.skip_string("lias")) return tpi_alias;
+    if (c == 'e' && in.skip_string("xecute")) return tpi_execute;
+    if (c == 'a' && in.skip_string("ction")) return tpi_execute;
     if (!is_tp_delim(c)) {
         Toi.set_p1(c);
         if (!in.tp_next_char(c)) return tpi_noval;

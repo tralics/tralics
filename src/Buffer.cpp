@@ -340,38 +340,6 @@ void Buffer::insert_token(Token T, bool sw) {
     }
 }
 
-// In case of error, this puts a token in the XML tree
-auto Buffer::convert_for_xml_err(Token T) -> std::string {
-    clear();
-    if (T.is_null())
-        append("\\invalid.");
-    else if (T.char_or_active()) {
-        // We simplify the algorithm by printing the character as is
-        char32_t c = T.char_val();
-        if (c == 0)
-            append("^^@");
-        else
-            push_back_real_utf8(c);
-    } else {
-        push_back('\\');
-        if (T.active_or_single()) {
-            char32_t c = T.char_val();
-            if (c == 0)
-                append("^^@");
-            else
-                push_back_real_utf8(c);
-        } else if (T.is_in_hash()) {
-            auto s = the_parser.hash_table[T.hash_loc()];
-            if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; }))
-                append(s);
-            else
-                for (auto c : s) push_back_xml_char(uchar(c));
-        } else
-            append("csname\\endcsname");
-    }
-    return std::string(*this);
-}
-
 // Print the scaled int V as a floating point in the buffer.
 // This is the algorithm of Knuth
 void Buffer::push_back(ScaledInt V, glue_spec unit) {
@@ -541,9 +509,22 @@ void Buffer::push_back_Roman(long n) {
 }
 
 // True is s is at ptrs.b. If so, updates ptrs.b
-auto Buffer::is_here(const std::string &s) -> bool {
+auto Buffer::skip_string(const std::string &s) -> bool {
     if (!substr(ptrs.b).starts_with(s)) return false;
     ptrs.b += s.size();
+    return true;
+}
+
+auto Buffer::skip_word_ci(const std::string &s) -> bool {
+    auto n = s.size();
+    for (size_t i = 0; i < n; i++) {
+        char c = (*this)[ptrs.b + i];
+        if (is_upper_case(c)) c += 'a' - 'A';
+        if (c != s[i]) return false;
+    }
+    char c = (*this)[ptrs.b + n];
+    if (is_letter(c)) return false;
+    ptrs.b += n;
     return true;
 }
 

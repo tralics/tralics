@@ -15,6 +15,44 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+namespace {
+    auto convert_for_xml_err(Token T) -> std::string {
+        if (T.is_null()) return "\\invalid.";
+
+        if (T.char_or_active()) {
+            if (char32_t c = T.char_val(); c == 0)
+                return "^^@";
+            else {
+                Buffer B;
+                B.push_back_real_utf8(c); // \todo without Buffer
+                return std::move(B);
+            }
+        }
+
+        if (T.active_or_single()) {
+            char32_t c = T.char_val();
+            if (c == 0)
+                return "\\^^@";
+            else {
+                Buffer B("\\");
+                B.push_back_real_utf8(c);
+                return std::move(B);
+            }
+        }
+
+        if (T.is_in_hash()) {
+            auto s = the_parser.hash_table[T.hash_loc()];
+            if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; })) return "\\" + s;
+
+            Buffer B("\\");
+            for (auto c : s) B.push_back_xml_char(uchar(c));
+            return std::move(B);
+        }
+
+        return "\\csname\\endcsname";
+    }
+} // namespace
+
 namespace err_ns {
     void convert_to_string(const TokenList &L);
 } // namespace err_ns
@@ -53,7 +91,7 @@ void Parser::signal_error(Token T, const std::string &s) {
     if (T.is_null()) return;
     auto str = std::string(s);
     the_stack.add_newid0("error");
-    std::string cmd = err_buf.convert_for_xml_err(T);
+    std::string cmd = convert_for_xml_err(T);
     the_stack.add_att_to_last(the_names["c"], str);
     the_stack.add_att_to_last(the_names["l"], cur_line_to_istring());
     the_stack.add_att_to_last(the_names["n"], cmd);

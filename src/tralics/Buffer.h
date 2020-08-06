@@ -85,85 +85,85 @@ public:
     [[nodiscard]] auto horner(size_t p) -> Digit; ///< Read an integer at `ptrs.b`, advance
 
     // Those are still unsorted as refactoring proceeds
-    void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
+
+    auto after_slash() -> bool;
     auto is_begin_something(const std::string &s) -> int;
-    auto is_here(const std::string &s) -> bool;
-    auto is_here_case(String s) -> bool;
     auto look_at_space(const std::string &s) -> bool;
+    auto next_char() { return (*this)[ptrs.b++]; }
+    auto next_env_spec() -> bool;
+    auto next_macro_spec() -> bool;
+    auto next_macro() -> bool;
+    auto next_utf8_char() -> char32_t;
+    auto push_back_newline_spec() -> bool;
+    auto remove_digits(const std::string &s) -> std::string;
+    auto reverse_horner() -> unsigned;
+    auto see_config_kw(String s, bool c) -> String;
+    auto see_equals(String s) -> bool;
+    auto skip_string(const std::string &s) -> bool;
+    auto skip_word_ci(const std::string &s) -> bool;
+    auto slash_separated(std::string &a) -> bool;
+    auto special_convert(bool init) -> std::string;
+    auto split_at_colon(std::string &before, std::string &after) -> bool;
+    auto str_toks(nl_to_tok nl) -> TokenList;
+    auto str_toks11(bool nl) -> TokenList;
+    auto string_delims() -> bool;
+    auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
+    auto tp_fetch_something() -> tpa_line;
+    auto tp_next_char(char &res) -> bool;
+    auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
+    auto xml_and_attrib(const std::string &s) -> Xml;
+
+    void insert_token(Token T, bool sw);
+    void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
+    void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     void lowercase();
     void new_word();
     void next_bibtex_char();
-    auto next_char() { return (*this)[ptrs.b++]; }
-    auto next_env_spec() -> bool;
-    auto next_macro() -> bool;
-    auto next_macro_spec() -> bool;
-    auto next_utf8_char() -> char32_t;
     void no_newline();
     void normalise_for_bibtex(String s);
     void out_four_hats(char32_t ch);
     void out_log(char32_t ch, output_encoding_type T);
-    void pt_to_mu();
     void process_big_char(size_t n);
-    void insert_token(Token T, bool sw);
+    void pt_to_mu();
     void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &s);
     void push_back_def(String, std::string);
     void push_back_elt(const std::string &name, Xid id, int w);
-    void push_back16(size_t n, bool uni);
-    void push_back16l(bool hat, unsigned n);
     void push_back_ent(char32_t ch);
     void push_back_hex(unsigned c);
     void push_back_Hex(unsigned c);
-    void push_back_math_token(const CmdChr &x, bool space);
+    void push_back_math_aux(std::string s);
     void push_back_math_tag(const CmdChr &x, int type);
     void push_back_math_tag(std::string s, int type);
-    void push_back_math_aux(std::string s);
+    void push_back_math_token(const CmdChr &x, bool space);
     void push_back_newline();
-    auto push_back_newline_spec() -> bool;
+    void push_back_real_utf8(char32_t c);
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(Xid id);
     void push_back_special_string(String s);
-    void push_back_real_utf8(char32_t c);
-    void push_back_xml_char(uchar c);
     void push_back_unless_punct(char c);
-    auto remove_digits(const std::string &s) -> std::string;
+    void push_back_xml_char(uchar c);
+    void push_back16(size_t n, bool uni);
+    void push_back16l(bool hat, unsigned n);
     void remove_last_space();
     void remove_space_at_end();
     void remove_spec_chars(bool url, Buffer &B);
-    auto reverse_horner() -> unsigned;
-    auto see_config_kw(String s, bool c) -> String;
-    auto see_equals(String s) -> bool;
     void show_uncomplete(String m);
-    void skip_over_brace();
-    void skip_letter();
-    void skip_sp_tab(); // \todo skip(const std::string&)
-    void skip_sp_tab_nl();
-    void skip_sp_tab_comma();
-    void skip_letter_dig();
-    void skip_letter_dig_dot();
     void skip_letter_dig_dot_slash();
-    auto slash_separated(std::string &a) -> bool;
-    auto split_at_colon(std::string &before, std::string &after) -> bool;
-    auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
-    auto special_convert(bool init) -> std::string;
+    void skip_letter_dig_dot();
+    void skip_letter_dig();
+    void skip_letter();
+    void skip_over_brace();
+    void skip_sp_tab_comma();
+    void skip_sp_tab_nl();
+    void skip_sp_tab(); // \todo skip(const std::string&)
     void special_title(std::string s);
-    auto str_toks(nl_to_tok nl) -> TokenList;
-    auto str_toks11(bool nl) -> TokenList;
-    auto string_delims() -> bool;
-    auto convert_for_xml_err(Token t) -> std::string;
-    auto tp_next_char(char &res) -> bool;
-    auto tp_fetch_something() -> tpa_line;
-    auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
     void undo() { ptrs.b--; }
     void uppercase();
-    auto xml_and_attrib(const std::string &s) -> Xml;
-    void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
-    auto after_slash() -> bool;
-
-    auto push_back(Token T) -> bool;
 
     using std::string::push_back;
+    auto push_back(Token T) -> bool;
     void push_back(char32_t c);
     void push_back(uchar c);
     void push_back(ScaledInt v, glue_spec unit);
