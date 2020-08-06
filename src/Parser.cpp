@@ -857,12 +857,12 @@ void Parser::set_default_language(int v) {
 
 // Creates some little constants.
 void Parser::make_constants() {
-    hash_table.OB_token      = make_char_token('{', 1);
-    hash_table.CB_token      = make_char_token('}', 2);
-    hash_table.dollar_token  = make_char_token('$', 3);
-    hash_table.hat_token     = Token(hat_t_offset, '^');
-    hash_table.zero_token    = Token(other_t_offset, '0');
-    hash_table.one_token     = Token(other_t_offset, '1');
+    hash_table.OB_token     = make_char_token('{', 1);
+    hash_table.CB_token     = make_char_token('}', 2);
+    hash_table.dollar_token = make_char_token('$', 3);
+    hash_table.hat_token    = Token(hat_t_offset, '^');
+    hash_table.zero_token   = Token(other_t_offset, '0');
+    Token(other_t_offset, '1');
     hash_table.comma_token   = Token(other_t_offset, ',');
     hash_table.equals_token  = Token(other_t_offset, '=');
     hash_table.dot_token     = Token(other_t_offset, '.');

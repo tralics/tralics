@@ -160,7 +160,7 @@ void Buffer::no_newline() {
 }
 
 // Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).
-auto Buffer::substring() const -> std::string { return std::string(begin() + to_signed(ptrs.a), begin() + to_signed(ptrs.b)); }
+auto Buffer::substring() const -> std::string { return substr(ptrs.a, ptrs.b - ptrs.a); }
 
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {

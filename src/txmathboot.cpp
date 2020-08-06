@@ -2070,9 +2070,8 @@ void MathDataP::boot() {
     eval_let("neg", "lnot");
 
     mk_ocb("in", "&Element;", "&#x02208;", in_code);
-    the_parser.hash_table.math_OB_token = mk_gen("math{", "{", "{", open_brace_code, "mo", mathopen_cmd, true);
-    the_parser.hash_table.math_CB_token = mk_gen("math}", "}", "}", close_brace_code, "mo", mathclose_cmd, true);
-    // mk_oc("varprime", "&prime;","&#x02032;", prime_code);
+    mk_gen("math{", "{", "{", open_brace_code, "mo", mathopen_cmd, true);
+    mk_gen("math}", "}", "}", close_brace_code, "mo", mathclose_cmd, true);
     mk_oc("prime", "&apos;", "&#x27;", prime_code);
     mc_table[27] = built_in_table[prime_code];
 

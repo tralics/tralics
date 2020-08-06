@@ -76,7 +76,7 @@ Hashtab::Hashtab() {
     primitive("omitcite", omitcite_cmd);
     primitive("bauthors", bib_cmd, zero_code);
     primitive("beditors", bib_cmd, one_code);
-    backslash_token = primitive("\\", backslash_cmd);
+    primitive("\\", backslash_cmd);
     primitive("newline", backslash_cmd, one_code); // idem
     primitive("hline", hline_cmd);
     primitive("cline", hline_cmd, one_code);
@@ -94,7 +94,7 @@ Hashtab::Hashtab() {
     primitive("hss", hfill_cmd, hss_code);
     primitive("rm", oldfont_cmd, rm_family_code);
     primitive("sf", oldfont_cmd, sf_family_code);
-    tt_token = primitive("tt", oldfont_cmd, tt_family_code);
+    primitive("tt", oldfont_cmd, tt_family_code);
     primitive("bf", oldfont_cmd, bf_series_code);
     primitive("it", oldfont_cmd, it_shape_code);
     primitive("sc", oldfont_cmd, sc_shape_code);
@@ -104,7 +104,7 @@ Hashtab::Hashtab() {
     primitive("textsf", argfont_cmd, sf_family_code);
     primitive("texttt", argfont_cmd, tt_family_code);
     primitive("textmd", argfont_cmd, md_series_code);
-    textbf_token = primitive("textbf", argfont_cmd, bf_series_code);
+    primitive("textbf", argfont_cmd, bf_series_code);
     primitive("textup", argfont_cmd, up_shape_code);
     primitive("textit", argfont_cmd, it_shape_code);
     primitive("textsl", argfont_cmd, sl_shape_code);
@@ -129,7 +129,7 @@ Hashtab::Hashtab() {
     primitive("scriptsize", fontsize_cmd, scriptsize_code);
     primitive("footnotesize", fontsize_cmd, footnotesize_code);
     primitive("Small", fontsize_cmd, footnotesize_code);
-    small_token = primitive("small", fontsize_cmd, small_code);
+    primitive("small", fontsize_cmd, small_code);
     primitive("normalsize", fontsize_cmd, normalsize_code);
     primitive("large", fontsize_cmd, large_code);
     primitive("Large", fontsize_cmd, Large_code);
@@ -257,11 +257,11 @@ Hashtab::Hashtab() {
     primitive("rotatebox", fbox_cmd, rotatebox_code);
     primitive("scalebox", fbox_cmd, scalebox_code);
     primitive("raisebox", fbox_cmd, raisebox_code);
-    hspace_token = primitive("hspace", hspace_cmd, zero_code);
-    vspace_token = primitive("vspace", hspace_cmd, one_code);
+    primitive("hspace", hspace_cmd, zero_code);
+    primitive("vspace", hspace_cmd, one_code);
     primitive("includegraphics", includegraphics_cmd, zero_code);
     primitive("psfig", includegraphics_cmd, one_code);
-    error_token    = primitive("error", error_cmd);
+    primitive("error", error_cmd);
     notprerr_token = primitive("@notprerr", error_cmd, one_code);
     primitive("@glo", glo_cmd);
     primitive("@reevaluate", reevaluate_cmd);
@@ -588,8 +588,8 @@ Hashtab::Hashtab() {
     primitive("thinspace", cst1_cmd, comma_code);
     primitive("_", cst1_cmd, underscore_code);
     primitive("&", cst1_cmd, amp_code);
-    text_OB_token = primitive("{", cst1_cmd, lbrace_chr);
-    text_CB_token = primitive("}", cst1_cmd, rbrace_chr);
+    primitive("{", cst1_cmd, lbrace_chr);
+    primitive("}", cst1_cmd, rbrace_chr);
     primitive("%", cst1_cmd, percent_code);
     primitive(" ", cst1_cmd, space_code);
     primitive("\n", cst1_cmd, space_code);
@@ -1388,11 +1388,11 @@ Hashtab::Hashtab() {
     primitive("formatdate", formatdate_cmd);
     primitive("numberwithin", numberwithin_cmd);
     primitive("@ifdefinable", ifdefinable_cmd);
-    dblarg_token         = primitive("@dblarg", dblarg_cmd);
-    refstepcounter_token = primitive("refstepcounter", refstepcounter_cmd);
-    makelabel_token      = primitive("tralics@makelabel", makelabel_cmd);
-    nomathsw0_token      = primitive("@nomathswi", nomath_cmd, zero_code);
-    nomathsw1_token      = primitive("@nomathswii", nomath_cmd, one_code);
+    dblarg_token = primitive("@dblarg", dblarg_cmd);
+    primitive("refstepcounter", refstepcounter_cmd);
+    primitive("tralics@makelabel", makelabel_cmd);
+    nomathsw0_token = primitive("@nomathswi", nomath_cmd, zero_code);
+    nomathsw1_token = primitive("@nomathswii", nomath_cmd, one_code);
     primitive("@nomathsws", nomath_cmd, two_code);
     primitive("@nomathswm", nomath_cmd, three_code);
     primitive("@nomathswe", nomath_cmd, subtypes(4));
@@ -1422,49 +1422,49 @@ Hashtab::Hashtab() {
     primitive("colorbox", color_cmd, colorbox_code);
     primitive("fcolorbox", color_cmd, fcolorbox_code);
 
-    isodd_token              = locate("isodd");
-    verb_prefix_token        = locate("verbprefix");
-    verbatim_prefix_token    = locate("verbatimprefix");
-    isundefined_token        = locate("isundefined");
-    urlfont_token            = locate("urlfont");
-    lengthtest_token         = locate("lengthtest");
-    boolean_token            = locate("boolean");
-    equal_token              = locate("equal");
-    not_token                = locate("not");
-    and_token                = locate("and");
-    NOT_token                = locate("NOT");
-    AND_token                = locate("AND");
-    OR_token                 = locate("OR");
-    ratio_token              = locate("ratio");
-    real_token               = locate("real");
-    prime_token              = locate("prime");
-    operatorname_token       = locate("operatorname");
-    elt_token                = locate("@elt");
-    nil_token                = locate("@nil");
-    dagger_token             = locate("dagger");
-    ddagger_token            = locate("ddagger");
-    vbar_token               = locate("|");
-    of_token                 = primitive("of", self_insert_cmd);
-    verbatim_font            = locate("verbatimfont");
-    verbatim_number_font     = locate("verbatimnumberfont");
-    gobble_token             = locate("@gobble");
-    gobbletwo_token          = locate("@gobbletwo");
-    xscale_token             = locate("xscale");
-    yscale_token             = locate("yscale");
-    xscaley_token            = locate("xscaley");
-    yscalex_token            = locate("yscalex");
-    refname_token            = locate("refname");
-    footcite_sep_token       = locate("footcitesep");
-    footcite_pre_token       = locate("footcitepre");
-    cite_punct_token         = locate("citepunct");
-    itemlabel_token          = locate("@itemlabel");
-    cite_type_token          = locate("cite@@type");
-    cite_prenote_token       = locate("cite@prenote");
-    headercr_token           = locate("@headercr");
-    lbrace_token             = locate("lbrace");
-    rbrace_token             = locate("rbrace");
-    tag_token                = locate("@tag");
-    qquad_token              = locate("qquad");
+    isodd_token           = locate("isodd");
+    verb_prefix_token     = locate("verbprefix");
+    verbatim_prefix_token = locate("verbatimprefix");
+    isundefined_token     = locate("isundefined");
+    urlfont_token         = locate("urlfont");
+    lengthtest_token      = locate("lengthtest");
+    boolean_token         = locate("boolean");
+    equal_token           = locate("equal");
+    not_token             = locate("not");
+    and_token             = locate("and");
+    NOT_token             = locate("NOT");
+    AND_token             = locate("AND");
+    OR_token              = locate("OR");
+    ratio_token           = locate("ratio");
+    real_token            = locate("real");
+    prime_token           = locate("prime");
+    operatorname_token    = locate("operatorname");
+    elt_token             = locate("@elt");
+    nil_token             = locate("@nil");
+    dagger_token          = locate("dagger");
+    ddagger_token         = locate("ddagger");
+    vbar_token            = locate("|");
+    primitive("of", self_insert_cmd);
+    verbatim_font        = locate("verbatimfont");
+    verbatim_number_font = locate("verbatimnumberfont");
+    gobble_token         = locate("@gobble");
+    gobbletwo_token      = locate("@gobbletwo");
+    xscale_token         = locate("xscale");
+    yscale_token         = locate("yscale");
+    xscaley_token        = locate("xscaley");
+    yscalex_token        = locate("yscalex");
+    refname_token        = locate("refname");
+    footcite_sep_token   = locate("footcitesep");
+    footcite_pre_token   = locate("footcitepre");
+    cite_punct_token     = locate("citepunct");
+    itemlabel_token      = locate("@itemlabel");
+    cite_type_token      = locate("cite@@type");
+    cite_prenote_token   = locate("cite@prenote");
+    headercr_token       = locate("@headercr");
+    lbrace_token         = locate("lbrace");
+    rbrace_token         = locate("rbrace");
+    locate("@tag");  // \todo useless alone?
+    locate("qquad"); // \todo useless alone?
     nocase_e_token           = locate("NoCaseChange");
     nocase_i_token           = locate("@NoCaseChange");
     cite_e_token             = locate("cite");
@@ -1477,9 +1477,9 @@ Hashtab::Hashtab() {
     CurrentOption_token      = locate("CurrentOption");
     CurrentOptionKey_token   = locate("CurrentOptionKey");
     CurrentOptionValue_token = locate("CurrentOptionValue");
-    increqnum_token          = locate("incr@eqnum");
-    at_zero_token            = locate("z@");
-    at_one_token             = locate("@ne");
+    locate("incr@eqnum"); // \todo useless alone?
+    at_zero_token = locate("z@");
+    at_one_token  = locate("@ne");
 }
 
 // This is done only if fancy_hdr is loaded (via \usepackage).
@@ -1935,7 +1935,7 @@ void Hashtab::boot_latex3() {
     eval_let("group_begin:", "tex_begingroup:D");
     eval_let("group_end:", "tex_endgroup:D");
     eval_let("if_int_compare:w", "tex_ifnum:D");
-    T_roman = eval_let("__int_to_roman:w", "tex_romannumeral:D");
+    eval_let("__int_to_roman:w", "tex_romannumeral:D");
     eval_let("group_insert_after:N", "tex_aftergroup:D");
     eval_let("c_minus_one", "m@ne");
     eval_let("cs_set_nopar:Npn", "tex_def:D");
@@ -1956,10 +1956,10 @@ void Hashtab::boot_latex3() {
     ExplFileDate_token        = locate("ExplFileDate");
     ExplFileVersion_token     = locate("ExplFileVersion");
     ExplFileDescription_token = locate("ExplFileDescription");
-    q_nil                     = locate("q_nil");
-    q_stop                    = locate("q_stop");
-    q_recursion_stop          = locate("q_recursion_stop");
-    T3col_tok                 = locate(":::");
+    locate("q_nil");
+    locate("q_stop");
+    locate("q_recursion_stop");
+    T3col_tok = locate(":::");
 
     primitive("GetIdInfo", GetIdInfo_cmd);
     primitive("GetIdInfoLog", GetIdInfoLog_cmd);
