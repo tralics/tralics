@@ -441,17 +441,3 @@ void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::strin
     }
     the_log << "\n";
 }
-
-void Buffer::interpret_bibtex_list() {
-    the_log << "bibtex_fields: ";
-    std::vector<std::string> &bib  = the_main->bibtex_fields;
-    std::vector<std::string> &bib1 = the_main->bibtex_fields_s;
-    interpret_aux(bib, bib1);
-}
-
-void Buffer::interpret_bibtex_extension_list() {
-    the_log << "bibtex_extensions: ";
-    std::vector<std::string> &bib  = the_main->bibtex_extensions;
-    std::vector<std::string> &bib2 = the_main->bibtex_extensions_s;
-    interpret_aux(bib, bib2);
-}

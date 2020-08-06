@@ -1,4 +1,7 @@
 #pragma once
+#include "tralics/Buffer.h"
+#include <string>
+
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2002,2004, 2007,2008
 

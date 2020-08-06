@@ -59,7 +59,7 @@ public:
     auto convert_to_log_encoding() -> std::string; ///< Convert to logging encoding
 
     // Mutating methods, affecting both the data and ptrs
-    void insert_without_crlf(const Buffer &s); ///< Reset, insert s minus CRLF, remove trailing spaces
+    void insert_without_crlf(const std::string &s); ///< Reset, insert s minus CRLF, remove trailing spaces
 
     // Those have void return type but return parameters
     void fill_table(bchar_type *table); ///< Not sure what this does?
@@ -85,10 +85,7 @@ public:
     [[nodiscard]] auto horner(size_t p) -> Digit; ///< Read an integer at `ptrs.b`, advance
 
     // Those are still unsorted as refactoring proceeds
-
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
-    void interpret_bibtex_list();
-    void interpret_bibtex_extension_list();
     auto is_begin_something(const std::string &s) -> int;
     auto is_here(const std::string &s) -> bool;
     auto is_here_case(String s) -> bool;

@@ -817,7 +817,7 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
     }
 }
 
-void Buffer::insert_without_crlf(const Buffer &s) {
+void Buffer::insert_without_crlf(const std::string &s) {
     clear();
     for (auto c : s)
         if (c != '\n' && c != '\r') push_back(c);

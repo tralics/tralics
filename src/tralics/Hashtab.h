@@ -1,6 +1,8 @@
 #pragma once
 #include "Equivalent.h"
+#include "Token.h"
 #include <unordered_map>
+#include <vector>
 
 // This is the main hash table.
 class Hashtab : public std::vector<std::string> {

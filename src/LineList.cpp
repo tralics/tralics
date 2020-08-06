@@ -342,8 +342,8 @@ auto LineList::parse_and_extract(String s) const -> LineList {
     int      b    = 0;
     Buffer & B    = local_buf;
     bool     keep = false;
-    for (auto C = begin(); C != end(); ++C) {
-        B        = *C;
+    for (const auto &C : *this) {
+        B        = C;
         int open = B.see_config_env();
         b += open;
         if (open != 0) keep = false; // status changed
@@ -355,7 +355,7 @@ auto LineList::parse_and_extract(String s) const -> LineList {
             if (B.is_begin_something(s) == 4) keep = true;
             continue;
         }
-        if (keep) res.push_back(*C);
+        if (keep) res.push_back(C);
     }
     return res;
 }

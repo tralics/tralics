@@ -1,4 +1,5 @@
 #include "tralics/NameMapper.h"
+#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
@@ -243,9 +244,17 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         if (sb == "false") the_main->use_all_sizes = false;
     }
     if (sa == "bibtex_fields") {
-        Buffer(sb).interpret_bibtex_list(); // \todo without Buffer
+        the_log << "bibtex_fields: ";
+        std::vector<std::string> &bib  = the_main->bibtex_fields;
+        std::vector<std::string> &bib1 = the_main->bibtex_fields_s;
+        Buffer(sb).interpret_aux(bib, bib1); // \todo without Buffer
     }
-    if (sa == "bibtex_extensions") { Buffer(sb).interpret_bibtex_extension_list(); }
+    if (sa == "bibtex_extensions") {
+        the_log << "bibtex_extensions: ";
+        std::vector<std::string> &bib  = the_main->bibtex_extensions;
+        std::vector<std::string> &bib2 = the_main->bibtex_extensions_s;
+        Buffer(sb).interpret_aux(bib, bib2); // \todo without Buffer
+    }
     if (sa == "mfenced_separator_val") {
         if (sb == "NONE")
             set("np_separator", "");
