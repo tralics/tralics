@@ -2274,9 +2274,9 @@ void Parser::T_end(const std::string &s) {
         else
             expand();
     } else {
-        Token t = hash_table.temp_token;
-        auto  k = t.eqtb_loc();
-        hash_table.eqtb[k].setnl(X->cc);
+        Token                      t       = hash_table.temp_token;
+        auto                       k       = t.eqtb_loc();
+        hash_table.eqtb[k].CmdChr::operator=(X->cc);
         back_input(t);
     }
 }
