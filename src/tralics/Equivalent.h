@@ -5,7 +5,8 @@ struct Equivalent : public CmdChr {
     long level{0}; ///< level at which this is defined
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
-    void               reset() {
+
+    void reset() {
         CmdChr::reset();
         level = 0;
     }
@@ -21,6 +22,4 @@ struct Equivalent : public CmdChr {
         setnl(c);
         level = lvl;
     }
-
-    void primitive(CmdChr b) { set(b, 1); }
 };

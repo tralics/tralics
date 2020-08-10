@@ -59,7 +59,7 @@ auto Hashtab::is_defined(const std::string &b) -> bool {
 // Creates a primitive.
 auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
     Token res = locate(s);
-    eqtb[res.eqtb_loc()].primitive(CmdChr(c, v));
+    eqtb[res.eqtb_loc()].set({c, v}, 1);
     return res;
 }
 
