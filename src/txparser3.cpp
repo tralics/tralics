@@ -126,7 +126,7 @@ void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
         push_save_stack(new SaveAuxCmd(*this, a, hash_table.eqtb[a]));
     else if (hash_table.eqtb[a].is_user())
         mac_table.delete_macro_ref(hash_table.eqtb[a].chr);
-    hash_table.eqtb[a].set(bc, gbl ? 1 : cur_level);
+    hash_table.eqtb[a] = {bc, gbl ? 1 : cur_level};
 }
 
 // This defines a user command, associated to the token A.

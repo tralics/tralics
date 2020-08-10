@@ -10,6 +10,4 @@ struct Equivalent : public CmdChr {
         CmdChr::reset();
         level = 0;
     }
-
-    void set(CmdChr c, long lvl) { *this = {c, lvl}; }
 };

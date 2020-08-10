@@ -70,7 +70,7 @@ SaveAuxCmd::~SaveAuxCmd() {
     } else {
         if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
             P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].chr);
-        P.hash_table.eqtb[cs].set(val, level);
+        P.hash_table.eqtb[cs] = {val, level};
     }
 }
 
