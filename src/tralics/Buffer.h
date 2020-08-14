@@ -95,7 +95,6 @@ public:
     auto next_macro() -> bool;
     auto next_utf8_char() -> char32_t;
     auto push_back_newline_spec() -> bool;
-    auto remove_digits(const std::string &s) -> std::string;
     auto reverse_horner() -> unsigned;
     auto see_config_kw(String s, bool c) -> String;
     auto see_equals(String s) -> bool;

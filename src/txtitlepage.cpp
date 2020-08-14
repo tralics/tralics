@@ -776,16 +776,3 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     the_log << "Alias " << pot_res << " does not match " << res << "\n";
     return false;
 }
-
-// This converts ra2003 to ra.
-auto Buffer::remove_digits(const std::string &s) -> std::string {
-    clear();
-    append(s);
-    size_t k = size();
-    while (k > 0 && is_digit(at(k - 1))) k--;
-    if (k != size()) {
-        resize(k);
-        return *this;
-    }
-    return "";
-}

@@ -92,3 +92,8 @@ auto to_utf8(char32_t c) -> std::string {
     utf8::append(c, std::ostream_iterator<char>(o));
     return o.str();
 }
+
+auto remove_digits(std::string s) -> std::string {
+    while ((!s.empty()) && is_digit(s.back())) s.pop_back();
+    return s;
+}

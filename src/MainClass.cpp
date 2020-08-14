@@ -863,7 +863,7 @@ auto MainClass::find_document_type() -> bool {
     if (dtype.empty()) return false;
     config_file.find_all_types(all_config_types);
     if (check_for_alias_type(false)) return true;
-    dtype = Buffer().remove_digits(dtype); // \todo without a Buffer
+    dtype = remove_digits(dtype);
     if (check_for_alias_type(true)) return true;
     if (!all_config_types.empty()) {
         dtype = all_config_types.front();
@@ -932,8 +932,7 @@ void MainClass::read_config_and_other() {
     config_file.parse_conf_toplevel();
     after_conf_assign(other_options);
     after_conf_assign(after_conf);
-    std::string tmp = Buffer().remove_digits(dtype);
-    if (!tmp.empty()) dtype = tmp;
+    dtype = remove_digits(dtype);
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
