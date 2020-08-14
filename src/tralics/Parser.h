@@ -386,7 +386,7 @@ private:
     void        finish_a_cell(Token T, const std::string &a);
     void        finish_counter_cmd(Token first, TokenList &L);
     void        finish_csname(Buffer &b, const std::string &s);
-    void        finish_csname(const Buffer &b);
+    void        finish_csname(const std::string &b);
     void        E_fi_or_else();
     void        finish_index();
     void        finish_color();

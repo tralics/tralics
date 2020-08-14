@@ -408,7 +408,8 @@ auto TitlePageAux::increment_flag() -> bool {
 // This is executed when we see the \titlepage command,
 // After that, no more titlepage ...
 void Parser::T_titlepage_finish(size_t v) {
-    auto kmax = Titlepage.bigtable.size();
+    Buffer B;
+    auto   kmax = Titlepage.bigtable.size();
     for (size_t k = 0; k < kmax; k++) Titlepage.bigtable[k].exec_post();
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
@@ -417,9 +418,9 @@ void Parser::T_titlepage_finish(size_t v) {
     bool          also_bib = false;
     if (tmp.find("'only title page'") != std::string::npos) finished = true;
     if (tmp.find("'translate also bibliography'") != std::string::npos) also_bib = true;
-    Xid(1).add_special_att(tmp, txclasses_local_buf);
+    Xid(1).add_special_att(tmp, B);
     Xml *res = tpa.convert(2);
-    res->id.add_special_att(tpa.get_T3(), txclasses_local_buf);
+    res->id.add_special_att(tpa.get_T3(), B);
     kmax = Titlepage.get_len2();
     for (size_t k = 1; k < kmax; k++) res->add_last_nl(Titlepage[k]);
     the_stack.pop_if_frame(the_names["cst_p"]);

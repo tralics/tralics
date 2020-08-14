@@ -23,6 +23,8 @@
 using namespace std::string_literals;
 
 namespace {
+    Buffer txclasses_local_buf;
+
     class ClassesData {
     public:
         std::vector<LatexPackage *> packages;

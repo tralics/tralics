@@ -1575,7 +1575,7 @@ void Parser::fetch_name2() {
 
 // Converts the buffer into a command; locally defines it to \relax if undef
 // result is in cur_tok
-void Parser::finish_csname(const Buffer &b) {
+void Parser::finish_csname(const std::string &b) {
     cur_tok  = hash_table.locate(b);
     auto pos = cur_tok.eqtb_loc();
     if (hash_table.eqtb[pos].val.is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);

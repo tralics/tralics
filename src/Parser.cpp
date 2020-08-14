@@ -1767,8 +1767,7 @@ void Parser::create_aux_file_and_run_pgm() {
         spdlog::warn("Cannot call external program unless using option -shell-escape");
         return;
     }
-    Buffer &B = biblio_buf4;
-    B.clear();
+    Buffer B;
     bbl.reset_lines();
     Bibliography &T = the_bibliography;
     T.dump(B);
@@ -1781,12 +1780,9 @@ void Parser::create_aux_file_and_run_pgm() {
         spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
         return;
     }
-    the_log << "++ executing " << T.cmd << ".\n";
+    spdlog::info("Executing bibliography command: {}", T.cmd);
     system(T.cmd.c_str());
-    B = file_name + ".bbl";
-    // NOTE: can we use on-the-fly encoding ?
-    the_log << "++ reading " << B << ".\n";
-    tralics_ns::read_a_file(bbl.lines, B, 1);
+    tralics_ns::read_a_file(bbl.lines, file_name + ".bbl", 1);
 }
 
 void Parser::after_main_text() {
@@ -1841,10 +1837,8 @@ void Parser::T_start_the_biblio() {
 // <foo>bar</foo>
 // Command has to be in Bib mode, argument translated in Arg mode.
 void Parser::T_cititem() {
-    auto    a = fetch_name0_nopar();
-    Buffer &B = biblio_buf4;
-    B         = "cititem-" + a;
-    finish_csname(B);
+    auto a = fetch_name0_nopar();
+    finish_csname("cititem-" + a);
     see_cs_token();
     if (cur_cmd_chr.cmd != relax_cmd) {
         back_input();
