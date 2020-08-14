@@ -1,4 +1,5 @@
 #pragma once
+#include "Buffer.h"
 #include "enums.h"
 #include <string>
 

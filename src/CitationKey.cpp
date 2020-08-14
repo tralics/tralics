@@ -25,20 +25,18 @@ CitationKey::CitationKey(bib_from a, const std::string &b) {
 // Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
 void CitationKey::make_key(const std::string &s) {
     if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
-    Buffer &B = biblio_buf2;
-    B.clear();
-    B.append(s);
-    B.lowercase();
-    cite_key       = s;
-    lower_cite_key = B;
-    B.clear();
+    cite_key = s;
+    Buffer B1(s);
+    B1.lowercase();
+    lower_cite_key = B1;
+
+    full_key.clear();
     if (cite_prefix == from_foot)
-        B.append("foot");
+        full_key = "foot";
     else if (cite_prefix == from_refer && !old_ra)
-        B.append("refer");
-    B.append("cite:");
-    B.append(s);
-    full_key = B;
+        full_key = "refer";
+    full_key.append("cite:");
+    full_key.append(s);
 }
 
 auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {

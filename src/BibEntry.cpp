@@ -9,7 +9,7 @@
 #include <fmt/ostream.h>
 
 namespace {
-    Buffer biblio_buf3;
+    Buffer biblio_buf2, biblio_buf3;
 
     auto want_handle_key(int s, bool last) -> bool {
         if (s < 4) return true;
@@ -618,8 +618,8 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     W.handle_the_names();
     X.value     = biblio_buf1;
     X.long_key  = biblio_buf2;
-    X.name_key  = biblio_buf4;
     X.short_key = biblio_buf3;
+    X.name_key  = biblio_buf4;
 }
 
 void BibEntry::normalise() {
