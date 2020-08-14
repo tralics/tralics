@@ -268,7 +268,7 @@ private:
     void        back_input_pt(bool spec);
     void        back_input_unless_space();
     void        bad_counter0();
-    void        bad_counter1(const Buffer &B, Equivalent &E);
+    void        bad_counter1(const Buffer &B, EqtbCmdChr &E);
     void        bad_csname(bool orig);
     void        bad_definition(Token name, size_t nb);
     void        bad_delimited(int cl, Token x);

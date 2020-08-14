@@ -14,6 +14,7 @@ template <typename T> struct EQTB {
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
+using EqtbCmdChr = EQTB<CmdChr>;
 using EqtbInt    = EQTB<long>;
 using EqtbString = EQTB<std::string>;
 using EqtbDim    = EQTB<ScaledInt>;

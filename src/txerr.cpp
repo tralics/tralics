@@ -271,7 +271,7 @@ void Parser::bad_counter0() {
     signal_error(err_tok, "invalid cmd");
 }
 
-void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
+void Parser::bad_counter1(const Buffer &B, EqtbCmdChr &E) {
     err_buf = (E.val.is_undef() ? "Unknown counter `" : "Invalid counter `") + B.substr(2) + "'";
     signal_error(err_tok, "bad counter");
 }

@@ -1868,7 +1868,7 @@ void Parser::counter_boot(const std::string &s, String aux) {
 // Returns true if bad
 auto Parser::counter_check(Buffer &b, bool def) -> bool {
     cur_tok       = hash_table.locate(b);
-    Equivalent &E = hash_table.eqtb[cur_tok.eqtb_loc()];
+    EqtbCmdChr &E = hash_table.eqtb[cur_tok.eqtb_loc()];
     if (def) {
         if (!E.val.is_undef_or_relax()) {
             bad_redefinition(0, cur_tok);

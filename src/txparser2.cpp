@@ -2223,7 +2223,7 @@ void Parser::T_use_counter(const std::string &s) {
     Buffer &b     = local_buf;
     b             = "c@" + s;
     Token       T = hash_table.locate(b);
-    Equivalent &E = hash_table.eqtb[T.eqtb_loc()];
+    EqtbCmdChr &E = hash_table.eqtb[T.eqtb_loc()];
     if (E.val.cmd != assign_int_cmd) return;
     word_define(E.val.chr, 0, true);
 }

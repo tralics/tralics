@@ -52,7 +52,7 @@ class SaveAuxCmd : public SaveAuxBase {
     size_t cs;  // ths position in eqtb to be restored
     CmdChr val; // the CmdChr to be restored
 public:
-    SaveAuxCmd(Parser &p, size_t a, const Equivalent &X) : SaveAuxBase(p, st_cmd, X.level), cs(a), val(X.val) {}
+    SaveAuxCmd(Parser &p, size_t a, const EqtbCmdChr &X) : SaveAuxBase(p, st_cmd, X.level), cs(a), val(X.val) {}
     ~SaveAuxCmd() override;
 };
 
