@@ -26,6 +26,7 @@ public:
 
     using std::string::string;
     using std::string::operator=;
+    using std::string::push_back;
 
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
@@ -49,10 +50,13 @@ public:
 
     // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
-    void remove_last(size_t n);                       ///< Drop `n` chars, provided size is large enough
+    void lowercase();
+    void remove_last(size_t n); ///< Drop `n` chars, provided size is large enough
+    void uppercase();
 
     // Mutating methods, affecting ptrs but not the data, as intended
     void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward
+    auto next_char() { return (*this)[ptrs.b++]; }
 
     // Mutating methods, affecting ptrs but not the data, but morally const
     // \todo all those should be const
@@ -86,13 +90,8 @@ public:
 
     // Those are still unsorted as refactoring proceeds
 
-    auto after_slash() -> bool;
     auto is_begin_something(const std::string &s) -> int;
     auto look_at_space(const std::string &s) -> bool;
-    auto next_char() { return (*this)[ptrs.b++]; }
-    auto next_env_spec() -> bool;
-    auto next_macro_spec() -> bool;
-    auto next_macro() -> bool;
     auto next_utf8_char() -> char32_t;
     auto push_back_newline_spec() -> bool;
     auto reverse_horner() -> unsigned;
@@ -109,24 +108,19 @@ public:
     auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
     auto tp_fetch_something() -> tpa_line;
     auto tp_next_char(char &res) -> bool;
-    auto trace_scan_dimen(Token T, ScaledInt v, bool mu) -> String;
     auto xml_and_attrib(const std::string &s) -> Xml;
 
     void insert_token(Token T, bool sw);
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
-    void lowercase();
     void new_word();
     void next_bibtex_char();
-    void no_newline();
     void normalise_for_bibtex(String s);
     void out_four_hats(char32_t ch);
     void out_log(char32_t ch, output_encoding_type T);
-    void process_big_char(size_t n);
     void pt_to_mu();
     void push_back_alt(const AttPair &X);
     void push_back_braced(const std::string &s);
-    void push_back_def(String, std::string);
     void push_back_elt(const std::string &name, Xid id, int w);
     void push_back_ent(char32_t ch);
     void push_back_hex(unsigned c);
@@ -140,14 +134,12 @@ public:
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(Xid id);
-    void push_back_special_string(String s);
     void push_back_unless_punct(char c);
     void push_back_xml_char(uchar c);
     void push_back16(size_t n, bool uni);
     void push_back16l(bool hat, unsigned n);
     void remove_last_space();
     void remove_space_at_end();
-    void remove_spec_chars(bool url, Buffer &B);
     void show_uncomplete(String m);
     void skip_letter_dig_dot_slash();
     void skip_letter_dig_dot();
@@ -158,10 +150,7 @@ public:
     void skip_sp_tab_nl();
     void skip_sp_tab(); // \todo skip(const std::string&)
     void special_title(std::string s);
-    void undo() { ptrs.b--; }
-    void uppercase();
 
-    using std::string::push_back;
     auto push_back(Token T) -> bool;
     void push_back(char32_t c);
     void push_back(uchar c);

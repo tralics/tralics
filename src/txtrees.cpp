@@ -135,7 +135,8 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     if (father) B += IR[*father]->key + "____";
     B += key;
     B.lowercase();
-    B.no_newline();
+    for (auto &c : B)
+        if (c == '\n') c = ' ';
     Xml *res = translate_list(L);
     Xml *x   = new Xml(the_names["index"], res);
     if (!encap.empty()) x->id.add_attribute(the_names["encap"], std::string(encap));

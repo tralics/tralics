@@ -157,8 +157,11 @@ void Parser::extended_chars(size_t c) {
     LC();
     if (c < 1 << 16)
         process_char(char32_t(c));
-    else
-        unprocessed_xml.process_big_char(c);
+    else {
+        unprocessed_xml.append("&#x");
+        unprocessed_xml.push_back16(c, false);
+        unprocessed_xml.push_back(';');
+    }
 }
 
 // Translate current character.

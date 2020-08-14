@@ -1733,10 +1733,6 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
     bool skip = scan_dimen1(mu, inf, co, shortcut);
     if (skip) read_one_space();
     cur_val.set_type(it_dimen);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << local_buf.trace_scan_dimen(err_tok, cur_val.get_dim_val(), mu);
-    }
 }
 
 // Multiplies a dimension by an integer

@@ -352,16 +352,6 @@ void Buffer::push_back_ent(char32_t ch) {
     push_back(';');
 }
 
-// This handles the case of \char 1234, where the number is at least 2^16
-// Uses hex representation.
-void Buffer::process_big_char(size_t n) {
-    push_back('&');
-    push_back('#');
-    push_back('x');
-    push_back16(n, false);
-    push_back(';');
-}
-
 // This is the function that puts a character into the buffer  as XML
 // We must handle some character. We use entities in case of big values
 // or control characters.
