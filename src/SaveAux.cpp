@@ -68,8 +68,8 @@ SaveAuxCmd::~SaveAuxCmd() {
     if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
-        if (P.hash_table.eqtb[cs].is_user()) // kill cur and change
-            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].chr);
+        if (P.hash_table.eqtb[cs].val.is_user()) // kill cur and change
+            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].val.chr);
         P.hash_table.eqtb[cs] = {val, level};
     }
 }

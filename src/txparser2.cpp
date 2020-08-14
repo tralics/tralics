@@ -2224,8 +2224,8 @@ void Parser::T_use_counter(const std::string &s) {
     b             = "c@" + s;
     Token       T = hash_table.locate(b);
     Equivalent &E = hash_table.eqtb[T.eqtb_loc()];
-    if (E.cmd != assign_int_cmd) return;
-    word_define(E.chr, 0, true);
+    if (E.val.cmd != assign_int_cmd) return;
+    word_define(E.val.chr, 0, true);
 }
 
 // \usecounter{foo}. Signals an error if foo is not a counter
@@ -2250,7 +2250,7 @@ void Parser::T_ifdefinable() {
         bad = true;
     else if (C == hash_table.relax_token)
         bad = true;
-    else if (!hash_table.eqtb[C.eqtb_loc()].is_undef_or_relax())
+    else if (!hash_table.eqtb[C.eqtb_loc()].val.is_undef_or_relax())
         bad = true;
     else {
         if (C.is_in_hash()) {
@@ -2376,7 +2376,7 @@ void Parser::T_listenv(symcodes x) {
         b += "@hook";
         Token T   = hash_table.locate(b);
         auto  pos = T.eqtb_loc();
-        if (!hash_table.eqtb[pos].is_undef()) back_input(T);
+        if (!hash_table.eqtb[pos].val.is_undef()) back_input(T);
     }
     Xml *res = new Xml(the_names["list"], nullptr);
     the_stack.push(the_names["list"], res);

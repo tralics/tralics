@@ -272,7 +272,7 @@ void Parser::bad_counter0() {
 }
 
 void Parser::bad_counter1(const Buffer &B, Equivalent &E) {
-    err_buf = (E.is_undef() ? "Unknown counter `" : "Invalid counter `") + B.substr(2) + "'";
+    err_buf = (E.val.is_undef() ? "Unknown counter `" : "Invalid counter `") + B.substr(2) + "'";
     signal_error(err_tok, "bad counter");
 }
 

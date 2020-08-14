@@ -53,7 +53,7 @@ auto Hashtab::is_defined(const std::string &b) -> bool {
         T = i->second + hash_offset;
 
     last_tok = Token(T);
-    return !eqtb[T - eqtb_offset].is_undef();
+    return !eqtb[T - eqtb_offset].val.is_undef();
 }
 
 // Creates a primitive.
@@ -68,7 +68,7 @@ auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
     Token Av   = locate(a);
     auto  A    = Av.eqtb_loc();
     auto  Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval], true);
+    the_parser.eq_define(A, eqtb[Bval].val, true);
     return Av;
 }
 
@@ -77,5 +77,5 @@ auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
 void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval], false);
+    the_parser.eq_define(A, eqtb[Bval].val, false);
 }

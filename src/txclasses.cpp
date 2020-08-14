@@ -1051,7 +1051,7 @@ void Parser::kvo_string_opt() {
     Buffer &    B   = txclasses_local_buf;
     B               = fam + "@" + arg;
     Token T         = hash_table.locate(B);
-    if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
+    if (!hash_table.eqtb[T.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
         return;
     }
@@ -1100,7 +1100,7 @@ void Parser::kvo_void_opt() {
     classes_ns::register_key(arg);
     B       = fam + "@" + arg;
     Token T = hash_table.locate(B);
-    if (!hash_table.eqtb[T.eqtb_loc()].is_undef_or_relax()) {
+    if (!hash_table.eqtb[T.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
         return;
     }
@@ -1150,7 +1150,7 @@ void Parser::kvo_comp_opt() {
     Buffer &    B    = txclasses_local_buf;
     B                = "if" + fam + '@' + comp;
     Token T          = hash_table.locate(B);
-    if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
+    if (hash_table.eqtb[T.eqtb_loc()].val.is_undef()) {
         B = "Cannot generate code for `" + arg + "', no parent " + comp;
         parse_error(err_tok, B, "bad redef");
         return;
@@ -1161,8 +1161,8 @@ void Parser::kvo_comp_opt() {
     Token T3 = hash_table.locate(fam + '@' + comp + "false");
     Token T4 = hash_table.locate(fam + '@' + arg + "true");
     B        = fam + '@' + arg + "true"; // \todo useless?
-    if (!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
-    if (!hash_table.eqtb[T4.eqtb_loc()].is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
+    if (!hash_table.eqtb[T2.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
+    if (!hash_table.eqtb[T4.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
     M_let_fast(T2, T1, true);
     M_let_fast(T4, T3, true);
     finish_kvo_bool(cmd, fam, arg);
@@ -1182,7 +1182,7 @@ void Parser::kvo_family_etc(subtypes k) {
     if (k == kvo_fam_set_code || k == kvo_pre_set_code) {
         TokenList L = read_arg();
         new_macro(L, T);
-    } else if (hash_table.eqtb[T.eqtb_loc()].is_undef()) {
+    } else if (hash_table.eqtb[T.eqtb_loc()].val.is_undef()) {
         B = s.substr(1);
         if (k == kvo_pre_get_code) B += "@";
         TokenList res = B.str_toks11(false);
@@ -1207,19 +1207,19 @@ auto Parser::check_if_redef(const std::string &s) -> bool {
     Buffer &B = txclasses_local_buf;
     B         = s + "true";
     Token T2  = hash_table.locate(B);
-    if (!hash_table.eqtb[T2.eqtb_loc()].is_undef_or_relax()) {
+    if (!hash_table.eqtb[T2.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef");
         return false;
     }
     B        = s + "false";
     Token T3 = hash_table.locate(B);
-    if (!hash_table.eqtb[T3.eqtb_loc()].is_undef_or_relax()) {
+    if (!hash_table.eqtb[T3.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T3, "", "bad redef");
         return false;
     }
     B        = "if" + s;
     Token T1 = hash_table.locate(B);
-    if (!hash_table.eqtb[T1.eqtb_loc()].is_undef_or_relax()) {
+    if (!hash_table.eqtb[T1.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T1, "", "bad redef");
         return false;
     }

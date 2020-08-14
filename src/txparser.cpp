@@ -1580,7 +1580,7 @@ void Parser::fetch_name2() {
 void Parser::finish_csname(const Buffer &b) {
     cur_tok  = hash_table.locate(b);
     auto pos = cur_tok.eqtb_loc();
-    if (hash_table.eqtb[pos].is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
+    if (hash_table.eqtb[pos].val.is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
 }
 
 // Same as above, but the token is to be read again
@@ -1870,12 +1870,12 @@ auto Parser::counter_check(Buffer &b, bool def) -> bool {
     cur_tok       = hash_table.locate(b);
     Equivalent &E = hash_table.eqtb[cur_tok.eqtb_loc()];
     if (def) {
-        if (!E.is_undef_or_relax()) {
+        if (!E.val.is_undef_or_relax()) {
             bad_redefinition(0, cur_tok);
             return true;
         }
     } else {
-        if (E.cmd != assign_int_cmd) {
+        if (E.val.cmd != assign_int_cmd) {
             bad_counter1(b, E);
             return true;
         }
@@ -2274,9 +2274,9 @@ void Parser::T_end(const std::string &s) {
         else
             expand();
     } else {
-        Token                      t       = hash_table.temp_token;
-        auto                       k       = t.eqtb_loc();
-        hash_table.eqtb[k].CmdChr::operator=(X->cc);
+        Token t                = hash_table.temp_token;
+        auto  k                = t.eqtb_loc();
+        hash_table.eqtb[k].val = X->cc;
         back_input(t);
     }
 }
@@ -3110,7 +3110,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
         String action = global ? "globally " : "";
         Logger::finish_seq();
         the_log << "{" << action << "changing " << A << "=";
-        token_for_show(hash_table.eqtb[pos]);
+        token_for_show(hash_table.eqtb[pos].val);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
         the_log << "}\n";
@@ -3230,8 +3230,8 @@ void Parser::M_newcommand(rd_flag redef) {
         auto guard = SaveErrTok(name);
         X          = read_latex_macro();
         if (redef == rd_never) { // case \CheckCommand
-            bool   is_same = true;
-            CmdChr pq      = hash_table.eqtb[name.eqtb_loc()];
+            bool is_same = true;
+            auto pq      = hash_table.eqtb[name.eqtb_loc()].val;
             if (pq.cmd != what)
                 is_same = false;
             else {
@@ -3696,7 +3696,7 @@ void Parser::set_boolean() {
         return;
     }
     if (my_csname("", s, A, "setboolean")) return;
-    if (hash_table.eqtb[cur_tok.eqtb_loc()].is_relax()) {
+    if (hash_table.eqtb[cur_tok.eqtb_loc()].val.is_relax()) {
         get_token();
         parse_error(T, "Undefined boolean ", cur_tok, "", "undefined boolean");
     }

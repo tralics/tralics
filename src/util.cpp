@@ -57,8 +57,8 @@ auto find_counter(const std::string &s) -> int {
     B        = "c@" + s;
     Token t  = the_parser.hash_table.locate(B);
     auto  cs = t.eqtb_loc();
-    if (the_parser.hash_table.eqtb[cs].cmd != assign_int_cmd) return -1;
-    return counter_val(the_parser.hash_table.eqtb[cs].chr - count_reg_offset);
+    if (the_parser.hash_table.eqtb[cs].val.cmd != assign_int_cmd) return -1;
+    return counter_val(the_parser.hash_table.eqtb[cs].val.chr - count_reg_offset);
 }
 
 auto only_digits(const std::string &s) -> bool {

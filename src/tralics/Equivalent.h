@@ -1,13 +1,14 @@
 #pragma once
 #include "CmdChr.h"
 
-struct Equivalent : public CmdChr {
-    long level{0}; ///< level at which this is defined
+struct Equivalent {
+    CmdChr val{};
+    long   level{};
 
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 
     void reset() {
-        CmdChr::reset();
+        val.reset();
         level = 0;
     }
 };
