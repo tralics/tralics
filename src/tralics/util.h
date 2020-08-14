@@ -10,7 +10,7 @@ auto find_counter(const std::string &s) -> int;
 auto is_m_font(symcodes cmd) -> bool;
 auto only_digits(const std::string &s) -> bool;
 auto only_space(const std::string &s) -> bool;
-auto remove_digits(const std::string s) -> std::string;
+auto remove_digits(std::string s) -> std::string;
 auto save_string_name(size_t n) -> String;
 auto split_assign(std::string s) -> std::pair<std::string, std::string>;
 auto split_commas(const std::string &S) -> std::vector<std::string>;

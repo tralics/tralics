@@ -853,7 +853,6 @@ void Bibtex::boot(std::string S, bool inra) {
 void Bibtex::bootagain() {
     old_ra = the_parser.get_ra_year() < 2006; // \todo we should really not keep this around
 
-    Buffer B;
     if (the_parser.cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");
         define_a_macro("feb", "f\\'evrier");
