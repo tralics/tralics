@@ -363,7 +363,6 @@ and rendering of subfigures in the next figure.</p>
 
 <Theorem style='plain' type='theo' id-text='4.15' id='uid51'>
 <head>Theorem</head>
-<p/>
 <formula id-text='4.16' id='uid52' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>e</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi> <mn>2</mn> </msup></mrow></math></formula>
 </Theorem>
 <Theorem style='remark' type='nn' id-text='4.2' id='uid53'>

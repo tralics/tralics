@@ -180,8 +180,7 @@ tata
 <p><Ref target='uid34'/><Ref target='uid34'/></p>
 <BTheorem style='plain' type='Exa' id-text='1.17.1' id='uid34'>
 <Head>Example</Head>
-<p>
-This is a sentence typeset</p>
+<p>This is a sentence typeset</p>
 <p>in the theorem environment <font-typewriter-family>Exa</font-typewriter-family>.</p>
 </BTheorem>
 <BTheorem style='plain' type='Rem' id-text='1' id='uid35'>

@@ -757,14 +757,14 @@ auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() ==
 // The case Foo'bar="&gee" is not handled.
 // nothing is printed in case the name starts with an apostrophe.
 // Print in reverse order, because this was in the previous version
+// \todo revert that inverse order thing
 
 void Buffer::push_back(const AttList &Y) {
     auto n = Y.size();
     if (the_main->double_quote_att)
         for (auto i = n; i > 0; i--) push_back_alt(Y[i - 1]);
     else
-        for (auto i = n; i > 0; i--)
-            if (!Y[i - 1].name.empty()) push_back(Y[i - 1]); // \todo this should never happen
+        for (auto i = n; i > 0; i--) push_back(Y[i - 1]);
 }
 
 void Buffer::push_back(const AttPair &X) {

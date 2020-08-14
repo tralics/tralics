@@ -1353,8 +1353,6 @@ void Parser::T_start_theorem(int c) {
             the_stack.add_nl();
         }
         the_stack.set_v_mode();
-        Xid res = ileave_v_mode();
-        res.add_attribute(std::string(), std::string(""));
         remove_initial_space_and_back_input();
     }
 }

@@ -26,6 +26,8 @@ Changes affecting the output
 -  [2020-04-21] switch to ``spdlog`` for logging, this changes the
    format and the repartition of the contents, hopefully in a reasonable
    direction
+-  [2020-08-14] do not insert an empty attribute pair in
+   Parser::T_start_theorem, this changes the output slightly but is cleaner
 
 2015-11-25, Version 2.15.4
 --------------------------
