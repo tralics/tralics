@@ -173,7 +173,10 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
 }
 
 // This defines a system macro.
-void Bibtex::define_a_macro(String name, String value) { find_a_macro(biblio_buf1, true, name, value); }
+void Bibtex::define_a_macro(String name, String value) {
+    Buffer B;
+    find_a_macro(B, true, name, value);
+}
 
 // Return an integer associated to a field position.
 auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
@@ -563,8 +566,7 @@ void Bibtex::parse_one_item() {
         mac_set_val(X, field_buf.special_convert(false));
     } else {
         cur_entry_line = cur_bib_line;
-        Buffer &A      = biblio_buf1;
-        A.clear();
+        Buffer A;
         skip_space();
         for (;;) {
             if (at_eol()) break;
@@ -851,6 +853,7 @@ void Bibtex::boot(std::string S, bool inra) {
 void Bibtex::bootagain() {
     old_ra = the_parser.get_ra_year() < 2006; // \todo we should really not keep this around
 
+    Buffer B;
     if (the_parser.cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");
         define_a_macro("feb", "f\\'evrier");
