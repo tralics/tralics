@@ -20,24 +20,19 @@ namespace {
         if (T.is_null()) return "\\invalid.";
 
         if (T.char_or_active()) {
-            if (char32_t c = T.char_val(); c == 0)
-                return "^^@";
-            else {
-                Buffer B;
-                B.push_back_real_utf8(c); // \todo without Buffer
-                return std::move(B);
-            }
+            char32_t c = T.char_val();
+            if (c == 0) return "^^@";
+            Buffer B;
+            B.push_back_real_utf8(c); // \todo without Buffer
+            return std::move(B);
         }
 
         if (T.active_or_single()) {
             char32_t c = T.char_val();
-            if (c == 0)
-                return "\\^^@";
-            else {
-                Buffer B("\\");
-                B.push_back_real_utf8(c);
-                return std::move(B);
-            }
+            if (c == 0) return "\\^^@";
+            Buffer B("\\");
+            B.push_back_real_utf8(c);
+            return std::move(B);
         }
 
         if (T.is_in_hash()) {
