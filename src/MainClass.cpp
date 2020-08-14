@@ -103,17 +103,15 @@ found at http://www.cecill.info.)";
     }
 
     /// Checks that name is non-empty and all lowercase
-    void check_lowercase(Buffer &B) {
-        auto n = B.size();
-        if (n == 0) {
+    void check_lowercase(const std::string &s) {
+        if (s.empty()) {
             spdlog::critical("Illegal file name of the form safir/2002.tex");
             the_main->bad_year(); // never returns
         }
-        for (size_t i = 0; i < n; i++)
-            if (B[i] < 32 || uchar(B[i]) > 127 || is_upper_case(B[i])) {
-                spdlog::critical("Fatal: only lowercase letters allowed, {}", B);
-                exit(1);
-            }
+        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || is_upper_case(c); })) {
+            spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
+            exit(1);
+        }
     }
 
     void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
@@ -969,16 +967,16 @@ void MainClass::see_name(std::string s) {
 }
 
 void MainClass::see_name1() {
-    Buffer C;
-    Buffer B(no_ext);
-    int    y = 0;
+    Buffer      C;
+    std::string B = no_ext;
+    int         y = 0;
     if (handling_ra) { // find and check the year from the file name
         y = extract_year(B, C);
         check_year(y, C, dclass, year_string);
     }
-    B                        = std::filesystem::path(std::string(B)).filename(); // \todo without Buffer
-    the_parser.the_projetval = B;                                                // this is apics
-    if (handling_ra) { // \todo handling_ra should disappear from tralics alltogether
+    B                        = std::filesystem::path(B).filename();
+    the_parser.the_projetval = B; // this is apics
+    if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
         check_lowercase(B);
         year_string = C;
         out_name    = B; // This is apics
