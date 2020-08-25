@@ -33,6 +33,7 @@ public:
     [[nodiscard]] auto codepoints() const -> std::vector<char32_t>;           ///< Translate contents into codepoints
     [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
+    [[nodiscard]] auto convert_to_log_encoding() const -> std::string;        ///< Convert to logging encoding
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }       ///< The character under the read pointer
@@ -60,7 +61,6 @@ public:
 
     // Mutating methods, affecting ptrs but not the data, but morally const
     // \todo all those should be const
-    auto convert_to_log_encoding() -> std::string; ///< Convert to logging encoding
 
     // Mutating methods, affecting both the data and ptrs
     void insert_without_crlf(const std::string &s); ///< Reset, insert s minus CRLF, remove trailing spaces

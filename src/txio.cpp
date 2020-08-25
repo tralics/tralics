@@ -383,24 +383,24 @@ auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
     return std::move(O);
 }
 
-auto Buffer::convert_to_log_encoding() -> std::string {
-    output_encoding_type T = the_main->log_encoding;
+auto Buffer::convert_to_log_encoding() const -> std::string {
+    auto T = the_main->log_encoding;
     if (T == en_utf8 || is_all_ascii()) return data();
-    auto old_ptr               = ptrs.b;
-    ptrs.b                     = 0;
+
+    Buffer B                   = *this;
+    B.ptrs.b                   = 0;
     the_converter.global_error = false;
     Buffer utf8_out;
     for (;;) {
-        char32_t c = next_utf8_char();
+        char32_t c = B.next_utf8_char();
         if (c == 0) {
-            if (at_eol()) break;
+            if (B.at_eol()) break;
             utf8_out += "<null>";
         } else if (c == '\r')
             utf8_out += "^^M";
         else
             utf8_out.out_log(c, T);
     }
-    ptrs.b = old_ptr;
     return std::move(utf8_out);
 }
 
