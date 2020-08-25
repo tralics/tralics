@@ -123,8 +123,6 @@ public:
     void push_back_braced(const std::string &s);
     void push_back_elt(const std::string &name, Xid id, int w);
     void push_back_ent(char32_t ch);
-    void push_back_hex(unsigned c);
-    void push_back_Hex(unsigned c);
     void push_back_math_aux(std::string s);
     void push_back_math_tag(const CmdChr &x, int type);
     void push_back_math_tag(std::string s, int type);
@@ -137,7 +135,6 @@ public:
     void push_back_unless_punct(char c);
     void push_back_xml_char(uchar c);
     void push_back16(size_t n, bool uni);
-    void push_back16l(bool hat, unsigned n);
     void remove_last_space();
     void remove_space_at_end();
     void show_uncomplete(String m);

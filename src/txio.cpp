@@ -255,64 +255,9 @@ void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(char32_t c) { utf8::append(c, std::back_inserter(*this)); }
 
-inline void Buffer::push_back_hex(unsigned c) {
-    if (c < 10)
-        push_back(static_cast<char>(c + '0'));
-    else
-        push_back(static_cast<char>(c + 'a' - 10));
-}
-
-inline void Buffer::push_back_Hex(unsigned c) {
-    if (c < 10)
-        push_back(static_cast<char>(c + '0'));
-    else
-        push_back(static_cast<char>(c + 'A' - 10));
-}
-
 // Converts in uppercase hex. If uni is ptrue, produces U+00AB
 void Buffer::push_back16(size_t n, bool uni) { // \todo fmt
-    static std::array<unsigned, 9> dig;
-    size_t                         k = 0;
-    for (;;) { // construct the list of digits
-        dig[k] = n % 16;
-        n      = n / 16;
-        k++;
-        if (n == 0) break;
-    }
-    if (uni) {
-        append("U+");
-        if (k < 4) push_back('0'); // print at least 4 digit
-        if (k < 3) push_back('0');
-        if (k < 2) push_back('0');
-        if (k < 1) push_back('0');
-    }
-    while (k > 0) push_back_Hex(dig[--k]);
-}
-
-// Converts number in lower hex form (assumes n>=16, so k>=2)
-// if hat is true, inserts hats before
-void Buffer::push_back16l(bool hat, unsigned n) {
-    static std::array<unsigned, 9> dig;
-    size_t                         k = 0;
-    for (;;) { // construct the list of digits
-        dig[k] = n % 16;
-        n      = n / 16;
-        k++;
-        if (n == 0) break;
-    }
-    if (hat) {
-        auto res = k;
-        while (k > 0) {
-            k--;
-            push_back('^');
-        }
-        if (res == 3) {
-            push_back('^');
-            push_back('0');
-        }
-        k = res;
-    }
-    while (k > 0) push_back_hex(dig[--k]);
+    format(uni ? "U+{:04X}" : "{:X}", n);
 }
 
 // This puts a 16bit char in the form ^^^^abcd in the buffer.
@@ -338,8 +283,12 @@ void Buffer::out_four_hats(char32_t ch) {
         append("^^?");
     else if (is_ascii(ch))
         push_back(static_cast<char>(c));
-    else
-        push_back16l(true, c);
+    else {
+        auto s = fmt::format("{:x}", c);
+        for (size_t i = 0; i < s.size(); ++i) push_back('^');
+        if (s.size() == 3) append("^0");
+        append(s);
+    }
 }
 
 // This inserts &#xabc;
@@ -356,31 +305,12 @@ void Buffer::push_back_ent(char32_t ch) {
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
-void Parser::process_char(char32_t c) {
-    if (c == 0)
-        unprocessed_xml.append(""); // may be required
-    else if (c == '\n')
-        unprocessed_xml.push_back('\n');
-    else if (c == '\r')
-        unprocessed_xml.push_back('\r');
-    else if (c == '\t')
-        unprocessed_xml.push_back('\t');
-    else if (c == '<')
-        unprocessed_xml.append("&lt;");
-    else if (c == '>')
-        unprocessed_xml.append("&gt;");
-    else if (c == '&')
-        unprocessed_xml.append("&amp;");
-    else if (c < 32 || is_big(c))
-        unprocessed_xml.push_back_ent(c);
-    else
-        unprocessed_xml.push_back(c);
-}
+void Parser::process_char(char32_t c) { unprocessed_xml.push_back_real_utf8(c); }
 
+// \todo rename this into push_back_with_xml_escaping or something
 void Buffer::push_back_real_utf8(char32_t c) {
-    if (c == 0)
-        append(""); // may be required
-    else if (c == '\n')
+    if (c == 0) return;
+    if (c == '\n')
         push_back('\n');
     else if (c == '\r')
         push_back('\r');
