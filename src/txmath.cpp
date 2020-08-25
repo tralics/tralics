@@ -151,7 +151,7 @@ void math_ns::add_to_trace(Token T) {
 }
 
 void math_ns::add_to_trace(const std::string &x) {
-    Trace.push_back_braced(x);
+    Trace.format("{{{}}}", x);
     trace_needs_space = false;
 }
 

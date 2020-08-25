@@ -556,7 +556,7 @@ void Bibtex::parse_one_item() {
     if (cn == type_comment) return;
     if (cn == type_preamble) {
         read_field(true);
-        bbl.push_back(field_buf);
+        bbl.append(field_buf);
     } else if (cn == type_string) {
         k = scan_identifier(2);
         if (k) return;
@@ -750,7 +750,7 @@ auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_cre
 void Bibtex::work() {
     auto n = all_entries.size();
     if (n == 0) return;
-    if (bbl.non_empty_buf()) bbl.newline();
+    if (!bbl.empty()) bbl.flush();
     boot_ra_prefix("ABC");
     all_entries_table.reserve(n);
     for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
@@ -767,7 +767,7 @@ void Bibtex::work() {
     if (want_numeric)
         for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(i + 1);
     for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
-    bbl.finish();
+    bbl.too_late = true;
 }
 
 // Signals an error if the year is invalid in the case of refer.
@@ -806,9 +806,9 @@ void Bibtex::bad_year(const std::string &given, String wanted) {
 // Plus le parser propement
 
 void Bibtex::read(const std::string &src, bib_from ct) {
-    bbl.push_back("% reading source ");
-    bbl.push_back(src);
-    bbl.newline();
+    bbl.append("% reading source ");
+    bbl.append(src);
+    bbl.flush();
     entry_prefix  = ct;
     normal_biblio = ct == from_year;
     refer_biblio  = ct == from_refer;
@@ -821,10 +821,9 @@ void Bibtex::read(const std::string &src, bib_from ct) {
         for (;;) parse_one_item();
     } catch (Berror x) {}
 
-    if (bbl.non_empty_buf()) // the buffer contains a preamble
-    {
-        bbl.push_back("%");
-        bbl.newline();
+    if (!bbl.empty()) {
+        bbl.append("%");
+        bbl.flush();
     }
 }
 

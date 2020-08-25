@@ -367,10 +367,10 @@ void BibEntry::numeric_label(size_t i) {
 // printing the bbl.
 
 void BibEntry::out_something(field_pos p, const std::string &s) {
-    bbl.push_back("\\cititem");
-    bbl.push_back_braced(bib_xml_name[p]);
-    bbl.push_back_braced(s);
-    bbl.newline();
+    bbl.append("\\cititem");
+    bbl.format("{{{}}}", bib_xml_name[p]);
+    bbl.format("{{{}}}", s);
+    bbl.flush();
 }
 
 // output a generic field as \cititem{k}{value}
@@ -403,25 +403,25 @@ void BibEntry::format_author(bool au) {
     field_pos p = au ? fp_author : fp_editor;
     if (all_fields[p].empty()) return;
     std::string data = au ? author_data.value : editor_data.value;
-    bbl.push_back("\\" + bib_xml_name[p]);
-    bbl.push_back_braced(data);
-    bbl.newline();
+    bbl.append("\\" + bib_xml_name[p]);
+    bbl.format("{{{}}}", data);
+    bbl.flush();
 }
 
 void BibEntry::call_type() {
-    bbl.reset();
-    bbl.push_back("%");
-    bbl.newline();
+    bbl.clear();
+    bbl.append("%");
+    bbl.flush();
     //  bbl.push_back("%%%");bbl.push_back(sort_label); bbl.newline();
-    bbl.push_back("\\citation");
-    bbl.push_back_braced(label);
-    bbl.push_back_braced(cite_key.full_key);
-    bbl.push_back_braced(unique_id);
-    bbl.push_back_braced(from_to_string());
+    bbl.append("\\citation");
+    bbl.format("{{{}}}", label);
+    bbl.format("{{{}}}", cite_key.full_key);
+    bbl.format("{{{}}}", unique_id);
+    bbl.format("{{{}}}", from_to_string());
     const auto &my_name = (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
-    bbl.push_back_braced(my_name);
-    bbl.push_back(aux_label);
-    bbl.newline();
+    bbl.format("{{{}}}", my_name);
+    bbl.append(aux_label);
+    bbl.flush();
     if (type_int == type_extension || raw_bib)
         call_type_all();
     else
@@ -431,29 +431,29 @@ void BibEntry::call_type() {
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
         if (s.starts_with("\\rrrt"))
-            bbl.push_back(s);
+            bbl.append(s);
         else {
-            bbl.push_back("\\csname @href\\endcsname");
+            bbl.append("\\csname @href\\endcsname");
             //    string S = hack_bib_space(s);
-            bbl.push_back_braced(remove_space(s));
-            bbl.push_back(insert_break(s));
+            bbl.format("{{{}}}", remove_space(s));
+            bbl.append(insert_break(s));
         }
-        bbl.newline();
+        bbl.flush();
     }
     std::vector<std::string> &Bib        = the_main->bibtex_fields;
     auto                      additional = Bib.size();
     for (size_t i = 0; i < additional; i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {
-            bbl.push_back("\\cititem");
-            bbl.push_back_braced(Bib[i]);
-            bbl.push_back_braced(ss);
-            bbl.newline();
+            bbl.append("\\cititem");
+            bbl.format("{{{}}}", Bib[i]);
+            bbl.format("{{{}}}", ss);
+            bbl.flush();
         }
     }
     out_something(fp_note);
-    bbl.push_back("\\endcitation");
-    bbl.newline();
+    bbl.append("\\endcitation");
+    bbl.flush();
 }
 
 void BibEntry::call_type_all() {

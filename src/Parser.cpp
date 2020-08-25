@@ -1699,7 +1699,7 @@ void Parser::T_cite_one() {
     auto ref         = std::string(fetch_name0_nopar());
     Xml *arg         = is_simple ? nullptr : xT_arg_nopar();
     // signal error after argument parsing
-    if (bbl.is_too_late()) {
+    if (bbl.too_late) {
         parse_error("Citation after loading biblio?");
         return;
     }
@@ -1768,7 +1768,7 @@ void Parser::create_aux_file_and_run_pgm() {
         return;
     }
     Buffer B;
-    bbl.reset_lines();
+    bbl.lines.clear();
     Bibliography &T = the_bibliography;
     T.dump(B);
     if (B.empty()) return;

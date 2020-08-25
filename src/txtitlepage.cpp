@@ -250,7 +250,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         if (get_flags2() == tp_A_flag) {
             Buffer &B = local_buf;
             B         = "\\" + T1;
-            B.push_back_braced(T4);
+            B.format("{{{}}}", T4);
             B.append("%\n");
             the_main->add_to_from_config(1, B);
         }
@@ -342,7 +342,7 @@ void TitlePageAux::exec_start(size_t k) {
     }
     Buffer &B = local_buf;
     B         = "\\" + T1;
-    B.push_back_braced(T4);
+    B.format("{{{}}}", T4);
     Titlepage[idx] = new Xml(std::string("empty"));
     B.append("%\n");
     if (fl == tp_A_flag) {

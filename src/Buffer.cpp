@@ -64,12 +64,6 @@ auto Buffer::next_non_space(size_t j) const -> size_t {
     return j;
 }
 
-void Buffer::push_back_braced(const std::string &s) {
-    push_back('{');
-    append(s);
-    push_back('}');
-}
-
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
 // Same code, but takes a 7 bit character as argument.

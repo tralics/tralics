@@ -120,7 +120,6 @@ public:
     void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();
     void push_back_alt(const AttPair &X);
-    void push_back_braced(const std::string &s);
     void push_back_elt(const std::string &name, Xid id, int w);
     void push_back_ent(char32_t ch);
     void push_back_math_aux(std::string s);
