@@ -9,7 +9,7 @@
 #include <fmt/ostream.h>
 
 namespace {
-    Buffer biblio_buf1, biblio_buf2, biblio_buf3;
+    Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4;
 
     auto want_handle_key(int s, bool last) -> bool {
         if (s < 4) return true;

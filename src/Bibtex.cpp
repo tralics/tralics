@@ -89,38 +89,37 @@ auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
 void Bibtex::read1(const std::string &cur) {
-    biblio_buf4.clear();
-    biblio_buf4.append(cur);
-    auto n = biblio_buf4.size();
-    if (read0(biblio_buf4, from_year)) return;
-    if (biblio_buf4.ends_with("+foot.bib")) {
-        biblio_buf4.resize(n - 5);
-        if (read0(biblio_buf4, from_foot)) return;
+    Buffer B;
+    B.append(cur);
+    auto n = B.size();
+    if (read0(B, from_year)) return;
+    if (B.ends_with("+foot.bib")) {
+        B.resize(n - 5);
+        if (read0(B, from_foot)) return;
     }
-    if (biblio_buf4.ends_with("+year.bib")) {
-        biblio_buf4.resize(n - 5);
-        if (read0(biblio_buf4, from_year)) return;
+    if (B.ends_with("+year.bib")) {
+        B.resize(n - 5);
+        if (read0(B, from_year)) return;
     }
-    if (biblio_buf4.ends_with("+all.bib")) {
-        biblio_buf4.resize(n - 4);
-        if (read0(biblio_buf4, from_any)) return;
+    if (B.ends_with("+all.bib")) {
+        B.resize(n - 4);
+        if (read0(B, from_any)) return;
     }
-    if (biblio_buf4.ends_with("+refer.bib")) {
-        biblio_buf4.resize(n - 6);
-        if (read0(biblio_buf4, from_refer)) return;
+    if (B.ends_with("+refer.bib")) {
+        B.resize(n - 6);
+        if (read0(B, from_refer)) return;
     }
-    if (biblio_buf4.ends_with(".bib")) {
-        biblio_buf4.resize(n - 4);
-        if (read0(biblio_buf4, from_year)) return;
+    if (B.ends_with(".bib")) {
+        B.resize(n - 4);
+        if (read0(B, from_year)) return;
     }
-    spdlog::warn("Bibtex Info: no biblio file {}", biblio_buf4);
+    spdlog::warn("Bibtex Info: no biblio file {}", B);
 }
 
 // Handles one bib file for the raweb. Returns true if the file exists.
 // Extension can be foot, year or refer. New in Tralics 2.9.3 it can be any
 auto Bibtex::read2(bib_from pre) -> bool {
-    Buffer &B = biblio_buf4;
-    B.clear();
+    Buffer B;
     B.append(no_year);
     if (pre == from_foot)
         B.append("_foot");
