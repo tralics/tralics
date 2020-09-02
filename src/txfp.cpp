@@ -236,7 +236,7 @@ void FpNum::div_by_10() {
 }
 
 // Puts in T the three 1000-base digits of A. Assumes T==0.
-inline void fp::mul_split_aux(Digit A, Digit *T) {
+void fp::mul_split_aux(Digit A, Digit *T) {
     if (A != 0U) {
         T[2] = A % 1000;
         A    = A / 1000;
@@ -246,7 +246,7 @@ inline void fp::mul_split_aux(Digit A, Digit *T) {
 }
 
 // Returns a number from three 1000-base digits
-inline auto fp::unsplit_mul(const Digit *z) -> Digit { return z[0] * 1000000 + z[1] * 1000 + z[2]; }
+auto fp::unsplit_mul(const Digit *z) -> Digit { return z[0] * 1000000 + z[1] * 1000 + z[2]; }
 
 // Splits into 12 times 1000-base digits
 void FpNum::mul_split(std::array<Digit, 12> &T) const {

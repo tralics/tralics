@@ -87,7 +87,7 @@ auto FontInfo::family_name() const -> std::string {
     return "";
 }
 
-// Idem. This function deals with the series. (the function is inline).
+// Idem. This function deals with the series.
 auto FontInfo::series_name() const -> std::string {
     if (series == fi_bf_series) return "\\bfseries";
     if (series == fi_bx_series) return "\\boldextendedseries";

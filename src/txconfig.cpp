@@ -136,7 +136,7 @@ auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDat
     return res;
 }
 
-inline void ParamDataSlot::to_buffer(Buffer &B) const { B.format("{}={},", key, value); }
+void ParamDataSlot::to_buffer(Buffer &B) const { B.format("{}={},", key, value); }
 
 void ParamDataList::keys_to_buffer(Buffer &B) const {
     for (const auto &i : data) B.format(" {}", i.key);

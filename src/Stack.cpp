@@ -18,6 +18,8 @@ namespace {
         default: return "_?";
         }
     }
+
+    auto get_cur_label() -> std::string { return the_parser.eqtb_string_table[0].val; }
 } // namespace
 
 // Dumps a stack slot
@@ -551,8 +553,6 @@ void Stack::mark_omit_cell() { back().omit_cell = true; }
 
 // This removes the last element of the top-stack
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
-
-inline auto get_cur_label() -> std::string { return std::string(the_parser.eqtb_string_table[0].val); }
 
 void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
     AttList &AL = get_att_list(xid.value);

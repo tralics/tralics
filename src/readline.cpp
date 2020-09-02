@@ -22,6 +22,11 @@
 #include <utility>
 #include <vector>
 
+#if defined(_WIN32)
+#else
+#include <termios.h>
+#endif
+
 namespace {
     const unsigned           buf_size = 2048;
     const unsigned           in_size  = 4096;
@@ -29,64 +34,62 @@ namespace {
     std::array<int, in_size> word_beg{};
     std::array<int, in_size> word_end{};
     std::string              cur_prompt{"> "};
-} // namespace
 
-// Conditional code for windows
+    // Conditional code for windows
 
 #if defined(_WIN32)
-// no termio
-inline void          RESET_TERMIO() {}
-inline void          SET_TERMIO() {}
-inline void          INIT_TERMIO() {}
-inline unsigned char check_for_control(unsigned char c) { return c; }
-inline bool          is_interrupt(char cc) { return cc == 3 || cc == 'y' || cc == 'Y'; }
-
+    // no termio
+    void          RESET_TERMIO() {}
+    void          SET_TERMIO() {}
+    void          INIT_TERMIO() {}
+    unsigned char check_for_control(unsigned char c) { return c; }
+    bool          is_interrupt(char cc) { return cc == 3 || cc == 'y' || cc == 'Y'; }
 #else
+    struct termios orig_termio, rl_termio;
+    void           RESET_TERMIO() { tcsetattr(0, TCSANOW, &orig_termio); }
+    void           SET_TERMIO() { tcsetattr(0, TCSANOW, &rl_termio); }
 
-#include <termios.h>
-static struct termios orig_termio, rl_termio;
-inline void           RESET_TERMIO() { tcsetattr(0, TCSANOW, &orig_termio); }
-inline void           SET_TERMIO() { tcsetattr(0, TCSANOW, &rl_termio); }
+    auto check_for_control(char c) -> char {
+        if (c == orig_termio.c_cc[VERASE])
+            c = 8; //^H
+        else if (c == orig_termio.c_cc[VEOF])
+            c = 4; // ^D
+        else if (c == orig_termio.c_cc[VKILL])
+            c = 11; // ^K
+        else if (c == orig_termio.c_cc[VWERASE])
+            c = 23; //^W
+        else if (c == orig_termio.c_cc[VSUSP])
+            c = 26; // ^Z
+        else if (c == orig_termio.c_cc[VINTR])
+            c = 3; // ^C
+        else if (c == orig_termio.c_cc[VQUIT])
+            c = 28;
+        return c;
+    }
 
-auto check_for_control(char c) -> char {
-    if (c == orig_termio.c_cc[VERASE])
-        c = 8; //^H
-    else if (c == orig_termio.c_cc[VEOF])
-        c = 4; // ^D
-    else if (c == orig_termio.c_cc[VKILL])
-        c = 11; // ^K
-    else if (c == orig_termio.c_cc[VWERASE])
-        c = 23; //^W
-    else if (c == orig_termio.c_cc[VSUSP])
-        c = 26; // ^Z
-    else if (c == orig_termio.c_cc[VINTR])
-        c = 3; // ^C
-    else if (c == orig_termio.c_cc[VQUIT])
-        c = 28;
-    return c;
-}
-inline auto is_interrupt(char cc) -> bool {
-    return cc == orig_termio.c_cc[VINTR] || cc == 3 || cc == orig_termio.c_cc[VQUIT] || cc == 'y' || cc == 'Y';
-}
-inline void INIT_TERMIO() {
-    tcgetattr(0, &orig_termio);
-    rl_termio = orig_termio;
-    rl_termio.c_iflag &= ~to_unsigned((BRKINT | PARMRK | INPCK | IXOFF | IMAXBEL));
-    rl_termio.c_iflag |= (IGNBRK | IGNPAR);
-    rl_termio.c_lflag &= ~unsigned(ICANON | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH);
-    rl_termio.c_lflag |= (ISIG);
-    rl_termio.c_cc[VMIN]   = 1;
-    rl_termio.c_cc[VTIME]  = 0;
-    rl_termio.c_cc[VSUSP]  = 0;
-    rl_termio.c_cc[VINTR]  = 0;
-    rl_termio.c_cc[VQUIT]  = 0;
-    rl_termio.c_cc[VSTOP]  = 0;
-    rl_termio.c_cc[VSTART] = 0;
+    auto is_interrupt(char cc) -> bool {
+        return cc == orig_termio.c_cc[VINTR] || cc == 3 || cc == orig_termio.c_cc[VQUIT] || cc == 'y' || cc == 'Y';
+    }
+    void INIT_TERMIO() {
+        tcgetattr(0, &orig_termio);
+        rl_termio = orig_termio;
+        rl_termio.c_iflag &= ~to_unsigned((BRKINT | PARMRK | INPCK | IXOFF | IMAXBEL));
+        rl_termio.c_iflag |= (IGNBRK | IGNPAR);
+        rl_termio.c_lflag &= ~unsigned(ICANON | ECHO | ECHOE | ECHOK | ECHONL | NOFLSH);
+        rl_termio.c_lflag |= (ISIG);
+        rl_termio.c_cc[VMIN]   = 1;
+        rl_termio.c_cc[VTIME]  = 0;
+        rl_termio.c_cc[VSUSP]  = 0;
+        rl_termio.c_cc[VINTR]  = 0;
+        rl_termio.c_cc[VQUIT]  = 0;
+        rl_termio.c_cc[VSTOP]  = 0;
+        rl_termio.c_cc[VSTART] = 0;
 #if defined(__ppc__)
-    rl_termio.c_cc[VDSUSP] = 0; // needed on the mac
+        rl_termio.c_cc[VDSUSP] = 0; // needed on the mac
 #endif
-}
+    }
 #endif
+} // namespace
 
 void readline_newprompt(std::string s) { cur_prompt = std::move(s); }
 
