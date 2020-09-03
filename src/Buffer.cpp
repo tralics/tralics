@@ -647,8 +647,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-auto Buffer::contains(const std::string &s) const -> bool { return find(s) != std::string::npos; }
-
 auto Buffer::is_spaceh(size_t j) const -> bool { return is_space((*this)[j]); }
 
 void Buffer::push_back(const TokenList &L) {

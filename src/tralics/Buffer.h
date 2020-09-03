@@ -30,7 +30,6 @@ public:
 
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
-    [[nodiscard]] auto contains(const std::string &s) const -> bool;          ///< Does the buffer has s as a substring?
     [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
     [[nodiscard]] auto convert_to_log_encoding() const -> std::string;        ///< Convert to logging encoding
     [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding

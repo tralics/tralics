@@ -713,25 +713,25 @@ void XmlIO::parse_dec_notation() {
 
 // Replaces %foo by its value
 auto XmlIO::expand_PEReference() -> bool {
-    Buffer B;
+    Buffer buf;
     for (;;) {
         char32_t c = next_char();
         if (c == ';') break;
-        B.push_back(c);
+        buf.push_back(c);
     }
-    std::string s  = B;
+    std::string s  = buf;
     bool        ok = false;
     auto        n  = entities.size();
     for (size_t i = 0; i < n; i++) {
         if (entities[i].name == s) {
-            B.clear();
-            B.append(entities[i].value);
+            buf.clear();
+            buf.append(entities[i].value);
             ok = true;
             break;
         }
     }
-    if (!ok) B += ";";
-    auto V = codepoints(B);
+    if (!ok) buf += ";";
+    auto V = codepoints(buf);
     while (!V.empty()) {
         reread_list.push_back(V.back());
         V.pop_back();

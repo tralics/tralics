@@ -1168,7 +1168,7 @@ void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
         token_ns::split_at(comma, tmp, key);
         std::string key_name = xkv_ns::find_key_of(key, type);
         aux                  = "," + key_name + ",";
-        if (!B.contains(aux)) {
+        if (B.find(aux) == std::string::npos) {
             if (!W.empty()) W.push_back(comma);
             W.splice(W.end(), key);
         }
