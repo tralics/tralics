@@ -884,7 +884,7 @@ void Parser::T_class_error(subtypes c) {
         prefix = B;
         B      = prea;
         if (!simple) B += " " + name;
-        auto posta = "Info";
+        const char *posta = "Info";
         if (what == mt_error)
             posta = "Error";
         else if (what == mt_warning)

@@ -7,7 +7,7 @@ void readline(char *buffer, size_t screen_size);
 
 auto bt_to_string(boundary_type v) -> std::string;
 auto codepoints(const std::string &s) -> std::vector<char32_t>;
-auto convert_to_utf8(const std::string s, size_t wc) -> std::string;
+auto convert_to_utf8(const std::string &s, size_t wc) -> std::string;
 auto find_counter(const std::string &s) -> int;
 auto is_m_font(symcodes cmd) -> bool;
 auto only_digits(const std::string &s) -> bool;

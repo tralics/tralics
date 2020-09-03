@@ -295,8 +295,8 @@ class Cv3Helper {
     Math               res;
     Xml *              p{};
     int                ploc{};
-    math_types         ptype;
-    math_types         prefix_type;
+    math_types         ptype{};
+    math_types         prefix_type{};
     Xml *              index{}, *exponent{};
     Math               object;
     int                special; // Sum or product

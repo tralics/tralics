@@ -107,7 +107,7 @@ auto codepoints(const std::string &s) -> std::vector<char32_t> {
     return res;
 }
 
-auto convert_to_utf8(const std::string s, size_t wc) -> std::string {
+auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
     if (wc == 0) return s; // Noop if utf8-encoded, but we never call the function in that case
     std::string res;
     for (auto ch : s) {
