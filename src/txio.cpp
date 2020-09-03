@@ -85,9 +85,7 @@ auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
 void Stats::io_convert_stats() {
     int bl = the_converter.bad_lines; // \todo why is this twice what it should be?
     int bc = the_converter.bad_chars;
-    int lc = the_converter.lines_converted;
     if (bl != 0) spdlog::warn("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
-    if (lc != 0) spdlog::info("Input conversion: {} line{} converted.", lc, io_ns::plural(lc));
 }
 
 // Returns 0 at end of line or error
@@ -106,7 +104,6 @@ auto Buffer::next_utf8_char() -> char32_t {
         return char32_t();
     }
     auto nn = to_unsigned(it - it0);
-    if (nn != 1) the_converter.line_is_ascii = false;
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
         utf8_ovf(cp);
@@ -115,37 +112,11 @@ auto Buffer::next_utf8_char() -> char32_t {
     return cp;
 }
 
-// This converts a line in UTF8 format. Returns true if no conversion needed
-auto Buffer::convert_line0(size_t wc) -> std::pair<bool, std::string> {
-    Buffer utf8_out;
-    ptrs.b     = 0;
-    char32_t c = 0;
-    for (;;) {
-        if (at_eol()) break;
-        if (wc == 0)
-            c = next_utf8_char();
-        else {
-            auto C = static_cast<uchar>(next_char());
-            if (wc == 1)
-                c = char32_t(C);
-            else
-                c = custom_table[wc - 2][C];
-            if (!(is_ascii(c) && c == C)) the_converter.line_is_ascii = false;
-        }
-        if (c != 0) utf8_out.push_back(c);
-    }
-    return {the_converter.line_is_ascii, utf8_out};
-}
-
-// This converts a line in UTF8 format
+// This converts a line to UTF8
 // Result of conversion is pushed back in the buffer
 void Buffer::convert_line(int l, size_t wc) {
     the_converter.start_convert(l);
-    auto [o, s] = convert_line0(wc);
-    if (o) return;
-    the_converter.lines_converted++;
-    clear();
-    append(s);
+    if (wc != 0) *this = convert_to_utf8(*this, wc);
 }
 
 // Why is v limited to 16bit chars?

@@ -1,6 +1,7 @@
 #include "tralics/util.h"
 #include "tralics/Converter.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include <sstream>
 #include <utf8.h>
 
@@ -103,5 +104,16 @@ auto codepoints(const std::string &s) -> std::vector<char32_t> {
     the_converter.start_convert(the_parser.get_cur_line());
     std::vector<char32_t> res;
     for (auto it = s.begin(); *it != 0;) res.emplace_back(utf8::next(it, s.end()));
+    return res;
+}
+
+auto convert_to_utf8(const std::string s, size_t wc) -> std::string {
+    if (wc == 0) return s; // Noop if utf8-encoded, but we never call the function in that case
+    std::string res;
+    for (auto ch : s) {
+        auto C = static_cast<uchar>(ch);
+        auto c = wc == 1 ? char32_t(C) : custom_table[wc - 2][C];
+        if (c != 0) utf8::append(c, std::back_inserter(res));
+    }
     return res;
 }

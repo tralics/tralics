@@ -13,5 +13,4 @@ auto Converter::new_error() -> bool {
 void Converter::start_convert(int l) {
     cur_file_line = l;
     global_error  = false;
-    line_is_ascii = true;
 }
