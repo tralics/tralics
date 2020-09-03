@@ -14,8 +14,6 @@
 
 // We define functions that return the name of a token;
 
-static Buffer make_name_buffer; // used for token names
-
 namespace tralics_ns {
     auto make_name(const std::string &x, int y) -> std::string;
     auto make_name16(String x, size_t y) -> std::string;
@@ -33,25 +31,11 @@ auto tralics_ns::strip_end(String s) -> String {
     return s + 3;
 }
 
-// This returns a temporary associated to \skip24
-// (given the name skip and the integer 24)
-auto tralics_ns::make_name(const std::string &x, int y) -> std::string {
-    make_name_buffer = fmt::format("{}{}", x, y);
-    return make_name_buffer;
-}
+auto tralics_ns::make_name(const std::string &x, int y) -> std::string { return fmt::format("{}{}", x, y); }
 
-auto tralics_ns::make_name16(String x, size_t y) -> std::string {
-    make_name_buffer = x;
-    make_name_buffer.push_back('"');
-    make_name_buffer.push_back16(y, false);
-    return make_name_buffer;
-}
+auto tralics_ns::make_name16(String x, size_t y) -> std::string { return fmt::format("{}\"{:X}", x, y); }
 
-auto CmdChr::specchar_cmd_name() const -> std::string {
-    make_name_buffer = "Character ";
-    make_name_buffer.push_back16(chr, true);
-    return make_name_buffer;
-}
+auto CmdChr::specchar_cmd_name() const -> std::string { return fmt::format("Character U+{:04X}", chr); }
 
 auto CmdChr::token_error_name() const -> String {
     switch (chr) {

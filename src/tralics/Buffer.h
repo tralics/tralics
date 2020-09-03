@@ -129,7 +129,6 @@ public:
     void push_back_special_att(Xid id);
     void push_back_unless_punct(char c);
     void push_back_xml_char(uchar c);
-    void push_back16(size_t n, bool uni);
     void remove_last_space();
     void remove_space_at_end();
     void show_uncomplete(String m);

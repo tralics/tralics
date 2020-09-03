@@ -28,9 +28,7 @@ namespace {
 
     void utf8_ovf(size_t n) { // \todo inline
         Converter &T = the_converter;
-        Buffer     B;
-        B.push_back16(n, true);
-        spdlog::error("UTF-8 parsing overflow (char {}, line {}, file {})", B, T.cur_file_line, T.cur_file_name);
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", n, T.cur_file_line, T.cur_file_name);
         T.bad_chars++;
     }
     /// Look for a file in the pool
@@ -222,11 +220,6 @@ void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
 
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(char32_t c) { utf8::append(c, std::back_inserter(*this)); }
-
-// Converts in uppercase hex. If uni is ptrue, produces U+00AB
-void Buffer::push_back16(size_t n, bool uni) { // \todo fmt
-    format(uni ? "U+{:04X}" : "{:X}", n);
-}
 
 // This puts a 16bit char in the form ^^^^abcd in the buffer.
 // Uses ^^ab notation if better

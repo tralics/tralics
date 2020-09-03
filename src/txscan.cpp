@@ -534,10 +534,8 @@ auto Parser::next_from_line0() -> bool {
     char32_t c = get_next_char();
     if (is_big(c)) { // convert to \char"ABCD
         Buffer &B = local_buf;
-        B.clear();
-        B.push_back('"');
-        B.push_back16(c, false);
-        auto k = B.size();
+        B         = fmt::format("\"{:X}", size_t(c));
+        auto k    = B.size();
         back_input(hash_table.space_token);
         while (k > 0) {
             back_input(Token(other_t_offset, static_cast<uchar>(B[k - 1])));

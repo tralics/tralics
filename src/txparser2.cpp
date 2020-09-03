@@ -2635,9 +2635,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
     }
     if (vb) {
         Buffer &B = mac_buffer;
-        B.clear();
-        B.append("-> \\char\"");
-        B.push_back16(to_unsigned(r), false);
+        B         = fmt::format("-> \\char\"{:X}", r);
         Logger::finish_seq();
         the_log << T << c << B << ".\n";
     }
