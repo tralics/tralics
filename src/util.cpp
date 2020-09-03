@@ -107,6 +107,17 @@ auto codepoints(const std::string &s) -> std::vector<char32_t> {
     return res;
 }
 
+auto convert_to_latin1(const std::string &s, bool latin1) -> std::string {
+    std::string res;
+    for (auto c : codepoints(s)) {
+        if (is_ascii(c) || (is_small(c) && latin1))
+            res.push_back(static_cast<char>(c));
+        else
+            res += fmt::format("&#x{:X};", size_t(c));
+    }
+    return res;
+}
+
 auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
     if (wc == 0) return s; // Noop if utf8-encoded, but we never call the function in that case
     std::string res;

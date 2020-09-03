@@ -32,7 +32,6 @@ namespace {
         B.push_back16(n, true);
         spdlog::error("UTF-8 parsing overflow (char {}, line {}, file {})", B, T.cur_file_line, T.cur_file_name);
         T.bad_chars++;
-        T.new_error();
     }
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
@@ -83,9 +82,8 @@ auto Buffer::is_all_ascii() const -> bool {
 auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
 
 void Stats::io_convert_stats() {
-    int bl = the_converter.bad_lines; // \todo why is this twice what it should be?
-    int bc = the_converter.bad_chars;
-    if (bl != 0) spdlog::warn("Input conversion errors: {} line{}, {} char{}.", bl, io_ns::plural(bl), bc, io_ns::plural(bc));
+    auto bc = the_converter.bad_chars;
+    if (bc != 0) spdlog::warn("Input conversion errors: {} char{}.", bc, io_ns::plural(bc));
 }
 
 // Returns 0 at end of line or error
@@ -98,7 +96,6 @@ auto Buffer::next_utf8_char() -> char32_t {
     } catch (utf8::invalid_utf8) {
         Converter &T = the_converter;
         T.bad_chars++;
-        T.new_error();
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return char32_t();
@@ -262,15 +259,7 @@ void Buffer::out_four_hats(char32_t ch) {
     }
 }
 
-// This inserts &#xabc;
-void Buffer::push_back_ent(char32_t ch) {
-    if (ch == 65534 || ch == 65535) return; // these chars are illegal
-    push_back('&');
-    push_back('#');
-    push_back('x');
-    push_back16(ch, false);
-    push_back(';');
-}
+void Buffer::push_back_ent(char32_t ch) { format("&#x{:X};", size_t(ch)); }
 
 // This is the function that puts a character into the buffer  as XML
 // We must handle some character. We use entities in case of big values
@@ -331,36 +320,15 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
 auto Buffer::convert_to_out_encoding() const -> std::string {
     auto T = the_main->output_encoding;
     if (T == en_boot || T == en_utf8 || is_all_ascii()) return data();
-    return convert_to_latin1(T == en_latin);
-}
-
-// Convert to latin 1 or ASCII
-auto Buffer::convert_to_latin1(bool nonascii) const -> std::string {
-    Buffer B; // \todo do it without temporary buffer
-    B.append(data());
-    Buffer O;
-    the_converter.global_error = false;
-    for (;;) {
-        char32_t c = B.next_utf8_char();
-        if ((c == 0) && B.at_eol()) break;
-        if (c == 0) continue;
-        if (is_ascii(c))
-            O.push_back(static_cast<char>(c));
-        else if (is_small(c) && nonascii)
-            O.push_back(static_cast<char>(c));
-        else
-            O.push_back_ent(c);
-    }
-    return std::move(O);
+    return convert_to_latin1(*this, T == en_latin);
 }
 
 auto Buffer::convert_to_log_encoding() const -> std::string {
     auto T = the_main->log_encoding;
     if (T == en_utf8 || is_all_ascii()) return data();
 
-    Buffer B                   = *this;
-    B.ptrs.b                   = 0;
-    the_converter.global_error = false;
+    Buffer B = *this;
+    B.ptrs.b = 0;
     Buffer utf8_out;
     for (;;) {
         char32_t c = B.next_utf8_char();

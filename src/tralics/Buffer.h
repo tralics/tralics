@@ -29,23 +29,22 @@ public:
     using std::string::push_back;
 
     // Standard const methods
-    [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); }    ///< Is the read pointer at the end?
-    [[nodiscard]] auto convert_to_latin1(bool nonascii) const -> std::string; ///< Convert to latin 1 or ASCII
-    [[nodiscard]] auto convert_to_log_encoding() const -> std::string;        ///< Convert to logging encoding
-    [[nodiscard]] auto convert_to_out_encoding() const -> std::string;        ///< Make a fresh copy with output encoding
-    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;                ///< Hash code of the string in the buffer
-    [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }       ///< The character under the read pointer
-    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;             ///< For typography
-    [[nodiscard]] auto int_val() const -> std::optional<size_t>;              ///< Try to parse the contents as an integer
-    [[nodiscard]] auto is_all_ascii() const -> bool;                          ///< Is everything ASCII and not CRLF?
-    [[nodiscard]] auto is_and(size_t k) const -> bool;                        ///< Is the word at `k` an `and`?
-    [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                     ///< It the char at `j` a space?
-    [[nodiscard]] auto is_special_end() const -> bool;                        ///< Is the current char `\\n`, `#` or `%`?
-    [[nodiscard]] auto next_non_space(size_t j) const -> size_t;              ///< Locate next non-space char after `j`
-    [[nodiscard]] auto see_config_env() const -> int;                         ///< Do we start with `Begin` or `End`?
-    [[nodiscard]] auto single_char() const -> char;                           ///< If only one (non-space) char, return it
-    [[nodiscard]] auto special_exponent() const -> String;                    ///< Normalize contents as exponent name (th,nd...)
-    [[nodiscard]] auto substring() const -> std::string;                      ///< Get the slice [ptrs.a,ptrs.b)
+    [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); } ///< Is the read pointer at the end?
+    [[nodiscard]] auto convert_to_log_encoding() const -> std::string;     ///< Convert to logging encoding
+    [[nodiscard]] auto convert_to_out_encoding() const -> std::string;     ///< Make a fresh copy with output encoding
+    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;             ///< Hash code of the string in the buffer
+    [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }    ///< The character under the read pointer
+    [[nodiscard]] auto insert_space_here(size_t k) const -> bool;          ///< For typography
+    [[nodiscard]] auto int_val() const -> std::optional<size_t>;           ///< Try to parse the contents as an integer
+    [[nodiscard]] auto is_all_ascii() const -> bool;                       ///< Is everything ASCII and not CRLF?
+    [[nodiscard]] auto is_and(size_t k) const -> bool;                     ///< Is the word at `k` an `and`?
+    [[nodiscard]] auto is_spaceh(size_t j) const -> bool;                  ///< It the char at `j` a space?
+    [[nodiscard]] auto is_special_end() const -> bool;                     ///< Is the current char `\\n`, `#` or `%`?
+    [[nodiscard]] auto next_non_space(size_t j) const -> size_t;           ///< Locate next non-space char after `j`
+    [[nodiscard]] auto see_config_env() const -> int;                      ///< Do we start with `Begin` or `End`?
+    [[nodiscard]] auto single_char() const -> char;                        ///< If only one (non-space) char, return it
+    [[nodiscard]] auto special_exponent() const -> String;                 ///< Normalize contents as exponent name (th,nd...)
+    [[nodiscard]] auto substring() const -> std::string;                   ///< Get the slice [ptrs.a,ptrs.b)
 
     // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
