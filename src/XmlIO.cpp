@@ -127,7 +127,7 @@ void XmlIO::next_line() {
         throw EndOfData();
     }
     cur_line       = n;
-    input_line     = line_buffer.codepoints();
+    input_line     = codepoints(line_buffer);
     input_line_pos = 0;
     cur_line_len   = input_line.size();
 }
@@ -713,7 +713,7 @@ void XmlIO::parse_dec_notation() {
 
 // Replaces %foo by its value
 auto XmlIO::expand_PEReference() -> bool {
-    B.clear();
+    Buffer B;
     for (;;) {
         char32_t c = next_char();
         if (c == ';') break;
@@ -731,14 +731,7 @@ auto XmlIO::expand_PEReference() -> bool {
         }
     }
     if (!ok) B += ";";
-    std::vector<char32_t> V;
-    V.clear();
-    B.ptrs.b = 0;
-    for (;;) { // \todo this is Buffer::codepoints()
-        char32_t c = B.next_utf8_char();
-        if (c == 0 && B.at_eol()) break;
-        V.push_back(c);
-    }
+    auto V = codepoints(B);
     while (!V.empty()) {
         reread_list.push_back(V.back());
         V.pop_back();

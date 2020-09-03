@@ -832,7 +832,7 @@ void Buffer::insert_without_crlf(const std::string &s) {
 void Parser::store_new_line(int n, bool vb) {
     set_cur_line(n);
     input_buffer.insert_without_crlf(scratch);
-    input_line          = input_buffer.codepoints();
+    input_line          = codepoints(input_buffer);
     input_buffer.ptrs.b = 0;
     if (vb) {
         Logger::finish_seq();

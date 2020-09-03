@@ -404,14 +404,6 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
     return std::move(utf8_out);
 }
 
-auto Buffer::codepoints() const -> std::vector<char32_t> { // \todo use at more places
-    the_converter.start_convert(the_parser.get_cur_line());
-    std::vector<char32_t> V2;
-    V2.reserve(size());
-    for (auto it = begin(); *it != 0;) V2.emplace_back(utf8::next(it, end()));
-    return V2;
-}
-
 // --------------------------------------------
 
 // This can be used to check if the main file exists. In this case the

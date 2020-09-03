@@ -24,6 +24,9 @@ namespace {
     // given the first byte. Returns 0 in case of error
     auto how_many_bytes(char c) -> size_t { return to_unsigned(utf8::internal::sequence_length(&c)); }
 
+    // True if it is an accent character, like \^.
+    auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c == '^' || c == '"' || c == '~' || c == '.' || c == '='; }
+
     // True if \sortnoop, \SortNoop, \noopsort plus brace or space
     // First char to test is at i+1
     auto is_noopsort(const std::string &s, size_t i) -> bool {

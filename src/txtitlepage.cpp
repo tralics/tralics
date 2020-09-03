@@ -23,6 +23,8 @@ namespace {
     TitlePage         Titlepage; // title page info
     TitlePageFullLine tpfl;
     TpiOneItem        Toi;
+
+    auto is_tp_delim(char c) -> bool { return c == '<' || c == '\\' || c == '"'; }
 } // namespace
 
 namespace tpage_ns {

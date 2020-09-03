@@ -63,8 +63,3 @@ namespace config_ns {
 namespace tpage_ns {
     void see_main_a(Buffer &in, Buffer &val);
 } // namespace tpage_ns
-
-// True if it is an accent character, like \^.
-inline auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c == '^' || c == '"' || c == '~' || c == '.' || c == '='; }
-
-inline auto is_tp_delim(char c) -> bool { return c == '<' || c == '\\' || c == '"'; }
