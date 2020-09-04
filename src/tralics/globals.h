@@ -31,8 +31,10 @@ inline bool                                                         in_hlinee, h
 inline bool                                                         old_ra = false;
 inline bool                                                         ra_ok{true};
 inline int                                                          cur_entry_line;    // position of entry in source file
+inline int                                                          cur_file_line{0};  // current line number
 inline int                                                          init_file_pos = 0; // position in init file
 inline int                                                          nb_words      = 0;
+inline int                                                          bad_chars{0};
 inline long                                                         cline_first, cline_last;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
@@ -42,6 +44,7 @@ inline std::ostream *                                               cur_fp;     
 inline std::string                                                  cur_entry_name; // name of entry under construction.
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
+inline std::string                                                  cur_file_name{"tty"};
 inline std::vector<std::filesystem::path>                           input_path;
 inline std::vector<std::pair<size_t, std::string>>                  ref_list;       // list of all \ref
 inline std::vector<std::pair<std::string, LabelInfo *>>             defined_labels; // list of all \label

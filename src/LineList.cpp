@@ -1,5 +1,4 @@
 #include "tralics/LineList.h"
-#include "tralics/Converter.h"
 #include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -171,7 +170,7 @@ auto LineList::get_next(Buffer &b) -> int {
         pop_front();
     }
     if (!converted) {
-        the_converter.cur_file_name = file_name;
+        cur_file_name = file_name;
         b.convert_line(n, encoding);
     }
     return n;
@@ -182,7 +181,7 @@ auto LineList::get_next_cv(Buffer &b, int w) -> int {
     auto [n, cv] = front().to_buffer(b);
     pop_front();
     if (w != 0) {
-        the_converter.cur_file_name = file_name;
+        cur_file_name = file_name;
         b.convert_line(n, to_unsigned(w));
     }
     return n;

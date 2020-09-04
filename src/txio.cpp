@@ -11,7 +11,6 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
-#include "tralics/Converter.h"
 #include "tralics/Logger.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
@@ -27,9 +26,8 @@ namespace {
     std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
 
     void utf8_ovf(size_t n) { // \todo inline
-        Converter &T = the_converter;
-        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", n, T.cur_file_line, T.cur_file_name);
-        T.bad_chars++;
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", n, cur_file_line, cur_file_name);
+        bad_chars++;
     }
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
@@ -80,8 +78,7 @@ auto Buffer::is_all_ascii() const -> bool {
 auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
 
 void Stats::io_convert_stats() {
-    auto bc = the_converter.bad_chars;
-    if (bc != 0) spdlog::warn("Input conversion errors: {} char{}.", bc, io_ns::plural(bc));
+    if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, io_ns::plural(bad_chars));
 }
 
 // Returns 0 at end of line or error
@@ -92,9 +89,8 @@ auto Buffer::next_utf8_char() -> char32_t {
     try {
         cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
     } catch (utf8::invalid_utf8) {
-        Converter &T = the_converter;
-        T.bad_chars++;
-        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", T.cur_file_name, T.cur_file_line, ptrs.b + 1);
+        bad_chars++;
+        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", cur_file_name, cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return char32_t();
     }
@@ -110,7 +106,7 @@ auto Buffer::next_utf8_char() -> char32_t {
 // This converts a line to UTF8
 // Result of conversion is pushed back in the buffer
 void Buffer::convert_line(int l, size_t wc) {
-    the_converter.start_convert(l);
+    cur_file_line = l;
     if (wc != 0) *this = convert_to_utf8(*this, wc);
 }
 
@@ -171,8 +167,8 @@ void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
     }
 
     std::ifstream fp(x);
-    std::string   old_name      = the_converter.cur_file_name;
-    the_converter.cur_file_name = x;
+    std::string   old_name = cur_file_name;
+    cur_file_name          = x;
     Buffer B;
     auto   wc        = the_main->input_encoding;
     bool   converted = spec < 2;
@@ -189,7 +185,7 @@ void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
             emit = true;
         else if (c == EOF) {
             if (!B.empty()) emit = true;
-            the_converter.cur_file_name = old_name;
+            cur_file_name = old_name;
         } else
             B.push_back(static_cast<char>(c));
         if (emit) {

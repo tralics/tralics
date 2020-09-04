@@ -1,5 +1,4 @@
 #include "tralics/util.h"
-#include "tralics/Converter.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <sstream>
@@ -101,7 +100,7 @@ auto remove_digits(std::string s) -> std::string {
 }
 
 auto codepoints(const std::string &s) -> std::vector<char32_t> {
-    the_converter.start_convert(the_parser.get_cur_line());
+    cur_file_line = the_parser.get_cur_line();
     std::vector<char32_t> res;
     for (auto it = s.begin(); *it != 0;) res.emplace_back(utf8::next(it, s.end()));
     return res;
