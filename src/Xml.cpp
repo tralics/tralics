@@ -602,7 +602,8 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 
 // This puts element T, with its value in the buffer.
 // If non trivial, the buffer is flushed (printed on the file)
-void Xml::to_buffer(Buffer &b) const {
+// \todo this should just output to the stream, the Buffer is auxiliary
+void Xml::to_buffer(Buffer &b, std::ostream &o) const {
     if (is_xmlc()) {
         if (id.value == 0)
             b += encode(name);
@@ -610,9 +611,9 @@ void Xml::to_buffer(Buffer &b) const {
             b += "<!--" + encode(name) + "-->";
         else if (id.value == size_t(-2)) {
             b += "<!" + encode(name);
-            for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
+            for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b, o);
             b += ">";
-            b.finish_xml_print();
+            b.finish_xml_print(o);
         } else if (id.value == size_t(-3))
             b += "<?" + encode(name) + "?>";
         return;
@@ -625,21 +626,16 @@ void Xml::to_buffer(Buffer &b) const {
             return;
         }
     }
-    for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b);
+    for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b, o);
     if (!name.empty()) b.push_back_elt(name, id, 2);
-    b.finish_xml_print();
+    b.finish_xml_print(o);
 }
 
 // This prints T on the file fp, using scbuf.
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
-    scbuf.clear();
-    cur_fp = &fp;
-    if (T != nullptr)
-        T->to_buffer(scbuf);
-    else
-        scbuf += "</>";
-    scbuf.finish_xml_print();
-    return fp;
+    Buffer B;
+    if (T != nullptr) T->to_buffer(B, fp);
+    return fp << B;
 }
 
 // Replace <name/> by vl.

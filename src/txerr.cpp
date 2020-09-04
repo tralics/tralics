@@ -40,7 +40,7 @@ namespace {
             if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; })) return "\\" + s;
 
             Buffer B("\\");
-            for (auto c : s) B.push_back_xml_char(uchar(c));
+            for (auto c : s) B.push_back_xml_char(c);
             return std::move(B);
         }
 

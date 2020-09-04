@@ -703,7 +703,7 @@ void Buffer::push_back_math_tag(std::string s, int type) {
         append("elt");
         if (type != pbm_end) {
             append(" name='");
-            for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+            for (size_t i = 0; i < n; i++) push_back_xml_char(s[i]);
             append("'");
         }
     }
@@ -726,7 +726,7 @@ void Buffer::push_back_math_aux(std::string s) {
     if (ok)
         append(s);
     else
-        for (size_t i = 0; i < n; i++) push_back_xml_char(uchar(s[i]));
+        for (size_t i = 0; i < n; i++) push_back_xml_char(s[i]);
 }
 
 // Returns the number of arguments of the command.

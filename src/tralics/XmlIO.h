@@ -23,7 +23,7 @@ class XmlIO {
     std::vector<Xml *>     cur_stack;
     size_t                 cur_line_len{};
     size_t                 input_line_pos{};
-    int                    enc{}; // 0=utf8, 1=latin1
+    size_t                 encoding{}; // 0=utf8, 1=latin1
     void                   error(const std::string &s) const;
     std::vector<EntityDef> entities;
     int                    nb_cond{};

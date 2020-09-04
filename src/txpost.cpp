@@ -169,8 +169,8 @@ void Buffer::push_back_elt(const std::string &name, Xid id, int w) {
     push_back('>');
 }
 
-void Buffer::finish_xml_print() {
-    *cur_fp << data();
+void Buffer::finish_xml_print(std::ostream &o) {
+    o << data();
     clear();
 }
 //--------------------------- Word stats

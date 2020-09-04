@@ -176,14 +176,14 @@ auto LineList::get_next(Buffer &b) -> int {
     return n;
 }
 
-auto LineList::get_next_cv(Buffer &b, int w) -> int {
+auto LineList::get_next_cv(Buffer &b, size_t w) -> int {
     if (empty()) return -1;
     b.append(front());
     auto n = front().number;
     pop_front();
     if (w != 0) {
         cur_file_name = file_name;
-        b.convert_line(n, to_unsigned(w));
+        b.convert_line(n, w);
     }
     return n;
 }

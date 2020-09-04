@@ -77,7 +77,7 @@ public:
     void rename(std::string old_name, std::string new_name);
     void subst_env0(std::string match, Xml *vl);
     void swap_x(Xml *x);
-    void to_buffer(Buffer &b) const;
+    void to_buffer(Buffer &b, std::ostream &o) const;
     auto total_span(long &res) const -> bool;
     auto try_cline(bool action) -> bool;
     auto try_cline_again(bool action) -> bool;

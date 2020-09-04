@@ -84,7 +84,7 @@ auto XmlIO::init(const std::string &name) -> bool {
     Type[uchar('$')]  = xt_other;
     Type[uchar('-')]  = xt_other;
     tralics_ns::read_a_file(lines, name, 3);
-    enc            = 0;
+    encoding       = 0;
     input_line_pos = cur_line_len = 0;
     nb_cond                       = 0;
     eof_ok                        = false;
@@ -118,7 +118,7 @@ void XmlIO::run() {
 // This fetches a line from the file, true at eof
 void XmlIO::next_line() {
     line_buffer.clear();
-    int n = lines.get_next_cv(line_buffer, enc);
+    int n = lines.get_next_cv(line_buffer, encoding);
     if (n == -1) {
         if (eof_ok && cur_stack.size() == 1)
             ;
@@ -348,9 +348,9 @@ void XmlIO::parse_pi() {
             aux.format("{}'", B);
             if (is_encoding) {
                 if (B == "iso-8859-1")
-                    enc = 1;
+                    encoding = 1;
                 else if (B == "UTF-8")
-                    enc = 0;
+                    encoding = 0;
                 else
                     error("Unrecognised encoding");
             }

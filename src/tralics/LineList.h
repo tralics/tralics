@@ -22,7 +22,7 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto find_top_val(String s, bool c) -> std::string;
     void set_interactive(bool sw) { interactive = sw; }
     auto get_next_raw(Buffer &b) -> int;
-    auto get_next_cv(Buffer &b, int w) -> int;
+    auto get_next_cv(Buffer &b, size_t w) -> int;
     auto get_next(Buffer &b) -> int;
     auto get_next(std::string &b, bool &cv) -> int;
     void insert(const std::string &c, bool cv);

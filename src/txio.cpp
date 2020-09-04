@@ -248,34 +248,11 @@ void Buffer::out_four_hats(char32_t ch) {
     }
 }
 
-void Buffer::push_back_ent(char32_t ch) { format("&#x{:X};", size_t(ch)); }
-
 // This is the function that puts a character into the buffer  as XML
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
 void Parser::process_char(char32_t c) { unprocessed_xml.push_back_real_utf8(c); }
-
-// \todo rename this into push_back_with_xml_escaping or something
-void Buffer::push_back_real_utf8(char32_t c) {
-    if (c == 0) return;
-    if (c == '\n')
-        push_back('\n');
-    else if (c == '\r')
-        push_back('\r');
-    else if (c == '\t')
-        push_back('\t');
-    else if (c == '<')
-        append("&lt;");
-    else if (c == '>')
-        append("&gt;");
-    else if (c == '&')
-        append("&amp;");
-    else if (c < 32 || is_big(c))
-        push_back_ent(c);
-    else
-        push_back(c);
-}
 
 // Assumes that c is not a special char
 void Parser::process_char(uchar c) {

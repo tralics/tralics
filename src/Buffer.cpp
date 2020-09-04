@@ -71,10 +71,9 @@ void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
 // Same code, but takes a 7 bit character as argument.
 // It could also be a part of a utf8 characater. Is left unchanged then.
-void Buffer::push_back_xml_char(uchar c) {
-    if (c == 0)
-        resize(ptrs.b); // may be required
-    else if (c == 13)
+void Buffer::push_back_xml_char(char c) {
+    if (c == 0) return;
+    if (c == '\n')
         push_back('\n');
     else if (c == '<')
         append("&lt;");
@@ -82,10 +81,31 @@ void Buffer::push_back_xml_char(uchar c) {
         append("&gt;");
     else if (c == '&')
         append("&amp;");
-    else if (c < 32)
-        push_back_ent(c);
+    else if (c > 0 && c < 32)
+        format("&#x{:X};", size_t(c));
     else
-        push_back(static_cast<char>(c));
+        push_back(c);
+}
+
+// \todo rename this into push_back_with_xml_escaping or something
+void Buffer::push_back_real_utf8(char32_t c) {
+    if (c == 0) return;
+    if (c == '\n')
+        push_back('\n');
+    else if (c == '\r')
+        push_back('\r');
+    else if (c == '\t')
+        push_back('\t');
+    else if (c == '<')
+        append("&lt;");
+    else if (c == '>')
+        append("&gt;");
+    else if (c == '&')
+        append("&amp;");
+    else if (c < 32 || is_big(c))
+        format("&#x{:X};", size_t(c));
+    else
+        utf8::append(c, std::back_inserter(*this));
 }
 
 // Converts the entire Buffer to lower case
