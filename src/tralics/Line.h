@@ -7,12 +7,6 @@ struct Line : public std::string {
     bool converted; // true if line is already converted
 
     Line(int n, std::string c = "", bool C = true) : std::string(std::move(c)), number(n), converted(C) {}
-
-    auto to_string(std::string &C, bool &cv) const -> int {
-        C  = *this;
-        cv = converted;
-        return number;
-    }
 };
 
 using line_iterator_const = std::list<Line>::const_iterator;

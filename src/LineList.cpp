@@ -200,7 +200,9 @@ auto LineList::get_next_raw(Buffer &b) -> int {
 // Puts the line in the string, instead of the buffer.
 auto LineList::get_next(std::string &b, bool &cv) -> int {
     if (empty()) return -1;
-    int n = front().to_string(b, cv);
+    b      = front();
+    cv     = front().converted;
+    auto n = front().number;
     pop_front();
     return n;
 }
