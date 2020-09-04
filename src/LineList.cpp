@@ -164,9 +164,9 @@ auto LineList::get_next(Buffer &b) -> int {
         if (n == -1) interactive = false;
     } else {
         if (empty()) return -1;
-        auto [nn, cv] = front().to_buffer(b);
-        n             = nn;
-        converted     = cv;
+        b.append(front());
+        n         = front().number;
+        converted = front().converted;
         pop_front();
     }
     if (!converted) {
@@ -178,7 +178,8 @@ auto LineList::get_next(Buffer &b) -> int {
 
 auto LineList::get_next_cv(Buffer &b, int w) -> int {
     if (empty()) return -1;
-    auto [n, cv] = front().to_buffer(b);
+    b.append(front());
+    auto n = front().number;
     pop_front();
     if (w != 0) {
         cur_file_name = file_name;
@@ -190,7 +191,8 @@ auto LineList::get_next_cv(Buffer &b, int w) -> int {
 // same as get_next, without conversion
 auto LineList::get_next_raw(Buffer &b) -> int {
     if (empty()) return -1;
-    auto [n, cv] = front().to_buffer(b);
+    b.append(front());
+    auto n = front().number;
     pop_front();
     return n;
 }
@@ -306,9 +308,10 @@ void LineList::parse_and_extract_clean(const std::string &s) {
     Buffer & B    = local_buf;
     bool     keep = true;
     for (auto &C : *this) {
-        B.clear();
-        auto [n, cv] = C.to_buffer(B);
-        int open     = B.see_config_env();
+        B         = C;
+        auto n    = C.number;
+        auto cv   = C.converted;
+        int  open = B.see_config_env();
         b += open;
         if (b < 0) {
             b = 0;
@@ -364,9 +367,8 @@ void LineList::parse_conf_toplevel() const {
     int    b = 0;
     Buffer B;
     for (const auto &C : *this) {
-        B.clear();
-        auto [n, cv]  = C.to_buffer(B);
-        init_file_pos = n;
+        B             = C;
+        init_file_pos = C.number;
         b += B.see_config_env();
         if (b == 0) tpage_ns::see_main_a(B, local_buf);
     }

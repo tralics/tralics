@@ -13,13 +13,6 @@ struct Line : public std::string {
         cv = converted;
         return number;
     }
-
-    auto to_buffer(Buffer &b) const -> std::pair<int, bool> {
-        b.append(*this);
-        return {number, converted};
-    }
-
-    void convert_line(size_t wc);
 };
 
 using line_iterator_const = std::list<Line>::const_iterator;
