@@ -606,24 +606,24 @@ void Xml::print_on(std::ostream &o) const {
         if (id.value == 0)
             o << encode(name);
         else if (id.value == size_t(-1))
-            o << fmt::format("<!--{}-->", encode(name));
+            fmt::print(o, "<!--{}-->", encode(name));
         else if (id.value == size_t(-2)) {
-            o << fmt::format("<!{}", encode(name));
+            fmt::print(o, "<!{}", encode(name));
             for (const auto &e : *this) o << e;
             o << ">";
         } else if (id.value == size_t(-3))
-            o << fmt::format("<?{}?>", encode(name));
+            fmt::print(o, "<?{}?>", encode(name));
         return;
     }
 
     if (empty() && !name.empty()) {
-        o << fmt::format("<{}{}/>", name.c_str(), id.get_att());
+        fmt::print(o, "<{}{}/>", name.c_str(), id.get_att());
         return;
     }
 
-    if (!name.empty()) o << fmt::format("<{}{}>", name.c_str(), id.get_att());
+    if (!name.empty()) fmt::print(o, "<{}{}>", name.c_str(), id.get_att());
     for (const auto &e : *this) o << e;
-    if (!name.empty()) o << fmt::format("</{}>", name.c_str());
+    if (!name.empty()) fmt::print(o, "</{}>", name.c_str());
 }
 
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
