@@ -156,25 +156,6 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     }
 }
 
-// Puts element T with its attribute list in the buffer.
-// If w=0, we print <foo att-list/>
-// If w=1, we print <foo att-list>
-// if w=2, we print </foo>
-void Buffer::push_back_elt(const std::string &name, Xid id, int w) {
-    push_back('<');
-    if (w == 2) push_back('/');
-    append(name.c_str()); // NOLINT c_str because there might be a 0 char in name, \todo fix that
-    if (w != 2) push_back(id.get_att());
-    if (w == 0) push_back('/');
-    push_back('>');
-}
-
-void Buffer::finish_xml_print(std::ostream &o) {
-    o << data();
-    clear();
-}
-//--------------------------- Word stats
-
 // This is called when a new word is seen.
 void all_words_ns::add_a_word(String s, size_t h) {
     auto      H = h % 100;

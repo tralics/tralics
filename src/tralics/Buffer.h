@@ -66,11 +66,10 @@ public:
     void fill_table(bchar_type *table); ///< Not sure what this does?
 
     // Those have void return type but involve global variables
-    void convert_line(int l, size_t wc);    ///< Convert a line to UTF8
-    void find_top_atts();                   ///< This does something with DocAttribs \todo [vb] sic
-    void finish_xml_print(std::ostream &o); ///< Flush the buffer
-    void insert_escape_char();              ///< Inserts the current escape char
-    void insert_escape_char_raw();          ///< This one is for `\meaning`
+    void convert_line(int l, size_t wc); ///< Convert a line to UTF8
+    void find_top_atts();                ///< This does something with DocAttribs \todo [vb] sic
+    void insert_escape_char();           ///< Inserts the current escape char
+    void insert_escape_char_raw();       ///< This one is for `\meaning`
 
     // Those are not const and have a return value, mostly they leave some
     // crucial info in ptrs.b and ptrs.a or just reset. \todo refactor all that
@@ -116,7 +115,6 @@ public:
     void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();
     void push_back_alt(const AttPair &X);
-    void push_back_elt(const std::string &name, Xid id, int w);
     void push_back_math_aux(std::string s);
     void push_back_math_tag(const CmdChr &x, int type);
     void push_back_math_tag(std::string s, int type);

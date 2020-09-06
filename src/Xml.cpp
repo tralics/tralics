@@ -7,6 +7,7 @@
 #include "tralics/util.h"
 #include "txmath.h"
 #include "txpost.h"
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -600,42 +601,34 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
     ptr[0]->add_tmp(gsl::not_null{bib});
 }
 
-// This puts element T, with its value in the buffer.
-// If non trivial, the buffer is flushed (printed on the file)
-// \todo this should just output to the stream, the Buffer is auxiliary
-void Xml::to_buffer(Buffer &b, std::ostream &o) const {
+void Xml::print_on(std::ostream &o) const {
     if (is_xmlc()) {
         if (id.value == 0)
-            b += encode(name);
+            o << encode(name);
         else if (id.value == size_t(-1))
-            b += "<!--" + encode(name) + "-->";
+            o << fmt::format("<!--{}-->", encode(name));
         else if (id.value == size_t(-2)) {
-            b += "<!" + encode(name);
-            for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b, o);
-            b += ">";
-            b.finish_xml_print(o);
+            o << fmt::format("<!{}", encode(name));
+            for (const auto &e : *this) o << e;
+            o << ">";
         } else if (id.value == size_t(-3))
-            b += "<?" + encode(name) + "?>";
+            o << fmt::format("<?{}?>", encode(name));
         return;
     }
-    if (!name.empty()) {
-        if (!empty())
-            b.push_back_elt(name, id, 1);
-        else {
-            b.push_back_elt(name, id, 0); // case of <foo/>
-            return;
-        }
+
+    if (empty() && !name.empty()) {
+        o << fmt::format("<{}{}/>", name.c_str(), id.get_att());
+        return;
     }
-    for (size_t i = 0; i < size(); i++) at(i)->to_buffer(b, o);
-    if (!name.empty()) b.push_back_elt(name, id, 2);
-    b.finish_xml_print(o);
+
+    if (!name.empty()) o << fmt::format("<{}{}>", name.c_str(), id.get_att());
+    for (const auto &e : *this) o << e;
+    if (!name.empty()) o << fmt::format("</{}>", name.c_str());
 }
 
-// This prints T on the file fp, using scbuf.
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream & {
-    Buffer B;
-    if (T != nullptr) T->to_buffer(B, fp);
-    return fp << B;
+    if (T != nullptr) T->print_on(fp);
+    return fp;
 }
 
 // Replace <name/> by vl.
