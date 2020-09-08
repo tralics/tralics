@@ -16,4 +16,5 @@ struct AttList : public std::vector<AttPair> {
     void push_back(const std::string &name, const std::string &value, bool force = true);
 };
 
+auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream &;
 auto operator<<(std::ostream &o, const AttList &a) -> std::ostream &;

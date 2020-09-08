@@ -144,7 +144,6 @@ public:
     void push_back(ScaledInt v, glue_spec unit);
     void push_back(const SthInternal &x);
     void push_back(const Glue &x);
-    void push_back(const AttPair &X);
     void push_back(const Macro &x);
     void push_back(const Macro &x, bool sw);
     void push_back(const TokenList &L);

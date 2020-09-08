@@ -698,21 +698,6 @@ void Buffer::skip_letter_dig_dot_slash() {
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
-void Buffer::push_back(const AttPair &X) { // \todo as insertion operator
-    if (X.name[0] == '\'') return;
-    const char        quote = the_main->double_quote_att ? '\"' : '\'';
-    const std::string repl  = the_main->double_quote_att ? "&quot;" : "&apos;";
-
-    format(" {}={}", X.name, quote);
-    for (char c : Buffer(X.value).convert_to_out_encoding()) {
-        if (c == quote)
-            append(repl);
-        else
-            push_back(c);
-    }
-    push_back(quote);
-}
-
 // Returns true if there is a space. Kills at the space. Advance
 auto Buffer::look_at_space(const std::string &s) -> bool {
     clear();
