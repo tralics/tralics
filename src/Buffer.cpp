@@ -698,48 +698,19 @@ void Buffer::skip_letter_dig_dot_slash() {
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
-// Puts the attribute list in the buffer
-// We can have Foo="bar'", printed as Foo='bar&apos;'
-// The case Foo'bar="&gee" is not handled.
-// nothing is printed in case the name starts with an apostrophe.
-// Print in reverse order, because this was in the previous version
-// \todo revert that inverse order thing
+void Buffer::push_back(const AttPair &X) { // \todo as insertion operator
+    if (X.name[0] == '\'') return;
+    const char        quote = the_main->double_quote_att ? '\"' : '\'';
+    const std::string repl  = the_main->double_quote_att ? "&quot;" : "&apos;";
 
-void Buffer::push_back(const AttList &Y) {
-    auto n = Y.size();
-    if (the_main->double_quote_att)
-        for (auto i = n; i > 0; i--) push_back_alt(Y[i - 1]);
-    else
-        for (auto i = n; i > 0; i--) push_back(Y[i - 1]);
-}
-
-void Buffer::push_back(const AttPair &X) {
-    const std::string &b = X.name;
-    const std::string &a = X.value;
-    if (b[0] == '\'') return;
-    format(" {}=\'", b);
-    for (char c : Buffer(a).convert_to_out_encoding()) {
-        if (c == '\'')
-            append("&apos;");
+    format(" {}={}", X.name, quote);
+    for (char c : Buffer(X.value).convert_to_out_encoding()) {
+        if (c == quote)
+            append(repl);
         else
             push_back(c);
     }
-    push_back('\'');
-}
-
-// Use double quotes instead of single quotes
-void Buffer::push_back_alt(const AttPair &X) {
-    const std::string &b = X.name;
-    const std::string &a = X.value;
-    if (b[0] == '\'') return;
-    format(" {}=\"", b);
-    for (char c : Buffer(a).convert_to_out_encoding()) {
-        if (c == '\"')
-            append("&quot;");
-        else
-            push_back(c);
-    }
-    push_back('\"');
+    push_back(quote);
 }
 
 // Returns true if there is a space. Kills at the space. Advance

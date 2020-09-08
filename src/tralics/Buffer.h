@@ -114,7 +114,6 @@ public:
     void out_four_hats(char32_t ch);
     void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();
-    void push_back_alt(const AttPair &X);
     void push_back_math_aux(std::string s);
     void push_back_math_tag(const CmdChr &x, int type);
     void push_back_math_tag(std::string s, int type);
@@ -145,7 +144,6 @@ public:
     void push_back(ScaledInt v, glue_spec unit);
     void push_back(const SthInternal &x);
     void push_back(const Glue &x);
-    void push_back(const AttList &Y);
     void push_back(const AttPair &X);
     void push_back(const Macro &x);
     void push_back(const Macro &x, bool sw);
