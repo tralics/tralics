@@ -172,11 +172,10 @@ auto Parser::L3_split_next_name() -> bool {
         err_buf  = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
         signal_error(err_tok, "no colon in name");
         return true;
-    } else {
-        tok_base = out->first;
-        tok_sig  = out->second;
-        return false;
     }
+    tok_base = out->first;
+    tok_sig  = out->second;
+    return false;
 }
 
 // user function, no error if missing colon

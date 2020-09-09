@@ -39,7 +39,7 @@ auto split_commas(const std::string &S) -> std::vector<std::string> {
     return res;
 }
 
-auto split_assign(std::string s) -> std::pair<std::string, std::string> {
+auto split_assign(std::string s) -> std::pair<std::string, std::string> { // \todo similar to split_at_colon
     size_t i = 0;
     while ((s[i] != 0) && (s[i] != '=')) i++;
     std::string key = without_end_spaces(std::string(s).substr(0, i));
