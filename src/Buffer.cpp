@@ -132,13 +132,7 @@ void Buffer::push_back_newline() {
 auto Buffer::push_back_newline_spec() -> bool {
     if (empty()) return true;
     push_back('\n');
-    if (at(0) == '#') {
-        if (starts_with("## tralics ident rc=")) { // \todo not very useful
-            auto line = substr(20, size() - 21);
-            spdlog::trace("Configuration file identification: {}", line);
-        }
-        return false;
-    }
+    if (at(0) == '#') return false;
     if (at(0) == '%' || is_space(at(0))) return true;
     if (starts_with("Begin")) return true;
     if (starts_with("End")) return true;
@@ -499,19 +493,6 @@ auto Buffer::int_val() const -> std::optional<size_t> {
     }
 }
 
-// splits foo:bar into foo and bar
-auto Buffer::split_at_colon(std::string &before, std::string &after) -> bool {
-    if (auto i = find(':'); i != npos) {
-        after = substr(i + 1);
-        resize(i);
-        before = data();
-        return true;
-    }
-    before = data();
-    after  = "";
-    return false;
-}
-
 // Sets ptrs.a to the first non-space
 // sets ptrs.b to the next equals sign. Returns false if no such sign exists
 auto Buffer::find_equals() -> bool {
@@ -747,11 +728,11 @@ void Buffer::push_back_special_att(Xid id) {
 
 // Returns true if we see space, then s then space then equals then space.
 // sets ptrs.b to the char after this space
-auto Buffer::see_equals(String s) -> bool {
+auto Buffer::see_equals(const std::string &s) -> bool {
     ptrs.b = 0;
     skip_sp_tab();
     if (!substr(ptrs.b).starts_with(s)) return false;
-    ptrs.b += strlen(s);
+    ptrs.b += s.size();
     skip_sp_tab();
     if (next_char() != '=') return false;
     skip_sp_tab();

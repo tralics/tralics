@@ -393,8 +393,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     auto      CR = Token(space_t_offset + '\n'); // behaves as space
     auto      NL = Token(other_t_offset + '\n'); // is ^^J
     ptrs.b       = 0;
-    for (;;) {
-        if (at_eol()) return L;
+    for (; !at_eol();) {
         char32_t c = next_utf8_char();
         if (c == 0) {
         } // ignore bad chars
@@ -405,6 +404,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
         else
             L.push_back(Token(other_t_offset, c));
     }
+    return L;
 }
 
 // Use character code 11 whenever possible

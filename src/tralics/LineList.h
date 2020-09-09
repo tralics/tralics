@@ -19,7 +19,7 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto find_doctype() -> std::string;
     auto find_documentclass() -> std::string;
     void find_top_atts();
-    auto find_top_val(String s, bool c) -> std::string;
+    auto find_top_val(const std::string &s, bool c) -> std::string;
     void set_interactive(bool sw) { interactive = sw; }
     auto get_next_raw(Buffer &b) -> int;
     auto get_next_cv(Buffer &b, size_t w) -> int;

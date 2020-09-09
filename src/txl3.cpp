@@ -165,13 +165,18 @@ auto Parser::L3_split_next_name() -> bool {
     B.clear();
     token_to_split = cur_tok;
     B += hash_table[cur_tok.hash_loc()];
-    bool ok = B.split_at_colon(tok_base, tok_sig);
-    if (!ok) {
-        err_buf = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
+    auto out = split_at_colon(B);
+    if (!out) {
+        tok_base = B;
+        tok_sig  = "";
+        err_buf  = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
         signal_error(err_tok, "no colon in name");
         return true;
+    } else {
+        tok_base = out->first;
+        tok_sig  = out->second;
+        return false;
     }
-    return false;
 }
 
 // user function, no error if missing colon
@@ -180,7 +185,14 @@ void Parser::L3_user_split_next_name(bool base) {
     if (l3_get_name(T)) return;
     Buffer &B = local_buffer;
     B         = hash_table[cur_tok.hash_loc()];
-    B.split_at_colon(tok_base, tok_sig);
+    auto out  = split_at_colon(B);
+    if (out) {
+        tok_base = out->first;
+        tok_sig  = out->second;
+    } else {
+        tok_base = B;
+        tok_sig  = "";
+    }
     std::string res = base ? tok_base : tok_sig;
     if (tracing_macros()) {
         Logger::finish_seq();
@@ -1019,7 +1031,14 @@ void Parser::l3_generate_variant(String orig, String var) {
     Token   T = hash_table.locate(orig);
     Buffer &B = local_buffer;
     B         = orig;
-    B.split_at_colon(tok_base, tok_sig);
+    auto out  = split_at_colon(B);
+    if (out) {
+        tok_base = out->first;
+        tok_sig  = out->second;
+    } else {
+        tok_base = B;
+        tok_sig  = "";
+    }
     l3_generate_variant(var, false, T);
 }
 

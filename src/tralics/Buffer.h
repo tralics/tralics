@@ -90,13 +90,12 @@ public:
     auto next_utf8_char() -> char32_t;
     auto push_back_newline_spec() -> bool;
     auto reverse_horner() -> unsigned;
-    auto see_config_kw(String s, bool c) -> String;
-    auto see_equals(String s) -> bool;
+    auto see_config_kw(const std::string &s, bool c) -> String;
+    auto see_equals(const std::string &s) -> bool;
     auto skip_string(const std::string &s) -> bool;
     auto skip_word_ci(const std::string &s) -> bool;
     auto slash_separated(std::string &a) -> bool;
     auto special_convert(bool init) -> std::string;
-    auto split_at_colon(std::string &before, std::string &after) -> bool;
     auto str_toks(nl_to_tok nl) -> TokenList;
     auto str_toks11(bool nl) -> TokenList;
     auto string_delims() -> bool;

@@ -349,13 +349,9 @@ auto Buffer::horner(size_t p) -> Digit {
 // multiplied by 10^9. Reading ends after 9 digits or EOL.
 // Ok for the fractional part of 1234.5678
 auto Buffer::reverse_horner() -> Digit {
-    size_t i   = 8;
-    Digit  res = 0;
-    for (;;) {
-        if (at_eol()) return res;
-        res += power_table[i] * to_unsigned(next_char() - '0');
-        if (i-- == 0) return res;
-    }
+    Digit res = 0;
+    for (size_t i = 9; !at_eol() && i > 0; --i) res += power_table[i - 1] * to_unsigned(next_char() - '0');
+    return res;
 }
 
 // Assume that the buffer holds : sign digits dot digits

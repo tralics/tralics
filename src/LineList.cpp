@@ -293,7 +293,7 @@ void LineList::find_all_types(std::vector<std::string> &res) {
 }
 
 // This find a toplevel value.
-auto LineList::find_top_val(String s, bool c) -> std::string {
+auto LineList::find_top_val(const std::string &s, bool c) -> std::string {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         B          = *C;

@@ -1,5 +1,6 @@
 #pragma once
 #include "enums.h"
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -17,6 +18,7 @@ auto remove_digits(std::string s) -> std::string;
 auto save_string_name(size_t n) -> String;
 auto split_assign(std::string s) -> std::pair<std::string, std::string>;
 auto split_commas(const std::string &S) -> std::vector<std::string>;
+auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>>;
 auto to_utf8(char32_t c) -> std::string;
 auto without_end_spaces(std::string s) -> std::string;
 

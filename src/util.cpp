@@ -127,3 +127,9 @@ auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
     }
     return res;
 }
+
+// splits foo:bar into foo and bar
+auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>> {
+    if (auto i = s.find(':'); i != std::string::npos) return {{s.substr(0, i), s.substr(i + 1)}};
+    return {};
+}

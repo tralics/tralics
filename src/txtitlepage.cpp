@@ -665,7 +665,7 @@ auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
 // If c is true, stop at white space or comment.
 // Otherwise, just remove trailing space.
 
-auto Buffer::see_config_kw(String s, bool c) -> String {
+auto Buffer::see_config_kw(const std::string &s, bool c) -> String {
     if (!see_equals(s)) return nullptr;
     if (c) {
         auto k = ptrs.b;
