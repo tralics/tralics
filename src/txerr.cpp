@@ -15,6 +15,8 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+using namespace std::string_literals;
+
 namespace {
     auto convert_for_xml_err(Token T) -> std::string {
         if (T.is_null()) return "\\invalid.";
@@ -267,7 +269,7 @@ void Parser::bad_counter0() {
 }
 
 void Parser::bad_counter1(const Buffer &B, EqtbCmdChr &E) {
-    err_buf = (E.val.is_undef() ? "Unknown counter `" : "Invalid counter `") + B.substr(2) + "'";
+    err_buf = (E.val.is_undef() ? "Unknown counter `"s : "Invalid counter `"s) + B.substr(2) + "'";
     signal_error(err_tok, "bad counter");
 }
 

@@ -15,6 +15,8 @@
 #include "tralics/globals.h"
 #include "txinline.h"
 
+using namespace std::string_literals;
+
 void show_unused_options();
 
 // This file contains the big switch that interprets (most) commands
@@ -817,7 +819,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
     mode m = the_stack.get_mode();
     need_bib_mode();
     flush_buffer();
-    T_arg1(the_names[c == 0 ? "bauteurs" : "bediteur"]);
+    T_arg1(the_names[c == 0 ? "bauteurs"s : "bediteur"s]);
     the_stack.set_mode(m);
     the_stack.add_nl();
 }

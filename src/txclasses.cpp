@@ -1241,6 +1241,6 @@ auto Parser::XKV_parse_filename() -> TokenList {
         return read_until_nopar(Token(other_t_offset, '>'));
     }
     LatexPackage *C     = the_class_data.cur_pack();
-    txclasses_local_buf = C->real_name() + (C->is_class() ? ".cls" : ".sty");
+    txclasses_local_buf = C->real_name() + (C->is_class() ? ".cls"s : ".sty"s);
     return txclasses_local_buf.str_toks11(false);
 }

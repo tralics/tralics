@@ -88,7 +88,7 @@ auto Buffer::next_utf8_char() -> char32_t {
     char32_t cp = 0;
     try {
         cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
-    } catch (utf8::invalid_utf8) {
+    } catch (utf8::invalid_utf8 &) {
         bad_chars++;
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", cur_file_name, cur_file_line, ptrs.b + 1);
         ++ptrs.b;
