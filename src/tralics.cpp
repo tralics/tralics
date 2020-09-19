@@ -35,5 +35,5 @@ auto main(int argc, char **argv) -> int {
     the_parser.boot(); // create the hash table and all that
     spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
     M.run(argc, argv);
-    return main_ns::nb_errs == 0 ? 0 : 2;
+    return nb_errs == 0 ? 0 : 2;
 }

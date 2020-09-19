@@ -133,7 +133,7 @@ void Parser::check_all_ids() {
                 break;
             }
             log_and_tty << "\n";
-            main_ns::nb_errs++;
+            nb_errs++;
         }
         std::string B = L->id;
         if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);

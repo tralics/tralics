@@ -1,6 +1,7 @@
 #include "tralics/Condition.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 
 void Condition::dump() const {
     for (size_t i = size(); i > 0; i--) at(i - 1).dump(to_signed(i - 1));
@@ -56,7 +57,7 @@ void Condition::pop() {
 // This pops all conditions, signaling errors.
 void Condition::terminate() {
     while (!empty()) {
-        main_ns::nb_errs++;
+        nb_errs++;
         spdlog::error("Unterminated \\if {}, started at line {}", top_serial(), top_line());
         pop_back();
     }

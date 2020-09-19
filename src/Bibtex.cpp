@@ -321,7 +321,7 @@ auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> std::st
 // Signals an error while reading the file.
 // We do not use parse_error here
 void Bibtex::err_in_file(String s, bool last) const {
-    main_ns::nb_errs++;
+    nb_errs++;
     Logger::finish_seq();
     log_and_tty << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
     if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
@@ -330,7 +330,7 @@ void Bibtex::err_in_file(String s, bool last) const {
 }
 
 void Bibtex::err_in_entry(String a) {
-    main_ns::nb_errs++;
+    nb_errs++;
     log_and_tty << "Error signaled while handling entry " << cur_entry_name;
     if (cur_entry_line >= 0) log_and_tty << " (line " << cur_entry_line << ")";
     log_and_tty << "\n" << a;

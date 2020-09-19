@@ -240,7 +240,7 @@ namespace {
             if (!li->used) continue;
             log_and_tty << "Error signaled by postprocessor\n"
                         << "Removing `" << s << "' made the following label disappear: " << V << "\n";
-            main_ns::nb_errs++;
+            nb_errs++;
         }
         for (auto &defined_label : defined_labels) {
             std::string j = defined_label.first;

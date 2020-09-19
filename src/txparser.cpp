@@ -1894,9 +1894,9 @@ auto Parser::counter_read_opt(String s) -> int {
         return 2;
     }
     TokenList bar_list;
-    int       ne = main_ns::nb_errs;
+    int       ne = nb_errs;
     if (!read_optarg_nopar(bar_list)) return 0;
-    if (ne != main_ns::nb_errs) return 1;
+    if (ne != nb_errs) return 1;
     if (my_csname("cl@", "", bar_list, "newcounter_opt")) return 1;
     return 2;
 }
@@ -1938,10 +1938,10 @@ auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
 // \@addtreset{foo}{bar}
 // evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
 void Parser::E_addtoreset() {
-    int       ne       = main_ns::nb_errs;
+    int       ne       = nb_errs;
     TokenList foo_list = read_arg_nopar();
     TokenList L        = read_arg_nopar();
-    if (ne != main_ns::nb_errs) return;
+    if (ne != nb_errs) return;
     brace_me(foo_list);
     if (my_csname("cl@", "", L, "\\@addtoreset")) return;
     Token cl_token = cur_tok; // \cl@bar

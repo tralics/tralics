@@ -2026,14 +2026,14 @@ void Parser::solve_cite(bool user) {
 // \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}
 // note that Tralics generates an empty von-part
 void Parser::T_bpers() {
-    int e              = main_ns::nb_errs;
+    int e              = nb_errs;
     unexpected_seen_hi = false;
     auto        A      = nT_optarg_nopar();
     std::string a      = nT_arg_nopar();
     std::string b      = nT_arg_nopar();
     std::string c      = nT_arg_nopar();
     std::string d      = nT_arg_nopar();
-    if (unexpected_seen_hi && e != main_ns::nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    if (unexpected_seen_hi && e != nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
     if (A && !A->empty()) the_stack.add_att_to_last(the_names["full_first"], *A);

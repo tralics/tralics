@@ -11,6 +11,7 @@
 
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -65,14 +66,14 @@ void err_ns::fatal_error(String s) {
 void Parser::signal_error() {
     int         line = get_cur_line();
     std::string file = get_cur_filename();
-    main_ns::nb_errs++;
+    nb_errs++;
     flush_buffer();
     Logger::finish_seq();
     if (file.empty())
         spdlog::error("on line {}: {}", line, err_buf);
     else
         spdlog::error("{}:{} {}", file, line, err_buf);
-    if (main_ns::nb_errs >= 5000) {
+    if (nb_errs >= 5000) {
         spdlog::critical("Translation aborted: Too many errors, aborting.");
         Logger::log_finish();
         exit(1);

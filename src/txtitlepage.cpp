@@ -435,7 +435,7 @@ void Parser::T_titlepage_finish(size_t v) {
     if (the_main->tpa_mode == 2)
         finished = true;
     else if (the_main->tpa_mode == 0) {
-        if (main_ns::nb_errs > 0) finished = true;
+        if (nb_errs > 0) finished = true;
     }
     if (finished && also_bib) {
         the_bibliography.set_nocite();

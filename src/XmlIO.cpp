@@ -1,6 +1,7 @@
 #include "tralics/XmlIO.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txinline.h"
 
@@ -740,6 +741,6 @@ auto XmlIO::expand_PEReference() -> bool {
 }
 
 void XmlIO::error(const std::string &s) const {
-    main_ns::nb_errs++;
+    nb_errs++;
     log_and_tty << "Error while parsing XML (line " << cur_line << ")\n" << s << ".\n";
 }

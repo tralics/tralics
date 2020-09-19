@@ -9,10 +9,10 @@ void Logger::log_dump(const std::string &s) {
 }
 
 void Logger::log_finish() {
-    if (main_ns::nb_errs == 0)
+    if (nb_errs == 0)
         spdlog::info("No error found.");
-    else if (main_ns::nb_errs == 1)
+    else if (nb_errs == 1)
         spdlog::warn("There was one error.");
     else
-        spdlog::warn("There were {} errors.", main_ns::nb_errs);
+        spdlog::warn("There were {} errors.", nb_errs);
 }

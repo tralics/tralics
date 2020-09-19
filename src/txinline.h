@@ -21,7 +21,6 @@
 
 // See comments in tralics.cpp where these variables are defined
 namespace main_ns {
-    inline int  nb_errs{0};
     inline bool no_xml_error{false};
     inline bool use_quotes{false};
     inline bool bib_allow_break{true};

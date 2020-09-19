@@ -35,6 +35,7 @@ inline int                                                          cur_file_lin
 inline int                                                          init_file_pos = 0; // position in init file
 inline int                                                          nb_words      = 0;
 inline int                                                          bad_chars{0};
+inline int                                                          nb_errs{0};
 inline long                                                         cline_first, cline_last;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
