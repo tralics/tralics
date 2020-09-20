@@ -54,10 +54,5 @@ namespace config_ns {
     auto pers_rc(const std::string &rc) -> std::string;
     void check_RC(Buffer &B, Xml *res);
     auto find_keys(const std::string &name) -> std::string;
-    auto start_interpret(Buffer &B, String s) -> bool;
     void interpret_list(const std::string &a, Buffer &B);
 } // namespace config_ns
-
-namespace tpage_ns {
-    void see_main_a(Buffer &in, Buffer &val);
-} // namespace tpage_ns

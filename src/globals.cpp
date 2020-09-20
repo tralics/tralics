@@ -3,21 +3,6 @@
 #include "txinline.h"
 #include <fmt/format.h>
 
-std::string all_themes;
-std::string everyjob_string;
-
-size_t leftquote_val{'`'};
-size_t rightquote_val{'\''};
-
-bool bad_minus{false};
-bool compatibility{false};
-bool nofloat_hack{false};
-bool only_input_data{false};
-bool raw_bib{false};
-bool seen_enddocument{false};
-
-std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
-
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {
         auto f = conf_path[i - 1] / s;

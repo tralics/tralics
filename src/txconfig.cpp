@@ -40,6 +40,26 @@ namespace config_ns {
 
 using namespace config_ns;
 
+namespace {
+    // We add a final slash, or double slash, this makes parsing easier;
+    // We also remove an initial slash (This is not done if the separator is a
+    // space, case where s is empty).
+    // An initial plus sign means: append the line to the vector, else reset.
+
+    auto start_interpret(Buffer &B, String s) -> bool {
+        bool ret_val = false;
+        B.append(s);
+        B.ptrs.b = 0;
+        if (B.head() == '+') {
+            B.advance();
+            the_log << "+";
+        } else
+            ret_val = true;
+        if ((s[0] != 0) && B.head() == '/') B.advance();
+        return ret_val;
+    }
+} // namespace
+
 // --------------------------------------------------
 
 // Configuration file option lists.
@@ -233,24 +253,6 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
     return s;
 }
 
-// We add a final slash, or double slash, this makes parsing easier;
-// We also remove an initial slash (This is not done if the separator is a
-// space, case where s is empty).
-// An initial plus sign means: append the line to the vector, else reset.
-
-auto config_ns::start_interpret(Buffer &B, String s) -> bool {
-    bool ret_val = false;
-    B.append(s);
-    B.ptrs.b = 0;
-    if (B.head() == '+') {
-        B.advance();
-        the_log << "+";
-    } else
-        ret_val = true;
-    if ((s[0] != 0) && B.head() == '/') B.advance();
-    return ret_val;
-}
-
 // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
 // This creates four slots in a table indexed by k.
 void config_ns::interpret_data_list(Buffer &B, const std::string &name) {
@@ -414,7 +416,7 @@ auto Buffer::add_with_space(const std::string &s) -> std::string {
 // Initial + means append, otherwise replace.
 
 void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2) {
-    if (config_ns::start_interpret(*this, "")) {
+    if (start_interpret(*this, "")) {
         bib.resize(0);
         bib2.resize(0);
     }

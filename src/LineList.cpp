@@ -1,9 +1,14 @@
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
+#include "tralics/NameMapper.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txinline.h"
 #include <ctre.hpp>
+
+namespace tpage_ns {
+    auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
+}
 
 namespace {
     Buffer local_buf;
@@ -22,6 +27,38 @@ namespace {
         auto str = s.substr(a, b - a);
         S.push_back(str);
         spdlog::trace("Defined type: {}", str);
+    }
+
+    // Returns 0, unless we see A="B", fills the buffers A and B.
+    // return 2 if there is a space in A, 1 otherwise.
+    auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
+        if (in.tp_fetch_something() != tl_normal) return 0;
+        for (;;) {
+            if (in.is_special_end()) return 0;
+            if (in.head() == '=') break;
+            key.push_back(in.head());
+            in.advance();
+        }
+        in.advance();
+        in.skip_sp_tab();
+        if (in.head() != '\"') return 0;
+        in.advance();
+        tpage_ns::scan_item(in, val, '\"');
+        key.ptrs.b = 0;
+        key.remove_space_at_end();
+        for (;;) {
+            if (key.head() == 0) return 1;
+            if (is_space(key.head())) return 2;
+            key.advance();
+        }
+    }
+
+    // This is called for all lines, outside groups.
+    void see_main_a(Buffer &in, Buffer &val) {
+        Buffer B;
+        val.clear();
+        int k = see_an_assignment(in, B, val);
+        if (k == 1) the_names.assign(B, val);
     }
 } // namespace
 
@@ -372,7 +409,7 @@ void LineList::parse_conf_toplevel() const {
         B             = C;
         init_file_pos = C.number;
         b += B.see_config_env();
-        if (b == 0) tpage_ns::see_main_a(B, local_buf);
+        if (b == 0) see_main_a(B, local_buf);
     }
 }
 

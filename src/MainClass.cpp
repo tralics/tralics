@@ -513,8 +513,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_externalprog: obsolete(s); return;
         case pa_trivialmath: trivial_math = atoi(a); return;
-        case pa_leftquote: leftquote_val = std::stoul(a, nullptr, 16); return;
-        case pa_rightquote: rightquote_val = std::stoul(a, nullptr, 16); return;
+        case pa_leftquote: leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
+        case pa_rightquote: rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
         case pa_inputfile: see_name(a); return;
         case pa_inputdata:

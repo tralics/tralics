@@ -31,7 +31,6 @@ namespace tpage_ns {
     void init_error();
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
     auto next_item(Buffer &in, Buffer &out) -> tpi_vals;
-    auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int;
 
 } // namespace tpage_ns
 
@@ -711,38 +710,6 @@ auto Buffer::see_config_env() const -> int {
     if (starts_with("Begin")) return 1;
     if (starts_with("End")) return -1;
     return 0;
-}
-
-// This is called for all lines, outside groups.
-void tpage_ns::see_main_a(Buffer &in, Buffer &val) {
-    Buffer B;
-    val.clear();
-    int k = tpage_ns::see_an_assignment(in, B, val);
-    if (k == 1) the_names.assign(B, val);
-}
-
-// Returns 0, unless we see A="B", fills the buffers A and B.
-// return 2 if there is a space in A, 1 otherwise.
-auto tpage_ns::see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
-    if (in.tp_fetch_something() != tl_normal) return 0;
-    for (;;) {
-        if (in.is_special_end()) return 0;
-        if (in.head() == '=') break;
-        key.push_back(in.head());
-        in.advance();
-    }
-    in.advance();
-    in.skip_sp_tab();
-    if (in.head() != '\"') return 0;
-    in.advance();
-    tpage_ns::scan_item(in, val, '\"');
-    key.ptrs.b = 0;
-    key.remove_space_at_end();
-    for (;;) {
-        if (key.head() == 0) return 1;
-        if (is_space(key.head())) return 2;
-        key.advance();
-    }
 }
 
 auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) -> bool {
