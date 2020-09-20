@@ -36,6 +36,7 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     void print(std::ostream &outfile);
     void read(const std::string &x, int spec);
     auto read_from_tty(Buffer &b) -> int;
+    void register_file();
     void reset(std::string x);
     void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;

@@ -56,6 +56,5 @@ auto next_label_id() -> std::string;
 auto null_cs_name() -> std::string;
 
 namespace main_ns {
-    void register_file(LineList &&x);                                                     ///< Push a file onto the pool
     auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; ///< Searches for a file in conf_path
 } // namespace main_ns

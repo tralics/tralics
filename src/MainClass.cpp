@@ -1036,7 +1036,7 @@ void MainClass::more_boot() const {
     LineList res;
     res.reset(".tex");
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
-    main_ns::register_file(std::move(res));
+    res.register_file();
     the_parser.my_stats.after_boot();
     the_parser.the_stack.set_xid_boot();
 }

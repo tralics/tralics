@@ -284,7 +284,7 @@ void Parser::T_filecontents(int spec) {
         action = 2;
         LineList res;
         res.reset(filename);
-        main_ns::register_file(std::move(res));
+        res.register_file();
         if (spec == 3) is_encoded = false;
     } else if (auto of = tralics_ns::find_in_path(filename); of) {
         Logger::finish_seq();
@@ -347,5 +347,3 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
     }
     return {};
 }
-
-void main_ns::register_file(LineList &&x) { file_pool.push_back(std::move(x)); }

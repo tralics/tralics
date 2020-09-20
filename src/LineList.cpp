@@ -471,3 +471,5 @@ void LineList::read(const std::string &x, int spec) {
         if (c == EOF) break;
     }
 }
+
+void LineList::register_file() { file_pool.push_back(std::move(*this)); }
