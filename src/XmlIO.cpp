@@ -84,7 +84,7 @@ auto XmlIO::init(const std::string &name) -> bool {
     Type[uchar(':')]  = xt_ok_first;
     Type[uchar('$')]  = xt_other;
     Type[uchar('-')]  = xt_other;
-    tralics_ns::read_a_file(lines, name, 3);
+    lines.read(name, 3);
     encoding       = 0;
     input_line_pos = cur_line_len = 0;
     nb_cond                       = 0;

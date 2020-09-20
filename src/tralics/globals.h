@@ -41,6 +41,7 @@ inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
 inline std::array<String, 3>                                        my_constant_table;
 inline std::array<WordList *, 100>                                  WL0;
+inline std::optional<size_t>                                        pool_position;  // \todo this is a static variable that should disappear
 inline std::string                                                  cur_entry_name; // name of entry under construction.
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};

@@ -410,3 +410,64 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
     }
     return false;
 }
+
+// This reads the file named x.
+// If spec is 0, we are reading the config file.
+// If 2 it's a tex file, and the file is converted later.
+// If 3, no conversion  done
+// If 4, its is the main file, log not yet open.
+void LineList::read(const std::string &x, int spec) {
+    reset(x);
+    if (pool_position) {
+        insert(file_pool[*pool_position]);
+        pool_position.reset();
+        return;
+    }
+
+    std::ifstream fp(x);
+    std::string   old_name = cur_file_name;
+    cur_file_name          = x;
+    Buffer B;
+    auto   wc        = the_main->input_encoding; // \todo redundant with encoding?
+    bool   converted = spec < 2;
+    encoding         = the_main->input_encoding;
+    int co_try       = spec == 3 ? 0 : 20;
+    for (;;) {
+        int  c    = fp.get();
+        bool emit = false;
+        if (c == '\r') { // pc or mac ?
+            emit = true;
+            c    = fp.peek();
+            if (c == '\n') fp.ignore();
+        } else if (c == '\n')
+            emit = true;
+        else if (c == EOF) {
+            if (!B.empty()) emit = true;
+            cur_file_name = old_name;
+        } else
+            B.push_back(static_cast<char>(c));
+        if (emit) {
+            if (spec == 0) // special case of config file
+                emit = B.push_back_newline_spec();
+            else
+                B.push_back_newline();
+            if (co_try != 0) {
+                co_try--;
+                if (auto k = io_ns::find_encoding(B)) {
+                    wc       = *k;
+                    encoding = wc;
+                    co_try   = 0;
+                    Logger::finish_seq();
+                    spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, cur_line + 1, x);
+                }
+            }
+            if (converted) B.convert_line(cur_line + 1, wc);
+            if (emit)
+                insert(B, converted);
+            else
+                ++cur_line;
+            B.clear();
+        }
+        if (c == EOF) break;
+    }
+}

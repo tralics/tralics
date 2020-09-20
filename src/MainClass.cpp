@@ -344,7 +344,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
     open_log();
-    tralics_ns::read_a_file(input_content, s, 4);
+    input_content.read(s, 4);
     if (input_content.empty()) {
         spdlog::critical("Fatal: Empty input file {}", s);
         exit(1);
@@ -795,7 +795,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
         spdlog::warn("Dummy default configuration file used.");
         return;
     }
-    tralics_ns::read_a_file(config_file, f, 0);
+    config_file.read(f, 0);
     config_file.normalise_final_cr();
     spdlog::trace("Read configuration file {}", f);
     if (f.extension() != ".tcf") return;
@@ -848,7 +848,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
     if (tcf_file) {
-        tralics_ns::read_a_file(config_file, *tcf_file, 0);
+        config_file.read(*tcf_file, 0);
         config_file.normalise_final_cr();
         spdlog::info("Read tcf file {}", *tcf_file);
     }

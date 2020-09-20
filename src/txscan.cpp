@@ -40,7 +40,7 @@ namespace {
             Logger::finish_seq();
             the_log << "++ Cannot open file " << file << " for input\n";
         } else {
-            tralics_ns::read_a_file(lines, fn, 1);
+            lines.read(fn, 1);
             is_open = true;
             cur_line.clear();
             line_no = 0;
@@ -413,7 +413,7 @@ void Parser::T_input(int q) {
 // On-the-fly conversion allowed
 void Parser::open_tex_file(const std::string &f, bool seen_star) {
     push_input_stack(f, seen_star, true);
-    tralics_ns::read_a_file(lines, f, 2);
+    lines.read(f, 2);
     lines.after_open();
     every_eof = true;
 }

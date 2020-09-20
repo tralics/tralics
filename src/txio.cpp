@@ -22,9 +22,6 @@
 #include <utf8.h>
 
 namespace {
-    std::vector<LineList> file_pool;     // pool managed by filecontents
-    std::optional<size_t> pool_position; // \todo this is a static variable that should disappear
-
     void utf8_ovf(size_t n) { // \todo inline
         spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", n, cur_file_line, cur_file_name);
         bad_chars++;
@@ -151,67 +148,6 @@ auto io_ns::find_encoding(const std::string &cl) -> std::optional<size_t> {
     if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
     if (k < to_signed(max_encoding)) return k;
     return {};
-}
-
-// This reads the file named x.
-// If spec is 0, we are reading the config file.
-// If 2 it's a tex file, and the file is converted later.
-// If 3, no conversion  done
-// If 4, its is the main file, log not yet open.
-void tralics_ns::read_a_file(LineList &L, const std::string &x, int spec) {
-    L.reset(x);
-    if (pool_position) {
-        L.insert(file_pool[*pool_position]);
-        pool_position.reset();
-        return;
-    }
-
-    std::ifstream fp(x);
-    std::string   old_name = cur_file_name;
-    cur_file_name          = x;
-    Buffer B;
-    auto   wc        = the_main->input_encoding;
-    bool   converted = spec < 2;
-    L.encoding       = the_main->input_encoding;
-    int co_try       = spec == 3 ? 0 : 20;
-    for (;;) {
-        int  c    = fp.get();
-        bool emit = false;
-        if (c == '\r') { // pc or mac ?
-            emit = true;
-            c    = fp.peek();
-            if (c == '\n') fp.ignore();
-        } else if (c == '\n')
-            emit = true;
-        else if (c == EOF) {
-            if (!B.empty()) emit = true;
-            cur_file_name = old_name;
-        } else
-            B.push_back(static_cast<char>(c));
-        if (emit) {
-            if (spec == 0) // special case of config file
-                emit = B.push_back_newline_spec();
-            else
-                B.push_back_newline();
-            if (co_try != 0) {
-                co_try--;
-                if (auto k = io_ns::find_encoding(B)) {
-                    wc         = *k;
-                    L.encoding = wc;
-                    co_try     = 0;
-                    Logger::finish_seq();
-                    spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, L.cur_line + 1, x);
-                }
-            }
-            if (converted) B.convert_line(L.cur_line + 1, wc);
-            if (emit)
-                L.insert(B, converted);
-            else
-                ++L.cur_line;
-            B.clear();
-        }
-        if (c == EOF) break;
-    }
 }
 
 // This puts x into the buffer in utf8 form

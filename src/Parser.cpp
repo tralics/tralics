@@ -1782,7 +1782,7 @@ void Parser::create_aux_file_and_run_pgm() {
     }
     spdlog::info("Executing bibliography command: {}", T.cmd);
     system(T.cmd.c_str());
-    tralics_ns::read_a_file(bbl.lines, file_name + ".bbl", 1);
+    bbl.lines.read(file_name + ".bbl", 1);
 }
 
 void Parser::after_main_text() {

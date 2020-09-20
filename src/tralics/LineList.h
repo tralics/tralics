@@ -34,10 +34,13 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     void parse_conf_toplevel() const;
     auto parse_and_extract(String s) const -> LineList;
     void print(std::ostream &outfile);
-    void reset(std::string x);
+    void read(const std::string &x, int spec);
     auto read_from_tty(Buffer &b) -> int;
+    void reset(std::string x);
     void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
 };
+
+inline std::vector<LineList> file_pool; // pool managed by filecontents \todo static inline in LineList

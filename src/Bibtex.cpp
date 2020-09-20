@@ -811,7 +811,7 @@ void Bibtex::read(const std::string &src, bib_from ct) {
     entry_prefix  = ct;
     normal_biblio = ct == from_year;
     refer_biblio  = ct == from_refer;
-    tralics_ns::read_a_file(in_lines, src, 1);
+    in_lines.read(src, 1);
     interactive = false;
 
     last_ok_line = 0;
