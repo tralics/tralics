@@ -327,41 +327,6 @@ void token_ns::remove_block(TokenList &L) {
     }
 }
 
-// Interprets *{3}{abc} as 3 copies of abc
-// This is used for expanding the header of a table
-void token_ns::expand_star(TokenList &L) {
-    TokenList res;
-    while (!L.empty()) {
-        Token t = L.front();
-        if (t.is_a_left_brace()) {
-            fast_get_block(L, res);
-        } else if (!t.is_star_token()) {
-            L.pop_front();
-            res.push_back(t);
-        } else {
-            L.pop_front();
-            TokenList u = fast_get_block(L);
-            TokenList v = fast_get_block(L);
-            remove_ext_braces(u);
-            remove_ext_braces(v);
-            size_t n = 0;
-            while (!u.empty()) {
-                Token q = u.front();
-                u.pop_front();
-                if (!q.is_digit_token()) break;
-                n = 10 * n + q.val_as_digit();
-                if (n > 1000000) break; // bug?
-            }
-            while (n > 0) {
-                TokenList w = v;
-                L.splice(L.begin(), w);
-                n--;
-            }
-        }
-    }
-    L.swap(res);
-}
-
 // Converts the string in the buffer into a token list.
 // Everything is of \catcode 12, except space.
 // If the switch is true, \n is converted to space, otherwise newline

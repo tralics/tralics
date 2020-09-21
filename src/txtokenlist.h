@@ -19,9 +19,6 @@ class Hashtab;
 using token_iterator = std::list<Token>::iterator;
 
 namespace token_ns {
-    void expand_nct(TokenList &);
-    auto expand_nct(TokenList &L, size_t n, uchar c, int &MX, TokenList &body) -> bool;
-    void expand_star(TokenList &L);
     auto fast_get_block(TokenList &L) -> TokenList;
     void fast_get_block(TokenList &L, TokenList &res);
     auto get_a_param(TokenList &L, bool br) -> TokenList;

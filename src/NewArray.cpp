@@ -161,7 +161,7 @@ void NewArray::run(Xid ID, bool main_fct) {
         if (s != "1") id.add_attribute(the_names["cols"], x);
     }
     preamble = P->read_arg(); // read the preamble
-    token_ns::expand_star(preamble);
+    preamble.expand_star();
     P->expand_nct(preamble);
     if (main_fct) AI = &P->the_stack.new_array_info(id);
     u_list.clear();

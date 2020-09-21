@@ -2160,7 +2160,7 @@ void Parser::expand_nct(TokenList &L) {
                 new_array_object.remove_a_type(c);
                 continue;
             }
-            if (token_ns::expand_nct(L, *n, c, max_iter, body)) {
+            if (L.expand_nct(*n, c, max_iter, body)) {
                 action = true;
                 if (tracing_commands()) the_log << "array preamble after " << c << ": " << L << "\n";
             }
