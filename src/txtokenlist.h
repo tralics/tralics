@@ -19,7 +19,6 @@ class Hashtab;
 using token_iterator = std::list<Token>::iterator;
 
 namespace token_ns {
-    void add_env(TokenList &L, String name);
     void add_par_noindent(TokenList &, const Hashtab &);
     void add_verbatim_number(TokenList &L, const Hashtab &H, long n);
     auto block_size(const TokenList &L) -> int;
@@ -44,7 +43,6 @@ namespace token_ns {
     auto replace_space(TokenList &A, Token x2, Token x3) -> int;
     void show(const TokenList &);
     auto split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z, bool s) -> bool;
-    auto string_to_list(String s, bool b) -> TokenList;
     auto string_to_list(const std::string &s, bool b) -> TokenList;
     void double_hack(TokenList &key);
     auto split_at(Token m, TokenList &L, TokenList &z) -> bool;

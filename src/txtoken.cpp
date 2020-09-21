@@ -431,14 +431,6 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
 
 // Converts a string to a token list. If b is true, we add braces.
 // NOTE:  in every case converts newline to space
-auto token_ns::string_to_list(String s, bool b) -> TokenList {
-    Buffer &B   = buffer_for_log;
-    B           = s;
-    TokenList L = B.str_toks(nlt_space);
-    if (b) the_parser.brace_me(L);
-    return L;
-}
-
 auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
     Buffer &B   = buffer_for_log;
     B           = s;
@@ -576,18 +568,6 @@ void token_ns::get_unique(TokenList &L, Token &t1, Token &t2) {
 void Parser::brace_me(TokenList &L) const {
     L.push_front(hash_table.OB_token);
     L.push_back(hash_table.CB_token);
-}
-
-void token_ns::add_env(TokenList &L, String name) {
-    TokenList L1 = string_to_list(name, true);
-    TokenList L2 = L1;
-    TokenList res;
-    res.push_back(the_parser.hash_table.begin_token);
-    res.splice(res.end(), L1);
-    res.splice(res.end(), L);
-    res.push_back(the_parser.hash_table.end_token);
-    res.splice(res.end(), L2);
-    swap(L, res);
 }
 
 void Buffer::dump_prefix(bool err, bool gbl, symcodes K) {
