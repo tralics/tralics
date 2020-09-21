@@ -4,6 +4,8 @@
 class Hashtab;
 
 struct TokenList : public std::list<Token> {
+    auto block_size() const -> int;
+
     void add_env(const std::string &name);
     void add_verbatim_number(const Hashtab &H, long n);
 };

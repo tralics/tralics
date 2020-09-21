@@ -255,30 +255,9 @@ auto token_ns::get_block(TokenList &L) -> TokenList {
 }
 
 // Assumes that the list starts with a brace.
-// Returns the number of tokens in sublist with its braces.
-// If the sublist is everything, returns -1.
-// in case of problem, returns -2.
-auto token_ns::block_size(const TokenList &L) -> int {
-    int  res = 0;
-    int  bl  = 0;
-    auto C   = L.begin();
-    auto E   = L.end();
-    while (C != E) {
-        Token t = *C;
-        ++C;
-        ++res;
-        if (check_brace(t, bl)) {
-            if (C == E) return -1;
-            return res;
-        }
-    }
-    return -2;
-}
-
-// Assumes that the list starts with a brace.
 // Returns the sublist with its braces.
 auto token_ns::fast_get_block(TokenList &L) -> TokenList {
-    int       len = block_size(L);
+    int       len = L.block_size();
     TokenList res;
     if (len == -2) {
         L.clear();
@@ -300,7 +279,7 @@ auto token_ns::fast_get_block(TokenList &L) -> TokenList {
 // Assumes that the list L starts with a brace.
 // puts the first block to the end of res
 void token_ns::fast_get_block(TokenList &L, TokenList &res) {
-    int len = block_size(L);
+    int len = L.block_size();
     if (len == -2) {
         L.clear();
         return;
