@@ -11,3 +11,14 @@ void TokenList::add_env(const std::string &name) {
     res.splice(res.end(), token_ns::string_to_list(name, true));
     swap(res);
 }
+
+// A number N gives: {\verbatimnumberfont{N}}\space
+void TokenList::add_verbatim_number(const Hashtab &H, long n) {
+    push_back(H.OB_token);
+    push_back(H.verbatim_number_font);
+    push_back(H.OB_token);
+    token_ns::push_back_i(*this, n);
+    push_back(H.CB_token);
+    push_back(H.CB_token);
+    push_back(H.space_token);
+}

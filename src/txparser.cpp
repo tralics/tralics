@@ -639,17 +639,6 @@ auto Parser::vb_tokens(char32_t test, TokenList &L, bool before) -> bool {
     return false;
 }
 
-// A number N gives: {\verbatimnumberfont{N}}\space
-void token_ns::add_verbatim_number(TokenList &L, const Hashtab &H, long n) {
-    L.push_back(H.OB_token);
-    L.push_back(H.verbatim_number_font);
-    L.push_back(H.OB_token);
-    push_back_i(L, n);
-    L.push_back(H.CB_token);
-    L.push_back(H.CB_token);
-    L.push_back(H.space_token);
-}
-
 // Case of \begin{verbatim} and variants.
 // Locally sets \endlinechar to CR, and reads each line via vb_tokens
 void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
@@ -681,7 +670,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
         n++;
         if (want_number) {
             word_define(to_unsigned(my_number), n, true);
-            token_ns::add_verbatim_number(res, hash_table, n);
+            res.add_verbatim_number(hash_table, n);
         }
         if (vb_tokens(char32_t('\r'), res, false)) {
             ok = false;

@@ -19,8 +19,6 @@ class Hashtab;
 using token_iterator = std::list<Token>::iterator;
 
 namespace token_ns {
-    void add_par_noindent(TokenList &, const Hashtab &);
-    void add_verbatim_number(TokenList &L, const Hashtab &H, long n);
     auto block_size(const TokenList &L) -> int;
     void expand_nct(TokenList &);
     auto expand_nct(TokenList &L, size_t n, uchar c, int &MX, TokenList &body) -> bool;

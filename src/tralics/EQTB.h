@@ -1,5 +1,6 @@
 #pragma once
 #include "../txscaled.h"
+#include "CmdChr.h"
 
 class Xml;
 
