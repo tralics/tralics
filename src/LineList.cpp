@@ -8,7 +8,7 @@
 
 namespace tpage_ns {
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
-}
+} // namespace tpage_ns
 
 namespace {
     Buffer local_buf;
@@ -138,10 +138,6 @@ void LineList::reset(std::string x) {
 
 // Insert a line at the end of the file, incrementing the line no
 void LineList::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
-
-// Insert a line at the end of the file, incrementing the line no
-// We assume that the const char* is ascii 7 bits
-void LineList::insert(String c) { emplace_back(++cur_line, c, true); }
 
 // Like insert, but we do not insert an empty line after an empty line.
 // Used by the raweb preprocessor, hence already converted

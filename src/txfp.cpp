@@ -1657,7 +1657,7 @@ void FpGenList::add_last_space(TokenList &W, String S) {
 
 // splits at X. What is before is put in z. Cur element disappears.
 
-void FpGenList::split_after(token_iterator X, TokenList &z) {
+void FpGenList::split_after(TokenList::iterator X, TokenList &z) {
     z.clear();
     z.splice(z.begin(), value, X, value.end());
     z.pop_front();

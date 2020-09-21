@@ -665,7 +665,7 @@ auto token_ns::length_normalise(TokenList &L) -> int {
     return n;
 }
 
-auto token_ns::is_sublist(token_iterator A, token_iterator B, int n) -> bool {
+auto token_ns::is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool {
     while (n > 0) {
         if (*A != *B) return false;
         ++A;

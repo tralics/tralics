@@ -16,8 +16,6 @@
 
 class Hashtab;
 
-using token_iterator = std::list<Token>::iterator;
-
 namespace token_ns {
     auto fast_get_block(TokenList &L) -> TokenList;
     void fast_get_block(TokenList &L, TokenList &res);
@@ -40,7 +38,7 @@ namespace token_ns {
     auto string_to_list(const std::string &s, bool b) -> TokenList;
     void double_hack(TokenList &key);
     auto split_at(Token m, TokenList &L, TokenList &z) -> bool;
-    auto is_sublist(token_iterator A, token_iterator B, int n) -> bool;
+    auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool;
     auto is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped) -> bool;
     void normalise_list(char c, TokenList &L);
     void sanitize_one(TokenList &L, uchar c);
@@ -70,7 +68,7 @@ public:
     void remove_spaces();
     void split_after(int n, TokenList &z);
     auto split_at(Token x, Token x2, TokenList &z) -> Token;
-    void split_after(token_iterator X, TokenList &z);
+    void split_after(TokenList::iterator X, TokenList &z);
     auto split_at_p(TokenList &A, TokenList &B) -> bool;
     void to_postfix();
     void fp_check_paren();
