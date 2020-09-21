@@ -1,5 +1,5 @@
 #pragma once
-#include "Token.h"
+#include "TokenList.h"
 
 // This holds the translation of \DeclareOption{foo}{bar} or
 // \usepackage[foo=bar]{pack} name foo, val bar

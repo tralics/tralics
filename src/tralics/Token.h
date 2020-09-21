@@ -76,6 +76,3 @@ inline Token T_use1, T_use2, T_usen, T_use_nonen, T_exp_notN, T_exp_notn, T_empt
 inline std::array<Token, 20> special_double;
 
 inline auto make_char_token(unsigned char c, unsigned cat) -> Token { return Token(nb_characters * cat + c); }
-
-using TokenList = std::list<Token>;
-auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

@@ -1,6 +1,6 @@
 #pragma once
 #include "AttList.h"
-#include "Token.h"
+#include "TokenList.h"
 #include "Xid.h"
 
 // Token classes and numbers for preamble tokens.
