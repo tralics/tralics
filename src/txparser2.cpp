@@ -1698,7 +1698,7 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
         if (L.empty()) break;
         Token t = L.front();
         if (t.is_a_left_brace()) {
-            token_ns::fast_get_block(L, res);
+            L.fast_get_block(res);
             continue;
         }
         L.pop_front();
@@ -1717,7 +1717,7 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
             res.clear();
             break;
         }
-        TokenList key = token_ns::fast_get_block(L);
+        TokenList key = L.fast_get_block();
         token_ns::remove_ext_braces(key);
         std::string Key = P->list_to_string_c(key, "Argument of \\savevalue");
         local_buf       = "XKV@" + xkv_header + Key + "@value";
@@ -1753,7 +1753,7 @@ void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
     TokenList args;
     if (!L.empty()) {
         if (L.front().is_a_left_brace()) { // get the block without the braces
-            token_ns::fast_get_block(L, args);
+            L.fast_get_block(args);
             args.pop_front();
             args.pop_back();
         } else { // otherwise get just a token

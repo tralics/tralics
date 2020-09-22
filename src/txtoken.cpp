@@ -254,48 +254,6 @@ auto token_ns::get_block(TokenList &L) -> TokenList {
     return TokenList();
 }
 
-// Assumes that the list starts with a brace.
-// Returns the sublist with its braces.
-auto token_ns::fast_get_block(TokenList &L) -> TokenList {
-    int       len = L.block_size();
-    TokenList res;
-    if (len == -2) {
-        L.clear();
-        return res;
-    }
-    if (len == -1) {
-        L.swap(res);
-        return res;
-    }
-    auto C = L.begin();
-    while (len > 0) {
-        len--;
-        ++C;
-    }
-    res.splice(res.begin(), L, L.begin(), C);
-    return res;
-}
-
-// Assumes that the list L starts with a brace.
-// puts the first block to the end of res
-void token_ns::fast_get_block(TokenList &L, TokenList &res) {
-    int len = L.block_size();
-    if (len == -2) {
-        L.clear();
-        return;
-    }
-    if (len == -1) {
-        res.splice(res.end(), L);
-        return;
-    }
-    auto C = L.begin();
-    while (len > 0) {
-        len--;
-        ++C;
-    }
-    res.splice(res.end(), L, L.begin(), C);
-}
-
 // Returns the first token, or the first token-list
 // There are braces around the thing if br is true
 auto token_ns::get_a_param(TokenList &L, bool br) -> TokenList {
@@ -303,7 +261,7 @@ auto token_ns::get_a_param(TokenList &L, bool br) -> TokenList {
     while (!L.empty()) {
         Token t = L.front();
         if (t.is_a_left_brace()) {
-            TokenList w = fast_get_block(L);
+            TokenList w = L.fast_get_block();
             if (!br) remove_ext_braces(w);
             return w;
         }

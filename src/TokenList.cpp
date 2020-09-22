@@ -50,7 +50,7 @@ auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool 
         pop_front();
         if (t.is_a_left_brace()) { // get a whole block
             push_front(t);         // re-enter the brace in the list
-            token_ns::fast_get_block(*this, res);
+            fast_get_block(res);
             continue;
         }
         if (t.cmd_val() == 10) continue;             // ignore spaces.
@@ -76,14 +76,14 @@ void TokenList::expand_star() {
     while (!empty()) {
         Token t = front();
         if (t.is_a_left_brace()) {
-            token_ns::fast_get_block(*this, res);
+            fast_get_block(res);
         } else if (!t.is_star_token()) {
             pop_front();
             res.push_back(t);
         } else {
             pop_front();
-            TokenList u = token_ns::fast_get_block(*this);
-            TokenList v = token_ns::fast_get_block(*this);
+            TokenList u = fast_get_block();
+            TokenList v = fast_get_block();
             token_ns::remove_ext_braces(u);
             token_ns::remove_ext_braces(v);
             size_t n = 0;
@@ -103,3 +103,23 @@ void TokenList::expand_star() {
     }
     swap(res);
 }
+
+// Assumes that the list starts with a brace.
+// Returns the sublist with its braces.
+auto TokenList::fast_get_block() -> TokenList {
+    int len = block_size();
+    if (len == -2) {
+        clear();
+        return {};
+    }
+    if (len == -1) return std::exchange(*this, {});
+    auto C = begin();
+    std::advance(C, len);
+    TokenList res;
+    res.splice(res.begin(), *this, begin(), C);
+    return res;
+}
+
+// Assumes that the list L starts with a brace.
+// puts the first block to the end of res
+void TokenList::fast_get_block(TokenList &res) { res.splice(res.end(), fast_get_block()); }
