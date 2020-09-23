@@ -627,14 +627,12 @@ private:
     void        remove_initial_space_and_back_input();
     void        remove_initial_space_relax();
     auto        remove_initial_star() -> bool;
-    void        restore_the_state(SaveState &x);
     auto        rT_arg_nopar() -> std::string;
     auto        sE_arg() -> std::string;
     auto        sE_optarg_nopar() -> std::string;
     void        runaway(int cl);
     void        err_one_arg(const TokenList &L);
     void        save_font();
-    void        save_the_state(SaveState &x);
     auto        scan_27bit_int() -> size_t;
     auto        scan_alpha() -> size_t;
     void        scan_box(size_t bc);

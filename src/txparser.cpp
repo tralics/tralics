@@ -555,12 +555,10 @@ void Parser::read_mac_body(TokenList &L, bool exp, size_t N) {
 // at brace_level zero (b=1)
 void Parser::read_toks_edef(TokenList &L) {
     scanner_status = ss_absorbing;
-    SaveState sv_state;
-    save_the_state(sv_state); // now TL is empty
+    SaveState sv_state(TL, restricted);
     restricted = true;
     TL.swap(L);                     // now L is empty
     scan_group4(L, get_cur_line()); // This fills L
-    restore_the_state(sv_state);
     scanner_status = ss_normal;
 }
 
@@ -1637,13 +1635,11 @@ auto Parser::fetch_name0_nopar() -> std::string {
 
 auto Parser::fetch_name1(TokenList &L) -> std::string {
     if (L.empty()) return "";
-    SaveState st_state;
-    save_the_state(st_state);
+    SaveState st_state(TL, restricted);
     restricted = true;
     L.push_back(hash_table.frozen_endcsname);
     TL.swap(L);
     fetch_name2();
-    restore_the_state(st_state);
     return fetch_name_res;
 }
 
@@ -3714,12 +3710,10 @@ void Parser::T_ifthenelse() {
 // This evaluates a condition in an environment.
 auto Parser::T_ifthenelse(TokenList &A) -> bool {
     Token     t = cur_tok;
-    SaveState st_state;
-    save_the_state(st_state);
+    SaveState st_state(TL, restricted);
     restricted = true;
     TL.swap(A);
     bool b = T_ifthenelse_inner(t);
-    restore_the_state(st_state);
     return b;
 }
 

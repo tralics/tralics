@@ -86,13 +86,11 @@ void Parser::translate0() {
 // Result is added to the current element on the stack.
 void Parser::T_translate(TokenList &X) {
     if (X.empty()) return;
-    SaveState s;
-    save_the_state(s);
+    SaveState s(TL, restricted);
     restricted = true;
     TL.swap(X);
     if (!unprocessed_xml.empty()) missing_flush();
     translate_all();
-    restore_the_state(s);
 }
 
 void Parser::translate01() {

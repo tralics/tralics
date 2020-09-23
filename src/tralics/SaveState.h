@@ -2,17 +2,18 @@
 #include "TokenList.h"
 
 class SaveState {
-    TokenList L; // the token list to be restored
-public:
-    bool restricted{}; // the restricted flag to be restored
+    TokenList &LL;
+    TokenList  L;
+    bool &     bb;
+    bool       b{true};
 
-    void copy_and_reset(TokenList &X) {
-        L.clear();
-        L.splice(L.begin(), X);
+public:
+    SaveState(TokenList &LL, bool &bb) : LL(LL), bb(bb) {
+        LL.swap(L);
+        std::swap(bb, b);
     }
-    void restore(TokenList &X) {
-        X.clear();
-        X.splice(X.begin(), L);
+    ~SaveState() {
+        LL.swap(L);
+        std::swap(bb, b);
     }
-    void set_restricted(bool b) { restricted = b; }
 };
