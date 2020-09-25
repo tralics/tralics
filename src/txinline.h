@@ -20,7 +20,7 @@
 #include <filesystem>
 
 namespace tralics_ns {
-    auto file_exists(const std::string &name) -> bool;
+    auto file_exists(const std::string &name, bool verbose = true) -> bool; // \todo make non-verbose
     auto find_in_confdir(const std::string &s, bool retry)
         -> std::optional<std::filesystem::path>;                                     ///< Try to open the file, using alt location if needed
     auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path>; ///< Tries to open a TeX file

@@ -164,7 +164,7 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
-    auto try_conf(const std::filesystem::path &dir) -> bool { return tralics_ns::file_exists(dir / "book.clt"); }
+    auto try_conf(const std::filesystem::path &dir) -> bool { return tralics_ns::file_exists(dir / "book.clt", false); }
 
     /// Locate the config dir, using a few sources \todo do it better
     void find_conf_path() {
@@ -172,36 +172,43 @@ found at http://www.cecill.info.)";
         String S = "/usr/share/tralics";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "/usr/lib/tralics/confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "/usr/local/lib/tralics/confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "/sw/share/tralics/confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "../confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "../../confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
         S = "/user/grimm/home/cvs/tralics/confdir";
         if (try_conf(S)) {
             conf_path.emplace_back(S);
+            spdlog::info("Adding configuration folder: {}", S);
             return;
         }
     }
@@ -770,7 +777,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (!user_config_file.empty()) {
         the_log << "Trying config file from user specs: " << user_config_file << "\n";
         if (user_config_file[0] == '.' || user_config_file[0] == '/') {
-            if (tralics_ns::file_exists(user_config_file)) return user_config_file;
+            if (tralics_ns::file_exists(user_config_file, false)) return user_config_file;
             return {};
         }
         if (!user_config_file.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
@@ -785,7 +792,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
         if (auto of = tralics_ns::find_in_confdir(xclass, true); of) return of;
     }
     std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
-    if (tralics_ns::file_exists(rc)) return rc;
+    if (tralics_ns::file_exists(rc, false)) return rc;
     return main_ns::search_in_confdir(rc);
 }
 
@@ -797,7 +804,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
     }
     config_file.read(f, 0);
     config_file.normalise_final_cr();
-    spdlog::trace("Read configuration file {}", f);
+    spdlog::info("Read configuration file {}", f);
     if (f.extension() != ".tcf") return;
 
     tcf_file = f;
@@ -912,7 +919,7 @@ void MainClass::read_config_and_other() {
     if (auto of = find_config_file(); of)
         open_config_file(*of);
     else
-        spdlog::trace("No configuration file.");
+        spdlog::warn("No configuration file.");
     if (!tcf_file) {
         bool found_type = find_document_type();
         if (dtype.empty()) found_type = false;

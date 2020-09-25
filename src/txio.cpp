@@ -230,10 +230,12 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 
 // This can be used to check if the main file exists. In this case the
 // transcript file is not yet open.
-auto tralics_ns::file_exists(const std::string &name) -> bool {
+auto tralics_ns::file_exists(const std::string &name, bool verbose) -> bool {
     auto e = std::filesystem::exists(name);
-    Logger::finish_seq();
-    spdlog::trace("++ file {} {}.", name, e ? "exists" : "does not exist");
+    if (verbose) {
+        Logger::finish_seq();
+        spdlog::trace("++ file {} {}.", name, e ? "exists" : "does not exist");
+    }
     return e;
 }
 
@@ -303,6 +305,20 @@ void Parser::T_filecontents(int spec) {
     kill_line(); // who knows
     cur_tok.kill();
     pop_level(bt_env);
+}
+
+// \todo the next two function are kind of misleadingly named
+
+auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
+    for (auto i = conf_path.size(); i != 0; i--) {
+        auto f = conf_path[i - 1] / s;
+        if (tralics_ns::file_exists(f, false)) {
+            spdlog::trace("Found in configuration path: {}", f);
+            return f;
+        }
+    }
+    spdlog::warn("File {} not found in configuration path", s);
+    return {};
 }
 
 auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> std::optional<std::filesystem::path> {
