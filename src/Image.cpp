@@ -1,19 +1,16 @@
 #include "tralics/Image.h"
 #include "txinline.h"
 
-// returns true if the file exists with extension s.
-auto Image::extension_exists(const std::string &s) const -> bool { return tralics_ns::file_exists(name + '.' + s); }
-
 // This checks all possible extensions and remembers them
 void Image::check_existence() {
     flags = 0;
-    if (extension_exists("ps")) flags |= 1;
-    if (extension_exists("eps")) flags |= 2;
-    if (extension_exists("epsi")) flags |= 4;
-    if (extension_exists("epsf")) flags |= 8;
-    if (extension_exists("pdf")) flags |= 16;
-    if (extension_exists("png")) flags |= 32;
-    if (extension_exists("gif")) flags |= 64;
+    if (tralics_ns::file_exists(name + ".ps")) flags |= 1;
+    if (tralics_ns::file_exists(name + ".eps")) flags |= 2;
+    if (tralics_ns::file_exists(name + ".epsi")) flags |= 4;
+    if (tralics_ns::file_exists(name + ".epsf")) flags |= 8;
+    if (tralics_ns::file_exists(name + ".pdf")) flags |= 16;
+    if (tralics_ns::file_exists(name + ".png")) flags |= 32;
+    if (tralics_ns::file_exists(name + ".gif")) flags |= 64;
 }
 
 // This checks that there is a unique source for the image

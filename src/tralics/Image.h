@@ -9,7 +9,6 @@ struct Image {
     Image() = default;
     Image(std::string N, int oc_val) : name(std::move(N)), occ(oc_val) {}
 
-    [[nodiscard]] auto extension_exists(const std::string &s) const -> bool;
-    void               check_existence();
-    void               check(Buffer &B1, Buffer &B2) const;
+    void check_existence();
+    void check(Buffer &B1, Buffer &B2) const;
 };
