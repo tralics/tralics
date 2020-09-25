@@ -85,7 +85,7 @@ void Parser::signal_error() {
 
 void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
-    if (main_ns::no_xml_error) return;
+    if (no_xml_error) return;
     if (T.is_null()) return;
     auto str = std::string(s);
     the_stack.add_newid0("error");

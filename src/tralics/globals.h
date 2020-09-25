@@ -13,6 +13,7 @@ class WordList;
 class LabelInfo;
 
 inline bool                                                         bad_minus{false};
+inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
 inline bool                                                         nofloat_hack{false};
 inline bool                                                         only_input_data{false};
@@ -22,8 +23,10 @@ inline bool                                                         distinguish_
 inline bool                                                         global_in_load    = false;
 inline bool                                                         global_in_url     = false;
 inline bool                                                         in_hlinee, have_above, have_below;
+inline bool                                                         no_xml_error{false};
 inline bool                                                         old_ra = false;
 inline bool                                                         ra_ok{true};
+inline bool                                                         use_quotes{false};
 inline char32_t                                                     leftquote_val{'`'};
 inline char32_t                                                     rightquote_val{'\''};
 inline int                                                          bad_chars{0};

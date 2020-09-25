@@ -19,17 +19,6 @@
 #include "txparam.h"
 #include <filesystem>
 
-// See comments in tralics.cpp where these variables are defined
-namespace main_ns {
-    inline bool no_xml_error{false};
-    inline bool use_quotes{false};
-    inline bool bib_allow_break{true};
-} // namespace main_ns
-
-namespace io_ns {
-    auto find_encoding(const std::string &cl) -> std::optional<size_t>;
-} // namespace io_ns
-
 namespace tralics_ns {
     auto file_exists(const std::string &name) -> bool;
     auto find_in_confdir(const std::string &s, bool retry)

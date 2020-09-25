@@ -131,25 +131,6 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
     return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)]);
 }
 
-auto io_ns::find_encoding(const std::string &cl) -> std::optional<size_t> {
-    if (cl.find("-*-") != std::string::npos) {
-        if (cl.find("coding: utf-8") != std::string::npos) return 0;
-        if (cl.find("coding: utf8") != std::string::npos) return 0;
-        if (cl.find("coding: latin1") != std::string::npos) return 1;
-        if (cl.find("coding: iso-8859-1") != std::string::npos) return 1;
-    }
-    if (cl.find("iso-8859-1") != std::string::npos) return 1;
-    if (cl.find("utf8-encoded") != std::string::npos) return 0;
-    if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
-    auto kk = cl.find("tralics-encoding:");
-    if (kk == std::string::npos) return {};
-    if (!is_digit(cl[kk + 17])) return {};
-    int k = cl[kk + 17] - '0';
-    if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
-    if (k < to_signed(max_encoding)) return k;
-    return {};
-}
-
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(char32_t c) { utf8::append(c, std::back_inserter(*this)); }
 

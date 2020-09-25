@@ -69,7 +69,7 @@ void Parser::translate_char(uchar c1, uchar c2) {
 void Parser::umlaut() {
     get_token();
     if (!cur_lang_german()) {
-        if (!main_ns::use_quotes) {
+        if (!use_quotes) {
             umlaut_bad();
             return;
         }

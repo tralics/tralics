@@ -13,6 +13,25 @@ namespace tpage_ns {
 namespace {
     Buffer local_buf;
 
+    auto find_encoding(const std::string &cl) -> std::optional<size_t> {
+        if (cl.find("-*-") != std::string::npos) {
+            if (cl.find("coding: utf-8") != std::string::npos) return 0;
+            if (cl.find("coding: utf8") != std::string::npos) return 0;
+            if (cl.find("coding: latin1") != std::string::npos) return 1;
+            if (cl.find("coding: iso-8859-1") != std::string::npos) return 1;
+        }
+        if (cl.find("iso-8859-1") != std::string::npos) return 1;
+        if (cl.find("utf8-encoded") != std::string::npos) return 0;
+        if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
+        auto kk = cl.find("tralics-encoding:");
+        if (kk == std::string::npos) return {};
+        if (!is_digit(cl[kk + 17])) return {};
+        int k = cl[kk + 17] - '0';
+        if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
+        if (k < to_signed(max_encoding)) return k;
+        return {};
+    }
+
     void find_one_type(const std::string &s, std::vector<std::string> &S) { // \todo regexp?
         if (!s.starts_with("BeginType")) return;
 
@@ -91,7 +110,7 @@ auto LineList::read_from_tty(Buffer &B) -> int {
     } else
         prev_line = true;
     if (B[0] == '%') { // debug
-        if (auto k = io_ns::find_encoding(B)) encoding = *k;
+        if (auto k = find_encoding(B)) encoding = *k;
     }
     return cur_line;
 }
@@ -486,7 +505,7 @@ void LineList::read(const std::string &x, int spec) {
                 B.push_back_newline();
             if (co_try != 0) {
                 co_try--;
-                if (auto k = io_ns::find_encoding(B)) {
+                if (auto k = find_encoding(B)) {
                     wc       = *k;
                     encoding = wc;
                     co_try   = 0;

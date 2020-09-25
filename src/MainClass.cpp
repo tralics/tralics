@@ -652,11 +652,11 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "allowbreak") {
-        main_ns::bib_allow_break = true;
+        bib_allow_break = true;
         return;
     }
     if (s == "noallowbreak") {
-        main_ns::bib_allow_break = false;
+        bib_allow_break = false;
         return;
     }
     if (s == "etex") {
@@ -668,7 +668,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "noxmlerror") {
-        main_ns::no_xml_error = true;
+        no_xml_error = true;
         return;
     }
     if (s == "l3") {
@@ -706,7 +706,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "usequotes") {
-        main_ns::use_quotes = true;
+        use_quotes = true;
         return;
     }
     if (s == "mathvariant") {

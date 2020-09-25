@@ -206,7 +206,7 @@ namespace {
     auto insert_break(const std::string &x) -> std::string {
         std::string res = "{\\url{";
         for (auto c : x) {
-            if (c == ' ' && main_ns::bib_allow_break) res.append("\\allowbreak");
+            if (c == ' ' && bib_allow_break) res.append("\\allowbreak");
             res.push_back(c);
         }
         res.append("}}");

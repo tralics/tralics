@@ -52,21 +52,20 @@ private:
     bool   no_new_file{false};        // can we pop the input stack ?
     bool   file_ended{};              //
     bool   chapter_has_star{false};   // true in frontmatter, backmatter
-    bool   use_quotes{};
-    bool   list_files_p;            // Should we list the files at the end ?
-    bool   tok_is_defined{};        // use by \ifcsname
-    int    old_nberrs{};            // previous number of errors
-    int    cur_line{};              // current input line number
-    int    begin_env_line{0};       // input line number of
-    int    ra_year{1789};           // default year if none given as argument
-    int    default_language_num{0}; // default language
-    int    cur_level;               // current level on the execution stack
-    size_t equation_ctr_pos{};      // position in the table of the counter equation
-    states state;                   // current state of the scanner
-    Token  cur_tok;                 // current token
-    Token  after_assignment_token;  // token for \afterassignment
-    CmdChr cur_cmd_chr;             // current command code and modifier
-    int    sectionning_offset;      // what is the main section, part, chapter ?
+    bool   list_files_p;              // Should we list the files at the end ?
+    bool   tok_is_defined{};          // use by \ifcsname
+    int    old_nberrs{};              // previous number of errors
+    int    cur_line{};                // current input line number
+    int    begin_env_line{0};         // input line number of
+    int    ra_year{1789};             // default year if none given as argument
+    int    default_language_num{0};   // default language
+    int    cur_level;                 // current level on the execution stack
+    size_t equation_ctr_pos{};        // position in the table of the counter equation
+    states state;                     // current state of the scanner
+    Token  cur_tok;                   // current token
+    Token  after_assignment_token;    // token for \afterassignment
+    CmdChr cur_cmd_chr;               // current command code and modifier
+    int    sectionning_offset;        // what is the main section, part, chapter ?
 public:
     l_state     long_state;     // Error recovery handling (\long)
     scan_stat   scanner_status; // Error recovery handling (\outer)
