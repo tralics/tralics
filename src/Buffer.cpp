@@ -33,7 +33,7 @@ namespace {
     auto is_noopsort(const std::string &s, size_t i) -> bool {
         auto n = s.size();
         if (i + 10 >= n) return false;
-        if (s[i + 10] != '{' && !is_space(s[i + 10])) return false;
+        if (s[i + 10] != '{' && !std::isspace(s[i + 10])) return false;
         if (s[i + 1] != '\\') return false;
         if (s[i + 3] != 'o') return false;
         if (s[i + 7] != 'o') return false;
@@ -127,7 +127,7 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (empty()) return true;
     push_back('\n');
     if (at(0) == '#') return false;
-    if (at(0) == '%' || is_space(at(0))) return true;
+    if (at(0) == '%' || std::isspace(at(0))) return true;
     if (starts_with("Begin")) return true;
     if (starts_with("End")) return true;
     insert(begin(), ' ');
@@ -141,7 +141,7 @@ void Buffer::remove_last(size_t n) {
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
 void Buffer::remove_last_space() {
-    if (!empty() && is_space(back()))
+    if (!empty() && std::isspace(back()))
         pop_back();
     else if (ends_with("&nbsp;"))
         remove_last(6);
@@ -152,7 +152,7 @@ void Buffer::remove_last_space() {
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (!empty() && is_space(back())) pop_back();
+    while (!empty() && std::isspace(back())) pop_back();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -455,7 +455,7 @@ auto Buffer::skip_word_ci(const std::string &s) -> bool {
     auto n = s.size();
     for (size_t i = 0; i < n; i++) {
         char c = (*this)[ptrs.b + i];
-        if (is_upper_case(c)) c += 'a' - 'A';
+        if (std::isupper(c)) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
     char c = (*this)[ptrs.b + n];
@@ -545,7 +545,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
         tmp.push_back(c);
     }
     auto b = tmp.size();
-    while (b > p && is_space(tmp[b - 1])) b--;
+    while (b > p && std::isspace(tmp[b - 1])) b--;
     tmp.resize(b);
     a = tmp.data();
     return true;
@@ -553,7 +553,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
 
 void Buffer::push_back_unless_punct(char c) {
     if (ends_with("&nbsp;")) return;
-    if (!empty() && is_space(back())) return;
+    if (!empty() && std::isspace(back())) return;
     if (!empty() && back() == '(') return;
     push_back(c);
 }
@@ -642,7 +642,7 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-auto Buffer::is_spaceh(size_t j) const -> bool { return is_space((*this)[j]); }
+auto Buffer::is_spaceh(size_t j) const -> bool { return std::isspace((*this)[j]); }
 
 void Buffer::push_back(const TokenList &L) {
     for (const auto &C : L) { insert_token(C, false); }
@@ -655,7 +655,7 @@ void Buffer::skip_sp_tab() {
     while (ptrs.b < size() && (head() == ' ' || head() == '\t')) ptrs.b++;
 }
 void Buffer::skip_sp_tab_nl() {
-    while (is_space(head())) ptrs.b++;
+    while (std::isspace(head())) ptrs.b++;
 }
 void Buffer::skip_sp_tab_comma() {
     while (head() == ' ' || head() == '\t' || head() == ',') ptrs.b++;
@@ -681,7 +681,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
     ptrs.b         = 0;
     for (int i = 0;; i++) {
         if (head() == 0) break;
-        if (is_space(head())) {
+        if (std::isspace(head())) {
             has_space  = true;
             at(ptrs.b) = 0;
             advance();
@@ -745,7 +745,7 @@ auto Buffer::special_convert(bool init) -> std::string {
     for (;;) {
         auto c = next_char();
         if (c == 0) break;
-        if (is_space(c)) {
+        if (std::isspace(c)) {
             if (!space) {
                 bb1.push_back(' ');
                 space = true;
@@ -837,13 +837,13 @@ void Buffer::special_title(std::string s) {
         }
         // c= is a brace at bottom level
         char cc = s[i + 1];
-        if (is_upper_case(cc) || cc == '$') {
+        if (std::isupper(cc) || cc == '$') {
             blevel = level;
             continue;
         }
         if (is_noopsort(s, i)) {
             i += 10;
-            while (i < n && is_space(s[i])) i++;
+            while (i < n && std::isspace(s[i])) i++;
             i--;
             blevel = level;
         } else
@@ -1008,7 +1008,7 @@ auto Buffer::is_and(size_t k) const -> bool {
 auto Buffer::insert_space_here(size_t k) const -> bool {
     if (k == 0) return false;
     if (at(k) != '.') return false;
-    if (!is_upper_case(at(k + 1))) return false;
-    if (!is_upper_case(at(k - 1))) return false;
+    if (!std::isupper(at(k + 1))) return false;
+    if (!std::isupper(at(k - 1))) return false;
     return true;
 }

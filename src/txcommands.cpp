@@ -273,7 +273,7 @@ void Parser::french_punctuation(CmdChr X) {
     if (c == 0xAB) {
         for (;;) {
             get_x_token();
-            if (cur_cmd_chr.is_space()) continue;
+            if (cur_cmd_chr.cmd_is_space()) continue;
             if (cur_cmd_chr.cmd == cst_cmd && cur_cmd_chr.chr == nobreakspace_code) break;
             if (cur_cmd_chr.cmd == cst1_cmd && cur_cmd_chr.chr == comma_code) break;
             if (cur_tok.is_valid()) back_input();

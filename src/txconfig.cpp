@@ -78,7 +78,7 @@ ParamDataVector::ParamDataVector() {
 
 // We may add a special slot at the end
 void ParamDataList::check_other() {
-    if (is_lower_case(name[0]) && !empty()) push_back(ParamDataSlot("Other", "Other"));
+    if (std::islower(name[0]) && !empty()) push_back(ParamDataSlot("Other", "Other"));
 }
 
 // --------------------------------------------------
@@ -100,8 +100,7 @@ void config_ns::interpret_list(const std::string &a, Buffer &b) {
 // Function called when theme_vals is seen in the config file.
 void config_ns::interpret_theme_list(const Buffer &B) {
     all_themes = " " + B + " ";
-    for (char &c : all_themes)
-        if (is_upper_case(c)) c += 'a' - 'A';
+    for (char &c : all_themes) c = static_cast<char>(std::tolower(c));
 }
 
 // --------------------------------------------------
@@ -432,7 +431,7 @@ void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::strin
             a++;
             the_log << "--";
         }
-        while ((head() != 0) && !is_space(head())) advance();
+        while ((head() != 0) && !std::isspace(head())) advance();
         ptrs.a        = a;
         std::string k = substring();
         if (keep)

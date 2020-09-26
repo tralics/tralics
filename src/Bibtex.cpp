@@ -367,7 +367,7 @@ void Bibtex::skip_space() {
         if (at_eol())
             next_line(true);
         else {
-            if (is_space(cur_char()))
+            if (std::isspace(static_cast<int>(cur_char())))
                 advance();
             else
                 return;
@@ -424,7 +424,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     }
     // a field part.
     if (what == 0) return check_val_end();
-    if (at_eol() || is_space(c)) skip_space();
+    if (at_eol() || std::isspace(static_cast<int>(c))) skip_space();
     if (what == 1) return check_entry_end(); // case of @foo
     return check_field_end(what);
 }
@@ -503,7 +503,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
     char32_t c = cur_char();
-    if (is_space(c) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
+    if (std::isspace(static_cast<int>(c)) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << fmt::format("\nit cannot end with `{}'\n", to_utf8(c)) << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
@@ -571,7 +571,7 @@ void Bibtex::parse_one_item() {
         for (;;) {
             if (at_eol()) break;
             char32_t c = cur_char();
-            if (c == ',' || is_space(c)) break;
+            if (c == ',' || std::isspace(static_cast<int>(c))) break;
             A << c;
             next_char();
         }

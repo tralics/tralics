@@ -1778,7 +1778,7 @@ void Parser::interpret_math_cmd(size_t res, subtypes c) {
 // --------------------------
 // Math array handling
 void Math::skip_initial_space() {
-    while (!empty() && front().is_space()) pop_front();
+    while (!empty() && front().cmd_is_space()) pop_front();
 }
 
 // Constructs the attributes list for a table.
@@ -2113,7 +2113,7 @@ void MathHelper::new_label(const std::string &s, bool anchor) {
 
 // This removes the spaces.
 void Math::remove_spaces() {
-    remove_if([](const MathElt &v) { return v.is_space(); });
+    remove_if([](const MathElt &v) { return v.cmd_is_space(); });
 }
 
 // Returns true if there is an \over or something like that in the list.
@@ -2666,7 +2666,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         i++;
         MathElt cur = front();
         pop_front();
-        if (cur.is_space()) continue; // ignore this
+        if (cur.cmd_is_space()) continue; // ignore this
         prev_is_hat  = cur_is_hat;
         symcodes cmd = cur.cmd;
         subtypes chr = cur.chr;
@@ -2729,7 +2729,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             continue;
         bool next_is_hat = false;
         if (cmd == math_list_cmd) {
-            while (!empty() && front().is_space()) pop_front();
+            while (!empty() && front().cmd_is_space()) pop_front();
             if (!empty() && (front().cmd == hat_catcode || front().cmd == hat_catcode)) next_is_hat = true;
         }
         math_style cmss = cms;

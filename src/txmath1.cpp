@@ -1363,7 +1363,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         if (L == E) return true;
         // DEBUG   std::cout<< "cmd:" << B << ".\n";
         CmdChr w = *L;
-        if (w.is_space() || w.is_letter() || w.is_other()) {
+        if (w.cmd_is_space() || w.is_letter() || w.is_other()) {
             char32_t c = w.char_val();
             if (c == '<')
                 B.append("&lt;");
@@ -1401,7 +1401,7 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
     for (;;) {
         if (L == E) return true;
         CmdChr w = *L;
-        if (w.is_space()) {
+        if (w.cmd_is_space()) {
         } // spaces are ignored
         else if (w.is_letter() || w.is_other())
             B.push_back(w.char_val());
@@ -1559,7 +1559,7 @@ auto Math::remove_req_arg() -> std::string {
 auto Math::remove_req_arg_noerr() const -> std::string {
     auto C = begin();
     auto E = end();
-    while (C != E && C->is_space()) ++C;
+    while (C != E && C->cmd_is_space()) ++C;
     if (C == E) return "empty";
     if (!C->is_list()) return "not-list";
     Math &L = C->get_list(); // the sublist containing the argument

@@ -31,7 +31,7 @@ auto Bchar::find_a_lower() const -> size_t {
         if (table[i + 1] == bct_extended) continue; // too complicated a case
         if (table[i + 1] == bct_normal) c = name_buffer[i + 1];
         if (table[i + 1] == bct_cmd) c = name_buffer[i + 3];
-        if (is_lower_case(c)) return i;
+        if (std::islower(c)) return i;
     }
     return last;
 }

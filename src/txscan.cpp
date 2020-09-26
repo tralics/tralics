@@ -260,7 +260,7 @@ auto Parser::scan_file_name() -> std::string {
             file_name.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.cmd == underscore_catcode) // allow foo_bar
             file_name.push_back(cur_cmd_chr.char_val());
-        else if (cur_cmd_chr.is_space())
+        else if (cur_cmd_chr.cmd_is_space())
             break;
         else {
             back_input();
@@ -1100,7 +1100,7 @@ auto Parser::scan_sign() -> bool {
     bool negative = false;
     for (;;) {
         get_x_token();
-        if (cur_cmd_chr.is_space()) continue;
+        if (cur_cmd_chr.cmd_is_space()) continue;
         if (cur_tok.is_minus_token())
             negative = !negative;
         else if (!cur_tok.is_plus_token())

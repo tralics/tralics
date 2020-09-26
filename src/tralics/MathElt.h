@@ -29,7 +29,7 @@ public:
     [[nodiscard]] auto is_list() const -> bool { return is_math_list() && font == subtypes(math_open_cd); }
     [[nodiscard]] auto is_hbox() const -> bool { return is_math_list() && font == subtypes(math_hbox_cd); }
     [[nodiscard]] auto is_digit() const -> bool;
-    [[nodiscard]] auto is_char() const -> bool { return is_space() || is_letter_token() || is_other_token(); }
+    [[nodiscard]] auto is_char() const -> bool { return cmd_is_space() || is_letter_token() || is_other_token(); }
     [[nodiscard]] auto is_letter_token() const -> bool { return is_letter(); }
     [[nodiscard]] auto is_other_token() const -> bool { return is_other(); }
     [[nodiscard]] auto is_star() const -> bool { return is_other_token() && get_char() == '*'; }

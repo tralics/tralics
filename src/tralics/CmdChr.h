@@ -25,7 +25,7 @@ public:
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
     [[nodiscard]] auto is_digit() const -> bool { return std::isdigit(static_cast<int>(chr)); }
     [[nodiscard]] auto is_other() const -> bool { return cmd == other_catcode; }
-    [[nodiscard]] auto is_space() const -> bool { return cmd == space_catcode; }
+    [[nodiscard]] auto cmd_is_space() const -> bool { return cmd == space_catcode; }
     [[nodiscard]] auto is_letter_other() const -> bool { return cmd == other_catcode || cmd == letter_catcode; }
     [[nodiscard]] auto is_relax() const -> bool { return cmd == relax_cmd; }
     [[nodiscard]] auto is_undef() const -> bool { return cmd == undef_cmd; }

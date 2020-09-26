@@ -188,9 +188,9 @@ void Buffer::new_word() {
     }
     ++nb_words;
     ok = true;
-    if (is_upper_case(at(0))) {
+    if (std::isupper(at(0))) {
         for (size_t i = 1; i < size(); i++) {
-            if (!is_lower_case(at(i))) ok = false;
+            if (!std::islower(at(i))) ok = false;
         }
         if (ok) at(0) += 'a' - 'A';
     }

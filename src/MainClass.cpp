@@ -108,7 +108,7 @@ found at http://www.cecill.info.)";
             spdlog::critical("Illegal file name of the form safir/2002.tex");
             the_main->bad_year(); // never returns
         }
-        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || is_upper_case(c); })) {
+        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || std::isupper(c); })) {
             spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
             exit(1);
         }

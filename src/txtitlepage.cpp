@@ -494,7 +494,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     Buffer &B = local_buf;
     B         = s;
     size_t j  = 0;
-    while ((B[j] != 0) && !is_space(B[j])) j++;
+    while ((B[j] != 0) && !std::isspace(B[j])) j++;
     bool have_space = B[j] != 0;
     B[j]            = 0;
     auto   match    = B;

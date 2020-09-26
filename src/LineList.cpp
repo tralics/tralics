@@ -67,7 +67,7 @@ namespace {
         key.remove_space_at_end();
         for (;;) {
             if (key.head() == 0) return 1;
-            if (is_space(key.head())) return 2;
+            if (std::isspace(key.head())) return 2;
             key.advance();
         }
     }
