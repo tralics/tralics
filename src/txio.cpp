@@ -155,7 +155,7 @@ void Buffer::out_four_hats(char32_t ch) {
         push_back(static_cast<char>(c + 64));
     } else if (ch == 127)
         append("^^?");
-    else if (is_ascii(ch))
+    else if (ch < 128)
         push_back(static_cast<char>(c));
     else {
         auto s = fmt::format("{:x}", c);
@@ -189,7 +189,7 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
         push_back('\t');
     else if (ch < 32)
         out_four_hats(ch);
-    else if (is_ascii(ch))
+    else if (ch < 128)
         push_back(static_cast<char>(ch));
     else if (T == en_utf8)
         push_back(ch);

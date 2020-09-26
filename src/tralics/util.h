@@ -22,7 +22,6 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 auto to_utf8(char32_t c) -> std::string;
 auto without_end_spaces(std::string s) -> std::string;
 
-inline auto is_ascii(char32_t c) -> bool { return c < 128; }
 inline auto is_big(char32_t c) -> bool { return c > 65535; }
 inline auto is_small(char32_t c) -> bool { return c < 256; }
 

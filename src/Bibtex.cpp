@@ -411,11 +411,11 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
     B.clear();
     char32_t c = cur_char();
-    if (!is_ascii(c) || std::isdigit(static_cast<int>(c)) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
+    if ((c >= 128) || std::isdigit(static_cast<int>(c)) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
         if (at_eol()) break;
         c = next_char();
-        if (!is_ascii(c) || get_class(c) != legal_id_char) {
+        if ((c >= 128) || get_class(c) != legal_id_char) {
             input_line_pos--; // c is to be read again
             break;
         }

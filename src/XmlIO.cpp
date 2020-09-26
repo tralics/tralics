@@ -183,7 +183,7 @@ void XmlIO::scan_name() {
     skip_char();
     for (;;) {
         char32_t xx = peek_char();
-        if (is_ascii(xx)) {
+        if (xx < 128) {
             x_type w = Type[xx];
             if (w == xt_space || w == xt_invalid) return;
         }

@@ -185,7 +185,7 @@ auto Token::tok_to_str() const -> std::string {
     int      cat      = cmd_val();
     char32_t c        = char_val();
     bool     good_cat = false;
-    if (!is_ascii(c) && cat == 12) good_cat = true;
+    if ((c >= 128) && cat == 12) good_cat = true;
     if (std::isalpha(static_cast<int>(c)) && cat == 11) good_cat = true;
     if (good_cat)
         B.out_log(c, the_main->log_encoding);

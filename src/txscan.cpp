@@ -463,7 +463,7 @@ auto Parser::scan_double_hat(char32_t c) -> bool {
         }
     }
     char32_t C = input_line[p + 1];
-    if (!is_ascii(C)) return false;
+    if (C >= 128) return false;
     auto c1 = C;
     input_line_pos++;
     input_line[p + 1] = char32_t(c1 < 64 ? c1 + 64 : c1 - 64);
