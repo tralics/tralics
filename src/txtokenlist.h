@@ -17,7 +17,6 @@
 class Hashtab;
 
 namespace token_ns {
-    auto get_a_param(TokenList &L, bool br) -> TokenList;
     auto get_block(TokenList &L) -> TokenList;
     auto get_unique(TokenList &L) -> Token;
     void get_unique(TokenList &L, Token &t1, Token &t2);

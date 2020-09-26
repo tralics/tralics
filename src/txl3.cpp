@@ -478,9 +478,9 @@ void Parser::E_l3str_case(subtypes c) {
     for (;;) {
         token_ns::remove_initial_spaces(clauses);
         if (clauses.empty()) break;
-        TokenList as2 = token_ns::get_a_param(clauses, false);
+        TokenList as2 = clauses.get_a_param();
         // should we check for bad termination?
-        TokenList   code = token_ns::get_a_param(clauses, false);
+        TokenList   code = clauses.get_a_param();
         std::string s2   = l3_to_string(exp, as2);
         if (s1 == s2) {
             match = true;

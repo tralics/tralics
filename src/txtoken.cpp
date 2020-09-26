@@ -254,26 +254,6 @@ auto token_ns::get_block(TokenList &L) -> TokenList {
     return TokenList();
 }
 
-// Returns the first token, or the first token-list
-// There are braces around the thing if br is true
-auto token_ns::get_a_param(TokenList &L, bool br) -> TokenList {
-    TokenList res;
-    while (!L.empty()) {
-        Token t = L.front();
-        if (t.is_a_left_brace()) {
-            TokenList w = L.fast_get_block();
-            if (!br) remove_ext_braces(w);
-            return w;
-        }
-        L.pop_front();
-        if (t.is_space_token()) continue;
-        res.push_back(t);
-        break;
-    }
-    if (br) the_parser.brace_me(res);
-    return res;
-}
-
 // Like getblock, returns nothing
 void token_ns::remove_block(TokenList &L) {
     int bl = 0;

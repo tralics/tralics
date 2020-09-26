@@ -12,6 +12,7 @@ struct TokenList : public std::list<Token> {
     void expand_star();
     auto fast_get_block() -> TokenList;
     void fast_get_block(TokenList &res); // \todo rename
+    auto get_a_param() -> TokenList;
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

@@ -61,7 +61,7 @@ auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool 
         result = true; // We found something
         MX--;
         if (MX < 0) return true;
-        for (size_t k = 0; k < n; k++) Table[k + 1] = token_ns::get_a_param(*this, false);
+        for (size_t k = 0; k < n; k++) Table[k + 1] = get_a_param();
         TokenList W = Parser::expand_mac_inner(body, Table.data());
         splice(begin(), W);
     }
@@ -123,3 +123,22 @@ auto TokenList::fast_get_block() -> TokenList {
 // Assumes that the list L starts with a brace.
 // puts the first block to the end of res
 void TokenList::fast_get_block(TokenList &res) { res.splice(res.end(), fast_get_block()); }
+
+// Returns the first token, or the first token-list
+// There are braces around the thing if br is true
+auto TokenList::get_a_param() -> TokenList {
+    TokenList res;
+    while (!empty()) {
+        Token t = front();
+        if (t.is_a_left_brace()) {
+            TokenList w = fast_get_block();
+            token_ns::remove_ext_braces(w);
+            return w;
+        }
+        pop_front();
+        if (t.is_space_token()) continue;
+        res.push_back(t);
+        break;
+    }
+    return res;
+}
