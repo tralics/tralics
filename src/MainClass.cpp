@@ -164,7 +164,7 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
-    auto try_conf(const std::filesystem::path &dir) -> bool { return tralics_ns::file_exists(dir / "book.clt", false); }
+    [[deprecated]] auto try_conf(const std::filesystem::path &dir) -> bool { return std::filesystem::exists(dir / "book.clt"); }
 
     /// Locate the config dir, using a few sources \todo do it better
     void find_conf_path() {
@@ -343,6 +343,7 @@ void MainClass::check_for_input() {
         spdlog::critical("Fatal error: Cannot open input file {}", infile);
         exit(1);
     }
+    spdlog::trace("Found input file: {}", *of);
     s        = *of;
     ult_name = of->replace_extension(".ult");
 
@@ -766,6 +767,7 @@ void MainClass::end_with_help(int v) {
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
     if (auto of = tralics_ns::find_in_confdir(tmp, true); of) {
+        spdlog::trace("Found TCF file: {}", *of);
         tcf_file = of;
         return true;
     }
@@ -777,7 +779,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (!user_config_file.empty()) {
         the_log << "Trying config file from user specs: " << user_config_file << "\n";
         if (user_config_file[0] == '.' || user_config_file[0] == '/') {
-            if (tralics_ns::file_exists(user_config_file, false)) return user_config_file;
+            if (std::filesystem::exists(user_config_file)) return user_config_file;
             return {};
         }
         if (!user_config_file.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
@@ -792,7 +794,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
         if (auto of = tralics_ns::find_in_confdir(xclass, true); of) return of;
     }
     std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
-    if (tralics_ns::file_exists(rc, false)) return rc;
+    if (std::filesystem::exists(rc)) return rc;
     return main_ns::search_in_confdir(rc);
 }
 

@@ -4,6 +4,7 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txinline.h"
+#include <fmt/ostream.h>
 
 namespace {
     inline auto is_spacer(char32_t c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
@@ -58,6 +59,7 @@ auto read_xml(const std::string &s) -> Xml * {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;
     }
+    spdlog::trace("Reading XML file: {}", *of);
     XmlIO res;
     if (res.init(*of)) return nullptr;
     return res.prun();

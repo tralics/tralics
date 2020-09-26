@@ -228,17 +228,6 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 
 // --------------------------------------------
 
-// This can be used to check if the main file exists. In this case the
-// transcript file is not yet open.
-auto tralics_ns::file_exists(const std::string &name, bool verbose) -> bool {
-    auto e = std::filesystem::exists(name);
-    if (verbose) {
-        Logger::finish_seq();
-        spdlog::trace("++ file {} {}.", name, e ? "exists" : "does not exist");
-    }
-    return e;
-}
-
 // This exits if the file cannot be opened and argument is true
 auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
@@ -312,7 +301,7 @@ void Parser::T_filecontents(int spec) {
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {
         auto f = conf_path[i - 1] / s;
-        if (tralics_ns::file_exists(f, false)) {
+        if (std::filesystem::exists(f)) {
             spdlog::trace("Found in configuration path: {}", f);
             return f;
         }
@@ -324,7 +313,7 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
 auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> std::optional<std::filesystem::path> {
     pool_position = search_in_pool(s);
     if (pool_position) return s;
-    if (file_exists(s)) return s;
+    if (std::filesystem::exists(s)) return s;
     if (!retry) return {};
     if (s.empty() || s[0] == '.' || s[0] == '/') return {};
     return main_ns::search_in_confdir(s);
@@ -335,12 +324,12 @@ auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesy
     pool_position = search_in_pool(s);
     if (pool_position) return s;
     if (s[0] == '.' || s[0] == '/') {
-        if (file_exists(s)) return s;
+        if (std::filesystem::exists(s)) return s;
         return {};
     }
     for (const auto &p : input_path) {
         auto ss = p.empty() ? std::filesystem::path(s) : p / s;
-        if (file_exists(ss)) return ss;
+        if (std::filesystem::exists(ss)) return ss;
     }
     return {};
 }

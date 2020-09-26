@@ -70,9 +70,9 @@ namespace {
     bool                                        require_eof = true; // eof is an outer token
 
     auto find_no_path(const std::string &s)
-        -> std::optional<std::filesystem::path> { // \todo is that just file_exists, or is the side-effect necessary?
+        -> std::optional<std::filesystem::path> { // \todo is that just std::filesystem::exists, or is the side-effect necessary?
         if (s.empty()) return {};
-        if (tralics_ns::file_exists(s)) return s;
+        if (std::filesystem::exists(s)) return s;
         return {};
     }
 
@@ -374,7 +374,7 @@ void Parser::T_input(int q) {
     else {
         res = tralics_ns::find_in_path(file);
         if (!res) {
-            Buffer &B = local_buf;
+            Buffer &B = local_buf; // \todo without local_buf
             B         = file;
             if (!B.ends_with(".tex")) {
                 B.append(".tex");
@@ -383,6 +383,7 @@ void Parser::T_input(int q) {
             }
         }
     }
+    spdlog::trace("Found file for input: {}", *res);
     if (q == openin_code) {
         tex_input_files[stream].open(file, *res, static_cast<bool>(res));
         return;
