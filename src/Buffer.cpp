@@ -103,7 +103,7 @@ void Buffer::push_back_real_utf8(char32_t c) {
         append("&gt;");
     else if (c == '&')
         append("&amp;");
-    else if (c < 32 || is_big(c))
+    else if (c < 32 || c > 65535)
         format("&#x{:X};", size_t(c));
     else
         utf8::append(c, std::back_inserter(*this));

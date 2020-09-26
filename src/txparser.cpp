@@ -801,7 +801,7 @@ auto Parser::delimiter_for_saveverb() -> char32_t {
         if (at_eol()) return char32_t();
         char32_t c = get_next_char();
         if (c == 0) return c;
-        if (is_big(c)) return char32_t();
+        if (c > 65535) return char32_t();
         if (get_catcode(c) == space_catcode) continue;
         if (get_catcode(c) == special_catcode) return c;
         return char32_t();

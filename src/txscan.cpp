@@ -475,7 +475,7 @@ auto Parser::cs_from_input() -> Token {
     if (at_eol()) return Token(null_tok_val);
     char32_t c = get_next_char();
     state      = state_S;
-    if (is_big(c)) { // abort and return null_cs
+    if (c > 65535) { // abort and return null_cs
         --input_line_pos;
         return Token(null_tok_val);
     }
@@ -486,7 +486,7 @@ auto Parser::cs_from_input() -> Token {
         for (;;) {
             if (at_eol()) break;
             c = get_next_char();
-            if (is_big(c)) {
+            if (c > 65535) {
                 --input_line_pos;
                 break;
             } // abort
@@ -520,7 +520,7 @@ auto Parser::cs_from_input() -> Token {
 auto Parser::next_from_line0() -> bool {
     if (at_eol()) return true;
     char32_t c = get_next_char();
-    if (is_big(c)) { // convert to \char"ABCD
+    if (c > 65535) { // convert to \char"ABCD
         Buffer &B = local_buf;
         B         = fmt::format("\"{:X}", size_t(c));
         auto k    = B.size();
