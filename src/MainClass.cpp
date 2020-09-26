@@ -164,53 +164,22 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
-    [[deprecated]] auto try_conf(const std::filesystem::path &dir) -> bool { return std::filesystem::exists(dir / "book.clt"); }
-
-    /// Locate the config dir, using a few sources \todo do it better
+    /// Locate the config dir, using a few standard sources \todo this should be
+    /// managed by CMake
     void find_conf_path() {
-        if (try_conf(conf_path[0])) return;
-        String S = "/usr/share/tralics";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
+        static const std::array<std::filesystem::path, 7> paths{
+            conf_path[0], "/usr/share/tralics", "/usr/lib/tralics/confdir", "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
+            "../confdir", "../../confdir"};
+
+        for (const auto &S : paths) {
+            if (exists(S / "book.clt")) {
+                conf_path.emplace_back(S);
+                spdlog::info("Found configuration folder: {}", S);
+                return;
+            }
         }
-        S = "/usr/lib/tralics/confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
-        S = "/usr/local/lib/tralics/confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
-        S = "/sw/share/tralics/confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
-        S = "../confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
-        S = "../../confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
-        S = "/user/grimm/home/cvs/tralics/confdir";
-        if (try_conf(S)) {
-            conf_path.emplace_back(S);
-            spdlog::info("Adding configuration folder: {}", S);
-            return;
-        }
+
+        spdlog::error("Configuration folder not found");
     }
 
     /// Split a `:`-separated path list into paths
