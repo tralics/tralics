@@ -1495,7 +1495,7 @@ auto Parser::list_to_string_cv(TokenList &L, Buffer &b) -> bool {
         if (get_x_token()) return true;
         if (cur_cmd_chr.cmd == endcsname_cmd) return false;
         if (cur_tok.not_a_cmd())
-            b.push_back(to_lower(cur_cmd_chr.char_val()));
+            b.push_back(static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val()))));
         else
             return true;
     }

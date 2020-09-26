@@ -1558,11 +1558,11 @@ auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
     char32_t c1 = 0, c2 = 0;
     if (cur_tok.is_a_char()) {
-        c1         = to_lower(cur_cmd_chr.char_val());
+        c1         = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
         Token save = cur_tok;
         get_x_token();
         if (cur_tok.is_a_char()) {
-            c2 = to_lower(cur_cmd_chr.char_val());
+            c2 = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
             if (c1 == 'p' && c2 == 't') return unit_pt;
             if (c1 == 'i' && c2 == 'n') return unit_in;
             if (c1 == 'p' && c2 == 'c') return unit_pc;

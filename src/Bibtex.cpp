@@ -419,7 +419,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
             input_line_pos--; // c is to be read again
             break;
         }
-        c = to_lower(c);
+        c = static_cast<char32_t>(std::tolower(static_cast<int>(c)));
         B.push_back(c);
     }
     // a field part.

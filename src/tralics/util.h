@@ -25,6 +25,5 @@ auto without_end_spaces(std::string s) -> std::string;
 inline auto is_ascii(char32_t c) -> bool { return c < 128; }
 inline auto is_big(char32_t c) -> bool { return c > 65535; }
 inline auto is_small(char32_t c) -> bool { return c < 256; }
-inline auto to_lower(char32_t c) -> char32_t { return 'A' <= c && c <= 'Z' ? char32_t(c + ('a' - 'A')) : c; }
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
