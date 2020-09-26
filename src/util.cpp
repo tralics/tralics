@@ -109,7 +109,7 @@ auto codepoints(const std::string &s) -> std::vector<char32_t> {
 auto convert_to_latin1(const std::string &s, bool latin1) -> std::string {
     std::string res;
     for (auto c : codepoints(s)) {
-        if ((c < 128) || (is_small(c) && latin1))
+        if ((c < 128) || (c < 256 && latin1))
             res.push_back(static_cast<char>(c));
         else
             res += fmt::format("&#x{:X};", size_t(c));

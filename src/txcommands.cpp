@@ -170,7 +170,7 @@ void Parser::translate_char(CmdChr X) {
     char32_t c = X.char_val();
     if (c == 0) return; // we do not want null chars in trace or Xml
     if (tracing_commands()) Logger::out_single_char(c);
-    if (!is_small(c)) {
+    if (c >= 256) {
         process_char(c);
         return;
     }

@@ -193,7 +193,7 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
         push_back(static_cast<char>(ch));
     else if (T == en_utf8)
         push_back(ch);
-    else if (is_small(ch) && T == en_latin)
+    else if (ch < 256 && T == en_latin)
         push_back(static_cast<char>(ch));
     else
         out_four_hats(ch);
