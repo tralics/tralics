@@ -131,7 +131,7 @@ found at http://www.cecill.info.)";
     // \todo refactor or deprecate with RA
     auto extract_year(std::string &B, std::string &C) -> int {
         size_t m = B.size(), n = m, k = 0;
-        while (k < 4 && n > 0 && is_digit(B[n - 1])) {
+        while (k < 4 && n > 0 && std::isdigit(B[n - 1])) {
             n--;
             k++;
         }
@@ -782,7 +782,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
     f.replace_extension();
     dtype = f.filename();
     for (size_t i = dtype.size() - 1; i > 0; --i) {
-        if (!is_digit(dtype[i])) {
+        if (!std::isdigit(dtype[i])) {
             dtype.resize(i + 1);
             break;
         }

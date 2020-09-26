@@ -1658,10 +1658,10 @@ void Parser::E_accent() {
         }
     }
     if (res.is_null()) {
-        std::string s =
-            achar >= 128
-                ? "a non 7-bit character"
-                : is_letter(static_cast<char>(achar)) ? "letter" : is_digit(static_cast<char>(achar)) ? "digit" : "non-letter character";
+        std::string s = achar >= 128 ? "a non 7-bit character"
+                                     : is_letter(static_cast<char>(achar))
+                                           ? "letter"
+                                           : std::isdigit(static_cast<char>(achar)) ? "digit" : "non-letter character";
         err_buf = msg1 + tfe.tok_to_str();
         if (acc_code2 != 0) err_buf += tfe2.tok_to_str();
         err_buf += "\nCannot put accent on " + s;

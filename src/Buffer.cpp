@@ -15,6 +15,7 @@
 #include "tralics/Parser.h"
 #include "tralics/Xml.h"
 #include "tralics/util.h"
+#include <cctype>
 #include <ctre.hpp>
 #include <fmt/format.h>
 #include <utf8.h>
@@ -110,14 +111,7 @@ void Buffer::push_back_real_utf8(char32_t c) {
 
 // Converts the entire Buffer to lower case
 void Buffer::lowercase() {
-    for (auto &c : *this)
-        if (is_upper_case(c)) c += 'a' - 'A';
-}
-
-// Converts the entire buffer to upper case
-void Buffer::uppercase() {
-    for (auto &c : *this)
-        if (is_lower_case(c)) c -= 'a' - 'A';
+    std::transform(begin(), end(), begin(), [](uchar c) { return std::tolower(c); });
 }
 
 // Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).
@@ -487,7 +481,7 @@ auto Buffer::int_val() const -> std::optional<size_t> {
     for (size_t p = 0;; p++) {
         auto c = (*this)[p];
         if (c == 0) return n;
-        if (!is_digit(c)) return {};
+        if (!std::isdigit(c)) return {};
         n = 10 * n + to_unsigned(c - '0');
         if (n > 1000000) return {};
     }
@@ -668,13 +662,13 @@ void Buffer::skip_sp_tab_comma() {
 }
 
 void Buffer::skip_letter_dig() {
-    while (is_letter(head()) || is_digit(head())) ptrs.b++;
+    while (is_letter(head()) || std::isdigit(head())) ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot() {
-    while (is_letter(head()) || is_digit(head()) || head() == '.') ptrs.b++;
+    while (is_letter(head()) || std::isdigit(head()) || head() == '.') ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot_slash() {
-    while (is_letter(head()) || is_digit(head()) || head() == '.' || head() == '/') ptrs.b++;
+    while (is_letter(head()) || std::isdigit(head()) || head() == '.' || head() == '/') ptrs.b++;
 }
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }

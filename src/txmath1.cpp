@@ -1469,7 +1469,7 @@ auto Math::chars_to_mb3() -> std::string {
             sz++;
             continue;
         }
-        if (is_digit(C)) {
+        if (std::isdigit(static_cast<int>(C))) {
             if (bc != 0) {
                 sz = 0;
                 break;
@@ -1811,7 +1811,7 @@ auto MathElt::maybe_seq(subtypes f) const -> bool {
 auto MathElt::maybe_iseq() const -> bool {
     if (cmd != other_catcode) return false;
     auto c = chr;
-    return c < 128 && ::is_digit(char(uchar(c)));
+    return c < 128 && std::isdigit(uchar(c));
 }
 
 // True is this can form a sequence of characters to put in a <mn>
@@ -1820,7 +1820,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
     if (cmd != other_catcode) return false;
     if (get_font() != f) return false;
     auto c = chr;
-    return c < 128 && ::is_digit(char(uchar(c)));
+    return c < 128 && std::isdigit(uchar(c));
 }
 
 // Converts a character sequence; first char W already removed from

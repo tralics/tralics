@@ -63,7 +63,7 @@ auto find_counter(const std::string &s) -> int {
 }
 
 auto only_digits(const std::string &s) -> bool {
-    return std::all_of(s.begin(), s.end(), [](char v) { return is_digit(v); });
+    return std::all_of(s.begin(), s.end(), [](char v) { return std::isdigit(v); });
 }
 
 auto bt_to_string(boundary_type v) -> std::string { // \todo std::optional<std::string>
@@ -95,7 +95,7 @@ auto to_utf8(char32_t c) -> std::string {
 }
 
 auto remove_digits(std::string s) -> std::string {
-    while ((!s.empty()) && is_digit(s.back())) s.pop_back();
+    while ((!s.empty()) && std::isdigit(s.back())) s.pop_back();
     return s;
 }
 

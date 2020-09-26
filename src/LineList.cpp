@@ -25,9 +25,9 @@ namespace {
         if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
         auto kk = cl.find("tralics-encoding:");
         if (kk == std::string::npos) return {};
-        if (!is_digit(cl[kk + 17])) return {};
+        if (!std::isdigit(cl[kk + 17])) return {};
         int k = cl[kk + 17] - '0';
-        if (is_digit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
+        if (std::isdigit(cl[kk + 18])) { k = 10 * k + cl[kk + 18] - '0'; }
         if (k < to_signed(max_encoding)) return k;
         return {};
     }

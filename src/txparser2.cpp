@@ -1820,7 +1820,7 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
     for (;;) {
         if (B.at_eol()) return true;
         auto c = B.head();
-        if (!is_digit(c)) { return true; }
+        if (!std::isdigit(c)) { return true; }
         B.advance();
         res = 10 * res + (c - '0');
         if (res > 9999) {
@@ -2012,7 +2012,7 @@ auto FormatDate::scan_next(Buffer &B, int &res) -> bool {
         }
         c = B.head();
     }
-    if (is_digit(c)) return scan_a_field(B, res);
+    if (std::isdigit(c)) return scan_a_field(B, res);
     if (!scan_a_month(B, res)) {
         the_parser.parse_error(err_tok, "Expected digits or a month in letters");
         return false;

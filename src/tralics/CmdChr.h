@@ -23,7 +23,7 @@ public:
 
     [[nodiscard]] auto char_val() const -> char32_t { return char32_t(unsigned(chr)); }
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
-    [[nodiscard]] auto is_digit() const -> bool { return '0' <= chr && chr <= '9'; }
+    [[nodiscard]] auto is_digit() const -> bool { return std::isdigit(static_cast<int>(chr)); }
     [[nodiscard]] auto is_other() const -> bool { return cmd == other_catcode; }
     [[nodiscard]] auto is_space() const -> bool { return cmd == space_catcode; }
     [[nodiscard]] auto is_letter_other() const -> bool { return cmd == other_catcode || cmd == letter_catcode; }

@@ -77,7 +77,7 @@ namespace {
     }
 
     auto hex_val(char32_t c) -> std::optional<unsigned> {
-        if (is_digit(c)) return c - '0';
+        if (std::isdigit(static_cast<int>(c))) return c - '0';
         if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
     }

@@ -2143,7 +2143,7 @@ auto MathElt::cv_char() const -> MathElt {
     auto     mt = mt_flag_small;
     auto     F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(char32_t(c)), mt_flag_small);
-    if (::is_digit(static_cast<char>(c)))
+    if (std::isdigit(static_cast<char>(c)))
         a = to_signed(c) - '0' + math_dig_loc;
     else if (::is_letter(static_cast<char>(c)) && F < 2) {
         a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);

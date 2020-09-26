@@ -50,7 +50,6 @@ public:
     void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
     void lowercase();
     void remove_last(size_t n); ///< Drop `n` chars, provided size is large enough
-    void uppercase();
 
     // Mutating methods, affecting ptrs but not the data, as intended
     void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward

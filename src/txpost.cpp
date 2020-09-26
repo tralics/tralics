@@ -170,7 +170,7 @@ void all_words_ns::add_a_word(String s, size_t h) {
     WL0[H] = new WordList(s, h, WL0[H]);
 }
 
-inline auto dig_char(char c) -> bool { return c == '-' || is_digit(c); }
+inline auto dig_char(char c) -> bool { return c == '-' || std::isdigit(c); }
 
 void Buffer::new_word() {
     if (empty()) return;
