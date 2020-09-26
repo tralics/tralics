@@ -735,7 +735,7 @@ void MainClass::end_with_help(int v) {
 
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
-    if (auto of = tralics_ns::find_in_confdir(tmp, true); of) {
+    if (auto of = tralics_ns::find_in_confdir(tmp); of) {
         spdlog::trace("Found TCF file: {}", *of);
         tcf_file = of;
         return true;
@@ -760,7 +760,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
-        if (auto of = tralics_ns::find_in_confdir(xclass, true); of) return of;
+        if (auto of = tralics_ns::find_in_confdir(xclass); of) return of;
     }
     std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
     if (std::filesystem::exists(rc)) return rc;

@@ -310,11 +310,10 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     return {};
 }
 
-auto tralics_ns::find_in_confdir(const std::string &s, bool retry) -> std::optional<std::filesystem::path> {
+auto tralics_ns::find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     pool_position = search_in_pool(s);
     if (pool_position) return s;
     if (std::filesystem::exists(s)) return s;
-    if (!retry) return {};
     if (s.empty() || s[0] == '.' || s[0] == '/') return {};
     return main_ns::search_in_confdir(s);
 }
