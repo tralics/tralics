@@ -260,7 +260,7 @@ auto Parser::scan_file_name() -> std::string {
             file_name.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.cmd == underscore_catcode) // allow foo_bar
             file_name.push_back(cur_cmd_chr.char_val());
-        else if (cur_cmd_chr.cmd_is_space())
+        else if (cur_cmd_chr.is_space())
             break;
         else {
             back_input();
@@ -784,14 +784,14 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             if (p + 3 < input_line.size() && input_line[p] == 'e' && input_line[p + 1] == 'g' && input_line[p + 2] == 'i' &&
                 input_line[p + 3] == 'n' &&
                 (p + 4 == input_line.size() // this is silly
-                 || !is_letter(input_line[p + 4])))
+                 || !std::isalpha(static_cast<int>(input_line[p + 4]))))
                 elevel++;
         }
         if (c == 'e') {
             auto p = input_line_pos;
             if (p + 1 < input_line.size() && input_line[p] == 'n' && input_line[p + 1] == 'd' &&
                 (p + 2 == input_line.size() // this is silly
-                 || !is_letter(input_line[p + 2]))) {
+                 || !std::isalpha(static_cast<int>(input_line[p + 2])))) {
                 elevel--;
                 if (elevel == -1) {
                     input_line_pos -= 2; // reread backshash e
@@ -1100,7 +1100,7 @@ auto Parser::scan_sign() -> bool {
     bool negative = false;
     for (;;) {
         get_x_token();
-        if (cur_cmd_chr.cmd_is_space()) continue;
+        if (cur_cmd_chr.is_space()) continue;
         if (cur_tok.is_minus_token())
             negative = !negative;
         else if (!cur_tok.is_plus_token())

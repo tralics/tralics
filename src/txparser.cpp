@@ -895,7 +895,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
 
 void Parser::back_input_unless_space() {
     if (cur_tok.is_invalid()) return;
-    if (cur_cmd_chr.cmd_is_space()) return;
+    if (cur_cmd_chr.is_space()) return;
     back_input();
 }
 
@@ -908,14 +908,14 @@ void Parser::read_one_space() {
 void Parser::remove_initial_space() {
     for (;;) {
         get_x_token();
-        if (!cur_cmd_chr.cmd_is_space()) return;
+        if (!cur_cmd_chr.is_space()) return;
     }
 }
 
 void Parser::remove_initial_space_and_back_input() {
     for (;;) {
         get_x_token();
-        if (!cur_cmd_chr.cmd_is_space()) break;
+        if (!cur_cmd_chr.is_space()) break;
     }
     if (cur_tok.is_valid()) back_input();
 }
@@ -924,7 +924,7 @@ void Parser::remove_initial_space_and_back_input() {
 void Parser::remove_initial_space_relax() {
     for (;;) {
         get_x_token();
-        if (!cur_cmd_chr.cmd_is_space() && !cur_cmd_chr.is_relax()) return;
+        if (!cur_cmd_chr.is_space() && !cur_cmd_chr.is_relax()) return;
     }
 }
 
@@ -933,7 +933,7 @@ void Parser::remove_initial_space_relax() {
 void Parser::skip_initial_space() {
     for (;;) {
         get_token();
-        if (!cur_cmd_chr.cmd_is_space()) return;
+        if (!cur_cmd_chr.is_space()) return;
     }
 }
 
@@ -953,7 +953,7 @@ void Parser::back_input_braced(TokenList &L) {
 void Parser::scan_optional_equals() {
     for (;;) {
         if (get_x_token()) return;
-        if (!cur_cmd_chr.cmd_is_space()) break;
+        if (!cur_cmd_chr.is_space()) break;
     }
     if (!cur_tok.is_equal_token()) back_input();
 }
@@ -2153,7 +2153,7 @@ void Parser::new_prim(String a, String b) {
     for (size_t i = 0; i < n; i++) {
         auto c = b[i];
         if (uchar(c) > 128) err_ns::fatal_error("internal error in new_prim");
-        spec_offsets T = c == ' ' ? space_t_offset : is_letter(c) ? letter_t_offset : other_t_offset;
+        spec_offsets T = c == ' ' ? space_t_offset : std::isalpha(c) ? letter_t_offset : other_t_offset;
         L.push_back(Token(T, char32_t(c)));
     }
     new_prim(hash_table.locate(a), L);
@@ -2632,7 +2632,7 @@ auto Parser::scan_keyword(String s) -> bool {
         if (cur_tok.not_a_cmd() && (cur_cmd_chr.char_val() == uchar(s[k]) || cur_cmd_chr.char_val() == uchar(s[k] + 'A' - 'a'))) {
             L.push_back(cur_tok);
             k++;
-        } else if (L.empty() && cur_cmd_chr.cmd_is_space())
+        } else if (L.empty() && cur_cmd_chr.is_space())
             continue;
         else {
             back_input();
@@ -3123,7 +3123,7 @@ void Parser::M_let(bool gbl) {
     skip_initial_space();
     if (cur_tok.is_equal_token()) {
         get_token();
-        if (cur_cmd_chr.cmd_is_space()) get_token();
+        if (cur_cmd_chr.is_space()) get_token();
     }
     M_let(A, gbl, false);
 }

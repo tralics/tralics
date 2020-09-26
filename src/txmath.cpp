@@ -1778,7 +1778,7 @@ void Parser::interpret_math_cmd(size_t res, subtypes c) {
 // --------------------------
 // Math array handling
 void Math::skip_initial_space() {
-    while (!empty() && front().cmd_is_space()) pop_front();
+    while (!empty() && front().is_space()) pop_front();
 }
 
 // Constructs the attributes list for a table.
@@ -2113,7 +2113,7 @@ void MathHelper::new_label(const std::string &s, bool anchor) {
 
 // This removes the spaces.
 void Math::remove_spaces() {
-    remove_if([](const MathElt &v) { return v.cmd_is_space(); });
+    remove_if([](const MathElt &v) { return v.is_space(); });
 }
 
 // Returns true if there is an \over or something like that in the list.
@@ -2145,9 +2145,9 @@ auto MathElt::cv_char() const -> MathElt {
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(char32_t(c)), mt_flag_small);
     if (std::isdigit(static_cast<char>(c)))
         a = to_signed(c) - '0' + math_dig_loc;
-    else if (::is_letter(static_cast<char>(c)) && F < 2) {
+    else if (std::isalpha(static_cast<char>(c)) && F < 2) {
         a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);
-    } else if (::is_letter(static_cast<char>(c))) {
+    } else if (std::isalpha(static_cast<char>(c))) {
         auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
@@ -2666,7 +2666,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         i++;
         MathElt cur = front();
         pop_front();
-        if (cur.cmd_is_space()) continue; // ignore this
+        if (cur.is_space()) continue; // ignore this
         prev_is_hat  = cur_is_hat;
         symcodes cmd = cur.cmd;
         subtypes chr = cur.chr;
@@ -2729,7 +2729,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             continue;
         bool next_is_hat = false;
         if (cmd == math_list_cmd) {
-            while (!empty() && front().cmd_is_space()) pop_front();
+            while (!empty() && front().is_space()) pop_front();
             if (!empty() && (front().cmd == hat_catcode || front().cmd == hat_catcode)) next_is_hat = true;
         }
         math_style cmss = cms;

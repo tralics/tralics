@@ -116,7 +116,7 @@ auto Buffer::tp_next_char(char &res) -> bool {
 auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     out.clear();
     if (del == '\\') { // scan a command
-        while (is_letter(in.head())) out.push_back(in.next_char());
+        while (std::isalpha(in.head())) out.push_back(in.next_char());
         return true;
     }
     if (del == '<') del = '>'; // else del is ""

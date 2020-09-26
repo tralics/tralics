@@ -40,7 +40,7 @@ namespace {
         if (b == 9) return; // bad
 
         size_t a = b;
-        while (is_letter(s[b])) b++;
+        while (std::isalpha(s[b])) b++;
         if (b == a) return; // bad
 
         auto str = s.substr(a, b - a);

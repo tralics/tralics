@@ -101,7 +101,7 @@ void Parser::translate01() {
 // This prints the command to translate. The case of a space is special
 // Letters are printed elsewhere
 void Parser::translate02() {
-    if (cur_cmd_chr.cmd_is_space()) {
+    if (cur_cmd_chr.is_space()) {
         if (!the_stack.in_v_mode()) Logger::out_single_char(char32_t(' '));
         return;
     }

@@ -186,7 +186,7 @@ auto Token::tok_to_str() const -> std::string {
     char32_t c        = char_val();
     bool     good_cat = false;
     if (!is_ascii(c) && cat == 12) good_cat = true;
-    if (::is_letter(c) && cat == 11) good_cat = true;
+    if (std::isalpha(static_cast<int>(c)) && cat == 11) good_cat = true;
     if (good_cat)
         B.out_log(c, the_main->log_encoding);
     else {
@@ -275,7 +275,7 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? is_letter(c) : the_parser.has_letter_catcode(c);
+        bool need_space = sw ? std::isalpha(static_cast<int>(c)) : the_parser.has_letter_catcode(c);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         append(the_parser.hash_table[T.hash_loc()]);
@@ -459,7 +459,7 @@ auto Buffer::skip_word_ci(const std::string &s) -> bool {
         if (c != s[i]) return false;
     }
     char c = (*this)[ptrs.b + n];
-    if (is_letter(c)) return false;
+    if (std::isalpha(c)) return false;
     ptrs.b += n;
     return true;
 }
@@ -649,7 +649,7 @@ void Buffer::push_back(const TokenList &L) {
 }
 
 void Buffer::skip_letter() {
-    while (is_letter(head())) ptrs.b++;
+    while (std::isalpha(head())) ptrs.b++;
 }
 void Buffer::skip_sp_tab() {
     while (ptrs.b < size() && (head() == ' ' || head() == '\t')) ptrs.b++;
@@ -662,13 +662,13 @@ void Buffer::skip_sp_tab_comma() {
 }
 
 void Buffer::skip_letter_dig() {
-    while (is_letter(head()) || std::isdigit(head())) ptrs.b++;
+    while (std::isalpha(head()) || std::isdigit(head())) ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot() {
-    while (is_letter(head()) || std::isdigit(head()) || head() == '.') ptrs.b++;
+    while (std::isalpha(head()) || std::isdigit(head()) || head() == '.') ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot_slash() {
-    while (is_letter(head()) || std::isdigit(head()) || head() == '.' || head() == '/') ptrs.b++;
+    while (std::isalpha(head()) || std::isdigit(head()) || head() == '.' || head() == '/') ptrs.b++;
 }
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
@@ -941,7 +941,7 @@ void Buffer::fill_table(bchar_type *table) {
                 Bibtex::err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
-            if (is_letter(at(ptrs.b + 1))) {
+            if (std::isalpha(at(ptrs.b + 1))) {
                 table[i]     = bct_cmd;
                 table[i + 1] = bct_continuation;
                 table[i + 2] = bct_continuation;

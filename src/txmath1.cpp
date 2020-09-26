@@ -659,7 +659,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
         push_back_math_aux(s);
         if (!space) return;
         if (s[0] == 0) return;
-        if (s[1] == 0 && !is_letter(s[0])) return;
+        if (s[1] == 0 && !std::isalpha(s[0])) return;
         push_back(' ');
     } else
         push_back_real_utf8(x.char_val());
@@ -686,7 +686,7 @@ void Buffer::push_back_math_tag(std::string s, int type) {
     bool ok = true; // true if letter
     for (size_t i = 0; i < n; i++) {
         auto c = s[i];
-        if (!is_letter(c)) {
+        if (!std::isalpha(c)) {
             if (s == "@root") {
                 s = "root";
                 break;
@@ -1363,7 +1363,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         if (L == E) return true;
         // DEBUG   std::cout<< "cmd:" << B << ".\n";
         CmdChr w = *L;
-        if (w.cmd_is_space() || w.is_letter() || w.is_other()) {
+        if (w.is_space() || w.is_letter() || w.is_other()) {
             char32_t c = w.char_val();
             if (c == '<')
                 B.append("&lt;");
@@ -1401,7 +1401,7 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
     for (;;) {
         if (L == E) return true;
         CmdChr w = *L;
-        if (w.cmd_is_space()) {
+        if (w.is_space()) {
         } // spaces are ignored
         else if (w.is_letter() || w.is_other())
             B.push_back(w.char_val());
@@ -1559,7 +1559,7 @@ auto Math::remove_req_arg() -> std::string {
 auto Math::remove_req_arg_noerr() const -> std::string {
     auto C = begin();
     auto E = end();
-    while (C != E && C->cmd_is_space()) ++C;
+    while (C != E && C->is_space()) ++C;
     if (C == E) return "empty";
     if (!C->is_list()) return "not-list";
     Math &L = C->get_list(); // the sublist containing the argument
@@ -1795,7 +1795,7 @@ auto MathElt::maybe_seq() const -> bool {
     if (cmd != letter_catcode) return false;
     if (get_font() == 0) return false;
     auto c = chr;
-    return c < 128 && ::is_letter(char(uchar(c)));
+    return c < 128 && std::isalpha(char(uchar(c)));
 }
 
 // True is this can form a sequence of characters to put in a <mi>
@@ -1804,7 +1804,7 @@ auto MathElt::maybe_seq(subtypes f) const -> bool {
     if (cmd != letter_catcode) return false;
     if (get_font() != f) return false;
     auto c = chr;
-    return c < 128 && ::is_letter(char(uchar(c)));
+    return c < 128 && std::isalpha(char(uchar(c)));
 }
 
 // True is this can form a sequence of digits to put in a <mn>

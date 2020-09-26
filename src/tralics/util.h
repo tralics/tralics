@@ -22,10 +22,8 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 auto to_utf8(char32_t c) -> std::string;
 auto without_end_spaces(std::string s) -> std::string;
 
-inline auto is_letter(char c) -> bool { return std::isupper(c) || std::islower(c); }
 inline auto is_ascii(char32_t c) -> bool { return c < 128; }
 inline auto is_big(char32_t c) -> bool { return c > 65535; }
-inline auto is_letter(char32_t c) -> bool { return is_ascii(c) && is_letter(static_cast<char>(c)); }
 inline auto is_small(char32_t c) -> bool { return c < 256; }
 inline auto to_lower(char32_t c) -> char32_t { return 'A' <= c && c <= 'Z' ? char32_t(c + ('a' - 'A')) : c; }
 

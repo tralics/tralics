@@ -1649,7 +1649,7 @@ void Parser::E_accent() {
         } else {
             res = accent_ns::fetch_accent(achar, acc_code);
             if (res.is_null() && achar < 128) {
-                if (is_letter(static_cast<char>(achar))) {
+                if (std::isalpha(static_cast<char>(achar))) {
                     spec = true; // T. Bouche veut une erreur
                     res  = accent_ns::fetch_accent(0, acc_code);
                 } else
@@ -1659,7 +1659,7 @@ void Parser::E_accent() {
     }
     if (res.is_null()) {
         std::string s = achar >= 128 ? "a non 7-bit character"
-                                     : is_letter(static_cast<char>(achar))
+                                     : std::isalpha(static_cast<char>(achar))
                                            ? "letter"
                                            : std::isdigit(static_cast<char>(achar)) ? "digit" : "non-letter character";
         err_buf = msg1 + tfe.tok_to_str();

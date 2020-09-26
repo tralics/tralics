@@ -304,7 +304,7 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
             L.push_back(SP);
         else if (c == '\n')
             L.push_back(nl ? SP : NL);
-        else if (is_letter(c) || c == '@')
+        else if (std::isalpha(static_cast<int>(c)) || c == '@')
             L.push_back(Token(letter_t_offset, c));
         else
             L.push_back(Token(other_t_offset, c));

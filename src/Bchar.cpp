@@ -121,7 +121,7 @@ auto Bchar::print_for_key(Buffer &X) -> size_t {
     auto i = first;
     while (i < last && table[i] == bct_bad) i++;
     if (i >= last) return i;
-    if (table[i] == bct_brace && is_letter(name_buffer[i + 1])) {
+    if (table[i] == bct_brace && std::isalpha(name_buffer[i + 1])) {
         X.push_back(name_buffer[i + 1]);
         i++;
         while (table[i] == bct_continuation) i++;
