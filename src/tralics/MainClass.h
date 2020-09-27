@@ -108,7 +108,6 @@ private:
     auto        check_for_alias_type(bool vb) -> bool;
     static auto check_for_arg(int &p, int argc, char **argv) -> String; ///< This gets foo, unless we are in the case tralics type=foo
     auto        check_line_aux(Buffer &) -> bool;
-    auto        check_section() -> int;
     auto        find_config_file() -> std::optional<std::filesystem::path>; // \todo static in MainClass.cpp
     auto        find_document_type() -> bool;                               ///< Massage the output of get_doc_type
     auto        find_opt_field(String info) -> bool;

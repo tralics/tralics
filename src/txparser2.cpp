@@ -43,6 +43,129 @@ namespace {
     std::string xkv_header;
     TokenList   xkv_action;
 
+    // return non-empty string only if section is new
+    auto check_section(const std::string &s) -> std::string {
+        static long cur_section = -1;
+        long        k           = -1;
+        err_buf.clear();
+        std::vector<ParamDataSlot> &X = config_data.data[1]->data;
+        auto                        n = X.size(); // number of sections
+        if (s.empty())
+            k = cur_section;
+        else
+            for (size_t i = 0; i < n; i++)
+                if (X[i].key == s) {
+                    k = to_signed(i + 1);
+                    break;
+                }
+        if (k > 0 && k < cur_section) {
+            err_buf.format("Bad section {} after {}\nOrder of sections is{}", s, X[to_unsigned(cur_section - 1)].key, sec_buffer);
+            the_parser.signal_error();
+        } else if (k == -1) {
+            if (n == 0) {
+                the_parser.parse_error("Illegal access to fullsection list.");
+                return "";
+            }
+            if (!s.empty()) {
+                err_buf.format("Invalid section {}\nValid sections are{}", s, sec_buffer);
+                the_parser.signal_error();
+                if (cur_section < 0) cur_section = 1;
+            }
+        } else
+            cur_section = k;
+        if (cur_section < 0) {
+            the_parser.parse_error("No default section");
+            cur_section = 1;
+        }
+        if (cur_section == composition_section) {
+            static bool first_module = true;
+            if (first_module)
+                first_module = false;
+            else {
+                the_parser.parse_error("Only one module accepted in composition");
+                cur_section++;
+                return "";
+            }
+        }
+        static long prev = -1;
+        if (prev == cur_section) return "";
+        prev             = cur_section;
+        cur_sec_no_topic = X[to_unsigned(cur_section - 1)].no_topic();
+        X[to_unsigned(cur_section - 1)].mark_used(); // incompatible with topics
+        return X[to_unsigned(cur_section - 1)].value;
+    }
+
+    auto is_good_ur(const std::string &x) -> bool {
+        std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+        auto                        n       = ur_list.size();
+        if (ur_size == 0) {
+            for (size_t i = 0; i < n; i++) ur_list[i].mark_used();
+            ur_size = n;
+        }
+        for (size_t i = 0; i < n; i++)
+            if (ur_list[i].matches(x)) return true;
+        return false;
+    }
+
+    // Interprets the RC argument of a pers command \todo RA
+    // This returns the short name, said otherwise, the argument.
+    // Notice the space case when argument is empty, or +foo or =foo.
+    auto pers_rc(const std::string &rc) -> std::string {
+        if (rc.empty()) {
+            if (have_default_ur) return the_default_rc;
+            if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
+                // signal error, make a default
+                the_parser.parse_error("No default Research Centre defined");
+                the_default_rc = "unknown";
+            }
+            have_default_ur = true;
+            return the_default_rc;
+        }
+        if (rc[0] == '+') { return rc.substr(1); }
+        bool spec = (rc.size() >= 2 && rc[0] == '=');
+        auto RC   = spec ? rc.substr(1) : rc;
+        if (!is_good_ur(RC)) {
+            err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
+            std::vector<ParamDataSlot> &V = config_data.data[0]->data;
+            for (auto &i : V)
+                if (i.is_used) err_buf += " " + i.key;
+            the_parser.signal_error(the_parser.err_tok, "illegal data");
+        }
+        if (spec) {
+            the_default_rc  = RC;
+            have_default_ur = true;
+        }
+        return RC;
+    }
+
+    // Special command. We assume that cur_sec_no_topic
+    // is correctlty set.
+    auto check_spec_section(const std::string &s) -> std::string {
+        if (cur_sec_no_topic) return "";
+        if (s.empty()) return "default";
+        return s;
+    }
+
+    // Return the value of the key in a list.
+    auto find_one_key(const std::string &name, const std::string &key) -> std::string {
+        if (name == "ur") return pers_rc(key);
+        if (name == "theme") return MainClass::check_theme(key);
+        if (name == "fullsection") return check_section(key);
+        if (name == "section") return check_spec_section(key);
+        ParamDataList *X = config_data.find_list(name, false);
+        if (X == nullptr) {
+            the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
+            return "";
+        }
+        auto n = X->size();
+        for (size_t i = 0; i < n; i++)
+            if (X->data[i].key == key) return X->data[i].value;
+        err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
+        X->keys_to_buffer(err_buf);
+        the_parser.signal_error(the_parser.err_tok, "illegal data");
+        return "";
+    }
+
     // Converts the whole data struture as foo1=bar1,foo2=bar2,
     auto find_keys(const std::string &name) -> std::string {
         ParamDataList *X = config_data.find_list(name, false); // \todo optional?
@@ -285,7 +408,7 @@ void Parser::E_get_config(int c) {
     if (c != 0) {
         TokenList L2 = read_arg();
         key          = list_to_string_c(L2, "Problem scanning key");
-        res          = config_ns::find_one_key(resource, key);
+        res          = find_one_key(resource, key);
     } else
         res = find_keys(resource);
     mac_buf     = res;

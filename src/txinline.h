@@ -32,7 +32,3 @@ namespace tralics_ns {
     void Titlepage_create(LineList &lines);
     void Titlepage_start(bool verbose);
 } // namespace tralics_ns
-
-namespace config_ns {
-    auto find_one_key(const std::string &name, const std::string &key) -> std::string;
-} // namespace config_ns
