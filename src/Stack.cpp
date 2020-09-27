@@ -429,7 +429,10 @@ void Stack::push1(const std::string &x) { push(x, new Xml(x, nullptr)); }
 void Stack::end_module() {
     trace_pop(true);
     for (;;) {
-        if (empty()) err_ns::fatal_error("unexpected empty stack");
+        if (empty()) {
+            spdlog::critical("Unexpected empty stack");
+            abort();
+        }
         if (back().frame == the_names["document"]) return;
         if (back().frame == the_names["module"]) {
             pop(the_names["module"]);

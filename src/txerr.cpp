@@ -55,11 +55,6 @@ namespace err_ns {
     void convert_to_string(const TokenList &L);
 } // namespace err_ns
 
-void err_ns::fatal_error(String s) {
-    std::cout << "Fatal error " << s << "\n";
-    abort();
-}
-
 // The error mechanism is as follows: we put the error message in a buffer
 // then use the following function to signal it.
 

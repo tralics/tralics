@@ -1642,7 +1642,10 @@ void FpGenList::add_last_space(String S) {
     for (size_t i = 0;; i++) {
         auto c = S[i];
         if (c == 0) return;
-        if (static_cast<uchar>(c) > 128) err_ns::fatal_error("add last space: internal error");
+        if (static_cast<uchar>(c) > 128) {
+            spdlog::critical("Add last space: internal error");
+            abort();
+        }
         push_back(Token(letter_t_offset, static_cast<uchar>(c)));
     }
 }

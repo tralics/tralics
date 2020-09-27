@@ -33,14 +33,9 @@ namespace tralics_ns {
     void Titlepage_start(bool verbose);
 } // namespace tralics_ns
 
-namespace err_ns {
-    void fatal_error(String s);
-} // namespace err_ns
-
 namespace config_ns {
     auto find_one_key(const std::string &name, const std::string &key) -> std::string;
     auto pers_rc(const std::string &rc) -> std::string;
     void check_RC(Buffer &B, Xml *res);
     auto find_keys(const std::string &name) -> std::string;
-    void interpret_list(const std::string &a, Buffer &B);
 } // namespace config_ns

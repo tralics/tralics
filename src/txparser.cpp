@@ -2152,7 +2152,10 @@ void Parser::new_prim(String a, String b) {
     auto      n = strlen(b);
     for (size_t i = 0; i < n; i++) {
         auto c = b[i];
-        if (uchar(c) > 128) err_ns::fatal_error("internal error in new_prim");
+        if (uchar(c) > 128) {
+            spdlog::critical("Internal error in new_prim");
+            abort();
+        }
         spec_offsets T = c == ' ' ? space_t_offset : std::isalpha(c) ? letter_t_offset : other_t_offset;
         L.push_back(Token(T, char32_t(c)));
     }

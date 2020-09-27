@@ -6,6 +6,87 @@
 #include "txinline.h"
 #include <spdlog/spdlog.h>
 
+namespace config_ns {
+    auto start_interpret(Buffer &B, String s) -> bool;
+} // namespace config_ns
+
+namespace {
+    // Function called when theme_vals is seen in the config file.
+    void interpret_theme_list(const Buffer &B) {
+        all_themes = " " + B + " ";
+        for (char &c : all_themes) c = static_cast<char>(std::tolower(c));
+    }
+
+    // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
+    // This creates four slots in a table indexed by k.
+    void interpret_data_list(Buffer &B, const std::string &name) {
+        ParamDataList *V = config_data.find_list(name, true);
+        if (config_ns::start_interpret(B, "//")) V->reset();
+        for (;;) {
+            std::string r1, r2;
+            if (!B.slash_separated(r1)) return;
+            if (!B.slash_separated(r2)) return;
+            if (r1.empty()) continue;
+            if (r2.empty()) r2 = r1;
+            the_log << name << ": " << r1 << " -> " << r2 << "\n";
+            V->push_back(ParamDataSlot(r1, r2));
+        }
+    }
+
+    // Interprets Sections ="/foo/bar*/gee".
+    // In 2007, we have  NewSections ="/foo/FOO/bar/BAR/gee/GEE"
+    // This is indicated by new_syntax
+    // Puts foo bar+ gee in the transcript file (we use + instead of *, meaning
+    // that the character was interpreted). Three RaSection objects are
+    // created, named foo, bar and gee. The second is marked: not for topic.
+    // In simplified mode, a section has a name and a number.
+    // Otherwise it has additional fields.
+    void interpret_section_list(Buffer &B, bool new_syntax) {
+        ParamDataList *V = config_data.data[1];
+        if (config_ns::start_interpret(B, "//")) {
+            V->reset();
+            sec_buffer.clear();
+            composition_section = -1;
+        }
+        std::string s, r;
+        for (;;) {
+            if (!B.slash_separated(s)) break;
+            if (new_syntax) {
+                if (!B.slash_separated(r)) break;
+            } else
+                r = "";
+            if (s.empty()) continue;
+            bool star = false;
+            auto ns   = s.size();
+            if (ns > 1 && s[ns - 1] == '*') {
+                s    = std::string(s, 0, ns - 1);
+                star = true;
+            }
+            if (r.empty()) r = s;
+            the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
+            if (s == "composition") composition_section = to_signed(V->size() + 1);
+            sec_buffer += " " + s;
+            V->push_back(ParamDataSlot(s, r, !star));
+        }
+    }
+
+    // --------------------------------------------------
+    // This interprets theme_vals = "foo bar"
+    // and all consequences
+
+    void interpret_list(const std::string &a, Buffer &b) {
+        if (a == "section")
+            interpret_section_list(b, false);
+        else if (a == "fullsection")
+            interpret_section_list(b, true);
+        else if (a == "theme")
+            interpret_theme_list(b);
+        else if (a.empty()) {
+        } else
+            interpret_data_list(b, a);
+    }
+} // namespace
+
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
     return name;
@@ -263,7 +344,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     }
     if (sa.ends_with("_vals")) {
         Buffer B(sb);
-        config_ns::interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
+        interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
     }
     if (sa == "mml_font_normal") { set("mml@font@normal", sb); }
     if (sa == "mml_font_upright") { set("mml@font@upright", sb); }

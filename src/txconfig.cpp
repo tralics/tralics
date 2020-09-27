@@ -20,18 +20,13 @@
 ParamDataVector config_data;
 
 namespace config_ns {
-    Buffer      sec_buffer;
     bool        have_default_ur = false;
     std::string the_default_rc;
     size_t      ur_size{0};
-    long        composition_section = -1;
-    bool        cur_sec_no_topic    = false;
+    bool        cur_sec_no_topic = false;
 } // namespace config_ns
 
 namespace config_ns {
-    void interpret_section_list(Buffer &B, bool new_syntax);
-    void interpret_data_list(Buffer &B, const std::string &name);
-    void interpret_theme_list(const Buffer &B);
     auto is_good_ur(const std::string &x) -> bool;
     auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long;
     auto check_section(const std::string &s) -> std::string;
@@ -40,7 +35,7 @@ namespace config_ns {
 
 using namespace config_ns;
 
-namespace {
+namespace config_ns {
     // We add a final slash, or double slash, this makes parsing easier;
     // We also remove an initial slash (This is not done if the separator is a
     // space, case where s is empty).
@@ -58,7 +53,7 @@ namespace {
         if ((s[0] != 0) && B.head() == '/') B.advance();
         return ret_val;
     }
-} // namespace
+} // namespace config_ns
 
 // --------------------------------------------------
 
@@ -82,65 +77,6 @@ void ParamDataList::check_other() {
 }
 
 // --------------------------------------------------
-// This interprets theme_vals = "foo bar"
-// and all consequences
-
-void config_ns::interpret_list(const std::string &a, Buffer &b) {
-    if (a == "section")
-        interpret_section_list(b, false);
-    else if (a == "fullsection")
-        interpret_section_list(b, true);
-    else if (a == "theme")
-        interpret_theme_list(b);
-    else if (a.empty()) {
-    } else
-        interpret_data_list(b, a);
-}
-
-// Function called when theme_vals is seen in the config file.
-void config_ns::interpret_theme_list(const Buffer &B) {
-    all_themes = " " + B + " ";
-    for (char &c : all_themes) c = static_cast<char>(std::tolower(c));
-}
-
-// --------------------------------------------------
-
-// Interprets Sections ="/foo/bar*/gee".
-// In 2007, we have  NewSections ="/foo/FOO/bar/BAR/gee/GEE"
-// This is indicated by new_syntax
-// Puts foo bar+ gee in the transcript file (we use + instead of *, meaning
-// that the character was interpreted). Three RaSection objects are
-// created, named foo, bar and gee. The second is marked: not for topic.
-// In simplified mode, a section has a name and a number.
-// Otherwise it has additional fields.
-void config_ns::interpret_section_list(Buffer &B, bool new_syntax) {
-    ParamDataList *V = config_data.data[1];
-    if (start_interpret(B, "//")) {
-        V->reset();
-        sec_buffer.clear();
-        composition_section = -1;
-    }
-    std::string s, r;
-    for (;;) {
-        if (!B.slash_separated(s)) break;
-        if (new_syntax) {
-            if (!B.slash_separated(r)) break;
-        } else
-            r = "";
-        if (s.empty()) continue;
-        bool star = false;
-        auto ns   = s.size();
-        if (ns > 1 && s[ns - 1] == '*') {
-            s    = std::string(s, 0, ns - 1);
-            star = true;
-        }
-        if (r.empty()) r = s;
-        the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-        if (s == "composition") composition_section = to_signed(V->size() + 1);
-        sec_buffer += " " + s;
-        V->push_back(ParamDataSlot(s, r, !star));
-    }
-}
 
 // --------------------------------------------------
 
@@ -250,22 +186,6 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
     if (cur_sec_no_topic) return "";
     if (s.empty()) return "default";
     return s;
-}
-
-// This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
-// This creates four slots in a table indexed by k.
-void config_ns::interpret_data_list(Buffer &B, const std::string &name) {
-    ParamDataList *V = config_data.find_list(name, true);
-    if (start_interpret(B, "//")) V->reset();
-    for (;;) {
-        std::string r1, r2;
-        if (!B.slash_separated(r1)) return;
-        if (!B.slash_separated(r2)) return;
-        if (r1.empty()) continue;
-        if (r2.empty()) r2 = r1;
-        the_log << name << ": " << r1 << " -> " << r2 << "\n";
-        V->push_back(ParamDataSlot(r1, r2));
-    }
 }
 
 // -----------------------------------------------------------
