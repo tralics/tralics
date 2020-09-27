@@ -367,7 +367,7 @@ void Bibtex::skip_space() {
         if (at_eol())
             next_line(true);
         else {
-            if (std::isspace(static_cast<int>(cur_char())))
+            if (std::isspace(static_cast<int>(cur_char())) != 0)
                 advance();
             else
                 return;
@@ -411,7 +411,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     Buffer &B = token_buf;
     B.clear();
     char32_t c = cur_char();
-    if ((c >= 128) || std::isdigit(static_cast<int>(c)) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
+    if ((c >= 128) || (std::isdigit(static_cast<int>(c)) != 0) || get_class(c) != legal_id_char) return wrong_first_char(c, what);
     for (;;) {
         if (at_eol()) break;
         c = next_char();
@@ -424,7 +424,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     }
     // a field part.
     if (what == 0) return check_val_end();
-    if (at_eol() || std::isspace(static_cast<int>(c))) skip_space();
+    if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) skip_space();
     if (what == 1) return check_entry_end(); // case of @foo
     return check_field_end(what);
 }
@@ -433,7 +433,7 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
 // We start with a function that complains if first character is wrong.
 auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
-    if (std::isdigit(static_cast<int>(c)))
+    if (std::isdigit(static_cast<int>(c)) != 0)
         log_and_tty << "\nit cannot start with a digit";
     else
         log_and_tty << fmt::format("\nit cannot start with `{}'", to_utf8(c));
@@ -503,7 +503,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
 auto Bibtex::check_val_end() -> int {
     if (at_eol()) return 0;
     char32_t c = cur_char();
-    if (std::isspace(static_cast<int>(c)) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
+    if ((std::isspace(static_cast<int>(c)) != 0) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
     log_and_tty << fmt::format("\nit cannot end with `{}'\n", to_utf8(c)) << "expecting `,', `#' or `" << right_outer_delim << "'";
     return 4;
@@ -571,7 +571,7 @@ void Bibtex::parse_one_item() {
         for (;;) {
             if (at_eol()) break;
             char32_t c = cur_char();
-            if (c == ',' || std::isspace(static_cast<int>(c))) break;
+            if (c == ',' || (std::isspace(static_cast<int>(c)) != 0)) break;
             A << c;
             next_char();
         }
@@ -705,11 +705,11 @@ void Bibtex::read_one_field(bool store) {
             if (c == '}') bl--;
             if (c == '{') bl++;
         }
-    } else if (std::isdigit(static_cast<int>(c))) {
+    } else if (std::isdigit(static_cast<int>(c)) != 0) {
         for (;;) {
             if (at_eol()) return;
             c = cur_char();
-            if (!std::isdigit(static_cast<int>(c))) return;
+            if (std::isdigit(static_cast<int>(c)) == 0) return;
             field_buf.push_back(c);
             advance();
         }

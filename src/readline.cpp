@@ -655,7 +655,7 @@ void Slined::Hnext(size_t n) {
 
 auto readline_ns::skip_over_letters(String buf, int j) -> int {
     for (;;) {
-        if (!std::isalpha(buf[j])) return j;
+        if (std::isalpha(buf[j]) == 0) return j;
         j++;
     }
 }
@@ -676,8 +676,8 @@ auto readline_ns::find_word_beg(char *buf, long size) -> int {
         if (c == '\\') {
             c = buf[j];
             j++;
-            if (std::isalpha(c)) j = skip_over_letters(buf, j);
-        } else if (std::isalpha(c))
+            if (std::isalpha(c) != 0) j = skip_over_letters(buf, j);
+        } else if (std::isalpha(c) != 0)
             j = skip_over_letters(buf, j);
         word_end[to_unsigned(i)] = j;
     }

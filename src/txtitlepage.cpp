@@ -116,7 +116,7 @@ auto Buffer::tp_next_char(char &res) -> bool {
 auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     out.clear();
     if (del == '\\') { // scan a command
-        while (std::isalpha(in.head())) out.push_back(in.next_char());
+        while (std::isalpha(in.head()) != 0) out.push_back(in.next_char());
         return true;
     }
     if (del == '<') del = '>'; // else del is ""
@@ -494,7 +494,7 @@ auto TitlePage::find_UR(const std::string &s, const std::string &name) const -> 
     Buffer &B = local_buf;
     B         = s;
     size_t j  = 0;
-    while ((B[j] != 0) && !std::isspace(B[j])) j++;
+    while ((B[j] != 0) && (std::isspace(B[j]) == 0)) j++;
     bool have_space = B[j] != 0;
     B[j]            = 0;
     auto   match    = B;

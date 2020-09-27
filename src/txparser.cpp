@@ -2156,7 +2156,7 @@ void Parser::new_prim(String a, String b) {
             spdlog::critical("Internal error in new_prim");
             abort();
         }
-        spec_offsets T = c == ' ' ? space_t_offset : std::isalpha(c) ? letter_t_offset : other_t_offset;
+        spec_offsets T = c == ' ' ? space_t_offset : std::isalpha(c) != 0 ? letter_t_offset : other_t_offset;
         L.push_back(Token(T, char32_t(c)));
     }
     new_prim(hash_table.locate(a), L);

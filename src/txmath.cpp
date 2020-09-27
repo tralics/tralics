@@ -2143,11 +2143,11 @@ auto MathElt::cv_char() const -> MathElt {
     auto     mt = mt_flag_small;
     auto     F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(char32_t(c)), mt_flag_small);
-    if (std::isdigit(static_cast<char>(c)))
+    if (std::isdigit(static_cast<char>(c)) != 0)
         a = to_signed(c) - '0' + math_dig_loc;
-    else if (std::isalpha(static_cast<char>(c)) && F < 2) {
+    else if ((std::isalpha(static_cast<char>(c)) != 0) && F < 2) {
         a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);
-    } else if (std::isalpha(static_cast<char>(c))) {
+    } else if (std::isalpha(static_cast<char>(c)) != 0) {
         auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);

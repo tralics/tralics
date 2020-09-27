@@ -31,7 +31,7 @@ auto Bchar::find_a_lower() const -> size_t {
         if (table[i + 1] == bct_extended) continue; // too complicated a case
         if (table[i + 1] == bct_normal) c = name_buffer[i + 1];
         if (table[i + 1] == bct_cmd) c = name_buffer[i + 3];
-        if (std::islower(c)) return i;
+        if (std::islower(c) != 0) return i;
     }
     return last;
 }
@@ -121,7 +121,7 @@ auto Bchar::print_for_key(Buffer &X) -> size_t {
     auto i = first;
     while (i < last && table[i] == bct_bad) i++;
     if (i >= last) return i;
-    if (table[i] == bct_brace && std::isalpha(name_buffer[i + 1])) {
+    if (table[i] == bct_brace && (std::isalpha(name_buffer[i + 1]) != 0)) {
         X.push_back(name_buffer[i + 1]);
         i++;
         while (table[i] == bct_continuation) i++;

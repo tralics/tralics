@@ -33,7 +33,7 @@ namespace {
     auto is_noopsort(const std::string &s, size_t i) -> bool {
         auto n = s.size();
         if (i + 10 >= n) return false;
-        if (s[i + 10] != '{' && !std::isspace(s[i + 10])) return false;
+        if (s[i + 10] != '{' && (std::isspace(s[i + 10]) == 0)) return false;
         if (s[i + 1] != '\\') return false;
         if (s[i + 3] != 'o') return false;
         if (s[i + 7] != 'o') return false;
@@ -127,7 +127,7 @@ auto Buffer::push_back_newline_spec() -> bool {
     if (empty()) return true;
     push_back('\n');
     if (at(0) == '#') return false;
-    if (at(0) == '%' || std::isspace(at(0))) return true;
+    if (at(0) == '%' || (std::isspace(at(0)) != 0)) return true;
     if (starts_with("Begin")) return true;
     if (starts_with("End")) return true;
     insert(begin(), ' ');
@@ -141,7 +141,7 @@ void Buffer::remove_last(size_t n) {
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
 void Buffer::remove_last_space() {
-    if (!empty() && std::isspace(back()))
+    if (!empty() && (std::isspace(back()) != 0))
         pop_back();
     else if (ends_with("&nbsp;"))
         remove_last(6);
@@ -152,7 +152,7 @@ void Buffer::remove_last_space() {
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (!empty() && std::isspace(back())) pop_back();
+    while (!empty() && (std::isspace(back()) != 0)) pop_back();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -186,7 +186,7 @@ auto Token::tok_to_str() const -> std::string {
     char32_t c        = char_val();
     bool     good_cat = false;
     if ((c >= 128) && cat == 12) good_cat = true;
-    if (std::isalpha(static_cast<int>(c)) && cat == 11) good_cat = true;
+    if ((std::isalpha(static_cast<int>(c)) != 0) && cat == 11) good_cat = true;
     if (good_cat)
         B.out_log(c, the_main->log_encoding);
     else {
@@ -275,7 +275,7 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? std::isalpha(static_cast<int>(c)) : the_parser.has_letter_catcode(c);
+        bool need_space = sw ? std::isalpha(static_cast<int>(c)) : static_cast<int>(the_parser.has_letter_catcode(c) != 0);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         append(the_parser.hash_table[T.hash_loc()]);
@@ -455,11 +455,11 @@ auto Buffer::skip_word_ci(const std::string &s) -> bool {
     auto n = s.size();
     for (size_t i = 0; i < n; i++) {
         char c = (*this)[ptrs.b + i];
-        if (std::isupper(c)) c += 'a' - 'A';
+        if (std::isupper(c) != 0) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
     char c = (*this)[ptrs.b + n];
-    if (std::isalpha(c)) return false;
+    if (std::isalpha(c) != 0) return false;
     ptrs.b += n;
     return true;
 }
@@ -481,7 +481,7 @@ auto Buffer::int_val() const -> std::optional<size_t> {
     for (size_t p = 0;; p++) {
         auto c = (*this)[p];
         if (c == 0) return n;
-        if (!std::isdigit(c)) return {};
+        if (std::isdigit(c) == 0) return {};
         n = 10 * n + to_unsigned(c - '0');
         if (n > 1000000) return {};
     }
@@ -545,7 +545,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
         tmp.push_back(c);
     }
     auto b = tmp.size();
-    while (b > p && std::isspace(tmp[b - 1])) b--;
+    while (b > p && (std::isspace(tmp[b - 1]) != 0)) b--;
     tmp.resize(b);
     a = tmp.data();
     return true;
@@ -553,7 +553,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
 
 void Buffer::push_back_unless_punct(char c) {
     if (ends_with("&nbsp;")) return;
-    if (!empty() && std::isspace(back())) return;
+    if (!empty() && (std::isspace(back()) != 0)) return;
     if (!empty() && back() == '(') return;
     push_back(c);
 }
@@ -642,33 +642,33 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     return X;
 }
 
-auto Buffer::is_spaceh(size_t j) const -> bool { return std::isspace((*this)[j]); }
+auto Buffer::is_spaceh(size_t j) const -> bool { return std::isspace((*this)[j]) != 0; }
 
 void Buffer::push_back(const TokenList &L) {
     for (const auto &C : L) { insert_token(C, false); }
 }
 
 void Buffer::skip_letter() {
-    while (std::isalpha(head())) ptrs.b++;
+    while (std::isalpha(head()) != 0) ptrs.b++;
 }
 void Buffer::skip_sp_tab() {
     while (ptrs.b < size() && (head() == ' ' || head() == '\t')) ptrs.b++;
 }
 void Buffer::skip_sp_tab_nl() {
-    while (std::isspace(head())) ptrs.b++;
+    while (std::isspace(head()) != 0) ptrs.b++;
 }
 void Buffer::skip_sp_tab_comma() {
     while (head() == ' ' || head() == '\t' || head() == ',') ptrs.b++;
 }
 
 void Buffer::skip_letter_dig() {
-    while (std::isalpha(head()) || std::isdigit(head())) ptrs.b++;
+    while ((std::isalpha(head()) != 0) || (std::isdigit(head()) != 0)) ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot() {
-    while (std::isalpha(head()) || std::isdigit(head()) || head() == '.') ptrs.b++;
+    while ((std::isalpha(head()) != 0) || (std::isdigit(head()) != 0) || head() == '.') ptrs.b++;
 }
 void Buffer::skip_letter_dig_dot_slash() {
-    while (std::isalpha(head()) || std::isdigit(head()) || head() == '.' || head() == '/') ptrs.b++;
+    while ((std::isalpha(head()) != 0) || (std::isdigit(head()) != 0) || head() == '.' || head() == '/') ptrs.b++;
 }
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
@@ -681,7 +681,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
     ptrs.b         = 0;
     for (int i = 0;; i++) {
         if (head() == 0) break;
-        if (std::isspace(head())) {
+        if (std::isspace(head()) != 0) {
             has_space  = true;
             at(ptrs.b) = 0;
             advance();
@@ -745,7 +745,7 @@ auto Buffer::special_convert(bool init) -> std::string {
     for (;;) {
         auto c = next_char();
         if (c == 0) break;
-        if (std::isspace(c)) {
+        if (std::isspace(c) != 0) {
             if (!space) {
                 bb1.push_back(' ');
                 space = true;
@@ -837,13 +837,13 @@ void Buffer::special_title(std::string s) {
         }
         // c= is a brace at bottom level
         char cc = s[i + 1];
-        if (std::isupper(cc) || cc == '$') {
+        if ((std::isupper(cc) != 0) || cc == '$') {
             blevel = level;
             continue;
         }
         if (is_noopsort(s, i)) {
             i += 10;
-            while (i < n && std::isspace(s[i])) i++;
+            while (i < n && (std::isspace(s[i]) != 0)) i++;
             i--;
             blevel = level;
         } else
@@ -941,7 +941,7 @@ void Buffer::fill_table(bchar_type *table) {
                 Bibtex::err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
-            if (std::isalpha(at(ptrs.b + 1))) {
+            if (std::isalpha(at(ptrs.b + 1)) != 0) {
                 table[i]     = bct_cmd;
                 table[i + 1] = bct_continuation;
                 table[i + 2] = bct_continuation;
@@ -1008,7 +1008,7 @@ auto Buffer::is_and(size_t k) const -> bool {
 auto Buffer::insert_space_here(size_t k) const -> bool {
     if (k == 0) return false;
     if (at(k) != '.') return false;
-    if (!std::isupper(at(k + 1))) return false;
-    if (!std::isupper(at(k - 1))) return false;
+    if (std::isupper(at(k + 1)) == 0) return false;
+    if (std::isupper(at(k - 1)) == 0) return false;
     return true;
 }

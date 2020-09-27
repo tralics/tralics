@@ -229,7 +229,7 @@ auto classes_ns::parse_version(const std::string &s) -> int {
     int  k = 0;
     for (size_t i = 0; i < n; i++) {
         char c = s[i];
-        if (std::isdigit(c)) {
+        if (std::isdigit(c) != 0) {
             r = 10 * r + (c - '0');
             k++;
             if (k == 8) break;

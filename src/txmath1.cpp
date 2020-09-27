@@ -659,7 +659,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
         push_back_math_aux(s);
         if (!space) return;
         if (s[0] == 0) return;
-        if (s[1] == 0 && !std::isalpha(s[0])) return;
+        if (s[1] == 0 && (std::isalpha(s[0]) == 0)) return;
         push_back(' ');
     } else
         push_back_real_utf8(x.char_val());
@@ -686,7 +686,7 @@ void Buffer::push_back_math_tag(std::string s, int type) {
     bool ok = true; // true if letter
     for (size_t i = 0; i < n; i++) {
         auto c = s[i];
-        if (!std::isalpha(c)) {
+        if (std::isalpha(c) == 0) {
             if (s == "@root") {
                 s = "root";
                 break;
@@ -1469,7 +1469,7 @@ auto Math::chars_to_mb3() -> std::string {
             sz++;
             continue;
         }
-        if (std::isdigit(static_cast<int>(C))) {
+        if (std::isdigit(static_cast<int>(C)) != 0) {
             if (bc != 0) {
                 sz = 0;
                 break;
@@ -1795,7 +1795,7 @@ auto MathElt::maybe_seq() const -> bool {
     if (cmd != letter_catcode) return false;
     if (get_font() == 0) return false;
     auto c = chr;
-    return c < 128 && std::isalpha(char(uchar(c)));
+    return c < 128 && (std::isalpha(char(uchar(c))) != 0);
 }
 
 // True is this can form a sequence of characters to put in a <mi>
@@ -1804,14 +1804,14 @@ auto MathElt::maybe_seq(subtypes f) const -> bool {
     if (cmd != letter_catcode) return false;
     if (get_font() != f) return false;
     auto c = chr;
-    return c < 128 && std::isalpha(char(uchar(c)));
+    return c < 128 && (std::isalpha(char(uchar(c))) != 0);
 }
 
 // True is this can form a sequence of digits to put in a <mn>
 auto MathElt::maybe_iseq() const -> bool {
     if (cmd != other_catcode) return false;
     auto c = chr;
-    return c < 128 && std::isdigit(uchar(c));
+    return c < 128 && (std::isdigit(uchar(c)) != 0);
 }
 
 // True is this can form a sequence of characters to put in a <mn>
@@ -1820,7 +1820,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
     if (cmd != other_catcode) return false;
     if (get_font() != f) return false;
     auto c = chr;
-    return c < 128 && std::isdigit(uchar(c));
+    return c < 128 && (std::isdigit(uchar(c)) != 0);
 }
 
 // Converts a character sequence; first char W already removed from

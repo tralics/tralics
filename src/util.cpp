@@ -10,7 +10,7 @@ namespace {
 
 auto only_space(const std::string &s) -> bool {
     for (size_t i = 0; i < s.length(); ++i) {
-        if (std::isspace(s[i])) continue;
+        if (std::isspace(s[i]) != 0) continue;
         if (s[i] == static_cast<char>(0xC2) && s[i + 1] == static_cast<char>(0xA0)) // UTF-8 nbsp
             i += 1;
         else
@@ -21,8 +21,8 @@ auto only_space(const std::string &s) -> bool {
 
 auto without_end_spaces(std::string s) -> std::string {
     size_t k = 0, l = s.size();
-    while (std::isspace(s[k])) ++k;
-    while (l > k && std::isspace(s[l - 1])) --l;
+    while (std::isspace(s[k]) != 0) ++k;
+    while (l > k && (std::isspace(s[l - 1]) != 0)) --l;
     return s.substr(k, l - k);
 }
 
@@ -95,7 +95,7 @@ auto to_utf8(char32_t c) -> std::string {
 }
 
 auto remove_digits(std::string s) -> std::string {
-    while ((!s.empty()) && std::isdigit(s.back())) s.pop_back();
+    while ((!s.empty()) && (std::isdigit(s.back()) != 0)) s.pop_back();
     return s;
 }
 

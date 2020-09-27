@@ -591,7 +591,7 @@ void BibEntry::presort(long serial) {
     {
         std::string s = last_chars(y, 2);
         if (!s.empty()) {
-            if (!std::isdigit(s[0])) s = "";
+            if (std::isdigit(s[0]) == 0) s = "";
         }
         label = lab1 + s;
     }
@@ -632,7 +632,7 @@ void BibEntry::normalise() {
     int res  = 0;
     for (size_t i = 0; i < n; i++) {
         char c = y[i];
-        if (!std::isdigit(c)) return;
+        if (std::isdigit(c) == 0) return;
         res = res * 10 + (c - '0');
         if (res > 10000) return;
     }

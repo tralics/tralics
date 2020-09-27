@@ -77,7 +77,7 @@ namespace {
     }
 
     auto hex_val(char32_t c) -> std::optional<unsigned> {
-        if (std::isdigit(static_cast<int>(c))) return c - '0';
+        if (std::isdigit(static_cast<int>(c)) != 0) return c - '0';
         if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
     }
@@ -784,14 +784,14 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             if (p + 3 < input_line.size() && input_line[p] == 'e' && input_line[p + 1] == 'g' && input_line[p + 2] == 'i' &&
                 input_line[p + 3] == 'n' &&
                 (p + 4 == input_line.size() // this is silly
-                 || !std::isalpha(static_cast<int>(input_line[p + 4]))))
+                 || (std::isalpha(static_cast<int>(input_line[p + 4])) == 0)))
                 elevel++;
         }
         if (c == 'e') {
             auto p = input_line_pos;
             if (p + 1 < input_line.size() && input_line[p] == 'n' && input_line[p + 1] == 'd' &&
                 (p + 2 == input_line.size() // this is silly
-                 || !std::isalpha(static_cast<int>(input_line[p + 2])))) {
+                 || (std::isalpha(static_cast<int>(input_line[p + 2])) == 0))) {
                 elevel--;
                 if (elevel == -1) {
                     input_line_pos -= 2; // reread backshash e

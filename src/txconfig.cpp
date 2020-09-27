@@ -73,7 +73,7 @@ ParamDataVector::ParamDataVector() {
 
 // We may add a special slot at the end
 void ParamDataList::check_other() {
-    if (std::islower(name[0]) && !empty()) push_back(ParamDataSlot("Other", "Other"));
+    if ((std::islower(name[0]) != 0) && !empty()) push_back(ParamDataSlot("Other", "Other"));
 }
 
 // --------------------------------------------------
@@ -338,7 +338,7 @@ void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::strin
             a++;
             the_log << "--";
         }
-        while ((head() != 0) && !std::isspace(head())) advance();
+        while ((head() != 0) && (std::isspace(head()) == 0)) advance();
         ptrs.a        = a;
         std::string k = substring();
         if (keep)

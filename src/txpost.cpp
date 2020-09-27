@@ -170,7 +170,7 @@ void all_words_ns::add_a_word(String s, size_t h) {
     WL0[H] = new WordList(s, h, WL0[H]);
 }
 
-inline auto dig_char(char c) -> bool { return c == '-' || std::isdigit(c); }
+inline auto dig_char(char c) -> bool { return c == '-' || (std::isdigit(c) != 0); }
 
 void Buffer::new_word() {
     if (empty()) return;
@@ -188,9 +188,9 @@ void Buffer::new_word() {
     }
     ++nb_words;
     ok = true;
-    if (std::isupper(at(0))) {
+    if (std::isupper(at(0)) != 0) {
         for (size_t i = 1; i < size(); i++) {
-            if (!std::islower(at(i))) ok = false;
+            if (std::islower(at(i)) == 0) ok = false;
         }
         if (ok) at(0) += 'a' - 'A';
     }

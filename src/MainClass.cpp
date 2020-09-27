@@ -108,7 +108,7 @@ found at http://www.cecill.info.)";
             spdlog::critical("Illegal file name of the form safir/2002.tex");
             the_main->bad_year(); // never returns
         }
-        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || std::isupper(c); })) {
+        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || (std::isupper(c) != 0); })) {
             spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
             exit(1);
         }
@@ -131,7 +131,7 @@ found at http://www.cecill.info.)";
     // \todo refactor or deprecate with RA
     auto extract_year(std::string &B, std::string &C) -> int {
         size_t m = B.size(), n = m, k = 0;
-        while (k < 4 && n > 0 && std::isdigit(B[n - 1])) {
+        while (k < 4 && n > 0 && (std::isdigit(B[n - 1]) != 0)) {
             n--;
             k++;
         }
@@ -782,7 +782,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
     f.replace_extension();
     dtype = f.filename();
     for (size_t i = dtype.size() - 1; i > 0; --i) {
-        if (!std::isdigit(dtype[i])) {
+        if (std::isdigit(dtype[i]) == 0) {
             dtype.resize(i + 1);
             break;
         }
