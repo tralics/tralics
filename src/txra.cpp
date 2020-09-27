@@ -10,11 +10,93 @@
 
 // This file contains commands needed for the RA
 
+#include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include "txinline.h"
 
-static Buffer            Tbuf;
-std::vector<std::string> module_list;
+namespace {
+    static Buffer Tbuf;
+
+    // User says \UR{foo,bar}
+    // returns -1 if there no other RC in the buffer.
+    // returns -2 if the RC is invalid
+    // returns location in the table otherwise
+    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
+        std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+        B.skip_sp_tab_comma();
+        if (B.head() == 0) return -1;
+        if (B.substr(B.ptrs.b, 3) == "\\UR") {
+            static bool warned = false;
+            if (!warned && the_parser.get_ra_year() > 2006) {
+                log_and_tty << "You should use Lille instead of \\URLille,\n";
+                log_and_tty << "Nancy instead of \\URNancy, etc.\n";
+                warned = true;
+            }
+            B.advance(3);
+        }
+        B.ptrs.a = B.ptrs.b;
+        B.skip_letter();
+        auto k = ur_list.size();
+        for (size_t j = 0; j < k; j++)
+            if (B.substring() == ur_list[j].key) {
+                sname = ur_list[j].key;
+                lname = ur_list[j].value;
+                ur_list[j].mark_used();
+                return to_signed(j);
+            }
+        return -2;
+    }
+
+    // This is the function used since 2007, when definining the
+    // Research Centers of the team;
+    // May return  <URRocquencourt/><URSophia/>
+    void check_RC(Buffer &B, Xml *res) {
+        const std::string &tmp      = the_names["rcval"];
+        bool               need_elt = tmp[0] == '+'; // Hack
+        std::string        str;
+        if (need_elt) str = tmp.substr(1);
+        Buffer      temp2;
+        std::string sname, lname;
+        temp2.clear();
+        std::vector<int> vals;
+        size_t           nb = 0;
+        B.ptrs.b            = 0;
+        for (;;) {
+            auto j = next_RC_in_buffer(B, sname, lname);
+            if (j == -1) break;
+            if (j == -2) {
+                nb = 0;
+                break;
+            }
+            Xml *new_elt{nullptr};
+            if (need_elt)
+                new_elt = new Xml(std::string(str + sname), nullptr);
+            else {
+                new_elt = new Xml(the_names["rcval"], nullptr);
+                new_elt->id.add_attribute(std::string("name"), std::string(sname));
+            }
+            res->push_back_unless_nullptr(new_elt);
+            temp2 += sname + " ";
+            the_default_rc = sname;
+            nb++;
+        }
+        ur_size = nb;
+        if (nb == 1) have_default_ur = true;
+        if (nb != 0) {
+            the_log << "Localisation " << temp2 << "\n";
+            return;
+        }
+
+        if (B.empty())
+            err_buf = "Empty localisation value\n";
+        else
+            err_buf = "Illegal localisation value: " + B + "\n";
+        err_buf += "Use one or more of:";
+        config_data.data[0]->keys_to_buffer(err_buf);
+        the_parser.signal_error();
+    }
+} // namespace
 
 namespace ra_ns {
     void fnhack(TokenList &c, TokenList &d, TokenList &aux);
@@ -66,7 +148,7 @@ void Parser::interpret_rc() {
     Tbuf << L; // \todo make TokenList formattable
     Xml *res = new Xml(the_names["rclist"], nullptr);
     the_stack.add_last(res);
-    config_ns::check_RC(Tbuf, res);
+    check_RC(Tbuf, res);
 }
 
 // --------------------------------------------------

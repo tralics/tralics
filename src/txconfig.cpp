@@ -19,16 +19,56 @@
 
 ParamDataVector config_data;
 
+namespace {
+    auto is_good_ur(const std::string &x) -> bool {
+        std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+        auto                        n       = ur_list.size();
+        if (ur_size == 0) {
+            for (size_t i = 0; i < n; i++) ur_list[i].mark_used();
+            ur_size = n;
+        }
+        for (size_t i = 0; i < n; i++)
+            if (ur_list[i].matches(x)) return true;
+        return false;
+    }
+
+    // Interprets the RC argument of a pers command \todo RA
+    // This returns the short name, said otherwise, the argument.
+    // Notice the space case when argument is empty, or +foo or =foo.
+    auto pers_rc(const std::string &rc) -> std::string {
+        if (rc.empty()) {
+            if (have_default_ur) return the_default_rc;
+            if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
+                // signal error, make a default
+                the_parser.parse_error("No default Research Centre defined");
+                the_default_rc = "unknown";
+            }
+            have_default_ur = true;
+            return the_default_rc;
+        }
+        if (rc[0] == '+') { return rc.substr(1); }
+        bool spec = (rc.size() >= 2 && rc[0] == '=');
+        auto RC   = spec ? rc.substr(1) : rc;
+        if (!is_good_ur(RC)) {
+            err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
+            std::vector<ParamDataSlot> &V = config_data.data[0]->data;
+            for (auto &i : V)
+                if (i.is_used) err_buf += " " + i.key;
+            the_parser.signal_error(the_parser.err_tok, "illegal data");
+        }
+        if (spec) {
+            the_default_rc  = RC;
+            have_default_ur = true;
+        }
+        return RC;
+    }
+} // namespace
+
 namespace config_ns {
-    bool        have_default_ur = false;
-    std::string the_default_rc;
-    size_t      ur_size{0};
-    bool        cur_sec_no_topic = false;
+    bool cur_sec_no_topic = false;
 } // namespace config_ns
 
 namespace config_ns {
-    auto is_good_ur(const std::string &x) -> bool;
-    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long;
     auto check_section(const std::string &s) -> std::string;
     auto check_spec_section(const std::string &s) -> std::string;
 } // namespace config_ns
@@ -176,128 +216,6 @@ auto config_ns::check_spec_section(const std::string &s) -> std::string {
 }
 
 // -----------------------------------------------------------
-
-// User says \UR{foo,bar}
-// returns -1 if there no other RC in the buffer.
-// returns -2 if the RC is invalid
-// returns location in the table otherwise
-auto config_ns::next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
-    std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
-    B.skip_sp_tab_comma();
-    if (B.head() == 0) return -1;
-    if (B.substr(B.ptrs.b, 3) == "\\UR") {
-        static bool warned = false;
-        if (!warned && the_parser.get_ra_year() > 2006) {
-            log_and_tty << "You should use Lille instead of \\URLille,\n";
-            log_and_tty << "Nancy instead of \\URNancy, etc.\n";
-            warned = true;
-        }
-        B.advance(3);
-    }
-    B.ptrs.a = B.ptrs.b;
-    B.skip_letter();
-    auto k = ur_list.size();
-    for (size_t j = 0; j < k; j++)
-        if (B.substring() == ur_list[j].key) {
-            sname = ur_list[j].key;
-            lname = ur_list[j].value;
-            ur_list[j].mark_used();
-            return to_signed(j);
-        }
-    return -2;
-}
-
-// This is the function used since 2007, when definining the
-// Research Centers of the team;
-// May return  <URRocquencourt/><URSophia/>
-void config_ns::check_RC(Buffer &B, Xml *res) {
-    const std::string &tmp      = the_names["rcval"];
-    bool               need_elt = tmp[0] == '+'; // Hack
-    std::string        str;
-    if (need_elt) str = tmp.substr(1);
-    Buffer      temp2;
-    std::string sname, lname;
-    temp2.clear();
-    std::vector<int> vals;
-    size_t           nb = 0;
-    B.ptrs.b            = 0;
-    for (;;) {
-        auto j = next_RC_in_buffer(B, sname, lname);
-        if (j == -1) break;
-        if (j == -2) {
-            nb = 0;
-            break;
-        }
-        Xml *new_elt{nullptr};
-        if (need_elt)
-            new_elt = new Xml(std::string(str + sname), nullptr);
-        else {
-            new_elt = new Xml(the_names["rcval"], nullptr);
-            new_elt->id.add_attribute(std::string("name"), std::string(sname));
-        }
-        res->push_back_unless_nullptr(new_elt);
-        temp2 += sname + " ";
-        the_default_rc = sname;
-        nb++;
-    }
-    ur_size = nb;
-    if (nb == 1) have_default_ur = true;
-    if (nb != 0) {
-        the_log << "Localisation " << temp2 << "\n";
-        return;
-    }
-
-    if (B.empty())
-        err_buf = "Empty localisation value\n";
-    else
-        err_buf = "Illegal localisation value: " + B + "\n";
-    err_buf += "Use one or more of:";
-    config_data.data[0]->keys_to_buffer(err_buf);
-    the_parser.signal_error();
-}
-
-// Interprets the RC argument of a pers command \todo RA
-// This returns the short name, said otherwise, the argument.
-// Notice the space case when argument is empty, or +foo or =foo.
-auto config_ns::pers_rc(const std::string &rc) -> std::string {
-    if (rc.empty()) {
-        if (have_default_ur) return the_default_rc;
-        if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
-            // signal error, make a default
-            the_parser.parse_error("No default Research Centre defined");
-            the_default_rc = "unknown";
-        }
-        have_default_ur = true;
-        return the_default_rc;
-    }
-    if (rc[0] == '+') { return rc.substr(1); }
-    bool spec = (rc.size() >= 2 && rc[0] == '=');
-    auto RC   = spec ? rc.substr(1) : rc;
-    if (!is_good_ur(RC)) {
-        err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
-        std::vector<ParamDataSlot> &V = config_data.data[0]->data;
-        for (auto &i : V)
-            if (i.is_used) err_buf += " " + i.key;
-        the_parser.signal_error(the_parser.err_tok, "illegal data");
-    }
-    if (spec) {
-        the_default_rc  = RC;
-        have_default_ur = true;
-    }
-    return RC;
-}
-
-auto config_ns::is_good_ur(const std::string &x) -> bool {
-    std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
-    auto                        n       = ur_list.size();
-    if (ur_size == 0) {
-        for (size_t i = 0; i < n; i++) ur_list[i].mark_used();
-        ur_size = n;
-    }
-    for (size_t i = 0; i < n; i++)
-        if (ur_list[i].matches(x)) return true;
-    return false;
-}
 
 // --------------------------------------------------
 

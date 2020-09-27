@@ -6,15 +6,13 @@
 #include <string>
 #include <vector>
 
-// \todo move from extern to inline
-
-struct LineList;
 class WordList;
 class LabelInfo;
 
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
+inline bool                                                         have_default_ur = false;
 inline bool                                                         nofloat_hack{false};
 inline bool                                                         only_input_data{false};
 inline bool                                                         raw_bib{false};
@@ -37,6 +35,7 @@ inline int                                                          nb_errs{0};
 inline int                                                          nb_words = 0;
 inline long                                                         cline_first, cline_last;
 inline long                                                         composition_section = -1;
+inline size_t                                                       ur_size{0};
 inline std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
@@ -50,6 +49,7 @@ inline std::string                                                  everyjob_str
 inline std::string                                                  file_name;       // Job name, without directory
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
+inline std::string                                                  the_default_rc; // \todo RA stuff
 inline std::vector<std::filesystem::path>                           conf_path{"../confdir"};
 inline std::vector<std::filesystem::path>                           input_path;
 inline std::vector<std::pair<size_t, std::string>>                  ref_list;       // list of all \ref

@@ -275,7 +275,8 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? std::isalpha(static_cast<int>(c)) : static_cast<int>(the_parser.has_letter_catcode(c) != 0);
+        bool need_space =
+            sw ? std::isalpha(static_cast<int>(c)) : static_cast<int>(static_cast<int>(the_parser.has_letter_catcode(c)) != 0) != 0;
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         append(the_parser.hash_table[T.hash_loc()]);
