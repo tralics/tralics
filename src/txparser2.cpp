@@ -42,6 +42,16 @@ namespace {
     std::string xkv_prefix;
     std::string xkv_header;
     TokenList   xkv_action;
+
+    // Converts the whole data struture as foo1=bar1,foo2=bar2,
+    auto find_keys(const std::string &name) -> std::string {
+        ParamDataList *X = config_data.find_list(name, false); // \todo optional?
+        if (X == nullptr) return "";
+        std::string res;
+        for (const auto &d : X->data) res.append(fmt::format("{}={},", d.key, d.value));
+        if (!X->empty()) res.pop_back();
+        return res;
+    }
 } // namespace
 
 namespace xkv_ns {
@@ -277,7 +287,7 @@ void Parser::E_get_config(int c) {
         key          = list_to_string_c(L2, "Problem scanning key");
         res          = config_ns::find_one_key(resource, key);
     } else
-        res = config_ns::find_keys(resource);
+        res = find_keys(resource);
     mac_buf     = res;
     TokenList L = mac_buf.str_toks11(false);
     if (tracing_macros()) {
@@ -1820,7 +1830,7 @@ auto FormatDate::scan_a_field(Buffer &B, int &res) -> bool {
     for (;;) {
         if (B.at_eol()) return true;
         auto c = B.head();
-        if (!std::isdigit(c)) { return true; }
+        if (std::isdigit(c) == 0) { return true; }
         B.advance();
         res = 10 * res + (c - '0');
         if (res > 9999) {
@@ -2012,7 +2022,7 @@ auto FormatDate::scan_next(Buffer &B, int &res) -> bool {
         }
         c = B.head();
     }
-    if (std::isdigit(c)) return scan_a_field(B, res);
+    if (std::isdigit(c) != 0) return scan_a_field(B, res);
     if (!scan_a_month(B, res)) {
         the_parser.parse_error(err_tok, "Expected digits or a month in letters");
         return false;

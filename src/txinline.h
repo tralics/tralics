@@ -37,5 +37,4 @@ namespace config_ns {
     auto find_one_key(const std::string &name, const std::string &key) -> std::string;
     auto pers_rc(const std::string &rc) -> std::string;
     void check_RC(Buffer &B, Xml *res);
-    auto find_keys(const std::string &name) -> std::string;
 } // namespace config_ns

@@ -27,7 +27,6 @@ public:
     void               mark_used() { is_used = true; }
     [[nodiscard]] auto matches(const std::string &x) const -> bool { return is_used && x == key; }
     [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
-    void               to_buffer(Buffer &B) const;
 };
 
 // We maintain a list of ParamDataSlot.

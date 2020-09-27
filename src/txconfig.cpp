@@ -91,21 +91,8 @@ auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDat
     return res;
 }
 
-void ParamDataSlot::to_buffer(Buffer &B) const { B.format("{}={},", key, value); }
-
 void ParamDataList::keys_to_buffer(Buffer &B) const {
     for (const auto &i : data) B.format(" {}", i.key);
-}
-
-// Converts the whole data struture as foo1=bar1,foo2=bar2,
-auto config_ns::find_keys(const std::string &name) -> std::string {
-    ParamDataList *X = config_data.find_list(name, false);
-    if (X == nullptr) return "";
-    Buffer B;
-    auto   n = X->size();
-    for (size_t i = 0; i < n; i++) X->data[i].to_buffer(B);
-    if (n > 0) B.pop_back();
-    return std::move(B);
 }
 
 // Return the value of the key in a list.
