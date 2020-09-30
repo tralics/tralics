@@ -70,12 +70,10 @@ public:
 
 // One item if a titlepage
 struct TpiOneItem {
-    char        p1{};  // first character modifier
-    char        p2{};  // second character modifier
-    std::string value; // the value
-    tpi_vals    v;     // the type (none, string, command, or XML element)
-
-    TpiOneItem() { reset(); }
+    char        p1{};         // first character modifier
+    char        p2{};         // second character modifier
+    std::string value;        // the value
+    tpi_vals    v{tpi_noval}; // the type (none, string, command, or XML element)
 
     [[nodiscard]] auto has_a_char() const -> bool { return p1 != 0 || p2 != 0; }
     [[nodiscard]] auto noval() const -> bool { return v == tpi_noval; }
@@ -88,14 +86,7 @@ struct TpiOneItem {
     [[nodiscard]] auto plus() const -> bool { return p1 == '+' && p2 == 0; }
     [[nodiscard]] auto quest_plus() const -> bool { return p1 == '?' && p2 == '+'; }
     [[nodiscard]] auto second_char() const -> bool { return p2 != 0; }
-    [[nodiscard]] auto get_v() const -> tpi_vals { return v; }
-    [[nodiscard]] auto get_value() const -> std::string { return value; }
-    [[nodiscard]] auto get_p1() const -> char { return p1; }
-    void               set_p2(char c) { p2 = c; }
-    void               set_p1(char c) { p1 = c; }
-    //  void bad() { v = tpi_err; }
-    void set_v(tpi_vals V) { v = V; }
-    void reset();
+    void               reset();
 };
 
 // temporary class, will bew copied into a TitlePageAux \todo do
@@ -103,13 +94,10 @@ class TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
     size_t     flags{};                    // the flags
 public:
-    friend class titlepage;
     friend class TitlePageAux;
-    auto               read() -> int;
-    void               kill();
-    auto               classify(int w, int state) -> tpi_vals;
-    [[nodiscard]] auto get_flags() const -> size_t { return flags; }
-    auto               encode_flags(char c1, char c2) -> bool;
+    auto read() -> int;
+    auto classify(int w, int state) -> tpi_vals;
+    auto encode_flags(char c1, char c2) -> bool;
 };
 
 class TitlePage {

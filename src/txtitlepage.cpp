@@ -111,10 +111,10 @@ auto tpage_ns::next_item(Buffer &in, Buffer &out) -> tpi_vals {
     if (c == 'e' && in.skip_string("xecute")) return tpi_execute;
     if (c == 'a' && in.skip_string("ction")) return tpi_execute;
     if (!is_tp_delim(c)) {
-        Toi.set_p1(c);
+        Toi.p1 = c;
         if (!in.tp_next_char(c)) return tpi_noval;
         if (!is_tp_delim(c)) {
-            Toi.set_p2(c);
+            Toi.p2 = c;
             if (!in.tp_next_char(c)) return tpi_noval;
             if (!is_tp_delim(c)) return tpi_err;
         }
@@ -136,26 +136,26 @@ auto TitlePageFullLine::read() -> int {
     int      res = 0;
     tpi_vals w   = tpage_ns::next_item(tp_main_buf, local_buf);
     if (w == tpi_err) return -1;
-    item1 = Toi;
-    item1.set_v(w);
+    item1   = Toi;
+    item1.v = w;
     res += 1000 * (w - 1);
     if (w == tpi_noval) return res;
     w = tpage_ns::next_item(tp_main_buf, local_buf);
     if (w == tpi_err) return -1;
-    item2 = Toi;
-    item2.set_v(w);
+    item2   = Toi;
+    item2.v = w;
     res += 100 * (w - 1);
     if (w == tpi_noval) return res;
     w = tpage_ns::next_item(tp_main_buf, local_buf);
     if (w == tpi_err) return -1;
-    item3 = Toi;
-    item3.set_v(w);
+    item3   = Toi;
+    item3.v = w;
     res += 10 * (w - 1);
     if (w == tpi_noval) return res;
     w = tpage_ns::next_item(tp_main_buf, local_buf);
     if (w == tpi_err) return -1;
-    item4 = Toi;
-    item4.set_v(w);
+    item4   = Toi;
+    item4.v = w;
     res += (w - 1);
     if (w == tpi_noval) return res;
     char c = 0;
@@ -193,7 +193,7 @@ auto TitlePageFullLine::classify(int w, int state) -> tpi_vals {
     else if (w == 2113)
         return item2.plus() && !item3.has_a_char() ? tpi_CEES : tpi_err;
     if (w != 2130) return tpi_err;
-    if (!encode_flags(item2.get_p1(), item3.get_p1())) return tpi_err;
+    if (!encode_flags(item2.p1, item3.p1)) return tpi_err;
     return tpi_CES;
 }
 
@@ -497,11 +497,11 @@ auto TitlePage::find_cmd(const std::string &s) const -> size_t {
 
 // Ctor from a TitlePageFullLine. It's just a copy.
 TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
-    T1     = X.item1.get_value();
-    T2     = X.item2.get_value();
-    T3     = X.item3.get_value();
-    T4     = X.item4.get_value();
-    xflags = X.get_flags();
+    T1     = X.item1.value;
+    T2     = X.item2.value;
+    T3     = X.item3.value;
+    T4     = X.item4.value;
+    xflags = X.flags;
 }
 
 // This compares a Begin line with the string s.
