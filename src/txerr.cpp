@@ -92,15 +92,8 @@ void Parser::signal_error(Token T, const std::string &s) {
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)
 void err_ns::convert_to_string(const TokenList &L) {
-    Buffer &      B = err_buf;
-    static Buffer buffer_for_log;
-    auto          C = L.begin();
-    auto          E = L.end();
-    while (C != E) {
-        buffer_for_log.clear();
-        if (buffer_for_log.push_back(*C)) buffer_for_log << ' ';
-        B += buffer_for_log;
-        ++C;
+    for (auto C = L.begin(); C != L.end(); ++C) {
+        if (err_buf.push_back(*C)) err_buf << ' ';
     }
 }
 

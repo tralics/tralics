@@ -29,6 +29,5 @@ namespace tralics_ns {
     auto titlepage_is_valid() -> bool;
 
     void boot_math(bool mv);
-    void Titlepage_create(LineList &lines);
     void Titlepage_start(bool verbose);
 } // namespace tralics_ns

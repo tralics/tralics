@@ -17,12 +17,9 @@
 #include "txinline.h"
 
 namespace {
-    Buffer            docspecial; // Buffer for document special things
-    Buffer            tp_main_buf;
-    Buffer            local_buf; // some local buffer
-    TitlePage         Titlepage; // title page info
-    TitlePageFullLine tpfl;
-    TpiOneItem        Toi;
+    Buffer     docspecial; // Buffer for document special things
+    Buffer     local_buf;  // some local buffer
+    TpiOneItem Toi;
 
     auto is_tp_delim(char c) -> bool { return c == '<' || c == '\\' || c == '"'; }
 } // namespace
@@ -57,35 +54,6 @@ auto Buffer::tp_fetch_something() -> tpa_line {
         return tl_empty;
     }
     return tl_normal;
-}
-
-// This is the function that creates the title page data
-// from a list of lines
-void tralics_ns::Titlepage_create(LineList &lines) {
-    if (lines.empty()) return;
-    Titlepage.make_valid();
-    for (;;) {
-        tp_main_buf.clear();
-        int line = lines.get_next(tp_main_buf);
-        if (line < 0) return;
-        init_file_pos = line;
-        tpa_line k    = tp_main_buf.tp_fetch_something();
-        if (k == tl_empty) continue;
-        if (k == tl_end) break;
-        int      w0 = tpfl.read();
-        tpi_vals w  = tpfl.classify(w0, Titlepage.state);
-        if (w == tpi_err) {
-            tpage_ns::init_error();
-            continue;
-        }
-        TitlePageAux tpa(tpfl);
-        bool         res = tpa.classify(w, Titlepage.state);
-        if (!res) {
-            tpage_ns::init_error();
-            continue;
-        }
-        Titlepage.bigtable.push_back(tpa);
-    }
 }
 
 // Example of usage

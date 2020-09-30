@@ -98,7 +98,7 @@ struct TpiOneItem {
     void reset();
 };
 
-// temporary class, will bew copied into a TitlePageAux
+// temporary class, will bew copied into a TitlePageAux \todo do
 class TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
     size_t     flags{};                    // the flags
@@ -134,3 +134,5 @@ public:
     [[nodiscard]] auto find_UR(const std::string &s, const std::string &name) const -> size_t;
     [[nodiscard]] auto find_cmd(const std::string &s) const -> size_t;
 };
+
+inline TitlePage Titlepage; // title page info

@@ -8,6 +8,7 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include "txtitlepage.h"
 #include <filesystem>
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -18,6 +19,10 @@
 #else
 #include <unistd.h>
 #endif
+
+namespace tpage_ns {
+    void init_error();
+}
 
 namespace {
     constexpr auto usage = R"(
@@ -84,6 +89,8 @@ found at http://www.cecill.info.)";
     std::string user_config_file;
 
     std::vector<std::string> other_options;
+
+    TitlePageFullLine tpfl;
 
     void after_conf_assign(std::vector<std::string> &V) {
         for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
@@ -257,6 +264,35 @@ found at http://www.cecill.info.)";
             usage_and_quit(1);
         }
         return std::move(B);
+    }
+
+    // This is the function that creates the title page data
+    // from a list of lines
+    void Titlepage_create(LineList &lines) {
+        if (lines.empty()) return;
+        Titlepage.make_valid();
+        for (;;) {
+            tp_main_buf.clear();
+            int line = lines.get_next(tp_main_buf);
+            if (line < 0) return;
+            init_file_pos = line;
+            tpa_line k    = tp_main_buf.tp_fetch_something();
+            if (k == tl_empty) continue;
+            if (k == tl_end) break;
+            int      w0 = tpfl.read();
+            tpi_vals w  = tpfl.classify(w0, Titlepage.state);
+            if (w == tpi_err) {
+                tpage_ns::init_error();
+                continue;
+            }
+            TitlePageAux tpa(tpfl);
+            bool         res = tpa.classify(w, Titlepage.state);
+            if (!res) {
+                tpage_ns::init_error();
+                continue;
+            }
+            Titlepage.bigtable.push_back(tpa);
+        }
     }
 } // namespace
 
@@ -921,7 +957,7 @@ void MainClass::read_config_and_other() {
     if (hr) from_config.insert("\\AtBeginDocument{\\rawebstartdocument}\n", true);
     config_file.find_top_atts();
     LineList TP = config_file.parse_and_extract("TitlePage");
-    tralics_ns::Titlepage_create(TP);
+    Titlepage_create(TP);
     if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
     input_content.splice(doc_class_pos, from_config);
     config_file.clear();
