@@ -1,4 +1,5 @@
 #include "tralics/TexOutStream.h"
+#include "tralics/util.h"
 #include "txinline.h"
 
 // This closes an output channel.
@@ -10,5 +11,5 @@ void TexOutStream::close(size_t chan) {
 // What if the file cannot be opened ?
 void TexOutStream::open(size_t chan, const std::string &fn) {
     if (chan < 0 || chan > max_openout) return; // This cannot happen
-    at(chan) = std::ofstream(tralics_ns::get_out_dir(fn));
+    at(chan) = std::ofstream(get_out_dir(fn));
 }

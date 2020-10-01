@@ -79,7 +79,7 @@ namespace {
 // This reads conditionally a file. Returns true if the file exists.
 auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
     B.append(".bib");
-    if (auto of = tralics_ns::find_in_path(B); of) {
+    if (auto of = find_in_path(B); of) {
         spdlog::trace("Found BIB file: {}", *of);
         read(*of, ct);
         return true;

@@ -456,7 +456,6 @@ void gb4eboot() {
 
 // --------------------------------------------------------------------
 // DATES
-using tralics_ns::is_leap_year;
 
 // Dispatcher function
 void Parser::date_commands(int c) {
@@ -531,7 +530,7 @@ void Parser::get_date_ctrs(long &year, size_t &month, size_t &day) {
 
 // True if year Y is a leap year
 
-auto tralics_ns::is_leap_year(long y) -> bool {
+auto is_leap_year(long y) -> bool {
     if ((y % 4) != 0) return false;
     if (y <= 1500) return true;
     if (y % 100 == 0) return y % 400 == 0;

@@ -291,6 +291,8 @@ public:
     void        set_type(size_t k, math_list_type c) { math_table[k].set_type(c); }
 };
 
+inline MathDataP math_data;
+
 class Cv3Helper {
     Math               res;
     Xml *              p{};

@@ -31,12 +31,6 @@ namespace tpage_ns {
 
 } // namespace tpage_ns
 
-// needed elsewhere, because we have to call add_language_add.
-auto tralics_ns::titlepage_is_valid() -> bool { return Titlepage.is_valid(); }
-
-// needed in txmain.
-void tralics_ns::Titlepage_start(bool verbose) { Titlepage.start_thing(verbose); }
-
 // This is called in case of trouble.
 void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " << init_file_pos << ")\n"; }
 

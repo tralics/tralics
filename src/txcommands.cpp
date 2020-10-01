@@ -14,6 +14,7 @@
 #include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 #include "txinline.h"
+#include "txtitlepage.h"
 
 using namespace std::string_literals;
 
@@ -746,7 +747,7 @@ void Parser::T_begindocument() {
     }
     if (cur_level != 2) parse_error("\\begin{document} not at level 0");
     seen_document = true;
-    if (!tralics_ns::titlepage_is_valid()) add_language_att();
+    if (!Titlepage.is_valid()) add_language_att();
     cur_tok.kill();
     pop_level(bt_env);
     cur_level = 1; // this is the outer level...

@@ -8,6 +8,7 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include "txmath.h"
 #include "txtitlepage.h"
 #include <filesystem>
 #include <fmt/ostream.h>
@@ -296,7 +297,7 @@ found at http://www.cecill.info.)";
     }
 } // namespace
 
-auto tralics_ns::get_out_dir(const std::string &name) -> std::filesystem::path { return out_dir / name; }
+auto get_out_dir(const std::string &name) -> std::filesystem::path { return out_dir / name; }
 
 void MainClass::get_os() {
 #if defined(__alpha)
@@ -343,7 +344,7 @@ void MainClass::check_for_input() {
         open_log();
         return;
     }
-    auto of = tralics_ns::find_in_path(s);
+    auto of = find_in_path(s);
     if (!of) {
         spdlog::critical("Fatal error: Cannot open input file {}", infile);
         exit(1);
@@ -371,7 +372,7 @@ void MainClass::check_for_input() {
 
 void MainClass::open_log() { // \todo spdlog etc
     auto f   = std::filesystem::path(out_dir) / (log_name + ".log");
-    log_file = tralics_ns::open_file(f, true);
+    log_file = open_file(f, true);
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
 
@@ -771,7 +772,7 @@ void MainClass::end_with_help(int v) {
 
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
-    if (auto of = tralics_ns::find_in_confdir(tmp); of) {
+    if (auto of = find_in_confdir(tmp); of) {
         spdlog::trace("Found TCF file: {}", *of);
         tcf_file = of;
         return true;
@@ -796,7 +797,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
-        if (auto of = tralics_ns::find_in_confdir(xclass); of) return of;
+        if (auto of = find_in_confdir(xclass); of) return of;
     }
     std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
     if (std::filesystem::exists(rc)) return rc;
@@ -1021,7 +1022,7 @@ void MainClass::trans0() {
     if (verbose) the_parser.M_tracingall();
     the_parser.load_latex();
     if (load_l3) the_parser.L3_load(true);
-    tralics_ns::Titlepage_start(verbose);
+    Titlepage.start_thing(verbose);
     if (only_input_data) {
         Logger::log_finish();
         exit(0);
@@ -1045,7 +1046,11 @@ void MainClass::show_input_size() {
 }
 
 void MainClass::more_boot() const {
-    tralics_ns::boot_math(math_variant);
+    math_data.boot();
+    if (math_variant) {
+        int w = (2 << 15) - 1;
+        the_parser.word_define(mathprop_ctr_code, w, true);
+    }
     if (etex_enabled) the_parser.hash_table.boot_etex();
     LineList res;
     res.reset(".tex");
@@ -1091,7 +1096,7 @@ void MainClass::run(int argc, char **argv) {
 
 void MainClass::out_xml() {
     auto p    = out_dir / (out_name + ".xml");
-    auto fp   = tralics_ns::open_file(p, true);
+    auto fp   = open_file(p, true);
     auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // \todo make this always true
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");

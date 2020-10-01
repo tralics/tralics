@@ -2948,7 +2948,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
         auto k = scan_int(cur_tok);
         return (k & 1) == 1;
     }
-    case if_leapyear_code: return tralics_ns::is_leap_year(scan_braced_int(cur_tok));
+    case if_leapyear_code: return is_leap_year(scan_braced_int(cur_tok));
     case if_int_code:
     case if_dim_code: {
         Token T = cur_tok;

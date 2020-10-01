@@ -16,7 +16,6 @@
 #include "tralics/util.h"
 #include "txmath.h"
 
-extern MathDataP math_data;
 using namespace math_ns;
 
 // mathml variants: normal, bold, italic, bold-italic, double-struck,

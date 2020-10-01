@@ -19,15 +19,4 @@
 #include "txparam.h"
 #include <filesystem>
 
-namespace tralics_ns {
-    auto find_in_confdir(const std::string &s)
-        -> std::optional<std::filesystem::path>;                                     ///< Try to open the file, using alt location if needed
-    auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path>; ///< Tries to open a TeX file
-    auto get_out_dir(const std::string &name) -> std::filesystem::path;              /// Returns output_dir+name
-    auto is_leap_year(long y) -> bool;
-    auto open_file(const std::string &name, bool f) -> std::ofstream;
-    auto titlepage_is_valid() -> bool;
-
-    void boot_math(bool mv);
-    void Titlepage_start(bool verbose);
-} // namespace tralics_ns
+namespace tralics_ns {} // namespace tralics_ns

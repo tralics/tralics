@@ -54,7 +54,7 @@ namespace {
 
 // The external function. Needs to be completed
 auto read_xml(const std::string &s) -> Xml * {
-    auto of = tralics_ns::find_in_path(s);
+    auto of = find_in_path(s);
     if (!of) {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;

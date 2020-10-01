@@ -372,14 +372,14 @@ void Parser::T_input(int q) {
     if (seen_plus)
         res = find_no_path(file);
     else {
-        res = tralics_ns::find_in_path(file);
+        res = find_in_path(file);
         if (!res) {
             Buffer &B = local_buf; // \todo without local_buf
             B         = file;
             if (!B.ends_with(".tex")) {
                 B.append(".tex");
                 std::string F = B;
-                res           = tralics_ns::find_in_path(F);
+                res           = find_in_path(F);
             }
         }
     }

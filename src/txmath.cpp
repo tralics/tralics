@@ -50,8 +50,6 @@ namespace {
     }
 } // namespace
 
-MathDataP math_data;
-
 using namespace math_ns;
 namespace math_ns {
     void add_to_trace(Token T);
@@ -3246,12 +3244,4 @@ void Math::remove_initial_group() {
     if (!X.empty()) return;
     if (initial_relax) pop_front();
     pop_front();
-}
-
-void tralics_ns::boot_math(bool mv) {
-    math_data.boot();
-    if (mv) {
-        int w = (2 << 15) - 1;
-        the_parser.word_define(mathprop_ctr_code, w, true);
-    }
 }

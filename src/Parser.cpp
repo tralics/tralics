@@ -761,7 +761,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
 void Parser::finish_images() {
     if (the_images.empty()) return;
     std::string   name = file_name + ".img";
-    auto          wn   = tralics_ns::get_out_dir(name);
+    auto          wn   = get_out_dir(name);
     std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
     Buffer B1, B2;

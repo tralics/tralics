@@ -24,7 +24,6 @@ static Buffer                 aux_buffer;
 static Buffer                 att_buffer;
 extern std::array<Xml *, 128> single_chars;
 extern bool                   cmi_verbose;
-extern MathDataP              math_data;
 
 // Codes are explained in Math::find_paren0 below.
 // This prints one token of the list.

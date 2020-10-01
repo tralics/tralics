@@ -229,7 +229,7 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 // --------------------------------------------
 
 // This exits if the file cannot be opened and argument is true
-auto tralics_ns::open_file(const std::string &name, bool fatal) -> std::ofstream {
+auto open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
     if (!fp && fatal) {
         spdlog::critical("Fatal: Cannot open file {} for output.", name);
@@ -258,12 +258,12 @@ void Parser::T_filecontents(int spec) {
         res.reset(filename);
         res.register_file();
         if (spec == 3) is_encoded = false;
-    } else if (auto of = tralics_ns::find_in_path(filename); of) {
+    } else if (auto of = find_in_path(filename); of) {
         Logger::finish_seq();
         spdlog::warn("File {} already exists, not generating from source.", *of);
     } else {
-        auto fn = tralics_ns::get_out_dir(filename);
-        outfile = tralics_ns::open_file(fn, false);
+        auto fn = get_out_dir(filename);
+        outfile = open_file(fn, false);
         Logger::finish_seq();
         log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)
@@ -296,7 +296,7 @@ void Parser::T_filecontents(int spec) {
     pop_level(bt_env);
 }
 
-// \todo the next two function are kind of misleadingly named
+// \todo the next three function are kind of misleadingly named
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = conf_path.size(); i != 0; i--) {
@@ -310,7 +310,7 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     return {};
 }
 
-auto tralics_ns::find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
+auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     pool_position = search_in_pool(s);
     if (pool_position) return s;
     if (std::filesystem::exists(s)) return s;
@@ -318,7 +318,7 @@ auto tralics_ns::find_in_confdir(const std::string &s) -> std::optional<std::fil
     return main_ns::search_in_confdir(s);
 }
 
-auto tralics_ns::find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {
+auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {
     if (s.empty()) return {};
     pool_position = search_in_pool(s);
     if (pool_position) return s;
