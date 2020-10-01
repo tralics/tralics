@@ -13,8 +13,10 @@
 
 #include "txparser2.h"
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
+#include "txparam.h"
 #include <fmt/format.h>
 
 namespace {

@@ -13,7 +13,6 @@
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include "txtitlepage.h"
 
 using namespace std::string_literals;

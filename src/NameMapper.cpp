@@ -3,7 +3,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
+#include "txparam.h"
 #include <spdlog/spdlog.h>
 
 namespace config_ns {

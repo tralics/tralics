@@ -12,9 +12,9 @@
 // Handle also utf8 input output
 
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
-#include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>

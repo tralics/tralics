@@ -1,5 +1,6 @@
 #include "tralics/Stack.h"
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"

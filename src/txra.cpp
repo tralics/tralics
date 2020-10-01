@@ -13,7 +13,7 @@
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
+#include "txparam.h"
 
 namespace {
     static Buffer Tbuf;

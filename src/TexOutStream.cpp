@@ -1,6 +1,5 @@
 #include "tralics/TexOutStream.h"
 #include "tralics/util.h"
-#include "txinline.h"
 
 // This closes an output channel.
 void TexOutStream::close(size_t chan) {

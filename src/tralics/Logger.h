@@ -1,5 +1,5 @@
 #pragma once
-#include "../txinline.h"
+#include "Buffer.h"
 #include <fstream>
 #include <memory>
 #include <spdlog/spdlog.h>

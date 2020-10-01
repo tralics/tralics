@@ -11,10 +11,10 @@
 #include "txtitlepage.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txinline.h"
 
 namespace {
     Buffer     docspecial; // Buffer for document special things

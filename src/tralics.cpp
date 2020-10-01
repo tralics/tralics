@@ -19,7 +19,6 @@
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txinline.h"
 #include <ctime>
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>

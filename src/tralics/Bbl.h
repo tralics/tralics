@@ -1,5 +1,4 @@
 #pragma once
-#include "../txinline.h"
 #include "LineList.h"
 #include "util.h"
 #include <fstream>

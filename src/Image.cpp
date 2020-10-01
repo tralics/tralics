@@ -1,5 +1,5 @@
 #include "tralics/Image.h"
-#include "txinline.h"
+#include <filesystem>
 
 // This checks all possible extensions and remembers them
 void Image::check_existence() {

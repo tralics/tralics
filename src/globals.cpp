@@ -1,6 +1,5 @@
 #include "tralics/globals.h"
 #include "tralics/Parser.h"
-#include "txinline.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>

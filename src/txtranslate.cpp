@@ -11,6 +11,7 @@
 // This file contains a big part of the Tralics translator
 
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
