@@ -28,7 +28,7 @@ extern bool                   cmi_verbose;
 // This prints the whole MathP list on the stream
 
 auto operator<<(std::ostream &fp, const MathP &X) -> std::ostream & {
-    for (const auto &x : X.value) fp << x;
+    for (const auto &x : X) fp << x;
     return fp;
 }
 
