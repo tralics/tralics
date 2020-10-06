@@ -156,4 +156,4 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
 
 inline auto encode(const std::string &s) -> std::string { return Buffer(s).convert_to_out_encoding(); }
 
-inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf;
+inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer;

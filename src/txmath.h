@@ -10,12 +10,12 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/MathElt.h"
+#include "tralics/MathP.h"
 #include "tralics/MathQ.h"
 #include "tralics/Xml.h"
 #include <spdlog/spdlog.h>
 
 class Math;
-class MathP;
 class MathF;
 
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
