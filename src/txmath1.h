@@ -11,20 +11,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// Helper for finding start and end of <mrow>
-class MathQ {
-    int start; // position of the item
-    int end;   // type of the item
-public:
-    // no default Ctor, but two specialised ones
-    MathQ(int i, int t) : start(i), end(t) {}
-    void get_both(int &i, int &t) const {
-        i = start;
-        t = end;
-    }
-    void print(std::ostream &fp) const { fp << start << ", " << end << "; "; }
-};
-
 // Helper for finding big small etc
 class MathPAux {
     int        pos;  // position of the item
@@ -81,7 +67,6 @@ class MathF {
     Xml *     t{};
 
 public:
-    MathF();
     [[nodiscard]] auto in_mrow() const -> bool { return state; }
     [[nodiscard]] auto is_next_change(int i) const -> bool { return i == next_change; }
     auto               get_aux() -> MathQList & { return aux; }
@@ -89,7 +74,7 @@ public:
     void               make_t_big() { t_big = true; }
     void               handle_t();
     void               push_in_t(Xml *x);
-    void               push_in_res(const MathElt& x) { res.push_back(x); }
+    void               push_in_res(const MathElt &x) { res.push_back(x); }
     void               push_in_res(Xml *x) { res.push_back(MathElt(x, -1, mt_flag_small)); }
     void               reset() {
         t     = nullptr;
@@ -97,6 +82,5 @@ public:
         t_big = false;
     }
     void finish(MathList &value);
-    void dump_aux();
     void pop_last(Xml *xval);
 };

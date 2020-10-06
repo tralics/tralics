@@ -53,20 +53,6 @@ auto operator<<(std::ostream &fp, const MathP &X) -> std::ostream & {
     return fp;
 }
 
-// This prints the whole MathQ list on the stream
-
-auto operator<<(std::ostream &fp, const MathQList &X) -> std::ostream & {
-    auto C = X.begin();
-    auto E = X.end();
-    while (C != E) {
-        C->print(fp);
-        ++C;
-    }
-    return fp;
-}
-
-// ------------------------------------------------------------------------
-
 // Returns true if there is a small.
 auto MathP::has_small() const -> bool {
     auto B = value.begin();
@@ -282,7 +268,7 @@ void MathP::find_paren_matched2(MathQList &res) const {
     while (B != E) {
         if (B->get_type() == mt_flag_small_l) k = B->get_pos();
         if (B->get_type() == mt_flag_small_r) {
-            res.push_back(MathQ(k, B->get_pos()));
+            res.push_back({k, B->get_pos()});
             aux_buffer.format("{}, {} ", k, B->get_pos());
         }
         ++B;
@@ -306,7 +292,7 @@ auto MathP::find_paren_rec(MathQList &res) const -> bool {
             allow_mid = true;
         } else if (B->get_type() == mt_flag_small_r) {
             if (p >= 0) {
-                res.push_back(MathQ(p, B->get_pos()));
+                res.push_back({p, B->get_pos()});
                 retval = true;
             }
             p = -1;
@@ -358,7 +344,7 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
         int seen_d1 = 0, seen_d2 = 0;
         if (aux.is_lbr2(seen_d1, seen_d2)) {
             if (verbose) log_file << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
-            res.push_back(MathQ(seen_d1, seen_d2));
+            res.push_back({seen_d1, seen_d2});
             return true;
         }
     }
@@ -435,7 +421,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
             }
             if (k == mt_flag_small_r) {
                 state = false;
-                t.push_back(MathQ(start_pos, i));
+                t.push_back({start_pos, i});
                 if (verbose) log_file << "MF: OK " << start_pos << ' ' << i << ' ' << '\n';
             }
         }
@@ -443,7 +429,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     if (t.empty()) failed = true;
     if (failed || state) {
         t.clear();
-        t.push_back(MathQ(start1, end1));
+        t.push_back({start1, end1});
         if (verbose) log_file << "MF: BB " << start1 << ' ' << end1 << '\n';
     }
     res.splice(res.end(), t);
@@ -538,7 +524,7 @@ void MathF::change_state() {
     else if (aux.empty())
         next_change = next_finish = -1;
     else {
-        aux.front().get_both(next_change, next_finish);
+        std::tie(next_change, next_finish) = aux.front();
         aux.pop_front();
     }
 }
@@ -560,20 +546,6 @@ void MathF::push_in_t(Xml *x) {
 void MathF::finish(MathList &value) {
     if ((t != nullptr) && !t->all_empty()) the_parser.signal_error("internal bug in finish_translate");
     value.swap(res);
-}
-
-MathF::MathF() = default;
-
-// debug
-void MathF::dump_aux() {
-    if (aux.empty()) return;
-    auto C = aux.begin();
-    auto E = aux.end();
-    while (C != E) {
-        C->print(std::cout);
-        ++C;
-    }
-    std::cout << "\n";
 }
 
 // --------------------------------------------------------------------
