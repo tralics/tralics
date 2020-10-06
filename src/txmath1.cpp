@@ -25,31 +25,10 @@ static Buffer                 att_buffer;
 extern std::array<Xml *, 128> single_chars;
 extern bool                   cmi_verbose;
 
-// Codes are explained in Math::find_paren0 below.
-// This prints one token of the list.
-void MathPAux::print(std::ostream &fp) const {
-    fp << pos;
-    switch (type) {
-    case mt_flag_small_l: fp << 'l'; break;
-    case mt_flag_small_m: fp << 'm'; break;
-    case mt_flag_small_r: fp << 'r'; break;
-    case mt_flag_big: fp << 'b'; break;
-    case mt_flag_rel: fp << 'R'; break;
-    case mt_flag_bin: fp << 'B'; break;
-    default: fp << 'x';
-    }
-    fp << ' ';
-}
-
 // This prints the whole MathP list on the stream
 
 auto operator<<(std::ostream &fp, const MathP &X) -> std::ostream & {
-    auto C = X.value.begin();
-    auto E = X.value.end();
-    while (C != E) {
-        C->print(fp);
-        ++C;
-    }
+    for (const auto &x : X.value) fp << x;
     return fp;
 }
 
@@ -117,7 +96,7 @@ void Math::find_paren0(MathP &aux) const {
                 break;
             default: break;
             }
-            if (keep) aux.push_back(MathPAux(i, t));
+            if (keep) aux.push_back({i, t});
         }
         ++L;
         i++;
@@ -126,7 +105,7 @@ void Math::find_paren0(MathP &aux) const {
     if (!inner_big || !seen_small) { // only small objects, or no parens
         aux.clear();
     } else
-        aux.push_back(MathPAux(i, mt_flag_big)); // add the end marker.
+        aux.push_back({i, mt_flag_big}); // add the end marker.
 }
 
 // The idea is to split the list into sublists, L1, L2, L3, etc.
@@ -143,7 +122,7 @@ auto MathP::analyse1(bool w) const -> bool {
     auto C        = value.begin();
     auto E        = value.end();
     while (C != E) {
-        math_types t = C->get_type();
+        math_types t = C->type;
         ++C;
         if (t == mt_flag_small_m || t == mt_flag_small_l || t == mt_flag_small_r) nb_small++;
         if (t == mt_flag_rel || (w && t == mt_flag_bin)) {
@@ -159,9 +138,9 @@ auto MathP::analyse1(bool w) const -> bool {
 // 0b 2l 6r 9R 10m 12m 13b.
 void MathP::remove_binrel() {
     if (analyse1(true)) return;
-    value.remove_if([](const MathPAux &m) { return m.get_type() == mt_flag_bin; });
+    value.remove_if([](const MathPAux &m) { return m.type == mt_flag_bin; });
     if (analyse1(false)) return;
-    value.remove_if([](const MathPAux &m) { return m.get_type() == mt_flag_rel; });
+    value.remove_if([](const MathPAux &m) { return m.type == mt_flag_rel; });
 }
 
 // The next function assumes that there is a big at the end of the list.
@@ -171,8 +150,8 @@ auto MathP::find_big(int &k) -> MathP {
     while (!value.empty()) {
         MathPAux N = value.front();
         value.pop_front();
-        if (N.get_type() == mt_flag_big) {
-            k = N.get_pos();
+        if (N.type == mt_flag_big) {
+            k = N.pos;
             return res;
         }
         res.value.push_back(N);
@@ -196,17 +175,17 @@ auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
         if (B == E) break;
         MathPAux N = *B;
         ++B;
-        if (B == E && N.get_type() == mt_flag_big) break;
-        if (N.get_type() == mt_flag_big) {
+        if (B == E && N.type == mt_flag_big) break;
+        if (N.type == mt_flag_big) {
             if (seen_d2 != -1) return false;
             if (seen_d1 == -1) return false;
             seen_big = true;
         } else if (N.is_small()) {
             if (seen_d2 != -1) return false;
             if (seen_d1 != -1)
-                seen_d2 = N.get_pos();
+                seen_d2 = N.pos;
             else
-                seen_d1 = N.get_pos();
+                seen_d1 = N.pos;
         }
     }
     if (!seen_big) return false;
@@ -226,9 +205,9 @@ auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
         if (N.is_small()) {
             if (seen_d2 != -1) return false;
             if (seen_d1 != -1)
-                seen_d2 = N.get_pos();
+                seen_d2 = N.pos;
             else
-                seen_d1 = N.get_pos();
+                seen_d1 = N.pos;
         }
     }
     return seen_d2 != -1;
@@ -243,18 +222,18 @@ auto MathP::find_paren_matched1() const -> bool {
     bool allow_mid = false;
     for (;;) {
         if (B == E) return is_out;
-        if (B->get_type() == mt_flag_small_m) {
+        if (B->type == mt_flag_small_m) {
             if (!allow_mid) return false;
             allow_mid = false;
-        } else if (is_out && B->get_type() == mt_flag_small_l) {
+        } else if (is_out && B->type == mt_flag_small_l) {
             is_out    = false;
             allow_mid = true;
-        } else if (!is_out && B->get_type() == mt_flag_small_r) {
+        } else if (!is_out && B->type == mt_flag_small_r) {
             is_out    = true;
             allow_mid = false;
-        } else if (B->get_type() == mt_flag_small_l)
+        } else if (B->type == mt_flag_small_l)
             return false;
-        else if (B->get_type() == mt_flag_small_r)
+        else if (B->type == mt_flag_small_r)
             return false;
         ++B;
     }
@@ -266,10 +245,10 @@ void MathP::find_paren_matched2(MathQList &res) const {
     int  k = 0;
     aux_buffer.clear();
     while (B != E) {
-        if (B->get_type() == mt_flag_small_l) k = B->get_pos();
-        if (B->get_type() == mt_flag_small_r) {
-            res.push_back({k, B->get_pos()});
-            aux_buffer.format("{}, {} ", k, B->get_pos());
+        if (B->type == mt_flag_small_l) k = B->pos;
+        if (B->type == mt_flag_small_r) {
+            res.push_back({k, B->pos});
+            aux_buffer.format("{}, {} ", k, B->pos);
         }
         ++B;
     }
@@ -283,16 +262,16 @@ auto MathP::find_paren_rec(MathQList &res) const -> bool {
     bool retval    = false;
     for (;;) {
         if (B == E) return retval;
-        if (B->get_type() == mt_flag_small_m) {
+        if (B->type == mt_flag_small_m) {
             if (!allow_mid) p = -1;
             allow_mid = false;
-        } else if (B->get_type() == mt_flag_small_l) {
+        } else if (B->type == mt_flag_small_l) {
             ++level;
-            p         = B->get_pos();
+            p         = B->pos;
             allow_mid = true;
-        } else if (B->get_type() == mt_flag_small_r) {
+        } else if (B->type == mt_flag_small_r) {
             if (p >= 0) {
-                res.push_back({p, B->get_pos()});
+                res.push_back({p, B->pos});
                 retval = true;
             }
             p = -1;
@@ -335,8 +314,8 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
         MathP content = aux.find_big(end);
         if (!content.has_small()) { // no small, look at next big
         } else {
-            content.remove_binrel();                       // remove useless bin/rel in content
-            content.push_back(MathPAux(end, mt_flag_rel)); // add end marker
+            content.remove_binrel();               // remove useless bin/rel in content
+            content.push_back({end, mt_flag_rel}); // add end marker
             if (verbose) log_file << "MF: sublist start=" << start << ' ' << content << "\n";
             content.find_paren2(start, res, verbose);
         }
@@ -359,8 +338,8 @@ auto MathP::find_relbin(int &k) -> MathP {
     while (!empty()) {
         MathPAux N = value.front();
         value.pop_front();
-        if (N.get_type() == mt_flag_rel || N.get_type() == mt_flag_bin) {
-            k = N.get_pos();
+        if (N.type == mt_flag_rel || N.type == mt_flag_bin) {
+            k = N.pos;
             return res;
         }
         res.value.push_back(N);
@@ -400,9 +379,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     int       start_pos = -1;
     if (verbose) log_file << "MF: Find paren1 (" << start1 << ", " << end1 << ") " << *this << "\n";
     while (!empty()) {
-        int        i = 0;
-        math_types k{};
-        value.front().get_both(i, k);
+        auto [i, k]   = value.front();
         bool is_small = value.front().is_small();
         value.pop_front();
         if (!is_small) continue;

@@ -1,4 +1,5 @@
 #pragma once
+#include "tralics/MathPAux.h"
 #include "txmath.h"
 
 // -*- C++ -*-
@@ -11,29 +12,8 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// Helper for finding big small etc
-class MathPAux {
-    int        pos;  // position of the item
-    math_types type; // type of the item
-public:
-    // no default Ctor, but two specialised ones
-    MathPAux(int i, math_types t) : pos(i), type(t) {}
-    [[nodiscard]] auto get_pos() const -> int { return pos; }
-    [[nodiscard]] auto get_type() const -> math_types { return type; }
-    void               get_both(int &i, math_types &t) const {
-        i = pos;
-        t = type;
-    }
-    void               print(std::ostream &fp) const;
-    [[nodiscard]] auto is_small() const -> bool { return type == mt_flag_small_l || type == mt_flag_small_r || type == mt_flag_small_m; }
-};
-
-using MathPList             = std::list<MathPAux>;
-using const_math_p_iterator = std::list<MathPAux>::const_iterator;
-using math_p_iterator       = std::list<MathPAux>::iterator;
-
 class MathP {
-    MathPList value;
+    std::list<MathPAux> value; // \todo inherit
 
 public:
     friend auto        operator<<(std::ostream &fp, const MathP &X) -> std::ostream &;
