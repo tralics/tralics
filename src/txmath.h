@@ -16,7 +16,7 @@
 #include <spdlog/spdlog.h>
 
 class Math;
-class MathF;
+struct MathF;
 
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 
