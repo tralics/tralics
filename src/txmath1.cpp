@@ -140,7 +140,7 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
         }
         start       = end;
         int seen_d1 = 0, seen_d2 = 0;
-        if (aux.is_lbr2(seen_d1, seen_d2)) {
+        if (aux.is_lbr(seen_d1, seen_d2)) {
             if (verbose) log_file << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
             res.push_back({seen_d1, seen_d2});
             return true;

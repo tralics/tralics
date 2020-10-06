@@ -16,12 +16,9 @@ auto MathP::has_small() const -> bool {
 // The next function returns true if the formula is acceptable if we split
 // at:  rel and bin if w is true, rel if w is false.
 auto MathP::analyse1(bool w) const -> bool {
-    int  nb_small = 0;
-    auto C        = begin();
-    auto E        = end();
-    while (C != E) { // \todo range loop
-        math_types t = C->type;
-        ++C;
+    int nb_small = 0;
+    for (const auto &x : *this) {
+        math_types t = x.type;
         if (t == mt_flag_small_m || t == mt_flag_small_l || t == mt_flag_small_r) nb_small++;
         if (t == mt_flag_rel || (w && t == mt_flag_bin)) {
             if (nb_small == 1) return false;
@@ -58,55 +55,16 @@ auto MathP::find_big(int &k) -> MathP {
     return MathP();
 }
 
-// Returns true if formula is ... left ... right ...
-// 2 delims only, a big between them, no big ouside.
-//  assumes that there is a big at the end of the list (ignored)
-auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool { // \todo rewrite
-    auto B        = begin();
-    auto E        = end();
-    seen_d1       = -1;
-    seen_d2       = -1;
-    bool seen_big = false;
-    ;
-    if (B == E) return false;
-    for (;;) {
-        if (B == E) break;
-        MathPAux N = *B;
-        ++B;
-        if (B == E && N.type == mt_flag_big) break;
-        if (N.type == mt_flag_big) {
-            if (seen_d2 != -1) return false;
-            if (seen_d1 == -1) return false;
-            seen_big = true;
-        } else if (N.is_small()) {
-            if (seen_d2 != -1) return false;
-            if (seen_d1 != -1)
-                seen_d2 = N.pos;
-            else
-                seen_d1 = N.pos;
-        }
-    }
-    if (!seen_big) return false;
-    return seen_d2 != -1;
-}
-
-auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
-    auto B  = begin();
-    auto E  = end();
+auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
     seen_d1 = -1;
     seen_d2 = -1;
-    if (B == E) return false;
-    for (;;) { // \todo range loop
-        if (B == E) break;
-        MathPAux N = *B;
-        ++B;
-        if (N.is_small()) {
-            if (seen_d2 != -1) return false;
-            if (seen_d1 != -1)
-                seen_d2 = N.pos;
-            else
-                seen_d1 = N.pos;
-        }
+    for (const auto &N : *this) {
+        if (!N.is_small()) continue;
+        if (seen_d2 != -1) return false;
+        if (seen_d1 != -1)
+            seen_d2 = N.pos;
+        else
+            seen_d1 = N.pos;
     }
     return seen_d2 != -1;
 }
@@ -114,69 +72,60 @@ auto MathP::is_lbr2(int &seen_d1, int &seen_d2) const -> bool {
 // Return true if Pairing is OK.
 // Handles the case of brakets (\langle  a \mid b\rangle)
 auto MathP::find_paren_matched1() const -> bool {
-    auto B         = begin();
-    auto E         = end();
     bool is_out    = true;
     bool allow_mid = false;
-    for (;;) { // \todo range loop
-        if (B == E) return is_out;
-        if (B->type == mt_flag_small_m) {
+    for (const auto &B : *this) {
+        if (B.type == mt_flag_small_m) {
             if (!allow_mid) return false;
             allow_mid = false;
-        } else if (is_out && B->type == mt_flag_small_l) {
+        } else if (is_out && B.type == mt_flag_small_l) {
             is_out    = false;
             allow_mid = true;
-        } else if (!is_out && B->type == mt_flag_small_r) {
+        } else if (!is_out && B.type == mt_flag_small_r) {
             is_out    = true;
             allow_mid = false;
-        } else if (B->type == mt_flag_small_l)
+        } else if (B.type == mt_flag_small_l)
             return false;
-        else if (B->type == mt_flag_small_r)
+        else if (B.type == mt_flag_small_r)
             return false;
-        ++B;
     }
+    return is_out;
 }
 
 void MathP::find_paren_matched2(MathQList &res) const {
-    auto B = begin();
-    auto E = end();
-    int  k = 0;
+    int k = 0;
     aux_buffer.clear();
-    while (B != E) { // \todo range loop
-        if (B->type == mt_flag_small_l) k = B->pos;
-        if (B->type == mt_flag_small_r) {
-            res.push_back({k, B->pos});
-            aux_buffer.format("{}, {} ", k, B->pos);
+    for (const auto &B : *this) {
+        if (B.type == mt_flag_small_l) k = B.pos;
+        if (B.type == mt_flag_small_r) {
+            res.push_back({k, B.pos});
+            aux_buffer.format("{}, {} ", k, B.pos);
         }
-        ++B;
     }
 }
 
 auto MathP::find_paren_rec(MathQList &res) const -> bool {
-    auto B     = begin();
-    auto E     = end();
     int  level = 0, p = -1;
     bool allow_mid = false;
     bool retval    = false;
-    for (;;) { // \todo range loop
-        if (B == E) return retval;
-        if (B->type == mt_flag_small_m) {
+    for (const auto &B : *this) {
+        if (B.type == mt_flag_small_m) {
             if (!allow_mid) p = -1;
             allow_mid = false;
-        } else if (B->type == mt_flag_small_l) {
+        } else if (B.type == mt_flag_small_l) {
             ++level;
-            p         = B->pos;
+            p         = B.pos;
             allow_mid = true;
-        } else if (B->type == mt_flag_small_r) {
+        } else if (B.type == mt_flag_small_r) {
             if (p >= 0) {
-                res.push_back({p, B->pos});
+                res.push_back({p, B.pos});
                 retval = true;
             }
             p = -1;
             if (level > 0) --level;
         }
-        ++B;
     }
+    return retval;
 }
 
 // Same algo as find_big. We assume that the list is terminated by
@@ -194,7 +143,7 @@ auto MathP::find_relbin(int &k) -> MathP {
         res.push_back(N);
     }
     the_parser.signal_error("internal bug in find relbin");
-    return MathP();
+    return {};
 }
 
 // As explained above, the current list will be split in smaller
