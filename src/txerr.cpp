@@ -92,8 +92,8 @@ void Parser::signal_error(Token T, const std::string &s) {
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)
 void err_ns::convert_to_string(const TokenList &L) {
-    for (auto C = L.begin(); C != L.end(); ++C) {
-        if (err_buf.push_back(*C)) err_buf << ' ';
+    for (const auto &C : L) {
+        if (err_buf.push_back(C)) err_buf << ' ';
     }
 }
 

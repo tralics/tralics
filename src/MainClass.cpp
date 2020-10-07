@@ -24,7 +24,7 @@
 
 namespace tpage_ns {
     void init_error();
-}
+} // namespace tpage_ns
 
 namespace {
     constexpr auto usage = R"(

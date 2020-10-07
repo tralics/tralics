@@ -16,7 +16,7 @@
 #include "txparam.h"
 
 namespace {
-    static Buffer Tbuf;
+    Buffer Tbuf;
 
     // User says \UR{foo,bar}
     // returns -1 if there no other RC in the buffer.
