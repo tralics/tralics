@@ -199,13 +199,6 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
         out_four_hats(ch);
 }
 
-// Converts the buffer to the output encoding
-auto Buffer::convert_to_out_encoding() const -> std::string {
-    auto T = the_main->output_encoding;
-    if (T == en_boot || T == en_utf8 || is_all_ascii()) return data();
-    return convert_to_latin1(*this, T == en_latin);
-}
-
 auto Buffer::convert_to_log_encoding() const -> std::string {
     auto T = the_main->log_encoding;
     if (T == en_utf8 || is_all_ascii()) return data();

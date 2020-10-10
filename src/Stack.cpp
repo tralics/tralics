@@ -4,6 +4,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 
 namespace {
     // For debug. Returns symbolic name of mode

@@ -31,7 +31,6 @@ public:
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); } ///< Is the read pointer at the end?
     [[nodiscard]] auto convert_to_log_encoding() const -> std::string;     ///< Convert to logging encoding
-    [[nodiscard]] auto convert_to_out_encoding() const -> std::string;     ///< Make a fresh copy with output encoding
     [[nodiscard]] auto hashcode(size_t prime) const -> size_t;             ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }    ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;          ///< For typography
@@ -153,7 +152,5 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     B.push_back(t);
     return B;
 }
-
-inline auto encode(const std::string &s) -> std::string { return Buffer(s).convert_to_out_encoding(); }
 
 inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer;

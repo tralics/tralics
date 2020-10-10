@@ -1,4 +1,5 @@
 #include "tralics/util.h"
+#include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <sstream>
@@ -132,4 +133,10 @@ auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
 auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>> {
     if (auto i = s.find(':'); i != std::string::npos) return {{s.substr(0, i), s.substr(i + 1)}};
     return {};
+}
+
+auto encode(const std::string &s) -> std::string {
+    auto T = the_main->output_encoding;
+    if (T == en_boot || T == en_utf8 || Buffer(s).is_all_ascii()) return s.data();
+    return convert_to_latin1(s, T == en_latin);
 }
