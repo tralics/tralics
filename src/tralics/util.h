@@ -16,6 +16,7 @@ auto find_counter(const std::string &s) -> int;
 auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>;
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path>;
 auto get_out_dir(const std::string &name) -> std::filesystem::path;
+auto is_all_ascii(const std::string &s) -> bool;
 auto is_leap_year(long y) -> bool; // \todo std::chrono::year::is_leap
 auto is_m_font(symcodes cmd) -> bool;
 auto only_digits(const std::string &s) -> bool;

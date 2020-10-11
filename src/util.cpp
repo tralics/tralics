@@ -137,6 +137,12 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 
 auto encode(const std::string &s) -> std::string {
     auto T = the_main->output_encoding;
-    if (T == en_boot || T == en_utf8 || Buffer(s).is_all_ascii()) return s.data();
+    if (T == en_boot || T == en_utf8 || is_all_ascii(s)) return s.data(); // \todo return s would be better but null chars happen
     return convert_to_latin1(s, T == en_latin);
+}
+
+// returns true if only ascii 7 bits in the buffer
+auto is_all_ascii(const std::string &s) -> bool {
+    auto wrong = [](char c) { return static_cast<uchar>(c) >= 128 || (c < 32 && c != '\t' && c != '\n'); };
+    return std::none_of(s.begin(), s.end(), wrong);
 }

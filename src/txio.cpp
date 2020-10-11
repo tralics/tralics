@@ -59,16 +59,6 @@ void io_ns::print_ascii(std::ostream &fp, char c) {
     }
 }
 
-// returns true if only ascii 7 bits in the buffer
-auto Buffer::is_all_ascii() const -> bool {
-    for (size_t i = 0; i < size(); i++) {
-        auto c = at(i);
-        if (static_cast<uchar>(c) >= 128) return false;
-        if (c < 32 && c != '\t' && c != '\n') return false;
-    }
-    return true;
-}
-
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers
 
@@ -201,7 +191,7 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
 
 auto Buffer::convert_to_log_encoding() const -> std::string {
     auto T = the_main->log_encoding;
-    if (T == en_utf8 || is_all_ascii()) return data();
+    if (T == en_utf8 || is_all_ascii(*this)) return data();
 
     Buffer B = *this;
     B.ptrs.b = 0;
