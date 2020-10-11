@@ -614,7 +614,7 @@ void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
     auto                    n = name_buffer.size() + 1;
     std::vector<bchar_type> table(n);
     NameSplitter            W(table.data());
-    name_buffer.fill_table(table.data());
+    name_buffer.fill_table(table);
     W.handle_the_names();
     X.value     = biblio_buf1;
     X.long_key  = biblio_buf2;

@@ -60,7 +60,7 @@ public:
     void insert_without_crlf(const std::string &s); ///< Reset, insert s minus CRLF, remove trailing spaces
 
     // Those have void return type but return parameters
-    void fill_table(bchar_type *table); ///< Not sure what this does?
+    void fill_table(std::vector<bchar_type> &table); ///< Not sure what this does?
 
     // Those have void return type but involve global variables
     void convert_line(int l, size_t wc); ///< Convert a line to UTF8

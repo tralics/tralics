@@ -55,9 +55,9 @@ auto null_cs_name() -> std::string {
     if (c == '\\') return "csname\\endcsname";
     if (c > 0 && c < int(nb_characters)) {
         Buffer B = "csname";
-        B.out_log(char32_t(char32_t(c)), the_main->log_encoding);
+        B.out_log(char32_t(c), the_main->log_encoding);
         B.append("endcsname");
-        return B.data();
+        return std::move(B);
     }
     if (c == 0) return "csname^^@endcsname";
     return "csnameendcsname";
@@ -547,7 +547,7 @@ auto Buffer::slash_separated(std::string &a) -> bool {
     auto b = tmp.size();
     while (b > p && (std::isspace(tmp[b - 1]) != 0)) b--;
     tmp.resize(b);
-    a = tmp.data();
+    a = tmp;
     return true;
 }
 
@@ -886,7 +886,7 @@ void Buffer::normalise_for_bibtex(String s) {
 }
 
 // For each character, we have its type in the table.
-void Buffer::fill_table(bchar_type *table) {
+void Buffer::fill_table(std::vector<bchar_type> &table) {
     ptrs.b = 0;
     for (;;) {
         auto i = ptrs.b;
