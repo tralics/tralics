@@ -3,7 +3,7 @@ image: ubuntu:focal
 before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -qq
-  - apt-get install -qq texlive-base python3-pip clang-9 clang-10 gcc-9 gcc-10 cmake
+  - apt-get install -qq texlive-base python3-pip cmake
   - pip3 install -q conan
 
 everything:
@@ -12,12 +12,17 @@ everything:
     matrix:
       - CC: clang-9
         CXX: clang++-9
+        PACKAGE: clang-9
       - CC: clang-10
         CXX: clang++-10
+        PACKAGE: clang-10
       - CC: gcc-9
         CXX: g++-9
+        PACKAGE: g++-9
       - CC: gcc-10
         CXX: g++-10
+        PACKAGE: g++-10
   script:
+    - apt-get install -qq $PACKAGE
     - cmake -B build
     - cmake --build build
