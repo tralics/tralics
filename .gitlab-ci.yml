@@ -3,13 +3,17 @@ image: ubuntu:focal
 before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -qq
-  - apt-get install -qq texlive-base python3-pip clang cmake
+  - apt-get install -qq texlive-base python3-pip clang-9 clang-10 cmake
   - pip3 install -q conan
 
 everything:
   stage: build
+  parallel:
+    matrix:
+      - CC: clang-9
+        CXX: clang++-9
+      - CC: clang-10
+        CXX: clang++-10
   script:
-    - export CC=clang
-    - export CXX=clang++
     - cmake -B build
     - cmake --build build
