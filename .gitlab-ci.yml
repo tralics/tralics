@@ -10,10 +10,7 @@ everything:
   stage: build
   parallel:
     matrix:
-      - CC: clang-9
-        CXX: clang++-9
-      - CC: clang-10
-        CXX: clang++-10
+      - CXX: [clang++-9, clang++-10, g++-9, g++-10]
   script:
     - cmake -B build
     - cmake --build build
