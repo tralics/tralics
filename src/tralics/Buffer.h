@@ -41,7 +41,6 @@ public:
     [[nodiscard]] auto next_non_space(size_t j) const -> size_t;           ///< Locate next non-space char after `j`
     [[nodiscard]] auto see_config_env() const -> int;                      ///< Do we start with `Begin` or `End`?
     [[nodiscard]] auto single_char() const -> char;                        ///< If only one (non-space) char, return it
-    [[nodiscard]] auto special_exponent() const -> String;                 ///< Normalize contents as exponent name (th,nd...)
     [[nodiscard]] auto substring() const -> std::string;                   ///< Get the slice [ptrs.a,ptrs.b)
 
     // Mutating methods, affecting the data but not ptrs

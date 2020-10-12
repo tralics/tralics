@@ -41,7 +41,7 @@ void MathF::push_in_t(Xml *x) {
     t->push_back_unless_nullptr(x);
 }
 
-void MathF::finish(MathList &value) {
+void MathF::finish(std::list<MathElt> &value) {
     if ((t != nullptr) && !t->all_empty()) the_parser.signal_error("internal bug in finish_translate");
     value.swap(res);
 }

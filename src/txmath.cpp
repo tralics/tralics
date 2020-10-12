@@ -447,12 +447,12 @@ void Math::push_back_font(subtypes X, subtypes c) { push_back(MathElt(CmdChr(mat
 void MathDataP::push_back(size_t k, CmdChr X, subtypes c) { get_list(k).push_back(MathElt(X, c)); }
 
 // Adds a token to the list
-void Math::push_front(CmdChr X, subtypes c) { MathList::push_front(MathElt(X, c)); }
+void Math::push_front(CmdChr X, subtypes c) { std::list<MathElt>::push_front(MathElt(X, c)); }
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
     auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].val);
-    MathList::push_back(MathElt(X, font));
+    std::list<MathElt>::push_back(MathElt(X, font));
 }
 
 // Add an xml element. If b>=0, this element is at position b in the table.
@@ -3188,11 +3188,11 @@ void Math::handle_cmd_Big(math_style cms) {
 }
 
 auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
-    MathList res;
-    Math     aux;
-    bool     state     = false;
-    bool     ok        = false; // true if we have added a fence
-    bool     try_again = false; // true if formula has unused \big
+    std::list<MathElt> res;
+    Math               aux;
+    bool               state     = false;
+    bool               ok        = false; // true if we have added a fence
+    bool               try_again = false; // true if formula has unused \big
     while (!empty()) {
         int        cmd = front().cmd;
         math_types t   = front().get_xmltype();

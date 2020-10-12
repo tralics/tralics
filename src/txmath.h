@@ -32,14 +32,13 @@ inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_
 // it can be math_xml_cmd, pos, type, where pos is a position into a
 //    table of XML elements.
 
-using MathList            = std::list<MathElt>;
 using const_math_iterator = std::list<MathElt>::const_iterator;
 
 namespace tralics_ns {
     auto math_env_name(subtypes c) -> String;
 } // namespace tralics_ns
 
-class Math : public MathList {
+class Math : public std::list<MathElt> {
     friend class MathHelper;
     friend class MathDataP;
     friend class MathElt;
@@ -49,7 +48,7 @@ public:
     subtypes    sname{nomathenv_code};
     std::string saved;
 
-    using MathList::push_back;
+    using std::list<MathElt>::push_back;
 
     [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
     auto                      chars_to_mb(Buffer &B, bool rec) const -> bool;
@@ -341,7 +340,6 @@ namespace math_ns {
     void fill_single_char();
     auto next_math_style(math_style x) -> math_style;
     auto next_frac_style(math_style x) -> math_style;
-    auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xml *;
     auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar c, size_t n) -> Xml *;

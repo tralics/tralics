@@ -26,6 +26,42 @@ static Buffer                 att_buffer;
 extern std::array<Xml *, 128> single_chars;
 extern bool                   cmi_verbose;
 
+namespace {
+    // This is the list of valid exponents and the conversions.
+    auto Buffer_special_exponent(const std::string &B) -> std::optional<std::string> {
+        if (B == "th") return "th";
+        if (B == "st") return "st";
+        if (B == "rd") return "rd";
+        if (B == "nd") return "nd";
+        if (B == "e" || B == "ieme" || B == "eme" || B == "i\303\250me" || B == "\303\250me") return "e";
+        if (B == "ier" || B == "er") return "er";
+        if (B == "iemes" || B == "i\303\250mes" || B == "es") return "es";
+        if (B == "\303\250re" || B == "re") return "re";
+        return {};
+    }
+
+    // This handles the case of i{\`e}me. Removes initial font change,
+    // looks at letters. If OK, return a valid XML exponent.
+    auto special_exponent(const_math_iterator L, const_math_iterator E) -> Xml * {
+        if (L == E) return nullptr;
+        if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
+        if (L == E) return nullptr;
+        if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
+        Buffer B;
+        while (L != E) {
+            if (L->is_char())
+                B.push_back(L->get_char());
+            else if (L->is_e_grave())
+                B.push_back(char32_t(0350U));
+            else
+                return nullptr;
+            ++L;
+        }
+        auto expo = Buffer_special_exponent(B);
+        return expo ? new Xml(*expo) : nullptr;
+    }
+} // namespace
+
 // This prints the whole MathP list on the stream
 
 auto operator<<(std::ostream &fp, const MathP &X) -> std::ostream & {
@@ -1256,7 +1292,7 @@ auto MathElt::special3() const -> Xml * {
     const_math_iterator L1;
     const_math_iterator E1;
     get_list().is_font_cmd1_list(L1, E1);
-    return math_ns::special_exponent(L1, E1);
+    return special_exponent(L1, E1);
 }
 
 // Assumes that \textrm{toto}  gives {\rm toto} (wrong!)
@@ -1278,29 +1314,6 @@ void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
     }
 }
 
-// This handles the case of i{\`e}me. Removes initial font change,
-// looks at letters. If OK, return a valid XML exponent.
-auto math_ns::special_exponent(const_math_iterator L, const_math_iterator E) -> Xml * {
-    if (L == E) return nullptr;
-    if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
-    if (L == E) return nullptr;
-    if (L->cmd == mathfont_cmd || L->cmd == fontsize_cmd) ++L;
-    Buffer &B = aux_buffer;
-    B.clear();
-    while (L != E) {
-        if (L->is_char())
-            B.push_back(L->get_char());
-        else if (L->is_e_grave())
-            B.push_back(char32_t(0350U));
-        else
-            return nullptr;
-        ++L;
-    }
-    String expo = B.special_exponent();
-    if (expo == nullptr) return nullptr;
-    return new Xml(std::string(expo));
-}
-
 // True if it is a group containing \grave{e}
 auto MathElt::is_e_grave() const -> bool {
     if (cmd != special_math_cmd && get_font() != grave_code) return false;
@@ -1309,19 +1322,6 @@ auto MathElt::is_e_grave() const -> bool {
     if (!A.get_arg1().chars_to_mb(B, false)) return false;
     if (B.single_char() != 'e') return false;
     return true;
-}
-
-// This is the list of valid exponents and the conversions.
-auto Buffer::special_exponent() const -> String {
-    if (*this == "th") return "th";
-    if (*this == "st") return "st";
-    if (*this == "rd") return "rd";
-    if (*this == "nd") return "nd";
-    if (*this == "e" || *this == "ieme" || *this == "eme" || *this == "i\303\250me" || *this == "\303\250me") return "e";
-    if (*this == "ier" || *this == "er") return "er";
-    if (*this == "iemes" || *this == "i\303\250mes" || *this == "es") return "es";
-    if (*this == "\303\250re" || *this == "re") return "re";
-    return nullptr;
 }
 
 // This is the main function.
