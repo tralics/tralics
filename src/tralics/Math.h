@@ -34,15 +34,13 @@ public:
     auto                      convert_this_to_string(Buffer &B) const -> std::string;
     auto                      find_parens(MathQList &res, bool verbose) const -> bool;
     auto                      get_arg1() -> Math { return front().get_list(); }
-    [[nodiscard]] auto        get_arg2() const -> Math { return second_element().get_list(); }
-    [[nodiscard]] auto        get_arg3() const -> Math { return third_element().get_list(); }
+    [[nodiscard]] auto        get_arg2() const -> Math { return std::next(begin())->get_list(); }
+    [[nodiscard]] auto        get_arg3() const -> Math { return std::next(begin(), 2)->get_list(); }
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
     [[nodiscard]] auto        get_name() const -> std::string;
     [[nodiscard]] static auto get_list(size_t w) -> Math &;
     void                      hack_type(int);
     [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
-    [[nodiscard]] auto        has_one_element() const -> bool;
-    [[nodiscard]] auto        has_two_elements() const -> bool;
     void                      is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
     auto                      M_array(bool numbered, math_style cms) -> Xml *;
     auto                      M_cv(math_style cms, int need_row) -> XmlAndType;
@@ -55,12 +53,10 @@ public:
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
     void                      remove_spaces();
-    [[nodiscard]] auto        second_element() const -> const MathElt &;
     void                      set_display_type() { type = math_ddollar_cd; }
     void                      set_env_name(int);
     void                      set_nondisplay_type() { type = math_dollar_cd; }
     void                      set_type(math_list_type c) { type = c; }
-    [[nodiscard]] auto        third_element() const -> const MathElt &;
     auto                      trivial_math(long action) -> Xml *;
     auto                      trivial_math_index(symcodes cmd) -> Xml *;
     auto                      check_align() -> int;

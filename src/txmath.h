@@ -17,8 +17,6 @@
 #include <spdlog/spdlog.h>
 #include <vector>
 
-struct MathF;
-
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 
 // A math object is a strange thing:
@@ -191,7 +189,7 @@ public:
     void        set_type(size_t k, math_list_type c);
 };
 
-inline MathDataP math_data;
+inline MathDataP math_data; // \todo unique instance, should we use static stuff?
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
