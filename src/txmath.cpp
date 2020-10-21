@@ -2926,7 +2926,7 @@ auto Math::M_cv3(math_style cms) -> Math {
         W.reinit();
         for (;;) {
             W.find_kernel();
-            if (W.state == 3) return W.finish();
+            if (W.state == 3) return W.res;
             if (W.state == 2) continue;
             break;
         }

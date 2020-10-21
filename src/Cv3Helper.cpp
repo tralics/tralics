@@ -20,7 +20,7 @@ void Cv3Helper::reinit() {
 void Cv3Helper::non_script() {
     pop_front();
     if (!empty()) {
-        if (get_cmd() == math_xml_cmd && get_xmltype() == mt_flag_space) pop_front();
+        if (front().cmd == math_xml_cmd && front().get_xmltype() == mt_flag_space) pop_front();
     }
 }
 
@@ -29,7 +29,7 @@ void Cv3Helper::find_kernel() {
         state = 3;
         return;
     }
-    symcodes C = get_cmd();
+    symcodes C = front().cmd;
     if (C == hat_catcode || C == underscore_catcode) {
         p     = new Xml(the_names["mrow"], nullptr); // Insert <mrow/> before
         state = 1;
@@ -40,7 +40,7 @@ void Cv3Helper::find_kernel() {
         return;
     }
     if (C == math_comp_cmd) {
-        subtypes q = get_chr();
+        subtypes q = front().chr;
         switch (q) {
         case between_noad: prefix_type = mt_flag_small_m; break;
         case ord_noad: prefix_type = mt_flag_small; break;
@@ -59,8 +59,8 @@ void Cv3Helper::find_kernel() {
         pop_front();
         return;
     }
-    ploc  = get_chr();
-    ptype = get_xmltype();
+    ploc  = front().chr;
+    ptype = front().get_xmltype();
     if (prefix_type != 0) ptype = prefix_type;
     if (ptype == mt_flag_opD) special = 1;
     if (ptype == mt_flag_opN) special = 2;
@@ -74,9 +74,9 @@ void Cv3Helper::find_index(math_style cms) {
         state = 2;
         return;
     }
-    symcodes C = get_cmd();
+    symcodes C = front().cmd;
     if (C == limits_cmd) {
-        int k = get_chr(); // displaylimits, nolimits, limits
+        int k = front().chr; // displaylimits, nolimits, limits
         pop_front();
         if ((index != nullptr) || (exponent != nullptr)) return; // allow x_2\limits^3
         if (special == 0) return;
@@ -96,7 +96,7 @@ void Cv3Helper::find_index(math_style cms) {
         pop_front();
         if (empty()) {
             the_parser.parse_error("Math formula should not finish with _");
-        } else if (get_cmd() == underscore_catcode || get_cmd() == hat_catcode)
+        } else if (front().cmd == underscore_catcode || front().cmd == hat_catcode)
             the_parser.parse_error("Two consecutive _ or ^ characters");
         else {
             index = front().remove_prefix();
@@ -108,7 +108,7 @@ void Cv3Helper::find_index(math_style cms) {
         pop_front();
         if (empty()) {
             the_parser.parse_error("Math formula should not finish with ^");
-        } else if (get_cmd() == underscore_catcode || get_cmd() == hat_catcode)
+        } else if (front().cmd == underscore_catcode || front().cmd == hat_catcode)
             the_parser.parse_error("Two consecutive _ or ^ characters");
         else {
             exponent = front().remove_prefix();

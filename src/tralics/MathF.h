@@ -1,5 +1,5 @@
 #pragma once
-#include "../txmath.h"
+#include "MathElt.h"
 #include "MathQ.h"
 
 // Helper for finding start and end of <mrow>
