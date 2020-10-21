@@ -517,7 +517,7 @@ void MathDataP::boot_table() {
     lmath_pos = 0;
 }
 
-inline auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(chr); }
+auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(chr); }
 
 // --------------------------------------------------------------------
 
