@@ -105,6 +105,31 @@ found at http://www.cecill.info.)";
         exit(1);
     }
 
+    /// Display usage message, then exit the program \todo Manage this centrally
+    void usage_and_quit(int v) {
+        std::cout << usage;
+        exit(v);
+    }
+
+    auto check_for_arg(int &p, int argc, char **argv) -> std::string {
+        if (p >= argc - 1) {
+            spdlog::critical("Argument missing for option {}", argv[p]);
+            usage_and_quit(1);
+        }
+        if (std::string(argv[p + 1]) == "=") { // \todo this allows weird syntax
+            if (p >= argc - 2) {
+                spdlog::critical("Argument missing for option {}", argv[p]);
+                usage_and_quit(1);
+            }
+            p += 2;
+            return argv[p];
+        }
+        ++p;
+        String a = argv[p];
+        if (*a == ' ') ++a;
+        return a;
+    }
+
     /// Initialises encoding tables
     void check_for_encoding() {
         for (auto &i : custom_table)
@@ -167,9 +192,8 @@ found at http://www.cecill.info.)";
         return s.filename();
     }
 
-    /// Display usage message, then exit the program \todo Manage this centrally
-    void usage_and_quit(int v) {
-        std::cout << usage;
+    void end_with_help(int v) {
+        spdlog::info("Say `tralics --help' to get some help");
         exit(v);
     }
 
@@ -192,9 +216,9 @@ found at http://www.cecill.info.)";
     }
 
     /// Split a `:`-separated path list into paths
-    void new_in_dir(String s) {
+    void new_in_dir(const std::string &s) {
         std::string b;
-        for (int i = 0;; i++) {
+        for (size_t i = 0;; i++) { // \todo range based loop
             char c = s[i];
             if (c == 0 || c == ':') {
                 if (!b.empty() && b.back() == '/') b.pop_back();
@@ -209,10 +233,8 @@ found at http://www.cecill.info.)";
 
     void obsolete(const std::string &s) { spdlog::warn("Obsolete option `-{}' ignored\n", s); }
 
-    auto param_hack(String a) -> bool {
-        Buffer B;
-        B.ptrs.b = 0;
-        B.append(a);
+    auto param_hack(const std::string &a) -> bool {
+        Buffer B(a);
         if (!B.find_equals()) return false;
         if (!B.backup_space()) return false;
         B.advance();
@@ -431,25 +453,6 @@ void MainClass::parse_args(int argc, char **argv) {
     if (rightquote_val == 0 || rightquote_val >= (1 << 16)) rightquote_val = '\'';
 }
 
-auto MainClass::check_for_arg(int &p, int argc, char **argv) -> String {
-    if (p >= argc - 1) {
-        spdlog::critical("Argument missing for option {}", argv[p]);
-        usage_and_quit(1);
-    }
-    if (std::string(argv[p + 1]) == "=") { // \todo this allows weird syntax
-        if (p >= argc - 2) {
-            spdlog::critical("Argument missing for option {}", argv[p]);
-            usage_and_quit(1);
-        }
-        p += 2;
-        return argv[p];
-    }
-    ++p;
-    String a = argv[p];
-    if (*a == ' ') ++a;
-    return a;
-}
-
 enum param_args {
     pa_none,
     pa_entnames,
@@ -508,7 +511,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }(s);
 
     if (special != pa_none) {
-        String a = argv[p] + eqpos;
+        std::string a = argv[p] + eqpos;
         if (eqpos == 0) a = check_for_arg(p, argc, argv);
         switch (special) {
         case pa_entnames: set_ent_names(a); return;
@@ -527,7 +530,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             conf_path.emplace_back(a);
             return;
         case pa_externalprog: obsolete(s); return;
-        case pa_trivialmath: trivial_math = atoi(a); return;
+        case pa_trivialmath: trivial_math = stoi(a); return;
         case pa_leftquote: leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_rightquote: rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
@@ -764,11 +767,6 @@ void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not 
         tpa_mode = 3; // case config
     else
         tpa_mode = 0; // default
-}
-
-void MainClass::end_with_help(int v) {
-    spdlog::info("Say `tralics --help' to get some help");
-    exit(v);
 }
 
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
