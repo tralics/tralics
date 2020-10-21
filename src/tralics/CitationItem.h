@@ -5,7 +5,7 @@ struct CitationItem {
     std::string key, from, id;
     Xid         solved;
 
-    CitationItem(std::string A, std::string B) : key(std::move(A)), from(std::move(B)), id("") {}
+    CitationItem(std::string A, std::string B) : key(std::move(A)), from(std::move(B)) {}
 
     void dump(Buffer &b) const;
 

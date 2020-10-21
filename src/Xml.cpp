@@ -65,7 +65,7 @@ namespace {
     auto is_entity(const std::string &s) -> size_t {
         static const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
 
-        for (auto w : entities) {
+        for (const auto *w : entities) {
             if (s.starts_with(w)) return strlen(w);
         }
         return 0;

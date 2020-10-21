@@ -405,7 +405,7 @@ void Parser::pop_level(boundary_type v) {
             parse_error(err_tok, "Internal error: empty save stack");
             return;
         }
-        auto p  = the_save_stack.back().get();
+        auto *p  = the_save_stack.back().get();
         bool ok = (p != nullptr) && p->type == st_boundary;
         my_stats.one_more_down();
         the_save_stack.pop_back();

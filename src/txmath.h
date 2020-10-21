@@ -15,8 +15,8 @@
 #include "tralics/MathQ.h"
 #include "tralics/Xml.h"
 #include <spdlog/spdlog.h>
+#include <vector>
 
-class Math;
 struct MathF;
 
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
@@ -188,37 +188,10 @@ public:
     auto        get_fence(size_t k) -> std::optional<std::string> { return xml_lr_ptable[k]; }
     auto        get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
     static auto mk_mo(String a) -> gsl::not_null<Xml *>;
-    void        set_type(size_t k, math_list_type c) { math_table[k].set_type(c); }
+    void        set_type(size_t k, math_list_type c);
 };
 
 inline MathDataP math_data;
-
-class Cv3Helper {
-    Math               res;
-    Xml *              p{};
-    int                ploc{};
-    math_types         ptype{};
-    math_types         prefix_type{};
-    Xml *              index{}, *exponent{};
-    Math               object;
-    int                special; // Sum or product
-    void               pop_front() { object.pop_front(); }
-    [[nodiscard]] auto get_cmd() const -> symcodes { return object.front().cmd; }
-    [[nodiscard]] auto get_chr() const -> subtypes { return object.front().chr; }
-    auto               get_xmltype() -> math_types { return object.front().get_xmltype(); }
-    auto               empty() -> bool { return object.empty(); }
-
-public:
-    int state{};
-    Cv3Helper(Math X) : object(std::move(X)), special(0) {}
-    void reinit();
-    void non_script();
-    void find_kernel();
-    void find_index(math_style cms);
-    void add_kernel(math_style cms);
-    auto find_operator(math_style cms) -> std::string;
-    auto finish() -> Math { return res; }
-};
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
@@ -251,30 +224,3 @@ namespace math_ns {
 
 //---------------------------------------------------------------------
 //  Some inline functions
-
-inline auto Math::has_two_elements() const -> bool {
-    auto X = begin();
-    if (X == end()) return false;
-    ++X;
-    return X != end();
-}
-
-inline auto Math::has_one_element() const -> bool {
-    auto X = begin();
-    if (X == end()) return false;
-    ++X;
-    return X == end();
-}
-
-inline auto Math::second_element() const -> const MathElt & {
-    auto X = begin();
-    ++X;
-    return *X;
-}
-
-inline auto Math::third_element() const -> const MathElt & {
-    auto X = begin();
-    ++X;
-    ++X;
-    return *X;
-}

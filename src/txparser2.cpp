@@ -2484,7 +2484,7 @@ void Parser::T_listenv(symcodes x) {
     b         = is_enum ? "enum" : "Enum";
     token_ns::int_to_roman(b, n);
     std::string list_ctr = b;
-    auto        np       = x == list_cmd ? "user_list" : x == itemize_cmd ? "simple" : x == enumerate_cmd ? "ordered" : "description";
+    const auto *np       = x == list_cmd ? "user_list" : x == itemize_cmd ? "simple" : x == enumerate_cmd ? "ordered" : "description";
     Token       t        = hash_table.itemlabel_token;
     M_let_fast(t, hash_table.relax_token, false);
     T_use_counter(list_ctr);

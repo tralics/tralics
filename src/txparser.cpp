@@ -4157,7 +4157,7 @@ void Parser::box_end(Xml *res, size_t pos) {
     else if (pos == xmlB_location)
         the_xmlB = res;
     else if (pos == leaders_location || pos == cleaders_location || pos == xleaders_location) {
-        auto p = pos == leaders_location ? "leaders" : pos == cleaders_location ? "cleaders" : "xleaders";
+        const auto *p = pos == leaders_location ? "leaders" : pos == cleaders_location ? "cleaders" : "xleaders";
         Xml *Y = new Xml(the_names[p], res);
         flush_buffer();
         the_stack.add_last(Y);
