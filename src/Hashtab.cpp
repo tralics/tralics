@@ -32,8 +32,8 @@ auto Hashtab::hash_find(const std::string &s) -> size_t {
 auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
     usage_unhashed++;
     push_back(a);
-    auto t                = size() - 1 + hash_offset;
-    eqtb[t - eqtb_offset] = {b, b.is_undef() ? 0 : 1}; // allows to define an undefined command
+    auto t                    = size() - 1 + hash_offset;
+    eqtb[Token(t).eqtb_loc()] = {b, b.is_undef() ? 0 : 1}; // allows to define an undefined command
     return Token(t);
 }
 
@@ -53,7 +53,7 @@ auto Hashtab::is_defined(const std::string &b) -> bool {
         T = i->second + hash_offset;
 
     last_tok = Token(T);
-    return !eqtb[T - eqtb_offset].val.is_undef();
+    return !eqtb[Token(T).eqtb_loc()].val.is_undef();
 }
 
 // Creates a primitive.

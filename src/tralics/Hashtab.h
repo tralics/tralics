@@ -10,9 +10,9 @@ private:
     std::unordered_map<std::string, size_t> map;
 
 public:
-    std::array<Token, 15>             my_mathfont_table;
-    std::array<Token, 5>              genfrac_mode;
-    std::array<EqtbCmdChr, eqtb_size> eqtb;
+    std::array<Token, 15>                  my_mathfont_table;
+    std::array<Token, 5>                   genfrac_mode;
+    std::unordered_map<size_t, EqtbCmdChr> eqtb;
 
     int usage_normal{0}, usage_unhashed{0};
 

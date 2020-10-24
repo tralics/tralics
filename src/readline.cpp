@@ -109,9 +109,6 @@ namespace readline_ns {
 
 using namespace readline_ns;
 
-inline void color_red() {} // dummy function
-inline void color_black() {}
-
 class Slined {
     char *                     m_inbuf{nullptr};
     std::array<char, buf_size> m_buffer{};
@@ -261,9 +258,7 @@ void Slined::redisplay() {
     auto j = copystring(m_inbuf, m_inmax, m_inpos, true);
     if (m_inpos >= m_inmax) m_pos = to_signed(j); // set cursor to EOL
     m_max = to_signed(j);
-    color_black();
     std::cerr << "\r" << m_prompt;
-    color_red();
     tycleol();
     redisplay0();
 }
@@ -816,7 +811,6 @@ void Slined::do_esc_command(size_t n, char c) {
     case 'w': delete_string(0, m_mark, m_inpos); return;
     case '@': m_mark = m_inpos; return;
     case '?':
-        color_black();
         std::cerr << "key bindings are more or less the same as in Emacs\n";
         std::cerr << "^R searches a string, <ESH>h shows history\n";
         std::cerr << "<ESC>n CMD : repeat the command CMD n times\n";
@@ -1003,7 +997,6 @@ void readline_ns::set_termio() {
     if (!term_set) {
         SET_TERMIO();
         term_set = true;
-        color_red();
     }
 }
 
@@ -1011,7 +1004,6 @@ void readline_ns::reset_termio() {
     if (term_set) {
         RESET_TERMIO();
         term_set = false;
-        color_black();
     }
 }
 

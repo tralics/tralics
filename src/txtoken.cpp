@@ -159,14 +159,6 @@ auto Token::no_case_letter(char x) const -> bool {
 
 // The hash table  --------------------------------------------------
 
-// Given a string s, with hash code p, we have p<hash_prime. In the good case,
-// thhe string is at location p, otherwise at next(p), next(next(p)), etc.
-// The idea is to use locations after hash prime. This means that all strings in
-// the list has hash code p. If there is not enough room, we may use a location q
-// less then hash prime. This means that, when looking for s string s' with
-// hash code q we may encourer strings with hash code p.
-// Note: initially Next[p] is zero; if non-zero the Text[Next[p]] is non-empty.
-
 // Returns the hashcode of the string in the buffer (assumed zero-terminated).
 // \todo standalone from std::string
 auto Buffer::hashcode(size_t prime) const -> size_t {

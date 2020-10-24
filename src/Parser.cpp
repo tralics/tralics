@@ -1658,11 +1658,11 @@ void Parser::E_accent() {
         }
     }
     if (res.is_null()) {
-        std::string s = achar >= 128 ? "a non 7-bit character"
-                                     : std::isalpha(static_cast<char>(achar)) != 0
-                                           ? "letter"
-                                           : std::isdigit(static_cast<char>(achar)) != 0 ? "digit" : "non-letter character";
-        err_buf = msg1 + tfe.tok_to_str();
+        std::string s = achar >= 128                                  ? "a non 7-bit character"
+                        : std::isalpha(static_cast<char>(achar)) != 0 ? "letter"
+                        : std::isdigit(static_cast<char>(achar)) != 0 ? "digit"
+                                                                      : "non-letter character";
+        err_buf       = msg1 + tfe.tok_to_str();
         if (acc_code2 != 0) err_buf += tfe2.tok_to_str();
         err_buf += "\nCannot put accent on " + s;
         if (achar < 128) {
@@ -1929,8 +1929,9 @@ void Parser::T_cite(subtypes sw) {
     T_cite(sw, prenote, type); // reads optional arguments
     type = normalise_for_bib(type);
     if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
-    Token sep = sw == footcite_code ? hash_table.footcite_sep_token
-                                    : sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
+    Token sep    = sw == footcite_code  ? hash_table.footcite_sep_token
+                   : sw == natcite_code ? hash_table.locate("NAT@sep")
+                                        : hash_table.cite_punct_token;
     cur_tok      = T;
     auto  List   = fetch_name0_nopar();
     int   n      = 0;

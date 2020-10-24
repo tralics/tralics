@@ -23,6 +23,7 @@ struct Token {
     [[nodiscard]] auto hash_loc() const -> size_t { return val - hash_offset; }
     [[nodiscard]] auto is_a_brace() const -> bool { return OB_t_offset <= val && val < RB_limit; }
     [[nodiscard]] auto is_a_char() const -> bool { return val < eqtb_offset; }
+    [[nodiscard]] auto not_a_cmd() const -> bool { return val < eqtb_offset; }
     [[nodiscard]] auto is_a_left_brace() const -> bool { return OB_t_offset <= val && val < CB_t_offset; }
     [[nodiscard]] auto is_backquote() const -> bool { return val == other_t_offset + '`'; }
     [[nodiscard]] auto is_bs_cparen() const -> bool { return val == single_offset + ')'; }
@@ -58,7 +59,6 @@ struct Token {
     [[nodiscard]] auto is_valid() const -> bool { return val != 0; }
     [[nodiscard]] auto is_zero_token() const -> bool { return val == other_t_offset + '0'; }
     [[nodiscard]] auto no_case_letter(char x) const -> bool;
-    [[nodiscard]] auto not_a_cmd() const -> bool { return val < eqtb_offset; }
     [[nodiscard]] auto tex_is_digit(unsigned radix) const -> long;
     [[nodiscard]] auto to_string() const -> String;
     [[nodiscard]] auto tok_to_str() const -> std::string;

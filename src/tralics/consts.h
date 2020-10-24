@@ -50,11 +50,3 @@ inline constexpr unsigned scan_char_num_max = nb_characters - 1; // nb_character
 // If you want to put an accent on a character with code >128,
 // you must remap it
 inline constexpr unsigned nb_accents = 128;
-
-// There are two hash tables. In the current version, they have the same size
-// Size of eqtb should be the same (??)
-inline constexpr int hash_prime = 40009;
-inline constexpr int hash_size  = 50000;
-// Size of eqtb. This +100 is strange.
-// The big part of the table
-inline constexpr int eqtb_size = hash_size + 2 * nb_characters + 100;
