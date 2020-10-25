@@ -696,35 +696,34 @@ void Parser::month_day(subtypes c) {
                     << "\n";
         return;
     }
-    auto                          n  = to_unsigned(n0);
-    static std::array<String, 12> fm = {"janvier", "f\\'evrier", "mars",      "avril",   "mai",      "juin",
-                                        "juillet", "ao\\^ut",    "septembre", "octobre", "novembre", "d\\'ecembre"};
-    static std::array<String, 12> sm = {"enero", "febrero", "marzo",      "abril",   "mayo",      "junio",
-                                        "julio", "agosto",  "septiembre", "octubre", "noviembre", "diciembre"};
-    static std::array<String, 12> gm = {"Januar", "Februar", "M\\\"arz",  "April",   "Mai",      "Juni",
-                                        "Juli",   "August",  "September", "Oktober", "November", "Dezember"};
-    static std::array<String, 12> em = {"January", "February", "March",     "April",   "May",      "June",
-                                        "July",    "August",   "September", "October", "November", "December"};
+    auto                               n  = to_unsigned(n0);
+    static std::array<std::string, 12> fm = {"janvier", "f\\'evrier", "mars",      "avril",   "mai",      "juin",
+                                             "juillet", "ao\\^ut",    "septembre", "octobre", "novembre", "d\\'ecembre"};
+    static std::array<std::string, 12> sm = {"enero", "febrero", "marzo",      "abril",   "mayo",      "junio",
+                                             "julio", "agosto",  "septiembre", "octubre", "noviembre", "diciembre"};
+    static std::array<std::string, 12> gm = {"Januar", "Februar", "M\\\"arz",  "April",   "Mai",      "Juni",
+                                             "Juli",   "August",  "September", "Oktober", "November", "Dezember"};
+    static std::array<std::string, 12> em = {"January", "February", "March",     "April",   "May",      "June",
+                                             "July",    "August",   "September", "October", "November", "December"};
 
-    static std::array<String, 7> fd = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
-    static std::array<String, 7> sd = {"Lunes", "Martes", "Mi\\'ercoles", "Jueves", "Viernes", "S\\'abado", "Domingo"};
-    static std::array<String, 7> gd = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
-    static std::array<String, 7> ed = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    static std::array<std::string, 7> fd = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
+    static std::array<std::string, 7> sd = {"Lunes", "Martes", "Mi\\'ercoles", "Jueves", "Viernes", "S\\'abado", "Domingo"};
+    static std::array<std::string, 7> gd = {"Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
+    static std::array<std::string, 7> ed = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    local_buf.clear();
+    std::string s;
     switch (c) {
-    case md_frenchm_code: local_buf += fm[n - 1]; break;
-    case md_frenchd_code: local_buf += fd[n - 1]; break;
-    case md_spanishm_code: local_buf += sm[n - 1]; break;
-    case md_spanishd_code: local_buf += sd[n - 1]; break;
-    case md_germanm_code: local_buf += gm[n - 1]; break;
-    case md_germand_code: local_buf += gd[n - 1]; break;
-    case md_englishm_code: local_buf += em[n - 1]; break;
-    case md_englishd_code: local_buf += ed[n - 1]; break;
+    case md_frenchm_code: s += fm[n - 1]; break;
+    case md_frenchd_code: s += fd[n - 1]; break;
+    case md_spanishm_code: s += sm[n - 1]; break;
+    case md_spanishd_code: s += sd[n - 1]; break;
+    case md_germanm_code: s += gm[n - 1]; break;
+    case md_germand_code: s += gd[n - 1]; break;
+    case md_englishm_code: s += em[n - 1]; break;
+    case md_englishd_code: s += ed[n - 1]; break;
     default: break;
     }
-    TokenList L;
-    tokenize_buffer(local_buf, L, "(month and day)");
+    TokenList L = tokenize_buffer(s, "(month and day)");
     if (tracing_macros()) the_log << T << "<-" << L << "\n";
     back_input(L);
 }

@@ -758,11 +758,7 @@ void Parser::T_begindocument() {
     the_bibtex.bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
     {
-        Buffer &  b = mac_buffer;
-        TokenList L;
-        b.clear();
-        b.append("\\let\\do\\noexpand\\ignorespaces\n");
-        tokenize_buffer(b, L, "(AtBeginDocument hook)");
+        TokenList L = tokenize_buffer("\\let\\do\\noexpand\\ignorespaces\n", "(AtBeginDocument hook)");
         back_input(L);
     }
     back_input(onlypreamble);
@@ -1056,8 +1052,10 @@ void Parser::translate03() {
     case save_box_cmd: T_save_box(c == 0); return;
     case make_box_cmd: begin_box(makebox_location, c); return;
     case leader_ship_cmd:
-        scan_box(c == shipout_code ? shipout_location
-                                   : c == leaders_code ? leaders_location : c == cleaders_code ? cleaders_location : xleaders_location);
+        scan_box(c == shipout_code    ? shipout_location
+                 : c == leaders_code  ? leaders_location
+                 : c == cleaders_code ? cleaders_location
+                                      : xleaders_location);
         return;
     case tracingall_cmd: M_tracingall(); return;
     case ifstar_cmd: T_ifstar(); return;

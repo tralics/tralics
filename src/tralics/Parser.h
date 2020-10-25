@@ -255,7 +255,7 @@ private:
     void        accent_err4();
     void        add_bib_marker(bool force);
     void        add_math_label(Xml *res);
-    void        tokenize_buffer(Buffer &b, TokenList &L, const std::string &name);
+    TokenList   tokenize_buffer(const std::string &b, const std::string &name);
     void        add_vspace(Token T, ScaledInt dimen, Xid X);
     void        after_parameter(bool exp, size_t N);
     void        after_math(bool is_inline);
@@ -457,7 +457,6 @@ private:
     void        grab_env(TokenList &v);
     auto        group_to_string() -> std::string;
     auto        group_to_string_spec(bool) -> std::string;
-    void        iexpand();
     void        T_ifdefinable();
     void        E_ifempty();
     void        T_ifnextchar(bool c);

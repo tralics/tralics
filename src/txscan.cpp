@@ -373,17 +373,9 @@ void Parser::T_input(int q) {
         res = find_no_path(file);
     else {
         res = find_in_path(file);
-        if (!res) {
-            Buffer &B = local_buf; // \todo without local_buf
-            B         = file;
-            if (!B.ends_with(".tex")) {
-                B.append(".tex");
-                std::string F = B;
-                res           = find_in_path(F);
-            }
-        }
+        if ((!res) && (!file.ends_with(".tex"))) res = find_in_path(file + ".tex");
     }
-    spdlog::trace("Found file for input: {}", *res);
+    if (res) spdlog::trace("Found file for input: {}", *res);
     if (q == openin_code) {
         tex_input_files[stream].open(file, *res, static_cast<bool>(res));
         return;
@@ -481,8 +473,8 @@ auto Parser::cs_from_input() -> Token {
     }
     int C = get_catcode(c);
     if (C == letter_catcode) {
-        mac_buffer.clear();
-        mac_buffer.push_back(c);
+        Buffer B;
+        B.push_back(c);
         for (;;) {
             if (at_eol()) break;
             c = get_next_char();
@@ -492,7 +484,7 @@ auto Parser::cs_from_input() -> Token {
             } // abort
             C = get_catcode(c);
             if (C == letter_catcode) {
-                mac_buffer.push_back(c);
+                B.push_back(c);
                 continue;
             }
             if (C == hat_catcode) {
@@ -501,7 +493,7 @@ auto Parser::cs_from_input() -> Token {
             --input_line_pos;
             break;
         }
-        return hash_table.locate(mac_buffer);
+        return hash_table.locate(B);
     }
     if (C == space_catcode) return Token(c + single_offset);
     if (C == hat_catcode) {
@@ -521,14 +513,9 @@ auto Parser::next_from_line0() -> bool {
     if (at_eol()) return true;
     char32_t c = get_next_char();
     if (c > 65535) { // convert to \char"ABCD
-        Buffer &B = local_buf;
-        B         = fmt::format("\"{:X}", size_t(c));
-        auto k    = B.size();
         back_input(hash_table.space_token);
-        while (k > 0) {
-            back_input(Token(other_t_offset, static_cast<uchar>(B[k - 1])));
-            k--;
-        }
+        auto s = fmt::format("\"{:X}", size_t(c));
+        for (auto k = s.size(); k > 0; --k) back_input(Token(other_t_offset, static_cast<uchar>(s[k - 1])));
         state = state_M;
         see_cs_token(hash_table.char_token);
         return false;
@@ -976,16 +963,16 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
 }
 
 // Fills the token list with the content of the buffer.
-void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
+TokenList Parser::tokenize_buffer(const std::string &b, const std::string &name) {
     auto guard = SaveScannerStatus(ss_normal);
     push_input_stack(name, false, true);
     auto n     = cur_input_stack.size();
     bool s     = restricted;
     restricted = false;
-    b.push_back('\n');
     lines.push_front(Line(-1));
-    lines.push_front(Line(1, b, true));
+    lines.push_front(Line(1, b + '\n', true));
     file_ended = false;
+    TokenList L;
     for (;;) {
         bool res = next_from_line0();
         if (!res) {
@@ -1000,6 +987,7 @@ void Parser::tokenize_buffer(Buffer &b, TokenList &L, const std::string &name) {
     if (!L.empty() && L.back() == hash_table.newline_token) L.pop_back();
     restricted = s;
     if (n == cur_input_stack.size()) pop_input_stack(false);
+    return L;
 }
 
 // --------------------------------------------------

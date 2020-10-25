@@ -565,14 +565,15 @@ void Parser::read_toks_edef(TokenList &L) {
 // --------------------------------------------------
 
 // Adds the content of the buffer to the document-hook token list.
-void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) { tokenize_buffer(b, document_hook, name); }
+void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) {
+    TokenList L = tokenize_buffer(b, name);
+    document_hook.splice(document_hook.end(), L);
+}
 
 // Evaluates now a token string. First action is to put chars in a buffer
 // (because we add a '\n' at the end of the string).
 void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
-    mac_buffer = s;
-    TokenList L;
-    tokenize_buffer(mac_buffer, L, "(tpa post " + cmd + ")");
+    TokenList L = tokenize_buffer(s, "(tpa post " + cmd + ")");
     T_translate(L);
 }
 
@@ -2648,15 +2649,11 @@ auto Parser::scan_keyword(String s) -> bool {
 // ------------------------------------
 
 void Parser::expand() {
-    auto guard = SaveErrTok(cur_tok);
-    iexpand();
-}
-
-void Parser::iexpand() {
-    subtypes c  = cur_cmd_chr.chr;
-    symcodes C  = cur_cmd_chr.cmd;
-    Token    T  = cur_tok;
-    bool     vb = tracing_macros();
+    auto     guard = SaveErrTok(cur_tok);
+    subtypes c     = cur_cmd_chr.chr;
+    symcodes C     = cur_cmd_chr.cmd;
+    Token    T     = cur_tok;
+    bool     vb    = tracing_macros();
     switch (C) {
     case a_cmd: E_accent_a(); return;
     case accent_cmd: E_accent(); return;
@@ -2769,7 +2766,7 @@ void Parser::iexpand() {
         back_input(hash_table.dollar_token);
         return;
     case noexpand_cmd: { // see comments in txscan
-        auto guard = SaveScannerStatus(ss_normal);
+        auto guard2 = SaveScannerStatus(ss_normal);
         if (get_token()) return;
         Token t = cur_tok;
         if (vb) {
