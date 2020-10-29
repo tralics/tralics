@@ -14,6 +14,7 @@
 #include "tralics/Cv3Helper.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/MathHelper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -26,11 +27,9 @@ namespace {
     Buffer             special_buffer;
     Buffer             math_buffer1;
     size_t             old_pos = 0;       // pointer into trace
-    MathHelper         cmi;               // Data structure holding some global values
     bool               trace_needs_space; // bool  for: \frac\pi y
     bool               old_need = false;  // prev value of trace_needs_space
     Token              fct_caller;
-    std::string        the_tag;
     std::vector<Xml *> all_maths;
 
     auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
@@ -63,7 +62,6 @@ namespace math_ns {
 } // namespace math_ns
 
 namespace tralics_ns {
-
     auto math_env_props(subtypes c) -> int;
 } // namespace tralics_ns
 
@@ -366,24 +364,6 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
     return res;
 }
 
-// Implements \cellattribute
-void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) {
-    Xid w;
-    if (c == cell_attribute_code)
-        w = cur_cell_id;
-    else if (c == row_attribute_code)
-        w = cur_row_id;
-    else if (c == table_attribute_code)
-        w = cur_table_id;
-    else if (c == thismath_attribute_code)
-        w = cur_math_id;
-    else if (c == formula_attribute_code)
-        w = cur_formula_id;
-    else
-        return;
-    w.add_attribute(a, b, true);
-}
-
 void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.get_tid().add_attribute(a, b, true); }
 
 // Adds a label to the formula X
@@ -521,34 +501,6 @@ auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(chr); 
 
 // --------------------------------------------------------------------
 
-// This is called before every math formula.
-void MathHelper::reset(bool dual) {
-    current_mode   = false;
-    pos_att        = "0";
-    seen_label     = false;
-    warned_label   = false;
-    label_val      = "";
-    tag_list       = TokenList();
-    is_tag_starred = false;
-    math_env_ctr   = 0;
-    all_env_ctr    = 0;
-    cur_math_id    = the_main->the_stack->next_xid(nullptr);
-    cur_formula_id = the_main->the_stack->next_xid(nullptr);
-    if (dual)
-        cur_texmath_id = the_main->the_stack->next_xid(nullptr);
-    else
-        cur_texmath_id = cur_math_id;
-    multi_labels.clear();
-    multi_labels_type.clear();
-    last_ml_pos = 0;
-}
-
-// Sets the type (display or not), and prepares the pos attribute.
-void MathHelper::set_type(bool b) {
-    current_mode = b;
-    pos_att      = b ? "inline" : "display";
-}
-
 // This finds a free position in the table of math lists.
 // Note: the return value is never zero.
 auto MathDataP::find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes {
@@ -579,10 +531,6 @@ MathElt::MathElt(Xml *x, math_types y) : CmdChr(math_xml_cmd, zero_code) {
     set_xmltype(y);
     chr = math_data.find_xml_location(x);
 }
-
-// Destroys all math lists, and resets pointers,
-// for use with another math object
-void MathHelper::finish_math_mem() { math_data.finish_math_mem(); }
 
 // This kills the math elements
 void MathDataP::finish_math_mem() {
@@ -647,18 +595,6 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
     if ((math_env_props(type) & 16) != 0) ignore_optarg();
     if ((math_env_props(type) & 32) != 0) read_arg();
     return type == math_code;
-}
-
-// Defines how many equation numbers are to be created
-// If multi is true, more than one is allowed
-void MathHelper::check_for_eqnum(subtypes type, bool multi) {
-    int fl = math_env_props(type);
-    if ((fl & 2) != 0)
-        eqnum_status = 1;
-    else if ((fl & 4) != 0)
-        eqnum_status = multi ? 2 : 3;
-    else
-        eqnum_status = 0;
 }
 
 // This piece of code is executed when the math formula has been read
@@ -845,22 +781,6 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
     pop_level(aux);
     the_stack.set_mode(om);
     fct_caller = xfct_caller;
-}
-
-// nnewt item in the list of tags
-void MathHelper::add_tag(TokenList &L) {
-    if (!tag_list.empty()) tag_list.push_back(the_parser.hash_table.comma_token);
-    tag_list.splice(tag_list.end(), L);
-}
-
-// passes the list of tag as argument to \x@tag or \y@tag
-void MathHelper::handle_tags() {
-    TokenList L = tag_list;
-    token_ns::remove_first_last_space(L);
-    the_parser.brace_me(L);
-    L.push_front(is_tag_starred ? the_parser.hash_table.ytag1_token : the_parser.hash_table.xtag1_token);
-    the_parser.back_input(L);
-    tag_list = TokenList();
 }
 
 // Reads a new token.
@@ -1133,156 +1053,6 @@ auto Parser::scan_math_endcell(Token t) -> bool {
     parse_error(err_tok, "unexpected command ", t, "; math mode aborted", "bad math");
     back_input(t);
     return true; // bad
-}
-
-// debug
-void MathHelper::dump_labels() {
-    auto n = multi_labels.size();
-    for (size_t i = 0; i < n; i++) {
-        int v = multi_labels_type[i];
-        if (v == 0)
-            the_log << "\n";
-        else if (v == 4)
-            the_log << "notag,";
-        else if (v == 1)
-            the_log << "label " << multi_labels[i] << ",";
-        else if (v == -1)
-            the_log << "bad label " << multi_labels[i] << ",";
-        else if (v == 2)
-            the_log << "tag " << multi_labels[i] << ",";
-        else if (v == 3)
-            the_log << "tag* " << multi_labels[i] << ",";
-        else if (v == -2)
-            the_log << "bad tag " << multi_labels[i] << ",";
-        else if (v == -3)
-            the_log << "bad tag* " << multi_labels[i] << ",";
-        else if (v == 5)
-            the_log << "eqno " << multi_labels[i] << ",";
-    }
-}
-
-//
-void MathHelper::ml_check_labels() {
-    auto        n      = multi_labels.size();
-    int         l      = 1;
-    Buffer &    B      = math_buffer;
-    static bool warned = false;
-    for (size_t i = 0; i < n; i++) {
-        int v = multi_labels_type[i];
-        if (v == 0)
-            l++;
-        else if (v == -1) {
-            B = "Multiple \\label " + multi_labels[i];
-            if (eqnum_status == 1)
-                B += " for the current the formula";
-            else {
-                B.format(" on row {} of the formula", l);
-                if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
-                warned = true;
-            }
-            the_parser.parse_error(the_parser.err_tok, B, "duplicate label");
-        }
-        if (v == -2 || v == -3) {
-            B = "Multiple \\tag " + multi_labels[i];
-            if (eqnum_status == 1)
-                B += " for the current formula";
-            else {
-                B.format(" on row {} of formula", l);
-                if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
-                warned = true;
-            }
-            the_parser.parse_error(the_parser.err_tok, B, "duplicate tag");
-        }
-    }
-}
-
-// true if no equation number has to be produced
-// leaves a hole for the label
-auto MathHelper::end_of_row() -> bool {
-    auto k           = last_ml_pos;
-    auto n           = multi_labels.size();
-    bool sseen_label = false;
-    bool seen_notag  = false;
-    bool seen_tag    = false;
-    for (size_t i = k; i < n; i++) {
-        int v = multi_labels_type[i];
-        if (v == 0) continue; // boundary
-        if (v == 1) {         // a label
-            if (sseen_label) { multi_labels_type[i] = -v; }
-            sseen_label = true;
-        } else if (v == 2 || v == 3) { // a tag
-            if (seen_tag) { multi_labels_type[i] = -v; }
-            seen_tag = true;
-        } else if (v == 4)
-            seen_notag = true;
-    }
-    bool ok = seen_tag || seen_notag;
-    if (seen_notag && sseen_label && !seen_tag) ok = false; // ??
-    if (!ok) new_multi_label("", 5);
-    new_multi_label("", 0); // add a new boundary
-    last_ml_pos = multi_labels.size();
-    return ok;
-}
-
-void MathHelper::ml_second_pass(Xml *row, bool vb) {
-    bool        slabel = false, stag = false;
-    std::string label;
-    std::string tag;
-    auto        n = multi_labels.size();
-    size_t      i = 0;
-    static int  N = 0;
-    if (last_ml_pos == 0) N = 0;
-    N++;
-    for (;;) {
-        if (last_ml_pos >= n) break;
-        i = last_ml_pos;
-        last_ml_pos++;
-        int j = (multi_labels_type[i]);
-        if (j == 0) break;
-        if (j == 1) {
-            slabel = true;
-            label  = multi_labels[i];
-        } else if (j == 2 || j == 3 || j == 5) {
-            stag = true;
-            tag  = multi_labels[i];
-        }
-    }
-    if (vb) {
-        if (slabel) the_log << "label on row " << N << " " << label << ".\n";
-        if (stag) the_log << "tag on row " << N << " " << tag << ".\n";
-    }
-    if (stag) {
-        std::string id = next_label_id();
-        the_parser.the_stack.create_new_anchor(row->id, id, std::string(tag));
-        if (slabel) the_parser.create_label(label, id);
-    } else if (slabel)
-        the_parser.parse_error("Internal error");
-}
-
-void MathHelper::ml_last_pass(bool vb) {
-    bool        slabel = false, stag = false;
-    std::string label;
-    std::string tag;
-    auto        n = multi_labels.size();
-    for (size_t i = 0; i < n; i++) {
-        int j = (multi_labels_type[i]);
-        if (j == 0) continue;
-        if (j == 1) {
-            slabel = true;
-            label  = multi_labels[i];
-        } else if (j == 2 || j == 3 || j == 5) {
-            stag = true;
-            tag  = multi_labels[i];
-        }
-    }
-    if (slabel) label_val = label;
-    the_tag = tag;
-    if (vb) {
-        the_log << "Check labels \n";
-        dump_labels();
-        if (slabel) the_log << "label for formula " << label << ".\n";
-        if (stag) the_log << "tag for formula " << tag << ".\n";
-    }
 }
 
 // We have seen & or \\. Must interpret it
@@ -2088,28 +1858,6 @@ void Parser::TM_math_fonts(Math &x) const {
 auto Parser::is_not_a_math_env(String s) -> bool {
     find_env_token(s, false);
     return cur_cmd_chr.is_user();
-}
-
-// This is done when we see a label in a math formula.
-// If anchor is true, we are in the case of \anchorlabel.
-// Only one label is allowed.
-void MathHelper::new_label(const std::string &s, bool anchor) {
-    if (eqnum_status == 2 || eqnum_status == 1) {
-        if (anchor) the_parser.parse_error("Illegal \\anchorlabel");
-        cmi.new_multi_label(s, 1);
-        return;
-    }
-    bool ok = true;
-    if (anchor)
-        ok = (eqnum_status == 0);
-    else {
-        if (eqnum_status == 0) ok = false; // TEMP
-    }
-    if (seen_label) ok = false;
-    if (ok)
-        set_label(s);
-    else
-        the_parser.parse_error(the_parser.err_tok, "Label will be lost: ", s, "label-lost");
 }
 
 // This removes the spaces.

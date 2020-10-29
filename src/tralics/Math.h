@@ -10,7 +10,6 @@
 using const_math_iterator = std::list<MathElt>::const_iterator;
 
 class Math : public std::list<MathElt> {
-    friend class MathHelper;
     friend class MathDataP;
     friend class MathElt;
     math_list_type type{invalid_cd};
