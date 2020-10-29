@@ -1,5 +1,6 @@
 #pragma once
 #include "tralics/Buffer.h"
+#include "tralics/ParamDataSlot.h"
 #include <string>
 
 // -*- C++ -*-
@@ -13,21 +14,6 @@
 // (See the file COPYING in the main directory for details)
 
 // This is one include  file for the tralics software
-
-// parameterised data
-class ParamDataSlot {
-public:
-    std::string key;
-    std::string value;
-    bool        is_used;
-
-    ParamDataSlot(std::string a, std::string b) : key(std::move(a)), value(std::move(b)), is_used(false) {}
-    ParamDataSlot(std::string a, std::string b, bool c) : key(std::move(a)), value(std::move(b)), is_used(c) {}
-
-    void               mark_used() { is_used = true; }
-    [[nodiscard]] auto matches(const std::string &x) const -> bool { return is_used && x == key; }
-    [[nodiscard]] auto no_topic() const -> bool { return !is_used; }
-};
 
 // We maintain a list of ParamDataSlot.
 class ParamDataList {

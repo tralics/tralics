@@ -29,7 +29,7 @@ namespace {
             if (r1.empty()) continue;
             if (r2.empty()) r2 = r1;
             the_log << name << ": " << r1 << " -> " << r2 << "\n";
-            V->push_back(ParamDataSlot(r1, r2));
+            V->push_back({r1, r2});
         }
     }
 
@@ -66,7 +66,7 @@ namespace {
             the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
             if (s == "composition") composition_section = to_signed(V->size() + 1);
             sec_buffer += " " + s;
-            V->push_back(ParamDataSlot(s, r, !star));
+            V->push_back({s, r, !star});
         }
     }
 

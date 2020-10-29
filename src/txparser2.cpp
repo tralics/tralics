@@ -91,9 +91,9 @@ namespace {
         }
         static long prev = -1;
         if (prev == cur_section) return "";
-        prev             = cur_section;
-        cur_sec_no_topic = X[to_unsigned(cur_section - 1)].no_topic();
-        X[to_unsigned(cur_section - 1)].mark_used(); // incompatible with topics
+        prev                                    = cur_section;
+        cur_sec_no_topic                        = X[to_unsigned(cur_section - 1)].no_topic();
+        X[to_unsigned(cur_section - 1)].is_used = true; // incompatible with topics
         return X[to_unsigned(cur_section - 1)].value;
     }
 
@@ -101,7 +101,7 @@ namespace {
         std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
         auto                        n       = ur_list.size();
         if (ur_size == 0) {
-            for (size_t i = 0; i < n; i++) ur_list[i].mark_used();
+            for (size_t i = 0; i < n; i++) ur_list[i].is_used = true;
             ur_size = n;
         }
         for (size_t i = 0; i < n; i++)

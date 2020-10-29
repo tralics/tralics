@@ -56,7 +56,7 @@ ParamDataVector::ParamDataVector() {
 
 // We may add a special slot at the end
 void ParamDataList::check_other() {
-    if ((std::islower(name[0]) != 0) && !empty()) push_back(ParamDataSlot("Other", "Other"));
+    if ((std::islower(name[0]) != 0) && !empty()) push_back({"Other", "Other"});
 }
 
 // --------------------------------------------------

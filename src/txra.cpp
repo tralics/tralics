@@ -40,9 +40,9 @@ namespace {
         auto k = ur_list.size();
         for (size_t j = 0; j < k; j++)
             if (B.substring() == ur_list[j].key) {
-                sname = ur_list[j].key;
-                lname = ur_list[j].value;
-                ur_list[j].mark_used();
+                sname              = ur_list[j].key;
+                lname              = ur_list[j].value;
+                ur_list[j].is_used = true;
                 return to_signed(j);
             }
         return -2;
