@@ -1117,7 +1117,7 @@ void MainClass::finish_init() const {
         if (year >= 2007) {
             if (config_data.data[2]->empty()) bad_conf("profession_vals");
             if (year >= 2013)
-                config_data.data[3]->reset(); // kill this
+                config_data.data[3]->clear(); // kill this
             else if (config_data.data[3]->empty())
                 bad_conf("affiliation_vals");
         }
@@ -1148,7 +1148,7 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
 
 void MainClass::check_section_use() const {
     if (handling_ra) {
-        std::vector<ParamDataSlot> &X = config_data.data[1]->data;
+        std::vector<ParamDataSlot> &X = *config_data.data[1];
         auto                        n = X.size(); // number of sections
         for (size_t i = 0; i < n; i++)
             if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");

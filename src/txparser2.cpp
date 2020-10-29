@@ -50,7 +50,7 @@ namespace {
         static long cur_section = -1;
         long        k           = -1;
         err_buf.clear();
-        std::vector<ParamDataSlot> &X = config_data.data[1]->data;
+        std::vector<ParamDataSlot> &X = *config_data.data[1];
         auto                        n = X.size(); // number of sections
         if (s.empty())
             k = cur_section;
@@ -98,7 +98,7 @@ namespace {
     }
 
     auto is_good_ur(const std::string &x) -> bool {
-        std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+        std::vector<ParamDataSlot> &ur_list = *config_data.data[0];
         auto                        n       = ur_list.size();
         if (ur_size == 0) {
             for (size_t i = 0; i < n; i++) ur_list[i].is_used = true;
@@ -128,7 +128,7 @@ namespace {
         auto RC   = spec ? rc.substr(1) : rc;
         if (!is_good_ur(RC)) {
             err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
-            std::vector<ParamDataSlot> &V = config_data.data[0]->data;
+            std::vector<ParamDataSlot> &V = *config_data.data[0];
             for (auto &i : V)
                 if (i.is_used) err_buf += " " + i.key;
             the_parser.signal_error(the_parser.err_tok, "illegal data");
@@ -161,7 +161,7 @@ namespace {
         }
         auto n = X->size();
         for (size_t i = 0; i < n; i++)
-            if (X->data[i].key == key) return X->data[i].value;
+            if ((*X)[i].key == key) return (*X)[i].value;
         err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
         X->keys_to_buffer(err_buf);
         the_parser.signal_error(the_parser.err_tok, "illegal data");
@@ -173,7 +173,7 @@ namespace {
         ParamDataList *X = config_data.find_list(name, false); // \todo optional?
         if (X == nullptr) return "";
         std::string res;
-        for (const auto &d : X->data) res.append(fmt::format("{}={},", d.key, d.value));
+        for (const auto &d : *X) res.append(fmt::format("{}={},", d.key, d.value));
         if (!X->empty()) res.pop_back();
         return res;
     }

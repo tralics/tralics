@@ -75,7 +75,7 @@ auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDat
 }
 
 void ParamDataList::keys_to_buffer(Buffer &B) const {
-    for (const auto &i : data) B.format(" {}", i.key);
+    for (const auto &i : *this) B.format(" {}", i.key);
 }
 
 // -----------------------------------------------------------

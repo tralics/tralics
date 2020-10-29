@@ -23,7 +23,7 @@ namespace {
     // returns -2 if the RC is invalid
     // returns location in the table otherwise
     auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
-        std::vector<ParamDataSlot> &ur_list = config_data.data[0]->data;
+        std::vector<ParamDataSlot> &ur_list = *config_data.data[0];
         B.skip_sp_tab_comma();
         if (B.head() == 0) return -1;
         if (B.substr(B.ptrs.b, 3) == "\\UR") {

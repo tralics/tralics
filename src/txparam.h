@@ -1,6 +1,6 @@
 #pragma once
 #include "tralics/Buffer.h"
-#include "tralics/ParamDataSlot.h"
+#include "tralics/ParamDataList.h"
 #include <string>
 
 // -*- C++ -*-
@@ -14,22 +14,6 @@
 // (See the file COPYING in the main directory for details)
 
 // This is one include  file for the tralics software
-
-// We maintain a list of ParamDataSlot.
-class ParamDataList {
-public:
-    std::string                name;
-    std::vector<ParamDataSlot> data;
-
-    void               check_other();
-    [[nodiscard]] auto its_me(const std::string &s) const -> bool { return name == s; }
-    ParamDataList(std::string s) : name(std::move(s)) {}
-    [[nodiscard]] auto empty() const -> bool { return data.empty(); }
-    void               push_back(const ParamDataSlot &x) { data.push_back(x); }
-    [[nodiscard]] auto size() const { return data.size(); }
-    void               keys_to_buffer(Buffer &B) const;
-    void               reset() { data = std::vector<ParamDataSlot>(); }
-};
 
 class ParamDataVector {
 public:

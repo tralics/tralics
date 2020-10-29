@@ -21,7 +21,7 @@ namespace {
     // This creates four slots in a table indexed by k.
     void interpret_data_list(Buffer &B, const std::string &name) {
         ParamDataList *V = config_data.find_list(name, true);
-        if (config_ns::start_interpret(B, "//")) V->reset();
+        if (config_ns::start_interpret(B, "//")) V->clear();
         for (;;) {
             std::string r1, r2;
             if (!B.slash_separated(r1)) return;
@@ -44,7 +44,7 @@ namespace {
     void interpret_section_list(Buffer &B, bool new_syntax) {
         ParamDataList *V = config_data.data[1];
         if (config_ns::start_interpret(B, "//")) {
-            V->reset();
+            V->clear();
             sec_buffer.clear();
             composition_section = -1;
         }
