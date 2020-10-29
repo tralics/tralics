@@ -1,5 +1,6 @@
 #include "tralics/Cv3Helper.h"
 #include "tralics/MainClass.h"
+#include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
 #include "txmath.h"
 

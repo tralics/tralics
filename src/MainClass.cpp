@@ -3,6 +3,7 @@
 #include "tralics/Line.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
+#include "tralics/MathDataP.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/Xml.h"

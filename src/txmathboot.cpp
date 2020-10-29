@@ -11,6 +11,7 @@
 // Tralics math; boot part. This constructs all data structures.
 
 #include "tralics/MainClass.h"
+#include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"

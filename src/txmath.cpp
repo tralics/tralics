@@ -14,6 +14,7 @@
 #include "tralics/Cv3Helper.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/MathDataP.h"
 #include "tralics/MathHelper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
