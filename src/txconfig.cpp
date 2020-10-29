@@ -15,7 +15,6 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txparam.h"
 
 namespace config_ns {
     // We add a final slash, or double slash, this makes parsing easier;

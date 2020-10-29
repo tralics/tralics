@@ -14,7 +14,6 @@
 #include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txparam.h"
 
 namespace {
     Buffer Tbuf;

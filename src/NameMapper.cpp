@@ -4,7 +4,6 @@
 #include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txparam.h"
 #include <spdlog/spdlog.h>
 
 namespace config_ns {

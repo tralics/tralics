@@ -17,7 +17,6 @@
 #include "tralics/ParamDataVector.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
-#include "txparam.h"
 #include <fmt/format.h>
 
 namespace {

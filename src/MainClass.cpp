@@ -10,7 +10,6 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txparam.h"
 #include "txtitlepage.h"
 #include <filesystem>
 #include <fmt/ostream.h>
