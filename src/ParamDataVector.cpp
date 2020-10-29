@@ -1,17 +1,16 @@
 #include "tralics/ParamDataVector.h"
 
 ParamDataVector::ParamDataVector() {
-    push_back(new ParamDataList("ur"));
-    push_back(new ParamDataList("sections"));
-    push_back(new ParamDataList("profession"));
-    push_back(new ParamDataList("affiliation"));
+    emplace_back("ur");
+    emplace_back("sections");
+    emplace_back("profession");
+    emplace_back("affiliation");
 }
 
 auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
-    for (size_t i = 0; i < size(); i++) // \todo range based
-        if (at(i)->name == name) return at(i);
+    for (auto &p : *this)
+        if (p.name == name) return &p;
     if (!creat) return nullptr;
-    auto *res = new ParamDataList(name);
-    push_back(res);
-    return res;
+    emplace_back(name);
+    return &back();
 }

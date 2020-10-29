@@ -43,9 +43,9 @@ namespace {
     // In simplified mode, a section has a name and a number.
     // Otherwise it has additional fields.
     void interpret_section_list(Buffer &B, bool new_syntax) {
-        ParamDataList *V = config_data[1];
+        ParamDataList &V = config_data[1];
         if (config_ns::start_interpret(B, "//")) {
-            V->clear();
+            V.clear();
             sec_buffer.clear();
             composition_section = -1;
         }
@@ -65,9 +65,9 @@ namespace {
             }
             if (r.empty()) r = s;
             the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-            if (s == "composition") composition_section = to_signed(V->size() + 1);
+            if (s == "composition") composition_section = to_signed(V.size() + 1);
             sec_buffer += " " + s;
-            V->push_back({s, r, !star});
+            V.push_back({s, r, !star});
         }
     }
 
