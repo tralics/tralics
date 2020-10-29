@@ -1,7 +1,9 @@
 #pragma once
+#include "Xml.h"
 #include "enums.h"
 #include <array>
 #include <filesystem>
+#include <gsl/gsl>
 #include <optional>
 #include <string>
 #include <vector>
@@ -59,9 +61,45 @@ inline std::vector<std::pair<std::string, LabelInfo *>>             defined_labe
 inline std::vector<std::pair<String, std::string>>                  removed_labels; // list of all \label removed
 inline std::vector<std::string>                                     omitcite_list;
 
-auto next_label_id() -> std::string;
-auto null_cs_name() -> std::string;
+// \todo next are global functions, should we do something with them?
+
+auto        next_label_id() -> std::string;
+auto        null_cs_name() -> std::string;
+inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 
 namespace main_ns {
     auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; ///< Searches for a file in conf_path
 } // namespace main_ns
+
+namespace math_ns {
+    void add_attribute_spec(const std::string &a, const std::string &b);
+    auto cv_special_string(int c) -> std::string;
+    auto get_builtin(size_t p) -> Xml *;
+    auto get_builtin_alt(size_t p) -> Xml *;
+    auto get_delimiter(CmdChr X) -> del_pos;
+    auto get_delimiter(int k) -> del_pos;
+    auto handle_hspace(Buffer &B) -> Xml *;
+    auto handle_space(Buffer &) -> Xml *;
+    void insert_delimiter(del_pos k);
+    void insert_delimiter_t(del_pos k);
+    auto math_constants(int c) -> Xml *;
+    auto math_space_code(int c) -> bool;
+    auto make_sup(Xml *xval) -> Xml *;
+    auto mk_mi(char32_t c) -> Xml *;
+    auto mk_mi(uchar c, size_t font) -> Xml *;
+    auto mk_space(const std::string &a) -> Xml *;
+    auto nb_args_for_cmd(int c) -> int;
+    void fill_math_char_slots();
+    void fill_math_char_slots_ent();
+    void fill_single_char();
+    auto next_math_style(math_style x) -> math_style;
+    auto next_frac_style(math_style x) -> math_style;
+    auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
+    auto style_level(subtypes tt) -> math_style;
+    auto make_math_char(uchar c, size_t n) -> Xml *;
+    auto xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml;
+} // namespace math_ns
+
+namespace tralics_ns {
+    auto math_env_name(subtypes c) -> String;
+} // namespace tralics_ns

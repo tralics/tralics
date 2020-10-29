@@ -15,7 +15,6 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txmath.h"
 
 using namespace math_ns;
 

@@ -10,7 +10,6 @@
 
 // Tralics, math part I
 
-#include "txmath.h"
 #include "tralics/Cv3Helper.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"

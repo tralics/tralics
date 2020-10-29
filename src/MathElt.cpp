@@ -1,7 +1,7 @@
 #include "tralics/MathElt.h"
 #include "tralics/Buffer.h"
+#include "tralics/Math.h"
 #include "tralics/util.h"
-#include "txmath.h"
 #include <fmt/ostream.h>
 
 // This prints a math element

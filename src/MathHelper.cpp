@@ -5,7 +5,6 @@
 #include "tralics/Parser.h"
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
-#include "txmath.h"
 
 namespace tralics_ns {
     auto math_env_props(subtypes c) -> int; // \todo elsewhere

@@ -11,12 +11,12 @@
 // Tralics, math part II
 
 #include "tralics/Logger.h"
+#include "tralics/Math.h"
 #include "tralics/MathF.h"
 #include "tralics/MathP.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txmath.h"
 #include <algorithm>
 #include <fmt/format.h>
 

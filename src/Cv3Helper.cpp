@@ -2,7 +2,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
-#include "txmath.h"
+#include "tralics/globals.h"
 
 void Cv3Helper::reinit() {
     state       = 2;

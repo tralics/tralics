@@ -17,7 +17,6 @@
 #include "tralics/TexFonts.h"
 #include "tralics/TexOutStream.h"
 #include "tralics/util.h"
-#include "txmath.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
