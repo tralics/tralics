@@ -11,12 +11,11 @@
 // The file contains code for configurating the Raweb
 
 #include "tralics/Logger.h"
+#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txparam.h"
-
-ParamDataVector config_data;
 
 namespace config_ns {
     // We add a final slash, or double slash, this makes parsing easier;
@@ -47,27 +46,6 @@ namespace config_ns {
 
 // This error is fatal
 // We make sure these four items always exist
-ParamDataVector::ParamDataVector() {
-    data.push_back(new ParamDataList("ur"));
-    data.push_back(new ParamDataList("sections"));
-    data.push_back(new ParamDataList("profession"));
-    data.push_back(new ParamDataList("affiliation"));
-}
-
-// --------------------------------------------------
-
-// --------------------------------------------------
-
-// Return the data associated to name, may create depend on creat
-auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
-    auto n = data.size();
-    for (size_t i = 0; i < n; i++)
-        if (data[i]->name == name) return data[i];
-    if (!creat) return nullptr;
-    auto *res = new ParamDataList(name);
-    data.push_back(res);
-    return res;
-}
 
 // -----------------------------------------------------------
 

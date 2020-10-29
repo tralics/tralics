@@ -14,6 +14,7 @@
 #include "txparser2.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/ParamDataVector.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
 #include "txparam.h"
@@ -50,7 +51,7 @@ namespace {
         static long cur_section = -1;
         long        k           = -1;
         err_buf.clear();
-        std::vector<ParamDataSlot> &X = *config_data.data[1];
+        std::vector<ParamDataSlot> &X = *config_data[1];
         auto                        n = X.size(); // number of sections
         if (s.empty())
             k = cur_section;
@@ -98,7 +99,7 @@ namespace {
     }
 
     auto is_good_ur(const std::string &x) -> bool {
-        std::vector<ParamDataSlot> &ur_list = *config_data.data[0];
+        std::vector<ParamDataSlot> &ur_list = *config_data[0];
         auto                        n       = ur_list.size();
         if (ur_size == 0) {
             for (size_t i = 0; i < n; i++) ur_list[i].is_used = true;
@@ -128,7 +129,7 @@ namespace {
         auto RC   = spec ? rc.substr(1) : rc;
         if (!is_good_ur(RC)) {
             err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
-            std::vector<ParamDataSlot> &V = *config_data.data[0];
+            std::vector<ParamDataSlot> &V = *config_data[0];
             for (auto &i : V)
                 if (i.is_used) err_buf += " " + i.key;
             the_parser.signal_error(the_parser.err_tok, "illegal data");

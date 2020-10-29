@@ -5,6 +5,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MathDataP.h"
 #include "tralics/NameMapper.h"
+#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
@@ -1113,20 +1114,20 @@ void MainClass::finish_init() const {
     if (handling_ra) {
         if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
         if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
-        if (config_data.data[0]->empty()) bad_conf("ur_vals");
+        if (config_data[0]->empty()) bad_conf("ur_vals");
         if (year >= 2007) {
-            if (config_data.data[2]->empty()) bad_conf("profession_vals");
+            if (config_data[2]->empty()) bad_conf("profession_vals");
             if (year >= 2013)
-                config_data.data[3]->clear(); // kill this
-            else if (config_data.data[3]->empty())
+                config_data[3]->clear(); // kill this
+            else if (config_data[3]->empty())
                 bad_conf("affiliation_vals");
         }
-        auto n = config_data.data[1]->size();
+        auto n = config_data[1]->size();
         if (n == 0) bad_conf("sections_vals");
         if (n < 2) bad_conf("Config file did not provide sections");
     }
-    auto n = config_data.data.size();
-    for (size_t i = 2; i < n; i++) config_data.data[i]->check_other();
+    auto n = config_data.size();
+    for (size_t i = 2; i < n; i++) config_data[i]->check_other();
 }
 
 auto MainClass::check_theme(const std::string &s) -> std::string {
@@ -1148,7 +1149,7 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
 
 void MainClass::check_section_use() const {
     if (handling_ra) {
-        std::vector<ParamDataSlot> &X = *config_data.data[1];
+        std::vector<ParamDataSlot> &X = *config_data[1];
         auto                        n = X.size(); // number of sections
         for (size_t i = 0; i < n; i++)
             if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");

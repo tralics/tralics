@@ -14,12 +14,3 @@
 // (See the file COPYING in the main directory for details)
 
 // This is one include  file for the tralics software
-
-class ParamDataVector {
-public:
-    std::vector<ParamDataList *> data;
-    ParamDataVector();
-    auto find_list(const std::string &name, bool creat) -> ParamDataList *;
-};
-
-extern ParamDataVector config_data;

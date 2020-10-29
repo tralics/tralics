@@ -11,6 +11,7 @@
 // This file contains commands needed for the RA
 
 #include "tralics/Logger.h"
+#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txparam.h"
@@ -23,7 +24,7 @@ namespace {
     // returns -2 if the RC is invalid
     // returns location in the table otherwise
     auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
-        std::vector<ParamDataSlot> &ur_list = *config_data.data[0];
+        std::vector<ParamDataSlot> &ur_list = *config_data[0];
         B.skip_sp_tab_comma();
         if (B.head() == 0) return -1;
         if (B.substr(B.ptrs.b, 3) == "\\UR") {
@@ -93,7 +94,7 @@ namespace {
         else
             err_buf = "Illegal localisation value: " + B + "\n";
         err_buf += "Use one or more of:";
-        config_data.data[0]->keys_to_buffer(err_buf);
+        config_data[0]->keys_to_buffer(err_buf);
         the_parser.signal_error();
     }
 } // namespace

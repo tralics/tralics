@@ -1,6 +1,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "txparam.h"
@@ -42,7 +43,7 @@ namespace {
     // In simplified mode, a section has a name and a number.
     // Otherwise it has additional fields.
     void interpret_section_list(Buffer &B, bool new_syntax) {
-        ParamDataList *V = config_data.data[1];
+        ParamDataList *V = config_data[1];
         if (config_ns::start_interpret(B, "//")) {
             V->clear();
             sec_buffer.clear();
