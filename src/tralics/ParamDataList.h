@@ -8,8 +8,6 @@ struct ParamDataList : public std::vector<ParamDataSlot> {
 
     ParamDataList(std::string s) : name(std::move(s)) {}
 
-    [[nodiscard]] auto its_me(const std::string &s) const -> bool { return name == s; }
-    void               keys_to_buffer(Buffer &B) const;
-
+    void keys_to_buffer(std::string &B) const;
     void check_other();
 };

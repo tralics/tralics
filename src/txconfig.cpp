@@ -54,11 +54,6 @@ ParamDataVector::ParamDataVector() {
     data.push_back(new ParamDataList("affiliation"));
 }
 
-// We may add a special slot at the end
-void ParamDataList::check_other() {
-    if ((std::islower(name[0]) != 0) && !empty()) push_back({"Other", "Other"});
-}
-
 // --------------------------------------------------
 
 // --------------------------------------------------
@@ -67,15 +62,11 @@ void ParamDataList::check_other() {
 auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
     auto n = data.size();
     for (size_t i = 0; i < n; i++)
-        if (data[i]->its_me(name)) return data[i];
+        if (data[i]->name == name) return data[i];
     if (!creat) return nullptr;
     auto *res = new ParamDataList(name);
     data.push_back(res);
     return res;
-}
-
-void ParamDataList::keys_to_buffer(Buffer &B) const {
-    for (const auto &i : *this) B.format(" {}", i.key);
 }
 
 // -----------------------------------------------------------
