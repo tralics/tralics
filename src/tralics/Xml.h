@@ -3,7 +3,7 @@
 #include "NameMapper.h"
 #include <gsl/gsl>
 
-class XmlAction;
+struct XmlAction;
 
 class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
 public:

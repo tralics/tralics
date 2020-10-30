@@ -5,6 +5,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
+#include "tralics/XmlAction.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txpost.h"
@@ -187,7 +188,7 @@ namespace {
             w = 2;
         else if (X4.is_ok())
             w = 3;
-        else if (X3.get_int_val() == 1)
+        else if (X3.int_val == 1)
             w = 0;
         switch (w) {
         case 0: // a single figure
@@ -226,7 +227,7 @@ namespace {
             from->move(the_names["cst_p"], to);
             XmlAction X5(the_names["figure"], rc_return_first);
             from->recurse0(X5);
-            if (X5.get_xml_val() != nullptr) // dommage
+            if (X5.xml_val != nullptr) // dommage
                 from->add_non_empty_to(to);
         }
         }
@@ -265,7 +266,7 @@ namespace {
         from->recurse(X1);
         // Special case: more than one tabular in the table
         // We move in to all tabular
-        if (X1.get_int_val() > 1) {
+        if (X1.int_val > 1) {
             Xml *X = new Xml(the_names["cst_p"], nullptr);
             to->push_back_unless_nullptr(X);
             from->move(the_names["table"], X);
@@ -444,18 +445,18 @@ void Xml::recurse0(XmlAction &X) {
     for (size_t k = 0; k < size(); k++) {
         Xml *y = at(k);
         if (y->is_xmlc()) continue;
-        if (y->has_name(X.get_match())) switch (X.get_what()) {
+        if (y->has_name(X.match)) switch (X.what) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
-                X.set_int_val(to_signed(y->id.value));
+                X.int_val = to_signed(y->id.value);
                 erase(begin() + to_signed(k));
                 return;
             case rc_return_first:
-                X.set_xml_val(y);
+                X.xml_val = y;
                 X.mark_found();
                 return;
             case rc_return_first_and_kill:
-                X.set_xml_val(y);
+                X.xml_val = y;
                 erase(begin() + to_signed(k));
                 X.mark_found();
                 return;
@@ -471,8 +472,8 @@ void Xml::recurse(XmlAction &X) {
     for (size_t k = 0; k < size(); k++) {
         Xml *T = at(k);
         if (T->is_xmlc()) continue;
-        if (T->has_name(X.get_match())) {
-            switch (X.get_what()) {
+        if (T->has_name(X.match)) {
+            switch (X.what) {
             case rc_delete:
                 erase(begin() + to_signed(k));
                 --k;
@@ -484,10 +485,10 @@ void Xml::recurse(XmlAction &X) {
                     continue;
                 }
                 break;
-            case rc_how_many: X.incr_int_val(); break;
-            case rc_subst: at(k) = gsl::not_null{X.get_xml_val()}; continue;
+            case rc_how_many: ++X.int_val; break;
+            case rc_subst: at(k) = gsl::not_null{X.xml_val}; continue;
             case rc_move:
-                X.get_xml_val()->push_back_unless_nullptr(T);
+                X.xml_val->push_back_unless_nullptr(T);
                 erase(begin() + to_signed(k));
                 --k;
                 continue;
@@ -511,7 +512,7 @@ void Xml::recurse(XmlAction &X) {
                 recurse(X); // this->tree has changed
                 return;     // nothing more to do.
             }
-            case rc_rename: T->name = X.get_string_val(); break;
+            case rc_rename: T->name = X.string_val; break;
             default: spdlog::critical("Fatal: illegal value in recurse"); abort();
             }
         }
@@ -642,14 +643,14 @@ void Xml::subst_env0(std::string match, Xml *vl) {
 auto Xml::how_many_env(std::string match) -> long {
     XmlAction X(std::move(match), rc_how_many);
     recurse(X);
-    return X.get_int_val();
+    return X.int_val;
 }
 
 // Removes and returns first element named N.
 auto Xml::get_first_env(const std::string &N) -> Xml * {
     XmlAction X(the_names[N], rc_return_first_and_kill);
     recurse0(X);
-    return X.get_xml_val();
+    return X.xml_val;
 }
 
 // Returns the element that is just before x.
