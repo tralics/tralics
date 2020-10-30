@@ -3,13 +3,12 @@
 #include <array>
 
 // This is a global object for math handling
-class MathDataP {
+class MathDataP : public std::vector<Math> {
     static const int                                      m_offset = 10000;
     std::array<Xml *, last_math_loc>                      built_in_table{};     // the static math table
     std::array<Xml *, last_math_loc>                      built_in_table_alt{}; // the static math table
     std::vector<Xml *>                                    xml_math_table;       // the dynamic math table
     size_t                                                xmath_pos{};          // number of slots used in the dynamic table
-    std::vector<Math>                                     math_table;           // the table of math lists
     size_t                                                lmath_pos{};          // number of slots used in the math table
     std::array<std::optional<std::string>, del_tablesize> xml_lr_ptable;        // table of fence attributes
     std::array<math_types, nb_mathchars>                  math_char_type{};     // the math type for +, = etc
@@ -60,7 +59,7 @@ public:
         if (i < m_offset) return built_in_table[i];
         return xml_math_table[i - m_offset];
     }
-    auto        get_list(size_t k) -> Math & { return math_table[k]; }
+    auto        get_list(size_t k) -> Math & { return (*this)[k]; }
     void        push_back(size_t k, CmdChr X, subtypes c);
     auto        get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
     auto        get_fence(size_t k) -> std::optional<std::string> { return xml_lr_ptable[k]; }

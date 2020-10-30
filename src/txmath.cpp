@@ -333,7 +333,7 @@ void Math::print() const {
 // -----------------------------------------------------------------------
 // Basic code generator
 
-void MathDataP::set_type(size_t k, math_list_type c) { math_table[k].set_type(c); }
+void MathDataP::set_type(size_t k, math_list_type c) { (*this)[k].set_type(c); }
 
 // General fence around val.
 auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
@@ -397,16 +397,16 @@ auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not
 // Some trivial functions on lists
 
 void MathDataP::realloc_list() {
-    auto k = 2 * math_table.size();
-    math_table.resize(k);
+    auto k = 2 * size();
+    resize(k);
     the_log << "Realloc math table to " << k << "\n";
 }
 
-// Makes sure there is enough place for two copies
+// Makes sure there is enough place for two copies \todo useless?
 void MathDataP::realloc_list0() {
     auto n = lmath_pos + 1;
-    if (n + n + n > math_table.size()) realloc_list();
-    if (n + n + n > math_table.size()) realloc_list();
+    if (n + n + n > size()) realloc_list();
+    if (n + n + n > size()) realloc_list();
 }
 
 // Appends the list X at the end, and destroys X.
@@ -491,7 +491,7 @@ auto math_ns::style_level(subtypes tt) -> math_style {
 
 // This creates the two tables math_table and xml_math_table
 void MathDataP::boot_table() {
-    math_table.resize(10);
+    resize(10);
     xml_math_table.resize(10, nullptr);
     xmath_pos = 0;
     lmath_pos = 0;
@@ -506,10 +506,10 @@ auto MathElt::get_xml_val() const -> Xml * { return math_data.get_xml_val(chr); 
 auto MathDataP::find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes {
     lmath_pos++;
     auto res = lmath_pos;
-    if (res >= math_table.size()) math_table.resize(res + 1);
-    math_table[res].set_type(c);
-    math_table[res].sname = n;
-    math_table[res].saved = std::move(s);
+    if (res >= size()) resize(res + 1);
+    (*this)[res].set_type(c);
+    (*this)[res].sname = n;
+    (*this)[res].saved = std::move(s);
     return subtypes(res);
 }
 
@@ -534,7 +534,7 @@ MathElt::MathElt(Xml *x, math_types y) : CmdChr(math_xml_cmd, zero_code) {
 
 // This kills the math elements
 void MathDataP::finish_math_mem() {
-    for (size_t i = 0; i <= lmath_pos; i++) math_table[i].clear();
+    for (size_t i = 0; i <= lmath_pos; i++) (*this)[i].clear();
     lmath_pos = 0;
     xmath_pos = 0;
 }
