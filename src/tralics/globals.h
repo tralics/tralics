@@ -1,4 +1,5 @@
 #pragma once
+#include "WordList.h"
 #include "Xml.h"
 #include "enums.h"
 #include <array>
@@ -8,7 +9,6 @@
 #include <string>
 #include <vector>
 
-class WordList;
 class LabelInfo;
 
 inline bool                                                         bad_minus{false};

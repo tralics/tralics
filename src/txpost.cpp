@@ -10,9 +10,9 @@
 
 // Post processing for tralics
 
-#include "txpost.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/WordList.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include "txtrees.h"
@@ -156,16 +156,16 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     }
 }
 
-// This is called when a new word is seen.
+// This is called when a new word is seen. \todo algorithm seems to overwrite WL0 a lot
 void all_words_ns::add_a_word(String s, size_t h) {
     auto      H = h % 100;
     WordList *L = WL0[H];
     while (L != nullptr) {
         if (L->is_here(s, h)) {
-            L->incr_freq();
+            L->freq++;
             return;
         }
-        L = L->get_next();
+        L = L->next;
     }
     WL0[H] = new WordList(s, h, WL0[H]);
 }

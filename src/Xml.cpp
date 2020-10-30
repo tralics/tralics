@@ -5,10 +5,10 @@
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
+#include "tralics/WordList.h"
 #include "tralics/XmlAction.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txpost.h"
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
@@ -17,21 +17,21 @@ namespace {
 
     // Prints all words with frequency i. Removes them from the list
     void dump_and_list(WordList *WL, int i) {
-        WordList *L       = WL->get_next();
+        WordList *L       = WL->next;
         WordList *first   = WL;
         int       printed = 0;
         while (L != nullptr) {
-            WordList *N = L->get_next();
+            WordList *N = L->next;
             if (L->dump(decoy_fp, i)) {
                 printed++;
                 delete L;
             } else {
-                first->set_next(L);
-                first = L;
+                first->next = L;
+                first       = L;
             }
             L = N;
         }
-        first->set_next(nullptr);
+        first->next = nullptr;
         if (printed != 0) { scbuf.format("{}={}, ", i, printed); }
     }
 
@@ -41,17 +41,17 @@ namespace {
         WordList *W  = WL;
         for (auto *L : WL0) {
             if (L == nullptr) continue;
-            while (W->get_next() != nullptr) W = W->get_next();
-            W->set_next(L);
+            while (W->next != nullptr) W = W->next;
+            W->next = L;
         }
-        if (WL->get_next() == nullptr) return;
+        if (WL->next == nullptr) return;
         auto wf = get_out_dir("words");
 
         auto f = std::ofstream(wf);
         if (!name.empty()) f << "Team " << name << "\n";
         scbuf.clear();
         int i = 0;
-        while (WL->get_next() != nullptr) {
+        while (WL->next != nullptr) {
             i++;
             dump_and_list(WL, i);
         }
