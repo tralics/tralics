@@ -364,11 +364,11 @@ auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xm
     return res;
 }
 
-void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.get_tid().add_attribute(a, b, true); }
+void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.cur_texmath_id.add_attribute(a, b, true); }
 
 // Adds a label to the formula X
 void Parser::add_math_label(Xml *res) {
-    if (cmi.get_eqnum_status() == 1) {
+    if (cmi.eqnum_status == 1) {
         cmi.ml_last_pass(tracing_math());
         if (the_tag.empty()) return;
     }
@@ -380,7 +380,7 @@ void Parser::add_math_label(Xml *res) {
         the_tag     = math_buffer;
     }
     the_stack.create_new_anchor(res->id, my_id, std::string(the_tag));
-    const std::string &label = cmi.get_label_val();
+    const std::string &label = cmi.label_val;
     if (!label.empty()) create_label(label, my_id);
 }
 
@@ -620,11 +620,11 @@ void Parser::after_math(bool is_inline) {
 // This is called if no MathML should be generated.
 void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     Math &      u  = math_data.get_list(vp);
-    Xid         id = cmi.get_mid();
+    Xid         id = cmi.cur_math_id;
     std::string S  = u.get_name();
     auto        s  = std::string(S);
     if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
-    id.add_attribute(the_names["type"], the_names[cmi.get_pos_att()]);
+    id.add_attribute(the_names["type"], the_names[cmi.pos_att]);
     id.add_attribute(the_names["textype"], s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->id  = id;
@@ -699,7 +699,7 @@ void Parser::T_math(subtypes type) {
     if (nm == -3) {
         Math &w   = math_data.get_list(loc_of_cp);
         alter     = w.convert_math_noML(false);
-        alter->id = cmi.get_tid();
+        alter->id = cmi.cur_texmath_id;
     }
     loc_of_cp = math_data.get_list(0).duplicate(false);
     Math &u   = math_data.get_list(loc_of_cp);
@@ -707,7 +707,7 @@ void Parser::T_math(subtypes type) {
     Xml *res{nullptr};
     if ((math_env_props(type) & 8) == 0) u.set_type(math_open_cd);
     if (u.has_type(math_env_cd)) {
-        res = u.M_array(cmi.get_eqnum_status() == 2, is_inline ? ms_T : ms_D);
+        res = u.M_array(cmi.eqnum_status == 2, is_inline ? ms_T : ms_D);
     } else {
         u.remove_spaces();
         if (is_inline) {
@@ -723,15 +723,15 @@ void Parser::T_math(subtypes type) {
     after_math(is_inline);
     // Insert the result in the tree.
     Xml *x = new Xml(the_names["math"], nullptr);
-    x->id  = cmi.get_mid();
+    x->id  = cmi.cur_math_id;
     x->add_att(the_names["xmlns"], the_names["mathmlns"]);
     x->add_tmp(gsl::not_null{res});
     if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
     Xml *res1 = new Xml(the_names["formula"], x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
-    res1->id = cmi.get_fid();
-    res1->add_att(the_names["type"], the_names[cmi.get_pos_att()]);
+    res1->id = cmi.cur_formula_id;
+    res1->add_att(the_names["type"], the_names[cmi.pos_att]);
     if (!textype.empty()) res1->add_att(the_names["textype"], std::string(textype));
     if (cmi.has_label()) add_math_label(res1);
     if (the_main->interactive_math) {
@@ -768,9 +768,9 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
             aux = bt_brace;
     }
     push_level(aux);
-    if (m == 0 && cmi.get_eqnum_status() == 3) refstepcounter("equation", false);
+    if (m == 0 && cmi.eqnum_status == 3) refstepcounter("equation", false);
     scan_math(x, t);
-    if (m == 0 && (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1)) {
+    if (m == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         if (!cmi.end_of_row()) {
             refstepcounter("equation", false);
             cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
@@ -1058,7 +1058,7 @@ auto Parser::scan_math_endcell(Token t) -> bool {
 // We have seen & or \\. Must interpret it
 void Parser::scan_math_endcell_ok(size_t res) {
     math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
-    if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.get_eqnum_status() == 2) {
+    if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.eqnum_status == 2) {
         bool w = cmi.end_of_row();
         if (!w) {
             refstepcounter("equation", false);
@@ -1102,7 +1102,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
             back_input(hash_table.OB_token); // Insert OB
             cmi.update_math_env_ctr(true);
         } else { // end something
-            if (cmi.get_math_env_ctr() > 0) {
+            if (cmi.math_env_ctr > 0) {
                 back_input(hash_table.CB_token); // matches the OB above
                 cmi.update_math_env_ctr(false);
                 back_input(eenv);
@@ -1128,7 +1128,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
         return false;
     }
     // Case \end{foo}
-    bool at_level_zero = cmi.get_all_env_ctr() == -1;
+    bool at_level_zero = cmi.all_env_ctr == -1;
     if (at_level_zero && cmi.has_tag()) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
@@ -1138,7 +1138,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     }
     if (type == math_env_cd && et == math_data.get_list(res).sname) {
         if (res == 0) { // end of main formula
-            if (cmi.get_eqnum_status() > 1) the_tag = the_parser.eqtb_string_table[0].val;
+            if (cmi.eqnum_status > 1) the_tag = the_parser.eqtb_string_table[0].val;
         }
         return true;
     }
@@ -1204,9 +1204,9 @@ auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
 // 0: \tag, 1=\@xtag 2=\@ytag 3=\notag 4=\nonumber
 void Parser::scan_math_tag(subtypes c) {
     if (c == 3 || c == 4) {
-        if (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1) {
+        if (cmi.eqnum_status == 2 || cmi.eqnum_status == 1) {
             cmi.new_multi_label("", 4);
-        } else if (cmi.get_eqnum_status() == 0) {
+        } else if (cmi.eqnum_status == 0) {
             parse_error("Illegal \\notag");
         } else { // decrement equation number
             auto v = eqtb_int_table[equation_ctr_pos].val;
@@ -1217,7 +1217,7 @@ void Parser::scan_math_tag(subtypes c) {
     bool is_star = false;
     if (c == 0) is_star = remove_initial_star();
     TokenList L = read_arg();
-    if (c == 0 && (cmi.get_eqnum_status() == 2 || cmi.get_eqnum_status() == 1)) {
+    if (c == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         L.remove_if([](const Token &m) { return m.is_math_shift(); });
         L.push_front(hash_table.relax_token);
         L.push_front(hash_table.ref_token);
@@ -1227,7 +1227,7 @@ void Parser::scan_math_tag(subtypes c) {
         cmi.new_multi_label(val, (is_star ? 3 : 2));
         return;
     }
-    if (c == 0 && (cmi.get_eqnum_status() == 0)) {
+    if (c == 0 && (cmi.eqnum_status == 0)) {
         parse_error("Illegal \\tag");
         return;
     }
@@ -1249,7 +1249,7 @@ void Parser::scan_eqno(math_list_type type) {
         return;
     }
     std::string w = cur_cmd_chr.chr == leqno_code ? "left" : "right";
-    cmi.get_fid().add_attribute(the_names["eqnpos"], the_names[w], true);
+    cmi.cur_formula_id.add_attribute(the_names["eqnpos"], the_names[w], true);
     TokenList L;
     int       balance = 0;
     for (;;) {
@@ -1599,10 +1599,10 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         n++; // empty cell, no atts needed.
         return res;
     }
-    Xid id        = res.id;
-    int tbl_align = 0;
-    cmi.set_cid(id);
-    Math args = *this;
+    Xid id          = res.id;
+    int tbl_align   = 0;
+    cmi.cur_cell_id = id;
+    Math args       = *this;
     if (!(front().cmd == special_math_cmd && front().get_lcmd() == sub_to_math(multicolumn_code))) {
         auto m = table.size();
         if (n < m) id.add_attribute(table[n], true);
@@ -1648,14 +1648,14 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     bool needs_dp    = (math_env_props(sname) & 1) != 0;
     if (sname == aligned_code) needs_dp = true; // OK FIXME
     if (sname == split_code) needs_dp = true;   // OK FIXME
-    size_t n    = 0;                            // index of cell in row.
-    Xml *  res  = new Xml(the_names["mtable"], nullptr);
-    Xml *  row  = new Xml(the_names["mtr"], nullptr);
-    Xid    rid  = cmi.get_rid(); // old rid, to be restored at the end
-    Xid    cid  = cmi.get_cid();
-    Xid    taid = cmi.get_taid();
-    cmi.set_taid(res->id);
-    cmi.set_rid(row->id);
+    size_t n         = 0;                       // index of cell in row.
+    Xml *  res       = new Xml(the_names["mtable"], nullptr);
+    Xml *  row       = new Xml(the_names["mtr"], nullptr);
+    Xid    rid       = cmi.cur_row_id; // old rid, to be restored at the end
+    Xid    cid       = cmi.cur_cell_id;
+    Xid    taid      = cmi.cur_table_id;
+    cmi.cur_table_id = res->id;
+    cmi.cur_row_id   = row->id;
     if (needs_dp) W = ms_D;
     res->push_back_unless_nullptr(row);
     bool first_cell = is_multline;
@@ -1665,22 +1665,22 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
             row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
-            cmi.set_cid(cid);
+            cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
         } else if (cmd == backslash_cmd) { // finish row and cell
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
             row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
-            if (first_cell) cmi.get_cid().add_attribute(the_names["columnalign"], the_names["left"]);
-            cmi.set_cid(cid);
+            if (first_cell) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["left"]);
+            cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
             if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
 
-            n   = 0;
-            row = new Xml(the_names["mtr"], nullptr);
-            cmi.set_rid(row->id);
+            n              = 0;
+            row            = new Xml(the_names["mtr"], nullptr);
+            cmi.cur_row_id = row->id;
             res->push_back_unless_nullptr(row);
         } else if (cmd == space_catcode && cell.empty()) {
             pop_front();
@@ -1691,8 +1691,8 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     }
     if (!cell.empty()) {
         row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
-        if (is_multline) cmi.get_cid().add_attribute(the_names["columnalign"], the_names["right"]);
-        cmi.set_cid(cid);
+        if (is_multline) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["right"]);
+        cmi.cur_cell_id = cid;
     }
     if (row->empty()) // kill the last empty row
         res->pop_back();
@@ -1701,10 +1701,10 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     }
 
     Xid w = the_main->the_stack->next_xid(res);
-    w.add_attribute(cmi.get_taid()); // move the attributes
-    cmi.set_rid(rid);
-    cmi.set_taid(taid);
-    res->id = w;
+    w.add_attribute(cmi.cur_table_id); // move the attributes
+    cmi.cur_row_id   = rid;
+    cmi.cur_table_id = taid;
+    res->id          = w;
     if (needs_dp) res->add_att(the_names["displaystyle"], the_names["true"]);
     return res;
 }
