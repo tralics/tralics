@@ -17,32 +17,6 @@ class Xml;
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// for modules
-class ModChecker {
-    std::string id;              // the id of the module or section
-    bool        is_mod{false};   // is this a module?
-    bool        has_info{false}; // does this have some infos ?
-public:
-    ModChecker() = default;
-    ModChecker(std::string I, bool mod) : id(std::move(I)), is_mod(mod) {}
-    void set(const std::string &I) {
-        if (id == I) has_info = true;
-    }
-    void check(int *T) const {
-        if (is_mod) {
-            if (has_info)
-                T[0]++;
-            else
-                T[1]++;
-        } else {
-            if (has_info)
-                T[2]++;
-            else
-                T[3]++;
-        }
-    }
-};
-
 // temporary for recursion.
 class XmlAction {
     std::string match;      // the name of the object to match
