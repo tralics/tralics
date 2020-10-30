@@ -143,7 +143,7 @@ public:
     void push_back(const Macro &x, bool sw);
     void push_back(const TokenList &L);
 
-    template <typename... Args> void format(const char *f, Args &&... args) { append(fmt::format(f, args...)); }
+    template <typename... Args> void format(const char *f, Args &&...args) { append(fmt::format(f, args...)); }
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
@@ -151,4 +151,5 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     return B;
 }
 
-inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer;
+inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer,
+    txparser2_local_buf;

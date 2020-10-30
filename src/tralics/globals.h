@@ -28,6 +28,8 @@ inline bool                                                         no_xml_error
 inline bool                                                         old_ra = false;
 inline bool                                                         ra_ok{true};
 inline bool                                                         use_quotes{false};
+inline bool                                                         xkv_is_global;
+inline bool                                                         xkv_is_save;
 inline char32_t                                                     leftquote_val{'`'};
 inline char32_t                                                     rightquote_val{'\''};
 inline int                                                          bad_chars{0};

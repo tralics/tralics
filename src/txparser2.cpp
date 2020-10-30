@@ -37,10 +37,8 @@ namespace {
         auto interpret(const std::string &s, Token T) -> bool;
     };
 
-    Buffer      local_buf, mac_buf, buf_for_del;
+    Buffer      mac_buf, buf_for_del;
     TokenList   KV_list;
-    bool        xkv_is_global;
-    bool        xkv_is_save;
     std::string xkv_prefix;
     std::string xkv_header;
     TokenList   xkv_action;
@@ -886,7 +884,7 @@ void Parser::T_xkeyval(subtypes c) {
         if (xkv_save_keys_aux(true, 1)) return;
         M_let_fast(cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
         xkv_ns::find_aux(2);
-        cur_tok = hash_table.locate(local_buf);
+        cur_tok = hash_table.locate(txparser2_local_buf);
         M_let_fast(cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
         return;
     }
@@ -906,7 +904,7 @@ void Parser::T_xkeyval(subtypes c) {
 // Otherwise \def\KV@foo@bar@default{\cmd{gee}}, then \def\cmd#1{ETC}
 
 void Parser::T_define_key(bool xkv) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     if (xkv)
         xkv_fetch_prefix_family();
     else {
@@ -926,7 +924,7 @@ void Parser::T_define_key(bool xkv) {
 // Implements \define@cmdkey, \define@cmdkeys
 // We make the assumption that a key does not contain a comma
 void Parser::define_cmd_key(subtypes c) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     xkv_fetch_prefix_family(); // read prefix and family
     TokenList L;
     if (read_optarg_nopar(L)) {
@@ -977,8 +975,8 @@ void Parser::define_choice_key() {
     bool if_plus = remove_initial_plus(true);
     xkv_fetch_prefix_family();
     TokenList keytoks = read_arg();
-    list_to_string_c(keytoks, xkv_header, "", "bad key name", local_buf);
-    Token     T = hash_table.locate(local_buf);
+    list_to_string_c(keytoks, xkv_header, "", "bad key name", txparser2_local_buf);
+    Token     T = hash_table.locate(txparser2_local_buf);
     TokenList storage_bin;
     read_optarg_nopar(storage_bin);
     TokenList allowed = read_arg();
@@ -1051,8 +1049,8 @@ void Parser::internal_choice_key() {
     int       k      = 0;
     bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
     if (B2 != relax) {
-        local_buf   = fmt::format("{}", k);
-        TokenList u = local_buf.str_toks(nlt_cr); // Should be irrelevant ?
+        txparser2_local_buf = fmt::format("{}", k);
+        TokenList u         = txparser2_local_buf.str_toks(nlt_cr); // Should be irrelevant ?
         new_macro(u, B2);
     }
     if (found)
@@ -1066,7 +1064,7 @@ void Parser::internal_choice_key() {
 }
 
 void Parser::define_bool_key(subtypes c) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     remove_initial_plus(false);
     bool if_plus = remove_initial_plus(true);
     if (c != define_boolkey_code) if_plus = false;
@@ -1092,7 +1090,7 @@ void Parser::define_bool_key(subtypes c) {
         B           = "true,false";
         TokenList v = B.str_toks11(false);
         B           = xkv_header + Key;
-        Token T     = hash_table.locate(local_buf);
+        Token T     = hash_table.locate(txparser2_local_buf);
         if (has_dft) {
             TokenList D = dft;
             internal_define_key_default(T, D);
@@ -1137,7 +1135,7 @@ void Parser::define_bool_key(subtypes c) {
 
 // Implements \key@ifundefined
 void Parser::key_ifundefined() {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     xkv_fetch_prefix();
     TokenList   fams      = read_arg();
     bool        undefined = true;
@@ -1161,7 +1159,7 @@ void Parser::key_ifundefined() {
 
 // Implements \disable@keys
 void Parser::disable_keys() {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     xkv_fetch_prefix_family(); // read prefix and family
     TokenList   keys = read_arg();
     std::string Keys = list_to_string_c(keys, "problem scanning keys");
@@ -1195,7 +1193,7 @@ void Parser::disable_keys() {
 auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
     xkv_fetch_prefix_family();
     xkv_ns::find_aux(c2);
-    Buffer &B   = local_buf;
+    Buffer &B   = txparser2_local_buf;
     bool    ret = !hash_table.is_defined(B);
     if (c && ret) {
         B = (c2 != 0 ? "No presets defined for `" : "No save keys defined for `") + xkv_header + "'";
@@ -1247,8 +1245,8 @@ auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
 // Command savekeys and presetkeys use a common whose name is constructed
 // here
 void xkv_ns::find_aux(int c) {
-    local_buf = "XKV@" + xkv_header;
-    local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
+    txparser2_local_buf = "XKV@" + xkv_header;
+    txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
 }
 
 // This merges L into W; both lists have the form \global{key}=value
@@ -1293,7 +1291,7 @@ void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
 // This deletes L from W. Here L is a simple list of keys
 void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
     Buffer &B   = buf_for_del;
-    Buffer &aux = local_buf;
+    Buffer &aux = txparser2_local_buf;
     the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
     Token     comma = the_parser.hash_table.comma_token;
     TokenList tmp;
@@ -1312,7 +1310,7 @@ void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
 
 // This finds mykey in the list whose name is in the buffer
 auto Parser::find_a_save_key(const std::string &mykey) -> bool {
-    Buffer &  B = local_buf;
+    Buffer &  B = txparser2_local_buf;
     TokenList W = get_mac_value(hash_table.locate(B));
     TokenList key;
     while (!W.empty()) {
@@ -1330,7 +1328,7 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
     token_ns::sanitize_one(L, '=');
     token_ns::sanitize_one(L, ',');
     xkv_ns::find_aux(type);
-    Token     T = hash_table.locate(local_buf);
+    Token     T = hash_table.locate(txparser2_local_buf);
     TokenList W = get_mac_value(T);
     if (mg)
         xkv_ns::merge(W, L, type);
@@ -1339,12 +1337,12 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
     new_macro(W, T, gbl);
 }
 
-// Assume local_buf contains the name of T without the extension
+// Assume txparser2_local_buf contains the name of T without the extension
 void Parser::internal_define_key_default(Token T, TokenList &L) {
     brace_me(L);
     L.push_front(T);
-    local_buf.append("@default");
-    cur_tok = hash_table.locate(local_buf);
+    txparser2_local_buf.append("@default");
+    cur_tok = hash_table.locate(txparser2_local_buf);
     new_macro(L, cur_tok);
 }
 
@@ -1375,7 +1373,7 @@ void Parser::xkv_fetch_prefix() {
         xkv_prefix = "KV@";
         return;
     }
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     B.clear();
     token_ns::remove_first_last_space(L);
     bool t = list_to_string(L, B);
@@ -1395,7 +1393,7 @@ void Parser::xkv_fetch_prefix() {
 
 void Parser::xkv_makehd(TokenList &L) {
     token_ns::remove_first_last_space(L);
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     B         = xkv_prefix;
     auto k    = B.size();
     if (list_to_string(L, B)) {
@@ -1407,7 +1405,7 @@ void Parser::xkv_makehd(TokenList &L) {
 }
 
 void xkv_ns::makehd(const std::string &fam) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     B         = xkv_prefix + fam;
     if (!fam.empty()) B.push_back('@');
     xkv_header = B;
@@ -1448,8 +1446,8 @@ void Parser::xkv_declare_option() {
     TokenList   xkey = key;
     std::string Key  = list_to_string_c(xkey, "Invalid option");
     classes_ns::register_key(Key);
-    list_to_string_c(key, xkv_header, "", "bad option name", local_buf);
-    Token     T = hash_table.locate(local_buf);
+    list_to_string_c(key, xkv_header, "", "bad option name", txparser2_local_buf);
+    Token     T = hash_table.locate(txparser2_local_buf);
     TokenList opt;
     read_optarg(opt);
     internal_define_key_default(T, opt);
@@ -1680,7 +1678,7 @@ void XkvSetkeys::run(bool c) {
 }
 
 void XkvSetkeys::check_preset(String s) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     auto    N = Fams.size();
     for (size_t i = 0; i < N; i++) {
         xkv_ns::makehd(Fams[i]);
@@ -1703,10 +1701,10 @@ void XkvSetkeys::set_aux(TokenList &W, long idx) {
         token_ns::split_at(comma_token, W, val);
         token_ns::remove_initial_spaces(val);
         if (val.empty()) continue;
-        cur.set_initial(val);
+        cur.initial = std::move(val);
         cur.extract();
-        if (cur.key_empty()) {
-            if (!cur.val_empty()) P->parse_error(P->err_tok, "No key for a value");
+        if (cur.keyname.empty()) {
+            if (!cur.value.empty()) P->parse_error(P->err_tok, "No key for a value");
             continue;
         }
         if (cur.ignore_this(Na)) continue;
@@ -1730,77 +1728,10 @@ void XkvSetkeys::set_aux(TokenList &W, long idx) {
     }
 }
 
-// Splits key=val into pieces
-void XkvToken::extract() {
-    TokenList key;
-    value   = initial;
-    has_val = token_ns::split_at(Token(other_t_offset, '='), value, key);
-    token_ns::remove_first_last_space(key);
-    token_ns::remove_first_last_space(value);
-    token_ns::remove_ext_braces(value);
-    token_ns::remove_ext_braces(value);
-    keyname   = xkv_ns::find_key_of(key, 1);
-    has_save  = xkv_is_save;
-    is_global = xkv_is_global;
-    token_ns::remove_first_last_space(value);
-}
-
-// True if the key is in the ignore list
-auto XkvToken::ignore_this(std::vector<std::string> &igna) -> bool {
-    auto n = igna.size();
-    for (size_t i = 0; i < n; i++)
-        if (keyname == igna[i]) return true;
-    return false;
-}
-
-// Constructs the header, in xkv_header
-// Constructs the 3 macros in action
-void XkvToken::prepare(const std::string &fam) {
-    Hashtab &H = the_parser.hash_table;
-    // We start constructing the three macros
-    Buffer &B = local_buf;
-    action.push_back(H.def_token);
-    action.push_back(H.xkv_tkey_token);
-    B           = keyname;
-    TokenList L = B.str_toks11(false);
-    the_parser.brace_me(L);
-    action.splice(action.end(), L);
-    action.push_back(H.def_token);
-    action.push_back(H.xkv_tfam_token);
-    B = fam;
-    L = B.str_toks11(false);
-    the_parser.brace_me(L);
-    action.splice(action.end(), L);
-    action.push_back(H.def_token);
-    action.push_back(H.xkv_header_token);
-    xkv_ns::makehd(fam);
-    L = B.str_toks11(false);
-    the_parser.brace_me(L);
-    action.splice(action.end(), L);
-}
-
-// Returns true if the key is defined
-auto XkvToken::is_defined(const std::string &fam) -> bool {
-    xkv_ns::makehd(fam);
-    local_buf += keyname;
-    return the_parser.hash_table.is_defined(local_buf);
-}
-
-// Returns true if must be saved; may set xkv_is_global
-auto XkvToken::check_save() -> bool {
-    if (has_save) {
-        xkv_is_global = is_global;
-        return true;
-    }
-    xkv_ns::find_aux(0);
-    if (!the_parser.hash_table.is_defined(local_buf)) return false;
-    return the_parser.find_a_save_key(keyname);
-}
-
 // This is called if the value must be saved
 void XkvSetkeys::save_key(const std::string &Key, TokenList &L) {
-    local_buf = "XKV@" + xkv_header + Key + "@value";
-    Token T   = P->hash_table.locate(local_buf);
+    txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
+    Token T             = P->hash_table.locate(txparser2_local_buf);
     P->new_macro(L, T, xkv_is_global);
 }
 
@@ -1808,15 +1739,15 @@ void XkvSetkeys::save_key(const std::string &Key, TokenList &L) {
 // What happens if you say \savevalue{keya} = \usevalue{keyb} ?
 void XkvSetkeys::run_key(Token mac, XkvToken &cur, const std::string &fam) {
     cur.prepare(fam);
-    more_action(cur.get_action());
+    more_action(cur.action);
     bool               s   = cur.check_save();
-    const std::string &Key = cur.get_name();
-    TokenList          L   = cur.get_code();
+    const std::string &Key = cur.keyname;
+    TokenList          L   = cur.value;
     if (s) save_key(Key, L);
-    if (cur.val_empty())
+    if (cur.value.empty())
         run_default(Key, mac, s);
     else {
-        TokenList LL = cur.get_code();
+        TokenList LL = cur.value;
         replace_pointers(LL);
         action.push_back(mac);
         P->brace_me(LL);
@@ -1826,7 +1757,7 @@ void XkvSetkeys::run_key(Token mac, XkvToken &cur, const std::string &fam) {
 
 // Interprets \usevalue{foo} in the list L
 void XkvSetkeys::replace_pointers(TokenList &L) {
-    Buffer &  B = local_buf;
+    Buffer &  B = txparser2_local_buf;
     TokenList res;
     int       n = 1000;
     for (;;) {
@@ -1854,8 +1785,8 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
         }
         TokenList key = L.fast_get_block();
         token_ns::remove_ext_braces(key);
-        std::string Key = P->list_to_string_c(key, "Argument of \\savevalue");
-        local_buf       = "XKV@" + xkv_header + Key + "@value";
+        std::string Key     = P->list_to_string_c(key, "Argument of \\savevalue");
+        txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
         if (P->hash_table.is_defined(B)) {
             TokenList w = P->get_mac_value(P->hash_table.last_tok);
             L.splice(L.begin(), w);
@@ -1869,7 +1800,7 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
 
 //
 void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     B         = xkv_header + Key + "@default";
     if (!P->hash_table.is_defined(B)) {
         B = "No value specified for key `" + Key + "'";
@@ -1906,7 +1837,7 @@ void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
 
 // This considers the case when \ProcessOptionsX has seen cur_opt
 void XkvSetkeys::check_action(XkvToken &cur) {
-    TokenList cur_opt = cur.get_all();
+    TokenList cur_opt = cur.initial;
     if (in_pox) {
         classes_ns::unknown_optionX(cur_opt, action);
         return;
@@ -1915,8 +1846,9 @@ void XkvSetkeys::check_action(XkvToken &cur) {
     if (no_err)
         new_unknown(cur_opt);
     else
-        P->parse_error(P->err_tok, "Undefined key: ", cur.get_name(), "undefined key");
+        P->parse_error(P->err_tok, "Undefined key: ", cur.keyname, "undefined key");
 }
+
 void Parser::formatdate() {
     flush_buffer();
     std::string s = sT_arg_nopar();
@@ -2227,7 +2159,7 @@ auto FormatDate::parse(Buffer &B) -> bool {
 // fills year month day
 auto FormatDate::interpret(const std::string &s, Token T) -> bool {
     err_tok   = T;
-    Buffer &B = local_buf;
+    Buffer &B = txparser2_local_buf;
     B         = s;
     B.ptrs.b  = 0;
     bool res  = parse(B);
@@ -2266,7 +2198,7 @@ void Parser::numberwithin() {
     TokenList foo_list = read_arg();
     TokenList A        = foo_list;
     TokenList bar_list = read_arg();
-    Buffer &  b        = local_buf;
+    Buffer &  b        = txparser2_local_buf;
     if (csname_ctr(foo_list, b)) {
         bad_counter0();
         return;
@@ -2296,7 +2228,7 @@ void Parser::numberwithin() {
 
 auto Parser::make_label_inner(const std::string &name) -> std::string {
     TokenList res;
-    Buffer &  b = local_buf;
+    Buffer &  b = txparser2_local_buf;
     b           = "the" + name;
     res.push_back(hash_table.locate(b));
     b = "p@" + name;
@@ -2311,9 +2243,9 @@ auto Parser::make_label_inner(const std::string &name) -> std::string {
 }
 
 // executes \stepcounter{foo}\makelabel*{foo}
-// the name of the counter is in local_buf abd L
+// the name of the counter is in txparser2_local_buf abd L
 void Parser::refstepcounter_inner(TokenList &L, bool star) {
-    std::string name = local_buf;
+    std::string name = txparser2_local_buf;
     brace_me(L);
     L.push_front(hash_table.stepcounter_token);
     T_translate(L);
@@ -2324,7 +2256,7 @@ void Parser::refstepcounter_inner(TokenList &L, bool star) {
 
 // takes a string as argument and translates the thing
 void Parser::refstepcounter(const std::string &S, bool star) {
-    Buffer &b = local_buf;
+    Buffer &b = txparser2_local_buf;
     b.clear();
     b.append(S);
     TokenList L = b.str_toks11(true);
@@ -2341,7 +2273,7 @@ void Parser::refstepcounter() {
 
 // Case where the nale of the label is in L
 void Parser::refstepcounter(TokenList &L, bool star) {
-    Buffer &b = local_buf;
+    Buffer &b = txparser2_local_buf;
     b.clear();
     TokenList L1 = L;
     if (list_to_string(L1, b)) {
@@ -2355,7 +2287,7 @@ void Parser::refstepcounter(TokenList &L, bool star) {
 // remembers locally the name.
 void Parser::T_use_counter(const std::string &s) {
     string_define(1, s, false);
-    Buffer &b     = local_buf;
+    Buffer &b     = txparser2_local_buf;
     b             = "c@" + s;
     Token       T = hash_table.locate(b);
     EqtbCmdChr &E = hash_table.eqtb[T.eqtb_loc()];
@@ -2407,7 +2339,7 @@ auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
     Hashtab & H = hash_table;
     TokenList res;
     int       b   = 0;
-    Buffer &  B   = local_buf;
+    Buffer &  B   = txparser2_local_buf;
     B             = "the" + ctr;
     Token the_ctr = H.locate(B);
     Token cmd     = H.relax_token;
@@ -2480,7 +2412,7 @@ void Parser::T_listenv(symcodes x) {
     auto n = listdepth;
     if (is_enum) n = n / 100;
     n         = n % 100;
-    Buffer &b = local_buf;
+    Buffer &b = txparser2_local_buf;
     b         = is_enum ? "enum" : "Enum";
     token_ns::int_to_roman(b, n);
     std::string list_ctr = b;

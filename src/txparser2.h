@@ -1,5 +1,6 @@
 #pragma once
 #include "tralics/Parser.h"
+#include "tralics/XkvToken.h"
 
 // -*- C++ -*-
 // TRALICS, copyright (C)  INRIA/apics (Jose' Grimm) 2008
@@ -12,31 +13,6 @@
 // (See the file COPYING in the main directory for details)
 
 // This file holds code for Xkeyval
-
-class XkvToken {
-    TokenList   initial; // of the form \gsavevalue{foo}=bar
-    TokenList   value;
-    std::string keyname;
-    bool        is_global{};
-    bool        has_save{};
-    bool        has_val{};
-    TokenList   action;
-
-public:
-    [[nodiscard]] auto key_empty() const -> bool { return keyname.empty(); }
-    [[nodiscard]] auto val_empty() const -> bool { return value.empty(); }
-    void               set_initial(TokenList L) { initial = std::move(L); }
-    auto               get_all() -> TokenList { return initial; }
-    auto               get_code() -> TokenList { return value; }
-    auto               get_action() -> TokenList & { return action; }
-    void               extract();
-    auto               ignore_this(std::vector<std::string> &igna) -> bool;
-    auto               get_name() -> std::string & { return keyname; }
-    void               prepare(const std::string &fam);
-    auto               is_defined(const std::string &fam) -> bool;
-    [[nodiscard]] auto get_save() const -> bool { return has_save; }
-    auto               check_save() -> bool;
-};
 
 // Used by \setkeys in xkv
 class XkvSetkeys {
