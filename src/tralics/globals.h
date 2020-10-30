@@ -56,6 +56,8 @@ inline std::string                                                  hlinee_above
 inline std::string                                                  tralics_version{"2.15.4"};
 inline std::string                                                  the_default_rc; // \todo RA stuff
 inline std::string                                                  the_tag;
+inline std::string                                                  xkv_header;
+inline std::string                                                  xkv_prefix;
 inline std::vector<std::filesystem::path>                           conf_path{"../confdir"};
 inline std::vector<std::filesystem::path>                           input_path;
 inline std::vector<std::pair<size_t, std::string>>                  ref_list;       // list of all \ref
