@@ -1,5 +1,7 @@
 #pragma once
 #include "TokenList.h"
+#include <string>
+#include <vector>
 
 struct XkvToken {
     std::string keyname;
