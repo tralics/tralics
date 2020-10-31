@@ -364,7 +364,7 @@ void Glue::negate() {
 
 // Adds y to this, assuming we have dimensions.
 void ScaledInt::add_dim(ScaledInt Y) {
-    auto x = get_value(), y = Y.get_value();
+    auto x = value, y = Y.value;
     auto mx = max_dimension;
     if ((x >= 0 && y <= mx - x) || (x <= 0 && y >= -mx - x))
         value = x + y;
@@ -377,8 +377,8 @@ void ScaledInt::add_dim(ScaledInt Y) {
 }
 
 void Glue::normalise() {
-    if (stretch.null()) stretch_order = glue_spec_pt;
-    if (shrink.null()) shrink_order = glue_spec_pt;
+    if (stretch == 0) stretch_order = glue_spec_pt;
+    if (shrink == 0) shrink_order = glue_spec_pt;
 }
 
 void SthInternal::normalise() {
@@ -390,15 +390,15 @@ void Glue::add(const Glue &r) {
     width.add_dim(r.width);
     if (stretch_order == r.stretch_order) {
         stretch.add_dim(r.stretch);
-        if (stretch.null()) stretch_order = glue_spec_pt;
-    } else if (stretch_order < r.stretch_order && !r.stretch.null()) {
+        if (stretch == 0) stretch_order = glue_spec_pt;
+    } else if (stretch_order < r.stretch_order && !(r.stretch == 0)) {
         stretch       = r.stretch;
         stretch_order = r.stretch_order;
     }
     if (shrink_order == r.shrink_order) {
         shrink.add_dim(r.shrink);
-        if (shrink.null()) shrink_order = glue_spec_pt;
-    } else if (shrink_order < r.shrink_order && !r.shrink.null()) {
+        if (shrink == 0) shrink_order = glue_spec_pt;
+    } else if (shrink_order < r.shrink_order && !(r.shrink == 0)) {
         shrink       = r.shrink;
         shrink_order = r.shrink_order;
     }
@@ -410,13 +410,13 @@ void Glue::add(const Glue &r) {
 void SthInternal::attach_fraction(RealNumber x) {
     int_val = x.get_ipart();
     long f  = x.get_fpart();
-    if (int_val.get_value() >= (1 << 14)) {
+    if (int_val.value >= (1 << 14)) {
         start_err("2^{14}");
-        err_buf.format("\nfor {}", int_val.get_value());
+        err_buf.format("\nfor {}", int_val.value);
         end_err();
         int_val = max_dimension;
     } else
-        int_val = (int_val.get_value() << 16) + f;
+        int_val = (int_val.value << 16) + f;
     if (x.get_negative()) int_val = -int_val;
 }
 
@@ -475,7 +475,7 @@ void SthInternal::add(const SthInternal &r) {
         glue_val.add(r.glue_val);
         return;
     }
-    auto x = int_val.get_value(), y = r.int_val.get_value();
+    auto x = int_val.value, y = r.int_val.value;
     int  mx = type == it_int ? max_integer : max_dimension;
     if (x >= 0 && y <= mx - x) {
         int_val = x + y;

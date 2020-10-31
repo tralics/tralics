@@ -293,7 +293,7 @@ void Buffer::insert_token(Token T, bool sw) {
 // This is the algorithm of Knuth
 void Buffer::push_back(ScaledInt V, glue_spec unit) {
     const int unity = 1 << 16;
-    auto      s     = V.get_value();
+    auto      s     = V.value;
     if (s < 0) {
         push_back('-');
         s = -s;
@@ -315,11 +315,11 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
 // Adds glue likes 3pt plus 3 fill
 void Buffer::push_back(const Glue &x) {
     push_back(x.get_width(), glue_spec_pt);
-    if (!x.get_stretch().null()) {
+    if (!(x.get_stretch() == 0)) {
         append(" plus ");
         push_back(x.get_stretch(), x.get_stretch_order());
     }
-    if (!x.get_shrink().null()) {
+    if (!(x.get_shrink() == 0)) {
         append(" minus ");
         push_back(x.get_shrink(), x.get_shrink_order());
     }
@@ -356,14 +356,6 @@ void Buffer::push_back(const SthInternal &x) {
 }
 
 auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
-
-ScaledInt::operator std::string() const {
-    Buffer B;
-    B.push_back(*this, glue_spec_pt);
-    return std::move(B);
-}
-
-auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & { return fp << static_cast<std::string>(x); }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     Buffer B;

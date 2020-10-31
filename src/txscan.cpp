@@ -1307,7 +1307,7 @@ void Parser::scan_something_internal(internal_type level) {
     {
         auto a = scan_int(cur_tok); // read the position in the table
         auto k = scan_font_ident(); // read the font ID
-        cur_val.set_dim(tfonts.get_dimen_param(k, a).get_value());
+        cur_val.set_dim(tfonts.get_dimen_param(k, a).value);
         return;
     }
     case assign_font_int_cmd: // hyphenchar, \skewchar. Read a font ID
@@ -2417,9 +2417,9 @@ void             TexRule::reset() {
 }
 
 void TexRule::convert(AttList &res) const {
-    if (rule_h.get_value() != default_rule_dimen) res.push_back(the_names["height"], std::string(rule_h));
-    if (rule_d.get_value() != default_rule_dimen) res.push_back(the_names["depth"], std::string(rule_d));
-    if (rule_w.get_value() != default_rule_dimen) res.push_back(the_names["width"], std::string(rule_w));
+    if (rule_h.value != default_rule_dimen) res.push_back(the_names["height"], std::string(rule_h));
+    if (rule_d.value != default_rule_dimen) res.push_back(the_names["depth"], std::string(rule_d));
+    if (rule_w.value != default_rule_dimen) res.push_back(the_names["width"], std::string(rule_w));
 }
 
 void Parser::scan_rule(int c) {

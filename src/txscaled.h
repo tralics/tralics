@@ -12,43 +12,10 @@
 // This defines the classes: ScaledInt, Glue, RealNumber,
 // SthInternal ScanSlot TexRule
 
+#include "tralics/ScaledInt.h"
 #include "txtokenlist.h"
 
 struct AttList;
-
-// this is a wrapper around an int
-class ScaledInt {
-public:
-    long value{0}; // the integer, considered as a scaled number
-
-    ScaledInt() = default;
-    ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
-    ScaledInt(long v) : value(v) {}
-
-    auto operator-() const -> ScaledInt { return ScaledInt(-value); }
-    void operator+=(ScaledInt X) { value += X.value; }
-
-    [[nodiscard]] auto get_value() const -> long { return value; }
-    [[nodiscard]] auto null() const -> bool { return value == 0; }
-
-    void add_dim(ScaledInt Y);
-    void neg() { value = -value; }
-    void divide(long n);
-    void quotient(long d);
-    void scale(long n, long d, long max_answer);
-    auto scale(long x, long n, long d, long max_answer, bool &negative) -> bool;
-    void mult_scaled(long x);
-    void mult_integer(long x);
-    void times_10_18();
-    void ovf30();
-    void ovf31();
-
-    operator std::string() const;
-};
-
-inline auto operator==(const ScaledInt &a, const ScaledInt &b) -> bool { return a.get_value() == b.get_value(); }
-
-auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
 
 // a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
 // the three ints should be ScaledInt.
@@ -128,14 +95,14 @@ public:
         type = it_int;
     }
     void               set_type(internal_type X) { type = X; }
-    [[nodiscard]] auto get_int_val() const -> long { return int_val.get_value(); }
+    [[nodiscard]] auto get_int_val() const -> long { return int_val.value; }
     [[nodiscard]] auto get_dim_val() const -> ScaledInt { return int_val; }
     auto               get_scaled() -> ScaledInt & { return int_val; }
     [[nodiscard]] auto get_token_val() const -> TokenList { return token_val; }
     void               set_int_val(long k) { int_val = k; }
     void               set_scaled_val(ScaledInt k) { int_val = k; }
     [[nodiscard]] auto get_glue_val() const -> const Glue & { return glue_val; }
-    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.get_width().get_value(); }
+    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.get_width().value; }
     void               initialise(internal_type t);
     void               copy(const SthInternal &x);
     void               negate() {
@@ -156,7 +123,7 @@ public:
         type    = it_dimen;
     }
     void set_dim(ScaledInt a) {
-        int_val = a.get_value();
+        int_val = a.value;
         type    = it_dimen;
     }
     void set_glue(Glue a) {
@@ -173,11 +140,11 @@ public:
     }
     void change_level(internal_type level);
     void glue_to_mu() {
-        if (type >= it_glue) int_val = glue_val.get_width().get_value();
+        if (type >= it_glue) int_val = glue_val.get_width().value;
     }
     void add(const SthInternal &r);
     void incr_int(long x) { int_val += x; }
-    void incr_dim(ScaledInt x) { int_val += x.get_value(); }
+    void incr_dim(ScaledInt x) { int_val += x.value; }
     void incr_glue(Glue x) { glue_val.add(x); }
     void glue_multiply(long v) { glue_val.multiply(v); }
     void glue_divide(long v) { glue_val.divide(v); }

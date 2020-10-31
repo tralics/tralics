@@ -980,8 +980,8 @@ void Parser::T_epsfbox() {
     AttList &res = the_stack.add_newid0("figure");
     no_extension(res, y);
     res.push_back(the_names["rend"], the_names["inline"]);
-    if (!xdim.null()) res.push_back(the_names["width"], std::string(xdim));
-    if (!ydim.null()) res.push_back(the_names["height"], std::string(ydim));
+    if (!(xdim == 0)) res.push_back(the_names["width"], std::string(xdim));
+    if (!(ydim == 0)) res.push_back(the_names["height"], std::string(ydim));
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -997,7 +997,7 @@ void Parser::T_hspace(subtypes c) {
 // Code of \vspace, or \vskip, after we have fetched the dimension.
 void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     if (!vert) {
-        auto dim = dimen.get_value();
+        auto dim = dimen.value;
         leave_v_mode();
         auto k = ((dim >> 16) + 2) / 4;
         while (k > 0) {

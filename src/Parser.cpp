@@ -2270,7 +2270,7 @@ void Parser::T_start_tabular(subtypes c) {
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) id.add_attribute(the_names["table_width"], std::string(tab_width));
+        if (!(tab_width == 0)) id.add_attribute(the_names["table_width"], std::string(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
@@ -2340,7 +2340,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     TokenList L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) {
+        if (!(tab_width == 0)) {
             have_above   = true;
             hlinee_above = std::string(tab_width);
         }
@@ -2348,7 +2348,7 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!tab_width.null()) {
+        if (!(tab_width == 0)) {
             have_below   = true;
             hlinee_below = std::string(tab_width);
         }
