@@ -11,6 +11,7 @@
 // This file contains a lot of stuff dealing with buffers.
 
 #include "tralics/Bibtex.h"
+#include "tralics/Glue.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/Xml.h"
@@ -314,14 +315,14 @@ void Buffer::push_back(ScaledInt V, glue_spec unit) {
 
 // Adds glue likes 3pt plus 3 fill
 void Buffer::push_back(const Glue &x) {
-    push_back(x.get_width(), glue_spec_pt);
-    if (!(x.get_stretch() == 0)) {
+    push_back(x.width, glue_spec_pt);
+    if (!(x.stretch == 0)) {
         append(" plus ");
-        push_back(x.get_stretch(), x.get_stretch_order());
+        push_back(x.stretch, x.stretch_order);
     }
-    if (!(x.get_shrink() == 0)) {
+    if (!(x.shrink == 0)) {
         append(" minus ");
-        push_back(x.get_shrink(), x.get_shrink_order());
+        push_back(x.shrink, x.shrink_order);
     }
 }
 

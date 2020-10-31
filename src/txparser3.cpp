@@ -232,8 +232,8 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
 }
 
 auto operator==(const Glue &a, const Glue &b) -> bool {
-    return a.get_width() == b.get_width() && a.get_shrink() == b.get_shrink() && a.get_stretch() == b.get_stretch() &&
-           a.get_shrink_order() == b.get_shrink_order() && a.get_stretch_order() == b.get_stretch_order();
+    return a.width == b.width && a.shrink == b.shrink && a.stretch == b.stretch && a.shrink_order == b.shrink_order &&
+           a.stretch_order == b.stretch_order;
 }
 
 // Define for a glue quantity

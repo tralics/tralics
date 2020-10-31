@@ -1,6 +1,7 @@
 #pragma once
 #include "../txscaled.h"
 #include "CmdChr.h"
+#include "Glue.h"
 
 class Xml;
 

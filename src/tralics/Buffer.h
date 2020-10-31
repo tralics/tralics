@@ -8,6 +8,7 @@
 #include <vector>
 
 struct AttPair;
+struct Glue;
 class Xml;
 
 /// A utility structure which is basically a std::string with a marked range,

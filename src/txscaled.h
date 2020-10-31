@@ -12,48 +12,11 @@
 // This defines the classes: ScaledInt, Glue, RealNumber,
 // SthInternal ScanSlot TexRule
 
+#include "tralics/Glue.h"
 #include "tralics/ScaledInt.h"
 #include "txtokenlist.h"
 
 struct AttList;
-
-// a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
-// the three ints should be ScaledInt.
-class Glue {
-    ScaledInt width;                       // natural width (2.3)
-    ScaledInt shrink;                      // shrink (6.7)
-    ScaledInt stretch;                     // stretch (4.5)
-    glue_spec shrink_order{glue_spec_pt};  // fill, symbolically
-    glue_spec stretch_order{glue_spec_pt}; // pt, symbolically
-public:
-    Glue() = default;
-    [[nodiscard]] auto get_width() const -> ScaledInt { return width; }
-    [[nodiscard]] auto get_shrink() const -> ScaledInt { return shrink; }
-    [[nodiscard]] auto get_stretch() const -> ScaledInt { return stretch; }
-    [[nodiscard]] auto get_shrink_order() const -> glue_spec { return shrink_order; }
-    [[nodiscard]] auto get_stretch_order() const -> glue_spec { return stretch_order; }
-    void               set_width(ScaledInt x) { width = x; }
-    void               set_shrink(ScaledInt x) { shrink = x; }
-    void               set_stretch(ScaledInt x) { stretch = x; }
-    void               set_shrink_order(glue_spec x) { shrink_order = x; }
-    void               set_stretch_order(glue_spec x) { stretch_order = x; }
-    void               kill();
-    void               normalise();
-    void               negate();
-    void               add(const Glue &r);
-    void               multiply(long n);
-    void               divide(long n);
-    void               incr_width(long x) { width += x; }
-    void               scale(long n, long d);
-    void               quotient(long f);
-    void               check_overflow();
-    void               expr_mul(long f);
-    void               add_ovf(const Glue &);
-
-    static void zdv();
-};
-
-auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
 
 // The value of the number is sign*(i+f/2^16);
 class RealNumber {
@@ -102,7 +65,7 @@ public:
     void               set_int_val(long k) { int_val = k; }
     void               set_scaled_val(ScaledInt k) { int_val = k; }
     [[nodiscard]] auto get_glue_val() const -> const Glue & { return glue_val; }
-    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.get_width().value; }
+    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.width.value; }
     void               initialise(internal_type t);
     void               copy(const SthInternal &x);
     void               negate() {
@@ -140,7 +103,7 @@ public:
     }
     void change_level(internal_type level);
     void glue_to_mu() {
-        if (type >= it_glue) int_val = glue_val.get_width().value;
+        if (type >= it_glue) int_val = glue_val.width.value; // \todo no value here
     }
     void add(const SthInternal &r);
     void incr_int(long x) { int_val += x; }

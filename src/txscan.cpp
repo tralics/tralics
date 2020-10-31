@@ -1759,18 +1759,18 @@ void Parser::scan_glue(internal_type level) {
     }
     Glue q;
 
-    q.set_width(cur_val.get_int_val());
+    q.width = cur_val.get_int_val();
     if (scan_keyword("plus")) {
         co = glue_spec_pt;
         scan_dimen(mu, true, co, false);
-        q.set_stretch(cur_val.get_int_val());
-        q.set_stretch_order(co);
+        q.stretch       = cur_val.get_int_val();
+        q.stretch_order = co;
     }
     if (scan_keyword("minus")) {
         co = glue_spec_pt;
         scan_dimen(mu, true, co, false);
-        q.set_shrink(cur_val.get_int_val());
-        q.set_shrink_order(co);
+        q.shrink       = cur_val.get_int_val();
+        q.shrink_order = co;
     }
     cur_val.set_glue_val(q);
     cur_val.set_type(level);
