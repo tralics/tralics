@@ -1049,7 +1049,7 @@ auto Parser::scan_int(Token t, int n, String s) -> size_t {
     if (N < 0 || N > n) {
         err_buf = fmt::format("Bad {} replaced by 0\n", s);
         signal_ovf(t, nullptr, N, n);
-        cur_val.set_int_val(0);
+        cur_val.int_val = 0;
         return 0;
     }
     return to_unsigned(N);
@@ -1188,7 +1188,7 @@ void Parser::scan_something_internal(internal_type level, bool negative) {
 void SthInternal::change_level(internal_type level) {
     while (type > level) {
         if (type == it_glue)
-            set_int_val(get_glue_width());
+            int_val = get_glue_width();
         else if (type == it_mu)
             the_parser.mu_error("in conversion from mu to ", level);
         type = internal_type(type - 1);
@@ -1255,11 +1255,11 @@ void Parser::scan_something_internal(internal_type level) {
         case parshapedimen_code: parshape_aux(m); return;
         case mutoglue_code:
             scan_glue(it_mu, cur_tok);
-            cur_val.set_type(it_glue);
+            cur_val.type = it_glue;
             return;
         case gluetomu_code:
             scan_glue(it_glue, cur_tok);
-            cur_val.set_type(it_mu);
+            cur_val.type = it_mu;
             return;
         case gluestretchorder_code:
         case glueshrinkorder_code:
@@ -1475,15 +1475,15 @@ auto Parser::E_the(subtypes c) -> TokenList {
     }
     scan_something_internal(it_tok, false);
     B.clear();
-    switch (cur_val.get_type()) {
+    switch (cur_val.type) {
     case it_ident: // case of a font name
     case it_tok:   // case of a token list
-        return cur_val.get_token_val();
+        return cur_val.token_val;
     case it_int: B.append(std::to_string(cur_val.get_int_val())); break;
     case it_dimen: B.push_back(ScaledInt(cur_val.get_int_val()), glue_spec_pt); break;
-    case it_glue: B.push_back(cur_val.get_glue_val()); break;
+    case it_glue: B.push_back(cur_val.glue_val); break;
     case it_mu:
-        B.push_back(cur_val.get_glue_val());
+        B.push_back(cur_val.glue_val);
         B.pt_to_mu();
         break;
     }
@@ -1578,7 +1578,7 @@ void Parser::scan_unit(RealNumber R) {
     }
     auto k = to_unsigned(k0);
     if (k == unit_sp) {
-        cur_val.set_int_val(R.ipart);
+        cur_val.int_val = R.ipart;
         cur_val.attach_sign(R.negative);
         return; // special ignore frac. part
     }
@@ -1612,7 +1612,7 @@ auto Parser::scan_dim_helper(bool mu, bool allow_int) -> bool {
         cur_val.glue_to_mu(); // Ignores stretch and shrink if desired
         if (cur_val.is_mu()) return true;
         if (allow_int && cur_val.is_int()) return true;
-        mu_error("Converting to mu from ", cur_val.get_type());
+        mu_error("Converting to mu from ", cur_val.type);
     } else
         scan_something_internal(it_dimen, false);
     return true;
@@ -1705,15 +1705,15 @@ auto Parser::scan_dimen1(bool mu, bool inf, glue_spec &co, bool shortcut) -> boo
 void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
     bool skip = scan_dimen1(mu, inf, co, shortcut);
     if (skip) read_one_space();
-    cur_val.set_type(it_dimen);
+    cur_val.type = it_dimen;
 }
 
 // Multiplies a dimension by an integer
 void Parser::multiply_dim(RealNumber val, long v) {
-    long rem = 0; // unused but modified
-    auto A   = arith_ns::xn_over_d(v, val.fpart, 1 << 16, rem);
-    auto B   = arith_ns::nx_plus_y(val.ipart, v, A);
-    cur_val.set_int_val(B);
+    long rem        = 0; // unused but modified
+    auto A          = arith_ns::xn_over_d(v, val.fpart, 1 << 16, rem);
+    auto B          = arith_ns::nx_plus_y(val.ipart, v, A);
+    cur_val.int_val = B;
     cur_val.attach_sign(val.negative);
 }
 
@@ -1729,7 +1729,7 @@ void Parser::scan_glue(internal_type level) {
     glue_spec co       = glue_spec_pt;
     if (cur_cmd_chr.is_ok_for_the()) { // got something to evaluate
         scan_something_internal(level, negative);
-        internal_type ct = cur_val.get_type();
+        internal_type ct = cur_val.type;
         switch (ct) {
         case it_int:
             scan_dimen(mu, false, co, true); // we have a multiplier
@@ -1743,13 +1743,13 @@ void Parser::scan_glue(internal_type level) {
             // Note that ct<=level, different means from ct=glue to level=mu
             if (level != ct) { // Assume level = glue, ct = mu
                 mu_error("in conversion from glue to ", ct);
-                cur_val.set_type(level);
+                cur_val.type = level;
             }
             return;
         default:
             // This should not happen
             parse_error(err_tok, "Unexpected error in ", err_tok, "", "bad");
-            cur_val.set_int_val(0);
+            cur_val.int_val = 0;
             break;
         }
     } else {
@@ -1773,7 +1773,7 @@ void Parser::scan_glue(internal_type level) {
         q.shrink_order = co;
     }
     cur_val.set_glue_val(q);
-    cur_val.set_type(level);
+    cur_val.type = level;
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{scanglue " << cur_val << "}\n";
@@ -1857,7 +1857,7 @@ void Parser::M_prefixed_aux(bool gbl) {
             scan_glue(it_mu, T);
         else
             scan_glue(it_glue, T);
-        glue_define(to_unsigned(p), cur_val.get_glue_val(), gbl);
+        glue_define(to_unsigned(p), cur_val.glue_val, gbl);
         return;
     }
     case def_code_cmd: assign_def_something(gbl); return;

@@ -1,5 +1,6 @@
 #pragma once
 #include "../txscaled.h"
+#include "SthInternal.h"
 #include "Xid.h"
 #include <cstring>
 #include <fmt/format.h>

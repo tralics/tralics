@@ -3544,7 +3544,7 @@ void Parser::do_register_command(bool gbl) {
                 cur_val.set_int(eqtb_int_table[l].val);
             else
                 cur_val.set_dim(eqtb_dim_table[l].val);
-            ScaledInt &W = cur_val.get_scaled();
+            ScaledInt &W = cur_val.int_val;
             if (q == multiply_cmd)
                 if (p == it_int)
                     W.mult_integer(v);
@@ -3567,7 +3567,7 @@ void Parser::do_register_command(bool gbl) {
     else if (p < it_glue)
         word_define(l, cur_val.get_int_val(), gbl);
     else
-        glue_define(l, cur_val.get_glue_val(), gbl);
+        glue_define(l, cur_val.glue_val, gbl);
 }
 
 // This implements \tracingall
@@ -3921,19 +3921,19 @@ void Parser::calc_primitive(SthInternal &A) {
     else if (cur_cmd_chr.cmd == unimp_cmd &&
              (cur_cmd_chr.chr == widthof_code || cur_cmd_chr.chr == depthof_code || cur_cmd_chr.chr == heightof_code)) {
         ignore_arg();
-        A.initialise(A.get_type()); // this puts 0 in A.
+        A.initialise(A.type); // this puts 0 in A.
     } else {
         back_input();
         scan_optional_equals(); // can do no harm.
         if (A.is_dimen()) {
             scan_dimen(false, hash_table.calc_token);
-            A.set_int_val(cur_val.get_int_val());
+            A.int_val = cur_val.int_val;
         } else if (A.is_glue()) {
             scan_glue(it_glue, hash_table.calc_token);
-            A.set_glue_val(cur_val.get_glue_val());
+            A.set_glue_val(cur_val.glue_val);
         } else {
             scan_int(hash_table.calc_token);
-            A.set_int_val(cur_val.get_int_val());
+            A.int_val = cur_val.int_val;
         }
     }
     if (tracing_commands()) {
@@ -3957,7 +3957,7 @@ void Parser::calc_aux(SthInternal &A) {
                 the_log << "{calc +-}\n";
             }
             SthInternal B;
-            B.initialise(A.get_type());
+            B.initialise(A.type);
             calc_primitive(B);
             if (T.is_minus_token()) B.negate();
             A.add(B);
@@ -4006,14 +4006,14 @@ void Parser::calc_aux(SthInternal &A) {
             if (A.is_glue())
                 A.glue_multiply(v);
             else if (A.is_int())
-                A.get_scaled().mult_integer(v);
+                A.int_val.mult_integer(v);
             else
-                A.get_scaled().mult_scaled(v);
+                A.int_val.mult_scaled(v);
         } else {
             if (A.is_glue())
                 A.glue_divide(v);
             else
-                A.get_scaled().divide(v);
+                A.int_val.divide(v);
         }
     }
 }
@@ -4024,7 +4024,7 @@ void Parser::ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res) {
     num.initialise(it_int);
     den.initialise(it_int);
     if (A.empty())
-        num.set_int_val(1 << 16); // Same as 1pt, but faster.
+        num.int_val = 1 << 16; // Same as 1pt, but faster.
     else
         calc_main(it_dimen, num, A);
     calc_main(it_dimen, den, B);
@@ -4049,7 +4049,7 @@ void Parser::calc_main(internal_type type, SthInternal &res, TokenList &B) {
         Logger::finish_seq();
         the_log << "{calc res " << A << "}\n";
     }
-    res.set_type(type);
+    res.type = type;
     res.copy(A);
 }
 
@@ -4094,7 +4094,7 @@ void Parser::exec_calc() {
             cur_val.incr_int(eqtb_int_table[l].val);
     }
     if (p == it_glue)
-        glue_define(l, cur_val.get_glue_val(), gbl);
+        glue_define(l, cur_val.glue_val, gbl);
     else if (p == it_dimen)
         dim_define(l, cur_val.get_dim_val(), gbl);
     else

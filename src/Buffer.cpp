@@ -340,15 +340,15 @@ void Buffer::pt_to_mu() {
 
 // The \relax is a bit strange.
 void Buffer::push_back(const SthInternal &x) {
-    switch (x.get_type()) {
+    switch (x.type) {
     case it_int: format("{}", x.get_int_val()); break;
     case it_dimen: push_back(ScaledInt(x.get_int_val()), glue_spec_pt); break;
     case it_glue:
-        push_back(x.get_glue_val());
+        push_back(x.glue_val);
         append("\\relax ");
         break;
     case it_mu:
-        push_back(x.get_glue_val());
+        push_back(x.glue_val);
         pt_to_mu();
         append("\\relax ");
         break;
