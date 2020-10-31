@@ -1521,7 +1521,7 @@ void Parser::scan_double(RealNumber &res) {
             Logger::finish_seq();
             the_log << "+scanint for " << err_tok << "->" << val << "\n";
         }
-        res.set_ipart(val); // this sets the integer part
+        res.ipart = val;
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
     get_token(); // read the . or ,
@@ -1578,8 +1578,8 @@ void Parser::scan_unit(RealNumber R) {
     }
     auto k = to_unsigned(k0);
     if (k == unit_sp) {
-        cur_val.set_int_val(R.get_ipart());
-        cur_val.attach_sign(R.get_negative());
+        cur_val.set_int_val(R.ipart);
+        cur_val.attach_sign(R.negative);
         return; // special ignore frac. part
     }
     static std::array<int, 9> numerator_table   = {0, 7227, 12, 7227, 7227, 7227, 1238, 14856, 0};
@@ -1587,14 +1587,14 @@ void Parser::scan_unit(RealNumber R) {
     int                       num               = numerator_table[k];
     int                       den               = denominator_table[k];
     if (k != unit_pt) {
-        auto i         = R.get_ipart();
-        auto f         = R.get_fpart();
+        auto i         = R.ipart;
+        auto f         = R.fpart;
         long remainder = 0;
         i              = arith_ns::xn_over_d(i, num, den, remainder);
         f              = (num * f + (remainder << 16)) / den;
         i += f >> 16;
-        R.set_fpart(f % (1 << 16));
-        R.set_ipart(i);
+        R.fpart = f % (1 << 16);
+        R.ipart = i;
     }
     cur_val.attach_fraction(R);
 }
@@ -1626,7 +1626,7 @@ auto Parser::scan_dim_helper(bool mu, bool allow_int) -> bool {
 // and return false
 
 auto Parser::scan_dim2(RealNumber &R, bool mu) -> bool {
-    R.set_negative(scan_sign());
+    R.negative = scan_sign();
     if (!scan_dim_helper(mu, true)) {
         scan_double(R);
         return false;
@@ -1639,7 +1639,7 @@ auto Parser::scan_dim2(RealNumber &R, bool mu) -> bool {
         // We could have \dimen0=\count0 \dimen1 ....
     }
     if (res)
-        cur_val.attach_sign(R.get_negative());
+        cur_val.attach_sign(R.negative);
     else
         R.from_int(cur_val.get_int_val());
     return res;
@@ -1711,10 +1711,10 @@ void Parser::scan_dimen(bool mu, bool inf, glue_spec &co, bool shortcut) {
 // Multiplies a dimension by an integer
 void Parser::multiply_dim(RealNumber val, long v) {
     long rem = 0; // unused but modified
-    auto A   = arith_ns::xn_over_d(v, val.get_fpart(), 1 << 16, rem);
-    auto B   = arith_ns::nx_plus_y(val.get_ipart(), v, A);
+    auto A   = arith_ns::xn_over_d(v, val.fpart, 1 << 16, rem);
+    auto B   = arith_ns::nx_plus_y(val.ipart, v, A);
     cur_val.set_int_val(B);
-    cur_val.attach_sign(val.get_negative());
+    cur_val.attach_sign(val.negative);
 }
 
 // This reads glue.

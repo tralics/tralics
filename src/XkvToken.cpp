@@ -26,8 +26,8 @@ void XkvToken::extract() {
 
 // True if the key is in the ignore list
 auto XkvToken::ignore_this(std::vector<std::string> &igna) const -> bool {
-    for (size_t i = 0; i < igna.size(); i++) // \todo std::any_of
-        if (keyname == igna[i]) return true;
+    for (auto &i : igna) // \todo std::any_of
+        if (keyname == i) return true;
     return false;
 }
 

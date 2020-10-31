@@ -3868,12 +3868,12 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
     static const unsigned int my_max = ((1U << 31) - 1);
     RealNumber                val;
     if (num < 0) {
-        val.set_negative(true);
-        num = -num;
+        val.negative = true;
+        num          = -num;
     }
     if (den < 0) {
-        val.change_sign();
-        den = -den;
+        val.negative = !val.negative;
+        den          = -den;
     }
     while (den >= int(my_max / 10)) {
         den /= 2;
@@ -3883,8 +3883,8 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
         parse_error(hash_table.calc_token, "Division by zero");
         return;
     }
-    auto A = num / den;
-    val.set_ipart(A); // Integer part of the thing.
+    auto A    = num / den;
+    val.ipart = A;
     std::array<long, 17> table{};
     for (size_t k = 0; k < 10; k++) {
         num -= A * den;
@@ -3902,7 +3902,7 @@ void Parser::calc_mul_aux(SthInternal &res) {
     back_input(hash_table.space_token); // in case...
     back_input(x);
     RealNumber val;
-    val.set_negative(scan_sign());
+    val.negative = scan_sign();
     back_input();
     scan_double(val);
     skip_initial_space_and_back_input();

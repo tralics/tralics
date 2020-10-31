@@ -13,30 +13,11 @@
 // SthInternal ScanSlot TexRule
 
 #include "tralics/Glue.h"
+#include "tralics/RealNumber.h"
 #include "tralics/ScaledInt.h"
 #include "txtokenlist.h"
 
 struct AttList;
-
-// The value of the number is sign*(i+f/2^16);
-class RealNumber {
-    bool negative{false}; // true if negative
-    long ipart{0};        // fractional part
-    long fpart{0};        // integer part, is <2^16
-public:
-    void               convert_decimal_part(size_t k, const long *table);
-    void               set_ipart(long x) { ipart = x; }
-    void               set_fpart(long x) { fpart = x; }
-    [[nodiscard]] auto get_ipart() const -> long { return ipart; }
-    [[nodiscard]] auto get_fpart() const -> long { return fpart; }
-    void               change_sign() { negative = !negative; }
-    void               set_negative(bool x) { negative = x; }
-    RealNumber() = default;
-    void               set_neg() { negative = true; }
-    void               change_sign_i() { ipart = -ipart; }
-    [[nodiscard]] auto get_negative() const -> bool { return negative; };
-    void               from_int(long x);
-};
 
 // This is a union of different things
 // it contains the result of scan_something_internal

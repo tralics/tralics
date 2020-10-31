@@ -8,6 +8,7 @@
 #include "LabelInfo.h"
 #include "LineList.h"
 #include "Mactab.h"
+#include "RealNumber.h"
 #include "SaveState.h"
 #include "Stack.h"
 

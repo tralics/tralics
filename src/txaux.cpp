@@ -130,8 +130,8 @@ void SthInternal::normalise() {
 // Overflow is 4096pt
 // Inlined call to attach sign
 void SthInternal::attach_fraction(RealNumber x) {
-    int_val = x.get_ipart();
-    long f  = x.get_fpart();
+    int_val = x.ipart;
+    long f  = x.fpart;
     if (int_val.value >= (1 << 14)) {
         start_err("2^{14}");
         err_buf.format("\nfor {}", int_val.value);
@@ -139,7 +139,7 @@ void SthInternal::attach_fraction(RealNumber x) {
         int_val = max_dimension;
     } else
         int_val = (int_val.value << 16) + f;
-    if (x.get_negative()) int_val = -int_val;
+    if (x.negative) int_val = -int_val;
 }
 
 // This attaches the sign, and checks for overflow.
@@ -240,29 +240,4 @@ void SthInternal::check_overflow(scan_expr_t t) {
         int_val.ovf30();
     } else
         glue_val.check_overflow();
-}
-
-// put x in this, but change the sign is *this<0
-void RealNumber::from_int(long x) {
-    if (negative) x = -x;
-    if (x > 0) {
-        ipart    = x;
-        fpart    = 0;
-        negative = false;
-    } else {
-        ipart    = -x;
-        negative = true;
-        fpart    = 0;
-    }
-}
-
-// Assume that we have read x=0.142. i.e. k=3 digits  in the table.
-// This computes y=x* 2^{17}, then (y+1)/2.
-void RealNumber::convert_decimal_part(size_t k, const long *table) {
-    long f = 0;
-    while (k > 0) {
-        k--;
-        f = (f + (table[k] << 17)) / 10;
-    }
-    fpart = (f + 1) / 2;
 }
