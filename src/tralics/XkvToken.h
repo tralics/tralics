@@ -14,7 +14,7 @@ public:
     void extract();
     void prepare(const std::string &fam);
 
-    auto check_save() -> bool;
-    auto ignore_this(std::vector<std::string> &igna) -> bool;
-    auto is_defined(const std::string &fam) -> bool;
+    [[nodiscard]] auto check_save() const -> bool;
+    [[nodiscard]] auto ignore_this(std::vector<std::string> &igna) const -> bool;
+    [[nodiscard]] auto is_defined(const std::string &fam) const -> bool;
 };

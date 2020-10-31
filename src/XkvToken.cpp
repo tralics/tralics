@@ -25,9 +25,8 @@ void XkvToken::extract() {
 }
 
 // True if the key is in the ignore list
-auto XkvToken::ignore_this(std::vector<std::string> &igna) -> bool {
-    auto n = igna.size();
-    for (size_t i = 0; i < n; i++)
+auto XkvToken::ignore_this(std::vector<std::string> &igna) const -> bool {
+    for (size_t i = 0; i < igna.size(); i++) // \todo std::any_of
         if (keyname == igna[i]) return true;
     return false;
 }
@@ -59,14 +58,14 @@ void XkvToken::prepare(const std::string &fam) {
 }
 
 // Returns true if the key is defined
-auto XkvToken::is_defined(const std::string &fam) -> bool {
+auto XkvToken::is_defined(const std::string &fam) const -> bool {
     xkv_ns::makehd(fam);
     txparser2_local_buf += keyname;
     return the_parser.hash_table.is_defined(txparser2_local_buf);
 }
 
 // Returns true if must be saved; may set xkv_is_global
-auto XkvToken::check_save() -> bool {
+auto XkvToken::check_save() const -> bool {
     if (has_save) {
         xkv_is_global = is_global;
         return true;

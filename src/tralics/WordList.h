@@ -14,7 +14,7 @@ public:
 
     [[nodiscard]] auto is_here(const std::string &s, size_t h) const -> bool { return (hash == h) && (name == s); }
 
-    auto dump(std::ostream &X, int i) -> bool {
+    auto dump(std::ostream &X, int i) const -> bool {
         if (freq == i) {
             X << freq << " " << name << "\n";
             return true;

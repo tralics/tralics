@@ -1149,8 +1149,8 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
 void MainClass::check_section_use() const {
     if (handling_ra) {
         std::vector<ParamDataSlot> &X = config_data[1];
-        for (size_t i = 0; i < X.size(); i++)
-            if (X[i].no_topic()) the_parser.parse_error(Token(), "No module in section ", X[i].key, "no module");
+        for (auto &i : X)
+            if (i.no_topic()) the_parser.parse_error(Token(), "No module in section ", i.key, "no module");
     }
 }
 

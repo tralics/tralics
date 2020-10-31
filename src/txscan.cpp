@@ -962,7 +962,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
 }
 
 // Fills the token list with the content of the buffer.
-TokenList Parser::tokenize_buffer(const std::string &b, const std::string &name) {
+auto Parser::tokenize_buffer(const std::string &b, const std::string &name) -> TokenList {
     auto guard = SaveScannerStatus(ss_normal);
     push_input_stack(name, false, true);
     auto n     = cur_input_stack.size();

@@ -13,7 +13,7 @@ namespace tralics_ns {
 using tralics_ns::math_env_props;
 
 // Implements \cellattribute
-void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) {
+void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) const {
     Xid w;
     if (c == cell_attribute_code)
         w = cur_cell_id;

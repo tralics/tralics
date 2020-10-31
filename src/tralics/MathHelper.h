@@ -66,7 +66,7 @@ public:
         else
             math_env_ctr--;
     }
-    void add_attribute(const std::string &a, const std::string &b, subtypes c);
+    void add_attribute(const std::string &a, const std::string &b, subtypes c) const;
     void starred_tag() { is_tag_starred = true; }
     void check_for_eqnum(subtypes type, bool multi);
 
