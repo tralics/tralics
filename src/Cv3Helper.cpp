@@ -60,7 +60,7 @@ void Cv3Helper::find_kernel() {
         pop_front();
         return;
     }
-    ploc  = front().chr;
+    ploc  = static_cast<long>(front().chr);
     ptype = front().get_xmltype();
     if (prefix_type != 0) ptype = prefix_type;
     if (ptype == mt_flag_opD) special = 1;
@@ -77,7 +77,7 @@ void Cv3Helper::find_index(math_style cms) {
     }
     symcodes C = front().cmd;
     if (C == limits_cmd) {
-        int k = front().chr; // displaylimits, nolimits, limits
+        size_t k = front().chr; // displaylimits, nolimits, limits
         pop_front();
         if ((index != nullptr) || (exponent != nullptr)) return; // allow x_2\limits^3
         if (special == 0) return;

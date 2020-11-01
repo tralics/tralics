@@ -13,7 +13,7 @@ public:
     MathElt(CmdChr X, subtypes c, std::string s = "") : CmdChr(X), font(c), payload(std::move(s)) {}
     MathElt(subtypes a, math_types b) : CmdChr(math_xml_cmd, a), font(subtypes(b)) {}
     MathElt(Xml *x, math_types y);
-    MathElt(Xml *A, int b, math_types c);
+    MathElt(Xml *A, long b, math_types c);
 
     [[nodiscard]] auto get_char() const -> char32_t { return char_val(); }
     [[nodiscard]] auto get_fml_subtype() const -> subtypes;

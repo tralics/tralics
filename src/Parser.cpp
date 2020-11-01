@@ -14,16 +14,13 @@
 #include <spdlog/spdlog.h>
 
 namespace accent_ns {
-    auto fetch_accent(size_t chr, int accent_code) -> Token;
     auto fetch_double_accent(int a, int acc3) -> Token;
-    auto combine_accents(int acc1, int acc2) -> int;
     auto double_a_accent(int acc3) -> unsigned;
     auto double_e_accent(int acc3) -> unsigned;
     auto double_o_accent(int acc3) -> unsigned;
     auto double_u_accent(int acc3) -> unsigned;
     auto double_other_accent(int a, int acc3) -> unsigned;
     void special_acc_hack(TokenList &y);
-    auto special_double_acc(int chr, int acc) -> Token;
 } // namespace accent_ns
 
 namespace {
@@ -51,6 +48,85 @@ namespace {
         return w;
     }
 
+    // For the case of \'\^e, construct an accent code.
+    // It is assumed that the order is irrelevant.
+
+    auto combine_accents(unsigned acc1, unsigned acc2) -> int {
+        // start with acute and something
+        if (acc1 == '\'' && acc2 == '~') return 9;
+        if (acc2 == '\'' && acc1 == '~') return 9;
+        if (acc1 == '\'' && acc2 == '=') return 10;
+        if (acc2 == '\'' && acc1 == '=') return 10;
+        if (acc1 == '\'' && acc2 == '.') return 11;
+        if (acc2 == '\'' && acc1 == '.') return 11;
+        if (acc1 == '\'' && acc2 == '^') return 12;
+        if (acc2 == '\'' && acc1 == '^') return 12;
+        if (acc1 == '\'' && acc2 == 'H') return 16;
+        if (acc2 == '\'' && acc1 == 'H') return 16;
+        if (acc1 == '\'' && acc2 == 'c') return 17;
+        if (acc2 == '\'' && acc1 == 'c') return 17;
+        if (acc1 == '\'' && acc2 == '"') return 2;
+        if (acc2 == '\'' && acc1 == '"') return 2;
+        if (acc1 == '\'' && acc2 == '^') return 21;
+        if (acc2 == '\'' && acc1 == '^') return 21;
+        if (acc1 == '\'' && acc2 == 'u') return 34;
+        if (acc2 == '\'' && acc1 == 'u') return 34;
+        // now grave and something
+        if (acc1 == '`' && acc2 == '=') return 13;
+        if (acc2 == '`' && acc1 == '=') return 13;
+        if (acc1 == '`' && acc2 == '^') return 15;
+        if (acc2 == '`' && acc1 == '^') return 15;
+        if (acc1 == '`' && acc2 == 'H') return 18;
+        if (acc2 == '`' && acc1 == 'H') return 18;
+        if (acc1 == '`' && acc2 == '"') return 4;
+        if (acc2 == '`' && acc1 == '"') return 4;
+        if (acc1 == '`' && acc2 == 'u') return 22;
+        if (acc2 == '`' && acc1 == 'u') return 22;
+        // now dot and something
+        if (acc1 == '.' && acc2 == '=') return 5;
+        if (acc2 == '.' && acc1 == '=') return 5;
+        if (acc1 == '.' && acc2 == 'v') return 19;
+        if (acc2 == '.' && acc1 == 'v') return 19;
+        if (acc1 == '.' && acc2 == 'd') return 20;
+        if (acc2 == '.' && acc1 == 'd') return 20;
+        // now hat and something
+        if (acc1 == '^' && acc2 == 'h') return 23;
+        if (acc2 == '^' && acc1 == 'h') return 23;
+        if (acc1 == '^' && acc2 == '~') return 24;
+        if (acc2 == '^' && acc1 == '~') return 24;
+        if (acc1 == '^' && acc2 == 'd') return 25;
+        if (acc2 == '^' && acc1 == 'd') return 25;
+        // diaresis
+        if (acc1 == '"' && acc2 == '=') return 1;
+        if (acc2 == '"' && acc1 == '=') return 1;
+        if (acc1 == '"' && acc2 == 'v') return 3;
+        if (acc2 == '"' && acc1 == 'v') return 3;
+        if (acc1 == '"' && acc2 == '~') return 27;
+        if (acc2 == '"' && acc1 == '~') return 27;
+        // other
+        if (acc1 == '=' && acc2 == '~') return 6;
+        if (acc2 == '=' && acc1 == '~') return 6;
+        if (acc1 == 'k' && acc2 == '=') return 7;
+        if (acc2 == 'k' && acc1 == '=') return 7;
+        if (acc1 == 'd' && acc2 == '=') return 14;
+        if (acc2 == 'd' && acc1 == '=') return 14;
+        if (acc1 == 'u' && acc2 == 'c') return 26;
+        if (acc2 == 'u' && acc1 == 'c') return 26;
+        if (acc1 == 'H' && acc2 == 'h') return 28;
+        if (acc2 == 'H' && acc1 == 'h') return 28;
+        if (acc1 == 'H' && acc2 == '~') return 29;
+        if (acc2 == 'H' && acc1 == '~') return 29;
+        if (acc1 == 'H' && acc2 == 'd') return 30;
+        if (acc2 == 'H' && acc1 == 'd') return 30;
+        if (acc1 == 'u' && acc2 == 'h') return 31;
+        if (acc2 == 'u' && acc1 == 'h') return 31;
+        if (acc1 == 'u' && acc2 == '~') return 32;
+        if (acc2 == 'u' && acc1 == '~') return 32;
+        if (acc1 == 'u' && acc2 == 'd') return 33;
+        if (acc2 == 'u' && acc1 == 'd') return 33;
+        return 0;
+    }
+
     // Accent tables. Holds the result of the expansion
     std::array<Token, nb_accents>           accent_cir;        // \^
     std::array<Token, nb_accents>           accent_acute;      // \'
@@ -74,6 +150,35 @@ namespace {
     std::array<Token, nb_accents>           accent_rondunder;  // \D
     std::array<Token, nb_accents>           accent_hook;       // \h
     std::array<Token, special_table_length> other_accent;
+
+    // Returns the token associated to acc for character chr.
+    // Return zero-token in case of failure
+    auto fetch_accent(size_t chr, unsigned acc) -> Token {
+        switch (acc) {
+        case '\'': return accent_acute[chr];
+        case '`': return accent_grave[chr];
+        case '^': return accent_cir[chr];
+        case '"': return accent_trema[chr];
+        case '~': return accent_tilde[chr];
+        case 'k': return accent_ogon[chr];
+        case 'H': return accent_uml[chr];
+        case 'v': return accent_check[chr];
+        case 'u': return accent_breve[chr];
+        case 'c': return accent_cedille[chr];
+        case '.': return accent_dotabove[chr];
+        case '=': return accent_macron[chr];
+        case 'r': return accent_ring[chr];
+        case 'b': return accent_barunder[chr];
+        case 'd': return accent_dotunder[chr];
+        case 'C': return accent_dgrave[chr];
+        case 'f': return accent_ibreve[chr];
+        case 'T': return accent_tildeunder[chr];
+        case 'V': return accent_circunder[chr];
+        case 'D': return accent_rondunder[chr];
+        case 'h': return accent_hook[chr];
+        default: return Token(0);
+        }
+    }
 
     // Puts char k, with letter catcode, in the table T at position k.
     void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
@@ -677,36 +782,31 @@ namespace {
 
     /// This creates the table with all the names.
     void make_names() { the_names.boot(); }
-} // namespace
 
-// Returns the token associated to acc for character chr.
-// Return zero-token in case of failure
-auto accent_ns::fetch_accent(size_t chr, int acc) -> Token {
-    switch (acc) {
-    case '\'': return accent_acute[chr];
-    case '`': return accent_grave[chr];
-    case '^': return accent_cir[chr];
-    case '"': return accent_trema[chr];
-    case '~': return accent_tilde[chr];
-    case 'k': return accent_ogon[chr];
-    case 'H': return accent_uml[chr];
-    case 'v': return accent_check[chr];
-    case 'u': return accent_breve[chr];
-    case 'c': return accent_cedille[chr];
-    case '.': return accent_dotabove[chr];
-    case '=': return accent_macron[chr];
-    case 'r': return accent_ring[chr];
-    case 'b': return accent_barunder[chr];
-    case 'd': return accent_dotunder[chr];
-    case 'C': return accent_dgrave[chr];
-    case 'f': return accent_ibreve[chr];
-    case 'T': return accent_tildeunder[chr];
-    case 'V': return accent_circunder[chr];
-    case 'D': return accent_rondunder[chr];
-    case 'h': return accent_hook[chr];
-    default: return Token(0);
+    auto special_double_acc(unsigned chr, unsigned acc) -> Token {
+        if (acc == '`' && chr == '*') return special_double[0];
+        if (acc == '`' && chr == '.') return special_double[1];
+        if (acc == '\'' && chr == '*') return special_double[2];
+        if (acc == '\'' && chr == '=') return special_double[3];
+        if (acc == '^' && chr == '*') return special_double[4];
+        if (acc == '^' && chr == '.') return special_double[5];
+        if (acc == '~' && chr == '*') return special_double[6];
+        if (acc == '~' && chr == '.') return special_double[7];
+        if (acc == '"' && chr == '*') return special_double[8];
+        if (acc == 'H' && chr == '*') return special_double[9];
+        if (acc == 'r' && chr == '*') return special_double[10];
+        if (acc == 'r' && chr == '=') return special_double[11];
+        if (acc == 'v' && chr == '*') return special_double[12];
+        if (acc == 'v' && chr == '\'') return special_double[13];
+        if (acc == 'u' && chr == '*') return special_double[14];
+        if (acc == 'u' && chr == '=') return special_double[15];
+        if (acc == '=' && chr == '*') return special_double[16];
+        if (acc == '.' && chr == '*') return special_double[17];
+        if (acc == '.' && chr == '\'') return special_double[18];
+        if (acc == 't' && chr == '*') return special_double[19];
+        return Token();
     }
-}
+} // namespace
 
 // This command puts a double accent on a letter.
 // The result is a token (character or command) from
@@ -1550,7 +1650,7 @@ void Parser::E_accent() {
         Logger::finish_seq();
         the_log << "{accent " << cur_tok << "}\n";
     }
-    int acc_code = cur_cmd_chr.chr;
+    unsigned acc_code = cur_cmd_chr.chr;
     if (global_in_url && acc_code == '~') {
         if (tracing_macros()) {
             Logger::finish_seq();
@@ -1570,8 +1670,8 @@ void Parser::E_accent() {
         signal_error(err_tok, msg2);
         return;
     }
-    int   acc_code2 = 0; // will be set in the double acc case.
-    Token tfe2;          // Second token for error.
+    unsigned acc_code2 = 0; // will be set in the double acc case.
+    Token    tfe2;          // Second token for error.
     if (y.size() >= 2) {
         token_from_list(y.front()); // Get the meaning of the start of y
         // case \'{\a'e};
@@ -1644,16 +1744,16 @@ void Parser::E_accent() {
     bool  spec = false;
     if (achar < nb_accents) {
         if (acc_code2 != 0) {
-            int acc3_code = accent_ns::combine_accents(acc_code, acc_code2);
+            int acc3_code = combine_accents(acc_code, acc_code2);
             res           = accent_ns::fetch_double_accent(to_signed(achar), acc3_code);
         } else {
-            res = accent_ns::fetch_accent(achar, acc_code);
+            res = fetch_accent(achar, acc_code);
             if (res.is_null() && achar < 128) {
                 if (std::isalpha(static_cast<char>(achar)) != 0) {
                     spec = true; // T. Bouche veut une erreur
-                    res  = accent_ns::fetch_accent(0, acc_code);
+                    res  = fetch_accent(0, acc_code);
                 } else
-                    res = accent_ns::special_double_acc(to_signed(achar), acc_code);
+                    res = special_double_acc(achar, acc_code);
             }
         }
     }

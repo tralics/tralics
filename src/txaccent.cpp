@@ -19,96 +19,14 @@
 #include "tralics/globals.h"
 
 namespace accent_ns {
-    auto fetch_accent(size_t chr, int accent_code) -> Token;
     auto fetch_double_accent(int a, int acc3) -> Token;
-    auto combine_accents(int acc1, int acc2) -> int;
     auto double_a_accent(int acc3) -> unsigned;
     auto double_e_accent(int acc3) -> unsigned;
     auto double_o_accent(int acc3) -> unsigned;
     auto double_u_accent(int acc3) -> unsigned;
     auto double_other_accent(int a, int acc3) -> unsigned;
     void special_acc_hack(TokenList &y);
-    auto special_double_acc(int chr, int acc) -> Token;
 } // namespace accent_ns
-
-// For the case of \'\^e, construct an accent code.
-// It is assumed that the order is irrelevant.
-
-auto accent_ns::combine_accents(int acc1, int acc2) -> int {
-    // start with acute and something
-    if (acc1 == '\'' && acc2 == '~') return 9;
-    if (acc2 == '\'' && acc1 == '~') return 9;
-    if (acc1 == '\'' && acc2 == '=') return 10;
-    if (acc2 == '\'' && acc1 == '=') return 10;
-    if (acc1 == '\'' && acc2 == '.') return 11;
-    if (acc2 == '\'' && acc1 == '.') return 11;
-    if (acc1 == '\'' && acc2 == '^') return 12;
-    if (acc2 == '\'' && acc1 == '^') return 12;
-    if (acc1 == '\'' && acc2 == 'H') return 16;
-    if (acc2 == '\'' && acc1 == 'H') return 16;
-    if (acc1 == '\'' && acc2 == 'c') return 17;
-    if (acc2 == '\'' && acc1 == 'c') return 17;
-    if (acc1 == '\'' && acc2 == '"') return 2;
-    if (acc2 == '\'' && acc1 == '"') return 2;
-    if (acc1 == '\'' && acc2 == '^') return 21;
-    if (acc2 == '\'' && acc1 == '^') return 21;
-    if (acc1 == '\'' && acc2 == 'u') return 34;
-    if (acc2 == '\'' && acc1 == 'u') return 34;
-    // now grave and something
-    if (acc1 == '`' && acc2 == '=') return 13;
-    if (acc2 == '`' && acc1 == '=') return 13;
-    if (acc1 == '`' && acc2 == '^') return 15;
-    if (acc2 == '`' && acc1 == '^') return 15;
-    if (acc1 == '`' && acc2 == 'H') return 18;
-    if (acc2 == '`' && acc1 == 'H') return 18;
-    if (acc1 == '`' && acc2 == '"') return 4;
-    if (acc2 == '`' && acc1 == '"') return 4;
-    if (acc1 == '`' && acc2 == 'u') return 22;
-    if (acc2 == '`' && acc1 == 'u') return 22;
-    // now dot and something
-    if (acc1 == '.' && acc2 == '=') return 5;
-    if (acc2 == '.' && acc1 == '=') return 5;
-    if (acc1 == '.' && acc2 == 'v') return 19;
-    if (acc2 == '.' && acc1 == 'v') return 19;
-    if (acc1 == '.' && acc2 == 'd') return 20;
-    if (acc2 == '.' && acc1 == 'd') return 20;
-    // now hat and something
-    if (acc1 == '^' && acc2 == 'h') return 23;
-    if (acc2 == '^' && acc1 == 'h') return 23;
-    if (acc1 == '^' && acc2 == '~') return 24;
-    if (acc2 == '^' && acc1 == '~') return 24;
-    if (acc1 == '^' && acc2 == 'd') return 25;
-    if (acc2 == '^' && acc1 == 'd') return 25;
-    // diaresis
-    if (acc1 == '"' && acc2 == '=') return 1;
-    if (acc2 == '"' && acc1 == '=') return 1;
-    if (acc1 == '"' && acc2 == 'v') return 3;
-    if (acc2 == '"' && acc1 == 'v') return 3;
-    if (acc1 == '"' && acc2 == '~') return 27;
-    if (acc2 == '"' && acc1 == '~') return 27;
-    // other
-    if (acc1 == '=' && acc2 == '~') return 6;
-    if (acc2 == '=' && acc1 == '~') return 6;
-    if (acc1 == 'k' && acc2 == '=') return 7;
-    if (acc2 == 'k' && acc1 == '=') return 7;
-    if (acc1 == 'd' && acc2 == '=') return 14;
-    if (acc2 == 'd' && acc1 == '=') return 14;
-    if (acc1 == 'u' && acc2 == 'c') return 26;
-    if (acc2 == 'u' && acc1 == 'c') return 26;
-    if (acc1 == 'H' && acc2 == 'h') return 28;
-    if (acc2 == 'H' && acc1 == 'h') return 28;
-    if (acc1 == 'H' && acc2 == '~') return 29;
-    if (acc2 == 'H' && acc1 == '~') return 29;
-    if (acc1 == 'H' && acc2 == 'd') return 30;
-    if (acc2 == 'H' && acc1 == 'd') return 30;
-    if (acc1 == 'u' && acc2 == 'h') return 31;
-    if (acc2 == 'u' && acc1 == 'h') return 31;
-    if (acc1 == 'u' && acc2 == '~') return 32;
-    if (acc2 == 'u' && acc1 == '~') return 32;
-    if (acc1 == 'u' && acc2 == 'd') return 33;
-    if (acc2 == 'u' && acc1 == 'd') return 33;
-    return 0;
-}
 
 // Fetches the position of a double accent on capital O
 auto accent_ns::double_o_accent(int acc3) -> unsigned {
@@ -223,28 +141,4 @@ void accent_ns::special_acc_hack(TokenList &y) {
         y.push_front(T2);
         y.push_front(T);
     }
-}
-
-auto accent_ns::special_double_acc(int chr, int acc) -> Token {
-    if (acc == '`' && chr == '*') return special_double[0];
-    if (acc == '`' && chr == '.') return special_double[1];
-    if (acc == '\'' && chr == '*') return special_double[2];
-    if (acc == '\'' && chr == '=') return special_double[3];
-    if (acc == '^' && chr == '*') return special_double[4];
-    if (acc == '^' && chr == '.') return special_double[5];
-    if (acc == '~' && chr == '*') return special_double[6];
-    if (acc == '~' && chr == '.') return special_double[7];
-    if (acc == '"' && chr == '*') return special_double[8];
-    if (acc == 'H' && chr == '*') return special_double[9];
-    if (acc == 'r' && chr == '*') return special_double[10];
-    if (acc == 'r' && chr == '=') return special_double[11];
-    if (acc == 'v' && chr == '*') return special_double[12];
-    if (acc == 'v' && chr == '\'') return special_double[13];
-    if (acc == 'u' && chr == '*') return special_double[14];
-    if (acc == 'u' && chr == '=') return special_double[15];
-    if (acc == '=' && chr == '*') return special_double[16];
-    if (acc == '.' && chr == '*') return special_double[17];
-    if (acc == '.' && chr == '\'') return special_double[18];
-    if (acc == 't' && chr == '*') return special_double[19];
-    return Token();
 }

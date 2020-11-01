@@ -1,5 +1,5 @@
 #pragma once
-#include <cctype>
+#include <stddef.h>
 
 // The value of the number is sign*(i+f/2^16);
 

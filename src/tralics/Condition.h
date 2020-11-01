@@ -19,7 +19,7 @@ struct Condition : public std::vector<CondAux> {
 
     [[nodiscard]] auto top_serial() const -> int { return empty() ? -1 : back().serial; }
     [[nodiscard]] auto top_branch() const -> int;
-    [[nodiscard]] auto top_type() const -> int;
+    [[nodiscard]] auto top_type() const -> long;
     [[nodiscard]] auto top_level() const { return size(); };
     [[nodiscard]] auto top_limit() const -> int { return empty() ? 0 : back().if_limit; }
     [[nodiscard]] auto top_line() const -> int { return empty() ? 0 : back().if_line; }

@@ -761,7 +761,7 @@ void Parser::T_verbatim() {
         n     = 0;
     }
     if (want_number && reg_number < 0) reg_number = 21; // hardcoded
-    if (reset) word_define(to_unsigned(reg_number + count_reg_offset), n - 1, true);
+    if (reset) word_define(to_unsigned(reg_number + to_signed(static_cast<size_t>(count_reg_offset))), n - 1, true);
     Token       t2 = hash_table.relax_token;
     Token       t3 = hash_table.relax_token;
     Token       t4 = hash_table.relax_token;

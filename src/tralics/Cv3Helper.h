@@ -5,7 +5,7 @@ class Cv3Helper : public Math {
     Xml *      index{};
     Xml *      exponent{};
     Xml *      p{};
-    int        ploc{};
+    long       ploc{};
     math_types ptype{};
     math_types prefix_type{};
     int        special{0}; // Sum or product

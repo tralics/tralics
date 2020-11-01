@@ -48,7 +48,7 @@ public:
     void                      push_back_list(subtypes X, math_list_type c);
     void                      push_back_font(subtypes X, subtypes c);
     void                      push_back(CmdChr X);
-    void                      push_back(Xml *A, int b, math_types c);
+    void                      push_back(Xml *A, long b, math_types c);
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_initial_group();
     void                      remove_spaces();

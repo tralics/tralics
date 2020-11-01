@@ -438,7 +438,7 @@ enum symcodes {
 };
 
 // Subtypes associated to a type. A given integer has more than one meaning.
-enum subtypes {
+enum subtypes : unsigned {
     // pointers into eqtb_int_table
     cat_code_offset  = 0,
     math_code_offset = cat_code_offset + nb_characters,

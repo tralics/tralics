@@ -1072,7 +1072,7 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> std:
         B         = "\\color@" + name;
         token_from_list(hash_table.locate(B));
         if ((cur_cmd_chr.cmd == color_cmd) && (cur_cmd_chr.chr >= color_offset)) {
-            auto k = to_unsigned(cur_cmd_chr.chr - color_offset);
+            auto k = cur_cmd_chr.chr - color_offset;
             if (k < all_colors.size()) return all_colors[k]->get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
@@ -1153,7 +1153,7 @@ void Parser::T_color(subtypes c) {
         return;
     }
     if (c >= color_offset) {
-        auto k = to_unsigned(c - color_offset);
+        auto k = c - color_offset;
         if (k < all_colors.size()) {
             std::string C = all_colors[k]->get_id();
             cur_font.set_color(C);

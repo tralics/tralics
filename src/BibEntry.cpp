@@ -17,7 +17,7 @@ namespace {
         if (last) return true;
         biblio_buf3.append("+");
         return false;
-    };
+    }
 
     class NameSplitter {
         bchar_type *table;

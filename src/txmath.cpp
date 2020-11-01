@@ -439,9 +439,9 @@ void Math::push_back(CmdChr X) {
 }
 
 // Add an xml element. If b>=0, this element is at position b in the table.
-void Math::push_back(Xml *A, int b, math_types c) { push_back(MathElt(A, b, c)); }
+void Math::push_back(Xml *A, long b, math_types c) { push_back(MathElt(A, b, c)); }
 
-MathElt::MathElt(Xml *A, int b, math_types c) {
+MathElt::MathElt(Xml *A, long b, math_types c) {
     subtypes pos{};
     if (b >= 0)
         pos = subtypes(b);
