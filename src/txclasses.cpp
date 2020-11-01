@@ -15,6 +15,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -42,8 +43,6 @@ namespace {
         static void show_unused();
     };
 } // namespace
-
-Buffer file_list;
 
 namespace {
     ClassesData the_class_data;
@@ -262,14 +261,9 @@ void classes_ns::add_to_filelist(const std::string &s, const std::string &date) 
     auto n = s.size();
     long k = -1;
     for (size_t i = 0; i < n; i++)
-        if (s[i] == '/') k = to_signed(i); // last slash
-    auto S  = s.substr(to_unsigned(k + 1));
-    auto nn = 12 - to_signed(S.size());
-    while (nn > 0) {
-        file_list << ' ';
-        --nn;
-    }
-    file_list += S + "   " + date + "\n"; // \todo fmt would work well here (padding at width 12)
+        if (s[i] == '/') k = to_signed(i); // last slash \todo std::filesystem
+    auto S = s.substr(to_unsigned(k + 1));
+    file_list += fmt::format("{:>12}   {}\n", S, date);
 }
 
 // This implements \ProvidesPackage, \ProvidesClass (synonym)

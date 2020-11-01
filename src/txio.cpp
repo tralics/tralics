@@ -36,7 +36,6 @@ namespace {
 
 namespace io_ns {
     void print_ascii(std::ostream &fp, char c);
-    auto plural(int n) -> String;
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
 } // namespace io_ns
@@ -61,12 +60,6 @@ void io_ns::print_ascii(std::ostream &fp, char c) {
 
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers
-
-auto io_ns::plural(int n) -> String { return n > 1 ? "s" : ""; }
-
-void Stats::io_convert_stats() {
-    if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, io_ns::plural(bad_chars));
-}
 
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF

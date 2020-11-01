@@ -1,5 +1,4 @@
 #pragma once
-#include "../txstats.h"
 #include "Condition.h"
 #include "EQTB.h"
 #include "FontInfo.h"
@@ -11,6 +10,7 @@
 #include "RealNumber.h"
 #include "SaveState.h"
 #include "Stack.h"
+#include "Stats.h"
 
 struct FpNum;
 class Math;

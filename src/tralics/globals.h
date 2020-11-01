@@ -52,6 +52,7 @@ inline std::string                                                  cur_entry_na
 inline std::string                                                  cur_file_name{"tty"};
 inline std::string                                                  everyjob_string; //
 inline std::string                                                  file_name;       // Job name, without directory
+inline std::string                                                  file_list;       // \todo vector of std::fs::path
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
 inline std::string                                                  the_default_rc; // \todo RA stuff
