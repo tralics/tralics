@@ -1,5 +1,6 @@
 #pragma once
 #include "Glue.h"
+#include "RealNumber.h"
 #include "TokenList.h"
 
 // This is a union of different things
