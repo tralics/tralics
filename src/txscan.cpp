@@ -16,6 +16,7 @@
 #include "tralics/Saver.h"
 #include "tralics/TexFonts.h"
 #include "tralics/TexOutStream.h"
+#include "tralics/TexRule.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -2340,23 +2341,6 @@ auto Parser::scan_mathfont_ident() -> size_t {
     }
     if (cur_tok.is_valid()) back_input();
     return scan_int(T, 14, "math font identifier");
-}
-
-// This scans a hrule or a vrule.
-// May be used in \cleaders\hrule; the result is the_stack.top_stack()
-// Depending on the type, some fields have a default value of 0.4pt, or 0 pt.
-// Others are -\infty (in reality, -2^14pt = - 2^30sp)
-static const int default_rule_dimen = -1073741824;
-void             TexRule::reset() {
-    rule_h = default_rule_dimen;
-    rule_w = default_rule_dimen;
-    rule_d = default_rule_dimen;
-}
-
-void TexRule::convert(AttList &res) const {
-    if (rule_h.value != default_rule_dimen) res.push_back(the_names["height"], std::string(rule_h));
-    if (rule_d.value != default_rule_dimen) res.push_back(the_names["depth"], std::string(rule_d));
-    if (rule_w.value != default_rule_dimen) res.push_back(the_names["width"], std::string(rule_w));
 }
 
 void Parser::scan_rule(int c) {

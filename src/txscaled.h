@@ -29,19 +29,3 @@ namespace arith_ns {
     auto quotient(int n, int d) -> int;
     auto add_ovf(ScaledInt x, ScaledInt y) -> int;
 } // namespace arith_ns
-
-class TexRule {
-public:
-    ScaledInt rule_w, rule_h, rule_d;
-    void      reset();
-    void      convert(AttList &res) const;
-    void      init_vrule() { rule_w = 26214; }
-    void      init_hrule() {
-        rule_h = 26214;
-        rule_d = 0;
-    }
-    void adjust() {
-        rule_h += rule_d;
-        rule_d.neg();
-    }
-};
