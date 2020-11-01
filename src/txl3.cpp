@@ -499,7 +499,7 @@ void Parser::E_l3str_case(subtypes c) {
     back_input(res);
 }
 
-void Parser::L3_check_cmd(int c) {
+void Parser::L3_check_cmd(subtypes c) {
     Token T = cur_tok;
     Token what;
     if (c == 1 || c == 3) {
@@ -521,10 +521,10 @@ void Parser::L3_check_cmd(int c) {
 // Token Lists
 
 // \tl_new:N and variants (14); half of them are \tl_new:c
-void Parser::l3_new_token_list(int c) {
+void Parser::l3_new_token_list(subtypes c) {
     bool c_name = false;
     if (c >= l3_tlx_new_code) {
-        c -= l3_tlx_new_code;
+        c      = subtypes(c - l3_tlx_new_code);
         c_name = true;
     }
     Token name = fetch_csname(c_name);
@@ -559,16 +559,16 @@ void Parser::l3_new_token_list(int c) {
 
 // \tl_set:Nn and variants. Second argument is (by default) expanded once
 // There are 24 variants; missing Npc
-void Parser::l3_tl_set(int c) {
+void Parser::l3_tl_set(subtypes c) {
     bool gbl   = false;
     bool c_arg = false;
     if (c >= 18) {
         gbl = true;
-        c -= 18;
+        c   = subtypes(c - 18);
     }
     if (c >= 9) {
         c_arg = true;
-        c -= 9;
+        c     = subtypes(c - 9);
     }
     Token name = fetch_csname(c_arg);
     // TODO:  if(check_declaration) check name is not undef_or_relax
@@ -593,7 +593,7 @@ void Parser::l3_tl_set(int c) {
 
 // \tl_concat:NNN \tl_concat:ccc and global version.
 // Args 2 and 3  are expanded once
-void Parser::l3_tl_concat(int c) {
+void Parser::l3_tl_concat(subtypes c) {
     bool  c_flag = (c & 1) != 0;
     Token name   = fetch_csname(c_flag);
     // TODO:  if(check_declaration) check all 3 arg are not undef_or_relax
@@ -608,21 +608,21 @@ void Parser::l3_tl_concat(int c) {
 
 // \tl_put_left:Nn and variants. Second argument is (by default) expanded once
 // There are 16 variants: nVox
-void Parser::l3_tl_put_left(int c) {
+void Parser::l3_tl_put_left(subtypes c) {
     bool gbl      = false;
     bool c_arg    = false;
     bool put_left = true;
     if (c >= 36) {
         put_left = false;
-        c -= 36;
+        c        = subtypes(c - 36);
     }
     if (c >= 18) {
         gbl = true;
-        c -= 18;
+        c   = subtypes(c - 18);
     }
     if (c >= 9) {
         c_arg = true;
-        c -= 9;
+        c     = subtypes(c - 9);
     }
     Token name = fetch_csname(c_arg);
     // TODO:  if(check_declaration) check name not undef_or_relax
@@ -646,21 +646,21 @@ void Parser::l3_tl_put_left(int c) {
 }
 
 // set rescan and variant 12 variants + 1
-void Parser::tl_set_rescan(int c) {
+void Parser::tl_set_rescan(subtypes c) {
     bool special = false;
     if (c == 12) {
         special = true;
-        c       = 0;
+        c       = subtypes(0);
     }
     bool gbl = false;
     if (c >= 6) {
         gbl = true;
-        c -= 6;
+        c   = subtypes(c - 6);
     }
     bool cflag = false;
     if (c >= 3) {
         cflag = true;
-        c -= 3;
+        c     = subtypes(c - 3);
     }
     Token name;
     if (!special) name = fetch_csname(cflag);
@@ -705,10 +705,10 @@ auto Parser::l3_read_int(Token T) -> long {
 }
 
 // \char_set_catcode_ignore:N T or \char_set_catcode_ignore:n `T
-void Parser::L3_set_cat_code(int c) {
+void Parser::L3_set_cat_code(subtypes c) {
     bool alpha = false;
     if (c >= 16) {
-        c -= 16;
+        c     = subtypes(c - 16);
         alpha = true;
     }
     size_t w = 0;
@@ -727,7 +727,7 @@ void Parser::L3_set_cat_code(int c) {
 }
 
 // \char_set_catcode:nn{110}{`A+1} and variants: \the or \showthe
-void Parser::L3_set_num_code(int c) {
+void Parser::L3_set_num_code(subtypes c) {
     size_t offset = 0;
     int    max    = 0;
     bool   show   = false;
@@ -777,6 +777,7 @@ void Parser::L3_set_num_code(int c) {
         offset = sf_code_offset;
         show   = true;
         break;
+    default: break;
     }
     Token T = cur_tok;
     if (max != 0) {
@@ -949,7 +950,7 @@ void Parser::generate_from_sig() {
     back_input(definer);
 }
 
-void Parser::Tl3_gen_from_ac(int c) {
+void Parser::Tl3_gen_from_ac(subtypes c) {
     Token     caller  = cur_tok;
     Token     fun     = fetch_csname(c == 1);
     Token     creator = fetch_csname(c == 2);

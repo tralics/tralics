@@ -240,7 +240,7 @@ void Parser::finish_index() {
 
 // -----------------------------------------------
 // Commands from tree-dvips.sty
-void Parser::T_trees(int c) {
+void Parser::T_trees(subtypes c) {
     flush_buffer();
     if (c == node_code)
         T_node();

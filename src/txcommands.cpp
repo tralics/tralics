@@ -288,7 +288,7 @@ void Parser::french_punctuation(CmdChr X) {
     extended_chars(c);
 }
 
-void Parser::T_cst2(int c) {
+void Parser::T_cst2(subtypes c) {
     LC();
     if (c == numero_code) process_string("n");
     if (c == Numero_code) process_string("N");
@@ -314,7 +314,7 @@ void Parser::T_cst2(int c) {
     E_xspace();
 }
 
-void Parser::T_cst1(int c) {
+void Parser::T_cst1(subtypes c) {
     switch (c) {
     case underscore_code:
         process_char('_');

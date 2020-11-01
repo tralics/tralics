@@ -438,7 +438,7 @@ void Parser::T_arg1(const std::string &y) {
 }
 
 // Case of an item in a list...
-void Parser::T_item(int c) {
+void Parser::T_item(subtypes c) {
     leave_h_mode();
     unfinished_par = nullptr;
     the_stack.pop_if_frame(the_names["item"]);
@@ -676,7 +676,7 @@ auto Parser::scan_anchor(bool &h) -> std::string {
 }
 
 // \label \anchor or \anchorlabel
-void Parser::T_label(int c) {
+void Parser::T_label(subtypes c) {
     if (c == 0) { // case of label
         std::string a = special_next_arg();
         create_label(a, the_stack.get_cur_id());
@@ -1671,7 +1671,7 @@ void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
 }
 
 // Translates \uppercase, \MakeUpperCase, etc
-void Parser::T_case_shift(int c) {
+void Parser::T_case_shift(subtypes c) {
     Token        T        = cur_tok;
     bool         to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
     const size_t offset   = to_upper ? uc_code_offset : lc_code_offset;
@@ -1826,7 +1826,7 @@ auto Parser::get_c_val(Token x) -> std::string {
     return nT_arg_nopar();
 }
 
-void Parser::T_bezier(int c) {
+void Parser::T_bezier(subtypes c) {
     Token C = cur_tok;
     flush_buffer();
     std::string                a1, a2, b1, b2, c1, c2;
@@ -1938,7 +1938,7 @@ void Parser::T_linethickness(int c) {
     if (c == linethickness_code) res.push_back(the_names["size"], nT_arg_nopar());
 }
 
-void Parser::T_curves(int c) {
+void Parser::T_curves(subtypes c) {
     Token C = cur_tok;
     flush_buffer();
     std::string x0 = "cst_empty";

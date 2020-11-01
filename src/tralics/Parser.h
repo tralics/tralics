@@ -295,7 +295,7 @@ private:
     void        calc_ratio_eval(long num, long den, SthInternal &res);
     void        calc_spec_mul(RealNumber val, SthInternal &res);
     void        call_define_key(TokenList &L, Token cmd, const std::string &arg, const std::string &fam);
-    void        T_case_shift(int c);
+    void        T_case_shift(subtypes c);
     static void check_all_ids();
     auto        check_brace(int &b) -> bool;
     auto        check_builtin_pack(const std::string &pack) -> bool;
@@ -308,7 +308,7 @@ private:
     void        E_convert();
     void        count_days();
     auto        M_counter(bool def) -> bool;
-    void        E_counter(int c);
+    void        E_counter(subtypes c);
     auto        counter_aux(const std::string &name, String opt, Token T) -> bool;
     void        counter_boot(const std::string &s, String aux);
     auto        counter_check(Buffer &b, bool def) -> bool;
@@ -397,7 +397,7 @@ private:
     void        finish_trivial_math(Xml *res);
     void        finish_no_mathml(bool is_inline, size_t vp);
     static auto first_boundary() -> boundary_type;
-    void        E_all_of_one(Token T, int c);
+    void        E_all_of_one(Token T, subtypes c);
     void        flush_buffer0();
     void        flush_buffer1();
     void        fnhack();
@@ -718,14 +718,14 @@ private:
     void        see_new_id_spec(bool);
     void        selective_sanitize();
     void        select_math_font();
-    void        E_setlength(int c);
+    void        E_setlength(subtypes c);
     void        set_boolean();
     void        set_counter(Token T, long c);
     void        set_date_ctrs(long year, size_t month, size_t day);
     void        setkeys(bool c);
-    void        M_shorthand_define(int cmd, bool gbl);
+    void        M_shorthand_define(subtypes cmd, bool gbl);
     auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;
-    void        M_shortverb(int x);
+    void        M_shortverb(subtypes x);
     void        short_verb_error(Token T, Token t, int x);
     static void show_box(Xml *X);
     void        skip_group(TokenList &);
@@ -761,7 +761,7 @@ private:
     void        T_atdocument(subtypes c);
     void        T_at_end_of_class();
     void        T_backslash();
-    void        T_bezier(int c);
+    void        T_bezier(subtypes c);
     void        T_bauteursediteurs(subtypes c);
     void        T_bibitem();
     void        T_biblio();
@@ -784,9 +784,9 @@ private:
     void        M_cons();
     void        M_cons(Token cmd, TokenList &L);
     void        T_cr();
-    void        T_cst1(int c);
-    void        T_cst2(int c);
-    void        T_curves(int c);
+    void        T_cst1(subtypes c);
+    void        T_cst2(subtypes c);
+    void        T_curves(subtypes c);
     void        T_dashline(subtypes c);
     void        T_declare_options();
     void        T_declare_option_star();
@@ -838,10 +838,10 @@ private:
     void        T_inputclass();
     void        T_ipa(subtypes c);
     void        T_isin();
-    void        T_item(int c);
+    void        T_item(subtypes c);
     auto        T_item_label(int c) -> std::string;
     void        T_keywords();
-    void        T_label(int c);
+    void        T_label(subtypes c);
     void        T_line(subtypes c);
     auto        scan_anchor(bool &h) -> std::string;
     void        T_listenv(symcodes x);
@@ -909,7 +909,7 @@ private:
     void        T_start_theorem(int c);
     void        T_testopt();
     void        T_titlepage(size_t v) const;
-    void        T_trees(int c);
+    void        T_trees(subtypes c);
     void        T_translate(TokenList &X);
     void        T_typein();
     void        T_twodims(std::string &A, std::string &B, Token C);
@@ -938,7 +938,7 @@ private:
     void        Tat_pers();
     void        Tat_pers_ra();
     void        testoptd(std::string s);
-    void        M_extension(int cc);
+    void        M_extension(subtypes cc);
     auto        string_to_write(long chan) -> std::string;
     void        tipa_acutemacron();
     void        tipa_brevemacro();
@@ -982,7 +982,7 @@ private:
     void        upn_eval(TokenList &l);
     void        url_hack(TokenList &L) const;
     void        use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
-    void        E_usename(int c, bool vb);
+    void        E_usename(subtypes c, bool vb);
     void        user_XML_swap(subtypes c);
     void        user_XML_modify(subtypes c);
     void        user_XML_fetch();
@@ -992,7 +992,7 @@ private:
     void        E_while(subtypes cc);
     void        wrong_mode(const std::string &s);
     void        wrong_pop(Token T, const std::string &a, const std::string &b);
-    void        E_input(int q);
+    void        E_input(subtypes q);
     void        xgetfontsize();
     void        xkv_fetch_prefix_family();
     void        T_xkv_for(subtypes c);
@@ -1025,7 +1025,7 @@ private:
     void define_definer(String base, String nsig, String osig);
     void define_definer(String base);
     void l3_after_cond(Token T, bool test, subtypes c);
-    void L3_check_cmd(int c);
+    void L3_check_cmd(subtypes c);
     void L3_eq_conditional(subtypes s);
     void E_l3expand_aux(subtypes c);
     void E_l3noexpand(subtypes c);
@@ -1038,7 +1038,7 @@ private:
     void l3_expand_Vv(TokenList &L, bool spec);
     void L3_generate_form(subtypes c, TokenList parms, TokenList body, subtypes s);
     void generate_from_sig();
-    void Tl3_gen_from_ac(int c);
+    void Tl3_gen_from_ac(subtypes c);
     void l3_generate_variant();
     void l3_generate_variant(String orig, String var);
     void l3_generate_variant(const std::string &var, bool prot, Token orig);
@@ -1059,15 +1059,15 @@ private:
     void L3_user_split_next_name(bool base);
     void tex_string(Buffer &B, Token T, bool esc) const;
     auto l3_read_int(Token T) -> long;
-    void L3_set_cat_code(int c);
-    void L3_set_num_code(int c);
+    void L3_set_cat_code(subtypes c);
+    void L3_set_num_code(subtypes c);
     auto l3_get_cat(symcodes &a, subtypes &b, Token caller) -> bool;
     void l3_token_check(subtypes c);
-    void l3_new_token_list(int c);
-    void l3_tl_concat(int c);
-    void l3_tl_set(int c);
-    void l3_tl_put_left(int c);
-    void tl_set_rescan(int c);
+    void l3_new_token_list(subtypes c);
+    void l3_tl_concat(subtypes c);
+    void l3_tl_set(subtypes c);
+    void l3_tl_put_left(subtypes c);
+    void tl_set_rescan(subtypes c);
     void T_scantokens(TokenList &L);
 };
 

@@ -117,7 +117,7 @@ auto Parser::string_to_write(long chan) -> std::string {
 // This implements \write, \openout, and \closeout
 // and \iow_term:x \iow_log:x of latex3
 // action is \immediate, since there is no shipout routine
-void Parser::M_extension(int cc) {
+void Parser::M_extension(subtypes cc) {
     static TexOutStream tex_out_stream; // the output streams
     long                chan = 0;
     if (cc == openout_code)
@@ -276,7 +276,7 @@ auto Parser::scan_file_name() -> std::string {
 // and \input \Input, \include \readxml
 // This is called from expand. We have to print the command name in the log
 // file. The real code of input is in T_input().
-void Parser::E_input(int q) {
+void Parser::E_input(subtypes q) {
     if (q == endinput_code) {
         if (tracing_commands()) Logger::log_dump("endinput");
         force_eof = true;
@@ -1819,10 +1819,10 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 // Handles a command like \advance\count0 by, that allows \global before it.
 // here cur_tok would be \advance
 void Parser::M_prefixed_aux(bool gbl) {
-    auto  chr = cur_cmd_chr.chr;
-    Token T   = cur_tok;
-    int   p   = 0;
-    long  q   = 0;
+    auto     chr = cur_cmd_chr.chr;
+    Token    T   = cur_tok;
+    subtypes p   = static_cast<subtypes>(0);
+    long     q   = 0;
     switch (cur_cmd_chr.cmd) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
     case shorthand_def_cmd: M_shorthand_define(chr, gbl); return;
@@ -1842,13 +1842,13 @@ void Parser::M_prefixed_aux(bool gbl) {
         p = chr;
         scan_optional_equals();
         q = scan_int(T);
-        word_define(to_unsigned(p), q, gbl);
+        word_define(p, q, gbl);
         return;
     case assign_dimen_cmd:
         p = chr;
         scan_optional_equals();
         scan_dimen(false, T);
-        dim_define(to_unsigned(p), cur_val.get_dim_val(), gbl);
+        dim_define(p, cur_val.get_dim_val(), gbl);
         return;
     case assign_glue_cmd:
     case assign_mu_glue_cmd: {
@@ -1859,7 +1859,7 @@ void Parser::M_prefixed_aux(bool gbl) {
             scan_glue(it_mu, T);
         else
             scan_glue(it_glue, T);
-        glue_define(to_unsigned(p), cur_val.glue_val, gbl);
+        glue_define(p, cur_val.glue_val, gbl);
         return;
     }
     case def_code_cmd: assign_def_something(gbl); return;

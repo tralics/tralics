@@ -31,7 +31,7 @@ void TexFonts::full_name(Buffer &B, long k) {
 }
 
 // Returns an integer parameter for a font
-auto TexFonts::get_int_param(long ft, int pos) -> long {
+auto TexFonts::get_int_param(long ft, subtypes pos) -> long {
     if (!is_valid(ft)) return -1;
     if (pos == 0) return at(to_unsigned(ft)).hyphen_char;
     return at(to_unsigned(ft)).skew_char;

@@ -1599,7 +1599,7 @@ void Parser::csname_arg() {
 }
 
 // Latex3 variants of \csname .. \endcsname
-void Parser::E_usename(int c, bool vb) {
+void Parser::E_usename(subtypes c, bool vb) {
     Token t = cur_tok;
     if (vb) {
         Logger::finish_seq();
@@ -1980,7 +1980,7 @@ void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, s
 // or \global\advance\c@foo 25\relax for \addtocounter{foo}{25}
 // In the case of \stepcounter, we do
 //  \global\advance\c@foo\@one\let\elt@stpelt\cl@foo
-void Parser::E_counter(int c) {
+void Parser::E_counter(subtypes c) {
     Token first = cur_tok;
     if (c == addtoreset_code) {
         E_addtoreset();
@@ -2025,7 +2025,7 @@ void Parser::finish_counter_cmd(Token first, TokenList &L) {
 }
 
 // c is 0 for \setlength, 1 for \addtolength
-void Parser::E_setlength(int c) {
+void Parser::E_setlength(subtypes c) {
     Token caller = cur_tok;
     if (read_token_arg(caller)) return;
     if (cur_tok.not_a_cmd()) {
@@ -2165,7 +2165,7 @@ void Parser::new_prim(String a, String b) {
 
 // Implements  \DefineShortVerb and \UndefineShortVerb
 // saves and restores catcode if value <256
-void Parser::M_shortverb(int x) {
+void Parser::M_shortverb(subtypes x) {
     Token Tfe = cur_tok;
     if (read_token_arg(Tfe)) return;
     Token t = cur_tok;
@@ -2305,7 +2305,7 @@ auto Parser::get_mac_value(Token t) -> TokenList {
 }
 
 // c is the number of arguments, c=0 is the same as 1, 5 is 12of3
-void Parser::E_all_of_one(Token T, int c) {
+void Parser::E_all_of_one(Token T, subtypes c) {
     String s{nullptr};
     int    n  = 0;
     bool   vb = tracing_macros();
@@ -2611,8 +2611,8 @@ void Parser::E_first_of_four(bool vb, subtypes c) {
 }
 
 void Parser::E_ignore_n_args(bool vb, subtypes c) {
-    int n = (c < 1 ? 1 : (c > 9 ? 9 : c));
-    int i = 1;
+    auto n = (c < 1 ? 1 : (c > 9 ? 9 : c));
+    int  i = 1;
     if (vb) {
         Logger::finish_seq();
         the_log << cur_tok << " ...#" << n << "->\n";
@@ -3357,7 +3357,7 @@ auto Parser::l3_get_name(Token T) -> bool {
 }
 
 // This interprets \countdef, and things like that
-void Parser::M_shorthand_define(int cmd, bool gbl) {
+void Parser::M_shorthand_define(subtypes cmd, bool gbl) {
     Token t   = cur_tok;
     Token tbd = get_r_token();
     if (tbd == hash_table.frozen_protection) return;
