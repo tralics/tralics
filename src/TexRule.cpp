@@ -1,4 +1,5 @@
 #include "tralics/TexRule.h"
+#include "tralics/AttList.h"
 #include "tralics/NameMapper.h"
 
 // This scans a hrule or a vrule.
@@ -8,7 +9,7 @@
 
 namespace {
     constexpr int default_rule_dimen = -1073741824;
-}
+} // namespace
 
 void TexRule::reset() {
     rule_h = default_rule_dimen;
