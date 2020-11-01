@@ -1,4 +1,5 @@
 #pragma once
+#include "Buffer.h"
 #include "TexFont.h"
 
 struct TexFonts : public std::vector<TexFont> {

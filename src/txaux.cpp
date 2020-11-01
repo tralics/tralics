@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include <fmt/format.h>
 
 namespace arith_ns {

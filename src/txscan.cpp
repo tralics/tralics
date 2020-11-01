@@ -14,6 +14,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Saver.h"
+#include "tralics/ScanSlot.h"
 #include "tralics/TexFonts.h"
 #include "tralics/TexOutStream.h"
 #include "tralics/TexRule.h"

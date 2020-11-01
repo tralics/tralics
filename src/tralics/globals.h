@@ -1,5 +1,4 @@
 #pragma once
-#include "WordList.h"
 #include "Xml.h"
 #include "enums.h"
 #include <array>
@@ -9,6 +8,7 @@
 #include <string>
 #include <vector>
 
+struct WordList;
 class LabelInfo;
 
 inline bool                                                         bad_minus{false};
@@ -70,6 +70,15 @@ inline std::vector<std::string>                                     omitcite_lis
 auto        next_label_id() -> std::string;
 auto        null_cs_name() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
+
+namespace arith_ns {
+    auto nx_plus_y(long n, long x, long y) -> long;
+    auto n_times_x(int n, ScaledInt x) -> ScaledInt;
+    void scaled_div(ScaledInt &x, int n);
+    auto xn_over_d(long x, long n, long d, long &remainder) -> long;
+    auto quotient(int n, int d) -> int;
+    auto add_ovf(ScaledInt x, ScaledInt y) -> int;
+} // namespace arith_ns
 
 namespace main_ns {
     auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; ///< Searches for a file in conf_path

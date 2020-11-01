@@ -1,5 +1,5 @@
 #pragma once
-#include "../txscaled.h"
+#include "ScaledInt.h"
 #include <string>
 #include <vector>
 

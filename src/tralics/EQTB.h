@@ -1,7 +1,7 @@
 #pragma once
-#include "../txscaled.h"
 #include "CmdChr.h"
 #include "Glue.h"
+#include "TokenList.h"
 
 class Xml;
 
