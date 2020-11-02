@@ -8,12 +8,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "txtitlepage.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
+#include "tralics/TitlePageAux.h"
 #include "tralics/TpiOneItem.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"

@@ -4,7 +4,6 @@
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageFullLine.h"
-#include "txtitlepage.h"
 
 // Ctor from a TitlePageFullLine. It's just a copy.
 TitlePageAux::TitlePageAux(TitlePageFullLine &X) {

@@ -1,7 +1,7 @@
 #pragma once
+#include "TitlePageAux.h"
 #include <vector>
 
-struct TitlePageAux;
 class Xml;
 
 struct TitlePage : public std::vector<Xml *> {

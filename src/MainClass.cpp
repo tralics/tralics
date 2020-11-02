@@ -8,11 +8,11 @@
 #include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
+#include "tralics/TitlePageAux.h"
 #include "tralics/TitlePageFullLine.h"
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txtitlepage.h"
 #include <filesystem>
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>

@@ -14,7 +14,6 @@
 #include "tralics/SaveAux.h"
 #include "tralics/TitlePage.h"
 #include "tralics/globals.h"
-#include "txtitlepage.h"
 
 using namespace std::string_literals;
 
