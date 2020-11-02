@@ -2,6 +2,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
+#include "tralics/TitlePageFullLine.h"
 #include "txtitlepage.h"
 
 // Ctor from a TitlePageFullLine. It's just a copy.

@@ -7,6 +7,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
+#include "tralics/TitlePageFullLine.h"
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
