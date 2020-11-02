@@ -20,6 +20,15 @@ inline constexpr int lmaxchar      = 256;
 inline constexpr int max_dimension = 07777777777;
 inline constexpr int max_integer   = 017777777777;
 
+inline constexpr int tp_u_flag    = 1;
+inline constexpr int tp_p_flag    = 2;
+inline constexpr int tp_e_flag    = 4;
+inline constexpr int tp_q_flag    = 8;
+inline constexpr int tp_plus_flag = 16;
+inline constexpr int tp_A_flag    = 32;
+inline constexpr int tp_B_flag    = 64;
+inline constexpr int tp_C_flag    = 96;
+
 // When the parser sees a character C with a catcode B then
 // We have then cur_tok = nb_characters* B + C  < eqtb_offset
 inline constexpr unsigned eqtb_offset = 16 * nb_characters;

@@ -1,4 +1,5 @@
 #pragma once
+#include "tralics/TitlePageAux.h"
 #include "tralics/Xml.h"
 
 // -*- C++ -*-
@@ -13,60 +14,7 @@
 
 // This file contains stuff for title-page element.
 
-class TitlePageFullLine;
-
-static const int tp_p_flag    = 2;
-static const int tp_e_flag    = 4;
-static const int tp_q_flag    = 8;
-static const int tp_plus_flag = 16;
-static const int tp_A_flag    = 32;
-static const int tp_B_flag    = 64;
-static const int tp_C_flag    = 96;
-
-// data for a titlepage item
-class TitlePageAux {
-    std::string T1, T2, T3, T4; // the four strings
-    size_t      idx{0};         // index into titlepage::Data
-    size_t      xflags{0};      // flags associated to the object
-    tpi_vals    type{tpi_zero}; // type of object
-
-public:
-    auto classify(tpi_vals w, int &state) -> bool;
-    auto convert(int i) -> Xml *;
-    auto convert(int i, Xml *r) -> Xml *;
-    auto convert(int i, const std::string &s) -> Xml * { return convert(i, new Xml(s)); }
-    void dump(size_t k);
-    void exec_start(size_t k);
-    void exec_post();
-    void exec(size_t v, bool vb);
-    void set_T1(std::string x) { T1 = std::move(x); }
-    void set_T2(std::string x) { T2 = std::move(x); }
-    void set_T3(std::string x) { T3 = std::move(x); }
-    void set_T4(std::string x) { T4 = std::move(x); }
-
-    auto               get_type() -> tpi_vals { return type; }
-    auto               get_typeref() -> tpi_vals & { return type; }
-    [[nodiscard]] auto get_flags2() const -> size_t { return 32U * (xflags / 32U); }
-    [[nodiscard]] auto has_u_flags() const -> bool { return (xflags & 1) != 0; }
-    [[nodiscard]] auto has_p_flags() const -> bool { return (xflags & tp_p_flag) != 0; }
-    [[nodiscard]] auto has_e_flags() const -> bool { return (xflags & tp_e_flag) != 0; }
-    [[nodiscard]] auto has_q_flags() const -> bool { return (xflags & tp_q_flag) != 0; }
-    [[nodiscard]] auto has_plus_flags() const -> bool { return (xflags & tp_plus_flag) != 0; }
-    TitlePageAux() = default;
-    TitlePageAux(TitlePageFullLine &X);
-    [[nodiscard]] auto find_UR(const std::string &s, size_t n) const -> size_t;
-    auto               get_T1() -> std::string { return T1; }
-    auto               get_T2() -> std::string { return T2; }
-    auto               get_T3() -> std::string { return T3; }
-    auto               get_T4() -> std::string { return T4; }
-    [[nodiscard]] auto find_cmd(const std::string &s) const -> bool;
-    void               move_T1T2(std::string x) {
-        T1 = T2;
-        T2 = std::move(x);
-    }
-    auto increment_flag() -> bool;
-    void decode_flags() const;
-};
+struct TitlePageFullLine;
 
 // One item if a titlepage
 struct TpiOneItem {
@@ -90,11 +38,10 @@ struct TpiOneItem {
 };
 
 // temporary class, will bew copied into a TitlePageAux \todo do
-class TitlePageFullLine {
+struct TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
     size_t     flags{};                    // the flags
-public:
-    friend class TitlePageAux;
+
     auto read() -> int;
     auto classify(int w, int state) -> tpi_vals;
     auto encode_flags(char c1, char c2) -> bool;
