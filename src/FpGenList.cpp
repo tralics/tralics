@@ -10,8 +10,7 @@
 auto FpGenList::find_str(int &n) const -> Token {
     tkbuf.clear();
     n = 0;
-    for (auto C = begin(); C != end(); ++C) {
-        Token x = *C;
+    for (auto x : *this) {
         if (x.is_lowercase_token()) {
             tkbuf.push_back(static_cast<char>(x.val_as_letter()));
             n++;
@@ -187,10 +186,10 @@ void FpGenList::fp_gen_komma() {
     bool  need_space = false;
     Token x1         = the_parser.hash_table.comma_token;
     Token x2         = Token(other_t_offset, ':');
-    for (auto X = begin(); X != end(); ++X) {
-        if (*X == x1 || *X == x2) {
+    for (auto &X : *this) {
+        if (X == x1 || X == x2) {
             need_space = true;
-            *X         = the_parser.hash_table.space_token;
+            X          = the_parser.hash_table.space_token;
         }
     }
     if (need_space) push_back(the_parser.hash_table.space_token);

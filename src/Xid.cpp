@@ -79,7 +79,7 @@ void Xid::add_attribute(Xid b) const {
 void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(to_signed(value), s, false); }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.
-void Xid::add_special_att(const std::string &S, Buffer &B) {
+void Xid::add_special_att(const std::string &S, Buffer &B) const {
     B      = S;
     B.ptrs = {0, 0};
     B.push_back_special_att(*this);

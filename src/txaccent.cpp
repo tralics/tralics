@@ -19,7 +19,6 @@
 #include "tralics/globals.h"
 
 namespace accent_ns {
-    auto fetch_double_accent(int a, int acc3) -> Token;
     auto double_a_accent(int acc3) -> unsigned;
     auto double_e_accent(int acc3) -> unsigned;
     auto double_o_accent(int acc3) -> unsigned;

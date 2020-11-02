@@ -139,7 +139,7 @@ void TitlePageAux::exec_start(size_t k) {
 }
 
 // This is executed when we see the \Titlepage cmd
-void TitlePageAux::exec_post() {
+void TitlePageAux::exec_post() const {
     if (type == tpi_rt_constant) Titlepage[idx] = new Xml(std::string(T1));
     if (type == tpi_rt_exec) Titlepage[idx] = the_parser.tpa_exec(T2);
     if (type != tpi_rt_normal) return;
@@ -235,7 +235,7 @@ void TitlePageAux::decode_flags() const {
 }
 
 // This prints a slot.
-void TitlePageAux::dump(size_t k) {
+void TitlePageAux::dump(size_t k) const {
     tpi_vals t = type;
     if (t == tpi_rt_alias) {
         Logger::finish_seq();

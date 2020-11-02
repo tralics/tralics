@@ -24,7 +24,7 @@ public:
     void               add_top_rule() const;
     void               add_bottom_rule() const;
     [[nodiscard]] auto has_attribute(const std::string &n) const -> std::string;
-    void               add_special_att(const std::string &S, Buffer &B);
+    void               add_special_att(const std::string &S, Buffer &B) const;
 };
 
 inline auto operator==(const Xid &a, const Xid &b) -> bool { return a.value == b.value; }
