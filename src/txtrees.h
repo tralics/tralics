@@ -23,13 +23,3 @@ namespace tralics_ns {
     void find_index_labels(std::vector<std::string> &W);
 
 } // namespace tralics_ns
-
-struct AllIndex : public std::vector<OneIndex *> {
-    size_t last_index{0}, last_iid{0};
-
-    AllIndex();
-
-    auto find_index(const std::string &s) -> size_t;
-    void mark_print(size_t g);
-    void new_index(const std::string &s, const std::string &title);
-};

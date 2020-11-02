@@ -12,6 +12,7 @@
 // It contains also some eTeX extensions.
 
 #include "txtrees.h"
+#include "tralics/AllIndex.h"
 #include "tralics/Indexer.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
@@ -36,30 +37,8 @@ namespace date_ns {
 namespace {
     Buffer                 local_buf;
     std::array<size_t, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    AllIndex               the_index;
     Token                  day_ctr, year_ctr, month_ctr;
 } // namespace
-
-// By default, this is a glossary and a main index
-AllIndex::AllIndex() {
-    push_back(new OneIndex("glossary", "Glossary", 6));
-    push_back(new OneIndex("default", "Index", 5));
-}
-
-// Returns the index location associated to the name S
-// If S is not found, the main index is used
-auto AllIndex::find_index(const std::string &s) -> size_t {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i)->name == s) return i;
-    return 1;
-}
-
-void AllIndex::new_index(const std::string &s, const std::string &title) {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i)->name == s) return;
-    auto id = the_main->the_stack->next_xid(nullptr).value;
-    push_back(new OneIndex(s, title, id));
-}
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
@@ -67,15 +46,6 @@ auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
     auto        i = the_index.find_index(s);
     return the_index.at(i)->AL;
-}
-
-// Case \printglossary or \printindex[foo].
-// Marks the place where to insert the index
-void AllIndex::mark_print(size_t g) {
-    Xml *mark = new Xml(std::string(), nullptr);
-    Xml *Foo  = new Xml(std::string(), mark);
-    the_main->the_stack->add_last(Foo);
-    at(g)->position = mark;
 }
 
 // Case of \index{key@value|encap}
