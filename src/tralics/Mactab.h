@@ -1,5 +1,6 @@
 #pragma once
 #include "../txtokenlist.h"
+#include "Macro.h"
 #include <memory>
 #include <vector>
 

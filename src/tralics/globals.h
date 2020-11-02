@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+// \todo move most of this to where it belongs
+
 struct WordList;
 class LabelInfo;
 

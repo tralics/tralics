@@ -164,16 +164,6 @@ auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
     }
 }
 
-// compares two macros
-auto Macro::is_same(const Macro &aux) const -> bool {
-    if (nbargs != aux.nbargs) return false;
-    if (type != aux.type) return false;
-    if (!token_ns::compare(body, aux.body)) return false;
-    for (size_t i = 0; i < 10; i++)
-        if (!token_ns::compare(delimiters[i], aux.delimiters[i])) return false;
-    return true;
-}
-
 // Removes the external braces in {foo}, but not in {foo}{bar}.
 void token_ns::remove_ext_braces(TokenList &L) {
     if (L.empty()) return;

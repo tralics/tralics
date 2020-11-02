@@ -10,6 +10,7 @@ struct AttPair;
 struct Glue;
 struct ScaledInt;
 struct SthInternal;
+class Macro;
 class Xid;
 class Xml;
 
