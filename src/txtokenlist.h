@@ -9,6 +9,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
+#include "tralics/FpStack.h"
 #include "tralics/Token.h"
 #include "tralics/TokenList.h"
 #include <string>
@@ -18,19 +19,6 @@ struct FpNum;
 class Hashtab;
 
 //
-class FpStack {
-    TokenList value;
-
-public:
-    void               clear() { value.clear(); }
-    [[nodiscard]] auto empty() const -> bool { return value.empty(); }
-    void               pop_upn(FpNum &x);
-    void               pop_upn(TokenList &L);
-    void               push_front(Token L) { value.push_front(L); }
-    void               push_front(TokenList &L) { value.splice(value.begin(), L); }
-    void               push_upn(TokenList &L);
-    void               push_upn(const FpNum &x);
-};
 
 // This represents the value of a user-defined command
 class Macro {

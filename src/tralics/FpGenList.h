@@ -14,7 +14,6 @@ public:
     void fp_gen_exp();
     void fp_gen_komma();
     void fp_gen_mul();
-    void append(TokenList &L) { splice(end(), L); }
     void remove_first_n(int n);
     void remove_spaces();
     void split_after(int n, TokenList &z);
