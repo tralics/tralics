@@ -17,61 +17,6 @@
 struct FpNum;
 class Hashtab;
 
-namespace token_ns {
-    auto get_block(TokenList &L) -> TokenList;
-    auto get_unique(TokenList &L) -> Token;
-    void get_unique(TokenList &L, Token &t1, Token &t2);
-    auto has_a_single_token(const TokenList &L) -> bool;
-    auto has_a_single_token(const TokenList &L, Token t) -> bool;
-    auto posint_to_list(long n) -> TokenList;
-    void push_back_i(TokenList &L, long n);
-    void remove_block(TokenList &L);
-    void remove_ext_braces(TokenList &L);
-    void remove_initial_spaces(TokenList &L);
-    void remove_first_last_space(TokenList &L);
-    void replace(TokenList &A, Token x1, Token x2);
-    auto replace_space(TokenList &A, Token x2, Token x3) -> int;
-    void show(const TokenList &);
-    auto split_at(Token e, Token m, Token m1, TokenList &L, TokenList &z, bool s) -> bool;
-    auto string_to_list(const std::string &s, bool b) -> TokenList;
-    void double_hack(TokenList &key);
-    auto split_at(Token m, TokenList &L, TokenList &z) -> bool;
-    auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool;
-    auto is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped) -> bool;
-    void normalise_list(char c, TokenList &L);
-    void sanitize_one(TokenList &L, uchar c);
-    void sanitize_one(TokenList &L, TokenList &s, long n);
-    void sanitize_one(TokenList &L);
-    auto check_brace(Token x, int &bl) -> bool;
-    auto compare(const TokenList &A, const TokenList &B) -> bool;
-} // namespace token_ns
-
-// This is for fp
-class FpGenList {
-public:
-    TokenList value;
-
-    FpGenList(TokenList A) : value(std::move(A)) {}
-    void add_last_space(String S);
-    void add_last_space(TokenList &W, String S);
-    auto find_str(int &n) const -> Token;
-    void fp_gen_add();
-    void fp_gen_app();
-    void fp_gen_exp();
-    void fp_gen_komma();
-    void fp_gen_mul();
-    void push_back(Token L) { value.push_back(L); }
-    void push_back(TokenList &L) { value.splice(value.end(), L); }
-    void remove_first_n(int n);
-    void remove_spaces();
-    void split_after(int n, TokenList &z);
-    auto split_at(Token x, Token x2, TokenList &z) -> Token;
-    void split_after(TokenList::iterator X, TokenList &z);
-    auto split_at_p(TokenList &A, TokenList &B) -> bool;
-    void to_postfix();
-    void fp_check_paren();
-};
-
 //
 class FpStack {
     TokenList value;

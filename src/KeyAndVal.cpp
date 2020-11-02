@@ -1,5 +1,6 @@
 #include "tralics/KeyAndVal.h"
 #include "tralics/Token.h"
+#include "tralics/globals.h"
 #include "txtokenlist.h"
 
 // Reverse function
