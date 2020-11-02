@@ -30,7 +30,7 @@ auto token_ns::posint_to_list(long n) -> TokenList {
     TokenList L;
     if (n <= 0) return L;
     while (n != 0) {
-        int k   = n % 10;
+        auto k  = n % 10;
         n       = n / 10;
         Token t = Token(other_t_offset, uchar(k + '0'));
         L.push_front(t);

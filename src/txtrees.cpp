@@ -200,9 +200,8 @@ void Parser::T_index(subtypes c) {
 void Parser::finish_index() {
     auto labels = std::vector<std::string>(the_index.last_iid, "");
     tralics_ns::find_index_labels(labels);
-    int  idx_size = 0;
-    int  idx_nb   = 0;
-    auto q        = the_index.size();
+    size_t idx_size = 0, idx_nb = 0;
+    auto   q = the_index.size();
     for (size_t jj = 1; jj <= q; jj++) {
         auto  j  = jj == q ? 0 : jj;
         auto *CI = the_index.at(j);
@@ -592,9 +591,9 @@ void Parser::count_days() {
     auto  month = to_unsigned(scan_braced_int(T));
     auto  day   = scan_braced_int(T);
     if (bad) return;
-    int                        c           = 0;
+    long                       c           = 0;
     static std::array<int, 13> month_table = {0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
-    for (auto y = start; y < cur; y++) c += date_ns::year_length(y);
+    for (auto y = start; y < cur; y++) c += to_signed(date_ns::year_length(y));
     c += month_table[month];
     if (is_leap_year(cur) && month > 2) c++;
     if (cur == 1582 && (month > 10 || (month == 10 && day > 14))) c -= 10;

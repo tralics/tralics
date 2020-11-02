@@ -652,7 +652,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     bool want_number = false;
     long n           = 0;
     if (my_number >= 0) {
-        my_number += count_reg_offset;
+        my_number += int(count_reg_offset);
         n           = eqtb_int_table[to_unsigned(my_number)].val;
         want_number = true;
     }
@@ -1097,7 +1097,7 @@ auto Parser::read_mac_nbargs() -> size_t {
     }
     if (t.cmd_val() == other_catcode) {
         auto tt = t.val_as_digit();
-        if (tt >= 0 && tt <= 9) return tt;
+        if (tt <= 9) return tt;
     }
     bad_nbargs(-3);
     return 0;
@@ -2527,7 +2527,7 @@ void Parser::E_ensuremath() {
 void Parser::E_random() {
     Token T = cur_tok;
     auto  t = scan_int(T);
-    int   u = std::rand();
+    long  u = std::rand();
     if (t > 0) u = u % t;
     Buffer B;
     B.format("{}", u);
@@ -2611,7 +2611,7 @@ void Parser::E_first_of_four(bool vb, subtypes c) {
 }
 
 void Parser::E_ignore_n_args(bool vb, subtypes c) {
-    auto n = (c < 1 ? 1 : (c > 9 ? 9 : c));
+    auto n = (c < 1 ? 1 : (c > 9 ? 9 : unsigned(c)));
     int  i = 1;
     if (vb) {
         Logger::finish_seq();
@@ -3368,42 +3368,34 @@ void Parser::M_shorthand_define(subtypes cmd, bool gbl) {
     cur_tok    = t;
     size_t   k = 0;
     symcodes ncmd{};
-    String   name = "unknown";
     switch (cmd) {
     case char_def_code:
-        name = "chardef";
         k    = scan_27bit_int();
         ncmd = char_given_cmd;
         break;
     case math_char_def_code:
-        name = "mathchardef";
         k    = scan_fifteen_bit_int();
         ncmd = math_given_cmd;
         break;
     case count_def_code:
-        name = "countdef";
-        k    = scan_reg_num();
+        k = scan_reg_num();
         k += count_reg_offset;
         ncmd = assign_int_cmd;
         break;
     case dimen_def_code:
-        name = "dimendef";
         k    = scan_reg_num();
         ncmd = assign_dimen_cmd;
         break;
     case skip_def_code:
-        name = "skipdef";
         k    = scan_reg_num();
         ncmd = assign_glue_cmd;
         break;
     case mu_skip_def_code:
-        name = "muskipdef";
-        k    = scan_reg_num();
+        k = scan_reg_num();
         k += muskip_reg_offset;
         ncmd = assign_mu_glue_cmd;
         break;
     case toks_def_code:
-        name = "toksdef";
         k    = scan_reg_num();
         ncmd = assign_toks_cmd;
         break;
@@ -3412,53 +3404,33 @@ void Parser::M_shorthand_define(subtypes cmd, bool gbl) {
     CmdChr R(ncmd, subtypes(k));
     eq_define(pos, R, gbl);
     Logger::finish_seq();
-    // the_log << "{\\" << name << " " << tbd << "=\\" << R.name() << "}\n";
 }
 
 // For bootstrap; always traced
-auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
+auto Parser::shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token {
     Token    T = hash_table.locate(sh);
     auto     p = T.eqtb_loc(); // return value
     symcodes ncmd{};
-    String   name{nullptr};
     switch (cmd) {
-    case char_def_code:
-        name = "chardef";
-        ncmd = char_given_cmd;
-        break;
-    case math_char_def_code:
-        name = "mathchardef";
-        ncmd = math_given_cmd;
-        break;
+    case char_def_code: ncmd = char_given_cmd; break;
+    case math_char_def_code: ncmd = math_given_cmd; break;
     case count_def_code:
-        name = "countdef";
         k += count_reg_offset;
         ncmd = assign_int_cmd;
         break;
-    case dimen_def_code:
-        name = "dimendef";
-        ncmd = assign_dimen_cmd;
-        break;
-    case skip_def_code:
-        name = "skipdef";
-        ncmd = assign_glue_cmd;
-        break;
+    case dimen_def_code: ncmd = assign_dimen_cmd; break;
+    case skip_def_code: ncmd = assign_glue_cmd; break;
     case mu_skip_def_code:
-        name = "muskipdef";
         k += muskip_reg_offset;
         ncmd = assign_mu_glue_cmd;
         break;
-    case toks_def_code:
-        name = "toksdef";
-        ncmd = assign_toks_cmd;
-        break;
+    case toks_def_code: ncmd = assign_toks_cmd; break;
     default: // should not happen
         return T;
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(p, R, true);
     Logger::finish_seq();
-    // the_log << "{\\" << name << " \\" << sh << "=\\" << R.name() << "}\n";
     return T;
 }
 
@@ -3514,7 +3486,7 @@ auto Parser::do_register_arg(int q, unsigned &p, Token &tfe) -> size_t {
 
 void Parser::do_register_command(bool gbl) {
     Token    T = cur_tok;
-    int      q = cur_cmd_chr.cmd;
+    auto     q = cur_cmd_chr.cmd;
     unsigned p = 0;
     auto     l = do_register_arg(q, p, T); // changes T from \advance to \skip
     if (cur_tok.is_invalid()) return;      // was an error
@@ -4345,7 +4317,7 @@ void Parser::E_useverb() {
 // Code of \long, \def, etc.  Handles \globaldefs
 // This is called an assignment, so \afterassignment is completed here
 void Parser::M_prefixed() {
-    int flags = 0;
+    unsigned flags = 0;
     while (cur_cmd_chr.cmd == prefix_cmd) {
         flags |= cur_cmd_chr.chr;
         remove_initial_space_relax();

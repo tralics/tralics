@@ -38,7 +38,7 @@ namespace {
     inline void txsleep(unsigned i) { sleep(i); }
 #endif
 
-    auto st_bool(bool x) -> std::string { return x ? the_names["true"] : the_names["false"]; };
+    auto st_bool(bool x) -> std::string { return x ? the_names["true"] : the_names["false"]; }
 } // namespace
 
 namespace translate_ns {

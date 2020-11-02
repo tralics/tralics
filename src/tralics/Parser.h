@@ -724,7 +724,7 @@ private:
     void        set_date_ctrs(long year, size_t month, size_t day);
     void        setkeys(bool c);
     void        M_shorthand_define(subtypes cmd, bool gbl);
-    auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;
+    auto        shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token;
     void        M_shortverb(subtypes x);
     void        short_verb_error(Token T, Token t, unsigned x);
     static void show_box(Xml *X);

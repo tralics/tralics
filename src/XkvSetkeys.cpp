@@ -13,7 +13,7 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 // Ctor
-XkvSetkeys::XkvSetkeys(Parser *P) : P(P) {
+XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
     comma_token     = P->hash_table.comma_token;
     equals_token    = P->hash_table.equals_token;
     na_token        = P->hash_table.xkv_na_token;

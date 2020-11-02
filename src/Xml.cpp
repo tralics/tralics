@@ -334,7 +334,7 @@ auto Xml::try_cline(bool action) -> bool {
 
 // Puts the total span in res, return false in case of trouble
 auto Xml::total_span(long &res) const -> bool {
-    int  r   = 0;
+    long r   = 0;
     auto len = size();
     for (size_t k = 0; k < len; k++) {
         if (at(k)->is_xmlc()) {

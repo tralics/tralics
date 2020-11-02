@@ -330,7 +330,7 @@ void XmlIO::parse_pi() {
     scan_name('?');
     bool is_tralics = B == "tralics";
     bool is_xml     = B == "xml";
-    aux             = B;
+    aux             = B.c_str();
     if (is_xml) {
         for (;;) {
             skip_space();

@@ -249,18 +249,17 @@ void Parser::close_all() {
 // A file name is a special thing in TeX.
 // We read until we find a non-char, or a space.
 auto Parser::scan_file_name() -> std::string {
-    static Buffer file_name;
+    Buffer fn;
 
     if (name_in_progress) return "sabotage!"; // recursion killer.
     name_in_progress = true;
     remove_initial_space_and_back_input();
-    file_name.clear();
     for (;;) {
         if (get_x_token()) break;
         if (cur_cmd_chr.is_letter_other())
-            file_name.push_back(cur_cmd_chr.char_val());
+            fn.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.cmd == underscore_catcode) // allow foo_bar
-            file_name.push_back(cur_cmd_chr.char_val());
+            fn.push_back(cur_cmd_chr.char_val());
         else if (cur_cmd_chr.is_space())
             break;
         else {
@@ -269,7 +268,7 @@ auto Parser::scan_file_name() -> std::string {
         }
     }
     name_in_progress = false;
-    return file_name;
+    return fn;
 }
 
 // This implements \endinput, \scantokens
@@ -1369,7 +1368,7 @@ void Parser::scan_something_internal(internal_type level) {
         return;
     case set_shape_cmd: // \parshape
         if (m == parshape_code)
-            cur_val.set_int(parshape_vector.size() / 2);
+            cur_val.set_int(to_signed(parshape_vector.size()) / 2);
         else { // interlinepenalties, etc
             auto k = scan_int(cur_tok);
             if (k < 0)
