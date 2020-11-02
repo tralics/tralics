@@ -10,6 +10,7 @@
 
 #include "tralics/FpGenList.h"
 #include "tralics/FpNum.h"
+#include "tralics/FpStack.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include <fmt/format.h>

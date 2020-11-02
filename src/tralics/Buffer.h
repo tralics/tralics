@@ -1,5 +1,6 @@
 #pragma once
-#include "../txtokenlist.h"
+#include "TokenList.h"
+#include "enums.h"
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>

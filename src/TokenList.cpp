@@ -1,7 +1,6 @@
 #include "tralics/TokenList.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include "txtokenlist.h"
 
 void TokenList::add_env(const std::string &name) {
     TokenList res;
