@@ -11,7 +11,6 @@
 // This file contains a lot of stuff dealing with trees
 // It contains also some eTeX extensions.
 
-#include "txtrees.h"
 #include "tralics/AllIndex.h"
 #include "tralics/Indexer.h"
 #include "tralics/Logger.h"

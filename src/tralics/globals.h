@@ -142,4 +142,6 @@ namespace token_ns {
 
 namespace tralics_ns {
     auto math_env_name(subtypes c) -> String;
+    void add_ref(long v, const std::string &s, bool idx);
+    void find_index_labels(std::vector<std::string> &W);
 } // namespace tralics_ns

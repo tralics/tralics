@@ -5,7 +5,6 @@
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txtrees.h"
 
 void Xid::add_top_rule() const {
     add_attribute(the_names["cell_topborder"], the_names["true"]);

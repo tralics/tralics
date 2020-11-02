@@ -15,7 +15,6 @@
 #include "tralics/WordList.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include "txtrees.h"
 #include <fmt/format.h>
 
 namespace {
