@@ -87,17 +87,13 @@ namespace main_ns {
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
-    auto cv_special_string(int c) -> std::string;
     auto get_builtin(size_t p) -> Xml *;
     auto get_builtin_alt(size_t p) -> Xml *;
-    auto get_delimiter(CmdChr X) -> del_pos;
-    auto get_delimiter(int k) -> del_pos;
     auto handle_hspace(Buffer &B) -> Xml *;
     auto handle_space(Buffer &) -> Xml *;
     void insert_delimiter(del_pos k);
     void insert_delimiter_t(del_pos k);
-    auto math_constants(int c) -> Xml *;
-    auto math_space_code(int c) -> bool;
+    auto math_space_code(subtypes c) -> bool;
     auto make_sup(Xml *xval) -> Xml *;
     auto mk_mi(char32_t c) -> Xml *;
     auto mk_mi(uchar c, size_t font) -> Xml *;

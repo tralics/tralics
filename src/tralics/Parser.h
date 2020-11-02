@@ -319,7 +319,7 @@ private:
     void        E_csname();
     void        csname_arg();
     static auto cur_group_type() -> int;
-    void        date_commands(int c);
+    void        date_commands(subtypes c);
     void        datebynumber();
     void        dbl_arg();
     void        M_declare_math_operator();
@@ -690,7 +690,7 @@ private:
     auto        scan_pair_ints(Token T, TokenList &L) -> bool;
     void        scan_prime();
     auto        scan_reg_num() -> size_t;
-    void        scan_rule(int c);
+    void        scan_rule(subtypes c);
     void        E_sideset();
     void        E_split();
     auto        scan_sign() -> bool;
@@ -812,7 +812,7 @@ private:
     void        T_figure_table_end(bool is_fig);
     void        T_fancy(String s, TokenList &L);
     void        T_fancy();
-    void        T_filecontents(int spec);
+    void        T_filecontents(subtypes spec);
     void        T_fbox(subtypes cc);
     void        T_fbox_dash_box();
     void        T_fbox_rotate_box();
@@ -834,7 +834,7 @@ private:
     void        T_if_package_with(bool c);
     void        T_ignoreA();
     void        T_index(subtypes c);
-    void        T_input(int q);
+    void        T_input(subtypes q);
     void        T_inputclass();
     void        T_ipa(subtypes c);
     void        T_isin();
@@ -846,7 +846,7 @@ private:
     auto        scan_anchor(bool &h) -> std::string;
     void        T_listenv(symcodes x);
     void        T_listenv_end();
-    void        T_linethickness(int c);
+    void        T_linethickness(subtypes c);
     void        E_loop();
     void        T_load_with_options(bool c);
     void        T_makebox(bool framed, Token C);
@@ -901,12 +901,12 @@ private:
     void        E_useverb();
     void        T_scan_glue(subtypes c);
     void        T_setmode();
-    void        T_specimp(int c);
+    void        T_specimp(subtypes c);
     void        T_subfigure();
     void        T_startprojet(String proj, String loc);
     void        T_start_tabular(subtypes c);
     void        T_start_the_biblio();
-    void        T_start_theorem(int c);
+    void        T_start_theorem(subtypes c);
     void        T_testopt();
     void        T_titlepage(size_t v) const;
     void        T_trees(subtypes c);

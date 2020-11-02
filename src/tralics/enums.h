@@ -2374,7 +2374,7 @@ enum recur_type {
 };
 
 // A code for each math object
-enum math_loc {
+enum math_loc : unsigned {
     math_dig_loc          = last_math_code,
     math_char_normal_loc  = math_dig_loc + 10,
     math_char_upright_loc = math_char_normal_loc + nb_mathchars,

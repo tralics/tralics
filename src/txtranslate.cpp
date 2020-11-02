@@ -1929,7 +1929,7 @@ void Parser::T_put(subtypes c) {
     if (c == put_code || c == multiput_code) remove_initial_space_and_back_input();
 }
 
-void Parser::T_linethickness(int c) {
+void Parser::T_linethickness(subtypes c) {
     flush_buffer();
     std::string C = "linethickness";
     if (c == thicklines_code) C = "thicklines";
@@ -2151,7 +2151,7 @@ void Parser::T_define_verbatim_env() {
 
 // Implements some commands (\ignorespaces, \mark, \penalty, \@@end,
 // \message and \errmessage
-void Parser::T_specimp(int c) {
+void Parser::T_specimp(subtypes c) {
     switch (c) {
     case ignorespaces_code: remove_initial_space_and_back_input(); return;
     case mark_code:

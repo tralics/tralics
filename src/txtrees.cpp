@@ -458,7 +458,7 @@ void gb4eboot() {
 // DATES
 
 // Dispatcher function
-void Parser::date_commands(int c) {
+void Parser::date_commands(subtypes c) {
     if (c == 0)
         is_date_valid();
     else if (c == 1)

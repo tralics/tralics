@@ -1109,107 +1109,9 @@ auto math_ns::special_fence(subtypes s, size_t &open, size_t &close) -> bool {
     return true;
 }
 
-// returns a delimiter position in the table
-// static
-auto math_ns::get_delimiter(CmdChr X) -> del_pos {
-    if (X.is_other()) {
-        if (X.char_val() >= 128) return del_invalid;
-        switch (static_cast<uchar>(X.char_val())) {
-        case '<': return del_open_ket;
-        case '>': return del_close_ket;
-        case '.': return del_dot;
-        case '(': return del_open_par;
-        case ')': return del_close_par;
-        case '[': return del_open_bra;
-        case ']': return del_close_bra;
-        case '|': return del_vert;
-        case '/': return del_slash;
-        default: return del_invalid;
-        }
-    }
-    if (X.is_math_openclosebetween()) {
-        switch (int(X.chr)) {
-        case rangle_code: return del_rangle;
-        case langle_code: return del_langle;
-        case lbrace_code: return del_lbrace;
-        case rbrace_code: return del_rbrace;
-        case open_brace_code: return del_lbrace;
-        case close_brace_code: return del_rbrace;
-        case lceil_code: return del_lceil;
-        case rceil_code: return del_rceil;
-        case rfloor_code: return del_rfloor;
-        case lfloor_code: return del_lfloor;
-        case Vert_code: return del_Vert;
-        case Vertx_code: return del_Vert;
-        case vert_code: return del_vert;
-        case lmoustache_code: return del_lmoustache;
-        case rmoustache_code: return del_rmoustache;
-        case uparrow_code: return del_uparrow;
-        case downarrow_code: return del_downarrow;
-        case updownarrow_code: return del_updownarrow;
-        case Uparrow_code: return del_Uparrow;
-        case Downarrow_code: return del_Downarrow;
-        case Updownarrow_code: return del_Updownarrow;
-        case rgroup_code: return del_rgroup;
-        case lgroup_code: return del_lgroup;
-        case backslash_code: return del_backslash;
-        default:;
-        }
-    }
-    if (X.is_cst1_cmd() && X.chr == lbrace_chr) return del_lbrace;
-    if (X.is_cst1_cmd() && X.chr == rbrace_chr) return del_rbrace;
-    return del_invalid;
-}
-
-auto math_ns::get_delimiter(int k) -> del_pos {
-    switch (k) {
-    case rangle_code: return del_rangle;
-    case langle_code: return del_langle;
-    case lbrace_code: return del_lbrace;
-    case rbrace_code: return del_rbrace;
-    case open_brace_code: return del_lbrace;
-    case close_brace_code: return del_rbrace;
-    case lceil_code: return del_lceil;
-    case rceil_code: return del_rceil;
-    case rfloor_code: return del_rfloor;
-    case lfloor_code: return del_lfloor;
-    case Vertx_code: return del_Vert;
-    case Vert_code: return del_Vert;
-    case vert_code: return del_vert;
-    case lmoustache_code: return del_lmoustache;
-    case rmoustache_code: return del_rmoustache;
-    case uparrow_code: return del_uparrow;
-    case downarrow_code: return del_downarrow;
-    case updownarrow_code: return del_updownarrow;
-    case Uparrow_code: return del_Uparrow;
-    case Downarrow_code: return del_Downarrow;
-    case Updownarrow_code: return del_Updownarrow;
-    case rgroup_code: return del_rgroup;
-    case lgroup_code: return del_lgroup;
-    case backslash_code: return del_backslash;
-    default:;
-    }
-    int n = k - math_c_loc;
-    if (0 < n && n < 127) {
-        switch (n) {
-        case '<': return del_open_ket;
-        case '>': return del_close_ket;
-        case '.': return del_dot;
-        case '(': return del_open_par;
-        case ')': return del_close_par;
-        case '[': return del_open_bra;
-        case ']': return del_close_bra;
-        case '|': return del_vert;
-        case '/': return del_slash;
-        default: return del_invalid;
-        }
-    }
-    return del_invalid;
-}
-
 // This is a static function
 // true if the constant is a space.
-auto math_ns::math_space_code(int c) -> bool {
+auto math_ns::math_space_code(subtypes c) -> bool {
     switch (c) {
     case quad_code: return true;
     case qquad_code: return true;
@@ -1218,34 +1120,6 @@ auto math_ns::math_space_code(int c) -> bool {
     case comma_code: return true;
     default: return false;
     }
-}
-
-// Returns the value of a constant,
-auto math_ns::math_constants(int c) -> Xml * {
-    switch (c) {
-    case dots_code: return math_data.get_mc_table(5);
-    case ldots_code: return math_data.get_mc_table(6);
-    case quad_code: return math_data.get_mc_table(7);
-    case qquad_code: return math_data.get_mc_table(8);
-    case space_code: return math_data.get_mc_table(9);
-    case dollar_code: return math_data.get_mc_table(10);
-    case percent_code: return math_data.get_mc_table(11);
-    case amp_code: return math_data.get_mc_table(12);
-    case exclam_code: return math_data.get_mc_table(13);
-    case comma_code: return math_data.get_mc_table(14);
-    case lbrace_chr: return math_data.get_mc_table(15);
-    case rbrace_chr: return math_data.get_mc_table(16);
-    case i_code: return math_data.get_mc_table(17);
-    case msharp_code: return math_data.get_mc_table(18);
-    case natural_code: return math_data.get_mc_table(19);
-    case flat_code: return math_data.get_mc_table(20);
-    case underscore_code: return math_data.get_mc_table(21);
-    case sharp_code: return math_data.get_mc_table(22);
-    case j_code: return math_data.get_mc_table(23);
-    case tdagger_code: return math_data.get_mc_table(24);
-    case tddagger_code: return math_data.get_mc_table(25);
-    }
-    return math_data.get_mc_table(0);
 }
 
 auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token {

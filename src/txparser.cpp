@@ -1283,7 +1283,7 @@ void Parser::T_end_theorem() {
     the_stack.add_nl();
 }
 
-void Parser::T_start_theorem(int c) {
+void Parser::T_start_theorem(subtypes c) {
     TokenList name      = read_arg();
     TokenList ctr       = read_arg(); // empty in case of theorem*
     TokenList font2     = read_arg();

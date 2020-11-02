@@ -341,7 +341,7 @@ auto Parser::latex_input(int q) -> std::string {
 
 // This implements \IfFileExists, \InputIfFileExists,
 //  \input, \include, \openin, \closein
-void Parser::T_input(int q) {
+void Parser::T_input(subtypes q) {
     size_t stream    = 0;
     bool   seen_star = false;
     bool   seen_plus = false;
@@ -2344,7 +2344,7 @@ auto Parser::scan_mathfont_ident() -> size_t {
     return scan_int(T, 14, "math font identifier");
 }
 
-void Parser::scan_rule(int c) {
+void Parser::scan_rule(subtypes c) {
     TexRule R;
     Token   T = cur_tok;
     if (c == rule_code) {

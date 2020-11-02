@@ -48,6 +48,143 @@ namespace {
         }
         return res;
     }
+
+    // Returns the value of a constant,
+    auto math_constants(subtypes c) -> Xml * {
+        switch (c) {
+        case dots_code: return math_data.get_mc_table(5);
+        case ldots_code: return math_data.get_mc_table(6);
+        case quad_code: return math_data.get_mc_table(7);
+        case qquad_code: return math_data.get_mc_table(8);
+        case space_code: return math_data.get_mc_table(9);
+        case dollar_code: return math_data.get_mc_table(10);
+        case percent_code: return math_data.get_mc_table(11);
+        case amp_code: return math_data.get_mc_table(12);
+        case exclam_code: return math_data.get_mc_table(13);
+        case comma_code: return math_data.get_mc_table(14);
+        case lbrace_chr: return math_data.get_mc_table(15);
+        case rbrace_chr: return math_data.get_mc_table(16);
+        case i_code: return math_data.get_mc_table(17);
+        case msharp_code: return math_data.get_mc_table(18);
+        case natural_code: return math_data.get_mc_table(19);
+        case flat_code: return math_data.get_mc_table(20);
+        case underscore_code: return math_data.get_mc_table(21);
+        case sharp_code: return math_data.get_mc_table(22);
+        case j_code: return math_data.get_mc_table(23);
+        case tdagger_code: return math_data.get_mc_table(24);
+        case tddagger_code: return math_data.get_mc_table(25);
+        default: return math_data.get_mc_table(0);
+        }
+    }
+
+    // Return the name of the element associated to the command c.
+    auto cv_special_string(subtypes c) -> std::string {
+        if (c >= first_maccent_code && c <= last_maccent_code) return c >= first_under_accent_code ? "munder" : "mover";
+        if (c == overline_code || c == overbrace_code || c == stackrel_code || c == overset_code || c == accentset_code) return "mover";
+        if (c == underline_code || c == underbrace_code || c == underset_code || c == undertilde_code || c == underaccent_code)
+            return "munder";
+        if (c == root_code) return "mroot";
+        if (c == frac_code || c == dfrac_code || c == tfrac_code || c == genfrac_code || c == cfrac_code || c == binom_code ||
+            c == dbinom_code || c == tbinom_code)
+            return "mfrac";
+        return "unknown";
+    }
+
+    // returns a delimiter position in the table
+    // static
+    auto get_delimiter(CmdChr X) -> del_pos {
+        if (X.is_other()) {
+            if (X.char_val() >= 128) return del_invalid;
+            switch (static_cast<uchar>(X.char_val())) {
+            case '<': return del_open_ket;
+            case '>': return del_close_ket;
+            case '.': return del_dot;
+            case '(': return del_open_par;
+            case ')': return del_close_par;
+            case '[': return del_open_bra;
+            case ']': return del_close_bra;
+            case '|': return del_vert;
+            case '/': return del_slash;
+            default: return del_invalid;
+            }
+        }
+        if (X.is_math_openclosebetween()) {
+            switch (int(X.chr)) {
+            case rangle_code: return del_rangle;
+            case langle_code: return del_langle;
+            case lbrace_code: return del_lbrace;
+            case rbrace_code: return del_rbrace;
+            case open_brace_code: return del_lbrace;
+            case close_brace_code: return del_rbrace;
+            case lceil_code: return del_lceil;
+            case rceil_code: return del_rceil;
+            case rfloor_code: return del_rfloor;
+            case lfloor_code: return del_lfloor;
+            case Vert_code: return del_Vert;
+            case Vertx_code: return del_Vert;
+            case vert_code: return del_vert;
+            case lmoustache_code: return del_lmoustache;
+            case rmoustache_code: return del_rmoustache;
+            case uparrow_code: return del_uparrow;
+            case downarrow_code: return del_downarrow;
+            case updownarrow_code: return del_updownarrow;
+            case Uparrow_code: return del_Uparrow;
+            case Downarrow_code: return del_Downarrow;
+            case Updownarrow_code: return del_Updownarrow;
+            case rgroup_code: return del_rgroup;
+            case lgroup_code: return del_lgroup;
+            case backslash_code: return del_backslash;
+            default:;
+            }
+        }
+        if (X.is_cst1_cmd() && X.chr == lbrace_chr) return del_lbrace;
+        if (X.is_cst1_cmd() && X.chr == rbrace_chr) return del_rbrace;
+        return del_invalid;
+    }
+
+    auto get_delimiter(unsigned k) -> del_pos {
+        switch (k) {
+        case rangle_code: return del_rangle;
+        case langle_code: return del_langle;
+        case lbrace_code: return del_lbrace;
+        case rbrace_code: return del_rbrace;
+        case open_brace_code: return del_lbrace;
+        case close_brace_code: return del_rbrace;
+        case lceil_code: return del_lceil;
+        case rceil_code: return del_rceil;
+        case rfloor_code: return del_rfloor;
+        case lfloor_code: return del_lfloor;
+        case Vertx_code: return del_Vert;
+        case Vert_code: return del_Vert;
+        case vert_code: return del_vert;
+        case lmoustache_code: return del_lmoustache;
+        case rmoustache_code: return del_rmoustache;
+        case uparrow_code: return del_uparrow;
+        case downarrow_code: return del_downarrow;
+        case updownarrow_code: return del_updownarrow;
+        case Uparrow_code: return del_Uparrow;
+        case Downarrow_code: return del_Downarrow;
+        case Updownarrow_code: return del_Updownarrow;
+        case rgroup_code: return del_rgroup;
+        case lgroup_code: return del_lgroup;
+        case backslash_code: return del_backslash;
+        default:;
+        }
+        if (k <= math_c_loc) return del_invalid;
+        auto n = k - math_c_loc;
+        switch (n) {
+        case '<': return del_open_ket;
+        case '>': return del_close_ket;
+        case '.': return del_dot;
+        case '(': return del_open_par;
+        case ')': return del_close_par;
+        case '[': return del_open_bra;
+        case ']': return del_close_bra;
+        case '|': return del_vert;
+        case '/': return del_slash;
+        default: return del_invalid;
+        }
+    }
 } // namespace
 
 using namespace math_ns;
@@ -81,7 +218,7 @@ auto Math::duplicate(bool nomath) const -> subtypes {
     while (C != E) {
         skip_next = skipping;
         if (C->cmd == nomath_cmd) {
-            int s = C->chr;
+            auto s = C->chr;
             ++C;
             if (C == E) break;
             if (s == 0)
@@ -1888,20 +2025,20 @@ auto MathElt::try_math_op() const -> Xml * {
 // This converts a character into a MathML object
 auto MathElt::cv_char() const -> MathElt {
     unsigned c  = chr;
-    int      a  = 0;
+    unsigned a  = 0;
     auto     mt = mt_flag_small;
     auto     F  = get_font();
     if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(char32_t(c)), mt_flag_small);
     if (std::isdigit(static_cast<char>(c)) != 0)
-        a = to_signed(c) - '0' + math_dig_loc;
+        a = c - uchar('0') + math_dig_loc;
     else if ((std::isalpha(static_cast<char>(c)) != 0) && F < 2) {
-        a = math_char_normal_loc + F * to_signed(nb_mathchars) + to_signed(c);
+        a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (std::isalpha(static_cast<char>(c)) != 0) {
         auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
-        a  = to_signed(c) + math_c_loc;
+        a  = c + math_c_loc;
         mt = math_data.get_math_char_type(c);
     }
     return MathElt(subtypes(a), mt);
@@ -1937,21 +2074,9 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
     return MathElt(CmdChr(error_cmd, zero_code), zero_code);
 }
 
-// Return the name of the element associated to the command c.
-auto math_ns::cv_special_string(int c) -> std::string {
-    if (c >= first_maccent_code && c <= last_maccent_code) return c >= first_under_accent_code ? "munder" : "mover";
-    if (c == overline_code || c == overbrace_code || c == stackrel_code || c == overset_code || c == accentset_code) return "mover";
-    if (c == underline_code || c == underbrace_code || c == underset_code || c == undertilde_code || c == underaccent_code) return "munder";
-    if (c == root_code) return "mroot";
-    if (c == frac_code || c == dfrac_code || c == tfrac_code || c == genfrac_code || c == cfrac_code || c == binom_code ||
-        c == dbinom_code || c == tbinom_code)
-        return "mfrac";
-    return "unknown";
-}
-
 // Return 1 if the list is left aligned, 2 if right aligned, 0 if centered
 auto Math::check_align() -> int {
-    int a = 0, b = 0;
+    auto a = subtypes(0), b = subtypes(0);
     if (!empty() && front().cmd == hfill_cmd) {
         a = front().chr;
         pop_front();
@@ -2433,7 +2558,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
             if (chr == one_code || chr == three_code) continue;
             Buffer &B = Trace;
             B.clear();
-            int n = cur.get_font();
+            auto n = cur.get_font();
             B.push_back(ScaledInt(n), glue_spec_pt);
             Xml *v = mk_space(B);
             res.push_back(MathElt(v, mt_flag_space));
