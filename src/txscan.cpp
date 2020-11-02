@@ -268,7 +268,7 @@ auto Parser::scan_file_name() -> std::string {
         }
     }
     name_in_progress = false;
-    return fn;
+    return std::move(fn);
 }
 
 // This implements \endinput, \scantokens
@@ -471,7 +471,7 @@ auto Parser::cs_from_input() -> Token {
         --input_line_pos;
         return Token(null_tok_val);
     }
-    int C = get_catcode(c);
+    auto C = get_catcode(c);
     if (C == letter_catcode) {
         Buffer B;
         B.push_back(c);
@@ -1851,8 +1851,8 @@ void Parser::M_prefixed_aux(bool gbl) {
         return;
     case assign_glue_cmd:
     case assign_mu_glue_cmd: {
-        p     = chr;
-        int n = cur_cmd_chr.cmd;
+        p      = chr;
+        auto n = cur_cmd_chr.cmd;
         scan_optional_equals();
         if (n == assign_mu_glue_cmd)
             scan_glue(it_mu, T);
@@ -2002,7 +2002,7 @@ void Parser::assign_toks(Token T, size_t p, bool gbl) {
     if (cur_cmd_chr.cmd == toks_register_cmd) p = scan_reg_num();
     scan_optional_equals();
     remove_initial_space_relax();
-    int    c        = cur_cmd_chr.cmd;
+    auto   c        = cur_cmd_chr.cmd;
     bool   have_reg = true;
     size_t q        = cur_cmd_chr.chr;
     if (c == open_catcode)

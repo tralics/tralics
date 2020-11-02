@@ -976,7 +976,7 @@ void Math::convert_math_noML0() {
     while (!empty()) {
         MathElt cur = front();
         pop_front();
-        int cmd = cur.cmd;
+        auto cmd = cur.cmd;
         if (cmd == mathfont_cmd && (empty() || front().cmd == mathfont_cmd)) continue;
         cur.cv_noML();
     }
@@ -988,7 +988,7 @@ void Math::convert_math_noMLt0() {
     while (!empty()) {
         MathElt cur = front();
         pop_front();
-        int cmd = cur.cmd;
+        auto cmd = cur.cmd;
         if (cmd == mathfont_cmd && (empty() || front().cmd == mathfont_cmd)) continue;
         if (!empty() && (cmd == hat_catcode || cmd == underscore_catcode)) {
             cur = front();

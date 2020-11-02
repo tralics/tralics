@@ -3440,7 +3440,7 @@ auto Parser::shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token {
 // We may have seen \advance, then \foo, where \foo is defined by
 // \countdef, so that we can return after seeing \foo.
 // In any case, returns a position and sets p to the type.
-auto Parser::do_register_arg(int q, unsigned &p, Token &tfe) -> size_t {
+auto Parser::do_register_arg(symcodes q, unsigned &p, Token &tfe) -> size_t {
     Token T = cur_tok;
     if (q != register_cmd) {
         get_x_token();

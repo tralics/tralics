@@ -533,7 +533,7 @@ void Parser::mk_hi(String x, char c) {
 
 void Parser::tipa_star() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.cmd;
+    auto cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
         auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
@@ -584,7 +584,7 @@ void Parser::tipa_star() {
 
 void Parser::tipa_semi() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.cmd;
+    auto cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
         auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
@@ -623,7 +623,7 @@ void Parser::tipa_semi() {
 
 void Parser::tipa_colon() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.cmd;
+    auto cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
         auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
@@ -666,7 +666,7 @@ void Parser::tipa_colon() {
 
 void Parser::tipa_exclam() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.cmd;
+    auto cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
         auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
@@ -701,7 +701,7 @@ void Parser::tipa_exclam() {
 
 void Parser::tipa_normal() {
     if (get_token()) return; // should not happen
-    int cmd = cur_cmd_chr.cmd;
+    auto cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
         auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {

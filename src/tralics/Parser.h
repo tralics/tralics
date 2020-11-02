@@ -336,7 +336,7 @@ private:
     void        dimen_from_list0(Token T, TokenList &L);
     void        dim_define(size_t a, ScaledInt c, bool gbl);
     void        disable_keys();
-    auto        do_register_arg(int q, unsigned &p, Token &tfe) -> size_t;
+    auto        do_register_arg(symcodes q, unsigned &p, Token &tfe) -> size_t;
     void        do_register_command(bool gbl);
     void        dump_save_stack() const;
     auto        edef_aux(TokenList &L) -> bool;

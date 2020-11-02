@@ -2868,7 +2868,7 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
     bool               ok        = false; // true if we have added a fence
     bool               try_again = false; // true if formula has unused \big
     while (!empty()) {
-        int        cmd = front().cmd;
+        auto       cmd = front().cmd;
         math_types t   = front().get_xmltype();
         if (cmd == math_xml_cmd && t == mt_flag_large_l) {
             if (state) {

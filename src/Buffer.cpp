@@ -183,7 +183,7 @@ auto Token::tok_to_str() const -> std::string {
         B.push_back(*this);
         return std::move(B);
     }
-    int      cat      = cmd_val();
+    unsigned cat      = cmd_val();
     char32_t c        = char_val();
     bool     good_cat = false;
     if ((c >= 128) && cat == 12) good_cat = true;
@@ -209,7 +209,7 @@ auto Buffer::push_back(Token T) -> bool {
         return false;
     }
     if (T.is_a_char()) {
-        int      cmd = T.cmd_val();
+        unsigned cmd = T.cmd_val();
         char32_t c   = T.char_val();
         if (cmd == eol_catcode) {
             push_back('#');
@@ -245,7 +245,7 @@ void Buffer::insert_token(Token T, bool sw) {
     if (T.char_or_active()) {
         char32_t c = T.char_val();
         if (T.is_a_char()) {
-            int cmd = T.cmd_val();
+            auto cmd = T.cmd_val();
             if (cmd == eol_catcode) {
                 push_back('#');
                 push_back(static_cast<char>(c + '0')); // parameter
