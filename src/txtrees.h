@@ -1,4 +1,5 @@
 #pragma once
+#include "tralics/Indexer.h"
 #include <algorithm>
 #include <string>
 #include <utility>
@@ -21,18 +22,6 @@ namespace tralics_ns {
     void find_index_labels(std::vector<std::string> &W);
 
 } // namespace tralics_ns
-
-class Indexer {
-public:
-    std::string        key; // sort key
-    std::string        aux;
-    Xml *              translation;
-    int                level;
-    size_t             iid; // index in the reference table
-    [[nodiscard]] auto is_same(int l, const std::string &k) const -> bool { return level == l && k == aux; }
-    Indexer(std::string k, std::string a, Xml *x, int l, size_t u)
-        : key(std::move(k)), aux(std::move(a)), translation(x), level(l), iid(u) {}
-};
 
 class OneIndex {
     std::string            name;
