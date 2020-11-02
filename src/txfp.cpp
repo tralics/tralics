@@ -2105,7 +2105,7 @@ void FpStack::push_upn(TokenList &L) {
 }
 
 // This adds a fp number in front of the stack.
-void FpStack::push_upn(FpNum x) {
+void FpStack::push_upn(const FpNum &x) {
     if (!empty()) push_front(the_parser.hash_table.comma_token);
     TokenList xv = x.to_list();
     push_front(xv);

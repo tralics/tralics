@@ -1,9 +1,5 @@
 #pragma once
-#include "CmdChr.h"
-#include "Glue.h"
-#include "TokenList.h"
-
-class Xml;
+#include <string>
 
 // Every eqtb entry has a level. Level_zero means undefined
 // Level_one is the outer level. The old value must be saved in case
@@ -16,10 +12,5 @@ template <typename T> struct EQTB {
     [[nodiscard]] auto must_push(int l) const -> bool { return level != l && l > 1; }
 };
 
-using EqtbCmdChr = EQTB<CmdChr>;
 using EqtbInt    = EQTB<long>;
 using EqtbString = EQTB<std::string>;
-using EqtbDim    = EQTB<ScaledInt>;
-using EqtbGlue   = EQTB<Glue>;
-using EqtbToken  = EQTB<TokenList>;
-using EqtbBox    = EQTB<Xml *>;

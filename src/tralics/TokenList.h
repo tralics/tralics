@@ -16,3 +16,5 @@ struct TokenList : public std::list<Token> {
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
+
+using EqtbToken = EQTB<TokenList>;

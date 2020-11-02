@@ -1,6 +1,7 @@
 #pragma once
 #include "Buffer.h"
 #include "NameMapper.h"
+#include "Xid.h"
 #include <gsl/gsl>
 
 struct XmlAction;
@@ -99,3 +100,5 @@ struct XmlAndType {
 auto read_xml(const std::string &s) -> Xml *;
 
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;
+
+using EqtbBox = EQTB<Xml *>;

@@ -2,16 +2,18 @@
 #include "Condition.h"
 #include "EQTB.h"
 #include "FontInfo.h"
+#include "Glue.h"
 #include "Hashtab.h"
 #include "Image.h"
 #include "LabelInfo.h"
 #include "LineList.h"
 #include "Mactab.h"
-#include "RealNumber.h"
 #include "SaveState.h"
 #include "Stack.h"
 #include "Stats.h"
+#include "SthInternal.h"
 
+struct RealNumber;
 struct FpNum;
 class Math;
 class SaveAuxBase;

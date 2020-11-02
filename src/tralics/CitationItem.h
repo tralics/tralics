@@ -1,5 +1,6 @@
 #pragma once
 #include "Buffer.h"
+#include "Xid.h"
 
 struct CitationItem {
     std::string key, from, id;

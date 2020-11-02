@@ -7,6 +7,8 @@
 #include "Xml.h"
 #include <list>
 
+struct AttList;
+
 using const_math_iterator = std::list<MathElt>::const_iterator;
 
 class Math : public std::list<MathElt> {

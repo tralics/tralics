@@ -9,11 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/FpNum.h"
 #include "tralics/Token.h"
+#include "tralics/TokenList.h"
 #include <string>
 #include <utility>
 
+struct FpNum;
 class Hashtab;
 
 namespace token_ns {
@@ -83,7 +84,7 @@ public:
     void               push_front(Token L) { value.push_front(L); }
     void               push_front(TokenList &L) { value.splice(value.begin(), L); }
     void               push_upn(TokenList &L);
-    void               push_upn(FpNum x);
+    void               push_upn(const FpNum &x);
 };
 
 // This represents the value of a user-defined command

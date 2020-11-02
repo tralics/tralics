@@ -1,7 +1,5 @@
 #pragma once
 #include "../txtokenlist.h"
-#include "SthInternal.h"
-#include "Xid.h"
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>
@@ -10,6 +8,9 @@
 
 struct AttPair;
 struct Glue;
+struct ScaledInt;
+struct SthInternal;
+class Xid;
 class Xml;
 
 /// A utility structure which is basically a std::string with a marked range,
@@ -119,7 +120,7 @@ public:
     void push_back_real_utf8(char32_t c);
     void push_back_roman(long n);
     void push_back_Roman(long n);
-    void push_back_special_att(Xid id);
+    void push_back_special_att(const Xid &id);
     void push_back_unless_punct(char c);
     void push_back_xml_char(char c);
     void remove_last_space();
@@ -138,7 +139,7 @@ public:
     auto push_back(Token T) -> bool;
     void push_back(char32_t c);
     void push_back(uchar c);
-    void push_back(ScaledInt v, glue_spec unit);
+    void push_back(const ScaledInt &v, glue_spec unit);
     void push_back(const SthInternal &x);
     void push_back(const Glue &x);
     void push_back(const Macro &x);

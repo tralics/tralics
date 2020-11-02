@@ -1,4 +1,5 @@
 #pragma once
+#include "EQTB.h"
 #include "enums.h"
 #include <string>
 
@@ -28,3 +29,5 @@ struct ScaledInt {
 };
 
 auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream &;
+
+using EqtbDim = EQTB<ScaledInt>;

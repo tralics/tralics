@@ -1,4 +1,5 @@
 #pragma once
+#include "EQTB.h"
 #include "ScaledInt.h"
 
 // a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
@@ -26,3 +27,5 @@ struct Glue {
 };
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;
+
+using EqtbGlue = EQTB<Glue>;

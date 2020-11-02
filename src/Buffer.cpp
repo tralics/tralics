@@ -292,7 +292,7 @@ void Buffer::insert_token(Token T, bool sw) {
 
 // Print the scaled int V as a floating point in the buffer.
 // This is the algorithm of Knuth
-void Buffer::push_back(ScaledInt V, glue_spec unit) {
+void Buffer::push_back(const ScaledInt &V, glue_spec unit) {
     const int unity = 1 << 16;
     auto      s     = V.value;
     if (s < 0) {
@@ -699,7 +699,7 @@ auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
 }
 
 // This converts the buffer in to an attribute list for id.
-void Buffer::push_back_special_att(Xid id) {
+void Buffer::push_back_special_att(const Xid &id) {
     for (;;) {
         if (!find_equals()) return;
         auto J = ptrs.a;

@@ -1,4 +1,5 @@
 #pragma once
+#include "EQTB.h"
 #include "enums.h"
 #include <string>
 
@@ -150,3 +151,5 @@ private:
     [[nodiscard]] auto token_xkeyval_name() const -> String;
     [[nodiscard]] auto token_xray_name() const -> String;
 };
+
+using EqtbCmdChr = EQTB<CmdChr>;
