@@ -13,6 +13,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
+#include "tralics/TitlePage.h"
 #include "tralics/TpiOneItem.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -149,7 +150,8 @@ void Parser::T_titlepage(size_t v) const {
 // This is executed when the translation begins.
 void TitlePage::start_thing(bool verbose) {
     if (!valid) return;
-    Data = new Xml *[len2];
+    clear();
+    resize(len2);
     for (unsigned int k = 0; k < bigtable.size(); k++) {
         if (verbose) bigtable[k].dump(k);
         bigtable[k].exec_start(k);

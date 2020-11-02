@@ -12,6 +12,7 @@
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
+#include "tralics/TitlePage.h"
 #include "tralics/globals.h"
 #include "txtitlepage.h"
 
