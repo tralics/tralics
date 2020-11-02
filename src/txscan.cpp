@@ -1820,7 +1820,7 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 void Parser::M_prefixed_aux(bool gbl) {
     auto     chr = cur_cmd_chr.chr;
     Token    T   = cur_tok;
-    subtypes p   = static_cast<subtypes>(0);
+    auto     p   = static_cast<subtypes>(0);
     long     q   = 0;
     switch (cur_cmd_chr.cmd) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
