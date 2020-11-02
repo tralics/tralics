@@ -45,7 +45,7 @@ namespace {
 auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
     auto        i = the_index.find_index(s);
-    return the_index.at(i)->AL;
+    return the_index.at(i).AL;
 }
 
 // Case of \index{key@value|encap}
@@ -97,7 +97,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     z               = L;
     std::string aux = to_stringE(z);
     // We have now: key@aux|encap
-    std::vector<Indexer> &IR    = *the_index.at(g);
+    std::vector<Indexer> &IR    = the_index.at(g);
     int                   level = 1;
     if (father) level = 1 + IR[*father].level;
     auto n = IR.size();
@@ -160,7 +160,7 @@ void Parser::T_index(subtypes c) {
     // make sure this exists
     auto pposition = index_aux(L, position, g);
     // Now, add a label here
-    auto iid = the_index.at(g)->at(pposition).iid;
+    auto iid = the_index.at(g).at(pposition).iid;
     auto nid = ++the_index.last_index;
 
     local_buf             = fmt::format("lid{}", nid);
@@ -177,32 +177,32 @@ void Parser::finish_index() {
     auto   q = the_index.size();
     for (size_t jj = 1; jj <= q; jj++) {
         auto  j  = jj == q ? 0 : jj;
-        auto *CI = the_index.at(j);
-        auto  n  = CI->size();
+        auto &CI = the_index.at(j);
+        auto  n  = CI.size();
         if (n == 0) continue;
         idx_size += n;
         idx_nb++;
         Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
         Xid  id  = res->id;
         {
-            const std::string &t = CI->title;
+            const std::string &t = CI.title;
             if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
         }
         {
-            AttList &L = the_stack.get_att_list(CI->AL);
+            AttList &L = the_stack.get_att_list(CI.AL);
             id.add_attribute(L, true);
         }
         for (size_t i = 0; i < n; i++) {
-            Xml *A = CI->at(i).translation;
-            A->id.add_attribute(the_names["target"], std::string(labels[CI->at(i).iid]));
+            Xml *A = CI.at(i).translation;
+            A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
         }
-        std::sort(CI->begin(), CI->end(), [](auto &A, auto &B) { return A.key < B.key; });
+        std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
         for (size_t i = 0; i < n; i++) {
-            Xml *A = CI->at(i).translation;
+            Xml *A = CI.at(i).translation;
             res->push_back_unless_nullptr(A);
             res->add_nl();
         }
-        the_stack.document_element()->insert_bib(res, CI->position);
+        the_stack.document_element()->insert_bib(res, CI.position);
     }
     if (idx_size == 0) return;
     log_and_tty << "Index has " << idx_size << " entries";

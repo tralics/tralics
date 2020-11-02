@@ -2,7 +2,7 @@
 #include "OneIndex.h"
 #include <string>
 
-struct AllIndex : public std::vector<OneIndex *> {
+struct AllIndex : public std::vector<OneIndex> {
     size_t last_index{0}, last_iid{0};
 
     AllIndex();
