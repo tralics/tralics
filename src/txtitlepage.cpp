@@ -13,6 +13,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
+#include "tralics/TpiOneItem.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 
@@ -254,14 +255,6 @@ void TitlePage::start_thing(bool verbose) {
         if (verbose) bigtable[k].dump(k);
         bigtable[k].exec_start(k);
     }
-}
-
-// clears a TPI
-void TpiOneItem::reset() {
-    p1    = 0;
-    p2    = 0;
-    value = "";
-    v     = tpi_noval;
 }
 
 // For the case CE, \URsop ?+ <UR myflags>
