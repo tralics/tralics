@@ -8,7 +8,7 @@ class SaveState {
     bool       b{true};
 
 public:
-    SaveState(TokenList &LL, bool &bb) : LL(LL), bb(bb) {
+    SaveState(TokenList &LLL, bool &bbb) : LL(LLL), bb(bbb) {
         LL.swap(L);
         std::swap(bb, b);
     }

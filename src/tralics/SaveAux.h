@@ -79,7 +79,7 @@ class SaveAuxToken : public SaveAuxBase {
     size_t    pos; // pthe position in toks_registers
     TokenList val; // the value to be restored
 public:
-    SaveAuxToken(Parser &P, long l, size_t p, TokenList v) : SaveAuxBase(P, st_token, l), pos(p), val(std::move(v)) {}
+    SaveAuxToken(Parser &PP, long l, size_t p, TokenList v) : SaveAuxBase(PP, st_token, l), pos(p), val(std::move(v)) {}
     ~SaveAuxToken() override;
 };
 
@@ -88,7 +88,7 @@ class SaveAuxGlue : public SaveAuxBase {
     size_t pos; // the position in glue_table
     Glue   val; // the value to be restored
 public:
-    SaveAuxGlue(Parser &P, long l, size_t p, Glue g) : SaveAuxBase(P, st_glue, l), pos(p), val(g) {}
+    SaveAuxGlue(Parser &PP, long l, size_t p, Glue g) : SaveAuxBase(PP, st_glue, l), pos(p), val(g) {}
     ~SaveAuxGlue() override;
 };
 
@@ -97,7 +97,7 @@ class SaveAuxString : public SaveAuxBase {
     size_t      pos; // the position in glue_table
     std::string val; // the value to be restored
 public:
-    SaveAuxString(Parser &P, long l, size_t p, std::string s) : SaveAuxBase(P, st_string, l), pos(p), val(std::move(s)) {}
+    SaveAuxString(Parser &PP, long l, size_t p, std::string s) : SaveAuxBase(PP, st_string, l), pos(p), val(std::move(s)) {}
     ~SaveAuxString() override;
 };
 

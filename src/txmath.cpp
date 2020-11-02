@@ -2597,7 +2597,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         } else if (cmd == big_cmd && !empty()) {
             cur = front();
             pop_front();
-            t           = chr / 4; //  empty, L, R, et M.
+            t           = int(chr) / 4; //  empty, L, R, et M.
             next_action = 2;
         } else if (cmd == ensuremath_cmd || cmd == nolinebreak_cmd || cmd == mathfont_cmd)
             continue;

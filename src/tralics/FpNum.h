@@ -6,8 +6,8 @@
 class Buffer;
 
 struct FpNum {
-    bool                        sign{true}; // sign of the number
-    std::array<unsigned int, 4> data{};     // the digits
+    bool                  sign{true}; // sign of the number
+    std::array<size_t, 4> data{};     // the digits
 
     FpNum(Digit a, Digit b, Digit c, Digit d) : data{a, b, c, d} {}
     FpNum() : FpNum(0, 0, 0, 0) {}

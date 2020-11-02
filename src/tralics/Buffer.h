@@ -87,7 +87,7 @@ public:
     auto look_at_space(const std::string &s) -> bool;
     auto next_utf8_char() -> char32_t;
     auto push_back_newline_spec() -> bool;
-    auto reverse_horner() -> unsigned;
+    auto reverse_horner() -> size_t;
     auto see_config_kw(const std::string &s, bool c) -> String;
     auto see_equals(const std::string &s) -> bool;
     auto skip_string(const std::string &s) -> bool;

@@ -5,7 +5,7 @@
 
 using uchar  = unsigned char;
 using String = const char *;
-using Digit  = unsigned int;
+using Digit  = size_t;
 
 class EndOfData {};
 

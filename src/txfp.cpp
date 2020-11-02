@@ -271,7 +271,7 @@ void FpNum::mul(FpNum X, FpNum Y) {
     bool                  xs = X.sign == Y.sign;
     std::array<Digit, 12> x{}, y{};
     std::array<Digit, 24> z{};
-    for (unsigned int &i : z) i = 0;
+    for (auto &i : z) i = 0;
     X.mul_split(x);
     Y.mul_split(y);
     auto [xmin, xmax] = set_xmax(x);
@@ -291,7 +291,7 @@ void FpNum::mul(FpNum X, int y) {
         y  = -y;
         xs = !xs;
     }
-    for (unsigned int &i : z) i = 0;
+    for (auto &i : z) i = 0;
     X.mul_split(x);
     for (size_t i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
     prop_carry(z);
@@ -348,7 +348,7 @@ auto Buffer::horner(size_t p) -> Digit {
 // via explicit power. k is decreasing, starts with 0. Result is
 // multiplied by 10^9. Reading ends after 9 digits or EOL.
 // Ok for the fractional part of 1234.5678
-auto Buffer::reverse_horner() -> Digit {
+auto Buffer::reverse_horner() -> size_t {
     Digit res = 0;
     for (size_t i = 9; !at_eol() && i > 0; --i) res += power_table[i - 1] * to_unsigned(next_char() - '0');
     return res;
@@ -407,7 +407,7 @@ auto FpNum::to_list() const -> TokenList {
     size_t    i = 0;
     if (buf2[0] == '+') i++;
     while (buf2[i] != 0) {
-        res.push_back(Token(to_unsigned(other_t_offset + buf2[i])));
+        res.push_back(Token(other_t_offset + to_unsigned(buf2[i])));
         i++;
     }
     return res;
@@ -675,7 +675,7 @@ void FpNum::div(int n) {
     }
     mul_split(x);
     Digit carry = 0;
-    for (unsigned int &i : x) {
+    for (auto &i : x) {
         Digit a = 1000 * carry + i;
         carry   = a % to_unsigned(n);
         i       = a / to_unsigned(n);
@@ -2009,8 +2009,8 @@ void FpNum::random() {
     auto  S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].val);
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
-    int   w     = to_signed(xib * 16807) - to_signed(xia * 2836);
-    if (w <= 0) w += cst_m;
+    auto  w     = to_signed(xib * 16807) - to_signed(xia * 2836);
+    if (w <= 0) w += to_signed(cst_m);
     the_parser.eqtb_int_table[fpseed_code].val = w;
     fp_rand2.data[1]                           = to_unsigned(w);
     div(fp_rand2, fp_rand1);

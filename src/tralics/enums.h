@@ -2,7 +2,7 @@
 #include "consts.h"
 
 // Command codes.
-enum symcodes {
+enum symcodes : unsigned {
     // Lets start with the catcodes
     invalid_cmd    = 0,
     escape_catcode = 0,
@@ -1954,7 +1954,7 @@ enum subtypes : unsigned {
 };
 
 // nb_characters*cur_cmd for catcode 11 and 12.
-enum spec_offsets {
+enum spec_offsets : unsigned {
     letter_t_offset    = letter_catcode * nb_characters,
     other_t_offset     = other_catcode * nb_characters,
     hat_t_offset       = hat_catcode * nb_characters,
