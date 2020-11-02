@@ -9,12 +9,9 @@
 // list are characters.
 auto FpGenList::find_str(int &n) const -> Token {
     tkbuf.clear();
-    auto C = value.begin();
-    auto E = value.end();
-    n      = 0;
-    while (C != E) {
+    n = 0;
+    for (auto C = begin(); C != end(); ++C) {
         Token x = *C;
-        ++C;
         if (x.is_lowercase_token()) {
             tkbuf.push_back(static_cast<char>(x.val_as_letter()));
             n++;
@@ -42,8 +39,8 @@ void FpGenList::add_last_space(String S) {
 // Adds at the end of *this a space, W, a second space and S (of type letter)
 // Assumes that S is ascii
 void FpGenList::add_last_space(TokenList &W, String S) {
-    value.push_back(the_parser.hash_table.space_token);
-    push_back(W);
+    push_back(the_parser.hash_table.space_token);
+    append(W);
     add_last_space(S);
 }
 
@@ -51,31 +48,28 @@ void FpGenList::add_last_space(TokenList &W, String S) {
 
 void FpGenList::split_after(TokenList::iterator X, TokenList &z) {
     z.clear();
-    z.splice(z.begin(), value, X, value.end());
+    z.splice(z.begin(), *this, X, end());
     z.pop_front();
-    z.swap(value);
+    z.swap(*this);
 }
 
 // Finds the first x1 or x2. Splits there. before is put in z.
 // Returns x1 or x2 (the token that is found) or 0 (if nothing is found).
 auto FpGenList::split_at(Token x1, Token x2, TokenList &z) -> Token {
-    auto X = value.begin();
-    auto E = value.end();
-    for (;;) {
-        if (X == E) return Token(0);
+    for (auto X = begin(); X != end(); ++X) {
         Token x = *X;
         if (x == x1 || x == x2) {
             split_after(X, z);
             return x;
         }
-        ++X;
     }
+    return Token(0);
 }
 
 // The first N tokens are put in z.
 // the Token that follows is recycled
 void FpGenList::split_after(int n, TokenList &z) {
-    auto X = value.begin();
+    auto X = begin();
     while (n > 0) {
         ++X;
         n--;
@@ -87,7 +81,7 @@ void FpGenList::split_after(int n, TokenList &z) {
 // provided that word is in the list.
 // For instance sin 25 gives 25 sin
 void FpGenList::fp_gen_app() {
-    while (!value.empty() && value.front().is_space_token()) value.pop_front();
+    while (!empty() && front().is_space_token()) pop_front();
     int   n = 0;
     Token x = find_str(n);
     if (!x.is_space_token()) return;
@@ -100,7 +94,7 @@ void FpGenList::fp_gen_app() {
         push_back(the_parser.hash_table.space_token);
         TokenList z;
         split_after(n, z);
-        push_back(z);
+        append(z);
     }
 }
 
@@ -112,8 +106,8 @@ void FpGenList::fp_gen_exp() {
     if (!split_at(x, x, aux).is_null()) {
         fp_gen_exp(); // handle B
         FpGenList Aux(aux);
-        Aux.fp_gen_exp();                 // handle A
-        add_last_space(Aux.value, "pow"); // insert operator and after
+        Aux.fp_gen_exp();           // handle A
+        add_last_space(Aux, "pow"); // insert operator and after
     } else
         fp_gen_app();
 }
@@ -137,19 +131,19 @@ void FpGenList::fp_gen_mul() {
             fp_gen_exp();   // handle  B
             FpGenList Aux(aux);
             Aux.fp_gen_exp(); // handle A
-            Aux.add_last_space(value, y == x1 ? "mul" : "div");
-            value.swap(Aux.value);
+            Aux.add_last_space(*this, y == x1 ? "mul" : "div");
+            swap(Aux);
             return;
         }
         FpGenList Aux(aux);
         Aux.fp_gen_exp(); // case A*B*C, handle A
         FpGenList Aux2(aux2);
-        Aux2.fp_gen_exp();                                       // handle B
-        Aux.add_last_space(Aux2.value, y == x1 ? "mul" : "div"); // we have A B mul
+        Aux2.fp_gen_exp();                                 // handle B
+        Aux.add_last_space(Aux2, y == x1 ? "mul" : "div"); // we have A B mul
         Aux.push_back(the_parser.hash_table.space_token);
         Aux.push_back(y2); // insert the second op
-        Aux.push_back(value);
-        value.swap(Aux.value);
+        Aux.append(*this);
+        swap(Aux);
     }
 }
 
@@ -170,8 +164,8 @@ void FpGenList::fp_gen_add() {
             fp_gen_mul();
             FpGenList Aux(aux);
             Aux.fp_gen_mul();
-            Aux.add_last_space(value, y == x1 ? "add" : "sub");
-            value.swap(Aux.value);
+            Aux.add_last_space(*this, y == x1 ? "add" : "sub");
+            swap(Aux);
             return;
         }
         FpGenList Aux(aux);
@@ -179,11 +173,11 @@ void FpGenList::fp_gen_add() {
         FpGenList Aux2(aux2);
         Aux2.fp_gen_mul();
 
-        Aux.add_last_space(Aux2.value, y == x1 ? "add" : "sub");
+        Aux.add_last_space(Aux2, y == x1 ? "add" : "sub");
         Aux.push_back(the_parser.hash_table.space_token);
         Aux.push_back(y2);
-        Aux.push_back(value);
-        value.swap(Aux.value);
+        Aux.append(*this);
+        swap(Aux);
     }
 }
 
@@ -191,16 +185,13 @@ void FpGenList::fp_gen_add() {
 // If a character has been replaced, a space is added at the end.
 void FpGenList::fp_gen_komma() {
     bool  need_space = false;
-    auto  X          = value.begin();
-    auto  E          = value.end();
     Token x1         = the_parser.hash_table.comma_token;
     Token x2         = Token(other_t_offset, ':');
-    while (X != E) {
+    for (auto X = begin(); X != end(); ++X) {
         if (*X == x1 || *X == x2) {
             need_space = true;
             *X         = the_parser.hash_table.space_token;
         }
-        ++X;
     }
     if (need_space) push_back(the_parser.hash_table.space_token);
     fp_gen_add();
@@ -211,27 +202,24 @@ void FpGenList::fp_gen_komma() {
 auto FpGenList::split_at_p(TokenList &A, TokenList &B) -> bool {
     Token x1 = Token(other_t_offset, '(');
     Token x2 = Token(other_t_offset, ')');
-    auto  X  = value.begin();
-    auto  E  = value.end();
-    auto  p1 = E; // at open paren
-    auto  p2 = E; // at close paren
-    for (;;) {
-        if (X == E) return false;
+    auto  p1 = end(); // at open paren
+    auto  p2 = end(); // at close paren
+    for (auto X = begin();; ++X) {
+        if (X == end()) return false;
         Token x = *X;
         if (x == x2) {
-            if (p2 != E) return false; // failed
+            if (p2 != end()) return false; // failed
             p2 = X;
             break;
         }
         if (x == x1) p1 = X;
-        ++X;
     }
     // close paren seen
-    if (p1 == E) return false;
-    A.splice(A.begin(), value, value.begin(), p1);
-    value.pop_front(); // remove open parenn
-    B.splice(B.begin(), value, value.begin(), p2);
-    value.pop_front(); // remove close paren
+    if (p1 == end()) return false;
+    A.splice(A.begin(), *this, begin(), p1);
+    pop_front(); // remove open parenn
+    B.splice(B.begin(), *this, begin(), p2);
+    pop_front(); // remove close paren
     return true;
 }
 
@@ -245,10 +233,10 @@ void FpGenList::to_postfix() {
         if (split_at_p(A, B)) {
             FpGenList BB(B);
             BB.fp_gen_komma(); //
-            value.swap(A);     // A holds: +cos(c+d), and value holds sin
+            swap(A);           // A holds: +cos(c+d), and value holds sin
             push_back(the_parser.hash_table.space_token);
-            push_back(BB.value);
-            push_back(A);
+            append(BB);
+            append(A);
         } else
             break;
     }
@@ -261,34 +249,31 @@ void FpGenList::fp_check_paren() {
     Token x0(other_t_offset, '(');
     Token x1 = the_parser.hash_table.minus_token;
     Token x2 = the_parser.hash_table.plus_token;
-    auto  X  = value.begin();
-    auto  E  = value.end();
-    while (X != E) {
+    ;
+    for (auto X = begin(); X != end(); ++X) {
         Token x = *X;
         if (x == x0) {
             auto Y = X;
             ++Y;
-            if (Y == E) return;
+            if (Y == end()) return;
             Token y = *Y;
             if (y.is_space_token() || y == x2)
-                value.erase(Y);
+                erase(Y);
             else if (y == x1)
-                value.insert(Y, the_parser.hash_table.zero_token);
+                insert(Y, the_parser.hash_table.zero_token);
         }
-        ++X;
     }
 }
 
 // This removes the first N tokens from the list
 void FpGenList::remove_first_n(int n) {
     while (n > 0) {
-        value.pop_front();
+        pop_front();
         n--;
     }
 }
 
 void FpGenList::remove_spaces() {
-    TokenList &L = value;
-    while (!L.empty() && L.front().is_space_token()) L.pop_front();
-    while (!L.empty() && L.back().is_space_token()) L.pop_back();
+    while (!empty() && front().is_space_token()) pop_front();
+    while (!empty() && back().is_space_token()) pop_back();
 }

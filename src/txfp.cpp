@@ -1748,10 +1748,10 @@ void Parser::fp_e_eval() {
     evaluator.to_postfix();
     if (tracing_commands()) {
         Logger::finish_seq();
-        the_log << "{FPpostfix " << evaluator.value << "}\n";
+        the_log << "{FPpostfix " << evaluator << "}\n";
     }
     back_input(hash_table.CB_token);
-    back_input(evaluator.value);
+    back_input(evaluator);
     back_input(hash_table.OB_token);
     back_input(A);
     back_input(fps[fp_upn_code]);
@@ -1874,7 +1874,7 @@ void Parser::upn_eval(TokenList &l) {
     TokenList z;
     if (L.split_at(t1, t2, z).val != 0) {
         upn_eval(z);
-        upn_eval(L.value);
+        upn_eval(L);
         return;
     }
     int                n   = 0;
@@ -2176,7 +2176,7 @@ void Parser::upn_eval(TokenList &l) {
         return;
     }
     back_input(hash_table.CB_token);
-    fp_special_expand(L.value);
+    fp_special_expand(L);
     back_input(hash_table.OB_token);
     TokenList w = read_arg();
     S.push_upn(w);

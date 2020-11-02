@@ -2,11 +2,10 @@
 #include "TokenList.h"
 
 // This is for fp
-class FpGenList {
+class FpGenList : public TokenList {
 public:
-    TokenList value;
+    FpGenList(const TokenList &o) : TokenList(o) {}
 
-    FpGenList(TokenList A) : value(std::move(A)) {}
     void add_last_space(String S);
     void add_last_space(TokenList &W, String S);
     auto find_str(int &n) const -> Token;
@@ -15,8 +14,7 @@ public:
     void fp_gen_exp();
     void fp_gen_komma();
     void fp_gen_mul();
-    void push_back(Token L) { value.push_back(L); }
-    void push_back(TokenList &L) { value.splice(value.end(), L); }
+    void append(TokenList &L) { splice(end(), L); }
     void remove_first_n(int n);
     void remove_spaces();
     void split_after(int n, TokenList &z);
